@@ -1,5 +1,5 @@
-name = "FeitThompson"
-defaultTargets = ["FeitThompson"]
+name = "CFSG"
+defaultTargets = ["FeitThompson", "BenderSuzuki"]
 lintDriver = "batteries/runLinter"
 
 [leanOptions]
