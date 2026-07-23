@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.theorem_10_6
+public import FeitThompson.BGsection10.theorem_10_6
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -135,16 +135,19 @@ public theorem section10_sylow_subgroupOf_normalizer_isHall
   haveI : Fact p.val.Prime := ⟨p.property⟩
   let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
   let Psub : Subgroup N := (P : Subgroup G).subgroupOf N
-  let PN : Sylow p.val N := P.subtype (by
+  have hP_le_N : (P : Subgroup G) ≤ N := by
     simpa [N] using (Subgroup.le_normalizer : (P : Subgroup G) ≤
-      Subgroup.normalizer (((P : Subgroup G) : Set G))))
+      Subgroup.normalizer (((P : Subgroup G) : Set G)))
+  let PN : Sylow p.val N := P.subtype hP_le_N
   have hPsub_eq : Psub = (PN : Subgroup N) := by
     ext x
     simp [Psub, PN, Sylow.subtype, N, Subgroup.mem_subgroupOf]
   refine isHallSubgroup_of (G := N) (π := ({p} : Set Nat.Primes)) (H := Psub) ?_ ?_
   · intro q hq_dvd
     have hPsubp : IsPGroup p.val Psub := by
-      simpa [hPsub_eq] using PN.isPGroup'
+      change IsPGroup p.val ((P : Subgroup G).subgroupOf N)
+      exact P.isPGroup'.of_equiv
+        (Subgroup.subgroupOfEquivOfLe hP_le_N).symm
     exact section8_isPiSubgroup_singleton_of_isPGroup hPsubp q hq_dvd
   · intro q hq_mem hq_dvd_index
     have hq_eq : q = p := by simpa using hq_mem
@@ -213,7 +216,9 @@ private theorem section10_sylow_le_ambientDerived_normalizer
     simpa [hcomm_map] using hP_le_map_comm hxP
   have hxmap : x ∈ (_root_.commutator N).map N.subtype := by
     simpa [Subgroup.map_subtype_commutator] using hxNN
-  simpa [N, ambientDerivedSubgroup, derivedSubgroup, derivedSeries_one] using hxmap
+  change x ∈ (derivedSeries N 1).map N.subtype
+  rw [derivedSeries_one]
+  exact hxmap
 
 private theorem section10_complement_commutator_eq_sylow
     {p : Nat.Primes} (P : Sylow p.val G) {V : Subgroup G}

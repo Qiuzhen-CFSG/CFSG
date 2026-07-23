@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection3.PFsection3_5
-public import Submission.FeitThompson.PFsection3.PFsection3_6
+public import FeitThompson.PFsection3.PFsection3_5
+public import FeitThompson.PFsection3.PFsection3_6
 
 /-!
 # Peterfalvi, Section 3, Hypothesis (3.6) and Proposition (3.7)
@@ -302,10 +302,10 @@ private theorem scalarProduct_psi_sigma_rectangle_eq_coeff_rectangle
 
 public theorem scalarProduct_sum_orthonormal_rectangle_eq_coeff_rectangle
     {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
+    {_W1 _W2 W : Subgroup G}
     {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
+    {_i0 : I} {_j0 : J}
+    {_ω : I → J → Section1.ClassFunction W}
     {χ : I → J → Section1.ClassFunction G}
     {a : I → J → ℂ}
     (hχ : IsOrthonormalDoubleFamily χ)

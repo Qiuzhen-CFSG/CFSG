@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection3.Basic
+public import FeitThompson.PFsection3.Basic
 
 /-!
 # Peterfalvi, Section 5: basic notation
@@ -56,7 +56,6 @@ public theorem integerSpan_mono
       hsub
       (by
         intro Y _hY2 hY1
-        dsimp
         simp [hY1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S₁.sum_attach,
     ← S₂.sum_attach] using hsum

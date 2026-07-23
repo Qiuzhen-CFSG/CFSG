@@ -1,23 +1,23 @@
 module
 
-public import Submission.FeitThompson.PFsection12.Basic
-import Submission.FeitThompson.PFsection12.PFsection12_4
-import Submission.FeitThompson.PFsection12.PFsection12_9
-import Submission.FeitThompson.PFsection12.PFsection12_10
-import Submission.FeitThompson.PFsection12.PFsection12_12
-import Submission.FeitThompson.GroupAction.MinimalNormal
-import Submission.FeitThompson.PFsection5.RealVirtualParity
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection7.PFsection7_3
-import Submission.FeitThompson.PFsection7.PFsection7_5
-import Submission.FeitThompson.PFsection7.PFsection7_7
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection7.PFsection7_8_c
-import Submission.FeitThompson.PFsection7.PFsection7_9
-import Submission.FeitThompson.PFsection8.PFsection8_16
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection9.PFsection9_1
+public import FeitThompson.PFsection12.Basic
+import FeitThompson.PFsection12.PFsection12_4
+import FeitThompson.PFsection12.PFsection12_9
+import FeitThompson.PFsection12.PFsection12_10
+import FeitThompson.PFsection12.PFsection12_12
+import FeitThompson.GroupAction.MinimalNormal
+import FeitThompson.PFsection5.RealVirtualParity
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection7.PFsection7_3
+import FeitThompson.PFsection7.PFsection7_5
+import FeitThompson.PFsection7.PFsection7_7
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection7.PFsection7_8_c
+import FeitThompson.PFsection7.PFsection7_9
+import FeitThompson.PFsection8.PFsection8_16
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
 
@@ -91,7 +91,7 @@ public theorem dadeSupport_eq_tildeA1_of_notation_8_14
 private theorem supportedOn_dadeTransform_of_CFon_subset
     {G : Type u} [Group G]
     {A A1 : Set G} {L : Subgroup G} {R : G → Subgroup G}
-    (hA1A : A1 ⊆ A)
+    (_hA1A : A1 ⊆ A)
     (hAL : ∀ a : G, a ∈ A → a ∈ L)
     {alpha : Section1.ClassFunction L}
     (halpha : Section2.CFOn L A1 alpha) :
@@ -304,8 +304,8 @@ public theorem not_conj_of_hypothesis_12_8_12_9_typeI
     letI : Fact p.Prime := ⟨hp⟩
     rcases hP0 with ⟨P, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hp_dvd_P0 : p ∣ Nat.card P0 := by
     letI : Fact p.Prime := ⟨hp⟩
     rcases hpP0.exists_card_eq with ⟨n, hn⟩
@@ -328,7 +328,10 @@ public theorem not_conj_of_hypothesis_12_8_12_9_typeI
     have hnot := theorem_12_9_prime_not_mem_subgroupPrimeSet_of_quotient_noncyclic
       M K p hp hKMF hquot
     intro hpK
-    exact hnot (by simpa [subgroupPrimeSet] using hpK)
+    apply hnot
+    dsimp [subgroupPrimeSet]
+    apply Set.mem_setOf.mpr
+    exact hpK
   rintro ⟨g, _hg, hML⟩
   have hKconjMF : section16MFSubgroup L (K.conjBy g) := by
     rw [hML]
@@ -471,15 +474,16 @@ private theorem theorem_12_14_value_eq_projection
     apply (centralizer_le_normalizer (Subgroup.zpowers x))
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
-    let xZ : Subgroup.zpowers x := ⟨x, Subgroup.mem_zpowers x⟩
-    let yZ : Subgroup.zpowers x := ⟨y, hy⟩
-    exact (congrArg Subtype.val (mul_comm xZ yZ)).symm
+    have : y * x = x * y := by
+      rcases Subgroup.mem_zpowers_iff.mp hy with ⟨k, rfl⟩
+      exact ((Commute.refl (x : G)).zpow_right k).symm
+    exact this
   have hP0p : IsPGroup p P0 := by
     letI : Fact p.Prime := ⟨hp⟩
     rcases hP0Sylow with ⟨PM, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   have hxK : x ∉ K := by
     intro hxK
     letI : Fact p.Prime := ⟨hp⟩
@@ -497,7 +501,10 @@ private theorem theorem_12_14_value_eq_projection
     have hpCardK : p ∣ Nat.card K := by
       rw [← hxorder]
       exact Subgroup.orderOf_dvd_natCard K hxK
-    exact hpK (by simpa [subgroupPrimeSet] using hpCardK)
+    apply hpK
+    dsimp [subgroupPrimeSet]
+    apply Set.mem_setOf.mpr
+    exact hpCardK
   have hinputM : theorem_12_4_dade_induction_lemma_source_inputs M K SM RM tauM := by
     intro _hhyp
     exact ⟨inferInstance, hMsM, _, _, _, _, hnotM⟩
@@ -649,7 +656,7 @@ private theorem theorem_12_14_projection_eq_character
   have hPrincipalR : Section1.scalarProduct G principal r = 0 := by
     have hswap := Section1.scalarProduct_star_swap (G := G) principal r
     have hstarzero : star (Section1.scalarProduct G r principal) = 0 := by
-      simpa [principal, hrp]
+      simp [principal, hrp]
     exact hswap.symm.trans hstarzero
   have hcomponentR : Section1.scalarProduct G component r = 0 := by
     dsimp [component, principal, gamma, W]
@@ -717,8 +724,8 @@ private theorem theorem_12_14_projection_eq_character
     letI : Fact p.Prime := ⟨hp⟩
     rcases hP0Sylow with ⟨PM, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
   have hP1card : Nat.card P1 = p ^ 2 := by
     letI : Fact p.Prime := ⟨hp⟩
@@ -824,7 +831,11 @@ private theorem theorem_12_14_projection_eq_character
         ((Nat.card H : ℝ) - 1) * (a : ℝ)^2 -
             2 * (e : ℝ) * (a : ℝ) ≤
           (e : ℝ) * ((e : ℝ) - 1) := by
-      convert hscaled using 1 <;> field_simp [heR.ne'] <;> ring
+      have htemp : (e : ℝ) * ((((Nat.card H : ℝ) - 1) / (e : ℝ)) * (a : ℝ)^2 - 2 * (a : ℝ)) =
+          ((Nat.card H : ℝ) - 1) * (a : ℝ)^2 - 2 * (e : ℝ) * (a : ℝ) := by
+        field_simp [heR.ne']
+      rw [htemp] at hscaled
+      exact hscaled
     by_contra haNe
     have haCases : (a : ℝ) ≤ -1 ∨ 1 ≤ (a : ℝ) := by
       have : a ≤ -1 ∨ 1 ≤ a := by omega
@@ -889,7 +900,7 @@ private theorem theorem_12_14_projection_eq_character
             eta (Fin.succ i) ⟨x, hxL⟩) = chi ⟨x, hxL⟩ := by
     rw [Finset.sum_eq_single izeta]
     · rw [hc izeta, hizeta]
-      simp [hibetazeta.symm, haZero, hchiNorm]
+      simp [hibetazeta.symm, hchiNorm]
     · intro i _hi hine
       rw [hc i]
       simp [hine, haZero]

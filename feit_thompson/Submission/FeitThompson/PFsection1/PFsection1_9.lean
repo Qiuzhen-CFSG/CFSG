@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.Representation.CharacterValues
+public import FeitThompson.Representation.CharacterValues
 public import Mathlib.Algebra.MvPolynomial.Equiv
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
@@ -72,7 +72,8 @@ private theorem complex_galois_aut_pow_on_roots_aux
   have hmap_const (y : F) :
       (MvPolynomial.mapAlgEquiv (σ := s) (R := ℚ) σF) (MvPolynomial.C y) =
         MvPolynomial.C (σF y) := by
-    simp [MvPolynomial.mapAlgEquiv]
+    rw [MvPolynomial.mapAlgEquiv_apply, MvPolynomial.map_C]
+    rfl
   let baseAut : B ≃+* B :=
     (ae.symm.toRingEquiv.trans
       (MvPolynomial.mapAlgEquiv (σ := s) (R := ℚ) σF).toRingEquiv).trans
@@ -111,7 +112,11 @@ private theorem complex_galois_aut_pow_on_roots_aux
     letI : IsAlgClosure B ℂ := hclosure
     have hB := IsAlgClosure.equivOfEquiv_algebraMap (L := ℂ) (M := ℂ)
       baseAlgAut.toRingEquiv (algebraMap F B y)
-    simpa [τ, τR, baseAlgAut, hbaseAlg_const y] using hB
+    change (IsAlgClosure.equivOfEquiv ℂ ℂ baseAlgAut.toRingEquiv)
+        (algebraMap B ℂ (algebraMap F B y)) =
+      algebraMap B ℂ (baseAlgAut (algebraMap F B y)) at hB
+    rw [hbaseAlg_const y] at hB
+    simpa [τ, τR, baseAlgAut] using hB
   refine ⟨τ, ?_⟩
   intro z hz
   have hzFmem : z ∈ F := by
@@ -216,7 +221,11 @@ public instance cyclotomicLeftSubfield_isCyclotomicExtension {a b : ℕ} (hn : a
   have hpos : 0 < a * b := Nat.pos_of_ne_zero hn
   have hζa : IsPrimitiveRoot (cyclotomicABRoot a b hn ^ b) a :=
     hζ.pow hpos (a := b) (b := a) (by rw [mul_comm])
-  simpa [cyclotomicLeftSubfield] using hζa.intermediateField_adjoin_isCyclotomicExtension ℚ
+  change IsCyclotomicExtension {a} ℚ (cyclotomicLeftSubfield a b hn).toSubalgebra
+  rw [cyclotomicLeftSubfield,
+    IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
+      (Algebra.IsAlgebraic.isAlgebraic (cyclotomicABRoot a b hn ^ b))]
+  exact hζa.adjoin_isCyclotomicExtension ℚ
 
 public instance cyclotomicRightSubfield_isCyclotomicExtension {a b : ℕ} (hn : a * b ≠ 0) :
     IsCyclotomicExtension {b} ℚ (cyclotomicRightSubfield a b hn) := by
@@ -228,7 +237,11 @@ public instance cyclotomicRightSubfield_isCyclotomicExtension {a b : ℕ} (hn : 
   have hpos : 0 < a * b := Nat.pos_of_ne_zero hn
   have hζb : IsPrimitiveRoot (cyclotomicABRoot a b hn ^ a) b :=
     hζ.pow hpos (a := a) (b := b) rfl
-  simpa [cyclotomicRightSubfield] using hζb.intermediateField_adjoin_isCyclotomicExtension ℚ
+  change IsCyclotomicExtension {b} ℚ (cyclotomicRightSubfield a b hn).toSubalgebra
+  rw [cyclotomicRightSubfield,
+    IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
+      (Algebra.IsAlgebraic.isAlgebraic (cyclotomicABRoot a b hn ^ a))]
+  exact hζb.adjoin_isCyclotomicExtension ℚ
 
 public instance cyclotomicLeftSubfield_normal {a b : ℕ} (hn : a * b ≠ 0) :
     Normal ℚ (cyclotomicLeftSubfield a b hn) := by

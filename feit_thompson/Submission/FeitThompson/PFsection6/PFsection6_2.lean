@@ -1,12 +1,13 @@
 module
 
-public import Submission.FeitThompson.PFsection6.PFsection6_1
-import Submission.FeitThompson.PFsection1.PFsection1_8
-import Submission.FeitThompson.PFsection5.PFsection5_6
-import Submission.FeitThompson.Representation.DegreeBounds
+public import FeitThompson.PFsection6.PFsection6_1
+import FeitThompson.PFsection1.PFsection1_8
+import FeitThompson.PFsection5.PFsection5_6
+import FeitThompson.Representation.DegreeBounds
 
 noncomputable section
 open scoped Classical
+open scoped commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -90,7 +91,11 @@ public theorem theorem_6_2_pf56_numeric_obstruction
     have hnew := Section5.theorem_5_6 S T R hsetup h52a h52b h52c h52d h52e
       S1 hS1sub hS1closed X hXbarNotin X1 (by simpa [coherentFamily] using hcoh)
       ⟨d1, dX, hd1, hdX, hdvd, dS1, hdS1, hlt⟩
-    convert hnew
+    change Section5.definition_5_1_statement Section5.puncturedSet
+      (S1 ∪ ({(X : Section1.ClassFunction L),
+        Section1.conjugateCharacter (X : Section1.ClassFunction L)} :
+          Finset (Section1.ClassFunction L))) T
+    exact hnew
   exact not_lt.mp hnot_lt
 
 public theorem theorem_6_2_obstruction_data
@@ -104,7 +109,7 @@ public theorem theorem_6_2_obstruction_data
     (hSB : inducedKernelFamily K B SB)
     (hAnorm : A.Normal)
     (hAltK : A < K)
-    (hcent : centralQuotientHypothesis K B C D)
+    (_hcent : centralQuotientHypothesis K B C D)
     (hcohSA : coherentFamily SA T)
     (hSBne : SB.Nonempty)
     (hnotSB : ¬ coherentFamily SB T) :
@@ -609,7 +614,8 @@ public theorem theorem_6_2_pf15_degree_lower
     rcases QuotientGroup.mk'_surjective (A.subgroupOf K) qq with ⟨k, rfl⟩
     change (ρQ i.1).character (QuotientGroup.mk' (A.subgroupOf K) k) = 1
     have hval := congrFun hprin k
-    simpa [θ, ρK, q, Section1.principalCharacter] using hval
+    change (ρQ i.1).character (QuotientGroup.mk' (A.subgroupOf K) k) = 1 at hval
+    exact hval
   let Y : I → Section1.ClassFunction L := fun i => Section1.inducedCF K (θ i.1)
   have hYdef : ∀ i : I, Y i = Section1.inducedCF K (θ i.1) := by
     intro i
@@ -662,7 +668,9 @@ public theorem theorem_6_2_pf15_degree_lower
     change (ρQ i.1).character (QuotientGroup.mk' (A.subgroupOf K) k) =
       (ρQ j.1).character (QuotientGroup.mk' (A.subgroupOf K) k)
     have hval := congrFun hθeq k
-    simpa [θ, ρK, q] using hval
+    change (ρQ i.1).character (QuotientGroup.mk' (A.subgroupOf K) k) =
+      (ρQ j.1).character (QuotientGroup.mk' (A.subgroupOf K) k) at hval
+    exact hval
   have hconjS1 : ∀ i j : I, YS1 j = YS1 i →
       ∃ o : Section1.conjugateOrbitIndex K (θ i.1),
         θ j.1 = Section1.conjugateOrbitConj K (θ i.1) o := by
@@ -671,7 +679,7 @@ public theorem theorem_6_2_pf15_degree_lower
       have h := congrArg (fun Y : S1 => (Y : Section1.ClassFunction L)) hYS
       simpa [hYS1coe] using h
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hnot : ∀ o : Section1.conjugateOrbitIndex K (θ i.1),
         θ j.1 ≠ Section1.conjugateOrbitConj K (θ i.1) o := hnone
     have horth := Section1.proposition_1_5_c_nonconjugate_rep_orbit_relIndex_canonical

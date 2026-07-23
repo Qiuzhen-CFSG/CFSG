@@ -4,7 +4,7 @@ Authors: Yusen Tang
 
 module
 
-public import Submission.FeitThompson.Representation.RepMap
+public import FeitThompson.Representation.RepMap
 
 open Function
 
@@ -459,3 +459,4 @@ public noncomputable def toRepresentationEquiv
     (e : ρ ≃ₗ σ) : Representation.Equiv ρ σ :=
   Representation.Equiv.mk e.toLinearEquiv e.isIntertwining'
 end RepEquiv
+

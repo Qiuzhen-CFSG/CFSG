@@ -1,10 +1,10 @@
 module
 
-public import Submission.FeitThompson.BGsection3.Remaining
-public import Submission.FeitThompson.BGsection12.lemma_12_1_a
-public import Submission.FeitThompson.ElementaryAbelian
-public import Submission.FeitThompson.GroupAction.Defs
-public import Submission.FeitThompson.Wielandt.MatrixTrace
+public import FeitThompson.BGsection3.Remaining
+public import FeitThompson.BGsection12.lemma_12_1_a
+public import FeitThompson.ElementaryAbelian
+public import FeitThompson.GroupAction.Defs
+public import FeitThompson.Wielandt.MatrixTrace
 
 /-!
 # Fixed-point product infrastructure for Wielandt
@@ -16,6 +16,8 @@ ladder remains in `FeitThompson.Wielandt`.
 -/
 
 noncomputable section
+
+open scoped IsMulCommutative
 
 namespace Wielandt
 
@@ -660,7 +662,8 @@ public noncomputable def fixedPointSubgroup_conj_complement_equiv
         show (eUE : UE) ∈ E.subgroupOf UE
         exact he0E⟩
     have hxUE : (eUE : UE) • x.1 = x.1 := by
-      simpa using hx
+      change (eUE : UE) • (x.1 : M) = x.1 at hx
+      exact hx
     have heUE_eq :
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) = uUE * eUE * uUE⁻¹ := by
@@ -820,14 +823,15 @@ public theorem fixedSubspace_subgroupOf_top_eq
         (⊤ : Subgroup R) =
       (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace R := by
   classical
+  letI : MulDistribMulAction (↥R) M := MulDistribMulAction.compHom M R.subtype
   ext x
   rw [Representation.fixedSubspace, Representation.mem_invariants]
   rw [Representation.fixedSubspace, Representation.mem_invariants]
   constructor
   · intro hx r
-    simpa using hx ⟨r, by simp⟩
+    simpa [MulAction.compHom_smul_def] using hx ⟨r, by simp⟩
   · intro hx r
-    simpa using hx r.1
+    simpa [MulAction.compHom_smul_def] using hx r.1
 
 /-- A nontrivial solvable group with no proper nontrivial normal invariant
 subgroups for the actor action is elementary abelian. -/
@@ -868,6 +872,7 @@ public theorem chiefFactor_elementaryAbelian_of_nontrivial
       htop_le_cent trivial
     exact ((Subgroup.mem_centralizer_iff.mp ha_cent) b trivial).symm
   letI : IsMulCommutative M := hcommM
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   have hnilM : Group.IsNilpotent M := by
     refine ⟨1, ?_⟩
     have hcenter : Subgroup.center M = ⊤ := by
@@ -879,7 +884,7 @@ public theorem chiefFactor_elementaryAbelian_of_nontrivial
         rw [Subgroup.mem_center_iff]
         intro y
         simpa using (IsMulCommutative.is_comm (M := M)).comm y x
-    simpa [upperCentralSeries_one] using hcenter
+    simpa [Subgroup.upperCentralSeries_one] using hcenter
   have hM_card_gt_one : 1 < Nat.card M :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
   obtain ⟨p, hp_prime, hp_dvd_cardM⟩ :=
@@ -1241,8 +1246,8 @@ public theorem isInvariant_subgroup_actor_of_isInvariant
   letI : MulDistribMulAction A V := MulDistribMulAction.compHom V A.subtype
   refine ⟨?_⟩
   intro a v
-  simpa [MulAction.compHom_smul_def] using
-    (IsInvariant.invariant (A := G) (G := V) (H := N) (a : G) v)
+  change v ∈ N ↔ (a : G) • v ∈ N
+  exact IsInvariant.invariant (A := G) (G := V) (H := N) (a : G) v
 
 /-- The coefficient-product quotient lift in the form used by induction on a
 fully invariant normal subgroup. -/
@@ -1382,7 +1387,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_minimal_inv
     by_cases hminv :
         ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤
     · exact hminimal hcopM hsolvM hminv hcoeff
-    · push_neg at hminv
+    · push Not at hminv
       rcases hminv with ⟨N, hNnormal, hNinv, hNne_bot, hNne_top⟩
       letI : N.Normal := hNnormal
       letI : IsInvariant G M N := hNinv
@@ -1652,20 +1657,36 @@ public noncomputable def fixedPointSubgroup_fixedSubspaceEquiv
     {A M : Type u} [Group A] [Group M]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M]
     (H : Subgroup A) :
-    ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace H) ≃
+    letI : CommGroup M := IsMulCommutative.instCommGroup
+    ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+      Representation (ZMod p) A (Additive M)).fixedSubspace H) ≃
       Additive ↥(fixedPointSubgroup (↥H) M) := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   refine
     { toFun := fun x =>
         Additive.ofMul ⟨Additive.toMul x.1, by
           rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
           intro h
           exact Additive.ofMul.injective (by
-            simpa using x.2 h)⟩
+            change Additive.ofMul ((h : A) • Additive.toMul x.1) = x.1
+            have hx := x.2 h
+            change
+              (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+                Representation (ZMod p) A (Additive M)) (h : A) x.1 = x.1 at hx
+            rw [Representation.ofElementaryAbelianAction_apply] at hx
+            exact hx)⟩
       invFun := fun y =>
         ⟨Additive.ofMul ((Additive.toMul y : ↥(fixedPointSubgroup (↥H) M)) : M), by
           intro h
-          have hy := (Additive.toMul y).2 h
-          simpa using congrArg Additive.ofMul hy⟩
+          let yH : fixedPointSubgroup (↥H) M := Additive.toMul y
+          have hy := yH.2 h
+          change (h : A) • (yH : M) = (yH : M) at hy
+          change
+            (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+              Representation (ZMod p) A (Additive M)) (h : A) (Additive.ofMul (yH : M)) =
+                Additive.ofMul (yH : M)
+          rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+          exact congrArg Additive.ofMul hy⟩
       left_inv := by
         intro x
         ext
@@ -1680,11 +1701,14 @@ subspace dimension of the associated elementary-abelian representation. -/
 public theorem fixedPointSubgroup_card_eq_prime_pow_finrank
     {A M : Type u} [Group A] [Group M] [Finite M]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M] :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Nat.card (fixedPointSubgroup A M) =
       p ^ Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   let ρ := Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)
   have h_equiv : ↥(ρ.fixedSubspace (⊤ : Subgroup A)) ≃
       Additive ↥(fixedPointSubgroup (↥(⊤ : Subgroup A)) M) :=
@@ -1697,7 +1721,8 @@ public theorem fixedPointSubgroup_card_eq_prime_pow_finrank
     · intro hx a
       exact hx ⟨a, by simp⟩
     · intro hx a
-      simpa using hx (a : A)
+      change (a : A) • x = x
+      exact hx (a : A)
   have h_add_card : Nat.card (Additive ↥(fixedPointSubgroup (↥(⊤ : Subgroup A)) M)) =
       Nat.card (fixedPointSubgroup A M) := by
     calc
@@ -1727,9 +1752,12 @@ public theorem fixedSubspace_finrank_eq_of_fixedPointSubgroup_card_eq
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M]
     (n : ℕ)
     (hcard : Nat.card (fixedPointSubgroup A M) = p ^ n) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) = n := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   apply Nat.pow_right_injective (Fact.out : Nat.Prime p).one_lt
   have hfixed :=
     fixedPointSubgroup_card_eq_prime_pow_finrank
@@ -1742,9 +1770,12 @@ public theorem fixedSubspace_finrank_eq_zero_of_fixedPointSubgroup_eq_bot
     {A M : Type u} [Group A] [Group M] [Finite M]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M]
     (hfix : fixedPointSubgroup A M = ⊥) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) = 0 := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   apply fixedSubspace_finrank_eq_of_fixedPointSubgroup_card_eq
   simp [hfix]
 
@@ -1754,15 +1785,21 @@ public theorem fixedSubspace_finrank_eq_full_of_fixedPointSubgroup_eq_top
     {A M : Type u} [Group A] [Group M] [Finite M]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M]
     (hfix : fixedPointSubgroup A M = ⊤) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) =
       Module.finrank (ZMod p) (Additive M) := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   apply fixedSubspace_finrank_eq_of_fixedPointSubgroup_card_eq
   have hnat := Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive M)
   have hMcard :
       Nat.card M = p ^ Module.finrank (ZMod p) (Additive M) := by
-    simpa [Nat.card_eq_fintype_card, ZMod.card] using hnat
+    calc
+      Nat.card M = Nat.card (Additive M) := (Nat.card_congr Additive.toMul).symm
+      _ = p ^ Module.finrank (ZMod p) (Additive M) := by
+        simpa [ZMod.card] using hnat
   rw [hfix]
   simp [hMcard]
 
@@ -1774,23 +1811,29 @@ public theorem fixedSubspace_finrank_eq_of_fixedPointSubgroup_nat_card_eq
     [MulDistribMulAction A M] [MulDistribMulAction B M]
     (hcard : Nat.card (fixedPointSubgroup A M) =
       Nat.card (fixedPointSubgroup B M)) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) =
       Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := B) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := B) (G := M) (p := p) :
+          Representation (ZMod p) B (Additive M)).fixedSubspace
           (⊤ : Subgroup B)) := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   apply Nat.pow_right_injective (Fact.out : Nat.Prime p).one_lt
   calc
     p ^ Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+          Representation (ZMod p) A (Additive M)).fixedSubspace
           (⊤ : Subgroup A)) =
         Nat.card (fixedPointSubgroup A M) := by
           exact (fixedPointSubgroup_card_eq_prime_pow_finrank
             (A := A) (M := M) (p := p)).symm
     _ = Nat.card (fixedPointSubgroup B M) := hcard
     _ = p ^ Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := B) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := B) (G := M) (p := p) :
+          Representation (ZMod p) B (Additive M)).fixedSubspace
           (⊤ : Subgroup B)) := by
           exact fixedPointSubgroup_card_eq_prime_pow_finrank
             (A := B) (M := M) (p := p)
@@ -1802,23 +1845,31 @@ public theorem full_finrank_eq_fixedSubspace_finrank_mul_of_fixedPoint_card_pow
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [MulDistribMulAction A M]
     (n : ℕ)
     (hcard : Nat.card M = Nat.card (fixedPointSubgroup A M) ^ n) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     Module.finrank (ZMod p) (Additive M) =
       Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            Representation (ZMod p) A (Additive M)).fixedSubspace
             (⊤ : Subgroup A)) * n := by
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   apply Nat.pow_right_injective (Fact.out : Nat.Prime p).one_lt
   calc
     p ^ Module.finrank (ZMod p) (Additive M) = Nat.card M := by
       have hnat := Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive M)
-      simpa [Nat.card_eq_fintype_card, ZMod.card] using hnat.symm
+      calc
+        p ^ Module.finrank (ZMod p) (Additive M) = Nat.card (Additive M) := by
+          simpa [ZMod.card] using hnat.symm
+        _ = Nat.card M := Nat.card_congr Additive.toMul
     _ = Nat.card (fixedPointSubgroup A M) ^ n := hcard
     _ = (p ^ Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            Representation (ZMod p) A (Additive M)).fixedSubspace
             (⊤ : Subgroup A))) ^ n := by
           rw [fixedPointSubgroup_card_eq_prime_pow_finrank
             (A := A) (M := M) (p := p)]
     _ = p ^ (Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p) :
+            Representation (ZMod p) A (Additive M)).fixedSubspace
             (⊤ : Subgroup A)) * n) := by
           rw [pow_mul]
 
@@ -1840,35 +1891,43 @@ public theorem fixedSubspace_finrank_identity_kernel_fixed_top
           UE) • m)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
     (hUtop : fixedPointSubgroup (↥U) M = ⊤) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : Fintype U := Fintype.ofFinite U
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+          Representation (ZMod p) UE (Additive M)).fixedSubspace
           (⊤ : Subgroup UE)) * Nat.card UE +
       Module.finrank (ZMod p) (Additive M) * Nat.card U =
     (∑ u : U,
       letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
       Module.finrank (ZMod p)
           ↥((Representation.ofElementaryAbelianAction
-              (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+              (A := E.conjBy (u : G)) (G := M) (p := p) :
+            Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
             (⊤ : Subgroup (E.conjBy (u : G)))) *
         Nat.card (E.conjBy (u : G))) +
         Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+            Representation (ZMod p) U (Additive M)).fixedSubspace
             (⊤ : Subgroup U)) * Nat.card U := by
     classical
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : Fintype U := Fintype.ofFinite U
     let rUE : ℕ := Module.finrank (ZMod p)
-      ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+      ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+        Representation (ZMod p) UE (Additive M)).fixedSubspace
         (⊤ : Subgroup UE))
     let rM : ℕ := Module.finrank (ZMod p) (Additive M)
     let rU : ℕ := Module.finrank (ZMod p)
-      ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+      ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+        Representation (ZMod p) U (Additive M)).fixedSubspace
         (⊤ : Subgroup U))
     let rE : U → ℕ := fun u =>
       letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
       Module.finrank (ZMod p)
         ↥((Representation.ofElementaryAbelianAction
-            (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+            (A := E.conjBy (u : G)) (G := M) (p := p) :
+          Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
           (⊤ : Subgroup (E.conjBy (u : G))))
     have hUrank : rU = rM := by
       simpa [rU, rM] using
@@ -1927,15 +1986,18 @@ public theorem fixedSubspace_complement_finrank_identity_of_card_identity
         MulDistribMulAction.compHom M (E.subgroupOf UE).subtype
       Nat.card M =
         Nat.card (fixedPointSubgroup (↥(E.subgroupOf UE)) M) ^ Nat.card E) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : MulDistribMulAction (↥(E.subgroupOf UE)) M :=
       MulDistribMulAction.compHom M (E.subgroupOf UE).subtype
     Module.finrank (ZMod p) (Additive M) =
       Module.finrank (ZMod p)
           ↥((Representation.ofElementaryAbelianAction
-            (A := E.subgroupOf UE) (G := M) (p := p)).fixedSubspace
+            (A := E.subgroupOf UE) (G := M) (p := p) :
+              Representation (ZMod p) (E.subgroupOf UE) (Additive M)).fixedSubspace
           (⊤ : Subgroup (E.subgroupOf UE))) *
         Nat.card E := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   letI : MulDistribMulAction (↥(E.subgroupOf UE)) M :=
     MulDistribMulAction.compHom M (E.subgroupOf UE).subtype
   exact
@@ -1957,37 +2019,44 @@ public theorem fixedSubspace_finrank_identity_kernel_fixed_bot_reduced_of_comple
           UE) • m)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
     (hbase :
+      letI : CommGroup M := IsMulCommutative.instCommGroup
       letI : MulDistribMulAction (↥(E.subgroupOf UE)) M :=
         MulDistribMulAction.compHom M (E.subgroupOf UE).subtype
       Module.finrank (ZMod p) (Additive M) =
         Module.finrank (ZMod p)
-            ↥((Representation.ofElementaryAbelianAction
-              (A := E.subgroupOf UE) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction
+              (A := E.subgroupOf UE) (G := M) (p := p) :
+                Representation (ZMod p) (E.subgroupOf UE) (Additive M)).fixedSubspace
             (⊤ : Subgroup (E.subgroupOf UE))) *
           Nat.card E) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : Fintype U := Fintype.ofFinite U
     Module.finrank (ZMod p) (Additive M) * Nat.card U =
     ∑ u : U,
       letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
       Module.finrank (ZMod p)
           ↥((Representation.ofElementaryAbelianAction
-              (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+              (A := E.conjBy (u : G)) (G := M) (p := p) :
+                Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
             (⊤ : Subgroup (E.conjBy (u : G)))) *
         Nat.card (E.conjBy (u : G)) := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   letI : Fintype U := Fintype.ofFinite U
   letI : MulDistribMulAction (↥(E.subgroupOf UE)) M :=
     MulDistribMulAction.compHom M (E.subgroupOf UE).subtype
   let rM : ℕ := Module.finrank (ZMod p) (Additive M)
   let rE0 : ℕ := Module.finrank (ZMod p)
     ↥((Representation.ofElementaryAbelianAction
-        (A := E.subgroupOf UE) (G := M) (p := p)).fixedSubspace
+        (A := E.subgroupOf UE) (G := M) (p := p) :
+          Representation (ZMod p) (E.subgroupOf UE) (Additive M)).fixedSubspace
       (⊤ : Subgroup (E.subgroupOf UE)))
   let rE : U → ℕ := fun u =>
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
     Module.finrank (ZMod p)
       ↥((Representation.ofElementaryAbelianAction
-          (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+          (A := E.conjBy (u : G)) (G := M) (p := p) :
+            Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
         (⊤ : Subgroup (E.conjBy (u : G))))
   have hbase' : rM = rE0 * Nat.card E := by
     simpa [rM, rE0] using hbase
@@ -2047,31 +2116,38 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant_of_kernel_fixed_
     (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤)
     (hbotRank :
       fixedPointSubgroup (↥U) M = ⊥ →
+        letI : CommGroup M := IsMulCommutative.instCommGroup
         letI : Fintype U := Fintype.ofFinite U
         Module.finrank (ZMod p) (Additive M) * Nat.card U =
         ∑ u : U,
           letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
           Module.finrank (ZMod p)
               ↥((Representation.ofElementaryAbelianAction
-                  (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+                  (A := E.conjBy (u : G)) (G := M) (p := p) :
+                    Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
                 (⊤ : Subgroup (E.conjBy (u : G)))) *
             Nat.card (E.conjBy (u : G))) :
+    letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : Fintype U := Fintype.ofFinite U
     Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+          Representation (ZMod p) UE (Additive M)).fixedSubspace
           (⊤ : Subgroup UE)) * Nat.card UE +
       Module.finrank (ZMod p) (Additive M) * Nat.card U =
     (∑ u : U,
       letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
       Module.finrank (ZMod p)
           ↥((Representation.ofElementaryAbelianAction
-              (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+              (A := E.conjBy (u : G)) (G := M) (p := p) :
+                Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
             (⊤ : Subgroup (E.conjBy (u : G)))) *
         Nat.card (E.conjBy (u : G))) +
       Module.finrank (ZMod p)
-        ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+        ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+          Representation (ZMod p) U (Additive M)).fixedSubspace
           (⊤ : Subgroup U)) * Nat.card U := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   letI : Fintype U := Fintype.ofFinite U
   have hUnorm : (U.subgroupOf UE).Normal := by
     have hUnormSup : (U.subgroupOf (U ⊔ E)).Normal :=
@@ -2093,7 +2169,8 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant_of_kernel_fixed_
   by_cases hUbot : fixedPointSubgroup (↥U) M = ⊥
   · have hUrank :
         Module.finrank (ZMod p)
-            ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+            ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+              Representation (ZMod p) U (Additive M)).fixedSubspace
               (⊤ : Subgroup U)) = 0 := by
       simpa using
         (fixedSubspace_finrank_eq_zero_of_fixedPointSubgroup_eq_bot
@@ -2103,7 +2180,8 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant_of_kernel_fixed_
         (UE := UE) (U := U) hcomp.1 hUcompat hUbot
     have hUErank :
         Module.finrank (ZMod p)
-            ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+            ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+              Representation (ZMod p) UE (Additive M)).fixedSubspace
               (⊤ : Subgroup UE)) = 0 := by
       simpa using
         (fixedSubspace_finrank_eq_zero_of_fixedPointSubgroup_eq_bot
@@ -2151,20 +2229,24 @@ public theorem fixedPointSubgroup_product_identity_action_elementaryAbelian_of_f
     (hEact : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) M)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
     (hrank :
+      letI : CommGroup M := IsMulCommutative.instCommGroup
       letI : Fintype U := Fintype.ofFinite U
       Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+            Representation (ZMod p) UE (Additive M)).fixedSubspace
             (⊤ : Subgroup UE)) * Nat.card UE +
         Module.finrank (ZMod p) (Additive M) * Nat.card U =
       (∑ u : U,
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
         Module.finrank (ZMod p)
             ↥((Representation.ofElementaryAbelianAction
-                (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+                (A := E.conjBy (u : G)) (G := M) (p := p) :
+                  Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
               (⊤ : Subgroup (E.conjBy (u : G)))) *
           Nat.card (E.conjBy (u : G))) +
         Module.finrank (ZMod p)
-          ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+          ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+            Representation (ZMod p) U (Additive M)).fixedSubspace
             (⊤ : Subgroup U)) * Nat.card U) :
     letI : Fintype U := Fintype.ofFinite U
     Nat.card (fixedPointSubgroup (↥UE) M) ^ Nat.card UE *
@@ -2172,19 +2254,23 @@ public theorem fixedPointSubgroup_product_identity_action_elementaryAbelian_of_f
       fixedPointSubgroup_conjBy_action_product U E hEact *
         Nat.card (fixedPointSubgroup (↥U) M) ^ Nat.card U := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   letI : Fintype U := Fintype.ofFinite U
   let rUE : ℕ := Module.finrank (ZMod p)
-    ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p)).fixedSubspace
+    ↥((Representation.ofElementaryAbelianAction (A := UE) (G := M) (p := p) :
+      Representation (ZMod p) UE (Additive M)).fixedSubspace
       (⊤ : Subgroup UE))
   let rM : ℕ := Module.finrank (ZMod p) (Additive M)
   let rU : ℕ := Module.finrank (ZMod p)
-    ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p)).fixedSubspace
+    ↥((Representation.ofElementaryAbelianAction (A := U) (G := M) (p := p) :
+      Representation (ZMod p) U (Additive M)).fixedSubspace
       (⊤ : Subgroup U))
   let rE : U → ℕ := fun u =>
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
     Module.finrank (ZMod p)
       ↥((Representation.ofElementaryAbelianAction
-          (A := E.conjBy (u : G)) (G := M) (p := p)).fixedSubspace
+          (A := E.conjBy (u : G)) (G := M) (p := p) :
+            Representation (ZMod p) (E.conjBy (u : G)) (Additive M)).fixedSubspace
         (⊤ : Subgroup (E.conjBy (u : G))))
   have hUEcard : Nat.card (fixedPointSubgroup (↥UE) M) = p ^ rUE := by
     simpa [rUE] using
@@ -2192,7 +2278,9 @@ public theorem fixedPointSubgroup_product_identity_action_elementaryAbelian_of_f
         (A := UE) (M := M) (p := p))
   have hMcard : Nat.card M = p ^ rM := by
     have hnat := Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive M)
-    simpa [rM, Nat.card_eq_fintype_card, ZMod.card] using hnat
+    calc
+      Nat.card M = Nat.card (Additive M) := (Nat.card_congr Additive.toMul).symm
+      _ = p ^ rM := by simpa [rM, ZMod.card] using hnat
   have hUcard : Nat.card (fixedPointSubgroup (↥U) M) = p ^ rU := by
     simpa [rU] using
       (fixedPointSubgroup_card_eq_prime_pow_finrank
@@ -2502,7 +2590,7 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
     by_cases hminv :
         ∀ N : Subgroup M', N.Normal → IsInvariant UE M' N → N ≠ ⊥ → N = ⊤
     · exact hchief M' hEact' hsolvM' hcop' hUcompat' hEcompat' hminv
-    · push_neg at hminv
+    · push Not at hminv
       rcases hminv with ⟨N, hNnormal, hNinv, hNne_bot, hNne_top⟩
       letI : N.Normal := hNnormal
       letI : IsInvariant UE M' N := hNinv
@@ -2571,12 +2659,12 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
         intro m
         calc
           u • ((m : M') : M' ⧸ N) = ((u • m : M') : M' ⧸ N) := by
-            exact MulAction.Quotient.smul_coe (β := U) (H := N) (b := u) (a := m)
+            exact MulAction.Quotient.smul_coe (X := U) (H := N) (b := u) (g := m)
           _ = (((⟨(u : G), hcomp.1 u.2⟩ : UE) • m : M') : M' ⧸ N) := by
             rw [hUcompat' u m]
           _ = (⟨(u : G), hcomp.1 u.2⟩ : UE) • ((m : M') : M' ⧸ N) := by
-            exact (MulAction.Quotient.smul_coe (β := UE) (H := N)
-              (b := (⟨(u : G), hcomp.1 u.2⟩ : UE)) (a := m)).symm
+            exact (MulAction.Quotient.smul_coe (X := UE) (H := N)
+              (b := (⟨(u : G), hcomp.1 u.2⟩ : UE)) (g := m)).symm
       have hEcompatQ : ∀ (u : U) (e : E.conjBy (u : G)) (q : M' ⧸ N),
           letI : MulDistribMulAction (↥(E.conjBy (u : G))) (M' ⧸ N) := hEactQ u
           e • q =
@@ -2591,7 +2679,7 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
         calc
           e • ((m : M') : M' ⧸ N) = ((e • m : M') : M' ⧸ N) := by
             exact MulAction.Quotient.smul_coe
-              (β := E.conjBy (u : G)) (H := N) (b := e) (a := m)
+              (X := E.conjBy (u : G)) (H := N) (b := e) (g := m)
           _ = (((⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
                 UE) • m : M') : M' ⧸ N) := by
@@ -2599,10 +2687,10 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
           _ = (⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
                 UE) • ((m : M') : M' ⧸ N) := by
-            exact (MulAction.Quotient.smul_coe (β := UE) (H := N)
+            exact (MulAction.Quotient.smul_coe (X := UE) (H := N)
               (b := (⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ : UE))
-              (a := m)).symm
+              (g := m)).symm
       have hNid :
           letI : Fintype U := Fintype.ofFinite U
           Nat.card (fixedPointSubgroup (↥UE) N) ^ Nat.card UE *
@@ -2661,12 +2749,14 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_elementaryAbel
     (m n : ι → ℕ)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hrank :
+      letI : CommGroup V := IsMulCommutative.instCommGroup
       (∑ i : ι,
         letI : MulDistribMulAction (↥(A i)) V :=
           MulDistribMulAction.compHom V (A i).subtype
         Module.finrank (ZMod p)
             ↥((Representation.ofElementaryAbelianAction
-                (A := ↥(A i)) (G := V) (p := p)).fixedSubspace
+                (A := ↥(A i)) (G := V) (p := p) :
+                  Representation (ZMod p) (↥(A i)) (Additive V)).fixedSubspace
               (⊤ : Subgroup (↥(A i)))) *
           (m i * Nat.card (A i))) =
       ∑ i : ι,
@@ -2674,7 +2764,8 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_elementaryAbel
           MulDistribMulAction.compHom V (A i).subtype
         Module.finrank (ZMod p)
             ↥((Representation.ofElementaryAbelianAction
-                (A := ↥(A i)) (G := V) (p := p)).fixedSubspace
+                (A := ↥(A i)) (G := V) (p := p) :
+                  Representation (ZMod p) (↥(A i)) (Additive V)).fixedSubspace
               (⊤ : Subgroup (↥(A i)))) *
           (n i * Nat.card (A i))) :
     (∏ i : ι,
@@ -2686,12 +2777,14 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_elementaryAbel
           MulDistribMulAction.compHom V (A i).subtype
         Nat.card (fixedPointSubgroup (↥(A i)) V) ^ (n i * Nat.card (A i)) := by
   classical
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   let r : ι → ℕ := fun i =>
     letI : MulDistribMulAction (↥(A i)) V :=
       MulDistribMulAction.compHom V (A i).subtype
     Module.finrank (ZMod p)
       ↥((Representation.ofElementaryAbelianAction
-          (A := ↥(A i)) (G := V) (p := p)).fixedSubspace
+          (A := ↥(A i)) (G := V) (p := p) :
+            Representation (ZMod p) (↥(A i)) (Additive V)).fixedSubspace
         (⊤ : Subgroup (↥(A i))))
   let eL : ι → ℕ := fun i => m i * Nat.card (A i)
   let eR : ι → ℕ := fun i => n i * Nat.card (A i)

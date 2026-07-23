@@ -1,13 +1,13 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_11_1
-import Submission.FeitThompson.PFsection12.PFsection12_4
-import Submission.FeitThompson.PFsection12.PFsection12_6
-import Submission.FeitThompson.PFsection12.PFsection12_7
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
+public import FeitThompson.PFsection14.PFsection14_11_1
+import FeitThompson.PFsection12.PFsection12_4
+import FeitThompson.PFsection12.PFsection12_6
+import FeitThompson.PFsection12.PFsection12_7
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
 
 /-!
 # Peterfalvi, Section 14: theorem (14.11.2)
@@ -2037,7 +2037,8 @@ public theorem section14_int_weighted_sigma_double_sum_isVirtualCharacter
     hσ.2.1 (ω i j)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
         (hωirr i j))
-  simpa using Section12.isVirtualCharacter_zsmul (coeff i j) hbase
+  rw [Int.cast_smul_eq_zsmul ℂ]
+  exact Section12.isVirtualCharacter_zsmul (coeff i j) hbase
 
 public theorem section14_scalarProduct_self_eq_of_virtual_cfNormSq_nat
     {G : Type u} [Group G] [Finite G]

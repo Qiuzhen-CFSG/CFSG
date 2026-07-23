@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_6_a
+public import FeitThompson.BGsection6.lemma_6_6_a
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -36,3 +36,4 @@ public theorem lemma_6_6_b
     (S : Subgroup G) = (S : Subgroup G) ⊓ derivedSubgroup G := hS_eq_inf
     _ = (S : Subgroup G) ⊓ ⁅U, U⁆ := hcomm
     _ ≤ ⁅U, U⁆ := inf_le_right
+

@@ -1,14 +1,14 @@
 module
 
-public import Submission.FeitThompson.BGsection3.Defs
-public import Submission.FeitThompson.BGsection3.lemma_3_1
-public import Submission.FeitThompson.BGsection3.lemma_3_3
-public import Submission.FeitThompson.GroupAction.Lemmas
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.GroupAction.Invariant
-public import Submission.FeitThompson.GroupAction.Cardinalities
-public import Submission.FeitThompson.PCore.PLengthOne
-public import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.lemma_3_1
+public import FeitThompson.BGsection3.lemma_3_3
+public import FeitThompson.GroupAction.Lemmas
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.GroupAction.Invariant
+public import FeitThompson.GroupAction.Cardinalities
+public import FeitThompson.PCore.PLengthOne
+public import FeitThompson.SubgroupConj
 
 open Subgroup
 
@@ -61,7 +61,9 @@ public theorem ker_ofQuotient_ker_eq_bot {G : Type*} [Group G] {F : Type*} [Fiel
   rw [MonoidHom.mem_ker] at hx
   have hgker : g ∈ ρ.ker := by
     rw [MonoidHom.mem_ker]
-    simpa using hx
+    ext v
+    have hxv := congrArg (fun f : Module.End F V => f v) hx
+    simpa using hxv
   simpa using (QuotientGroup.eq_one_iff (N := ρ.ker) g).2 hgker
 
 public theorem fixedSubspace_map_mk'_of_kerRepresentation_eq {G : Type*} [Group G]
@@ -69,13 +71,15 @@ public theorem fixedSubspace_map_mk'_of_kerRepresentation_eq {G : Type*} [Group 
     (ρ : Representation F G V) (R : Subgroup G) :
     (Representation.kerRepresentation ρ).fixedSubspace (R.map (QuotientGroup.mk' ρ.ker)) =
       ρ.fixedSubspace R := by
-  simpa [Representation.kerRepresentation] using
-    (fixedSubspace_map_mk'_ofQuotient_eq (ρ := ρ) (N := ρ.ker) (R := R))
+  change (Representation.ofQuotient ρ ρ.ker).fixedSubspace
+    (R.map (QuotientGroup.mk' ρ.ker)) = ρ.fixedSubspace R
+  exact fixedSubspace_map_mk'_ofQuotient_eq (ρ := ρ) (N := ρ.ker) (R := R)
 
 public theorem ker_of_kerRepresentation_eq_bot {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V) :
     (Representation.kerRepresentation ρ).ker = ⊥ := by
-  simpa [Representation.kerRepresentation] using ker_ofQuotient_ker_eq_bot (ρ := ρ)
+  change (Representation.ofQuotient ρ ρ.ker).ker = ⊥
+  exact ker_ofQuotient_ker_eq_bot (ρ := ρ)
 
 public theorem not_map_le_ker_of_not_le_ker_of_quotient
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
@@ -97,9 +101,9 @@ public theorem not_map_le_ker_of_not_le_ker_of_kerRepresentation
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (K : Subgroup G) (hK : ¬ K ≤ ρ.ker) :
     ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ (Representation.kerRepresentation ρ).ker := by
-  simpa [Representation.kerRepresentation] using
-    (not_map_le_ker_of_not_le_ker_of_quotient
-      (ρ := ρ) (N := ρ.ker) (K := K) hK)
+  change ¬ K.map (QuotientGroup.mk' ρ.ker) ≤ (Representation.ofQuotient ρ ρ.ker).ker
+  exact not_map_le_ker_of_not_le_ker_of_quotient
+    (ρ := ρ) (N := ρ.ker) (K := K) hK
 
 public theorem quotient_representation_data_of_irreducible_not_le_ker_local
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
@@ -129,11 +133,9 @@ public theorem not_isMulCommutative_map_mk'_of_commutator_map_ne_bot
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     simpa using
-      (show x * y = y * x by
-        simpa using
-          (mul_comm
-            (⟨x, hx⟩ : K.map (QuotientGroup.mk' N))
-            (⟨y, hy⟩ : K.map (QuotientGroup.mk' N)))).symm
+      hcomm.is_comm.comm
+        (⟨y, hy⟩ : K.map (QuotientGroup.mk' N))
+        (⟨x, hx⟩ : K.map (QuotientGroup.mk' N))
   have hC_eq :
       ((commutator (↥K)).map K.subtype).map (QuotientGroup.mk' N) =
         ⁅K.map (QuotientGroup.mk' N), K.map (QuotientGroup.mk' N)⁆ := by
@@ -195,7 +197,9 @@ public theorem commutator_le_centralizerIn_of_map_le_centralizerIn_ofQuotient {G
   have hzker : z ∈ ρ.ker := by
     rw [MonoidHom.mem_ker]
     rw [MonoidHom.mem_ker] at hzqker
-    simpa [q] using hzqker
+    ext v
+    have hzqv := congrArg (fun f : Module.End F V => f v) hzqker
+    simpa [q] using hzqv
   exact ⟨hzK, hzker⟩
 
 
@@ -374,7 +378,9 @@ public theorem le_ker_of_forall_simple_submodule_le_ker {G : Type*} [Group G] {F
             hsimple q hq_simple hh
           rw [MonoidHom.mem_ker] at hhq
           have hhq' := congrArg (fun f => f ⟨xq, hxq⟩) hhq
-          simpa using congrArg (fun y => ρ.asModuleEquiv y.1) hhq'
+          have hhq'' := congrArg Subtype.val hhq'
+          change ρ h (ρ.asModuleEquiv xq) = ρ.asModuleEquiv xq at hhq''
+          exact hhq''
         have ht_fix : ρ h (ρ.asModuleEquiv xt) = ρ.asModuleEquiv xt :=
           ih (by
             intro m hm
@@ -395,7 +401,7 @@ public theorem exists_simple_submodule_nontrivial_of_not_le_ker {G : Type*} [Gro
       IsSimpleModule (MonoidAlgebra F G) m ∧
       ¬ H ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
   by_contra hcontra
-  push_neg at hcontra
+  push Not at hcontra
   exact hH (le_ker_of_forall_simple_submodule_le_ker (ρ := ρ) H hcontra)
 
 public theorem fixedSubspace_ofSubmodule'_eq_bot_of_fixedSubspace_eq_bot {G : Type*} [Group G]

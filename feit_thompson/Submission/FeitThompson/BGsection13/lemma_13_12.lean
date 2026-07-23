@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.corollary_13_11
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.corollary_13_11
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -155,6 +155,7 @@ private theorem section13_lemma_13_12_not_le_centralizer_of_msigma_fixed
     rw [← hElemBot]
     exact hCPg_le_elem))
 
+omit [IsMinCE G] in
 private theorem section13_lemma_13_12_fixed_rankTwo_centralizer_prime
     {E P A : Subgroup G} {p q : Nat.Primes}
     (hP : P ∈ section10PrimeOrderSubgroupsIn p E)
@@ -205,6 +206,7 @@ private theorem section13_lemma_13_12_fixed_rankTwo_centralizer_prime
       · exact False.elim (hcardY_ne_one hone)
   simpa [Y, section10PrimeOrderSubgroupsIn] using ⟨hY_le_A, hYcard⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_lemma_13_12_quotient_prime_of_not_le_centralizer
     {E P A : Subgroup G} {p : Nat.Primes}
     (hCnorm : section10NormalIn (subgroupCentralizerIn E A) E)
@@ -425,8 +427,7 @@ private theorem section13_lemma_13_12_contradiction_of_msigma_fixed
         hMstar.1 hEstar hPne hP_le_E₁star hqσstar hY_CstarP_prime).1
     have hMstar_mem_CY :
         Mstar ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer (Y : Set G)) := by
-      have : Mstar ∈ ({Mstar} : Set (Subgroup G)) := by simp
-      simpa [hMaxCY_Mstar] using this
+      simp [hMaxCY_Mstar]
     have hMstar_eq_M : Mstar = M := by
       have : Mstar ∈ ({M} : Set (Subgroup G)) := by
         simpa [hMaxCY_M] using hMstar_mem_CY
@@ -464,8 +465,7 @@ private theorem section13_lemma_13_12_contradiction_of_msigma_fixed
         hMstar.1 hEstar hpτ2star hB P hP_B hCstarP_ne
     have hMstar_mem_CP :
         Mstar ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer (P : Set G)) := by
-      have : Mstar ∈ ({Mstar} : Set (Subgroup G)) := by simp
-      simpa [hMaxCP_Mstar] using this
+      simp [hMaxCP_Mstar]
     have hCP_le_inf :
         subgroupCentralizerIn (section10Msigma M) P ≤ section10Msigma M ⊓ Mstar := by
       intro x hx

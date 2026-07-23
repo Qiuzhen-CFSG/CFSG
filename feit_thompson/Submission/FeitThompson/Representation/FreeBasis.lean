@@ -6,7 +6,7 @@ module
 
 public import Mathlib.GroupTheory.GroupAction.Quotient
 public import Mathlib.RepresentationTheory.Equiv
-public import Submission.FeitThompson.Representation.RepEquiv
+public import FeitThompson.Representation.RepEquiv
 
 /-!
 # Bases of free representations
@@ -37,15 +37,16 @@ free representation. -/
 G-set. -/
 public noncomputable def freeBasis
     (K G alpha : Type*) [Field K] [Group G] :
-    Module.Basis (alpha × G) K (alpha →₀ G →₀ K) :=
+    Module.Basis (alpha × G) K (alpha →₀ MonoidAlgebra K G) :=
   (Finsupp.basisSingleOne : Module.Basis (alpha × G) K ((alpha × G) →₀ K)).map
-    (Finsupp.curryLinearEquiv K)
+    ((Finsupp.curryLinearEquiv K).trans
+      (Finsupp.mapRange.linearEquiv (MonoidAlgebra.coeffLinearEquiv K).symm))
 
 @[simp]
 public theorem freeBasis_apply
     (K G alpha : Type*) [Field K] [Group G] (x : alpha × G) :
     freeBasis K G alpha x =
-      Finsupp.single x.1 (Finsupp.single x.2 (1 : K)) := by
+      Finsupp.single x.1 (MonoidAlgebra.single x.2 (1 : K)) := by
   ext i g
   simp [freeBasis, Finsupp.curryLinearEquiv]
 
@@ -65,10 +66,10 @@ public theorem free_apply_freeBasis
 /-- Explicit pair form of the free-basis action theorem. -/
 @[simp]
 public theorem free_apply_freeBasis_pair
-    (K G alpha : Type*) [Field K] [Group G] (g h : G) (a : alpha) :
+  (K G alpha : Type*) [Field K] [Group G] (g h : G) (a : alpha) :
     free K G alpha g (freeBasis K G alpha (a, h)) =
       freeBasis K G alpha (a, g * h) := by
-  simpa only using (free_apply_freeBasis K G alpha g (a, h))
+  convert free_apply_freeBasis K G alpha g (a, h) using 1; rfl
 
 /-- Every orbit of the canonical basis index of a free representation has the
 cardinality of the represented group. -/
@@ -126,7 +127,7 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
       simp
     mul_smul g h i := by
       change q ((g * h) • q.symm i) = q (g • q.symm (q (h • q.symm i)))
-      simpa only [q.symm_apply_apply, mul_smul] }
+      simp [q.symm_apply_apply, mul_smul] }
   refine ⟨Fin (Fintype.card (alpha × G)), inferInstance, smallAction, ?_⟩
   letI : MulAction G (Fin (Fintype.card (alpha × G))) := smallAction
   let b : Module.Basis (Fin (Fintype.card (alpha × G))) K V :=
@@ -169,3 +170,6 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
       MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
     simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
 end Representation
+
+
+

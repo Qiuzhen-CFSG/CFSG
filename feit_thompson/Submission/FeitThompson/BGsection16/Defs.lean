@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection15.corollary_15_9
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection15.corollary_15_9
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -104,6 +104,7 @@ variable {G : Type*} [Group G] [Finite G]
   section16NilpotentNormalHallIn MF M ∧
     ∀ H : Subgroup G, section16NilpotentNormalHallIn H M → H ≤ MF
 
+omit [Finite G] in
 /-- The subgroup `M_F` is unique when it exists. -/
 public theorem section16MFSubgroup_unique
     {M MF NF : Subgroup G}

@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection8.PFsection8_5_a
+public import FeitThompson.PFsection8.PFsection8_5_a
 
 noncomputable section
 
@@ -79,7 +79,7 @@ private theorem sup_isNilpotent_of_commuting_nilpotent
     simpa [f, a, b, mul_assoc] using hval
   letI : Group.IsNilpotent A := hAnil
   letI : Group.IsNilpotent B := hBnil
-  exact nilpotent_of_surjective f hf_surj
+  exact Group.nilpotent_of_surjective f hf_surj
 
 private theorem typeP_complement_eq_bot_of_left_eq
     {G : Type u} [Group G] [Finite G]

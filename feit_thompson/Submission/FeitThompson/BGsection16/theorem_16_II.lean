@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection16.theorem_16_I
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection16.theorem_16_I
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -16,6 +16,7 @@ open scoped Pointwise
 section MainResults
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [Finite G] [IsMinCE G] in
 public theorem section16_msigma_nonidentity_mem_ASet_public
     {M U : Subgroup G} {x : G}
     (_hM : M ∈ section9MaximalSubgroups G)
@@ -93,14 +94,14 @@ private theorem section16_ASet_diff_msigma_centralizer_le
     have hMcont :
         M ∈ section9MaximalSubgroupsContaining
           (Subgroup.centralizer ({a ^ n} : Set G)) := by
-      have hsingle : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [huniq] using hsingle
+      simp [huniq]
     exact hMcont.2
   intro c hc
   apply hcentPow_le_M
   rw [Subgroup.mem_centralizer_singleton_iff]
   have hcomm : Commute c a := by
-    simpa [Commute] using (Subgroup.mem_centralizer_singleton_iff.mp hc)
+    change c * a = a * c
+    exact Subgroup.mem_centralizer_singleton_iff.mp hc
   exact (hcomm.zpow_right n).eq
 
 public theorem section16_ASet_diff_msigma_centralizer_le_public
@@ -140,6 +141,7 @@ public theorem section16_ASet_diff_msigma_le_normalizer_public
     (G := G) (M := M) (K := K) (U := U) hM
     (by simpa [section16KUData] using hKU)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_AZeroSet_subset_ASet_of_K_eq_bot
     {M K U : Subgroup G}
     (hKU : section15KUData M K U)
@@ -166,6 +168,7 @@ private theorem section16_AZeroSet_subset_ASet_of_K_eq_bot
     simpa [N, sup_comm] using haJoin
   simpa [← hNset] using haN
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_mem_normalizer_singleton_of_mem_centralizer_singleton
     {a c : G}
     (hc : c ∈ Subgroup.centralizer ({a} : Set G)) :
@@ -181,7 +184,7 @@ private theorem section16_mem_normalizer_singleton_of_mem_centralizer_singleton
   constructor
   · intro hy
     have hy_eq : y = a := by simpa using hy
-    simpa [hy_eq, hfix]
+    simp [hy_eq, hfix]
   · intro hy
     have hy_eq : c * y * c⁻¹ = a := by simpa using hy
     have hfix_inv : c⁻¹ * a * c = a := by
@@ -192,7 +195,7 @@ private theorem section16_mem_normalizer_singleton_of_mem_centralizer_singleton
         y = c⁻¹ * (c * y * c⁻¹) * c := by group
         _ = c⁻¹ * a * c := by rw [hy_eq]
         _ = a := hfix_inv
-    simpa [hy_a]
+    simp [hy_a]
 
 private theorem section16_A0_diff_A_centralizer_le
     {M K U : Subgroup G} {a : G}
@@ -257,6 +260,7 @@ private theorem section16_A0_diff_A_centralizer_le
     rw [hc_eq]
     exact M.mul_mem (M.mul_mem hmM hdM) (M.inv_mem hmM)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_mem_M_of_mem_AChoice
     {M K U : Subgroup G} {X : Set G} {x : G}
     (hX : section16AChoice M K U X)
@@ -270,6 +274,7 @@ private theorem section16_mem_M_of_mem_AChoice
       simpa [hXA0] using hx
     exact hxA0.1.1
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_conjugateInSubgroup_top_symm
     {x y : G}
     (hxy : section16ConjugateInSubgroup (⊤ : Subgroup G) x y) :
@@ -344,8 +349,7 @@ private theorem section16_ASet_diff_msigma_conjugator_mem_M
     have hMcont :
         M ∈ section9MaximalSubgroupsContaining
           (Subgroup.centralizer ({z} : Set G)) := by
-      have hsingle : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [huniq_z] using hsingle
+      simp [huniq_z]
     exact hMcont.2
   have hMg_cont :
       M.conjBy g ∈ section9MaximalSubgroupsContaining
@@ -522,7 +526,7 @@ private theorem section16_A0_diff_A_conjugator_mem_M
       · have hu_one_mem : u ∈ ({1} : Set G) :=
           hsmall ⟨huHat, huConjSet⟩
         have hu_one : u = 1 := by simpa using hu_one_mem
-        exact False.elim (huHat.2 (Or.inl (by simpa [hu_one] using K.one_mem)))
+        exact False.elim (huHat.2 (Or.inl (by simp [hu_one])))
     have hZleM : Z ≤ M := by
       refine sup_le hKU.1.1 ?_
       intro z hz
@@ -556,7 +560,7 @@ private def section16SubgroupConjSetoid (G : Type*) [Group G] :
     · intro A
       refine ⟨1, ?_⟩
       ext x
-      simp [Subgroup.conjBy, MulAut.conj_apply]
+      simp [Subgroup.conjBy]
     · intro A B hAB
       rcases hAB with ⟨g, hAB⟩
       refine ⟨g⁻¹, ?_⟩
@@ -573,11 +577,13 @@ private def section16SubgroupConjSetoid (G : Type*) [Group G] :
         _ = (C.conjBy h).conjBy g := by rw [hBC]
         _ = C.conjBy (g * h) := section11_conjBy_conjBy (G := G) C h g
 
+omit [IsMinCE G] in
 public theorem section16_exists_maximalConjugacyRepresentatives :
     ∃ Ms : List (Subgroup G), section16MaximalConjugacyRepresentatives (G := G) Ms := by
   classical
   let S : Setoid (Subgroup G) := section16SubgroupConjSetoid G
   letI : Setoid (Subgroup G) := S
+  letI : Fintype (Quotient S) := Fintype.ofFinite _
   let qs : List (Quotient S) := (Finset.univ : Finset (Quotient S)).toList
   let reps : List (Subgroup G) := qs.map fun q => Quotient.out q
   let Ms : List (Subgroup G) := reps.filter fun M => M ∈ section9MaximalSubgroups G
@@ -595,7 +601,7 @@ public theorem section16_exists_maximalConjugacyRepresentatives :
     let R : Subgroup G := Quotient.out q
     have hRrelN : R ≈ N := by
       have hout : Quotient.mk'' R = q := by
-        simpa [R] using Quotient.out_eq q
+        simp [R]
       exact Quotient.exact (by simpa [q] using hout)
     have hRmax : R ∈ section9MaximalSubgroups G := by
       rcases hRrelN with ⟨g, hR⟩
@@ -730,7 +736,7 @@ public theorem section16_section14N_data_of_not_centralizer_le
 private theorem section16_theoremII_mem_msigma_of_mem_D
     {M MF K U : Subgroup G} {X : Set G}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
+    (_hMF : section16MFSubgroup M MF)
     (hKU : section16KUData M K U)
     (hX : section16AChoice M K U X) :
     ∀ x : G, x ∈ section16TheoremIIDSet M X → x ∈ section10Msigma M := by
@@ -783,7 +789,7 @@ private theorem section16_theoremII_canonical_D_data
     section16_theoremII_mem_msigma_of_mem_D (G := G) hM hMF hKU hX x hxD
   have hxne : x ≠ 1 := hxD.2.1
   have hMx : M ∈ section14MsigmaElement x := by
-    exact ⟨hM, by simpa [section14MsigmaElement, section14MsigmaFamily,
+      exact ⟨hM, by simpa [section14MsigmaElement, section14MsigmaFamily,
       Set.singleton_subset_iff] using hxσM⟩
   have hσ : (section14MsigmaElement x).Nonempty := ⟨M, hMx⟩
   have hcard :
@@ -812,9 +818,7 @@ private theorem section16_theoremII_canonical_D_data
     · have hnotP : N ∉ section14MFamilyP G := by
         intro hP
         rcases hP.2 with ⟨p, hpκ⟩
-        have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-          simpa [hF.2] using hpκ
-        exact hpempty
+        simp [hF.2] at hpκ
       exact Or.inl (section16_typeI_of_not_MFamilyP (G := G) hNcont.1 hNFσ hnotP)
     · exact Or.inr (section16_typeII_of_MFamilyP2 (G := G) hNFσ hNKU hP2)
   have hTypeII_consequence :
@@ -846,9 +850,7 @@ private theorem section16_theoremII_canonical_D_data
     have hMnotP : M ∉ section14MFamilyP G := by
       intro hMP
       rcases hMP.2 with ⟨p, hpκ⟩
-      have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-        simpa [hMFamF.2] using hpκ
-      exact hpempty
+      simp [hMFamF.2] at hpκ
     exact ⟨hFrob, section16_typeI_of_not_MFamilyP (G := G) hM hMF hMnotP, hNotTI⟩
   refine ⟨NK, NU, hNcont, hNFσ, hNKU, ?_, hType, hcomp, hTypeII_consequence⟩
   simpa [N, hNσ_eq] using hxA
@@ -939,7 +941,7 @@ private theorem section16_theoremII_supportDataForRep_spec
     {R : Subgroup G}
     (hR : section16_theoremII_supportRepCandidate (G := G) M X R) :
     let P := section16_theoremII_supportDataForRep (G := G) hM hMF hKU hX R hR
-    ∃ x : G, ∃ hxD : x ∈ section16TheoremIIDSet M X, ∃ g : G,
+    ∃ x : G, ∃ _hxD : x ∈ section16TheoremIIDSet M X, ∃ g : G,
       section14N x = R.conjBy g ∧
         P.M ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) ∧
           section16MFSubgroup P.M P.H ∧
@@ -1135,6 +1137,7 @@ private theorem section16_supportDataForRep_eq_of_same_rep
   cases hproof
   rfl
 
+omit [IsMinCE G] in
 private theorem section16_notConjugate_of_distinct_maximal_representatives
     {Ms : List (Subgroup G)}
     (hMs : section16MaximalConjugacyRepresentatives (G := G) Ms)
@@ -1177,7 +1180,8 @@ private theorem section16_theoremII_supportDataForRep_isPiSubgroup_sigma_rep
   have hPM_eq : P.M = R.conjBy g := by
     simpa [P, section16_theoremII_supportDataOf] using hNg
   rw [hPM_eq, section16_sigmaPrimes_conjBy (G := G) R g] at hPpi
-  simpa [P] using hPpi
+  change IsPiSubgroup (G := G) (section10SigmaPrimes R) P.H
+  exact hPpi
 
 private theorem section16_theoremII_supportList_pairwise_coprime
     {M MF K U : Subgroup G} {X : Set G}
@@ -1354,19 +1358,7 @@ private theorem section16_section14N_mem_of_nonsingleton
     (hcard : 1 < Nat.card {M : Subgroup G // M ∈ section14MsigmaElement x}) :
     section14N x ∈
       section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) := by
-  classical
-  have hcard' :
-      1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-    simpa using hcard
-  have hNdef :
-      section14N x =
-        Classical.choose
-          (ExistsUnique.exists (theorem_14_4_unique_N (x := x) hx hσ hcard)) := by
-    simp [section14N, hx, hσ, hcard']
-  rw [hNdef]
-  exact
-    Classical.choose_spec
-      (ExistsUnique.exists (theorem_14_4_unique_N (x := x) hx hσ hcard))
+  exact section14N_mem_of_nonsingleton (G := G) hx hσ hcard
 
 private theorem section16_section14N_conjBy_of_theoremII_D
     {M MF K U : Subgroup G} {X : Set G}
@@ -1421,7 +1413,6 @@ private theorem section16_section14N_conjBy_of_theoremII_D
     refine ⟨m⁻¹ * c * m, ?_, by simp [MulAut.conj_apply, mul_assoc]⟩
     apply hNxcont.2
     rw [Subgroup.mem_centralizer_singleton_iff] at hc ⊢
-    change (m⁻¹ * c * m) * x = x * (m⁻¹ * c * m)
     have h := congrArg (fun t : G => m⁻¹ * t * m) hc
     simpa [y, mul_assoc] using h
   obtain ⟨N0, _hN0, huniqN0⟩ :=
@@ -1431,6 +1422,7 @@ private theorem section16_section14N_conjBy_of_theoremII_D
     huniqN0 ((section14N x).conjBy m) hNxconjcont
   exact hNy_eq.trans hNxconj_eq.symm
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_K_eq_bot_of_kappa_empty
     {M K U : Subgroup G}
     (hKU : section15KUData M K U)
@@ -1447,9 +1439,7 @@ private theorem section16_K_eq_bot_of_kappa_empty
     simpa [section12_card_subgroupOf_eq hKU.1.1] using hpdiv
   have hqκ : q ∈ section14KappaPrimes M :=
     hKU.1.2.p_in_pi_of_p_dvd_card q (by simpa [q] using hpdivSub)
-  have hqEmpty : q ∈ (∅ : Set Nat.Primes) := by
-    simpa [hκ] using hqκ
-  simpa using hqEmpty
+  simp [hκ] at hqκ
 
 private theorem section16_ASet_diff_msigma_absurd_of_tau2_empty
     {M K U : Subgroup G}
@@ -1500,14 +1490,12 @@ private theorem section16_ASet_diff_msigma_absurd_of_tau2_empty
   rcases corollary_14_3 (G := G) (M := M) hM hxSigma hxne hz_ne hzcentIn
       hzsigma' with hκ | hτ
   · have hqSupp : q ∈ section14ElementPrimeSupport (a ^ n) := by
-      simpa [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
+      simp [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
     exact hzsupport_compl hqSupp (Or.inl (hκ.1 hqSupp))
   · have hqSupp : q ∈ section14ElementPrimeSupport (a ^ n) := by
-      simpa [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
+      simp [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
     have hqτ2 : q ∈ section12Tau2Primes M := hτ.1 hqSupp
-    have hqEmpty : q ∈ (∅ : Set Nat.Primes) := by
-      simpa [hτ2] using hqτ2
-    simpa using hqEmpty
+    simp [hτ2] at hqτ2
 
 private theorem section16_AZeroSet_subset_msigma_of_kappa_tau2_empty
     {M K U : Subgroup G}
@@ -1532,9 +1520,7 @@ private theorem section16_AZeroSet_subset_msigma_of_kappa_tau2_empty
     have hsuppσ : section14ElementPrimeSupport a ⊆ section10SigmaPrimes M := by
       intro p hp
       rcases hsupp hp with hpκ | hpσ
-      · have hpEmpty : p ∈ (∅ : Set Nat.Primes) := by
-          simpa [hκ] using hpκ
-        exact False.elim (by simpa using hpEmpty)
+      · simp [hκ] at hpκ
       · exact hpσ
     exact section16_mem_msigma_of_primeSupport_subset (G := G) hM ha.1.1 hsuppσ
 
@@ -1574,7 +1560,7 @@ private theorem section16_elementCentralizerIn_le_msigma_of_kappa_tau2_empty
     section16_K_eq_bot_of_kappa_empty (G := G) hKU hκ
   intro c hc
   by_cases hcne : c = 1
-  · simpa [hcne] using (section10Msigma M).one_mem
+  · simp [hcne]
   have hcHat : c ∈ section16HatMsigmaSet M := by
     refine ⟨hc.1, ?_⟩
     have hxCent_c : x ∈ Subgroup.centralizer ({c} : Set G) := by
@@ -1597,10 +1583,9 @@ private theorem section16_elementCentralizerIn_le_msigma_of_kappa_tau2_empty
 private noncomputable def section16_conjByMulEquiv
     (H : Subgroup G) (g : G) :
     H ≃* H.conjBy g := by
-  simpa [Subgroup.conjBy] using
-    H.equivMapOfInjective (MulAut.conj g).toMonoidHom
-      (EquivLike.injective (MulAut.conj g))
+  exact (MulAut.conj g).subgroupMap H
 
+omit [IsMinCE G] in
 private theorem section16_primeRank_conjBy_eq
     (H : Subgroup G) (q : ℕ) (g : G) :
     primeRank q (H.conjBy g) = primeRank q H := by
@@ -1610,6 +1595,7 @@ private theorem section16_primeRank_conjBy_eq
     (section10_primeRank_le_of_equiv_pre (R := H) (S := H.conjBy g) q e)
     (section10_primeRank_le_of_equiv_pre (R := H.conjBy g) (S := H) q e.symm)
 
+omit [IsMinCE G] in
 private theorem section16_tau2Primes_conjBy
     (H : Subgroup G) (g : G) :
     section12Tau2Primes (H.conjBy g) = section12Tau2Primes H := by
@@ -1635,7 +1621,7 @@ private theorem section16_theoremII_supportList_centralizer_coprime
     (hKU : section16KUData M K U)
     (hX : section16AChoice M K U X)
     {Ms : List (Subgroup G)}
-    (hMs : section16MaximalConjugacyRepresentatives (G := G) Ms) :
+    (_hMs : section16MaximalConjugacyRepresentatives (G := G) Ms) :
     ∀ P ∈ section16_theoremII_supportList (G := G) hM hMF hKU hX Ms,
       ∀ x : G, x ∈ section16NonidentityElements X →
         Nat.Coprime (Nat.card P.H) (Nat.card (elementCentralizerIn M x)) := by
@@ -1740,9 +1726,7 @@ private theorem section16_theoremII_supportList_centralizer_coprime
         simpa [section16_tau2Primes_conjBy (G := G) P.M g] using hrTauP
       have hrTauM : r ∈ section12Tau2Primes M := by
         simpa [hPgM] using hrTauPg
-      have hrEmpty : r ∈ (∅ : Set Nat.Primes) := by
-        simpa [hτ2empty] using hrTauM
-      simpa using hrEmpty
+      simp [hτ2empty] at hrTauM
     have hσdis :
         Disjoint (section10SigmaPrimes M) (section10SigmaPrimes P.M) :=
       theorem_13_9 (G := G) hM hPcont0.1 hnotconj
@@ -1794,6 +1778,7 @@ public theorem section16_ASet_diff_msigma_subset_AZeroSet_public
     (G := G) (M := M) (K := K) (U := U) hM
     (by simpa [section16KUData] using hKU)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_msigma_nonidentity_mem_AZeroSet_public
     {M K U : Subgroup G} {x : G}
     (hKU : section16KUData M K U)
@@ -2017,7 +2002,10 @@ private theorem section16_theoremII_support_AZero_diff_H_nonempty_TI
     section16_kudata_to_section15 (G := G) hPKU
   have hxA_msigma :
       x ∈ section16ASet P.M P.U \ (section10Msigma P.M : Set G) := by
-    simpa [hH_eq] using hxA
+    change x ∈ section16ASet P.M P.U ∧ x ∉ section10Msigma P.M
+    change x ∈ section16ASet P.M P.U ∧ x ∉ P.H at hxA
+    rw [hH_eq] at hxA
+    exact hxA
   have hxA0 : x ∈ section16AZeroSet P.M P.K :=
     section16_ASet_diff_msigma_subset_AZeroSet (G := G) hPcont.1 hPKU15 hxA_msigma
   have hNonemptySigma :
@@ -2164,7 +2152,7 @@ private theorem section16_theoremII_supportList_coverage
           elementCentralizerIn (section10Msigma (section14N y)) y :=
         (theorem_14_4_a (G := G) (x := y) hyD.2.1 hσy hcardy hMy).1
       _ = elementCentralizerIn P.H y := by
-            simpa [hyN_eq, hPH_eq]
+            simp [hyN_eq, hPH_eq]
       _ = section16CentralizerInSet P.H ({y} : Set G) := rfl
   have hRnormC :
       Subgroup.centralizer ({y} : Set G) ≤
@@ -2509,9 +2497,7 @@ public theorem theorem_16_II_canonical_support_coprime
           hrTauN
       have hrTauM : r ∈ section12Tau2Primes M := by
         simpa [hNgM] using hrTauNg
-      have hrEmpty : r ∈ (∅ : Set Nat.Primes) := by
-        simpa [hτ2empty] using hrTauM
-      simpa using hrEmpty
+      simp [hτ2empty] at hrTauM
     have hσdis :
         Disjoint (section10SigmaPrimes M) (section10SigmaPrimes (section14N x)) :=
       theorem_13_9 (G := G) hM hNcont.1 hnotconj

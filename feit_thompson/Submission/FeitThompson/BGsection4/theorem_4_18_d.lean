@@ -1,8 +1,8 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
-public import Submission.FeitThompson.GeneratorRank
-public import Submission.FeitThompson.BGsection4.theorem_4_18_c
+public import FeitThompson.GeneratorRank
+public import FeitThompson.BGsection4.theorem_4_18_c
 /-! # Theorem 4.18(d) from BG Section 4 -/
 
 universe u
@@ -33,13 +33,12 @@ public theorem theorem_4_18_d {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
       have hxmap : q x ∈ H.map q := Subgroup.mem_map_of_mem q hx
       rw [hHmap_bot] at hxmap
       have hx1 : q x = 1 := by simpa using hxmap
-      simpa [MonoidHom.mem_ker] using hx1
+      exact (MonoidHom.mem_ker).2 hx1
     have hHle_ker' : H ≤ (QuotientGroup.mk' N).ker := by
       simpa [q] using hHle_ker
     refine hHle_ker'.trans ?_
     intro x hx
-    have hx1 : (QuotientGroup.mk' N) x = 1 := by
-      simpa [MonoidHom.mem_ker] using hx
+    have hx1 : (QuotientGroup.mk' N) x = 1 := (MonoidHom.mem_ker).1 hx
     exact (QuotientGroup.eq_one_iff (N := N) (x := x)).1 hx1
   exact hHle_N.trans (le_sSup ⟨hNnorm, hNcop⟩)
 

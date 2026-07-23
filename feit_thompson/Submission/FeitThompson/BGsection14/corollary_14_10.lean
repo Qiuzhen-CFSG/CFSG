@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.corollary_14_9
+public import FeitThompson.BGsection14.corollary_14_9
 
 open scoped Pointwise
 
@@ -13,6 +13,7 @@ open scoped Pointwise
 section Section14
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [IsMinCE G] in
 private theorem section14_sigmaLength_conjBy
     (x a : G) :
     section14SigmaLength (a⁻¹ * x * a) = section14SigmaLength x := by
@@ -24,7 +25,7 @@ private theorem section14_sigmaLength_conjBy
       section14SigmaSupport (a⁻¹ * x * a) = section14SigmaSupport x := by
     ext π
     simp [section14SigmaSupport, hPrimeSupport]
-  simpa [section14SigmaLength, hSigmaSupport]
+  simp [section14SigmaLength, hSigmaSupport]
 
 private theorem section14_sigmaLength_le_two_of_primeSupport_subset_sigma_union
     {g : G} {M N : Subgroup G}
@@ -178,7 +179,7 @@ private theorem section14_sigmaLength_le_two_of_alt2
     section14_sigmaLength_le_two_of_mul_of_mem_msigma
       (G := G) hHstarP.1 hHP.1 hy0'Hstarσ hy0Hσ hcomm0.symm
   have hConjEq : y0' * y0 = (m : G) * (y * y') * (m : G)⁻¹ := by
-    simpa [y0, y0', hcomm1.eq, mul_assoc]
+    simp [y0, y0', hcomm1.eq, mul_assoc]
   have hConjLen :
       section14SigmaLength ((m : G) * (y * y') * (m : G)⁻¹) ≤ 2 := by
     simpa [hConjEq] using hy0Len
@@ -205,7 +206,7 @@ public theorem corollary_14_10 (g : G) :
         rw [section14ElementPrimeSupport, hbot] at hp1
         exact hp1
       · intro hπ
-        simpa using hπ
+        simp at hπ
     simp [section14SigmaLength, hSigmaSupport]
   · rcases (lemma_14_6 (G := G) (g := g) hg1).1 with hAlt1 | hAlt2
     · rcases hAlt1 with ⟨x, x', hEq, hxlen, hx'R⟩

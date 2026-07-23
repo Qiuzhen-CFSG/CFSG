@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.BGsection11.lemma_11_1_b
+public import FeitThompson.BGsection11.lemma_11_1_b
 import Mathlib.GroupTheory.Schreier
 
 /-!
@@ -40,7 +40,7 @@ private theorem section11_map_subtype_le_normalizer_of_normal
           rw [hhx']
         _ = x := by simp [mul_assoc]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_msigma_le_normalizer (M : Subgroup G) :
     M ≤ Subgroup.normalizer (section10Msigma M : Set G) := by
   simpa [section10Msigma] using
@@ -62,7 +62,7 @@ public theorem section11_conjBy_le_normalizer_conjBy_of_le_normalizer
     simp [MulAut.conj_apply]
     group
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_hall_le_of_isPiSubgroup_of_le_normalizer
     {π : Set Nat.Primes} {H K : Subgroup G}
     (hH : IsHallSubgroup π H) (hKπ : IsPiSubgroup (G := G) π K)
@@ -117,6 +117,7 @@ public theorem section11_hall_le_of_isPiSubgroup_of_le_normalizer
   have hHK_le_H : HK ≤ H := (Subgroup.relIndex_eq_one).1 hrel_eq_one
   exact le_trans le_sup_left hHK_le_H
 
+omit [IsMinCE G] in
 private theorem section11_A_isPGroup
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) :
@@ -126,6 +127,7 @@ private theorem section11_A_isPGroup
   letI : IsElementaryAbelian p.val A := hAelem
   exact IsElementaryAbelian.isPGroup p.val A
 
+omit [IsMinCE G] in
 public theorem section11_coprime_A_of_isPiSubgroup_sigma
     {M A0 A H : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P)
@@ -164,7 +166,7 @@ public theorem section11_le_normalizer_map_of_isInvariant
   have hyInv : a • y ∈ K :=
     (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
   exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
-    simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hAH]⟩
+    simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
 
 end Section11
 
@@ -202,6 +204,7 @@ private theorem section11_msigma_inf_conjBy_eq
   · intro x hx
     exact ⟨hx.1, (Subgroup.map_mono (section11_msigma_le M)) hx.2⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section11_isPiSubgroup_subgroupOf
     {π : Set Nat.Primes} {H K : Subgroup G}
     (hKπ : IsPiSubgroup (G := G) π K) (hKH : K ≤ H) :
@@ -216,7 +219,7 @@ private theorem section11_isInvariant_subgroupOf_of_le_normalizer
     {A H K : Subgroup G}
     (hAH : A ≤ Subgroup.normalizer (H : Set G))
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
-    (hKH : K ≤ H) :
+    (_hKH : K ≤ H) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
     IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
@@ -269,7 +272,9 @@ public theorem corollary_11_2_a
   have hK_le_M : K ≤ M := by
     simpa [K] using section11_msigma_le M
   have hKg_le_Mg : Kg ≤ M.conjBy g := by
-    simpa [K, Kg] using Subgroup.map_mono (section11_msigma_le M)
+    change K.map (MulAut.conj g).toMonoidHom ≤
+      M.map (MulAut.conj g).toMonoidHom
+    exact Subgroup.map_mono hK_le_M
   have hHallK : IsHallSubgroup (section10SigmaPrimes M) K := by
     simpa [K] using (theorem_10_2_b h11.maximal).1
   have hKσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) K :=
@@ -279,9 +284,9 @@ public theorem corollary_11_2_a
   have hKgσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Kg :=
     hHallKg.p_in_pi_of_p_dvd_card
   have hJ_le_K : J ≤ K := by
-    simpa [J] using (inf_le_left : K ⊓ Kg ≤ K)
+    simp [J]
   have hJ_le_Kg : J ≤ Kg := by
-    simpa [J] using (inf_le_right : K ⊓ Kg ≤ Kg)
+    simp [J]
   have hJσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) J :=
     IsPiSubgroup.of_le hJ_le_K hKσ
   have hcardJ_ne_one : Nat.card J ≠ 1 := by

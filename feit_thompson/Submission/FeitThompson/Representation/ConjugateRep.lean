@@ -6,7 +6,7 @@ module
 
 public import Mathlib.RepresentationTheory.Basic
 public import Mathlib.RepresentationTheory.Induced
-public import Submission.FeitThompson.Representation.RepEquiv
+public import FeitThompson.Representation.RepEquiv
 
 open Representation
 open scoped MonoidAlgebra
@@ -109,9 +109,13 @@ public noncomputable def conjugateRepEquiv
   refine Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro h
   ext v
+  simp only [LinearMap.comp_apply, Representation.conjugateRep_apply]
+  have he : (e.toLinearEquiv : V → W) = (e : V → W) :=
+    Representation.RepEquiv.coe_toLinearMap e
+  simp only [LinearEquiv.coe_toLinearMap]
+  rw [he]
   simpa [Representation.conjugateRep_apply] using
-    Representation.IntertwiningMap.isIntertwining
-      (ρ := rho) (σ := sigma) e.toRepMap
+    Representation.RepEquiv.isIntertwining e
       ⟨g * (h : G) * g⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 g⟩ v
 /-- Conjugation by an ambient representation operator is an order automorphism

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_7_e
+public import FeitThompson.BGsection12.theorem_12_7_e
 
 open scoped Pointwise
 
@@ -50,8 +50,8 @@ public theorem section12_nilpotent_le_centralizer_of_pSubgroup_pre
       intro x hx
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (P₀ : Subgroup R)) hx (hA_le_P₀ ha)).symm
+      exact (setLike_mul_comm
+        (s := (P₀ : Subgroup R)) hx (hA_le_P₀ ha)).symm
     · have hQ_norm : (Q : Subgroup R).Normal :=
         Group.IsNilpotent.sylow_normal hnil q Q
       have hdis : Disjoint (Q : Subgroup R) (P₀ : Subgroup R) :=
@@ -75,7 +75,7 @@ public theorem section12_pSubgroup_isMulCommutative_of_abelian_sylow_pre
   have hPcomm : IsMulCommutative (P : Subgroup R) := hSylow_comm P
   refine ⟨⟨fun x y => ?_⟩⟩
   exact Subtype.ext <|
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := (P : Subgroup R)) (hK_le_P x.property)
+    setLike_mul_comm (s := (P : Subgroup R)) (hK_le_P x.property)
       (hK_le_P y.property)
 
 omit [IsMinCE G] in
@@ -113,8 +113,8 @@ public theorem section12_fitting_le_centralizer_of_normal_pSubgroup_abelian_sylo
       Subgroup.mem_map.mpr ⟨(x : F), x.property, rfl⟩
     have hyPamb : ((y : F) : G) ∈ Pamb :=
       Subgroup.mem_map.mpr ⟨(y : F), y.property, rfl⟩
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := (S : Subgroup G)) (hPamb_le_S hxPamb) (hPamb_le_S hyPamb)
+    exact setLike_mul_comm
+      (s := (S : Subgroup G)) (hPamb_le_S hxPamb) (hPamb_le_S hyPamb)
   have hF_cent_A0 : (⊤ : Subgroup F) ≤ Subgroup.centralizer (A0 : Set F) :=
     section12_nilpotent_le_centralizer_of_pSubgroup_pre
       (R := F) (A := A0) (p := p)
@@ -160,8 +160,8 @@ public theorem section12_fitting_le_centralizer_of_pSubgroup_le_fitting_abelian_
       Subgroup.mem_map.mpr ⟨(x : F), x.property, rfl⟩
     have hyPamb : ((y : F) : G) ∈ Pamb :=
       Subgroup.mem_map.mpr ⟨(y : F), y.property, rfl⟩
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := (S : Subgroup G)) (hPamb_le_S hxPamb) (hPamb_le_S hyPamb)
+    exact setLike_mul_comm
+      (s := (S : Subgroup G)) (hPamb_le_S hxPamb) (hPamb_le_S hyPamb)
   have hF_cent_A0 : (⊤ : Subgroup F) ≤ Subgroup.centralizer (A0 : Set F) :=
     section12_nilpotent_le_centralizer_of_pSubgroup_pre
       (R := F) (A := A0) (p := p)
@@ -206,9 +206,9 @@ public theorem section12_all_sylow_comm_of_one_pre
   have hconj_comm :
       IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
     letI : IsMulCommutative (S : Subgroup G) := hScomm
-    simpa [Sylow.coe_subgroup_smul] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+    rw [Sylow.coe_subgroup_smul]
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
   rw [← hg]
   exact hconj_comm
 
@@ -231,7 +231,8 @@ public theorem section12_sylow_subgroupOf_normalizer_isHall_pre
   refine isHallSubgroup_of (G := N) (π := ({p} : Set Nat.Primes)) (H := Psub) ?_ ?_
   · intro q hq_dvd
     have hPsubp : IsPGroup p.val Psub := by
-      simpa [hPsub_eq] using PN.isPGroup'
+      rw [hPsub_eq]
+      exact PN.isPGroup'
     exact section8_isPiSubgroup_singleton_of_isPGroup hPsubp q hq_dvd
   · intro q hq_mem hq_dvd_index
     have hq_eq : q = p := by simpa using hq_mem
@@ -258,7 +259,9 @@ public theorem section12_exists_complementInNormalizer_pre
     exact y.property
   · have hVsub_eq : ((Vsub.map N.subtype).subgroupOf N) = Vsub := by
       simpa [N] using (subgroupOf_map_subtype_eq (K := N) Vsub)
-    simpa [section10ComplementInNormalizer, Psub, N, hVsub_eq] using hVsub
+    change Psub.IsComplement' ((Vsub.map N.subtype).subgroupOf N)
+    rw [hVsub_eq]
+    exact hVsub
 
 public theorem section12_lemma_12_8_c_core_pre
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes} {S : Sylow p.val G}
@@ -297,7 +300,7 @@ public theorem section12_lemma_12_8_c_core_pre
     simpa [NA] using (Subgroup.le_normalizer : A ≤ Subgroup.normalizer (A : Set G))
   have hAnormNA : section10NormalIn A NA := by
     refine ⟨hA_le_NA, ?_⟩
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hA_le_NA).2 (by simpa [NA])
+    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hA_le_NA).2 (by simp [NA])
   have hFNA_le_CA :
       section8FittingSubgroup NA ≤ Subgroup.centralizer (A : Set G) :=
     section12_fitting_le_centralizer_of_normal_pSubgroup_abelian_sylow_pre
@@ -358,8 +361,8 @@ public theorem section12_lemma_12_8_c_core_pre
     exact hC_le_E (by
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (S : Subgroup G)) hs (hAS ha)).symm)
+      exact (setLike_mul_comm
+        (s := (S : Subgroup G)) hs (hAS ha)).symm)
   have hSleM : (S : Subgroup G) ≤ M := hSleE.trans hE.1.2.1
   let SM : Sylow p.val M := S.subtype hSleM
   have hSM_eq_S : section10AmbientSylowSubgroup M SM = (S : Subgroup G) := by
@@ -421,6 +424,7 @@ public theorem section12_isMulCommutative_of_mulEquiv_pre_pre
   classical
   refine ⟨⟨fun x y => ?_⟩⟩
   letI : IsMulCommutative B := hB
+  letI : CommGroup B := IsMulCommutative.instCommGroup
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
@@ -445,7 +449,7 @@ public theorem section12_isMulCommutative_of_nilpotent_of_sylow_pre_pre
     haveI : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
     have hcomm : IsMulCommutative (P : Subgroup K) := hSyl p.val P
     exact Subtype.ext <|
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := (P : Subgroup K))
+      setLike_mul_comm (s := (P : Subgroup K))
         (x' p P).property (y' p P).property
   have hxy := congrArg e hxy'
   simpa [x', y'] using hxy
@@ -479,7 +483,9 @@ public theorem section12_tau2_core_fitting_eq_E2_of_abelian_sylow_pre
     simpa [K, piCore_map_subtype_subgroupOf] using hcoreHall
   have hKHall : IsHallSubgroup π K := by
     refine isHallSubgroup_of (G := G) π K ?_ ?_
-    · simpa [K] using piCoreIn_isPiSubgroup (G := G) π F
+    · intro q hq
+      exact (piCoreIn_isPiSubgroup (G := G) π F) q
+        (by simpa [K] using hq)
     · intro q hqπ hqidx
       have hidx_eq : K.relIndex F * F.index = K.index :=
         Subgroup.relIndex_mul_index hK_le_F
@@ -569,8 +575,8 @@ public theorem lemma_12_8_a
     exact hC_le_E (by
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (S : Subgroup G)) hs (hAS ha)).symm)
+      exact (setLike_mul_comm
+        (s := (S : Subgroup G)) hs (hAS ha)).symm)
   have hHallE2 :
       IsHallSubgroup (section12Tau2Primes M) E₂ :=
     section12_E2_global_hall_of_abelian_sylow_pre
@@ -607,7 +613,7 @@ public theorem lemma_12_8_a
       simpa [F] using section8FittingSubgroup_isNilpotent E
     have hsubnil : Group.IsNilpotent (E₂.subgroupOf F) := by
       infer_instance
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := E₂.subgroupOf F) (G' := E₂)
       (Subgroup.subgroupOfEquivOfLe (H := E₂) (K := F) hE2_le_F)
   have hE2comm : IsMulCommutative E₂ :=
@@ -645,8 +651,8 @@ public theorem lemma_12_8_a
             Subgroup.mem_map.mpr ⟨((x : (P : Subgroup E₂)) : E₂), x.property, rfl⟩
           have hyPamb : (((y : (P : Subgroup E₂)) : E₂) : G) ∈ Pamb :=
             Subgroup.mem_map.mpr ⟨((y : (P : Subgroup E₂)) : E₂), y.property, rfl⟩
-          exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := (Q : Subgroup G)) (hPamb_le_Q hxPamb) (hPamb_le_Q hyPamb))
+          exact setLike_mul_comm
+            (s := (Q : Subgroup G)) (hPamb_le_Q hxPamb) (hPamb_le_Q hyPamb))
   exact ⟨hE2comm, hE2norm⟩
 
 

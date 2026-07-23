@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection16.proposition_16_1
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection16.proposition_16_1
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -288,7 +288,7 @@ public theorem theorem_16_I :
         ∃ MF : Subgroup G, section16MFSubgroup M MF ∧ section16TypeI M MF
     · exact Or.inl hAllTypeI
     · right
-      push_neg at hAllTypeI
+      push Not at hAllTypeI
       rcases hAllTypeI with ⟨M, hM, hNoTypeI⟩
       rcases section16_exists_mfSubgroup (G := G) M with ⟨MF, hMF⟩
       rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
@@ -342,7 +342,8 @@ public theorem theorem_16_I :
           simpa [Kstar, section16HatW, section16HatZ, section16ZSubgroup] using hHatZTI
         have hWcomm : IsMulCommutative (K ⊔ Kstar : Subgroup G) := by
           have hZcyc' : IsCyclic (K ⊔ Kstar : Subgroup G) := by
-            simpa [Kstar, section16ZSubgroup] using hZcyc
+            change IsCyclic (section16ZSubgroup K Kstar)
+            exact hZcyc
           letI : IsCyclic (K ⊔ Kstar : Subgroup G) := hZcyc'
           infer_instance
         exact section16_hatW_subset_normalizer_eq_of_ti
@@ -401,7 +402,8 @@ public theorem theorem_16_I :
         ?_, ?_, ?_, ?_, ?_, ?_, hMaximalCover, hTypeII_or, hMTypeLate,
         hMstarTypeLate, ?_⟩
       · simpa [Kstar, section16ZSubgroup] using hZdp
-      · simpa [Kstar, section16ZSubgroup] using hZcyc
+      · change IsCyclic (section16ZSubgroup K Kstar)
+        exact hZcyc
       · exact ne_of_gt hKstarPos
       · exact hHatWNormalizer
       · exact section16_not_typeI_of_MFamilyP (G := G) hMP hMF

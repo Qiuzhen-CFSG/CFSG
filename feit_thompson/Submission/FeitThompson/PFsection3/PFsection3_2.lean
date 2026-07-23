@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection3.PFsection3_5
-public import Submission.FeitThompson.PFsection3.PFsection3_7
+public import FeitThompson.PFsection3.PFsection3_5
+public import FeitThompson.PFsection3.PFsection3_7
 
 /-!
 # Peterfalvi, Section 3, Theorem (3.2)
@@ -78,8 +78,28 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible
     simpa [hchar] using
       (uliftRepresentation_pf32_character (G := G) (V := Fin n → ℂ) (ρ := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G χ χ =
+          Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem isClassFunction_of_commGroup
     {A : Type*} [CommGroup A] (φ : Section1.ClassFunction A) :
@@ -738,9 +758,14 @@ public theorem theorem_3_2_statement_of_pf35
       intro p
       rcases hint p with ⟨z, hz⟩
       rw [hz]
-      simpa [zsmul_eq_mul] using
-        isVirtualCharacter_zsmul z
-          (isVirtualCharacter_of_signedIrreducible (hsigned p.1 p.2))
+      have hsmul :
+          (z : ℂ) • χ p.1 p.2 =
+            (z • χ p.1 p.2 : Section1.ClassFunction G) := by
+        ext g
+        simp [zsmul_eq_mul]
+      rw [hsmul]
+      exact isVirtualCharacter_zsmul z
+        (isVirtualCharacter_of_signedIrreducible (hsigned p.1 p.2))
     have hsum :
         Representation.IsVirtualCharacter
           (Section1.weightedFamilySum

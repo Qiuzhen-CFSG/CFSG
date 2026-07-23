@@ -4,11 +4,19 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.corollary_5_4
-public import Submission.FeitThompson.BGsection4.theorem_4_17
-public import Submission.FeitThompson.BGsection4.lemma_4_5_b
+public import FeitThompson.BGsection5.corollary_5_4
+public import FeitThompson.BGsection4.theorem_4_17
+public import FeitThompson.BGsection4.lemma_4_5_b
 
 /-! # Theorem 5.5(a) from BG Section 5 -/
+
+open scoped commutatorElement
+
+private theorem theorem_5_5_a_coe_smul_of_isInvariant
+    {A G : Type*} [Group A] [Group G] [MulDistribMulAction A G]
+    {H : Subgroup G} [IsInvariant A G H] (a : A) (x : H) :
+    ((a • x : H) : G) = a • (x : G) :=
+  rfl
 
 private theorem pCore_quotient_pCore_eq_bot
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime] :
@@ -45,7 +53,9 @@ private theorem coprime_card_quotient_pCore
       exact Subgroup.card_bot
     exact (Fact.out : Nat.Prime p).not_dvd_one (by simpa [hP_card_one] using hP_card_dvd)
   have hP_le_pcore : (P : Subgroup (G ⧸ pCore p G)) ≤ pCore p (G ⧸ pCore p G) := by
-    exact le_sSup ⟨Subgroup.normal_of_comm (H := (P : Subgroup (G ⧸ pCore p G))), P.isPGroup'⟩
+    exact le_sSup
+      ⟨Subgroup.normal_of_isMulCommutative (H := (P : Subgroup (G ⧸ pCore p G))),
+        P.isPGroup'⟩
   have hP_bot : (P : Subgroup (G ⧸ pCore p G)) = ⊥ := by
     exact le_bot_iff.mp (by simpa [hpcore_bot] using hP_le_pcore)
   exact hP_ne_bot hP_bot
@@ -57,10 +67,10 @@ private theorem theorem_5_5_a_of_derivedSubgroup_isPGroup
   have hder_le_pcore : derivedSubgroup A ≤ pCore p A :=
     le_sSup ⟨(inferInstance : (derivedSubgroup A).Normal), hder_p⟩
   have hquot_comm : IsMulCommutative (A ⧸ pCore p A) := by
-    refine ⟨⟨?_⟩⟩
-    exact
-      (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := pCore p A)).mpr
-        (by simpa [derivedSubgroup, derivedSeries_one] using hder_le_pcore) |>.comm
+    apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
+    change derivedSeries A 1 ≤ pCore p A at hder_le_pcore
+    rw [derivedSeries_one] at hder_le_pcore
+    exact hder_le_pcore
   exact ⟨hquot_comm, coprime_card_quotient_pCore (G := A) (p := p) hquot_comm⟩
 
 private theorem natCard_eq_prime_of_isPGroup_nontrivial_le_prime
@@ -240,7 +250,7 @@ private theorem primeRank_le_primeRank_of_subgroup
   classical
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     let A' : Subgroup K := (A.map H.subtype).subgroupOf K
@@ -285,7 +295,7 @@ public theorem groupRank_le_groupRank_of_subgroup
   classical
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · refine ⟨0, 2, by decide, zero_le _⟩
+  · refine ⟨0, 2, by decide, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hq, hnq⟩
     refine le_csSup ?_ ?_
@@ -320,7 +330,7 @@ private theorem primeRank_le_groupRank_sylow
   classical
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     obtain ⟨Q, hAQ⟩ := IsPGroup.exists_le_sylow (p := p) hAp
@@ -366,7 +376,7 @@ public theorem primeRank_fitting_le_groupRank_pCore
   rw [primeRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := fittingSubgroup G), inferInstance,
-      zero_le _⟩
+      Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     let Amap : Subgroup G := A.map (fittingSubgroup G).subtype
@@ -514,7 +524,9 @@ private theorem derivedSubgroup_actsTrivially_on_cyclic_prime_order
   have ha_ker : (a : A) ∈ φ.ker := (Abelianization.commutator_subset_ker φ) ha_comm
   have ha_one : φ (a : A) = 1 := by
     simpa [MonoidHom.mem_ker] using ha_ker
-  simpa [φ, MulDistribMulAction.toMulAut_apply] using congrArg (fun f : MulAut G => f g) ha_one
+  change (a : A) • g = g
+  simpa [φ, MulDistribMulAction.toMulAut_apply] using
+    congrArg (fun f : MulAut G => f g) ha_one
 
 private theorem pow_pred_actsTrivially_on_cyclic_prime_order
     {A G : Type*} [Group A] [Finite A] [Group G] [Finite G] [MulDistribMulAction A G]
@@ -624,13 +636,15 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) := hx
           have hsmul : c • (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant c (x : G) |>.mp hxG
-          simpa [N, Subgroup.mem_subgroupOf] using hsmul
+          simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using
+            hsmul
         · intro hx
           have hsmulG : c • (x : G) ∈ Gi (i + 1) := by
-            simpa [N, Subgroup.mem_subgroupOf] using hx
+            simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using
+              hx
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant c (x : G) |>.mpr hsmulG
-          simpa [N, Subgroup.mem_subgroupOf] using hxG
+          simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
       letI : IsInvariant A K N := hNinv
       letI : MulAction.QuotientAction A N :=
         quotientAction_of_isInvariant (A := A) N hNinv
@@ -651,7 +665,8 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
         simpa [bgen, b] using hfix
       have hdiv_mem : (b • gK) / gK ∈ N :=
         (QuotientGroup.eq_iff_div_mem (N := N) (x := b • gK) (y := gK)).1 hmk_eq
-      simpa [K, N, gK, b, Subgroup.mem_subgroupOf, div_eq_mul_inv] using hdiv_mem
+      simpa [K, N, gK, b, Subgroup.mem_subgroupOf, div_eq_mul_inv,
+        theorem_5_5_a_coe_smul_of_isInvariant] using hdiv_mem
   have hcop_b_p : Nat.Coprime (orderOf b) p := by
     have hb_dvd : orderOf b ∣ orderOf a := orderOf_pow_dvd (x := a) (p - 1)
     exact Nat.Coprime.of_dvd_left hb_dvd hcop.symm
@@ -757,7 +772,9 @@ private theorem normal_prime_order_subgroup_le_center_of_isPGroup
   have hfix : ConjAct.toConjAct r • (⟨s, hs⟩ : S) = ⟨s, hs⟩ :=
     htriv (ConjAct.toConjAct r) ⟨s, hs⟩
   have hconj : r * s * r⁻¹ = s := by
-    simpa [ConjAct.smul_def] using congrArg Subtype.val hfix
+    have hfix_val := congrArg Subtype.val hfix
+    change ConjAct.toConjAct r • (s : R) = s at hfix_val
+    simpa [ConjAct.toConjAct_smul] using hfix_val
   have hmul : r * s = s * r := by
     simpa [mul_assoc] using congrArg (fun x => x * r) hconj
   simpa [eq_comm] using hmul
@@ -817,7 +834,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
     intro r hr
     rw [Subgroup.mem_centralizer_iff]
     intro s hs
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := R₀) hs hr
+    exact setLike_mul_comm (s := R₀) hs hr
   have hU_norm : U.Normal := by
     refine ⟨fun u hu x => ?_⟩
     have huH : u ∈ H := hU_le_H hu
@@ -1339,24 +1356,26 @@ private theorem theorem_5_5_a_commutatorChain_descends
 private theorem theorem_5_5_a_commutatorChain_le_lowerCentralSeries
     {R : Type*} [Group R] {H : Subgroup R} :
     ∀ n,
-      theorem_5_5_a_commutatorChain H n ≤ lowerCentralSeries R n := by
+      theorem_5_5_a_commutatorChain H n ≤
+        (⊤ : Subgroup R).lowerCentralSeries n := by
   intro n
   induction n with
   | zero =>
-      simp [theorem_5_5_a_commutatorChain_zero, lowerCentralSeries_zero]
+      simp [theorem_5_5_a_commutatorChain_zero, Subgroup.lowerCentralSeries_zero]
   | succ n ih =>
       have hmono :
           ⁅theorem_5_5_a_commutatorChain H n, (⊤ : Subgroup R)⁆ ≤
-            ⁅lowerCentralSeries R n, (⊤ : Subgroup R)⁆ :=
+            ⁅(⊤ : Subgroup R).lowerCentralSeries n, (⊤ : Subgroup R)⁆ :=
         Subgroup.commutator_mono ih le_rfl
-      simpa [theorem_5_5_a_commutatorChain_succ, lowerCentralSeries_succ,
+      simpa [theorem_5_5_a_commutatorChain_succ, Subgroup.lowerCentralSeries_succ,
         Subgroup.commutator_def] using hmono
 
 private theorem theorem_5_5_a_commutatorChain_eventually_bot
     {R : Type*} [Group R] [Group.IsNilpotent R] (H : Subgroup R) :
     ∃ n, theorem_5_5_a_commutatorChain H n = ⊥ := by
   obtain ⟨n, hn⟩ :=
-    (nilpotent_iff_lowerCentralSeries (G := R)).1 (show Group.IsNilpotent R from inferInstance)
+    (Subgroup.nilpotent_iff_lowerCentralSeries (G := R)).1
+      (show Group.IsNilpotent R from inferInstance)
   refine ⟨n, ?_⟩
   have hle :
       theorem_5_5_a_commutatorChain H n ≤ (⊥ : Subgroup R) := by
@@ -1452,13 +1471,15 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) := hx
           have hsmul : b • (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant b (x : G) |>.mp hxG
-          simpa [N, Subgroup.mem_subgroupOf] using hsmul
+          simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using
+            hsmul
         · intro hx
           have hsmulG : b • (x : G) ∈ Gi (i + 1) := by
-            simpa [N, Subgroup.mem_subgroupOf] using hx
+            simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using
+              hx
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant b (x : G) |>.mpr hsmulG
-          simpa [N, Subgroup.mem_subgroupOf] using hxG
+          simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
       letI : IsInvariant A K N := hNinv
       letI : MulDistribMulAction A (K ⧸ N) :=
         quotientMulDistribMulAction (A := A) (G := K) N hNinv
@@ -1471,10 +1492,15 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
       let gK : K := ⟨g, hg⟩
       have hfix : a • ((gK : K) : K ⧸ N) = ((gK : K) : K ⧸ N) := htriv a _
       have hmk_eq : QuotientGroup.mk' N (a • gK) = QuotientGroup.mk' N gK := by
-        simpa using hfix
+        rw [MulAction.subgroup_smul_def]
+        rw [MulAction.subgroup_smul_def] at hfix
+        exact (MulAction.Quotient.smul_coe (H := N) (a : A) gK).symm.trans hfix
       have hdiv_mem : (a • gK) / gK ∈ N :=
         (QuotientGroup.eq_iff_div_mem (N := N) (x := a • gK) (y := gK)).1 hmk_eq
-      simpa [K, N, gK, Subgroup.mem_subgroupOf, div_eq_mul_inv] using hdiv_mem
+      change ((a : A) • g) * g⁻¹ ∈ Gi (i + 1)
+      rw [MulAction.subgroup_smul_def] at hdiv_mem
+      simpa [K, N, gK, Subgroup.mem_subgroupOf, div_eq_mul_inv,
+        theorem_5_5_a_coe_smul_of_isInvariant] using hdiv_mem
 
 private theorem theorem_5_5_a_high_rank_series_from_H_core
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
@@ -1601,11 +1627,9 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
       intro a x
       constructor
       · intro hx
-        change (a • (x : H) : H) ∈ GiH n
         change a • (x : R) ∈ GiR n
         exact (hGi_inv_R.invariant a (x : R)).1 hx
       · intro hx
-        change x ∈ GiH n
         change (x : R) ∈ GiR n
         have hx' : a • (x : R) ∈ GiR n := hx
         exact (hGi_inv_R.invariant a (x : R)).2 hx'
@@ -1840,11 +1864,9 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     intro b x
     constructor
     · intro hx
-      change (b • (x : H) : H) ∈ GiH n
       change b • (x : R) ∈ GiR n
       exact (hGi_inv_R.invariant b (x : R)).1 hx
     · intro hx
-      change x ∈ GiH n
       change (x : R) ∈ GiR n
       have hx' : b • (x : R) ∈ GiR n := hx
       exact (hGi_inv_R.invariant b (x : R)).2 hx'
@@ -1998,7 +2020,8 @@ public theorem theorem_5_5_a_high_rank_series_bridge
         have ha :=
           (mem_fixingSubgroup_iff
             (M := derivedSubgroup A) (s := (H : Set R))).1 a.2 x hx
-        simpa using ha
+        rw [MulAction.subgroup_smul_def, MulAction.subgroup_smul_def] at ha
+        simpa [MulAction.subgroup_smul_def, MulAut.smul_def] using ha
       map_one' := by
         ext x
         rfl

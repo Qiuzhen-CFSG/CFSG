@@ -4,8 +4,8 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_3_a_1
-public import Submission.FeitThompson.BGsection3.theorem_3_4
+public import FeitThompson.BGsection6.lemma_6_3_a_1
+public import FeitThompson.BGsection3.theorem_3_4
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -154,7 +154,7 @@ public theorem lemma_6_3_a_2
       _ = eQ b * eQ a := by
             exact
               ((Subgroup.Normal.quotient_commutative_iff_commutator_le
-                (N := (_root_.commutator H))).mpr le_rfl).comm (eQ a) (eQ b)
+                (N := (_root_.commutator H))).mpr le_rfl).is_comm.comm (eQ a) (eQ b)
       _ = eQ (b * a) := by simp [eQ]
   have hcomplQ :
       IsCompl (fixedPointSubgroup (↥K) (↥H ⧸ Xsub))

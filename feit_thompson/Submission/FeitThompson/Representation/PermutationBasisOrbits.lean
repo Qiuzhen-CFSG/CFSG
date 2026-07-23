@@ -263,8 +263,8 @@ private noncomputable def permFixedPointsEquivZpowersFixedPoints
     rw [← hz]
     exact Function.IsFixedPt.perm_zpow x.2 z⟩
   invFun x := ⟨x.1, x.2 ⟨σ, Subgroup.mem_zpowers σ⟩⟩
-  left_inv x := rfl
-  right_inv x := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 private theorem primeOrder_perm_fixedPoints_orbit_formula
     {X : Type*} [Finite X] (σ : Equiv.Perm X)
@@ -312,8 +312,8 @@ private def trivialPermFixedPointsEquiv
     Function.fixedPoints (1 : Equiv.Perm X) ≃ X where
   toFun x := x.1
   invFun x := ⟨x, rfl⟩
-  left_inv x := rfl
-  right_inv x := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 private noncomputable def trivialPermOrbitQuotientEquiv
     (X : Type*) :
     X ≃ MulAction.orbitRel.Quotient
@@ -501,7 +501,5 @@ public theorem permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
     (permutedBasisInvariantsLinearEquivRespectful rho b hb)]
   exact quotientFunctionsLinearEquivRespectful_finrank F iota _
 end Representation
-
-
 
 

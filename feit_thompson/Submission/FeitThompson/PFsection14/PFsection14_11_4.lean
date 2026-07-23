@@ -1,11 +1,11 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_11_3
-import Submission.FeitThompson.PFsection12.PFsection12_7
-import Submission.FeitThompson.PFsection3.PFsection3_4
-import Submission.FeitThompson.PFsection7.PFsection7_5
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
+public import FeitThompson.PFsection14.PFsection14_11_3
+import FeitThompson.PFsection12.PFsection12_7
+import FeitThompson.PFsection3.PFsection3_4
+import FeitThompson.PFsection7.PFsection7_5
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection8.PFsection8_5_a
 
 /-!
 # Peterfalvi, Section 14: theorem (14.11.4)
@@ -225,7 +225,6 @@ public theorem section14_normalizedSupportEnergy_principal
         (Nat.card X : ℝ) := by
     rw [Section7.supportEnergy]
     simp [Section1.principalCharacter]
-    exact (Fintype.card_subtype (fun g : G => g ∈ X)).symm
   rw [hsupp]
   ring
 

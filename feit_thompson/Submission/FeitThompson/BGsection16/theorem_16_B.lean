@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection16.theorem_16_A
-public import Submission.FeitThompson.PFsection2.Basic
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection16.theorem_16_A
+public import FeitThompson.PFsection2.Basic
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -60,7 +60,8 @@ public theorem section16_groupRank_U_le_two_of_section15
   classical
   let E : Subgroup G := K ⊔ U
   have hEcomp : section12ComplementToMsigma M E := by
-    simpa using hKU.2.2.1
+    change section12ComplementIn M (section10Msigma M) (K ⊔ U)
+    exact hKU.2.2.1
   let eE : E.subgroupOf M ≃* E :=
     Subgroup.subgroupOfEquivOfLe (H := E) (K := M) hEcomp.2.1
   have hE_rank : groupRank E ≤ 2 :=
@@ -104,6 +105,7 @@ private theorem section16_hasAbelianSylowRankAtMostTwo_of_section15
       (R := U) (q := p.val) (A := (P : Subgroup U)) P.isPGroup' hPcomm).trans
         hU_rank⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_hatMsigmaSet_le_generatedCentralizers
     (M U : Subgroup G) :
     ((U : Set G) ∩ section16HatMsigmaSet M) ⊆
@@ -137,12 +139,14 @@ private theorem section16_setCommutative_hatMsigma_of_section15
   classical
   have hcomm : IsMulCommutative (section15GeneratedMsigmaCentralizers M U) :=
     lemma_15_1_d hM hKU
+  letI : IsMulCommutative (section15GeneratedMsigmaCentralizers M U) := hcomm
   intro x hx y hy
-  exact Subgroup.mul_comm_of_mem_isMulCommutative
-    (H := section15GeneratedMsigmaCentralizers M U)
+  exact setLike_mul_comm
+    (s := section15GeneratedMsigmaCentralizers M U)
     (section16_hatMsigmaSet_le_generatedCentralizers (G := G) M U hx)
     (section16_hatMsigmaSet_le_generatedCentralizers (G := G) M U hy)
 
+omit [IsMinCE G] in
 private theorem section16_elementCentralizerIn_eq_bot_of_frobeniusJoin
     {M R : Subgroup G}
     (hFrob : section12FrobeniusJoinWithKernel (section10Msigma M) R) :
@@ -235,6 +239,7 @@ private theorem section16_centralizer_unique_of_section15
   exact (lemma_15_1_c (M := M) (K := K) (U := U) (X := X)
     hM hKU hXU hXne hcent).1
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_centralizer_zpowers_eq_singleton
     (u : G) :
     Subgroup.centralizer ((Subgroup.zpowers u : Subgroup G) : Set G) =
@@ -293,6 +298,7 @@ private theorem section16_centralizer_unique_of_U_hat_element
       hM hKU (Subgroup.zpowers u) hXU hXne hcent
   simpa [section16_centralizer_zpowers_eq_singleton (G := G) u] using huniq
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_centralizer_singleton_conjBy_eq
     (u m : G) :
     (Subgroup.centralizer ({u} : Set G)).conjBy m =
@@ -312,6 +318,7 @@ private theorem section16_centralizer_singleton_conjBy_eq
       simpa [mul_assoc] using h
     · simp [MulAut.conj_apply, mul_assoc]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_maximalSubgroupsContaining_centralizer_singleton_conj
     {M : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -340,7 +347,7 @@ private theorem section16_maximalSubgroupsContaining_centralizer_singleton_conj
           Subgroup.mem_map.mpr ⟨c, hc, by simp [MulAut.conj_apply, mul_assoc]⟩
         simpa [section16_centralizer_singleton_conjBy_eq (G := G) u m] using hmap
       exact Subgroup.mem_map.mpr ⟨m * c * m⁻¹, hH.2 hconj, by
-        simp [MulAut.conj_apply, mul_assoc]⟩
+        simp [mul_assoc]⟩
     have hHinv_eq : H.conjBy m⁻¹ = M := by
       have hsingle : H.conjBy m⁻¹ ∈ ({M} : Set (Subgroup G)) := by
         simpa [huniq] using hHinv
@@ -352,15 +359,14 @@ private theorem section16_maximalSubgroupsContaining_centralizer_singleton_conj
         _ = M.conjBy m := by rw [hHinv_eq]
         _ = M := section11_conjBy_eq_of_mem_normalizer
           (H := M) (Subgroup.le_normalizer hm)
-    simpa [hH_eq]
+    simp [hH_eq]
   · intro hHsingle
     have hH_eq : H = M := by simpa using hHsingle
     subst H
     have hMcont :
         M ∈ section9MaximalSubgroupsContaining
           (Subgroup.centralizer ({u} : Set G)) := by
-      have hsingle : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [huniq] using hsingle
+      simp [huniq]
     refine ⟨hM, ?_⟩
     intro c hc
     have hback :
@@ -523,9 +529,9 @@ private theorem section16_exists_conj_mem_centralizer_of_coprime_conj
       exact Subtype.ext_iff.mp hu_sub
     rw [pow_mul, hu_card, one_pow]
   have huComm : Commute u g := by
-    simpa [Commute] using
-      (section16_section2_mem_elementCentralizer_commute
-        ((Subgroup.mem_inf.mp huCent).2)).symm
+    change u * g = g * u
+    exact (section16_section2_mem_elementCentralizer_commute
+      ((Subgroup.mem_inf.mp huCent).2)).symm
   have hugPow : (u * g) ^ n = g := by
     calc
       (u * g) ^ n = u ^ n * g ^ n := huComm.mul_pow n
@@ -540,8 +546,9 @@ private theorem section16_exists_conj_mem_centralizer_of_coprime_conj
   intro z hz
   rw [Set.mem_singleton_iff] at hz
   subst z
-  simpa [Commute] using hxr_comm_g.symm
+  exact hxr_comm_g.symm.eq
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_ASet_diff_msigma_product_decomp
     {M U : Subgroup G}
     {a : G}
@@ -601,7 +608,8 @@ private theorem section16_ASet_diff_msigma_u_mem_hat
     intro p hp
     exact hUHall.p_in_pi_of_p_dvd_card p hp
   have hSσπ : IsPiSubgroup (section10SigmaPrimes M) Sσ := by
-    simpa [Sσ] using (theorem_10_2_b (G := G) hM).2.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact (theorem_10_2_b (G := G) hM).2.p_in_pi_of_p_dvd_card p hp
   have hπdisj :
       Disjoint ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ)
         (section10SigmaPrimes M) := by
@@ -656,7 +664,7 @@ private theorem section16_ASet_diff_msigma_u_mem_hat
   apply Subgroup.ne_bot_iff_exists_ne_one.mpr
   have hzSigmaG : ((zσ : M) : G) ∈ section10Msigma M := by
     change ((zσ : M) : G) ∈ (section10MsigmaSubgroup M).map M.subtype
-    exact Subgroup.mem_map.mpr ⟨(zσ : M), by simpa [Sσ] using zσ.property, rfl⟩
+    exact Subgroup.mem_map.mpr ⟨(zσ : M), by simp [Sσ], rfl⟩
   have hzCentM : (zσ : M) ∈ Subgroup.centralizer ({uM} : Set M) := by
     have hz := (Subgroup.mem_inf.mp hzCent).2
     simpa [Section2.elementCentralizer] using hz
@@ -713,7 +721,8 @@ public theorem section16_ASet_diff_msigma_conj_U_hat_of_coprime
     intro p hp
     exact hUHall.p_in_pi_of_p_dvd_card p hp
   have hSσπ : IsPiSubgroup (section10SigmaPrimes M) Sσ := by
-    simpa [Sσ] using (theorem_10_2_b (G := G) hM).2.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact (theorem_10_2_b (G := G) hM).2.p_in_pi_of_p_dvd_card p hp
   have hπdisj :
       Disjoint ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ)
         (section10SigmaPrimes M) := by
@@ -739,7 +748,7 @@ public theorem section16_ASet_diff_msigma_conj_U_hat_of_coprime
     simpa [Sσ, section16_msigma_subgroupOf_eq (M := M)] using hsSub
   have haM_eq_yu : aM = yM * uM := by
     apply Subtype.ext
-    simpa [aM, yM, uM, sM, ha_eq, mul_assoc]
+    simp [aM, yM, uM, sM, ha_eq, mul_assoc]
   rcases section16_exists_centralizer_coset_conj_of_coprime
       (K := Sσ) (g := uM) hcop_uS ⟨yM, hySσ⟩ with
     ⟨rσ, vσ, hvCent, hvu_eq⟩
@@ -748,8 +757,8 @@ public theorem section16_ASet_diff_msigma_conj_U_hat_of_coprime
   have hvSσ : vM ∈ Sσ := vσ.property
   have hvComm : Commute vM uM := by
     have hv := (Subgroup.mem_inf.mp hvCent).2
-    simpa [Section2.elementCentralizer, Commute] using
-      (section16_section2_mem_elementCentralizer_commute hv).symm
+    change vM * uM = uM * vM
+    exact (section16_section2_mem_elementCentralizer_commute hv).symm
   have hv_order_dvd_Sσ : orderOf vM ∣ Nat.card Sσ :=
     Subgroup.orderOf_dvd_natCard Sσ hvSσ
   have hcop_uv : Nat.Coprime (orderOf uM) (orderOf vM) :=
@@ -786,7 +795,7 @@ public theorem section16_ASet_diff_msigma_conj_U_hat_of_coprime
       orderOf (vM * uM) =
           orderOf ((rM : M)⁻¹ * aM * (rM : M)) := by rw [hvu_eq']
       _ = orderOf aM := hconj_order
-      _ = orderOf a := by simp [Subgroup.orderOf_coe, aM]
+      _ = orderOf a := by simp [aM]
   have hcardSσ_eq :
       Nat.card Sσ = Nat.card (section10Msigma M) := by
     calc
@@ -905,6 +914,7 @@ public theorem section16_ASet_diff_msigma_exists_prime_compl_zpow
     simpa [Subgroup.orderOf_coe] using hz_order_M
   simpa [q', ← hzG_eq] using hz_order_G
 
+set_option linter.unusedVariables false in
 public theorem section16_ASet_diff_msigma_zpow_unique_centralizer
     {M K U : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -952,7 +962,7 @@ public theorem section16_ASet_diff_msigma_zpow_unique_centralizer
   rcases corollary_14_3 (G := G) (M := M) hM hxSigma hxne hz_ne hzcentIn hzsigma' with
     hκ | hτ
   · have hqSupp : q ∈ section14ElementPrimeSupport (a ^ n) := by
-      simpa [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
+      simp [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers, hzorder]
     exact False.elim (hzsupport_compl hqSupp (Or.inl (hκ.1 hqSupp)))
   · exact hτ.2.2
 
@@ -1058,6 +1068,7 @@ public theorem section16_ASet_diff_msigma_le_normalizer_of_M
         (G := G) (M := M) (K := K) (U := U) hM hKU (M.inv_mem hm) hconj
     simpa [mul_assoc] using hback
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_mem_normalizer_of_conjBy_eq
     {H : Subgroup G} {g : G} (hg : H.conjBy g = H) :
     g ∈ Subgroup.normalizer (H : Set G) := by
@@ -1089,7 +1100,7 @@ public theorem section16_maximal_normalizer_eq_self
   have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
   have hMsigmaSub_ne : section10MsigmaSubgroup M ≠ ⊥ := by
     intro hbot
-    exact hMsigma_ne (by simpa [section10Msigma, hbot])
+    exact hMsigma_ne (by simp [section10Msigma, hbot])
   have hnorm :=
     section10_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       (G := G) hM (N := section10MsigmaSubgroup M) hMsigmaSub_ne
@@ -1148,8 +1159,7 @@ private theorem section16_TISubset_of_unique_element_centralizers
       have hMcont :
           M ∈ section9MaximalSubgroupsContaining
             (Subgroup.centralizer ({y} : Set G)) := by
-        have hsingle : M ∈ ({M} : Set (Subgroup G)) := by simp
-        simpa [huniq y hyT hyne] using hsingle
+        simp [huniq y hyT hyne]
       exact hMcont.2
     have hcent_x_le_Mg :
         Subgroup.centralizer ({x} : Set G) ≤ M.conjBy g := by
@@ -1245,8 +1255,7 @@ private theorem section16_ASet_diff_msigma_TI
       have hMcont :
           M ∈ section9MaximalSubgroupsContaining
             (Subgroup.centralizer ({w} : Set G)) := by
-        have hsingle : M ∈ ({M} : Set (Subgroup G)) := by simp
-        simpa [huniq_w] using hsingle
+        simp [huniq_w]
       exact hMcont.2
     have hMg_cont :
         M.conjBy g ∈ section9MaximalSubgroupsContaining
@@ -1290,7 +1299,7 @@ private theorem section16_ASet_diff_msigma_TI
 public theorem theorem_16_B
     {M MF K U : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
+    (_hMF : section16MFSubgroup M MF)
     (hKU : section16KUData M K U) :
     section16TheoremBConclusions M K U := by
   classical

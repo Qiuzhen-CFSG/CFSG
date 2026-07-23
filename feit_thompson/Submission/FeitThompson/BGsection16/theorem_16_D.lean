@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection16.theorem_16_C
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection16.theorem_16_C
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -50,7 +50,7 @@ public theorem theorem_16_D
       constructor
       · intro hL
         have hLN : L = N := hNuniq L hL
-        simpa [hLN]
+        simp [hLN]
       · intro hL
         have hLN : L = N := by simpa using hL
         simpa [hLN] using hNcont
@@ -63,9 +63,7 @@ public theorem theorem_16_D
       have hNnotF : N ∉ section14MFamilyF G := by
         intro hNF
         rcases hNP2'.1.2 with ⟨p, hpκ⟩
-        have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-          simpa [hNF.2] using hpκ
-        exact hpempty
+        simp [hNF.2] at hpκ
       rcases section16_exists_prime_order_zpower (G := G) hxne with
         ⟨r, xr, hr, hxrmem, hxrorder⟩
       rcases corollary_15_9 (G := G) (M := M) (N := N) (x := x)

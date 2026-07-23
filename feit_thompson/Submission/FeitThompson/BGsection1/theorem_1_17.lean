@@ -4,9 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.proposition_1_16
+public import FeitThompson.BGsection1.proposition_1_16
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement IsMulCommutative
 
 public section
 
@@ -73,9 +73,10 @@ public lemma focalSubgroup_le_commutator (H : Subgroup G) : focalSubgroup H ≤ 
   rw [focalSubgroup_def, closure_le]
   rintro z ⟨x, hx, y, hy, hxy, rfl⟩
   rcases isConj_iff.mp hxy with ⟨u, rfl⟩
-  simpa [commutatorElement_def, mul_assoc] using
-    (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup G)) (H₂ := ⊤)
-      (show x⁻¹ ∈ (⊤ : Subgroup G) by simp) (show u ∈ (⊤ : Subgroup G) by simp))
+  have hcomm : ⁅x⁻¹, u⁆ ∈ _root_.commutator G :=
+    commutator_mem_commutator (mem_top (x⁻¹)) (mem_top u)
+  rw [SetLike.mem_coe]
+  simpa only [commutatorElement_def, inv_inv, mul_assoc] using hcomm
 
 /-- The commutator subgroup of `H` lies in its focal subgroup. -/
 public lemma commutator_le_focalSubgroupOf (H : Subgroup G) : _root_.commutator H ≤ focalSubgroupOf H := by
@@ -92,9 +93,9 @@ public lemma commutator_le_focalSubgroupOf (H : Subgroup G) : _root_.commutator 
   · simp [commutatorElement_def, mul_assoc]
 
 public instance instIsMulCommutativeQuotientFocalSubgroupOf (H : Subgroup G) :
-    IsMulCommutative (H ⧸ focalSubgroupOf H) := by
-  refine ⟨⟨(Normal.quotient_commutative_iff_commutator_le (N := focalSubgroupOf H)).mpr
-    (commutator_le_focalSubgroupOf H) |>.comm⟩⟩
+    IsMulCommutative (H ⧸ focalSubgroupOf H) :=
+  Normal.quotient_commutative_iff_commutator_le.mpr
+    (commutator_le_focalSubgroupOf H)
 
 /-- In `H/H*`, conjugate elements of `H` have the same class. -/
 public lemma focalSubgroupOf.mk'_conj_eq (H : Subgroup G) {h : G} (hh : h ∈ H) (g : G)
@@ -117,26 +118,13 @@ public noncomputable def transferFocal (H : Subgroup G) [H.FiniteIndex] :
 /-- The transfer map restricts to the power map modulo the focal subgroup. -/
 public theorem transferFocal_eq_pow (H : Subgroup G) [H.FiniteIndex] (x : H) :
     transferFocal H x = (x : H ⧸ H.focalSubgroupOf) ^ H.index := by
-  letI := H.fintypeQuotientOfFiniteIndex
-  letI :
-      ∀ ω : Quotient (MulAction.orbitRel (zpowers (x : G)) (G ⧸ H)),
-        Fintype (MulAction.orbit (zpowers (x : G)) (Quotient.out ω)) :=
-    fun _ => Fintype.ofFinite _
   have : Fintype (Quotient (MulAction.orbitRel (zpowers (x : G)) (G ⧸ H))) :=
     Fintype.ofFinite _
-  have hindex :
-      H.index =
-        ∑ q : Quotient (MulAction.orbitRel (zpowers (x : G)) (G ⧸ H)),
-          Function.minimalPeriod (fun t : G ⧸ H => (x : G) • t) q.out := by
-    simpa using index_eq_sum_minimalPeriod H (x : G)
-  rw [transferFocal, MonoidHom.transfer_eq_prod_quotient_orbitRel_zpowers_quot, hindex,
-    ← Finset.prod_pow_eq_pow_sum]
+  rw [transferFocal, index_eq_sum_minimalPeriod H x, ← Finset.prod_pow_eq_pow_sum,
+    MonoidHom.transfer_eq_prod_quotient_orbitRel_zpowers_quot]
   apply Finset.prod_congr rfl
-  intro q hq
-  simpa using focalSubgroupOf.mk'_conj_eq (H := H)
-    (hh := H.pow_mem x.2 _)
-    (g := q.out.out)
-    (hconj := QuotientGroup.out_conj_pow_minimalPeriod_mem H (x : G) q.out)
+  intros
+  apply focalSubgroupOf.mk'_conj_eq H
 
 variable {p : ℕ} [Fact p.Prime] [Finite G] [Finite (Sylow p G)]
 

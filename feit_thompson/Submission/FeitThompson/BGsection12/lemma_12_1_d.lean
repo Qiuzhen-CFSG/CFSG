@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_1_c
+public import FeitThompson.BGsection12.lemma_12_1_c
 
 open scoped Pointwise
 
@@ -44,7 +44,7 @@ public theorem lemma_12_1_d
     have hE1comm : IsMulCommutative E₁ :=
       section12_isMulCommutative_of_commutator_eq_bot hE1commutator
     letI : IsZGroup E₁ := hE1Z
-    letI : CommGroup E₁ := CommGroup.ofIsMulCommutative
+    letI : CommGroup E₁ := IsMulCommutative.instCommGroup
     haveI : Group.IsNilpotent E₁ := inferInstance
     infer_instance
   · have hE3Z : IsZGroup E₃ := by
@@ -71,7 +71,7 @@ public theorem lemma_12_1_d
       haveI : Group.IsNilpotent (ambientDerivedSubgroup E) := hnil_der
       have hsubnil : Group.IsNilpotent (E₃.subgroupOf (ambientDerivedSubgroup E)) :=
         inferInstance
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (G := E₃.subgroupOf (ambientDerivedSubgroup E)) (G' := E₃) e
     letI : IsZGroup E₃ := hE3Z
     haveI : Group.IsNilpotent E₃ := hnil_E3

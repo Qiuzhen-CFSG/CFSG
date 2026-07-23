@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.lemma_13_1
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.lemma_13_1
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -24,6 +24,7 @@ private theorem section13_prime_mem_E_of_tau13
     p ∈ subgroupPrimeSet E := by
   exact section12_prime_mem_E_of_mem_tau13 hM hE hpτ13
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_centralizes_of_commutator_eq_bot
     {A B P : Subgroup G} (hcomm : ⁅A, B⁆ = ⊥) (hPB : P ≤ B) :
     P ≤ Subgroup.centralizer (A : Set G) := by
@@ -34,6 +35,7 @@ private theorem section13_centralizes_of_commutator_eq_bot
     exact (Subgroup.le_centralizer_iff (H := A) (K := B)).mp hA_le_centB
   exact hPB.trans hB_le_centA
 
+omit [IsMinCE G] in
 private theorem section13_le_centralizer_of_sylow_images
     {K X : Subgroup G}
     (hSylowCent : ∀ q : Nat.Primes, q ∈ subgroupPrimeSet X →
@@ -57,11 +59,13 @@ private theorem section13_le_centralizer_of_sylow_images
     change ((y : X) : G) ∈ Subgroup.centralizer (K : Set G)
     have hy_map : ((y : X) : G) ∈ ((S : Subgroup X).map X.subtype : Subgroup G) :=
       Subgroup.mem_map_of_mem X.subtype hyS
-    exact hSylowCent q (by simpa [q] using Nat.dvd_of_mem_primeFactors hr) S hy_map
+    exact hSylowCent q
+      (by simpa [q, subgroupPrimeSet] using Nat.dvd_of_mem_primeFactors hr) S hy_map
   intro x hxX
   let xX : X := ⟨x, hxX⟩
   have hxC : xX ∈ C := htop_le_C (show xX ∈ (⊤ : Subgroup X) by simp)
-  simpa [C, xX] using hxC
+  change ((xX : X) : G) ∈ Subgroup.centralizer (K : Set G) at hxC
+  exact hxC
 
 omit [IsMinCE G] in
 private theorem section13_eq_top_of_exists_sylow_le
@@ -100,6 +104,7 @@ private theorem section13_eq_top_of_exists_sylow_le
   · simp [Nat.factorization_eq_zero_of_not_prime (n := Nat.card X) (p := p) hp,
       Nat.factorization_eq_zero_of_not_prime (n := Nat.card H) (p := p) hp]
 
+omit [IsMinCE G] in
 public theorem section13_le_centralizer_of_exists_sylow_images
     {K X : Subgroup G}
     (hSylowCent : ∀ q : Nat.Primes, q ∈ subgroupPrimeSet X →
@@ -114,7 +119,7 @@ public theorem section13_le_centralizer_of_exists_sylow_images
     let q : Nat.Primes := ⟨p, hpFact.out⟩
     haveI : Fact q.val.Prime := ⟨q.property⟩
     have hqX : q ∈ subgroupPrimeSet X := by
-      simpa [q] using Nat.dvd_of_mem_primeFactors hpX
+      simpa [q, subgroupPrimeSet] using Nat.dvd_of_mem_primeFactors hpX
     obtain ⟨S, hScent⟩ := hSylowCent q hqX
     refine ⟨S, ?_⟩
     change (S : Subgroup X) ≤ C
@@ -128,7 +133,8 @@ public theorem section13_le_centralizer_of_exists_sylow_images
   have hxC : xX ∈ C := by
     rw [hC_top]
     simp
-  simpa [C, xX] using hxC
+  change ((xX : X) : G) ∈ Subgroup.centralizer (K : Set G) at hxC
+  exact hxC
 
 omit [IsMinCE G] in
 private theorem section13_primeRank_le_card
@@ -136,7 +142,7 @@ private theorem section13_primeRank_le_card
     primeRank q R ≤ Nat.card R := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨B, _hBp, _hBcomm, hnB⟩
     exact hnB.trans <|
@@ -180,7 +186,7 @@ private theorem section13_primeRank_le_groupRank_sylow
   haveI : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     obtain ⟨Q, hAQ⟩ := IsPGroup.exists_le_sylow (G := R) (p := p.val) hAp
@@ -225,6 +231,7 @@ public theorem section13_normalizer_ne_top_of_ne_bot_le_maximal
       simpa [hXtop] using hXM
     exact hM.1 (top_le_iff.mp htop_le_M)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_ambient_sylow_is_cyclic {p : Nat.Primes}
     {E : Subgroup G} (P : Sylow p.val E)
     (hPcyc : IsCyclic (P : Subgroup E)) :
@@ -263,6 +270,7 @@ public theorem section13_prime_mem_tau13_of_cyclic_sylow_E
     · exact False.elim (hp_notτ2 hpτ2)
   · exact Or.inr hpτ3
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_isPGroup_of_le_pSubgroup
     {A X : Subgroup G} {p : Nat.Primes}
     (hAp : IsPGroup p.val A) (hXA : X ≤ A) :
@@ -272,6 +280,7 @@ public theorem section13_isPGroup_of_le_pSubgroup
   let e : X.subgroupOf A ≃* X := Subgroup.subgroupOfEquivOfLe hXA
   exact hXsub_p.of_equiv e
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_ne_bot_of_prime_order
     {X : Subgroup G} {q : Nat.Primes} (hXcard : Nat.card X = q.val) :
     X ≠ ⊥ := by
@@ -282,6 +291,7 @@ public theorem section13_ne_bot_of_prime_order
   have hq_one : q.val = 1 := by omega
   exact q.property.ne_one hq_one
 
+omit [IsMinCE G] in
 public theorem section13_ambient_sylow_le_normalizer_of_le_cyclic
     {A X : Subgroup G} (hXA : X ≤ A) (hAcyc : IsCyclic A) :
     A ≤ Subgroup.normalizer (X : Set G) := by

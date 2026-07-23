@@ -1,10 +1,10 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_1
-public import Submission.FeitThompson.PFsection5.PFsection5_2
-public import Submission.FeitThompson.PFsection4.PFsection4_9
-public import Submission.FeitThompson.ChiefFactors.Core
-import Submission.FeitThompson.Representation.SolvableDimension
+public import FeitThompson.PFsection5.PFsection5_1
+public import FeitThompson.PFsection5.PFsection5_2
+public import FeitThompson.PFsection4.PFsection4_9
+public import FeitThompson.ChiefFactors.Core
+import FeitThompson.Representation.SolvableDimension
 
 /-!
 # Peterfalvi, Section 6: basic notation
@@ -125,7 +125,7 @@ public theorem exists_inducedKernelFamily
     have ha : (a : K) = 1 := by
       apply Subtype.ext
       simpa using a.property
-    simpa [ha, Section1.degree]
+    simp [ha, Section1.degree]
   · rintro ⟨eta, hetaIrr, _hetaBot, hetaNe, rfl⟩
     rcases hetaIrr with ⟨n, rho, hrho, hetaEq⟩
     have hrhoCharIrr :
@@ -177,7 +177,7 @@ public theorem not_subgroupInKernel_top_of_irreducible_ne_principal
       refine Finset.sum_congr rfl ?_
       intro g _hg
       have hg := hker ⟨g, by simp⟩
-      simpa using hg
+      simpa [Section1.degree] using hg
     rw [hsum]
     simp
   have hdeg0 : Section1.degree theta = 0 := by
@@ -304,7 +304,9 @@ public theorem quotientCharacterInflation_isIrreducibleCharacterOnGroup
     (χ : (T ⧸ H.subgroupOf T) →* ℂˣ) :
     Section1.IsIrreducibleCharacterOnGroup
       (Section1.quotientCharacterInflation H T χ) := by
-  simpa [Section1.quotientCharacterInflation, Section1.characterInflationByHom] using
+  change Section1.IsIrreducibleCharacterOnGroup
+    (Section1.characterInflationByHom (QuotientGroup.mk' (H.subgroupOf T)) χ)
+  exact
     characterInflationByHom_isIrreducibleCharacterOnGroup
       (QuotientGroup.mk' (H.subgroupOf T)) χ
 
@@ -822,7 +824,7 @@ public theorem nilpotent_normal_inf_center_ne_bot
     N ⊓ Subgroup.center G ≠ ⊥ := by
   classical
   rcases Group.IsNilpotent.nilpotent G with ⟨n, hn⟩
-  let P : ℕ → Prop := fun n => N ⊓ upperCentralSeries G n ≠ ⊥
+  let P : ℕ → Prop := fun n => N ⊓ Subgroup.upperCentralSeries G n ≠ ⊥
   have hExists : ∃ n, P n := by
     refine ⟨n, ?_⟩
     dsimp [P]
@@ -843,24 +845,24 @@ public theorem nilpotent_normal_inf_center_ne_bot
   · rcases Nat.exists_eq_succ_of_ne_zero hm0 with ⟨k, hk⟩
     have hmPsucc : P (k + 1) := by
       simpa [hk] using hmP
-    have hprev_bot : N ⊓ upperCentralSeries G k = ⊥ := by
+    have hprev_bot : N ⊓ Subgroup.upperCentralSeries G k = ⊥ := by
       by_contra hne
       exact hm_min k (by rw [hk]; exact Nat.lt_succ_self k) hne
     apply fun hbot => hmPsucc ?_
     apply le_antisymm ?_ bot_le
     intro x hx
     have hxN : x ∈ N := hx.1
-    have hxU : x ∈ upperCentralSeries G (k + 1) := hx.2
+    have hxU : x ∈ Subgroup.upperCentralSeries G (k + 1) := hx.2
     have hxcenter : x ∈ Subgroup.center G := by
       rw [Subgroup.mem_center_iff]
       intro y
-      have hcommU : x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G k :=
-        (mem_upperCentralSeries_succ_iff).mp hxU y
+      have hcommU : x * y * x⁻¹ * y⁻¹ ∈ Subgroup.upperCentralSeries G k :=
+        (Subgroup.mem_upperCentralSeries_succ_iff).mp hxU y
       have hcommN : x * y * x⁻¹ * y⁻¹ ∈ N := by
         have hyxinv : y * x⁻¹ * y⁻¹ ∈ N := by
           exact (inferInstance : N.Normal).conj_mem (x⁻¹) (N.inv_mem hxN) y
         simpa [mul_assoc] using N.mul_mem hxN hyxinv
-      have hcommInf : x * y * x⁻¹ * y⁻¹ ∈ N ⊓ upperCentralSeries G k :=
+      have hcommInf : x * y * x⁻¹ * y⁻¹ ∈ N ⊓ Subgroup.upperCentralSeries G k :=
         ⟨hcommN, hcommU⟩
       have hcommOne : x * y * x⁻¹ * y⁻¹ = 1 := by
         simpa [hprev_bot] using hcommInf
@@ -880,18 +882,18 @@ public theorem nilpotent_commutator_lt_self_of_normal
   refine lt_of_le_of_ne hle ?_
   intro hEq
   have hEq' : N = ⁅N, (⊤ : Subgroup G)⁆ := hEq.symm
-  have hN_le_lcs : ∀ n, N ≤ lowerCentralSeries G n := by
+  have hN_le_lcs : ∀ n, N ≤ (⊤ : Subgroup G).lowerCentralSeries n := by
     intro n
     induction n with
     | zero =>
-        simp [lowerCentralSeries_zero]
+        simp [Subgroup.lowerCentralSeries_zero]
     | succ n ih =>
         calc
           N = ⁅N, (⊤ : Subgroup G)⁆ := hEq'
-          _ ≤ ⁅lowerCentralSeries G n, (⊤ : Subgroup G)⁆ :=
+          _ ≤ ⁅(⊤ : Subgroup G).lowerCentralSeries n, (⊤ : Subgroup G)⁆ :=
             Subgroup.commutator_mono ih le_rfl
-          _ = lowerCentralSeries G (n + 1) := rfl
-  rcases (nilpotent_iff_lowerCentralSeries (G := G)).1
+          _ = (⊤ : Subgroup G).lowerCentralSeries (n + 1) := rfl
+  rcases (Subgroup.nilpotent_iff_lowerCentralSeries (G := G)).1
       (show Group.IsNilpotent G from inferInstance) with ⟨n, hn⟩
   apply hN
   exact le_bot_iff.mp (by simpa [hn] using hN_le_lcs n)
@@ -915,7 +917,7 @@ public theorem nilpotentQuotient_of_le_right
     exact hMB hx
   have hnilQuot : Group.IsNilpotent ((H ⧸ Msub) ⧸ Bbar) := by
     infer_instance
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := (H ⧸ Msub) ⧸ Bbar)
     (G' := H ⧸ Bsub)
     (QuotientGroup.quotientQuotientEquivQuotient Msub Bsub hMsubBsub)
@@ -941,7 +943,6 @@ public theorem commutatorQuotientHypothesis_quotient_commutative
     ⟨_hMK, _hH1K, hMH1, hMnormK, _hMnorm, _hH1norm', _hKnorm, hcommEq⟩
   haveI : (M.subgroupOf K).Normal := hMnormK
   haveI : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
-  refine ⟨?_⟩
   apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
   intro x hx
   let q : K →* K ⧸ M.subgroupOf K := QuotientGroup.mk' (M.subgroupOf K)

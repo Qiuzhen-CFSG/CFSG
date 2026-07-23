@@ -1,12 +1,12 @@
 module
 
-public import Submission.FeitThompson.BGsection4.lemma_4_10
-public import Submission.FeitThompson.BGsection4.lemma_4_9
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
-public import Submission.FeitThompson.BGsection4.lemma_4_5_b
-public import Submission.FeitThompson.BGsection4.proposition_4_8_b
+public import FeitThompson.BGsection4.lemma_4_10
+public import FeitThompson.BGsection4.lemma_4_9
+public import FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection4.lemma_4_5_b
+public import FeitThompson.BGsection4.proposition_4_8_b
 
-open scoped FixedPoints
+open scoped FixedPoints IsMulCommutative commutatorElement
 
 /-! # Infrastructure for Proposition 4.11 from BG Section 4 -/
 
@@ -46,7 +46,7 @@ private theorem natCard_quotient_zpowers_pow_eq_prime
   rcases hp_dvd_order with ⟨m, hm⟩
   have hm_ne_zero : m ≠ 0 := by
     intro hm_zero
-    have hzero : orderOf g = 0 := by simpa [hm, hm_zero]
+    have hzero : orderOf g = 0 := by simp [hm, hm_zero]
     exact (Nat.ne_of_gt (orderOf_pos g)) hzero
   have hm_pos : 0 < m := Nat.pos_of_ne_zero hm_ne_zero
   have hdiv_pos : 0 < orderOf g / p := by
@@ -68,7 +68,7 @@ public theorem normal_of_derivedSubgroup_le
   refine Subgroup.Normal.mk ?_
   intro n hn g
   have hcomm : ⁅g, n⁆ ∈ derivedSubgroup G := by
-    simpa [derivedSubgroup] using
+    simpa only [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
       (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup G)) (H₂ := (⊤ : Subgroup G))
         (by simp) (by simp))
   have hconj_eq : g * n * g⁻¹ = ⁅g, n⁆ * n := by
@@ -114,7 +114,7 @@ private theorem mho_one_map_subtype_mono
       rw [mho]
       exact Subgroup.subset_closure ⟨⟨(z : G), hDH z.2⟩, rfl⟩
     simpa using Subgroup.mem_map_of_mem H.subtype hzH
-  · simpa using (mho p 1 H).one_mem
+  · simp
   · intro a b _ _ ha hb
     exact ((mho p 1 H).map H.subtype).mul_mem ha hb
   · intro a _ ha
@@ -144,8 +144,7 @@ private theorem mho_one_map_subtype_normal_of_normal
       simpa [mho, S, MonoidHom.map_closure] using hz'map'
     have hconj_pow :
         g * (((z ^ (p ^ 1) : N) : G)) * g⁻¹ = (((z' ^ (p ^ 1) : N) : G)) := by
-      simpa [z'] using
-        (show g * ((z : G) ^ (p ^ 1)) * g⁻¹ = (g * (z : G) * g⁻¹) ^ (p ^ 1) by simp)
+      simp [z']
     change g * (((z ^ (p ^ 1) : N) : G)) * g⁻¹ ∈ Subgroup.closure S
     rw [hconj_pow]
     exact hz'map
@@ -167,15 +166,15 @@ private theorem exists_zpowers_sup_eq_comap_of_cyclic_subgroup_quotient
     · intro x hxT
       change q x ∈ Abar
       have hx_one : q x = 1 := (QuotientGroup.eq_one_iff (N := T) (x := x)).2 hxT
-      simpa [hx_one] using Abar.one_mem
-    · exact (Subgroup.zpowers_le).2 (by simpa [q, ha] using abar.2)
+      simp [hx_one]
+    · exact (Subgroup.zpowers_le).2 (by simp [q, ha])
   have hmap_le : H.map q ≤ Abar :=
     (Subgroup.map_le_iff_le_comap).2 hH_le
   have hAbar_le : Abar ≤ H.map q := by
     intro y hyA
     have hytop : (⟨y, hyA⟩ : Abar) ∈ (⊤ : Subgroup Abar) := by simp
     have hyzpow : (⟨y, hyA⟩ : Abar) ∈ Subgroup.zpowers abar := by
-      simpa [habar_top] using hytop
+      simp [habar_top]
     rcases Subgroup.mem_zpowers_iff.mp hyzpow with ⟨n, hn⟩
     have hy_eq : q (a ^ n) = y := by
       calc
@@ -191,7 +190,7 @@ private theorem exists_zpowers_sup_eq_comap_of_cyclic_subgroup_quotient
     _ = H ⊔ q.ker := Subgroup.comap_map_eq (f := q) (H := H)
     _ = H := by
       apply sup_eq_left.2
-      simpa [H, q, QuotientGroup.ker_mk']
+      simp [H, q, QuotientGroup.ker_mk']
 
 private theorem exists_zpowers_sup_eq_top_of_cyclic_quotient
     {R : Type*} [Group R] {N : Subgroup R} [N.Normal]
@@ -264,7 +263,13 @@ public theorem proposition_4_11_aux
     have hcardQ :
         Nat.card (R ⧸ frattini R) =
           p ^ Module.finrank (ZMod p) (Additive (R ⧸ frattini R)) := by
-      simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive (R ⧸ frattini R))
+      calc
+        Nat.card (R ⧸ frattini R) = Nat.card (Additive (R ⧸ frattini R)) :=
+          Nat.card_congr Additive.ofMul
+        _ = p ^ Module.finrank (ZMod p) (Additive (R ⧸ frattini R)) := by
+          simpa only [Nat.card_zmod] using
+            (Module.natCard_eq_pow_finrank
+              (K := ZMod p) (V := Additive (R ⧸ frattini R)))
     have hquot_finrank_le_two : Module.finrank (ZMod p) (Additive (R ⧸ frattini R)) ≤ 2 := by
       have hpow_le : p ^ Module.finrank (ZMod p) (Additive (R ⧸ frattini R)) ≤ p ^ 2 := by
         rw [← hcardQ]
@@ -281,7 +286,7 @@ public theorem proposition_4_11_aux
     have hD_ne_bot : D ≠ ⊥ := by
       intro hD_bot
       have hcomm_bot : _root_.commutator R = ⊥ := by
-        simpa [D, derivedSubgroup, derivedSeries_one] using hD_bot
+        simpa only [D, derivedSubgroup, derivedSeries_one] using hD_bot
       have hcent :
           (⊤ : Subgroup R) ≤ Subgroup.centralizer ((⊤ : Subgroup R) : Set R) :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer
@@ -325,7 +330,8 @@ public theorem proposition_4_11_aux
         have hker_le_center :
             (QuotientGroup.mk' T : R →* R ⧸ T).ker ≤ Subgroup.center R := by
           simpa [QuotientGroup.ker_mk'] using hT_central
-        exact commutative_of_cyclic_center_quotient (QuotientGroup.mk' T) hker_le_center a b
+        exact ((QuotientGroup.mk' T).isMulCommutative_of_isCyclic_of_ker_le_center
+          hker_le_center).is_comm.comm a b
       obtain ⟨Abar, hAbar_norm, hAbar_cyc, hAquot_cyc⟩ := hmeta_quot
       letI : Abar.Normal := hAbar_norm
       obtain ⟨a, haH⟩ :=
@@ -360,7 +366,7 @@ public theorem proposition_4_11_aux
       have hTsub_center : Tsub ≤ Subgroup.center H := by
         intro x hx
         have hxT : ((x : H) : R) ∈ T := by
-          simpa [Tsub] using hx
+          simpa [Tsub, Subgroup.mem_subgroupOf] using hx
         rw [Subgroup.mem_center_iff]
         intro y
         apply Subtype.ext
@@ -380,7 +386,8 @@ public theorem proposition_4_11_aux
         have hkerTsub_le_center :
             (QuotientGroup.mk' Tsub : H →* H ⧸ Tsub).ker ≤ Subgroup.center H := by
           simpa [QuotientGroup.ker_mk'] using hTsub_center
-        exact commutative_of_cyclic_center_quotient (QuotientGroup.mk' Tsub) hkerTsub_le_center x y
+        exact ((QuotientGroup.mk' Tsub).isMulCommutative_of_isCyclic_of_ker_le_center
+          hkerTsub_le_center).is_comm.comm x y
       letI : IsMulCommutative H := hH_comm
       have hmhoD_bot : mho p 1 D = ⊥ := by
         exact
@@ -405,7 +412,7 @@ public theorem proposition_4_11_aux
         have hcomm_le : _root_.commutator R ≤ H :=
           Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
             (N := H) (H := Subgroup.zpowers b) hH_sup_b inferInstance
-        simpa [D, derivedSubgroup, derivedSeries_one] using hcomm_le
+        simpa only [D, derivedSubgroup, derivedSeries_one] using hcomm_le
       let qT : R →* R ⧸ T := QuotientGroup.mk' T
       have hHmap_eq : H.map qT = Abar := by
         calc
@@ -692,10 +699,11 @@ public theorem proposition_4_11_aux
         have hker_le_center :
             (QuotientGroup.mk' Hbar : R ⧸ C →* (R ⧸ C) ⧸ Hbar).ker ≤ Subgroup.center (R ⧸ C) := by
           simpa [QuotientGroup.ker_mk'] using hHbar_center
-        exact commutative_of_cyclic_center_quotient (QuotientGroup.mk' Hbar) hker_le_center x y
+        exact ((QuotientGroup.mk' Hbar).isMulCommutative_of_isCyclic_of_ker_le_center
+          hker_le_center).is_comm.comm x y
       letI : IsMulCommutative (R ⧸ C) := hQcomm_C
       have hD_le_C : D ≤ C := by
-        simpa [D, derivedSubgroup, derivedSeries_one, qC, QuotientGroup.ker_mk'] using
+        simpa only [D, derivedSubgroup, derivedSeries_one, qC, QuotientGroup.ker_mk'] using
           (Abelianization.commutator_subset_ker qC)
       have hD_eq_C : D = C := le_antisymm hD_le_C hC_le_D
       obtain ⟨S, hC_le_S, hS_cyc, hS_max⟩ :=
@@ -712,7 +720,7 @@ public theorem proposition_4_11_aux
           simpa using hS_cyc
         have hR_cyc : IsCyclic R :=
           (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R).isCyclic.1 htop_cyc
-        exact hRcomm ⟨hR_cyc.commutative⟩
+        exact hRcomm hR_cyc.isMulCommutative
       have hS1_eq :
           ∀ S1 : Subgroup R, S ≤ S1 →
             Nat.card (S1 ⧸ S.subgroupOf S1) = p →
@@ -962,7 +970,8 @@ public theorem proposition_4_11_aux
         have hker_le_center :
             (QuotientGroup.mk' T : R →* R ⧸ T).ker ≤ Subgroup.center R := by
           simpa [QuotientGroup.ker_mk'] using hT_central
-        exact commutative_of_cyclic_center_quotient (QuotientGroup.mk' T) hker_le_center a b
+        exact ((QuotientGroup.mk' T).isMulCommutative_of_isCyclic_of_ker_le_center
+          hker_le_center).is_comm.comm a b
       obtain ⟨Abar, hAbar_norm, hAbar_cyc, hAquot_cyc⟩ := hmeta_quot
       letI : Abar.Normal := hAbar_norm
       obtain ⟨a, haH⟩ :=
@@ -997,7 +1006,7 @@ public theorem proposition_4_11_aux
       have hTsub_center : Tsub ≤ Subgroup.center H := by
         intro x hx
         have hxT : ((x : H) : R) ∈ T := by
-          simpa [Tsub] using hx
+          simpa [Tsub, Subgroup.mem_subgroupOf] using hx
         rw [Subgroup.mem_center_iff]
         intro y
         apply Subtype.ext
@@ -1017,21 +1026,22 @@ public theorem proposition_4_11_aux
         have hkerTsub_le_center :
             (QuotientGroup.mk' Tsub : H →* H ⧸ Tsub).ker ≤ Subgroup.center H := by
           simpa [QuotientGroup.ker_mk'] using hTsub_center
-        exact commutative_of_cyclic_center_quotient (QuotientGroup.mk' Tsub) hkerTsub_le_center x y
+        exact ((QuotientGroup.mk' Tsub).isMulCommutative_of_isCyclic_of_ker_le_center
+          hkerTsub_le_center).is_comm.comm x y
       letI : IsMulCommutative H := hH_comm
       have hD_le_H : D ≤ H := by
         letI : IsMulCommutative (Subgroup.zpowers b) := inferInstance
         have hcomm_le : _root_.commutator R ≤ H :=
           Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
             (N := H) (H := Subgroup.zpowers b) hH_sup_b inferInstance
-        simpa [D, derivedSubgroup, derivedSeries_one] using hcomm_le
+        simpa only [D, derivedSubgroup, derivedSeries_one] using hcomm_le
       have hM_le_mhoHmap : M ≤ (mho p 1 H).map H.subtype := by
         simpa [M, D] using (mho_one_map_subtype_mono (p := p) hD_le_H)
       have hT_le_mhoHmap : T ≤ (mho p 1 H).map H.subtype := hT_le_M.trans hM_le_mhoHmap
       have hTsub_le_mhoH : Tsub ≤ mho p 1 H := by
         intro x hx
         have hxT : ((x : H) : R) ∈ T := by
-          simpa [Tsub] using hx
+          simpa [Tsub, Subgroup.mem_subgroupOf] using hx
         have hxmap : ((x : H) : R) ∈ (mho p 1 H).map H.subtype := hT_le_mhoHmap hxT
         rcases Subgroup.mem_map.mp hxmap with ⟨y, hy, hy_eq⟩
         have hyx : y = x := by

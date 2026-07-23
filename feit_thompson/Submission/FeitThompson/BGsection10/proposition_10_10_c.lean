@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_10_b
-public import Submission.FeitThompson.BGsection5.theorem_5_3
-public import Submission.FeitThompson.BGsection5.theorem_5_5_a
+public import FeitThompson.BGsection10.proposition_10_10_b
+public import FeitThompson.BGsection5.theorem_5_3
+public import FeitThompson.BGsection5.theorem_5_5_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -48,8 +48,10 @@ private theorem section10_derivedSubgroup_isPGroup_of_theorem_5_5_a
   have hder_le_pcore : derivedSubgroup A ≤ pCore r A := by
     have hcomm_le : _root_.commutator A ≤ pCore r A :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le
-        (N := pCore r A)).1 hquot_comm.is_comm
-    simpa [derivedSubgroup, derivedSeries_one] using hcomm_le
+        (N := pCore r A)).1 hquot_comm
+    change derivedSeries A 1 ≤ pCore r A
+    rw [derivedSeries_one]
+    exact hcomm_le
   let Dsub : Subgroup (pCore r A) := (derivedSubgroup A).subgroupOf (pCore r A)
   have hDsubp : IsPGroup r Dsub :=
     (pCore_isPGroup (G := A) (p := r)).to_subgroup Dsub

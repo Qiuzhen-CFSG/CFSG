@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.theorem_14_4
+public import FeitThompson.BGsection14.theorem_14_4
 
 open scoped Pointwise
 
@@ -37,8 +37,8 @@ public theorem section14_nonsingleton_of_mem_R_ne_one
   · by_cases hcard : 1 < Nat.card {M : Subgroup G // M ∈ section14MsigmaElement x}
     · exact ⟨hx, hσ, hcard⟩
     · have hcard' :
-          ¬ 1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-        simpa using hcard
+          ¬ 1 < (section14MsigmaElement x).ncard := by
+        simpa only [Nat.card_coe_set_eq] using hcard
       have hr1 : r = 1 := by
         simpa [section14R, hx, hσ, hcard'] using hr
       exact False.elim (hrne hr1)
@@ -46,6 +46,7 @@ public theorem section14_nonsingleton_of_mem_R_ne_one
       simpa [section14R, hx, hσ] using hr
     exact False.elim (hrne hr1)
 
+omit [IsMinCE G] in
 public theorem section14_unique_sigma_block_of_length_one
     {x : G} (hx : section14SigmaLength x = 1) :
     ∃! π : Set Nat.Primes, π ∈ section14SigmaSupport x := by
@@ -108,7 +109,7 @@ public theorem section14_primeSupport_subset_sigmaN_of_mem_R
     have hbot : section14ElementPrimeSupport r = ∅ := by
       ext q
       simp [section14ElementPrimeSupport, hr1, subgroupPrimeSet, q.2.ne_one]
-    simpa [hbot] using hp
+    simp [hbot] at hp
   · obtain ⟨hx, hσ, hcard⟩ := section14_nonsingleton_of_mem_R_ne_one hr hr1
     let M : Subgroup G := Classical.choose hσ
     have hM : M ∈ section14MsigmaElement x := Classical.choose_spec hσ
@@ -122,6 +123,7 @@ public theorem section14_primeSupport_subset_sigmaN_of_mem_R
         section8_subgroupPrimeSet_mono
           (Subgroup.zpowers_le.2 hrCx.1) hp
 
+omit [IsMinCE G] in
 public theorem section14_sigma_mem_conjBy
     {L : Subgroup G} {p : Nat.Primes}
     (hpσ : p ∈ section10SigmaPrimes L) (a : G) :
@@ -209,7 +211,7 @@ public theorem section14_sigmaSupport_eq_singleton_of_length_one
       rw [subgroupPrimeSet]
       rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
         ⟨_hzle, hqcard⟩
-      simpa [hqcard]
+      simp [hqcard]
     simpa [section14ElementPrimeSupport] using
       section8_subgroupPrimeSet_mono
         (Subgroup.zpowers_le.2 hz_zpowx) hqz
@@ -372,7 +374,7 @@ public theorem section14_mem_zpowers_mul_of_commute_of_coprime_order
     _ = a := by
           simpa using hn
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section14_eq_one_of_support_subset_and_compl
     {a : G} {π : Set Nat.Primes}
     (haπ : section14ElementPrimeSupport a ⊆ π)
@@ -433,10 +435,10 @@ public theorem section14_mem_zpowers_right_of_support_subset
     have hcopAB' : Nat.Coprime (Nat.card A) (Nat.card B) := by
       rw [hcardA, hcardB]
       exact hcopAB
-    exact disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcopAB')
+    exact Subgroup.disjoint_of_coprime_natCard hcopAB'
   haveI : A.Normal := inferInstance
   have hyTop : (⟨y, hy⟩ : C) ∈ A ⊔ B := by
-    simpa [hABtop]
+    simp [hABtop]
   rcases (Subgroup.mem_sup_of_normal_left (s := A) (t := B) (x := (⟨y, hy⟩ : C))).1 hyTop with
     ⟨u, huA, v, hvB, huv⟩
   have huA' : (u : G) ∈ Subgroup.zpowers a := by
@@ -445,7 +447,8 @@ public theorem section14_mem_zpowers_right_of_support_subset
     simpa [B, Subgroup.mem_subgroupOf] using hvB
   have huv_eq : (u : G) * (v : G) = y := congrArg Subtype.val huv
   have huvComm : Commute (u : G) (v : G) := by
-    simpa [Commute] using congrArg Subtype.val (mul_comm u v)
+    change (u : G) * (v : G) = (v : G) * (u : G)
+    exact setLike_mul_comm (s := C) u.property v.property
   have huπc : section14ElementPrimeSupport (u : G) ⊆ πᶜ := by
     intro p hp
     exact haπc (section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 huA') (by
@@ -579,7 +582,7 @@ private theorem section14_eq_or_mem_R_of_common_product
         rw [subgroupPrimeSet]
         rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
           ⟨_hzle, hqcard⟩
-        simpa [hqcard]
+        simp [hqcard]
       simpa [section14ElementPrimeSupport] using
         section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hz_zpowa) hqz
     rcases hcover hqA with hq₁ | hq₂
@@ -658,7 +661,7 @@ private theorem section14_eq_or_mem_R_of_common_product
           section14_mem_zpowers_left_of_support_subset
             (a := y) (b := ry) (y := x)
             hyrComm hcopy hyπc hryπ
-            (by simpa [hEqx] using Subgroup.mem_zpowers (y * ry))
+            (by simp [hEqx])
             hxπc
         have hryZpowY : ry ∈ Subgroup.zpowers y := by
           have hxy : y * ry ∈ Subgroup.zpowers y := hEqx ▸ hxZpowY
@@ -676,7 +679,7 @@ private theorem section14_eq_or_mem_R_of_common_product
           section14_mem_zpowers_right_of_support_subset
             (a := y) (b := ry) (y := x)
             hyrComm hcopy hyπc hryπ
-            (by simpa [hEqx] using Subgroup.mem_zpowers (y * ry))
+            (by simp [hEqx])
             hxπ
         have hyZpowRy : y ∈ Subgroup.zpowers ry := by
           have hxy : y * ry ∈ Subgroup.zpowers ry := hEqx ▸ hxZpowRy
@@ -827,7 +830,7 @@ private theorem section14_eq_or_mem_R_of_common_product
               Nat.Coprime (Nat.card (Subgroup.zpowers x))
                 (Nat.card (Subgroup.zpowers rx)) := by
             simpa [Nat.card_zpowers] using hcopx
-          exact disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcopCard)
+          exact Subgroup.disjoint_of_coprime_natCard hcopCard
         exact Or.inl
           (section14_b1_left_eq_of_mul_eq_of_disjoint
             (G := G) hdisjxr
@@ -926,13 +929,13 @@ public theorem section14_sigmaLength_one_of_mem_msigma
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hqcard⟩
-          simpa [hqcard]
+          simp [hqcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono
             (Subgroup.zpowers_le.2 hz_zpowx) hqz
       exact ⟨⟨M, hM, rfl⟩, ⟨q, hqSupp,
         section14_primeSupport_subset_sigma_of_msigmaMember hMx hqSupp⟩⟩
-  simpa [section14SigmaLength, hSigmaSupport]
+  simp [section14SigmaLength, hSigmaSupport]
 
 /-- Lemma 14.5(b): nonconjugate maximal subgroups have disjoint `M̃`. -/
 public theorem lemma_14_5_b
@@ -991,6 +994,7 @@ private theorem section14_top_conjBy (g : G) :
     rw [Subgroup.conjBy, Subgroup.mem_map]
     exact ⟨g⁻¹ * x * g, Subgroup.mem_top _, by simp [mul_assoc]⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_maximal_conjBy
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) (g : G) :
     M.conjBy g ∈ section9MaximalSubgroups G := by
@@ -998,6 +1002,7 @@ public theorem section14_maximal_conjBy
   rw [h_map]
   exact ((MulAut.conj g : G ≃* G).mapSubgroup.isCoatom_iff M).mpr hM
 
+omit [IsMinCE G] in
 public theorem section14_sigmaPrimes_conjBy
     (M : Subgroup G) (a : G) :
     section10SigmaPrimes (M.conjBy a) = section10SigmaPrimes M := by
@@ -1009,6 +1014,7 @@ public theorem section14_sigmaPrimes_conjBy
   · intro hp
     exact section14_sigma_mem_conjBy (L := M) hp a
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_msigma_conjBy_subgroupOf
     (M : Subgroup G) (a : G) :
     let e : M ≃* M.conjBy a := (MulAut.conj a).subgroupMap M
@@ -1043,6 +1049,7 @@ private theorem section14_msigma_conjBy_subgroupOf
       change ((e z : M.conjBy a) : G) = (x : G) at hzx'
       exact hzx'
 
+omit [IsMinCE G] in
 public theorem section14_mem_msigma_conjBy
     {M : Subgroup G} {x a : G} (hx : x ∈ section10Msigma M) :
     a * x * a⁻¹ ∈ section10Msigma (M.conjBy a) := by
@@ -1061,8 +1068,9 @@ public theorem section14_mem_msigma_conjBy
   have hKg_pi_M : IsPiSubgroup (G := G) (section10SigmaPrimes M) Kg := by
     have hMsigma_pi :
         IsPiSubgroup (G := G) (section10SigmaPrimes M) (section10Msigma M) := by
-      simpa [section10Msigma, section10MsigmaSubgroup] using
-        (piCoreIn_isPiSubgroup (G := G) (π := section10SigmaPrimes M) M)
+      change IsPiSubgroup (G := G) (section10SigmaPrimes M)
+        (piCoreIn (section10SigmaPrimes M) M)
+      exact piCoreIn_isPiSubgroup (G := G) (π := section10SigmaPrimes M) M
     intro p hpKg
     have hpMσ : p.val ∣ Nat.card (section10Msigma M) := by
       have hcard :
@@ -1085,6 +1093,7 @@ public theorem section14_mem_msigma_conjBy
     exact Subgroup.mem_map.mpr ⟨x, hx, by simp [MulAut.conj_apply]⟩
   exact hKg_le_sigma hxKg
 
+omit [IsMinCE G] in
 public theorem section14_msigmaElement_conjBy
     {M : Subgroup G} {x a : G} (hM : M ∈ section14MsigmaElement x) :
     M.conjBy a ∈ section14MsigmaElement (a * x * a⁻¹) := by
@@ -1093,6 +1102,7 @@ public theorem section14_msigmaElement_conjBy
   rcases Set.mem_singleton_iff.mp hy with rfl
   exact section14_mem_msigma_conjBy (G := G) (M := M) (x := x) (a := a) (hM.2 (by simp))
 
+omit [IsMinCE G] in
 public theorem section14_msigma_conjBy
     (M : Subgroup G) (a : G) :
     (section10Msigma M).conjBy a = section10Msigma (M.conjBy a) := by
@@ -1156,7 +1166,6 @@ public theorem section14_elementCentralizerIn_conjBy
       simpa [hzEq] using hz
     · have hycomm : Commute y (a * x * a⁻¹) := Subgroup.mem_centralizer_singleton_iff.mp hy.2
       refine Subgroup.mem_centralizer_singleton_iff.mpr ?_
-      change (a⁻¹ * y * a) * x = x * (a⁻¹ * y * a)
       have hmul := congrArg (fun t : G => a⁻¹ * t * a) hycomm.eq
       simpa [mul_assoc] using hmul
 
@@ -1261,12 +1270,12 @@ public theorem section14_mem_tilde_conjBy
     have hconj := congrArg (fun t : G => a * t * a⁻¹) h1
     simpa [mul_assoc] using hconj
   · by_cases hr1 : r = 1
-    · simpa [hr1] using (show 1 ∈ section14R (a⁻¹ * x * a) from (section14R (a⁻¹ * x * a)).one_mem)
+    · simp [hr1]
     · obtain ⟨hx, hσx, hcardx⟩ :=
         section14_nonsingleton_of_mem_R_ne_one (G := G) hr hr1
       have hrConj :
           a⁻¹ * r * a ∈ (section14R x).conjBy a⁻¹ := by
-        exact Subgroup.mem_map.mpr ⟨r, hr, by simp [MulAut.conj_apply]⟩
+        exact Subgroup.mem_map.mpr ⟨r, hr, by simp⟩
       simpa [section14_R_conjBy_of_nonsingleton (G := G) (a := a⁻¹) hx hσx hcardx,
         mul_assoc] using hrConj
   · simp [mul_assoc]
@@ -1304,6 +1313,7 @@ private theorem section14_sigmaLength_one_of_mem_conjClosureMsigma
     simpa [mul_assoc] using hconj
   exact section14_sigmaLength_one_of_mem_msigma (G := G) hMga hgMσ hgne
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_conjugateSubgroups_trans
     {A B C : Subgroup G}
     (hAB : section14ConjugateSubgroups A B)
@@ -1314,6 +1324,7 @@ private theorem section14_conjugateSubgroups_trans
   exact ⟨a * b, by
     simpa using (section11_conjBy_conjBy (G := G) C b a)⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_maximal_of_conjugate
     {M L : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
     (hLM : section14ConjugateSubgroups L M) :
@@ -1325,6 +1336,7 @@ private theorem section14_maximal_of_conjugate
 public def section14ConjClosureMsigmaNonid (M : Subgroup G) : Set G :=
   section14ConjugacyClosure {y | y ∈ section10Msigma M ∧ y ≠ 1}
 
+omit [IsMinCE G] in
 public theorem section14_mem_conjClosureMsigmaNonid_of_mem_msigma_of_conjugate
     {M L : Subgroup G} (hLM : section14ConjugateSubgroups L M)
     {x : G} (hxLσ : x ∈ section10Msigma L) (hxne : x ≠ 1) :
@@ -1340,6 +1352,7 @@ public theorem section14_mem_conjClosureMsigmaNonid_of_mem_msigma_of_conjugate
     simp
   · simpa [MulAut.conj_apply] using hxy.symm
 
+omit [IsMinCE G] in
 private theorem section14_msigmaElement_nonempty_of_mem_conjClosureMsigmaNonid
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
     {x : G} (hx : x ∈ section14ConjClosureMsigmaNonid M) :
@@ -1399,7 +1412,7 @@ public theorem section14_maximal_normalizer_eq_self_of_msigma_member
     rw [subgroupPrimeSet]
     rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
       ⟨_hzle, hqcard⟩
-    simpa [hqcard]
+    simp [hqcard]
   have hqMσ : q ∈ subgroupPrimeSet (section10Msigma M) := by
     exact section8_subgroupPrimeSet_mono
       (Subgroup.zpowers_le.2 (by
@@ -1776,8 +1789,7 @@ public theorem lemma_14_5_c
             let q : G ⧸ M := (a : G ⧸ M)
             have hqa : (Quotient.out q)⁻¹ * a ∈ M := by
               apply QuotientGroup.eq.mp
-              simpa [q] using (Quotient.out_eq' q :
-                ((Quotient.out q : G) : G ⧸ M) = q)
+              simp [q]
             have hqaNorm :
                 ((Quotient.out q)⁻¹ * a) ∈ Subgroup.normalizer (M : Set G) := by
               simpa [hMnorm] using (Subgroup.le_normalizer hqa)
@@ -1823,7 +1835,7 @@ public theorem lemma_14_5_c
         _ = Fintype.card {x : section10Msigma M // x ≠ 1} :=
           Nat.card_eq_fintype_card (α := {x : section10Msigma M // x ≠ 1})
         _ = Fintype.card (section10Msigma M) - 1 := by
-          simpa using (Set.card_ne_eq (1 : section10Msigma M))
+          simp
         _ = Nat.card (section10Msigma M) - 1 := by rw [Nat.card_eq_fintype_card]
     calc
       Nat.card (section14ConjugacyClosure (section14Tilde M))

@@ -1,10 +1,12 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
 import Mathlib.GroupTheory.IndexNormal
-public import Submission.FeitThompson.Utils
-public import Submission.FeitThompson.BGsection4.Infrastructure
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.Utils
+public import FeitThompson.BGsection4.Infrastructure
+public import FeitThompson.BGsection4.lemma_4_5_a
+
+open scoped IsMulCommutative commutatorElement
 
 section Main
 

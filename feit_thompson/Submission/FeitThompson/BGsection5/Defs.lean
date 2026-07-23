@@ -3,19 +3,19 @@ Authors: OpenAI
 -/
 
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
-public import Submission.FeitThompson.Representation.CyclicQuotientExtension
-public import Submission.FeitThompson.Representation.SolvableDimension
-public import Submission.FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
-public import Submission.FeitThompson.Representation.ExtraspecialFixedPoints
-public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
-public import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
-public import Submission.FeitThompson.GeneratorRank
-public import Submission.FeitThompson.BGsection4.Defs
-import Submission.FeitThompson.PCore.PCore
-import Submission.FeitThompson.PGroup.NormalSubgroups
-import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import FeitThompson.Representation.CyclicQuotientExtension
+public import FeitThompson.Representation.SolvableDimension
+public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import FeitThompson.Representation.ExtraspecialFixedPoints
+public import FeitThompson.Representation.TwoDimensionalOddOrder
+public import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import FeitThompson.GeneratorRank
+public import FeitThompson.BGsection4.Defs
+import FeitThompson.PCore.PCore
+import FeitThompson.PGroup.NormalSubgroups
+import FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
 
 /-! # Definitions for BG Section 5 -/
@@ -48,10 +48,10 @@ section
   (omega₁ (G := Subgroup.center G) (p := p)).map (Subgroup.center G).subtype
 
 /-- The subgroup `Ω₁(Z₂(G))` inside `G`. -/
-@[expose] public abbrev Ω₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
+public abbrev Ω₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
   z2OmegaCandidate p
 
-@[expose] public abbrev CΩ₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
+public abbrev CΩ₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
   Subgroup.centralizer (Ω₁Z₂ p G : Set G)
 
 /-- A finite `p`-group is narrow if it has rank at most two, or if it admits a subgroup of
@@ -82,7 +82,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     intro q
     rw [primeRank]
     refine csSup_le ?_ ?_
-    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, zero_le _⟩
+    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
       rcases hn with ⟨A, _hAp, _hAcomm, hnA⟩
       exact hnA.trans <| (generatorRank_le_natCard_local A).trans (Subgroup.card_le_card_group A)

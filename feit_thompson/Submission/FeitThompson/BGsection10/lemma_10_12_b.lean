@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_12_a
+public import FeitThompson.BGsection10.lemma_10_12_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -36,8 +36,8 @@ private theorem section10_maximal_le_normalizer_sigma_sylow_of_msigma_nilpotent
       (S := section10MsigmaSubgroup M)
       (section10_msigmaSubgroup_isHall hM) hpσ P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hPG_le_Sg : PG ≤ section10Msigma M := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hyP, rfl⟩
@@ -83,8 +83,8 @@ private theorem section10_sigma_primes_disjoint_of_nonconj_nilpotent
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   obtain ⟨T, hPGT⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hPGp
   have hT_eq_PG : (T : Subgroup G) = PG :=
     section10_sigma_ambient_sylow_eq_of_le_sylow hpσM P T (by simpa [PG] using hPGT)

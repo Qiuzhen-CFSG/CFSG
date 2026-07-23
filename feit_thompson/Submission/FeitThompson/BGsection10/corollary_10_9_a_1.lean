@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_8_c
+public import FeitThompson.BGsection10.lemma_10_8_c
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Statements from BG Section 10
@@ -144,6 +144,7 @@ private theorem section10_ambient_sylow_le_centralizer_of_nilpotent_overgroup
   exact section10_pSubgroup_le_centralizer_of_nilpotent_overgroup
     (G := G) hpq hLnil hPL hXL hPp hXq
 
+omit [IsMinCE G] in
 private theorem section10_isPiSubgroup_beta_compl_of_isPGroup_not_mem_beta
     {M X : Subgroup G} {q : Nat.Primes}
     (hqβ : q ∉ section10BetaPrimes M) (hXq : IsPGroup q.val X) :
@@ -304,9 +305,8 @@ public theorem section10_exists_sylow_subgroupOf_with_same_ambient
     rcases Subgroup.mem_map.mp hx with ⟨yD, hyP, rfl⟩
     have hySsub : (⟨yD, hPS hyP⟩ : SsubD) ∈ Psub := hyP
     refine ⟨e ⟨yD, hPS hyP⟩, ?_, ?_⟩
-    · have : e ⟨yD, hPS hyP⟩ ∈ (Psub : Subgroup SsubD).map e.toMonoidHom :=
-        ⟨⟨yD, hPS hyP⟩, hySsub, rfl⟩
-      simpa [PS] using this
+    · change e ⟨yD, hPS hyP⟩ ∈ (Psub : Subgroup SsubD).map e.toMonoidHom
+      exact Subgroup.mem_map.mpr ⟨⟨yD, hPS hyP⟩, hySsub, rfl⟩
     · rfl
 
 omit [IsMinCE G] in
@@ -382,7 +382,7 @@ public theorem section10_exists_nilpotent_hall_containing
   have hNsub_nil : Group.IsNilpotent Nsub := by
     let e : N ≃* Nsub := (Subgroup.subgroupOfEquivOfLe (H := N) (K := K) hNK).symm
     letI : Group.IsNilpotent N := hNnil
-    exact nilpotent_of_mulEquiv (G := N) (G' := Nsub) e
+    exact Group.nilpotent_of_mulEquiv (G := N) (G' := Nsub) e
   obtain ⟨k, hk⟩ :=
     exists_conj_eq_of_isHallSubgroup_of_solvable
       (G := K) hKsolv (H₁ := Nsub) (H₂ := C) hNHall hCHall
@@ -393,11 +393,11 @@ public theorem section10_exists_nilpotent_hall_containing
         Subgroup.equivMapOfInjective Nsub (MulAut.conj k).toMonoidHom
           (MulAut.conj k).injective
       letI : Group.IsNilpotent Nsub := hNsub_nil
-      exact nilpotent_of_mulEquiv (G := Nsub) (G' := Nconj) e
+      exact Group.nilpotent_of_mulEquiv (G := Nsub) (G' := Nconj) e
     have hC_eq : C = Nconj := by simpa [Nconj] using hk
     let e : Nconj ≃* C := MulEquiv.subgroupCongr hC_eq.symm
     letI : Group.IsNilpotent Nconj := hNconj_nil
-    exact nilpotent_of_mulEquiv (G := Nconj) (G' := C) e
+    exact Group.nilpotent_of_mulEquiv (G := Nconj) (G' := C) e
   let L : Subgroup H := C.map K.subtype
   have hLK : L ≤ K := by
     intro x hx
@@ -413,9 +413,10 @@ public theorem section10_exists_nilpotent_hall_containing
   have hLnil : Group.IsNilpotent L := by
     let e : C ≃* L := Subgroup.equivMapOfInjective C K.subtype K.subtype_injective
     letI : Group.IsNilpotent C := hCnil
-    exact nilpotent_of_mulEquiv (G := C) (G' := L) e
+    exact Group.nilpotent_of_mulEquiv (G := C) (G' := L) e
   exact ⟨L, hLK, hXL, by simpa [hLsub_eq] using hCHall, hLnil⟩
 
+omit [IsMinCE G] in
 private theorem section10_lift_msigma_local_centralizer
     {M X : Subgroup G} {p : Nat.Primes} (hXleM : X ≤ M)
     (hlocal :
@@ -431,8 +432,8 @@ private theorem section10_lift_msigma_local_centralizer
   let S : Subgroup M := section10MsigmaSubgroup M
   let Sg : Subgroup G := section10Msigma M
   let e : S ≃* Sg := by
-    simpa [S, Sg, section10Msigma] using
-      (Subgroup.equivMapOfInjective S M.subtype M.subtype_injective)
+    change S ≃* S.map M.subtype
+    exact Subgroup.equivMapOfInjective S M.subtype M.subtype_injective
   let Pσ : Sylow p.val Sg := P.mapSurjective (f := e.toMonoidHom) e.surjective
   refine ⟨Pσ, ?_⟩
   intro y hy
@@ -455,8 +456,9 @@ private theorem section10_lift_msigma_local_centralizer
       (ySg : G) = (e yS : G) := by
         exact congrArg Subtype.val hyS_eq.symm
       _ = ((yS : S) : M) := by
-        change (((yS : S) : M) : G) = (((yS : S) : M) : G)
-        rfl
+        unfold e
+        exact Subgroup.coe_equivMapOfInjective_apply
+          S M.subtype M.subtype_injective yS
   simpa [xM, hySg_val] using congrArg Subtype.val hcommM
 
 private theorem section10_corollary_10_9_a_1_of_le_derived
@@ -477,7 +479,8 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
     have hxG : ((x : M) : G) ∈ ambientDerivedSubgroup M := hXD hx
     rw [ambientDerivedSubgroup, Subgroup.mem_map] at hxG
     rcases hxG with ⟨y, hyD, hyx⟩
-    change x ∈ D
+    change y ∈ derivedSubgroup M at hyD
+    change x ∈ derivedSubgroup M
     have hyxM : y = x := Subtype.ext hyx
     simpa [hyxM] using hyD
   have hXMq : IsPGroup q.val XM := by
@@ -500,7 +503,7 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
   have hLsubDnil : Group.IsNilpotent LsubD := by
     let e : L ≃* LsubD := (Subgroup.subgroupOfEquivOfLe hLD).symm
     letI : Group.IsNilpotent L := hLnil
-    exact nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
+    exact Group.nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
   have hXsubD_le_LsubD : XsubD ≤ LsubD := by
     intro x hx
     exact hXML hx
@@ -704,7 +707,7 @@ private theorem section10_inf_derived_nilpotent_of_pair_hall
     letI : Group.IsNilpotent L := hLnil
     infer_instance
   let e : AsubL ≃* A := Subgroup.subgroupOfEquivOfLe hAL
-  exact nilpotent_of_mulEquiv (G := AsubL) (G' := A) e
+  exact Group.nilpotent_of_mulEquiv (G := AsubL) (G' := A) e
 
 private theorem section10_pSubgroup_le_inf_derived_of_sigma
     {M : Subgroup G} {p : Nat.Primes} {W : Subgroup M} {P : Subgroup W}
@@ -743,6 +746,7 @@ private theorem section10_pSubgroup_le_inf_derived_of_sigma
       exact (QuotientGroup.eq_one_iff (N := D) (x : M)).2 hx.2
   simpa [A, D] using hP_le_ker.trans (le_of_eq hker_eq)
 
+omit [IsMinCE G] in
 private theorem section10_qSubgroup_le_inf_pPrimeCore_of_largest_lt
     {M : Subgroup G} {p q : Nat.Primes} {W : Subgroup M} {Q : Subgroup W}
     (hlargest : IsLargestPrimeDivisor p.val (Nat.card (M ⧸ pPrimeCore p.val M)))
@@ -758,6 +762,7 @@ private theorem section10_qSubgroup_le_inf_pPrimeCore_of_largest_lt
   have hxmap : (x : M) ∈ Q.map W.subtype := ⟨x, hx, rfl⟩
   exact ⟨x.property, hQmap_le_core hxmap⟩
 
+omit [IsMinCE G] in
 private theorem section10_inf_pPrimeCore_subgroupOf_isPGroup_of_pair_hall
     {M : Subgroup G} {p q : Nat.Primes} {W : Subgroup M}
     (_hpq : p ≠ q) (hWHall : IsHallSubgroup ({p, q} : Set Nat.Primes) W) :
@@ -808,7 +813,7 @@ private theorem section10_pair_hall_nilpotent_of_inf_derived_nilpotent
     (hpq_lt : p.val < q.val) :
     Group.IsNilpotent W := by
   classical
-  have hnil_iff := (isNilpotent_of_finite_tfae (G := W)).out 0 3
+  have hnil_iff := (Group.isNilpotent_of_finite_tfae (G := W)).out 0 3
   rw [hnil_iff]
   intro r hr P
   by_cases hrW : r ∣ Nat.card W
@@ -831,7 +836,7 @@ private theorem section10_pair_hall_nilpotent_of_inf_derived_nilpotent
           exact hx.1
         let e : A ≃* AW := (Subgroup.subgroupOfEquivOfLe (H := A) (K := W) hAW_le).symm
         letI : Group.IsNilpotent A := hWinfDnil
-        exact nilpotent_of_mulEquiv (G := A) (G' := AW) e
+        exact Group.nilpotent_of_mulEquiv (G := A) (G' := AW) e
       have hP_le_AW : (P : Subgroup W) ≤ AW :=
         section10_pSubgroup_le_inf_derived_of_sigma
           (G := G) (M := M) (p := p) (W := W) (P := (P : Subgroup W))

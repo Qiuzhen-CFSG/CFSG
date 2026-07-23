@@ -1,22 +1,22 @@
 module
 
-import Submission.FeitThompson.BGsection3.lemma_3_2_a
-import Submission.FeitThompson.BGsection12.theorem_12_12_a
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection9.PFsection9_1
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection9.PFsection9_7
-import Submission.FeitThompson.PFsection9.PFsection9_11
-import Submission.FeitThompson.PFsection12.Basic
-import Submission.FeitThompson.PFsection12.Basic
-import Submission.FeitThompson.PFsection8.PFsection8_15
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-public import Submission.FeitThompson.PFsection13.Basic
-public import Submission.FeitThompson.PFsection13.Basic
-import Submission.FeitThompson.PFsection3.PFsection3_5
-import Submission.FeitThompson.PFsection3.PFsection3_9
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection6.PFsection6_8
+import FeitThompson.BGsection3.lemma_3_2_a
+import FeitThompson.BGsection12.theorem_12_12_a
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection9.PFsection9_1
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection9.PFsection9_7
+import FeitThompson.PFsection9.PFsection9_11
+import FeitThompson.PFsection12.Basic
+import FeitThompson.PFsection12.Basic
+import FeitThompson.PFsection8.PFsection8_15
+import FeitThompson.PFsection8.SourceTypePBridge
+public import FeitThompson.PFsection13.Basic
+public import FeitThompson.PFsection13.Basic
+import FeitThompson.PFsection3.PFsection3_5
+import FeitThompson.PFsection3.PFsection3_9
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection6.PFsection6_8
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 
 /-!
@@ -356,7 +356,7 @@ public theorem section13_hypothesis52FullData_with_late_book_of_typePFourSix
           Section4Scratch.primeDadeA0Set
               (W1.subgroupOf M) (W2.subgroupOf M) W46 A =
             Section8.section8CyclicA0Set M W1 W2 Abook := by
-        simpa [Section4Scratch.primeDadeA0Set,
+        simp [Section4Scratch.primeDadeA0Set,
           Section8.section8CyclicA0Set, hA, hW]
       have hCyclicHypothesis' :
           Section2.hypothesis_2_2_statement
@@ -399,8 +399,10 @@ public theorem section13_hypothesis52FullData_with_late_book_of_typePFourSix
       let d52 : Section8.section8Hypothesis52FullData M Ms W1 W2 Abook :=
         Section8.section8Hypothesis52FullData_of_supportedHypothesis
           hCyclicHypothesis' hTauCyclic' hSigmaAgree hW hSupported'
-      exact ⟨Ms, Abook, d52, hMFleMs, rfl,
-        by simpa [d52] using hSigmaAgree,
+      have hSigmaAgree' : typePFourSixSigmaAgreesOnCyclicTI M W1 W2 d52.W d52.sigma := by
+        dsimp [d52, Section8.section8Hypothesis52FullData_of_supportedHypothesis]
+        exact hSigmaAgree
+      exact ⟨Ms, Abook, d52, hMFleMs, rfl, hSigmaAgree',
         fun hLate =>
           ⟨section13_notation_8_10_source_data_A_eq_centralizerUnion_of_late
               hSourceNotation hLate,
@@ -848,8 +850,7 @@ public theorem section13_typeP_cyclicTI_transport_agreement
     have hzW2 : z ∉ (W2 : Set G) :=
       Section3.cyclicTISet_not_mem_right W1 W2 W hz
     refine ⟨?_, ?_⟩
-    · simp [zS, Section3.cyclicTISet, Subgroup.mem_subgroupOf, d52.W_eq,
-        hzWsup]
+    · simp [zS, Subgroup.mem_subgroupOf, d52.W_eq, hzWsup]
     · intro hmem
       rcases hmem with hleft | hright
       · exact hzW1 (by simpa [zS, Subgroup.mem_subgroupOf] using hleft)
@@ -1238,8 +1239,10 @@ public theorem
     intro ψ hψ
     simp only [Finset.mem_insert, Finset.mem_singleton] at hψ
     rcases hψ with hψ | hψ
-    · simpa [hψ] using X.2
-    · simpa [hψ] using (h52a X).1
+    · rw [hψ]
+      exact X.2
+    · rw [hψ]
+      exact (h52a X).1
   have hIsoPair :
       Section5.isCFLinearIsometryOnSpan
         ({(X : Section1.ClassFunction Smax),
@@ -1668,11 +1671,15 @@ public theorem section13_one_le_normSq_one_of_signedIrreducible
     have hfin_ne : Module.finrank ℂ (Fin n → ℂ) ≠ 0 := by
       intro hzero
       apply hdeg_ne
-      simpa [Section1.degree_representation_character ρ, hzero]
+      simp [Section1.degree_representation_character ρ, hzero]
     have hfin_ge : (1 : ℝ) ≤ (Module.finrank ℂ (Fin n → ℂ) : ℝ) := by
       exact_mod_cast (Nat.succ_le_of_lt (Nat.pos_of_ne_zero hfin_ne))
     have hval : ρ.character 1 = (Module.finrank ℂ (Fin n → ℂ) : ℂ) := by
-      simpa [Section1.degree_apply] using Section1.degree_representation_character ρ
+      calc
+        ρ.character 1 = Section1.degree ρ.character :=
+          (Section1.degree_apply ρ.character).symm
+        _ = (Module.finrank ℂ (Fin n → ℂ) : ℂ) :=
+          Section1.degree_representation_character ρ
     rw [hval, Complex.normSq_natCast]
     nlinarith
   rcases hε with rfl | rfl

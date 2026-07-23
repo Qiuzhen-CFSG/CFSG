@@ -4,14 +4,15 @@ Authors: Tianjiao Nie, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.PCore.Defs
-public import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.PCore.Defs
+public import FeitThompson.SubgroupConj
 open Subgroup
 
 section PLengthOne
 
 variable {G : Type*} [Group G] [Finite G]
 
+omit [Finite G] in
 /-- If `p` is coprime to `|G|`, then `G` has p-length 1. -/
 public theorem hasPLengthOne_of_coprime_card {p : ℕ} [Fact p.Prime]
     (hcop : Nat.Coprime p (Nat.card G)) :

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection11.corollary_11_4
+public import FeitThompson.BGsection11.corollary_11_4
 import Mathlib.GroupTheory.Schreier
 
 /-!
@@ -95,8 +95,9 @@ private theorem section11_zpowers_mem_prime_order_subgroups
   have horder : orderOf (a : G) = p.val := orderOf_eq_prime hpowG haG_ne
   refine ⟨?_, ?_⟩
   · exact (Subgroup.zpowers_le).2 a.property
-  · simpa [Nat.card_zpowers, horder]
+  · simp [Nat.card_zpowers, horder]
 
+omit [IsMinCE G] in
 private theorem section11_exists_prime_order_subgroup_centralizer_ne_bot
     {M A0 A Q : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P)
@@ -109,7 +110,7 @@ private theorem section11_exists_prime_order_subgroup_centralizer_ne_bot
   rcases h11.A_rank_two with ⟨hAcard, hAelem⟩
   letI : IsElementaryAbelian p.val A := hAelem
   letI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
   haveI : Subgroup.Normalizes A Q := ⟨hAQ⟩
   have hcopAQ : Nat.Coprime (Nat.card A) (Nat.card Q) :=
@@ -159,7 +160,7 @@ public theorem section11_normalizer_le_normalizer_map_subtype_of_characteristic
     (Subgroup.normalizer (H : Set G)) ?_
   intro g x hx
   rcases Subgroup.mem_map.mp hx with ⟨xH, hxK, rfl⟩
-  let gH : Subgroup.normalizer (H : Set G) := ⟨g, by simpa using g.property⟩
+  let gH : Subgroup.normalizer (H : Set G) := ⟨g, by simp⟩
   have hfix :
       Subgroup.comap (Subgroup.normalizerMonoidHom H gH).toMonoidHom K = K :=
     (inferInstance : K.Characteristic).fixed (Subgroup.normalizerMonoidHom H gH)
@@ -169,7 +170,7 @@ public theorem section11_normalizer_le_normalizer_map_subtype_of_characteristic
     exact hxK
   have hxImage : (Subgroup.normalizerMonoidHom H gH) xH ∈ K := hxComap
   exact ⟨(Subgroup.normalizerMonoidHom H gH) xH, hxImage, by
-    simpa [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
+    simp [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
 
 omit [IsMinCE G] in
 public theorem section11_isMulCommutative_sylow_of_sylow
@@ -237,7 +238,7 @@ public theorem section11_subgroupCentralizerIn_conjBy
         _ = (g * r * g⁻¹) * (g * x0 * g⁻¹) := by group
         _ = y * x := by rw [hx', hry']
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_conjBy_ne_bot
     {H : Subgroup G} {g : G} (hH : H ≠ ⊥) :
     H.conjBy g ≠ ⊥ := by
@@ -249,7 +250,7 @@ public theorem section11_conjBy_ne_bot
     simp [hbot]
   exact hH ((Subgroup.card_eq_one (H := H)).1 hcardH)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_subgroupCentralizerIn_conjBy_ne_bot
     {R X : Subgroup G} {g : G}
     (hC : subgroupCentralizerIn R X ≠ ⊥) :
@@ -266,7 +267,7 @@ public theorem section11_subgroupCentralizerIn_conjBy_eq_self_of_mem_normalizer
   have hR : R.conjBy g = R := section11_conjBy_eq_of_mem_normalizer hgR
   simpa [hR] using section11_subgroupCentralizerIn_conjBy R X g
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_subgroupCentralizerIn_conjBy_self_ne_bot_of_mem_normalizer
     {R X : Subgroup G} {g : G}
     (hgR : g ∈ Subgroup.normalizer (R : Set G))
@@ -371,14 +372,15 @@ public theorem section11_isMulCommutative_ambient_of_sylow
     (hcomm : IsMulCommutative (P : Subgroup M)) :
     IsMulCommutative (section10AmbientSylowSubgroup M P) := by
   letI : IsMulCommutative (P : Subgroup M) := hcomm
-  simpa [section10AmbientSylowSubgroup] using
-    (Subgroup.map_isMulCommutative (f := M.subtype) (H := (P : Subgroup M)))
+  change IsMulCommutative ((P : Subgroup M).map M.subtype)
+  exact Subgroup.map_isMulCommutative (f := M.subtype) (H := (P : Subgroup M))
 
 omit [Finite G] [IsMinCE G] in
 public theorem section11_omega1_isElementaryAbelian_of_commutative
     {p : ℕ} [Fact p.Prime]
     (H : Type*) [Group H] [IsMulCommutative H] :
     IsElementaryAbelian p (omega₁ (G := H) (p := p)) := by
+  letI : CommGroup H := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := by infer_instance
       exponent_dvd_p := ?_ }
@@ -491,7 +493,7 @@ public theorem theorem_11_5
       simpa [R2] using hQ2_eq
     have hnilKg : Group.IsNilpotent Kg := by
       let e : K ≃* Kg := (MulAut.conj g).subgroupMap K
-      exact nilpotent_of_mulEquiv (G := K) (G' := Kg) (_h := hnilK) e
+      exact Group.nilpotent_of_mulEquiv (G := K) (G' := Kg) (_h := hnilK) e
     have hQ2_normal : ((Q2 : Subgroup Kg)).Normal :=
       Group.IsNilpotent.sylow_normal hnilKg q.val Q2
     have hQ2_char : ((Q2 : Subgroup Kg)).Characteristic :=
@@ -509,7 +511,9 @@ public theorem theorem_11_5
           section11_normalizer_le_normalizer_map_subtype_of_characteristic
             (G := G) Kg (Q2 : Subgroup Kg))
     have hKσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) K := by
-      simpa [K] using (theorem_10_2_b h11.maximal).1.p_in_pi_of_p_dvd_card
+      have hHallK : IsHallSubgroup (section10SigmaPrimes M) K := by
+        simpa [K] using (theorem_10_2_b h11.maximal).1
+      exact hHallK.p_in_pi_of_p_dvd_card
     have hR1σ : IsPiSubgroup (G := G) (section10SigmaPrimes M) R1 := by
       exact IsPiSubgroup.of_le (by
         simpa [R1] using section11_ambientSylow_le K Q1) hKσ
@@ -542,10 +546,7 @@ public theorem theorem_11_5
     have hnot_conj :
         ¬ ∃ k : subgroupNormalizerIn Pamb (A : Set G), X2 = X1.conjBy (k : G) := by
       rintro ⟨k, hk⟩
-      have hkPamb : (k : G) ∈ Pamb := by
-        have hk_mem : (k : G) ∈ subgroupNormalizerIn Pamb (A : Set G) := k.2
-        exact (show (k : G) ∈ Subgroup.normalizer (A : Set G) ⊓ Pamb from by
-          simpa [subgroupNormalizerIn] using hk_mem).2
+      have hkPamb : (k : G) ∈ Pamb := (mem_subgroupNormalizerIn.mp k.2).2
       have hkR1 : (k : G) ∈ Subgroup.normalizer (R1 : Set G) :=
         hPamb_norm_R1 hkPamb
       have hC1X2_ne : subgroupCentralizerIn R1 X2 ≠ ⊥ := by

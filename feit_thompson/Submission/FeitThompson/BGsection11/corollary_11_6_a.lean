@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection11.theorem_11_5
+public import FeitThompson.BGsection11.theorem_11_5
 
 /-!
 # Corollary 11.6(a)
@@ -37,9 +37,9 @@ public theorem corollary_11_6_a
     have hΩsub : IsElementaryAbelian p.val Ωsub :=
       section11_omega1_isElementaryAbelian_of_commutative (H := Pamb) (p := p.val)
     letI : IsElementaryAbelian p.val Ωsub := hΩsub
-    simpa [Ω, Ωsub, section11OmegaOne] using
-      section11_isElementaryAbelian_map (G := Pamb) (p := p.val)
-        (A := Ωsub) Pamb.subtype
+    change IsElementaryAbelian p.val (Ωsub.map Pamb.subtype)
+    exact section11_isElementaryAbelian_map (G := Pamb) (p := p.val)
+      (A := Ωsub) Pamb.subtype
   have hA_le_Ω : A ≤ Ω := by
     intro a ha
     have haP : a ∈ Pamb := by

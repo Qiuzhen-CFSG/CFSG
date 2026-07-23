@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_13
+public import FeitThompson.BGsection12.theorem_12_13
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement IsMulCommutative
 
 /-!
 # corollary_12_14
@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_unique_overgroups_eq_of_contains_maximal_local
     {H M : Subgroup G} (hH : H ∈ section9UniqueSubgroups G)
     (hM : M ∈ section9MaximalSubgroups G) (hHM : H ≤ M) :
@@ -29,7 +30,7 @@ public theorem section12_unique_overgroups_eq_of_contains_maximal_local
     simpa using hsingle
   simpa [hMN] using hNuniq
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_primeOrderSubgroupsIn_isPGroup
     {A X : Subgroup G} {p : Nat.Primes}
     (hX : X ∈ section10PrimeOrderSubgroupsIn p A) :
@@ -37,7 +38,7 @@ public theorem section12_primeOrderSubgroupsIn_isPGroup
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hX) with
     ⟨_hXA, hXcard⟩
   exact IsPGroup.of_card (p := p.val) (G := X) (n := 1)
-    (by simpa [hXcard, pow_one])
+    (by simp [hXcard])
 
 omit [IsMinCE G] in
 private theorem section12_pSubgroup_le_centralizer_of_primeOrder_normalizes
@@ -64,7 +65,7 @@ private theorem section12_pSubgroup_le_centralizer_of_primeOrder_normalizes
   have h := congrArg (fun t : G => t * u) hconj
   simpa [mul_assoc] using h.symm
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_exists_sylow_containing_pSubgroup
     {K X : Subgroup G} {p : Nat.Primes}
     (hXleK : X ≤ K) (hXp : IsPGroup p.val X) :
@@ -87,7 +88,7 @@ private theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_local
   classical
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨B, hBp, hBcomm, hnB⟩
     have hB_le_sigmaSub : B ≤ section10MsigmaSubgroup M :=
@@ -159,7 +160,7 @@ private theorem section12_primeRank_le_groupRank_msigma_sylow_ambient_local
     groupRank_le_of_equiv e.symm
   exact h1.trans (h2.trans h3)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_ambientSylowSubgroup_smul_local
     {M : Subgroup G} {p : Nat.Primes}
     (P : Sylow p.val M) (m : M) :
@@ -209,7 +210,7 @@ private theorem section12_conjBy_inv'_local (H : Subgroup G) (g : G) :
     (H.conjBy g⁻¹).conjBy g = H := by
   simpa using section12_conjBy_inv_local (G := G) H g⁻¹
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_top_conjBy_local (g : G) :
     (⊤ : Subgroup G).conjBy g = ⊤ := by
   ext x
@@ -221,7 +222,7 @@ private theorem section12_top_conjBy_local (g : G) :
     refine ⟨g⁻¹ * x * g, by simp, ?_⟩
     simp [MulAut.conj_apply, mul_assoc]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_le_conjBy_inv_of_conjBy_le_local
     {H K : Subgroup G} {g : G} (hHK : H.conjBy g ≤ K) :
     H ≤ K.conjBy g⁻¹ := by
@@ -233,7 +234,7 @@ private theorem section12_le_conjBy_inv_of_conjBy_le_local
     exact ⟨x, hx, by simp [MulAut.conj_apply]⟩
   · simp [mul_assoc]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_maximal_conjBy_local
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) (g : G) :
     M.conjBy g ∈ section9MaximalSubgroups G := by
@@ -291,7 +292,7 @@ private theorem section12_inf_eq_bot_of_pSubgroup_and_pPrime_card_local
   have hcop : Nat.Coprime (Nat.card H) (Nat.card K) := by
     rw [hn]
     exact Nat.Coprime.pow_left n hKcop
-  exact Subgroup.inf_eq_bot_of_coprime hcop
+  exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
 
 omit [IsMinCE G] in
 private theorem section12_sylow_map_quotient_pPrimeCore_eq_top_of_hasNormalPComplement_local
@@ -511,8 +512,8 @@ private theorem section12_ambientDerivedSubgroup_eq_bot_of_isMulCommutative_loca
     intro x _hx
     rw [Subgroup.mem_centralizer_iff]
     intro y _hy
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := (⊤ : Subgroup P)) (by simp) (by simp)).symm
+    exact (setLike_mul_comm
+      (s := (⊤ : Subgroup P)) (by simp) (by simp)).symm
   have hcomm_bot : ⁅(⊤ : Subgroup P), (⊤ : Subgroup P)⁆ = ⊥ :=
     (Subgroup.commutator_eq_bot_iff_le_centralizer).2 htop_cent
   have hder_bot : derivedSubgroup P = ⊥ := by
@@ -530,6 +531,7 @@ private theorem section12_ambientDerivedSubgroup_eq_bot_of_isMulCommutative_loca
     subst x
     exact Subgroup.one_mem _
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_centralizes_of_le_omegaOneCenter_local
     {P X : Subgroup G} {p : Nat.Primes}
     (hXΩ : X ≤ section10OmegaOneCenter p P) :
@@ -551,12 +553,15 @@ private theorem section12_commutator_mul_mul_of_commute_local
   have hc₁ : Commute q₁ y₂ := by exact hq₁y₂
   have hc₂ : Commute y₁ q₂ := by exact hy₁q₂
   have hc₃ : Commute y₁ y₂ := by exact hy₁y₂
-  simp [commutatorElement_def]
+  change
+    q₁ * y₁ * (q₂ * y₂) * (q₁ * y₁)⁻¹ * (q₂ * y₂)⁻¹ =
+      q₁ * q₂ * q₁⁻¹ * q₂⁻¹
+  rw [mul_inv_rev, mul_inv_rev]
   calc
     q₁ * y₁ * (q₂ * y₂) * (y₁⁻¹ * q₁⁻¹) * (y₂⁻¹ * q₂⁻¹)
         = q₁ * y₁ * q₂ * y₂ * y₁⁻¹ * q₁⁻¹ * y₂⁻¹ * q₂⁻¹ := by
             simp [mul_assoc]
-    _
+    _ 
         = q₁ * (y₁ * q₂) * y₂ * y₁⁻¹ * q₁⁻¹ * y₂⁻¹ * q₂⁻¹ := by
             simp [mul_assoc]
     _ = q₁ * (q₂ * y₁) * y₂ * y₁⁻¹ * q₁⁻¹ * y₂⁻¹ * q₂⁻¹ := by
@@ -574,6 +579,7 @@ private theorem section12_commutator_mul_mul_of_commute_local
     _ = q₁ * q₂ * q₁⁻¹ * q₂⁻¹ := by
             simp [mul_assoc]
 
+omit [IsMinCE G] in
 private theorem section12_ambientDerived_le_omegaOneCenter_of_specialShape_local
     {P : Subgroup G} {p : Nat.Primes}
     (hshape : section10SpecialRankTwoSylowShape (H := P) p) :
@@ -782,7 +788,7 @@ private theorem section12_ambientDerived_le_centralizer_of_derived_le_center_loc
   exact congrArg (fun t : P => (t : G))
     (Subgroup.mem_center_iff.mp hycenter ⟨z, hz⟩)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_hasNormalPComplement_msigma_ambient_local
     {M : Subgroup G} {p : ℕ}
     (hcomp : HasNormalPComplement p (section10MsigmaSubgroup M)) :
@@ -855,7 +861,7 @@ public theorem section12_exists_pSubgroup_gt_le_normalizer_of_lt_pgroup_local
     exact hXS.ne (le_antisymm hX_le_S hS_le_X)
   have hnc : NormalizerCondition S := by
     letI : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
-    exact normalizerCondition_of_isNilpotent (G := S)
+    exact Group.normalizerCondition_of_isNilpotent (G := S)
   let NS : Subgroup S := Subgroup.normalizer (XS : Set S)
   have hXS_lt_NS : XS < NS := by
     simpa [NS] using hnc XS hXS_lt_top
@@ -939,6 +945,7 @@ private theorem section12_sylow_ambient_not_lt_pSubgroup_le_local
     exact Subgroup.mem_map_of_mem M.subtype hyP
   exact hPGY.not_ge hY_le_PG
 
+omit [IsMinCE G] in
 private theorem section12_sigma_ambient_sylow_eq_of_le_sylow_local
     {M : Subgroup G} {p : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -1048,7 +1055,8 @@ private theorem section12_le_ambientDerived_sylow_of_le_ambientDerived_of_hasNor
     have hsx : (s : K) = xK := hsxK
     simpa [xK] using congrArg (fun y : K => (y : G)) hsx
   change ((e s : Pamb) : G) = x
-  simpa [e, Pamb] using hsG
+  change ((s : K) : G) = x
+  exact hsG
 
 private theorem section12_corollary_12_14_derived_chosen_core
     {M X : Subgroup G} {p : Nat.Primes} (P : Sylow p.val (section10Msigma M))
@@ -1077,9 +1085,9 @@ private theorem section12_corollary_12_14_derived_chosen_core
       simpa [section10Msigma] using Subgroup.map_subtype_le (section10MsigmaSubgroup M)
     exact hσM y.property
   have hPamb_p : IsPGroup p.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup (section10Msigma M)))
-        P.isPGroup' (section10Msigma M).subtype
+    change IsPGroup p.val
+      ((P : Subgroup (section10Msigma M)).map (section10Msigma M).subtype)
+    exact IsPGroup.map P.isPGroup' (section10Msigma M).subtype
   have hPamb_proper : Pamb ≠ ⊤ :=
     IsMinCE.pSubgroup_ne_top (G := G) (p := p.val) hPamb_p
   have hcompAmb : HasNormalPComplement p.val (section10Msigma M) :=
@@ -1118,7 +1126,9 @@ private theorem section12_corollary_12_14_derived_chosen_core
     intro hCtop
     have htop_le_Pamb : (⊤ : Subgroup G) ≤ Pamb := by
       intro x hx
-      exact hC_le_Pamb (by simpa [hCtop] using hx)
+      apply hC_le_Pamb
+      rw [hCtop]
+      exact hx
     exact hPamb_proper (top_le_iff.mp htop_le_Pamb)
   have hU :
       ∃ U : Subgroup G,
@@ -1198,9 +1208,8 @@ private theorem section12_corollary_12_14_derived_chosen_core
           simpa [PsubM, Subgroup.mem_subgroupOf, xM] using hx
         exact Subgroup.mem_map.mpr ⟨xM, hPsubM_le_PM hxPsubM, rfl⟩
       have hPMamb_p : IsPGroup p.val PMamb := by
-        simpa [PMamb, section10AmbientSylowSubgroup] using
-          IsPGroup.map (p := p.val) (H := (PM : Subgroup M))
-            PM.isPGroup' M.subtype
+        change IsPGroup p.val ((PM : Subgroup M).map M.subtype)
+        exact IsPGroup.map PM.isPGroup' M.subtype
       let PMambSub : Subgroup (section10Msigma M) := PMamb.subgroupOf (section10Msigma M)
       have hPMambSub_p : IsPGroup p.val PMambSub :=
         hPMamb_p.of_equiv
@@ -1241,8 +1250,8 @@ private theorem section12_corollary_12_14_derived_chosen_core
           intro x _hx
           rw [Subgroup.mem_center_iff]
           intro y
-          exact (Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := (⊤ : Subgroup (Sg : Subgroup G))) (by simp) (by simp)).symm
+          exact (setLike_mul_comm
+            (s := (⊤ : Subgroup (Sg : Subgroup G))) (by simp) (by simp)).symm
         · exact section12_derived_le_center_of_specialShape_type_local
             (p := p) hshape
       have hderPamb_le_center :
@@ -1348,9 +1357,9 @@ private theorem section12_corollary_12_14_core
       simpa [section10Msigma] using Subgroup.map_subtype_le (section10MsigmaSubgroup M)
     exact hσM y.property
   have hPamb_p : IsPGroup p.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup (section10Msigma M)))
-        P.isPGroup' (section10Msigma M).subtype
+    change IsPGroup p.val
+      ((P : Subgroup (section10Msigma M)).map (section10Msigma M).subtype)
+    exact IsPGroup.map P.isPGroup' (section10Msigma M).subtype
   have hbeta_core
       (hpβ : p ∈ section10BetaPrimes M) :
       section10AmbientSylowSubgroup (section10Msigma M) P ∈ section9UniqueSubgroups G ∧

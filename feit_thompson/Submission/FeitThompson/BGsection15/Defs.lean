@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.lemma_14_13
-import Submission.FeitThompson.PCore.CentralizerControl
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection14.lemma_14_13
+import FeitThompson.PCore.CentralizerControl
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 

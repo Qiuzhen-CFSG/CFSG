@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_10_d
+public import FeitThompson.BGsection12.corollary_12_10_d
 
 open scoped Pointwise
 
@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 private lemma mem_of_mem_subgroupOf {H K : Subgroup G} {x : K} (hx : x ∈ H.subgroupOf K) : (x : G) ∈ H :=
   (Subgroup.mem_subgroupOf (H := H) (K := K)).mp hx
 
@@ -282,7 +283,7 @@ public theorem corollary_12_10_e
   have hE2_cent_x₂ : E₂ ≤ Subgroup.centralizer ({x₂} : Set G) := by
     intro y hy
     rw [Subgroup.mem_centralizer_singleton_iff]
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E₂) hy hx₂_E2
+    exact setLike_mul_comm (s := E₂) hy hx₂_E2
   -- ============================================================
   -- STEP 3: Pick p ∈ τ₂(M) dividing |x₂|, find A ∈ E_p^2(E₂) ⊆ C_G(x₂)
   -- ============================================================
@@ -356,7 +357,7 @@ public theorem corollary_12_10_e
     intro a ha
     have ha_E2 : a ∈ E₂ := hA'_E2 ha
     rw [Subgroup.mem_centralizer_singleton_iff]
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E₂) ha_E2 hx₂_E2
+    exact setLike_mul_comm (s := E₂) ha_E2 hx₂_E2
   -- ============================================================
   -- STEP 4: Apply Theorem 12.5(e) to prove result for x₂
   -- ============================================================
@@ -372,7 +373,7 @@ public theorem corollary_12_10_e
     · intro hL
       rcases hL with ⟨hLmax, hLcont⟩
       by_cases hLM : L = M
-      · simpa [hLM]
+      · simp [hLM]
       · have hA'_L : A' ≤ L := hA'_cent_x₂.trans hLcont
         have hL_A' : L ∈ section9MaximalSubgroupsContaining A' := ⟨hLmax, hA'_L⟩
         have hMσ_inf_bot : section10Msigma M ⊓ L = ⊥ :=
@@ -410,7 +411,7 @@ public theorem corollary_12_10_e
         · exact h_cent_proper h_top
         · have hNmax : N ∈ section9MaximalSubgroups G := hNcoatom
           by_cases hNM : N = M
-          · exact h_not (hNcent.trans (by simpa [hNM]))
+          · exact h_not (hNcent.trans (by simp [hNM]))
           · have hA'_N : A' ≤ N := hA'_cent_x₂.trans hNcent
             have hN_A' : N ∈ section9MaximalSubgroupsContaining A' := ⟨hNmax, hA'_N⟩
             have hMσ_inf_bot : section10Msigma M ⊓ N = ⊥ :=
@@ -490,8 +491,8 @@ public theorem corollary_12_10_e
           · intro hz
             apply Subgroup.mem_map.mpr
             refine ⟨gM * z * gM⁻¹, Subgroup.mul_mem M (Subgroup.mul_mem M hgM_M hz) hgM_inv_M, ?_⟩
-            simp [MulAut.conj_apply, mul_assoc]
-    simpa [hL_eq_M] using (by simp : M ∈ ({M} : Set (Subgroup G)))
+            simp [mul_assoc]
+    simp [hL_eq_M]
   · intro hL
     have hL_single : L ∈ ({M} : Set (Subgroup G)) := by simpa using hL
     have hL_eq_M : L = M := by simpa using hL_single

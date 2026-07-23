@@ -1,6 +1,8 @@
 module
 
-public import Submission.FeitThompson.BGsection4.Infrastructure
+public import FeitThompson.BGsection4.Infrastructure
+
+open scoped commutatorElement
 
 section Main
 

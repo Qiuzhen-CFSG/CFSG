@@ -1,19 +1,19 @@
 module
 
-public import Submission.FeitThompson.PFsection6.PFsection6_7
-public import Submission.FeitThompson.BGsection3.Defs
-import Submission.FeitThompson.BGsection3.lemma_3_2_b
-import Submission.FeitThompson.BGsection3.theorem_3_4
-import Submission.FeitThompson.PFsection3.PFsection3_5
-public import Submission.FeitThompson.PFsection5.PFsection5_3
-import Submission.FeitThompson.PFsection5.PFsection5_7
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.Representation.DegreeBounds
-import Submission.FeitThompson.PFsection6.PFsection6_2
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection6.PFsection6_5_b
-import Submission.FeitThompson.PFsection6.PFsection6_5_c
-import Submission.FeitThompson.PFsection6.PFsection6_6
+public import FeitThompson.PFsection6.PFsection6_7
+public import FeitThompson.BGsection3.Defs
+import FeitThompson.BGsection3.lemma_3_2_b
+import FeitThompson.BGsection3.theorem_3_4
+import FeitThompson.PFsection3.PFsection3_5
+public import FeitThompson.PFsection5.PFsection5_3
+import FeitThompson.PFsection5.PFsection5_7
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.Representation.DegreeBounds
+import FeitThompson.PFsection6.PFsection6_2
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection6.PFsection6_5_b
+import FeitThompson.PFsection6.PFsection6_5_c
+import FeitThompson.PFsection6.PFsection6_6
 
 noncomputable section
 
@@ -629,9 +629,9 @@ public theorem theorem_6_8_subgroupImagePuncturedSet_mem_iff
   · rintro ⟨h, hhl, hhne⟩
     have hval : (h : L) = l := Subtype.ext hhl
     constructor
-    · simpa [← hval] using h.property
+    · simp [← hval]
     · intro hlone
-      exact hhne (by simpa [hval, hlone])
+      exact hhne (by simp [hval, hlone])
   · rintro ⟨hlH, hlne⟩
     exact ⟨⟨l, hlH⟩, rfl, by simpa using hlne⟩
 
@@ -669,7 +669,7 @@ public theorem theorem_6_8_CFOn_subgroupImagePuncturedSet_of_integerSpanOn
   · intro l hlnot
     by_cases hlone : l = 1
     · exact (Section1.supportedOn_iff.mp hχpunct) l
-        (by simpa [Section5.puncturedSet, hlone])
+        (by simp [Section5.puncturedSet, hlone])
     · have hlnotH : ¬ l ∈ H := by
         intro hlH
         exact hlnot ((theorem_6_8_subgroupImagePuncturedSet_mem_iff L H l).2
@@ -848,13 +848,14 @@ theorem theorem_6_8_not_subgroupInKernel_top_of_ne_principal
         Section1.degree θ := by
     unfold Section1.scalarProduct Section1.principalCharacter Section1.degree
     have hsum :
-        (∑ g : H, θ g * star (1 : ℂ)) = ∑ _g : H, θ 1 := by
+        (∑ g : H, θ g * star (1 : ℂ)) =
+          ∑ _g : H, Section1.degree θ := by
       refine Finset.sum_congr rfl ?_
       intro g _hg
       have hg := hker ⟨g, by simp⟩
-      simpa using hg
+      simpa only [map_one, star_one, mul_one] using hg
     rw [hsum]
-    simp
+    simp [Section1.degree]
   have hdeg0 : Section1.degree θ = 0 := by
     rw [← hspdeg, horth]
   rcases hθirr with ⟨_n, ρ, hρirr, hθeq⟩
@@ -1217,14 +1218,14 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_S_eq
       have hχred :
           (χ : Section1.ClassFunction L) ∈
             S.filter (fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ) := by
-        simpa [redS] using χ.2
+        simp [redS]
       exact (Finset.mem_filter.mp hχred).1
     have hχnotirr : ¬ Section1.IsIrreducibleCharacterOnGroup
         (χ : Section1.ClassFunction L) := by
       have hχred :
           (χ : Section1.ClassFunction L) ∈
             S.filter (fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ) := by
-        simpa [redS] using χ.2
+        simp [redS]
       exact (Finset.mem_filter.mp hχred).2
     rcases theorem_6_8_caseC2_nonirreducible_mem_piColumn_of_fullData
         h68 d hχS hχnotirr with ⟨j, hj, hχeq⟩
@@ -1315,7 +1316,7 @@ theorem theorem_6_8_reducible_mem_of_reducible_subfamily_card_eq
     rw [Finset.mem_filter] at hψ ⊢
     exact ⟨hSZsubS hψ.1, hψ.2⟩
   have hEq : SZ.filter red = S.filter red := by
-    exact Finset.eq_of_subset_of_card_le hsub (by simpa [red, hcard])
+    exact Finset.eq_of_subset_of_card_le hsub (by simp [red, hcard])
   have hχredS : χ ∈ S.filter red := by
     rw [Finset.mem_filter]
     exact ⟨hχS, hχred⟩
@@ -1580,14 +1581,14 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_le
       have hχred :
           (χ : Section1.ClassFunction L) ∈
             SZ.filter (fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ) := by
-        simpa [redSZ] using χ.2
+        simp [redSZ]
       exact (Finset.mem_filter.mp hχred).1
     have hχnotirr : ¬ Section1.IsIrreducibleCharacterOnGroup
         (χ : Section1.ClassFunction L) := by
       have hχred :
           (χ : Section1.ClassFunction L) ∈
             SZ.filter (fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ) := by
-        simpa [redSZ] using χ.2
+        simp [redSZ]
       exact (Finset.mem_filter.mp hχred).2
     rcases theorem_6_8_caseC2_nonirreducible_mem_SZ_piColumn
         hfamily d hχSZ hχnotirr with ⟨j, hj, hχeq⟩
@@ -1844,7 +1845,7 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
   intro y hy
   have hyElem :
       y ∈ elementCentralizerIn (H.map q) (r : L ⧸ H1) := by
-    simpa [H1, Section2.centralizerIn, Section2.elementCentralizer,
+    simpa [q, H1, Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hy
   rcases r.property with ⟨w, hwW1, hwq⟩
   have hw_sub_ne : (⟨w, hwW1⟩ : W1) ≠ 1 := by
@@ -1886,7 +1887,9 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
     have hcomm_r : y * (r : L ⧸ H1) = (r : L ⧸ H1) * y :=
       Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
     have hcomm_qw : Commute y (q w) := by
-      simpa [hwq] using hcomm_r
+      change y * q w = q w * y
+      rw [hwq]
+      exact hcomm_r
     have hcomm_qa : Commute y (q a) := by
       rw [← hn]
       simpa [q] using hcomm_qw.zpow_right n
@@ -1915,7 +1918,7 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
       y = q z := hzy.symm
       _ = 1 := by
         simpa [q] using (QuotientGroup.eq_one_iff (N := H1) z).2 hzH1
-  simpa [hy_eq_one]
+  exact hy_eq_one
 
 public theorem theorem_6_8_frobeniusQuotient_commutator_of_complement
     {L : Type u} [Group L] [Finite L]
@@ -1994,8 +1997,12 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_frobenius
             (⟨x, trivial⟩ : (⊤ : Subgroup L)) ∈
               H.subgroupOf (⊤ : Subgroup L) := hxH
         have hxRtop : (⟨x, trivial⟩ : (⊤ : Subgroup L)) ∈ Rtop := by
-          convert hrtop using 1
-          exact Subtype.ext hrtopx.symm
+          have hsubeq : (⟨x, trivial⟩ : (⊤ : Subgroup L)) = rtop := by
+            apply Subtype.ext
+            change x = (rtop : L)
+            exact hrtopx.symm
+          rw [hsubeq]
+          exact hrtop
         exact (Subgroup.disjoint_def.mp hcompTop.disjoint) hxHtop hxRtop
       have hx_top_eq : (⟨x, trivial⟩ : (⊤ : Subgroup L)) = 1 := by
         simpa using hx_top
@@ -2193,7 +2200,13 @@ public theorem theorem_6_8_inertiaSubgroup_eq_of_frobenius_complement
     intro x hx
     change Section1.conjugateOnNormal H θ x = θ
     funext h
-    simpa [Section1.conjugateOnNormal] using hθclass ⟨x, hx⟩ h
+    change θ ⟨x * (h : L) * x⁻¹, by
+      exact (inferInstance : H.Normal).conj_mem (h : L) h.2 x⟩ = θ h
+    calc
+      θ ⟨x * (h : L) * x⁻¹, _⟩ =
+          θ (⟨x, hx⟩ * h * ⟨x, hx⟩⁻¹) := by
+        congr 1
+      _ = θ h := hθclass ⟨x, hx⟩ h
   apply le_antisymm
   · intro g hgI
     rcases hcomp.2 g with ⟨p, hp⟩
@@ -2209,7 +2222,7 @@ public theorem theorem_6_8_inertiaSubgroup_eq_of_frobenius_complement
           ((Section1.inertiaSubgroup H θ).inv_mem hhI) hgI
       have heq : (h : L)⁻¹ * g = (r : L) := by
         rw [← hgr]
-        simp [mul_assoc]
+        simp
       simpa [heq] using htmp
     have hr_one : r = 1 := by
       by_contra hrne
@@ -2220,7 +2233,8 @@ public theorem theorem_6_8_inertiaSubgroup_eq_of_frobenius_complement
     have hg_eq : g = (h : L) := by
       rw [← hgr, hr_one]
       simp
-    simpa [hg_eq] using h.property
+    rw [hg_eq]
+    exact h.property
   · exact hHleI
 
 public theorem theorem_6_8_frobeniusWithKernel_top_complement_data
@@ -2259,8 +2273,12 @@ public theorem theorem_6_8_frobeniusWithKernel_top_complement_data
             (⟨x, trivial⟩ : (⊤ : Subgroup L)) ∈
               H.subgroupOf (⊤ : Subgroup L) := hxH
         have hxRtop : (⟨x, trivial⟩ : (⊤ : Subgroup L)) ∈ Rtop := by
-          convert hrtop using 1
-          exact Subtype.ext hrtopx.symm
+          have hsubeq : (⟨x, trivial⟩ : (⊤ : Subgroup L)) = rtop := by
+            apply Subtype.ext
+            change x = (rtop : L)
+            exact hrtopx.symm
+          rw [hsubeq]
+          exact hrtop
         exact (Subgroup.disjoint_def.mp hcompTop.disjoint) hxHtop hxRtop
       have hx_top_eq : (⟨x, trivial⟩ : (⊤ : Subgroup L)) = 1 := by
         simpa using hx_top
@@ -2775,7 +2793,7 @@ theorem theorem_6_8_sylow_of_nonabelianPQuotient_bot
       (Nat.Prime.coprime_iff_not_dvd hpprime).1 hcop.symm
     simpa [Subgroup.relIndex_top_right] using hnotRel
   let P : Sylow p L := IsPGroup.toSylow hHp hnot
-  exact ⟨P, by simpa [P] using (IsPGroup.toSylow_coe hHp hnot)⟩
+  exact ⟨P, by simp [P, IsPGroup.toSylow_coe]⟩
 
 public theorem theorem_6_8_subgroupImagePuncturedSet_eq_map_punctured
     {G : Type u} [Group G]
@@ -2790,7 +2808,7 @@ public theorem theorem_6_8_subgroupImagePuncturedSet_eq_map_punctured
     · intro hx1
       apply hhne
       ext
-      simpa [hheq, hx1]
+      simp [hheq, hx1]
   · rintro ⟨hxH, hxne⟩
     rcases hxH with ⟨l, hlH, hlEq⟩
     refine ⟨⟨l, hlH⟩, hlEq, ?_⟩
@@ -2904,7 +2922,7 @@ theorem theorem_6_8_sylow_map_subtype_of_sylow_normalizer
       (Fact.out : Nat.Prime p) hpowdvdL
   let Pamb : Sylow p G := IsPGroup.toSylow hHp hnotidx
   exact ⟨Pamb, by
-    simpa [Pamb, Hmap] using (IsPGroup.toSylow_coe hHp hnotidx)⟩
+    simp [Pamb, Hmap, IsPGroup.toSylow_coe]⟩
 
 theorem theorem_6_8_map_subtype_ne_bot
     {G : Type u} [Group G] {L : Subgroup G} {Z : Subgroup L}
@@ -2939,7 +2957,7 @@ theorem theorem_6_8_map_subtype_le_centerIn
 theorem theorem_6_8_map_subtype_normal_subgroupOf
     {G : Type u} [Group G] {L : Subgroup G} {Z : Subgroup L}
     [Z.Normal] :
-    ∃ hZL : Z.map L.subtype ≤ L,
+    ∃ _hZL : Z.map L.subtype ≤ L,
       ((Z.map L.subtype).subgroupOf L).Normal := by
   have hZL : Z.map L.subtype ≤ L := Subgroup.map_subtype_le Z
   refine ⟨hZL, ?_⟩
@@ -2998,7 +3016,7 @@ theorem theorem_6_8_isTISubsetWithNormalizer_Hsharp_subgroup
     constructor
     · rintro ⟨h, hhl, hhne⟩
       have hEq : (h : L) = l := Subtype.ext (by simpa using hhl)
-      exact ⟨by simpa [A, ← hEq] using h.property, by
+      exact ⟨by simp [← hEq], by
         intro hl
         exact hhne (hEq.trans hl)⟩
     · intro hl
@@ -4099,7 +4117,10 @@ theorem theorem_6_8_center_restriction_smul_of_irreducible
         a • (1 : Module.End ℂ (Fin n → ℂ)) := by
     intro z
     let φc := Representation.IntertwiningMap.centralMul (ρ := ρ) (zToH z)
-      (by simpa using hcenterH z)
+      (by
+        rw [Submonoid.mem_center_iff]
+        intro y
+        exact (Subgroup.mem_center_iff.mp (hcenterH z)) y)
     obtain ⟨a, ha⟩ :=
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).surjective φc
@@ -4110,8 +4131,18 @@ theorem theorem_6_8_center_restriction_smul_of_irreducible
           (φc : Module.End ℂ (Fin n → ℂ)) := by
       simpa using congrArg (fun f : Representation.IntertwiningMap ρ ρ =>
         (f : Module.End ℂ (Fin n → ℂ))) ha
-    simpa [Representation.IntertwiningMap.algebraMap_apply, φc,
-      Representation.IntertwiningMap.centralMul] using hlin.symm
+    calc
+      (ρ (zToH z) : Module.End ℂ (Fin n → ℂ)) =
+          (φc : Module.End ℂ (Fin n → ℂ)) := rfl
+      _ = ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
+          Representation.IntertwiningMap ρ ρ) :
+            Module.End ℂ (Fin n → ℂ)) := hlin.symm
+      _ = a • (1 : Module.End ℂ (Fin n → ℂ)) := by
+        rw [Representation.IntertwiningMap.algebraMap_apply]
+        change (a • (1 : Representation.IntertwiningMap ρ ρ)).toLinearMap =
+          a • (1 : Module.End ℂ (Fin n → ℂ))
+        rw [Representation.IntertwiningMap.toLinearMap_smul]
+        congr 1
   let scalar : Z → ℂ := fun z => Classical.choose (hscalar_exists z)
   have hscalar_spec : ∀ z : Z,
       (ρ (zToH z) : Module.End ℂ (Fin n → ℂ)) =
@@ -4789,7 +4820,7 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
   intro y hy
   have hyElem :
       y ∈ elementCentralizerIn (H.map q) (r : L ⧸ Z) := by
-    simpa [Section2.centralizerIn, Section2.elementCentralizer,
+    simpa [q, Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hy
   rcases r.property with ⟨w, hwW1, hwq⟩
   have hw_sub_ne : (⟨w, hwW1⟩ : W1) ≠ 1 := by
@@ -4831,7 +4862,9 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
     have hcomm_r : y * (r : L ⧸ Z) = (r : L ⧸ Z) * y :=
       Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
     have hcomm_qw : Commute y (q w) := by
-      simpa [hwq] using hcomm_r
+      change y * q w = q w * y
+      rw [hwq]
+      exact hcomm_r
     have hcomm_qa : Commute y (q a) := by
       rw [← hn]
       simpa [q] using hcomm_qw.zpow_right n
@@ -4861,7 +4894,7 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
       y = q z := hzy.symm
       _ = 1 := by
         simpa [q] using (QuotientGroup.eq_one_iff (N := Z) z).2 hzZ
-  simpa [hy_eq_one]
+  exact hy_eq_one
 
 theorem theorem_6_8_caseA_quotient_centralizerIn_eq_W2_map
     {G : Type u} [Group G] [Finite G]
@@ -4956,7 +4989,9 @@ theorem theorem_6_8_caseA_quotient_centralizerIn_eq_W2_map
       have hcomm_r : y * (r : L ⧸ Z) = (r : L ⧸ Z) * y :=
         Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
       have hcomm_qw : Commute y (q w) := by
-        simpa [hwq] using hcomm_r
+        change y * q w = q w * y
+        rw [hwq]
+        exact hcomm_r
       have hcomm_qa : Commute y (q a) := by
         rw [← hn]
         simpa [q] using hcomm_qw.zpow_right n
@@ -5266,8 +5301,12 @@ public theorem theorem_6_8_notation_3_3_transport
     · intro hker
       let χW : Section1.ClassFunction W := fun w => χ (e w)
       have hχW : Section1.IsIrreducibleCharacterOnGroup χW := by
-        simpa [χW, theorem_6_8_transportClassFunction] using
-          (theorem_6_8_transportClassFunction_irreducible e.symm hχ)
+        have hχW_eq :
+            χW = theorem_6_8_transportClassFunction e.symm χ := by
+          ext w
+          simp [χW, theorem_6_8_transportClassFunction]
+        rw [hχW_eq]
+        exact theorem_6_8_transportClassFunction_irreducible e.symm hχ
       have hkerW : Section1.subgroupInKernel' χW (W2.subgroupOf W) := by
         intro a
         have ha : (((e (a : W) : V) : M) ∈ V2) :=
@@ -5291,8 +5330,12 @@ public theorem theorem_6_8_notation_3_3_transport
     · intro hker
       let χW : Section1.ClassFunction W := fun w => χ (e w)
       have hχW : Section1.IsIrreducibleCharacterOnGroup χW := by
-        simpa [χW, theorem_6_8_transportClassFunction] using
-          (theorem_6_8_transportClassFunction_irreducible e.symm hχ)
+        have hχW_eq :
+            χW = theorem_6_8_transportClassFunction e.symm χ := by
+          ext w
+          simp [χW, theorem_6_8_transportClassFunction]
+        rw [hχW_eq]
+        exact theorem_6_8_transportClassFunction_irreducible e.symm hχ
       have hkerW : Section1.subgroupInKernel' χW (W1.subgroupOf W) := by
         intro a
         have ha : (((e (a : W) : V) : M) ∈ V1) :=
@@ -5333,8 +5376,12 @@ public theorem theorem_6_8_notation_3_3_transport
   · intro χ hχ
     let χW : Section1.ClassFunction W := fun w => χ (e w)
     have hχW : Section1.IsIrreducibleCharacterOnGroup χW := by
-      simpa [χW, theorem_6_8_transportClassFunction] using
-        (theorem_6_8_transportClassFunction_irreducible e.symm hχ)
+      have hχW_eq :
+          χW = theorem_6_8_transportClassFunction e.symm χ := by
+        ext w
+        simp [χW, theorem_6_8_transportClassFunction]
+      rw [hχW_eq]
+      exact theorem_6_8_transportClassFunction_irreducible e.symm hχ
     rcases hω.all_irreducibles χW hχW with ⟨i, j, hij⟩
     refine ⟨i, j, ?_⟩
     ext v
@@ -5359,7 +5406,7 @@ theorem theorem_6_8_subgroupMap_mk'_injective_of_inf_eq_bot
     simpa using hdiffBot
   calc
     (a : L) = (a : L) * ((a : L)⁻¹ * (b : L)) := by simp [hdiff_one]
-    _ = (b : L) := by simp [mul_assoc]
+    _ = (b : L) := by simp
 
 theorem theorem_6_8_subgroupMap_mk'_mem_map_iff_of_inf_eq_bot
     {L : Type u} [Group L] [Finite L]
@@ -5384,7 +5431,7 @@ theorem theorem_6_8_subgroupMap_mk'_mem_map_iff_of_inf_eq_bot
       simpa using hdiffBot
     have hx_eq : (x : L) = a := by
       calc
-        (x : L) = a * (a⁻¹ * (x : L)) := by simp [mul_assoc]
+        (x : L) = a * (a⁻¹ * (x : L)) := by simp
         _ = a := by simp [hdiff_one]
     simpa [hx_eq] using haA
   · intro hxA
@@ -5715,8 +5762,11 @@ public theorem theorem_6_8_inducedKernelFamily_irreducible_of_frobeniusQuotient
     intro h
     have hmem : ((h : L) : L ⧸ H1) ∈ Section1.quotientImageSubgroup H H1 := by
       exact ⟨(h : L), h.2, rfl⟩
-    simpa [θbarRep, qH, q, Section1.quotientImageSubgroup] using
-      (Section1.quotientThetaRepresentation_character_mk H H1 ρ hkerRep h hmem)
+    have hqH : qH h = ⟨((h : L) : L ⧸ H1), hmem⟩ := by
+      apply Subtype.ext
+      rfl
+    rw [hqH]
+    exact Section1.quotientThetaRepresentation_character_mk H H1 ρ hkerRep h hmem
   have hθbar_ne :
       θbarRep.character ≠ Section1.principalCharacter Hbar := by
     intro hprin
@@ -6796,7 +6846,10 @@ theorem theorem_6_8_Y_argumentPow_closed_of_familyData
     change θ ((a : H) ^ e) = θ ((1 : H) ^ e)
     have haPow : ((a : H) ^ e) ∈ ⁅H, H⁆.subgroupOf H :=
       (⁅H, H⁆.subgroupOf H).pow_mem a.property e
-    simpa using hθker ⟨(a : H) ^ e, haPow⟩
+    calc
+      θ ((a : H) ^ e) = Section1.degree θ :=
+        hθker ⟨(a : H) ^ e, haPow⟩
+      _ = θ ((1 : H) ^ e) := by simp [Section1.degree]
   have hθuNe : θu ≠ Section1.principalCharacter H := by
     intro hθuPrin
     apply hθne
@@ -7540,8 +7593,11 @@ theorem theorem_6_8_regular_add_local_of_subtypeMap
       apply hz
       have := congrArg (theorem_6_8_subtypeMapEquiv L Z).symm hmap
       simpa using this
+    have hval :
+        (((theorem_6_8_subtypeMapEquiv L Z) z : Z.map L.subtype) : G) =
+          ((z : L) : G) := rfl
     simpa [Section1.subgroupRestriction, regularCharacter,
-      Section1.principalCharacter, hcard, hcardF, hz, hzmap] using h
+      Section1.principalCharacter, hcard, hcardF, hz, hzmap, hval] using h
 
 public theorem theorem_6_8_frobenius_complement_centralizerIn_eq_bot
     {L : Type u} [Group L] [Finite L]
@@ -8914,10 +8970,10 @@ theorem theorem_6_8_tau1_mem_subsetSum_R_of_union_hypothesis_5_2
       Finset (Section1.ClassFunction G))
     (hsetup : Section5.hypothesis_5_2_setup_statement (X ∪ Y))
     (h52a : Section5.hypothesis_5_2_a_statement (X ∪ Y))
-    (h52b : Section5.hypothesis_5_2_b_statement (X ∪ Y) T)
+    (_h52b : Section5.hypothesis_5_2_b_statement (X ∪ Y) T)
     (h52c : Section5.hypothesis_5_2_c_statement (X ∪ Y))
     (h52d : Section5.hypothesis_5_2_d_statement (X ∪ Y) T R)
-    (h52e : Section5.hypothesis_5_2_e_statement (X ∪ Y) R)
+    (_h52e : Section5.hypothesis_5_2_e_statement (X ∪ Y) R)
     (hτ₁ : coherentExtension Y T τ₁)
     {η : Section1.ClassFunction L} (hηY : η ∈ Y) :
     Section5.isSubsetSumOf
@@ -9001,10 +9057,10 @@ theorem theorem_6_8_tau2_mem_subsetSum_R_of_union_hypothesis_5_2
       Finset (Section1.ClassFunction G))
     (hsetup : Section5.hypothesis_5_2_setup_statement (X ∪ Y))
     (h52a : Section5.hypothesis_5_2_a_statement (X ∪ Y))
-    (h52b : Section5.hypothesis_5_2_b_statement (X ∪ Y) T)
+    (_h52b : Section5.hypothesis_5_2_b_statement (X ∪ Y) T)
     (h52c : Section5.hypothesis_5_2_c_statement (X ∪ Y))
     (h52d : Section5.hypothesis_5_2_d_statement (X ∪ Y) T R)
-    (h52e : Section5.hypothesis_5_2_e_statement (X ∪ Y) R)
+    (_h52e : Section5.hypothesis_5_2_e_statement (X ∪ Y) R)
     (hτ₂ : coherentExtension X T τ₂)
     {χ : Section1.ClassFunction L} (hχX : χ ∈ X) :
     Section5.isSubsetSumOf
@@ -9601,10 +9657,12 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
       ∀ i j,
         Section1.scalarProduct H (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) hχcomplete i j)
+    change Section1.scalarProduct H
+      (Section1.ofConjClassFunction (χ i))
+      (Section1.ofConjClassFunction (χ j)) = if i = j then 1 else 0
+    rw [Section1.scalarProduct_ofConjClassFunction]
+    exact Section1.representation_completeFamily_orthonormal
+      (chi := χ) hχcomplete i j
   have hφchar : Section1.IsCharacter φ :=
     theorem_6_8_isCharacter_of_irreducible hφ
   have hφsubChar :
@@ -9775,10 +9833,12 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
       ∀ i j,
         Section1.scalarProduct H (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) hχcomplete i j)
+    change Section1.scalarProduct H
+      (Section1.ofConjClassFunction (χ i))
+      (Section1.ofConjClassFunction (χ j)) = if i = j then 1 else 0
+    rw [Section1.scalarProduct_ofConjClassFunction]
+    exact Section1.representation_completeFamily_orthonormal
+      (chi := χ) hχcomplete i j
   have hφsubChar :
       Section1.IsCharacter
         (Section1.subgroupOfClassFunction (T := H) φ) :=
@@ -10825,7 +10885,7 @@ theorem theorem_6_8_right_candidate_scalarProduct_Y_eq_anchor_of_caseB_familyDat
       simp [pair, hη₁ne]
     have hpair_eq : pair = Y := by
       apply Finset.eq_of_subset_of_card_le hpair_subset
-      simpa [hpair_card, hcard]
+      simp [hpair_card, hcard]
     have hηpair : η ∈ pair := by
       simpa [hpair_eq] using hηY
     simpa [pair] using hηpair
@@ -11977,7 +12037,7 @@ theorem theorem_6_8_pf54_remainder_virtual
   have hYeq : Yrem = Xbig - T α := by
     rw [hT]
     ext g
-    simp [sub_eq_add_neg, add_assoc]
+    simp [sub_eq_add_neg]
   simpa [hYeq] using Section3.isVirtualCharacter_sub hXvirt hTvirt
 
 theorem theorem_6_8_projection_integer_coeff_sq_le_norm
@@ -12771,7 +12831,7 @@ theorem theorem_6_8_caseA_source_coeff_eq_nat_mul_base_of_degree_multiple
     Section5.integerSpan_sub hχspan hχ₀smul
   have hdiffDeg : Section1.degree (χ - (d : ℂ) • χ₀) = 0 := by
     rw [Section1.degree_apply] at hχdeg ⊢
-    simpa [Section1.degree_apply, hχdeg]
+    simp [Section1.degree_apply, hχdeg]
   have hdiffOnX :
       Section5.integerSpanOn X Section5.puncturedSet (χ - (d : ℂ) • χ₀) :=
     ⟨hdiffSpan, (Section5.supportedOn_puncturedSet_iff_degree_eq_zero _).2 hdiffDeg⟩
@@ -13362,7 +13422,7 @@ theorem theorem_6_8_caseA_right_candidate_scalarProduct_Y_eq_anchor
       simp [pair, hη₁ne]
     have hpair_eq : pair = Y := by
       apply Finset.eq_of_subset_of_card_le hpair_subset
-      simpa [hpair_card, hcard]
+      simp [hpair_card, hcard]
     have hηpair : η ∈ pair := by
       simpa [hpair_eq] using hηY
     simpa [pair] using hηpair
@@ -13898,7 +13958,7 @@ theorem theorem_6_8_caseB_card_two_mem_eq_anchor_or_other
     simp [pair, hη₁ne]
   have hpair_eq : pair = Y := by
     apply Finset.eq_of_subset_of_card_le hpair_subset
-    simpa [hpair_card, hcard]
+    simp [hpair_card, hcard]
   have hηpair : η ∈ pair := by
     simpa [hpair_eq] using hηY
   simpa [pair] using hηpair
@@ -14132,21 +14192,21 @@ theorem theorem_6_8_caseB_unionImage_Y_Y_gram
     · have himgη : img η = Ycf := by
         rw [himgη_formula, hηeq, hYcf]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have himgξ : img ξ = Ycf := by
         rw [himgξ_formula, hξeq, hYcf]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       rw [himgη, himgξ, hηeq, hξeq]
       exact hselfYcf
     · have himgη : img η = -τ₁ η₂ := by
         rw [himgη_formula, hηeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have himgξ : img ξ = -τ₁ η₁ := by
         rw [himgξ_formula, hξeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have htarget : Section1.scalarProduct G (img η) (img ξ) =
           Section1.scalarProduct L η₂ η₁ := by
         rw [himgη, himgξ, theorem_6_8_scalarProduct_neg_neg]
@@ -14165,7 +14225,7 @@ theorem theorem_6_8_caseB_unionImage_Y_Y_gram
       have himgξ : img ξ = -τ₁ η₂ := by
         rw [himgξ_formula, hξeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have htarget : Section1.scalarProduct G (img η) (img ξ) =
           Section1.scalarProduct L η₁ η₂ := by
         rw [himgη, himgξ, theorem_6_8_scalarProduct_neg_neg]
@@ -15493,7 +15553,7 @@ noncomputable def theorem_6_8_caseA_unionImage
     {τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y}) :
     Section1.ClassFunction G :=
-  if hηX : (η : Section1.ClassFunction L) ∈ X then
+  if _hηX : (η : Section1.ClassFunction L) ∈ X then
     τ₂ (η : Section1.ClassFunction L)
   else
     τ₁ (η : Section1.ClassFunction L)
@@ -15761,7 +15821,7 @@ theorem theorem_6_8_caseA_shift_agreement_all_of_base
     Section5.integerSpan_sub hχspan hχ₀smul
   have hdiffDeg : Section1.degree (χ - (d : ℂ) • χ₀) = 0 := by
     rw [Section1.degree_apply] at hχdeg ⊢
-    simpa [Section1.degree_apply, hχdeg]
+    simp [Section1.degree_apply, hχdeg]
   have hdiffOn :
       Section5.integerSpanOn X Section5.puncturedSet (χ - (d : ℂ) • χ₀) :=
     ⟨hdiffSpan, (Section5.supportedOn_puncturedSet_iff_degree_eq_zero _).2 hdiffDeg⟩
@@ -15825,7 +15885,7 @@ theorem theorem_6_8_caseA_shift_data_all_of_base_decomposition
     Section5.integerSpan_sub hχspan hχ₀smul
   have hdiffDeg : Section1.degree (χ - (d : ℂ) • χ₀) = 0 := by
     rw [Section1.degree_apply] at hχdeg ⊢
-    simpa [Section1.degree_apply, hχdeg]
+    simp [Section1.degree_apply, hχdeg]
   have hdiffOn :
       Section5.integerSpanOn X Section5.puncturedSet (χ - (d : ℂ) • χ₀) :=
     ⟨hdiffSpan, (Section5.supportedOn_puncturedSet_iff_degree_eq_zero _).2 hdiffDeg⟩
@@ -16687,21 +16747,21 @@ theorem theorem_6_8_caseA_signed_unionImage_Y_Y_gram
     · have himgη : img η = Ycf := by
         rw [himgη_formula, hηeq, hYcf]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have himgξ : img ξ = Ycf := by
         rw [himgξ_formula, hξeq, hYcf]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       rw [himgη, himgξ, hηeq, hξeq]
       exact hselfYcf
     · have himgη : img η = -τ₁ η₂ := by
         rw [himgη_formula, hηeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have himgξ : img ξ = -τ₁ η₁ := by
         rw [himgξ_formula, hξeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have htarget : Section1.scalarProduct G (img η) (img ξ) =
           Section1.scalarProduct L η₂ η₁ := by
         rw [himgη, himgξ, theorem_6_8_scalarProduct_neg_neg]
@@ -16720,7 +16780,7 @@ theorem theorem_6_8_caseA_signed_unionImage_Y_Y_gram
       have himgξ : img ξ = -τ₁ η₂ := by
         rw [himgξ_formula, hξeq]
         ext g
-        simp [sub_eq_add_neg, add_assoc]
+        simp [sub_eq_add_neg]
       have htarget : Section1.scalarProduct G (img η) (img ξ) =
           Section1.scalarProduct L η₁ η₂ := by
         rw [himgη, himgξ, theorem_6_8_scalarProduct_neg_neg]
@@ -18916,7 +18976,7 @@ theorem theorem_6_8_induced_indexed_degree_sum_le_intermediate_sum
       have h := congrArg (fun Y : S1 => (Y : Section1.ClassFunction L)) hYS
       simpa [hYS1coe] using h
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hnot : ∀ o : Section1.conjugateOrbitIndex K (θ i),
         θ j ≠ Section1.conjugateOrbitConj K (θ i) o := hnone
     rcases hθirr j with ⟨nj, ρj, hρj, hθj_eq⟩
@@ -19545,8 +19605,16 @@ theorem theorem_6_8_complete_nonkernel_degree_data
           rw [hθ0eq]
         · have hnorm :=
             (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-          simpa [Section1.classFunctionInner_toConjClassFunction, hθ0eq]
-            using hnorm
+          have hto :
+              Section1.toConjClassFunction θ0 hθ0class =
+                ρ.characterClassFunction := by
+            refine Section1.toConjClassFunction_eq_of_apply θ0 hθ0class
+              ρ.characterClassFunction ?_
+            intro g
+            rw [hθ0eq]
+            rfl
+          rw [hto]
+          exact hnorm
       rcases hχ.2.1 (Section1.toConjClassFunction θ0 hθ0class) hθ0rep with
         ⟨i, hi⟩
       have hiθ : θ i = θ0 := by

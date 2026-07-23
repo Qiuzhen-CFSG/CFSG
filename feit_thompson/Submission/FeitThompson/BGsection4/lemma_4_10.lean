@@ -1,8 +1,8 @@
 module
 
-public import Submission.FeitThompson.BGsection4.proposition_4_8_b
-import Submission.FeitThompson.Utils
-public import Submission.FeitThompson.BGsection4.lemma_4_5_b
+public import FeitThompson.BGsection4.proposition_4_8_b
+import FeitThompson.Utils
+public import FeitThompson.BGsection4.lemma_4_5_b
 
 open scoped FixedPoints
 

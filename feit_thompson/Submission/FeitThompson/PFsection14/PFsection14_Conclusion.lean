@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_2
+public import FeitThompson.PFsection14.PFsection14_2
 
 /-!
 # Peterfalvi, Section 14: section conclusion

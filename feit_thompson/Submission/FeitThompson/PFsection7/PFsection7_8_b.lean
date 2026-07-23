@@ -1,8 +1,8 @@
 module
 
-import Submission.FeitThompson.PFsection7.PFsection7_7
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-public import Submission.FeitThompson.PFsection7.PFsection7_6
+import FeitThompson.PFsection7.PFsection7_7
+import FeitThompson.PFsection7.PFsection7_8_a
+public import FeitThompson.PFsection7.PFsection7_6
 
 noncomputable section
 
@@ -1249,6 +1249,7 @@ public theorem theorem_7_8_b_component_norm_of_weightedSum_norm
   have hnormWre :
       Complex.re (Section1.scalarProduct G W W) =
         ((Nat.card H : ℝ) - 1) / (e : ℝ) := by
+    change Section5.cfNormSq W = ((Nat.card H : ℝ) - 1) / (e : ℝ)
     simpa [W, e] using hWnorm
   rw [hstar_a]
   have hcoeff_re :
@@ -1306,8 +1307,18 @@ private theorem theorem_7_8_b_double_sum_two_coeffs
     have hsplit0 :
         (∑ j : Fin n, f j) =
           f iβ + Finset.sum (Finset.univ \ {iβ}) f := by
-      exact Finset.sum_eq_add_sum_diff_singleton (s := Finset.univ) iβ f
-        (by intro hmem; simp at hmem)
+      have hdiff :
+          Finset.univ \ ({iβ} : Finset (Fin n)) = Finset.univ.erase iβ := by
+        ext x
+        simp
+      calc
+        (∑ j : Fin n, f j) =
+            Finset.sum (Finset.univ.erase iβ) f + f iβ := by
+              symm
+              exact Finset.sum_erase_add (Finset.univ) f (by simp)
+        _ = f iβ + Finset.sum (Finset.univ \ {iβ}) f := by
+              rw [← hdiff]
+              exact add_comm _ _
     have hdiff :
         Finset.univ \ ({iβ} : Finset (Fin n)) = Finset.univ.erase iβ := by
       ext x
@@ -1341,8 +1352,18 @@ private theorem theorem_7_8_b_double_sum_two_coeffs
     have hsplit0 :
         (∑ i : Fin n, g i) =
           g iβ + Finset.sum (Finset.univ \ {iβ}) g := by
-      exact Finset.sum_eq_add_sum_diff_singleton (s := Finset.univ) iβ g
-        (by intro hmem; simp at hmem)
+      have hdiff :
+          Finset.univ \ ({iβ} : Finset (Fin n)) = Finset.univ.erase iβ := by
+        ext x
+        simp
+      calc
+        (∑ i : Fin n, g i) =
+            Finset.sum (Finset.univ.erase iβ) g + g iβ := by
+              symm
+              exact Finset.sum_erase_add (Finset.univ) g (by simp)
+        _ = g iβ + Finset.sum (Finset.univ \ {iβ}) g := by
+              rw [← hdiff]
+              exact add_comm _ _
     have hdiff :
         Finset.univ \ ({iβ} : Finset (Fin n)) = Finset.univ.erase iβ := by
       ext x

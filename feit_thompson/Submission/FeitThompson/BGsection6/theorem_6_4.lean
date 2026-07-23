@@ -4,8 +4,8 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_3_b_2
-import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection6.lemma_6_3_b_2
+import FeitThompson.SubgroupConj
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -104,7 +104,7 @@ private theorem quotientByFittingIsNilpotent_of_mulEquiv
     · exact
         le_sSup ⟨
           Subgroup.Normal.map (H := fittingSubgroup G) inferInstance e.toMonoidHom e.surjective,
-          nilpotent_of_mulEquiv
+          Group.nilpotent_of_mulEquiv
             (G := fittingSubgroup G)
             (G' := (fittingSubgroup G).map e.toMonoidHom)
             (MulEquiv.subgroupMap e (fittingSubgroup G))⟩
@@ -116,7 +116,7 @@ private theorem quotientByFittingIsNilpotent_of_mulEquiv
           le_sSup ⟨
             Subgroup.Normal.map (H := fittingSubgroup H) inferInstance e.symm.toMonoidHom
               e.symm.surjective,
-            nilpotent_of_mulEquiv
+            Group.nilpotent_of_mulEquiv
               (G := fittingSubgroup H)
               (G' := (fittingSubgroup H).map e.symm.toMonoidHom)
               (MulEquiv.subgroupMap e.symm (fittingSubgroup H))⟩
@@ -128,7 +128,7 @@ private theorem quotientByFittingIsNilpotent_of_mulEquiv
     QuotientGroup.congr
       (G' := fittingSubgroup G)
       (H' := fittingSubgroup H) (e := e) hfit_map
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := G ⧸ fittingSubgroup G) (G' := H ⧸ fittingSubgroup H) (_h := hnil) eQ
 
 private theorem quotientByFittingIsNilpotent_of_surjective
@@ -152,7 +152,7 @@ private theorem quotientByFittingIsNilpotent_of_surjective
       ext
       exact hxy
     letI : Group.IsNilpotent (fittingSubgroup G) := inferInstance
-    exact nilpotent_of_surjective (G := fittingSubgroup G) (G' := (fittingSubgroup G).map f) φ hφsurj
+    exact Group.nilpotent_of_surjective (G := fittingSubgroup G) (G' := (fittingSubgroup G).map f) φ hφsurj
   have hfit_le : (fittingSubgroup G).map f ≤ fittingSubgroup H := by
     exact le_sSup ⟨Subgroup.Normal.map (H := fittingSubgroup G) inferInstance f hf, hfit_map_nil⟩
   have hfit_comap : fittingSubgroup G ≤ (fittingSubgroup H).comap f := by
@@ -171,12 +171,12 @@ private theorem quotientByFittingIsNilpotent_of_surjective
     QuotientGroup.map_surjective_of_surjective (N := fittingSubgroup G) (M := fittingSubgroup H) f
       hmkf_surj hfit_comap
   letI : Group.IsNilpotent (G ⧸ fittingSubgroup G) := hnil
-  exact nilpotent_of_surjective (G := G ⧸ fittingSubgroup G) (G' := H ⧸ fittingSubgroup H) qf hqf_surj
+  exact Group.nilpotent_of_surjective (G := G ⧸ fittingSubgroup G) (G' := H ⧸ fittingSubgroup H) qf hqf_surj
 
 private theorem subgroup_isNilpotent_of_le
     {G : Type*} [Group G] [Finite G] {A B : Subgroup G}
     [Group.IsNilpotent A] (hBA : B ≤ A) : Group.IsNilpotent B := by
-  exact nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe (H := B) (K := A) hBA)
+  exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe (H := B) (K := A) hBA)
 
 private def infMulEquivSubgroupOf
     {G : Type*} [Group G] (A B : Subgroup G) :
@@ -214,21 +214,23 @@ private theorem quotientByFittingIsNilpotent_subgroupOf
     have hB_nil : Group.IsNilpotent B := by
       exact subgroup_isNilpotent_of_le (A := fittingSubgroup G) (B := B) inf_le_left
     let eB : B ≃* A := infMulEquivSubgroupOf (fittingSubgroup G) H
-    exact nilpotent_of_mulEquiv (G := B) (G' := A) (_h := hB_nil) eB
+    exact Group.nilpotent_of_mulEquiv (G := B) (G' := A) (_h := hB_nil) eB
   have hA_le_fitH : A ≤ fittingSubgroup H := by
     exact le_sSup ⟨Subgroup.Normal.subgroupOf (inferInstance : (fittingSubgroup G).Normal) H, hA_nil⟩
   let f : H →* G ⧸ fittingSubgroup G :=
     (QuotientGroup.mk' (fittingSubgroup G)).comp H.subtype
   have hker_f : f.ker = A := by
     ext x
-    constructor <;> intro hx <;> simpa [f, A, QuotientGroup.eq_one_iff] using hx
+    change (QuotientGroup.mk' (fittingSubgroup G)) (x : G) = 1 ↔
+      (x : G) ∈ fittingSubgroup G
+    exact QuotientGroup.eq_one_iff (x : G)
   let eKer : H ⧸ A ≃* f.range :=
     (QuotientGroup.quotientMulEquivOfEq (G := H) (M := A) (N := f.ker) hker_f.symm).trans
       (QuotientGroup.quotientKerEquivRange f)
   have hquotA_nil : Group.IsNilpotent (H ⧸ A) := by
     letI : Group.IsNilpotent (G ⧸ fittingSubgroup G) := hnil
     letI : Group.IsNilpotent f.range := Subgroup.isNilpotent f.range
-    exact nilpotent_of_mulEquiv (G := f.range) (G' := H ⧸ A) eKer.symm
+    exact Group.nilpotent_of_mulEquiv (G := f.range) (G' := H ⧸ A) eKer.symm
   let π : H ⧸ A →* H ⧸ fittingSubgroup H :=
     { toFun := Subgroup.quotientMapOfLE hA_le_fitH
       map_one' := rfl
@@ -242,7 +244,7 @@ private theorem quotientByFittingIsNilpotent_subgroupOf
     refine Quotient.inductionOn' q ?_
     intro x
     exact ⟨QuotientGroup.mk x, rfl⟩
-  exact nilpotent_of_surjective (G := H ⧸ A) (G' := H ⧸ fittingSubgroup H)
+  exact Group.nilpotent_of_surjective (G := H ⧸ A) (G' := H ⧸ fittingSubgroup H)
     π (by simpa [π] using hsurj)
 
 
@@ -355,7 +357,7 @@ private theorem theorem_6_4_main
               Subgroup.Normal.map (H := fittingSubgroup (G ⧸ (⊥ : Subgroup G)))
                 (inferInstance : (fittingSubgroup (G ⧸ (⊥ : Subgroup G))).Normal)
                 eBot.toMonoidHom eBot.surjective,
-              nilpotent_of_mulEquiv
+              Group.nilpotent_of_mulEquiv
                 (G := ↥(fittingSubgroup (G ⧸ (⊥ : Subgroup G))))
                 (G' := ↥((fittingSubgroup (G ⧸ (⊥ : Subgroup G))).map eBot.toMonoidHom))
                 (Subgroup.equivMapOfInjective
@@ -383,7 +385,7 @@ private theorem theorem_6_4_main
                             fittingSubgroup G :=
                         (MulEquiv.subgroupMap eBot ((fittingSubgroup G).comap eBot.toMonoidHom)).trans
                           (MulEquiv.subgroupCongr hmap_eq)
-                      exact nilpotent_of_mulEquiv
+                      exact Group.nilpotent_of_mulEquiv
                         (G := fittingSubgroup G)
                         (G' := (fittingSubgroup G).comap eBot.toMonoidHom)
                         (_h := (inferInstance : Group.IsNilpotent (fittingSubgroup G)))
@@ -400,7 +402,7 @@ private theorem theorem_6_4_main
               Group.IsNilpotent
                 (((G ⧸ (⊥ : Subgroup G)) ⧸ fittingSubgroup (G ⧸ (⊥ : Subgroup G)))) := by
             simpa [QuotientByFittingIsNilpotent] using hnil2
-          exact nilpotent_of_mulEquiv
+          exact Group.nilpotent_of_mulEquiv
             (G := ((G ⧸ (⊥ : Subgroup G)) ⧸ fittingSubgroup (G ⧸ (⊥ : Subgroup G))))
             (G' := G ⧸ fittingSubgroup G) eNil
         let eTop : (⊤ : Subgroup G) ≃* G := Subgroup.topEquiv
@@ -411,7 +413,7 @@ private theorem theorem_6_4_main
               Subgroup.Normal.map (H := fittingSubgroup (↥(⊤ : Subgroup G)))
                 (inferInstance : (fittingSubgroup (↥(⊤ : Subgroup G))).Normal)
                 eTop.toMonoidHom eTop.surjective,
-              nilpotent_of_mulEquiv
+              Group.nilpotent_of_mulEquiv
                 (G := ↥(fittingSubgroup (↥(⊤ : Subgroup G))))
                 (G' := ↥((fittingSubgroup (↥(⊤ : Subgroup G))).map eTop.toMonoidHom))
                 (Subgroup.equivMapOfInjective
@@ -439,7 +441,7 @@ private theorem theorem_6_4_main
                             fittingSubgroup G :=
                         (MulEquiv.subgroupMap eTop ((fittingSubgroup G).comap eTop.toMonoidHom)).trans
                           (MulEquiv.subgroupCongr hmap_eq)
-                      exact nilpotent_of_mulEquiv
+                      exact Group.nilpotent_of_mulEquiv
                         (G := fittingSubgroup G)
                         (G' := (fittingSubgroup G).comap eTop.toMonoidHom)
                         (_h := (inferInstance : Group.IsNilpotent (fittingSubgroup G)))
@@ -452,7 +454,7 @@ private theorem theorem_6_4_main
             (G' := fittingSubgroup (↥(⊤ : Subgroup G)))
             (H' := fittingSubgroup G) (e := eTop) hfit_map_top
         letI : Group.IsNilpotent (G ⧸ fittingSubgroup G) := hnilG
-        exact nilpotent_of_mulEquiv
+        exact Group.nilpotent_of_mulEquiv
           (G := G ⧸ fittingSubgroup G)
           (G' := ↥(⊤ : Subgroup G) ⧸ fittingSubgroup (↥(⊤ : Subgroup G)))
           eTopQ.symm
@@ -870,7 +872,8 @@ private theorem theorem_6_4_main
           refine ⟨y, hyL, ?_, ?_⟩
           · have hmap_conj :
                 (J₁.conjBy y).map qN = (J₁.map qN).conjBy (qN y) := by
-              simpa [Subgroup.conjBy] using map_mk'_map_conj_eq_local64 (N := N) (H := J₁) y
+              simpa [qN, Subgroup.conjBy] using
+                map_mk'_map_conj_eq_local64 (N := N) (H := J₁) y
             have hsup_map :
                 (J₁.conjBy y ⊔ J₂).map qN = (J₁.map qN).conjBy (qN y) ⊔ J₂.map qN := by
               calc
@@ -904,7 +907,7 @@ private theorem theorem_6_4_main
             calc
               (H.conjBy y).map qN
                   = (H.map qN).conjBy (qN y) := by
-                      simpa [Subgroup.conjBy] using
+                      simpa [qN, Subgroup.conjBy] using
                         (map_mk'_map_conj_eq_local64 (N := N) (H := H) y)
               _ = H.map qN := hybar_conj
           have hHy_le_HN : H.conjBy y ≤ HN := by
@@ -949,7 +952,7 @@ private theorem theorem_6_4_main
             rw [Subgroup.disjoint_def]
             intro x hxN hxH
             apply Subtype.ext
-            exact (Subgroup.disjoint_def.mp (disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcop_N_H)))
+            exact (Subgroup.disjoint_def.mp (Subgroup.disjoint_of_coprime_natCard hcop_N_H))
               (show ((x : HN) : G) ∈ N from hxN) (show ((x : HN) : G) ∈ H from hxH)
           have hcard_Hy : Nat.card (H.conjBy y) = Nat.card H := by
             simpa [Subgroup.conjBy] using
@@ -962,7 +965,7 @@ private theorem theorem_6_4_main
             rw [Subgroup.disjoint_def]
             intro x hxN hxHy
             apply Subtype.ext
-            exact (Subgroup.disjoint_def.mp (disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcop_N_Hy)))
+            exact (Subgroup.disjoint_def.mp (Subgroup.disjoint_of_coprime_natCard hcop_N_Hy))
               (show ((x : HN) : G) ∈ N from hxN) (show ((x : HN) : G) ∈ H.conjBy y from hxHy)
           have hsup_H : Nsub ⊔ Hsub = ⊤ := by
             calc
@@ -1079,7 +1082,7 @@ private theorem theorem_6_4_main
           have hcop_N_H : Nat.Coprime (Nat.card N) (Nat.card H) := by
             exact (coprime_card_of_isPGroup_of_not_dvd (P := N) (A := H) hN_p hp_not_H).symm
           have hHN_bot : H ⊓ N = ⊥ := by
-            exact Subgroup.inf_eq_bot_of_coprime hcop_N_H.symm
+            exact (Subgroup.disjoint_of_coprime_natCard hcop_N_H.symm).eq_bot
           let x0 : G := z * y
           have hx0L : x0 ∈ L := by
             exact L.mul_mem (hN_le_L hzN) hyL
@@ -1154,10 +1157,12 @@ private theorem theorem_6_4_main
               S.map qN = (J₁.conjBy y ⊔ J₂).map qN := by
             have hmap_conj_x0 :
                 (J₁.conjBy x0).map qN = (J₁.map qN).conjBy (qN x0) := by
-              simpa [Subgroup.conjBy] using map_mk'_map_conj_eq_local64 (N := N) (H := J₁) x0
+              simpa [qN, Subgroup.conjBy] using
+                map_mk'_map_conj_eq_local64 (N := N) (H := J₁) x0
             have hmap_conj_y :
                 (J₁.conjBy y).map qN = (J₁.map qN).conjBy (qN y) := by
-              simpa [Subgroup.conjBy] using map_mk'_map_conj_eq_local64 (N := N) (H := J₁) y
+              simpa [qN, Subgroup.conjBy] using
+                map_mk'_map_conj_eq_local64 (N := N) (H := J₁) y
             calc
               S.map qN = (J₁.conjBy x0).map qN ⊔ J₂.map qN := by
                 simp [S, Subgroup.map_sup]
@@ -1217,18 +1222,23 @@ private theorem theorem_6_4_main
                     (Subgroup.map_sup S N (MulAut.conj h).toMonoidHom)
                 _ = Lstar := by rw [hSconj, hNconj]
             exact mem_normalizer_of_conjBy_eq_local hLstarconj
+          letI : H.Normalizes Lstar := ⟨hHnorm_Lstar⟩
           letI : MulDistribMulAction ↥H ↥Lstar :=
             Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) H Lstar hHnorm_Lstar
           haveI : IsInvariant ↥H ↥Lstar ((J₁.conjBy x0).subgroupOf Lstar) := by
             refine ⟨?_⟩
             intro h g
-            simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hHnorm_Lstar] using
-              ((Subgroup.mem_normalizer_iff.mp (hHnorm_J₁x0 h.property)) ((g : Lstar) : G))
+            change (((g : Lstar) : G) ∈ J₁.conjBy x0) ↔
+              (((h • g : Lstar) : G) ∈ J₁.conjBy x0)
+            rw [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
+            exact
+              (Subgroup.mem_normalizer_iff.mp (hHnorm_J₁x0 h.property)) ((g : Lstar) : G)
           haveI : IsInvariant ↥H ↥Lstar (J₂.subgroupOf Lstar) := by
             refine ⟨?_⟩
             intro h g
-            simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hHnorm_Lstar] using
-              ((Subgroup.mem_normalizer_iff.mp (hnorm₂ h.property)) ((g : Lstar) : G))
+            change (((g : Lstar) : G) ∈ J₂) ↔ (((h • g : Lstar) : G) ∈ J₂)
+            rw [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
+            exact (Subgroup.mem_normalizer_iff.mp (hnorm₂ h.property)) ((g : Lstar) : G)
           have hJ₁x0_pi_sub : IsPiSubgroup (G := Lstar) π ((J₁.conjBy x0).subgroupOf Lstar) := by
             intro r hr
             exact hJ₁x0_pi r (by
@@ -1465,7 +1475,7 @@ private theorem theorem_6_4_main
                 fittingSubgroup M ≃* (fittingSubgroup M).map M.subtype :=
               Subgroup.equivMapOfInjective (f := M.subtype) (fittingSubgroup M) M.subtype_injective
             exact
-              nilpotent_of_mulEquiv (G := fittingSubgroup M)
+              Group.nilpotent_of_mulEquiv (G := fittingSubgroup M)
                 (G' := (fittingSubgroup M).map M.subtype) e
           have hFMG_le_fitG : FMG ≤ fittingSubgroup G := by
             exact
@@ -1548,7 +1558,7 @@ private theorem theorem_6_4_main
                 Subgroup.equivMapOfInjective (f := M.subtype) (fittingSubgroup M)
                   M.subtype_injective
               exact
-                nilpotent_of_mulEquiv (G := fittingSubgroup M)
+                Group.nilpotent_of_mulEquiv (G := fittingSubgroup M)
                   (G' := (fittingSubgroup M).map M.subtype) e
             have hFMG_le_fitG : FMG ≤ fittingSubgroup G := by
               exact

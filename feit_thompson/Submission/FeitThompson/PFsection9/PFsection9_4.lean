@@ -1,11 +1,13 @@
 module
 
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PCore.PCore
-import Submission.FeitThompson.PCore.PPrimeCore
-public import Submission.FeitThompson.PFsection9.Basic
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PCore.PCore
+import FeitThompson.PCore.PPrimeCore
+public import FeitThompson.PFsection9.Basic
 
 noncomputable section
+
+open scoped IsMulCommutative commutatorElement
 
 namespace Section9
 
@@ -583,11 +585,12 @@ private theorem invariant_subgroup_of_submodule_nontrivial_sec9
   intro a ha
   rw [MonoidHom.mem_ker]
   ext q
-  apply Additive.toMul.injective
   have hqQ : Additive.toMul (q : Additive V) ∈ Q := by
     simp [Q, S, η]
   let qQ : Q := ⟨Additive.toMul (q : Additive V), hqQ⟩
   have hfix := htriv ⟨a, ha⟩ qQ
+  change (a : A) • Additive.toMul (q : Additive V) =
+    Additive.toMul (q : Additive V) at hfix
   simpa [qQ, S, hρ, Subrepresentation.toRepresentation] using hfix
 
 private theorem theorem_9_4_typeIIIIV_frattini_quotient_complement_sec9
@@ -738,7 +741,8 @@ private theorem theorem_9_4_typeIIIIV_frattini_simple_factor_sec9
     have huUW1 : uUW1 ∈ U.subgroupOf UW1 := by
       simp [uUW1, Subgroup.mem_subgroupOf, u.property]
     have hfix := htriv ⟨uUW1, huUW1⟩ x
-    simpa [UW1, V, P, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hfix
+    change u • x = x at hfix
+    exact hfix
   have hcop :
       Nat.Coprime (Nat.card W2) (Nat.card UW1) := by
     simpa [UW1] using
@@ -783,8 +787,33 @@ private theorem theorem_9_4_typeIIIIV_UW1_frattini_nontrivial_sec9
   intro hU hUW1
   apply hU
   intro u x
-  have hfix := hUW1 ⟨(u : G), (show U ≤ U ⊔ W1 from le_sup_left) u.property⟩ x
-  simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hfix
+  let P : Subgroup MF := pCore (Nat.card W2) MF
+  letI : IsInvariant U MF P := by
+    simpa [P] using
+      pCore_isInvariant_of_normalizes_sec9
+        (A := U) (MF := MF) (p := Nat.card W2)
+  letI : IsInvariant (U ⊔ W1 : Subgroup G) MF P := by
+    simpa [P] using
+      pCore_isInvariant_of_normalizes_sec9
+        (A := (U ⊔ W1 : Subgroup G)) (MF := MF) (p := Nat.card W2)
+  let uUW1 : (U ⊔ W1 : Subgroup G) :=
+    ⟨(u : G), (show U ≤ U ⊔ W1 from le_sup_left) u.property⟩
+  refine QuotientGroup.induction_on x ?_
+  intro y
+  have hfix := hUW1 uUW1 (QuotientGroup.mk' (frattini P) y)
+  have hsmul : (u • y : P) = uUW1 • y := by
+    apply Subtype.ext
+    apply MF.subtype_injective
+    change
+      (u : G) * (((y : P) : MF) : G) * (u : G)⁻¹ =
+        (uUW1 : G) * (((y : P) : MF) : G) * (uUW1 : G)⁻¹
+    rfl
+  change QuotientGroup.mk' (frattini P) (u • y) =
+    QuotientGroup.mk' (frattini P) y
+  change QuotientGroup.mk' (frattini P) (uUW1 • y) =
+    QuotientGroup.mk' (frattini P) y at hfix
+  rw [hsmul]
+  exact hfix
 
 private theorem not_actsTrivially_quotient_of_isCompl_nontrivial_subgroup_sec9
     {A V : Type u} [Group A] [Group V] [MulDistribMulAction A V]
@@ -812,7 +841,8 @@ private theorem not_actsTrivially_quotient_of_isCompl_nontrivial_subgroup_sec9
   intro h q
   have hqQ : (q : V) ∈ Q := q.property
   have hsmulQ : (h : H) • (q : V) ∈ Q := by
-    simpa using (hQ_inv.invariant (h : A) (q : V)).1 hqQ
+    change (h : A) • (q : V) ∈ Q
+    exact (hQ_inv.invariant (h : A) (q : V)).1 hqQ
   have hfixquot := htriv h (QuotientGroup.mk' C (q : V))
   have hsmul_mk :
       (h : H) • QuotientGroup.mk' C (q : V) =
@@ -833,7 +863,8 @@ private theorem not_actsTrivially_quotient_of_isCompl_nontrivial_subgroup_sec9
   have hdivOne : ((h : H) • (q : V)) / (q : V) = 1 := by
     simpa using hdivBot
   have heqH : (h : H) • (q : V) = (q : V) := div_eq_one.mp hdivOne
-  simpa using heqH
+  change (h : A) • (q : V) = (q : V) at heqH
+  exact heqH
 
 private theorem not_actsTrivially_of_action_transfer_sec9
     {A H X : Type u} [SMul A X] [SMul H X]
@@ -944,7 +975,7 @@ private theorem theorem_9_4_typeIIIIV_liftedH0_subgroupOf_MF_normal_sec9
   have htop_le_PK : (⊤ : Subgroup MF) ≤ P ⊔ K := by
     haveI : Group.IsNilpotent MF := hMFnil
     have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup MF)) := by
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (G := MF) (G' := ↥(⊤ : Subgroup MF))
         (Subgroup.topEquiv.symm : MF ≃* ↥(⊤ : Subgroup MF))
     have hTop_le_iSup :
@@ -1207,7 +1238,7 @@ private theorem nilpotent_top_le_pCore_sup_pPrimeCore_sec9
   classical
   haveI : Group.IsNilpotent Q := hQnil
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup Q)) := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Q) (G' := ↥(⊤ : Subgroup Q))
       (Subgroup.topEquiv.symm : Q ≃* ↥(⊤ : Subgroup Q))
   have hTop_le_iSup :
@@ -1465,11 +1496,15 @@ private theorem inf_simple_factor_eq_bot_or_eq_self_sec9
   have hrM_le_m : rM ≤ m := by
     intro v hv
     have hvRQ : Additive.toMul v ∈ RQ := by
-      simpa [rM, σ, η] using hv
+      change Additive.toMul v ∈ RQ at hv
+      exact hv
     have hvQ : Additive.toMul v ∈ Q := hvRQ.2
     have hvηQ : v ∈ η Q := by
-      simpa [η] using hvQ
-    simpa [rM, σ, S, hηQ_eq] using hvηQ
+      change Additive.toMul v ∈ Q
+      exact hvQ
+    rw [hηQ_eq] at hvηQ
+    change v ∈ m at hvηQ
+    exact hvηQ
   have hAtom : IsAtom m :=
     (@isSimpleModule_iff_isAtom (MonoidAlgebra (ZMod p) A) _
       ρ.asModule instAddRho instModRho m).1 hm_simple
@@ -1479,11 +1514,13 @@ private theorem inf_simple_factor_eq_bot_or_eq_self_sec9
     apply le_antisymm
     · intro x hx
       have hxv : Additive.ofMul x ∈ rM := by
-        simpa [rM, σ, η] using hx
+        change x ∈ RQ
+        exact hx
       have hxbot : Additive.ofMul x ∈ (⊥ : Submodule (MonoidAlgebra (ZMod p) A) ρ.asModule) := by
         simpa [hrM_bot] using hxv
       have hxzero : Additive.ofMul x = 0 := by
-        simpa using hxbot
+        change Additive.ofMul x = 0 at hxbot
+        exact hxbot
       have hxone : x = 1 := by
         have := congrArg Additive.toMul hxzero
         simpa using this
@@ -1494,12 +1531,16 @@ private theorem inf_simple_factor_eq_bot_or_eq_self_sec9
     apply le_antisymm inf_le_right
     intro x hxQ
     have hxηQ : Additive.ofMul x ∈ η Q := by
-      simpa [η] using hxQ
+      change x ∈ Q
+      exact hxQ
     have hxm : Additive.ofMul x ∈ m := by
-      simpa [S, hηQ_eq] using hxηQ
+      rw [hηQ_eq] at hxηQ
+      change Additive.ofMul x ∈ m at hxηQ
+      exact hxηQ
     have hxrM : Additive.ofMul x ∈ rM := by
       simpa [hrM_eq_m] using hxm
-    simpa [rM, σ, η] using hxrM
+    change x ∈ RQ at hxrM
+    exact hxrM
 
 private theorem subgroup_eq_complement_of_le_of_inf_eq_bot_sec9
     {V : Type u} [Group V] [IsMulCommutative V]
@@ -1509,7 +1550,7 @@ private theorem subgroup_eq_complement_of_le_of_inf_eq_bot_sec9
     (hL_inf_Q : L ⊓ Q = ⊥) :
     L = Qcompl := by
   classical
-  haveI : Qcompl.Normal := Subgroup.normal_of_comm Qcompl
+  haveI : Qcompl.Normal := Subgroup.normal_of_isMulCommutative Qcompl
   apply le_antisymm
   · intro x hxL
     have hx_top : x ∈ Q ⊔ Qcompl := by
@@ -1587,8 +1628,8 @@ private theorem theorem_9_4_typeIIIIV_liftedH0_source_sec9
           Q = (Subgroup.toAddSubgroup.trans
               (AddSubgroup.toZModSubmodule (n := Nat.card W2))).symm
             (Subrepresentation.ofSubmodule' m).toSubmodule →
-          letI : CommGroup V := CommGroup.ofIsMulCommutative;
-          letI : Qcompl.Normal := Subgroup.normal_of_comm Qcompl;
+          letI : CommGroup V := IsMulCommutative.instCommGroup;
+          letI : Qcompl.Normal := Subgroup.normal_of_isMulCommutative Qcompl;
           (hQcompl_inv_U : IsInvariant U V Qcompl) →
           (letI : IsInvariant U V Qcompl := hQcompl_inv_U;
             letI : MulDistribMulAction U (V ⧸ Qcompl) :=
@@ -1878,7 +1919,17 @@ private theorem theorem_9_4_typeIIIIV_liftedH0_source_sec9
           change ((a • ((x : P) : MF) : MF) : G) =
             (a : G) * (((x : P) : MF) : G) * (a : G)⁻¹
           simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
-        simpa [NMF, Subgroup.mem_comap, Subgroup.inclusion, aM, xM, hsmulG] using hconjN
+        change
+          (⟨(((a • x : P) : MF) : G),
+            hMF_le_M ((a • x : P) : MF).property⟩ : M) ∈ N
+        have heq :
+            (⟨(((a • x : P) : MF) : G),
+              hMF_le_M ((a • x : P) : MF).property⟩ : M) =
+              aM * xM * aM⁻¹ := by
+          apply Subtype.ext
+          exact hsmulG
+        rw [heq]
+        exact hconjN
       have hL_forward : ∀ (a : UW1) {x : V}, x ∈ L → a • x ∈ L := by
         intro a x hx
         rcases Subgroup.mem_map.mp hx with ⟨y, hyNP, rfl⟩
@@ -1899,7 +1950,7 @@ private theorem theorem_9_4_typeIIIIV_liftedH0_source_sec9
               (AddSubgroup.toZModSubmodule (n := p))).symm
             (Subrepresentation.ofSubmodule' m).toSubmodule := by
         simpa [UW1, V, P, p] using _hQ_eq
-      haveI : CommGroup V := CommGroup.ofIsMulCommutative
+      haveI : CommGroup V := IsMulCommutative.instCommGroup
       have hL_cases : L ⊓ Q = ⊥ ∨ L ⊓ Q = Q := by
         simpa [UW1, V, P, p] using
           inf_simple_factor_eq_bot_or_eq_self_sec9
@@ -2068,8 +2119,8 @@ private theorem theorem_9_4_typeIIIIV_maschke_frattini_source_sec9
     simpa [UW1, V, P] using
       theorem_9_4_typeIIIIV_frattini_quotient_complement_sec9
         M MF U W1 W2 q h92 Q hQ_inv
-  letI : CommGroup V := CommGroup.ofIsMulCommutative
-  haveI : Qcompl.Normal := Subgroup.normal_of_comm Qcompl
+  letI : CommGroup V := IsMulCommutative.instCommGroup
+  haveI : Qcompl.Normal := Subgroup.normal_of_isMulCommutative Qcompl
   have hQcompl_inv_Usub : IsInvariant (U.subgroupOf UW1) V Qcompl :=
     { invariant := fun h v => hQcompl_inv.invariant (h : UW1) v }
   have hQcompl_nontriv :
@@ -2103,7 +2154,8 @@ private theorem theorem_9_4_typeIIIIV_maschke_frattini_source_sec9
     intro h x
     let u : U := ⟨((h : U.subgroupOf UW1) : UW1), h.property⟩
     have hfix := htriv u x
-    simpa [u, UW1, V, P, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hfix
+    change h • x = x at hfix
+    exact hfix
   -- Source step still open: lift the complementary kernel `Qcompl` through
   -- the inverse-image/product construction with `O_{p'}(MF)` to build `H0`,
   -- then identify `MF/H0` with the selected noncentral factor quotient above.

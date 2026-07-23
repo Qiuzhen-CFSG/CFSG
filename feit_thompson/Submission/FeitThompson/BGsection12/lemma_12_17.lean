@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_16_b
+public import FeitThompson.BGsection12.corollary_12_16_b
 
 open scoped Pointwise
 
@@ -357,7 +357,7 @@ private theorem section12_lemma_12_17_inf_cyclic
       exact isCyclic_of_subsingleton (α := (Q : Subgroup I))
   letI : IsZGroup I := hIZ
   letI : IsMulCommutative I := hIcomm
-  letI : CommGroup I := CommGroup.ofIsMulCommutative
+  letI : CommGroup I := IsMulCommutative.instCommGroup
   exact inferInstance
 
 /-- Lemma 12.17. -/

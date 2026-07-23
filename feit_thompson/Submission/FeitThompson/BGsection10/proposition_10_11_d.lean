@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_11_c
-public import Submission.FeitThompson.BGsection3.Remaining
+public import FeitThompson.BGsection10.proposition_10_11_c
+public import FeitThompson.BGsection3.Remaining
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -36,7 +36,7 @@ private theorem section10_commutator_le_left_of_le_normalizer
     (Subgroup.mem_normalizer_iff.mp hp_norm k⁻¹).1 (K.inv_mem hk)
   simpa [commutatorElement_def, mul_assoc] using K.mul_mem hk hpk_inv
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section10_commutator_isPiSubgroup_of_left
     {π : Set Nat.Primes} {K P : Subgroup G}
     (hPnormK : P ≤ Subgroup.normalizer (K : Set G))
@@ -194,6 +194,7 @@ private theorem section10_le_normalizer_sup_of_le_normalizers
     have hx' := hforward r⁻¹ (R.inv_mem hr) (r * x * r⁻¹) hx
     simpa [mul_assoc] using hx'
 
+omit [IsMinCE G] in
 private theorem section10_commutator_centralizerIn_eq_bot_of_coprime
     {K P : Subgroup G}
     (hPnormK : P ≤ Subgroup.normalizer (K : Set G))
@@ -211,9 +212,8 @@ private theorem section10_commutator_centralizerIn_eq_bot_of_coprime
   have hcomm_map : Ccomm.map K.subtype = ⁅K, P⁆ := by
     simpa [Ccomm] using
       commutatorAction_subgroup_conj_map_eq_commutator K P hPnormK
-  have hsolvK : IsSolvable K := by
-    letI : IsMulCommutative K := hKcomm
-    infer_instance
+  have hsolvK : IsSolvable K :=
+    isSolvable_of_comm fun x y => hKcomm.is_comm.comm x y
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
       (isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -506,7 +506,7 @@ private theorem section10_commutator_le_centralizer_msigma_of_10_11d
     let e : S.subgroupOf T ≃* S :=
       Subgroup.subgroupOfEquivOfLe (H := S) (K := T) (by simp [T])
     letI : Group.IsNilpotent (S.subgroupOf T) := hSnil_sub
-    exact nilpotent_of_mulEquiv (G := S.subgroupOf T) (G' := S) e
+    exact Group.nilpotent_of_mulEquiv (G := S.subgroupOf T) (G' := S) e
   -- In the nilpotent group `S`, the `sigma(M)'` subgroup `K₀` centralizes
   -- the normal `sigma(M)` subgroup `M_sigma`.
   have hK0cent : K0 ≤ Subgroup.centralizer (section10Msigma M : Set G) := by

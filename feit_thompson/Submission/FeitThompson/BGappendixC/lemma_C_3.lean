@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGappendixC.lemma_C_2
+public import FeitThompson.BGappendixC.lemma_C_2
 
 open scoped Pointwise
 
@@ -779,8 +779,8 @@ source equations C2--C10 produce a norm-one unit `v` with
 with `t⁻¹` and `2 - x` to recover the forward-action endpoint. -/
 public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
     [Fact q.Prime]
-    (hA : appendixCConditionA p q) (hoddp : Odd p) (hoddq : Odd q)
-    (hp3 : p ≠ 3)
+    (hA : appendixCConditionA p q) (hoddp : Odd p) (_hoddq : Odd q)
+    (_hp3 : p ≠ 3)
     {G : Type u} [Group G] (σ : appendixCH p q →* G)
     (hσ : Function.Injective σ)
     (Q : Subgroup G) [Finite Q] [IsMulCommutative Q]
@@ -839,7 +839,7 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
     simpa [P0img] using hP0Q hs
   have q_comm {a b : G} (ha : a ∈ Q) (hb : b ∈ Q) : a * b = b * a := by
     simpa using congrArg Subtype.val
-      (mul_comm (⟨a, ha⟩ : Q) (⟨b, hb⟩ : Q))
+      ((IsMulCommutative.is_comm (M := Q)).comm (⟨a, ha⟩ : Q) (⟨b, hb⟩ : Q))
   have hq_sinv_t : s⁻¹ * t ∈ Q := by
     rw [ht_eq]
     have hsinv_norm_Q :
@@ -1716,7 +1716,9 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
       simpa [P0img, φ, C] using hycomm
     have hyinvC : (⟨y⁻¹, Q.inv_mem hy⟩ : Q) ∈ C := by
       have hyinvC0 : (⟨y, hy⟩ : Q)⁻¹ ∈ C := C.inv_mem hyC
-      convert hyinvC0 using 1
+      rw [show (⟨y⁻¹, Q.inv_mem hy⟩ : Q) = (⟨y, hy⟩ : Q)⁻¹ from
+        Subtype.ext (by rfl)]
+      exact hyinvC0
     have action_mem {a z : G} (ha : a ∈ P0img) (hz : z ∈ Q)
         (hzC : (⟨z, hz⟩ : Q) ∈ C) :
         (⟨a * z * a⁻¹,
@@ -1727,7 +1729,15 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
           a0 • (⟨z, hz⟩ : Q) ∈ C :=
         (IsInvariant.invariant (A := P0img) (G := Q) (H := C) a0
           (⟨z, hz⟩ : Q)).1 hzC
-      simpa [a0, φ, C, MulAction.compHom_smul_def] using hsmul
+      have hsmul' :
+          (Subgroup.inclusion hP0Q ⟨a, ha⟩) • (⟨z, hz⟩ : Q) ∈ C := by
+        simpa [a0, φ, C, MulAction.compHom_smul_def,
+          Subgroup.normalizerMonoidHom] using hsmul
+      rw [show (⟨a * z * a⁻¹,
+          (Subgroup.mem_normalizer_iff.mp (by simpa [P0img] using hP0Q ha) z).1 hz⟩ :
+            Q) = (Subgroup.inclusion hP0Q ⟨a, ha⟩) • (⟨z, hz⟩ : Q) from
+        Subtype.ext (by rfl)]
+      exact hsmul'
     have hnorm_rs1 : rs1 ∈ Subgroup.normalizer (Q : Set G) := by
       simpa [P0img] using hP0Q rhs1
     have hnorm_rs3 : rs3 ∈ Subgroup.normalizer (Q : Set G) := by
@@ -2053,7 +2063,7 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
           (by
             intro h
             exact hrs1_ne (inv_eq_one.mp h))
-          u0 (by simpa [uimg, mul_assoc] using hinner_U)
+          u0 (by simpa [Uimg, uimg, mul_assoc] using hinner_U)
       exact hu0_ne hu0_eq_one
     have ht_inv_eq : t⁻¹ = y⁻¹ * s⁻¹ * y := by
       rw [ht_eq]

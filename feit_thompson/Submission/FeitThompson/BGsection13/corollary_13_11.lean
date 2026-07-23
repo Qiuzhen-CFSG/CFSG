@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.theorem_13_10
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.theorem_13_10
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -151,7 +151,7 @@ public theorem corollary_13_11_b
     E = E₁ ⊔ E₂ ⊔ E₃ := hEfull
     _ = E₁ ⊔ E₃ := by
       rw [hE₂bot]
-      simp [sup_assoc]
+      simp
 
 /-- Corollary 13.11(c): if `E₃ ≠ 1` and `E₃` does not act regularly
 on `M_σ`, then `E` acts in a prime manner on `M_σ`. -/
@@ -253,6 +253,7 @@ private theorem section13_corollary_13_11_normalIn_of_prime_le_E3
   have hXE : X ≤ E := hX.1.trans hE₃norm.1
   exact ⟨hXE, (Subgroup.normal_subgroupOf_iff_le_normalizer hXE).2 hE_norm_X⟩
 
+omit [IsMinCE G] in
 private theorem section13_corollary_13_11_normalIn_of_conjBy
     {E X : Subgroup G} {g : G}
     (hgE : g ∈ E) (hXg : section10NormalIn (X.conjBy g) E) :

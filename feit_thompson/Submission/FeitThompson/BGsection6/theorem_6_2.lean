@@ -4,11 +4,11 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.theorem_6_1
-import Submission.FeitThompson.Representation.ElementaryAbelianAction
-import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection6.theorem_6_1
+import FeitThompson.Representation.ElementaryAbelianAction
+import FeitThompson.SubgroupConj
 
-open scoped MatrixGroups Pointwise TensorProduct
+open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 
 /-! # Theorem 6.2 from BG Section 6 -/
 
@@ -122,7 +122,11 @@ private theorem chief_conj_range_pCore_eq_bot_local
     intro a b
     apply Subtype.ext
     ext u
-    simpa using congrArg Subtype.val ((htriv a u).trans (htriv b u).symm)
+    have ha := htriv a u
+    have hb := htriv b u
+    change ((a : A) : MulAut Uq) u = u at ha
+    change ((b : A) : MulAut Uq) u = u at hb
+    exact congrArg Subtype.val (ha.trans hb.symm)
   have hcard_one : Nat.card P = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
@@ -168,6 +172,7 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
   have hUq_elem : IsElementaryAbelian p (↥Uq) := by
     simpa [hq_eq_p] using hUq_elem'
   letI : IsElementaryAbelian p (↥Uq) := hUq_elem
+  letI : CommGroup Uq := IsMulCommutative.instCommGroup
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   have hφ_pcore_bot : pCore p φ.range = ⊥ := by
     simpa [π, Uq, φ] using
@@ -258,7 +263,10 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
       calc
         ((z • d0 : Uq) : G ⧸ cf.V) =
             π ((a : G) * ⁅(a : G), y⁆ * (a : G)⁻¹) := by
-              simp [z, ψ, φ, π, d0, MulAut.conjNormal_apply, mul_assoc]
+              change
+                π (a : G) * π ⁅(a : G), y⁆ * (π (a : G))⁻¹ =
+                  π ((a : G) * ⁅(a : G), y⁆ * (a : G)⁻¹)
+              rw [map_mul, map_mul, map_inv]
         _ = π ⁅(a : G), y⁆ := by
               simpa [π] using congrArg π hfix_d
         _ = (d0 : G ⧸ cf.V) := rfl
@@ -303,7 +311,7 @@ private theorem quotient_pPrimeCore_subgroupMap_injective_local
     rw [hcard]
     exact (pPrimeCore_coprime_card (G := G) (p := p)).pow_left n
   have hinf_bot : H ⊓ pPrimeCore p G = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hcoprime
+    (Subgroup.disjoint_of_coprime_natCard hcoprime).eq_bot
   have hker_bot :
       (((q.comp H.subtype)).ker : Subgroup H) = ⊥ := by
     ext x

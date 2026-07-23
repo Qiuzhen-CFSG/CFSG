@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.Representation.Orthogonality
+public import FeitThompson.Representation.Orthogonality
 public import Mathlib.LinearAlgebra.Matrix.Permutation
 
 open scoped BigOperators
@@ -53,11 +53,13 @@ variable {L : Type*} [Group L] [Finite L]
     apply Subtype.ext
     simp [normalSubgroupConjMulEquiv, mul_assoc]
 
+omit [Finite L] in
 public theorem conjClassesConjPerm_mk
     (N : Subgroup L) [N.Normal] (g : L) (x : N) :
     conjClassesConjPerm N g (ConjClasses.mk x) =
       ConjClasses.mk ((normalSubgroupConjMulEquiv N g) x) := rfl
 
+omit [Finite L] in
 public theorem conjClassesConjPerm_symm_mk
     (N : Subgroup L) [N.Normal] (g : L) (x : N) :
     (conjClassesConjPerm N g).symm (ConjClasses.mk x) =
@@ -102,13 +104,14 @@ public theorem classFunctionConjLinearEquiv_basisFun
         ((Pi.basisFun ℂ (ConjClasses N))
           ((conjClassesConjPerm N g) c))
             ((conjClassesConjPerm N g) c)
-    simpa [hinv]
+    simp [hinv]
   · have hdc : d ≠ (conjClassesConjPerm N g) c := by
       intro hdc
       apply hsymm
       rw [hdc]
       simp
     simp [classFunctionConjLinearEquiv, hsymm, hdc]
+omit [Finite L] in
 public theorem classFunctionConjLinearEquiv_characterClassFunction
     (N : Subgroup L) [N.Normal] (g : L)
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
@@ -218,8 +221,9 @@ public theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
       · intro hi
         change sigma i = i at hi
         apply sigma.injective
-        simpa [hi]
+        simp [hi]
 
+omit [Finite L] in
 public theorem classFunctionConjLinearEquiv_symm_apply
     (N : Subgroup L) [N.Normal] (g : L)
     (chi : ClassFunction N) :

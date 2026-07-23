@@ -4,30 +4,30 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
-public import Submission.FeitThompson.BGsection1.CentralizerLemmas
-public import Submission.FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import Submission.FeitThompson.BGsection1.PLengthLemmas
-public import Submission.FeitThompson.Commutator.FocalSubgroup
-public import Submission.FeitThompson.GroupAction.CentralizerCondition
-public import Submission.FeitThompson.GroupAction.CoprimeHall
-public import Submission.FeitThompson.GroupAction.FixedPointTransport
-public import Submission.FeitThompson.GroupAction.NoncyclicAbelianPGroup
-public import Submission.FeitThompson.GroupAction.SeriesPiGroup
-public import Submission.FeitThompson.PCore.CentralizerControl
-public import Submission.FeitThompson.Burnside.NormalComplement
-public import Submission.FeitThompson.Commutator.ActionTriviality
-public import Submission.FeitThompson.Frattini.CoprimeAction
-public import Submission.FeitThompson.Commutator.CyclicSylow
-public import Submission.FeitThompson.Commutator.Core
-public import Submission.FeitThompson.ElementaryAbelian
-public import Submission.FeitThompson.Fitting.Centralizer
-public import Submission.FeitThompson.Fitting.Core
-public import Submission.FeitThompson.Fitting.Faithful
-public import Submission.FeitThompson.PGroup.NormalSubgroups
-public import Submission.FeitThompson.PGroup.OmegaFrattini
-public import Submission.FeitThompson.ZGroup.Hall
-public import Submission.FeitThompson.ChiefFactors.BaerCore
+public import FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.CentralizerLemmas
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.BGsection1.PLengthLemmas
+public import FeitThompson.Commutator.FocalSubgroup
+public import FeitThompson.GroupAction.CentralizerCondition
+public import FeitThompson.GroupAction.CoprimeHall
+public import FeitThompson.GroupAction.FixedPointTransport
+public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
+public import FeitThompson.GroupAction.SeriesPiGroup
+public import FeitThompson.PCore.CentralizerControl
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Commutator.ActionTriviality
+public import FeitThompson.Frattini.CoprimeAction
+public import FeitThompson.Commutator.CyclicSylow
+public import FeitThompson.Commutator.Core
+public import FeitThompson.ElementaryAbelian
+public import FeitThompson.Fitting.Centralizer
+public import FeitThompson.Fitting.Core
+public import FeitThompson.Fitting.Faithful
+public import FeitThompson.PGroup.NormalSubgroups
+public import FeitThompson.PGroup.OmegaFrattini
+public import FeitThompson.ZGroup.Hall
+public import FeitThompson.ChiefFactors.BaerCore
 
 open scoped Pointwise
 

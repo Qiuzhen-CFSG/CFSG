@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection8.theorem_8_1
+public import FeitThompson.BGsection8.theorem_8_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 import Mathlib.Order.Atoms

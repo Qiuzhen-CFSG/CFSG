@@ -3,12 +3,12 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.BGsection5.theorem_5_6_b
-import Submission.FeitThompson.PCore.PCore
-import Submission.FeitThompson.PGroup.NormalSubgroups
-import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import FeitThompson.BGsection5.theorem_5_6_b
+import FeitThompson.PCore.PCore
+import FeitThompson.PGroup.NormalSubgroups
+import FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
-public import Submission.FeitThompson.BGsection4.theorem_4_18_c
+public import FeitThompson.BGsection4.theorem_4_18_c
 
 /-! # Shared infrastructure for Theorem 5.6(c) and 5.6(e) -/
 
@@ -121,13 +121,19 @@ public theorem theorem_5_6_e_high_rank
     have hmap_p : IsPGroup p ((derivedSubgroup A).map χ) :=
       IsPGroup.map (p := p) (H := derivedSubgroup A) hderA_p χ
     have hcomm_map_eq : (_root_.commutator A).map χ = _root_.commutator (G ⧸ L) := by
-      simpa [derivedSeries_one] using map_derivedSeries_eq (f := χ) hχ_surj 1
+      have hmap := map_derivedSeries_eq (f := χ) hχ_surj 1
+      rw [derivedSeries_one, derivedSeries_one] at hmap
+      exact hmap
     have hcomm_p : IsPGroup p ((_root_.commutator A).map χ) := by
-      simpa [derivedSubgroup, derivedSeries_one] using hmap_p
+      change IsPGroup p ((derivedSeries A 1).map χ) at hmap_p
+      rw [derivedSeries_one] at hmap_p
+      exact hmap_p
     have hcommQ_p : IsPGroup p (_root_.commutator (G ⧸ L)) := by
       rw [← hcomm_map_eq]
       exact hcomm_p
-    simpa [derivedSubgroup, derivedSeries_one] using hcommQ_p
+    change IsPGroup p (derivedSeries (G ⧸ L) 1)
+    rw [derivedSeries_one]
+    exact hcommQ_p
   have hcopQ : Nat.Coprime p (Nat.card (G ⧸ L)) :=
     coprime_card_quotient_Op_p'p_of_hasPLengthOne (G := G) (p := p) hplen
   have hderQ_cop : Nat.Coprime p (Nat.card (derivedSubgroup (G ⧸ L))) := by
@@ -139,7 +145,9 @@ public theorem theorem_5_6_e_high_rank
       exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hderQ_cop) hpdvd
   have hderQ_bot : derivedSubgroup (G ⧸ L) = ⊥ := Subgroup.card_eq_one.mp hderQ_card_eq_one
   have hcomm_bot : _root_.commutator (G ⧸ L) = ⊥ := by
-    simpa [derivedSubgroup, derivedSeries_one] using hderQ_bot
+    change derivedSeries (G ⧸ L) 1 = ⊥ at hderQ_bot
+    rw [derivedSeries_one] at hderQ_bot
+    exact hderQ_bot
   have htop_comm_bot : ⁅(⊤ : Subgroup (G ⧸ L)), (⊤ : Subgroup (G ⧸ L))⁆ = ⊥ := by
     simpa [_root_.commutator_def] using hcomm_bot
   have htop_le_centralizer :
@@ -172,8 +180,11 @@ public theorem theorem_5_6_c
       exact (theorem_5_6_e_high_rank
         (G := G) (p := p) hodd hp_dvd (S := S) hSnarrow hSrank hplenG).1
     have hder_le : derivedSubgroup G ≤ Op_p'p p G := by
-      simpa [derivedSubgroup] using
+      have hcomm_le :=
         (Subgroup.Normal.quotient_commutative_iff_commutator_le
-          (N := Op_p'p p G)).1 hcommQ.is_comm
+          (N := Op_p'p p G)).1 hcommQ
+      change derivedSeries G 1 ≤ Op_p'p p G
+      rw [derivedSeries_one]
+      exact hcomm_le
     exact hasNormalPComplement_of_le (G := G) (p := p) hder_le
       (hasNormalPComplement_Op_p'p (G := G) (p := p))

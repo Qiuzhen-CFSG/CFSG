@@ -1,8 +1,10 @@
 module
 
 import Mathlib.Data.Nat.Choose.Dvd
-public import Submission.FeitThompson.BGsection4.Infrastructure
-public import Submission.FeitThompson.BGsection4.proposition_4_3_a
+public import FeitThompson.BGsection4.Infrastructure
+public import FeitThompson.BGsection4.proposition_4_3_a
+
+open scoped commutatorElement
 
 section Main
 
@@ -35,9 +37,8 @@ private theorem pth_mul_eq_mul_pows_of_derived_le_omega₁
       have hcomm_mem' : ⁅u, v⁆ ∈ Subgroup.center R := by
         simpa [commutatorElement_inv] using (Subgroup.center R).inv_mem hcomm_mem
       have hc_der : ⁅v, u⁆ ∈ derivedSubgroup R := by
-        simpa [derivedSubgroup] using
-          (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup R)) (H₂ := (⊤ : Subgroup R))
-            (by simp) (by simp))
+        change ⁅v, u⁆ ∈ ⁅(⊤ : Subgroup R), (⊤ : Subgroup R)⁆
+        exact Subgroup.commutator_mem_commutator (by simp) (by simp)
       have hc_choose : ⁅v, u⁆ ^ Nat.choose p 2 = 1 := by
         exact choose_two_pow_eq_one (p := p) hpodd (hder_pow hc_der)
       calc
@@ -48,20 +49,19 @@ private theorem pth_mul_eq_mul_pows_of_derived_le_omega₁
       let c : R := ⁅v, u⁆
       let du : R := ⁅c, u⁆
       let dv : R := ⁅c, v⁆
-      have hL2 : lowerCentralSeries R 2 ≤ Subgroup.center R :=
+      have hL2 : (⊤ : Subgroup R).lowerCentralSeries 2 ≤ Subgroup.center R :=
         lowerCentralSeries_two_le_center_of_class3 (R := R) hclass3.2
-      have hdu_mem_l2 : du ∈ lowerCentralSeries R 2 := by
+      have hdu_mem_l2 : du ∈ (⊤ : Subgroup R).lowerCentralSeries 2 := by
         simpa [c, du] using
           (triple_commutator_mem_lowerCentralSeries_two (R := R) v u u)
-      have hdv_mem_l2 : dv ∈ lowerCentralSeries R 2 := by
+      have hdv_mem_l2 : dv ∈ (⊤ : Subgroup R).lowerCentralSeries 2 := by
         simpa [c, dv] using
           (triple_commutator_mem_lowerCentralSeries_two (R := R) v u v)
       have hdu_cent : du ∈ Subgroup.center R := hL2 hdu_mem_l2
       have hdv_cent : dv ∈ Subgroup.center R := hL2 hdv_mem_l2
       have hc_der : c ∈ derivedSubgroup R := by
-        simpa [c, derivedSubgroup] using
-          (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup R)) (H₂ := (⊤ : Subgroup R))
-            (by simp) (by simp))
+        change ⁅v, u⁆ ∈ ⁅(⊤ : Subgroup R), (⊤ : Subgroup R)⁆
+        exact Subgroup.commutator_mem_commutator (by simp) (by simp)
       have hdu_der : du ∈ derivedSubgroup R := by
         have hcomm_le : ⁅derivedSubgroup R, (⊤ : Subgroup R)⁆ ≤ derivedSubgroup R :=
           Subgroup.commutator_le_left (H₁ := derivedSubgroup R) (H₂ := (⊤ : Subgroup R))

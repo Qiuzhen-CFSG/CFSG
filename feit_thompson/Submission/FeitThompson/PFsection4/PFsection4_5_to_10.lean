@@ -1,13 +1,13 @@
 module
 
-import Submission.FeitThompson.PFsection1.PFsection1_2
-import Submission.FeitThompson.PFsection1.PFsection1_5
-import Submission.FeitThompson.PFsection1.PFsection1_6
-import Submission.FeitThompson.Representation.RepEquiv
-public import Submission.FeitThompson.PFsection4.PFsection4_9
-public import Submission.FeitThompson.PFsection4.PFsection4_7
-public import Submission.FeitThompson.PFsection4.PFsection4_10
-import Submission.FeitThompson.PFsection4.PFsection4_4
+import FeitThompson.PFsection1.PFsection1_2
+import FeitThompson.PFsection1.PFsection1_5
+import FeitThompson.PFsection1.PFsection1_6
+import FeitThompson.Representation.RepEquiv
+public import FeitThompson.PFsection4.PFsection4_9
+public import FeitThompson.PFsection4.PFsection4_7
+public import FeitThompson.PFsection4.PFsection4_10
+import FeitThompson.PFsection4.PFsection4_4
 
 /-!
 # Scratch formalization for Peterfalvi Section 4, items (4.5)–(4.10)
@@ -251,7 +251,7 @@ private theorem mem_W2_of_mem_K_and_mem_W_of_hypothesis_4_2_pf45
   have hw1K : (w1 : L) ∈ K := by
     have hw1eq : (w1 : L) = x * (w2 : L)⁻¹ := by
       calc
-        (w1 : L) = (w1 : L) * ((w2 : L) * (w2 : L)⁻¹) := by simp [mul_assoc]
+        (w1 : L) = (w1 : L) * ((w2 : L) * (w2 : L)⁻¹) := by simp
         _ = ((w1 : L) * (w2 : L)) * (w2 : L)⁻¹ := by simp [mul_assoc]
         _ = x * (w2 : L)⁻¹ := by rw [hw12]
     rw [hw1eq]
@@ -318,7 +318,7 @@ private theorem omegaRowDifference_CFOn_wMinusW2_pf45
       exact hx ⟨x.2, hxnot⟩
     have hEq : ω i j x = ω i0 j x :=
       omega_eq_baseRow_of_mem_W2_pf45 hω i j hxW2
-    simpa [Pi.sub_apply, hEq]
+    simp [Pi.sub_apply, hEq]
 
 private theorem omegaBaseRowDifference_CFOn_wMinusW1_pf45
     {L : Type u} [Group L] [Finite L]
@@ -356,7 +356,7 @@ private theorem not_mem_conjugateSet_wMinusW2_of_mem_K_pf45
   rcases hconj with ⟨x, hx⟩
   have haK : a ∈ K := by
     have hkconj' : Section2.conjBy x a ∈ K := by
-      simpa [hx] using k.2
+      simp [hx]
     have := Subgroup.Normal.conj_mem hKnorm (Section2.conjBy x a) hkconj' x⁻¹
     simpa [Section2.conjBy, mul_assoc] using this
   have haW2 : a ∈ W2 :=
@@ -493,6 +493,7 @@ public theorem puncturedSet_subset_a0Set_of_hypothesis_4_6_self
     (h46 : hypothesis_4_6_statement K W1 W2 W K A) :
     puncturedSet ⊆ a0Set W2 W A := by
   intro x hx1
+  change x ≠ 1 at hx1
   rcases h46 with ⟨h42, _hKnorm, _hW2K, _hKK, hcentA, _hAinK⟩
   by_cases hxK : x ∈ K
   · left
@@ -707,7 +708,8 @@ private def dualCoannihilatorSubrepresentation_pf45
     have hS : rho.dual g⁻¹ f ∈ S.toSubmodule :=
       S.apply_mem_toSubmodule g⁻¹ hf
     have hvzero := hv (rho.dual g⁻¹ f) hS
-    simpa using hvzero
+    simpa only [Representation.dual_apply, inv_inv, Module.Dual.transpose_apply,
+      LinearMap.comp_apply] using hvzero
 
 private theorem dualCoannihilatorSubrepresentation_eq_top_of_eq_bot_pf45
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -758,7 +760,8 @@ private theorem representation_dual_irreducible_of_pf45
         change S.toSubmodule.dualCoannihilator = (⊥ : Submodule ℂ V) at htmp
         exact htmp
       rw [hNsub] at hdual
-      simpa using hdual.symm
+      change S.toSubmodule = (⊤ : Submodule ℂ (Module.Dual ℂ V))
+      simpa only [Submodule.dualAnnihilator_bot] using hdual.symm
     · left
       apply Subrepresentation.toSubmodule_injective
       apply le_antisymm ?_ bot_le
@@ -830,8 +833,7 @@ private theorem standardizeRepresentation_irreducible_pf45
     ext v i
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
-    simpa [standardizeRepresentation_pf45, b.equivFun_apply, Matrix.mulVec_eq_sum,
-      LinearMap.toMatrix_apply'] using h.symm
+    simp [standardizeRepresentation_pf45, e, b, b.equivFun_apply]
   exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private theorem isIrreducibleCharacterOnGroup_conjugateCharacter_pf45
@@ -912,7 +914,7 @@ private theorem supportedOn_diff_of_supportedOn_withOne_and_equal_degree_pf45
     simp [Pi.sub_apply, hEqVal]
   · rw [Section1.supportedOn_iff] at hφ hψ
     have hxNotWithOne : x ∉ withOne A := by
-      simpa [withOne, hxA, hx1]
+      simp [withOne, hxA, hx1]
     have hφ0 : φ x = 0 := hφ x hxNotWithOne
     have hψ0 : ψ x = 0 := hψ x hxNotWithOne
     simp [Pi.sub_apply, hφ0, hψ0]
@@ -964,7 +966,7 @@ private theorem subgroupInRepresentationKernel_of_subgroupInKernel_pf45
     (Section1.subgroupInKernel_iff ρ A).mp hA
   intro a
   change (ρ.comp A.subtype) a = LinearMap.id
-  simpa using Representation.isTrivial_def (ρ.comp A.subtype) a
+  simpa only [Module.End.one_eq_id] using Representation.isTrivial_def (ρ.comp A.subtype) a
 
 private theorem subgroupInKernel_of_subgroupInRepresentationKernel_pf45
     {G V : Type*} [Group G]
@@ -975,7 +977,8 @@ private theorem subgroupInKernel_of_subgroupInRepresentationKernel_pf45
   refine (Section1.subgroupInKernel_iff ρ A).mpr ?_
   refine ⟨?_⟩
   intro a
-  simpa using hA a
+  change ρ (a : G) = LinearMap.id
+  exact hA a
 
 private theorem subgroupInKernel'_subgroupRestriction_iff_pf45
     {G : Type*} [Group G]
@@ -1157,8 +1160,13 @@ private theorem twistBy_characterInflationByHom_mk'_isIrreducibleCharacterOnGrou
   refine ⟨n, Section1.representationTwistByCharacter lambda ρ, ?_, ?_⟩
   · exact Section1.irreducible_twistByCharacter lambda ρ hρirr
   · rw [hρchar]
-    simpa [lambda, Section1.characterInflationByHom] using
-      (Section1.representationTwistByCharacter_character lambda ρ).symm
+    calc
+      Section1.characterInflationByHom (QuotientGroup.mk' K) chi * ρ.character =
+          (fun g : L => (lambda g : ℂ)) * ρ.character := by
+            ext g
+            rfl
+      _ = (Section1.representationTwistByCharacter lambda ρ).character :=
+        (Section1.representationTwistByCharacter_character lambda ρ).symm
 
 private theorem characterInflationByHom_mk'_isIrreducibleCharacterOnGroup_pf45
     {L : Type u} [Group L] [Finite L] {K : Subgroup L} [K.Normal]
@@ -1344,7 +1352,7 @@ private theorem baseRow_twist_eq_row_pf45
             ring
       _ = ω (e chi) j ⟨x, Section3.cyclicTISet_subset W1 W2 W hx⟩ := by
             rw [sign_mul_self_eq_one_pf45 (hsign j)]
-            simpa [hω.product (e chi) j
+            simp [hω.product (e chi) j
               ⟨x, Section3.cyclicTISet_subset W1 W2 W hx⟩]
   have htwistEq :
       deltaSign j • twist = Section3.sigmaOfPF35 ω χpf (ω (e chi) j) := by
@@ -1667,7 +1675,18 @@ private theorem irreducible_fixed_column_of_induced_eq_piColumn_pf45
       _ = 1 := hcolInner
   have hρKirr : Representation.IsIrreducible ρK := by
     apply (Representation.irreducible_iff_character_norm_one (ρ := ρK)).2
-    simpa [hresChar] using hself
+    have hρKclass : Section1.IsClassFunction ρK.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρK) g x
+    have htoeq :
+        Section1.toConjClassFunction ρK.character hρKclass =
+          Representation.characterClassFunction ρK := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    rw [← htoeq, Section1.classFunctionInner_toConjClassFunction]
+    rw [hresChar] at hself
+    exact hself
   exact ⟨n, ρK, hρKirr, hresChar⟩
 
 public theorem hypothesis_3_1_of_hypothesis_4_6_pf45
@@ -1707,11 +1726,12 @@ public theorem deltaSign_eq_of_equal_degree_pf45
     Section3.natCard_left_ge_three_of_hypothesis_3_1
       (W1 := W1) (W2 := W2) (W := W) h31
   have hcard' : 3 ≤ Fintype.card W1 := by
-    simpa using hcard
+    rw [Nat.card_eq_fintype_card] at hcard
+    exact hcard
   rcases h43d i j with ⟨a, ha⟩
   rcases h43d i k with ⟨b, hb⟩
   rcases hsign j with hj | hj <;> rcases hsign k with hk | hk
-  · simpa [hj, hk]
+  · simp [hj, hk]
   · exfalso
     have hEq :
         (1 : ℂ) + ((a : ℂ) * (Nat.card W1 : ℂ)) =
@@ -1746,7 +1766,7 @@ public theorem deltaSign_eq_of_equal_degree_pf45
     have hEqInt : (((a : Int) - b) * (Fintype.card W1 : Int) : Int) = 2 := by
       nlinarith
     exact not_two_eq_int_mul_of_three_le_pf45 hcard' hEqInt.symm
-  · simpa [hj, hk]
+  · simp [hj, hk]
 
 private theorem irreducible_eq_principal_of_both_kernels_pf45
     {L : Type u} [Group L] [Finite L]
@@ -2072,7 +2092,9 @@ private theorem not_subgroupInKernel'_conjugateOrbitConj_of_not_pf45
   have hkerConj' :
       Section1.subgroupInKernel' (Section1.conjugateOnNormal K X g) (H.subgroupOf K) := by
     rw [← hg] at hkerConj
-    simpa [Section1.conjugateOrbitConj] using hkerConj
+    change Section1.subgroupInKernel'
+      (Section1.conjugateOnNormal K X g) (H.subgroupOf K) at hkerConj
+    exact hkerConj
   have hkerBase :
       Section1.subgroupInKernel'
         (Section1.conjugateOnNormal K (Section1.conjugateOnNormal K X g) g⁻¹)
@@ -2518,7 +2540,7 @@ private theorem theorem_4_10_formula_pf45
       deltaSign j • piChar i j - deltaSign j • piChar i0 j - piChar i j0 + piChar i0 j0
           = deltaSign j • (piChar i j - piChar i0 j) -
               deltaSign j0 • (piChar i j0 - piChar i0 j0) := by
-                simp [hδ0, smul_sub, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+                simp [hδ0, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
       _ = Section1.inducedCF W (ω i j - ω i0 j) -
             Section1.inducedCF W (ω i j0 - ω i0 j0) := by
               rw [hind i j, hind i j0]
@@ -2874,7 +2896,26 @@ private theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_pf45
     rfl
   · have hnorm :=
       (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-    simpa [Section1.classFunctionInner_toConjClassFunction] using hnorm
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G ρ.character ρ.character =
+          Representation.classFunctionInner
+            (Section1.toConjClassFunction ρ.character hρclass)
+            (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 := hnorm
 
 private theorem ofConjClassFunction_isIrreducibleCharacterOnGroup_pf45
     {G : Type u} [Group G] [Finite G]
@@ -3054,7 +3095,7 @@ private theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis_pf45
         rw [← hsymm]
         simp
       have hsymm' : (Equiv.symm σ) i ≠ j := by
-        simpa using hsymm
+        exact hsymm
       rw [LinearMap.toMatrix_apply]
       have hentry :
           (b.repr ((T : M →ₗ[ℂ] M) (b j))) i = (b.repr (b (σ j))) i := by
@@ -3082,7 +3123,7 @@ private theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis_pf45
           · intro hi
             change σ i = i at hi
             apply σ.injective
-            simpa [hi]
+            simp [hi]
 
 private noncomputable def normalSubgroupConjMulEquiv_pf45
     {L : Type u} [Group L]
@@ -3186,7 +3227,7 @@ private theorem classFunctionConjLinearEquiv_basisFun_pf45
         ((Pi.basisFun ℂ (ConjClasses K))
           ((conjClassesConjPerm_pf45 K g) c))
             ((conjClassesConjPerm_pf45 K g) c)
-    simpa [hinv]
+    simp [hinv]
   · have hdc : d ≠ (conjClassesConjPerm_pf45 K g) c := by
       intro hdc
       apply hsymm
@@ -3517,7 +3558,16 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
   have hfix_conj_inv :
       (Function.fixedPoints (conjClassesConjPerm_pf45 K g⁻¹)).ncard =
         (Function.fixedPoints (conjClassesConjPerm_pf45 K g)).ncard := by
-    simpa using fixedPoints_perm_inv_ncard_pf45 (conjClassesConjPerm_pf45 K g)
+    have hperm :
+        conjClassesConjPerm_pf45 K g⁻¹ = (conjClassesConjPerm_pf45 K g)⁻¹ := by
+      apply Equiv.ext
+      intro c
+      rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
+      rw [conjClassesConjPerm_mk_pf45]
+      symm
+      simpa using (conjClassesConjPerm_symm_inv_mk_pf45 K g⁻¹ x)
+    rw [hperm]
+    exact fixedPoints_perm_inv_ncard_pf45 (conjClassesConjPerm_pf45 K g)
   have hcast :
       ((Nat.card {X : ClassFunction K |
           Section1.IsIrreducibleCharacterOnGroup X ∧
@@ -3732,7 +3782,7 @@ private theorem fixed_conjClass_exists_centralizing_rep_of_coprime_pf45
       (xr : L) * (u * g)
           = (r⁻¹ * (x : L) * r) * (r⁻¹ * ((y : L) * g) * r) := by
               rw [hugEq]
-      _ = r⁻¹ * ((x : L) * ((y : L) * g)) * r := by simp [xr, mul_assoc]
+      _ = r⁻¹ * ((x : L) * ((y : L) * g)) * r := by simp [mul_assoc]
       _ = r⁻¹ * (((y : L) * g) * (x : L)) * r := by rw [hygx_comm]
       _ = (r⁻¹ * ((y : L) * g) * r) * (r⁻¹ * (x : L) * r) := by simp [mul_assoc]
       _ = (u * g) * (xr : L) := by rw [← hugEq]
@@ -3745,8 +3795,7 @@ private theorem fixed_conjClass_exists_centralizing_rep_of_coprime_pf45
       exact Subtype.ext_iff.mp hu_sub
     rw [pow_mul, hu_card, one_pow]
   have huComm : Commute u g := by
-    simpa [Commute] using
-      (mem_elementCentralizer_commute_pf45 ((Subgroup.mem_inf.mp huCent).2)).symm
+    exact (mem_elementCentralizer_commute_pf45 ((Subgroup.mem_inf.mp huCent).2)).symm
   have hugPow : (u * g) ^ n = g := by
     calc
       (u * g) ^ n = u ^ n * g ^ n := huComm.mul_pow n
@@ -3761,13 +3810,13 @@ private theorem fixed_conjClass_exists_centralizing_rep_of_coprime_pf45
   intro z hz
   rw [Set.mem_singleton_iff] at hz
   subst z
-  simpa [Commute] using hxr_comm_g.symm
+  exact hxr_comm_g.symm.eq
 
 private theorem fixed_irreducible_card_le_centralizerIn_source_pf45
     {L : Type u} [Group L] [Finite L]
     (K W1 W2 W : Subgroup L) [K.Normal]
     (h42 : Section4.hypothesis_4_2_statement K W1 W2 W)
-    {g : L} (hgW1 : g ∈ W1) (hg1 : g ≠ 1) :
+    {g : L} (hgW1 : g ∈ W1) (_hg1 : g ≠ 1) :
     Nat.card {X : ClassFunction K |
         Section1.IsIrreducibleCharacterOnGroup X ∧
           Section1.conjugateOnNormal K X g = X} ≤
@@ -3852,12 +3901,12 @@ private theorem fixed_irreducible_card_le_natCard_W2_of_W1_fixed_core_pf45
     (K W1 W2 W : Subgroup L) [K.Normal]
     {I J : Type*} [Fintype I] [Fintype J]
     [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction L)
-    (piChar : I → J → ClassFunction L)
-    (deltaSign : J → ℂ)
-    (xChar : J → ClassFunction K)
+    (_i0 : I) (_j0 : J)
+    (_ω : I → J → ClassFunction W)
+    (_σ : ClassFunction W →ₗ[ℂ] ClassFunction L)
+    (_piChar : I → J → ClassFunction L)
+    (_deltaSign : J → ℂ)
+    (_xChar : J → ClassFunction K)
     (h42 : Section4.hypothesis_4_2_statement K W1 W2 W)
     {g : L} (hgW1 : g ∈ W1) (hg1 : g ≠ 1) :
     Nat.card {X : ClassFunction K |
@@ -4029,7 +4078,9 @@ private theorem inertiaSubgroup_eq_of_no_nontrivial_W1_fixed_pf45
     intro x hx
     change Section1.conjugateOnNormal K X x = X
     funext h
-    simpa [Section1.conjugateOnNormal] using hXclass ⟨x, hx⟩ h
+    have hclass := hXclass ⟨x, hx⟩ h
+    change X ⟨x * (h : L) * x⁻¹, _⟩ = X h at hclass
+    exact hclass
   apply le_antisymm
   · intro g hgI
     rcases hsemi.mul_surjective g (by trivial) with ⟨k, hkK, w, hwW1, hkw⟩
@@ -4114,7 +4165,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
     (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (hB : Section4.theorem_4_3_b_statement
       W1 W2 W I J i0 j0 ω σ piChar deltaSign hω)
-    (hC : Section4.theorem_4_3_c_statement W2 W I J piChar deltaSign ω)
+    (_hC : Section4.theorem_4_3_c_statement W2 W I J piChar deltaSign ω)
     (h45a : theorem_4_5_a_statement K piChar xChar)
     (X : ClassFunction K)
     (hX : Section1.IsIrreducibleCharacterOnGroup X)
@@ -4128,8 +4179,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
   have hnoFix :
       ∀ g : L, g ∈ W1 → g ≠ 1 →
         Section1.conjugateOnNormal K ρ.character g ≠ ρ.character := by
-    intro g hgW1 hg1
-    intro hfix
+    intro g hgW1 hg1 hfix
     exact hXnot
       (fixed_irreducible_mem_range_xChar_of_W1_fixed_pf45
         K W1 W2 W i0 j0 ω σ piChar deltaSign xChar
@@ -4138,21 +4188,31 @@ private theorem induced_irreducible_of_not_mem_range_pf45
       Section1.inertiaSubgroup K ρ.character = K :=
     inertiaSubgroup_eq_of_no_nontrivial_W1_fixed_pf45
       K W1 W2 W h42 hXclass hnoFix
-  have hRel : K.relIndex (Section1.inertiaSubgroup K ρ.character) = 1 := by
-    simp [hIeq]
   have hnorm :
       Section1.scalarProduct L (Section1.inducedCF K ρ.character)
         (Section1.inducedCF K ρ.character) = 1 := by
     exact
       Section1.proposition_1_5_b_norm_one_rep_orbit_relIndex_canonical
-        K ρ hρirr (by simpa [hIeq] using hRel)
+        K ρ hρirr (by simp [hIeq])
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρ) :=
     Representation.finiteDimensional_ind K ρ
   have hIndIrr :
       Representation.IsIrreducible (Representation.ind K.subtype ρ) := by
     apply (Representation.irreducible_iff_character_norm_one
       (ρ := Representation.ind K.subtype ρ)).2
-    simpa [Section1.inducedCF_eq_representation_character] using hnorm
+    have hIndClass : Section1.IsClassFunction (Representation.ind K.subtype ρ).character := by
+      intro x g
+      simpa [mul_assoc] using
+        Representation.char_conj (ρ := Representation.ind K.subtype ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction (Representation.ind K.subtype ρ).character hIndClass =
+          Representation.characterClassFunction (Representation.ind K.subtype ρ) := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    rw [← htoeq, Section1.classFunctionInner_toConjClassFunction,
+      ← Section1.inducedCF_eq_representation_character K ρ]
+    exact hnorm
   refine ⟨Module.finrank ℂ (Representation.IndV K.subtype ρ),
     standardizeRepresentation_pf45 (Representation.ind K.subtype ρ), ?_, ?_⟩
   · exact standardizeRepresentation_irreducible_pf45
@@ -4160,7 +4220,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
   · calc
       Section1.inducedCF K ρ.character =
           (Representation.ind K.subtype ρ).character := by
-            simpa using (Section1.inducedCF_eq_representation_character K ρ)
+            exact Section1.inducedCF_eq_representation_character K ρ
       _ = (standardizeRepresentation_pf45 (Representation.ind K.subtype ρ)).character := by
             ext g
             symm
@@ -4212,7 +4272,7 @@ theorem_4_5_b_statement K piChar xChar := by
         scalarProduct_irreducible_self_pf45
           (induced_irreducible_of_not_mem_range_pf45
             K W1 W2 W i0 j0 ω σ piChar deltaSign xChar h42 hω hB' hC h45a' X hX hXnot)
-    exact by simpa [hone] using hzero
+    simp [hone] at hzero
   · intro ψ hψ
     exact theorem_4_5_b_exhaustion_of_first_part_pf45
       K piChar xChar h45a' i0 j0 ω σ deltaSign hω hB'
@@ -4710,8 +4770,8 @@ private theorem supportedOn_punctured_iff_supportedOn_of_supportedOn_withOne_pf4
     rw [Section1.supportedOn_iff] at hpunct hf ⊢
     intro x hxA
     by_cases hx1 : x = 1
-    · exact hpunct x (by simpa [puncturedSet, hx1])
-    · exact hf x (by simpa [withOne, hxA, hx1])
+    · exact hpunct x (by simp [puncturedSet, hx1])
+    · exact hf x (by simp [withOne, hxA, hx1])
   · intro hAon
     rw [Section1.supportedOn_iff] at hAon ⊢
     intro x hxPunct
@@ -4846,7 +4906,7 @@ private theorem conjugate_piChar_baseRow_eq_of_conjugate_omega_pf45
     have hzero : piChar i0 j = 0 := by
       simpa [hρchar] using hzeroChar
     rw [hzero] at hnormj
-    simpa [Section1.scalarProduct] using hnormj
+    simp [Section1.scalarProduct] at hnormj
   have hmPos : 0 < m := by
     by_contra hmNotPos
     have hm0 : m = 0 := Nat.eq_zero_of_not_pos hmNotPos
@@ -4860,7 +4920,7 @@ private theorem conjugate_piChar_baseRow_eq_of_conjugate_omega_pf45
     have hzero : piChar i0 j' = 0 := by
       simpa [hρ'char] using hzeroChar
     rw [hzero] at hnormj'
-    simpa [Section1.scalarProduct] using hnormj'
+    simp [Section1.scalarProduct] at hnormj'
   have hnVal : piChar i0 j 1 = (n : ℂ) := by
     simpa [Section1.degree] using hnDeg
   have hmVal : piChar i0 j' 1 = (m : ℂ) := by
@@ -4950,7 +5010,8 @@ private theorem baseRow_linearCharacter_left_eq_one_pf45
   have hval :
       ω i0 j ((Section3.internalDirectProductMulEquiv hIP).toMonoidHom
         (MonoidHom.inl W1 W2 x)) = 1 := by
-    simpa [hω.degree_one i0 j] using hker
+    rw [hω.degree_one i0 j] at hker
+    exact hker
   simpa [hlin] using hval
 
 private theorem baseRow_linearCharacter_eq_rightComponent_pf45
@@ -4985,7 +5046,7 @@ private theorem baseRow_linearCharacter_eq_rightComponent_pf45
       _ = e.toMonoidHom p := by rw [hp]
       _ = w := by
             change e p = w
-            simpa [p, e] using MulEquiv.apply_symm_apply e w
+            simp [p, e]
   have hleft :
       lin (e.toMonoidHom (MonoidHom.inl W1 W2 p.1)) = 1 :=
     baseRow_linearCharacter_left_eq_one_pf45 hIP hω lin hlin p.1
@@ -5973,8 +6034,7 @@ private theorem coeff_sum_complex_zero_of_supportedOn_punctured_equalDegree_eval
     calc
       Section1.degree (Section1.evalCoeff (fun t : T => piColumn piChar t.1) v) =
           ∑ t : T, (v t : ℂ) * Section1.degree (piColumn piChar t.1) := by
-            simp [Section1.degree, Section1.evalCoeff, Pi.smul_apply,
-              mul_assoc, mul_left_comm, mul_comm]
+            simp [Section1.degree, Section1.evalCoeff, Pi.smul_apply]
       _ = ∑ t : T, (v t : ℂ) * (n : ℂ) := by
             refine Finset.sum_congr rfl ?_
             intro t _ht
@@ -6004,7 +6064,7 @@ private theorem evalCoeff_eq_evalCoeff_sub_base_of_coeff_sum_zero_pf45
       _ = 0 := by simp [hsum]
   calc
     Section1.evalCoeff mu v g = ∑ j : J, (v j : ℂ) * mu j g := by
-      simp [Section1.evalCoeff, Pi.smul_apply, mul_assoc, mul_left_comm, mul_comm]
+      simp [Section1.evalCoeff, Pi.smul_apply, mul_comm]
     _ = ∑ j : J, (v j : ℂ) * mu j g - 0 := by
           ring
     _ = ∑ j : J, (v j : ℂ) * mu j g - ∑ j : J, (v j : ℂ) * mu j0 g := by
@@ -6016,7 +6076,7 @@ private theorem evalCoeff_eq_evalCoeff_sub_base_of_coeff_sum_zero_pf45
           intro j _hj
           ring
     _ = Section1.evalCoeff (fun j => mu j - mu j0) v g := by
-          simp [Section1.evalCoeff, Pi.smul_apply, mul_assoc, mul_left_comm, mul_comm]
+          simp [Section1.evalCoeff, Pi.smul_apply, mul_comm]
 
 private theorem tau_piColumn_sub_eq_signed_omegaColumnSigma_sub_pf45
     {L : Type u} [Group L] [Finite L]
@@ -6050,7 +6110,7 @@ private theorem tau_piColumn_sub_eq_signed_omegaColumnSigma_sub_pf45
         ∑ i : I, (piChar i j - piChar i k) := by
     ext g
     simp [piColumn, sub_eq_add_neg, Finset.sum_add_distrib,
-      add_assoc, add_left_comm, add_comm]
+      add_comm]
   calc
     τ (piColumn piChar j - piColumn piChar k)
         = ∑ i : I, τ (piChar i j - piChar i k) := by
@@ -6192,7 +6252,7 @@ private theorem theorem_4_9_a_core_pf45
       have hEqInner :
           Section1.scalarProduct L (piColumn piChar j') (piChar i0 j) =
             Section1.scalarProduct L (piColumn piChar j) (piChar i0 j) := by
-        simpa [hEq]
+        simp [hEq]
       rw [hright] at hEqInner
       have : (0 : ℂ) = 1 := hleft.symm.trans hEqInner
       exact zero_ne_one this
@@ -6210,15 +6270,13 @@ private theorem theorem_4_9_a_core_pf45
     have hknej' : k ≠ j' := by
       intro hEq
       apply hneqCol
-      simpa [hEq]
+      simp [hEq]
     have hval :=
       congrArg (fun v : Section1.CoeffVector (equalDegreeColumnIndex piChar j0 k) => v tk) hv0
     have htkneq : tk ≠ tj' := by
       intro hEq
       exact hknej' (congrArg Subtype.val hEq)
-    have : (1 : Int) = 0 := by
-      simpa [Section1.signedBasisDifference, Section1.basisVector, tk, tj', htkneq] using hval
-    norm_num at this
+    simp [Section1.signedBasisDifference, Section1.basisVector, tk, tj', htkneq] at hval
   · have hkSupp : Section1.supportedOn (piColumn piChar k) (withOne A) :=
       (theorem_4_7_nonbase_column_data_pf45
         K W1 W2 W H A i0 j0 ω σ piChar xChar deltaSign
@@ -6510,7 +6568,7 @@ public theorem theorem_4_9_b
             refine congrArg (fun f => Section1.evalCoeff f v) ?_
             funext t
             dsimp [muG, tk]
-            simpa [smul_sub]
+            simp [smul_sub]
       _ = Section1.evalCoeff muG v := hEvalG.symm
 
 public theorem theorem_4_9_b_full

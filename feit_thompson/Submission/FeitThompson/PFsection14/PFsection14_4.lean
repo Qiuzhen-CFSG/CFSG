@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_2_SourceData
+public import FeitThompson.PFsection14.PFsection14_2_SourceData
 
 /-!
 # Peterfalvi, Section 14: theorem (14.4)

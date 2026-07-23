@@ -4,7 +4,9 @@ public import Mathlib.GroupTheory.Frattini
 public import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
-public import Submission.FeitThompson.ElementaryAbelian
+public import FeitThompson.ElementaryAbelian
+
+open scoped IsMulCommutative
 
 /-!
 # Frattini lemmas used in BG section 1
@@ -21,7 +23,7 @@ public theorem lemma_1_7_a {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Pr
 lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
     [Fact (IsPGroup p R)] {K : Subgroup R} (hK : IsCoatom K) : K.Normal := by
   have hnil : Group.IsNilpotent R := IsPGroup.isNilpotent (p := p) (G := R) (h := Fact.out)
-  have hnc : NormalizerCondition R := normalizerCondition_of_isNilpotent (G := R)
+  have hnc : NormalizerCondition R := Group.normalizerCondition_of_isNilpotent (G := R)
   exact Subgroup.NormalizerCondition.normal_of_coatom K hnc hK
 
 lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
@@ -110,7 +112,7 @@ public lemma commutator_le_frattini_of_isPGroup {R : Type*} [Group R] [Finite R]
   have hcardQ : Nat.card (R ⧸ M) = p := card_quotient_coatom_eq_prime (p := p) (K := M) hM
   have hcyc : IsCyclic (R ⧸ M) := isCyclic_of_prime_card (α := (R ⧸ M)) hcardQ
   letI : CommGroup (R ⧸ M) := hcyc.commGroup
-  have hcommQ : Std.Commutative (· * · : R ⧸ M → R ⧸ M → R ⧸ M) := ⟨mul_comm⟩
+  have hcommQ : IsMulCommutative (R ⧸ M) := inferInstance
   have hcomm_le : _root_.commutator R ≤ M :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := M)).1 hcommQ
   exact hcomm_le hx
@@ -142,9 +144,9 @@ public theorem isElementaryAbelian_quotient_frattini {R : Type*} [Group R] [Fini
   }
   · have hcomm_le : _root_.commutator R ≤ frattini R :=
       commutator_le_frattini_of_isPGroup (R := R) (p := p)
-    have hcommQ : Std.Commutative (· * · : R ⧸ frattini R → R ⧸ frattini R → R ⧸ frattini R) :=
+    have hcommQ : IsMulCommutative (R ⧸ frattini R) :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := frattini R)).2 hcomm_le
-    exact ⟨hcommQ⟩
+    exact hcommQ
   · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
     intro q
     refine QuotientGroup.induction_on q ?_
@@ -192,7 +194,8 @@ public theorem frattini_eq_bot_of_isElementaryAbelian {R : Type*} [Group R] [Fin
         rcases SetLike.exists_of_lt hCD with ⟨d, hdD, hdnotC⟩
         have hsup : B ⊔ C = ⊤ := by simpa [sup_comm] using hcompl.sup_eq_top
         have hdBC : d ∈ B ⊔ C := by simp [hsup]
-        rcases Subgroup.mem_sup.1 hdBC with ⟨b, hbB, c, hcC, hbc_eq⟩
+        rcases (Subgroup.mem_sup (s := B) (t := C) (x := d)).1 hdBC with
+          ⟨b, hbB, c, hcC, hbc_eq⟩
         have hbcD : b * c ∈ D := by simpa [hbc_eq] using hdD
         have hcD : c ∈ D := hC_le_D hcC
         have hbD : b ∈ D := by
@@ -328,9 +331,9 @@ public theorem frattini_eq_closure_commutator_union_powers {R : Type*} [Group R]
       toIsMulCommutative := ?_,
       exponent_dvd_p := ?_
     }
-    · have hcommQ : Std.Commutative (· * · : R ⧸ K → R ⧸ K → R ⧸ K) :=
+    · have hcommQ : IsMulCommutative (R ⧸ K) :=
         (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := K)).2 hcomm_le_K
-      exact ⟨hcommQ⟩
+      exact hcommQ
     · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
       intro q
       refine QuotientGroup.induction_on q ?_

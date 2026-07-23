@@ -1,12 +1,12 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_9_CalT
-import Submission.FeitThompson.PFsection8.PFsection8_15
-import Submission.FeitThompson.PFsection11.PFsection11_9
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
+public import FeitThompson.PFsection14.PFsection14_9_CalT
+import FeitThompson.PFsection8.PFsection8_15
+import FeitThompson.PFsection11.PFsection11_9
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection4.PFsection4_5_to_10
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection7.PFsection7_8_a
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), Delta correction
@@ -2195,7 +2195,13 @@ public theorem section14_theorem_14_9_late_type_T1_principalInducedCharacter_eq_
   have hxChar0 : xChar j0 = Section1.principalCharacter (derivedSubgroup Tmax) := by
     have hres := h45a.1 i0 j0
     rw [hbase.2] at hres
-    simpa [Section1.subgroupRestriction, Section1.principalCharacter] using hres.symm
+    have hprincipal :
+        Section1.subgroupRestriction (derivedSubgroup Tmax)
+            (Section1.principalCharacter Tmax) =
+          Section1.principalCharacter (derivedSubgroup Tmax) := by
+      ext x
+      simp [Section1.subgroupRestriction, Section1.principalCharacter]
+    exact hres.symm.trans hprincipal
   have hMuColumn_eq_indDer :
       Section10.muColumn μloc j0 =
         Section1.inducedCF (derivedSubgroup Tmax)
@@ -2255,7 +2261,7 @@ a non-base local row; its local column need not be the base column. -/
                           Section7.principalInducedCharacter Tmax (Q ⊔ V) =
                             Section10.muColumn μloc j0
 
-
+  
   @[expose] public def section14_theorem_14_9_late_type_T1PF11FamilyCoreSourceData
       {G : Type u} [Group G] [Finite G] [IsMinCE G]
       {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
@@ -2300,7 +2306,7 @@ a non-base local row; its local column need not be the base column. -/
         Section7.principalInducedCharacter Tmax (Q ⊔ V) =
           Section10.muColumn μloc j0
 
-
+  
   @[expose] public def section14_theorem_14_9_late_type_T1PF11Type34SourceData
       {G : Type u} [Group G] [Finite G] [IsMinCE G]
       (Tmax Q V D W2 W1 : Subgroup G)
@@ -2704,7 +2710,7 @@ a non-base local row; its local column need not be the base column. -/
         ∀ x : Wloc, (((e.symm x : W) : G)) = (((x : Wloc) : Tmax) : G) := by
       intro x
       have hx := he_apply (e.symm x)
-      simpa using hx
+      simpa using hx.symm
     have hχloc_kernel :
         Section1.subgroupInKernel'
           (Section6.theorem_6_8_transportClassFunction e (ω 0 1))
@@ -2719,7 +2725,7 @@ a non-base local row; its local column need not be the base column. -/
           ⟨e.symm (a : Wloc), by
             simpa [Subgroup.mem_subgroupOf] using haW1⟩
       have hkerω : (ω 0 1) (e.symm (a : Wloc)) = (ω 0 1) 1 := by
-        simpa [hωNat 0 1 h0q h1p] using hker
+        simpa [hωNat 0 1 h0q h1p, Section1.degree] using hker
       simpa [Section6.theorem_6_8_transportClassFunction, Section1.degree] using hkerω
     rcases (hωloc.left_kernel_exact
         (Section6.theorem_6_8_transportClassFunction e (ω 0 1))

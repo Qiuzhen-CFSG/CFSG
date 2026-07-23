@@ -4,14 +4,17 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.ChiefFactors.Core
-public import Submission.FeitThompson.ChiefFactors.BaerCore
-import Submission.FeitThompson.GroupAction.Quotient
+public import FeitThompson.ChiefFactors.Core
+public import FeitThompson.ChiefFactors.BaerCore
+import FeitThompson.GroupAction.Quotient
 
 import Mathlib.Order.Atoms.Finite
 import Mathlib.Order.RelSeries
 
 section Proposition12
+
+open scoped commutatorElement
+open scoped IsMulCommutative
 
 universe u
 
@@ -39,7 +42,7 @@ public lemma le_fittingSubgroupOf_of_normal_nilpotent {H N : Subgroup G} (hHN : 
   haveI : Group.IsNilpotent (N.subgroupOf H) := by
     let e := (Subgroup.subgroupOfEquivOfLe (G := G) (H := N) (K := H) hHN).symm
     have : Group.IsNilpotent (↥N) := hN_nil
-    exact nilpotent_of_mulEquiv (G := N) (G' := N.subgroupOf H) e
+    exact Group.nilpotent_of_mulEquiv (G := N) (G' := N.subgroupOf H) e
   have hle_in_H : N.subgroupOf H ≤ fittingSubgroup (↥H) :=
     le_sSup ⟨hN_H_norm, (inferInstance : Group.IsNilpotent (N.subgroupOf H))⟩
   have hmap_le : (N.subgroupOf H).map H.subtype ≤ fittingSubgroupOf (G := G) H :=
@@ -85,11 +88,10 @@ public lemma fittingSubgroupOf_isNilpotent (H : Subgroup G) :
     Group.IsNilpotent (fittingSubgroupOf (G := G) H) := by
   classical
   haveI : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
-  let K : Subgroup (↥H) := fittingSubgroup (↥H)
-  let e : K ≃* K.map H.subtype := Subgroup.equivMapOfInjective (f := H.subtype) K H.subtype_injective
-  have : Group.IsNilpotent (K.map H.subtype) :=
-    nilpotent_of_mulEquiv (G := K) (G' := K.map H.subtype) e
-  simpa [fittingSubgroupOf, K] using this
+  change Group.IsNilpotent ((fittingSubgroup (↥H)).map H.subtype)
+  let e : fittingSubgroup (↥H) ≃* (fittingSubgroup (↥H)).map H.subtype :=
+    Subgroup.equivMapOfInjective (f := H.subtype) (fittingSubgroup (↥H)) H.subtype_injective
+  exact Group.nilpotent_of_mulEquiv e
 
 /-- If `H` is normal in `G`, then its Fitting subgroup, viewed inside `G`, lies in `F(G)`. -/
 public lemma fittingSubgroupOf_le_fittingSubgroup (H : Subgroup G) (hH : H.Normal) :
@@ -262,7 +264,8 @@ private theorem exists_covBy_series_normalBelow {K : Subgroup G} [Finite G] [K.N
     intro htop
     have htop' : ((⊤ : α).1 : Subgroup G) = ((⊥ : α).1 : Subgroup G) :=
       congrArg (fun X : α => (X.1 : Subgroup G)) htop
-    exact hK (by simpa using htop')
+    change K = (⊥ : Subgroup G) at htop'
+    exact hK htop'
   let s : LTSeries α := LTSeries.mk 1 ![⊥, ⊤] (by
     intro i j hij
     fin_cases i <;> fin_cases j <;> simp at hij ⊢
@@ -329,7 +332,7 @@ private theorem commutator_le_of_covBy_top_normalBelow {K : Subgroup G} [K.Norma
   let π : G →* G ⧸ V := QuotientGroup.mk' V
   let Uq : Subgroup (G ⧸ V) := K.map π
   have hA_lt : V < K := by
-    simpa [V] using hA.lt
+    exact hA.lt
   have hUq_ne_bot : Uq ≠ ⊥ := by
     intro hUq_bot
     have hle : K ≤ π.ker := (Subgroup.map_eq_bot_iff (f := π) (H := K)).1 hUq_bot
@@ -377,8 +380,9 @@ private theorem commutator_le_of_covBy_top_normalBelow {K : Subgroup G} [K.Norma
       calc
         L = (L.comap π).map π := by simp [hmap]
         _ = K.map π := by
-          simpa [L', Uq, normalBelowSubgroup] using
-            congrArg (fun M : NormalBelow (G := G) K => Subgroup.map π (normalBelowSubgroup (G := G) M)) h
+          have h' := congrArg (normalBelowSubgroup (G := G)) h
+          change L.comap π = K at h'
+          exact congrArg (Subgroup.map π) h'
         _ = Uq := rfl
   haveI : IsMinimalNormal Uq := {
     minimal := fun L _ hLUq => by
@@ -395,8 +399,8 @@ private theorem commutator_le_of_covBy_top_normalBelow {K : Subgroup G} [K.Norma
   let e : K ⧸ V.subgroupOf K ≃* Uq :=
     (QuotientGroup.quotientMulEquivOfEq hker).symm.trans
       (QuotientGroup.quotientKerEquivOfSurjective (φ := φ) hφ_surj)
-  have hcommQ : Std.Commutative (· * · : K ⧸ V.subgroupOf K → _ → _) := by
-    refine ⟨fun x y => ?_⟩
+  have hcommQ : IsMulCommutative (K ⧸ V.subgroupOf K) := by
+    refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
     apply e.injective
     simpa using (mul_comm (e x) (e y))
   have hcomm_sub : _root_.commutator K ≤ V.subgroupOf K :=
@@ -443,7 +447,12 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
   have hs_head_apply : s 0 = ⊤ := by
     simpa [RelSeries.head] using hs_head
   have hs_last_apply : s ⟨s.length, Nat.lt_succ_self _⟩ = ⊥ := by
-    simpa [RelSeries.last] using hs_last
+    have hidx : (⟨s.length, Nat.lt_succ_self _⟩ : Fin (s.length + 1)) =
+        Fin.last s.length := by
+      ext
+      rfl
+    rw [hidx]
+    exact hs_last
   have hnormalBelow_top : normalBelowSubgroup (G := G) (⊤ : NormalBelow (G := G) K) = K := rfl
   have hnormalBelow_bot : normalBelowSubgroup (G := G) (⊥ : NormalBelow (G := G) K) = ⊥ := rfl
   have hProper_le_F : ∀ L : NormalBelow (G := G) K, L ≠ ⊤ → normalBelowSubgroup (G := G) L ≤ F := by
@@ -458,7 +467,7 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
     if hn : n ≤ s.length then
       (normalBelowSubgroup (G := G) (s ⟨n, Nat.lt_succ_of_le hn⟩)).subgroupOf K
     else ⊥
-  have hD_desc : IsDescendingCentralSeries D := by
+  have hD_desc : Subgroup.IsDescendingCentralSeries D := by
     refine ⟨?_, ?_⟩
     · ext x
       simp [D, hs_head_apply, hnormalBelow_top]
@@ -469,9 +478,16 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
           have hs_step : s i.succ ⋖ s (Fin.castSucc i) := by
             simpa [s] using s.step i
           have hx_upper : (x : G) ∈ normalBelowSubgroup (G := G) (s (Fin.castSucc i)) := by
-            have : x ∈ (normalBelowSubgroup (G := G) (s (Fin.castSucc i))).subgroupOf K := by
-              simpa [D, hnle] using hx
-            exact this
+            have hx' : x ∈
+                (normalBelowSubgroup (G := G)
+                  (s ⟨n, Nat.lt_succ_of_le hnle⟩)).subgroupOf K := by
+              simpa only [D, dif_pos hnle] using hx
+            have hidx : (⟨n, Nat.lt_succ_of_le hnle⟩ : Fin (s.length + 1)) =
+                Fin.castSucc i := by
+              ext
+              rfl
+            rw [← hidx]
+            exact hx'
           have hcomm :
               ⁅normalBelowSubgroup (G := G) (s (Fin.castSucc i)), K⁆ ≤
                 normalBelowSubgroup (G := G) (s i.succ) := by
@@ -491,12 +507,18 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
                 commutator_le_of_covBy_top_normalBelow (G := G) (K := K) hsolv
                   (A := s i.succ) hs_top_step
             · have hpos : 0 < n := Nat.pos_of_ne_zero hzero
-              let j : Fin (st.length + 1) := ⟨n, by simpa [st, u] using hnle⟩
+              let j : Fin (st.length + 1) := ⟨n, by simpa [st, u, s] using hnle⟩
               have hi : (0 : Fin (st.length + 1)) < j := by
-                simpa [j] using hpos
+                change 0 < n
+                exact hpos
               have hupper_lt_head : s (Fin.castSucc i) < s 0 := by
-                have : st 0 < st j := st.strictMono hi
-                simpa [j, st, u, s, i] using this
+                have hst :
+                    (show NormalBelow (G := G) K from st j) <
+                      (show NormalBelow (G := G) K from st 0) :=
+                  st.strictMono hi
+                change (show NormalBelow (G := G) K from st j) <
+                  (show NormalBelow (G := G) K from st 0)
+                exact hst
               have hupper_lt_top : s (Fin.castSucc i) < ⊤ := by
                 simpa [hs_head_apply] using hupper_lt_head
               have hupper_le_F :
@@ -518,7 +540,17 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
             (Subgroup.commutator_le).1 hcomm (x : G) hx_upper (g : G) g.property
           have : (⁅x, g⁆ : K) ∈
               (normalBelowSubgroup (G := G) (s i.succ)).subgroupOf K := hmem_lower
-          simpa [D, Nat.succ_le_of_lt hlt] using this
+          have hn1le : n + 1 ≤ s.length := Nat.succ_le_of_lt hlt
+          have hidx : (⟨n + 1, Nat.lt_succ_of_le hn1le⟩ : Fin (s.length + 1)) =
+              i.succ := by
+            ext
+            rfl
+          have hD_eq : D (n + 1) =
+              (normalBelowSubgroup (G := G)
+                (s ⟨n + 1, Nat.lt_succ_of_le hn1le⟩)).subgroupOf K := by
+            simp [D, hn1le]
+          rw [hD_eq, hidx]
+          exact this
         · have hn_eq : n = s.length := le_antisymm hnle (Nat.not_lt.mp hlt)
           subst hn_eq
           have hx_bot : x = 1 := by
@@ -537,12 +569,15 @@ private theorem minimal_counterexample_nilpotent {H F K : Subgroup G} [K.Normal]
     ext x
     simp [D, hs_last_apply, hnormalBelow_bot]
   exact
-    (nilpotent_iff_finite_descending_central_series (G := K)).2
+    (Subgroup.nilpotent_iff_finite_descending_central_series (G := K)).2
       ⟨s.length, D, hD_desc, hD_last⟩
 
 end Proposition12
 
 section Proposition12RestrictedConverse
+
+open scoped commutatorElement
+open scoped IsMulCommutative
 
 universe u
 
@@ -609,7 +644,7 @@ private theorem comap_fittingSubgroupOf_map_le_fittingSubgroupOf
     ext
     simpa using (Subgroup.mem_centralizer_iff.mp hxcent _ hyH)
   have hP_nil : Group.IsNilpotent P :=
-    isNilpotent_of_ker_le_center (subgroupToMap_local (G := G) π P) hker_le_center
+    Subgroup.isNilpotent_of_ker_le_center (subgroupToMap_local (G := G) π P) hker_le_center
   exact le_fittingSubgroupOf_of_normal_nilpotent (G := G) (H := H) (N := P)
     hP_le_H hP_normal hP_nil
 
@@ -647,8 +682,8 @@ public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactor
         · exact Or.inr (hM_min L inferInstance hL_le_M hL_bot)
     }
     have hM_nil : Group.IsNilpotent M := by
-      have _ : IsMulCommutative M := minimalNormal_solvable_isMulCommutative M
-      infer_instance
+      letI : IsMulCommutative M := minimalNormal_solvable_isMulCommutative M
+      exact CommGroup.isNilpotent (G := M)
     have hM_le_fitH : M ≤ fittingSubgroupOf (G := G) H :=
       le_fittingSubgroupOf_of_normal_nilpotent (G := G) (H := H) (N := M)
         hM_le_H hM_norm hM_nil
@@ -753,6 +788,8 @@ public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactor
 
 end Proposition12RestrictedConverse
 
+open scoped IsMulCommutative
+
 /-
 **Kind**: Theorem
 **Note**: Proposition 1.2
@@ -763,8 +800,8 @@ Let $D'$ be the set of all chief factors $U/V$ of $G$ for which $U \subset F(G')
 Then
 \[ F(G') = \bigcap_{U/V \in D} C_{G'}(U/V) = \bigcap_{U/V \in D'} C_{G'}(U/V). \]
 -/
-  set_option maxHeartbeats 4000000 in
-  public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+set_option maxHeartbeats 4000000 in
+public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
     (H : Subgroup G) (hH : H.Normal) :
     fittingSubgroupOf (G := G) H =
         sInf (centralizerOfChiefFactor (G := G) H '' (Set.univ : Set (ChiefFactor G))) ∧
@@ -827,7 +864,7 @@ Then
       let J : Subgroup (↥(baer (G := G))) := I.subgroupOf (baer (G := G))
       haveI : Group.IsNilpotent J := by infer_instance
       let e := Subgroup.subgroupOfEquivOfLe (G := G) (H := I) (K := baer (G := G)) hI_le_baer
-      exact nilpotent_of_mulEquiv (G := J) (G' := I) e
+      exact Group.nilpotent_of_mulEquiv (G := J) (G' := I) e
     exact le_fittingSubgroupOf_of_normal_nilpotent (G := G) (H := H) (N := I) hI_le_H hI_norm hI_nil
 
   have hall_eq_F : F = sInf (centralizerOfChiefFactor (G := G) H '' (Set.univ : Set (ChiefFactor G))) :=
@@ -860,7 +897,8 @@ Then
       haveI : IsSolvable (↥M) := by infer_instance
       have hM_abelian : IsMulCommutative (↥M) := minimalNormal_solvable_isMulCommutative M
       have hM_nil : Group.IsNilpotent M := by
-        haveI : IsMulCommutative (↥M) := hM_abelian; exact CommGroup.isNilpotent
+        haveI : IsMulCommutative (↥M) := hM_abelian
+        exact CommGroup.isNilpotent (G := M)
       have hM_le_F : M ≤ F := le_fittingSubgroupOf_of_normal_nilpotent hM_le_H hM_norm hM_nil
       have : M = ⊥ := le_bot_iff.mp (hM_le_F.trans (by simp [hF_bot]))
       exact hM_ne_bot this
@@ -886,7 +924,7 @@ Then
         _ = (sInf (centralizerOfChiefFactorIn (G := G) H '' {cf : ChiefFactor G | cf.U ≤ F})).map H.subtype := by
           symm; exact hRHS_bot
     exact ⟨h_main, h_second⟩
-  · push_neg at hS_empty
+  · push Not at hS_empty
     rcases hS_empty with ⟨cf0, hcf0⟩
 
     have h_centralizing_le_F (N : Subgroup G) (hN_norm : N.Normal) (hN_le_H : N ≤ H)
@@ -1023,8 +1061,9 @@ Then
           have h_lt : f (i+1) < f i := (hf_chief i hi_lt_r).lt
           exact h_lt.le.trans (ih hi_le_r)
       have hK_nilpotent : Group.IsNilpotent K := by
-        rw [nilpotent_iff_lowerCentralSeries (G := K)]
-        have h_lcs_le : ∀ i, i ≤ r → lowerCentralSeries (↥K) i ≤ (f i).subgroupOf K := by
+        rw [Subgroup.nilpotent_iff_lowerCentralSeries (G := K)]
+        have h_lcs_le : ∀ i, i ≤ r →
+            (⊤ : Subgroup K).lowerCentralSeries i ≤ (f i).subgroupOf K := by
           intro i hi
           induction i with
           | zero => simp [hf0]
@@ -1037,7 +1076,8 @@ Then
             have h_fi_le_K' : f i ≤ K := h_fi_le_K i hi_le_r
             have h_top_map : (⊤ : Subgroup (↥K)).map K.subtype = K := by ext x; simp
             calc
-              lowerCentralSeries (↥K) (i+1) = ⁅lowerCentralSeries (↥K) i, ⊤⁆ := rfl
+              (⊤ : Subgroup K).lowerCentralSeries (i+1) =
+                  ⁅(⊤ : Subgroup K).lowerCentralSeries i, ⊤⁆ := rfl
               _ ≤ ⁅(f i).subgroupOf K, ⊤⁆ := Subgroup.commutator_mono (ih hi_le_r) (le_refl _)
               _ ≤ (f (i+1)).subgroupOf K := by
                 have h_map_ineq : Subgroup.map K.subtype (⁅(f i).subgroupOf K, ⊤⁆) ≤ Subgroup.map K.subtype ((f (i+1)).subgroupOf K) := by
@@ -1052,10 +1092,11 @@ Then
                     _ ≤ f (i+1) := h_central
                     _ = Subgroup.map K.subtype ((f (i+1)).subgroupOf K) := by simp [h_fi1_le_K]
                 exact (Subgroup.map_le_map_iff_of_injective (f := K.subtype) K.subtype_injective).mp h_map_ineq
-        have h_lcs_r : lowerCentralSeries (↥K) r = ⊥ := by
+        have h_lcs_r : (⊤ : Subgroup K).lowerCentralSeries r = ⊥ := by
           apply eq_bot_iff.mpr
           calc
-            lowerCentralSeries (↥K) r ≤ (f r).subgroupOf K := h_lcs_le r (le_refl r)
+            (⊤ : Subgroup K).lowerCentralSeries r ≤ (f r).subgroupOf K :=
+              h_lcs_le r (le_refl r)
             _ = (⊥ : Subgroup G).subgroupOf K := by rw [hfr]
             _ = ⊥ := by simp
         exact ⟨r, h_lcs_r⟩
@@ -1113,7 +1154,10 @@ Then
         · rintro ⟨y, hy, rfl⟩
           have hy' := (Subgroup.mem_comap (f := H.subtype) (K := centralizerOfChiefFactor (G := G) H cf)).mp hy
           exact hy'
-        · intro hx; refine ⟨⟨x, h_sub hx⟩, ?_, rfl⟩; simpa [Subgroup.mem_comap] using hx
+        · intro hx
+          refine ⟨⟨x, h_sub hx⟩, ?_, rfl⟩
+          change x ∈ centralizerOfChiefFactor (G := G) H cf
+          exact hx
       have hI_res'_le_I_res : I_res'.map H.subtype ≤ I_res := by
         refine le_iInf (fun cf => ?_)
         refine le_iInf (fun hcf => ?_)
@@ -1133,7 +1177,8 @@ Then
             hI_res_centralizes cf hcf
           intro x hx
           have hx_val : (x : G) ∈ I_res := by
-            simpa [Subgroup.mem_comap] using hx
+            change (x : G) ∈ I_res at hx
+            exact hx
           have hx_cf : (x : G) ∈ centralizerOfChiefFactor (G := G) H cf := hI_res_le_cf hx_val
           exact (Subgroup.mem_comap (f := H.subtype)).mpr hx_cf
         calc
@@ -1142,7 +1187,8 @@ Then
             · intro hx; have hxH : x ∈ H := hI_res_le_H hx
               refine ⟨⟨x, hxH⟩, ?_, rfl⟩; simpa [Subgroup.mem_subgroupOf] using hx
             · rintro ⟨y, hy, rfl⟩
-              simpa [Subgroup.mem_comap] using hy
+              change (y : G) ∈ I_res at hy
+              exact hy
           _ ≤ I_res'.map H.subtype := Subgroup.map_mono hI_res_comap_le
       exact le_antisymm hI_res'_le_I_res hI_res_le_I_res'
 
@@ -1177,4 +1223,4 @@ public theorem isNilpotent_of_le_centralizerOfChiefFactor
   let e : fittingSubgroupOf (G := G) H ≃* H := MulEquiv.subgroupCongr hF_eq
   haveI : Group.IsNilpotent (fittingSubgroupOf (G := G) H) :=
     fittingSubgroupOf_isNilpotent (G := G) H
-  exact nilpotent_of_mulEquiv e
+  exact Group.nilpotent_of_mulEquiv e

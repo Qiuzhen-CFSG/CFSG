@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection9.theorem_9_1
+public import FeitThompson.BGsection9.theorem_9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 
@@ -36,7 +36,7 @@ public theorem section9_c92_primeRank_le_natCard
     primeRank p R ≤ Nat.card R := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := R), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hApA, _hAcomm, hnA⟩
     exact hnA.trans <|
@@ -86,8 +86,13 @@ public theorem section9_c92_elementaryAbelian_card_ge_pow_generatorRank
     {p : ℕ} [Fact p.Prime]
     (R : Type*) [Group R] [Finite R] [IsElementaryAbelian p R] :
     p ^ generatorRank R ≤ Nat.card R := by
+  letI : CommGroup R := IsMulCommutative.instCommGroup
+  letI : AddCommGroup (Additive R) := Additive.addCommGroup
   have hcard : Nat.card R = p ^ Module.finrank (ZMod p) (Additive R) := by
-    simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive R)
+    calc
+      Nat.card R = Nat.card (Additive R) := (Nat.card_congr Additive.toMul).symm
+      _ = p ^ Module.finrank (ZMod p) (Additive R) := by
+        simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive R)
   have hgr_le_finrank : generatorRank R ≤ Module.finrank (ZMod p) (Additive R) :=
     generatorRank_le_finrank_of_elementaryAbelian (p := p) R
   rw [hcard]
@@ -97,6 +102,7 @@ public theorem section9_c92_omega1_isElementaryAbelian_of_commutative
     {p : ℕ} [Fact p.Prime]
     (R : Type*) [Group R] [IsMulCommutative R] :
     IsElementaryAbelian p (omega₁ (G := R) (p := p)) := by
+  letI : CommGroup R := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := by infer_instance
       exponent_dvd_p := ?_ }
@@ -121,7 +127,7 @@ public theorem section9_c92_omega1_card_eq_card_quotient_frattini_of_commutative
     (R : Type*) [Group R] [Finite R] [IsMulCommutative R] [Fact (IsPGroup p R)] :
     Nat.card (omega₁ (G := R) (p := p)) = Nat.card (R ⧸ frattini R) := by
   classical
-  letI : CommGroup R := CommGroup.ofIsMulCommutative
+  letI : CommGroup R := IsMulCommutative.instCommGroup
   let φ : R →* R := powMonoidHom p
   have hφker : φ.ker = omega₁ (G := R) (p := p) := by
     ext x
@@ -131,7 +137,6 @@ public theorem section9_c92_omega1_card_eq_card_quotient_frattini_of_commutative
       refine Subgroup.subset_closure ?_
       simpa [φ, pow_one] using hx
     · intro hx
-      change x ∈ φ.ker
       refine
         Subgroup.closure_induction (k := {y : R | y ^ (p ^ 1) = 1})
           (p := fun z _hz => z ∈ φ.ker) (x := x) (by
@@ -155,7 +160,9 @@ public theorem section9_c92_omega1_card_eq_card_quotient_frattini_of_commutative
         (Subgroup.commutator_eq_bot_iff_le_centralizer).2 hcomm_top
       simpa [_root_.commutator_def] using htop_comm_bot
     have hderived_bot : derivedSubgroup R = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using hcomm_bot
+      change derivedSeries R 1 = ⊥
+      rw [derivedSeries_one]
+      exact hcomm_bot
     have hrange :
         Set.range (fun x : R => x ^ p) = ((φ.range : Subgroup R) : Set R) := by
       ext y
@@ -210,7 +217,7 @@ public theorem section9_c92_isElementaryAbelian_of_le
         exact
           { is_comm := ⟨fun x y =>
               Subtype.ext <|
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := K)
+                setLike_mul_comm (s := K)
                   (hHK x.2) (hHK y.2)⟩ }
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -257,7 +264,7 @@ public theorem section9_c92_generatorRank_at_least_two_of_elementaryAbelian_card
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp

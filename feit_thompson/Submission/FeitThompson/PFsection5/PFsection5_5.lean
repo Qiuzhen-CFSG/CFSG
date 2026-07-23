@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_4
-public import Submission.FeitThompson.PFsection3.PFsection3_5
+public import FeitThompson.PFsection5.PFsection5_4
+public import FeitThompson.PFsection3.PFsection3_5
 
 /-!
 # Peterfalvi, Section 5, Theorem (5.5)

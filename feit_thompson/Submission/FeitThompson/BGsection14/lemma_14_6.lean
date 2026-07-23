@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.lemma_14_5
+public import FeitThompson.BGsection14.lemma_14_5
 
 open scoped Pointwise
 
@@ -63,7 +63,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
         rw [subgroupPrimeSet]
         rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
           ⟨_hzle, hqcard⟩
-        simpa [hqcard]
+        simp [hqcard]
       simpa [section14ElementPrimeSupport] using
         section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hz_zpowa) hqz
     rcases hcover hqA with hq₁ | hq₂
@@ -114,8 +114,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
     have hy'G : y' ∈ Subgroup.zpowers x := by
       simpa [hEqx] using hy'G1
     have hB_y : B ∈ section14SigmaSupport y := by
-      simpa [B, section14_sigmaSupport_eq_singleton_of_length_one hy hM] using
-        (show section10SigmaPrimes M ∈ ({section10SigmaPrimes M} : Set (Set Nat.Primes)) by simp)
+      simp [B, section14_sigmaSupport_eq_singleton_of_length_one hy hM]
     have hB_x : B ∈ section14SigmaSupport x :=
       sigmaSupport_mono (support_mono hyG) hB_y
     have hyMσ : y ∈ section10Msigma M := hM.2 (by simp)
@@ -131,7 +130,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hqcard⟩
-          simpa [hqcard]
+          simp [hqcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono
             (Subgroup.zpowers_le.2 hz_zpowy') hqz
@@ -181,7 +180,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
       have hXne : X ≠ ⊥ := by
         intro hXbot
         have hcard_one : Nat.card X = 1 := by
-          simpa [hXbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+          simp [hXbot]
         exact q.2.ne_one (hXcard.symm.trans hcard_one)
       have hXne_top : X ≠ ⊤ := by
         intro hXtop
@@ -258,7 +257,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
           Nat.Coprime (Nat.card (Subgroup.zpowers x))
             (Nat.card (Subgroup.zpowers x')) := by
         simpa [Nat.card_zpowers] using hcopx
-      exact disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcopCard)
+      exact Subgroup.disjoint_of_coprime_natCard hcopCard
     have hcover_of_memG {a : G} (haG : a ∈ Subgroup.zpowers (x * x')) :
         section14ElementPrimeSupport a ⊆ Bx ∪ π := by
       intro p hpA
@@ -288,7 +287,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
         rw [subgroupPrimeSet]
         rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
           ⟨_hzle, hqcard⟩
-        simpa [hqcard]
+        simp [hqcard]
       simpa [section14ElementPrimeSupport] using
         section8_subgroupPrimeSet_mono
           (Subgroup.zpowers_le.2 hz_zpowy) hqz
@@ -368,9 +367,9 @@ public theorem section14_exists_sigma_support_witness
       ⟨_hz, hzord⟩
     exact hzord
   have hXcard : Nat.card X = q.val := by
-    simpa [X, hXorder] using (Nat.card_zpowers z)
+    simp [X, hXorder]
   have hXq : IsPGroup q.val X := by
-    exact IsPGroup.of_card (n := 1) (by simpa [hXcard, pow_one])
+    exact IsPGroup.of_card (n := 1) (by simp [hXcard])
   have hzpowg_ne_top : Subgroup.zpowers g ≠ ⊤ := by
     intro htop
     haveI : IsCyclic G := (isCyclic_iff_exists_zpowers_eq_top (α := G)).2 ⟨g, htop⟩
@@ -393,7 +392,7 @@ public theorem section14_exists_sigma_support_witness
   have hqSupp : q ∈ section14ElementPrimeSupport g := by
     have hqz : q ∈ subgroupPrimeSet (Subgroup.zpowers z) := by
       rw [subgroupPrimeSet]
-      simpa [hXorder]
+      simp [hXorder]
     simpa [section14ElementPrimeSupport, X] using
       section8_subgroupPrimeSet_mono hXle_zpowg hqz
   have hXsub_char : (X.subgroupOf (Subgroup.zpowers g)).Characteristic := by
@@ -418,7 +417,7 @@ public theorem section14_exists_sigma_support_witness
   · exact ⟨M0, hM0.1, ⟨q, hqSupp, hqσ0⟩⟩
   · have hbot_pi : IsPiSubgroup (G := G) (section10SigmaPrimes M0)ᶜ (⊥ : Subgroup G) := by
       intro p hp
-      simpa [subgroupPrimeSet, p.2.ne_one] using hp
+      simp [p.2.ne_one] at hp
     obtain ⟨E, hEcomp, _hbotE⟩ :=
       section14_exists_sigma_complement_containing
         (G := G) (M := M0) (K := ⊥) hM0.1 bot_le hbot_pi
@@ -451,6 +450,7 @@ public theorem section14_exists_sigma_support_witness
         hM0.1 hE hqτ20 hA hM1) hqτ20 |>.1
     exact ⟨M1, hM1.1, ⟨q, hqSupp, hqσ1⟩⟩
 
+omit [IsMinCE G] in
 private theorem section14_exists_block_factor
     {g : G} {B : Set Nat.Primes}
     (hB : B ∈ section14SigmaSupport g) :
@@ -480,7 +480,7 @@ private theorem section14_exists_block_factor
   let gH : H := ⟨g, Subgroup.mem_zpowers g⟩
   have hgTop : gH ∈ Ksub ⊔ Lsub := by
     have htop : Ksub ⊔ Lsub = ⊤ := hcomp.sup_eq_top
-    simpa [htop]
+    simp [htop]
   rcases (Subgroup.mem_sup_of_normal_left (x := gH) (s := Ksub) (t := Lsub)).1 hgTop with
     ⟨yK, hyKsub, yL, hyLsub, hyEq⟩
   let y : G := yK
@@ -511,7 +511,7 @@ private theorem section14_exists_block_factor
     exact hLsupp <| section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hyL) hpY'
   have hyne : y ≠ 1 := by
     intro hy1
-    have hEq' : g = y' := by simpa [hEq, hy1]
+    have hEq' : g = y' := by simp [hEq, hy1]
     exact (hy'Bc (by simpa [hEq'] using hqSupp)) hqB
   have hycomm : Commute y y' := by
     rcases Subgroup.mem_zpowers_iff.mp hyH with ⟨m, hm⟩
@@ -554,6 +554,8 @@ public theorem section14_exists_msigma_factor_of_ne_one
   have hxlen : section14SigmaLength x = 1 :=
     section14_sigmaLength_one_of_mem_msigma (G := G) hMx.1 (hMx.2 (by simp)) hxne
   refine ⟨x, x', M0.conjBy a⁻¹, hgxx', hxlen, ?_, hcomm, hMx⟩
+  change section14ElementPrimeSupport x' ⊆
+    (section10SigmaPrimes (M0.conjBy a⁻¹))ᶜ
   simpa [B, section14_sigmaPrimes_conjBy (G := G) M0 a⁻¹] using hx'Bc
 
 private theorem section14_exists_msigmaElement_of_tau2_centralizer
@@ -591,11 +593,11 @@ private theorem section14_exists_msigmaElement_of_tau2_centralizer
       ⟨_hzK, hXorder⟩
     exact hXorder
   have hXcard : Nat.card X = q.val := by
-    simpa [X, hXorder] using (Nat.card_zpowers z)
+    simp [X, hXorder]
   have hqSupp : q ∈ section14ElementPrimeSupport x' := by
     have hqX : q ∈ subgroupPrimeSet X := by
       rw [subgroupPrimeSet]
-      simpa [hXcard]
+      simp [hXcard]
     simpa [section14ElementPrimeSupport, X] using
       section8_subgroupPrimeSet_mono
         (Subgroup.zpowers_le.2 hz_zpowx') hqX
@@ -719,8 +721,8 @@ private theorem section14_mem_R_of_tau2_centralizer
       intro hEq
       exact hMstar_conj_ne (congrArg Subtype.val hEq).symm
     haveI : Nontrivial Ωx' := ⟨L₁, L₂, hne⟩
-    have hcard' : 1 < Fintype.card Ωx' := Fintype.one_lt_card
-    simpa [Ωx', Nat.card_eq_fintype_card] using hcard'
+    change 1 < Nat.card Ωx'
+    exact Finite.one_lt_card
   have hNx' :
       section14N x' ∈
         section9MaximalSubgroupsContaining (Subgroup.centralizer ({x'} : Set G)) :=
@@ -867,8 +869,8 @@ public theorem lemma_14_6
             intro hEq
             exact hMconjg_ne (congrArg Subtype.val hEq).symm
           haveI : Nontrivial Ωx := ⟨L₁, L₂, hne⟩
-          have hcard' : 1 < Fintype.card Ωx := Fintype.one_lt_card
-          simpa [Ωx, Nat.card_eq_fintype_card] using hcard'
+          change 1 < Nat.card Ωx
+          exact Finite.one_lt_card
         let N : Subgroup G := section14N x
         have hNx :
             N ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) := by
@@ -989,7 +991,7 @@ public theorem lemma_14_6
                 (G := G) (A := Cmx) (p := p) hpC
             rcases hX with ⟨hXC, hXcard⟩
             have hXp : IsPGroup p.val X := by
-              exact IsPGroup.of_card (n := 1) (by simpa [hXcard, pow_one])
+              exact IsPGroup.of_card (n := 1) (by simp [hXcard])
             have hXN : X ≤ N := by
               intro y hy
               exact (hCmx_le_MN (hXC hy)).2
@@ -1131,7 +1133,7 @@ public theorem lemma_14_6
             rw [subgroupPrimeSet]
             rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
               ⟨_hzle, hqcard⟩
-            simpa [hqcard]
+            simp [hqcard]
           simpa [section14ElementPrimeSupport] using
             section8_subgroupPrimeSet_mono
               (Subgroup.zpowers_le.2 hz_zpowy) hqz
@@ -1179,7 +1181,7 @@ public theorem lemma_14_6
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hqcard⟩
-          simpa [hqcard]
+          simp [hqcard]
         simpa [section14ElementPrimeSupport] using
             section8_subgroupPrimeSet_mono
               (Subgroup.zpowers_le.2 hz_zpowy) hqz
@@ -1204,7 +1206,7 @@ public theorem lemma_14_6
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hqcard⟩
-          simpa [hqcard]
+          simp [hqcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono
             (Subgroup.zpowers_le.2 hz_zpowx) hqz
@@ -1224,7 +1226,7 @@ public theorem lemma_14_6
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hz'prime) with
             ⟨_hzle, hq'card⟩
-          simpa [hq'card]
+          simp [hq'card]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono
             (Subgroup.zpowers_le.2 hz'_zpowy) hq'z

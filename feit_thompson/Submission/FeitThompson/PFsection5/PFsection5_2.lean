@@ -1,10 +1,10 @@
 module
 
-public import Submission.FeitThompson.PFsection5.Basic
-public import Submission.FeitThompson.PFsection1.PFsection1_7_Core
-public import Submission.FeitThompson.PFsection2.Basic
-public import Submission.FeitThompson.PFsection3.Basic
-public import Submission.FeitThompson.PFsection4.Basic
+public import FeitThompson.PFsection5.Basic
+public import FeitThompson.PFsection1.PFsection1_7_Core
+public import FeitThompson.PFsection2.Basic
+public import FeitThompson.PFsection3.Basic
+public import FeitThompson.PFsection4.Basic
 
 /-!
 # Peterfalvi, Section 5: Theorem (5.2)

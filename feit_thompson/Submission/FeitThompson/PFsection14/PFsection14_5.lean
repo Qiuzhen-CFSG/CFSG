@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_4
+public import FeitThompson.PFsection14.PFsection14_4
 
 /-!
 # Peterfalvi, Section 14: theorem (14.5)
@@ -62,7 +62,7 @@ public theorem section14_semidirectProduct_of_frobenius_complement
     have hhSub : hL ∈ H.subgroupOf L := hh
     have hconj : kL * hL * kL⁻¹ ∈ H.subgroupOf L :=
       hHnorm.conj_mem hL hhSub kL
-    simpa [Section2.conjBy, kL, hL] using hconj
+    simpa [Section2.conjBy, kL, hL, Subgroup.mem_subgroupOf] using hconj
   · exact disjoint_iff.mp hdisj
   · intro c hc
     let cL : L := ⟨c, hc⟩

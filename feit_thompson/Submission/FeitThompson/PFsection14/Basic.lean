@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGappendixC.theorem_C
-public import Submission.FeitThompson.PFsection13.PFsection13_19
+public import FeitThompson.BGappendixC.theorem_C
+public import FeitThompson.PFsection13.PFsection13_19
 
 /-!
 # Peterfalvi, Section 14: basic notation

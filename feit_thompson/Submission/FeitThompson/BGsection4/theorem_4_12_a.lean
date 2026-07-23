@@ -1,13 +1,13 @@
 module
 
-public import Submission.FeitThompson.BGsection4.proposition_4_11
-public import Submission.FeitThompson.BGsection4.lemma_4_1
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
-public import Submission.FeitThompson.BGsection4.lemma_4_5_b
-public import Submission.FeitThompson.BGsection4.lemma_4_10
-public import Submission.FeitThompson.Representation.ElementaryAbelianAction
+public import FeitThompson.BGsection4.proposition_4_11
+public import FeitThompson.BGsection4.lemma_4_1
+public import FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection4.lemma_4_5_b
+public import FeitThompson.BGsection4.lemma_4_10
+public import FeitThompson.Representation.ElementaryAbelianAction
 
-open scoped FixedPoints
+open scoped FixedPoints IsMulCommutative commutatorElement
 
 /-! # Infrastructure for Theorem 4.12(a) from BG Section 4 -/
 
@@ -15,7 +15,7 @@ universe u
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints IsMulCommutative commutatorElement
 
 private theorem derivedSubgroup_isCyclic_of_isMetacyclic
     {R : Type*} [Group R] [Finite R] (hmeta : IsMetacyclic R) :
@@ -23,10 +23,9 @@ private theorem derivedSubgroup_isCyclic_of_isMetacyclic
   classical
   obtain ⟨S, hSnorm, hScyc, hquotcyc⟩ := hmeta
   letI : S.Normal := hSnorm
-  have hquotcomm : Std.Commutative ((· * ·) : (R ⧸ S) → (R ⧸ S) → (R ⧸ S)) :=
-    hquotcyc.commutative
+  have hquotcomm : IsMulCommutative (R ⧸ S) := hquotcyc.isMulCommutative
   have hder_le_S : derivedSubgroup R ≤ S := by
-    simpa [derivedSubgroup, derivedSeries_one] using
+    simpa [derivedSubgroup, derivedSeries_one, commutator] using
       (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := S)).1 hquotcomm
   exact Subgroup.isCyclic_of_le hder_le_S
 
@@ -55,7 +54,6 @@ private theorem mulAut_isMulCommutative_of_isCyclic
   let e := IsCyclic.mulAutMulEquiv (G := G)
   refine ⟨⟨fun a b => ?_⟩⟩
   apply e.injective
-  change e (a * b) = e (b * a)
   simp [mul_comm]
 
 private noncomputable def conjugationMulAutOfNormal
@@ -197,6 +195,8 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup G) [IsInvariant A G B] :
     ∃ C : Subgroup G, IsCompl B C ∧ IsInvariant A G C := by
   classical
+  letI : CommGroup G := IsMulCommutative.instCommGroup
+  letI : AddCommGroup (Additive G) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive G) :=
     Representation.ofElementaryAbelianAction (A := A) (G := G) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
@@ -517,7 +517,7 @@ private theorem isMulCommutative_of_top_map_eq_top
   simpa using congrArg f ((IsMulCommutative.is_comm (M := G)).comm x0 y0)
 
 private theorem isMulCommutative_of_subgroup_eq_top
-    {G : Type*} [Group G] {H : Subgroup G} (hH : H = ⊤)
+    {G : Type*} [Group G] {H : Subgroup G} (_hH : H = ⊤)
     (hcomm : IsMulCommutative G) :
     IsMulCommutative H := by
   refine ⟨⟨fun x y => ?_⟩⟩
@@ -649,8 +649,7 @@ private theorem omega₁_sup_map_quotient_le_omega₁_quotient
         simpa [pow_one, map_pow] using congrArg qS hu
       exact hmap_le (Subgroup.mem_map_of_mem qS hz)
     · have hz_one : qS z = 1 := (QuotientGroup.eq_one_iff (N := S) (x := z)).2 hz
-      simpa [hz_one] using
-        (Subgroup.one_mem (Subgroup.closure {z : G ⧸ S | z ^ (p ^ 1) = 1}))
+      simp [hz_one]
   · simp
   · intro x y _ _ hx hy
     simpa [map_mul] using (Subgroup.mul_mem _ hx hy)
@@ -891,7 +890,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
             have hx1 : (x : R ⧸ S) = 1 := by
               rw [← hr]
               exact (QuotientGroup.eq_one_iff (N := S) (x := r)).2 hrS
-            simpa [hx1]
+            simp [hx1]
           exact hCbar_ne_bot hCbar_bot
         have hB_top : B = ⊤ := by
           exact eq_top_of_isCompl_bot (by simpa [hC_bot] using hBC)
@@ -899,7 +898,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
           apply le_antisymm hB0_le_ΩQ
           intro y hy
           have hyB : (⟨y, hy⟩ : ΩQ) ∈ B := by
-            simpa [hB_top]
+            simp [hB_top]
           change y ∈ B0
           simpa [B, Subgroup.mem_subgroupOf] using hyB
         have hB0_eq_mapΩR : B0 = ΩR.map qS := by
@@ -912,11 +911,11 @@ public theorem theorem_4_12_a_aux (n : ℕ)
                 intro y hy
                 rcases hy with ⟨s, hs, rfl⟩
                 have hs1 : qS s = 1 := (QuotientGroup.eq_one_iff (N := S) (x := s)).2 hs
-                simpa [hs1]
+                simp [hs1]
               rw [hSmap_bot]
             _ = ΩR.map qS := by simp
         have hker_eq : qS.ker.subgroupOf ΩR = S.subgroupOf ΩR := by
-          simpa [qS, QuotientGroup.ker_mk']
+          simp [qS, QuotientGroup.ker_mk']
         have hker_card_ge : p ≤ Nat.card (qS.ker.subgroupOf ΩR) := by
           rw [hker_eq]
           have hSp : IsPGroup p S := (Fact.out : IsPGroup p R).to_subgroup S

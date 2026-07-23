@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_15
-import Submission.FeitThompson.PFsection9.PFsection9_1
+public import FeitThompson.PFsection13.PFsection13_15
+import FeitThompson.PFsection9.PFsection9_1
 
 /-!
 # Peterfalvi, Section 13: PFsection13_16
@@ -424,12 +424,12 @@ private theorem section13_theorem_13_16_K_subgroupOf_KW2_solvable_of_sourceConte
   have hKnil : Group.IsNilpotent K := by
     let e : K.subgroupOf V ≃* K :=
       Subgroup.subgroupOfEquivOfLe (H := K) (K := V) inf_le_left
-    exact nilpotent_of_mulEquiv (G := K.subgroupOf V) (G' := K)
+    exact Group.nilpotent_of_mulEquiv (G := K.subgroupOf V) (G' := K)
       (_h := hKsubV_nil) e
   have hKsubKW2_nil : Group.IsNilpotent (K.subgroupOf KW2) := by
     let e : K.subgroupOf KW2 ≃* K :=
       Subgroup.subgroupOfEquivOfLe (H := K) (K := KW2) le_sup_left
-    exact nilpotent_of_mulEquiv (G := K) (G' := K.subgroupOf KW2)
+    exact Group.nilpotent_of_mulEquiv (G := K) (G' := K.subgroupOf KW2)
       (_h := hKnil) e.symm
   haveI : Group.IsNilpotent (K.subgroupOf KW2) := hKsubKW2_nil
   simpa [K, KW2] using (inferInstance : IsSolvable (K.subgroupOf KW2))
@@ -462,7 +462,7 @@ private theorem section13_theorem_13_16_Q1_solvable_of_sourceContext
   have hQ1nil : Group.IsNilpotent Q1 := by
     let e : Q1.subgroupOf Q ≃* Q1 :=
       Subgroup.subgroupOfEquivOfLe (H := Q1) (K := Q) hQ1Q
-    exact nilpotent_of_mulEquiv (G := Q1.subgroupOf Q) (G' := Q1)
+    exact Group.nilpotent_of_mulEquiv (G := Q1.subgroupOf Q) (G' := Q1)
       (_h := hQ1subQ_nil) e
   haveI : Group.IsNilpotent Q1 := hQ1nil
   infer_instance
@@ -523,8 +523,8 @@ private theorem section13_theorem_13_16_K_le_centralizer_W1_of_frobenius
     apply hK_not_le_C0
     intro k hkK
     have hkE : k ∈ E := (show K ≤ E from le_sup_left) hkK
-    have hkSub : (⟨k, hkE⟩ : E) ∈ K.subgroupOf E := by
-      simpa [Subgroup.mem_subgroupOf] using hkK
+    have hkSub : (⟨k, hkE⟩ : E) ∈ K.subgroupOf E :=
+      Subgroup.mem_subgroupOf.mpr hkK
     have hkCsub := hle hkSub
     simpa [C0, Subgroup.mem_subgroupOf] using hkCsub
   haveI : (C0.subgroupOf E).Normal := hC0normIn.2

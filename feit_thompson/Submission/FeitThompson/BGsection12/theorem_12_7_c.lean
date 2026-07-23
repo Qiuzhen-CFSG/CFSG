@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_7_a
+public import FeitThompson.BGsection12.theorem_12_7_a
 
 open scoped Pointwise
 
@@ -75,7 +75,7 @@ public theorem section12_exists_primeOrder_centralizer_ne_bot_of_tau2_pre
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
   letI : IsElementaryAbelian p.val A := hAelem
   letI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
   haveI : Subgroup.Normalizes A (section10Msigma M) := by
     refine ⟨?_⟩
@@ -127,7 +127,7 @@ public theorem section12_le_fittingSubgroupOf_of_normalIn_nilpotent
   haveI : Group.IsNilpotent (N.subgroupOf H) := by
     let e := (Subgroup.subgroupOfEquivOfLe (G := G) (H := N) (K := H) hHN).symm
     have : Group.IsNilpotent N := hN_nil
-    exact nilpotent_of_mulEquiv (G := N) (G' := N.subgroupOf H) e
+    exact Group.nilpotent_of_mulEquiv (G := N) (G' := N.subgroupOf H) e
   have hle_in_H : N.subgroupOf H ≤ fittingSubgroup H :=
     le_sSup ⟨hN_norm, (inferInstance : Group.IsNilpotent (N.subgroupOf H))⟩
   have hmap_le : (N.subgroupOf H).map H.subtype ≤ fittingSubgroupOf (G := G) H :=
@@ -164,6 +164,7 @@ public theorem section12_subgroupCentralizerIn_commute_pre
   intro c hc
   exact (Subgroup.mem_centralizer_iff.mp hc.2 s hs).symm
 
+omit [IsMinCE G] in
 public theorem section12_subgroupCentralizerIn_le_fitting_of_card_prime_pre
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -377,7 +378,7 @@ public theorem section12_le_conjBy_inv_of_conjBy_le_pre
   · apply hHK
     rw [Subgroup.conjBy, Subgroup.mem_map]
     exact ⟨x, hx, by simp [MulAut.conj_apply]⟩
-  · simp [MulAut.conj_apply]
+  · simp
     group
 
 omit [Finite G] [IsMinCE G] in
@@ -397,7 +398,7 @@ public theorem section12_conjBy_le_centralizer_conjBy_pre
   rw [← hcx, ← hby]
   simpa [mul_assoc] using congrArg (fun t : G => t * g⁻¹) hcomm
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_maximal_conjBy_pre
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) (g : G) :
     M.conjBy g ∈ section9MaximalSubgroups G := by
@@ -428,6 +429,7 @@ public theorem section12_normalizer_le_self_of_maximal_pre
     · exact hM.1 hMtop
   exact le_of_eq ((hM.le_iff_eq hNproper).mp Subgroup.le_normalizer)
 
+omit [IsMinCE G] in
 public theorem section12_exists_nonabelian_sylow_containing_rankTwo_pre
     {E A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
@@ -448,9 +450,9 @@ public theorem section12_exists_nonabelian_sylow_containing_rankTwo_pre
   have hSbad_comm : IsMulCommutative (Sbad : Subgroup G) := by
     have hconj_comm : IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
       letI : IsMulCommutative (S : Subgroup G) := hScomm
-      simpa [Sylow.coe_subgroup_smul] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+      rw [Sylow.coe_subgroup_smul]
+      exact Subgroup.map_isMulCommutative
+        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
     rw [← hg]
     exact hconj_comm
   exact hSbad_noncomm hSbad_comm
@@ -488,13 +490,13 @@ public theorem section12_global_sylow_not_le_M_of_nonabelian_pre
   have hScomm : IsMulCommutative (S : Subgroup G) := by
     refine ⟨⟨fun x y => ?_⟩⟩
     have hxsub : (⟨(x : G), hSleM x.property⟩ : M) ∈ (SM : Subgroup M) := by
-      simpa [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf] using x.property
+      simp [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf]
     have hysub : (⟨(y : G), hSleM y.property⟩ : M) ∈ (SM : Subgroup M) := by
-      simpa [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf] using y.property
+      simp [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf]
     apply Subtype.ext
     exact congrArg (fun z : M => (z : G)) <|
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (SM : Subgroup M)) hxsub hysub
+      setLike_mul_comm
+        (s := (SM : Subgroup M)) hxsub hysub
   exact hSnonab hScomm
 
 public theorem section12_sylow_inf_M_isMulCommutative_pre
@@ -522,14 +524,14 @@ public theorem section12_sylow_inf_M_isMulCommutative_pre
   have hxT : (⟨(x : G), hI_le_M x.property⟩ : M) ∈ (T : Subgroup M) := by
     apply hIsub_le_T
     change (⟨(x : G), hI_le_M x.property⟩ : M) ∈ I.subgroupOf M
-    simpa [Subgroup.mem_subgroupOf] using (show (x : G) ∈ I from x.property)
+    simp [Subgroup.mem_subgroupOf]
   have hyT : (⟨(y : G), hI_le_M y.property⟩ : M) ∈ (T : Subgroup M) := by
     apply hIsub_le_T
     change (⟨(y : G), hI_le_M y.property⟩ : M) ∈ I.subgroupOf M
-    simpa [Subgroup.mem_subgroupOf] using (show (y : G) ∈ I from y.property)
+    simp [Subgroup.mem_subgroupOf]
   apply Subtype.ext
   exact congrArg (fun z : M => (z : G)) <|
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := (T : Subgroup M)) hxT hyT
+    setLike_mul_comm (s := (T : Subgroup M)) hxT hyT
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_conjBy_eq_self_of_le_abelian_pre
@@ -543,7 +545,7 @@ public theorem section12_conjBy_eq_self_of_le_abelian_pre
   · intro hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hyX, hyx⟩
     have hgy : g * y = y * g :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := H) hgH (hXH hyX)
+      setLike_mul_comm (s := H) hgH (hXH hyX)
     have hx_eq_y : x = y := by
       rw [← hyx]
       simp [MulAut.conj_apply, hgy, mul_assoc]
@@ -551,7 +553,7 @@ public theorem section12_conjBy_eq_self_of_le_abelian_pre
   · intro hx
     refine Subgroup.mem_map.mpr ⟨x, hx, ?_⟩
     have hgx : g * x = x * g :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := H) hgH (hXH hx)
+      setLike_mul_comm (s := H) hgH (hXH hx)
     simp [MulAut.conj_apply, hgx, mul_assoc]
 
 public theorem section12_not_centralizer_le_M_of_ne_fixed_primeOrder_tau2_pre
@@ -631,7 +633,7 @@ public theorem section12_not_centralizer_le_M_of_ne_fixed_primeOrder_tau2_pre
     have hkS : (k : G) ∈ (S : Subgroup G) := by
       have hk' :
           (k : G) ∈ Subgroup.normalizer (A : Set G) ⊓ (S : Subgroup G) := by
-        simpa [subgroupNormalizerIn] using k.property
+        simp [subgroupNormalizerIn]
       exact hk'.2
     have hk_not_M : (k : G) ∉ M := by
       intro hkM
@@ -705,7 +707,7 @@ public theorem section12_CA_msigma_eq_fixed_primeOrder_of_tau2_pre
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
   letI : IsElementaryAbelian p.val A := hAelem
   letI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
   have hAKnorm : A ≤ Subgroup.normalizer (K : Set G) := by
     exact (section12_rankTwo_le hA_M).trans (by simpa [K] using section12_le_normalizer_msigma)
@@ -749,7 +751,6 @@ public theorem section12_CA_msigma_eq_fixed_primeOrder_of_tau2_pre
     by_cases hXA₀ : X = A₀
     · rw [hfix_map]
       intro x hx
-      change x ∈ Subgroup.centralizer (A₀ : Set G)
       rw [← hXA₀]
       exact section12_centralizer_singleton_le_centralizer_zpowers_pre (G := G)
         (a : G) hx.2
@@ -817,7 +818,7 @@ public theorem section12_CA_msigma_eq_fixed_primeOrder_of_tau2_pre
       intro hXeq
       exact hcA₀ (by
         have hcX : c ∈ X := by
-          simpa [X] using Subgroup.mem_zpowers c
+          simp [X]
         simpa [hXeq] using hcX)
     have hnot :
         ¬ Subgroup.centralizer (X : Set G) ≤ M :=

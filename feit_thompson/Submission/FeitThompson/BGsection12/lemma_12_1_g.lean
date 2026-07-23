@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_1_f
+public import FeitThompson.BGsection12.lemma_12_1_f
 
 open scoped Pointwise
 
@@ -20,7 +20,7 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 public theorem lemma_12_1_g
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
+    (_hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
     A ∈ maximalElementaryAbelianSubgroups p.val G ∧

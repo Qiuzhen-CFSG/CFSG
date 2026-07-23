@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.theorem_6_2
+public import FeitThompson.BGsection6.theorem_6_2
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -84,15 +84,12 @@ public theorem lemma_6_3_a_1
   have hnormKq_eq_top : Subgroup.normalizer (Kq : Set (G ⧸ N)) = ⊤ := top_le_iff.mp htop_le_normKq
   have hKq_normal : Kq.Normal := (Subgroup.normalizer_eq_top_iff).mp hnormKq_eq_top
   letI : Kq.Normal := hKq_normal
-  have hq_top : (⊤ : Subgroup G).map q = ⊤ := by
-    exact Subgroup.map_top_of_surjective (f := q) (QuotientGroup.mk'_surjective N)
   have hderivedQ_le_Kq : derivedSubgroup (G ⧸ N) ≤ Kq := by
     simpa [derivedSubgroup] using
       (Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
         (N := Kq) (H := Hq) (by simpa [sup_comm] using hCompq.sup_eq_top) inferInstance)
   have hmap_derived : (derivedSubgroup G).map q = derivedSubgroup (G ⧸ N) := by
-    simpa [derivedSubgroup, hq_top] using
-      (Subgroup.map_commutator (H₁ := (⊤ : Subgroup G)) (H₂ := (⊤ : Subgroup G)) q)
+    exact map_derivedSeries_eq (f := q) (QuotientGroup.mk'_surjective N) 1
   have hHq_le_derivedQ : Hq ≤ derivedSubgroup (G ⧸ N) := by
     rw [← hmap_derived]
     exact Subgroup.map_mono hld
@@ -154,9 +151,7 @@ public theorem lemma_6_3_a_1
   have hcommQ_top : _root_.commutator (H ⧸ Nsub) = ⊤ := by
     calc
       _root_.commutator (H ⧸ Nsub) = (_root_.commutator H).map qH := by
-        symm
-        simpa [hqH_top] using
-          (Subgroup.map_commutator (H₁ := (⊤ : Subgroup H)) (H₂ := (⊤ : Subgroup H)) qH)
+        exact (map_derivedSeries_eq (f := qH) (QuotientGroup.mk'_surjective Nsub) 1).symm
       _ = ⊤ := hcommH_map_top
   have hNsub_top : Nsub = ⊤ := by
     by_contra hNsub_ne_top

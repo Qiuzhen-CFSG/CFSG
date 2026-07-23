@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_5_b
+public import FeitThompson.BGsection6.lemma_6_5_b
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -17,3 +17,4 @@ public theorem lemma_6_5_c
     (g : G) (hconj : H.conjBy g ≤ U) :
     ∃ c ∈ subgroupCentralizerIn K H, ∃ u ∈ U, g = u * c := by
   exact lemma_6_5_c_core (K := K) (U := U) (H := H) hKU hHU hcop g hconj
+

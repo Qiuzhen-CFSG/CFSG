@@ -4,15 +4,17 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.GroupAction.Defs
+public import FeitThompson.GroupAction.Defs
 
 public import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Tactic.Basic
 
-import Submission.FeitThompson.Commutator.Core
+import FeitThompson.Commutator.Core
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.PGroup
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
+
+open scoped commutatorElement
 
 public theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ : A →* MulAut G)
     (a : A) (g : G) :
@@ -27,7 +29,7 @@ public theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ
         =
         ((inl g : G ⋊[φ] A)⁻¹) * (inr a : G ⋊[φ] A) * ((inl g : G ⋊[φ] A)⁻¹)⁻¹ *
             (inr a : G ⋊[φ] A)⁻¹ := by
-          simp [commutatorElement_def]
+          rw [commutatorElement_def]
     _ = ((inl g : G ⋊[φ] A)⁻¹) * ((inr a : G ⋊[φ] A) * (inl g : G ⋊[φ] A) * (inr a : G ⋊[φ] A)⁻¹) := by
           simp [mul_assoc]
     _ = ((inl g : G ⋊[φ] A)⁻¹) * inl ((φ a) g) := by
@@ -59,7 +61,7 @@ public theorem commute_inl_inr_iff (g : G) (a : A) :
         (inr a : SD) * (inl g : SD) * (inr a : SD)⁻¹ = (inl g : SD) := by
       -- `Commute` gives `a*b = b*a`, hence conjugation is trivial.
       have : (inr a : SD) * (inl g : SD) = (inl g : SD) * (inr a : SD) := by
-        simpa [Commute] using h.symm
+        exact h.symm.eq
       calc
         (inr a : SD) * (inl g : SD) * (inr a : SD)⁻¹
             = (inl g : SD) * (inr a : SD) * (inr a : SD)⁻¹ := by
@@ -93,7 +95,7 @@ public theorem commute_inl_inr_iff (g : G) (a : A) :
                 simp [mul_assoc]
         _ = (inl g : SD) * (inr a : SD) := by simp [hconj]
     -- `Commute` is definitional equality for `*` commutativity.
-    simpa [Commute] using this.symm
+    exact (commute_iff_eq _ _).mpr this.symm
 
 end Semidirect
 
@@ -115,7 +117,6 @@ public theorem fixedPointSubgroup_map_inl_eq_inf_centralizer_top_inr
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let inr : A →* SD := SemidirectProduct.inr (φ := φ)
@@ -133,7 +134,7 @@ public theorem fixedPointSubgroup_map_inl_eq_inf_centralizer_top_inr
       have hfix : a • g = g := (FixedPoints.mem_subgroup (M := A) (a := g)).1 hgFix a
       have hcomm : Commute (inl g : SD) (inr a) :=
         (Semidirect.commute_inl_inr_iff (G := G) (A := A) g a).2 hfix
-      simpa [Commute] using hcomm.eq.symm
+      exact hcomm.eq.symm
   · intro hz
     rw [Subgroup.mem_inf] at hz
     rcases hz with ⟨hzHG, hzCent⟩
@@ -145,7 +146,7 @@ public theorem fixedPointSubgroup_map_inl_eq_inf_centralizer_top_inr
     have hcommEq : (inr a : SD) * (inl g : SD) = (inl g : SD) * (inr a : SD) :=
       (Subgroup.mem_centralizer_iff.mp hzCent) (inr a) ha
     have hcomm : Commute (inl g : SD) (inr a) := by
-      simpa [Commute] using hcommEq.symm
+      exact (commute_iff_eq _ _).mpr hcommEq.symm
     exact (Semidirect.commute_inl_inr_iff (G := G) (A := A) g a).1 hcomm
 
 
@@ -161,7 +162,6 @@ public theorem centralizer_fixedPointSubgroup_map_inl_eq_inf_centralizer_fixedPo
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let HG : Subgroup SD := (⊤ : Subgroup G).map inl
@@ -207,7 +207,6 @@ public theorem commutatorAction_map_inl_eq_commutator_top_inr
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let inr : A →* SD := SemidirectProduct.inr (φ := φ)
@@ -375,7 +374,6 @@ public theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Gr
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let inr : A →* SD := SemidirectProduct.inr (φ := φ)
@@ -520,7 +518,6 @@ public theorem center_map_inl_eq_inf_centralizer_top_inl
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let HG : Subgroup SD := (⊤ : Subgroup G).map inl
@@ -605,7 +602,6 @@ public theorem commutator_centralizerFixed_commutatorAction_map_inl_le_top_inl
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
   letI : Group SD := by
-    dsimp [SD]
     infer_instance
   let inl : G →* SD := SemidirectProduct.inl (φ := φ)
   let inr : A →* SD := SemidirectProduct.inr (φ := φ)
@@ -779,7 +775,7 @@ end card
 
 section PGroupAction
 
-variable {A G : Type*} [Group A] [Finite A] [Group G] [Finite G] [MulDistribMulAction A G]
+variable {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
 
 /-- If a `p`-group `A` acts on a cyclic group `G` of order `p`, then the action is trivial. -/
 public theorem actsTrivially_of_isPGroup_on_cyclic_prime_order

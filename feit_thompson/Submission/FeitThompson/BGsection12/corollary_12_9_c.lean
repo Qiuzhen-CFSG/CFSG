@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_8_e
+public import FeitThompson.BGsection12.lemma_12_8_e
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # corollary_12_9_c
@@ -61,9 +61,9 @@ public theorem corollary_12_9_c
   have h_comm_mul (a b : G) (ha : a ∈ A) (hb : b ∈ A) :
       ⁅a * b, (t : G)⁆ = ⁅a, (t : G)⁆ * ⁅b, (t : G)⁆ := by
     have h_ax : a * ⁅b, (t : G)⁆ = ⁅b, (t : G)⁆ * a :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha (h_mem b hb)
+      setLike_mul_comm (s := A) ha (h_mem b hb)
     have h_xy : ⁅a, (t : G)⁆ * ⁅b, (t : G)⁆ = ⁅b, (t : G)⁆ * ⁅a, (t : G)⁆ :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A) (h_mem a ha) (h_mem b hb)
+      setLike_mul_comm (s := A) (h_mem a ha) (h_mem b hb)
     calc
       ⁅a * b, (t : G)⁆ = (a * b) * (t : G) * (a * b)⁻¹ * (t : G)⁻¹ := rfl
       _ = a * b * (t : G) * b⁻¹ * a⁻¹ * (t : G)⁻¹ := by simp [mul_assoc]
@@ -166,7 +166,7 @@ public theorem corollary_12_9_c
           simpa [φ] using congrArg Subtype.val hy_ker
         exact ((commutatorElement_eq_one_iff_mul_comm (g₁ := (y : G)) (g₂ := (t : G))).mp hcomm_eq_one)
       have h_comm : Commute (y : G) (t : G) := hy_comm_t
-      simpa using (h_comm.zpow_right n).symm
+      exact (h_comm.zpow_right n).symm.eq
     · intro hx; rcases hx with ⟨hxA, hxC⟩
       let y : A := ⟨x, hxA⟩
       have hy_ker : φ y = 1 := by
@@ -295,7 +295,8 @@ public theorem corollary_12_9_c
         simpa [Subgroup.mem_subgroupOf] using hq
       have hconj_mem : (MulAut.conj e) (⟨q, hqE⟩ : E) ∈ E₁₂.subgroupOf E :=
         hQ_E_conj_le (Subgroup.mem_map.mpr ⟨⟨q, hqE⟩, hq_E_mem, rfl⟩)
-      simpa [eG] using hconj_mem
+      have hconj_mem' : ((MulAut.conj e) (⟨q, hqE⟩ : E) : G) ∈ E₁₂ := hconj_mem
+      simpa [eG, MulAut.conj_apply] using hconj_mem'
     -- Conjugate Q^eG further into E₁ using Hall theory in ↥E₁₂
     have hQe_card : Nat.card (Q.map (MulAut.conj eG).toMonoidHom) = q.val := by
       apply (Nat.card_congr ?_).trans hQcard
@@ -354,7 +355,8 @@ public theorem corollary_12_9_c
         simpa [Subgroup.mem_subgroupOf] using hq
       have hconj_mem : (MulAut.conj f) (⟨q, hq_E12⟩ : E₁₂) ∈ E₁.subgroupOf E₁₂ :=
         hQe_E12_conj_le (Subgroup.mem_map.mpr ⟨⟨q, hq_E12⟩, hq_E12_mem, rfl⟩)
-      simpa [fG] using hconj_mem
+      have hconj_mem' : ((MulAut.conj f) (⟨q, hq_E12⟩ : E₁₂) : G) ∈ E₁ := hconj_mem
+      simpa [fG, MulAut.conj_apply] using hconj_mem'
     -- Now Q^g ≤ E₁ where g = fG * eG
     let g : G := fG * eG
     have hg_E : g ∈ E := Subgroup.mul_mem E hfG_E heG_E
@@ -455,7 +457,8 @@ public theorem corollary_12_9_c
           simpa [aE, Subgroup.mem_subgroupOf] using ha
         have h_conj : (⟨g, hg_E⟩ * aE * ⟨g, hg_E⟩⁻¹) ∈ A.subgroupOf E :=
           hAnorm.conj_mem aE ha_sub ⟨g, hg_E⟩
-        simpa [aE] using h_conj
+        have h_conj' : ((⟨g, hg_E⟩ * aE * ⟨g, hg_E⟩⁻¹ : E) : G) ∈ A := h_conj
+        simpa [aE] using h_conj'
       · intro hx
         have hxE : x ∈ E := hAE' hx
         let xE : E := ⟨x, hxE⟩
@@ -490,7 +493,8 @@ public theorem corollary_12_9_c
           simpa [yM, Subgroup.mem_subgroupOf] using hy
         have h_conj : (⟨g, hg_M⟩ * yM * ⟨g, hg_M⟩⁻¹) ∈ (⁅A, Q⁆.subgroupOf M) :=
           hAQ_norm.conj_mem yM hy_sub ⟨g, hg_M⟩
-        simpa [yM] using h_conj
+        have h_conj' : ((⟨g, hg_M⟩ * yM * ⟨g, hg_M⟩⁻¹ : M) : G) ∈ ⁅A, Q⁆ := h_conj
+        simpa [yM] using h_conj'
       · intro hx
         have hxM : x ∈ M := hAQ_M hx
         let xM : M := ⟨x, hxM⟩

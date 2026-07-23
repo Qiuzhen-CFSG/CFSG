@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.theorem_13_5
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.theorem_13_5
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -75,7 +75,7 @@ private theorem section13_msigma_centralizer_eq_E1_of_nontrivial_le_E1
     exact Subgroup.mem_centralizer_iff.mpr (fun y hyP =>
       (Subgroup.mem_centralizer_iff.mp hx.2) y (hPE₁ hyP))
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_centralizer_sup_eq_inf
     (A B : Subgroup G) :
     Subgroup.centralizer ((A ⊔ B : Subgroup G) : Set G) =
@@ -165,6 +165,7 @@ private theorem section13_exists_tau2_rankTwo_of_E2_ne_bot
     ⟨A, hA⟩
   exact ⟨q, hqτ2, A, hA⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_rankTwo_of_EData
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -173,6 +174,7 @@ public theorem section13_rankTwo_of_EData
   rcases hE with ⟨hcomp, _hE12, _hE1, _hE2, _hE3⟩
   exact ⟨hA.1.trans hcomp.2.1, hA.2⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_coprime_card_E1_rankTwo_tau2
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -204,7 +206,7 @@ private theorem section13_fixed_rankTwo_le_centralizer_of_E1_centralized
     (hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hE₁ne : E₁ ≠ ⊥)
-    (hpτ2 : p ∈ section12Tau2Primes M)
+    (_hpτ2 : p ∈ section12Tau2Primes M)
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
     (hXE₁ : X ≤ subgroupCentralizerIn (section10Msigma M) E₁) :
     subgroupCentralizerIn A E₁ ≤ Subgroup.centralizer (X : Set G) := by
@@ -233,7 +235,7 @@ private theorem section13_fixed_rankTwo_le_centralizer_of_E1_centralized
   have hpE : p ∈ subgroupPrimeSet E := by
     have hp_dvd_A : p.val ∣ Nat.card A := by
       rw [hAcard]
-      simpa [pow_two] using dvd_mul_right p.val p.val
+      simp [pow_two]
     exact hp_dvd_A.trans (Subgroup.card_dvd_of_le hA.1)
   intro a ha
   by_cases ha1 : a = 1
@@ -298,7 +300,8 @@ private theorem section13_rankTwo_le_fixed_sup_commutator_E1
   rcases hA.2 with ⟨hAcard, hAelem⟩
   have hsolvA : IsSolvable A := by
     letI : IsElementaryAbelian p.val A := hAelem
-    infer_instance
+    have hAcomm := hAelem.toIsMulCommutative
+    exact isSolvable_of_comm fun x y => hAcomm.is_comm.comm x y
   have hcop : Nat.Coprime (Nat.card E₁) (Nat.card A) :=
     section13_coprime_card_E1_rankTwo_tau2
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
@@ -326,7 +329,7 @@ private theorem section13_rankTwo_le_fixed_sup_commutator_E1
   intro a ha
   let aA : A := ⟨a, ha⟩
   have haJoin : aA ∈ Cfix ⊔ Ccomm := by
-    simpa [hsup]
+    simp [hsup]
   have haMap : a ∈ (Cfix ⊔ Ccomm).map A.subtype :=
     Subgroup.mem_map.mpr ⟨aA, haJoin, rfl⟩
   simpa [hsup_map] using haMap
@@ -470,7 +473,7 @@ private theorem section13_isPGroup_of_isHallSubgroup_singleton
   let q' : Nat.Primes := ⟨q, hq_prime⟩
   have hq_mem : q' ∈ ({p} : Set Nat.Primes) :=
     hP.p_in_pi_of_p_dvd_card q' hq_dvd
-  exact congrArg Subtype.val (by simpa using hq_mem)
+  exact congrArg Subtype.val (Set.mem_singleton_iff.mp hq_mem)
 
 omit [IsMinCE G] in
 private theorem section13_isHallSubgroup_singleton_of_isPGroup_not_dvd_index
@@ -486,7 +489,7 @@ private theorem section13_isHallSubgroup_singleton_of_isPGroup_not_dvd_index
       q.property.dvd_of_dvd_pow (by simpa [hn] using hq)
     have hqp : q = p :=
       Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.property p.property).mp hq_dvd_p)
-    simpa [hqp]
+    simp [hqp]
   · intro q hq hqidx
     have hqp : q = p := by simpa using hq
     exact hnot (by simpa [hqp] using hqidx)
@@ -655,7 +658,8 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
   haveI : Subgroup.Normalizes E₁ K := ⟨hE₁_norm_K⟩
   have hK_le_M : K ≤ M := by
     intro x hx
-    rcases Subgroup.mem_map.mp (by simpa [K] using hx) with ⟨y, _hy, rfl⟩
+    change x ∈ (section10MsigmaSubgroup M).map M.subtype at hx
+    rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact y.property
   have hK_ne_top : K ≠ ⊤ := by
     intro hKtop
@@ -673,7 +677,7 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
     have hcard : Nat.card (E.subgroupOf M) = Nat.card E :=
       natCard_subgroupOf_eq E M hE_le_M
     have hsEsub : s.val ∣ Nat.card (E.subgroupOf M) := by
-      simpa [hcard] using hsE
+      simpa [hcard, subgroupPrimeSet] using hsE
     exact (section12_msigma_complement_isHall_sigma_compl
       (G := G) hM hE.1).p_in_pi_of_p_dvd_card s hsEsub
   have hE₁πsub : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ E₁ := by
@@ -696,11 +700,11 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
     have hcard : Nat.card Xsub = Nat.card X :=
       natCard_subgroupOf_eq X K hXleK
     have hrX : r.val ∣ Nat.card X := by
-      simpa [Xsub, hcard] using hr
+      simpa [Xsub, hcard, subgroupPrimeSet] using hr
     have hrq : r = q :=
       Subtype.ext ((Nat.prime_dvd_prime_iff_eq r.property q.property).mp
         (by simpa [hXcard] using hrX))
-    simpa [hrq]
+    simp [hrq]
   have hE₁_norm_X : E₁ ≤ Subgroup.normalizer (X : Set G) :=
     section13_le_normalizer_of_le_centralizer (G := G)
       (hXleCE₁.trans inf_le_right)
@@ -723,8 +727,7 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
         (K := Subgroup.centralizer (D : Set G)) hE₁_norm_K hE₁_norm_centD
   haveI : Subgroup.Normalizes E₁ C := ⟨hE₁_norm_C⟩
   have hC_le_K : C ≤ K := by
-    simpa [C, subgroupCentralizerIn] using (inf_le_left :
-      subgroupCentralizerIn K D ≤ K)
+    simp [C, subgroupCentralizerIn]
   have hCπsub : IsPiSubgroup (G := G) (section10SigmaPrimes M) C :=
     IsPiSubgroup.of_le hC_le_K hKπsub
   have hCπ : IsPiGroup (section10SigmaPrimes M) C :=
@@ -736,9 +739,12 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
     exact hK_ne_top (top_le_iff.mp (by simpa [hCtop] using hC_le_K))
   have hCsolv : IsSolvable C :=
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.2 hC_ne_top)
+  have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
+    ext
+    rfl
   rcases exists_invariant_sylow_of_pi_complement_action
       (G := C) (A := E₁) (π := section10SigmaPrimes M) (p := q.val)
-      hCπ hE₁π hCsolv (by simpa using hqσ) with
+      hCπ hE₁π hCsolv (by rw [hq_eq]; exact hqσ) with
     ⟨TC, hTCinv⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup C TC
   have hPamb_le_C : Pamb ≤ C := by
@@ -755,8 +761,9 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
       (G := G) (A := E₁) (H := K) (K := Pamb)
       hE₁_norm_K hPamb_norm hPamb_le_K
   have hPamb_q : IsPGroup q.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (TC : Subgroup C)) TC.isPGroup' C.subtype
+    change IsPGroup q.val ((TC : Subgroup C).map C.subtype)
+    exact IsPGroup.map (p := q.val) (H := (TC : Subgroup C))
+      TC.isPGroup' C.subtype
   have hHCq : IsPGroup q.val HC :=
     hPamb_q.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := Pamb) (K := K) hPamb_le_K).symm
@@ -988,7 +995,7 @@ public theorem section13_nonregular_exists_prime_order_centralizing
       ¬ ∀ a : G, a ∈ E₁ → a ≠ 1 → elementCentralizerIn E₃ a = ⊥ := by
     intro hregular
     exact hnotRegular ⟨hE₁_norm_E₃, hregular⟩
-  push_neg at hnot_all
+  push Not at hnot_all
   rcases hnot_all with ⟨a, haE₁, hane, hCent_ne_bot⟩
   have hzp_ne_bot : Subgroup.zpowers a ≠ (⊥ : Subgroup G) := by
     intro hzp_bot
@@ -1038,7 +1045,7 @@ public theorem section13_centralizer_ne_bot_of_prime_manner_not_regular
       ¬ ∀ a : G, a ∈ A → a ≠ 1 → elementCentralizerIn H a = ⊥ := by
     intro hregular
     exact hnotRegular ⟨hprime.1, hregular⟩
-  push_neg at hnot_all
+  push Not at hnot_all
   rcases hnot_all with ⟨a, haA, hane, hCa_ne⟩
   have hzp_ne : Subgroup.zpowers a ≠ (⊥ : Subgroup G) := by
     intro hzp
@@ -1080,6 +1087,7 @@ public theorem section13_centralizer_ne_bot_of_prime_manner_not_regular
     exact q.property.ne_one hq_one
   exact hXne (le_bot_iff.mp hXbot)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_lemma_13_7_centralizer_le_join_of_left_factor
     {M E₁ E₃ P R X : Subgroup G} {p r : Nat.Primes}
     (hE₁_prime : section13ActsPrimeManner E₁ (section10Msigma M))
@@ -1132,6 +1140,7 @@ private theorem section13_lemma_13_7_centralizer_le_join_of_left_factor
   rw [section13_centralizer_sup_eq_inf]
   exact ⟨(hCX_E₁ hy).2, (hCX_E₃ hy).2⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_lemma_13_7_centralizer_le_join_of_right_factor
     {M E₁ E₃ P R X : Subgroup G} {p r : Nat.Primes}
     (hE₁_prime : section13ActsPrimeManner E₁ (section10Msigma M))
@@ -1182,6 +1191,7 @@ private theorem section13_lemma_13_7_centralizer_le_join_of_right_factor
   rw [section13_centralizer_sup_eq_inf]
   exact ⟨(hCX_E₁ hy).2, (hCX_E₃ hy).2⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_lemma_13_7_centralizer_le_join_of_conj
     {M E₁ E₃ X : Subgroup G} {g : G}
     (hJ_norm :
@@ -1261,14 +1271,16 @@ public theorem section13_lemma_13_7_prime_conj_le_E1_or_E3
     intro s hs
     have hcard : Nat.card (E₁.subgroupOf E) = Nat.card E₁ :=
       natCard_subgroupOf_eq E₁ E hE₁E
-    exact Or.inl (hHallE₁E.p_in_pi_of_p_dvd_card s (by simpa [hcard] using hs))
+    exact Or.inl (hHallE₁E.p_in_pi_of_p_dvd_card s
+      (by simpa [hcard, subgroupPrimeSet] using hs))
   have hE₃π :
       IsPiSubgroup (G := G)
         (section12Tau1Primes M ∪ section12Tau3Primes M) E₃ := by
     intro s hs
     have hcard : Nat.card (E₃.subgroupOf E) = Nat.card E₃ :=
       natCard_subgroupOf_eq E₃ E hE₃E
-    exact Or.inr (hHallE₃.p_in_pi_of_p_dvd_card s (by simpa [hcard] using hs))
+    exact Or.inr (hHallE₃.p_in_pi_of_p_dvd_card s
+      (by simpa [hcard, subgroupPrimeSet] using hs))
   have hJπ :
       IsPiSubgroup (G := G)
         (section12Tau1Primes M ∪ section12Tau3Primes M) J := by
@@ -1316,7 +1328,7 @@ public theorem section13_lemma_13_7_prime_conj_le_E1_or_E3
         (section12Tau1Primes M) XJ hXJπ hXJinv with
       ⟨K, hKHall, _hKinv, hXK⟩
     have hE₁_le_J : E₁ ≤ J := by
-      simpa [J] using (le_sup_left : E₁ ≤ E₁ ⊔ E₃)
+      simp [J]
     have hE₁HallJ :
         IsHallSubgroup (section12Tau1Primes M) (E₁.subgroupOf J) := by
       refine isHallSubgroup_of (G := J) (section12Tau1Primes M)
@@ -1376,7 +1388,7 @@ public theorem section13_lemma_13_7_prime_conj_le_E1_or_E3
       have hxXE : xE ∈ XE := by
         simpa [XE, Subgroup.mem_subgroupOf, xE] using hx
       exact hXE_le_E₃ hxXE
-    refine ⟨1, by simpa [J] using (Subgroup.one_mem J), Or.inr ?_⟩
+    refine ⟨1, by simp, Or.inr ?_⟩
     intro y hy
     rcases Subgroup.mem_map.mp hy with ⟨x, hx, rfl⟩
     simpa [MulAut.conj_apply] using hX_le_E₃ hx
@@ -1451,6 +1463,7 @@ private theorem section13_lemma_13_7_of_equal_centralizers
       (p := p) (r := r) hM hE hE₁_prime hE₃_prime hP hR_E₃
       hCP_eq_CR hX
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_lemma_13_7_CR_ne_bot_of_proper
     {M P R : Subgroup G}
     (hCP_le_CR :
@@ -1523,6 +1536,7 @@ private theorem section13_lemma_13_7_tau2_empty_of_proper
   · intro hqempty
     cases hqempty
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_E2_eq_bot_of_tau2_empty
     {M E₁₂ E₂ : Subgroup G}
     (hE₂ : section12HallSubgroupIn (section12Tau2Primes M) E₂ E₁₂)
@@ -1540,9 +1554,9 @@ public theorem section13_E2_eq_bot_of_tau2_empty
     simpa [q', hcard_sub] using hqdiv
   have hqτ2 : q' ∈ section12Tau2Primes M :=
     hHallE₂.p_in_pi_of_p_dvd_card q' hqdiv_sub
-  exact by simpa [hτ2empty] using hqτ2
+  simp [hτ2empty] at hqτ2
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_coprime_index_of_isHall_compl
     {π : Set Nat.Primes} {N E : Subgroup G}
     (hN : IsHallSubgroup π N) (hE : IsHallSubgroup πᶜ E) :
@@ -1556,7 +1570,7 @@ private theorem section13_coprime_index_of_isHall_compl
     by_contra hnot
     exact hq_notπc hnot)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_card_eq_index_of_isHall_compl
     {π : Set Nat.Primes} {N E : Subgroup G}
     (hN : IsHallSubgroup π N) (hE : IsHallSubgroup πᶜ E) :
@@ -1637,6 +1651,7 @@ public theorem section13_isPiSubgroup_subgroupOf
     natCard_subgroupOf_eq K H hKH
   exact hKπ p (by rwa [hcard] at hp)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_complementToMsigma_of_local_complement
     {M : Subgroup G} {E : Subgroup M}
     (hcomp : (section10MsigmaSubgroup M).IsComplement' E) :
@@ -1941,6 +1956,7 @@ public theorem section13_exists_EData_containing_sigma_compl_piSubgroup
   exact ⟨E, E₁₂, E₁, E₂, E₃,
     ⟨hEcomp, hE₁₂HallIn, hE₁HallIn, hE₂HallIn, hE₃HallIn⟩, hA_E⟩
 
+omit [IsMinCE G] in
 private theorem section13_subgroupCentralizerIn_actor_eq_bot_of_prime_manner
     {H A K : Subgroup G}
     (hA_prime : section13ActsPrimeManner A H)
@@ -2000,7 +2016,7 @@ private theorem section13_lemma_13_7_proper_centralizer_absurd
       E = E₁ ⊔ E₂ ⊔ E₃ := hEfull
       _ = E₁ ⊔ E₃ := by
         rw [hE₂bot]
-        simp [sup_assoc]
+        simp
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
     ⟨hP_E₁, hPcard⟩
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hR_E₃) with
@@ -2173,7 +2189,7 @@ private theorem section13_lemma_13_7_proper_centralizer_absurd
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     haveI : IsCyclic E₃ := hE₃cyc
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E₃)
+    exact setLike_mul_comm (s := E₃)
       hy (hR_E₃_le hx)
   have hR_cent_E : R ≤ Subgroup.centralizer (E : Set G) := by
     intro x hx

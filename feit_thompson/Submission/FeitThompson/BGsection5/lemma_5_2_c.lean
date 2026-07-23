@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.lemma_5_2_b
+public import FeitThompson.BGsection5.lemma_5_2_b
 
 /-! # Lemma 5.2(c) from BG Section 5 -/
 
@@ -47,7 +47,6 @@ public theorem lemma_5_2_c
         simpa [mul_assoc] using (congrArg (fun t : R => t * r) hconj).symm
       exact hmul
     · intro hr
-      change φ r = 1
       ext w
       have hrcent : r ∈ Subgroup.centralizer (W : Set R) := hr
       have hmul : ((w : W) : R) * r = r * ((w : W) : R) :=

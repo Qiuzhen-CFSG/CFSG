@@ -1,29 +1,29 @@
 module
 
-public import Submission.FeitThompson.PFsection11.Basic
-import Submission.FeitThompson.PFsection10.PFsection10_11
-import Submission.FeitThompson.BGsection6.lemma_6_5_a
-import Submission.FeitThompson.BGsection6.lemma_6_3_a_1
-import Submission.FeitThompson.PFsection6.PFsection6_2
-import Submission.FeitThompson.PFsection6.PFsection6_3
-import Submission.FeitThompson.PFsection6.PFsection6_5_b
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection8.PFsection8_5_b
-import Submission.FeitThompson.PFsection8.PFsection8_8
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection4.PFsection4_4
-import Submission.FeitThompson.PFsection5.PFsection5_7
-import Submission.FeitThompson.PFsection5.PFsection5_8
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection5.RealVirtualParity
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection9.PFsection9_4
-import Submission.FeitThompson.PFsection9.PFsection9_6
-import Submission.FeitThompson.PFsection9.PFsection9_7
-import Submission.FeitThompson.PFsection9.PFsection9_8
-import Submission.FeitThompson.PFsection9.PFsection9_11
-import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
+public import FeitThompson.PFsection11.Basic
+import FeitThompson.PFsection10.PFsection10_11
+import FeitThompson.BGsection6.lemma_6_5_a
+import FeitThompson.BGsection6.lemma_6_3_a_1
+import FeitThompson.PFsection6.PFsection6_2
+import FeitThompson.PFsection6.PFsection6_3
+import FeitThompson.PFsection6.PFsection6_5_b
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection8.PFsection8_5_b
+import FeitThompson.PFsection8.PFsection8_8
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection4.PFsection4_4
+import FeitThompson.PFsection5.PFsection5_7
+import FeitThompson.PFsection5.PFsection5_8
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection5.RealVirtualParity
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection9.PFsection9_4
+import FeitThompson.PFsection9.PFsection9_6
+import FeitThompson.PFsection9.PFsection9_7
+import FeitThompson.PFsection9.PFsection9_8
+import FeitThompson.PFsection9.PFsection9_11
+import FeitThompson.PFsection4.PFsection4_5_to_10
 
 /-!
 # Peterfalvi, Section 11: Theorem (11.9)
@@ -34,6 +34,9 @@ noncomputable section
 open scoped BigOperators Pointwise
 
 attribute [local instance] Fintype.ofFinite
+
+attribute [local instance] commutatorElement
+attribute [local instance] IsMulCommutative.instCommGroup
 
 namespace Section11
 universe u v w
@@ -443,13 +446,13 @@ private theorem theorem_11_3_ambientDerived_solvable_of_typePDefinitionData
   have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
       haveI : Group.IsNilpotent MF := hMFnil
-      exact nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcomp.1)).symm
+      exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcomp.1)).symm
     haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
   have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
       haveI : Group.IsNilpotent U := hUnil
-      exact nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
+      exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
     haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
     haveI : IsSolvable (U.subgroupOf D) := by infer_instance
     exact solvable_of_solvable_injective (f := hcompl.QuotientMulEquiv.toMonoidHom)
@@ -1181,7 +1184,7 @@ private theorem theorem_11_3_HC_nilpotent_subgroupOf_M_of_hypothesis
   let eM : ((H ⊔ C).subgroupOf M) ≃* ↥(H ⊔ C) :=
     Subgroup.subgroupOfEquivOfLe hHC_le_M
   haveI : Group.IsNilpotent ((H ⊔ C).subgroupOf F) := hHCsubF_nil
-  exact nilpotent_of_mulEquiv (eF.trans eM.symm)
+  exact Group.nilpotent_of_mulEquiv (eF.trans eM.symm)
 
 /-- A nilpotent normal subgroup is a nilpotent quotient over `1`. -/
 private theorem theorem_11_3_nilpotentQuotient_bot_of_normal_nilpotent
@@ -1425,10 +1428,11 @@ private theorem theorem_11_quotientCentralizedBy_C_of_hypothesis
     exact hxParts.2
   have hhH : h ∈ H := by
     simpa [hHMF] using hhMF
-  have hcomm : ⁅x, h⁆ = 1 := by
-    exact commutatorElement_eq_one_iff_mul_comm.mpr
-      ((Subgroup.mem_centralizer_iff.mp hxCentH h hhH).symm)
-  simpa [hcomm] using (H0.one_mem : (1 : G) ∈ H0)
+  have hcomm : ⁅x, h⁆ = 1 :=
+    (commutatorElement_eq_one_iff_mul_comm (g₁ := x) (g₂ := h)).mpr
+      (Subgroup.mem_centralizer_iff.mp hxCentH h hhH).symm
+  rw [hcomm]
+  exact H0.one_mem
 
 /-- Hypothesis `(11.2)` supplies the normal quotient `U/C` and hence the
 cardinality package used in PF `(9.5)`. -/
@@ -2315,9 +2319,7 @@ private theorem theorem_11_pf96_W2_image_card_eq_source_of_hypothesis
         calc
           QuotientGroup.mk' (H0.subgroupOf MF) (a • h) =
               a • QuotientGroup.mk' (H0.subgroupOf MF) h := by
-                simpa using
-                  (MulAction.Quotient.smul_coe
-                    (H := H0.subgroupOf MF) (a := a) (g := h)).symm
+                simp
           _ = a • x := by rw [hmk]
           _ = x := hfix
           _ = QuotientGroup.mk' (H0.subgroupOf MF) h := hmk.symm
@@ -2353,9 +2355,7 @@ private theorem theorem_11_pf96_W2_image_card_eq_source_of_hypothesis
       calc
         a • QuotientGroup.mk' (H0.subgroupOf MF) h =
             QuotientGroup.mk' (H0.subgroupOf MF) (a • h) := by
-              simpa using
-                (MulAction.Quotient.smul_coe
-                  (H := H0.subgroupOf MF) (a := a) (g := h))
+              simp
         _ = QuotientGroup.mk' (H0.subgroupOf MF) h := hqeq
   have hfixedCard :
       Nat.card (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF)) = p := by
@@ -2820,7 +2820,7 @@ private theorem theorem_11_4_H0C_subgroupOf_lt_HC_subgroupOf_of_hypothesis
           _hp, ⟨hH0normH, hquotNontrivial, _hquotElementary⟩,
           _hchief, _hcomm, _hpW2, _hqW1⟩)
   have hDleB : (H ⊔ C).subgroupOf M ≤ (H0 ⊔ C).subgroupOf M := by
-    simpa [hEq]
+    simp [hEq]
   have hrel_one :
       ((H0 ⊔ C).subgroupOf M).relIndex ((H ⊔ C).subgroupOf M) = 1 :=
     (Subgroup.relIndex_eq_one).2 hDleB
@@ -2856,9 +2856,10 @@ private theorem theorem_11_4_commutator_HC_subgroupOf_le_H0C_subgroupOf_of_hypot
   haveI : IsElementaryAbelian p (H ⧸ H0.subgroupOf H) := hquotElementary
   have hHquotComm : Std.Commutative (· * · : H ⧸ H0.subgroupOf H → _ → _) := by
     infer_instance
+  have hHquotComm' : IsMulCommutative (H ⧸ H0.subgroupOf H) := ⟨hHquotComm⟩
   have hHcomm_le_H0 : _root_.commutator H ≤ H0.subgroupOf H :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (G := H) (N := H0.subgroupOf H)).1 hHquotComm
+      (G := H) (N := H0.subgroupOf H)).1 hHquotComm'
   have hHM : H ≤ M :=
     theorem_11_3_H_le_M_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11'
   have hCM : C ≤ M :=
@@ -3394,7 +3395,7 @@ private theorem theorem_11_5_ambientDerived_lt_of_solvable_ne_bot
   haveI : IsSolvable E := hsolv
   haveI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot (H := E)).2 hne
   have hDlt : derivedSubgroup E < (⊤ : Subgroup E) := by
-    simpa [derivedSubgroup, derivedSeries_one] using
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator] using
       IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
   intro hEq
@@ -3487,8 +3488,8 @@ private theorem theorem_11_5_secondDerived_quotient_commutative
     dsimp [A, K]
     exact theorem_11_5_secondDerived_subgroupOf_eq_ambientDerived_derived M
   haveI : (A.subgroupOf K).Normal := hA_norm.subgroupOf K
-  refine ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
-    (N := A.subgroupOf K)).2 ?_⟩
+  refine { is_comm := (Subgroup.Normal.quotient_commutative_iff_commutator_le
+    (N := A.subgroupOf K)).2 ?_ |>.is_comm }
   rw [hA_eq]
   rw [section12_ambientDerivedSubgroup_subgroupOf_eq]
   exact le_rfl
@@ -3600,7 +3601,6 @@ private theorem theorem_11_5_integerSpan_mono
       hsub
       (by
         intro y _hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach,
     ← S2.sum_attach] using hsum
@@ -4297,7 +4297,7 @@ private theorem theorem_11_5_HC_solvable_of_hypothesis
   let eM : ((H ⊔ C).subgroupOf M) ≃* ↥(H ⊔ C) :=
     Subgroup.subgroupOfEquivOfLe hHCM
   haveI : Group.IsNilpotent ((H ⊔ C).subgroupOf M) := hHCnilM
-  have hHCnil : Group.IsNilpotent ↥(H ⊔ C) := nilpotent_of_mulEquiv eM
+  have hHCnil : Group.IsNilpotent ↥(H ⊔ C) := Group.nilpotent_of_mulEquiv eM
   haveI : Group.IsNilpotent ↥(H ⊔ C) := hHCnil
   exact inferInstance
 
@@ -4808,16 +4808,17 @@ private theorem theorem_11_6_ambientDerived_H_le_H0_of_hypothesis
   haveI : IsElementaryAbelian p (H ⧸ H0.subgroupOf H) := hElem
   have hcommQ : Std.Commutative (· * · : H ⧸ H0.subgroupOf H → _ → _) := by
     infer_instance
+  have hcommQ' : IsMulCommutative (H ⧸ H0.subgroupOf H) := ⟨hcommQ⟩
   have hcomm_le : commutator H ≤ H0.subgroupOf H :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (G := H) (N := H0.subgroupOf H)).1 hcommQ
+      (G := H) (N := H0.subgroupOf H)).1 hcommQ'
   intro x hx
   have hxH : x ∈ H := section12_ambientDerivedSubgroup_le hx
   have hxsub' : (⟨x, hxH⟩ : H) ∈ (ambientDerivedSubgroup H).subgroupOf H := by
     exact hx
   have hxsub : (⟨x, hxH⟩ : H) ∈ commutator H := by
-    simpa [section12_ambientDerivedSubgroup_subgroupOf_eq, derivedSubgroup, derivedSeries_one]
-      using hxsub'
+    simpa [section12_ambientDerivedSubgroup_subgroupOf_eq, derivedSubgroup, derivedSeries_one,
+      _root_.commutator] using hxsub'
   have hxH0sub : (⟨x, hxH⟩ : H) ∈ H0.subgroupOf H := hcomm_le hxsub
   exact Subgroup.mem_subgroupOf.mp hxH0sub
 
@@ -5183,7 +5184,7 @@ private theorem theorem_11_6_frobeniusActionData_H0_of_hypothesis
       haveI : Group.IsNilpotent H := hHnil
       infer_instance
     have hH0nil : Group.IsNilpotent H0 :=
-      nilpotent_of_mulEquiv (G := H0.subgroupOf H) (G' := H0)
+      Group.nilpotent_of_mulEquiv (G := H0.subgroupOf H) (G' := H0)
         (Subgroup.subgroupOfEquivOfLe hH0H)
     haveI : Group.IsNilpotent H0 := hH0nil
     infer_instance
@@ -5405,11 +5406,9 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_isCompl_of_h
     Subgroup.card_quotient_dvd_card (s := commutator H)
   have hcopUQ : Nat.Coprime (Nat.card U) (Nat.card (H ⧸ commutator H)) :=
     Nat.Coprime.of_dvd_right hquot_dvd hcopUH
-  have hQcomm : IsMulCommutative (H ⧸ commutator H) := by
-    refine ⟨⟨?_⟩⟩
-    exact
-      (Subgroup.Normal.quotient_commutative_iff_commutator_le
-        (N := commutator H)).mpr le_rfl |>.comm
+  have hQcomm : IsMulCommutative (H ⧸ commutator H) :=
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le
+      (N := commutator H)).mpr le_rfl
   exact proposition_1_6_d
     (G := H ⧸ commutator H) (A := U) hsolvQ hcopUQ hQcomm
 
@@ -5508,7 +5507,6 @@ private theorem theorem_11_6_commutatorAction_quotient_commutator_eq_top
     rcases hyS with ⟨a, h, rfl⟩
     refine Subgroup.subset_closure ?_
     refine ⟨a, qcomm h, ?_⟩
-    change qcomm (h⁻¹ * (a • h)) = (qcomm h)⁻¹ * (a • qcomm h)
     simp [qcomm]
   apply top_unique
   simpa [hmap_top] using hmap_le
@@ -5824,7 +5822,7 @@ private theorem theorem_11_6_H0_le_ambientDerived_H_of_fixedPointSubgroup_bot
     simpa using hmem
   have hxsub : xH ∈ (ambientDerivedSubgroup H).subgroupOf H := by
     simpa [section12_ambientDerivedSubgroup_subgroupOf_eq, derivedSubgroup,
-      derivedSeries_one] using hxcomm
+      derivedSeries_one, _root_.commutator] using hxcomm
   exact hxsub
 
 /-- Source bridge for the hard direction `H0 ≤ H'` in PF `(11.6)`.
@@ -5917,7 +5915,7 @@ private theorem theorem_11_6_isPGroup_H_of_hypothesis
   have hHnil : Group.IsNilpotent H :=
     theorem_11_3_H_nilpotent_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11Full
   have hH0sub_eq : H0.subgroupOf H = commutator H := by
-    simpa [hH0eq, derivedSubgroup, derivedSeries_one] using
+    simpa [hH0eq, derivedSubgroup, derivedSeries_one, _root_.commutator] using
       (section12_ambientDerivedSubgroup_subgroupOf_eq (G := G) (E := H))
   have hQp0 : IsPGroup p (H ⧸ H0.subgroupOf H) := by
     exact IsElementaryAbelian.isPGroup p (H ⧸ H0.subgroupOf H)
@@ -5961,7 +5959,8 @@ private theorem theorem_11_7_isElementaryAbelian_of_equiv
     { toIsMulCommutative := { is_comm := Std.Commutative.mk ?_ }
       exponent_dvd_p := ?_ }
   · intro a b
-    have hcomm : e.symm a * e.symm b = e.symm b * e.symm a := mul_comm _ _
+    have hcomm : e.symm a * e.symm b = e.symm b * e.symm a :=
+      IsMulCommutative.is_comm.comm (e.symm a) (e.symm b)
     apply_fun e at hcomm
     simpa [e.map_mul] using hcomm
   · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -6903,12 +6902,11 @@ private def theorem_11_7_additiveBilinMap_of_multiplicativePairing
       map_add' := by
         intro x₁ x₂
         ext y
-        simpa using congrArg Additive.ofMul
-          (hmul_left (Additive.toMul x₁) (Additive.toMul x₂) (Additive.toMul y))
+        simp
       map_smul' := by
         intro c x
         ext y
-        simpa using DFunLike.congr_fun (ZMod.map_smul pairingAdd c x) y }
+        exact DFunLike.congr_fun (ZMod.map_smul pairingAdd c x) y }
 
 /-- The additive bilinear map attached to a multiplicative pairing evaluates to
 the same value in additive notation. -/
@@ -7066,9 +7064,7 @@ private theorem theorem_11_7_quotientSubgroupNormalizedBy_of_isInvariant
     intro h
     have hsmulG :
         (((a⁻¹ : U) • h : MF) : G) = (a : G)⁻¹ * (h : G) * (a : G) := by
-      simpa using
-        (Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe U MF
-          (a⁻¹ : U) h)
+      simp
     exact hsmulG ▸ (((a⁻¹ : U) • h : MF).property)
   refine ⟨hconjMF, ?_⟩
   let action : MulAut (MF ⧸ H0.subgroupOf MF) :=
@@ -7079,9 +7075,7 @@ private theorem theorem_11_7_quotientSubgroupNormalizedBy_of_isInvariant
         ((a⁻¹ : U) • h : MF) =
           ⟨(a : G)⁻¹ * (h : G) * (a : G), hconjMF h⟩ := by
       apply Subtype.ext
-      simpa using
-        (Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe U MF
-          (a⁻¹ : U) h)
+      simp
     change action (QuotientGroup.mk' (H0.subgroupOf MF) h) =
       QuotientGroup.mk' (H0.subgroupOf MF)
         ⟨(a : G)⁻¹ * (h : G) * (a : G), hconjMF h⟩
@@ -7190,9 +7184,13 @@ private theorem theorem_11_7_scalarBilinForm_nondegenerate_of_pairingLeftRadical
         have hbilin_zero : bilin x (Additive.ofMul y) = 0 := by
           apply e.injective
           simpa [form, theorem_11_7_scalarBilinForm_of_linearEquiv_apply] using hxzero
-        rw [← ofMul_toMul x] at hbilin_zero
-        simpa [bilin, theorem_11_7_additiveBilinMap_of_multiplicativePairing_apply]
-          using hbilin_zero
+        have htemp := hbilin_zero
+        rw [← ofMul_toMul x] at htemp
+        rw [theorem_11_7_additiveBilinMap_of_multiplicativePairing_apply
+          (p := p) pairing hmul_left hmul_right (Additive.toMul x) y] at htemp
+        have hzero_eq : (0 : Additive B) = Additive.ofMul (1 : B) := by simp
+        rw [hzero_eq] at htemp
+        exact (Equiv.injective Additive.ofMul) htemp
       have hxbot : Additive.toMul x ∈ (⊥ : Subgroup A) := by
         simpa [hbot] using hxrad
       have hmul : Additive.toMul x = 1 := by
@@ -7202,7 +7200,7 @@ private theorem theorem_11_7_scalarBilinForm_nondegenerate_of_pairingLeftRadical
       have hx0 : x = 0 := by
         simpa using hxbot
       subst x
-      simp [LinearMap.mem_ker]
+      simp
   change form.Nondegenerate
   rw [LinearMap.BilinForm.nondegenerate_iff_ker_eq_bot]
   exact hker
@@ -7484,9 +7482,8 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
   have hcommPairingBilin_self :
       ∀ a : Additive Hbar, commPairingBilin a a = 0 := by
     intro a
-    rw [← ofMul_toMul a]
-    simpa [hcommPairingBilin_apply] using
-      congrArg Additive.ofMul (hcommPairingH0bar_self (Additive.toMul a))
+    rw [← ofMul_toMul a, hcommPairingBilin_apply]
+    simp [hcommPairingH0bar_self (Additive.toMul a)]
   let H0barToScalar : Additive H0bar ≃ₗ[ZMod p] ZMod p :=
     (Classical.choice
       (Module.nonempty_linearEquiv_of_finrank_eq_one hH0bar_finrank)).symm
@@ -7550,8 +7547,6 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
         commPairingH0bar (u • a) (u • b) = commPairingH0bar a b := by
     intro u a b
     ext
-    change (commPairingH0bar (u • a) (u • b) : H ⧸ Q) =
-      (commPairingH0bar a b : H ⧸ Q)
     rw [hcommPairingH0bar_coe (u • a) (u • b), hcommPairingH0bar_coe a b]
     exact hcommPairing_U_invariant u a b
   let leftRadical : Subgroup Hbar :=
@@ -7564,7 +7559,8 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
     have hbot' :
         theorem_11_7_pairingLeftRadical commPairingH0bar
           hcommPairingH0bar_mul_left = ⊥ := by
-      simpa [leftRadical] using hbot
+      dsimp [leftRadical] at hbot
+      exact hbot
     have hNondeg : commPairingForm.Nondegenerate := by
       simpa [commPairingForm, commPairingBilin] using
         theorem_11_7_scalarBilinForm_nondegenerate_of_pairingLeftRadical_eq_bot
@@ -9587,8 +9583,8 @@ private theorem theorem_11_8_3_betaCandidate_same_row
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ)
     (hUniform : Section10.uniformMuData W1 W2 j0 μ δSign d n δ)
     (hδ : δ = 1)
-    (hζ : ζ ∈ S1)
-    (hExt : Section7.isCoherentExtension S1 τ τ₁)
+    (_hζ : ζ ∈ S1)
+    (_hExt : Section7.isCoherentExtension S1 τ τ₁)
     (i : I)
     {j k : J}
     (hj : j ≠ j0)
@@ -9659,8 +9655,8 @@ private theorem theorem_11_8_3_betaCandidate_same_column
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ)
     (hUniform : Section10.uniformMuData W1 W2 j0 μ δSign d n δ)
     (hδ : δ = 1)
-    (hζ : ζ ∈ S1)
-    (hExt : Section7.isCoherentExtension S1 τ τ₁)
+    (_hζ : ζ ∈ S1)
+    (_hExt : Section7.isCoherentExtension S1 τ τ₁)
     (i : I)
     {j : J}
     (hj : j ≠ j0) :
@@ -10000,8 +9996,7 @@ private theorem theorem_11_8_muColumn_sub_smul_eq_base_add_sum_alpha
               (fun i : I => Section10.alphaChar μ ζ n δ j0 i j) := by
   intro hδ hd
   ext x
-  simp [Section10.muColumn, Section10.alphaChar, hδ, hd, Finset.sum_sub_distrib,
-    Finset.sum_add_distrib, Finset.sum_smul, Finset.card_univ]
+  simp [Section10.muColumn, Section10.alphaChar, hδ, hd, Finset.sum_sub_distrib]
   ring
 
 private theorem theorem_11_8_tau_muColumn_sub_smul_eq_sum_omega
@@ -10051,8 +10046,7 @@ private theorem theorem_11_8_tau_muColumn_sub_smul_eq_sum_omega
           simp [halpha]
     _ = Finset.sum Finset.univ (fun i : I => σ (ω i j)) - (d : ℂ) • τ₁ ζ := by
           ext x
-          simp [hd, Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_smul,
-            Finset.card_univ, Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
+          simp [hd, Finset.sum_sub_distrib, Finset.card_univ, Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
           ring
 
 private theorem theorem_11_8_6_columnData_of_alpha_formula
@@ -10604,10 +10598,11 @@ private theorem theorem_11_8_all_nonbase_muColumn_mem_reducible_family
         hω h43b h45a h45b hInd ⟨χ, hχpair.1⟩ hχpair.2 with
       ⟨j, hj, hχeq⟩
     exact Finset.mem_image.mpr ⟨j, by simp [hj], by
-      simpa [Section10.muColumn] using hχeq.symm⟩
+      simpa [Section10.muColumn, Section4Scratch.piColumn] using hχeq.symm⟩
   have hColumnInj : Function.Injective (Section10.muColumn μ) := by
-    simpa [Section10.muColumn] using
-      (Section5.piColumn_injective_pf58 hω h43b)
+    intro x y h
+    apply (Section5.piColumn_injective_pf58 hω h43b)
+    simpa [Section10.muColumn, Section4Scratch.piColumn] using h
   have hColumnsCard : Columns.card = p - 1 := by
     calc
       Columns.card = (Finset.univ.erase j0).card :=
@@ -10637,7 +10632,7 @@ private theorem theorem_11_8_all_nonbase_muColumn_mem_reducible_family
       h10 hNotation hj
   have hmuRed :
       ¬ Section1.IsIrreducibleCharacterOnGroup (Section10.muColumn μ j) := by
-    simpa [Section10.muColumn] using
+    simpa [Section10.muColumn, Section4Scratch.piColumn] using
       (Section5.piColumn_not_irreducible_pf53 h46 hω h43b j)
   have hmuRedS : Section10.muColumn μ j ∈ RedS := by
     simp [RedS, hmuS, hmuRed]
@@ -11007,7 +11002,7 @@ private theorem theorem_11_8_1_subfamily_count_of_hypothesis
     rw [← Subgroup.index_eq_card]
     simpa [Subgroup.relIndex, hSA.1] using hrelInternal
   have hlinCard : Nat.card ((K ⧸ A.subgroupOf K) →* ℂˣ) = u := by
-    letI : CommGroup (K ⧸ A.subgroupOf K) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (K ⧸ A.subgroupOf K) := IsMulCommutative.instCommGroup
     letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent (K ⧸ A.subgroupOf K)) :=
       Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent (K ⧸ A.subgroupOf K))
     rw [← hquotCard]
@@ -12226,7 +12221,8 @@ private theorem theorem_11_8_6_all_reducible_extension_with_columns_of_hypothesi
     have hgram := h49bData.1
       (Section1.basisVector t) (Section1.basisVector s)
     simpa [sourceColumn, targetColumn, hSign k hk,
-      theorem_11_8_6_evalCoeff_basisVector] using hgram
+      theorem_11_8_6_evalCoeff_basisVector, Section10.muColumn,
+      Section4Scratch.piColumn] using hgram
   have hLands :=
     Section4Scratch.theorem_4_9_b_lands_in_zIrr
       (derivedSubgroup M) (W1.subgroupOf M) (W2.subgroupOf M) W
@@ -12279,7 +12275,8 @@ private theorem theorem_11_8_6_all_reducible_extension_with_columns_of_hypothesi
     have hTauAgreement :
         tau (Section1.evalCoeff sourceColumn w) =
           Section1.evalCoeff targetColumn w := by
-      simpa [sourceColumn, targetColumn, hSign k hk] using
+      simpa [sourceColumn, targetColumn, hSign k hk, Section10.muColumn,
+        Section4Scratch.piColumn] using
         h49bData.2 w hA
     calc
       tau2 (Section1.evalCoeff
@@ -14415,15 +14412,17 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
         (Section10.finite_orthonormal_coeff_normSq_sum_le_two_pf105
           ePair horthPair hXNorm)
     have hZActive : Section1.scalarProduct G Z (e i j) = 1 := by
-      have hj' : j0 ≠ j := fun hEq => hj hEq.symm
+      have hne : (i, j0) ≠ (i, j) := by
+        intro h; exact hj ((Prod.mk.inj h).2).symm
       dsimp [Z]
       rw [Section5.scalarProduct_sub_left, heOrth, heOrth]
-      simp [hj, hj']
+      simp [hne]
     have hZBase : Section1.scalarProduct G Z (e i j0) = -1 := by
-      have hj' : j0 ≠ j := fun hEq => hj hEq.symm
+      have hne : (i, j) ≠ (i, j0) := by
+        intro h; exact hj ((Prod.mk.inj h).2)
       dsimp [Z]
       rw [Section5.scalarProduct_sub_left, heOrth, heOrth]
-      simp [hj, hj']
+      simp [hne]
     have hUpdateActive : c i j = b i j + 1 := by
       change Section1.scalarProduct G X (e i j) =
         Section1.scalarProduct G (X - Z) (e i j) + 1
@@ -14619,17 +14618,17 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
           B r k = μ r k + (-1 : ℂ) • μ i0 k +
             (-1 : ℂ) • μ r j0 + μ i0 j0 := by
         ext x
-        simp [B, hSign k, Pi.sub_apply, Pi.add_apply, Pi.smul_apply]
+        simp [B, hSign k]
         ring
       have hZForm : Z = e i j + (-1 : ℂ) • e i j0 := by
         ext x
-        simp [Z, Pi.sub_apply, Pi.add_apply, Pi.smul_apply]
+        simp [Z]
         ring
       have hRForm :
           R r k = e r k + (-1 : ℂ) • e i0 k +
             (-1 : ℂ) • e r j0 + e i0 j0 := by
         ext x
-        simp [R, Pi.sub_apply, Pi.add_apply, Pi.smul_apply]
+        simp [R]
         ring
       rw [hAlphaForm, hBForm, hZForm, hRForm]
       simp only [Section1.scalarProduct_add_left,
@@ -14795,7 +14794,9 @@ private theorem theorem_11_9_scalarProduct_dade_principal_eq_source
             (Fintype.ofFinite (H (↑(⟨a, hA.subset_L a ha⟩ : L))))))).2
       hconstant
   rw [hτ α hα]
-  simpa [Section1.subgroupRestriction, Section1.principalCharacter] using htransfer
+  have h_restrict : subgroupRestriction L (principalCharacter G) = principalCharacter (↥L) := by
+    ext x; simp [subgroupRestriction, principalCharacter]
+  simpa [h_restrict] using htransfer
 
 set_option maxHeartbeats 2000000 in
 
@@ -15165,7 +15166,7 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
       Section1.scalarProduct_smul_right]
     rw [hColumnEntry, hColumnBase,
       hColumnZeta, hζMu i j, hζMu i j0, hζSelf]
-    simp <;> ring
+    simp
   have hPsiPhi :
       Section1.scalarProduct G (eta0 - τ₁ ζ) φ = -(1 : ℂ) + (n : ℂ) := by
     rw [← hbase]
@@ -15286,7 +15287,7 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
     rw [hBetaFormula, Section5.scalarProduct_add_right,
       Section5.scalarProduct_sub_right, Section1.scalarProduct_smul_right,
       hTauZetaX, hTauZetaZ, hZetaT]
-    simp <;> ring
+    simp
   have hPhiBeta : φ = beta + Z - (n : ℂ) • τ₁ ζ := by
     dsimp [beta]
     abel
@@ -15297,7 +15298,7 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
       Section1.scalarProduct G eta0 (φ - Z + (n : ℂ) • τ₁ ζ) - 1
     rw [Section5.scalarProduct_add_right, Section5.scalarProduct_sub_right,
       Section1.scalarProduct_smul_right, hEtaZ, hEtaTauZeta]
-    simp <;> ring
+    simp
   have hTauZetaPhi :
       Section1.scalarProduct G (τ₁ ζ) φ = (a : ℂ) - (n : ℂ) := by
     rw [hPhiBeta, Section5.scalarProduct_sub_right,
@@ -15307,7 +15308,7 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
       rw [hExt.1 ζ ζ (Section5.integerSpan_of_mem SHC hζ)
         (Section5.integerSpan_of_mem SHC hζ), hζSelf]
     rw [hTauSelf]
-    simp <;> ring
+    simp
   have hPairExpansion :
       Section1.scalarProduct G (eta0 - τ₁ ζ) φ =
         Section1.scalarProduct G eta0 beta - 1 - (a : ℂ) + (n : ℂ) := by
@@ -15970,7 +15971,6 @@ public theorem theorem_11_8
     {I J : Type*}
     [Fintype I]
     [Fintype J]
-    [Fintype J]
     [DecidableEq I]
     [DecidableEq J]
     (M MF H U C H0 W1 W2 : Subgroup G)
@@ -16389,7 +16389,7 @@ private theorem theorem_11_9_quotient_card_gt_one_and_dvd_sub_one_of_hypothesis
       (theorem_11_6 M MF H U C H0 W1 W2 S τ p q h11).2.2.2
     have hCsub_eq : C.subgroupOf U = commutator U := by
       rw [hCeqDer]
-      simpa [derivedSubgroup, derivedSeries_one] using
+      simpa [derivedSubgroup, derivedSeries_one, _root_.commutator] using
         (section12_ambientDerivedSubgroup_subgroupOf_eq (G := G) (E := U))
     have hInv : IsInvariant W1 U (C.subgroupOf U) := by
       rw [hCsub_eq]
@@ -16596,7 +16596,7 @@ public theorem theorem_11_exists_conj_eq_of_typeP_complements
     apply hM.1
     apply top_unique
     intro x _hx
-    exact hDleM (by simpa [hDtop])
+    exact hDleM (by simp [hDtop])
   have hDsolv : IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
   rcases exists_conj_eq_of_isHallSubgroup_of_solvable
@@ -16668,9 +16668,7 @@ public theorem theorem_11_hypothesis_9_2_of_typeP_typeIIIIV
         A = B.conjBy d → IsMulCommutative B → IsMulCommutative A := by
     intro A B d hEq hcomm
     subst A
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj d).toMonoidHom) (H := B))
+    apply Subgroup.map_isMulCommutative
   have not_comm_of_eq_conjBy :
       ∀ {A B : Subgroup G} {d : G},
         A = B.conjBy d → ¬ IsMulCommutative B → ¬ IsMulCommutative A := by
@@ -16777,9 +16775,7 @@ public theorem theorem_11_exists_notation_8_10_source_data_of_typeP_typeIIIIV
         A = B.conjBy d → IsMulCommutative B → IsMulCommutative A := by
     intro A B d hEq hcomm
     subst A
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj d).toMonoidHom) (H := B))
+    apply Subgroup.map_isMulCommutative
   have normalizer_le_of_conjBy_eq :
       ∀ {A B : Subgroup G} {d : G},
         d ∈ M → B = A.conjBy d →
@@ -17101,7 +17097,7 @@ private theorem theorem_11_9_isCyclic_of_nilpotent_cyclic_abelianization
     · have hKnorm : K.Normal := by
         haveI : Group.IsNilpotent U := hNil
         exact Subgroup.NormalizerCondition.normal_of_coatom K
-          (normalizerCondition_of_isNilpotent (G := U)) hKcoatom
+          (Group.normalizerCondition_of_isNilpotent (G := U)) hKcoatom
       letI : K.Normal := hKnorm
       have hsimple : IsSimpleGroup (U ⧸ K) := by
         let e : Subgroup (U ⧸ K) ≃o Set.Ici K := QuotientGroup.comapMk'OrderIso K
@@ -17124,9 +17120,10 @@ private theorem theorem_11_9_isCyclic_of_nilpotent_cyclic_abelianization
       letI : Group.IsNilpotent (U ⧸ K) := hNilQuot
       have hcommQuot : Std.Commutative (· * · : U ⧸ K → U ⧸ K → U ⧸ K) := by
         infer_instance
+      have hcommQuot' : IsMulCommutative (U ⧸ K) := { is_comm := hcommQuot }
       have hcomm_le_K : commutator U ≤ K := by
         rw [← Subgroup.Normal.quotient_commutative_iff_commutator_le (N := K)]
-        exact hcommQuot
+        exact hcommQuot'
       have htop_le_K : (⊤ : Subgroup U) ≤ K := by
         rw [← hHsup_comm]
         exact sup_le hHK hcomm_le_K
@@ -17144,7 +17141,7 @@ private theorem theorem_11_9_isMulCommutative_of_nilpotent_cyclic_abelianization
   intro hNil hcyc
   have hcycU : IsCyclic U :=
     theorem_11_9_isCyclic_of_nilpotent_cyclic_abelianization hNil hcyc
-  exact ⟨IsCyclic.commutative⟩
+  exact IsCyclic.isMulCommutative
 
 /-- In case `(9.7.b)`, PF `(11.6)` identifies the kernel `C` with `U'`.
 The cyclic quotient supplied by `(9.7.b)` is therefore the abelianization of
@@ -17172,7 +17169,7 @@ public theorem theorem_11_9_complement_isCyclic_of_case_b
   rcases hcyclicQuot with ⟨_hCU, _hCnormal, hcycQuot, _hcardQuot⟩
   have hCsub_eq : C.subgroupOf U = commutator U := by
     subst C
-    simpa [derivedSubgroup, derivedSeries_one] using
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator] using
       (section12_ambientDerivedSubgroup_subgroupOf_eq (G := G) (E := U))
   let e : U ⧸ C.subgroupOf U ≃* U ⧸ commutator U :=
     QuotientGroup.quotientMulEquivOfEq hCsub_eq
@@ -17204,7 +17201,7 @@ private theorem theorem_11_9_typeIII_of_case_b
   have hUcyc : IsCyclic U :=
     theorem_11_9_complement_isCyclic_of_case_b
       M MF H U C H0 W1 W2 S τ p q u h11Full hcaseB
-  have hUcomm : IsMulCommutative U := ⟨IsCyclic.commutative⟩
+  have hUcomm : IsMulCommutative U := IsCyclic.isMulCommutative
   rcases h11Full with
     ⟨_h10, _hHMF, htypeIIIIV, _hHleD, _hUleD, _hCeq, _hH0H, _hH0normM,
       _hp, _hquot, _hchief, _hcomm, _hpW2, _hqW1, _hPDef, _hOddAnd92⟩
@@ -19219,7 +19216,7 @@ private theorem theorem_11_9_cfNormSq_weighted_projection_le_of_norm_gap
     simpa [Section1.scalarProduct_star_swap] using congrArg star hCP
   have hYeq : Y = P + C := by
     ext g
-    simp [C, P, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+    simp [C, P, sub_eq_add_neg]
   have hnorm :
       Section5.cfNormSq Y = Section5.cfNormSq P + Section5.cfNormSq C := by
     rw [hYeq]
@@ -19417,7 +19414,7 @@ private theorem theorem_11_9_tau_muColumn_sub_SHC_cfNormSq_of_hypothesis
       intro i
       simpa [Section10.muColumn, hsum_fun] using hentry_col i
     rw [hsum_fun, Section1.scalarProduct_fintype_sum_left]
-    simpa [hentry_col', hcardI]
+    simp [hentry_col', hcardI]
   have hμζ :
       Section1.scalarProduct M (Section10.muColumn μ j0) ζ = 0 := by
     rw [Section10.muColumn]
@@ -19933,7 +19930,7 @@ private theorem theorem_11_9_tau_SHC_sub_conjugate_sigma_omega_scalarProduct_eq_
         Section1.conjugateCharacter (X : Section1.ClassFunction M)} :
         Finset (Section1.ClassFunction M)) ⊆ SHC := by
     intro χ hχ
-    simp [X, ζbar] at hχ
+    simp at hχ
     rcases hχ with rfl | rfl
     · exact hζ
     · exact hζbar
@@ -21241,7 +21238,7 @@ private theorem theorem_11_9_tau_axis_galois_projection_swap_source_data_for_non
         simp [hcolCoeff i hi]
       · by_cases hseed : x = (i1, j0)
         · rw [hseed]
-          simp [hcell, (hcolCoeff i hi).symm]
+          simp [(hcolCoeff i hi).symm]
         · simp [hcell, hseed]
     · intro j hj
       apply theorem_11_9_weightedFamilySum_congr_weights
@@ -21251,7 +21248,7 @@ private theorem theorem_11_9_tau_axis_galois_projection_swap_source_data_for_non
         simp [hrowCoeff j hj]
       · by_cases hseed : x = (i0, j1)
         · rw [hseed]
-          simp [hcell, (hrowCoeff j hj).symm]
+          simp [(hrowCoeff j hj).symm]
         · simp [hcell, hseed]
 
 /-- Remaining source-facing Galois/projection-orthogonality package for the
@@ -23228,8 +23225,24 @@ private theorem theorem_11_9_case_a_ratio_eq_one_of_scalar_unit_equation
   have hprod : (u / a) * z.natAbs = 1 := by
     have habs := congrArg Int.natAbs hmul
     rcases hε with rfl | rfl
-    · simpa [Int.natAbs_mul] using habs
-    · simpa [Int.natAbs_mul] using habs
+    · have htemp : (u / a : ℕ) * z.natAbs = 1 := by
+        have htemp1 : ((Nat.cast (u / a : ℕ) : ℤ) * z).natAbs = 1 := by
+          simpa using habs
+        rw [Int.natAbs_mul] at htemp1
+        have htemp2 : (Nat.cast (u / a : ℕ) : ℤ).natAbs = (u / a : ℕ) :=
+          Int.natAbs_natCast (u / a)
+        rw [htemp2] at htemp1
+        exact htemp1
+      exact htemp
+    · have htemp : (u / a : ℕ) * z.natAbs = 1 := by
+        have htemp1 : ((Nat.cast (u / a : ℕ) : ℤ) * z).natAbs = 1 := by
+          simpa using habs
+        rw [Int.natAbs_mul] at htemp1
+        have htemp2 : (Nat.cast (u / a : ℕ) : ℤ).natAbs = (u / a : ℕ) :=
+          Int.natAbs_natCast (u / a)
+        rw [htemp2] at htemp1
+        exact htemp1
+      exact htemp
   exact Nat.eq_one_of_mul_eq_one_right hprod
 
 /-- Arithmetic extraction of `a ∣ u` from the PF `(9.8)` degree-divisibility
@@ -23288,7 +23301,7 @@ private theorem theorem_11_9_case_a_scalar_unit_equation_of_complex_source
     exact (sub_eq_zero.mp hsub).symm
   have hcast : ((((u / a : ℕ) : ℤ) * z : ℤ) : ℂ) = (ε : ℂ) := by
     norm_num [Int.cast_mul] at hcomplex' ⊢
-    simpa using hcomplex'
+    exact hcomplex'
   exact_mod_cast hcast
 
 /-- PF `(9.8)` divisibility extraction used in `(11.9)(c)`: the reducible
@@ -24098,7 +24111,7 @@ private theorem theorem_11_9_case_a_scalar_product_equation_of_pf58_formula
     rw [theorem_11_9_scalarProduct_sub_right]
     rw [Section1.scalarProduct_smul_right, Section1.scalarProduct_smul_right]
     rw [hcolumn, hlam]
-    simp [mul_comm, mul_left_comm, mul_assoc]
+    simp
   exact horth.symm.trans hcalc
 
 /-- A degree-zero integral combination of two members of a family lies in
@@ -24610,10 +24623,10 @@ private theorem theorem_11_9_case_a_exists_nonbase_muColumn_mem_reducible_family
       ⟨j, hj, hχeq⟩
     apply Finset.mem_image.mpr
     refine ⟨j, by simp [hj], ?_⟩
-    simpa [Section10.muColumn] using hχeq.symm
+    simpa [Section10.muColumn, Section4Scratch.piColumn] using hχeq.symm
   have hColumnInj : Function.Injective (Section10.muColumn μ) := by
-    simpa [Section10.muColumn] using
-      (Section5.piColumn_injective_pf58 hω h43b)
+    unfold Section10.muColumn
+    exact Section5.piColumn_injective_pf58 hω h43b
   have hColumnsCard : Columns.card = p - 1 := by
     calc
       Columns.card = (Finset.univ.erase j0).card := by
@@ -24649,7 +24662,7 @@ private theorem theorem_11_9_case_a_exists_nonbase_muColumn_mem_reducible_family
       h10 hNotation hj
   have hmuRed :
       ¬ Section1.IsIrreducibleCharacterOnGroup (Section10.muColumn μ j) := by
-    simpa [Section10.muColumn] using
+    simpa [Section10.muColumn, Section4Scratch.piColumn] using
       (Section5.piColumn_not_irreducible_pf53 h46 hω h43b j)
   have hmuRedS : Section10.muColumn μ j ∈ RedS := by
     simp [RedS, hmuS, hmuRed]

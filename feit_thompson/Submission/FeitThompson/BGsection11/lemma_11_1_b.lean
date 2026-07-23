@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection11.lemma_11_1_a
+public import FeitThompson.BGsection11.lemma_11_1_a
 
 /-!
 # Lemma 11.1(b)
@@ -20,7 +20,7 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 public theorem lemma_11_1_b
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {g : G}
-    (hgM : g ∉ M) (hAgM : A ≤ M.conjBy g) (hqσ : q ∈ section10SigmaPrimes M)
+    (hgM : g ∉ M) (_hAgM : A ≤ M.conjBy g) (hqσ : q ∈ section10SigmaPrimes M)
     (Q1 : Sylow q.val (section10Msigma M))
     (Q2 : Sylow q.val ((section10Msigma M).conjBy g))
     (hAQ1 :
@@ -39,7 +39,7 @@ public theorem lemma_11_1_b
   let R2 : Subgroup G :=
     section10AmbientSylowSubgroup ((section10Msigma M).conjBy g) Q2
   by_contra hnot
-  push_neg at hnot
+  push Not at hnot
   rcases hnot with ⟨hC1_ne_bot, hC2_ne_bot⟩
   have hR1star :
       R1 ∈ section7HStarFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) := by

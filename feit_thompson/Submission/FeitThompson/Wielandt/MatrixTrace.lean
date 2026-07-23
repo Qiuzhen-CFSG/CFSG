@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGsection3.Remaining
-public import Submission.FeitThompson.LinearAlgebra.MatrixBlocks
+public import FeitThompson.BGsection3.Remaining
+public import FeitThompson.LinearAlgebra.MatrixBlocks
 
 /-!
 # Matrix trace infrastructure for Wielandt fixed-point arguments
@@ -23,6 +23,7 @@ Wielandt's theorem. -/
     {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (A : Subgroup G) : ℕ :=
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   letI : MulDistribMulAction A V :=
     MulDistribMulAction.compHom V A.subtype
   Module.finrank (ZMod p)

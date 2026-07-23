@@ -6,8 +6,10 @@ module
 
 public import Mathlib.RepresentationTheory.Invariants
 
-public import Submission.FeitThompson.ElementaryAbelian
-public import Submission.FeitThompson.GroupAction.Defs
+public import FeitThompson.ElementaryAbelian
+public import FeitThompson.GroupAction.Defs
+
+open scoped IsMulCommutative
 
 /-!
 Representations attached to actions on elementary abelian groups.

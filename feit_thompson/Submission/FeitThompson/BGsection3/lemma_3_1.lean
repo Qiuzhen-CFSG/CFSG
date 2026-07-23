@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
 public theorem lemma_3_1 {G : Type*} [Group G] [Finite G] (K R : Subgroup G)
     (hK_ne : K ≠ ⊥) (hR_ne : R ≠ ⊥) (hK_normal : K.Normal) (hKR : K.IsComplement' R) :

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_3_b
+public import FeitThompson.BGsection12.lemma_12_3_b
 
 open scoped Pointwise
 
@@ -12,7 +12,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_centralizer_le_of_unique_normalizer_primeOrder_pre
     {M A A₀ : Subgroup G} {p : Nat.Primes}
     (hA₀ : A₀ ∈ section10PrimeOrderSubgroupsIn p A)
@@ -122,7 +122,7 @@ public theorem section12_generatorRank_le_groupRank_of_subgroup_pre
       rcases hn with ⟨B, _hBp, _hBcomm, hnB⟩
       exact hnB.trans <|
         (section8_generatorRank_le_natCard B).trans (Subgroup.card_le_card_group B)
-    · exact ⟨A', hA'p, hA'comm, by simpa [hgen_eq]⟩
+    · exact ⟨A', hA'p, hA'comm, by simp [hgen_eq]⟩
   rw [groupRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card K, ?_⟩
@@ -152,7 +152,7 @@ public theorem section12_generatorRank_at_least_three_of_elementaryAbelian_card_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hgt : p ^ 2 < Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -180,7 +180,7 @@ public theorem section12_primeOrder_ne_bot
     rw [← hXcard, hcard_bot]
   exact (ne_of_gt p.2.one_lt) hp_eq_one
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_ne_bot
     {H A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p H) :
@@ -218,7 +218,7 @@ public theorem section12_normalizer_ne_top_of_ne_bot_ne_top_pre
   · exact hQ_ne_bot hQbot
   · exact hQ_ne_top hQtop
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_le_normalizer_of_primeOrder_pre
     {A X : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G)
@@ -235,7 +235,7 @@ public theorem section12_rankTwo_le_normalizer_of_primeOrder_pre
   · intro hx
     have hxA : x ∈ A := hXA hx
     have hcomm : a * x = x * a :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha hxA
+      setLike_mul_comm (s := A) ha hxA
     have hconj : a * x * a⁻¹ = x := by
       calc
         a * x * a⁻¹ = x * a * a⁻¹ := by rw [hcomm]
@@ -245,7 +245,7 @@ public theorem section12_rankTwo_le_normalizer_of_primeOrder_pre
     have hyA : a * x * a⁻¹ ∈ A := hXA hx
     have hainv : a⁻¹ ∈ A := A.inv_mem ha
     have hcomm : a⁻¹ * (a * x * a⁻¹) = (a * x * a⁻¹) * a⁻¹ :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hainv hyA
+      setLike_mul_comm (s := A) hainv hyA
     have hpre : a⁻¹ * (a * x * a⁻¹) * a = a * x * a⁻¹ := by
       calc
         a⁻¹ * (a * x * a⁻¹) * a = (a * x * a⁻¹) * a⁻¹ * a := by rw [hcomm]
@@ -256,7 +256,7 @@ public theorem section12_rankTwo_le_normalizer_of_primeOrder_pre
         _ = a * x * a⁻¹ := hpre
     simpa [← hx_eq] using hx
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_le_centralizer_of_primeOrder_pre
     {A X : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G)
@@ -268,7 +268,7 @@ public theorem section12_rankTwo_le_centralizer_of_primeOrder_pre
   intro a ha
   rw [Subgroup.mem_centralizer_iff]
   intro x hx
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) (hXA hx) ha
+  exact setLike_mul_comm (s := A) (hXA hx) ha
 
 public theorem section12_exists_alternate_normalizer_overgroup_pre
     {M A X : Subgroup G} {p : Nat.Primes}
@@ -428,7 +428,7 @@ public theorem section12_primeRank_le_groupRank_of_normal_hall_pre
   haveI : Fact p.val.Prime := ⟨p.2⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨B, hBp, hBcomm, hnB⟩
     have hB_le_H : B ≤ H :=
@@ -462,7 +462,7 @@ public theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_pre
   classical
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨B, hBp, hBcomm, hnB⟩
     have hB_le_sigmaSub : B ≤ section10MsigmaSubgroup M :=
@@ -519,7 +519,7 @@ public theorem section12_primeRank_le_groupRank_sylow_pre
   haveI : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     obtain ⟨Q, hAQ⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
@@ -595,9 +595,8 @@ public theorem section12_isElementaryAbelian_sup_of_le_centralizer_pre
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact { is_comm := ⟨fun x y => by exact mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -619,10 +618,12 @@ public theorem section12_isElementaryAbelian_sup_of_le_centralizer_pre
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          have hclosure_comm : IsMulCommutative ↥(Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
+            (hclosure_comm.is_comm.comm
+              (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
         calc
           (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
           _ = 1 := by simp [hypow, hzpow]) (by
@@ -645,9 +646,11 @@ public theorem section12_omega1_isElementaryAbelian_of_commutative
         intro y hy
         simpa [pow_one] using hy) (by simp) (by
         intro y z _ _ hy hz
+        have hyz : Commute y z :=
+          (commute_iff_eq y z).2
+            ((IsMulCommutative.is_comm (M := R)).comm y z)
         calc
-          (y * z) ^ p = y ^ p * z ^ p := by
-            simpa using mul_pow y z p
+          (y * z) ^ p = y ^ p * z ^ p := hyz.mul_pow p
           _ = 1 := by simp [hy, hz]) (by
         intro y _ hy
         simp [hy]) x.property
@@ -656,25 +659,29 @@ omit [Finite G] [IsMinCE G] in
 public theorem section12_omega1Z_isElementaryAbelian_pre
     {p : ℕ} [Fact p.Prime] (R : Type*) [Group R] :
     IsElementaryAbelian p (Ω₁Z p R) := by
+  change IsElementaryAbelian p
+    ((omega₁ (G := Subgroup.center R) (p := p)).map
+      (Subgroup.center R).subtype)
   let Ωc : Subgroup (Subgroup.center R) := omega₁ (G := Subgroup.center R) (p := p)
   have hΩcelem : IsElementaryAbelian p Ωc := by
     letI : IsMulCommutative (Subgroup.center R) := inferInstance
     simpa [Ωc] using section12_omega1_isElementaryAbelian_of_commutative
       (p := p) (Subgroup.center R)
   letI : IsElementaryAbelian p Ωc := hΩcelem
-  simpa [Ω₁Z, Ωc] using
-    section12_isElementaryAbelian_map (p := p) (A := Ωc) (Subgroup.center R).subtype
+  exact section12_isElementaryAbelian_map
+    (p := p) (A := Ωc) (Subgroup.center R).subtype
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_omegaOneCenter_isElementaryAbelian_pre
     {p : Nat.Primes} (P : Subgroup G) :
     IsElementaryAbelian p.val (section10OmegaOneCenter p P) := by
+  change IsElementaryAbelian p.val ((Ω₁Z p.val P).map P.subtype)
   haveI : Fact p.val.Prime := ⟨p.2⟩
   have hZelem : IsElementaryAbelian p.val (Ω₁Z p.val P) :=
     section12_omega1Z_isElementaryAbelian_pre (p := p.val) P
   letI : IsElementaryAbelian p.val (Ω₁Z p.val P) := hZelem
-  simpa [section10OmegaOneCenter] using
-    section12_isElementaryAbelian_map (p := p.val) (A := Ω₁Z p.val P) P.subtype
+  exact section12_isElementaryAbelian_map
+    (p := p.val) (A := Ω₁Z p.val P) P.subtype
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_omegaOneCenter_le_pre
@@ -737,7 +744,7 @@ public theorem section12_omegaOneCenter_ne_bot_of_nontrivial_pgroup_pre
     have hzG_one : ((z : P) : G) = 1 := by
       simpa [hmap_bot] using hzmap
     have hz_one : z = 1 := Subtype.ext hzG_one
-    simpa [hz_one]
+    simp [hz_one]
   · intro hz
     rw [Subgroup.mem_bot] at hz
     rw [hz]
@@ -778,6 +785,7 @@ public theorem section12_omega1Z_characteristic_pre
       (Subgroup.mem_map_of_mem φc.toMonoidHom hzΩ)
   exact Subgroup.mem_map.mpr ⟨φc z, hφcz, rfl⟩
 
+omit [IsMinCE G] in
 public theorem section12_omegaOneCenter_le_rankTwo_of_rank_centralizer_pre
     {M A P : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M)
@@ -894,7 +902,7 @@ public theorem section12_rankTwo_not_isCyclic_pre
     (section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq
       (p := p.val) hcard)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_rankTwo_pre
     {M A : Subgroup G} {p : Nat.Primes} (hA : A ∈ section12RankTwoElementaryAbelianIn p M)
     (a : A) (ha : a ≠ 1) :
@@ -914,9 +922,10 @@ public theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_rankTwo_pre
     simpa [section10PrimeOrderSubgroupsIn] using
       (And.intro hz_le_A hz_card))
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_coprime_card_of_pPrime_pre
     {M A K : Subgroup G} {p : Nat.Primes}
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p M)
+    (_hA : A ∈ section12RankTwoElementaryAbelianIn p M)
     (hKp' : IsPiSubgroup (G := G) (section10PPrimeSet p) K) :
     Nat.Coprime p.val (Nat.card K) := by
   refine Nat.coprime_of_dvd ?_
@@ -942,6 +951,7 @@ public theorem section12_centralizer_singleton_le_centralizer_zpowers_pre
     (Subgroup.mem_centralizer_singleton_iff.mp hx).symm
   simpa using (hcomm.zpow_left n).eq
 
+omit [IsMinCE G] in
 public theorem section12_prop116_subgroup_le_centralizer_pre
     {M A K : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M)
@@ -958,7 +968,7 @@ public theorem section12_prop116_subgroup_le_centralizer_pre
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
   haveI : IsElementaryAbelian p.val A := hAelem
   haveI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
   haveI : Subgroup.Normalizes A K := ⟨hAKnorm⟩
   have hKcop : Nat.Coprime p.val (Nat.card K) :=
@@ -1153,12 +1163,12 @@ public theorem section12_msigma_nilpotent_of_malpha_eq_bot_pre
     constructor
     · intro hx
       have hxα : (x : M) ∈ section10MalphaSubgroup M := by
-        simpa [Subgroup.mem_subgroupOf] using hx
+        exact Subgroup.mem_subgroupOf.mp hx
       have hxbot : (x : M) ∈ (⊥ : Subgroup M) := by
         simpa [hαsub_bot] using hxα
-      simpa using hxbot
+      exact Subgroup.mem_bot.mpr (Subtype.ext (Subgroup.mem_bot.mp hxbot))
     · intro hx
-      have hxone : x = 1 := by simpa using hx
+      have hxone : x = 1 := Subgroup.mem_bot.mp hx
       rw [hxone]
       exact Subgroup.one_mem _
   have hD_nil : Group.IsNilpotent (derivedSubgroup M) := by
@@ -1167,7 +1177,7 @@ public theorem section12_msigma_nilpotent_of_malpha_eq_bot_pre
           derivedSubgroup M :=
       (QuotientGroup.quotientMulEquivOfEq hαsubD_bot).trans
         (QuotientGroup.quotientBot (G := derivedSubgroup M))
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := derivedSubgroup M ⧸ (section10MalphaSubgroup M).subgroupOf (derivedSubgroup M))
       (G' := derivedSubgroup M) e
   have hσD : section10MsigmaSubgroup M ≤ derivedSubgroup M :=
@@ -1180,13 +1190,13 @@ public theorem section12_msigma_nilpotent_of_malpha_eq_bot_pre
       section10MsigmaSubgroup M :=
     Subgroup.subgroupOfEquivOfLe hσD
   have hσlocal_nil : Group.IsNilpotent (section10MsigmaSubgroup M) :=
-    nilpotent_of_mulEquiv
+    Group.nilpotent_of_mulEquiv
       (G := (section10MsigmaSubgroup M).subgroupOf (derivedSubgroup M))
       (G' := section10MsigmaSubgroup M) eσD
   let eσ : section10MsigmaSubgroup M ≃* section10Msigma M :=
     Subgroup.equivMapOfInjective (f := M.subtype)
       (section10MsigmaSubgroup M) M.subtype_injective
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := section10MsigmaSubgroup M) (G' := section10Msigma M) eσ
 
 public theorem section12_not_alpha_in_prop_12_4_pre
@@ -1238,7 +1248,7 @@ public theorem section12_not_alpha_in_prop_12_4_pre
     rw [hn]
     cases n with
     | zero =>
-        have hcard_one : Nat.card Z = 1 := by simpa [hn]
+        have hcard_one : Nat.card Z = 1 := by simp [hn]
         exact False.elim (hcard_ne_one hcard_one)
     | succ n =>
         exact dvd_pow_self p.val (Nat.succ_ne_zero n))
@@ -1276,7 +1286,7 @@ public theorem section12_not_alpha_in_prop_12_4_pre
   have hRankM_le_two : primeRank p.val M ≤ 2 := hRankM_le_P.trans hRankP_le_two
   omega
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_isPiSubgroup_sigma_compl_of_not_sigma_pre
     {M A : Subgroup G} {p : Nat.Primes}
     (hpσ : p ∉ section10SigmaPrimes M)

@@ -4,7 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.Defs
+
+open scoped commutatorElement
 
 public instance center_isInvariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     IsInvariant A G (Subgroup.center G) where
@@ -247,7 +249,8 @@ lemma actsTrivially_of_center_and_quotient {G A : Type*} [Group G] [Finite G] [G
     exact (FixedPoints.mem_subgroup (M := A) (a := (z : G))).mpr fun a' => by
       have h := hZtriv a' ⟨z, hz⟩
       have h' := congr_arg Subtype.val h
-      simpa using h'
+      have hcoe : ((a' • ⟨z, hz⟩ : Subgroup.center G) : G) = a' • z := rfl
+      rwa [hcoe] at h'
   have h_mem_center : ∀ (a : A) (g : G), (a • g) * g⁻¹ ∈ Subgroup.center G := by
     intro a g
     have h := hQtriv a (QuotientGroup.mk g)
@@ -364,7 +367,9 @@ lemma centralizer_condition_on_center_quotient {G A : Type*} [Group G] [Finite G
     have hz := h_comm' f hf
     have hZtriv' := hZtriv a ⟨⁅x, f⁆, hz⟩
     have hZtriv'' : a • (⁅x, f⁆) = ⁅x, f⁆ := by
-      simpa using congr_arg Subtype.val hZtriv'
+      have hcoe : ((a • ⟨⁅x, f⁆, hz⟩ : Subgroup.center G) : G) = a • ⁅x, f⁆ := rfl
+      have hZtriv_val := congr_arg Subtype.val hZtriv'
+      rwa [hcoe] at hZtriv_val
     calc
       ⁅a • x, f⁆ = a • ⁅x, f⁆ := by
         have haf : a • f = f := (FixedPoints.mem_subgroup (M := A) (a := f)).mp hf a
@@ -416,7 +421,7 @@ public theorem actsTrivially_of_nilpotent_coprime_and_centralizer_fixedPointSubg
     fun G' _ _ => ∀ [MulDistribMulAction A G'] [Finite G'], Nat.Coprime (Nat.card A) (Nat.card G') →
       (Subgroup.centralizer (fixedPointSubgroup A G' : Set G') ≤ fixedPointSubgroup A G') →
       ActsTrivially (A := A) (G := G')
-  refine (nilpotent_center_quotient_ind (P := P) G ?_ ?_) hcoprime hC
+  refine (Group.nilpotent_center_quotient_ind (P := P) G ?_ ?_) hcoprime hC
   · intro G' _ hsub
     haveI : Subsingleton G' := hsub
     intro hact hfin hcoprime' hC' a g

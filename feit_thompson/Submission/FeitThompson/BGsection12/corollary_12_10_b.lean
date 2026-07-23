@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_9_c
+public import FeitThompson.BGsection12.corollary_12_9_c
 
 open scoped Pointwise
 
@@ -123,8 +123,8 @@ private theorem section12_E2_commutative
         (theorem_12_5_b hM hp hA_M).1 T
       have hTamb_comm : IsMulCommutative (section10AmbientSylowSubgroup M T) := by
         letI : IsMulCommutative (T : Subgroup M) := hTcomm
-        simpa [section10AmbientSylowSubgroup] using
-          (Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M)))
+        change IsMulCommutative ((T : Subgroup M).map M.subtype)
+        exact Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M))
       have hE2_amb_le_T : E₂ ≤ section10AmbientSylowSubgroup M T := by
         intro x hx
         exact Subgroup.mem_map.mpr
@@ -132,8 +132,8 @@ private theorem section12_E2_commutative
             hE2sub_le_T (by simpa [E₂sub, Subgroup.mem_subgroupOf] using hx), rfl⟩
       refine ⟨⟨fun x y => ?_⟩⟩
       exact Subtype.ext <|
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := section10AmbientSylowSubgroup M T)
+        setLike_mul_comm
+          (s := section10AmbientSylowSubgroup M T)
           (hE2_amb_le_T x.property) (hE2_amb_le_T y.property)
 
 /-- Corollary 12.10(b). -/

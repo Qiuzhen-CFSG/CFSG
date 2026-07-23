@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection6.Defs
-public import Submission.FeitThompson.BGsection9.Defs
-public import Submission.FeitThompson.BGsection9.theorem_9_6_in_particular
+public import FeitThompson.BGsection6.Defs
+public import FeitThompson.BGsection9.Defs
+public import FeitThompson.BGsection9.theorem_9_6_in_particular
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -155,11 +155,15 @@ public theorem section10OmegaOneCenter_isElementaryAbelian
       IsElementaryAbelian.omega₁_of_isMulCommutative
         (p := p.val) (Subgroup.center P)
   have hΩZelem : IsElementaryAbelian p.val (Ω₁Z p.val P) := by
+    change IsElementaryAbelian p.val
+      ((omega₁ (G := Subgroup.center P) (p := p.val)).map
+        (Subgroup.center P).subtype)
     letI : IsElementaryAbelian p.val Ωc := hΩcelem
-    simpa [Ω₁Z, Ωc] using
+    simpa [Ωc] using
       IsElementaryAbelian.map (p := p.val) (A := Ωc) (Subgroup.center P).subtype
   letI : IsElementaryAbelian p.val (Ω₁Z p.val P) := hΩZelem
-  simpa [section10OmegaOneCenter] using
+  change IsElementaryAbelian p.val ((Ω₁Z p.val P).map P.subtype)
+  simpa using
     IsElementaryAbelian.map (p := p.val) (A := Ω₁Z p.val P) P.subtype
 
 omit [Finite G] in

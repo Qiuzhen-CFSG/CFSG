@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_7
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
+public import FeitThompson.PFsection13.PFsection13_7
+import FeitThompson.PFsection8.PFsection8_5_a
 
 /-!
 # Peterfalvi, Section 13: PFsection13_8

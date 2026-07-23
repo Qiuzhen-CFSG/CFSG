@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.theorem_10_2_a
-public import Submission.FeitThompson.BGsection4.theorem_4_20_a
+public import FeitThompson.BGsection10.theorem_10_2_a
+public import FeitThompson.BGsection4.theorem_4_20_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -33,11 +33,15 @@ public theorem section10_fitting_quotient_msigma_groupRank_le_two
   let Q := M ⧸ section10MsigmaSubgroup M
   let F : Subgroup Q := fittingSubgroup Q
   have hFπc : IsPiSubgroup (G := Q) πᶜ F := by
-    simpa [Q, F, π, section10MsigmaSubgroup] using
-      section10_fitting_quotient_piCore_isPiSubgroup_compl (H := M) (π := π)
+    change IsPiSubgroup
+      (G := M ⧸ piCore (section10SigmaPrimes M) M)
+      (section10SigmaPrimes M)ᶜ
+      (fittingSubgroup (M ⧸ piCore (section10SigmaPrimes M) M))
+    exact section10_fitting_quotient_piCore_isPiSubgroup_compl
+      (H := M) (π := section10SigmaPrimes M)
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, Nat.prime_two, zero_le _⟩
+  · exact ⟨0, 2, Nat.prime_two, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hqprime, hnq⟩
     by_cases hn_le_two : n ≤ 2
@@ -55,9 +59,11 @@ public theorem section10_fitting_quotient_msigma_groupRank_le_two
     have hprankF_le_Q : primeRank p.val F ≤ primeRank p.val Q := by
       simpa [Q, F, p] using section8_primeRank_le_of_subgroup (G := Q) F p.val
     have hprankQ_le_M : primeRank p.val Q ≤ primeRank p.val M := by
-      simpa [Q, π, section10MsigmaSubgroup] using
-        section10_primeRank_quotient_piCore_le_of_not_mem
-          (H := M) (π := π) (p := p) hp_not_sigma
+      change primeRank p.val (M ⧸ piCore (section10SigmaPrimes M) M) ≤
+        primeRank p.val M
+      exact section10_primeRank_quotient_piCore_le_of_not_mem
+        (H := M) (π := section10SigmaPrimes M) (p := p) (by
+          simpa [π] using hp_not_sigma)
     have hp_dvd_M : p.val ∣ Nat.card M := by
       exact (hp_dvd_F.trans (Subgroup.card_subgroup_dvd_card F)).trans
         (Subgroup.card_quotient_dvd_card (s := section10MsigmaSubgroup M))
@@ -107,8 +113,12 @@ public theorem section10_prime_not_dvd_derived_quotient_msigma_of_mem_sigma
     hp_dvd_derQ.trans (Subgroup.card_dvd_of_le hDerQ_le_F)
   have hFπc :
       IsPiSubgroup (G := Q) πᶜ (fittingSubgroup Q) := by
-    simpa [Q, K, π, section10MsigmaSubgroup] using
-      section10_fitting_quotient_piCore_isPiSubgroup_compl (H := M) (π := π)
+    change IsPiSubgroup
+      (G := M ⧸ piCore (section10SigmaPrimes M) M)
+      (section10SigmaPrimes M)ᶜ
+      (fittingSubgroup (M ⧸ piCore (section10SigmaPrimes M) M))
+    exact section10_fitting_quotient_piCore_isPiSubgroup_compl
+      (H := M) (π := section10SigmaPrimes M)
   exact (hFπc p hp_dvd_F) hpσ
 
 public theorem section10_msigmaSubgroup_isHall
@@ -130,12 +140,19 @@ public theorem section10_msigmaSubgroup_isHall
       simpa [hidx_mul] using hp_dvd_index
     rcases p.property.dvd_or_dvd hp_dvd_prod with hp_rel | hp_Didx
     · have hrel_eq : K.relIndex D = (K.subgroupOf D).index := by
-        rw [← Subgroup.relIndex_top_right (H := K.subgroupOf D)]
-        simpa using
-          (Subgroup.relIndex_subgroupOf (H := K) (K := D) (L := D) (hKL := le_rfl))
+        calc
+          K.relIndex D =
+              (K.subgroupOf D).relIndex (D.subgroupOf D) :=
+            (Subgroup.relIndex_subgroupOf
+              (H := K) (K := D) (L := D) (hKL := le_rfl)).symm
+          _ = (K.subgroupOf D).relIndex ⊤ := by rw [Subgroup.subgroupOf_self]
+          _ = (K.subgroupOf D).index :=
+            Subgroup.relIndex_top_right (H := K.subgroupOf D)
       exact section10_prime_not_dvd_derived_quotient_msigma_of_mem_sigma hM
         (by simpa [π] using hpσ) (by
-          simpa [D, K, hrel_eq, Subgroup.index_eq_card] using hp_rel)
+          change p.val ∣ Nat.card (D ⧸ K.subgroupOf D)
+          rw [← (K.subgroupOf D).index_eq_card, ← hrel_eq]
+          exact hp_rel)
     · exact (section10_sigma_not_dvd_quotient_derived hM
         (by simpa [π] using hpσ)) (by
           simpa [D, Subgroup.index_eq_card] using hp_Didx)
@@ -151,7 +168,8 @@ public theorem section10_prime_not_dvd_maximal_index_of_mem_sigma
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype)
   obtain ⟨S, hPGS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hPGp
   have hS_eq_PG : (S : Subgroup G) = PG := by

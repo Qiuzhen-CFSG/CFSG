@@ -1,19 +1,19 @@
 module
 
-public import Submission.FeitThompson.PFsection4.Basic
-public import Submission.FeitThompson.PFsection4.PFsection4_3
-public import Submission.FeitThompson.PFsection4.PFsection4_4
-public import Submission.FeitThompson.PFsection4.PFsection4_5
-public import Submission.FeitThompson.PFsection4.PFsection4_6
-public import Submission.FeitThompson.PFsection4.PFsection4_8
-public import Submission.FeitThompson.PFsection3.PFsection3_1
-public import Submission.FeitThompson.PFsection3.PFsection3_3
-public import Submission.FeitThompson.PFsection3.PFsection3_9
-public import Submission.FeitThompson.PFsection2.PFsection2_2
-public import Submission.FeitThompson.PFsection1.PFsection1_2
-public import Submission.FeitThompson.PFsection1.PFsection1_5
-public import Submission.FeitThompson.PFsection1.PFsection1_6
-public import Submission.FeitThompson.HallSubgroups.Core
+public import FeitThompson.PFsection4.Basic
+public import FeitThompson.PFsection4.PFsection4_3
+public import FeitThompson.PFsection4.PFsection4_4
+public import FeitThompson.PFsection4.PFsection4_5
+public import FeitThompson.PFsection4.PFsection4_6
+public import FeitThompson.PFsection4.PFsection4_8
+public import FeitThompson.PFsection3.PFsection3_1
+public import FeitThompson.PFsection3.PFsection3_3
+public import FeitThompson.PFsection3.PFsection3_9
+public import FeitThompson.PFsection2.PFsection2_2
+public import FeitThompson.PFsection1.PFsection1_2
+public import FeitThompson.PFsection1.PFsection1_5
+public import FeitThompson.PFsection1.PFsection1_6
+public import FeitThompson.HallSubgroups.Core
 
 /-!
 # Peterfalvi, Section 4: Theorem (4.9)

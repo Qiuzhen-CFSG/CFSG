@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_10_c
+public import FeitThompson.BGsection10.proposition_10_10_c
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -87,7 +87,7 @@ public theorem section10_hall_compl_sigma_groupRank_le_two
   classical
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, Nat.prime_two, zero_le _⟩
+  · exact ⟨0, 2, Nat.prime_two, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hqprime, hnq⟩
     by_cases hn_le_two : n ≤ 2
@@ -116,6 +116,7 @@ public theorem section10_hall_compl_sigma_groupRank_le_two
       exact hp_not_sigma (section10_alpha_subset_sigma hM hpα)
     exact hnq.trans (hrankE_le_M.trans hrankM_le_two)
 
+omit [IsMinCE G] in
 private theorem section10_hall_compl_sylow_map_to_maximal_sylow
     {M : Subgroup G} {E : Subgroup M}
     (hEHall : IsHallSubgroup (section10SigmaPrimes M)ᶜ E)
@@ -180,8 +181,8 @@ private theorem section10_map_subtype_le_normalizer_map_of_le_normalizer
     have hkmap :
         H.subtype ((((⟨b, hb⟩ : L) • kK : K) : H)) ∈ K.map H.subtype :=
       Subgroup.mem_map_of_mem H.subtype (((⟨b, hb⟩ : L) • kK).2)
-    simpa only [kK, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hL_normK]
-      using hkmap
+    simpa only [kK, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hL_normK,
+      map_mul, map_inv] using hkmap
   · intro hx
     rcases Subgroup.mem_map.mp ha with ⟨b, hb, rfl⟩
     have hb_inv : b⁻¹ ∈ L := L.inv_mem hb

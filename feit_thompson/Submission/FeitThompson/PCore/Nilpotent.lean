@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.PCore.PCore
-public import Submission.FeitThompson.PCore.PPrimeCore
+public import FeitThompson.PCore.PCore
+public import FeitThompson.PCore.PPrimeCore
 
 /-!
 # Nilpotent groups and `p`-cores
@@ -20,7 +20,7 @@ public theorem nilpotent_top_le_pCore_sup_pPrimeCore
   classical
   haveI : Group.IsNilpotent Q := hQnil
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup Q)) := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Q) (G' := ↥(⊤ : Subgroup Q))
       (Subgroup.topEquiv.symm : Q ≃* ↥(⊤ : Subgroup Q))
   have hTop_le_iSup :

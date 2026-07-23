@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_6_c
+public import FeitThompson.BGsection6.lemma_6_6_c
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -20,14 +20,24 @@ public theorem lemma_6_6_d
     obtain ⟨T, hQT⟩ := IsPGroup.exists_le_sylow (G := G) (p := p) hQ
     obtain ⟨x, hxTS⟩ := MulAction.exists_smul_eq G T S
     have hT_conj : MulAut.conj x • (T : Subgroup G) = S := by
-      simpa using congrArg (fun P : Sylow p G => (P : Subgroup G)) hxTS
+      calc
+        MulAut.conj x • (T : Subgroup G) = ((x • T : Sylow p G) : Subgroup G) :=
+          Sylow.coe_subgroup_smul.symm
+        _ = S := congrArg (fun P : Sylow p G => (P : Subgroup G)) hxTS
     have hQ_conj : Q.conjBy x ≤ S := by
       calc
         Q.conjBy x ≤ (T : Subgroup G).conjBy x := by
           simpa [Subgroup.conjBy] using
             (Subgroup.map_mono (f := (MulAut.conj x).toMonoidHom) hQT)
         _ = S := by
-          simpa [Subgroup.conjBy] using hT_conj
+          change (T : Subgroup G).map (MulAut.conj x).toMonoidHom = S
+          rw [Subgroup.pointwise_smul_def] at hT_conj
+          have hhom :
+              MulDistribMulAction.toMonoidEnd (MulAut G) G (MulAut.conj x) =
+                (MulAut.conj x).toMonoidHom := by
+            ext g
+            rfl
+          rwa [hhom] at hT_conj
     exact ⟨x, hQ_conj⟩
   obtain ⟨x, hxS⟩ := hQ_conj_into_S
   have hQS : (Q ⊓ S : Subgroup G).carrier.Nonempty := by

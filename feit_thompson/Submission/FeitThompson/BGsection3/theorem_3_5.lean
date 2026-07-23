@@ -1,10 +1,10 @@
 module
 
-public import Submission.FeitThompson.BGsection3.Defs
-public import Submission.FeitThompson.BGsection3.Infrastructure
-public import Submission.FeitThompson.BGsection3.lemma_3_2_a
-public import Submission.FeitThompson.BGsection3.lemma_3_2_b
-public import Submission.FeitThompson.BGsection3.lemma_3_3
+public import FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Infrastructure
+public import FeitThompson.BGsection3.lemma_3_2_a
+public import FeitThompson.BGsection3.lemma_3_2_b
+public import FeitThompson.BGsection3.lemma_3_3
 
 open scoped FixedPoints TensorProduct Pointwise
 
@@ -186,7 +186,9 @@ theorem theorem_3_5_fixedSubspace_rank_one_of_nonzero
   have hi_inj : Function.Injective i := by
     intro v w hEq
     have hEqV : v.1.1 = w.1.1 := by
-      simpa [i] using congrArg Subtype.val hEq
+      have hEq' := congrArg (fun x : ↥(ρ.fixedSubspace R) => (x : V)) hEq
+      change v.1.1 = w.1.1 at hEq'
+      exact hEq'
     exact Subtype.ext <| Subtype.ext hEqV
   letI : FiniteDimensional F ↥(ρ.fixedSubspace R) := FiniteDimensional.of_rank_eq_one hfixR
   have hfin_fix : Module.finrank F ↥(ρ.fixedSubspace R) = 1 :=
@@ -200,13 +202,13 @@ theorem theorem_3_5_fixedSubspace_rank_one_of_nonzero
   have hfin_pos : 0 < Module.finrank F S := by
     refine Nat.pos_of_ne_zero ?_
     intro hzero
-    exact hfixm (by simpa [S] using (Submodule.finrank_eq_zero).mp hzero)
+    apply hfixm
+    change S = ⊥
+    exact (Submodule.finrank_eq_zero).mp hzero
   have hfin_S : Module.finrank F S = 1 := by
     omega
-  exact
-    by
-      simpa [S] using
-        (Module.rank_eq_one_iff_finrank_eq_one (R := F) (M := S)).2 hfin_S
+  change Module.rank F S = 1
+  exact (Module.rank_eq_one_iff_finrank_eq_one (R := F) (M := S)).2 hfin_S
 
 set_option backward.isDefEq.respectTransparency false in
 theorem theorem_3_5_faithful_reduction
@@ -527,7 +529,7 @@ noncomputable def theorem_3_5_projectionRepMapOfIsCompl
     (P Q : Subrepresentation ρ) (hPQ : IsCompl P.toSubmodule Q.toSubmodule) :
     ρ →ₗ P.toRepresentation := by
   let proj : V →ₗ[F] P.toSubmodule :=
-    Submodule.linearProjOfIsCompl P.toSubmodule Q.toSubmodule hPQ
+    Submodule.projectionOnto P.toSubmodule Q.toSubmodule hPQ
   have hproj_intertwining (g : G) :
       proj.comp (ρ g) = (P.toRepresentation g).comp proj := by
     apply LinearMap.ext
@@ -536,18 +538,18 @@ noncomputable def theorem_3_5_projectionRepMapOfIsCompl
     have hu_mem : ρ g u ∈ P.toSubmodule := P.apply_mem_toSubmodule g u.2
     have hw_mem : ρ g w ∈ Q.toSubmodule := Q.apply_mem_toSubmodule g w.2
     let projQ : V →ₗ[F] Q.toSubmodule :=
-      Submodule.linearProjOfIsCompl Q.toSubmodule P.toSubmodule hPQ.symm
+      Submodule.projectionOnto Q.toSubmodule P.toSubmodule hPQ.symm
     have hdecomp : (proj v : V) + (projQ v : V) = v := by
       simpa [proj, projQ] using
-        Submodule.IsCompl.projection_add_projection_eq_self hPQ v
+        Submodule.projection_add_projection_eq_self hPQ v
     have hproj_v : proj v = u := by
       exact huniq (proj v) (projQ v) hdecomp |>.1
     have hproj_hu : proj ((ρ g) u) = ⟨(ρ g) u, hu_mem⟩ := by
       simpa [proj] using
-        Submodule.linearProjOfIsCompl_apply_left hPQ ⟨(ρ g) u, hu_mem⟩
+        Submodule.projectionOnto_apply_left hPQ ⟨(ρ g) u, hu_mem⟩
     have hproj_hw : proj ((ρ g) w) = 0 := by
       simpa [proj] using
-        Submodule.linearProjOfIsCompl_apply_right hPQ ⟨(ρ g) w, hw_mem⟩
+        Submodule.projectionOnto_apply_right hPQ ⟨(ρ g) w, hw_mem⟩
     apply Subtype.ext
     calc
       (((proj.comp (ρ g)) v : P.toSubmodule) : V) =
@@ -574,25 +576,26 @@ noncomputable def theorem_3_5_fixedSubspace_prodEquivOfIsCompl
   let projP : ρ →ₗ P.toRepresentation := theorem_3_5_projectionRepMapOfIsCompl P Q hPQ
   let projQ : ρ →ₗ Q.toRepresentation := theorem_3_5_projectionRepMapOfIsCompl Q P hPQ.symm
   let projP' : V →ₗ[F] P.toSubmodule :=
-    Submodule.linearProjOfIsCompl P.toSubmodule Q.toSubmodule hPQ
+    Submodule.projectionOnto P.toSubmodule Q.toSubmodule hPQ
   let projQ' : V →ₗ[F] Q.toSubmodule :=
-    Submodule.linearProjOfIsCompl Q.toSubmodule P.toSubmodule hPQ.symm
+    Submodule.projectionOnto Q.toSubmodule P.toSubmodule hPQ.symm
   have hdecomp (v : V) :
       ((projP v : P.toSubmodule) : V) + ((projQ v : Q.toSubmodule) : V) = v := by
-    simpa [projP, projQ, projP', projQ'] using
-      Submodule.IsCompl.projection_add_projection_eq_self hPQ v
+    change (projP' v : V) + (projQ' v : V) = v
+    simpa [projP', projQ'] using
+      Submodule.projection_add_projection_eq_self hPQ v
   have hprojP_left (u : P.toSubmodule) : projP u = u := by
     change projP' u = u
-    exact Submodule.linearProjOfIsCompl_apply_left hPQ u
+    exact Submodule.projectionOnto_apply_left hPQ u
   have hprojP_right (u : Q.toSubmodule) : projP u = 0 := by
     change projP' u = 0
-    exact Submodule.linearProjOfIsCompl_apply_right hPQ u
+    exact Submodule.projectionOnto_apply_right hPQ u
   have hprojQ_left (u : Q.toSubmodule) : projQ u = u := by
     change projQ' u = u
-    exact Submodule.linearProjOfIsCompl_apply_left hPQ.symm u
+    exact Submodule.projectionOnto_apply_left hPQ.symm u
   have hprojQ_right (u : P.toSubmodule) : projQ u = 0 := by
     change projQ' u = 0
-    exact Submodule.linearProjOfIsCompl_apply_right hPQ.symm u
+    exact Submodule.projectionOnto_apply_right hPQ.symm u
   let e :
       ρ.fixedSubspace H ≃ₗ[F]
         (P.toRepresentation.fixedSubspace H × Q.toRepresentation.fixedSubspace H) := by
@@ -609,14 +612,18 @@ noncomputable def theorem_3_5_fixedSubspace_prodEquivOfIsCompl
             ext <;> simp }
     · change ∀ h : H, P.toRepresentation h (projP v) = projP v
       intro h
-      simpa [projP] using
+      have hv :=
         (Representation.IntertwiningMap.isIntertwining
           (ρ := ρ) (σ := P.toRepresentation) projP h v).symm.trans (congrArg projP (v.2 h))
+      change P.toRepresentation h (projP v) = projP v at hv
+      exact hv
     · change ∀ h : H, Q.toRepresentation h (projQ v) = projQ v
       intro h
-      simpa [projQ] using
+      have hv :=
         (Representation.IntertwiningMap.isIntertwining
           (ρ := ρ) (σ := Q.toRepresentation) projQ h v).symm.trans (congrArg projQ (v.2 h))
+      change Q.toRepresentation h (projQ v) = projQ v at hv
+      exact hv
     · change ∀ h : H, ρ h (vw.1.1 + vw.2.1) = vw.1.1 + vw.2.1
       intro h
       have hvP : ρ h vw.1.1 = vw.1.1 := by
@@ -632,16 +639,24 @@ noncomputable def theorem_3_5_fixedSubspace_prodEquivOfIsCompl
       · apply Subtype.ext
         change projP.toLinearMap (vw.1.1 + vw.2.1) = vw.1.1
         have hleft : projP.toLinearMap (↑↑vw.1 : V) = vw.1.1 := by
-          simpa using hprojP_left vw.1.1
+          have hleft' := hprojP_left vw.1.1
+          change projP.toLinearMap (↑↑vw.1 : V) = vw.1.1 at hleft'
+          exact hleft'
         have hright : projP.toLinearMap (↑↑vw.2 : V) = 0 := by
-          simpa using hprojP_right vw.2.1
+          have hright' := hprojP_right vw.2.1
+          change projP.toLinearMap (↑↑vw.2 : V) = 0 at hright'
+          exact hright'
         rw [map_add, hleft, hright, add_zero]
       · apply Subtype.ext
         change projQ.toLinearMap (vw.1.1 + vw.2.1) = vw.2.1
         have hleft : projQ.toLinearMap (↑↑vw.1 : V) = 0 := by
-          simpa using hprojQ_right vw.1.1
+          have hleft' := hprojQ_right vw.1.1
+          change projQ.toLinearMap (↑↑vw.1 : V) = 0 at hleft'
+          exact hleft'
         have hright : projQ.toLinearMap (↑↑vw.2 : V) = vw.2.1 := by
-          simpa using hprojQ_left vw.2.1
+          have hright' := hprojQ_left vw.2.1
+          change projQ.toLinearMap (↑↑vw.2 : V) = vw.2.1 at hright'
+          exact hright'
         rw [map_add, hleft, hright, zero_add]
   exact e
 
@@ -678,16 +693,18 @@ theorem theorem_3_5_le_ker_of_normal_fixedSubspace_ne_bot
   let S : Subrepresentation ρ := theorem_3_5_fixedSubrepresentation_of_normal ρ H
   have hS_ne : S ≠ ⊥ := by
     intro hS
-    exact hfix (by
-      simpa [S, theorem_3_5_fixedSubrepresentation_of_normal] using
-        congrArg Subrepresentation.toSubmodule hS)
+    apply hfix
+    have hS' := congrArg Subrepresentation.toSubmodule hS
+    change ρ.fixedSubspace H = (⊥ : Submodule F V) at hS'
+    exact hS'
   have hS_top : S = ⊤ := by
     rcases (inferInstance : Representation.IsIrreducible ρ).eq_bot_or_eq_top S with hbot | htop
     · exact False.elim (hS_ne hbot)
     · exact htop
   have htop_sub : ρ.fixedSubspace H = ⊤ := by
-    simpa [S, theorem_3_5_fixedSubrepresentation_of_normal] using
-      congrArg Subrepresentation.toSubmodule hS_top
+    have hS_top' := congrArg Subrepresentation.toSubmodule hS_top
+    change ρ.fixedSubspace H = (⊤ : Submodule F V) at hS_top'
+    exact hS_top'
   intro h hh
   rw [MonoidHom.mem_ker]
   ext v
@@ -728,6 +745,7 @@ theorem theorem_3_5_irreducible_finiteDimensional_of_fixedSubspace_ne_bot
     intro hS
     have hv0 : v = 0 := by
       have : v ∈ (⊥ : Subrepresentation ρ).toSubmodule := by simpa [hS] using hvS
+      change v ∈ (⊥ : Submodule F V) at this
       simpa using this
     exact hvne hv0
   have hS_top : S = ⊤ := by
@@ -740,8 +758,10 @@ theorem theorem_3_5_irreducible_finiteDimensional_of_fixedSubspace_ne_bot
   exact
     (LinearEquiv.ofTop (Submodule.span F (Set.range fun g : G => ρ g v))
       (by
-        simpa [S, theorem_3_5_orbitSpanSubrepresentation] using
-          congrArg Subrepresentation.toSubmodule hS_top)).finiteDimensional
+        have hS_top' := congrArg Subrepresentation.toSubmodule hS_top
+        change Submodule.span F (Set.range fun g : G => ρ g v) =
+          (⊤ : Submodule F V) at hS_top'
+        exact hS_top')).finiteDimensional
 
 noncomputable def theorem_3_5_coindMap
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
@@ -763,15 +783,26 @@ noncomputable def theorem_3_5_coindMap
           ext g
           simp }
     intro h g
-    simpa [mul_assoc] using
-      (Representation.IntertwiningMap.isIntertwining
-        (ρ := σ.comp H.subtype) (σ := ρ) π h (σ g w))
+    have hπ := Representation.IntertwiningMap.isIntertwining
+      (ρ := σ.comp H.subtype) (σ := ρ) π h (σ g w)
+    change π (σ (h : G) (σ g w)) = ρ h (π (σ g w)) at hπ
+    change π (σ ((h : G) * g) w) = ρ h (π (σ g w))
+    simpa using hπ
   · intro g
     apply LinearMap.ext
     intro w
     apply Subtype.ext
     ext x
-    simp [coindRep, Representation.coind_apply]
+    change π (σ x (σ g w)) = π (σ (x * g) w)
+    rw [σ.map_mul]
+    rfl
+
+private theorem theorem_3_5_coindEval_coindMap
+    {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
+    {V : Type*} [AddCommGroup V] [Module F V] {W : Type*}
+    [AddCommGroup W] [Module F W] (σ : Representation F G W)
+    (ρ : Representation F H V) (π : σ.comp H.subtype →ₗ ρ) (g : G) (w : W) :
+    coindEval (ρ := ρ) g (theorem_3_5_coindMap σ ρ π w) = π (σ g w) := rfl
 
 noncomputable def theorem_3_5_coindMapOfSubrep
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
@@ -792,11 +823,15 @@ noncomputable def theorem_3_5_coindMapOfSubrep
   have hcompl_sub : IsCompl M.toSubmodule ψ.toSubmodule := by
     refine ⟨?_, ?_⟩
     · rw [disjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+      have h := congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+      change M.toSubmodule ⊓ ψ.toSubmodule = (⊥ : Submodule F V) at h
+      exact h
     · rw [codisjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+      have h := congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+      change M.toSubmodule ⊔ ψ.toSubmodule = (⊤ : Submodule F V) at h
+      exact h
   let proj : V →ₗ[F] M.toSubmodule :=
-    Submodule.linearProjOfIsCompl M.toSubmodule ψ.toSubmodule hcompl_sub
+    Submodule.projectionOnto M.toSubmodule ψ.toSubmodule hcompl_sub
   have hproj_intertwining (h : H) :
       proj.comp (σH h) = (M.toRepresentation h).comp proj := by
     apply LinearMap.ext
@@ -805,15 +840,15 @@ noncomputable def theorem_3_5_coindMapOfSubrep
     have hu_mem : (σH h) u ∈ M.toSubmodule := M.apply_mem_toSubmodule h u.2
     have hw_mem : (σH h) w ∈ ψ.toSubmodule := ψ.apply_mem_toSubmodule h w.2
     let projψ : V →ₗ[F] ψ.toSubmodule :=
-      Submodule.linearProjOfIsCompl ψ.toSubmodule M.toSubmodule hcompl_sub.symm
+      Submodule.projectionOnto ψ.toSubmodule M.toSubmodule hcompl_sub.symm
     have hdecomp : (proj v : V) + (projψ v : V) = v := by
-      simpa [proj, projψ] using Submodule.IsCompl.projection_add_projection_eq_self hcompl_sub v
+      simpa [proj, projψ] using Submodule.projection_add_projection_eq_self hcompl_sub v
     have hproj_v : proj v = u := by
       exact huniq (proj v) (projψ v) hdecomp |>.1
     have hproj_hu : proj ((σH h) u) = ⟨(σH h) u, hu_mem⟩ := by
-      simpa [proj] using Submodule.linearProjOfIsCompl_apply_left hcompl_sub ⟨(σH h) u, hu_mem⟩
+      simpa [proj] using Submodule.projectionOnto_apply_left hcompl_sub ⟨(σH h) u, hu_mem⟩
     have hproj_hw : proj ((σH h) w) = 0 := by
-      simpa [proj] using Submodule.linearProjOfIsCompl_apply_right hcompl_sub ⟨(σH h) w, hw_mem⟩
+      simpa [proj] using Submodule.projectionOnto_apply_right hcompl_sub ⟨(σH h) w, hw_mem⟩
     apply Subtype.ext
     calc
       (((proj.comp (σH h)) v : M.toSubmodule) : V) =
@@ -840,8 +875,9 @@ theorem theorem_3_5_coindMapOfSubrep_eval_one
     coindEval (ρ := M.toRepresentation) (1 : G)
       (theorem_3_5_coindMapOfSubrep σ hchar M m) = m := by
   classical
-  unfold theorem_3_5_coindMapOfSubrep theorem_3_5_coindMap coindEval
-  simp [Submodule.linearProjOfIsCompl_apply_left]
+  unfold theorem_3_5_coindMapOfSubrep
+  simp only [theorem_3_5_coindEval_coindMap, map_one, Module.End.one_apply,
+    Representation.RepMap.coe_mk, Submodule.projectionOnto_apply_left]
 
 theorem theorem_3_5_coind_apply_baseFunctionAt
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
@@ -923,8 +959,11 @@ theorem theorem_3_5_coindEval_surjective_fixedSubspace
         intro hq
         apply hrq
         simpa using hq.symm
-      simpa using
-        (coindEval_of_ne_coset (ρ := ρ) (x := (1 : G)) (g := (r : G)) hrq' v)
+      have hzero :=
+        coindEval_of_ne_coset (ρ := ρ) (x := (1 : G)) (g := (r : G)) hrq' v
+      change coindEval (ρ := ρ) (1 : G)
+        (coindBaseFunctionAt (ρ := ρ) (r : G) v) = 0 at hzero
+      exact hzero
     · intro hr
       exact False.elim (hr (Finset.mem_univ _))
 
@@ -1032,9 +1071,14 @@ theorem theorem_3_5_fixedSubspace_extendScalars_eq_baseChange
     (Representation.extendScalars F' ρ).fixedSubspace H =
       (ρ.fixedSubspace H).baseChange F' := by
   dsimp [Representation.fixedSubspace]
-  simpa [Representation.extendScalars_apply] using
-    theorem_3_5_invariants_extendScalars_eq_baseChange
-      (ρ := ρ.comp H.subtype) hF hF'
+  have hrep :
+      (Representation.extendScalars F' ρ).comp H.subtype =
+        Representation.extendScalars F' (ρ.comp H.subtype) := by
+    ext h
+    rfl
+  rw [hrep]
+  exact theorem_3_5_invariants_extendScalars_eq_baseChange
+    (ρ := ρ.comp H.subtype) hF hF'
 
 theorem theorem_3_5_fixedSubspace_rank_one_extendScalars
     {G : Type*} [Group G] [Finite G] {F : Type*} [Field F]
@@ -1174,15 +1218,21 @@ noncomputable def theorem_3_5_coindEquivOfNotall
     intro hbot
     apply hf_ne
     apply Representation.RepMap.toLinearMap_injective
-    exact LinearMap.range_eq_bot.mp (by
-      simpa using congrArg Subrepresentation.toSubmodule hbot)
+    apply LinearMap.range_eq_bot.mp
+    have hbot' := congrArg Subrepresentation.toSubmodule hbot
+    change LinearMap.range f.toLinearMap =
+      (⊥ : Submodule F (Representation.coindV H.subtype M.toRepresentation)) at hbot'
+    exact hbot'
   have hrange_top : f.range = ⊤ := by
     rcases hsimple_coind.eq_bot_or_eq_top f.range with hbot | htop
     · exact False.elim (hrange_ne hbot)
     · exact htop
   have hfsurj : Function.Surjective f := by
-    exact LinearMap.range_eq_top.mp (by
-      simpa using congrArg Subrepresentation.toSubmodule hrange_top)
+    apply LinearMap.range_eq_top.mp
+    have hrange_top' := congrArg Subrepresentation.toSubmodule hrange_top
+    change LinearMap.range f.toLinearMap =
+      (⊤ : Submodule F (Representation.coindV H.subtype M.toRepresentation)) at hrange_top'
+    exact hrange_top'
   let eLin : V ≃ₗ[F] Representation.coindV H.subtype M.toRepresentation :=
     LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩
   refine Representation.RepEquiv.mk eLin ?_
@@ -1368,15 +1418,19 @@ public theorem theorem_3_5_coprime_card_of_prime_complement
     constructor
     · intro hg
       have hsmulP : a • (P : Subgroup ↥K) = (P : Subgroup ↥K) := by
-        simpa using congrArg (fun Q : Sylow p' ↥K => (Q : Subgroup ↥K))
+        have hfixed := congrArg (fun Q : Sylow p' ↥K => (Q : Subgroup ↥K))
           ((MulAction.mem_fixedPoints.mp hPfix) a)
+        change a • (P : Subgroup ↥K) = (P : Subgroup ↥K) at hfixed
+        exact hfixed
       have : a • g ∈ a • (P : Subgroup ↥K) :=
         Subgroup.smul_mem_pointwise_smul g a (P : Subgroup ↥K) hg
       simpa [hsmulP] using this
     · intro hg
       have hsmulPinv : a⁻¹ • (P : Subgroup ↥K) = (P : Subgroup ↥K) := by
-        simpa using congrArg (fun Q : Sylow p' ↥K => (Q : Subgroup ↥K))
+        have hfixed := congrArg (fun Q : Sylow p' ↥K => (Q : Subgroup ↥K))
           ((MulAction.mem_fixedPoints.mp hPfix) a⁻¹)
+        change a⁻¹ • (P : Subgroup ↥K) = (P : Subgroup ↥K) at hfixed
+        exact hfixed
       have : a⁻¹ • (a • g) ∈ a⁻¹ • (P : Subgroup ↥K) :=
         Subgroup.smul_mem_pointwise_smul (a • g) a⁻¹ (P : Subgroup ↥K) hg
       simpa [hsmulPinv, inv_smul_smul] using this
@@ -1686,9 +1740,13 @@ theorem theorem_3_5_faithful_irreducible_endpoint
       have hcompl_sub : IsCompl P.toSubmodule Q.toSubmodule := by
         refine ⟨?_, ?_⟩
         · rw [disjoint_iff]
-          simpa using congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+          have h := congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+          change P.toSubmodule ⊓ Q.toSubmodule = (⊥ : Submodule F V) at h
+          exact h
         · rw [codisjoint_iff]
-          simpa using congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+          have h := congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+          change P.toSubmodule ⊔ Q.toSubmodule = (⊤ : Submodule F V) at h
+          exact h
       have hP_ne_bot : P.toSubmodule ≠ ⊥ := by
         letI : Nontrivial P.toSubmodule := Subrepresentation.irreducible_module_nontrivial P.toRepresentation
         exact Submodule.nontrivial_iff_ne_bot.mp inferInstance
@@ -1716,7 +1774,9 @@ theorem theorem_3_5_faithful_irreducible_endpoint
           rw [MonoidHom.mem_ker] at hc
           have hcv : P.toRepresentation ((c : Csub) : S) ⟨v, hv⟩ = ⟨v, hv⟩ :=
             DFunLike.congr_fun hc ⟨v, hv⟩
-          simpa using congrArg Subtype.val hcv
+          have hcv' := congrArg Subtype.val hcv
+          change ρS ((c : Csub) : S) v = v at hcv'
+          exact hcv'
         have hfixC_neS : ρS.fixedSubspace Csub ≠ ⊥ := by
           intro hbot
           apply hP_ne_bot
@@ -1761,7 +1821,9 @@ theorem theorem_3_5_faithful_irreducible_endpoint
           rw [MonoidHom.mem_ker] at hc
           have hcv : Q.toRepresentation ((c : Csub) : S) ⟨v, hv⟩ = ⟨v, hv⟩ :=
             DFunLike.congr_fun hc ⟨v, hv⟩
-          simpa using congrArg Subtype.val hcv
+          have hcv' := congrArg Subtype.val hcv
+          change ρS ((c : Csub) : S) v = v at hcv'
+          exact hcv'
         have hfixC_neS : ρS.fixedSubspace Csub ≠ ⊥ := by
           intro hbot
           apply hQ_ne_bot

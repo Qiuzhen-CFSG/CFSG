@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_6_b
+public import FeitThompson.BGsection6.lemma_6_6_b
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -43,3 +43,4 @@ public theorem lemma_6_6_c
   have hgN : g ∈ Subgroup.normalizer S := by
     simpa [U] using hgU
   exact ⟨c, hcY, g, hgN, hx_eq.symm⟩
+

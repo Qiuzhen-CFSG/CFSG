@@ -13,7 +13,7 @@ public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 public import Mathlib.LinearAlgebra.Matrix.Permutation
 public import Mathlib.Order.BourbakiWitt
 public import Mathlib.Order.CompletePartialOrder
-public import Submission.FeitThompson.Representation.Unbundled
+public import FeitThompson.Representation.Unbundled
 public import Mathlib.RingTheory.PicardGroup
 public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.RingTheory.SimpleRing.Principal
@@ -214,7 +214,9 @@ theorem invConjClass_fixed_eq_one_of_odd_card
   rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
   have hclass :
       ConjClasses.mk g⁻¹ = ConjClasses.mk g := by
-    simpa [invConjClassEquiv, invConjClass] using hc
+    change invConjClass (ConjClasses.mk g) = ConjClasses.mk g at hc
+    change ConjClasses.mk g⁻¹ = ConjClasses.mk g at hc
+    exact hc
   have hconj : IsConj g g⁻¹ := by
     exact (ConjClasses.mk_eq_mk_iff_isConj.mp hclass).symm
   rcases hconj with ⟨u, hu⟩
@@ -383,7 +385,8 @@ public lemma trace_pow_eq_sum_eigenvalues
   let N : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hn hpow
   have hindep : iSupIndep N := by
-    simpa [N] using f.eigenspaces_iSupIndep.comp Subtype.coe_injective
+    change iSupIndep (f.eigenspace ∘ (fun μ : f.Eigenvalues => (μ : ℂ)))
+    exact f.eigenspaces_iSupIndep.comp Subtype.coe_injective
   have htop : iSup N = ⊤ := by
     simpa [N] using eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
   have hds : DirectSum.IsInternal N :=
@@ -575,7 +578,7 @@ lemma representation_exists_nonzero_hom_to_dual_of_fixed_conjugate
       Module.finrank ℂ (Representation.IntertwiningMap ρ ρ.dual) = 1 :=
     representation_self_dual_hom_finrank_eq_one_of_fixed_conjugate ρ hρ_irreducible hfixed
   by_contra hzero
-  push_neg at hzero
+  push Not at hzero
   have hsub :
       Subsingleton (Representation.IntertwiningMap ρ ρ.dual) := by
     refine ⟨fun f g => ?_⟩
@@ -909,7 +912,7 @@ lemma representation_character_eq_principal_of_average_ne_zero
     simp
   have hexists : ∃ f : Representation.IntertwiningMap T ρ, f ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     have hsub : Subsingleton (Representation.IntertwiningMap T ρ) := by
       refine ⟨fun f g => ?_⟩
       rw [hzero f, hzero g]

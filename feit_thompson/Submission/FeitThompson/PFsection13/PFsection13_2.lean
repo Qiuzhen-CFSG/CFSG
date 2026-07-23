@@ -1,20 +1,20 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_1
-public import Submission.FeitThompson.PFsection13.PFsection13_Common
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection9.PFsection9_4
-import Submission.FeitThompson.PFsection9.PFsection9_6
-import Submission.FeitThompson.PFsection9.PFsection9_7
-import Submission.FeitThompson.PFsection9.PFsection9_11
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection8.PFsection8_15
-import Submission.FeitThompson.PFsection8.PFsection8_16
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection10.PFsection10_11
-import Submission.FeitThompson.PFsection11.PFsection11_9
-import Submission.FeitThompson.PFsection12.PFsection12_7
+public import FeitThompson.PFsection13.PFsection13_1
+public import FeitThompson.PFsection13.PFsection13_Common
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection9.PFsection9_4
+import FeitThompson.PFsection9.PFsection9_6
+import FeitThompson.PFsection9.PFsection9_7
+import FeitThompson.PFsection9.PFsection9_11
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection8.PFsection8_15
+import FeitThompson.PFsection8.PFsection8_16
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection10.PFsection10_11
+import FeitThompson.PFsection11.PFsection11_9
+import FeitThompson.PFsection12.PFsection12_7
 
 /-!
 # Peterfalvi, Section 13: PFsection13_2
@@ -22,7 +22,7 @@ import Submission.FeitThompson.PFsection12.PFsection12_7
 
 noncomputable section
 
-open scoped BigOperators Pointwise
+open scoped BigOperators Pointwise commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -607,7 +607,7 @@ private theorem section13_maximal_normalizer_eq_self_of_isMinCE
   have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
   have hMsigmaSub_ne : section10MsigmaSubgroup M ≠ ⊥ := by
     intro hbot
-    exact hMsigma_ne (by simpa [section10Msigma, hbot])
+    exact hMsigma_ne (by simp [section10Msigma, hbot])
   have hnorm :=
     section10_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       (G := G) hM (N := section10MsigmaSubgroup M) hMsigmaSub_ne
@@ -2061,10 +2061,10 @@ private theorem section13_typeII_theorem_8_12_conclusion
       Section8.notation_8_10_source_data M MF Ms Abook A0book
         (Section8.a1Set MF) := by
     have hA1 : Section8.a1Set MF = Section8.a1Set Ms := by
-      simpa [hMsEq]
+      simp [hMsEq]
     have hAbook :
         Abook = Section8.section8CentralizerUnion (ambientDerivedSubgroup M) Ms := by
-      simpa [Abook, hMsEq]
+      simp [Abook, hMsEq]
     refine ⟨hM, hP.1, hMs, hA1, Or.inr ?_⟩
     refine ⟨U, W1, W2, hP, Or.inl hII, hAbook, rfl, ?_⟩
     intro hlate
@@ -2126,10 +2126,10 @@ private theorem section13_typeII_typePFAZero_TI_of_source
       Section8.notation_8_10_source_data M MF Ms Abook A0book
         (Section8.a1Set MF) := by
     have hA1 : Section8.a1Set MF = Section8.a1Set Ms := by
-      simpa [hMsEq]
+      simp [hMsEq]
     have hAbook :
         Abook = Section8.section8CentralizerUnion (ambientDerivedSubgroup M) Ms := by
-      simpa [Abook, hMsEq]
+      simp [Abook, hMsEq]
     have hA0book :
         A0book =
           Abook ∪ section16ConjugatesOfSetBySet (section16HatW W1 W2)
@@ -2266,10 +2266,10 @@ private theorem section13_typeII_normalizer_le_of_theorem_8_12
       Section8.notation_8_10_source_data M MF Ms Abook A0book
         (Section8.a1Set MF) := by
     have hA1 : Section8.a1Set MF = Section8.a1Set Ms := by
-      simpa [hMsEq]
+      simp [hMsEq]
     have hAbook :
         Abook = Section8.section8CentralizerUnion (ambientDerivedSubgroup M) Ms := by
-      simpa [Abook, hMsEq]
+      simp [Abook, hMsEq]
     refine ⟨hM, hP.1, hMs, hA1, Or.inr ?_⟩
     refine ⟨U, W1, W2, hP, Or.inl hII, hAbook, rfl, ?_⟩
     intro hlate
@@ -2525,7 +2525,7 @@ private def theorem_13_2_case_9_7_hypothesis92BridgeData
 
 private def theorem_13_2_case_9_7_hypothesis92SourceCoreData
     {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G) : Prop :=
+    (M MF U W1 _ : Subgroup G) : Prop :=
   Section8.typeIIToIVSourceCondition M U W1 ∧
     (section16TypeII M MF →
       IsMulCommutative U ∧
@@ -2737,7 +2737,7 @@ private theorem section13_exists_conj_eq_of_typeP_complements
     intro hDtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       intro x _hx
-      exact hDleM (by simpa [hDtop])
+      exact hDleM (by simp [hDtop])
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hsolvD : IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
@@ -2767,9 +2767,9 @@ private theorem section13_isMulCommutative_of_eq_conjBy
     (hEq : U = V.conjBy d) (hcomm : IsMulCommutative V) :
     IsMulCommutative U := by
   subst U
-  simpa [Subgroup.conjBy] using
-    (Subgroup.map_isMulCommutative
-      (f := (MulAut.conj d).toMonoidHom) (H := V))
+  rw [Subgroup.conjBy]
+  exact Subgroup.map_isMulCommutative
+    (f := (MulAut.conj d).toMonoidHom) (H := V)
 
 private theorem section13_not_isMulCommutative_of_eq_conjBy
     {G : Type u} [Group G] {U V : Subgroup G} {d : G}
@@ -3073,12 +3073,12 @@ private theorem section13_typeFData_of_eq_conjBy
     simpa [hEq] using hVdne
   · have hCompConj := section13_section12ComplementIn_conjBy (G := G) d hComp
     simpa [hDconj, hMFconj, hEq] using hCompConj
-  · simpa [hEq] using
+  · simpa [Subgroup.conjBy, hEq] using
       (Subgroup.map_mono (f := (MulAut.conj d).toMonoidHom) hU1le)
   · letI : IsMulCommutative U1 := hU1comm
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj d).toMonoidHom) (H := U1))
+    rw [Subgroup.conjBy]
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj d).toMonoidHom) (H := U1)
   · have hNormConj := section13_section10NormalIn_conjBy (G := G) d hU1norm
     simpa [hEq] using hNormConj
   · intro x hxMF hxne z hz
@@ -3114,7 +3114,7 @@ private theorem section13_typeFData_of_eq_conjBy
       hCent (d⁻¹ * x * d) hyMF hyne ⟨hzBackV, hzBackCent⟩
     exact Subgroup.mem_map.mpr ⟨d⁻¹ * z * d, hzBackU1, by
       simp [MulAut.conj_apply, mul_assoc]⟩
-  · simpa [hEq] using
+  · simpa [Subgroup.conjBy, hEq] using
       (Subgroup.map_mono (f := (MulAut.conj d).toMonoidHom) hU0le)
   · have hU0exp :
         Monoid.exponent (U0.conjBy d) = Monoid.exponent U0 := by
@@ -3582,7 +3582,7 @@ private theorem section13_theorem_13_2_hypothesis11_of_typeIIIIV_hoReduction_sou
       section13_theorem_13_2_case_9_7_hypothesis92_of_sourceContext
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
         hsourceOrig
-    exact { h92Nat with q_eq := by simpa [hqW1] using h92Nat.q_eq }
+    exact { h92Nat with q_eq := by simp [hqW1] }
   rcases hho with
     ⟨hH0P, _hPSmax, hH0NormalS, hH0NormalP, hH0LtP, hElem, hTypeData⟩
   have hH0S : H0 ≤ Smax :=
@@ -4300,7 +4300,7 @@ private theorem section13_theorem_13_2_case_9_7_corePrereqData_of_hypothesis95Bo
       Section9.hypothesis_9_2_statement Smax P U W1 W2 (Nat.card W1) :=
     h95.hypothesis92
   have h92q : Section9.hypothesis_9_2_statement Smax P U W1 W2 q := by
-    exact { h92Nat with q_eq := by simpa [hq_card] using h92Nat.q_eq }
+    exact { h92Nat with q_eq := by simp [hq_card] }
   have hMin : IsMinCE G :=
     section13_theorem_13_2_global_isMinCE_of_sourceContext
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
@@ -5598,12 +5598,10 @@ private theorem section13_theorem_13_2_typeIIElementaryConclusion_of_sourceConte
     intro x y
     apply Subtype.ext
     letI : IsMulCommutative U := hUcomm
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := U) (hCU x.property) (hCU y.property)
-  have hcommC : _root_.commutator C = ⊥ := by
-    letI : IsMulCommutative C := hCcomm
-    rw [commutator_eq_bot_iff_center_eq_top]
-    exact CommGroup.center_eq_top
+    exact setLike_mul_comm
+      (s := U) (hCU x.property) (hCU y.property)
+  haveI : IsMulCommutative C := hCcomm
+  have hcommC : _root_.commutator C = ⊥ := commutator_eq_bot (G := C)
   have hCprimeBot : Cprime = (⊥ : Subgroup G) := by
     rw [h95.Cprime_eq_commutator, hcommC]
     simp
@@ -5634,7 +5632,7 @@ private theorem section13_isElementaryAbelian_of_mulEquiv
     { toIsMulCommutative := { is_comm := Std.Commutative.mk ?_ }
       exponent_dvd_p := ?_ }
   · intro a b
-    have hcomm : e.symm a * e.symm b = e.symm b * e.symm a := mul_comm _ _
+    have hcomm : e.symm a * e.symm b = e.symm b * e.symm a := mul_comm' _ _
     apply_fun e at hcomm
     simpa [e.map_mul] using hcomm
   · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -5817,12 +5815,10 @@ private theorem section13_theorem_13_2_coherence911KernelFamily_of_sourceContext
     intro x y
     apply Subtype.ext
     letI : IsMulCommutative U := hUcomm
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := U) (hCU x.property) (hCU y.property)
-  have hcommC : _root_.commutator C = ⊥ := by
-    letI : IsMulCommutative C := hCcomm
-    rw [commutator_eq_bot_iff_center_eq_top]
-    exact CommGroup.center_eq_top
+    exact setLike_mul_comm
+      (s := U) (hCU x.property) (hCU y.property)
+  haveI : IsMulCommutative C := hCcomm
+  have hcommC : _root_.commutator C = ⊥ := commutator_eq_bot (G := C)
   have hbot : Cprime = (⊥ : Subgroup G) := by
     rw [_h95.Cprime_eq_commutator, hcommC]
     simp
@@ -6382,7 +6378,7 @@ private theorem section13_typeP_AZero_TI_of_typeP_source
 
 private def section13_bookAZeroData
     {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
+    (M MF _ W1 W2 : Subgroup G)
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
     (A0book : Set G) (H_A0 : G → Subgroup G) : Prop :=
   ∃ Ms : Subgroup G, ∃ Abook A1book : Set G,

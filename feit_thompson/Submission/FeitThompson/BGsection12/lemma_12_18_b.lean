@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_18_a
+public import FeitThompson.BGsection12.lemma_12_18_a
 
 open scoped Pointwise
 
@@ -43,8 +43,8 @@ public theorem lemma_12_18_b
   have hQproper : Q ≠ ⊤ := by
     intro hQtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
-      intro x _hx
-      exact hQle (by simpa [hQtop])
+      rw [← hQtop]
+      exact hQle
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hnormQproper : Subgroup.normalizer (Q : Set G) ≠ ⊤ :=
     section12_normalizer_ne_top_of_ne_bot_ne_top (G := G) hQne hQproper
@@ -241,7 +241,7 @@ public theorem lemma_12_18_b
         have hx_eq : x = 1 := by
           apply Subtype.ext
           simpa using hxbot
-        simpa [hx_eq]
+        simp [hx_eq]
       · intro hx
         have hx_eq : x = 1 := by
           simpa using hx
@@ -253,7 +253,7 @@ public theorem lemma_12_18_b
       have hquot_nil' : Group.IsNilpotent (D ⧸ KsubD) := by
         simpa [D, K, KsubD] using hquot_nil
       letI : Group.IsNilpotent (D ⧸ KsubD) := hquot_nil'
-      exact nilpotent_of_mulEquiv (G := D ⧸ KsubD) (G' := D) e
+      exact Group.nilpotent_of_mulEquiv (G := D ⧸ KsubD) (G' := D) e
     have hSQleD : (SQ : Subgroup M) ≤ D := by
       intro x hx
       have hxQ : ((x : M) : G) ∈ Q := by

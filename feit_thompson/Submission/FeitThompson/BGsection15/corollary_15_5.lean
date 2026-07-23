@@ -4,13 +4,13 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection15.corollary_15_4
-import Submission.FeitThompson.PCore.CentralizerControl
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection15.corollary_15_4
+import FeitThompson.PCore.CentralizerControl
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-! # Corollary 15 5 from BG Section 15 -/
 
@@ -40,7 +40,7 @@ private theorem section15_normal_isPiSubgroup_le_hall
   intro x hx
   have hxS : x ∈ S := by
     have hNleS : N ≤ S := by
-      simpa [S] using (show N ≤ H ⊔ N from le_sup_right)
+      simp [S]
     exact hNleS hx
   simpa [hEq] using hxS
 
@@ -49,7 +49,7 @@ private theorem section15_normal_isPiSubgroup_le_hall
 public theorem section15_sigma_complement_fitting_core_tau2
     {M MF : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF) :
+    (_hMF : section15MFSubgroup M MF) :
     IsPiSubgroup (G := G) (section12Tau2Primes M)
       (section15SigmaComplementFittingCore M) := by
   classical
@@ -128,7 +128,7 @@ private theorem section15_corollary15_5_a_of_MF_eq_msigma
     {M MF : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hEq : MF = section10Msigma M) :
+    (_hEq : MF = section10Msigma M) :
     section15SigmaComplementFittingCore M ≤ section8FittingSubgroup M ∧
       IsCyclic (section15SigmaComplementFittingCore M) ∧
         IsPiSubgroup (G := G) (section12Tau2Primes M)
@@ -137,8 +137,9 @@ private theorem section15_corollary15_5_a_of_MF_eq_msigma
   · simpa [section15SigmaComplementFittingCore] using
       (piCoreIn_le (G := G) (section10SigmaPrimes M)ᶜ
         (section8FittingSubgroup M))
-  · simpa [section15SigmaComplementFittingCore] using
-      section10_sigma_compl_fitting_core_isCyclic (G := G) hM
+  · change IsCyclic
+      (piCoreIn (section10SigmaPrimes M)ᶜ (section8FittingSubgroup M))
+    exact section10_sigma_compl_fitting_core_isCyclic (G := G) hM
   · exact section15_sigma_complement_fitting_core_tau2 hM hMF
 
 /-- Corollary 15.5(a), proper branch `M_F ≠ M_σ`: Theorem 15.2(g) and
@@ -147,7 +148,7 @@ private theorem section15_corollary15_5_a_of_MF_ne_msigma
     {M MF : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hNe : MF ≠ section10Msigma M) :
+    (_hNe : MF ≠ section10Msigma M) :
     section15SigmaComplementFittingCore M ≤ section8FittingSubgroup M ∧
       IsCyclic (section15SigmaComplementFittingCore M) ∧
         IsPiSubgroup (G := G) (section12Tau2Primes M)
@@ -156,8 +157,9 @@ private theorem section15_corollary15_5_a_of_MF_ne_msigma
   · simpa [section15SigmaComplementFittingCore] using
       (piCoreIn_le (G := G) (section10SigmaPrimes M)ᶜ
         (section8FittingSubgroup M))
-  · simpa [section15SigmaComplementFittingCore] using
-      section10_sigma_compl_fitting_core_isCyclic (G := G) hM
+  · change IsCyclic
+      (piCoreIn (section10SigmaPrimes M)ᶜ (section8FittingSubgroup M))
+    exact section10_sigma_compl_fitting_core_isCyclic (G := G) hM
   · exact section15_sigma_complement_fitting_core_tau2 hM hMF
 
 public theorem corollary_15_5_a
@@ -172,6 +174,7 @@ public theorem corollary_15_5_a
   · exact section15_corollary15_5_a_of_MF_eq_msigma hM hMF hEq
   · exact section15_corollary15_5_a_of_MF_ne_msigma hM hMF hEq
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_secondDerived_le_of_quotientAbelian_ambientDerived
     {M K : Subgroup G}
     (hquot : section15QuotientAbelian (ambientDerivedSubgroup M) K) :
@@ -183,9 +186,8 @@ private theorem section15_secondDerived_le_of_quotientAbelian_ambientDerived
     simpa [Kloc] using hKnorm
   have hder_le_Kloc : derivedSubgroup D ≤ Kloc :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (N := Kloc)).1 hComm.is_comm
+      (N := Kloc)).1 hComm
   intro x hx
-  change x ∈ K
   change x ∈ ambientDerivedSubgroup D at hx
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   change ((y : D) : G) ∈ K
@@ -206,7 +208,7 @@ private theorem section15_nilpotent_top_le_hall_sup_centralizer
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup R) := by
     let e : R ≃* (⊤ : Subgroup R) :=
       (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R).symm
-    exact nilpotent_of_mulEquiv (G := R) (G' := (⊤ : Subgroup R)) e
+    exact Group.nilpotent_of_mulEquiv (G := R) (G' := (⊤ : Subgroup R)) e
   have htop_le_sup :
       (⊤ : Subgroup R) ≤
         ⨆ q : (Nat.card R).primeFactors.attach, pCore q.1.1 R :=
@@ -235,7 +237,8 @@ private theorem section15_nilpotent_top_le_hall_sup_centralizer
             (G := R) πᶜ (pCore q.val R) hcoreπc
       exact hcore_le_Z.trans le_sup_right
   have hHπ : IsPiSubgroup (G := R) π H := by
-    simpa [π] using hHall.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact hHall.p_in_pi_of_p_dvd_card p hp
   have hZπ : IsPiSubgroup (G := R) πᶜ Z := by
     simpa [Z] using piCore_isPiSubgroup (G := R) πᶜ
   have hπdisj : Disjoint πᶜ π := by
@@ -277,6 +280,7 @@ private theorem section15_nilpotent_top_le_hall_sup_centralizer
     exact hmul.symm
   exact htop_le_sup.trans (hcores_le.trans (sup_le_sup_left hZcentH H))
 
+omit [Finite G] [IsMinCE G] in
 public theorem section15_MF_le_fitting
     {M MF : Subgroup G}
     (hMF : section15MFSubgroup M MF) :
@@ -284,7 +288,7 @@ public theorem section15_MF_le_fitting
   rcases hMF.1 with ⟨hMFM, hMFnormM, hMFnil, _hMFHall⟩
   haveI : Group.IsNilpotent (MF.subgroupOf M) := by
     let e := (Subgroup.subgroupOfEquivOfLe (G := G) (H := MF) (K := M) hMFM).symm
-    exact nilpotent_of_mulEquiv (G := MF) (G' := MF.subgroupOf M) e
+    exact Group.nilpotent_of_mulEquiv (G := MF) (G' := MF.subgroupOf M) e
   have hMF_le_fit_local : MF.subgroupOf M ≤ fittingSubgroup M :=
     le_sSup ⟨hMFnormM, (inferInstance : Group.IsNilpotent (MF.subgroupOf M))⟩
   have hmap_le :
@@ -293,6 +297,7 @@ public theorem section15_MF_le_fitting
   simpa [section8FittingSubgroup, fittingSubgroupOf, Subgroup.subgroupOf_map_subtype,
     inf_eq_left.2 hMFM] using hmap_le
 
+omit [IsMinCE G] in
 private theorem section15_fitting_eq_centralizer_sup_of_MF
     {M MF : Subgroup G}
     (hMF : section15MFSubgroup M MF)
@@ -349,6 +354,7 @@ private theorem section15_fitting_eq_centralizer_sup_of_MF
     simpa [C, sup_comm] using hx
   · exact sup_le hC_le_F hMFleF
 
+omit [IsMinCE G] in
 private theorem section15_fitting_eq_of_normal_le_fitting
     {M S : Subgroup G}
     (hSM : S ≤ M)
@@ -378,7 +384,7 @@ private theorem section15_fitting_eq_of_normal_le_fitting
   have hFSsub_nil : Group.IsNilpotent (FS.subgroupOf M) := by
     let e : FS.subgroupOf M ≃* FS :=
       Subgroup.subgroupOfEquivOfLe (H := FS) (K := M) hFSleM
-    exact nilpotent_of_mulEquiv (G := FS) (G' := FS.subgroupOf M)
+    exact Group.nilpotent_of_mulEquiv (G := FS) (G' := FS.subgroupOf M)
       (_h := by simpa [FS] using section8FittingSubgroup_isNilpotent S) e.symm
   have hFSsub_le_fit : FS.subgroupOf M ≤ fittingSubgroup M :=
     le_sSup ⟨hFSnormM, hFSsub_nil⟩
@@ -395,7 +401,7 @@ private theorem section15_fitting_eq_of_normal_le_fitting
   have hFsub_nil : Group.IsNilpotent (F.subgroupOf S) := by
     let e : F.subgroupOf S ≃* F :=
       Subgroup.subgroupOfEquivOfLe (H := F) (K := S) hFleS
-    exact nilpotent_of_mulEquiv (G := F) (G' := F.subgroupOf S)
+    exact Group.nilpotent_of_mulEquiv (G := F) (G' := F.subgroupOf S)
       (_h := by simpa [F] using section8FittingSubgroup_isNilpotent M) e.symm
   have hFsub_le_fitS : F.subgroupOf S ≤ fittingSubgroup S :=
     le_sSup ⟨hF_norm_S, hFsub_nil⟩
@@ -407,6 +413,7 @@ private theorem section15_fitting_eq_of_normal_le_fitting
       ⟨⟨x, hFleS hxF⟩, by simpa [Subgroup.mem_subgroupOf] using hxF, rfl⟩)
   exact le_antisymm hFS_le_F hF_le_FS
 
+omit [Finite G] [IsMinCE G] in
 public theorem section15_msigma_le_fitting_of_MF_eq_msigma
     {M MF : Subgroup G}
     (hMF : section15MFSubgroup M MF)
@@ -415,6 +422,7 @@ public theorem section15_msigma_le_fitting_of_MF_eq_msigma
   rw [← hEq]
   exact section15_MF_le_fitting hMF
 
+omit [Finite G] [IsMinCE G] in
 public theorem section15_fitting_msigma_eq_of_MF_eq_msigma
     {M MF : Subgroup G}
     (hMF : section15MFSubgroup M MF)
@@ -435,6 +443,7 @@ public theorem section15_fitting_msigma_eq_of_MF_eq_msigma
     rw [hfit_top]
     simp
 
+omit [IsMinCE G] in
 public theorem section15_fitting_eq_msigma_sup_sigma_compl_core_of_MF_eq_msigma
     {M MF : Subgroup G}
     (hMF : section15MFSubgroup M MF)
@@ -504,7 +513,8 @@ public theorem section15_internalDirectProduct_msigma_sigma_compl_core_of_MF_eq_
       (piCoreIn_le (G := G) (section10SigmaPrimes M)ᶜ
         (section8FittingSubgroup M))
   have hSπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-    simpa [S] using (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card p hp
   have hYπ : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ Y := by
     simpa [Y, section15SigmaComplementFittingCore] using
       piCoreIn_isPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ
@@ -582,7 +592,8 @@ public theorem section15_centralizer_MF_le_fitting_of_MF_eq_msigma
   have hCσnormC : section10NormalIn Cσ C :=
     ⟨hCσleC, (inferInstance : (Cσ.subgroupOf C).Normal)⟩
   have hSπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-    simpa [S] using (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card p hp
   have hCσπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Cσ :=
     IsPiSubgroup.of_le hCσleS hSπ
   have hXσc : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ X := by
@@ -622,13 +633,13 @@ public theorem section15_centralizer_MF_le_fitting_of_MF_eq_msigma
     letI : Group.IsNilpotent S := hσnil
     have hCσsub_nil : Group.IsNilpotent (Cσ.subgroupOf S) := by infer_instance
     let e : Cσ.subgroupOf S ≃* Cσ := Subgroup.subgroupOfEquivOfLe hCσleS
-    exact nilpotent_of_mulEquiv (G := Cσ.subgroupOf S) (G' := Cσ)
+    exact Group.nilpotent_of_mulEquiv (G := Cσ.subgroupOf S) (G' := Cσ)
       (_h := hCσsub_nil) e
   have hXnil : Group.IsNilpotent X := by
     letI : IsCyclic X := hXcyc
     have hXcomm : IsMulCommutative X := by infer_instance
     letI : IsMulCommutative X := hXcomm
-    letI : CommGroup X := CommGroup.ofIsMulCommutative
+    letI : CommGroup X := IsMulCommutative.instCommGroup
     infer_instance
   have hCσcentX : Cσ ≤ Subgroup.centralizer (X : Set G) := by
     intro c hc
@@ -651,7 +662,7 @@ public theorem section15_centralizer_MF_le_fitting_of_MF_eq_msigma
     (Subgroup.normal_subgroupOf_iff_le_normalizer hC_le_M).2 hM_norm_C
   have hCsub_nil : Group.IsNilpotent (C.subgroupOf M) := by
     let e : C.subgroupOf M ≃* C := Subgroup.subgroupOfEquivOfLe hC_le_M
-    exact nilpotent_of_mulEquiv (G := C) (G' := C.subgroupOf M)
+    exact Group.nilpotent_of_mulEquiv (G := C) (G' := C.subgroupOf M)
       (_h := hCnil) e.symm
   have hCsub_le_fit : C.subgroupOf M ≤ fittingSubgroup M :=
     le_sSup ⟨(inferInstance : (C.subgroupOf M).Normal), hCsub_nil⟩
@@ -796,7 +807,8 @@ private theorem section15_corollary15_5_b_remaining_of_MF_ne_msigma
         piCoreIn_isPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ
           (section8FittingSubgroup M)
     have hSπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-      simpa [S] using (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card
+      intro p hp
+      exact (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card p hp
     have hπdisj : Disjoint (section10SigmaPrimes M)ᶜ (section10SigmaPrimes M) := by
       rw [Set.disjoint_left]
       intro p hpcompl hp
@@ -807,7 +819,7 @@ private theorem section15_corollary15_5_b_remaining_of_MF_ne_msigma
     intro y hy
     exact Subgroup.mem_bot.mpr (Subgroup.disjoint_def.mp hYSdisj hy (hYleS hy))
   have hF_decomp : F = section8FittingSubgroup S ⊔ Y := by
-    simpa [hFitS_eq_F, hYbot] using (rfl : F = F)
+    simp [hFitS_eq_F, hYbot]
   have hIDP :
       section12InternalDirectProduct
         (section8FittingSubgroup S) Y F := by
@@ -856,6 +868,7 @@ private theorem section15_corollary15_5_b_of_MF_ne_msigma
   exact ⟨hg.2.1, section15_corollary15_5_b_remaining_of_MF_ne_msigma
     hM hMF hNe⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_quotientAbelian_implies_quotientNilpotent
     {H K : Subgroup G}
     (h : section15QuotientAbelian H K) :
@@ -863,8 +876,10 @@ private theorem section15_quotientAbelian_implies_quotientNilpotent
   rcases h with ⟨hKH, hNorm, hComm⟩
   refine ⟨hKH, hNorm, ?_⟩
   letI : IsMulCommutative (H ⧸ K.subgroupOf H) := hComm
+  letI : CommGroup (H ⧸ K.subgroupOf H) := IsMulCommutative.instCommGroup
   infer_instance
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_quotient_nilpotent_of_normal_complement_le
     {S Q D N : Subgroup G}
     (hcomp : section12ComplementIn S Q D)
@@ -892,10 +907,10 @@ private theorem section15_quotient_nilpotent_of_normal_complement_le
   have hDloc_nil : Group.IsNilpotent Dloc := by
     let e : Dloc ≃* D :=
       Subgroup.subgroupOfEquivOfLe (H := D) (K := S) hcomp.2.1
-    exact nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
   have hquotQ_nil : Group.IsNilpotent (S ⧸ Qloc) := by
     let e : S ⧸ Qloc ≃* Dloc := hcomp'.QuotientMulEquiv
-    exact nilpotent_of_mulEquiv (G := Dloc) (G' := S ⧸ Qloc)
+    exact Group.nilpotent_of_mulEquiv (G := Dloc) (G' := S ⧸ Qloc)
       (_h := hDloc_nil) e.symm
   have hQloc_le_Nloc : Qloc ≤ Nloc := by
     intro x hx
@@ -912,7 +927,7 @@ private theorem section15_quotient_nilpotent_of_normal_complement_le
     intro s
     exact ⟨QuotientGroup.mk' Qloc s, by simp [π]⟩
   refine ⟨hNleS, hNnorm, ?_⟩
-  exact nilpotent_of_surjective (G := S ⧸ Qloc) (G' := S ⧸ Nloc)
+  exact Group.nilpotent_of_surjective (G := S ⧸ Qloc) (G' := S ⧸ Nloc)
     π hπ_surj
 
 public theorem corollary_15_5_b
@@ -936,7 +951,7 @@ public theorem corollary_15_5_b
 private theorem section15_corollary15_5_c_of_MF_eq_msigma
     {M MF : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
+    (_hMF : section15MFSubgroup M MF)
     (hEq : MF = section10Msigma M) :
     MF ≤ ambientDerivedSubgroup M ∧
       section10QuotientNilpotent (ambientDerivedSubgroup M) MF := by
@@ -1003,6 +1018,7 @@ public theorem corollary_15_5_c
   · exact section15_corollary15_5_c_of_MF_eq_msigma hM hMF hEq
   · exact section15_corollary15_5_c_of_MF_ne_msigma hM hMF hEq
 
+omit [IsMinCE G] in
 private theorem section15_MFamilyP_of_nontrivial_hall_kappa
     {M K : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)

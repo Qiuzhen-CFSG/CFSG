@@ -8,7 +8,7 @@ public import Mathlib.RepresentationTheory.Intertwining
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.Algebra.Module.NatInt
 
-public import Submission.FeitThompson.Representation.SubrepresentationLattice
+public import FeitThompson.Representation.SubrepresentationLattice
 
 open Function
 open scoped MonoidAlgebra

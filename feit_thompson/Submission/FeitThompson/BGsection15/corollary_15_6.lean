@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection15.corollary_15_5
-import Submission.FeitThompson.PCore.CentralizerControl
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection15.corollary_15_5
+import FeitThompson.PCore.CentralizerControl
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 
@@ -97,9 +97,9 @@ private theorem section15_corollary15_6_Kstar_le_secondDerived
       _ = ⁅D, D⁆ := by
         rw [hHloc_map]
       _ = section15SecondDerivedSubgroup M := by
-        simpa [section15SecondDerivedSubgroup, D, ambientDerivedSubgroup,
-          derivedSubgroup, derivedSeries_one] using
-          (Subgroup.map_subtype_commutator (H := D)).symm
+        simpa [section15SecondDerivedSubgroup, D] using
+          (section12_ambientDerivedSubgroup_eq_commutator
+            (G := G) (H := ambientDerivedSubgroup M)).symm
   intro x hx
   change x ∈ subgroupCentralizerIn (section10Msigma M) K at hx
   have hxS : x ∈ section10Msigma M := hx.1
@@ -141,6 +141,7 @@ private theorem section15_corollary15_6_Kstar_le_MF
       ⟨_q, _hq, _Q, _hQ, _hQnormal, hKstarQ, hQMF⟩
     exact hKstarQ.trans hQMF
 
+omit [IsMinCE G] in
 private theorem section15_K_ne_bot_of_MFamilyP
     {M K : Subgroup G}
     (hM : M ∈ section14MFamilyP G)

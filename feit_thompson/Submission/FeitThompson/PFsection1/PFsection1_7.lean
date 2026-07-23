@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection1.PFsection1_7_Mackey
+public import FeitThompson.PFsection1.PFsection1_7_Mackey
 import Mathlib.GroupTheory.SchurZassenhaus
 /-!
 # Peterfalvi, Section 1, Proposition (1.7)

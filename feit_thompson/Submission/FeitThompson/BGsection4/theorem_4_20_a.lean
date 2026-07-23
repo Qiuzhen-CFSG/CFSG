@@ -1,9 +1,9 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
-public import Submission.FeitThompson.GeneratorRank
-public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
-public import Submission.FeitThompson.BGsection4.corollary_4_19
+public import FeitThompson.GeneratorRank
+public import FeitThompson.BGsection4.gorenstein_5_4_15
+public import FeitThompson.BGsection4.corollary_4_19
 
 /-! # Theorem 4.20(a) from BG Section 4 -/
 
@@ -85,7 +85,7 @@ private theorem derivedSubgroup_isNilpotent_of_groupRank_le_two
   have hFit_eq_D : fittingSubgroupOf (G := G) D = D := le_antisymm hFit_le_D hD_le_fittingOfD
   have hFit_nil : Group.IsNilpotent (fittingSubgroupOf (G := G) D) :=
     fittingSubgroupOf_isNilpotent (G := G) D
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := fittingSubgroupOf (G := G) D) (G' := D) (MulEquiv.subgroupCongr hFit_eq_D)
 
 public theorem theorem_4_20_a {G : Type*} [Group G] [Finite G]
@@ -125,14 +125,15 @@ public theorem theorem_4_20_a {G : Type*} [Group G] [Finite G]
           exact (mem_centralizerOfChiefFactor (H := D) (cf := cf) (g := x)).2
             ⟨hxD, (mem_centralizerOfChiefFactor (H := (⊤ : Subgroup G)) (cf := cf) (g := x)).1
               hx_top_cent |>.2⟩
-        simpa [centralizerOfChiefFactorIn, Subgroup.mem_comap] using hx_D_cent
+        change x ∈ centralizerOfChiefFactor (G := G) D cf
+        exact hx_D_cent
       have hprop := (proposition_1_2 (G := G) hsolv D inferInstance).2
       exact hD_le_I_res_map.trans_eq hprop.symm
     have hFit_le_D : fittingSubgroupOf (G := G) D ≤ D := fittingSubgroupOf_le (G := G) D
     have hFit_eq_D : fittingSubgroupOf (G := G) D = D := le_antisymm hFit_le_D hD_le_fittingOfD
     have hFit_nil : Group.IsNilpotent (fittingSubgroupOf (G := G) D) :=
       fittingSubgroupOf_isNilpotent (G := G) D
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := fittingSubgroupOf (G := G) D) (G' := D) (MulEquiv.subgroupCongr hFit_eq_D)
 
 end Main

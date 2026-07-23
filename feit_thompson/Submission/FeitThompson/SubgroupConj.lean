@@ -6,7 +6,9 @@ module
 
 public import Mathlib.Algebra.Group.Subgroup.Actions
 
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
+
+open scoped commutatorElement
 
 /-!
 # Subgroup conjugation algebra
@@ -259,6 +261,7 @@ public theorem quotient_sup_image_eq_complement_map
       exact e.apply_symm_apply wK
     exact heval.trans hey.symm
 
+omit [Finite G] in
 /-- If `K.IsComplement' R` and `N ≤ K`, then the images under `G → G/N` are complementary. -/
 public theorem isComplement'_map_mk'_of_le_isComplement' (K R N : Subgroup G) [N.Normal]
     (hN_le_K : N ≤ K) (hKR : K.IsComplement' R) :

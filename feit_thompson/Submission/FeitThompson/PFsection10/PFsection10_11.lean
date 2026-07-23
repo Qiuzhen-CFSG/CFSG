@@ -1,26 +1,26 @@
 module
 
-public import Submission.FeitThompson.PFsection10.Basic
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection5.PFsection5_8
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection7.PFsection7_5
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection8.PFsection8_13
-import Submission.FeitThompson.PFsection8.PFsection8_15
-import Submission.FeitThompson.PFsection8.PFsection8_16
-import Submission.FeitThompson.PFsection8.PFsection8_18
-import Submission.FeitThompson.PFsection8.PFsection8_9
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection6.PFsection6_5_b
-import Submission.FeitThompson.PFsection6.PFsection6_5_c
-import Submission.FeitThompson.PFsection6.PFsection6_8
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection9.PFsection9_4
-import Submission.FeitThompson.PFsection9.PFsection9_6
-public import Submission.FeitThompson.PFsection9.PFsection9_11
+public import FeitThompson.PFsection10.Basic
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection5.PFsection5_8
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection7.PFsection7_5
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection8.PFsection8_13
+import FeitThompson.PFsection8.PFsection8_15
+import FeitThompson.PFsection8.PFsection8_16
+import FeitThompson.PFsection8.PFsection8_18
+import FeitThompson.PFsection8.PFsection8_9
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection6.PFsection6_5_b
+import FeitThompson.PFsection6.PFsection6_5_c
+import FeitThompson.PFsection6.PFsection6_8
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection9.PFsection9_4
+import FeitThompson.PFsection9.PFsection9_6
+public import FeitThompson.PFsection9.PFsection9_11
 
 /-!
 # Peterfalvi, Section 10: Theorem (10.11)
@@ -62,7 +62,6 @@ private theorem theorem_10_2_linear_induced_character_bridge
     {G : Type u}
     [Group G]
     [Finite G]
-    [Finite G]
     {M MF W1 W2 : Subgroup G}
     {V : Set G}
     {S : Finset (Section1.ClassFunction M)}
@@ -89,7 +88,6 @@ private theorem theorem_10_2_linear_induced_character_bridge
   letI : (H2M.subgroupOf (derivedSubgroup M)).Normal := hNnormal
   have hcomm :
       IsMulCommutative (derivedSubgroup M ⧸ H2M.subgroupOf (derivedSubgroup M)) := by
-    refine ⟨?_⟩
     apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
     dsimp [H2M]
     change derivedSubgroup (derivedSubgroup M) ≤
@@ -187,7 +185,6 @@ private theorem theorem_10_2_supported
   letI : (H2M.subgroupOf (derivedSubgroup M)).Normal := hNnormal
   have hcomm :
       IsMulCommutative (derivedSubgroup M ⧸ H2M.subgroupOf (derivedSubgroup M)) := by
-    refine ⟨?_⟩
     apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
     dsimp [H2M]
     change derivedSubgroup (derivedSubgroup M) ≤
@@ -6141,7 +6138,7 @@ private theorem theorem_10_7_semidirectProduct_of_mf_complement
     have hhSub : hS ∈ SF.subgroupOf S := hh
     have hconj : kS * hS * kS⁻¹ ∈ SF.subgroupOf S :=
       hSFnorm.conj_mem hS hhSub kS
-    simpa [Section2.conjBy, kS, hS] using hconj
+    simpa [Section2.conjBy, kS, hS, Subgroup.mem_subgroupOf] using hconj
   · exact disjoint_iff.mp hdisj
   · intro c hc
     let D : Subgroup G := ambientDerivedSubgroup S
@@ -6415,7 +6412,8 @@ private theorem theorem_10_7_exists_quotientBarUCardinality_of_quotientCentraliz
     ∃ u : ℕ, Section9.quotientBarUCardinality U C u := by
   classical
   letI : IsMulCommutative U := hUcomm
-  letI : (C.subgroupOf U).Normal := Subgroup.normal_of_comm (C.subgroupOf U)
+  letI : (C.subgroupOf U).Normal :=
+    Subgroup.normal_of_isMulCommutative (C.subgroupOf U)
   exact ⟨Nat.card (U ⧸ C.subgroupOf U), hC.1, inferInstance, rfl⟩
 
 private theorem theorem_10_7_hypothesis_5_2_b_of_section8_fullData
@@ -7149,7 +7147,7 @@ public theorem derivedSupportedFourSixData_of_hypothesis_10_1_supported_data
         mu deltaSign omega sigma tau) :
     ∃ sigmaM : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction M,
       ∃ xChar : J → Section1.ClassFunction (derivedSubgroup M),
-        ∃ H_A H_A0 : G → Subgroup G,
+        ∃ H_A _H_A0 : G → Subgroup G,
           Section4Scratch.hypothesis_4_6_supported_statement M
             (derivedSubgroup M) (W1.subgroupOf M) (W2.subgroupOf M) W
             (derivedSubgroup M) A i0 j0 omega sigmaM sigma mu xChar
@@ -8244,7 +8242,7 @@ private theorem theorem_10_7_section16ASet_subset_AS_of_typeII_notation_8_10_sou
     have hcomm : Commute x a :=
       Subgroup.mem_centralizer_singleton_iff.mp hxCentA
     exact ⟨haD, by
-      simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm⟩
+      simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm.eq⟩
   intro x hx
   exact hMem.2 x hSrcII (hASetCentralizer hx)
 
@@ -8509,7 +8507,8 @@ private theorem theorem_10_7_frobeniusWithKernel_of_section8_frobenius
         (IsFrobeniusGroupWithKernelComplement.normal hfrobM)
         (IsFrobeniusGroupWithKernelComplement.isComplement' hfrobM)).1
         hfrobM r hrne
-    simpa [Section2.centralizerIn] using hcentM
+    simpa [elementCentralizerIn, Section2.centralizerIn,
+      Section2.elementCentralizer] using hcentM
 
 private theorem theorem_10_7_typeP_not_frobeniusWithKernel
     {G : Type u}
@@ -9805,7 +9804,7 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_source_data
     dsimp [Kstar]
     exact theorem_10_7_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
-    simpa [section16Kstar] using hKstarStar.symm
+    simpa [Kstar, section16Kstar] using hKstarStar.symm
   have hKstarStarW2_eq_W1 : section16Kstar Mstar W2 = W1 := by
     rw [← hKstar_eq_W2]
     exact hKstarStar_eq_W1
@@ -9843,7 +9842,8 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_source_data
   have hProdW : section12InternalDirectProduct W1 W2 Wcase := by
     simpa [Wcase, Kstar, hKstar_eq_W2, section16ZSubgroup] using hProd
   have hCycW : IsCyclic Wcase := by
-    simpa [Wcase, section16ZSubgroup] using hZcycW
+    change IsCyclic (W1 ⊔ W2 : Subgroup G)
+    exact hZcycW
   have hW2ne : W2 ≠ ⊥ := by
     simpa [← hKstar_eq_W2] using (ne_of_gt hKstarPos)
   have hNormalizer :
@@ -10215,18 +10215,14 @@ private theorem theorem_10_7_omegaSystem_transport_swap_of_conjugating_equiv
     intro x
     change (((x : M) : G) ∈ W2) ↔ ((((e x : Wsel) : Smax) : G) ∈ W1S)
     rw [hW1S_eq, he x]
-    simpa [Subgroup.conjBy, MulAut.conj_apply, mul_assoc] using
-      (Subgroup.mem_map_equiv (f := MulAut.conj g) (K := W2)
-        (x := g * ((x : M) : G) * g⁻¹)).symm
+    simp [Subgroup.conjBy, MulAut.conj_apply, mul_assoc]
   have hmem2 : ∀ x : W,
       ((x : M) ∈ W1.subgroupOf M) ↔
         (((e x : Wsel) : Smax) ∈ W2S.subgroupOf Smax) := by
     intro x
     change (((x : M) : G) ∈ W1) ↔ ((((e x : Wsel) : Smax) : G) ∈ W2S)
     rw [hW2S_eq, he x]
-    simpa [Subgroup.conjBy, MulAut.conj_apply, mul_assoc] using
-      (Subgroup.mem_map_equiv (f := MulAut.conj g) (K := W1)
-        (x := g * ((x : M) : G) * g⁻¹)).symm
+    simp [Subgroup.conjBy, MulAut.conj_apply, mul_assoc]
   exact Section6.theorem_6_8_notation_3_3_transport e hcard1 hcard2 hmem1 hmem2
     (Section3.notation_3_3_statement_swap hω)
 
@@ -10945,8 +10941,7 @@ private theorem theorem_10_7_typeP_partner_cyclicTI_selected_pair_sigma_cycTIiso
       zS ∈ Section3.cyclicTISet
         (W1S.subgroupOf Smax) (W2S.subgroupOf Smax) d52.W := by
     refine ⟨?_, ?_⟩
-    · change (zS : Smax) ∈ (d52.W : Set Smax)
-      have hzD : ((e ⟨z, hzW⟩ : d52.W) : Smax) ∈ (d52.W : Set Smax) :=
+    · have hzD : ((e ⟨z, hzW⟩ : d52.W) : Smax) ∈ (d52.W : Set Smax) :=
         (e ⟨z, hzW⟩).property
       have hzS_eq : zS = ((e ⟨z, hzW⟩ : d52.W) : Smax) := by
         ext
@@ -13696,7 +13691,9 @@ private theorem theorem_10_7_inducedFromNonkernelFamily_of_section8InducedNonker
   apply hθnonker
   intro m hmMs
   let a : (Ms.subgroupOf M).subgroupOf (derivedSubgroup M) :=
-    ⟨m, by simpa [Subgroup.mem_subgroupOf] using hmMs⟩
+    ⟨m, by
+      change ((m : M) : G) ∈ Ms
+      exact hmMs⟩
   have ha := hker a
   simpa [a, Section1.subgroupInKernel', Section1.degree] using ha
 
@@ -20087,7 +20084,8 @@ private theorem typePDefinitionData_secondComplement_prime_mem_mf
   have hW2MF : W2 ≤ MF := fun x hx => (hW2le hx).1
   have hcard_dvd : Nat.card W2 ∣ Nat.card MF :=
     Subgroup.card_dvd_of_le hW2MF
-  simpa [subgroupPrimeSet] using hpW2.trans hcard_dvd
+  change p ∣ Nat.card MF
+  exact hpW2.trans hcard_dvd
 
 private theorem theorem_10_8_typeII_mf_isHallSubgroup
     {G : Type u}
@@ -20484,7 +20482,8 @@ private theorem theorem_10_8_weightedProjectionEnergy_neg
     (χ : Section1.ClassFunction G) :
     Section7.weightedProjectionEnergy A L H (-χ) =
       Section7.weightedProjectionEnergy A L H χ := by
-  rw [Section7.weightedProjectionEnergy, theorem_10_8_dadeProjectionOn_neg]
+  unfold Section7.weightedProjectionEnergy
+  rw [theorem_10_8_dadeProjectionOn_neg]
   simpa using
     (Section5.cfNormSq_smul (-1 : ℂ) (Section7.dadeProjectionOn A L H χ))
 
@@ -22690,7 +22689,8 @@ private theorem theorem_10_8_frobeniusJoin_mem_kernel_of_mem_join_centralizes_ne
         (IsFrobeniusGroupWithKernelComplement.normal hfrobL)
         (IsFrobeniusGroupWithKernelComplement.isComplement' hfrobL)).1
         hfrobL r hrne
-    simpa [Section2.centralizerIn] using hcentElem
+    simpa [Section2.centralizerIn, Section2.elementCentralizer, elementCentralizerIn]
+      using hcentElem
   have hfrob6 : Section6.frobeniusWithKernel L K := by
     refine ⟨le_sup_left, hKnormal, Rsub, ?_, ?_, ?_, ?_⟩
     · exact IsFrobeniusGroupWithKernelComplement.isComplement' hfrobL
@@ -22793,7 +22793,7 @@ private theorem theorem_10_8_exists_prime_order_zpower_centralized
     rcases Subgroup.mem_zpowers_iff.mp haZ with ⟨n, hn⟩
     simp [← hn]
   have hxCent : x ∈ elementCentralizerIn (⊤ : Subgroup G) a :=
-    ⟨by simp, by simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm⟩
+    ⟨by simp, Subgroup.mem_centralizer_singleton_iff.mpr hcomm.symm⟩
   exact ⟨a, haZ, hane, haOrder, hxCent⟩
 
 private theorem theorem_10_8_typeP_not_conj_nonidentity_W1_of_prime_support
@@ -22823,7 +22823,8 @@ private theorem theorem_10_8_typeP_not_conj_nonidentity_W1_of_prime_support
     ⟨_hMF, _hW1cyc, _hW1ne, _hW1hall, _hMcomp, _hUleD,
       _hUnil, _hW1norm, hDercomp, _hRest⟩
   have hpMFcard : p ∣ Nat.card MF := by
-    simpa [subgroupPrimeSet] using hpMF
+    change p ∣ Nat.card MF at hpMF
+    exact hpMF
   have hpD : p ∣ Nat.card (ambientDerivedSubgroup M) :=
     hpMFcard.trans (Subgroup.card_dvd_of_le hDercomp.1)
   have hcop : Nat.Coprime (Nat.card W1) (Nat.card (ambientDerivedSubgroup M)) :=
@@ -22881,7 +22882,9 @@ private theorem theorem_10_8_typeP_prime_support_mem_AZeroSet
     exact section12_pSubgroup_le_normal_hall_of_prime_mem
       (R := M) (π := subgroupPrimeSet MF)
       (H := MF.subgroupOf M) (A := A.subgroupOf M) (p := p')
-      hMFHall (by simpa [p'] using hpMF) hAsubP
+      hMFHall (by
+        dsimp [p']
+        exact hpMF) hAsubP
   have haMF : a ∈ MF := by
     have haSub : (⟨a, haM⟩ : M) ∈ MF.subgroupOf M :=
       hAleMFsub (by
@@ -22897,7 +22900,7 @@ private theorem theorem_10_8_typeP_prime_support_mem_AZeroSet
       refine ⟨haSigma, ?_⟩
       have hcomm : Commute x a :=
         Subgroup.mem_centralizer_singleton_iff.mp hxCentTop.2
-      simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm
+      exact Subgroup.mem_centralizer_singleton_iff.mpr hcomm.symm
     apply Subgroup.ne_bot_iff_exists_ne_one.mpr
     let aC : elementCentralizerIn (section10Msigma M) x := ⟨a, haCentX⟩
     refine ⟨aC, ?_⟩
@@ -24039,7 +24042,8 @@ private theorem frobeniusJoin_kernel_card_ge_two_mul_complement_add_one
         (IsFrobeniusGroupWithKernelComplement.normal hfrobL)
         (IsFrobeniusGroupWithKernelComplement.isComplement' hfrobL)).1
         hfrobL r hr
-    simpa [Section2.centralizerIn] using hcentElem
+    simpa [Section2.centralizerIn, Section2.elementCentralizer, elementCentralizerIn]
+      using hcentElem
   have hdvdSub : Nat.card Rsub ∣ Nat.card Ksub - 1 :=
     Section6.frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
       (Q := L) (K := Ksub) (R := Rsub) (N := Ksub) le_rfl hcent
@@ -24323,7 +24327,8 @@ private theorem theorem_10_8_counting_selectedTypeP_pair_witness_reverse_source
     dsimp [Kstar]
     exact theorem_10_8_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
-    simpa [section16Kstar] using hKstarStar.symm
+    dsimp [Kstar]
+    exact hKstarStar.symm
   have hKstarStarW2_eq_W1 : section16Kstar Mstar W2 = W1 := by
     rw [← hKstar_eq_W2]
     exact hKstarStar_eq_W1
@@ -24361,7 +24366,8 @@ private theorem theorem_10_8_counting_selectedTypeP_pair_witness_reverse_source
   have hProdW : section12InternalDirectProduct W1 W2 Wcase := by
     simpa [Wcase, Kstar, hKstar_eq_W2, section16ZSubgroup] using hProd
   have hCycW : IsCyclic Wcase := by
-    simpa [Wcase, section16ZSubgroup] using hZcycW
+    change IsCyclic (W1 ⊔ W2 : Subgroup G)
+    exact hZcycW
   have hW2ne : W2 ≠ ⊥ := by
     simpa [← hKstar_eq_W2] using (ne_of_gt hKstarPos)
   have hNormalizer :
@@ -25316,7 +25322,7 @@ public theorem supportedOn_primeDadeA0_of_supportedOn_derivedSubgroup_degree_zer
     {ω : I → J → Section1.ClassFunction W}
     {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
     {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    (hNotation : section10FourSixNotationSupportedData M W1 W2 W A A0
+    (_hNotation : section10FourSixNotationSupportedData M W1 W2 W A A0
       i0 j0 μ δSign ω σ τ)
     (h46 : Section4Scratch.hypothesis_4_6_statement
       (derivedSubgroup M) (W1.subgroupOf M) (W2.subgroupOf M) W
@@ -31934,7 +31940,8 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_supported_source_data
     dsimp [Kstar]
     exact theorem_10_8_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
-    simpa [section16Kstar] using hKstarStar.symm
+    dsimp [Kstar]
+    exact hKstarStar.symm
   have hKstarStarW2_eq_W1 : section16Kstar Mstar W2 = W1 := by
     rw [← hKstar_eq_W2]
     exact hKstarStar_eq_W1
@@ -31972,7 +31979,8 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_supported_source_data
   have hProdW : section12InternalDirectProduct W1 W2 Wcase := by
     simpa [Wcase, Kstar, hKstar_eq_W2, section16ZSubgroup] using hProd
   have hCycW : IsCyclic Wcase := by
-    simpa [Wcase, section16ZSubgroup] using hZcycW
+    change IsCyclic (W1 ⊔ W2 : Subgroup G)
+    exact hZcycW
   have hW2ne : W2 ≠ ⊥ := by
     simpa [← hKstar_eq_W2] using (ne_of_gt hKstarPos)
   have hNormalizer :
@@ -32810,8 +32818,7 @@ private theorem theorem_10_7_typeP_partner_cyclicTI_selected_row_sigma_selected_
       zS ∈ Section3.cyclicTISet
         (W1S.subgroupOf Smax) (W2S.subgroupOf Smax) d52.W := by
     refine ⟨?_, ?_⟩
-    · change (zS : Smax) ∈ (d52.W : Set Smax)
-      have hzD : ((e ⟨z, hzW⟩ : d52.W) : Smax) ∈ (d52.W : Set Smax) :=
+    · have hzD : ((e ⟨z, hzW⟩ : d52.W) : Smax) ∈ (d52.W : Set Smax) :=
         (e ⟨z, hzW⟩).property
       have hzS_eq : zS = ((e ⟨z, hzW⟩ : d52.W) : Smax) := by
         ext
@@ -34446,7 +34453,8 @@ private theorem theorem_10_8_counting_selectedTypeP_pair_witness_reverse_support
     dsimp [Kstar]
     exact theorem_10_8_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
-    simpa [section16Kstar] using hKstarStar.symm
+    dsimp [Kstar]
+    exact hKstarStar.symm
   have hKstarStarW2_eq_W1 : section16Kstar Mstar W2 = W1 := by
     rw [← hKstar_eq_W2]
     exact hKstarStar_eq_W1
@@ -34484,7 +34492,8 @@ private theorem theorem_10_8_counting_selectedTypeP_pair_witness_reverse_support
   have hProdW : section12InternalDirectProduct W1 W2 Wcase := by
     simpa [Wcase, Kstar, hKstar_eq_W2, section16ZSubgroup] using hProd
   have hCycW : IsCyclic Wcase := by
-    simpa [Wcase, section16ZSubgroup] using hZcycW
+    change IsCyclic (W1 ⊔ W2 : Subgroup G)
+    exact hZcycW
   have hW2ne : W2 ≠ ⊥ := by
     simpa [← hKstar_eq_W2] using (ne_of_gt hKstarPos)
   have hNormalizer :
@@ -37443,10 +37452,8 @@ private theorem theorem_10_10_2_kernelSubfamily_complement_index_bridge
     exact hS
   have hα0card : Nat.card α0 = p - 1 := by
     dsimp [α0]
-    rw [Nat.card_eq_fintype_card]
-    simpa using
-      (Fintype.card_subtype
-        (fun i : ι => Section1.degree (θ i) = (p : ℂ))).trans hθcount
+    rw [Nat.card_eq_fintype_card, Fintype.card_subtype]
+    exact hθcount
   have hαcard : Nat.card α = p - 1 := by
     dsimp [α]
     rw [Nat.card_congr (Equiv.ulift : ULift α0 ≃ α0), hα0card]
@@ -44861,7 +44868,6 @@ private theorem typeVReduction_kernelSubfamily_degree_eq_card_W1_supported
     hnormal.subgroupOf (derivedSubgroup M)
   have hcomm : IsMulCommutative
       (derivedSubgroup M ⧸ (H'.subgroupOf M).subgroupOf (derivedSubgroup M)) := by
-    refine ⟨?_⟩
     apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     exact le_rfl
@@ -45189,7 +45195,15 @@ private theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one_supporte
       (⟨(a : M), Subgroup.mem_zpowers (a : M)⟩ : A) •
         ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) =
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) := by
-    simpa [A] using hfix
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) at hfix
+    exact hfix
   have hqmem :
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) ∈
         fixedPointSubgroup A (derivedSubgroup M ⧸ N) := by
@@ -45208,7 +45222,7 @@ private theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one_supporte
     typeVReduction_kernelQuotient_fixedPointSubgroup_zpowers_eq_bot_supported
       hred h10 a ha
   rw [hfixBot] at hqmem
-  simpa using hqmem
+  exact Subgroup.mem_bot.mp hqmem
 
 private theorem typeVReduction_nonprincipalLinearCharacterOrbitQuotient_card_eq_div_supported
     {G : Type u}
@@ -45667,10 +45681,15 @@ private theorem typeVReduction_inducedCF_quotientCharacterInflation_isIrreducibl
     intro x
     apply Units.ext
     have hxfix := congrFun hfix x
-    change ((χ (a • ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ) =
-      (χ (((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ))
-    simpa [Section1.quotientCharacterInflation, Section1.conjugateOnNormal, a,
-      Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hxfix
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ))
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ)) at hxfix
+    exact hxfix
   exact linearCharacter_eq_one_of_fixed_by_fixedPointFree a hfreea χ hχfix
 
 private theorem typeVReduction_complement_source_degree_ne_one_supported
@@ -45763,10 +45782,8 @@ private theorem theorem_10_10_2_kernelSubfamily_complement_index_bridge_supporte
     exact hS
   have hα0card : Nat.card α0 = p - 1 := by
     dsimp [α0]
-    rw [Nat.card_eq_fintype_card]
-    simpa using
-      (Fintype.card_subtype
-        (fun i : ι => Section1.degree (θ i) = (p : ℂ))).trans hθcount
+    rw [Nat.card_eq_fintype_card, Fintype.card_subtype]
+    exact hθcount
   have hαcard : Nat.card α = p - 1 := by
     dsimp [α]
     rw [Nat.card_congr (Equiv.ulift : ULift α0 ≃ α0), hα0card]
@@ -52002,7 +52019,9 @@ private theorem theorem_10_10_inducedFromNonkernelFamily_of_section8
   apply hθnonker
   intro m hmMs
   let a : (Ms.subgroupOf M).subgroupOf (derivedSubgroup M) :=
-    ⟨m, by simpa [Subgroup.mem_subgroupOf] using hmMs⟩
+    ⟨m, by
+      change ((m : M) : G) ∈ Ms
+      exact hmMs⟩
   have ha := hker a
   simpa [a, Section1.subgroupInKernel', Section1.degree] using ha
 
@@ -53772,7 +53791,8 @@ private theorem theorem_10_10_typeP_W2_subgroupOf_le_derived_commutator
       (⟨x, hxD⟩ : derivedSubgroup M) ∈
         ((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
           (derivedSubgroup M) := by
-    simpa [Subgroup.mem_subgroupOf] using hxSecond
+    change x ∈ (section16SecondDerivedSubgroup M).subgroupOf M
+    exact hxSecond
   have hxCommD : (⟨x, hxD⟩ : derivedSubgroup M) ∈
       derivedSubgroup (derivedSubgroup M) := by
     rw [← secondDerivedSubgroup_subgroupOf_derived_eq M]
@@ -53941,8 +53961,8 @@ private theorem theorem_10_10_source_typeV_ti_hypothesis_6_8_source_supported
         M.subtype_injective
     have hDnil_ambient : Group.IsNilpotent (ambientDerivedSubgroup M) := by
       haveI : Group.IsNilpotent MF := hMFnil
-      exact nilpotent_of_mulEquiv (MulEquiv.subgroupCongr hMF_eq_D)
-    exact nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M)
+      exact Group.nilpotent_of_mulEquiv (MulEquiv.subgroupCongr hMF_eq_D)
+    exact Group.nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M)
       (G' := derivedSubgroup M) e.symm
   refine ⟨S, τ, h10, ?_⟩
   exact ⟨h42.1, hoddM, hDne, hDnil, hTI68,
@@ -54125,8 +54145,8 @@ private theorem theorem_10_10_nilpotent_derivedSubgroup_of_typeP_bot
       M.subtype_injective
   have hDnil_ambient : Group.IsNilpotent (ambientDerivedSubgroup M) := by
     haveI : Group.IsNilpotent MF := hMFnil
-    exact nilpotent_of_mulEquiv (MulEquiv.subgroupCongr hMF_eq_D)
-  exact nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M)
+    exact Group.nilpotent_of_mulEquiv (MulEquiv.subgroupCongr hMF_eq_D)
+  exact Group.nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M)
     (G' := derivedSubgroup M) e.symm
 
 private theorem theorem_10_10_hypothesis_6_1_of_typeP_bot_hypothesis_10_1
@@ -54366,7 +54386,7 @@ private theorem theorem_10_10_frobeniusQuotient_commutator_of_hypothesis_4_2
   intro y hy
   have hyElem :
       y ∈ elementCentralizerIn (H.map q) (r : L ⧸ H1) := by
-    simpa [H1, Section2.centralizerIn, Section2.elementCentralizer,
+    simpa [q, H1, Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hy
   rcases r.property with ⟨w, hwW1, hwq⟩
   have hw_sub_ne : (⟨w, hwW1⟩ : W1) ≠ 1 := by
@@ -54408,7 +54428,9 @@ private theorem theorem_10_10_frobeniusQuotient_commutator_of_hypothesis_4_2
     have hcomm_r : y * (r : L ⧸ H1) = (r : L ⧸ H1) * y :=
       Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
     have hcomm_qw : Commute y (q w) := by
-      simpa [hwq] using hcomm_r
+      change y * q w = q w * y
+      rw [hwq]
+      exact hcomm_r
     have hcomm_qa : Commute y (q a) := by
       rw [← hn]
       simpa [q] using hcomm_qw.zpow_right n
@@ -54748,7 +54770,8 @@ private theorem theorem_10_10_source_typeV_cyclicCore_coherent_source
       derivedSubgroup_index_eq_card_W1_of_hypothesis_10_1 _h10
   have hindexComm :
       (commutator M).index = Fintype.card W1 := by
-    simpa [derivedSubgroup, derivedSeries_one] using hindexF
+    rw [← derivedSeries_one]
+    exact hindexF
   have hindexTop :
       (⁅(⊤ : Subgroup M), (⊤ : Subgroup M)⁆).index = Fintype.card W1 := by
     simpa [_root_.commutator_def] using hindexComm
@@ -54790,7 +54813,8 @@ private theorem theorem_10_10_source_typeV_cyclicCore_coherent_source_supported
       derivedSubgroup_index_eq_card_W1_of_hypothesis_10_1_supported_data _h10
   have hindexComm :
       (commutator M).index = Fintype.card W1 := by
-    simpa [derivedSubgroup, derivedSeries_one] using hindexF
+    rw [← derivedSeries_one]
+    exact hindexF
   have hindexTop :
       (⁅(⊤ : Subgroup M), (⊤ : Subgroup M)⁆).index = Fintype.card W1 := by
     simpa [_root_.commutator_def] using hindexComm
@@ -55010,27 +55034,21 @@ private theorem theorem_10_10_secondDerived_eq_center_and_card_of_noncomm_p3
       isCyclic_of_prime_card (α := H ⧸ Subgroup.center H) hquot_card
     letI : IsCyclic (H ⧸ Subgroup.center H) := hquot_cyc
     apply hnoncomm
-    refine ⟨⟨fun x y => ?_⟩⟩
-    exact commutative_of_cyclic_center_quotient
+    exact MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center
       (QuotientGroup.mk' (Subgroup.center H))
-      (by simp [QuotientGroup.ker_mk']) x y
+      (by simp [QuotientGroup.ker_mk'])
   have hcenter_card : Nat.card (Subgroup.center H) = p.val := by
     simpa [hm_eq_one] using hm
   have hder_le_center : derivedSubgroup H ≤ Subgroup.center H := by
-    simpa [derivedSubgroup, derivedSeries_one] using hcomm_center
+    change derivedSeries H 1 ≤ Subgroup.center H
+    rw [derivedSeries_one]
+    exact hcomm_center
   have hder_ne_bot : derivedSubgroup H ≠ ⊥ := by
     intro hder_bot
     apply hnoncomm
-    refine ⟨⟨?_⟩⟩
-    intro x y
-    have hcomm_le_bot : commutator H ≤ (⊥ : Subgroup H) := by
-      simpa [derivedSubgroup, derivedSeries_one] using le_of_eq hder_bot
-    have hxy_mem : ⁅x, y⁆ ∈ (commutator H) :=
-      Subgroup.commutator_mem_commutator
-        (H₁ := (⊤ : Subgroup H)) (H₂ := (⊤ : Subgroup H)) (by simp) (by simp)
-    have hxy_bot : ⁅x, y⁆ ∈ (⊥ : Subgroup H) := hcomm_le_bot hxy_mem
-    have hxy_one : ⁅x, y⁆ = 1 := by simpa using hxy_bot
-    exact commutatorElement_eq_one_iff_mul_comm.mp hxy_one
+    apply (_root_.commutator_eq_bot_iff H).mp
+    rw [← derivedSeries_one]
+    exact hder_bot
   have hcenter_le_der : Subgroup.center H ≤ derivedSubgroup H :=
     center_le_of_le_center_ne_bot_of_prime_center_local
       (K := H) (q := p.val) (hcenter := hcenter_card)
@@ -55038,7 +55056,8 @@ private theorem theorem_10_10_secondDerived_eq_center_and_card_of_noncomm_p3
   have hder_eq_center : derivedSubgroup H = Subgroup.center H :=
     le_antisymm hder_le_center hcenter_le_der
   have hcomm_eq_center : commutator H = Subgroup.center H := by
-    simpa [derivedSubgroup, derivedSeries_one] using hder_eq_center
+    rw [← derivedSeries_one]
+    exact hder_eq_center
   have hCenter :
       ambientDerivedSubgroup H = (Subgroup.center H).map H.subtype := by
     simp [ambientDerivedSubgroup, hcomm_eq_center]
@@ -55067,7 +55086,8 @@ private theorem theorem_10_10_secondDerivedSubgroup_subgroupOf_eq_commutator
         (⟨x, hxD⟩ : derivedSubgroup M) ∈
           ((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
             (derivedSubgroup M) := by
-      simpa [Subgroup.mem_subgroupOf] using hx
+      change x ∈ (section16SecondDerivedSubgroup M).subgroupOf M
+      exact hx
     have hxCommD : (⟨x, hxD⟩ : derivedSubgroup M) ∈
         derivedSubgroup (derivedSubgroup M) := by
       rw [← secondDerivedSubgroup_subgroupOf_derived_eq M]
@@ -55095,7 +55115,8 @@ private theorem theorem_10_10_secondDerivedSubgroup_subgroupOf_eq_commutator
       apply Subtype.ext
       exact hyx
     rw [hy_eq] at hySecond
-    simpa [Subgroup.mem_subgroupOf] using hySecond
+    change x ∈ (section16SecondDerivedSubgroup M).subgroupOf M at hySecond
+    exact hySecond
 
 private theorem theorem_10_10_secondDerived_relIndex_eq_commutator
     {G : Type u}
@@ -55129,7 +55150,7 @@ private theorem theorem_10_10_isMulCommutative_of_mulEquiv
   haveI : IsMulCommutative A := hcomm
   refine ⟨⟨fun b₁ b₂ => ?_⟩⟩
   apply e.symm.injective
-  simpa using (mul_comm (e.symm b₁) (e.symm b₂))
+  simpa using hcomm.is_comm.comm (e.symm b₁) (e.symm b₂)
 
 private theorem theorem_10_10_not_isMulCommutative_ambientDerived_of_nonabelianPQuotient
     {G : Type u}
@@ -55402,7 +55423,8 @@ private theorem theorem_10_10_source_typeV_cubeCore_reduction_structural_payload
     simpa [Nat.card_eq_fintype_card] using hindex
   have hindexComm :
       (commutator M).index = Fintype.card W1 := by
-    simpa [derivedSubgroup, derivedSeries_one] using hindexF
+    rw [← derivedSeries_one]
+    exact hindexF
   have hbound :
       (ambientDerivedSubgroup (ambientDerivedSubgroup M)).relIndex
           (ambientDerivedSubgroup M) ≤
@@ -55838,7 +55860,8 @@ private theorem theorem_10_10_source_typeV_cubeCore_reduction_structural_payload
     simpa [Nat.card_eq_fintype_card] using hindex
   have hindexComm :
       (commutator M).index = Fintype.card W1 := by
-    simpa [derivedSubgroup, derivedSeries_one] using hindexF
+    rw [← derivedSeries_one]
+    exact hindexF
   have hbound :
       (ambientDerivedSubgroup (ambientDerivedSubgroup M)).relIndex
           (ambientDerivedSubgroup M) ≤
@@ -56175,7 +56198,9 @@ private theorem isElementaryAbelian_of_mulEquiv
   · refine ⟨⟨?_⟩⟩
     intro b₁ b₂
     apply e.symm.injective
-    simpa using (mul_comm (e.symm b₁) (e.symm b₂))
+    have hcommA : IsMulCommutative A :=
+      (inferInstance : IsElementaryAbelian p A).toIsMulCommutative
+    simpa using hcommA.is_comm.comm (e.symm b₁) (e.symm b₂)
   · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
     intro b
     apply e.symm.injective
@@ -56479,20 +56504,11 @@ private theorem theorem_10_11_coherent_of_typeII_hypothesis
     letI : IsMulCommutative U := hUcomm
     refine ⟨⟨?_⟩⟩
     intro a b
-    exact Subtype.ext (Subgroup.mul_comm_of_mem_isMulCommutative (H := U)
+    exact Subtype.ext (setLike_mul_comm (s := U)
       (hCU.1 a.2) (hCU.1 b.2))
   have hCcomm_bot : _root_.commutator C = ⊥ := by
     letI : IsMulCommutative C := hCcomm
-    have htop_cent :
-        (⊤ : Subgroup C) ≤
-          Subgroup.centralizer (((⊤ : Subgroup C) : Set C)) := by
-      intro a _ha
-      rw [Subgroup.mem_centralizer_iff]
-      intro b _hb
-      exact mul_comm b a
-    simpa using
-      (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := (⊤ : Subgroup C))
-        (H₂ := (⊤ : Subgroup C))).2 htop_cent
+    exact _root_.commutator_eq_bot C
   have hCprime_bot : Cprime = ⊥ := by
     rw [hCprimeEq, hCcomm_bot, Subgroup.map_bot]
   have hSH0Cprime :

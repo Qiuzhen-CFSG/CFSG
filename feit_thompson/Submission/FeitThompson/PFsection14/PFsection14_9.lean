@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_9_Correction
+public import FeitThompson.PFsection14.PFsection14_9_Correction
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9)

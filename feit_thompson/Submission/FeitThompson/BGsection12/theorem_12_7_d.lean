@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_7_b
+public import FeitThompson.BGsection12.theorem_12_7_b
 
 open scoped Pointwise
 
@@ -38,9 +38,9 @@ public theorem section12_CA_msigma_split_E2_cyclic_factor_pre
     obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S Sbad
     have hconj_comm : IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
       letI : IsMulCommutative (S : Subgroup G) := hScomm
-      simpa [Sylow.coe_subgroup_smul] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+      rw [Sylow.coe_subgroup_smul]
+      exact Subgroup.map_isMulCommutative
+        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
     have hSbad_comm : IsMulCommutative (Sbad : Subgroup G) := by
       rw [← hg]
       exact hconj_comm
@@ -214,12 +214,13 @@ public theorem section12_CA_msigma_not_le_frattini_E2_pre
     simpa [C, hCbot] using hCcard.symm
   exact p.2.ne_one hp_one
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_coprime_card_E1_tau2_pre
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
+    (_hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
+    (_hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
     Nat.Coprime p.val (Nat.card E₁) := by
   classical
   rcases hE with ⟨_hcomp, _hE12, hE1, _hE2, _hE3⟩
@@ -463,6 +464,7 @@ public theorem section12_CA_msigma_complement_in_E2_pre
       have hx' := hforward (e₁⁻¹) hx
       simpa [e₁, mul_assoc] using hx'
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_coprime_card_E1_E2_pre
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃) :
@@ -484,6 +486,7 @@ public theorem section12_coprime_card_E1_E2_pre
   have h2 : primeRank r.val M = 2 := hr2.2
   omega
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_coprime_card_E12_E3_pre
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃) :
@@ -549,7 +552,7 @@ public theorem section12_pack_complement_from_E2_pre
       _ = E₁ ⊔ (C ⊔ P₀) ⊔ E₃ := by
         simpa [C] using congrArg (fun X : Subgroup G => E₁ ⊔ X ⊔ E₃) hE₂eq
       _ = C ⊔ E₀ := by
-        simp [D, E₀, sup_assoc, sup_left_comm, sup_comm]
+        simp [D, E₀, sup_left_comm, sup_comm]
   · rw [Subgroup.disjoint_def]
     intro x hxC hxE₀
     have hxE2 : x ∈ E₂ := hCE2 hxC
@@ -591,16 +594,16 @@ public theorem section12_pack_complement_from_E2_pre
     have hzE12 : z ∈ E₁₂ := by
       have hz_eq : z = d⁻¹ * x := by
         rw [← hdz_eq_x]
-        simp [mul_assoc]
+        simp
       rw [hz_eq]
       exact E₁₂.mul_mem (E₁₂.inv_mem (hDE12 hdD)) hxE12
-    have hE12E3_bot : E₁₂ ⊓ E₃ = ⊥ :=
-      Subgroup.inf_eq_bot_of_coprime
+    have hE12E3_disj : Disjoint E₁₂ E₃ :=
+      Subgroup.disjoint_of_coprime_natCard
         (section12_coprime_card_E12_E3_pre (G := G) (M := M) (E := E)
           (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
     have hz_one : z = 1 := by
       have hzbot : z ∈ (⊥ : Subgroup G) := by
-        simpa [hE12E3_bot] using (show z ∈ E₁₂ ⊓ E₃ from ⟨hzE12, hzE3⟩)
+        exact Subgroup.disjoint_def.mp hE12E3_disj hzE12 hzE3
       simpa using hzbot
     have hx_eq_d : x = d := by
       rw [← hdz_eq_x, hz_one, mul_one]
@@ -637,16 +640,16 @@ public theorem section12_pack_complement_from_E2_pre
       have hrE2 : r ∈ E₂ := hP₀E₂ hrP₀'
       have he_eq : e = d * r⁻¹ := by
         rw [← her_eq_d]
-        simp [mul_assoc]
+        simp
       rw [he_eq]
       exact E₂.mul_mem hdE2 (E₂.inv_mem hrE2)
-    have hE1E2_bot : E₁ ⊓ E₂ = ⊥ :=
-      Subgroup.inf_eq_bot_of_coprime
+    have hE1E2_disj : Disjoint E₁ E₂ :=
+      Subgroup.disjoint_of_coprime_natCard
         (section12_coprime_card_E1_E2_pre (G := G) (M := M) (E := E)
           (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
     have he_one : e = 1 := by
       have hebot : e ∈ (⊥ : Subgroup G) := by
-        simpa [hE1E2_bot] using (show e ∈ E₁ ⊓ E₂ from ⟨heE1', heE2⟩)
+        exact Subgroup.disjoint_def.mp hE1E2_disj heE1' heE2
       simpa using hebot
     have hd_eq_r : d = r := by
       rw [← her_eq_d, he_one, one_mul]

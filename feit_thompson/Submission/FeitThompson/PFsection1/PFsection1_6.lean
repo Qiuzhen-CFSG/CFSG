@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection1.PFsection1_5
-public import Submission.FeitThompson.GroupAction.Quotient
+public import FeitThompson.PFsection1.PFsection1_5
+public import FeitThompson.GroupAction.Quotient
 public import Mathlib.GroupTheory.Coset.Card
 public import Mathlib.GroupTheory.QuotientGroup.Basic
 /-!
@@ -72,7 +72,7 @@ lemma subgroupInKernel'_conjugate
     simpa using hA.conj_mem (a : G) a.2 x
   have hmem := hker ⟨x * (a : G) * x⁻¹, hxax⟩
   dsimp [conjugateClassFunction, degree]
-  simpa using hmem
+  simpa [degree] using hmem
 
 lemma subgroupInKernel'_conjugate_iff
     {G : Type*} [Group G]

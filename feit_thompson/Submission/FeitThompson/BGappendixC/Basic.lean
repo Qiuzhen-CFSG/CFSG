@@ -13,7 +13,7 @@ public import Mathlib.NumberTheory.JacobiSum.Basic
 public import Mathlib.NumberTheory.MulChar.Lemmas
 public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
 /-!
 # Statements from BG Appendix C
@@ -104,7 +104,7 @@ public theorem natCard_ker_eq_card_div_of_surjective
 public theorem appendixC_complex_hasEnoughRootsOfUnity (n : ℕ) [NeZero n] :
     HasEnoughRootsOfUnity ℂ n := by
   exact HasEnoughRootsOfUnity.of_card_le (R := ℂ) (n := n)
-    (by simp [Complex.card_rootsOfUnity])
+    (Complex.card_rootsOfUnity n).ge
 
 /-- Orthogonality for all complex linear characters of a finite abelian group,
 using the ambient `Fintype` instance for the character group. -/

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.theorem_5_3
+public import FeitThompson.BGsection5.theorem_5_3
 
 /-! # Theorem 5.3(a) from BG Section 5 -/
 

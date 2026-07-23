@@ -2,7 +2,7 @@ module
 
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 
-public import Submission.FeitThompson.HallSubgroups.Core
+public import FeitThompson.HallSubgroups.Core
 
 /-!
 # Hall subgroup consequence for finite Z-groups

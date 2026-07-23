@@ -4,12 +4,12 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
-import Submission.FeitThompson.Commutator.ActionTriviality
-import Submission.FeitThompson.Frattini.CoprimeAction
-import Submission.FeitThompson.GroupAction.MinimalNormal
-import Submission.FeitThompson.GroupAction.Quotient
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection1.Defs
+import FeitThompson.Commutator.ActionTriviality
+import FeitThompson.Frattini.CoprimeAction
+import FeitThompson.GroupAction.MinimalNormal
+import FeitThompson.GroupAction.Quotient
+import FeitThompson.HallSubgroups.Conjugacy
 
 open scoped Pointwise
 
@@ -121,8 +121,10 @@ public theorem commutatorAction_le_piCore_of_hall_complement_le_fixedPointSubgro
     have hp_not_mem : (⟨p, hp_prime⟩ : Nat.Primes) ∉ π :=
       hHallπ.p_in_pi_of_p_dvd_index ⟨p, hp_prime⟩ hp_dvd_Hπidx
     have hp_mem : (⟨p, hp_prime⟩ : Nat.Primes) ∈ π := by
-      simpa using
+      have hnot_not_mem :=
         hHallπ'.p_in_pi_of_p_dvd_index ⟨p, hp_prime⟩ hp_dvd_Hπ'idx
+      change ¬ ((⟨p, hp_prime⟩ : Nat.Primes) ∉ π) at hnot_not_mem
+      exact Classical.not_not.mp hnot_not_mem
     exact (hp_not_mem hp_mem).elim
   have hcard_dvd_index : Nat.card Hπ' ∣ Hπ.index := by
     have hcard_dvd_G : Nat.card Hπ' ∣ Nat.card G := Subgroup.card_subgroup_dvd_card Hπ'

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.proposition_12_15_a
+public import FeitThompson.BGsection12.proposition_12_15_a
 
 open scoped Pointwise
 
@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [IsMinCE G] in
 private theorem section12_inf_sylow_eq_sylow_of_normalizer_le
     {M Mstar : Subgroup G} {q : Nat.Primes}
     {S : Sylow q.val (M ⊓ Mstar : Subgroup G)}
@@ -41,8 +42,8 @@ private theorem section12_inf_sylow_eq_sylow_of_normalizer_le
   let Nloc : Subgroup TG := Subgroup.normalizer (K : Set TG)
   let Namb : Subgroup G := Nloc.map TG.subtype
   have hTGp : IsPGroup q.val TG := by
-    simpa [TG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (T.isPGroup') M.subtype
+    change IsPGroup q.val ((T : Subgroup M).map M.subtype)
+    exact IsPGroup.map T.isPGroup' M.subtype
   have hNamb_p : IsPGroup q.val Namb := by
     have hNloc_p : IsPGroup q.val Nloc := hTGp.to_subgroup Nloc
     exact IsPGroup.map hNloc_p TG.subtype
@@ -95,7 +96,7 @@ private theorem section12_inf_sylow_eq_sylow_of_normalizer_le
   have hNloc_eq : Nloc = K := le_antisymm hNloc_le_K Subgroup.le_normalizer
   have hnc : NormalizerCondition TG := by
     letI : Group.IsNilpotent TG := IsPGroup.isNilpotent (p := q.val) (G := TG) hTGp
-    exact normalizerCondition_of_isNilpotent (G := TG)
+    exact Group.normalizerCondition_of_isNilpotent (G := TG)
   have hKtop : K = ⊤ :=
     normalizerCondition_iff_only_full_group_self_normalizing.mp hnc K (by
       simpa [Nloc] using hNloc_eq)
@@ -129,17 +130,18 @@ public theorem proposition_12_15_b
     {S : Sylow q.val (M ⊓ Mstar : Subgroup G)}
     (hM : M ∈ section9MaximalSubgroups G)
     (hq : q ∈ section10SigmaPrimes M)
-    (hX : X ≤ M) (hXne : X ≠ ⊥) (hXq : IsPGroup q.val X)
+    (_hX : X ≤ M) (_hXne : X ≠ ⊥) (_hXq : IsPGroup q.val X)
     (hMstar : Mstar ∈ section9MaximalSubgroupsContaining (Subgroup.normalizer (X : Set G)))
-    (hMstar_ne : Mstar ≠ M)
+    (_hMstar_ne : Mstar ≠ M)
     (hXS : X ≤ section10AmbientSylowSubgroup (M ⊓ Mstar) S) :
     Subgroup.normalizer ((section10AmbientSylowSubgroup (M ⊓ Mstar) S : Subgroup G) : Set G) ≤ M := by
   classical
   haveI : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (S.isPGroup') (M ⊓ Mstar : Subgroup G).subtype
+    change IsPGroup q.val
+      ((S : Subgroup (M ⊓ Mstar : Subgroup G)).map (M ⊓ Mstar : Subgroup G).subtype)
+    exact IsPGroup.map S.isPGroup' (M ⊓ Mstar : Subgroup G).subtype
   have hPamb_le_M : Pamb ≤ M := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩

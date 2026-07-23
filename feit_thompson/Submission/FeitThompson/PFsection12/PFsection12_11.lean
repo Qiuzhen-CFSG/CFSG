@@ -1,21 +1,21 @@
 module
 
-public import Submission.FeitThompson.PFsection12.Basic
-import Submission.FeitThompson.PFsection12.PFsection12_9
-import Submission.FeitThompson.PFsection12.PFsection12_10
-import Submission.FeitThompson.GroupAction.MinimalNormal
-import Submission.FeitThompson.PFsection5.RealVirtualParity
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection7.PFsection7_3
-import Submission.FeitThompson.PFsection7.PFsection7_5
-import Submission.FeitThompson.PFsection7.PFsection7_7
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection7.PFsection7_8_c
-import Submission.FeitThompson.PFsection7.PFsection7_9
-import Submission.FeitThompson.PFsection8.PFsection8_16
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection9.PFsection9_1
+public import FeitThompson.PFsection12.Basic
+import FeitThompson.PFsection12.PFsection12_9
+import FeitThompson.PFsection12.PFsection12_10
+import FeitThompson.GroupAction.MinimalNormal
+import FeitThompson.PFsection5.RealVirtualParity
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection7.PFsection7_3
+import FeitThompson.PFsection7.PFsection7_5
+import FeitThompson.PFsection7.PFsection7_7
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection7.PFsection7_8_c
+import FeitThompson.PFsection7.PFsection7_9
+import FeitThompson.PFsection8.PFsection8_16
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
 
@@ -129,9 +129,8 @@ public theorem theorem_12_11_source_leaf
       rw [← hP0eq]
       exact section11_ambientSylow_le M PM
     have hP0p : IsPGroup p P0 := by
-      rw [← hP0eq]
-      simpa [section10AmbientSylowSubgroup] using
-        IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+      rw [← hP0eq, section10AmbientSylowSubgroup]
+      exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
     let ML : Subgroup L := (M ⊓ L).subgroupOf L
     have hMLpi : IsPiSubgroup (G := L) (subgroupPrimeSet H) ML := by
       intro q hqML
@@ -166,7 +165,8 @@ public theorem theorem_12_11_source_leaf
       have hP0P : P0 ≤ P := by
         intro y hy
         exact Subgroup.mem_map.mpr
-          ⟨⟨y, hP0H hy⟩, hP0H_le_core (by simpa [P0H] using hy), rfl⟩
+          ⟨⟨y, hP0H hy⟩, hP0H_le_core (by
+            simpa [P0H, Subgroup.mem_subgroupOf] using hy), rfl⟩
       have hPp : IsPGroup p P := by
         simpa [P] using
           IsPGroup.map (p := p) (H := pCore p H)
@@ -530,7 +530,7 @@ public theorem theorem_12_11_source_leaf
       have hwne : w ≠ 1 := by
         intro hwone
         apply hwnotK'
-        simpa [hwone]
+        simp [hwone]
       have hxCentW : x ∈ elementCentralizerIn (M ⊓ L) w := by
         refine ⟨hxE, ?_⟩
         change x ∈ Subgroup.centralizer ({w} : Set G)
@@ -542,8 +542,8 @@ public theorem theorem_12_11_source_leaf
       have hAcentX : A ≤ Subgroup.centralizer ({x} : Set G) := by
         intro a haA
         rw [Subgroup.mem_centralizer_singleton_iff]
-        exact Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := E1) (hA_E1 haA) hxE1
+        exact setLike_mul_comm
+          (s := E1) (hA_E1 haA) hxE1
       have hzA : z ∈ A := Subgroup.mem_zpowers z
       have hznotH : z ∉ H := by
         intro hzH

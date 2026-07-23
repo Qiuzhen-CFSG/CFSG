@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_12_a
+public import FeitThompson.BGsection12.theorem_12_12_a
 
 open scoped Pointwise
 
@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_exponent_eq_lcm_of_complement_normal_coprime
     {H K L : Subgroup G}
     (hKL : section12ComplementIn H K L)
@@ -76,6 +77,7 @@ private theorem section12_exponent_eq_lcm_of_complement_normal_coprime
     simpa [Nat.mul_comm] using hgpow
   · exact Nat.lcm_dvd hKexp_dvd_H hLexp_dvd_H
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_exponent_eq_lcm_of_complement_commutative
     {H K L : Subgroup G}
     (hKL : section12ComplementIn H K L)
@@ -84,7 +86,7 @@ private theorem section12_exponent_eq_lcm_of_complement_commutative
   classical
   rcases hKL with ⟨hKH, hLH, hHsup, _hdisj⟩
   letI : IsMulCommutative H := hHcomm
-  letI : CommGroup H := CommGroup.ofIsMulCommutative
+  letI : CommGroup H := IsMulCommutative.instCommGroup
   have hKsub_exp : Monoid.exponent (K.subgroupOf H) = Monoid.exponent K := by
     simpa using Monoid.exponent_eq_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hKH)
   have hLsub_exp : Monoid.exponent (L.subgroupOf H) = Monoid.exponent L := by
@@ -117,7 +119,7 @@ private theorem section12_exponent_eq_lcm_of_complement_commutative
     intro g
     haveI : (L.subgroupOf H).Normal := by infer_instance
     have hg_sup : g ∈ K.subgroupOf H ⊔ L.subgroupOf H := by
-      simpa [hKL_top]
+      simp [hKL_top]
     rcases (Subgroup.mem_sup_of_normal_right
         (s := K.subgroupOf H) (t := L.subgroupOf H) (x := g)).1 hg_sup with
       ⟨k, hk, l, hl, hkl⟩
@@ -317,6 +319,7 @@ private theorem section12_exponent_eq_of_CA_msigma_complement_in_E2
     _ = Monoid.exponent Z := by rw [hquot_exp_Z]
     _ = Monoid.exponent E₂ := hExpZ_eq_E₂
 
+omit [IsMinCE G] in
 public theorem section12_exists_primeOrder_zpowers_of_prime_dvd_card
     {B : Subgroup G} {q : Nat.Primes} (hqB : q.val ∣ Nat.card B) :
     ∃ z : G, z ∈ B ∧ z ≠ 1 ∧
@@ -446,7 +449,7 @@ private theorem section12_tau1_primeSupport_of_centralizer_of_complement
           haveI : (E₃.subgroupOf E).Normal := hE3norm.2
           exact section12_pSubgroup_le_normal_hall_of_prime_mem hHallE3 hqτ3 hZsub_p
         have hzsub : (⟨z, hzE⟩ : E) ∈ (Subgroup.zpowers z).subgroupOf E := by
-          simpa [Subgroup.mem_subgroupOf] using Subgroup.mem_zpowers z
+          simp [Subgroup.mem_subgroupOf]
         exact hZsubE hzsub
       exact hzE3
 
@@ -497,7 +500,7 @@ private theorem section12_complementToMsigma_ne_bot
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
     IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
-    simpa [derivedSubgroup, derivedSeries_one] using hder_top
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using hder_top
   exact hcomm_lt.ne hcomm_top
 
 private theorem section12_frobeniusJoinWithKernel_of_trivial_centralizers
@@ -698,8 +701,8 @@ private theorem section12_tau2_sylow_omegaOne_eq_rankTwo_of_abelian
     exact hC_le_E (by
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (S : Subgroup G)) hs (hAS ha)).symm)
+      exact (setLike_mul_comm
+        (s := (S : Subgroup G)) hs (hAS ha)).symm)
   have hSleM : (S : Subgroup G) ≤ M := hSleE.trans hE.1.2.1
   have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M :=
     section12_rankTwo_of_EData hE hA
@@ -734,6 +737,7 @@ private theorem section12_powMonoidHom_range_characteristic
     · exact MonoidHom.mem_range.mpr ⟨e.symm y, rfl⟩
     · simp [powMonoidHom_apply]
 
+omit [IsMinCE G] in
 private theorem section12_primeOrderSubgroupIn_of_ne_bot_ne_self_of_rankTwo
     {A X : Subgroup G} {p : Nat.Primes}
     (hAcard : Nat.card A = p.val ^ 2)
@@ -746,7 +750,7 @@ private theorem section12_primeOrderSubgroupIn_of_ne_bot_ne_self_of_rankTwo
     intro hk0
     apply hXne
     apply (Subgroup.card_eq_one (H := X)).mp
-    simpa [hk_card, hk0]
+    simp [hk_card, hk0]
   have hk_ne_two : k ≠ 2 := by
     intro hk2
     have hXsub_card : Nat.card (X.subgroupOf A) = Nat.card A := by
@@ -757,13 +761,14 @@ private theorem section12_primeOrderSubgroupIn_of_ne_bot_ne_self_of_rankTwo
       apply le_antisymm hXA
       intro a ha
       have haSub : (⟨a, ha⟩ : A) ∈ X.subgroupOf A := by
-        simpa [hXsub_top]
+        simp [hXsub_top]
       simpa [Subgroup.mem_subgroupOf] using haSub
     exact hXproper hXeqA
   have hk_eq_one : k = 1 := by
     omega
-  exact ⟨hXA, by simpa [hk_card, hk_eq_one]⟩
+  exact ⟨hXA, by simp [hk_card, hk_eq_one]⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_pow_eq_one
     {B : Subgroup G} {p : Nat.Primes} {x : G}
     (hxB : x ∈ B) (hxpow : x ^ p.val = 1) (hxne : x ≠ 1) :
@@ -773,6 +778,7 @@ private theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_pow_eq_one
     rw [Nat.card_zpowers, orderOf_eq_prime hxpow hxne]
   exact ⟨Subgroup.zpowers_le.2 hxB, hcard⟩
 
+omit [IsMinCE G] in
 private theorem section12_eq_of_le_primeOrderSubgroupsIn
     {A X Y : Subgroup G} {p : Nat.Primes}
     (hX : X ∈ section10PrimeOrderSubgroupsIn p A)
@@ -788,7 +794,7 @@ private theorem section12_eq_of_le_primeOrderSubgroupsIn
   apply le_antisymm hXY
   intro y hy
   have hySub : (⟨y, hy⟩ : Y) ∈ X.subgroupOf Y := by
-    simpa [hXsub_top]
+    simp [hXsub_top]
   simpa [Subgroup.mem_subgroupOf] using hySub
 
 private theorem section12_tau2_sylow_le_E2_of_abelian
@@ -864,14 +870,14 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
       apply le_antisymm
       · intro x hx
         rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-        simpa using y.2
+        simp
       · exact bot_le
     have hAbot : A = ⊥ := hOmegaS.symm.trans hOmegaBot
     exact hAne hAbot
   haveI : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hSne
   haveI : Fact p.val.Prime := ⟨p.2⟩
   have hSp : IsPGroup p.val Ssub := S.isPGroup'
-  letI : CommGroup Ssub := CommGroup.ofIsMulCommutative
+  letI : CommGroup Ssub := IsMulCommutative.instCommGroup
   rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := Ssub) (hG := hSp)).mp inferInstance with
     ⟨n, hn_pos, hcardS⟩
   have hexp_dvd_card : Monoid.exponent Ssub ∣ p.val ^ n := by
@@ -888,7 +894,7 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
     cases k with
     | zero =>
         exfalso
-        exact hExpS_ne_one (by simpa [hExpS])
+        exact hExpS_ne_one (by simp [hExpS])
     | succ k =>
         exact Nat.succ_pos _
   let d : Nat := p.val ^ (k - 1)
@@ -908,7 +914,7 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
           | zero =>
               cases (Nat.not_lt_zero _ hk_pos)
           | succ k =>
-              simp [pow_succ', Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
+              simp [pow_succ', Nat.mul_comm]
         exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp hExp_dvd z
       simpa [d, pow_mul] using congrArg Subtype.val hpow
     have hxOmega : ((z : Ssub) ^ d : G) ∈ section12OmegaOneSubgroup p Ssub :=
@@ -1291,7 +1297,9 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
       simpa [Subgroup.mem_subgroupOf] using hq0
     have hconj_mem : (MulAut.conj e) (⟨q0, hq0E⟩ : E) ∈ E₁₂.subgroupOf E :=
       hQ_E_conj_le (Subgroup.mem_map.mpr ⟨⟨q0, hq0E⟩, hq0_E_mem, rfl⟩)
-    simpa [eG] using hconj_mem
+    change (eG * q0 * eG⁻¹ : G) ∈ E₁₂
+    change (((e * (⟨q0, hq0E⟩ : E) * e⁻¹ : E) : G) ∈ E₁₂) at hconj_mem
+    exact hconj_mem
   have hQe_card : Nat.card (Q.map (MulAut.conj eG).toMonoidHom) = q.val := by
     apply (Nat.card_congr ?_).trans hQcard
     exact (Subgroup.equivMapOfInjective
@@ -1347,7 +1355,9 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
       simpa [Subgroup.mem_subgroupOf] using hq0
     have hconj_mem : (MulAut.conj f) (⟨q0, hq0_E12⟩ : E₁₂) ∈ E₁.subgroupOf E₁₂ :=
       hQe_E12_conj_le (Subgroup.mem_map.mpr ⟨⟨q0, hq0_E12⟩, hq0_E12_mem, rfl⟩)
-    simpa [fG] using hconj_mem
+    change (fG * q0 * fG⁻¹ : G) ∈ E₁
+    change (((f * (⟨q0, hq0_E12⟩ : E₁₂) * f⁻¹ : E₁₂) : G) ∈ E₁) at hconj_mem
+    exact hconj_mem
   let g : G := fG * eG
   have hg_E : g ∈ E := Subgroup.mul_mem E hfG_E heG_E
   have h_mulAut_comp : ((MulAut.conj fG) * (MulAut.conj eG)).toMonoidHom =
@@ -1449,7 +1459,9 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
         simpa [aE, Subgroup.mem_subgroupOf] using ha
       have h_conj : (⟨g, hg_E⟩ * aE * ⟨g, hg_E⟩⁻¹) ∈ A.subgroupOf E :=
         hAnorm.2.conj_mem aE ha_sub ⟨g, hg_E⟩
-      simpa [aE] using h_conj
+      change (g * a * g⁻¹ : G) ∈ A
+      change (((⟨g, hg_E⟩ * aE * ⟨g, hg_E⟩⁻¹ : E) : G) ∈ A) at h_conj
+      exact h_conj
     · intro hx
       have hxE : x ∈ E := hAE hx
       let xE : E := ⟨x, hxE⟩
@@ -1483,7 +1495,9 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
         simpa [yM, Subgroup.mem_subgroupOf] using hy
       have h_conj : (⟨g, hg_M⟩ * yM * ⟨g, hg_M⟩⁻¹) ∈ (⁅A, Q⁆.subgroupOf M) :=
         hAQ_norm.conj_mem yM hy_sub ⟨g, hg_M⟩
-      simpa [yM] using h_conj
+      change (g * y * g⁻¹ : G) ∈ ⁅A, Q⁆
+      change (((⟨g, hg_M⟩ * yM * ⟨g, hg_M⟩⁻¹ : M) : G) ∈ ⁅A, Q⁆) at h_conj
+      exact h_conj
     · intro hx
       have hxM : x ∈ M := hAQ_M hx
       let xM : M := ⟨x, hxM⟩
@@ -1501,6 +1515,7 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
   rw [h_comm_conj, h_AQ_conj_eq] at h_A_Qg_bot
   exact hcomm h_A_Qg_bot
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_exists_quotientPrime_of_normal_proper
     {H K : Subgroup G}
     (hKnorm : section10NormalIn K H) (hKne : K ≠ H) :
@@ -1513,7 +1528,7 @@ private theorem section12_exists_quotientPrime_of_normal_proper
     apply le_antisymm hKnorm.1
     intro x hxH
     have hxKsub : (⟨x, hxH⟩ : H) ∈ Ksub := by
-      simpa [Ksub, htop] using (show (⟨x, hxH⟩ : H) ∈ (⊤ : Subgroup H) by simp)
+      simp [Ksub, htop]
     simpa [Ksub, Subgroup.mem_subgroupOf] using hxKsub
   have hidx_ne_one : Ksub.index ≠ 1 := by
     intro hidx
@@ -1521,6 +1536,7 @@ private theorem section12_exists_quotientPrime_of_normal_proper
   obtain ⟨q, hqprime, hqdiv⟩ := Nat.exists_prime_and_dvd hidx_ne_one
   exact ⟨⟨q, hqprime⟩, ⟨hKnorm.1, hqdiv⟩⟩
 
+omit [IsMinCE G] in
 private theorem section12_quotientPrime_of_sylow_not_le_normal
     {E K : Subgroup G} {q : Nat.Primes}
     (hKnorm : section10NormalIn K E)
@@ -1625,9 +1641,7 @@ private theorem section12_quotientMulDistribMulActionOfTrivial_smul_mk'
     (QuotientGroup.mk' N).liftOfSurjective (QuotientGroup.mk'_surjective (N := N)) ⟨φ, by
       simpa [QuotientGroup.ker_mk'] using hNker⟩
   have hcomp : φq.comp (QuotientGroup.mk' N) = φ := by
-    simpa [φq] using congrArg Subtype.val
-      (((QuotientGroup.mk' N).liftOfSurjective
-        (QuotientGroup.mk'_surjective (N := N))).left_inv ⟨φ, hNker⟩)
+    simp [φq]
   change φq (QuotientGroup.mk' N a) m = φ a m
   have hqa : φq (QuotientGroup.mk' N a) = φ a := by
     exact congrArg (fun f : A →* MulAut M => f a) hcomp
@@ -1668,6 +1682,7 @@ public theorem section12_fixedPointSubgroup_map_mk'_eq_of_trivial
     have hmb : (b : A) • m = m := hm ⟨b, hbB⟩
     calc
       bq • m = (b : A) • m := by
+        change (bq : A ⧸ N) • m = (b : A) • m
         simpa [hbq] using
           (section12_quotientMulDistribMulActionOfTrivial_smul_mk'
             (A := A) (M := M) hNfix (a := b) (m := m))
@@ -1741,7 +1756,7 @@ private theorem section12_isMulCommutative_of_mulEquiv_pre
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := mul_comm (e x) (e y)
+    _ = e y * e x := mul_comm' (e x) (e y)
     _ = e (y * x) := (e.map_mul y x).symm
 
 omit [IsMinCE G] in
@@ -1767,7 +1782,7 @@ private theorem section12_isCyclic_pi_of_pairwise_coprime_cyclic
     IsCyclic (∀ i, H i) := by
   classical
   letI : ∀ i, Fintype (H i) := fun i => Fintype.ofFinite (H i)
-  letI : ∀ i, CommGroup (H i) := fun i => CommGroup.ofIsMulCommutative
+  letI : ∀ i, CommGroup (H i) := fun i => IsMulCommutative.instCommGroup
   have hexp_coprime :
       Set.Pairwise (↑(Finset.univ : Finset ι)) (Nat.Coprime.onFun fun i => Monoid.exponent (H i)) := by
     intro i hi j hj hij
@@ -1837,7 +1852,7 @@ private lemma unique_subgroup_of_prime_order_in_cyclic
     have hL_ne_bot : L ≠ ⊥ := by
       intro hbot
       have hcard1 : Nat.card L = 1 := by
-        simpa [hbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+        simp [hbot]
       rw [hL] at hcard1; exact hp_prime.ne_one hcard1
     haveI : Nontrivial L := (Subgroup.nontrivial_iff_ne_bot L).mpr hL_ne_bot
     obtain ⟨h, hh⟩ := IsCyclic.exists_monoid_generator (α := L)
@@ -1890,9 +1905,9 @@ private theorem section12_all_sylow_comm_of_one
   have hconj_comm :
       IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
     letI : IsMulCommutative (S : Subgroup G) := hScomm
-    simpa [Sylow.coe_subgroup_smul] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+    rw [Sylow.coe_subgroup_smul]
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
   rw [← hg]
   exact hconj_comm
 
@@ -1967,8 +1982,8 @@ private theorem section12_E2_global_hall_of_abelian_sylow
         intro x hx
         rw [Subgroup.mem_centralizer_iff]
         intro b hb
-        exact (Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := (Q : Subgroup G)) hx (hB_le_Q hb)).symm
+        exact (setLike_mul_comm
+          (s := (Q : Subgroup G)) hx (hB_le_Q hb)).symm
       have hCB_le_E : Subgroup.centralizer (B : Set G) ≤ E := by
         have h6B :=
           corollary_12_6_b (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
@@ -2194,7 +2209,9 @@ private theorem
   have hE_le_NE2 : E ≤ Subgroup.normalizer (E₂ : Set G) :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hE2normE.1).1 hE2normE.2
   have hE_le_NS : E ≤ Subgroup.normalizer (Ssub : Set G) := by
-    simpa [Ssub, h8d.2.1] using hE_le_NE2
+    change E ≤ Subgroup.normalizer (((S : Subgroup G) : Set G))
+    rw [h8d.2.1]
+    exact hE_le_NE2
   have hSnormE : section10NormalIn Ssub E := by
     refine ⟨hSleE, ?_⟩
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hSleE).2 hE_le_NS
@@ -2212,8 +2229,8 @@ private theorem
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact y.property
   have hQE_p : IsPGroup q.val (QE Qe) := by
-    simpa [QE, section10AmbientSylowSubgroup] using
-      IsPGroup.map Qe.isPGroup' E.subtype
+    change IsPGroup q.val ((Qe : Subgroup E).map E.subtype)
+    exact IsPGroup.map Qe.isPGroup' E.subtype
   have hQE_not_le_CES : ¬ QE Qe ≤ CES := by
     intro hQE_le_CES
     have hQe_le_CESsub : (Qe : Subgroup E) ≤ CES.subgroupOf E := by
@@ -2241,8 +2258,8 @@ private theorem
       rw [Subgroup.mem_centralizer_iff]
       intro t ht
       exact
-        (Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := Ssub) hs ht).symm
+        (setLike_mul_comm
+          (s := Ssub) hs ht).symm
     exact hQE_not_le_CES (hQE_le_S.trans hS_le_CES)
   have hcopQE_S : Nat.Coprime (Nat.card (QE Qe)) (Nat.card Ssub) :=
     IsPGroup.coprime_card_of_ne q.val p.val hq_ne_p (QE Qe) Ssub hQE_p S.isPGroup'
@@ -2251,7 +2268,7 @@ private theorem
     have hQE_le_NS : QE Qe ≤ Subgroup.normalizer (Ssub : Set G) := hQE_le_E.trans hE_le_NS
     letI : Subgroup.Normalizes (QE Qe) Ssub := ⟨hQE_le_NS⟩
     letI : IsMulCommutative Ssub := hScomm
-    letI : CommGroup Ssub := CommGroup.ofIsMulCommutative
+    letI : CommGroup Ssub := IsMulCommutative.instCommGroup
     have hfix_eq :
         fixedPointSubgroup (↥(QE Qe)) (↥Ssub) =
           (subgroupCentralizerIn Ssub (QE Qe)).subgroupOf Ssub := by
@@ -2264,7 +2281,7 @@ private theorem
       haveI : IsElementaryAbelian p.val A := hAelem
       have hs_ne : (s : Ssub) ≠ 1 := by
         intro hs1
-        exact hsprime.ne_one (by simpa [hs1] using rfl)
+        exact hsprime.ne_one (by simp [hs1])
       have hs_order_eq_p : orderOf s = p.val := by
         rcases (IsPGroup.iff_orderOf (p := p.val)).mp S.isPGroup' s with ⟨m, hm_eq⟩
         have hp_dvd_order : p.val ∣ orderOf s := by
@@ -2378,8 +2395,8 @@ private theorem
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact y.property
   have hQE_p : IsPGroup q.val QE := by
-    simpa [QE, section10AmbientSylowSubgroup] using
-      IsPGroup.map Qe.isPGroup' E.subtype
+    change IsPGroup q.val ((Qe : Subgroup E).map E.subtype)
+    exact IsPGroup.map Qe.isPGroup' E.subtype
   have hQE_ne_bot : QE ≠ ⊥ := by
     intro hQEbot
     apply hQE_not_le_CEA
@@ -2556,7 +2573,7 @@ private theorem
         apply le_antisymm
         · intro x hx
           rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-          simpa using y.2
+          simp
         · exact bot_le
       exact hA_ne_bot (hOmegaS.symm.trans hOmegaBot)
     haveI : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hS_ne_bot
@@ -2579,7 +2596,8 @@ private theorem
     have hE_le_NE2 : E ≤ Subgroup.normalizer (E₂ : Set G) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hE2normE.1).1 hE2normE.2
     have hE_le_NS : E ≤ Subgroup.normalizer ((S : Subgroup G) : Set G) := by
-      simpa [h8d.2.1] using hE_le_NE2
+      rw [h8d.2.1]
+      exact hE_le_NE2
     have hQE_le_E : QE ≤ E := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -2590,8 +2608,8 @@ private theorem
     let QEsub : Subgroup N := QE.subgroupOf N
     have hQEsub_p : IsPGroup q.val QEsub := by
       have hQE_p : IsPGroup q.val QE := by
-        simpa [QE, section10AmbientSylowSubgroup] using
-          IsPGroup.map Qe.isPGroup' E.subtype
+        change IsPGroup q.val ((Qe : Subgroup E).map E.subtype)
+        exact IsPGroup.map Qe.isPGroup' E.subtype
       exact hQE_p.of_equiv
         (Subgroup.subgroupOfEquivOfLe (H := QE) (K := N) hQE_le_NS).symm
     obtain ⟨Q, hQEsub_le_Q⟩ := IsPGroup.exists_le_sylow (G := N) (p := q.val) hQEsub_p
@@ -2607,8 +2625,8 @@ private theorem
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
         hM hE hp hA hAS hScomm
     have hQG_p : IsPGroup q.val QG := by
-      simpa [QG, section10AmbientSylowSubgroup] using
-        IsPGroup.map Q.isPGroup' N.subtype
+      change IsPGroup q.val ((Q : Subgroup N).map N.subtype)
+      exact IsPGroup.map Q.isPGroup' N.subtype
     have hQG_le_N : QG ≤ N := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -2640,8 +2658,7 @@ private theorem
       calc
         QG ⊓ E = QGE.map E.subtype := by
           symm
-          simpa [QGE] using
-            (Subgroup.map_subgroupOf_eq_of_le (H := QG ⊓ E) (K := E) inf_le_right)
+          simp [QGE]
         _ = (Qe : Subgroup E).map E.subtype := by rw [hQGE_eq_Qe]
         _ = QE := rfl
     have hQ0_le_QE : Q0 ≤ QE := by
@@ -2745,8 +2762,8 @@ private theorem
             exact q.2.odd_of_ne_two hq_ne_two)
           hcop_q_Ssub hquot_p hreg
       have hQE_p : IsPGroup q.val QE := by
-        simpa [QE, section10AmbientSylowSubgroup] using
-          IsPGroup.map Qe.isPGroup' E.subtype
+        change IsPGroup q.val ((Qe : Subgroup E).map E.subtype)
+        exact IsPGroup.map Qe.isPGroup' E.subtype
       let Q0sub : Subgroup QG := Q0.subgroupOf QG
       let QEsubQG : Subgroup QG := QE.subgroupOf QG
       have hQ0sub_le_QEsub : Q0sub ≤ QEsubQG := by
@@ -2927,8 +2944,7 @@ private theorem
         have hmap :
             (XQ.map (QuotientGroup.mk' (Q0.subgroupOf QG))) =
               Subgroup.zpowers (QuotientGroup.mk' (Q0.subgroupOf QG) x) := by
-          simpa [XQ] using
-            (MonoidHom.map_zpowers (QuotientGroup.mk' (Q0.subgroupOf QG)) x)
+          simp [XQ]
         rw [← hmap]
         exact
           section12_fixedPointSubgroup_map_mk'_eq_of_trivial
@@ -2953,7 +2969,7 @@ private theorem
             simpa [hC0_eq] using hs
           have hs_centX : s ∈ Subgroup.centralizer (X : Set G) := hsC0.2
           have hx_mem_X : (x : G) ∈ X := by
-            exact Subgroup.mem_map.mpr ⟨x, by simpa [XQ], rfl⟩
+            exact Subgroup.mem_map.mpr ⟨x, by simp [XQ], rfl⟩
           exact (Subgroup.mem_centralizer_iff.mp hs_centX (x : G) hx_mem_X).symm
         have hxQ0 : x ∈ (Q0.subgroupOf QG) := by
           change (x : G) ∈ Q0
@@ -3002,7 +3018,7 @@ private theorem
       have hcop_X_S : Nat.Coprime (Nat.card X) (Nat.card Ssub) :=
         IsPGroup.coprime_card_of_ne q.val p.val hq_ne_p X Ssub hX_p hS_p
       letI : IsMulCommutative Ssub := hScomm
-      letI : CommGroup Ssub := CommGroup.ofIsMulCommutative
+      letI : CommGroup Ssub := IsMulCommutative.instCommGroup
       have hsolvS : IsSolvable Ssub := by infer_instance
       have hcompl_action :
           IsCompl (fixedPointSubgroup (↥X) (↥Ssub))
@@ -3021,7 +3037,7 @@ private theorem
           let yS : Ssub := ⟨y, hyS⟩
           have hySub : yS ∈ (C0 ⊔ C1).subgroupOf Ssub := by
             have hyTop : yS ∈ C0.subgroupOf Ssub ⊔ C1.subgroupOf Ssub := by
-              simpa [hC0s_C1s_top]
+              simp [hC0s_C1s_top]
             have hsub :
                 C0.subgroupOf Ssub ⊔ C1.subgroupOf Ssub =
                   (C0 ⊔ C1).subgroupOf Ssub := by
@@ -3330,17 +3346,17 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
           Monoid.exponent
             ((((default : Sylow q.val E₂) : Subgroup E₂).map E₂.subtype) : Subgroup G) := by
       letI : IsMulCommutative E₂ := hE2comm
-      letI : CommGroup E₂ := CommGroup.ofIsMulCommutative
       haveI : Fact q.val.Prime := ⟨q.2⟩
       let QE2 : Sylow q.val E₂ := Q.subtype hQ_le_E2
       have hQexpE2 :
           Monoid.exponent (Q : Subgroup G) =
             Monoid.exponent ((QE2 : Subgroup E₂) : Subgroup E₂) := by
         symm
-        simpa [QE2, Sylow.subtype] using
-          (Monoid.exponent_eq_of_mulEquiv
-            (Subgroup.subgroupOfEquivOfLe
-              (H := (Q : Subgroup G)) (K := E₂) hQ_le_E2))
+        rw [show (QE2 : Subgroup E₂) = (Q : Subgroup G).subgroupOf E₂ by
+          simp [QE2]]
+        exact Monoid.exponent_eq_of_mulEquiv
+          (Subgroup.subgroupOfEquivOfLe
+            (H := (Q : Subgroup G)) (K := E₂) hQ_le_E2)
       have hQE2_norm : ((QE2 : Subgroup E₂) : Subgroup E₂).Normal := by infer_instance
       letI : Unique (Sylow q.val E₂) := Sylow.unique_of_normal QE2 hQE2_norm
       have hQE2_eq_def : QE2 = default := by
@@ -3398,12 +3414,12 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
       _ = ((⊤ : Subgroup E₂).map E₂.subtype) := by
         rw [hsup_top]
       _ = E₂.subtype.range := by rw [MonoidHom.range_eq_map]
-      _ = E₂ := by simpa using (Subgroup.range_subtype (H := E₂))
+        _ = E₂ := by simp
   have hZfac_comm :
       Pairwise fun i j => ∀ x y, x ∈ Zfac i → y ∈ Zfac j → Commute x y := by
     intro i j _hij x y hx hy
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := E₂) (hZfac_le i hx) (hZfac_le j hy)
+    exact setLike_mul_comm
+      (s := E₂) (hZfac_le i hx) (hZfac_le j hy)
   have hQfac_comm :
       Pairwise fun i j => ∀ x y, x ∈ Qfac i → y ∈ Qfac j → Commute x y := by
     intro i j _hij x y hx hy
@@ -3413,8 +3429,8 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
     have hyE2 : y ∈ E₂ := by
       rcases Subgroup.mem_map.mp hy with ⟨y', hy', rfl⟩
       exact y'.property
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := E₂) hxE2 hyE2
+    exact setLike_mul_comm
+      (s := E₂) hxE2 hyE2
   have hZfac_coprime :
       Pairwise fun i j => Nat.Coprime (Nat.card (Zfac i)) (Nat.card (Zfac j)) := by
     intro i j hij
@@ -3477,7 +3493,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
           exact le_iSup Zfac i <|
             (Subgroup.mem_normalizer_iff.mp (hZfac_norm i a.property) x).1 hx
       | h1 =>
-          simpa
+          simp
       | hmul x y hx hy hx' hy' =>
           simpa [mul_assoc] using P₀.mul_mem hx' hy'
     intro e he
@@ -3537,7 +3553,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
       apply le_antisymm
       · intro a ha
         rcases Subgroup.mem_map.mp ha with ⟨y, hy, rfl⟩
-        simpa using y.property
+        simp
       · exact bot_le
     have hCent_one : Subgroup.centralizer ({1} : Set G) = ⊤ := by
       ext a
@@ -3545,8 +3561,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
       constructor
       · intro _ha
         simp
-      · intro _ha
-        intro b hb
+      · intro _ha b hb
         have hb1 : b = 1 := by simpa using hb
         subst b
         simp
@@ -3673,9 +3688,9 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
       exact congrArg Subtype.val (@Subsingleton.elim E₂ hsub xE₂ 1)
     exact hE₂ne hE₂bot
   have hE1E2_bot : E₁ ⊓ E₂ = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime
+    (Subgroup.disjoint_of_coprime_natCard
       (section12_coprime_card_E1_E2 (G := G) (M := M) (E := E)
-        (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+        (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
   have hE1E2_disj : Disjoint E₁ E₂ := by
     rw [disjoint_iff]
     exact hE1E2_bot
@@ -3687,7 +3702,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
         (H := E₁) (N := P₀) hE₁normP₀)
   have hcompD : section12ComplementIn D P₀ E₁ := by
     refine ⟨by simp [D], by simp [D], ?_, ?_⟩
-    · simpa [D, sup_comm]
+    · simp [D, sup_comm]
     · exact hE1P₀_disj.symm
   have hcopP₀E₁ : Nat.Coprime (Nat.card P₀) (Nat.card E₁) := by
     have hcop : Nat.Coprime (Nat.card E₁) (Nat.card E₂) :=
@@ -3700,7 +3715,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
       (G := G) (H := D) (K := P₀) (L := E₁) hcompD hP₀normD hcopP₀E₁
   have hcompE₁₂ : section12ComplementIn E₁₂ E₂ E₁ := by
     refine ⟨hE2E12, hE1E12, ?_, ?_⟩
-    · simpa [h12.2.1, sup_comm]
+    · simp [h12.2.1, sup_comm]
     · exact hE1E2_disj.symm
   have hExpE₁₂ :
       Monoid.exponent E₁₂ = Nat.lcm (Monoid.exponent E₂) (Monoid.exponent E₁) :=
@@ -3711,9 +3726,9 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
         (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE).symm
   have hE12E3_bot : E₁₂ ⊓ E₃ = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime
+    (Subgroup.disjoint_of_coprime_natCard
       (section12_coprime_card_E12_E3 (G := G) (M := M) (E := E)
-        (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+        (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
   have hE12E3_disj : Disjoint E₁₂ E₃ := by
     rw [disjoint_iff]
     exact hE12E3_bot
@@ -3729,7 +3744,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
       (hE₀E.trans hE_norm_E₃)
   have hcompE₀ : section12ComplementIn E₀ E₃ D := by
     refine ⟨by simp [E₀], by simp [E₀], ?_, ?_⟩
-    · simpa [E₀, sup_comm]
+    · simp [E₀, sup_comm]
     · exact hDE3_disj.symm
   have hcopE₃D : Nat.Coprime (Nat.card E₃) (Nat.card D) := by
     have hcop : Nat.Coprime (Nat.card E₁₂) (Nat.card E₃) :=
@@ -3743,7 +3758,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
   have hEeqE₁₂E₃ : E = E₁₂ ⊔ E₃ := by
     calc
       E = E₁ ⊔ E₂ ⊔ E₃ := h12.1
-      _ = E₁₂ ⊔ E₃ := by simpa [h12.2.1, sup_assoc]
+      _ = E₁₂ ⊔ E₃ := by simp [h12.2.1, sup_assoc]
   have hcompE : section12ComplementIn E E₃ E₁₂ := by
     refine ⟨hE3E, hE12E, ?_, ?_⟩
     · simpa [sup_comm] using hEeqE₁₂E₃
@@ -3812,7 +3827,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
     have hzE12 : z ∈ E₁₂ := by
       have hz_eq : z = d⁻¹ * r := by
         rw [← hdz_eq_r]
-        simp [mul_assoc]
+        simp
       rw [hz_eq]
       exact E₁₂.mul_mem (E₁₂.inv_mem (hDE12 hdD)) hrE12
     have hz_one : z = 1 := by
@@ -3967,7 +3982,7 @@ public theorem theorem_12_12_b
             _ = E₁ ⊔ (C ⊔ P₀) ⊔ E₃ := by
               simpa [C] using congrArg (fun X : Subgroup G => E₁ ⊔ X ⊔ E₃) hE₂eq
             _ = C ⊔ E₀ := by
-              simp [D, E₀, sup_assoc, sup_left_comm, sup_comm]
+              simp [D, E₀, sup_left_comm, sup_comm]
         · rw [Subgroup.disjoint_def]
           intro x hxC hxE₀
           have hxE2 : x ∈ E₂ := hCE2 hxC
@@ -4009,13 +4024,13 @@ public theorem theorem_12_12_b
           have hzE12 : z ∈ E₁₂ := by
             have hz_eq : z = d⁻¹ * x := by
               rw [← hdz_eq_x]
-              simp [mul_assoc]
+              simp
             rw [hz_eq]
             exact E₁₂.mul_mem (E₁₂.inv_mem (hDE12 hdD)) hxE12
           have hE12E3_bot : E₁₂ ⊓ E₃ = ⊥ :=
-            Subgroup.inf_eq_bot_of_coprime
+            (Subgroup.disjoint_of_coprime_natCard
               (section12_coprime_card_E12_E3 (G := G) (M := M) (E := E)
-                (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+                (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
           have hz_one : z = 1 := by
             have hzbot : z ∈ (⊥ : Subgroup G) := by
               simpa [hE12E3_bot] using (show z ∈ E₁₂ ⊓ E₃ from ⟨hzE12, hzE3⟩)
@@ -4059,9 +4074,9 @@ public theorem theorem_12_12_b
             rw [he_eq]
             exact E₂.mul_mem hdE2 (E₂.inv_mem hrE2)
           have hE1E2_bot : E₁ ⊓ E₂ = ⊥ :=
-            Subgroup.inf_eq_bot_of_coprime
+            (Subgroup.disjoint_of_coprime_natCard
               (section12_coprime_card_E1_E2 (G := G) (M := M) (E := E)
-                (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+                (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
           have he_one : e = 1 := by
             have hebot : e ∈ (⊥ : Subgroup G) := by
               simpa [hE1E2_bot] using (show e ∈ E₁ ⊓ E₂ from ⟨heE1', heE2⟩)
@@ -4093,9 +4108,9 @@ public theorem theorem_12_12_b
           exact congrArg Subtype.val (@Subsingleton.elim E₂ hsub xE₂ 1)
         exact hE₂ne hE₂bot
       have hE1E2_bot : E₁ ⊓ E₂ = ⊥ :=
-        Subgroup.inf_eq_bot_of_coprime
+        (Subgroup.disjoint_of_coprime_natCard
           (section12_coprime_card_E1_E2 (G := G) (M := M) (E := E)
-            (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+            (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
       have hE1E2_disj : Disjoint E₁ E₂ := by
         rw [disjoint_iff]
         exact hE1E2_bot
@@ -4107,7 +4122,7 @@ public theorem theorem_12_12_b
             (H := E₁) (N := P₀) hE₁normP₀)
       have hcompD : section12ComplementIn D P₀ E₁ := by
         refine ⟨by simp [D], by simp [D], ?_, ?_⟩
-        · simpa [D, sup_comm]
+        · simp [D, sup_comm]
         · exact hE1P₀_disj.symm
       have hcopP₀E₁ : Nat.Coprime (Nat.card P₀) (Nat.card E₁) := by
         have hcop : Nat.Coprime (Nat.card E₁) (Nat.card E₂) :=
@@ -4120,7 +4135,7 @@ public theorem theorem_12_12_b
           (G := G) (H := D) (K := P₀) (L := E₁) hcompD hP₀normD hcopP₀E₁
       have hcompE₁₂ : section12ComplementIn E₁₂ E₂ E₁ := by
         refine ⟨hE2E12, hE1E12, ?_, ?_⟩
-        · simpa [h12.2.1, sup_comm]
+        · simp [h12.2.1, sup_comm]
         · exact hE1E2_disj.symm
       have hExpE₁₂ :
           Monoid.exponent E₁₂ = Nat.lcm (Monoid.exponent E₂) (Monoid.exponent E₁) :=
@@ -4131,9 +4146,9 @@ public theorem theorem_12_12_b
             (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
             (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE).symm
       have hE12E3_bot : E₁₂ ⊓ E₃ = ⊥ :=
-        Subgroup.inf_eq_bot_of_coprime
+        (Subgroup.disjoint_of_coprime_natCard
           (section12_coprime_card_E12_E3 (G := G) (M := M) (E := E)
-            (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+            (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
       have hE12E3_disj : Disjoint E₁₂ E₃ := by
         rw [disjoint_iff]
         exact hE12E3_bot
@@ -4149,7 +4164,7 @@ public theorem theorem_12_12_b
           (hE₀E.trans hE_norm_E₃)
       have hcompE₀ : section12ComplementIn E₀ E₃ D := by
         refine ⟨by simp [E₀], by simp [E₀], ?_, ?_⟩
-        · simpa [E₀, sup_comm]
+        · simp [E₀, sup_comm]
         · exact hDE3_disj.symm
       have hcopE₃D : Nat.Coprime (Nat.card E₃) (Nat.card D) := by
         have hcop : Nat.Coprime (Nat.card E₁₂) (Nat.card E₃) :=
@@ -4163,7 +4178,7 @@ public theorem theorem_12_12_b
       have hEeqE₁₂E₃ : E = E₁₂ ⊔ E₃ := by
         calc
           E = E₁ ⊔ E₂ ⊔ E₃ := h12.1
-          _ = E₁₂ ⊔ E₃ := by simpa [h12.2.1, sup_assoc]
+          _ = E₁₂ ⊔ E₃ := by simp [h12.2.1, sup_assoc]
       have hcompE : section12ComplementIn E E₃ E₁₂ := by
         refine ⟨hE3E, hE12E, ?_, ?_⟩
         · simpa [sup_comm] using hEeqE₁₂E₃

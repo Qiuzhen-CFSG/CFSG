@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.proposition_14_2
+public import FeitThompson.BGsection14.proposition_14_2
 
 open scoped Pointwise
 
@@ -211,7 +211,7 @@ public theorem corollary_14_3
           subst hπ
           refine ⟨⟨Mstar, hMstar.1, rfl⟩, ?_⟩
           exact ⟨q, hqSupp, hsupp_sigma_star hqSupp⟩
-      simpa [section14SigmaLength, hSigmaSupport_eq]
+      simp [section14SigmaLength, hSigmaSupport_eq]
     · classical
       letI : MulDistribMulAction Unit M := {
         smul := fun _ y => y

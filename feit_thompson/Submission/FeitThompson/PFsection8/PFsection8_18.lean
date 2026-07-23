@@ -1,9 +1,9 @@
 module
 
-public import Submission.FeitThompson.PFsection8.Basic
-import Submission.FeitThompson.PFsection8.PFsection8_12
-import Submission.FeitThompson.PFsection8.PFsection8_13
-import Submission.FeitThompson.PFsection8.PFsection8_17
+public import FeitThompson.PFsection8.Basic
+import FeitThompson.PFsection8.PFsection8_12
+import FeitThompson.PFsection8.PFsection8_13
+import FeitThompson.PFsection8.PFsection8_17
 
 noncomputable section
 
@@ -585,7 +585,7 @@ private theorem theorem_8_18_nilpotentNormalHallIn_conjBy
     exact hnormMap
   · let eH : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
     letI : Group.IsNilpotent H := hHnil
-    exact nilpotent_of_surjective eH.toMonoidHom eH.surjective
+    exact Group.nilpotent_of_surjective eH.toMonoidHom eH.surjective
   · let eM : M ≃* M.conjBy g := (MulAut.conj g).subgroupMap M
     have hsub :
         Subgroup.map eM.toMonoidHom (H.subgroupOf M) =
@@ -999,6 +999,11 @@ private theorem theorem_8_18_section10PPrimeCore_isCyclic_conj_back
     (hCyc : IsCyclic (section10PPrimeCore p (H.conjBy g))) :
     IsCyclic (section10PPrimeCore p H) := by
   let eH : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
+  have hcomp :
+      (H.conjBy g).subtype.comp eH.toMonoidHom =
+        (MulAut.conj g).toMonoidHom.comp H.subtype := by
+    ext x
+    rfl
   have hcore :
       section10PPrimeCore p (H.conjBy g) =
         (section10PPrimeCore p H).conjBy g := by
@@ -1009,7 +1014,8 @@ private theorem theorem_8_18_section10PPrimeCore_isCyclic_conj_back
       congrArg
         (fun K : Subgroup (H.conjBy g) => K.map (H.conjBy g).subtype)
         hraw.symm
-    simpa [section10PPrimeCore, piCoreIn, Subgroup.conjBy, eH,
+    rw [Subgroup.map_map, hcomp] at hraw'
+    simpa only [section10PPrimeCore, piCoreIn, Subgroup.conjBy,
       Subgroup.map_map] using hraw'
   have hCycMap : IsCyclic ((section10PPrimeCore p H).conjBy g) := by
     exact hcore ▸ hCyc
@@ -1028,7 +1034,7 @@ private theorem theorem_8_18_fittingSubgroup_map_mulEquiv
     · exact (show (fittingSubgroup A).Normal from inferInstance).map
         e.toMonoidHom e.surjective
     · haveI : Group.IsNilpotent (fittingSubgroup A) := inferInstance
-      exact nilpotent_of_mulEquiv (e.subgroupMap (fittingSubgroup A))
+      exact Group.nilpotent_of_mulEquiv (e.subgroupMap (fittingSubgroup A))
   · have hpre :
         (fittingSubgroup B).map e.symm.toMonoidHom ≤ fittingSubgroup A := by
       refine le_sSup ?_
@@ -1036,7 +1042,7 @@ private theorem theorem_8_18_fittingSubgroup_map_mulEquiv
       · exact (show (fittingSubgroup B).Normal from inferInstance).map
           e.symm.toMonoidHom e.symm.surjective
       · haveI : Group.IsNilpotent (fittingSubgroup B) := inferInstance
-        exact nilpotent_of_mulEquiv
+        exact Group.nilpotent_of_mulEquiv
           (e.symm.subgroupMap (fittingSubgroup B))
     intro b hb
     refine Subgroup.mem_map.mpr ?_
@@ -1049,6 +1055,11 @@ private theorem theorem_8_18_section8FittingSubgroup_conjBy
     section8FittingSubgroup (H.conjBy g) =
       (section8FittingSubgroup H).conjBy g := by
   let eH : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
+  have hcomp :
+      (H.conjBy g).subtype.comp eH.toMonoidHom =
+        (MulAut.conj g).toMonoidHom.comp H.subtype := by
+    ext x
+    rfl
   have hmap :
       (fittingSubgroup H).map eH.toMonoidHom =
         fittingSubgroup (H.conjBy g) :=
@@ -1057,8 +1068,9 @@ private theorem theorem_8_18_section8FittingSubgroup_conjBy
     congrArg
       (fun K : Subgroup (H.conjBy g) => K.map (H.conjBy g).subtype)
       hmap.symm
-  simpa [section8FittingSubgroup, fittingSubgroupOf, Subgroup.conjBy,
-    eH, Subgroup.map_map] using hmapG
+  rw [Subgroup.map_map, hcomp] at hmapG
+  simpa only [section8FittingSubgroup, fittingSubgroupOf, Subgroup.conjBy,
+    Subgroup.map_map] using hmapG
 
 private theorem theorem_8_18_section16SecondDerivedSubgroup_conjBy
     {G : Type u} [Group G]
@@ -1295,9 +1307,10 @@ public theorem theorem_8_18_typeFData_conj_back
     simpa [Subgroup.conjBy_inv] using hCompBack
   · exact Subgroup.map_mono hU1le
   · letI : IsMulCommutative U1 := hU1comm
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U1))
+    change IsMulCommutative
+      (U1.map (MulAut.conj g⁻¹).toMonoidHom)
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U1)
   · have hNormBack :=
       theorem_8_18_section10NormalIn_conjBy (G := G) g⁻¹ hU1norm
     simpa [Subgroup.conjBy_inv] using hNormBack
@@ -1442,7 +1455,7 @@ public theorem theorem_8_18_typePDefinitionData_conj_back
     simpa [hDback] using hBack'
   · let eU : U ≃* U.conjBy g⁻¹ := (MulAut.conj g⁻¹).subgroupMap U
     letI : Group.IsNilpotent U := hUnil
-    exact nilpotent_of_surjective eU.toMonoidHom eU.surjective
+    exact Group.nilpotent_of_surjective eU.toMonoidHom eU.surjective
   · have hBack := Subgroup.map_mono
       (f := (MulAut.conj g⁻¹).toMonoidHom) hW1norm
     have hEq :=
@@ -1618,9 +1631,10 @@ public theorem theorem_8_18_typeIIDefinitionData_conj_back
   · exact theorem_8_18_typeIIToIVSourceCondition_conj_back
       (G := G) (M := M) (g := g) hCond
   · letI : IsMulCommutative U := hComm
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U))
+    change IsMulCommutative
+      (U.map (MulAut.conj g⁻¹).toMonoidHom)
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U)
   · intro hle
     apply hNorm
     have hNormLe :
@@ -1692,9 +1706,10 @@ public theorem theorem_8_18_typeIDefinitionData_conj_back
       simpa [Subgroup.conjBy_inv] using hCompBack
     · exact Subgroup.map_mono hU1le
     · letI : IsMulCommutative U1 := hU1comm
-      simpa [Subgroup.conjBy] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U1))
+      change IsMulCommutative
+        (U1.map (MulAut.conj g⁻¹).toMonoidHom)
+      exact Subgroup.map_isMulCommutative
+        (f := (MulAut.conj g⁻¹).toMonoidHom) (H := U1)
     · have hNormBack :=
         theorem_8_18_section10NormalIn_conjBy (G := G) g⁻¹ hU1norm
       simpa [Subgroup.conjBy_inv] using hNormBack

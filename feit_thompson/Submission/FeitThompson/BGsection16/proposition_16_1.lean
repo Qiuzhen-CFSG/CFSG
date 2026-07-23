@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection16.theorem_16_E
-import Submission.FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.BGsection16.theorem_16_E
+import FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 
@@ -61,6 +61,7 @@ public theorem section16_caseF_iff_K_eq_bot
   · intro hKbot
     exact ⟨hKbot, section16_U_ne_bot_of_K_eq_bot (G := G) hM hMF hKU hKbot⟩
 
+omit [IsMinCE G] in
 public theorem section16_MFamilyF_of_K_eq_bot
     {M K U : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -103,7 +104,7 @@ public theorem section16_MFamilyF_of_K_eq_bot
         exact Subtype.ext (Subgroup.mem_bot.mp hxbot)
       · intro hx
         have hxone : x = 1 := Subgroup.mem_bot.mp hx
-        simpa [hxone, Subgroup.mem_subgroupOf]
+        simp [hxone]
     have hpidx : p.val ∣ (K.subgroupOf M).index := by
       simpa [hKsub_bot, Subgroup.index_bot] using hpM
     exact False.elim ((hKU15.1.2.p_in_pi_of_p_dvd_index p hpidx) hpκ)
@@ -170,7 +171,8 @@ private theorem section16_isMulCommutative_of_mulEquiv
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := by rw [mul_comm]
+    _ = e y * e x :=
+      (IsMulCommutative.is_comm (M := S)).comm (e x) (e y)
     _ = e (y * x) := (e.map_mul y x).symm
 
 omit [IsMinCE G] in
@@ -182,22 +184,25 @@ private theorem section16_hasAbelianSylowRankAtMostTwo_of_mulEquiv
   classical
   intro p P
   haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Q : Sylow p.val S := P.mapSurjective (f := e.toMonoidHom) e.surjective
+  let f : R →* S := e.toMonoidHom
+  let Q : Sylow p.val S := P.mapSurjective (f := f) e.surjective
   have hQ := hS p Q
-  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map e.toMonoidHom) :=
-    Subgroup.equivMapOfInjective (f := e.toMonoidHom) (P : Subgroup R) e.injective
-  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map e.toMonoidHom) := by
-    simpa [Q, Sylow.coe_mapSurjective] using hQ.1
+  change IsMulCommutative ((P : Subgroup R).map f) ∧
+    generatorRank ((P : Subgroup R).map f) ≤ 2 at hQ
+  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map f) :=
+    Subgroup.equivMapOfInjective (f := f) (P : Subgroup R) e.injective
+  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map f) := hQ.1
   have hcomm : IsMulCommutative (P : Subgroup R) :=
     section16_isMulCommutative_of_mulEquiv ePmap hQmap_comm
   have hrank : generatorRank (P : Subgroup R) ≤ 2 := by
     have hle :
         generatorRank (P : Subgroup R) ≤
-          generatorRank ((P : Subgroup R).map e.toMonoidHom) :=
+          generatorRank ((P : Subgroup R).map f) :=
       generatorRank_le_of_equiv ePmap.symm
-    exact hle.trans (by simpa [Q, Sylow.coe_mapSurjective] using hQ.2)
+    exact hle.trans hQ.2
   exact ⟨hcomm, hrank⟩
 
+omit [IsMinCE G] in
 private theorem section16_quotientHasAbelianSylowRankAtMostTwo_of_msigma_complement
     {M E : Subgroup G}
     (hcomp : section12ComplementToMsigma M E)
@@ -218,6 +223,7 @@ private theorem section16_quotientHasAbelianSylowRankAtMostTwo_of_msigma_complem
       (Subgroup.subgroupOfEquivOfLe (H := E) (K := M) hcomp.2.1)
   exact section16_hasAbelianSylowRankAtMostTwo_of_mulEquiv e hE
 
+omit [IsMinCE G] in
 private theorem section16_theorem12_12_hcent_of_MFamilyF_complement
     {M E : Subgroup G}
     (hF : M ∈ section14MFamilyF G)
@@ -274,9 +280,7 @@ private theorem section16_theorem12_12_hcent_of_MFamilyF_complement
       · exact Or.inl ⟨hrτ1, P, hPprime, hCentPne⟩
       · exact Or.inr ⟨hrτ3, P, hPprime, hCentPne⟩
     simpa [section14KappaPrimes] using hrκ_def
-  have hrempty : r ∈ (∅ : Set Nat.Primes) := by
-    simpa [hF.2] using hrκ
-  exact hrempty
+  simp [hF.2] at hrκ
 
 private theorem section16_typeI_abelian_control_of_MFamilyF
     {M MF : Subgroup G}
@@ -289,7 +293,9 @@ private theorem section16_typeI_abelian_control_of_MFamilyF
   classical
   intro E hcompMF
   have hcomp : section12ComplementToMsigma M E := by
-    simpa [hMF_eq] using hcompMF
+    change section12ComplementIn M (section10Msigma M) E
+    rw [← hMF_eq]
+    exact hcompMF
   rcases section16_exists_EData_for_fixed_sigma_complement
       (G := G) (M := M) (E := E) hM hcomp with
     ⟨E₁₂, E₁, E₂, E₃, hEdata⟩
@@ -314,7 +320,9 @@ private theorem section16_typeI_frobenius_complements_of_MFamilyF
   classical
   intro E hcompMF
   have hcomp : section12ComplementToMsigma M E := by
-    simpa [hMF_eq] using hcompMF
+    change section12ComplementIn M (section10Msigma M) E
+    rw [← hMF_eq]
+    exact hcompMF
   rcases section16_exists_EData_for_fixed_sigma_complement
       (G := G) (M := M) (E := E) hM hcomp with
     ⟨E₁₂, E₁, E₂, E₃, hEdata⟩
@@ -404,9 +412,7 @@ private theorem section16_typeI_of_caseF_with_alternative
     have hMP : M ∈ section14MFamilyP G :=
       section16_MFamilyP_of_nontrivial_hall_kappa (G := G) hM hLHall14 hLne
     rcases hMP.2 with ⟨p, hpκ⟩
-    have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-      simpa [hF.2] using hpκ
-    exact False.elim hpempty
+    simp [hF.2] at hpκ
   · exact section16_typeI_quotient_rank_of_caseF
       (G := G) hM hMF hKU hKbot
 
@@ -476,7 +482,7 @@ private theorem section16_piStar_of_section15_source_setup
         letI : IsMulCommutative MF := hMFcomm
         refine ⟨⟨fun a b => ?_⟩⟩
         apply Subtype.ext
-        exact Subgroup.mul_comm_of_mem_isMulCommutative (H := MF)
+        exact setLike_mul_comm (s := MF)
           (hP_le_MF a.property) (hP_le_MF b.property)
       exact hpNoncomm hPcomm
     obtain ⟨S, hS⟩ :=
@@ -547,14 +553,14 @@ private theorem section16_section15_alternatives_of_caseF_not_TI
       ¬ ∀ g : G, section16ConjugateSet (MF : Set G) g = (MF : Set G) ∨
         (MF : Set G) ∩ section16ConjugateSet (MF : Set G) g ⊆ ({1} : Set G) := by
     simpa [section16TISubset] using hnotTI
-  push_neg at hnotForall
+  push Not at hnotForall
   rcases hnotForall with ⟨g, hconj_ne, hnot_subset⟩
   rcases Set.not_subset.mp hnot_subset with ⟨x, hx, hxnotone_set⟩
   have hxMF : x ∈ MF := hx.1
   have hxConjMF : x ∈ section16ConjugateSet (MF : Set G) g := hx.2
   have hxne : x ≠ 1 := by
     intro hxone
-    exact hxnotone_set (by simpa [hxone])
+    exact hxnotone_set (by simp [hxone])
   have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) := by
     rcases hMF15.1 with ⟨hMFM, hMFnormM, _hMFnil, _hMFHall⟩
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hMFM).1 hMFnormM
@@ -663,6 +669,7 @@ private theorem section16_section15_caseF_alternatives_without_P1
           _hQuotCard⟩
       exact False.elim ((section16_not_MFamilyP1_of_MFamilyF (G := G) hF) hP1)
 
+omit [IsMinCE G] in
 private theorem section16_typeI_final_alternative_of_caseF_bridges
     {M MF X : Subgroup G}
     (hF : M ∈ section14MFamilyF G)
@@ -686,7 +693,7 @@ private theorem section16_typeI_final_alternative_of_caseF_bridges
     right
     have hpMF : p ∈ subgroupPrimeSet MF := by
       rw [subgroupPrimeSet]
-      have hpX : p.val ∣ Nat.card X := by simpa [hpCard]
+      have hpX : p.val ∣ Nat.card X := by simp [hpCard]
       exact hpX.trans (Subgroup.card_dvd_of_le hXle)
     refine ⟨?_, ?_⟩
     · intro q hqMF
@@ -719,6 +726,7 @@ private theorem section16_typeI_alternative_of_caseF_bridges
     exact section16_typeI_final_alternative_of_caseF_bridges
       (G := G) hF hXle hAlt hPiStarSource
 
+omit [IsMinCE G] in
 private theorem section16_typeI_final_alternative_of_caseF
     {M MF X : Subgroup G}
     (hF : M ∈ section14MFamilyF G)
@@ -811,15 +819,21 @@ private theorem section16_elementCentralizerIn_ambientDerived_eq_Kstar_of_caseP
   have hK_norm_Kstar : K ≤ Subgroup.normalizer (Kstar : Set G) := by
     intro x hxK
     exact (centralizer_le_normalizer Kstar) (hZdp.2.2.2.2 hxK)
-  have hKstarNormal : (Kstar.subgroupOf Z).Normal := by
-    simpa [Z, section16ZSubgroup] using
-      (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-        (H := K) (N := Kstar) hK_norm_Kstar)
+  have hK_le_Z : K ≤ Z := by
+    change K ≤ K ⊔ Kstar
+    exact le_sup_left
+  have hKstar_le_Z : Kstar ≤ Z := by
+    change Kstar ≤ K ⊔ Kstar
+    exact le_sup_right
+  have hZ_le_norm_Kstar : Z ≤ Subgroup.normalizer (Kstar : Set G) := by
+    change K ⊔ Kstar ≤ Subgroup.normalizer (Kstar : Set G)
+    exact sup_le hK_norm_Kstar Subgroup.le_normalizer
+  have hKstarNormal : (Kstar.subgroupOf Z).Normal :=
+    (Subgroup.normal_subgroupOf_iff_le_normalizer hKstar_le_Z).2 hZ_le_norm_Kstar
   letI : (Kstar.subgroupOf Z).Normal := hKstarNormal
   have htop0 : K.subgroupOf Z ⊔ Kstar.subgroupOf Z = ⊤ := by
-    simpa [Z, section16ZSubgroup] using
-      (Subgroup.subgroupOf_sup
-        (A := K) (A' := Kstar) (B := Z) le_sup_left le_sup_right).symm
+    rw [← Subgroup.subgroupOf_sup hK_le_Z hKstar_le_Z]
+    exact Subgroup.subgroupOf_eq_top.mpr (sup_le hK_le_Z hKstar_le_Z)
   have htop : Kstar.subgroupOf Z ⊔ K.subgroupOf Z = ⊤ := by
     simpa [sup_comm] using htop0
   apply le_antisymm
@@ -1132,13 +1146,14 @@ private theorem section16_zpowers_eq_of_mem_hasPrimeOrder
   exact Subgroup.eq_of_le_of_card_ge hle (by
     rw [Nat.card_zpowers, horder_eq, hcardA])
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section16_hasPrimeOrder_conjBy
     {A : Subgroup G} (hA : section16HasPrimeOrder A) (g : G) :
     section16HasPrimeOrder (A.conjBy g) := by
   rcases hA with ⟨p, hcardA⟩
   exact ⟨p, by simpa [section11_card_conjBy (G := G) A g] using hcardA⟩
 
+omit [IsMinCE G] in
 private theorem section16_conjugateSubgroupsIn_M_of_msigma_fusion
     {M MF K U A0 A1 : Subgroup G}
     (hD : section16TheoremDConclusions M MF K U)
@@ -1161,7 +1176,6 @@ private theorem section16_conjugateSubgroupsIn_M_of_msigma_fusion
   let y : G := g * x * g⁻¹
   have hyA1 : y ∈ A1 := by
     rw [hgEq]
-    change y ∈ A0.conjBy g
     exact Subgroup.mem_map.mpr ⟨x, hxA0, by simp [y, MulAut.conj_apply]⟩
   have hyne : y ≠ 1 := by
     intro hy
@@ -1271,6 +1285,7 @@ private theorem section16_typeIII_or_typeIV_of_caseP1_ne_with_complement
       (G := G) hM hMF hKU hKne hCompMFV hVnil hKleNormV hT6
   exact section16_typeIII_or_typeIV_of_common hCommon hExtra hNormV
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_nilpotent_of_complementIn_quotientNilpotent
     {D H V : Subgroup G}
     (hquot : section10QuotientNilpotent D H)
@@ -1290,11 +1305,11 @@ private theorem section16_nilpotent_of_complementIn_quotientNilpotent
         (G := G) (M := D) (K := V) (L := H) hcomp_symm hHnormIn
   have hVlocNil : Group.IsNilpotent Vloc := by
     let e : D ⧸ Hloc ≃* Vloc := hcomp'.QuotientMulEquiv
-    exact nilpotent_of_mulEquiv (G := D ⧸ Hloc) (G' := Vloc)
+    exact Group.nilpotent_of_mulEquiv (G := D ⧸ Hloc) (G' := Vloc)
       (_h := hquotNil) e
   let eV : Vloc ≃* V :=
     Subgroup.subgroupOfEquivOfLe (H := V) (K := D) hcomp.2.1
-  exact nilpotent_of_mulEquiv (G := Vloc) (G' := V) (_h := hVlocNil) eV
+  exact Group.nilpotent_of_mulEquiv (G := Vloc) (G' := V) (_h := hVlocNil) eV
 
 omit [Finite G] [IsMinCE G] in
 private theorem section16_complementIn_of_isComplement'_subgroupOf
@@ -1308,7 +1323,7 @@ private theorem section16_complementIn_of_isComplement'_subgroupOf
       let xD : D := ⟨x, hxD⟩
       have hxTop : xD ∈ (⊤ : Subgroup D) := by simp
       have hxSup : xD ∈ H.subgroupOf D ⊔ Vloc := by
-        simpa [hcomp.sup_eq_top] using hxTop
+        simp [hcomp.sup_eq_top]
       have hxSub : xD ∈ (H ⊔ section8SubgroupInAmbient Vloc).subgroupOf D := by
         have hsub_eq :
             (H ⊔ section8SubgroupInAmbient Vloc).subgroupOf D =
@@ -1335,7 +1350,8 @@ private theorem section16_complementIn_of_isComplement'_subgroupOf
       simpa [section8SubgroupInAmbient_subgroupOf_eq] using hxVsub
     have hxbot : xD ∈ (⊥ : Subgroup D) :=
       Subgroup.disjoint_def.mp hcomp.disjoint hxHloc hxVloc
-    simpa [xD] using congrArg Subtype.val (by simpa using hxbot)
+    change (xD : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
 
 omit [Finite G] [IsMinCE G] in
 public theorem section16_complement_isHall_compl_of_isHall
@@ -1770,6 +1786,7 @@ private theorem section16_typeCommon_of_caseP2_with_T6
         (G := G) hM hMF15 hKU15 hKne hUne
   have hUnil : Group.IsNilpotent U := by
     letI : IsMulCommutative U := hUcomm
+    letI : CommGroup U := IsMulCommutative.instCommGroup
     infer_instance
   have hKleNormU : K ≤ subgroupNormalizerIn M (U : Set G) := by
     intro x hxK
@@ -1978,14 +1995,14 @@ private theorem section16_section15_alternatives_of_MF_eq_msigma_not_TI
       ¬ ∀ g : G, section16ConjugateSet (MF : Set G) g = (MF : Set G) ∨
         (MF : Set G) ∩ section16ConjugateSet (MF : Set G) g ⊆ ({1} : Set G) := by
     simpa [section16TISubset] using hnotTI
-  push_neg at hnotForall
+  push Not at hnotForall
   rcases hnotForall with ⟨g, hconj_ne, hnot_subset⟩
   rcases Set.not_subset.mp hnot_subset with ⟨x, hx, hxnotone_set⟩
   have hxMF : x ∈ MF := hx.1
   have hxConjMF : x ∈ section16ConjugateSet (MF : Set G) g := hx.2
   have hxne : x ≠ 1 := by
     intro hxone
-    exact hxnotone_set (by simpa [hxone])
+    exact hxnotone_set (by simp [hxone])
   have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) := by
     rcases hMF15.1 with ⟨hMFM, hMFnormM, _hMFnil, _hMFHall⟩
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hMFM).1 hMFnormM
@@ -2071,6 +2088,7 @@ private theorem section16_section15_alternatives_of_MF_eq_msigma_not_TI
       hpCard hpSigmaBeta hpNoncomm hpCyclicMF hqMF
   exact ⟨X, hXleMF_cyc.1, hXne, hBetaMF, hAlt, hPiStarSource⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_card_dvd_of_section15_quotientCardDvd_msigma_complement
     {M MF K : Subgroup G} {n : ℕ}
     (hMF_eq : MF = section10Msigma M)
@@ -2094,6 +2112,7 @@ private theorem section16_card_dvd_of_section15_quotientCardDvd_msigma_complemen
       _ = Nat.card K := hKlocCard
   simpa [hquotCard] using hDvd
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_card_dvd_of_section15_quotientExponentDvd_msigma_complement
     {M MF K : Subgroup G} {n : ℕ}
     (hMF_eq : MF = section10Msigma M)
@@ -2172,7 +2191,7 @@ private theorem section16_typeVAlternative_of_caseP1_eq
           ⟨p, hpCard, hpSigmaBeta, hpNoncomm, hpCyclic, hExp⟩
         have hpMF : p ∈ subgroupPrimeSet MF := by
           rw [subgroupPrimeSet]
-          have hpX : p.val ∣ Nat.card X := by simpa [hpCard]
+          have hpX : p.val ∣ Nat.card X := by simp [hpCard]
           exact hpX.trans (Subgroup.card_dvd_of_le hXle)
         have hpPiStar : p ∈ section16PiStarPrimes G := by
           exact hPiStarSource p p hpCard hpSigmaBeta hpNoncomm hpCyclic hpMF
@@ -2186,7 +2205,7 @@ private theorem section16_typeVAlternative_of_caseP1_eq
             _hP1, hQuotCard⟩
         have hpMF : p ∈ subgroupPrimeSet MF := by
           rw [subgroupPrimeSet]
-          have hpX : p.val ∣ Nat.card X := by simpa [hpCard]
+          have hpX : p.val ∣ Nat.card X := by simp [hpCard]
           exact hpX.trans (Subgroup.card_dvd_of_le hXle)
         have hpPiStar : p ∈ section16PiStarPrimes G := by
           exact hPiStarSource p p hpCard hpSigmaBeta hPNoncomm hpCyclic hpMF
@@ -2419,6 +2438,7 @@ public theorem section16_W1_hall_compl_derived_of_typeCommon
       simpa [hDcardSub] using hqDsub
     exact hqDcompl (by simpa [D, subgroupPrimeSet] using hqDcard)
 
+omit [IsMinCE G] in
 private theorem section16_primeRank_le_one_of_typeCommon_W1_prime
     {M MF V W1 W2 X : Subgroup G} {p : Nat.Primes}
     (hCommon : section16TypeCommon M MF V W1 W2)
@@ -2535,7 +2555,7 @@ private theorem section16_tau13_of_typeCommon_W1_prime
       have hpProd :
           p.val ∣ ((section10Msigma M).subgroupOf M).index *
               Nat.card ((section10Msigma M).subgroupOf M) := by
-        simpa [hprod] using hpM
+        simpa [subgroupPrimeSet, hprod] using hpM
       by_contra hpNotCard
       have hpNotIndex : ¬ p.val ∣ ((section10Msigma M).subgroupOf M).index :=
         fun hpidx => (hSigmaHallM.p_in_pi_of_p_dvd_index p hpidx) hpSigma
@@ -2804,10 +2824,11 @@ private theorem section16_hall_complement_in_ambientDerived_of_complement
   have hquot : section10QuotientNilpotent D MF := by
     simpa [D] using (corollary_15_5_c (G := G) hM hMF15).2
   have hCompSymm : section12ComplementIn D V MF := by
-    simpa [D] using
-      (⟨hComp.2.1, hComp.1, by simpa [sup_comm] using hComp.2.2.1,
-        hComp.2.2.2.symm⟩ :
-        section12ComplementIn (ambientDerivedSubgroup M) V MF)
+    change V ≤ D ∧ MF ≤ D ∧ D = V ⊔ MF ∧ Disjoint V MF
+    refine ⟨hComp.2.1, hComp.1, ?_, hComp.2.2.2.symm⟩
+    calc
+      D = MF ⊔ V := hComp.2.2.1
+      _ = V ⊔ MF := sup_comm _ _
   have hMFnormD : section10NormalIn MF D :=
     ⟨hquot.1, hquot.2.1⟩
   have hCompLocal :
@@ -2853,7 +2874,7 @@ public theorem section16_conjugate_ambient_complement_of_caseP2
     intro hDtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       intro x _hx
-      exact hDleM (by simpa [hDtop])
+      exact hDleM (by simp [hDtop])
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hsolvD : IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
@@ -2902,7 +2923,7 @@ private theorem section16_normalizer_U_le_of_conjugate_ambient_complement
     intro hDtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       intro x _hx
-      exact hDleM (by simpa [hDtop])
+      exact hDleM (by simp [hDtop])
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hsolvD : IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)

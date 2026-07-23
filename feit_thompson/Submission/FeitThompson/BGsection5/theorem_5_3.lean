@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.lemma_5_2_c
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
-public import Submission.FeitThompson.BGsection4.lemma_4_5_b
+public import FeitThompson.BGsection5.lemma_5_2_c
+public import FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection4.lemma_4_5_b
 
 /-! # Theorem 5.3 from BG Section 5 -/
 
@@ -19,7 +19,7 @@ public theorem groupRank_le_one_of_isCyclic
     intro q hq
     rw [primeRank]
     refine csSup_le ?_ ?_
-    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, zero_le _⟩
+    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
       rcases hn with ⟨A, _hApA, hAcomm, hnA⟩
       letI : IsMulCommutative A := hAcomm
@@ -29,7 +29,7 @@ public theorem groupRank_le_one_of_isCyclic
       exact hnA.trans hAle
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, by decide, zero_le _⟩
+  · exact ⟨0, 2, by decide, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hq, hnq⟩
     exact hnq.trans (hprimeRank_le_one q hq)
@@ -50,7 +50,7 @@ public theorem primeRank_le_natCard
     primeRank p G ≤ Nat.card G := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hApA, _hAcomm, hnA⟩
     exact hnA.trans <| (generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)
@@ -63,7 +63,7 @@ private theorem primeRank_top_subgroup_eq
   apply le_antisymm
   · refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := (⊤ : Subgroup G)), inferInstance,
-        zero_le _⟩
+        Nat.zero_le _⟩
     · intro n hn
       rcases hn with ⟨A, hAp, hAcomm, hnA⟩
       let Amap : Subgroup G := A.map (⊤ : Subgroup G).subtype
@@ -87,7 +87,7 @@ private theorem primeRank_top_subgroup_eq
         exact hmB.trans <| (generatorRank_le_natCard B).trans (Subgroup.card_le_card_group B)
       · exact ⟨Amap, hAmap_p, hAmap_comm, by simpa [hgen_eq] using hnA⟩
   · refine csSup_le ?_ ?_
-    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, zero_le _⟩
+    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
       rcases hn with ⟨A, hAp, hAcomm, hnA⟩
       let Atop : Subgroup (⊤ : Subgroup G) := A.subgroupOf (⊤ : Subgroup G)
@@ -459,7 +459,7 @@ private theorem narrow_forward_exists_rank_two_maximal
           simpa [pow_one] using hr₀powC
         exact Subgroup.mem_map.mpr ⟨⟨r₀, hr₀C⟩, hr₀Ω, rfl⟩
       have hr₀B : r₀ ∈ B := hEB hr₀E
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := B) hr₀B hb
+      exact setLike_mul_comm (s := B) hr₀B hb
     have hB_le_E : B ≤ E := by
       intro b hb
       have hbpow : b ^ p = 1 := by
@@ -489,8 +489,15 @@ public theorem omega1Z_isElementaryAbelian
   letI : IsElementaryAbelian p Ωc := hΩcelem
   refine
     { toIsMulCommutative := by
-        simpa [Ω₁Z, Ωc] using
-          (Subgroup.map_isMulCommutative (f := (Subgroup.center R).subtype) (H := Ωc))
+        have hΩZ_le_center : Ω₁Z p R ≤ Subgroup.center R := by
+          intro x hx
+          rcases Subgroup.mem_map.mp hx with ⟨y, _hy, hyx⟩
+          rw [← hyx]
+          exact y.property
+        apply (Subgroup.le_centralizer_iff_isMulCommutative
+          (K := Ω₁Z p R)).1
+        exact hΩZ_le_center.trans
+          (Subgroup.center_le_centralizer (Ω₁Z p R : Set R))
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -600,7 +607,10 @@ public theorem exists_order_p_subgroup_of_rank_two_maximal_not_le
     have hS_le_Z : S ≤ Ω₁Z p R := by
       intro y hyS
       have hy_top : (⟨y, hyS⟩ : S) ∈ (⊤ : Subgroup S) := by simp
-      exact (show y ∈ Ω₁Z p R from by simpa [← hZS] using hy_top)
+      have hy_sub : (⟨y, hyS⟩ : S) ∈ (Ω₁Z p R).subgroupOf S := by
+        rw [hZS]
+        exact hy_top
+      exact Subgroup.mem_subgroupOf.mp hy_sub
     exact hS_not_le_T (hS_le_Z.trans hZ_le_T)
   have hZ_normal : (Ω₁Z p R).Normal := by
     refine ⟨?_⟩
@@ -667,7 +677,7 @@ public theorem groupRank_centralizer_le_two_of_rank_two_maximal
     intro s hs
     rw [Subgroup.mem_centralizer_iff]
     intro t ht
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E) (hS_le_E ht) (hS_le_E hs)
+    exact setLike_mul_comm (s := E) (hS_le_E ht) (hS_le_E hs)
   have hE_le_C : E ≤ C := by
     rw [hE_eq]
     exact sup_le hZ_le_C hS_le_C
@@ -776,7 +786,7 @@ private theorem rank_two_maximal_implies_narrow
     intro s hs
     rw [Subgroup.mem_centralizer_iff]
     intro t ht
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E) (hS_le_E ht) (hS_le_E hs)
+    exact setLike_mul_comm (s := E) (hS_le_E ht) (hS_le_E hs)
   have hsup_le : S ⊔ subgroupCentralizerIn T S ≤ C := by
     refine sup_le hS_le_C ?_
     exact inf_le_right
@@ -832,7 +842,7 @@ private theorem rank_two_maximal_implies_narrow
     have hD_le_C : D ≤ C := sup_le hS_le_C hUmap_le_C
     have hDcard : Nat.card D = p ^ 3 := by
       letI : IsElementaryAbelian p D := hDelem
-      letI : CommGroup D := CommGroup.ofIsMulCommutative
+      letI : CommGroup D := IsMulCommutative.instCommGroup
       have hdisj_sub : Disjoint (S.subgroupOf D) (Umap.subgroupOf D) := by
         rw [Subgroup.disjoint_def]
         intro x hxS hxU

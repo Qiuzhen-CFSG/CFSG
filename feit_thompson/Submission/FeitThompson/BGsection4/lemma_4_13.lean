@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
+public import FeitThompson.BGsection4.gorenstein_5_4_15
 
 /-! # Lemma 4.13 from BG Section 4 -/
 

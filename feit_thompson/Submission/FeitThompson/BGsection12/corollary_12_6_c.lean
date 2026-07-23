@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_6_b
+public import FeitThompson.BGsection12.corollary_12_6_b
 
 open scoped Pointwise
 
@@ -71,6 +71,7 @@ public theorem corollary_12_6_c
   · intro hL
     simpa [Set.mem_singleton_iff.mp hL] using hM_mem
 
+omit [IsMinCE G] in
 public theorem section12_exists_primeOrder_zpowers_in_pre
     {B : Subgroup G} {x : G} (hxB : x ∈ B) (hxne : x ≠ 1) :
     ∃ q : Nat.Primes, ∃ z : G,
@@ -106,6 +107,7 @@ public theorem section12_exists_primeOrder_zpowers_in_pre
   exact ⟨q', z, hz_zpowx, hzB, hz_ne,
     by simpa [section10PrimeOrderSubgroupsIn, Nat.card_zpowers] using ⟨hzB, hz_order⟩⟩
 
+omit [IsMinCE G] in
 public theorem section12_exists_primeOrder_zpowers_of_prime_dvd_card_pre
     {B : Subgroup G} {q : Nat.Primes} (hqB : q.val ∣ Nat.card B) :
     ∃ z : G, z ∈ B ∧ z ≠ 1 ∧

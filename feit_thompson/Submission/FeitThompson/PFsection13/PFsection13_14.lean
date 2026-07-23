@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_13
+public import FeitThompson.PFsection13.PFsection13_13
 
 /-!
 # Peterfalvi, Section 13: PFsection13_14
@@ -129,7 +129,7 @@ public theorem section13_prime_dvd_geom_quotient_mod_eq_one
   have hroot : (Polynomial.cyclotomic q (ZMod r)).IsRoot (p : ZMod r) := by
     rw [Polynomial.cyclotomic_prime (ZMod r) q]
     rw [Polynomial.IsRoot]
-    simp only [Polynomial.eval_finset_sum, Polynomial.eval_pow, Polynomial.eval_X]
+    simp only [Polynomial.eval_finsetSum, Polynomial.eval_pow, Polynomial.eval_X]
     have hsum_dvd : r ∣ ∑ i ∈ Finset.range q, p ^ i := by
       simpa [Nat.geomSum_eq hp.two_le q] using hrdvd
     simpa using ((ZMod.natCast_eq_zero_iff (∑ i ∈ Finset.range q, p ^ i) r).mpr

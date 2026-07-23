@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGsection7.lemma_7_1
-import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection7.lemma_7_1
+import FeitThompson.SubgroupConj
 /-! # Theorem 7.2 from BG Section 7 -/
 
 open scoped Pointwise
@@ -300,7 +300,7 @@ public theorem theorem_7_2
     exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
       (R := Subgroup.center A) hcenterRank'
   letI : Fact p.val.Prime := ⟨p.2⟩
-  letI : CommGroup B := CommGroup.ofIsMulCommutative
+  letI : CommGroup B := IsMulCommutative.instCommGroup
   letI : Fact (IsPGroup p.val B) := ⟨hBp⟩
   have hB_noncyc : ¬ IsCyclic B := not_isCyclic_of_three_le_generatorRank hBrank
   have hB_ne_bot : B ≠ ⊥ := by
@@ -336,7 +336,7 @@ public theorem theorem_7_2
     exists_cyclicQuotient_fixedPoint_nonbot (A := B) (G := ↥Q₁) hBQ₁fix_top
   have hC_noncyc : ¬ IsCyclic C :=
     not_isCyclic_of_three_le_generatorRank_of_cyclic_quotient hBrank hCcyc
-  letI : CommGroup C := CommGroup.ofIsMulCommutative
+  letI : CommGroup C := IsMulCommutative.instCommGroup
   have hCp : IsPGroup p.val C := hBp.to_subgroup C
   letI : Fact (IsPGroup p.val C) := ⟨hCp⟩
   let ιCA : C →* A := ιBA.comp C.subtype

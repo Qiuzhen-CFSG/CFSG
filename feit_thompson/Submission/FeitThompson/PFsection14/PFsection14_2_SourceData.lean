@@ -1,17 +1,17 @@
 module
 
-public import Submission.FeitThompson.PFsection14.Basic
-import Submission.FeitThompson.PFsection3.PFsection3_5
-import Submission.FeitThompson.PFsection3.PFsection3_9
-import Submission.FeitThompson.PFsection2.PFsection2_1
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection6.PFsection6_8
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection9.Basic
-import Submission.FeitThompson.PFsection9.PFsection9_10
-import Submission.FeitThompson.PFsection13.Basic
+public import FeitThompson.PFsection14.Basic
+import FeitThompson.PFsection3.PFsection3_5
+import FeitThompson.PFsection3.PFsection3_9
+import FeitThompson.PFsection2.PFsection2_1
+import FeitThompson.PFsection2.PFsection2_7_11
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection6.PFsection6_8
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection9.Basic
+import FeitThompson.PFsection9.PFsection9_10
+import FeitThompson.PFsection13.Basic
 
 /-!
 # Peterfalvi, Section 14: (14.2) source-data adapters

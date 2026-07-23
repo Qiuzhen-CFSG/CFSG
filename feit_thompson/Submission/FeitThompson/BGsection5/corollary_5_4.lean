@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.theorem_5_3_d
+public import FeitThompson.BGsection5.theorem_5_3_d
 
 /-! # Corollary 5.4 from BG Section 5 -/
 
@@ -32,7 +32,7 @@ private theorem rank_two_maximal_of_order_p_centralizer_rank_le_two
     intro s hs
     rw [Subgroup.mem_centralizer_iff]
     intro t ht
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := S) ht hs
+    exact setLike_mul_comm (s := S) ht hs
   have hSZ_elem : IsElementaryAbelian p (Z ⊔ S : Subgroup R) := by
     have hS_le_centZ : S ≤ Subgroup.centralizer (Z : Set R) := by
       exact (Subgroup.le_centralizer_iff).mp hZ_le_C
@@ -192,7 +192,7 @@ private theorem rank_two_maximal_of_order_p_centralizer_rank_le_two
       rw [Subgroup.mem_centralizer_iff]
       intro s hs
       have hsB : s ∈ B := hSZ_le_B (Subgroup.mem_sup_right hs)
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := B) hsB hb
+      exact setLike_mul_comm (s := B) hsB hb
     by_cases hB_eq : B = Z ⊔ S
     · exact hB_eq.symm
     · have hBSZ_ne : Z ⊔ S ≠ B := fun h => hB_eq h.symm

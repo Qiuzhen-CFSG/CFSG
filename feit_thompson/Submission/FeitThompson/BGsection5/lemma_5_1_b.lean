@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.lemma_5_1_a
-public import Submission.FeitThompson.BGsection4.lemma_4_10
-import Submission.FeitThompson.PCore.PCore
-import Submission.FeitThompson.PGroup.NormalSubgroups
-import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import FeitThompson.BGsection5.lemma_5_1_a
+public import FeitThompson.BGsection4.lemma_4_10
+import FeitThompson.PCore.PCore
+import FeitThompson.PGroup.NormalSubgroups
+import FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
 
 /-! # Lemma 5.1(b) from BG Section 5 -/
@@ -20,8 +20,13 @@ private theorem elementaryAbelian_card_ge_pow_generatorRank
     {p : ℕ} [Fact p.Prime]
     (G : Type*) [Group G] [Finite G] [IsElementaryAbelian p G] :
     p ^ generatorRank G ≤ Nat.card G := by
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   have hcard : Nat.card G = p ^ Module.finrank (ZMod p) (Additive G) := by
-    simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G)
+    calc
+      Nat.card G = Nat.card (Additive G) := (Nat.card_congr Additive.toMul).symm
+      _ = Nat.card (ZMod p) ^ Module.finrank (ZMod p) (Additive G) :=
+        Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G)
+      _ = p ^ Module.finrank (ZMod p) (Additive G) := by simp [ZMod.card]
   have hgr_le_finrank : generatorRank G ≤ Module.finrank (ZMod p) (Additive G) :=
     generatorRank_le_finrank_of_elementaryAbelian (p := p) G
   rw [hcard]
@@ -31,7 +36,7 @@ public theorem generatorRank_at_least_three_of_elementaryAbelian_card_p3
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 3) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -49,7 +54,7 @@ private theorem generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3
     {B : Subgroup G} [IsElementaryAbelian p B] (hBcard : Nat.card B = p ^ 3) :
     3 ≤ generatorRank G := by
   classical
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   by_contra hlt
   have hle_two : generatorRank G ≤ 2 := by omega
   have hmeta : IsMetacyclic G :=
@@ -152,7 +157,8 @@ public theorem quotient_centralizer_card_le_p_of_elementaryAbelian_rank_two
       intro a b
       apply hi
       ext x
-      simpa using (htriv a x).trans (htriv b x).symm
+      change a • x = b • x
+      exact (htriv a x).trans (htriv b x).symm
     have hcard_one : Nat.card Q = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
     rw [hcard_one]
     exact (Fact.out : Nat.Prime p).one_lt.le
@@ -252,7 +258,7 @@ public theorem quotient_centralizer_card_le_p_of_elementaryAbelian_rank_two
         congrArg (fun f : MulAut (E ⧸ fixedPointSubgroup Q E) => f g) ha_one
     have hy_exists : ∃ y : E, y ∉ fixedPointSubgroup Q E := by
       by_contra hy
-      push_neg at hy
+      push Not at hy
       apply hfix_top
       exact (Subgroup.eq_top_iff' (H := fixedPointSubgroup Q E)).2 hy
     obtain ⟨y, hy_notin_fix⟩ := hy_exists
@@ -381,7 +387,7 @@ public theorem scnSubgroup_generatorRank_at_least_three
     have hAle : A ≤ Subgroup.centralizer (A : Set R) := by
       simp [hAcent]
     exact (Subgroup.le_centralizer_iff_isMulCommutative (K := A)).1 hAle
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hpA : IsPGroup p A := hpR.to_subgroup A
   have hnonempty : (selfCentralizingAbelianSubgroupsAtLeast A 3 : Set (Subgroup A)).Nonempty := by
     by_contra hempty
@@ -422,6 +428,7 @@ public theorem omega1_isElementaryAbelian_of_commutative
     {p : ℕ} [Fact p.Prime]
     (G : Type*) [Group G] [IsMulCommutative G] :
     IsElementaryAbelian p (omega₁ (G := G) (p := p)) := by
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := by infer_instance
       exponent_dvd_p := ?_ }
@@ -446,7 +453,7 @@ private theorem omega1_card_eq_card_quotient_frattini_of_commutative
     (G : Type*) [Group G] [Finite G] [IsMulCommutative G] [Fact (IsPGroup p G)] :
     Nat.card (omega₁ (G := G) (p := p)) = Nat.card (G ⧸ frattini G) := by
   classical
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   let φ : G →* G := powMonoidHom p
   have hφker : φ.ker = omega₁ (G := G) (p := p) := by
     ext x
@@ -456,7 +463,6 @@ private theorem omega1_card_eq_card_quotient_frattini_of_commutative
       refine Subgroup.subset_closure ?_
       simpa [φ, pow_one] using hx
     · intro hx
-      change x ∈ φ.ker
       refine
         Subgroup.closure_induction (k := {y : G | y ^ (p ^ 1) = 1})
           (p := fun z _hz => z ∈ φ.ker) (x := x) (by
@@ -480,7 +486,9 @@ private theorem omega1_card_eq_card_quotient_frattini_of_commutative
         (Subgroup.commutator_eq_bot_iff_le_centralizer).2 hcomm_top
       simpa [_root_.commutator_def] using htop_comm_bot
     have hderived_bot : derivedSubgroup G = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using hcomm_bot
+      change derivedSeries G 1 = ⊥
+      rw [derivedSeries_one]
+      exact hcomm_bot
     have hrange :
         Set.range (fun x : G => x ^ p) = ((φ.range : Subgroup G) : Set G) := by
       ext y
@@ -536,7 +544,7 @@ public theorem isElementaryAbelian_of_le
         exact
           { is_comm := ⟨fun x y =>
               Subtype.ext <|
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := K)
+                setLike_mul_comm (s := K)
                   (hHK x.2) (hHK y.2)⟩ }
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -639,14 +647,12 @@ public theorem isElementaryAbelian_sup_of_le_centralizer'
           ((IsMulCommutative.is_comm (M := C)).comm ⟨x, hxC⟩ ⟨y, hyC⟩)
   have hsup : E ⊔ C = Subgroup.closure s := by
     simpa [s] using (Subgroup.sup_eq_closure E C)
+  letI : IsMulCommutative ↥(Subgroup.closure s) :=
+    Subgroup.isMulCommutative_closure hcomm_s
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact
-          { is_comm :=
-              ⟨fun x y => by
-                exact mul_comm x y⟩ }
+        infer_instance
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -668,10 +674,8 @@ public theorem isElementaryAbelian_sup_of_le_centralizer'
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
           show y * z = z * y
-          simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
+          exact setLike_mul_comm (s := Subgroup.closure s) hy hz
         · calc
             (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
             _ = 1 := by simp [hypow, hzpow]
@@ -820,7 +824,7 @@ private theorem exists_normal_elementaryAbelian_card_p3_of_scn_three_checked
           exact
             { is_comm := ⟨fun x y =>
                 Subtype.ext <|
-                  Subgroup.mul_comm_of_mem_isMulCommutative (H := Ω)
+                  setLike_mul_comm (s := Ω)
                     (hBΩ x.2) (hBΩ y.2)⟩ }
         exponent_dvd_p := ?_ }
     refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -961,7 +965,7 @@ public theorem exists_normal_elementaryAbelian_card_p3_containing_rank_two_norma
       rw [Subgroup.mem_centralizer_iff]
       intro e he
       have hmul : b * e = e * b :=
-        Subgroup.mul_comm_of_mem_isMulCommutative (H := B₀) hb (hE_le_B₀ he)
+        setLike_mul_comm (s := B₀) hb (hE_le_B₀ he)
       exact hmul.symm
     have hB₀_le_C : B₀ ≤ C := by
       intro b hb

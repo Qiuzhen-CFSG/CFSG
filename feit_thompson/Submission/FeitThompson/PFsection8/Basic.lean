@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGsection16.theorem_16_II
-public import Submission.FeitThompson.PFsection7.Basic
+public import FeitThompson.BGsection16.theorem_16_II
+public import FeitThompson.PFsection7.Basic
 
 /-!
 # Peterfalvi, Section 8: basic notation

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_14_c
+public import FeitThompson.BGsection10.proposition_10_14_c
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -47,6 +47,7 @@ private theorem section10_unique_overgroups_eq_of_contains_maximal
     simpa using hsingle
   simpa [hMN] using hNuniq
 
+omit [IsMinCE G] in
 private theorem section10_le_unique_maximal_of_le
     {Y X M : Subgroup G} (hYX : Y ≤ X) (hXproper : X ≠ ⊤)
     (hMuniq : section9MaximalSubgroupsContaining Y = {M}) :
@@ -76,6 +77,7 @@ public theorem section10_normalizer_ne_top_of_ne_bot_le_maximal
       simpa [hXtop] using hXM
     exact hM.1 (top_le_iff.mp htop_le_M)
 
+omit [IsMinCE G] in
 public theorem section10_normalizer_le_of_unique_le_maximal
     {D X M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
     (hDunique : D ∈ section9UniqueSubgroups G) (hDM : D ≤ M)
@@ -112,6 +114,7 @@ public theorem section10_pCore_ne_bot_of_dvd_card_nilpotent
   rw [hcardS] at hqS
   exact (Fact.out : Nat.Prime q).not_dvd_one hqS
 
+omit [IsMinCE G] in
 public theorem section10_sylow_map_subtype_of_normalizer_le
     {p : ℕ} [Fact p.Prime] {M : Subgroup G} (P : Sylow p M)
     (hN : Subgroup.normalizer
@@ -161,6 +164,7 @@ public theorem section10_sylow_map_subtype_of_normalizer_le
     exact Nat.dvd_of_mul_dvd_mul_left (pow_pos (Fact.out : Nat.Prime p).pos n) hdvd'
   exact P.not_dvd_index hp_dvd_P_index
 
+omit [IsMinCE G] in
 /-- An ideal prime in `σ(M)` lies in `β(M)`. -/
 public theorem section10_betaPrimes_of_idealPrime_of_sigma
     {M : Subgroup G} {p : Nat.Primes}

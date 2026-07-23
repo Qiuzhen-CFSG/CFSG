@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_7_d
+public import FeitThompson.BGsection12.theorem_12_7_d
 
 open scoped Pointwise
 
@@ -119,7 +119,7 @@ public theorem theorem_12_7_e
           haveI : (E₃.subgroupOf E).Normal := hE3norm.2
           exact section12_pSubgroup_le_normal_hall_of_prime_mem hHallE3 hqτ3 hZsub_p
         have hzsub : (⟨z, hzE⟩ : E) ∈ (Subgroup.zpowers z).subgroupOf E := by
-          simpa [Subgroup.mem_subgroupOf] using Subgroup.mem_zpowers z
+          simp [Subgroup.mem_subgroupOf]
         exact hZsubE hzsub
       exact hzE3
 
@@ -128,7 +128,7 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
     (hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
+    (_hA : A ∈ section12RankTwoElementaryAbelianIn p E)
     (_hAS : A ≤ (S : Subgroup G)) (hScomm : IsMulCommutative (S : Subgroup G)) :
     IsHallSubgroup (section12Tau2Primes M) E₂ := by
   classical
@@ -177,9 +177,9 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
         have hconj_comm :
             IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
           letI : IsMulCommutative (S : Subgroup G) := hScomm
-          simpa [Sylow.coe_subgroup_smul] using
-            (Subgroup.map_isMulCommutative
-              (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+          rw [Sylow.coe_subgroup_smul]
+          exact Subgroup.map_isMulCommutative
+            (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
         have hQcomm : IsMulCommutative (Q : Subgroup G) := by
           rw [← hg]
           exact hconj_comm
@@ -188,8 +188,8 @@ public theorem section12_E2_global_hall_of_abelian_sylow_pre
         intro x hx
         rw [Subgroup.mem_centralizer_iff]
         intro b hb
-        exact (Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := (Q : Subgroup G)) hx (hB_le_Q hb)).symm
+        exact (setLike_mul_comm
+          (s := (Q : Subgroup G)) hx (hB_le_Q hb)).symm
       have hCB_le_E : Subgroup.centralizer (B : Set G) ≤ E := by
         have h6B :=
           corollary_12_6_b (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
@@ -206,7 +206,7 @@ public theorem section12_tau2_sylow_comm_of_abelian_sylow_pre
     (hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
+    (_hA : A ∈ section12RankTwoElementaryAbelianIn p E)
     (_hAS : A ≤ (S : Subgroup G)) (hScomm : IsMulCommutative (S : Subgroup G))
     (hq : q ∈ section12Tau2Primes M) :
     IsMulCommutative (Q : Subgroup G) := by
@@ -231,9 +231,9 @@ public theorem section12_tau2_sylow_comm_of_abelian_sylow_pre
   have hconj_comm :
       IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
     letI : IsMulCommutative (S : Subgroup G) := hScomm
-    simpa [Sylow.coe_subgroup_smul] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+    rw [Sylow.coe_subgroup_smul]
+    exact Subgroup.map_isMulCommutative
+      (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
   have hQcomm : IsMulCommutative (Q : Subgroup G) := by
     rw [← hg]
     exact hconj_comm

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection9.theorem_9_6
+public import FeitThompson.BGsection9.theorem_9_6
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 
@@ -24,7 +24,7 @@ private theorem section9_generatorRank_at_least_two_of_elementaryAbelian_card_p_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -70,7 +70,7 @@ private theorem section9_generatorRank_at_least_three_of_elementaryAbelian_card_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hgt : p ^ 2 < Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -121,7 +121,7 @@ public theorem theorem_9_6_in_particular
     intro b hb
     rw [Subgroup.mem_centralizer_iff]
     intro a ha
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := B) (hAB ha) hb
+    exact setLike_mul_comm (s := B) (hAB ha) hb
   have hcentralizerRank : 3 ≤ groupRank (Subgroup.centralizer (A : Set G)) := by
     exact groupRank_at_least_three_of_generatorRank_subgroup
       (q := p) hp hB_le_centralizer (IsElementaryAbelian.isPGroup p B)

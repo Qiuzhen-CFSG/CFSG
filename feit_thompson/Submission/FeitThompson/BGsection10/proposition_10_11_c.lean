@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_11_b
+public import FeitThompson.BGsection10.proposition_10_11_b
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Statements from BG Section 10
@@ -89,6 +89,7 @@ public theorem section10_msigma_eq_piCoreIn (M : Subgroup G) :
     section10Msigma M = piCoreIn (section10SigmaPrimes M) M := by
   rfl
 
+omit [IsMinCE G] in
 private theorem section10_piCoreIn_mono
     {π ρ : Set Nat.Primes} (H : Subgroup G) (hπρ : π ⊆ ρ) :
     piCoreIn π H ≤ piCoreIn ρ H := by
@@ -97,6 +98,7 @@ private theorem section10_piCoreIn_mono
   exact Subgroup.mem_map.mpr
     ⟨y, section10_piCore_mono (H := H) hπρ hy, rfl⟩
 
+omit [IsMinCE G] in
 public theorem section10_le_normalizer_msigma
     {M : Subgroup G} :
     M ≤ Subgroup.normalizer (section10Msigma M : Set G) := by
@@ -116,6 +118,7 @@ public theorem section10_le_normalizer_fitting
   letI : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
   exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section10_le_normalizer_sigma_compl_fitting_core
     (M : Subgroup G) :
     M ≤ Subgroup.normalizer
@@ -209,11 +212,12 @@ public theorem section10_sigma_compl_fitting_core_isCyclic
     let ZF : Subgroup F := Z.subgroupOf F
     have hZF_nil : Group.IsNilpotent ZF := Subgroup.isNilpotent ZF
     let e : ZF ≃* Z := Subgroup.subgroupOfEquivOfLe (H := Z) (K := F) hZleF
-    exact nilpotent_of_mulEquiv (G := ZF) (G' := Z) e
+    exact Group.nilpotent_of_mulEquiv (G := ZF) (G' := Z) e
   letI : IsZGroup Z := hZgroup
   letI : Group.IsNilpotent Z := hZnil
   infer_instance
 
+omit [IsMinCE G] in
 public theorem section10_fitting_le_msigma_sup_sigma_compl_fitting_core
     (M : Subgroup G) :
     section8FittingSubgroup M ≤
@@ -230,7 +234,7 @@ public theorem section10_fitting_le_msigma_sup_sigma_compl_fitting_core
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup F) := by
     let e : F ≃* (⊤ : Subgroup F) :=
       (Subgroup.topEquiv : (⊤ : Subgroup F) ≃* F).symm
-    exact nilpotent_of_mulEquiv (G := F) (G' := (⊤ : Subgroup F)) e
+    exact Group.nilpotent_of_mulEquiv (G := F) (G' := (⊤ : Subgroup F)) e
   have htop_le_sup :
       (⊤ : Subgroup F) ≤
         ⨆ q : (Nat.card F).primeFactors.attach, pCore q.1.1 F :=
@@ -286,7 +290,7 @@ public theorem section10_fitting_le_msigma_sup_sigma_compl_fitting_core
   let xF : F := ⟨x, hxF⟩
   have hxK : xF ∈ K :=
     hsup_le_K (htop_le_sup (Subgroup.mem_top xF))
-  simpa [K, F, S, Z] using hxK
+  simpa [K, F, S, Z, Subgroup.mem_subgroupOf] using hxK
 
 omit [Finite G] [IsMinCE G] in
 private theorem section10_le_centralizer_sup_of_le_centralizers
@@ -310,6 +314,7 @@ private theorem section10_le_centralizer_of_le_centralizer
   intro s hs
   exact (Subgroup.mem_centralizer_iff.mp (hSC hs) a ha).symm
 
+omit [IsMinCE G] in
 private theorem section10_pSubgroup_le_centralizer_piSubgroup_of_nilpotent_overgroup
     {π : Set Nat.Primes} {L P X : Subgroup G} {p : Nat.Primes}
     (hpπ : p ∉ π) (hLnil : Group.IsNilpotent L) (hPL : P ≤ L) (hXL : X ≤ L)
@@ -322,12 +327,12 @@ private theorem section10_pSubgroup_le_centralizer_piSubgroup_of_nilpotent_overg
     have hXsub_nil : Group.IsNilpotent Xsub := by infer_instance
     let e : Xsub ≃* X := Subgroup.subgroupOfEquivOfLe (H := X) (K := L) hXL
     letI : Group.IsNilpotent Xsub := hXsub_nil
-    exact nilpotent_of_mulEquiv (G := Xsub) (G' := X) e
+    exact Group.nilpotent_of_mulEquiv (G := Xsub) (G' := X) e
   letI : Group.IsNilpotent X := hXnil
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup X) := by
     let e : X ≃* (⊤ : Subgroup X) :=
       (Subgroup.topEquiv : (⊤ : Subgroup X) ≃* X).symm
-    exact nilpotent_of_mulEquiv (G := X) (G' := (⊤ : Subgroup X)) e
+    exact Group.nilpotent_of_mulEquiv (G := X) (G' := (⊤ : Subgroup X)) e
   have htop_le_sup :
       (⊤ : Subgroup X) ≤
         ⨆ q : (Nat.card X).primeFactors.attach, pCore q.1.1 X :=
@@ -366,9 +371,10 @@ private theorem section10_pSubgroup_le_centralizer_piSubgroup_of_nilpotent_overg
     let xX : X := ⟨x, hx⟩
     have hxC : xX ∈ (Subgroup.centralizer (P : Set G)).comap X.subtype :=
       hsup_le_cent (htop_le_sup (Subgroup.mem_top xX))
-    simpa [xX] using hxC
+    simpa [xX, Subgroup.mem_subgroupOf] using hxC
   exact section10_le_centralizer_of_le_centralizer (G := G) hXcentP
 
+omit [IsMinCE G] in
 public theorem section10_isPiSubgroup_le_centralizer_of_nilpotent_disjoint
     {π ρ : Set Nat.Primes} {L A B : Subgroup G}
     (hπρ : Disjoint π ρ) (hLnil : Group.IsNilpotent L) (hAL : A ≤ L) (hBL : B ≤ L)
@@ -381,12 +387,12 @@ public theorem section10_isPiSubgroup_le_centralizer_of_nilpotent_disjoint
     have hAsub_nil : Group.IsNilpotent Asub := by infer_instance
     let e : Asub ≃* A := Subgroup.subgroupOfEquivOfLe (H := A) (K := L) hAL
     letI : Group.IsNilpotent Asub := hAsub_nil
-    exact nilpotent_of_mulEquiv (G := Asub) (G' := A) e
+    exact Group.nilpotent_of_mulEquiv (G := Asub) (G' := A) e
   letI : Group.IsNilpotent A := hAnil
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup A) := by
     let e : A ≃* (⊤ : Subgroup A) :=
       (Subgroup.topEquiv : (⊤ : Subgroup A) ≃* A).symm
-    exact nilpotent_of_mulEquiv (G := A) (G' := (⊤ : Subgroup A)) e
+    exact Group.nilpotent_of_mulEquiv (G := A) (G' := (⊤ : Subgroup A)) e
   have htop_le_sup :
       (⊤ : Subgroup A) ≤
         ⨆ q : (Nat.card A).primeFactors.attach, pCore q.1.1 A :=
@@ -422,7 +428,7 @@ public theorem section10_isPiSubgroup_le_centralizer_of_nilpotent_disjoint
   let aA : A := ⟨a, ha⟩
   have haC : aA ∈ (Subgroup.centralizer (B : Set G)).comap A.subtype :=
     hsup_le_cent (htop_le_sup (Subgroup.mem_top aA))
-  simpa [aA] using haC
+  simpa [aA, Subgroup.mem_subgroupOf] using haC
 
 omit [Finite G] [IsMinCE G] in
 private theorem section10_ambientDerived_le_centralizer_of_cyclic_normal
@@ -445,7 +451,7 @@ private theorem section10_ambientDerived_le_centralizer_of_cyclic_normal
   intro z hz
   rcases Subgroup.mem_map.mp hx with ⟨d, hd, rfl⟩
   let zM : M := ⟨z, hZleM hz⟩
-  let zZM : ZM := ⟨zM, by simpa [ZM, zM] using hz⟩
+  let zZM : ZM := ⟨zM, by simpa [ZM, zM, Subgroup.mem_subgroupOf] using hz⟩
   have hd_comm : (d : M) ∈ _root_.commutator M := by
     change (d : M) ∈ derivedSubgroup M
     exact hd

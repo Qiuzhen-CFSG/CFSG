@@ -2,8 +2,8 @@ module
 
 public import Mathlib.Logic.Basic
 public import Mathlib.GroupTheory.PGroup
-public import Submission.FeitThompson.HallSubgroups.Core
-import Submission.FeitThompson.GroupAction.Quotient
+public import FeitThompson.HallSubgroups.Core
+import FeitThompson.GroupAction.Quotient
 
 open scoped Pointwise
 

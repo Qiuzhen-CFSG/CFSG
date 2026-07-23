@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGsection7.theorem_7_2
-import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection7.theorem_7_2
+import FeitThompson.SubgroupConj
 /-! # Theorem 7.3 from BG Section 7 -/
 
 open scoped Pointwise
@@ -133,7 +133,7 @@ public theorem theorem_7_3
     exists_pSubgroup_two_le_generatorRank_of_one_lt_groupRank
       (R := Subgroup.center A) hcenterRank'
   letI : Fact p.val.Prime := ⟨p.2⟩
-  letI : CommGroup B := CommGroup.ofIsMulCommutative
+  letI : CommGroup B := IsMulCommutative.instCommGroup
   letI : Fact (IsPGroup p.val B) := ⟨hBp⟩
   have hB_noncyc : ¬ IsCyclic B := not_isCyclic_of_two_le_generatorRank hBrank
   have hB_ne_bot : B ≠ ⊥ := by

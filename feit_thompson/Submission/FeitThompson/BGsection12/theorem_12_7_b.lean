@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_7_c
+public import FeitThompson.BGsection12.theorem_12_7_c
 
 open scoped Pointwise
 
@@ -112,7 +112,7 @@ public theorem section12_CA_msigma_ne_omegaOneCenter_of_tau2_pre
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
-    (hPnonab : ¬ IsMulCommutative P)
+    (_hPnonab : ¬ IsMulCommutative P)
     (hPnotM : ¬ P ≤ M)
     (hCcard : Nat.card (subgroupCentralizerIn A (section10Msigma M)) = p.val) :
     subgroupCentralizerIn A (section10Msigma M) ≠ section10OmegaOneCenter p P := by
@@ -164,7 +164,7 @@ public theorem section12_lemma_10_13_factor_msigma_centralizer_eq_bot_pre
   by_contra hyne_bot
   have hyne : y ≠ 1 := by
     intro hy1
-    exact hyne_bot (by simpa [hy1])
+    exact hyne_bot (by simp [hy1])
   obtain ⟨q, z, hz_zpowy, hzY, hzne, hXqY⟩ :=
     section12_exists_primeOrder_zpowers_in_pre (B := Y) hy.1 hyne
   let X : Subgroup G := Subgroup.zpowers z
@@ -280,9 +280,9 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
     obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G P Pnonab
     have hconj_comm : IsMulCommutative ((g • P : Sylow p.val G) : Subgroup G) := by
       letI : IsMulCommutative (P : Subgroup G) := hPcomm
-      simpa [Sylow.coe_subgroup_smul] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj g).toMonoidHom) (H := (P : Subgroup G)))
+      rw [Sylow.coe_subgroup_smul]
+      exact Subgroup.map_isMulCommutative
+        (f := (MulAut.conj g).toMonoidHom) (H := (P : Subgroup G))
     have hPnonab_comm : IsMulCommutative (Pnonab : Subgroup G) := by
       rw [← hg]
       exact hconj_comm
@@ -303,8 +303,8 @@ public theorem section12_sigma_compl_fitting_core_le_CA_msigma_pre
     have hzPM : z ∈ (P : Subgroup G) ⊓ M := ⟨hZ_le_P hz, hZ_le_M hz⟩
     have haPM : a ∈ (P : Subgroup G) ⊓ M :=
       ⟨hA_le_P ha, (section12_rankTwo_le hA_M) ha⟩
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := (P : Subgroup G) ⊓ M) hzPM haPM).symm
+    exact (setLike_mul_comm
+      (s := (P : Subgroup G) ⊓ M) hzPM haPM).symm
   have hAmaxG : A ∈ maximalElementaryAbelianSubgroups p.val G :=
     (lemma_12_1_g (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
@@ -512,6 +512,8 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariant A V B] :
     ∃ C : Subgroup V, IsCompl B C ∧ IsInvariant A V C := by
   classical
+  letI : CommGroup V := IsMulCommutative.instCommGroup
+  letI : AddCommGroup (Additive V) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
     Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
@@ -625,7 +627,8 @@ public theorem section12_rankTwo_tau2_le_E2
     section12_rankTwo_subgroupOf_isPGroup hA
   haveI : Fact p.val.Prime := ⟨p.2⟩
   have hp' : (⟨p.val, Fact.out⟩ : Nat.Primes) ∈ section12Tau2Primes M := by
-    simpa using hp
+    rw [show (⟨p.val, Fact.out⟩ : Nat.Primes) = p by exact Subtype.ext rfl]
+    exact hp
   have hA_le_E2sub : A.subgroupOf E ≤ E₂.subgroupOf E :=
     section12_normal_pSubgroup_le_of_isHallSubgroup_of_prime_mem
       (R := E) (π := section12Tau2Primes M) (H := E₂.subgroupOf E)
@@ -676,9 +679,7 @@ public theorem section12_E2_commutative_of_tau2_nonabelian_pre
   have hTcomm : IsMulCommutative (T : Subgroup M) :=
     (theorem_12_5_b hM hp hA_M).1 T
   have hTamb_comm : IsMulCommutative (section10AmbientSylowSubgroup M T) := by
-    letI : IsMulCommutative (T : Subgroup M) := hTcomm
-    simpa [section10AmbientSylowSubgroup] using
-      (Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M)))
+    exact section11_isMulCommutative_ambient_of_sylow hTcomm
   have hE2_amb_le_T : E₂ ≤ section10AmbientSylowSubgroup M T := by
     intro x hx
     exact Subgroup.mem_map.mpr
@@ -686,8 +687,8 @@ public theorem section12_E2_commutative_of_tau2_nonabelian_pre
         hE2sub_le_T (by simpa [E₂sub, Subgroup.mem_subgroupOf] using hx), rfl⟩
   refine ⟨⟨fun x y => ?_⟩⟩
   exact Subtype.ext <|
-    Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := section10AmbientSylowSubgroup M T)
+    setLike_mul_comm
+      (s := section10AmbientSylowSubgroup M T)
       (hE2_amb_le_T x.property) (hE2_amb_le_T y.property)
 
 public theorem section12_E2_le_centralizer_rankTwo_tau2_of_theorem_12_7_pre
@@ -710,9 +711,10 @@ public theorem section12_E2_le_centralizer_rankTwo_tau2_of_theorem_12_7_pre
   intro x hx
   rw [Subgroup.mem_centralizer_iff]
   intro a ha
-  exact (Subgroup.mul_comm_of_mem_isMulCommutative
-    (H := E₂) hx (hA_le_E2 ha)).symm
+  exact (setLike_mul_comm
+    (s := E₂) hx (hA_le_E2 ha)).symm
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_E_le_normalizer_CA_msigma_pre
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -775,6 +777,7 @@ public theorem section12_E_le_normalizer_CA_msigma_pre
           _ = (e⁻¹ * (e * x * e⁻¹) * (e⁻¹)⁻¹) * y := by group
     simpa [C, mul_assoc] using hx'
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_CA_msigma_normalIn_E_pre
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)

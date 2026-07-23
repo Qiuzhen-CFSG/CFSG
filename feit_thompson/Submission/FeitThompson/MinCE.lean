@@ -19,6 +19,9 @@ import Mathlib.GroupTheory.Nilpotent
 import Mathlib.GroupTheory.Solvable
 import Mathlib.Tactic.TypeStar
 
+open scoped commutatorElement
+open scoped IsMulCommutative
+
 /-- Minimal counter-example. -/
 public class IsMinCE (G : Type*) [Group G] [Finite G] : Prop where
   odd_order : Odd (Nat.card G)
@@ -30,7 +33,8 @@ public class IsMinCE (G : Type*) [Group G] [Finite G] : Prop where
 /-- `G` is not abelian. -/
 theorem not_comm_of_min_ce {G : Type*} [Group G] [Finite G]
     [IsMinCE G] : ¬ IsMulCommutative G := by
-  intro _
+  intro hcomm
+  letI : IsMulCommutative G := hcomm
   have hSol : IsSolvable G := by
     refine ⟨1, ?_⟩
     have h1 : commutatorSet G ⊆ {(1 : G)} := by

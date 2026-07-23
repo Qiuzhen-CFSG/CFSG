@@ -4,13 +4,13 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection6.Defs
-public import Submission.FeitThompson.MinCE
-import Submission.FeitThompson.BGsection3.theorem_3_4
-import Submission.FeitThompson.HallSubgroups.Conjugacy
-import Submission.FeitThompson.SubgroupConj
-import Submission.FeitThompson.PCore.CentralizerControl
-import Submission.FeitThompson.Representation.SolvableDimension
+public import FeitThompson.BGsection6.Defs
+public import FeitThompson.MinCE
+import FeitThompson.BGsection3.theorem_3_4
+import FeitThompson.HallSubgroups.Conjugacy
+import FeitThompson.SubgroupConj
+import FeitThompson.PCore.CentralizerControl
+import FeitThompson.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
@@ -168,7 +168,8 @@ public lemma piCore_map_iso {π : Set Nat.Primes} {G' : Type*} [Group G']
     · rintro ⟨K, ⟨hKnorm, hKπ⟩, rfl⟩
       constructor
       · exact Subgroup.Normal.map hKnorm f.toMonoidHom f.surjective
-      · simpa using hKπ.map f.toMonoidHom
+      · change IsPiSubgroup (G := G') π (K.map f.toMonoidHom)
+        exact hKπ.map f.toMonoidHom
     · intro hK'
       refine ⟨F.symm K', ?_, ?_⟩
       constructor
@@ -467,7 +468,8 @@ public lemma le_section7K_of_le_centralizer_isPiSubgroup [IsMinCE G]
     intro c y hy
     let cY : Subgroup.normalizer (Y : Set G) := ⟨c, hC_le_normY c.property⟩
     let yY : Y := ⟨y, hM_le_Y hy⟩
-    have hyY : yY ∈ M.subgroupOf Y := by simpa using hy
+    have hyY : yY ∈ M.subgroupOf Y := by
+      exact Subgroup.mem_subgroupOf.mpr hy
     have hfix :
         Subgroup.comap (Subgroup.normalizerMonoidHom Y cY).toMonoidHom (M.subgroupOf Y) =
           M.subgroupOf Y :=
@@ -493,7 +495,9 @@ public lemma le_section7K_of_le_centralizer_isPiSubgroup [IsMinCE G]
     le_sSup ⟨hMsub_normC, hMsub_piC⟩
   have hM_le_K : M ≤ section7K A := by
     have hmap_le := Subgroup.map_mono (f := C.subtype) hMsub_le_core
-    simpa [section7K, C, Subgroup.subgroupOf_map_subtype, inf_eq_left.mpr hM_le_C] using hmap_le
+    rw [Subgroup.subgroupOf_map_subtype, inf_eq_left.mpr hM_le_C] at hmap_le
+    change M ≤ (piCore (subgroupPrimeSet A)ᶜ ↥C).map C.subtype
+    exact hmap_le
   exact hS_le_M.trans hM_le_K
 
 omit [Finite G] in
@@ -546,7 +550,7 @@ public lemma normalizerCondition_of_isPiSubgroup_singleton {H : Subgroup G} {q :
   haveI : Group.IsNilpotent ↥H := by
     exact IsPGroup.isNilpotent (p := q.val) (G := ↥H)
       (h := isPGroup_of_isPiSubgroup_singleton hH)
-  exact normalizerCondition_of_isNilpotent (G := ↥H)
+  exact Group.normalizerCondition_of_isNilpotent (G := ↥H)
 
 public lemma isPiSubgroup_singleton_of_isPGroup {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPGroup q.val H) :

@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_9
+public import FeitThompson.PFsection5.PFsection5_9
 
 /-!
 # Parity for real virtual characters of odd-order groups

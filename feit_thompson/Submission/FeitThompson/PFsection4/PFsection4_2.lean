@@ -1,11 +1,11 @@
 module
 
-public import Submission.FeitThompson.PFsection4.Basic
-public import Submission.FeitThompson.PFsection2.Basic
-public import Submission.FeitThompson.PFsection1.PFsection1_2
-public import Submission.FeitThompson.PFsection1.PFsection1_5
-public import Submission.FeitThompson.PFsection1.PFsection1_6
-public import Submission.FeitThompson.HallSubgroups.Core
+public import FeitThompson.PFsection4.Basic
+public import FeitThompson.PFsection2.Basic
+public import FeitThompson.PFsection1.PFsection1_2
+public import FeitThompson.PFsection1.PFsection1_5
+public import FeitThompson.PFsection1.PFsection1_6
+public import FeitThompson.HallSubgroups.Core
 
 /-!
 # Peterfalvi, Section 4: Theorem (4.2)

@@ -4,7 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.Defs
+
+open scoped commutatorElement
 
 variable {G : Type _} [Group G] (p : ℕ) (S : Sylow p G)
 

@@ -1,9 +1,9 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_3
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection6.PFsection6_8
+public import FeitThompson.PFsection13.PFsection13_3
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection6.PFsection6_8
 
 /-!
 # Peterfalvi, Section 13: PFsection13_4
@@ -158,7 +158,7 @@ private theorem theorem_13_4_difference_supportedOn_punctured
     simpa [Section1.degree_apply] using sub_eq_zero.mpr hdeg
   · have hxHsub : x ∉ (H.subgroupOf M : Set M) := by
       intro hxsub
-      exact hxH (by simpa using hxsub)
+      exact hxH (by simpa using (Subgroup.mem_subgroupOf.1 hxsub))
     simp [hφ x hxHsub, hψ x hxHsub]
 
 private theorem theorem_13_4_conjugateCharacter_supportedOn

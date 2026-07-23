@@ -1,17 +1,17 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
 import Mathlib.Data.Nat.Choose.Dvd
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-public import Submission.FeitThompson.PGroup.NormalSubgroups
-import Submission.FeitThompson.Frattini.Core
-import Submission.FeitThompson.Commutator.Core
-import Submission.FeitThompson.Fitting.Centralizer
-import Submission.FeitThompson.PCore.CentralizerControl
-public import Submission.FeitThompson.GeneratorRank
-import Submission.FeitThompson.Utils
+public import FeitThompson.PGroup.NormalSubgroups
+import FeitThompson.Frattini.Core
+import FeitThompson.Commutator.Core
+import FeitThompson.Fitting.Centralizer
+import FeitThompson.PCore.CentralizerControl
+public import FeitThompson.GeneratorRank
+import FeitThompson.Utils
 
 /-! # Definitions from BG Section 4 -/
 

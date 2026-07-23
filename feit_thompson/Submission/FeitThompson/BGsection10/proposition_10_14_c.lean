@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_14_b
+public import FeitThompson.BGsection10.proposition_10_14_b
 
 open scoped Pointwise
 
@@ -86,7 +86,7 @@ public theorem proposition_10_14_c
     have hPnil : Group.IsNilpotent P :=
       IsPGroup.isNilpotent (p := p.val) (G := P) P.isPGroup'
     letI : Group.IsNilpotent P := hPnil
-    have hnc : NormalizerCondition P := normalizerCondition_of_isNilpotent (G := P)
+    have hnc : NormalizerCondition P := Group.normalizerCondition_of_isNilpotent (G := P)
     have hKtop : K = ⊤ :=
       (normalizerCondition_iff_only_full_group_self_normalizing.mp hnc) K hnormK_eq
     have hQeqP : Q = (P : Subgroup G) := by
@@ -95,7 +95,8 @@ public theorem proposition_10_14_c
       have hyK : (⟨y, hyP⟩ : P) ∈ K := by
         rw [hKtop]
         simp
-      simpa [K, Subgroup.mem_subgroupOf] using hyK
+      change y ∈ Q at hyK
+      exact hyK
     have hQrank_gt : 1 < groupRank Q := by
       have hQrank_three : 3 ≤ groupRank Q := by
         rw [hQeqP]

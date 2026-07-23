@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.GroupAction.Quotient
+public import FeitThompson.GroupAction.Quotient
 
 open scoped Pointwise
 

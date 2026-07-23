@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection14.lemma_14_11
+public import FeitThompson.BGsection14.lemma_14_11
 
 open scoped Pointwise
 
@@ -13,6 +13,7 @@ open scoped Pointwise
 section Section14
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [IsMinCE G] in
 private theorem section14_ambientSylow_isSylow_of_hall
     {H K : Subgroup G} {π : Set Nat.Primes} {q : Nat.Primes}
     (hHall : section12HallSubgroupIn π K H) (hqπ : q ∈ π)
@@ -34,9 +35,7 @@ private theorem section14_ambientSylow_isSylow_of_hall
       (Subgroup.subgroupOfEquivOfLe
         (H := section10AmbientSylowSubgroup K Q) (K := H) hQamb_le_H).symm
   have hR_map : R.map H.subtype = section10AmbientSylowSubgroup K Q := by
-    simpa [R, inf_eq_left.2 hQamb_le_H] using
-      (Subgroup.subgroupOf_map_subtype
-        (H := section10AmbientSylowSubgroup K Q) (K := H))
+    simp [R, inf_eq_left.2 hQamb_le_H]
   have hR_not_dvd : ¬ q.val ∣ R.index := by
     intro hidx
     have hR_card : Nat.card R = Nat.card (Q : Subgroup K) := by
@@ -77,6 +76,7 @@ private theorem section14_ambientSylow_isSylow_of_hall
       simp [S, section10AmbientSylowSubgroup]
     _ = section10AmbientSylowSubgroup K Q := hR_map
 
+omit [IsMinCE G] in
 private theorem section14_regular_normalizes_ambientSylow
     {K U : Subgroup G} {r : Nat.Primes}
     (hUcomm : IsMulCommutative U)
@@ -90,9 +90,7 @@ private theorem section14_regular_normalizes_ambientSylow
   haveI : Fact r.val.Prime := ⟨r.2⟩
   haveI : IsMulCommutative U := hUcomm
   have hR_normal : ((R : Subgroup U)).Normal := by
-    refine ⟨?_⟩
-    intro x hx y
-    simpa [mul_comm, mul_left_comm, mul_assoc] using hx
+    infer_instance
   haveI : Unique (Sylow r.val U) := Sylow.unique_of_normal R hR_normal
   refine subgroup_le_normalizer_of_conj_mem P K ?_
   intro k x hxP
@@ -104,15 +102,16 @@ private theorem section14_regular_normalizes_ambientSylow
   let Y : Subgroup U := (P.conjBy (k : G)).subgroupOf U
   have hY_p : IsPGroup r.val Y := by
     have hPk_p : IsPGroup r.val (P.conjBy (k : G)) := by
-      simpa [P, Subgroup.conjBy] using
-        IsPGroup.map (p := r.val) (H := P) hP_p (MulAut.conj (k : G)).toMonoidHom
+      change IsPGroup r.val (P.map (MulAut.conj (k : G)).toMonoidHom)
+      exact IsPGroup.map (p := r.val) (H := P) hP_p (MulAut.conj (k : G)).toMonoidHom
     exact hPk_p.of_equiv (Subgroup.subgroupOfEquivOfLe hPk_le_U).symm
   obtain ⟨S, hYS⟩ := IsPGroup.exists_le_sylow (G := U) (p := r.val) hY_p
   have hS_eq : S = R := Subsingleton.elim _ _
   have hxPk : (k : G) * x * (k : G)⁻¹ ∈ P.conjBy (k : G) := by
     exact Subgroup.mem_map.mpr ⟨x, hxP, by simp [MulAut.conj_apply]⟩
   have hxY : (⟨(k : G) * x * (k : G)⁻¹, hPk_le_U hxPk⟩ : U) ∈ Y := by
-    simpa [Y] using hxPk
+    change (k : G) * x * (k : G)⁻¹ ∈ P.conjBy (k : G)
+    exact hxPk
   have hxS : (⟨(k : G) * x * (k : G)⁻¹, hPk_le_U hxPk⟩ : U) ∈ (S : Subgroup U) := hYS hxY
   have hxR : (⟨(k : G) * x * (k : G)⁻¹, hPk_le_U hxPk⟩ : U) ∈ (R : Subgroup U) := by
     simpa [hS_eq] using hxS
@@ -136,7 +135,7 @@ private theorem section14_cor14_12_not_le_partner
     (proposition_14_2_g (G := G) (M := M) (K := K) hM hK).2.1
   have hKne : K ≠ ⊥ := by
     intro hKbot
-    have hcard1 : Nat.card K = 1 := by simpa [hKbot]
+    have hcard1 : Nat.card K = 1 := by simp [hKbot]
     exact hKcardPrime.ne_one hcard1
   obtain ⟨x0, hx0ne⟩ := Subgroup.ne_bot_iff_exists_ne_one.mp hKne
   have hKstarne : section14KStar M K ≠ ⊥ :=
@@ -220,6 +219,7 @@ private theorem section14_cor14_12_H_in_F
       rw [Subgroup.mem_centralizer_iff]
       intro x hxP
       haveI : IsMulCommutative U := hUcomm
+      letI : CommGroup U := IsMulCommutative.instCommGroup
       exact congrArg Subtype.val (mul_comm (⟨x, hP_le_U hxP⟩ : U) ⟨u, hu⟩)
     exact hUHcent.trans (centralizer_le_normalizer P) |>.trans hH.2
   have hKH : K ≤ H :=
@@ -242,10 +242,10 @@ private theorem section14_cor14_12_H_in_F
             Nat.card (U.subgroupOf M) * (U.subgroupOf M).index := by
         calc
           Nat.card (U.subgroupOf H) * (U.subgroupOf H).index = Nat.card H := by
-            simpa [Nat.mul_comm] using Subgroup.card_mul_index (H := U.subgroupOf H)
+            simp
           _ = Nat.card M := hcardHM
           _ = Nat.card (U.subgroupOf M) * (U.subgroupOf M).index := by
-            simpa [Nat.mul_comm] using (Subgroup.card_mul_index (H := U.subgroupOf M)).symm
+            simp
       rw [hcardUH, hcardUM] at hmul
       exact Nat.eq_of_mul_eq_mul_left Nat.card_pos hmul
     have hUhallH : section12HallSubgroupIn π U H := by
@@ -286,7 +286,7 @@ private theorem section14_cor14_12_H_in_F
       (proposition_14_2_g (G := G) (M := M) (K := K) hM hK).2.1
     have hKne : K ≠ ⊥ := by
       intro hKbot
-      have hcard1 : Nat.card K = 1 := by simpa [hKbot]
+      have hcard1 : Nat.card K = 1 := by simp [hKbot]
       exact hKcardPrime.ne_one hcard1
     have haMstar : a ∈ Mstar := by
       by_contra haNotMstar
@@ -338,7 +338,7 @@ private theorem section14_cor14_12_k_in_fitting_of_complement
   have hHnotP : H ∉ section14MFamilyP G := by
     intro hHP
     rcases hHP.2 with ⟨p, hp⟩
-    simpa [hHF.2] using hp
+    simp [hHF.2] at hp
   rcases h14 with
     ⟨hMstarP, _hMstar_not_conj, hPrimeOrderUnique, _hKstarHall, _hKsigmaHall, hKeq,
       _hKappaEq, _hZdp, _hZcyc, _hInterData, _hWidehatTI, _hWidehatNorm, _hWidehatDisj,
@@ -508,6 +508,7 @@ public theorem corollary_14_12
       rw [Subgroup.mem_centralizer_iff]
       intro x hxP
       haveI : IsMulCommutative U := hUcomm
+      letI : CommGroup U := IsMulCommutative.instCommGroup
       exact congrArg Subtype.val (mul_comm (⟨x, hP_le_U hxP⟩ : U) ⟨u, hu⟩)
     exact hUHcent.trans (centralizer_le_normalizer P) |>.trans hH.2
   have hKH : K ≤ H :=
@@ -548,14 +549,14 @@ public theorem corollary_14_12
             letI : Group.IsNilpotent (section8FittingSubgroup D) :=
               section8FittingSubgroup_isNilpotent D
             exact
-              nilpotent_of_mulEquiv
+              Group.nilpotent_of_mulEquiv
                 (Subgroup.subgroupOfEquivOfLe
                   (H := section8FittingSubgroup D) (K := D) (section8FittingSubgroup_le D)).symm
           have hKsubFsub' : ((K.subgroupOf D).subgroupOf Fsub).IsSubnormal := by
             letI : Group.IsNilpotent Fsub := hnilFsub
             exact
               section8_isSubnormal_of_normalizerCondition
-                (G := Fsub) normalizerCondition_of_isNilpotent
+                (G := Fsub) Group.normalizerCondition_of_isNilpotent
                 ((K.subgroupOf D).subgroupOf Fsub)
           have hFsubSubnormal : Fsub.IsSubnormal := by
             letI : Fsub.Normal := by
@@ -570,7 +571,7 @@ public theorem corollary_14_12
     have hUleσ : U ≤ section10Msigma H := by
       have hKne : K ≠ ⊥ := by
         intro hKbot
-        have hcard1 : Nat.card K = 1 := by simpa [hKbot]
+        have hcard1 : Nat.card K = 1 := by simp [hKbot]
         exact hKcardPrime.ne_one hcard1
       have hCbot : subgroupCentralizerIn U K = ⊥ :=
         section14_subgroupCentralizerIn_eq_bot_of_regular (G := G) hKne hUreg
@@ -656,9 +657,9 @@ public theorem corollary_14_12
         have hp_eq_q : p' = q := by
           simpa [p'] using hpq
         have hqκ : q ∈ section14KappaPrimes M := by
-          have hqK : q.val ∣ Nat.card K := by simpa [q]
+          have hqK : q.val ∣ Nat.card K := by simp [q]
           exact hK.2.p_in_pi_of_p_dvd_card q
-            (by simpa [section12_card_subgroupOf_eq hK.1, q] using hqK)
+            (by simp [section12_card_subgroupOf_eq hK.1, q])
         exact hpκ' (by simpa [hp_eq_q] using hqκ)
       have hOqDq : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) OqD := by
         simpa [OqD] using piCoreIn_isPiSubgroup (G := G) ({q} : Set Nat.Primes) D
@@ -763,7 +764,7 @@ public theorem corollary_14_12
               intro hqbad
               rcases hqbad with hqσ | hqκ
               · exact hq_not_sigmaH hqσ
-              · simpa [hHF.2] using hqκ⟩ S).2.2
+              · simp [hHF.2] at hqκ⟩ S).2.2
       exact
         disjoint_iff.mp
           (lemma_10_12_b (G := G) (M := H) (H := Mstar) hHF.1 hMstarP.1 hnotconj hnilH).1
@@ -892,8 +893,8 @@ public theorem corollary_14_12
         · exact hqτ2
         · have hqκH : q ∈ section14KappaPrimes H := ⟨hqτ13, ⟨K, hKprimeH, hCne⟩⟩
           have : q ∈ (∅ : Set Nat.Primes) := by
-            simpa [hHF.2] using hqκH
-          simpa using this
+            simp [hHF.2] at hqκH
+          simp at this
       obtain ⟨E₁₂, E₁, E₂, E₃, hEdata⟩ :=
         section14_exists_EData_of_complement (G := G) (M := H) (E := D) hHF.1 hDcomp
       obtain ⟨A, hA⟩ :=
@@ -909,7 +910,7 @@ public theorem corollary_14_12
         intro hEq
         have hκnonempty : (section14KappaPrimes H).Nonempty := by
           simpa [hEq] using hMstarP.2
-        simpa [hHF.2] using hκnonempty
+        simp [hHF.2] at hκnonempty
       have hσHMstar_bot : section10Msigma H ⊓ Mstar = ⊥ :=
         theorem_12_5_e (G := G) (M := H) (A := A) (p := q)
           hHF.1 hqτ2 hA_H Mstar hA_Mstar hMstar_ne_H
@@ -1344,9 +1345,9 @@ public theorem corollary_14_12
         simpa [sup_comm] using hKU_le_MH
       calc
         ((M ⊓ H : Subgroup G) : Set G) = ↑(subgroupNormalizerIn M (U : Set G)) := by
-          simpa [hMH_eq_norm]
+          simp [hMH_eq_norm]
         _ = ↑(K ⊔ U) := by
-          simpa [hNMU]
+          simp [hNMU]
         _ = ↑(U ⊔ K) := by
           simp [sup_comm]
         _ = (U : Set G) * (K : Set G) := by
@@ -1373,7 +1374,7 @@ public theorem corollary_14_12
               intro hqbad
               rcases hqbad with hqσ | hqκ
               · exact hq_not_sigmaH hqσ
-              · simpa [hHF.2] using hqκ⟩ S).2.2
+              · simp [hHF.2] at hqκ⟩ S).2.2
       by_cases hUtop : U = section10Msigma H
       · have hHnormU : H ≤ Subgroup.normalizer (U : Set G) := by
           subst hUtop
@@ -1399,12 +1400,12 @@ public theorem corollary_14_12
             have hxTop : (⟨x, hxσ⟩ : section10Msigma H) ∈ (⊤ : Subgroup (section10Msigma H)) := by
               simp
             have hxUσ : (⟨x, hxσ⟩ : section10Msigma H) ∈ Uσ := by
-              simpa [htop] using hxTop
+              simp [htop]
             simpa [Uσ, Subgroup.mem_subgroupOf] using hxUσ
         have hUσ_lt_top : Uσ < ⊤ := lt_top_iff_ne_top.mpr hUσ_ne_top
         have hnc : NormalizerCondition (section10Msigma H) := by
           letI : Group.IsNilpotent (section10Msigma H) := hσH_nil
-          exact normalizerCondition_of_isNilpotent (G := section10Msigma H)
+          exact Group.normalizerCondition_of_isNilpotent (G := section10Msigma H)
         let Nσ : Subgroup (section10Msigma H) :=
           Subgroup.normalizer ((U.subgroupOf (section10Msigma H) : Subgroup (section10Msigma H)) : Set (section10Msigma H))
         have hUσ_lt_Nσ : Uσ < Nσ := hnc Uσ hUσ_lt_top

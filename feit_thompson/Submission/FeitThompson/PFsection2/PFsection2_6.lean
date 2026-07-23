@@ -1,12 +1,12 @@
 module
 
-public import Submission.FeitThompson.PFsection2.PFsection2_5
-public import Submission.FeitThompson.PFsection2.PFsection2_1
-public import Submission.FeitThompson.PFsection2.PFsection2_7
-public import Submission.FeitThompson.PFsection2.PFsection2_10
-public import Submission.FeitThompson.PFsection2.PFsection2_8
-public import Submission.FeitThompson.PFsection2.PFsection2_9
-public import Submission.FeitThompson.PFsection2.PFsection2_11
+public import FeitThompson.PFsection2.PFsection2_5
+public import FeitThompson.PFsection2.PFsection2_1
+public import FeitThompson.PFsection2.PFsection2_7
+public import FeitThompson.PFsection2.PFsection2_10
+public import FeitThompson.PFsection2.PFsection2_8
+public import FeitThompson.PFsection2.PFsection2_9
+public import FeitThompson.PFsection2.PFsection2_11
 import Mathlib.Algebra.Group.Pointwise.Set.Basic
 
 /-!
@@ -971,7 +971,7 @@ private theorem internalSemidirectProduct_mem_left_of_order_coprime_right
     change (internalSemidirectLeftComponent h cx : G) *
         (internalSemidirectRightComponent h cx : G) = x at hdec
     simpa [hright_one] using hdec.symm
-  simpa [hx_eq_left] using (internalSemidirectLeftComponent h cx).2
+  simp [hx_eq_left]
 
 public theorem centralizerIn_hInter_eq_hInter_union_singleton
     {G : Type u} [Group G] [Finite G]
@@ -1119,7 +1119,13 @@ private theorem hInter_mul_normalizer_mem_conjugateSet_cosetProduct
   rcases hpiece with ⟨s, hs, hsx⟩
   rcases hs with ⟨c, hc, hcs⟩
   have hcUnion : c ∈ HInter H (B ∪ Set.singleton b) := by
-    simpa [centralizerIn_hInter_eq_hInter_union_singleton h hB hBA hbA] using hc
+    have hcUnion' : c ∈ HInter H (Set.union B (Set.singleton b)) := by
+      rw [← centralizerIn_hInter_eq_hInter_union_singleton h hB hBA hbA]
+      exact hc
+    have hunion : Set.union B (Set.singleton b) = B ∪ Set.singleton b := by
+      rfl
+    rw [← hunion]
+    exact hcUnion'
   have hcHb : c ∈ H b :=
     hInter_le_of_mem H (B := B ∪ Set.singleton b) (by exact Or.inr rfl) hcUnion
   have hccomm : c * b = b * c := by
@@ -2176,38 +2182,41 @@ private theorem exists_representative_system_for_nonempty_subsets
   classical
   let S : Type u := {B : Set G // B.Nonempty ∧ B ⊆ A}
   let rel : S → S → Prop := fun B C => LConjugateSubsets L (B : Set G) (C : Set G)
-  have hrel_refl : Reflexive rel := by
-    intro B
-    refine ⟨1, ?_⟩
-    ext g
-    constructor
-    · intro hg
-      exact ⟨g, hg, by simp [conjBy]⟩
-    · intro hg
-      simpa [setConjugateBy, conjBy] using hg
-  have hrel_symm : Symmetric rel := by
-    intro B C hBC
-    rcases hBC with ⟨x, hx⟩
-    refine ⟨x⁻¹, ?_⟩
-    rw [hx]
-    simp [setConjugateBy, conjBy, mul_assoc]
-  have hrel_trans : Transitive rel := by
-    intro B C D hBC hCD
-    rcases hBC with ⟨x, hx⟩
-    rcases hCD with ⟨y, hy⟩
-    refine ⟨y * x, ?_⟩
-    rw [hy, hx]
-    simp [setConjugateBy, conjBy, mul_assoc]
+  have hrel_refl : Std.Refl rel :=
+    ⟨by
+      intro B
+      refine ⟨1, ?_⟩
+      ext g
+      constructor
+      · intro hg
+        exact ⟨g, hg, by simp [conjBy]⟩
+      · intro hg
+        simpa [setConjugateBy, conjBy] using hg⟩
+  have hrel_symm : Std.Symm rel :=
+    ⟨by
+      intro B C hBC
+      rcases hBC with ⟨x, hx⟩
+      refine ⟨x⁻¹, ?_⟩
+      rw [hx]
+      simp [setConjugateBy, conjBy, mul_assoc]⟩
+  have hrel_trans : IsTrans S rel :=
+    ⟨by
+      intro B C D hBC hCD
+      rcases hBC with ⟨x, hx⟩
+      rcases hCD with ⟨y, hy⟩
+      refine ⟨y * x, ?_⟩
+      rw [hy, hx]
+      simp [setConjugateBy, conjBy, mul_assoc]⟩
   let s : Setoid S :=
     { r := rel
       iseqv :=
-        { refl := hrel_refl
+        { refl := hrel_refl.refl
           symm := by
             intro B C h
-            exact hrel_symm h
+            exact hrel_symm.symm B C h
           trans := by
             intro B C D hBC hCD
-            exact hrel_trans hBC hCD } }
+            exact hrel_trans.trans B C D hBC hCD } }
   let Q := Quotient s
   haveI : Finite Q := by
     refine Finite.of_surjective (Quotient.mk s) ?_
@@ -2298,7 +2307,7 @@ private theorem sum_nonemptySubsetsFinset_pair_union_singleton
             · subst hxa
               exact Set.mem_singleton_iff.mpr rfl
             · exfalso
-              exact hCempty ⟨x, ⟨hxB, by simpa [Set.mem_singleton_iff] using hxa⟩⟩
+              exact hCempty ⟨x, ⟨hxB, fun hx => hxa (Set.mem_singleton_iff.mp hx)⟩⟩
           have hEq : B = Set.singleton a := by
             ext x
             constructor
@@ -2333,7 +2342,7 @@ private theorem sum_nonemptySubsetsFinset_pair_union_singleton
           · intro hxB
             by_cases hxa : x = a
             · exact Or.inr (Set.mem_singleton_iff.mpr hxa)
-            · exact Or.inl ⟨hxB, by simpa [Set.mem_singleton_iff] using hxa⟩
+            · exact Or.inl ⟨hxB, fun hx => hxa (Set.mem_singleton_iff.mp hx)⟩
         exact ⟨C, hCmem, hCeq⟩
     · intro hB
       rw [Finset.mem_insert] at hB
@@ -2556,39 +2565,42 @@ private theorem exists_representative_system_for_lconjugate_elements
   classical
   let S : Type u := {a : G // a ∈ A}
   let rel : S → S → Prop := fun a b => conjugateInSubgroup L (a : G) (b : G)
-  have hrel_refl : Reflexive rel := by
-    intro a
-    refine ⟨1, ?_⟩
-    simp [conjBy]
-  have hrel_symm : Symmetric rel := by
-    intro a b hab
-    rcases hab with ⟨x, hx⟩
-    refine ⟨x⁻¹, ?_⟩
-    calc
-      conjBy (x⁻¹ : G) b = conjBy (x⁻¹ : G) (conjBy (x : G) a) := by
-        rw [hx]
-      _ = a := by
-        simp [conjBy, mul_assoc]
-  have hrel_trans : Transitive rel := by
-    intro a b c hab hbc
-    rcases hab with ⟨x, hx⟩
-    rcases hbc with ⟨y, hy⟩
-    refine ⟨y * x, ?_⟩
-    calc
-      conjBy ((y * x : L) : G) a = conjBy (y : G) (conjBy (x : G) a) := by
-        simp [conjBy, mul_assoc]
-      _ = c := by
-        rw [hx, hy]
+  have hrel_refl : Std.Refl rel :=
+    ⟨by
+      intro a
+      refine ⟨1, ?_⟩
+      simp [conjBy]⟩
+  have hrel_symm : Std.Symm rel :=
+    ⟨by
+      intro a b hab
+      rcases hab with ⟨x, hx⟩
+      refine ⟨x⁻¹, ?_⟩
+      calc
+        conjBy (x⁻¹ : G) b = conjBy (x⁻¹ : G) (conjBy (x : G) a) := by
+          rw [hx]
+        _ = a := by
+          simp [conjBy, mul_assoc]⟩
+  have hrel_trans : IsTrans S rel :=
+    ⟨by
+      intro a b c hab hbc
+      rcases hab with ⟨x, hx⟩
+      rcases hbc with ⟨y, hy⟩
+      refine ⟨y * x, ?_⟩
+      calc
+        conjBy ((y * x : L) : G) a = conjBy (y : G) (conjBy (x : G) a) := by
+          simp [conjBy, mul_assoc]
+        _ = c := by
+          rw [hx, hy]⟩
   let s : Setoid S :=
     { r := rel
       iseqv :=
-        { refl := hrel_refl
+        { refl := hrel_refl.refl
           symm := by
             intro a b h
-            exact hrel_symm h
+            exact hrel_symm.symm a b h
           trans := by
             intro a b c hab hbc
-            exact hrel_trans hab hbc } }
+            exact hrel_trans.trans a b c hab hbc } }
   let Q := Quotient s
   haveI : Finite Q := by
     refine Finite.of_surjective (Quotient.mk s) ?_
@@ -2613,7 +2625,7 @@ private theorem exists_representative_system_for_lconjugate_elements
       exact Finset.mem_image.mpr ⟨q0, Finset.mem_univ q0, rfl⟩
     · have hq : Quotient.mk s b0 = q0 := by
           simp [b0, q0]
-      exact hrel_symm (Quotient.exact (s := s) hq)
+      exact hrel_symm.symm _ _ (Quotient.exact (s := s) hq)
     · intro c hc hconj
       rcases Finset.mem_image.mp hc with ⟨q, _hq, hc0⟩
       have hcA : c ∈ A := by
@@ -2621,7 +2633,7 @@ private theorem exists_representative_system_for_lconjugate_elements
       have hrelac : rel a0 ⟨c, hcA⟩ := by
         simpa [rel, S, a0] using hconj
       have hrelc : rel (Quotient.out q) a0 := by
-        simpa [rel, S, a0, hc0] using (hrel_symm hrelac)
+        simpa [rel, S, a0, hc0] using (hrel_symm.symm _ _ hrelac)
       have hqeq : q = q0 := by
         have hmkq : Quotient.mk s (Quotient.out q) = q := Quotient.out_eq q
         have hmk0 : Quotient.mk s (Quotient.out q) = q0 := by
@@ -2823,7 +2835,6 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
       Nat.card G := by
   classical
   letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype (ConjAct G) := Fintype.ofFinite (ConjAct G)
   have hsurj :
       Function.Surjective
         (fun x : ConjAct G =>
@@ -2843,7 +2854,7 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
     Fintype.ofFinite (MulAction.orbit (ConjAct G) S)
   have hcard :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group
-      (α := ConjAct G) (β := Set G) S
+      (ConjAct G) S
   have hstab :
       Fintype.card (MulAction.stabilizer (ConjAct G) S) =
         Fintype.card (setNormalizer S) := by
@@ -2853,7 +2864,8 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
       Fintype.card (MulAction.orbit (ConjAct G) S) *
           Fintype.card (MulAction.stabilizer (ConjAct G) S) =
         Fintype.card G := by
-    simpa [ConjAct.card] using hcard
+    rw [ConjAct.card] at hcard
+    exact hcard
   rw [hstab] at hcard'
   simpa [Nat.card_eq_fintype_card] using hcard'
 
@@ -3214,7 +3226,8 @@ private theorem sum_orbit_conjAct_eq_card_mul
     intro b
     rcases (MulAction.mem_orbit_iff.1 b.2) with ⟨x, hx⟩
     have hclass : ψ (x • a) = ψ a := by
-      simpa [ConjAct.toConjAct_smul] using hψ x a
+      rw [ConjAct.smul_def]
+      exact hψ (ConjAct.ofConjAct x) a
     calc
       ψ (b : L) = ψ (x • a) := by rw [hx]
       _ = ψ a := hclass
@@ -3234,7 +3247,7 @@ private theorem orbit_card_mul_card_centralizerIn
   classical
   have hcard :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group
-      (α := ConjAct L) (β := L) a
+      (ConjAct L) a
   have hstab :
       Fintype.card { x : ConjAct L // x • a = a } =
         Fintype.card (centralizerIn L (a : G)) := by
@@ -3297,8 +3310,7 @@ private theorem orbit_card_mul_card_centralizerIn
         rfl
     exact Fintype.card_congr e
   simpa [Nat.card_eq_fintype_card, hstab] using
-    (MulAction.card_orbit_mul_card_stabilizer_eq_card_group
-      (α := ConjAct L) (β := L) a)
+    hcard
 
 private def cosetProductLeftMulEquiv
     {G : Type u} [Group G] (a : G) (K : Subgroup G) :
@@ -3571,7 +3583,7 @@ private theorem normalizerIn_setConjugateBy_eq_conjugateSubgroup
     · exact L.mul_mem (L.mul_mem x.2 hz.1) (L.inv_mem x.2)
     · exact (normalizesSet_setConjugateBy_iff (B := B) (x := x)
         (y := conjBy (x : G) z)).2 (by
-          simpa [conjBy, mul_assoc] using hz.2)
+          simpa [setNormalizer, conjBy, mul_assoc] using hz.2)
 
 private theorem rightTranslateSet_conjugateSubgroup_eq_conjugateImage
     {G : Type u} [Group G] (x b : G) (K : Subgroup G) :
@@ -4247,8 +4259,6 @@ private noncomputable def normalizerConjugateEquivOrbitNormalizer
       right_inv := ?_ }
   · intro b
     refine ⟨e ⟨(b : G), b.2.2⟩, ?_⟩
-    change (((e ⟨(b : G), b.2.2⟩ : MulAction.orbit (ConjAct L) aL) : L) : G) ∈
-      normalizerIn L B
     simpa [e, conjugateInSubgroupEquivOrbit] using b.2.1
   · intro b
     refine ⟨(((b : MulAction.orbit (ConjAct L) aL) : L) : G), ?_, ?_⟩
@@ -4384,7 +4394,8 @@ private theorem lSubsetOrbitFinset_card_mul_card_normalizerIn
         · exact xL.2
         · have hxset : setConjugateBy (xL : G) B = B := by
             have hxfix : ((x : ConjAct L) • B : Set G) = B := x.2
-            simpa [xL, toG] using hxfix
+            change setConjugateBy (xL : G) B = B at hxfix
+            exact hxfix
           have hximg : conjugateImage B (xL : G) = B := by
             simpa [setConjugateBy_eq_conjugateImage] using hxset
           exact (normalizesSet_iff_conjugateImage_eq_self).2 hximg
@@ -4396,7 +4407,8 @@ private theorem lSubsetOrbitFinset_card_mul_card_normalizerIn
           (normalizesSet_iff_conjugateImage_eq_self).1 hxnorm
         have hxset : setConjugateBy (x : G) B = B := by
           simpa [setConjugateBy_eq_conjugateImage] using hximg
-        simpa [xL, toG] using hxset
+        change setConjugateBy (x : G) B = B
+        exact hxset
       · intro x
         ext
         rfl
@@ -4406,7 +4418,7 @@ private theorem lSubsetOrbitFinset_card_mul_card_normalizerIn
     exact Fintype.card_congr e
   have hcard :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group
-      (α := ConjAct L) (β := Set G) B
+      (ConjAct L) B
   rw [horbit, hstab] at hcard
   simpa [Nat.card_eq_fintype_card] using hcard
 
@@ -4718,7 +4730,7 @@ private theorem normalizerIn_singleton_eq_centralizerIn
     have hnorm : normalizesSet (Set.singleton a) x := (Subgroup.mem_inf.mp hx).2
     have hfix : conjBy x a = a := by
       have hmem : conjBy x a ∈ (Set.singleton a : Set G) := (hnorm a).2 rfl
-      simpa using hmem
+      exact Set.mem_singleton_iff.mp hmem
     exact mem_elementCentralizer_of_conjBy_eq_self' hfix
   · intro hx
     refine Subgroup.mem_inf.mpr ⟨(Subgroup.mem_inf.mp hx).1, ?_⟩
@@ -6185,14 +6197,11 @@ private theorem theorem_2_6_virtual_closure_core
               (A := A) (L := L) (H := H) h hBprops.1 hBprops.2
               hα.2 (hαBspec B hBmem) hg
           rw [hterm, mul_zero]
-        have hsum' :
-            (∑ B ∈ reps, (-1 : ℂ) ^ Fintype.card B *
-              Section1.inducedCF (MOfSet H L B) (αB B) g) = 0 := by
-          simpa [Nat.card_eq_fintype_card] using hsum
         calc
           dadeTransform H hAL α g = 0 := hleft
           _ = dadeInclusionExclusionSum L H reps αB g := by
-            simp [dadeInclusionExclusionSum, hsum']
+            rw [dadeInclusionExclusionSum, hsum]
+            simp
     exact ⟨reps, αB, hreps, hαBspec, hαBvirt, hformula⟩
   rcases hinclusion with ⟨reps, αB, _hreps, _hαBspec, hαBvirt, hformula⟩
   rw [hformula]
@@ -6431,14 +6440,11 @@ private theorem proposition_2_10 {G : Type u} [Group G] [Finite G]
             (A := A) (L := L) (H := H) h hBprops.1 hBprops.2
             hα.2 (hαBspec B hBmem) hg
         rw [hterm, mul_zero]
-      have hsum' :
-          (∑ B ∈ reps, (-1 : ℂ) ^ Fintype.card B *
-            Section1.inducedCF (MOfSet H L B) (αB B) g) = 0 := by
-        simpa [Nat.card_eq_fintype_card] using hsum
       calc
         dadeTransform H hAL α g = 0 := hleft
         _ = dadeInclusionExclusionSum L H reps αB g := by
-          simp [dadeInclusionExclusionSum, hsum']
+          rw [dadeInclusionExclusionSum, hsum]
+          simp
   simpa [proposition_2_10_statement] using hstmt
 
 private theorem proposition_2_11 {G : Type u} [Group G] [Finite G]

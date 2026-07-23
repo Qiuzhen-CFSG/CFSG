@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_10_a
+public import FeitThompson.BGsection10.proposition_10_10_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -37,7 +37,7 @@ public theorem proposition_10_10_b
   haveI : Fact q.val.Prime := ⟨q.property⟩
   letI : IsElementaryAbelian p.val A := hA.1.2
   letI : IsMulCommutative A := hA.1.2.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hHyp : Hypothesis7_1 A := section10_rankTwoMaximal_hypothesis7_1 (G := G) hA
   have hAπ : subgroupPrimeSet A = ({p} : Set Nat.Primes) :=
     section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton (G := G) hA

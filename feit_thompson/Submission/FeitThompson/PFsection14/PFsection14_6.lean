@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_5
-public import Submission.FeitThompson.PFsection14.PFsection14_2_Quotient
+public import FeitThompson.PFsection14.PFsection14_5
+public import FeitThompson.PFsection14.PFsection14_2_Quotient
 
 /-!
 # Peterfalvi, Section 14: theorem (14.6)
@@ -633,9 +633,8 @@ public theorem section14_omegaOneCenter_card_eq_prime_or_prime_sq_of_le_square
     have hΩelem : IsElementaryAbelian rp.val (Ω₁Z rp.val R) :=
       omega1Z_isElementaryAbelian (p := rp.val) (R := R)
     letI : IsElementaryAbelian rp.val (Ω₁Z rp.val R) := hΩelem
-    simpa [Z, section10OmegaOneCenter] using
-      section10_isElementaryAbelian_map_pre
-        (G := R) (p := rp.val) (A := Ω₁Z rp.val R) (G' := G) R.subtype
+    exact section10_isElementaryAbelian_map_pre
+      (G := R) (p := rp.val) (A := Ω₁Z rp.val R) (G' := G) R.subtype
   have hZp : IsPGroup rp.val Z := by
     letI : IsElementaryAbelian rp.val Z := hZelem
     exact IsElementaryAbelian.isPGroup rp.val Z
@@ -719,9 +718,8 @@ public theorem section14_omegaOneCenter_card_bound_of_le_rank_two
     have hΩlocal : IsElementaryAbelian rp.val (Ω₁Z rp.val R) :=
       omega1Z_isElementaryAbelian (p := rp.val) (R := R)
     letI : IsElementaryAbelian rp.val (Ω₁Z rp.val R) := hΩlocal
-    simpa [Ω, section10OmegaOneCenter] using
-      section10_isElementaryAbelian_map_pre
-        (G := R) (p := rp.val) (A := Ω₁Z rp.val R) (G' := G) R.subtype
+    exact section10_isElementaryAbelian_map_pre
+      (G := R) (p := rp.val) (A := Ω₁Z rp.val R) (G' := G) R.subtype
   have hΩ0elem : IsElementaryAbelian rp.val Ω0 := by
     letI : IsElementaryAbelian rp.val Ω := hΩelem
     exact IsElementaryAbelian.subgroupOf hΩR0
@@ -791,13 +789,13 @@ public theorem section14_groupRank_le_two_of_injective_to_fin_two_cyclic
   classical
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, by decide, zero_le _⟩
+  · exact ⟨0, 2, by decide, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, _hq, hnq⟩
     have hprimeRank_le : primeRank q A ≤ 2 := by
       rw [primeRank]
       refine csSup_le ?_ ?_
-      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := A), inferInstance, zero_le _⟩
+      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := A), inferInstance, Nat.zero_le _⟩
       · intro m hm
         rcases hm with ⟨B, _hBp, _hBcomm, hmB⟩
         let φB : B →* (Fin 2 → C) := φ.comp B.subtype
@@ -1240,13 +1238,30 @@ public theorem section14_exists_elementCentralizerIn_of_BG116
     ∃ x : G, x ∈ R0 ∧ x ≠ 1 ∧ elementCentralizerIn P x ≠ ⊥ := by
   classical
   haveI : Fact r.Prime := ⟨hr⟩
-  haveI : Fact (IsPGroup r R0) := ⟨hR0p⟩
-  letI : MulDistribMulAction R0 P :=
+  letI : MulDistribMulAction (↥R0) (↥P) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) R0 P hR0normP
   have htop :
       (⨆ (a : R0) (_ : a ≠ 1),
         fixedPointSubgroup (↥(Subgroup.zpowers a)) P) = ⊤ := by
-    simpa using proposition_1_16_a (G := P) (A := R0) r hcop hR0noncyc
+    let commR0 : CommGroup (↥R0) := IsMulCommutative.instCommGroup
+    letI : CommGroup (↥R0) := commR0
+    letI : Group (↥R0) := commR0.toGroup
+    have hR0p' : IsPGroup r (↥R0) := by
+      intro a
+      obtain ⟨k, hk⟩ := hR0p a
+      refine ⟨k, ?_⟩
+      exact Subtype.ext (congrArg Subtype.val hk)
+    haveI : Fact (IsPGroup r (↥R0)) := ⟨hR0p'⟩
+    have hR0noncyc' : ¬ @IsCyclic (↥R0) ZPow.toPow := by
+      intro h
+      apply hR0noncyc
+      rcases h with ⟨a, ha⟩
+      constructor
+      refine ⟨a, fun x => ?_⟩
+      obtain ⟨n, hn⟩ := ha x
+      refine ⟨n, ?_⟩
+      exact Subtype.ext (congrArg Subtype.val hn)
+    simpa using proposition_1_16_a (G := (↥P)) (A := (↥R0)) r hcop hR0noncyc'
   by_contra hnone
   have hfix_bot :
       ∀ a : R0, ∀ ha : a ≠ 1,
@@ -1627,10 +1642,9 @@ public theorem section14_caseA_centralizerInP_element_source_adapter
     apply Subtype.ext
     show ((x * y : R0) : G) = ((y * x : R0) : G)
     change (x : G) * (y : G) = (y : G) * (x : G)
-    letI : IsMulCommutative U := hUcomm
     let xU : U := ⟨(x : G), _hR0U x.property⟩
     let yU : U := ⟨(y : G), _hR0U y.property⟩
-    have hxy : xU * yU = yU * xU := mul_comm xU yU
+    have hxy : xU * yU = yU * xU := hUcomm.is_comm.comm xU yU
     exact congrArg (fun z : U => (z : G)) hxy
   have hPne : P ≠ ⊥ := by
     intro hbot

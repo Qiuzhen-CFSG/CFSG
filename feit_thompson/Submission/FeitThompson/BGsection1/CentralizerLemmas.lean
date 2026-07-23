@@ -4,10 +4,10 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
-import Submission.FeitThompson.Fitting.Centralizer
+public import FeitThompson.BGsection1.Defs
+import FeitThompson.Fitting.Centralizer
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 public lemma centralizer_le_normalizer {G : Type*} [Group G] (R : Subgroup G) :
     Subgroup.centralizer (R : Set G) ≤ Subgroup.normalizer R := by
@@ -95,7 +95,8 @@ public lemma pPrimeCore_le_centralizer_of_normal_pgroup {G : Type*} [Group G] [F
     rcases hRp.exists_card_eq with ⟨n, hn⟩
     rw [hn]
     exact (pPrimeCore_coprime_card (G := G) (p := p)).pow_left n
-  have hinf_bot : R ⊓ pPrimeCore p G = ⊥ := Subgroup.inf_eq_bot_of_coprime hcopR
+  have hinf_bot : R ⊓ pPrimeCore p G = ⊥ :=
+    disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hcopR)
   have hcomm_bot : ⁅r, x⁆ ∈ (⊥ : Subgroup G) := by
     simpa [hinf_bot] using hcomm_inf
   simpa using hcomm_bot
@@ -254,7 +255,7 @@ public theorem normalizer_map_quotient_eq_map_normalizer
       have hcopMT : Nat.Coprime (Nat.card M) (Nat.card T) := by
         rw [hn]
         exact hcop.symm.pow_right n
-      exact Subgroup.inf_eq_bot_of_coprime hcopMT
+      exact disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hcopMT)
     have hdisj' : Disjoint M' T' := by
       rw [Subgroup.disjoint_def]
       intro x hxM hxT
@@ -305,16 +306,18 @@ public theorem normalizer_map_quotient_eq_map_normalizer
       rcases Subgroup.mem_map.mp hy' with ⟨z, hz, rfl⟩
       have hzT' : z ∈ T' := by
         simpa [hPk] using hz
-      simpa [eKN, KN, T'] using hzT'
+      change (z : G) ∈ T
+      exact hzT'
     · intro hx
-      have hxT : (x : G) ∈ T := by simpa using hx
+      have hxT : (x : G) ∈ T := hx
       have hxK : x ∈ K.subgroupOf (Subgroup.normalizer (K : Set G)) := by
         show (x : G) ∈ K
         exact Subgroup.mem_sup_right hxT
       let y : KN := ⟨x, hxK⟩
       let z : K := ⟨x.1, by exact Subgroup.mem_sup_right hxT⟩
       have hzT' : z ∈ T' := by
-        simpa [T', z] using hx
+        change (z : G) ∈ T
+        exact hxT
       have hzPk : z ∈ (Pk : Subgroup K) := by
         simpa [hPk] using hzT'
       have hyMap : y ∈ (Pk : Subgroup K).map eKN.toMonoidHom := by
@@ -367,13 +370,13 @@ public theorem centralizer_map_quotient_eq_map_centralizer
   intro q
   letI : M.Normal := hM
   have hnormq : Subgroup.normalizer (T.map q) = (Subgroup.normalizer T).map q := by
-    simpa using (normalizer_map_quotient_eq_map_normalizer (G := G) (p := p) T M hM hcop)
+    simpa [q] using (normalizer_map_quotient_eq_map_normalizer (G := G) (p := p) T M hM hcop)
   have hinf_bot : M ⊓ T = ⊥ := by
     rcases (Fact.out : IsPGroup p (↥T)).exists_card_eq with ⟨n, hn⟩
     have hcopMT : Nat.Coprime (Nat.card M) (Nat.card T) := by
       rw [hn]
       exact hcop.symm.pow_right n
-    exact Subgroup.inf_eq_bot_of_coprime hcopMT
+    exact disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hcopMT)
   refine le_antisymm ?_ ?_
   · intro x hxC
     have hconj_mem {g y : G ⧸ M}
@@ -424,7 +427,7 @@ public theorem centralizer_map_quotient_eq_map_centralizer
         exact ⟨hm_comm, ht_comm⟩
       have hcomm_elem : n * t * n⁻¹ * t⁻¹ = 1 := by simpa using hbot
       have hcomm_elem' := congrArg Inv.inv hcomm_elem
-      simpa [mul_assoc] using hcomm_elem'
+      simpa [commutatorElement_def, mul_assoc] using hcomm_elem'
     exact ⟨n, hn_cent, rfl⟩
   · simpa using
       (Subgroup.map_centralizer_le_centralizer_image (s := (T : Set G)) q)
@@ -563,7 +566,7 @@ public theorem centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable
   have hcent_map :
       Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
         (Subgroup.centralizer (TG : Set G)).map q := by
-    simpa using
+    simpa [q] using
       (centralizer_map_quotient_eq_map_centralizer (G := G) (p := p) (T := TG) (M := M) hMnormal hMcop)
   have hmap_cent_le : (Subgroup.centralizer (TG : Set G)).map q ≤ pCore p (G ⧸ M) := by
     rw [← hcent_map]

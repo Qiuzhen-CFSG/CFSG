@@ -1,8 +1,8 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_3
-import Submission.FeitThompson.PFsection8.PFsection8_13
-public import Submission.FeitThompson.PFsection8.Basic
+public import FeitThompson.PFsection5.PFsection5_3
+import FeitThompson.PFsection8.PFsection8_13
+public import FeitThompson.PFsection8.Basic
 
 noncomputable section
 
@@ -480,12 +480,13 @@ private theorem theorem_8_15_coprime_orders
             Nat.card (elementCentralizerIn LF x) :=
         natCard_subgroupOf_eq (elementCentralizerIn LF x) LF inf_le_left
       simpa [hcard_eq] using hcard_dvd'
-    simpa [hReqx, Section2.centralizerIn, elementCentralizerIn] using
+    simpa [hReqx, Section2.centralizerIn, Section2.elementCentralizer,
+      elementCentralizerIn] using
       hcopLF.of_dvd_left hcard_dvd
   · have hxNotD : x ∈ A0 \ D := ⟨hxA0, hxD⟩
     have hR : R x = ⊥ := hRbot x hxNotD
-    simpa [hR, Section2.centralizerIn] using
-      (Nat.coprime_one_left (Nat.card (Section2.centralizerIn M y)))
+    rw [hR, Subgroup.card_bot]
+    exact Nat.coprime_one_left (Nat.card (Section2.centralizerIn M y))
 
 private theorem theorem_8_15_hypothesis2_of_normalizer_eq
     {G : Type u} [Group G] [Finite G]
@@ -1682,7 +1683,9 @@ private theorem theorem_8_15_inducedFromNonkernelFamily
   apply hθnonker
   intro m hmMs
   let a : (Ms.subgroupOf M).subgroupOf (derivedSubgroup M) :=
-    ⟨m, by simpa [Subgroup.mem_subgroupOf] using hmMs⟩
+    ⟨m, by
+      change ((m : M) : G) ∈ Ms
+      exact hmMs⟩
   have ha := hker a
   simpa [a, Section1.subgroupInKernel', Section1.degree] using ha
 

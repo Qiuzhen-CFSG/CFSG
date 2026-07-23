@@ -4,10 +4,10 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.Defs
 import Mathlib.Data.Nat.Choose.Dvd
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 section CriticalSubgroupLemmas
 
@@ -15,26 +15,26 @@ variable {G : Type*} [Group G]
 
 /-- The second term `Z₂(G)` of the upper central series is characteristic. -/
 public theorem upperCentralSeries_two_characteristic (G : Type*) [Group G] :
-    (upperCentralSeries G 2).Characteristic := by
+    (Subgroup.upperCentralSeries G 2).Characteristic := by
   rw [Subgroup.characteristic_iff_comap_eq]
   intro φ
-  exact comap_upperCentralSeries (G := G) (H := G) φ 2
+  exact Subgroup.comap_upperCentralSeries (G := G) (H := G) φ 2
 
 /-- Any subgroup of `Z₂(G)` has commutator with `G` contained in `Z(G)`. -/
 public theorem commutator_le_center_of_le_upperCentralSeries_two
-    (H : Subgroup G) (hH : H ≤ upperCentralSeries G 2) :
+    (H : Subgroup G) (hH : H ≤ Subgroup.upperCentralSeries G 2) :
     ⁅H, (⊤ : Subgroup G)⁆ ≤ Subgroup.center G := by
   refine Subgroup.commutator_le.2 ?_
   intro x hx y hy
-  have hxZ2 : x ∈ upperCentralSeries G 2 := hH hx
-  have hxStep : ∀ z : G, x * z * x⁻¹ * z⁻¹ ∈ upperCentralSeries G 1 := by
-    exact (mem_upperCentralSeries_succ_iff (G := G) (n := 1) (x := x)).1 hxZ2
-  have hxy : x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G 1 := hxStep y
-  simpa [upperCentralSeries_one] using hxy
+  have hxZ2 : x ∈ Subgroup.upperCentralSeries G 2 := hH hx
+  have hxStep : ∀ z : G, x * z * x⁻¹ * z⁻¹ ∈ Subgroup.upperCentralSeries G 1 := by
+    exact (Subgroup.mem_upperCentralSeries_succ_iff (G := G) (n := 1) (x := x)).1 hxZ2
+  have hxy : x * y * x⁻¹ * y⁻¹ ∈ Subgroup.upperCentralSeries G 1 := hxStep y
+  simpa [Subgroup.upperCentralSeries_one, commutatorElement_def] using hxy
 
 /-- Any subgroup of `Z₂(G)` satisfies `⁅H,G⁆ ≤ centerIn(H)`. -/
 public theorem commutator_le_centerIn_of_le_upperCentralSeries_two
-    (H : Subgroup G) [H.Normal] (hH : H ≤ upperCentralSeries G 2) :
+    (H : Subgroup G) [H.Normal] (hH : H ≤ Subgroup.upperCentralSeries G 2) :
     ⁅H, (⊤ : Subgroup G)⁆ ≤ centerIn (G := G) H := by
   intro x hx
   refine ⟨(Subgroup.commutator_le_left (H₁ := H) (H₂ := (⊤ : Subgroup G)) hx), ?_⟩
@@ -70,22 +70,24 @@ public theorem nilpotencyClassLe_two_of_commutator_le_centerIn
     NilpotencyClassLe 2 (↥H) := by
   have hcomm_sub : _root_.commutator (↥H) ≤ Subgroup.center (↥H) :=
     subgroup_commutator_le_center_of_commutator_le_centerIn (G := G) H hcomm
-  have hL1_le_center : lowerCentralSeries (↥H) 1 ≤ Subgroup.center (↥H) := by
-    simpa [lowerCentralSeries_one] using hcomm_sub
-  have hL2_bot : lowerCentralSeries (↥H) 2 = ⊥ := by
+  have hL1_le_center :
+      (⊤ : Subgroup (↥H)).lowerCentralSeries 1 ≤ Subgroup.center (↥H) := by
+    rw [Subgroup.top_lowerCentralSeries_one]
+    exact hcomm_sub
+  have hL2_bot : (⊤ : Subgroup (↥H)).lowerCentralSeries 2 = ⊥ := by
     simpa [Nat.succ_eq_add_one] using
-      (lowerCentralSeries_succ_eq_bot (G := ↥H) (n := 1) hL1_le_center)
+      (Subgroup.lowerCentralSeries_succ_eq_bot (⊤ : Subgroup (↥H)) (n := 1) hL1_le_center)
   have hnil : Group.IsNilpotent (↥H) :=
-    (nilpotent_iff_lowerCentralSeries (G := ↥H)).2 ⟨2, hL2_bot⟩
+    (Subgroup.nilpotent_iff_lowerCentralSeries (G := ↥H)).2 ⟨2, hL2_bot⟩
   letI : Group.IsNilpotent (↥H) := hnil
   have hclass : Group.nilpotencyClass (↥H) ≤ 2 :=
-    (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := ↥H)).1 hL2_bot
+    (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := ↥H)).1 hL2_bot
   unfold NilpotencyClassLe
-  exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := ↥H)).2 hclass
+  exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := ↥H)).2 hclass
 
 /-- Any subgroup of `Z₂(G)` has nilpotency class at most `2`. -/
 public theorem nilpotencyClassLe_two_of_le_upperCentralSeries_two
-    (H : Subgroup G) [H.Normal] (hH : H ≤ upperCentralSeries G 2) :
+    (H : Subgroup G) [H.Normal] (hH : H ≤ Subgroup.upperCentralSeries G 2) :
     NilpotencyClassLe 2 (↥H) :=
   nilpotencyClassLe_two_of_commutator_le_centerIn (G := G) H
     (commutator_le_centerIn_of_le_upperCentralSeries_two (G := G) H hH)
@@ -255,10 +257,11 @@ public lemma pth_mul_eq_one_of_class2 [Fact p.Prime]
 
 public lemma pth_pow_eq_one_of_mem_omega₁_upperCentralSeries_two [Fact p.Prime]
     (hpodd : p ≠ 2)
-    {x : upperCentralSeries G 2}
-    (hx : x ∈ omega₁ (G := ↥(upperCentralSeries G 2)) (p := p)) :
+    {x : Subgroup.upperCentralSeries G 2}
+    (hx : x ∈ omega₁ (G := ↥(Subgroup.upperCentralSeries G 2)) (p := p)) :
     ((x : G) ^ p = 1) := by
-  refine Subgroup.closure_induction (k := {z : upperCentralSeries G 2 | z ^ (p ^ 1) = 1})
+  refine Subgroup.closure_induction
+    (k := {z : Subgroup.upperCentralSeries G 2 | z ^ (p ^ 1) = 1})
     (x := x) ?mem ?one ?mul ?inv hx
   · intro z hz
     have hz' : z ^ p = 1 := by simpa [pow_one] using hz
@@ -266,8 +269,9 @@ public lemma pth_pow_eq_one_of_mem_omega₁_upperCentralSeries_two [Fact p.Prime
   · simp
   · intro z₁ z₂ _hz₁ _hz₂ hz₁ hz₂
     have hcomm_le :
-        ⁅upperCentralSeries G 2, (⊤ : Subgroup G)⁆ ≤ Subgroup.center G :=
-      commutator_le_center_of_le_upperCentralSeries_two (G := G) (upperCentralSeries G 2) (le_rfl)
+        ⁅Subgroup.upperCentralSeries G 2, (⊤ : Subgroup G)⁆ ≤ Subgroup.center G :=
+      commutator_le_center_of_le_upperCentralSeries_two (G := G)
+        (Subgroup.upperCentralSeries G 2) le_rfl
     have hcomm_mem : ⁅(z₂ : G), (z₁ : G)⁆ ∈ Subgroup.center G := by
       exact hcomm_le (Subgroup.commutator_mem_commutator z₂.property (by simp))
     simpa using
@@ -278,15 +282,16 @@ public lemma pth_pow_eq_one_of_mem_omega₁_upperCentralSeries_two [Fact p.Prime
 lemma pth_pow_eq_one_of_mem_z2OmegaCandidate_raw [Fact p.Prime]
     (hpodd : p ≠ 2) {x : G}
     (hx :
-      x ∈ (omega₁ (G := ↥(upperCentralSeries G 2)) (p := p)).map
-        (upperCentralSeries G 2).subtype) :
+      x ∈ (omega₁ (G := ↥(Subgroup.upperCentralSeries G 2)) (p := p)).map
+        (Subgroup.upperCentralSeries G 2).subtype) :
     x ^ p = 1 := by
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   exact pth_pow_eq_one_of_mem_omega₁_upperCentralSeries_two (G := G) (p := p) hpodd hy
 
 /-- Canonical `Z₂`-omega candidate subgroup in `G`. -/
 @[expose] public def z2OmegaCandidate : Subgroup G :=
-  (omega₁ (G := ↥(upperCentralSeries G 2)) (p := p)).map (upperCentralSeries G 2).subtype
+  (omega₁ (G := ↥(Subgroup.upperCentralSeries G 2)) (p := p)).map
+    (Subgroup.upperCentralSeries G 2).subtype
 
 /-- Automorphisms of `G` fixing the canonical `Z₂`-omega candidate pointwise. -/
 @[expose] public def z2OmegaCandidateFixingSubgroup : Subgroup (MulAut G) :=
@@ -297,6 +302,7 @@ section PrimeOrderReduction
 
 variable [Finite G] [Fact p.Prime]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Prime-order elimination criterion specialized to the fixer of `z2OmegaCandidate`. -/
 public theorem isPGroup_z2OmegaCandidateFixingSubgroup_of_primeOrder_eq_p
     (hprime :
@@ -324,14 +330,14 @@ public theorem prime_order_eq_p_of_prime_ne_p_elimination
 end PrimeOrderReduction
 
 public theorem z2OmegaCandidate_le_upperCentralSeries_two :
-    z2OmegaCandidate (G := G) p ≤ upperCentralSeries G 2 := by
+    z2OmegaCandidate (G := G) p ≤ Subgroup.upperCentralSeries G 2 := by
   intro x hx
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   exact y.property
 
 public theorem z2OmegaCandidate_characteristic :
     (z2OmegaCandidate (G := G) p).Characteristic := by
-  let Z2 : Subgroup G := upperCentralSeries G 2
+  let Z2 : Subgroup G := Subgroup.upperCentralSeries G 2
   let Ω : Subgroup Z2 := omega₁ (G := ↥Z2) (p := p)
   have hZ2 : Z2.Characteristic := upperCentralSeries_two_characteristic (G := G)
   have hΩ : Ω.Characteristic := by
@@ -343,7 +349,8 @@ public theorem z2OmegaCandidate_commutator_le_centerIn :
     ⁅z2OmegaCandidate (G := G) p, (⊤ : Subgroup G)⁆ ≤
       centerIn (G := G) (z2OmegaCandidate (G := G) p) := by
   let H : Subgroup G := z2OmegaCandidate (G := G) p
-  have hHle : H ≤ upperCentralSeries G 2 := z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
+  have hHle : H ≤ Subgroup.upperCentralSeries G 2 :=
+    z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
   have hHchar : H.Characteristic := by
     simpa [H] using (z2OmegaCandidate_characteristic (G := G) p)
   letI : H.Characteristic := hHchar
@@ -354,7 +361,8 @@ public theorem z2OmegaCandidate_commutator_le_centerIn :
 public theorem z2OmegaCandidate_nilpotencyClassLe_two :
     NilpotencyClassLe 2 (↥(z2OmegaCandidate (G := G) p)) := by
   let H : Subgroup G := z2OmegaCandidate (G := G) p
-  have hHle : H ≤ upperCentralSeries G 2 := z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
+  have hHle : H ≤ Subgroup.upperCentralSeries G 2 :=
+    z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
   have hHchar : H.Characteristic := by
     simpa [H] using (z2OmegaCandidate_characteristic (G := G) p)
   letI : H.Characteristic := hHchar
@@ -362,9 +370,10 @@ public theorem z2OmegaCandidate_nilpotencyClassLe_two :
   simpa [H] using
     (nilpotencyClassLe_two_of_le_upperCentralSeries_two (G := G) H hHle)
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem z2OmegaCandidate_isPGroup [Fact (IsPGroup p G)] :
     IsPGroup p (↥(z2OmegaCandidate (G := G) p)) := by
-  let Z2 : Subgroup G := upperCentralSeries G 2
+  let Z2 : Subgroup G := Subgroup.upperCentralSeries G 2
   let Ω : Subgroup Z2 := omega₁ (G := ↥Z2) (p := p)
   have hZ2p : IsPGroup p (↥Z2) := (Fact.out : IsPGroup p G).to_subgroup Z2
   have hΩp : IsPGroup p Ω := hZ2p.to_subgroup Ω
@@ -383,14 +392,14 @@ public theorem z2OmegaCandidate_exponent_dvd_p_of_odd [Fact p.Prime] (hpodd : p 
 public theorem z2OmegaCandidate_ne_bot [Finite G] [Nontrivial G] [Fact p.Prime]
     [Fact (IsPGroup p G)] :
     z2OmegaCandidate (G := G) p ≠ ⊥ := by
-  let Z2 : Subgroup G := upperCentralSeries G 2
+  let Z2 : Subgroup G := Subgroup.upperCentralSeries G 2
   have hcenter_nontriv : Nontrivial (Subgroup.center G) :=
     (Fact.out : IsPGroup p G).center_nontrivial
   have hcenter_ne_bot : Subgroup.center G ≠ ⊥ :=
     (Subgroup.nontrivial_iff_ne_bot (H := Subgroup.center G)).1 hcenter_nontriv
   have hcenter_le_Z2 : Subgroup.center G ≤ Z2 := by
-    simpa [Z2, upperCentralSeries_one] using
-      (upperCentralSeries_mono (G := G) (show 1 ≤ 2 by decide))
+    simpa [Z2, Subgroup.upperCentralSeries_one] using
+      (Subgroup.upperCentralSeries_mono (G := G) (show 1 ≤ 2 by decide))
   have hZ2_ne_bot : Z2 ≠ ⊥ := by
     intro hZ2bot
     have hcenter_bot : Subgroup.center G = ⊥ :=

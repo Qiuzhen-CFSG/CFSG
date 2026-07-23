@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection8.Basic
+public import FeitThompson.PFsection8.Basic
 
 noncomputable section
 
@@ -207,7 +207,7 @@ public theorem theorem_8_8_typeCommon_W1_complement
     · intro x hxM
       let xM : M := ⟨x, hxM⟩
       have hxSup : xM ∈ D.subgroupOf M ⊔ W1.subgroupOf M := by
-        simpa [hcompLocal.sup_eq_top]
+        simp [hcompLocal.sup_eq_top]
       have hxSub : xM ∈ (D ⊔ W1).subgroupOf M := by
         have hsub_eq :
             (D ⊔ W1).subgroupOf M = D.subgroupOf M ⊔ W1.subgroupOf M := by
@@ -225,7 +225,8 @@ public theorem theorem_8_8_typeCommon_W1_complement
       simpa [xM, Subgroup.mem_subgroupOf] using hxW1
     have hxbot : xM ∈ (⊥ : Subgroup M) :=
       Subgroup.disjoint_def.mp hcompLocal.disjoint hxDloc hxW1loc
-    simpa [xM] using congrArg Subtype.val (by simpa using hxbot)
+    change (xM : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
 
 private theorem theorem_8_8_hallSubgroup_in_intermediate_of_hall_overgroup
     {G : Type u} [Group G] [Finite G]
@@ -455,7 +456,7 @@ private theorem theorem_8_8_typeII_typeFData_of_canonical
     intro hDtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       intro x _hx
-      exact hDleM (by simpa [D, hDtop])
+      exact hDleM (by simp [D, hDtop])
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hsolvD : IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
@@ -479,7 +480,7 @@ private theorem theorem_8_8_typeII_typeFData_of_canonical
     exact hUne hUbot
   have hUnormU : section10NormalIn U U := by
     refine ⟨le_rfl, ?_⟩
-    simpa using (show (⊤ : Subgroup U).Normal from inferInstance)
+    simp
   rcases lemma_15_1_e_join (G := G) (M := M) (K := K) (U := U)
       hM hKU15 hUne with
     ⟨U0, hU0le, hExp, hFrobSigma⟩

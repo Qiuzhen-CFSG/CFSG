@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_9_Delta
-import Submission.FeitThompson.PFsection8.PFsection8_15
+public import FeitThompson.PFsection14.PFsection14_9_Delta
+import FeitThompson.PFsection8.PFsection8_15
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), calT construction
@@ -288,7 +288,7 @@ public theorem section14_not_subgroupInKernel_top_of_ne_principal
       refine Finset.sum_congr rfl ?_
       intro g _hg
       have hg := hker ⟨g, by simp⟩
-      simpa using hg
+      simpa [Section1.degree] using hg
     rw [hsum]
     simp
   have hdeg0 : Section1.degree θ = 0 := by
@@ -513,7 +513,6 @@ public theorem section14_typeP_quotient_commutative_of_sup
       have hx' : (x : Tmax) ∈ Q.subgroupOf Tmax ⊔ V.subgroupOf Tmax :=
         Subgroup.mem_sup_right hx
       simpa [← hK_eq, K] using hx'
-  refine ⟨?_⟩
   exact Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
     (Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
       (N := N) (H := H) hsup hHcomm)
@@ -770,8 +769,8 @@ public theorem section14_typeP_frobeniusQuotientWithKernel_of_frobeniusJoin
       · exact (sup_le hVleT hW2leT) v.property
       · exact Subgroup.mem_subgroupOf.mpr ((le_sup_right : V ≤ Q ⊔ V) hvG)
       · simpa [e, qT, N] using
-          section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
-            hQnormal hKnormal hQVdisj hTcomp hfrob v
+          (section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
+            hQnormal hKnormal hQVdisj hTcomp hfrob v).symm
     · intro hz
       rcases hz with ⟨k, hkK, rfl⟩
       let Qsub : Subgroup Tmax := Q.subgroupOf Tmax
@@ -813,8 +812,8 @@ public theorem section14_typeP_frobeniusQuotientWithKernel_of_frobeniusJoin
       · exact (sup_le hVleT hW2leT) w.property
       · exact Subgroup.mem_subgroupOf.mpr hwG
       · simpa [e, qT, N] using
-          section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
-            hQnormal hKnormal hQVdisj hTcomp hfrob w
+          (section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
+            hQnormal hKnormal hQVdisj hTcomp hfrob w).symm
     · intro hz
       rcases hz with ⟨w, hwR, rfl⟩
       have hwG : (w : G) ∈ W2 := Subgroup.mem_subgroupOf.mp hwR
@@ -824,8 +823,8 @@ public theorem section14_typeP_frobeniusQuotientWithKernel_of_frobeniusJoin
         exact Subgroup.mem_subgroupOf.mpr hwG
       refine ⟨wS, hwWsub, ?_⟩
       simpa [e, qT, N, wS] using
-        (section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
-          hQnormal hKnormal hQVdisj hTcomp hfrob wS).symm
+        section14_typeP_quotientMulEquiv_apply hQleT hVleT hW2leT
+          hQnormal hKnormal hQVdisj hTcomp hfrob wS
   have hfrobQuot : IsFrobeniusGroupWithKernelComplement (K.map qT) (R.map qT) := by
     rw [← hVmap, ← hWmap]
     exact hfrobMap
@@ -1094,7 +1093,7 @@ public theorem section14_linearCharacter_orbit_card_eq_div
       χ hχfix
   have horbit := Section10.nonidentityOrbitQuotient_card_eq_div
     (A := A) (G := Q →* ℂˣ) hfreeChar
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q := by
@@ -1128,7 +1127,7 @@ public theorem section14_linearCharacter_orbit_card_mul_eq_sub_one
       χ hχfix
   have horbit := Section10.nonidentityOrbitQuotient_card_mul_eq_sub_one
     (A := A) (G := Q →* ℂˣ) hfreeChar
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q := by
@@ -1381,7 +1380,7 @@ public theorem section14_quotientCharacterInflation_conjugate_kernel_eq
     rfl
   have hq : (y : K ⧸ H.subgroupOf K) =
       ((x : K) : K ⧸ H.subgroupOf K) := by
-    letI : CommGroup (K ⧸ H.subgroupOf K) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (K ⧸ H.subgroupOf K) := IsMulCommutative.instCommGroup
     rw [hy]
     change QuotientGroup.mk' (H.subgroupOf K) (k * x * k⁻¹) =
       QuotientGroup.mk' (H.subgroupOf K) x

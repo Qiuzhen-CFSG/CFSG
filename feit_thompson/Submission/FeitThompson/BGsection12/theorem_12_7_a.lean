@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_6_f
+public import FeitThompson.BGsection12.corollary_12_6_f
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 section Section12
 
@@ -112,7 +112,7 @@ public theorem section12_primeRank_E_ge_two_of_tau2
   rcases (by simpa [section12Tau2Primes] using hp) with ⟨hpσ, hprank⟩
   obtain ⟨A, hAp, hAcomm, hAgen⟩ :=
     section12_exists_pSubgroup_two_le_generatorRank_of_two_le_primeRank
-      (R := M) (p := p.val) (by simpa [hprank])
+      (R := M) (p := p.val) (by simp [hprank])
   have hAinf : section10Msigma M ⊓ (A.map M.subtype) = ⊥ := by
     have hAmap_p : IsPGroup p.val (A.map M.subtype) :=
       IsPGroup.map hAp M.subtype
@@ -127,7 +127,8 @@ public theorem section12_primeRank_E_ge_two_of_tau2
     intro a ha
     have haσ : ((a : M) : G) ∈ section10Msigma M := by
       have haσsub : (a : M) ∈ (section10Msigma M).subgroupOf M := by
-        simpa [section12Msigma_subgroupOf_eq] using ha
+        rw [section12Msigma_subgroupOf_eq]
+        exact Subgroup.mem_subgroupOf.mp ha
       simpa [Subgroup.mem_subgroupOf] using haσsub
     have haA : ((a : M) : G) ∈ A.map M.subtype :=
       Subgroup.mem_map.mpr ⟨a, a.property, rfl⟩
@@ -194,7 +195,7 @@ public theorem section12_exists_rankTwo_in_E_of_tau2
   rcases Subgroup.mem_map.mp hx with ⟨a, _ha, rfl⟩
   exact a.property
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_normal_rankTwo_centralizes_of_ne
     {E A B : Subgroup G} {p q : Nat.Primes}
     (hpq : p ≠ q)
@@ -274,14 +275,14 @@ public theorem section12_sylow_contained_in_E_forces_abelian_sylow_pre
   refine ⟨⟨fun x y => ?_⟩⟩
   have hxsub : (⟨(x : G), hP_le_M x.property⟩ : M) ∈ (PM : Subgroup M) := by
     rw [hPM_eq_Psub]
-    simpa [Psub, Subgroup.mem_subgroupOf] using x.property
+    simp [Psub, Subgroup.mem_subgroupOf]
   have hysub : (⟨(y : G), hP_le_M y.property⟩ : M) ∈ (PM : Subgroup M) := by
     rw [hPM_eq_Psub]
-    simpa [Psub, Subgroup.mem_subgroupOf] using y.property
+    simp [Psub, Subgroup.mem_subgroupOf]
   apply Subtype.ext
   exact congrArg (fun z : M => (z : G)) <|
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (PM : Subgroup M)) hxsub hysub
+      setLike_mul_comm
+        (s := (PM : Subgroup M)) hxsub hysub
 
 omit [IsMinCE G] in
 public theorem section12_exists_mem_section7HStarFamily_of_mem_family_pre
@@ -317,7 +318,7 @@ public theorem section12_rankTwoMaximal_subgroupOf_of_le_pre
           exact
             { is_comm := ⟨fun x y =>
                 Subtype.ext <| Subtype.ext <|
-                  Subgroup.mul_comm_of_mem_isMulCommutative (H := A)
+                  setLike_mul_comm (s := A)
                     (Subgroup.mem_subgroupOf.mp x.2) (Subgroup.mem_subgroupOf.mp y.2)⟩ }
         exponent_dvd_p := ?_ }
     refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -459,9 +460,9 @@ public theorem theorem_12_7_a
     have hPbad_comm : IsMulCommutative (Pbad : Subgroup G) := by
       have hconj_comm : IsMulCommutative ((g • P : Sylow p.val G) : Subgroup G) := by
         letI : IsMulCommutative (P : Subgroup G) := hPcomm
-        simpa [Sylow.coe_subgroup_smul] using
-          (Subgroup.map_isMulCommutative
-            (f := (MulAut.conj g).toMonoidHom) (H := (P : Subgroup G)))
+        rw [Sylow.coe_subgroup_smul]
+        exact Subgroup.map_isMulCommutative
+          (f := (MulAut.conj g).toMonoidHom) (H := (P : Subgroup G))
       rw [← hg]
       exact hconj_comm
     exact hPbad_noncomm hPbad_comm

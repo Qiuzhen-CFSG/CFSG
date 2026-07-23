@@ -1,11 +1,11 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_7
-public import Submission.FeitThompson.PFsection5.PFsection5_3
-public import Submission.FeitThompson.PFsection5.Basic
-import Submission.FeitThompson.PFsection1.PFsection1_1
-import Submission.FeitThompson.PFsection1.PFsection1_4
-import Submission.FeitThompson.PFsection1.PFsection1_5
+public import FeitThompson.PFsection5.PFsection5_7
+public import FeitThompson.PFsection5.PFsection5_3
+public import FeitThompson.PFsection5.Basic
+import FeitThompson.PFsection1.PFsection1_1
+import FeitThompson.PFsection1.PFsection1_4
+import FeitThompson.PFsection1.PFsection1_5
 import Mathlib.Algebra.MvPolynomial.Equiv
 import Mathlib.FieldTheory.IsAlgClosed.Classification
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
@@ -140,10 +140,7 @@ private theorem standardizeRepresentation_irreducible_pf59
         isIntertwining' := ?_ }
     intro g
     ext v i
-    have h := congrArg (fun w => w i)
-      (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
-    simpa [standardizeRepresentation_pf59, b.equivFun_apply, Matrix.mulVec_eq_sum,
-      LinearMap.toMatrix_apply'] using h.symm
+    simp [standardizeRepresentation_pf59, e, b, b.equivFun_apply]
   exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private def dualCoannihilatorSubrepresentation_pf59
@@ -157,7 +154,8 @@ private def dualCoannihilatorSubrepresentation_pf59
     intro f hf
     have hS : ρ.dual g⁻¹ f ∈ S.toSubmodule := S.apply_mem_toSubmodule g⁻¹ hf
     have hvzero := hv (ρ.dual g⁻¹ f) hS
-    simpa using hvzero
+    simpa only [Representation.dual_apply, inv_inv, Module.Dual.transpose_apply,
+      LinearMap.comp_apply] using hvzero
 
 private theorem dualCoannihilatorSubrepresentation_eq_top_of_eq_bot_pf59
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -205,7 +203,8 @@ private theorem representation_dual_irreducible_of_pf59
         change S.toSubmodule.dualCoannihilator = (⊥ : Submodule ℂ V) at htmp
         exact htmp
       rw [hNsub] at hdual
-      simpa using hdual.symm
+      change S.toSubmodule = (⊤ : Submodule ℂ (Module.Dual ℂ V))
+      simpa only [Submodule.dualAnnihilator_bot] using hdual.symm
     · left
       apply Subrepresentation.toSubmodule_injective
       apply le_antisymm ?_ bot_le
@@ -412,9 +411,14 @@ public theorem isVirtualCharacter_evalCoeff_pf59
   classical
   rw [Section1.evalCoeff]
   refine isVirtualCharacter_finset_sum_pf59 (Finset.univ : Finset ι)
-    (fun i => ((v i : ℤ) : ℂ) • μ i) ?_
+    (fun i => (v i : ℂ) • μ i) ?_
   intro i _hi
-  simpa using isVirtualCharacter_zsmul_pf59 (v i) (hμ i)
+  have hsmul :
+      (v i : ℂ) • μ i = (v i • μ i : Section1.ClassFunction G) := by
+    ext g
+    simp [zsmul_eq_mul]
+  rw [hsmul]
+  exact isVirtualCharacter_zsmul_pf59 (v i) (hμ i)
 
 private theorem scalarProduct_self_of_irreducibleCharacterOnGroup_pf59
     {G : Type*} [Group G] [Finite G]
@@ -446,7 +450,7 @@ private theorem one_not_mem_dadeSupport_pf59
     rw [Section2.elementCentralizer, Subgroup.mem_centralizer_iff]
     intro y hy
     have hy' : y = a := by simpa using hy
-    simpa [hy']
+    simp [hy']
   have haCL : a ∈ Section2.centralizerIn L a := by
     exact Subgroup.mem_inf.mpr ⟨h22.subset_L a ha, haCent⟩
   have haInf : a ∈ H a ⊓ Section2.centralizerIn L a := by
@@ -488,7 +492,7 @@ private theorem supportedOn_diff_of_supportedOn_withOne_and_equal_degree_pf59
     simp [Pi.sub_apply, hEqVal]
   · rw [Section1.supportedOn_iff] at hφ hψ
     have hxNotWithOne : x ∉ Section4Scratch.withOne A := by
-      simpa [Section4Scratch.withOne, hxA, hx1]
+      simp [Section4Scratch.withOne, hxA, hx1]
     have hφ0 : φ x = 0 := hφ x hxNotWithOne
     have hψ0 : ψ x = 0 := hψ x hxNotWithOne
     simp [Pi.sub_apply, hφ0, hψ0]
@@ -505,8 +509,8 @@ private theorem supportedOn_punctured_iff_supportedOn_of_supportedOn_withOne_pf5
     rw [Section1.supportedOn_iff] at hpunct hf ⊢
     intro x hxA
     by_cases hx1 : x = 1
-    · exact hpunct x (by simpa [puncturedSet, hx1])
-    · exact hf x (by simpa [Section4Scratch.withOne, hxA, hx1])
+    · exact hpunct x (by simp [puncturedSet, hx1])
+    · exact hf x (by simp [Section4Scratch.withOne, hxA, hx1])
   · intro hAon
     rw [Section1.supportedOn_iff] at hAon ⊢
     intro x hxPunct
@@ -590,11 +594,11 @@ private theorem pair_hypothesis_5_2_a_pf59
   rcases hYeq with hY | hY
   ·
     constructor
-    · simpa [pairFinset_pf59, hY, conjugateCharacter_involutive_pf59 X]
+    · simp [pairFinset_pf59, hY]
     · simpa [hY] using hXne
   ·
     constructor
-    · simpa [pairFinset_pf59, hY, conjugateCharacter_involutive_pf59 X]
+    · simp [pairFinset_pf59, hY, conjugateCharacter_involutive_pf59 X]
     · simpa [hY, conjugateCharacter_involutive_pf59 X] using hXne.symm
 
 private theorem dadeTransform_add_pf59
@@ -1103,7 +1107,7 @@ public theorem eq_neg_of_scalarProduct_eq_neg_one_signed_pf59
     (hψ : Section3.IsSignedIrreducibleCharacter ψ)
     (hsp : Section1.scalarProduct G χ ψ = -1) :
     ψ = -χ := by
-  rcases signedIrreducible_eq_or_eq_neg_of_scalarProduct_ne_zero_pf59 hχ hψ (by simpa [hsp]) with
+  rcases signedIrreducible_eq_or_eq_neg_of_scalarProduct_ne_zero_pf59 hχ hψ (by simp [hsp]) with
     hEq | hEq
   · have hself : Section1.scalarProduct G χ χ = 1 := by
       rcases hχ with ⟨ε, hε, μ, hμ, rfl⟩
@@ -1219,10 +1223,11 @@ public theorem signed_irreducible_of_virtual_norm_one_pf59
       ∀ i j,
         Section1.scalarProduct G (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) ⟨hirr, hall, _hinj⟩ i j)
+    change Section1.scalarProduct G (Section1.ofConjClassFunction (χ i))
+      (Section1.ofConjClassFunction (χ j)) = if i = j then 1 else 0
+    rw [Section1.scalarProduct_ofConjClassFunction]
+    exact Section1.representation_completeFamily_orthonormal
+      (chi := χ) ⟨hirr, hall, _hinj⟩ i j
   have hcoeff_int :
       ∀ i, ∃ z : ℤ, Section1.scalarProduct G φ (ψ i) = (z : ℂ) := by
     intro i
@@ -1464,12 +1469,12 @@ public theorem signed_irreducible_eq_of_scalarProduct_eq_one_pf59
     (hsp : Section1.scalarProduct G χ ψ = 1) :
     ψ = χ := by
   rcases signedIrreducible_eq_or_eq_neg_of_scalarProduct_ne_zero_pf59
-      hχ hψ (by simpa [hsp]) with hEq | hEq
+      hχ hψ (by simp [hsp]) with hEq | hEq
   · exact hEq
   · have hcontra : (-1 : ℂ) = 1 := by
       calc
         (-1 : ℂ) = Section1.scalarProduct G χ (-χ) := by
-            rw [show -χ = (-1 : ℂ) • χ by ext g <;> simp]
+            rw [show -χ = (-1 : ℂ) • χ by ext g; simp]
             rw [Section1.scalarProduct_smul_right, scalarProduct_self_signedIrreducible_pf59 hχ]
             simp
         _ = 1 := by simpa [hEq] using hsp
@@ -1599,11 +1604,11 @@ private theorem same_sign_smul_ne_neg_same_sign_smul_pf59
   have hdegEq : ε * (n : ℂ) = -(ε * (m : ℂ)) := by
     calc
       ε * (n : ℂ) = Section1.degree (ε • ν) := by
-            simp [Section1.degree_apply, hν1, smul_eq_mul, mul_assoc]
-      _ = Section1.degree (-(ε • μ)) := by simpa [hEq]
+            simp [Section1.degree_apply, hν1, smul_eq_mul]
+      _ = Section1.degree (-(ε • μ)) := by simp [hEq]
       _ = -Section1.degree (ε • μ) := by simp [Section1.degree]
       _ = -(ε * (m : ℂ)) := by
-            simp [Section1.degree_apply, hμ1, smul_eq_mul, mul_assoc]
+            simp [Section1.degree_apply, hμ1, smul_eq_mul]
   rcases hε with rfl | rfl
   · have hdegRe : (n : ℝ) = -(m : ℝ) := by
       simpa using congrArg Complex.re hdegEq
@@ -1657,7 +1662,8 @@ private theorem complex_galois_aut_pow_on_roots_pf59
   have hmap_const (y : F) :
       (MvPolynomial.mapAlgEquiv (σ := s) (R := ℚ) σF) (MvPolynomial.C y) =
         MvPolynomial.C (σF y) := by
-    simp [MvPolynomial.mapAlgEquiv]
+    rw [MvPolynomial.mapAlgEquiv_apply, MvPolynomial.map_C]
+    rfl
   let baseAut : B ≃+* B :=
     (ae.symm.toRingEquiv.trans
       (MvPolynomial.mapAlgEquiv (σ := s) (R := ℚ) σF).toRingEquiv).trans
@@ -1696,6 +1702,10 @@ private theorem complex_galois_aut_pow_on_roots_pf59
     letI : IsAlgClosure B ℂ := hclosure
     have hB := IsAlgClosure.equivOfEquiv_algebraMap (L := ℂ) (M := ℂ)
       baseAlgAut.toRingEquiv (algebraMap F B y)
+    change (IsAlgClosure.equivOfEquiv ℂ ℂ baseAlgAut.toRingEquiv)
+        (algebraMap B ℂ (algebraMap F B y)) =
+      algebraMap B ℂ (baseAlgAut (algebraMap F B y)) at hB
+    rw [hbaseAlg_const y] at hB
     simpa [τ, τR, baseAlgAut, hbaseAlg_const y] using hB
   refine ⟨τ, ?_⟩
   intro z hz
@@ -1856,7 +1866,7 @@ private theorem classFunctionArgumentPow_smul_pf59
     (h : Section3.classFunctionArgumentPow φ ψ e) :
     Section3.classFunctionArgumentPow ((z : ℂ) • φ) ((z : ℂ) • ψ) e := by
   intro g
-  simp [Section3.classFunctionArgumentPow, h g]
+  simp [h g]
 
 private theorem classFunctionArgumentPow_sub_pf59
     {G : Type*} [Group G]
@@ -1866,7 +1876,7 @@ private theorem classFunctionArgumentPow_sub_pf59
     (h₂ : Section3.classFunctionArgumentPow φ₂ ψ₂ e) :
     Section3.classFunctionArgumentPow (φ₁ - φ₂) (ψ₁ - ψ₂) e := by
   intro g
-  simp [Section3.classFunctionArgumentPow, h₁ g, h₂ g]
+  simp [h₁ g, h₂ g]
 
 private theorem degree_eq_of_classFunctionArgumentPow_pf59
     {G : Type*} [Group G]
@@ -1934,7 +1944,7 @@ public theorem theorem_5_9_a
     exact Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card L) he
   obtain ⟨ψ, hψS, hψne⟩ : ∃ ψ, ψ ∈ S ∧ ψ ≠ X := by
     by_contra hNo
-    push_neg at hNo
+    push Not at hNo
     have hsubset : S ⊆ ({X} : Finset (Section1.ClassFunction L)) := by
       intro φ hφ
       simp [hNo φ hφ]
@@ -2017,13 +2027,13 @@ public theorem theorem_5_9_a
     calc
       Section1.degree (T1 X) = Section1.degree (εX • μX) := by rw [hTXeq]
       _ = εX * Section1.degree μX := by
-            simp [Section1.degree, smul_eq_mul, mul_assoc]
+            simp [Section1.degree, smul_eq_mul]
       _ = εX * (mX : ℂ) := by rw [hμXdeg]
   have hdegT1ψ : Section1.degree (T1 ψ) = εψ * (mψ : ℂ) := by
     calc
       Section1.degree (T1 ψ) = Section1.degree (εψ • μψ) := by rw [hTψeq]
       _ = εψ * Section1.degree μψ := by
-            simp [Section1.degree, smul_eq_mul, mul_assoc]
+            simp [Section1.degree, smul_eq_mul]
       _ = εψ * (mψ : ℂ) := by rw [hμψdeg]
   have hdegRelation :
       (nψ : ℂ) * Section1.degree (T1 X) -
@@ -2104,7 +2114,7 @@ public theorem theorem_5_9_a
         calc
           Section1.degree (T1 φ) = Section1.degree (εφ • μφ) := by rw [hTφeq]
           _ = εφ * Section1.degree μφ := by
-                simp [Section1.degree, smul_eq_mul, mul_assoc]
+                simp [Section1.degree, smul_eq_mul]
           _ = εφ * (mφ : ℂ) := by rw [hμφdeg]
       have hdegRelationφ :
           (nφ : ℂ) * Section1.degree (T1 X) -
@@ -2293,7 +2303,7 @@ public theorem theorem_5_9_b
     let τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G :=
       dadeTransformLinear_pf59 A L H hAL
     have hSne : Sx.Nonempty := by
-      simpa [Sx, pairFinset_pf59]
+      simp [Sx, pairFinset_pf59]
     have h52a : hypothesis_5_2_a_statement Sx :=
       pair_hypothesis_5_2_a_pf59 hXbar
     have h52b : hypothesis_5_2_b_statement Sx τ :=
@@ -2352,7 +2362,7 @@ public theorem theorem_5_9_b
       simp [hφψ]
     have hψmem : ψ ∈ R Xs := by
       rw [hRpair]
-      simp [hφψ]
+      simp
     have hφSigned : Section3.IsSignedIrreducibleCharacter φ := hRX.1 _ hφmem
     have hψSigned : Section3.IsSignedIrreducibleCharacter ψ := hRX.1 _ hψmem
     have hEqXpair : target = φ + ψ := by
@@ -2370,8 +2380,7 @@ public theorem theorem_5_9_b
           Section1.conjugateCharacter (X - Section1.conjugateCharacter X) =
             -(X - Section1.conjugateCharacter X) := by
         ext l
-        simp [Section1.conjugateCharacter, sub_eq_add_neg, add_comm, add_left_comm,
-          add_assoc]
+        simp [Section1.conjugateCharacter, sub_eq_add_neg, add_comm]
       calc
         Section1.conjugateCharacter target
             = Section1.conjugateCharacter

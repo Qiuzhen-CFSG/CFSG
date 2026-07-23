@@ -1,8 +1,8 @@
 module
 
-import Submission.FeitThompson.PFsection7.PFsection7_2_b
-import Submission.FeitThompson.PFsection2.PFsection2_5
-public import Submission.FeitThompson.PFsection7.PFsection7_1
+import FeitThompson.PFsection7.PFsection7_2_b
+import FeitThompson.PFsection2.PFsection2_5
+public import FeitThompson.PFsection7.PFsection7_1
 
 noncomputable section
 
@@ -81,7 +81,8 @@ private theorem subgroupTrunc_CFon_pf73
   constructor
   · intro x a
     have hxAiff : ((x * a * x⁻¹ : L) : G) ∈ A ↔ (a : G) ∈ A := by
-      simpa using h.L_le_normalizer x.2 (a : G)
+      change Section2.conjBy (x : G) (a : G) ∈ A ↔ (a : G) ∈ A
+      exact h.L_le_normalizer x.2 (a : G)
     by_cases ha : (a : G) ∈ A
     · have hxa : ((x * a * x⁻¹ : L) : G) ∈ A := hxAiff.2 ha
       have hxa' : (↑x * ↑a * (↑x)⁻¹ : G) ∈ A := by

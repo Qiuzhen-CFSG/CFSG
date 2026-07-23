@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.theorem_13_4
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.theorem_13_4
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -16,6 +16,7 @@ open scoped Pointwise
 section Section13
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [Finite G] [IsMinCE G] in
 public theorem section13_tau1_of_mem_E1_primeSet
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -27,9 +28,10 @@ public theorem section13_tau1_of_mem_E1_primeSet
   have hpE₁sub : p.val ∣ Nat.card (E₁.subgroupOf E) := by
     have hcard : Nat.card (E₁.subgroupOf E) = Nat.card E₁ :=
       natCard_subgroupOf_eq E₁ E hE₁E
-    simpa [hcard] using hpE₁
+    simpa [hcard, subgroupPrimeSet] using hpE₁
   exact hHallE₁E.p_in_pi_of_p_dvd_card p hpE₁sub
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_tau1_of_prime_order_le_E1
     {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -48,6 +50,7 @@ public theorem section13_tau1_of_prime_order_le_E1
   exact section13_tau1_of_mem_E1_primeSet (G := G) (M := M) (E := E)
     (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE hpE₁
 
+omit [IsMinCE G] in
 public theorem section13_exists_prime_order_subgroup_le_ambient_sylow
     {A : Subgroup G} {q : Nat.Primes} (S : Sylow q.val A)
     (hSne : (S : Subgroup A) ≠ ⊥) :
@@ -81,6 +84,7 @@ public theorem section13_exists_prime_order_subgroup_le_ambient_sylow
     simp [R, Nat.card_zpowers, horderG]
   exact ⟨R, hR_le, hRcard⟩
 
+omit [IsMinCE G] in
 private theorem section13_E1_sylow_as_E_sylow
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G} {q : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -100,7 +104,9 @@ private theorem section13_E1_sylow_as_E_sylow
     apply Subtype.ext
     exact congrArg (fun z : E => (z : G)) hxy
   have hKp : IsPGroup q.val K := by
-    simpa [K, f] using IsPGroup.map (p := q.val) (H := (S : Subgroup E₁)) S.isPGroup' f
+    change IsPGroup q.val ((S : Subgroup E₁).map f)
+    exact IsPGroup.map (p := q.val) (H := (S : Subgroup E₁))
+      S.isPGroup' f
   have hqτ1 : q ∈ section12Tau1Primes M :=
     section13_tau1_of_mem_E1_primeSet (G := G) (M := M) (E := E)
       (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃)
@@ -128,7 +134,10 @@ private theorem section13_E1_sylow_as_E_sylow
     have hScyc : IsCyclic (S : Subgroup E₁) := inferInstance
     have hKcyc : IsCyclic K :=
       (Subgroup.equivMapOfInjective (f := f) (S : Subgroup E₁) hf_inj).isCyclic.1 hScyc
-    simpa [T, K, IsPGroup.toSylow_coe] using hKcyc
+    have hTK : (T : Subgroup E) = K := by
+      simp [T, IsPGroup.toSylow_coe]
+    rw [hTK]
+    exact hKcyc
   refine ⟨T, ?_, hTcyc⟩
   ext x
   constructor
@@ -183,7 +192,7 @@ private theorem section13_E1_sylow_component_centralizes
     intro x hxR
     rw [Subgroup.mem_centralizer_iff]
     intro y hyP
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := E₁) (hPE₁ hyP) (hR_le_E₁ hxR)
+    exact setLike_mul_comm (s := E₁) (hPE₁ hyP) (hR_le_E₁ hxR)
   have hR_prime_cent :
       R ∈ section10PrimeOrderSubgroupsIn q (subgroupCentralizerIn E P) := by
     have hR_le_cent : R ≤ subgroupCentralizerIn E P := by

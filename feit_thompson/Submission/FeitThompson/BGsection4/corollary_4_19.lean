@@ -1,20 +1,20 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
-public import Submission.FeitThompson.GeneratorRank
-public import Submission.FeitThompson.BGsection4.theorem_4_17
-public import Submission.FeitThompson.BGsection4.theorem_4_18_a
-public import Submission.FeitThompson.BGsection4.theorem_4_18_b
-public import Submission.FeitThompson.BGsection4.theorem_4_18_c
-public import Submission.FeitThompson.BGsection4.theorem_4_18_d
-public import Submission.FeitThompson.BGsection4.theorem_4_18_e
+public import FeitThompson.GeneratorRank
+public import FeitThompson.BGsection4.theorem_4_17
+public import FeitThompson.BGsection4.theorem_4_18_a
+public import FeitThompson.BGsection4.theorem_4_18_b
+public import FeitThompson.BGsection4.theorem_4_18_c
+public import FeitThompson.BGsection4.theorem_4_18_d
+public import FeitThompson.BGsection4.theorem_4_18_e
 /-! # Corollary 4.19 from BG Section 4 -/
 
 universe u
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints commutatorElement
 
 private theorem chiefFactor_quotient_isElementaryAbelian_of_isPFactor
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
@@ -87,7 +87,11 @@ private theorem chiefFactor_quotient_isElementaryAbelian_of_isPFactor
     · simp
     · intro a b _ha _hb ha hb
       calc
-        (a * b) ^ p = a ^ p * b ^ p := by simpa using mul_pow a b p
+        (a * b) ^ p = a ^ p * b ^ p := by
+          have hab : Commute a b := by
+            rw [commute_iff_eq]
+            exact hUq_comm.is_comm.comm a b
+          exact hab.mul_pow p
         _ = 1 := by simp [ha, hb]
     · intro a _ha ha
       simp [ha]
@@ -401,8 +405,7 @@ private theorem derivedSubgroup_le_comap_centralizer_of_quotient_commutative
   change (QuotientGroup.mk' M) x ∈ Subgroup.centralizer (R : Set (G ⧸ M))
   rw [Subgroup.mem_centralizer_iff]
   intro r _hr
-  letI : IsMulCommutative (G ⧸ M) := hcomm
-  exact mul_comm _ _
+  exact hcomm.is_comm.comm _ _
 
 private theorem derivedSubgroup_le_centralizerOfChiefFactor_of_le_comap_centralizer_quotient
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
@@ -1186,7 +1189,9 @@ private theorem chiefFactor_conj_range_pCore_eq_bot_local
     intro a b
     apply Subtype.ext
     ext u
-    simpa using congrArg Subtype.val ((htriv a u).trans (htriv b u).symm)
+    change ((a • u : Uq) : G ⧸ cf.V) = ((b • u : Uq) : G ⧸ cf.V)
+    exact congrArg (fun x : Uq => (x : G ⧸ cf.V))
+      ((htriv a u).trans (htriv b u).symm)
   have hcard_one : Nat.card P = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one

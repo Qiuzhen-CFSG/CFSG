@@ -1,11 +1,11 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_16
-import Submission.FeitThompson.PFsection12.PFsection12_7
-import Submission.FeitThompson.PFsection12.PFsection12_16
-import Submission.FeitThompson.BGsection13.lemma_13_13
-import Submission.FeitThompson.PFsection9.PFsection9_1
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
+public import FeitThompson.PFsection13.PFsection13_16
+import FeitThompson.PFsection12.PFsection12_7
+import FeitThompson.PFsection12.PFsection12_16
+import FeitThompson.BGsection13.lemma_13_13
+import FeitThompson.PFsection9.PFsection9_1
+import FeitThompson.PFsection8.SourceTypePBridge
 
 /-!
 # Peterfalvi, Section 13: PFsection13_17
@@ -13,7 +13,7 @@ import Submission.FeitThompson.PFsection8.SourceTypePBridge
 
 noncomputable section
 
-open scoped BigOperators Pointwise
+open scoped BigOperators Pointwise commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -497,7 +497,7 @@ private theorem section13_theorem_13_17_U_le_H_from_centralizer_inf
   have hyU : y ∈ U := hy.1
   let uU : U := ⟨u, hu⟩
   let yU : U := ⟨y, hyU⟩
-  have hcomm : uU * yU = yU * uU := mul_comm uU yU
+  have hcomm : uU * yU = yU * uU := mul_comm' uU yU
   exact (congrArg (fun z : U => (z : G)) hcomm).symm
 
 private theorem section13_centralizer_nontrivial_kernel_subgroup_le_of_fixedPointFree
@@ -889,7 +889,9 @@ private theorem section13_complementIn_of_isComplement'_subgroupOf
       simpa [section8SubgroupInAmbient_subgroupOf_eq] using hxVsub
     have hxbot : xD ∈ (⊥ : Subgroup D) :=
       Subgroup.disjoint_def.mp hcomp.disjoint hxHloc hxVloc
-    simpa [xD] using congrArg Subtype.val (by simpa using hxbot)
+    have hxbot_val : (xD : G) = (1 : G) :=
+      congrArg Subtype.val (by simpa using hxbot)
+    simpa [xD] using hxbot_val
 
 private theorem section13_frobeniusWithKernel_exists_complementIn
     {G : Type u} [Group G] {L H : Subgroup G}
@@ -1044,7 +1046,10 @@ private theorem section13_coprime_card_of_prime_not_mem_subgroupPrimeSet
   rw [Nat.coprime_comm]
   exact (hq.coprime_iff_not_dvd).2 (by
     intro hdiv
-    exact hnot (by simpa [subgroupPrimeSet] using hdiv))
+    have hmem : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet H := by
+      apply Set.mem_setOf.mpr
+      simpa using hdiv
+    exact hnot hmem)
 
 private theorem section13_subgroupPrimeSet_section10Msigma_eq
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -1186,7 +1191,10 @@ public theorem section13_coprime_card_typeI_mf_of_typeP_prime
   rw [Nat.coprime_comm]
   exact (hr.coprime_iff_not_dvd).2 (by
     intro hrH
-    exact hrNotH (by simpa [subgroupPrimeSet] using hrH))
+    have hmem : (⟨r, hr⟩ : Nat.Primes) ∈ subgroupPrimeSet H := by
+      apply Set.mem_setOf.mpr
+      simpa using hrH
+    exact hrNotH hmem)
 
 private theorem section13_subgroupPrimeSet_conjBy
     {G : Type u} [Group G] [Finite G] (H : Subgroup G) (g : G) :
@@ -1254,7 +1262,7 @@ private theorem section13_section16NilpotentNormalHallIn_conjBy
           _ = x⁻¹ * (x * y * x⁻¹) * x := by rw [hmx, hhy]
           _ = y := by group
   · let e : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
-    exact nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) e
+    exact Group.nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) e
   · have hcardSub :
         Nat.card ((H.conjBy g).subgroupOf (M.conjBy g)) = Nat.card (H.subgroupOf M) := by
       calc
@@ -1701,11 +1709,10 @@ private theorem section13_theorem_13_17_q_not_mem_H_primeSet_of_sourceContext
     intro x hx
     exact (hW1le hx).1
   have hqQ : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet Q := by
-    rw [subgroupPrimeSet]
-    exact (by
-      have hcard : Nat.card W1 ∣ Nat.card Q :=
-        Subgroup.card_dvd_of_le hW1leQ
-      simpa [hq_card] using hcard)
+    apply Set.mem_setOf.mpr
+    have hcard : Nat.card W1 ∣ Nat.card Q :=
+      Subgroup.card_dvd_of_le hW1leQ
+    simpa [hq_card] using hcard
   have hqMsT : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet MsT := by
     rw [subgroupPrimeSet] at hqQ ⊢
     exact Nat.dvd_trans hqQ (Subgroup.card_dvd_of_le hQleMsT)
@@ -2120,10 +2127,8 @@ private theorem section13_pSubgroup_le_centralizer_pCore_of_cyclic_sylow
   intro y hyCore
   have hxS : x ∈ (S : Subgroup E) := hP_le_S hxP
   have hyS : y ∈ (S : Subgroup E) := hcore_le_S hyCore
-  haveI : IsMulCommutative (S : Subgroup E) := by
-    haveI : IsCyclic (S : Subgroup E) := hcycSylow S
-    exact ⟨IsCyclic.commutative⟩
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := (S : Subgroup E)) hyS hxS
+  haveI : IsMulCommutative (S : Subgroup E) := inferInstance
+  exact setLike_mul_comm (s := (S : Subgroup E)) hyS hxS
 
 private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
     {E : Type u} [Group E] [Finite E] [IsSolvable E] {P : Subgroup E}
@@ -2212,11 +2217,11 @@ private theorem section13_huppert_prime_order_subgroup_le_centralizer_fitting_of
         apply e.injective
         simp [hn]
       let y : Subgroup.zpowers a := ⟨e.symm z, hzE⟩
-      have hyfix : (y : E) • x = x := by
-        simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using hx y
       have hzy : e (y : E) = z := by
         simp [y]
-      simpa [MulAction.compHom_smul_def, hzy] using hyfix
+      have hyfix : (y : E) • x = x := by
+        simpa [← Subgroup.smul_def] using hx y
+      simpa [Subgroup.smul_def, MulAction.compHom_smul_def, hzy] using hyfix
     have haSub : e a ≠ 1 := by
       intro h
       exact ha (e.injective (by simpa using h))

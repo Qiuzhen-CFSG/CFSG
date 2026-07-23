@@ -6,23 +6,23 @@ public import Mathlib.LinearAlgebra.Semisimple
 public import Mathlib.RepresentationTheory.Invariants
 public import Mathlib.RepresentationTheory.Irreducible
 
-public import Submission.FeitThompson.BGsection1.lemma_1_22
-public import Submission.FeitThompson.Representation.CyclicQuotientExtension
-public import Submission.FeitThompson.Representation.SolvableDimension
-public import Submission.FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
-public import Submission.FeitThompson.Representation.ExtraspecialFixedPoints
-public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
-public import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
-import Submission.FeitThompson.Fitting.Centralizer
-import Submission.FeitThompson.GroupAction.CoprimeHall
-import Submission.FeitThompson.PCore.CentralizerControl
-public import Submission.FeitThompson.Fitting.Faithful
-public import Submission.FeitThompson.Representation.Maschke
-public import Submission.FeitThompson.Representation.CompleteReducibility
-public import Submission.FeitThompson.Representation.RepEquiv
-public import Submission.FeitThompson.Representation.kerRepresentation
-public import Submission.FeitThompson.Representation.SubrepresentationLattice
-public import Submission.FeitThompson.SubgroupConjAction
+public import FeitThompson.BGsection1.lemma_1_22
+public import FeitThompson.Representation.CyclicQuotientExtension
+public import FeitThompson.Representation.SolvableDimension
+public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import FeitThompson.Representation.ExtraspecialFixedPoints
+public import FeitThompson.Representation.TwoDimensionalOddOrder
+public import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+import FeitThompson.Fitting.Centralizer
+import FeitThompson.GroupAction.CoprimeHall
+import FeitThompson.PCore.CentralizerControl
+public import FeitThompson.Fitting.Faithful
+public import FeitThompson.Representation.Maschke
+public import FeitThompson.Representation.CompleteReducibility
+public import FeitThompson.Representation.RepEquiv
+public import FeitThompson.Representation.kerRepresentation
+public import FeitThompson.Representation.SubrepresentationLattice
+public import FeitThompson.SubgroupConjAction
 
 open scoped FixedPoints TensorProduct Pointwise
 
@@ -192,7 +192,7 @@ public theorem IsFrobeniusGroupWithKernelComplement.map_mulEquiv
         _ = e a * e s * (e a)⁻¹ := by
           have hmapped :=
             congrArg (fun z : B => b * z * b⁻¹) hsy.symm
-          simpa only [a, e.apply_symm_apply] using hmapped
+          simpa only [a, e.apply_symm_apply, MulEquiv.coe_toMonoidHom] using hmapped
         _ = e (a * s * a⁻¹) := by simp
     have hrConj : r ∈ R.conjBy a := by
       rw [Subgroup.conjBy, Subgroup.mem_map]

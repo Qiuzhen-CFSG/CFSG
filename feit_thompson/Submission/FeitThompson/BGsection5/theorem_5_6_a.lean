@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection5.theorem_5_5_c_2
-public import Submission.FeitThompson.BGsection4.theorem_4_18_a
-import Submission.FeitThompson.PCore.PCore
-import Submission.FeitThompson.PGroup.NormalSubgroups
-import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import FeitThompson.BGsection5.theorem_5_5_c_2
+public import FeitThompson.BGsection4.theorem_4_18_a
+import FeitThompson.PCore.PCore
+import FeitThompson.PGroup.NormalSubgroups
+import FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
 
 /-! # Theorem 5.6(a) from BG Section 5 -/
@@ -105,7 +105,8 @@ private theorem quotient_Op_p'p_card_dvd_normalizer_card
       Nat.card (N ⧸ L.subgroupOf N) = Nat.card (N.map (QuotientGroup.mk' L)) := hcard_map.symm
       _ = Nat.card (⊤ : Subgroup (G ⧸ L)) := by rw [hmap_top]
       _ = Nat.card (G ⧸ L) := by rw [Subgroup.card_top]
-  exact ⟨1, by simp [N, L, hcard_eq]⟩
+  change Nat.card (G ⧸ L) ∣ Nat.card (N ⧸ L.subgroupOf N)
+  rw [hcard_eq]
 
 private theorem quotient_Op_p'p_card_dvd_automorphism_image_card
     {G : Type*} [Group G] [Finite G] [IsSolvable G] {p : ℕ} [Fact p.Prime]

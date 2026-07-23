@@ -1,23 +1,23 @@
 module
 
-public import Submission.FeitThompson.PFsection12.Basic
-import Submission.FeitThompson.PFsection10.PFsection10_11
-import Submission.FeitThompson.PFsection11.PFsection11_9
-import Submission.FeitThompson.PFsection12.PFsection12_6
-import Submission.FeitThompson.PFsection12.PFsection12_9
-import Submission.FeitThompson.GroupAction.MinimalNormal
-import Submission.FeitThompson.PFsection5.RealVirtualParity
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection7.PFsection7_3
-import Submission.FeitThompson.PFsection7.PFsection7_5
-import Submission.FeitThompson.PFsection7.PFsection7_7
-import Submission.FeitThompson.PFsection7.PFsection7_8_a
-import Submission.FeitThompson.PFsection7.PFsection7_8_b
-import Submission.FeitThompson.PFsection7.PFsection7_8_c
-import Submission.FeitThompson.PFsection7.PFsection7_9
-import Submission.FeitThompson.PFsection8.PFsection8_16
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection9.PFsection9_1
+public import FeitThompson.PFsection12.Basic
+import FeitThompson.PFsection10.PFsection10_11
+import FeitThompson.PFsection11.PFsection11_9
+import FeitThompson.PFsection12.PFsection12_6
+import FeitThompson.PFsection12.PFsection12_9
+import FeitThompson.GroupAction.MinimalNormal
+import FeitThompson.PFsection5.RealVirtualParity
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection7.PFsection7_3
+import FeitThompson.PFsection7.PFsection7_5
+import FeitThompson.PFsection7.PFsection7_7
+import FeitThompson.PFsection7.PFsection7_8_a
+import FeitThompson.PFsection7.PFsection7_8_b
+import FeitThompson.PFsection7.PFsection7_8_c
+import FeitThompson.PFsection7.PFsection7_9
+import FeitThompson.PFsection8.PFsection8_16
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
 
@@ -187,7 +187,7 @@ private theorem theorem_12_10_p0_le_mf_of_typeIIIIV
       apply hL.1
       apply top_unique
       intro z _hz
-      exact hDL (by simpa [hDtop])
+      exact hDL (by simp [hDtop])
     have hDsolv : IsSolvable D :=
       IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
     obtain ⟨Q, hQHall, _hQinv, hP0DQ⟩ :=
@@ -247,8 +247,8 @@ public theorem theorem_12_10_typeI_reduction_source_leaf
   have hP0p : IsPGroup p P0 := by
     rcases hP0Sylow with ⟨P, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hxP0 : x ∈ P0 := by
     rcases hxOmega with ⟨y, _hyOmega, hyx⟩
     have hyP0 : (y : G) ∈ P0 := y.property
@@ -500,8 +500,8 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
   have hP0p : IsPGroup p P0 := by
     rcases hP0Sylow with ⟨P, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hP0ne : P0 ≠ ⊥ := by
     intro hbot
     have hcyc : IsCyclic P0 := by
@@ -685,7 +685,7 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
         (lemma_3_1 (H.subgroupOf S) (U0.subgroupOf S)
           hfrobS.kernel_ne_bot hfrobS.complement_ne_bot hfrobS.normal
           hfrobS.isComplement').1 hfrobS
-      simpa [elementCentralizerIn, Section2.centralizerIn] using hcent
+      simpa [elementCentralizerIn, Section2.centralizerIn, Section2.elementCentralizer] using hcent
     have hP1subleHsub : P1.subgroupOf S ≤ H.subgroupOf S := by
       intro z hz
       exact hP1H hz

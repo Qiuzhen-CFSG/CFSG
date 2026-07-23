@@ -1,13 +1,13 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_12
-public import Submission.FeitThompson.PFsection14.PFsection14_13
-import Submission.FeitThompson.PFsection12.PFsection12_4
-import Submission.FeitThompson.PFsection12.PFsection12_6
-import Submission.FeitThompson.PFsection12.PFsection12_7
-public import Submission.FeitThompson.PFsection7.PFsection7_8_a
-public import Submission.FeitThompson.PFsection7.PFsection7_8_b
-public import Submission.FeitThompson.PFsection7.PFsection7_9
+public import FeitThompson.PFsection14.PFsection14_12
+public import FeitThompson.PFsection14.PFsection14_13
+import FeitThompson.PFsection12.PFsection12_4
+import FeitThompson.PFsection12.PFsection12_6
+import FeitThompson.PFsection12.PFsection12_7
+public import FeitThompson.PFsection7.PFsection7_8_a
+public import FeitThompson.PFsection7.PFsection7_8_b
+public import FeitThompson.PFsection7.PFsection7_9
 
 /-!
 # Peterfalvi, Section 14: theorem (14.14)
@@ -1810,7 +1810,8 @@ public theorem section14_theorem_14_14_pf79_parity_source_bridge
       p q u v c d h hctx h143 h1410 h1413 with
     ⟨hγ10_raw, _hconjγ10⟩
   have hγ10 : Section1.scalarProduct G (γidx 1) (γidx 0) = 0 := by
-    simpa [γidx] using hγ10_raw
+    change Section1.scalarProduct G (τL₁ φ) (τM₁ ψ) = 0
+    exact hγ10_raw
   have hγ01 : Section1.scalarProduct G (γidx 0) (γidx 1) = 0 := by
     have hswap := Section1.scalarProduct_star_swap (G := G) (γidx 1) (γidx 0)
     have hstarzero : star (Section1.scalarProduct G (γidx 0) (γidx 1)) = 0 := by
@@ -1826,7 +1827,11 @@ public theorem section14_theorem_14_14_pf79_parity_source_bridge
         Section1.scalarProduct G (γidx 0) (βidx 1 + γidx 1) +
             Section1.scalarProduct G (γidx 1) (βidx 0 + γidx 0) =
           (1 : ℂ) + 2 * (z : ℂ) := by
-    simpa [βidx, γidx] using hodd_raw
+    change ∃ z : ℤ,
+      Section1.scalarProduct G (τM₁ ψ) (τL βL + τL₁ φ) +
+          Section1.scalarProduct G (τL₁ φ) (τM βM + τM₁ ψ) =
+        (1 : ℂ) + 2 * (z : ℂ)
+    exact hodd_raw
   exact Section7.theorem_7_9_parityData_of_delta_odd hγ01 hγ10 hodd
 
 public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
@@ -1984,7 +1989,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [Aidx, Lidx, Kidx] using h22M
-      · simpa [Aidx, Lidx, Kidx] using h22L
+      · change Section2.hypothesis_2_2_statement (Section8.a1Set H) L RL
+        exact h22L
     · intro i j hij
       fin_cases i <;> fin_cases j
       · exact (hij rfl).elim
@@ -2016,7 +2022,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [Aidx, Lidx, Kidx, τidx] using hAgreeM
-      · simpa [Aidx, Lidx, Kidx, τidx] using hAgreeL
+      · change Section7.agreesWithDadeTransform (Section8.a1Set H) L RL τL
+        exact hAgreeL
     · intro i
       fin_cases i
       · exact Section12.section16MFSubgroup_le hKMF
@@ -2038,15 +2045,20 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [Sidx, Hidx, Lidx] using hPunctM
-      · simpa [Sidx, Hidx, Lidx] using hPunctL
+      · change Section7.puncturedInducedFamily (H.subgroupOf L) Lfam
+        exact hPunctL
     · intro i
       fin_cases i
-      · simpa [Sidx, τidx] using hCohM
-      · simpa [Sidx, τidx] using hCohL
+      · change Section6.coherentFamily Mfam τM
+        exact hCohM
+      · change Section6.coherentFamily Lfam τL
+        exact hCohL
     · intro i
       fin_cases i
-      · simpa [Sidx, τidx, νidx] using hExtM
-      · simpa [Sidx, τidx, νidx] using hExtL
+      · change Section7.isCoherentExtension Mfam τM τM₁
+        exact hExtM
+      · change Section7.isCoherentExtension Lfam τL τL₁
+        exact hExtL
     · intro i
       fin_cases i
       · simpa [Sidx, ζidx, Hidx, Lidx] using ⟨hψmem, hψirr, hψdeg⟩
@@ -2054,7 +2066,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [βidx, τidx, ζidx, Lidx, Hidx] using hβMτ
-      · simpa [βidx, τidx, ζidx, Lidx, Hidx] using hβLτ
+      · change τL βL = Section7.theorem_7_8_beta L H τL φ
+        exact hβLτ
     · intro i
       fin_cases i
       · rfl
@@ -2068,7 +2081,10 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
         p q u v c d h hctxraw h143raw h1410raw h1413)
   have h79 :=
     Section7.theorem_7_9 Aidx Lidx Hidx Kidx Sidx τidx νidx ζidx βidx γidx
-  simpa [βidx, γidx] using h79 hsource79 hparity
+  change
+    (Section1.scalarProduct G (βidx 0) (γidx 1) ≠ 0 ∨
+      Section1.scalarProduct G (βidx 1) (γidx 0) ≠ 0)
+  exact h79 hsource79 hparity
 
 @[expose] public def section14_typeI_core_ltr_pf78Setup
     {G : Type u} [Group G] [Finite G]

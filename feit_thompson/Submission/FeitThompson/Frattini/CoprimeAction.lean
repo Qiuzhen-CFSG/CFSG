@@ -5,14 +5,16 @@ public import Mathlib.Data.Finite.Defs
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.Frattini
 public import Mathlib.GroupTheory.Solvable
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
-public import Submission.FeitThompson.Frattini.Core
-public import Submission.FeitThompson.GroupAction.Lemmas
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.Frattini.Core
+public import FeitThompson.GroupAction.Lemmas
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.HallSubgroups.Conjugacy
+
+open scoped IsMulCommutative
 
 public theorem actsTrivially_quotient_commutatorAction
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
@@ -93,6 +95,9 @@ public theorem commutatorAction₂_eq_commutatorAction_of_coprime
   letI : IsInvariant A G H := commutatorAction_isInvariant (G := G) (A := A)
   let Csub : Subgroup H := commutatorAction (A := A) (G := H)
   letI : Csub.Normal := commutatorAction_normal (G := H) (A := A)
+  letI : MulAction.QuotientAction A Csub :=
+    quotientAction_of_isInvariant (A := A) (G := H) Csub
+      (commutatorAction_isInvariant (G := H) (A := A))
   letI : MulDistribMulAction A (H ⧸ Csub) :=
     quotientMulDistribMulAction (A := A) (G := H) Csub
       (commutatorAction_isInvariant (G := H) (A := A))
@@ -101,7 +106,7 @@ public theorem commutatorAction₂_eq_commutatorAction_of_coprime
     actsTrivially_quotient_commutatorAction (G := H) (A := A)
   have hq_smul (a : A) (h : H) : qH (a • h) = qH h := by
     have hfix : a • (qH h) = qH h := htriv_quot a (qH h)
-    simpa [qH, MulAction.Quotient.smul_mk] using hfix
+    exact (MulAction.Quotient.smul_mk (H := Csub) a h).symm.trans hfix
   have hcard_quot_dvd : Nat.card (H ⧸ Csub) ∣ Nat.card G := by
     exact (Subgroup.card_quotient_dvd_card (s := Csub)).trans (Subgroup.card_subgroup_dvd_card H)
   have hcop_quot : Nat.Coprime (Nat.card A) (Nat.card (H ⧸ Csub)) :=
@@ -171,7 +176,7 @@ public theorem isCompl_fixedPointSubgroup_commutatorAction_of_sup_eq_top_of_copr
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (hcomm : IsMulCommutative G) :
     IsCompl (fixedPointSubgroup A G) (commutatorAction (A := A) (G := G)) := by
-  letI : CommGroup G := by infer_instance
+  letI : IsMulCommutative G := hcomm
   letI : Fintype A := Fintype.ofFinite A
   let N : G →* G := by
     refine
@@ -179,7 +184,8 @@ public theorem isCompl_fixedPointSubgroup_commutatorAction_of_sup_eq_top_of_copr
         map_one' := by simp
         map_mul' := ?_ }
     intro x y
-    simp [smul_mul', Finset.prod_mul_distrib]
+    simp only [smul_mul']
+    exact Finset.prod_mul_distrib
   have hnorm_gen (a : A) (g : G) : N (g⁻¹ * (a • g)) = 1 := by
     have hprod_shift : (∏ b : A, (b * a) • g) = ∏ b : A, b • g := by
       have hbij : Function.Bijective (fun b : A => b * a) := by
@@ -199,9 +205,9 @@ public theorem isCompl_fixedPointSubgroup_commutatorAction_of_sup_eq_top_of_copr
     calc
       N (g⁻¹ * (a • g))
           = ∏ b : A, (b • g)⁻¹ * ((b * a) • g) := by
-              simp [N, smul_mul', smul_inv', smul_smul]
+              simp [N, smul_mul', smul_smul]
       _ = (∏ b : A, (b • g)⁻¹) * (∏ b : A, ((b * a) • g)) := by
-            simp [Finset.prod_mul_distrib]
+            rw [Finset.prod_mul_distrib]
       _ = (∏ b : A, (b • g)⁻¹) * (∏ b : A, b • g) := by simp [hprod_shift]
       _ = ((∏ b : A, b • g)⁻¹) * (∏ b : A, b • g) := by simp
       _ = 1 := by simp

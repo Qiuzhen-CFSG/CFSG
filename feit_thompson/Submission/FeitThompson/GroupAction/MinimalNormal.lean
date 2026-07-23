@@ -1,4 +1,4 @@
-/-
+/- 
 Authors: Tianjiao Nie
 
 Small helper: choose a minimal (by cardinality) nontrivial normal `A`-invariant subgroup.
@@ -8,10 +8,10 @@ This is used in several blueprint-driven inductions where the action must descen
 
 module
 
-public import Submission.FeitThompson.GroupAction.Invariant
+public import FeitThompson.GroupAction.Invariant
 
 import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.Basic
 
 open scoped Pointwise

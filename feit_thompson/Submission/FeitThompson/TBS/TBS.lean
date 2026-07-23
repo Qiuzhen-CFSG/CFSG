@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.Gorenstein.Chapter8_2
+public import FeitThompson.Gorenstein.Chapter8_2
 
 /-!
 # Huppert--Blackburn X.1.12, Thompson--Bender
@@ -14,7 +14,7 @@ Lean-oriented decomposition lives in
 `FeitThompson/TBS/step-proof/thompson_bender_signalizer_lemma/`.
 -/
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement IsMulCommutative
 
 universe u
 
@@ -232,7 +232,7 @@ public theorem thompson_bender_centralizer_pCore_quotient_le_pCore
     have hcent_map :
         Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
           (Subgroup.centralizer (TG : Set G)).map q := by
-      simpa using
+      simpa [q] using
         (centralizer_map_quotient_eq_map_centralizer (G := G) (p := p)
           (T := TG) (M := M) hMnormal hMcop)
     have hcent_map' :
@@ -329,7 +329,11 @@ public theorem thompson_bender_coprime_card_of_centralizer_order_p
         congrArg Subtype.val hfix
     simpa [mul_assoc] using congrArg (fun t : G => t * a) hconj
   have hx_order_G : orderOf (((x : fixedPointSubgroup (↥A) (↥K)) : K) : G) = p := by
-    simpa [Subgroup.orderOf_coe] using hx_order
+    calc
+      orderOf (((x : fixedPointSubgroup (↥A) (↥K)) : K) : G) =
+          orderOf ((x : fixedPointSubgroup (↥A) (↥K)) : K) := Subgroup.orderOf_coe _
+      _ = orderOf x := Subgroup.orderOf_coe _
+      _ = p := hx_order
   have hx_one : (((x : fixedPointSubgroup (↥A) (↥K)) : K) : G) = 1 :=
     thompson_bender_eq_one_of_mem_K_centralizer_order_p
       (G := G) (p := p) (A := A) (K := K)
@@ -527,7 +531,7 @@ public theorem thompson_bender_quotient_K_inf_A_eq_bot
       Nat.Coprime (Nat.card (K.map q)) (Nat.card (A.map q)) := by
     rw [hAq_card]
     exact (Fact.out : Nat.Prime p).coprime_pow_of_not_dvd (m := n) hp_not_dvd_Kq
-  exact Subgroup.inf_eq_bot_of_coprime hcop
+  exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
 
 /--
 If an element lies in both `A` and `O_p(G)`, then it centralizes the `p'`
@@ -546,7 +550,8 @@ public theorem thompson_bender_mem_A_inf_pCore_centralizes_K
   have hcopKP : Nat.Coprime (Nat.card K) (Nat.card (pCore p G)) := by
     rw [hPcard]
     exact hK_coprime.symm.pow_right n
-  have hInf : K ⊓ pCore p G = ⊥ := Subgroup.inf_eq_bot_of_coprime hcopKP
+  have hInf : K ⊓ pCore p G = ⊥ :=
+    (Subgroup.disjoint_of_coprime_natCard hcopKP).eq_bot
   rw [Subgroup.mem_centralizer_iff]
   intro k hk
   have hx_norm : x ∈ Subgroup.normalizer (K : Set G) := hA_le_normalizer_K hxA
@@ -1670,8 +1675,7 @@ public theorem thompson_bender_exists_nontrivial_mem_fixedPointSubgroup_of_pgrou
     hA.exists_fixed_point_of_prime_dvd_card_of_fixed_point
       (α := P) hdiv hone
   refine ⟨x, ?_, ?_⟩
-  · change x ∈ fixedPointSubgroup A P
-    simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
+  · simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
       MulAction.mem_fixedPoints.mp hxfix
   · intro hx
     exact hxne hx.symm
@@ -2622,8 +2626,12 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
     have hmnonfix : k • m ≠ m := by
       intro hmfix
       apply hxnonfix
-      simpa [M, m, xb, P, φK, hKleNormP] using
-        congrArg (fun z : M => ((z.val : B) : P)) hmfix
+      have hmfixB := congrArg TBSBaer.val hmfix
+      change k • xb = xb at hmfixB
+      have hmfixP : ((k • xb : B) : P) = (xb : P) :=
+        congrArg (fun z : B => (z : P)) hmfixB
+      change φK k x = x at hmfixP
+      exact hmfixP
     refine Subgroup.ne_bot_iff_exists_ne_one.mpr ?_
     have hgen : m⁻¹ * k • m ∈ C := by
       change m⁻¹ * k • m ∈ commutatorAction (A := K) (G := M)
@@ -2723,7 +2731,8 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
       simpa [M] using Nat.card_congr (TBSBaer.equiv (G := B) (r := r))
     rw [hcardM]
     exact hcopKB
-  have hsolvM : IsSolvable M := by infer_instance
+  have hsolvM : IsSolvable M :=
+    isSolvable_of_comm fun a b => hMcomm.is_comm.comm a b
   have hbot : fixedPointSubgroup K M ⊓ C = ⊥ := by
     simpa [C] using
       thompson_bender_fixedPointSubgroup_inf_commutatorAction_eq_bot_of_solvable_coprime_comm

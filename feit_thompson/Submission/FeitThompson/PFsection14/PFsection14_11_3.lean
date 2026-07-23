@@ -1,8 +1,8 @@
 module
 
-public import Submission.FeitThompson.PFsection14.PFsection14_11_2
-import Submission.FeitThompson.PFsection9.PFsection9_10
-import Submission.FeitThompson.PFsection5.PFsection5_9
+public import FeitThompson.PFsection14.PFsection14_11_2
+import FeitThompson.PFsection9.PFsection9_10
+import FeitThompson.PFsection5.PFsection5_9
 
 /-!
 # Peterfalvi, Section 14: theorem (14.11.3)
@@ -1735,7 +1735,7 @@ public theorem section14_typeI_dadeSupport_eq_tildeA_of_notation_8_14
       Section2.dadeSupport A R = tildeAM :=
     Section12.dadeSupport_eq_tildeA_of_notation_8_14_source_data
       M A A0 A1 D tildeAM tildeA0 tildeA1 R h814
-  rwa [← hA]
+  rwa [← hA] 
 
 public theorem section14_theorem_14_11_3_dade_support_tildeA_witness_source_bridge
     {G : Type u} [Group G] [Finite G]
@@ -1940,7 +1940,7 @@ public theorem section14_exists_conj_prime_order_mem_sylow_centralized_of_not_co
     hXQ (Subgroup.mem_zpowers (x : G))
   let a : G := y * (x : G) * y⁻¹
   have haP : a ∈ (P : Subgroup G) := by
-    have hxSmul : a ∈ (y • Q : Sylow p G) := by
+    have hxSmul : a ∈ ((y • Q : Sylow p G) : Subgroup G) := by
       change a ∈ MulAut.conj y • (Q : Set G)
       exact ⟨(x : G), hxQ, by simp [a, MulAut.conj_apply, mul_assoc]⟩
     simpa [hy] using hxSmul
@@ -1963,7 +1963,7 @@ public theorem section14_exists_conj_prime_order_mem_sylow_centralized_of_not_co
   have hcomm : Commute (y * g * y⁻¹) a := by
     dsimp [a]
     simpa [mul_assoc] using hcomm_xg.symm.conj y
-  exact ⟨by simp, by simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm⟩
+  exact ⟨by simp, by simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.eq⟩
 
 public theorem section14_exists_conj_typeP_MF_element_centralized_of_not_coprime_order
     {G : Type u} [Group G] [Finite G]

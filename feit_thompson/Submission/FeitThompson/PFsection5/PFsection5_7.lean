@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection5.PFsection5_6
-public import Submission.FeitThompson.PFsection5.Basic
+public import FeitThompson.PFsection5.PFsection5_6
+public import FeitThompson.PFsection5.Basic
 
 /-!
 # Peterfalvi, Section 5, Theorem (5.7)
@@ -79,7 +79,6 @@ private theorem integerSpan_mono_pf57
       hsub
       (by
         intro y _hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach,
     ← S2.sum_attach] using hsum
@@ -376,7 +375,7 @@ private theorem supportedOn_puncturedSet_iff_degree_eq_zero_pf57
     intro g hg
     have hg1 : g = 1 := by
       by_contra hne
-      exact hg (by simpa [puncturedSet, hne])
+      exact hg (by simp [puncturedSet, hne])
     subst hg1
     simpa [Section1.degree_apply] using hdeg
 
@@ -521,7 +520,12 @@ private theorem isVirtualCharacter_evalCoeff_pf57
   refine isVirtualCharacter_finset_sum_pf57 (Finset.univ : Finset ι)
     (fun i => ((v i : ℂ) • μ i)) ?_
   intro i _hi
-  simpa using isVirtualCharacter_zsmul_pf57 (v i) (hμ i)
+  have hsmul :
+      (v i : ℂ) • μ i = (v i • μ i : Section1.ClassFunction G) := by
+    ext g
+    simp [zsmul_eq_mul]
+  rw [hsmul]
+  exact isVirtualCharacter_zsmul_pf57 (v i) (hμ i)
 
 private theorem scalarProduct_self_eq_cfNormSq_of_character_pf57
     {G : Type u} [Group G] [Finite G]
@@ -976,7 +980,7 @@ private theorem finset_eq_pair_of_card_two_of_conj_stable_pf57
     simp [pair, h52a X]
   have hpair_eq : pair = S := by
     apply Finset.eq_of_subset_of_card_le hpair_subset
-    simpa [hpair_card, hcard2]
+    simp [hpair_card, hcard2]
   simpa [pair] using hpair_eq.symm
 
 private theorem pairDiff_memOn_pf57
@@ -1039,7 +1043,7 @@ private theorem pairDiff_memOn_of_card_two_pf57
     (hsetup : hypothesis_5_2_setup_statement S)
     (h52a : hypothesis_5_2_a_statement S)
     (X : S)
-    (hcard2 : S.card = 2) :
+    (_hcard2 : S.card = 2) :
     integerSpanOn S puncturedSet
       ((X : Section1.ClassFunction L) -
         Section1.conjugateCharacter (X : Section1.ClassFunction L)) := by
@@ -1433,7 +1437,7 @@ private theorem complement_image_of_subsetSum_pf57
 private theorem exists_third_member_of_card_ne_two_pf57
     {L : Type u} [Group L] [Finite L]
     (S : Finset (Section1.ClassFunction L))
-    (hsetup : hypothesis_5_2_setup_statement S)
+    (_hsetup : hypothesis_5_2_setup_statement S)
     (h52a : hypothesis_5_2_a_statement S)
     (X : S)
     (hcard2 : S.card ≠ 2) :
@@ -2342,7 +2346,7 @@ private theorem anchored_image_of_pf57
               = T ((χX - χX1) + (χX1 - χX1bar)) := by
                   rw [hYeqX1bar]
                   ext g
-                  ring
+                  ring_nf
           _ = T (χX - χX1) + T (χX1 - χX1bar) := by simp
           _ = (Xbig - X1img) + (X1img - X1barimg) := by
                 rw [hsplit_X1, hsplit_X1bar]
@@ -2474,9 +2478,6 @@ private theorem image_family_cross_pf57
       Section1.scalarProduct L χX χX +
           Section1.scalarProduct G (img Y) (img Z) =
         Section1.scalarProduct L χX χX + 0 := by
-    change Section1.scalarProduct L χX χX +
-        Section1.scalarProduct G (img Y) (img Z) =
-      Section1.scalarProduct L χX χX + (0 : ℂ)
     simpa [χX] using hiso
   exact add_left_cancel hiso'
 
@@ -2681,7 +2682,7 @@ private theorem anchorImage_pf57_split
   classical
   intro Y
   by_cases hYX : (Y : Section1.ClassFunction L) = (X : Section1.ClassFunction L)
-  · simpa [anchorImage_pf57, hYX]
+  · simp [anchorImage_pf57, hYX]
   · by_cases hYXbar : (Y : Section1.ClassFunction L) =
         Section1.conjugateCharacter (X : Section1.ClassFunction L)
     · have hXbar_ne_X :
@@ -2932,7 +2933,7 @@ private noncomputable def imageFamilyCoeff_pf57
     map_smul' := by
       intro z φ
       rw [Section1.scalarProduct_smul_left]
-      simpa [smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] }
+      simp [smul_eq_mul, mul_assoc, mul_comm] }
 
 private theorem imageFamilyCoeff_basis_pf57
     {L : Type u} [Group L] [Finite L]
@@ -3281,7 +3282,7 @@ private theorem theorem_5_7_pair_case_pf57
             rfl
       _ = 0 := by
             rw [degree_conjugateCharacter_eq_of_isCharacter_pf57 hχXchar]
-            simp [χXbar]
+            simp
   have hdiff_ne_zero : χX - χXbar ≠ 0 := by
     intro hzero
     exact hX_ne_Xbar (Subtype.ext (sub_eq_zero.mp hzero))

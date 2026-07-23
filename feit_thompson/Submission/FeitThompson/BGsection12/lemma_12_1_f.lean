@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_1_e
+public import FeitThompson.BGsection12.lemma_12_1_e
 
 open scoped Pointwise
 
@@ -85,7 +85,9 @@ public theorem lemma_12_1_f
     section12_sylow_cyclic_of_primeRank_le_one hpodd hprank P
   have hPcenter_bot : (P : Subgroup E) ⊓ Subgroup.center E = ⊥ :=
     section12_sylow_inf_center_eq_bot_of_le_commutator P hPcyc (by
-      simpa [derivedSubgroup, derivedSeries_one] using hP_le_der)
+      change (P : Subgroup E) ≤ derivedSeries E 1 at hP_le_der
+      rw [derivedSeries_one] at hP_le_der
+      exact hP_le_der)
   have hQmap_le_center : Qmap ≤ Subgroup.center E := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩

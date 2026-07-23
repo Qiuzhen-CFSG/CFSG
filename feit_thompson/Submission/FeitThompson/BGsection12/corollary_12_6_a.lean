@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.theorem_12_5_f
+public import FeitThompson.BGsection12.theorem_12_5_f
 
 open scoped Pointwise
 
@@ -12,6 +12,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 /-- Corollary 12.6(a). -/
 public theorem section12_rankTwo_of_EData
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
@@ -21,6 +22,7 @@ public theorem section12_rankTwo_of_EData
   rcases hE with ⟨hcomp, _hE12, _hE1, _hE2, _hE3⟩
   exact section12_rankTwo_mono hA hcomp.2.1
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_msigma_sup_rankTwo_inf_complement_eq_pre
     {M E A : Subgroup G} {p : Nat.Primes}
     (hcomp : section12ComplementToMsigma M E)
@@ -64,7 +66,7 @@ public theorem section12_msigma_sup_rankTwo_inf_complement_eq_pre
       have hxE : x ∈ E := hx.2
       have hs_eq : s = a⁻¹ * x := by
         rw [← has]
-        simp [mul_assoc]
+        simp
       rw [hs_eq]
       exact E.mul_mem (E.inv_mem haE) hxE
     have hs_bot : s ∈ (⊥ : Subgroup G) := by
@@ -129,6 +131,7 @@ public theorem section12_rankTwo_normalIn_complement_of_tau2_pre
       simpa [hSA_inf_E] using hback_inf
     simpa [mul_assoc] using hbackA
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_mem_omegaOneSubgroup_of_mem_pow_eq_one_pre
     {H : Subgroup G} {p : Nat.Primes} {x : G}
     (hxH : x ∈ H) (hxp : x ^ p.val = 1) :
@@ -139,6 +142,7 @@ public theorem section12_mem_omegaOneSubgroup_of_mem_pow_eq_one_pre
     exact Subgroup.subset_closure (by simpa [xH] using hxp)
   exact Subgroup.mem_map.mpr ⟨xH, hxΩ, rfl⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_primeOrder_le_omegaOneSubgroup_of_le_pre
     {H X : Subgroup G} {p : Nat.Primes}
     (hX : X ∈ section10PrimeOrderSubgroupsIn p H) :
@@ -213,6 +217,7 @@ public theorem section12_primeOrderSubgroupsIn_E_eq_rankTwo_pre
     have hAE : A ≤ E := section12_rankTwo_le hA
     simpa [section10PrimeOrderSubgroupsIn] using ⟨hXA.trans hAE, hXcard⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_msigma_inf_normalizer_rankTwo_le_centralizer_pre
     {M E A : Subgroup G} {p : Nat.Primes}
     (hcomp : section12ComplementToMsigma M E)
@@ -306,7 +311,7 @@ public theorem section12_normalizerIn_rankTwo_eq_complement_pre
     have hsNormA : s ∈ Subgroup.normalizer (A : Set G) := by
       have hs_eq : s = e⁻¹ * x := by
         rw [hx_eq]
-        simp [mul_assoc]
+        simp
       rw [hs_eq]
       exact (Subgroup.normalizer (A : Set G)).mul_mem
         ((Subgroup.normalizer (A : Set G)).inv_mem heNormA) hxNormA

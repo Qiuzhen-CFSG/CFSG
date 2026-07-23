@@ -1,8 +1,8 @@
 module
 
-public import Submission.FeitThompson.PFsection4.Basic
-public import Submission.FeitThompson.PFsection1.PFsection1_7_Core
-public import Submission.FeitThompson.PFsection3.PFsection3_5
+public import FeitThompson.PFsection4.Basic
+public import FeitThompson.PFsection1.PFsection1_7_Core
+public import FeitThompson.PFsection3.PFsection3_5
 
 /-!
 # Peterfalvi, Section 4, Proposition (4.1)
@@ -83,8 +83,29 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf41
     simpa [hchar] using
       (uliftRepresentation_pf41_character (X := X) (V := Fin n → ℂ) (ρ := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character :=
+      by
+        intro x g
+        simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct X χ χ =
+          Section1.scalarProduct X ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_signed_irreducible_ne_zero_iff_pf41
     {X : Type u} [Group X] [Finite X]

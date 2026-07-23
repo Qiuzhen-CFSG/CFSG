@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.proposition_10_14_d
+public import FeitThompson.BGsection10.proposition_10_14_d
 import Mathlib.GroupTheory.Schreier
 
 open scoped Pointwise

@@ -1,9 +1,9 @@
 module
 
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection8.PFsection8_5_b
-public import Submission.FeitThompson.PFsection9.PFsection9_6
-import Submission.FeitThompson.Representation.ElementaryAbelianAction
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection8.PFsection8_5_b
+public import FeitThompson.PFsection9.PFsection9_6
+import FeitThompson.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.CharP.CharAndCard
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
@@ -12,7 +12,7 @@ import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 noncomputable section
 
-open scoped MonoidAlgebra
+open scoped IsMulCommutative MonoidAlgebra commutatorElement
 
 namespace Section9
 
@@ -36,7 +36,6 @@ public theorem theorem_9_7_barU_isMulCommutative_sec9
     IsMulCommutative (U ⧸ C.subgroupOf U) := by
   classical
   letI : (C.subgroupOf U).Normal := hnormalC
-  refine ⟨?_⟩
   apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
   intro x hx
   have hPsource : Section8.typePDefinitionData M MF U W1 W2 := by
@@ -121,7 +120,11 @@ private theorem theorem_9_7_finrank_eq_one_of_abs_irred_commuting_image_sec9
     rcases hsurj f with ⟨c, hc⟩
     refine ⟨c, ?_⟩
     have happ := congrArg (fun T : Representation.End ρ => T v) hc
-    simpa [Representation.End.algebraMap_apply, f] using happ.symm
+    calc
+      ρ g v = f v := rfl
+      _ = (algebraMap F (Representation.End ρ) c) v := happ.symm
+      _ = c • v := by
+        simp [Representation.End.algebraMap_apply]
   let S : Subrepresentation ρ :=
     { toSubmodule := Submodule.span F ({v} : Set V)
       apply_mem_toSubmodule := by
@@ -151,7 +154,10 @@ private theorem theorem_9_7_finrank_eq_one_of_abs_irred_commuting_image_sec9
   have hspan_top :
       (Submodule.span F ({v} : Set V) : Submodule F V) = ⊤ := by
     have hsub := congrArg Subrepresentation.toSubmodule hS_top
-    simpa [S] using hsub
+    change
+      (Submodule.span F ({v} : Set V) : Submodule F V) =
+        (⊤ : Submodule F V) at hsub
+    exact hsub
   rw [finrank_eq_one_iff_of_nonzero' v hv]
   intro x
   have hxmem : x ∈ (Submodule.span F ({v} : Set V) : Submodule F V) := by
@@ -1925,7 +1931,8 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
     have hmap_mem (a : U) {x : MF ⧸ H0MF} (hx : x ∈ N) : a • x ∈ N := by
       change Additive.ofMul (a • x) ∈ S.toSubmodule
       have hx' : Additive.ofMul x ∈ S.toSubmodule := by
-        simpa [Submodule.mem_toAddSubgroup] using hx
+        change Additive.ofMul x ∈ S.toSubmodule at hx
+        exact hx
       have hx'' := S.apply_mem_toSubmodule a hx'
       simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
@@ -1950,7 +1957,9 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
     · intro hx
       simpa [hx]
     · intro hx
-      simpa using hx
+      change x = 0 at hx
+      subst x
+      exact Subgroup.one_mem _
   · right
     apply Subrepresentation.toSubmodule_injective
     ext x
@@ -3430,8 +3439,10 @@ private theorem theorem_9_7_minimal_of_W1_conjugate_minimal_sec9
     simpa [hψ_symm]
       using hnorm
   have hTpre_neBot : T.map ψ.symm.toMonoidHom ≠ ⊥ := by
-    simpa using
-      theorem_9_7_subgroup_map_mulAut_ne_bot_sec9 ψ.symm T hTneBot
+    intro hmap
+    exact hTneBot
+      ((Subgroup.map_eq_bot_iff_of_injective
+        (H := T) (f := ψ.symm.toMonoidHom) ψ.symm.injective).mp hmap)
   have hTpre_le_Q : T.map ψ.symm.toMonoidHom ≤ Q := by
     rw [hR_eq] at hTleR
     exact (theorem_9_7_subgroup_le_map_mulAut_iff_sec9 ψ T Q).1 hTleR
@@ -4010,9 +4021,11 @@ private theorem theorem_9_7_zmod_submodule_internal_direct_sum_of_iSupIndep_span
   let η : Subgroup V ≃o Submodule (ZMod p) (Additive V) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hHindepZ : iSupIndep fun i => η (H i) := by
-    simpa [η] using
-      theorem_9_7_zmod_submodule_iSupIndep_of_iSupIndep_sec9
-        (V := V) (p := p) H hHindep
+    change iSupIndep
+      ((Subgroup.toAddSubgroup.trans
+        (AddSubgroup.toZModSubmodule (M := Additive V) (n := p))) ∘ H)
+    exact theorem_9_7_zmod_submodule_iSupIndep_of_iSupIndep_sec9
+      (V := V) (p := p) H hHindep
   have hHsupZ : iSup (fun i => η (H i)) = ⊤ := by
     calc
       iSup (fun i => η (H i)) = η (iSup H) := (η.map_iSup H).symm
@@ -4032,7 +4045,11 @@ private theorem theorem_9_7_ofSubmodule_mapSubmodule_toSubmodule_sec9
       (S : Submodule k V).toAddSubmonoid at hv
     rcases hv with ⟨x, hx, hxv⟩
     have hxv' : x = v := by
-      simpa [Representation.asModuleEquiv] using hxv
+      calc
+        x = ρ.asModuleEquiv (ρ.asModuleEquiv.symm x) :=
+          (ρ.asModuleEquiv.apply_symm_apply x).symm
+        _ = ρ.asModuleEquiv v := congrArg ρ.asModuleEquiv hxv
+        _ = v := rfl
     simpa [hxv'] using hx
   · intro hv
     change v ∈ AddSubmonoid.map ρ.asModuleEquiv.symm
@@ -4086,8 +4103,8 @@ private theorem theorem_9_7_subrepresentation_le_of_nonzero_mem_sec9
     · exact htop
   intro w hw
   have hwU : (⟨w, hw⟩ : S.toSubmodule) ∈ U.toSubmodule := by
-    simpa [hU_top] using
-      (show (⟨w, hw⟩ : S.toSubmodule) ∈ (⊤ : Submodule F S.toSubmodule) by simp)
+    rw [hU_top]
+    trivial
   exact hwU
 
 private theorem
@@ -4139,7 +4156,8 @@ private theorem
           (S := S q) (T := U) hwq hwU hw0
       have hleMod : (S q).asSubmodule ≤ Umod := by
         rw [← hUmod_eq]
-        simpa using hleU
+        intro x hx
+        exact hleU hx
       let sSet : Set (Submodule F[A] (Representation.asModule ρ)) :=
         Set.range fun r : s =>
           ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))
@@ -4235,7 +4253,7 @@ private theorem
           _ = (ρ a) (ρ.asModuleEquiv ↑(eS' v)) := by
                   rfl
       exact False.elim ((hSnotEquiv hqr).false heqA)
-  rw [iSupIndep_iff_finset_sum_eq_zero_imp_eq_zero
+  rw [iSupIndep_iff_finsetSum_eq_zero_imp_eq_zero
     (p := fun i : ι => (S i).toSubmodule)]
   intro s
   refine Finset.induction_on s ?_ ?_
@@ -4376,8 +4394,11 @@ private theorem
       (MF := MF) (H0 := H0) (U := U) hbarElem hUnormMF hH0invU Q hQnorm
   let Qpack : ρ.invtSubmodule := ⟨η Q, hQinvt⟩
   refine ⟨Subrepresentation.ofSubmodule' (ρ.mapSubmodule Qpack), ?_⟩
-  simpa [Qpack] using
-    theorem_9_7_ofSubmodule_mapSubmodule_toSubmodule_sec9 ρ Qpack
+  calc
+    (Subrepresentation.ofSubmodule' (ρ.mapSubmodule Qpack)).toSubmodule =
+        (Qpack : Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF))) :=
+      theorem_9_7_ofSubmodule_mapSubmodule_toSubmodule_sec9 ρ Qpack
+    _ = η Q := rfl
 
 private theorem
     theorem_9_7_irreducible_subrepresentation_of_minimal_invariant_subgroup_sec9
@@ -4411,13 +4432,13 @@ private theorem
     · intro hxQ
       have hxS : Additive.ofMul x ∈ S.toSubmodule := by
         simpa [hS', η] using hxQ
-      have hxBot : Additive.ofMul x ∈ (⊥ : Submodule (ZMod p) (Additive V)) := by
-        simpa [hSbot] using hxS
-      simpa using hxBot
+      rw [hSbot] at hxS
+      change x = 1 at hxS
+      exact Subgroup.mem_bot.mpr hxS
     · intro hxBot
-      have hxone : x = 1 := by
-        simpa using hxBot
-      simp [hxone]
+      have hxone := Subgroup.mem_bot.mp hxBot
+      rw [hxone]
+      exact Q.one_mem
   · intro T hTS
     by_cases hTbot : T = ⊥
     · exact hTbot
@@ -4449,11 +4470,12 @@ private theorem
             simpa [R, Submodule.mem_toAddSubgroup] using hxT
           have hxBot : Additive.toMul x ∈ (⊥ : Subgroup V) := by
             simpa [hRbot] using hxR
-          simpa using hxBot
+          change Additive.toMul x = 1
+          exact Subgroup.mem_bot.mp hxBot
         · intro hxBot
-          have hxzero : x = 0 := by
-            simpa using hxBot
-          simp [hxzero]
+          change x = 0 at hxBot
+          subst x
+          exact T.toSubmodule.zero_mem
       have hRleQ : R ≤ Q := by
         intro x hxR
         have hxT : Additive.ofMul x ∈ T.toSubmodule := by
@@ -4469,7 +4491,8 @@ private theorem
         have hxQ : Additive.toMul x ∈ Q := by
           simpa [hS', η] using hxS
         have hxR : Additive.toMul x ∈ R := hQleR hxQ
-        simpa [R, Submodule.mem_toAddSubgroup] using hxR
+        change Additive.toMul x ∈ R
+        exact hxR
       have hEq : T = S := le_antisymm hTS.le hSleT
       exact (ne_of_lt hTS) hEq
 
@@ -4593,7 +4616,7 @@ private theorem
     QuotientGroup.lift (C.subgroupOf U) φU hCker
   letI : (C.subgroupOf U).Normal := hnormalC
   haveI : IsMulCommutative (U ⧸ C.subgroupOf U) := hbarComm
-  letI : CommGroup (U ⧸ C.subgroupOf U) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (U ⧸ C.subgroupOf U) := IsMulCommutative.instCommGroup
   let ρ : (U ⧸ C.subgroupOf U) →* MulAut Q :=
     φbar.comp (invMonoidHom : (U ⧸ C.subgroupOf U) →* (U ⧸ C.subgroupOf U))
   refine ⟨Nat.card ρ.range, hnormalC, ρ, ?_, rfl, ?_, ?_⟩
@@ -4994,7 +5017,9 @@ private theorem theorem_9_7_base_finrank_one_of_zmod_submodule_iSupIndep_equal_c
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hHindep : iSupIndep H :=
     theorem_9_7_iSupIndep_of_zmod_submodule_iSupIndep_sec9
-      (V := V) (p := p) H (by simpa [η] using hHindepZ)
+      (V := V) (p := p) H (by
+        change iSupIndep fun i => η (H i)
+        exact hHindepZ)
   exact theorem_9_7_base_finrank_one_of_iSupIndep_equal_card_span_sec9
     hpprime hqprime hVelem hfinrank Q H hHcardEqQ hHsup hHindep
 
@@ -5381,7 +5406,7 @@ private theorem theorem_9_7_finrank_dvd_finrank_iSup_irreducible_equal_dim_sec9
 private theorem
     theorem_9_7_clifford_zmod_submodule_iSupIndep_of_minimal_generator_orbit_ne_two_source_bridge_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
+    {MF H0 U W1 : Subgroup G}
     (p q : ℕ)
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
@@ -5603,14 +5628,17 @@ private theorem
   have hHindep : iSupIndep H :=
     theorem_9_7_iSupIndep_of_equal_prime_card_span_sec9
       hpprime hbarElem hbarFinrank Q H hQcard hHcardEqQ hHsup
-  simpa [η] using
-    theorem_9_7_zmod_submodule_iSupIndep_of_iSupIndep_sec9
-      (V := MF ⧸ H0.subgroupOf MF) (p := p) H hHindep
+  change iSupIndep
+    ((Subgroup.toAddSubgroup.trans
+      (AddSubgroup.toZModSubmodule
+        (M := Additive (MF ⧸ H0.subgroupOf MF)) (n := p))) ∘ H)
+  exact theorem_9_7_zmod_submodule_iSupIndep_of_iSupIndep_sec9
+    (V := MF ⧸ H0.subgroupOf MF) (p := p) H hHindep
 
 private theorem
     theorem_9_7_clifford_dimension_eq_of_minimal_generator_orbit_ne_two_source_bridge_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
+    {MF H0 U W1 : Subgroup G}
     (p q : ℕ)
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
@@ -5677,7 +5705,7 @@ private theorem
   have hHindepZ : iSupIndep fun i => η (H i) := by
     simpa [η] using
       theorem_9_7_clifford_zmod_submodule_iSupIndep_of_minimal_generator_orbit_ne_two_source_bridge_sec9
-        (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
+        (MF := MF) (H0 := H0) (U := U) (W1 := W1)
         p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
         hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
         hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop
@@ -5693,7 +5721,7 @@ private theorem
 private theorem
     theorem_9_7_base_card_eq_prime_of_minimal_generator_orbit_source_bridge_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
+    {MF H0 U W1 _C : Subgroup G}
     (p q : ℕ)
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
@@ -5769,7 +5797,7 @@ private theorem
           Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
         q = q * Module.finrank (ZMod p) (η Q) :=
       theorem_9_7_clifford_dimension_eq_of_minimal_generator_orbit_ne_two_source_bridge_sec9
-        (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
+        (MF := MF) (H0 := H0) (U := U) (W1 := W1)
         p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
         hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
         hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop
@@ -5846,7 +5874,7 @@ private theorem
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hQcard : Nat.card Q = p :=
     theorem_9_7_base_card_eq_prime_of_minimal_generator_orbit_source_bridge_sec9
-      (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
+      (MF := MF) (H0 := H0) (U := U) (W1 := W1) (_C := C)
       p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
       hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
       hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop
@@ -9325,9 +9353,8 @@ private theorem theorem_9_7_schurEndFieldData_of_irreducible_sec9
   let instModuleE : Module E ρ.asModule := endFieldModule ρ
   letI : Module E ρ.asModule := instModuleE
   have hρasFinite : Finite ρ.asModule :=
-    Module.finite_iff_finite.mp
-      (inferInstance : FiniteDimensional (ZMod p)
-        (Additive (MF ⧸ H0.subgroupOf MF)))
+    Finite.of_equiv (Additive (MF ⧸ H0.subgroupOf MF))
+      ρ.asModuleEquiv.symm.toEquiv
   let instFiniteE : Module.Finite E ρ.asModule := Module.Finite.of_finite
   haveI : Module.Finite E ρ.asModule := instFiniteE
   have h_as :
@@ -9664,7 +9691,13 @@ private theorem theorem_9_7_endFieldRep_ker_le_ker_sec9
       ρ.asModuleEquiv (((endFieldRep ρ) g) m) =
         ρ.asModuleEquiv m := by
     simpa [m] using congrArg (fun f => ρ.asModuleEquiv (f m)) hg
-  simpa [m, endFieldRep_apply'] using hgm
+  change ρ g v = v
+  calc
+    ρ g v = ρ.asModuleEquiv (((endFieldRep ρ) g) m) := by
+      simpa only [m, ρ.asModuleEquiv.apply_symm_apply] using
+        (endFieldRep_apply' ρ g m).symm
+    _ = ρ.asModuleEquiv m := hgm
+    _ = v := ρ.asModuleEquiv.apply_symm_apply v
 
 private theorem theorem_9_7_le_endFieldRep_ker_of_le_ker_sec9
     {F : Type*} [Field F]
@@ -10932,7 +10965,7 @@ private theorem theorem_9_7_W2_image_prime_field_of_fixed_generator_sec9
     _ = Subgroup.map φH.toMonoidHom (Subgroup.zpowers sQ) := by
         rw [hK_eq_zpowers_orig]
     _ = Subgroup.zpowers (φH sQ) := by
-        simpa using (MonoidHom.map_zpowers φH.toMonoidHom sQ)
+        exact MonoidHom.map_zpowers φH.toMonoidHom sQ
     _ = Subgroup.zpowers (Multiplicative.ofAdd (1 : F)) := by
         rw [hφs_mul]
 
@@ -11590,11 +11623,17 @@ private theorem
       change ((ψU (QuotientGroup.mk' (C.subgroupOf U) x) : Eˣ) : E) =
         (((theorem_9_7_endUnitScalarEquivOfLinearEquiv_sec9 e) T : Eˣ) : E)
       dsimp [ψU, scalarEquiv]
-      simp [invQ, xinv, T]
+      have hinvQ :
+          invQ (x : U ⧸ C.subgroupOf U) =
+            (xinv : U ⧸ C.subgroupOf U) := by
+        change (QuotientGroup.mk' (C.subgroupOf U) x)⁻¹ =
+          QuotientGroup.mk' (C.subgroupOf U) x⁻¹
+        rw [map_inv]
+      rw [hinvQ]
       exact congrArg
         (fun a : Aˣ =>
           (((theorem_9_7_endUnitScalarEquivOfLinearEquiv_sec9 e) a : Eˣ) : E))
-        (hφUA x)
+        (hφUA xinv)
     have hρ_apply :
         ρ xinv (Additive.ofMul qh) = Additive.ofMul qconj := by
       have hact : xinv • qh = qconj := by

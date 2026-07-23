@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection3.Basic
+public import FeitThompson.PFsection3.Basic
 
 /-!
 # Peterfalvi, Section 4: basic notation

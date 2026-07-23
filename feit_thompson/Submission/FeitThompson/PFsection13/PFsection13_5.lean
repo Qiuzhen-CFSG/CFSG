@@ -1,9 +1,9 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_4
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection7.PFsection7_7
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
+public import FeitThompson.PFsection13.PFsection13_4
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection7.PFsection7_7
+import FeitThompson.PFsection8.SourceTypePBridge
 
 /-!
 # Peterfalvi, Section 13: PFsection13_5
@@ -638,9 +638,9 @@ private theorem theorem_13_5_isMulCommutative_sup_of_le_centralizer
     have hval := congrArg (fun z : D => (z : G)) hycd
     simpa [c, d] using hval.symm
   have hac : a * c = c * a :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := A) haA hcA
+    setLike_mul_comm (s := A) haA hcA
   have hbd : b * d = d * b :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := Y) hbY hdY
+    setLike_mul_comm (s := Y) hbY hdY
   have hbc : b * c = c * b :=
     (Subgroup.mem_centralizer_iff.mp (hYleCentA hbY) c hcA).symm
   have had : a * d = d * a :=
@@ -667,7 +667,7 @@ public theorem theorem_13_5_H_subgroupOf_isMulCommutative
     (p q u v c d : ℕ)
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
-    (hH : H = P ⊔ C) (hHS : H ≤ Smax) :
+    (hH : H = P ⊔ C) (_ : H ≤ Smax) :
     IsMulCommutative (H.subgroupOf Smax) := by
   have hsourceOrig := hsource
   have h13_2 := theorem_13_2
@@ -688,7 +688,7 @@ public theorem theorem_13_5_H_subgroupOf_isMulCommutative
       rw [← hCeq]
       exact y.property
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := U)
+    exact setLike_mul_comm (s := U)
       hx.1 hy.1
   have hCleCentP : C ≤ Subgroup.centralizer (P : Set G) := by
     intro x hx
@@ -703,7 +703,7 @@ public theorem theorem_13_5_H_subgroupOf_isMulCommutative
   refine ⟨⟨fun x y => ?_⟩⟩
   apply Subtype.ext
   apply Subtype.ext
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := H)
+  exact setLike_mul_comm (s := H)
     (show (((x : H.subgroupOf Smax) : Smax) : G) ∈ H from x.property)
     (show (((y : H.subgroupOf Smax) : Smax) : G) ∈ H from y.property)
 
@@ -722,7 +722,7 @@ private theorem theorem_13_5_inducedFamilyNotation_insert_principal_of_punctured
     rcases hχ with hχ | hχ
     · refine ⟨Section1.principalCharacter H,
         Section3.principalCharacter_isIrreducibleCharacterOnGroup, ?_⟩
-      simpa [hχ]
+      simp [hχ]
     · rcases (hS χ).mp hχ with ⟨θ, hθirr, _hθne, hχeq⟩
       exact ⟨θ, hθirr, hχeq⟩
   · rintro ⟨θ, hθirr, hχeq⟩
@@ -966,9 +966,12 @@ private theorem theorem_13_5_normalized_induced_restriction_kernel_package
     have hker := hindKer ⟨(e.symm (x : H) : M), hxP⟩
     have hβone := hβeval (1 : H)
     have hβx := hβeval (x : H)
+    have hxM_val : (e.symm (x : H) : M) = ⟨(x : G), hHM (x : H).property⟩ := Subtype.ext rfl
+    have h1M_val : (1 : M) = ⟨(1 : G), hHM (Subgroup.one_mem H)⟩ := Subtype.ext rfl
+    have h1e : (e.symm (1 : H) : M) = (1 : M) := by simp
     unfold Section1.degree
     rw [hβx, hβone]
-    simpa [Section1.degree] using congrArg
+    simpa [Section1.degree, hxM_val, h1M_val, h1e] using congrArg
       (fun z : ℂ => (Section5.cfNormSq η : ℂ)⁻¹ * z) hker
   exact ⟨β, hβchar, hβker, hβeval⟩
 
@@ -1404,7 +1407,10 @@ private theorem theorem_13_5_squareSumFormula_source
   rcases _ha with ⟨aInt, ha_int⟩
   rcases hres with ⟨_hHSres, hres_eval⟩
   have hζ1H_one : ζ1H 1 = ζ1 1 := by
-    simpa using hres_eval 1
+    have htemp := hres_eval (1 : H)
+    have hone : (⟨(1 : G), _hHSres (Subgroup.one_mem H)⟩ : Smax) = (1 : Smax) :=
+      Subtype.ext (by simp)
+    simpa [hone] using htemp
   have hstar_a : star a = a := by
     rw [ha_int]
     simp

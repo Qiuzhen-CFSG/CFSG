@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_5_a
+public import FeitThompson.BGsection6.lemma_6_5_a
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -68,3 +68,4 @@ public theorem lemma_6_5_b
       exact (Subgroup.normalizer (G := G) (H : Set G)).mul_mem
         (lemma_6_5_centralizerIn_le_normalizer K H hcC) huN.1
     exact hnorm
+

@@ -17,13 +17,13 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import Submission.FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import Submission.FeitThompson.Burnside.NormalComplement
-public import Submission.FeitThompson.Extraspecial
-public import Submission.FeitThompson.LinearAlgebra.BlockElementaryMap
-public import Submission.FeitThompson.Representation.ConjugateRep
-public import Submission.FeitThompson.BGsection2.EndFieldRep
-public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Extraspecial
+public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.BGsection2.EndFieldRep
+public import FeitThompson.Representation.TwoDimensionalOddOrder
 
 open Representation
 open MonoidAlgebra
@@ -35,6 +35,7 @@ open scoped BigOperators
 open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
+open scoped IsMulCommutative
 /-
 **Kind**: Theorem
 **Note**: Lemma 2.7
@@ -51,7 +52,7 @@ def lemma_2_7_toEnd
     (p : ℕ) [Fact p.Prime]
     {P Q : Type*} [Group P] [Group Q] [IsElementaryAbelian p P]
     (i : Q →* MulAut P) (α : Q) :
-  End (ZMod p) (Additive P) := {
+  Module.End (ZMod p) (Additive P) := {
     toFun := fun x ↦ Additive.ofMul ((i α) (Additive.toMul x))
     map_add' := fun x y ↦ by
       rw [toMul_add, map_mul]
@@ -90,7 +91,7 @@ lemma lemma_2_7_main_1
     (hp : Nat.card P = p ^ 2) (hq : Nat.card Q = q ^ 2)
     {i : Q →* MulAut P} (hi : Function.Injective i) :
     ∃ v₁ v₂ : Additive P,
-    (Set.range (lemma_2_7_toEnd p i) : Set (End (ZMod p) (Additive P))) ≤ {β |
+    (Set.range (lemma_2_7_toEnd p i) : Set (Module.End (ZMod p) (Additive P))) ≤ {β |
     ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} ∧ AddSubgroup.closure {v₁, v₂} = ⊤ ∧ v₁ ≠ 0 ∧ v₂ ≠ 0 := by
   have : Finite P := by
     apply Nat.finite_of_card_ne_zero
@@ -140,14 +141,14 @@ lemma lemma_2_7_main_1
         invFun := fun m ↦ ⟨Additive.ofMul m, Set.mem_preimage.mp trivial⟩
       }
     rw [this, hp, Nat.card_unique, ne_eq, Nat.pow_eq_one.not]
-    push_neg
+    push Not
     exact ⟨Nat.Prime.ne_one factp.1, two_ne_zero⟩
   have : ¬ (∀ (a : Subrepresentation ρ), a = ⊥ ∨ a = ⊤) := by tauto
-  push_neg at this
+  push Not at this
 
   rcases this with ⟨a, ha⟩
   let a' := by
-    refine submoduleOfSMulMem (G := Q) (V := ρ.asModule) a.toSubmodule ?_
+    refine submoduleOfSMulMem (M := Q) (V := ρ.asModule) a.toSubmodule ?_
     intro q v hv
     simp only [of_apply, single_smul, one_smul]
     have hv' : (ρ.asModuleEquiv v) ∈ a.toSubmodule := (Submodule.mem_toAddSubgroup a.toSubmodule).mp hv
@@ -445,9 +446,9 @@ public theorem lemma_2_7_a
     {i : Q →* MulAut P} (hi : Function.Injective i) :
     q ∣ p - 1 := by
   rcases lemma_2_7_main_1 hne hp hq hi with ⟨v₁, v₂, hle, hcl, _, _⟩
-  have hf : Finite {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
-    suffices h : Finite (End (ZMod p) (Additive P)) by exact Subtype.finite
-    let f : (End (ZMod p) (Additive P)) → ((Additive P) → (Additive P)) := fun ϕ ↦ ϕ
+  have hf : Finite {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
+    suffices h : Finite (Module.End (ZMod p) (Additive P)) by exact Subtype.finite
+    let f : (Module.End (ZMod p) (Additive P)) → ((Additive P) → (Additive P)) := fun ϕ ↦ ϕ
     haveI : Finite (Additive P) := by
       apply Nat.finite_of_card_ne_zero
       have : Nat.card (Additive P) = Nat.card P := rfl
@@ -457,23 +458,23 @@ public theorem lemma_2_7_a
     apply Finite.of_injective f fun x y hxy ↦ ?_
     rw [DFunLike.ext_iff]
     exact fun z ↦ congrFun hxy z
-  have hf' : Fintype {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := Fintype.ofFinite _
+  have hf' : Fintype {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := Fintype.ofFinite _
   have : Nat.card (Set.range (lemma_2_7_toEnd p i)) = q ^ 2 := by
     rw [← hq]
     have hfaithful : Function.Injective (lemma_2_7_toEnd p i) :=
       fun _ _ he ↦ hi (MulEquiv.ext_iff.mpr (LinearMap.congr_fun he))
     exact Nat.card_range_of_injective hfaithful
-  have hl : q ^ 2 ≤ Nat.card {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
+  have hl : q ^ 2 ≤ Nat.card {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
     rw [← this]
     exact Nat.card_mono hf hle
   by_contra hdvd
-  have : (1 : End (ZMod p) (Additive P)) ∈ {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
+  have : (1 : Module.End (ZMod p) (Additive P)) ∈ {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
     use 1, 1
     refine ⟨?_, ?_, ?_, ?_⟩ <;> try rw [one_smul, Module.End.one_apply]
     all_goals rw [one_pow]
-  have : ∀ β : {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1}, β = ⟨(1 : End (ZMod p) (Additive P)), this⟩  := by
+  have : ∀ β : {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1}, β = ⟨(1 : Module.End (ZMod p) (Additive P)), this⟩  := by
     intro ⟨β, hβ⟩
-    suffices h : β = (1 : End (ZMod p) (Additive P)) by exact SetCoe.ext h
+    suffices h : β = (1 : Module.End (ZMod p) (Additive P)) by exact SetCoe.ext h
     rcases hβ with ⟨l₁, l₂, hl₁, hl₂, hl₁e, hl₂e⟩
     let l₁' : (ZMod p)ˣ := Units.ofPowEqOne l₁ q hl₁e (Nat.Prime.ne_zero factq.1)
     have : l₁ = l₁' := rfl
@@ -509,10 +510,10 @@ public theorem lemma_2_7_a
     rw [this, one_smul] at hl₂
     ext v
     simp only [Module.End.one_apply, EmbeddingLike.apply_eq_iff_eq]
-    set f := (β - (1 : End (ZMod p) (Additive P)))
+    set f := (β - (1 : Module.End (ZMod p) (Additive P)))
     have (v : Additive P) : β v = v ↔ f v = 0 := by
       nth_rw 2 [← Module.End.one_apply (R := ZMod p) v]
-      rw [← sub_left_inj (a := (1 : End (ZMod p) (Additive P)) v), sub_self]
+      rw [← sub_left_inj (a := (1 : Module.End (ZMod p) (Additive P)) v), sub_self]
       rfl
     rw [this] at ⊢ hl₁ hl₂
     have : v ∈ AddSubgroup.closure {v₁, v₂} := by
@@ -520,10 +521,10 @@ public theorem lemma_2_7_a
       exact AddSubgroup.mem_top v
     rw [AddSubgroup.mem_closure_pair] at this
     rcases this with ⟨m, n, rfl⟩
-    have : MulActionHomClass (End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
+    have : MulActionHomClass (Module.End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
     rw [map_add, map_smul, map_smul, hl₁, hl₂, smul_zero, smul_zero, zero_add]
 
-  have : Nat.card {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} = 1 := by
+  have : Nat.card {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} = 1 := by
     rw [Nat.card_eq_fintype_card]
     exact Fintype.card_eq_one_of_forall_eq this
   rw [this] at hl
@@ -537,13 +538,13 @@ lemma lemma_2_7_main_2
     (hp : Nat.card P = p ^ 2) (hq : Nat.card Q = q ^ 2)
     {i : Q →* MulAut P} (hi : Function.Injective i) :
     ∃ v₁ v₂ : Additive P,
-    (Set.range (lemma_2_7_toEnd p i) : Set (End (ZMod p) (Additive P))) = {β |
+    (Set.range (lemma_2_7_toEnd p i) : Set (Module.End (ZMod p) (Additive P))) = {β |
     ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} ∧ AddSubgroup.closure {v₁, v₂} = ⊤ ∧ v₁ ≠ 0 ∧ v₂ ≠ 0 := by
   rcases lemma_2_7_main_1 hne hp hq hi with ⟨v₁, v₂, hle, hcl, hv₁, hv₂⟩
   use v₁, v₂
-  have hf : Finite {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
-    suffices h : Finite (End (ZMod p) (Additive P)) by exact Subtype.finite
-    let f : (End (ZMod p) (Additive P)) → ((Additive P) → (Additive P)) := fun ϕ ↦ ϕ
+  have hf : Finite {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
+    suffices h : Finite (Module.End (ZMod p) (Additive P)) by exact Subtype.finite
+    let f : (Module.End (ZMod p) (Additive P)) → ((Additive P) → (Additive P)) := fun ϕ ↦ ϕ
     haveI : Finite (Additive P) := by
       apply Nat.finite_of_card_ne_zero
       have : Nat.card (Additive P) = Nat.card P := rfl
@@ -553,10 +554,10 @@ lemma lemma_2_7_main_2
     apply Finite.of_injective f fun x y hxy ↦ ?_
     rw [DFunLike.ext_iff]
     exact fun z ↦ congrFun hxy z
-  have hf' : Fintype {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := Fintype.ofFinite _
-  have hf'' : Finite (Set.range (lemma_2_7_toEnd p i) : Set (End (ZMod p) (Additive P))) := Finite.Set.subset _ hle
-  have hf''' : Fintype (Set.range (lemma_2_7_toEnd p i) : Set (End (ZMod p) (Additive P))) := Fintype.ofFinite _
-  have {A B : Set (End (ZMod p) (Additive P))} [Fintype A] [Fintype B] (hle : A ≤ B) (hc : Fintype.card B ≤ Fintype.card A) : A = B := by
+  have hf' : Fintype {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := Fintype.ofFinite _
+  have hf'' : Finite (Set.range (lemma_2_7_toEnd p i) : Set (Module.End (ZMod p) (Additive P))) := Finite.Set.subset _ hle
+  have hf''' : Fintype (Set.range (lemma_2_7_toEnd p i) : Set (Module.End (ZMod p) (Additive P))) := Fintype.ofFinite _
+  have {A B : Set (Module.End (ZMod p) (Additive P))} [Fintype A] [Fintype B] (hle : A ≤ B) (hc : Fintype.card B ≤ Fintype.card A) : A = B := by
     let f := Set.inclusion hle
     have : Fintype (Set.range f) := Fintype.ofFinite ↑(Set.range f)
     have : Function.Injective f := Set.inclusion_injective hle
@@ -587,8 +588,8 @@ lemma lemma_2_7_main_2
       fun _ _ he ↦ hi (MulEquiv.ext_iff.mpr (LinearMap.congr_fun he))
     exact Nat.card_range_of_injective hfaithful
   rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card, this]
-  set B := {β : End (ZMod p) (Additive P) | ∃! l : (ZMod p) × (ZMod p), β v₁ = l.1 • v₁ ∧ β v₂ = l.2 • v₂ ∧ l.1 ^ q = 1 ∧ l.2 ^ q = 1}
-  have : {β : End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} = B := by
+  set B := {β : Module.End (ZMod p) (Additive P) | ∃! l : (ZMod p) × (ZMod p), β v₁ = l.1 • v₁ ∧ β v₂ = l.2 • v₂ ∧ l.1 ^ q = 1 ∧ l.2 ^ q = 1}
+  have : {β : Module.End (ZMod p) (Additive P) | ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} = B := by
     ext β
     unfold B
     simp only [exists_and_left, Set.mem_setOf_eq]
@@ -635,7 +636,7 @@ lemma lemma_2_7_main_2
       exact AddSubgroup.mem_top v
     rw [AddSubgroup.mem_closure_pair] at this
     rcases this with ⟨m, n, rfl⟩
-    have : MulActionHomClass (End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
+    have : MulActionHomClass (Module.End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
     rw [map_add, map_add, map_smul, map_smul, map_smul, map_smul, hβ₁'1, hβ₁'2, hβ₂'1, hβ₂'2, he]
   have : Nat.card B = Nat.card (Set.range f) := by exact Eq.symm (Nat.card_range_of_injective this)
   rw [this]
@@ -738,7 +739,7 @@ public theorem lemma_2_7_b
       exact Nat.Prime.ne_one (factq.1) hord.symm
   rcases lemma_2_7_main_2 hne hp hq hi with ⟨v₁, v₂, heq, hcl, hv₁, hv₂⟩
   rcases this with ⟨e, he1, he2⟩
-  have : e • (1 : End (ZMod p) (Additive P)) ∈ {β |
+  have : e • (1 : Module.End (ZMod p) (Additive P)) ∈ {β |
     ∃ l₁ l₂ : ZMod p, β v₁ = l₁ • v₁ ∧ β v₂ = l₂ • v₂ ∧ l₁ ^ q = 1 ∧ l₂ ^ q = 1} := by
     simp only [exists_and_left, Set.mem_setOf_eq, LinearMap.smul_apply, Module.End.one_apply]
     use e
@@ -746,10 +747,10 @@ public theorem lemma_2_7_b
   rw [← heq] at this
   rcases this with ⟨α, hα⟩
   use α, e.val
-  have hap : Additive.ofMul ((i α) (Additive.toMul v₁)) = (e • (1 : End (ZMod p) (Additive P))) v₁ := by
+  have hap : Additive.ofMul ((i α) (Additive.toMul v₁)) = (e • (1 : Module.End (ZMod p) (Additive P))) v₁ := by
       rw [← hα]
       rfl
-  have hap2 : Additive.ofMul ((i α) (Additive.toMul v₂)) = (e • (1 : End (ZMod p) (Additive P))) v₂ := by
+  have hap2 : Additive.ofMul ((i α) (Additive.toMul v₂)) = (e • (1 : Module.End (ZMod p) (Additive P))) v₂ := by
       rw [← hα]
       rfl
   constructor
@@ -773,7 +774,7 @@ public theorem lemma_2_7_b
       exact AddSubgroup.mem_top v
     rw [AddSubgroup.mem_closure_pair] at this
     rcases this with ⟨m, n, hv⟩
-    have : MulActionHomClass (End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
+    have : MulActionHomClass (Module.End (ZMod p) (Additive P)) ℤ (Additive P) (Additive P) := {map_smulₛₗ := LinearMap.map_smul_of_tower}
     have (v : Additive P) (m : ℤ) : Additive.ofMul ((i α) (Additive.toMul (m • v))) = m • Additive.ofMul ((i α) (Additive.toMul v)) := by
       simp only [toMul_zsmul, map_zpow, ofMul_zpow]
     rw [← hv, toMul_add, map_mul, ofMul_mul, this, this, hap, hap2, ← map_smul, ← map_smul, ← map_add, hv]

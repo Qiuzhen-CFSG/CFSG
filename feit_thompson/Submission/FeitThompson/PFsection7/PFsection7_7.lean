@@ -1,7 +1,7 @@
 module
 
-import Submission.FeitThompson.PFsection2.PFsection2_7_11
-public import Submission.FeitThompson.PFsection7.PFsection7_6
+import FeitThompson.PFsection2.PFsection2_7_11
+public import FeitThompson.PFsection7.PFsection7_6
 
 noncomputable section
 
@@ -74,7 +74,9 @@ private theorem dadeProjectionOn_CFon_pf77
   constructor
   · intro x a
     have hxAiff : ((x * a * x⁻¹ : L) : G) ∈ A ↔ (a : G) ∈ A := by
-      simpa using h.L_le_normalizer x.2 (a : G)
+      have hxAiff' := h.L_le_normalizer x.2 (a : G)
+      change (↑x * ↑a * (↑x)⁻¹ : G) ∈ A ↔ (↑a : G) ∈ A at hxAiff'
+      exact hxAiff'
     by_cases ha : (a : G) ∈ A
     · have hxa : ((x * a * x⁻¹ : L) : G) ∈ A := hxAiff.2 ha
       have hxa' : (↑x * ↑a * (↑x)⁻¹ : G) ∈ A := by
@@ -831,6 +833,7 @@ public theorem projectionBasisPackage_detection_of_inducedFamilyEnumeration_sour
         have hback :
             y⁻¹ * (y * z * y⁻¹) * (y⁻¹)⁻¹ ∈ H.subgroupOf L :=
           hHnormal.conj_mem (y * z * y⁻¹ : L) hzHsub y⁻¹
+        change z ∈ H.subgroupOf L
         simpa [mul_assoc] using hback
       · intro hz1
         apply hz_ne

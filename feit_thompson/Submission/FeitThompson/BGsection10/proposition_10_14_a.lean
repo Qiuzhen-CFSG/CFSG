@@ -3,9 +3,9 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_13_c
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
-public import Submission.FeitThompson.BGsection5.theorem_5_3
+public import FeitThompson.BGsection10.lemma_10_13_c
+public import FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection5.theorem_5_3
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -40,7 +40,7 @@ private theorem section10_primeRank_le_natCard
     primeRank q H ≤ Nat.card H := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hAq, _hAcomm, hnA⟩
     exact hnA.trans <|
@@ -97,8 +97,14 @@ private theorem section10_elementaryAbelian_card_ge_pow_generatorRank
     {p : ℕ} [Fact p.Prime]
     (H : Type*) [Group H] [Finite H] [IsElementaryAbelian p H] :
     p ^ generatorRank H ≤ Nat.card H := by
+  letI : CommGroup H := IsMulCommutative.instCommGroup
+  letI : AddCommGroup (Additive H) := Additive.addCommGroup
   have hcard : Nat.card H = p ^ Module.finrank (ZMod p) (Additive H) := by
-    simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive H)
+    calc
+      Nat.card H = Nat.card (Additive H) := (Nat.card_congr Additive.toMul).symm
+      _ = p ^ Module.finrank (ZMod p) (Additive H) :=
+        by simpa [ZMod.card] using
+          Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive H)
   have hgr_le_finrank : generatorRank H ≤ Module.finrank (ZMod p) (Additive H) :=
     generatorRank_le_finrank_of_elementaryAbelian (p := p) H
   rw [hcard]
@@ -108,7 +114,7 @@ private theorem section10_generatorRank_at_least_two_of_elementaryAbelian_card_p
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -148,6 +154,7 @@ private theorem section10_omega1_isElementaryAbelian_of_commutative
     {p : ℕ} [Fact p.Prime]
     (H : Type*) [Group H] [IsMulCommutative H] :
     IsElementaryAbelian p (omega₁ (G := H) (p := p)) := by
+  letI : CommGroup H := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := by infer_instance
       exponent_dvd_p := ?_ }
@@ -172,7 +179,7 @@ private theorem section10_omega1_card_eq_card_quotient_frattini_of_commutative
     (H : Type*) [Group H] [Finite H] [IsMulCommutative H] [Fact (IsPGroup p H)] :
     Nat.card (omega₁ (G := H) (p := p)) = Nat.card (H ⧸ frattini H) := by
   classical
-  letI : CommGroup H := CommGroup.ofIsMulCommutative
+  letI : CommGroup H := IsMulCommutative.instCommGroup
   let φ : H →* H := powMonoidHom p
   have hφker : φ.ker = omega₁ (G := H) (p := p) := by
     ext x
@@ -182,7 +189,6 @@ private theorem section10_omega1_card_eq_card_quotient_frattini_of_commutative
       refine Subgroup.subset_closure ?_
       simpa [φ, pow_one] using hx
     · intro hx
-      change x ∈ φ.ker
       refine
         Subgroup.closure_induction (k := {y : H | y ^ (p ^ 1) = 1})
           (p := fun z _hz => z ∈ φ.ker) (x := x) (by
@@ -206,7 +212,9 @@ private theorem section10_omega1_card_eq_card_quotient_frattini_of_commutative
         (Subgroup.commutator_eq_bot_iff_le_centralizer).2 hcomm_top
       simpa [_root_.commutator_def] using htop_comm_bot
     have hderived_bot : derivedSubgroup H = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using hcomm_bot
+      change derivedSeries H 1 = ⊥
+      rw [derivedSeries_one]
+      exact hcomm_bot
     have hrange :
         Set.range (fun x : H => x ^ p) = ((φ.range : Subgroup H) : Set H) := by
       ext y
@@ -360,6 +368,7 @@ public theorem section10_exists_pSubgroup_three_le_generatorRank_of_three_le_pri
   rcases htSup_mem with ⟨A, hAp, hAcomm, htSup_le⟩
   exact ⟨A, hAp, hAcomm, Nat.succ_le_of_lt (lt_of_lt_of_le hrank' htSup_le)⟩
 
+omit [IsMinCE G] in
 public theorem section10_prime_dvd_card_of_pSubgroup_two_le_generatorRank
     {p : ℕ} [Fact p.Prime] {B : Subgroup G}
     (hBp : IsPGroup p B) (hBgen : 2 ≤ generatorRank B) :
@@ -464,7 +473,7 @@ public theorem section10_primeRank_le_groupRank_sylow
   haveI : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     obtain ⟨Q, hAQ⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
@@ -510,15 +519,16 @@ private theorem section10_primeRank_le_ambientDerived_of_sigma
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let SD : Sylow p.val D := S.subtype hSleD
   let eD : D ≃* Dg := by
-    simpa [D, Dg, ambientDerivedSubgroup] using
-      (Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective)
+    change D ≃* D.map M.subtype
+    exact Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective
   let X : Sylow p.val Dg := SD.mapSurjective (f := eD.toMonoidHom) eD.surjective
   have hrankM_le_S : primeRank p.val M ≤ groupRank (S : Subgroup M) :=
     section10_primeRank_le_groupRank_sylow (G := M) S
   have hS_le_SD : groupRank (S : Subgroup M) ≤ groupRank (SD : Subgroup D) := by
     let eS : (SD : Subgroup D) ≃* (S : Subgroup M) := by
-      simpa [SD, Sylow.coe_subtype] using
-        (Subgroup.subgroupOfEquivOfLe (H := (S : Subgroup M)) (K := D) hSleD)
+      change (S.subgroupOf D) ≃* (S : Subgroup M)
+      exact Subgroup.subgroupOfEquivOfLe
+        (H := (S : Subgroup M)) (K := D) hSleD
     exact section10_groupRank_le_of_equiv (R := (SD : Subgroup D))
       (S := (S : Subgroup M)) eS
   have hSD_le_X : groupRank (SD : Subgroup D) ≤ groupRank (X : Subgroup Dg) := by
@@ -572,8 +582,9 @@ public theorem section10_primeRank_normalizer_of_derived_sylow_ge_of_sigma_prime
   have hPG_le_U : PG ≤ U := by
     exact hP_le_DU.trans section10_ambientDerivedSubgroup_le_base
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup Dg)) P.isPGroup' Dg.subtype
+    change IsPGroup p.val ((P : Subgroup Dg).map Dg.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup Dg))
+      P.isPGroup' Dg.subtype
   have hP_le_PG : groupRank (P : Subgroup Dg) ≤ groupRank PG := by
     let ePG : (P : Subgroup Dg) ≃* PG :=
       Subgroup.equivMapOfInjective (f := Dg.subtype) (P : Subgroup Dg)
@@ -692,7 +703,8 @@ public theorem section10_primeRank_normalizer_of_derived_sylow_ge_of_not_beta_pr
     have htwo : 2 ≤ primeRank p.val M := by omega
     exact htwo.trans (section10_primeRank_le_groupRank_sylow (G := M) SM)
   have hSMsub_rank : 2 ≤ groupRank SMsub := by
-    simpa [hSM_eq] using hM_rank
+    rw [← hSM_eq]
+    exact hM_rank
   have hS_rank : 2 ≤ groupRank (S : Subgroup Usub) := by
     let eS : (S : Subgroup Usub) ≃* SMsub :=
       Subgroup.equivMapOfInjective
@@ -719,7 +731,7 @@ private theorem section10_isElementaryAbelian_of_le
         exact
           { is_comm := ⟨fun x y =>
               Subtype.ext <|
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := K)
+                setLike_mul_comm (s := K)
                   (hHK x.2) (hHK y.2)⟩ }
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -754,6 +766,7 @@ private theorem section10_isElementaryAbelian_map_of_injective
     _ = f (y ^ p) := by simp
     _ = 1 := by simpa using congrArg f (congrArg Subtype.val hypow)
 
+omit [IsMinCE G] in
 public theorem section10_exists_elementaryAbelian_rank_two_subgroup_of_pgroup_rank_two
     {p : ℕ} [Fact p.Prime] {R : Subgroup G}
     (hRp : IsPGroup p R) (hRrank : 2 ≤ groupRank R) :

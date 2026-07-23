@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_10_e
+public import FeitThompson.BGsection12.corollary_12_10_e
 
 open scoped Pointwise
 
@@ -113,8 +113,8 @@ public theorem lemma_12_11_a
       intro x hx
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := A) hx hy).symm
+      exact (setLike_mul_comm
+        (s := A) hx hy).symm
     · obtain ⟨B, hB⟩ :=
         section12_exists_rankTwo_in_E_of_tau2
           (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)

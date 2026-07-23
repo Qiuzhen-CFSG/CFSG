@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_4_a
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
-public import Submission.FeitThompson.BGsection5.theorem_5_3
+public import FeitThompson.BGsection10.lemma_10_4_a
+public import FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection5.theorem_5_3
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 

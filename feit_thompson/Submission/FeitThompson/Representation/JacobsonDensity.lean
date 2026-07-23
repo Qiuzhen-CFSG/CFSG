@@ -6,8 +6,8 @@ module
 
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-public import Submission.FeitThompson.Representation.ExtendScalars
-public import Submission.FeitThompson.Representation.RepEnd
+public import FeitThompson.Representation.ExtendScalars
+public import FeitThompson.Representation.RepEnd
 
 namespace Representation
 open scoped MonoidAlgebra
@@ -183,7 +183,7 @@ public theorem jacobson_density_surjective
     have hj : {(b j : V) | j ≠ i} = j '' ιi := by
       ext x
       simp_all only [ne_eq, Subtype.exists, Set.mem_setOf_eq, Submodule.coe_subtype,
-        Function.comp_apply, Set.mem_image, Set.mem_diff, Set.mem_univ, Set.mem_singleton_iff,
+        Function.comp_apply, Set.mem_image, Set.mem_sdiff, Set.mem_univ, Set.mem_singleton_iff,
         true_and, p, ι, i, j, ιi]
     have : LinearIndependent F j := by
       rw [LinearMap.linearIndependent_iff]
@@ -208,7 +208,7 @@ public theorem jacobson_density_surjective
         subst hdim
         ext x
         simp_all only [Submodule.coe_subtype, ne_eq, Subtype.exists, Function.comp_apply,
-          Set.mem_range, exists_prop, Set.mem_image, Set.mem_diff, Set.mem_univ,
+          Set.mem_range, exists_prop, Set.mem_image, Set.mem_sdiff, Set.mem_univ,
           Set.mem_singleton_iff, true_and, ι, j, p, i, ιi, U, ι']
       rw [← this, finrank_span_eq_card hli, ← hdim, Module.finrank_eq_nat_card_basis b, ← Fintype.card_eq_nat_card, Fintype.card_subtype_compl (fun j => j = i)]
       exact
@@ -397,7 +397,7 @@ public theorem jacobson_density_surjective
     rw [linearIndependent_iff_notMem_span] at this
     have he : {b j | j ≠ i}  = b '' (Set.univ \ {i}) := by
       ext x
-      simp_all only [ne_eq, Module.Basis.self_mem_span_image, Set.mem_diff, Set.mem_univ,
+      simp_all only [ne_eq, Module.Basis.self_mem_span_image, Set.mem_sdiff, Set.mem_univ,
         Set.mem_singleton_iff, not_true_eq_false, and_false, not_false_eq_true, implies_true,
         Subtype.exists, Set.mem_setOf_eq, Set.mem_image, true_and, p, ι]
     unfold W

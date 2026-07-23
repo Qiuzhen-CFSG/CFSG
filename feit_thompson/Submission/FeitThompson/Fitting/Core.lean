@@ -3,8 +3,10 @@ Authors: Tianjiao Nie, Yusen Tang
 -/
 module
 
-public import Submission.FeitThompson.PCore.PCore
-public import Submission.FeitThompson.PCore.PPrimeCore
+public import FeitThompson.PCore.PCore
+public import FeitThompson.PCore.PPrimeCore
+
+open scoped IsMulCommutative
 
 /-!
 
@@ -60,7 +62,7 @@ lemma normal_nilpotent_comap {G : Type*} [Group G] {N : Subgroup G}
   let e : (N.comap φ.toMonoidHom) ≃* N :=
     (MulEquiv.subgroupMap φ (N.comap φ.toMonoidHom)).trans
       (MulEquiv.subgroupCongr hmap_eq)
-  exact nilpotent_of_mulEquiv (G := N) (G' := N.comap φ.toMonoidHom) (_h := hnil) e.symm
+  exact Group.nilpotent_of_mulEquiv (G := N) (G' := N.comap φ.toMonoidHom) (_h := hnil) e.symm
 
 /-- The preimage map `comap φ` for an automorphism `φ` preserves suprema. -/
 lemma comap_sSup {G : Type*} [Group G] (φ : G ≃* G) (S : Set (Subgroup G)) :

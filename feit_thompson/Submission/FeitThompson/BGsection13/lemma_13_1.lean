@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.Defs
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.Defs
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -16,7 +16,7 @@ open scoped Pointwise
 section Section13
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section13_le_normalizer_msigma {M : Subgroup G} :
     M ≤ Subgroup.normalizer (section10Msigma M : Set G) := by
   intro m hm
@@ -204,8 +204,7 @@ public theorem section13_commutator_centralizerIn_eq_bot_of_coprime
     simpa [Ccomm] using
       commutatorAction_subgroup_conj_map_eq_commutator K P hPnormK
   have hsolvK : IsSolvable K := by
-    letI : IsMulCommutative K := hKcomm
-    infer_instance
+    exact isSolvable_of_comm fun x y => (hKcomm.is_comm).comm x y
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
       (isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -232,7 +231,7 @@ public theorem section13_commutator_centralizerIn_eq_bot_of_coprime
     simpa [hinf_bot] using hxinf
   exact congrArg Subtype.val (Subgroup.mem_bot.mp hxbot)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section13_coprime_card_of_isPiSubgroup_disjoint_primes
     {π ρ : Set Nat.Primes} {A B : Subgroup G}
     (hA : IsPiSubgroup π A) (hB : IsPiSubgroup ρ B)
@@ -329,7 +328,7 @@ private theorem section13_centralizes_of_commutator_le_pi_compl
     (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := K) (H₂ := P)).mp hcomm_bot
   exact (Subgroup.le_centralizer_iff (H := K) (K := P)).mp hK_le_centP
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section13_le_normalizer_malpha {M : Subgroup G} :
     M ≤ Subgroup.normalizer (section10Malpha M : Set G) := by
   intro m hm
@@ -403,6 +402,7 @@ public theorem section13_conjBy_eq_of_mem_normalizer
     · simpa using (Subgroup.mem_normalizer_iff.mp hgInv x).1 hx
     · simp [MulAut.conj_apply, mul_assoc]
 
+omit [IsMinCE G] in
 public theorem section13_normalizer_inf_sylow_le_right_of_sigma
     {M Mstar : Subgroup G} {q : Nat.Primes}
     {S : Sylow q.val (M ⊓ Mstar : Subgroup G)}
@@ -459,6 +459,7 @@ public theorem section13_Mbeta_eq_Malpha_of_alphaPrimes_eq_betaPrimes
   simp [section10Mbeta, section10Malpha, section10MbetaSubgroup,
     section10MalphaSubgroup, hαβ]
 
+omit [IsMinCE G] in
 public theorem section13_Mbeta_ne_bot_of_inf_sup_mbeta_eq
     {M Mstar : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -529,8 +530,9 @@ private theorem section13_ambient_sylow_isPiSubgroup_sigma_compl_of_not_sigma
     IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ
       (section10AmbientSylowSubgroup Mstar S) := by
   have hSp : IsPGroup p.val (section10AmbientSylowSubgroup Mstar S) := by
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (S : Subgroup Mstar)) S.isPGroup' Mstar.subtype
+    change IsPGroup p.val ((S : Subgroup Mstar).map Mstar.subtype)
+    exact IsPGroup.map (p := p.val) (H := (S : Subgroup Mstar))
+      S.isPGroup' Mstar.subtype
   exact section13_isPiSubgroup_compl_of_isPGroup_not_mem hpσ hSp
 
 omit [Finite G] [IsMinCE G] in
@@ -654,7 +656,10 @@ public theorem section13_sigmaPrimes_mem_of_alphaPrimes_mem
   have hmulA : A.index * Nat.card A = Nat.card M :=
     Subgroup.index_mul_card (H := A)
   have hp_mul : p.val ∣ A.index * Nat.card A := by
-    simpa [hmulA] using hpM
+    have hpM' : p.val ∣ Nat.card M := by
+      simpa [subgroupPrimeSet] using hpM
+    rw [hmulA]
+    exact hpM'
   rcases p.2.dvd_mul.mp hp_mul with hpidx | hpA
   · exact False.elim (hp_not_idx_A hpidx)
   · have hA_card_dvd_S : Nat.card A ∣ Nat.card S := by
@@ -676,7 +681,7 @@ private theorem section13_one_le_generatorRank_of_nontrivial
   obtain ⟨S, hScard, hSgen⟩ := Group.rank_spec R
   have hSempty : S = ∅ := Finset.card_eq_zero.mp (by omega)
   have hclosureS_bot : Subgroup.closure (S : Set R) = ⊥ := by
-    simpa [hSempty] using (Subgroup.closure_empty (G := R))
+    simp [hSempty]
   have hbot_top : (⊥ : Subgroup R) = ⊤ := by
     rw [← hclosureS_bot, hSgen]
   have hsub : Subsingleton R := by
@@ -770,7 +775,8 @@ private theorem section13_sylow_inf_normal_ne_bot_of_prime_dvd_normal
   have hqD : (q : R) ∈ D := by
     rcases q.property with ⟨d, _hd, hdq⟩
     have hqd : (q : R) = d := hdq.symm
-    simpa [hqd] using d.property
+    rw [hqd]
+    exact d.property
   have hxS : x ∈ (S : Subgroup R) := by
     have hxConjT : x ∈ MulAut.conj g • (T : Subgroup R) := by
       simpa [x, MulAut.conj_apply] using
@@ -942,8 +948,8 @@ private theorem lemma_13_1_b_core
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hMstar : Mstar ∈ section9MaximalSubgroups G)
     (hpE : p ∈ subgroupPrimeSet E)
-    (hpMstar : p ∈ subgroupPrimeSet Mstar)
-    (hpτ1star : p ∉ section12Tau1Primes Mstar)
+    (_hpMstar : p ∈ subgroupPrimeSet Mstar)
+    (_hpτ1star : p ∉ section12Tau1Primes Mstar)
     (hcomm : ⁅section10Msigma M ⊓ Mstar, M ⊓ Mstar⁆ ≠ ⊥)
     (hnotconj : section12NotConjugate Mstar M) :
     p ∉ section12Tau2Primes Mstar := by
@@ -972,15 +978,17 @@ private theorem lemma_13_1_b_core
   let Y : Subgroup G := section10AmbientSylowSubgroup Dg YS
   have hY_ne : Y ≠ ⊥ := by
     have hYS_ne : (YS : Subgroup Dg) ≠ ⊥ :=
-      Sylow.ne_bot_of_dvd_card (G := Dg) YS (by simpa [Dg] using hqD)
+      Sylow.ne_bot_of_dvd_card (G := Dg) YS
+        (by simpa [Dg, subgroupPrimeSet] using hqD)
     intro hYbot
     have hYS_bot : (YS : Subgroup Dg) = ⊥ :=
       (Subgroup.map_eq_bot_iff_of_injective (H := (YS : Subgroup Dg)) (f := Dg.subtype)
         Dg.subtype_injective).1 (by simpa [Y, section10AmbientSylowSubgroup] using hYbot)
     exact hYS_ne hYS_bot
   have hYq : IsPGroup q.val Y := by
-    simpa [Y, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (YS : Subgroup Dg)) YS.isPGroup' Dg.subtype
+    change IsPGroup q.val ((YS : Subgroup Dg).map Dg.subtype)
+    exact IsPGroup.map (p := q.val) (H := (YS : Subgroup Dg))
+      YS.isPGroup' Dg.subtype
   have hYσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Y := by
     intro r hrY
     have hr_singleton : r ∈ ({q} : Set Nat.Primes) :=
@@ -1011,6 +1019,7 @@ private theorem lemma_13_1_b_core
         hMstar hpβ YS hprank
   omega
 
+omit [Finite G] [IsMinCE G] in
 private theorem lemma_13_1_a_sylow_cover
     {Mstar P : Subgroup G} {p : Nat.Primes}
     (hPinf : P ≤ Mstar) (hPp : IsPGroup p.val P) :
@@ -1049,8 +1058,9 @@ private theorem lemma_13_1_a_malpha_sylow_normalized
   let Dg : Subgroup G := ambientDerivedSubgroup Mstar
   let SD : Sylow p.val D := S.subtype hSleD
   let e : D ≃* Dg := by
-    simpa [D, Dg, ambientDerivedSubgroup] using
-      (Subgroup.equivMapOfInjective (f := Mstar.subtype) D Mstar.subtype_injective)
+    change D ≃* D.map Mstar.subtype
+    exact Subgroup.equivMapOfInjective
+      (f := Mstar.subtype) D Mstar.subtype_injective
   let X : Sylow p.val Dg := SD.mapSurjective (f := e.toMonoidHom) e.surjective
   have hXsub_eq :
       (section10AmbientSylowSubgroup Dg X).subgroupOf Mstar = (S : Subgroup Mstar) := by
@@ -1068,15 +1078,18 @@ private theorem lemma_13_1_a_malpha_sylow_normalized
         calc
           (x : G) = (yDg : G) := hyx.symm
           _ = (e yD : G) := by exact congrArg Subtype.val hyD_eq.symm
-          _ = (((yD : D) : Mstar) : G) := by rfl
+          _ = (((yD : D) : Mstar) : G) := by
+            unfold e
+            exact Subgroup.coe_equivMapOfInjective_apply
+              D Mstar.subtype Mstar.subtype_injective yD
       have hyS : ((yD : D) : Mstar) ∈ (S : Subgroup Mstar) := by
-        simpa [SD, Sylow.coe_subtype] using hySD
+        simpa [SD, Sylow.coe_subtype, Subgroup.mem_subgroupOf] using hySD
       simpa [hx_eq] using hyS
     · intro hx
       have hxD : x ∈ D := hSleD hx
       let yD : D := ⟨x, hxD⟩
       have hySD : yD ∈ (SD : Subgroup D) := by
-        simpa [SD, Sylow.coe_subtype, yD] using hx
+        simpa [SD, Sylow.coe_subtype, yD, Subgroup.mem_subgroupOf] using hx
       have hyX : e yD ∈ (X : Subgroup Dg) := by
         simpa [X, Sylow.coe_mapSurjective] using
           (show e yD ∈ (SD : Subgroup D).map e.toMonoidHom from
@@ -1084,7 +1097,9 @@ private theorem lemma_13_1_a_malpha_sylow_normalized
       change ((x : Mstar) : G) ∈ section10AmbientSylowSubgroup Dg X
       rw [section10AmbientSylowSubgroup, Subgroup.mem_map]
       refine ⟨e yD, hyX, ?_⟩
-      rfl
+      unfold e
+      exact Subgroup.coe_equivMapOfInjective_apply
+        D Mstar.subtype Mstar.subtype_injective yD
   have hlocal_normal :
       (section10MalphaSubgroup Mstar ⊔ (S : Subgroup Mstar)).Normal := by
     have h :=
@@ -1264,8 +1279,9 @@ private theorem section13_prime_mem_ambientDerived_of_sigma_or_tau3
         M.subtype_injective).1 (by simpa [SG, section10AmbientSylowSubgroup] using hSG_bot)
     exact hS_ne hS_bot
   have hSGp : IsPGroup p.val SG := by
-    simpa [SG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (S : Subgroup M)) S.isPGroup' M.subtype
+    change IsPGroup p.val ((S : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := p.val) (H := (S : Subgroup M))
+      S.isPGroup' M.subtype
   exact section8_prime_mem_subgroupPrimeSet_of_nontrivial_pSubgroup
     (A := ambientDerivedSubgroup M) (B := SG.subgroupOf (ambientDerivedSubgroup M))
     (hBp := hSGp.of_equiv
@@ -1331,8 +1347,10 @@ private theorem section13_prime_mem_derived_normalizer_of_not_betaG
   have hPG_le_DU : PG ≤ DU := by
     simpa [PG, DU, Dg] using hP_le_DU
   have hP_ne : (P : Subgroup Dg) ≠ ⊥ := by
-    simpa [Dg] using Sylow.ne_bot_of_dvd_card
-      (G := ambientDerivedSubgroup Mstar) P (by simpa [Dg] using hpDg)
+    have hpDg' : p.val ∣ Nat.card Dg := by
+      change p.val ∣ Nat.card (ambientDerivedSubgroup Mstar)
+      exact hpDg
+    exact Sylow.ne_bot_of_dvd_card (G := Dg) P hpDg'
   have hPG_ne : PG ≠ ⊥ := by
     intro hPG_bot
     have hP_bot : (P : Subgroup Dg) = ⊥ :=
@@ -1340,8 +1358,9 @@ private theorem section13_prime_mem_derived_normalizer_of_not_betaG
         Dg.subtype_injective).1 (by simpa [PG, section10AmbientSylowSubgroup] using hPG_bot)
     exact hP_ne hP_bot
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup Dg)) P.isPGroup' Dg.subtype
+    change IsPGroup p.val ((P : Subgroup Dg).map Dg.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup Dg))
+      P.isPGroup' Dg.subtype
   simpa [DU, Dg] using
     section8_prime_mem_subgroupPrimeSet_of_nontrivial_pSubgroup
       (A := DU) (B := PG.subgroupOf DU)
@@ -1382,15 +1401,20 @@ public theorem lemma_13_1_c
   let Y : Subgroup G := section10AmbientSylowSubgroup Dg YS
   have hY_ne : Y ≠ ⊥ := by
     have hYS_ne : (YS : Subgroup Dg) ≠ ⊥ :=
-      Sylow.ne_bot_of_dvd_card (G := Dg) YS (by simpa [Dg] using hqD)
+      by
+        have hqD' : q.val ∣ Nat.card Dg := by
+          change q.val ∣ Nat.card (ambientDerivedSubgroup Mstar)
+          exact hqD
+        exact Sylow.ne_bot_of_dvd_card (G := Dg) YS hqD'
     intro hYbot
     have hYS_bot : (YS : Subgroup Dg) = ⊥ :=
       (Subgroup.map_eq_bot_iff_of_injective (H := (YS : Subgroup Dg)) (f := Dg.subtype)
         Dg.subtype_injective).1 (by simpa [Y, section10AmbientSylowSubgroup] using hYbot)
     exact hYS_ne hYS_bot
   have hYq : IsPGroup q.val Y := by
-    simpa [Y, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (YS : Subgroup Dg)) YS.isPGroup' Dg.subtype
+    change IsPGroup q.val ((YS : Subgroup Dg).map Dg.subtype)
+    exact IsPGroup.map (p := q.val) (H := (YS : Subgroup Dg))
+      YS.isPGroup' Dg.subtype
   have hYσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Y := by
     intro r hrY
     have hr_singleton : r ∈ ({q} : Set Nat.Primes) :=

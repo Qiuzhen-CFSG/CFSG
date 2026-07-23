@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection2.PFsection2_6
+public import FeitThompson.PFsection2.PFsection2_6
 
 /-!
 # Peterfalvi, Section 2, Propositions (2.7)-(2.11)
@@ -353,14 +353,11 @@ public theorem proposition_2_10 {G : Type u} [Group G] [Finite G]
             (A := A) (L := L) (H := H) h hBprops.1 hBprops.2
             hα.2 (hαBspec B hBmem) hg
         rw [hterm, mul_zero]
-      have hsum' :
-          (∑ B ∈ reps, (-1 : ℂ) ^ Fintype.card B *
-            Section1.inducedCF (MOfSet H L B) (αB B) g) = 0 := by
-        simpa [Nat.card_eq_fintype_card] using hsum
       calc
         dadeTransform H hAL α g = 0 := hleft
         _ = dadeInclusionExclusionSum L H reps αB g := by
-          simp [dadeInclusionExclusionSum, hsum']
+          rw [dadeInclusionExclusionSum, hsum]
+          simp
   simpa [proposition_2_10_statement] using hstmt
 
 public theorem proposition_2_11 {G : Type u} [Group G] [Finite G]

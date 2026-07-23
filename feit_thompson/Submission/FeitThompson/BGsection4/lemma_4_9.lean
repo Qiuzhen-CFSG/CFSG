@@ -1,10 +1,10 @@
 module
 
-public import Submission.FeitThompson.BGsection4.proposition_4_8_b
-public import Submission.FeitThompson.BGsection4.proposition_4_8_b
-public import Submission.FeitThompson.BGsection4.proposition_4_8_a
-public import Submission.FeitThompson.BGsection4.proposition_4_3_b
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection4.proposition_4_8_b
+public import FeitThompson.BGsection4.proposition_4_8_b
+public import FeitThompson.BGsection4.proposition_4_8_a
+public import FeitThompson.BGsection4.proposition_4_3_b
+public import FeitThompson.BGsection4.lemma_4_5_a
 
 /-! # Lemma 4.9 from BG Section 4 -/
 
@@ -12,7 +12,7 @@ universe u
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints IsMulCommutative
 public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
     [Fact (IsPGroup p R)] (hpgt : 3 < p)
     (hOmega : Nat.card (omega₁ (G := R) (p := p)) ≤ p ^ 2) :
@@ -89,13 +89,13 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
                 refine lt_of_le_of_ne hE_le_Ω ?_
                 intro hEq
                 have hcard_le : Nat.card ΩU ≤ p ^ 2 := by
-                  simpa [← hEq, hEcard]
+                  simp [← hEq, hEcard]
                 exact hgood hcard_le
               exact hE_lt_Ω.2 hΩU_le_E
             obtain ⟨y, hy_pow, hy_not_mem⟩ :
                 ∃ y : G ⧸ U, y ^ p = 1 ∧ y ∉ E := by
               by_contra hcontra
-              push_neg at hcontra
+              push Not at hcontra
               exact hpow_not_subset (by
                 intro y hy
                 exact hcontra y (by simpa [pow_one] using hy))
@@ -121,7 +121,6 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             have hEsub_sup : Esub ⊔ Subgroup.zpowers yB = ⊤ := by
               apply eq_top_iff.2
               intro z _hz
-              change z ∈ Esub ⊔ Subgroup.zpowers yB
               rcases (Subgroup.mem_sup_of_normal_left
                 (x := ((z : B) : G ⧸ U)) (s := E) (t := Subgroup.zpowers y)).1 z.2 with
                 ⟨e, he, w, hw, hmul⟩
@@ -129,8 +128,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
               refine (Subgroup.mem_sup_of_normal_left
                 (x := z) (s := Esub) (t := Subgroup.zpowers yB)).2 ?_
               refine ⟨⟨e, by exact Subgroup.mem_sup_left he⟩, ?_, yB ^ m, ?_, ?_⟩
-              · change ((⟨e, Subgroup.mem_sup_left he⟩ : B) ∈ Esub)
-                simpa [Esub]
+              · simpa [Esub]
               · exact Subgroup.zpow_mem_zpowers yB m
               · apply Subtype.ext
                 simpa [yB, mul_assoc] using hmul
@@ -144,8 +142,10 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             have hEsub_lt_top : Esub < ⊤ := by
               refine lt_of_le_of_ne le_top ?_
               intro hEq
-              have hyEsub : yB ∈ Esub := by simpa [hEq]
-              exact hy_not_mem (by simpa [Esub] using hyEsub)
+              have hyEsub : yB ∈ Esub := by simp [hEq]
+              exact hy_not_mem (by
+                change (yB : G ⧸ U) ∈ E
+                exact (Subgroup.mem_subgroupOf).1 hyEsub)
             have hB_card_gt : p ^ 2 < Nat.card B := by
               have hlt : Nat.card Esub < Nat.card B := by
                 simpa using natCard_lt_of_subgroup_lt (H := Esub) (K := (⊤ : Subgroup B)) hEsub_lt_top
@@ -166,7 +166,8 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
               intro e he
               change (e : B) ∈ Subgroup.closure {x : B | x ^ (p ^ 1) = 1}
               refine Subgroup.subset_closure ?_
-              have heE : (((e : B) : G ⧸ U) ∈ E) := by simpa [Esub] using he
+              have heE : (((e : B) : G ⧸ U) ∈ E) :=
+                (Subgroup.mem_subgroupOf).1 he
               have he_powE : (⟨((e : B) : G ⧸ U), heE⟩ : E) ^ p = 1 :=
                 Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
                   (IsElementaryAbelian.exponent_dvd_p p E) ⟨((e : B) : G ⧸ U), heE⟩
@@ -181,7 +182,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             have hΩB_top : omega₁ (G := B) (p := p) = ⊤ := by
               apply eq_top_iff.2
               intro z _hz
-              have hz_sup : z ∈ Esub ⊔ Subgroup.zpowers yB := by simpa [hEsub_sup]
+              have hz_sup : z ∈ Esub ⊔ Subgroup.zpowers yB := by simp [hEsub_sup]
               exact (sup_le hEsub_le_omega ((Subgroup.zpowers_le).2 hyB_mem_omega)) hz_sup
             have hΩB_card : Nat.card (omega₁ (G := B) (p := p)) = p ^ 3 := by
               calc
@@ -199,7 +200,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
                   intro z hz
                   have hz' : (⟨z, hz⟩ : ΩU) = 1 := Subsingleton.elim _ _
                   simpa using congrArg Subtype.val hz'
-                have hΩU_card : Nat.card ΩU = 1 := by simpa [hΩU_eq_bot]
+                have hΩU_card : Nat.card ΩU = 1 := by simp [hΩU_eq_bot]
                 have hcard_le : Nat.card ΩU ≤ p ^ 2 := by
                   rw [hΩU_card]
                   exact Nat.succ_le_of_lt (pow_pos (Fact.out : Nat.Prime p).pos 2)
@@ -230,7 +231,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
               let xΩ : ΩU := ⟨x, hB_le x.2⟩
               have hxpowΩ : xΩ ^ p = 1 := by
                 exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-                  (show Monoid.exponent ↥ΩU ∣ p by simpa [hΩU_exp]) xΩ
+                  (show Monoid.exponent ↥ΩU ∣ p by simp [hΩU_exp]) xΩ
               apply Subtype.ext
               simpa [xΩ] using congrArg Subtype.val hxpowΩ
             have hΩB_card : Nat.card (omega₁ (G := B) (p := p)) = p ^ 3 := by
@@ -271,7 +272,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             rw [← hB_top]
             exact hB_le_ΩU
           have hQ_class2 : NilpotencyClassLe 2 (G ⧸ U) :=
-            nilpotencyClassLe_of_card_le_p_cubed (R := G ⧸ U) (p := p) (by simpa [hQcard])
+            nilpotencyClassLe_of_card_le_p_cubed (R := G ⧸ U) (p := p) (by simp [hQcard])
           have hΩU_exp_one_or_p :
               Monoid.exponent ↥ΩU = 1 ∨ Monoid.exponent ↥ΩU = p :=
             proposition_4_3_a (R := G ⧸ U) (p := p) hpodd (Or.inl hQ_class2)
@@ -343,7 +344,8 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             simpa [ΩG] using omega₁_characteristic (G := G) (p := p)
           letI : ΩG.Normal := by infer_instance
           have hΩG_comm : IsMulCommutative ΩG := by
-            exact ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq (p := p) (G := ΩG) hΩG_card⟩⟩
+            exact IsPGroup.isMulCommutative_of_card_eq_prime_sq
+              (p := p) (G := ΩG) hΩG_card
           have hΩG_pow : ∀ x : ΩG, x ^ p = 1 := by
             letI : IsMulCommutative ΩG := hΩG_comm
             intro x
@@ -366,17 +368,14 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
                 _ = 1 := by simp [hy, hz]
             · intro y _ hy
               simpa [inv_pow] using congrArg Inv.inv hy
-          have hquot_comm :
-              Std.Commutative (· * · : G ⧸ ΩG → G ⧸ ΩG → G ⧸ ΩG) := by
-            letI : IsMulCommutative (G ⧸ ΩG) :=
-              ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq
-                (p := p) (G := G ⧸ ΩG) hΩG_quot_card⟩⟩
-            infer_instance
+          have hquot_comm : IsMulCommutative (G ⧸ ΩG) :=
+            IsPGroup.isMulCommutative_of_card_eq_prime_sq
+              (p := p) (G := G ⧸ ΩG) hΩG_quot_card
           have hder_le_ΩG : derivedSubgroup G ≤ ΩG := by
-            simpa [derivedSubgroup, derivedSeries_one] using
+            simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
               (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := ΩG)).1 hquot_comm
           have hclass3 : NilpotencyClassLe 3 G :=
-            nilpotencyClassLe_of_card_le_p_four (R := G) (p := p) (by simpa [hGcard_p4])
+            nilpotencyClassLe_of_card_le_p_four (R := G) (p := p) (by simp [hGcard_p4])
           obtain ⟨φ, hφ⟩ :=
             proposition_4_3_b (R := G) (p := p) hpodd (Or.inr ⟨hpgt, hclass3⟩) hder_le_ΩG
           have hpow_mem_U : ∀ x : G, x ^ p ∈ U := by
@@ -384,7 +383,7 @@ public theorem lemma_4_9 {R : Type u} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
             apply (QuotientGroup.eq_one_iff (N := U) (x := x ^ p)).1
             have hxpow : (q x) ^ p = 1 := by
               exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-                (show Monoid.exponent (G ⧸ U) ∣ p by simpa [hQ_exp]) (q x)
+                (show Monoid.exponent (G ⧸ U) ∣ p by simp [hQ_exp]) (q x)
             simpa [q] using hxpow
           have hφ_range_le_U : φ.range ≤ U := by
             intro x hx

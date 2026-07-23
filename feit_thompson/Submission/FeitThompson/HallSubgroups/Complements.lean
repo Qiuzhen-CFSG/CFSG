@@ -21,9 +21,9 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import Submission.FeitThompson.GroupAction.Invariant
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.HallSubgroups.Core
+public import FeitThompson.GroupAction.Invariant
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.HallSubgroups.Core
 
 section SemidirectInfrastructure
 
@@ -77,6 +77,7 @@ The proof follows the standard `H¹(A, H) = 0` argument, using the existing cocy
 section CoprimeInvariantComplement
 
 open scoped Pointwise
+open scoped IsMulCommutative
 open MulAction
 
 variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
@@ -207,10 +208,6 @@ lemma smul_op_smul_leftTransversal (a : A) (g : Gᵐᵒᵖ) (T : H.LeftTransvers
 
 variable [IsMulCommutative H] [Subgroup.FiniteIndex H]
 
--- The `G`-action on `H.QuotientDiff` is provided by `Mathlib.GroupTheory.SchurZassenhaus`.
-noncomputable local instance instMulActionQuotientDiffG : MulAction G H.QuotientDiff :=
-  Subgroup.instMulActionQuotientDiff (H := H) (G := G)
-
 /-- An `A`-action on `H.QuotientDiff` induced by an `A`-action on `G` that preserves `H`. -/
 @[reducible] noncomputable def mulActionQuotientDiff : MulAction A H.QuotientDiff := by
   classical
@@ -246,7 +243,8 @@ noncomputable local instance instMulActionQuotientDiffG : MulAction G H.Quotient
         change smulQD (a * b) (Quotient.mk'' T) = smulQD a (smulQD b (Quotient.mk'' T))
         simp [smulQD, mul_smul] }
 
-noncomputable local instance instMulActionQuotientDiffA : MulAction A H.QuotientDiff :=
+noncomputable local instance (priority := 100) instMulActionQuotientDiffA :
+    MulAction A H.QuotientDiff :=
   mulActionQuotientDiff (G := G) (A := A) (H := H)
 
 omit [H.Normal] in
@@ -254,7 +252,7 @@ lemma smul_mk (a : A) (T : H.LeftTransversal) :
     (mulActionQuotientDiff (G := G) (A := A) (H := H)).smul a (Quotient.mk'' T) =
       Quotient.mk'' (a • T) := by
   classical
-  rfl
+  exact Quotient.map'_mk'' _ _ _
 
 set_option backward.isDefEq.respectTransparency false in
 lemma smul_smul_quotientDiff (a : A) (g : G) (q : H.QuotientDiff) :
@@ -276,7 +274,7 @@ lemma smul_smul_quotientDiff (a : A) (g : G) (q : H.QuotientDiff) :
             (Quotient.mk'' (op (g⁻¹ : G) • T) : H.QuotientDiff) := by
               rfl
     _ = Quotient.mk'' (a • (op (g⁻¹ : G) • T)) := by
-          rfl
+          exact smul_mk (G := G) (A := A) (H := H) a _
     _ = Quotient.mk'' (op ((a • g)⁻¹ : G) • (a • T)) := by
           simpa using congrArg Quotient.mk'' hT
     _ =
@@ -290,9 +288,14 @@ lemma smul_smul_quotientDiff (a : A) (g : G) (q : H.QuotientDiff) :
 
 /-- Commutation between the `A`-action and the `G`-action on `H.QuotientDiff`. -/
 lemma smul_smul_quotientDiff' (a : A) (g : G) (q : H.QuotientDiff) :
-    a • (SMul.smul g q) = SMul.smul (a • g) (a • q) := by
+    a • (g • q) = (a • g) • (a • q) := by
   -- Reduce to `smul_smul_quotientDiff`, which is stated using explicit `MulAction.smul`.
-  simpa using smul_smul_quotientDiff (G := G) (A := A) (H := H) a g q
+  change
+    (mulActionQuotientDiff (G := G) (A := A) (H := H)).smul a
+        ((Subgroup.instMulActionQuotientDiff (H := H) (G := G)).smul g q) =
+      (Subgroup.instMulActionQuotientDiff (H := H) (G := G)).smul (a • g)
+        ((mulActionQuotientDiff (G := G) (A := A) (H := H)).smul a q)
+  exact smul_smul_quotientDiff (G := G) (A := A) (H := H) a g q
 
 lemma isCocycle₁_of_smul_basepoint
     [Finite H]
@@ -308,16 +311,16 @@ lemma isCocycle₁_of_smul_basepoint
     -- Apply `a` to `hb : c b • (b • α) = α` and rewrite using equivariance.
     have hb0 : a • (c b • (b • α)) = a • α := by
       simpa using congrArg (fun q : H.QuotientDiff => a • q) hb
-    have hb1 : a • (SMul.smul ((c b : H) : G) (b • α)) = a • α := by
-      simpa using hb0
+    have hb1 : a • (((c b : H) : G) • (b • α)) = a • α := by
+      simpa only [MulAction.subgroup_smul_def] using hb0
     have hcomm :=
       smul_smul_quotientDiff' (G := G) (A := A) (H := H) a ((c b : H) : G) (b • α)
-    have hb2 : SMul.smul (a • ((c b : H) : G)) (a • (b • α)) = a • α := by
+    have hb2 : (a • ((c b : H) : G)) • (a • (b • α)) = a • α := by
       simpa [hcomm] using hb1
     have hb3 : (a • c b) • (a • (b • α)) = a • α := by
-      have hb2' : SMul.smul ((a • c b : H) : G) (a • (b • α)) = a • α := by
+      have hb2' : ((a • c b : H) : G) • (a • (b • α)) = a • α := by
         simpa [coe_smul (G := G) (A := A) (H := H)] using hb2
-      simpa using hb2'
+      simpa only [MulAction.subgroup_smul_def] using hb2'
     simpa [mul_smul] using hb3
   have h_comp : (c a * (a • c b)) • ((a * b) • α) = α := by
     -- Use `h_step` and then `ha`.
@@ -358,8 +361,8 @@ lemma fixedPoint_of_coboundary
   calc
     a • (n⁻¹ • α) = (a • (n⁻¹ : H)) • (a • α) := by
       have hcomm :=
-        smul_smul_quotientDiff (G := G) (A := A) (H := H) a ((n⁻¹ : H) : G) α
-      simpa [coe_smul (G := G) (A := A) (H := H)] using hcomm
+        smul_smul_quotientDiff' (G := G) (A := A) (H := H) a ((n⁻¹ : H) : G) α
+      simpa [MulAction.subgroup_smul_def, coe_smul (G := G) (A := A) (H := H)] using hcomm
     _ = (a • (n⁻¹ : H)) • ((c a)⁻¹ • α) := by simp [ha]
     _ = ((a • (n⁻¹ : H)) * (c a)⁻¹) • α := by simp [mul_smul]
     _ = n⁻¹ • α := by
@@ -408,7 +411,7 @@ public theorem exists_invariant_complement'
   · -- Invariance of the stabilizer from equivariance of the action and `α₀` being fixed.
     refine ⟨?_⟩
     intro a g
-    change (SMul.smul g α₀ = α₀) ↔ (SMul.smul (a • g) α₀ = α₀)
+    change (g • α₀ = α₀) ↔ ((a • g) • α₀ = α₀)
     constructor
     · intro hg
       have := congrArg (fun q : H.QuotientDiff => a • q) hg
@@ -416,7 +419,7 @@ public theorem exists_invariant_complement'
       simpa [smul_smul_quotientDiff' (G := G) (A := A) (H := H), hfixed a] using this
     · intro hg
       -- Apply the forward direction to `a⁻¹` and `a • g`.
-      have hg' : SMul.smul (a⁻¹ • (a • g)) α₀ = α₀ := by
+      have hg' : (a⁻¹ • (a • g)) • α₀ = α₀ := by
         have := congrArg (fun q : H.QuotientDiff => a⁻¹ • q) hg
         simpa [smul_smul_quotientDiff' (G := G) (A := A) (H := H), hfixed a⁻¹] using this
       simpa [inv_smul_smul] using hg'
@@ -515,7 +518,8 @@ public lemma exists_conj_eq_of_isComplement'
         (MulAction.stabilizer G α₁).map (MulAut.conj (n : G)).toMonoidHom := by
     calc
       MulAction.stabilizer G α₂ = MulAction.stabilizer G ((n : G) • α₁) := by
-        simpa [α₂] using congrArg (MulAction.stabilizer G) hn.symm
+        simpa only [α₂, MulAction.subgroup_smul_def] using
+          congrArg (MulAction.stabilizer G) hn.symm
       _ = (MulAction.stabilizer G α₁).map (MulAut.conj (n : G)).toMonoidHom :=
         MulAction.stabilizer_smul_eq_stabilizer_map_conj (G := G) (g := (n : G)) (a := α₁)
   simpa [hstab₁, hstab₂] using hmap

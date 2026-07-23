@@ -1,9 +1,9 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_9
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
+public import FeitThompson.PFsection13.PFsection13_9
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection8.PFsection8_5_a
 
 /-!
 # Peterfalvi, Section 13: PFsection13_10
@@ -1131,10 +1131,14 @@ private theorem section13_theorem_13_10_totalCardinality_from_G0Data_and_disjoin
     simpa [Hc, Qc, U] using section13_G0_disjoint_conjugateClosures_of_G0Data H Q G0 hG0
   have hUcard : Nat.card U = Nat.card Hc + Nat.card Qc := by
     have h := Set.ncard_union_eq hdisj
-    simpa [← Nat.card_coe_set_eq, Hc, Qc, U] using h
+    dsimp [U, Hc, Qc]
+    rw [← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq]
+    exact h
   have hNcard : Nat.card N = Nat.card G0 + Nat.card U := by
     have h := Set.ncard_union_eq hG0Udisj
-    simpa [← Nat.card_coe_set_eq, hN_union, U] using h
+    dsimp [U]
+    rw [← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq, ← Nat.card_coe_set_eq, hN_union]
+    exact h
   have hNcompl : N = ({1} : Set G)ᶜ := by
     ext x
     simp [N, section16NonidentityElements]
@@ -1144,7 +1148,9 @@ private theorem section13_theorem_13_10_totalCardinality_from_G0Data_and_disjoin
     have htmp : 1 + N.ncard = Nat.card G := by
       simpa [hNcompl, hone, add_comm] using hcompl
     have htmp' : Nat.card G = 1 + N.ncard := htmp.symm
-    simpa [← Nat.card_coe_set_eq] using htmp'
+    dsimp [N]
+    rw [← Nat.card_coe_set_eq]
+    exact htmp'
   rw [hGcard_nat, hNcard, hUcard]
   simp [Hc, Qc]
   ring_nf
@@ -2061,7 +2067,7 @@ private theorem section13_conjBy_le_centralizer_singleton_of_mem_comm
   rcases hz with ⟨q0, hq0, hz⟩
   rw [← hz]
   have hcomm : q0 * y = y * q0 :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := Q) hq0 hy
+    setLike_mul_comm (s := Q) hq0 hy
   calc
     (g * q0 * g⁻¹) * (g * y * g⁻¹) = g * (q0 * y) * g⁻¹ := by group
     _ = g * (y * q0) * g⁻¹ := by rw [hcomm]

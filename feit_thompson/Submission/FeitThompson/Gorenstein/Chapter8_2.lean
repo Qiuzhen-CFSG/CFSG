@@ -4,11 +4,11 @@ module
 Authors: OpenAI
 -/
 
-public import Submission.FeitThompson.BGsection1.lemma_1_22
-public import Submission.FeitThompson.BGsection3.Infrastructure
-public import Submission.FeitThompson.PCore.CentralizerControl
-public import Submission.FeitThompson.PGroup.NormalSubgroups
-public import Submission.FeitThompson.Commutator.Core
+public import FeitThompson.BGsection1.lemma_1_22
+public import FeitThompson.BGsection3.Infrastructure
+public import FeitThompson.PCore.CentralizerControl
+public import FeitThompson.PGroup.NormalSubgroups
+public import FeitThompson.Commutator.Core
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 
 /-!
@@ -20,7 +20,7 @@ Gorenstein's Theorem 8.2.11. We intentionally avoid importing
 infrastructure here.
 -/
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 section
 
@@ -53,65 +53,78 @@ theorem eq_one_of_mem_pGroup_sq_eq_one
 
 theorem lowerCentralSeries_commutator_le
     (i j : ℕ) :
-    ⁅lowerCentralSeries G i, lowerCentralSeries G j⁆ ≤
-      lowerCentralSeries G (i + j + 1) := by
+    ⁅(⊤ : Subgroup G).lowerCentralSeries i, (⊤ : Subgroup G).lowerCentralSeries j⁆ ≤
+      (⊤ : Subgroup G).lowerCentralSeries (i + j + 1) := by
   induction j generalizing i with
   | zero =>
-      simpa [lowerCentralSeries_zero, Nat.add_assoc] using
-        (le_rfl : ⁅lowerCentralSeries G i, ⊤⁆ ≤ ⁅lowerCentralSeries G i, ⊤⁆)
+      simp [Subgroup.lowerCentralSeries]
   | succ j ih =>
-      let N : Subgroup G := lowerCentralSeries G (i + j + 2)
+      let N : Subgroup G := (⊤ : Subgroup G).lowerCentralSeries (i + j + 2)
       let q : G →* G ⧸ N := QuotientGroup.mk' N
       have h1le :
-          ⁅⁅(⊤ : Subgroup G), lowerCentralSeries G i⁆, lowerCentralSeries G j⁆ ≤ N := by
+          ⁅⁅(⊤ : Subgroup G), (⊤ : Subgroup G).lowerCentralSeries i⁆,
+            (⊤ : Subgroup G).lowerCentralSeries j⁆ ≤ N := by
         dsimp [N]
-        rw [Subgroup.commutator_comm (⊤ : Subgroup G), lowerCentralSeries_succ,
-          ← lowerCentralSeries_succ]
+        rw [Subgroup.commutator_comm (⊤ : Subgroup G)]
+        change
+          ⁅(⊤ : Subgroup G).lowerCentralSeries (i + 1),
+            (⊤ : Subgroup G).lowerCentralSeries j⁆ ≤
+              (⊤ : Subgroup G).lowerCentralSeries (i + j + 2)
         simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using (ih (i + 1))
       have h2le :
-          ⁅⁅lowerCentralSeries G i, lowerCentralSeries G j⁆, (⊤ : Subgroup G)⁆ ≤ N := by
+          ⁅⁅(⊤ : Subgroup G).lowerCentralSeries i, (⊤ : Subgroup G).lowerCentralSeries j⁆,
+            (⊤ : Subgroup G)⁆ ≤ N := by
         dsimp [N]
         exact Subgroup.commutator_mono (ih i) le_rfl
       have h1bot :
-          ⁅⁅(⊤ : Subgroup G).map q, (lowerCentralSeries G i).map q⁆,
-            (lowerCentralSeries G j).map q⁆ = ⊥ := by
+          ⁅⁅(⊤ : Subgroup G).map q, ((⊤ : Subgroup G).lowerCentralSeries i).map q⁆,
+            ((⊤ : Subgroup G).lowerCentralSeries j).map q⁆ = ⊥ := by
         apply le_bot_iff.mp
         calc
-          ⁅⁅(⊤ : Subgroup G).map q, (lowerCentralSeries G i).map q⁆,
-              (lowerCentralSeries G j).map q⁆ =
-              (⁅⁅(⊤ : Subgroup G), lowerCentralSeries G i⁆, lowerCentralSeries G j⁆).map q := by
+          ⁅⁅(⊤ : Subgroup G).map q, ((⊤ : Subgroup G).lowerCentralSeries i).map q⁆,
+              ((⊤ : Subgroup G).lowerCentralSeries j).map q⁆ =
+              (⁅⁅(⊤ : Subgroup G), (⊤ : Subgroup G).lowerCentralSeries i⁆,
+                (⊤ : Subgroup G).lowerCentralSeries j⁆).map q := by
                 rw [Subgroup.map_commutator, Subgroup.map_commutator]
           _ ≤ N.map q := Subgroup.map_mono h1le
           _ = ⊥ := QuotientGroup.map_mk'_self (N := N)
       have h2bot :
-          ⁅⁅(lowerCentralSeries G i).map q, (lowerCentralSeries G j).map q⁆,
+          ⁅⁅((⊤ : Subgroup G).lowerCentralSeries i).map q,
+            ((⊤ : Subgroup G).lowerCentralSeries j).map q⁆,
             (⊤ : Subgroup G).map q⁆ = ⊥ := by
         apply le_bot_iff.mp
         calc
-          ⁅⁅(lowerCentralSeries G i).map q, (lowerCentralSeries G j).map q⁆,
+          ⁅⁅((⊤ : Subgroup G).lowerCentralSeries i).map q,
+              ((⊤ : Subgroup G).lowerCentralSeries j).map q⁆,
               (⊤ : Subgroup G).map q⁆ =
-              (⁅⁅lowerCentralSeries G i, lowerCentralSeries G j⁆, (⊤ : Subgroup G)⁆).map q := by
+              (⁅⁅(⊤ : Subgroup G).lowerCentralSeries i,
+                (⊤ : Subgroup G).lowerCentralSeries j⁆, (⊤ : Subgroup G)⁆).map q := by
                 rw [Subgroup.map_commutator, Subgroup.map_commutator]
           _ ≤ N.map q := Subgroup.map_mono h2le
           _ = ⊥ := QuotientGroup.map_mk'_self (N := N)
       have hbotq :
-          ⁅⁅(lowerCentralSeries G j).map q, (⊤ : Subgroup G).map q⁆,
-            (lowerCentralSeries G i).map q⁆ = ⊥ := by
+          ⁅⁅((⊤ : Subgroup G).lowerCentralSeries j).map q, (⊤ : Subgroup G).map q⁆,
+            ((⊤ : Subgroup G).lowerCentralSeries i).map q⁆ = ⊥ := by
         exact Subgroup.commutator_commutator_eq_bot_of_rotate h1bot h2bot
       have hleq :
-          (⁅⁅lowerCentralSeries G j, (⊤ : Subgroup G)⁆, lowerCentralSeries G i⁆).map q = ⊥ := by
+          (⁅⁅(⊤ : Subgroup G).lowerCentralSeries j, (⊤ : Subgroup G)⁆,
+            (⊤ : Subgroup G).lowerCentralSeries i⁆).map q = ⊥ := by
         simpa [Subgroup.map_commutator] using hbotq
       have hle :
-          ⁅⁅lowerCentralSeries G j, (⊤ : Subgroup G)⁆, lowerCentralSeries G i⁆ ≤ N := by
+          ⁅⁅(⊤ : Subgroup G).lowerCentralSeries j, (⊤ : Subgroup G)⁆,
+            (⊤ : Subgroup G).lowerCentralSeries i⁆ ≤ N := by
         have hker :=
           (Subgroup.map_eq_bot_iff
             (f := q)
-            (H := ⁅⁅lowerCentralSeries G j, (⊤ : Subgroup G)⁆, lowerCentralSeries G i⁆)).1 hleq
+            (H := ⁅⁅(⊤ : Subgroup G).lowerCentralSeries j, (⊤ : Subgroup G)⁆,
+              (⊤ : Subgroup G).lowerCentralSeries i⁆)).1 hleq
         simpa [q, QuotientGroup.ker_mk'] using hker
       dsimp [N] at hle
-      change ⁅lowerCentralSeries G i, ⁅lowerCentralSeries G j, (⊤ : Subgroup G)⁆⁆ ≤
-        lowerCentralSeries G (i + j + 2)
-      simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm, Subgroup.commutator_comm] using hle
+      change ⁅(⊤ : Subgroup G).lowerCentralSeries i,
+        ⁅(⊤ : Subgroup G).lowerCentralSeries j, (⊤ : Subgroup G)⁆⁆ ≤
+          (⊤ : Subgroup G).lowerCentralSeries (i + j + 2)
+      rw [Subgroup.commutator_comm]
+      exact hle
 
 /-- Gorenstein's iterated commutator chain `[B, A; i]`. -/
 def replacementCommChain (B A : Subgroup G) : ℕ → Subgroup G
@@ -231,11 +244,12 @@ theorem replacementCommChainSub_eq_subgroupOf
 theorem replacementCommChainSub_le_lowerCentralSeries
     (B A : Subgroup G) :
     ∀ n,
-      replacementCommChainSub B A n ≤ lowerCentralSeries (↥(B ⊔ A)) n
+      replacementCommChainSub B A n ≤
+        (⊤ : Subgroup ↥(B ⊔ A)).lowerCentralSeries n
   | 0 => by
-      simp [lowerCentralSeries_zero]
+      simp [Subgroup.lowerCentralSeries_zero]
   | n + 1 => by
-      rw [replacementCommChainSub_succ, lowerCentralSeries_succ]
+      rw [replacementCommChainSub_succ, Subgroup.lowerCentralSeries_succ]
       exact
         (Subgroup.commutator_mono
           (replacementCommChainSub_le_lowerCentralSeries B A n) le_top)
@@ -244,7 +258,8 @@ theorem replacementCommChain_eventually_bot_of_isNilpotent
     (B A : Subgroup G)
     (hnil : Group.IsNilpotent ↥(B ⊔ A)) :
     ∃ n, replacementCommChain B A n = ⊥ := by
-  obtain ⟨n, hn⟩ := (nilpotent_iff_lowerCentralSeries (G := ↥(B ⊔ A))).1 hnil
+  obtain ⟨n, hn⟩ :=
+    (Subgroup.nilpotent_iff_lowerCentralSeries (G := ↥(B ⊔ A))).1 hnil
   refine ⟨n, ?_⟩
   calc
     replacementCommChain B A n =
@@ -595,7 +610,7 @@ theorem quotient_pPrimeCore_subgroupMap_injective
     rw [hcard]
     exact (pPrimeCore_coprime_card (G := G) (p := p)).pow_left n
   have hinf_bot : H ⊓ pPrimeCore p G = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hcoprime
+    (Subgroup.disjoint_of_coprime_natCard hcoprime).eq_bot
   have hker_bot :
       (((q.comp H.subtype)).ker : Subgroup H) = ⊥ := by
     ext x
@@ -633,14 +648,15 @@ theorem thompsonCenter_normal_subgroupOf_sylow
       constructor
       · rintro ⟨A, hA, rfl⟩
         refine ⟨?_, ?_, ?_⟩
-        · simpa [e, Subgroup.pointwise_smul_def] using
-            (Subgroup.conj_smul_le_of_le hA.1 ⟨g, hg⟩)
+        · change A.map (MulDistribMulAction.toMonoidHom G (MulAut.conj g)) ≤ S
+          exact Subgroup.conj_smul_le_of_le hA.1 ⟨g, hg⟩
         · letI : IsMulCommutative A := hA.2.1
           exact Subgroup.map_isMulCommutative (H := A) e.toMonoidHom
         · intro C hC hCcomm
           have hCpre_le : C.map e.symm.toMonoidHom ≤ S := by
-            simpa [e, Subgroup.pointwise_smul_def] using
-              (Subgroup.conj_smul_le_of_le hC ⟨g⁻¹, S.inv_mem hg⟩)
+            intro x hx
+            rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
+            simpa [e] using S.mul_mem (S.mul_mem (S.inv_mem hg) (hC hy)) hg
           have hCpre_comm : IsMulCommutative (C.map e.symm.toMonoidHom) := by
             infer_instance
           have hAmax := hA.2.2 (C.map e.symm.toMonoidHom) hCpre_le hCpre_comm
@@ -655,14 +671,15 @@ theorem thompsonCenter_normal_subgroupOf_sylow
       · intro hB
         refine ⟨B.map e.symm.toMonoidHom, ?_, ?_⟩
         · refine ⟨?_, ?_, ?_⟩
-          · simpa [e, Subgroup.pointwise_smul_def] using
-              (Subgroup.conj_smul_le_of_le hB.1 ⟨g⁻¹, S.inv_mem hg⟩)
+          · intro x hx
+            rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
+            simpa [e] using S.mul_mem (S.mul_mem (S.inv_mem hg) (hB.1 hy)) hg
           · letI : IsMulCommutative B := hB.2.1
             exact Subgroup.map_isMulCommutative (H := B) e.symm.toMonoidHom
           · intro C hC hCcomm
             have hCpre_le : C.map e.toMonoidHom ≤ S := by
-              simpa [e, Subgroup.pointwise_smul_def] using
-                (Subgroup.conj_smul_le_of_le hC ⟨g, hg⟩)
+              change C.map (MulDistribMulAction.toMonoidHom G (MulAut.conj g)) ≤ S
+              exact Subgroup.conj_smul_le_of_le hC ⟨g, hg⟩
             have hCpre_comm : IsMulCommutative (C.map e.toMonoidHom) := by
               infer_instance
             have hBmax := hB.2.2 (C.map e.toMonoidHom) hCpre_le hCpre_comm
@@ -1030,18 +1047,15 @@ theorem thompsonAbelianSubgroups_centralizer_eq
     have hB_comm : IsMulCommutative B := by
       change IsMulCommutative (Subgroup.closure ((A : Set G) ∪ {x}))
       letI : IsMulCommutative A := hA.2.1
-      letI : CommGroup ↥(Subgroup.closure ((A : Set G) ∪ {x})) :=
-        Subgroup.closureCommGroupOfComm (k := ((A : Set G) ∪ {x})) <| by
+      exact Subgroup.isMulCommutative_closure (k := ((A : Set G) ∪ {x})) <| by
         intro y hy z hz
         rcases hy with hyA | rfl
         · rcases hz with hzA | rfl
-          · exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hyA hzA
+          · exact setLike_mul_comm (s := A) hyA hzA
           · exact Subgroup.mem_centralizer_iff.mp hx.1 _ hyA
         · rcases hz with hzA | rfl
           · exact (Subgroup.mem_centralizer_iff.mp hx.1 _ hzA).symm
           · simp
-      refine ⟨?_⟩
-      exact ⟨fun y z => mul_comm y z⟩
     have hB_card_le : Nat.card B ≤ Nat.card A := hA.2.2 B hB_le_P hB_comm
     have hA_le_B : A ≤ B := by
       intro y hy
@@ -1201,25 +1215,20 @@ theorem thompsonReplacement_base
     exact sup_le hM_le_P (fun y hy => hA.1 hy.2)
   · rw [Subgroup.sup_eq_closure]
     letI : IsMulCommutative A := hA.2.1
-    letI :
-        CommGroup ↥(Subgroup.closure
-          (((M : Subgroup G) : Set G) ∪ ((C : Subgroup G) : Set G))) :=
-      Subgroup.closureCommGroupOfComm
-        (k := (((M : Subgroup G) : Set G) ∪ ((C : Subgroup G) : Set G))) <| by
+    exact Subgroup.isMulCommutative_closure
+      (k := (((M : Subgroup G) : Set G) ∪ ((C : Subgroup G) : Set G))) <| by
         intro y hy z hz
         rcases hy with hyM | hyC
         · rcases hz with hzM | hzC
           · exact
-              Subgroup.mul_comm_of_mem_isMulCommutative
-                (H := M) hyM hzM
+              setLike_mul_comm
+                (s := M) hyM hzM
           · exact Subgroup.mem_centralizer_iff.mp hzC.1 _ hyM
         · rcases hz with hzM | hzC
           · exact (Subgroup.mem_centralizer_iff.mp hyC.1 _ hzM).symm
           · exact
-              Subgroup.mul_comm_of_mem_isMulCommutative
-                (H := A) hyC.2 hzC.2
-    refine ⟨?_⟩
-    exact ⟨fun y z => mul_comm y z⟩
+              setLike_mul_comm
+                (s := A) hyC.2 hzC.2
   · intro B hB_le_P hB_comm
     have hB_card_le_A : Nat.card B ≤ Nat.card A := hA.2.2 B hB_le_P hB_comm
     have hA_card_le :
@@ -1273,7 +1282,7 @@ theorem thompsonReplacement_base
           have hxcM0 : ⁅x, c⁆ ∈ M0 := by
             exact Subgroup.subset_closure ⟨c, hc, rfl⟩
           have hac : Commute a c := by
-            exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha hc
+            exact setLike_mul_comm (s := A) ha hc
           let s : G := x * a * x⁻¹
           let t : G := x * c * x⁻¹
           let β : G := ⁅x, a⁆
@@ -1310,7 +1319,7 @@ theorem thompsonReplacement_base
               _ = t * s := by rfl
           have hβδ : Commute β δ := by
             dsimp [β, δ]
-            exact Subgroup.mul_comm_of_mem_isMulCommutative (H := M0) hxaM0 hxcM0
+            exact setLike_mul_comm (s := M0) hxaM0 hxcM0
           have hAinvCinv : Commute a⁻¹ c⁻¹ := (hac.inv_left).inv_right
           have hAinv_t_cinv : a⁻¹ * t * c⁻¹ = t * a⁻¹ * c⁻¹ := by
             have hs_eq' :
@@ -1702,9 +1711,12 @@ theorem pConstrained_quotient_pPrimeCore
     have hcent_map :
         Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
           (Subgroup.centralizer (TG : Set G)).map q := by
-      simpa using
-        (centralizer_map_quotient_eq_map_centralizer (G := G) (p := p)
-          (T := TG) (M := M) hMnormal hMcop)
+      have h := centralizer_map_quotient_eq_map_centralizer (G := G) (p := p)
+        (T := TG) (M := M) hMnormal hMcop
+      change
+        Subgroup.centralizer ((fun a : G => q a) '' (TG : Set G)) =
+          (Subgroup.centralizer (TG : Set G)).map q at h
+      simpa using h
     have hcent_map' :
         Subgroup.centralizer (Tbar : Set (G ⧸ M)) =
           (Subgroup.centralizer (TG : Set G)).map q := by
@@ -2002,10 +2014,12 @@ theorem pStable_quotient_pPrimeCore
     have htmp :=
       normalizer_map_quotient_eq_map_normalizer
         (G := G) (p := p) Q1 M hM_normal hMcop
+    change
+      Subgroup.normalizer ((fun a : G => q a) '' (Q1 : Set G)) = N1.map q at htmp
     have htmp' :
         Subgroup.normalizer ((Q1.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) = N1.map q := by
       rw [← himage]
-      simpa [N1] using htmp
+      exact htmp
     simpa [N, hQ1_map_q] using htmp'.symm
   have hCmap : C1.map q = C := by
     letI : Fact (IsPGroup p (↑Q1)) := ⟨hQ1p⟩
@@ -2021,10 +2035,12 @@ theorem pStable_quotient_pPrimeCore
     have htmp :=
       centralizer_map_quotient_eq_map_centralizer
         (G := G) (p := p) (T := Q1) (M := M) hM_normal hMcop
+    change
+      Subgroup.centralizer ((fun a : G => q a) '' (Q1 : Set G)) = C1.map q at htmp
     have htmp' :
         Subgroup.centralizer ((Q1.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) = C1.map q := by
       rw [← himage]
-      simpa [C1] using htmp
+      exact htmp
     simpa [C, hQ1_map_q] using htmp'.symm
   let qN1 : N1 →* N :=
     (q.comp N1.subtype).codRestrict N (by
@@ -2075,7 +2091,8 @@ theorem pStable_quotient_pPrimeCore
     intro z hz
     rcases Subgroup.mem_map.mp hz with ⟨a, ha, rfl⟩
     have haA0map : (a : G ⧸ M) ∈ A0.map q := by
-      simpa [hA0_map_q] using ha
+      change (a : G ⧸ M) ∈ A at ha
+      rwa [← hA0_map_q] at ha
     rcases Subgroup.mem_map.mp haA0map with ⟨x, hxA0, hxa⟩
     let xN1 : N1 := ⟨x, hA0_le_normalizer_Q1 hxA0⟩
     have hxSA : QuotientGroup.mk' (C1.subgroupOf N1) xN1 ∈ SA := by
@@ -2645,8 +2662,8 @@ theorem theorem_8_2_10
             rw [Subgroup.mem_centralizer_iff]
             intro c hc
             exact
-              Subgroup.mul_comm_of_mem_isMulCommutative
-                (H := Z) (hBcomm_le_Z hc) hz.2
+              setLike_mul_comm
+                (s := Z) (hBcomm_le_Z hc) hz.2
           rw [← hB1_eq_B]
           dsimp [B1]
           letI : C.Normal := hC_normal
@@ -2919,7 +2936,8 @@ theorem theorem_8_2_10
                     rw [commutator_subgroupOf_map_eq
                       (S := H) (H := B) (R := B) le_sup_left le_sup_left] at hxmap'
                     simpa [Bcomm] using hxmap'
-                  simpa [Nsub] using hxmap
+                  change x ∈ Bcomm.subgroupOf H
+                  exact hxmap
                 have hBbar_comm : IsMulCommutative (Bsub.map qH) := by
                   have hBbar_comm_eq :
                       ⁅Bsub.map qH, Bsub.map qH⁆ = ⊥ := by
@@ -2971,8 +2989,9 @@ theorem theorem_8_2_10
                 have hcommBbar_Abar : ⁅Bsub.map qH, Asub.map qH⁆ = Dbar 1 := by
                   change ⁅Dbar 0, Asub.map qH⁆ = Dbar 1
                   simpa [Dbar, replacementCommChainSub_zero] using hDbar_comm_A 0
-                have hL1q_le : lowerCentralSeries (H ⧸ Nsub) 1 ≤ Dbar 1 := by
-                  rw [lowerCentralSeries_one]
+                have hL1q_le :
+                    (⊤ : Subgroup (H ⧸ Nsub)).lowerCentralSeries 1 ≤ Dbar 1 := by
+                  rw [Subgroup.top_lowerCentralSeries_one]
                   refine (Subgroup.commutator_le).2 ?_
                   intro y hy z hz
                   have hy' : y ∈ Bsub.map qH ⊔ Asub.map qH := by
@@ -2994,12 +3013,12 @@ theorem theorem_8_2_10
                     ⟨b2, hb2, a2, ha2, rfl⟩
                   have hb12 : b1 * b2 = b2 * b1 := by
                     exact
-                      Subgroup.mul_comm_of_mem_isMulCommutative
-                        (H := Bsub.map qH) hb1 hb2
+                      setLike_mul_comm
+                        (s := Bsub.map qH) hb1 hb2
                   have ha12 : a1 * a2 = a2 * a1 := by
                     exact
-                      Subgroup.mul_comm_of_mem_isMulCommutative
-                        (H := Asub.map qH) ha1 ha2
+                      setLike_mul_comm
+                        (s := Asub.map qH) ha1 ha2
                   have ha1b2_mem : ⁅a1, b2⁆ ∈ Dbar 1 := by
                     have : ⁅a1, b2⁆ ∈ ⁅Asub.map qH, Bsub.map qH⁆ := by
                       exact Subgroup.commutator_mem_commutator ha1 hb2
@@ -3014,8 +3033,8 @@ theorem theorem_8_2_10
                       b1 * ⁅a1, b2⁆ * b1⁻¹ = ⁅a1, b2⁆ := by
                     have hcomm : b1 * ⁅a1, b2⁆ = ⁅a1, b2⁆ * b1 := by
                       exact
-                        Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Bsub.map qH) hb1 ha1b2_B
+                        setLike_mul_comm
+                          (s := Bsub.map qH) hb1 ha1b2_B
                     calc
                       b1 * ⁅a1, b2⁆ * b1⁻¹ = (⁅a1, b2⁆ * b1) * b1⁻¹ := by
                         rw [hcomm]
@@ -3024,8 +3043,8 @@ theorem theorem_8_2_10
                       b2 * ⁅b1, a2⁆ * b2⁻¹ = ⁅b1, a2⁆ := by
                     have hcomm : b2 * ⁅b1, a2⁆ = ⁅b1, a2⁆ * b2 := by
                       exact
-                        Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Bsub.map qH) hb2 hb1a2_B
+                        setLike_mul_comm
+                          (s := Bsub.map qH) hb2 hb1a2_B
                     calc
                       b2 * ⁅b1, a2⁆ * b2⁻¹ = (⁅b1, a2⁆ * b2) * b2⁻¹ := by
                         rw [hcomm]
@@ -3033,13 +3052,13 @@ theorem theorem_8_2_10
                   have hbb2 : ⁅b1, b2⁆ = 1 := by
                     exact
                       commutatorElement_eq_one_iff_commute.mpr
-                        (Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Bsub.map qH) hb1 hb2)
+                        (setLike_mul_comm
+                          (s := Bsub.map qH) hb1 hb2)
                   have haa2 : ⁅a1, a2⁆ = 1 := by
                     exact
                       commutatorElement_eq_one_iff_commute.mpr
-                        (Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Asub.map qH) ha1 ha2)
+                        (setLike_mul_comm
+                          (s := Asub.map qH) ha1 ha2)
                   have hleft_mem : ⁅b1 * a1, b2⁆ ∈ Dbar 1 := by
                     rw [commutator_mul_left, hbb2]
                     simpa [hb1_conj_ha1b2, mul_assoc] using ha1b2_mem
@@ -3051,8 +3070,8 @@ theorem theorem_8_2_10
                       b2 * ⁅b1 * a1, a2⁆ * b2⁻¹ = ⁅b1 * a1, a2⁆ := by
                     have hcomm : b2 * ⁅b1 * a1, a2⁆ = ⁅b1 * a1, a2⁆ * b2 := by
                       exact
-                        Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Bsub.map qH) hb2 hright_B
+                        setLike_mul_comm
+                          (s := Bsub.map qH) hb2 hright_B
                     calc
                       b2 * ⁅b1 * a1, a2⁆ * b2⁻¹ = (⁅b1 * a1, a2⁆ * b2) * b2⁻¹ := by
                         rw [hcomm]
@@ -3060,13 +3079,14 @@ theorem theorem_8_2_10
                   rw [commutator_mul_right]
                   simpa [hright_conj, mul_assoc] using (Dbar 1).mul_mem hleft_mem hright_mem
                 have hLq_le_Dbar :
-                    ∀ i, lowerCentralSeries (H ⧸ Nsub) (i + 1) ≤ Dbar (i + 1) := by
+                    ∀ i, (⊤ : Subgroup (H ⧸ Nsub)).lowerCentralSeries (i + 1) ≤
+                      Dbar (i + 1) := by
                   intro i
                   induction i with
                   | zero =>
                       exact hL1q_le
                   | succ i ih =>
-                      rw [lowerCentralSeries_succ]
+                      rw [Subgroup.lowerCentralSeries_succ]
                       refine (Subgroup.commutator_le).2 ?_
                       intro x hx y hy
                       have hxD : x ∈ Dbar (i + 1) := ih hx
@@ -3085,8 +3105,8 @@ theorem theorem_8_2_10
                         have hxB : x ∈ Bsub.map qH := hDbar_le_Bbar (i + 1) hxD
                         exact
                           commutatorElement_eq_one_iff_commute.mpr
-                            (Subgroup.mul_comm_of_mem_isMulCommutative
-                              (H := Bsub.map qH) hxB hb)
+                            (setLike_mul_comm
+                              (s := Bsub.map qH) hxB hb)
                       have hxa_mem : ⁅x, a⁆ ∈ Dbar (i + 2) := by
                         have : ⁅x, a⁆ ∈ ⁅Dbar (i + 1), Asub.map qH⁆ := by
                           exact Subgroup.commutator_mem_commutator hxD ha
@@ -3096,8 +3116,8 @@ theorem theorem_8_2_10
                           b * ⁅x, a⁆ * b⁻¹ = ⁅x, a⁆ := by
                         have hcomm : b * ⁅x, a⁆ = ⁅x, a⁆ * b := by
                           exact
-                            Subgroup.mul_comm_of_mem_isMulCommutative
-                              (H := Bsub.map qH) hb hxa_B
+                            setLike_mul_comm
+                              (s := Bsub.map qH) hb hxa_B
                         calc
                           b * ⁅x, a⁆ * b⁻¹ = (⁅x, a⁆ * b) * b⁻¹ := by
                             rw [hcomm]
@@ -3105,16 +3125,18 @@ theorem theorem_8_2_10
                       rw [commutator_mul_right, hxb]
                       simpa [hconj, mul_assoc] using hxa_mem
                 have hLmap_le :
-                    ∀ i, (lowerCentralSeries H i).map qH ≤ lowerCentralSeries (H ⧸ Nsub) i := by
+                    ∀ i, ((⊤ : Subgroup H).lowerCentralSeries i).map qH ≤
+                      (⊤ : Subgroup (H ⧸ Nsub)).lowerCentralSeries i := by
                   intro i
                   induction i with
                   | zero =>
                       simp
                   | succ i ih =>
                       change
-                        Subgroup.map qH ⁅lowerCentralSeries H i, (⊤ : Subgroup H)⁆ ≤
-                          lowerCentralSeries (H ⧸ Nsub) (i + 1)
-                      rw [Subgroup.map_commutator, lowerCentralSeries_succ,
+                        Subgroup.map qH ⁅(⊤ : Subgroup H).lowerCentralSeries i,
+                          (⊤ : Subgroup H)⁆ ≤
+                            (⊤ : Subgroup (H ⧸ Nsub)).lowerCentralSeries (i + 1)
+                      rw [Subgroup.map_commutator, Subgroup.lowerCentralSeries_succ,
                         Subgroup.map_top_of_surjective qH (QuotientGroup.mk'_surjective Nsub)]
                       exact Subgroup.commutator_mono ih le_rfl
                 have hDbar_bot : Dbar (nA + 1) = ⊥ := by
@@ -3128,66 +3150,74 @@ theorem theorem_8_2_10
                       rw [replacementCommChainSub_eq_subgroupOf]
                     _ = (⊥ : Subgroup H).map qH := by rw [hDnA_succ_bot, hbot_sub]
                     _ = ⊥ := by simp
-                have hLq_bot : lowerCentralSeries (H ⧸ Nsub) (nA + 1) = ⊥ := by
+                have hLq_bot :
+                    (⊤ : Subgroup (H ⧸ Nsub)).lowerCentralSeries (nA + 1) = ⊥ := by
                   apply le_antisymm
                   · exact (hLq_le_Dbar nA).trans_eq hDbar_bot
                   · exact bot_le
-                have hLH_le_Nsub : lowerCentralSeries H (nA + 1) ≤ Nsub := by
-                  have hmap_bot : (lowerCentralSeries H (nA + 1)).map qH = ⊥ := by
+                have hLH_le_Nsub :
+                    (⊤ : Subgroup H).lowerCentralSeries (nA + 1) ≤ Nsub := by
+                  have hmap_bot :
+                      ((⊤ : Subgroup H).lowerCentralSeries (nA + 1)).map qH = ⊥ := by
                     apply le_antisymm
                     · exact (hLmap_le (nA + 1)).trans_eq hLq_bot
                     · exact bot_le
                   exact
                     (by
                       have hker :
-                          lowerCentralSeries H (nA + 1) ≤ qH.ker :=
+                          (⊤ : Subgroup H).lowerCentralSeries (nA + 1) ≤ qH.ker :=
                         (Subgroup.map_eq_bot_iff
-                          (f := qH) (H := lowerCentralSeries H (nA + 1))).1 hmap_bot
+                          (f := qH)
+                          (H := (⊤ : Subgroup H).lowerCentralSeries (nA + 1))).1 hmap_bot
                       simpa [qH, QuotientGroup.ker_mk'] using hker)
-                have hLH_bot : lowerCentralSeries H (nA + 2) = ⊥ := by
+                have hLH_bot : (⊤ : Subgroup H).lowerCentralSeries (nA + 2) = ⊥ := by
                   have hcomm_bot :
-                      ⁅lowerCentralSeries H (nA + 1), (⊤ : Subgroup H)⁆ = ⊥ := by
+                      ⁅(⊤ : Subgroup H).lowerCentralSeries (nA + 1),
+                        (⊤ : Subgroup H)⁆ = ⊥ := by
                     exact
                       (Subgroup.commutator_eq_bot_iff_le_centralizer).2
                         (hLH_le_Nsub.trans hNsub_cent_top)
                   have hidx : nA + 2 = (nA + 1) + 1 := by omega
-                  simpa [lowerCentralSeries, hidx] using hcomm_bot
+                  simpa [Subgroup.lowerCentralSeries, hidx] using hcomm_bot
                 have hnA_le_two : nA ≤ 2 := by
                   by_contra hnA_gt_two
                   have hnA_ge_three : 3 ≤ nA := by omega
                   have hLpred_comm :
-                      IsMulCommutative (lowerCentralSeries H (nA - 1)) := by
+                      IsMulCommutative ((⊤ : Subgroup H).lowerCentralSeries (nA - 1)) := by
                     have hcomm_bot :
-                        ⁅lowerCentralSeries H (nA - 1), lowerCentralSeries H (nA - 1)⁆ = ⊥ := by
+                        ⁅(⊤ : Subgroup H).lowerCentralSeries (nA - 1),
+                          (⊤ : Subgroup H).lowerCentralSeries (nA - 1)⁆ = ⊥ := by
                       apply le_antisymm
                       · calc
-                          ⁅lowerCentralSeries H (nA - 1), lowerCentralSeries H (nA - 1)⁆ ≤
-                              lowerCentralSeries H ((nA - 1) + (nA - 1) + 1) := by
+                          ⁅(⊤ : Subgroup H).lowerCentralSeries (nA - 1),
+                            (⊤ : Subgroup H).lowerCentralSeries (nA - 1)⁆ ≤
+                              (⊤ : Subgroup H).lowerCentralSeries
+                                ((nA - 1) + (nA - 1) + 1) := by
                                 simpa using
                                   (lowerCentralSeries_commutator_le
                                     (G := H) (nA - 1) (nA - 1))
-                          _ ≤ lowerCentralSeries H (nA + 2) := by
-                                apply lowerCentralSeries_antitone
+                          _ ≤ (⊤ : Subgroup H).lowerCentralSeries (nA + 2) := by
+                                apply Subgroup.lowerCentralSeries_antitone
                                 omega
                           _ = ⊥ := hLH_bot
                       · exact bot_le
                     exact
                       (Subgroup.le_centralizer_iff_isMulCommutative
-                        (K := lowerCentralSeries H (nA - 1))).1 <|
+                        (K := (⊤ : Subgroup H).lowerCentralSeries (nA - 1))).1 <|
                         (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hcomm_bot
                   have hDpred_sub_comm :
                       IsMulCommutative ((replacementCommChain B A (nA - 1)).subgroupOf H) := by
                     have hsub :
                         (replacementCommChain B A (nA - 1)).subgroupOf H ≤
-                          lowerCentralSeries H (nA - 1) := by
+                          (⊤ : Subgroup H).lowerCentralSeries (nA - 1) := by
                       rw [← replacementCommChainSub_eq_subgroupOf]
                       exact replacementCommChainSub_le_lowerCentralSeries B A (nA - 1)
                     refine ⟨?_⟩
                     exact ⟨fun y z => by
                       apply Subtype.ext
                       simpa using
-                        (Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := lowerCentralSeries H (nA - 1))
+                        (setLike_mul_comm
+                          (s := (⊤ : Subgroup H).lowerCentralSeries (nA - 1))
                           (hsub y.2) (hsub z.2))⟩
                   have hDpred_comm :
                       IsMulCommutative (replacementCommChain B A (nA - 1)) := by
@@ -3367,8 +3397,8 @@ theorem theorem_8_2_10
                   have hd2H_Bbar : qH d2H ∈ Bsub.map qH := hDbar_le_Bbar 2 hd2H_Dbar2
                   have haH_comm_bH : qH aH * qH bH = qH bH * qH aH := by
                     exact
-                      Subgroup.mul_comm_of_mem_isMulCommutative
-                        (H := Bsub.map qH) haH_Bbar hbH_Bbar
+                      setLike_mul_comm
+                        (s := Bsub.map qH) haH_Bbar hbH_Bbar
                   have hd1bar_cent_Abar :
                       qH d1H ∈
                         Subgroup.centralizer
@@ -3382,20 +3412,26 @@ theorem theorem_8_2_10
                   have hq_d1_eq_d2 : qH d1H = qH d2H := by
                     have huvH : qH uH * qH vH = qH vH * qH uH := by
                       exact
-                        Subgroup.mul_comm_of_mem_isMulCommutative
-                          (H := Asub.map qH) huH_Abar hvH_Abar
+                        setLike_mul_comm
+                          (s := Asub.map qH) huH_Abar hvH_Abar
                     have hqa : ⁅qH xH, qH uH⁆ = qH aH := by
-                      simpa [a, xH, uH] using
-                        (map_commutatorElement (f := qH) (g₁ := xH) (g₂ := uH))
+                      have hxuH : ⁅xH, uH⁆ = aH := by
+                        apply Subtype.ext
+                        rfl
+                      rw [← hxuH]
+                      exact (map_commutatorElement (f := qH) (g₁ := xH) (g₂ := uH)).symm
                     have hqb : ⁅qH xH, qH vH⁆ = qH bH := by
-                      simpa [b, xH, vH] using
-                        (map_commutatorElement (f := qH) (g₁ := xH) (g₂ := vH))
+                      have hxvH : ⁅xH, vH⁆ = bH := by
+                        apply Subtype.ext
+                        rfl
+                      rw [← hxvH]
+                      exact (map_commutatorElement (f := qH) (g₁ := xH) (g₂ := vH)).symm
                     have hq_d1_inv :
                         ⁅qH uH, qH bH⁆ = (qH d2H)⁻¹ := by
                       calc
                         ⁅qH uH, qH bH⁆ = qH ⁅uH, bH⁆ := by
-                          simpa using
-                            (map_commutatorElement (f := qH) (g₁ := uH) (g₂ := bH))
+                          exact
+                            (map_commutatorElement (f := qH) (g₁ := uH) (g₂ := bH)).symm
                         _ = (qH d2H)⁻¹ := by
                           have hbhu_eq : ⁅bH, uH⁆ = d2H := by
                             rfl
@@ -3409,8 +3445,8 @@ theorem theorem_8_2_10
                         ⁅qH vH, qH aH⁆ = (qH d1H)⁻¹ := by
                       calc
                         ⁅qH vH, qH aH⁆ = qH ⁅vH, aH⁆ := by
-                          simpa using
-                            (map_commutatorElement (f := qH) (g₁ := vH) (g₂ := aH))
+                          exact
+                            (map_commutatorElement (f := qH) (g₁ := vH) (g₂ := aH)).symm
                         _ = (qH d1H)⁻¹ := by
                           have hav_eq : ⁅aH, vH⁆ = d1H := by
                             rfl
@@ -3454,8 +3490,8 @@ theorem theorem_8_2_10
                           have hcomm :
                               qH bH * qH d2H = qH d2H * qH bH := by
                             exact
-                              Subgroup.mul_comm_of_mem_isMulCommutative
-                                (H := Bsub.map qH) hbH_Bbar hd2H_Bbar
+                              setLike_mul_comm
+                                (s := Bsub.map qH) hbH_Bbar hd2H_Bbar
                           have hcomm' :
                               qH bH * (qH d2H)⁻¹ = (qH d2H)⁻¹ * qH bH := by
                             have hcomm' : Commute (qH bH) (qH d2H) := hcomm
@@ -3466,8 +3502,8 @@ theorem theorem_8_2_10
                           have hcomm :
                               qH aH * qH d1H = qH d1H * qH aH := by
                             exact
-                              Subgroup.mul_comm_of_mem_isMulCommutative
-                                (H := Bsub.map qH) haH_Bbar hd1H_Bbar
+                              setLike_mul_comm
+                                (s := Bsub.map qH) haH_Bbar hd1H_Bbar
                           have hcomm' :
                               qH aH * (qH d1H)⁻¹ = (qH d1H)⁻¹ * qH aH := by
                             have hcomm' : Commute (qH aH) (qH d1H) := hcomm
@@ -3736,17 +3772,12 @@ theorem theorem_8_2_10
                 have hM_le_B : M ≤ B := hM_le_D1.trans (replacementCommChain_le_left B A 1)
                 have hM_comm : IsMulCommutative M := by
                   dsimp [M]
-                  letI :
-                      CommGroup ↥(Subgroup.closure
-                        {g : G | ∃ v ∈ A, ⁅x, v⁆ = g}) :=
-                    Subgroup.closureCommGroupOfComm
-                      (k := {g : G | ∃ v ∈ A, ⁅x, v⁆ = g}) <| by
-                        intro y hy z hz
-                        rcases hy with ⟨u, huA, rfl⟩
-                        rcases hz with ⟨v, hvA, rfl⟩
-                        exact commutatorElement_eq_one_iff_commute.mp (hgen_comm u huA v hvA)
-                  refine ⟨?_⟩
-                  exact ⟨fun y z => mul_comm y z⟩
+                  exact Subgroup.isMulCommutative_closure
+                    (k := {g : G | ∃ v ∈ A, ⁅x, v⁆ = g}) <| by
+                      intro y hy z hz
+                      rcases hy with ⟨u, huA, rfl⟩
+                      rcases hz with ⟨v, hvA, rfl⟩
+                      exact commutatorElement_eq_one_iff_commute.mp (hgen_comm u huA v hvA)
                 have hAstar :
                     Astar ∈ thompsonAbelianSubgroups (G := G) (P : Subgroup G) := by
                   dsimp [Astar, C, M]
@@ -3862,8 +3893,8 @@ theorem theorem_8_2_10
                   exact ⟨fun y z => by
                     apply Subtype.ext
                     simpa using
-                      (Subgroup.mul_comm_of_mem_isMulCommutative
-                        (H := replacementCommChain B A nA)
+                      (setLike_mul_comm
+                        (s := replacementCommChain B A nA)
                         (hM_le_DnA y.2) (hM_le_DnA z.2))⟩
                 have hAstar :
                     Astar ∈ thompsonAbelianSubgroups (G := G) (P : Subgroup G) := by
@@ -4222,7 +4253,7 @@ theorem theorem_8_2_10
           rw [Subgroup.mem_centralizer_iff]
           intro y hy
           simpa using
-            (Subgroup.mul_comm_of_mem_isMulCommutative (H := X) (hB_le_X hy) (hB_le_X hx))
+            (setLike_mul_comm (s := X) (hB_le_X hy) (hB_le_X hx))
         have hpCore_quot_bot : pCore p (G ⧸ L) = ⊥ := by
           letI : L.Normal := by
             dsimp [L]
@@ -4522,8 +4553,8 @@ theorem theorem_8_2_10
             intro b n hn
             have hbn : (b : G) * n = n * b := by
               exact
-                Subgroup.mul_comm_of_mem_isMulCommutative
-                  (H := B) b.2 hn.1
+                setLike_mul_comm
+                  (s := B) b.2 hn.1
             have hconj : (b : G) * n * (b : G)⁻¹ = n := by
               calc
                 (b : G) * n * (b : G)⁻¹ = n * (b : G) * (b : G)⁻¹ := by
@@ -4614,12 +4645,12 @@ theorem theorem_8_2_10
               have hmap_comm : qH ⁅x0, uH⁆ = 1 := by
                 calc
                   qH ⁅x0, uH⁆ = ⁅qH x0, qH uH⁆ := by
-                    simpa using
-                      (map_commutatorElement (f := qH) (g₁ := x0) (g₂ := uH))
+                    exact map_commutatorElement (f := qH) (g₁ := x0) (g₂ := uH)
                   _ = 1 := hcomm_q
               have hcomm_mem : ⁅x0, uH⁆ ∈ Nsub := by
                 exact (QuotientGroup.eq_one_iff (N := Nsub) ⁅x0, uH⁆).1 hmap_comm
-              simpa [uH, Nsub, Subgroup.mem_subgroupOf] using hcomm_mem
+              change ⁅(x0 : G), u⁆ ∈ N at hcomm_mem
+              exact hcomm_mem
             exact ⟨(x0 : G), hx0B, hx0_not_norm, hcomm_gen_le_N⟩
           obtain ⟨x, hxB, hx_not_norm, hcomm_gen_le_N⟩ := hx_exists
           let M : Subgroup G := Subgroup.closure {g : G | ∃ u ∈ A1, ⁅x, u⁆ = g}
@@ -4639,8 +4670,8 @@ theorem theorem_8_2_10
             exact ⟨fun y z => by
               apply Subtype.ext
               simpa using
-                (Subgroup.mul_comm_of_mem_isMulCommutative
-                  (H := B) (hM_le_B y.2) (hM_le_B z.2))⟩
+                (setLike_mul_comm
+                  (s := B) (hM_le_B y.2) (hM_le_B z.2))⟩
           have hAstar :
               Astar ∈ thompsonAbelianSubgroups (G := G) (P : Subgroup G) := by
             dsimp [Astar, C, M]
@@ -4658,8 +4689,8 @@ theorem theorem_8_2_10
               have hyB : y ∈ B := hy.2
               have hmB : m ∈ B := hM_le_B hmM
               exact
-                Subgroup.mul_comm_of_mem_isMulCommutative
-                  (H := B) hmB hyB
+                setLike_mul_comm
+                  (s := B) hmB hyB
             have hA1infB_le_AstarinfB : A1 ⊓ B ≤ Astar ⊓ B := by
               have hC_le_Astar : C ≤ Astar := by
                 dsimp [Astar]
@@ -4936,7 +4967,7 @@ public theorem G_theorem_8_2_11
         rw [hcard]
         exact (pPrimeCore_coprime_card (G := G) (p := p)).pow_left n
       have hinf_bot : pCore p G ⊓ M = ⊥ :=
-        Subgroup.inf_eq_bot_of_coprime hcoprime
+        (Subgroup.disjoint_of_coprime_natCard hcoprime).eq_bot
       have hpCore_eq_bot : pCore p G = ⊥ := by
         rw [inf_eq_left.mpr hleM] at hinf_bot
         exact hinf_bot

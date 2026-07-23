@@ -5,7 +5,7 @@ Authors: Yusen Tang
 module
 
 public import Mathlib.RingTheory.LittleWedderburn
-public import Submission.FeitThompson.Representation.AbsolutelyIrreducible
+public import FeitThompson.Representation.AbsolutelyIrreducible
 
 open Representation
 open MonoidAlgebra
@@ -39,7 +39,7 @@ variable {V : Type*} [AddCommGroup V] [Module F V]
 variable (ρ : Representation F G V)
 
 /-- We build the `K[G]`-module instance on `ρ.asModule`.-/
-public instance endFieldModule :
+public noncomputable instance endFieldModule :
   Module (End F[G] ρ.asModule) ρ.asModule := {
     smul := fun k m ↦ k m
     mul_smul := fun _ _ _ ↦ rfl
@@ -66,7 +66,10 @@ variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 /-- We build the finite field instance over the endomorphism field `K = End_{F[G]}(ρ.asModule)`.-/
 public instance endField_finite :
     Finite (End F[G] ρ.asModule) :=
-  let : Finite ρ.asModule := Module.finite_iff_finite.mp iFD
+  letI : Module F ρ.asModule := Representation.instModuleAsModule ρ
+  letI : Finite V := Module.finite_iff_finite.mp iFD
+  let : Finite ρ.asModule :=
+    Finite.of_injective ρ.asModuleEquiv ρ.asModuleEquiv.injective
   let : Finite (ρ.asModule → ρ.asModule) := Pi.finite
   Finite.of_injective _ fun _ _ h ↦ by ext; exact congrFun h _
 

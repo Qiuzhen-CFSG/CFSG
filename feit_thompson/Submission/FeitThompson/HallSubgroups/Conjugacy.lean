@@ -7,7 +7,7 @@ module
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Group.Subgroup.Defs
 public import Mathlib.Data.Bracket
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.Data.Finite.Defs
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.Commutator.Basic
@@ -31,11 +31,11 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import Submission.FeitThompson.GroupAction.Invariant
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.HallSubgroups.Core
-public import Submission.FeitThompson.HallSubgroups.Complements
-public import Submission.FeitThompson.HallSubgroups.Existence
+public import FeitThompson.GroupAction.Invariant
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.HallSubgroups.Core
+public import FeitThompson.HallSubgroups.Complements
+public import FeitThompson.HallSubgroups.Existence
 
 
 /-
@@ -53,6 +53,8 @@ Let $\pi$ be a set of primes.
 -/
 
 universe u v
+
+open scoped IsMulCommutative
 
 
 public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
@@ -92,8 +94,8 @@ public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
   have hK_inv : IsInvariant A N K := by
     refine ⟨?_⟩
     intro a x
-    change (x.1 ∈ H₂) ↔ ((a • x).1 ∈ H₂)
-    simpa [K] using hInv₂.invariant a x.1
+    change (x.1 ∈ H₂) ↔ (a • x.1 ∈ H₂)
+    exact hInv₂.invariant a x.1
   obtain ⟨L, hL_hall, _hL_inv, hK_le_L⟩ :=
     exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       (G := N) (A := A) hsolvN hcoprimeN π K hK_pi hK_inv
@@ -107,7 +109,8 @@ public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
   intro x hx
   change ((⟨x, hx.2⟩ : N) : G) ∈ H₁
   have hxK : (⟨x, hx.2⟩ : N) ∈ K := by
-    simpa [K] using hx.1
+    change x ∈ H₂
+    exact hx.1
   exact hK_le_H₁N hxK
 
 lemma IsHallSubgroup.map_of_surjective
@@ -254,7 +257,8 @@ lemma lift_conj_eq_of_map_eq
   have hN_le_H₁g : N ≤ H₁g := by
     simpa [QuotientGroup.ker_mk'] using hker₁g
   have hsup_eq : H₁g ⊔ N = H₁g := sup_eq_left.mpr hN_le_H₁g
-  simpa [hsup_eq] using hcomap'
+  change H₂ = H₁g
+  exact hcomap'.trans hsup_eq
 
 public lemma map_subgroupOf_map_conj_eq
     {G : Type*} [Group G]
@@ -381,7 +385,6 @@ public theorem exists_principal_cocycle_of_solvable_coprime
     intro n ih N' _ _ _ hcard hsolv' hcop' c hc
     by_cases hcomm : IsMulCommutative N'
     · letI : IsMulCommutative N' := hcomm
-      letI : CommGroup N' := by infer_instance
       obtain ⟨x, hx⟩ :=
         exists_coboundary_of_cocycle_of_coprime_card
           (A := A) (N := N') c hc hcop'
@@ -410,30 +413,27 @@ public theorem exists_principal_cocycle_of_solvable_coprime
         isInvariant_of_characteristic (A := A) (G := N') D
       letI : MulAction.QuotientAction A D :=
         quotientAction_of_isInvariant (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
-      let Q := N' ⧸ D
-      letI : Group Q := by infer_instance
-      letI : Finite Q := by infer_instance
-      letI : MulDistribMulAction A Q :=
+      letI : Finite (N' ⧸ D) := by infer_instance
+      letI : MulDistribMulAction A (N' ⧸ D) :=
         quotientMulDistribMulAction (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
-      have hQcomm : Std.Commutative (· * · : Q → Q → Q) := by
+      letI : IsMulCommutative (N' ⧸ D) := by
         exact
           (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := D)).2
             (le_rfl : commutator N' ≤ commutator N')
-      letI : IsMulCommutative Q := ⟨hQcomm⟩
-      letI : CommGroup Q := by infer_instance
-      let cQ : A → Q := fun a => (QuotientGroup.mk' D) (c a)
+      let cQ : A → N' ⧸ D := fun a => (QuotientGroup.mk' D) (c a)
       have hcQ : ∀ a b : A, cQ (a * b) = cQ a * (a • cQ b) := by
         intro a b
         change
           (QuotientGroup.mk' D) (c (a * b)) =
             (QuotientGroup.mk' D) (c a) * (a • ((QuotientGroup.mk' D) (c b)))
         simp [hc, MulAction.Quotient.smul_mk]
-      have hcopQ : Nat.Coprime (Nat.card A) (Nat.card Q) := by
-        have hdvd : Nat.card Q ∣ Nat.card N' := Subgroup.card_quotient_dvd_card (s := D)
+      have hcopQ : Nat.Coprime (Nat.card A) (Nat.card (N' ⧸ D)) := by
+        have hdvd : Nat.card (N' ⧸ D) ∣ Nat.card N' :=
+          Subgroup.card_quotient_dvd_card (s := D)
         exact Nat.Coprime.of_dvd_right hdvd hcop'
       obtain ⟨xQ, hxQ⟩ :=
         exists_coboundary_of_cocycle_of_coprime_card
-          (A := A) (N := Q) cQ hcQ hcopQ
+          (A := A) (N := N' ⧸ D) cQ hcQ hcopQ
       obtain ⟨x0, rfl⟩ := QuotientGroup.mk'_surjective D xQ
       let cD : A → D := fun a =>
         ⟨x0⁻¹ * c a * (a • x0), by
@@ -486,7 +486,8 @@ public theorem exists_principal_cocycle_of_solvable_coprime
       intro a
       have hy' : x0⁻¹ * c a * (a • x0) = (y : N') * (a • (y : N'))⁻¹ := by
         have htmp := congrArg Subtype.val (hy a)
-        simpa [cD, mul_comm, mul_left_comm, mul_assoc] using htmp
+        change x0⁻¹ * c a * (a • x0) = (y : N') * (a • (y : N'))⁻¹ at htmp
+        exact htmp
       calc
         c a = x0 * (x0⁻¹ * c a * (a • x0)) * (a • x0)⁻¹ := by
                 simp [mul_assoc]
@@ -571,7 +572,6 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       have hN_le_centralizer : N ≤ Subgroup.centralizer (N : Set G') :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := N) (H₂ := N)).1 hcomm_bot
       exact (Subgroup.le_centralizer_iff_isMulCommutative (K := N)).1 hN_le_centralizer
-    letI : CommGroup N := by infer_instance
     have hN_card_ne_one : Nat.card (↥N) ≠ 1 := by
       have : 1 < Nat.card (↥N) := (Subgroup.one_lt_card_iff_ne_bot (H := N)).2 hN_ne_bot
       exact ne_of_gt this
@@ -581,7 +581,7 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
     have hP₀_ne_bot : (P₀ : Subgroup N) ≠ ⊥ :=
       Sylow.ne_bot_of_dvd_card (G := N) P₀ (by simpa using hp_dvd)
     have hP₀_normal : (P₀ : Subgroup N).Normal := by
-      simpa using (Subgroup.normal_of_comm (H := (P₀ : Subgroup N)))
+      simpa using (Subgroup.normal_of_isMulCommutative (H := (P₀ : Subgroup N)))
     haveI : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
     haveI : Subsingleton (Sylow p N) := by infer_instance
     haveI : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
@@ -610,7 +610,8 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       have : Nat.card Q * Nat.card Psub = n := by simpa [hcard] using hmul.symm
       simpa [this] using hlt
     let f : G' →* Q := QuotientGroup.mk' Psub
-    have hf : Function.Surjective f := by simpa [f] using QuotientGroup.mk'_surjective Psub
+    have hf : Function.Surjective f := by
+      simpa only [f, Q] using QuotientGroup.mk'_surjective Psub
     let Kbar₁ : Subgroup Q := K₁.map f
     let Kbar₂ : Subgroup Q := K₂.map f
     have hHallbar₁ : IsHallSubgroup π' Kbar₁ := by
@@ -623,30 +624,37 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
     have hqbar' :
         K₂.map f = (K₁.map f).map (MulAut.conj (f g)).toMonoidHom := by
       subst qbar
-      simpa [Kbar₁, Kbar₂] using hqbar
+      simpa only [Kbar₁, Kbar₂, f, Q, QuotientGroup.mk'_apply] using hqbar
     let p' : Nat.Primes := ⟨p, hp_prime⟩
     by_cases hp_mem : p' ∈ π'
-    · have hPsub_le_K₁ : Psub ≤ K₁ :=
+    · have hp_mem_fact : (⟨p, Fact.out⟩ : Nat.Primes) ∈ π' := by
+        rw [show (⟨p, Fact.out⟩ : Nat.Primes) = p' by rfl]
+        exact hp_mem
+      have hPsub_le_K₁ : Psub ≤ K₁ :=
         normal_pSubgroup_le_of_isHallSubgroup_of_prime_mem
-          (H := K₁) (N := Psub) hPsub_p hHallK₁ (by simpa [p'] using hp_mem)
+          (H := K₁) (N := Psub) hPsub_p hHallK₁ hp_mem_fact
       have hPsub_le_K₂ : Psub ≤ K₂ :=
         normal_pSubgroup_le_of_isHallSubgroup_of_prime_mem
-          (H := K₂) (N := Psub) hPsub_p hHallK₂ (by simpa [p'] using hp_mem)
+          (H := K₂) (N := Psub) hPsub_p hHallK₂ hp_mem_fact
       refine ⟨g, ?_⟩
       exact lift_conj_eq_of_map_eq
         (N := Psub) (H₁ := K₁) (H₂ := K₂) g hPsub_le_K₁ hPsub_le_K₂ hqbar'
     · have hp_not_mem : p' ∉ π' := hp_mem
+      have hp_not_mem_fact : (⟨p, Fact.out⟩ : Nat.Primes) ∉ π' := by
+        rw [show (⟨p, Fact.out⟩ : Nat.Primes) = p' by rfl]
+        exact hp_not_mem
       let K₁g : Subgroup G' := K₁.map (MulAut.conj g).toMonoidHom
       have hHallK₁g : IsHallSubgroup π' K₁g := by
         simpa [K₁g] using hHallK₁.map_conj g
       have hDisK₂ : Disjoint K₂ Psub :=
         disjoint_isHallSubgroup_normal_pSubgroup_of_prime_not_mem
-          (H := K₂) (N := Psub) hHallK₂ hPsub_p (by simpa [p'] using hp_not_mem)
+          (H := K₂) (N := Psub) hHallK₂ hPsub_p hp_not_mem_fact
       have hDisK₁g : Disjoint K₁g Psub :=
         disjoint_isHallSubgroup_normal_pSubgroup_of_prime_not_mem
-          (H := K₁g) (N := Psub) hHallK₁g hPsub_p (by simpa [p'] using hp_not_mem)
+          (H := K₁g) (N := Psub) hHallK₁g hPsub_p hp_not_mem_fact
       have hmapK₁g : (K₁.map f).map (MulAut.conj (f g)).toMonoidHom = K₁g.map f := by
-        simpa [K₁g] using (map_mk'_map_conj_eq (N := Psub) K₁ g).symm
+        simpa only [K₁g, f, Q, QuotientGroup.mk'_apply] using
+          (map_mk'_map_conj_eq (N := Psub) K₁ g).symm
       have hqbar'' : K₂.map f = K₁g.map f := hqbar'.trans hmapK₁g
       let K0 : Subgroup G' := (K₂.map f).comap f
       have hK₂_le_K0 : K₂ ≤ K0 := by
@@ -670,7 +678,6 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
         simpa [Pk] using
           (Subgroup.Normal.subgroupOf (H := Psub) (K := K0) (inferInstance : Psub.Normal))
       haveI : IsMulCommutative (↥Pk) := by infer_instance
-      letI : CommGroup Pk := by infer_instance
       have hK0_eq_sup_K₂ : K0 = K₂ ⊔ Psub := by
         calc
           K0 = (K₂.map f).comap f := rfl
@@ -719,7 +726,8 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       have hcomp_K₁g : Pk.IsComplement' K₁gk := by
         exact (Subgroup.isComplement'_of_disjoint_and_mul_eq_univ hdis_K₁g hmul_univ_K₁g).symm
       have hPk_p : IsPGroup p Pk := by
-        simpa [Pk] using (IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0))
+        change IsPGroup p (Psub.comap K0.subtype)
+        exact IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0)
       have hPk_coprime_index : Nat.Coprime (Nat.card Pk) Pk.index := by
         have hcard_congr : Nat.card (K0 ⧸ Pk) = Nat.card (K₂.map f) := by
           simpa [K0, Pk, hker_eq] using

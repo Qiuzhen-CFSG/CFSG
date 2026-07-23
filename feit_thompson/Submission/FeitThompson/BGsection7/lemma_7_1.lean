@@ -1,8 +1,8 @@
 module
 
-public import Submission.FeitThompson.BGsection7.Defs
-public import Submission.FeitThompson.BGsection3.theorem_3_4
-import Submission.FeitThompson.SubgroupConj
+public import FeitThompson.BGsection7.Defs
+public import FeitThompson.BGsection3.theorem_3_4
+import FeitThompson.SubgroupConj
 /-! # Lemma 7.1 from BG Section 7 -/
 
 open scoped Pointwise
@@ -48,11 +48,13 @@ private lemma lemma_7_1_local [IsMinCE G]
     intro a x hx
     let xH : H := ⟨x, hM_le_H hx⟩
     have hxH : xH ∈ M.subgroupOf H := by
-      simpa [xH] using hx
+      exact Subgroup.mem_subgroupOf.mpr hx
     have hxInv : a • xH ∈ M.subgroupOf H :=
       (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := M.subgroupOf H) a xH).1 hxH
+    have hxInv' : ((a • xH : H) : G) ∈ M :=
+      Subgroup.mem_subgroupOf.mp hxInv
     change (a : G) * x * (a : G)⁻¹ ∈ M
-    simpa [xH, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hA_le_normH] using hxInv
+    simpa [xH, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hA_le_normH] using hxInv'
   haveI : Subgroup.Normalizes A M := ⟨hA_le_normM⟩
   have hQ₁fam : Q₁ ∈ section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) :=
     section7HStarFamily.mem_family hQ₁
@@ -174,10 +176,14 @@ private lemma lemma_7_1_local [IsMinCE G]
     mem_section7HStarFamily_top_conjBy_of_mem_centralizer hk_cent hQ₁
   have hHQ₁_le_R₁ : H ⊓ Q₁ ≤ R₁ := by
     intro x hx
-    exact Subgroup.mem_map.mpr ⟨⟨x, hHQ₁_core hx⟩, hK₁_le_R₁ (by simpa [K₁] using hx), rfl⟩
+    have hxK₁ : (⟨x, hHQ₁_core hx⟩ : M) ∈ K₁ := by
+      exact Subgroup.mem_subgroupOf.mpr hx
+    exact Subgroup.mem_map.mpr ⟨⟨x, hHQ₁_core hx⟩, hK₁_le_R₁ hxK₁, rfl⟩
   have hHQ₂_le_R₂ : H ⊓ Q₂ ≤ R₂ := by
     intro x hx
-    exact Subgroup.mem_map.mpr ⟨⟨x, hHQ₂_core hx⟩, hK₂_le_R₂ (by simpa [K₂] using hx), rfl⟩
+    have hxK₂ : (⟨x, hHQ₂_core hx⟩ : M) ∈ K₂ := by
+      exact Subgroup.mem_subgroupOf.mpr hx
+    exact Subgroup.mem_map.mpr ⟨⟨x, hHQ₂_core hx⟩, hK₂_le_R₂ hxK₂, rfl⟩
   have hmH : (m : G) ∈ H := hM_le_H m.property
   have hm_normH : (m : G) ∈ Subgroup.normalizer (H : Set G) := H.le_normalizer hmH
   have hHQ₁k_le_Q₃ : H ⊓ Q₁.conjBy (k : G) ≤ Q₃ := by

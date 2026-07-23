@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection13.corollary_13_3
-import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.BGsection13.corollary_13_3
+import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 
@@ -74,7 +74,7 @@ public theorem section13_le_normalizer_map_of_isInvariant
   have hyInv : a • y ∈ K :=
     (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
   exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
-    simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hAH]⟩
+    simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
 
 private theorem section13_theorem_13_4_exists_pr_invariant_sylow
     {M E E₁₂ E₁ E₂ E₃ P R : Subgroup G} {p r q : Nat.Primes}
@@ -157,10 +157,13 @@ private theorem section13_theorem_13_4_exists_pr_invariant_sylow
   have hAX : Subgroup.Normalizes A X := ⟨hA_norm_X⟩
   refine ⟨by simpa [X, A] using hAX, ?_⟩
   letI : Subgroup.Normalizes A X := hAX
+  have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
+    ext
+    rfl
   simpa [X, A] using
     exists_invariant_sylow_of_pi_complement_action
       (G := X) (A := A) (π := section10SigmaPrimes M) (p := q.val)
-      hXπ hAπ hXsolv (by simpa using hqσ)
+      hXπ hAπ hXsolv (by rw [hq_eq]; exact hqσ)
 
 private theorem section13_theorem_13_4_centralizes_of_not_tau1_star
     {M E E₁₂ E₁ E₂ E₃ P R Mstar : Subgroup G} {p r : Nat.Primes}
@@ -208,10 +211,11 @@ private theorem section13_theorem_13_4_centralizes_of_not_tau1_star
     hMstar.2 ((centralizer_le_normalizer P) hx.2)
   exact hInf_cent_R ⟨hx.1, hxMstar⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_theorem_13_4_big_commutator_ne_of_sylow_commutator_ne
     {M E E₁₂ E₁ E₂ E₃ P R Mstar : Subgroup G} {p r q : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E)
+    (_hP : P ∈ section10PrimeOrderSubgroupsIn p E)
     (hR : R ∈ section10PrimeOrderSubgroupsIn r (subgroupCentralizerIn E P))
     (hMstar : Mstar ∈ section9MaximalSubgroupsContaining
       (Subgroup.normalizer (P : Set G)))
@@ -642,10 +646,13 @@ private theorem section13_malpha_exists_pr_invariant_sylow
   have hAX : Subgroup.Normalizes A X := ⟨hA_norm_X⟩
   refine ⟨by simpa [X, A] using hAX, ?_⟩
   letI : Subgroup.Normalizes A X := hAX
+  have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
+    ext
+    rfl
   simpa [X, A] using
     exists_invariant_sylow_of_pi_complement_action
       (G := X) (A := A) (π := section10AlphaPrimes M) (p := q.val)
-      hXπ hAπ hXsolv (by simpa using hqα)
+      hXπ hAπ hXsolv (by rw [hq_eq]; exact hqα)
 
 private theorem section13_malpha_pr_invariant_sylow_centralizes
     {M E E₁₂ E₁ E₂ E₃ P R Mstar : Subgroup G} {p r q : Nat.Primes}
@@ -686,8 +693,9 @@ private theorem section13_malpha_pr_invariant_sylow_centralizes
     have hR_norm_Sg : R ≤ Subgroup.normalizer (Sg : Set G) :=
       le_sup_right.trans hPR_norm_Sg
     have hSgq : IsPGroup q.val Sg := by
-      simpa [Sg, Xα] using
-        IsPGroup.map (p := q.val) (H := (S : Subgroup Xα)) S.isPGroup' Xα.subtype
+      change IsPGroup q.val ((S : Subgroup Xα).map Xα.subtype)
+      exact IsPGroup.map (p := q.val) (H := (S : Subgroup Xα))
+        S.isPGroup' Xα.subtype
     have hXα_le_Xσ :
         Xα ≤ subgroupCentralizerIn (section10Msigma M) P := by
       intro x hx
@@ -838,8 +846,9 @@ private theorem section13_theorem_13_4_pr_invariant_sylow_noncentral_absurd
   have hQ_le_Mstar : Q ≤ Mstar := hQ_le_Sg.trans hSg_le_Mstar
   have hQq : IsPGroup q.val Q := by
     have hSgq : IsPGroup q.val Sg := by
-      simpa [Sg, X] using
-        IsPGroup.map (p := q.val) (H := (S : Subgroup X)) S.isPGroup' X.subtype
+      change IsPGroup q.val ((S : Subgroup X).map X.subtype)
+      exact IsPGroup.map (p := q.val) (H := (S : Subgroup X))
+        S.isPGroup' X.subtype
     exact section13_isPGroup_of_le_pSubgroup (G := G) hSgq hQ_le_Sg
   have hSR_norm_Q : Sg ⊔ R ≤ Subgroup.normalizer (Q : Set G) := by
     have hQ_norm_sup : (Q.subgroupOf (Sg ⊔ R : Subgroup G)).Normal := by
@@ -871,8 +880,9 @@ private theorem section13_theorem_13_4_pr_invariant_sylow_noncentral_absurd
     intro hEq
     exact hnotconj_star_M 1 (by simpa [hEq] using section8_conjBy_one (G := G) Mstar)
   have hSgq : IsPGroup q.val Sg := by
-    simpa [Sg, X] using
-      IsPGroup.map (p := q.val) (H := (S : Subgroup X)) S.isPGroup' X.subtype
+    change IsPGroup q.val ((S : Subgroup X).map X.subtype)
+    exact IsPGroup.map (p := q.val) (H := (S : Subgroup X))
+      S.isPGroup' X.subtype
   have hSg_comm : IsMulCommutative Sg := by
     by_contra hnon
     exact

@@ -4,22 +4,22 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.proposition_1_10
+public import FeitThompson.BGsection1.proposition_1_10
 
-open scoped Pointwise
+open scoped Pointwise IsMulCommutative commutatorElement
 
 universe uG uA
 public section
 
 public theorem commutator_mem_omega₁_center_of_mem_upperCentralSeries_two_of_pow_eq_one
     {G : Type*} [Group G] {p : ℕ} [Fact p.Prime] {x g : G}
-    (hx₂ : x ∈ upperCentralSeries G 2) (hxpow : x ^ p = 1) :
+    (hx₂ : x ∈ Subgroup.upperCentralSeries G 2) (hxpow : x ^ p = 1) :
     ⁅x, g⁆ ∈ (omega₁ (G := Subgroup.center G) (p := p)).map (Subgroup.center G).subtype := by
   let _ := (inferInstance : Fact p.Prime)
   have hcomm_center : ⁅x, g⁆ ∈ Subgroup.center G := by
     rw [show 2 = 1 + 1 by decide] at hx₂
-    simpa [upperCentralSeries_one, commutatorElement_def, mul_assoc] using
-      (mem_upperCentralSeries_succ_iff.mp hx₂) g
+    simpa [Subgroup.upperCentralSeries_one, commutatorElement_def, mul_assoc] using
+      (Subgroup.mem_upperCentralSeries_succ_iff.mp hx₂) g
   have hxpow_center : x ^ p ∈ Subgroup.center G := by
     simp [hxpow]
   have hcomm_center' : ⁅g, x⁆ ∈ Subgroup.center G := by

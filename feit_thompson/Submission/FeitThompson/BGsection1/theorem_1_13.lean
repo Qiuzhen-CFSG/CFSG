@@ -4,9 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.theorem_1_11
+public import FeitThompson.BGsection1.theorem_1_11
 
-open scoped Pointwise
+open scoped Pointwise IsMulCommutative commutatorElement
 
 public section
 
@@ -28,7 +28,8 @@ theorem faithful_on_selfCentralizing_of_coprime {G A : Type*} [Group G] [Finite 
       intro c hc
       have hc_fix : a • c = c := by
         have := congrArg Subtype.val (ha ⟨c, hc⟩)
-        simpa using this
+        change ((a • (⟨c, hc⟩ : C) : C) : G) = c
+        exact this
       have hconj : g * c * g⁻¹ ∈ C := Subgroup.Normal.conj_mem inferInstance c hc g
       have hconj_fix : a • (g * c * g⁻¹) = g * c * g⁻¹ := by
         have h := congrArg Subtype.val (ha ⟨g * c * g⁻¹, hconj⟩)
@@ -54,7 +55,8 @@ theorem faithful_on_selfCentralizing_of_coprime {G A : Type*} [Group G] [Finite 
     have hx_mem_C : x ∈ C := hcent hx_centralizer
     have hx_fix : a • x = x := by
       have := congrArg Subtype.val (ha ⟨x, hx_mem_C⟩)
-      simpa using this
+      change ((a • (⟨x, hx_mem_C⟩ : C) : C) : G) = x
+      exact this
     have hx_fix_pow : ∀ n : ℕ, (a ^ n) • x = x := by
       intro n
       induction n with

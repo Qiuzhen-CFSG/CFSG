@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection1.PFsection1_7_Core
-public import Submission.FeitThompson.Representation.CharacterValues
+public import FeitThompson.PFsection1.PFsection1_7_Core
+public import FeitThompson.Representation.CharacterValues
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.GroupAction.ConjAct
 public import Mathlib.GroupTheory.Index

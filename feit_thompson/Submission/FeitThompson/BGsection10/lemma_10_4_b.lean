@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_5
+public import FeitThompson.BGsection10.lemma_10_5
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -54,8 +54,8 @@ private theorem section10_omegaOneCenter_ne_bot_of_sylow_prime_mem
       section10_map_subtype_ne_bot_of_ne_bot (G := G) (M := M) hPne
   letI : Nontrivial PG := (Subgroup.nontrivial_iff_ne_bot PG).2 hPGne
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hZ_nontrivial : Nontrivial (Subgroup.center PG) := hPGp.center_nontrivial
   have hpdvd_center : p.val ∣ Nat.card (Subgroup.center PG) := by
     have hcenter_p : IsPGroup p.val (Subgroup.center PG) :=

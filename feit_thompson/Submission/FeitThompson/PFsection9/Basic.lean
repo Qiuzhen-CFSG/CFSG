@@ -1,10 +1,10 @@
 module
 
-import Submission.FeitThompson.GroupAction.Cardinalities
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.PFsection8.Basic
-public import Submission.FeitThompson.PFsection5.PFsection5_2
-public import Submission.FeitThompson.PFsection5.PFsection5_3
+import FeitThompson.GroupAction.Cardinalities
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.PFsection8.Basic
+public import FeitThompson.PFsection5.PFsection5_2
+public import FeitThompson.PFsection5.PFsection5_3
 
 /-!
 # Peterfalvi, Section 9: basic notation
@@ -15,7 +15,7 @@ This file records book-facing vocabulary for Peterfalvi, Section 9,
 
 noncomputable section
 
-open scoped BigOperators
+open scoped BigOperators commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -733,7 +733,11 @@ public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_le_sec9
     have hEq : ((ambientDerivedSubgroup M).subgroupOf M) = derivedSubgroup M :=
       section12_ambientDerivedSubgroup_subgroupOf_eq (E := M)
     exact hEq ▸ hambient
-  simpa [P, Section8.section8MsInKernelOfDerivedCharacter] using hP
+  rcases hP with ⟨θ, hθirr, hθnonker, hχeq⟩
+  refine ⟨θ, hθirr, ?_, hχeq⟩
+  intro hker
+  rcases hθnonker with ⟨x, hxMs, xM, xN, hxne⟩
+  exact hxne (hker ⟨⟨x, xM⟩, xN⟩ hxMs)
 
 public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_MF_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1057,14 +1061,14 @@ public theorem typePDefinitionData_ambientDerived_solvable_sec9
   have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
       haveI : Group.IsNilpotent MF := hMFnil
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcompDU.1)).symm
     haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
   have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
       haveI : Group.IsNilpotent U := hUnil
-      exact nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcompDU.2.1).symm
+      exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcompDU.2.1).symm
     haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
     haveI : IsSolvable (U.subgroupOf D) := by infer_instance
     exact solvable_of_solvable_injective

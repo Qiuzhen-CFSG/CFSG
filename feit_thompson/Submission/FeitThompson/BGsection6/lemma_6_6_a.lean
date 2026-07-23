@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection6.lemma_6_5_c
+public import FeitThompson.BGsection6.lemma_6_5_c
 
 open scoped MatrixGroups Pointwise TensorProduct
 
@@ -107,3 +107,4 @@ public theorem lemma_6_6_a
     · rw [← hM_sup_S_eq_L]
       exact sup_le le_sup_left (le_sup_of_le_right Subgroup.le_normalizer)
   exact ⟨hS_le_L, hM_sup_S_eq_L, hM_sup_norm_eq_top⟩
+

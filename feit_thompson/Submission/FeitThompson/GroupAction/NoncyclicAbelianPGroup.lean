@@ -4,10 +4,10 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.Defs
 import Mathlib.RepresentationTheory.Submodule
-import Submission.FeitThompson.Frattini.Core
-import Submission.FeitThompson.GroupAction.CoprimeHall
+import FeitThompson.Frattini.Core
+import FeitThompson.GroupAction.CoprimeHall
 
 open scoped Pointwise
 
@@ -38,7 +38,7 @@ theorem exists_nontrivial_scalar_fix_of_simple
       simpa [mul_assoc] using hmul
     exact
       hncyc (isCyclic_of_injective φ.rangeRestrict (fun _ _ h => hφinj (congrArg Subtype.val h)))
-  push_neg at hnot_no_kernel
+  push Not at hnot_no_kernel
   rcases hnot_no_kernel with ⟨a, hφa, ha_ne_one⟩
   refine ⟨a, ha_ne_one, ?_⟩
   intro x
@@ -143,18 +143,19 @@ theorem proposition_1_16_b_elementaryAbelian
     change b • Additive.toMul x ∈ fixedPointSubgroup (↥Y) G
     rw [FixedPoints.mem_subgroup]
     intro z
-    have hxfix : z • Additive.toMul x = Additive.toMul x := by
+    have hxfix : ((z : A) • Additive.toMul x) = Additive.toMul x := by
       change Additive.toMul x ∈ fixedPointSubgroup (↥Y) G at hx
       rw [FixedPoints.mem_subgroup] at hx
-      exact hx z
+      simpa only [Subgroup.smul_def] using hx z
     have hcomm : Commute ((z : Y) : A) b := by
-      simpa using mul_comm ((z : Y) : A) b
+      exact Commute.all _ _
+    change ((z : A) • (b • Additive.toMul x)) = b • Additive.toMul x
     calc
-      z • (b • Additive.toMul x) = (((z : Y) : A) * b) • Additive.toMul x := by
-        simpa using (smul_smul ((z : Y) : A) b (Additive.toMul x))
+      ((z : A) • (b • Additive.toMul x)) = (((z : Y) : A) * b) • Additive.toMul x := by
+        exact smul_smul ((z : Y) : A) b (Additive.toMul x)
       _ = (b * ((z : Y) : A)) • Additive.toMul x := by simp [hcomm.eq]
-      _ = b • (z • Additive.toMul x) := by
-        simpa using (smul_smul b ((z : Y) : A) (Additive.toMul x)).symm
+      _ = b • (((z : Y) : A) • Additive.toMul x) := by
+        exact (smul_smul b ((z : Y) : A) (Additive.toMul x)).symm
       _ = b • Additive.toMul x := by simp [hxfix]
   let H : Subgroup G := ⨆ Y : Y1, fixedPointSubgroup (↥Y.1) G
   let L : Submodule (ZMod q) (Additive G) := ⨆ Y : Y1, p Y
@@ -205,18 +206,15 @@ theorem proposition_1_16_b_elementaryAbelian
                       (MonoidAlgebra.of (ZMod q) A ((y : Y) : A)) • ρ.asModuleEquiv.symm x =
                         ρ.asModuleEquiv.symm x := by
                     exact congrArg Subtype.val (hfix y ⟨ρ.asModuleEquiv.symm x, hx⟩)
-                  have hfix'' :
-                      ρ.asModuleEquiv
-                          ((MonoidAlgebra.of (ZMod q) A ((y : Y) : A)) • ρ.asModuleEquiv.symm x) =
-                        ρ.asModuleEquiv (ρ.asModuleEquiv.symm x) := by
-                    exact congrArg ρ.asModuleEquiv hfix'
-                  have hfix''' :
-                      ρ.asAlgebraHom (MonoidAlgebra.of (ZMod q) A ((y : Y) : A))
-                          (Additive.toMul x) =
-                        Additive.toMul x := by
-                    simpa [Representation.asModuleEquiv_map_smul] using hfix''
-                  simpa [Representation.asAlgebraHom, ρ, MulDistribMulAction.toMulAut] using hfix'''
-                simpa using hyfix
+                  have hfixρ_asModule :
+                      ρ.asModuleEquiv.symm (ρ ((y : Y) : A) x) = ρ.asModuleEquiv.symm x := by
+                    rw [Representation.asModuleEquiv_symm_map_rho]
+                    exact hfix'
+                  have hfixρ : ρ ((y : Y) : A) x = x :=
+                    ρ.asModuleEquiv.symm.injective hfixρ_asModule
+                  simpa [ρ, MulDistribMulAction.toMulAut] using congrArg Additive.toMul hfixρ
+                change ((y : A) • Additive.toMul x) = Additive.toMul x
+                exact hyfix
               have hle'' : ρ.mapSubmodule.symm S ≤ ⟨p Y1', hBinv Y⟩ := hle'
               simpa using ρ.mapSubmodule.monotone hle''
             have hsub : (⟨p Y1', hBinv Y⟩ : ρ.invtSubmodule) ≤ ⟨L, hLinv⟩ := by
@@ -275,7 +273,8 @@ theorem proposition_1_16_b_qgroup
             have hsubinv : IsInvariant ↥Y.1 G (frattini G) := by
               constructor
               intro z g
-              simpa using (hfrattini_inv.invariant ((z : Y.1) : A) g)
+              change (g ∈ frattini G) ↔ (((z : Y.1) : A) • g ∈ frattini G)
+              exact hfrattini_inv.invariant ((z : Y.1) : A) g
             letI : MulAction.QuotientAction ↥Y.1 (frattini G) :=
               quotientAction_of_isInvariant (A := ↥Y.1) (frattini G) hsubinv
             letI : MulDistribMulAction ↥Y.1 (G ⧸ frattini G) :=
@@ -286,8 +285,8 @@ theorem proposition_1_16_b_qgroup
                 (frattini G) hsubinv).symm
   haveI : IsElementaryAbelian q (G ⧸ frattini G) :=
     isElementaryAbelian_quotient_frattini (R := G) (p := q)
-  letI : CommGroup (G ⧸ frattini G) := inferInstance
   have hKbar_top : Kbar = ⊤ := by
+    letI : CommGroup (G ⧸ frattini G) := IsMulCommutative.instCommGroup
     simpa [Kbar, Y1, iSup_subtype] using
       proposition_1_16_b_elementaryAbelian (G := G ⧸ frattini G) (A := A) (q := q) hAq
   have hKsup : K ⊔ frattini G = ⊤ := by
@@ -297,10 +296,10 @@ theorem proposition_1_16_b_qgroup
       simp [hKbar_eq, hKbar_top]
     rcases hgbar with ⟨k, hkK, hkg⟩
     have hkgΦ : k⁻¹ * g ∈ frattini G := by
-      rw [← QuotientGroup.eq_one_iff]
-      change (((k⁻¹ * g : G) : G ⧸ frattini G)) = 1
-      change ((QuotientGroup.mk' (frattini G) k)⁻¹ * (QuotientGroup.mk' (frattini G) g)) = 1
-      rw [hkg]
+      apply (QuotientGroup.eq_one_iff (N := frattini G) (x := k⁻¹ * g)).1
+      rw [QuotientGroup.mk_mul, QuotientGroup.mk_inv]
+      have hkg' : (k : G ⧸ frattini G) = (g : G ⧸ frattini G) := hkg
+      rw [hkg']
       simp
     exact (Subgroup.mem_sup_of_normal_right (s := K) (t := frattini G) (x := g)).2
       ⟨k, hkK, k⁻¹ * g, hkgΦ, by simp⟩
@@ -338,7 +337,8 @@ public theorem exists_invariant_sylow
   constructor
   intro a g
   have hsmulP : a • (P : Subgroup G) = (P : Subgroup G) := by
-    simpa using congrArg (fun Q : Sylow q G => (Q : Subgroup G)) ((MulAction.mem_fixedPoints.mp hPfix) a)
+    simpa [Sylow.pointwise_smul_def] using
+      congrArg (fun Q : Sylow q G => (Q : Subgroup G)) ((MulAction.mem_fixedPoints.mp hPfix) a)
   constructor
   · intro hg
     have : a • g ∈ a • (P : Subgroup G) :=
@@ -346,7 +346,7 @@ public theorem exists_invariant_sylow
     simpa [hsmulP] using this
   · intro hg
     have hsmulPinv : a⁻¹ • (P : Subgroup G) = (P : Subgroup G) := by
-      simpa using congrArg (fun Q : Sylow q G => (Q : Subgroup G))
+      simpa [Sylow.pointwise_smul_def] using congrArg (fun Q : Sylow q G => (Q : Subgroup G))
         ((MulAction.mem_fixedPoints.mp hPfix) a⁻¹)
     have : a⁻¹ • (a • g) ∈ a⁻¹ • (P : Subgroup G) :=
       Subgroup.smul_mem_pointwise_smul (a • g) a⁻¹ (P : Subgroup G) hg
@@ -466,8 +466,11 @@ public theorem iSup_fixedPointSubgroup_zpowers_eq_top_of_noncyclic_abelian_pGrou
     have hzpow_le : Subgroup.zpowers (a : A) ≤ Y := (Subgroup.zpowers_le).2 a.2
     have hfix_le :
         fixedPointSubgroup (↥Y) G ≤ fixedPointSubgroup (↥(Subgroup.zpowers (a : A))) G := by
-      simpa [fixedPointSubgroup] using
-        (fixedPoints_subgroup_antitone (M := A) (α := G) hzpow_le)
+      intro g hg
+      rw [FixedPoints.mem_subgroup] at hg ⊢
+      intro z
+      change ((z : A) • g) = g
+      exact hg (⟨z, hzpow_le z.2⟩ : Y)
     exact le_iSup_of_le (a : A) (le_iSup_of_le ha_ne_one' hfix_le)
   have htop_le :
       (⊤ : Subgroup G) ≤ (⨆ (a : A) (_ : a ≠ 1), fixedPointSubgroup (↥(Subgroup.zpowers a)) G) := by

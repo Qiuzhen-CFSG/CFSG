@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.BGsection11.Defs
+public import FeitThompson.BGsection11.Defs
 import Mathlib.GroupTheory.Schreier
 
 /-!
@@ -54,10 +54,8 @@ private theorem section11_isElementaryAbelian_sup_of_le_centralizer
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact
-          { is_comm := ⟨fun x y => by exact mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -79,10 +77,12 @@ private theorem section11_isElementaryAbelian_sup_of_le_centralizer
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          have hclosure_comm : IsMulCommutative ↥(Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) ⟨z, hz⟩)
+            (hclosure_comm.is_comm.comm
+              (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
         calc
           (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
           _ = 1 := by simp [hypow, hzpow]) (by
@@ -199,8 +199,8 @@ omit [Finite G] [IsMinCE G] in
 public theorem section11_ambientSylow_isPGroup
     {q : Nat.Primes} (H : Subgroup G) (Q : Sylow q.val H) :
     IsPGroup q.val (section10AmbientSylowSubgroup H Q) := by
-  simpa [section10AmbientSylowSubgroup] using
-    IsPGroup.map (p := q.val) (H := (Q : Subgroup H)) Q.isPGroup' H.subtype
+  change IsPGroup q.val ((Q : Subgroup H).map H.subtype)
+  exact IsPGroup.map (p := q.val) (H := (Q : Subgroup H)) Q.isPGroup' H.subtype
 
 omit [IsMinCE G] in
 public theorem section11_ambientSylow_mem_section7HFamily_top
@@ -246,9 +246,7 @@ public theorem section11_ambientSylow_isSylow_of_hall
       (Subgroup.subgroupOfEquivOfLe
         (H := section10AmbientSylowSubgroup K Q) (K := H) hQamb_le_H).symm
   have hR_map : R.map H.subtype = section10AmbientSylowSubgroup K Q := by
-    simpa [R, inf_eq_left.2 hQamb_le_H] using
-      (Subgroup.subgroupOf_map_subtype
-        (H := section10AmbientSylowSubgroup K Q) (K := H))
+    simp [R, inf_eq_left.2 hQamb_le_H]
   have hR_not_dvd : ¬ q.val ∣ R.index := by
     intro hidx
     have hidx_map :
@@ -276,6 +274,7 @@ public theorem section11_ambientSylow_isSylow_of_hall
       simp [S, section10AmbientSylowSubgroup]
     _ = section10AmbientSylowSubgroup K Q := hR_map
 
+omit [IsMinCE G] in
 public theorem section11_normalizer_ambientSylow_le_of_sigma
     {M : Subgroup G} {q : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G) (hqσ : q ∈ section10SigmaPrimes M)
@@ -308,7 +307,7 @@ public theorem section11_centralizer_ne_top_of_prime_order
     have hp1 : p.val = 1 := by
       rw [← hXcard]
       exact hcard1
-    exact p.2.not_dvd_one (by simpa [hp1])
+    exact p.2.not_dvd_one (by simp [hp1])
   have hX_le_center : X ≤ Subgroup.center G := by
     have hsubset : (X : Set G) ⊆ Subgroup.center G :=
       (Subgroup.centralizer_eq_top_iff_subset).mp hCtop
@@ -350,7 +349,7 @@ public theorem section11_star_of_ambient_sylow_normalizer_le
     section8_isPGroup_of_isPiSubgroup_singleton hTfam.2.1
   haveI : Group.IsNilpotent T :=
     IsPGroup.isNilpotent (p := q.val) (G := T) hT_q
-  have hnc : NormalizerCondition T := normalizerCondition_of_isNilpotent (G := T)
+  have hnc : NormalizerCondition T := Group.normalizerCondition_of_isNilpotent (G := T)
   let Nsub : Subgroup T :=
     Subgroup.normalizer ((R.subgroupOf T : Subgroup T) : Set T)
   have hRsub_lt_N : R.subgroupOf T < Nsub :=
@@ -419,11 +418,10 @@ public theorem section11_star_of_ambient_sylow_normalizer_le
       simpa [hS_eq] using hxAmb
     · exact hR_le_Namb
   have hRsub_map : (R.subgroupOf T).map T.subtype = R := by
-    simpa [inf_eq_left.2 hRT] using
-      (Subgroup.subgroupOf_map_subtype (H := R) (K := T))
+    simp [inf_eq_left.2 hRT]
   have hNsub_eq_Rsub : Nsub = R.subgroupOf T := by
     apply Subgroup.map_injective T.subtype_injective
-    simpa [Namb, hNamb_eq_R, hRsub_map]
+    simp [Namb, hNamb_eq_R, hRsub_map]
   exact hRsub_lt_N.ne hNsub_eq_Rsub.symm
 
 public theorem section11_ambientSylow_mem_star_of_sigma
@@ -542,14 +540,14 @@ public theorem section11_maximal_conjBy
   rw [h_map]
   exact ((MulAut.conj g : G ≃* G).mapSubgroup.isCoatom_iff M).mpr hM
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_card_conjBy (M : Subgroup G) (g : G) :
     Nat.card (M.conjBy g) = Nat.card M := by
   simpa [Subgroup.conjBy] using
     (Subgroup.card_map_of_injective
       (K := M) (f := (MulAut.conj g).toMonoidHom) (MulAut.conj g).injective)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section11_ambientSylow_conjBy_subgroupOf
     {q : Nat.Primes} (M : Subgroup G) (S : Sylow q.val M) (g : G) :
     let e : M ≃* M.conjBy g := (MulAut.conj g).subgroupMap M
@@ -625,6 +623,7 @@ public theorem section11_ambientSylow_conjBy_exists
       rw [← hRsub_eq]
       exact hRsub_map
 
+omit [IsMinCE G] in
 public theorem section11_sigma_mem_conjBy
     {M : Subgroup G} {q : Nat.Primes} (hqσ : q ∈ section10SigmaPrimes M) (g : G) :
     q ∈ section10SigmaPrimes (M.conjBy g) := by
@@ -633,7 +632,9 @@ public theorem section11_sigma_mem_conjBy
   rcases section11_ambientSylow_conjBy_exists M S g with ⟨Sg, hSg_eq⟩
   refine ⟨?_, Sg, ?_⟩
   · change q.val ∣ Nat.card (M.conjBy g)
-    simpa [section11_card_conjBy M g] using hqM
+    change q.val ∣ Nat.card M at hqM
+    rw [section11_card_conjBy M g]
+    exact hqM
   · rw [hSg_eq]
     intro x hx
     have hx_back :
@@ -766,7 +767,7 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 public theorem lemma_11_1_a
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {g : G}
-    (hgM : g ∉ M) (hAgM : A ≤ M.conjBy g) (hqσ : q ∈ section10SigmaPrimes M)
+    (hgM : g ∉ M) (_hAgM : A ≤ M.conjBy g) (hqσ : q ∈ section10SigmaPrimes M)
     (Q1 : Sylow q.val (section10Msigma M))
     (Q2 : Sylow q.val ((section10Msigma M).conjBy g))
     (hAQ1 :

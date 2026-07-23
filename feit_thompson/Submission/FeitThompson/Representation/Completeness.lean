@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.Representation.SimpleCriteria
+public import FeitThompson.Representation.SimpleCriteria
 public import Mathlib.Algebra.Central.Matrix
 public import Mathlib.Algebra.Algebra.Subalgebra.Pi
 public import Mathlib.Algebra.MonoidAlgebra.Module
@@ -23,7 +23,7 @@ variable {G : Type*} [Group G] [Finite G]
 
 private abbrev GroupAlgebra := MonoidAlgebra ℂ G
 
-private noncomputable def wedderburnDataExists (G : Type*) [Group G] [Finite G] :
+private theorem wedderburnDataExists (G : Type*) [Group G] [Finite G] :
     ∃ (n : ℕ) (d : Fin n → ℕ), (∀ i, NeZero (d i)) ∧
         Nonempty (GroupAlgebra (G := G) ≃ₐ[ℂ]
           Π i, Matrix (Fin (d i)) (Fin (d i)) ℂ) := by
@@ -162,7 +162,9 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
           intro hbot
           apply hS
           apply Subrepresentation.toSubmodule_injective
-          simpa using hbot
+          change S.toSubmodule =
+            (⊥ : Submodule ℂ (Fin (wedderburnDim (G := G) i) → ℂ))
+          exact hbot
         exact Submodule.exists_mem_ne_zero_of_ne_bot hSsub
       rcases hne with ⟨v, hvS, hv0⟩
       obtain ⟨j, hvj⟩ : ∃ j, v j ≠ 0 := by
@@ -181,7 +183,7 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
         have hsum_eq :
             (∑ k : Fin (wedderburnDim (G := G) i), Pi.single k (w k)) = w := by
           ext l
-          simpa using (Finset.sum_pi_single l w Finset.univ)
+          simp
         simpa [hsum_eq] using hsum
       intro k
       let E : Matrix (Fin (wedderburnDim (G := G) i))
@@ -199,7 +201,9 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
           · subst l
             simp [div_mul_cancel₀ _ hvj]
           · simp [Pi.single_eq_of_ne hl]
-        simpa [Module.compHom, φ] using congrFun hmat l
+        change (blockAlgHom (G := G) i a • v) l =
+          (Pi.single k (w k) : Fin (wedderburnDim (G := G) i) → ℂ) l
+        exact congrFun hmat l
       rw [← hact]
       suffices ∀ a : A, a • v ∈ S from this a
       intro a
@@ -209,13 +213,15 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
           change (0 : Fin (wedderburnDim (G := G) i) → ℂ) ∈ S.toSubmodule
           exact S.toSubmodule.zero_mem
       | add x y hx hy =>
-          simpa [add_smul] using S.toSubmodule.add_mem hx hy
+          rw [add_smul]
+          change x • v + y • v ∈ S.toSubmodule
+          exact S.toSubmodule.add_mem hx hy
       | single g r =>
           have hg : (MonoidAlgebra.single g (1 : ℂ) : A) • v ∈ S :=
             S.apply_mem_toSubmodule g hvS
           have hsingle : (MonoidAlgebra.single g r : A) =
               r • (MonoidAlgebra.single g (1 : ℂ) : A) := by
-            simpa using (MonoidAlgebra.smul_single' (M := G) r g (1 : ℂ)).symm
+            simp
           rw [hsingle]
           rw [smul_assoc]
           exact S.toSubmodule.smul_mem r hg
@@ -304,7 +310,7 @@ private lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
         | single g r =>
             have hsingle : (MonoidAlgebra.single g r : GroupAlgebra (G := G)) =
                 r • (MonoidAlgebra.single g (1 : ℂ) : GroupAlgebra (G := G)) := by
-              simpa using (MonoidAlgebra.smul_single' (M := G) r g (1 : ℂ)).symm
+              simp
             rw [hsingle]
             rw [smul_assoc r (MonoidAlgebra.single g (1 : ℂ) : GroupAlgebra (G := G)) v,
               smul_assoc r (MonoidAlgebra.single g (1 : ℂ) : GroupAlgebra (G := G)) (φ v)]
@@ -388,15 +394,10 @@ private noncomputable def classFunctionCentralElement (φ : ClassFunction G) :
     GroupAlgebra (G := G) :=
   ∑ g : G, MonoidAlgebra.single g (φ (ConjClasses.mk g⁻¹))
 
-private lemma classFunctionCentralElement_apply (φ : ClassFunction G) (g : G) :
-    classFunctionCentralElement (G := G) φ g = φ (ConjClasses.mk g⁻¹) := by
+private lemma classFunctionCentralElement_coeff (φ : ClassFunction G) (g : G) :
+    (classFunctionCentralElement (G := G) φ).coeff g = φ (ConjClasses.mk g⁻¹) := by
   classical
-  rw [classFunctionCentralElement]
-  change (Finsupp.applyAddHom g)
-      (∑ x : G, MonoidAlgebra.single x (φ (ConjClasses.mk x⁻¹))) =
-    φ (ConjClasses.mk g⁻¹)
-  rw [map_sum]
-  simp [MonoidAlgebra.single_apply]
+  simp [classFunctionCentralElement, Finsupp.single_apply]
 
 private noncomputable def classFunctionCentralElementLinear :
     ClassFunction G →ₗ[ℂ] GroupAlgebra (G := G) where
@@ -404,11 +405,11 @@ private noncomputable def classFunctionCentralElementLinear :
   map_add' φ ψ := by
     classical
     ext g
-    simp [classFunctionCentralElement_apply]
+    simp [classFunctionCentralElement_coeff]
   map_smul' c φ := by
     classical
     ext g
-    simp [classFunctionCentralElement_apply, smul_eq_mul]
+    simp [classFunctionCentralElement_coeff, smul_eq_mul]
 
 private lemma classFunctionCentralElement_single_comm (φ : ClassFunction G) (h : G) :
     (MonoidAlgebra.single h (1 : ℂ) : GroupAlgebra (G := G)) *
@@ -417,13 +418,14 @@ private lemma classFunctionCentralElement_single_comm (φ : ClassFunction G) (h 
         MonoidAlgebra.single h (1 : ℂ) := by
   classical
   ext x
-  simp [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
-    classFunctionCentralElement_apply]
+  simp only [MonoidAlgebra.coeff_single_mul_apply,
+    MonoidAlgebra.coeff_mul_single_apply, one_mul, mul_one,
+    classFunctionCentralElement_coeff]
   have hconj :
       ConjClasses.mk ((h⁻¹ * x)⁻¹) = ConjClasses.mk ((x * h⁻¹)⁻¹) := by
     rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
     exact ⟨h, by group⟩
-  simpa [mul_assoc] using congrArg φ hconj
+  exact congrArg φ hconj
 
 private lemma classFunctionCentralElement_comm (φ : ClassFunction G) (a : GroupAlgebra (G := G)) :
     a * classFunctionCentralElement (G := G) φ =
@@ -442,8 +444,10 @@ private lemma classFunctionCentralElement_comm (φ : ClassFunction G) (a : Group
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
       have hφ := congrArg φ hconj
-      simpa [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
-        classFunctionCentralElement_apply, hr, mul_comm, mul_left_comm, mul_assoc] using hφ
+      simp only [MonoidAlgebra.coeff_single_mul_apply,
+        MonoidAlgebra.coeff_mul_single_apply,
+        classFunctionCentralElement_coeff]
+      rw [hφ, mul_comm]
 
 private lemma blockAlgHom_classFunctionCentralElement_mem_center
     (φ : ClassFunction G) (i : wedderburnIndex G) :
@@ -578,8 +582,8 @@ private lemma classFunctionBlockTraceLinear_injective :
       blockAlgHom (G := G) i 0
     rw [ha, ha_zero]
     simp
-  have hcoeff := congrArg (fun a : GroupAlgebra (G := G) => a g⁻¹) hcentral_zero
-  simpa [classFunctionCentralElement_apply] using hcoeff
+  have hcoeff := congrArg (fun a : GroupAlgebra (G := G) => a.coeff g⁻¹) hcentral_zero
+  simpa [classFunctionCentralElement_coeff] using hcoeff
 
 private lemma classFunction_finrank_le_blockCharacters_card :
     Module.finrank ℂ (ClassFunction G) ≤ Fintype.card (wedderburnIndex G) := by
@@ -657,7 +661,7 @@ public theorem classFunction_span_irreducible_characters
       · left
         simpa [heq] using horth
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hspan_mem : χ ∈ Submodule.span ℂ (Set.range (blockCharacter (G := G))) := by
       rw [blockCharacters_span]
       exact Submodule.mem_top

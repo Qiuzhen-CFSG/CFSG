@@ -4,7 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import Submission.FeitThompson.ChiefFactors.Core
+public import FeitThompson.ChiefFactors.Core
+
+open scoped commutatorElement
 
 /-!
 ## Proposition 1.2: Baer intersection + chief-factor centralizers
@@ -286,7 +288,7 @@ public theorem baer_nilpotent_of_card :
             ((Subgroup.mem_centralizer_iff).1 hy_cent x.1 (by simpa using hxM)).symm
           ext
           simpa using hy_comm
-        exact isNilpotent_of_ker_le_center f hker)
+        exact Subgroup.isNilpotent_of_ker_le_center f hker)
 
 /-- The Baer intersection of a finite solvable group is nilpotent. -/
 public theorem baer_nilpotent (hsolv : IsSolvable G) :
@@ -324,7 +326,7 @@ theorem isNilpotent_map_of_isNilpotent {H : Type*} [Group H] (f : G →* H) (N :
   let φ := subgroupToMap (G := G) f N
   have hsurj : Function.Surjective φ := subgroupToMap_surjective (G := G) f N
   haveI : Group.IsNilpotent (↥N) := hN
-  exact nilpotent_of_surjective (G := (↥N)) (G' := (↥(N.map f))) φ hsurj
+  exact Group.nilpotent_of_surjective (G := (↥N)) (G' := (↥(N.map f))) φ hsurj
 
 /-- For a chief factor `cf = (V ◁ U)`, the image `U/V` in the quotient `G/V` is a minimal nontrivial normal subgroup. -/
 public theorem chiefFactor_quotient_minimal (cf : ChiefFactor G) :

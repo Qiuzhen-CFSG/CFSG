@@ -6,9 +6,9 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Mathlib.RepresentationTheory.Irreducible
-public import Submission.FeitThompson.Representation.ExtendScalars
-public import Submission.FeitThompson.Representation.JacobsonDensity
-public import Submission.FeitThompson.Representation.SubrepresentationLattice
+public import FeitThompson.Representation.ExtendScalars
+public import FeitThompson.Representation.JacobsonDensity
+public import FeitThompson.Representation.SubrepresentationLattice
 
 open scoped TensorProduct
 open scoped MonoidAlgebra

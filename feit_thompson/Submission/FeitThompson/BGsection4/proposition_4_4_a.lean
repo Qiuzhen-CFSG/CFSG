@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.BGsection4.Defs
-public import Submission.FeitThompson.BGsection3.theorem_3_4
+public import FeitThompson.BGsection4.Defs
+public import FeitThompson.BGsection3.theorem_3_4
 
 section Main
 

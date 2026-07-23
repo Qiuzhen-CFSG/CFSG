@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.lemma_12_8_c
+public import FeitThompson.BGsection12.lemma_12_8_c
 
 open scoped Pointwise
 
@@ -218,7 +218,7 @@ public theorem lemma_12_8_d
     simpa [NA] using (Subgroup.le_normalizer : A ≤ Subgroup.normalizer (A : Set G))
   have hAnormNA : section10NormalIn A NA := by
     refine ⟨hA_le_NA, ?_⟩
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hA_le_NA).2 (by simpa [NA])
+    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hA_le_NA).2 (by simp [NA])
   have hCA_le_NA : Subgroup.centralizer (A : Set G) ≤ NA := by
     simpa [NA] using centralizer_le_normalizer A
   have hFNA_eq_FC :
@@ -310,7 +310,7 @@ public theorem lemma_12_8_d
     simpa [π₂] using section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
   rcases hE2HallE with ⟨hE2E, hHallE2E⟩
   have hE2_le_K : E₂ ≤ K := by
-    simpa [K] using (le_sup_left : E₂ ≤ E₂ ⊔ E₃)
+    simp [K]
   have hE2HallK : IsHallSubgroup π₂ (E₂.subgroupOf K) := by
     refine isHallSubgroup_of (G := K) π₂ (E₂.subgroupOf K) ?_ ?_
     · intro q hqcard

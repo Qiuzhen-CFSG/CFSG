@@ -17,16 +17,16 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import Submission.FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import Submission.FeitThompson.Burnside.NormalComplement
-public import Submission.FeitThompson.Extraspecial
-public import Submission.FeitThompson.LinearAlgebra.BlockElementaryMap
-public import Submission.FeitThompson.Representation.ConjugateRep
-public import Submission.FeitThompson.BGsection2.EndFieldRep
-public import Submission.FeitThompson.Representation.CyclicQuotientExtension
-import Submission.FeitThompson.Representation.Unbundled
-public import Submission.FeitThompson.Representation.SolvableDimension
-public import Submission.FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Extraspecial
+public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.BGsection2.EndFieldRep
+public import FeitThompson.Representation.CyclicQuotientExtension
+import FeitThompson.Representation.Unbundled
+public import FeitThompson.Representation.SolvableDimension
+public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
 
 open Representation
 open MonoidAlgebra
@@ -38,6 +38,7 @@ open scoped BigOperators
 open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
+open scoped commutatorElement
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.5
@@ -55,7 +56,8 @@ Then every finite dimensional, faithful, irreducible $FG$-module $V$ satisfies $
 theorem invariants_eq_bot_iff_fixedVectors_eq_zero
     {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V) (H : Subgroup G) :
-    Representation.invariants (ρ.comp H.subtype) = ⊥ ↔ {v : V | ∀ h : H, ρ h v = v} = {0} := by
+    Representation.invariants (ρ.comp H.subtype) = ⊥ ↔
+      {v : V | ∀ h : H, (ρ.comp H.subtype) h v = v} = {0} := by
   constructor
   · intro hbot
     ext v
@@ -118,8 +120,13 @@ theorem le_ker_of_forall_simple_submodule_le_ker {G : Type*} [Group G] {F : Type
           have hhq : h ∈ (Subrepresentation.ofSubmodule' q).toRepresentation.ker :=
             hsimple q hq_simple hh
           rw [MonoidHom.mem_ker] at hhq
-          have hhq' := congrArg (fun f => f ⟨xq, hxq⟩) hhq
-          simpa using congrArg (fun y => ρ.asModuleEquiv y.1) hhq'
+          have hhq' :
+              ((Subrepresentation.ofSubmodule' q).toRepresentation h) ⟨xq, hxq⟩ =
+                ⟨xq, hxq⟩ := by
+            simpa using congrArg (fun f => f ⟨xq, hxq⟩) hhq
+          have hhq'' := congrArg Subtype.val hhq'
+          change ρ h (ρ.asModuleEquiv xq) = ρ.asModuleEquiv xq
+          exact hhq''
         have ht_fix : ρ h (ρ.asModuleEquiv xt) = ρ.asModuleEquiv xt :=
           ih (by
             intro m hm
@@ -140,7 +147,7 @@ theorem exists_simple_submodule_nontrivial_of_not_le_ker {G : Type*} [Group G]
       IsSimpleModule (MonoidAlgebra F G) m ∧
       ¬ H ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
   by_contra hcontra
-  push_neg at hcontra
+  push Not at hcontra
   exact hH (le_ker_of_forall_simple_submodule_le_ker (ρ := ρ) H hcontra)
 
 theorem invariants_ofSubmodule'_eq_bot_of_invariants_eq_bot {G : Type*} [Group G]
@@ -293,7 +300,9 @@ theorem center_apply_eq_smul_id_of_irreducible
     {z : G} (hz : z ∈ Subgroup.center G) :
     ∃ a : F, (ρ z : Module.End F V) = a • 1 := by
   let φ := Representation.IntertwiningMap.centralMul (ρ := ρ) z (by
-    simpa using hz)
+    rw [Submonoid.mem_center_iff]
+    intro g
+    exact (Subgroup.mem_center_iff.mp hz) g)
   obtain ⟨a, ha⟩ :=
     (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
       (ρ := ρ)).surjective φ
@@ -303,8 +312,13 @@ theorem center_apply_eq_smul_id_of_irreducible
           Representation.IntertwiningMap ρ ρ) : Module.End F V) =
         (φ : Module.End F V) := by
     simpa using congrArg (fun f : Representation.IntertwiningMap ρ ρ => (f : Module.End F V)) ha
-  simpa [Representation.IntertwiningMap.algebraMap_apply, φ,
-    Representation.IntertwiningMap.centralMul] using hlin.symm
+  calc
+    (ρ z : Module.End F V) = (φ : Module.End F V) := rfl
+    _ = ((algebraMap F (Representation.IntertwiningMap ρ ρ) a :
+        Representation.IntertwiningMap ρ ρ) : Module.End F V) := hlin.symm
+    _ = a • (1 : Module.End F V) := by
+      ext v
+      simp [Representation.IntertwiningMap.algebraMap_apply, LinearMap.smul_apply]
 
 theorem span_range_eq_top_of_irreducible_isAlgClosed
     {F : Type*} [Field F] [IsAlgClosed F]
@@ -334,7 +348,7 @@ theorem trace_eq_zero_of_not_mem_center_of_faithful_irreducible_isExtraspecial
     {x : K} (hx : x ∉ Subgroup.center K) :
     LinearMap.trace F V (ρ x : Module.End F V) = 0 := by
   rw [Subgroup.mem_center_iff] at hx
-  push_neg at hx
+  push Not at hx
   obtain ⟨y, hyx⟩ := hx
   let z : K := ⁅y, x⁆
   have hz_ne_one : z ≠ 1 := by
@@ -670,7 +684,7 @@ theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
                   rw [hinv]
             _ = (Module.finrank F V : F) := by
                   simp
-        simpa using htrace_eq
+        simpa [tq, Aq, b] using htrace_eq
       · have hnotcenter : repQ r * (repQ s)⁻¹ ∉ Subgroup.center K := by
           intro hcenter
           have hquot :
@@ -686,7 +700,7 @@ theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
                   exact
                     trace_eq_zero_of_not_mem_center_of_faithful_irreducible_isExtraspecial
                       (q := q) (ρ := ρ) hfaithful (x := repQ r * (repQ s)⁻¹) hnotcenter
-        simpa [hrs] using htrace_eq
+        simpa [tq, Aq, b, hrs] using htrace_eq
     have hsum :
         c.sum (fun r a => a * tq (b r)) = c s * (Module.finrank F V : F) := by
       classical
@@ -789,17 +803,18 @@ theorem theorem_2_5_exists_faithful_irreducible
   classical
   have hpprime : p.Prime := Fact.out
   letI : Fintype P := Fintype.ofFinite P
-  let τ : Representation F P (P →₀ F) := Representation.ofMulAction F P P
+  let τ : Representation F P (MonoidAlgebra F P) := Representation.ofMulAction F P P
   have hτfaithful : Function.Injective τ := by
     intro x y hxy
     have hval :=
       congrArg
-        (fun f : Module.End F (P →₀ F) => f (Finsupp.single (1 : P) (1 : F)))
+        (fun f : Module.End F (MonoidAlgebra F P) =>
+          f (MonoidAlgebra.single (1 : P) (1 : F)))
         hxy
-    have hsingle : Finsupp.single x (1 : F) = Finsupp.single y (1 : F) := by
+    have hsingle : MonoidAlgebra.single x (1 : F) = MonoidAlgebra.single y (1 : F) := by
       simpa [τ, Representation.ofMulAction_single] using hval
     by_contra hxy_ne
-    have hpoint := congrArg (fun f : P →₀ F => f x) hsingle
+    have hpoint := congrArg (fun f : MonoidAlgebra F P => f.coeff x) hsingle
     have : (1 : F) = 0 := by
       simp [hxy_ne] at hpoint
     exact one_ne_zero this
@@ -821,25 +836,26 @@ theorem theorem_2_5_exists_faithful_irreducible
       · exact hle.trans (by simp [hτker])
       · exact bot_le
     exact hcenter_ne_bot this
-  letI : FiniteDimensional F (P →₀ F) := by infer_instance
+  letI : FiniteDimensional F (MonoidAlgebra F P) := by infer_instance
   obtain ⟨m, hmSimple, hcenter_not_le_ker_m⟩ :=
     exists_simple_submodule_nontrivial_of_not_le_ker
       (ρ := τ) (H := Subgroup.center P) hcenter_not_le_ker
-  let incl : m →ₗ[F] (P →₀ F) := {
+  let M := Subrepresentation.ofSubmodule' m
+  let incl : M.toSubmodule →ₗ[F] MonoidAlgebra F P := {
     toFun := fun v => v.1
     map_add' := fun _ _ => rfl
     map_smul' := fun _ _ => rfl
   }
-  letI : FiniteDimensional F m :=
+  letI : FiniteDimensional F M.toSubmodule :=
     FiniteDimensional.of_injective incl (fun v w h => Subtype.ext h)
-  let ρ : Representation F P m := (Subrepresentation.ofSubmodule' m).toRepresentation
+  let ρ : Representation F P M.toSubmodule := M.toRepresentation
   have hρirr : IsIrreducible ρ := irreducible_of_ofSubmodule'_simple τ hmSimple
   letI : IsIrreducible ρ := hρirr
   have hρker : ρ.ker = ⊥ :=
     ker_eq_bot_of_center_not_le_ker_of_isExtraspecial
       (q := p) (ρ := ρ) hcenter_not_le_ker_m
   have hρfaithful : Function.Injective ρ := ρ.ker_eq_bot_iff.mp hρker
-  exact ⟨↥m, inferInstance, inferInstance, inferInstance, ρ, hρirr, hρfaithful⟩
+  exact ⟨↥M.toSubmodule, inferInstance, inferInstance, inferInstance, ρ, hρirr, hρfaithful⟩
 
 def theorem_2_5_rangeInlEquiv
     {P : Type*} [Group P]
@@ -989,7 +1005,10 @@ theorem theorem_2_5_exists_extension
   refine ⟨σ, ?_⟩
   ext q v
   have hq := congrArg (fun r : Representation F K V => r (eK q) v) hσK
-  simpa [ρK, eK] using hq
+  calc
+    σ (SemidirectProduct.inl q) v = σ (eK q) v := by rfl
+    _ = ρK (eK q) v := hq
+    _ = ρ q v := by rfl
 
 theorem theorem_2_5_generator_linearEquiv
     {h : ℕ} {H : Type*} [Group H] [Finite H] (hH : Nat.card H = h)
@@ -1023,7 +1042,8 @@ theorem theorem_2_5_generator_linearEquiv
   calc
     u.toLinearEquiv ^ h = (u ^ h).toLinearEquiv := htoLinearEquiv_pow h
     _ = 1 := by
-      simpa using congrArg LinearMap.GeneralLinearGroup.toLinearEquiv hu_pow
+      rw [hu_pow]
+      rfl
 
 theorem theorem_2_5_hE_intertwining_eq_eigenspace
     {F : Type*} [Field F]
@@ -1217,7 +1237,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
   haveI : Nontrivial (Subgroup.center P) := by
     refine (nontrivial_iff_exists_ne (1 : Subgroup.center P)).2 ?_
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hsub : Subsingleton (Subgroup.center P) := ⟨fun a b => by rw [hnone a, hnone b]⟩
     have hcard1 : Nat.card (Subgroup.center P) = 1 :=
       (Nat.card_eq_one_iff_unique).2 ⟨hsub, ⟨1⟩⟩
@@ -1234,7 +1254,11 @@ theorem theorem_2_5_hE_char_not_dvd_card
   have hρz : (ρ z : Module.End F V) = a • 1 := by
     ext v
     have hv := congrArg (fun g : ρ.IntertwiningMap ρ => g v) ha
-    simpa [f, Representation.IntertwiningMap.algebraMap_apply, LinearMap.smul_apply] using hv.symm
+    calc
+      ρ z v = f v := rfl
+      _ = (algebraMap F (ρ.IntertwiningMap ρ) a) v := hv.symm
+      _ = a • v := by
+        simp [Representation.IntertwiningMap.algebraMap_apply]
   have hz_dvd : orderOf (z : P) ∣ p := by
     simpa [IsExtraspecial.center_order_p p P] using
       (Subgroup.orderOf_dvd_natCard (Subgroup.center P) z.2)
@@ -1530,7 +1554,7 @@ theorem theorem_2_5_hE
                   rw [hinv]
             _ = (Module.finrank F V : F) := by
                   simp
-        simpa using htrace_eq
+        simpa [ts, As, b] using htrace_eq
       · have hnotcenter : repQ r * (repQ s)⁻¹ ∉ Subgroup.center P := by
           intro hcenter
           have hquot :
@@ -1546,7 +1570,7 @@ theorem theorem_2_5_hE
                   exact
                     trace_eq_zero_of_not_mem_center_of_faithful_irreducible_isExtraspecial
                       (q := p) (ρ := ρ) hρfaithful (x := repQ r * (repQ s)⁻¹) hnotcenter
-        simpa [hrs] using htrace_eq
+        simpa [ts, As, b, hrs] using htrace_eq
     have hsum :
         c.sum (fun r a => a * ts (b r)) = c s * (Module.finrank F V : F) := by
       classical
@@ -1975,7 +1999,9 @@ theorem theorem_2_5_hE
         simpa [LinearMap.comp_apply] using hlast)
   have hgS_pow : gS ^ h = 1 := by
     apply LinearEquiv.toLinearMap_injective
-    simpa [gS, LinearEquiv.toLinearMap_pow] using hS_pow
+    rw [LinearEquiv.toLinearMap_pow]
+    change S ^ h = (1 : Module.End F (Q →₀ F))
+    exact hS_pow
   let A : Fin h → Submodule F (Q →₀ F) := fun i => Module.End.eigenspace S (ε ^ (i : ℤ))
   let orbitVec : Ω' → Fin h → Q →₀ F := fun ω i =>
     ∑ n ∈ Finset.range h,
@@ -2181,7 +2207,7 @@ theorem theorem_2_5_hE
   have horbitVec_eval_self (ω : Ω') (i : Fin h) :
       orbitVec ω i (r ω) = ε ^ (((i : ℕ) * (h - 1) : ℕ) : ℤ) := by
     dsimp [orbitVec]
-    rw [Finsupp.finset_sum_apply, Finset.sum_eq_single 0]
+    rw [Finsupp.finsetSum_apply, Finset.sum_eq_single 0]
     · simp
     · intro n hn hn0
       rcases hS_pow_single (r ω) n with ⟨d, hd_ne_zero, hd⟩
@@ -2195,7 +2221,7 @@ theorem theorem_2_5_hE
   have horbitVec_eval_other {ω ω' : Ω'} (hneq : ω ≠ ω') (i : Fin h) :
       orbitVec ω i (r ω') = 0 := by
     dsimp [orbitVec]
-    rw [Finsupp.finset_sum_apply]
+    rw [Finsupp.finsetSum_apply]
     refine Finset.sum_eq_zero ?_
     intro n hn
     rcases hS_pow_single (r ω) n with ⟨d, hd_ne_zero, hd⟩
@@ -2205,7 +2231,7 @@ theorem theorem_2_5_hE
   have horbitVec_eval_one (ω : Ω') (i : Fin h) :
       orbitVec ω i (1 : Q) = 0 := by
     dsimp [orbitVec]
-    rw [Finsupp.finset_sum_apply]
+    rw [Finsupp.finsetSum_apply]
     refine Finset.sum_eq_zero ?_
     intro n hn
     rcases hS_pow_single (r ω) n with ⟨d, hd_ne_zero, hd⟩
@@ -2647,9 +2673,6 @@ theorem theorem_2_5_b_core
     exact hh_ne_zero
   haveI : Finite H := Nat.finite_of_card_ne_zero hcardH_ne_zero
   let G := SemidirectProduct P H φ
-  letI : Group G := by
-    dsimp [G]
-    infer_instance
   let eG : G ≃ P × H := by
     dsimp [G]
     exact SemidirectProduct.equivProd (φ := φ)
@@ -2703,7 +2726,8 @@ theorem theorem_2_5_b_core
   let ρ' := Representation.extendScalars F' ρ
   have hρ'faithful : Function.Injective ρ' := by
     exact (Representation.extendScalars_faithful_iff F' ρ).mp hfaithful
-  have hfixRset : {v : V | ∀ r : R, ρ r v = v} = ({0} : Set V) := by
+  have hfixRset :
+      {v : V | ∀ r : R, (ρ.comp R.subtype) r v = v} = ({0} : Set V) := by
     ext v
     constructor
     · intro hv
@@ -2721,7 +2745,7 @@ theorem theorem_2_5_b_core
           {w : V' | ∀ r : R, (Representation.extendScalars F' ρR) r w = w} = ({0} : Set V') := by
         exact
           fixedVectors_eq_zero_extendScalars (ρ := ρR) (F' := F')
-            (by simpa [ρR] using hfixRset)
+            (by simpa only [ρR] using hfixRset)
       ext w
       constructor
       · intro hw
@@ -2738,7 +2762,7 @@ theorem theorem_2_5_b_core
         simp [hw0]
     exact
       (invariants_eq_bot_iff_fixedVectors_eq_zero (ρ := ρ') (H := R)).2
-        (by simpa using hfixRset')
+        hfixRset'
   have hcenterP_ne_bot : (Subgroup.center P) ≠ ⊥ := by
     intro hcenter_bot
     have hcenter_card :
@@ -2749,15 +2773,16 @@ theorem theorem_2_5_b_core
   have hC_not_le_ker : ¬ C ≤ ρ'.ker := by
     intro hle
     have hker : ρ'.ker = ⊥ := (MonoidHom.ker_eq_bot_iff (f := ρ')).2 hρ'faithful
-    have hC_le_bot : C ≤ (⊥ : Subgroup G) := by
-      simpa [hker] using hle
+    have hC_le_bot : C ≤ ⊥ := by
+      rw [← hker]
+      exact hle
     have hC_bot : C = ⊥ := le_antisymm hC_le_bot bot_le
     have hcenter_le_bot : Subgroup.center P ≤ ⊥ := by
       intro z hz
       have hzC : SemidirectProduct.inl z ∈ C := ⟨z, hz, rfl⟩
-      have : (SemidirectProduct.inl z : G) = 1 := by
-        simpa [hC_bot] using hzC
-      exact SemidirectProduct.inl_injective (by simpa using this)
+      have hzCbot := hC_bot ▸ hzC
+      change SemidirectProduct.inl z = 1 at hzCbot
+      exact SemidirectProduct.inl_injective (by simpa using hzCbot)
     exact hcenterP_ne_bot (le_antisymm hcenter_le_bot bot_le)
   have hcharG' :
       ringChar F' = 0 ∨ Nat.Prime (ringChar F') ∧ Nat.Coprime (ringChar F') (Nat.card G) := by
@@ -2768,11 +2793,6 @@ theorem theorem_2_5_b_core
       refine ⟨?_, ?_⟩
       · simpa [F', Algebra.ringChar_eq F F'] using hprime
       · simpa [F', Algebra.ringChar_eq F F'] using hcop
-  let moduleρ'V : Module (MonoidAlgebra F' (SemidirectProduct P H φ)) V' :=
-    Module.compHom V' (Representation.asAlgebraHom ρ').toRingHom
-  have moduleρ' : Module (MonoidAlgebra F' (SemidirectProduct P H φ)) ρ'.asModule := by
-    simpa [ρ', Representation.asModule] using moduleρ'V
-  haveI : Module (MonoidAlgebra F' (SemidirectProduct P H φ)) ρ'.asModule := moduleρ'
   have hsemisimple :=
     Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime (ρ := ρ') hcharG'
   obtain ⟨m, hmSimple, hmFix, hmCker⟩ :=
@@ -2803,11 +2823,6 @@ theorem theorem_2_5_b_core
       intro g hg
       rcases hg with ⟨z, hz, rfl⟩
       exact hle hz
-    let moduleτPV : Module (MonoidAlgebra F' P) ↥M.toSubmodule :=
-      Module.compHom ↥M.toSubmodule (Representation.asAlgebraHom τP).toRingHom
-    have moduleτP : Module (MonoidAlgebra F' P) τP.asModule := by
-      simpa [τP, Representation.asModule] using moduleτPV
-    haveI : Module (MonoidAlgebra F' P) τP.asModule := moduleτP
     have hτPsemisimple :=
       Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
         (ρ := τP) hcharP'
@@ -2855,7 +2870,8 @@ theorem theorem_2_5_b_core
           dsimp [q]
           exact (eK.apply_symm_apply k).symm
         rw [hk]
-        simpa [τK, τP, eK] using NP.apply_mem_toSubmodule q hv
+        change τ (SemidirectProduct.inl q) v ∈ NP.toSubmodule
+        exact NP.apply_mem_toSubmodule q hv
     }
     have hNKirr : Representation.IsIrreducible NK.toRepresentation := by
       refine
@@ -2865,14 +2881,24 @@ theorem theorem_2_5_b_core
       rfl
     let σNK : Representation F' K ↥NP.toSubmodule := σN.comp K.subtype
     have hσNK : σNK = NK.toRepresentation := by
-      ext k v
+      apply MonoidHom.ext
+      intro k
+      apply LinearMap.ext
+      intro v
+      apply Subtype.ext
       let q : P := eK.symm k
       have hk : k = eK q := by
         dsimp [q]
         exact (eK.apply_symm_apply k).symm
       rw [hk]
       have hq := congrArg (fun r : Representation F' P ↥NP.toSubmodule => r q v) hσN
-      simpa [σNK, NK, τK, τP, eK] using hq
+      have hq' := congrArg (fun w : NP.toSubmodule => (w : M.toSubmodule)) hq
+      have heK : K.subtype (eK q) = SemidirectProduct.inl q := rfl
+      change (σN (K.subtype (eK q)) v : M.toSubmodule) = τ (K.subtype (eK q)) v
+      rw [heK]
+      change (σN (SemidirectProduct.inl q) v : M.toSubmodule) =
+        τ (SemidirectProduct.inl q) v at hq'
+      exact hq'
     have hσNKirr : Representation.IsIrreducible σNK := by
       simpa [hσNK] using hNKirr
     have ENK : ∀ g : G, σNK ≃ₗ conjugateRep σNK g := by

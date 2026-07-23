@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.PFsection2.PFsection2_4
-public import Submission.FeitThompson.PFsection2.Basic
+public import FeitThompson.PFsection2.PFsection2_4
+public import FeitThompson.PFsection2.Basic
 
 /-!
 # Peterfalvi, Section 2, Definition (2.5)

@@ -5,13 +5,13 @@ module
 
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-public import Submission.FeitThompson.BGsection7.theorem_7_4
-public import Submission.FeitThompson.BGsection6.theorem_6_1
-public import Submission.FeitThompson.BGsection6.theorem_6_7
-public import Submission.FeitThompson.BGsection5.theorem_5_3
-public import Submission.FeitThompson.BGsection4.proposition_4_6
+public import FeitThompson.BGsection7.theorem_7_4
+public import FeitThompson.BGsection6.theorem_6_1
+public import FeitThompson.BGsection6.theorem_6_7
+public import FeitThompson.BGsection5.theorem_5_3
+public import FeitThompson.BGsection4.proposition_4_6
 
-open scoped Pointwise
+open scoped Pointwise IsMulCommutative commutatorElement
 
 /-! # Proposition 7.5 from BG Section 7 -/
 
@@ -126,7 +126,7 @@ private theorem maximalElementaryAbelianSubgroups_subgroupOf_of_set_eq
       let aX : X := ⟨a, hAX ha⟩
       have haB : aX ∈ B := hAB ha
       exact congrArg Subtype.val
-        (Subgroup.mul_comm_of_mem_isMulCommutative (H := B) haB hb'B)
+        (setLike_mul_comm (s := B) haB hb'B)
     have hb_pow : (b' : G) ^ p = 1 := by
       letI : IsElementaryAbelian p Bmap := hBmap_elem
       simpa using congrArg (fun z : Bmap => ((z : Bmap) : G))
@@ -237,7 +237,8 @@ private theorem subgroupCentralizerIn_le_of_selfCentralizing_subgroupOf
     exact (Subgroup.mem_centralizer_iff.mp hx.2) ((a : P) : G) (Subgroup.mem_subgroupOf.mp ha)
   have hxA0 : (⟨x, hxP⟩ : P) ∈ A.subgroupOf (P : Subgroup G) := by
     simpa [hAcent] using hxA0cent
-  simpa [Subgroup.mem_subgroupOf] using hxA0
+  change x ∈ A at hxA0
+  exact hxA0
 
 private theorem centralizer_zpowers_eq_centralizer_singleton
     {G : Type*} [Group G] (z : G) :
@@ -272,8 +273,11 @@ private theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq_
   letI : FiniteDimensional (ZMod p) Q := Module.Finite.of_finite
   have hp_one_lt : 1 < p := hp_prime.one_lt
   have hcardQ : Nat.card A = p ^ Module.finrank (ZMod p) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
+    calc
+      Nat.card A = Nat.card Q := Nat.card_congr Additive.ofMul
+      _ = p ^ Module.finrank (ZMod p) Q :=
+        by simpa only [Nat.card_zmod] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
   have hdim_le_two : Module.finrank (ZMod p) Q ≤ 2 := by
     have hpow_le : p ^ Module.finrank (ZMod p) Q ≤ p ^ 2 := by
       simpa [hcardQ] using hAcard
@@ -298,7 +302,6 @@ private theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq_
     intro a b hab
     apply Subtype.ext
     ext x
-    apply Additive.toMul.injective
     have hx :=
       congrArg
         (fun f : LinearMap.GeneralLinearGroup (ZMod p) Q => (f : Q → Q) (Additive.ofMul x))
@@ -413,9 +416,24 @@ private theorem le_pPrimeCore_of_contains_sylow
   let AX : Subgroup X := A.subgroupOf X
   let YX : Subgroup X := Y.subgroupOf X
   let PX : Sylow p X := P.subtype hPX
-  let ePX : ↥(PX : Subgroup X) ≃* ↥P := by
-    simpa [PX, Sylow.coe_subtype] using
-      (Subgroup.subgroupOfEquivOfLe (H := (P : Subgroup G)) (K := X) hPX)
+  let ePX : ↥(PX : Subgroup X) ≃* ↥(P : Subgroup G) := {
+    toFun x := ⟨((x : X) : G), by
+      have hx := x.property
+      change (x : X) ∈ (P : Subgroup G).subgroupOf X at hx
+      exact hx⟩
+    invFun x := ⟨⟨(x : G), hPX x.property⟩, by
+      change (x : G) ∈ (P : Subgroup G)
+      exact x.property⟩
+    left_inv x := by
+      apply Subtype.ext
+      rfl
+    right_inv x := by
+      apply Subtype.ext
+      rfl
+    map_mul' x y := by
+      apply Subtype.ext
+      rfl
+  }
   let A0 : Subgroup P := A.subgroupOf (P : Subgroup G)
   let AXP : Subgroup (PX : Subgroup X) := A0.map ePX.symm.toMonoidHom
   have hAXPnorm : AXP.Normal := by
@@ -438,13 +456,13 @@ private theorem le_pPrimeCore_of_contains_sylow
       simpa [AX, Subgroup.mem_subgroupOf] using ha
     let aP : P := ⟨(a : G), hAP haG⟩
     have haA0 : aP ∈ A0 := by
-      simpa [A0, aP, Subgroup.mem_subgroupOf] using ha
+      change (a : G) ∈ A
+      exact haG
     have haAXP : ePX.symm aP ∈ AXP := by
       exact Subgroup.mem_map.mpr ⟨aP, haA0, rfl⟩
     have haOpX : (((ePX.symm aP : PX) : X)) ∈ Op_p'p p X :=
       h6 (Subgroup.mem_map_of_mem PX.toSubgroup.subtype haAXP)
     have hea : ((ePX.symm aP : PX) : X) = a := by
-      apply Subtype.ext
       rfl
     simpa [hea] using haOpX
   let M : Subgroup X := pPrimeCore p X
@@ -488,7 +506,9 @@ private theorem le_pPrimeCore_of_contains_sylow
         Subgroup.normalizer (YX : Set X) =
           (Subgroup.normalizer (Y : Set G)).subgroupOf X := by
       exact (Subgroup.subgroupOf_normalizer_eq (H := Y) (N := X) hYX).symm
-    simpa [hnorm_eq] using (hAYnorm haG)
+    rw [hnorm_eq]
+    change (a : G) ∈ Subgroup.normalizer (Y : Set G)
+    exact hAYnorm haG
   have hAbar_norm_Ybar : Abar ≤ Subgroup.normalizer (Ybar : Set (X ⧸ M)) := by
     intro a ha
     refine Subgroup.mem_normalizer_fintype ?_
@@ -514,7 +534,8 @@ private theorem le_pPrimeCore_of_contains_sylow
     have hcomm_Ybar : ⁅a, y⁆ ∈ Ybar := by
       have hyconj : a * y * a⁻¹ ∈ Ybar :=
         (Subgroup.mem_normalizer_iff.mp (hAbar_norm_Ybar ha) y).1 hy
-      simpa using Ybar.mul_mem hyconj (Ybar.inv_mem hy)
+      change a * y * a⁻¹ * y⁻¹ ∈ Ybar
+      exact Ybar.mul_mem hyconj (Ybar.inv_mem hy)
     have hcomm_bot : ⁅a, y⁆ ∈ (⊥ : Subgroup (X ⧸ M)) := by
       rw [← hpCore_inf_Ybar]
       exact ⟨hcomm_pcore, hcomm_Ybar⟩
@@ -745,7 +766,7 @@ private theorem le_pPrimeCore_map_of_inf_centralizer_singleton_contains_sylow
     have hA_le_Cz : A ≤ Subgroup.centralizer ({z} : Set G) := by
       intro a ha
       rw [Subgroup.mem_centralizer_singleton_iff]
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha hzA
+      exact setLike_mul_comm (s := A) ha hzA
     exact hA_le_Cz.trans Subgroup.le_normalizer
   have hA_normYz : A ≤ Subgroup.normalizer (Yz : Set G) := by
     have hA_normY :
@@ -1065,7 +1086,9 @@ private theorem proposition_7_5_case_eq
             (Subgroup.normalizer (Y : Set G)).subgroupOf X := by
         exact (Subgroup.subgroupOf_normalizer_eq (H := Y) (N := X) hYX).symm
       intro a ha
-      simpa [hnorm_eq] using (hAYnorm ha)
+      rw [hnorm_eq]
+      change (a : G) ∈ Subgroup.normalizer (Y : Set G)
+      exact hAYnorm ha
     have hYsub_cop : Nat.Coprime p (Nat.card (Y.subgroupOf X)) := by
       rw [Nat.card_congr (Subgroup.subgroupOfEquivOfLe (H := Y) (K := X) hYX).toEquiv]
       exact hYcop
@@ -1138,7 +1161,7 @@ private theorem proposition_7_5_case_scn
       rw [Subgroup.mem_center_iff]
       intro x
       exact
-        Subgroup.mul_comm_of_mem_isMulCommutative (H := A)
+        setLike_mul_comm (s := A)
           (by simp [hAtop])
           (by simp [hAtop])
     exact top_ne_bot (hcenter_top.symm.trans (center_eq_bot_of_min_ce (G := G)))
@@ -1253,7 +1276,7 @@ private theorem proposition_7_5_case_scn
             have hzXb : z ∈ Xb := by
               rw [Subgroup.mem_centralizer_singleton_iff]
               have hcommB0 : (b0 : P) * z0 = z0 * (b0 : P) :=
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := B0) b0.2 z0.2
+                setLike_mul_comm (s := B0) b0.2 z0.2
               simpa [b, bP, z, zP] using (congrArg Subtype.val hcommB0).symm
             let P1 : Subgroup G := (P : Subgroup G) ⊓ Xb
             have hP1_le_P : P1 ≤ (P : Subgroup G) := inf_le_left
@@ -1351,7 +1374,8 @@ private theorem proposition_7_5_case_scn
             have hzP2_mem : (⟨z, hzXb⟩ : Xb) ∈ (P2 : Subgroup Xb) := hP1XP2 hzP1X
             let zP2 : P2 := ⟨⟨z, hzXb⟩, hzP2_mem⟩
             have hzP1P2_mem : zP2 ∈ P1P2 := by
-              simpa [P1P2, zP2, Subgroup.mem_subgroupOf] using hzP1X
+              change (⟨z, hzXb⟩ : Xb) ∈ P1.subgroupOf Xb
+              exact hzP1X
             let zP1P2 : P1P2 := ⟨zP2, hzP1P2_mem⟩
             have hzP1P2_center : zP1P2 ∈ Subgroup.center P1P2 := by
               rw [Subgroup.mem_center_iff]
@@ -1533,7 +1557,7 @@ private theorem proposition_7_5_case_scn
               _ ≤ (pPrimeCore p Xb).map Xb.subtype := by
                     exact sup_le hfix_le_Xb hcomm_le_Xb
         have hBnormY : B ≤ Subgroup.normalizer (Y : Set G) := hB_le_A.trans hAYnorm
-        letI : CommGroup B := CommGroup.ofIsMulCommutative
+        letI : CommGroup B := IsMulCommutative.instCommGroup
         haveI : Subgroup.Normalizes B Y := ⟨hBnormY⟩
         letI : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
         have hBfix_top :
@@ -1588,7 +1612,7 @@ private theorem proposition_7_5_case_scn
             have hA_le_Cb : A ≤ Subgroup.centralizer ({(b : G)} : Set G) := by
               intro a ha
               rw [Subgroup.mem_centralizer_singleton_iff]
-              exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha hbA
+              exact setLike_mul_comm (s := A) ha hbA
             exact hA_le_Cb.trans Subgroup.le_normalizer
           have hfix_norm : A ≤ Subgroup.normalizer (elementCentralizerIn Y (b : G) : Set G) := by
             exact

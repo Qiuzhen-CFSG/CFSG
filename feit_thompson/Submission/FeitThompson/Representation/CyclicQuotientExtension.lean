@@ -17,12 +17,12 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import Submission.FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import Submission.FeitThompson.Burnside.NormalComplement
-public import Submission.FeitThompson.Extraspecial
-public import Submission.FeitThompson.LinearAlgebra.BlockElementaryMap
-public import Submission.FeitThompson.Representation.ConjugateRep
-public import Submission.FeitThompson.BGsection2.EndFieldRep
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Extraspecial
+public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.BGsection2.EndFieldRep
 
 open Representation
 open MonoidAlgebra
@@ -98,7 +98,7 @@ def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H
     Representation.IntertwiningMap.isIntertwining
       (ρ := rho) (σ := proposition_2_2_sigma H iota) u
       (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hN h h.prop x⟩ : H) v
-  simpa [conjugateRep_apply] using hu
+  convert hu using 1 <;> rfl
 
 omit [IsAlgClosed
   F] [FiniteDimensional F V] [FiniteDimensional F W] [rho.IsIrreducible] [iota.IsIrreducible] in
@@ -218,8 +218,13 @@ public noncomputable def proposition_2_2_a_apply
   have hxinv_mem_range (v : V) : iota x⁻¹ (u v) ∈ u.range.toSubmodule := by
     refine LinearMap.mem_range.mpr ?_
     refine ⟨mu • (E x).symm v, ?_⟩
-    have h := congrArg (fun f : rho →ₗ proposition_2_2_sigma H iota => f ((E x).symm v)) hu
-    simpa [proposition_2_2_twistMap, proposition_2_2_conjugateMap_apply] using h.symm
+    calc
+      u (mu • (E x).symm v) = mu • u ((E x).symm v) := RepMap.map_smul u _ _
+      _ = (mu • u) ((E x).symm v) :=
+        (RepMap.smul_apply rho (proposition_2_2_sigma H iota) mu u _).symm
+      _ = proposition_2_2_twistMap H rho E iota x u ((E x).symm v) := by rw [hu]
+      _ = iota x⁻¹ (u v) := by
+        simp [proposition_2_2_twistMap, proposition_2_2_conjugateMap_apply]
   have hx_mem_range (v : V) : iota x (u v) ∈ u.range.toSubmodule := by
     refine LinearMap.mem_range.mpr ?_
     refine ⟨mu⁻¹ • E x v, ?_⟩
@@ -275,7 +280,11 @@ public noncomputable def proposition_2_2_a_apply
   have hpsi_ne : psi ≠ ⊥ := by
     intro hpsi
     have hSbot : S = ⊥ := by
-      simpa [psi, S] using congrArg Subrepresentation.toSubmodule hpsi
+      calc
+        S = psi.toSubmodule := rfl
+        _ = (⊥ : Subrepresentation iota).toSubmodule :=
+          congrArg Subrepresentation.toSubmodule hpsi
+        _ = (⊥ : Submodule F W) := rfl
     apply hu_ne
     apply Representation.RepMap.toLinearMap_injective
     exact LinearMap.range_eq_bot.mp hSbot
@@ -285,7 +294,11 @@ public noncomputable def proposition_2_2_a_apply
     · exact htop
   have hsurj : Function.Surjective u := by
     have hS_top : S = ⊤ := by
-      simpa [psi, S] using congrArg Subrepresentation.toSubmodule hpsi_top
+      calc
+        S = psi.toSubmodule := rfl
+        _ = (⊤ : Subrepresentation iota).toSubmodule :=
+          congrArg Subrepresentation.toSubmodule hpsi_top
+        _ = (⊤ : Submodule F W) := rfl
     exact LinearMap.range_eq_top.mp hS_top
   have hinj : Function.Injective u := by
     rcases (Representation.IsIrreducible.injective_or_eq_zero (ρ := rho) (σ := proposition_2_2_sigma H iota) (f := u)) with huinj | hu0
@@ -339,7 +352,12 @@ theorem p22b_repMapRangeNeBotOfNeZero
   intro hbot
   apply hf
   apply Representation.RepMap.toLinearMap_injective
-  exact LinearMap.range_eq_bot.mp (by simpa using congrArg Subrepresentation.toSubmodule hbot)
+  apply LinearMap.range_eq_bot.mp
+  calc
+    f.toLinearMap.range = f.range.toSubmodule := rfl
+    _ = (⊥ : Subrepresentation ρ₂).toSubmodule :=
+      congrArg Subrepresentation.toSubmodule hbot
+    _ = (⊥ : Submodule F V₂) := rfl
 
 omit [H.Normal] in
 theorem p22b_repMapRangeEqTopOfNeZero
@@ -367,8 +385,12 @@ noncomputable def p22b_repEquivOfNeZero
     · exact False.elim (hf hf0)
   have hfsurj : Function.Surjective f := by
     exact LinearMap.range_eq_top.mp (by
-      simpa using congrArg Subrepresentation.toSubmodule
-        (p22b_repMapRangeEqTopOfNeZero f hf))
+      calc
+        f.toLinearMap.range = f.range.toSubmodule := rfl
+        _ = (⊤ : Subrepresentation ρ₂).toSubmodule :=
+          congrArg Subrepresentation.toSubmodule
+            (p22b_repMapRangeEqTopOfNeZero f hf)
+        _ = (⊤ : Submodule F V₂) := rfl)
   refine RepEquiv.mk (LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩) ?_
   intro h
   ext v
@@ -529,10 +551,14 @@ noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
     refine RepMap.mk evLin ?_
     intro h
     ext f
-    simpa [evLin] using
-      (Representation.IntertwiningMap.isIntertwining
-        (ρ := ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype))
-        (σ := conjugateRep ρ g) (p22b_funEval (G := G) (H := H) ρ g) h f.1)
+    change f.1.1 (g * h.val) =
+      ρ ⟨g * h.val * g⁻¹,
+        Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ (f.1.1 g)
+    simpa [mul_assoc] using
+      f.1.2
+        ⟨g * h.val * g⁻¹,
+          Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩
+        g
   refine RepEquiv.mk (LinearEquiv.ofBijective ev.toLinearMap ⟨?_, ?_⟩) ?_
   · intro f₁ f₂ hfg
     ext x
@@ -548,7 +574,7 @@ noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
         simpa [p22b_funEval, hmem, div_eq_mul_inv, mul_assoc] using
           f₂.1.2 ⟨x * g⁻¹, hmem⟩ (g : G)
       have hg : f₁.1.1 g = f₂.1.1 g := by
-        simpa [ev, evLin] using hfg
+        simpa [ev, evLin, p22b_funEval] using hfg
       rw [hf₁, hf₂, hg]
     · have hf₁x : f₁.1.1 x = 0 := f₁.2 x hx
       have hf₂x : f₂.1.1 x = 0 := f₂.2 x hx
@@ -598,7 +624,7 @@ theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
     have hmap :
         ρ ⟨x * sx⁻¹, hxmem⟩ (f sx) = f x := by
       simpa [sx, mul_assoc] using (f.2 ⟨x * sx⁻¹, hxmem⟩ sx).symm
-    simpa [p22b_funBaseFunctionAt, sx, hxmem] using hmap
+    simpa [p22b_funBaseFunctionAt, p22b_funEval, sx, hxmem] using hmap
   calc
     (∑ q : G ⧸ H,
         p22b_funBaseFunctionAt (G := G) (H := H) ρ
@@ -963,10 +989,11 @@ public theorem proposition_2_2_b
   have hcomm :=
     Representation.IntertwiningMap.isIntertwining
       (ρ := L.toRepresentation.comp H.subtype) (σ := ρ) eL.toRepMap h (eV.symm v)
-  have hv : eL.toRepMap (eV.symm v) = v := by
-    exact eV.apply_symm_apply v
+  change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) =
+    ρ h (eL.toLinearEquiv (eV.symm v)) at hcomm
   calc
     eV ((L.toRepresentation h) (eV.symm v))
-        = ρ h (eL.toRepMap (eV.symm v)) := by
-            simpa [eV] using hcomm
-    _ = ρ h v := by rw [hv]
+        = ρ h (eL.toLinearEquiv (eV.symm v)) := by
+            change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) = _
+            exact hcomm
+    _ = ρ h v := by simp [eV]

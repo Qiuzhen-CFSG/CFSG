@@ -1,10 +1,12 @@
 module
 
-public import Submission.FeitThompson.Gorenstein.Chapter8_2
+public import FeitThompson.Gorenstein.Chapter8_2
 
 universe u
 
 namespace TBSScratch
+
+open scoped commutatorElement IsMulCommutative
 
 structure Baer (r : ℕ) (G : Type u) where
   val : G

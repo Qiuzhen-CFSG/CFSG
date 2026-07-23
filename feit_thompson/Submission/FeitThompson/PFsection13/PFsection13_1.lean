@@ -1,18 +1,18 @@
 module
 
-public import Submission.FeitThompson.PFsection13.Basic
-import Submission.FeitThompson.PFsection8.PFsection8_5_a
-import Submission.FeitThompson.PFsection8.PFsection8_8
-import Submission.FeitThompson.PFsection8.SourceTypePBridge
-import Submission.FeitThompson.PFsection3.PFsection3_2
-import Submission.FeitThompson.PFsection5.PFsection5_9
-import Submission.FeitThompson.PFsection6.PFsection6_5_a
-import Submission.FeitThompson.PFsection9.PFsection9_3
-import Submission.FeitThompson.PFsection9.PFsection9_4
-import Submission.FeitThompson.PFsection9.PFsection9_7
-import Submission.FeitThompson.PFsection9.PFsection9_9
-import Submission.FeitThompson.PFsection10.PFsection10_11
-import Submission.FeitThompson.PFsection11.PFsection11_9
+public import FeitThompson.PFsection13.Basic
+import FeitThompson.PFsection8.PFsection8_5_a
+import FeitThompson.PFsection8.PFsection8_8
+import FeitThompson.PFsection8.SourceTypePBridge
+import FeitThompson.PFsection3.PFsection3_2
+import FeitThompson.PFsection5.PFsection5_9
+import FeitThompson.PFsection6.PFsection6_5_a
+import FeitThompson.PFsection9.PFsection9_3
+import FeitThompson.PFsection9.PFsection9_4
+import FeitThompson.PFsection9.PFsection9_7
+import FeitThompson.PFsection9.PFsection9_9
+import FeitThompson.PFsection10.PFsection10_11
+import FeitThompson.PFsection11.PFsection11_9
 
 /-!
 # Peterfalvi, Section 13: PFsection13_1
@@ -864,8 +864,9 @@ private theorem hypothesis_13_1_typePFourSixTableInducedTransport_source
           ωsec (rowB ⟨i, hi⟩) (colB ⟨j, hj⟩) -
             ωsec i0 (colB ⟨j, hj⟩) := by
       dsimp [rowB, colB, iF, jF]
+      have hfI0' : fI (0 : Fin (Nat.card ↥Wleft)) = i0 := by simpa using hfI0
       rw [hωTable ⟨i, hi⟩ ⟨j, hj⟩,
-        hωTable ⟨0, hq0⟩ ⟨j, hj⟩, hfI0]
+        hωTable 0 ⟨j, hj⟩, hfI0']
     calc
       Section1.inducedCF ((Wleft ⊔ Wright).subgroupOf M)
           (Section1.subgroupOfClassFunction (T := M) (ω i j - ω 0 j)) =
@@ -2434,10 +2435,9 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseMuAlignment_selectedEntry
   selected Section `(4.6)` row and column maps.  The S/T family, Dade, and
   T-side hypotheses are not part of this entrywise alignment boundary.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col hrow0 hcol0 hcol_ne hrow_inj _hrow_surj
-    _hcol_surj hIndTransport i j hi hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col hrow0 hcol0
+    hcol_ne hrow_inj _hrow_surj _hcol_surj hIndTransport i j hi hj0 hj
   exact
     (hypothesis_13_1_dadeDifferencePointwiseMuDeltaAlignment_selectedColumn
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation row col hrow0 hcol0
@@ -2499,11 +2499,9 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseMuAlignment_selectedTable
   Checked wrapper around the entrywise source boundary for visible/selected
   `μ` alignment.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col hrow0 hcol0 hcol_ne hrow_inj hrow_surj
-    hcol_surj hIndTransport
-  intro i j hi hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col hrow0 hcol0
+    hcol_ne hrow_inj hrow_surj hcol_surj hIndTransport i j hi hj0 hj
   exact
     hypothesis_13_1_dadeDifferencePointwiseMuAlignment_selectedEntry_source
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation
@@ -2607,10 +2605,9 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseDeltaAlignment_selectedCo
   selected Section `(4.6)` column.  Its orientation is fixed by the same
   two-row signed-difference comparison as the entrywise `μ` alignment.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col hrow0 hcol0 hcol_ne hrow_inj hIndTransport
-    j hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col hrow0 hcol0
+    hcol_ne hrow_inj hIndTransport j hj0 hj
   exact
     (hypothesis_13_1_dadeDifferencePointwiseMuDeltaAlignment_selectedColumn
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation row col hrow0 hcol0
@@ -2671,11 +2668,9 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseDeltaAlignment_selectedTa
   /-
   Checked wrapper around the selected-column sign comparison.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col hrow0 hcol0 hcol_ne hrow_inj _hrow_surj
-    _hcol_surj hIndTransport
-  intro _i j _hi hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col hrow0 hcol0
+    hcol_ne hrow_inj _hrow_surj _hcol_surj hIndTransport _i j _hi hj0 hj
   exact
     hypothesis_13_1_dadeDifferencePointwiseDeltaAlignment_selectedColumn_source
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation row col hrow0 hcol0
@@ -2971,10 +2966,10 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseSigmaOmegaAlignment_selec
   concrete selected Section `(4.6)` row and column maps.  The S/T family,
   Dade, and T-side hypotheses are not part of this pointwise image boundary.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col _hrow0 _hcol0 _hcol_ne _hrow_inj _hrow_surj
-    _hcol_surj _hIndTransport hExactTransport i j hi _hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col _hrow0 _hcol0
+    _hcol_ne _hrow_inj _hrow_surj _hcol_surj _hIndTransport hExactTransport
+    i j hi _hj0 hj
   exact
     hypothesis_13_1_dadeDifferencePointwiseSigmaOmegaAlignment_of_exactTransport
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation row col hExactTransport
@@ -3038,11 +3033,10 @@ private theorem hypothesis_13_1_dadeDifferencePointwiseSigmaOmegaAlignment_selec
   Checked wrapper around the pointwise source boundary for visible/selected
   cyclic-TI image alignment.
   -/
-  intro ω η μ ν μsum νsum δ δ' σ hnotation
-  intro I J _instI _decI _instJ _decJ Wsel A A0 i0 j0 μsel δSign ωsec σsel
-  intro hSelNotation row col hrow0 hcol0 hcol_ne hrow_inj hrow_surj
-    hcol_surj hIndTransport hExactTransport
-  intro i j hi hj0 hj
+  intro ω η μ ν μsum νsum δ δ' σ hnotation I J _instI _decI _instJ _decJ
+    Wsel A A0 i0 j0 μsel δSign ωsec σsel hSelNotation row col hrow0 hcol0
+    hcol_ne hrow_inj hrow_surj hcol_surj hIndTransport hExactTransport
+    i j hi hj0 hj
   exact
     hypothesis_13_1_dadeDifferencePointwiseSigmaOmegaAlignment_selectedImage_source
       ω η μ ν μsum νsum δ δ' σ hnotation hSelNotation
@@ -3769,10 +3763,7 @@ private theorem hypothesis_13_1_betaSupportSet_subset_typePFAZeroSet
   rcases hx with hxP | hxV
   · left
     refine ⟨x, hxP, ?_⟩
-    change x ∈ section16NonidentityElements
-      ((elementCentralizerIn (ambientDerivedSubgroup Smax) x : Subgroup G) : Set G)
     refine ⟨?_, hxP.2⟩
-    change x ∈ elementCentralizerIn (ambientDerivedSubgroup Smax) x
     rw [elementCentralizerIn]
     refine ⟨hypothesis_13_1_MF_le_derived_of_typeP hTypeP hxP.1, ?_⟩
     simp [Subgroup.mem_centralizer_iff]
@@ -4113,7 +4104,7 @@ private theorem hypothesis_13_1_natCard_puncturedSubgroupSet
     _ = Fintype.card {x : H // x ≠ 1} := Nat.card_eq_fintype_card
     _ = Fintype.card H - 1 := by
       have hcompl := Fintype.card_subtype_compl (fun x : H => x = 1)
-      simpa using hcompl
+      simp [hcompl]
     _ = Nat.card H - 1 := by rw [Nat.card_eq_fintype_card]
 
 private theorem hypothesis_13_1_PU_nonP_not_mem_PW1_conjugates_source
@@ -4233,7 +4224,7 @@ private theorem hypothesis_13_1_mu_zero_on_PU_nonP_row_restriction_source
                 (x : G) ∉ (P : Set G) →
                   ∀ i, i < Nat.card W1 →
                     μ i j x = μ 0 j x := by
-
+  
   classical
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxPU _hxNotP i hi
   have hnotationAlign := hnotation
@@ -4296,7 +4287,7 @@ private theorem hypothesis_13_1_mu_zero_on_PU_nonP_restriction_source
               (x : G) ∈ ((P ⊔ U : Subgroup G) : Set G) →
                 (x : G) ∉ (P : Set G) →
                   μ 0 j x = (Nat.card W1 : ℂ)⁻¹ * μsum j x := by
-
+  
   classical
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxPU hxNotP
   have hnotationRows := hnotation
@@ -4344,7 +4335,7 @@ private theorem hypothesis_13_1_muColumn_nonbase_not_irreducible_source
       A A0 i0 j0 μsel δSign ωsec σsec τS)
     (j : J) (_hj : j ≠ j0) :
     ¬ Section1.IsIrreducibleCharacterOnGroup (Section10.muColumn μsel j) := by
-
+  
   intro hIrr
   have hNotation' := hNotation
   rcases hTypePDef with
@@ -4518,10 +4509,9 @@ private theorem hypothesis_13_1_hypothesis_9_2_of_case_typeP
       (section12_ambientDerivedSubgroup_le (G := G) (E := Smax)) d.property
     have hUcomm : IsMulCommutative U := by
       rw [hUconj]
-      letI : IsMulCommutative V := hVcomm
-      simpa [Subgroup.conjBy] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj (d : G)).toMonoidHom) (H := V))
+      haveI : IsMulCommutative V := hVcomm
+      unfold Subgroup.conjBy
+      infer_instance
     have hUnorm : ¬ Subgroup.normalizer (U : Set G) ≤ Smax := by
       intro hNormU
       exact hVnorm
@@ -4751,7 +4741,7 @@ private theorem hypothesis_13_1_typePFourSixTauSourceData_of_selected_fullData
       Section4Scratch.primeDadeA0Set
           (W1.subgroupOf M) (W2.subgroupOf M) d52.W Apre =
         Section8.section8CyclicA0Set M W1 W2 Abook := by
-    simpa [Apre, Section4Scratch.primeDadeA0Set,
+    simp [Apre, Section4Scratch.primeDadeA0Set,
       Section8.section8CyclicA0Set, d52.W_eq]
   have hCyclicDade :
       ∃ hCyclicA0 : Section2.hypothesis_2_2_statement
@@ -5016,7 +5006,7 @@ private theorem hypothesis_13_1_H0_eq_bot_of_typeII
     (hW2prime : Nat.Prime (Nat.card W2))
     (hho : Section9.hoReductionData M MF U W2 H0 hp) :
     H0 = ⊥ := by
-
+  
   classical
   letI : IsMinCE G := hmin
   have hquotCard :
@@ -5266,7 +5256,7 @@ private theorem hypothesis_13_1_typeP_reducibleFamilyMember_to_fitting
         Section1.degree θ = 1 ∧
         chi = Section1.inducedCF
           ((section8FittingSubgroup Smax).subgroupOf Smax) θ := by
-
+  
   classical
   letI : IsMinCE G := hmin
   have h92 : Section9.hypothesis_9_2_statement
@@ -5753,7 +5743,7 @@ private theorem hypothesis_13_1_muSum_fittingData_source
                     ((section8FittingSubgroup Smax).subgroupOf Smax) θ) ∧
               Section1.degree (μsum j) =
                 (Nat.card W1 : ℂ) * Section1.degree (μ 0 j) := by
-
+  
   classical
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj
   have hnotationAlign := hnotation
@@ -5855,7 +5845,7 @@ private theorem hypothesis_13_1_muSum_fittingData_source
             rw [hsumI, hentrySum, hrangeSum]
       _ = μsum j g := by
             simp [hμsum j hj]
-
+  
   have hTypePDef :
       Section8.typePDefinitionData Smax P U W1 W2 :=
     hypothesis_13_1_typePDefinitionData_of_case_typeP hmin hcase hSTypeP
@@ -6317,7 +6307,7 @@ private theorem hypothesis_13_1_mu_zero_on_PU_nonP_column_relation_source
                 (x : G) ∉ (P : Set G) →
                   μ 0 j x = (Nat.card W1 : ℂ)⁻¹ * μsum j x ∧
                     μsum j x = 0 := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxPU hxNotP
   exact ⟨
     hypothesis_13_1_mu_zero_on_PU_nonP_restriction_source hmin hcase
@@ -6523,7 +6513,7 @@ private theorem hypothesis_13_1_betaSupportSet_PU_s_side_source
                     (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
                       (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax)) -
                         μ 0 j) x = 0 := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxPU hxP _hxV
   by_cases hx1 : (x : G) = 1
   · exact
@@ -6964,7 +6954,7 @@ private theorem hypothesis_13_1_inducedPrincipal_W1_conjugator_mem_source
         ∀ y : Smax,
           y * x * y⁻¹ ∈ ((P ⊔ W1).subgroupOf Smax : Subgroup Smax) →
             y ∈ ((P ⊔ W1).subgroupOf Smax : Subgroup Smax) := by
-
+  
   classical
   intro x hxW1 y hyConj
   let D : Subgroup G := ambientDerivedSubgroup Smax
@@ -7933,7 +7923,7 @@ private theorem hypothesis_13_1_betaSupportSet_W1_classSupport_zero_s_side_sourc
                 (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
                   (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax)) -
                     μ 0 j) x = 0 := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxClass
   have hSTypePDef : Section8.typePDefinitionData Smax P U W1 W2 :=
     hypothesis_13_1_typePDefinitionData_of_case_typeP hmin hcase hSTypeP
@@ -8003,7 +7993,7 @@ private theorem hypothesis_13_1_betaSupportSet_outside_PU_s_side_source
                     (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
                       (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax)) -
                         μ 0 j) x = 0 := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj x hxNotPU _hxP hxV
   have hxClass :
       (x : G) ∈ section16ConjugatesOfSetBySet
@@ -8052,7 +8042,7 @@ private theorem hypothesis_13_1_betaSupportSet_s_side_source
                   μ 0 j)
               (subgroupSetPreimage Smax
                 (theorem_13_18_betaSupportSet Smax W W1 W2 P)) := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j hj0 hj
   rw [Section1.supportedOn_iff]
   intro x hx
@@ -8083,20 +8073,20 @@ private theorem hypothesis_13_1_betaSupportSet_s_side_source
 private theorem hypothesis_13_1_conjugateBetaTauDataFor_s_side_source
     {G : Type u} [Group G] [Finite G]
     {W W1 W2 Smax Tmax P Q U V : Subgroup G}
-    (hmin : IsMinCE G)
-    (hcase : Section8.theorem_8_8_case_b_data W W1 W2 Smax Tmax P Q)
-    (hSTypeP : Section8.typePData Smax P U W1 W2)
-    (hTTypeP : Section8.typePData Tmax Q V W2 W1)
+    (_hmin : IsMinCE G)
+    (_hcase : Section8.theorem_8_8_case_b_data W W1 W2 Smax Tmax P Q)
+    (_hSTypeP : Section8.typePData Smax P U W1 W2)
+    (_hTTypeP : Section8.typePData Tmax Q V W2 W1)
     (Sfam : Finset (Section1.ClassFunction Smax))
     (Tfam : Finset (Section1.ClassFunction Tmax))
     (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
     (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (hSnonker : nonkernelInducedFamily Smax (P ⊔ U) P Sfam)
-    (hTnonker : nonkernelInducedFamily Tmax (Q ⊔ V) Q Tfam)
-    (hDadeS : dadeIsometryRelativeToAZero Smax P Sfam τS)
-    (hDadeT : dadeIsometryRelativeToAZero Tmax Q Tfam τT)
+    (_hSnonker : nonkernelInducedFamily Smax (P ⊔ U) P Sfam)
+    (_hTnonker : nonkernelInducedFamily Tmax (Q ⊔ V) Q Tfam)
+    (_hDadeS : dadeIsometryRelativeToAZero Smax P Sfam τS)
+    (_hDadeT : dadeIsometryRelativeToAZero Tmax Q Tfam τT)
     (hFourSixS : typePFourSixTauSourceData Smax P U W1 W2 τS)
-    (hFourSixT : typePFourSixTauSourceData Tmax Q V W2 W1 τT) :
+    (_hFourSixT : typePFourSixTauSourceData Tmax Q V W2 W1 τT) :
     ∀ (ω : ℕ → ℕ → Section1.ClassFunction W)
       (η : ℕ → ℕ → Section1.ClassFunction G)
       (μ : ℕ → ℕ → Section1.ClassFunction Smax)
@@ -8116,7 +8106,7 @@ private theorem hypothesis_13_1_conjugateBetaTauDataFor_s_side_source
                 τS (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
                   (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax)) -
                     μ 0 k) := by
-
+  
   intro ω η μ ν μsum νsum δ δ' σ hnotation j k hj0 hj hk0 hk hμ
   have hFourSixSBook := hFourSixS
   rcases hFourSixSBook with
@@ -8244,7 +8234,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_cfIndMod_source
             (((P ⊔ W1).subgroupOf Smax).map
               (QuotientGroup.mk' (P.subgroupOf Smax))))
           (QuotientGroup.mk' (P.subgroupOf Smax) s) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -8269,7 +8259,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_Dgamma_source
         Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
             (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax)) s =
           gamma (QuotientGroup.mk' (P.subgroupOf Smax) s) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -8372,9 +8362,7 @@ private theorem section13_cfNormSq_of_quotient_principal_count_data
       (∑ x : Q, Complex.normSq (gamma x)) =
         Complex.normSq (gamma 1) +
           ∑ x ∈ Finset.univ.erase (1 : Q), Complex.normSq (gamma x) := by
-    simpa [add_comm] using
-      (Finset.sum_erase_add _ (Finset.mem_univ (1 : Q))
-        (fun x : Q => Complex.normSq (gamma x))).symm
+    simp
   rw [hsum, hgamma1, hsum_nonid, hQcard, Nat.cast_mul]
   have hu_ne : (u : ℝ) ≠ 0 := by exact_mod_cast hu.ne'
   have hq_ne : (q : ℝ) ≠ 0 := by exact_mod_cast hq.ne'
@@ -8471,7 +8459,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_card_structur
             letI : (C.subgroupOf U).Normal := hnormal
             Nat.card (Smax ⧸ P.subgroupOf Smax) =
               Nat.card (U ⧸ C.subgroupOf U) * Nat.card W1 := by
-
+  
   classical
   let D : Subgroup G := ambientDerivedSubgroup Smax
   rcases hSTypeP with ⟨hP, hCommon⟩
@@ -8548,7 +8536,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_card_source
         C = ⊥ →
           Section9.quotientBarUCardinality U C u →
             Nat.card (Smax ⧸ P.subgroupOf Smax) = u * Nat.card W1 := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -8572,7 +8560,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_join_subgroupOf_index_
         C = ⊥ →
           Section9.quotientBarUCardinality U C u →
             Subgroup.index ((P ⊔ W1).subgroupOf Smax) = u := by
-
+  
   classical
   let D : Subgroup G := ambientDerivedSubgroup Smax
   rcases hSTypeP with ⟨hP, hCommon⟩
@@ -8655,7 +8643,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_Hbar_index_so
               ((P ⊔ W1).subgroupOf Smax).map
                 (QuotientGroup.mk' (P.subgroupOf Smax))
             Subgroup.index Hbar = u := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -8698,7 +8686,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_gamma_identit
             let gamma : Section1.ClassFunction (Smax ⧸ P.subgroupOf Smax) :=
               Section1.inducedCF Hbar (Section1.principalCharacter Hbar)
             Complex.normSq (gamma 1) = (u : ℝ) ^ (2 : ℕ) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -8936,7 +8924,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_Hbar_tiNormal
               ((P ⊔ W1).subgroupOf Smax).map
                 (QuotientGroup.mk' (P.subgroupOf Smax))
             section16TISubsetWithNormalizer (Section7.puncturedSubgroupSet Hbar) Hbar := by
-
+  
   classical
   let D : Subgroup G := ambientDerivedSubgroup Smax
   let K : Subgroup G := U ⊔ W1
@@ -9029,7 +9017,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_one_values_ca
               Finset.univ.erase (1 : Smax ⧸ P.subgroupOf Smax)
             (nonidentity.filter (fun x => gamma x = 1)).card =
               u * (Nat.card W1 - 1) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9070,7 +9058,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_one_values_ca
         rcases hxH with ⟨z, hzH, t, ht, hxz⟩
         have hz_ne : z ≠ 1 := by
           intro hz1
-          exact hxne (by simpa [hxz, hz1])
+          exact hxne (by simp [hxz, hz1])
         exact hxnotX ⟨z, ⟨hzH, hz_ne⟩, t, ht, hxz⟩
       have hzero : gamma x.1 = 0 := by
         simpa [gamma] using
@@ -9179,7 +9167,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_conjugacy_sup
                   Set.univ ∨
                 Nat.card {y : Smax ⧸ P.subgroupOf Smax // y * x * y⁻¹ ∈ Hbar} =
                   Nat.card Hbar := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9234,7 +9222,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_nonidentity_v
             let nonidentity : Finset (Smax ⧸ P.subgroupOf Smax) :=
               Finset.univ.erase (1 : Smax ⧸ P.subgroupOf Smax)
             ∀ x, x ∈ nonidentity → gamma x = 0 ∨ gamma x = 1 := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9283,7 +9271,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_one_values_so
             (nonidentity.filter (fun x => gamma x = 1)).card =
                 u * (Nat.card W1 - 1) ∧
               ∀ x, x ∈ nonidentity → gamma x = 0 ∨ gamma x = 1 := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9322,7 +9310,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_support_sourc
                     x ∈ Finset.univ.erase (1 : Smax ⧸ P.subgroupOf Smax) →
                       x ∉ support → gamma x = 0) ∧
                     (∀ x, x ∈ support → gamma x = 1) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9362,7 +9350,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_nonidentity_s
             (∑ x ∈ Finset.univ.erase (1 : Smax ⧸ P.subgroupOf Smax),
                 Complex.normSq (gamma x)) =
               (u : ℝ) * ((Nat.card W1 : ℝ) - 1) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9404,7 +9392,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_count_data_so
                 (∑ x ∈ Finset.univ.erase (1 : Smax ⧸ P.subgroupOf Smax),
                     Complex.normSq (gamma x)) =
                   (u : ℝ) * ((Nat.card W1 : ℝ) - 1) := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9441,7 +9429,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_count_source
                 (Section1.inducedCF Hbar (Section1.principalCharacter Hbar)) =
                 ((u - 1 : ℕ) : ℝ) /
                     (Nat.card W1 : ℝ) + 1 := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9483,7 +9471,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_quotient_norm_count_so
                       (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax))) =
                   ((u - 1 : ℕ) : ℝ) /
                       (Nat.card W1 : ℝ) + 1 := by
-
+  
   classical
   letI : (P.subgroupOf Smax).Normal :=
     Section12.section16MFSubgroup_subgroupOf_normal hSTypeP.1
@@ -9541,7 +9529,7 @@ private theorem hypothesis_13_1_betaNorm_inducedPrincipal_cardQuotient_core_sour
                 (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax))) =
             ((u - 1 : ℕ) : ℝ) /
                 (Nat.card W1 : ℝ) + 1 := by
-
+  
   intro C u hC hCbot hBarU
   rcases hypothesis_13_1_betaNorm_inducedPrincipal_Dgamma_source hSTypeP with
     ⟨gamma, hgamma⟩
@@ -9847,7 +9835,7 @@ public theorem hypothesis_13_1_subgroupInKernel_of_irreducible_constituent_of_ke
     exact_mod_cast hzero
   have hexists : ∃ f : Representation.IntertwiningMap φρ χρ, f ≠ 0 := by
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hsub : Subsingleton (Representation.IntertwiningMap φρ χρ) := by
       refine ⟨fun f g => ?_⟩
       rw [hnone f, hnone g]
@@ -10047,7 +10035,12 @@ private theorem hypothesis_13_1_betaNorm_selected_mu_zero_row_not_subgroupInKern
     by
       intro a
       let aP : P.subgroupOf Smax := ⟨a.1, by
-        simpa [Subgroup.mem_subgroupOf] using a.2⟩
+        -- a.2 : a.1 ∈ (P.subgroupOf Smax).subgroupOf (derivedSubgroup Smax)
+        -- = (P.subgroupOf Smax).comap (derivedSubgroup Smax).subtype
+        have ha_smax : (derivedSubgroup Smax).subtype a.1 ∈ P.subgroupOf Smax :=
+          (Subgroup.mem_comap (f := (derivedSubgroup Smax).subtype)).mp a.2
+        dsimp at ha_smax ⊢
+        exact ha_smax⟩
       simpa [Section1.subgroupRestriction, Section1.degree, aP] using hker aP
   exact Section1.subgroupInKernel'_of_eq (hres i0 j) hresKer
 
@@ -10584,10 +10577,9 @@ private theorem hypothesis_13_1_not_typeIV_of_typeIII_source
     ⟨d, hVconj⟩
   have hVcomm : IsMulCommutative V := by
     rw [hVconj]
-    letI : IsMulCommutative U := hUcomm
-    simpa [Subgroup.conjBy] using
-      (Subgroup.map_isMulCommutative
-        (f := (MulAut.conj (d : G)).toMonoidHom) (H := U))
+    haveI : IsMulCommutative U := hUcomm
+    unfold Subgroup.conjBy
+    infer_instance
   exact hVnotcomm hVcomm
 
 private theorem hypothesis_13_1_sourceChoiceData_source

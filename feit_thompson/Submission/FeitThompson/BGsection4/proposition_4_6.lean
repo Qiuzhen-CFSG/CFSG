@@ -1,8 +1,8 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
+public import FeitThompson.BGsection3.Defs
 
-public import Submission.FeitThompson.BGsection4.lemma_4_5_c
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection4.lemma_4_5_c
+public import FeitThompson.BGsection4.lemma_4_5_a
 
 section Main
 
@@ -12,7 +12,7 @@ public theorem proposition_4_6 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact 
     ∃ A : Subgroup R, A.Normal ∧ A ≤ S ∧ Nat.card A = p ^ 2 ∧ IsElementaryAbelian p A := by
   classical
   letI : Fact (IsPGroup p S) := ⟨(Fact.out : IsPGroup p R).to_subgroup S⟩
-  let Z2S : Subgroup S := upperCentralSeries S 2
+  let Z2S : Subgroup S := Subgroup.upperCentralSeries S 2
   let Ω : Subgroup Z2S := omega₁ (G := ↥Z2S) (p := p)
   have hΩ_noncyc : ¬ IsCyclic Ω := (lemma_4_5_c (R := ↥S) (p := p) hpodd hSncyc).1
   have hΩ_nontrivial : Nontrivial Ω := Nontrivial.of_not_isCyclic hΩ_noncyc

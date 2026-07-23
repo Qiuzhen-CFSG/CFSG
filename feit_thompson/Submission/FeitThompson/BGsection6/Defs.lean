@@ -4,28 +4,28 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import Submission.FeitThompson.BGsection5.Defs
-public import Submission.FeitThompson.BGsection1.lemma_1_22
-public import Submission.FeitThompson.BGsection1.Defs
-public import Submission.FeitThompson.BGsection1.CentralizerLemmas
-public import Submission.FeitThompson.BGsection1.PLengthLemmas
-public import Submission.FeitThompson.Gorenstein.Chapter8_2
-public import Submission.FeitThompson.ChiefFactors.Core
-public import Submission.FeitThompson.Commutator.Core
-public import Submission.FeitThompson.ElementaryAbelian
-public import Submission.FeitThompson.Fitting.Centralizer
-public import Submission.FeitThompson.Fitting.Core
-public import Submission.FeitThompson.Frattini.CoprimeAction
-public import Submission.FeitThompson.Frattini.Core
-public import Submission.FeitThompson.GroupAction.Defs
-public import Submission.FeitThompson.GroupAction.CoprimeHall
-public import Submission.FeitThompson.GroupAction.Quotient
-public import Submission.FeitThompson.HallSubgroups.Conjugacy
-public import Submission.FeitThompson.HallSubgroups.Core
-import Submission.FeitThompson.SubgroupConj
-public import Submission.FeitThompson.PCore.Defs
-public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
-public import Submission.FeitThompson.SubgroupConjAction
+public import FeitThompson.BGsection5.Defs
+public import FeitThompson.BGsection1.lemma_1_22
+public import FeitThompson.BGsection1.Defs
+public import FeitThompson.BGsection1.CentralizerLemmas
+public import FeitThompson.BGsection1.PLengthLemmas
+public import FeitThompson.Gorenstein.Chapter8_2
+public import FeitThompson.ChiefFactors.Core
+public import FeitThompson.Commutator.Core
+public import FeitThompson.ElementaryAbelian
+public import FeitThompson.Fitting.Centralizer
+public import FeitThompson.Fitting.Core
+public import FeitThompson.Frattini.CoprimeAction
+public import FeitThompson.Frattini.Core
+public import FeitThompson.GroupAction.Defs
+public import FeitThompson.GroupAction.CoprimeHall
+public import FeitThompson.GroupAction.Quotient
+public import FeitThompson.HallSubgroups.Conjugacy
+public import FeitThompson.HallSubgroups.Core
+import FeitThompson.SubgroupConj
+public import FeitThompson.PCore.Defs
+public import FeitThompson.Representation.TwoDimensionalOddOrder
+public import FeitThompson.SubgroupConjAction
 public import Mathlib.Algebra.CharP.Lemmas
 public import Mathlib.FieldTheory.Minpoly.Field
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
@@ -36,7 +36,7 @@ public import Mathlib.LinearAlgebra.GeneralLinearGroup.AlgEquiv
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.LinearAlgebra.Eigenspace.Semisimple
 
-open scoped MatrixGroups Pointwise TensorProduct
+open scoped MatrixGroups Pointwise TensorProduct commutatorElement IsMulCommutative
 
 /-!
 # Statements from BG Section 6
@@ -319,7 +319,8 @@ public theorem thompsonCenter_normal_subgroupOf_sylow
         thompsonCenter (G := G) (P : Subgroup G) := by
     rw [← hTmap]
     exact Subgroup.mem_map_of_mem ((P : Subgroup G).subtype) hyImage
-  simpa [gN, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe] using hyMap
+  change g * (yT : G) * g⁻¹ ∈ thompsonCenter (G := G) (P : Subgroup G) at hyMap
+  simpa [mul_assoc] using hyMap
 
 public theorem normalizer_le_normalizer_thompsonCenter
     [Finite G] (S : Subgroup G) :
@@ -561,18 +562,15 @@ public theorem thompsonAbelianSubgroups_centralizer_eq [Finite G]
     have hB_comm : IsMulCommutative B := by
       change IsMulCommutative (Subgroup.closure ((A : Set G) ∪ {x}))
       letI : IsMulCommutative A := hA.2.1
-      letI : CommGroup ↥(Subgroup.closure ((A : Set G) ∪ {x})) :=
-        Subgroup.closureCommGroupOfComm (k := ((A : Set G) ∪ {x})) <| by
-          intro y hy z hz
-          rcases hy with hyA | rfl
-          · rcases hz with hzA | rfl
-            · exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hyA hzA
-            · exact Subgroup.mem_centralizer_iff.mp hx.2 _ hyA
-          · rcases hz with hzA | rfl
-            · exact (Subgroup.mem_centralizer_iff.mp hx.2 _ hzA).symm
-            · simp
-      refine ⟨?_⟩
-      exact ⟨fun y z => mul_comm y z⟩
+      apply Subgroup.isMulCommutative_closure
+      intro y hy z hz
+      rcases hy with hyA | rfl
+      · rcases hz with hzA | rfl
+        · exact setLike_mul_comm (s := A) hyA hzA
+        · exact Subgroup.mem_centralizer_iff.mp hx.2 _ hyA
+      · rcases hz with hzA | rfl
+        · exact (Subgroup.mem_centralizer_iff.mp hx.2 _ hzA).symm
+        · simp
     have hB_card_le : Nat.card B ≤ Nat.card A := hA.2.2 B hB_le_P hB_comm
     have hA_le_B : A ≤ B := by
       intro y hy
@@ -701,11 +699,12 @@ public theorem replacementCommChainSub_eq_subgroupOf
 public theorem replacementCommChainSub_le_lowerCentralSeries
     (B A : Subgroup G) :
     ∀ n,
-      replacementCommChainSub B A n ≤ lowerCentralSeries (↥(B ⊔ A)) n
+      replacementCommChainSub B A n ≤
+        (Subgroup.lowerCentralSeries (⊤ : Subgroup ↥(B ⊔ A)) n)
   | 0 => by
-      simp [lowerCentralSeries_zero]
+      simp [Subgroup.lowerCentralSeries_zero]
   | n + 1 => by
-      rw [replacementCommChainSub_succ, lowerCentralSeries_succ]
+      rw [replacementCommChainSub_succ, Subgroup.lowerCentralSeries_succ]
       exact
         (Subgroup.commutator_mono
           (replacementCommChainSub_le_lowerCentralSeries B A n) le_top)
@@ -714,7 +713,8 @@ public theorem replacementCommChain_eventually_bot_of_isNilpotent
     (B A : Subgroup G)
     (hnil : Group.IsNilpotent ↥(B ⊔ A)) :
     ∃ n, replacementCommChain B A n = ⊥ := by
-  obtain ⟨n, hn⟩ := (nilpotent_iff_lowerCentralSeries (G := ↥(B ⊔ A))).1 hnil
+  obtain ⟨n, hn⟩ :=
+    (Subgroup.nilpotent_iff_lowerCentralSeries (G := ↥(B ⊔ A))).1 hnil
   refine ⟨n, ?_⟩
   calc
     replacementCommChain B A n =
@@ -1034,8 +1034,10 @@ public theorem exists_invariant_sylow_of_pgroup_operator_coprime
   constructor
   intro a g
   have hsmulP : a • (P : Subgroup G) = (P : Subgroup G) := by
-    simpa using congrArg (fun Q : Sylow p G => (Q : Subgroup G))
+    have h := congrArg (fun Q : Sylow p G => (Q : Subgroup G))
       ((MulAction.mem_fixedPoints.mp hPfix) a)
+    change a • (P : Subgroup G) = (P : Subgroup G) at h
+    exact h
   constructor
   · intro hg
     have : a • g ∈ a • (P : Subgroup G) :=
@@ -1043,8 +1045,10 @@ public theorem exists_invariant_sylow_of_pgroup_operator_coprime
     simpa [hsmulP] using this
   · intro hg
     have hsmulPinv : a⁻¹ • (P : Subgroup G) = (P : Subgroup G) := by
-      simpa using congrArg (fun Q : Sylow p G => (Q : Subgroup G))
+      have h := congrArg (fun Q : Sylow p G => (Q : Subgroup G))
         ((MulAction.mem_fixedPoints.mp hPfix) a⁻¹)
+      change a⁻¹ • (P : Subgroup G) = (P : Subgroup G) at h
+      exact h
     have : a⁻¹ • (a • g) ∈ a⁻¹ • (P : Subgroup G) :=
       Subgroup.smul_mem_pointwise_smul (a • g) a⁻¹ (P : Subgroup G) hg
     simpa [hsmulPinv] using this
@@ -1148,7 +1152,8 @@ private theorem isPiGroup_of_isPGroup_mem
   rcases (IsPGroup.iff_card.mp hqG) with ⟨n, hn⟩
   have hr_eq : r.val = q := Nat.prime_eq_prime_of_dvd_pow r.2 Fact.out (hn ▸ hr)
   have hr_eq' : r = (⟨q, Fact.out⟩ : Nat.Primes) := Subtype.ext hr_eq
-  simpa [hr_eq'] using hqπ
+  rw [hr_eq']
+  exact hqπ
 
 private theorem piSolvable_singleton_of_solvable
     {G : Type*} [Group G] [Finite G] [IsSolvable G]
@@ -1200,7 +1205,8 @@ private theorem piSolvable_singleton_of_solvable
   · right
     refine ⟨?_, ?_⟩
     · have hqmem : (⟨q, Fact.out⟩ : Nat.Primes) ∈ {r : Nat.Primes | r.val = p} := by
-        simpa using hqp
+        change q = p
+        exact hqp
       exact isPiGroup_of_isPGroup_mem (π := {r : Nat.Primes | r.val = p}) (q := q) hcf_q hqmem
     · exact solvable_quotient_of_solvable (cf.V.subgroupOf cf.U)
   · left
@@ -1789,7 +1795,7 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
     HasQuadraticMinimalPolynomial F V T := by
   haveI : Nontrivial V := by
     by_contra hV
-    push_neg at hV
+    push Not at hV
     exact hne (Subsingleton.elim _ _)
   let Q : Polynomial F := (Polynomial.X - Polynomial.C (1 : F)) ^ 2
   have hroot : Polynomial.aeval T Q = 0 := by
@@ -1841,7 +1847,8 @@ private theorem square_zero_of_kerRepresentation
     {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (g : G) (hSq : (ρ g - 1) ^ 2 = 0) :
     ((Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
-  simpa [Representation.kerRepresentation_apply] using hSq
+  change (ρ g - 1) ^ 2 = 0
+  exact hSq
 
 private theorem square_zero_of_extendScalars
     {F F' V : Type*} [Field F] [Field F'] [Algebra F F']
@@ -1943,7 +1950,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       ¬ ∀ g : G, ∃ k : ℕ, orderOf g = p ^ k := by
     intro h
     exact hnot_pgroup ((IsPGroup.iff_orderOf (p := p) (G := G)).2 h)
-  push_neg at hnot_orderOf
+  push Not at hnot_orderOf
   rcases hnot_orderOf with ⟨g, hg_not_p_power⟩
   have hg_visible : ρ g ≠ 1 := by
     intro hgρ
@@ -1963,7 +1970,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
   have hexists_q_ne_p :
       ∃ q : ℕ, q.Prime ∧ q ∣ Nat.card G ∧ q ≠ p := by
     by_contra hcontra
-    push_neg at hcontra
+    push Not at hcontra
     apply hcard_not_pow
     refine ⟨(Nat.card G).primeFactorsList.length, ?_⟩
     apply Nat.eq_prime_pow_of_unique_prime_dvd (Nat.card_pos.ne')
@@ -1996,7 +2003,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       (Module.End.isSemisimple_sub_algebraMap_iff (f := ρ a) (μ := (1 : F))).2 hρa_semisimple
   have h_has_eigen_ne_one : ∃ μ : F, Module.End.HasEigenvalue (ρ a) μ ∧ μ ≠ 1 := by
     by_contra hcontra
-    push_neg at hcontra
+    push Not at hcontra
     have hsub_zero : ρ a - 1 = 0 := by
       rw [Module.End.IsSemisimple.eq_zero_iff_forall_eigenvalue (f := ρ a - 1) h_sub_semisimple]
       intro μ hμ
@@ -2034,15 +2041,22 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
   have hv_mem_W : vm ∈ W.asSubmodule := by
     change vm ∈ mCyc
     exact Submodule.subset_span (by simp [vm])
+  have hv_mem_W0 : v ∈ W.toSubmodule := by
+    have hvm : vm ∈ W.toSubmodule :=
+      Subrepresentation.mem_asSubmodule_iff.mp hv_mem_W
+    have hvm_eq : vm = v := by
+      rfl
+    rw [hvm_eq] at hvm
+    exact hvm
   have hW_ne_bot : W ≠ ⊥ := by
     intro hW_bot
-    have : vm ∈ (⊥ : Submodule (MonoidAlgebra F G) ρ.asModule) := by
-      simpa [W, hW_bot] using hv_mem_W
-    have hvm_zero : vm = 0 := by simpa using this
-    exact hv_ne_zero (by simpa [vm] using congrArg ρ.asModuleEquiv hvm_zero)
-  have hv_mem_W0 : v ∈ W.toSubmodule := by
-    simpa [vm] using hv_mem_W
-  let wv : W.toRepresentation.asModule := ⟨vm, by simpa [Wsub] using hv_mem_W⟩
+    have hvbot : v ∈ (⊥ : Subrepresentation ρ).toSubmodule := by
+      rw [← hW_bot]
+      exact hv_mem_W0
+    change v ∈ (⊥ : Submodule F V) at hvbot
+    exact hv_ne_zero (by simpa using hvbot)
+  let wv : W.toRepresentation.asModule :=
+    ⟨vm, Subrepresentation.mem_asSubmodule_iff.mp hv_mem_W⟩
   let wv0 : W.toSubmodule := ⟨v, hv_mem_W0⟩
   have hsmul_wv (c : MonoidAlgebra F G) :
       ((W.toRepresentation.asModuleEquiv
@@ -2084,7 +2098,10 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       ((W.toRepresentation.asModuleEquiv (c • wv) : W.toSubmodule) : V)
           = ρ.asModuleEquiv (c • vm) := hsmul_wv c
       _ = ((W.toRepresentation.asModuleEquiv x : W.toSubmodule) : V) := by
-          simpa [Representation.asModuleEquiv] using congrArg ρ.asModuleEquiv hc
+          have hc' := congrArg (fun z : ρ.asModule => ρ.asModuleEquiv z) hc
+          change ρ.asModuleEquiv (c • vm) =
+            ((W.toRepresentation.asModuleEquiv x : W.toSubmodule) : V) at hc'
+          exact hc'
   let : Module.Finite (MonoidAlgebra F G) W.toRepresentation.asModule :=
     have hfinite_top : Module.Finite (MonoidAlgebra F G)
         (⊤ : Submodule (MonoidAlgebra F G) W.toRepresentation.asModule) :=
@@ -2214,8 +2231,8 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       simpa [smul_smul, ← map_mul, hμ_sub_ne_zero] using hsmul_zero
     have hwv0_mem_M : wv0 ∈ M.toSubmodule := by
       simpa [Submodule.Quotient.mk_eq_zero] using hwv0_zero_quot
-    exact hwv_not_mem_Msub (by
-      simpa [M, wv, wv0] using hwv0_mem_M)
+    change wv ∈ Msub at hwv0_mem_M
+    exact hwv_not_mem_Msub hwv0_mem_M
 
 private theorem not_isPGroup_of_faithful_irreducible_visible_quotient
     {F G V : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
@@ -2244,16 +2261,20 @@ private theorem not_isPGroup_of_faithful_irreducible_visible_quotient
       IsPGroup.center_nontrivial (p := p) (G := G) hG_p
     obtain ⟨z, hz_center, hz_ne_one⟩ :=
       Subgroup.exists_ne_one_of_nontrivial (Subgroup.center G)
+    have hz_center' : z ∈ Submonoid.center G := by
+      have hz_submonoid : z ∈ (Subgroup.center G).toSubmonoid := hz_center
+      rw [Subgroup.center_toSubmonoid] at hz_submonoid
+      exact hz_submonoid
     let f : Representation.IntertwiningMap ρ ρ :=
-      Representation.IntertwiningMap.centralMul ρ z (by
-        simpa [Subgroup.center_toSubmonoid] using hz_center)
+      Representation.IntertwiningMap.centralMul ρ z hz_center'
     obtain ⟨a, ha⟩ :=
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).2 f
     have hz_scalar : ρ z = algebraMap F (Module.End F V) a := by
       have hlin := congrArg
         (fun φ : Representation.IntertwiningMap ρ ρ => φ.toLinearMap) ha.symm
-      simpa [f, Representation.IntertwiningMap.centralMul] using hlin
+      change ρ z = a • (1 : Module.End F V) at hlin
+      exact hlin.trans (Algebra.algebraMap_eq_smul_one a).symm
     rcases hG_p z with ⟨n, hz_pow⟩
     have hρz_pow : (ρ z) ^ (p ^ n) = 1 := by
       simpa [MonoidHom.map_pow] using congrArg ρ hz_pow
@@ -2518,8 +2539,8 @@ private theorem isPGroup_of_closure_pair_in_abelian_sylow
       have ha_cent' : a ∈ Subgroup.centralizer (Subgroup.closure S : Set G) := by
         simpa [Subgroup.centralizer_closure] using ha_cent
       have hab : Commute a b := by
-        exact Commute.symm <| by
-          simpa [Commute] using (Subgroup.mem_centralizer_iff.mp ha_cent') b hb
+        rw [commute_iff_eq]
+        exact ((Subgroup.mem_centralizer_iff.mp ha_cent') b hb).symm
       refine ⟨ka + kb, ?_⟩
       calc
         (a * b) ^ (p ^ (ka + kb)) = a ^ (p ^ (ka + kb)) * b ^ (p ^ (ka + kb)) := by
@@ -2578,7 +2599,7 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
     haveI : Group.IsNilpotent A :=
       IsPGroup.isNilpotent (G := A) (p := p) A.isPGroup'
     exact isSubnormal_of_normalizerCondition
-      (G := (A : Subgroup G)) (normalizerCondition_of_isNilpotent) DA
+      (G := (A : Subgroup G)) (Group.normalizerCondition_of_isNilpotent) DA
   rcases Subgroup.IsSubnormal.exists_chain hDA_subnormal with
     ⟨m, f, hmono, hnormal, hf0, hfm⟩
   let Bad : ℕ → Prop := fun i =>
@@ -2599,7 +2620,8 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
     have haD : a ∈ D := by
       have haDA : (⟨a, haA⟩ : A) ∈ DA := by
         simpa [hi0, hf0, DA] using hai
-      simpa [DA] using haDA
+      change a ∈ D at haDA
+      exact haDA
     exact ha_not_D haD
   let j : ℕ := i - 1
   have hji : j + 1 = i := by
@@ -2627,7 +2649,8 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
       rw [hD_eq]
       exact Subgroup.subset_closure hdS
     have hdDA : (⟨d, hdA⟩ : A) ∈ DA := by
-      simpa [DA] using hdD
+      change d ∈ D
+      exact hdD
     have hdfj : (⟨d, hdA⟩ : A) ∈ f j := by
       have hDA_le_fj : DA ≤ f j := by
         simpa [hf0] using hmono (Nat.zero_le j)
@@ -2648,7 +2671,8 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
       A.mul_mem (A.mul_mem hgA hdA) (A.inv_mem hgA)
     have hconj_fj : (⟨g * d * g⁻¹, hgdgA⟩ : A) ∈ f j := by
       have hconj_fj' : ((gF * dF * gF⁻¹ : f (j + 1)) : A) ∈ f j := by
-        simpa using hconj_sub
+        change ((gF * dF * gF⁻¹ : f (j + 1)) : A) ∈ f j at hconj_sub
+        exact hconj_sub
       have heq : ((gF * dF * gF⁻¹ : f (j + 1)) : A) =
           (⟨g * d * g⁻¹, hgdgA⟩ : A) := by
         ext
@@ -2765,8 +2789,11 @@ private theorem gorenstein_3_8_2_conjugacy_class_le_pCore
         let P₀ : Sylow p G := default
         have hnot_CP₀ : ¬ C ⊆ (P₀ : Set G) := hnot_C_le_sylow P₀
         have hnot_forall_mem : ¬ ∀ z ∈ C, z ∈ (P₀ : Subgroup G) := by
-          simpa [Set.subset_def] using hnot_CP₀
-        push_neg at hnot_forall_mem
+          intro hmem
+          apply hnot_CP₀
+          intro z hz
+          exact hmem z hz
+        push Not at hnot_forall_mem
         rcases hnot_forall_mem with ⟨y, hyC, hy_not_P₀⟩
         have hy_p : IsPElement (p := p) y := by
           rcases hyC with ⟨g, rfl⟩
@@ -3076,7 +3103,10 @@ private theorem gorenstein_3_8_2_conjugacy_class_le_pCore
         have : IsPGroup p (Subgroup.closure ({q x, q y} : Set (G ⧸ H))) := by
           rw [← hmap_eq]
           exact hmap_p
-        simpa [q, y] using this
+        have hqy : q y = q g * q x * (q g)⁻¹ := by
+          simp [q, y]
+        rw [← hqy]
+        exact this
       have hxq_core : q x ∈ pCore p (G ⧸ H) := by
         exact ih (Nat.card (G ⧸ H)) hcard_lt (G := G ⧸ H) rfl hxq_p hpair_q
       have hmap :
@@ -3152,8 +3182,8 @@ private theorem gorenstein_3_8_1_two_dimensional_odd_order_forces_pgroup
           have hcomm_ab : Commute a b := by
             rw [← Subgroup.zpowers_eq_closure] at ha_mem hb_mem
             exact
-              Subgroup.mul_comm_of_mem_isMulCommutative
-                (H := Subgroup.zpowers x) ha_mem hb_mem
+              setLike_mul_comm
+                (s := Subgroup.zpowers x) ha_mem hb_mem
           refine ⟨ka + kb, ?_⟩
           calc
             (a * b) ^ ((ringChar F) ^ (ka + kb)) =
@@ -3202,8 +3232,8 @@ private theorem gorenstein_3_8_1_two_dimensional_odd_order_forces_pgroup
           have hcomm_ab : Commute a b := by
             rw [← Subgroup.zpowers_eq_closure] at ha_mem hb_mem
             exact
-              Subgroup.mul_comm_of_mem_isMulCommutative
-                (H := Subgroup.zpowers y) ha_mem hb_mem
+              setLike_mul_comm
+                (s := Subgroup.zpowers y) ha_mem hb_mem
           refine ⟨ka + kb, ?_⟩
           calc
             (a * b) ^ ((ringChar F) ^ (ka + kb)) =
@@ -3366,7 +3396,9 @@ private theorem gorenstein_3_8_1_even_quotient_of_faithful_irreducible
           simpa [hfix] using hv
       }
       rcases hρ_irreducible.eq_bot_or_eq_top W with hW_bot | hW_top
-      · simpa [W] using congrArg Subrepresentation.toSubmodule hW_bot
+      · have h := congrArg Subrepresentation.toSubmodule hW_bot
+        change (LinearMap.ker A ⊓ LinearMap.ker B) = (⊥ : Submodule F V) at h
+        exact h
       · have hx_ker : x ∈ ρ.ker := by
           rw [MonoidHom.mem_ker]
           ext v
@@ -3649,10 +3681,10 @@ private theorem gorenstein_3_8_1_even_quotient_of_faithful_irreducible
     have hW_ne_bot : W ≠ ⊥ := by
       intro hW_bot
       have hv_zero : v = 0 := by
-        have hv_bot : v ∈ (⊥ : Submodule F V) := by
-          have : v ∈ W.toSubmodule := by simpa [W] using hv_mem_W
-          simpa [hW_bot] using this
-        simpa using hv_bot
+        have hvW : v ∈ W.toSubmodule := by simpa [W] using hv_mem_W
+        rw [hW_bot] at hvW
+        change v ∈ (⊥ : Submodule F V) at hvW
+        simpa using hvW
       exact hv_ne_zero hv_zero
     have hW_top : W = ⊤ := by
       rcases hρ_irreducible.eq_bot_or_eq_top W with hbot | htop
@@ -3660,7 +3692,8 @@ private theorem gorenstein_3_8_1_even_quotient_of_faithful_irreducible
       · exact htop
     have htop_eq : Wlin = ⊤ := by
       have hsub := congrArg Subrepresentation.toSubmodule hW_top
-      simpa [W] using hsub
+      change Wlin = (⊤ : Submodule F V) at hsub
+      exact hsub
     have hfin_le_two : Module.finrank F V ≤ 2 := by
       have hspan_le :
           Module.finrank F Wlin ≤ 2 := by
@@ -3764,8 +3797,9 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     have hx_sq : (ρ x - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hx_p hx_quad
     have hx'_sq : (ρ' x - 1) ^ 2 = 0 := by
-      simpa [ρ', Representation.extendScalars_apply] using
-        square_zero_of_extendScalars (F' := F') (T := ρ x) hx_sq
+      have h := square_zero_of_extendScalars (F' := F') (T := ρ x) hx_sq
+      change (ρ' x - 1) ^ 2 = 0 at h
+      exact h
     have hx'_ne : ρ' x ≠ 1 := by
       intro hx'_one
       have hx_one : x = 1 := by
@@ -3801,8 +3835,9 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     have hy_sq : (ρ y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hy_p hy_quad
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 := by
-      simpa [ρ', Representation.extendScalars_apply] using
-        square_zero_of_extendScalars (F' := F') (T := ρ y) hy_sq
+      have h := square_zero_of_extendScalars (F' := F') (T := ρ y) hy_sq
+      change (ρ' y - 1) ^ 2 = 0 at h
+      exact h
     have hy'_ne : ρ' y ≠ 1 := by
       intro hy'_one
       have hy_one : y = 1 := by
@@ -3836,26 +3871,19 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
 
   -- Next choose an irreducible composition factor on which the action is
   -- nontrivial.  This is Gorenstein's composition-factor step.
-  have hcomposition_factor :
-      ∃ (W : Subrepresentation ρ') (M : Subrepresentation W.toRepresentation) (g0 : H),
-        Representation.IsIrreducible
-          (Representation.quotient W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule) ∧
-        (Representation.quotient W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule) g0 ≠ 1 := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
-    exact exists_visible_irreducible_subquotient_of_not_isPGroup
+  letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+  obtain ⟨W, M, g0, hM_irreducible, hg0_not_ker_M⟩ :=
+    exists_visible_irreducible_subquotient_of_not_isPGroup
       (p := p) ρ' hρ'_faithful hnot_pgroup
-  obtain ⟨W, M, g0, hM_irreducible, hg0_not_ker_M⟩ := hcomposition_factor
-  let σ : Representation F' H (W.toSubmodule ⧸ M.toSubmodule) :=
-    Representation.quotient W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule
+  let σ := Representation.quotient (k := F') (G := H) (V := W.toSubmodule)
+    W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule
   have hσ_irreducible : Representation.IsIrreducible σ := by
     simpa [σ] using hM_irreducible
   haveI : Representation.IsIrreducible σ := hσ_irreducible
-  haveI : FiniteDimensional F' (W.toSubmodule ⧸ M.toSubmodule) :=
-    finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
+  letI := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
-  let σq : Representation F' (H ⧸ σ.ker) (W.toSubmodule ⧸ M.toSubmodule) :=
-    Representation.kerRepresentation σ
+  let σq := Representation.kerRepresentation σ
   have hσq_faithful : Function.Injective σq :=
     Representation.kerRepresentation_faithful σ
   have hσq_irreducible : Representation.IsIrreducible σq := by
@@ -3912,7 +3940,8 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     let g0q : H ⧸ σ.ker := QuotientGroup.mk' σ.ker g0
     have hg0q_visible : σq g0q ≠ 1 := by
-      simpa [σq, g0q, Representation.kerRepresentation_apply] using hg0_not_ker_M
+      change σ g0 ≠ 1
+      simpa [σ] using hg0_not_ker_M
     exact not_isPGroup_of_faithful_irreducible_visible_quotient
       (p := p) σq hσq_faithful hσq_irreducible g0q hg0q_visible
   have hxq_ne_one : σq xq ≠ 1 := by
@@ -3942,7 +3971,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact hquot_not_pgroup
       (isPGroup_of_closure_singleton_eq_top_of_isPElement hclosure_singleton hxq_p)
-  have hxq_quad : HasQuadraticMinimalPolynomial F' (W.toSubmodule ⧸ M.toSubmodule) (σq xq) := by
+  have hxq_quad : HasQuadraticMinimalPolynomial F' _ (σq xq) := by
     -- Pass the square-zero operator `ρ' x - 1` to the chosen simple quotient,
     -- then through the faithful kernel quotient.
     letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
@@ -3953,7 +3982,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     have hxσq_sq : (σq xq - 1) ^ 2 = 0 := by
       simpa [σq, xq] using square_zero_of_kerRepresentation σ x hxσ_sq
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (σq xq) hxσq_sq hxq_ne_one
-  have hyq_quad : HasQuadraticMinimalPolynomial F' (W.toSubmodule ⧸ M.toSubmodule) (σq yq) := by
+  have hyq_quad : HasQuadraticMinimalPolynomial F' _ (σq yq) := by
     letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ' hy_p hy'_quad
@@ -4005,7 +4034,7 @@ private theorem gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
   -- characteristic `p` and a `p`-element acting with quadratic minimal
   -- polynomial.
   unfold PStableGroup PStableRepresentation at hnstable
-  push_neg at hnstable
+  push Not at hnstable
   rcases hnstable with
     ⟨F, V, _hF, _hchar, _hVadd, _hVmodule, _hVfiniteDimensional, ρ,
       hρ_faithful, hρ_not_stable⟩
@@ -4020,7 +4049,7 @@ private theorem gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
     -- Source: Daniel Gorenstein, *Finite Groups*, Chapter 3, Theorem 8.2
     -- (Alperin--Lyons/Baer--Suzuki form), applied to the conjugacy class of `x`.
     by_contra hpair
-    push_neg at hpair
+    push Not at hpair
     letI : Fact p.Prime := by
       refine ⟨?_⟩
       rcases CharP.char_is_prime_or_zero (R := F) p with hp | hp0
@@ -4474,7 +4503,9 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
                 Additive.ofMul ((yR : R) : V) := by
             simpa using DFunLike.congr_fun hg (Additive.ofMul ((yR : R) : V))
           have hy_fix : g • ((yR : R) : V) = ((yR : R) : V) := by
-            simpa [ρ] using hy_fix_add
+            change Additive.ofMul (g • ((yR : R) : V)) =
+              Additive.ofMul ((yR : R) : V) at hy_fix_add
+            exact congrArg Additive.toMul hy_fix_add
           have hy_fix' : ((g • yR : R) : V) = (yR : V) := by
             calc
               ((g • yR : R) : V) = g • ((yR : R) : V) := by
@@ -4674,7 +4705,9 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
             Additive.ofMul ((yR : R) : V) := by
         simpa [z] using DFunLike.congr_fun hzρ (Additive.ofMul ((yR : R) : V))
       have hy_fix : xG • ((yR : R) : V) = ((yR : R) : V) := by
-        simpa [ρ, z, xG] using hy_fix_add
+        change Additive.ofMul (xG • ((yR : R) : V)) =
+          Additive.ofMul ((yR : R) : V) at hy_fix_add
+        exact congrArg Additive.toMul hy_fix_add
       have hy_fix' : ((xG • yR : R) : V) = (yR : V) := by
         calc
           ((xG • yR : R) : V) = xG • ((yR : R) : V) := by
@@ -4786,7 +4819,7 @@ public theorem quotient_pPrimeCore_subgroupMap_injective
     rw [hcard]
     exact (pPrimeCore_coprime_card (G := G) (p := p)).pow_left n
   have hinf_bot : H ⊓ pPrimeCore p G = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hcoprime
+    (Subgroup.disjoint_of_coprime_natCard hcoprime).eq_bot
   have hker_bot :
       (((q.comp H.subtype)).ker : Subgroup H) = ⊥ := by
     ext x

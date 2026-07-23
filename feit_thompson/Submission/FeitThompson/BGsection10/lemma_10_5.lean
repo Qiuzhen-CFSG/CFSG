@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_4_c
-public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import FeitThompson.BGsection10.lemma_10_4_c
+public import FeitThompson.BGsection4.lemma_4_5_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -49,7 +49,7 @@ public theorem section10_generatorRank_at_least_two_of_elementaryAbelian_card_p_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -173,8 +173,12 @@ public theorem section10_omega1_isElementaryAbelian_of_commutative_pre
       (by simp)
       (by
         intro a b _ha _hb hpa hpb
-        rw [mul_pow]
-        simp [hpa, hpb])
+        have hab : Commute a b :=
+          (commute_iff_eq a b).2
+            ((IsMulCommutative.is_comm (M := H)).comm a b)
+        calc
+          (a * b) ^ p = a ^ p * b ^ p := hab.mul_pow p
+          _ = 1 := by simp [hpa, hpb])
       (by
         intro a _ha hpa
         rw [inv_pow, hpa, inv_one])
@@ -185,6 +189,9 @@ public theorem section10_omega1Z_isElementaryAbelian_pre
     {p : ℕ} [Fact p.Prime]
     (R : Type*) [Group R] :
     IsElementaryAbelian p (Ω₁Z p R) := by
+  change IsElementaryAbelian p
+    ((omega₁ (G := Subgroup.center R) (p := p)).map
+      (Subgroup.center R).subtype)
   let Ωc : Subgroup (Subgroup.center R) := omega₁ (G := Subgroup.center R) (p := p)
   have hΩcelem : IsElementaryAbelian p Ωc := by
     letI : IsMulCommutative (Subgroup.center R) := inferInstance
@@ -194,7 +201,7 @@ public theorem section10_omega1Z_isElementaryAbelian_pre
   letI : IsElementaryAbelian p Ωc := hΩcelem
   refine
     { toIsMulCommutative := by
-        simpa [Ω₁Z, Ωc] using
+        simpa [Ωc] using
           (Subgroup.map_isMulCommutative (f := (Subgroup.center R).subtype) (H := Ωc))
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -271,9 +278,8 @@ private theorem section10_isElementaryAbelian_sup_of_le_centralizer_pre
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact { is_comm := ⟨fun x y => mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -295,10 +301,12 @@ private theorem section10_isElementaryAbelian_sup_of_le_centralizer_pre
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          have hclosure_comm : IsMulCommutative ↥(Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
+            (hclosure_comm.is_comm.comm
+              (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
         calc
           (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
           _ = 1 := by simp [hypow, hzpow]) (by
@@ -339,7 +347,8 @@ private theorem section10_exists_rank_two_elementary_over_prime_order
     exact hXne <| le_bot_iff.mp <| hXPG.trans (le_of_eq hPGbot)
   letI : Nontrivial PG := (Subgroup.nontrivial_iff_ne_bot PG).2 hPGne
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   let Z : Subgroup G := section10OmegaOneCenter p PG
   have hZ_ne_bot : Z ≠ ⊥ := by
@@ -374,7 +383,9 @@ private theorem section10_exists_rank_two_elementary_over_prime_order
       · exact False.elim (hZsub_ne_bot hbot)
       · intro x hx
         have hxsub : (⟨x, hx⟩ : X) ∈ (⊤ : Subgroup X) := by simp
-        exact (show x ∈ Z from by simpa [← htop] using hxsub)
+        rw [← htop] at hxsub
+        change x ∈ Z at hxsub
+        exact hxsub
     have hΩchar : (Ω₁Z p.val PG).Characteristic :=
       section10_omega1Z_characteristic_pre p.val PG
     letI : (Ω₁Z p.val PG).Characteristic := hΩchar
@@ -399,7 +410,8 @@ private theorem section10_exists_rank_two_elementary_over_prime_order
   let XPG : Subgroup PG := X.subgroupOf PG
   have hzPG_not_XPG : zPG ∉ XPG := by
     intro hz
-    exact hzX (by simpa [XPG] using hz)
+    change (zPG : G) ∈ X at hz
+    exact hzX hz
   let S : Subgroup PG := Subgroup.zpowers zPG
   have hzPG_ne_one : zPG ≠ 1 := by
     intro hz1
@@ -453,7 +465,9 @@ private theorem section10_exists_rank_two_elementary_over_prime_order
     · have hzS : zPG ∈ S := Subgroup.mem_zpowers zPG
       have hzX : zPG ∈ XPG := by
         have hzsub : (⟨zPG, hzS⟩ : S) ∈ (⊤ : Subgroup S) := by simp
-        exact (show zPG ∈ XPG from by simpa [← htop] using hzsub)
+        rw [← htop] at hzsub
+        change zPG ∈ XPG at hzsub
+        exact hzsub
       exact hzPG_not_XPG hzX
   let A0 : Subgroup PG := S ⊔ XPG
   have hX_le_centS : XPG ≤ Subgroup.centralizer (S : Set PG) := by

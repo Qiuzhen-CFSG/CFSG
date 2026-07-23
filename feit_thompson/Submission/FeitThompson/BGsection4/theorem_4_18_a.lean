@@ -1,9 +1,9 @@
 module
-public import Submission.FeitThompson.BGsection3.Defs
-public import Submission.FeitThompson.Fitting.Centralizer
-public import Submission.FeitThompson.GeneratorRank
-public import Submission.FeitThompson.BGsection4.lemma_4_7
-public import Submission.FeitThompson.BGsection4.lemma_4_13
+public import FeitThompson.BGsection3.Defs
+public import FeitThompson.Fitting.Centralizer
+public import FeitThompson.GeneratorRank
+public import FeitThompson.BGsection4.lemma_4_7
+public import FeitThompson.BGsection4.lemma_4_13
 /-! # Theorem 4.18(a) from BG Section 4 -/
 
 universe u

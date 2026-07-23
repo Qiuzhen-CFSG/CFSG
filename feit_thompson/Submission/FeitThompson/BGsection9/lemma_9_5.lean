@@ -4,14 +4,14 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection9.lemma_9_4
-public import Submission.FeitThompson.BGsection4.theorem_4_20_a
-public import Submission.FeitThompson.BGsection4.theorem_4_20_c
-public import Submission.FeitThompson.BGsection4.corollary_4_19
+public import FeitThompson.BGsection9.lemma_9_4
+public import FeitThompson.BGsection4.theorem_4_20_a
+public import FeitThompson.BGsection4.theorem_4_20_c
+public import FeitThompson.BGsection4.corollary_4_19
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Lemma 9.5 from BG Section 9
@@ -109,7 +109,7 @@ private theorem section9_c95_scn_isMulCommutative
   letI : IsMulCommutative A0 := hA0comm
   refine { is_comm := ⟨fun a b => ?_⟩ }
   have hcomm0 : eA.symm a * eA.symm b = eA.symm b * eA.symm a := by
-    exact mul_comm (eA.symm a) (eA.symm b)
+    exact hA0comm.is_comm.comm (eA.symm a) (eA.symm b)
   simpa using congrArg eA hcomm0
 
 private theorem section9_c95_scn_not_isCyclic
@@ -130,9 +130,9 @@ private theorem section9_c95_scn_proper
   have hGcomm : IsMulCommutative G := by
     refine { is_comm := ⟨fun x y => ?_⟩ }
     exact
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A)
+      setLike_mul_comm (s := A)
         (by simp [hAtop]) (by simp [hAtop])
-  exact IsMinCE.not_solvable (G := G) (isSolvable_of_comm (fun a b : G => mul_comm a b))
+  exact IsMinCE.not_solvable (G := G) (isSolvable_of_comm hGcomm.is_comm.comm)
 
 private theorem section9_c95_centralizer_scn_ne_top
     {p : ℕ} [Fact p.Prime] {A : Subgroup G}
@@ -201,7 +201,7 @@ private theorem section9_c95_exists_prime_ne_p_of_three_le_groupRank_and_p_rank_
     exact hnq.trans (section9_c92_primeRank_le_natCard (p := q) R)
   have hSnonempty : S.Nonempty := by
     refine ⟨0, ?_⟩
-    exact ⟨p, Fact.out, zero_le _⟩
+    exact ⟨p, Fact.out, Nat.zero_le _⟩
   have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hSnonempty hSbdd
   rcases hsSup_mem with ⟨q, hqprime, hsSup_le⟩
   let q' : Nat.Primes := ⟨q, hqprime⟩
@@ -859,9 +859,10 @@ private theorem section9_c95_low_rank_singleton_of_pPrime_fitting_centralized
   have hDerived_le_F : derivedSubgroup M ≤ F :=
     le_sSup ⟨(inferInstance : (derivedSubgroup M).Normal), hDerived_nil⟩
   have hQuot_comm : IsMulCommutative (M ⧸ F) := by
-    exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hDerived_le_F⟩
+    exact
+      (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hDerived_le_F
   letI : IsMulCommutative (M ⧸ F) := hQuot_comm
-  letI : CommGroup (M ⧸ F) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (M ⧸ F) := IsMulCommutative.instCommGroup
   let qM : M →* M ⧸ F := QuotientGroup.mk' F
   have hFS_normal : (F ⊔ (S : Subgroup M)).Normal := by
     have hEq : ((S : Subgroup M).map qM).comap qM = F ⊔ (S : Subgroup M) := by
@@ -1078,7 +1079,9 @@ private theorem section9_c95_exists_normal_sylow_ne_p_of_low_fitting_rank
   let Bad : ℕ → Prop := fun k => ∃ hk : k < n + 1, series ⟨k, hk⟩ = ⊥
   have hBad_exists : ∃ k, Bad k := by
     refine ⟨n, ?_⟩
-    exact ⟨Nat.lt_succ_self n, by simpa using hbot⟩
+    refine ⟨Nat.lt_succ_self n, ?_⟩
+    change series (Fin.last n) = ⊥
+    exact hbot
   let k : ℕ := Nat.find hBad_exists
   have hkBad : Bad k := Nat.find_spec hBad_exists
   rcases hkBad with ⟨hk_lt, hk_bot⟩
@@ -1281,11 +1284,16 @@ private theorem section9_c95_sylow_commutator_le_ambientDerived_inf
         (R := (P : Subgroup G)) hNormP_le_I hP_le_I
   rw [← hcomm_map_eq]
   exact Subgroup.map_mono <| by
-    simpa [derivedSubgroup] using
-      (Subgroup.commutator_mono
+    change
+      ⁅(P : Subgroup G).subgroupOf I,
+          (Subgroup.normalizer ((P : Subgroup G) : Set G)).subgroupOf I⁆ ≤
+        derivedSeries I 1
+    rw [derivedSeries_one]
+    exact
+      Subgroup.commutator_mono
         (show (P : Subgroup G).subgroupOf I ≤ (⊤ : Subgroup I) by simp)
         (show (Subgroup.normalizer ((P : Subgroup G) : Set G)).subgroupOf I ≤
-          (⊤ : Subgroup I) by simp))
+          (⊤ : Subgroup I) by simp)
 
 private theorem section9_c95_exists_centralizer_escape_maximal
     {p : ℕ} [Fact p.Prime] {B M : Subgroup G}
@@ -1380,7 +1388,7 @@ private theorem section9_c95_exists_omega1_scn_data
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha y.2).symm
+    exact (setLike_mul_comm (s := A) ha y.2).symm
   have hArank_two : 2 ≤ groupRank A :=
     section9_c93_groupRank_at_least_two_of_generatorRank_subgroup
       (G := G) (q := p) (Fact.out : Nat.Prime p)
@@ -1645,7 +1653,7 @@ private theorem section9_c95_exists_fixedPoint_not_le_centralizer
           Subgroup.centralizer (R : Set G) := by
   classical
   letI : IsElementaryAbelian p Ω := hΩelem
-  letI : CommGroup Ω := CommGroup.ofIsMulCommutative
+  letI : CommGroup Ω := IsMulCommutative.instCommGroup
   letI : Fact (IsPGroup p Ω) := ⟨IsElementaryAbelian.isPGroup p Ω⟩
   by_contra hnone
   have hfixed_le :
@@ -1694,7 +1702,6 @@ private theorem section9_c95_fixedPoint_map_le_inf_of_mem_map
     exact hzfix yY
   have hconj :
       (((yY : Y) : Ω) : G) * (zD : G) * (((yY : Y) : Ω) : G)⁻¹ = (zD : G) := by
-    change ((yY : Ω) : G) * (zD : G) * ((yY : Ω) : G)⁻¹ = (zD : G)
     exact congrArg (fun x : D => (x : G)) hfix
   simpa [mul_assoc] using
     congrArg (fun x : G => x * (((yY : Y) : Ω) : G)) hconj
@@ -2008,7 +2015,7 @@ private theorem section9_c95_pPrime_fitting_le_centralizer_sylow_commutator
   have hB_le_M : B ≤ M := hB_le_ΩA.trans hΩA_le_M
   have hYnoncyclic : ¬ IsCyclic Y := by
     letI : IsElementaryAbelian p ΩA := hΩAelem
-    letI : CommGroup ΩA := CommGroup.ofIsMulCommutative
+    letI : CommGroup ΩA := IsMulCommutative.instCommGroup
     exact not_isCyclic_of_three_le_generatorRank_of_cyclic_quotient hΩAgen hYcyc
   have hBnoncyclic : ¬ IsCyclic B := by
     intro hBcyc
@@ -2301,7 +2308,7 @@ public theorem lemma_9_5
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := A) ha y.2).symm
+    exact (setLike_mul_comm (s := A) ha y.2).symm
   have hArank_two : 2 ≤ groupRank A :=
     section9_c93_groupRank_at_least_two_of_generatorRank_subgroup
       (G := G) (q := p) (Fact.out : Nat.Prime p)

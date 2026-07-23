@@ -7,10 +7,10 @@ module
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Data.Finite.Defs
 public import Mathlib.GroupTheory.Solvable
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 
-public import Submission.FeitThompson.Fitting.Core
-import Submission.FeitThompson.ChiefFactors.Proposition12
+public import FeitThompson.Fitting.Core
+import FeitThompson.ChiefFactors.Proposition12
 
 /-!
 # Proposition 1.3: the Fitting subgroup is self-centralizing (solvable case)
@@ -79,8 +79,8 @@ public theorem pSubgroup_le_centralizer_pCore_of_cyclic_sylow_fitting
   have hyS : y ∈ (S : Subgroup G) := hcore_le_S hyCore
   haveI : IsMulCommutative (S : Subgroup G) := by
     haveI : IsCyclic (S : Subgroup G) := hcycSylow S
-    exact ⟨IsCyclic.commutative⟩
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := (S : Subgroup G)) hyS hxS
+    exact IsCyclic.isMulCommutative
+  exact setLike_mul_comm (s := (S : Subgroup G)) hyS hxS
 
 public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
     {G : Type u} [Group G] [Finite G] (hsolv : IsSolvable G) :
@@ -145,7 +145,7 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
             intro y
             apply Subtype.ext
             simpa using (Subgroup.mem_center_iff.mp hxCenterH) (y : H)
-          exact isNilpotent_of_ker_le_center f hfker
+          exact Subgroup.isNilpotent_of_ker_le_center f hfker
         exact le_sSup
           (show N ∈ {M : Subgroup H | M.Normal ∧ Group.IsNilpotent M} from
             ⟨inferInstance, (by simpa using hN_nil)⟩)
@@ -236,7 +236,7 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
         haveI : Group.IsNilpotent (fittingSubgroup (↥C)) := by infer_instance
         let e : (fittingSubgroup (↥C)) ≃* (↥C) :=
           (MulEquiv.subgroupCongr hfitC_top).trans (Subgroup.topEquiv : (⊤ : Subgroup (↥C)) ≃* (↥C))
-        exact nilpotent_of_mulEquiv (G := fittingSubgroup (↥C)) (G' := (↥C)) e
+        exact Group.nilpotent_of_mulEquiv (G := fittingSubgroup (↥C)) (G' := (↥C)) e
 
       have hC_le_F : C ≤ F :=
         le_sSup

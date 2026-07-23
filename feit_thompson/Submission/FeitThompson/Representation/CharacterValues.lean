@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.Representation.Cyclotomic
-public import Submission.FeitThompson.Representation.Induction
+public import FeitThompson.Representation.Cyclotomic
+public import FeitThompson.Representation.Induction
 
 /-!
 # Cyclotomic integrality of character values
@@ -164,7 +164,8 @@ public lemma trace_eq_sum_trace_restrict_eigenspaces_of_commute
   let Nsub : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hp hf
   have hindep : iSupIndep Nsub := by
-    simpa [Nsub] using f.eigenspaces_iSupIndep.comp Subtype.coe_injective
+    change iSupIndep (f.eigenspace ∘ (fun μ : f.Eigenvalues => (μ : ℂ)))
+    exact f.eigenspaces_iSupIndep.comp Subtype.coe_injective
   have htop : iSup Nsub = ⊤ := by
     simpa [Nsub] using eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
   have hds : DirectSum.IsInternal Nsub :=
@@ -190,7 +191,8 @@ public lemma trace_mul_eq_sum_eigen_mul_trace_restrict
   let Nsub : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hp hf
   have hindep : iSupIndep Nsub := by
-    simpa [Nsub] using f.eigenspaces_iSupIndep.comp Subtype.coe_injective
+    change iSupIndep (f.eigenspace ∘ (fun μ : f.Eigenvalues => (μ : ℂ)))
+    exact f.eigenspaces_iSupIndep.comp Subtype.coe_injective
   have htop : iSup Nsub = ⊤ := by
     simpa [Nsub] using eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
   have hds : DirectSum.IsInternal Nsub :=
@@ -333,6 +335,10 @@ public theorem finite_order_commuting_trace_mul_congruent
   obtain ⟨i, _hi_lt, hi⟩ := hξ.eq_pow_of_pow_eq_one hμp
   have hbase := pow_mul_congruent_right_mod_one_sub
     (η := η) (ξ := ξ) (y := t μ) hξη (ht_mem μ) i
+  change congruentModIn A
+    (⟨1 - ξ, A.sub_mem A.one_mem hξη⟩ : A)
+    (⟨ξ ^ i * t μ, A.mul_mem (A.pow_mem hξη i) (ht_mem μ)⟩ : A)
+    (⟨t μ, ht_mem μ⟩ : A) at hbase
   change congruentModIn A oneSub (zterm μ) (wterm μ)
   simpa [zterm, wterm, t, hi] using hbase
 

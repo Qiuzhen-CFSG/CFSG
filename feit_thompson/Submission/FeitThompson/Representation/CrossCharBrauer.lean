@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.Representation.Completeness
-public import Submission.FeitThompson.Representation.PermutationBasisOrbits
+public import FeitThompson.Representation.Completeness
+public import FeitThompson.Representation.PermutationBasisOrbits
 public import Mathlib.GroupTheory.GroupAction.Quotient
 
 open scoped BigOperators AlgebraMonoidAlgebra Matrix.Module
@@ -70,7 +70,7 @@ private lemma crossCharClassFunctionPairing_character
 private abbrev CrossCharGroupAlgebra (F G : Type*) [Field F] [Group G] :=
   MonoidAlgebra F G
 
-private noncomputable def crossCharWedderburnDataExists
+private theorem crossCharWedderburnDataExists
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
     (hchar : ¬ ringChar F ∣ Nat.card G) :
     ∃ (n : ℕ) (d : Fin n → ℕ), (∀ i, NeZero (d i)) ∧
@@ -247,7 +247,9 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
           intro hbot
           apply hS
           apply Subrepresentation.toSubmodule_injective
-          simpa using hbot
+          change S.toSubmodule =
+            (⊥ : Submodule F (Fin (crossCharWedderburnDim i) → F))
+          exact hbot
         exact Submodule.exists_mem_ne_zero_of_ne_bot hSsub
       rcases hne with ⟨v, hvS, hv0⟩
       obtain ⟨j, hvj⟩ : ∃ j, v j ≠ 0 := by
@@ -266,7 +268,7 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
         have hsum_eq :
             (∑ k : Fin (crossCharWedderburnDim i), Pi.single k (w k)) = w := by
           ext l
-          simpa using (Finset.sum_pi_single l w Finset.univ)
+          simp
         simpa [hsum_eq] using hsum
       intro k
       let E : Matrix (Fin (crossCharWedderburnDim i))
@@ -284,23 +286,29 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
           · subst l
             simp [div_mul_cancel₀ _ hvj]
           · simp [Pi.single_eq_of_ne hl]
-        simpa [Module.compHom, φ] using congrFun hmat l
+        change (crossCharBlockAlgHom i a • v) l =
+          (Pi.single k (w k) : Fin (crossCharWedderburnDim i) → F) l
+        exact congrFun hmat l
       rw [← hact]
       suffices ∀ a : A, a • v ∈ S from this a
       intro a
       induction a using MonoidAlgebra.induction_linear with
       | zero =>
           rw [zero_smul]
+          change (0 : Fin (crossCharWedderburnDim i) → F) ∈ S.toSubmodule
           exact S.toSubmodule.zero_mem
       | add x y hx hy =>
-          simpa [add_smul] using S.toSubmodule.add_mem hx hy
+          rw [add_smul]
+          change x • v + y • v ∈ S.toSubmodule
+          exact S.toSubmodule.add_mem hx hy
       | single g r =>
           have hg : (MonoidAlgebra.single g (1 : F) : A) • v ∈ S :=
             S.apply_mem_toSubmodule g hvS
           have hsingle : (MonoidAlgebra.single g r : A) =
               r • (MonoidAlgebra.single g (1 : F) : A) := by
-            simpa using (MonoidAlgebra.smul_single' (M := G) r g (1 : F)).symm
-          rw [hsingle, smul_assoc]
+            simp
+          rw [hsingle]
+          rw [smul_assoc]
           exact S.toSubmodule.smul_mem r hg
 
 private noncomputable def crossCharBlockCharacter
@@ -371,8 +379,7 @@ private lemma crossCharBlockCharacters_orthonormal
                 CrossCharGroupAlgebra F G) =
                 r • (MonoidAlgebra.single g (1 : F) :
                   CrossCharGroupAlgebra F G) := by
-              simpa using
-                (MonoidAlgebra.smul_single' (M := G) r g (1 : F)).symm
+              simp
             rw [hsingle]
             rw [smul_assoc r
                 (MonoidAlgebra.single g (1 : F) : CrossCharGroupAlgebra F G) v,
@@ -482,18 +489,13 @@ private noncomputable def crossCharClassFunctionCentralElement
     (φ : CrossCharClassFunction F G) : CrossCharGroupAlgebra F G :=
   ∑ g : G, MonoidAlgebra.single g (φ (ConjClasses.mk g⁻¹))
 
-private lemma crossCharClassFunctionCentralElement_apply
+private lemma crossCharClassFunctionCentralElement_coeff
     {F G : Type*} [Field F] [Group G] [Finite G]
     (φ : CrossCharClassFunction F G) (g : G) :
-    crossCharClassFunctionCentralElement φ g =
+    (crossCharClassFunctionCentralElement φ).coeff g =
       φ (ConjClasses.mk g⁻¹) := by
   classical
-  rw [crossCharClassFunctionCentralElement]
-  change (Finsupp.applyAddHom g)
-      (∑ x : G, MonoidAlgebra.single x (φ (ConjClasses.mk x⁻¹))) =
-    φ (ConjClasses.mk g⁻¹)
-  rw [map_sum]
-  simp [MonoidAlgebra.single_apply]
+  simp [crossCharClassFunctionCentralElement, Finsupp.single_apply]
 
 private noncomputable def crossCharClassFunctionCentralElementLinear
     {F G : Type*} [Field F] [Group G] [Finite G] :
@@ -502,11 +504,11 @@ private noncomputable def crossCharClassFunctionCentralElementLinear
   map_add' φ ψ := by
     classical
     ext g
-    simp [crossCharClassFunctionCentralElement_apply]
+    simp [crossCharClassFunctionCentralElement_coeff]
   map_smul' c φ := by
     classical
     ext g
-    simp [crossCharClassFunctionCentralElement_apply, smul_eq_mul]
+    simp [crossCharClassFunctionCentralElement_coeff, smul_eq_mul]
 
 private lemma crossCharClassFunctionCentralElement_comm
     {F G : Type*} [Field F] [Group G] [Finite G]
@@ -527,9 +529,10 @@ private lemma crossCharClassFunctionCentralElement_comm
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
       have hφ := congrArg φ hconj
-      simpa [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
-        crossCharClassFunctionCentralElement_apply, hr, mul_comm,
-        mul_left_comm, mul_assoc] using hφ
+      simp only [MonoidAlgebra.coeff_single_mul_apply,
+        MonoidAlgebra.coeff_mul_single_apply,
+        crossCharClassFunctionCentralElement_coeff]
+      rw [hφ, mul_comm]
 
 private lemma crossCharBlockAlgHom_centralElement_mem_center
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
@@ -622,8 +625,8 @@ private lemma crossCharClassFunctionBlockScalarLinear_injective
     rw [ha, ha_zero]
     simp
   have hcoeff := congrArg
-    (fun a : CrossCharGroupAlgebra F G => a g⁻¹) hcentral_zero
-  simpa [crossCharClassFunctionCentralElement_apply] using hcoeff
+    (fun a : CrossCharGroupAlgebra F G => a.coeff g⁻¹) hcentral_zero
+  simpa [crossCharClassFunctionCentralElement_coeff] using hcoeff
 
 private lemma crossCharClassFunction_finrank_le_blockCharacters_card
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
@@ -699,7 +702,7 @@ private theorem crossChar_irreducibleCharacters_complete
     exact hchar ((ringChar.spec F (Nat.card G)).1 hz)
   letI : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   let χ : CrossCharClassFunction F G :=
     crossCharCharacterClassFunction ρ
   have hsum :
@@ -746,7 +749,7 @@ private theorem crossChar_irreducibleCharacters_complete
         crossCharClassFunctionPairing_sum_left _ _ _
       _ = 0 := by simp [hall]
   exact one_ne_zero (hself.symm.trans hzero)
-@[expose] private def crossCharConjClassesPerm
+private def crossCharConjClassesPerm
     {G : Type*} [Group G] (α : G ≃* G) :
     Equiv.Perm (ConjClasses G) where
   toFun := ConjClasses.map α.toMonoidHom
@@ -771,7 +774,7 @@ private theorem crossCharConjClassesPerm_symm_mk
       ConjClasses.mk (α.symm x) := by
   rfl
 
-@[expose] private noncomputable def crossCharClassFunctionMapLinearEquiv
+private noncomputable def crossCharClassFunctionMapLinearEquiv
     {F G : Type*} [Field F] [Group G] (α : G ≃* G) :
     CrossCharClassFunction F G ≃ₗ[F] CrossCharClassFunction F G where
   toFun φ := fun c => φ ((crossCharConjClassesPerm α).symm c)
@@ -793,11 +796,6 @@ private theorem crossCharClassFunctionMapLinearEquiv_basisFun
   by_cases h : d = crossCharConjClassesPerm α c
   · subst d
     simp [crossCharClassFunctionMapLinearEquiv, Pi.basisFun_apply]
-    have hd : (crossCharConjClassesPerm α).symm
-        (crossCharConjClassesPerm α c) = c :=
-      (crossCharConjClassesPerm α).symm_apply_apply c
-    rw [hd]
-    simp only [Pi.single_eq_same]
   · have hs : (crossCharConjClassesPerm α).symm d ≠ c := by
       intro hs
       apply h
@@ -876,7 +874,7 @@ private theorem crossCharBlockMap_injective
     crossChar_irreducibleCharacters_basis hchar]
   exact hcharEq
 
-@[expose] private noncomputable def crossCharBlockPerm
+private noncomputable def crossCharBlockPerm
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G) :
     Equiv.Perm (CrossCharWedderburnIndex F G hchar) :=

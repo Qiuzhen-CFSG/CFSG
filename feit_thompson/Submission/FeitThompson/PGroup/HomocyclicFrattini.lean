@@ -1,7 +1,7 @@
 module
 
-public import Submission.FeitThompson.Frattini.Core
-public import Submission.FeitThompson.PGroup.Homocyclic
+public import FeitThompson.Frattini.Core
+public import FeitThompson.PGroup.Homocyclic
 
 /-!
 # Frattini facts for standard homocyclic coordinate covers

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection12.corollary_12_14
+public import FeitThompson.BGsection12.corollary_12_14
 
 open scoped Pointwise
 
@@ -25,7 +25,7 @@ public theorem proposition_12_15_a
     (hX : X ≤ M) (hXne : X ≠ ⊥) (hXq : IsPGroup q.val X)
     (hMstar : Mstar ∈ section9MaximalSubgroupsContaining (Subgroup.normalizer (X : Set G)))
     (hMstar_ne : Mstar ≠ M)
-    (hXS : X ≤ section10AmbientSylowSubgroup (M ⊓ Mstar) S) :
+    (_hXS : X ≤ section10AmbientSylowSubgroup (M ⊓ Mstar) S) :
     section12NotConjugate Mstar M := by
   exact lemma_12_2_b (G := G) (M := M) (Mstar := Mstar) (X := X) (p := q)
     hM hXq hXne hX hMstar (Or.inl ⟨hq, hMstar_ne.symm⟩)

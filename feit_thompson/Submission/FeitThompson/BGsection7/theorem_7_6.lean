@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection7.proposition_7_5
-public import Submission.FeitThompson.BGsection5.theorem_5_5_a
+public import FeitThompson.BGsection7.proposition_7_5
+public import FeitThompson.BGsection5.theorem_5_5_a
 /-! # Theorem 7.6 from BG Section 7 -/
 
 open scoped Pointwise
@@ -66,7 +66,7 @@ public theorem theorem_7_6
     letI : IsMulCommutative A0 := hA0comm
     refine { is_comm := ⟨fun a b => ?_⟩ }
     have hcomm0 : eA.symm a * eA.symm b = eA.symm b * eA.symm a := by
-      simpa using mul_comm (eA.symm a) (eA.symm b)
+      exact hA0comm.is_comm.comm (eA.symm a) (eA.symm b)
     simpa using congrArg eA hcomm0
   letI : IsMulCommutative A := hAcomm
   have hAscn2 : A ∈ scnPrimeSubgroups 2 p G := by
@@ -101,7 +101,7 @@ public theorem theorem_7_6
     rw [Subgroup.mem_center_iff]
     intro b
     apply Subtype.ext
-    exact congrArg Subtype.val (mul_comm b a)
+    exact congrArg Subtype.val (hAcomm.is_comm.comm b a)
   have hcenterRank : 3 ≤ groupRank (Subgroup.center A) := by
     exact groupRank_at_least_three_of_generatorRank_subgroup
       (q := p) Fact.out htop_center hAp_top hAcomm_top hAgen_top

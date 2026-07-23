@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.PFsection13.PFsection13_14
+public import FeitThompson.PFsection13.PFsection13_14
 
 /-!
 # Peterfalvi, Section 13: PFsection13_15

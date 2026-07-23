@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.corollary_10_7_d
+public import FeitThompson.BGsection10.corollary_10_7_d
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
@@ -49,7 +49,12 @@ public theorem corollary_10_7_e
   obtain ⟨x, hxS⟩ := MulAction.exists_smul_eq G S P
   have hSxP : (S : Subgroup G).conjBy x = (P : Subgroup G) := by
     have hxS' := congrArg (fun T : Sylow p.val G => (T : Subgroup G)) hxS
-    simpa [Subgroup.conjBy] using hxS'
+    have hSconj_smul :
+        (S : Subgroup G).conjBy x = ((x • S : Sylow p.val G) : Subgroup G) := by
+      rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+      ext y
+      constructor <;> rintro ⟨z, hz, rfl⟩ <;> exact ⟨z, hz, rfl⟩
+    exact hSconj_smul.trans hxS'
   have hRxP : R.conjBy x ≤ (P : Subgroup G) := by
     exact (section10_conjBy_mono hRleS x).trans (le_of_eq hSxP)
   have hQxP : Q.conjBy x ≤ (P : Subgroup G) := by

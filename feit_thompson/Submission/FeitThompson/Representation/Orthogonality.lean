@@ -1,6 +1,6 @@
 module
 
-public import Submission.FeitThompson.Representation.Completeness
+public import FeitThompson.Representation.Completeness
 import Mathlib.Data.Complex.BigOperators
 import Mathlib.LinearAlgebra.Basis.Basic
 
@@ -346,8 +346,8 @@ public theorem card_irreducible_characters_eq_card_conjClasses
     simpa using (Module.finrank_eq_card_basis b)
   have hfinrank_fun :
       Module.finrank ℂ (ClassFunction G) = Fintype.card (ConjClasses G) := by
-    simpa [ClassFunction] using
-      (Module.finrank_fintype_fun_eq_card (R := ℂ) (η := ConjClasses G))
+    change Module.finrank ℂ (ConjClasses G → ℂ) = Fintype.card (ConjClasses G)
+    exact Module.finrank_fintype_fun_eq_card (R := ℂ) (η := ConjClasses G)
   rw [Nat.card_eq_fintype_card]
   exact hfinrank_basis.symm.trans hfinrank_fun
 

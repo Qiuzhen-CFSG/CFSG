@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import Submission.FeitThompson.BGsection11.theorem_11_7
+public import FeitThompson.BGsection11.theorem_11_7
 import Mathlib.GroupTheory.Schreier
 
 open scoped Pointwise
@@ -45,7 +45,7 @@ variable {G : Type*} [Group G] [Finite G]
 /-- A subgroup `K` is a Hall `π`-subgroup of `H`, both viewed in the same ambient group. -/
 @[expose] public def section12HallSubgroupIn
     (π : Set Nat.Primes) (K H : Subgroup G) : Prop :=
-  ∃ hKH : K ≤ H, IsHallSubgroup π (K.subgroupOf H)
+  ∃ _hKH : K ≤ H, IsHallSubgroup π (K.subgroupOf H)
 
 /-- A subgroup `K` is a Sylow `p`-subgroup of `H`, both viewed in the same ambient group. -/
 @[expose] public def section12SylowSubgroupIn
@@ -79,7 +79,7 @@ variable {G : Type*} [Group G] [Finite G]
 /-- The prime support of a formal quotient `H/K`, recorded by the relative index. -/
 @[expose] public def section12QuotientPrimeSet
     (K H : Subgroup G) : Set Nat.Primes :=
-  {q | ∃ hKH : K ≤ H, q.val ∣ (K.subgroupOf H).index}
+  {q | ∃ _hKH : K ≤ H, q.val ∣ (K.subgroupOf H).index}
 
 /-- An internal direct product statement for subgroups of a common ambient group. -/
 @[expose] public def section12InternalDirectProduct
@@ -124,7 +124,7 @@ public theorem section12_primeRank_le_card {R : Type*} [Group R] [Finite R] (q :
     primeRank q R ≤ Nat.card R := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hAq, _hAcomm, hnA⟩
     exact hnA.trans <|
@@ -250,19 +250,21 @@ public theorem section12_groupRank_le_of_equiv {R S : Type*} [Group R] [Finite R
     rw [groupRank, hSet]
     simp
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12Msigma_subgroupOf_eq {M : Subgroup G} :
     (section10Msigma M).subgroupOf M = section10MsigmaSubgroup M := by
-  simpa [section10Msigma, section10MsigmaSubgroup] using
-    (piCore_map_subtype_subgroupOf (G := G) (section10SigmaPrimes M) M)
+  change (piCoreIn (section10SigmaPrimes M) M).subgroupOf M =
+    piCore (section10SigmaPrimes M) M
+  exact piCore_map_subtype_subgroupOf (G := G) (section10SigmaPrimes M) M
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12Malpha_subgroupOf_eq {M : Subgroup G} :
     (section10Malpha M).subgroupOf M = section10MalphaSubgroup M := by
-  simpa [section10Malpha, section10MalphaSubgroup] using
-    (piCore_map_subtype_subgroupOf (G := G) (section10AlphaPrimes M) M)
+  change (piCoreIn (section10AlphaPrimes M) M).subgroupOf M =
+    piCore (section10AlphaPrimes M) M
+  exact piCore_map_subtype_subgroupOf (G := G) (section10AlphaPrimes M) M
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_complement_to_msigma_isComplement'
     {M E : Subgroup G}
     (hcomp : section12ComplementToMsigma M E) :
@@ -355,7 +357,7 @@ public theorem section12_nilpotent_ambientDerivedSubgroup
     {E : Subgroup G}
     (hE' : Group.IsNilpotent (derivedSubgroup E)) :
     Group.IsNilpotent (ambientDerivedSubgroup E) := by
-  exact nilpotent_of_mulEquiv (G := derivedSubgroup E) (G' := ambientDerivedSubgroup E)
+  exact Group.nilpotent_of_mulEquiv (G := derivedSubgroup E) (G' := ambientDerivedSubgroup E)
     (Subgroup.equivMapOfInjective (f := E.subtype) (derivedSubgroup E) E.subtype_injective)
 
 omit [Finite G] [IsMinCE G] in
@@ -484,7 +486,7 @@ private theorem section12_complement_inf_derived_eq
     · exact (map_derivedSeries_le_derivedSeries K.subtype 1)
         (Subgroup.mem_map_of_mem K.subtype hy)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_complement_inter_ambientDerived_eq
     {M E : Subgroup G}
     (hcomp : section12ComplementToMsigma M E) :
@@ -533,7 +535,7 @@ public theorem section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -624,13 +626,14 @@ private theorem section12_normal_pSubgroup_le_sylow
     simpa [MulAut.smul_def, MulAut.conj_apply, mul_assoc] using hQ
   simpa [hg] using hN_le_gQ
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_nilpotent_derivedSubgroup_of_ambient
     {E : Subgroup G}
     (hnil : Group.IsNilpotent (ambientDerivedSubgroup E)) :
     Group.IsNilpotent (derivedSubgroup E) := by
   let e : derivedSubgroup E ≃* ambientDerivedSubgroup E :=
     Subgroup.equivMapOfInjective (f := E.subtype) (derivedSubgroup E) E.subtype_injective
-  exact nilpotent_of_mulEquiv (G := ambientDerivedSubgroup E) (G' := derivedSubgroup E)
+  exact Group.nilpotent_of_mulEquiv (G := ambientDerivedSubgroup E) (G' := derivedSubgroup E)
     e.symm
 
 private theorem section12_tau3_prime_mem_derived
@@ -641,6 +644,7 @@ private theorem section12_tau3_prime_mem_derived
     p ∈ subgroupPrimeSet (derivedSubgroup E) := by
   classical
   rcases hp with ⟨hpσ, hpMder, _hprank⟩
+  change p.val ∣ Nat.card (derivedSubgroup M) at hpMder
   let N : Subgroup M := section10MsigmaSubgroup M
   let D : Subgroup M := derivedSubgroup M
   have hN_le_D : N ≤ D := (theorem_10_2_c (M := M) hM).2
@@ -683,6 +687,7 @@ private theorem section12_tau3_prime_mem_derived
   rw [hcard_E_der, ← hmap_derived, hcard_quot_map]
   exact hp_dvd_quot
 
+omit [IsMinCE G] in
 public theorem section12_tau3_primeRank_E_le_one
     {M E : Subgroup G} {p : Nat.Primes}
     (hcomp : section12ComplementToMsigma M E)
@@ -694,6 +699,7 @@ public theorem section12_tau3_primeRank_E_le_one
   exact (section12_primeRank_le_of_equiv (R := E.subgroupOf M) (S := E) p.val e).trans
     (by simpa [hprank] using section8_primeRank_le_of_subgroup (S := E.subgroupOf M) p.val)
 
+omit [IsMinCE G] in
 public theorem section12_sylow_cyclic_of_primeRank_le_one
     {E : Subgroup G} {p : Nat.Primes}
     (hpodd : p.val ≠ 2) (hrank : primeRank p.val E ≤ 1)
@@ -739,6 +745,7 @@ public theorem section12_tau3_sylow_le_derived
   have hcomp : section12ComplementToMsigma M E := hE.1
   have hpD : p ∈ subgroupPrimeSet (derivedSubgroup E) :=
     section12_tau3_prime_mem_derived hM hcomp hp
+  change p.val ∣ Nat.card (derivedSubgroup E) at hpD
   have hpE : p.val ∣ Nat.card E := hpD.trans (Subgroup.card_subgroup_dvd_card (derivedSubgroup E))
   have hpG : p.val ∣ Nat.card G := hpE.trans (Subgroup.card_subgroup_dvd_card E)
   have hpodd : p.val ≠ 2 := Odd.ne_two_of_dvd_nat IsMinCE.odd_order hpG
@@ -847,6 +854,7 @@ public theorem section12_sigmaPrimes_mem_of_alphaPrimes_mem
   classical
   have hpα_mem : p ∈ section10AlphaPrimes M := hpα
   rcases hpα with ⟨hpM, _hprank⟩
+  change p.val ∣ Nat.card M at hpM
   let A : Subgroup M := section10MalphaSubgroup M
   let S : Subgroup M := section10MsigmaSubgroup M
   have hHallA : IsHallSubgroup (section10AlphaPrimes M) A :=
@@ -877,6 +885,7 @@ public theorem section12_not_sigma_of_mem_complement
     (hpE : p ∈ subgroupPrimeSet E) :
     p ∉ section10SigmaPrimes M := by
   classical
+  change p.val ∣ Nat.card E at hpE
   let N : Subgroup M := section10MsigmaSubgroup M
   let Ec : Subgroup M := E.subgroupOf M
   have hHallN : IsHallSubgroup (section10SigmaPrimes M) N :=
@@ -903,7 +912,7 @@ private theorem section12_one_le_generatorRank_of_nontrivial
   obtain ⟨S, hScard, hSgen⟩ := Group.rank_spec R
   have hSempty : S = ∅ := Finset.card_eq_zero.mp (by omega)
   have hclosureS_bot : Subgroup.closure (S : Set R) = ⊥ := by
-    simpa [hSempty] using (Subgroup.closure_empty (G := R))
+    simp [hSempty]
   have hbot_top : (⊥ : Subgroup R) = ⊤ := by
     rw [← hclosureS_bot, hSgen]
   have hsub : Subsingleton R := by
@@ -1046,7 +1055,9 @@ private theorem section12_complement_ne_bot
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
     IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
-    simpa [derivedSubgroup, derivedSeries_one] using hder_top
+    change derivedSeries M 1 = ⊤ at hder_top
+    rw [derivedSeries_one] at hder_top
+    exact hder_top
   exact hcomm_lt.ne hcomm_top
 
 public theorem section12_ambientDerivedSubgroup_lt
@@ -1058,8 +1069,9 @@ public theorem section12_ambientDerivedSubgroup_lt
   haveI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot (H := E)).2 hE_ne_bot
   have hsolvE : IsSolvable E := section12_solvable_of_complement hM hcomp
   have hDlt : derivedSubgroup E < (⊤ : Subgroup E) := by
-    simpa [derivedSubgroup, derivedSeries_one] using
-      IsSolvable.commutator_lt_top_of_nontrivial (G := E)
+    change derivedSeries E 1 < ⊤
+    rw [derivedSeries_one]
+    exact IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
   intro hEq
   have hDtop : derivedSubgroup E = (⊤ : Subgroup E) := by
@@ -1069,6 +1081,7 @@ public theorem section12_ambientDerivedSubgroup_lt
     simpa [section12_ambientDerivedSubgroup_subgroupOf_eq] using hsubtop
   exact hDlt.ne hDtop
 
+omit [IsMinCE G] in
 public theorem section12_E12_eq_bot_of_E1_E2_eq_bot
     {M E E₁₂ E₁ E₂ : Subgroup G}
     (hE12 : section12HallSubgroupIn (section12Tau1Primes M ∪ section12Tau2Primes M) E₁₂ E)
@@ -1081,9 +1094,9 @@ public theorem section12_E12_eq_bot_of_E1_E2_eq_bot
   rcases hE1 with ⟨hE1E12, hHallE1⟩
   rcases hE2 with ⟨hE2E12, hHallE2⟩
   have hE1sub_bot : E₁.subgroupOf E₁₂ = ⊥ := by
-    simpa [hE1bot]
+    simp [hE1bot]
   have hE2sub_bot : E₂.subgroupOf E₁₂ = ⊥ := by
-    simpa [hE2bot]
+    simp [hE2bot]
   have hHallE1bot : IsHallSubgroup (section12Tau1Primes M) (⊥ : Subgroup E₁₂) := by
     simpa [hE1sub_bot] using hHallE1
   have hHallE2bot : IsHallSubgroup (section12Tau2Primes M) (⊥ : Subgroup E₁₂) := by
@@ -1111,7 +1124,7 @@ public theorem section12_E3_eq_E_of_E12_eq_bot
   rcases hE12 with ⟨hE12E, hHallE12⟩
   rcases hE3 with ⟨hE3E, hHallE3⟩
   have hE12sub_bot : E₁₂.subgroupOf E = ⊥ := by
-    simpa [hE12bot]
+    simp [hE12bot]
   have hHallE12bot :
       IsHallSubgroup (section12Tau1Primes M ∪ section12Tau2Primes M)
         (⊥ : Subgroup E) := by
@@ -1168,7 +1181,7 @@ private theorem section12_prime_dvd_card_of_primeRank_pos
     exact hnA.trans <|
       (section8_generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)
   have hTnonempty : T.Nonempty :=
-    ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, zero_le _⟩
+    ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   have hSup_mem : sSup T ∈ T := Nat.sSup_mem hTnonempty hTbdd
   rcases hSup_mem with ⟨A, hAp, _hAcomm, hAgen⟩
   have hAgen_pos : 0 < generatorRank A := by
@@ -1182,7 +1195,7 @@ private theorem section12_prime_dvd_card_of_primeRank_pos
     have hgen0 : generatorRank A = 0 := by
       rw [generatorRank_eq_group_rank]
       haveI : Group.FG A := Group.fg_of_finite
-      apply le_antisymm ?_ (zero_le _)
+      apply le_antisymm ?_ (Nat.zero_le _)
       refine Group.rank_le (G := A) (S := ∅) ?_
       rw [Finset.coe_empty, Subgroup.closure_empty]
       exact (Subsingleton.elim (⊤ : Subgroup A) ⊥).symm
@@ -1225,6 +1238,7 @@ public theorem section12_prime_mem_E_of_mem_tau13
             using hpτ3.2.1
         simpa [subgroupPrimeSet, hcardD] using hpambient_sub
       exact section8_subgroupPrimeSet_mono section12_ambientDerivedSubgroup_le hpambient
+  change p.val ∣ Nat.card M at hpM
   have hHall :
       IsHallSubgroup (section10SigmaPrimes M)ᶜ (E.subgroupOf M) :=
     section12_msigma_complement_isHall_sigma_compl hM hE.1

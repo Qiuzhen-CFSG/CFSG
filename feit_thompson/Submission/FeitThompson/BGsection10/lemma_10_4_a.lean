@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Submission.FeitThompson.BGsection10.lemma_10_3
+public import FeitThompson.BGsection10.lemma_10_3
 
 open scoped Pointwise
 
