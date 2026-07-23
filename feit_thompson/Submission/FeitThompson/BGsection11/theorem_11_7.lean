@@ -250,7 +250,7 @@ private theorem section11_exists_msigma_complement_containing_A
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hAinv : IsInvariant Unit M (A.subgroupOf M) := by
+  have hAinv : IsInvariantSubgroup Unit M (A.subgroupOf M) := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -290,7 +290,7 @@ private theorem section11_exists_msigma_complement_containing_P
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hPinv : IsInvariant Unit M (P : Subgroup M) := by
+  have hPinv : IsInvariantSubgroup Unit M (P : Subgroup M) := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1282,7 +1282,7 @@ private theorem section11_complement_exists_A_invariant_tail_sylow
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
     (hPleE : (P : Subgroup M) ≤ E) (_hp_lt_q : p.val < q.val) :
     ∃ Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E),
-      IsInvariant ((A.subgroupOf M).subgroupOf E)
+      IsInvariantSubgroup ((A.subgroupOf M).subgroupOf E)
         (piCore ({r : Nat.Primes | p.val < r.val}) E) (Q : Subgroup _) := by
   classical
   haveI : Fact p.val.Prime := ⟨p.property⟩
@@ -1372,7 +1372,7 @@ private theorem section11_complement_exists_noncentral_A_invariant_tail_sylow
     ∃ q : Nat.Primes, ∃ Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E),
       p.val < q.val ∧
         q.val ∣ Nat.card (piCore ({r : Nat.Primes | p.val < r.val}) E) ∧
-          IsInvariant ((A.subgroupOf M).subgroupOf E)
+          IsInvariantSubgroup ((A.subgroupOf M).subgroupOf E)
             (piCore ({r : Nat.Primes | p.val < r.val}) E) (Q : Subgroup _) ∧
             ¬ (A.subgroupOf M).subgroupOf E ≤
               Subgroup.centralizer
@@ -1426,7 +1426,7 @@ private theorem section11_complement_A_normalizes_tail_sylow_ambient
     (hPleE : (P : Subgroup M) ≤ E)
     {Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)}
     (hQinv :
-      IsInvariant ((A.subgroupOf M).subgroupOf E)
+      IsInvariantSubgroup ((A.subgroupOf M).subgroupOf E)
         (piCore ({r : Nat.Primes | p.val < r.val}) E) (Q : Subgroup _)) :
     A ≤ Subgroup.normalizer
       (((((Q : Subgroup (piCore ({r : Nat.Primes | p.val < r.val}) E)).map
@@ -1891,7 +1891,7 @@ private theorem section11_tail_sylow_noncyclic_of_fixed_ne_bot
     (hPleE : (P : Subgroup M) ≤ E)
     {Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)}
     (hQinv :
-      IsInvariant ((A.subgroupOf M).subgroupOf E)
+      IsInvariantSubgroup ((A.subgroupOf M).subgroupOf E)
         (piCore ({r : Nat.Primes | p.val < r.val}) E) (Q : Subgroup _))
     (hq_ne_p : q ≠ p)
     (hCne :

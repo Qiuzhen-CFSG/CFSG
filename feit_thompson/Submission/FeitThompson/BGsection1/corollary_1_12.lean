@@ -52,7 +52,7 @@ public theorem corollary_1_12 {G A : Type*} [Group G] [Finite G] [Group A] [Fini
       exact hfix x (hEcent hx) hxord a
   have hD_le_centE : D ≤ Subgroup.centralizer (E : Set G) := by
     exact Subgroup.centralizer_le (show (E : Set G) ⊆ (C : Set G) from hE_le_C)
-  have hDinv : IsInvariant A G D := by
+  have hDinv : IsInvariantSubgroup A G D := by
     refine ⟨?_⟩
     intro a g
     constructor
@@ -78,7 +78,7 @@ public theorem corollary_1_12 {G A : Type*} [Group G] [Finite G] [Group A] [Fini
         exact this a⁻¹
       have hsmul := congrArg (fun t : G => a⁻¹ • t) (hg c hc)
       simpa [smul_mul_assoc, hcfix] using hsmul
-  letI : IsInvariant A G D := hDinv
+  letI : IsInvariantSubgroup A G D := hDinv
   letI : Fact (IsPGroup p D) := ⟨(Fact.out : IsPGroup p G).to_subgroup D⟩
   have hΩD : ActsTriviallyOnSubgroup (A := A) (G := D) (omega₁ (G := D) (p := p)) := by
     have hΩD_le : omega₁ (G := D) (p := p) ≤ fixedPointSubgroup A D := by

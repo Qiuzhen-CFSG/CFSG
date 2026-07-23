@@ -75,8 +75,9 @@ private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClass
     (classSumComplex (G := G) c).coeff x =
       if ConjClasses.mk x = c then 1 else 0 := by
   rw [classSumComplex]
-  simp only [MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single]
+  simp only [MonoidAlgebra.coeff_sum]
   rw [Finset.sum_apply']
+  change ∑ g ∈ classSet (G := G) c, (Finsupp.single g (1 : ℂ)) x = _
   by_cases hx : ConjClasses.mk x = c
   · rw [if_pos hx]
     have hxmem : x ∈ classSet (G := G) c := (mem_classSet_iff (G := G)).2 hx
@@ -95,6 +96,12 @@ private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClass
       simpa [hyx] using (mem_classSet_iff (G := G)).1 hy
     simp [hyx]
 
+private lemma classSumComplex_apply [DecidableEq (ConjClasses G)]
+    (c : ConjClasses G) (x : G) :
+    classSumComplex (G := G) c x =
+      if ConjClasses.mk x = c then 1 else 0 :=
+  classSumComplex_coeff c x
+
 private lemma classSumComplex_single_comm (c : ConjClasses G) (h : G) :
     (MonoidAlgebra.single h (1 : ℂ) : MonoidAlgebra ℂ G) *
         classSumComplex (G := G) c =
@@ -102,8 +109,8 @@ private lemma classSumComplex_single_comm (c : ConjClasses G) (h : G) :
         MonoidAlgebra.single h (1 : ℂ) := by
   classical
   ext x
-  simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply,
-    classSumComplex_coeff, one_mul, mul_one]
+  simp only [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
+    classSumComplex_apply, one_mul, mul_one]
   have hconj :
       ConjClasses.mk (h⁻¹ * x) = ConjClasses.mk (x * h⁻¹) := by
     rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
@@ -123,8 +130,8 @@ private lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G)
           ConjClasses.mk (g⁻¹ * x) = ConjClasses.mk (x * g⁻¹) := by
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
-      simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply,
-        classSumComplex_coeff]
+      simp only [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
+        classSumComplex_apply]
       rw [hconj, mul_comm]
 
 private noncomputable def centralElementIntertwiner
@@ -422,7 +429,7 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
       ∑ s : ConjClasses G, (a i j s : ℂ) • classSumComplex (G := G) s := by
   classical
   ext x
-  rw [MonoidAlgebra.coeff_mul]
+  rw [MonoidAlgebra.mul_apply]
   have hinner (u : G) :
       Finsupp.sum (classSumComplex (G := G) j).coeff
         (fun v r => if u * v = x then (classSumComplex (G := G) i).coeff u * r else 0) =

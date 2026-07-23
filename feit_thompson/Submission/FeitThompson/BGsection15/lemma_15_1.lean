@@ -822,7 +822,7 @@ private theorem section15_tau2_piSubgroup_commutative
     mul_smul := fun _ _ x => rfl
     smul_mul := fun _ x y => rfl
     smul_one := fun _ => rfl }
-  have hXsubInv : IsInvariant Unit E Xsub := by
+  have hXsubInv : IsInvariantSubgroup Unit E Xsub := by
     refine ⟨?_⟩
     intro a x
     simp

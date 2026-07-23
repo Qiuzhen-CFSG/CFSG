@@ -25,7 +25,7 @@ public theorem actsTrivially_quotient_commutatorAction
         (commutatorAction_isInvariant (G := G) (A := A))
     ActsTrivially (A := A) (G := G ⧸ H) := by
   let H : Subgroup G := commutatorAction (A := A) (G := G)
-  let hHinv : IsInvariant A G H := commutatorAction_isInvariant (G := G) (A := A)
+  let hHinv : IsInvariantSubgroup A G H := commutatorAction_isInvariant (G := G) (A := A)
   letI : H.Normal := commutatorAction_normal (G := G) (A := A)
   letI : MulDistribMulAction A (G ⧸ H) :=
     quotientMulDistribMulAction (A := A) (G := G) H hHinv
@@ -47,14 +47,14 @@ public theorem fixedPointSubgroup_sup_commutatorAction_eq_top_of_fixedPointQuoti
     {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G]
     (hfixed_quotient_image :
-      ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
+      ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariantSubgroup A G H),
         letI : MulDistribMulAction A (G ⧸ H) :=
           quotientMulDistribMulAction (A := A) (G := G) H hHinv
         fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H)) :
     fixedPointSubgroup A G ⊔ commutatorAction (A := A) (G := G) = ⊤ := by
   let H : Subgroup G := commutatorAction (A := A) (G := G)
   have hHnorm : H.Normal := commutatorAction_normal (G := G) (A := A)
-  have hHinv : IsInvariant A G H := commutatorAction_isInvariant (G := G) (A := A)
+  have hHinv : IsInvariantSubgroup A G H := commutatorAction_isInvariant (G := G) (A := A)
   letI : H.Normal := hHnorm
   letI : MulDistribMulAction A (G ⧸ H) :=
     quotientMulDistribMulAction (A := A) (G := G) H hHinv
@@ -92,7 +92,7 @@ public theorem commutatorAction₂_eq_commutatorAction_of_coprime
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     commutatorAction₂ (A := A) (G := G) = commutatorAction (A := A) (G := G) := by
   let H : Subgroup G := commutatorAction (A := A) (G := G)
-  letI : IsInvariant A G H := commutatorAction_isInvariant (G := G) (A := A)
+  letI : IsInvariantSubgroup A G H := commutatorAction_isInvariant (G := G) (A := A)
   let Csub : Subgroup H := commutatorAction (A := A) (G := H)
   letI : Csub.Normal := commutatorAction_normal (G := H) (A := A)
   letI : MulAction.QuotientAction A Csub :=

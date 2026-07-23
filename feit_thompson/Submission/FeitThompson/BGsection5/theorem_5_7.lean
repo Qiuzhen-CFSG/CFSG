@@ -348,7 +348,7 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
   haveI : P.Normal := by
     dsimp [P]
     infer_instance
-  have hF_inv : IsInvariant A Uq F := by
+  have hF_inv : IsInvariantSubgroup A Uq F := by
     refine ⟨?_⟩
     intro a u
     constructor

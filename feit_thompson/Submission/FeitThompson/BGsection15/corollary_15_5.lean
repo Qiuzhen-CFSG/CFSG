@@ -1073,7 +1073,7 @@ public theorem section15_isPiSubgroup_le_normal_hall_of_solvable
     mul_smul := fun _ _ x => rfl
     smul_mul := fun _ x y => rfl
     smul_one := fun _ => rfl }
-  have hXinv : IsInvariant Unit R X := by
+  have hXinv : IsInvariantSubgroup Unit R X := by
     refine ⟨?_⟩
     intro a x
     simp

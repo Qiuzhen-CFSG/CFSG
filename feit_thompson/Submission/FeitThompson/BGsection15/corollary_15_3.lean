@@ -430,7 +430,7 @@ private theorem section15_corollary15_3_centralizer_kappa_compl
     have hqeq : q = p :=
       Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hqdiv)
     simpa [hqeq] using hpκ
-  have hXsubInv : IsInvariant Unit M Xsub := by
+  have hXsubInv : IsInvariantSubgroup Unit M Xsub := by
     refine ⟨?_⟩
     intro _ y
     simp [Xsub]
@@ -709,7 +709,7 @@ private theorem section15_exists_conjBy_le_hall_of_isPiSubgroup
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hXsubInv : IsInvariant Unit M Xsub := by
+  have hXsubInv : IsInvariantSubgroup Unit M Xsub := by
     refine ⟨?_⟩
     intro _ x
     simp [Xsub]

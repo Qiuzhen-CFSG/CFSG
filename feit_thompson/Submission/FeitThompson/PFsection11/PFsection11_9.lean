@@ -1752,7 +1752,7 @@ private theorem theorem_11_7_factorAction_apply_eq_inv_smul
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hnormalC : (C.subgroupOf U).Normal)
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (ρ : (U ⧸ C.subgroupOf U) →* MulAut Q)
@@ -1856,7 +1856,7 @@ private theorem theorem_11_case_9_7_a_pairingVanishing_source_bridge
         _hUnil, _hW1normU, _hcompDU, _hMFnotcyc, _hsecond, _hfitEq,
         _hfitLeD, _hW2le, _hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
     exact hUleD.trans section12_ambientDerivedSubgroup_le
-  have hH0inv : IsInvariant U MF (H0.subgroupOf MF) :=
+  have hH0inv : IsInvariantSubgroup U MF (H0.subgroupOf MF) :=
     Section9.subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9
       M MF U H0 hMFleM hUleM hH0normalM hUnormMF
   refine Exists.intro hnormalH0 ?_
@@ -1883,7 +1883,7 @@ private theorem theorem_11_case_9_7_a_pairingVanishing_source_bridge
       le_sup_right.trans
         (Section9.theorem_9_3_action_normalizes_and_solvable_sec9
           M MF U W1 W2 q h92).1
-    have hC9inv : IsInvariant W1 U (C9.subgroupOf U) :=
+    have hC9inv : IsInvariantSubgroup W1 U (C9.subgroupOf U) :=
       Section9.theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9
         h92 h94Full (Section9.case_9_7_a_quotientCentralizerIn_sec9 hcaseA)
         hW1normU hW1normMF
@@ -2295,7 +2295,7 @@ private theorem theorem_11_pf96_W2_image_card_eq_source_of_hypothesis
   have hW1normH0 : W1 ≤ Subgroup.normalizer (H0 : Set G) :=
     hW1M.trans hMnormH0
   have hH0MF : H0 ≤ MF := hH0H
-  have hH0inv : IsInvariant W1 MF (H0.subgroupOf MF) :=
+  have hH0inv : IsInvariantSubgroup W1 MF (H0.subgroupOf MF) :=
     isInvariant_subgroupOf_of_le_normalizer
       (A := W1) (H := MF) (K := H0) hW1normMF hW1normH0 hH0MF
   letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
@@ -4122,7 +4122,7 @@ private theorem theorem_11_5_isInvariant_subgroupOf_of_le_normalizer
     (hRnormK : R ≤ Subgroup.normalizer (K : Set G))
     (hRnormH : R ≤ Subgroup.normalizer (H : Set G)) :
     letI : Subgroup.Normalizes R K := ⟨hRnormK⟩
-    IsInvariant R K (H.subgroupOf K) := by
+    IsInvariantSubgroup R K (H.subgroupOf K) := by
   letI : Subgroup.Normalizes R K := ⟨hRnormK⟩
   refine ⟨?_⟩
   intro r x
@@ -4246,7 +4246,7 @@ private theorem theorem_11_5_isInvariant_secondDerived_subgroupOf_HC
         dsimp [HC]
         exact theorem_11_5_W1_le_normalizer_HC_of_hypothesis
           M MF H U C H0 W1 W2 S τ p q h11⟩
-    IsInvariant W1 HC (DD.subgroupOf HC) := by
+    IsInvariantSubgroup W1 HC (DD.subgroupOf HC) := by
   let HC : Subgroup G := H ⊔ C
   let DD : Subgroup G := ambientDerivedSubgroup (ambientDerivedSubgroup M)
   have hW1normHC : W1 ≤ Subgroup.normalizer ((HC : Subgroup G) : Set G) := by
@@ -4495,7 +4495,7 @@ private theorem theorem_11_5_fixedPointFree_index_dvd
     exact theorem_11_5_secondDerived_subgroupOf_HC_normal
       M MF H U C H0 W1 W2 S τ p q h11
   letI : (DD.subgroupOf HC).Normal := hDDnorm
-  have hInv : IsInvariant W1 HC (DD.subgroupOf HC) := by
+  have hInv : IsInvariantSubgroup W1 HC (DD.subgroupOf HC) := by
     dsimp [DD, HC]
     exact theorem_11_5_isInvariant_secondDerived_subgroupOf_HC
       M MF H U C H0 W1 W2 S τ p q h11
@@ -5370,7 +5370,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_isCompl_of_h
     (hUnormH : U ≤ Subgroup.normalizer (H : Set G)) :
     hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5379,7 +5379,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_isCompl_of_h
   intro h11
   classical
   letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-  let hcommInv : IsInvariant U H (commutator H) :=
+  let hcommInv : IsInvariantSubgroup U H (commutator H) :=
     isInvariant_of_characteristic (A := U) (G := H) (commutator H)
   letI : MulDistribMulAction U (H ⧸ commutator H) :=
     quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5467,7 +5467,7 @@ private theorem theorem_11_6_commutatorAction_quotient_commutator_eq_top
     [Group A]
     [MulDistribMulAction A H]
     (hcommTop : commutatorAction (A := A) (G := H) = ⊤)
-    (hcommInv : IsInvariant A H (commutator H)) :
+    (hcommInv : IsInvariantSubgroup A H (commutator H)) :
     letI : MulDistribMulAction A (H ⧸ commutator H) :=
       quotientMulDistribMulAction (A := A) (G := H) (commutator H) hcommInv
     commutatorAction (A := A) (G := H ⧸ commutator H) = ⊤ := by
@@ -5645,7 +5645,7 @@ private theorem theorem_11_6_fixedPointSubgroup_le_commutatorAction_of_hypothesi
     (hUnormH : U ≤ Subgroup.normalizer (H : Set G)) :
     hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5654,7 +5654,7 @@ private theorem theorem_11_6_fixedPointSubgroup_le_commutatorAction_of_hypothesi
   intro h11
   classical
   letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-  let hcommInv : IsInvariant U H (commutator H) :=
+  let hcommInv : IsInvariantSubgroup U H (commutator H) :=
     isInvariant_of_characteristic (A := U) (G := H) (commutator H)
   letI : MulDistribMulAction U (H ⧸ commutator H) :=
     quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5685,7 +5685,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_eq_bot_of_co
     (hUnormH : U ≤ Subgroup.normalizer (H : Set G))
     (hcompl :
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5693,7 +5693,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_eq_bot_of_co
         (commutatorAction (A := U) (G := H ⧸ commutator H))) :
     hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5701,7 +5701,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_eq_bot_of_co
   intro h11
   classical
   letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-  let hcommInv : IsInvariant U H (commutator H) :=
+  let hcommInv : IsInvariantSubgroup U H (commutator H) :=
     isInvariant_of_characteristic (A := U) (G := H) (commutator H)
   letI : MulDistribMulAction U (H ⧸ commutator H) :=
     quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5737,7 +5737,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_eq_bot_of_hy
     (hUnormH : U ≤ Subgroup.normalizer (H : Set G)) :
     hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5745,7 +5745,7 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_eq_bot_of_hy
   intro h11
   have hcompl :
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5768,7 +5768,7 @@ private theorem theorem_11_6_H0_le_ambientDerived_H_of_fixedPointSubgroup_bot
     (hUnormH : U ≤ Subgroup.normalizer (H : Set G))
     (hfixBot :
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5776,7 +5776,7 @@ private theorem theorem_11_6_H0_le_ambientDerived_H_of_fixedPointSubgroup_bot
     H0 ≤ ambientDerivedSubgroup H := by
   classical
   letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-  let hcommInv : IsInvariant U H (commutator H) :=
+  let hcommInv : IsInvariantSubgroup U H (commutator H) :=
     isInvariant_of_characteristic (A := U) (G := H) (commutator H)
   letI : MulDistribMulAction U (H ⧸ commutator H) :=
     quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -5854,7 +5854,7 @@ private theorem theorem_11_6_H0_le_ambientDerived_H_of_hypothesis
       M MF H U C H0 W1 W2 S τ p q h11
   have hfixBot :
       letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-      let hcommInv : IsInvariant U H (commutator H) :=
+      let hcommInv : IsInvariantSubgroup U H (commutator H) :=
         isInvariant_of_characteristic (A := U) (G := H) (commutator H)
       letI : MulDistribMulAction U (H ⧸ commutator H) :=
         quotientMulDistribMulAction (A := U) (G := H) (commutator H) hcommInv
@@ -7016,7 +7016,7 @@ private theorem theorem_11_7_pairingLeftRadical_isInvariant
     (pairing : A → A → B)
     (hmul_left : ∀ a b c : A, pairing (a * b) c = pairing a c * pairing b c)
     (hinv : ∀ γ : Γ, ∀ a b : A, pairing (γ • a) (γ • b) = pairing a b) :
-    IsInvariant Γ A (theorem_11_7_pairingLeftRadical pairing hmul_left) := by
+    IsInvariantSubgroup Γ A (theorem_11_7_pairingLeftRadical pairing hmul_left) := by
   refine ⟨?_⟩
   intro γ a
   constructor
@@ -7046,14 +7046,14 @@ private theorem theorem_11_7_quotientSubgroupNormalizedBy_of_isInvariant
     (MF H0 U : Subgroup G)
     [Subgroup.Normalizes U MF]
     [hnormal : (H0.subgroupOf MF).Normal]
-    (hH0inv : IsInvariant U MF (H0.subgroupOf MF))
+    (hH0inv : IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQ :
       letI : MulAction.QuotientAction U (H0.subgroupOf MF) :=
         quotientAction_of_isInvariant (A := U) (G := MF) (H0.subgroupOf MF) hH0inv
       letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
         quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0inv
-      IsInvariant U (MF ⧸ H0.subgroupOf MF) Q) :
+      IsInvariantSubgroup U (MF ⧸ H0.subgroupOf MF) Q) :
     Section9.quotientSubgroupNormalizedBy MF H0 U Q := by
   letI : MulAction.QuotientAction U (H0.subgroupOf MF) :=
     quotientAction_of_isInvariant (A := U) (G := MF) (H0.subgroupOf MF) hH0inv
@@ -7095,14 +7095,14 @@ private theorem theorem_11_7_quotientSubgroupNormalizedBy_of_isInvariant
       · have hx' : (a⁻¹ : U) • (action.symm x) ∈ Q := by
           change action (action.symm x) ∈ Q
           simpa using hx
-        exact (IsInvariant.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
+        exact (IsInvariantSubgroup.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
           (H := Q) (a⁻¹ : U) (action.symm x)).2 hx'
       · exact action.apply_symm_apply x
     · intro hx
       rcases hx with ⟨y, hy, rfl⟩
       change action y ∈ Q
       change (a⁻¹ : U) • y ∈ Q
-      exact (IsInvariant.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
+      exact (IsInvariantSubgroup.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
         (H := Q) (a⁻¹ : U) y).1 hy
 
 /-- A vector-valued bilinear map can be scalarized by a linear equivalence from
@@ -7258,7 +7258,7 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
     theorem_11_6_U_le_normalizer_H_of_hypothesis
       M MF H U C H0 W1 W2 S τ p q h11Full
   letI : Subgroup.Normalizes U H := ⟨hUnormH⟩
-  have hH0inv : IsInvariant U H (H0.subgroupOf H) := by
+  have hH0inv : IsInvariantSubgroup U H (H0.subgroupOf H) := by
     have hforward :
         ∀ (u : U) (x : H), x ∈ H0.subgroupOf H → u • x ∈ H0.subgroupOf H := by
       intro u x hx
@@ -7285,8 +7285,8 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
       have hx' : u⁻¹ • (u • x) ∈ H0.subgroupOf H :=
         hforward u⁻¹ (u • x) hx
       simpa [smul_smul] using hx'
-  letI : IsInvariant U H (H0.subgroupOf H) := hH0inv
-  have hQinv : IsInvariant U H Q := by
+  letI : IsInvariantSubgroup U H (H0.subgroupOf H) := hH0inv
+  have hQinv : IsInvariantSubgroup U H Q := by
     have hforward :
         ∀ (u : U) (x : H), x ∈ Q → u • x ∈ Q := by
       intro u x hx
@@ -7314,7 +7314,7 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
       have hx' : u⁻¹ • (u • x) ∈ Q :=
         hforward u⁻¹ (u • x) hx
       simpa [smul_smul] using hx'
-  letI : IsInvariant U H Q := hQinv
+  letI : IsInvariantSubgroup U H Q := hQinv
   let Hbar := H ⧸ H0.subgroupOf H
   letI : MulAction.QuotientAction U (H0.subgroupOf H) :=
     quotientAction_of_isInvariant (A := U) (G := H) (H0.subgroupOf H) hH0inv
@@ -7551,7 +7551,7 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
     exact hcommPairing_U_invariant u a b
   let leftRadical : Subgroup Hbar :=
     theorem_11_7_pairingLeftRadical commPairingH0bar hcommPairingH0bar_mul_left
-  have hleftRadical_invariant : IsInvariant U Hbar leftRadical := by
+  have hleftRadical_invariant : IsInvariantSubgroup U Hbar leftRadical := by
     exact theorem_11_7_pairingLeftRadical_isInvariant
       commPairingH0bar hcommPairingH0bar_mul_left hcommPairingH0bar_U_invariant
   have hleftRadical_ne_bot : leftRadical ≠ ⊥ := by
@@ -7585,7 +7585,7 @@ private theorem theorem_11_7_quotient_commutator_eq_one_of_bilinear_source
     have hH0normMF : (H0.subgroupOf MF).Normal := by
       rw [← _hHMF]
       exact hH0normH
-    have hH0invU : IsInvariant U MF (H0.subgroupOf MF) :=
+    have hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF) :=
       Section9.subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9
         M MF U H0 hMFleM hUleM _hH0normM.2 hUnormMF
     rcases Section9.exists_quotientCentralizerIn_normal_of_invariant_sec9
@@ -10929,9 +10929,9 @@ private theorem theorem_11_8_1_subfamily_count_of_hypothesis
     rw [hAeq, section12_ambientDerivedSubgroup_subgroupOf_eq]
     infer_instance
   letI : (A.subgroupOf K).Characteristic := hNchar
-  have hInv : IsInvariant R K (A.subgroupOf K) :=
+  have hInv : IsInvariantSubgroup R K (A.subgroupOf K) :=
     isInvariant_of_characteristic (A := R) (G := K) (A.subgroupOf K)
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  letI : IsInvariantSubgroup R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -16391,7 +16391,7 @@ private theorem theorem_11_9_quotient_card_gt_one_and_dvd_sub_one_of_hypothesis
       rw [hCeqDer]
       simpa [derivedSubgroup, derivedSeries_one, _root_.commutator] using
         (section12_ambientDerivedSubgroup_subgroupOf_eq (G := G) (E := U))
-    have hInv : IsInvariant W1 U (C.subgroupOf U) := by
+    have hInv : IsInvariantSubgroup W1 U (C.subgroupOf U) := by
       rw [hCsub_eq]
       exact isInvariant_of_characteristic (A := W1) (G := U) (commutator U)
     letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=

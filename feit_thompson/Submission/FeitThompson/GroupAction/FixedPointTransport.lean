@@ -60,7 +60,7 @@ public theorem actsTriviallyOnSubgroup_sup {H K : Subgroup G}
 
 /-- Pointwise triviality on `H ≤ G` descends to pointwise triviality on its image in `G ⧸ N`. -/
 public theorem actsTriviallyOnSubgroup_map_quotient_of_actsTriviallyOnSubgroup
-    (N H : Subgroup G) [N.Normal] (hNinv : IsInvariant A G N)
+    (N H : Subgroup G) [N.Normal] (hNinv : IsInvariantSubgroup A G N)
     (htriv : ActsTriviallyOnSubgroup (A := A) (G := G) H) :
     letI : MulDistribMulAction A (G ⧸ N) :=
       quotientMulDistribMulAction (A := A) (G := G) N hNinv

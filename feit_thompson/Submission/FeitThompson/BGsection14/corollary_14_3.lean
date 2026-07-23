@@ -298,7 +298,7 @@ public theorem corollary_14_3
       have hqeq : q = p :=
         Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hqdiv)
       simpa [hqeq] using hpκ
-    have hXsubInv : IsInvariant Unit M Xsub := by
+    have hXsubInv : IsInvariantSubgroup Unit M Xsub := by
       refine ⟨?_⟩
       intro _ y
       simp [Xsub]

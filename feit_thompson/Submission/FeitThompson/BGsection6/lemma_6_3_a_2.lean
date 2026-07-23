@@ -49,7 +49,7 @@ public theorem lemma_6_3_a_2
           (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := X) (K := H) hX_le_H)
       _ = (_root_.commutator H).map H.subtype := by
         simpa [X] using (Subgroup.map_subtype_commutator (H := H)).symm
-  have hXsub_inv : IsInvariant (↥K) (↥H) Xsub := by
+  have hXsub_inv : IsInvariantSubgroup (↥K) (↥H) Xsub := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -70,7 +70,7 @@ public theorem lemma_6_3_a_2
             ((((a : K) • x : H) : G)) hxX (((a : K) : G)⁻¹)
       simpa [Xsub, Subgroup.mem_subgroupOf,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hKnormH, mul_assoc] using hx'
-  letI : IsInvariant (↥K) (↥H) Xsub := hXsub_inv
+  letI : IsInvariantSubgroup (↥K) (↥H) Xsub := hXsub_inv
   letI : MulAction.QuotientAction (↥K) Xsub :=
     quotientAction_of_isInvariant (A := ↥K) (G := ↥H) Xsub hXsub_inv
   letI : MulDistribMulAction (↥K) (↥H ⧸ Xsub) :=

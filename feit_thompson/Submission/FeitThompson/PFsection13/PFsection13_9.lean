@@ -2695,8 +2695,8 @@ private theorem theorem_13_9_sum_normSq_cyclic_repeated_linear_characters_genera
     intro y
     exact _hx.ge (Subgroup.mem_top y)
   haveI : IsCyclic H := (isCyclic_iff_exists_zpowers_eq_top (α := H)).2 ⟨x, _hx⟩
-  have hcardRoots : Nat.card (rootsOfUnity n ℂ) = n :=
-    Complex.card_rootsOfUnity n
+  have hcardRoots : Nat.card (rootsOfUnity n ℂ) = n := by
+    simpa only [Nat.card_eq_fintype_card] using Complex.card_rootsOfUnity n
   have hcard : Nat.card H = Nat.card (rootsOfUnity n ℂ) := by
     rw [hcardRoots]
   let rootEquiv : H ≃* rootsOfUnity n ℂ :=

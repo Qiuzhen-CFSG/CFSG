@@ -12,7 +12,7 @@ public section
 
 theorem faithful_on_selfCentralizing_of_coprime {G A : Type*} [Group G] [Finite G]
     [Group A] [Finite A] [MulDistribMulAction A G] [FaithfulSMul A G]
-    (C : Subgroup G) [C.Normal] [IsInvariant A G C]
+    (C : Subgroup G) [C.Normal] [IsInvariantSubgroup A G C]
     (hcent : Subgroup.centralizer (C : Set G) ≤ C)
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     FaithfulSMul A C := by
@@ -693,9 +693,9 @@ public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p :
         simpa [hcardG] using hqp_coprime.pow_right nG
       have hBcop : Nat.Coprime (Nat.card (↥B)) (Nat.card G) := by
         simpa [hBcard] using hqcop
-      have hBinv : IsInvariant B G C :=
+      have hBinv : IsInvariantSubgroup B G C :=
         isInvariant_of_characteristic (A := B) (G := G) C
-      letI : IsInvariant B G C := hBinv
+      letI : IsInvariantSubgroup B G C := hBinv
       have hΩB : ActsTriviallyOnSubgroup (A := B) (G := ↥C) (omega₁ (G := ↥C) (p := p)) := by
         intro b x hx
         apply Subtype.ext

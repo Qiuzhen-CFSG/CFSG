@@ -79,12 +79,12 @@ public theorem isInvariant_of_compatible_le_actor
     (hBA : B ≤ A)
     (hcompat : ∀ (b : B) (m : M), b • m = (⟨(b : G), hBA b.2⟩ : A) • m)
     {N : Subgroup M}
-    (hAinv : IsInvariant A M N) :
-    IsInvariant B M N := by
+    (hAinv : IsInvariantSubgroup A M N) :
+    IsInvariantSubgroup B M N := by
   refine ⟨?_⟩
   intro b m
   have hA :=
-    IsInvariant.invariant (A := A) (G := M) (H := N)
+    IsInvariantSubgroup.invariant (A := A) (G := M) (H := N)
       (⟨(b : G), hBA b.2⟩ : A) m
   constructor
   · intro hm
@@ -528,7 +528,7 @@ public theorem section12ComplementIn_conj_complement_le
 public theorem fixedPointSubgroup_invariant_of_normal
     {A M : Type u} [Group A] [Group M] [MulDistribMulAction A M]
     (B : Subgroup A) [B.Normal] :
-    IsInvariant A M (fixedPointSubgroup (↥B) M) := by
+    IsInvariantSubgroup A M (fixedPointSubgroup (↥B) M) := by
   refine ⟨?_⟩
   intro g x
   constructor
@@ -839,19 +839,19 @@ public theorem chiefFactor_elementaryAbelian_of_nontrivial
     {A M : Type u} [Group A] [Group M] [Finite M] [MulDistribMulAction A M]
     [Nontrivial M]
     (hsolvM : IsSolvable M)
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant A M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup A M N → N ≠ ⊥ → N = ⊤) :
     ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p M := by
   classical
   have hcommM : IsMulCommutative M := by
     have hcomm_lt : commutator M < (⊤ : Subgroup M) := by
       letI : IsSolvable M := hsolvM
       exact IsSolvable.commutator_lt_top_of_nontrivial (G := M)
-    have htop_inv : IsInvariant A M (⊤ : Subgroup M) := by
+    have htop_inv : IsInvariantSubgroup A M (⊤ : Subgroup M) := by
       refine ⟨?_⟩
       intro a g
       simp
-    letI : IsInvariant A M (⊤ : Subgroup M) := htop_inv
-    have hcomm_inv : IsInvariant A M (commutator M) := by
+    letI : IsInvariantSubgroup A M (⊤ : Subgroup M) := htop_inv
+    have hcomm_inv : IsInvariantSubgroup A M (commutator M) := by
       simpa [_root_.commutator_def] using
         (isInvariant_commutator (A := A) (G := M)
           (H := (⊤ : Subgroup M)) (K := (⊤ : Subgroup M)))
@@ -896,7 +896,7 @@ public theorem chiefFactor_elementaryAbelian_of_nontrivial
   have hP_normal : (P : Subgroup M).Normal :=
     Group.IsNilpotent.sylow_normal hnilM p P
   letI : (P : Subgroup M).Characteristic := Sylow.characteristic_of_normal P hP_normal
-  have hP_inv : IsInvariant A M (P : Subgroup M) :=
+  have hP_inv : IsInvariantSubgroup A M (P : Subgroup M) :=
     isInvariant_of_characteristic (A := A) (G := M) (P : Subgroup M)
   have hP_top : (P : Subgroup M) = ⊤ :=
     hminv (P : Subgroup M) hP_normal hP_inv hP_ne_bot
@@ -907,7 +907,7 @@ public theorem chiefFactor_elementaryAbelian_of_nontrivial
   let Ω : Subgroup M := omega₁ (G := M) (p := p)
   letI : Ω.Characteristic := by
     simpa [Ω] using omega₁_characteristic (G := M) (p := p)
-  have hΩ_inv : IsInvariant A M Ω :=
+  have hΩ_inv : IsInvariantSubgroup A M Ω :=
     isInvariant_of_characteristic (A := A) (G := M) Ω
   have hΩ_ne_bot : Ω ≠ ⊥ := by
     letI : Fintype M := Fintype.ofFinite M
@@ -955,7 +955,7 @@ elementary abelian. -/
 public theorem chiefFactor_elementaryAbelian_or_subsingleton
     {A M : Type u} [Group A] [Group M] [Finite M] [MulDistribMulAction A M]
     (hsolvM : IsSolvable M)
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant A M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup A M N → N ≠ ⊥ → N = ⊤) :
     Subsingleton M ∨ Nontrivial M ∧ ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p M := by
   by_cases hsub : Subsingleton M
   · exact Or.inl hsub
@@ -972,16 +972,16 @@ public theorem fixedPointSubgroup_card_eq_mul_quotient_action
     {A M : Type u} [Group A] [Finite A] [Group M] [Finite M]
     [MulDistribMulAction A M]
     {N : Subgroup M} [N.Normal]
-    (hNinv : IsInvariant A M N)
+    (hNinv : IsInvariantSubgroup A M N)
     (hsolvM : IsSolvable M)
     (hcopA : Nat.Coprime (Nat.card A) (Nat.card M)) :
-    letI : IsInvariant A M N := hNinv
+    letI : IsInvariantSubgroup A M N := hNinv
     letI : MulDistribMulAction A (M ⧸ N) :=
       quotientMulDistribMulAction (A := A) (G := M) N hNinv
     Nat.card (fixedPointSubgroup A M) =
       Nat.card (fixedPointSubgroup A N) *
         Nat.card (fixedPointSubgroup A (M ⧸ N)) := by
-  letI : IsInvariant A M N := hNinv
+  letI : IsInvariantSubgroup A M N := hNinv
   letI : MulDistribMulAction A (M ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := M) N hNinv
   have hcopTop : Nat.Coprime (Nat.card (⊤ : Subgroup A)) (Nat.card M) := by
@@ -1000,20 +1000,20 @@ public theorem fixedPointSubgroup_card_eq_mul_quotient_of_compatible_le_actor
     {N : Subgroup M} [N.Normal]
     (hBA : B ≤ A)
     (hcompat : ∀ (b : B) (m : M), b • m = (⟨(b : G), hBA b.2⟩ : A) • m)
-    (hAinv : IsInvariant A M N)
+    (hAinv : IsInvariantSubgroup A M N)
     (hsolvM : IsSolvable M)
     (hcopA : Nat.Coprime (Nat.card A) (Nat.card M)) :
-    let hBinv : IsInvariant B M N :=
+    let hBinv : IsInvariantSubgroup B M N :=
       isInvariant_of_compatible_le_actor A B hBA hcompat hAinv
-    letI : IsInvariant B M N := hBinv
+    letI : IsInvariantSubgroup B M N := hBinv
     letI : MulDistribMulAction B (M ⧸ N) :=
       quotientMulDistribMulAction (A := B) (G := M) N hBinv
     Nat.card (fixedPointSubgroup (↥B) M) =
       Nat.card (fixedPointSubgroup (↥B) N) *
         Nat.card (fixedPointSubgroup (↥B) (M ⧸ N)) := by
-  let hBinv : IsInvariant B M N :=
+  let hBinv : IsInvariantSubgroup B M N :=
     isInvariant_of_compatible_le_actor A B hBA hcompat hAinv
-  letI : IsInvariant B M N := hBinv
+  letI : IsInvariantSubgroup B M N := hBinv
   letI : MulDistribMulAction B (M ⧸ N) :=
     quotientMulDistribMulAction (A := B) (G := M) N hBinv
   have hcopB : Nat.Coprime (Nat.card B) (Nat.card M) := by
@@ -1083,16 +1083,16 @@ subgroup. This packages the local instances needed in downstream theorem
 statements. -/
 public noncomputable def fixedPointSubgroup_card_subgroup_of_invariant
     {A M : Type u} [Group A] [Group M] [MulDistribMulAction A M]
-    (N : Subgroup M) (hNinv : IsInvariant A M N) : ℕ :=
-  letI : IsInvariant A M N := hNinv
+    (N : Subgroup M) (hNinv : IsInvariantSubgroup A M N) : ℕ :=
+  letI : IsInvariantSubgroup A M N := hNinv
   Nat.card (fixedPointSubgroup A N)
 
 /-- Cardinality of fixed points for the induced action on a quotient by an
 invariant normal subgroup. -/
 public noncomputable def fixedPointSubgroup_card_quotient_of_invariant
     {A M : Type u} [Group A] [Group M] [MulDistribMulAction A M]
-    (N : Subgroup M) [N.Normal] (hNinv : IsInvariant A M N) : ℕ :=
-  letI : IsInvariant A M N := hNinv
+    (N : Subgroup M) [N.Normal] (hNinv : IsInvariantSubgroup A M N) : ℕ :=
+  letI : IsInvariantSubgroup A M N := hNinv
   letI : MulDistribMulAction A (M ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := M) N hNinv
   Nat.card (fixedPointSubgroup A (M ⧸ N))
@@ -1108,7 +1108,7 @@ public theorem fixedPointSubgroup_product_card_eq_lift_invariant_normal
     (hAinv : ∀ i : ι,
       letI : MulDistribMulAction (↥(A i)) V :=
         MulDistribMulAction.compHom V (A i).subtype
-      IsInvariant (↥(A i)) V N)
+      IsInvariantSubgroup (↥(A i)) V N)
     (hsolvV : IsSolvable V)
     (hcopA : ∀ i : ι, Nat.Coprime (Nat.card (A i)) (Nat.card V))
     (hNid :
@@ -1160,7 +1160,7 @@ public theorem fixedPointSubgroup_product_card_eq_lift_invariant_normal
     intro i
     letI : MulDistribMulAction (↥(A i)) V :=
       MulDistribMulAction.compHom V (A i).subtype
-    letI : IsInvariant (↥(A i)) V N := hAinv i
+    letI : IsInvariantSubgroup (↥(A i)) V N := hAinv i
     letI : MulDistribMulAction (↥(A i)) (V ⧸ N) :=
       quotientMulDistribMulAction (A := ↥(A i)) (G := V) N (hAinv i)
     simpa [cV, cN, cQ, fixedPointSubgroup_card_subgroup_of_invariant,
@@ -1196,7 +1196,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_invariant
     (hAinv : ∀ i : ι,
       letI : MulDistribMulAction (↥(A i)) V :=
         MulDistribMulAction.compHom V (A i).subtype
-      IsInvariant (↥(A i)) V N)
+      IsInvariantSubgroup (↥(A i)) V N)
     (hsolvV : IsSolvable V)
     (hcopA : ∀ i : ι, Nat.Coprime (Nat.card (A i)) (Nat.card V))
     (hNid :
@@ -1240,15 +1240,16 @@ actor with the restricted action. -/
 public theorem isInvariant_subgroup_actor_of_isInvariant
     {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V]
     (A : Subgroup G) {N : Subgroup V}
-    (hNinv : IsInvariant G V N) :
+    (hNinv : IsInvariantSubgroup G V N) :
     letI : MulDistribMulAction A V := MulDistribMulAction.compHom V A.subtype
-    IsInvariant A V N := by
+    IsInvariantSubgroup A V N := by
   letI : MulDistribMulAction A V := MulDistribMulAction.compHom V A.subtype
   refine ⟨?_⟩
   intro a v
   change v ∈ N ↔ (a : G) • v ∈ N
-  exact IsInvariant.invariant (A := G) (G := V) (H := N) (a : G) v
+  exact IsInvariantSubgroup.invariant (A := G) (G := V) (H := N) (a : G) v
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The coefficient-product quotient lift in the form used by induction on a
 fully invariant normal subgroup. -/
 public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_invariant_normal
@@ -1259,9 +1260,9 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_in
     (A : ι → Subgroup G)
     (m n : ι → ℕ)
     {N : Subgroup V} [N.Normal]
-    (hGinv : IsInvariant G V N)
+    (hGinv : IsInvariantSubgroup G V N)
     (hNid :
-      letI : IsInvariant G V N := hGinv
+      letI : IsInvariantSubgroup G V N := hGinv
       letI : MulDistribMulAction G N := inferInstance
       (∏ i : ι,
         letI : MulDistribMulAction (↥(A i)) N :=
@@ -1272,7 +1273,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_in
           MulDistribMulAction.compHom N (A i).subtype
         Nat.card (fixedPointSubgroup (↥(A i)) N) ^ (n i * Nat.card (A i)))
     (hQid :
-      letI : IsInvariant G V N := hGinv
+      letI : IsInvariantSubgroup G V N := hGinv
       letI : MulDistribMulAction G (V ⧸ N) :=
         quotientMulDistribMulAction (A := G) (G := V) N hGinv
       (∏ i : ι,
@@ -1295,7 +1296,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_in
   let hAinv : ∀ i : ι,
       letI : MulDistribMulAction (↥(A i)) V :=
         MulDistribMulAction.compHom V (A i).subtype
-      IsInvariant (↥(A i)) V N := fun i =>
+      IsInvariantSubgroup (↥(A i)) V N := fun i =>
     isInvariant_subgroup_actor_of_isInvariant (A i) hGinv
   have hcopA : ∀ i : ι, Nat.Coprime (Nat.card (A i)) (Nat.card V) := by
     intro i
@@ -1311,7 +1312,8 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_in
           MulDistribMulAction.compHom V (A i).subtype
         fixedPointSubgroup_card_subgroup_of_invariant (A := ↥(A i)) (M := V)
           N (hAinv i) ^ (n i * Nat.card (A i)) := by
-    simpa [fixedPointSubgroup_card_subgroup_of_invariant, hAinv] using hNid
+    simpa [fixedPointSubgroup_card_subgroup_of_invariant, hAinv,
+      instMulDistribMulAction_subtype_local, MulDistribMulAction.compHom] using hNid
   have hQid' :
       (∏ i : ι,
         letI : MulDistribMulAction (↥(A i)) V :=
@@ -1323,7 +1325,8 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_global_in
           MulDistribMulAction.compHom V (A i).subtype
         fixedPointSubgroup_card_quotient_of_invariant (A := ↥(A i)) (M := V)
           N (hAinv i) ^ (n i * Nat.card (A i)) := by
-    simpa [fixedPointSubgroup_card_quotient_of_invariant, hAinv] using hQid
+    simpa [fixedPointSubgroup_card_quotient_of_invariant, hAinv,
+      instMulDistribMulAction_subtype_local, MulDistribMulAction.compHom] using hQid
   exact
     fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_lift_invariant_normal
       (A := A) (m := m) (n := n) hAinv hsolvV hcopA hNid' hQid'
@@ -1348,7 +1351,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_minimal_inv
       ∀ {M : Type u} [Group M] [Finite M] [MulDistribMulAction G M],
         Nat.Coprime (Nat.card M) (Nat.card G) →
         IsSolvable M →
-        (∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) →
+        (∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) →
         (∀ g : G,
           (∑ i : ι, if g ∈ A i then m i else 0) =
             ∑ i : ι, if g ∈ A i then n i else 0) →
@@ -1385,12 +1388,12 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_minimal_inv
     refine Nat.strong_induction_on k ?_
     intro k ih M _ _ _ hcard hcopM hsolvM
     by_cases hminv :
-        ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤
+        ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤
     · exact hminimal hcopM hsolvM hminv hcoeff
     · push Not at hminv
       rcases hminv with ⟨N, hNnormal, hNinv, hNne_bot, hNne_top⟩
       letI : N.Normal := hNnormal
-      letI : IsInvariant G M N := hNinv
+      letI : IsInvariantSubgroup G M N := hNinv
       letI : MulDistribMulAction G (M ⧸ N) :=
         quotientMulDistribMulAction (A := G) (G := M) N hNinv
       have hNlt : Nat.card N < k := by
@@ -1412,7 +1415,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_minimal_inv
       have hcopQ : Nat.Coprime (Nat.card (M ⧸ N)) (Nat.card G) := by
         exact Nat.Coprime.of_dvd_left (Subgroup.card_quotient_dvd_card (s := N)) hcopM
       have hNid :
-          letI : IsInvariant G M N := hNinv
+          letI : IsInvariantSubgroup G M N := hNinv
           letI : MulDistribMulAction G N := inferInstance
           (∏ i : ι,
             letI : MulDistribMulAction (↥(A i)) N :=
@@ -1424,7 +1427,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_minimal_inv
             Nat.card (fixedPointSubgroup (↥(A i)) N) ^ (n i * Nat.card (A i)) := by
         exact ih (Nat.card N) hNlt N rfl hcopN hsolvN
       have hQid :
-          letI : IsInvariant G M N := hNinv
+          letI : IsInvariantSubgroup G M N := hNinv
           letI : MulDistribMulAction G (M ⧸ N) :=
             quotientMulDistribMulAction (A := G) (G := M) N hNinv
           (∏ i : ι,
@@ -1455,12 +1458,12 @@ public theorem
     (hcoeff : ∀ g : G,
       (∑ i : ι, if g ∈ A i then m i else 0) =
         ∑ i : ι, if g ∈ A i then n i else 0)
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (helem :
       ∀ {M : Type u} [Group M] [Finite M] [MulDistribMulAction G M] [Nontrivial M]
         {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M],
         Nat.Coprime (Nat.card M) (Nat.card G) →
-        (∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) →
+        (∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) →
         (∀ g : G,
           (∑ i : ι, if g ∈ A i then m i else 0) =
             ∑ i : ι, if g ∈ A i then n i else 0) →
@@ -1529,7 +1532,7 @@ public theorem fixedPointSubgroup_product_card_eq_of_coeff_sum_eq_of_elementaryA
       ∀ {M : Type u} [Group M] [Finite M] [MulDistribMulAction G M] [Nontrivial M]
         {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M],
         Nat.Coprime (Nat.card M) (Nat.card G) →
-        (∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) →
+        (∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) →
         (∀ g : G,
           (∑ i : ι, if g ∈ A i then m i else 0) =
             ∑ i : ι, if g ∈ A i then n i else 0) →
@@ -2113,7 +2116,7 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant_of_kernel_fixed_
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) • m)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup UE M N → N ≠ ⊥ → N = ⊤)
     (hbotRank :
       fixedPointSubgroup (↥U) M = ⊥ →
         letI : CommGroup M := IsMulCommutative.instCommGroup
@@ -2162,7 +2165,7 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant_of_kernel_fixed_
         fixedPointSubgroup (↥(U.subgroupOf UE)) M :=
     fixedPointSubgroup_eq_subgroupOf_of_compatible
       UE U hcomp.1 hUcompat
-  have hUinv : IsInvariant UE M (fixedPointSubgroup (↥U) M) := by
+  have hUinv : IsInvariantSubgroup UE M (fixedPointSubgroup (↥U) M) := by
     rw [hUeq]
     exact fixedPointSubgroup_invariant_of_normal (A := UE) (M := M)
       (U.subgroupOf UE)
@@ -2328,19 +2331,19 @@ public theorem fixedPointSubgroup_product_identity_action_lift_from_invariant_no
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) • m)
     {N : Subgroup M} [N.Normal]
-    (hUEinv : IsInvariant UE M N)
+    (hUEinv : IsInvariantSubgroup UE M N)
     (hN :
-      let hUinv : IsInvariant U M N :=
+      let hUinv : IsInvariantSubgroup U M N :=
         isInvariant_of_compatible_le_actor UE U hcomp.1 hUcompat hUEinv
-      letI : IsInvariant U M N := hUinv
-      let hEuinv : ∀ u : U, IsInvariant (E.conjBy (u : G)) M N := fun u =>
+      letI : IsInvariantSubgroup U M N := hUinv
+      let hEuinv : ∀ u : U, IsInvariantSubgroup (E.conjBy (u : G)) M N := fun u =>
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
         isInvariant_of_compatible_le_actor UE (E.conjBy (u : G))
           (section12ComplementIn_conj_complement_le UE U E hcomp u)
           (hEcompat u) hUEinv
       let hEactN : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) N := fun u => by
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-        letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
         infer_instance
       letI : Fintype U := Fintype.ofFinite U
       Nat.card (fixedPointSubgroup (↥UE) N) ^ Nat.card UE *
@@ -2348,22 +2351,22 @@ public theorem fixedPointSubgroup_product_identity_action_lift_from_invariant_no
         fixedPointSubgroup_conjBy_action_product U E hEactN *
           Nat.card (fixedPointSubgroup (↥U) N) ^ Nat.card U)
     (hQ :
-      letI : IsInvariant UE M N := hUEinv
+      letI : IsInvariantSubgroup UE M N := hUEinv
       letI : MulDistribMulAction UE (M ⧸ N) :=
         quotientMulDistribMulAction (A := UE) (G := M) N hUEinv
-      let hUinv : IsInvariant U M N :=
+      let hUinv : IsInvariantSubgroup U M N :=
         isInvariant_of_compatible_le_actor UE U hcomp.1 hUcompat hUEinv
-      letI : IsInvariant U M N := hUinv
+      letI : IsInvariantSubgroup U M N := hUinv
       letI : MulDistribMulAction U (M ⧸ N) :=
         quotientMulDistribMulAction (A := U) (G := M) N hUinv
-      let hEuinv : ∀ u : U, IsInvariant (E.conjBy (u : G)) M N := fun u =>
+      let hEuinv : ∀ u : U, IsInvariantSubgroup (E.conjBy (u : G)) M N := fun u =>
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
         isInvariant_of_compatible_le_actor UE (E.conjBy (u : G))
           (section12ComplementIn_conj_complement_le UE U E hcomp u)
           (hEcompat u) hUEinv
       let hEactQ : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) (M ⧸ N) := fun u => by
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-        letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
         exact quotientMulDistribMulAction (A := E.conjBy (u : G)) (G := M) N (hEuinv u)
       letI : Fintype U := Fintype.ofFinite U
       Nat.card (fixedPointSubgroup (↥UE) (M ⧸ N)) ^ Nat.card UE *
@@ -2377,26 +2380,26 @@ public theorem fixedPointSubgroup_product_identity_action_lift_from_invariant_no
         Nat.card (fixedPointSubgroup (↥U) M) ^ Nat.card U := by
   classical
   letI : Fintype U := Fintype.ofFinite U
-  letI : IsInvariant UE M N := hUEinv
+  letI : IsInvariantSubgroup UE M N := hUEinv
   letI : MulDistribMulAction UE (M ⧸ N) :=
     quotientMulDistribMulAction (A := UE) (G := M) N hUEinv
-  let hUinv : IsInvariant U M N :=
+  let hUinv : IsInvariantSubgroup U M N :=
     isInvariant_of_compatible_le_actor UE U hcomp.1 hUcompat hUEinv
-  letI : IsInvariant U M N := hUinv
+  letI : IsInvariantSubgroup U M N := hUinv
   letI : MulDistribMulAction U (M ⧸ N) :=
     quotientMulDistribMulAction (A := U) (G := M) N hUinv
-  let hEuinv : ∀ u : U, IsInvariant (E.conjBy (u : G)) M N := fun u =>
+  let hEuinv : ∀ u : U, IsInvariantSubgroup (E.conjBy (u : G)) M N := fun u =>
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
     isInvariant_of_compatible_le_actor UE (E.conjBy (u : G))
       (section12ComplementIn_conj_complement_le UE U E hcomp u)
       (hEcompat u) hUEinv
   let hEactN : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) N := fun u => by
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-    letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+    letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
     infer_instance
   let hEactQ : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) (M ⧸ N) := fun u => by
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-    letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+    letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
     exact quotientMulDistribMulAction (A := E.conjBy (u : G)) (G := M) N (hEuinv u)
   have hUEfactor :
       Nat.card (fixedPointSubgroup (↥UE) M) =
@@ -2422,7 +2425,7 @@ public theorem fixedPointSubgroup_product_identity_action_lift_from_invariant_no
           Nat.card (fixedPointSubgroup (↥(E.conjBy (u : G))) (M ⧸ N)) := by
     intro u
     letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-    letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+    letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
     letI : MulDistribMulAction (E.conjBy (u : G)) (M ⧸ N) := hEactQ u
     have hcopEu : Nat.Coprime (Nat.card (E.conjBy (u : G))) (Nat.card M) := by
       exact Nat.Coprime.of_dvd_left
@@ -2458,11 +2461,11 @@ public theorem fixedPointSubgroup_product_identity_action_lift_from_invariant_no
       (dQ := Nat.card (fixedPointSubgroup (↥U) (M ⧸ N)))
       (cN := fun u : U =>
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-        letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
         Nat.card (fixedPointSubgroup (↥(E.conjBy (u : G))) N))
       (cQ := fun u : U =>
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M := hEact u
-        letI : IsInvariant (E.conjBy (u : G)) M N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M N := hEuinv u
         letI : MulDistribMulAction (E.conjBy (u : G)) (M ⧸ N) := hEactQ u
         Nat.card (fixedPointSubgroup (↥(E.conjBy (u : G))) (M ⧸ N)))
       hUEfactor hMfactor hUfactor hEfactor hNprod hQprod
@@ -2476,7 +2479,7 @@ public theorem fixedPointSubgroup_product_identity_action_chiefFactor_of_element
     [MulDistribMulAction UE M] [MulDistribMulAction U M]
     (hEact : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) M)
     (hsolvM : IsSolvable M)
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup UE M N → N ≠ ⊥ → N = ⊤)
     (hElemCase :
       ∀ {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] [Nontrivial M],
         letI : Fintype U := Fintype.ofFinite U
@@ -2552,7 +2555,7 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
           e • m =
             (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
               UE) • m) →
-        (∀ N : Subgroup M', N.Normal → IsInvariant UE M' N → N ≠ ⊥ → N = ⊤) →
+        (∀ N : Subgroup M', N.Normal → IsInvariantSubgroup UE M' N → N ≠ ⊥ → N = ⊤) →
         letI : Fintype U := Fintype.ofFinite U
         Nat.card (fixedPointSubgroup (↥UE) M') ^ Nat.card UE *
             Nat.card M' ^ Nat.card U =
@@ -2588,31 +2591,31 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
     refine Nat.strong_induction_on n ?_
     intro n ih M' _ _ _ _ hEact' hn hsolvM' hcop' hUcompat' hEcompat'
     by_cases hminv :
-        ∀ N : Subgroup M', N.Normal → IsInvariant UE M' N → N ≠ ⊥ → N = ⊤
+        ∀ N : Subgroup M', N.Normal → IsInvariantSubgroup UE M' N → N ≠ ⊥ → N = ⊤
     · exact hchief M' hEact' hsolvM' hcop' hUcompat' hEcompat' hminv
     · push Not at hminv
       rcases hminv with ⟨N, hNnormal, hNinv, hNne_bot, hNne_top⟩
       letI : N.Normal := hNnormal
-      letI : IsInvariant UE M' N := hNinv
+      letI : IsInvariantSubgroup UE M' N := hNinv
       letI : MulDistribMulAction UE (M' ⧸ N) :=
         quotientMulDistribMulAction (A := UE) (G := M') N hNinv
-      let hUinv : IsInvariant U M' N :=
+      let hUinv : IsInvariantSubgroup U M' N :=
         isInvariant_of_compatible_le_actor UE U hcomp.1 hUcompat' hNinv
-      letI : IsInvariant U M' N := hUinv
+      letI : IsInvariantSubgroup U M' N := hUinv
       letI : MulDistribMulAction U (M' ⧸ N) :=
         quotientMulDistribMulAction (A := U) (G := M') N hUinv
-      let hEuinv : ∀ u : U, IsInvariant (E.conjBy (u : G)) M' N := fun u =>
+      let hEuinv : ∀ u : U, IsInvariantSubgroup (E.conjBy (u : G)) M' N := fun u =>
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M' := hEact' u
         isInvariant_of_compatible_le_actor UE (E.conjBy (u : G))
           (section12ComplementIn_conj_complement_le UE U E hcomp u)
           (hEcompat' u) hNinv
       let hEactN : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) N := fun u => by
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M' := hEact' u
-        letI : IsInvariant (E.conjBy (u : G)) M' N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M' N := hEuinv u
         infer_instance
       let hEactQ : ∀ u : U, MulDistribMulAction (↥(E.conjBy (u : G))) (M' ⧸ N) := fun u => by
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M' := hEact' u
-        letI : IsInvariant (E.conjBy (u : G)) M' N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M' N := hEuinv u
         exact quotientMulDistribMulAction (A := E.conjBy (u : G)) (G := M') N (hEuinv u)
       have hNlt : Nat.card N < n := by
         have hN_lt_top : N < ⊤ := lt_top_iff_ne_top.mpr hNne_top
@@ -2646,7 +2649,7 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
               UE) • m := by
         intro u e m
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M' := hEact' u
-        letI : IsInvariant (E.conjBy (u : G)) M' N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M' N := hEuinv u
         apply Subtype.ext
         change (e • (m : M') : M') =
           ((⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
@@ -2659,12 +2662,12 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
         intro m
         calc
           u • ((m : M') : M' ⧸ N) = ((u • m : M') : M' ⧸ N) := by
-            exact MulAction.Quotient.smul_coe (X := U) (H := N) (b := u) (g := m)
+            exact MulAction.Quotient.smul_coe (H := N) (b := u) (a := m)
           _ = (((⟨(u : G), hcomp.1 u.2⟩ : UE) • m : M') : M' ⧸ N) := by
             rw [hUcompat' u m]
           _ = (⟨(u : G), hcomp.1 u.2⟩ : UE) • ((m : M') : M' ⧸ N) := by
-            exact (MulAction.Quotient.smul_coe (X := UE) (H := N)
-              (b := (⟨(u : G), hcomp.1 u.2⟩ : UE)) (g := m)).symm
+            exact (MulAction.Quotient.smul_coe (H := N)
+              (b := (⟨(u : G), hcomp.1 u.2⟩ : UE)) (a := m)).symm
       have hEcompatQ : ∀ (u : U) (e : E.conjBy (u : G)) (q : M' ⧸ N),
           letI : MulDistribMulAction (↥(E.conjBy (u : G))) (M' ⧸ N) := hEactQ u
           e • q =
@@ -2672,14 +2675,13 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
               UE) • q := by
         intro u e q
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) M' := hEact' u
-        letI : IsInvariant (E.conjBy (u : G)) M' N := hEuinv u
+        letI : IsInvariantSubgroup (E.conjBy (u : G)) M' N := hEuinv u
         letI : MulDistribMulAction (↥(E.conjBy (u : G))) (M' ⧸ N) := hEactQ u
         refine QuotientGroup.induction_on q ?_
         intro m
         calc
           e • ((m : M') : M' ⧸ N) = ((e • m : M') : M' ⧸ N) := by
-            exact MulAction.Quotient.smul_coe
-              (X := E.conjBy (u : G)) (H := N) (b := e) (g := m)
+            exact MulAction.Quotient.smul_coe (H := N) (b := e) (a := m)
           _ = (((⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
                 UE) • m : M') : M' ⧸ N) := by
@@ -2687,10 +2689,10 @@ public theorem fixedPointSubgroup_product_identity_action_of_chiefFactor
           _ = (⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
                 UE) • ((m : M') : M' ⧸ N) := by
-            exact (MulAction.Quotient.smul_coe (X := UE) (H := N)
+            exact (MulAction.Quotient.smul_coe (H := N)
               (b := (⟨(e : G),
                 section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ : UE))
-              (g := m)).symm
+              (a := m)).symm
       have hNid :
           letI : Fintype U := Fintype.ofFinite U
           Nat.card (fixedPointSubgroup (↥UE) N) ^ Nat.card UE *

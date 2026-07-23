@@ -185,7 +185,7 @@ private theorem exists_hall_of_isPiSubgroup_solvable
   have hcop : Nat.Coprime (Nat.card Unit) (Nat.card H) := by simp
   have hKπ' : IsPiSubgroup (G := H) π (K.subgroupOf H) :=
     hKπ.subgroupOf hKH
-  have hKinv : IsInvariant Unit H (K.subgroupOf H) := by
+  have hKinv : IsInvariantSubgroup Unit H (K.subgroupOf H) := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -817,7 +817,7 @@ private theorem mem_section7HStarFamily_A_of_mem_section7HStarFamily_P_of_normal
     haveI : Subgroup.Normalizes P H := ⟨hPnormH⟩
     have hQsub_pi : IsPiSubgroup (G := H) ({q} : Set Nat.Primes) (Q.subgroupOf H) :=
       hQfamP.2.1.subgroupOf hQ_le_H
-    have hQsub_inv : IsInvariant (↥P) (↥H) (Q.subgroupOf H) := by
+    have hQsub_inv : IsInvariantSubgroup (↥P) (↥H) (Q.subgroupOf H) := by
       simpa [N] using
         (isInvariant_subgroupOf_of_le_normalizer
           (A := P) (H := H) (K := Q) hPnormH hPnormQ hQ_le_H)
@@ -831,13 +831,13 @@ private theorem mem_section7HStarFamily_A_of_mem_section7HStarFamily_P_of_normal
       exact y.property
     have hQ₂_pi : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q₂ := by
       simpa [Q₂] using (hQ₂Hall.isPiSubgroup).map H.subtype
-    letI : IsInvariant (↥P) (↥H) Q₂sub := hQ₂inv
+    letI : IsInvariantSubgroup (↥P) (↥H) Q₂sub := hQ₂inv
     have hPnormQ₂ : P ≤ Subgroup.normalizer (Q₂ : Set G) := by
       refine subgroup_le_normalizer_of_conj_mem Q₂ P ?_
       intro p x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       have hyInv : p • y ∈ Q₂sub :=
-        (IsInvariant.invariant (A := ↥P) (G := ↥H) (H := Q₂sub) p y).1 hy
+        (IsInvariantSubgroup.invariant (A := ↥P) (G := ↥H) (H := Q₂sub) p y).1 hy
       exact Subgroup.mem_map.mpr ⟨p • y, hyInv, by
         simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
     have hQ_le_Q₂ : Q ≤ Q₂ := by
@@ -1099,11 +1099,11 @@ private theorem theorem_7_4_normal_case
         smul_mul := fun _ _ _ => rfl
         smul_one := fun _ => rfl }
       have hcopUnitNsub : Nat.Coprime (Nat.card Unit) (Nat.card Nsub) := by simp
-      have hP0inv : IsInvariant Unit Nsub P0 := by
+      have hP0inv : IsInvariantSubgroup Unit Nsub P0 := by
         refine ⟨?_⟩
         intro _ y
         simp
-      have hPk0inv : IsInvariant Unit Nsub Pk0 := by
+      have hPk0inv : IsInvariantSubgroup Unit Nsub Pk0 := by
         refine ⟨?_⟩
         intro _ y
         simp

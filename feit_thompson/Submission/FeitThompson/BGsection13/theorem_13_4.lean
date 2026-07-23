@@ -63,16 +63,16 @@ public theorem section13_le_normalizer_map_of_isInvariant
     {A H : Subgroup G} {K : Subgroup H}
     (hAH : A ≤ Subgroup.normalizer (H : Set G)) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) K →
+    IsInvariantSubgroup (↥A) (↥H) K →
     A ≤ Subgroup.normalizer (K.map H.subtype : Set G) := by
   intro hKinv
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-  letI : IsInvariant (↥A) (↥H) K := hKinv
+  letI : IsInvariantSubgroup (↥A) (↥H) K := hKinv
   refine subgroup_le_normalizer_of_conj_mem (K.map H.subtype) A ?_
   intro a x hx
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   have hyInv : a • y ∈ K :=
-    (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
+    (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
   exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
 
@@ -86,7 +86,7 @@ private theorem section13_theorem_13_4_exists_pr_invariant_sylow
     ∃ hAX : Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Msigma M) P),
     letI : Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Msigma M) P) := hAX
     ∃ S : Sylow q.val (subgroupCentralizerIn (section10Msigma M) P),
-      IsInvariant (↥(P ⊔ R)) (↥(subgroupCentralizerIn (section10Msigma M) P))
+      IsInvariantSubgroup (↥(P ⊔ R)) (↥(subgroupCentralizerIn (section10Msigma M) P))
         (S : Subgroup (subgroupCentralizerIn (section10Msigma M) P)) := by
   classical
   haveI : Fact q.val.Prime := ⟨q.property⟩
@@ -559,7 +559,7 @@ private theorem section13_malpha_exists_pr_invariant_sylow
     ∃ hAX : Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Malpha M) P),
     letI : Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Malpha M) P) := hAX
     ∃ S : Sylow q.val (subgroupCentralizerIn (section10Malpha M) P),
-      IsInvariant (↥(P ⊔ R)) (↥(subgroupCentralizerIn (section10Malpha M) P))
+      IsInvariantSubgroup (↥(P ⊔ R)) (↥(subgroupCentralizerIn (section10Malpha M) P))
         (S : Subgroup (subgroupCentralizerIn (section10Malpha M) P)) := by
   classical
   haveI : Fact q.val.Prime := ⟨q.property⟩
@@ -669,7 +669,7 @@ private theorem section13_malpha_pr_invariant_sylow_centralizes
     (hrτ1star : r ∈ section12Tau1Primes Mstar)
     [Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Malpha M) P)]
     (S : Sylow q.val (subgroupCentralizerIn (section10Malpha M) P))
-    (hSinv : IsInvariant (↥(P ⊔ R))
+    (hSinv : IsInvariantSubgroup (↥(P ⊔ R))
       (↥(subgroupCentralizerIn (section10Malpha M) P))
       (S : Subgroup (subgroupCentralizerIn (section10Malpha M) P))) :
     (S : Subgroup (subgroupCentralizerIn (section10Malpha M) P)).map
@@ -797,7 +797,7 @@ private theorem section13_theorem_13_4_pr_invariant_sylow_noncentral_absurd
     (hrτ1star : r ∈ section12Tau1Primes Mstar)
     [Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Msigma M) P)]
     (S : Sylow q.val (subgroupCentralizerIn (section10Msigma M) P))
-    (hSinv : IsInvariant (↥(P ⊔ R))
+    (hSinv : IsInvariantSubgroup (↥(P ⊔ R))
       (↥(subgroupCentralizerIn (section10Msigma M) P))
       (S : Subgroup (subgroupCentralizerIn (section10Msigma M) P)))
     (hcomm :
@@ -1177,7 +1177,7 @@ private theorem section13_theorem_13_4_pr_invariant_sylow_centralizes
     (hrτ1star : r ∈ section12Tau1Primes Mstar)
     [Subgroup.Normalizes (P ⊔ R) (subgroupCentralizerIn (section10Msigma M) P)]
     (S : Sylow q.val (subgroupCentralizerIn (section10Msigma M) P))
-    (hSinv : IsInvariant (↥(P ⊔ R))
+    (hSinv : IsInvariantSubgroup (↥(P ⊔ R))
       (↥(subgroupCentralizerIn (section10Msigma M) P))
       (S : Subgroup (subgroupCentralizerIn (section10Msigma M) P))) :
     (S : Subgroup (subgroupCentralizerIn (section10Msigma M) P)).map

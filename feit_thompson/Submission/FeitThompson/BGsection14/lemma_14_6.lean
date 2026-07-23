@@ -158,7 +158,7 @@ private theorem section14_eq_left_or_right_of_alt1_alt2_product
         have hreq : r = q :=
           Subtype.ext ((Nat.prime_dvd_prime_iff_eq r.2 q.2).mp hrdiv)
         simpa [hreq] using hqκ
-      have hXsubInv : IsInvariant Unit M Xsub := by
+      have hXsubInv : IsInvariantSubgroup Unit M Xsub := by
         refine ⟨?_⟩
         intro _ y
         simp [Xsub]
@@ -1042,7 +1042,7 @@ public theorem lemma_14_6
           mul_smul := fun _ _ _ => rfl
           smul_mul := fun _ _ _ => rfl
           smul_one := fun _ => rfl }
-        have hYsub_inv : IsInvariant Unit Cx Ysub := by
+        have hYsub_inv : IsInvariantSubgroup Unit Cx Ysub := by
           refine ⟨?_⟩
           intro _ y
           simp [Ysub]

@@ -271,7 +271,7 @@ public theorem corollary_12_9_c
         section12_card_subgroupOf_eq hQE
       rw [hcard_eq] at hr
       exact hQ_pi12 r hr
-    have hQ_E_inv : IsInvariant PUnit.{1} E (Q.subgroupOf E) :=
+    have hQ_E_inv : IsInvariantSubgroup PUnit.{1} E (Q.subgroupOf E) :=
       ⟨fun _ _ => ⟨id, id⟩⟩
     -- Embed Q.subgroupOf E into a Hall π₁₂-subgroup of ↥E, then conjugate to E₁₂.subgroupOf E
     rcases proposition_1_5_b hE_solv hcopE π12 (Q.subgroupOf E) hQ_E_pi12 hQ_E_inv with
@@ -326,7 +326,7 @@ public theorem corollary_12_9_c
         section12_card_subgroupOf_eq hQe_le_E12
       rw [hcard_eq] at hr
       exact hQe_pi1 r hr
-    have hQe_E12_inv : IsInvariant PUnit.{1} E₁₂
+    have hQe_E12_inv : IsInvariantSubgroup PUnit.{1} E₁₂
         ((Q.map (MulAut.conj eG).toMonoidHom).subgroupOf E₁₂) :=
       ⟨fun _ _ => ⟨id, id⟩⟩
     rcases proposition_1_5_b hE12_solv hcopE12 π1

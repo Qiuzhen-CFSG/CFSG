@@ -284,7 +284,7 @@ private theorem theorem_9_nb_redM_W2_map_mk_H0_MF_card_eq_of_source_sec9
   have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
     hW1_le_M.trans hM_norm_MF
   letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
-  have hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
+  have hH0_inv_W1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF) :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF W1 H0
       hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
   rcases hWbar with ⟨_hnormalSrc, hsourceCard⟩
@@ -14832,7 +14832,7 @@ private theorem H0CLinearCandidateXmu_transported_generator_raw_smul_source_core
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U))
+      IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hμrawOrderedData :
       H0CLinearCandidateXmuOrderedTransportedRawCoordinateData_sec9
         (MF := MF) (H0 := H0) (W1 := W1) p q H hHcard w0 μraw)
@@ -15217,7 +15217,7 @@ private theorem H0CLinearCandidateXmu_transported_muorbit_injective_source_core_
       (theorem_9_3_action_normalizes_and_solvable_sec9 M MF U W1 W2 q h92).1
   have hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U) := by
+      IsInvariantSubgroup W1 U (C.subgroupOf U) := by
     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
     exact theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9
       h92 hpData (case_9_7_a_quotientCentralizerIn_sec9 hcase)

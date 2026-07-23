@@ -370,7 +370,7 @@ public theorem section10_exists_nilpotent_hall_containing
     mul_smul := by intro a b x; rfl
     smul_mul := by intro a x y; rfl
     smul_one := by intro a; rfl }
-  have hXsub_inv : IsInvariant PUnit.{1} K Xsub := by
+  have hXsub_inv : IsInvariantSubgroup PUnit.{1} K Xsub := by
     refine ⟨?_⟩
     intro a x
     simp
@@ -928,7 +928,7 @@ private theorem section10_exists_nilpotent_pair_hall_containing_of_lt
     mul_smul := by intro a b x; rfl
     smul_mul := by intro a x y; rfl
     smul_one := by intro a; rfl }
-  have hXM_inv : IsInvariant PUnit.{1} M XM := by
+  have hXM_inv : IsInvariantSubgroup PUnit.{1} M XM := by
     refine ⟨?_⟩
     intro a x
     simp

@@ -303,7 +303,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       have hQleNormC : Q ≤ Subgroup.normalizer (C : Set G) := hQleC.trans Subgroup.le_normalizer
       simpa [KN] using
         (le_inf hQleNormN hQleNormC).trans Subgroup.inf_normalizer_le_normalizer_inf
-    have hKNinv : IsInvariant (↥Q) (↥N) (KN.subgroupOf N) := by
+    have hKNinv : IsInvariantSubgroup (↥Q) (↥N) (KN.subgroupOf N) := by
       refine ⟨?_⟩
       intro a x
       constructor
@@ -323,7 +323,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
             exact Subgroup.mem_subgroupOf.mp hx)
         apply Subgroup.mem_subgroupOf.mpr
         simpa [mul_assoc] using hx'
-    letI : IsInvariant (↥Q) (↥N) (KN.subgroupOf N) := hKNinv
+    letI : IsInvariantSubgroup (↥Q) (↥N) (KN.subgroupOf N) := hKNinv
     letI : MulAction.QuotientAction (↥Q) (KN.subgroupOf N) :=
       quotientAction_of_isInvariant (A := ↥Q) (G := ↥N) (KN.subgroupOf N) hKNinv
     letI : MulDistribMulAction (↥Q) (↥N ⧸ KN.subgroupOf N) :=

@@ -160,10 +160,10 @@ private theorem section10_centralizer_witness_image_isInvariant
     (A : Subgroup (subgroupCentralizerIn (section10Malpha M) X)) :
     let C : Subgroup G := subgroupCentralizerIn (section10Malpha M) X
     let ι : C →* section10Malpha M := Subgroup.inclusion (show C ≤ section10Malpha M by exact inf_le_left)
-    IsInvariant X (section10Malpha M) (A.map ι) := by
+    IsInvariantSubgroup X (section10Malpha M) (A.map ι) := by
   let C : Subgroup G := subgroupCentralizerIn (section10Malpha M) X
   let ι : C →* section10Malpha M := Subgroup.inclusion (show C ≤ section10Malpha M by exact inf_le_left)
-  change IsInvariant X (section10Malpha M) (A.map ι)
+  change IsInvariantSubgroup X (section10Malpha M) (A.map ι)
   have hforward :
       ∀ x : X, ∀ y : section10Malpha M, y ∈ A.map ι → x • y ∈ A.map ι := by
     intro x y hy
@@ -198,7 +198,7 @@ private theorem section10_exists_invariant_sylow_malpha_containing_witness
     (A : Subgroup (subgroupCentralizerIn (section10Malpha M) X))
     (hAp : IsPGroup p.val A) :
     ∃ P : Sylow p.val (section10Malpha M),
-      IsInvariant X (section10Malpha M) (P : Subgroup (section10Malpha M)) ∧
+      IsInvariantSubgroup X (section10Malpha M) (P : Subgroup (section10Malpha M)) ∧
         A.map (Subgroup.inclusion
           (show subgroupCentralizerIn (section10Malpha M) X ≤ section10Malpha M by
             exact inf_le_left)) ≤ (P : Subgroup (section10Malpha M)) := by
@@ -213,7 +213,7 @@ private theorem section10_exists_invariant_sylow_malpha_containing_witness
   have hAαπ : IsPiSubgroup (G := section10Malpha M) ({p} : Set Nat.Primes) Aα :=
     section8_isPiSubgroup_singleton_of_isPGroup (G := section10Malpha M)
       (H := Aα) (q := p) hAαp
-  have hAαinv : IsInvariant X (section10Malpha M) Aα := by
+  have hAαinv : IsInvariantSubgroup X (section10Malpha M) Aα := by
     simpa [Aα, C, ι] using
       section10_centralizer_witness_image_isInvariant (G := G) (M := M) (X := X) A
   have hMαproper : section10Malpha M ≠ ⊤ := by
@@ -787,7 +787,7 @@ private theorem section10_lemma_10_3_rank_two_core
     have hBPp : IsPGroup p.val BP := by
       letI : IsElementaryAbelian p.val BP := hBPelement
       exact IsElementaryAbelian.isPGroup p.val BP
-    letI : IsInvariant X (section10Malpha M) (P : Subgroup (section10Malpha M)) := hPinv
+    letI : IsInvariantSubgroup X (section10Malpha M) (P : Subgroup (section10Malpha M)) := hPinv
     have htrivP :
         ActsTrivially (A := X) (G := (P : Subgroup (section10Malpha M))) := by
       letI : Fact (IsPGroup p.val (P : Subgroup (section10Malpha M))) := ⟨P.isPGroup'⟩

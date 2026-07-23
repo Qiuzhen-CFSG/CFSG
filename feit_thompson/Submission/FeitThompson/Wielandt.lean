@@ -428,7 +428,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (_hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (_hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverCanonicalAdditiveLinearReductionData
@@ -454,7 +454,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverCanonicalMatrixReductionData
@@ -479,7 +479,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverCanonicalLinearReductionData
@@ -504,7 +504,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverCanonicalLinearData
@@ -528,7 +528,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_reducti
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverMatrixReductionCoreData
@@ -550,7 +550,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_reducti
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverMatrixReductionData
@@ -575,7 +575,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_gt_one
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverMatrixData
@@ -596,7 +596,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_linear_gt_one
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverLinearData
@@ -618,7 +618,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_action_gt_one
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverActionData
@@ -639,7 +639,7 @@ public theorem exists_standard_homocyclic_frattini_quotient_cover_gt_one
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty
       (StandardHomocyclicFrattiniQuotientCoverData
@@ -660,7 +660,7 @@ public theorem exists_homocyclic_frattini_quotient_cover_gt_one
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 1 < e) :
     Nonempty (HomocyclicFrattiniQuotientCover (G := G) (V := V) (p := p) e) := by
   classical
@@ -675,7 +675,7 @@ public theorem exists_homocyclic_frattini_quotient_cover_prime_power
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 0 < e) :
     Nonempty (HomocyclicFrattiniQuotientCover (G := G) (V := V) (p := p) e) := by
   classical
@@ -689,7 +689,7 @@ public theorem exists_homocyclic_frattini_cover_prime_power
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 0 < e) :
     Nonempty (HomocyclicFrattiniCover (G := G) (V := V) (p := p) e) := by
   classical
@@ -706,7 +706,7 @@ public theorem exists_homocyclic_frattini_cover_linear_lift_prime_power
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 0 < e) :
     Nonempty (HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) := by
   classical
@@ -765,9 +765,9 @@ public theorem
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-  let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+  let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
     isInvariant_of_characteristic (frattini L.cover)
-  letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+  letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
   letI : MulDistribMulAction A (frattini L.cover) :=
     instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := frattini L.cover)
   haveI : Fact (IsPGroup p L.cover) := ⟨L.cover_isPGroup⟩
@@ -821,11 +821,11 @@ private noncomputable def
       AddSubgroupClass.instZModModule
         (K := (D.fixedSubgroup.toAddSubgroup : AddSubgroup (Additive L.cover)))
     let φ : L.cover →* L.cover := powMonoidHom p
-    let hkerInv : IsInvariant A L.cover φ.ker := by
+    let hkerInv : IsInvariantSubgroup A L.cover φ.ker := by
       haveI : φ.ker.Characteristic := by
         simpa [φ] using powMonoidHom_ker_characteristic (H := L.cover) p
       exact isInvariant_of_characteristic φ.ker
-    letI : IsInvariant A L.cover φ.ker := hkerInv
+    letI : IsInvariantSubgroup A L.cover φ.ker := hkerInv
     letI : MulDistribMulAction A φ.ker :=
       instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := φ.ker)
     fixedPointSubgroup A φ.ker ≃
@@ -845,8 +845,8 @@ private noncomputable def
   let φ : L.cover →* L.cover := powMonoidHom p
   haveI : φ.ker.Characteristic := by
     simpa [φ] using powMonoidHom_ker_characteristic (H := L.cover) p
-  let hkerInv : IsInvariant A L.cover φ.ker := isInvariant_of_characteristic φ.ker
-  letI : IsInvariant A L.cover φ.ker := hkerInv
+  let hkerInv : IsInvariantSubgroup A L.cover φ.ker := isInvariant_of_characteristic φ.ker
+  letI : IsInvariantSubgroup A L.cover φ.ker := hkerInv
   letI : MulDistribMulAction A φ.ker :=
     instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := φ.ker)
   refine {
@@ -947,13 +947,13 @@ public theorem
     simpa [φ] using powMonoidHom_ker_characteristic (H := L.cover) p
   haveI : φ.range.Characteristic := by
     simpa [φ] using powMonoidHom_range_characteristic (H := L.cover) p
-  let hkerInv : IsInvariant A L.cover φ.ker := isInvariant_of_characteristic φ.ker
-  let hrangeInv : IsInvariant A L.cover φ.range := isInvariant_of_characteristic φ.range
-  let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+  let hkerInv : IsInvariantSubgroup A L.cover φ.ker := isInvariant_of_characteristic φ.ker
+  let hrangeInv : IsInvariantSubgroup A L.cover φ.range := isInvariant_of_characteristic φ.range
+  let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
     isInvariant_of_characteristic (frattini L.cover)
-  letI : IsInvariant A L.cover φ.ker := hkerInv
-  letI : IsInvariant A L.cover φ.range := hrangeInv
-  letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+  letI : IsInvariantSubgroup A L.cover φ.ker := hkerInv
+  letI : IsInvariantSubgroup A L.cover φ.range := hrangeInv
+  letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
   letI : MulDistribMulAction A φ.ker :=
     instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := φ.ker)
   letI : MulDistribMulAction A φ.range :=
@@ -1865,7 +1865,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     {e : ℕ} (he : 0 < e) :
     Nonempty
       (Σ L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e,
@@ -1890,7 +1890,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -1910,7 +1910,7 @@ public theorem exists_homocyclic_cover_rectangular_common_lift_and_block_family_
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -1932,7 +1932,7 @@ public theorem
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -1953,7 +1953,7 @@ public theorem exists_homocyclic_rectangular_common_lift_and_block_family_prime_
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -1975,7 +1975,7 @@ public theorem exists_homocyclic_rectangular_common_lift_block_data_prime_power
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -1996,7 +1996,7 @@ public theorem exists_rectangular_common_matrix_lift_block_data_prime_power
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -2014,7 +2014,7 @@ public theorem exists_common_matrix_lift_block_data_prime_power
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -2031,7 +2031,7 @@ public theorem exists_common_matrix_lift_and_block_data_prime_power
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -2068,7 +2068,7 @@ public theorem exists_matrix_trace_model_prime_power_of_elementaryAbelian_minima
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -2091,7 +2091,7 @@ public theorem exists_trace_sum_function_prime_power_of_elementaryAbelian_minima
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     {e : ℕ} (he : 0 < e) :
@@ -2117,7 +2117,7 @@ public theorem exists_trace_sum_function_prime_power_of_elementaryAbelian_minima
     [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     (e : ℕ) :
@@ -2144,7 +2144,7 @@ public theorem fixedSubspace_finrank_sum_modEq_prime_power_of_coeff_sum_eq_eleme
     [MulDistribMulAction G V] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     (m n : ι → ℕ)
@@ -2189,7 +2189,7 @@ public theorem fixedSubspace_finrank_sum_eq_of_coeff_sum_eq_elementaryAbelian_mi
     [MulDistribMulAction G V] [Fintype ι] [Nontrivial V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup G V N → N ≠ ⊥ → N = ⊤)
     (A : ι → Subgroup G)
     [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
     (m n : ι → ℕ)
@@ -2424,7 +2424,7 @@ public theorem fixedSubspace_finrank_identity_minimal_invariant
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) • m)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup UE M N → N ≠ ⊥ → N = ⊤) :
     letI : CommGroup M := IsMulCommutative.instCommGroup
     letI : Fintype U := Fintype.ofFinite U
     Module.finrank (ZMod p)
@@ -2470,7 +2470,7 @@ public theorem fixedPointSubgroup_product_identity_action_elementaryAbelian_mini
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) • m)
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup UE M N → N ≠ ⊥ → N = ⊤) :
     letI : Fintype U := Fintype.ofFinite U
     Nat.card (fixedPointSubgroup (↥UE) M) ^ Nat.card UE *
         Nat.card M ^ Nat.card U =
@@ -2500,7 +2500,7 @@ public theorem fixedPointSubgroup_product_identity_action_chiefFactor
       e • m =
         (⟨(e : G), section12ComplementIn_conj_complement_le UE U E hcomp u e.2⟩ :
           UE) • m)
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant UE M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup UE M N → N ≠ ⊥ → N = ⊤) :
     letI : Fintype U := Fintype.ofFinite U
     Nat.card (fixedPointSubgroup (↥UE) M) ^ Nat.card UE *
         Nat.card M ^ Nat.card U =

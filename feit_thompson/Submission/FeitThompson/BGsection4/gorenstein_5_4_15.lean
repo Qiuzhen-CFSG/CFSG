@@ -3843,11 +3843,11 @@ private theorem gorenstein_theorem_5_4_15_automorphism_dvd
       have hq_coprime_p : Nat.Coprime q p :=
         (Nat.coprime_primes (Fact.out : Nat.Prime q) (Fact.out : Nat.Prime p)).2 hq_ne
       simpa [hAψ_card, hHcard] using hq_coprime_p.pow_right n
-    have hHinv : IsInvariant Aψ R H :=
+    have hHinv : IsInvariantSubgroup Aψ R H :=
       isInvariant_of_characteristic (A := Aψ) (G := R) H
-    letI : IsInvariant Aψ R H := hHinv
+    letI : IsInvariantSubgroup Aψ R H := hHinv
     letI : MulDistribMulAction Aψ H := inferInstance
-    have hΦinv : IsInvariant Aψ H (frattini H) :=
+    have hΦinv : IsInvariantSubgroup Aψ H (frattini H) :=
       isInvariant_of_characteristic (A := Aψ) (G := H) (frattini H)
     letI : MulDistribMulAction Aψ (H ⧸ frattini H) :=
       quotientMulDistribMulAction (A := Aψ) (G := H) (frattini H) hΦinv

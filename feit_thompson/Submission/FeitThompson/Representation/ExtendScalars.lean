@@ -462,7 +462,7 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
     (extendScalars E rho).asAlgebraHom
         (MonoidAlgebra.mapRingHom G (algebraMap F E) b) =
       LinearMap.baseChange E (rho.asAlgebraHom b) := by
-  induction b using MonoidAlgebra.induction with
+  induction b using Finsupp.induction with
   | zero =>
       have hmzero :
           MonoidAlgebra.mapRingHom G (algebraMap F E) (0 : MonoidAlgebra F G) = 0 :=
@@ -479,8 +479,8 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
   | single_add g d b hg hd ih =>
       have hsingle :
           (extendScalars E rho).asAlgebraHom
-              (MonoidAlgebra.mapRingHom G (algebraMap F E) (MonoidAlgebra.single g d)) =
-            LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) := by
+              (MonoidAlgebra.mapRingHom G (algebraMap F E) (Finsupp.single g d)) =
+            LinearMap.baseChange E (rho.asAlgebraHom (Finsupp.single g d)) := by
         rw [MonoidAlgebra.mapRingHom_single,
           Representation.asAlgebraHom_single,
           Representation.asAlgebraHom_single,
@@ -496,19 +496,19 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
       let m := MonoidAlgebra.mapRingHom G (algebraMap F E)
       let p := (extendScalars E rho).asAlgebraHom
       calc
-        p (m (MonoidAlgebra.single g d + b)) =
-            p (m (MonoidAlgebra.single g d) + m b) :=
-          congrArg p (map_add m (MonoidAlgebra.single g d) b)
-        _ = p (m (MonoidAlgebra.single g d)) + p (m b) :=
-          map_add p (m (MonoidAlgebra.single g d)) (m b)
-        _ = LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) +
+        p (m (Finsupp.single g d + b)) =
+            p (m (Finsupp.single g d) + m b) :=
+          congrArg p (map_add m (Finsupp.single g d) b)
+        _ = p (m (Finsupp.single g d)) + p (m b) :=
+          map_add p (m (Finsupp.single g d)) (m b)
+        _ = LinearMap.baseChange E (rho.asAlgebraHom (Finsupp.single g d)) +
             LinearMap.baseChange E (rho.asAlgebraHom b) := congrArg₂ (· + ·) hsingle ih
         _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (MonoidAlgebra.single g d) + rho.asAlgebraHom b) :=
+            (rho.asAlgebraHom (Finsupp.single g d) + rho.asAlgebraHom b) :=
           (LinearMap.baseChange_add _ _).symm
         _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (MonoidAlgebra.single g d + b)) :=
+            (rho.asAlgebraHom (Finsupp.single g d + b)) :=
           congrArg (LinearMap.baseChange E)
-            (map_add rho.asAlgebraHom (MonoidAlgebra.single g d) b).symm
+            (map_add rho.asAlgebraHom (Finsupp.single g d) b).symm
 
 end Representation

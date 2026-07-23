@@ -183,7 +183,7 @@ public theorem quotient_centralizer_card_le_p_of_elementaryAbelian_rank_two
         simpa [hn2, hEcard] using hn
       have hn_one : n = 1 := by omega
       simpa [hn_one] using hn
-    have hfix_inv : IsInvariant Q E (fixedPointSubgroup Q E) := by
+    have hfix_inv : IsInvariantSubgroup Q E (fixedPointSubgroup Q E) := by
       refine ⟨?_⟩
       intro a g
       constructor

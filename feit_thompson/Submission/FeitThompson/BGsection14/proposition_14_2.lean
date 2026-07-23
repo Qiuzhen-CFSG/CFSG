@@ -90,7 +90,7 @@ public theorem section14_exists_sigma_complement_containing
     intro p hpKsub
     have hcard : Nat.card Ksub = Nat.card K := section12_card_subgroupOf_eq hKM
     exact hKπ p (by simpa [Ksub, hcard] using hpKsub)
-  have hKsubInv : IsInvariant Unit M Ksub := by
+  have hKsubInv : IsInvariantSubgroup Unit M Ksub := by
     refine ⟨?_⟩
     intro _ x
     simp [Ksub]
@@ -327,7 +327,7 @@ private theorem section14_exists_EData_with_kappa_in_E1_of_tau1
     have hpκ : p ∈ section14KappaPrimes M :=
       hKHallM.p_in_pi_of_p_dvd_card p (by simpa [KsubE, hcardE, hcardM] using hpKsubE)
     exact Or.inl (hκτ1 hpκ)
-  have hKsubE_inv : IsInvariant Unit E KsubE := by
+  have hKsubE_inv : IsInvariantSubgroup Unit E KsubE := by
     refine ⟨?_⟩
     intro _ x
     simp [KsubE]
@@ -367,7 +367,7 @@ private theorem section14_exists_EData_with_kappa_in_E1_of_tau1
       hKHallM.p_in_pi_of_p_dvd_card p
         (by simpa [KsubE₁₂, hcardE₁₂, hcardM] using hpKsubE₁₂)
     exact hκτ1 hpκ
-  have hKsubE₁₂_inv : IsInvariant Unit E₁₂ KsubE₁₂ := by
+  have hKsubE₁₂_inv : IsInvariantSubgroup Unit E₁₂ KsubE₁₂ := by
     refine ⟨?_⟩
     intro _ x
     simp [KsubE₁₂]
@@ -1208,7 +1208,7 @@ public theorem section14_conjugate_kappa_witness_into_hall
     have hq_eq : q = p := by
       exact Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hqdiv)
     simpa [hq_eq] using hpκ_mem
-  have hP₀sub_inv : IsInvariant Unit M P₀sub := by
+  have hP₀sub_inv : IsInvariantSubgroup Unit M P₀sub := by
     refine ⟨?_⟩
     intro _ x
     simp [P₀sub]
@@ -1276,7 +1276,7 @@ private theorem section14_conjugate_prime_witness_into_hall
     have hq_eq : q = p := by
       exact Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hqdiv)
     simpa [hq_eq] using hpπ
-  have hPsub_inv : IsInvariant Unit A Psub := by
+  have hPsub_inv : IsInvariantSubgroup Unit A Psub := by
     refine ⟨?_⟩
     intro _ x
     simp [Psub]
@@ -3872,7 +3872,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
       have hpZ : p ∈ subgroupPrimeSet Z := by
         simpa [Zsub, subgroupPrimeSet, section12_card_subgroupOf_eq hZM] using hpZsub
       exact hZσ p hpZ
-    have hZsub_inv : IsInvariant Unit M Zsub := by
+    have hZsub_inv : IsInvariantSubgroup Unit M Zsub := by
       refine ⟨?_⟩
       intro _ x
       simp [Zsub]
@@ -4133,7 +4133,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
         mul_smul := fun _ _ _ => rfl
         smul_mul := fun _ _ _ => rfl
         smul_one := fun _ => rfl }
-      have hYgsub_inv : IsInvariant Unit Mstar Ygsub := by
+      have hYgsub_inv : IsInvariantSubgroup Unit Mstar Ygsub := by
         refine ⟨?_⟩
         intro _ x
         simp [Ygsub]

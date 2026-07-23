@@ -1039,19 +1039,19 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       letI : Fact (IsPGroup p C_T) := ⟨hCTp⟩
       have hCTmeta : IsMetacyclic C_T :=
         proposition_4_11 (R := C_T) (p := p) hpgt (by rw [hΩCT_card])
-      have hS_inv : IsInvariant A R S :=
+      have hS_inv : IsInvariantSubgroup A R S :=
         isInvariant_of_characteristic (A := A) (G := R) S
-      letI : IsInvariant A R S := hS_inv
-      have htop_inv : IsInvariant A R (⊤ : Subgroup R) :=
+      letI : IsInvariantSubgroup A R S := hS_inv
+      have htop_inv : IsInvariantSubgroup A R (⊤ : Subgroup R) :=
         isInvariant_of_characteristic (A := A) (G := R) (⊤ : Subgroup R)
-      letI : IsInvariant A R (⊤ : Subgroup R) := htop_inv
-      have hT_inv : IsInvariant A R T := by
+      letI : IsInvariantSubgroup A R (⊤ : Subgroup R) := htop_inv
+      have hT_inv : IsInvariantSubgroup A R T := by
         simpa [T] using
           isInvariant_commutator (A := A) S (⊤ : Subgroup R)
-      letI : IsInvariant A R T := hT_inv
-      have hCT_inv : IsInvariant A R C_T := by
+      letI : IsInvariantSubgroup A R T := hT_inv
+      have hCT_inv : IsInvariantSubgroup A R C_T := by
         simpa [C_T] using isInvariant_centralizer (A := A) T
-      letI : IsInvariant A R C_T := hCT_inv
+      letI : IsInvariantSubgroup A R C_T := hCT_inv
       letI : MulDistribMulAction A C_T := inferInstance
       have hCT_comm_action :
           IsMulCommutative (commutatorAction (A := A) (G := C_T)) :=
@@ -1075,10 +1075,10 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hD_eq_comm : D = ⁅S, S⁆ := by
         change (derivedSubgroup S).map S.subtype = ⁅S, S⁆
         rw [derivedSubgroup, derivedSeries_one, Subgroup.map_subtype_commutator]
-      have hD_inv : IsInvariant A R D := by
+      have hD_inv : IsInvariantSubgroup A R D := by
         rw [hD_eq_comm]
         simpa using isInvariant_commutator (A := A) S S
-      letI : IsInvariant A R D := hD_inv
+      letI : IsInvariantSubgroup A R D := hD_inv
       have hD_le_C : D ≤ C := by
         rw [hD_eq_ZS]
         intro x hx
@@ -1129,7 +1129,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
                 rfl
               exact hT_le_CT (hS_action_le_T hxmap)
             · have haxCT : a • x ∈ C_T :=
-                (IsInvariant.invariant (A := A) (G := R) (H := C_T) a x).1 hxCT
+                (IsInvariantSubgroup.invariant (A := A) (G := R) (H := C_T) a x).1 hxCT
               exact C_T.mul_mem (C_T.inv_mem hxCT) haxCT
           · simp
           · intro x y _hx _hy hxCT hyCT
@@ -1194,16 +1194,16 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         infer_instance
       letI : C.Normal := hC_normal
       let qC : R →* R ⧸ C := QuotientGroup.mk' C
-      have hC_inv : IsInvariant A R C := by
+      have hC_inv : IsInvariantSubgroup A R C := by
         simpa [C] using isInvariant_centralizer (A := A) S
-      letI : IsInvariant A R C := hC_inv
+      letI : IsInvariantSubgroup A R C := hC_inv
       letI : MulDistribMulAction A (R ⧸ C) :=
         quotientMulDistribMulAction (A := A) (G := R) C hC_inv
       let Q : Subgroup (R ⧸ C) := C_T.map qC
-      have hQ_inv : IsInvariant A (R ⧸ C) Q := by
+      have hQ_inv : IsInvariantSubgroup A (R ⧸ C) Q := by
         simpa [Q, qC] using
           isInvariant_map_quotient (A := A) (G := R) (N := C) C_T
-      letI : IsInvariant A (R ⧸ C) Q := hQ_inv
+      letI : IsInvariantSubgroup A (R ⧸ C) Q := hQ_inv
       have hTmap_card : Nat.card (T.map qC) = p := by
         let qT : T →* R ⧸ C := qC.comp T.subtype
         have hrange_eq : qT.range = T.map qC := by
@@ -1254,7 +1254,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hBq_le_Q : Bq ≤ Q := by
         dsimp [Bq, Q]
         exact Subgroup.map_mono hT_le_CT
-      have hBq_inv : IsInvariant A (R ⧸ C) Bq := by
+      have hBq_inv : IsInvariantSubgroup A (R ⧸ C) Bq := by
         simpa [Bq, qC] using
           isInvariant_map_quotient (A := A) (G := R) (N := C) T
       let B : Subgroup Q := Bq.subgroupOf Q
@@ -1263,8 +1263,8 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           Nat.card B = Nat.card Bq := by
             exact natCard_subgroupOf_eq Bq Q hBq_le_Q
           _ = p := by simpa [Bq] using hTmap_card
-      have hB_inv : IsInvariant A Q B := by
-        letI : IsInvariant A (R ⧸ C) Bq := hBq_inv
+      have hB_inv : IsInvariantSubgroup A Q B := by
+        letI : IsInvariantSubgroup A (R ⧸ C) Bq := hBq_inv
         simpa [B, Bq, Q] using isInvariant_subgroupOf Bq Q
       obtain ⟨y, hyS, hy_not_T⟩ :
           ∃ y : R, y ∈ S ∧ y ∉ T :=
@@ -1451,36 +1451,36 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
             simpa [hker_theta_eq_Csub] using hker_mem
           exact hCsub_mem
       letI : IsElementaryAbelian p Q := hQ_elem
-      letI : IsInvariant A Q B := hB_inv
+      letI : IsInvariantSubgroup A Q B := hB_inv
       obtain ⟨Y, hBY, hY_inv⟩ :=
         exists_isCompl_isInvariant_of_elementaryAbelian_coprime
           (G := Q) (A := A) (p := p) hcop B
-      letI : IsInvariant A Q Y := hY_inv
+      letI : IsInvariantSubgroup A Q Y := hY_inv
       let Ybar : Subgroup (R ⧸ C) := Y.map Q.subtype
       have hYbar_le_Q : Ybar ≤ Q := by
         exact Subgroup.map_subtype_le Y
-      have hYbar_inv : IsInvariant A (R ⧸ C) Ybar := by
+      have hYbar_inv : IsInvariantSubgroup A (R ⧸ C) Ybar := by
         refine ⟨?_⟩
         intro a g
         constructor
         · rintro ⟨yq, hyY, rfl⟩
-          refine ⟨a • yq, (IsInvariant.invariant (A := A) (G := Q) (H := Y) a yq).1 hyY, ?_⟩
+          refine ⟨a • yq, (IsInvariantSubgroup.invariant (A := A) (G := Q) (H := Y) a yq).1 hyY, ?_⟩
           rfl
         · rintro ⟨yq, hyY, hg⟩
-          refine ⟨a⁻¹ • yq, (IsInvariant.invariant (A := A) (G := Q) (H := Y) a⁻¹ yq).1 hyY, ?_⟩
+          refine ⟨a⁻¹ • yq, (IsInvariantSubgroup.invariant (A := A) (G := Q) (H := Y) a⁻¹ yq).1 hyY, ?_⟩
           change ((a⁻¹ • yq : Q) : R ⧸ C) = g
           calc
             ((a⁻¹ • yq : Q) : R ⧸ C) = a⁻¹ • (yq : R ⧸ C) := rfl
             _ = a⁻¹ • (a • g) := congrArg (fun z : R ⧸ C => a⁻¹ • z) hg
             _ = g := inv_smul_smul a g
-      letI : IsInvariant A (R ⧸ C) Ybar := hYbar_inv
+      letI : IsInvariantSubgroup A (R ⧸ C) Ybar := hYbar_inv
       let X : Subgroup R := Ybar.comap qC
-      have hX_inv : IsInvariant A R X := by
+      have hX_inv : IsInvariantSubgroup A R X := by
         refine isInvariant_comap_quotient
           (A := A) (G := R) (N := C) Ybar ?_
         intro a g
         simp [MulAction.Quotient.smul_mk]
-      letI : IsInvariant A R X := hX_inv
+      letI : IsInvariantSubgroup A R X := hX_inv
       have hC_le_X : C ≤ X := by
         simpa [X, qC, QuotientGroup.ker_mk'] using
           (Subgroup.ker_le_comap (f := qC) (H := Ybar))
@@ -1822,7 +1822,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         simpa [commutatorElement_inv] using T.inv_mem hyx_mem
       obtain ⟨α, sα, hsα_not_T⟩ := h_exists_alpha_s_not_T
       have hαyS_mem : α • y ∈ S :=
-        (IsInvariant.invariant (A := A) (G := R) (H := S) α y).1 hyS
+        (IsInvariantSubgroup.invariant (A := A) (G := R) (H := S) α y).1 hyS
       let αyS : S := ⟨α • y, hαyS_mem⟩
       have hαy_zpow : qTsub αyS ∈ Subgroup.zpowers (qTsub yS) := by
         rw [hzy_top]
@@ -1837,7 +1837,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hj_lt : j < p := by
         simpa using Finset.mem_range.mp hj_range
       have hαzT_mem : α • z ∈ T :=
-        (IsInvariant.invariant (A := A) (G := R) (H := T) α z).1 hzT
+        (IsInvariantSubgroup.invariant (A := A) (G := R) (H := T) α z).1 hzT
       let αzT : T := ⟨α • z, hαzT_mem⟩
       have hαz_zpow : qDsubT αzT ∈ Subgroup.zpowers (qDsubT zT) := by
         rw [hzz_top]
@@ -1852,7 +1852,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hk_lt : k < p := by
         simpa using Finset.mem_range.mp hk_range
       have hαxX_mem : α • x ∈ X :=
-        (IsInvariant.invariant (A := A) (G := R) (H := X) α x).1 hxX_mem
+        (IsInvariantSubgroup.invariant (A := A) (G := R) (H := X) α x).1 hxX_mem
       let αxX : X := ⟨α • x, hαxX_mem⟩
       have hαx_zpow : αxX ∈ Subgroup.zpowers xX := by
         rw [hxX_gen]
@@ -1988,9 +1988,9 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           _ = ⁅y, z⁆ ^ (j * k) := h_yj_zk
       have hi_eq_jk_zmod : (i : ZMod p) = (j * k : ZMod p) :=
         by simpa using zmod_natCast_eq_of_pow_eq_of_orderOf hyz_order hyz_pow_i_eq_jk
-      have hDsubT_inv : IsInvariant A T DsubT := by
+      have hDsubT_inv : IsInvariantSubgroup A T DsubT := by
         simpa [DsubT] using isInvariant_subgroupOf D T
-      letI : IsInvariant A T DsubT := hDsubT_inv
+      letI : IsInvariantSubgroup A T DsubT := hDsubT_inv
       letI : MulDistribMulAction A (T ⧸ DsubT) :=
         quotientMulDistribMulAction (A := A) (G := T) DsubT hDsubT_inv
       let xyT : T := ⟨⁅x, y⁆, hxy_mem_T⟩
@@ -2143,9 +2143,9 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         calc
           (i : ZMod p) * ((j : ZMod p) * (j : ZMod p)) = (i : ZMod p) := hi_eq_i_j_sq.symm
           _ = (i : ZMod p) * 1 := by rw [mul_one]
-      have hTsub_inv : IsInvariant A S Tsub := by
+      have hTsub_inv : IsInvariantSubgroup A S Tsub := by
         simpa [Tsub] using isInvariant_subgroupOf T S
-      letI : IsInvariant A S Tsub := hTsub_inv
+      letI : IsInvariantSubgroup A S Tsub := hTsub_inv
       letI : MulDistribMulAction A (S ⧸ Tsub) :=
         quotientMulDistribMulAction (A := A) (G := S) Tsub hTsub_inv
       have hα_qy_eq_pow_j : α • qTsub yS = (qTsub yS) ^ j := by

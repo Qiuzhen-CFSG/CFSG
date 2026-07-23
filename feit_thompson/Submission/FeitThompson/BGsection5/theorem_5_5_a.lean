@@ -14,7 +14,7 @@ open scoped commutatorElement
 
 private theorem theorem_5_5_a_coe_smul_of_isInvariant
     {A G : Type*} [Group A] [Group G] [MulDistribMulAction A G]
-    {H : Subgroup G} [IsInvariant A G H] (a : A) (x : H) :
+    {H : Subgroup G} [IsInvariantSubgroup A G H] (a : A) (x : H) :
     ((a • x : H) : G) = a • (x : G) :=
   rfl
 
@@ -161,7 +161,7 @@ private theorem fixingSubgroupOf_normal_of_characteristic
 
 private theorem fixingSubgroupOf_subtype_univ_eq
     {B R : Type*} [Group B] [Group R] [MulDistribMulAction B R]
-    {H : Subgroup R} [IsInvariant B R H] :
+    {H : Subgroup R} [IsInvariantSubgroup B R H] :
     fixingSubgroupOf B H (Set.univ : Set H) =
       fixingSubgroupOf B R (H : Set R) := by
   ext b
@@ -605,7 +605,7 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
     (hbot : ∃ n, Gi n = ⊥)
     (_hdesc : ∀ n, Gi (n + 1) ≤ Gi n)
     (hnormal : ∀ n, (Gi n).Normal)
-    (hinv : ∀ n, IsInvariant A G (Gi n))
+    (hinv : ∀ n, IsInvariantSubgroup A G (Gi n))
     (hquot_card : ∀ n, Gi n ≠ ⊥ →
       Nat.card ((Gi n) ⧸ (Gi (n + 1)).subgroupOf (Gi n)) = p)
     (a : A) (hcop : Nat.Coprime p (orderOf a)) :
@@ -626,9 +626,9 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
       haveI : K.Normal := hnormal i
       haveI : (Gi (i + 1)).Normal := hnormal (i + 1)
       haveI : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
-      letI : IsInvariant A G K := hinv i
+      letI : IsInvariantSubgroup A G K := hinv i
       letI : MulDistribMulAction A K := inferInstance
-      have hNinv : IsInvariant A K N := by
+      have hNinv : IsInvariantSubgroup A K N := by
         constructor
         intro c x
         constructor
@@ -645,7 +645,7 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant c (x : G) |>.mpr hsmulG
           simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
-      letI : IsInvariant A K N := hNinv
+      letI : IsInvariantSubgroup A K N := hNinv
       letI : MulAction.QuotientAction A N :=
         quotientAction_of_isInvariant (A := A) N hNinv
       letI : MulDistribMulAction A (K ⧸ N) :=
@@ -1427,7 +1427,7 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
     (hbot : ∃ n, Gi n = ⊥)
     (hdesc : ∀ n, Gi (n + 1) ≤ Gi n)
     (hnormal : ∀ n, (Gi n).Normal)
-    (hinv : ∀ n, IsInvariant A G (Gi n))
+    (hinv : ∀ n, IsInvariantSubgroup A G (Gi n))
     (hquot_card : ∀ n, Gi n ≠ ⊥ →
       Nat.card ((Gi n) ⧸ (Gi (n + 1)).subgroupOf (Gi n)) = p) :
     ∃ (ι : Type) (Gi' : ι → Subgroup G) (next : ι → ι),
@@ -1441,10 +1441,10 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
     simpa [Nat.succ_eq_add_one] using hdesc i
   · exact hnormal
   · intro i
-    letI : IsInvariant A G (Gi i) := hinv i
+    letI : IsInvariantSubgroup A G (Gi i) := hinv i
     constructor
     intro a g
-    exact IsInvariant.invariant (A := A) (G := G) (H := Gi i) (a : A) g
+    exact IsInvariantSubgroup.invariant (A := A) (G := G) (H := Gi i) (a : A) g
   · intro i a g hg
     by_cases hGi_bot : Gi i = ⊥
     · have hg_one : g = 1 := by
@@ -1461,9 +1461,9 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
       haveI : K.Normal := hnormal i
       haveI : (Gi (i + 1)).Normal := hnormal (i + 1)
       haveI : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
-      letI : IsInvariant A G K := hinv i
+      letI : IsInvariantSubgroup A G K := hinv i
       letI : MulDistribMulAction A K := inferInstance
-      have hNinv : IsInvariant A K N := by
+      have hNinv : IsInvariantSubgroup A K N := by
         constructor
         intro b x
         constructor
@@ -1480,7 +1480,7 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant b (x : G) |>.mpr hsmulG
           simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
-      letI : IsInvariant A K N := hNinv
+      letI : IsInvariantSubgroup A K N := hNinv
       letI : MulDistribMulAction A (K ⧸ N) :=
         quotientMulDistribMulAction (A := A) (G := K) N hNinv
       have hQcard : Nat.card (K ⧸ N) = p := by
@@ -1522,10 +1522,10 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
   letI : IsSolvable R := inferInstance
   letI : H.Characteristic := hHchar
   letI : H.Normal := by infer_instance
-  letI : IsInvariant A R H :=
+  letI : IsInvariantSubgroup A R H :=
     isInvariant_of_characteristic (A := A) (G := R) H
   letI : MulDistribMulAction A H := inferInstance
-  letI : IsInvariant (derivedSubgroup A) R H :=
+  letI : IsInvariantSubgroup (derivedSubgroup A) R H :=
     isInvariant_of_characteristic (A := derivedSubgroup A) (G := R) H
   letI : MulDistribMulAction (derivedSubgroup A) H := inferInstance
   have hker_eq :
@@ -1614,14 +1614,14 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
       letI : (GiR n).Characteristic := hGi_char
       have hGi_norm : (GiR n).Normal := by infer_instance
       simpa [GiH] using Subgroup.Normal.subgroupOf hGi_norm H
-    have hinv : ∀ n, IsInvariant A H (GiH n) := by
+    have hinv : ∀ n, IsInvariantSubgroup A H (GiH n) := by
       intro n
       have hGi_char :
           (GiR n).Characteristic := by
         simpa [GiR] using
           theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
       letI : (GiR n).Characteristic := hGi_char
-      have hGi_inv_R : IsInvariant A R (GiR n) :=
+      have hGi_inv_R : IsInvariantSubgroup A R (GiR n) :=
         isInvariant_of_characteristic (A := A) (G := R) (GiR n)
       constructor
       intro a x
@@ -1787,7 +1787,7 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
   letI : Group.IsNilpotent R := hRnil
   letI : H.Characteristic := hHchar
   letI : H.Normal := by infer_instance
-  letI : IsInvariant A R H :=
+  letI : IsInvariantSubgroup A R H :=
     isInvariant_of_characteristic (A := A) (G := R) H
   letI : MulDistribMulAction A H := inferInstance
   have hHpgroup : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
@@ -1851,14 +1851,14 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     letI : (GiR n).Characteristic := hGi_char
     have hGi_norm : (GiR n).Normal := by infer_instance
     simpa [GiH] using Subgroup.Normal.subgroupOf hGi_norm H
-  have hinv : ∀ n, IsInvariant A H (GiH n) := by
+  have hinv : ∀ n, IsInvariantSubgroup A H (GiH n) := by
     intro n
     have hGi_char :
         (GiR n).Characteristic := by
       simpa [GiR] using
         theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
     letI : (GiR n).Characteristic := hGi_char
-    have hGi_inv_R : IsInvariant A R (GiR n) :=
+    have hGi_inv_R : IsInvariantSubgroup A R (GiR n) :=
       isInvariant_of_characteristic (A := A) (G := R) (GiR n)
     constructor
     intro b x

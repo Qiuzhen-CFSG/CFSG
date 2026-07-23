@@ -567,7 +567,7 @@ public theorem section13_isInvariant_subgroupOf_of_le_normalizer
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
     (_hKH : K ≤ H) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
+    IsInvariantSubgroup (↥A) (↥H) (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
   refine ⟨?_⟩
   intro a x
@@ -708,7 +708,7 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
   have hE₁_norm_X : E₁ ≤ Subgroup.normalizer (X : Set G) :=
     section13_le_normalizer_of_le_centralizer (G := G)
       (hXleCE₁.trans inf_le_right)
-  have hXsub_inv : IsInvariant (↥E₁) (↥K) Xsub :=
+  have hXsub_inv : IsInvariantSubgroup (↥E₁) (↥K) Xsub :=
     section13_isInvariant_subgroupOf_of_le_normalizer
       (G := G) (A := E₁) (H := K) (K := X)
       hE₁_norm_K hE₁_norm_X hXleK
@@ -756,7 +756,7 @@ private theorem section13_lemma_13_6_conjugate_centralizes_derivedE
       section13_le_normalizer_map_of_isInvariant
         (G := G) (A := E₁) (H := C) (K := (TC : Subgroup C))
         hE₁_norm_C hTCinv
-  have hHCinv : IsInvariant (↥E₁) (↥K) HC :=
+  have hHCinv : IsInvariantSubgroup (↥E₁) (↥K) HC :=
     section13_isInvariant_subgroupOf_of_le_normalizer
       (G := G) (A := E₁) (H := K) (K := Pamb)
       hE₁_norm_K hPamb_norm hPamb_le_K
@@ -1319,7 +1319,7 @@ public theorem section13_lemma_13_7_prime_conj_le_E1_or_E3
       mul_smul := fun _ _ x => rfl
       smul_mul := fun _ x y => rfl
       smul_one := fun _ => rfl }
-    have hXJinv : IsInvariant Unit J XJ := by
+    have hXJinv : IsInvariantSubgroup Unit J XJ := by
       refine ⟨?_⟩
       intro a x
       simp
@@ -1721,7 +1721,7 @@ public theorem section13_exists_EData_containing_tau1_piSubgroup
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hAinv_M : IsInvariant Unit M A_M := by
+  have hAinv_M : IsInvariantSubgroup Unit M A_M := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1762,7 +1762,7 @@ public theorem section13_exists_EData_containing_tau1_piSubgroup
         (section12Tau1Primes M ∪ section12Tau2Primes M) A_E := by
     exact section13_isPiSubgroup_subgroupOf
       (fun q hqA => Or.inl (hAπ q hqA)) hA_E
-  have hAinv_E : IsInvariant Unit E A_E := by
+  have hAinv_E : IsInvariantSubgroup Unit E A_E := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1800,7 +1800,7 @@ public theorem section13_exists_EData_containing_tau1_piSubgroup
   let A_E₁₂ : Subgroup E₁₂ := A.subgroupOf E₁₂
   have hAπ_E₁₂ : IsPiSubgroup (G := E₁₂) (section12Tau1Primes M) A_E₁₂ :=
     section13_isPiSubgroup_subgroupOf hAπ hA_E₁₂
-  have hAinv_E₁₂ : IsInvariant Unit E₁₂ A_E₁₂ := by
+  have hAinv_E₁₂ : IsInvariantSubgroup Unit E₁₂ A_E₁₂ := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1821,7 +1821,7 @@ public theorem section13_exists_EData_containing_tau1_piSubgroup
   have hbotτ2 : IsPiSubgroup (G := E₁₂) (section12Tau2Primes M) (⊥ : Subgroup E₁₂) := by
     intro q hq
     exact False.elim (q.property.not_dvd_one (by simpa using hq))
-  have hbotInv_E₁₂ : IsInvariant Unit E₁₂ (⊥ : Subgroup E₁₂) := by
+  have hbotInv_E₁₂ : IsInvariantSubgroup Unit E₁₂ (⊥ : Subgroup E₁₂) := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1836,7 +1836,7 @@ public theorem section13_exists_EData_containing_tau1_piSubgroup
   have hbotτ3 : IsPiSubgroup (G := E) (section12Tau3Primes M) (⊥ : Subgroup E) := by
     intro q hq
     exact False.elim (q.property.not_dvd_one (by simpa using hq))
-  have hbotInv_E : IsInvariant Unit E (⊥ : Subgroup E) := by
+  have hbotInv_E : IsInvariantSubgroup Unit E (⊥ : Subgroup E) := by
     refine ⟨?_⟩
     intro _ x
     simp
@@ -1868,7 +1868,7 @@ public theorem section13_exists_EData_containing_sigma_compl_piSubgroup
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hAinv_M : IsInvariant Unit M A_M := by
+  have hAinv_M : IsInvariantSubgroup Unit M A_M := by
     refine ⟨?_⟩
     intro _ x
     simp

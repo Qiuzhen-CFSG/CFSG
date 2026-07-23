@@ -992,7 +992,7 @@ public theorem exists_invariant_sylow_of_pi_complement_action
     [MulDistribMulAction A G] {π : Set Nat.Primes}
     (hGπ : IsPiGroup π G) (hAπ' : IsPiGroup (πᶜ) A) (hGsolv : IsSolvable G)
     {p : ℕ} [Fact p.Prime] (_hpπ : (⟨p, Fact.out⟩ : Nat.Primes) ∈ π) :
-    ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) := by
+    ∃ P : Sylow p G, IsInvariantSubgroup A G (P : Subgroup G) := by
   classical
   -- This is the solvable-`G` branch of Gorenstein 6.2.2, obtained via
   -- coprime Hall-subgroup existence.
@@ -1015,7 +1015,7 @@ public theorem exists_invariant_sylow_of_pgroup_operator_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] {r p : ℕ} [Fact r.Prime] [Fact p.Prime]
     [Fact (IsPGroup r A)] (hcoprime : Nat.Coprime r (Nat.card G)) :
-    ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) := by
+    ∃ P : Sylow p G, IsInvariantSubgroup A G (P : Subgroup G) := by
   -- Source: adapted from
   -- `FeitThompson/GroupAction/NoncyclicAbelianPGroup.lean: exists_invariant_sylow`.
   classical
@@ -1285,7 +1285,7 @@ private theorem mem_centralizer_of_quotient_frattini_local
     exact Subgroup.le_normalizer_of_normal (K := Subgroup.zpowers x) (H := H)
   letI : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) (Subgroup.zpowers x) H hznorm
-  have hfrattini_inv : IsInvariant (↥(Subgroup.zpowers x)) (↥H) (frattini H) :=
+  have hfrattini_inv : IsInvariantSubgroup (↥(Subgroup.zpowers x)) (↥H) (frattini H) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers x)) (G := ↥H) (frattini H)
   have hquot :
       letI : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H ⧸ frattini H) :=
@@ -4392,7 +4392,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
             change conjR g 1 = 1
             ext
             simp [conjR] }
-      have hfrattini_inv : IsInvariant G R (frattini R) :=
+      have hfrattini_inv : IsInvariantSubgroup G R (frattini R) :=
         isInvariant_of_characteristic (A := G) (G := R) (frattini R)
       letI : MulAction.QuotientAction G (frattini R) :=
         quotientAction_of_isInvariant (A := G) (frattini R) hfrattini_inv
@@ -4475,7 +4475,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
             change conjR g 1 = 1
             ext
             simp [conjR] }
-      have hfrattini_inv : IsInvariant G R (frattini R) :=
+      have hfrattini_inv : IsInvariantSubgroup G R (frattini R) :=
         isInvariant_of_characteristic (A := G) (G := R) (frattini R)
       letI : MulAction.QuotientAction G (frattini R) :=
         quotientAction_of_isInvariant (A := G) (frattini R) hfrattini_inv
@@ -4594,7 +4594,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
           change conjR g 1 = 1
           ext
           simp [conjR] }
-    have hfrattini_inv : IsInvariant G R (frattini R) :=
+    have hfrattini_inv : IsInvariantSubgroup G R (frattini R) :=
       isInvariant_of_characteristic (A := G) (G := R) (frattini R)
     letI : MulAction.QuotientAction G (frattini R) :=
       quotientAction_of_isInvariant (A := G) (frattini R) hfrattini_inv

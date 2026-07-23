@@ -162,7 +162,7 @@ public theorem section14_conjugate_kappa_element_into_hall
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hYsubInv : IsInvariant Unit M Ysub := by
+  have hYsubInv : IsInvariantSubgroup Unit M Ysub := by
     refine ⟨?_⟩
     intro _ z
     simp [Ysub]

@@ -14,8 +14,8 @@ public section
 theorem proposition_1_5_b {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
-    ∀ K : Subgroup G, IsPiSubgroup (G := G) π K → IsInvariant A G K →
-      ∃ H : Subgroup G, IsHallSubgroup π H ∧ IsInvariant A G H ∧ K ≤ H := by
+    ∀ K : Subgroup G, IsPiSubgroup (G := G) π K → IsInvariantSubgroup A G K →
+      ∃ H : Subgroup G, IsHallSubgroup π H ∧ IsInvariantSubgroup A G H ∧ K ≤ H := by
   intro K hK_pi hK_inv
   exact exists_isHallSubgroup_isInvariant_of_isPiSubgroup
     (G := G) (A := A) hsolv hcoprime π K hK_pi hK_inv
@@ -27,8 +27,8 @@ theorem proposition_1_5_c {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
     ∀ H₁ H₂ : Subgroup G,
       IsHallSubgroup π H₁ →
         IsHallSubgroup π H₂ →
-          IsInvariant A G H₁ →
-            IsInvariant A G H₂ →
+          IsInvariantSubgroup A G H₁ →
+            IsInvariantSubgroup A G H₂ →
               ∃ g : G, g ∈ fixedPointSubgroup A G ∧ H₂ = H₁.map (MulAut.conj g) := by
   intro H₁ H₂ hHall₁ hHall₂ hInv₁ hInv₂
   exact
@@ -39,7 +39,7 @@ theorem proposition_1_5_c {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
 theorem proposition_1_5_d {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
-    ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
+    ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariantSubgroup A G H),
       letI : MulDistribMulAction A (G ⧸ H) :=
         quotientMulDistribMulAction (A := A) (G := G) H hHinv
       fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by

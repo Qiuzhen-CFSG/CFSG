@@ -136,9 +136,9 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
     have hVcard : Nat.card (H ⧸ frattini H) ≤ p ^ 2 :=
       natCard_frattini_quotient_le_p_sq_of_groupRank_le_two_and_exponent_p
         (R := H) (p := p) hHrank hHexp
-    letI : IsInvariant A R H := isInvariant_of_characteristic (A := A) (G := R) H
+    letI : IsInvariantSubgroup A R H := isInvariant_of_characteristic (A := A) (G := R) H
     letI : MulDistribMulAction A H := inferInstance
-    have hΦinv : IsInvariant A H (frattini H) :=
+    have hΦinv : IsInvariantSubgroup A H (frattini H) :=
       isInvariant_of_characteristic (A := A) (G := H) (frattini H)
     let V : Type _ := H ⧸ frattini H
     letI : MulDistribMulAction A V :=

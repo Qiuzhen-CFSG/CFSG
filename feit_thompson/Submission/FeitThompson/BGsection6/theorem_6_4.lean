@@ -1225,7 +1225,7 @@ private theorem theorem_6_4_main
           letI : H.Normalizes Lstar := ⟨hHnorm_Lstar⟩
           letI : MulDistribMulAction ↥H ↥Lstar :=
             Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) H Lstar hHnorm_Lstar
-          haveI : IsInvariant ↥H ↥Lstar ((J₁.conjBy x0).subgroupOf Lstar) := by
+          haveI : IsInvariantSubgroup ↥H ↥Lstar ((J₁.conjBy x0).subgroupOf Lstar) := by
             refine ⟨?_⟩
             intro h g
             change (((g : Lstar) : G) ∈ J₁.conjBy x0) ↔
@@ -1233,7 +1233,7 @@ private theorem theorem_6_4_main
             rw [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
             exact
               (Subgroup.mem_normalizer_iff.mp (hHnorm_J₁x0 h.property)) ((g : Lstar) : G)
-          haveI : IsInvariant ↥H ↥Lstar (J₂.subgroupOf Lstar) := by
+          haveI : IsInvariantSubgroup ↥H ↥Lstar (J₂.subgroupOf Lstar) := by
             refine ⟨?_⟩
             intro h g
             change (((g : Lstar) : G) ∈ J₂) ↔ (((h • g : Lstar) : G) ∈ J₂)

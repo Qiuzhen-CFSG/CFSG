@@ -213,7 +213,7 @@ public theorem theorem_5_5_c_2
     have hquot_cyc : IsCyclic (R ⧸ Ω) := by
       let e : R ⧸ R₁ ≃* R ⧸ Ω := QuotientGroup.quotientMulEquivOfEq hΩ_eq_R₁.symm
       exact (e.isCyclic).1 hquot_cyc_R₁
-    have hΩinv : IsInvariant A R Ω := isInvariant_of_characteristic (A := A) (G := R) Ω
+    have hΩinv : IsInvariantSubgroup A R Ω := isInvariant_of_characteristic (A := A) (G := R) Ω
     letI : Ω.Normal := inferInstance
     letI : MulAction.QuotientAction A Ω := quotientAction_of_isInvariant (A := A) Ω hΩinv
     letI : MulDistribMulAction A (R ⧸ Ω) :=

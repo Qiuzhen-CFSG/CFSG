@@ -516,7 +516,7 @@ public lemma isInvariant_subgroupOf_of_le_normalizer
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
     (_hKH : K ≤ H) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
+    IsInvariantSubgroup (↥A) (↥H) (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
   refine ⟨?_⟩
   intro a x

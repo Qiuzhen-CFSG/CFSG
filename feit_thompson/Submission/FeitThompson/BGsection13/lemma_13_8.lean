@@ -1124,7 +1124,7 @@ private theorem section13_lemma_13_8_exists_hall_in_centralizer_containing_piSub
   have hcop : Nat.Coprime (Nat.card PUnit.{1}) (Nat.card C) := by simp
   have hKπC : IsPiSubgroup (G := C) π (K.subgroupOf C) :=
     section13_isPiSubgroup_subgroupOf (G := G) hKπ (by simpa [C] using hK_C)
-  have hKinv : IsInvariant PUnit.{1} C (K.subgroupOf C) := by
+  have hKinv : IsInvariantSubgroup PUnit.{1} C (K.subgroupOf C) := by
     refine ⟨?_⟩
     intro a x
     cases a
@@ -1862,7 +1862,7 @@ omit [IsMinCE G] in
 private theorem section13_fixedPointSubgroup_quotient_eq_map_of_solvable_kernel_coprime
     {L A : Type*} [Group L] [Finite L] [Group A] [Finite A]
     [MulDistribMulAction A L]
-    (K : Subgroup L) [K.Normal] (hKinv : IsInvariant A L K)
+    (K : Subgroup L) [K.Normal] (hKinv : IsInvariantSubgroup A L K)
     (hKsolv : IsSolvable K)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card K)) :
     letI : MulDistribMulAction A (L ⧸ K) :=
@@ -1870,7 +1870,7 @@ private theorem section13_fixedPointSubgroup_quotient_eq_map_of_solvable_kernel_
     fixedPointSubgroup A (L ⧸ K) =
       (fixedPointSubgroup A L).map (QuotientGroup.mk' K) := by
   classical
-  letI : IsInvariant A L K := hKinv
+  letI : IsInvariantSubgroup A L K := hKinv
   letI : MulAction.QuotientAction A K :=
     quotientAction_of_isInvariant (A := A) (G := L) K hKinv
   letI : MulDistribMulAction A (L ⧸ K) :=
@@ -1975,7 +1975,7 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
     haveI : KUsub.Normal := by
       dsimp [KUsub]
       exact Subgroup.normal_subgroupOf_of_le_normalizer (N := K) hU_norm_K
-    have hKUinv : IsInvariant (↥P) (↥U) KUsub := by
+    have hKUinv : IsInvariantSubgroup (↥P) (↥U) KUsub := by
       refine ⟨?_⟩
       intro a x
       change ((x : U) : G) ∈ K ↔
@@ -2014,7 +2014,7 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
       simpa [hmap] using hcard_map.symm
     have hcop : Nat.Coprime (Nat.card P) (Nat.card KUsub) := by
       simpa [hKUsub_card] using hcopKU
-    letI : IsInvariant (↥P) (↥U) KUsub := hKUinv
+    letI : IsInvariantSubgroup (↥P) (↥U) KUsub := hKUinv
     letI : MulAction.QuotientAction (↥P) KUsub :=
       quotientAction_of_isInvariant (A := ↥P) (G := ↥U) KUsub hKUinv
     letI : MulDistribMulAction (↥P) (↥U ⧸ KUsub) :=
@@ -2061,12 +2061,12 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
     haveI : KsubS.Normal := by
       dsimp [KsubS, S]
       exact Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := U) (N := K) hU_norm_K
-    have hKsubS_inv : IsInvariant (↥P) (↥S) KsubS := by
+    have hKsubS_inv : IsInvariantSubgroup (↥P) (↥S) KsubS := by
       simpa [KsubS] using
         section13_isInvariant_subgroupOf_of_le_normalizer
           (G := G) (A := P) (H := S) (K := K)
           hP_norm_S hP_norm_K le_sup_right
-    letI : IsInvariant (↥P) (↥S) KsubS := hKsubS_inv
+    letI : IsInvariantSubgroup (↥P) (↥S) KsubS := hKsubS_inv
     letI : MulAction.QuotientAction (↥P) KsubS :=
       quotientAction_of_isInvariant (A := ↥P) (G := ↥S) KsubS hKsubS_inv
     letI : MulDistribMulAction (↥P) (↥S ⧸ KsubS) :=

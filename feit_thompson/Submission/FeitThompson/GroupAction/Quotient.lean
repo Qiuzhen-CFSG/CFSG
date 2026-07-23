@@ -221,20 +221,20 @@ open MulAction
 
 variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
 
-/-- If a subgroup `H` is `A`-invariant (in the sense of `IsInvariant`), then the action descends to
+/-- If a subgroup `H` is `A`-invariant (in the sense of `IsInvariantSubgroup`), then the action descends to
 `G ⧸ H`. -/
-public lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A G H) :
+public lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariantSubgroup A G H) :
     MulAction.QuotientAction A H where
   inv_mul_mem a {g g'} hg := by
     -- Use invariance of `H` and the fact `a` acts by an automorphism.
     have hH' : ∀ a : A, ∀ g : G, g ∈ H ↔ a • g ∈ H := by
-      exact IsInvariant.invariant
+      exact IsInvariantSubgroup.invariant
     have : a • (g⁻¹ * g') ∈ H := (hH' a (g⁻¹ * g')).1 hg
     simpa [smul_mul_assoc, smul_inv_smul] using this
 
 /-- A `MulDistribMulAction` on `G ⧸ H` induced by an `A`-action on `G` that preserves `H`. -/
 @[reducible, expose]
-public noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariant A G H)
+public noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariantSubgroup A G H)
     [H.Normal] : MulDistribMulAction A (G ⧸ H) := by
   classical
   -- First, install the descended `MulAction`.
@@ -268,10 +268,10 @@ public noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsIn
 /-- For the induced action on `G ⧸ H`, the image of fixed points in `G` lies in fixed points of
 the quotient. -/
 public theorem fixedPointSubgroup_map_mk'_le_fixedPointSubgroup_quotient
-    (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H) :
+    (H : Subgroup G) [H.Normal] (hH : IsInvariantSubgroup A G H) :
     letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
     (fixedPointSubgroup A G).map (QuotientGroup.mk' H) ≤ fixedPointSubgroup A (G ⧸ H) := by
-  letI : IsInvariant A G H := hH
+  letI : IsInvariantSubgroup A G H := hH
   letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
   letI : MulAction.QuotientAction A H := quotientAction_of_isInvariant (A := A) H hH
   intro q hq
@@ -291,12 +291,12 @@ public theorem fixedPointSubgroup_map_mk'_le_fixedPointSubgroup_quotient
 public theorem fixedPointSubgroup_quotient_eq_map_of_isMulCommutative
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G]
-    (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H)
+    (H : Subgroup G) [H.Normal] (hH : IsInvariantSubgroup A G H)
     [IsMulCommutative H]
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card H)) :
     letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
     fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
-  letI : IsInvariant A G H := hH
+  letI : IsInvariantSubgroup A G H := hH
   letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
   letI : MulAction.QuotientAction A H := quotientAction_of_isInvariant (A := A) H hH
   letI : CommGroup H := by infer_instance
@@ -357,7 +357,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
     [MulDistribMulAction A G]
     (hsolv : IsSolvable G)
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
-    ∀ (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H),
+    ∀ (H : Subgroup G) [H.Normal] (hH : IsInvariantSubgroup A G H),
       letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
       fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
   classical
@@ -366,7 +366,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
       Nat.card G' = n →
         IsSolvable G' →
           Nat.Coprime (Nat.card A) (Nat.card G') →
-            ∀ (H' : Subgroup G') [H'.Normal] (hH' : IsInvariant A G' H'),
+            ∀ (H' : Subgroup G') [H'.Normal] (hH' : IsInvariantSubgroup A G' H'),
               letI : MulDistribMulAction A (G' ⧸ H') :=
                 quotientMulDistribMulAction (A := A) (G := G') H' hH'
               fixedPointSubgroup A (G' ⧸ H') = (fixedPointSubgroup A G').map (QuotientGroup.mk' H')
@@ -374,7 +374,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
     intro n
     refine Nat.strong_induction_on n ?_
     intro n ih G' _ _ _ hcard hsolv' hcop' H' _hH'Normal hH'
-    letI : IsInvariant A G' H' := hH'
+    letI : IsInvariantSubgroup A G' H' := hH'
     letI : MulAction.QuotientAction A H' := quotientAction_of_isInvariant (A := A) H' hH'
     letI : MulDistribMulAction A (G' ⧸ H') :=
       quotientMulDistribMulAction (A := A) (G := G') H' hH'
@@ -432,7 +432,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := N) (H₂ := N)).1 hcomm_botN
       haveI : IsMulCommutative N :=
         (Subgroup.le_centralizer_iff_isMulCommutative (K := N)).1 hN_le_cent
-      haveI : IsInvariant A H' N0 := by
+      haveI : IsInvariantSubgroup A H' N0 := by
         refine ⟨?_⟩
         intro a g
         have hfixed :
@@ -450,22 +450,22 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
           have hg'' := hg'
           rw [hfixed] at hg''
           exact hg''
-      have hNinv : IsInvariant A G' N := by
+      have hNinv : IsInvariantSubgroup A G' N := by
         refine ⟨?_⟩
         intro a g
         constructor
         · rintro ⟨x, hx, rfl⟩
-          refine ⟨a • x, (IsInvariant.invariant (A := A) (G := H') (H := N0) a x).1 hx, ?_⟩
+          refine ⟨a • x, (IsInvariantSubgroup.invariant (A := A) (G := H') (H := N0) a x).1 hx, ?_⟩
           rfl
         · rintro ⟨x, hx, hxg⟩
-          refine ⟨a⁻¹ • x, (IsInvariant.invariant (A := A) (G := H') (H := N0) a⁻¹ x).1 hx, ?_⟩
+          refine ⟨a⁻¹ • x, (IsInvariantSubgroup.invariant (A := A) (G := H') (H := N0) a⁻¹ x).1 hx, ?_⟩
           have : ((a⁻¹ • x : H') : G') = g := by
             calc
               ((a⁻¹ • x : H') : G') = a⁻¹ • (x : G') := by rfl
               _ = a⁻¹ • (a • g) := by simpa using congrArg (fun t : G' => a⁻¹ • t) hxg
               _ = g := inv_smul_smul a g
           simp [this]
-      letI : IsInvariant A G' N := hNinv
+      letI : IsInvariantSubgroup A G' N := hNinv
       letI : MulAction.QuotientAction A N := quotientAction_of_isInvariant (A := A) N hNinv
       let Q := G' ⧸ N
       letI : Group Q := by infer_instance
@@ -487,21 +487,21 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
         simpa [hEq] using hlt
       let fN : G' →* Q := QuotientGroup.mk' N
       let Hbar : Subgroup Q := H'.map fN
-      have hHbar_inv : IsInvariant A Q Hbar := by
+      have hHbar_inv : IsInvariantSubgroup A Q Hbar := by
         refine ⟨?_⟩
         intro a q
         constructor
         · rintro ⟨g, hg, rfl⟩
-          refine ⟨a • g, (IsInvariant.invariant (A := A) (G := G') (H := H') a g).1 hg, ?_⟩
+          refine ⟨a • g, (IsInvariantSubgroup.invariant (A := A) (G := G') (H := H') a g).1 hg, ?_⟩
           change (QuotientGroup.mk' N) (a • g) = a • ((QuotientGroup.mk' N) g)
           exact MulAction.Quotient.smul_mk (H := N) a g
         · rintro ⟨g, hg, hq⟩
-          refine ⟨a⁻¹ • g, (IsInvariant.invariant (A := A) (G := G') (H := H') a⁻¹ g).1 hg, ?_⟩
+          refine ⟨a⁻¹ • g, (IsInvariantSubgroup.invariant (A := A) (G := G') (H := H') a⁻¹ g).1 hg, ?_⟩
           have : fN (a⁻¹ • g) = a⁻¹ • fN g := by
             change (QuotientGroup.mk' N) (a⁻¹ • g) = a⁻¹ • ((QuotientGroup.mk' N) g)
             exact MulAction.Quotient.smul_mk (H := N) (a⁻¹) g
           simp [this, hq]
-      letI : IsInvariant A Q Hbar := hHbar_inv
+      letI : IsInvariantSubgroup A Q Hbar := hHbar_inv
       letI : MulAction.QuotientAction A Hbar := quotientAction_of_isInvariant (A := A) Hbar hHbar_inv
       letI : MulDistribMulAction A (Q ⧸ Hbar) :=
         quotientMulDistribMulAction (A := A) (G := Q) Hbar hHbar_inv
@@ -607,11 +607,11 @@ section IsInvariantQuotient
 open QuotientGroup
 
 public lemma isInvariant_map_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {N : Subgroup G} [N.Normal] [IsInvariant A G N]
-    (H : Subgroup G) [IsInvariant A G H] :
+    {N : Subgroup G} [N.Normal] [IsInvariantSubgroup A G N]
+    (H : Subgroup G) [IsInvariantSubgroup A G H] :
     letI : MulDistribMulAction A (G ⧸ N) :=
       quotientMulDistribMulAction (A := A) (G := G) N inferInstance
-    IsInvariant A (G ⧸ N) (H.map (mk' N)) := by
+    IsInvariantSubgroup A (G ⧸ N) (H.map (mk' N)) := by
   letI : MulAction.QuotientAction A N :=
     quotientAction_of_isInvariant (A := A) (G := G) N inferInstance
   letI : MulDistribMulAction A (G ⧸ N) :=
@@ -620,32 +620,32 @@ public lemma isInvariant_map_quotient {G A : Type*} [Group G] [Group A] [MulDist
   intro a q
   constructor
   · rintro ⟨g, hg, rfl⟩
-    refine ⟨a • g, (IsInvariant.invariant (A := A) (G := G) (H := H) a g).1 hg, ?_⟩
+    refine ⟨a • g, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a g).1 hg, ?_⟩
     -- Show that `(a • g : G) ⧸ N = a • (g : G ⧸ N)`
     -- This holds because the quotient action is defined via `QuotientAction`.
     exact (MulAction.Quotient.smul_coe (H := N) (a : A) (g : G)).symm
   · rintro ⟨g, hg, hq⟩
-    refine ⟨a⁻¹ • g, (IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ g).1 hg, ?_⟩
+    refine ⟨a⁻¹ • g, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ g).1 hg, ?_⟩
     have hsmul := congrArg (fun z : G ⧸ N => a⁻¹ • z) hq
     simpa [inv_smul_smul] using hsmul
 
 public lemma isInvariant_comap_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {N : Subgroup G} [N.Normal] [IsInvariant A G N]
+    {N : Subgroup G} [N.Normal] [IsInvariantSubgroup A G N]
     (H : Subgroup (G ⧸ N))
-    [hQ : MulDistribMulAction A (G ⧸ N)] [IsInvariant A (G ⧸ N) H]
+    [hQ : MulDistribMulAction A (G ⧸ N)] [IsInvariantSubgroup A (G ⧸ N) H]
     (hq : ∀ a : A, ∀ g : G, a • ((mk' N) g) = (mk' N) (a • g)) :
-    IsInvariant A G (H.comap (mk' N)) := by
+    IsInvariantSubgroup A G (H.comap (mk' N)) := by
   refine ⟨?_⟩
   intro a g
   constructor
   · intro hg
     change (mk' N) (a • g) ∈ H
     rw [← hq a g]
-    exact (IsInvariant.invariant (A := A) (G := G ⧸ N) (H := H) a ((mk' N) g)).1 hg
+    exact (IsInvariantSubgroup.invariant (A := A) (G := G ⧸ N) (H := H) a ((mk' N) g)).1 hg
   · intro hg
     change (mk' N) g ∈ H
     have hg' : a⁻¹ • ((mk' N) (a • g)) ∈ H :=
-      (IsInvariant.invariant (A := A) (G := G ⧸ N) (H := H) a⁻¹ ((mk' N) (a • g))).1 hg
+      (IsInvariantSubgroup.invariant (A := A) (G := G ⧸ N) (H := H) a⁻¹ ((mk' N) (a • g))).1 hg
     have hcalc : a⁻¹ • ((mk' N) (a • g)) = (mk' N) g := by
       calc
         a⁻¹ • ((mk' N) (a • g)) = (mk' N) (a⁻¹ • (a • g)) := by

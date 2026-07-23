@@ -211,10 +211,8 @@ omit [Finite G] [FiniteDimensional ℂ A] in
 noncomputable abbrev indToCoind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     Representation.IndV S.subtype ρ →ₗ[ℂ] Representation.coindV S.subtype ρ :=
-  Representation.Coinvariants.lift _ (TensorProduct.lift <|
-    (linearCombination _ fun g =>
-      LinearMap.codRestrict _ (indToCoindAux S ρ g) fun _ _ _ => by simp) ∘ₗ
-      (MonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) fun _ => by ext; simp
+  Representation.Coinvariants.lift _ (TensorProduct.lift <| linearCombination _ fun g =>
+    LinearMap.codRestrict _ (indToCoindAux S ρ g) fun _ _ _ => by simp) fun _ => by ext; simp
 
 omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp] lemma indToCoind_mk
@@ -235,7 +233,7 @@ omit [Finite G] [FiniteDimensional ℂ A] in
         (fun g => Representation.IndV.mk S.subtype ρ g (f.1 g))
         fun g₁ g₂ ⟨s, (hs : _ * _ = _)⟩ =>
           (Submodule.Quotient.eq _).2 <| Representation.Coinvariants.mem_ker_of_eq s
-            (MonoidAlgebra.single g₂ 1 ⊗ₜ[ℂ] f.1 g₂) _ <| by
+            (single g₂ 1 ⊗ₜ[ℂ] f.1 g₂) _ <| by
               have := f.2 s g₂
               simp_all
   map_add' _ _ := by

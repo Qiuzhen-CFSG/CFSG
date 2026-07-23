@@ -397,17 +397,28 @@ private noncomputable def classFunctionCentralElement (φ : ClassFunction G) :
 private lemma classFunctionCentralElement_coeff (φ : ClassFunction G) (g : G) :
     (classFunctionCentralElement (G := G) φ).coeff g = φ (ConjClasses.mk g⁻¹) := by
   classical
-  simp [classFunctionCentralElement, Finsupp.single_apply]
+  simp only [classFunctionCentralElement, MonoidAlgebra.coeff_sum]
+  rw [Finset.sum_apply']
+  change ∑ c : G, (Finsupp.single c (φ (ConjClasses.mk c⁻¹))) g = _
+  simp only [Finsupp.single_apply]
+  rw [Finset.sum_ite_eq' Finset.univ g]
+  simp
+
+private lemma classFunctionCentralElement_apply (φ : ClassFunction G) (g : G) :
+    classFunctionCentralElement (G := G) φ g = φ (ConjClasses.mk g⁻¹) :=
+  classFunctionCentralElement_coeff φ g
 
 private noncomputable def classFunctionCentralElementLinear :
     ClassFunction G →ₗ[ℂ] GroupAlgebra (G := G) where
   toFun φ := classFunctionCentralElement (G := G) φ
   map_add' φ ψ := by
     classical
+    apply MonoidAlgebra.coeff_injective
     ext g
     simp [classFunctionCentralElement_coeff]
   map_smul' c φ := by
     classical
+    apply MonoidAlgebra.coeff_injective
     ext g
     simp [classFunctionCentralElement_coeff, smul_eq_mul]
 
@@ -418,9 +429,9 @@ private lemma classFunctionCentralElement_single_comm (φ : ClassFunction G) (h 
         MonoidAlgebra.single h (1 : ℂ) := by
   classical
   ext x
-  simp only [MonoidAlgebra.coeff_single_mul_apply,
-    MonoidAlgebra.coeff_mul_single_apply, one_mul, mul_one,
-    classFunctionCentralElement_coeff]
+  simp only [(MonoidAlgebra.single_mul_apply),
+    (MonoidAlgebra.mul_single_apply), one_mul, mul_one,
+    classFunctionCentralElement_apply]
   have hconj :
       ConjClasses.mk ((h⁻¹ * x)⁻¹) = ConjClasses.mk ((x * h⁻¹)⁻¹) := by
     rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
@@ -444,9 +455,9 @@ private lemma classFunctionCentralElement_comm (φ : ClassFunction G) (a : Group
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
       have hφ := congrArg φ hconj
-      simp only [MonoidAlgebra.coeff_single_mul_apply,
-        MonoidAlgebra.coeff_mul_single_apply,
-        classFunctionCentralElement_coeff]
+      simp only [(MonoidAlgebra.single_mul_apply),
+        (MonoidAlgebra.mul_single_apply),
+        classFunctionCentralElement_apply]
       rw [hφ, mul_comm]
 
 private lemma blockAlgHom_classFunctionCentralElement_mem_center

@@ -41,8 +41,8 @@ public theorem section12_piSubgroup_le_normal_hall
 public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     {V A : Type*} [Group V] [Finite V] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p V] [Group A] [Finite A] [MulDistribMulAction A V]
-    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariant A V B] :
-    ∃ C : Subgroup V, IsCompl B C ∧ IsInvariant A V C := by
+    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariantSubgroup A V B] :
+    ∃ C : Subgroup V, IsCompl B C ∧ IsInvariantSubgroup A V C := by
   classical
   letI : CommGroup V := IsMulCommutative.instCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
@@ -61,7 +61,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     intro x hx
     have hxB : Additive.toMul x ∈ B := by simpa [η] using hx
     simpa [ρ, η] using
-      (IsInvariant.invariant (A := A) (G := V) (H := B) a (Additive.toMul x)).1 hxB
+      (IsInvariantSubgroup.invariant (A := A) (G := V) (H := B) a (Additive.toMul x)).1 hxB
   let Bpack : ρ.invtSubmodule := ⟨η B, hBinv⟩
   haveI : Fintype A := Fintype.ofFinite A
   haveI : NeZero (Fintype.card A : ZMod p) := by
@@ -80,7 +80,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (ZMod p) inferInstance A inferInstance inferInstance ρ.asModule instAdd instMod inferInstance Bmod
   let Cpack : ρ.invtSubmodule := ρ.mapSubmodule.symm Cmod
   let C : Subgroup V := η.symm (Cpack : Submodule (ZMod p) (Additive V))
-  have hCinv : IsInvariant A V C := by
+  have hCinv : IsInvariantSubgroup A V C := by
     refine ⟨?_⟩
     intro a v
     constructor
@@ -364,44 +364,44 @@ private theorem section12_E1_le_normalizer_E2
 
 private theorem section12_isInvariant_map_quotient_local
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {N : Subgroup G} [N.Normal] [IsInvariant A G N]
-    (H : Subgroup G) [IsInvariant A G H] :
+    {N : Subgroup G} [N.Normal] [IsInvariantSubgroup A G N]
+    (H : Subgroup G) [IsInvariantSubgroup A G H] :
     letI : MulDistribMulAction A (G ⧸ N) :=
       quotientMulDistribMulAction (A := A) (G := G) N inferInstance
-    IsInvariant A (G ⧸ N) (H.map (QuotientGroup.mk' N)) := by
+    IsInvariantSubgroup A (G ⧸ N) (H.map (QuotientGroup.mk' N)) := by
   letI : MulDistribMulAction A (G ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := G) N inferInstance
   refine ⟨?_⟩
   intro a q
   constructor
   · rintro ⟨g, hg, rfl⟩
-    refine ⟨a • g, (IsInvariant.invariant (A := A) (G := G) (H := H) a g).1 hg, ?_⟩
+    refine ⟨a • g, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a g).1 hg, ?_⟩
     simp [MulAction.Quotient.smul_mk]
   · rintro ⟨g, hg, hq⟩
-    refine ⟨a⁻¹ • g, (IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ g).1 hg, ?_⟩
+    refine ⟨a⁻¹ • g, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ g).1 hg, ?_⟩
     have hsmul := congrArg (fun z : G ⧸ N => a⁻¹ • z) hq
     simpa [MulAction.Quotient.smul_mk, inv_smul_smul] using hsmul
 
 private theorem section12_isInvariant_comap_quotient_local
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {N : Subgroup G} [N.Normal] [IsInvariant A G N]
+    {N : Subgroup G} [N.Normal] [IsInvariantSubgroup A G N]
     (H : Subgroup (G ⧸ N))
-    [MulDistribMulAction A (G ⧸ N)] [IsInvariant A (G ⧸ N) H]
+    [MulDistribMulAction A (G ⧸ N)] [IsInvariantSubgroup A (G ⧸ N) H]
     (hq : ∀ a : A, ∀ g : G,
       a • ((QuotientGroup.mk' N) g) = (QuotientGroup.mk' N) (a • g)) :
-    IsInvariant A G (H.comap (QuotientGroup.mk' N)) := by
+    IsInvariantSubgroup A G (H.comap (QuotientGroup.mk' N)) := by
   refine ⟨?_⟩
   intro a g
   constructor
   · intro hg
     change (QuotientGroup.mk' N) (a • g) ∈ H
     rw [← hq a g]
-    exact (IsInvariant.invariant (A := A) (G := G ⧸ N) (H := H) a
+    exact (IsInvariantSubgroup.invariant (A := A) (G := G ⧸ N) (H := H) a
       ((QuotientGroup.mk' N) g)).1 hg
   · intro hg
     change (QuotientGroup.mk' N) g ∈ H
     have hg' : a⁻¹ • ((QuotientGroup.mk' N) (a • g)) ∈ H :=
-      (IsInvariant.invariant (A := A) (G := G ⧸ N) (H := H) a⁻¹
+      (IsInvariantSubgroup.invariant (A := A) (G := G ⧸ N) (H := H) a⁻¹
         ((QuotientGroup.mk' N) (a • g))).1 hg
     simpa [hq, inv_smul_smul] using hg'
 
@@ -636,7 +636,7 @@ private theorem section12_E1_invariant_CA_msigma_subgroupOf_E2
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
     letI : Subgroup.Normalizes E₁ E₂ :=
       ⟨section12_E1_le_normalizer_E2 (G := G) (M := M) hM hE⟩
-    IsInvariant E₁ E₂
+    IsInvariantSubgroup E₁ E₂
       ((subgroupCentralizerIn A (section10Msigma M)).subgroupOf E₂) := by
   classical
   let C : Subgroup G := subgroupCentralizerIn A (section10Msigma M)
@@ -694,26 +694,26 @@ public theorem section12_CA_msigma_complement_in_E2
   haveI : Fact (IsPGroup p.val E₂) := ⟨hE₂p⟩
   letI : Subgroup.Normalizes E₁ E₂ :=
     ⟨section12_E1_le_normalizer_E2 (G := G) (M := M) hM hE⟩
-  have hΦinv : IsInvariant E₁ E₂ Φ := by
+  have hΦinv : IsInvariantSubgroup E₁ E₂ Φ := by
     simpa [Φ] using isInvariant_of_characteristic (A := E₁) (G := E₂) (frattini E₂)
-  letI : IsInvariant E₁ E₂ Φ := hΦinv
+  letI : IsInvariantSubgroup E₁ E₂ Φ := hΦinv
   haveI : Φ.Normal := by
     simpa [Φ] using (inferInstance : (frattini E₂).Normal)
   letI : MulDistribMulAction E₁ (E₂ ⧸ Φ) :=
     quotientMulDistribMulAction (A := E₁) (G := E₂) Φ hΦinv
-  have hC₂inv : IsInvariant E₁ E₂ C₂ := by
+  have hC₂inv : IsInvariantSubgroup E₁ E₂ C₂ := by
     simpa [C₂, C] using
       section12_E1_invariant_CA_msigma_subgroupOf_E2
         (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
         hM hE hp hA
-  letI : IsInvariant E₁ E₂ C₂ := hC₂inv
+  letI : IsInvariantSubgroup E₁ E₂ C₂ := hC₂inv
   let B : Subgroup (E₂ ⧸ Φ) := C₂.map q
-  have hBinv : IsInvariant E₁ (E₂ ⧸ Φ) B := by
+  have hBinv : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) B := by
     simpa [B, q] using
       section12_isInvariant_map_quotient_local
         (A := E₁) (G := E₂) (N := Φ) (H := C₂)
-  letI : IsInvariant E₁ (E₂ ⧸ Φ) B := hBinv
+  letI : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) B := hBinv
   have hVelem : IsElementaryAbelian p.val (E₂ ⧸ Φ) := by
     simpa [Φ] using isElementaryAbelian_quotient_frattini (R := E₂) (p := p.val)
   letI : IsElementaryAbelian p.val (E₂ ⧸ Φ) := hVelem
@@ -725,11 +725,11 @@ public theorem section12_CA_msigma_complement_in_E2
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
         hM hE hp hA) B
   let P₀sub : Subgroup E₂ := Q.comap q
-  letI : IsInvariant E₁ (E₂ ⧸ Φ) Q := hQinv
+  letI : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) Q := hQinv
   have hqcompat : ∀ a : E₁, ∀ g : E₂, a • q g = q (a • g) := by
     intro a g
     simp [q, MulAction.Quotient.smul_mk]
-  have hP₀subInv : IsInvariant E₁ E₂ P₀sub := by
+  have hP₀subInv : IsInvariantSubgroup E₁ E₂ P₀sub := by
     simpa [P₀sub, q] using
       section12_isInvariant_comap_quotient_local
         (A := E₁) (G := E₂) (N := Φ) (H := Q) hqcompat
@@ -845,7 +845,7 @@ public theorem section12_CA_msigma_complement_in_E2
         (a : G) * x * (a : G)⁻¹ ∈ P₀ := by
       rcases Subgroup.mem_map.mp hx with ⟨y, hyP₀sub, rfl⟩
       refine Subgroup.mem_map.mpr ⟨a • y, ?_, ?_⟩
-      · exact (IsInvariant.invariant (A := E₁) (G := E₂) (H := P₀sub) a y).1 hyP₀sub
+      · exact (IsInvariantSubgroup.invariant (A := E₁) (G := E₂) (H := P₀sub) a y).1 hyP₀sub
       · simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
     intro e he
     let e₁ : E₁ := ⟨e, he⟩

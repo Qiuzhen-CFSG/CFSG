@@ -254,7 +254,7 @@ public theorem theorem_12_12_source_leaf
   obtain ⟨V, hVnormal, hVinv, hVne, hVmin⟩ :=
     exists_minimal_normal_isInvariant (G := T) (A := E)
   letI : V.Normal := hVnormal
-  letI : IsInvariant E T V := hVinv
+  letI : IsInvariantSubgroup E T V := hVinv
   have hVelem : IsElementaryAbelian p V := by
     refine
       { toIsMulCommutative := inferInstance
@@ -436,14 +436,14 @@ public theorem theorem_12_12_source_leaf
         rw [← hregularV a ha, hfixTop]
       exact (bot_ne_top : (⊥ : Subgroup V) ≠ ⊤) hbotTop
     have hVminimalTop :
-        ∀ N : Subgroup V, N.Normal → IsInvariant E V N → N ≠ ⊥ → N = ⊤ := by
+        ∀ N : Subgroup V, N.Normal → IsInvariantSubgroup E V N → N ≠ ⊥ → N = ⊤ := by
       intro N hNnormal hNinv hNne
       letI : N.Normal := hNnormal
-      letI : IsInvariant E V N := hNinv
+      letI : IsInvariantSubgroup E V N := hNinv
       let Nmap : Subgroup T := N.map V.subtype
-      have hNmapInv : IsInvariant E T Nmap := by
+      have hNmapInv : IsInvariantSubgroup E T Nmap := by
         simpa [Nmap] using isInvariant_map_subtype (A := E) (G := T) V N
-      letI : IsInvariant E T Nmap := hNmapInv
+      letI : IsInvariantSubgroup E T Nmap := hNmapInv
       have hNmapNormal : Nmap.Normal := by infer_instance
       have hNmapNe : Nmap ≠ ⊥ := by
         intro hbot

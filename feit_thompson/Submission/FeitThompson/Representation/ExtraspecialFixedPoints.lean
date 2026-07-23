@@ -812,9 +812,14 @@ theorem theorem_2_5_exists_faithful_irreducible
           f (MonoidAlgebra.single (1 : P) (1 : F)))
         hxy
     have hsingle : MonoidAlgebra.single x (1 : F) = MonoidAlgebra.single y (1 : F) := by
-      simpa [τ, Representation.ofMulAction_single] using hval
+      change (Representation.ofMulAction F P P x) (Finsupp.single (1 : P) (1 : F)) =
+        (Representation.ofMulAction F P P y) (Finsupp.single (1 : P) (1 : F)) at hval
+      rw [Representation.ofMulAction_single, Representation.ofMulAction_single] at hval
+      change (Finsupp.single x (1 : F) : P →₀ F) = Finsupp.single y (1 : F)
+      simpa only [smul_eq_mul, mul_one] using hval
     by_contra hxy_ne
     have hpoint := congrArg (fun f : MonoidAlgebra F P => f.coeff x) hsingle
+    change (Finsupp.single x (1 : F)) x = (Finsupp.single y (1 : F)) x at hpoint
     have : (1 : F) = 0 := by
       simp [hxy_ne] at hpoint
     exact one_ne_zero this

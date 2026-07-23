@@ -57,7 +57,7 @@ private theorem section13_lemma_13_12_not_le_centralizer_of_msigma_fixed
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hPinv : IsInvariant Unit E Psub := by
+  have hPinv : IsInvariantSubgroup Unit E Psub := by
     refine ⟨?_⟩
     intro _ x
     simp

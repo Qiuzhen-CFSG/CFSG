@@ -12,7 +12,7 @@ import Mathlib.Algebra.Group.Subgroup.Pointwise
 open scoped commutatorElement
 
 public lemma isInvariant_of_characteristic {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [H.Characteristic] : IsInvariant A G H := by
+    [MulDistribMulAction A G] (H : Subgroup G) [H.Characteristic] : IsInvariantSubgroup A G H := by
   refine ⟨?_⟩
   intro a g
   have hfixed :
@@ -32,18 +32,18 @@ public lemma isInvariant_of_characteristic {G A : Type*} [Group G] [Group A]
     exact hg''
 
 public lemma isInvariant_normalizer_of_isInvariant {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H] :
-    IsInvariant A G (Subgroup.normalizer H) := by
+    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariantSubgroup A G H] :
+    IsInvariantSubgroup A G (Subgroup.normalizer H) := by
   have hforward : ∀ a : A, ∀ g : G, g ∈ Subgroup.normalizer H → a • g ∈ Subgroup.normalizer H := by
     intro a g hg
     rw [Subgroup.mem_normalizer_iff] at hg ⊢
     intro x
     calc
       x ∈ H ↔ a⁻¹ • x ∈ H :=
-        (IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ x)
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ x)
       _ ↔ g * (a⁻¹ • x) * g⁻¹ ∈ H := hg (a⁻¹ • x)
       _ ↔ a • (g * (a⁻¹ • x) * g⁻¹) ∈ H :=
-        (IsInvariant.invariant (A := A) (G := G) (H := H) a
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a
           (g * (a⁻¹ • x) * g⁻¹))
       _ ↔ (a • g) * x * (a • g)⁻¹ ∈ H := by
         simp [smul_mul', smul_inv_smul, mul_assoc]
@@ -56,17 +56,17 @@ public lemma isInvariant_normalizer_of_isInvariant {G A : Type*} [Group G] [Grou
     simpa [inv_smul_smul] using this
 
 public lemma isInvariant_map_subtype {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H] (K : Subgroup H)
-    [IsInvariant A H K] : IsInvariant A G (K.map H.subtype) := by
+    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariantSubgroup A G H] (K : Subgroup H)
+    [IsInvariantSubgroup A H K] : IsInvariantSubgroup A G (K.map H.subtype) := by
   -- Use the restricted action on `H`.
   refine ⟨?_⟩
   intro a g
   constructor
   · rintro ⟨x, hx, rfl⟩
-    refine ⟨a • x, (IsInvariant.invariant (A := A) (G := H) (H := K) a x).1 hx, ?_⟩
+    refine ⟨a • x, (IsInvariantSubgroup.invariant (A := A) (G := H) (H := K) a x).1 hx, ?_⟩
     rfl
   · rintro ⟨x, hx, hxg⟩
-    refine ⟨a⁻¹ • x, (IsInvariant.invariant (A := A) (G := H) (H := K) a⁻¹ x).1 hx, ?_⟩
+    refine ⟨a⁻¹ • x, (IsInvariantSubgroup.invariant (A := A) (G := H) (H := K) a⁻¹ x).1 hx, ?_⟩
     -- Show that the chosen element maps back to `g`.
     have : ((a⁻¹ • x : H) : G) = g := by
       calc
@@ -76,9 +76,9 @@ public lemma isInvariant_map_subtype {G A : Type*} [Group G] [Group A]
     simp only [Subgroup.subtype_apply, this]
 
 public lemma isInvariant_map_conj_of_mem_fixedPoint {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H]
+    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariantSubgroup A G H]
     {g : G} (hg : g ∈ fixedPointSubgroup A G) :
-    IsInvariant A G (H.map (MulAut.conj g).toMonoidHom) := by
+    IsInvariantSubgroup A G (H.map (MulAut.conj g).toMonoidHom) := by
   have hg_fixed : ∀ a : A, a • g = g := by
     simpa [fixedPointSubgroup] using hg
   have hforward : ∀ a : A, ∀ x : G,
@@ -86,7 +86,7 @@ public lemma isInvariant_map_conj_of_mem_fixedPoint {G A : Type*} [Group G] [Gro
     intro a x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     refine Subgroup.mem_map.mpr ?_
-    refine ⟨a • y, (IsInvariant.invariant (A := A) (G := G) (H := H) a y).1 hy, ?_⟩
+    refine ⟨a • y, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a y).1 hy, ?_⟩
     change g * (a • y) * g⁻¹ = a • (g * y * g⁻¹)
     simp [smul_mul', hg_fixed a, mul_assoc]
   refine ⟨?_⟩
@@ -99,8 +99,8 @@ public lemma isInvariant_map_conj_of_mem_fixedPoint {G A : Type*} [Group G] [Gro
 
 public lemma isInvariant_sup {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H K : Subgroup G)
-    [IsInvariant A G H] [IsInvariant A G K] :
-    IsInvariant A G (H ⊔ K) := by
+    [IsInvariantSubgroup A G H] [IsInvariantSubgroup A G K] :
+    IsInvariantSubgroup A G (H ⊔ K) := by
   refine ⟨?_⟩
   intro a g
   constructor
@@ -110,8 +110,8 @@ public lemma isInvariant_sup {G A : Type*} [Group G] [Group A]
       (x := g) ?_ ?_ ?_ ?_ hg
     · intro x hx
       rcases hx with (hx | hx)
-      · exact Subgroup.subset_closure (Or.inl ((IsInvariant.invariant (A := A) (G := G) (H := H) a x).1 hx))
-      · exact Subgroup.subset_closure (Or.inr ((IsInvariant.invariant (A := A) (G := G) (H := K) a x).1 hx))
+      · exact Subgroup.subset_closure (Or.inl ((IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a x).1 hx))
+      · exact Subgroup.subset_closure (Or.inr ((IsInvariantSubgroup.invariant (A := A) (G := G) (H := K) a x).1 hx))
     · simp
     · intro x y _ _ hx hy
       simpa [smul_mul'] using Subgroup.mul_mem _ hx hy
@@ -124,8 +124,8 @@ public lemma isInvariant_sup {G A : Type*} [Group G] [Group A]
         (x := a • g) ?_ ?_ ?_ ?_ hg
       · intro x hx
         rcases hx with (hx | hx)
-        · exact Subgroup.subset_closure (Or.inl ((IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ x).1 hx))
-        · exact Subgroup.subset_closure (Or.inr ((IsInvariant.invariant (A := A) (G := G) (H := K) a⁻¹ x).1 hx))
+        · exact Subgroup.subset_closure (Or.inl ((IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ x).1 hx))
+        · exact Subgroup.subset_closure (Or.inr ((IsInvariantSubgroup.invariant (A := A) (G := G) (H := K) a⁻¹ x).1 hx))
       · simp
       · intro x y _ _ hx hy
         simpa [smul_mul'] using Subgroup.mul_mem _ hx hy
@@ -135,8 +135,8 @@ public lemma isInvariant_sup {G A : Type*} [Group G] [Group A]
 
 public lemma isInvariant_commutator {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H K : Subgroup G)
-    [IsInvariant A G H] [IsInvariant A G K] :
-    IsInvariant A G ⁅H, K⁆ := by
+    [IsInvariantSubgroup A G H] [IsInvariantSubgroup A G K] :
+    IsInvariantSubgroup A G ⁅H, K⁆ := by
   let S : Set G := {x : G | ∃ h ∈ H, ∃ k ∈ K, ⁅h, k⁆ = x}
   have hforward : ∀ a : A, ∀ x : G, x ∈ ⁅H, K⁆ → a • x ∈ ⁅H, K⁆ := by
     intro a x hx
@@ -146,8 +146,8 @@ public lemma isInvariant_commutator {G A : Type*} [Group G] [Group A]
       ?mem ?one ?mul ?inv hx
     · rintro y ⟨h, hh, k, hk, rfl⟩
       refine Subgroup.subset_closure ?_
-      refine ⟨a • h, (IsInvariant.invariant (A := A) (G := G) (H := H) a h).1 hh,
-        a • k, (IsInvariant.invariant (A := A) (G := G) (H := K) a k).1 hk, ?_⟩
+      refine ⟨a • h, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a h).1 hh,
+        a • k, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := K) a k).1 hk, ?_⟩
       calc
         ⁅a • h, a • k⁆ = (a • h) * (a • k) * (a • h)⁻¹ * (a • k)⁻¹ := rfl
         _ = a • (h * k * h⁻¹ * k⁻¹) := by
@@ -166,15 +166,15 @@ public lemma isInvariant_commutator {G A : Type*} [Group G] [Group A]
     simpa [inv_smul_smul] using this
 
 public lemma isInvariant_centralizer {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H] :
-    IsInvariant A G (Subgroup.centralizer (H : Set G)) := by
+    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariantSubgroup A G H] :
+    IsInvariantSubgroup A G (Subgroup.centralizer (H : Set G)) := by
   have hforward : ∀ a : A, ∀ g : G,
       g ∈ Subgroup.centralizer (H : Set G) → a • g ∈ Subgroup.centralizer (H : Set G) := by
     intro a g hg
     rw [Subgroup.mem_centralizer_iff] at hg ⊢
     intro h hh
     have hh' : a⁻¹ • h ∈ H :=
-      (IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ h).1 hh
+      (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ h).1 hh
     have hcomm : (a⁻¹ • h) * g = g * (a⁻¹ • h) := hg (a⁻¹ • h) hh'
     have hcomm' : a • ((a⁻¹ • h) * g) = a • (g * (a⁻¹ • h)) :=
       congrArg (fun x => a • x) hcomm
@@ -189,25 +189,25 @@ public lemma isInvariant_centralizer {G A : Type*} [Group G] [Group A]
 
 public lemma isInvariant_inf {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H K : Subgroup G)
-    [IsInvariant A G H] [IsInvariant A G K] :
-    IsInvariant A G (H ⊓ K) := by
+    [IsInvariantSubgroup A G H] [IsInvariantSubgroup A G K] :
+    IsInvariantSubgroup A G (H ⊓ K) := by
   refine ⟨?_⟩
   intro a g
   constructor
   · rintro ⟨hgH, hgK⟩
-    exact ⟨(IsInvariant.invariant (A := A) (G := G) (H := H) a g).1 hgH,
-      (IsInvariant.invariant (A := A) (G := G) (H := K) a g).1 hgK⟩
+    exact ⟨(IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a g).1 hgH,
+      (IsInvariantSubgroup.invariant (A := A) (G := G) (H := K) a g).1 hgK⟩
   · intro hg
     rcases hg with ⟨hgH, hgK⟩
     have hg' : a⁻¹ • (a • g) ∈ H ⊓ K := by
-      refine ⟨(IsInvariant.invariant (A := A) (G := G) (H := H) a⁻¹ (a • g)).1 hgH,
-        (IsInvariant.invariant (A := A) (G := G) (H := K) a⁻¹ (a • g)).1 hgK⟩
+      refine ⟨(IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a⁻¹ (a • g)).1 hgH,
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := K) a⁻¹ (a • g)).1 hgK⟩
     simpa [inv_smul_smul] using hg'
 
 public lemma isInvariant_subgroupOf {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H K : Subgroup G)
-    [IsInvariant A G H] [IsInvariant A G K] :
-    IsInvariant A K (H.subgroupOf K) := by
+    [IsInvariantSubgroup A G H] [IsInvariantSubgroup A G K] :
+    IsInvariantSubgroup A K (H.subgroupOf K) := by
   refine ⟨?_⟩
   intro a x
   constructor
@@ -215,7 +215,7 @@ public lemma isInvariant_subgroupOf {G A : Type*} [Group G] [Group A]
     have hx' : (x : G) ∈ H := hx
     have hmem : (a • (x : K) : K) ∈ H.subgroupOf K := by
       have : (a • (x : K) : G) ∈ H := by
-        exact (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).1 hx'
+        exact (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a (x : G)).1 hx'
       change a • (x : G) ∈ H
       exact this
     exact hmem
@@ -224,13 +224,13 @@ public lemma isInvariant_subgroupOf {G A : Type*} [Group G] [Group A]
     have hx' : (a • (x : K) : G) ∈ H := by
       exact hx
     have hx_inv : (x : G) ∈ H := by
-      simpa using (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).2 hx'
+      simpa using (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a (x : G)).2 hx'
     exact hx_inv
 
 public lemma isInvariant_centralizer_of_actsTriviallyOnSubgroup {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H : Subgroup G)
     (hHtriv : ActsTriviallyOnSubgroup (A := A) (G := G) H) :
-    IsInvariant A G (Subgroup.centralizer (H : Set G)) := by
+    IsInvariantSubgroup A G (Subgroup.centralizer (H : Set G)) := by
   have hforward :
       ∀ a : A, ∀ g : G,
         g ∈ Subgroup.centralizer (H : Set G) → a • g ∈ Subgroup.centralizer (H : Set G) := by
@@ -255,8 +255,8 @@ public lemma isInvariant_centralizer_of_actsTriviallyOnSubgroup {G A : Type*} [G
 public theorem isInvariant_sup_of_le_normalizer
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     (X Y : Subgroup G) (hY_le_normX : Y ≤ Subgroup.normalizer (X : Set G))
-    [IsInvariant A G X] [IsInvariant A G Y] :
-    IsInvariant A G (X ⊔ Y) := by
+    [IsInvariantSubgroup A G X] [IsInvariantSubgroup A G Y] :
+    IsInvariantSubgroup A G (X ⊔ Y) := by
   have hXY_le_normX : X ⊔ Y ≤ Subgroup.normalizer (X : Set G) := sup_le X.le_normalizer hY_le_normX
   letI : (X.subgroupOf (X ⊔ Y)).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := X ⊔ Y) (N := X) hXY_le_normX
@@ -276,11 +276,11 @@ public theorem isInvariant_sup_of_le_normalizer
       ⟨x, hx, y, hy, hxy⟩
     have hxX : a • ((x : ↥(X ⊔ Y)) : G) ∈ X := by
       exact
-        (IsInvariant.invariant (A := A) (G := G) (H := X) a (((x : ↥(X ⊔ Y)) : G))).1 <|
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := X) a (((x : ↥(X ⊔ Y)) : G))).1 <|
           by simpa [Subgroup.mem_subgroupOf] using hx
     have hyY : a • ((y : ↥(X ⊔ Y)) : G) ∈ Y := by
       exact
-        (IsInvariant.invariant (A := A) (G := G) (H := Y) a (((y : ↥(X ⊔ Y)) : G))).1 <|
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := Y) a (((y : ↥(X ⊔ Y)) : G))).1 <|
           by simpa [Subgroup.mem_subgroupOf] using hy
     have hxyG : ((x : ↥(X ⊔ Y)) : G) * ((y : ↥(X ⊔ Y)) : G) = g := by
       exact congrArg Subtype.val hxy

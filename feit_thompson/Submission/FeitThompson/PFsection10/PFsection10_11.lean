@@ -6473,7 +6473,7 @@ private theorem theorem_10_7_quotientCentralizerIn_tail_source_data
       _hFitLeD, _hW2le, _hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
   have hU_le_Smax : U ≤ Smax :=
     hU_le_D.trans (section12_ambientDerivedSubgroup_le (G := G) (E := Smax))
-  have hH0_inv_U : IsInvariant U SF (H0.subgroupOf SF) :=
+  have hH0_inv_U : IsInvariantSubgroup U SF (H0.subgroupOf SF) :=
     Section9.subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9
       Smax SF U H0 hSF_le_Smax hU_le_Smax hH0_normal_Smax hU_norm_SF
   exact
@@ -19369,10 +19369,10 @@ private theorem theorem_10_8_counting_quotient_sub_one_factor
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -19669,10 +19669,10 @@ private theorem theorem_10_8_counting_quotient_sub_one_factor_supported
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -37633,7 +37633,7 @@ private theorem theorem_10_10_2_kernelSubfamily_decomposition_bridge
   haveI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic :=
     hNchar
   have hNinvW1 :
-      IsInvariant (W1.subgroupOf M) (derivedSubgroup M)
+      IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M)
         ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
     isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M)
@@ -45046,7 +45046,7 @@ private theorem typeVReduction_kernelQuotient_fixedPointSubgroup_zpowers_eq_bot_
     letI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic :=
       hNchar
     let hNinv :
-        IsInvariant (Subgroup.zpowers (a : M)) (derivedSubgroup M)
+        IsInvariantSubgroup (Subgroup.zpowers (a : M)) (derivedSubgroup M)
           ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
       isInvariant_of_characteristic
         ((H'.subgroupOf M).subgroupOf (derivedSubgroup M))
@@ -45073,9 +45073,9 @@ private theorem typeVReduction_kernelQuotient_fixedPointSubgroup_zpowers_eq_bot_
     infer_instance
   haveI : N.Characteristic := hNchar
   let A : Subgroup M := Subgroup.zpowers (a : M)
-  have hNinv : IsInvariant A (derivedSubgroup M) N := by
+  have hNinv : IsInvariantSubgroup A (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := A) (G := derivedSubgroup M) N
-  letI : IsInvariant A (derivedSubgroup M) N := hNinv
+  letI : IsInvariantSubgroup A (derivedSubgroup M) N := hNinv
   have hNcard : Nat.card N = p := by
     dsimp [N]
     exact typeVReduction_Hprime_subgroupOf_derived_card_eq_prime hred
@@ -45149,7 +45149,7 @@ private theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one_supporte
     letI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic :=
       hNchar
     let hNinvW1 :
-        IsInvariant (W1.subgroupOf M) (derivedSubgroup M)
+        IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M)
           ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
       isInvariant_of_characteristic
         ((H'.subgroupOf M).subgroupOf (derivedSubgroup M))
@@ -45175,10 +45175,10 @@ private theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one_supporte
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -45186,9 +45186,9 @@ private theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one_supporte
   refine QuotientGroup.induction_on q ?_
   intro x hfix
   let A : Subgroup M := Subgroup.zpowers (a : M)
-  have hNinvA : IsInvariant A (derivedSubgroup M) N := by
+  have hNinvA : IsInvariantSubgroup A (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := A) (G := derivedSubgroup M) N
-  letI : IsInvariant A (derivedSubgroup M) N := hNinvA
+  letI : IsInvariantSubgroup A (derivedSubgroup M) N := hNinvA
   letI : MulDistribMulAction A (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := derivedSubgroup M) N hNinvA
   have hgenFix :
@@ -45245,7 +45245,7 @@ private theorem typeVReduction_nonprincipalLinearCharacterOrbitQuotient_card_eq_
     letI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic :=
       hNchar
     let hNinvW1 :
-        IsInvariant (W1.subgroupOf M) (derivedSubgroup M)
+        IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M)
           ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
       isInvariant_of_characteristic
         ((H'.subgroupOf M).subgroupOf (derivedSubgroup M))
@@ -45278,10 +45278,10 @@ private theorem typeVReduction_nonprincipalLinearCharacterOrbitQuotient_card_eq_
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -45346,7 +45346,7 @@ private theorem typeVReduction_orbitRel_of_inducedCF_quotientCharacterInflation_
     letI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic :=
       hNchar
     let hNinvW1 :
-        IsInvariant (W1.subgroupOf M) (derivedSubgroup M)
+        IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M)
           ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
       isInvariant_of_characteristic
         ((H'.subgroupOf M).subgroupOf (derivedSubgroup M))
@@ -45393,10 +45393,10 @@ private theorem typeVReduction_orbitRel_of_inducedCF_quotientCharacterInflation_
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -45519,10 +45519,10 @@ private theorem typeVReduction_kernelSubfamily_card_eq_div_supported
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -45637,10 +45637,10 @@ private theorem typeVReduction_inducedCF_quotientCharacterInflation_isIrreducibl
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
   haveI : N.Characteristic := hNchar
-  have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
+  have hNinvW1 : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  letI : IsInvariantSubgroup (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1

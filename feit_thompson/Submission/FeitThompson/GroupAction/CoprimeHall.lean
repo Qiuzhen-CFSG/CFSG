@@ -35,8 +35,8 @@ public theorem exists_mem_fixedPointSubgroup_eq_map_conj_of_isHallSubgroup_of_is
     ∀ H₁ H₂ : Subgroup G,
       IsHallSubgroup π H₁ →
         IsHallSubgroup π H₂ →
-          IsInvariant A G H₁ →
-            IsInvariant A G H₂ →
+          IsInvariantSubgroup A G H₁ →
+            IsInvariantSubgroup A G H₂ →
               ∃ g : G, g ∈ fixedPointSubgroup A G ∧ H₂ = H₁.map (MulAut.conj g) := by
   intro H₁ H₂ hHall₁ hHall₂ hInv₁ hInv₂
   simpa using
@@ -47,7 +47,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
-    ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
+    ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariantSubgroup A G H),
       letI : MulDistribMulAction A (G ⧸ H) :=
         quotientMulDistribMulAction (A := A) (G := G) H hHinv
       fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
@@ -59,7 +59,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
 
 public theorem commutatorAction_map_mk'_le_commutatorAction_quotient
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H) :
+    (H : Subgroup G) [H.Normal] (hHinv : IsInvariantSubgroup A G H) :
     letI : MulDistribMulAction A (G ⧸ H) :=
       quotientMulDistribMulAction (A := A) (G := G) H hHinv
     (commutatorAction (A := A) (G := G)).map (QuotientGroup.mk' H) ≤
@@ -170,7 +170,7 @@ public theorem fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprim
   simpa using
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_fixedPointQuotientImage
       (G := G) (A := A)
-      (hfixed_quotient_image := fun (H : Subgroup G) (_ : H.Normal) (hHinv : IsInvariant A G H) =>
+      (hfixed_quotient_image := fun (H : Subgroup G) (_ : H.Normal) (hHinv : IsInvariantSubgroup A G H) =>
         fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
           (G := G) (A := A) hsolv hcoprime (π := (∅ : Set Nat.Primes)) H hHinv)
 

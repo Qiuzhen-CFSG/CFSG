@@ -293,7 +293,7 @@ public theorem commutatorAction_le_of_actsTrivially_quotient
 
 public theorem fixedPointSubgroup_map_subtype_eq_inf
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] :
+    (H : Subgroup G) [IsInvariantSubgroup A G H] :
     (fixedPointSubgroup A H).map H.subtype = H ⊓ fixedPointSubgroup A G := by
   ext x
   constructor
@@ -316,7 +316,7 @@ public theorem fixedPointSubgroup_map_subtype_eq_inf
 
 public theorem commutatorSubgroup_smul_mem_of_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] (c : A) {y : G}
+    (H : Subgroup G) [IsInvariantSubgroup A G H] (c : A) {y : G}
     (hy : y ∈ commutatorSubgroup (A := A) (G := G) H) :
     c • y ∈ commutatorSubgroup (A := A) (G := G) H := by
   let f : G →* G := (MulDistribMulAction.toMulAut A G c).toMonoidHom
@@ -328,7 +328,7 @@ public theorem commutatorSubgroup_smul_mem_of_isInvariant
     rcases hz with ⟨w, hw, rfl⟩
     rcases hw with ⟨a, h, hh, rfl⟩
     have hh' : d • h ∈ H :=
-      (IsInvariant.invariant (A := A) (G := G) (H := H) d h).1 hh
+      (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) d h).1 hh
     refine ⟨d * a * d⁻¹, d • h, hh', ?_⟩
     simp [smul_mul', smul_smul, mul_assoc]
   have himage : f '' S = S := by
@@ -353,8 +353,8 @@ public theorem commutatorSubgroup_smul_mem_of_isInvariant
 
 public theorem commutatorSubgroup_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] :
-    IsInvariant A G (commutatorSubgroup (A := A) (G := G) H) := by
+    (H : Subgroup G) [IsInvariantSubgroup A G H] :
+    IsInvariantSubgroup A G (commutatorSubgroup (A := A) (G := G) H) := by
   refine ⟨?_⟩
   intro c y
   constructor
@@ -369,7 +369,7 @@ set_option backward.isDefEq.respectTransparency false in
 public theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] :
     (commutatorAction (A := A) (G := G)).Normal ∧
-      IsInvariant A G (commutatorAction (A := A) (G := G)) := by
+      IsInvariantSubgroup A G (commutatorAction (A := A) (G := G)) := by
   let N : Subgroup G := commutatorAction (A := A) (G := G)
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
@@ -680,25 +680,25 @@ public theorem commutatorAction_normal
 
 public theorem commutatorAction_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
-    IsInvariant A G (commutatorAction (A := A) (G := G)) :=
+    IsInvariantSubgroup A G (commutatorAction (A := A) (G := G)) :=
   (commutatorAction_normal_and_invariant (G := G) (A := A)).2
 
 public theorem commutatorAction₂_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
-    IsInvariant A G (commutatorAction₂ (A := A) (G := G)) := by
+    IsInvariantSubgroup A G (commutatorAction₂ (A := A) (G := G)) := by
   let H : Subgroup G := commutatorAction (A := A) (G := G)
-  letI : IsInvariant A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
+  letI : IsInvariantSubgroup A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
   simpa [H, commutatorAction₂] using
     (commutatorSubgroup_isInvariant (A := A) (G := G) H)
 
 public theorem commutatorAction_map_subtype_eq_commutatorAction₂
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     let H : Subgroup G := commutatorAction (A := A) (G := G)
-    letI : IsInvariant A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
+    letI : IsInvariantSubgroup A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
     (commutatorAction (A := A) (G := H)).map H.subtype = commutatorAction₂ (A := A) (G := G) := by
   classical
   let H : Subgroup G := commutatorAction (A := A) (G := G)
-  letI : IsInvariant A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
+  letI : IsInvariantSubgroup A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
   let SH : Set H := {x : H | ∃ a : A, ∃ h : H, x = h⁻¹ * (a • h)}
   let SG : Set G := {x : G | ∃ a : A, ∃ g : G, g ∈ H ∧ x = g⁻¹ * (a • g)}
   have himage : H.subtype '' SH = SG := by
@@ -728,7 +728,7 @@ public theorem commutatorAction₂_subgroupOf_commutatorAction_normal
     let H : Subgroup G := commutatorAction (A := A) (G := G)
     ((commutatorAction₂ (A := A) (G := G)).subgroupOf H).Normal := by
   let H : Subgroup G := commutatorAction (A := A) (G := G)
-  letI : IsInvariant A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
+  letI : IsInvariantSubgroup A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
   -- letI : MulDistribMulAction A H := instMulDistribMulAction_subtype (A := A) (G := G) H
   let Csub : Subgroup H := commutatorAction (A := A) (G := H)
   have hCsub_normal : Csub.Normal :=

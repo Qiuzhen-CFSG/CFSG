@@ -48,7 +48,8 @@ public theorem freeBasis_apply
     freeBasis K G alpha x =
       Finsupp.single x.1 (MonoidAlgebra.single x.2 (1 : K)) := by
   ext i g
-  simp [freeBasis, Finsupp.curryLinearEquiv]
+  simp [freeBasis, Finsupp.curryLinearEquiv, MonoidAlgebra.ofCoeff,
+    MonoidAlgebra.single]
 
 /-- The free representation permutes its canonical basis through left
 multiplication on the group coordinate. -/
@@ -61,7 +62,11 @@ public theorem free_apply_freeBasis
   rcases x with ⟨i, h⟩
   change Representation.free K G alpha g (freeBasis K G alpha (i, h)) =
     freeBasis K G alpha (i, g * h)
-  simp
+  rw [freeBasis_apply, freeBasis_apply]
+  change Representation.free K G alpha g
+      (Finsupp.single i (Finsupp.single h (1 : K))) =
+    Finsupp.single i (Finsupp.single (g * h) (1 : K))
+  exact Representation.free_single_single (k := K) (G := G) (α := alpha) g h i 1
 
 /-- Explicit pair form of the free-basis action theorem. -/
 @[simp]
@@ -170,6 +175,3 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
       MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
     simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
 end Representation
-
-
-

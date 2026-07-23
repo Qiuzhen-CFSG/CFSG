@@ -166,12 +166,12 @@ public theorem theorem_3_6_reduce_eq_commutator {G : Type uG} [Group G] [Finite 
     letI : (N.subgroupOf H).Normal := by
       rwa [hcommsub_eq]
     exact Subgroup.le_normalizer_of_normal_subgroupOf hN_le_H
-  letI : IsInvariant (↥R) (↥H) C := commutatorAction_isInvariant (G := ↥H) (A := ↥R)
+  letI : IsInvariantSubgroup (↥R) (↥H) C := commutatorAction_isInvariant (G := ↥H) (A := ↥R)
   have hRinv : ∀ r : R, ∀ x ∈ N, (r : G) * x * (r : G)⁻¹ ∈ N := by
     intro r x hx
     have hxCmap : x ∈ C.map H.subtype := by simpa [hCmap] using hx
     rcases Subgroup.mem_map.mp hxCmap with ⟨xH, hxH, rfl⟩
-    have hsmul : r • xH ∈ C := (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := C) r xH).1 hxH
+    have hsmul : r • xH ∈ C := (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := C) r xH).1 hxH
     have hmem : (((r • xH : H) : G)) ∈ N := by
       rw [← hCmap]
       exact Subgroup.mem_map_of_mem H.subtype hsmul
@@ -359,10 +359,10 @@ public theorem theorem_3_6_characteristic_quotient_step {G : Type uG} [Group G] 
     Subgroup.le_normalizer_of_normal (H := H)
   have hXinv : ∀ r : R, ∀ x ∈ X, (r : G) * x * (r : G)⁻¹ ∈ X := by
     letI : XH.Characteristic := hXH_char
-    haveI : IsInvariant (↥R) (↥H) XH := isInvariant_of_characteristic (A := ↥R) (G := ↥H) XH
+    haveI : IsInvariantSubgroup (↥R) (↥H) XH := isInvariant_of_characteristic (A := ↥R) (G := ↥H) XH
     intro r x hx
     rcases hx with ⟨xH, hxH, rfl⟩
-    refine ⟨r • xH, (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := XH) r xH).1 hxH, ?_⟩
+    refine ⟨r • xH, (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := XH) r xH).1 hxH, ?_⟩
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have hX_normal : X.Normal := by
     letI : XH.Characteristic := hXH_char
@@ -434,7 +434,7 @@ public theorem theorem_3_6_fitting_eq_pcore {G : Type uG} [Group G] [Finite G]
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad)
 
 noncomputable instance {H : Type*} [Group H] [Finite H] {x : H} {V : Subgroup H} [V.Normal] : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥V ⧸ frattini V) := by
-  have hfrattini_inv : IsInvariant (↥(Subgroup.zpowers x)) (↥V) (frattini V) :=
+  have hfrattini_inv : IsInvariantSubgroup (↥(Subgroup.zpowers x)) (↥V) (frattini V) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers x)) (G := ↥V) (frattini V)
   exact quotientMulDistribMulAction (A := ↥(Subgroup.zpowers x)) (G := ↥V) (frattini V) hfrattini_inv
 
@@ -455,7 +455,7 @@ public theorem theorem_3_6_mem_centralizer_of_quotient_frattini
     simpa [q, Vbar] using hx_cent
   have hznorm : Subgroup.zpowers x ≤ Subgroup.normalizer V := by
     exact Subgroup.le_normalizer_of_normal (K := Subgroup.zpowers x) (H := V)
-  have hfrattini_inv : IsInvariant (↥(Subgroup.zpowers x)) (↥V) (frattini V) :=
+  have hfrattini_inv : IsInvariantSubgroup (↥(Subgroup.zpowers x)) (↥V) (frattini V) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers x)) (G := ↥V) (frattini V)
   have hquot :
       ActsTrivially (A := ↥(Subgroup.zpowers x)) (G := ↥V ⧸ frattini V) := by
@@ -903,8 +903,8 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
       K ≤ U ∧
       V ⊔ K = U ∧
       Disjoint V K ∧
-      IsInvariant (↥R) (↥H) K ∧
-      IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
+      IsInvariantSubgroup (↥R) (↥H) K ∧
+      IsInvariantSubgroup (↥R) (↥H) (Subgroup.normalizer K) := by
   letI : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let V : Subgroup H := fittingSubgroup H
@@ -924,9 +924,9 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  have hV_inv : IsInvariant (↥R) (↥H) V :=
+  have hV_inv : IsInvariantSubgroup (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) V := hV_inv
   have hFbar_char : Fbar.Characteristic := by
     dsimp [Fbar]
     infer_instance
@@ -934,9 +934,9 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     dsimp [U, q]
     exact Subgroup.Characteristic.comap_quotient_mk (H := V) (K := Fbar) hFbar_char
   letI : U.Characteristic := hU_char
-  have hU_inv : IsInvariant (↥R) (↥H) U :=
+  have hU_inv : IsInvariantSubgroup (↥R) (↥H) U :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) U
-  letI : IsInvariant (↥R) (↥H) U := hU_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) U := hU_inv
 
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
@@ -944,14 +944,14 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
   letI : IsElementaryAbelian p ↥V := hV_elem
   have hVp : IsPGroup p ↥V := IsElementaryAbelian.isPGroup p ↥V
-  have hVsub_inv : IsInvariant (↥R) (↥U) (V.subgroupOf U) := by
+  have hVsub_inv : IsInvariantSubgroup (↥R) (↥U) (V.subgroupOf U) := by
     refine ⟨?_⟩
     intro a x
     change ((x : H) ∈ V) ↔ ((((a • x : U) : U) : H) ∈ V)
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := V) a (x : H)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := V) a (x : H)
     change ((x : H) ∈ V) ↔ ((((a • x : U) : U) : H) ∈ V) at hx
     exact hx
-  letI : IsInvariant (↥R) (↥U) (V.subgroupOf U) := hVsub_inv
+  letI : IsInvariantSubgroup (↥R) (↥U) (V.subgroupOf U) := hVsub_inv
   have hVsub_norm : (V.subgroupOf U).Normal :=
     Subgroup.Normal.subgroupOf (G := ↥H) (hH := inferInstance) U
   letI : (V.subgroupOf U).Normal := hVsub_norm
@@ -990,7 +990,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
   obtain ⟨K0, hK0_comp, hK0_inv⟩ :=
     Subgroup.quotientDiff.exists_invariant_complement' (G := U) (A := ↥R) (H := V.subgroupOf U)
       (hH := inferInstance) hVsub_coprime_index hcopRVsub
-  letI : IsInvariant (↥R) (↥U) K0 := hK0_inv
+  letI : IsInvariantSubgroup (↥R) (↥U) K0 := hK0_inv
   let K : Subgroup H := K0.map U.subtype
   have hK_le_U : K ≤ U := by
     simpa [K] using (Subgroup.map_subtype_le K0)
@@ -1015,10 +1015,10 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
         Disjoint ((V.subgroupOf U).map U.subtype) (K0.map U.subtype) :=
       Subgroup.disjoint_map U.subtype_injective hK0_comp.disjoint
     simpa [K, hVsub_map] using hmap_disj
-  have hK_inv : IsInvariant (↥R) (↥H) K := by
+  have hK_inv : IsInvariantSubgroup (↥R) (↥H) K := by
     simpa [K] using isInvariant_map_subtype (A := ↥R) (G := ↥H) U K0
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  have hNK_inv : IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
+  have hNK_inv : IsInvariantSubgroup (↥R) (↥H) (Subgroup.normalizer K) := by
     simpa using isInvariant_normalizer_of_isInvariant (A := ↥R) (G := ↥H) K
   exact ⟨K, hK_le_U, hVK_sup, hVK_disj, hK_inv, hNK_inv⟩
 
@@ -1162,8 +1162,8 @@ public theorem theorem_3_6_normalizer_sup_top
       K ≤ U ∧
       V ⊔ K = U ∧
       Disjoint V K ∧
-      IsInvariant (↥R) (↥H) K ∧
-      IsInvariant (↥R) (↥H) (Subgroup.normalizer K) ∧
+      IsInvariantSubgroup (↥R) (↥H) K ∧
+      IsInvariantSubgroup (↥R) (↥H) (Subgroup.normalizer K) ∧
       V ⊔ Subgroup.normalizer K = ⊤ := by
   letI : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
@@ -1244,9 +1244,9 @@ private theorem isPGroup_of_isHallSubgroup_singleton
 
 private theorem exists_invariant_pSubgroup_of_isInvariant
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    {H : Subgroup G} [IsInvariant A G H] {p : ℕ} [Fact p.Prime]
+    {H : Subgroup G} [IsInvariantSubgroup A G H] {p : ℕ} [Fact p.Prime]
     (hsolvH : IsSolvable ↥H) (hcopAH : Nat.Coprime (Nat.card A) (Nat.card H)) :
-    ∃ P : Subgroup H, IsPGroup p P ∧ ¬ p ∣ P.index ∧ IsInvariant A H P := by
+    ∃ P : Subgroup H, IsPGroup p P ∧ ¬ p ∣ P.index ∧ IsInvariantSubgroup A H P := by
   let π : Set Nat.Primes := {⟨p, Fact.out⟩}
 
   obtain ⟨Psub, hPsub_hall, hPsub_inv⟩ :=
@@ -1278,10 +1278,10 @@ private theorem isPGroup_normalizerSubtypeMap
 
 private theorem isInvariant_normalizerSubtypeMap_of_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] (K : Subgroup H)
-    [IsInvariant A H (normalizerOf K)] (P : Subgroup (normalizerOf K))
-    [IsInvariant A (normalizerOf K) P] :
-    IsInvariant A H (normalizerSubtypeMap K P) := by
+    (H : Subgroup G) [IsInvariantSubgroup A G H] (K : Subgroup H)
+    [IsInvariantSubgroup A H (normalizerOf K)] (P : Subgroup (normalizerOf K))
+    [IsInvariantSubgroup A (normalizerOf K) P] :
+    IsInvariantSubgroup A H (normalizerSubtypeMap K P) := by
   simpa [normalizerSubtypeMap] using
     isInvariant_map_subtype (A := A) (G := H) (normalizerOf K) P
 
@@ -1533,12 +1533,12 @@ public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H)))
-    (hNK_inv : IsInvariant (↥R) (↥H) (normalizerOf K))
+    (hNK_inv : IsInvariantSubgroup (↥R) (↥H) (normalizerOf K))
     (hVNK_sup : fittingSubgroup H ⊔ normalizerOf K = ⊤) :
     ∃ P : Subgroup (normalizerOf K),
       IsPGroup p P ∧
       ¬ p ∣ P.index ∧
-      IsInvariant (↥R) (↥(normalizerOf K)) P ∧
+      IsInvariantSubgroup (↥R) (↥(normalizerOf K)) P ∧
       ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ := by
   letI : Fact p.Prime := ⟨hp⟩
   let NK : Subgroup H := normalizerOf K
@@ -1550,7 +1550,7 @@ public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial
   have hcopR_NK : Nat.Coprime (Nat.card R) (Nat.card NK) := by
     exact Nat.Coprime.of_dvd_right hNK_card_dvd_H hcopHR.symm
   have hsolvNK : IsSolvable ↥NK := by infer_instance
-  letI : IsInvariant (↥R) (↥H) NK := by
+  letI : IsInvariantSubgroup (↥R) (↥H) NK := by
     simpa [NK] using hNK_inv
   obtain ⟨P, hP_p, hP_not_dvd, hP_inv⟩ :=
     exists_invariant_pSubgroup_of_isInvariant
@@ -1576,7 +1576,7 @@ public theorem theorem_3_6_exists_normalizer_pSubgroup_with_nontrivial_commutato
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H)))
-    (hNK_inv : IsInvariant (↥R) (↥H) (normalizerOf K))
+    (hNK_inv : IsInvariantSubgroup (↥R) (↥H) (normalizerOf K))
     (hVNK_sup : fittingSubgroup H ⊔ normalizerOf K = ⊤) :
     ∃ P : Subgroup (normalizerOf K),
       IsPGroup p P ∧
@@ -1592,7 +1592,7 @@ private theorem normal_map_subtype_of_normal_and_isInvariant
     {G : Type*} [Group G] {H R : Subgroup G}
     [H.Normal] (hHR : H.IsComplement' R) (S : Subgroup H)
     [S.Normal]
-    (hSinv : IsInvariant (↥R) (↥H) S) :
+    (hSinv : IsInvariantSubgroup (↥R) (↥H) S) :
     (S.map H.subtype).Normal := by
   let N : Subgroup G := S.map H.subtype
   have hN_le_H : N ≤ H := by
@@ -1620,7 +1620,7 @@ private theorem normal_map_subtype_of_normal_and_isInvariant
     have hxN : x ∈ S.map H.subtype := by
       simpa [N] using hx
     rcases Subgroup.mem_map.mp hxN with ⟨xH, hxH, rfl⟩
-    have hsmul : r • xH ∈ S := (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := S) r xH).1 hxH
+    have hsmul : r • xH ∈ S := (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := S) r xH).1 hxH
     have hmem : (((r • xH : H) : G)) ∈ N := by
       change (((r • xH : H) : G)) ∈ S.map H.subtype
       exact Subgroup.mem_map_of_mem H.subtype hsmul
@@ -1827,9 +1827,9 @@ public theorem theorem_3_6_fitting_centralizer_proper
 
 private theorem isInvariant_subgroupCentralizerIn_of_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (V K : Subgroup G) [IsInvariant A G V] [IsInvariant A G K] :
-    IsInvariant A G (subgroupCentralizerIn V K) := by
-  have hcent_inv : IsInvariant A G (Subgroup.centralizer (K : Set G)) :=
+    (V K : Subgroup G) [IsInvariantSubgroup A G V] [IsInvariantSubgroup A G K] :
+    IsInvariantSubgroup A G (subgroupCentralizerIn V K) := by
+  have hcent_inv : IsInvariantSubgroup A G (Subgroup.centralizer (K : Set G)) :=
     isInvariant_centralizer (A := A) K
   simpa [subgroupCentralizerIn] using isInvariant_inf (A := A) (G := G) V (Subgroup.centralizer (K : Set G))
 
@@ -1916,8 +1916,8 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H)))
     (hVK_disj : Disjoint (fittingSubgroup H) K) (hK_ne_bot : K ≠ ⊥) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     ⁅fittingSubgroup H, K⁆ = fittingSubgroup H ∧
       subgroupCentralizerIn (fittingSubgroup H) K = ⊥ := by
@@ -1935,9 +1935,9 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  have hV_inv : IsInvariant (↥R) (↥H) V :=
+  have hV_inv : IsInvariantSubgroup (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) V := hV_inv
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -1974,11 +1974,11 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
       rw [← hVNK_sup]
       exact sup_le hV_le_norm_W hNK_le_norm_W
     exact Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  have hC_inv : IsInvariant (↥R) (↥H) C := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+  have hC_inv : IsInvariantSubgroup (↥R) (↥H) C := by
+    letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     simpa [C] using isInvariant_subgroupCentralizerIn_of_isInvariant (A := ↥R) V K
-  have hW_inv : IsInvariant (↥R) (↥H) W := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+  have hW_inv : IsInvariantSubgroup (↥R) (↥H) W := by
+    letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     simpa [W] using isInvariant_commutator (A := ↥R) V K
   let Cmap : Subgroup G := C.map H.subtype
   let Wmap : Subgroup G := W.map H.subtype
@@ -2068,8 +2068,8 @@ public theorem theorem_3_6_K_fixedPointSubgroup_on_fitting_eq_bot
     (hVK_disj : Disjoint (fittingSubgroup H) K) (hK_ne_bot : K ≠ ⊥) :
     let V : Subgroup H := fittingSubgroup H
 
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     V ⊔ normalizerOf K = ⊤ →
     fixedPointSubgroup (↥K) (↥V) = ⊥ := by
   letI : Fact p.Prime := ⟨hp⟩
@@ -2103,8 +2103,8 @@ public theorem theorem_3_6_normalizer_complement_structure
       K ≤ U ∧
       V ⊔ K = U ∧
       Disjoint V K ∧
-      IsInvariant (↥R) (↥H) K ∧
-      IsInvariant (↥R) (↥H) (normalizerOf K) ∧
+      IsInvariantSubgroup (↥R) (↥H) K ∧
+      IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) ∧
       V ⊔ normalizerOf K = ⊤ ∧
       ⁅V, K⁆ = V ∧
       subgroupCentralizerIn V K = ⊥ ∧
@@ -2153,8 +2153,8 @@ public theorem theorem_3_6_normalizer_complement_structure
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  have hV_inv : IsInvariant (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  have hV_inv : IsInvariantSubgroup (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
+  letI : IsInvariantSubgroup (↥R) (↥H) V := hV_inv
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -2191,11 +2191,11 @@ public theorem theorem_3_6_normalizer_complement_structure
       rw [← hVNK_sup]
       exact sup_le hV_le_norm_W hNK_le_norm_W
     exact Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  have hC_inv : IsInvariant (↥R) (↥H) C := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+  have hC_inv : IsInvariantSubgroup (↥R) (↥H) C := by
+    letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     simpa [C] using isInvariant_subgroupCentralizerIn_of_isInvariant (A := ↥R) V K
-  have hW_inv : IsInvariant (↥R) (↥H) W := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+  have hW_inv : IsInvariantSubgroup (↥R) (↥H) W := by
+    letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     simpa [W] using isInvariant_commutator (A := ↥R) V K
   let Cmap : Subgroup G := C.map H.subtype
   let Wmap : Subgroup G := W.map H.subtype
@@ -2410,7 +2410,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     (hKsub_fit : (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K))
     (hCH_le_K : subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K)
     (hKR₀_bot : ⁅K.map H.subtype, R₀⁆ = ⊥) :
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     let NK : Subgroup H := normalizerOf K
     NK ≤ (subgroupCentralizerIn H R₀).subgroupOf H ∧
       IsCyclic K ∧
@@ -2421,16 +2421,16 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
   let NK : Subgroup H := normalizerOf K
   have hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
 
-  have hNK_invR : IsInvariant (↥R) (↥H) NK := by
+  have hNK_invR : IsInvariantSubgroup (↥R) (↥H) NK := by
     simpa [NK] using hNK_inv
-  have hNK_inv₀ : IsInvariant (↥R₀) (↥H) NK := by
+  have hNK_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) NK := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := NK)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := NK)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ NK) ↔ (a • x ∈ NK) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) NK := hNK_inv₀
+  letI : IsInvariantSubgroup (↥R₀) (↥H) NK := hNK_inv₀
   have hK_le_NK : K ≤ NK := Subgroup.le_normalizer
   have hR₀_ne_bot : R₀ ≠ ⊥ := by
     intro hR₀_bot
@@ -2462,7 +2462,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
   have hK_triv_NK :
       ActsTriviallyOnSubgroup (A := ↥R₀) (G := ↥NK) (K.subgroupOf NK) :=
     actsTriviallyOnSubgroup_of_le_fixedPointSubgroup (A := ↥R₀) (G := ↥NK) hK_fix_NK
-  have hKsub_inv₀ : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := by
+  have hKsub_inv₀ : IsInvariantSubgroup (↥R₀) (↥NK) (K.subgroupOf NK) := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -2473,7 +2473,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
       have hxfix : a⁻¹ • (a • x) = a • x := hK_triv_NK a⁻¹ (a • x) hx
       have hxa : x = a • x := by simpa [smul_smul] using hxfix
       exact hxa ▸ hx
-  letI : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := hKsub_inv₀
+  letI : IsInvariantSubgroup (↥R₀) (↥NK) (K.subgroupOf NK) := hKsub_inv₀
   have hK_triv_pointwise : ∀ a : R₀, ∀ x : K.subgroupOf NK, a • x = x := by
     intro a x
     apply Subtype.ext
@@ -2575,8 +2575,8 @@ public theorem theorem_3_6_r0_commutator_nontrivial
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -2601,7 +2601,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  letI : IsInvariant (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
+  letI : IsInvariantSubgroup (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
   letI : V.Normal := by
     dsimp [V]
     infer_instance
@@ -2648,7 +2648,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
       exact Subgroup.map_top_of_surjective q (QuotientGroup.mk'_surjective V)
     rw [← hmap_top]
     exact hcommHq_le
-  letI : IsInvariant (↥R) (↥H) NK := hNK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) NK := hNK_inv
   -- letI : MulDistribMulAction (↥R) (↥NK) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) NK
   have hNK_map_top : NK.map q = ⊤ := by
     apply top_unique
@@ -2729,7 +2729,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
       _ = (⊤ : Subgroup NK).map φ := by
         symm
         exact Subgroup.map_top_of_surjective φ hφ_surj
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   -- letI : MulDistribMulAction (↥R) (↥K) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) K
   let ρ : R →* MulAut K := MulDistribMulAction.toMulAut (G := ↥R) (M := ↥K)
   let ψ : NK →* MulAut K := by
@@ -2822,8 +2822,8 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -2947,14 +2947,14 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     exact (Subgroup.disjoint_def.mp hVgKg_disj) hxVg hxKgG
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
   haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-  have hK_inv₀ : IsInvariant (↥R₀) (↥H) K := by
+  have hK_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) K := by
     refine ⟨?_⟩
     intro a x
     have hx := hK_inv.invariant (A := ↥R) (G := ↥H) (H := K)
       ⟨a, hR₀_le a.2⟩ x
     change (x ∈ K) ↔ (a • x ∈ K) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) K := hK_inv₀
+  letI : IsInvariantSubgroup (↥R₀) (↥H) K := hK_inv₀
   have hR₀_le_normKg : R₀ ≤ Subgroup.normalizer (Kg : Set G) := by
     intro a ha
     rw [Subgroup.mem_normalizer_iff]
@@ -2962,7 +2962,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     constructor
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
-      have hy' : (⟨a, ha⟩ : R₀) • y ∈ K := (IsInvariant.invariant (A := ↥R₀) (G := ↥H)
+      have hy' : (⟨a, ha⟩ : R₀) • y ∈ K := (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H)
           (H := K) ⟨a, ha⟩ y).1 hyK
       refine Subgroup.mem_map.mpr ?_
       exact ⟨(⟨a, ha⟩ : R₀) • y, hy', by
@@ -2970,7 +2970,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     · intro hx
       have ha_inv : a⁻¹ ∈ R₀ := R₀.inv_mem ha
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
-      have hy' : (⟨a⁻¹, ha_inv⟩ : R₀) • y ∈ K := (IsInvariant.invariant (A := ↥R₀) (G := ↥H)
+      have hy' : (⟨a⁻¹, ha_inv⟩ : R₀) • y ∈ K := (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H)
           (H := K) ⟨a⁻¹, ha_inv⟩ y).1 hyK
       refine Subgroup.mem_map.mpr ?_
       exact ⟨(⟨a⁻¹, ha_inv⟩ : R₀) • y, hy', by
@@ -3188,8 +3188,8 @@ public theorem theorem_3_6_false_of_local_sub_comm
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -3223,8 +3223,8 @@ public theorem theorem_3_6_false_of_comm_sub
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -3259,8 +3259,8 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
       fittingSubgroup H ⊔ K =
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -3416,14 +3416,14 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     exact hcop_p_R₀
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
   haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-  have hK_inv₀ : IsInvariant (↥R₀) (↥H) K := by
+  have hK_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) K := by
     refine ⟨?_⟩
     intro a x
     have hx := hK_inv.invariant (A := ↥R) (G := ↥H) (H := K)
       ⟨a, hR₀_le a.2⟩ x
     change (x ∈ K) ↔ (a • x ∈ K) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) K := hK_inv₀
+  letI : IsInvariantSubgroup (↥R₀) (↥H) K := hK_inv₀
   have hR₀_le_normKg : R₀ ≤ Subgroup.normalizer (Kg : Set G) := by
     intro a ha
     rw [Subgroup.mem_normalizer_iff]
@@ -3431,7 +3431,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     constructor
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
-      have hy' : (⟨a, ha⟩ : R₀) • y ∈ K := (IsInvariant.invariant (A := ↥R₀) (G := ↥H)
+      have hy' : (⟨a, ha⟩ : R₀) • y ∈ K := (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H)
           (H := K) ⟨a, ha⟩ y).1 hyK
       refine Subgroup.mem_map.mpr ?_
       exact ⟨(⟨a, ha⟩ : R₀) • y, hy', by
@@ -3439,7 +3439,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     · intro hx
       have ha_inv : a⁻¹ ∈ R₀ := R₀.inv_mem ha
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
-      have hy' : (⟨a⁻¹, ha_inv⟩ : R₀) • y ∈ K := (IsInvariant.invariant (A := ↥R₀) (G := ↥H)
+      have hy' : (⟨a⁻¹, ha_inv⟩ : R₀) • y ∈ K := (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H)
           (H := K) ⟨a⁻¹, ha_inv⟩ y).1 hyK
       refine Subgroup.mem_map.mpr ?_
       exact ⟨(⟨a⁻¹, ha_inv⟩ : R₀) • y, hy', by
@@ -3685,8 +3685,8 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H)))
     (P : Subgroup (normalizerOf K)) (hP_p : IsPGroup p P) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -3871,9 +3871,9 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H)))
     (P : Subgroup (normalizerOf K)) (hP_p : IsPGroup p P) :
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -3889,10 +3889,10 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
   let Psubg : Subgroup G := Psub.map H.subtype
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
   haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-  have hPsub_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
+  have hPsub_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ Psub) ↔ (a • x ∈ Psub) at hx
     exact hx
@@ -3914,7 +3914,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       refine Subgroup.mem_map.mpr ?_
       refine ⟨(⟨a, ha⟩ : R₀) • y, ?_, ?_⟩
-      · exact (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := Psub) ⟨a, ha⟩ y).1 hy
+      · exact (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H) (H := Psub) ⟨a, ha⟩ y).1 hy
       · simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
     · intro hx
       have hxH_conj : (a : G) * x * (a : G)⁻¹ ∈ H := hPsubg_le_H hx
@@ -3930,7 +3930,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
           simpa using hy_eq
         simpa [hyx] using hy
       have hxPsub : xH ∈ Psub :=
-        (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := Psub) ⟨a, ha⟩ xH).2 hxPsub_smul
+        (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H) (H := Psub) ⟨a, ha⟩ xH).2 hxPsub_smul
       exact Subgroup.mem_map_of_mem H.subtype hxPsub
   haveI : Subgroup.Normalizes R₀ Psubg := ⟨hR₀normPsubg⟩
   have hR₀_dvd_R : Nat.card R₀ ∣ Nat.card R := by
@@ -4106,8 +4106,8 @@ public theorem theorem_3_6_local_subambient_step
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (K : Subgroup H) (P : Subgroup (normalizerOf K)) (X : Subgroup H) :
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
-    IsInvariant (↥R) (↥H) X →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) X →
     normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
     let N : Subgroup H := fittingSubgroup H ⊔ X ⊔ normalizerSubtypeMap K P
     let Ng : Subgroup G := N.map H.subtype
@@ -4125,17 +4125,17 @@ public theorem theorem_3_6_local_subambient_step
   let S : Subgroup G := Ng ⊔ R₀
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
   haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-  have hP_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
+  have hP_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ Psub) ↔ (a • x ∈ Psub) at hx
     exact hx
-  have hX_inv₀ : IsInvariant (↥R₀) (↥H) X := by
+  have hX_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) X := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := X)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := X)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ X) ↔ (a • x ∈ X) at hx
     exact hx
@@ -4143,17 +4143,17 @@ public theorem theorem_3_6_local_subambient_step
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  have hV_inv₀ : IsInvariant (↥R₀) (↥H) V :=
+  have hV_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
-  have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-    letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
+  have hY_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Y := by
+    letI : IsInvariantSubgroup (↥R₀) (↥H) X := hX_inv₀
+    letI : IsInvariantSubgroup (↥R₀) (↥H) Psub := hP_inv₀
     simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
   have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
     Subgroup.le_normalizer_of_normal (H := V)
-  have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-    letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+  have hN_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) N := by
+    letI : IsInvariantSubgroup (↥R₀) (↥H) V := hV_inv₀
+    letI : IsInvariantSubgroup (↥R₀) (↥H) Y := hY_inv₀
     simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
   have hNg_le_H : Ng ≤ H := by
     intro x hx
@@ -4163,7 +4163,7 @@ public theorem theorem_3_6_local_subambient_step
     intro r x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     refine Subgroup.mem_map.mpr ?_
-    refine ⟨r • y, (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
+    refine ⟨r • y, (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have hR₀_le_normNg : R₀ ≤ Subgroup.normalizer (Ng : Set G) :=
     subgroup_le_normalizer_of_conj_mem Ng R₀ hR₀invNg
@@ -4249,15 +4249,15 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
           (QuotientGroup.mk' (fittingSubgroup H)))
     (hVK_disj : Disjoint (fittingSubgroup H) K)
     (P : Subgroup (normalizerOf K)) (hP_p : IsPGroup p P) :
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     fittingSubgroup H ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     ∀ (X : Subgroup H), X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       let N : Subgroup H := fittingSubgroup H ⊔ X ⊔ normalizerSubtypeMap K P
       let Ng : Subgroup G := N.map H.subtype
@@ -4304,17 +4304,17 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
     simpa [hN_core_bot] using hmap.symm
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
   haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-  have hP_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
+  have hP_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ Psub) ↔ (a • x ∈ Psub) at hx
     exact hx
-  have hX_inv₀ : IsInvariant (↥R₀) (↥H) X := by
+  have hX_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) X := by
     refine ⟨?_⟩
     intro a x
-    have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := X)
+    have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := X)
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ X) ↔ (a • x ∈ X) at hx
     exact hx
@@ -4322,24 +4322,24 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
     dsimp [V]
     infer_instance
   letI : V.Characteristic := hV_char
-  have hV_inv₀ : IsInvariant (↥R₀) (↥H) V :=
+  have hV_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
   let Y : Subgroup H := X ⊔ Psub
-  have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-    letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
+  have hY_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Y := by
+    letI : IsInvariantSubgroup (↥R₀) (↥H) X := hX_inv₀
+    letI : IsInvariantSubgroup (↥R₀) (↥H) Psub := hP_inv₀
     simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
   have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
     Subgroup.le_normalizer_of_normal (H := V)
-  have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-    letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+  have hN_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) N := by
+    letI : IsInvariantSubgroup (↥R₀) (↥H) V := hV_inv₀
+    letI : IsInvariantSubgroup (↥R₀) (↥H) Y := hY_inv₀
     simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
   have hR₀invNg : ∀ r : R₀, ∀ x ∈ Ng, (r : G) * x * (r : G)⁻¹ ∈ Ng := by
     intro r x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     refine Subgroup.mem_map.mpr ?_
-    refine ⟨r • y, (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
+    refine ⟨r • y, (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have hR₀_le_normNg : R₀ ≤ Subgroup.normalizer (Ng : Set G) :=
     subgroup_le_normalizer_of_conj_mem Ng R₀ hR₀invNg
@@ -4495,9 +4495,9 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
     ∃ K : Subgroup H, ∃ P : Subgroup (normalizerOf K),
       V ⊔ K = Fbar.comap q ∧
       Disjoint V K ∧
-      IsInvariant (↥R) (↥H) K ∧
-      IsInvariant (↥R) (↥H) (normalizerOf K) ∧
-      IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) ∧
+      IsInvariantSubgroup (↥R) (↥H) K ∧
+      IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) ∧
+      IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) ∧
       V ⊔ normalizerOf K = ⊤ ∧
       V ⊓ normalizerOf K = ⊥ ∧
       (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) ∧
@@ -4507,7 +4507,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       V ⊔ K ⊔ normalizerSubtypeMap K P = ⊤ ∧
       R = R₀ ∧
       ∀ X : Subgroup H, X ≤ K →
-        IsInvariant (↥R) (↥H) X →
+        IsInvariantSubgroup (↥R) (↥H) X →
         normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
         X < K →
         ⁅X, normalizerSubtypeMap K P⁆ = ⊥ := by
@@ -4525,9 +4525,9 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       hsolvG hodd hHR hcopHR hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_sup
       hNK_inv hVNK_sup
   let Psub : Subgroup H := normalizerSubtypeMap K P
-  have hPsub_inv : IsInvariant (↥R) (↥H) Psub := by
-    letI : IsInvariant (↥R) (↥H) (normalizerOf K) := hNK_inv
-    letI : IsInvariant (↥R) (↥(normalizerOf K)) P := hP_inv
+  have hPsub_inv : IsInvariantSubgroup (↥R) (↥H) Psub := by
+    letI : IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) := hNK_inv
+    letI : IsInvariantSubgroup (↥R) (↥(normalizerOf K)) P := hP_inv
     simpa [Psub, normalizerSubtypeMap] using
       isInvariant_map_subtype (A := ↥R) (G := ↥H) (normalizerOf K) P
   have hV_char : V.Characteristic := by
@@ -4547,7 +4547,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
     simpa [normalizerOf] using hPsub_le_NK
   have hN_top_of_ambient_top :
       ∀ (X : Subgroup H),
-        IsInvariant (↥R) (↥H) X →
+        IsInvariantSubgroup (↥R) (↥H) X →
         Psub ≤ Subgroup.normalizer (X : Set H) →
         let N : Subgroup H := V ⊔ X ⊔ Psub
         let Ng : Subgroup G := N.map H.subtype
@@ -4565,38 +4565,38 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       exact y.2
     let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
     haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
-    have hPsub_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
+    have hPsub_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Psub := by
       refine ⟨?_⟩
       intro a x
-      have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub)
+      have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub)
         ⟨(a : G), hR₀_le a.2⟩ x
       change (x ∈ Psub) ↔ (a • x ∈ Psub) at hx
       exact hx
-    have hX_inv₀ : IsInvariant (↥R₀) (↥H) X := by
+    have hX_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) X := by
       refine ⟨?_⟩
       intro a x
-      have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := X)
+      have hx := IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := X)
         ⟨(a : G), hR₀_le a.2⟩ x
       change (x ∈ X) ↔ (a • x ∈ X) at hx
       exact hx
-    have hV_inv₀ : IsInvariant (↥R₀) (↥H) V :=
+    have hV_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) V :=
       isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
     let Y : Subgroup H := X ⊔ Psub
-    have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-      letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-      letI : IsInvariant (↥R₀) (↥H) Psub := hPsub_inv₀
+    have hY_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) Y := by
+      letI : IsInvariantSubgroup (↥R₀) (↥H) X := hX_inv₀
+      letI : IsInvariantSubgroup (↥R₀) (↥H) Psub := hPsub_inv₀
       simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
     have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
       Subgroup.le_normalizer_of_normal (H := V)
-    have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-      letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-      letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+    have hN_inv₀ : IsInvariantSubgroup (↥R₀) (↥H) N := by
+      letI : IsInvariantSubgroup (↥R₀) (↥H) V := hV_inv₀
+      letI : IsInvariantSubgroup (↥R₀) (↥H) Y := hY_inv₀
       simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
     have hR₀invNg : ∀ r : R₀, ∀ x ∈ Ng, (r : G) * x * (r : G)⁻¹ ∈ Ng := by
       intro r x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       refine Subgroup.mem_map.mpr ?_
-      refine ⟨r • y, (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
+      refine ⟨r • y, (IsInvariantSubgroup.invariant (A := ↥R₀) (G := ↥H) (H := N) r y).1 hy, ?_⟩
       simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
     have hR₀_le_normNg : R₀ ≤ Subgroup.normalizer (Ng : Set G) :=
       subgroup_le_normalizer_of_conj_mem Ng R₀ hR₀invNg
@@ -4820,13 +4820,13 @@ public theorem theorem_3_6_K_eq_commutator_with_P
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -4879,9 +4879,9 @@ public theorem theorem_3_6_K_eq_commutator_with_P
     have hX_lt : X < K := by
       refine lt_of_le_of_ne hX_le_K ?_
       simpa [X, eq_comm] using hX_ne
-    have hX_inv : IsInvariant (↥R) (↥H) X := by
-      letI : IsInvariant (↥R) (↥H) K := hK_inv
-      letI : IsInvariant (↥R) (↥H) Psub := hPsub_inv
+    have hX_inv : IsInvariantSubgroup (↥R) (↥H) X := by
+      letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
+      letI : IsInvariantSubgroup (↥R) (↥H) Psub := hPsub_inv
       simpa [X] using isInvariant_commutator (A := ↥R) K Psub
     have hPsub_conjX :
         ∀ a : Psub, ∀ x ∈ X, (a : H) * x * (a : H)⁻¹ ∈ X := by
@@ -4960,14 +4960,14 @@ public theorem theorem_3_6_K_is_q_group
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -4982,7 +4982,7 @@ public theorem theorem_3_6_K_is_q_group
     simpa [Psub, NK, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [NK, normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -5053,15 +5053,15 @@ public theorem theorem_3_6_K_is_q_group
       simpa [Lmap, htop_map] using hEq
     have hLmap_lt : Lmap < K := lt_of_le_of_ne hLmap_le_K hLmap_ne_K
     letI : L.Characteristic := hL_char
-    letI : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
-    have hLmap_invR : IsInvariant (↥R) (↥H) Lmap := by
+    letI : IsInvariantSubgroup (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
+    have hLmap_invR : IsInvariantSubgroup (↥R) (↥H) Lmap := by
       simpa [Lmap] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K L
-    letI : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
+    letI : IsInvariantSubgroup (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
     have hPsub_normLmap : Psub ≤ Subgroup.normalizer (Lmap : Set H) := by
       refine subgroup_le_normalizer_of_conj_mem Lmap Psub ?_
       intro a x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-      have hy' : a • y ∈ L := (IsInvariant.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
+      have hy' : a • y ∈ L := (IsInvariantSubgroup.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
       simpa [Lmap, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hPsub_normK] using
         (Subgroup.mem_map_of_mem K.subtype hy')
     haveI : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
@@ -5117,14 +5117,14 @@ public theorem theorem_3_6_K_class_two_exponent_q
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -5140,7 +5140,7 @@ public theorem theorem_3_6_K_class_two_exponent_q
     simpa [Psub, NK, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [NK, normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -5204,15 +5204,15 @@ public theorem theorem_3_6_K_class_two_exponent_q
       simpa [Lmap, htop_map] using hEq
     have hLmap_lt : Lmap < K := lt_of_le_of_ne hLmap_le_K hLmap_ne_K
     letI : L.Characteristic := hL_char
-    letI : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
-    have hLmap_invR : IsInvariant (↥R) (↥H) Lmap := by
+    letI : IsInvariantSubgroup (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
+    have hLmap_invR : IsInvariantSubgroup (↥R) (↥H) Lmap := by
       simpa [Lmap] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K L
-    letI : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
+    letI : IsInvariantSubgroup (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
     have hPsub_normLmap : Psub ≤ Subgroup.normalizer (Lmap : Set H) := by
       refine subgroup_le_normalizer_of_conj_mem Lmap Psub ?_
       intro a x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-      have hy' : a • y ∈ L := (IsInvariant.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
+      have hy' : a • y ∈ L := (IsInvariantSubgroup.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
       simpa [Lmap, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hPsub_normK] using
         (Subgroup.mem_map_of_mem K.subtype hy')
     haveI : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
@@ -5267,13 +5267,13 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -5281,7 +5281,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     haveI : Subgroup.Normalizes Psub K :=
       ⟨by
         simpa [Psub, normalizerOf, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)⟩
-    let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+    let hKcomm_inv : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
     let _ : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
@@ -5310,7 +5310,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     theorem_3_6_K_eq_commutator_with_P H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit
       hP_p hPK_ne_bot hproper
-  let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+  let hKcomm_inv : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_inv
@@ -5392,14 +5392,14 @@ public theorem theorem_3_6_K_frattini_eq_commutator
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -5456,14 +5456,14 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    IsInvariant (↥R) (↥H) K →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    IsInvariantSubgroup (↥R) (↥H) K →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
@@ -5471,7 +5471,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     haveI : Subgroup.Normalizes Psub K :=
       ⟨by
         simpa [Psub, normalizerOf, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)⟩
-    let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+    let hKcomm_inv : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
     let _ : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
@@ -5508,7 +5508,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     theorem_3_6_K_frattini_eq_commutator H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
       hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
-  let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+  let hKcomm_inv : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_inv
@@ -5518,7 +5518,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
   intro a ha
   have hcop_zpow_K : Nat.Coprime (Nat.card (Subgroup.zpowers a)) (Nat.card K) := by
     exact Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card (Subgroup.zpowers a)) hcopPsubK
-  let hcomm_inv_zpow : IsInvariant (↥(Subgroup.zpowers a)) (↥K) (commutator (↥K)) :=
+  let hcomm_inv_zpow : IsInvariantSubgroup (↥(Subgroup.zpowers a)) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers a)) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers a)) (commutator (↥K))
@@ -5530,7 +5530,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
       ActsTrivially (A := ↥(Subgroup.zpowers a)) (G := ↥K ⧸ commutator (↥K)) := by
     intro b x
     exact smul_eq_self_of_mem_zpowers (y := a) b.2 (ha x)
-  let hPhi_inv_zpow : IsInvariant (↥(Subgroup.zpowers a)) (↥K) (frattini (↥K)) :=
+  let hPhi_inv_zpow : IsInvariantSubgroup (↥(Subgroup.zpowers a)) (↥K) (frattini (↥K)) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers a)) (G := ↥K) (frattini (↥K))
   letI : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (frattini (↥K)) :=
     quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers a)) (frattini (↥K))
@@ -5586,9 +5586,9 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -5596,13 +5596,13 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
-    let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
+    let hKcomm_invR : IsInvariantSubgroup (↥R) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
     let _ : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_invR
@@ -5622,10 +5622,10 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
   let Sg : Subgroup G := Psubg ⊔ R
   let Ksub : Subgroup Sg := Psubg.subgroupOf Sg
   let Rsub : Subgroup Sg := R.subgroupOf Sg
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  letI : IsInvariant (↥R) (↥H) Psub := by
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) Psub := by
     simpa [Psub] using hPsub_inv
-  let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
+  let hKcomm_invR : IsInvariantSubgroup (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
@@ -5638,7 +5638,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
   haveI : Fact qK.Prime := ⟨hqK_prime⟩
   haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
-  let hKcomm_invP : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+  let hKcomm_invP : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_invP
@@ -5774,7 +5774,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
         symm
         exact Subgroup.subgroupOf_sup (A := Psubg) (A' := R) (B := Sg) le_sup_left le_sup_right
       _ = ⊤ := by simp [Sg]
-  have hK_invS : IsInvariant (↥Sg) (↥H) K := by
+  have hK_invS : IsInvariantSubgroup (↥Sg) (↥H) K := by
     refine ⟨?_⟩
     have hforward : ∀ a : Sg, ∀ x : H, x ∈ K → a • x ∈ K := by
       intro a x hx
@@ -5795,8 +5795,8 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
       have h :=
         hforward a⁻¹ (a • x) hx
       simpa [smul_smul] using h
-  letI : IsInvariant (↥Sg) (↥H) K := hK_invS
-  let hKcomm_invS : IsInvariant (↥Sg) (↥K) (commutator (↥K)) :=
+  letI : IsInvariantSubgroup (↥Sg) (↥H) K := hK_invS
+  let hKcomm_invS : IsInvariantSubgroup (↥Sg) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Sg) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥Sg) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Sg) (commutator (↥K)) hKcomm_invS
@@ -6010,9 +6010,9 @@ public theorem theorem_3_6_K_fixed_not_le_commutator
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -6020,20 +6020,20 @@ public theorem theorem_3_6_K_fixed_not_le_commutator
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     ¬ fixedPointSubgroup (↥R) (↥K) ≤ commutator (↥K) := by
   letI : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
+  let hKcomm_invR : IsInvariantSubgroup (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
@@ -6077,9 +6077,9 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -6087,12 +6087,12 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     ∃ qK : ℕ,
       Nat.Prime qK ∧
         Nat.card (fixedPointSubgroup (↥R) (↥K)) = qK ∧
@@ -6102,7 +6102,7 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   obtain ⟨qK, hqK_prime, _, _, hqK_pgroup, _, hexpK⟩ :=
     theorem_3_6_K_class_two_exponent_q H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -6213,9 +6213,9 @@ public theorem theorem_3_6_K_commutatorAction_proper
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -6223,12 +6223,12 @@ public theorem theorem_3_6_K_commutatorAction_proper
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     fixedPointSubgroup (↥R) (↥K) ⊓ commutatorAction (A := ↥R) (G := ↥K) = ⊥ ∧
       commutatorAction (A := ↥R) (G := ↥K) ≠ ⊤ := by
   letI : Fact p.Prime := ⟨hp⟩
@@ -6236,10 +6236,10 @@ public theorem theorem_3_6_K_commutatorAction_proper
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   let Kcomm : Subgroup K := commutatorAction (A := ↥R) (G := ↥K)
-  let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
+  let hKcomm_invR : IsInvariantSubgroup (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
   letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
@@ -6360,9 +6360,9 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -6370,12 +6370,12 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     IsMulCommutative ↥(commutatorAction (A := ↥R) (G := ↥K)) := by
   set_option maxHeartbeats 800000 in
   letI : Fact p.Prime := ⟨hp⟩
@@ -6395,7 +6395,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
   let S : Subgroup KR := Kcommsub ⊔ RsubKR
   let Ksub : Subgroup S := Kcommsub.subgroupOf S
   let Rsub : Subgroup S := RsubKR.subgroupOf S
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   have hf : Function.Injective f := by
     intro x y hxy
     apply K.subtype_injective
@@ -6425,13 +6425,13 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
       have hy' : (⟨a, ha⟩ : R) • y ∈ K :=
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
       exact Subgroup.mem_map_of_mem H.subtype hy'
     · intro hx
       have ha_inv : a⁻¹ ∈ R := R.inv_mem ha
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
       have hy' : (⟨a⁻¹, ha_inv⟩ : R) • y ∈ K :=
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ y).1 hyK
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ y).1 hyK
       refine Subgroup.mem_map.mpr ?_
       refine ⟨(⟨a⁻¹, ha_inv⟩ : R) • y, hy', ?_⟩
       have hyx' : (↑y * a : G) = (a * x * a⁻¹) * a := by
@@ -6443,14 +6443,14 @@ public theorem theorem_3_6_K_commutatorAction_abelian
           exact congrArg (fun z : G => a⁻¹ * z) hyx'
         _ = x := by simp [mul_assoc]
   haveI : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
-  have hKcomm_invR : IsInvariant (↥R) (↥K) Kcomm :=
+  have hKcomm_invR : IsInvariantSubgroup (↥R) (↥K) Kcomm :=
     commutatorAction_isInvariant (G := ↥K) (A := ↥R)
   have hRnormKcommg : R ≤ Subgroup.normalizer (Kcommg : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem Kcommg R ?_
     intro a x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     have hy' : a • y ∈ Kcomm :=
-      (IsInvariant.invariant (A := ↥R) (G := ↥K) (H := Kcomm) a y).1 hy
+      (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥K) (H := Kcomm) a y).1 hy
     exact Subgroup.mem_map_of_mem f hy'
   have hKcommsub_normal : Ksub.Normal := by
     have hS_le_normKcommsub : S ≤ Subgroup.normalizer (Kcommsub : Set KR) := by
@@ -6975,9 +6975,9 @@ public theorem theorem_3_6_K_elementaryAbelian
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -6985,12 +6985,12 @@ public theorem theorem_3_6_K_elementaryAbelian
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     ∃ qK : ℕ,
       Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧ IsElementaryAbelian qK ↥K := by
   set_option maxHeartbeats 800000 in
@@ -7004,7 +7004,7 @@ public theorem theorem_3_6_K_elementaryAbelian
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   let Kcomm : Subgroup K := commutatorAction (A := ↥R) (G := ↥K)
   obtain ⟨qK, hqK_prime, hqK_ne_p, hqK_ne_R₀, hqK_pgroup, hcomm_center, hexpK⟩ :=
@@ -7093,8 +7093,8 @@ public theorem theorem_3_6_K_elementaryAbelian
         simpa [X, htop_map] using hX_eq_K
       apply hKcomm_ne_top
       exact (Subgroup.map_injective (f := K.subtype) K.subtype_injective) hmap_eq
-    have hX_inv : IsInvariant (↥R) (↥H) X := by
-      have hKcomm_inv : IsInvariant (↥R) (↥K) Kcomm :=
+    have hX_inv : IsInvariantSubgroup (↥R) (↥H) X := by
+      have hKcomm_inv : IsInvariantSubgroup (↥R) (↥K) Kcomm :=
         commutatorAction_isInvariant (G := ↥K) (A := ↥R)
       simpa [X] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K Kcomm
     have hcommXP_bot : ⁅X, Psub⁆ = ⊥ := hproper X hX_le_K hX_inv hnorm hX_lt_K
@@ -7104,7 +7104,7 @@ public theorem theorem_3_6_K_elementaryAbelian
         (by simpa [Subgroup.commutator_comm] using hcommXP_bot)
     let qcomm : ↥K →* (↥K ⧸ commutator (↥K)) := QuotientGroup.mk' (commutator (↥K))
     haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
-    let hKcomm_invP : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
+    let hKcomm_invP : IsInvariantSubgroup (↥Psub) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
     letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
       quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_invP
@@ -7139,7 +7139,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       theorem_3_6_K_frattini_eq_commutator H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
         hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
-    let hKcomm_inv : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
+    let hKcomm_inv : IsInvariantSubgroup (↥R) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
     letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
       quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_inv
@@ -7164,7 +7164,7 @@ public theorem theorem_3_6_K_elementaryAbelian
         (QuotientGroup.eq_iff_div_mem (N := commutator (↥K)) (x := a • k) (y := k)).2
           (by simpa [div_eq_mul_inv] using hconj)
       simpa using hfix
-    let hPhi_inv : IsInvariant (↥R) (↥K) (frattini (↥K)) :=
+    let hPhi_inv : IsInvariantSubgroup (↥R) (↥K) (frattini (↥K)) :=
       isInvariant_of_characteristic (A := ↥R) (G := ↥K) (frattini (↥K))
     letI : MulAction.QuotientAction (↥R) (frattini (↥K)) :=
       quotientAction_of_isInvariant (A := ↥R) (frattini (↥K)) hPhi_inv
@@ -7193,7 +7193,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       intro a x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       exact Subgroup.mem_map_of_mem H.subtype <|
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) a y).1 hy
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) a y).1 hy
     haveI : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
     have htrivKg : ActsTrivially (A := ↥R) (G := ↥Kg) := by
       intro a x
@@ -7436,14 +7436,14 @@ public theorem theorem_3_6_K_elementaryAbelian
       · intro hx
         rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
         exact Subgroup.mem_map_of_mem H.subtype <|
-          (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
+          (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
       · intro hx
         have ha_inv : a⁻¹ ∈ R := R.inv_mem ha
         rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
         refine Subgroup.mem_map.mpr ?_
         let yK : K := ⟨y, hyK⟩
         refine ⟨(⟨a⁻¹, ha_inv⟩ : R) • yK,
-          (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
+          (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
         have hyx' : H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) = x := by
           calc
             H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) =
@@ -7463,7 +7463,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       intro a x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       have hy' : (⟨a, a.2⟩ : R) • y ∈ Psub :=
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub) ⟨a, a.2⟩ y).1 hy
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub) ⟨a, a.2⟩ y).1 hy
       exact Subgroup.mem_map_of_mem H.subtype hy'
     have hSg_le_normPsubg : Sg ≤ Subgroup.normalizer (Psubg : Set G) := by
       exact sup_le Psubg.le_normalizer hR_le_normPsubg
@@ -7530,7 +7530,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       rw [hSg_card]
       exact Nat.Coprime.mul_right hcop_q_Psubg hcop_q_R
     have hoddSg : Odd (Nat.card Sg) := odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card Sg)
-    have hK_invS : IsInvariant (↥Sg) (↥H) K := by
+    have hK_invS : IsInvariantSubgroup (↥Sg) (↥H) K := by
       refine ⟨?_⟩
       have hforward : ∀ a : Sg, ∀ x : H, x ∈ K → a • x ∈ K := by
         intro a x hx
@@ -7550,8 +7550,8 @@ public theorem theorem_3_6_K_elementaryAbelian
       · intro hx
         have h := hforward a⁻¹ (a • x) hx
         simpa [smul_smul] using h
-    letI : IsInvariant (↥Sg) (↥H) K := hK_invS
-    let hZ_invS : IsInvariant (↥Sg) (↥K) Z :=
+    letI : IsInvariantSubgroup (↥Sg) (↥H) K := hK_invS
+    let hZ_invS : IsInvariantSubgroup (↥Sg) (↥K) Z :=
       isInvariant_of_characteristic (A := ↥Sg) (G := ↥K) Z
     letI : MulAction.QuotientAction (↥Sg) Z :=
       quotientAction_of_isInvariant (A := ↥Sg) Z hZ_invS
@@ -7750,9 +7750,9 @@ public theorem theorem_3_6_K_card_gt_q_sq
     let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
     V ⊔ K = Fbar.comap q →
     Disjoint V K →
-    (hK_inv : IsInvariant (↥R) (↥H) K) →
-    IsInvariant (↥R) (↥H) (normalizerOf K) →
-    IsInvariant (↥R) (↥H) (normalizerSubtypeMap K P) →
+    (hK_inv : IsInvariantSubgroup (↥R) (↥H) K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerOf K) →
+    IsInvariantSubgroup (↥R) (↥H) (normalizerSubtypeMap K P) →
     V ⊔ normalizerOf K = ⊤ →
     V ⊓ normalizerOf K = ⊥ →
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
@@ -7760,12 +7760,12 @@ public theorem theorem_3_6_K_card_gt_q_sq
     IsPGroup p P →
     ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ →
     (∀ X : Subgroup H, X ≤ K →
-      IsInvariant (↥R) (↥H) X →
+      IsInvariantSubgroup (↥R) (↥H) X →
       normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     R = R₀ →
-    let _ : IsInvariant (↥R) (↥H) K := hK_inv
+    let _ : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
     ∃ qK : ℕ,
       Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧
         IsElementaryAbelian qK ↥K ∧ qK ^ 2 < Nat.card K := by
@@ -7780,7 +7780,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hK_ne_bot : K ≠ ⊥ := by
     intro hK_bot
@@ -7824,14 +7824,14 @@ public theorem theorem_3_6_K_card_gt_q_sq
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
       exact Subgroup.mem_map_of_mem H.subtype <|
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
     · intro hx
       have ha_inv : a⁻¹ ∈ R := R.inv_mem ha
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
       refine Subgroup.mem_map.mpr ?_
       let yK : K := ⟨y, hyK⟩
       refine ⟨(⟨a⁻¹, ha_inv⟩ : R) • yK,
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
       have hyx' : H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) = x := by
         calc
           H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) =
@@ -7928,7 +7928,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       intro a x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       have hy' : (⟨a, a.2⟩ : R) • y ∈ Psub :=
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := Psub) ⟨a, a.2⟩ y).1 hy
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := Psub) ⟨a, a.2⟩ y).1 hy
       exact Subgroup.mem_map_of_mem H.subtype hy'
     have hSg_le_normPsubg : Sg ≤ Subgroup.normalizer (Psubg : Set G) := by
       exact sup_le Psubg.le_normalizer hR_le_normPsubg
@@ -7995,7 +7995,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       rw [hSg_card]
       exact Nat.Coprime.mul_right hcop_q_Psubg hcop_q_R
     have hoddSg : Odd (Nat.card Sg) := odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card Sg)
-    have hK_invS : IsInvariant (↥Sg) (↥H) K := by
+    have hK_invS : IsInvariantSubgroup (↥Sg) (↥H) K := by
       refine ⟨?_⟩
       have hforward : ∀ a : Sg, ∀ x : H, x ∈ K → a • x ∈ K := by
         intro a x hx
@@ -8015,7 +8015,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       · intro hx
         have h := hforward a⁻¹ (a • x) hx
         simpa [smul_smul] using h
-    letI : IsInvariant (↥Sg) (↥H) K := hK_invS
+    letI : IsInvariantSubgroup (↥Sg) (↥H) K := hK_invS
     letI : CommGroup K := IsMulCommutative.instCommGroup
     let ι : Sg →* MulAut (↥K) := MulDistribMulAction.toMulAut (G := ↥Sg) (M := ↥K)
     let I : Subgroup (MulAut (↥K)) := ι.range
@@ -8330,7 +8330,7 @@ open scoped Pointwise
 
 private theorem theorem_3_6_fixedPointSubgroup_subgroup_eq_bot_of_disjoint
     {A : Type*} [Group A] {M : Type*} [Group M] [MulDistribMulAction A M]
-    (U : Subgroup M) [IsInvariant A M U]
+    (U : Subgroup M) [IsInvariantSubgroup A M U]
     (hdisj : Disjoint U (fixedPointSubgroup A M)) :
     fixedPointSubgroup A (↥U) = ⊥ := by
   apply bot_unique
@@ -8347,7 +8347,7 @@ private theorem theorem_3_6_fixedPointSubgroup_subgroup_eq_bot_of_disjoint
 private theorem theorem_3_6_fixedPointSubgroup_sup_eq_bot_of_disjoint
     {A : Type*} [Group A] [Finite A]
     {M : Type*} [Group M] [Finite M] [IsMulCommutative M] [MulDistribMulAction A M]
-    (U W : Subgroup M) [IsInvariant A M U] [IsInvariant A M W] [IsInvariant A M (U ⊔ W)]
+    (U W : Subgroup M) [IsInvariantSubgroup A M U] [IsInvariantSubgroup A M W] [IsInvariantSubgroup A M (U ⊔ W)]
     (hdisj : Disjoint U W)
     (hfixU : fixedPointSubgroup A (↥U) = ⊥)
     (hfixW : fixedPointSubgroup A (↥W) = ⊥) :
@@ -8393,8 +8393,8 @@ private theorem theorem_3_6_fixedPointSubgroup_sup_eq_bot_of_disjoint
     exact ⟨hu_eq, hw_eq⟩
   have hu_fix : ∀ a : A, a • u = u := by
     intro a
-    have hau : a • u ∈ U := (IsInvariant.invariant (A := A) (G := M) (H := U) a u).1 huU
-    have haw : a • w ∈ W := (IsInvariant.invariant (A := A) (G := M) (H := W) a w).1 hwW
+    have hau : a • u ∈ U := (IsInvariantSubgroup.invariant (A := A) (G := M) (H := U) a u).1 huU
+    have haw : a • w ∈ W := (IsInvariantSubgroup.invariant (A := A) (G := M) (H := W) a w).1 hwW
     have huwx : a • u * (a • w) = u * w := by
       calc
         a • u * (a • w) = a • (u * w) := by simp [smul_mul']
@@ -8404,8 +8404,8 @@ private theorem theorem_3_6_fixedPointSubgroup_sup_eq_bot_of_disjoint
     exact (hunique hau huU haw hwW huwx).1
   have hw_fix : ∀ a : A, a • w = w := by
     intro a
-    have hau : a • u ∈ U := (IsInvariant.invariant (A := A) (G := M) (H := U) a u).1 huU
-    have haw : a • w ∈ W := (IsInvariant.invariant (A := A) (G := M) (H := W) a w).1 hwW
+    have hau : a • u ∈ U := (IsInvariantSubgroup.invariant (A := A) (G := M) (H := U) a u).1 huU
+    have haw : a • w ∈ W := (IsInvariantSubgroup.invariant (A := A) (G := M) (H := W) a w).1 hwW
     have huwx : a • u * (a • w) = u * w := by
       calc
         a • u * (a • w) = a • (u * w) := by simp [smul_mul']
@@ -8448,7 +8448,7 @@ private theorem theorem_3_6_normal_map_subtype_of_normal_and_isInvariant
     {G : Type*} [Group G] {H R : Subgroup G}
     [H.Normal] (hHR : H.IsComplement' R) (S : Subgroup H)
     [S.Normal]
-    (hSinv : IsInvariant (↥R) (↥H) S) :
+    (hSinv : IsInvariantSubgroup (↥R) (↥H) S) :
     (S.map H.subtype).Normal := by
   let N : Subgroup G := S.map H.subtype
   have hN_le_H : N ≤ H := by
@@ -8476,7 +8476,7 @@ private theorem theorem_3_6_normal_map_subtype_of_normal_and_isInvariant
     have hxN : x ∈ S.map H.subtype := by
       simpa [N] using hx
     rcases Subgroup.mem_map.mp hxN with ⟨xH, hxH, rfl⟩
-    have hsmul : r • xH ∈ S := (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := S) r xH).1 hxH
+    have hsmul : r • xH ∈ S := (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := S) r xH).1 hxH
     have hmem : (((r • xH : H) : G)) ∈ N := by
       change (((r • xH : H) : G)) ∈ S.map H.subtype
       exact Subgroup.mem_map_of_mem H.subtype hsmul
@@ -8524,7 +8524,7 @@ private theorem theorem_3_6_final_contradiction
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) K := hK_inv
   haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   let actP_K : MulDistribMulAction (↥Psub) (↥K) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := H) Psub K hPsub_normK
@@ -8560,9 +8560,9 @@ private theorem theorem_3_6_final_contradiction
     exact
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
         (G := H) K V hKnormV a x
-  let hV_invR : IsInvariant (↥R) (↥H) V :=
+  let hV_invR : IsInvariantSubgroup (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_invR
+  letI : IsInvariantSubgroup (↥R) (↥H) V := hV_invR
   have hfixK_V_bot :
       fixedPointSubgroup (↥K) (↥V) = ⊥ := by
     simpa [V] using
@@ -8659,7 +8659,7 @@ private theorem theorem_3_6_final_contradiction
     have hcardQ : Nat.card (↥K ⧸ Y.1) = qK := by
       simpa [Subgroup.index_eq_card] using Y.2.1
     exact isCyclic_of_prime_card (α := ↥K ⧸ Y.1) hcardQ
-  have hF_Kinv : ∀ Y : Ωsub, IsInvariant (↥K) (↥V) (F Y) := by
+  have hF_Kinv : ∀ Y : Ωsub, IsInvariantSubgroup (↥K) (↥V) (F Y) := by
     intro Y
     have hforward : ∀ a : K, ∀ {x : V}, x ∈ F Y → a • x ∈ F Y := by
       intro a x hx
@@ -8749,14 +8749,14 @@ private theorem theorem_3_6_final_contradiction
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, rfl⟩
       exact Subgroup.mem_map_of_mem H.subtype <|
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a, ha⟩ y).1 hyK
     · intro hx
       have ha_inv : a⁻¹ ∈ R := R.inv_mem ha
       rcases Subgroup.mem_map.mp hx with ⟨y, hyK, hyx⟩
       refine Subgroup.mem_map.mpr ?_
       let yK : K := ⟨y, hyK⟩
       refine ⟨(⟨a⁻¹, ha_inv⟩ : R) • yK,
-        (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
+        (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥H) (H := K) ⟨a⁻¹, ha_inv⟩ yK).1 hyK, ?_⟩
       have hyx' : H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) = x := by
         calc
           H.subtype ((((⟨a⁻¹, ha_inv⟩ : R) • yK : K) : H)) =
@@ -8818,7 +8818,7 @@ private theorem theorem_3_6_final_contradiction
     exact
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
         (G := G) Sg H hSg_le_normH a x
-  have hK_invS : IsInvariant (↥Sg) (↥H) K := by
+  have hK_invS : IsInvariantSubgroup (↥Sg) (↥H) K := by
     refine ⟨?_⟩
     have hforward : ∀ a : Sg, ∀ x : H, x ∈ K → a • x ∈ K := by
       intro a x hx
@@ -8838,21 +8838,21 @@ private theorem theorem_3_6_final_contradiction
     · intro hx
       have h := hforward a⁻¹ (a • x) hx
       simpa [smul_smul] using h
-  letI : IsInvariant (↥Sg) (↥H) K := hK_invS
-  let hV_invS : IsInvariant (↥Sg) (↥H) V :=
+  letI : IsInvariantSubgroup (↥Sg) (↥H) K := hK_invS
+  let hV_invS : IsInvariantSubgroup (↥Sg) (↥H) V :=
     isInvariant_of_characteristic (A := ↥Sg) (G := ↥H) V
-  letI : IsInvariant (↥Sg) (↥H) V := hV_invS
+  letI : IsInvariantSubgroup (↥Sg) (↥H) V := hV_invS
   letI : CommGroup ↥V := IsMulCommutative.instCommGroup
   have hsub_le_normalizer (X Y : Subgroup V) : Y ≤ Subgroup.normalizer (X : Set V) := by
     intro y hy
     rw [Subgroup.mem_normalizer_iff]
     intro x
     constructor <;> intro hx <;> simpa [mul_assoc, mul_comm] using hx
-  have hF_restrict_inv (Y Z : Ωsub) : IsInvariant Y.1 (↥V) (F Z) := by
+  have hF_restrict_inv (Y Z : Ωsub) : IsInvariantSubgroup Y.1 (↥V) (F Z) := by
     refine ⟨?_⟩
     intro a x
     exact (hF_Kinv Z).invariant (a : K) x
-  have hF_sup_inv : ∀ s : Finset Ωsub, ∀ Y : Ωsub, IsInvariant Y.1 (↥V) (s.sup F) := by
+  have hF_sup_inv : ∀ s : Finset Ωsub, ∀ Y : Ωsub, IsInvariantSubgroup Y.1 (↥V) (s.sup F) := by
     intro s
     induction s using Finset.induction with
     | empty =>
@@ -8869,12 +8869,12 @@ private theorem theorem_3_6_final_contradiction
           simpa using hxone
     | insert i s hi ih =>
         intro Y
-        letI : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
-        letI : IsInvariant Y.1 (↥V) (s.sup F) := ih Y
+        letI : IsInvariantSubgroup Y.1 (↥V) (F i) := hF_restrict_inv Y i
+        letI : IsInvariantSubgroup Y.1 (↥V) (s.sup F) := ih Y
         have hs_le_norm : s.sup F ≤ Subgroup.normalizer (F i : Set V) :=
           hsub_le_normalizer (X := F i) (Y := s.sup F)
         have hsup_inv :
-            IsInvariant Y.1 (↥V) (F i ⊔ s.sup F) :=
+            IsInvariantSubgroup Y.1 (↥V) (F i ⊔ s.sup F) :=
           isInvariant_sup_of_le_normalizer (A := Y.1) (G := ↥V) (X := F i) (Y := s.sup F)
             hs_le_norm
         simpa [Finset.sup_insert, hi] using hsup_inv
@@ -8923,14 +8923,14 @@ private theorem theorem_3_6_final_contradiction
           have hYs : Y ∉ s := by
             intro hYs
             exact hYins (Finset.mem_insert_of_mem hYs)
-          letI : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
-          letI : IsInvariant Y.1 (↥V) (s.sup F) := hF_sup_inv s Y
+          letI : IsInvariantSubgroup Y.1 (↥V) (F i) := hF_restrict_inv Y i
+          letI : IsInvariantSubgroup Y.1 (↥V) (s.sup F) := hF_sup_inv s Y
           have hFi_fix_bot : fixedPointSubgroup Y.1 (↥(F i)) = ⊥ := by
             have hdisj_iY : Disjoint (F i) (F Y) := hF_pairwise hYi.symm
             simpa [F] using
               theorem_3_6_fixedPointSubgroup_subgroup_eq_bot_of_disjoint
                 (A := Y.1) (M := ↥V) (U := F i) hdisj_iY
-          letI : IsInvariant Y.1 (↥V) (F i ⊔ s.sup F) := by
+          letI : IsInvariantSubgroup Y.1 (↥V) (F i ⊔ s.sup F) := by
             exact
               isInvariant_sup_of_le_normalizer (A := Y.1) (G := ↥V) (X := F i)
                 (Y := s.sup F) (hsub_le_normalizer (X := F i) (Y := s.sup F))
@@ -9137,7 +9137,7 @@ private theorem theorem_3_6_final_contradiction
       (hYZ : Disjoint (MulAction.orbit (↥Sg) Y) (MulAction.orbit (↥Sg) Z)) :
       Disjoint (Wg Y) (Wg Z) := by
     simpa [Wg] using Subgroup.disjoint_map H.subtype_injective (hWH_disj_of_orbit_disj hYZ)
-  have hWV_invK (Y : Ωsub) : IsInvariant (↥K) (↥V) (WV Y) := by
+  have hWV_invK (Y : Ωsub) : IsInvariantSubgroup (↥K) (↥V) (WV Y) := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -9181,7 +9181,7 @@ private theorem theorem_3_6_final_contradiction
               ((MulDistribMulAction.toMulAut (↥K) (↥V) a) x) ∈ WV Y :=
         hmap_le (Subgroup.mem_map_of_mem _ hx)
       simpa [MulDistribMulAction.toMulAut_apply] using hx'
-  have hWV_invS (Y : Ωsub) : IsInvariant (↥Sg) (↥V) (WV Y) := by
+  have hWV_invS (Y : Ωsub) : IsInvariantSubgroup (↥Sg) (↥V) (WV Y) := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -9222,7 +9222,7 @@ private theorem theorem_3_6_final_contradiction
               le_iSup_of_le (MulAction.mem_orbit_of_mem_orbit a⁻¹ hUY) le_rfl
       have hx' : (ρV a⁻¹) ((ρV a) x) ∈ WV Y := hmap_le (Subgroup.mem_map_of_mem _ hx)
       simpa [ρV, MulDistribMulAction.toMulAut_apply] using hx'
-  have hWV_invR (Y : Ωsub) : IsInvariant (↥R) (↥V) (WV Y) := by
+  have hWV_invR (Y : Ωsub) : IsInvariantSubgroup (↥R) (↥V) (WV Y) := by
     refine ⟨?_⟩
     intro a x
     let aS : Sg := ⟨(a : G), Subgroup.mem_sup_right a.2⟩
@@ -9231,8 +9231,8 @@ private theorem theorem_3_6_final_contradiction
     exact hx
   have hWH_le_V (Y : Ωsub) : WH Y ≤ V := by
     simpa [WH] using (Subgroup.map_subtype_le (WV Y))
-  have hWH_invR (Y : Ωsub) : IsInvariant (↥R) (↥H) (WH Y) := by
-    letI : IsInvariant (↥R) (↥V) (WV Y) := hWV_invR Y
+  have hWH_invR (Y : Ωsub) : IsInvariantSubgroup (↥R) (↥H) (WH Y) := by
+    letI : IsInvariantSubgroup (↥R) (↥V) (WV Y) := hWV_invR Y
     simpa [WH] using isInvariant_map_subtype (A := ↥R) (G := ↥H) V (WV Y)
   have hWH_normal (Y : Ωsub) : (WH Y).Normal := by
     have hV_norm_WH : V ≤ Subgroup.normalizer (WH Y : Set H) := by
@@ -9815,7 +9815,7 @@ private theorem theorem_3_6_final_contradiction
       Kcomm.index = Nat.card CfixK := hcomplK'.index_eq_card
       _ = qK := hCfixK_card
   have hR_fixed_eq_Kcomm {Y : Ωsub} (hY_fix : ∀ a : R, a • Y = Y) : Y.1 = Kcomm := by
-    have hFY_invR : IsInvariant (↥R) (↥V) (F Y) := by
+    have hFY_invR : IsInvariantSubgroup (↥R) (↥V) (F Y) := by
       have hforward : ∀ a : R, ∀ {x : V}, x ∈ F Y → a • x ∈ F Y := by
         intro a x hx
         let xFY : F Y := ⟨x, hx⟩
@@ -9827,8 +9827,8 @@ private theorem theorem_3_6_final_contradiction
       · intro hx
         have hx' : a⁻¹ • (a • x) ∈ F Y := hforward a⁻¹ hx
         simpa [inv_smul_smul] using hx'
-    letI : IsInvariant (↥R) (↥V) (F Y) := hFY_invR
-    letI : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
+    letI : IsInvariantSubgroup (↥R) (↥V) (F Y) := hFY_invR
+    letI : IsInvariantSubgroup (↥K) (↥V) (F Y) := hF_Kinv Y
     let CY : Subgroup K := actionCentralizerIn (A := ↥K) (G := ↥(F Y)) (⊤ : Subgroup K)
     have hY_le_CY : Y.1 ≤ CY := by
       intro y hy
@@ -10062,7 +10062,7 @@ private theorem theorem_3_6_final_contradiction
         _ = ((((a • x : V) : H) : G)) := by
               simpa only [Subgroup.coe_mul, InvMemClass.coe_inv] using
                 congrArg Subtype.val (hP_smul_V_coe a x).symm
-    have hFY_invP : IsInvariant (↥Psub) (↥V) (F Y) := by
+    have hFY_invP : IsInvariantSubgroup (↥Psub) (↥V) (F Y) := by
       have hforward : ∀ a : Psub, ∀ {x : V}, x ∈ F Y → a • x ∈ F Y := by
         intro a x hx
         let ag : Psubg := ⟨((a : H) : G), Subgroup.mem_map_of_mem H.subtype a.2⟩
@@ -10082,8 +10082,8 @@ private theorem theorem_3_6_final_contradiction
       · intro hx
         have hx' : a⁻¹ • (a • x) ∈ F Y := hforward a⁻¹ hx
         simpa [inv_smul_smul] using hx'
-    letI : IsInvariant (↥Psub) (↥V) (F Y) := hFY_invP
-    letI : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
+    letI : IsInvariantSubgroup (↥Psub) (↥V) (F Y) := hFY_invP
+    letI : IsInvariantSubgroup (↥K) (↥V) (F Y) := hF_Kinv Y
     let CY : Subgroup K := actionCentralizerIn (A := ↥K) (G := ↥(F Y)) (⊤ : Subgroup K)
     have hY_le_CY : Y.1 ≤ CY := by
       intro y hy

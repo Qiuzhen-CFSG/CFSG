@@ -248,7 +248,7 @@ private theorem section13_exists_E_invariant_msigma_sylow
     ∃ hEσ : Subgroup.Normalizes E (section10Msigma M),
       letI : Subgroup.Normalizes E (section10Msigma M) := hEσ
       ∃ S : Sylow q.val (section10Msigma M),
-        IsInvariant (↥E) (↥(section10Msigma M))
+        IsInvariantSubgroup (↥E) (↥(section10Msigma M))
           (S : Subgroup (section10Msigma M)) := by
   classical
   haveI : Fact q.val.Prime := ⟨q.property⟩
@@ -305,7 +305,7 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
     ∃ hEC : Subgroup.Normalizes E (subgroupCentralizerIn (section10Msigma M) Q),
       letI : Subgroup.Normalizes E (subgroupCentralizerIn (section10Msigma M) Q) := hEC
       ∃ S : Sylow q.val (subgroupCentralizerIn (section10Msigma M) Q),
-        IsInvariant (↥E) (↥(subgroupCentralizerIn (section10Msigma M) Q))
+        IsInvariantSubgroup (↥E) (↥(subgroupCentralizerIn (section10Msigma M) Q))
           (S : Subgroup (subgroupCentralizerIn (section10Msigma M) Q)) := by
   classical
   haveI : Fact q.val.Prime := ⟨q.property⟩

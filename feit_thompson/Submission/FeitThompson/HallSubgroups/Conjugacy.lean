@@ -62,14 +62,14 @@ public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
     [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     {π : Set Nat.Primes} {H₁ H₂ : Subgroup G}
     (hHall₁ : IsHallSubgroup π H₁) (hHall₂ : IsHallSubgroup π H₂)
-    (hInv₁ : IsInvariant A G H₁) (hInv₂ : IsInvariant A G H₂) :
+    (hInv₁ : IsInvariantSubgroup A G H₁) (hInv₂ : IsInvariantSubgroup A G H₂) :
     H₂ ⊓ Subgroup.normalizer H₁ ≤ H₁ := by
   let N : Subgroup G := Subgroup.normalizer H₁
   let K : Subgroup N := H₂.subgroupOf N
-  letI : IsInvariant A G H₁ := hInv₁
-  have hN_inv : IsInvariant A G N := by
+  letI : IsInvariantSubgroup A G H₁ := hInv₁
+  have hN_inv : IsInvariantSubgroup A G N := by
     simpa [N] using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
-  letI : IsInvariant A G N := hN_inv
+  letI : IsInvariantSubgroup A G N := hN_inv
   letI : IsSolvable G := hsolv
   have hsolvN : IsSolvable N := subgroup_solvable_of_solvable (H := N)
   have hcoprimeN : Nat.Coprime (Nat.card A) (Nat.card N) := by
@@ -91,7 +91,7 @@ public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
           (Subgroup.card_map_of_injective (K := K) (f := N.subtype) N.subtype_injective)
       exact hcard_map.symm ▸ hdiv_map
     exact hPiH₂ p (hp.trans hcard_dvd)
-  have hK_inv : IsInvariant A N K := by
+  have hK_inv : IsInvariantSubgroup A N K := by
     refine ⟨?_⟩
     intro a x
     change (x.1 ∈ H₂) ↔ (a • x.1 ∈ H₂)
@@ -326,7 +326,7 @@ public lemma exists_fixedPoint_conj_of_normalizer_coboundary
 
 lemma exists_normalizer_factor_of_conj_eq_of_isInvariant
     {G : Type*} {A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {H₁ H₂ : Subgroup G} (hInv₁ : IsInvariant A G H₁) (hInv₂ : IsInvariant A G H₂)
+    {H₁ H₂ : Subgroup G} (hInv₁ : IsInvariantSubgroup A G H₁) (hInv₂ : IsInvariantSubgroup A G H₂)
     {g : G} (hconj : H₂ = H₁.map (MulAut.conj g).toMonoidHom) :
     ∃ φ : A → Subgroup.normalizer H₁,
       (∀ a : A, a • g = g * (φ a : G)) ∧
@@ -409,13 +409,13 @@ public theorem exists_principal_cocycle_of_solvable_coprime
         simpa [D] using (inferInstance : (commutator N').Normal)
       letI : D.Characteristic := by
         simpa [D] using (inferInstance : (commutator N').Characteristic)
-      letI : IsInvariant A N' D :=
+      letI : IsInvariantSubgroup A N' D :=
         isInvariant_of_characteristic (A := A) (G := N') D
       letI : MulAction.QuotientAction A D :=
-        quotientAction_of_isInvariant (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
+        quotientAction_of_isInvariant (A := A) (G := N') D (inferInstance : IsInvariantSubgroup A N' D)
       letI : Finite (N' ⧸ D) := by infer_instance
       letI : MulDistribMulAction A (N' ⧸ D) :=
-        quotientMulDistribMulAction (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
+        quotientMulDistribMulAction (A := A) (G := N') D (inferInstance : IsInvariantSubgroup A N' D)
       letI : IsMulCommutative (N' ⧸ D) := by
         exact
           (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := D)).2
@@ -786,7 +786,7 @@ public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
     [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) {H₁ H₂ : Subgroup G}
     (hHall₁ : IsHallSubgroup π H₁) (hHall₂ : IsHallSubgroup π H₂)
-    (hInv₁ : IsInvariant A G H₁) (hInv₂ : IsInvariant A G H₂) :
+    (hInv₁ : IsInvariantSubgroup A G H₁) (hInv₂ : IsInvariantSubgroup A G H₂) :
     ∃ g : G, g ∈ fixedPointSubgroup A G ∧ H₂ = H₁.map (MulAut.conj g) := by
   by_cases hH₁norm : H₁.Normal
   · letI : H₁.Normal := hH₁norm
@@ -851,10 +851,10 @@ public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
           have hcopN : Nat.Coprime (Nat.card A) (Nat.card (Subgroup.normalizer (H₁ : Set G))) := by
             exact Nat.Coprime.of_dvd_right
               (Subgroup.card_subgroup_dvd_card (s := Subgroup.normalizer H₁) (α := G)) hcoprime
-          letI : IsInvariant A G H₁ := hInv₁
-          have hInvN : IsInvariant A G (Subgroup.normalizer H₁) := by
+          letI : IsInvariantSubgroup A G H₁ := hInv₁
+          have hInvN : IsInvariantSubgroup A G (Subgroup.normalizer H₁) := by
             simpa using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
-          letI : IsInvariant A G (Subgroup.normalizer (H₁ : Set G)) := hInvN
+          letI : IsInvariantSubgroup A G (Subgroup.normalizer (H₁ : Set G)) := hInvN
           have hcocycle' :
               ∀ a b : A, φ (a * b) = φ a * (a • φ b) := by
             intro a b

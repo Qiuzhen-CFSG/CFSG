@@ -178,7 +178,7 @@ private theorem theorem_12_10_p0_le_mf_of_typeIIIIV
       mul_smul := fun _ _ _ => rfl
       smul_mul := fun _ _ _ => rfl
       smul_one := fun _ => rfl }
-    have hP0Dinv : IsInvariant Unit D P0D := by
+    have hP0Dinv : IsInvariantSubgroup Unit D P0D := by
       refine ⟨?_⟩
       intro _ z
       simp [P0D]

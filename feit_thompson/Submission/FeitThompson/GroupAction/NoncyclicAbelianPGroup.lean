@@ -249,7 +249,7 @@ theorem proposition_1_16_b_qgroup
   have hsolv : IsSolvable G := by
     letI : Group.IsNilpotent G := (Fact.out : IsPGroup q G).isNilpotent
     infer_instance
-  let hfrattini_inv : IsInvariant A G (frattini G) :=
+  let hfrattini_inv : IsInvariantSubgroup A G (frattini G) :=
     isInvariant_of_characteristic (A := A) (G := G) (frattini G)
   letI : MulAction.QuotientAction A (frattini G) :=
     quotientAction_of_isInvariant (A := A) (frattini G) hfrattini_inv
@@ -270,7 +270,7 @@ theorem proposition_1_16_b_qgroup
             have hsubcop :
                 Nat.Coprime (Nat.card ↥Y.1) (Nat.card G) := by
               exact Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card Y.1) hcopG
-            have hsubinv : IsInvariant ↥Y.1 G (frattini G) := by
+            have hsubinv : IsInvariantSubgroup ↥Y.1 G (frattini G) := by
               constructor
               intro z g
               change (g ∈ frattini G) ↔ (((z : Y.1) : A) • g ∈ frattini G)
@@ -308,7 +308,7 @@ theorem proposition_1_16_b_qgroup
 
 theorem fixedPointSubgroup_map_subtype_le
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] (Y : Subgroup A) :
+    (H : Subgroup G) [IsInvariantSubgroup A G H] (Y : Subgroup A) :
     (fixedPointSubgroup (↥Y) H).map H.subtype ≤ fixedPointSubgroup (↥Y) G := by
   intro g hg
   rcases hg with ⟨x, hx, rfl⟩
@@ -322,7 +322,7 @@ public theorem exists_invariant_sylow
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     {p q : ℕ} [Fact p.Prime] [Fact q.Prime] [Fact (IsPGroup p A)] [MulDistribMulAction A G]
     (hG : Nat.Coprime p (Nat.card G)) :
-    ∃ P : Sylow q G, IsInvariant A G (P : Subgroup G) := by
+    ∃ P : Sylow q G, IsInvariantSubgroup A G (P : Subgroup G) := by
   classical
   let P₀ : Sylow q G := default
   have hcard_dvd : Nat.card (Sylow q G) ∣ Nat.card G := by
@@ -399,7 +399,7 @@ public theorem iSup_fixedPointSubgroup_cyclicQuot_eq_top_of_noncyclic_abelian_pG
     refine eq_top_of_exists_sylow_le H ?_
     intro q hq _hq
     obtain ⟨Q, hQinv⟩ := exists_invariant_sylow (G := G) (A := A) (p := p) (q := q) hG
-    letI : IsInvariant A G (Q : Subgroup G) := hQinv
+    letI : IsInvariantSubgroup A G (Q : Subgroup G) := hQinv
     have hq_dvd_G : q ∣ Nat.card G := (Nat.mem_primeFactors.mp hq).2.1
     have hp_not_dvd_q : ¬ p ∣ q := by
       intro hpq

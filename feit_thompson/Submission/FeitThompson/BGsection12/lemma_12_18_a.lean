@@ -276,7 +276,7 @@ private theorem section12_exists_alpha_invariant_sylow_malpha
     (hXπ : IsPiSubgroup (G := G) (section10AlphaPrimes M)ᶜ X) :
     ∃ (r : Nat.Primes) (R : Sylow r.val (section10Malpha M)),
       r ∈ section10AlphaPrimes M ∧
-        IsInvariant X (section10Malpha M) (R : Subgroup (section10Malpha M)) ∧
+        IsInvariantSubgroup X (section10Malpha M) (R : Subgroup (section10Malpha M)) ∧
           3 ≤ groupRank (R : Subgroup (section10Malpha M)) := by
   classical
   obtain ⟨r, hrα⟩ := section12_exists_alpha_prime_of_malpha_ne_bot
@@ -311,11 +311,11 @@ private theorem section12_centralizer_witness_image_isInvariant
     let C : Subgroup G := subgroupCentralizerIn (section10Malpha M) X
     let ι : C →* section10Malpha M :=
       Subgroup.inclusion (show C ≤ section10Malpha M by exact inf_le_left)
-    IsInvariant X (section10Malpha M) (A.map ι) := by
+    IsInvariantSubgroup X (section10Malpha M) (A.map ι) := by
   let C : Subgroup G := subgroupCentralizerIn (section10Malpha M) X
   let ι : C →* section10Malpha M :=
     Subgroup.inclusion (show C ≤ section10Malpha M by exact inf_le_left)
-  change IsInvariant X (section10Malpha M) (A.map ι)
+  change IsInvariantSubgroup X (section10Malpha M) (A.map ι)
   have hforward :
       ∀ x : X, ∀ y : section10Malpha M, y ∈ A.map ι → x • y ∈ A.map ι := by
     intro x y hy
@@ -350,7 +350,7 @@ private theorem section12_exists_alpha_invariant_sylow_malpha_containing_witness
     (A : Subgroup (subgroupCentralizerIn (section10Malpha M) X))
     (hAp : IsPGroup r.val A) :
     ∃ R : Sylow r.val (section10Malpha M),
-      IsInvariant X (section10Malpha M) (R : Subgroup (section10Malpha M)) ∧
+      IsInvariantSubgroup X (section10Malpha M) (R : Subgroup (section10Malpha M)) ∧
         A.map (Subgroup.inclusion
           (show subgroupCentralizerIn (section10Malpha M) X ≤ section10Malpha M by
             exact inf_le_left)) ≤ (R : Subgroup (section10Malpha M)) := by
@@ -365,7 +365,7 @@ private theorem section12_exists_alpha_invariant_sylow_malpha_containing_witness
   have hAαπ : IsPiSubgroup (G := section10Malpha M) ({r} : Set Nat.Primes) Aα :=
     section8_isPiSubgroup_singleton_of_isPGroup (G := section10Malpha M)
       (H := Aα) (q := r) hAαp
-  have hAαinv : IsInvariant X (section10Malpha M) Aα := by
+  have hAαinv : IsInvariantSubgroup X (section10Malpha M) Aα := by
     simpa [Aα, C, ι] using
       section12_centralizer_witness_image_isInvariant (G := G) (M := M) (X := X) A
   have hMαproper : section10Malpha M ≠ ⊤ := by
@@ -527,7 +527,7 @@ private theorem section12_lemma_12_18_a_critical_not_le_centralizer_Q
     (hqα : q ∉ section10AlphaPrimes M)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     {R1 : Subgroup (R : Subgroup (section10Malpha M))}
     (hR1fix : IsPGroup r.val
@@ -630,16 +630,16 @@ private theorem section12_le_normalizer_map_of_isInvariant
     {A H : Subgroup G} {K : Subgroup H}
     (hAH : A ≤ Subgroup.normalizer (H : Set G)) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) K →
+    IsInvariantSubgroup (↥A) (↥H) K →
     A ≤ Subgroup.normalizer (K.map H.subtype : Set G) := by
   intro hKinv
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-  letI : IsInvariant (↥A) (↥H) K := hKinv
+  letI : IsInvariantSubgroup (↥A) (↥H) K := hKinv
   refine subgroup_le_normalizer_of_conj_mem (K.map H.subtype) A ?_
   intro a x hx
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   have hyInv : a • y ∈ K :=
-    (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
+    (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
   exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
 
@@ -648,7 +648,7 @@ private theorem section12_lemma_12_18_a_critical_le_normalizer
     {M P Q : Subgroup G} {r : Nat.Primes}
     [Subgroup.Normalizes (P ⊔ Q) (section10Malpha M)]
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     {R1 : Subgroup (R : Subgroup (section10Malpha M))}
     (hR1char : R1.Characteristic) :
@@ -1056,7 +1056,7 @@ private theorem section12_lemma_12_18_a_centralizer_P_ne_bot_of_critical
     (hqα : q ∉ section10AlphaPrimes M)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     {R1 : Subgroup (R : Subgroup (section10Malpha M))}
     (hR1char : R1.Characteristic)
@@ -2136,7 +2136,7 @@ private theorem section12_lemma_12_18_a_rechosen_sylow_quotient_core
     (hCPne : subgroupCentralizerIn (section10Malpha M) P ≠ ⊥)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     (hCRPQne :
       subgroupCentralizerIn
@@ -2279,7 +2279,7 @@ private theorem section12_lemma_12_18_a_rechosen_sylow_endpoint_core
     (hCPne : subgroupCentralizerIn (section10Malpha M) P ≠ ⊥)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     (hCRPQne :
       subgroupCentralizerIn
@@ -2368,7 +2368,7 @@ private theorem section12_lemma_12_18_a_join_centralizer_bot_of_rechosen_sylow
     (hCPne : subgroupCentralizerIn (section10Malpha M) P ≠ ⊥)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     (hRrank : 3 ≤ groupRank (R : Subgroup (section10Malpha M)))
     (hCRPQne :
@@ -2524,7 +2524,7 @@ private theorem section12_lemma_12_18_a_critical_core
     (hCPrank : groupRank (subgroupCentralizerIn (section10Malpha M) P) ≤ 1)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     (hRrank : 3 ≤ groupRank (R : Subgroup (section10Malpha M)))
     (hRnoncentral :
@@ -2569,7 +2569,7 @@ private theorem section12_lemma_12_18_a_sylow_core
     (hCPrank : groupRank (subgroupCentralizerIn (section10Malpha M) P) ≤ 1)
     (hrα : r ∈ section10AlphaPrimes M)
     (R : Sylow r.val (section10Malpha M))
-    (hRinv : IsInvariant (↥(P ⊔ Q)) (section10Malpha M)
+    (hRinv : IsInvariantSubgroup (↥(P ⊔ Q)) (section10Malpha M)
       (R : Subgroup (section10Malpha M)))
     (hRrank : 3 ≤ groupRank (R : Subgroup (section10Malpha M))) :
     subgroupCentralizerIn (section10Malpha M) P ≠ ⊥ ∧

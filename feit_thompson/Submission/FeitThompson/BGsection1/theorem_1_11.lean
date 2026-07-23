@@ -213,7 +213,7 @@ public theorem theorem_1_11_of_omegaFrattiniMapTopBridge
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (hΩ : ActsTriviallyOnSubgroup (A := A) (G := G) (omega₁ (G := G) (p := p))) :
     ActsTrivially (A := A) (G := G) := by
-  let hΦinv : IsInvariant A G (frattini G) :=
+  let hΦinv : IsInvariantSubgroup A G (frattini G) :=
     isInvariant_of_characteristic (A := A) (G := G) (frattini G)
   letI : MulDistribMulAction A (G ⧸ frattini G) :=
     quotientMulDistribMulAction (A := A) (G := G) (frattini G) hΦinv
@@ -395,7 +395,7 @@ lemma diff_pow_eq_one_of_commutator_mem_center_of_pow_fixed
 theorem actsTriviallyOnSubgroup_omega₁_subgroup
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] {p : ℕ} [Fact p.Prime]
     [Fact (IsPGroup p G)] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H]
+    (H : Subgroup G) [IsInvariantSubgroup A G H]
     (hΩ : ActsTriviallyOnSubgroup (A := A) (G := G) (omega₁ (G := G) (p := p))) :
     ActsTriviallyOnSubgroup (A := A) (G := H) (omega₁ (G := H) (p := p)) := by
   have hmap :
@@ -446,14 +446,14 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
             c * (a • x) = a • (c * x) := by simp [hcfix]
             _ = a • (x * c) := by rw [hx' c hc]
             _ = (a • x) * c := by simp [hcfix]
-        have hDinv : IsInvariant A H D := by
+        have hDinv : IsInvariantSubgroup A H D := by
           refine ⟨?_⟩
           intro a x
           constructor
           · exact hDsmul
           · intro hx
             simpa [smul_smul] using (hDsmul (a := a⁻¹) (x := a • x) hx)
-        letI : IsInvariant A H D := hDinv
+        letI : IsInvariantSubgroup A H D := hDinv
         by_cases hDtop : D = ⊤
         · have hC_le_center : C ≤ Subgroup.center H := by
             intro c hc
@@ -464,12 +464,12 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
               simpa [D, Subgroup.mem_centralizer_iff] using hxD
             exact (hxD' c hc).symm
           let Φ : Subgroup H := frattini H
-          have hΦinv : IsInvariant A H Φ :=
+          have hΦinv : IsInvariantSubgroup A H Φ :=
             isInvariant_of_characteristic (A := A) (G := H) Φ
-          letI : IsInvariant A H Φ := hΦinv
+          letI : IsInvariantSubgroup A H Φ := hΦinv
           by_cases hΦtop : Φ = ⊤
           · exact theorem_1_8 (R := H) (A := A) (p := p) hHcop <| by
-              let hΦinv' : IsInvariant A H (frattini H) :=
+              let hΦinv' : IsInvariantSubgroup A H (frattini H) :=
                 isInvariant_of_characteristic (A := A) (G := H) (frattini H)
               letI : MulAction.QuotientAction A (frattini H) :=
                 quotientAction_of_isInvariant (A := A) (frattini H) hΦinv'

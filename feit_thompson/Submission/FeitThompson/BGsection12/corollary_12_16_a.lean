@@ -247,7 +247,7 @@ private theorem section12_conjugate_pi_subgroup_into_product_factor
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hZsub_inv : IsInvariant Unit H Zsub := by
+  have hZsub_inv : IsInvariantSubgroup Unit H Zsub := by
     refine ⟨?_⟩
     intro _ x
     simp [Zsub]
@@ -668,7 +668,7 @@ private theorem section12_conjugate_sigma_subgroup_into_msigma_of_le
     have hpZ : p ∈ subgroupPrimeSet Z := by
       simpa [Zsub, subgroupPrimeSet, section12_card_subgroupOf_eq hZM] using hpZsub
     exact hZσ p hpZ
-  have hZsub_inv : IsInvariant Unit M Zsub := by
+  have hZsub_inv : IsInvariantSubgroup Unit M Zsub := by
     refine ⟨?_⟩
     intro _ x
     simp [Zsub]

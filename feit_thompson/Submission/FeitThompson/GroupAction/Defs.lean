@@ -33,15 +33,15 @@ public abbrev fixingSubgroupOf (A : Type*) (G : Type*) [Group A] [MulAction A G]
   fixingSubgroup (M := A) (α := G) S
 
 /-- A subgroup `H ≤ G` is `A`-invariant if it is fixed under the pointwise action. -/
-public class IsInvariant (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop where
+public class IsInvariantSubgroup (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop where
   invariant : ∀ a : A, ∀ g : G, g ∈ H ↔ a • g ∈ H
 
 /-- Restrict an `A`-action on `G` to an `A`-invariant subgroup `H`. -/
 public instance instMulDistribMulAction_subtype
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {H : Subgroup G} [IsInvariant A G H] :
+    {H : Subgroup G} [IsInvariantSubgroup A G H] :
     MulDistribMulAction A H where
-  smul a x := ⟨a • x.1, (IsInvariant.invariant (A := A) (G := G) (H := H) a x.1).1 x.2⟩
+  smul a x := ⟨a • x.1, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a x.1).1 x.2⟩
   one_smul x := by
     ext
     change ((1 : A) • (x : G)) = x
@@ -107,5 +107,5 @@ public def StabilizesNormalSeries {G A : Type*} [Group G] [Group A] [MulDistribM
       (∃ n : ℕ, Nat.iterate next n top = bottom)) ∧
     (∀ i, Gi (next i) ≤ Gi i) ∧
     (∀ i, (Gi i).Normal) ∧
-    (∀ i, IsInvariant A G (Gi i)) ∧
+    (∀ i, IsInvariantSubgroup A G (Gi i)) ∧
       ∀ i (a : A) (g : G), g ∈ Gi i → (a • g) * g⁻¹ ∈ Gi (next i)

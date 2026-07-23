@@ -288,16 +288,16 @@ to fixed points in the range of that map. -/
 public noncomputable def fixedPointSubgroupPowQuotientKerEquivRange
     {A M : Type*} [Group A] [CommGroup M] [MulDistribMulAction A M]
     (p : ℕ) :
-    let hker : IsInvariant A M ((powMonoidHom p : M →* M).ker) := by
+    let hker : IsInvariantSubgroup A M ((powMonoidHom p : M →* M).ker) := by
       haveI : ((powMonoidHom p : M →* M).ker).Characteristic :=
         powMonoidHom_ker_characteristic (H := M) p
       exact isInvariant_of_characteristic ((powMonoidHom p : M →* M).ker)
-    let hrange : IsInvariant A M ((powMonoidHom p : M →* M).range) := by
+    let hrange : IsInvariantSubgroup A M ((powMonoidHom p : M →* M).range) := by
       haveI : ((powMonoidHom p : M →* M).range).Characteristic :=
         powMonoidHom_range_characteristic (H := M) p
       exact isInvariant_of_characteristic ((powMonoidHom p : M →* M).range)
-    letI : IsInvariant A M ((powMonoidHom p : M →* M).ker) := hker
-    letI : IsInvariant A M ((powMonoidHom p : M →* M).range) := hrange
+    letI : IsInvariantSubgroup A M ((powMonoidHom p : M →* M).ker) := hker
+    letI : IsInvariantSubgroup A M ((powMonoidHom p : M →* M).range) := hrange
     letI : MulDistribMulAction A (M ⧸ (powMonoidHom p : M →* M).ker) :=
       quotientMulDistribMulAction (A := A) (G := M) _ hker
     letI : MulDistribMulAction A ((powMonoidHom p : M →* M).range) :=
@@ -311,12 +311,12 @@ public noncomputable def fixedPointSubgroupPowQuotientKerEquivRange
     simpa [φ] using powMonoidHom_ker_characteristic (H := M) p
   haveI : φ.range.Characteristic := by
     simpa [φ] using powMonoidHom_range_characteristic (H := M) p
-  let hker : IsInvariant A M φ.ker :=
+  let hker : IsInvariantSubgroup A M φ.ker :=
     isInvariant_of_characteristic φ.ker
-  let hrange : IsInvariant A M φ.range :=
+  let hrange : IsInvariantSubgroup A M φ.range :=
     isInvariant_of_characteristic φ.range
-  letI : IsInvariant A M φ.ker := hker
-  letI : IsInvariant A M φ.range := hrange
+  letI : IsInvariantSubgroup A M φ.ker := hker
+  letI : IsInvariantSubgroup A M φ.range := hrange
   letI : MulDistribMulAction A (M ⧸ φ.ker) :=
     quotientMulDistribMulAction (A := A) (G := M) φ.ker hker
   letI : MulDistribMulAction A φ.range :=
@@ -2329,7 +2329,7 @@ public noncomputable def
     (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) :
     letI : Group L.cover := L.instGroupCover
     letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-    let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+    let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
       isInvariant_of_characteristic (frattini L.cover)
     letI : MulDistribMulAction A (L.cover ⧸ frattini L.cover) :=
       quotientMulDistribMulAction (A := A) (G := L.cover) (frattini L.cover) hΦinv
@@ -2339,9 +2339,9 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-  let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+  let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
     isInvariant_of_characteristic (frattini L.cover)
-  letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+  letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
   letI : MulDistribMulAction A (L.cover ⧸ frattini L.cover) :=
     quotientMulDistribMulAction (A := A) (G := L.cover) (frattini L.cover) hΦinv
   letI : MulDistribMulAction A V := MulDistribMulAction.compHom V A.subtype
@@ -2420,7 +2420,7 @@ public theorem
     (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) :
     letI : Group L.cover := L.instGroupCover
     letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-    let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+    let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
       isInvariant_of_characteristic (frattini L.cover)
     letI : MulDistribMulAction A (L.cover ⧸ frattini L.cover) :=
       quotientMulDistribMulAction (A := A) (G := L.cover) (frattini L.cover) hΦinv
@@ -2430,9 +2430,9 @@ public theorem
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-  let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+  let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
     isInvariant_of_characteristic (frattini L.cover)
-  letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+  letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
   letI : MulDistribMulAction A (L.cover ⧸ frattini L.cover) :=
     quotientMulDistribMulAction (A := A) (G := L.cover) (frattini L.cover) hΦinv
   letI : MulDistribMulAction A V := MulDistribMulAction.compHom V A.subtype
@@ -2464,9 +2464,9 @@ public structure HomocyclicFrattiniCoverSubgroupFixedFrattiniCardData
   fixed_frattini_card :
     letI : Group L.cover := L.instGroupCover
     letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-    let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+    let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
       isInvariant_of_characteristic (frattini L.cover)
-    letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+    letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
     letI : MulDistribMulAction A (frattini L.cover) :=
       instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := frattini L.cover)
     Nat.card (fixedPointSubgroup A (frattini L.cover)) =
@@ -2499,9 +2499,9 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : MulDistribMulAction A L.cover := homocyclicFrattiniCoverSubgroupAction A L
-  let hΦinv : IsInvariant A L.cover (frattini L.cover) :=
+  let hΦinv : IsInvariantSubgroup A L.cover (frattini L.cover) :=
     isInvariant_of_characteristic (frattini L.cover)
-  letI : IsInvariant A L.cover (frattini L.cover) := hΦinv
+  letI : IsInvariantSubgroup A L.cover (frattini L.cover) := hΦinv
   letI : MulDistribMulAction A (frattini L.cover) :=
     instMulDistribMulAction_subtype (A := A) (G := L.cover) (H := frattini L.cover)
   letI : MulDistribMulAction A (L.cover ⧸ frattini L.cover) :=

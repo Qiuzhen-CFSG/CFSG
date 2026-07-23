@@ -68,7 +68,7 @@ private theorem chief_conj_range_pCore_eq_bot_local
   haveI : P.Normal := by
     dsimp [P]
     infer_instance
-  have hF_inv : IsInvariant A Uq F := by
+  have hF_inv : IsInvariantSubgroup A Uq F := by
     refine ⟨?_⟩
     intro a u
     constructor
@@ -580,7 +580,7 @@ public theorem theorem_6_2
           by_cases hi : i ≤ r
           · simpa [Gi, hi] using Subgroup.Normal.subgroupOf (hf_norm i hi) Q
           · simp [Gi, hi]
-        have hGi_inv : ∀ i, IsInvariant H Q (Gi i) := by
+        have hGi_inv : ∀ i, IsInvariantSubgroup H Q (Gi i) := by
           intro i
           by_cases hi : i ≤ r
           · have hH_norm_fi : H ≤ Subgroup.normalizer (f i : Set (G ⧸ M)) := by

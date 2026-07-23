@@ -13,13 +13,13 @@ lemma not_dvd_card_of_isPiGroup_of_prime_notMem (π : Set Nat.Primes) (G : Type*
 
 
 /-- If `H` is invariant under the action of `A`, then it is also invariant under any subgroup of `A`. -/
-instance IsInvariant.subgroup {A G : Type*} [Group A] [Group G] [SMul A G] (H : Subgroup G) [IsInvariant A G H]
-    (B : Subgroup A) : IsInvariant B G H where
-  invariant a g := IsInvariant.invariant (A := A) (G := G) (H := H) a g
+instance IsInvariantSubgroup.subgroup {A G : Type*} [Group A] [Group G] [SMul A G] (H : Subgroup G) [IsInvariantSubgroup A G H]
+    (B : Subgroup A) : IsInvariantSubgroup B G H where
+  invariant a g := IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a g
 
 lemma actsTriviallyOn_subgroup_of_smul_div_mem_and_coprime {G A : Type _} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (p : ℕ) (hp : Nat.Prime p) (H K : Subgroup G)
-    [IsInvariant A G H] [IsInvariant A G K]
+    [IsInvariantSubgroup A G H] [IsInvariantSubgroup A G K]
     (hP : IsPGroup p A) (hcoprime : Nat.Coprime p (Nat.card H))
     (htriv_factor : ∀ a : A, ∀ g : G, g ∈ K → (a • g) * g⁻¹ ∈ H)
     (htriv_H : ∀ a : A, ∀ g : G, g ∈ H → a • g = g) :
@@ -189,18 +189,18 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
             simp [H]
           _ = (φ a) g := by simp [ψ', QuotientGroup.kerLift]
       _ = a • g := rfl
-  have hinvQ : ∀ i, IsInvariant Q G (Gi i) := by
+  have hinvQ : ∀ i, IsInvariantSubgroup Q G (Gi i) := by
     intro i
     constructor
     intro aQ g
     refine QuotientGroup.induction_on aQ (fun a => ?_)
     constructor
     · intro hg
-      have hg' := (IsInvariant.invariant (A := A) (G := G) (H := Gi i) a g).1 hg
+      have hg' := (IsInvariantSubgroup.invariant (A := A) (G := G) (H := Gi i) a g).1 hg
       simpa [smul_eq] using hg'
     · intro hg
       have hg' : a • g ∈ Gi i := by simpa [smul_eq] using hg
-      exact (IsInvariant.invariant (A := A) (G := G) (H := Gi i) a g).2 hg'
+      exact (IsInvariantSubgroup.invariant (A := A) (G := G) (H := Gi i) a g).2 hg'
   have hfactorQ : ∀ i (aQ : Q) (g : G), g ∈ Gi i → (aQ • g) * g⁻¹ ∈ Gi (next i) := by
     intro i aQ g hg
     refine QuotientGroup.induction_on aQ (fun a => ?_)
@@ -219,7 +219,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
       rcases Sylow.nonempty (p := p.val) (G := Q) with ⟨P⟩
       have hP_pgroup : IsPGroup p.val P := P.isPGroup'
       let P' : Subgroup Q := P
-      have hinvP : ∀ i, IsInvariant P' G (Gi i) := fun i => IsInvariant.subgroup (Gi i) P'
+      have hinvP : ∀ i, IsInvariantSubgroup P' G (Gi i) := fun i => IsInvariantSubgroup.subgroup (Gi i) P'
       have hfactorP : ∀ i (a : P') (g : G), g ∈ Gi i → (a • g) * g⁻¹ ∈ Gi (next i) := by
         intro i a g hg
         exact hfactorQ i a g hg
@@ -242,8 +242,8 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
               _ ≤ Gi (Nat.iterate next k top) := hdesc (Nat.iterate next k top)
           have h_normal_H : (Gi (Nat.iterate next (k + 1) top)).Normal := hnormal _
           have h_normal_K : (Gi (Nat.iterate next k top)).Normal := hnormal _
-          haveI : IsInvariant P' G (Gi (Nat.iterate next (k + 1) top)) := hinvP _
-          haveI : IsInvariant P' G (Gi (Nat.iterate next k top)) := hinvP _
+          haveI : IsInvariantSubgroup P' G (Gi (Nat.iterate next (k + 1) top)) := hinvP _
+          haveI : IsInvariantSubgroup P' G (Gi (Nat.iterate next k top)) := hinvP _
           have h_factor : ∀ a : P', ∀ g : G, g ∈ Gi (Nat.iterate next k top) → (a • g) * g⁻¹ ∈ Gi (Nat.iterate next (k + 1) top) := by
             intro a' g' hg'
             have h := hfactorQ (Nat.iterate next k top) a' g' hg'

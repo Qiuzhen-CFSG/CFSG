@@ -1710,7 +1710,7 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
       Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
     letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
     let C : Subgroup Q := commutatorAction (A := P0img) (G := Q)
-    haveI : IsInvariant P0img Q C := by
+    haveI : IsInvariantSubgroup P0img Q C := by
       simpa [C] using (commutatorAction_isInvariant (G := Q) (A := P0img))
     have hyC : (⟨y, hy⟩ : Q) ∈ C := by
       simpa [P0img, φ, C] using hycomm
@@ -1727,7 +1727,7 @@ public theorem appendixC_lemma_C_3_twisted_companion_value_of_conditionB_action
       let a0 : P0img := ⟨a, ha⟩
       have hsmul :
           a0 • (⟨z, hz⟩ : Q) ∈ C :=
-        (IsInvariant.invariant (A := P0img) (G := Q) (H := C) a0
+        (IsInvariantSubgroup.invariant (A := P0img) (G := Q) (H := C) a0
           (⟨z, hz⟩ : Q)).1 hzC
       have hsmul' :
           (Subgroup.inclusion hP0Q ⟨a, ha⟩) • (⟨z, hz⟩ : Q) ∈ C := by

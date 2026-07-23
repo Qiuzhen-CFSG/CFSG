@@ -509,8 +509,8 @@ specialized to the subgroup/action conventions used in Section 12. -/
 public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime_pre
     {V A : Type*} [Group V] [Finite V] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p V] [Group A] [Finite A] [MulDistribMulAction A V]
-    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariant A V B] :
-    ∃ C : Subgroup V, IsCompl B C ∧ IsInvariant A V C := by
+    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariantSubgroup A V B] :
+    ∃ C : Subgroup V, IsCompl B C ∧ IsInvariantSubgroup A V C := by
   classical
   letI : CommGroup V := IsMulCommutative.instCommGroup
   letI : AddCommGroup (Additive V) := Additive.addCommGroup
@@ -530,7 +530,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     intro x hx
     have hxB : Additive.toMul x ∈ B := by simpa [η] using hx
     simpa [ρ, η] using
-      (IsInvariant.invariant (A := A) (G := V) (H := B) a (Additive.toMul x)).1 hxB
+      (IsInvariantSubgroup.invariant (A := A) (G := V) (H := B) a (Additive.toMul x)).1 hxB
   let Bpack : ρ.invtSubmodule := ⟨η B, hBinv⟩
   haveI : Fintype A := Fintype.ofFinite A
   haveI : NeZero (Fintype.card A : ZMod p) := by
@@ -549,7 +549,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (ZMod p) inferInstance A inferInstance inferInstance ρ.asModule instAdd instMod inferInstance Bmod
   let Cpack : ρ.invtSubmodule := ρ.mapSubmodule.symm Cmod
   let C : Subgroup V := η.symm (Cpack : Submodule (ZMod p) (Additive V))
-  have hCinv : IsInvariant A V C := by
+  have hCinv : IsInvariantSubgroup A V C := by
     refine ⟨?_⟩
     intro a v
     constructor

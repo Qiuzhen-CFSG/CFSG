@@ -97,7 +97,7 @@ public theorem corollary_12_10_e
     have hpτ2 : p ∈ section12Tau2Primes M := hxπ hp_mem
     rcases (by simpa [section12Tau2Primes] using hpτ2) with ⟨hp_not_σ, _⟩
     simpa [Set.mem_compl_iff] using hp_not_σ
-  have hxM_inv : IsInvariant PUnit.{1} M ((Subgroup.zpowers x).subgroupOf M) :=
+  have hxM_inv : IsInvariantSubgroup PUnit.{1} M ((Subgroup.zpowers x).subgroupOf M) :=
     ⟨fun _ _ => ⟨id, id⟩⟩
   rcases proposition_1_5_b hM_solv hcopM ((section10SigmaPrimes M)ᶜ : Set Nat.Primes)
       ((Subgroup.zpowers x).subgroupOf M) hx_pi_σ' hxM_inv with ⟨H_M, hHMhall, _, hx_sub_HM⟩
@@ -194,7 +194,7 @@ public theorem corollary_12_10_e
     have hp_mem : p ∈ subgroupPrimeSet (Subgroup.zpowers x₁) := by
       dsimp [subgroupPrimeSet]; exact hp
     exact hx₁_π hp_mem
-  have hx₁E_inv : IsInvariant PUnit.{1} E ((Subgroup.zpowers x₁).subgroupOf E) :=
+  have hx₁E_inv : IsInvariantSubgroup PUnit.{1} E ((Subgroup.zpowers x₁).subgroupOf E) :=
     ⟨fun _ _ => ⟨id, id⟩⟩
   rcases proposition_1_5_b hE_solv hcopE (section12Tau2Primes M)
       ((Subgroup.zpowers x₁).subgroupOf E) hx₁E_pi hx₁E_inv with ⟨H_E, hHEhall, _, hx₁_sub_HE⟩
@@ -319,7 +319,7 @@ public theorem corollary_12_10_e
     have hq_eq_p : q = p :=
       Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.property p.property).mp hq_dvd_p)
     subst hq_eq_p; exact hpτ2
-  have hA_inv : IsInvariant PUnit.{1} E (A.subgroupOf E) := ⟨fun _ _ => ⟨id, id⟩⟩
+  have hA_inv : IsInvariantSubgroup PUnit.{1} E (A.subgroupOf E) := ⟨fun _ _ => ⟨id, id⟩⟩
   rcases proposition_1_5_b hE_solv hcopE (section12Tau2Primes M)
       (A.subgroupOf E) hA_pi hA_inv with ⟨H_A, hHAhall, _, hA_sub_HA⟩
   rcases exists_conj_eq_of_isHallSubgroup_of_solvable hE_solv hHAhall hHallE2 with ⟨h : E, hh⟩

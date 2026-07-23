@@ -6,9 +6,9 @@ public import Submission.FeitThompson.BGsection3.lemma_3_3
 open scoped commutatorElement IsMulCommutative
 
 public instance instMulDistribMulAction_subtype_local {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] {H : Subgroup G} [IsInvariant A G H] :
+    [MulDistribMulAction A G] {H : Subgroup G} [IsInvariantSubgroup A G H] :
     MulDistribMulAction A H where
-  smul a x := ⟨a • x.1, (IsInvariant.invariant (A := A) (G := G) (H := H) a x.1).1 x.2⟩
+  smul a x := ⟨a • x.1, (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) a x.1).1 x.2⟩
   one_smul x := by
     ext
     change ((1 : A) • (x : G)) = x
@@ -27,7 +27,7 @@ public instance instMulDistribMulAction_subtype_local {G A : Type*} [Group G] [G
     simp
 
 public lemma fixedPointSubgroup_subtype_eq_local {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H] :
+    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariantSubgroup A G H] :
     fixedPointSubgroup A H = (fixedPointSubgroup A G).subgroupOf H := by
   ext x
   constructor
@@ -93,7 +93,7 @@ theorem exists_simple_submodule_faithful_quotient_counterexample
 
 theorem faithful_on_selfCentralizing_of_coprime_local {G A : Type*} [Group G] [Finite G]
     [Group A] [Finite A] [MulDistribMulAction A G] [FaithfulSMul A G]
-    (C : Subgroup G) [C.Normal] [IsInvariant A G C]
+    (C : Subgroup G) [C.Normal] [IsInvariantSubgroup A G C]
     (hcent : Subgroup.centralizer (C : Set G) ≤ C)
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     FaithfulSMul A C := by
@@ -987,10 +987,10 @@ theorem proper_characteristic_le_fixedPointSubgroup_local
   have hH'_lt : H' < K := lt_of_le_of_ne hH'_le hH'_ne
   have hRinv : ∀ r : R, ∀ h ∈ H', (r : G) * h * (r : G)⁻¹ ∈ H' := by
     letI : H.Characteristic := hH_char
-    haveI : IsInvariant (↥R) (↥K) H := isInvariant_of_characteristic (A := ↥R) (G := ↥K) H
+    haveI : IsInvariantSubgroup (↥R) (↥K) H := isInvariant_of_characteristic (A := ↥R) (G := ↥K) H
     intro r h hh
     rcases hh with ⟨x, hx, rfl⟩
-    refine ⟨r • x, (IsInvariant.invariant (A := ↥R) (G := ↥K) (H := H) r x).1 hx, ?_⟩
+    refine ⟨r • x, (IsInvariantSubgroup.invariant (A := ↥R) (G := ↥K) (H := H) r x).1 hx, ?_⟩
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have hsub :
       ⁅R, H'⁆ ≤ ρ.centralizerIn H' :=
@@ -1048,7 +1048,7 @@ theorem theorem_3_4_quotient_center_fixfree_local
     simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRK] using
       proper_characteristic_le_fixedPointSubgroup_local K R ρ hind hsolvG hodd hK_normal hKR
         hcopKR hR_prime hchar hfixR hKbot Z inferInstance hZ_top a z hz
-  have hZinv : IsInvariant (↥R) (↥K) Z :=
+  have hZinv : IsInvariantSubgroup (↥R) (↥K) Z :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) Z
   letI : MulAction.QuotientAction (↥R) Z :=
     quotientAction_of_isInvariant (A := ↥R) Z hZinv
@@ -1386,7 +1386,7 @@ noncomputable def quotientCenterConjAut {G : Type uG} [Group G]
   let hRK : R ≤ Subgroup.normalizer K := Subgroup.le_normalizer_of_normal (H := K)
   haveI : Subgroup.Normalizes R K := ⟨hRK⟩
   let Z : Subgroup ↥K := Subgroup.center (↥K)
-  let hZinv : IsInvariant (↥R) (↥K) Z :=
+  let hZinv : IsInvariantSubgroup (↥R) (↥K) Z :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) Z
   letI : MulAction.QuotientAction (↥R) Z :=
     quotientAction_of_isInvariant (A := ↥R) Z hZinv
@@ -1497,7 +1497,7 @@ theorem theorem_3_4_quotient_center_irreducible_local
     simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRK] using
       proper_characteristic_le_fixedPointSubgroup_local K R ρ hind hsolvG hodd hK_normal hKR
         hcopKR hR_prime hchar hfixR hKbot Z inferInstance hZ_top a z hz
-  let hZinv : IsInvariant (↥R) (↥K) Z :=
+  let hZinv : IsInvariantSubgroup (↥R) (↥K) Z :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) Z
   let Q : Type uG := ↥K ⧸ Z
   letI : Group Q := QuotientGroup.Quotient.group Z
@@ -1780,7 +1780,7 @@ theorem theorem_3_4_quotient_center_zpowers_fixfree_local
   letI : Nontrivial Q := quotient_center_nontrivial_of_not_isMulCommutative hcommK
   letI : IsElementaryAbelian q Q :=
     isElementaryAbelian_quotient_center_of_commutator_le_center_of_exponent_eq hcomm hexp
-  let hZinv : IsInvariant (↥R) (↥K) Z :=
+  let hZinv : IsInvariantSubgroup (↥R) (↥K) Z :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) Z
   letI : MulAction.QuotientAction (↥R) Z :=
     quotientAction_of_isInvariant (A := ↥R) Z hZinv
@@ -1895,7 +1895,7 @@ public theorem subgroupCentralizerIn_map_mk'_eq_map_of_solvable_coprime
   haveI : Xsub.Normal := by
     exact Subgroup.Normal.subgroupOf (H := X) (K := H) (inferInstance : X.Normal)
   haveI : Subgroup.Normalizes R H := ⟨hRnormH⟩
-  have hXsub_inv : IsInvariant (↥R) (↥H) Xsub := by
+  have hXsub_inv : IsInvariantSubgroup (↥R) (↥H) Xsub := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -1916,7 +1916,7 @@ public theorem subgroupCentralizerIn_map_mk'_eq_map_of_solvable_coprime
             ((((a : R) • x : H) : G)) hxX (((a : R) : G)⁻¹)
       simpa [Xsub, Subgroup.mem_subgroupOf,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRnormH, mul_assoc] using hx'
-  letI : IsInvariant (↥R) (↥H) Xsub := hXsub_inv
+  letI : IsInvariantSubgroup (↥R) (↥H) Xsub := hXsub_inv
   letI : MulAction.QuotientAction (↥R) Xsub :=
     quotientAction_of_isInvariant (A := ↥R) (G := ↥H) Xsub hXsub_inv
   letI : MulDistribMulAction (↥R) (↥H ⧸ Xsub) :=
@@ -2013,7 +2013,7 @@ theorem elementCentralizerIn_map_mk'_eq_map_center_of_solvable_coprime
     have hzpow_dvd : Nat.card (Subgroup.zpowers r) ∣ Nat.card R :=
       Subgroup.card_subgroup_dvd_card (Subgroup.zpowers r)
     exact (Nat.Coprime.of_dvd_right hzpow_dvd hcopKR).symm
-  have hNsub_inv : IsInvariant (↥(Subgroup.zpowers r)) (↥K) Nsub := by
+  have hNsub_inv : IsInvariantSubgroup (↥(Subgroup.zpowers r)) (↥K) Nsub := by
     refine ⟨?_⟩
     intro a x
     constructor
@@ -2039,7 +2039,7 @@ theorem elementCentralizerIn_map_mk'_eq_map_center_of_solvable_coprime
             ((((a : Subgroup.zpowers r) : R) • x : K) : G) hxN ((((a : Subgroup.zpowers r) : R) : G)⁻¹)
       simpa [Nsub, Subgroup.mem_subgroupOf,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRK, mul_assoc] using hx'
-  letI : IsInvariant (↥(Subgroup.zpowers r)) (↥K) Nsub := hNsub_inv
+  letI : IsInvariantSubgroup (↥(Subgroup.zpowers r)) (↥K) Nsub := hNsub_inv
   letI : MulAction.QuotientAction (↥(Subgroup.zpowers r)) Nsub :=
     quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers r)) (G := ↥K) Nsub hNsub_inv
   letI : MulDistribMulAction (↥(Subgroup.zpowers r)) (↥K ⧸ Nsub) :=
@@ -2319,7 +2319,7 @@ theorem theorem_3_4_extraspecial_center_kernel_constituent
       have h1 : quotientCenterConjAut K R hK_normal rR (qZ kK) = rR • (qZ kK) := by
         simp [quotientCenterConjAut, MulDistribMulAction.toMulAut_apply]
       have h2 : rR • (qZ kK) = qZ (rR • kK) :=
-        (MulAction.Quotient.smul_coe (X := ↥R) (H := Z) (b := rR) (g := (kK : K)))
+        (MulAction.Quotient.smul_coe (H := Z) (b := rR) (a := (kK : K)))
       have h3 : qZ (rR • kK) = qZ kK := QuotientGroup.eq.mpr (hkdiff_eq ▸ hz)
       exact h1.trans (h2.trans h3)
     have hkfix :

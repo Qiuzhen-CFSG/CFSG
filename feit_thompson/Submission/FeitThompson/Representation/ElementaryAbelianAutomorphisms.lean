@@ -148,7 +148,7 @@ lemma lemma_2_7_main_1
 
   rcases this with ⟨a, ha⟩
   let a' := by
-    refine submoduleOfSMulMem (M := Q) (V := ρ.asModule) a.toSubmodule ?_
+    refine submoduleOfSMulMem (G := Q) (V := ρ.asModule) a.toSubmodule ?_
     intro q v hv
     simp only [of_apply, single_smul, one_smul]
     have hv' : (ρ.asModuleEquiv v) ∈ a.toSubmodule := (Submodule.mem_toAddSubgroup a.toSubmodule).mp hv

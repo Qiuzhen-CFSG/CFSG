@@ -476,7 +476,7 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
       mul_smul := fun _ _ _ => rfl
       smul_mul := fun _ _ _ => rfl
       smul_one := fun _ => rfl }
-    have hTsubCInv : IsInvariant Unit C (T.subgroupOf C) := by
+    have hTsubCInv : IsInvariantSubgroup Unit C (T.subgroupOf C) := by
       refine ⟨?_⟩
       intro _ x
       simp [Subgroup.mem_subgroupOf]

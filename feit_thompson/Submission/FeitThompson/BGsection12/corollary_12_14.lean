@@ -957,10 +957,13 @@ private theorem section12_sigma_ambient_sylow_eq_of_le_sylow_local
   haveI : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   by_contra hne
+  have hPG_le_S : PG ≤ (S : Subgroup G) := by
+    change section10AmbientSylowSubgroup M P ≤ (S : Subgroup G)
+    exact hPGS
   have hPG_lt_S : PG < (S : Subgroup G) := by
-    refine ⟨by simpa [PG] using hPGS, ?_⟩
+    refine ⟨hPG_le_S, ?_⟩
     intro hS_le_PG
-    exact hne (le_antisymm hS_le_PG (by simpa [PG] using hPGS))
+    exact hne (le_antisymm hS_le_PG hPG_le_S)
   rcases section12_exists_pSubgroup_gt_le_normalizer_of_lt_pgroup_local
       (G := G) (S := (S : Subgroup G)) (X := PG) (p := p.val)
       S.isPGroup' hPG_lt_S with

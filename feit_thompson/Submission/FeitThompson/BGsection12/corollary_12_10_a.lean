@@ -342,7 +342,7 @@ public theorem section12_exists_EData_containing_sigma_compl_piSubgroup
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hAinv_M : IsInvariant Unit M A_M := by
+  have hAinv_M : IsInvariantSubgroup Unit M A_M := by
     refine ⟨?_⟩
     intro _ x
     simp

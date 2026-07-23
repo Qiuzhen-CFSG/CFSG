@@ -557,7 +557,7 @@ private theorem section13_isInvariant_subgroupOf_of_le_normalizer
     (hAH : A ≤ Subgroup.normalizer (H : Set G))
     (hAK : A ≤ Subgroup.normalizer (K : Set G)) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant A H (K.subgroupOf H) := by
+    IsInvariantSubgroup A H (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
   refine ⟨?_⟩
   intro a x
@@ -609,7 +609,7 @@ private theorem section13_le_normalizer_map_of_isInvariant
     {G : Type u} [Group G]
     (A Q : Subgroup G) (C : Subgroup Q)
     (hAQ : A ≤ Subgroup.normalizer (Q : Set G))
-    [hCinv : letI : Subgroup.Normalizes A Q := ⟨hAQ⟩; IsInvariant A Q C] :
+    [hCinv : letI : Subgroup.Normalizes A Q := ⟨hAQ⟩; IsInvariantSubgroup A Q C] :
     A ≤ Subgroup.normalizer ((C.map Q.subtype : Subgroup G) : Set G) := by
   letI : Subgroup.Normalizes A Q := ⟨hAQ⟩
   intro a haA
@@ -619,13 +619,13 @@ private theorem section13_le_normalizer_map_of_isInvariant
   · intro hx
     rcases hx with ⟨q, hqC, rfl⟩
     refine ⟨(⟨a, haA⟩ : A) • q, ?_, ?_⟩
-    · exact (IsInvariant.invariant (A := A) (G := Q) (H := C)
+    · exact (IsInvariantSubgroup.invariant (A := A) (G := Q) (H := C)
         (⟨a, haA⟩ : A) q).1 hqC
     · simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   · intro hx
     rcases hx with ⟨q, hqC, hx_eq⟩
     refine ⟨(⟨a, haA⟩ : A)⁻¹ • q, ?_, ?_⟩
-    · exact (IsInvariant.invariant (A := A) (G := Q) (H := C)
+    · exact (IsInvariantSubgroup.invariant (A := A) (G := Q) (H := C)
         ((⟨a, haA⟩ : A)⁻¹) q).1 hqC
     · have hx_eq' : (q : G) = a * x * a⁻¹ := by simpa using hx_eq
       calc
@@ -680,12 +680,12 @@ private theorem section13_theorem_13_16_MaschkeFrobeniusSourceData_of_inputs
   let K : Subgroup G := V ⊓ Subgroup.normalizer (W1 : Set G)
   let KW2 : Subgroup G := K ⊔ W2
   letI : Subgroup.Normalizes KW2 Q := ⟨by simpa [K, KW2] using hKW2normQ⟩
-  have hW1inv : IsInvariant KW2 Q (W1.subgroupOf Q) := by
+  have hW1inv : IsInvariantSubgroup KW2 Q (W1.subgroupOf Q) := by
     exact section13_isInvariant_subgroupOf_of_le_normalizer
       (A := KW2) (H := Q) (K := W1)
       (by simpa [K, KW2] using hKW2normQ)
       (by simpa [K, KW2] using hKW2normW1)
-  letI : IsInvariant KW2 Q (W1.subgroupOf Q) := hW1inv
+  letI : IsInvariantSubgroup KW2 Q (W1.subgroupOf Q) := hW1inv
   rcases section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
       (V := Q) (A := KW2) (p := q) (by simpa [K, KW2] using hcop)
       (W1.subgroupOf Q) with ⟨C, hcompl, hCinv⟩
@@ -697,7 +697,7 @@ private theorem section13_theorem_13_16_MaschkeFrobeniusSourceData_of_inputs
     simpa [Q1] using
       section13_internalDirectProduct_of_subgroup_isCompl W1 Q C hW1Q hcompl hQcomm
   have hQ1Q : Q1 ≤ Q := hQprod.2.1
-  haveI : IsInvariant KW2 Q C := hCinv
+  haveI : IsInvariantSubgroup KW2 Q C := hCinv
   refine ⟨Q1, hQprod, ?_⟩
   intro hKne
   refine ⟨by simpa [K] using hfrob hKne, ?_, ?_⟩

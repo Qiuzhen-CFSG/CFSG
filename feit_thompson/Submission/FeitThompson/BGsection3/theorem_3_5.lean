@@ -1412,7 +1412,7 @@ public theorem theorem_3_5_coprime_card_of_prime_complement
     simpa using (not_dvd_card_sylow (p := p') (G := ↥K))
   obtain ⟨P, hPfix⟩ :=
     hRp.nonempty_fixed_point_of_prime_not_dvd_card (Sylow p' ↥K) hpSylow
-  have hPinv : IsInvariant (↥R) (↥K) (P : Subgroup ↥K) := by
+  have hPinv : IsInvariantSubgroup (↥R) (↥K) (P : Subgroup ↥K) := by
     refine ⟨?_⟩
     intro a g
     constructor

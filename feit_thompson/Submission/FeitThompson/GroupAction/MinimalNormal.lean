@@ -23,13 +23,13 @@ variable {G A : Type*} [Group G] [Finite G] [Group A] [MulDistribMulAction A G]
 /-- Existence of a minimal nontrivial normal `A`-invariant subgroup in a finite nontrivial group. -/
 public theorem exists_minimal_normal_isInvariant [Nontrivial G] :
     ∃ M : Subgroup G,
-      M.Normal ∧ IsInvariant A G M ∧ M ≠ ⊥ ∧
-        (∀ K : Subgroup G, K.Normal → IsInvariant A G K → K ≠ ⊥ → K ≤ M → K = M) := by
+      M.Normal ∧ IsInvariantSubgroup A G M ∧ M ≠ ⊥ ∧
+        (∀ K : Subgroup G, K.Normal → IsInvariantSubgroup A G K → K ≠ ⊥ → K ≤ M → K = M) := by
   classical
   -- Work with the predicate expressing "nontrivial, normal, and invariant".
   let P : ℕ → Prop :=
     fun n =>
-      ∃ K : Subgroup G, K.Normal ∧ IsInvariant A G K ∧ K ≠ ⊥ ∧ Nat.card K = n
+      ∃ K : Subgroup G, K.Normal ∧ IsInvariantSubgroup A G K ∧ K ≠ ⊥ ∧ Nat.card K = n
   have hP : ∃ n, P n := by
     refine ⟨Nat.card G, ?_⟩
     refine ⟨⊤, ?_, ?_, ?_, ?_⟩

@@ -33,11 +33,11 @@ private theorem exists_maximal_cyclic_invariant_subgroup_containing_derived
     {R A : Type*} [Group R] [Finite R] [Group A] [Finite A] [MulDistribMulAction A R]
     (hdercyc : IsCyclic (derivedSubgroup R)) :
     ∃ S : Subgroup R,
-      derivedSubgroup R ≤ S ∧ IsCyclic S ∧ IsInvariant A R S ∧
-        ∀ T : Subgroup R, derivedSubgroup R ≤ T → IsCyclic T → IsInvariant A R T →
+      derivedSubgroup R ≤ S ∧ IsCyclic S ∧ IsInvariantSubgroup A R S ∧
+        ∀ T : Subgroup R, derivedSubgroup R ≤ T → IsCyclic T → IsInvariantSubgroup A R T →
           S ≤ T → T = S := by
   classical
-  let s : Set (Subgroup R) := {S | derivedSubgroup R ≤ S ∧ IsCyclic S ∧ IsInvariant A R S}
+  let s : Set (Subgroup R) := {S | derivedSubgroup R ≤ S ∧ IsCyclic S ∧ IsInvariantSubgroup A R S}
   have hsfin : s.Finite := Set.toFinite s
   have hsne : s.Nonempty := by
     refine ⟨derivedSubgroup R, ?_⟩
@@ -78,13 +78,13 @@ private noncomputable def conjugationMulAutOfNormal
 
 private noncomputable def actionMulAutOfInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (S : Subgroup G) [IsInvariant A G S] (a : A) : MulAut S :=
+    (S : Subgroup G) [IsInvariantSubgroup A G S] (a : A) : MulAut S :=
   {
     toFun := fun s =>
-      ⟨a • (s : G), (IsInvariant.invariant (A := A) (G := G) (H := S) a (s : G)).1 s.2⟩
+      ⟨a • (s : G), (IsInvariantSubgroup.invariant (A := A) (G := G) (H := S) a (s : G)).1 s.2⟩
     invFun := fun s =>
       ⟨a⁻¹ • (s : G),
-        (IsInvariant.invariant (A := A) (G := G) (H := S) a⁻¹ (s : G)).1 s.2⟩
+        (IsInvariantSubgroup.invariant (A := A) (G := G) (H := S) a⁻¹ (s : G)).1 s.2⟩
     left_inv := by
       intro s
       ext
@@ -101,7 +101,7 @@ private noncomputable def actionMulAutOfInvariant
 
 private theorem action_commutator_generator_le_centralizer_of_cyclic_invariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {S : Subgroup G} [S.Normal] [IsInvariant A G S] (hScyc : IsCyclic S)
+    {S : Subgroup G} [S.Normal] [IsInvariantSubgroup A G S] (hScyc : IsCyclic S)
     (a : A) (g : G) :
     g⁻¹ * (a • g) ∈ Subgroup.centralizer (S : Set G) := by
   classical
@@ -130,7 +130,7 @@ private theorem action_commutator_generator_le_centralizer_of_cyclic_invariant
 
 private theorem commutatorAction_le_centralizer_of_cyclic_invariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {S : Subgroup G} [S.Normal] [IsInvariant A G S] (hScyc : IsCyclic S) :
+    {S : Subgroup G} [S.Normal] [IsInvariantSubgroup A G S] (hScyc : IsCyclic S) :
     commutatorAction (A := A) (G := G) ≤ Subgroup.centralizer (S : Set G) := by
   rw [commutatorAction_eq_closure (G := G) (A := A)]
   refine (Subgroup.closure_le (K := Subgroup.centralizer (S : Set G))).2 ?_
@@ -140,7 +140,7 @@ private theorem commutatorAction_le_centralizer_of_cyclic_invariant
 
 private theorem le_center_of_commutatorAction_eq_top_of_cyclic_invariant
     {R A : Type*} [Group R] [Group A] [MulDistribMulAction A R]
-    {S : Subgroup R} [S.Normal] [IsInvariant A R S] (hScyc : IsCyclic S)
+    {S : Subgroup R} [S.Normal] [IsInvariantSubgroup A R S] (hScyc : IsCyclic S)
     (hcommtop : commutatorAction (A := A) (G := R) = ⊤) :
     S ≤ Subgroup.center R := by
   have hcomm_le_cent :
@@ -192,8 +192,8 @@ private theorem natCard_subgroup_lt_of_ne_top
 public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     {G A : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup G) [IsInvariant A G B] :
-    ∃ C : Subgroup G, IsCompl B C ∧ IsInvariant A G C := by
+    (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup G) [IsInvariantSubgroup A G B] :
+    ∃ C : Subgroup G, IsCompl B C ∧ IsInvariantSubgroup A G C := by
   classical
   letI : CommGroup G := IsMulCommutative.instCommGroup
   letI : AddCommGroup (Additive G) := Additive.addCommGroup
@@ -213,7 +213,7 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     intro x hx
     have hxB : Additive.toMul x ∈ B := by simpa [η] using hx
     simpa [ρ, η] using
-      (IsInvariant.invariant (A := A) (G := G) (H := B) a (Additive.toMul x)).1 hxB
+      (IsInvariantSubgroup.invariant (A := A) (G := G) (H := B) a (Additive.toMul x)).1 hxB
   let Bpack : ρ.invtSubmodule := ⟨η B, hBinv⟩
   haveI : Fintype A := Fintype.ofFinite A
   haveI : NeZero (Fintype.card A : ZMod p) := by
@@ -231,7 +231,7 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (ZMod p) inferInstance A inferInstance inferInstance ρ.asModule instAdd instMod inferInstance Bmod
   let Cpack : ρ.invtSubmodule := ρ.mapSubmodule.symm Cmod
   let C : Subgroup G := η.symm (Cpack : Submodule (ZMod p) (Additive G))
-  have hCinv : IsInvariant A G C := by
+  have hCinv : IsInvariantSubgroup A G C := by
     refine ⟨?_⟩
     intro a g
     constructor
@@ -694,7 +694,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
           (R := R) (A := A) hdercyc
       have hS_normal : S.Normal := normal_of_derivedSubgroup_le S hD_le_S
       letI : S.Normal := hS_normal
-      letI : IsInvariant A R S := hS_inv
+      letI : IsInvariantSubgroup A R S := hS_inv
       have hS_center : S ≤ Subgroup.center R := by
         exact le_center_of_commutatorAction_eq_top_of_cyclic_invariant
           (A := A) (S := S) hS_cyc (by simpa [H] using hHtop)
@@ -749,7 +749,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         let ΩQ : Subgroup (R ⧸ S) := omega₁ (G := R ⧸ S) (p := p)
         letI : ΩQ.Characteristic := by
           simpa [ΩQ] using omega₁_characteristic (G := R ⧸ S) (p := p)
-        letI : IsInvariant A (R ⧸ S) ΩQ :=
+        letI : IsInvariantSubgroup A (R ⧸ S) ΩQ :=
           isInvariant_of_characteristic (A := A) (G := R ⧸ S) ΩQ
         letI : MulDistribMulAction A ΩQ := inferInstance
         have hΩQ_pow : ∀ x : ΩQ, x ^ p = 1 := by
@@ -772,18 +772,18 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         let ΩR : Subgroup R := omega₁ (G := R) (p := p)
         letI : ΩR.Characteristic := by
           simpa [ΩR] using omega₁_characteristic (G := R) (p := p)
-        letI : IsInvariant A R ΩR :=
+        letI : IsInvariantSubgroup A R ΩR :=
           isInvariant_of_characteristic (A := A) (G := R) ΩR
         let B0 : Subgroup (R ⧸ S) := (ΩR ⊔ S).map qS
         have hB0_le_ΩQ : B0 ≤ ΩQ := by
           simpa [B0, ΩR, ΩQ, qS] using
             omega₁_sup_map_quotient_le_omega₁_quotient (G := R) (p := p) S
         let B : Subgroup ΩQ := B0.subgroupOf ΩQ
-        haveI : IsInvariant A R (ΩR ⊔ S) := isInvariant_sup ΩR S
-        haveI : IsInvariant A (R ⧸ S) B0 := by
+        haveI : IsInvariantSubgroup A R (ΩR ⊔ S) := isInvariant_sup ΩR S
+        haveI : IsInvariantSubgroup A (R ⧸ S) B0 := by
           simpa [B0, qS] using
             isInvariant_map_quotient (A := A) (G := R) (N := S) (H := ΩR ⊔ S)
-        haveI : IsInvariant A ΩQ B := by
+        haveI : IsInvariantSubgroup A ΩQ B := by
           simpa [B, B0, ΩQ] using isInvariant_subgroupOf B0 ΩQ
         haveI : IsElementaryAbelian p ΩQ := hΩQ_elem
         obtain ⟨C, hBC, hCinv⟩ :=
@@ -813,10 +813,10 @@ public theorem theorem_4_12_a_aux (n : ℕ)
             change qS s ∈ Cbar
             have hs1 : qS s = 1 := (QuotientGroup.eq_one_iff (N := S) (x := s)).2 hs
             simp [Cbar, hs1]
-          haveI : IsInvariant A ΩQ C := hCinv
-          haveI : IsInvariant A (R ⧸ S) Cbar := by
+          haveI : IsInvariantSubgroup A ΩQ C := hCinv
+          haveI : IsInvariantSubgroup A (R ⧸ S) Cbar := by
             simpa [Cbar, ΩQ] using isInvariant_map_subtype (A := A) (G := R ⧸ S) ΩQ C
-          haveI : IsInvariant A R X := by
+          haveI : IsInvariantSubgroup A R X := by
             refine isInvariant_comap_quotient (A := A) (G := R) (N := S) Cbar ?_
             intro a g
             simp [MulAction.Quotient.smul_mk]
@@ -1010,7 +1010,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         exact isCyclic_of_surjective phi hphi_surj
       have hRcomm : IsMulCommutative R := lemma_4_1 (G := R) hcenter_quot_cyc
       exact isMulCommutative_of_subgroup_eq_top (H := H) hHtop hRcomm
-    · letI : IsInvariant A R H := by
+    · letI : IsInvariantSubgroup A R H := by
         simpa [H] using commutatorAction_isInvariant (G := R) (A := A)
       letI : MulDistribMulAction A H := inferInstance
       have hHp : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H

@@ -9,7 +9,7 @@ public import Submission.FeitThompson.BGsection1.Defs
 open scoped commutatorElement
 
 public instance center_isInvariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
-    IsInvariant A G (Subgroup.center G) where
+    IsInvariantSubgroup A G (Subgroup.center G) where
   invariant a g := by
     have hcenter := Subgroup.centerCharacteristic.fixed (MulDistribMulAction.toMulAut A G a)
     have mem_comap : g ∈ (Subgroup.center G).comap (MulDistribMulAction.toMulAut A G a).toMonoidHom ↔
@@ -22,18 +22,18 @@ public instance center_isInvariant {G A : Type*} [Group G] [Group A] [MulDistrib
     exact mem_iff
 
 public instance quotientAction_of_invariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] : MulAction.QuotientAction A H := by
+    (H : Subgroup G) [IsInvariantSubgroup A G H] : MulAction.QuotientAction A H := by
   constructor
   intro b a a' h
   have h_inv : a⁻¹ * a' ∈ H := h
-  have h_smul : b • (a⁻¹ * a') ∈ H := (IsInvariant.invariant (A := A) (G := G) (H := H) b (a⁻¹ * a')).1 h_inv
+  have h_smul : b • (a⁻¹ * a') ∈ H := (IsInvariantSubgroup.invariant (A := A) (G := G) (H := H) b (a⁻¹ * a')).1 h_inv
   have eq : b • (a⁻¹ * a') = (b • a)⁻¹ * b • a' := by
     simp [smul_inv']
   rw [eq] at h_smul
   exact h_smul
 
 public instance quotient_mulDistribMulAction {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [H.Normal] [IsInvariant A G H] : MulDistribMulAction A (G ⧸ H) :=
+    (H : Subgroup G) [H.Normal] [IsInvariantSubgroup A G H] : MulDistribMulAction A (G ⧸ H) :=
   { MulAction.quotient A H with
     smul_mul := by
       intro a

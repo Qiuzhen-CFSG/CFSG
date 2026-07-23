@@ -1155,7 +1155,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
         (section12_normalIn_ambientDerivedSubgroup (G := G) (E := Tmax)).2
       simpa [K, hDerComp.2.2.1] using hDerNormal
     letI : N.Normal := hQnormal.subgroupOf K
-    let hNinv : IsInvariant (W2.subgroupOf Tmax) K N := by
+    let hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := by
       have hW2normK : W2.subgroupOf Tmax ≤ Subgroup.normalizer (K : Set Tmax) :=
         Subgroup.le_normalizer_of_normal (H := K)
       have hW2normQ :
@@ -1166,7 +1166,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
         exact Subgroup.mem_subgroupOf.mpr
           ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
       exact isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     ∀ q : K ⧸ N, a • q = q → q = 1 := by
@@ -1203,9 +1203,9 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
     intro x hx
     exact Subgroup.mem_subgroupOf.mpr
       ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
-  have hNinv : IsInvariant (W2.subgroupOf Tmax) K N :=
+  have hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax) K N :=
     isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   let Sg : Subgroup G := V ⊔ W2
@@ -1264,7 +1264,7 @@ public theorem section14_typeP_quotient_fixed_eq_one_of_W2_ne_one
   have hqeq : QuotientGroup.mk' N (a • k) = QuotientGroup.mk' N k := by
     simpa using hfix
   have haqKN : a • qK ∈ N :=
-    (IsInvariant.invariant (A := W2.subgroupOf Tmax) (G := K) (H := N) a qK).1 hqKN
+    (IsInvariantSubgroup.invariant (A := W2.subgroupOf Tmax) (G := K) (H := N) a qK).1 hqKN
   have hmk_aqK : QuotientGroup.mk' N (a • qK) = 1 :=
     (QuotientGroup.eq_one_iff (N := N) (a • qK)).2 haqKN
   have hsmul_k : a • k = (a • qK) * (a • vK) := by
@@ -1393,14 +1393,14 @@ public theorem section14_typeP_quotientCharacterInflation_smul_eq_conjugateOnNor
     {Tmax Q V W2 : Subgroup G}
     (hQnormal : (Q.subgroupOf Tmax).Normal)
     (hKnormal : ((Q ⊔ V).subgroupOf Tmax).Normal)
-    (hNinv : IsInvariant (W2.subgroupOf Tmax)
+    (hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax)
       ((Q ⊔ V).subgroupOf Tmax)
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
     letI : K.Normal := hKnormal
     letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1418,7 +1418,7 @@ public theorem section14_typeP_quotientCharacterInflation_smul_eq_conjugateOnNor
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
   letI : K.Normal := hKnormal
   letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1437,14 +1437,14 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_smul_eq
     {Tmax Q V W2 : Subgroup G}
     (hQnormal : (Q.subgroupOf Tmax).Normal)
     (hKnormal : ((Q ⊔ V).subgroupOf Tmax).Normal)
-    (hNinv : IsInvariant (W2.subgroupOf Tmax)
+    (hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax)
       ((Q ⊔ V).subgroupOf Tmax)
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
     letI : K.Normal := hKnormal
     letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1462,7 +1462,7 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_smul_eq
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
   letI : K.Normal := hKnormal
   letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1494,14 +1494,14 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_eq_of_orbitR
     {Tmax Q V W2 : Subgroup G}
     (hQnormal : (Q.subgroupOf Tmax).Normal)
     (hKnormal : ((Q ⊔ V).subgroupOf Tmax).Normal)
-    (hNinv : IsInvariant (W2.subgroupOf Tmax)
+    (hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax)
       ((Q ⊔ V).subgroupOf Tmax)
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax))) :
     let K : Subgroup Tmax := (Q ⊔ V).subgroupOf Tmax
     let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
     letI : K.Normal := hKnormal
     letI : N.Normal := hQnormal.subgroupOf K
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1523,7 +1523,7 @@ public theorem section14_typeP_inducedCF_quotientCharacterInflation_eq_of_orbitR
   let N : Subgroup K := (Q.subgroupOf Tmax).subgroupOf K
   letI : K.Normal := hKnormal
   letI : N.Normal := hQnormal.subgroupOf K
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1548,7 +1548,7 @@ public theorem section14_typeP_orbitRel_of_inducedCF_quotientCharacterInflation_
     {Tmax Q V W2 : Subgroup G}
     (hQnormal : (Q.subgroupOf Tmax).Normal)
     (hKnormal : ((Q ⊔ V).subgroupOf Tmax).Normal)
-    (hNinv : IsInvariant (W2.subgroupOf Tmax)
+    (hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax)
       ((Q ⊔ V).subgroupOf Tmax)
       ((Q.subgroupOf Tmax).subgroupOf ((Q ⊔ V).subgroupOf Tmax)))
     (hTcomp : section12ComplementIn Tmax (Q ⊔ V) W2)
@@ -1561,7 +1561,7 @@ public theorem section14_typeP_orbitRel_of_inducedCF_quotientCharacterInflation_
     letI : K.Normal := hKnormal
     letI : N.Normal := hQnormal.subgroupOf K
     letI : IsMulCommutative (K ⧸ N) := hquotComm
-    letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+    letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
       quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
     letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1586,7 +1586,7 @@ public theorem section14_typeP_orbitRel_of_inducedCF_quotientCharacterInflation_
   letI : K.Normal := hKnormal
   letI : N.Normal := hNnormal
   letI : IsMulCommutative (K ⧸ N) := hquotComm
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=
@@ -1737,9 +1737,9 @@ public theorem section14_theorem_14_9_late_type_T1_calt1_card_source_bridge
     intro x hx
     exact Subgroup.mem_subgroupOf.mpr
       ((le_sup_left : Q ≤ Q ⊔ V) (Subgroup.mem_subgroupOf.mp hx))
-  have hNinv : IsInvariant (W2.subgroupOf Tmax) K N :=
+  have hNinv : IsInvariantSubgroup (W2.subgroupOf Tmax) K N :=
     isInvariant_subgroupOf_of_le_normalizer hW2normK hW2normQ hQleK
-  letI : IsInvariant (W2.subgroupOf Tmax) K N := hNinv
+  letI : IsInvariantSubgroup (W2.subgroupOf Tmax) K N := hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) (K ⧸ N) :=
     quotientMulDistribMulAction (A := W2.subgroupOf Tmax) (G := K) N hNinv
   letI : MulDistribMulAction (W2.subgroupOf Tmax) ((K ⧸ N) →* ℂˣ) :=

@@ -1006,7 +1006,7 @@ private theorem section13_containing_complement_of_solvable_mf
     apply section13_isPiSubgroup_primeSet_compl_of_coprime_card (H := H) (K := Kloc)
     rw [hKloc_card]
     exact hKcop
-  have hKlocInv : IsInvariant Unit L Kloc := by
+  have hKlocInv : IsInvariantSubgroup Unit L Kloc := by
     refine ⟨?_⟩
     intro _ x
     simp [Kloc]

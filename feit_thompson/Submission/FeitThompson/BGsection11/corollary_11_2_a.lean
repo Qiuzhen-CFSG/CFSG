@@ -155,16 +155,16 @@ public theorem section11_le_normalizer_map_of_isInvariant
     {A H : Subgroup G} {K : Subgroup H}
     (hAH : A ≤ Subgroup.normalizer (H : Set G)) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) K →
+    IsInvariantSubgroup (↥A) (↥H) K →
     A ≤ Subgroup.normalizer (K.map H.subtype : Set G) := by
   intro hKinv
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-  letI : IsInvariant (↥A) (↥H) K := hKinv
+  letI : IsInvariantSubgroup (↥A) (↥H) K := hKinv
   refine subgroup_le_normalizer_of_conj_mem (K.map H.subtype) A ?_
   intro a x hx
   rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
   have hyInv : a • y ∈ K :=
-    (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
+    (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥H) (H := K) a y).1 hy
   exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
 
@@ -221,7 +221,7 @@ private theorem section11_isInvariant_subgroupOf_of_le_normalizer
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
     (_hKH : K ≤ H) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
+    IsInvariantSubgroup (↥A) (↥H) (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
   refine ⟨?_⟩
   intro a x
@@ -329,7 +329,7 @@ public theorem corollary_11_2_a
     exfalso
     have : r.val ∣ (1 : ℕ) := by simpa using hr
     exact r.property.not_dvd_one this
-  have hbotInv : IsInvariant (↥A) (↥J) (⊥ : Subgroup J) := by
+  have hbotInv : IsInvariantSubgroup (↥A) (↥J) (⊥ : Subgroup J) := by
     exact isInvariant_of_characteristic (A := ↥A) (G := ↥J) (⊥ : Subgroup J)
   obtain ⟨R0sub, hR0Hall, hR0inv, _hbot_le_R0⟩ :=
     proposition_1_5_b (G := ↥J) (A := ↥A) hsolvJ hcopJ
@@ -366,7 +366,7 @@ public theorem corollary_11_2_a
   have hR0Kπ :
       IsPiSubgroup (G := K) ({q} : Set Nat.Primes) (R0G.subgroupOf K) :=
     section11_isPiSubgroup_subgroupOf hR0Gπ hR0G_le_K
-  have hR0Kinv : IsInvariant (↥A) (↥K) (R0G.subgroupOf K) := by
+  have hR0Kinv : IsInvariantSubgroup (↥A) (↥K) (R0G.subgroupOf K) := by
     simpa using
       section11_isInvariant_subgroupOf_of_le_normalizer
         (A := A) (H := K) (K := R0G) hA_norm_K hA_norm_R0G hR0G_le_K
@@ -401,7 +401,7 @@ public theorem corollary_11_2_a
   have hR0Kgπ :
       IsPiSubgroup (G := Kg) ({q} : Set Nat.Primes) (R0G.subgroupOf Kg) :=
     section11_isPiSubgroup_subgroupOf hR0Gπ hR0G_le_Kg
-  have hR0Kginv : IsInvariant (↥A) (↥Kg) (R0G.subgroupOf Kg) := by
+  have hR0Kginv : IsInvariantSubgroup (↥A) (↥Kg) (R0G.subgroupOf Kg) := by
     simpa using
       section11_isInvariant_subgroupOf_of_le_normalizer
         (A := A) (H := Kg) (K := R0G) hA_norm_Kg hA_norm_R0G hR0G_le_Kg

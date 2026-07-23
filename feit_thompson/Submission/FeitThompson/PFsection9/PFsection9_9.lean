@@ -293,7 +293,7 @@ private theorem theorem_9_9_case_b_H0_isInvariant_U_MF_sec9
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    IsInvariant U MF (H0.subgroupOf MF) := by
+    IsInvariantSubgroup U MF (H0.subgroupOf MF) := by
   dsimp only
   let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
     theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
@@ -2600,7 +2600,7 @@ private theorem theorem_9_9_nonprincipal_linear_character_fixed_U_mem_C_sec9
         (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
           (hH0invU :
             letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-            IsInvariant U MF (H0.subgroupOf MF)) →
+            IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
           (letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
           letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
             quotientMulDistribMulAction (A := U) (G := MF)
@@ -2951,7 +2951,7 @@ private theorem theorem_9_9_fixed_nonMF_HC_constituent_U_component_mem_C_sec9
         _hUnil, _hW1normU, _hcompDU, _hMFnotcyc, _hsecond, _hfitEq,
         _hfitLeD, _hW2le, _hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
     exact hUleD.trans section12_ambientDerivedSubgroup_le
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     dsimp [H0MF]
     exact subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF U H0
       hMFleM hUleM hH0normalM hUnormMF
@@ -3340,7 +3340,7 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -3359,7 +3359,7 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
   have hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
     theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5260,7 +5260,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_smul_eq_co
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5303,7 +5303,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_smul_eq_co
     theorem_9_9_case_b_U_le_normalizer_MF_sec9
       M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9
         M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
@@ -5467,7 +5467,7 @@ private theorem theorem_9_9_C_bot_orbitRel_of_intermediate_eq_sec9
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5494,7 +5494,7 @@ private theorem theorem_9_9_C_bot_orbitRel_of_intermediate_eq_sec9
     theorem_9_9_case_b_U_le_normalizer_MF_sec9
       M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9
         M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
@@ -5646,7 +5646,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_smul_
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5672,7 +5672,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_smul_
     theorem_9_9_case_b_U_le_normalizer_MF_sec9
       M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9
         M MF U W1 W2 H0 (⊥ : Subgroup G) p q u hcase
@@ -5764,7 +5764,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_induced_eq_of_orbitRel
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5789,7 +5789,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_induced_eq_of_orbitRel
   have hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
     theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5818,7 +5818,7 @@ private theorem theorem_9_9_C_bot_orbitRel_of_quotientLinearCharacter_induced_eq
     let hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
       theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    let hH0invU : IsInvariant U MF H0MF := by
+    let hH0invU : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using
         theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5845,7 +5845,7 @@ private theorem theorem_9_9_C_bot_orbitRel_of_quotientLinearCharacter_induced_eq
   have hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
     theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
@@ -5886,7 +5886,7 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_le_SH0
   have hUnormMF : U ≤ Subgroup.normalizer (MF : Set G) :=
     theorem_9_9_case_b_U_le_normalizer_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF H0MF := by
+  have hH0invU : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using
       theorem_9_9_case_b_H0_isInvariant_U_MF_sec9 M MF U W1 W2 H0 C p q u hcase
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=

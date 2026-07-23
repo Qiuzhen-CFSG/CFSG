@@ -222,7 +222,7 @@ private theorem section14_7_exists_hall_kappa_containing_kstar
         Nat.card ((section14KStar M K).subgroupOf Mi) = Nat.card (section14KStar M K) :=
       section12_card_subgroupOf_eq hKstarLeMi
     exact hKstarPi p (by simpa [hcard] using hp)
-  have hKstarSubInv : IsInvariant Unit Mi ((section14KStar M K).subgroupOf Mi) := by
+  have hKstarSubInv : IsInvariantSubgroup Unit Mi ((section14KStar M K).subgroupOf Mi) := by
     refine ⟨?_⟩
     intro _ y
     simp
@@ -829,7 +829,7 @@ private theorem section14_7_kistar_le_k_of_xstar
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hKistarSubInv : IsInvariant Unit M (Kistar.subgroupOf M) := by
+  have hKistarSubInv : IsInvariantSubgroup Unit M (Kistar.subgroupOf M) := by
     refine ⟨?_⟩
     intro _ y
     simp [Kistar]
@@ -5264,7 +5264,7 @@ private theorem section14_7_partner_hall_sigma
         Nat.card ((section14KStar M K).subgroupOf Mi) = Nat.card (section14KStar M K) :=
       section12_card_subgroupOf_eq hKstarLeMi
     exact hKstarSigma p (by simpa [hcard] using hp)
-  have hKstarSubInv : IsInvariant Unit Mi ((section14KStar M K).subgroupOf Mi) := by
+  have hKstarSubInv : IsInvariantSubgroup Unit Mi ((section14KStar M K).subgroupOf Mi) := by
     refine ⟨?_⟩
     intro _ y
     simp
@@ -6789,7 +6789,7 @@ public theorem proposition_14_2_a_of_fixed_sigma_complement
       hKHallM.p_in_pi_of_p_dvd_card p
         (by simpa [KsubE, hcardE, hcardM] using hpKsubE)
     exact Or.inl (hκτ1 hpκ)
-  have hKsubE_inv : IsInvariant Unit E KsubE := by
+  have hKsubE_inv : IsInvariantSubgroup Unit E KsubE := by
     refine ⟨?_⟩
     intro _ x
     simp [KsubE]
@@ -6829,7 +6829,7 @@ public theorem proposition_14_2_a_of_fixed_sigma_complement
       hKHallM.p_in_pi_of_p_dvd_card p
         (by simpa [KsubE₁₂, hcardE₁₂, hcardM] using hpKsubE₁₂)
     exact hκτ1 hpκ
-  have hKsubE₁₂_inv : IsInvariant Unit E₁₂ KsubE₁₂ := by
+  have hKsubE₁₂_inv : IsInvariantSubgroup Unit E₁₂ KsubE₁₂ := by
     refine ⟨?_⟩
     intro _ x
     simp [KsubE₁₂]

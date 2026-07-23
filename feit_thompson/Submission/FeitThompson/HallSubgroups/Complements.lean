@@ -165,7 +165,7 @@ open MulOpposite
 open MulAction
 
 variable (H : Subgroup G)
-variable [hH : IsInvariant A G H]
+variable [hH : IsInvariantSubgroup A G H]
 
 local instance : MulAction.QuotientAction A H :=
   quotientAction_of_isInvariant (A := A) H hH
@@ -379,7 +379,7 @@ public theorem exists_invariant_complement'
     [Finite G] [Finite A]
     (hHc : Nat.Coprime (Nat.card H) H.index)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card H)) :
-    ∃ K : Subgroup G, IsComplement' H K ∧ IsInvariant A G K := by
+    ∃ K : Subgroup G, IsComplement' H K ∧ IsInvariantSubgroup A G K := by
   classical
   -- Make the relevant actions explicit to avoid instance ambiguity.
   letI : MulAction.QuotientAction A H := quotientAction_of_isInvariant (A := A) H hH

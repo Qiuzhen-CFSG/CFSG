@@ -1252,7 +1252,7 @@ public theorem section14_exists_elementCentralizerIn_of_BG116
       refine ⟨k, ?_⟩
       exact Subtype.ext (congrArg Subtype.val hk)
     haveI : Fact (IsPGroup r (↥R0)) := ⟨hR0p'⟩
-    have hR0noncyc' : ¬ @IsCyclic (↥R0) ZPow.toPow := by
+    have hR0noncyc' : ¬ IsCyclic (↥R0) := by
       intro h
       apply hR0noncyc
       rcases h with ⟨a, ha⟩

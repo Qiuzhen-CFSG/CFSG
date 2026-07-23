@@ -864,9 +864,9 @@ private theorem hypothesis_13_1_typePFourSixTableInducedTransport_source
           ωsec (rowB ⟨i, hi⟩) (colB ⟨j, hj⟩) -
             ωsec i0 (colB ⟨j, hj⟩) := by
       dsimp [rowB, colB, iF, jF]
-      have hfI0' : fI (0 : Fin (Nat.card ↥Wleft)) = i0 := by simpa using hfI0
+      have hfI0' : fI (⟨0, hq0⟩ : Fin (Nat.card ↥Wleft)) = i0 := by simpa using hfI0
       rw [hωTable ⟨i, hi⟩ ⟨j, hj⟩,
-        hωTable 0 ⟨j, hj⟩, hfI0']
+        hωTable ⟨0, hq0⟩ ⟨j, hj⟩, hfI0']
     calc
       Section1.inducedCF ((Wleft ⊔ Wright).subgroupOf M)
           (Section1.subgroupOfClassFunction (T := M) (ω i j - ω 0 j)) =
@@ -5299,7 +5299,7 @@ private theorem hypothesis_13_1_typeP_reducibleFamilyMember_to_fitting
     rw [Subgroup.bot_subgroupOf]
     infer_instance
   have hbotInvariant :
-      IsInvariant U P ((⊥ : Subgroup G).subgroupOf P) := by
+      IsInvariantSubgroup U P ((⊥ : Subgroup G).subgroupOf P) := by
     simpa [Subgroup.bot_subgroupOf] using
       (isInvariant_of_characteristic (A := U) (G := P) (⊥ : Subgroup P))
   rcases Section9.exists_quotientCentralizerIn_normal_of_invariant_sec9
@@ -7357,7 +7357,7 @@ private theorem hypothesis_13_1_W1_card_dvd_quotient_sub_one
         hW1normU hW1normP
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
   letI : (C.subgroupOf U).Normal := hnormal
-  have hCinv : IsInvariant W1 U (C.subgroupOf U) :=
+  have hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U) :=
     isInvariant_subgroupOf_of_le_normalizer hW1normU hW1normC hCU
   letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
     quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv

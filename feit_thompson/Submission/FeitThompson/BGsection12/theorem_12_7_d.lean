@@ -243,7 +243,7 @@ public theorem section12_E1_invariant_CA_msigma_subgroupOf_E2_pre
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
     letI : Subgroup.Normalizes E₁ E₂ :=
       ⟨section12_E1_le_normalizer_E2_pre (G := G) (M := M) hM hE⟩
-    IsInvariant E₁ E₂
+    IsInvariantSubgroup E₁ E₂
       ((subgroupCentralizerIn A (section10Msigma M)).subgroupOf E₂) := by
   classical
   let C : Subgroup G := subgroupCentralizerIn A (section10Msigma M)
@@ -301,26 +301,26 @@ public theorem section12_CA_msigma_complement_in_E2_pre
   haveI : Fact (IsPGroup p.val E₂) := ⟨hE₂p⟩
   letI : Subgroup.Normalizes E₁ E₂ :=
     ⟨section12_E1_le_normalizer_E2_pre (G := G) (M := M) hM hE⟩
-  have hΦinv : IsInvariant E₁ E₂ Φ := by
+  have hΦinv : IsInvariantSubgroup E₁ E₂ Φ := by
     simpa [Φ] using isInvariant_of_characteristic (A := E₁) (G := E₂) (frattini E₂)
-  letI : IsInvariant E₁ E₂ Φ := hΦinv
+  letI : IsInvariantSubgroup E₁ E₂ Φ := hΦinv
   haveI : Φ.Normal := by
     simpa [Φ] using (inferInstance : (frattini E₂).Normal)
   letI : MulDistribMulAction E₁ (E₂ ⧸ Φ) :=
     quotientMulDistribMulAction (A := E₁) (G := E₂) Φ hΦinv
-  have hC₂inv : IsInvariant E₁ E₂ C₂ := by
+  have hC₂inv : IsInvariantSubgroup E₁ E₂ C₂ := by
     simpa [C₂, C] using
       section12_E1_invariant_CA_msigma_subgroupOf_E2_pre
         (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
         hM hE hp hA
-  letI : IsInvariant E₁ E₂ C₂ := hC₂inv
+  letI : IsInvariantSubgroup E₁ E₂ C₂ := hC₂inv
   let B : Subgroup (E₂ ⧸ Φ) := C₂.map q
-  have hBinv : IsInvariant E₁ (E₂ ⧸ Φ) B := by
+  have hBinv : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) B := by
     simpa [B, q] using
       isInvariant_map_quotient
         (A := E₁) (G := E₂) (N := Φ) (H := C₂)
-  letI : IsInvariant E₁ (E₂ ⧸ Φ) B := hBinv
+  letI : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) B := hBinv
   have hVelem : IsElementaryAbelian p.val (E₂ ⧸ Φ) := by
     simpa [Φ] using isElementaryAbelian_quotient_frattini (R := E₂) (p := p.val)
   letI : IsElementaryAbelian p.val (E₂ ⧸ Φ) := hVelem
@@ -332,11 +332,11 @@ public theorem section12_CA_msigma_complement_in_E2_pre
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
         hM hE hp hA) B
   let P₀sub : Subgroup E₂ := Q.comap q
-  letI : IsInvariant E₁ (E₂ ⧸ Φ) Q := hQinv
+  letI : IsInvariantSubgroup E₁ (E₂ ⧸ Φ) Q := hQinv
   have hqcompat : ∀ a : E₁, ∀ g : E₂, a • q g = q (a • g) := by
     intro a g
     simp [q, MulAction.Quotient.smul_mk]
-  have hP₀subInv : IsInvariant E₁ E₂ P₀sub := by
+  have hP₀subInv : IsInvariantSubgroup E₁ E₂ P₀sub := by
     simpa [P₀sub, q] using
       isInvariant_comap_quotient
         (A := E₁) (G := E₂) (N := Φ) (H := Q) hqcompat
@@ -452,7 +452,7 @@ public theorem section12_CA_msigma_complement_in_E2_pre
         (a : G) * x * (a : G)⁻¹ ∈ P₀ := by
       rcases Subgroup.mem_map.mp hx with ⟨y, hyP₀sub, rfl⟩
       refine Subgroup.mem_map.mpr ⟨a • y, ?_, ?_⟩
-      · exact (IsInvariant.invariant (A := E₁) (G := E₂) (H := P₀sub) a y).1 hyP₀sub
+      · exact (IsInvariantSubgroup.invariant (A := E₁) (G := E₂) (H := P₀sub) a y).1 hyP₀sub
       · simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
     intro e he
     let e₁ : E₁ := ⟨e, he⟩

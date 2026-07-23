@@ -1763,7 +1763,7 @@ private theorem section9_c95_pgroup_centralizes_of_centralizes_chiefFactors
     by_cases hi : i ≤ r
     · simpa [Gi, hi] using Subgroup.Normal.subgroupOf (hf_norm i hi) K_I
     · simp [Gi, hi]
-  have hGi_inv : ∀ i, IsInvariant R_I K_I (Gi i) := by
+  have hGi_inv : ∀ i, IsInvariantSubgroup R_I K_I (Gi i) := by
     intro i
     by_cases hi : i ≤ r
     · have hR_norm_fi : R_I ≤ Subgroup.normalizer (f i : Set I) := by

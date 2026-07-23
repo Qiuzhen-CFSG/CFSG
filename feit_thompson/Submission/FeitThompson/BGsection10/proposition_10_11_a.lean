@@ -70,7 +70,7 @@ private theorem section10_exists_hall_compl_sigma_containing
     have hcard : Nat.card Ksub = Nat.card K :=
       Nat.card_congr (Subgroup.subgroupOfEquivOfLe (H := K) (K := M) hKle).toEquiv
     exact hKσ p (by rwa [hcard] at hp)
-  have hKsub_inv : IsInvariant PUnit.{1} M Ksub := by
+  have hKsub_inv : IsInvariantSubgroup PUnit.{1} M Ksub := by
     refine ⟨?_⟩
     intro a x
     simp

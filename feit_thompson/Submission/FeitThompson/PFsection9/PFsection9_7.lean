@@ -700,7 +700,7 @@ public noncomputable def theorem_9_7_successorTransportFactorAction_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -718,7 +718,7 @@ public theorem theorem_9_7_successorTransportFactorAction_apply_mk_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -741,7 +741,7 @@ private theorem theorem_9_7_successorTransportFactorAction_range_card_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -773,7 +773,7 @@ private theorem theorem_9_7_successorTransportFactorAction_range_isCyclic_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -801,7 +801,7 @@ private noncomputable def theorem_9_7_successorTransportFactorAction_rangeEquiv_
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -834,7 +834,7 @@ private theorem theorem_9_7_successorTransportFactorAction_rangeEquiv_apply_mk_s
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -855,7 +855,7 @@ private theorem theorem_9_7_successorTransportFactorAction_rangeEdge_apply_mk_se
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (e : Q ≃* R)
@@ -928,7 +928,7 @@ private theorem theorem_9_7_generator_quotient_action_pow_eq_one_sec9
     {U W1 C : Subgroup G}
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     {q : ℕ} (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤) :
@@ -946,7 +946,7 @@ private theorem theorem_9_7_generator_MF_quotient_action_inv_pow_eq_one_sec9
     {MF H0 W1 : Subgroup G}
     [hW1normMF : Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     {q : ℕ} (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤) :
@@ -1192,7 +1192,7 @@ private theorem theorem_9_7_quotient_cardinality_from_chief_data_sec9
 private theorem theorem_9_7_W1_fixedPointSubgroup_card_eq_source_subtype_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
     (MF W1 H0 : Subgroup G) [Subgroup.Normalizes W1 MF]
-    (hH0_inv : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0_inv : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (hnormal : (H0.subgroupOf MF).Normal) :
     (letI : (H0.subgroupOf MF).Normal := hnormal;
       letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
@@ -1260,7 +1260,7 @@ private theorem theorem_9_7_W1_fixedPointSubgroup_ne_top_of_chief_data_sec9
             (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) →
               (hH0invW1 :
                 letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-                IsInvariant W1 MF (H0.subgroupOf MF)) →
+                IsInvariantSubgroup W1 MF (H0.subgroupOf MF)) →
               (hbarCard :
                 letI : (H0.subgroupOf MF).Normal := hnormalH0
                 Nat.card (MF ⧸ H0.subgroupOf MF) = p ^ q) →
@@ -1712,7 +1712,7 @@ public theorem theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) :
     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-    IsInvariant W1 U (C.subgroupOf U) := by
+    IsInvariantSubgroup W1 U (C.subgroupOf U) := by
   classical
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
   rcases hpData with
@@ -1778,7 +1778,7 @@ public theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_of_isInvariant_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) :
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) :
     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
     letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
       quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
@@ -1824,7 +1824,7 @@ private theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_sec9
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) :
     ∃ hW1normU : W1 ≤ Subgroup.normalizer (U : Set G),
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      ∃ hCinv : IsInvariant W1 U (C.subgroupOf U),
+      ∃ hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U),
         letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
           quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
         fixedPointSubgroup W1 (U ⧸ C.subgroupOf U) = ⊥ := by
@@ -1833,7 +1833,7 @@ private theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_sec9
     theorem_9_7_W1_le_normalizer_U_of_hypothesis_9_2_sec9 h92
   refine ⟨hW1normU, ?_⟩
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-  have hCinv : IsInvariant W1 U (C.subgroupOf U) :=
+  have hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U) :=
     theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9 h92 hpData hC
       hW1normU hW1normMF
   refine ⟨hCinv, ?_⟩
@@ -1857,7 +1857,7 @@ public theorem theorem_9_7_mem_C_of_barU_fixed_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U))
+      IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hfixedBot :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
       letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
@@ -1893,7 +1893,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -1912,7 +1912,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -1927,7 +1927,7 @@ private theorem theorem_9_7_irreducible_representation_of_quotientIrreducible_se
       eq_bot_or_eq_top := ?_ }
   intro S
   let N : Subgroup (MF ⧸ H0MF) := S.toSubmodule.toAddSubgroup.toSubgroup'
-  have hN_inv : IsInvariant U (MF ⧸ H0MF) N := by
+  have hN_inv : IsInvariantSubgroup U (MF ⧸ H0MF) N := by
     have hmap_mem (a : U) {x : MF ⧸ H0MF} (hx : x ∈ N) : a • x ∈ N := by
       change Additive.ofMul (a • x) ∈ S.toSubmodule
       have hx' : Additive.ofMul x ∈ S.toSubmodule := by
@@ -2013,7 +2013,7 @@ private theorem theorem_9_7_generator_fixed_coset_of_smul_div_mem_C_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U))
+      IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1) (x : U)
     (hxdiv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -2061,7 +2061,7 @@ public theorem theorem_9_7_quotient_action_fixed_to_commutator_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (x : U)
     (hfix :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
@@ -2076,7 +2076,7 @@ public theorem theorem_9_7_quotient_action_fixed_to_commutator_sec9
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -2101,7 +2101,7 @@ private theorem theorem_9_7_quotient_action_fixed_of_commutator_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (x : U)
     (hcomm : ∀ h : G, h ∈ MF → ⁅(x : G), h⁆ ∈ H0) :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
@@ -2114,7 +2114,7 @@ private theorem theorem_9_7_quotient_action_fixed_of_commutator_sec9
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -2138,7 +2138,7 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     {Q : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (x : U)
     (hcent :
@@ -2153,7 +2153,7 @@ private theorem
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -2238,7 +2238,7 @@ private theorem theorem_9_7_quotient_action_fixed_of_iSup_factors_fixed_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     {q : ℕ}
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hSup : iSup H = ⊤)
@@ -2394,7 +2394,7 @@ private theorem theorem_9_7_successorTransportFactorAction_action_field_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (hQR : quotientSubgroupConjugateByElement MF H0 Q R (w0 : G))
@@ -2525,7 +2525,7 @@ public theorem theorem_9_7_successorTransportFactorAction_eq_of_action_field_sec
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (hQR : quotientSubgroupConjugateByElement MF H0 Q R (w0 : G))
@@ -2578,7 +2578,7 @@ private theorem theorem_9_7_successorFactorAction_transport_eq_of_factor_data_se
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)} {a : ℕ}
     (hQR : quotientSubgroupConjugateByElement MF H0 Q R (w0 : G))
@@ -2705,7 +2705,7 @@ private theorem
     {MF H0 A : Subgroup G}
     [Subgroup.Normalizes A MF]
     [hnormal : (H0.subgroupOf MF).Normal]
-    (hH0inv : IsInvariant A MF (H0.subgroupOf MF))
+    (hH0inv : IsInvariantSubgroup A MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (a : A) :
     (letI : MulAction.QuotientAction A (H0.subgroupOf MF) :=
@@ -3248,8 +3248,8 @@ private theorem
     [Subgroup.Normalizes U MF] [Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [Subgroup.Normalizes W1 U]
-    (hH0invU : IsInvariant U MF (H0.subgroupOf MF))
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
     (w : W1) :
@@ -3339,7 +3339,7 @@ private theorem
     apply Subtype.ext
     simp [u', Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
     group
-  have hQw_inv : IsInvariant U (MF ⧸ H0MF) Qw := by
+  have hQw_inv : IsInvariantSubgroup U (MF ⧸ H0MF) Qw := by
     constructor
     intro u x
     constructor
@@ -3358,8 +3358,8 @@ private theorem
     [Subgroup.Normalizes U MF] [Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [Subgroup.Normalizes W1 U]
-    (hH0invU : IsInvariant U MF (H0.subgroupOf MF))
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
     (w : W1) :
@@ -3383,8 +3383,8 @@ private theorem theorem_9_7_minimal_of_W1_conjugate_minimal_sec9
     [Subgroup.Normalizes U MF] [Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [Subgroup.Normalizes W1 U]
-    (hH0invU : IsInvariant U MF (H0.subgroupOf MF))
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (hQminimal :
       ∀ T : Subgroup (MF ⧸ H0.subgroupOf MF),
@@ -3660,7 +3660,7 @@ private theorem
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hqpos : 0 < q)
@@ -3729,7 +3729,7 @@ private theorem
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hqpos : 0 < q)
@@ -3781,7 +3781,7 @@ private theorem
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w0 : W1)
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hqpos : 0 < q)
@@ -4300,7 +4300,7 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q) :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
@@ -4333,7 +4333,7 @@ private theorem
   let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
       Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-  have hQinv : IsInvariant U (MF ⧸ H0.subgroupOf MF) Q :=
+  have hQinv : IsInvariantSubgroup U (MF ⧸ H0.subgroupOf MF) Q :=
     isInvariant_of_quotientSubgroupNormalizedBy_sec9
       (MF := MF) (H0 := H0) (A := U) hH0invU Q hQnorm
   rw [Representation.mem_invtSubmodule]
@@ -4343,7 +4343,7 @@ private theorem
   have hxQ : Additive.toMul x ∈ Q := by
     simpa [η] using hx
   simpa [ρ, η] using
-    (IsInvariant.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
+    (IsInvariantSubgroup.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
       (H := Q) u (Additive.toMul x)).1 hxQ
 
 private theorem
@@ -4356,7 +4356,7 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q) :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
@@ -4408,7 +4408,7 @@ private theorem
     (Q : Subgroup V)
     (hQneBot : Q ≠ ⊥)
     (hQminimal :
-      ∀ R : Subgroup V, IsInvariant A V R → R ≠ ⊥ → R ≤ Q → Q ≤ R)
+      ∀ R : Subgroup V, IsInvariantSubgroup A V R → R ≠ ⊥ → R ≤ Q → Q ≤ R)
     (S : Subrepresentation
       (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)))
     (hS :
@@ -4444,7 +4444,7 @@ private theorem
     · exact hTbot
     · exfalso
       let R : Subgroup V := T.toSubmodule.toAddSubgroup.toSubgroup'
-      have hRinv : IsInvariant A V R := by
+      have hRinv : IsInvariantSubgroup A V R := by
         have hmap_mem (a : A) {x : V} (hx : x ∈ R) : a • x ∈ R := by
           change Additive.ofMul (a • x) ∈ T.toSubmodule
           have hx' : Additive.ofMul x ∈ T.toSubmodule := by
@@ -4574,7 +4574,7 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
     (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
     (hQcard : Nat.card Q = p) :
@@ -4583,17 +4583,17 @@ private theorem
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulAction.QuotientAction U H0MF :=
     quotientAction_of_isInvariant (A := U) (G := MF) H0MF hH0invU'
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
-  have hQinv : IsInvariant U (MF ⧸ H0MF) Q := by
+  have hQinv : IsInvariantSubgroup U (MF ⧸ H0MF) Q := by
     simpa [H0MF] using
       (isInvariant_of_quotientSubgroupNormalizedBy_sec9
         (MF := MF) (H0 := H0) (A := U) hH0invU' Q hQnorm)
-  letI : IsInvariant U (MF ⧸ H0MF) Q := hQinv
+  letI : IsInvariantSubgroup U (MF ⧸ H0MF) Q := hQinv
   let φU : U →* MulAut Q := MulDistribMulAction.toMulAut U Q
   have hCker : C.subgroupOf U ≤ φU.ker := by
     intro c _hc
@@ -4773,11 +4773,11 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (w0 : W1)
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hHcard : ∀ i, Nat.card (H i) = p)
@@ -5093,8 +5093,8 @@ private theorem theorem_9_7_minimal_of_ordered_generator_orbit_sec9
     [Subgroup.Normalizes U MF] [Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [Subgroup.Normalizes W1 U]
-    (hH0invU : IsInvariant U MF (H0.subgroupOf MF))
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     {q : ℕ} (hqpos : 0 < q)
     (w0 : W1)
     {Q : Subgroup (MF ⧸ H0.subgroupOf MF)}
@@ -5159,8 +5159,8 @@ private theorem theorem_9_7_pairwise_disjoint_of_minimal_generator_orbit_sec9
     [Subgroup.Normalizes U MF] [Subgroup.Normalizes W1 MF]
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [Subgroup.Normalizes W1 U]
-    (hH0invU : IsInvariant U MF (H0.subgroupOf MF))
-    (hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF))
+    (hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF))
+    (hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     {q : ℕ}
     (hqprime : Nat.Prime q)
     (hW1card : Nat.card W1 = q)
@@ -5421,11 +5421,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (_hW1card : Nat.card W1 = q)
     (_hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -5497,7 +5497,7 @@ private theorem
       hH0invU hH0invW1 hqprime.pos w0 hQminimal H hHzero_eq_Q hsucc
   have hminimalInv :
       ∀ i : Fin q, ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        IsInvariant U (MF ⧸ H0.subgroupOf MF) R →
+        IsInvariantSubgroup U (MF ⧸ H0.subgroupOf MF) R →
           R ≠ ⊥ → R ≤ H i → H i ≤ R := by
     intro i R hRinv hRne hRle
     have hRnorm : quotientSubgroupNormalizedBy MF H0 U R := by
@@ -5653,11 +5653,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -5736,11 +5736,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -5824,11 +5824,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -5905,11 +5905,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -5984,11 +5984,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6065,11 +6065,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6141,11 +6141,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6213,11 +6213,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6284,11 +6284,11 @@ private theorem
       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
       (hH0invU :
         letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-        IsInvariant U MF (H0.subgroupOf MF))
+        IsInvariantSubgroup U MF (H0.subgroupOf MF))
       (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
       (hH0invW1 :
         letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-        IsInvariant W1 MF (H0.subgroupOf MF))
+        IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
       (w0 : W1)
       (hW1card : Nat.card W1 = q)
       (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6392,11 +6392,11 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6474,15 +6474,15 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6559,15 +6559,15 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6637,15 +6637,15 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6710,15 +6710,15 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -6974,15 +6974,15 @@ private theorem
     (hbarComm :
       letI : (C.subgroupOf U).Normal := hnormalC
       IsMulCommutative (U ⧸ C.subgroupOf U))
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (w0 : W1)
     (hW1card : Nat.card W1 = q)
     (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -7027,15 +7027,15 @@ private theorem
       (hbarComm :
         letI : (C.subgroupOf U).Normal := hnormalC
         IsMulCommutative (U ⧸ C.subgroupOf U))
-      (hCinv : IsInvariant W1 U (C.subgroupOf U))
+      (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
       (hH0invU :
         letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-        IsInvariant U MF (H0.subgroupOf MF))
+        IsInvariantSubgroup U MF (H0.subgroupOf MF))
       (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
       (hH0invW1 :
         letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-        IsInvariant W1 MF (H0.subgroupOf MF))
+        IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
       (w0 : W1)
       (hW1card : Nat.card W1 = q)
       (hw0gen : Subgroup.zpowers w0 = ⊤)
@@ -7092,14 +7092,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7143,7 +7143,7 @@ private theorem
     exact le_sup_right.trans hUW1normMF
   have hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF) := by
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF) := by
     letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
     rcases hpData with
       ⟨_hH0leMF, hMFleM, hH0normalM, _hH0normalMF, _hH0lt, _helem,
@@ -7190,14 +7190,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7267,14 +7267,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7393,14 +7393,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7498,14 +7498,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7721,7 +7721,7 @@ public theorem theorem_9_7_orderedCaseAComponentTransitionData_of_case_a_sec9
     exact le_sup_left.trans hUW1normMF
   have hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF) := by
+      IsInvariantSubgroup U MF (H0.subgroupOf MF) := by
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
     have hUleM : U ≤ M := by
       rcases h92.typePDefinitionData with
@@ -7742,7 +7742,7 @@ public theorem theorem_9_7_orderedCaseAComponentTransitionData_of_case_a_sec9
     theorem_9_7_W1_le_normalizer_MF_of_hypothesis_9_2_sec9 h92
   have hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U) := by
+      IsInvariantSubgroup W1 U (C.subgroupOf U) := by
     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
     exact theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9 h92 hpDataFull hC
       hW1normU hW1normMF
@@ -7830,14 +7830,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -7962,14 +7962,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8088,14 +8088,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8207,14 +8207,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8310,14 +8310,14 @@ private theorem
                     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                     (hH0invU :
                       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                      IsInvariant U MF (H0.subgroupOf MF)) →
+                      IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                     (hnormalC : (C.subgroupOf U).Normal) →
                       (letI : (C.subgroupOf U).Normal := hnormalC
                       IsMulCommutative (U ⧸ C.subgroupOf U)) →
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8418,7 +8418,7 @@ private theorem
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8480,7 +8480,7 @@ private theorem
     ⟨_hH0MF_hp, hMFM_hp, hH0normalM_hp, _hH0normalMF_hp, _hH0lt_hp,
       _hbarElemRaw, _htypeIIIIVData_hp⟩
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU : IsInvariant U MF (H0.subgroupOf MF) :=
+  have hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF) :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF U H0
       hMFM_hp hUleM hH0normalM_hp hUnormMF
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8526,7 +8526,7 @@ private theorem
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8614,7 +8614,7 @@ private theorem
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                     (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     (w0 : W1) →
                     (hw0gen : Subgroup.zpowers w0 = ⊤) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -8703,7 +8703,7 @@ private theorem
                     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                       (hCinv :
                         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                        IsInvariant W1 U (C.subgroupOf U)) →
+                        IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                     letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
                     letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
                       quotientMulDistribMulAction (A := W1) (G := U)
@@ -8836,7 +8836,7 @@ public theorem
     theorem_9_7_W1_le_normalizer_MF_of_hypothesis_9_2_sec9 h92
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-  have hCinv : IsInvariant W1 U (C.subgroupOf U) :=
+  have hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U) :=
     theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9 h92 hpData hC
       hW1normU hW1normMF
   letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
@@ -9261,7 +9261,7 @@ private def theorem_9_7_schurEndFieldData_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) : Prop :=
@@ -9291,7 +9291,7 @@ private def theorem_9_7_schurEndFieldFullData_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) : Prop :=
@@ -9313,7 +9313,7 @@ private theorem theorem_9_7_schurEndFieldData_of_irreducible_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9406,7 +9406,7 @@ private theorem theorem_9_7_schurEndField_card_eq_prime_or_full_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9477,7 +9477,7 @@ private theorem theorem_9_7_schurEndField_card_finrank_alternative_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9561,7 +9561,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_le_elementary_actio
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9579,7 +9579,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_le_elementary_actio
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -9622,7 +9622,7 @@ private theorem theorem_9_7_elementary_action_ker_le_quotientCentralizerIn_subgr
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9639,7 +9639,7 @@ private theorem theorem_9_7_elementary_action_ker_le_quotientCentralizerIn_subgr
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -9722,7 +9722,7 @@ private theorem theorem_9_7_quotientCentralizerIn_subgroupOf_eq_endFieldRep_ker_
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9771,7 +9771,7 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0inv :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hbarElem :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
@@ -9937,7 +9937,7 @@ private def theorem_9_7_schurFieldHomRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -9984,7 +9984,7 @@ private def theorem_9_7_schurFieldHomCompatibilityRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -10029,7 +10029,7 @@ private def theorem_9_7_schurFieldHomCompatibilityNoninjectiveRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -10073,7 +10073,7 @@ private def theorem_9_7_schurFieldHomCompatibilityAdditiveActionRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -10134,7 +10134,7 @@ private def theorem_9_7_schurFieldCoordinateAdditiveActionRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -10183,7 +10183,7 @@ private def theorem_9_7_schurFieldCoordinateAdditiveActionNoVectorRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -10230,7 +10230,7 @@ private def theorem_9_7_schurFieldCoordinateAdditiveActionUData_sec9
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF)) : Prop :=
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
@@ -10266,7 +10266,7 @@ private noncomputable def theorem_9_7_schurQuotientWAddEquiv_sec9
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (F : Type u) [AddCommGroup F]
     (φHadd : Additive (MF ⧸ H0.subgroupOf MF) ≃+ F) :
     W1 → F ≃+ F := by
@@ -10288,7 +10288,7 @@ private theorem theorem_9_7_schurQuotientWAddEquiv_action_sec9
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (F : Type u) [AddCommGroup F]
     (φHadd : Additive (MF ⧸ H0.subgroupOf MF) ≃+ F) :
     letI : (H0.subgroupOf MF).Normal := hnormalH0
@@ -10440,16 +10440,16 @@ private theorem theorem_9_7_schurQuotientWAddEquiv_unit_compat_of_fixed_one_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hnormalC : (C.subgroupOf U).Normal)
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U))
+      IsInvariantSubgroup W1 U (C.subgroupOf U))
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (F : Type u) [Field F]
     (Ustar : Subgroup Fˣ)
     (φHadd : Additive (MF ⧸ H0.subgroupOf MF) ≃+ F)
@@ -10632,7 +10632,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -10665,11 +10665,11 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                             (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) →
                             (hH0invW1 :
                               letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-                              IsInvariant W1 MF (H0.subgroupOf MF)) →
+                              IsInvariantSubgroup W1 MF (H0.subgroupOf MF)) →
                             ∀ F : Type u, ∀ fieldInst : Field F,
                               ∀ fintypeInst : Fintype F,
                               letI : Field F := fieldInst
@@ -10730,7 +10730,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -10763,11 +10763,11 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                             (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) →
                             (hH0invW1 :
                               letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-                              IsInvariant W1 MF (H0.subgroupOf MF)) →
+                              IsInvariantSubgroup W1 MF (H0.subgroupOf MF)) →
                             ∀ F : Type u, ∀ fieldInst : Field F,
                               ∀ fintypeInst : Fintype F,
                               letI : Field F := fieldInst
@@ -10883,7 +10883,7 @@ private theorem theorem_9_7_W2_image_prime_field_of_fixed_generator_sec9
     (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
     (hH0invW1 :
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
+      IsInvariantSubgroup W1 MF (H0.subgroupOf MF))
     (hfixedCard :
       letI : (H0.subgroupOf MF).Normal := hnormalH0
       letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
@@ -10977,7 +10977,7 @@ private def theorem_9_7_schurFieldHomCompatibilityAdditiveRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -11024,7 +11024,7 @@ private def theorem_9_7_schurFieldHomCompatibilityPointwiseRawData_sec9
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U)) : Prop :=
+      IsInvariantSubgroup W1 U (C.subgroupOf U)) : Prop :=
   letI : (H0.subgroupOf MF).Normal := hnormalH0
   letI : (C.subgroupOf U).Normal := hnormalC
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -11078,7 +11078,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -11111,11 +11111,11 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                             (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) →
                             (hH0invW1 :
                               letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-                              IsInvariant W1 MF (H0.subgroupOf MF)) →
+                              IsInvariantSubgroup W1 MF (H0.subgroupOf MF)) →
                             theorem_9_7_schurFieldCoordinateAdditiveActionUData_sec9
                               MF H0 U C W1 hnormalH0 hnormalC hW1normMF
                               hH0invW1 →
@@ -11363,7 +11363,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -11420,7 +11420,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldCoordinateAdditiveActionNoVectorRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -11481,7 +11481,7 @@ private theorem
   have hH0normalM : (H0.subgroupOf M).Normal := by
     rcases hp96 with ⟨_hp, _hp_eq, hpData, _h96⟩
     exact hpData.2.2.1
-  have hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
+  have hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF) :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF W1 H0
       hMFleM hW1leM hH0normalM hW1normMF
   letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
@@ -11712,7 +11712,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -11782,7 +11782,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldCoordinateAdditiveActionNoVectorRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -11820,7 +11820,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -11870,7 +11870,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldCoordinateAdditiveActionNoVectorRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -11952,7 +11952,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12002,7 +12002,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldCoordinateAdditiveActionRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12044,7 +12044,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12094,7 +12094,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                             (hCinv :
                               letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                              IsInvariant W1 U (C.subgroupOf U)) →
+                              IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomCompatibilityAdditiveActionRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12150,7 +12150,7 @@ private theorem
     (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G))
     (hCinv :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      IsInvariant W1 U (C.subgroupOf U))
+      IsInvariantSubgroup W1 U (C.subgroupOf U))
     (F : Type u) [Field F] [Fintype F]
     (Ustar : Subgroup Fˣ)
     (hspan : AddSubgroup.closure
@@ -12282,7 +12282,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12332,7 +12332,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomCompatibilityAdditiveRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12379,7 +12379,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12429,7 +12429,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomCompatibilityPointwiseRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12484,7 +12484,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12534,7 +12534,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomCompatibilityNoninjectiveRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12603,7 +12603,7 @@ private theorem
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12653,7 +12653,7 @@ private theorem
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomCompatibilityRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12688,7 +12688,7 @@ private theorem
   have hH0normalM : (H0.subgroupOf M).Normal := by
     rcases hp96 with ⟨_hp, _hp_eq, hpData, _h96⟩
     exact hpData.2.2.1
-  have hH0invW1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
+  have hH0invW1 : IsInvariantSubgroup W1 MF (H0.subgroupOf MF) :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF W1 H0
       hMFleM hW1leM hH0normalM hW1normMF
   letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
@@ -12777,7 +12777,7 @@ private theorem theorem_9_7_schur_field_model_raw_from_elementary_irreducible_ho
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12827,7 +12827,7 @@ private theorem theorem_9_7_schur_field_model_raw_from_elementary_irreducible_ho
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 theorem_9_7_schurFieldHomRawData_sec9
                                   MF H0 U C W1 hnormalH0 hnormalC hW1normU hCinv := by
   intro h92 hp96 hC hBarU hpprime hqprime hnormalH0 hUnormMF hH0invU
@@ -12874,7 +12874,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_hom_so
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -12924,7 +12924,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_hom_so
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 letI : (H0.subgroupOf MF).Normal := hnormalH0
                                 letI : (C.subgroupOf U).Normal := hnormalC
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -13026,7 +13026,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_source
                       (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) →
                         (hH0invU :
                           letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-                          IsInvariant U MF (H0.subgroupOf MF)) →
+                          IsInvariantSubgroup U MF (H0.subgroupOf MF)) →
                       (hbarElem :
                         letI : (H0.subgroupOf MF).Normal := hnormalH0
                         IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF)) →
@@ -13076,7 +13076,7 @@ private theorem theorem_9_7_schur_field_model_from_elementary_irreducible_source
                             (hW1normU : W1 ≤ Subgroup.normalizer (U : Set G)) →
                               (hCinv :
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-                                IsInvariant W1 U (C.subgroupOf U)) →
+                                IsInvariantSubgroup W1 U (C.subgroupOf U)) →
                                 letI : (H0.subgroupOf MF).Normal := hnormalH0
                                 letI : (C.subgroupOf U).Normal := hnormalC
                                 letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
@@ -13192,7 +13192,7 @@ private theorem theorem_9_7_irreducible_field_model_data_source_bridge_sec9
     le_sup_left.trans
       (theorem_9_3_action_normalizes_and_solvable_sec9 M MF U W1 W2 q h92).1
   letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-  have hCinv : IsInvariant W1 U (C.subgroupOf U) :=
+  have hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U) :=
     theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9 h92 hpData hC
       hW1normU hW1normMF
   have hpDataFull : hoReductionData M MF U W2 H0 hp := hpData
@@ -13225,7 +13225,7 @@ private theorem theorem_9_7_irreducible_field_model_data_source_bridge_sec9
         _hUnil, _hW1normU, _hcompDU, _hMFnotcyc, _hsecond, _hfitEq,
         _hfitLeD, _hW2le, _hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
     exact hUleD.trans section12_ambientDerivedSubgroup_le
-  have hH0invU : IsInvariant U MF (H0.subgroupOf MF) :=
+  have hH0invU : IsInvariantSubgroup U MF (H0.subgroupOf MF) :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF U H0
       _hMFM hUleM _hH0normalM_hp hUnormMF
   haveI : Fact p.Prime := ⟨hpprime⟩
@@ -13596,7 +13596,7 @@ private theorem theorem_9_7_irreducible_field_model_with_prime_field_image_sourc
   have hH0normalM : (H0.subgroupOf M).Normal := by
     rcases hp96 with ⟨_hp, _hp_eq, hpData, _h96⟩
     exact hpData.2.2.1
-  have hH0invW1 : IsInvariant W1 MF H0MF :=
+  have hH0invW1 : IsInvariantSubgroup W1 MF H0MF :=
     subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF W1 H0
       hMFleM hW1leM hH0normalM hW1normMF
   letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=

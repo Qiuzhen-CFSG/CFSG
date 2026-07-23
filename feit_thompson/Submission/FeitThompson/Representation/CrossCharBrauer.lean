@@ -495,7 +495,19 @@ private lemma crossCharClassFunctionCentralElement_coeff
     (crossCharClassFunctionCentralElement φ).coeff g =
       φ (ConjClasses.mk g⁻¹) := by
   classical
-  simp [crossCharClassFunctionCentralElement, Finsupp.single_apply]
+  simp only [crossCharClassFunctionCentralElement, MonoidAlgebra.coeff_sum]
+  rw [Finset.sum_apply']
+  change ∑ c : G, (Finsupp.single c (φ (ConjClasses.mk c⁻¹))) g = _
+  simp only [Finsupp.single_apply]
+  rw [Finset.sum_ite_eq' Finset.univ g]
+  simp
+
+private lemma crossCharClassFunctionCentralElement_apply
+    {F G : Type*} [Field F] [Group G] [Finite G]
+    (φ : CrossCharClassFunction F G) (g : G) :
+    crossCharClassFunctionCentralElement φ g =
+      φ (ConjClasses.mk g⁻¹) :=
+  crossCharClassFunctionCentralElement_coeff φ g
 
 private noncomputable def crossCharClassFunctionCentralElementLinear
     {F G : Type*} [Field F] [Group G] [Finite G] :
@@ -503,10 +515,12 @@ private noncomputable def crossCharClassFunctionCentralElementLinear
   toFun φ := crossCharClassFunctionCentralElement φ
   map_add' φ ψ := by
     classical
+    apply MonoidAlgebra.coeff_injective
     ext g
     simp [crossCharClassFunctionCentralElement_coeff]
   map_smul' c φ := by
     classical
+    apply MonoidAlgebra.coeff_injective
     ext g
     simp [crossCharClassFunctionCentralElement_coeff, smul_eq_mul]
 
@@ -529,9 +543,9 @@ private lemma crossCharClassFunctionCentralElement_comm
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
       have hφ := congrArg φ hconj
-      simp only [MonoidAlgebra.coeff_single_mul_apply,
-        MonoidAlgebra.coeff_mul_single_apply,
-        crossCharClassFunctionCentralElement_coeff]
+      simp only [MonoidAlgebra.single_mul_apply,
+        MonoidAlgebra.mul_single_apply,
+        crossCharClassFunctionCentralElement_apply]
       rw [hφ, mul_comm]
 
 private lemma crossCharBlockAlgHom_centralElement_mem_center

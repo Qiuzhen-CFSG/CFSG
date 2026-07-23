@@ -49,7 +49,7 @@ private theorem section12_not_mem_beta_of_not_mem_sigma_of_dvd_card_current
 private theorem section12_isInvariant_of_le_fixedPointSubgroup_current
     {A R : Type*} [Group A] [Group R] [MulDistribMulAction A R]
     {H : Subgroup R} (hH : H ≤ fixedPointSubgroup A R) :
-    IsInvariant A R H := by
+    IsInvariantSubgroup A R H := by
   have htriv : ActsTriviallyOnSubgroup (A := A) (G := R) H :=
     actsTriviallyOnSubgroup_of_le_fixedPointSubgroup (A := A) (G := R) hH
   refine ⟨?_⟩
@@ -200,7 +200,7 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
     [Subgroup.Normalizes (ambientDerivedSubgroup E) (section10Msigma M)]
     {H : Subgroup (section10Msigma M)}
     (hHHall : IsHallSubgroup (section10BetaPrimes M)ᶜ H)
-    (hHinv : IsInvariant (ambientDerivedSubgroup E) (section10Msigma M) H) :
+    (hHinv : IsInvariantSubgroup (ambientDerivedSubgroup E) (section10Msigma M) H) :
     H ≤ fixedPointSubgroup (ambientDerivedSubgroup E) (section10Msigma M) := by
   classical
   let D : Subgroup G := ambientDerivedSubgroup E
@@ -256,13 +256,13 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
           (K := (Q : Subgroup D)) (f := D.subtype) D.subtype_injective)
     have hcop : Nat.Coprime (Nat.card (Q : Subgroup D)) (Nat.card S) := by
       simpa [hXcard] using hcopX
-    letI : IsInvariant D S H := hHinv
-    have hHinvQ : IsInvariant (Q : Subgroup D) S H := by
+    letI : IsInvariantSubgroup D S H := hHinv
+    have hHinvQ : IsInvariantSubgroup (Q : Subgroup D) S H := by
       refine ⟨?_⟩
       intro a y
       change y ∈ H ↔ (a : D) • y ∈ H
-      exact IsInvariant.invariant (A := D) (G := S) (H := H) (a : D) y
-    have hLinvQ : IsInvariant (Q : Subgroup D) S L :=
+      exact IsInvariantSubgroup.invariant (A := D) (G := S) (H := H) (a : D) y
+    have hLinvQ : IsInvariantSubgroup (Q : Subgroup D) S L :=
       section12_isInvariant_of_le_fixedPointSubgroup_current hLfix
     obtain ⟨g, hgfix, hH_eq⟩ :=
       proposition_1_5_c
@@ -306,7 +306,7 @@ private theorem section12_exists_invariant_hall_betaCompl_msigma
     [Subgroup.Normalizes (ambientDerivedSubgroup E) (section10Msigma M)] :
     ∃ H : Subgroup (section10Msigma M),
       IsHallSubgroup (section10BetaPrimes M)ᶜ H ∧
-        IsInvariant (ambientDerivedSubgroup E) (section10Msigma M) H := by
+        IsInvariantSubgroup (ambientDerivedSubgroup E) (section10Msigma M) H := by
   classical
   let D : Subgroup G := ambientDerivedSubgroup E
   let S : Subgroup G := section10Msigma M

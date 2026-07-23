@@ -1921,14 +1921,14 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
     · intro hxD
       rcases Subgroup.mem_map.mp hxD with ⟨xS, hxDloc, rfl⟩
       have hxDsmul : (⟨k, hkK⟩ : K) • xS ∈ Dloc :=
-        (IsInvariant.invariant (A := K) (G := S) (H := Dloc)
+        (IsInvariantSubgroup.invariant (A := K) (G := S) (H := Dloc)
           (⟨k, hkK⟩ : K) xS).1 hxDloc
       exact Subgroup.mem_map.mpr ⟨(⟨k, hkK⟩ : K) • xS, hxDsmul, by
         simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
     · intro hxD
       rcases Subgroup.mem_map.mp hxD with ⟨xS, hxDloc, hxS_eq⟩
       have hxDsmul : ((⟨k, hkK⟩ : K)⁻¹) • xS ∈ Dloc :=
-        (IsInvariant.invariant (A := K) (G := S) (H := Dloc)
+        (IsInvariantSubgroup.invariant (A := K) (G := S) (H := Dloc)
           ((⟨k, hkK⟩ : K)⁻¹) xS).1 hxDloc
       exact Subgroup.mem_map.mpr
         ⟨((⟨k, hkK⟩ : K)⁻¹) • xS, hxDsmul, by
@@ -5896,7 +5896,7 @@ private theorem section15_fixedPointSubgroup_eq_top_of_quotient_trivial
     {Q A : Type*} [Group Q] [Finite Q] [Group A] [Finite A]
     [MulDistribMulAction A Q]
     (hsolvQ : IsSolvable Q) (hcop : Nat.Coprime (Nat.card A) (Nat.card Q))
-    (N : Subgroup Q) [N.Normal] (hNinv : IsInvariant A Q N)
+    (N : Subgroup Q) [N.Normal] (hNinv : IsInvariantSubgroup A Q N)
     (hNfix : N ≤ fixedPointSubgroup A Q)
     (hquot :
       letI : MulDistribMulAction A (Q ⧸ N) :=

@@ -41,7 +41,7 @@ private lemma lemma_7_1_local [IsMinCE G]
   have hMsub_char : (M.subgroupOf H).Characteristic := by
     rw [hMsub_eq]
     exact piCore_characteristic (G := ↥H) (subgroupPrimeSet A)ᶜ
-  letI : IsInvariant (↥A) (↥H) (M.subgroupOf H) :=
+  letI : IsInvariantSubgroup (↥A) (↥H) (M.subgroupOf H) :=
     isInvariant_of_characteristic (A := ↥A) (G := ↥H) (M.subgroupOf H)
   have hA_le_normM : A ≤ Subgroup.normalizer (M : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem M A ?_
@@ -50,7 +50,7 @@ private lemma lemma_7_1_local [IsMinCE G]
     have hxH : xH ∈ M.subgroupOf H := by
       exact Subgroup.mem_subgroupOf.mpr hx
     have hxInv : a • xH ∈ M.subgroupOf H :=
-      (IsInvariant.invariant (A := ↥A) (G := ↥H) (H := M.subgroupOf H) a xH).1 hxH
+      (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥H) (H := M.subgroupOf H) a xH).1 hxH
     have hxInv' : ((a • xH : H) : G) ∈ M :=
       Subgroup.mem_subgroupOf.mp hxInv
     change (a : G) * x * (a : G)⁻¹ ∈ M
@@ -82,11 +82,11 @@ private lemma lemma_7_1_local [IsMinCE G]
     have hHQ₂_pi : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) (H ⊓ Q₂) :=
       IsPiSubgroup.of_le inf_le_right hQ₂fam.2.1
     exact hHQ₂_pi.subgroupOf hHQ₂_core
-  have hK₁_inv : IsInvariant (↥A) (↥M) K₁ := by
+  have hK₁_inv : IsInvariantSubgroup (↥A) (↥M) K₁ := by
     simpa [K₁] using
       (isInvariant_subgroupOf_of_le_normalizer
         (A := A) (H := M) (K := H ⊓ Q₁) hA_le_normM hA_le_normHQ₁ hHQ₁_core)
-  have hK₂_inv : IsInvariant (↥A) (↥M) K₂ := by
+  have hK₂_inv : IsInvariantSubgroup (↥A) (↥M) K₂ := by
     simpa [K₂] using
       (isInvariant_subgroupOf_of_le_normalizer
         (A := A) (H := M) (K := H ⊓ Q₂) hA_le_normM hA_le_normHQ₂ hHQ₂_core)
@@ -149,14 +149,14 @@ private lemma lemma_7_1_local [IsMinCE G]
     simpa [R₁] using (hR₁Hall.isPiSubgroup).map M.subtype
   have hR₂_pi : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) R₂ := by
     simpa [R₂] using (hR₂Hall.isPiSubgroup).map M.subtype
-  letI : IsInvariant (↥A) (↥M) R₁sub := hR₁inv
-  letI : IsInvariant (↥A) (↥M) R₂sub := hR₂inv
+  letI : IsInvariantSubgroup (↥A) (↥M) R₁sub := hR₁inv
+  letI : IsInvariantSubgroup (↥A) (↥M) R₂sub := hR₂inv
   have hA_le_normR₁ : A ≤ Subgroup.normalizer (R₁ : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem R₁ A ?_
     intro a x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     have hyInv : a • y ∈ R₁sub :=
-      (IsInvariant.invariant (A := ↥A) (G := ↥M) (H := R₁sub) a y).1 hy
+      (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥M) (H := R₁sub) a y).1 hy
     exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
       simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
   have hA_le_normR₂ : A ≤ Subgroup.normalizer (R₂ : Set G) := by
@@ -164,7 +164,7 @@ private lemma lemma_7_1_local [IsMinCE G]
     intro a x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     have hyInv : a • y ∈ R₂sub :=
-      (IsInvariant.invariant (A := ↥A) (G := ↥M) (H := R₂sub) a y).1 hy
+      (IsInvariantSubgroup.invariant (A := ↥A) (G := ↥M) (H := R₂sub) a y).1 hy
     exact Subgroup.mem_map.mpr ⟨a • y, hyInv, by
       simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]⟩
   have hR₂_fam : R₂ ∈ section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) := by

@@ -131,7 +131,7 @@ public theorem exists_quotientCentralizerIn_normal_of_invariant_sec9
     {MF H0 U : Subgroup G}
     [Subgroup.Normalizes U MF]
     (hnormal : (H0.subgroupOf MF).Normal)
-    (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) :
+    (hH0_inv_U : IsInvariantSubgroup U MF (H0.subgroupOf MF)) :
     ∃ C : Subgroup G,
       quotientCentralizerIn MF H0 U C ∧ (C.subgroupOf U).Normal := by
   classical
@@ -207,7 +207,7 @@ public theorem exists_quotientCentralizerIn_of_invariant_sec9
     {MF H0 U : Subgroup G}
     [Subgroup.Normalizes U MF]
     (hnormal : (H0.subgroupOf MF).Normal)
-    (hH0_inv_U : IsInvariant U MF (H0.subgroupOf MF)) :
+    (hH0_inv_U : IsInvariantSubgroup U MF (H0.subgroupOf MF)) :
     ∃ C : Subgroup G, quotientCentralizerIn MF H0 U C := by
   rcases exists_quotientCentralizerIn_normal_of_invariant_sec9
       hnormal hH0_inv_U with ⟨C, hC, _hCnormal⟩
@@ -376,11 +376,11 @@ public theorem subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9
       A ≤ M →
         (H0.subgroupOf M).Normal →
           A ≤ Subgroup.normalizer (MF : Set G) →
-            IsInvariant A MF (H0.subgroupOf MF) := by
+            IsInvariantSubgroup A MF (H0.subgroupOf MF) := by
   classical
   intro hMF_le_M hA_le_M hH0_normal_M hA_norm_MF
   let H0MF : Subgroup MF := H0.subgroupOf MF
-  change IsInvariant A MF H0MF
+  change IsInvariantSubgroup A MF H0MF
   have hforward : ∀ (a : A) (x : MF), x ∈ H0MF → a • x ∈ H0MF := by
     intro a x hx
     have haM : (a : G) ∈ M := hA_le_M a.property
@@ -1612,7 +1612,7 @@ public theorem ambientDerived_subgroupOf_index_eq_q_of_hypothesis_9_2_sec9
       letI : (C.subgroupOf U).Normal := hnormalC
       ∃ hW1normU : W1 ≤ Subgroup.normalizer (U : Set G),
         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-        ∃ hCinv : IsInvariant W1 U (C.subgroupOf U),
+        ∃ hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U),
           letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
             quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
           ∃ F : Type u, ∃ fieldInst : Field F, ∃ fintypeInst : Fintype F,
@@ -1659,7 +1659,7 @@ public theorem ambientDerived_subgroupOf_index_eq_q_of_hypothesis_9_2_sec9
       letI : (C.subgroupOf U).Normal := hnormalC
       ∃ hW1normU : W1 ≤ Subgroup.normalizer (U : Set G),
         letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-        ∃ hCinv : IsInvariant W1 U (C.subgroupOf U),
+        ∃ hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U),
           letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
             quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
           ∃ F : Type u, ∃ fieldInst : Field F, ∃ fintypeInst : Fintype F,
@@ -2253,7 +2253,7 @@ the character argument from the proof of `(9.7)`.
     letI : (H0.subgroupOf MF).Normal := hnormal
     ∃ hUnormMF : U ≤ Subgroup.normalizer (MF : Set G),
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      ∃ hH0inv : IsInvariant U MF (H0.subgroupOf MF),
+      ∃ hH0inv : IsInvariantSubgroup U MF (H0.subgroupOf MF),
         letI : MulAction.QuotientAction U (H0.subgroupOf MF) :=
           quotientAction_of_isInvariant (A := U) (G := MF)
             (H0.subgroupOf MF) hH0inv

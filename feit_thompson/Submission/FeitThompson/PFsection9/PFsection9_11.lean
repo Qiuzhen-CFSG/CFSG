@@ -12240,7 +12240,7 @@ private theorem quotient_action_fixed_of_quotientSubgroupCentralizedByElement_se
   (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
   (hH0invU :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    IsInvariant U MF (H0.subgroupOf MF))
+    IsInvariantSubgroup U MF (H0.subgroupOf MF))
   {Q : Subgroup (MF ⧸ H0.subgroupOf MF)}
   (x : U)
   (hcent : quotientSubgroupCentralizedByElement MF H0 Q (x : G)) :
@@ -12254,7 +12254,7 @@ private theorem quotient_action_fixed_of_quotientSubgroupCentralizedByElement_se
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -12844,7 +12844,7 @@ private theorem elementCentralizerIn_of_nontrivial_quotient_fixed_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hsolvMF : IsSolvable MF)
     (hcopU : Nat.Coprime (Nat.card U) (Nat.card MF))
     {Q : Subgroup (MF ⧸ H0.subgroupOf MF)}
@@ -12856,9 +12856,9 @@ private theorem elementCentralizerIn_of_nontrivial_quotient_fixed_sec9
     let H0MF : Subgroup MF := H0.subgroupOf MF
     haveI : H0MF.Normal := hnormalH0
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    have hH0invU' : IsInvariant U MF H0MF := by
+    have hH0invU' : IsInvariantSubgroup U MF H0MF := by
       simpa [H0MF] using hH0invU
-    letI : IsInvariant U MF H0MF := hH0invU'
+    letI : IsInvariantSubgroup U MF H0MF := hH0invU'
     letI : MulDistribMulAction U (MF ⧸ H0MF) :=
       quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
     have hx_fixed :
@@ -12876,11 +12876,11 @@ private theorem elementCentralizerIn_of_nontrivial_quotient_fixed_sec9
     let A : Subgroup U := Subgroup.zpowers x
     letI : MulDistribMulAction A MF :=
       MulDistribMulAction.compHom MF A.subtype
-    have hH0invA : IsInvariant A MF H0MF := by
+    have hH0invA : IsInvariantSubgroup A MF H0MF := by
       refine ⟨?_⟩
       intro a y
-      exact IsInvariant.invariant (A := U) (G := MF) (H := H0MF) (a : U) y
-    letI : IsInvariant A MF H0MF := hH0invA
+      exact IsInvariantSubgroup.invariant (A := U) (G := MF) (H := H0MF) (a : U) y
+    letI : IsInvariantSubgroup A MF H0MF := hH0invA
     letI : MulDistribMulAction A (MF ⧸ H0MF) :=
       quotientMulDistribMulAction (A := A) (G := MF) H0MF hH0invA
     have hA_dvd_U : Nat.card A ∣ Nat.card U :=
@@ -13385,7 +13385,7 @@ private theorem factor_kernel_conjBy_inv_eq_of_successorTransport_sec9
     [hnormalH0 : (H0.subgroupOf MF).Normal]
     [hW1normU : Subgroup.Normalizes W1 U]
     (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
+    (hCinv : IsInvariantSubgroup W1 U (C.subgroupOf U))
     (w : W1)
     {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
     (eQR : Q ≃* R)
@@ -13732,7 +13732,7 @@ public theorem quotientCentralizerIn_mem_of_iSup_quotientSubgroupCentralizedByEl
   (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
   (hH0invU :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    IsInvariant U MF (H0.subgroupOf MF))
+    IsInvariantSubgroup U MF (H0.subgroupOf MF))
   (hC : quotientCentralizerIn MF H0 U C)
   (H : ι → Subgroup (MF ⧸ H0.subgroupOf MF))
   (hSup : iSup H = ⊤)
@@ -13743,7 +13743,7 @@ public theorem quotientCentralizerIn_mem_of_iSup_quotientSubgroupCentralizedByEl
   let H0MF : Subgroup MF := H0.subgroupOf MF
   haveI : H0MF.Normal := hnormalH0
   letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-  have hH0invU' : IsInvariant U MF H0MF := by
+  have hH0invU' : IsInvariantSubgroup U MF H0MF := by
     simpa [H0MF] using hH0invU
   letI : MulDistribMulAction U (MF ⧸ H0MF) :=
     quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0invU'
@@ -14424,7 +14424,7 @@ private theorem theorem_9_11_case_a_9112_H0_invariant_U_sec9
     (hcase : case_9_7_a_data M MF U W1 W2 H0 C p (Nat.card W1) a)
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G)) :
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-    IsInvariant U MF (H0.subgroupOf MF) := by
+    IsInvariantSubgroup U MF (H0.subgroupOf MF) := by
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
     have hUleM : U ≤ M := by
       rcases (case_9_7_a_hypothesis_9_2_sec9 hcase).typePDefinitionData with
@@ -14457,7 +14457,7 @@ private def theorem_9_11_case_a_9112_productThetaFixedOnInfData_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF)) : Prop :=
+      IsInvariantSubgroup U MF (H0.subgroupOf MF)) : Prop :=
     letI : IsMulCommutative (MF ⧸ H0.subgroupOf MF) := hcommQ
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
     letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
@@ -14493,7 +14493,7 @@ private theorem theorem_9_11_case_a_9112_productTheta_fixed_of_mem_inf_sec9
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hU1_centralizes :
       ∀ x : G, x ∈ U1 →
         quotientSubgroupCentralizedByElement MF H0
@@ -14555,7 +14555,7 @@ private theorem theorem_9_11_case_a_9112_productTheta_fixed_of_mem_inf_sec9
         · subst hji
           change thetaH (α (x : MF ⧸ H0.subgroupOf MF)) = thetaH (x : MF ⧸ H0.subgroupOf MF)
           rw [hiFixed (x : MF ⧸ H0.subgroupOf MF) x.property]
-        · have hQinv : IsInvariant U (MF ⧸ H0.subgroupOf MF) (H9112 j) := by
+        · have hQinv : IsInvariantSubgroup U (MF ⧸ H0.subgroupOf MF) (H9112 j) := by
             simpa using
               (isInvariant_of_quotientSubgroupNormalizedBy_sec9
                 (MF := MF) (H0 := H0) (A := U) hH0invU (H9112 j)
@@ -14563,7 +14563,7 @@ private theorem theorem_9_11_case_a_9112_productTheta_fixed_of_mem_inf_sec9
           have hαx_mem : α (x : MF ⧸ H0.subgroupOf MF) ∈ H9112 j := by
             have hxmem :
                 (u⁻¹ : U) • (x : MF ⧸ H0.subgroupOf MF) ∈ H9112 j :=
-              (IsInvariant.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
+              (IsInvariantSubgroup.invariant (A := U) (G := MF ⧸ H0.subgroupOf MF)
                 (H := H9112 j) (u⁻¹ : U) (x : MF ⧸ H0.subgroupOf MF)).1
                 x.property
             simpa [α] using hxmem
@@ -15661,7 +15661,7 @@ private theorem
     (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
     (hH0invU :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
+      IsInvariantSubgroup U MF (H0.subgroupOf MF))
     (hproductTheta_fixed :
       theorem_9_11_case_a_9112_productThetaFixedOnInfData_sec9
         M MF U W1 W2 H0 C U1 Ui p a H9112 i hcase hHcard hHindep hHsup
@@ -16194,7 +16194,7 @@ private theorem
         M MF U W1 W2 H0 C p a hcase
     have hH0invU_fixed :
         letI : Subgroup.Normalizes U MF := ⟨hUnormMF_fixed⟩
-        IsInvariant U MF (H0.subgroupOf MF) :=
+        IsInvariantSubgroup U MF (H0.subgroupOf MF) :=
       theorem_9_11_case_a_9112_H0_invariant_U_sec9
         M MF U W1 W2 H0 C p a hcase hUnormMF_fixed
     have hquotElem_fixed : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := by
@@ -21223,7 +21223,7 @@ private theorem theorem_9_11_case_a_step_9_11_8_sourceData_of_noPairStep_sec9
     exact le_sup_left.trans hUW1normMF
   have hH0invU_9112 :
       letI : Subgroup.Normalizes U MF := ⟨hUnormMF_9112⟩
-      IsInvariant U MF (H0.subgroupOf MF) := by
+      IsInvariantSubgroup U MF (H0.subgroupOf MF) := by
     letI : Subgroup.Normalizes U MF := ⟨hUnormMF_9112⟩
     have hUleM_9112 : U ≤ M := by
       rcases (case_9_7_a_hypothesis_9_2_sec9 hcase).typePDefinitionData with

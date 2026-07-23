@@ -997,7 +997,7 @@ private theorem theorem_3_7_chief_quotient_fixedPointSubgroup_eq_top_of_pgroup
     intro hF_bot
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by simpa [F, hF_bot] using hu_mem
     exact hu_ne_one' (Subgroup.mem_bot.mp hu_bot).symm
-  have hF_inv : IsInvariant (G ⧸ cf.V) Uq F := by
+  have hF_inv : IsInvariantSubgroup (G ⧸ cf.V) Uq F := by
     refine ⟨?_⟩
     intro a u
     constructor
@@ -1097,7 +1097,7 @@ private theorem theorem_3_7_chief_conj_range_pCore_eq_bot
   haveI : P.Normal := by
     dsimp [P]
     infer_instance
-  have hF_inv : IsInvariant A Uq F := by
+  have hF_inv : IsInvariantSubgroup A Uq F := by
     refine ⟨?_⟩
     intro a u
     constructor
@@ -3209,7 +3209,7 @@ public theorem proposition_3_9 {p : ℕ} {H R : Type*} [Group H] [Finite H] [Non
       Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card Q) hH_coprime
     have hQregular : ActsRegularly R Q := by
       intro a ha
-      haveI : IsInvariant (↥(Subgroup.zpowers a)) H Q :=
+      haveI : IsInvariantSubgroup (↥(Subgroup.zpowers a)) H Q :=
         { invariant := fun b x => hQinv.invariant (b : R) x }
       simpa [hregular a ha] using
         (fixedPointSubgroup_subtype_eq_local (A := ↥(Subgroup.zpowers a)) (G := H) Q)
@@ -3377,7 +3377,7 @@ public theorem ActsRegularly.subgroup {H R : Type*} [Group H] [Group R]
 
 public theorem ActsRegularly.invariantSubgroup {H R : Type*} [Group H] [Group R]
     [MulDistribMulAction R H] (hregular : ActsRegularly R H) (E : Subgroup H)
-    [IsInvariant R H E] :
+    [IsInvariantSubgroup R H E] :
     ActsRegularly R E := by
   intro a ha
   rw [Subgroup.eq_bot_iff_forall]
@@ -3510,9 +3510,9 @@ public theorem omega₁_map_subtype_normal_of_normal
 
 public theorem minimalInvariantNormal_solvable_exists_isElementaryAbelian
     {G A : Type*} [Group G] [Finite G] [Group A] [MulDistribMulAction A G]
-    (M : Subgroup G) [M.Normal] [IsInvariant A G M] [IsSolvable (↥M)]
+    (M : Subgroup G) [M.Normal] [IsInvariantSubgroup A G M] [IsSolvable (↥M)]
     (hM_ne_bot : M ≠ ⊥)
-    (hmin : ∀ K : Subgroup G, K.Normal → IsInvariant A G K → K ≠ ⊥ → K ≤ M → K = M) :
+    (hmin : ∀ K : Subgroup G, K.Normal → IsInvariantSubgroup A G K → K ≠ ⊥ → K ≤ M → K = M) :
     ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p (↥M) := by
   classical
   haveI : Nontrivial (↥M) := (Subgroup.nontrivial_iff_ne_bot M).2 hM_ne_bot
@@ -3526,7 +3526,7 @@ public theorem minimalInvariantNormal_solvable_exists_isElementaryAbelian
     have htop_map : (⊤ : Subgroup (↥M)).map M.subtype = M := by
       simpa [MonoidHom.range_eq_map] using (M.range_subtype : M.subtype.range = M)
     simpa [Subgroup.map_subtype_commutator, htop_map] using hlt'
-  have hcomm_inv : IsInvariant A G ⁅M, M⁆ :=
+  have hcomm_inv : IsInvariantSubgroup A G ⁅M, M⁆ :=
     isInvariant_commutator (A := A) (G := G) M M
   have hcomm_eq_bot : ⁅M, M⁆ = ⊥ := by
     by_contra hne
@@ -3552,9 +3552,9 @@ public theorem minimalInvariantNormal_solvable_exists_isElementaryAbelian
   haveI : (P : Subgroup (↥M)).Characteristic :=
     Sylow.characteristic_of_normal (G := (↥M)) (p := p) P hP_normal
   haveI : ((P : Subgroup (↥M)).map M.subtype).Normal := by infer_instance
-  haveI : IsInvariant A (↥M) (P : Subgroup (↥M)) :=
+  haveI : IsInvariantSubgroup A (↥M) (P : Subgroup (↥M)) :=
     isInvariant_of_characteristic (A := A) (G := ↥M) (P : Subgroup (↥M))
-  have hPmap_inv : IsInvariant A G ((P : Subgroup (↥M)).map M.subtype) :=
+  have hPmap_inv : IsInvariantSubgroup A G ((P : Subgroup (↥M)).map M.subtype) :=
     isInvariant_map_subtype (A := A) (G := G) M (P : Subgroup (↥M))
   have hPmap_ne_bot : (P : Subgroup (↥M)).map M.subtype ≠ ⊥ := by
     intro hbot
@@ -3576,9 +3576,9 @@ public theorem minimalInvariantNormal_solvable_exists_isElementaryAbelian
     simpa [Ω] using (omega₁_characteristic (G := (↥M)) (p := p))
   haveI : Ω.Characteristic := hΩ_char
   haveI : (Ω.map M.subtype).Normal := by infer_instance
-  haveI : IsInvariant A (↥M) Ω :=
+  haveI : IsInvariantSubgroup A (↥M) Ω :=
     isInvariant_of_characteristic (A := A) (G := ↥M) Ω
-  have hΩmap_inv : IsInvariant A G (Ω.map M.subtype) :=
+  have hΩmap_inv : IsInvariantSubgroup A G (Ω.map M.subtype) :=
     isInvariant_map_subtype (A := A) (G := G) M Ω
   have hΩmap_ne_bot : Ω.map M.subtype ≠ ⊥ := by
     simpa [Ω] using omega₁_map_subtype_ne_bot (M := M) (p := p) hp_dvd
@@ -3616,18 +3616,18 @@ public theorem minimalInvariantNormal_solvable_exists_isElementaryAbelian
 
 public theorem exists_regular_elementaryAbelian_invariant_subgroup_of_invariant_solvable_subgroup
     {H R : Type*} [Group H] [Finite H] [Group R] [MulDistribMulAction R H]
-    (hregular : ActsRegularly R H) {S : Subgroup H} [IsInvariant R H S]
+    (hregular : ActsRegularly R H) {S : Subgroup H} [IsInvariantSubgroup R H S]
     (hS_ne_bot : S ≠ ⊥) (hSsolv : IsSolvable (↥S)) :
-    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariant R H E),
+    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariantSubgroup R H E),
       r.Prime ∧ E ≠ ⊥ ∧ IsElementaryAbelian r (↥E) ∧
-        letI : IsInvariant R H E := hE_inv
+        letI : IsInvariantSubgroup R H E := hE_inv
         ActsRegularly R E := by
   classical
   haveI : Nontrivial (↥S) := (Subgroup.nontrivial_iff_ne_bot S).2 hS_ne_bot
   obtain ⟨M, hMnorm, hMinv, hM_ne_bot, hMmin⟩ :=
     exists_minimal_normal_isInvariant (G := S) (A := R)
   haveI : M.Normal := hMnorm
-  haveI : IsInvariant R S M := hMinv
+  haveI : IsInvariantSubgroup R S M := hMinv
   haveI : IsSolvable (↥S) := hSsolv
   haveI : IsSolvable (↥M) := subgroup_solvable_of_solvable M
   obtain ⟨r, hr, hMelem⟩ :=
@@ -3635,7 +3635,7 @@ public theorem exists_regular_elementaryAbelian_invariant_subgroup_of_invariant_
       (G := S) (A := R) M hM_ne_bot
       (fun K hKnorm hKinv hKne hKle => hMmin K hKnorm hKinv hKne hKle)
   let E : Subgroup H := M.map S.subtype
-  have hE_inv : IsInvariant R H E := by
+  have hE_inv : IsInvariantSubgroup R H E := by
     simpa [E] using isInvariant_map_subtype (A := R) (G := H) S M
   have hE_ne_bot : E ≠ ⊥ := by
     intro hbot
@@ -3648,7 +3648,7 @@ public theorem exists_regular_elementaryAbelian_invariant_subgroup_of_invariant_
   have hEelem : IsElementaryAbelian r (↥E) := by
     simpa [E] using (IsElementaryAbelian.map_subtype (p := r) (K := S) (H := M))
   refine ⟨E, r, hE_inv, hr, hE_ne_bot, hEelem, ?_⟩
-  letI : IsInvariant R H E := hE_inv
+  letI : IsInvariantSubgroup R H E := hE_inv
   exact ActsRegularly.invariantSubgroup hregular E
 
 
@@ -3675,7 +3675,7 @@ public theorem exists_invariant_sylow_of_solvable_target_coprime
     {G A : Type*} [Group G] [Finite G] [IsSolvable G] [Group A] [Finite A]
     [MulDistribMulAction A G] (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     {p : ℕ} [Fact p.Prime] :
-    ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) := by
+    ∃ P : Sylow p G, IsInvariantSubgroup A G (P : Subgroup G) := by
   classical
   let πp : Set Nat.Primes := {⟨p, Fact.out⟩}
   obtain ⟨H, hHhall, hHinv⟩ :=
@@ -3693,7 +3693,7 @@ private theorem exists_invariant_sylow_of_pgroup_operator_coprime_bg3
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] {r p : ℕ} [Fact r.Prime] [Fact p.Prime]
     [Fact (IsPGroup r A)] (hcoprime : Nat.Coprime r (Nat.card G)) :
-    ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) :=
+    ∃ P : Sylow p G, IsInvariantSubgroup A G (P : Subgroup G) :=
   exists_invariant_sylow (G := G) (A := A) (p := r) (q := p) hcoprime
 
 /-- Prime-power operator nonabelian `H¹` base: a `1`-cocycle for a coprime finite
@@ -4020,7 +4020,7 @@ private theorem isInvariant_of_inr_le_normalizer_map_inl_sylow
     let inr : A →* G ⋊[φ] A := SemidirectProduct.inr (φ := φ)
     let Pembed : Subgroup (G ⋊[φ] A) := (P : Subgroup G).map inl
     ((⊤ : Subgroup A).map inr) ≤ Subgroup.normalizer Pembed →
-      IsInvariant A G (P : Subgroup G) := by
+      IsInvariantSubgroup A G (P : Subgroup G) := by
   classical
   intro φ inl inr Pembed hle
   have hinl_inj : Function.Injective inl := by
@@ -4558,9 +4558,9 @@ private theorem coprime_card_of_regular_action
 public theorem exists_regular_elementaryAbelian_invariant_subgroup_of_solvable_target_regular_action
     {H R : Type*} [Group H] [Finite H] [Nontrivial H] [IsSolvable H]
     [Group R] [Finite R] [MulDistribMulAction R H] (hregular : ActsRegularly R H) :
-    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariant R H E),
+    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariantSubgroup R H E),
       r.Prime ∧ E ≠ ⊥ ∧ IsElementaryAbelian r (↥E) ∧
-        letI : IsInvariant R H E := hE_inv
+        letI : IsInvariantSubgroup R H E := hE_inv
         ActsRegularly R E := by
   classical
   have hH_card_gt_one : 1 < Nat.card H :=
@@ -4574,7 +4574,7 @@ public theorem exists_regular_elementaryAbelian_invariant_subgroup_of_solvable_t
     exists_invariant_sylow_of_solvable_target_coprime
       (G := H) (A := R) hcopRH (p := r)
   let S : Subgroup H := S₀
-  haveI : IsInvariant R H S := hS₀_inv
+  haveI : IsInvariantSubgroup R H S := hS₀_inv
   have hS_ne_bot : S ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := H) (p := r) S₀ hr_dvd_H
   have hSsolv : IsSolvable (↥S) := by
@@ -4592,7 +4592,7 @@ public theorem exists_invariant_sylow_of_solvable_operator_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [IsSolvable A]
     [MulDistribMulAction A G] (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     {p : ℕ} [Fact p.Prime] :
-    ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) := by
+    ∃ P : Sylow p G, IsInvariantSubgroup A G (P : Subgroup G) := by
   classical
   by_cases hA_card_one : Nat.card A = 1
   · letI : Subsingleton A := (Nat.card_eq_one_iff_unique.mp hA_card_one).1
@@ -4615,9 +4615,9 @@ public theorem exists_invariant_sylow_of_solvable_operator_coprime
 private theorem exists_regular_elementaryAbelian_invariant_subgroup_of_solvable_operator_regular_action_source
     {H R : Type*} [Group H] [Finite H] [Nontrivial H] [Group R] [Finite R]
     [IsSolvable R] [MulDistribMulAction R H] (hregular : ActsRegularly R H) :
-    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariant R H E),
+    ∃ (E : Subgroup H) (r : ℕ) (hE_inv : IsInvariantSubgroup R H E),
       r.Prime ∧ E ≠ ⊥ ∧ IsElementaryAbelian r (↥E) ∧
-        letI : IsInvariant R H E := hE_inv
+        letI : IsInvariantSubgroup R H E := hE_inv
         ActsRegularly R E := by
   classical
   have hH_card_gt_one : 1 < Nat.card H :=
@@ -4631,7 +4631,7 @@ private theorem exists_regular_elementaryAbelian_invariant_subgroup_of_solvable_
     exists_invariant_sylow_of_solvable_operator_coprime
       (G := H) (A := R) hcopRH (p := r)
   let S : Subgroup H := S₀
-  haveI : IsInvariant R H S := hS₀_inv
+  haveI : IsInvariantSubgroup R H S := hS₀_inv
   have hS_ne_bot : S ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := H) (p := r) S₀ hr_dvd_H
   have hSsolv : IsSolvable (↥S) := by
@@ -4750,7 +4750,7 @@ public theorem regular_pq_complement_centralizes_of_odd_regular_action_source
   obtain ⟨E, r, hE_inv, hr, hE_ne_bot, hE_elem, hE_regular⟩ :=
     exists_regular_elementaryAbelian_invariant_subgroup_of_solvable_operator_regular_action_source
       (H := H) (R := R) hregular
-  letI : IsInvariant R H E := hE_inv
+  letI : IsInvariantSubgroup R H E := hE_inv
   letI : Fact r.Prime := ⟨hr⟩
   haveI : IsElementaryAbelian r (↥E) := hE_elem
   haveI : Nontrivial (↥E) := (Subgroup.nontrivial_iff_ne_bot E).2 hE_ne_bot
@@ -5252,7 +5252,7 @@ omit [Finite G] in
 private theorem theorem_3_10_case2_elementaryAbelian
     (hnilM : Group.IsNilpotent M)
     (hminv :
-      ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) :
+      ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) :
     ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p M := by
   classical
   have hM_card_gt_one : 1 < Nat.card M := Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -5264,7 +5264,7 @@ private theorem theorem_3_10_case2_elementaryAbelian
     Sylow.ne_bot_of_dvd_card (G := M) (p := p) P hp_dvd_cardM
   have hP_normal : (P : Subgroup M).Normal := Group.IsNilpotent.sylow_normal hnilM p P
   letI : (P : Subgroup M).Characteristic := Sylow.characteristic_of_normal P hP_normal
-  have hP_inv : IsInvariant G M (P : Subgroup M) :=
+  have hP_inv : IsInvariantSubgroup G M (P : Subgroup M) :=
     isInvariant_of_characteristic (A := G) (G := M) (P : Subgroup M)
   have hP_top : (P : Subgroup M) = ⊤ :=
     hminv (P : Subgroup M) hP_normal hP_inv hP_ne_bot
@@ -5276,7 +5276,7 @@ private theorem theorem_3_10_case2_elementaryAbelian
     letI : Nontrivial (Subgroup.center M) := IsPGroup.center_nontrivial (p := p) (G := M) hMpgroup
     exact (Subgroup.nontrivial_iff_ne_bot (H := Subgroup.center M)).1 inferInstance
   letI : (Subgroup.center M).Characteristic := Subgroup.centerCharacteristic
-  have hcenter_inv : IsInvariant G M (Subgroup.center M) :=
+  have hcenter_inv : IsInvariantSubgroup G M (Subgroup.center M) :=
     isInvariant_of_characteristic (A := G) (G := M) (Subgroup.center M)
   have hcenter_top : Subgroup.center M = ⊤ :=
     hminv (Subgroup.center M) inferInstance hcenter_inv hcenter_ne_bot
@@ -5289,7 +5289,7 @@ private theorem theorem_3_10_case2_elementaryAbelian
 
   let Ω : Subgroup M := omega₁ (G := M) (p := p)
   letI : Ω.Characteristic := by simpa [Ω] using omega₁_characteristic (G := M) (p := p)
-  have hΩ_inv : IsInvariant G M Ω := isInvariant_of_characteristic (A := G) (G := M) Ω
+  have hΩ_inv : IsInvariantSubgroup G M Ω := isInvariant_of_characteristic (A := G) (G := M) Ω
   have hΩ_ne_bot : Ω ≠ ⊥ := by
     letI : Fintype M := Fintype.ofFinite M
     obtain ⟨x, hx_order⟩ := _root_.exists_prime_orderOf_dvd_card (G := M) p <| by
@@ -5336,7 +5336,7 @@ omit [Finite G] [Finite M] in
 private theorem theorem_3_10_case2_irreducible
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M]
     (hminv :
-      ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) :
+      ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) :
     Representation.IsIrreducible
       (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
         Representation (ZMod p) G (Additive M)) := by
@@ -5347,7 +5347,7 @@ private theorem theorem_3_10_case2_irreducible
       eq_bot_or_eq_top := ?_ }
   intro S
   let N : Subgroup M := S.toSubmodule.toAddSubgroup.toSubgroup'
-  have hN_inv : IsInvariant G M N := by
+  have hN_inv : IsInvariantSubgroup G M N := by
     have hmap_mem (g : G) {x : M} (hx : x ∈ N) : g • x ∈ N := by
       change Additive.ofMul (g • x) ∈ S.toSubmodule
       have hx' : Additive.ofMul x ∈ S.toSubmodule := by
@@ -5534,13 +5534,13 @@ private theorem theorem_3_10_natCard_eq_prime_of_cyclic_elementaryAbelian
 
 omit [Finite G] [Finite M] [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_invariant_subgroup
-    {A : Subgroup G} {N : Subgroup M} [IsInvariant G M N]
+    {A : Subgroup G} {N : Subgroup M} [IsInvariantSubgroup G M N]
     (hfixA : fixedPointSubgroup (↥A) M = ⊥) :
     fixedPointSubgroup (↥A) N = ⊥ := by
-  letI : IsInvariant A M N :=
+  letI : IsInvariantSubgroup A M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
-        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
+        exact IsInvariantSubgroup.invariant (A := G) (G := M) (H := N) (a : G) g }
   apply
     (Subgroup.map_eq_bot_iff_of_injective
       (H := fixedPointSubgroup (↥A) N) (f := N.subtype) N.subtype_injective).1
@@ -5549,27 +5549,27 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_invariant_subgroup
 
 omit [Finite G] [Finite M] [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_eq_of_invariant_subgroup
-    {N : Subgroup M} [IsInvariant G M N]
+    {N : Subgroup M} [IsInvariantSubgroup G M N]
     (hfixR :
       ∀ x : R, x ≠ 1 →
         fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M = fixedPointSubgroup (↥R) M) :
     ∀ x : R, x ≠ 1 →
       fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) N = fixedPointSubgroup (↥R) N := by
-  letI : IsInvariant (↥R) M N :=
+  letI : IsInvariantSubgroup (↥R) M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
-        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
+        exact IsInvariantSubgroup.invariant (A := G) (G := M) (H := N) (a : G) g }
   intro x hx
-  letI : IsInvariant (↥(Subgroup.zpowers (x : G))) M N :=
+  letI : IsInvariantSubgroup (↥(Subgroup.zpowers (x : G))) M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
-        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
+        exact IsInvariantSubgroup.invariant (A := G) (G := M) (H := N) (a : G) g }
   apply (Subgroup.map_injective (f := N.subtype) N.subtype_injective)
   rw [fixedPointSubgroup_map_subtype_eq_inf, fixedPointSubgroup_map_subtype_eq_inf, hfixR x hx]
 
 omit [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
-    {A : Subgroup G} {N : Subgroup M} [N.Normal] (hNinv : IsInvariant G M N)
+    {A : Subgroup G} {N : Subgroup M} [N.Normal] (hNinv : IsInvariantSubgroup G M N)
     (hsolvM : IsSolvable M) (hcopA : Nat.Coprime (Nat.card A) (Nat.card M))
     (hfixA : fixedPointSubgroup (↥A) M = ⊥) :
     letI : MulDistribMulAction G (M ⧸ N) :=
@@ -5578,7 +5578,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
   letI : MulDistribMulAction G (M ⧸ N) :=
     quotientMulDistribMulAction (A := G) (G := M) N hNinv
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
-  letI : IsInvariant A M N :=
+  letI : IsInvariantSubgroup A M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
         exact hNinv.invariant (a : G) g }
@@ -5588,7 +5588,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
 
 omit [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
-    {N : Subgroup M} [N.Normal] (hNinv : IsInvariant G M N)
+    {N : Subgroup M} [N.Normal] (hNinv : IsInvariantSubgroup G M N)
     (hsolvM : IsSolvable M) (hcopR : Nat.Coprime (Nat.card R) (Nat.card M))
     (hfixR :
       ∀ x : R, x ≠ 1 →
@@ -5601,7 +5601,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
   letI : MulDistribMulAction G (M ⧸ N) :=
     quotientMulDistribMulAction (A := G) (G := M) N hNinv
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
-  letI : IsInvariant (↥R) M N :=
+  letI : IsInvariantSubgroup (↥R) M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
         exact hNinv.invariant (a : G) g }
@@ -5611,7 +5611,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
     exact Subgroup.card_subgroup_dvd_card ((Subgroup.zpowers (x : G)).subgroupOf R)
   have hz_cop : Nat.Coprime (Nat.card (Subgroup.zpowers (x : G))) (Nat.card M) := by
     exact Nat.Coprime.of_dvd_left hz_dvd hcopR
-  letI : IsInvariant (↥(Subgroup.zpowers (x : G))) M N :=
+  letI : IsInvariantSubgroup (↥(Subgroup.zpowers (x : G))) M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
         exact hNinv.invariant (a : G) g }
@@ -5628,7 +5628,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
 
 omit [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_card_factor
-    {N : Subgroup M} [N.Normal] (hNinv : IsInvariant G M N)
+    {N : Subgroup M} [N.Normal] (hNinv : IsInvariantSubgroup G M N)
     (hsolvM : IsSolvable M) (hcopR : Nat.Coprime (Nat.card R) (Nat.card M)) :
     letI : MulDistribMulAction G (M ⧸ N) :=
       quotientMulDistribMulAction (A := G) (G := M) N hNinv
@@ -5637,9 +5637,9 @@ private theorem theorem_3_10_fixedPointSubgroup_card_factor
         Nat.card (fixedPointSubgroup (↥R) (M ⧸ N)) := by
   letI : MulDistribMulAction G (M ⧸ N) :=
     quotientMulDistribMulAction (A := G) (G := M) N hNinv
-  letI : IsInvariant G M N := hNinv
+  letI : IsInvariantSubgroup G M N := hNinv
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
-  letI : IsInvariant (↥R) M N :=
+  letI : IsInvariantSubgroup (↥R) M N :=
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
         exact hNinv.invariant (a : G) g }
@@ -5683,7 +5683,7 @@ private theorem theorem_3_10_fixedPointSubgroup_card_factor
 
 omit [Nontrivial M] in
 public theorem fixedPointSubgroup_card_eq_mul_quotient_of_solvable_coprime
-    {N : Subgroup M} [N.Normal] (hNinv : IsInvariant G M N)
+    {N : Subgroup M} [N.Normal] (hNinv : IsInvariantSubgroup G M N)
     (hsolvM : IsSolvable M) (hcopR : Nat.Coprime (Nat.card R) (Nat.card M)) :
     letI : MulDistribMulAction G (M ⧸ N) :=
       quotientMulDistribMulAction (A := G) (G := M) N hNinv
@@ -5696,7 +5696,7 @@ public theorem fixedPointSubgroup_card_eq_mul_quotient_of_solvable_coprime
 omit [Finite G] [Finite M] [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_invariant_of_normal
     {A : Subgroup G} [A.Normal] :
-    IsInvariant G M (fixedPointSubgroup (↥A) M) := by
+    IsInvariantSubgroup G M (fixedPointSubgroup (↥A) M) := by
   refine ⟨?_⟩
   intro g x
   constructor
@@ -7226,7 +7226,7 @@ private noncomputable def theorem_3_10_case2_rho_iso_coind
     (hfixK : fixedPointSubgroup (↥K) M = ⊥)
     (hR_cyclic : IsCyclic R)
     (hR_prime : Nat.Prime (Nat.card R))
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤)
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤)
     (ρ : Representation (ZMod q) G (Additive M))
     (hirred : Representation.IsIrreducible ρ)
     (hfaith : actionCentralizerIn (A := G) (G := M) (⊤ : Subgroup G) = ⊥)
@@ -7408,7 +7408,7 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
     (_hfixR : ∀ x : R, x ≠ 1 →
       fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M = fixedPointSubgroup (↥R) M)
     (_hR_cyclic : IsCyclic R)
-    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) :
+    (hminv : ∀ N : Subgroup M, N.Normal → IsInvariantSubgroup G M N → N ≠ ⊥ → N = ⊤) :
     Nat.card M = Nat.card (fixedPointSubgroup (↥R) M) ^ Nat.card R := by
   classical
   letI : K.Normal := hfrob.normal
@@ -8079,7 +8079,7 @@ public theorem theorem_3_10
         · exact bot_le
       letI : Nontrivial ↥K' := (Subgroup.nontrivial_iff_ne_bot K').2 hK_ne_bot
       exact False.elim (top_ne_bot (hfix_top.symm.trans hfix_bot))
-    by_cases hminv : ∀ N : Subgroup M', N.Normal → IsInvariant G' M' N → N ≠ ⊥ → N = ⊤
+    by_cases hminv : ∀ N : Subgroup M', N.Normal → IsInvariantSubgroup G' M' N → N ≠ ⊥ → N = ⊤
     ·
       obtain ⟨q, hq, hMq⟩ := theorem_3_10_case2_elementaryAbelian
         (G := G') (M := M') hnilM' hminv
@@ -8089,7 +8089,7 @@ public theorem theorem_3_10
         rcases exists_minimal_normal_le (G := G') K' hfrob'.normal hK_ne_bot with
           ⟨K₀, hK₀_normal, hK₀_le_K', hK₀_ne_bot, hK₀_min⟩
         letI : K₀.Normal := hK₀_normal
-        have hfixK₀_inv : IsInvariant G' M' (fixedPointSubgroup (↥K₀) M') :=
+        have hfixK₀_inv : IsInvariantSubgroup G' M' (fixedPointSubgroup (↥K₀) M') :=
           theorem_3_10_fixedPointSubgroup_invariant_of_normal (A := K₀)
         have hfixK₀_normal : (fixedPointSubgroup (↥K₀) M').Normal := by
           have : IsMulCommutative M' := inferInstance
@@ -8450,7 +8450,7 @@ public theorem theorem_3_10
     · push Not at hminv
       rcases hminv with ⟨N, hN_normal, hN_inv, hN_ne_bot, hN_ne_top⟩
       letI : N.Normal := hN_normal
-      letI : IsInvariant G' M' N := hN_inv
+      letI : IsInvariantSubgroup G' M' N := hN_inv
       letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hN_ne_bot
       have hN_lt_top : N < ⊤ := lt_of_le_of_ne le_top hN_ne_top
       have hcardN_lt : Nat.card N < Nat.card M' := by
@@ -8520,7 +8520,7 @@ public theorem theorem_3_10
       · intro hcycFix
         let A : Subgroup G' := ⁅K', K'⁆
         letI : MulDistribMulAction A M' := MulDistribMulAction.compHom M' A.subtype
-        letI : IsInvariant (↥R') M' N :=
+        letI : IsInvariantSubgroup (↥R') M' N :=
           { invariant := fun a g => by
               change g ∈ N ↔ (a : G') • g ∈ N
               exact hN_inv.invariant (a : G') g }
@@ -8571,16 +8571,16 @@ public theorem theorem_3_10
             · simp [Gi]
           · intro i
             fin_cases i
-            · change IsInvariant A M' (⊤ : Subgroup M')
+            · change IsInvariantSubgroup A M' (⊤ : Subgroup M')
               refine { invariant := ?_ }
               intro a g
               constructor <;> intro _ <;> simp
-            · change IsInvariant A M' N
+            · change IsInvariantSubgroup A M' N
               refine { invariant := ?_ }
               intro a g
               change g ∈ N ↔ (a : G') • g ∈ N
               exact hN_inv.invariant (a : G') g
-            · change IsInvariant A M' (⊥ : Subgroup M')
+            · change IsInvariantSubgroup A M' (⊥ : Subgroup M')
               refine { invariant := ?_ }
               intro a g
               constructor

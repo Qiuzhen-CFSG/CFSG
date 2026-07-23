@@ -800,7 +800,7 @@ public theorem theorem_12_9_exists_conjugate_le_typeF_complement
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hP0subInv : IsInvariant Unit M P0sub := by
+  have hP0subInv : IsInvariantSubgroup Unit M P0sub := by
     refine ⟨?_⟩
     intro _ x
     simp [P0sub]
