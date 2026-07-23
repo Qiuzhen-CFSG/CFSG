@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.BGsection4.proposition_4_11
-public import FeitThompson.BGsection4.lemma_4_1
-public import FeitThompson.BGsection4.lemma_4_5_a
-public import FeitThompson.BGsection4.lemma_4_5_b
-public import FeitThompson.BGsection4.lemma_4_10
-public import FeitThompson.Representation.ElementaryAbelianAction
+public import Submission.FeitThompson.BGsection4.proposition_4_11
+public import Submission.FeitThompson.BGsection4.lemma_4_1
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection4.lemma_4_5_b
+public import Submission.FeitThompson.BGsection4.lemma_4_10
+public import Submission.FeitThompson.Representation.ElementaryAbelianAction
 
 open scoped FixedPoints IsMulCommutative commutatorElement
 

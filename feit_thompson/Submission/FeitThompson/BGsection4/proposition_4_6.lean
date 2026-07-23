@@ -1,8 +1,8 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-public import FeitThompson.BGsection4.lemma_4_5_c
-public import FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection4.lemma_4_5_c
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
 
 section Main
 

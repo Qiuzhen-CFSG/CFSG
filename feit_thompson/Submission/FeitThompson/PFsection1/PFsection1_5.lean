@@ -1,14 +1,14 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_4
+public import Submission.FeitThompson.PFsection1.PFsection1_4
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.GroupTheory.GroupAction.ConjAct
 public import Mathlib.GroupTheory.Index
 public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.SimpleCriteria
-public import FeitThompson.Representation.Unbundled
-public import FeitThompson.Representation.CharacterValues
+public import Submission.FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.SimpleCriteria
+public import Submission.FeitThompson.Representation.Unbundled
+public import Submission.FeitThompson.Representation.CharacterValues
 /-!
 # Peterfalvi, Section 1, Proposition (1.5)
 

@@ -1,12 +1,12 @@
 module
 
-import FeitThompson.PFsection5.RealVirtualParity
-import FeitThompson.PFsection7.PFsection7_11
-import FeitThompson.PFsection7.PFsection7_8_a
-import FeitThompson.PFsection7.PFsection7_8_b
-public import FeitThompson.PFsection13.PFsection13_18
-import FeitThompson.PFsection12.PFsection12_7
-import FeitThompson.PFsection12.PFsection12_6
+import Submission.FeitThompson.PFsection5.RealVirtualParity
+import Submission.FeitThompson.PFsection7.PFsection7_11
+import Submission.FeitThompson.PFsection7.PFsection7_8_a
+import Submission.FeitThompson.PFsection7.PFsection7_8_b
+public import Submission.FeitThompson.PFsection13.PFsection13_18
+import Submission.FeitThompson.PFsection12.PFsection12_7
+import Submission.FeitThompson.PFsection12.PFsection12_6
 
 /-!
 # Peterfalvi, Section 13: PFsection13_19

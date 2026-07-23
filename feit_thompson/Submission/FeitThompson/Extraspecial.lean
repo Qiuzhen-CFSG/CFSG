@@ -3,7 +3,7 @@ Authors: Yusen Tang
 -/
 module
 
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 
 /-- An extraspecial `p`-group has center of order `p`, elementary abelian central quotient, and
 nontrivial central quotient. -/

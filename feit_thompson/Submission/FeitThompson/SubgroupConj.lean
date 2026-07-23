@@ -6,7 +6,7 @@ module
 
 public import Mathlib.Algebra.Group.Subgroup.Actions
 
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 open scoped commutatorElement
 

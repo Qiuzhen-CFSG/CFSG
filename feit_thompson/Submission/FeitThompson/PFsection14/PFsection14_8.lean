@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection14.Basic
+public import Submission.FeitThompson.PFsection14.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Log.Monotone
 

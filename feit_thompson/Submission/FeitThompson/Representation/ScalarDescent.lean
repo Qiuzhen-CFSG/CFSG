@@ -11,8 +11,8 @@ public import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 public import Mathlib.LinearAlgebra.TensorProduct.Basis
 public import Mathlib.LinearAlgebra.TensorProduct.Pi
 
-public import FeitThompson.Representation.ExtendScalars
-public import FeitThompson.Representation.KrullSchmidt
+public import Submission.FeitThompson.Representation.ExtendScalars
+public import Submission.FeitThompson.Representation.KrullSchmidt
 
 /-!
 # Scalar-descent infrastructure

@@ -4,10 +4,10 @@ import Mathlib.Analysis.MeanInequalities
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
 import Mathlib.RingTheory.Polynomial.Resultant.Basic
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection6.PFsection6_8
-public import FeitThompson.PFsection13.PFsection13_8
-import FeitThompson.PFsection8.PFsection8_5_a
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection6.PFsection6_8
+public import Submission.FeitThompson.PFsection13.PFsection13_8
+import Submission.FeitThompson.PFsection8.PFsection8_5_a
 
 /-!
 # Peterfalvi, Section 13: PFsection13_9

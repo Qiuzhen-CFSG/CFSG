@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import FeitThompson.BGsection11.lemma_11_1_b
+public import Submission.FeitThompson.BGsection11.lemma_11_1_b
 import Mathlib.GroupTheory.Schreier
 
 /-!

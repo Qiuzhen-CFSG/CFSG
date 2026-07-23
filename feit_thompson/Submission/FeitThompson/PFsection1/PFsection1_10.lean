@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Representation.CharacterValues
+public import Submission.FeitThompson.Representation.CharacterValues
 
 /-!
 # Peterfalvi, Section 1, Proposition (1.10)

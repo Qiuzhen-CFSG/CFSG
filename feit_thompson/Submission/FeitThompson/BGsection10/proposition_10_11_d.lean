@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection10.proposition_10_11_c
-public import FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection10.proposition_10_11_c
+public import Submission.FeitThompson.BGsection3.Remaining
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 

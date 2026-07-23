@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_9_Delta
-import FeitThompson.PFsection8.PFsection8_15
+public import Submission.FeitThompson.PFsection14.PFsection14_9_Delta
+import Submission.FeitThompson.PFsection8.PFsection8_15
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), calT construction

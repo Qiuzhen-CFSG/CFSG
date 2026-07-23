@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.PFsection13.PFsection13_16
-import FeitThompson.PFsection12.PFsection12_7
-import FeitThompson.PFsection12.PFsection12_16
-import FeitThompson.BGsection13.lemma_13_13
-import FeitThompson.PFsection9.PFsection9_1
-import FeitThompson.PFsection8.SourceTypePBridge
+public import Submission.FeitThompson.PFsection13.PFsection13_16
+import Submission.FeitThompson.PFsection12.PFsection12_7
+import Submission.FeitThompson.PFsection12.PFsection12_16
+import Submission.FeitThompson.BGsection13.lemma_13_13
+import Submission.FeitThompson.PFsection9.PFsection9_1
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
 
 /-!
 # Peterfalvi, Section 13: PFsection13_17

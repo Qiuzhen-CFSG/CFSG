@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGappendixC.Basic
+public import Submission.FeitThompson.BGappendixC.Basic
 
 open scoped Pointwise commutatorElement
 

@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection11.corollary_11_2_b
-public import FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection11.corollary_11_2_b
+public import Submission.FeitThompson.BGsection3.Remaining
 import Mathlib.GroupTheory.Schreier
 
 /-!

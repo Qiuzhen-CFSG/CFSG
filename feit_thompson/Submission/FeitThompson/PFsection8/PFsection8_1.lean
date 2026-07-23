@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection8.Basic
+public import Submission.FeitThompson.PFsection8.Basic
 
 /-!
 # Peterfalvi, Section 8: Theorem (8.1)

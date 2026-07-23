@@ -1,9 +1,9 @@
 module
 
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.PCore.PCore
-import FeitThompson.PCore.PPrimeCore
-public import FeitThompson.PFsection9.Basic
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PCore.PPrimeCore
+public import Submission.FeitThompson.PFsection9.Basic
 
 noncomputable section
 

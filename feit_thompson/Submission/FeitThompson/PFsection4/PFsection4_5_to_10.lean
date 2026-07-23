@@ -1,13 +1,13 @@
 module
 
-import FeitThompson.PFsection1.PFsection1_2
-import FeitThompson.PFsection1.PFsection1_5
-import FeitThompson.PFsection1.PFsection1_6
-import FeitThompson.Representation.RepEquiv
-public import FeitThompson.PFsection4.PFsection4_9
-public import FeitThompson.PFsection4.PFsection4_7
-public import FeitThompson.PFsection4.PFsection4_10
-import FeitThompson.PFsection4.PFsection4_4
+import Submission.FeitThompson.PFsection1.PFsection1_2
+import Submission.FeitThompson.PFsection1.PFsection1_5
+import Submission.FeitThompson.PFsection1.PFsection1_6
+import Submission.FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.PFsection4.PFsection4_9
+public import Submission.FeitThompson.PFsection4.PFsection4_7
+public import Submission.FeitThompson.PFsection4.PFsection4_10
+import Submission.FeitThompson.PFsection4.PFsection4_4
 
 /-!
 # Scratch formalization for Peterfalvi Section 4, items (4.5)–(4.10)

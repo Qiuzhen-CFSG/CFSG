@@ -4,12 +4,12 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.Defs
-import FeitThompson.Commutator.ActionTriviality
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.GroupAction.MinimalNormal
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.HallSubgroups.Conjugacy
+public import Submission.FeitThompson.BGsection1.Defs
+import Submission.FeitThompson.Commutator.ActionTriviality
+import Submission.FeitThompson.Frattini.CoprimeAction
+import Submission.FeitThompson.GroupAction.MinimalNormal
+import Submission.FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.HallSubgroups.Conjugacy
 
 open scoped Pointwise
 

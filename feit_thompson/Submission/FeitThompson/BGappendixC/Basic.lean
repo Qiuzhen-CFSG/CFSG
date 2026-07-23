@@ -13,7 +13,7 @@ public import Mathlib.NumberTheory.JacobiSum.Basic
 public import Mathlib.NumberTheory.MulChar.Lemmas
 public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.GroupTheory.SemidirectProduct
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 /-!
 # Statements from BG Appendix C

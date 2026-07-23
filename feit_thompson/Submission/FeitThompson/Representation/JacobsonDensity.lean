@@ -6,8 +6,8 @@ module
 
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-public import FeitThompson.Representation.ExtendScalars
-public import FeitThompson.Representation.RepEnd
+public import Submission.FeitThompson.Representation.ExtendScalars
+public import Submission.FeitThompson.Representation.RepEnd
 
 namespace Representation
 open scoped MonoidAlgebra

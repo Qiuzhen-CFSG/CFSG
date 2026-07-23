@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection15.corollary_15_9
-import FeitThompson.PFsection2.PFsection2_1
+public import Submission.FeitThompson.BGsection15.corollary_15_9
+import Submission.FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 

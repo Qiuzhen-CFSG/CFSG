@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.Completeness
-public import FeitThompson.Representation.PermutationBasisOrbits
+public import Submission.FeitThompson.Representation.Completeness
+public import Submission.FeitThompson.Representation.PermutationBasisOrbits
 public import Mathlib.GroupTheory.GroupAction.Quotient
 
 open scoped BigOperators AlgebraMonoidAlgebra Matrix.Module

@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection7.Basic
+public import Submission.FeitThompson.PFsection7.Basic
 
 /-!
 # Peterfalvi, Section 7: Theorem (7.4)

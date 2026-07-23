@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection13.PFsection13_4
-import FeitThompson.PFsection8.PFsection8_5_a
-import FeitThompson.PFsection7.PFsection7_7
-import FeitThompson.PFsection8.SourceTypePBridge
+public import Submission.FeitThompson.PFsection13.PFsection13_4
+import Submission.FeitThompson.PFsection8.PFsection8_5_a
+import Submission.FeitThompson.PFsection7.PFsection7_7
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
 
 /-!
 # Peterfalvi, Section 13: PFsection13_5

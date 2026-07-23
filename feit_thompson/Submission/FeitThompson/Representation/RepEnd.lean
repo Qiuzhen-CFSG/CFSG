@@ -4,7 +4,7 @@ Authors: Yusen Tang
 
 module
 
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.RepEquiv
 
 namespace Representation
 

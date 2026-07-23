@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection7.Defs
-public import FeitThompson.BGsection7.theorem_7_2
-public import FeitThompson.BGsection7.theorem_7_4
-public import FeitThompson.BGsection7.proposition_7_5
-public import FeitThompson.BGsection7.theorem_7_6
+public import Submission.FeitThompson.BGsection7.Defs
+public import Submission.FeitThompson.BGsection7.theorem_7_2
+public import Submission.FeitThompson.BGsection7.theorem_7_4
+public import Submission.FeitThompson.BGsection7.proposition_7_5
+public import Submission.FeitThompson.BGsection7.theorem_7_6
 import Mathlib.Order.Atoms
 
 open scoped commutatorElement

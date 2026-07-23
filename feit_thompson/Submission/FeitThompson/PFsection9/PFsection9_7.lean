@@ -1,9 +1,9 @@
 module
 
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.PFsection8.PFsection8_5_b
-public import FeitThompson.PFsection9.PFsection9_6
-import FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.PFsection8.PFsection8_5_b
+public import Submission.FeitThompson.PFsection9.PFsection9_6
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.CharP.CharAndCard
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.SpecificGroups.Cyclic

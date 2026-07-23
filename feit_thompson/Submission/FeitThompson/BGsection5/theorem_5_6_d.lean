@@ -4,10 +4,10 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection5.theorem_5_6_c
-import FeitThompson.BGsection4.theorem_4_18_d
-import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
+public import Submission.FeitThompson.BGsection5.theorem_5_6_c
+import Submission.FeitThompson.BGsection4.theorem_4_18_d
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PGroup.NormalSubgroups
 
 /-! # Theorem 5.6(d) from BG Section 5 -/
 

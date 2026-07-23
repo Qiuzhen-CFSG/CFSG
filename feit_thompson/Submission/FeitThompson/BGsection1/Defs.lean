@@ -33,32 +33,32 @@ public import Mathlib.RepresentationTheory.Basic
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.ChiefFactors.Core
-public import FeitThompson.ChiefFactors.BaerCore
-public import FeitThompson.ChiefFactors.Proposition12
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Commutator.ActionTriviality
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.Commutator.CyclicSylow
-import FeitThompson.Commutator.Core
-import FeitThompson.ElementaryAbelian
-import FeitThompson.Fitting.Centralizer
-import FeitThompson.Fitting.Core
-import FeitThompson.Fitting.Faithful
-public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.HallSubgroups.Core
-public import FeitThompson.HallSubgroups.Complements
-public import FeitThompson.HallSubgroups.Existence
-public import FeitThompson.HallSubgroups.Conjugacy
-public import FeitThompson.PGroup.Omega
-import FeitThompson.PGroup.NormalSubgroups
-public import FeitThompson.Representation.CompleteReducibility
-public import FeitThompson.Representation.Maschke
-import FeitThompson.ZGroup.Hall
+public import Submission.FeitThompson.ChiefFactors.Core
+public import Submission.FeitThompson.ChiefFactors.BaerCore
+public import Submission.FeitThompson.ChiefFactors.Proposition12
+import Submission.FeitThompson.Burnside.NormalComplement
+import Submission.FeitThompson.Commutator.ActionTriviality
+import Submission.FeitThompson.Frattini.CoprimeAction
+import Submission.FeitThompson.Commutator.CyclicSylow
+import Submission.FeitThompson.Commutator.Core
+import Submission.FeitThompson.ElementaryAbelian
+import Submission.FeitThompson.Fitting.Centralizer
+import Submission.FeitThompson.Fitting.Core
+import Submission.FeitThompson.Fitting.Faithful
+public import Submission.FeitThompson.Frattini.Core
+public import Submission.FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.GroupAction.Invariant
+public import Submission.FeitThompson.GroupAction.Lemmas
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.HallSubgroups.Core
+public import Submission.FeitThompson.HallSubgroups.Complements
+public import Submission.FeitThompson.HallSubgroups.Existence
+public import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import Submission.FeitThompson.PGroup.Omega
+import Submission.FeitThompson.PGroup.NormalSubgroups
+public import Submission.FeitThompson.Representation.CompleteReducibility
+public import Submission.FeitThompson.Representation.Maschke
+import Submission.FeitThompson.ZGroup.Hall
 
 open scoped Pointwise
 

@@ -4,8 +4,8 @@ Authors: OpenAI
 module
 
 public import Mathlib.Algebra.GCDMonoid.FinsetLemmas
-public import FeitThompson.BGsection12.corollary_12_9_b
-public import FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection12.corollary_12_9_b
+public import Submission.FeitThompson.BGsection3.Remaining
 
 open scoped Pointwise
 

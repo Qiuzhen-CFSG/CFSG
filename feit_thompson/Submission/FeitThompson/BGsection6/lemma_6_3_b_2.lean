@@ -4,7 +4,7 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import FeitThompson.BGsection6.lemma_6_3_b_1
+public import Submission.FeitThompson.BGsection6.lemma_6_3_b_1
 
 open scoped MatrixGroups Pointwise TensorProduct
 

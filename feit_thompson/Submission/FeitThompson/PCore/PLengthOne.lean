@@ -4,8 +4,8 @@ Authors: Tianjiao Nie, Yusen Tang
 
 module
 
-public import FeitThompson.PCore.Defs
-public import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.PCore.Defs
+public import Submission.FeitThompson.SubgroupConj
 open Subgroup
 
 section PLengthOne

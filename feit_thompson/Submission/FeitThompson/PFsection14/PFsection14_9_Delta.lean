@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_7
-public import FeitThompson.PFsection14.PFsection14_8
+public import Submission.FeitThompson.PFsection14.PFsection14_7
+public import Submission.FeitThompson.PFsection14.PFsection14_8
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), Delta and source data

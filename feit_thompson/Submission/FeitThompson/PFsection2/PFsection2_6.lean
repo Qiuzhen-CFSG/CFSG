@@ -1,12 +1,12 @@
 module
 
-public import FeitThompson.PFsection2.PFsection2_5
-public import FeitThompson.PFsection2.PFsection2_1
-public import FeitThompson.PFsection2.PFsection2_7
-public import FeitThompson.PFsection2.PFsection2_10
-public import FeitThompson.PFsection2.PFsection2_8
-public import FeitThompson.PFsection2.PFsection2_9
-public import FeitThompson.PFsection2.PFsection2_11
+public import Submission.FeitThompson.PFsection2.PFsection2_5
+public import Submission.FeitThompson.PFsection2.PFsection2_1
+public import Submission.FeitThompson.PFsection2.PFsection2_7
+public import Submission.FeitThompson.PFsection2.PFsection2_10
+public import Submission.FeitThompson.PFsection2.PFsection2_8
+public import Submission.FeitThompson.PFsection2.PFsection2_9
+public import Submission.FeitThompson.PFsection2.PFsection2_11
 import Mathlib.Algebra.Group.Pointwise.Set.Basic
 
 /-!

@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection7.proposition_7_5
-public import FeitThompson.BGsection5.theorem_5_5_a
+public import Submission.FeitThompson.BGsection7.proposition_7_5
+public import Submission.FeitThompson.BGsection5.theorem_5_5_a
 /-! # Theorem 7.6 from BG Section 7 -/
 
 open scoped Pointwise

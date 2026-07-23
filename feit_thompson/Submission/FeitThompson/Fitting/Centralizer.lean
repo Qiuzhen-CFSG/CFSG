@@ -9,8 +9,8 @@ public import Mathlib.Data.Finite.Defs
 public import Mathlib.GroupTheory.Solvable
 import Mathlib.SetTheory.Cardinal.NatCard
 
-public import FeitThompson.Fitting.Core
-import FeitThompson.ChiefFactors.Proposition12
+public import Submission.FeitThompson.Fitting.Core
+import Submission.FeitThompson.ChiefFactors.Proposition12
 
 /-!
 # Proposition 1.3: the Fitting subgroup is self-centralizing (solvable case)

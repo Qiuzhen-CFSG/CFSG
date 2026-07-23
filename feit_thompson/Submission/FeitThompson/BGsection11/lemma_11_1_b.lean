@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection11.lemma_11_1_a
+public import Submission.FeitThompson.BGsection11.lemma_11_1_a
 
 /-!
 # Lemma 11.1(b)

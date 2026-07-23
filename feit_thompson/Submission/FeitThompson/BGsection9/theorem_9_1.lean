@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection9.Defs
-public import FeitThompson.BGsection4.theorem_4_20_a
+public import Submission.FeitThompson.BGsection9.Defs
+public import Submission.FeitThompson.BGsection4.theorem_4_20_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
 

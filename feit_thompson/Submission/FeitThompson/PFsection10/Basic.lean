@@ -1,12 +1,12 @@
 module
 
-import FeitThompson.PFsection4.PFsection4_4
-import FeitThompson.PFsection4.PFsection4_5_to_10
-import FeitThompson.PFsection5.PFsection5_3
-import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection5.PFsection5_8
-import FeitThompson.Representation.DegreeBounds
-public import FeitThompson.PFsection9.Basic
+import Submission.FeitThompson.PFsection4.PFsection4_4
+import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
+import Submission.FeitThompson.PFsection5.PFsection5_3
+import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection5.PFsection5_8
+import Submission.FeitThompson.Representation.DegreeBounds
+public import Submission.FeitThompson.PFsection9.Basic
 
 /-!
 # Peterfalvi, Section 10: basic notation

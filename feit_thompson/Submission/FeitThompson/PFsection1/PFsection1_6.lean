@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_5
-public import FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.PFsection1.PFsection1_5
+public import Submission.FeitThompson.GroupAction.Quotient
 public import Mathlib.GroupTheory.Coset.Card
 public import Mathlib.GroupTheory.QuotientGroup.Basic
 /-!

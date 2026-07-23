@@ -4,12 +4,12 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.GroupAction.Defs
 
 public import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Tactic.Basic
 
-import FeitThompson.Commutator.Core
+import Submission.FeitThompson.Commutator.Core
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.PGroup
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic

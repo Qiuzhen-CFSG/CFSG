@@ -1,19 +1,19 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_7
-public import FeitThompson.BGsection3.Defs
-import FeitThompson.BGsection3.lemma_3_2_b
-import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.PFsection3.PFsection3_5
-public import FeitThompson.PFsection5.PFsection5_3
-import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.Representation.DegreeBounds
-import FeitThompson.PFsection6.PFsection6_2
-import FeitThompson.PFsection6.PFsection6_5_a
-import FeitThompson.PFsection6.PFsection6_5_b
-import FeitThompson.PFsection6.PFsection6_5_c
-import FeitThompson.PFsection6.PFsection6_6
+public import Submission.FeitThompson.PFsection6.PFsection6_7
+public import Submission.FeitThompson.BGsection3.Defs
+import Submission.FeitThompson.BGsection3.lemma_3_2_b
+import Submission.FeitThompson.BGsection3.theorem_3_4
+import Submission.FeitThompson.PFsection3.PFsection3_5
+public import Submission.FeitThompson.PFsection5.PFsection5_3
+import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.Representation.DegreeBounds
+import Submission.FeitThompson.PFsection6.PFsection6_2
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
+import Submission.FeitThompson.PFsection6.PFsection6_5_b
+import Submission.FeitThompson.PFsection6.PFsection6_5_c
+import Submission.FeitThompson.PFsection6.PFsection6_6
 
 noncomputable section
 

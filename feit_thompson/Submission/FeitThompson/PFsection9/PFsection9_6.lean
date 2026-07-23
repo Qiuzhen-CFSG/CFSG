@@ -1,8 +1,8 @@
 module
 
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.BGsection3.Remaining
-public import FeitThompson.PFsection9.Basic
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.PFsection9.Basic
 
 noncomputable section
 

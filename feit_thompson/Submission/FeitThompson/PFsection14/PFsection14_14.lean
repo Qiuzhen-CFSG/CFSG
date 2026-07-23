@@ -1,13 +1,13 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_12
-public import FeitThompson.PFsection14.PFsection14_13
-import FeitThompson.PFsection12.PFsection12_4
-import FeitThompson.PFsection12.PFsection12_6
-import FeitThompson.PFsection12.PFsection12_7
-public import FeitThompson.PFsection7.PFsection7_8_a
-public import FeitThompson.PFsection7.PFsection7_8_b
-public import FeitThompson.PFsection7.PFsection7_9
+public import Submission.FeitThompson.PFsection14.PFsection14_12
+public import Submission.FeitThompson.PFsection14.PFsection14_13
+import Submission.FeitThompson.PFsection12.PFsection12_4
+import Submission.FeitThompson.PFsection12.PFsection12_6
+import Submission.FeitThompson.PFsection12.PFsection12_7
+public import Submission.FeitThompson.PFsection7.PFsection7_8_a
+public import Submission.FeitThompson.PFsection7.PFsection7_8_b
+public import Submission.FeitThompson.PFsection7.PFsection7_9
 
 /-!
 # Peterfalvi, Section 14: theorem (14.14)

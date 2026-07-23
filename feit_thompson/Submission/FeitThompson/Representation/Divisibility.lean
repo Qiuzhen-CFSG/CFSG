@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.Orthogonality
+public import Submission.FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.Orthogonality
 public import Mathlib.Algebra.Central.End
 public import Mathlib.Algebra.MonoidAlgebra.MapDomain
 public import Mathlib.Algebra.MonoidAlgebra.Module

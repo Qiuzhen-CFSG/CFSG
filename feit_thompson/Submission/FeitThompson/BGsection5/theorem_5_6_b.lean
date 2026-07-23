@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection5.theorem_5_6_a
-import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
+public import Submission.FeitThompson.BGsection5.theorem_5_6_a
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PGroup.NormalSubgroups
 
 /-! # Theorem 5.6(b) from BG Section 5 -/
 

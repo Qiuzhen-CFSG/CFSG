@@ -1,10 +1,10 @@
 module
 
-public import FeitThompson.BGsection4.proposition_4_8_b
-public import FeitThompson.BGsection4.proposition_4_8_b
-public import FeitThompson.BGsection4.proposition_4_8_a
-public import FeitThompson.BGsection4.proposition_4_3_b
-public import FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection4.proposition_4_8_b
+public import Submission.FeitThompson.BGsection4.proposition_4_8_b
+public import Submission.FeitThompson.BGsection4.proposition_4_8_a
+public import Submission.FeitThompson.BGsection4.proposition_4_3_b
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
 
 /-! # Lemma 4.9 from BG Section 4 -/
 

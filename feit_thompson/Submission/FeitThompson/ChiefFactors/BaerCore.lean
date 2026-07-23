@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.ChiefFactors.Core
+public import Submission.FeitThompson.ChiefFactors.Core
 
 open scoped commutatorElement
 

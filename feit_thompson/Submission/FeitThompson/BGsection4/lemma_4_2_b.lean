@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.BGsection4.Defs
+public import Submission.FeitThompson.BGsection4.Defs
 
 open scoped commutatorElement
 

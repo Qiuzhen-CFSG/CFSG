@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_3
+public import Submission.FeitThompson.PFsection1.PFsection1_3
 public import Mathlib.Analysis.Complex.Basic
-public import FeitThompson.Representation.RepEquiv
-public import FeitThompson.Representation.Unbundled
+public import Submission.FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.Unbundled
 /-!
 # Peterfalvi, Section 1, Proposition (1.4)
 

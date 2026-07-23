@@ -6,7 +6,7 @@ module
 
 public import Mathlib.RepresentationTheory.Basic
 public import Mathlib.RepresentationTheory.Induced
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.RepEquiv
 
 open Representation
 open scoped MonoidAlgebra

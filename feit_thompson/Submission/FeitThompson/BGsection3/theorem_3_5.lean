@@ -1,10 +1,10 @@
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection3.Infrastructure
-public import FeitThompson.BGsection3.lemma_3_2_a
-public import FeitThompson.BGsection3.lemma_3_2_b
-public import FeitThompson.BGsection3.lemma_3_3
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Infrastructure
+public import Submission.FeitThompson.BGsection3.lemma_3_2_a
+public import Submission.FeitThompson.BGsection3.lemma_3_2_b
+public import Submission.FeitThompson.BGsection3.lemma_3_3
 
 open scoped FixedPoints TensorProduct Pointwise
 

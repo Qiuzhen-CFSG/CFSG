@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection11.theorem_11_5
+public import Submission.FeitThompson.BGsection11.theorem_11_5
 
 /-!
 # Corollary 11.6(a)

@@ -1,10 +1,10 @@
 module
 
-import FeitThompson.GroupAction.Cardinalities
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.PFsection8.Basic
-public import FeitThompson.PFsection5.PFsection5_2
-public import FeitThompson.PFsection5.PFsection5_3
+import Submission.FeitThompson.GroupAction.Cardinalities
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.PFsection8.Basic
+public import Submission.FeitThompson.PFsection5.PFsection5_2
+public import Submission.FeitThompson.PFsection5.PFsection5_3
 
 /-!
 # Peterfalvi, Section 9: basic notation

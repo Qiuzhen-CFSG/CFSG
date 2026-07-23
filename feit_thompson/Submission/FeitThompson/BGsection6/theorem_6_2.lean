@@ -4,9 +4,9 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import FeitThompson.BGsection6.theorem_6_1
-import FeitThompson.Representation.ElementaryAbelianAction
-import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.BGsection6.theorem_6_1
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.SubgroupConj
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 

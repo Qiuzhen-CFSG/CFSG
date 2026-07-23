@@ -10,7 +10,7 @@ public import Mathlib.LinearAlgebra.Basis.VectorSpace
 public import Mathlib.LinearAlgebra.Dimension.Constructions
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 
 open scoped IsMulCommutative
 

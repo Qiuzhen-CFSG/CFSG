@@ -1,20 +1,20 @@
 module
 
-public import FeitThompson.PFsection13.PFsection13_1
-public import FeitThompson.PFsection13.PFsection13_Common
-import FeitThompson.PFsection8.PFsection8_5_a
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.PFsection9.PFsection9_4
-import FeitThompson.PFsection9.PFsection9_6
-import FeitThompson.PFsection9.PFsection9_7
-import FeitThompson.PFsection9.PFsection9_11
-import FeitThompson.PFsection8.SourceTypePBridge
-import FeitThompson.PFsection8.PFsection8_15
-import FeitThompson.PFsection8.PFsection8_16
-import FeitThompson.PFsection2.PFsection2_7_11
-import FeitThompson.PFsection10.PFsection10_11
-import FeitThompson.PFsection11.PFsection11_9
-import FeitThompson.PFsection12.PFsection12_7
+public import Submission.FeitThompson.PFsection13.PFsection13_1
+public import Submission.FeitThompson.PFsection13.PFsection13_Common
+import Submission.FeitThompson.PFsection8.PFsection8_5_a
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.PFsection9.PFsection9_4
+import Submission.FeitThompson.PFsection9.PFsection9_6
+import Submission.FeitThompson.PFsection9.PFsection9_7
+import Submission.FeitThompson.PFsection9.PFsection9_11
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
+import Submission.FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection8.PFsection8_16
+import Submission.FeitThompson.PFsection2.PFsection2_7_11
+import Submission.FeitThompson.PFsection10.PFsection10_11
+import Submission.FeitThompson.PFsection11.PFsection11_9
+import Submission.FeitThompson.PFsection12.PFsection12_7
 
 /-!
 # Peterfalvi, Section 13: PFsection13_2

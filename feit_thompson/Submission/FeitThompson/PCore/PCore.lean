@@ -4,7 +4,7 @@ Authors: Tianjiao Nie, Yusen Tang
 
 module
 
-public import FeitThompson.PCore.Defs
+public import Submission.FeitThompson.PCore.Defs
 
 open scoped commutatorElement
 

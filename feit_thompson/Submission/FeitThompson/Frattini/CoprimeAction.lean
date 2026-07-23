@@ -9,10 +9,10 @@ import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
-public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.HallSubgroups.Conjugacy
+public import Submission.FeitThompson.Frattini.Core
+public import Submission.FeitThompson.GroupAction.Lemmas
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.HallSubgroups.Conjugacy
 
 open scoped IsMulCommutative
 

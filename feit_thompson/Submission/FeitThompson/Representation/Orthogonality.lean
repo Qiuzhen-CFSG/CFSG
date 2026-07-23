@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Representation.Completeness
+public import Submission.FeitThompson.Representation.Completeness
 import Mathlib.Data.Complex.BigOperators
 import Mathlib.LinearAlgebra.Basis.Basic
 

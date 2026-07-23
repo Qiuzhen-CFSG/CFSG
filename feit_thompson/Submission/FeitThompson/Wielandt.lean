@@ -1,15 +1,15 @@
 module
 
-public import FeitThompson.BGsection3.Remaining
-public import FeitThompson.BGsection12.lemma_12_1_a
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.LinearAlgebra.MatrixBlocks
-public import FeitThompson.PGroup.HomocyclicFrattini
-public import FeitThompson.Wielandt.FixedPointProduct
-public import FeitThompson.Wielandt.MatrixTrace
-public import FeitThompson.Wielandt.StandardCover
-public import FeitThompson.Wielandt.SubgroupRectangular
+public import Submission.FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection12.lemma_12_1_a
+public import Submission.FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.LinearAlgebra.MatrixBlocks
+public import Submission.FeitThompson.PGroup.HomocyclicFrattini
+public import Submission.FeitThompson.Wielandt.FixedPointProduct
+public import Submission.FeitThompson.Wielandt.MatrixTrace
+public import Submission.FeitThompson.Wielandt.StandardCover
+public import Submission.FeitThompson.Wielandt.SubgroupRectangular
 
 /-!
 # Wielandt fixed point theorem

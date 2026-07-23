@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PGroup.HomocyclicFrattini
-public import FeitThompson.Wielandt.MatrixTrace
+public import Submission.FeitThompson.PGroup.HomocyclicFrattini
+public import Submission.FeitThompson.Wielandt.MatrixTrace
 
 /-!
 # Homocyclic lift packages for Wielandt fixed-point arguments

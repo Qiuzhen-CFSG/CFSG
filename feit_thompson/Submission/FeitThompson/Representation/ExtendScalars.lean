@@ -8,8 +8,8 @@ public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.RepresentationTheory.Invariants
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 
-public import FeitThompson.Representation.SubrepresentationLattice
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.SubrepresentationLattice
+public import Submission.FeitThompson.Representation.RepEquiv
 
 open LinearMap
 open scoped TensorProduct

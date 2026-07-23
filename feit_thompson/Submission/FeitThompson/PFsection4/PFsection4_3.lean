@@ -1,13 +1,13 @@
 module
 
-public import FeitThompson.PFsection4.Basic
-public import FeitThompson.PFsection4.PFsection4_1
-public import FeitThompson.PFsection4.PFsection4_2
-public import FeitThompson.PFsection1.PFsection1_4
-public import FeitThompson.PFsection2.PFsection2_3
-public import FeitThompson.PFsection2.PFsection2_6
-public import FeitThompson.PFsection3.PFsection3_5
-public import FeitThompson.PFsection3.PFsection3_9
+public import Submission.FeitThompson.PFsection4.Basic
+public import Submission.FeitThompson.PFsection4.PFsection4_1
+public import Submission.FeitThompson.PFsection4.PFsection4_2
+public import Submission.FeitThompson.PFsection1.PFsection1_4
+public import Submission.FeitThompson.PFsection2.PFsection2_3
+public import Submission.FeitThompson.PFsection2.PFsection2_6
+public import Submission.FeitThompson.PFsection3.PFsection3_5
+public import Submission.FeitThompson.PFsection3.PFsection3_9
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
 /-!

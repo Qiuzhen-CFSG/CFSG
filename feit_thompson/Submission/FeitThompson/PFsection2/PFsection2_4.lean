@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection2.Basic
-public import FeitThompson.HallSubgroups.Core
+public import Submission.FeitThompson.PFsection2.Basic
+public import Submission.FeitThompson.HallSubgroups.Core
 public import Mathlib.GroupTheory.Complement
 public import Mathlib.GroupTheory.OrderOfElement
 

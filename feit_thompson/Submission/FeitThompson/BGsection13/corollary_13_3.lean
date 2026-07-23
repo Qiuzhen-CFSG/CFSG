@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection13.corollary_13_2
-import FeitThompson.HallSubgroups.Conjugacy
+public import Submission.FeitThompson.BGsection13.corollary_13_2
+import Submission.FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
 

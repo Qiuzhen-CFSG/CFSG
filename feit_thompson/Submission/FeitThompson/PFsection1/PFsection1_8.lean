@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_6
-public import FeitThompson.Representation.DegreeBounds
+public import Submission.FeitThompson.PFsection1.PFsection1_6
+public import Submission.FeitThompson.Representation.DegreeBounds
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import Mathlib.GroupTheory.Subgroup.Center

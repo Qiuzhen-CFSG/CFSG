@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection8.PFsection8_8
+public import Submission.FeitThompson.PFsection8.PFsection8_8
 
 noncomputable section
 

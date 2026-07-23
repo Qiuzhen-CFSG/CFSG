@@ -4,9 +4,9 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.ChiefFactors.Core
-public import FeitThompson.ChiefFactors.BaerCore
-import FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.ChiefFactors.Core
+public import Submission.FeitThompson.ChiefFactors.BaerCore
+import Submission.FeitThompson.GroupAction.Quotient
 
 import Mathlib.Order.Atoms.Finite
 import Mathlib.Order.RelSeries

@@ -4,11 +4,11 @@ module
 Authors: OpenAI
 -/
 
-public import FeitThompson.BGsection1.lemma_1_22
-public import FeitThompson.BGsection3.Infrastructure
-public import FeitThompson.PCore.CentralizerControl
-public import FeitThompson.PGroup.NormalSubgroups
-public import FeitThompson.Commutator.Core
+public import Submission.FeitThompson.BGsection1.lemma_1_22
+public import Submission.FeitThompson.BGsection3.Infrastructure
+public import Submission.FeitThompson.PCore.CentralizerControl
+public import Submission.FeitThompson.PGroup.NormalSubgroups
+public import Submission.FeitThompson.Commutator.Core
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 
 /-!

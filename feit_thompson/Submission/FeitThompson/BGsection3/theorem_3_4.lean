@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.BGsection3.Infrastructure
-public import FeitThompson.BGsection3.lemma_3_3
+public import Submission.FeitThompson.BGsection3.Infrastructure
+public import Submission.FeitThompson.BGsection3.lemma_3_3
 
 open scoped commutatorElement IsMulCommutative
 

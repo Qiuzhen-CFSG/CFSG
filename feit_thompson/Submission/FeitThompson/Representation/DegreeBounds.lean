@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.Representation.JacobsonDensity
-public import FeitThompson.Representation.SubrepresentationLattice
+public import Submission.FeitThompson.Representation.JacobsonDensity
+public import Submission.FeitThompson.Representation.SubrepresentationLattice
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
-public import FeitThompson.Representation.Maschke
+public import Submission.FeitThompson.Representation.Maschke
 
 /-!
 # Degree bounds for finite-group representations

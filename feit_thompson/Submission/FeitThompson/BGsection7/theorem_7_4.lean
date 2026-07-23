@@ -1,21 +1,21 @@
 module
 
-public import FeitThompson.BGsection6.Defs
-public import FeitThompson.BGsection6.lemma_6_5_a
-public import FeitThompson.MinCE
-import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.HallSubgroups.Conjugacy
-import FeitThompson.SubgroupConj
-import FeitThompson.PCore.CentralizerControl
-import FeitThompson.Representation.SolvableDimension
+public import Submission.FeitThompson.BGsection6.Defs
+public import Submission.FeitThompson.BGsection6.lemma_6_5_a
+public import Submission.FeitThompson.MinCE
+import Submission.FeitThompson.BGsection3.theorem_3_4
+import Submission.FeitThompson.HallSubgroups.Conjugacy
+import Submission.FeitThompson.SubgroupConj
+import Submission.FeitThompson.PCore.CentralizerControl
+import Submission.FeitThompson.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.Order.Preorder.Finite
-public import FeitThompson.BGsection7.Defs
-public import FeitThompson.BGsection7.lemma_7_1
-public import FeitThompson.BGsection7.theorem_7_2
-public import FeitThompson.BGsection7.theorem_7_3
+public import Submission.FeitThompson.BGsection7.Defs
+public import Submission.FeitThompson.BGsection7.lemma_7_1
+public import Submission.FeitThompson.BGsection7.theorem_7_2
+public import Submission.FeitThompson.BGsection7.theorem_7_3
 
 open scoped Pointwise commutatorElement
 

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection14.corollary_14_10
+public import Submission.FeitThompson.BGsection14.corollary_14_10
 
 open scoped Pointwise commutatorElement
 

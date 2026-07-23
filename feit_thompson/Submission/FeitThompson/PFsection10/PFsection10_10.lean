@@ -1,26 +1,26 @@
 module
 
-public import FeitThompson.PFsection10.Basic
-import FeitThompson.PFsection8.SourceTypePBridge
-import FeitThompson.PFsection5.PFsection5_8
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection7.PFsection7_5
-import FeitThompson.PFsection7.PFsection7_8_a
-import FeitThompson.PFsection7.PFsection7_8_b
-import FeitThompson.PFsection8.PFsection8_13
-import FeitThompson.PFsection8.PFsection8_15
-import FeitThompson.PFsection8.PFsection8_16
-import FeitThompson.PFsection8.PFsection8_18
-import FeitThompson.PFsection8.PFsection8_9
-import FeitThompson.PFsection2.PFsection2_7_11
-import FeitThompson.PFsection6.PFsection6_5_a
-import FeitThompson.PFsection6.PFsection6_5_b
-import FeitThompson.PFsection6.PFsection6_5_c
-import FeitThompson.PFsection6.PFsection6_8
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.PFsection9.PFsection9_4
-import FeitThompson.PFsection9.PFsection9_6
-public import FeitThompson.PFsection9.PFsection9_11
+public import Submission.FeitThompson.PFsection10.Basic
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
+import Submission.FeitThompson.PFsection5.PFsection5_8
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection7.PFsection7_5
+import Submission.FeitThompson.PFsection7.PFsection7_8_a
+import Submission.FeitThompson.PFsection7.PFsection7_8_b
+import Submission.FeitThompson.PFsection8.PFsection8_13
+import Submission.FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection8.PFsection8_16
+import Submission.FeitThompson.PFsection8.PFsection8_18
+import Submission.FeitThompson.PFsection8.PFsection8_9
+import Submission.FeitThompson.PFsection2.PFsection2_7_11
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
+import Submission.FeitThompson.PFsection6.PFsection6_5_b
+import Submission.FeitThompson.PFsection6.PFsection6_5_c
+import Submission.FeitThompson.PFsection6.PFsection6_8
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.PFsection9.PFsection9_4
+import Submission.FeitThompson.PFsection9.PFsection9_6
+public import Submission.FeitThompson.PFsection9.PFsection9_11
 
 /-!
 # Peterfalvi, Section 10: Theorem (10.10)

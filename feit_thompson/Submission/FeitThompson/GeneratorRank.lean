@@ -1,10 +1,10 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
-import FeitThompson.ElementaryAbelian
+import Submission.FeitThompson.ElementaryAbelian
 
 open scoped IsMulCommutative Subgroup
 

@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_16
-public import FeitThompson.PFsection14.PFsection14_2_Field
-import FeitThompson.PFsection12.PFsection12_4
-import FeitThompson.PFsection12.PFsection12_6
-import FeitThompson.PFsection12.PFsection12_7
-import FeitThompson.PFsection8.PFsection8_15
+public import Submission.FeitThompson.PFsection14.PFsection14_16
+public import Submission.FeitThompson.PFsection14.PFsection14_2_Field
+import Submission.FeitThompson.PFsection12.PFsection12_4
+import Submission.FeitThompson.PFsection12.PFsection12_6
+import Submission.FeitThompson.PFsection12.PFsection12_7
+import Submission.FeitThompson.PFsection8.PFsection8_15
 
 /-!
 # Peterfalvi, Section 14: theorem (14.2)

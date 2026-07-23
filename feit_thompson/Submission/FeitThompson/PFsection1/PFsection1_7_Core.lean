@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_6
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.Orthogonality
-public import FeitThompson.Representation.SimpleCriteria
-public import FeitThompson.Representation.Divisibility
-public import FeitThompson.Representation.CharacterValues
+public import Submission.FeitThompson.PFsection1.PFsection1_6
+public import Submission.FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.Orthogonality
+public import Submission.FeitThompson.Representation.SimpleCriteria
+public import Submission.FeitThompson.Representation.Divisibility
+public import Submission.FeitThompson.Representation.CharacterValues
 public import Mathlib.GroupTheory.FiniteAbelian.Duality
 public import Mathlib.GroupTheory.Index
 /-!

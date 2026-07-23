@@ -1,9 +1,9 @@
 module
 
-import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.PFsection8.SourceTypePBridge
-import FeitThompson.PFsection8.PFsection8_5_b
-public import FeitThompson.PFsection9.PFsection9_1
+import Submission.FeitThompson.BGsection3.theorem_3_4
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
+import Submission.FeitThompson.PFsection8.PFsection8_5_b
+public import Submission.FeitThompson.PFsection9.PFsection9_1
 
 noncomputable section
 

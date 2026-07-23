@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection16.theorem_16_C
-import FeitThompson.PFsection2.PFsection2_1
+public import Submission.FeitThompson.BGsection16.theorem_16_C
+import Submission.FeitThompson.PFsection2.PFsection2_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.Order.Preorder.Finite
 

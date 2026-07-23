@@ -1,22 +1,22 @@
 module
 
-public import FeitThompson.PFsection1.PFsection1_7
-public import FeitThompson.PFsection5.PFsection5_3
-public import FeitThompson.PFsection5.PFsection5_5
-public import FeitThompson.PFsection5.PFsection5_7
-public import FeitThompson.PFsection6.PFsection6_5_b
-public import FeitThompson.PFsection6.PFsection6_5_c
-public import FeitThompson.PFsection6.PFsection6_6
-public import FeitThompson.PFsection6.PFsection6_8
-public import FeitThompson.PFsection7.PFsection7_11
-public import FeitThompson.PFsection7.PFsection7_6
-public import FeitThompson.PFsection11.Basic
-public import FeitThompson.PFsection8.PFsection8_2_b
-public import FeitThompson.PFsection8.PFsection8_2_c
-public import FeitThompson.PFsection8.PFsection8_12
-public import FeitThompson.PFsection8.PFsection8_13
-public import FeitThompson.PFsection8.PFsection8_17
-public import FeitThompson.PFsection8.PFsection8_18
+public import Submission.FeitThompson.PFsection1.PFsection1_7
+public import Submission.FeitThompson.PFsection5.PFsection5_3
+public import Submission.FeitThompson.PFsection5.PFsection5_5
+public import Submission.FeitThompson.PFsection5.PFsection5_7
+public import Submission.FeitThompson.PFsection6.PFsection6_5_b
+public import Submission.FeitThompson.PFsection6.PFsection6_5_c
+public import Submission.FeitThompson.PFsection6.PFsection6_6
+public import Submission.FeitThompson.PFsection6.PFsection6_8
+public import Submission.FeitThompson.PFsection7.PFsection7_11
+public import Submission.FeitThompson.PFsection7.PFsection7_6
+public import Submission.FeitThompson.PFsection11.Basic
+public import Submission.FeitThompson.PFsection8.PFsection8_2_b
+public import Submission.FeitThompson.PFsection8.PFsection8_2_c
+public import Submission.FeitThompson.PFsection8.PFsection8_12
+public import Submission.FeitThompson.PFsection8.PFsection8_13
+public import Submission.FeitThompson.PFsection8.PFsection8_17
+public import Submission.FeitThompson.PFsection8.PFsection8_18
 
 /-!
 # Peterfalvi, Section 12: basic notation

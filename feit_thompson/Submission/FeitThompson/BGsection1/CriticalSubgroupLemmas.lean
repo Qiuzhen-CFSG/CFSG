@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.Defs
+public import Submission.FeitThompson.BGsection1.Defs
 import Mathlib.Data.Nat.Choose.Dvd
 
 open scoped Pointwise commutatorElement

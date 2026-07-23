@@ -1,16 +1,16 @@
 module
 
-public import FeitThompson.Representation.RepEquiv
-public import FeitThompson.PFsection5.PFsection5_2
-public import FeitThompson.PFsection1.PFsection1_4
-public import FeitThompson.PFsection1.PFsection1_5
-public import FeitThompson.PFsection1.PFsection1_7_Core
-public import FeitThompson.PFsection3.PFsection3_5
-public import FeitThompson.PFsection3.PFsection3_8
-public import FeitThompson.PFsection4.PFsection4_1
-public import FeitThompson.PFsection4.PFsection4_3
-public import FeitThompson.PFsection4.PFsection4_4
-public import FeitThompson.PFsection4.PFsection4_5_to_10
+public import Submission.FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.PFsection5.PFsection5_2
+public import Submission.FeitThompson.PFsection1.PFsection1_4
+public import Submission.FeitThompson.PFsection1.PFsection1_5
+public import Submission.FeitThompson.PFsection1.PFsection1_7_Core
+public import Submission.FeitThompson.PFsection3.PFsection3_5
+public import Submission.FeitThompson.PFsection3.PFsection3_8
+public import Submission.FeitThompson.PFsection4.PFsection4_1
+public import Submission.FeitThompson.PFsection4.PFsection4_3
+public import Submission.FeitThompson.PFsection4.PFsection4_4
+public import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
 
 /-!
 # Peterfalvi, Section 5, Theorem (5.3)

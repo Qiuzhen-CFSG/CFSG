@@ -1,14 +1,14 @@
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection3.lemma_3_1
-public import FeitThompson.BGsection3.lemma_3_3
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Cardinalities
-public import FeitThompson.PCore.PLengthOne
-public import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.lemma_3_1
+public import Submission.FeitThompson.BGsection3.lemma_3_3
+public import Submission.FeitThompson.GroupAction.Lemmas
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.GroupAction.Invariant
+public import Submission.FeitThompson.GroupAction.Cardinalities
+public import Submission.FeitThompson.PCore.PLengthOne
+public import Submission.FeitThompson.SubgroupConj
 
 open Subgroup
 

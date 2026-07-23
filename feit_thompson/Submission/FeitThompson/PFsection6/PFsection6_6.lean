@@ -1,14 +1,14 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_4
-import FeitThompson.PFsection5.PFsection5_6
-import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection1.PFsection1_6
-import FeitThompson.PFsection1.PFsection1_7_Core
-import FeitThompson.Representation.DegreeBounds
-import FeitThompson.PFsection6.PFsection6_5_a
-import FeitThompson.PFsection6.PFsection6_5_b
-import FeitThompson.PFsection6.PFsection6_5_c
+public import Submission.FeitThompson.PFsection6.PFsection6_4
+import Submission.FeitThompson.PFsection5.PFsection5_6
+import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection1.PFsection1_6
+import Submission.FeitThompson.PFsection1.PFsection1_7_Core
+import Submission.FeitThompson.Representation.DegreeBounds
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
+import Submission.FeitThompson.PFsection6.PFsection6_5_b
+import Submission.FeitThompson.PFsection6.PFsection6_5_c
 
 noncomputable section
 

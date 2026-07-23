@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_6
-public import FeitThompson.PFsection14.PFsection14_2_Field
+public import Submission.FeitThompson.PFsection14.PFsection14_6
+public import Submission.FeitThompson.PFsection14.PFsection14_2_Field
 
 /-!
 # Peterfalvi, Section 14: theorem (14.7)

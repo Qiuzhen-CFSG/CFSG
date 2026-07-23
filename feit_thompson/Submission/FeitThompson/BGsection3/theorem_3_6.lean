@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.Fitting.Centralizer
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection3.theorem_3_4
-public import FeitThompson.BGsection3.theorem_3_5
+public import Submission.FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.theorem_3_4
+public import Submission.FeitThompson.BGsection3.theorem_3_5
 
 open scoped commutatorElement
 

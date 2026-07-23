@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.Basic
+public import Submission.FeitThompson.BGsection1.Basic
 
 open scoped Pointwise
 

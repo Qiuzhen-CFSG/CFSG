@@ -31,10 +31,10 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.HallSubgroups.Core
-public import FeitThompson.HallSubgroups.Complements
+public import Submission.FeitThompson.GroupAction.Invariant
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.HallSubgroups.Core
+public import Submission.FeitThompson.HallSubgroups.Complements
 
 
 /-

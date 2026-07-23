@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import FeitThompson.BGsection11.theorem_11_7
+public import Submission.FeitThompson.BGsection11.theorem_11_7
 import Mathlib.GroupTheory.Schreier
 
 open scoped Pointwise

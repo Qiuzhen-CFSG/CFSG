@@ -11,7 +11,7 @@ import Mathlib.GroupTheory.OrderOfElement
 public import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic.Basic
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 
 open scoped IsMulCommutative
 

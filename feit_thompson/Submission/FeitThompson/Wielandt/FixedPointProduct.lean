@@ -1,10 +1,10 @@
 module
 
-public import FeitThompson.BGsection3.Remaining
-public import FeitThompson.BGsection12.lemma_12_1_a
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.Wielandt.MatrixTrace
+public import Submission.FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection12.lemma_12_1_a
+public import Submission.FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.Wielandt.MatrixTrace
 
 /-!
 # Fixed-point product infrastructure for Wielandt

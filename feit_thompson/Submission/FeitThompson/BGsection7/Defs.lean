@@ -4,13 +4,13 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection6.Defs
-public import FeitThompson.MinCE
-import FeitThompson.BGsection3.theorem_3_4
-import FeitThompson.HallSubgroups.Conjugacy
-import FeitThompson.SubgroupConj
-import FeitThompson.PCore.CentralizerControl
-import FeitThompson.Representation.SolvableDimension
+public import Submission.FeitThompson.BGsection6.Defs
+public import Submission.FeitThompson.MinCE
+import Submission.FeitThompson.BGsection3.theorem_3_4
+import Submission.FeitThompson.HallSubgroups.Conjugacy
+import Submission.FeitThompson.SubgroupConj
+import Submission.FeitThompson.PCore.CentralizerControl
+import Submission.FeitThompson.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card

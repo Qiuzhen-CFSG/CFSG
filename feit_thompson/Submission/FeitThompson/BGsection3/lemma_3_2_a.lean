@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection3.lemma_3_1
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.lemma_3_1
 
 
 public theorem lemma_3_2_a_no_solv {G : Type*} [Group G] [Finite G]

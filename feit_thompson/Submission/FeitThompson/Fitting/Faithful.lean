@@ -13,8 +13,8 @@ public import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.Basic
 
-import FeitThompson.Fitting.Centralizer
-public import FeitThompson.Fitting.Core
+import Submission.FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.Fitting.Core
 
 /-!
 # Proposition 1.4: faithful action on the Fitting subgroup (coprime case)

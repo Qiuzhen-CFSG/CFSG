@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Gorenstein.Chapter8_2
+public import Submission.FeitThompson.Gorenstein.Chapter8_2
 
 universe u
 

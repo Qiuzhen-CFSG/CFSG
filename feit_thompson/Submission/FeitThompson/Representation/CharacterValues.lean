@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.Representation.Cyclotomic
-public import FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.Cyclotomic
+public import Submission.FeitThompson.Representation.Induction
 
 /-!
 # Cyclotomic integrality of character values

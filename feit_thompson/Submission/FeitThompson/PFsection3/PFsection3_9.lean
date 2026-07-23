@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection3.PFsection3_2
-public import FeitThompson.PFsection3.PFsection3_8
-public import FeitThompson.PFsection1.PFsection1_9
-public import FeitThompson.Representation.Divisibility
+public import Submission.FeitThompson.PFsection3.PFsection3_2
+public import Submission.FeitThompson.PFsection3.PFsection3_8
+public import Submission.FeitThompson.PFsection1.PFsection1_9
+public import Submission.FeitThompson.Representation.Divisibility
 
 /-!
 # Peterfalvi, Section 3, Proposition (3.9)

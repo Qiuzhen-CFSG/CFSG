@@ -4,8 +4,8 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.Defs
-import FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.BGsection1.Defs
+import Submission.FeitThompson.Fitting.Centralizer
 
 open scoped Pointwise commutatorElement
 

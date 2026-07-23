@@ -1,9 +1,9 @@
 module
 
-import FeitThompson.PFsection3.PFsection3_9
-public import FeitThompson.PFsection13.PFsection13_5
-import FeitThompson.PFsection8.PFsection8_5_a
-import FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection3.PFsection3_9
+public import Submission.FeitThompson.PFsection13.PFsection13_5
+import Submission.FeitThompson.PFsection8.PFsection8_5_a
+import Submission.FeitThompson.PFsection8.PFsection8_15
 
 /-!
 # Peterfalvi, Section 13: PFsection13_6

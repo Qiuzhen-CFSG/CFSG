@@ -6,8 +6,8 @@ module
 
 public import Mathlib.RepresentationTheory.Invariants
 
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.GroupAction.Defs
 
 open scoped IsMulCommutative
 

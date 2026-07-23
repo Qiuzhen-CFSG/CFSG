@@ -5,7 +5,7 @@ Authors: Yusen Tang
 module
 
 public import Mathlib.RingTheory.LittleWedderburn
-public import FeitThompson.Representation.AbsolutelyIrreducible
+public import Submission.FeitThompson.Representation.AbsolutelyIrreducible
 
 open Representation
 open MonoidAlgebra

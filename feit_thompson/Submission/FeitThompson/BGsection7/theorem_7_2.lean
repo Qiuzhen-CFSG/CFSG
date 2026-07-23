@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.BGsection7.lemma_7_1
-import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.BGsection7.lemma_7_1
+import Submission.FeitThompson.SubgroupConj
 /-! # Theorem 7.2 from BG Section 7 -/
 
 open scoped Pointwise

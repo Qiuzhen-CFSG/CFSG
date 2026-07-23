@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection10.corollary_10_7_a
-public import FeitThompson.BGsection4.theorem_4_16
+public import Submission.FeitThompson.BGsection10.corollary_10_7_a
+public import Submission.FeitThompson.BGsection4.theorem_4_16
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 

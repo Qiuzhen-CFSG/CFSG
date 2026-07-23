@@ -1,11 +1,11 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-public import FeitThompson.Utils
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.proposition_4_6
+public import Submission.FeitThompson.Utils
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.proposition_4_6
 
 /-! # Gorenstein 5.4.15 support for BG Section 4 -/
 

@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Wielandt.HomocyclicLift
+public import Submission.FeitThompson.Wielandt.HomocyclicLift
 
 /-!
 # Standard homocyclic quotient-cover packages for Wielandt

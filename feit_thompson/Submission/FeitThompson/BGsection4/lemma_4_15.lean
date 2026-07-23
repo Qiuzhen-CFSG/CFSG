@@ -1,8 +1,8 @@
 module
 
-public import FeitThompson.BGsection3.theorem_3_4
-public import FeitThompson.BGsection4.Infrastructure
-public import FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection3.theorem_3_4
+public import Submission.FeitThompson.BGsection4.Infrastructure
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
 
 /-! # Lemma 4.15 from BG Section 4 -/
 

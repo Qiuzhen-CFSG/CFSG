@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection4.lemma_4_1
-public import FeitThompson.BGsection4.proposition_4_4_b
-public import FeitThompson.BGsection4.proposition_4_3_b
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection4.lemma_4_1
+public import Submission.FeitThompson.BGsection4.proposition_4_4_b
+public import Submission.FeitThompson.BGsection4.proposition_4_3_b
 
 /-! # Infrastructure for BG Section 4, Lemma 4.5 -/
 

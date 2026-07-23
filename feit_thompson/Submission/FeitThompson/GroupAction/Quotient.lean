@@ -16,7 +16,7 @@ import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.GroupTheory.QuotientGroup.Basic
 import Mathlib.Tactic.Basic
 
-public import FeitThompson.GroupAction.Invariant
+public import Submission.FeitThompson.GroupAction.Invariant
 
 open scoped IsMulCommutative commutatorElement
 

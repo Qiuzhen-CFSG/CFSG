@@ -1,12 +1,12 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_9_CalT
-import FeitThompson.PFsection8.PFsection8_15
-import FeitThompson.PFsection11.PFsection11_9
-import FeitThompson.PFsection2.PFsection2_7_11
-import FeitThompson.PFsection4.PFsection4_5_to_10
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection7.PFsection7_8_a
+public import Submission.FeitThompson.PFsection14.PFsection14_9_CalT
+import Submission.FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection11.PFsection11_9
+import Submission.FeitThompson.PFsection2.PFsection2_7_11
+import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection7.PFsection7_8_a
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), Delta correction

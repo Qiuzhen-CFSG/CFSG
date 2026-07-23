@@ -1,12 +1,12 @@
 module
 
-import FeitThompson.PFsection8.PFsection8_13
-import FeitThompson.PFsection2.PFsection2_7_11
-import FeitThompson.PFsection4.PFsection4_3
-import FeitThompson.PFsection4.PFsection4_5_to_10
-import FeitThompson.PFsection3.PFsection3_9
-public import FeitThompson.PFsection6.PFsection6_8
-public import FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection8.PFsection8_13
+import Submission.FeitThompson.PFsection2.PFsection2_7_11
+import Submission.FeitThompson.PFsection4.PFsection4_3
+import Submission.FeitThompson.PFsection4.PFsection4_5_to_10
+import Submission.FeitThompson.PFsection3.PFsection3_9
+public import Submission.FeitThompson.PFsection6.PFsection6_8
+public import Submission.FeitThompson.PFsection8.PFsection8_15
 
 noncomputable section
 

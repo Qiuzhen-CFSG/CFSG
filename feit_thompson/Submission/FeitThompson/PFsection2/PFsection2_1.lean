@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection2.Basic
+public import Submission.FeitThompson.PFsection2.Basic
 public import Mathlib.GroupTheory.Complement
 public import Mathlib.Data.Set.Card.Arithmetic
 

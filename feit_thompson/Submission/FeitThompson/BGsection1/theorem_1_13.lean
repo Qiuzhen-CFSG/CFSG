@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.theorem_1_11
+public import Submission.FeitThompson.BGsection1.theorem_1_11
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

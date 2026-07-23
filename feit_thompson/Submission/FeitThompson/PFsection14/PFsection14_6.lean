@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_5
-public import FeitThompson.PFsection14.PFsection14_2_Quotient
+public import Submission.FeitThompson.PFsection14.PFsection14_5
+public import Submission.FeitThompson.PFsection14.PFsection14_2_Quotient
 
 /-!
 # Peterfalvi, Section 14: theorem (14.6)

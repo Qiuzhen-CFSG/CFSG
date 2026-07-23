@@ -1,17 +1,17 @@
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.BGsection3.lemma_3_1
-public import FeitThompson.BGsection3.theorem_3_4
-public import FeitThompson.BGsection3.theorem_3_5
-public import FeitThompson.BGsection3.theorem_3_6
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.lemma_3_1
+public import Submission.FeitThompson.BGsection3.theorem_3_4
+public import Submission.FeitThompson.BGsection3.theorem_3_5
+public import Submission.FeitThompson.BGsection3.theorem_3_6
 import Mathlib.Data.Nat.Choose.Dvd
 import Mathlib.GroupTheory.GroupAction.OfQuotient
 import Mathlib.GroupTheory.IndexNormal
-import FeitThompson.GroupAction.MinimalNormal
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.Fitting.Centralizer
-public import FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.GroupAction.MinimalNormal
+import Submission.FeitThompson.PGroup.NormalSubgroups
+import Submission.FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.Representation.ElementaryAbelianAction
 
 open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
 

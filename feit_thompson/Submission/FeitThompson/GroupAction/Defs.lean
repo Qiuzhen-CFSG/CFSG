@@ -13,7 +13,7 @@ public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
 import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Tactic.Basic
 
-import FeitThompson.Commutator.Core
+import Submission.FeitThompson.Commutator.Core
 
 open scoped FixedPoints
 

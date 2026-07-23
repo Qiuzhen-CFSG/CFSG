@@ -13,7 +13,7 @@ public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 public import Mathlib.LinearAlgebra.Matrix.Permutation
 public import Mathlib.Order.BourbakiWitt
 public import Mathlib.Order.CompletePartialOrder
-public import FeitThompson.Representation.Unbundled
+public import Submission.FeitThompson.Representation.Unbundled
 public import Mathlib.RingTheory.PicardGroup
 public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.RingTheory.SimpleRing.Principal

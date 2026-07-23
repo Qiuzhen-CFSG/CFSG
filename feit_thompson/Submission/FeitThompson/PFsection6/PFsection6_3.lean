@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_2
-import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.PFsection6.PFsection6_2
+import Submission.FeitThompson.SubgroupConj
 
 noncomputable section
 

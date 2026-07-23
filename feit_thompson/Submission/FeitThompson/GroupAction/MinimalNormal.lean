@@ -8,7 +8,7 @@ This is used in several blueprint-driven inductions where the action must descen
 
 module
 
-public import FeitThompson.GroupAction.Invariant
+public import Submission.FeitThompson.GroupAction.Invariant
 
 import Mathlib.Algebra.Group.Subgroup.Finite
 import Mathlib.SetTheory.Cardinal.NatCard

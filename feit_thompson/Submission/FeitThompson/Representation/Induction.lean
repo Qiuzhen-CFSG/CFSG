@@ -2,7 +2,7 @@ module
 
 public import Mathlib.RepresentationTheory.Character
 public import Mathlib.RepresentationTheory.FiniteIndex
-public import FeitThompson.Representation.Unbundled
+public import Submission.FeitThompson.Representation.Unbundled
 public import Mathlib.Algebra.DirectSum.LinearMap
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Complex.Polynomial.Basic

@@ -4,10 +4,10 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.Defs
+public import Submission.FeitThompson.BGsection1.Defs
 import Mathlib.RepresentationTheory.Submodule
-import FeitThompson.Frattini.Core
-import FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.GroupAction.CoprimeHall
 
 open scoped Pointwise
 

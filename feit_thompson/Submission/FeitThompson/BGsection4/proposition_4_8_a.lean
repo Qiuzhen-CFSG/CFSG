@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.BGsection4.gorenstein_5_4_15
+public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
 /-! # Proposition 4.8(a) from BG Section 4 -/
 
 section Main

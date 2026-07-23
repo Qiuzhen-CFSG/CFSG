@@ -1,8 +1,8 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.theorem_4_20_a
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.theorem_4_20_a
 /-! # Theorem 4.20(b) from BG Section 4 -/
 
 universe u

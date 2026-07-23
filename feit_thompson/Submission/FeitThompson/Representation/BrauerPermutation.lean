@@ -3,7 +3,7 @@ Authors: OpenAI
 -/
 module
 
-public import FeitThompson.Representation.Orthogonality
+public import Submission.FeitThompson.Representation.Orthogonality
 public import Mathlib.LinearAlgebra.Matrix.Permutation
 
 open scoped BigOperators

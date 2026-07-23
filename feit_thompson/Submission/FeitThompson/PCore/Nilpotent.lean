@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.PCore.PCore
-public import FeitThompson.PCore.PPrimeCore
+public import Submission.FeitThompson.PCore.PCore
+public import Submission.FeitThompson.PCore.PPrimeCore
 
 /-!
 # Nilpotent groups and `p`-cores

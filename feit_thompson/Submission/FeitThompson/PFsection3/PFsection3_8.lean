@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection3.PFsection3_7
+public import Submission.FeitThompson.PFsection3.PFsection3_7
 
 /-!
 # Peterfalvi, Section 3, Proposition (3.8)

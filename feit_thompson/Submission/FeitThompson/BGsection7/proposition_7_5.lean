@@ -5,11 +5,11 @@ module
 
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
-public import FeitThompson.BGsection7.theorem_7_4
-public import FeitThompson.BGsection6.theorem_6_1
-public import FeitThompson.BGsection6.theorem_6_7
-public import FeitThompson.BGsection5.theorem_5_3
-public import FeitThompson.BGsection4.proposition_4_6
+public import Submission.FeitThompson.BGsection7.theorem_7_4
+public import Submission.FeitThompson.BGsection6.theorem_6_1
+public import Submission.FeitThompson.BGsection6.theorem_6_7
+public import Submission.FeitThompson.BGsection5.theorem_5_3
+public import Submission.FeitThompson.BGsection4.proposition_4_6
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

@@ -1,9 +1,9 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.gorenstein_5_4_15
-public import FeitThompson.BGsection4.corollary_4_19
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
+public import Submission.FeitThompson.BGsection4.corollary_4_19
 
 /-! # Theorem 4.20(a) from BG Section 4 -/
 

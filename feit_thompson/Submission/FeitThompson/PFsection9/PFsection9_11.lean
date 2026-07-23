@@ -1,20 +1,20 @@
 module
 
-public import FeitThompson.PFsection3.PFsection3_9
-import FeitThompson.PFsection9.PFsection9_3
-public import FeitThompson.PFsection9.Basic
-public import FeitThompson.PFsection9.PFsection9_7
-public import FeitThompson.PFsection9.PFsection9_8
-public import FeitThompson.PFsection9.PFsection9_9
-public import FeitThompson.PFsection9.PFsection9_10
-public import FeitThompson.PFsection5.PFsection5_3
-public import FeitThompson.PFsection5.PFsection5_6
-public import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection6.PFsection6_6
-import FeitThompson.PFsection6.PFsection6_8
-public import FeitThompson.PFsection8.PFsection8_5_b
-public import FeitThompson.PFsection8.PFsection8_15
+public import Submission.FeitThompson.PFsection3.PFsection3_9
+import Submission.FeitThompson.PFsection9.PFsection9_3
+public import Submission.FeitThompson.PFsection9.Basic
+public import Submission.FeitThompson.PFsection9.PFsection9_7
+public import Submission.FeitThompson.PFsection9.PFsection9_8
+public import Submission.FeitThompson.PFsection9.PFsection9_9
+public import Submission.FeitThompson.PFsection9.PFsection9_10
+public import Submission.FeitThompson.PFsection5.PFsection5_3
+public import Submission.FeitThompson.PFsection5.PFsection5_6
+public import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection6.PFsection6_6
+import Submission.FeitThompson.PFsection6.PFsection6_8
+public import Submission.FeitThompson.PFsection8.PFsection8_5_b
+public import Submission.FeitThompson.PFsection8.PFsection8_15
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

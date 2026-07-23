@@ -6,7 +6,7 @@ module
 
 public import Mathlib.GroupTheory.GroupAction.Quotient
 public import Mathlib.RepresentationTheory.Equiv
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.RepEquiv
 
 /-!
 # Bases of free representations

@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_1
-import FeitThompson.PFsection1.PFsection1_8
-import FeitThompson.PFsection5.PFsection5_6
-import FeitThompson.Representation.DegreeBounds
+public import Submission.FeitThompson.PFsection6.PFsection6_1
+import Submission.FeitThompson.PFsection1.PFsection1_8
+import Submission.FeitThompson.PFsection5.PFsection5_6
+import Submission.FeitThompson.Representation.DegreeBounds
 
 noncomputable section
 open scoped Classical

@@ -1,8 +1,8 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_4
-import FeitThompson.Frattini.Core
-import FeitThompson.PFsection6.PFsection6_5_a
+public import Submission.FeitThompson.PFsection6.PFsection6_4
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
 import Mathlib.Algebra.Ring.Parity
 
 noncomputable section

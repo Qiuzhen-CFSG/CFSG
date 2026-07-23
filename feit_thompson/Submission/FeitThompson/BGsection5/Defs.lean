@@ -3,19 +3,19 @@ Authors: OpenAI
 -/
 
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-public import FeitThompson.Representation.CyclicQuotientExtension
-public import FeitThompson.Representation.SolvableDimension
-public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
-public import FeitThompson.Representation.ExtraspecialFixedPoints
-public import FeitThompson.Representation.TwoDimensionalOddOrder
-public import FeitThompson.Representation.ElementaryAbelianAutomorphisms
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.Defs
-import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Submission.FeitThompson.Representation.CyclicQuotientExtension
+public import Submission.FeitThompson.Representation.SolvableDimension
+public import Submission.FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import Submission.FeitThompson.Representation.ExtraspecialFixedPoints
+public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
+public import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.Defs
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PGroup.NormalSubgroups
+import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
 
 /-! # Definitions for BG Section 5 -/

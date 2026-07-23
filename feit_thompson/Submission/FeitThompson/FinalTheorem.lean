@@ -4,14 +4,14 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGappendixC.theorem_C
-public import FeitThompson.BGsection16.theorem_16_II
-public import FeitThompson.MinCE
-import FeitThompson.PFsection3.PFsection3_9
-import FeitThompson.PFsection8.PFsection8_8
-import FeitThompson.PFsection12.PFsection12_7
-public import FeitThompson.PFsection14.PFsection14_1
-public import FeitThompson.PFsection14.PFsection14_Conclusion
+public import Submission.FeitThompson.BGappendixC.theorem_C
+public import Submission.FeitThompson.BGsection16.theorem_16_II
+public import Submission.FeitThompson.MinCE
+import Submission.FeitThompson.PFsection3.PFsection3_9
+import Submission.FeitThompson.PFsection8.PFsection8_8
+import Submission.FeitThompson.PFsection12.PFsection12_7
+public import Submission.FeitThompson.PFsection14.PFsection14_1
+public import Submission.FeitThompson.PFsection14.PFsection14_Conclusion
 
 /-!
 # Final odd-order theorem wiring

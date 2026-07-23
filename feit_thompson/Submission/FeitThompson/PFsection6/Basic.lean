@@ -1,10 +1,10 @@
 module
 
-public import FeitThompson.PFsection5.PFsection5_1
-public import FeitThompson.PFsection5.PFsection5_2
-public import FeitThompson.PFsection4.PFsection4_9
-public import FeitThompson.ChiefFactors.Core
-import FeitThompson.Representation.SolvableDimension
+public import Submission.FeitThompson.PFsection5.PFsection5_1
+public import Submission.FeitThompson.PFsection5.PFsection5_2
+public import Submission.FeitThompson.PFsection4.PFsection4_9
+public import Submission.FeitThompson.ChiefFactors.Core
+import Submission.FeitThompson.Representation.SolvableDimension
 
 /-!
 # Peterfalvi, Section 6: basic notation

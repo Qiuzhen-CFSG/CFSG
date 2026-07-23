@@ -17,12 +17,12 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
-public import FeitThompson.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Submission.FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import Submission.FeitThompson.Burnside.NormalComplement
+public import Submission.FeitThompson.Extraspecial
+public import Submission.FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Submission.FeitThompson.Representation.ConjugateRep
+public import Submission.FeitThompson.BGsection2.EndFieldRep
 
 open Representation
 open MonoidAlgebra

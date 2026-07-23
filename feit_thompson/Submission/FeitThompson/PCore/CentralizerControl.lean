@@ -4,23 +4,23 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.CentralizerLemmas
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Commutator.ActionTriviality
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.Commutator.CyclicSylow
-import FeitThompson.Commutator.Core
-import FeitThompson.ElementaryAbelian
-import FeitThompson.Fitting.Centralizer
-import FeitThompson.Fitting.Core
-import FeitThompson.Fitting.Faithful
-import FeitThompson.GroupAction.CentralizerCondition
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.GroupAction.Lemmas
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.SubgroupConjAction
-import FeitThompson.ZGroup.Hall
-import FeitThompson.ChiefFactors.BaerCore
+public import Submission.FeitThompson.BGsection1.CentralizerLemmas
+import Submission.FeitThompson.Burnside.NormalComplement
+import Submission.FeitThompson.Commutator.ActionTriviality
+import Submission.FeitThompson.Frattini.CoprimeAction
+import Submission.FeitThompson.Commutator.CyclicSylow
+import Submission.FeitThompson.Commutator.Core
+import Submission.FeitThompson.ElementaryAbelian
+import Submission.FeitThompson.Fitting.Centralizer
+import Submission.FeitThompson.Fitting.Core
+import Submission.FeitThompson.Fitting.Faithful
+import Submission.FeitThompson.GroupAction.CentralizerCondition
+import Submission.FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.GroupAction.Lemmas
+import Submission.FeitThompson.PGroup.NormalSubgroups
+import Submission.FeitThompson.SubgroupConjAction
+import Submission.FeitThompson.ZGroup.Hall
+import Submission.FeitThompson.ChiefFactors.BaerCore
 
 open scoped Pointwise
 

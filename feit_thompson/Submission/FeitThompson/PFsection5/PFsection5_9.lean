@@ -1,11 +1,11 @@
 module
 
-public import FeitThompson.PFsection5.PFsection5_7
-public import FeitThompson.PFsection5.PFsection5_3
-public import FeitThompson.PFsection5.Basic
-import FeitThompson.PFsection1.PFsection1_1
-import FeitThompson.PFsection1.PFsection1_4
-import FeitThompson.PFsection1.PFsection1_5
+public import Submission.FeitThompson.PFsection5.PFsection5_7
+public import Submission.FeitThompson.PFsection5.PFsection5_3
+public import Submission.FeitThompson.PFsection5.Basic
+import Submission.FeitThompson.PFsection1.PFsection1_1
+import Submission.FeitThompson.PFsection1.PFsection1_4
+import Submission.FeitThompson.PFsection1.PFsection1_5
 import Mathlib.Algebra.MvPolynomial.Equiv
 import Mathlib.FieldTheory.IsAlgClosed.Classification
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic

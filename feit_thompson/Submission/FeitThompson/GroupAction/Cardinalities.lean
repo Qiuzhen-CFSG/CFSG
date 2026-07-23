@@ -4,8 +4,8 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.GroupAction.Quotient
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.GroupTheory.QuotientGroup.Basic
 

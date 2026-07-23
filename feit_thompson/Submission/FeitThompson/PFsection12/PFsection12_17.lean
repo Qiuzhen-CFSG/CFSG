@@ -1,20 +1,20 @@
 module
 
-public import FeitThompson.PFsection12.Basic
-import FeitThompson.PFsection12.PFsection12_7
-import FeitThompson.GroupAction.MinimalNormal
-import FeitThompson.PFsection5.RealVirtualParity
-import FeitThompson.PFsection6.PFsection6_5_a
-import FeitThompson.PFsection7.PFsection7_3
-import FeitThompson.PFsection7.PFsection7_5
-import FeitThompson.PFsection7.PFsection7_7
-import FeitThompson.PFsection7.PFsection7_8_a
-import FeitThompson.PFsection7.PFsection7_8_b
-import FeitThompson.PFsection7.PFsection7_8_c
-import FeitThompson.PFsection7.PFsection7_9
-import FeitThompson.PFsection8.PFsection8_16
-import FeitThompson.PFsection8.SourceTypePBridge
-import FeitThompson.PFsection9.PFsection9_1
+public import Submission.FeitThompson.PFsection12.Basic
+import Submission.FeitThompson.PFsection12.PFsection12_7
+import Submission.FeitThompson.GroupAction.MinimalNormal
+import Submission.FeitThompson.PFsection5.RealVirtualParity
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
+import Submission.FeitThompson.PFsection7.PFsection7_3
+import Submission.FeitThompson.PFsection7.PFsection7_5
+import Submission.FeitThompson.PFsection7.PFsection7_7
+import Submission.FeitThompson.PFsection7.PFsection7_8_a
+import Submission.FeitThompson.PFsection7.PFsection7_8_b
+import Submission.FeitThompson.PFsection7.PFsection7_8_c
+import Submission.FeitThompson.PFsection7.PFsection7_9
+import Submission.FeitThompson.PFsection8.PFsection8_16
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
+import Submission.FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
 

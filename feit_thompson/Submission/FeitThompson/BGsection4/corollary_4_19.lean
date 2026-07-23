@@ -1,13 +1,13 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.theorem_4_17
-public import FeitThompson.BGsection4.theorem_4_18_a
-public import FeitThompson.BGsection4.theorem_4_18_b
-public import FeitThompson.BGsection4.theorem_4_18_c
-public import FeitThompson.BGsection4.theorem_4_18_d
-public import FeitThompson.BGsection4.theorem_4_18_e
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.theorem_4_17
+public import Submission.FeitThompson.BGsection4.theorem_4_18_a
+public import Submission.FeitThompson.BGsection4.theorem_4_18_b
+public import Submission.FeitThompson.BGsection4.theorem_4_18_c
+public import Submission.FeitThompson.BGsection4.theorem_4_18_d
+public import Submission.FeitThompson.BGsection4.theorem_4_18_e
 /-! # Corollary 4.19 from BG Section 4 -/
 
 universe u

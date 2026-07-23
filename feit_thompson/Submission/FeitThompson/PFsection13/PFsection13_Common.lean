@@ -1,22 +1,22 @@
 module
 
-import FeitThompson.BGsection3.lemma_3_2_a
-import FeitThompson.BGsection12.theorem_12_12_a
-import FeitThompson.PFsection8.PFsection8_5_a
-import FeitThompson.PFsection9.PFsection9_1
-import FeitThompson.PFsection9.PFsection9_3
-import FeitThompson.PFsection9.PFsection9_7
-import FeitThompson.PFsection9.PFsection9_11
-import FeitThompson.PFsection12.Basic
-import FeitThompson.PFsection12.Basic
-import FeitThompson.PFsection8.PFsection8_15
-import FeitThompson.PFsection8.SourceTypePBridge
-public import FeitThompson.PFsection13.Basic
-public import FeitThompson.PFsection13.Basic
-import FeitThompson.PFsection3.PFsection3_5
-import FeitThompson.PFsection3.PFsection3_9
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection6.PFsection6_8
+import Submission.FeitThompson.BGsection3.lemma_3_2_a
+import Submission.FeitThompson.BGsection12.theorem_12_12_a
+import Submission.FeitThompson.PFsection8.PFsection8_5_a
+import Submission.FeitThompson.PFsection9.PFsection9_1
+import Submission.FeitThompson.PFsection9.PFsection9_3
+import Submission.FeitThompson.PFsection9.PFsection9_7
+import Submission.FeitThompson.PFsection9.PFsection9_11
+import Submission.FeitThompson.PFsection12.Basic
+import Submission.FeitThompson.PFsection12.Basic
+import Submission.FeitThompson.PFsection8.PFsection8_15
+import Submission.FeitThompson.PFsection8.SourceTypePBridge
+public import Submission.FeitThompson.PFsection13.Basic
+public import Submission.FeitThompson.PFsection13.Basic
+import Submission.FeitThompson.PFsection3.PFsection3_5
+import Submission.FeitThompson.PFsection3.PFsection3_9
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection6.PFsection6_8
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 
 /-!

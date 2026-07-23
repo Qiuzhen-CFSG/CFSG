@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Representation.SimpleCriteria
+public import Submission.FeitThompson.Representation.SimpleCriteria
 public import Mathlib.Algebra.Central.Matrix
 public import Mathlib.Algebra.Algebra.Subalgebra.Pi
 public import Mathlib.Algebra.MonoidAlgebra.Module

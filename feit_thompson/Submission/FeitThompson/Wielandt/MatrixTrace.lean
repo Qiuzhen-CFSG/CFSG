@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.BGsection3.Remaining
-public import FeitThompson.LinearAlgebra.MatrixBlocks
+public import Submission.FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.LinearAlgebra.MatrixBlocks
 
 /-!
 # Matrix trace infrastructure for Wielandt fixed-point arguments

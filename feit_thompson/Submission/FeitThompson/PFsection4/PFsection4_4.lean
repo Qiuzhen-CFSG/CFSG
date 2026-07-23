@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection4.PFsection4_3
-public import FeitThompson.PFsection1.PFsection1_6
-import FeitThompson.PFsection1.PFsection1_7_Core
-import FeitThompson.Representation.kerRepresentation
+public import Submission.FeitThompson.PFsection4.PFsection4_3
+public import Submission.FeitThompson.PFsection1.PFsection1_6
+import Submission.FeitThompson.PFsection1.PFsection1_7_Core
+import Submission.FeitThompson.Representation.kerRepresentation
 
 /-!
 # Peterfalvi, Section 4, item (4.4)

@@ -2,7 +2,7 @@ module
 
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.GroupTheory.Subgroup.Centralizer
-public import FeitThompson.Representation.Unbundled
+public import Submission.FeitThompson.Representation.Unbundled
 /-!
 # Peterfalvi, Section 1, Proposition (1.2)
 

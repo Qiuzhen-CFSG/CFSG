@@ -4,10 +4,10 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection10.theorem_10_1_c
-public import FeitThompson.BGsection4.theorem_4_20_a
-public import FeitThompson.BGsection10.theorem_10_1_d
-public import FeitThompson.BGsection10.theorem_10_1_e
+public import Submission.FeitThompson.BGsection10.theorem_10_1_c
+public import Submission.FeitThompson.BGsection4.theorem_4_20_a
+public import Submission.FeitThompson.BGsection10.theorem_10_1_d
+public import Submission.FeitThompson.BGsection10.theorem_10_1_e
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 

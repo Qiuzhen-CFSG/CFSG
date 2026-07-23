@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection14.Defs
+public import Submission.FeitThompson.BGsection14.Defs
 
 open scoped Pointwise
 

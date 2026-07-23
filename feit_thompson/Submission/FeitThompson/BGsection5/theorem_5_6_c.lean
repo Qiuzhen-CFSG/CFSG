@@ -3,12 +3,12 @@ Authors: OpenAI
 -/
 module
 
-public import FeitThompson.BGsection5.theorem_5_6_b
-import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Submission.FeitThompson.BGsection5.theorem_5_6_b
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PGroup.NormalSubgroups
+import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
-public import FeitThompson.BGsection4.theorem_4_18_c
+public import Submission.FeitThompson.BGsection4.theorem_4_18_c
 
 /-! # Shared infrastructure for Theorem 5.6(c) and 5.6(e) -/
 

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection12.lemma_12_8_d
+public import Submission.FeitThompson.BGsection12.lemma_12_8_d
 
 open scoped Pointwise commutatorElement
 

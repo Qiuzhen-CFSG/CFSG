@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.Representation.Foundations
-public import FeitThompson.Representation.RepEquiv
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.Maschke
+public import Submission.FeitThompson.Representation.Foundations
+public import Submission.FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.Maschke
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.RepresentationTheory.FinGroupCharZero
 public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas

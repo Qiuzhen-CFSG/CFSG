@@ -1,17 +1,17 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 import Mathlib.GroupTheory.Schreier
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.proposition_4_8_a
-public import FeitThompson.BGsection4.proposition_4_8_b
-public import FeitThompson.BGsection4.lemma_4_10
-public import FeitThompson.BGsection4.proposition_4_11
-public import FeitThompson.BGsection4.theorem_4_12_a
-public import FeitThompson.BGsection4.theorem_4_12_c
-public import FeitThompson.BGsection4.lemma_4_13
-public import FeitThompson.BGsection4.lemma_4_15
-public import FeitThompson.BGsection4.gorenstein_5_4_15
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.proposition_4_8_a
+public import Submission.FeitThompson.BGsection4.proposition_4_8_b
+public import Submission.FeitThompson.BGsection4.lemma_4_10
+public import Submission.FeitThompson.BGsection4.proposition_4_11
+public import Submission.FeitThompson.BGsection4.theorem_4_12_a
+public import Submission.FeitThompson.BGsection4.theorem_4_12_c
+public import Submission.FeitThompson.BGsection4.lemma_4_13
+public import Submission.FeitThompson.BGsection4.lemma_4_15
+public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
 
 /-! # Theorem 4.16 from BG Section 4 -/
 

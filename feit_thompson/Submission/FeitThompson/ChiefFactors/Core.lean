@@ -20,9 +20,9 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.Fitting.Core
-import FeitThompson.PGroup.Omega
+public import Submission.FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.Fitting.Core
+import Submission.FeitThompson.PGroup.Omega
 
 open scoped IsMulCommutative commutatorElement
 

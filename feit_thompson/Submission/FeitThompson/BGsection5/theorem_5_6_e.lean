@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection5.theorem_5_6_d
-import FeitThompson.BGsection4.theorem_4_18_e
-import FeitThompson.PCore.PCore
+public import Submission.FeitThompson.BGsection5.theorem_5_6_d
+import Submission.FeitThompson.BGsection4.theorem_4_18_e
+import Submission.FeitThompson.PCore.PCore
 
 /-! # Theorem 5.6(e) from BG Section 5 -/
 

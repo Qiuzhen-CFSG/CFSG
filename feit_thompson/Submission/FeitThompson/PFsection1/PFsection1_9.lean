@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Representation.CharacterValues
+public import Submission.FeitThompson.Representation.CharacterValues
 public import Mathlib.Algebra.MvPolynomial.Equiv
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois

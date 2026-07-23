@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection11.corollary_11_6_c
+public import Submission.FeitThompson.BGsection11.corollary_11_6_c
 import Mathlib.GroupTheory.Schreier
 
 open scoped commutatorElement

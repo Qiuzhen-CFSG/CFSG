@@ -1,8 +1,8 @@
 module
 
 import Mathlib.Data.Nat.Choose.Dvd
-public import FeitThompson.BGsection4.Infrastructure
-public import FeitThompson.BGsection4.proposition_4_3_a
+public import Submission.FeitThompson.BGsection4.Infrastructure
+public import Submission.FeitThompson.BGsection4.proposition_4_3_a
 
 open scoped commutatorElement
 

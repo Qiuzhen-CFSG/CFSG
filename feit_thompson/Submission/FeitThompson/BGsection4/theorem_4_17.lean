@@ -1,8 +1,8 @@
 module
-public import FeitThompson.BGsection3.Defs
-import FeitThompson.Representation.ElementaryAbelianAction
-public import FeitThompson.GeneratorRank
-public import FeitThompson.BGsection4.gorenstein_5_4_15
+public import Submission.FeitThompson.BGsection3.Defs
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
+public import Submission.FeitThompson.GeneratorRank
+public import Submission.FeitThompson.BGsection4.gorenstein_5_4_15
 
 /-! # Theorem 4.17 from BG Section 4 -/
 

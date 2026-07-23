@@ -1,10 +1,10 @@
 module
 
-import FeitThompson.BGsection3.lemma_3_1
-import FeitThompson.PFsection8.PFsection8_2_b
-public import FeitThompson.PFsection9.PFsection9_7
-public import FeitThompson.PFsection9.PFsection9_8
-public import FeitThompson.PFsection9.PFsection9_9
+import Submission.FeitThompson.BGsection3.lemma_3_1
+import Submission.FeitThompson.PFsection8.PFsection8_2_b
+public import Submission.FeitThompson.PFsection9.PFsection9_7
+public import Submission.FeitThompson.PFsection9.PFsection9_8
+public import Submission.FeitThompson.PFsection9.PFsection9_9
 
 noncomputable section
 

@@ -1,7 +1,7 @@
 module
 
-public import FeitThompson.PFsection12.Basic
-import FeitThompson.PFsection3.PFsection3_5
+public import Submission.FeitThompson.PFsection12.Basic
+import Submission.FeitThompson.PFsection3.PFsection3_5
 
 /-!
 # Peterfalvi, Section 13: basic notation

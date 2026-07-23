@@ -1,9 +1,9 @@
 module
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
-import FeitThompson.Utils
-public import FeitThompson.BGsection4.lemma_4_5_a
-public import FeitThompson.BGsection4.lemma_4_5_a
+import Submission.FeitThompson.Utils
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
 
 open scoped commutatorElement
 

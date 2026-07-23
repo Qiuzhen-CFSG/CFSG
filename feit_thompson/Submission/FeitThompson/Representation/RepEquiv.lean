@@ -4,7 +4,7 @@ Authors: Yusen Tang
 
 module
 
-public import FeitThompson.Representation.RepMap
+public import Submission.FeitThompson.Representation.RepMap
 
 open Function
 

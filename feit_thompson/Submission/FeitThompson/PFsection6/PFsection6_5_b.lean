@@ -1,9 +1,9 @@
 module
 
-public import FeitThompson.PFsection6.PFsection6_4
-import FeitThompson.ChiefFactors.BaerCore
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.PFsection6.PFsection6_5_a
+public import Submission.FeitThompson.PFsection6.PFsection6_4
+import Submission.FeitThompson.ChiefFactors.BaerCore
+import Submission.FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
 
 noncomputable section
 

@@ -5,8 +5,8 @@ Authors: OpenAI
 module
 
 public import Mathlib.Data.Set.Card.Arithmetic
-public import FeitThompson.BGsection13.lemma_13_13
-public import FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection13.lemma_13_13
+public import Submission.FeitThompson.BGsection3.Remaining
 
 open scoped Pointwise
 

@@ -4,28 +4,28 @@ Authors: OpenAI, Yusen Tang
 
 module
 
-public import FeitThompson.BGsection5.Defs
-public import FeitThompson.BGsection1.lemma_1_22
-public import FeitThompson.BGsection1.Defs
-public import FeitThompson.BGsection1.CentralizerLemmas
-public import FeitThompson.BGsection1.PLengthLemmas
-public import FeitThompson.Gorenstein.Chapter8_2
-public import FeitThompson.ChiefFactors.Core
-public import FeitThompson.Commutator.Core
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.Fitting.Centralizer
-public import FeitThompson.Fitting.Core
-public import FeitThompson.Frattini.CoprimeAction
-public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.GroupAction.CoprimeHall
-public import FeitThompson.GroupAction.Quotient
-public import FeitThompson.HallSubgroups.Conjugacy
-public import FeitThompson.HallSubgroups.Core
-import FeitThompson.SubgroupConj
-public import FeitThompson.PCore.Defs
-public import FeitThompson.Representation.TwoDimensionalOddOrder
-public import FeitThompson.SubgroupConjAction
+public import Submission.FeitThompson.BGsection5.Defs
+public import Submission.FeitThompson.BGsection1.lemma_1_22
+public import Submission.FeitThompson.BGsection1.Defs
+public import Submission.FeitThompson.BGsection1.CentralizerLemmas
+public import Submission.FeitThompson.BGsection1.PLengthLemmas
+public import Submission.FeitThompson.Gorenstein.Chapter8_2
+public import Submission.FeitThompson.ChiefFactors.Core
+public import Submission.FeitThompson.Commutator.Core
+public import Submission.FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.Fitting.Core
+public import Submission.FeitThompson.Frattini.CoprimeAction
+public import Submission.FeitThompson.Frattini.Core
+public import Submission.FeitThompson.GroupAction.Defs
+public import Submission.FeitThompson.GroupAction.CoprimeHall
+public import Submission.FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.HallSubgroups.Conjugacy
+public import Submission.FeitThompson.HallSubgroups.Core
+import Submission.FeitThompson.SubgroupConj
+public import Submission.FeitThompson.PCore.Defs
+public import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
+public import Submission.FeitThompson.SubgroupConjAction
 public import Mathlib.Algebra.CharP.Lemmas
 public import Mathlib.FieldTheory.Minpoly.Field
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure

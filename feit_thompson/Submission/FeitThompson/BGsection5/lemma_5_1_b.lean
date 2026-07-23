@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection5.lemma_5_1_a
-public import FeitThompson.BGsection4.lemma_4_10
-import FeitThompson.PCore.PCore
-import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Submission.FeitThompson.BGsection5.lemma_5_1_a
+public import Submission.FeitThompson.BGsection4.lemma_4_10
+import Submission.FeitThompson.PCore.PCore
+import Submission.FeitThompson.PGroup.NormalSubgroups
+import Submission.FeitThompson.Representation.ElementaryAbelianAutomorphisms
 import Mathlib.GroupTheory.Schreier
 
 /-! # Lemma 5.1(b) from BG Section 5 -/

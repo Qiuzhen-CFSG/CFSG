@@ -2,7 +2,7 @@ module
 
 public import Mathlib.GroupTheory.Transfer
 
-public import FeitThompson.ChiefFactors.Core
+public import Submission.FeitThompson.ChiefFactors.Core
 
 /-!
 # Burnside normal p-complement consequence
