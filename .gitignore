@@ -1,7 +1,7 @@
 ## macOS
 .DS_Store
 ## Lake
-.lake/*
+.lake
 .cache/*
 ## Blueprint
 /blueprint/print/print.log
