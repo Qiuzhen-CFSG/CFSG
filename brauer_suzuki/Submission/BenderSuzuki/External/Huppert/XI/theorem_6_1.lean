@@ -5,17 +5,17 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.External.Huppert.XI.FrobeniusKernel
-public import FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection3.Remaining
 import Submission.BenderSuzuki.External.Huppert.II.theorem_1_12
 import Submission.BenderSuzuki.External.Huppert.IV.ComplementTransfer
 import Submission.BenderSuzuki.External.Huppert.XI.SharpNearField
 import Submission.BenderSuzuki.External.Isaacs.VI.theorem_6_34
 import Submission.BenderSuzuki.External.Isaacs.VII.theorem_7_14
 import Submission.BenderSuzuki.External.Isaacs.VII.theorem_7_15
-import FeitThompson.PFsection1.PFsection1_7_Mackey
-import FeitThompson.PFsection6.PFsection6_8
-import FeitThompson.PCore.Nilpotent
-import FeitThompson.Representation.BrauerPermutation
+import Submission.FeitThompson.PFsection1.PFsection1_7_Mackey
+import Submission.FeitThompson.PFsection6.PFsection6_8
+import Submission.FeitThompson.PCore.Nilpotent
+import Submission.FeitThompson.Representation.BrauerPermutation
 
 /-!
 # Feit XI.6.1

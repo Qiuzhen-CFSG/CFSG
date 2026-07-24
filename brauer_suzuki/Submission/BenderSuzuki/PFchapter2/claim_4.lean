@@ -8,7 +8,7 @@ public import Submission.BenderSuzuki.PFchapter2.claim_1
 public import Submission.BenderSuzuki.PFchapter2.claim_3
 public import Submission.BenderSuzuki.PFchapter1section2.proposition_1_b
 public import Submission.BenderSuzuki.PFchapter1section2.proposition_2
-public import FeitThompson.Wielandt
+public import Submission.FeitThompson.Wielandt
 
 namespace BenderSuzuki
 namespace PFchapter2

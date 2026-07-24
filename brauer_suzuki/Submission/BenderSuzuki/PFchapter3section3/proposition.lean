@@ -11,7 +11,7 @@ public import Mathlib.LinearAlgebra.Dimension.Finite
 import Submission.BenderSuzuki.PFAppendixIII.proposition_1
 import Submission.BenderSuzuki.PFAppendixIII.lemma_1
 import Submission.BenderSuzuki.PFAppendixIII.theorem
-import FeitThompson.HallSubgroups.Conjugacy
+import Submission.FeitThompson.HallSubgroups.Conjugacy
 import Submission.BenderSuzuki.PFchapter1section2.corollary
 import Submission.BenderSuzuki.PFchapter1section2.proposition_2
 import Submission.BenderSuzuki.PFchapter1section2.AppendixIInput

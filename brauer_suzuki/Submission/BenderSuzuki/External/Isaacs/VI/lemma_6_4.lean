@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.ConjugateRep
-public import FeitThompson.Representation.SubrepresentationLattice
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.ConjugateRep
+public import Submission.FeitThompson.Representation.SubrepresentationLattice
+public import Submission.FeitThompson.Representation.RepEquiv
 
 /-!
 # Isaacs Lemma 6.4

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection1.Defs
+public import Submission.FeitThompson.BGsection1.Defs
 public import Mathlib.GroupTheory.Transfer
 
 /-!

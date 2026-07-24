@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.FieldTheory.Finite.Extension
 public import Mathlib.FieldTheory.Finite.Trace

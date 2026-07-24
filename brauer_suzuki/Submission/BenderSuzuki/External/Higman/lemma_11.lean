@@ -10,8 +10,8 @@ import Submission.BenderSuzuki.External.Higman.lemma_6
 public import Submission.BenderSuzuki.External.Higman.lemma_9
 public import Submission.BenderSuzuki.External.Higman.lemma_10
 import Submission.BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.Frattini.Core
+import Submission.FeitThompson.GroupAction.Invariant
+import Submission.FeitThompson.Frattini.Core
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic

@@ -11,11 +11,11 @@ import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_6
 import Submission.BenderSuzuki.PFchapter1section1.proposition_1_d
 import Submission.BenderSuzuki.PFchapter1section1.proposition_1_e
 import Submission.BenderSuzuki.PFchapter1section3.lemma_2
-import FeitThompson.HallSubgroups.Conjugacy
-import FeitThompson.HallSubgroups.Existence
-import FeitThompson.PGroup.Omega
-import FeitThompson.PFsection3.PFsection3_7
-import FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.HallSubgroups.Conjugacy
+import Submission.FeitThompson.HallSubgroups.Existence
+import Submission.FeitThompson.PGroup.Omega
+import Submission.FeitThompson.PFsection3.PFsection3_7
+import Submission.FeitThompson.PFsection5.PFsection5_9
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 
 public import Submission.BenderSuzuki.PFAppendixIV.theorem
@@ -25,8 +25,8 @@ public import Submission.BenderSuzuki.PFchapter1section3.lemma_1
 public import Submission.BenderSuzuki.PFchapter1section3.proposition_1_c
 public import Submission.BenderSuzuki.PFchapter1section3.proposition_2
 public import Submission.BenderSuzuki.PFchapter3section1.Basic
-public import FeitThompson.FinalTheorem
-public import FeitThompson.PFsection6.Basic
+public import Submission.FeitThompson.FinalTheorem
+public import Submission.FeitThompson.PFsection6.Basic
 
 namespace BenderSuzuki
 namespace PFchapter3section1

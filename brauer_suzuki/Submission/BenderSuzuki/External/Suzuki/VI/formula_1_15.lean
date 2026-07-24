@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.External.Suzuki.VI.formula_1_7
-public import FeitThompson.Representation.Divisibility
+public import Submission.FeitThompson.Representation.Divisibility
 
 /-!
 # Suzuki VI.(1.15)

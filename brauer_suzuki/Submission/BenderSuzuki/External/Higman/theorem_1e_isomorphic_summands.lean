@@ -6,7 +6,7 @@ module
 
 public import Submission.BenderSuzuki.External.Higman.theorem_1b
 import Submission.BenderSuzuki.External.Higman.lemma_12
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.GroupAction.Quotient
 
 /-!
 # Higman's classification theorem for Suzuki 2-groups: extracted branch

@@ -7,7 +7,7 @@ module
 public import Submission.BenderSuzuki.PFchapter1section1.Basic
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_4_b
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_4_c
-public import FeitThompson.GroupAction.Cardinalities
+public import Submission.FeitThompson.GroupAction.Cardinalities
 
 namespace BenderSuzuki
 namespace PFchapter1section1

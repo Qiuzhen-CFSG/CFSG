@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.PFsection1.PFsection1_6
+public import Submission.FeitThompson.PFsection1.PFsection1_6
 
 /-!
 # Suzuki VI.1.8(ii)

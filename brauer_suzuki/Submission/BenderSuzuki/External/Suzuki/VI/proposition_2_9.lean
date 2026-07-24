@@ -7,7 +7,7 @@ module
 public import Submission.BenderSuzuki.External.Isaacs.VII.lemma_7_7
 public import Submission.BenderSuzuki.External.Suzuki.VI.proposition_1_13
 public import Submission.BenderSuzuki.External.Suzuki.VI.proposition_2_8
-public import FeitThompson.Representation.CharacterValues
+public import Submission.FeitThompson.Representation.CharacterValues
 import Mathlib.Tactic.Group
 
 /-!

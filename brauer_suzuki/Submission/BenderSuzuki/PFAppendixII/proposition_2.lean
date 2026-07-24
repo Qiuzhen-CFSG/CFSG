@@ -7,8 +7,8 @@ module
 public import Submission.BenderSuzuki.PFAppendixII.proposition_1
 public import Submission.BenderSuzuki.RightNearField.Linear
 import Submission.BenderSuzuki.PFAppendixI.proposition_2
-public import FeitThompson.BGsection2.EndFieldRep
-public import FeitThompson.Representation.Maschke
+public import Submission.FeitThompson.BGsection2.EndFieldRep
+public import Submission.FeitThompson.Representation.Maschke
 
 /-!
 # Peterfalvi Appendix II, Proposition 2

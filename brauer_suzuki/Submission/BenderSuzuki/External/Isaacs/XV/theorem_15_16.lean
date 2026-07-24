@@ -4,13 +4,13 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 public import Submission.BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import Submission.BenderSuzuki.External.Isaacs.XV.lemma_15_15
-public import FeitThompson.GroupAction.FreeOrbitQuotient
-public import FeitThompson.Representation.FreeBasis
-public import FeitThompson.Representation.ScalarDescent
-public import FeitThompson.Representation.PermutationBasisOrbits
+public import Submission.FeitThompson.GroupAction.FreeOrbitQuotient
+public import Submission.FeitThompson.Representation.FreeBasis
+public import Submission.FeitThompson.Representation.ScalarDescent
+public import Submission.FeitThompson.Representation.PermutationBasisOrbits
 public import Mathlib.FieldTheory.AlgebraicClosure
 
 open scoped TensorProduct

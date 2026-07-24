@@ -12,9 +12,9 @@ public import Submission.BenderSuzuki.External.Higman.lemma_11
 import Submission.BenderSuzuki.External.Higman.lemma_6
 public import Submission.BenderSuzuki.PFAppendixIII.FrobeniusBilinear
 import Submission.BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.Frattini.Core
-import FeitThompson.Representation.Maschke
+import Submission.FeitThompson.GroupAction.Invariant
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.Representation.Maschke
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RepresentationTheory.Submodule
 

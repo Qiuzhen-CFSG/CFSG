@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Frattini.Core
+public import Submission.FeitThompson.Frattini.Core
 public import Submission.BenderSuzuki.External.Huppert.IV.Residual
 import Submission.BenderSuzuki.External.Huppert.V.Semidirect
 import Mathlib.GroupTheory.IndexNormal

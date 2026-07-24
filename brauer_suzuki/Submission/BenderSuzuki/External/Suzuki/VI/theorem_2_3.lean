@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.BGsection3.Defs
 
 public import Submission.BenderSuzuki.External.Suzuki.VI.proposition_2_9
 import Submission.BenderSuzuki.External.Suzuki.VI.theorem_1_8
-import FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection5.PFsection5_9
 
 /-!
 # Suzuki VI.2.3

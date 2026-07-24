@@ -6,10 +6,10 @@ module
 
 public import Submission.BenderSuzuki.External.Suzuki.VI.theorem_2_3
 public import Submission.BenderSuzuki.External.Huppert.V.theorem_8_14
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.GroupTheory.PGroup
-import FeitThompson.BGsection3.lemma_3_1
+import Submission.FeitThompson.BGsection3.lemma_3_1
 
 /-!
 # Point-stabilizer Frobenius kernels for Huppert--Blackburn XI

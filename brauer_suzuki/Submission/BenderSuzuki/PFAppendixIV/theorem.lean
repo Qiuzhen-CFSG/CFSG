@@ -8,14 +8,14 @@ public import Submission.BenderSuzuki.PFAppendixIV.lemma_1
 public import Submission.BenderSuzuki.PFAppendixIV.lemma_2
 public import Submission.BenderSuzuki.External.Suzuki.VI.theorem_2_3
 import Submission.BenderSuzuki.External.Huppert.V.theorem_8_14
-import FeitThompson.BGsection3.Remaining
-import FeitThompson.PFsection3.PFsection3_5
-import FeitThompson.PFsection5.PFsection5_9
-import FeitThompson.PFsection6.Basic
-import FeitThompson.PFsection6.PFsection6_5_b
-import FeitThompson.PFsection6.PFsection6_6
-import FeitThompson.HallSubgroups.Core
-import FeitThompson.Representation.DegreeBounds
+import Submission.FeitThompson.BGsection3.Remaining
+import Submission.FeitThompson.PFsection3.PFsection3_5
+import Submission.FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.PFsection6.Basic
+import Submission.FeitThompson.PFsection6.PFsection6_5_b
+import Submission.FeitThompson.PFsection6.PFsection6_6
+import Submission.FeitThompson.HallSubgroups.Core
+import Submission.FeitThompson.Representation.DegreeBounds
 
 /-!
 # Peterfalvi Appendix IV, Feit-Sibley Theorem

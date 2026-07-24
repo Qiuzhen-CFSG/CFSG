@@ -15,7 +15,7 @@ import Submission.BenderSuzuki.PFchapter1section2.proposition_1_a
 import Submission.BenderSuzuki.PFchapter1section3.lemma_3
 import Submission.BenderSuzuki.PFchapter2.claim_1
 import Submission.BenderSuzuki.PFchapter2.claim_9
-import FeitThompson.GroupAction.NoncyclicAbelianPGroup
+import Submission.FeitThompson.GroupAction.NoncyclicAbelianPGroup
 import Mathlib.Data.Nat.Factorization.PrimePow
 
 namespace BenderSuzuki

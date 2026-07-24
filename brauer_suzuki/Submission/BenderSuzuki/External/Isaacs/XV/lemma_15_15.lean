@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.External.Isaacs.VII.problem_7_1
-import FeitThompson.Representation.CrossCharBrauer
+import Submission.FeitThompson.Representation.CrossCharBrauer
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 /-!

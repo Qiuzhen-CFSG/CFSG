@@ -14,7 +14,7 @@ import Submission.BenderSuzuki.External.Huppert.XI.example_1_3
 import Mathlib.GroupTheory.DoubleCoset
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
 import Mathlib.Topology.Compactification.OnePoint.ProjectiveLine
-import FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Algebra.Subalgebra.Lattice
 import Mathlib.Algebra.Field.ULift
 import Mathlib.Algebra.Group.Units.Equiv

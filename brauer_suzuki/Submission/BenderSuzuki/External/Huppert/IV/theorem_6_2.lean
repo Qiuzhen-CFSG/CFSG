@@ -7,10 +7,10 @@ module
 public import Submission.BenderSuzuki.External.Huppert.IV.Basic
 public import Submission.BenderSuzuki.External.Huppert.IV.theorem_5_1
 public import Submission.BenderSuzuki.External.Huppert.IV.theorem_5_4
-public import FeitThompson.BGsection1.Basic
-public import FeitThompson.BGsection3.theorem_3_6
-public import FeitThompson.BGsection9.corollary_9_2
-import FeitThompson.Representation.ElementaryAbelianAction
+public import Submission.FeitThompson.BGsection1.Basic
+public import Submission.FeitThompson.BGsection3.theorem_3_6
+public import Submission.FeitThompson.BGsection9.corollary_9_2
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Field.ULift
 
 /-!

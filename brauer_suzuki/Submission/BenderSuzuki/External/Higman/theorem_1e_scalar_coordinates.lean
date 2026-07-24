@@ -8,8 +8,8 @@ public import Submission.BenderSuzuki.External.Higman.theorem_1a
 public import Submission.BenderSuzuki.External.Higman.theorem_1b
 public import Submission.BenderSuzuki.External.Higman.theorem_1e_isomorphic_summands
 public import Submission.BenderSuzuki.External.Higman.lemma_12
-import FeitThompson.Representation.ElementaryAbelianAction
-import FeitThompson.GroupAction.CentralizerCondition
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.GroupAction.CentralizerCondition
 import Mathlib.GroupTheory.Complement
 
 /-!

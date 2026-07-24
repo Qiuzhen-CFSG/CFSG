@@ -20,7 +20,7 @@ import Submission.BenderSuzuki.External.Huppert.XI.example_10_7
 import Submission.BenderSuzuki.External.Huppert.XI.lemma_3_1
 import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_3
 import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_6
-import FeitThompson.GroupAction.Cardinalities
+import Submission.FeitThompson.GroupAction.Cardinalities
 import Mathlib.FieldTheory.Fixed
 
 namespace BenderSuzuki

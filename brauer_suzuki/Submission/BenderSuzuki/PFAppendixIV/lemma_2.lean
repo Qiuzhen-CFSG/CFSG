@@ -9,11 +9,11 @@ public import Submission.BenderSuzuki.External.Isaacs.VI.theorem_6_5
 public import Submission.BenderSuzuki.External.Isaacs.VII.lemma_7_7
 public import Submission.BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import Submission.BenderSuzuki.PFchapter1section1.Basic
-public import FeitThompson.PFsection1.PFsection1_1
-public import FeitThompson.PFsection1.PFsection1_6
-import FeitThompson.PFsection2.PFsection2_6
-import FeitThompson.PFsection3.PFsection3_5
-public import FeitThompson.PFsection5.Basic
+public import Submission.FeitThompson.PFsection1.PFsection1_1
+public import Submission.FeitThompson.PFsection1.PFsection1_6
+import Submission.FeitThompson.PFsection2.PFsection2_6
+import Submission.FeitThompson.PFsection3.PFsection3_5
+public import Submission.FeitThompson.PFsection5.Basic
 
 /-!
 # Peterfalvi Appendix IV, Lemma 2

@@ -13,7 +13,7 @@ import Submission.BenderSuzuki.PFchapter1section2.proposition_1_a
 import Submission.BenderSuzuki.PFchapter1section2.proposition_1_b
 import Submission.BenderSuzuki.PFchapter1section3.lemma_1
 import Submission.BenderSuzuki.External.Huppert.V.Semidirect
-import FeitThompson.GroupAction.Cardinalities
+import Submission.FeitThompson.GroupAction.Cardinalities
 
 namespace BenderSuzuki
 namespace PFchapter1section3

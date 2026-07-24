@@ -7,8 +7,8 @@ module
 public import Submission.BenderSuzuki.PFchapter1section2.proposition_1_b
 import Submission.BenderSuzuki.PFchapter1section1.proposition_4_b
 import Submission.BenderSuzuki.PFchapter1section1.proposition_5
-import FeitThompson.BGsection8.theorem_8_1
-import FeitThompson.PCore.Nilpotent
+import Submission.FeitThompson.BGsection8.theorem_8_1
+import Submission.FeitThompson.PCore.Nilpotent
 
 namespace BenderSuzuki
 namespace PFchapter1section2

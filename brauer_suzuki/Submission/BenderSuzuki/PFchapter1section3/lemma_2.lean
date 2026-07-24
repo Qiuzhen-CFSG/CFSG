@@ -9,7 +9,7 @@ import Submission.BenderSuzuki.PFchapter1section3.proposition_1_a
 import Submission.BenderSuzuki.PFchapter1section2.proposition_2
 import Submission.BenderSuzuki.PFchapter1section1.lemma_a
 import Submission.BenderSuzuki.PFchapter1section1.proposition_1_d
-import FeitThompson.SubgroupConj
+import Submission.FeitThompson.SubgroupConj
 
 namespace BenderSuzuki
 namespace PFchapter1section3

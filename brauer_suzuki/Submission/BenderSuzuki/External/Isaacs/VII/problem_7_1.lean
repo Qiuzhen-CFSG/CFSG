@@ -3,8 +3,8 @@ Authors: OpenAI
 -/
 
 module
-public import FeitThompson.BGsection3.lemma_3_1
-public import FeitThompson.Wielandt.FixedPointProduct
+public import Submission.FeitThompson.BGsection3.lemma_3_1
+public import Submission.FeitThompson.Wielandt.FixedPointProduct
 
 /-!
 # Isaacs Problem 7.1
@@ -380,7 +380,3 @@ end VII
 end Isaacs
 end External
 end BenderSuzuki
-
-
-
-

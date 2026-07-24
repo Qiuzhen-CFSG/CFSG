@@ -14,15 +14,15 @@ public import Submission.BenderSuzuki.External.Suzuki.VI.formula_1_15
 public import Submission.BenderSuzuki.External.Suzuki.VI.definition_2_7
 public import Submission.BenderSuzuki.External.Suzuki.VI.proposition_2_8
 public import Submission.BenderSuzuki.External.Suzuki.VI.proposition_2_9
-public import FeitThompson.PCore.Defs
+public import Submission.FeitThompson.PCore.Defs
 public import Mathlib.GroupTheory.SpecificGroups.Quaternion
 import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
 import Submission.BenderSuzuki.External.Huppert.IV.Basic
 import Submission.BenderSuzuki.External.Huppert.IV.ComplementTransfer
-import FeitThompson.BGsection1.PLengthLemmas
-import FeitThompson.PFsection1.PFsection1_9
-import FeitThompson.PFsection3.PFsection3_5
-import FeitThompson.PFsection5.PFsection5_9
+import Submission.FeitThompson.BGsection1.PLengthLemmas
+import Submission.FeitThompson.PFsection1.PFsection1_9
+import Submission.FeitThompson.PFsection3.PFsection3_5
+import Submission.FeitThompson.PFsection5.PFsection5_9
 import Mathlib.Tactic
 
 /-!

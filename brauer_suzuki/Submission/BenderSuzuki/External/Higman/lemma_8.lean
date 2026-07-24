@@ -6,9 +6,9 @@ module
 
 public import Submission.BenderSuzuki.External.Higman.lemma_1
 public import Submission.BenderSuzuki.External.Higman.lemma_6
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.Frattini.Core
+import Submission.FeitThompson.GroupAction.Defs
+import Submission.FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.Frattini.Core
 import Mathlib.LinearAlgebra.FixedSubmodule
 
 /-!

@@ -14,9 +14,9 @@ import Submission.BenderSuzuki.PFAppendixIII.theorem
 import Submission.BenderSuzuki.PFAppendixIII.lemma_1
 import Submission.BenderSuzuki.External.Higman.lemma_1
 import Submission.BenderSuzuki.External.Huppert.II.theorem_8_27
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.Representation.ElementaryAbelianAction
-import FeitThompson.Representation.TwoDimensionalOddOrder
+import Submission.FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.Representation.ElementaryAbelianAction
+import Submission.FeitThompson.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
 namespace BenderSuzuki

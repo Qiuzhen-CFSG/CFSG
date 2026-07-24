@@ -141,16 +141,23 @@ private theorem focalSubgroupOf_lt_top_of_controlled_fusion
       (T : Subgroup H).focalSubgroup.map f ≤ C.map (P : Subgroup G).subtype := by
     rw [Subgroup.focalSubgroup_def, Subgroup.map_le_iff_le_comap,
       Subgroup.closure_le]
-    rintro g ⟨x, hx, y, hy, ⟨u, hu⟩, hg⟩
+    rintro g ⟨hg_mem, a, ha, u, hcomm⟩
+    let x : H := a⁻¹
+    let y : H := u * x * u⁻¹
+    have hx : x ∈ (T : Subgroup H) := by
+      simpa [x] using (T : Subgroup H).inv_mem ha
+    have hy : y ∈ (T : Subgroup H) := by
+      simpa [x, y, hcomm, commutatorElement_def, mul_assoc] using
+        (T : Subgroup H).mul_mem ((T : Subgroup H).inv_mem ha) hg_mem
+    have hu : u * x * u⁻¹ = y := rfl
+    have hg : g = x⁻¹ * y := by
+      simp [x, y, hcomm, commutatorElement_def, mul_assoc]
     have hfxP : f x ∈ (P : Subgroup G) :=
       hTmap (Subgroup.mem_map_of_mem f hx)
     have hfyP : f y ∈ (P : Subgroup G) :=
       hTmap (Subgroup.mem_map_of_mem f hy)
-    have hxy : (u : H) * x * (u : H)⁻¹ = y := by
-      calc
-        (u : H) * x * (u : H)⁻¹ = y * (u : H) * (u : H)⁻¹ := by rw [hu]
-        _ = y := by simp
-    obtain ⟨z, hz⟩ := hfusion hfxP hfyP ⟨f (u : H), by simpa using congrArg f hxy⟩
+    obtain ⟨z, hz⟩ := hfusion hfxP hfyP
+      ⟨f (u : H), by simpa using congrArg f hu⟩
     have hgT : g ∈ (T : Subgroup H) := by
       rw [hg]
       exact (T : Subgroup H).mul_mem ((T : Subgroup H).inv_mem hx) hy

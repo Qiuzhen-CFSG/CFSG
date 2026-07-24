@@ -17,7 +17,7 @@ import Submission.BenderSuzuki.PFchapter4section1.claim_H4_b
 import Submission.BenderSuzuki.PFchapter4section1.claim_H5
 import Submission.BenderSuzuki.PFchapter4section1.claim_H6_c
 import Submission.BenderSuzuki.External.Huppert.V.theorem_8_15
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.GroupAction.Quotient
 
 namespace BenderSuzuki
 namespace PFchapter4section2

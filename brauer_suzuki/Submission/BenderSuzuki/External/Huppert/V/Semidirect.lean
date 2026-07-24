@@ -5,11 +5,11 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.PFchapter1section1.Basic
-public import FeitThompson.BGsection3.Remaining
-public import FeitThompson.BGsection3.lemma_3_3
-public import FeitThompson.BGsection6.Defs
-public import FeitThompson.BGsection8.theorem_8_1
-public import FeitThompson.GroupAction.MinimalNormal
+public import Submission.FeitThompson.BGsection3.Remaining
+public import Submission.FeitThompson.BGsection3.lemma_3_3
+public import Submission.FeitThompson.BGsection6.Defs
+public import Submission.FeitThompson.BGsection8.theorem_8_1
+public import Submission.FeitThompson.GroupAction.MinimalNormal
 public import Mathlib.GroupTheory.FixedPointFree
 public import Mathlib.LinearAlgebra.Dimension.Free
 public import Mathlib.FieldTheory.Finite.GaloisField

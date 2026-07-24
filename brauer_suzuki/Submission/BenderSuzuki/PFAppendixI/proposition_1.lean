@@ -5,12 +5,12 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.PFAppendixI.Basic
-public import FeitThompson.BGsection4.lemma_4_5_a
+public import Submission.FeitThompson.BGsection4.lemma_4_5_a
 public import Submission.BenderSuzuki.External.Huppert.V.theorem_8_15
-public import FeitThompson.Fitting.Core
+public import Submission.FeitThompson.Fitting.Core
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
-public import FeitThompson.FinalTheorem
-public import FeitThompson.Fitting.Centralizer
+public import Submission.FeitThompson.FinalTheorem
+public import Submission.FeitThompson.Fitting.Centralizer
 public import Mathlib.Algebra.Group.Subgroup.Order
 
 attribute [local instance] IsMulCommutative.instCommGroup

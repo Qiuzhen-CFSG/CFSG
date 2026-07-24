@@ -10,8 +10,8 @@ public import Submission.BenderSuzuki.PFchapter1section1.Basic
 public import Submission.BenderSuzuki.MatrixGroups.PSL2
 public import Submission.BenderSuzuki.MatrixGroups.Suzuki
 public import Submission.BenderSuzuki.MatrixGroups.Unitary
-public import FeitThompson.PCore.Defs
-public import FeitThompson.PCore.PPrimeCore
+public import Submission.FeitThompson.PCore.Defs
+public import Submission.FeitThompson.PCore.PPrimeCore
 import Submission.BenderSuzuki.External.Huppert.II.theorem_6_13
 import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_6
 import Submission.BenderSuzuki.External.Huppert.II.theorem_10_13

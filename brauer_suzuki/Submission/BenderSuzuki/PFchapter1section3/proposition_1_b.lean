@@ -7,7 +7,7 @@ module
 public import Submission.BenderSuzuki.PFchapter1section3.proposition_1_a
 public import Submission.BenderSuzuki.PFchapter1section2.proposition_3
 public import Submission.BenderSuzuki.PFchapter1section1.lemma_a
-public import FeitThompson.BGsection1.CentralizerLemmas
+public import Submission.FeitThompson.BGsection1.CentralizerLemmas
 
 namespace BenderSuzuki
 namespace PFchapter1section3

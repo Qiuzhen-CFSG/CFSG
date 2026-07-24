@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.SubgroupConj
+public import Submission.FeitThompson.SubgroupConj
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_1_a
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_1_d
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_2_c

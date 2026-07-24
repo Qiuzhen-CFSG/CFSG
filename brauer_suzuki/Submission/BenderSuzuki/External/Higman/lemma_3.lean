@@ -5,8 +5,8 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.External.Higman.lemma_2
-import FeitThompson.Frattini.Core
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.GroupAction.Quotient
 
 /-!
 # Higman Lemma 3

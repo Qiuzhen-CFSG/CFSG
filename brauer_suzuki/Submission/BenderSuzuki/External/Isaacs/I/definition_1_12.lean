@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.RepEquiv
 
 /-!
 # Isaacs Definition 1.12

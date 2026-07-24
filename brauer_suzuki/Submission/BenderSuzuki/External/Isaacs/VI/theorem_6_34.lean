@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.BrauerPermutation
-public import FeitThompson.Representation.SolvableDimension
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.ConjugateRep
-public import FeitThompson.Representation.RepEquiv
+public import Submission.FeitThompson.Representation.BrauerPermutation
+public import Submission.FeitThompson.Representation.SolvableDimension
+public import Submission.FeitThompson.Representation.Induction
+public import Submission.FeitThompson.Representation.ConjugateRep
+public import Submission.FeitThompson.Representation.RepEquiv
 
 /-!
 # Isaacs Theorem 6.34

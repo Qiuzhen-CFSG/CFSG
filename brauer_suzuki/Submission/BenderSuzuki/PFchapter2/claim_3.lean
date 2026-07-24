@@ -11,12 +11,12 @@ import Submission.BenderSuzuki.External.Isaacs.VI.theorem_6_5
 import Submission.BenderSuzuki.External.Isaacs.XV.theorem_15_16
 import Submission.BenderSuzuki.External.Huppert.V.theorem_8_15
 import Submission.BenderSuzuki.PFAppendixII.proposition_2
-import FeitThompson.BGsection3.Remaining
-import FeitThompson.BGsection3.lemma_3_1
-import FeitThompson.HallSubgroups.Core
-import FeitThompson.PFsection6.PFsection6_5_a
-import FeitThompson.Representation.SubrepresentationLattice
-import FeitThompson.Wielandt.FixedPointProduct
+import Submission.FeitThompson.BGsection3.Remaining
+import Submission.FeitThompson.BGsection3.lemma_3_1
+import Submission.FeitThompson.HallSubgroups.Core
+import Submission.FeitThompson.PFsection6.PFsection6_5_a
+import Submission.FeitThompson.Representation.SubrepresentationLattice
+import Submission.FeitThompson.Wielandt.FixedPointProduct
 
 namespace BenderSuzuki
 namespace PFchapter2

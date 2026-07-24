@@ -9,10 +9,10 @@ public import Submission.BenderSuzuki.External.Higman.lemma_11
 public import Submission.BenderSuzuki.External.Higman.lemma_12
 public import Submission.BenderSuzuki.External.Higman.InvariantComplement
 import Mathlib.Order.RelSeries
-import FeitThompson.Frattini.Core
-import FeitThompson.Commutator.Core
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.Commutator.Core
+import Submission.FeitThompson.GroupAction.Invariant
+import Submission.FeitThompson.GroupAction.Quotient
 
 /-!
 # Higman Lemma 13

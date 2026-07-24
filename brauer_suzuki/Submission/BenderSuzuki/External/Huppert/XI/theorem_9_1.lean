@@ -8,9 +8,9 @@ public import Submission.BenderSuzuki.External.Huppert.XI.FrobeniusKernel
 public import Submission.BenderSuzuki.External.Huppert.XI.theorem_6_1
 import Submission.BenderSuzuki.External.Suzuki.VI.formula_1_15
 import Submission.BenderSuzuki.External.Isaacs.VI.theorem_6_34
-import FeitThompson.PFsection1.PFsection1_7_Mackey
-import FeitThompson.PFsection6.PFsection6_8
-import FeitThompson.Representation.BrauerPermutation
+import Submission.FeitThompson.PFsection1.PFsection1_7_Mackey
+import Submission.FeitThompson.PFsection6.PFsection6_8
+import Submission.FeitThompson.Representation.BrauerPermutation
 import Mathlib.NumberTheory.Multiplicity
 
 /-!

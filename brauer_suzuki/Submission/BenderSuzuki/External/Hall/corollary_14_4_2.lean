@@ -6,7 +6,7 @@ module
 
 public import Submission.BenderSuzuki.External.Hall.Basic
 public import Submission.BenderSuzuki.External.Hall.theorem_14_4_1
-import FeitThompson.Frattini.Core
+import Submission.FeitThompson.Frattini.Core
 
 /-!
 # Hall Corollary 14.4.2

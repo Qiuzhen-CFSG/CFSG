@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.RepEnd
-public import FeitThompson.Representation.ConjugateRep
+public import Submission.FeitThompson.Representation.RepEnd
+public import Submission.FeitThompson.Representation.ConjugateRep
 public import Mathlib.FieldTheory.Fixed
 
 /-!

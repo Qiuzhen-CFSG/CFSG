@@ -6,7 +6,7 @@ module
 
 public import Submission.BenderSuzuki.PFchapter2.Basic
 import Submission.BenderSuzuki.PFchapter1section2.AppendixIInput
-import FeitThompson.SubgroupConj
+import Submission.FeitThompson.SubgroupConj
 import Submission.BenderSuzuki.PFAppendixII.proposition_2
 import Submission.BenderSuzuki.PFchapter2.claim_2_b
 import Submission.BenderSuzuki.PFchapter2.claim_4

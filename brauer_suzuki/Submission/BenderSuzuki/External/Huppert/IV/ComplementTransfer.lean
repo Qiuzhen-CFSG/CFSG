@@ -5,14 +5,15 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.PFchapter1section1.Basic
-public import FeitThompson.BGsection1.Basic
-public import FeitThompson.BGsection1.PLengthLemmas
-public import FeitThompson.BGsection6.Defs
-public import FeitThompson.BGsection8.theorem_8_1
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
+public import Submission.FeitThompson.BGsection1.Basic
+public import Submission.FeitThompson.BGsection1.PLengthLemmas
+public import Submission.FeitThompson.BGsection6.Defs
+public import Submission.FeitThompson.BGsection8.theorem_8_1
+public import Submission.FeitThompson.GroupAction.Lemmas
+public import Submission.FeitThompson.GroupAction.Quotient
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.Sylow
+public import Mathlib.GroupTheory.Focal
 import Mathlib.GroupTheory.NoncommCoprod
 
 /-!

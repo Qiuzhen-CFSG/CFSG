@@ -8,10 +8,10 @@ public import Mathlib.GroupTheory.SchurZassenhaus
 public import Mathlib.GroupTheory.Solvable
 
 import Mathlib.GroupTheory.GroupAction.OfQuotient
-import FeitThompson.FinalTheorem
-import FeitThompson.ChiefFactors.BaerCore
-import FeitThompson.ChiefFactors.Core
-import FeitThompson.HallSubgroups.Conjugacy
+import Submission.FeitThompson.FinalTheorem
+import Submission.FeitThompson.ChiefFactors.BaerCore
+import Submission.FeitThompson.ChiefFactors.Core
+import Submission.FeitThompson.HallSubgroups.Conjugacy
 
 /-!
 # Huppert I.18.3

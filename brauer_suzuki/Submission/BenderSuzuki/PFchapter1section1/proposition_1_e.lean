@@ -6,8 +6,8 @@ module
 
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_1_b
 public import Submission.BenderSuzuki.PFchapter1section1.proposition_1_c
-public import FeitThompson.BGsection1.Basic
-public import FeitThompson.SubgroupConjAction
+public import Submission.FeitThompson.BGsection1.Basic
+public import Submission.FeitThompson.SubgroupConjAction
 
 namespace BenderSuzuki
 namespace PFchapter1section1

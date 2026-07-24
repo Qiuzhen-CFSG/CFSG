@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 import Mathlib.Data.Nat.Factorization.Basic
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.GroupAction.Quotient
 public import Submission.BenderSuzuki.PFchapter2.Basic
 public import Mathlib.GroupTheory.Transfer
 

@@ -7,8 +7,8 @@ module
 import Mathlib.GroupTheory.FixedPointFree
 import Mathlib.LinearAlgebra.Eigenspace.Basic
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.Frattini.CoprimeAction
+import Submission.FeitThompson.GroupAction.CoprimeHall
 public import Submission.BenderSuzuki.External.Higman.lemma_5
 
 /-!

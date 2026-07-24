@@ -18,8 +18,8 @@ public import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_3
 public import Submission.BenderSuzuki.MatrixGroups.Suzuki
 public import Submission.BenderSuzuki.External.Higman.theorem_1a
 public import Submission.BenderSuzuki.External.Higman.theorem_1c
-import FeitThompson.BGsection3.lemma_3_2_a
-import FeitThompson.Representation.Orthogonality
+import Submission.FeitThompson.BGsection3.lemma_3_2_a
+import Submission.FeitThompson.Representation.Orthogonality
 
 /-!
 # Suzuki XI.11.15

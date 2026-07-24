@@ -7,8 +7,8 @@ module
 public import Submission.BenderSuzuki.PFchapter2.Basic
 import Submission.BenderSuzuki.PFchapter1section1.proposition_5
 import Submission.BenderSuzuki.PFchapter1section3.lemma_3
-import FeitThompson.BGsection4.lemma_4_5_a
-import FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.BGsection4.lemma_4_5_a
+import Submission.FeitThompson.GroupAction.Quotient
 
 namespace BenderSuzuki.PFchapter2
 

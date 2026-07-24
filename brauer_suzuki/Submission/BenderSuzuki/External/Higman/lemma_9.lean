@@ -9,9 +9,9 @@ public import Submission.BenderSuzuki.External.Higman.lemma_2
 public import Submission.BenderSuzuki.External.Higman.lemma_3
 public import Submission.BenderSuzuki.External.Higman.lemma_7
 public import Submission.BenderSuzuki.External.Higman.lemma_8
-import FeitThompson.Frattini.Core
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Invariant
+import Submission.FeitThompson.Frattini.Core
+import Submission.FeitThompson.GroupAction.Defs
+import Submission.FeitThompson.GroupAction.Invariant
 
 /-!
 # Higman Lemma 9

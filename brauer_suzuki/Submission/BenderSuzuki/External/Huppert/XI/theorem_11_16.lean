@@ -18,7 +18,7 @@ public import Submission.BenderSuzuki.External.Huppert.XI.theorem_6_8
 public import Submission.BenderSuzuki.External.Huppert.XI.theorem_9_1
 public import Submission.BenderSuzuki.External.Huppert.XI.theorem_11_15
 import Submission.BenderSuzuki.External.Huppert.V.theorem_8_15
-import FeitThompson.BGsection3.Remaining
+import Submission.FeitThompson.BGsection3.Remaining
 import Mathlib.Topology.Compactification.OnePoint.ProjectiveLine
 import Submission.BenderSuzuki.PFAppendixII.proposition_2
 public import Submission.BenderSuzuki.External.Huppert.XI.SharpNearField

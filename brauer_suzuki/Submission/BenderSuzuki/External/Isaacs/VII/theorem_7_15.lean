@@ -4,9 +4,9 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.PFsection1.PFsection1_4
-public import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection5.PFsection5_9
+public import Submission.FeitThompson.PFsection1.PFsection1_4
+public import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection5.PFsection5_9
 
 /-!
 # Isaacs Corollary 7.15

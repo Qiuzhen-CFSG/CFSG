@@ -7,9 +7,9 @@ module
 public import Submission.BenderSuzuki.PFchapter2.Basic
 import Submission.BenderSuzuki.External.Hall.theorem_14_4_2
 import Submission.BenderSuzuki.PFchapter1section3.lemma_3
-import FeitThompson.GroupAction.Quotient
-import FeitThompson.TBS.TBS
-import FeitThompson.PFsection2.Basic
+import Submission.FeitThompson.GroupAction.Quotient
+import Submission.FeitThompson.TBS.TBS
+import Submission.FeitThompson.PFsection2.Basic
 import Submission.BenderSuzuki.External.Huppert.V.Semidirect
 import Submission.BenderSuzuki.PFchapter1section1.proposition_5
 

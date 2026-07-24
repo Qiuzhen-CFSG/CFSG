@@ -11,7 +11,7 @@ import Submission.BenderSuzuki.External.Huppert.II.theorem_10_13
 import Submission.BenderSuzuki.External.Huppert.II.theorem_6_13
 import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_3
 import Submission.BenderSuzuki.External.Huppert.XI.theorem_3_6
-import FeitThompson.SubgroupConj
+import Submission.FeitThompson.SubgroupConj
 public import Submission.BenderSuzuki.MatrixGroups.Suzuki
 public import Mathlib.LinearAlgebra.Projectivization.Action
 

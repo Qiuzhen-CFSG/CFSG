@@ -8,7 +8,7 @@ public import Submission.BenderSuzuki.RightNearField
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.Module.ZMod
 
-public import FeitThompson.ElementaryAbelian
+public import Submission.FeitThompson.ElementaryAbelian
 public import Mathlib.RepresentationTheory.Maschke
 /-!
 # Linear algebra of finite right near-fields

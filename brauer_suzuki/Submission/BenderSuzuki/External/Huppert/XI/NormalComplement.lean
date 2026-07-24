@@ -7,9 +7,9 @@ module
 public import Submission.BenderSuzuki.External.Huppert.IV.ComplementTransfer
 public import Submission.BenderSuzuki.External.Huppert.IV.theorem_5_4
 public import Submission.BenderSuzuki.External.Huppert.V.FrattiniQuotient
-public import FeitThompson.BGsection1.theorem_1_8
-public import FeitThompson.BGsection1.theorem_1_11
-public import FeitThompson.PGroup.OmegaFrattini
+public import Submission.FeitThompson.BGsection1.theorem_1_8
+public import Submission.FeitThompson.BGsection1.theorem_1_11
+public import Submission.FeitThompson.PGroup.OmegaFrattini
 public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 
 namespace BenderSuzuki

@@ -7,9 +7,9 @@ module
 public import Submission.BenderSuzuki.PFchapter1section2.proposition_1_c
 import Submission.BenderSuzuki.PFchapter1section2.AppendixIInput
 import Submission.BenderSuzuki.PFchapter1section1.lemma_b
-import FeitThompson.BGsection3.Remaining
-import FeitThompson.GroupAction.Cardinalities
-import FeitThompson.SubgroupConj
+import Submission.FeitThompson.BGsection3.Remaining
+import Submission.FeitThompson.GroupAction.Cardinalities
+import Submission.FeitThompson.SubgroupConj
 
 namespace BenderSuzuki
 namespace PFchapter1section2

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.PFsection1.PFsection1_5
+public import Submission.FeitThompson.PFsection1.PFsection1_5
 
 /-!
 # Isaacs Lemma 7.7
@@ -209,6 +209,3 @@ end VII
 end Isaacs
 end External
 end BenderSuzuki
-
-
-

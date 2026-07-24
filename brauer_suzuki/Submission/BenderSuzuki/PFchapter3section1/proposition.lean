@@ -13,11 +13,11 @@ import Submission.BenderSuzuki.PFchapter1section1.proposition_5
 import Submission.BenderSuzuki.External.Higman.theorem_1
 import Submission.BenderSuzuki.External.Huppert.II.theorem_10_12
 import Submission.BenderSuzuki.External.Huppert.V.Semidirect
-import FeitThompson.BGsection3.lemma_3_3
+import Submission.FeitThompson.BGsection3.lemma_3_3
 import Submission.BenderSuzuki.PFAppendixIII.theorem
 import Submission.BenderSuzuki.PFAppendixIII.lemma_2
-import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.Wielandt.FixedPointProduct
+import Submission.FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.Wielandt.FixedPointProduct
 public import Submission.BenderSuzuki.PFchapter3section1.Basic
 
 namespace BenderSuzuki

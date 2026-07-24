@@ -4,11 +4,11 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.Maschke
-public import FeitThompson.Representation.ElementaryAbelianAction
+public import Submission.FeitThompson.Representation.Maschke
+public import Submission.FeitThompson.Representation.ElementaryAbelianAction
 public import Mathlib.RepresentationTheory.Submodule
 import Mathlib.Algebra.Field.ZMod
-import FeitThompson.GroupAction.Invariant
+import Submission.FeitThompson.GroupAction.Invariant
 
 open scoped IsMulCommutative
 

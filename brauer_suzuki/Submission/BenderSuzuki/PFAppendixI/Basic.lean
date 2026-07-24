@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.ElementaryAbelianAction
-public import FeitThompson.Representation.RepMap
+public import Submission.FeitThompson.Representation.ElementaryAbelianAction
+public import Submission.FeitThompson.Representation.RepMap
 public import Mathlib.FieldTheory.Finite.GaloisField
 
 open scoped IsMulCommutative
@@ -118,6 +118,3 @@ public noncomputable def AppendixIFpT
 
 end PFAppendixI
 end BenderSuzuki
-
-
-

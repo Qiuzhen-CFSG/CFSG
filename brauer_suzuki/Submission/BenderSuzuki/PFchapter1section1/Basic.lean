@@ -8,8 +8,8 @@ public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.GroupTheory.Sylow
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Submission.BenderSuzuki.PFAppendixIII.Basic
-public import FeitThompson.BGsection3.Defs
-public import FeitThompson.PCore.PPrimeCore
+public import Submission.FeitThompson.BGsection3.Defs
+public import Submission.FeitThompson.PCore.PPrimeCore
 
 open scoped BigOperators Pointwise
 open BenderSuzuki.PFAppendixIII

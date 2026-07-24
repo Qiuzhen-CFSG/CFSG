@@ -15,7 +15,7 @@ import Submission.BenderSuzuki.PFchapter1section2.proposition_3
 import Submission.BenderSuzuki.PFchapter1section2.AppendixIInput
 import Submission.BenderSuzuki.PFchapter1section3.lemma_5
 import Submission.BenderSuzuki.PFchapter3section3.proposition
-import FeitThompson.GroupAction.CoprimeHall
+import Submission.FeitThompson.GroupAction.CoprimeHall
 
 namespace BenderSuzuki
 namespace PFchapter4section4

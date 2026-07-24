@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import Submission.BenderSuzuki.PFAppendixI.Basic
-public import FeitThompson.BGsection2.EndFieldRep
+public import Submission.FeitThompson.BGsection2.EndFieldRep
 public import Mathlib.RingTheory.SimpleModule.Rank
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
 /-!

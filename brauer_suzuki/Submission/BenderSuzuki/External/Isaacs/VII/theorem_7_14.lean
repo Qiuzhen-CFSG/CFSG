@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.PFsection5.PFsection5_7
-import FeitThompson.PFsection5.PFsection5_9
+public import Submission.FeitThompson.PFsection5.PFsection5_7
+import Submission.FeitThompson.PFsection5.PFsection5_9
 
 /-!
 # Isaacs Theorem 7.14
