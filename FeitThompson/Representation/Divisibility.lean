@@ -71,20 +71,19 @@ private lemma classSumComplex_isIntegral (c : ConjClasses G) :
   rw [← hmap]
   exact map_isIntegral_int φ (classSumInt_isIntegral (G := G) c)
 
-private lemma classSumComplex_apply [DecidableEq (ConjClasses G)] (c : ConjClasses G) (x : G) :
-    classSumComplex (G := G) c x =
+private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClasses G) (x : G) :
+    (classSumComplex (G := G) c).coeff x =
       if ConjClasses.mk x = c then 1 else 0 := by
   rw [classSumComplex]
-  change ((∑ g ∈ classSet (G := G) c, MonoidAlgebra.single g (1 : ℂ) : G →₀ ℂ) :
-      G → ℂ) x = if ConjClasses.mk x = c then 1 else 0
+  simp only [MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single]
   rw [Finset.sum_apply']
   by_cases hx : ConjClasses.mk x = c
   · rw [if_pos hx]
     have hxmem : x ∈ classSet (G := G) c := (mem_classSet_iff (G := G)).2 hx
     rw [Finset.sum_eq_single x]
-    · simp [MonoidAlgebra.single_apply]
+    · simp
     · intro y hy hyx
-      simp [MonoidAlgebra.single_apply, hyx]
+      simp [hyx]
     · intro hxnot
       exact False.elim (hxnot hxmem)
   · rw [if_neg hx]
@@ -94,7 +93,7 @@ private lemma classSumComplex_apply [DecidableEq (ConjClasses G)] (c : ConjClass
       intro hyx
       apply hx
       simpa [hyx] using (mem_classSet_iff (G := G)).1 hy
-    simp [MonoidAlgebra.single_apply, hyx]
+    simp [hyx]
 
 private lemma classSumComplex_single_comm (c : ConjClasses G) (h : G) :
     (MonoidAlgebra.single h (1 : ℂ) : MonoidAlgebra ℂ G) *
@@ -103,8 +102,8 @@ private lemma classSumComplex_single_comm (c : ConjClasses G) (h : G) :
         MonoidAlgebra.single h (1 : ℂ) := by
   classical
   ext x
-  simp [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
-    classSumComplex_apply]
+  simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply,
+    classSumComplex_coeff, one_mul, mul_one]
   have hconj :
       ConjClasses.mk (h⁻¹ * x) = ConjClasses.mk (x * h⁻¹) := by
     rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
@@ -119,16 +118,14 @@ private lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G)
   | zero => simp
   | add x y hx hy => simp [add_mul, mul_add, hx, hy]
   | single g r =>
-      by_cases hr : r = 0
-      · rw [hr, MonoidAlgebra.single_zero, zero_mul, mul_zero]
       ext x
       have hconj :
           ConjClasses.mk (g⁻¹ * x) = ConjClasses.mk (x * g⁻¹) := by
         rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
         exact ⟨g, by group⟩
-      simpa [MonoidAlgebra.single_mul_apply, MonoidAlgebra.mul_single_apply,
-        classSumComplex_apply, hr, mul_comm, mul_left_comm, mul_assoc] using congrArg
-          (fun d : ConjClasses G => if d = c then (r : ℂ) else 0) hconj
+      simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply,
+        classSumComplex_coeff]
+      rw [hconj, mul_comm]
 
 private noncomputable def centralElementIntertwiner
     (ρ : Representation ℂ G V) (z : MonoidAlgebra ℂ G)
@@ -144,6 +141,7 @@ private noncomputable def centralElementIntertwiner
     rw [← map_mul, ← map_mul]
     exact congrArg ρ.asAlgebraHom (hz (MonoidAlgebra.single g (1 : ℂ))).symm
 
+omit [Finite G] [FiniteDimensional ℂ V] in
 public theorem irreducible_nontrivial
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ] :
     Nontrivial V := by
@@ -182,9 +180,11 @@ private lemma centralElementIntertwiner_eq_scalar
       (1 : Representation.IntertwiningMap ρ ρ) hone_ne_zero).mp hfin
       (centralElementIntertwiner (ρ := ρ) z hz)
   refine ⟨a, ?_⟩
+  ext v
   simpa [centralElementIntertwiner] using
-    (congrArg (fun f : Representation.IntertwiningMap ρ ρ => f.toLinearMap) ha).symm
+    (congrArg (fun f : Representation.IntertwiningMap ρ ρ => f v) ha).symm
 
+omit [FiniteDimensional ℂ V] in
 private lemma classSumComplex_trace
     (ρ : Representation ℂ G V) (c : ConjClasses G) :
     LinearMap.trace ℂ V (ρ.asAlgebraHom (classSumComplex (G := G) c)) =
@@ -205,6 +205,7 @@ private lemma classSet_card_eq_carrier_card (c : ConjClasses G) :
       rw [mem_classSet_iff]
       exact (ConjClasses.mem_carrier_iff_mk_eq (a := g) (b := c)).symm))
 
+omit [FiniteDimensional ℂ V] in
 private lemma classSumComplex_trace_eq_card_mul
     (ρ : Representation ℂ G V) {c : ConjClasses G} {x : G}
     (hx : ConjClasses.mk x = c) :
@@ -219,7 +220,7 @@ private lemma classSumComplex_trace_eq_card_mul
       rw [(mem_classSet_iff (G := G)).1 hg, hx]
     rw [ConjClasses.mk_eq_mk_iff_isConj] at hmk
     rcases isConj_iff.mp hmk with ⟨y, rfl⟩
-    simpa using (Representation.char_conj (ρ := ρ) g y)
+    simp
   calc
     ∑ g ∈ classSet (G := G) c, ρ.character g
         = ∑ g ∈ classSet (G := G) c, ρ.character x := by
@@ -230,11 +231,13 @@ private lemma classSumComplex_trace_eq_card_mul
             rw [Finset.sum_const, classSet_card_eq_carrier_card]
             simp [nsmul_eq_mul]
 
+omit [FiniteDimensional ℂ V] in
 private lemma isIntegral_scalar_of_isIntegral_smul_one
     [Nontrivial V] (a : ℂ) (h : IsIntegral ℤ (a • (1 : Module.End ℂ V))) :
     IsIntegral ℤ a := by
   have h' : IsIntegral ℤ (algebraMap ℂ (Module.End ℂ V) a) := by
-    simpa using h
+    rw [Algebra.algebraMap_eq_smul_one]
+    exact h
   let f : ℂ →ₐ[ℤ] Module.End ℂ V := IsScalarTower.toAlgHom ℤ ℂ (Module.End ℂ V)
   exact (isIntegral_algHom_iff f
     (FaithfulSMul.algebraMap_injective ℂ (Module.End ℂ V))).mp h'
@@ -308,18 +311,21 @@ public lemma representation_character_isIntegral
 private noncomputable def classRep (c : ConjClasses G) : G :=
   Classical.choose (ConjClasses.exists_rep c)
 
+omit [Finite G] in
 private lemma classRep_spec (c : ConjClasses G) :
     ConjClasses.mk (classRep (G := G) c) = c :=
   Classical.choose_spec (ConjClasses.exists_rep c)
 
+omit [Finite G] [FiniteDimensional ℂ V] in
 private lemma character_eq_of_mk_eq
     (ρ : Representation ℂ G V) {g x : G}
     (h : ConjClasses.mk g = ConjClasses.mk x) :
     ρ.character g = ρ.character x := by
   rw [ConjClasses.mk_eq_mk_iff_isConj] at h
   rcases isConj_iff.mp h with ⟨y, rfl⟩
-  simpa using (Representation.char_conj (ρ := ρ) g y)
+  simp
 
+omit [FiniteDimensional ℂ V] in
 private lemma sum_character_norm_by_conjClasses
     (ρ : Representation ℂ G V) :
     (∑ g : G, ρ.character g * star (ρ.character g)) =
@@ -416,25 +422,27 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
       ∑ s : ConjClasses G, (a i j s : ℂ) • classSumComplex (G := G) s := by
   classical
   ext x
-  rw [MonoidAlgebra.mul_apply]
+  rw [MonoidAlgebra.coeff_mul]
   have hinner (u : G) :
-      Finsupp.sum (classSumComplex (G := G) j)
-        (fun v r => if u * v = x then (classSumComplex (G := G) i) u * r else 0) =
+      Finsupp.sum (classSumComplex (G := G) j).coeff
+        (fun v r => if u * v = x then (classSumComplex (G := G) i).coeff u * r else 0) =
         ∑ v : G, if u * v = x then
-          (classSumComplex (G := G) i) u * (classSumComplex (G := G) j) v else 0 := by
-    rw [Finsupp.sum_of_support_subset (classSumComplex (G := G) j)
+          (classSumComplex (G := G) i).coeff u *
+            (classSumComplex (G := G) j).coeff v else 0 := by
+    rw [Finsupp.sum_of_support_subset (classSumComplex (G := G) j).coeff
       (s := Finset.univ) (by intro y hy; simp)
-      (fun v r => if u * v = x then (classSumComplex (G := G) i) u * r else 0)
+      (fun v r => if u * v = x then (classSumComplex (G := G) i).coeff u * r else 0)
       (by intro y hy; by_cases h : u * y = x <;> simp [h])]
   have hleft :
-      (Finsupp.sum (classSumComplex (G := G) i) fun u r =>
-        Finsupp.sum (classSumComplex (G := G) j) fun v t =>
+      (Finsupp.sum (classSumComplex (G := G) i).coeff fun u r =>
+        Finsupp.sum (classSumComplex (G := G) j).coeff fun v t =>
           if u * v = x then r * t else 0) =
       ∑ u : G, ∑ v : G, if u * v = x then
-        (classSumComplex (G := G) i) u * (classSumComplex (G := G) j) v else 0 := by
-    rw [Finsupp.sum_of_support_subset (classSumComplex (G := G) i)
+        (classSumComplex (G := G) i).coeff u *
+          (classSumComplex (G := G) j).coeff v else 0 := by
+    rw [Finsupp.sum_of_support_subset (classSumComplex (G := G) i).coeff
       (s := Finset.univ) (by intro y hy; simp)
-      (fun u r => Finsupp.sum (classSumComplex (G := G) j) fun v t =>
+      (fun u r => Finsupp.sum (classSumComplex (G := G) j).coeff fun v t =>
         if u * v = x then r * t else 0)
       (by intro y hy; simp)]
     apply Finset.sum_congr rfl
@@ -442,7 +450,8 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
     exact hinner u
   have hindicator :
       (∑ u : G, ∑ v : G, if u * v = x then
-        (classSumComplex (G := G) i) u * (classSumComplex (G := G) j) v else 0) =
+        (classSumComplex (G := G) i).coeff u *
+          (classSumComplex (G := G) j).coeff v else 0) =
       ∑ u : G, ∑ v : G,
         if u ∈ i.carrier ∧ v ∈ j.carrier ∧ u * v = x then (1 : ℂ) else 0 := by
     apply Finset.sum_congr rfl
@@ -452,21 +461,21 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
     by_cases hiu : u ∈ i.carrier
     · by_cases hjv : v ∈ j.carrier
       · by_cases huv : u * v = x
-        · simp [classSumComplex_apply, ConjClasses.mem_carrier_iff_mk_eq.mp hiu,
+        · simp [classSumComplex_coeff, ConjClasses.mem_carrier_iff_mk_eq.mp hiu,
             ConjClasses.mem_carrier_iff_mk_eq.mp hjv, huv, hiu, hjv]
         · simp [huv]
       · have hjmk : ConjClasses.mk v ≠ j := by
           intro h
           exact hjv ((ConjClasses.mem_carrier_iff_mk_eq).2 h)
         by_cases huv : u * v = x
-        · simp [classSumComplex_apply, ConjClasses.mem_carrier_iff_mk_eq.mp hiu,
+        · simp [classSumComplex_coeff, ConjClasses.mem_carrier_iff_mk_eq.mp hiu,
             hjmk, huv, hiu, hjv]
         · simp [huv]
     · have himk : ConjClasses.mk u ≠ i := by
         intro h
         exact hiu ((ConjClasses.mem_carrier_iff_mk_eq).2 h)
       by_cases huv : u * v = x
-      · simp [classSumComplex_apply, himk, huv, hiu]
+      · simp [classSumComplex_coeff, himk, huv, hiu]
       · simp [huv]
   have hdouble :
       (∑ u : G, ∑ v : G,
@@ -521,13 +530,9 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
     exact_mod_cast (hdata i j (ConjClasses.mk x) x hxmem).symm
   have hright :
       ((@Finset.univ (ConjClasses G) (Fintype.ofFinite (ConjClasses G))).sum fun s =>
-        (a i j s : ℂ) • classSumComplex (G := G) s) x =
+        (a i j s : ℂ) • classSumComplex (G := G) s).coeff x =
         (a i j (ConjClasses.mk x) : ℂ) := by
-    change (((@Finset.univ (ConjClasses G) (Fintype.ofFinite (ConjClasses G))).sum fun s =>
-      (a i j s : ℂ) • classSumComplex (G := G) s : G →₀ ℂ) : G → ℂ) x =
-        (a i j (ConjClasses.mk x) : ℂ)
-    rw [Finsupp.coe_finset_sum]
-    simp [Finset.sum_apply, classSumComplex_apply]
+    simp [classSumComplex_coeff]
   exact hleft.trans (hindicator.trans (hdouble.trans (hcoeff.trans hright.symm)))
 
 public theorem classSumScalar_mul_eq_sum_of_coefficients
@@ -601,8 +606,11 @@ public theorem irreducible_dimension_dvd_group_order
   have hnorm :
       (Nat.card G : ℂ)⁻¹ *
           ∑ g : G, ρ.character g * star (ρ.character g) = 1 := by
-    simpa [classFunctionInner, characterClassFunction, d] using
-      (irreducible_iff_character_norm_one (ρ := ρ)).1 inferInstance
+    have hnorm' := (irreducible_iff_character_norm_one (ρ := ρ)).1 inferInstance
+    unfold classFunctionInner at hnorm'
+    have hcharacter (g : G) :
+        characterClassFunction ρ (ConjClasses.mk g) = ρ.character g := rfl
+    simpa only [hcharacter] using hnorm'
   have hsumG :
       (∑ g : G, ρ.character g * star (ρ.character g)) = (Nat.card G : ℂ) := by
     calc

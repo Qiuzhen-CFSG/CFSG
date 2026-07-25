@@ -110,7 +110,6 @@ private theorem integerSpan_mono_pf56
       hsub
       (by
         intro y hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach, ← S2.sum_attach] using
     hsum
@@ -298,7 +297,7 @@ private theorem supportedOn_puncturedSet_iff_degree_eq_zero_pf56
     intro g hg
     have hg1 : g = 1 := by
       by_contra hne
-      exact hg (by simpa [puncturedSet, hne])
+      exact hg (by simp [puncturedSet, hne])
     subst hg1
     simpa [Section1.degree_apply] using hdeg
 
@@ -671,7 +670,7 @@ private theorem cfNormSq_weightedFamilySum_orthogonal_real_pf56
           refine Finset.sum_congr rfl ?_
           intro i _hi
           rw [hright i]
-          simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+          simp [pow_two, mul_left_comm, mul_comm]
     _ = ∑ i : ι, (w i) ^ (2 : ℕ) * r i := by
           simp [pow_two]
 
@@ -717,7 +716,12 @@ private theorem isVirtualCharacter_evalCoeff_pf56
   refine isVirtualCharacter_finset_sum_pf56 (Finset.univ : Finset ι)
     (fun i => ((v i : ℂ) • μ i)) ?_
   intro i _hi
-  simpa using isVirtualCharacter_zsmul_pf56 (v i) (hμ i)
+  have hsmul :
+      (v i : ℂ) • μ i = (v i • μ i : Section1.ClassFunction G) := by
+    ext g
+    simp [zsmul_eq_mul]
+  rw [hsmul]
+  exact isVirtualCharacter_zsmul_pf56 (v i) (hμ i)
 
 private theorem scalarProduct_self_eq_cfNormSq_of_character_pf56
     {G : Type u} [Group G] [Finite G]
@@ -866,7 +870,7 @@ private theorem scalarProduct_old_transform_eq_source_of_degree_ne_zero_pf56
       simpa [Section1.degree_apply] using hS1_degree Y0
     have hψeval : ψ 1 = (dψ : ℂ) := by
       simpa [Section1.degree_apply] using hψ_degree
-    simp [η, hY0eval, hψeval, mul_assoc, mul_left_comm, mul_comm]
+    simp [η, hY0eval, hψeval, mul_comm]
   have hη_memOn_S : integerSpanOn S puncturedSet η :=
     ⟨integerSpan_mono_pf56 hS1S hη_span_S1, hη_on⟩
   have hη_agree : τ1 η = T η :=
@@ -1131,22 +1135,22 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
       map_add' := by
         intro η ξ
         rw [Section1.scalarProduct_add_left]
-        simp [mul_add, mul_assoc]
+        simp [mul_add]
       map_smul' := by
         intro z η
         rw [Section1.scalarProduct_smul_left]
-        simpa [smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] }
+        simp [smul_eq_mul, mul_left_comm] }
   let coeffχbar : Section1.ClassFunction L →ₗ[ℂ] ℂ :=
     { toFun := fun η => (Section1.scalarProduct L χbar χbar)⁻¹ *
         Section1.scalarProduct L η χbar
       map_add' := by
         intro η ξ
         rw [Section1.scalarProduct_add_left]
-        simp [mul_add, mul_assoc]
+        simp [mul_add]
       map_smul' := by
         intro z η
         rw [Section1.scalarProduct_smul_left]
-        simpa [smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] }
+        simp [smul_eq_mul, mul_left_comm] }
   let Tnew : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G :=
     τ1 +
       coeffχ.smulRight (X - τ1 χ) +
@@ -1194,13 +1198,13 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
   have hTnew_diffψ : Tnew (χ - ψ) = T (χ - ψ) := by
     calc
       Tnew (χ - ψ) = Tnew χ - Tnew ψ := by
-        simpa using Tnew.map_sub χ ψ
+        simp
       _ = X - τ1 ψ := by rw [hTnew_χ, hTnew_ψ]
       _ = T (χ - ψ) := hTdiffψ
   have hTnew_diffχ : Tnew (χ - χbar) = T (χ - χbar) := by
     calc
       Tnew (χ - χbar) = Tnew χ - Tnew χbar := by
-        simpa using Tnew.map_sub χ χbar
+        simp
       _ = X - Xbar := by rw [hTnew_χ, hTnew_χbar]
       _ = T (χ - χbar) := hTdiffχ
   let μSnew : Snew → Section1.ClassFunction L := fun Y => (Y : Section1.ClassFunction L)
@@ -1235,7 +1239,7 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
                 simp [μSnew, iOld, jOld]
       · have hjpair : (j : Section1.ClassFunction L) ∈ pair := by
           have hjSnew : (j : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (j.2 : (j : Section1.ClassFunction L) ∈ Snew)
+            exact j.2
           exact (Finset.mem_union.mp hjSnew).resolve_left hjOld
         have hjpair_eq :
             (j : Section1.ClassFunction L) = χ ∨
@@ -1257,7 +1261,7 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
     · by_cases hjOld : (j : Section1.ClassFunction L) ∈ S1
       · have hipair : (i : Section1.ClassFunction L) ∈ pair := by
           have hiSnew : (i : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (i.2 : (i : Section1.ClassFunction L) ∈ Snew)
+            exact i.2
           exact (Finset.mem_union.mp hiSnew).resolve_left hiOld
         have hipair_eq :
             (i : Section1.ClassFunction L) = χ ∨
@@ -1281,14 +1285,14 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
       · have hipair : (i : Section1.ClassFunction L) = χ ∨
             (i : Section1.ClassFunction L) = χbar := by
           have hiSnew : (i : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (i.2 : (i : Section1.ClassFunction L) ∈ Snew)
+            exact i.2
           have hipair' : (i : Section1.ClassFunction L) ∈ pair :=
             (Finset.mem_union.mp hiSnew).resolve_left hiOld
           simpa [pair] using hipair'
         have hjpair : (j : Section1.ClassFunction L) = χ ∨
             (j : Section1.ClassFunction L) = χbar := by
           have hjSnew : (j : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (j.2 : (j : Section1.ClassFunction L) ∈ Snew)
+            exact j.2
           have hjpair' : (j : Section1.ClassFunction L) ∈ pair :=
             (Finset.mem_union.mp hjSnew).resolve_left hjOld
           simpa [pair] using hjpair'
@@ -1325,7 +1329,7 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
       · have hYpair : (Y : Section1.ClassFunction L) = χ ∨
             (Y : Section1.ClassFunction L) = χbar := by
           have hYSnew : (Y : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (Y.2 : (Y : Section1.ClassFunction L) ∈ Snew)
+            exact Y.2
           have hYpair' : (Y : Section1.ClassFunction L) ∈ pair :=
             (Finset.mem_union.mp hYSnew).resolve_left hYold
           simpa [pair] using hYpair'
@@ -1403,7 +1407,7 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
         rw [show pair = ({χ, χbar} : Finset (Section1.ClassFunction L)) by rfl]
         rw [Finset.sum_insert]
         · rw [Finset.sum_singleton]
-          simp [coeff, Snew, pair, m, n, hχ_mem_Snew, hχbar_mem_Snew]
+          simp [coeff, Snew, pair, m, n]
         · simp [hχ_ne_χbar]
       calc
         (Section1.evalCoeff (fun x : Snew => (x : Section1.ClassFunction L)) v) g
@@ -1893,7 +1897,7 @@ private theorem theorem_5_6_3_extend_coherent_with_extension_source
     rw [Section1.degree_apply]
     have hφeval : φ 1 = (dφ : ℂ) := by
       simpa [Section1.degree_apply] using hdφ
-    simp [hφeval, Int.cast_mul, mul_assoc]
+    simp [hφeval, Int.cast_mul]
   have hχchar : Section1.IsCharacter χ := hsetup.2 ⟨χ, _hχS⟩
   have hχbar_char : Section1.IsCharacter χbar :=
     hsetup.2 ⟨χbar, hχbarS⟩
@@ -1919,7 +1923,7 @@ private theorem theorem_5_6_3_extend_coherent_with_extension_source
       _ = Section1.degree ψ := by
             dsimp [ψ]
             rw [Section1.degree_apply]
-            simp [Section1.degree_apply, mul_assoc]
+            simp [Section1.degree_apply]
   have hdψ_ne : (dψ : ℂ) ≠ 0 := by
     intro hdψ_zero
     have hψdeg0 : Section1.degree ψ = 0 := by
@@ -2189,7 +2193,7 @@ public theorem theorem_5_6
     dsimp [ψ]
     have hχ1eval : χ1 1 = (d1 : ℂ) := by
       simpa [Section1.degree_apply] using hd1
-    simp [Section1.degree_apply, hχ1eval, mul_comm, mul_left_comm, mul_assoc]
+    simp [Section1.degree_apply, hχ1eval, mul_comm]
   have hdiffψ_on : Section1.supportedOn diffψ puncturedSet := by
     apply (supportedOn_puncturedSet_iff_degree_eq_zero_pf56 diffψ).2
     have hχXdeg : Section1.degree χX = (d1 * a : ℂ) := by
@@ -2437,7 +2441,7 @@ public theorem theorem_5_6
       calc
         χ1 = 0 := hχ1_zero
         _ = Section1.conjugateCharacter (0 : Section1.ClassFunction L) := hbar_zero.symm
-        _ = Section1.conjugateCharacter χ1 := by simpa [hχ1_zero]
+        _ = Section1.conjugateCharacter χ1 := by simp [hχ1_zero]
     exact hX1_ne_bar hχ1_bar
   have hTdiffψ_toldX1_int :
       ∃ m : ℤ, Section1.scalarProduct G (T diffψ) (Told χ1) = (m : ℂ) := by
@@ -2451,7 +2455,7 @@ public theorem theorem_5_6
       cfNormSq ((a : ℂ) • χ1) = (a : ℝ) ^ (2 : ℕ) * cfNormSq χ1 := by
         unfold cfNormSq
         rw [Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right]
-        simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+        simp [pow_two, mul_assoc, mul_left_comm]
       _ = (a : ℝ) ^ (2 : ℕ) * (n1 : ℝ) := by rw [hn1]
   rcases hTdiffψ_toldX1_int with ⟨m, hm⟩
   have hToldX1_Xbig_zero :
@@ -2498,7 +2502,7 @@ public theorem theorem_5_6
       calc
         χ1 = 0 := hχ1_zero
         _ = Section1.conjugateCharacter (0 : Section1.ClassFunction L) := hconj_zero_L.symm
-        _ = Section1.conjugateCharacter χ1 := by simpa [hχ1_zero]
+        _ = Section1.conjugateCharacter χ1 := by simp [hχ1_zero]
     exact hX1_ne_bar hχ1_bar
   have hn1_ne_zero : (n1 : ℝ) ≠ 0 := by
     rw [← hn1]
@@ -2572,7 +2576,7 @@ public theorem theorem_5_6
         (Y0 : Section1.ClassFunction L) = 0 := hY0_zero
         _ = Section1.conjugateCharacter (0 : Section1.ClassFunction L) := hconj_zero_L.symm
         _ = Section1.conjugateCharacter (Y0 : Section1.ClassFunction L) := by
-              simpa [hY0_zero]
+              simp [hY0_zero]
     exact (h52a ⟨(Y0 : Section1.ClassFunction L), hS1subset Y0.2⟩).2 hY0_bar
   have hY_told_old :
       ∀ Y0 : S1, Y0 ≠ X1 →
@@ -2593,7 +2597,7 @@ public theorem theorem_5_6
         simpa [Section1.degree_apply] using hdS1 Y0
       have hχ1eval : χ1 1 = (d1 : ℂ) := by
         simpa [Section1.degree_apply] using hd1
-      simp [η, hY0eval, hχ1eval, mul_assoc, mul_left_comm, mul_comm]
+      simp [η, hY0eval, hχ1eval, mul_comm]
     have hη_memOn_S : integerSpanOn S puncturedSet η := by
       exact ⟨integerSpan_mono_pf56 hS1subset hη_span_S1, hη_on⟩
     have hη_agree : Told η = T η := hAgreeOld η ⟨hη_span_S1, hη_on⟩
@@ -2621,7 +2625,7 @@ public theorem theorem_5_6
       dsimp [η]
       rw [scalarProduct_sub_right_pf56, Section1.scalarProduct_smul_right,
         Section1.scalarProduct_smul_right]
-      simp [hχ1Y0_zero, hχ1_self, Int.cast_mul, mul_assoc, mul_left_comm, mul_comm]
+      simp [hχ1Y0_zero, hχ1_self, Int.cast_mul]
     have hsource :
         Section1.scalarProduct L diffψ η =
           ((((a : ℤ) * n1 * (dS1 Y0 : ℤ)) : ℤ) : ℂ) := by
@@ -2632,7 +2636,7 @@ public theorem theorem_5_6
             (-((((a : ℤ) * n1 * (dS1 Y0 : ℤ)) : ℤ) : ℂ)) := by
         dsimp [ψ]
         rw [Section1.scalarProduct_smul_left]
-        simp [hχ1_eta, Int.cast_mul, mul_assoc, mul_left_comm, mul_comm]
+        simp [hχ1_eta, Int.cast_mul, mul_left_comm, mul_comm]
       simp [hχX_eta_zero, hpsi_eta]
     have hμOld_Xbig_zero :
         Section1.scalarProduct G (μOld Y0) Xbig = 0 := by
@@ -2667,7 +2671,7 @@ public theorem theorem_5_6
           Section1.scalarProduct_smul_right, scalarProduct_sub_left_pf56,
           scalarProduct_sub_left_pf56]
         simp [sub_eq_add_neg, hXbig_μOld_zero, hXbig_toldX1_zero, hY_toldX1,
-          mul_assoc, mul_left_comm, mul_comm]
+          mul_comm]
       rw [hY_toldX1] at htmp
       rw [htarget] at htmp
       have htmp' :
@@ -2746,7 +2750,7 @@ public theorem theorem_5_6
                 simpa [χ1, hn1] using hμOld_self X1
               rw [Section1.scalarProduct_smul_left]
               rw [hselfX1, hP_toldX1]
-              simp [Int.cast_mul, add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
+              simp [Int.cast_mul, sub_eq_add_neg]
         _ = (-m : ℂ) := by
               have hInt : ((a : ℤ) * n1 : ℤ) - A = -m := by
                 dsimp [A]
@@ -2793,7 +2797,7 @@ public theorem theorem_5_6
     scalarProduct_zero_swap_pf56 hZold_W_zero
   have hY_decomp :
       Y = W + Zold := by
-    simpa [Zold, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    simp [Zold, sub_eq_add_neg, add_left_comm]
   have hW_le_Y :
       cfNormSq W ≤ cfNormSq Y := by
     have hYnorm :
@@ -2811,7 +2815,6 @@ public theorem theorem_5_6
       wCorr μOld
       (fun Y0 => cfNormSq (Y0 : Section1.ClassFunction L))
       hμOld_orth hμOld_self
-  dsimp [P] at hP_norm0
   have hu :
       (@Finset.univ S1 (Fintype.ofFinite S1)) = u := by
     ext Y0
@@ -2855,15 +2858,18 @@ public theorem theorem_5_6
     rw [Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right,
       Section1.scalarProduct_smul_left, Section1.scalarProduct_smul_right, hselfX1,
       hP_toldX1, hμOldX1_P]
-    simp [cfNormSq, Int.cast_mul, pow_two, sub_eq_add_neg,
-      mul_assoc, mul_left_comm, mul_comm]
+    simp [pow_two, sub_eq_add_neg, mul_assoc, mul_comm]
     nlinarith [hn1]
   have hY_upper :
       cfNormSq Y ≤ (a : ℝ) ^ (2 : ℕ) * (n1 : ℝ) := by
     simpa [hψ_norm] using hY_le
   have hsumDegNorm_gt :
       2 * (a : ℝ) * (d1 : ℝ) ^ (2 : ℕ) < sumDegNorm := by
-    simpa [sumDegNorm, pow_two, mul_assoc, mul_left_comm, mul_comm] using hineq
+    change 2 * (a : ℝ) * (d1 : ℝ) ^ (2 : ℕ) <
+      Finset.sum u (fun Y0 =>
+        ((dS1 Y0 : ℝ) ^ (2 : ℕ)) / cfNormSq (Y0 : Section1.ClassFunction L))
+    rw [show u = S1.attach by rfl]
+    simpa [pow_two, mul_assoc, mul_left_comm, mul_comm] using hineq
   have hsumDegNorm_pos :
       0 < sumDegNorm := by
     have hleft_nonneg : 0 ≤ 2 * (a : ℝ) * (d1 : ℝ) ^ (2 : ℕ) := by
@@ -3001,7 +3007,7 @@ public theorem theorem_5_6
         _ = Section1.conjugateCharacter (0 : Section1.ClassFunction L) := by
               ext g
               simp [Section1.conjugateCharacter]
-        _ = Section1.conjugateCharacter χX := by simpa [hχX_zero]
+        _ = Section1.conjugateCharacter χX := by simp [hχX_zero]
     exact (h52a X).2 hχX_bar
   have hχXbar_cfNorm_ne_zero : cfNormSq χXbar ≠ 0 := by
     intro h0
@@ -3013,28 +3019,28 @@ public theorem theorem_5_6
               ext g
               simp [Section1.conjugateCharacter]
         _ = Section1.conjugateCharacter χXbar := by
-              simpa [χXbar, hχXbar_zero, Section1.conjugateCharacter]
+              simp [χXbar, hχXbar_zero]
     exact (h52a ⟨χXbar, (h52a X).1⟩).2 hχXbar_bar
   let coeffX : Section1.ClassFunction L →ₗ[ℂ] ℂ :=
     { toFun := fun φ => (Section1.scalarProduct L χX χX)⁻¹ * Section1.scalarProduct L φ χX
       map_add' := by
         intro φ ψ'
         rw [Section1.scalarProduct_add_left]
-        simp [mul_add, mul_assoc]
+        simp [mul_add]
       map_smul' := by
         intro z φ
         rw [Section1.scalarProduct_smul_left]
-        simpa [smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] }
+        simp [smul_eq_mul, mul_left_comm] }
   let coeffXbar : Section1.ClassFunction L →ₗ[ℂ] ℂ :=
     { toFun := fun φ => (Section1.scalarProduct L χXbar χXbar)⁻¹ * Section1.scalarProduct L φ χXbar
       map_add' := by
         intro φ ψ'
         rw [Section1.scalarProduct_add_left]
-        simp [mul_add, mul_assoc]
+        simp [mul_add]
       map_smul' := by
         intro z φ
         rw [Section1.scalarProduct_smul_left]
-        simpa [smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] }
+        simp [smul_eq_mul, mul_left_comm] }
   let Tnew : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G :=
     Told +
       coeffX.smulRight (Xbig - Told χX) +
@@ -3103,11 +3109,11 @@ public theorem theorem_5_6
         simp
       _ = Xbig - Told ψ := by rw [hTnew_X, hTnew_ψ]
       _ = Xbig - Y := by rw [hY_eq_Toldψ]
-      _ = T diffψ := by simpa [hTdiffψ_eq] using hY_eq.symm
+      _ = T diffψ := by simp [hTdiffψ_eq]
   have hTnew_diffX : Tnew diffX = T diffX := by
     calc
       Tnew diffX = Tnew χX - Tnew χXbar := by
-        simpa [diffX, χXbar] using Tnew.map_sub χX χXbar
+        simp [diffX, χXbar]
       _ = Xbig - Xbarimg := by rw [hTnew_X, hTnew_Xbar]
       _ = T diffX := by
             dsimp [Xbarimg]
@@ -3227,7 +3233,7 @@ public theorem theorem_5_6
     have hTnew_diffX' : Tnew diffX = Xbig - Xbarimg := by
       calc
         Tnew diffX = Tnew χX - Tnew χXbar := by
-          simpa [diffX, χXbar] using Tnew.map_sub χX χXbar
+          simp [diffX, χXbar]
         _ = Xbig - Xbarimg := by rw [hTnew_X, hTnew_Xbar]
     have hTdiffX_eq : T diffX = Xbig - Xbarimg := by
       rw [← hTnew_diffX, hTnew_diffX']
@@ -3308,7 +3314,7 @@ public theorem theorem_5_6
                 simp [μSnew, iOld, jOld]
       · have hjpair : (j : Section1.ClassFunction L) ∈ pair := by
           have hjSnew : (j : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (j.2 : (j : Section1.ClassFunction L) ∈ Snew)
+            exact j.2
           exact (Finset.mem_union.mp hjSnew).resolve_left hjOld
         have hjpair_eq : (j : Section1.ClassFunction L) = χX ∨
             (j : Section1.ClassFunction L) = χXbar := by
@@ -3337,7 +3343,7 @@ public theorem theorem_5_6
     · by_cases hjOld : (j : Section1.ClassFunction L) ∈ S1
       · have hipair : (i : Section1.ClassFunction L) ∈ pair := by
           have hiSnew : (i : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (i.2 : (i : Section1.ClassFunction L) ∈ Snew)
+            exact i.2
           exact (Finset.mem_union.mp hiSnew).resolve_left hiOld
         have hipair_eq : (i : Section1.ClassFunction L) = χX ∨
             (i : Section1.ClassFunction L) = χXbar := by
@@ -3367,14 +3373,14 @@ public theorem theorem_5_6
       · have hipair : (i : Section1.ClassFunction L) = χX ∨
             (i : Section1.ClassFunction L) = χXbar := by
           have hiSnew : (i : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (i.2 : (i : Section1.ClassFunction L) ∈ Snew)
+            exact i.2
           have hipair' : (i : Section1.ClassFunction L) ∈ pair :=
             (Finset.mem_union.mp hiSnew).resolve_left hiOld
           simpa [pair] using hipair'
         have hjpair : (j : Section1.ClassFunction L) = χX ∨
             (j : Section1.ClassFunction L) = χXbar := by
           have hjSnew : (j : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (j.2 : (j : Section1.ClassFunction L) ∈ Snew)
+            exact j.2
           have hjpair' : (j : Section1.ClassFunction L) ∈ pair :=
             (Finset.mem_union.mp hjSnew).resolve_left hjOld
           simpa [pair] using hjpair'
@@ -3410,7 +3416,7 @@ public theorem theorem_5_6
       · have hYpair : (Y : Section1.ClassFunction L) = χX ∨
             (Y : Section1.ClassFunction L) = χXbar := by
           have hYSnew : (Y : Section1.ClassFunction L) ∈ S1 ∪ pair := by
-            simpa [Snew] using (Y.2 : (Y : Section1.ClassFunction L) ∈ Snew)
+            exact Y.2
           have hYpair' : (Y : Section1.ClassFunction L) ∈ pair := by
             exact (Finset.mem_union.mp hYSnew).resolve_left hYold
           simpa [pair] using hYpair'

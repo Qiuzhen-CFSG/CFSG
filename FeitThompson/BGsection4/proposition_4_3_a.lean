@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection4.Infrastructure
 
+open scoped commutatorElement
+
 section Main
 
 public theorem proposition_4_3_a {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]

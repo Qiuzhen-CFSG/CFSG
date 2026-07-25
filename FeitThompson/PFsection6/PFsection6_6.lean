@@ -12,7 +12,7 @@ import FeitThompson.PFsection6.PFsection6_5_c
 
 noncomputable section
 
-open scoped Classical
+open scoped Classical commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -265,11 +265,13 @@ public theorem theorem_6_6_isPGroup_of_nonabelianPQuotient_bot
   haveI : Fact p.Prime := ⟨hpprime⟩
   have hbot_sub : (⊥ : Subgroup L).subgroupOf K = (⊥ : Subgroup K) := by
     ext x
-    simp [Subgroup.mem_subgroupOf]
+    simp
   let e : K ⧸ (⊥ : Subgroup L).subgroupOf K ≃* K :=
     (QuotientGroup.quotientMulEquivOfEq hbot_sub).trans QuotientGroup.quotientBot
   exact hQp.of_equiv e
 
+-- Keep `Z` in the public signature for compatibility with existing named calls.
+set_option linter.unusedVariables false in
 public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
     {L : Type u} [Group L] [Finite L]
     {K Z : Subgroup L}
@@ -279,7 +281,7 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
     {p : ℕ}
     (hpQ : nonabelianPQuotient (⊥ : Subgroup L) K p)
     {χ : Section1.ClassFunction L} (hχX : χ ∈ Xset) :
-    ∃ a dχ : ℕ,
+  ∃ a dχ : ℕ,
       Section1.degree χ = (dχ : ℂ) ∧
         dχ = K.relIndex (⊤ : Subgroup L) * p ^ a := by
   classical
@@ -307,10 +309,9 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
   rcases (Nat.dvd_prime_pow hpprime).1 hdθ_dvd_pow with
     ⟨a, _ham, hdθ⟩
   refine ⟨a, K.relIndex (⊤ : Subgroup L) * p ^ a, ?_, rfl⟩
-  have hKindex_ne : K.index ≠ 0 := Subgroup.index_ne_zero_of_finite (H := K)
   rw [hχeq, Section1.degree_inducedClassFunction K θ]
   rw [hθeq, Section1.degree_representation_character]
-  simp [Subgroup.relIndex_top_right, Nat.cast_mul, hKindex_ne, hdθ]
+  simp [Subgroup.relIndex_top_right, Nat.cast_mul, hdθ]
 
 theorem theorem_6_6_centralModulo_bot_of_centerIn
     {L : Type u} [Group L] {K Z : Subgroup L}
@@ -366,10 +367,9 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
     ⟨a, _ham, hdθ⟩
   let dχ : ℕ := K.relIndex (⊤ : Subgroup L) * p ^ a
   have hχdeg : Section1.degree χ = (dχ : ℂ) := by
-    have hKindex_ne : K.index ≠ 0 := Subgroup.index_ne_zero_of_finite (H := K)
     rw [hχeq, Section1.degree_inducedClassFunction K θ]
     rw [hθeq, Section1.degree_representation_character]
-    simp [dχ, Subgroup.relIndex_top_right, Nat.cast_mul, hKindex_ne, hdθ]
+    simp [dχ, Subgroup.relIndex_top_right, Nat.cast_mul, hdθ]
   have hdim_bound : dθ ^ (2 : ℕ) ≤ Z.relIndex K := by
     letI : Representation.IsIrreducible ρ := hρirr
     have hcentral :
@@ -381,9 +381,11 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
       have hb : (b : K) = 1 := Subgroup.mem_bot.mp b.2
       ext v i
       simp [hb]
-    simpa using
-      (Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
-        (ρ := ρ) (⊥ : Subgroup K) (Z.subgroupOf K) hBker hcentral)
+    change dθ ^ (2 : ℕ) ≤ (Z.subgroupOf K).index
+    have hfinrank : Module.finrank ℂ (Fin dθ → ℂ) = dθ := by simp
+    rw [← hfinrank]
+    exact Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+      (ρ := ρ) (⊥ : Subgroup K) (Z.subgroupOf K) hBker hcentral
   have hpale : p ^ (2 * a) ≤ Z.relIndex K := by
     calc
       p ^ (2 * a) = (p ^ a) ^ (2 : ℕ) := by
@@ -713,8 +715,6 @@ public theorem theorem_6_6_complete_sum_degree_normSq
         (fun k => Complex.normSq (η k (ConjClasses.mk (1 : G))))
         (by
           intro i
-          change Complex.normSq (χ i (ConjClasses.mk (1 : G))) =
-            Complex.normSq (η (f i) (ConjClasses.mk (1 : G)))
           rw [hf_spec i]))
   exact hsum_eq.trans hsumη
 
@@ -726,16 +726,18 @@ theorem theorem_6_6_toConjClassFunction_irreducible
       (Section1.toConjClassFunction χ
         (theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup hχ)) := by
   rcases hχ with ⟨n, ρ, hρirr, hχeq⟩
-  refine ⟨?_, ?_⟩
-  · refine ⟨n, ρ, ?_⟩
+  let hχclass := theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup
+    ⟨n, ρ, hρirr, hχeq⟩
+  have htoeq :
+      Section1.toConjClassFunction χ hχclass =
+        Representation.characterClassFunction ρ := by
     apply Section1.toConjClassFunction_eq_of_apply
     intro g
     rw [hχeq]
     rfl
-  · have hnorm :=
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-    simpa [Section1.classFunctionInner_toConjClassFunction, hχeq]
-      using hnorm
+  refine ⟨⟨n, ρ, htoeq⟩, ?_⟩
+  rw [htoeq]
+  exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
 theorem theorem_6_6_ofConjClassFunction_irreducibleOnGroup
     {G : Type u} [Group G] [Finite G]
@@ -1154,16 +1156,16 @@ public theorem theorem_6_6_complete_nonkernel_degree_data
           Representation.IsIrreducibleCharacter
             (Section1.toConjClassFunction χ0 hχ0class) := by
         rcases hχ0.1 with ⟨n, ρ, hρirr, hχ0eq⟩
-        constructor
-        · refine ⟨n, ρ, ?_⟩
-          ext c
-          rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
-          change χ0 g = ρ.character g
+        have htoeq :
+            Section1.toConjClassFunction χ0 hχ0class =
+              Representation.characterClassFunction ρ := by
+          apply Section1.toConjClassFunction_eq_of_apply
+          intro g
           rw [hχ0eq]
-        · have hnorm :=
-            (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-          simpa [Section1.classFunctionInner_toConjClassFunction, hχ0eq]
-            using hnorm
+          rfl
+        refine ⟨⟨n, ρ, htoeq⟩, ?_⟩
+        rw [htoeq]
+        exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
       rcases hχ.2.1 (Section1.toConjClassFunction χ0 hχ0class) hχ0rep with
         ⟨i, hi⟩
       have hiχ : θ i = χ0 := by
@@ -1839,7 +1841,7 @@ theorem theorem_6_6_exists_irreducible_not_subgroupInKernel
   rcases Representation.second_orthogonality (G := L) with ⟨ι, hι, χ, hχ, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hall : ∀ i : ι,
       χ i (ConjClasses.mk (z : L)) = χ i (ConjClasses.mk (1 : L)) := by
     intro i
@@ -1919,8 +1921,8 @@ theorem theorem_6_6_ordered_degree_divisibility
     {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
     (h64 : hypothesis_6_4_statement K ⊥ H1 S T)
     (hSbot : inducedKernelFamily K ⊥ S)
-    (hZne : Z ≠ ⊥) (hZcenter : Z ≤ centerIn K) (hZnorm : Z.Normal)
-    (hSZ : inducedKernelFamily K Z SZ)
+    (_hZne : Z ≠ ⊥) (hZcenter : Z ≤ centerIn K) (hZnorm : Z.Normal)
+    (_hSZ : inducedKernelFamily K Z SZ)
     (hXeq : Xset = S \ SZ)
     (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ Xset ↔
       Section1.IsIrreducibleCharacterOnGroup χ ∧
@@ -2140,8 +2142,8 @@ theorem theorem_6_6_ordered_degree_divisibility
             rw [← hdS1 Y, hYdeg]
           have hdS1_eq : dS1 Y = dY := by
             exact_mod_cast hcast
-          simpa [hdS1_eq, hYeq] using
-            dvd_mul_right (K.relIndex (⊤ : Subgroup L)) (p ^ b)
+          rw [hdS1_eq, hYeq]
+          exact dvd_mul_right (K.relIndex (⊤ : Subgroup L)) (p ^ b)
         letI : Z.Normal := hZnorm
         have hp_total :
             p ^ (2 * a) ∣ ∑ X' : Xset, degX X' ^ (2 : ℕ) := by

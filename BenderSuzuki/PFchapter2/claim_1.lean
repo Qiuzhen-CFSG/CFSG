@@ -687,7 +687,8 @@ private theorem claim_1_P_image_eq_top_of_VmodW_card_eq_p
     have hdivW : ι x / ι y ∈ W.subgroupOf V :=
       QuotientGroup.eq_iff_div_mem.mp hxy
     have hdivW_G : (x : G) * (y : G)⁻¹ ∈ W := by
-      simpa [ι, div_eq_mul_inv] using hdivW
+      simpa [ι, Subgroup.inclusion, Subgroup.coe_mk, div_eq_mul_inv] using
+        (Subgroup.mem_subgroupOf.mp hdivW)
     have hdivP_G : (x : G) * (y : G)⁻¹ ∈ P :=
       P.mul_mem x.property (P.inv_mem y.property)
     have hbot : (x : G) * (y : G)⁻¹ ∈ (⊥ : Subgroup G) := by
@@ -713,7 +714,7 @@ private theorem claim_1_P_image_eq_top_of_VmodW_card_eq_p
       let xP : P := ⟨(xV : G), by
         simpa [Subgroup.mem_subgroupOf] using hxP⟩
       refine ⟨xP, ?_⟩
-      simpa [φ, ι, π, xP] using hxz
+      simpa [φ, ι, π, xP, Subgroup.inclusion, Subgroup.coe_mk] using hxz
     · intro hz
       rcases hz with ⟨xP, rfl⟩
       refine Subgroup.mem_map.mpr ?_
@@ -785,7 +786,8 @@ private theorem claim_1_VmodW_card_eq_p_from_faithful_fieldAut
     have hdivW : ι x / ι y ∈ W.subgroupOf V :=
       QuotientGroup.eq_iff_div_mem.mp hq
     have hdivW_G : (x : G) * (y : G)⁻¹ ∈ W := by
-      simpa [ι, div_eq_mul_inv] using hdivW
+      simpa [ι, Subgroup.inclusion, Subgroup.coe_mk, div_eq_mul_inv] using
+        (Subgroup.mem_subgroupOf.mp hdivW)
     have hdivP_G : (x : G) * (y : G)⁻¹ ∈ P :=
       P.mul_mem x.property (P.inv_mem y.property)
     have hbot : (x : G) * (y : G)⁻¹ ∈ (⊥ : Subgroup G) := by
@@ -947,11 +949,11 @@ private theorem claim_1_W_sup_P_eq_V
       simp
     rcases Subgroup.mem_map.mp hxq with ⟨pV, hpP, hpq⟩
     have hpP_G : (pV : G) ∈ P := by
-      simpa [Subgroup.mem_subgroupOf] using hpP
+      simpa using (Subgroup.mem_subgroupOf.mp hpP)
     have hx_div_p : xV / pV ∈ W.subgroupOf V := by
       exact QuotientGroup.eq_iff_div_mem.mp hpq.symm
     have hx_div_p_G : x * (pV : G)⁻¹ ∈ W := by
-      simpa [xV, div_eq_mul_inv] using hx_div_p
+      simpa [xV, div_eq_mul_inv] using (Subgroup.mem_subgroupOf.mp hx_div_p)
     have hwp : x * (pV : G)⁻¹ ∈ W ⊔ P :=
       Subgroup.mem_sup_left hx_div_p_G
     have hp : (pV : G) ∈ W ⊔ P :=
@@ -1017,7 +1019,7 @@ private theorem claim_1_q0_card_obligation
         let yV : V := pToV yP
         rcases hv_action yV q with ⟨hq_conj, hq_image⟩
         have hfixF : rho yP (x : F) = (x : F) := by
-          simpa [rho] using (x.property yP)
+          simpa [rho, MulAction.compHom_smul_def] using (x.property yP)
         have hStarComm :
             (vmodW_aut (QuotientGroup.mk yV) : F ≃+* F)
                 (Multiplicative.toAdd (q0_add q)) =
@@ -1028,10 +1030,15 @@ private theorem claim_1_q0_card_obligation
                 (Multiplicative.toAdd (q0_add q)) =
               Multiplicative.toAdd (q0_add q) := by
           apply (vmodW_aut (QuotientGroup.mk yV) : F ≃+* F).injective
-          simpa using hStarComm.symm
+          simpa [yV, yP, pToV, Subgroup.inclusion] using hStarComm.symm
         have hq_image' :
             q0_add ⟨rightConjugateElem (q : G) y, hq_conj⟩ = q0_add q := by
-          simpa [hStarCommInv] using hq_image
+          calc
+            q0_add ⟨rightConjugateElem (q : G) y, hq_conj⟩ =
+                Multiplicative.ofAdd ((vmodW_aut (QuotientGroup.mk yV) : F ≃+* F).symm
+                  (Multiplicative.toAdd (q0_add q))) := hq_image
+            _ = Multiplicative.ofAdd (Multiplicative.toAdd (q0_add q)) := by rw [hStarCommInv]
+            _ = q0_add q := by simp
         have hright : rightConjugateElem (q : G) y = (q : G) :=
           congrArg Subtype.val (q0_add.injective hq_image')
         calc
@@ -1062,7 +1069,7 @@ private theorem claim_1_q0_card_obligation
             Multiplicative.ofAdd
                 ((vmodW_aut (QuotientGroup.mk xV) : F ≃+* F).symm a) =
                 q0_add ⟨rightConjugateElem (q : G) (xP : G), hq_conj⟩ := by
-              simpa [q, a] using hq_image.symm
+              simpa [q, a, xV, pToV, Subgroup.inclusion] using hq_image.symm
             _ = q0_add q := by simp [hright]
             _ = Multiplicative.ofAdd a := by simp [a]
         change rho xP a = a
@@ -1132,10 +1139,15 @@ private theorem claim_1_q0_card_obligation
               (Multiplicative.toAdd (q0_add qQ0)) =
             Multiplicative.toAdd (q0_add qQ0) := by
         apply (vmodW_aut (QuotientGroup.mk yV) : F ≃+* F).injective
-        simpa using hStarComm.symm
+        simpa [yV, yP, pToV, Subgroup.inclusion] using hStarComm.symm
       have hq_image' :
           q0_add ⟨rightConjugateElem (qQ0 : G) y, hq_conj⟩ = q0_add qQ0 := by
-        simpa [hStarCommInv] using hq_image
+        calc
+          q0_add ⟨rightConjugateElem (qQ0 : G) y, hq_conj⟩ =
+              Multiplicative.ofAdd ((vmodW_aut (QuotientGroup.mk yV) : F ≃+* F).symm
+                (Multiplicative.toAdd (q0_add qQ0))) := hq_image
+          _ = Multiplicative.ofAdd (Multiplicative.toAdd (q0_add qQ0)) := by rw [hStarCommInv]
+          _ = q0_add qQ0 := by simp
       have hright : rightConjugateElem (qQ0 : G) y = (qQ0 : G) :=
         congrArg Subtype.val (q0_add.injective hq_image')
       calc
@@ -1165,7 +1177,7 @@ private theorem claim_1_q0_card_obligation
     intro x y hxy
     apply hrho_inj
     exact FaithfulSMul.eq_of_smul_eq_smul (fun a : F => by
-      simpa using hxy a)
+      simpa [MulAction.compHom_smul_def] using hxy a)
   letI : Fintype P := Fintype.ofFinite P
   have hfinrank : Module.finrank (FixedPoints.subfield P F) F = p := by
     letI : FaithfulSMul P F := hfaithful
@@ -1394,7 +1406,7 @@ private theorem claim_1_normalizer_eq_centralizer
         haveI : IsCyclic (V ⧸ W.subgroupOf V) := hcyc
         have hquot_comm :
             Std.Commutative (α := V ⧸ W.subgroupOf V) (· * ·) :=
-          IsCyclic.commutative
+          inferInstance
         have hquot :
             (QuotientGroup.mk' (W.subgroupOf V) (vV * yV) :
                 V ⧸ W.subgroupOf V) =
@@ -1463,6 +1475,8 @@ private theorem claim_1_P_le_centralizer_P
   haveI : Fact p.Prime := ⟨hch.B1.p_prime⟩
   haveI : IsCyclic P := isCyclic_of_prime_card hPcard
   have hcomm : (⟨x, hxP⟩ : P) * ⟨y, hyP⟩ = ⟨y, hyP⟩ * ⟨x, hxP⟩ := by
+    letI : CommGroup P :=
+      { mul_comm := fun a b => (inferInstance : IsMulCommutative P).is_comm.comm a b }
     exact mul_comm _ _
   exact (congrArg Subtype.val hcomm).symm
 

@@ -29,6 +29,8 @@ namespace External
 
 universe u v
 
+open scoped commutatorElement
+
 set_option backward.isDefEq.respectTransparency false in
 /-- A nonidentity element of a Frobenius complement fixes only the principal
 irreducible character of the kernel.  This is the Brauer-permutation input
@@ -478,9 +480,13 @@ private theorem huppert_XI_6_2_degree_sq_le_lower_sum
     have hone : 1 ≤
         ∑ i ∈ Finset.univ.filter
           (fun i => degreeNat i < degreeNat i0), degreeNat i ^ 2 := by
-      simpa [hdegreeJ0] using
-        (Finset.single_le_sum
-          (fun i _hi => Nat.zero_le (degreeNat i ^ 2)) hj0mem)
+      have htemp : degreeNat j0 ^ 2 ≤
+          ∑ i ∈ Finset.univ.filter
+            (fun i => degreeNat i < degreeNat i0), degreeNat i ^ 2 :=
+        Finset.single_le_sum
+          (fun i _hi => Nat.zero_le (degreeNat i ^ 2)) hj0mem
+      rw [hdegreeJ0] at htemp
+      exact htemp
     omega
   exact Nat.le_of_dvd hsumPos hdvd
 
@@ -551,6 +557,7 @@ private theorem huppert_XI_6_1_fixedPointSubgroup_abelianization_eq_bot
     isInvariant_of_characteristic (A := A) (G := Q) C
   letI : MulDistribMulAction A (Q ⧸ C) :=
     quotientMulDistribMulAction (A := A) (G := Q) C hCinv
+  haveI : C.Normal := by dsimp [C]; infer_instance
   have hquot := fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
     (G := Q) (A := A) hsolv hcop C hCinv
   rw [hquot, hfix]
@@ -576,6 +583,7 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
     isInvariant_of_characteristic (A := A) (G := Q) C
   letI : MulDistribMulAction A (Q ⧸ C) :=
     quotientMulDistribMulAction (A := A) (G := Q) C hCinv
+  haveI : C.Normal := by dsimp [C]; infer_instance
   intro a ha x hx
   let S := Subgroup.zpowers a
   have hScardDvd : Nat.card S ∣ Nat.card A :=
@@ -594,7 +602,7 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
     exact hfree a ha q hqa
   rw [hfixQ] at hquot
   have hquotBot : fixedPointSubgroup (↥S) (Q ⧸ C) = ⊥ := by
-    simpa using hquot
+    simpa [C] using hquot
   have hxS : x ∈ fixedPointSubgroup (↥S) (Q ⧸ C) := by
     change ∀ s : S, s • x = x
     intro s
@@ -752,14 +760,28 @@ private theorem huppert_XI_6_3_productLinearCharacter_injective
     obtain ⟨a0, rfl⟩ := QuotientGroup.mk'_surjective (commutator A) a
     have hval := DFunLike.congr_fun hxy
       (Abelianization.of (e (a0, 1)))
-    simpa [huppert_XI_6_3_productLinearCharacter] using hval
+    have htemp : x.1 (Abelianization.of a0) = y.1 (Abelianization.of a0) := by
+      have : huppert_XI_6_3_productLinearCharacter e x.1 x.2 (Abelianization.of (e (a0, 1))) =
+          huppert_XI_6_3_productLinearCharacter e y.1 y.2 (Abelianization.of (e (a0, 1))) := hval
+      unfold huppert_XI_6_3_productLinearCharacter at this
+      simpa [MonoidHom.coprod_apply, MonoidHom.comp_apply,
+        MulEquiv.symm_apply_apply, MonoidHom.map_one, mul_one] using this
+    simpa [show a = Abelianization.of a0 from rfl.symm,
+      Abelianization.of] using htemp
   have hsecond : x.2 = y.2 := by
     apply DFunLike.ext _ _
     intro b
     obtain ⟨b0, rfl⟩ := QuotientGroup.mk'_surjective (commutator B) b
     have hval := DFunLike.congr_fun hxy
       (Abelianization.of (e (1, b0)))
-    simpa [huppert_XI_6_3_productLinearCharacter] using hval
+    have htemp : x.2 (Abelianization.of b0) = y.2 (Abelianization.of b0) := by
+      have : huppert_XI_6_3_productLinearCharacter e x.1 x.2 (Abelianization.of (e (1, b0))) =
+          huppert_XI_6_3_productLinearCharacter e y.1 y.2 (Abelianization.of (e (1, b0))) := hval
+      unfold huppert_XI_6_3_productLinearCharacter at this
+      simpa [MonoidHom.coprod_apply, MonoidHom.comp_apply,
+        MulEquiv.symm_apply_apply, MonoidHom.map_one, mul_one] using this
+    simpa [show b = Abelianization.of b0 from rfl.symm,
+      Abelianization.of] using htemp
   exact Prod.ext hfirst hsecond
 
 /-- The abelianization of a direct product has at least the product of the
@@ -1009,8 +1031,7 @@ private theorem frobenius_complement_normalizer_eq
           (hFrob.normal.conj_mem (f : H)⁻¹ (F.inv_mem f.property) (z' : H))⟩
     have hdecomp :
         (f' : H) * (z' : H) = (1 : F) * (y : H) := by
-      simp only [f', y, hxd, Subgroup.coe_mul, Subgroup.coe_inv,
-        Subgroup.coe_one]
+      simp [f', y, hxd]
       rw [show (z' : H) = (d : H) * (z : H) * (d : H)⁻¹ by rfl]
       group
     have hpair :
@@ -1031,7 +1052,7 @@ private theorem frobenius_complement_normalizer_eq
       simpa [hcent] using hfcent
     have hfone : f = 1 := Subtype.ext (by simpa using hfbot)
     rw [hxd, hfone]
-    simpa using d.property
+    simp [one_mul]
   · exact Subgroup.le_normalizer
 
 /-- Membership in the ambient image of a two-point stabilizer is exactly
@@ -1298,7 +1319,7 @@ private theorem zassenhaus_twoPointStabilizer_normalizer_index_two
         (x : G) • a = b ∧ (x : G) • b = a := by
       exact zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
         hat_most_two_fixed_points a b hab F hFrob (x : G)
-        (by simpa [T] using x.property) (by simpa [H, D, Dg] using hxD)
+        (by simp [T]) (by exact hxD)
     left
     change ((x * sT : T) : G) ∈ Dg
     apply (twoPointStabilizer_map_mem_iff a b hab ((x * sT : T) : G)).mpr
@@ -1375,7 +1396,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_exists_swap_involution
         (((c : C) : T) : G) • b = a := by
     apply zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
       hat_most_two_fixed_points a b hab F hFrob
-    · simpa [T] using (c : T).property
+    · simp [T]
     · intro hcDg
       apply hcnotD
       exact hcDg
@@ -1584,7 +1605,7 @@ private theorem zassenhaus_odd_twoPointNormalizer_isZGroup
       _ = Nat.card D := hDgcard
   letI : IsZGroup D :=
     isZGroup_of_frobenius_complement_of_odd F D (by simpa [D] using hFrob)
-      (by simpa [D] using hodd)
+      (by simpa [H, D, MulAction.stabilizer] using hodd)
   let eDg : D ≃* Dg :=
     Subgroup.equivMapOfInjective D H.subtype H.subtype_injective
   let eDsub : Dsub ≃* Dg :=
@@ -1745,7 +1766,9 @@ private theorem zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
         Subgroup.normalizer ((QTsub : Subgroup T) : Set T) ≤
           Subgroup.centralizer (QTsub : Set T) := by
       rcases Sylow.normalizer_le_centralizer_or_le_commutator QT with hcent | hle
-      · simpa [hQTcoe] using hcent
+      · have hQTcoe_set : (QT : Set T) = (QTsub : Set T) :=
+          congrArg (fun (s : Subgroup T) => (s : Set T)) hQTcoe
+        simpa [hQTcoe_set] using hcent
       · exfalso
         apply hqcommNot
         exact (QT.dvd_card_of_dvd_card hqT).trans
@@ -1769,13 +1792,13 @@ private theorem zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
       intro hqF
       have hqone : q ∣ 1 := by
         have := Nat.dvd_sub hqF hqFsub
-        convert this using 1 <;> omega
+        (convert this using 1; omega)
       exact hq.not_dvd_one hqone
     have hqFplusNot : ¬ q ∣ Nat.card F + 1 := by
       intro hqFplus
       have hqtwo : q ∣ 2 := by
         have := Nat.dvd_sub hqFplus hqFsub
-        convert this using 1 <;> omega
+        (convert this using 1; omega)
       rcases (Nat.dvd_prime Nat.prime_two).mp hqtwo with hq1 | hq2eq
       · exact hq.ne_one hq1
       · exact hqne hq2eq
@@ -1949,19 +1972,15 @@ private theorem isMulCommutative_sup_of_le_centralizer
     (hBcentral : B ≤ Subgroup.centralizer (A : Set Q)) :
     IsMulCommutative (A ⊔ B : Subgroup Q) := by
   rw [Subgroup.sup_eq_closure]
-  letI : CommGroup (Subgroup.closure ((A : Set Q) ∪ (B : Set Q))) :=
-    Subgroup.closureCommGroupOfComm (by
-      intro x hx y hy
-      rcases hx with hxA | hxB
-      · rcases hy with hyA | hyB
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) hxA hyA
-        · exact Subgroup.mem_centralizer_iff.mp (hBcentral hyB) x hxA
-      · rcases hy with hyA | hyB
-        · exact (Subgroup.mem_centralizer_iff.mp (hBcentral hxB) y hyA).symm
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := B) hxB hyB)
-  exact ⟨⟨fun x y => mul_comm x y⟩⟩
+  exact Subgroup.isMulCommutative_closure (by
+    intro x hx y hy
+    rcases hx with hxA | hxB
+    · rcases hy with hyA | hyB
+      · exact setLike_mul_comm (s := A) hxA hyA
+      · exact Subgroup.mem_centralizer_iff.mp (hBcentral hyB) x hxA
+    · rcases hy with hyA | hyB
+      · exact (Subgroup.mem_centralizer_iff.mp (hBcentral hxB) y hyA).symm
+      · exact setLike_mul_comm (s := B) hxB hyB)
 
 /-- XI.1.5, inversion part: every element interchanging the two points acts
 by inversion on the odd cyclic two-point stabilizer. -/
@@ -2036,7 +2055,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
   have hcTne : cT ≠ 1 := by
     intro hcOne
     apply hcTnotD
-    simpa [hcOne]
+    simp [hcOne]
   have hcTSq : cT ^ 2 = 1 := by
     apply Subtype.ext
     exact hcSq
@@ -2047,7 +2066,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hcTorder : orderOf cT = 2 := orderOf_eq_prime hcTSq hcTne
   have hRcard : Nat.card R = 2 := by
-    simpa [R, hcTorder] using Nat.card_zpowers cT
+    simp [R, hcTorder]
   have hsup : Dsub ⊔ R = ⊤ := by
     apply top_unique
     intro x _hx
@@ -2060,7 +2079,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
           exact hxD hxDg
         exact zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
           hat_most_two_fixed_points a b hab F hFrob ((x : T) : G)
-          (by simpa [T] using x.property) hxnotDg
+          (by simp [T]) hxnotDg
       have hxcDg : (((x * cT : T) : G)) ∈ Dg := by
         apply (twoPointStabilizer_map_mem_iff a b hab ((x * cT : T) : G)).mpr
         constructor
@@ -2069,7 +2088,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
         · change (((x : T) : G) * c) • b = b
           rw [mul_smul, hcb, hxswap.1]
       have hxcD : x * cT ∈ Dsub := by
-        simpa [Dsub] using hxcDg
+        simpa [Dsub, Subgroup.mem_subgroupOf] using hxcDg
       have hcR : cT ∈ R := Subgroup.mem_zpowers cT
       have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
       have hxrepr : x = (x * cT) * cT := by
@@ -2078,7 +2097,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
       exact (Dsub ⊔ R).mul_mem
         (Subgroup.mem_sup_left hxcD) (Subgroup.mem_sup_right hcR)
   have hRnormD : R ≤ Subgroup.normalizer (Dsub : Set T) := by
-    simpa [Dsub.normalizer_eq_top]
+    simp [Dsub.normalizer_eq_top]
   let N : Subgroup T := ⁅Dsub, R⁆
   haveI : N.Normal := by
     have hNnormal := commutator_normal_in_sup Dsub R
@@ -2100,8 +2119,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := Dsub) hxD hyD)
+      (setLike_mul_comm (s := Dsub) hxD hyD)
   have hBcomm : IsMulCommutative B := by
     refine ⟨⟨fun x y => ?_⟩⟩
     apply Subtype.ext
@@ -2110,8 +2128,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := R) hxR hyR)
+      (setLike_mul_comm (s := R) hxR hyR)
   have hBcentralA : B ≤ Subgroup.centralizer (A : Set (T ⧸ N)) := by
     intro rbar hrbar
     rcases hrbar with ⟨r, hrR, rfl⟩
@@ -2140,11 +2157,13 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     refine ⟨⟨fun x y => ?_⟩⟩
     have hxy :
         (⟨x, trivial⟩ : (⊤ : Subgroup (T ⧸ N))) * ⟨y, trivial⟩ =
-          ⟨y, trivial⟩ * ⟨x, trivial⟩ := mul_comm _ _
+          ⟨y, trivial⟩ * ⟨x, trivial⟩ := by
+      ext
+      exact congrArg Subtype.val (h.1.1 ⟨x, trivial⟩ ⟨y, trivial⟩)
     exact congrArg Subtype.val hxy
   have hcommLeN : commutator T ≤ N :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp
-      hquotComm.is_comm
+      hquotComm
   have hNleComm : N ≤ commutator T := by
     exact Subgroup.commutator_mono le_top le_top
   have hNeqD : N = Dsub :=
@@ -2198,7 +2217,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
         congrArg Subtype.val hx
     have hccomm : Commute cT (x : T) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hconjFix, mul_assoc]
+      simp [commutatorElement_def, hconjFix]
     have hxFixed : x ∈ fixedPointSubgroup R Dsub := by
       change ∀ r : R, r • x = x
       intro r
@@ -2234,14 +2253,13 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
       rw [mul_smul, hca, hsb]
     · change (s * c) • b = b
       rw [mul_smul, hcb, hsa]
-  let dT : Dsub := ⟨sT * cT, by simpa [Dsub] using hscDg⟩
+  let dT : Dsub := ⟨sT * cT, by simpa [Dsub, Subgroup.mem_subgroupOf] using hscDg⟩
   have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
   have hsEq : sT = (dT : T) * cT := by
     change sT = (sT * cT) * cT
     rw [mul_assoc, hcMul, mul_one]
   have hdcomm : Commute (dT : T) (xDsub : T) := by
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := Dsub) dT.property xDsub.property
+    exact setLike_mul_comm (s := Dsub) dT.property xDsub.property
   have hcalc :
       sT * (xDsub : T) * sT⁻¹ = ((xDsub⁻¹ : Dsub) : T) := by
     calc
@@ -2505,7 +2523,7 @@ private theorem huppert_XI_6_not_subgroupInKernel_top_of_ne_principal
       refine Finset.sum_congr rfl ?_
       intro g _hg
       have hg := hker ⟨g, by simp⟩
-      simpa using hg
+      simpa [Section1.degree] using hg
     rw [hsum]
     simp
   have hdeg0 : Section1.degree theta = 0 := by
@@ -2726,16 +2744,15 @@ private theorem huppert_XI_6_toConjClassFunction_irreducible
     Section1.isCharacter_isClassFunction chi
       (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi)
   rcases hchi with ⟨n, rho, hrhoIrr, hchiEq⟩
-  refine ⟨?_, ?_⟩
-  · refine ⟨n, rho, ?_⟩
+  have hchar_eq : Section1.toConjClassFunction chi hclass = rho.characterClassFunction := by
     apply Section1.toConjClassFunction_eq_of_apply
     intro g
     rw [hchiEq]
     rfl
+  refine ⟨⟨n, rho, hchar_eq⟩, ?_⟩
   · have hnorm :=
       (Representation.irreducible_iff_character_norm_one (ρ := rho)).1 hrhoIrr
-    simpa [hclass, Section1.classFunctionInner_toConjClassFunction, hchiEq]
-      using hnorm
+    simpa [hchar_eq] using hnorm
 
 private theorem huppert_XI_6_positive_degree_nat
     {Q : Type u} [Group Q] [Finite Q]
@@ -3367,7 +3384,7 @@ private theorem nilpotent_internalDirectProduct_pCore_pPrimeCore
     rw [hn]
     exact (pPrimeCore_coprime_card (G := Q) (p := p)).pow_left n
   have hinf : pCore p Q ⊓ pPrimeCore p Q = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hcop
+    (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hdis : Disjoint (pCore p Q) (pPrimeCore p Q) := disjoint_iff.mpr hinf
   refine
     { left_le := le_top
@@ -3802,8 +3819,7 @@ private theorem completeFamily_card_eq_conjClasses
     Fintype.card I = Module.finrank ℂ (Representation.ClassFunction A) :=
       (Module.finrank_eq_card_basis b).symm
     _ = Fintype.card (ConjClasses A) := by
-      simpa [Representation.ClassFunction] using
-        (Module.finrank_fintype_fun_eq_card (R := ℂ) (η := ConjClasses A))
+      simp [Representation.ClassFunction]
     _ = Nat.card (ConjClasses A) := by rw [Nat.card_eq_fintype_card]
 
 /-- A duplicate-free finite set containing every irreducible character has
@@ -4205,9 +4221,10 @@ private theorem irreducibleCharacter_eq_transport_extProd_of_internalDirectProdu
   have hfactorPoint : thetaProd = extProdSection1ClassFunction chi psi := by
     ext x
     have hval := congrArg (fun f => f (ConjClasses.mk x)) hfactor
-    simpa [Phi, hthetaClass, chi, psi, extProdClassFunction_mk,
-      extProdSection1ClassFunction,
-      Section1.toConjClassFunction_apply] using hval
+    have h_ext := extProdClassFunction_mk chiR psiR x.1 x.2
+    simpa [Phi, hthetaClass, chi, psi, extProdSection1ClassFunction,
+      Section1.ofConjClassFunction, Section1.toConjClassFunction_apply,
+      Prod.mk.eta, h_ext] using hval
   refine ⟨chi, psi, hchi, hpsi, ?_⟩
   ext q
   calc
@@ -4447,7 +4464,7 @@ private theorem huppert_XI_6_3_lift_pcore_linear_character_injective
     ext c
     rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
     have hval := congrFun hprod (x, 1)
-    simpa [extProdSection1ClassFunction,
+    simpa [Section1.ofConjClassFunction, extProdSection1ClassFunction,
       huppert_XI_6_3_abelianizationLinearCharacter,
       Section1.characterInflationByHom] using hval
 
@@ -4776,7 +4793,7 @@ private theorem huppert_XI_6_3_complete_lower_sum_eq_nonprincipal_add_one
   have hdegreeOne : degreeNat one = 1 := by
     have hcast : (degreeNat one : ℂ) = 1 := by
       rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree, Section1.principalCharacter]
+      simp [one, Section1.degree]
     exact_mod_cast hcast
   have honeLower : one ∈ K.filter (fun chi => degreeNat chi < z) :=
     Finset.mem_filter.mpr ⟨honeK, by simpa [hdegreeOne] using hz⟩
@@ -4862,7 +4879,7 @@ private theorem huppert_XI_6_3_abelianization_card_le_nonprincipal_lower_sum_add
   have hdegreeOne : degreeNat one = 1 := by
     have hcast : (degreeNat one : ℂ) = 1 := by
       rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree, Section1.principalCharacter]
+      simp [one, Section1.degree]
     exact_mod_cast hcast
   have honeLower : one ∈ K.filter (fun chi => degreeNat chi < z) :=
     Finset.mem_filter.mpr ⟨honeK, by simpa [hdegreeOne] using hz⟩
@@ -4990,7 +5007,7 @@ private theorem huppert_XI_6_3_nonprincipal_lower_sum_add_one
   have hdegreeOne : degreeNat one = 1 := by
     have hcast : (degreeNat one : ℂ) = 1 := by
       rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree, Section1.principalCharacter]
+      simp [one, Section1.degree]
     exact_mod_cast hcast
   have honeLower :
       one ∈ K.filter (fun chi => degreeNat chi < z) :=
@@ -5974,10 +5991,10 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
           (a := a) hcomp hNtrans
       intro x y
       obtain ⟨r, hr, hrunique⟩ := hregularTop x y
-      refine ⟨(r : N), by simpa using hr, ?_⟩
+      refine ⟨(r : N), by simpa [Subgroup.smul_def] using hr, ?_⟩
       intro n hn
       let nTop : (⊤ : Subgroup N) := ⟨n, trivial⟩
-      have hnTop : (nTop : N) • x = y := by simpa [nTop] using hn
+      have hnTop : (nTop : N) • x = y := by simpa [nTop, Subgroup.smul_def] using hn
       have heq : nTop = r := hrunique nTop hnTop
       exact congrArg Subtype.val heq
     have hRproper : R ≠ ⊤ := by
@@ -5988,7 +6005,8 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
       exact hab (hfix.symm.trans hn)
     let rToH : R → H := fun r =>
       ⟨((r : N) : G), by
-        simpa using MulAction.mem_stabilizer_iff.mp r.property⟩
+        apply MulAction.mem_stabilizer_iff.mpr
+        simpa [Subgroup.smul_def] using MulAction.mem_stabilizer_iff.mp r.property⟩
     have hRtoF : ∀ r : R, rToH r ∈ F := by
       intro r
       apply hNaF
@@ -6016,7 +6034,7 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
         have hxvalG : ((x : N) : G) =
             ((g : N) : G) * ((r : N) : G) * ((g : N) : G)⁻¹ := by
           exact congrArg Subtype.val hxval
-        have hrfixG : ((r : N) : G) • a = a := by simpa using hrfix
+        have hrfixG : ((r : N) : G) • a = a := by simpa [Subgroup.smul_def] using hrfix
         calc
           ((x : N) : G) • (((g : N) : G) • a) =
               (((g : N) : G) * ((r : N) : G) * ((g : N) : G)⁻¹) •
@@ -6028,7 +6046,7 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
         (huppert_XI_6_4_frobeniusKernel_uniqueFixedPoint
           htwo a b hab F hFrob xF hxFne (((g : N) : G) • a)).mp (by simpa [xF, rToH] using hxfixga)
       apply hgR
-      exact MulAction.mem_stabilizer_iff.mpr (by simpa using hga)
+      exact MulAction.mem_stabilizer_iff.mpr (by simpa [Subgroup.smul_def] using hga)
     obtain ⟨K, hKFrob⟩ :=
       Suzuki.VI.suzuki_ch6_theorem_2_3 R hRne hRproper hRTI
     let Kmap : Subgroup G := K.map N.subtype
@@ -6050,7 +6068,7 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
     intro x y
     obtain ⟨k, hk, hkunique⟩ := hKregular x y
     let kg : Kmap := ⟨((k : N) : G), ⟨(k : N), k.property, rfl⟩⟩
-    refine ⟨kg, by simpa [kg] using hk, ?_⟩
+    refine ⟨kg, by simpa [kg, Subgroup.smul_def] using hk, ?_⟩
     intro z hz
     rcases z.property with ⟨n, hnK, hnz⟩
     let nK : K := ⟨n, hnK⟩
@@ -6141,7 +6159,7 @@ public theorem zassenhaus_nontrivial_normal_is_two_pretransitive
       change ((f : H) : G) • a = a
       exact MulAction.mem_stabilizer_iff.mp (f : H).property
     have hfY : fN • (n0 • y) = b := by
-      simpa [fN, ySub, bSub] using congrArg Subtype.val hf
+      simpa [fN, ySub, bSub, Subgroup.smul_def] using congrArg Subtype.val hf
     refine ⟨fN * n0, ?_, ?_⟩
     · rw [mul_smul, hn0x, hfixa]
     · rw [mul_smul, hfY]
@@ -6164,9 +6182,9 @@ public theorem zassenhaus_nontrivial_normal_is_two_pretransitive
       (x : MulAction.stabilizer G a).property⟩
   invFun y :=
     ⟨⟨((y : N) : G), y.property⟩, (y : N).property⟩
-  left_inv x := rfl
-  right_inv y := rfl
-  map_mul' x y := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
+  map_mul' _ _ := rfl
 
 /-- Restrict a Frobenius decomposition to a subgroup containing its kernel. -/
 public theorem frobenius_restrict_to_subgroup_containing_kernel
@@ -6367,7 +6385,7 @@ private theorem zassenhaus_regular_normal_unique
     (htwo : MulAction.IsMultiplyPretransitive N X 2)
     (a : X) (M R : Subgroup N)
     (hMnormal : M.Normal) (hRnormal : R.Normal)
-    (hMne : M ≠ ⊥) (hRne : R ≠ ⊥)
+    (hMne : M ≠ ⊥) (_hRne : R ≠ ⊥)
     (hMregular :
       ∀ x y : X, ∃! m : M, (m : N) • x = y)
     (hRregular :
@@ -6409,7 +6427,7 @@ private theorem zassenhaus_regular_normal_unique
       obtain ⟨j, hj⟩ := hJtrans.exists_smul_eq a (m • a)
       let jM : M := ⟨(j : N), j.property.1⟩
       obtain ⟨m0, hm0, huniq⟩ := hMregular a (m • a)
-      have hjm0 : jM = m0 := huniq jM (by simpa [jM] using hj)
+      have hjm0 : jM = m0 := huniq jM (by simpa [jM, Subgroup.smul_def] using hj)
       have hmm0 : mM = m0 := huniq mM rfl
       have hmj : m = (j : N) :=
         congrArg Subtype.val (hmm0.trans hjm0.symm)
@@ -6421,7 +6439,7 @@ private theorem zassenhaus_regular_normal_unique
       obtain ⟨j, hj⟩ := hJtrans.exists_smul_eq a (r • a)
       let jR : R := ⟨(j : N), j.property.2⟩
       obtain ⟨r0, hr0, huniq⟩ := hRregular a (r • a)
-      have hjr0 : jR = r0 := huniq jR (by simpa [jR] using hj)
+      have hjr0 : jR = r0 := huniq jR (by simpa [jR, Subgroup.smul_def] using hj)
       have hrr0 : rR = r0 := huniq rR rfl
       have hrj : r = (j : N) :=
         congrArg Subtype.val (hrr0.trans hjr0.symm)
@@ -6449,8 +6467,9 @@ private theorem zassenhaus_regular_normal_unique
         obtain ⟨k, hkact, _hkunique⟩ := hMregular a x
         have hrk : r * (k : N) = (k : N) * r :=
           (Subgroup.mem_centralizer_iff.mp (hMcentR k.property)) r hr
-        have hkm : (k : N) * (m : N) = (m : N) * (k : N) :=
-          congrArg Subtype.val (mul_comm k m)
+        have hkm : (k : N) * (m : N) = (m : N) * (k : N) := by
+          simpa [Subgroup.coe_mul] using
+            congrArg Subtype.val (hMelem.toIsMulCommutative.1.comm k m)
         calc
           r • x = r • ((k : N) • a) := by rw [hkact]
           _ = (r * (k : N)) • a := (mul_smul r (k : N) a).symm
@@ -6520,7 +6539,8 @@ public theorem zassenhaus_normal_subgroup_no_regular_normal
           (g * ((m : N) : G) * g⁻¹) • x =
               g • (((m : N) : G) • (g⁻¹ • x)) := by
                 simp only [mul_smul]
-          _ = g • (g⁻¹ • y) := by simpa using congrArg (fun z => g • z) hmact
+          _ = g • (g⁻¹ • y) := by
+            simpa [Subgroup.smul_def] using congrArg (fun z => g • z) hmact
           _ = y := smul_inv_smul g y
       refine ⟨mg, hmgact, ?_⟩
       intro z hz
@@ -6543,7 +6563,7 @@ public theorem zassenhaus_normal_subgroup_no_regular_normal
                 mul_smul g⁻¹ (g * ((n : N) : G) * g⁻¹) x
           _ = g⁻¹ • (((z : N) : G) • x) := by rw [hnzG]
           _ = g⁻¹ • y := by
-            simpa using congrArg (fun q => g⁻¹ • q) hz
+            simpa [Subgroup.smul_def] using congrArg (fun q => g⁻¹ • q) hz
       have hnm : nM = m := hmunique nM hnact
       apply Subtype.ext
       calc
@@ -6580,7 +6600,7 @@ public theorem zassenhaus_normal_subgroup_no_regular_normal
   obtain ⟨m, hmact, hmunique⟩ := hMregular x y
   let kg : K :=
     ⟨((m : N) : G), ⟨(m : N), m.property, rfl⟩⟩
-  refine ⟨kg, by simpa [kg] using hmact, ?_⟩
+  refine ⟨kg, by simpa [kg, Subgroup.smul_def] using hmact, ?_⟩
   intro z hz
   rcases z.property with ⟨n, hnM, hnz⟩
   let nM : M := ⟨n, hnM⟩
@@ -6792,7 +6812,7 @@ public theorem zassenhaus_even_twoPointStabilizer_exists_swap_involution
     exact ht
   have hta : tG • a = a := (t : H).property
   have htb : tG • b = b := by
-    simpa [tG, b'] using
+    simpa [tG, b', Subgroup.smul_def] using
       congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp t.property)
   obtain ⟨z, hz⟩ :=
     Subgroup.ne_bot_iff_exists_ne_one.mp hFrob.kernel_ne_bot
@@ -6915,7 +6935,7 @@ public theorem zassenhaus_swap_kernel_bruhat_decomposition
     exact congrArg Subtype.val hfd2.symm
   have hd1a : ((d1 : H) : G) • a = a := (d1 : H).property
   have hd1b : ((d1 : H) : G) • b = b := by
-    simpa [b'] using
+    simpa [b', Subgroup.smul_def] using
       congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp d1.property)
   have hd1sa : (s * ((d1 : H) : G) * s) • a = a := by
     simp [mul_smul, hsa, hsb, hd1b]
@@ -6992,7 +7012,7 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
   have hFcomm : IsMulCommutative F :=
     frobenius_kernel_commutative_of_even_complement_card F D hFrob heven
   letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := CommGroup.ofIsMulCommutative
+  letI : CommGroup F := IsMulCommutative.instCommGroup
   let eAdd : Additive F ≃+ Additive F := AddEquiv.refl (Additive F)
   obtain ⟨ePoint, hPointA, hPointB, hPointF⟩ :=
     huppert_blackburn_XI_pointStabilizer_exists_projectivePointEquiv
@@ -7046,7 +7066,7 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
           apply ePoint.injective
           rw [ePoint.apply_symm_apply, hPointFx]
         have hdb : (((d : H) : G)) • b = b := by
-          simpa [b'] using
+          simpa [b', Subgroup.smul_def] using
             congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp d.property)
         calc
           ePoint ((((d : H) : G)) • ePoint.symm (some x)) =
@@ -7086,7 +7106,7 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
     simpa [tG] using congrArg (fun x : D => (((x : H) : G))) htsqD
   have hta : tG • a = a := (t : H).property
   have htb : tG • b = b := by
-    simpa [tG, b'] using
+    simpa [tG, b', Subgroup.smul_def] using
       congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp t.property)
   have htsa : (s * tG * s) • a = a := by
     simp [mul_smul, hsa, hsb, htb]
@@ -7204,9 +7224,23 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
       s * (((x.1 : F) : H) : G) * s =
         (((f1 : H) : G)) * s * (((f2 : H) : G)) * (((d : H) : G)) := by
     intro x
-    simpa [F0] using
-      zassenhaus_swap_kernel_bruhat_decomposition
-        htwo a b hab F hFrob s hssq hsa hsb x.1 x.2
+    have hmem : ∀ (g : H), g ∈ D ↔ (g : G) • b = b := by
+      intro g
+      have hD_def : D = MulAction.stabilizer H (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) := rfl
+      rw [hD_def]
+      constructor
+      · intro hg
+        have hg' := MulAction.mem_stabilizer_iff.mp hg
+        apply_fun Subtype.val at hg'
+        simpa [Subgroup.smul_def] using hg'
+      · intro hg
+        apply MulAction.mem_stabilizer_iff.mpr
+        apply Subtype.ext
+        simpa [Subgroup.smul_def] using hg
+    rcases zassenhaus_swap_kernel_bruhat_decomposition
+      htwo a b hab F hFrob s hssq hsa hsb x.1 x.2 with ⟨f1, f2, d, h⟩
+    refine ⟨f1, f2, d, ?_⟩
+    simpa [H] using h
   choose f1 f2 d hdecomp using hBruhat
   let k (x : F0) : Additive F := Additive.ofMul x.1
   let ell (x : F0) : Additive F := Additive.ofMul (f1 x)
@@ -7251,7 +7285,7 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
         have hz : 0 = ell x + z := Option.some.inj (by simpa [hm] using hx)
         have hzeq : z = -(ell x) := by
           exact eq_neg_of_add_eq_zero_right hz.symm
-        simpa [hm, hzeq]
+        simp [hzeq]
   have hMeq (x : F0) : m x = -(k x) := by
     have hTauNegK : tau (some (-(k x))) = some (-(ell x)) := by
       simpa [hTauK] using hTauNeg (some (k x))
@@ -7411,7 +7445,7 @@ public theorem zassenhaus_twoPointStabilizer_card_eq
           _ = g • x := by rw [(d : MulAction.stabilizer G x).property]
           _ = a := hgx
       have hzy : (((d : MulAction.stabilizer G x) : G)) • y = y := by
-        simpa using congrArg Subtype.val
+        simpa [Subgroup.smul_def] using congrArg Subtype.val
           (MulAction.mem_stabilizer_iff.mp d.property)
       have hzb : z • b = b := by
         calc
@@ -7434,7 +7468,7 @@ public theorem zassenhaus_twoPointStabilizer_card_eq
           _ = g⁻¹ • a := by rw [(d : MulAction.stabilizer G a).property]
           _ = x := by rw [← hgx, inv_smul_smul]
       have hdb : (((d : MulAction.stabilizer G a) : G)) • b = b := by
-        simpa using congrArg Subtype.val
+        simpa [Subgroup.smul_def] using congrArg Subtype.val
           (MulAction.mem_stabilizer_iff.mp d.property)
       have hzy : z • y = y := by
         calc
@@ -7733,7 +7767,6 @@ private theorem huppert_XI_6_3_nilpotent_degree_growth
     change 2 * Nat.card D * z + 1 < C
     rw [hCA]
     exact lt_of_le_of_lt hbound hstrict
-  change 2 * Nat.card D * z < A
   have hzSq :
       z ^ 2 ≤ A + 1 := by
     rw [← hCA]
@@ -8684,7 +8717,7 @@ private theorem zassenhaus_derangement_count
     by_cases hzero : fix g = 0
     · simp [delta, hzero]
     · have hcases : fix g = 1 ∨ fix g = 2 := by omega
-      rcases hcases with hfix | hfix <;> simp [delta, hzero, hfix]
+      rcases hcases with hfix | hfix <;> simp [delta, hfix]
   have hpolySum :
       ∑ g ∈ (Finset.univ : Finset G).erase 1,
           (2 * delta g + 3 * fix g) =
@@ -8853,8 +8886,8 @@ public theorem huppert_XI_5_3_kernel_quotient_linear_family
   let e : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := e.isCyclic.mpr hcyclic
   letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : IsMulCommutative Q := IsCyclic.isMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   let inflate : (Q →* ℂˣ) → Section1.ClassFunction H :=
     fun chi => Section1.characterInflationByHom q chi
   have hinflate : Function.Injective inflate := by
@@ -8863,8 +8896,12 @@ public theorem huppert_XI_5_3_kernel_quotient_linear_family
     intro x
     obtain ⟨h, hh⟩ := QuotientGroup.mk'_surjective F x
     apply Units.ext
-    have hval := congrFun hEq h
-    simpa [inflate, q, Section1.characterInflationByHom, ← hh] using hval
+    calc
+      (chi x : ℂ) = (chi (q h) : ℂ) := by rw [← hh]
+      _ = (inflate chi h : ℂ) := rfl
+      _ = (inflate psi h : ℂ) := by rw [hEq]
+      _ = (psi (q h) : ℂ) := rfl
+      _ = (psi x : ℂ) := by rw [hh]
   letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
   let Z : Finset (Section1.ClassFunction H) :=
     Finset.univ.image inflate
@@ -8968,7 +9005,7 @@ private lemma huppert_XI_5_3_mackeyIntersection_eq_twoPointStabilizer
     {G : Type u} {Omega : Type v}
     [Group G] [Finite G] [MulAction G Omega]
     (a b : Omega) (hab : a ≠ b)
-    (t : G) (hta : t • a = b) (htb : t • b = a) :
+    (t : G) (_hta : t • a = b) (htb : t • b = a) :
     Section1.mackeyIntersection
         (MulAction.stabilizer G a) (MulAction.stabilizer G a) t =
       MulAction.stabilizer (MulAction.stabilizer G a)
@@ -8997,7 +9034,7 @@ private lemma huppert_XI_5_3_mackeyIntersection_eq_twoPointStabilizer
         _ = (t * ((k : MulAction.stabilizer G a) : G) * t⁻¹) • a :=
               (mul_smul (t * (((k : MulAction.stabilizer G a) : G))) t⁻¹ a).symm
         _ = a := hk
-    exact (MulAction.toPerm t).injective (by simpa [htb] using hk'')
+    exact (MulAction.toPerm t).injective (by simpa [htb, Subgroup.smul_def] using hk'')
   · intro hk
     have hk'' : ((k : MulAction.stabilizer G a) : G) • b = b := by
       exact congrArg Subtype.val hk
@@ -9127,7 +9164,7 @@ private lemma huppert_XI_5_3_scalarProduct_inducedCF_twoCoset
     [Group G] [Finite G] [MulAction G Omega]
     (h2 : MulAction.IsMultiplyPretransitive G Omega 2)
     (a b : Omega) (hab : a ≠ b)
-    (t : G) (hta : t • a = b) (htb : t • b = a)
+    (t : G) (hta : t • a = b) (_htb : t • b = a)
     (psi phi : Section1.ClassFunction (MulAction.stabilizer G a))
     (hpsi : Section1.IsClassFunction psi)
     (hphi : Section1.IsClassFunction phi) :
@@ -9206,11 +9243,9 @@ private lemma huppert_XI_5_3_mackeyCrossTerm_eq_conjugate
       (huppert_XI_5_3_mackeyIntersection_eq_twoPointStabilizer a b hab t hta htb)
   let eD : I ≃* D :=
     { toFun := fun x => ⟨x.1, by
-        change x.1 ∈ D
         rw [← hInter]
         exact x.2⟩
       invFun := fun x => ⟨x.1, by
-        change x.1 ∈ I
         rw [hInter]
         exact x.2⟩
       left_inv := by intro x; apply Subtype.ext; rfl
@@ -9482,8 +9517,8 @@ public theorem huppert_XI_5_3_nonprincipal_induced_family
   let e : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := e.isCyclic.mpr hcyclic
   letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : IsMulCommutative Q := IsCyclic.isMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   letI : Fintype A := Fintype.ofFinite A
   letI : Fintype A0 := Fintype.ofFinite A0
   have hdual : Nat.card A = Nat.card Q := by
@@ -9563,8 +9598,10 @@ public theorem huppert_XI_5_3_nonprincipal_induced_family
     ⟨(chi : A)⁻¹, by
       intro h
       apply chi.2
-      have := congrArg (fun z : A => z⁻¹) h
-      simpa using this⟩
+      calc
+        (chi : A) = ((chi : A)⁻¹)⁻¹ := (inv_inv (chi : A)).symm
+        _ = 1⁻¹ := by rw [congrArg (fun z : A => z⁻¹) h]
+        _ = 1 := inv_one (G := A)⟩
   have hinv0_ne : ∀ chi : A0, inv0 chi ≠ chi := by
     intro chi hEq
     exact hinv_ne chi (congrArg Subtype.val hEq).symm
@@ -9593,7 +9630,7 @@ public theorem huppert_XI_5_3_nonprincipal_induced_family
             (hIndEq (inv0 chi) chi).mpr (Or.inr rfl)
           exact hEq.trans hchiEq
     rw [hfiber]
-    simpa [hinv0_ne chi, Ne.symm (hinv0_ne chi)]
+    simp [Ne.symm (hinv0_ne chi)]
   have hcardEq : Fintype.card A0 = 2 * B.card := by
     apply Nat.le_antisymm
     · exact Finset.card_le_mul_card_image (Finset.univ : Finset A0) 2
@@ -9643,7 +9680,8 @@ private theorem huppert_XI_6_7_nontrivial_kernel_conjClasses_card
   let q : H →* H ⧸ F := QuotientGroup.mk' F
   let qD : D →* H ⧸ F := q.comp D.subtype
   let e : H ⧸ F ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
-  letI : IsMulCommutative D := ⟨hDcyclic.commutative⟩
+  letI : IsMulCommutative D := IsCyclic.isMulCommutative
+  letI : CommGroup D := IsMulCommutative.instCommGroup
   have hquotComm (x y : H ⧸ F) : x * y = y * x := by
     apply e.injective
     simpa only [map_mul] using (mul_comm (e x) (e y))
@@ -9889,7 +9927,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
   have hY0eq_of_comm : IsMulCommutative F → Y0 = Y := by
     intro hFcomm
     letI : IsMulCommutative F := hFcomm
-    letI : CommGroup F := CommGroup.ofIsMulCommutative
+    letI : CommGroup F := IsMulCommutative.instCommGroup
     have hcommRoot : _root_.commutator F = ⊥ := by
       rw [commutator_eq_bot_iff_center_eq_top]
       exact CommGroup.center_eq_top
@@ -9924,7 +9962,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
       rw [hquotientCard, _hHcard] at hsumEq
       have hFindex :
           F.relIndex (⊤ : Subgroup H) = Nat.card D := by
-        simpa [Subgroup.relIndex_top_right] using
+        simpa [D, Subgroup.relIndex_top_right] using
           hFrob.isComplement'.symm.index_eq_card
       have hallDegree : ∀ eta : Y, degreeNat eta = Nat.card D := by
         intro eta
@@ -10198,7 +10236,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
     letI : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
     have hKerCount :
         Nat.card KerClass + Nat.card D = Nat.card (ConjClasses H) := by
-      simpa [KerClass] using
+      simpa [KerClass, H, MulAction.mem_stabilizer_iff] using
         (huppert_XI_6_7_nontrivial_kernel_conjClasses_card
           F D hFrob (by simpa [D, H] using hcyclic))
     have hKerCard : Nat.card KerClass = Y.card := by
@@ -10266,7 +10304,6 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
         (Quotient.out_eq (ConjClasses.mk x))
     have hOneFix (C : One) : classFix C = 1 := by
       rcases Finset.mem_image.mp C.2 with ⟨K, _hK, hKC⟩
-      change classFix C.1 = 1
       rw [← hKC, hclassFix_mk]
       apply Nat.card_eq_one_iff_exists.mpr
       refine ⟨⟨a, (kerRep K).property⟩, ?_⟩
@@ -10286,7 +10323,8 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
     let twoMap : D0 → ConjClasses G := fun d =>
       ConjClasses.mk ((((d : D) : H) : G))
     have hDcyclic : IsCyclic D := by simpa [D, H] using hcyclic
-    letI : IsMulCommutative D := ⟨hDcyclic.commutative⟩
+    letI : IsMulCommutative D := IsCyclic.isMulCommutative
+    letI : CommGroup D := IsMulCommutative.instCommGroup
     have htwoMapEq : ∀ d e : D0, twoMap d = twoMap e →
         (e : D) = (d : D) ∨ (e : D) = (d : D)⁻¹ := by
       intro d e hde
@@ -10405,15 +10443,13 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
       calc
         Fintype.card D0 =
             Fintype.card D - Fintype.card {d : D // d = 1} := by
-          simpa [D0] using
-            (Fintype.card_subtype_compl (p := fun d : D => d = 1))
+          simp [D0]
         _ = Fintype.card D - 1 := by simp
         _ = Nat.card D - 1 := by rw [Nat.card_eq_fintype_card]
     have hTwoLower : (Nat.card D - 1) / 2 ≤ Two.card := by
       omega
     have hTwoFix (C : Two) : classFix C = 2 := by
       rcases Finset.mem_image.mp C.2 with ⟨d, _hd, hdC⟩
-      change classFix C.1 = 2
       rw [← hdC, hclassFix_mk]
       apply Nat.card_eq_two_iff.mpr
       let da : MulAction.fixedBy Omega ((((d : D) : H) : G)) :=
@@ -10483,8 +10519,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
       exact hgh (ConjClasses.mk_eq_mk_iff_isConj.mp hEq)
     let Extra : Finset (ConjClasses G) := {C1, Cg, Ch}
     have hExtraCard : Extra.card = 3 := by
-      simp [Extra, hC1g, hC1h, hCgh, Ne.symm hC1g,
-        Ne.symm hC1h, Ne.symm hCgh]
+      simp [Extra, hC1g, hC1h, hCgh]
     have hOneExtra : Disjoint One Extra := by
       rw [Finset.disjoint_left]
       intro C hCOne hCExtra
@@ -10625,12 +10660,12 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
         eQ.isCyclic.mpr (by simpa [D, H] using hcyclic)
       letI : IsCyclic (H ⧸ F) := hQcyclic
       letI : IsMulCommutative (H ⧸ F) :=
-        ⟨IsCyclic.commutative⟩
+        IsCyclic.isMulCommutative
       letI : CommGroup (H ⧸ F) :=
-        CommGroup.ofIsMulCommutative
+        IsMulCommutative.instCommGroup
       have hFindex :
           F.relIndex (⊤ : Subgroup H) = Nat.card D := by
-        simpa [Subgroup.relIndex_top_right] using
+        simpa [D, Subgroup.relIndex_top_right] using
           hFrob.isComplement'.symm.index_eq_card
       have hindexPos : 0 < F.relIndex (⊤ : Subgroup H) := by
         rw [hFindex]
@@ -11159,10 +11194,10 @@ private theorem huppert_XI_6_1_simple_odd_character_core
         ∀ a b c : Omega,
           a ≠ b → a ≠ c → b ≠ c →
             ¬ (g • a = a ∧ g • b = b ∧ g • c = c))
-    (hno_regular_normal :
+    (_hno_regular_normal :
       ¬ ∃ R : Subgroup G, R.Normal ∧ R ≠ ⊥ ∧
         ∀ a b : Omega, ∃! r : R, (r : G) • a = b)
-    (hsimple : ∀ N : Subgroup G, N.Normal → N ≠ ⊥ → N = ⊤)
+    (_hsimple : ∀ N : Subgroup G, N.Normal → N ≠ ⊥ → N = ⊤)
     (a b : Omega) (hab : a ≠ b)
     (F : Subgroup (MulAction.stabilizer G a))
     (hFrob : IsFrobeniusGroupWithKernelComplement F
@@ -11267,7 +11302,7 @@ private theorem huppert_XI_6_1_simple_abelian_small_contradiction
       htwo_transitive hat_most_two_fixed_points hsimple
       a b hab F hFrob hodd s hsa hsb
   letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := CommGroup.ofIsMulCommutative
+  letI : CommGroup F := IsMulCommutative.instCommGroup
   have hFnil : Group.IsNilpotent F := inferInstance
   have hdegreeDvd : Nat.card F - 1 ∣ Nat.card G :=
     huppert_XI_6_1_simple_odd_character_divisibility
@@ -11375,7 +11410,7 @@ private theorem huppert_XI_6_1_frobeniusKernel_card_primePower_aux
     · exact huppert_XI_6_1_simple_small_core
         htwo_transitive hat_most_two_fixed_points hno_regular_normal hsimple
         a b hab F hFrob hFnil hsmall
-    · push_neg at hsimple
+    · push Not at hsimple
       obtain ⟨N, hNnormal, hNne, hNtop⟩ := hsimple
       have hNtwo : MulAction.IsMultiplyPretransitive N Omega 2 :=
         zassenhaus_nontrivial_normal_is_two_pretransitive
@@ -11405,9 +11440,9 @@ private theorem huppert_XI_6_1_frobeniusKernel_card_primePower_aux
         huppert_blackburn_XI_pointStabilizer_frobeniusKernel_exists
           hNtwo hatN hnoN a b hab
       let H := MulAction.stabilizer G a
-      let Na : Subgroup H := N.comap H.subtype
+      let Na : Subgroup (MulAction.stabilizer G a) := N.comap (MulAction.stabilizer G a).subtype
       have hFNa : F ≤ Na := by
-        simpa [H, Na] using
+        simpa [Na] using
           zassenhaus_normal_stabilizer_contains_frobeniusKernel
             htwo_transitive hno_regular_normal a b hab F hFrob
             N hNnormal hNne
@@ -11426,38 +11461,41 @@ private theorem huppert_XI_6_1_frobeniusKernel_card_primePower_aux
           apply Subtype.ext
           have hyfix := MulAction.mem_stabilizer_iff.mp hyD
           have hyfixOmega :
-              (((y : Na) : H) : G) • b = b :=
+              (((y : Na) : MulAction.stabilizer G a) : G) • b = b :=
             congrArg Subtype.val hyfix
           rw [← hyx]
-          simpa [eNa, normalSubgroup_pointStabilizerEquiv] using hyfixOmega
+          have hmap : (eNa y : G) = (((y : Na) : MulAction.stabilizer G a) : G) := rfl
+          simpa [hmap, Subgroup.smul_def] using hyfixOmega
         · intro hx
           let y : Na := eNa.symm x
           refine ⟨y, ?_, eNa.apply_symm_apply x⟩
-          change ((y : Na) : H) ∈ D
+          change ((y : Na) : MulAction.stabilizer G a) ∈ D
           apply MulAction.mem_stabilizer_iff.mpr
           apply Subtype.ext
           have hxfix := MulAction.mem_stabilizer_iff.mp hx
           have hxfixOmega : (((x : HN) : N) : G) • b = b :=
             congrArg Subtype.val hxfix
-          simpa [y, eNa, normalSubgroup_pointStabilizerEquiv] using hxfixOmega
+          have hmap : (eNa.symm x : G) = (((x : HN) : N) : G) := rfl
+          simpa [y, hmap, Subgroup.smul_def] using hxfixOmega
       have hDNne : DN ≠ ⊥ := by
         simpa [HN, DN] using hFother.complement_ne_bot
-      have hDNa_ne : DNa ≠ ⊥ := by
+      have hDNa_ne : DNa ≠ (⊥ : Subgroup Na) := by
         intro hbot
         apply hDNne
         rw [← hDmap, hbot]
         simp
       have hFrobNa :
-          IsFrobeniusGroupWithKernelComplement
-            (F.subgroupOf Na) DNa := by
-        simpa [DNa] using
-          frobenius_restrict_to_subgroup_containing_kernel
-            F D Na hFrob hFNa (by simpa [DNa] using hDNa_ne)
+          IsFrobeniusGroupWithKernelComplement (F.subgroupOf Na) DNa := by
+        have htemp := frobenius_restrict_to_subgroup_containing_kernel
+          (H := (MulAction.stabilizer G a : Type _))
+          F D Na hFrob hFNa
+          (by simpa [DNa] using hDNa_ne)
+        simpa [DNa] using htemp
       let FN : Subgroup HN := (F.subgroupOf Na).map eNa.toMonoidHom
       have hFrobN : IsFrobeniusGroupWithKernelComplement FN DN := by
         have hmap := hFrobNa.map_mulEquiv eNa
         rw [hDmap] at hmap
-        simpa [FN] using hmap
+        simpa [FN, H] using hmap
       have hFNnil : Group.IsNilpotent FN :=
         huppert_blackburn_XI_frobeniusKernel_nilpotent FN DN hFrobN
       have hcardN : Nat.card N < Nat.card G := by
@@ -11470,13 +11508,14 @@ private theorem huppert_XI_6_1_frobeniusKernel_card_primePower_aux
       have hFNcard : Nat.card FN = Nat.card F := by
         calc
           Nat.card FN = Nat.card (F.subgroupOf Na) := by
-            simpa [FN] using
+            simpa [FN, H, MulAction.mem_stabilizer_iff] using
               (Subgroup.card_map_of_injective
                 (K := F.subgroupOf Na) (f := eNa.toMonoidHom) eNa.injective)
           _ = Nat.card F := natCard_subgroupOf_eq F Na hFNa
       exact ⟨p, f, hp, hf, hFNcard.symm.trans hFNpow⟩
 termination_by Nat.card G
-decreasing_by simpa using hcardN
+decreasing_by
+  · simpa using hcardN
 
 /-- Huppert--Blackburn XI.6.1(a), specialized to the Frobenius kernel of a
 point stabilizer in a Zassenhaus action. -/
@@ -11527,7 +11566,7 @@ public theorem huppert_XI_6_1_centralPrime_eq_noncommutativeSylowPrime
     (p : ℕ) (hp : Nat.Prime p)
     (P : Sylow p F) (hPnoncomm : ¬ IsMulCommutative P)
     (z : F) (hzprime : Nat.Prime (orderOf z))
-    (hcentralizer :
+    (_hcentralizer :
       Subgroup.centralizer
           ({((z : MulAction.stabilizer G a) : G)} : Set G) =
         F.map (MulAction.stabilizer G a).subtype) :
@@ -11647,7 +11686,8 @@ private theorem huppert_XI_6_1_abelianKernel_complement_bound_aux
         have hyfixOmega : (((y : Na) : H) : G) • b = b :=
           congrArg Subtype.val hyfix
         rw [← hyx]
-        simpa [eNa, normalSubgroup_pointStabilizerEquiv] using hyfixOmega
+        have hmap : (eNa y : G) = (((y : Na) : H) : G) := rfl
+        simpa [hmap, Subgroup.smul_def] using hyfixOmega
       · intro hx
         let y : Na := eNa.symm x
         refine ⟨y, ?_, eNa.apply_symm_apply x⟩
@@ -11657,7 +11697,8 @@ private theorem huppert_XI_6_1_abelianKernel_complement_bound_aux
         have hxfix := MulAction.mem_stabilizer_iff.mp hx
         have hxfixOmega : (((x : HN) : N) : G) • b = b :=
           congrArg Subtype.val hxfix
-        simpa [y, eNa, normalSubgroup_pointStabilizerEquiv] using hxfixOmega
+        have hmap : (eNa.symm x : G) = (((x : HN) : N) : G) := rfl
+        simpa [y, hmap, Subgroup.smul_def] using hxfixOmega
     have hDNne : DN ≠ ⊥ := by
       simpa [HN, DN] using hFother.complement_ne_bot
     have hDNa_ne : DNa ≠ ⊥ := by
@@ -11667,7 +11708,7 @@ private theorem huppert_XI_6_1_abelianKernel_complement_bound_aux
       simp
     have hFrobNa :
         IsFrobeniusGroupWithKernelComplement (F.subgroupOf Na) DNa := by
-      simpa [DNa] using
+      simpa [DNa, H] using
         frobenius_restrict_to_subgroup_containing_kernel
           F D Na hFrob hFNa hDNa_ne
     let FN : Subgroup HN := (F.subgroupOf Na).map eNa.toMonoidHom
@@ -11678,7 +11719,7 @@ private theorem huppert_XI_6_1_abelianKernel_complement_bound_aux
     have hFcardN : Nat.card FN = Nat.card F := by
       calc
         Nat.card FN = Nat.card (F.subgroupOf Na) := by
-          simpa [FN] using
+          simpa [FN, H, MulAction.mem_stabilizer_iff] using
             (Subgroup.card_map_of_injective
               (K := F.subgroupOf Na) (f := eNa.toMonoidHom) eNa.injective)
         _ = Nat.card F := natCard_subgroupOf_eq F Na hFNa

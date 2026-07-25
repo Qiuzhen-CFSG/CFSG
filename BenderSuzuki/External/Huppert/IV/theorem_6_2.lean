@@ -32,6 +32,8 @@ namespace External
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
 
+attribute [local instance] commutatorElement
+
 universe u v
 
 /-- Decode the first coordinate of the Huppert IV.6.2(a) score. -/
@@ -104,7 +106,14 @@ public theorem normalizer_conj_smul_eq
     {Q : Type u} [Group Q] (U : Subgroup Q) (g : Q) :
     Subgroup.normalizer ((MulAut.conj g • U : Subgroup Q) : Set Q) =
       MulAut.conj g • Subgroup.normalizer (U : Set Q) := by
-  simpa [Subgroup.pointwise_smul_def] using
+  have hmap : ((MulDistribMulAction.toMonoidEnd (MulAut Q) Q) (MulAut.conj g) : Q →* Q) =
+      (MulAut.conj g : Q →* Q) := by
+    ext x
+    calc
+      ((MulDistribMulAction.toMonoidEnd (MulAut Q) Q) (MulAut.conj g)) x
+          = (MulAut.conj g) • x := rfl
+      _ = (MulAut.conj g) x := rfl
+  simpa [Subgroup.pointwise_smul_def, hmap] using
     (Subgroup.map_equiv_normalizer_eq (H := U) (f := MulAut.conj g)).symm
 
 /-- A normal `p`-complement in a subgroup normalizer is invariant under
@@ -376,7 +385,7 @@ private theorem hkt_iv62_h_centralizer_of_pCore_nilpotent
     simpa [C] using hkt_iv62_h_centralizer_le_fitting_of_reduced
       (Q := Q) (q := q) hcore_bot hnot_Qp hsolv
   have hC_nil : Group.IsNilpotent C := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := C.subgroupOf (fittingSubgroup Q)) (G' := C)
       (Subgroup.subgroupOfEquivOfLe
         (G := Q) (H := C) (K := fittingSubgroup Q) hC_le_fit)
@@ -435,7 +444,7 @@ private theorem hkt_iv62_h_isPGroup_of_nilpotent_non_q_pcores_bot
           ⟨inferInstance, hcop⟩)
     exact le_bot_iff.mp (by simpa [hNqprime_bot] using hcore_le)
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup N)) := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := N) (G' := ↥(⊤ : Subgroup N))
       (Subgroup.topEquiv.symm : N ≃* ↥(⊤ : Subgroup N))
   have hTop_le_iSup :
@@ -1245,6 +1254,8 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
   let qN : N →* N ⧸ UN := QuotientGroup.mk' UN
   let Pbar : Sylow q (N ⧸ UN) :=
     P.mapSurjective (f := qN) (QuotientGroup.mk'_surjective UN)
+  have hPbar_eq : (Pbar : Subgroup (N ⧸ UN)) = (P : Subgroup N).map qN := by
+    simp [Pbar, Sylow.coe_mapSurjective]
   have hcard_lt : Nat.card (N ⧸ UN) < Nat.card Q := by
     simpa [N, UN] using hkt_card_normalizer_quotient_lt_of_ne_bot (Q := Q) hU_ne_bot
   have hq_dvd_quot : q ∣ Nat.card (N ⧸ UN) := by
@@ -1318,7 +1329,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
       exact hkt_hasNormalPComplement_centralizer_map_quotient_of_normalizer
         (G := N) (p := q) (N := UN) (T := K_N) hUN_le_KN hcomp_intrinsic
     rw [hcenter_eq] at hcomp_quot
-    simpa [Pbar, Sylow.coe_mapSurjective] using hcomp_quot
+    rw [hPbar_eq]; exact hcomp_quot
   have hJ_comp : HasNormalPComplement q
       (Subgroup.normalizer
         (thompsonSubgroup (G := N ⧸ UN) (Pbar : Subgroup (N ⧸ UN)) :
@@ -1398,7 +1409,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
       exact hkt_hasNormalPComplement_normalizer_map_quotient_of_normalizer
         (G := N) (p := q) (N := UN) (T := K_N) hUN_le_KN hcomp_intrinsic
     rw [hJ_eq] at hcomp_quot
-    simpa [Pbar, Sylow.coe_mapSurjective] using hcomp_quot
+    rw [hPbar_eq]; exact hcomp_quot
   have hJrank_comp : HasNormalPComplement q
       (Subgroup.normalizer
         (huppertRankThompsonSubgroup (G := N ⧸ UN) (Pbar : Subgroup (N ⧸ UN)) :
@@ -1511,9 +1522,8 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
             intro C _ hCcomm
             exact (hA.2.2 C (by simp) hCcomm).trans hA_rank_le_AZ
           have hAZ_le : AZ ≤ Jbar := by
-            simpa [Jbar, R] using
-              (le_sSup hAZ_mem :
-                AZ ≤ huppertRankThompsonSubgroup (G := R) (⊤ : Subgroup R))
+            dsimp [Jbar, huppertRankThompsonSubgroup]
+            exact le_sSup hAZ_mem
           exact le_sup_right.trans hAZ_le
         have hKZ_le_K : KZ ≤ K := by
           exact Subgroup.comap_mono hZJ
@@ -1555,7 +1565,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
             refine Subgroup.mem_map.mpr ⟨e (QuotientGroup.mk' UP k), ?_, ?_⟩
             · exact Subgroup.mem_map.mpr ⟨QuotientGroup.mk' UP k,
                 (by simpa [K] using hkK), rfl⟩
-            · simpa [e] using
+            · simpa [e, qN] using
                 quotientSubgroupRangeEquiv_apply_mk (P : Subgroup N) UN k
           · intro hx
             rcases Subgroup.mem_map.mp hx with ⟨z, hz, hzval⟩
@@ -1565,7 +1575,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
             calc
               qN ((k : (P : Subgroup N)) : N) =
                   (e (QuotientGroup.mk' UP k) : N ⧸ UN) := by
-                simpa [e] using
+                simpa [e, qN] using
                   (quotientSubgroupRangeEquiv_apply_mk (P : Subgroup N) UN k).symm
               _ = x := hzval
         _ = (huppertRankThompsonSubgroup
@@ -1586,7 +1596,7 @@ private theorem hkt_iv62_f_normalizer_quotient_hasNormalPComplement
       exact hkt_hasNormalPComplement_normalizer_map_quotient_of_normalizer
         (G := N) (p := q) (N := UN) (T := K_N) hUN_le_KN hcomp_intrinsic
     rw [hJ_eq] at hcomp_quot
-    simpa [Pbar, Sylow.coe_mapSurjective] using hcomp_quot
+    rw [hPbar_eq]; exact hcomp_quot
   exact hsmall_rec Pbar hcard_lt hq_dvd_quot hcenter_comp hJrank_comp
 
 /-- Sentence 2 of Huppert IV.6.2(f), rewritten using `N_Q(U)=Q` and
@@ -1785,7 +1795,7 @@ private theorem hkt_iv62_f_proper_over_sylow_hasNormalPComplement
     have hf_surj : Function.Surjective f := by
       intro x
       have hxmap : (x : Q) ∈ (SH : Subgroup H).map H.subtype := by
-        simpa [hSH_map_eq] using x.property
+        simp [hSH_map_eq, x.property]
       rcases Subgroup.mem_map.mp hxmap with ⟨y, hy, hyx⟩
       refine ⟨⟨y, hy⟩, ?_⟩
       apply Subtype.ext
@@ -1829,7 +1839,7 @@ private theorem hkt_isMulCommutative_of_mulEquiv
   refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
   obtain ⟨x0, rfl⟩ := e.surjective x
   obtain ⟨y0, rfl⟩ := e.surjective y
-  simpa using congrArg e (mul_comm x0 y0)
+  simpa using congrArg e ((inferInstance : IsMulCommutative G).is_comm.comm x0 y0)
 
 /-- Elementary abelian structure transfers across a multiplicative equivalence. -/
 private theorem hkt_isElementaryAbelian_of_mulEquiv
@@ -1956,7 +1966,7 @@ private theorem hkt_generated_coprime_action_trivial_from_complement
     have hcop : Nat.Coprime (Nat.card AH) (Nat.card K) := by
       rw [hn]
       exact hKcop.pow_left n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hcomm_bot : ⁅AH, K⁆ = ⊥ := by
     have hleft : ⁅AH, K⁆ ≤ AH := by
       letI : AH.Normal := hAHnormal
@@ -1975,7 +1985,7 @@ private theorem hkt_generated_coprime_action_trivial_from_complement
   intro a ha
   let aH : H := ⟨a, hA_le_generated ha⟩
   have haH : aH ∈ AH := by
-    simpa [AH, aH, H] using ha
+    simpa [AH, aH, H, Subgroup.mem_subgroupOf] using ha
   have hcommH : aH * xH = xH * aH :=
     (Subgroup.mem_centralizer_iff.mp (hK_le_centAH hxH_mem_K)) aH haH
   exact congrArg Subtype.val hcommH
@@ -2022,8 +2032,8 @@ private theorem hkt_natCard_map_quotient_eq_of_image_complement
   have hNsub_Pamb_bot : N.subgroupOf Pamb = (⊥ : Subgroup Pamb) := by
     apply le_antisymm ?_ bot_le
     intro x hx
-    have hxN : (x : G) ∈ N := by
-      simpa using hx
+    have hxN : (x : G) ∈ N :=
+      Subgroup.mem_subgroupOf.mp hx
     rcases Subgroup.mem_map.mp x.property with ⟨y, hyP, hyx⟩
     have hyNK : ((y : R) : K) ∈ N.subgroupOf K := by
       change (((y : R) : K) : G) ∈ N
@@ -2190,9 +2200,14 @@ private theorem hkt_hasNormalPComplement_of_proper_index_not_dvd
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact y.property
   have hS_le_Lg : (S : Subgroup Q) ≤ Lg := by
-    rw [← hconjT_eq_S, hTQ_coe]
-    simpa [Lg, Subgroup.conjBy] using
-      (Subgroup.map_mono (f := (MulAut.conj g).toMonoidHom) hTQsub_le_L)
+    calc
+      (S : Subgroup Q) = MulAut.conj g • (TQ : Subgroup Q) := hconjT_eq_S.symm
+      _ = MulAut.conj g • TQsub := by rw [hTQ_coe]
+      _ = TQsub.map (MulAut.conj g).toMonoidHom := rfl
+      _ ≤ L.map (MulAut.conj g).toMonoidHom :=
+        Subgroup.map_mono (f := (MulAut.conj g).toMonoidHom) hTQsub_le_L
+      _ = L.conjBy g := rfl
+      _ = Lg := rfl
   have hLgproper : Lg < ⊤ := by
     refine lt_of_le_of_ne le_top ?_
     intro htop
@@ -2549,12 +2564,12 @@ private theorem hkt_sup_lt_top_of_sup_eq_top_of_coprime_normal
     have hcop : Nat.Coprime (Nat.card K) (Nat.card S) := by
       rw [hS_card]
       exact hK_coprime.symm.pow_right n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hM_inf_S : M ⊓ S = ⊥ := by
     have hcop : Nat.Coprime (Nat.card M) (Nat.card S) := by
       rw [hS_card]
       exact hM_coprime.symm.pow_right n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hS_le_norm_K : S ≤ Subgroup.normalizer (K : Set G) :=
     Subgroup.le_normalizer_of_normal
   have hS_le_norm_M : S ≤ Subgroup.normalizer (M : Set G) :=
@@ -2580,9 +2595,9 @@ this core keeps only the final solvability consequence, while the remaining
 source leaf below is stated in that structural form. -/
 private theorem hkt_iv62_f_reduced_nonburnside_isSolvable_core
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (hcore_bot : pPrimeCore q Q = ⊥) (hnot_Qp : ¬ IsPGroup q Q)
-    (hq2 : q ≠ 2) (S : Sylow q Q) (hq_dvd : q ∣ Nat.card Q)
-    (hnot_burnside :
+    (hcore_bot : pPrimeCore q Q = ⊥) (_hnot_Qp : ¬ IsPGroup q Q)
+    (_hq2 : q ≠ 2) (S : Sylow q Q) (hq_dvd : q ∣ Nat.card Q)
+    (_hnot_burnside :
       ¬ (S : Subgroup Q) ≤ centerIn (G := Q) (Subgroup.normalizer (S : Subgroup Q)))
     (hcentralizer_dvd :
       HasNormalPComplement q
@@ -2769,7 +2784,7 @@ private theorem hkt_iv62_f_reduced_nonburnside_isSolvable_core
           exact hxH
         · intro hx
           apply Subtype.ext
-          have hxH : (x : Q) ∈ H := by simpa [HK] using hx
+          have hxH : (x : Q) ∈ H := Subgroup.mem_subgroupOf.mp hx
           exact (QuotientGroup.eq_one_iff (N := H) (x := (x : Q))).2 hxH
       let eKbar : K ⧸ HK ≃* Kbar :=
         (QuotientGroup.quotientMulEquivOfEq hφ_ker.symm).trans
@@ -3033,7 +3048,7 @@ private theorem hkt_iv62_f_reduced_nonburnside_isSolvable_core
               exact hkt_sylow_eq_top_of_H_sup_normalizer_image_top
                 (H := H) (K := K) (Kbar := Kbar) (R := R)
                 hK_le_comap hKbar_minimal hcompR hR_card_eq_Kbar Pr hr_dvd_R rfl
-                (by simpa [L, Namb] using hLtop)
+                (by simpa [L, Namb, Pamb, ιR] using hLtop)
             have hFalse_of_Lproper : L < ⊤ → False := by
               intro hLproper
               have hcompR : HK.IsComplement' R := by
@@ -3408,7 +3423,7 @@ private theorem hkt_isElementaryAbelian_quotient_of_isElementaryAbelian
     IsElementaryAbelian p (G ⧸ N) := by
   letI : IsElementaryAbelian p G := hGelem
   letI : IsMulCommutative G := hGelem.toIsMulCommutative
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := ?_
       exponent_dvd_p := ?_ }
@@ -3419,7 +3434,7 @@ private theorem hkt_isElementaryAbelian_quotient_of_isElementaryAbelian
       rw [hcomm_bot]
       exact bot_le
     exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (N := N)).2 hcomm_le⟩
+      (N := N)).2 hcomm_le |>.is_comm⟩
   · exact (Group.exponent_quotient_dvd (H := N)).trans
       (IsElementaryAbelian.exponent_dvd_p p G)
 
@@ -3469,7 +3484,7 @@ private theorem hkt_iv62_o_card_bound_of_relIndex_and_inf_bot
     Nat.card B ≤ q ^ 2 := by
   classical
   have hcard_eq : Nat.card B = C1.index * Nat.card C1 := by
-    simpa [Nat.mul_comm] using C1.index_mul_card.symm
+    rw [C1.index_mul_card.symm]
   have hcard_C1_le_index_C2 : Nat.card C1 ≤ C2.index := by
     have hcard_rel : Nat.card C1 = C2.relIndex C1 := by
       calc
@@ -3624,7 +3639,8 @@ private theorem hkt_fin_two_perm_hom_eq_one_of_isPGroup_odd
   have hq_not_dvd_perm : ¬ q ∣ Nat.card (Equiv.Perm (Fin 2)) := by
     intro hdiv
     have hq_dvd_two : q ∣ 2 := by
-      simpa [hperm_card] using hdiv
+      rw [← hperm_card]
+      exact hdiv
     have hq_eq_two : q = 2 :=
       (Nat.prime_dvd_prime_iff_eq (Fact.out : Nat.Prime q) Nat.prime_two).1
         hq_dvd_two
@@ -3740,46 +3756,46 @@ These declarations are copied into this file so the book-order proof does not de
 
 private theorem hkt_iv62_r_coprime_order_nonscalar_element_exists
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (hcore_bot : pPrimeCore q Q = ⊥) (hnot_Qp : ¬ IsPGroup q Q)
-    (hq2 : q ≠ 2) (S : Sylow q Q)
-    (hq_dvd : q ∣ Nat.card Q)
-    (hnot_burnside :
+    (_hcore_bot : pPrimeCore q Q = ⊥) (_hnot_Qp : ¬ IsPGroup q Q)
+    (_hq2 : q ≠ 2) (S : Sylow q Q)
+    (_hq_dvd : q ∣ Nat.card Q)
+    (_hnot_burnside :
       ¬ (S : Subgroup Q) ≤ centerIn (G := Q) (Subgroup.normalizer (S : Subgroup Q)))
-    (hcentralizer_dvd :
+    (_hcentralizer_dvd :
       HasNormalPComplement q
         (↥(Subgroup.centralizer
           (centerIn (G := Q) (S : Subgroup Q) : Set Q))))
-    (hnormalizer_rank_dvd : HasNormalPComplement q
+    (_hnormalizer_rank_dvd : HasNormalPComplement q
       (↥(Subgroup.normalizer
         (huppertRankThompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q))))
-    (hproper_rec : ∀ (H : Subgroup Q) (T : Sylow q H), H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := H) (T : Subgroup H) : Set H)) →
+    (_hproper_rec : ∀ (H : Subgroup Q) (T : Sylow q H), H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := H) (T : Subgroup H) : Set H)) →
         HasNormalPComplement q
           (Subgroup.normalizer
             (huppertRankThompsonSubgroup (G := H) (T : Subgroup H) : Set H)) →
         HasNormalPComplement q H)
-    (hsmall_rec : ∀ {R : Type u} [Group R] [Finite R] (T : Sylow q R), Nat.card R < Nat.card Q → q ∣ Nat.card R → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := R) (T : Subgroup R) : Set R)) →
+    (_hsmall_rec : ∀ {R : Type u} [Group R] [Finite R] (T : Sylow q R), Nat.card R < Nat.card Q → q ∣ Nat.card R → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := R) (T : Subgroup R) : Set R)) →
         HasNormalPComplement q
           (Subgroup.normalizer
             (huppertRankThompsonSubgroup (G := R) (T : Subgroup R) : Set R)) →
         HasNormalPComplement q R)
     {U : Subgroup Q}
-    (hU_ne_bot : U ≠ ⊥) (hU_p : IsPGroup q U)
-    (hU_no_complement : ¬ HasNormalPComplement q (↥(Subgroup.normalizer (U : Set Q))))
-    (hUmax :
+    (_hU_ne_bot : U ≠ ⊥) (_hU_p : IsPGroup q U)
+    (_hU_no_complement : ¬ HasNormalPComplement q (↥(Subgroup.normalizer (U : Set Q))))
+    (_hUmax :
       ∀ W : Subgroup Q,
         W ≠ ⊥ →
         IsPGroup q W →
           ¬ HasNormalPComplement q (↥(Subgroup.normalizer (W : Set Q))) →
           Nat.factorization (Nat.card (Subgroup.normalizer (W : Set Q))) q * (Nat.card Q + 1) + Nat.card W ≤ Nat.factorization (Nat.card (Subgroup.normalizer (U : Set Q))) q * (Nat.card Q + 1) + Nat.card U)
     (P : Sylow q (Subgroup.normalizer (U : Set Q)))
-    (hUS : U < (S : Subgroup Q))
-    (hUN_le_P :
+    (_hUS : U < (S : Subgroup Q))
+    (_hUN_le_P :
       U.subgroupOf (Subgroup.normalizer (U : Set Q)) ≤
         (P : Subgroup (Subgroup.normalizer (U : Set Q))))
-    (hcardUP :
+    (_hcardUP :
       Nat.card U < Nat.card (P : Subgroup (Subgroup.normalizer (U : Set Q))))
-    (hNtop : Subgroup.normalizer (U : Set Q) = ⊤)
-    (hU_eq_core : U = pCore q Q)
+    (_hNtop : Subgroup.normalizer (U : Set Q) = ⊤)
+    (_hU_eq_core : U = pCore q Q)
     (L : Σ A : Subgroup Q, { B : Subgroup Q //
       A ≤ (S : Subgroup Q) ∧
         IsMulCommutative A ∧
@@ -3822,10 +3838,13 @@ private theorem hkt_iv62_r_coprime_order_nonscalar_element_exists
   classical
   obtain ⟨c, hC_eq_zpowers, hc_not_scalar⟩ := hC_generator
   refine ⟨c, ?_, ?_, hc_not_scalar⟩
-  · simpa [hC_eq_zpowers, Nat.card_zpowers] using hC_coprime
+  · convert hC_coprime using 1
+    simp [hC_eq_zpowers, Nat.card_zpowers]
   · intro a d
-    let dC : C := ⟨(d : Q), by simpa [hC_eq_zpowers] using d.property⟩
-    simpa [dC] using hA_conj_commutes_C a dC
+    have hmem : (d : Q) ∈ C :=
+      hC_eq_zpowers.symm ▸ d.property
+    let dC : C := ⟨(d : Q), hmem⟩
+    apply hA_conj_commutes_C a dC
 
 private theorem hkt_iv62_r_quadratic_extension_choice_exists
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
@@ -4001,7 +4020,14 @@ private theorem hkt_iv62_r_cyclic_generator_rhoF_ne_one
       rhoF (c.1 : Q) = rhoF ((generator.1 : Q) ^ n) := by rw [hc_eq]
       _ = rhoF (generator.1 : Q) ^ n := by rw [map_pow]
       _ = 1 := by simp [hgen]
-  simpa using congrArg LinearEquiv.toLinearMap hceq
+  have htemp : (rhoF (c.1 : Q)).toLinearMap = 1 := by
+    calc
+      (rhoF (c.1 : Q)).toLinearMap
+          = (rhoF (c.1 : Q) : (Fin 2 → K.fst) →ₗ[K.fst] Fin 2 → K.fst) := rfl
+      _ = ((1 : (Fin 2 → K.fst) ≃ₗ[K.fst] Fin 2 → K.fst) : (Fin 2 → K.fst) →ₗ[K.fst] Fin 2 → K.fst) :=
+        congrArg (fun (φ : (Fin 2 → K.fst) ≃ₗ[K.fst] Fin 2 → K.fst) => (φ : (Fin 2 → K.fst) →ₗ[K.fst] Fin 2 → K.fst)) hceq
+      _ = 1 := rfl
+  simpa [one_smul] using htemp
 
 private theorem hkt_iv62_r_cyclic_generator_rhoF_order_dvd_card
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
@@ -6550,13 +6576,16 @@ private theorem hkt_iv62_terminal_coordinates_exists
     Nonempty (Additive (L.2.1) ≃+ (Fin 2 → ZMod q)) := by
   classical
   letI : IsElementaryAbelian q L.2.1 := L.2.2.2.2.2.2.2.2.2.1
+  letI : CommGroup L.2.1 :=
+    { mul_comm := fun a b =>
+        L.2.2.2.2.2.2.2.2.2.1.toIsMulCommutative.is_comm.comm a b }
   haveI : Module.Finite (ZMod q) (Additive (L.2.1)) := Module.Finite.of_finite
   haveI : Module.Finite (ZMod q) (Fin 2 → ZMod q) := Module.Finite.of_finite
   have hnat : Nat.card (Additive (L.2.1)) =
       q ^ Module.finrank (ZMod q) (Additive (L.2.1)) := by
     simpa using Module.natCard_eq_pow_finrank (K := ZMod q) (V := Additive (L.2.1))
   have hcard : Nat.card (Additive (L.2.1)) = q ^ 2 := by
-    simpa using L.2.2.2.2.2.2.2.2.2.2.1
+    simpa [Additive] using L.2.2.2.2.2.2.2.2.2.2.1
   have hpow : q ^ Module.finrank (ZMod q) (Additive (L.2.1)) = q ^ 2 := by
     rw [← hnat, hcard]
   have hfin : Module.finrank (ZMod q) (Additive (L.2.1)) = 2 :=
@@ -6592,6 +6621,9 @@ private theorem hkt_iv62_terminal_conjugation_linear_action_exists
   classical
   letI : (L.2.1).Normal := L.2.2.2.2.2.2.2.1
   letI : IsElementaryAbelian q L.2.1 := L.2.2.2.2.2.2.2.2.2.1
+  letI : CommGroup L.2.1 :=
+    { mul_comm := fun a b =>
+        L.2.2.2.2.2.2.2.2.2.1.toIsMulCommutative.is_comm.comm a b }
   letI : MulDistribMulAction Q L.2.1 :=
     MulDistribMulAction.compHom L.2.1 (MulAut.conjNormal (H := L.2.1))
   let coordLin : Additive (L.2.1) ≃ₗ[ZMod q] (Fin 2 → ZMod q) :=
@@ -6940,7 +6972,7 @@ private theorem hkt_iv62_i_J_normalizers_local_extracted
           generatorRank C ≤ generatorRank A)
     (hKbar_normal : Kbar.Normal)
     (hKbar_minimal : IsMinimalNormal Kbar)
-    (hKbar_ne_bot : Kbar ≠ ⊥)
+    (_hKbar_ne_bot : Kbar ≠ ⊥)
     (hKbar_coprime : Nat.Coprime q (Nat.card Kbar))
     (hsolvable : IsSolvable Q)
     (X : Subgroup Q) (TX : Sylow q X)
@@ -7149,7 +7181,7 @@ private theorem hkt_iv62_i_J_normalizers_local_extracted
       rcases hJbar_p.exists_card_eq with ⟨n, hn⟩
       rw [hn]
       exact hK2X_coprime.symm.pow_right n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hK2bar_le_sup : K2bar ≤ Kbar ⊔ Abar := by
     simpa [K2bar] using commutator_le_sup Kbar Abar
   have hsup_le_normalizer_K2bar :
@@ -7167,7 +7199,7 @@ private theorem hkt_iv62_i_J_normalizers_local_extracted
   letI : K2X.Normal := hK2X_normal
   have hK2X_sup_AX : K2X ⊔ AX = ⊤ := by
     rw [← Subgroup.subgroupOf_sup le_sup_left le_sup_right]
-    exact (Subgroup.subgroupOf_eq_top).2 (by simpa [Xbar])
+    exact (Subgroup.subgroupOf_eq_top).2 (by simp)
   have hker_le_TX : piX.ker ≤ (TX : Subgroup X) := by
     intro z hz
     have hzval := congrArg Subtype.val (show piX z = 1 from hz)
@@ -7330,12 +7362,12 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
     rw [hn]
     exact hKbar_coprime.symm.pow_right n
   have hKbar_inf_Abar : Kbar ⊓ Abar = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hKbar_Abar_coprime
+    (Subgroup.disjoint_of_coprime_natCard hKbar_Abar_coprime).eq_bot
   have hP_map : P.map π = Abar := by
     simp [P, Abar, π, Subgroup.map_sup]
   have hP_comap : Abar.comap π = P := by
-    simpa [Abar, P, π] using
-      (QuotientGroup.comap_map_mk' (pCore q Q) A)
+    dsimp [Abar, P, π]
+    exact QuotientGroup.comap_map_mk' (pCore q Q) A
   letI : IsSolvable Q := hsolvable
   letI : IsSolvable (Q ⧸ pCore q Q) :=
     solvable_quotient_of_solvable (pCore q Q)
@@ -7394,8 +7426,8 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
       · intro hn
         have hnK : n ∈ Kbar := hn.1
         have hcomm : k * n = n * k :=
-          Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := Kbar) hk hnK
+          setLike_mul_comm
+            (s := Kbar) hk hnK
         have heq : k * n * k⁻¹ = n := by
           calc
             k * n * k⁻¹ = n * k * k⁻¹ := by rw [hcomm]
@@ -7409,8 +7441,8 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
               (Kbar.mul_mem (Kbar.inv_mem hk) hconj.1) hk
           simpa [mul_assoc] using htmp
         have hcomm : k * n = n * k :=
-          Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := Kbar) hk hnK
+          setLike_mul_comm
+            (s := Kbar) hk hnK
         have heq : k * n * k⁻¹ = n := by
           calc
             k * n * k⁻¹ = n * k * k⁻¹ := by rw [hcomm]
@@ -7477,8 +7509,19 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
     apply hx_not_normalizer
     have hcore_map_eq :
         (pCore q Q).map (MulAut.conj x).toMonoidHom = pCore q Q := by
-      simpa [Subgroup.pointwise_smul_def] using
-        (Subgroup.Normal.conj_smul_eq_self x (pCore q Q))
+      have htemp := Subgroup.Normal.conj_smul_eq_self x (pCore q Q)
+      have htemp' : MulAut.conj x • (pCore q Q : Subgroup Q) =
+          (pCore q Q).map (MulAut.conj x).toMonoidHom := by
+        calc
+          MulAut.conj x • (pCore q Q : Subgroup Q)
+              = Subgroup.map ((MulDistribMulAction.toMonoidEnd (MulAut Q) Q) (MulAut.conj x)) (pCore q Q : Subgroup Q) := by
+            simp [Subgroup.pointwise_smul_def]
+          _ = Subgroup.map (MulAut.conj x : Q →* Q) (pCore q Q : Subgroup Q) := by
+            apply congrArg (fun f : Q →* Q => Subgroup.map f (pCore q Q : Subgroup Q))
+            ext y; simp
+          _ = (pCore q Q).map (MulAut.conj x).toMonoidHom := rfl
+      rw [htemp'] at htemp
+      exact htemp
     have hP_map_conj_le :
         P.map (MulAut.conj x).toMonoidHom ≤ P := by
       change (pCore q Q ⊔ A).map (MulAut.conj x).toMonoidHom ≤ P
@@ -7553,8 +7596,8 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
       intro ax hax
       rcases Subgroup.mem_map.mp hax with ⟨a, ha, rfl⟩
       have hb0_cent :
-          (b0 : Q) ∈ Subgroup.centralizer (A : Set Q) := by
-        simpa [CA] using hb0
+          (b0 : Q) ∈ Subgroup.centralizer (A : Set Q) :=
+        Subgroup.mem_subgroupOf.mp hb0
       have hcomm :
           a * (b0 : Q) = (b0 : Q) * a :=
         Subgroup.mem_centralizer_iff.mp hb0_cent a ha
@@ -7569,8 +7612,8 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
       have hax : (MulAut.conj x) a ∈ Ax :=
         Subgroup.mem_map_of_mem (MulAut.conj x).toMonoidHom ha
       have hb_cent :
-          (b : Q) ∈ Subgroup.centralizer (Ax : Set Q) := by
-        simpa [CAx] using hb
+          (b : Q) ∈ Subgroup.centralizer (Ax : Set Q) :=
+        Subgroup.mem_subgroupOf.mp hb
       have hcomm :
           (MulAut.conj x) a * (b : Q) =
             (b : Q) * (MulAut.conj x) a :=
@@ -7610,7 +7653,10 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
     have hAx_le_cent_b :
         Ax ≤ Subgroup.centralizer ({(b : Q)} : Set Q) := by
       have hbAx' : (b : Q) ∈ Subgroup.centralizer (Ax : Set Q) := by
-        simpa [Ax] using hbAx
+        have hbAx_cent : (b : Q) ∈ Subgroup.centralizer
+            (((MulAut.conj x : Q → Q) '' (A : Set Q)) : Set Q) :=
+          Subgroup.mem_subgroupOf.mp hbAx
+        simpa [Ax] using hbAx_cent
       intro a ha
       rw [Subgroup.mem_centralizer_iff]
       intro z hz
@@ -7824,8 +7870,8 @@ private theorem hkt_iv62_r_cyclic_nonscalar_actor_extracted
       have hbar_comm :
           π ((a : Q) * (d : Q) * (a : Q)⁻¹) * π (d : Q) =
             π (d : Q) * π ((a : Q) * (d : Q) * (a : Q)⁻¹) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := Kbar) hconjbar hdbar
+        setLike_mul_comm
+          (s := Kbar) hconjbar hdbar
       have hquot_commutator :
           π ⁅(a : Q) * (d : Q) * (a : Q)⁻¹, (d : Q)⁆ = 1 := by
         rw [map_commutatorElement]
@@ -7835,7 +7881,10 @@ private theorem hkt_iv62_r_cyclic_nonscalar_actor_extracted
         apply (QuotientGroup.eq_one_iff
           (N := pCore q Q)
           (x := ⁅(a : Q) * (d : Q) * (a : Q)⁻¹, (d : Q)⁆)).1
-        simpa [π] using hquot_commutator
+        calc
+          π (⁅(a : Q) * (d : Q) * (a : Q)⁻¹, (d : Q)⁆)
+              = ⁅π ((a : Q) * (d : Q) * (a : Q)⁻¹), π (d : Q)⁆ := by simp
+          _ = 1 := hquot_commutator
       have hmemker :
           ⁅(a : Q) * (d : Q) * (a : Q)⁻¹, (d : Q)⁆ ∈ rho.ker := by
         rw [hker]
@@ -7959,7 +8008,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
     (hz_not_core : z ∉ pCore q Q)
     (hz_mem_S : z ∈ (S : Subgroup Q))
     (hWz_p : IsPGroup q Wz)
-    (hWz_le_S : Wz ≤ (S : Subgroup Q))
+    (_hWz_le_S : Wz ≤ (S : Subgroup Q))
     (hS_le_normalizer_Wz : (S : Subgroup Q) ≤ Subgroup.normalizer (Wz : Set Q))
     (hnormalizer_Wz_comp : HasNormalPComplement q (↥(Subgroup.normalizer (Wz : Set Q))))
     (hz_comm_mod_core_S :
@@ -8063,15 +8112,16 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
     have hcomm_coreQ : ⁅(w : Q), (n : Q)⁆ ∈ pCore q Q :=
       hWz_comm_mod_core_NWz (w : Q) hwQ n
     have hcomm_CoreNWz : ⁅w, n⁆ ∈ CoreNWz := by
-      simpa [CoreNWz, Subgroup.mem_subgroupOf] using hcomm_coreQ
+      apply Subgroup.mem_subgroupOf.mpr
+      have h_eq : (↑⁅w, n⁆ : Q) = ⁅(w : Q), (n : Q)⁆ :=
+        map_commutatorElement (NWz.subtype) w n
+      rw [h_eq]
+      exact hcomm_coreQ
     have hcomm_quot :
         ⁅QuotientGroup.mk' CoreNWz w, QuotientGroup.mk' CoreNWz n⁆ = 1 := by
-      have hmk : QuotientGroup.mk' CoreNWz ⁅w, n⁆ = 1 :=
-        (QuotientGroup.eq_one_iff (N := CoreNWz) (x := ⁅w, n⁆)).2 hcomm_CoreNWz
-      simpa using
-        (show QuotientGroup.mk' CoreNWz ⁅w, n⁆ =
-            ⁅QuotientGroup.mk' CoreNWz w, QuotientGroup.mk' CoreNWz n⁆ from
-          map_commutatorElement (f := QuotientGroup.mk' CoreNWz) (g₁ := w) (g₂ := n)).symm.trans hmk
+      rw [← map_commutatorElement (QuotientGroup.mk' CoreNWz) w n]
+      apply (QuotientGroup.eq_one_iff _).mpr
+      exact hcomm_CoreNWz
     exact (commutatorElement_eq_one_iff_mul_comm.mp hcomm_quot).symm
   have hWzbar_p : IsPGroup q Wzbar := by
     simpa [Wzbar] using hWzNWz_p.map (QuotientGroup.mk' CoreNWz)
@@ -8453,9 +8503,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
       Subgroup.Normal.subgroupOf (pCore_normal (G := Q) (p := q)) Klayer
   letI : CoreKlayer.Normal := step_f_CoreKlayer_normal
   let phiKlayer : Klayer →* step_f_Kbar :=
-    { toFun := fun k => ⟨piCore (k : Q), by
-          change piCore (k : Q) ∈ step_f_Kbar
-          exact k.property⟩
+    { toFun := fun k => ⟨piCore (k : Q), k.property⟩
       map_one' := by
         apply Subtype.ext
         simp [piCore]
@@ -8468,10 +8516,13 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
     rcases QuotientGroup.mk'_surjective (pCore q Q) (y : Q ⧸ pCore q Q) with ⟨x, hx⟩
     have hxK : x ∈ Klayer := by
       change piCore x ∈ step_f_Kbar
-      simpa [piCore, hx] using y.property
+      have : piCore x = y := hx
+      rw [this]
+      exact y.property
     refine ⟨⟨x, hxK⟩, ?_⟩
     apply Subtype.ext
-    simpa [phiKlayer, piCore] using hx
+    dsimp [phiKlayer, piCore]
+    exact hx
   have step_f_phiKlayer_ker : phiKlayer.ker = CoreKlayer := by
     ext x
     change phiKlayer x = 1 ↔ x ∈ CoreKlayer
@@ -8639,7 +8690,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
     have hnorm_top : Subgroup.normalizer (W : Set Q) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr step_l_W_normal
     intro y hy
-    simpa [hnorm_top]
+    simp [hnorm_top]
   have step_m_actor_card_coprime_q : Nat.Coprime (Nat.card actor) q := by
     rcases hx_actor_r with ⟨n, hn⟩
     have hcop_rq : Nat.Coprime r_actor q :=
@@ -9146,9 +9197,9 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
       change (b : Q) ∈ Subgroup.centralizer (H : Set Q)
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
-      have hbH : (b : Q) ∈ H := by
-        simpa [interInB] using hb
-      exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := H) hbH ha).symm
+      have hbH : (b : Q) ∈ H :=
+        Subgroup.mem_subgroupOf.mp hb
+      exact (setLike_mul_comm (s := H) hbH ha).symm
     have step_o_index_of_inter
         (H : Subgroup Q) (hH_comm : IsMulCommutative H)
         (hinter : (interInB H).index ≤ q) :
@@ -9166,7 +9217,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               generatorRank (A0.1 ⊓ pCore q Q : Subgroup Q) + 1 := by
         let Y : Subgroup A0.1 := (A0.1 ⊓ pCore q Q).subgroupOf A0.1
         letI : IsMulCommutative A0.1 := A0.2.2.1
-        letI : Y.Normal := Subgroup.normal_of_comm Y
+        letI : Y.Normal := Subgroup.normal_of_isMulCommutative Y
         have hsource_i_j :
             ⁅step_f_Kbar, A0.1.map piCore⁆ ⊔ A0.1.map piCore = ⊤ ∧
               IsCyclic (A0.1 ⧸ Y) := by
@@ -9214,6 +9265,9 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               (G := Q ⧸ pCore q Q) (M := step_f_Kbar)
           letI : Fact r.Prime := ⟨hr⟩
           letI : IsElementaryAbelian r step_f_Kbar := hKbar_elementary
+          letI : CommGroup step_f_Kbar :=
+            { mul_comm := fun a b =>
+                hKbar_elementary.toIsMulCommutative.is_comm.comm a b }
           have hcent_le_Kbar :
               Subgroup.centralizer (step_f_Kbar : Set (Q ⧸ pCore q Q)) ≤ step_f_Kbar := by
             let F : Subgroup (Q ⧸ pCore q Q) := fittingSubgroup (Q ⧸ pCore q Q)
@@ -9370,7 +9424,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   rcases hAbar_p.exists_card_eq with ⟨n, hn⟩
                   rw [hn]
                   exact hK2bar_coprime.symm.pow_right n
-                exact Subgroup.inf_eq_bot_of_coprime hAbar_K2_coprime
+                exact (Subgroup.disjoint_of_coprime_natCard hAbar_K2_coprime).eq_bot
               let K2X : Subgroup Xbar := K2bar.subgroupOf Xbar
               let AX : Subgroup Xbar := Abar.subgroupOf Xbar
               have hXbar_le_norm_K2 :
@@ -9385,7 +9439,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               have hK2X_sup_AX : K2X ⊔ AX = ⊤ := by
                 rw [← Subgroup.subgroupOf_sup le_sup_left le_sup_right]
                 exact (Subgroup.subgroupOf_eq_top).2 (by
-                  simpa [Xbar])
+                  simp)
               have hcompX : K2X.IsComplement' AX := by
                 refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
                 · rw [Subgroup.disjoint_def]
@@ -9495,14 +9549,18 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 have hzX : z ∈ X := hP0Q_le_X hzP0Q
                 let zX : X := ⟨z, hzX⟩
                 have hzTX : zX ∈ (TX : Subgroup X) := by
-                  simpa [TX, P0X] using hzP0Q
+                  have hzP0X : zX ∈ P0X := by
+                    simpa [P0X, Subgroup.mem_subgroupOf] using hzP0Q
+                  simpa [TX, IsPGroup.toSylow_coe] using hzP0X
                 have hzcentTX :
                     zX ∈ Subgroup.centralizer ((TX : Subgroup X) : Set X) := by
                   rw [Subgroup.mem_centralizer_iff]
                   intro x hxTX
                   apply Subtype.ext
                   have hxP0Q : (x : Q) ∈ P0Q := by
-                    simpa [TX, P0X] using hxTX
+                    have hxP0X : (x : X) ∈ P0X := by
+                      simpa [TX, P0X, IsPGroup.toSylow_coe] using hxTX
+                    simpa [P0X, Subgroup.mem_subgroupOf] using hxP0X
                   exact Subgroup.mem_centralizer_iff.mp hzZ0.2
                     (x : Q) (hP0Q_le_S hxP0Q)
                 exact Subgroup.mem_map.mpr
@@ -9519,7 +9577,9 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
             have hA_subgroupOf_le_TX : A0.1.subgroupOf X ≤ (TX : Subgroup X) := by
               intro a ha
               have haP0Q : (a : Q) ∈ P0Q := hA_le_P0Q ha
-              simpa [TX, P0X] using haP0Q
+              have haP0X : a ∈ P0X := by
+                simpa [P0X, Subgroup.mem_subgroupOf] using haP0Q
+              simpa [TX, IsPGroup.toSylow_coe] using haP0X
             have hP0Q_le_S : P0Q ≤ (S : Subgroup Q) :=
               sup_le (hkt_pCore_le_sylow (Q := Q) (q := q) S) A0.2.1
             have hTX_map_le_S :
@@ -9527,7 +9587,9 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               intro x hx
               rcases Subgroup.mem_map.mp hx with ⟨y, hyTX, rfl⟩
               have hyP0Q : (y : Q) ∈ P0Q := by
-                simpa [TX, P0X] using hyTX
+                have hyP0X : (y : X) ∈ P0X := by
+                  simpa [TX, P0X, IsPGroup.toSylow_coe] using hyTX
+                simpa [P0X, Subgroup.mem_subgroupOf] using hyP0X
               exact hP0Q_le_S hyP0Q
             have hJ_local :=
               hkt_iv62_i_J_normalizers_local_extracted
@@ -9537,7 +9599,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 (Kbar := step_f_Kbar)
                 (hKbar_normal := step_f_Kbar_normal)
                 (hKbar_minimal := step_f_Kbar_minimal)
-                (hKbar_ne_bot := step_f_Kbar_ne_bot)
+                (_hKbar_ne_bot := step_f_Kbar_ne_bot)
                 (hKbar_coprime := step_f_Kbar_coprime)
                 (hsolvable := step_f_solvable)
                 (X := X) (TX := TX) (hX_eq := by rfl)
@@ -9580,7 +9642,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                 rw [hn]
                 exact hN_coprime.symm.pow_right n
               have hN_inf_CoreX : N ⊓ CoreX = ⊥ :=
-                Subgroup.inf_eq_bot_of_coprime hN_CoreX_coprime
+                (Subgroup.disjoint_of_coprime_natCard hN_CoreX_coprime).eq_bot
               have hN_le_cent_CoreX :
                   N ≤ Subgroup.centralizer (CoreX : Set X) := by
                 apply (Subgroup.commutator_eq_bot_iff_le_centralizer
@@ -9606,7 +9668,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   exact congrArg (fun y : X => (y : Q)) hcommX
                 have hn_core : ((n : X) : Q) ∈ pCore q Q :=
                   step_h_self_centralizing hn_ambient_cent
-                simpa [CoreX] using hn_core
+                simpa [CoreX, Subgroup.mem_subgroupOf] using hn_core
               have hN_p : IsPGroup q N :=
                 IsPGroup.to_le (H := N) (K := CoreX) hCoreX_p hN_le_CoreX
               have hN_bot : N = ⊥ :=
@@ -9645,7 +9707,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               rw [hn]
               exact step_f_Kbar_coprime.pow_left n
             have hAbar_inf_Kbar : Abar ⊓ step_f_Kbar = ⊥ :=
-              Subgroup.inf_eq_bot_of_coprime hAbar_Kbar_coprime
+              (Subgroup.disjoint_of_coprime_natCard hAbar_Kbar_coprime).eq_bot
             apply (MonoidHom.ker_eq_bot_iff ρ).1
             rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
             apply le_antisymm
@@ -9706,8 +9768,8 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   have hkKbar : k ∈ step_f_Kbar := hK2bar_le_Kbar hkK2
                   have hnKbar : n ∈ step_f_Kbar := hNamb_le_Kbar hn
                   have hcomm : k * n = n * k :=
-                    Subgroup.mul_comm_of_mem_isMulCommutative
-                      (H := step_f_Kbar) hkKbar hnKbar
+                    setLike_mul_comm
+                      (s := step_f_Kbar) hkKbar hnKbar
                   simpa [hcomm, mul_assoc] using hn
                 · intro hconj
                   have hkKbar : k ∈ step_f_Kbar := hK2bar_le_Kbar hkK2
@@ -9721,8 +9783,8 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                         (step_f_Kbar.mul_mem hk_inv hconjK) hkKbar
                     simpa [mul_assoc] using htmp
                   have hcomm : k * n = n * k :=
-                    Subgroup.mul_comm_of_mem_isMulCommutative
-                      (H := step_f_Kbar) hkKbar hnKbar
+                    setLike_mul_comm
+                      (s := step_f_Kbar) hkKbar hnKbar
                   simpa [hcomm, mul_assoc] using hconj
               have hAbar_le_norm_Namb :
                   Abar ≤ Subgroup.normalizer (Namb : Set (Q ⧸ pCore q Q)) := by
@@ -9780,7 +9842,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
                   (hx : x ∈ N) : a • x ∈ N := by
                 change Additive.ofMul (a • x) ∈ Srep.toSubmodule
                 have hx' : Additive.ofMul x ∈ Srep.toSubmodule := by
-                  simpa [Submodule.mem_toAddSubgroup] using hx
+                  simpa [N, Submodule.mem_toAddSubgroup, AddSubgroup.mem_toSubgroup'] using hx
                 have hx'' := Srep.apply_mem_toSubmodule a hx'
                 simpa [ρ, ρ0,
                   Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
@@ -9799,7 +9861,18 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               have hxN : Additive.toMul x ∈ N ↔ x ∈ Srep.toSubmodule := by
                 simp [N]
               rw [← hxN, hN_bot]
-              constructor <;> intro hx <;> simpa using hx
+              constructor
+              · intro hx
+                have hx' := Subgroup.mem_bot.mp hx
+                have hx0 : x = 0 := by
+                  apply Additive.toMul.injective
+                  simpa using hx'
+                exact (Submodule.mem_bot (R := ZMod r) (M := Additive step_f_Kbar)).mpr hx0
+              · intro hx
+                have hx0 : x = 0 :=
+                  (Submodule.mem_bot (R := ZMod r) (M := Additive step_f_Kbar)).mp hx
+                rw [Subgroup.mem_bot, hx0]
+                rfl
             · right
               have hN_top : N = ⊤ := hminv N inferInstance hN_inv hN_bot
               apply Subrepresentation.toSubmodule_injective
@@ -9807,12 +9880,17 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
               have hxN : Additive.toMul x ∈ N ↔ x ∈ Srep.toSubmodule := by
                 simp [N]
               rw [← hxN, hN_top]
-              constructor <;> intro hx <;> simpa using hx
+              constructor
+              · intro _
+                trivial
+              · intro _
+                trivial
           letI : Representation.IsIrreducible ρ := hρ_irreducible
           have hcenter_cyclic : IsCyclic (Subgroup.center Abar) :=
             center_cyclic_of_representation_faithful_irreducible ρ hρ_faithful
           have hAbar_center : Subgroup.center Abar = ⊤ := by
-            letI : IsMulCommutative Abar := hAbar_comm
+            letI : CommGroup Abar :=
+              { mul_comm := hAbar_comm.is_comm.comm }
             exact CommGroup.center_eq_top
           have hAbar_cyclic : IsCyclic Abar := by
             have htop_cyclic : IsCyclic (⊤ : Subgroup Abar) := by
@@ -9921,7 +9999,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
         have step_n_Acore_comm : IsMulCommutative Acore := by
           refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
           apply Subtype.ext
-          exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A0.1)
+          exact setLike_mul_comm (s := A0.1)
             x.property.1 y.property.1
         have step_n_B_le_cent_Acore : B ≤ Subgroup.centralizer (Acore : Set Q) := by
           intro b hb
@@ -9977,7 +10055,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
             have hAcore_comm : IsMulCommutative Acore := by
               refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
               apply Subtype.ext
-              exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A0.1)
+              exact setLike_mul_comm (s := A0.1)
                 x.property.1 y.property.1
             haveI : Fact (IsPGroup q Acore) :=
               ⟨IsPGroup.to_le (pCore_isPGroup (G := Q) (p := q)) inf_le_right⟩
@@ -10300,7 +10378,7 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
         refine (Subgroup.closure_le (K := (⊥ : Subgroup commCarrier))).2 ?_
         rintro x ⟨r, d, rfl⟩
         have hfix := step_p_Rqprime_trivial_on_commCarrier r d
-        simpa [hfix]
+        simp [hfix]
       have hmap :
           (commutatorAction (A := RqprimeLayer) (G := commCarrier)).map
               commCarrier.subtype = ⁅commCarrier, RqprimeLayer⁆ := by
@@ -10950,7 +11028,7 @@ private theorem hkt_isPElement_mem_pCore_of_selected_pSubgroup_eq_pCore_reduced_
   have hU_le_V : U ≤ V := by
     intro u huU
     let uN : N := ⟨u, hU_le_N huU⟩
-    let uP : (P : Subgroup N) := ⟨uN, hUN_le_P' (by simpa [uN, UN] using huU)⟩
+    let uP : (P : Subgroup N) := ⟨uN, hUN_le_P' (Subgroup.mem_subgroupOf.mpr huU)⟩
     have huUP : uP ∈ UP := by
       simpa [uP, uN, UP, UN, Subgroup.mem_subgroupOf] using huU
     have huK : uP ∈ K := (le_sup_left : UP ≤ K) huUP
@@ -11393,7 +11471,9 @@ private theorem hkt_thompson_iv62_pPrimeCore_eq_bot_isPGroup_of_local_p_nilpoten
           Nat.factorization (Nat.card (Subgroup.normalizer (U : Set Q))) q *
               (Nat.card Q + 1) + Nat.card U
         have hbad' : noncomplementPSubgroups.Nonempty := by
-          simpa [noncomplementPSubgroups] using hbad
+          rcases hbad with ⟨U, hU⟩
+          refine ⟨U, ?_⟩
+          simpa [noncomplementPSubgroups] using hU
         have hfinite : noncomplementPSubgroups.Finite := Set.toFinite _
         obtain ⟨Upre, hUpremax'⟩ := hfinite.exists_maximalFor (f := score) _ hbad'
         have hUpre_mem_noncomplementPSubgroups : Upre ∈ noncomplementPSubgroups :=
@@ -11692,7 +11772,7 @@ private theorem hkt_thompson_iv62_pPrimeCore_eq_bot_isPGroup_of_local_p_nilpoten
           exact hu
       let zN : (Subgroup.normalizer (U : Set Q)) := ⟨z, hzN⟩
       have hzK : zN ∈ K := by
-        simpa [K, zN] using hzS
+        simpa [K, zN, Subgroup.mem_subgroupOf] using hzS
       have hzP : zN ∈ (P : Subgroup (Subgroup.normalizer (U : Set Q))) := by
         simpa [hK_eq_P] using hzK
       refine Subgroup.mem_map.mpr ⟨zN, ?_, rfl⟩
@@ -11843,9 +11923,8 @@ private theorem hkt_thompson_iv62_pPrimeCore_eq_bot_isPGroup_of_local_p_nilpoten
           intro C hC_le hCcomm
           exact (hA.2.2 C hC_le hCcomm).trans hA_rank_le_AZ
         have hAZ_le : AZ ≤ JN := by
-          simpa [JN] using
-            (le_sSup hAZ_mem :
-              AZ ≤ huppertRankThompsonSubgroup (G := (Subgroup.normalizer (U : Set Q))) (P : Subgroup (Subgroup.normalizer (U : Set Q))))
+          dsimp [JN, huppertRankThompsonSubgroup]
+          exact le_sSup hAZ_mem
         exact le_sup_right.trans hAZ_le
       have hJN_ne_bot : JN ≠ ⊥ := by
         intro hJNbot
@@ -12343,7 +12422,7 @@ public theorem huppert_IV_6_2_thompson_normal_p_complement
       HasNormalPComplement q
         (↥(Subgroup.centralizer
           (centerIn (G := Q) (S : Subgroup Q) : Set Q))))
-    (hnormalizer :
+    (_hnormalizer :
       HasNormalPComplement q
         (↥(Subgroup.normalizer
           (thompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q))))

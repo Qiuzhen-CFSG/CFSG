@@ -71,7 +71,7 @@ public theorem rightInvariantAddSubgroup_card_lower_bound
   classical
   obtain ⟨x, hxU, hx0⟩ : ∃ x : F, x ∈ U ∧ x ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hU_ne
     apply le_antisymm
     · intro y hy
@@ -174,7 +174,7 @@ public theorem proposition_2_indexTwoCyclic_irreducible
 index-two subgroup of the near-field unit group. This is the Maschke
 coprimality input. -/
 public theorem rightNearField_addOrderOf_one_not_dvd_indexTwoSubgroup_card
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hA_index : A.index = 2) :
     ¬ addOrderOf (1 : F) ∣ Nat.card A := by
   let p := addOrderOf (1 : F)
@@ -205,17 +205,17 @@ set_option backward.isDefEq.respectTransparency false in
 prime-field representation. Maschke supplies an invariant complement, and the
 printed cardinality argument rules out two nonzero complementary summands. -/
 public theorem proposition_2_indexTwoCyclic_representation_irreducible
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A) (hA_index : A.index = 2) :
     let p := addOrderOf (1 : F)
     letI : Fact (Nat.Prime p) := ⟨rightNearField_addOrderOf_one_prime⟩
     letI : Module (ZMod p) F := rightNearFieldZModModule F
-    letI : IsMulCommutative A := ⟨hA_cyclic.commutative⟩
+    letI : IsMulCommutative A := hA_cyclic.isMulCommutative
     Representation.IsIrreducible (rightNearFieldUnitsRepresentation A) := by
   let p := addOrderOf (1 : F)
   letI : Fact (Nat.Prime p) := ⟨rightNearField_addOrderOf_one_prime⟩
   letI : Module (ZMod p) F := rightNearFieldZModModule F
-  letI : IsMulCommutative A := ⟨hA_cyclic.commutative⟩
+  letI : IsMulCommutative A := hA_cyclic.isMulCommutative
   let rho : Representation (ZMod p) A F := rightNearFieldUnitsRepresentation A
   have hnot : ¬ p ∣ Nat.card A :=
     rightNearField_addOrderOf_one_not_dvd_indexTwoSubgroup_card A hA_index
@@ -242,7 +242,7 @@ public theorem proposition_2_indexTwoCyclic_representation_irreducible
     have hone : (1 : F) ∈ (⊥ : Submodule (MonoidAlgebra (ZMod p) A) F) := by
       rw [h]
       simp
-    have hzero : (1 : F) = 0 := by simpa using hone
+    have hzero : (1 : F) = 0 := (Submodule.mem_bot _).mp hone
     exact one_ne_zero hzero
   refine
     { exists_pair_ne := ⟨⊥, ⊤, hbot_ne_top⟩
@@ -279,7 +279,9 @@ public theorem proposition_2_indexTwoCyclic_representation_irreducible
     apply hTbot
     exact Submodule.toAddSubgroup_injective h
   · rw [disjoint_iff]
-    simpa using congrArg Submodule.toAddSubgroup hST.inf_eq_bot
+    have hinf : (S ⊓ T).toAddSubgroup = S.toAddSubgroup ⊓ T.toAddSubgroup := by
+      ext x; simp
+    simpa [hinf] using congrArg Submodule.toAddSubgroup hST.inf_eq_bot
   · simpa [Submodule.sup_toAddSubgroup] using
       congrArg Submodule.toAddSubgroup hST.sup_eq_top
 
@@ -287,7 +289,7 @@ set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 500000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_2_appendixI_field_coordinates
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A) (hA_index : A.index = 2) :
     ∃ (p n : ℕ) (K : Type u) (_ : CommRing K) (_ : Finite K)
         (_ : Algebra (ZMod p) K) (e : F ≃+ K),
@@ -310,7 +312,7 @@ private theorem proposition_2_appendixI_field_coordinates
         (Multiplicative.toAdd x * ((b : A) : Fˣ)) * ((a : A) : Fˣ)
       rw [Subgroup.coe_mul, Units.val_mul]
       have habU : (a : Fˣ) * (b : Fˣ) = (b : Fˣ) * (a : Fˣ) :=
-        congrArg Subtype.val (hA_cyclic.commutative.comm a b)
+        congrArg Subtype.val (hA_cyclic.isMulCommutative.is_comm.comm a b)
       have habF : ((a : Fˣ) : F) * (b : Fˣ) =
           ((b : Fˣ) : F) * (a : Fˣ) := congrArg Units.val habU
       rw [habF, mul_assoc]
@@ -386,19 +388,67 @@ private theorem proposition_2_appendixI_field_coordinates
     apply proposition_2_indexTwoCyclic_irreducible A hA_index
         S.toAddSubgroup V.toAddSubgroup
     · intro x hx a
+      have hxS : x ∈ S := (Submodule.mem_toAddSubgroup S).mp hx
+      let x' : Additive (Multiplicative F) := x
       let t : T := ⟨a, by simp [T]⟩
-      have hs := S.smul_mem (MonoidAlgebra.single t 1) hx
-      have hs' : rhoT t x ∈ S := by
-        simpa only [Representation.single_smul, one_smul] using hs
-      simpa [rhoT, Representation.ofElementaryAbelianAction_apply_ofMul, t] using hs'
+      have hsmul' : (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) ∈ S := by
+        have hxS' : (x' : rhoT.asModule) ∈ S := hxS
+        exact S.smul_mem' (MonoidAlgebra.single t (1 : ZMod p)) hxS'
+      have htemp_eq : (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) = (rhoT t) x' := by
+        calc
+          (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) =
+              (1 : ZMod p) • rhoT t (rhoT.asModuleEquiv (x' : rhoT.asModule)) :=
+            Representation.single_smul (t := (1 : ZMod p)) (g := t) (v := (x' : rhoT.asModule)) (ρ := rhoT)
+          _ = rhoT t (rhoT.asModuleEquiv (x' : rhoT.asModule)) := by simp
+          _ = (rhoT t) x' := by
+            have h_cast : rhoT.asModuleEquiv (x' : rhoT.asModule) = (x' : Additive (Multiplicative F)) := rfl
+            simp [h_cast]
+      have hval' : rhoT t x' ∈ S := by
+        rw [← htemp_eq]
+        exact hsmul'
+      have h_eq : rhoT t x' = (x : F) * (((a : A) : Fˣ) : F) := by
+        calc
+          rhoT t x' = Additive.ofMul (t • Additive.toMul x') := by
+            simpa using (Representation.ofElementaryAbelianAction_apply_ofMul
+              (a := t) (x := Additive.toMul x'))
+          _ = (x : F) * (((a : A) : Fˣ) : F) := by
+            dsimp [t, x']
+            rfl
+      have hX : (x : F) * (((a : A) : Fˣ) : F) ∈ S := by
+        rw [← h_eq]
+        exact hval'
+      exact (Submodule.mem_toAddSubgroup S).mpr hX
     · intro x hx a
+      have hxV : x ∈ V := (Submodule.mem_toAddSubgroup V).mp hx
+      let x' : Additive (Multiplicative F) := x
       let t : T := ⟨a, by simp [T]⟩
-      have hv := V.smul_mem (MonoidAlgebra.single t 1) hx
-      have hv' : rhoT t x ∈ V := by
-        change (MonoidAlgebra.single t (1 : ZMod p) •
-          (show rhoT.asModule from x)) ∈ V at hv
-        simpa only [Representation.single_smul (ρ := rhoT), one_smul] using hv
-      simpa [rhoT, Representation.ofElementaryAbelianAction_apply_ofMul, t] using hv'
+      have hsmul' : (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) ∈ V := by
+        have hxV' : (x' : rhoT.asModule) ∈ V := hxV
+        exact V.smul_mem' (MonoidAlgebra.single t (1 : ZMod p)) hxV'
+      have htemp_eq : (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) = (rhoT t) x' := by
+        calc
+          (MonoidAlgebra.single t (1 : ZMod p)) • (x' : rhoT.asModule) =
+              (1 : ZMod p) • rhoT t (rhoT.asModuleEquiv (x' : rhoT.asModule)) :=
+            Representation.single_smul (t := (1 : ZMod p)) (g := t) (v := (x' : rhoT.asModule)) (ρ := rhoT)
+          _ = rhoT t (rhoT.asModuleEquiv (x' : rhoT.asModule)) := by simp
+          _ = (rhoT t) x' := by
+            have h_cast : rhoT.asModuleEquiv (x' : rhoT.asModule) = (x' : Additive (Multiplicative F)) := rfl
+            simp [h_cast]
+      have hval' : rhoT t x' ∈ V := by
+        rw [← htemp_eq]
+        exact hsmul'
+      have h_eq : rhoT t x' = (x : F) * (((a : A) : Fˣ) : F) := by
+        calc
+          rhoT t x' = Additive.ofMul (t • Additive.toMul x') := by
+            simpa using (Representation.ofElementaryAbelianAction_apply_ofMul
+              (a := t) (x := Additive.toMul x'))
+          _ = (x : F) * (((a : A) : Fˣ) : F) := by
+            dsimp [t, x']
+            rfl
+      have hX : (x : F) * (((a : A) : Fˣ) : F) ∈ V := by
+        rw [← h_eq]
+        exact hval'
+      exact (Submodule.mem_toAddSubgroup V).mpr hX
     · intro h
       apply hSbot
       exact Submodule.toAddSubgroup_injective h
@@ -406,7 +456,9 @@ private theorem proposition_2_appendixI_field_coordinates
       apply hVbot
       exact Submodule.toAddSubgroup_injective h
     · rw [disjoint_iff]
-      simpa using congrArg Submodule.toAddSubgroup hSV.inf_eq_bot
+      have hinf : (S ⊓ V).toAddSubgroup = S.toAddSubgroup ⊓ V.toAddSubgroup := by
+        ext x; simp
+      simpa [hinf] using congrArg Submodule.toAddSubgroup hSV.inf_eq_bot
     · simpa [Submodule.sup_toAddSubgroup] using
         congrArg Submodule.toAddSubgroup hSV.sup_eq_top
   letI : Representation.IsIrreducible rhoT := hIrr
@@ -447,16 +499,31 @@ private theorem proposition_2_appendixI_field_coordinates
       { toSubmodule := LinearMap.ker (d.restrictScalars (ZMod p))
         apply_mem_toSubmodule := by
           intro t x hx
-          have hmap := d.map_smul (MonoidAlgebra.single t 1) x
-          have hdx : d x = 0 := hx
-          rw [hdx, smul_zero] at hmap
-          simpa only [Representation.single_smul, one_smul] using hmap }
+          let x_as_rho : rhoT.asModule := x
+          have hdx : d x_as_rho = 0 := hx
+          rw [LinearMap.mem_ker]
+          have htemp : d ((rhoT t) x_as_rho : rhoT.asModule) = 0 := by
+            have h_cast : rhoT.asModuleEquiv x_as_rho = (x_as_rho : Additive (Multiplicative F)) := rfl
+            have h1 : (rhoT t) (rhoT.asModuleEquiv x_as_rho) = (rhoT t) x_as_rho := by
+              simp [h_cast]
+            have h_smul : d ((MonoidAlgebra.single t (1 : ZMod p)) • x_as_rho) =
+              (MonoidAlgebra.single t (1 : ZMod p)) • d x_as_rho :=
+              d.map_smul (MonoidAlgebra.single t (1 : ZMod p)) x_as_rho
+            calc
+              d ((rhoT t) x_as_rho : rhoT.asModule) =
+                  d ((rhoT t) (rhoT.asModuleEquiv x_as_rho) : rhoT.asModule) := by
+                simp [h1]
+              _ = d ((MonoidAlgebra.single t (1 : ZMod p)) • x_as_rho) := by
+                simp [Representation.single_smul, one_smul]
+              _ = (MonoidAlgebra.single t (1 : ZMod p)) • d x_as_rho := h_smul
+              _ = 0 := by simp [hdx]
+          exact htemp }
     have hW_ne_bot : W ≠ ⊥ := by
       intro hW
       have hv1bot : v1 ∈ (⊥ : Subrepresentation rhoT) := by
         rw [← hW]
         exact hdv1
-      have hv1zero : v1 = 0 := by simpa using hv1bot
+      have hv1zero : v1 = 0 := (Submodule.mem_bot _).mp hv1bot
       exact hv1 hv1zero
     have hWtop : W = ⊤ := by
       rcases hIrr.eq_bot_or_eq_top W with hW | hW
@@ -554,7 +621,7 @@ set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 500000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_2_semilinear_coordinates
-    {F K : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F K : Type u} [RightNearField F] [Finite F]
     {p : ℕ} [Fact (Nat.Prime p)] [Field K] [Finite K] [Algebra (ZMod p) K]
     (A : Subgroup Fˣ) (hA_index : A.index = 2) (e : F ≃+ K) (he1 : e 1 = 1)
     (hscalar : ∀ (x : F) (a : A),
@@ -821,7 +888,7 @@ private theorem finiteField_orderTwo_aut_coordinates
 set_option maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_2_coordinate_square_iff_mem
-    {F K : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F K : Type u} [RightNearField F] [Finite F]
     {p m : ℕ} [Fact (Nat.Prime p)]
     [Field K] [Finite K] [Algebra (ZMod p) K]
     (A : Subgroup Fˣ) (hA_index : A.index = 2)
@@ -900,11 +967,11 @@ private theorem proposition_2_coordinate_square_iff_mem
         rw [hz, hzero, mul_zero]
       refine ⟨Units.mk0 z hz_ne, ?_⟩
       apply Units.ext
-      simpa [pow_two] using hz.symm
+      simpa [ey, pow_two] using hz.symm
     · rintro ⟨z, hz⟩
       refine ⟨(z : K), ?_⟩
       have hval := congrArg Units.val hz
-      simpa [pow_two] using hval.symm
+      simpa [ey, pow_two] using hval.symm
   have hB_iff : ey ∈ B ↔ y ∈ A := by
     constructor
     · rintro ⟨a, ha⟩
@@ -920,7 +987,7 @@ private theorem proposition_2_coordinate_square_iff_mem
 set_option maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_2_semilinear_kernel_cases
-    {F K : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F K : Type u} [RightNearField F] [Finite F]
     [Field K] [Finite K]
     (A : Subgroup Fˣ) (hA_index : A.index = 2) (e : F ≃+ K)
     (hscalar : ∀ (x : F) (a : A),
@@ -947,7 +1014,9 @@ private theorem proposition_2_semilinear_kernel_cases
     have hscalar_a := hscalar x (⟨a⁻¹, A.inv_mem ha⟩ : A)
     have hea_ne : e ((a⁻¹ : Fˣ) : F) ≠ 0 := by
       intro hea
-      exact Units.ne_zero a⁻¹ (e.injective (by simpa using hea))
+      apply Units.ne_zero a⁻¹
+      apply e.injective
+      simpa [map_zero] using hea
     exact mul_right_cancel₀ hea_ne (hsemi_a.symm.trans hscalar_a)
   have hrel := Subgroup.relIndex_mul_index hAop_ker
   have hp : (Aop.relIndex σHom.ker * σHom.ker.index).Prime := by
@@ -979,7 +1048,7 @@ private theorem proposition_2_semilinear_kernel_cases
 set_option maxHeartbeats 2000000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_2_center_card
-    {F K : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F K : Type u} [RightNearField F] [Finite F]
     {p m : ℕ} [Fact (Nat.Prime p)]
     [Field K] [Finite K] [Algebra (ZMod p) K]
     (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A) (hA_index : A.index = 2)
@@ -1130,7 +1199,7 @@ private theorem proposition_2_center_card
       intro g
       by_cases hgA : g ∈ A
       · have hcomm :=
-          hA_cyclic.commutative.comm (⟨g, hgA⟩ : A) (⟨y, hyA⟩ : A)
+          hA_cyclic.isMulCommutative.is_comm.comm (⟨g, hgA⟩ : A) (⟨y, hyA⟩ : A)
         exact congrArg Subtype.val hcomm
       · have hgop : MulOpposite.op g ∉ Aop := by
           intro hgop
@@ -1236,7 +1305,7 @@ A finite near-field whose multiplicative group has a cyclic subgroup of index
 two is either a field, or is the displayed exceptional near-field. In the
 latter case the center of its multiplicative group has order r - 1. -/
 public theorem proposition_2
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A) (hA_index : A.index = 2) :
     (∀ x y : F, x * y = y * x) ∨
       ∃ p n : ℕ, IsDicksonIndexTwoModel F p n := by
@@ -1264,7 +1333,7 @@ public theorem proposition_2
     exact hA_index
   have hex_u : ∃ u : (Fˣ)ᵐᵒᵖ, u ∉ Aop := by
     by_contra h
-    push_neg at h
+    push Not at h
     have htop : Aop = ⊤ := by
       apply eq_top_iff.mpr
       intro x hx

@@ -42,8 +42,10 @@ private theorem hypothesisA1_H_decomp
   rcases (Subgroup.mem_sup_of_normal_left (s := QH) (t := DH) (x := hH)).mp hhH with
     ⟨qH, hqH, dH, hdH, hmul⟩
   refine ⟨qH, ?_, dH, ?_, ?_⟩
-  · simpa [QH] using hqH
-  · simpa [DH] using hdH
+  · change qH ∈ Q.subgroupOf H
+    exact hqH
+  · change dH ∈ D.subgroupOf H
+    exact hdH
   · exact congrArg Subtype.val hmul
 
 private theorem hypothesisA1_H_decomp_unique
@@ -411,7 +413,6 @@ private theorem hypothesisA1_Qt_regular_on_complement
   let q : G := t⁻¹ * q0 * t
   have hqQt : q ∈ rightConjugate Q t := by
     refine ⟨q0, hq0.1, ?_⟩
-    change (MulEquiv.toMonoidHom (MulAut.conj t⁻¹)) q0 = q
     dsimp [q]
     simp
   have ht_base : t • base = t⁻¹ • base := by rw [htinv]

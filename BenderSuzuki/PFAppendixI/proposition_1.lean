@@ -11,6 +11,9 @@ public import FeitThompson.Fitting.Core
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 public import FeitThompson.FinalTheorem
 public import FeitThompson.Fitting.Centralizer
+public import Mathlib.Algebra.Group.Subgroup.Order
+
+attribute [local instance] IsMulCommutative.instCommGroup
 
 /-!
 # Peterfalvi Appendix I, Proposition 1
@@ -155,7 +158,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_sup_eq_bot
     have : (⟨w, hw⟩ : W) = 1 := by simpa [hfixW] using hw_mem
     exact congrArg Subtype.val this
   apply Subtype.ext
-  simpa [← huw, hu_one, hw_one]
+  simp [← huw, hu_one, hw_one]
 
 private theorem peterfalvi_appendixI_proposition_1_disjoint_sup_fixedPointSubgroup
     {A M : Type*} [Group A] [Finite A]
@@ -193,6 +196,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
     (hpair : Pairwise (fun i j => Disjoint (F i) (F j))) :
     iSupIndep F := by
   classical
+  letI : CommGroup M := IsMulCommutative.instCommGroup
   have hF_inv (i j : ι) : IsInvariant (T i) M (F j) := by
     have hforward : ∀ a : T i, ∀ x : M, x ∈ F j → a • x ∈ F j := by
       intro a x hx
@@ -202,7 +206,12 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
         (b : A) • ((a : A) • x) = ((b : A) * (a : A)) • x := by simp [mul_smul]
         _ = ((a : A) * (b : A)) • x := by rw [mul_comm]
         _ = (a : A) • ((b : A) • x) := by simp [mul_smul]
-        _ = (a : A) • x := congrArg (fun y : M => (a : A) • y) (by simpa using hx b)
+        _ = (a : A) • x := by
+          have haction : (b : A) • x = x := by
+            calc
+              (b : A) • x = (b : ↥(T j)) • x := rfl
+              _ = x := hx b
+          simp [haction]
     refine ⟨?_⟩
     intro a x
     constructor
@@ -212,9 +221,28 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_family_iSu
       simpa [inv_smul_smul] using hx'
   have hnormalizer (X Y : Subgroup M) : Y ≤ Subgroup.normalizer (X : Set M) := by
     intro y hy
-    rw [Subgroup.mem_normalizer_iff]
+    rw [Subgroup.mem_set_normalizer_iff]
     intro x
-    constructor <;> intro hx <;> simpa [mul_assoc, mul_comm] using hx
+    constructor
+    · intro hx
+      have hyx : y * x * y⁻¹ = x := by
+        calc
+          y * x * y⁻¹ = (y * x) * y⁻¹ := rfl
+          _ = (x * y) * y⁻¹ := by rw [mul_comm y x]
+          _ = x * (y * y⁻¹) := by rw [mul_assoc]
+          _ = x * 1 := by rw [mul_inv_cancel y]
+          _ = x := by rw [mul_one x]
+      rw [hyx]
+      exact hx
+    · intro hx
+      have hyx' : x = y * x * y⁻¹ := by
+        calc
+          x = x * 1 := (mul_one x).symm
+          _ = x * (y * y⁻¹) := by rw [mul_inv_cancel y]
+          _ = x * y * y⁻¹ := by rw [mul_assoc]
+          _ = y * x * y⁻¹ := by rw [mul_comm x y]
+      rw [hyx']
+      exact hx
   have hsup_inv : ∀ (s : Finset ι) (i : ι), IsInvariant (T i) M (s.sup F) := by
     intro s
     induction s using Finset.induction with
@@ -284,7 +312,7 @@ private theorem peterfalvi_appendixI_proposition_1_hyperplane_fixed_iSupIndep_an
     let F : Ω → Subgroup E := fun Y => fixedPointSubgroup (↥Y.1) E
     iSupIndep F ∧ iSup F = ⊤ := by
   classical
-  letI : CommGroup R := CommGroup.ofIsMulCommutative
+  letI : CommGroup R := IsMulCommutative.instCommGroup
   let Ω := {Y : Subgroup R //
     Y.index = p ∧ fixedPointSubgroup (↥Y) E ≠ ⊥}
   let F : Ω → Subgroup E := fun Y => fixedPointSubgroup (↥Y.1) E
@@ -510,7 +538,9 @@ private theorem peterfalvi_appendixI_proposition_1_crossBlock_stabilizer_of_odd_
       exact hga_ne (Subgroup.mem_bot.mp hga_bot)
     have hgj : g • j = i ∨ g • j = j := by
       have hprod' : (g • b) * (g • a) = a * b := by
-        simpa [mul_comm] using hprod
+        calc
+          (g • b) * (g • a) = (g • a) * (g • b) := mul_comm (g • b) (g • a)
+          _ = a * b := hprod
       -- Repeat the support isolation with the two acted-on summands reversed.
       by_contra h
       simp only [not_or] at h
@@ -598,7 +628,7 @@ private theorem peterfalvi_appendixI_proposition_1_crossBlock_stabilizer_of_odd_
       exact mul_left_cancel hprod
     exact ⟨hga, hgb⟩
   · rintro ⟨hga, hgb⟩
-    simpa [hga, hgb]
+    simp [hga, hgb]
 
 /-- Stabilizer intersection for Peterfalvi's preliminary direct-sum argument. -/
 private theorem peterfalvi_appendixI_proposition_1_stabilizer_mul_eq_inf
@@ -634,7 +664,7 @@ private theorem peterfalvi_appendixI_proposition_1_stabilizer_mul_eq_inf
       exact mul_left_cancel hprod
     exact ⟨hga, hgb⟩
   · rintro ⟨hga, hgb⟩
-    simpa [hga, hgb]
+    simp [hga, hgb]
 
 /-- Peterfalvi's preliminary direct-sum argument for two invariant complementary summands. -/
 private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_invariant_isCompl
@@ -725,7 +755,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_invariant_i
       exact Subgroup.mem_top e
     letI : IsMulCommutative E :=
       (inferInstance : IsElementaryAbelian q E).toIsMulCommutative
-    letI : V.Normal := Subgroup.normal_of_comm V
+    letI : V.Normal := Subgroup.normal_of_isMulCommutative V
     obtain ⟨u, hu, v, hv, huv⟩ := Subgroup.mem_sup_of_normal_right.mp hmem
     calc
       g • e = g • (u * v) := by rw [huv]
@@ -762,6 +792,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
         Nat.card (MulAction.stabilizer P b)) :
     ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
   classical
+  letI : CommGroup E := IsMulCommutative.instCommGroup
   let η : Subgroup E ≃o Submodule (ZMod q) (Additive E) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := q))
   let U : Subgroup E := η.symm W.toSubmodule
@@ -771,19 +802,31 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
     apply hW
     apply Subrepresentation.toSubmodule_injective
     have himage := congrArg η hUbot
-    simpa [U] using himage
+    calc
+      W.toSubmodule = η U := by simp [U]
+      _ = η (⊥ : Subgroup E) := himage
+      _ = (⊥ : Submodule (ZMod q) (Additive E)) := η.map_bot
+      _ = (⊥ : Subrepresentation ρ).toSubmodule := rfl
   have hV : V ≠ ⊥ := by
     intro hVbot
     apply hC
     apply Subrepresentation.toSubmodule_injective
     have himage := congrArg η hVbot
-    simpa [V] using himage
+    calc
+      C.toSubmodule = η V := by simp [V]
+      _ = η (⊥ : Subgroup E) := himage
+      _ = (⊥ : Submodule (ZMod q) (Additive E)) := η.map_bot
+      _ = (⊥ : Subrepresentation ρ).toSubmodule := rfl
   have hcompl_sub : IsCompl W.toSubmodule C.toSubmodule := by
     refine ⟨?_, ?_⟩
     · rw [disjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+      have himage := congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+      have : (⊥ : Subrepresentation ρ).toSubmodule = (⊥ : Submodule (ZMod q) (Additive E)) := rfl
+      simpa using (himage.trans this)
     · rw [codisjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+      have himage := congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+      have : (⊤ : Subrepresentation ρ).toSubmodule = (⊤ : Submodule (ZMod q) (Additive E)) := rfl
+      simpa using (himage.trans this)
   have hcompl_UV : IsCompl U V := by
     apply (OrderIso.isCompl_iff (f := η) (x := U) (y := V)).2
     simpa [U, V] using hcompl_sub
@@ -865,9 +908,15 @@ private theorem peterfalvi_appendixI_proposition_1_invariants_eq_bot_of_irreduci
     { toSubmodule := Representation.invariants (ρ.comp K.subtype)
       apply_mem_toSubmodule := Representation.le_comap_invariants ρ K }
   rcases IsSimpleOrder.eq_bot_or_eq_top S with hS | hS
-  · simpa [S] using congrArg Subrepresentation.toSubmodule hS
-  · have hStop : Representation.invariants (ρ.comp K.subtype) = ⊤ := by
-      simpa [S] using congrArg Subrepresentation.toSubmodule hS
+  · calc
+      Representation.invariants (ρ.comp K.subtype) = S.toSubmodule := rfl
+      _ = (⊥ : Subrepresentation ρ).toSubmodule := congrArg Subrepresentation.toSubmodule hS
+      _ = (⊥ : Submodule F V) := rfl
+  · have hStop : Representation.invariants (ρ.comp K.subtype) = (⊤ : Submodule F V) := by
+      calc
+        Representation.invariants (ρ.comp K.subtype) = S.toSubmodule := rfl
+        _ = (⊤ : Subrepresentation ρ).toSubmodule := congrArg Subrepresentation.toSubmodule hS
+        _ = (⊤ : Submodule F V) := rfl
     exfalso
     apply hKker
     intro k hk
@@ -888,6 +937,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_centerLine
       (Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q))) :
     fixedPointSubgroup (Subgroup.zpowers z) E = ⊥ := by
   classical
+  letI : CommGroup E := IsMulCommutative.instCommGroup
   let ρ := Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
   letI : Representation.IsIrreducible ρ := by simpa [ρ] using hirr
   let Z : Subgroup P := Subgroup.zpowers z
@@ -983,11 +1033,11 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
     · letI : Representation.IsIrreducible ρ := hirr
       by_cases hPcyc : IsCyclic P
       · letI : IsCyclic P := hPcyc
-        letI : IsMulCommutative P := ⟨IsCyclic.commutative⟩
+        letI : IsMulCommutative P := IsCyclic.isMulCommutative
         intro x hx e hxe
         by_contra he
         let H : Subgroup P := Subgroup.zpowers x
-        letI : H.Normal := Subgroup.normal_of_comm H
+        letI : H.Normal := Subgroup.normal_of_isMulCommutative H
         let S : Subrepresentation ρ := {
           toSubmodule := ρ.fixedSubspace H
           apply_mem_toSubmodule := by
@@ -1014,7 +1064,10 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
         have hS_ne : S ≠ ⊥ := by
           intro hS
           have hfix_bot : ρ.fixedSubspace H = ⊥ := by
-            simpa [S] using congrArg Subrepresentation.toSubmodule hS
+            calc
+              ρ.fixedSubspace H = S.toSubmodule := rfl
+              _ = (⊥ : Subrepresentation ρ).toSubmodule := congrArg Subrepresentation.toSubmodule hS
+              _ = (⊥ : Submodule (ZMod q) (Additive E)) := rfl
           have hvbot : Additive.ofMul e ∈ (⊥ : Submodule (ZMod q) (Additive E)) := by
             rw [← hfix_bot]
             exact hvfix
@@ -1026,7 +1079,10 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
           · exact False.elim (hS_ne hbot)
           · exact htop
         have hfix_top : ρ.fixedSubspace H = ⊤ := by
-          simpa [S] using congrArg Subrepresentation.toSubmodule hS_top
+          calc
+            ρ.fixedSubspace H = S.toSubmodule := rfl
+            _ = (⊤ : Subrepresentation ρ).toSubmodule := congrArg Subrepresentation.toSubmodule hS_top
+            _ = (⊤ : Submodule (ZMod q) (Additive E)) := rfl
         have hxrep : ρ x = 1 := by
           ext v
           have hv : v ∈ ρ.fixedSubspace H := by simp [hfix_top]
@@ -1057,7 +1113,10 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
               have hwR : (w : P) ∈ R :=
                 (Subgroup.zpowers_le.mpr hzR) w.2
               have hwe := he ⟨⟨w, hwR⟩, by simp⟩
-              simpa using hwe
+              have hwe' : (w : P) • e = e := by simpa using hwe
+              calc
+                w • e = (w : P) • e := rfl
+                _ = e := hwe'
             simpa [hfix_z] using hez
           let Ω := {Y : Subgroup R //
             Y.index = p ∧ fixedPointSubgroup (↥Y) E ≠ ⊥}
@@ -1084,7 +1143,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
             exact DFunLike.congr_fun hab e
           have htwo : ∃ Y Z : Ω, Y ≠ Z := by
             by_contra hYZ
-            push_neg at hYZ
+            push Not at hYZ
             let Y : Ω := Classical.choice hΩ_nonempty
             have hFYtop : F Y = ⊤ := by
               apply top_unique
@@ -1460,7 +1519,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
   letI : IsSolvable D := odd_order_theorem D hDodd
   letI : IsCyclic (fittingSubgroup D) := hFcyclic
   haveI : IsMulCommutative (fittingSubgroup D) :=
-    ⟨IsCyclic.commutative⟩
+    IsCyclic.isMulCommutative
   have hcent_eq :
       Subgroup.centralizer (fittingSubgroup D : Set D) = fittingSubgroup D := by
     apply le_antisymm
@@ -1479,6 +1538,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
         ((IsCyclic.mulAutMulEquiv (fittingSubgroup D)) alpha)
         ((IsCyclic.mulAutMulEquiv (fittingSubgroup D)) beta))
   letI : IsMulCommutative (MulAut (fittingSubgroup D)) := hAutComm
+  letI : CommGroup (MulAut (fittingSubgroup D)) := IsMulCommutative.instCommGroup
   let equivRange :
       D ⧸ fittingSubgroup D ≃* phi.range :=
     (QuotientGroup.quotientMulEquivOfEq hker.symm).trans

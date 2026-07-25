@@ -211,8 +211,10 @@ omit [Finite G] [FiniteDimensional ℂ A] in
 noncomputable abbrev indToCoind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     Representation.IndV S.subtype ρ →ₗ[ℂ] Representation.coindV S.subtype ρ :=
-  Representation.Coinvariants.lift _ (TensorProduct.lift <| linearCombination _ fun g =>
-    LinearMap.codRestrict _ (indToCoindAux S ρ g) fun _ _ _ => by simp) fun _ => by ext; simp
+  Representation.Coinvariants.lift _ (TensorProduct.lift <|
+    (linearCombination _ fun g =>
+      LinearMap.codRestrict _ (indToCoindAux S ρ g) fun _ _ _ => by simp) ∘ₗ
+      (MonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) fun _ => by ext; simp
 
 omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp] lemma indToCoind_mk
@@ -233,7 +235,7 @@ omit [Finite G] [FiniteDimensional ℂ A] in
         (fun g => Representation.IndV.mk S.subtype ρ g (f.1 g))
         fun g₁ g₂ ⟨s, (hs : _ * _ = _)⟩ =>
           (Submodule.Quotient.eq _).2 <| Representation.Coinvariants.mem_ker_of_eq s
-            (single g₂ 1 ⊗ₜ[ℂ] f.1 g₂) _ <| by
+            (MonoidAlgebra.single g₂ 1 ⊗ₜ[ℂ] f.1 g₂) _ <| by
               have := f.2 s g₂
               simp_all
   map_add' _ _ := by
@@ -279,7 +281,7 @@ lemma coindToInd_indToCoind
   letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
   ext g a
   rw [LinearMap.comp_apply, coindToInd_apply, LinearMap.id_apply]
-  simp only [map_sum, AddSubmonoidClass.coe_finset_sum, Finset.sum_apply]
+  simp only [map_sum, AddSubmonoidClass.coe_finsetSum, Finset.sum_apply]
   rw [Finset.sum_eq_single ⟦a⟧]
   · simp
   · intro b _ hb
@@ -336,7 +338,7 @@ public noncomputable def indCoindEquiv
     refine ⟨coindToInd S ρ y, ?_⟩
     have hy := congrArg (fun T : Representation.coindV S.subtype ρ →ₗ[ℂ]
         Representation.coindV S.subtype ρ => T y) (coindToInd_indToCoind S ρ)
-    simpa [LinearMap.comp_apply] using hy
+    simpa [f, LinearMap.comp_apply] using hy
 
 abbrev RightCosets (S : Subgroup G) := Quotient (QuotientGroup.rightRel S)
 
@@ -827,7 +829,8 @@ public lemma trace_pow_eq_sum_eigenvalues
   let N : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hn hpow
   have hindep : iSupIndep N := by
-    simpa [N] using f.eigenspaces_iSupIndep.comp Subtype.coe_injective
+    change iSupIndep (f.eigenspace ∘ (fun μ : f.Eigenvalues => (μ : ℂ)))
+    exact f.eigenspaces_iSupIndep.comp Subtype.coe_injective
   have htop : iSup N = ⊤ := by
     simpa [N] using eigenspace_iSup_eq_top_over_eigenvalues (f := f) hsemi
   have hds : DirectSum.IsInternal N :=

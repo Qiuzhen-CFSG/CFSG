@@ -49,7 +49,7 @@ private theorem isaacs_15_16_fixedSpace_of_freePermutationBasis
       forall h : H0, forall i : iota,
         (rho.comp H0.subtype) h (b i) = b (h • i) := by
     intro h i
-    simpa using hb (h : G) i
+    simpa [MulAction.subgroup_smul_def] using hb (h : G) i
   calc
     Module.finrank K (Representation.fixedSubspace rho H0) =
         Module.finrank K (Representation.invariants (rho.comp H0.subtype : Representation K H0 V)) := rfl
@@ -151,13 +151,12 @@ private theorem isaacs_15_16_of_repEquiv_free
 
 private noncomputable def isaacs_15_16_extendScalars_free_equiv
     {K E G alpha : Type*} [Field K] [Field E] [Algebra K E] [Group G] :
-    Representation.extendScalars (F := K) (G := G)
-      (V := alpha →₀ G →₀ K) E (Representation.free K G alpha) ≃ₗ
+    Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha) ≃ₗ
       Representation.free E G alpha := by
   let bK := (Representation.freeBasis K G alpha).baseChange E
   let bE := Representation.freeBasis E G alpha
-  let e : (E ⊗[K] (alpha →₀ G →₀ K)) ≃ₗ[E]
-      (alpha →₀ G →₀ E) := bK.equiv bE (Equiv.refl (alpha × G))
+  let e : (E ⊗[K] (alpha →₀ MonoidAlgebra K G)) ≃ₗ[E]
+      (alpha →₀ MonoidAlgebra E G) := bK.equiv bE (Equiv.refl (alpha × G))
   refine Representation.RepEquiv.mk e ?_
   intro g
   apply Module.Basis.ext bK
@@ -171,12 +170,12 @@ private noncomputable def isaacs_15_16_extendScalars_free_equiv
     Representation.free_apply_freeBasis_pair, ← Module.Basis.baseChange_apply,
     ← Module.Basis.baseChange_apply]
   have heval1 :
-      (e : E ⊗[K] (alpha →₀ G →₀ K) → alpha →₀ G →₀ E)
+      (e : E ⊗[K] (alpha →₀ MonoidAlgebra K G) → alpha →₀ MonoidAlgebra E G)
           ((Representation.freeBasis K G alpha).baseChange E (a, g * h)) =
         bE (a, g * h) := by
     simpa only [bK] using heval (a, g * h)
   have heval2 :
-      (e : E ⊗[K] (alpha →₀ G →₀ K) → alpha →₀ G →₀ E)
+      (e : E ⊗[K] (alpha →₀ MonoidAlgebra K G) → alpha →₀ MonoidAlgebra E G)
           ((Representation.freeBasis K G alpha).baseChange E (a, h)) =
         bE (a, h) := by
     simpa only [bK] using heval (a, h)
@@ -194,8 +193,7 @@ private theorem isaacs_15_16_extendScalars_equiv_free
       Representation.free E G alpha) :
     Nonempty
       (Representation.extendScalars (F := K) (G := G) (V := V) E rho ≃ₗ
-        Representation.extendScalars (F := K) (G := G)
-          (V := alpha →₀ G →₀ K) E (Representation.free K G alpha)) :=
+        Representation.extendScalars (F := K) (G := G) E (Representation.free K G alpha)) :=
   ⟨e.trans (isaacs_15_16_extendScalars_free_equiv
     (K := K) (E := E) (G := G) (alpha := alpha)).symm⟩
 private theorem isaacs_15_16_repEquiv_of_extendScalars
@@ -220,7 +218,7 @@ private theorem isaacs_15_16_descend_equiv_free
   letI : Fintype alpha := Fintype.ofFinite alpha
   refine isaacs_15_16_repEquiv_of_extendScalars
     (F := K) (E := E) (G := G) (V := V)
-    (W := alpha →₀ G →₀ K) rho (Representation.free K G alpha) ?_
+    (W := alpha →₀ MonoidAlgebra K G) rho (Representation.free K G alpha) ?_
   exact isaacs_15_16_extendScalars_equiv_free
     (K := K) (E := E) (G := G) (V := V) (alpha := alpha) rho e
 private noncomputable def isaacs_15_16_repEquiv_asModule
@@ -727,8 +725,8 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
   letI : CharP E (ringChar E) := ringChar.charP E
   let rhoE : Representation E G (E ⊗[K] V) :=
     Representation.extendScalars E rho
-  letI : FiniteDimensional E (E ⊗[K] V) := by
-    simpa using Representation.extendScalars_finite_dimensional E rho
+  letI : FiniteDimensional E (E ⊗[K] V) :=
+    Representation.extendScalars_finite_dimensional E rho
   have hfixedE : rhoE.fixedSubspace N =
       (⊥ : Submodule E (E ⊗[K] V)) := by
     simpa [E, rhoE] using
@@ -788,13 +786,45 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
   let A : C -> Submodule E (E ⊗[K] V) :=
     fun c => c.1.restrictScalars E
   have hInternalE : DirectSum.IsInternal A := by
-    simpa [A, C] using hInternal
+    have h_same : (DirectSum.coeAddMonoidHom A :
+        DirectSum (Subtype C) (fun (c : Subtype C) => A c) → (E ⊗[K] V)) =
+        (DirectSum.coeAddMonoidHom
+          (fun (c : C) => (c.1 : Submodule (MonoidAlgebra E N) (E ⊗[K] V)))) ∘
+        (DirectSum.map (fun (c : C) =>
+          (Submodule.restrictScalarsEquiv E (MonoidAlgebra E N) (E ⊗[K] V)
+            c.1).toAddMonoidHom) : DirectSum (Subtype C) (fun c => A c) →
+          DirectSum (Subtype C) (fun c => (c.1 : Submodule (MonoidAlgebra E N) (E ⊗[K] V)))) := by
+      ext x
+      induction x using DirectSum.induction_on with
+      | zero => simp [A]
+      | of c x => simp [A, Submodule.restrictScalarsEquiv, DirectSum.coeAddMonoidHom]
+      | add x y hx hy => simp [hx, hy, A]
+    unfold DirectSum.IsInternal
+    rw [h_same]
+    have he_bijective : Function.Bijective (DirectSum.map (fun (c : C) =>
+      (Submodule.restrictScalarsEquiv E (MonoidAlgebra E N) (E ⊗[K] V)
+        c.1).toAddMonoidHom) : DirectSum (Subtype C) (fun c => A c) →
+      DirectSum (Subtype C) (fun c => (c.1 : Submodule (MonoidAlgebra E N) (E ⊗[K] V)))) := by
+      have hinj : ∀ (c : C), Function.Injective
+        ((Submodule.restrictScalarsEquiv E (MonoidAlgebra E N) (E ⊗[K] V)
+          c.1).toAddMonoidHom) := by
+        intro c; exact AddEquiv.injective _
+      have hsurj : ∀ (c : C), Function.Surjective
+        ((Submodule.restrictScalarsEquiv E (MonoidAlgebra E N) (E ⊗[K] V)
+          c.1).toAddMonoidHom) := by
+        intro c; exact AddEquiv.surjective _
+      exact ⟨(DirectSum.map_injective _).mpr hinj, (DirectSum.map_surjective _).mpr hsurj⟩
+    exact hInternal.comp he_bijective
   have hmap : forall h : H, forall c : C,
       Submodule.map ((rhoE.comp H.subtype) h) (A c) = A (h • c) := by
     intro h c
-    simpa [A, C, componentAction] using
-      (isaacs_15_16_componentOrderIso_restrictScalars
-        rhoE N (h : G) c.1).symm
+    have htemp := (isaacs_15_16_componentOrderIso_restrictScalars rhoE N (h : G) c.1).symm
+    -- htemp: ... = Submodule.restrictScalars E ((isaacs_15_16_componentOrderIso ...) c.1)
+    -- goal:  ... = Submodule.restrictScalars E ↑(h • c)
+    -- By definition of componentAction: ↑(h • c) = (isaacs_15_16_componentOrderIso ...) c.1
+    have hc_smul : (h • c).1 = isaacs_15_16_componentOrderIso rhoE N (h : G) c.1 := by
+      rfl
+    simpa [A, C, hc_smul, Representation.asModule] using htemp
   have h71 := VII.isaacs_problem_7_1 N H hfrob.kernel_ne_bot
     hfrob.complement_ne_bot hfrob.isComplement'.sup_eq_top
     hfrob.isComplement'.disjoint
@@ -822,10 +852,7 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
       letI : FiniteDimensional E S :=
         FiniteDimensional.of_injective (S.subtype.restrictScalars E)
           Subtype.val_injective
-      have hirr : Representation.IsIrreducible sigma := by
-        simpa [sigma] using
-          (irreducible_subrepresentation_of_simple_asModuleSubmodule
-            psiN hSsimple)
+      have hirr := irreducible_subrepresentation_of_simple_asModuleSubmodule psiN hSsimple
       have hnonprincipal :
           ¬ Nonempty (sigma ≃ₗ Representation.trivial E N E) := by
         rintro ⟨e⟩
@@ -850,7 +877,7 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
         apply Subtype.ext
         exact hvzero
       let psiConj (h : H) : Representation E N S :=
-        Representation.conjugateRep (G := G) (H := N) sigma (h : G)⁻¹
+        Representation.conjugateRep (G := G) (H := N) (F := E) (V := S) sigma (h : G)⁻¹
       have hpsiConj : forall h : H, forall n : N,
           psiConj h (h • n) = sigma n := by
         intro h n
@@ -953,8 +980,8 @@ private theorem isaacs_15_16_algebraicClosure_restrict_equiv_free
             (Subrepresentation.ofSubmodule' S) (k : G)⁻¹)
       have hequiv : Nonempty (psiConj h ≃ₗ psiConj k) :=
         ⟨eH.symm.trans (eTrans.trans eK)⟩
-      exact isaacs_lemma_15_15 sigma hcharE hfixedConj hirr
-        hnonprincipal psiConj hpsiConj h k hequiv }
+      exact isaacs_lemma_15_15 (psi := sigma) (V := S) (psiConj := psiConj)
+        hcharE hfixedConj hirr hnonprincipal hpsiConj h k hequiv }
   obtain ⟨alpha, hfinite, ⟨e⟩⟩ :=
     isaacs_15_16_repEquiv_free_of_component_action
       (rhoE.comp H.subtype) A hInternalE hmap

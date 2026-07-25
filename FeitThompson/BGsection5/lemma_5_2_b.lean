@@ -10,6 +10,8 @@ public import FeitThompson.BGsection5.lemma_5_2_a
 
 section
 
+open scoped commutatorElement
+
 public theorem lemma_5_2_b
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hpR : IsPGroup p R) (hR : 3 ≤ groupRank R)
@@ -30,8 +32,14 @@ public theorem lemma_5_2_b
     letI : IsElementaryAbelian p Ωc := hΩcelem
     refine
       { toIsMulCommutative := by
-          simpa [Z, Ω₁Z, Ωc] using
-            (Subgroup.map_isMulCommutative (f := (Subgroup.center R).subtype) (H := Ωc))
+          refine IsMulCommutative.of_comm ?_
+          intro x y
+          apply Subtype.ext
+          have hxcenter : (x : R) ∈ Subgroup.center R := by
+            rcases Subgroup.mem_map.mp x.2 with ⟨x', _hx', hx⟩
+            rw [← hx]
+            exact x'.2
+          exact (Subgroup.mem_center_iff.mp hxcenter (y : R)).symm
         exponent_dvd_p := ?_ }
     refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
     intro x
@@ -75,7 +83,7 @@ public theorem lemma_5_2_b
       intro q hq
       rw [primeRank]
       refine csSup_le ?_ ?_
-      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le _⟩
+      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le⟩
       intro n hn
       rcases hn with ⟨A, _hApA, hAcomm, hnA⟩
       letI : IsMulCommutative A := hAcomm
@@ -86,7 +94,7 @@ public theorem lemma_5_2_b
     have hgroupRank_le_one : groupRank R ≤ 1 := by
       rw [groupRank]
       refine csSup_le ?_ ?_
-      · exact ⟨0, p, Fact.out, zero_le _⟩
+      · exact ⟨0, p, Fact.out, zero_le⟩
       intro n hn
       rcases hn with ⟨q, hq, hnq⟩
       exact hnq.trans (hprimeRank_le_one q hq)
@@ -144,18 +152,22 @@ public theorem lemma_5_2_b
     have hk_one : k = 1 := by omega
     simpa [hk_one] using hk
   have hW_noncyclic_raw :
-      ¬ IsCyclic (omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)) := by
+      ¬ IsCyclic (omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)) := by
     haveI : Fact (IsPGroup p R) := ⟨hpR⟩
     exact (lemma_4_5_c (R := R) (p := p) hpodd hR_not_cyclic).1
   have hW_noncyclic : ¬ IsCyclic W := by
     intro hWcyc
-    let Ωsub : Subgroup (upperCentralSeries R 2) := omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)
-    have hmapcyc : IsCyclic (Ωsub.map (upperCentralSeries R 2).subtype) := by
-      simpa [W, Ω₁Z₂, z2OmegaCandidate, Ωsub] using hWcyc
-    letI : IsCyclic (Ωsub.map (upperCentralSeries R 2).subtype) := hmapcyc
-    let e : Ωsub ≃* Ωsub.map (upperCentralSeries R 2).subtype :=
-      Subgroup.equivMapOfInjective Ωsub (upperCentralSeries R 2).subtype
-        (upperCentralSeries R 2).subtype_injective
+    let Ωsub : Subgroup (Subgroup.upperCentralSeries R 2) :=
+      omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)
+    have hmapcyc : IsCyclic (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype) := by
+      rcases (Subgroup.isCyclic_iff_exists_zpowers_eq_top W).mp hWcyc with ⟨g, hg⟩
+      apply (Subgroup.isCyclic_iff_exists_zpowers_eq_top
+        (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype)).mpr
+      exact ⟨g, by simpa [W, Ω₁Z₂, z2OmegaCandidate, Ωsub] using hg⟩
+    letI : IsCyclic (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype) := hmapcyc
+    let e : Ωsub ≃* Ωsub.map (Subgroup.upperCentralSeries R 2).subtype :=
+      Subgroup.equivMapOfInjective Ωsub (Subgroup.upperCentralSeries R 2).subtype
+        (Subgroup.upperCentralSeries R 2).subtype_injective
     have hΩcyc : IsCyclic Ωsub := isCyclic_of_injective e.toMonoidHom e.injective
     exact hW_noncyclic_raw (by simpa [Ωsub] using hΩcyc)
   have hWexp_dvd : Monoid.exponent ↥W ∣ p := by
@@ -165,7 +177,7 @@ public theorem lemma_5_2_b
     exact congrArg Subtype.val <|
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp hWexp_dvd w
   have hcomm_mem_Z {w r : R} (hw : w ∈ W) : ⁅w, r⁆ ∈ Z := by
-    have hwZ2 : w ∈ upperCentralSeries R 2 := by
+    have hwZ2 : w ∈ Subgroup.upperCentralSeries R 2 := by
       simpa [W, Ω₁Z₂] using z2OmegaCandidate_le_upperCentralSeries_two (G := R) (p := p) hw
     have hwpow : w ^ p = 1 := hWpow ⟨w, hw⟩
     simpa [Z, Ω₁Z] using
@@ -199,13 +211,16 @@ public theorem lemma_5_2_b
     have hZ_le_W : Z ≤ W := by
       intro z hz
       have hzcent : z ∈ Subgroup.center R := hZ_le_center hz
-      let z₂ : upperCentralSeries R 2 := ⟨z,
-        upperCentralSeries_mono (G := R) (show 1 ≤ 2 by decide) (by simpa [upperCentralSeries_one] using hzcent)⟩
+      let z₂ : Subgroup.upperCentralSeries R 2 := ⟨z,
+        Subgroup.upperCentralSeries_mono (G := R) (show 1 ≤ 2 by decide)
+          (by simpa [Subgroup.upperCentralSeries_one] using hzcent)⟩
       refine Subgroup.mem_map.mpr ?_
       refine ⟨z₂, ?_, rfl⟩
       rw [omega₁, omega]
       refine Subgroup.subset_closure ?_
-      simpa [pow_one, z₂] using hZpow ⟨z, hz⟩
+      simp only [Set.mem_setOf_eq, pow_one]
+      apply Subtype.ext
+      exact hZpow ⟨z, hz⟩
     have hZ_le_C : Z ≤ C := by
       intro z hz
       exact ⟨hZ_le_W hz, hZcentE hz⟩

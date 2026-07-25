@@ -6,7 +6,7 @@ module
 public import FeitThompson.BGsection6.theorem_6_4
 import FeitThompson.SubgroupConj
 
-open scoped MatrixGroups Pointwise TensorProduct
+open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 
 /-! # Lemma 6.5 infrastructure from BG Section 6 -/
 
@@ -76,20 +76,20 @@ public theorem lemma_6_5_derived_le_sup_commutator
     calc
       QuotientGroup.mk' K ⁅p, q⁆
           = ⁅((p : G) : G ⧸ K), ((q : G) : G ⧸ K)⁆ := by
-              simpa using
+              exact
                 (map_commutatorElement (f := QuotientGroup.mk' K) (g₁ := p) (g₂ := q))
       _ = ⁅(((k₁ * u₁ : G) : G) : G ⧸ K), (((k₂ * u₂ : G) : G) : G ⧸ K)⁆ := by
             rw [← hk₁u₁, ← hk₂u₂]
       _ = ⁅(u₁ : G ⧸ K), (u₂ : G ⧸ K)⁆ := by rw [hk₁eq, hk₂eq]
       _ = QuotientGroup.mk' K c := by
-            simpa [c] using
+            exact
               (map_commutatorElement (f := QuotientGroup.mk' K) (g₁ := u₁) (g₂ := u₂)).symm
   let k₀ : G := ⁅p, q⁆ * c⁻¹
   have hk₀K : k₀ ∈ K := by
     apply (QuotientGroup.eq_one_iff (N := K) (x := k₀)).mp
     calc
       QuotientGroup.mk' K k₀ = QuotientGroup.mk' K ⁅p, q⁆ * (QuotientGroup.mk' K c)⁻¹ := by
-        simp [k₀]
+        simp only [k₀, map_mul, map_inv]
       _ = QuotientGroup.mk' K c * (QuotientGroup.mk' K c)⁻¹ := by rw [hmap_eq]
       _ = 1 := by simp
   have hrepr : ⁅p, q⁆ = k₀ * c := by
@@ -105,7 +105,7 @@ public theorem lemma_6_5_c_core
     (g : G) (hconj : H.conjBy g ≤ U) :
     ∃ c ∈ subgroupCentralizerIn K H, ∃ u ∈ U, g = u * c := by
   classical
-  have hHK_bot : H ⊓ K = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop
+  have hHK_bot : H ⊓ K = ⊥ := (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hg_sup : g ∈ U ⊔ K := by
     simp [hKU, sup_comm]
   obtain ⟨u₀, hu₀U, k, hkK, huk⟩ :=
@@ -227,7 +227,7 @@ public theorem lemma_6_5_c_core
       have hcopHk : Nat.Coprime (Nat.card (H.conjBy k)) (Nat.card K) := by
         rw [hcard_Hk]
         exact hcop
-      exact Subgroup.inf_eq_bot_of_coprime hcopHk
+      exact (Subgroup.disjoint_of_coprime_natCard hcopHk).eq_bot
     have hdisjHkK : Disjoint (H.conjBy k) K := by
       rw [Subgroup.disjoint_def]
       intro x hxHk hxK
@@ -395,7 +395,7 @@ public theorem lemma_6_5_a
     have hxH : x ∈ H := hx.1
     have hxD : x ∈ derivedSubgroup G := hx.2
     have hxU : x ∈ U := hHU hxH
-    have hHK_bot : H ⊓ K = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop
+    have hHK_bot : H ⊓ K = ⊥ := (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
     have hD_le_K_sup_UU : derivedSubgroup G ≤ K ⊔ ⁅U, U⁆ := by
       exact lemma_6_5_derived_le_sup_commutator hKU
     have hxKUU : x ∈ K ⊔ ⁅U, U⁆ := hD_le_K_sup_UU hxD

@@ -43,8 +43,9 @@ private theorem section12_prop1215e_complement
   haveI : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (S.isPGroup') (M ⊓ Mstar : Subgroup G).subtype
+    change IsPGroup q.val
+      ((S : Subgroup (M ⊓ Mstar : Subgroup G)).map (M ⊓ Mstar : Subgroup G).subtype)
+    exact IsPGroup.map S.isPGroup' (M ⊓ Mstar : Subgroup G).subtype
   have hPamb_le_M : Pamb ≤ M := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -127,6 +128,7 @@ private theorem section12_prop1215e_complement
       (G := G) (M := M) (N := Mstar) (E := Estar)
       hEstar.1 hEstar_le_M hσstar_inf_M
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_notConjugate_symm
     {H K : Subgroup G} (hnot : section12NotConjugate H K) :
     section12NotConjugate K H := by
@@ -286,8 +288,9 @@ private theorem section12_prop1215e_beta_subset
   haveI : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
-    simpa [Pamb, section10AmbientSylowSubgroup] using
-      IsPGroup.map (S.isPGroup') (M ⊓ Mstar : Subgroup G).subtype
+    change IsPGroup q.val
+      ((S : Subgroup (M ⊓ Mstar : Subgroup G)).map (M ⊓ Mstar : Subgroup G).subtype)
+    exact IsPGroup.map S.isPGroup' (M ⊓ Mstar : Subgroup G).subtype
   have hPamb_le_M : Pamb ≤ M := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -406,8 +409,8 @@ private theorem section12_prop1215e_beta_subset
     let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
     let PG : Subgroup G := section10AmbientSylowSubgroup M P
     have hPGp : IsPGroup p.val PG := by
-      simpa [PG, section10AmbientSylowSubgroup] using
-        IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+      change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+      exact IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
     obtain ⟨Qσ, hQσ_cent_PG⟩ :=
       corollary_10_9_a_1
         (G := G) (M := M) (X := PG) (p := q) (q := p)
@@ -461,8 +464,9 @@ private theorem section12_prop1215e_beta_subset
     have hPGconj_ne : PG.conjBy (m : G) ≠ ⊥ :=
       section12_conjBy_ne_bot (G := G) hPG_ne (m : G)
     have hPGconj_p : IsPGroup p.val (PG.conjBy (m : G)) := by
-      simpa [Subgroup.conjBy] using
-        IsPGroup.map (p := p.val) (H := PG) hPGp ((MulAut.conj (m : G)).toMonoidHom)
+      change IsPGroup p.val (PG.map ((MulAut.conj (m : G)).toMonoidHom))
+      exact IsPGroup.map (p := p.val) (H := PG) hPGp
+        ((MulAut.conj (m : G)).toMonoidHom)
     have hpPGconj : p.val ∣ Nat.card (PG.conjBy (m : G)) := by
       rcases hPGconj_p.card_eq_or_dvd with hcard | hdiv
       · exact False.elim (hPGconj_ne ((Subgroup.card_eq_one (H := PG.conjBy (m : G))).1 hcard))

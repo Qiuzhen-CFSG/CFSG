@@ -62,7 +62,7 @@ public theorem aligned_generic_coordinate_core
             rw [hthetaSigmaFirst]
       _ = z := by
         ring_nf
-        simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+        simp only [CharTwo.two_eq_zero, mul_zero, zero_add]
   have hlambdaCoordinate :
       theta lambda = z * (z + a * theta a)⁻¹ := by
     rw [← div_eq_mul_inv]
@@ -416,14 +416,14 @@ public theorem aligned_xi1114_two_generic_inputs
     apply hnOne
     apply inv_eq_one.mp
     apply add_left_cancel (a := (1 : K))
-    simpa only [h, CharTwo.add_self_eq_zero]
+    simp only [h, CharTwo.add_self_eq_zero]
   have hB₁ : (1 + n⁻¹) + (1 : K) ≠ 0 := by
     intro h
     apply inv_ne_zero hn
     calc
       n⁻¹ = (1 + n⁻¹) + 1 := by
         ring_nf
-        simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+        simp only [CharTwo.two_eq_zero, zero_add]
       _ = 0 := h
   have hZ₂ : n⁻¹ ≠ 0 := inv_ne_zero hn
   have hB₂ : n⁻¹ + (1 : K) ≠ 0 := by

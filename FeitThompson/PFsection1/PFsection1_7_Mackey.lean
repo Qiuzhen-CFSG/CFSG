@@ -297,7 +297,6 @@ public theorem mackeyConjugateRestriction_restrict_subgroupOf_normal
   let hm : I := h
   let ht : T := hm
   have hh : (ht : G) ∈ H := by
-    change (ht : G) ∈ H
     exact h.2
   have hconjH : a * (ht : G) * a⁻¹ ∈ H :=
     (inferInstance : H.Normal).conj_mem (ht : G) hh a
@@ -590,7 +589,10 @@ public theorem mackey_inertia_off_diagonal_zero_of_clifford_restrictions
     rw [htheta]
     funext x
     change thetaRep.character ⟨h * (x : G) * h⁻¹, _⟩ = thetaRep.character x
-    simpa [mul_assoc] using Representation.char_conj (ρ := thetaRep) x ⟨h, hh⟩
+    convert Representation.char_conj (ρ := thetaRep) x ⟨h, hh⟩ using 1
+    apply congrArg thetaRep.character
+    apply Subtype.ext
+    simp [mul_assoc]
   have hne : conjugateOnNormal H theta q.out ≠ theta := by
     exact DoubleCoset.out_not_mem_of_ne_mk_one T hq
   exact scalarProduct_mackeySummand_eq_zero_of_characters_restrictions_and_conjugate_ne
@@ -900,8 +902,6 @@ public theorem finite_univ_sum_eq_fintype_sum
     (∑ i : ι, f i) =
       ∑ i ∈ (@Finset.univ ι (Fintype.ofFinite ι)), f i := by
   classical
-  change (∑ i ∈ (@Finset.univ ι (inferInstanceAs (Fintype ι))), f i) =
-    ∑ i ∈ (@Finset.univ ι (Fintype.ofFinite ι)), f i
   have hinst : (inferInstanceAs (Fintype ι)) = Fintype.ofFinite ι :=
     Subsingleton.elim _ _
   rw [hinst]
@@ -1204,7 +1204,10 @@ public theorem isaacs_theorem_6_11_from_mackey_and_clifford_restrictions
     rw [htheta]
     funext x
     change thetaRep.character ⟨h * (x : G) * h⁻¹, _⟩ = thetaRep.character x
-    simpa [mul_assoc] using Representation.char_conj (ρ := thetaRep) x ⟨h, hh⟩
+    convert Representation.char_conj (ρ := thetaRep) x ⟨h, hh⟩ using 1
+    apply congrArg thetaRep.character
+    apply Subtype.ext
+    simp [mul_assoc]
   have hoff := mackey_inertia_off_diagonal_zero_of_clifford_restrictions
     H theta thetaRep e psi hpsi_character hpsi_class htheta htheta_irreducible hres
   exact isaacs_theorem_6_11_from_mackey_offDiagonal_subgroup H T hHT theta e psi chi

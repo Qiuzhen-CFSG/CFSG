@@ -20,7 +20,7 @@ the full endomorphism algebra is spanned by representatives for the cosets of
 
 noncomputable section
 
-open scoped BigOperators
+open scoped BigOperators commutatorElement
 
 namespace Representation
 
@@ -220,7 +220,10 @@ private lemma scalar_on_subgroup_of_centralModulo_kernel
         (φ : Module.End ℂ V) := by
     simpa using
       congrArg (fun f : Representation.IntertwiningMap ρ ρ => (f : Module.End ℂ V)) ha
-  simpa [Representation.IntertwiningMap.algebraMap_apply, φ] using hlin.symm
+  ext v
+  simpa [Representation.IntertwiningMap.algebraMap_apply, φ,
+    Representation.IntertwiningMap.smul_apply] using
+    congrArg (fun f : Module.End ℂ V => f v) hlin.symm
 
 /-- Isaacs, Corollary 2.30 in the direct commutator form used by Peterfalvi
 (1.8): if `D/B` is central and `B` is in the kernel of an irreducible

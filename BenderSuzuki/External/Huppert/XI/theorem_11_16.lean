@@ -130,13 +130,13 @@ private theorem huppert_XI_2_4_isCyclic_of_isMulCommutative_unique_order_two
           by_contra hy1
           have hxval : f x = true := by simp [f, hx1]
           have hyval : f y = false := by simp [f, hy1]
-          cases (by simpa [hxval, hyval] using hxy : true = false)
-        simpa [hx1, hy1]
+          simp [hxval, hyval] at hxy
+        simp [hx1, hy1]
       · have hy1 : y ≠ 1 := by
           intro hy1
           have hxval : f x = false := by simp [f, hx1]
           have hyval : f y = true := by simp [f, hy1]
-          cases (by simpa [hxval, hyval] using hxy : false = true)
+          simp [hxval, hyval] at hxy
         apply Subtype.ext
         apply Subtype.ext
         have hxpow : x ^ (2 : ℕ) = 1 := by
@@ -231,8 +231,12 @@ private theorem huppert_XI_2_4_invariantNormal_inversion_and_cyclic
   subst q
   have hxcoset :
       (QuotientGroup.mk' H) (phi x) = (QuotientGroup.mk' H) x := by
-    simpa [sigma, phiQ,
-      BenderSuzuki.External.invariantQuotientAut_mk'] using hqfixed
+    change
+      BenderSuzuki.External.invariantQuotientAut phi H hHphi
+          (QuotientGroup.mk' H x) =
+        QuotientGroup.mk' H x at hqfixed
+    rw [BenderSuzuki.External.invariantQuotientAut_mk'] at hqfixed
+    exact hqfixed
   have htheta_x : phi x / x ∈ H :=
     QuotientGroup.eq_iff_div_mem.mp hxcoset
   have hx_not_mem : x ∉ H := by
@@ -380,7 +384,7 @@ private theorem huppert_XI_2_4_invariantNormal_inversion_and_cyclic
     have h := congrArg Inv.inv hab
     simpa using h.symm
   letI : IsMulCommutative H := ⟨⟨hcomm⟩⟩
-  letI : CommGroup H := CommGroup.ofIsMulCommutative
+  letI : CommGroup H := IsMulCommutative.instCommGroup
   have hHZ : IsZGroup H := by
     constructor
     intro q hq P
@@ -1255,10 +1259,10 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
             IsCyclic Q ∨
               ∃ k : ℕ, 2 ≤ k ∧ IsPGroup 2 (QuaternionGroup k) ∧
                 Nonempty (Q ≃* QuaternionGroup k)) := by
-        let rightAdd : (Kˣ)ᵐᵒᵖ →* (K ≃+ K) :=
+        let rightAdd : (Kˣ)ᵐᵒᵖ →* Multiplicative (K ≃+ K) :=
           PFAppendixII.rightNearFieldRightMulAction
         let rightAut : (Kˣ)ᵐᵒᵖ →* MulAut (Multiplicative K) :=
-          { toFun := fun u => (rightAdd u).toMultiplicative
+          { toFun := fun u => (Multiplicative.toAdd (rightAdd u)).toMultiplicative
             map_one' := by
               ext x
               change Multiplicative.ofAdd
@@ -1558,7 +1562,8 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
       have hXI24_tauUnits_mulEquiv_involutive :
           Function.Involutive hXI24_tauUnits_mulEquiv := by
         intro u
-        simpa only [hXI24_tauUnits_mulEquiv] using hTauUnits_involutive u
+        change tauUnits (tauUnits u) = u
+        exact hTauUnits_involutive u
       have hXI24_tauUnits_mulEquiv_fixed_triple :
           ∀ x y z : Kˣ,
             hXI24_tauUnits_mulEquiv x = x →
@@ -1567,9 +1572,12 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
               x = y ∨ x = z ∨ y = z := by
         intro x y z hx hy hz
         apply hXI23_fixed_triple x y z
-        · simpa only [hXI24_tauUnits_mulEquiv] using hx
-        · simpa only [hXI24_tauUnits_mulEquiv] using hy
-        · simpa only [hXI24_tauUnits_mulEquiv] using hz
+        · change tauUnits x = x at hx
+          exact hx
+        · change tauUnits y = y at hy
+          exact hy
+        · change tauUnits z = z at hz
+          exact hz
       let twoPointInclusion :
           MulAction.stabilizer (MulAction.stabilizer G a) b' →* G :=
         (MulAction.stabilizer G a).subtype.comp
@@ -1596,16 +1604,20 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
               MulAction.stabilizer
                 (MulAction.stabilizer G a) b') :
                   MulAction.stabilizer G a) : G) • b) = b
-        simpa [b'] using congrArg Subtype.val (eUnits.symm u).property
+        have hfix := congrArg
+          (fun x : SubMulAction.ofStabilizer G a => (x : Omega))
+          (eUnits.symm u).property
+        simpa only [b', SetLike.val_smul,
+          MulAction.subgroup_smul_def] using hfix
       let x0 : Omega := ePoint.symm (some (1 : K))
       have hax0 : a ≠ x0 := by
         intro h
         have he := congrArg ePoint h
-        simpa [x0, hPointA] using he
+        simp [x0, hPointA] at he
       have hbx0 : b ≠ x0 := by
         intro h
         have he := congrArg ePoint h
-        simpa [x0, hPointB] using he
+        simp [x0, hPointB] at he
       have hXI22_uniqueOrderThree :
           ∀ U V : Subgroup Kˣ,
             Nat.card U = 3 → Nat.card V = 3 → U = V :=
@@ -1618,7 +1630,8 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
         hXI24_tauUnits_mulEquiv_fixed_triple,
         hTau_none, hTau_zero, ?_, ?_⟩
       · intro x
-        simpa only [hXI24_tauUnits_mulEquiv] using hTauUnits_apply x
+        change some ((tauUnits x : Kˣ) : K) = tau (some (x : K))
+        exact hTauUnits_apply x
       by_cases hp2 : p = 2
       · subst p
         have hKcard : Nat.card K = 2 ^ f := by
@@ -1744,8 +1757,8 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
                     Nonempty (PL ≃* QuaternionGroup k) := by
                 rcases hPquaternion with ⟨k, hk, hkP, ⟨eP⟩⟩
                 let ePL : PL ≃* P := by
-                  simpa [PL, Sylow.subtype] using
-                    (Subgroup.subgroupOfEquivOfLe hP_le_L)
+                  change (P : Subgroup Kˣ).subgroupOf L ≃* P
+                  exact Subgroup.subgroupOfEquivOfLe hP_le_L
                 exact ⟨k, hk, hkP, ⟨ePL.trans eP⟩⟩
               have hcompTwo : HasNormalPComplement 2 L := by
                 simpa [L] using
@@ -2012,7 +2025,7 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
     have hFelem : IsElementaryAbelian p F := by
       simpa [hpq] using hFelem_q
     have hFcard_additive : Nat.card (Additive F) = n := by
-      simpa using hFcard
+      exact (Nat.card_congr Additive.toMul).trans hFcard
     rcases huppert_blackburn_XI_sharpTriple_exists_rightNearField
         htwo_transitive hsharp a b hab F hFrob hFelem.toIsMulCommutative with
       ⟨K, hNF, hKfinite, eAdd, eUnits, hmul_coordinate⟩
@@ -2760,7 +2773,7 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
         · simp [hy]
         let ux : Kˣ := Units.mk0 x hx
         let uy : Kˣ := Units.mk0 y hy
-        have hxy : ux * uy = uy * ux := IsCyclic.commutative.comm ux uy
+        have hxy : ux * uy = uy * ux := mul_comm' ux uy
         simpa [ux, uy] using congrArg (fun z : Kˣ => (z : K)) hxy
       exact Or.inl (hPGL_over_galoisField hcomm)
     · rcases PFAppendixII.proposition_2 C hCcyclic hCindex_two with
@@ -2850,9 +2863,9 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
           ∃ P : Sylow p F, ¬ IsMulCommutative P := by
     intro hFcomm hFnil'
     by_contra h
-    push_neg at h
+    push Not at h
     obtain ⟨e⟩ :=
-      ((isNilpotent_of_finite_tfae (G := F)).out 0 4).mp hFnil'
+      ((Group.isNilpotent_of_finite_tfae (G := F)).out 0 4).mp hFnil'
     apply hFcomm
     refine ⟨⟨fun x y => ?_⟩⟩
     have hcoord : e.symm x * e.symm y = e.symm y * e.symm x := by
@@ -2893,7 +2906,12 @@ public theorem huppert_blackburn_XI_11_16_zassenhaus_classification
       exists_prime_orderOf_dvd_card' (G := Subgroup.center Q) q hqcenter
     let zF : F := ((z : Subgroup.center Q) : Q)
     have hzorderF : orderOf zF = q := by
-      simpa [zF] using hzorder
+      calc
+        orderOf zF = orderOf (((z : Subgroup.center Q) : Q) : F) := rfl
+        _ = orderOf ((z : Subgroup.center Q) : Q) :=
+          Subgroup.orderOf_coe ((z : Subgroup.center Q) : Q)
+        _ = orderOf z := Subgroup.orderOf_coe z
+        _ = q := hzorder
     have hzFne : zF ≠ 1 := by
       intro hz
       have horder_one : orderOf zF = 1 := by simp [hz]

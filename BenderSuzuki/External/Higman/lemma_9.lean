@@ -22,6 +22,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped IsMulCommutative commutatorElement
 
 universe u
 
@@ -225,7 +226,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
         apply le_antisymm
         · rw [Subgroup.closure_le]
           rintro _ ⟨a, rfl⟩
-          simpa using a.property
+          simp
         · intro x hx
           exact Subgroup.subset_closure
             ⟨⟨x, hx⟩, by simp⟩
@@ -438,20 +439,20 @@ public theorem lemma9_maximal_abelian_contains_frattini
         haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         have hnil : Group.IsNilpotent P :=
           IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
-        obtain ⟨n, hn⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
-        have hA_le : ∀ i : ℕ, A ≤ lowerCentralSeries P i := by
+        obtain ⟨n, hn⟩ := Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
+        have hA_le : ∀ i : ℕ, A ≤ (⊤ : Subgroup P).lowerCentralSeries i := by
           intro i
           induction i with
-          | zero => simpa
+          | zero => simp
           | succ i ih =>
-              rw [lowerCentralSeries_succ]
-              change A ≤ ⁅lowerCentralSeries P i, (⊤ : Subgroup P)⁆
+              rw [Subgroup.lowerCentralSeries_succ]
               calc
                 A = ⁅(⊤ : Subgroup P), A⁆ := by
                   simpa [K] using hKA.symm
                 _ = ⁅A, (⊤ : Subgroup P)⁆ :=
                   Subgroup.commutator_comm _ _
-                _ ≤ ⁅lowerCentralSeries P i, (⊤ : Subgroup P)⁆ :=
+                _ ≤ ⁅(⊤ : Subgroup P).lowerCentralSeries i,
+                      (⊤ : Subgroup P)⁆ :=
                   Subgroup.commutator_mono ih le_rfl
         have hbot : A ≤ ⊥ := by
           rw [← hn]
@@ -503,7 +504,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
           apply le_antisymm
           · rw [Subgroup.closure_le]
             rintro _ ⟨a, rfl⟩
-            simpa using a.property
+            simp
           · intro x hx
             exact Subgroup.subset_closure ⟨⟨x, hx⟩, by simp⟩
         exact False.elim (hK_proper.ne hK_eq_A)
@@ -770,7 +771,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
         apply le_antisymm
         · rw [Subgroup.closure_le]
           rintro _ ⟨a, rfl⟩
-          simpa using a.property
+          simp
         · intro x hx
           exact Subgroup.subset_closure ⟨⟨x, hx⟩, by simp⟩
       · obtain ⟨t, ht⟩ := Nat.exists_eq_succ_of_ne_zero hs0
@@ -821,7 +822,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
         apply le_antisymm
         · rw [Subgroup.closure_le]
           rintro _ ⟨a, rfl⟩
-          simpa using a.property
+          simp
         · intro x hx
           exact Subgroup.subset_closure ⟨⟨x, hx⟩, by simp⟩
       · left
@@ -869,7 +870,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
         lt_of_le_of_ne hA_le_center (fun heq => hnot (le_of_eq heq.symm))
       exact _hmax (Subgroup.center P) (by infer_instance) (by infer_instance)
         (isXInvariantSubgroup_center X P) hlt
-    have hclass_two : lowerCentralSeries P 2 = ⊥ := by
+    have hclass_two : (⊤ : Subgroup P).lowerCentralSeries 2 = ⊥ := by
       letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       letI : Group.IsNilpotent P :=
         IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
@@ -880,7 +881,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
         have hA_le_K : A ≤ K := by
           intro a ha
           by_cases ha_one : a = 1
-          · simpa [ha_one]
+          · simp [ha_one]
           · apply lemma1_involutions_mem_of_nontrivial_invariant
               _hP _hXtrans hK_X hK_ne a
             refine ⟨ha_one, ?_⟩
@@ -891,118 +892,142 @@ public theorem lemma9_maximal_abelian_contains_frattini
         · exact False.elim (_hmax K hK_normal hK_abelian hK_X hlt)
         · exact heq.symm
       have hlower_weight :
-          ∀ i j : ℕ, ⁅lowerCentralSeries P i, lowerCentralSeries P j⁆ ≤
-            lowerCentralSeries P (i + j + 1) := by
+          ∀ i j : ℕ,
+            ⁅(⊤ : Subgroup P).lowerCentralSeries i,
+              (⊤ : Subgroup P).lowerCentralSeries j⁆ ≤
+                (⊤ : Subgroup P).lowerCentralSeries (i + j + 1) := by
         intro i
         induction i with
         | zero =>
             intro j
             calc
-              ⁅lowerCentralSeries P 0, lowerCentralSeries P j⁆ =
-                  ⁅(⊤ : Subgroup P), lowerCentralSeries P j⁆ := by
-                rw [lowerCentralSeries_zero]
-              _ = ⁅lowerCentralSeries P j, (⊤ : Subgroup P)⁆ :=
+              ⁅(⊤ : Subgroup P).lowerCentralSeries 0,
+                  (⊤ : Subgroup P).lowerCentralSeries j⁆ =
+                    ⁅(⊤ : Subgroup P),
+                      (⊤ : Subgroup P).lowerCentralSeries j⁆ := by
+                rw [Subgroup.lowerCentralSeries_zero]
+              _ = ⁅(⊤ : Subgroup P).lowerCentralSeries j,
+                    (⊤ : Subgroup P)⁆ :=
                 Subgroup.commutator_comm _ _
-              _ = lowerCentralSeries P (j + 1) :=
-                (lowerCentralSeries_succ j).symm
-              _ ≤ lowerCentralSeries P (0 + j + 1) := by simp
+              _ = (⊤ : Subgroup P).lowerCentralSeries (j + 1) :=
+                (Subgroup.lowerCentralSeries_succ (⊤ : Subgroup P) j).symm
+              _ ≤ (⊤ : Subgroup P).lowerCentralSeries (0 + j + 1) := by
+                simp
         | succ i ih =>
             intro j
-            let N := lowerCentralSeries P (i.succ + j + 1)
+            let N := (⊤ : Subgroup P).lowerCentralSeries (i.succ + j + 1)
             let q : P →* P ⧸ N := QuotientGroup.mk' N
             have htop_map : (⊤ : Subgroup P).map q = ⊤ :=
               Subgroup.map_top_of_surjective q
                 (QuotientGroup.mk'_surjective N)
-            change ⁅lowerCentralSeries P i.succ,
-              lowerCentralSeries P j⁆ ≤ N
+            change ⁅(⊤ : Subgroup P).lowerCentralSeries i.succ,
+              (⊤ : Subgroup P).lowerCentralSeries j⁆ ≤ N
             rw [← QuotientGroup.ker_mk' N]
             apply
               (Subgroup.map_eq_bot_iff
-                (⁅lowerCentralSeries P i.succ,
-                  lowerCentralSeries P j⁆)).mp
+                (⁅(⊤ : Subgroup P).lowerCentralSeries i.succ,
+                  (⊤ : Subgroup P).lowerCentralSeries j⁆)).mp
             rw [Subgroup.map_commutator]
             have hsucc_map :
-                (lowerCentralSeries P i.succ).map q =
-                  ⁅(lowerCentralSeries P i).map q, ⊤⁆ := by
-              change (⁅lowerCentralSeries P i,
+                ((⊤ : Subgroup P).lowerCentralSeries i.succ).map q =
+                  ⁅((⊤ : Subgroup P).lowerCentralSeries i).map q, ⊤⁆ := by
+              change (⁅(⊤ : Subgroup P).lowerCentralSeries i,
                 (⊤ : Subgroup P)⁆).map q =
-                  ⁅(lowerCentralSeries P i).map q, ⊤⁆
+                  ⁅((⊤ : Subgroup P).lowerCentralSeries i).map q, ⊤⁆
               rw [Subgroup.map_commutator, htop_map]
             rw [hsucc_map]
             apply Subgroup.commutator_commutator_eq_bot_of_rotate
             · calc
                 ⁅⁅(⊤ : Subgroup (P ⧸ N)),
-                    (lowerCentralSeries P j).map q⁆,
-                    (lowerCentralSeries P i).map q⁆ =
-                    (⁅⁅(⊤ : Subgroup P), lowerCentralSeries P j⁆,
-                      lowerCentralSeries P i⁆).map q := by
+                    ((⊤ : Subgroup P).lowerCentralSeries j).map q⁆,
+                    ((⊤ : Subgroup P).lowerCentralSeries i).map q⁆ =
+                    (⁅⁅(⊤ : Subgroup P),
+                        (⊤ : Subgroup P).lowerCentralSeries j⁆,
+                      (⊤ : Subgroup P).lowerCentralSeries i⁆).map q := by
                   rw [Subgroup.map_commutator,
                     Subgroup.map_commutator, htop_map]
                 _ = ⊥ := by
                   apply
                     (Subgroup.map_eq_bot_iff
-                      (⁅⁅(⊤ : Subgroup P), lowerCentralSeries P j⁆,
-                        lowerCentralSeries P i⁆)).mpr
+                      (⁅⁅(⊤ : Subgroup P),
+                          (⊤ : Subgroup P).lowerCentralSeries j⁆,
+                        (⊤ : Subgroup P).lowerCentralSeries i⁆)).mpr
                   rw [QuotientGroup.ker_mk']
                   calc
-                    ⁅⁅(⊤ : Subgroup P), lowerCentralSeries P j⁆,
-                        lowerCentralSeries P i⁆ =
-                        ⁅lowerCentralSeries P i,
-                          lowerCentralSeries P (j + 1)⁆ := by
+                    ⁅⁅(⊤ : Subgroup P),
+                        (⊤ : Subgroup P).lowerCentralSeries j⁆,
+                        (⊤ : Subgroup P).lowerCentralSeries i⁆ =
+                        ⁅(⊤ : Subgroup P).lowerCentralSeries i,
+                          (⊤ : Subgroup P).lowerCentralSeries (j + 1)⁆ := by
                       calc
-                        ⁅⁅(⊤ : Subgroup P), lowerCentralSeries P j⁆,
-                            lowerCentralSeries P i⁆ =
-                            ⁅⁅lowerCentralSeries P j,
+                        ⁅⁅(⊤ : Subgroup P),
+                            (⊤ : Subgroup P).lowerCentralSeries j⁆,
+                            (⊤ : Subgroup P).lowerCentralSeries i⁆ =
+                            ⁅⁅(⊤ : Subgroup P).lowerCentralSeries j,
                               (⊤ : Subgroup P)⁆,
-                              lowerCentralSeries P i⁆ := by
+                              (⊤ : Subgroup P).lowerCentralSeries i⁆ := by
                           rw [Subgroup.commutator_comm
-                            (⊤ : Subgroup P) (lowerCentralSeries P j)]
-                        _ = ⁅lowerCentralSeries P (j + 1),
-                              lowerCentralSeries P i⁆ := by
+                            (⊤ : Subgroup P)
+                            ((⊤ : Subgroup P).lowerCentralSeries j)]
+                        _ = ⁅(⊤ : Subgroup P).lowerCentralSeries (j + 1),
+                              (⊤ : Subgroup P).lowerCentralSeries i⁆ := by
                           rfl
-                        _ = ⁅lowerCentralSeries P i,
-                              lowerCentralSeries P (j + 1)⁆ :=
+                        _ = ⁅(⊤ : Subgroup P).lowerCentralSeries i,
+                              (⊤ : Subgroup P).lowerCentralSeries (j + 1)⁆ :=
                           Subgroup.commutator_comm _ _
                     _ ≤ N := by
-                      dsimp [N]
+                      change
+                        ⁅(⊤ : Subgroup P).lowerCentralSeries i,
+                          (⊤ : Subgroup P).lowerCentralSeries (j + 1)⁆ ≤
+                            (⊤ : Subgroup P).lowerCentralSeries
+                              (i.succ + j + 1)
                       rw [show i.succ + j + 1 =
                         i + (j + 1) + 1 by omega]
                       exact ih (j + 1)
             · calc
-                ⁅⁅(lowerCentralSeries P j).map q,
-                    (lowerCentralSeries P i).map q⁆,
+                ⁅⁅((⊤ : Subgroup P).lowerCentralSeries j).map q,
+                    ((⊤ : Subgroup P).lowerCentralSeries i).map q⁆,
                     (⊤ : Subgroup (P ⧸ N))⁆ =
-                    (⁅⁅lowerCentralSeries P j, lowerCentralSeries P i⁆,
+                    (⁅⁅(⊤ : Subgroup P).lowerCentralSeries j,
+                        (⊤ : Subgroup P).lowerCentralSeries i⁆,
                       (⊤ : Subgroup P)⁆).map q := by
                   rw [Subgroup.map_commutator,
                     Subgroup.map_commutator, htop_map]
                 _ = ⊥ := by
                   apply
                     (Subgroup.map_eq_bot_iff
-                      (⁅⁅lowerCentralSeries P j, lowerCentralSeries P i⁆,
+                      (⁅⁅(⊤ : Subgroup P).lowerCentralSeries j,
+                          (⊤ : Subgroup P).lowerCentralSeries i⁆,
                         (⊤ : Subgroup P)⁆)).mpr
                   rw [QuotientGroup.ker_mk']
                   calc
-                    ⁅⁅lowerCentralSeries P j, lowerCentralSeries P i⁆,
+                    ⁅⁅(⊤ : Subgroup P).lowerCentralSeries j,
+                        (⊤ : Subgroup P).lowerCentralSeries i⁆,
                         (⊤ : Subgroup P)⁆ ≤
-                        ⁅lowerCentralSeries P (i + j + 1),
+                        ⁅(⊤ : Subgroup P).lowerCentralSeries (i + j + 1),
                           (⊤ : Subgroup P)⁆ := by
                       apply Subgroup.commutator_mono ?_ le_rfl
                       rw [Subgroup.commutator_comm
-                        (lowerCentralSeries P j)
-                        (lowerCentralSeries P i)]
+                        ((⊤ : Subgroup P).lowerCentralSeries j)
+                        ((⊤ : Subgroup P).lowerCentralSeries i)]
                       exact ih j
-                    _ = lowerCentralSeries P ((i + j + 1) + 1) :=
-                      (lowerCentralSeries_succ (i + j + 1)).symm
+                    _ = (⊤ : Subgroup P).lowerCentralSeries
+                        ((i + j + 1) + 1) :=
+                      (Subgroup.lowerCentralSeries_succ
+                        (⊤ : Subgroup P) (i + j + 1)).symm
                     _ = N := by
-                      dsimp [N]
+                      change
+                        (⊤ : Subgroup P).lowerCentralSeries
+                            ((i + j + 1) + 1) =
+                          (⊤ : Subgroup P).lowerCentralSeries
+                            (i.succ + j + 1)
                       congr 1
                       omega
       have hlower_X (n : ℕ) :
-          IsXInvariantSubgroup X (lowerCentralSeries P n) := by
+          IsXInvariantSubgroup X ((⊤ : Subgroup P).lowerCentralSeries n) := by
         have hforward :
-            ∀ x : X, ∀ p : P, p ∈ lowerCentralSeries P n →
-              x • p ∈ lowerCentralSeries P n := by
+            ∀ x : X, ∀ p : P, p ∈ (⊤ : Subgroup P).lowerCentralSeries n →
+              x • p ∈ (⊤ : Subgroup P).lowerCentralSeries n := by
           intro x p hp
           exact
             (Subgroup.characteristic_iff_le_comap.mp inferInstance
@@ -1023,62 +1048,67 @@ public theorem lemma9_maximal_abelian_contains_frattini
         have hcomm_one : ⁅(x : P), (y : P)⁆ = 1 := by
           simpa using hmem
         exact commutatorElement_eq_one_iff_mul_comm.mp hcomm_one
-      apply lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mpr
+      apply Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mpr
       let c := Group.nilpotencyClass P
       by_contra hc_not
       have hc_gt : 2 < c := by
         omega
-      let K := lowerCentralSeries P (c - 2)
-      let L := lowerCentralSeries P (c - 1)
-      have hc_bot : lowerCentralSeries P c = ⊥ := by
+      let K := (⊤ : Subgroup P).lowerCentralSeries (c - 2)
+      let L := (⊤ : Subgroup P).lowerCentralSeries (c - 1)
+      have hc_bot : (⊤ : Subgroup P).lowerCentralSeries c = ⊥ := by
         dsimp [c]
-        exact lowerCentralSeries_nilpotencyClass
+        exact Subgroup.lowerCentralSeries_nilpotencyClass
       have hK_ne : K ≠ ⊥ := by
         intro hK_bot
         have hc_le : c ≤ c - 2 :=
-          lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp
+          Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp
             (by simpa [K] using hK_bot)
         omega
       have hL_ne : L ≠ ⊥ := by
         intro hL_bot
         have hc_le : c ≤ c - 1 :=
-          lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp
+          Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp
             (by simpa [L] using hL_bot)
         omega
       have hK_comm_bot : ⁅K, K⁆ = ⊥ := by
         apply le_antisymm ?_ bot_le
         calc
           ⁅K, K⁆ ≤
-              lowerCentralSeries P ((c - 2) + (c - 2) + 1) := by
+              (⊤ : Subgroup P).lowerCentralSeries
+                ((c - 2) + (c - 2) + 1) := by
             simpa [K] using hlower_weight (c - 2) (c - 2)
-          _ ≤ lowerCentralSeries P c :=
-            lowerCentralSeries_antitone (by omega)
+          _ ≤ (⊤ : Subgroup P).lowerCentralSeries c :=
+            (⊤ : Subgroup P).lowerCentralSeries_antitone (by omega)
           _ = ⊥ := hc_bot
       have hL_comm_bot : ⁅L, L⁆ = ⊥ := by
         apply le_antisymm ?_ bot_le
         calc
           ⁅L, L⁆ ≤
-              lowerCentralSeries P ((c - 1) + (c - 1) + 1) := by
+              (⊤ : Subgroup P).lowerCentralSeries
+                ((c - 1) + (c - 1) + 1) := by
             simpa [L] using hlower_weight (c - 1) (c - 1)
-          _ ≤ lowerCentralSeries P c :=
-            lowerCentralSeries_antitone (by omega)
+          _ ≤ (⊤ : Subgroup P).lowerCentralSeries c :=
+            (⊤ : Subgroup P).lowerCentralSeries_antitone (by omega)
           _ = ⊥ := hc_bot
       have hK_ne_L : K ≠ L := by
         intro hKL
         apply hL_ne
         dsimp [K, L] at hKL ⊢
         calc
-          lowerCentralSeries P (c - 1) =
-              lowerCentralSeries P ((c - 2) + 1) := by
+          (⊤ : Subgroup P).lowerCentralSeries (c - 1) =
+              (⊤ : Subgroup P).lowerCentralSeries ((c - 2) + 1) := by
             congr 1
             omega
-          _ = ⁅lowerCentralSeries P (c - 2), (⊤ : Subgroup P)⁆ :=
-            lowerCentralSeries_succ (c - 2)
-          _ = ⁅lowerCentralSeries P (c - 1), (⊤ : Subgroup P)⁆ := by
+          _ = ⁅(⊤ : Subgroup P).lowerCentralSeries (c - 2),
+                (⊤ : Subgroup P)⁆ :=
+            Subgroup.lowerCentralSeries_succ (⊤ : Subgroup P) (c - 2)
+          _ = ⁅(⊤ : Subgroup P).lowerCentralSeries (c - 1),
+                (⊤ : Subgroup P)⁆ := by
             rw [hKL]
-          _ = lowerCentralSeries P ((c - 1) + 1) :=
-            (lowerCentralSeries_succ (c - 1)).symm
-          _ = lowerCentralSeries P c := by
+          _ = (⊤ : Subgroup P).lowerCentralSeries ((c - 1) + 1) :=
+            (Subgroup.lowerCentralSeries_succ
+              (⊤ : Subgroup P) (c - 1)).symm
+          _ = (⊤ : Subgroup P).lowerCentralSeries c := by
             congr 1
             omega
           _ = ⊥ := hc_bot
@@ -1092,8 +1122,8 @@ public theorem lemma9_maximal_abelian_contains_frattini
     have hquot_two : ∀ q : P ⧸ A, q ^ 2 = 1 := by
       have hcomm_le_center : commutator P ≤ Subgroup.center P := by
         have hclass := hclass_two
-        rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ,
-          lowerCentralSeries_one] at hclass
+        rw [show 2 = 1 + 1 by omega, Subgroup.lowerCentralSeries_succ,
+          Subgroup.top_lowerCentralSeries_one] at hclass
         change ⁅commutator P, (⊤ : Subgroup P)⁆ = ⊥ at hclass
         rw [Subgroup.commutator_eq_bot_iff_le_centralizer] at hclass
         simpa [← Subgroup.centralizer_univ, ← Subgroup.coe_top] using hclass
@@ -1126,8 +1156,7 @@ public theorem lemma9_maximal_abelian_contains_frattini
           simp
         exact (commutatorElement_eq_one_iff_mul_comm.mp hone).symm
       intro q
-      refine Quotient.inductionOn' q ?_
-      intro g
+      obtain ⟨g, rfl⟩ := QuotientGroup.mk'_surjective A q
       have hmk :
           QuotientGroup.mk' A (g ^ 2) = 1 :=
         (QuotientGroup.eq_one_iff (N := A) (g ^ 2)).2

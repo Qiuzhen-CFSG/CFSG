@@ -32,6 +32,7 @@ public theorem exists_homocyclic_frattini_quotient_cover_e_one
   letI : Fintype V := Fintype.ofFinite V
   letI : DecidableEq V := Classical.decEq V
   haveI : Fact (IsPGroup p V) := ⟨IsElementaryAbelian.isPGroup p V⟩
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   have hExp : Monoid.exponent V = p := IsElementaryAbelian.exponent_eq_prime (G := V) (p := p)
   let matrixIndex : Type u := ULift (Fin (Module.finrank (ZMod p) (Additive V)))
   let b : Module.Basis (Fin (Module.finrank (ZMod p) (Additive V))) (ZMod p) (Additive V) :=
@@ -54,7 +55,8 @@ public theorem exists_homocyclic_frattini_quotient_cover_e_one
       ext i
       rfl }
   let coordinateEquiv : (matrixIndex → ZMod (p ^ 1)) ≃+ Additive V :=
-    (reindexEquiv.trans (AddEquiv.piCongrRight fun _ => ZMod.ringEquivCongr (pow_one p))).trans
+    (reindexEquiv.trans
+      (AddEquiv.piCongrRight fun _ => (ZMod.ringEquivCongr (pow_one p)).toAddEquiv)).trans
       b.equivFun.symm.toAddEquiv
   let frattiniQuotientEquiv : V ⧸ frattini V ≃* V :=
     frattiniQuotientEquivOfIsElementaryAbelian (R := V) (p := p)
@@ -79,6 +81,7 @@ public theorem exists_homocyclic_frattini_quotient_cover_e_one
       dsimp [frattiniQuotientEquiv, coverAction]
       rw [frattiniQuotientEquivOfIsElementaryAbelian_coe,
         frattiniQuotientEquivOfIsElementaryAbelian_coe]
+      rfl
     card_matrixIndex := by
       simp [matrixIndex] }⟩
 
@@ -103,6 +106,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverData
         g • frattiniQuotientEquiv
           (QuotientGroup.mk' (frattini (StandardHomocyclicCover matrixIndex (p ^ e))) w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -123,6 +127,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverActionData
           (coverAction g w)) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Source-hard standard cover data at the coordinate-linear interface.
@@ -151,6 +156,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverLinearData
               (Multiplicative.toAdd w)))) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Source-hard standard cover data reduced to a matrix lifting condition, with
@@ -217,6 +223,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverMatrixData
             (Matrix.toLin' (matrixLift g) (Multiplicative.toAdd w)))) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Pass from a reduction-compatible matrix lift to the source-shaped matrix
@@ -785,8 +792,12 @@ public noncomputable def
     quotientEquiv_action := by
       intro g w
       dsimp [MulEquiv.trans]
-      simpa only [standardHomocyclicCoverFrattiniQuotientEquiv_mk'] using
-        D.quotientEquiv_action g w
+      change D.quotientToV
+          (standardHomocyclicCoverReduction D.matrixIndex p e D.height_pos
+            (D.coverAction g w)) =
+        g • D.quotientToV
+          (standardHomocyclicCoverReduction D.matrixIndex p e D.height_pos w)
+      exact D.quotientEquiv_action g w
     card_matrixIndex := D.card_matrixIndex }
 
 /-- Assemble standard homocyclic quotient-cover source data into the cover

@@ -6,6 +6,8 @@ module
 
 public import FeitThompson.BGsection1.Defs
 
+open scoped commutatorElement
+
 variable {G : Type _} [Group G] (p : ℕ) (S : Sylow p G)
 
 /-- The focal subgroup `F` as defined in Theorem 1.17. -/

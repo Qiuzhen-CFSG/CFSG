@@ -40,6 +40,7 @@ universe u
 
 open IsCyclotomicExtension
 open scoped Cyclotomic
+open scoped Pointwise
 open PFAppendixIII
 
 private lemma quaternionGroup_isInvolution_a_parameter
@@ -119,8 +120,8 @@ private lemma quaternionGroup_center_eq_zpowers_a_parameter
     cases q with
     | a i =>
         by_cases h_one : (QuaternionGroup.a i : QuaternionGroup m) = 1
-        · simpa [h_one] using
-            (Subgroup.one_mem (Subgroup.zpowers t))
+        · rw [h_one]
+          exact Subgroup.one_mem (Subgroup.zpowers t)
         · have hcomm :=
             (Subgroup.mem_center_iff.mp hq)
               (QuaternionGroup.xa 0 : QuaternionGroup m)
@@ -235,7 +236,7 @@ private lemma quaternionGroup_orderFourSubgroup_eq_of_le_a_one
     rw [← hiv]
     have hpowmem : (a1 ^ k) ^ d ∈ Subgroup.zpowers (a1 ^ k) :=
       (Subgroup.zpowers (a1 ^ k)).pow_mem (Subgroup.mem_zpowers _) d
-    simpa [pow_mul, hi] using hpowmem
+    simp [pow_mul, hi] at hpowmem ⊢
   change V = U0
   apply Subgroup.eq_of_le_of_card_ge hV_le_U0
   rw [hVcard, Nat.card_zpowers,
@@ -279,7 +280,7 @@ private lemma quaternionGroup_orderFourSubgroup_normal
           rw [show u = QuaternionGroup.a
             (k : ZMod (2 * (2 * k))) by
               simp [u, QuaternionGroup.a_one_pow]]
-          simp only [QuaternionGroup.xa_mul_a, QuaternionGroup.a_mul_xa]
+          simp only [QuaternionGroup.xa_mul_a]
           congr 1
           ring
         have hconj :
@@ -459,7 +460,11 @@ private lemma generalizedQuaternion_source_subgroups
       exact (MulEquivClass.apply_mem_center_iff e).2 hp
     · rintro ⟨q, hq, rfl⟩
       apply (MulEquivClass.apply_mem_center_iff e).1
-      simpa using hq
+      change e (e.symm q) ∈ Set.center (QuaternionGroup (2 * k))
+      rw [e.apply_symm_apply]
+      change q ∈ Subgroup.center (QuaternionGroup (2 * k)) at hq
+      rw [← Subgroup.coe_center]
+      exact hq
   · intro V hV_le hVcard
     let V0 : Subgroup (QuaternionGroup (2 * k)) := V.map e.toMonoidHom
     have hV0_le : V0 ≤ X0 := by
@@ -608,12 +613,16 @@ private lemma example3_commuting_involutions_eq
     have hmem : g * u * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
       rw [Sylow.coe_subgroup_smul]
       exact Set.mem_smul_set.mpr ⟨u, huS, rfl⟩
-    simpa [hcoe] using hmem⟩
+    change g * u * g⁻¹ ∈ (Q : Subgroup G)
+    rw [← hcoe]
+    exact hmem⟩
   let vg : Q := ⟨g * v * g⁻¹, by
     have hmem : g * v * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
       rw [Sylow.coe_subgroup_smul]
       exact Set.mem_smul_set.mpr ⟨v, hvS, rfl⟩
-    simpa [hcoe] using hmem⟩
+    change g * v * g⁻¹ ∈ (Q : Subgroup G)
+    rw [← hcoe]
+    exact hmem⟩
   have hugAmbient : IsInvolution (g * u * g⁻¹) := by
     simpa [rightConjugateElem] using
       isInvolution_rightConjugateElem (g := g⁻¹) hu
@@ -895,7 +904,8 @@ private lemma example3_stage_e_structure_constant_identity
     refine ⟨j, ?_⟩
     ext g
     have hg := congrFun hj (ConjClasses.mk g)
-    simpa [mu, Section1.toConjClassFunction_apply] using hg
+    change xi j (ConjClasses.mk g) = chi i g
+    exact hg
   choose kappa hkappa using hchiIndex
   have hspChi : ∀ i : Fin r,
       Section1.scalarProduct G (chi i) omega =
@@ -1372,7 +1382,13 @@ private lemma example3_quotient_sylow
       exact congrArg Subtype.val (hqinj (congrArg Subtype.val hxy))
     · intro y
       have hy : (y : G ⧸ N) ∈ (Q : Subgroup G).map q := by
-        simpa [Qbar, Sylow.coe_mapSurjective] using y.2
+        let y0 : G ⧸ N := y
+        have hy0 : y0 ∈ (Qbar : Subgroup (G ⧸ N)) := y.property
+        have hQbar : (Qbar : Subgroup (G ⧸ N)) =
+            (Q : Subgroup G).map q := by
+          simp [Qbar, Sylow.coe_mapSurjective]
+        rw [hQbar] at hy0
+        exact hy0
       rcases Subgroup.mem_map.mp hy with ⟨x, hx, hxy⟩
       refine ⟨⟨x, hx⟩, ?_⟩
       apply Subtype.ext
@@ -1444,7 +1460,7 @@ private lemma example3_corefree_target_of_normal_center_even
       exact ⟨hw.2, by simpa [pow_two] using hw.1⟩
     have hcomm : Commute (z : G) (w : G) := by
       rw [commute_iff_eq]
-      exact Subgroup.mul_comm_of_mem_isMulCommutative ZM z.property w.property
+      exact setLike_mul_comm z.property w.property
     have hwz : (w : G) = (z : G) :=
       (hcommuting_unique (z : G) (w : G) hzI hwI hcomm).symm
     have hconj : g * (z : G) * g⁻¹ = (z : G) := hwz
@@ -1463,7 +1479,8 @@ private lemma example3_corefree_target_of_normal_center_even
     rw [Subgroup.mem_center_iff]
     intro x
     obtain ⟨g, rfl⟩ := QuotientGroup.mk'_surjective N x
-    simpa using congrArg q (Subgroup.mem_center_iff.mp hzcenter g)
+    change q g * q (z : G) = q (z : G) * q g
+    exact congrArg q (Subgroup.mem_center_iff.mp hzcenter g)
   let zbar : Subgroup.center (G ⧸ N) := ⟨q (z : G), hqzcenter⟩
   have hqorder : orderOf (q (z : G)) = 2 := by
     rw [orderOf_injective q hqinj]
@@ -1490,7 +1507,7 @@ private lemma example3_corefree_nonsimple_target
       M.Normal → M = ⊥ ∨ M = ⊤ := by
     intro hAll
     exact hnotSimple ((isSimpleGroup_iff G).2 ⟨hGnontrivial, hAll⟩)
-  push_neg at hnotAll
+  push Not at hnotAll
   obtain ⟨M, hMnormal, hMnebot, hMnetop⟩ := hnotAll
   have hMeven : 2 ∣ Nat.card M := by
     by_contra hodd
@@ -1708,7 +1725,7 @@ private lemma example3_three_constituent_argumentPow_fixed
   have hperm : ∀ i, ∃ j, chi j = chipow i := by
     intro i
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hzero : Section1.scalarProduct G zeta (chipow i) = 0 := by
       rw [hzeta_decomposition, Section1.scalarProduct_add_left,
         Section1.scalarProduct_weightedFamilySum_left, hprincipal_chipow i]
@@ -1955,7 +1972,7 @@ private lemma example3_defect_four_mul_of_order_values
     (chi : Section1.ClassFunction G)
     (m : ℕ) (rho : Representation ℂ G (Fin m → ℂ))
     (hchar : chi = rho.character)
-    (t x : G) (ht : orderOf t = 2) (hx : orderOf x = 4)
+    (t x : G) (_ht : orderOf t = 2) (hx : orderOf x = 4)
     (epsilon : ℂ)
     (hfourValue : ∀ y : G, orderOf y = 4 → chi y = epsilon)
     (htwoValue : ∀ y : G, orderOf y = 2 → chi y = chi t) :
@@ -2563,7 +2580,9 @@ private lemma example3_stage_l_final
       have hs1 := hscale 1
       have hs2 := hscale 2
       norm_num at hs0 hs1 hs2 ⊢
-      have hs2' : f 2 = (g : ℤ) * w 2 := by simpa using hs2
+      have hs2' : f 2 = (g : ℤ) * w 2 := by
+        simpa only [Equiv.swap_apply_of_ne_of_ne
+          (by decide : (2 : Fin 3) ≠ 0) (by decide : (2 : Fin 3) ≠ 1)] using hs2
       have hfac :
           (g : ℤ) ^ 2 *
             (e 1 * w 0 ^ 2 * d 0 * d 2 +
@@ -2581,7 +2600,9 @@ private lemma example3_stage_l_final
       have hs1 := hscale 1
       have hs2 := hscale 2
       norm_num at hs0 hs1 hs2 ⊢
-      have hs1' : f 1 = (g : ℤ) * w 1 := by simpa using hs1
+      have hs1' : f 1 = (g : ℤ) * w 1 := by
+        simpa only [Equiv.swap_apply_of_ne_of_ne
+          (by decide : (1 : Fin 3) ≠ 0) (by decide : (1 : Fin 3) ≠ 2)] using hs1
       have hfac :
           (g : ℤ) ^ 2 *
             (e 2 * w 0 ^ 2 * d 1 * d 0 +
@@ -2796,11 +2817,11 @@ private lemma example3_cyclic_card_four_order_four_eq_or_eq_inv
     simpa using congrArg Multiplicative.ofAdd (hy1.trans hx1.symm)
   · right
     apply e.symm.injective
-    have hadd : (e.symm y).toAdd = -(e.symm x).toAdd := by simpa [hy1, hx1]
+    have hadd : (e.symm y).toAdd = -(e.symm x).toAdd := by simp [hy1, hx1]
     simpa using congrArg Multiplicative.ofAdd hadd
   · right
     apply e.symm.injective
-    have hadd : (e.symm y).toAdd = -(e.symm x).toAdd := by simpa [hy1, hx1]
+    have hadd : (e.symm y).toAdd = -(e.symm x).toAdd := by simp [hy1, hx1]
     simpa using congrArg Multiplicative.ofAdd hadd
   · left
     apply e.symm.injective
@@ -2831,7 +2852,7 @@ private lemma example3_card_eight_center_two_conj_eq_inv
   have hb_not_comm_all : ¬ ∀ q : P, q * b = b * q := by
     intro h
     exact hb_not_center (Subgroup.mem_center_iff.mpr h)
-  push_neg at hb_not_comm_all
+  push Not at hb_not_comm_all
   obtain ⟨q, hnoncomm⟩ := hb_not_comm_all
   have hyB : q * b * q⁻¹ ∈ B :=
     hBnormal.conj_mem b (Subgroup.mem_zpowers b) q
@@ -3310,9 +3331,8 @@ private lemma example3_card_four_axis_fixed_of_card_eight
     omega
   letI : V.val.Normal := Subgroup.normal_of_index_eq_two hindex
   apply Subtype.ext
-  change V.val.map (MulAut.conj q).toMonoidHom = V.val
-  simpa only [MulAut.smul_def] using
-    (Subgroup.Normal.conj_smul_eq_self q V.val)
+  change (MulAut.conj q • V.val : Subgroup Q) = V.val
+  exact Subgroup.Normal.conj_smul_eq_self q V.val
 
 private def example3_normalizer_card_axis_perm_hom
     {G : Type*} [Group G] [Finite G] (Q : Subgroup G) :
@@ -3331,7 +3351,7 @@ private lemma example3_normalizer_axis_hom_fixed_by_subgroup
     ⟨(q : G), Subgroup.le_normalizer q.property⟩
   have hAut : Q.normalizerMonoidHom qN = MulAut.conj q := by
     ext y
-    simpa [qN] using Q.normalizerMonoidHom_apply_apply_coe qN y
+    simp [qN, Q.normalizerMonoidHom_apply_apply_coe]
   change example3_subgroup_card_perm (Q.normalizerMonoidHom qN) V = V
   rw [hAut]
   exact example3_card_four_axis_fixed_of_card_eight hQcard q V
@@ -3426,8 +3446,10 @@ private lemma example3_normalizer_axis_perm_order
     rw [← rho.map_pow]
     apply Equiv.ext
     intro V
-    simpa [rho, hnormalizerAction] using
-      example3_card_four_axis_fixed_of_card_eight hQcard q V
+    change example3_subgroup_card_perm
+      ((Q : Subgroup G).normalizerMonoidHom (n ^ m)) V = V
+    rw [hnormalizerAction]
+    exact example3_card_four_axis_fixed_of_card_eight hQcard q V
   exact example3_perm_order_eq_one_or_three_of_odd_pow_eq_one
     hAxisCard (rho n) m hmOdd hpow
 
@@ -3445,7 +3467,7 @@ private lemma example3_normalizer_axis_fixed_or_transitive
   by_cases hfixed : ∀ n V, rho n V = V
   · exact Or.inl hfixed
   · right
-    push_neg at hfixed
+    push Not at hfixed
     obtain ⟨n, V, hnV⟩ := hfixed
     have hnOrder : orderOf (rho n) = 3 := by
       rcases example3_normalizer_axis_perm_order
@@ -3503,7 +3525,6 @@ private lemma example3_axis_transitive_order_four_conj
   let bB : B.val := ⟨bQ, Subgroup.mem_zpowers bQ⟩
   have hcB : orderOf cB = 4 := by
     rw [Subgroup.orderOf_mk]
-    change orderOf (e aQ) = 4
     rw [e.orderOf_eq, haQ]
   have hbB : orderOf bB = 4 := by
     simpa [bB, Subgroup.orderOf_mk] using hbQ
@@ -3512,14 +3533,16 @@ private lemma example3_axis_transitive_order_four_conj
   · refine ⟨(n : G), ?_⟩
     have hcG :=
       congrArg (fun z : B.val => (((z : (Q : Subgroup G)) : G))) hc
-    simpa [cB, bB, e, aQ, bQ] using hcG
+    exact (Subgroup.normalizerMonoidHom_apply_apply_coe
+      (Q : Subgroup G) n aQ).symm.trans hcG
   · obtain ⟨q, hq⟩ := hinverter b hb
     refine ⟨(q : G) * (n : G), ?_⟩
     have hcG :=
       congrArg (fun z : B.val => (((z : (Q : Subgroup G)) : G))) hc
     have hconjInv :
         (n : G) * (a : G) * (n : G)⁻¹ = (b : G)⁻¹ := by
-      simpa [cB, bB, e, aQ, bQ] using hcG
+      exact (Subgroup.normalizerMonoidHom_apply_apply_coe
+        (Q : Subgroup G) n aQ).symm.trans hcG
     calc
       ((q : G) * (n : G)) * (a : G) *
           ((q : G) * (n : G))⁻¹ =
@@ -3667,7 +3690,8 @@ private lemma example3_axis_fixed_normalizer_preserves_zpowers
   rcases hmem with ⟨k, hk⟩
   refine ⟨k, ?_⟩
   have hkG := congrArg (fun z : (Q : Subgroup G) => (z : G)) hk
-  simpa [e, xQ] using hkG
+  exact hkG.trans
+    (Subgroup.normalizerMonoidHom_apply_apply_coe (Q : Subgroup G) n xQ)
 
 private lemma example3_index_two_of_card_four_le_card_eight
     {G : Type*} [Group G] [Finite G]
@@ -3746,10 +3770,14 @@ private lemma example3_fusion_up_to_inverse
   obtain ⟨c, hc⟩ := MulAction.exists_smul_eq NB QN RN
   have hcQ : (c : G) • Q = g • Q := by
     apply Sylow.subtype_injective (N := NB)
-    simpa only [QN, RN, R, Sylow.smul_subtype] using hc
+    calc
+      ((c : G) • Q).subtype (Sylow.smul_le hQ_le_normB c) =
+          c • QN := (Sylow.smul_subtype hQ_le_normB c).symm
+      _ = RN := hc
+      _ = (g • Q).subtype hgQ_le_normB := rfl
   let n0 : G := (c : G)⁻¹ * g
   have hn0 : n0 ∈ Subgroup.normalizer ((Q : Subgroup G) : Set G) := by
-    rw [← Sylow.smul_eq_iff_mem_normalizer]
+    apply Sylow.smul_eq_iff_mem_normalizer.mp
     calc
       n0 • Q = (c : G)⁻¹ • (g • Q) := by simp [n0, mul_smul]
       _ = (c : G)⁻¹ • ((c : G) • Q) := by rw [hcQ]
@@ -3774,7 +3802,6 @@ private lemma example3_fusion_up_to_inverse
     simpa [bB, Subgroup.orderOf_mk] using hb
   have hy : orderOf y = 4 := by
     rw [Subgroup.orderOf_mk]
-    change orderOf ((c : G)⁻¹ * (b : G) * (c : G)) = 4
     have heq :
         (c : G)⁻¹ * (b : G) * (c : G) =
           (MulAut.conj ((c : G)⁻¹)) (b : G) := by simp
@@ -4417,7 +4444,7 @@ private lemma example3_stage_i_character_value
     apply Finset.sum_congr rfl
     intro u _hu
     have hbool : ∀ z : ZMod 2, z ^ 2 = z := by decide
-    simpa using hbool (ax u : ZMod 2)
+    simp [hbool (ax u : ZMod 2)]
   have hsqOdd : Odd (∑ u : N, ax u ^ 2) := by
     apply ZMod.intCast_eq_one_iff_odd.mp
     rw [hsqParity]
@@ -4541,7 +4568,7 @@ private lemma suzuki_example3_stage_c_to_l_core
     (H X : Subgroup G) (CH : Subgroup H)
     (hQcard_X : Nat.card Q = 2 * Nat.card X)
     (NH : Subgroup H)
-    (hNHnormal : NH.Normal)
+    (_hNHnormal : NH.Normal)
     (hNHodd : Nat.Coprime 2 (Nat.card NH))
     (hHcard_Q_NH : Nat.card H = Nat.card Q * Nat.card NH)
     (lambda : Section1.ClassFunction CH)
@@ -4559,16 +4586,16 @@ private lemma suzuki_example3_stage_c_to_l_core
       ∀ (k : G) (hk : k ∈ K), eta ⟨k, hKTI.1 hk⟩ = 4)
     (hetaSupport : ∀ h : H, (h : G) ∉ K → eta h = 0)
     (hetaOne : eta 1 = 0)
-    (hCHnormal : CH.Normal)
-    (hHquotCcard : Nat.card (H ⧸ CH) = 2)
+    (_hCHnormal : CH.Normal)
+    (_hHquotCcard : Nat.card (H ⧸ CH) = 2)
     (hlambda_irreducible :
       Section1.IsIrreducibleCharacterOnGroup lambda)
-    (hlambda_ne_principal :
+    (_hlambda_ne_principal :
       lambda ≠ Section1.principalCharacter CH)
     (heta_def :
       eta = Section1.inducedCF CH
         (Section1.principalCharacter CH - lambda))
-    (heta_principal :
+    (_heta_principal :
       Section1.scalarProduct H eta
         (Section1.principalCharacter H) = 1)
     (hstage_c_input :
@@ -4688,7 +4715,11 @@ private lemma suzuki_example3_stage_c_to_l_core
       apply Finset.sum_eq_zero
       intro x _hx
       split
-      next _hmem => simpa using hetaOne
+      next hmem =>
+        have harg : (⟨x * 1 * x⁻¹, hmem⟩ : H) = 1 := by
+          apply Subtype.ext
+          simp
+        rw [harg, hetaOne]
       next _hnot => rfl
     have hzeta_t : zeta t = 0 := by
       dsimp [zeta]
@@ -4801,7 +4832,11 @@ private lemma suzuki_example3_stage_c_to_l_core
       apply Finset.sum_eq_zero
       intro x _hx
       split
-      next _hmem => simpa using hetaOne
+      next hmem =>
+        have harg : (⟨x * 1 * x⁻¹, hmem⟩ : H) = 1 := by
+          apply Subtype.ext
+          simp
+        rw [harg, hetaOne]
       next _hnot => rfl
     have hsum_d : 1 + ∑ i, epsilon i * d i = 0 := by
       calc
@@ -4979,7 +5014,11 @@ private lemma suzuki_example3_stage_c_to_l_core
       apply Finset.sum_eq_zero
       intro x _hx
       split
-      next _hmem => simpa using hetaOne
+      next hmem =>
+        have harg : (⟨x * 1 * x⁻¹, hmem⟩ : H) = 1 := by
+          apply Subtype.ext
+          simp
+        rw [harg, hetaOne]
       next _hnot => rfl
     have hsum_d : 1 + ∑ i, epsilon i * d i = 0 := by
       calc
@@ -5113,7 +5152,7 @@ private lemma suzuki_example3_stage_c_to_l_core
             have hab : a = b := by
               rw [orderOf_eq_one_iff.mp haG,
                 orderOf_eq_one_iff.mp hbG]
-            exact ⟨1, by simpa [hab]⟩
+            exact ⟨1, by simp [hab]⟩
           · have hbG : orderOf b = 2 := by
               have haG : orderOf a = 2 := by
                 simpa [aQ, Subgroup.orderOf_mk] using ha2
@@ -5199,7 +5238,6 @@ private lemma suzuki_example3_stage_c_to_l_core
       have hfZ : ∀ i, f i = (fZ i : ℂ) := by
         intro i
         rw [hf i, hdZ i, heZ i]
-        push_cast
         simp [fZ]
       let epsilonZ : Fin 3 → ℤ :=
         fun i => if epsilon i = 1 then 1 else -1
@@ -5210,7 +5248,7 @@ private lemma suzuki_example3_stage_c_to_l_core
         · simp [epsilonZ, hi]
         · have hi' : epsilon i = -1 :=
             (hepsilon_sign i).resolve_left hi
-          simp [epsilonZ, hi, hi']
+          simp [epsilonZ, hi']
       have hepsilonZ_sign :
           ∀ i, epsilonZ i = 1 ∨ epsilonZ i = -1 := by
         intro i
@@ -5448,9 +5486,16 @@ private lemma example3_stage_c_norm_core
       intro i
       refine Quotient.inductionOn i ?_
       intro g
-      simpa [Section1.conjugateOrbitConj, Section1.conjugateOnNormal,
-        honeRep_char, Section1.principalCharacter] using
-          hlambda_ne_principal
+      change lambda ≠ Section1.conjugateOnNormal CH oneRep.character g
+      intro hEq
+      apply hlambda_ne_principal
+      calc
+        lambda = Section1.conjugateOnNormal CH oneRep.character g := hEq
+        _ = Section1.conjugateOnNormal CH
+            (Section1.principalCharacter CH) g := by rw [honeRep_char]
+        _ = Section1.principalCharacter CH := by
+          funext c
+          simp [Section1.conjugateOnNormal, Section1.principalCharacter]
     simpa [honeRep_char, hlambdaRep_char] using
       Section1.proposition_1_5_c_nonconjugate_rep_orbit_relIndex_canonical
         CH lambda lambdaRep oneRep hlambdaRep_char hlambdaRep_irr
@@ -5497,10 +5542,12 @@ private lemma example3_stage_c_norm_core
     norm_num
   have hnorm_large (hlarge : 4 < xCard) :
       Section1.scalarProduct H eta eta = 3 := by
-    convert heta_norm_of_rel 1 (hlambda_rel_large hlarge) using 1 <;> norm_num
+    convert heta_norm_of_rel 1 (hlambda_rel_large hlarge) using 1
+    norm_num
   have hnorm_small (hfour : xCard = 4) :
       Section1.scalarProduct H eta eta = 4 := by
-    convert heta_norm_of_rel 2 (hlambda_rel_small hfour) using 1 <;> norm_num
+    convert heta_norm_of_rel 2 (hlambda_rel_small hfour) using 1
+    norm_num
   have hnorm_cases : Section1.scalarProduct H eta eta = 3 ∨
       Section1.scalarProduct H eta eta = 4 := by
     rcases eq_or_lt_of_le hfour_le with hfour | hlarge
@@ -5593,14 +5640,14 @@ private theorem suzuki_example3_corefree_setup
     have hxQT : xQ ∈ TQ := hUniqueInvolutionQ xQ hxQorder
     exact ⟨xQ, hxQT, rfl⟩
   have hX_le_C : X ≤ C := by
+    letI : IsMulCommutative XQ := hXQcyclic.isMulCommutative
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     rcases hx with ⟨xQ, hxQ, rfl⟩
     rcases hy with ⟨yQ, hyQ, rfl⟩
-    exact congrArg (fun z : Q => (z : G)) <| congrArg Subtype.val
-      (hXQcyclic.commutative.comm
-        (⟨yQ, hUQ_le_XQ hyQ⟩ : XQ) (⟨xQ, hxQ⟩ : XQ))
+    exact congrArg (fun z : Q => (z : G))
+      (setLike_mul_comm (hUQ_le_XQ hyQ) hxQ)
   have hQ_le_H : (Q : Subgroup G) ≤ H := by
     have hnormalizerQ : Subgroup.normalizer (UQ : Set Q) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr hUQnormal
@@ -5871,8 +5918,7 @@ private theorem suzuki_example3_corefree_setup
   have hNCHcharacteristic : NCH.Characteristic := by
     dsimp [NCH]
     rw [Subgroup.characteristic_iff_map_le]
-    intro aut
-    rintro x hx
+    intro aut x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     rcases Subgroup.mem_map.mp hy with ⟨z, hz, rfl⟩
     let psi : C ≃* C := (eCH.symm.trans aut).trans eCH
@@ -5924,7 +5970,7 @@ private theorem suzuki_example3_corefree_setup
     rw [ha]
     exact hNodd.pow_left a
   have hSNdisjoint : Disjoint (S : Subgroup C) N :=
-    disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hSNcoprime)
+    Subgroup.disjoint_of_coprime_natCard hSNcoprime
   let qN : C →* C ⧸ N := QuotientGroup.mk' N
   let SQ : Sylow 2 (C ⧸ N) :=
     S.mapSurjective (QuotientGroup.mk'_surjective N)
@@ -5993,7 +6039,7 @@ private theorem suzuki_example3_corefree_setup
     rw [ha]
     exact hNHodd.pow_left a
   have hQHNHdisjoint : Disjoint QH NH :=
-    disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hQHNHcoprime)
+    Subgroup.disjoint_of_coprime_natCard hQHNHcoprime
   let qNH : H →* H ⧸ NH := QuotientGroup.mk' NH
   let fQH : QH →* H ⧸ NH := qNH.comp QH.subtype
   have hfQHker : fQH.ker = ⊥ := by
@@ -6456,12 +6502,20 @@ private theorem suzuki_example3_corefree_setup
   have hq_conj_lambda_inv (c : CH) :
       lambda ⟨qH * (c : H) * qH⁻¹,
         hCHnormal.conj_mem (c : H) c.property qH⟩ = lambda c⁻¹ := by
+    let qcCH : CH := ⟨qH * (c : H) * qH⁻¹,
+      hCHnormal.conj_mem (c : H) c.property qH⟩
+    let qcC : C :=
+      ⟨q * ((eCH c : C) : G) * q⁻¹,
+        (Subgroup.mem_normalizer_iff.mp
+          (hH_le_normC qH.property) (eCH c)).1 (eCH c).property⟩
+    have heqc : eCH qcCH = qcC := by
+      apply Subtype.ext
+      rfl
     change
-      (chi (qN ⟨q * (c : G) * q⁻¹,
-        (Subgroup.mem_normalizer_iff.mp (hH_le_normC qH.property) (eCH c)).1
-          (eCH c).property⟩) : ℂ) =
+      (chi (qN (eCH qcCH)) : ℂ) =
       (chi ((qN (eCH c))⁻¹) : ℂ)
-    simpa using congrArg (fun y : C ⧸ N => (chi y : ℂ))
+    rw [heqc]
+    exact congrArg (fun y : C ⧸ N => (chi y : ℂ))
       (hq_conj_quotient_inv (eCH c))
   have hmX : m = Nat.card X := by
     dsimp [m]
@@ -6569,7 +6623,9 @@ private theorem suzuki_example3_corefree_setup
     have hcTNC :=
       (hmemTNG_iff ((c : H) : G) hcC).1 hcTNG
     have hlc : lambda c = 1 := (hlambda_eq_one_iff c).2 (by
-      simpa [eCH] using hcTNC)
+      convert hcTNC using 1
+      apply Subtype.ext
+      rfl)
     simp [Section1.principalCharacter, hlc]
   have heta_support :
       ∀ h : H, (h : G) ∉ K → eta h = 0 := by
@@ -6595,7 +6651,7 @@ private theorem suzuki_example3_corefree_setup
       rfl
   have hone_not_K : (1 : G) ∉ K := by
     intro h1
-    simpa [K] using h1
+    simp [K] at h1
   have heta_one : eta 1 = 0 :=
     heta_support 1 (by simpa using hone_not_K)
   have hKfour : ∀ k : G, k ∈ K → 4 ∣ orderOf k := by
@@ -6718,7 +6774,7 @@ private theorem suzuki_example3_corefree_setup
       apply Nat.dvd_antisymm
       · simpa [hquotCard] using orderOf_dvd_natCard (qN xC)
       · exact (hfour_order_iff_quotient xC).1 (by
-          simpa [xC, Subgroup.orderOf_mk, hxorderG])
+          simp [xC, Subgroup.orderOf_mk, hxorderG])
     refine ⟨xH, ?_, hxorderG, hxcomm, ?_⟩
     · exact ⟨hX_le_C x.property, by rw [hxorderG]⟩
     · intro h
@@ -6761,7 +6817,8 @@ private theorem suzuki_example3_corefree_setup
       · rintro (⟨u, rfl⟩ | ⟨u, rfl⟩)
         · let uC : C := ⟨(u : G), hNH_le_CH u.property⟩
           have huN : uC ∈ N := (hNH_iff uC).1 (by
-            simpa [uC] using u.property)
+            change (u : H) ∈ NH
+            exact u.property)
           let c : C := xC * uC
           have hquone : qN uC = 1 := by
             change (uC : C ⧸ N) = 1
@@ -6774,7 +6831,8 @@ private theorem suzuki_example3_corefree_setup
           simpa [c, xC, uC, Subgroup.orderOf_mk] using hfourC
         · let uC : C := ⟨(u : G), hNH_le_CH u.property⟩
           have huN : uC ∈ N := (hNH_iff uC).1 (by
-            simpa [uC] using u.property)
+            change (u : H) ∈ NH
+            exact u.property)
           let c : C := xC⁻¹ * uC
           have hquone : qN uC = 1 := by
             change (uC : C ⧸ N) = 1

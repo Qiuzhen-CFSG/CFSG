@@ -13,6 +13,7 @@ open scoped Pointwise
 section Section14
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+
 private theorem section14_7_not_conjugate_and_z_le
     {M K Xi Mi : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
@@ -519,7 +520,8 @@ private theorem section14_7_xi_le_kstar_of_xstar
   have hNXZ :=
     proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi Xstar hXstarKi
   have hZdp : section12InternalDirectProduct Ki Kistar Zi := by
-    simpa [Zi, Kistar] using hNXZ.2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact hNXZ.2.2
   have hZleZi : section14Z M K ≤ Zi :=
     section14_7_z_le_of_kstar_prime
       (G := G) (M := M) (K := K) (Xi := Xi) (Mi := Mi) (Ki := Ki)
@@ -532,15 +534,20 @@ private theorem section14_7_xi_le_kstar_of_xstar
     exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hx)
   have hcompKistar :
       (Kistar.subgroupOf Zi).IsComplement' (Ki.subgroupOf Zi) := by
-    simpa [Zi, Kistar, inf_comm] using
+    change
+      ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).IsComplement'
+        (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki))
+    exact
       section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
-        (G := G) (H := Kistar) (R := Ki) hKi_norm_Kistar
+        (G := G) (H := section14KStar Mi Ki) (R := Ki) hKi_norm_Kistar
         (by simpa [disjoint_iff, Kistar, inf_comm] using hZdp.2.2.2.1)
   have hcompKi :
       (Ki.subgroupOf Zi).IsComplement' (Kistar.subgroupOf Zi) := hcompKistar.symm
   have hKistarNormal : (Kistar.subgroupOf Zi).Normal := by
-    simpa [Zi, Kistar] using
-      (Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := Ki) (N := Kistar) hKi_norm_Kistar)
+    change ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).Normal
+    exact
+      Subgroup.normal_subgroupOf_sup_of_le_normalizer
+        (H := Ki) (N := section14KStar Mi Ki) hKi_norm_Kistar
   letI : (Kistar.subgroupOf Zi).Normal := hKistarNormal
   let q : Zi →* Zi ⧸ (Kistar.subgroupOf Zi) :=
     QuotientGroup.mk' (Kistar.subgroupOf Zi)
@@ -548,7 +555,7 @@ private theorem section14_7_xi_le_kstar_of_xstar
       Nat.card ((Xi.subgroupOf Zi).map q) ∣ Nat.card Xi := by
     have hcard_sub : Nat.card (Xi.subgroupOf Zi) = Nat.card Xi :=
       natCard_subgroupOf_eq Xi Zi hXiZ
-    exact (Subgroup.card_map_dvd (H := Xi.subgroupOf Zi) q).trans (by simpa [hcard_sub])
+    exact (Subgroup.card_map_dvd (H := Xi.subgroupOf Zi) q).trans (by simp [hcard_sub])
   have hQuot_card :
       Nat.card (Zi ⧸ (Kistar.subgroupOf Zi)) = Nat.card Ki := by
     calc
@@ -638,7 +645,8 @@ private theorem section14_7_ki_le_z_of_xstar
   have hNXZ :=
     proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi Xstar hXstarKi
   have hZdp : section12InternalDirectProduct Ki (section14KStar Mi Ki) (section14Z Mi Ki) := by
-    simpa [section14Z, section14KStar] using hNXZ.2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact hNXZ.2.2
   have hKi_norm_Xi : Ki ≤ Subgroup.normalizer (Xi : Set G) := by
     intro y hy
     apply (centralizer_le_normalizer Xi)
@@ -985,6 +993,10 @@ private theorem section14_7_overgroupFamily_finite (K : Subgroup G) :
     (section14_7_overgroupFamily K).Finite :=
   Set.toFinite _
 
+noncomputable local instance (K : Subgroup G) :
+    Fintype {Mi // Mi ∈ section14_7_overgroupFamily K} :=
+  Fintype.ofFinite _
+
 private theorem section14_7_overgroupFamily_nonempty
     {M K : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
@@ -1279,7 +1291,10 @@ public theorem section14_7_primeOrder_le_k_or_kstar_of_z
       exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
     have hcompKstar :
         ((section14KStar M K).subgroupOf Z).IsComplement' (K.subgroupOf Z) := by
-      simpa [Z, inf_comm] using
+      change
+        ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).IsComplement'
+          (K.subgroupOf (K ⊔ section14KStar M K))
+      exact
         section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
           (G := G) (H := section14KStar M K) (R := K) hK_norm_Kstar
           (by simpa [disjoint_iff, inf_comm] using hZdp.2.2.2.1)
@@ -1287,9 +1302,10 @@ public theorem section14_7_primeOrder_le_k_or_kstar_of_z
         (K.subgroupOf Z).IsComplement' ((section14KStar M K).subgroupOf Z) :=
       hcompKstar.symm
     have hKstarNormal : ((section14KStar M K).subgroupOf Z).Normal := by
-      simpa [Z] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := K) (N := section14KStar M K) hK_norm_Kstar)
+      change ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := K) (N := section14KStar M K) hK_norm_Kstar
     letI : ((section14KStar M K).subgroupOf Z).Normal := hKstarNormal
     let φ : Z →* Z ⧸ ((section14KStar M K).subgroupOf Z) :=
       QuotientGroup.mk' ((section14KStar M K).subgroupOf Z)
@@ -1297,7 +1313,7 @@ public theorem section14_7_primeOrder_le_k_or_kstar_of_z
       have hcard_sub : Nat.card (X.subgroupOf Z) = Nat.card X :=
         natCard_subgroupOf_eq X Z (by simpa [Z] using hXZ)
       exact (Subgroup.card_map_dvd (H := X.subgroupOf Z) φ).trans (by
-        simpa [hcard_sub])
+        simp [hcard_sub])
     have hQuot_card :
         Nat.card (Z ⧸ ((section14KStar M K).subgroupOf Z)) = Nat.card K := by
       calc
@@ -1356,7 +1372,7 @@ public theorem section14_7_primeOrder_le_k_or_kstar_of_z
       have hcard_sub : Nat.card (X.subgroupOf Z) = Nat.card X :=
         natCard_subgroupOf_eq X Z (by simpa [Z, section14Z, sup_comm] using hXZ)
       exact (Subgroup.card_map_dvd (H := X.subgroupOf Z) φ).trans (by
-        simpa [hcard_sub])
+        simp [hcard_sub])
     have hQuot_card :
         Nat.card (Z ⧸ (K.subgroupOf Z)) = Nat.card (section14KStar M K) := by
       calc
@@ -1543,7 +1559,10 @@ private theorem section14_7_base_kstar_hall_sigma_in_z
       exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
     have hcompKstar :
         ((section14KStar M K).subgroupOf Z).IsComplement' (K.subgroupOf Z) := by
-      simpa [Z, inf_comm] using
+      change
+        ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).IsComplement'
+          (K.subgroupOf (K ⊔ section14KStar M K))
+      exact
         section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
           (G := G) (H := section14KStar M K) (R := K) hK_norm_Kstar
           (by simpa [disjoint_iff, inf_comm] using hZdp.2.2.2.1)
@@ -1602,8 +1621,8 @@ private theorem section14_7_kstarOfOvergroupFamily_hall_sigma_in_z
   have hXstarKi : Xstar ∈ section12PrimeOrderSubgroups Ki := by
     exact ⟨hXstar.1.trans hKstarKi, hXstar.2⟩
   have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-    simpa [Kistar, section14Z, section14KStar] using
-      (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi Xstar hXstarKi).2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi Xstar hXstarKi).2.2
   refine ⟨hKistarLeK.trans le_sup_left, ?_⟩
   refine isHallSubgroup_of (G := section14Z M K) (section10SigmaPrimes Mi)
     (Kistar.subgroupOf (section14Z M K)) ?_ ?_
@@ -1629,9 +1648,12 @@ private theorem section14_7_kstarOfOvergroupFamily_hall_sigma_in_z
       exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hxKi)
     have hcompKistar :
         (Kistar.subgroupOf (section14Z Mi Ki)).IsComplement' (Ki.subgroupOf (section14Z Mi Ki)) := by
-      simpa [Kistar, inf_comm] using
+      change
+        ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).IsComplement'
+          (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki))
+      exact
         section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
-          (G := G) (H := Kistar) (R := Ki) hKi_norm_Kistar
+          (G := G) (H := section14KStar Mi Ki) (R := Ki) hKi_norm_Kistar
           (by simpa [disjoint_iff, Kistar, inf_comm] using hZdp.2.2.2.1)
     have hcompKistar' :
         (Kistar.subgroupOf (section14Z M K)).IsComplement' (Ki.subgroupOf (section14Z M K)) := by
@@ -1832,7 +1854,10 @@ private theorem section14_7_overgroupFamilyKstarJoin_eq_k
     simpa using (htop'.symm ▸ hcompFam0)
   have hcompK :
       ((section14KStar M K).subgroupOf Z).IsComplement' (K.subgroupOf Z) := by
-    simpa [Z, inf_comm] using
+    change
+      ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).IsComplement'
+        (K.subgroupOf (K ⊔ section14KStar M K))
+    exact
       section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
         (G := G) (H := section14KStar M K) (R := K) hK_norm_Kstar
         (by simpa [disjoint_iff, inf_comm] using hZdp.2.2.2.1)
@@ -1853,6 +1878,7 @@ private theorem section14_7_overgroupFamilyKstarJoin_eq_k
           _ = Nat.card K := natCard_subgroupOf_eq K Z le_sup_left
   exact Subgroup.eq_of_le_of_card_ge hJfamLeK hcardJfam.ge
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_centralizer_conjBy
     (X : Subgroup G) (a : G) :
     (Subgroup.centralizer (X : Set G)).conjBy a =
@@ -1878,6 +1904,7 @@ private theorem section14_centralizer_conjBy
     have hcomm' := congrArg (fun t : G => a⁻¹ * t * a) hcomm
     simpa [mul_assoc] using hcomm'
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_maximalSubgroupsContaining_centralizer_conjBy
     {X M : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -1899,7 +1926,7 @@ private theorem section14_maximalSubgroupsContaining_centralizer_conjBy
       have hxCg : g * x * g⁻¹ ∈ Subgroup.centralizer (X.conjBy g : Set G) := by
         simpa [section14_centralizer_conjBy (G := G) X g] using hxCgMap
       have hxH : g * x * g⁻¹ ∈ H := hH.2 hxCg
-      exact Subgroup.mem_map.mpr ⟨g * x * g⁻¹, hxH, by simp [MulAut.conj_apply, mul_assoc]⟩
+      exact Subgroup.mem_map.mpr ⟨g * x * g⁻¹, hxH, by simp [mul_assoc]⟩
     have hHinv_eq : H.conjBy g⁻¹ = M := by
       have hmem : H.conjBy g⁻¹ ∈ ({M} : Set (Subgroup G)) := by
         simpa [huniq] using hHinv
@@ -1908,19 +1935,18 @@ private theorem section14_maximalSubgroupsContaining_centralizer_conjBy
       calc
         H = (H.conjBy g⁻¹).conjBy g := (section11_conjBy_inv' (G := G) H g).symm
         _ = M.conjBy g := by rw [hHinv_eq]
-    simpa [hHeq]
+    simp [hHeq]
   · intro hH
     simp at hH
     subst hH
     have hMcent :
         M ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer (X : Set G)) := by
-      have hmem : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [huniq] using hmem
+      simp [huniq]
     refine ⟨section14_maximal_conjBy (G := G) hM g, ?_⟩
     intro x hxC
     have hxBackMap :
         g⁻¹ * x * g ∈ (Subgroup.centralizer (X.conjBy g : Set G)).conjBy g⁻¹ := by
-      exact Subgroup.mem_map.mpr ⟨x, hxC, by simp [MulAut.conj_apply, mul_assoc]⟩
+      exact Subgroup.mem_map.mpr ⟨x, hxC, by simp [mul_assoc]⟩
     have hxBack : g⁻¹ * x * g ∈ Subgroup.centralizer (X : Set G) := by
       have hxBack' :
           g⁻¹ * x * g ∈ Subgroup.centralizer (((X.conjBy g).conjBy g⁻¹) : Set G) := by
@@ -1988,7 +2014,13 @@ private theorem section14_7_not_conjugate_of_distinct_overgroupFamily
   have hσeq : section10SigmaPrimes Mj = section10SigmaPrimes Mi := by
     simpa [hMjEq] using section14_sigmaPrimes_conjBy (G := G) Mi g
   have hHallJ : IsHallSubgroup (section10SigmaPrimes Mi) (Kjstar.subgroupOf Z) := by
-    simpa [Z, hσeq] using hHallJraw
+    rw [← hσeq]
+    change
+      IsHallSubgroup (section10SigmaPrimes Mj)
+        ((section14_7_KstarOfOvergroupFamily
+          (G := G) (M := M) (K := K) (Mi := Mj) hM hK hMjFam).subgroupOf
+            (section14Z M K))
+    exact hHallJraw
   have hZleMi : Z ≤ Mi := by
     change section14Z M K ≤ Mi
     rw [hZeqZi]
@@ -2012,7 +2044,11 @@ private theorem section14_7_not_conjugate_of_distinct_overgroupFamily
             exact Subgroup.map_mono (by
               intro x hx
               exact hXiLeKistar hx)
-      _ = Kjstar.subgroupOf Z := by simpa using hz.symm
+      _ = Kjstar.subgroupOf Z := by
+        change
+          Kjstar.subgroupOf Z =
+            (Kistar.subgroupOf Z).map (MulAut.conj z).toMonoidHom at hz
+        exact hz.symm
   have hXiConjLeKjstar : Xi.conjBy (z : G) ≤ Kjstar := by
     exact
       section14_conjBy_le_of_subgroupOf_conjBy_le
@@ -2134,8 +2170,8 @@ private theorem section14_7_kstarOfOvergroupFamily_le_ki_of_distinct
   have hX0 : X0 ∈ section12PrimeOrderSubgroups Ki :=
     section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
   have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-    simpa [Kistar, section14Z, section14KStar] using
-      (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
   have hKi_norm_Kistar : Ki ≤ Subgroup.normalizer (Kistar : Set G) := by
     intro x hxKi
     exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hxKi)
@@ -2147,9 +2183,12 @@ private theorem section14_7_kstarOfOvergroupFamily_le_ki_of_distinct
     exact (Subgroup.mem_centralizer_iff.mp (hZdp.2.2.2.2 hyKi) x hxKistar).symm
   have hcompKistar :
       (Kistar.subgroupOf (section14Z Mi Ki)).IsComplement' (Ki.subgroupOf (section14Z Mi Ki)) := by
-    simpa [Kistar, inf_comm] using
+    change
+      ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).IsComplement'
+        (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki))
+    exact
       section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
-        (G := G) (H := Kistar) (R := Ki) hKi_norm_Kistar
+        (G := G) (H := section14KStar Mi Ki) (R := Ki) hKi_norm_Kistar
         (by simpa [disjoint_iff, Kistar, inf_comm] using hZdp.2.2.2.1)
   have hcompKistar' :
       (Kistar.subgroupOf Z).IsComplement' (Ki.subgroupOf Z) := by
@@ -2163,7 +2202,8 @@ private theorem section14_7_kstarOfOvergroupFamily_le_ki_of_distinct
   have hKiNormal0' : (Ki.subgroupOf (Ki ⊔ Kistar)).Normal := by
     exact hEqSup ▸ hKiNormal0Aux
   have hKiNormal0 : (Ki.subgroupOf (section14Z Mi Ki)).Normal := by
-    simpa [section14Z, Kistar] using hKiNormal0'
+    change (Ki.subgroupOf (Ki ⊔ Kistar)).Normal
+    exact hKiNormal0'
   have hKiNormal : (Ki.subgroupOf Z).Normal := by
     change (Ki.subgroupOf (section14Z M K)).Normal
     simpa using (hZeqZi.symm ▸ hKiNormal0)
@@ -2189,7 +2229,7 @@ private theorem section14_7_kstarOfOvergroupFamily_le_ki_of_distinct
     have hpSigmaI : r ∈ section10SigmaPrimes Mi :=
       hHallI.p_in_pi_of_p_dvd_card r hpKistarSub
     have : r ∈ (⊥ : Set Nat.Primes) := hσdis.le_bot ⟨hpSigmaI, hpSigmaJ⟩
-    simpa using this
+    simp at this
   have hMap_bot : (Kjstar.subgroupOf Z).map φ = ⊥ := by
     exact (Subgroup.eq_bot_iff_card (H := (Kjstar.subgroupOf Z).map φ)).2 hMap_card_one
   exact
@@ -2201,7 +2241,7 @@ private noncomputable def section14_7_otherKstarJoinOfOvergroupFamily
     {M K Mi : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMiFam : Mi ∈ section14_7_overgroupFamily K) : Subgroup G :=
+    (_hMiFam : Mi ∈ section14_7_overgroupFamily K) : Subgroup G :=
   section14KStar M K ⊔
     sSup (Set.range fun j : {Mj // Mj ∈ section14_7_overgroupFamily K ∧ Mj ≠ Mi} =>
       section14_7_KstarOfOvergroupFamily
@@ -2290,8 +2330,8 @@ private theorem section14_7_otherKstarJoinOfOvergroupFamily_eq_ki
   have hX0 : X0 ∈ section12PrimeOrderSubgroups Ki :=
     section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
   have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-    simpa [Kistar, section14Z, section14KStar] using
-      (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
   have hJleKi : J ≤ Ki :=
     section14_7_otherKstarJoinOfOvergroupFamily_le_ki
       (G := G) (M := M) (K := K) (Mi := Mi) hM hK hMiFam
@@ -2405,9 +2445,12 @@ private theorem section14_7_otherKstarJoinOfOvergroupFamily_eq_ki
       (Ki.subgroupOf (section14Z M K))
     have hcomp :
         (Kistar.subgroupOf (section14Z Mi Ki)).IsComplement' (Ki.subgroupOf (section14Z Mi Ki)) := by
-      simpa [Kistar, inf_comm] using
+      change
+        ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).IsComplement'
+          (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki))
+      exact
         section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
-          (G := G) (H := Kistar) (R := Ki) hKi_norm_Kistar
+          (G := G) (H := section14KStar Mi Ki) (R := Ki) hKi_norm_Kistar
           (by simpa [disjoint_iff, Kistar, inf_comm] using hZdp.2.2.2.1)
     simpa using (hZeqZi.symm ▸ hcomp)
   have hcardJ : Nat.card J = Nat.card Ki := by
@@ -2438,6 +2481,7 @@ public def section14_7_TSet
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) : Set G :=
   (section14Z M K : Set G) \ section14_7_factorUnion (G := G) (M := M) (K := K) hM hK
 
+omit [IsMinCE G] in
 private theorem section14_isPiElement_of_mem_hall
     {M K : Subgroup G} {π : Set Nat.Primes}
     (hK : section12HallSubgroupIn π K M)
@@ -2485,7 +2529,7 @@ private theorem section14_7_exists_alt2_of_mem_TSet
       Or.inr <| Set.mem_iUnion.2 ⟨⟨Mi, hMiFam⟩, by simpa using htMi⟩
   have htne : t ≠ 1 := by
     intro ht1
-    exact htNotBase (by simpa [ht1])
+    exact htNotBase (by simp [ht1])
   obtain ⟨q, z, hz_zpowt, _hzZ, hzne, hzprime⟩ :=
     section14_exists_primeOrder_zpowers_in (G := G)
       (B := section14Z M K) htZ htne
@@ -2511,15 +2555,19 @@ private theorem section14_7_exists_alt2_of_mem_TSet
       intro x hxK
       exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
     have hKstarNormal : ((section14KStar M K).subgroupOf Z).Normal := by
-      simpa [Z] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := K) (N := section14KStar M K) hK_norm_Kstar)
+      change ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := K) (N := section14KStar M K) hK_norm_Kstar
     letI : ((section14KStar M K).subgroupOf Z).Normal := hKstarNormal
     have htop0 :
         (K.subgroupOf Z) ⊔ ((section14KStar M K).subgroupOf Z) = ⊤ := by
-      simpa [Z, section14Z] using
+      change
+        (K.subgroupOf (K ⊔ section14KStar M K)) ⊔
+            ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)) = ⊤
+      simpa only [Subgroup.subgroupOf_self] using
         (Subgroup.subgroupOf_sup
-          (A := K) (A' := section14KStar M K) (B := Z)
+          (A := K) (A' := section14KStar M K) (B := K ⊔ section14KStar M K)
           le_sup_left le_sup_right).symm
     have htop :
         ((section14KStar M K).subgroupOf Z) ⊔ (K.subgroupOf Z) = ⊤ := by
@@ -2586,8 +2634,8 @@ private theorem section14_7_exists_alt2_of_mem_TSet
     have hX0 : X0 ∈ section12PrimeOrderSubgroups Ki :=
       section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
     have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-      simpa [Kistar, section14Z, section14KStar] using
-        (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
+      change section14ZInternalDirectProduct Mi Ki
+      exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
     let Z : Subgroup G := section14Z Mi Ki
     have htZi : t ∈ Z := by
       simpa [Z, hZeqZi] using htZ
@@ -2595,14 +2643,19 @@ private theorem section14_7_exists_alt2_of_mem_TSet
       intro x hxKi
       exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hxKi)
     have hKistarNormal : (Kistar.subgroupOf Z).Normal := by
-      simpa [Z, Kistar] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := Ki) (N := Kistar) hKi_norm_Kistar)
+      change ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := Ki) (N := section14KStar Mi Ki) hKi_norm_Kistar
     letI : (Kistar.subgroupOf Z).Normal := hKistarNormal
     have htop0 : (Ki.subgroupOf Z) ⊔ (Kistar.subgroupOf Z) = ⊤ := by
-      simpa [Z, Kistar, section14Z] using
+      change
+        (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki)) ⊔
+            ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)) = ⊤
+      simpa only [Subgroup.subgroupOf_self] using
         (Subgroup.subgroupOf_sup
-          (A := Ki) (A' := Kistar) (B := Z) le_sup_left le_sup_right).symm
+          (A := Ki) (A' := section14KStar Mi Ki) (B := Ki ⊔ section14KStar Mi Ki)
+          le_sup_left le_sup_right).symm
     have htop : (Kistar.subgroupOf Z) ⊔ (Ki.subgroupOf Z) = ⊤ := by
       simpa [sup_comm] using htop0
     let tZ : Z := ⟨t, htZi⟩
@@ -2665,7 +2718,7 @@ private theorem section14_7_TSet_disjoint_tilde
     rcases ht with ⟨htT, htTilde⟩
     have htne : t ≠ 1 := by
       intro ht1
-      exact htT.2 (Or.inl (by simpa [ht1]))
+      exact htT.2 (Or.inl (by simp [ht1]))
     rcases htTilde with ⟨x, hxHσ, hxne, x', hx'R, htEq⟩
     have hAlt1 :
         ∃ a a' : G,
@@ -2686,8 +2739,9 @@ private theorem section14_7_TSet_disjoint_tilde
       exact ⟨y, y', M0, htEq0, hylen0, hy'ne0, hy'κ0, hy'cent0, hM0y⟩
     exact (lemma_14_6 (G := G) (g := t) htne).2 ⟨hAlt1, hAlt2⟩
   · intro ht
-    simpa using ht
+    simp at ht
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_zpowers_conjBy_inv
     (x g : G) :
     Subgroup.zpowers (g⁻¹ * x * g) = (Subgroup.zpowers x).conjBy g⁻¹ := by
@@ -2705,6 +2759,7 @@ public theorem section14_zpowers_conjBy_inv
       simpa [MulAut.conj_apply, mul_assoc] using
         (conj_zpow (i := n) (a := g⁻¹) (b := x))⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_isPiElement_conjBy_inv
     {π : Set Nat.Primes} {x g : G}
     (hx : section14IsPiElement π x) :
@@ -2757,10 +2812,10 @@ private theorem section14_7_mem_z_of_mem_TSet_of_conj_mem_z
     simpa [htEq] using hy'T1
   have hygT : g⁻¹ * y * g ∈ Subgroup.zpowers (g⁻¹ * t * g) := by
     rw [section14_zpowers_conjBy_inv (G := G) t g]
-    exact Subgroup.mem_map.mpr ⟨y, hyT, by simp [MulAut.conj_apply, mul_assoc]⟩
+    exact Subgroup.mem_map.mpr ⟨y, hyT, by simp [mul_assoc]⟩
   have hy'gT : g⁻¹ * y' * g ∈ Subgroup.zpowers (g⁻¹ * t * g) := by
     rw [section14_zpowers_conjBy_inv (G := G) t g]
-    exact Subgroup.mem_map.mpr ⟨y', hy'T, by simp [MulAut.conj_apply, mul_assoc]⟩
+    exact Subgroup.mem_map.mpr ⟨y', hy'T, by simp [mul_assoc]⟩
   have hygσ : section14ElementPrimeSupport (g⁻¹ * y * g) ⊆ section10SigmaPrimes M0 :=
     section14_isPiElement_conjBy_inv (G := G) hyσ
   have hy'gσc :
@@ -2772,8 +2827,8 @@ private theorem section14_7_mem_z_of_mem_TSet_of_conj_mem_z
   have hX0 : X0 ∈ section12PrimeOrderSubgroups K0 :=
     section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
   have hZdp : section12InternalDirectProduct K0 K0star Z0 := by
-    simpa [Z0, K0star, section14Z, section14KStar] using
-      (proposition_14_2_b1 (G := G) (M := M0) (K := K0) hM0 hK0 X0 hX0).2.2
+    change section14ZInternalDirectProduct M0 K0
+    exact (proposition_14_2_b1 (G := G) (M := M0) (K := K0) hM0 hK0 X0 hX0).2.2
   have htgZ0 : g⁻¹ * t * g ∈ Z0 := by
     simpa [hZeqZ0, Z0] using htgZ
   have hK0star_norm_K0 : K0star ≤ Subgroup.normalizer (K0 : Set G) := by
@@ -2789,12 +2844,17 @@ private theorem section14_7_mem_z_of_mem_TSet_of_conj_mem_z
           (H := K0star) (N := K0) hK0star_norm_K0)
     have hK0Normal0 : (K0.subgroupOf (K0 ⊔ K0star)).Normal := by
       exact (sup_comm K0star K0) ▸ hK0Normal0'
-    simpa [Z0, K0star, section14Z] using hK0Normal0
+    change (K0.subgroupOf (K0 ⊔ K0star)).Normal
+    exact hK0Normal0
   letI : (K0.subgroupOf Z0).Normal := hK0Normal
   have htop0 : (K0.subgroupOf Z0) ⊔ (K0star.subgroupOf Z0) = ⊤ := by
-    simpa [Z0, K0star, section14Z] using
+    change
+      (K0.subgroupOf (K0 ⊔ section14KStar M0 K0)) ⊔
+          ((section14KStar M0 K0).subgroupOf (K0 ⊔ section14KStar M0 K0)) = ⊤
+    simpa only [Subgroup.subgroupOf_self] using
       (Subgroup.subgroupOf_sup
-        (A := K0) (A' := K0star) (B := Z0) le_sup_left le_sup_right).symm
+        (A := K0) (A' := section14KStar M0 K0) (B := K0 ⊔ section14KStar M0 K0)
+        le_sup_left le_sup_right).symm
   let tgZ0 : Z0 := ⟨g⁻¹ * t * g, htgZ0⟩
   have htgTop : tgZ0 ∈ (K0.subgroupOf Z0) ⊔ (K0star.subgroupOf Z0) := by
     simp [htop0]
@@ -2858,7 +2918,7 @@ private theorem section14_7_mem_z_of_mem_TSet_of_conj_mem_z
         K0star ⊓ M0.conjBy g⁻¹ = ⊥ :=
       (proposition_14_2_d (G := G) (M := M0) (K := K0) hM0 hK0).1 g⁻¹ hgInvNotM0
     have hygMgInv : g⁻¹ * y * g ∈ M0.conjBy g⁻¹ := by
-      exact Subgroup.mem_map.mpr ⟨y, hyM0, by simp [MulAut.conj_apply, mul_assoc]⟩
+      exact Subgroup.mem_map.mpr ⟨y, hyM0, by simp [mul_assoc]⟩
     have hygInf : g⁻¹ * y * g ∈ K0star ⊓ M0.conjBy g⁻¹ := ⟨hygK0star, hygMgInv⟩
     have hygBot : g⁻¹ * y * g ∈ (⊥ : Subgroup G) := by
       simpa [hdisj] using hygInf
@@ -2873,7 +2933,7 @@ private theorem section14_7_mem_z_of_mem_TSet_of_conj_mem_z
       (proposition_14_2_d (G := G) (M := M0) (K := K0) hM0 hK0).2
         g⁻¹ (M0.inv_mem hgM0) hgInvNotZ0
     have hy'gKgInv : g⁻¹ * y' * g ∈ K0.conjBy g⁻¹ := by
-      exact Subgroup.mem_map.mpr ⟨y', hyK0, by simp [MulAut.conj_apply, mul_assoc]⟩
+      exact Subgroup.mem_map.mpr ⟨y', hyK0, by simp [mul_assoc]⟩
     have hy'gInf : g⁻¹ * y' * g ∈ K0 ⊓ K0.conjBy g⁻¹ := ⟨hy'gK0, hy'gKgInv⟩
     have hy'gBot : g⁻¹ * y' * g ∈ (⊥ : Subgroup G) := by
       simpa [hdisj] using hy'gInf
@@ -3011,9 +3071,10 @@ private theorem section14_7_factorUnion_conj_iff_of_mem_z
       intro y hyK
       exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hyK)
     have hBaseNormal : ((section14KStar M K).subgroupOf (section14Z M K)).Normal := by
-      simpa [section14Z] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := K) (N := section14KStar M K) hK_norm_Kstar)
+      change ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := K) (N := section14KStar M K) hK_norm_Kstar
     letI : ((section14KStar M K).subgroupOf (section14Z M K)).Normal := hBaseNormal
     exact
       Subgroup.le_normalizer_of_normal_subgroupOf
@@ -3042,15 +3103,16 @@ private theorem section14_7_factorUnion_conj_iff_of_mem_z
     have hX0 : X0 ∈ section12PrimeOrderSubgroups Ki :=
       section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
     have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-      simpa [Kistar, section14Z, section14KStar] using
-        (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
+      change section14ZInternalDirectProduct Mi Ki
+      exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
     have hKi_norm_Kistar : Ki ≤ Subgroup.normalizer (Kistar : Set G) := by
       intro y hyKi
       exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hyKi)
     have hKistarNormal : (Kistar.subgroupOf (section14Z Mi Ki)).Normal := by
-      simpa [Kistar, section14Z] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := Ki) (N := Kistar) hKi_norm_Kistar)
+      change ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := Ki) (N := section14KStar Mi Ki) hKi_norm_Kistar
     letI : (Kistar.subgroupOf (section14Z Mi Ki)).Normal := hKistarNormal
     have hNormZi : section14Z Mi Ki ≤ Subgroup.normalizer (Kistar : Set G) :=
       Subgroup.le_normalizer_of_normal_subgroupOf
@@ -3122,7 +3184,7 @@ private theorem section14_7_TSet_ti
         section14SetConjBy (section14_7_TSet (G := G) (M := M) (K := K) hM hK) g = ∅ :=
     section14_7_TSet_inter_setConjBy_eq_empty_of_not_mem_z
       (G := G) (M := M) (K := K) hM hK hgNotZ
-  simpa [hEmpty]
+  simp [hEmpty]
 
 public theorem section14_7_conjClosure_TSet_disjoint_conjClosure_tilde
     {M K H : Subgroup G}
@@ -3185,7 +3247,6 @@ private theorem section14_7_card_conjClosure_union_overgroupFamily
           Nat.card (section14ConjugacyClosure (section14Tilde i.1)) := by
   classical
   let I := {Mi // Mi ∈ section14_7_overgroupFamily K}
-  letI : Fintype I := Fintype.ofFinite I
   let U : Option I → Set G
     | none =>
         section14ConjugacyClosure
@@ -3253,6 +3314,7 @@ private theorem section14_7_card_conjClosure_union_overgroupFamily
           ∑ i : I, Nat.card (section14ConjugacyClosure (section14Tilde i.1)) := by
           rw [Fintype.sum_option]
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_one_not_mem_conjClosure_of_one_not_mem
     {T : Set G} (hT1 : 1 ∉ T) :
     1 ∉ section14ConjugacyClosure T := by
@@ -3308,6 +3370,7 @@ public theorem section14_one_not_mem_conjClosure_tilde
   exact section14_one_not_mem_conjClosure_of_one_not_mem
     (G := G) (T := section14Tilde M) (section14_one_not_mem_tilde (G := G) hM)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_card_conjClosure_eq_card_mul_index_of_ti
     {T : Set G}
     (hT1 : 1 ∉ T)
@@ -3358,7 +3421,7 @@ private theorem section14_card_conjClosure_eq_card_mul_index_of_ti
       let a : G := Quotient.out q
       have hgaN : g * a⁻¹ ∈ N := by
         have hqa : (Quotient.mk'' a : Ω) = Quotient.mk'' g := by
-          simpa [q, a] using (Quotient.out_eq' q : (Quotient.mk'' (Quotient.out q) : Ω) = q)
+          simp [q, a]
         exact QuotientGroup.rightRel_apply.mp (Quotient.exact' hqa)
       let n : G := g * a⁻¹
       have hnInvNorm : n⁻¹ ∈ N := N.inv_mem hgaN
@@ -3389,7 +3452,7 @@ private theorem section14_7_one_not_mem_TSet
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) :
     1 ∉ section14_7_TSet (G := G) (M := M) (K := K) hM hK := by
   intro h1
-  exact h1.2 (Or.inl (by simp [section14_7_factorUnion]))
+  exact h1.2 (Or.inl (by simp))
 
 private theorem section14_7_conjClosure_union_overgroupFamily_subset_nonidentity
     {M K : Subgroup G}
@@ -3399,8 +3462,7 @@ private theorem section14_7_conjClosure_union_overgroupFamily_subset_nonidentity
         ⋃ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
           section14ConjugacyClosure (section14Tilde i.1)) ⊆
       ({g : G | g ≠ 1} : Set G) := by
-  intro g hg
-  intro hg1
+  intro g hg hg1
   subst hg1
   rcases hg with hgT | hgFam
   · exact
@@ -3413,6 +3475,7 @@ private theorem section14_7_conjClosure_union_overgroupFamily_subset_nonidentity
     rcases i.2 with ⟨Xi, _hXi, hMi⟩
     exact section14_one_not_mem_conjClosure_tilde (G := G) (M := i.1) hMi.1 hgi
 
+omit [IsMinCE G] in
 private theorem section14_card_nonidentity :
     Nat.card ({g : G | g ≠ 1} : Set G) = Nat.card G - 1 := by
   classical
@@ -3483,7 +3546,6 @@ private theorem section14_7_card_conjClosure_union_self_overgroupFamily
           Nat.card (section14ConjugacyClosure (section14Tilde i.1)) := by
   classical
   let I := {Mi // Mi ∈ section14_7_overgroupFamily K}
-  letI : Fintype I := Fintype.ofFinite I
   let U : Option (Option I) → Set G
     | none =>
         section14ConjugacyClosure
@@ -3598,8 +3660,7 @@ private theorem section14_7_conjClosure_union_self_overgroupFamily_subset_nonide
         ⋃ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
           section14ConjugacyClosure (section14Tilde i.1)) ⊆
       ({g : G | g ≠ 1} : Set G) := by
-  intro g hg
-  intro hg1
+  intro g hg hg1
   subst hg1
   rcases hg with hgLeft | hgFam
   · rcases hgLeft with hgT | hgMtilde
@@ -3643,6 +3704,7 @@ private theorem section14_7_card_conjClosure_union_self_overgroupFamily_le_nonid
   change Nat.card A ≤ Nat.card B
   exact hcard
 
+omit [Finite G] [IsMinCE G] in
 private theorem section14_z_le_of_hall_kappa
     {M K : Subgroup G}
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) :
@@ -3748,6 +3810,7 @@ private theorem section14_7_z_lt_overgroupFamily
     exact hNX_not_le_M hNX_le_M
   exact lt_of_le_of_ne hZleMi hZne
 
+omit [IsMinCE G] in
 private theorem section14_two_mul_card_of_lt
     {H L : Subgroup G}
     (hHL : H < L) :
@@ -3768,7 +3831,7 @@ private theorem section14_two_mul_card_of_lt
     calc
       Nat.card H * Hsub.index = Nat.card Hsub * Hsub.index := by rw [hcardHsub]
       _ = Nat.card L := by
-            simpa [Nat.mul_comm] using Subgroup.card_mul_index (H := Hsub)
+            exact Subgroup.card_mul_index (H := Hsub)
   have htwo_mul : 2 * Nat.card H ≤ Nat.card H * Hsub.index := by
     calc
       2 * Nat.card H = Nat.card H * 2 := by simp [Nat.mul_comm]
@@ -3853,7 +3916,7 @@ private theorem section14_card_conjClosure_tilde_eq_q_of_complement
       _ = Nat.card M := by
             simpa using hcomp'.card_mul
   have hmg : Nat.card M * M.index = Nat.card G := by
-    simpa [Nat.mul_comm] using Subgroup.card_mul_index (H := M)
+    exact Subgroup.card_mul_index (H := M)
   have hclosure :
       Nat.card (section14ConjugacyClosure (section14Tilde M)) =
         (Nat.card (section10Msigma M) - 1) * M.index :=
@@ -3989,7 +4052,6 @@ private theorem section14_7_card_factorUnion_add
               (G := G) (M := M) (K := K) (Mi := i.1) hM hK i.2) := by
   classical
   let I := {Mi // Mi ∈ section14_7_overgroupFamily K}
-  letI : Fintype I := Fintype.ofFinite I
   change Nat.card (section14_7_factorUnion (G := G) (M := M) (K := K) hM hK) +
         Nat.card I =
       Nat.card (section14KStar M K) +
@@ -4059,7 +4121,7 @@ private theorem section14_7_card_factorUnion_add
               intro hEq
               have hijSub : i = j := Subtype.ext hEq
               apply hne
-              simpa [hijSub]
+              simp [hijSub]
             rw [Function.onFun]
             rw [Set.disjoint_left]
             intro x hxI hxJ
@@ -4094,12 +4156,14 @@ private theorem section14_7_card_factorUnion_add
   have hFactorAddOne :
       ((section14_7_factorUnion (G := G) (M := M) (K := K) hM hK) \ ({1} : Set G)).ncard + 1 =
         Nat.card (section14_7_factorUnion (G := G) (M := M) (K := K) hM hK) := by
-    simpa [Nat.card_coe_set_eq] using Set.ncard_diff_singleton_add_one hOneFactor
+    simpa [Nat.card_coe_set_eq] using Set.ncard_sdiff_singleton_add_one hOneFactor
   have hBaseAddOne :
       (U none).ncard + 1 = Nat.card (section14KStar M K) := by
-    simpa [U, Nat.card_coe_set_eq] using
-      (Set.ncard_diff_singleton_add_one
-        (s := (section14KStar M K : Set G)) (a := 1) (by simp))
+    change
+      ((section14KStar M K : Set G) \ ({1} : Set G)).ncard + 1 =
+        Nat.card (section14KStar M K)
+    rw [Set.ncard_sdiff_singleton_add_one (by simp)]
+    rw [← Nat.card_coe_set_eq, SetLike.coe_sort_coe]
   have hFamAdd :
       (∑ i : I, (U (some i)).ncard) + Nat.card I =
         ∑ i : I,
@@ -4122,12 +4186,15 @@ private theorem section14_7_card_factorUnion_add
                       (section14_7_KstarOfOvergroupFamily
                         (G := G) (M := M) (K := K) (Mi := i.1) hM hK i.2) := by
               intro i
-              simpa [U, Nat.card_coe_set_eq] using
-                (Set.ncard_diff_singleton_add_one
-                  (s :=
-                    ((section14_7_KstarOfOvergroupFamily
-                        (G := G) (M := M) (K := K) (Mi := i.1) hM hK i.2 : Subgroup G) : Set G))
-                  (a := 1) (by simp))
+              change
+                ((section14_7_KstarOfOvergroupFamily
+                      (G := G) (M := M) (K := K) (Mi := i.1) hM hK i.2 : Set G) \
+                    ({1} : Set G)).ncard + 1 =
+                  Nat.card
+                    (section14_7_KstarOfOvergroupFamily
+                      (G := G) (M := M) (K := K) (Mi := i.1) hM hK i.2)
+              rw [Set.ncard_sdiff_singleton_add_one (by simp)]
+              rw [← Nat.card_coe_set_eq, SetLike.coe_sort_coe]
             simp_rw [hterm]
   omega
 
@@ -4158,12 +4225,16 @@ private theorem section14_7_card_TSet_add
       Nat.card (section14_7_TSet (G := G) (M := M) (K := K) hM hK) +
         Nat.card (section14_7_factorUnion (G := G) (M := M) (K := K) hM hK) =
       Nat.card (section14Z M K) := by
-    simpa [section14_7_TSet, Nat.card_coe_set_eq] using
-      (Set.ncard_diff_add_ncard_of_subset hFactorLeZ)
+    have hZcard :
+        (section14Z M K : Set G).ncard = Nat.card (section14Z M K) := by
+      rw [← Nat.card_coe_set_eq, SetLike.coe_sort_coe]
+    simpa only [section14_7_TSet, Nat.card_coe_set_eq, hZcard] using
+      (Set.ncard_sdiff_add_ncard_of_subset hFactorLeZ)
   have hCardFactor :=
     section14_7_card_factorUnion_add (G := G) (M := M) (K := K) hM hK
   omega
 
+omit [IsMinCE G] in
 public theorem section14_mem_P1_of_mem_P_and_not_mem_P2
     {M : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
@@ -4192,7 +4263,10 @@ private theorem section14_7_card_k_mul_card_kstar_eq_z
     exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
   have hcomp :
       ((section14KStar M K).subgroupOf Z).IsComplement' (K.subgroupOf Z) := by
-    simpa [Z, inf_comm] using
+    change
+      ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).IsComplement'
+        (K.subgroupOf (K ⊔ section14KStar M K))
+    exact
       section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
         (G := G) (H := section14KStar M K) (R := K) hK_norm_Kstar
         (by simpa [disjoint_iff, inf_comm] using hZdp.2.2.2.1)
@@ -4237,7 +4311,7 @@ private theorem section14_7_card_ki_mul_card_kistar_eq_z
         Xi ≤ Kistar ∧
         Ki ≤ section14Z M K ∧
         Kistar ≤ K := by
-    simpa [Xi, Ki, Kistar] using
+    simpa [Xi, Ki, Kistar, section14_7_KstarOfOvergroupFamily] using
       section14_7_XiKiOfOvergroupFamily_spec
         (G := G) (M := M) (K := K) (Mi := Mi) hM hK hMiFam
   rcases hMiSpec with
@@ -4249,17 +4323,22 @@ private theorem section14_7_card_ki_mul_card_kistar_eq_z
   have hX0 : X0 ∈ section12PrimeOrderSubgroups Ki :=
     section14_primeOrderSubgroups_of_primeOrderSubgroupsIn hX0PrimeIn
   have hZdp : section12InternalDirectProduct Ki Kistar (section14Z Mi Ki) := by
-    simpa [Ki, Kistar, section14Z, section14KStar] using
-      (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
+    change section14ZInternalDirectProduct Mi Ki
+    exact (proposition_14_2_b1 (G := G) (M := Mi) (K := Ki) hMiP hKi X0 hX0).2.2
   have hKi_norm_Kistar : Ki ≤ Subgroup.normalizer (Kistar : Set G) := by
     intro x hxKi
     exact (centralizer_le_normalizer Kistar) (hZdp.2.2.2.2 hxKi)
   have hcomp :
       (Kistar.subgroupOf (section14Z Mi Ki)).IsComplement' (Ki.subgroupOf (section14Z Mi Ki)) := by
-    simpa [Ki, Kistar, inf_comm] using
+    change
+      ((section14KStar Mi Ki).subgroupOf (Ki ⊔ section14KStar Mi Ki)).IsComplement'
+        (Ki.subgroupOf (Ki ⊔ section14KStar Mi Ki))
+    exact
       section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
-        (G := G) (H := Kistar) (R := Ki) hKi_norm_Kistar
-        (by simpa [disjoint_iff, Ki, Kistar, inf_comm] using hZdp.2.2.2.1)
+        (G := G) (H := section14KStar Mi Ki) (R := Ki) hKi_norm_Kistar
+        (by
+          simpa [disjoint_iff, Ki, Kistar, section14_7_KstarOfOvergroupFamily, inf_comm]
+            using hZdp.2.2.2.1)
   calc
     Nat.card Ki * Nat.card Kistar =
         Nat.card (Ki.subgroupOf (section14Z Mi Ki)) *
@@ -4309,9 +4388,8 @@ public theorem section14_7_exists_P2_self_or_overgroupFamily
     section14ConjugacyClosure T ∪
       section14ConjugacyClosure (section14Tilde M) ∪
       ⋃ i : I, section14ConjugacyClosure (section14Tilde i.1)
-  letI : Fintype I := Fintype.ofFinite I
   have hZidxNat : Nat.card Z * Z.index = Nat.card G := by
-    simpa [Z, Nat.mul_comm] using Subgroup.card_mul_index (H := Z)
+    exact Subgroup.card_mul_index (H := Z)
   have hZidxQ : (Nat.card Z : ℚ) * (Z.index : ℚ) = (Nat.card G : ℚ) := by
     exact_mod_cast hZidxNat
   have hTclosureQ :
@@ -4538,7 +4616,6 @@ public theorem section14_7_exists_P2_self_or_overgroupFamily
     rcases section14_7_overgroupFamily_nonempty (G := G) (M := M) (K := K) hM hK with
       ⟨Mi, hMiFam⟩
     exact ⟨⟨Mi, hMiFam⟩⟩
-  letI : Fintype I := Fintype.ofFinite I
   have hIcardPos : 0 < Nat.card I := by
     rw [Nat.card_eq_fintype_card]
     exact Fintype.card_pos_iff.mpr hINonempty
@@ -4592,6 +4669,7 @@ public theorem section14_7_exists_P2_self_or_overgroupFamily
     norm_num
   linarith
 
+omit [IsMinCE G] in
 public theorem section14_subgroup_eq_of_le_prime_card
     {H K : Subgroup G}
     (hHK : H ≤ K)
@@ -4781,7 +4859,7 @@ public theorem section14_7_singleton_collapse_of_P2_witness
     have hi : i = ⟨Mi, hMiFam⟩ := by
       apply Subtype.ext
       exact huniq i.1 i.2
-    simpa [Kistar, hi] using (le_rfl : Kistar ≤ Kistar)
+    simp [Kistar, hi]
   have hKistarEqK :
       Kistar = K := by
     have hFamEqKistar :
@@ -4890,7 +4968,7 @@ private theorem section14_7_factorUnion_eq_kstar_union_k_of_singleton
       simpa [hiSub, hKistarEqK] using hxi
     · intro hxK
       exact Set.mem_iUnion.mpr ⟨⟨Mi, hMiFam⟩, by simpa [hKistarEqK] using hxK⟩
-  simpa [section14_7_factorUnion, hFamUnion]
+  simp [section14_7_factorUnion, hFamUnion]
 
 public theorem section14_7_TSet_eq_widehatZ_of_singleton
     {M K Mi : Subgroup G}
@@ -4905,30 +4983,21 @@ public theorem section14_7_TSet_eq_widehatZ_of_singleton
   simp [section14_7_TSet, section14WidehatZ,
     section14_7_factorUnion_eq_kstar_union_k_of_singleton
       (G := G) (M := M) (K := K) (Mi := Mi) hM hK hMiFam huniqFam hKistarEqK,
-    Set.union_comm, Set.union_left_comm, Set.union_assoc]
+    Set.union_comm]
 
+omit [IsMinCE G] in
 private theorem section14_7_overgroupFamily_card_eq_one_of_singleton
     {M K Mi : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hM : M ∈ section14MFamilyP G)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hMiFam : Mi ∈ section14_7_overgroupFamily K)
     (huniqFam : ∀ Mj : Subgroup G, Mj ∈ section14_7_overgroupFamily K → Mj = Mi) :
     Nat.card {Mj // Mj ∈ section14_7_overgroupFamily K} = 1 := by
-  classical
-  let I := {Mj // Mj ∈ section14_7_overgroupFamily K}
-  let a : I := ⟨Mi, hMiFam⟩
-  let e : I ≃ Unit := {
-    toFun := fun _ => ()
-    invFun := fun _ => a
-    left_inv := by
-      intro i
-      apply Subtype.ext
-      exact (huniqFam i.1 i.2).symm
-    right_inv := by
-      intro u
-      cases u
-      rfl }
-  simpa using Nat.card_congr e
+  refine Nat.card_eq_one_iff_unique.mpr ⟨?_, ⟨⟨Mi, hMiFam⟩⟩⟩
+  constructor
+  intro i j
+  apply Subtype.ext
+  exact (huniqFam i.1 i.2).trans (huniqFam j.1 j.2).symm
 
 private theorem section14_7_card_TSet_add_eq_z_add_one_of_singleton
     {M K Mi : Subgroup G}
@@ -4944,7 +5013,6 @@ private theorem section14_7_card_TSet_add_eq_z_add_one_of_singleton
       Nat.card (section14Z M K) + 1 := by
   classical
   let I : Type _ := {Mj // Mj ∈ section14_7_overgroupFamily K}
-  let _ : Fintype I := CategoryTheory.FinCategory.fintypeObj
   have hSum :
       ∑ i : I,
           Nat.card
@@ -4960,7 +5028,7 @@ private theorem section14_7_card_TSet_add_eq_z_add_one_of_singleton
       intro i
       have hiEq : i.1 = Mi := huniqFam i.1 i.2
       have hiSub : i = ⟨Mi, hMiFam⟩ := Subtype.ext hiEq
-      simpa [hiSub, hKistarEqK]
+      simp [hiSub, hKistarEqK]
     calc
       ∑ i : I,
             Nat.card
@@ -5102,7 +5170,7 @@ private theorem section14_7_card_conjClosure_widehat_of_singleton
       section14_7_card_k_mul_card_kstar_eq_z (G := G) (M := M) (K := K) hM hK
   have hzg :
       Nat.card Z * Z.index = Nat.card G := by
-    simpa [Z, Nat.mul_comm] using Subgroup.card_mul_index (H := Z)
+    exact Subgroup.card_mul_index (H := Z)
   have ht :
       Nat.card T + Nat.card (section14KStar M K) + Nat.card K =
         Nat.card Z + 1 := by
@@ -5278,6 +5346,7 @@ private theorem section14_7_partner_hall_sigma
   have hYeq : Y = section14KStar M K := le_antisymm hYleKstar hKstarLeY
   simpa [hYeq] using hY
 
+omit [IsMinCE G] in
 private theorem section14_7_cyclic_of_isZGroup_of_le_nilpotent
     {H N : Subgroup G}
     (hHZ : IsZGroup H)
@@ -5294,9 +5363,9 @@ private theorem section14_7_cyclic_of_isZGroup_of_le_nilpotent
 
 private theorem section14_7_k_cyclic_of_partner
     {M K Mi : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
+    (_hM : M ∈ section14MFamilyP G)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMiP : Mi ∈ section14MFamilyP G)
+    (_hMiP : Mi ∈ section14MFamilyP G)
     (hHallKappaBase :
       section12HallSubgroupIn (section14KappaPrimes Mi) (section14KStar M K) Mi)
     (hKEqPartnerKstar : K = section14KStar Mi (section14KStar M K))
@@ -5319,7 +5388,7 @@ private theorem section14_7_k_cyclic_of_partner
 
 private theorem section14_7_kstar_cyclic_of_partner
     {M K Mi : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
+    (_hM : M ∈ section14MFamilyP G)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hHallKappaBase :
       section12HallSubgroupIn (section14KappaPrimes Mi) (section14KStar M K) Mi)
@@ -5407,7 +5476,10 @@ private theorem section14_7_z_cyclic_of_partner
       Ksub.IsComplement' Kstarsub := by
     have hcompKstar :
         ((section14KStar M K).subgroupOf Z).IsComplement' (K.subgroupOf Z) := by
-      simpa [Z, inf_comm] using
+      change
+        ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).IsComplement'
+          (K.subgroupOf (K ⊔ section14KStar M K))
+      exact
         section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
           (G := G) (H := section14KStar M K) (R := K) hK_norm_Kstar
           (by simpa [disjoint_iff, inf_comm] using hZdp.2.2.2.1)
@@ -5550,9 +5622,10 @@ private theorem section14_7_complement_ambientDerived_of_k_cyclic
   have hEq : N = ambientDerivedSubgroup M := le_antisymm hNleDer hDerLeN
   simpa [hEq] using hcomp.1
 
+omit [IsMinCE G] in
 private theorem section14_7_kappa_eq_tau1_of_complement_ambientDerived
     {M K : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
+    (_hM : M ∈ section14MFamilyP G)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hComp : section12ComplementIn M K (ambientDerivedSubgroup M)) :
     section14KappaPrimes M = section12Tau1Primes M := by
@@ -5629,7 +5702,7 @@ private theorem section14_7_kappa_eq_tau1_of_complement_ambientDerived
   · intro p hpτ1
     have hpM : p.val ∣ Nat.card M :=
       section14_prime_dvd_card_of_primeRank_pos
-        (R := M) (p := p) (by simpa [hpτ1.2.2])
+        (R := M) (p := p) (by simp [hpτ1.2.2])
     have hcardK : Nat.card Ksub = Nat.card K := section12_card_subgroupOf_eq hKM
     have hcardD : Nat.card Dsub = Nat.card (ambientDerivedSubgroup M) := by
       simpa [Dsub] using
@@ -5794,7 +5867,7 @@ private theorem section14_7_inter_partner_eq_z
             rw [section14Z, sup_comm]
       _ = K ⊔ section14KStar M K := by rw [← hKEqPartnerKstar]
       _ = section14Z M K := by rw [section14Z]
-  exact le_antisymm (hInfLeZi.trans (by simpa [hZiEqZ])) hZLeInf
+  exact le_antisymm (hInfLeZi.trans (by simp [hZiEqZ])) hZLeInf
 
 private theorem section14_7_elementCentralizer_eq_z_of_mem_k
     {M K : Subgroup G} {x : G}
@@ -5838,8 +5911,8 @@ private theorem section14_7_elementCentralizer_eq_z_of_mem_k
 
 private theorem section14_7_elementCentralizer_partner_eq_z
     {M K Mi : Subgroup G} {y : G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hM : M ∈ section14MFamilyP G)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hMiP : Mi ∈ section14MFamilyP G)
     (hHallKappaBase :
       section12HallSubgroupIn (section14KappaPrimes Mi) (section14KStar M K) Mi)
@@ -5903,7 +5976,7 @@ private theorem section14_7_centralizer_mul_eq_z
     (hPrimeOrderUnique :
       ∀ X : Subgroup G, X ∈ section12PrimeOrderSubgroups K →
         section9MaximalSubgroupsContaining (Subgroup.centralizer (X : Set G)) = {Mi})
-    (hMiP : Mi ∈ section14MFamilyP G)
+    (_hMiP : Mi ∈ section14MFamilyP G)
     (hInfEqZ : M ⊓ Mi = section14Z M K)
     (hKcyc : IsCyclic K)
     (hKstarcyc : IsCyclic (section14KStar M K))
@@ -6018,7 +6091,7 @@ private theorem section14_7_widehat_inter_conj_eq_empty_of_not_mem
     (hM : M ∈ section14MFamilyP G)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hZdp : section14ZInternalDirectProduct M K)
-    (hKcyc : IsCyclic K)
+    (_hKcyc : IsCyclic K)
     (hgM : g ∉ M) :
     section14WidehatZ M K ∩ (M.conjBy g : Set G) = ∅ := by
   apply Set.eq_empty_iff_forall_notMem.2
@@ -6036,14 +6109,19 @@ private theorem section14_7_widehat_inter_conj_eq_empty_of_not_mem
     intro x hxK
     exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
   have hKstarNormal : ((section14KStar M K).subgroupOf Z).Normal := by
-    simpa [Z, section14Z] using
-      (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-        (H := K) (N := section14KStar M K) hK_norm_Kstar)
+    change ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).Normal
+    exact
+      Subgroup.normal_subgroupOf_sup_of_le_normalizer
+        (H := K) (N := section14KStar M K) hK_norm_Kstar
   letI : ((section14KStar M K).subgroupOf Z).Normal := hKstarNormal
   have htop0 : (K.subgroupOf Z) ⊔ ((section14KStar M K).subgroupOf Z) = ⊤ := by
-    simpa [Z, section14Z] using
+    change
+      (K.subgroupOf (K ⊔ section14KStar M K)) ⊔
+          ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)) = ⊤
+    simpa only [Subgroup.subgroupOf_self] using
       (Subgroup.subgroupOf_sup
-        (A := K) (A' := section14KStar M K) (B := Z) le_sup_left le_sup_right).symm
+        (A := K) (A' := section14KStar M K) (B := K ⊔ section14KStar M K)
+        le_sup_left le_sup_right).symm
   have htop :
       ((section14KStar M K).subgroupOf Z) ⊔ (K.subgroupOf Z) = ⊤ := by
     simpa [sup_comm] using htop0
@@ -6450,14 +6528,19 @@ public theorem theorem_14_7_exists
       intro x hxL
       exact (centralizer_le_normalizer (section14KStar H L)) (hHZdp.2.2.2.2 hxL)
     have hLstarNormal : ((section14KStar H L).subgroupOf ZH).Normal := by
-      simpa [ZH, section14Z] using
-        (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-          (H := L) (N := section14KStar H L) hL_norm_Lstar)
+      change ((section14KStar H L).subgroupOf (L ⊔ section14KStar H L)).Normal
+      exact
+        Subgroup.normal_subgroupOf_sup_of_le_normalizer
+          (H := L) (N := section14KStar H L) hL_norm_Lstar
     letI : ((section14KStar H L).subgroupOf ZH).Normal := hLstarNormal
     have htop0 : (L.subgroupOf ZH) ⊔ ((section14KStar H L).subgroupOf ZH) = ⊤ := by
-      simpa [ZH, section14Z] using
+      change
+        (L.subgroupOf (L ⊔ section14KStar H L)) ⊔
+            ((section14KStar H L).subgroupOf (L ⊔ section14KStar H L)) = ⊤
+      simpa only [Subgroup.subgroupOf_self] using
         (Subgroup.subgroupOf_sup
-          (A := L) (A' := section14KStar H L) (B := ZH) le_sup_left le_sup_right).symm
+          (A := L) (A' := section14KStar H L) (B := L ⊔ section14KStar H L)
+          le_sup_left le_sup_right).symm
     have htop : ((section14KStar H L).subgroupOf ZH) ⊔ (L.subgroupOf ZH) = ⊤ := by
       simpa [sup_comm] using htop0
     let sZ : ZH := ⟨s, hsZ⟩
@@ -6520,7 +6603,7 @@ public theorem theorem_14_7_exists
       have huZpowS : u0 ∈ Subgroup.zpowers s :=
         (Subgroup.zpowers_le.2 hzZpowS) huY
       have huMap : c⁻¹ * u0 * c ∈ (Subgroup.zpowers s).conjBy c⁻¹ := by
-        exact Subgroup.mem_map.mpr ⟨u0, huZpowS, by simp [MulAut.conj_apply, mul_assoc]⟩
+        exact Subgroup.mem_map.mpr ⟨u0, huZpowS, by simp [mul_assoc]⟩
       have hzpowEq : Subgroup.zpowers t = (Subgroup.zpowers s).conjBy c⁻¹ := by
         simpa [htEq] using section14_zpowers_conjBy_inv (G := G) s c
       have huZpowT : c⁻¹ * u0 * c ∈ Subgroup.zpowers t := by
@@ -6528,7 +6611,7 @@ public theorem theorem_14_7_exists
       simpa [mul_assoc] using (Subgroup.zpowers_le.2 htWidehat.1) huZpowT
     have hYcard : Nat.card Y = q.val := by
       rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with ⟨_hzle, hqcard⟩
-      simpa [Y, hqcard] using (Nat.card_zpowers z)
+      simp [Y, hqcard]
     have hYcCard : Nat.card (Y.conjBy c⁻¹) = q.val := by
       calc
         Nat.card (Y.conjBy c⁻¹) = Nat.card Y := section14_card_conjBy (G := G) Y c⁻¹

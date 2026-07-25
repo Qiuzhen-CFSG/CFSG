@@ -81,7 +81,7 @@ theorem nilpotent_top_le_pCore_sup_pPrimeCore
   classical
   haveI : Group.IsNilpotent Q := hQnil
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup Q)) := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Q) (G' := ↥(⊤ : Subgroup Q))
       (Subgroup.topEquiv.symm : Q ≃* ↥(⊤ : Subgroup Q))
   have hTop_le_iSup :

@@ -397,7 +397,7 @@ public theorem coefficients_eq_single_column_indicator
     {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
     (a : I → J → ℂ) (r : I) (s : J)
     (hrect : ∀ i i' j j', a i j + a i' j' = a i j' + a i' j)
-    (hbase : a r s ≠ 0)
+    (_hbase : a r s ≠ 0)
     (j' : J) (hj's : j' ≠ s)
     (hcolzero : ∀ j, j ≠ s → a r j = 0)
     (hintzero : ∀ i j, i ≠ r → j ≠ s → a i j = 0) :
@@ -420,7 +420,7 @@ public theorem coefficients_eq_single_row_indicator
     {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
     (a : I → J → ℂ) (r : I) (s : J)
     (hrect : ∀ i i' j j', a i j + a i' j' = a i j' + a i' j)
-    (hbase : a r s ≠ 0)
+    (_hbase : a r s ≠ 0)
     (i' : I) (hi'r : i' ≠ r)
     (hrowzero : ∀ i, i ≠ r → a i s = 0)
     (hintzero : ∀ i j, i ≠ r → j ≠ s → a i j = 0) :
@@ -770,7 +770,7 @@ private theorem coefficientNonzeroCount_ge_two_card_left_of_two_nonzero_columns
 
 private theorem coefficientNonzeroCount_ge_card_left_add_card_right_sub_one_of_nonzero_column_row_off
     {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (a : I → J → ℂ) (i : I) (s q : J) (hqs : q ≠ s)
+    (a : I → J → ℂ) (i : I) (s q : J) (_hqs : q ≠ s)
     (hcol : ∀ k, a k s ≠ 0)
     (hrow : ∀ t, t ≠ s → a i t ≠ 0) :
     Fintype.card I + (Fintype.card J - 1) ≤ coefficientNonzeroCount a := by

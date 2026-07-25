@@ -16,6 +16,7 @@ open scoped Pointwise
 section Section13
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [IsMinCE G] in
 private theorem section13_primeRank_at_least_two_of_rankTwo
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -33,7 +34,7 @@ private theorem section13_primeRank_at_least_two_of_rankTwo
   have hA'comm : IsMulCommutative A' := by
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := M)
   have hgenA : 2 ≤ generatorRank A := by
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
+    letI : CommGroup A := IsMulCommutative.instCommGroup
     have hcard_dvd : Nat.card A ∣ p.val ^ Group.rank A := by
       simpa using card_dvd_exponent_pow_rank' (G := A) (n := p.val) (fun a =>
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -167,8 +168,7 @@ private theorem section13_lemma_13_13_centralizer_prime_le_M_of_tau1
     have hM_mem :
         M ∈ section9MaximalSubgroupsContaining
           (Subgroup.centralizer (Q.conjBy g : Set G)) := by
-      have : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [hMaxQg] using this
+      simp [hMaxQg]
     exact hM_mem.2
   intro c hc
   have hgcg_cent : g * c * g⁻¹ ∈ Subgroup.centralizer (Q.conjBy g : Set G) := by
@@ -372,8 +372,7 @@ private theorem section13_lemma_13_13_centralizer_prime_le_M_of_tau3
     have hM_mem :
         M ∈ section9MaximalSubgroupsContaining
           (Subgroup.centralizer (Q.conjBy g : Set G)) := by
-      have : M ∈ ({M} : Set (Subgroup G)) := by simp
-      simpa [hMaxQg] using this
+      simp [hMaxQg]
     exact hM_mem.2
   intro c hc
   have hgcg_cent : g * c * g⁻¹ ∈ Subgroup.centralizer (Q.conjBy g : Set G) := by

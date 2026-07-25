@@ -192,7 +192,7 @@ public theorem IsFrobeniusGroupWithKernelComplement.map_mulEquiv
         _ = e a * e s * (e a)⁻¹ := by
           have hmapped :=
             congrArg (fun z : B => b * z * b⁻¹) hsy.symm
-          simpa only [a, e.apply_symm_apply] using hmapped
+          simpa only [a, e.apply_symm_apply, MulEquiv.coe_toMonoidHom] using hmapped
         _ = e (a * s * a⁻¹) := by simp
     have hrConj : r ∈ R.conjBy a := by
       rw [Subgroup.conjBy, Subgroup.mem_map]

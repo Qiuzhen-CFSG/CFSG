@@ -14,11 +14,11 @@ namespace PFchapter4section2
 public theorem claim_15_a
     (E : Type*) [Field E] [CharP E 2] (m : ℕ) (zeta alpha beta : E)
     (tau : E → E) (u d : ℕ → E)
-    (sigma : E → E) (hseq_zeta_ne_one : zeta ≠ 1) (hseq_alpha_ne_zero : alpha ≠ 0)
+    (_ : E → E) (_ : zeta ≠ 1) (hseq_alpha_ne_zero : alpha ≠ 0)
     (hseq_beta_ne_zero : beta ≠ 0) (hseq_tau_nonzero : ∀ x : E, x ≠ 0 → tau x ≠ 0)
     (hseq_zeta_order : orderOf zeta = m)
-    (hseq_recurrence_u : ∀ i : ℕ, u i ≠ alpha → u (i + 1) = (alpha + u i)⁻¹)
-    (hseq_recurrence_d : ∀ i : ℕ, u i ≠ alpha →
+    (_ : ∀ i : ℕ, u i ≠ alpha → u (i + 1) = (alpha + u i)⁻¹)
+    (_ : ∀ i : ℕ, u i ≠ alpha →
       d (i + 1) = d i * zeta * tau ((u (i + 1))⁻¹ ^ 2))
     (hseq_beta_characteristic_root : beta ^ 2 + alpha * beta + 1 = 0)
     (hseq_closed : Section2SequenceClosedData E m zeta alpha beta tau u d) :

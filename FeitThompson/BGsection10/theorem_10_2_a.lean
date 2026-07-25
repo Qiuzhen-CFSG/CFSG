@@ -11,7 +11,7 @@ public import FeitThompson.BGsection10.theorem_10_1_e
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Theorem 10.2(a) from BG Section 10
@@ -101,12 +101,12 @@ public theorem section10_malphaSubgroup_le_msigmaSubgroup
 public theorem section10_minCE_derivedSubgroup_eq_top :
     derivedSubgroup G = ⊤ := by
   haveI : IsSimpleGroup G := IsMinCE.simple
-  have hnormal : (derivedSubgroup G).Normal := by
-    simpa [derivedSubgroup, derivedSeries_one] using
-      (inferInstance : (commutator G).Normal)
+  have hnormal : (derivedSubgroup G).Normal :=
+    derivedSeries_normal (G := G) 1
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (derivedSubgroup G) hnormal with hbot | htop
   · have hcomm_bot : commutator G = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using hbot
+      rw [_root_.commutator_def]
+      exact hbot
     have hcenter_top : Subgroup.center G = ⊤ :=
       (commutator_eq_bot_iff_center_eq_top (G := G)).mp hcomm_bot
     have hcomm : ∀ a b : G, a * b = b * a := by
@@ -152,7 +152,8 @@ public theorem section10_sigma_focal_generator_mem_ambientDerived
       simpa [X, PG] using (Subgroup.zpowers_le.mpr hxP)
     have hXM : X ≤ M := hX_le_PG.trans hPG_le_M
     have hPGp : IsPGroup p.val PG := by
-      simpa [PG, section10AmbientSylowSubgroup] using
+      change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+      simpa using
         IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
     have hXp : IsPGroup p.val X := by
       let XPG : Subgroup PG := X.subgroupOf PG
@@ -188,10 +189,9 @@ public theorem section10_sigma_focal_generator_mem_ambientDerived
     let xM : M := ⟨x, hxM⟩
     have hlocal :
         ⁅xM⁻¹, m⁆ ∈ derivedSubgroup M := by
-      have hcomm :
-          ⁅xM⁻¹, m⁆ ∈ ⁅(⊤ : Subgroup M), (⊤ : Subgroup M)⁆ :=
-        Subgroup.commutator_mem_commutator (by simp) (by simp)
-      simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using hcomm
+      change ⁅xM⁻¹, m⁆ ∈ derivedSeries M 1
+      rw [derivedSeries_one, _root_.commutator_def]
+      exact Subgroup.commutator_mem_commutator (by simp) (by simp)
     have hmap :
         ((xM⁻¹ : M) * m * xM * m⁻¹ : M) ∈ derivedSubgroup M := by
       simpa [commutatorElement_def, mul_assoc] using hlocal
@@ -209,7 +209,8 @@ public theorem section10_sigma_ambient_sylow_le_ambientDerived
   haveI : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   rcases IsPGroup.exists_le_sylow (G := G) (p := p.val) hPGp with ⟨S, hPGS⟩
   have hS_eq : (S : Subgroup G) = PG :=
@@ -542,7 +543,8 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
       apply eCA.injective
       calc
         eCA (x * y) = eCA x * eCA y := map_mul eCA x y
-        _ = eCA y * eCA x := mul_comm (eCA x) (eCA y)
+        _ = eCA y * eCA x :=
+          (IsMulCommutative.is_comm (M := A)).comm (eCA x) (eCA y)
         _ = eCA (y * x) := (map_mul eCA y x).symm
     have hBcomm : IsMulCommutative B := by
       letI : IsMulCommutative C := hCcomm
@@ -631,11 +633,15 @@ public theorem section10_fitting_quotient_malpha_groupRank_le_two
   let Q := M ⧸ section10MalphaSubgroup M
   let F : Subgroup Q := fittingSubgroup Q
   have hFπc : IsPiSubgroup (G := Q) πᶜ F := by
-    simpa [Q, F, π, section10MalphaSubgroup] using
-      section10_fitting_quotient_piCore_isPiSubgroup_compl (H := M) (π := π)
+    change IsPiSubgroup
+      (G := M ⧸ piCore (section10AlphaPrimes M) M)
+      (section10AlphaPrimes M)ᶜ
+      (fittingSubgroup (M ⧸ piCore (section10AlphaPrimes M) M))
+    exact section10_fitting_quotient_piCore_isPiSubgroup_compl
+      (H := M) (π := section10AlphaPrimes M)
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, Nat.prime_two, zero_le _⟩
+  · exact ⟨0, 2, Nat.prime_two, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hqprime, hnq⟩
     by_cases hn_le_two : n ≤ 2
@@ -653,9 +659,11 @@ public theorem section10_fitting_quotient_malpha_groupRank_le_two
     have hprankF_le_Q : primeRank p.val F ≤ primeRank p.val Q := by
       simpa [Q, F, p] using section8_primeRank_le_of_subgroup (G := Q) F p.val
     have hprankQ_le_M : primeRank p.val Q ≤ primeRank p.val M := by
-      simpa [Q, π, section10MalphaSubgroup] using
-        section10_primeRank_quotient_piCore_le_of_not_mem
-          (H := M) (π := π) (p := p) hp_not_alpha
+      change primeRank p.val (M ⧸ piCore (section10AlphaPrimes M) M) ≤
+        primeRank p.val M
+      exact section10_primeRank_quotient_piCore_le_of_not_mem
+        (H := M) (π := section10AlphaPrimes M) (p := p) (by
+          simpa [π] using hp_not_alpha)
     have hp_dvd_M : p.val ∣ Nat.card M := by
       exact (hp_dvd_F.trans (Subgroup.card_subgroup_dvd_card F)).trans
         (Subgroup.card_quotient_dvd_card (s := section10MalphaSubgroup M))
@@ -666,7 +674,7 @@ public theorem section10_fitting_quotient_malpha_groupRank_le_two
         (show p ∈ section10AlphaPrimes M from ⟨hp_dvd_M, hgt⟩))
     exact hnq.trans (hprankF_le_Q.trans (hprankQ_le_M.trans hprankM_le_two))
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section10_card_derivedSubgroup_quotient_malpha_eq
     {M : Subgroup G} :
     Nat.card (derivedSubgroup M ⧸
@@ -691,10 +699,12 @@ public theorem section10_card_derivedSubgroup_quotient_malpha_eq
         exact hx1
       have hxK : (x : M) ∈ K :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : M))).1 hx1'
-      simpa [K, D, Subgroup.mem_subgroupOf] using hxK
+      change (x : M) ∈ K
+      exact hxK
     · intro hx
       have hxK : (x : M) ∈ K := by
-        simpa [K, D, Subgroup.mem_subgroupOf] using hx
+        change (x : M) ∈ K at hx
+        exact hx
       have hx1 : ((x : M) : M ⧸ K) = 1 :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : M))).2 hxK
       rw [MonoidHom.mem_ker]
@@ -746,10 +756,12 @@ public theorem section10_card_derivedSubgroup_quotient_eq
         exact hx1
       have hxK : (x : H) ∈ K :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : H))).1 hx1'
-      simpa [D, Subgroup.mem_subgroupOf] using hxK
+      change (x : H) ∈ K
+      exact hxK
     · intro hx
       have hxK : (x : H) ∈ K := by
-        simpa [D, Subgroup.mem_subgroupOf] using hx
+        change (x : H) ∈ K at hx
+        exact hx
       have hx1 : ((x : H) : H ⧸ K) = 1 :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : H))).2 hxK
       rw [MonoidHom.mem_ker]
@@ -817,10 +829,12 @@ public theorem section10_derivedSubgroup_quotient_malpha_nilpotent
         exact hx1
       have hxK : (x : M) ∈ K :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : M))).1 hx1'
-      simpa [K, D, Subgroup.mem_subgroupOf] using hxK
+      change (x : M) ∈ K
+      exact hxK
     · intro hx
       have hxK : (x : M) ∈ K := by
-        simpa [K, D, Subgroup.mem_subgroupOf] using hx
+        change (x : M) ∈ K at hx
+        exact hx
       have hx1 : ((x : M) : M ⧸ K) = 1 :=
         (QuotientGroup.eq_one_iff (N := K) (x := (x : M))).2 hxK
       rw [MonoidHom.mem_ker]
@@ -848,13 +862,13 @@ public theorem section10_derivedSubgroup_quotient_malpha_nilpotent
     exact hDerQ_nil
   have hquot_ker_nil : Group.IsNilpotent (D ⧸ φ.ker) := by
     letI : Group.IsNilpotent φ.range := hφrange_nil
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := φ.range) (G' := D ⧸ φ.ker) (QuotientGroup.quotientKerEquivRange φ).symm
   have hquot_nil : Group.IsNilpotent (D ⧸ K.subgroupOf D) := by
     let e : D ⧸ K.subgroupOf D ≃* D ⧸ φ.ker :=
       QuotientGroup.quotientMulEquivOfEq hφker.symm
     letI : Group.IsNilpotent (D ⧸ φ.ker) := hquot_ker_nil
-    exact nilpotent_of_mulEquiv (G := D ⧸ φ.ker) (G' := D ⧸ K.subgroupOf D) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := D ⧸ φ.ker) (G' := D ⧸ K.subgroupOf D) e.symm
   exact ⟨hKD, hKnormalD, by simpa [D, K] using hquot_nil⟩
 
 public theorem section10_prime_not_dvd_derived_quotient_malpha_of_mem_alpha
@@ -894,8 +908,12 @@ public theorem section10_prime_not_dvd_derived_quotient_malpha_of_mem_alpha
     hp_dvd_derQ.trans (Subgroup.card_dvd_of_le hDerQ_le_F)
   have hFπc :
       IsPiSubgroup (G := Q) πᶜ (fittingSubgroup Q) := by
-    simpa [Q, K, π, section10MalphaSubgroup] using
-      section10_fitting_quotient_piCore_isPiSubgroup_compl (H := M) (π := π)
+    change IsPiSubgroup
+      (G := M ⧸ piCore (section10AlphaPrimes M) M)
+      (section10AlphaPrimes M)ᶜ
+      (fittingSubgroup (M ⧸ piCore (section10AlphaPrimes M) M))
+    exact section10_fitting_quotient_piCore_isPiSubgroup_compl
+      (H := M) (π := section10AlphaPrimes M)
   exact (hFπc p hp_dvd_F) hpα
 
 public theorem section10_malphaSubgroup_isHall
@@ -919,12 +937,19 @@ public theorem section10_malphaSubgroup_isHall
       simpa [hidx_mul] using hp_dvd_index
     rcases p.property.dvd_or_dvd hp_dvd_prod with hp_rel | hp_Didx
     · have hrel_eq : K.relIndex D = (K.subgroupOf D).index := by
-        rw [← Subgroup.relIndex_top_right (H := K.subgroupOf D)]
-        simpa using
-          (Subgroup.relIndex_subgroupOf (H := K) (K := D) (L := D) (hKL := le_rfl))
+        calc
+          K.relIndex D =
+              (K.subgroupOf D).relIndex (D.subgroupOf D) :=
+            (Subgroup.relIndex_subgroupOf
+              (H := K) (K := D) (L := D) (hKL := le_rfl)).symm
+          _ = (K.subgroupOf D).relIndex ⊤ := by rw [Subgroup.subgroupOf_self]
+          _ = (K.subgroupOf D).index :=
+            Subgroup.relIndex_top_right (H := K.subgroupOf D)
       exact section10_prime_not_dvd_derived_quotient_malpha_of_mem_alpha hM
         (by simpa [π] using hpα) (by
-          simpa [D, K, hrel_eq, Subgroup.index_eq_card] using hp_rel)
+          change p.val ∣ Nat.card (D ⧸ K.subgroupOf D)
+          rw [← (K.subgroupOf D).index_eq_card, ← hrel_eq]
+          exact hp_rel)
     · exact (section10_sigma_not_dvd_quotient_derived hM
         (section10_alpha_subset_sigma hM (by simpa [π] using hpα))) (by
           simpa [D, Subgroup.index_eq_card] using hp_Didx)
@@ -940,7 +965,8 @@ public theorem section10_prime_not_dvd_maximal_index_of_mem_alpha
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hpσ : p ∈ section10SigmaPrimes M := section10_alpha_subset_sigma hM hpα
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype)
   obtain ⟨S, hPGS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hPGp
   have hS_eq_PG : (S : Subgroup G) = PG := by

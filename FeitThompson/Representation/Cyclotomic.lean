@@ -516,7 +516,10 @@ public theorem prime_dvd_int_of_congruent_zero_mod_one_sub_self
   let nA : A := ⟨(n : ℂ), intCast_mem_cyclotomicOrder ξ n⟩
   let zeroA : A := 0
   have hcong' : congruentModIn A oneSubξA nA zeroA := by
-    simpa [CongruentModOneSub, A, ξA, oneSubξA, nA, zeroA] using hcong
+    change congruentModIn A
+      (⟨1 - ξ, A.sub_mem A.one_mem (eta_mem_cyclotomicOrder ξ)⟩ : A)
+      (⟨(n : ℂ), intCast_mem_cyclotomicOrder ξ n⟩ : A) (0 : A)
+    exact hcong
   rw [congruentModIn_iff_dvd] at hcong'
   obtain ⟨qA, hqA⟩ := hcong'
   have hq_mem : (qA : ℂ) ∈ cyclotomicOrder ξ := qA.2
@@ -664,10 +667,16 @@ public theorem prime_dvd_int_of_congruent_zero_mod_one_sub
   let nA : A := ⟨(n : ℂ), intCast_mem_cyclotomicOrder η n⟩
   let zeroA : A := 0
   have hcong' : congruentModIn A oneSubξA nA zeroA := by
-    simpa [CongruentModOneSub, A, ξA, oneSubξA, nA, zeroA] using hcong
+    change congruentModIn A
+      (⟨1 - ξ, A.sub_mem A.one_mem hξη⟩ : A)
+      (⟨(n : ℂ), intCast_mem_cyclotomicOrder η n⟩ : A) (0 : A)
+    exact hcong
   rw [congruentModIn_iff_dvd] at hcong'
   have hbase : (1 - ξA) ∣ nA := by
-    simpa [oneSubξA, nA, zeroA] using hcong'
+    convert hcong' using 1
+    · apply Subtype.ext
+      simp [oneSubξA, ξA]
+    · simp [nA, zeroA]
   have hprod_dvd :
       (∏ k ∈ Finset.range (p - 1), (1 - ξA ^ (k + 1))) ∣ nA ^ (p - 1) :=
     prod_one_sub_pow_dvd_power_of_congruent hp hξ hbase

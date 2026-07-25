@@ -87,8 +87,7 @@ public theorem standardizeRepresentation_irreducible
     ext v i
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
-    simpa [standardizeRepresentation, b.equivFun_apply, Matrix.mulVec_eq_sum,
-      LinearMap.toMatrix_apply'] using h.symm
+    simp [standardizeRepresentation, e, b, b.equivFun_apply]
   exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 public theorem isIrreducibleCharacterOnGroup_of_representation
@@ -1471,7 +1470,7 @@ theorem proposition_1_4_coeff_lattice_three_plus
         simpa [nu] using hab.symm
       by_cases hj2 : j = 2
       · subst hj2
-        simpa [nu] using hbc
+        simpa [nu, h20, h21] using hbc
       have hj1 : j ≠ 1 := by
         intro h
         exact hij h.symm
@@ -1484,12 +1483,12 @@ theorem proposition_1_4_coeff_lattice_three_plus
         simpa [nu, h20, h21] using hac.symm
       by_cases hj1 : j = 1
       · subst hj1
-        simpa [nu] using hbc.symm
+        simpa [nu, h20, h21] using hbc.symm
       have hj2 : j ≠ 2 := by
         intro h
         exact hij h.symm
       have hspec := hnu_spec hj0 hj1 hj2
-      simpa [nu, hj0, hj1, hj2] using hspec.2.2.1
+      simpa [nu, h20, h21, hj0, hj1, hj2] using hspec.2.2.1
     by_cases hj0 : j = 0
     · have hspec := hnu_spec hi0 hi1 hi2
       subst hj0
@@ -1501,7 +1500,7 @@ theorem proposition_1_4_coeff_lattice_three_plus
     by_cases hj2 : j = 2
     · have hspec := hnu_spec hi0 hi1 hi2
       subst hj2
-      simpa [nu, hi0, hi1, hi2] using hspec.2.2.1.symm
+      simpa [nu, h20, h21, hi0, hi1, hi2] using hspec.2.2.1.symm
     have hspeci := hnu_spec hi0 hi1 hi2
     have hspecj := hnu_spec hj0 hj1 hj2
     intro hnu
@@ -2410,7 +2409,7 @@ theorem proposition_1_4_three_plus
         intro h
         exact hij h.symm
       have hspec := hν_spec hj0 hj1 hj2'
-      simpa [mu, ν, hj0, hj1, hj2'] using M.irr_ne_of_ne hspec.2.2.1
+      simpa [mu, ν, h20, h21, hj0, hj1, hj2'] using M.irr_ne_of_ne hspec.2.2.1
     by_cases hj0 : j = 0
     · have hspec := hν_spec hi0 hi1 hi2
       subst hj0
@@ -2422,7 +2421,7 @@ theorem proposition_1_4_three_plus
     by_cases hj2 : j = 2
     · have hspec := hν_spec hi0 hi1 hi2
       subst hj2
-      simpa [mu, ν, hi0, hi1, hi2] using (M.irr_ne_of_ne hspec.2.2.1).symm
+      simpa [mu, ν, h20, h21, hi0, hi1, hi2] using (M.irr_ne_of_ne hspec.2.2.1).symm
     have hspeci := hν_spec hi0 hi1 hi2
     have hspecj := hν_spec hj0 hj1 hj2
     intro hEq

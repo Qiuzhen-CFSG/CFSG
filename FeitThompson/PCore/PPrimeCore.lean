@@ -211,7 +211,7 @@ public theorem isPGroup_of_nilpotent_normal (N : Subgroup G) (hN_normal : N.Norm
   have hQ_ne_bot : (Q : Subgroup N) ≠ ⊥ := by
     apply Sylow.ne_bot_of_dvd_card Q hq_dvd
   haveI : Group.IsNilpotent (↥N) := hN_nilpotent
-  have h_normcond : NormalizerCondition N := normalizerCondition_of_isNilpotent
+  have h_normcond : NormalizerCondition N := Group.normalizerCondition_of_isNilpotent
   have hQ_normal : (Q : Subgroup N).Normal :=
     Sylow.normal_of_normalizerCondition h_normcond Q
   have hQ_char : (Q : Subgroup N).Characteristic :=

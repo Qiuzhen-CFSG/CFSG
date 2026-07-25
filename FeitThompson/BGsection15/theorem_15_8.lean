@@ -17,6 +17,8 @@ open scoped Pointwise
 section Section15
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+
+omit [Finite G] [IsMinCE G] in
 private theorem section15_complementToMsigma_of_isComplement_subgroup
     {M : Subgroup G} {E : Subgroup M}
     (hcomp : (section10MsigmaSubgroup M).IsComplement' E) :
@@ -52,7 +54,7 @@ private theorem section15_complementToMsigma_of_isComplement_subgroup
     have hybot : y ∈ (⊥ : Subgroup M) :=
       Subgroup.disjoint_def.mp hcomp.disjoint hyσ hyE
     have hyone : y = 1 := by simpa using hybot
-    simpa [hx_eq, hyone]
+    simp [hx_eq, hyone]
 
 private theorem section15_hall_kappa_complementToMsigma_of_mem_P1
     {M K : Subgroup G}
@@ -120,6 +122,7 @@ public theorem section15_theorem15_8_corollary14_12_conclusions
     (G := G) (M := M) (K := K) (Mstar := Mstar) (U := U)
     hMP2 hK h14 hU hrU R hHmax
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_le_fitting_of_le_msigma_and_centralizes_quotient_kstar
     {M K Q₀ X : Subgroup G}
     (hquot :
@@ -150,6 +153,7 @@ private theorem section15_le_fitting_of_le_msigma_and_centralizes_quotient_kstar
     simpa [xσ] using hcommG
   simpa [map_mul] using congrArg qσ hcommσ
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_exists_msigma_sylow_eq_of_sylowSubgroupIn
     {M Q : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M)
@@ -164,9 +168,9 @@ private theorem section15_exists_msigma_sylow_eq_of_sylowSubgroupIn
   have hQσ_p : IsPGroup q.val Qσ := by
     have hQp : IsPGroup q.val Q := by
       rw [← hPamb]
-      simpa [section10AmbientSylowSubgroup] using
-        (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-          P.isPGroup' M.subtype)
+      change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+      exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+        P.isPGroup' M.subtype
     exact hQp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := Q) (K := σ) hQσ).symm
   obtain ⟨S, hQσ_le_S⟩ := IsPGroup.exists_le_sylow (G := σ) (p := q.val) hQσ_p
@@ -183,9 +187,9 @@ private theorem section15_exists_msigma_sylow_eq_of_sylowSubgroupIn
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact section15_msigma_le y.property
   have hAmb_p : IsPGroup q.val (section10AmbientSylowSubgroup σ S) := by
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (S : Subgroup σ))
-        S.isPGroup' σ.subtype)
+    change IsPGroup q.val ((S : Subgroup σ).map σ.subtype)
+    exact IsPGroup.map (p := q.val) (H := (S : Subgroup σ))
+      S.isPGroup' σ.subtype
   let R : Subgroup M := (section10AmbientSylowSubgroup σ S).subgroupOf M
   have hR_p : IsPGroup q.val R :=
     hAmb_p.of_equiv
@@ -242,7 +246,7 @@ private theorem section15_unique_of_sylowSubgroupIn_msigma_kstar
 
 private theorem section15_theorem15_8_no_rankTwo_centralizes_K_core
     {M H K Mstar MFstar A : Subgroup G} {p q : Nat.Primes}
-    (hHF : H ∈ section14MFamilyF G)
+    (_hHF : H ∈ section14MFamilyF G)
     (hMstarP1 : Mstar ∈ section14MFamilyP1 G)
     (hMFstar : section15MFSubgroup Mstar MFstar)
     (hKstarHall :
@@ -250,13 +254,13 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_core
     (hKeq : K = section14KStar Mstar (section14KStar M K))
     (hAcentK : A ≤ Subgroup.centralizer (K : Set G))
     (hqcardK : q.val = Nat.card K)
-    (hqSigmaMstar : q ∈ section10SigmaPrimes Mstar)
+    (_hqSigmaMstar : q ∈ section10SigmaPrimes Mstar)
     (hpSigmaMstar : p ∈ section10SigmaPrimes Mstar)
-    (hp_not_betaMstar : p ∉ section10BetaPrimes Mstar)
-    (hA_H : A ∈ section12RankTwoElementaryAbelianIn p H)
+    (_hp_not_betaMstar : p ∉ section10BetaPrimes Mstar)
+    (_hA_H : A ∈ section12RankTwoElementaryAbelianIn p H)
     (hA_Mstar : A ∈ section12RankTwoElementaryAbelianIn p Mstar)
     (hAnotUnique : A ∉ section9UniqueSubgroups G)
-    (hσHinfMstar_bot : section10Msigma H ⊓ Mstar = ⊥)
+    (_hσHinfMstar_bot : section10Msigma H ⊓ Mstar = ⊥)
     (hAleσMstar : A ≤ section10Msigma Mstar)
     (hpq : p ≠ q) :
     False := by
@@ -334,9 +338,11 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_core
       hQσ.trans hσleF
     have hQπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q := by
       have hQp : IsPGroup q.val Q := by
-        simpa [Q, section10AmbientSylowSubgroup] using
-          (IsPGroup.map (p := q.val) (H := (S : Subgroup (section10Msigma Mstar)))
-            S.isPGroup' (section10Msigma Mstar).subtype)
+        change IsPGroup q.val
+          ((S : Subgroup (section10Msigma Mstar)).map (section10Msigma Mstar).subtype)
+        exact IsPGroup.map (p := q.val)
+          (H := (S : Subgroup (section10Msigma Mstar))) S.isPGroup'
+          (section10Msigma Mstar).subtype
       exact section8_isPiSubgroup_singleton_of_isPGroup (G := G) hQp
     have hQunique : Q ∈ section9UniqueSubgroups G := by
       have hUnique :
@@ -481,7 +487,7 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_of_ne_q
     intro hEq
     have hκnonempty : (section14KappaPrimes H).Nonempty := by
       simpa [hEq] using hMstarP.2
-    simpa [hHF.2] using hκnonempty
+    simp [hHF.2] at hκnonempty
   have hAnotUnique : A ∉ section9UniqueSubgroups G :=
     section15_not_unique_of_le_two_distinct_maximal
       (G := G) (L := A) (M := H) (N := Mstar)
@@ -494,7 +500,7 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_of_ne_q
   have hKne : K ≠ ⊥ := by
     intro hKbot
     have hcardK : Nat.card K = 1 := by
-      simpa [hKbot]
+      simp [hKbot]
     exact q.2.ne_one (hqcard.trans hcardK)
   have hKcentA : K ≤ Subgroup.centralizer (A : Set G) := by
     intro k hk
@@ -534,7 +540,7 @@ private theorem section15_theorem15_8_no_rankTwo_centralizes_K_of_ne_q
     have hp_dvd_A : p.val ∣ Nat.card A := by
       rcases section12_rankTwo_elementary hA_Mstar with ⟨hAcard, _hAelem⟩
       rw [hAcard]
-      simpa [pow_two] using dvd_mul_right p.val p.val
+      simp [pow_two]
     have hp_dvd_Msigma : p.val ∣ Nat.card (section10Msigma Mstar) :=
       hp_dvd_A.trans (Subgroup.card_dvd_of_le hAleσMstar)
     exact ((theorem_10_2_b (G := G) hMstarP.1).1).p_in_pi_of_p_dvd_card
@@ -688,6 +694,7 @@ private theorem section15_theorem15_8_tau2H_unique_prime
     section8_isPiSubgroup_singleton_of_isPGroup (G := G) hAq p hpA
   simpa using hpSingleton
 
+omit [Finite G] [IsMinCE G] in
 /-- A nonempty prime set with all elements equal to `q` is `{q}`. -/
 private theorem section15_tau2_singleton_of_nonempty_unique
     {H : Subgroup G} {q : Nat.Primes}
@@ -701,7 +708,7 @@ private theorem section15_tau2_singleton_of_nonempty_unique
   constructor
   · intro hp
     have hpq : p = q := hunique p hp
-    simpa [hpq]
+    simp [hpq]
   · intro hp
     have hpq : p = q := by simpa using hp
     simpa [hpq] using hqτ2
@@ -720,6 +727,7 @@ private theorem section15_theorem15_8_tau2H_singleton
       (G := G) (M := M) (H := H) (K := K) (Mstar := Mstar) (U := U)
       (MFstar := MFstar) hSituation hMFstar hqK)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section15_tau2_not_mem_kappa
     {M : Subgroup G} {p : Nat.Primes}
     (hpτ2 : p ∈ section12Tau2Primes M) :
@@ -776,7 +784,8 @@ private theorem section15_tau2_empty_of_centralizer_U_not_le
   intro r hrτ2
   let E : Subgroup G := K ⊔ U
   have hEcomp : section12ComplementToMsigma M E := by
-    simpa [E] using hKU.2.2.1
+    change section12ComplementIn M (section10Msigma M) (K ⊔ U)
+    exact hKU.2.2.1
   rcases section15_exists_EData_for_fixed_sigma_complement
       (G := G) (M := M) (E := E) hM hEcomp with
     ⟨E₁₂, E₁, E₂, E₃, hEdata⟩
@@ -796,7 +805,7 @@ private theorem section15_tau2_empty_of_centralizer_U_not_le
     exact section15_hallSubgroupIn_of_le_overgroup
       (G := G) (M := M) (E := E) (U := U)
       (π := ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ))
-      hKU.2.2.2.1 (by simpa [E] using le_sup_right)
+      hKU.2.2.2.1 (by simp [E])
       (by simpa [E] using hKU.2.2.1.2.1)
   have hUnormE : section10NormalIn U E := by
     simpa [E] using hKU.2.2.2.2.2.2
@@ -842,6 +851,7 @@ private theorem section15_isMulCommutative_of_surjective
   rcases hf x with ⟨a, rfl⟩
   rcases hf y with ⟨b, rfl⟩
   letI : IsMulCommutative A := hA
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   simpa using congrArg f (mul_comm a b)
 
 omit [IsMinCE G] in
@@ -879,14 +889,14 @@ private theorem section15_ambientDerived_le_pPrimeCore_map_of_nilpotent_pCore_co
   have hder_le_L : derivedSubgroup H ≤ L := by
     have hcomm_le : _root_.commutator H ≤ L :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le
-        (N := L)).1 hquot_comm.is_comm
-    simpa [derivedSubgroup, derivedSeries_one, L] using hcomm_le
+        (N := L)).1 hquot_comm
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def, L] using hcomm_le
   have hmap_le :
       (derivedSubgroup H).map H.subtype ≤ (pPrimeCore p.val H).map H.subtype :=
     Subgroup.map_mono hder_le_L
   simpa [ambientDerivedSubgroup, L] using hmap_le
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section15_hasNonabelianSylow_of_noncomm_pSubgroup
     {P : Subgroup G} {p : Nat.Primes}
     (hPp : IsPGroup p.val P) (hPnoncomm : ¬ IsMulCommutative P) :
@@ -898,8 +908,8 @@ private theorem section15_hasNonabelianSylow_of_noncomm_pSubgroup
   apply hPnoncomm
   refine ⟨⟨fun x y => ?_⟩⟩
   exact Subtype.ext <|
-    Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := (S : Subgroup G)) (hP_le_S x.property) (hP_le_S y.property)
+    setLike_mul_comm
+      (s := (S : Subgroup G)) (hP_le_S x.property) (hP_le_S y.property)
 
 private theorem section15_theorem15_8_hasNonabelianSylow_q
     {M H K Mstar U MFstar : Subgroup G} {q : Nat.Primes}
@@ -1027,8 +1037,8 @@ private theorem section15_theorem15_8_hasNonabelianSylow_q
       refine ⟨⟨fun x y => ?_⟩⟩
       apply Subtype.ext
       exact
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := (S : Subgroup σ)) (hPcore_le_S x.property) (hPcore_le_S y.property)
+        setLike_mul_comm
+          (s := (S : Subgroup σ)) (hPcore_le_S x.property) (hPcore_le_S y.property)
     have hder_le_pprime :
         ambientDerivedSubgroup σ ≤ (pPrimeCore q.val σ).map σ.subtype :=
       section15_ambientDerived_le_pPrimeCore_map_of_nilpotent_pCore_commutative
@@ -1047,9 +1057,9 @@ private theorem section15_theorem15_8_hasNonabelianSylow_q
         (pPrimeCore_coprime_card (G := σ) (p := q.val))) hq_dvd_core
   let Qamb : Subgroup G := section10AmbientSylowSubgroup σ S
   have hQamb_p : IsPGroup q.val Qamb := by
-    simpa [Qamb, section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (S : Subgroup σ))
-        S.isPGroup' σ.subtype)
+    change IsPGroup q.val ((S : Subgroup σ).map σ.subtype)
+    exact IsPGroup.map (p := q.val) (H := (S : Subgroup σ))
+      S.isPGroup' σ.subtype
   have hQamb_noncomm : ¬ IsMulCommutative Qamb := by
     intro hQamb_comm
     let e : (S : Subgroup σ) ≃* (S : Subgroup σ).map σ.subtype :=
@@ -1057,7 +1067,9 @@ private theorem section15_theorem15_8_hasNonabelianSylow_q
         σ.subtype_injective
     have hScomm : IsMulCommutative (S : Subgroup σ) :=
       section15_isMulCommutative_of_mulEquiv e
-        (by simpa [Qamb, section10AmbientSylowSubgroup] using hQamb_comm)
+        (by
+          change IsMulCommutative ((S : Subgroup σ).map σ.subtype) at hQamb_comm
+          exact hQamb_comm)
     exact hSnoncomm hScomm
   exact
     section15_hasNonabelianSylow_of_noncomm_pSubgroup
@@ -1129,6 +1141,7 @@ private theorem section15_theorem15_8_primeOrder_le_K_of_le_inter
     exact False.elim ((section15_kappa_subset_primeSet_diff_sigma
       (G := G) (M := M) hqκ).2 hqσ)
 
+omit [IsMinCE G] in
 private theorem section15_eq_of_le_prime_card
     {K X : Subgroup G} {q : Nat.Primes}
     (hXK : X ≤ K)
@@ -1221,7 +1234,7 @@ private theorem section15_theorem15_8_centralizer_U_not_le_M
     intro hEq
     have hκnonempty : (section14KappaPrimes H).Nonempty := by
       simpa [hEq] using hMstarP.2
-    simpa [hHF.2] using hκnonempty
+    simp [hHF.2] at hκnonempty
   have hX_ne_K : X ≠ K := by
     intro hXeqK
     have hσH_le_CK : section10Msigma H ≤ Subgroup.centralizer (K : Set G) := by

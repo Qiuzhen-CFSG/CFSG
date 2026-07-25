@@ -64,21 +64,21 @@ private theorem theorem_13_3_isMulCommutative_sup_of_le_centralizer
     (hYleCentA : Y ≤ Subgroup.centralizer (A : Set G)) :
     IsMulCommutative (A ⊔ Y : Subgroup G) := by
   rw [Subgroup.sup_eq_closure]
-  letI : CommGroup
+  have hcomm : IsMulCommutative
       (Subgroup.closure ((A : Set G) ∪ (Y : Set G))) :=
-    Subgroup.closureCommGroupOfComm (by
+    Subgroup.isMulCommutative_closure (by
       intro x hx y hy
       rcases hx with hxA | hxY
       · rcases hy with hyA | hyY
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) hxA hyA
+        · exact setLike_mul_comm
+            (s := A) hxA hyA
         · exact Subgroup.mem_centralizer_iff.mp (hYleCentA hyY) x hxA
       · rcases hy with hyA | hyY
         · exact
             (Subgroup.mem_centralizer_iff.mp (hYleCentA hxY) y hyA).symm
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := Y) hxY hyY)
-  exact ⟨⟨fun x y ↦ mul_comm x y⟩⟩
+        · exact setLike_mul_comm
+            (s := Y) hxY hyY)
+  exact ⟨⟨hcomm.is_comm.comm⟩⟩
 
 private theorem hypothesis_13_1_muSum_characterData_of_sourceData
     {G : Type u}
@@ -170,7 +170,7 @@ private theorem hypothesis_13_1_muSum_characterData_of_sourceData
       rw [← hC]
       exact y.property
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := U) hx.1 hy.1
+    exact setLike_mul_comm (s := U) hx.1 hy.1
   have hCleCentP : C ≤ Subgroup.centralizer (P : Set G) := by
     intro x hx
     have hx' : x ∈ subgroupCentralizerIn U P := by
@@ -595,7 +595,7 @@ private theorem theorem_13_3_irreducibleBranch_for_coherentExtension
         (Finset.range (Nat.card W1)).sum (fun i => η i j)
   · exact Or.inl hAll
   · right
-    push_neg at hAll
+    push Not at hAll
     rcases hAll with ⟨j, hj0, hj, hjneg⟩
     rcases hNaturalAlt j hj0 hj with hpos |
       ⟨k, hk0, hk, hkj, hconjJK, hnegJK, huniq⟩
@@ -1002,7 +1002,7 @@ private theorem theorem_13_3_allReducible_exists_positiveExtension
       (Section1.basisVector t) (Section1.basisVector s)
     rw [hEvalCoeffBasisTarget, hEvalCoeffBasisTarget,
       hEvalCoeffBasisSource, hEvalCoeffBasisSource] at hgram
-    simpa [sourceColumn, targetColumn, hSignK] using hgram
+    simpa [sourceColumn, targetColumn, hSignK, Section10.muColumn, Section4Scratch.piColumn] using hgram
   have hLands :=
     Section4Scratch.theorem_4_9_b_lands_in_zIrr
       (derivedSubgroup Smax) (W1.subgroupOf Smax) (W2.subgroupOf Smax)
@@ -1060,7 +1060,7 @@ private theorem theorem_13_3_allReducible_exists_positiveExtension
     have hTauAgreement :
         τS (Section1.evalCoeff sourceColumn w) =
           Section1.evalCoeff targetColumn w := by
-      simpa [sourceColumn, targetColumn, hSignK] using
+      simpa [sourceColumn, targetColumn, hSignK, Section10.muColumn, Section4Scratch.piColumn] using
         h49bData.2 w hA
     calc
       τ1 (Section1.evalCoeff
@@ -1143,7 +1143,7 @@ private theorem theorem_13_3_exists_signAlternativeExtension_of_sourceData
   · have hIrr : ∃ X : Sfam,
         Section1.IsIrreducibleCharacterOnGroup
           (X : Section1.ClassFunction Smax) := by
-      push_neg at hAllReducible
+      push Not at hAllReducible
       exact hAllReducible
     rcases theorem_13_2 Smax Tmax W W1 W2 P Q U V C D
         Sfam Tfam τS τT p q u v c d hsource with

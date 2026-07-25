@@ -1,6 +1,6 @@
 module
 
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.GroupTheory.Sylow

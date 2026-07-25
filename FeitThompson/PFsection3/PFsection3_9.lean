@@ -373,8 +373,28 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf39
     simpa [hchar] using
       (uliftRepresentation_pf39_character (G := G) (V := Fin n → ℂ) (ρ := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G χ χ =
+          Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_signed_irreducible_ne_zero_iff_pf39
     {G : Type u} [Group G] [Finite G]
@@ -1290,10 +1310,24 @@ private theorem isVirtualCharacter_of_int_scalarProduct_irreducibles_pf39
       ∀ i j,
         Section1.scalarProduct G (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) ⟨hirr, hall, _hinj⟩ i j)
+    have hto :
+        ∀ k, Section1.toConjClassFunction (ψ k) (hψclass k) = χ k := by
+      intro k
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G (ψ i) (ψ j) =
+          Representation.classFunctionInner
+            (Section1.toConjClassFunction (ψ i) (hψclass i))
+            (Section1.toConjClassFunction (ψ j) (hψclass j)) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          (ψ i) (ψ j) (hψclass i) (hψclass j)).symm
+      _ = Representation.classFunctionInner (χ i) (χ j) := by
+        rw [hto i, hto j]
+      _ = if i = j then 1 else 0 :=
+        Section1.representation_completeFamily_orthonormal
+          (chi := χ) ⟨hirr, hall, _hinj⟩ i j
   let a : ι → ℤ := fun i => Classical.choose (hcoeff_int (ψ i) (hψirr i))
   have ha : ∀ i, Section1.scalarProduct G φ (ψ i) = (a i : ℂ) := by
     intro i
@@ -1432,10 +1466,24 @@ public theorem signed_irreducible_of_virtual_norm_one_pf39
       ∀ i j,
         Section1.scalarProduct G (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) ⟨hirr, hall, _hinj⟩ i j)
+    have hto :
+        ∀ k, Section1.toConjClassFunction (ψ k) (hψclass k) = χ k := by
+      intro k
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G (ψ i) (ψ j) =
+          Representation.classFunctionInner
+            (Section1.toConjClassFunction (ψ i) (hψclass i))
+            (Section1.toConjClassFunction (ψ j) (hψclass j)) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          (ψ i) (ψ j) (hψclass i) (hψclass j)).symm
+      _ = Representation.classFunctionInner (χ i) (χ j) := by
+        rw [hto i, hto j]
+      _ = if i = j then 1 else 0 :=
+        Section1.representation_completeFamily_orthonormal
+          (chi := χ) ⟨hirr, hall, _hinj⟩ i j
   have hcoeff_int :
       ∀ i, ∃ z : ℤ, Section1.scalarProduct G φ (ψ i) = (z : ℂ) := by
     intro i
@@ -2079,7 +2127,11 @@ private theorem exists_alpha_basis_pf39
         exact (h34.1 p).2 x hx'
   have he_li : LinearIndependent ℂ e := by
     have hcomp : LinearIndependent ℂ ((Submodule.subtype _) ∘ e) := by
-      simpa [Function.comp, e, alpha] using h34.2.1
+      have heq : (Submodule.subtype _ ∘ e) = alpha := by
+        funext p
+        rfl
+      rw [heq]
+      exact h34.2.1
     exact ((Submodule.subtype _).linearIndependent_iff
       (Submodule.ker_subtype _)).mp hcomp
   have he_span : ⊤ ≤ Submodule.span ℂ (Set.range e) := by
@@ -2221,7 +2273,13 @@ private theorem mapsVirtualCharacters_sigmaOfPF35_pf39
       · simpa [hEq] using isVirtualCharacter_of_irreducibleCharacterOnGroup hψ
       · simpa [hEq] using isVirtualCharacter_neg
           (isVirtualCharacter_of_irreducibleCharacterOnGroup hψ)
-    simpa [zsmul_eq_mul] using isVirtualCharacter_zsmul_pf39 z hχvirt
+    have hsmul :
+        (z : ℂ) • χ p.1 p.2 =
+          (z • χ p.1 p.2 : Section1.ClassFunction G) := by
+      ext g
+      simp [zsmul_eq_mul]
+    rw [hsmul]
+    exact isVirtualCharacter_zsmul_pf39 z hχvirt
   have hsum :
       Representation.IsVirtualCharacter
         (Section1.weightedFamilySum
@@ -2249,8 +2307,7 @@ private theorem mapsClassFunctions_sigmaOfPF35_pf39
     {χ : I → J → Section1.ClassFunction G}
     (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j)) :
     MapsClassFunctions (sigmaOfPF35 ω χ) := by
-  intro α _hα
-  intro x g
+  intro α _hα x g
   change
     Section1.weightedFamilySum
         (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
@@ -3647,7 +3704,7 @@ public theorem eq_signed_sub_cTIiso
     (hφnorm : Section1.scalarProduct G φ φ = 2)
     {δ : ℂ} (hδnorm : Complex.normSq δ = 1)
     (i : I) {j1 j2 : J} (hj : j1 ≠ j2)
-    (hagrees : ∀ x : G, ∀ hx : x ∈ cyclicTISet W1 W2 W,
+    (hagrees : ∀ x : G, ∀ _hx : x ∈ cyclicTISet W1 W2 W,
       φ x = (δ • (σ (ω i j1) - σ (ω i j2))) x) :
     φ = δ • (σ (ω i j1) - σ (ω i j2)) := by
   classical
@@ -4031,7 +4088,8 @@ private theorem signed_irreducible_eq_sigmaOfPF35_of_agrees_ordered_pf39
         simp
       rw [sub_eq_add_neg, Section1.scalarProduct_add_left, hneg,
         Section1.scalarProduct_smul_left, hselfσ] at horthψ
-      simpa using horthψ
+      rw [neg_one_mul] at horthψ
+      simpa only [sub_eq_add_neg] using horthψ
     exact (sub_eq_zero.mp hz).symm
   exact signed_irreducible_eq_of_scalarProduct_eq_one_pf39
     hX

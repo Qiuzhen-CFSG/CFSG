@@ -18,7 +18,7 @@ universe u v
 
 open PFchapter1section1 PFAppendixIII
 open PFchapter1section3
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Peterfalvi, Part II, Chapter II, Claim (11)
@@ -78,7 +78,7 @@ public theorem claim_11_sylow_of_subgroupOf_sylow_of_normalizer_le
         haveI : Group.IsNilpotent Q :=
           IsPGroup.isNilpotent (p := p) (G := Q) hQ
         have hnc : NormalizerCondition Q :=
-          normalizerCondition_of_isNilpotent (G := Q)
+          Group.normalizerCondition_of_isNilpotent (G := Q)
         have hlt : PQ < Subgroup.normalizer (PQ : Set Q) :=
           hnc PQ hPQ_lt_top
         obtain ⟨xQ, hxNorm, hxNotPQ⟩ := SetLike.exists_of_lt hlt
@@ -726,10 +726,10 @@ private theorem claim_11_T_regular_nonzero_of_nearField_coordinates
   let z : F := Multiplicative.toAdd (addEquiv.symm yT)
   have haCoord :
       (((addEquiv (Multiplicative.ofAdd a) : T) : G)) = x := by
-    simpa [a, xT]
+    simp [a, xT]
   have hzCoord :
       (((addEquiv (Multiplicative.ofAdd z) : T) : G)) = y := by
-    simpa [z, yT]
+    simp [z, yT]
   have ha : a ≠ 0 := by
     intro ha0
     apply hxne
@@ -764,7 +764,7 @@ private theorem claim_11_T_regular_nonzero_of_nearField_coordinates
   let bd : Fˣ := unitEquiv.symm dCQ
   have hbdCoord :
       (((unitEquiv bd : ↥(Q ⊓ Subgroup.centralizer (P : Set G))) : G)) = d := by
-    simpa [bd, dCQ]
+    simp [bd, dCQ]
   have haddEq :
       (((addEquiv (Multiplicative.ofAdd (a * (bd : F))) : T) : G)) =
         (((addEquiv (Multiplicative.ofAdd z) : T) : G)) := by
@@ -832,7 +832,7 @@ private theorem claim_11_mem_T_of_mem_R_of_inverted
       rightConjugateElem u s = s⁻¹ * u * s := rfl
       _ = s * u * s := by rw [hsInv]
       _ = u * s * s := by rw [hsu]
-      _ = u := by simpa [mul_assoc, ← pow_two, hsI.sq_eq_one]
+      _ = u := by simp [mul_assoc, ← pow_two, hsI.sq_eq_one]
   have hxCoord : rightConjugateElem x s = a⁻¹ * u := by
     calc
       rightConjugateElem x s = rightConjugateElem (a * u) s := by rw [hau]
@@ -969,7 +969,7 @@ private theorem claim_11_coprime_involution_decomposition
     exact hRodd.coprime_two_left
   have hsolvR : IsSolvable R := by
     letI : IsMulCommutative R := hRcomm
-    infer_instance
+    exact isSolvable_of_comm (fun x y => mul_comm' x y)
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
       (isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -1006,7 +1006,8 @@ private theorem claim_11_coprime_involution_decomposition
   have hyComm : y ∈ Ccomm := by
     exact Ccomm.mul_mem hxComm ((IsInvariant.invariant sA xR).mp hxComm)
   have hyGen : sA • y = y := by
-    simp [y, smul_mul', smul_smul, hsA_sq, mul_comm]
+    simp only [y, smul_mul', smul_smul, hsA_sq, one_smul]
+    exact mul_comm' _ _
   have hyFix : y ∈ Cfix := by
     change ∀ a : A, a • y = y
     intro a
@@ -1417,7 +1418,7 @@ public theorem claim_11
     ⟨hNcore, hnormal, quotientAction, hsmul, hAbar,
       F, hFnear, hFfinite, hFnontrivial, unitEquivNear, hPO, hchar⟩
   letI : core.Normal := by
-    simpa [core] using hnormal
+    simpa [core, OmegaP, C] using hnormal
   have hNcoreLocal : N.subgroupOf C = core := by
     simpa [N, C, OmegaP, HP, DP, QP, core] using hNcore
   letI : PFAppendixII.RightNearField F := hFnear
@@ -1504,7 +1505,15 @@ public theorem claim_11
   have h7 := claim_7 H D Q K V W Q0 S Q1 P N t s p hch hind hN
   dsimp only at h7
   rcases h7 with ⟨_hnormal7, hNP, eSigmaData⟩
-  rcases eSigmaData with ⟨eSigma, heSigma⟩
+  rcases eSigmaData with ⟨eSigmaRaw, heSigmaRaw⟩
+  let eSigma : DP.map (QuotientGroup.mk' core) ≃*
+      ↥(W ⊓ Subgroup.centralizer (P : Set G)) := by
+    simpa [DP, core, OmegaP, C] using eSigmaRaw
+  have heSigma (a : DP.map (QuotientGroup.mk' core)) :
+      QuotientGroup.mk' core
+          ⟨(eSigma a : G), (eSigma a).property.2⟩ =
+        (a : C ⧸ core) := by
+    simpa [DP, core, OmegaP, C, eSigma] using heSigmaRaw a
   have hPOcopy := hPO
   rcases hPOcopy with
     ⟨addLift, unitLift, sigmaAct, hcoordinates, haddZero, hadd,
@@ -1548,7 +1557,8 @@ public theorem claim_11
     have hxP : (x : G) ∈ P := by
       simpa [Subgroup.mem_subgroupOf] using hxPsub
     have hxQG : (x : G) ∈ Q := by
-      simpa [QP] using hxQ
+      change (x : G) ∈ Q at hxQ
+      exact hxQ
     have hxBot : (x : G) ∈ (⊥ : Subgroup G) :=
       hch.section3.section2.hA.A1.Q_disjoint_D.le_bot
         ⟨hxQG, hP_le_D hxP⟩
@@ -1569,21 +1579,25 @@ public theorem claim_11
       map_mul' := fun _ _ => rfl }
   let unitEquivCoord : nearFieldStar Q P ≃* Fˣ :=
     (starToQP.trans qpToQbar).trans unitToQbar.symm
-  let unitEquiv : Fˣ ≃* ↥(Q ⊓ Subgroup.centralizer (P : Set G)) := by
-    simpa [nearFieldStar] using unitEquivCoord.symm
+  let unitEquiv : Fˣ ≃* ↥(Q ⊓ Subgroup.centralizer (P : Set G)) :=
+    { unitEquivCoord.symm with }
   have hunitCoordinate (b : Fˣ) :
       QuotientGroup.mk' core
           ⟨((unitEquiv b : ↥(Q ⊓ Subgroup.centralizer (P : Set G))) : G),
             (unitEquiv b).property.2⟩ =
         unitLift b := by
+    let qC : C :=
+      ⟨((unitEquiv b : ↥(Q ⊓ Subgroup.centralizer (P : Set G))) : G),
+        (unitEquiv b).property.2⟩
     let qP : QP := starToQP (unitEquivCoord.symm b)
+    have hqP_C : (qP : C) = qC := by
+      apply Subtype.ext
+      rfl
+    change QuotientGroup.mk' core qC = unitLift b
     calc
-      QuotientGroup.mk' core
-          ⟨((unitEquiv b : ↥(Q ⊓ Subgroup.centralizer (P : Set G))) : G),
-            (unitEquiv b).property.2⟩ =
-          (qpToQbar qP : C ⧸ core) := by
-            symm
-            simpa [qP, unitEquiv, unitEquivCoord, starToQP] using hqpToQbar qP
+      QuotientGroup.mk' core qC = (qpToQbar qP : C ⧸ core) := by
+        rw [← hqP_C]
+        exact (hqpToQbar qP).symm
       _ = (unitToQbar b : C ⧸ core) := by
         have hq : qpToQbar qP = unitToQbar b := by
           simp [qP, unitEquivCoord]
@@ -1830,7 +1844,8 @@ public theorem claim_11
       rcases hxM with ⟨a, ha⟩
       let aF : F := Multiplicative.toAdd a
       have haLift : addLift aF = pi xC := by
-        simpa [addHom, aF, claim_11_additiveHom] using ha
+        change addLift aF = pi xC at ha
+        exact ha
       have hxBarFixed :
           rightConjugateElem (pi xC) sBar = pi xC := by
         calc
@@ -1878,13 +1893,13 @@ public theorem claim_11
   let Qbar : Subgroup (C ⧸ core) := QP.map pi
   let Dbar : Subgroup (C ⧸ core) := DP.map pi
   have hQbar_le_Hbar : Qbar ≤ Hbar := by
-    simpa [Qbar, Hbar, pi] using hAbar.Q_le_H
+    simpa [Qbar, Hbar, pi, QP, HP, core, OmegaP, C] using hAbar.Q_le_H
   have hDbar_le_Hbar : Dbar ≤ Hbar := by
-    simpa [Dbar, Hbar, pi] using hAbar.D_le_H
+    simpa [Dbar, Hbar, pi, DP, HP, core, OmegaP, C] using hAbar.D_le_H
   have hQbar_normal_in_Hbar : (Qbar.subgroupOf Hbar).Normal := by
-    simpa [Qbar, Hbar, pi] using hAbar.Q_normal_in_H
+    simpa [Qbar, Hbar, pi, QP, HP, core, OmegaP, C] using hAbar.Q_normal_in_H
   have hQbar_sup_Dbar : Qbar ⊔ Dbar = Hbar := by
-    simpa [Qbar, Dbar, Hbar, pi] using hAbar.Q_sup_D
+    simpa [Qbar, Dbar, Hbar, pi, QP, DP, HP, core, OmegaP, C] using hAbar.Q_sup_D
   have hAddRangeDisjointHbar : Disjoint addHom.range Hbar := by
     rw [Subgroup.disjoint_def]
     intro x hxAdd hxH
@@ -1937,9 +1952,9 @@ public theorem claim_11
     intro x _hx
     rcases hcoordinates.2 x with ⟨⟨a, u, d⟩, hcoord⟩
     have hcoord' : addLift a * unitLift u * (d : C ⧸ core) = x := by
-      simpa [Dbar, pi] using hcoord
+      simpa [Dbar, pi, DP, core, OmegaP, C] using hcoord
     have hdDbar : (d : C ⧸ core) ∈ Dbar := by
-      simpa [Dbar, pi] using d.property
+      simpa [Dbar, pi, DP, core, OmegaP, C] using d.property
     apply Subgroup.mem_sup_of_normal_left.mpr
     rw [mul_assoc] at hcoord'
     refine ⟨addLift a, ?_, unitLift u * (d : C ⧸ core), ?_, hcoord'⟩
@@ -2133,7 +2148,10 @@ public theorem claim_11
       have hcorePNow : core = P.subgroupOf C := by
         rw [← hNcoreLocal, hNP]
       rw [hcorePNow] at hcommCore
-      simpa [xC, yC, Subgroup.mem_subgroupOf] using hcommCore
+      change C.subtype ⁅xC, yC⁆ ∈ P at hcommCore
+      rw [map_commutatorElement] at hcommCore
+      change ⁅x, y⁆ ∈ P at hcommCore
+      exact hcommCore
     have hcomm_ne_bot : ⁅R, R⁆ ≠ ⊥ := by
       intro hbot
       apply hRnoncomm
@@ -2242,7 +2260,8 @@ public theorem claim_11
             simpa [rightConjugateElem, mul_assoc] using hmem
           let zC : C := rightConjugateElem xC cC
           have hcPi : pi cC = unitLift d := by
-            simpa [c, cC] using hunitCoordinate d
+            change QuotientGroup.mk' core cC = unitLift d
+            exact hunitCoordinate d
           have hzCpi : pi zC = addLift b := by
             calc
               pi zC = rightConjugateElem (pi xC) (pi cC) := by
@@ -2636,7 +2655,7 @@ public theorem claim_11
       let z : Fˣ := b * u * b⁻¹
       have hzSq : z ^ 2 = 1 := by
         calc
-          z ^ 2 = b * (u ^ 2) * b⁻¹ := by simp [z, pow_two]; group
+          z ^ 2 = b * (u ^ 2) * b⁻¹ := by simp [z, pow_two]
           _ = 1 := by rw [huSq]; simp
       have hzNe : z ≠ 1 := by
         intro hzOne
@@ -2841,7 +2860,8 @@ public theorem claim_11
       rw [hcabval]
       exact habT
     have hdivT : (((rightConjugateElem ca bC / cab : C) : G)) ∈ T := by
-      simpa only [map_div] using T.div_mem hleftTC habTC
+      change ((rightConjugateElem ca bC : C) : G) / (cab : G) ∈ T
+      exact T.div_mem hleftTC habTC
     have hdivP : (((rightConjugateElem ca bC / cab : C) : G)) ∈ P := by
       change (((rightConjugateElem ca bC / cab : C) : G)) ∈ N at hdivNsub
       rw [hNP] at hdivNsub
@@ -2878,7 +2898,7 @@ public theorem claim_11
         rw [rightConjugateElem, hsInv]
       _ = (s * s) * t * s := by group
       _ = t * s := by
-        simpa [← pow_two, hch.section3.2.2.1.sq_eq_one]
+        simp [← pow_two, hch.section3.2.2.1.sq_eq_one]
       _ = (s * t)⁻¹ := by rw [mul_inv_rev, hsInv, htInv]
   have hst_mem_T : s * t ∈ T :=
     claim_11_mem_T_of_mem_R_of_inverted
@@ -2911,11 +2931,13 @@ public theorem claim_11
     let q : ↥(Q ⊓ Subgroup.centralizer (P : Set G) : Subgroup G) := unitEquiv u
     let qC : C := ⟨(q : G), q.property.2⟩
     have hqCpi : pi qC = unitLift u := by
-      simpa [q, qC] using hunitCoordinate u
+      change QuotientGroup.mk' core qC = unitLift u
+      exact hunitCoordinate u
     let w : ↥(W ⊓ Subgroup.centralizer (P : Set G) : Subgroup G) := eSigma d
     let wC : C := ⟨(w : G), w.property.2⟩
     have hwCpi : pi wC = (d : C ⧸ core) := by
-      simpa [w, wC] using heSigma d
+      change QuotientGroup.mk' core wC = (d : C ⧸ core)
+      exact heSigma d
     have hprodPi : pi (aC * qC * wC) = pi gC := by
       calc
         pi (aC * qC * wC) =
@@ -2971,7 +2993,7 @@ public theorem claim_11
       rcases AddSubgroup.mem_zmultiples_iff.mp haZ with ⟨k, rfl⟩
       calc
         sigmaAct d (k • (1 : F)) = sigmaHom (k • (1 : F)) := rfl
-        _ = k • sigmaHom (1 : F) := sigmaHom.map_zsmul (1 : F) k
+        _ = k • sigmaHom (1 : F) := sigmaHom.map_zsmul k (1 : F)
         _ = k • (1 : F) := by
           change k • sigmaAct d 1 = k • (1 : F)
           rw [(hsigmaMaps d 0 0).2.2]
@@ -3000,7 +3022,7 @@ public theorem claim_11
       let z : Fˣ := b * u * b⁻¹
       have hzSq : z ^ 2 = 1 := by
         calc
-          z ^ 2 = b * (u ^ 2) * b⁻¹ := by simp [z, pow_two]; group
+          z ^ 2 = b * (u ^ 2) * b⁻¹ := by simp [z, pow_two]
           _ = 1 := by rw [huSq]; simp
       have hzNe : z ≠ 1 := by
         intro hzOne
@@ -3028,7 +3050,15 @@ public theorem claim_11
     let qC : C := ⟨q, hq.2⟩
     have hqCoordinate : pi qC = unitLift b := by
       have hb := unitEquiv.apply_symm_apply qSub
-      simpa [qC, qSub, b, hb] using hunitCoordinate b
+      change QuotientGroup.mk' core qC = unitLift b
+      have hqC_eq :
+          qC =
+            ⟨((unitEquiv b : ↥(Q ⊓ Subgroup.centralizer (P : Set G))) : G),
+              (unitEquiv b).property.2⟩ := by
+        apply Subtype.ext
+        exact (congrArg Subtype.val hb).symm
+      rw [hqC_eq]
+      exact hunitCoordinate b
     have hqsQuotient : pi (qC * sC) = pi (sC * qC) := by
       calc
         pi (qC * sC) = pi qC * pi sC := map_mul _ _ _
@@ -3238,11 +3268,13 @@ public theorem claim_11
       let q : ↥(Q ⊓ Subgroup.centralizer (P : Set G)) := unitEquiv u
       let qC : C := ⟨(q : G), q.property.2⟩
       have hqCpi : pi qC = unitLift u := by
-        simpa [q, qC] using hunitCoordinate u
+        change QuotientGroup.mk' core qC = unitLift u
+        exact hunitCoordinate u
       let w : Sigma := eSigma d
       let wC : C := ⟨(w : G), w.property.2⟩
       have hwCpi : pi wC = (d : C ⧸ core) := by
-        simpa [w, wC] using heSigma d
+        change QuotientGroup.mk' core wC = (d : C ⧸ core)
+        exact heSigma d
       have hprodPi : pi (aC * qC * wC) = pi gC := by
         calc
           pi (aC * qC * wC) =

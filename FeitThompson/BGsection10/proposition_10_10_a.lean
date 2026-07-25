@@ -61,9 +61,8 @@ public theorem section10_isElementaryAbelian_sup_of_le_centralizer
     simpa [s] using (Subgroup.sup_eq_closure E D)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup (Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact { is_comm := ⟨fun x y => mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -85,10 +84,12 @@ public theorem section10_isElementaryAbelian_sup_of_le_centralizer
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup (Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          have hclosure_comm : IsMulCommutative (Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
+            (hclosure_comm.is_comm.comm
+              (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
         calc
           (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
           _ = 1 := by simp [hypow, hzpow]) (by
@@ -127,6 +128,7 @@ public theorem section10_groupRank_at_least_two_of_generatorRank_subgroup
     exact hnr.trans (section10_primeRank_le_natCard_pre (q := r) K)
   · exact ⟨q, hq, hqrankK⟩
 
+omit [IsMinCE G] in
 public theorem section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton
     {p : Nat.Primes} {A : Subgroup G}
     (hA : A ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G) :
@@ -172,7 +174,7 @@ public theorem section10_rankTwoMaximal_hypothesis7_1
       refine ⟨?_, ?_⟩
       · rw [Subgroup.mem_centralizer_iff]
         intro y hyA
-        exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hyA hxA
+        exact setLike_mul_comm (s := A) hyA hxA
       · let xA : A := ⟨x, hxA⟩
         have hxpow : xA ^ p.val = 1 := by
           exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -261,6 +263,7 @@ public theorem section10_sylow_smul_coe_eq_conjBy
     rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
     simpa [Subgroup.conjBy] using hx
 
+omit [Finite G] [IsMinCE G] in
 public theorem section10_section7K_le_centralizer (A : Subgroup G) :
     section7K A ≤ Subgroup.centralizer (A : Set G) := by
   intro x hx
@@ -281,7 +284,7 @@ public theorem proposition_10_10_a
   haveI : Fact q.val.Prime := ⟨q.property⟩
   letI : IsElementaryAbelian p.val A := hA.1.2
   letI : IsMulCommutative A := hA.1.2.toIsMulCommutative
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hHyp : Hypothesis7_1 A := section10_rankTwoMaximal_hypothesis7_1 (G := G) hA
   have hAπ : subgroupPrimeSet A = ({p} : Set Nat.Primes) :=
     section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton (G := G) hA

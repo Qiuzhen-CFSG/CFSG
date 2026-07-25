@@ -9,7 +9,7 @@ public import BenderSuzuki.External.Huppert.II.theorem_6_11
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import Mathlib.LinearAlgebra.Projectivization.Action
-public import Mathlib.LinearAlgebra.Transvection
+public import Mathlib.LinearAlgebra.Transvection.Basic
 
 import Mathlib.LinearAlgebra.Matrix.Transvection
 import Mathlib.Algebra.Group.AddChar
@@ -27,6 +27,7 @@ namespace BenderSuzuki
 namespace External
 
 open scoped LinearAlgebra.Projectivization
+open scoped commutatorElement
 
 universe u
 
@@ -216,7 +217,7 @@ private theorem huppert613_diagonalSL_mem_closure
       ∏ i : {i : m // i ≠ p}, (u i)⁻¹ =
           (∏ i : {i : m // i ≠ p}, u i)⁻¹ := by
         symm
-        simpa using
+        exact
           (map_prod (invMonoidHom : Kˣ →* Kˣ)
             (fun i : {i : m // i ≠ p} => u i) Finset.univ)
       _ = u p := by rw [hu_rest, inv_inv]
@@ -283,11 +284,11 @@ private theorem huppert613_steinberg_commutator
   ext r
   by_cases hri : r = i
   · subst r
-    simp [hik, hkj, Ne.symm hij, Ne.symm hik, Ne.symm hkj]
+    simp [hik, Ne.symm hij, Ne.symm hik, Ne.symm hkj]
     ring
   · by_cases hrk : r = k
     · subst r
-      simp [hri, hik, hkj, Ne.symm hij, Ne.symm hik, Ne.symm hkj]
+      simp [hri, hik, Ne.symm hij, Ne.symm hkj]
     · simp [hri, hrk]
 
 private theorem huppert613_exists_unit_sq_ne_one
@@ -357,10 +358,10 @@ private theorem huppert613_pairDiagonalSL_inv
   funext r
   by_cases hrp : r = p
   · subst r
-    simp [huppert613_pairDiagonalValue, hpi, Ne.symm hpi]
+    simp [huppert613_pairDiagonalValue]
   · by_cases hri : r = i
     · subst r
-      simp [huppert613_pairDiagonalValue, hpi, Ne.symm hpi]
+      simp [huppert613_pairDiagonalValue, Ne.symm hpi]
     · simp [huppert613_pairDiagonalValue, hrp, hri]
 
 private theorem huppert613_pairDiagonalSL_conj
@@ -385,11 +386,12 @@ private theorem huppert613_pairDiagonalSL_conj
   simp_rw [huppert613_diagonal_mulVec_apply]
   by_cases hrp : r = p
   · subst r
-    simp [huppert613_pairDiagonalValue, hpi, Ne.symm hpi]
+    simp [huppert613_pairDiagonalValue, Ne.symm hpi]
     field_simp [Units.ne_zero a]
   · by_cases hri : r = i
     · subst r
-      simp [huppert613_diagonal_mulVec_apply, huppert613_pairDiagonalValue, hpi, Ne.symm hpi]
+      simp [huppert613_diagonal_mulVec_apply, huppert613_pairDiagonalValue,
+        Ne.symm hpi]
     · simp [huppert613_diagonal_mulVec_apply, huppert613_pairDiagonalValue, hrp, hri]
 
 private theorem huppert613_elementarySL_mem_commutator_fin_two
@@ -466,9 +468,9 @@ private theorem huppert613_toLin_elementarySL
   rw [huppert613_transvection_mulVec]
   by_cases hki : k = i
   · subst k
-    simp [LinearEquiv.transvection.apply, LinearMap.transvection.apply,
+    simp [LinearMap.transvection.apply,
       huppert613_coord, huppert613_basisVector]
-  · simp [LinearEquiv.transvection.apply, LinearMap.transvection.apply,
+  · simp [LinearMap.transvection.apply,
       huppert613_coord, huppert613_basisVector, hki]
 
 private theorem huppert613_basisVector_ne_zero
@@ -476,7 +478,7 @@ private theorem huppert613_basisVector_ne_zero
     huppert613_basisVector (K := K) i ≠ 0 := by
   intro h
   have hi := congrFun h i
-  exact (one_ne_zero : (1 : K) ≠ 0) (by simpa [huppert613_basisVector] using hi)
+  simp [huppert613_basisVector] at hi
 
 private theorem huppert613_projective_basis_ne
     {K : Type u} [Field K] {m : Type*} [DecidableEq m]
@@ -488,9 +490,7 @@ private theorem huppert613_projective_basis_ne
   intro h
   rcases (Projectivization.mk_eq_mk_iff K _ _ _ _).1 h with ⟨s, hs⟩
   have hi := congrFun hs i
-  have hzero : (0 : K) = 1 := by
-    simpa [huppert613_basisVector, hij] using hi
-  exact zero_ne_one hzero
+  simp [huppert613_basisVector, hij] at hi
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Huppert II.6.13: `PSL(n,K)` is simple apart from `PSL(2,2)` and `PSL(2,3)`. -/
@@ -531,7 +531,11 @@ public theorem huppert_II_6_13
         refine ⟨hMN, ?_⟩
         exact H.mul_mem hMmem hNmem
     rcases hP with ⟨hA, hAmem⟩
-    simpa only [Subsingleton.elim hA A.property] using hAmem
+    have hAEq :
+        (⟨(A : Matrix (Fin n) (Fin n) K), hA⟩ : SL) = A :=
+      Subtype.ext rfl
+    rw [← hAEq]
+    exact hAmem
   have hSLperfect : commutator SL = ⊤ := by
     apply top_unique
     rw [← htransvection_generation, Subgroup.closure_le]
@@ -559,8 +563,8 @@ public theorem huppert_II_6_13
     calc
       commutator PSL = (commutator SL).map q := by
         symm
-        simpa [hqtop] using
-          (Subgroup.map_commutator (⊤ : Subgroup SL) (⊤ : Subgroup SL) q)
+        rw [_root_.commutator_def, _root_.commutator_def,
+          Subgroup.map_commutator, hqtop]
       _ = ⊤ := by rw [hSLperfect, hqtop]
   have hprojective_action :=
     huppert_II_6_11_projective_action (K := K) n hn
@@ -576,8 +580,12 @@ public theorem huppert_II_6_13
     let w : V := huppert613_basisVector (K := K) (⟨0, by omega⟩ : Fin n)
     have hw : w ≠ 0 := by
       intro h
-      have h0 := congrFun h (⟨0, by omega⟩ : Fin n)
-      exact one_ne_zero (by simpa [w, huppert613_basisVector] using h0)
+      have h0 : (1 : K) = 0 := by
+        calc
+          1 = w (⟨0, by omega⟩ : Fin n) := by
+            simp [w, huppert613_basisVector]
+          _ = 0 := by rw [h]; rfl
+      exact one_ne_zero h0
     let a : P := Projectivization.mk K w hw
     let A := LinearMap.ker ((Module.Dual.eval K V) w)
     have haf (f : A) : (f : Module.Dual K V) w = 0 := by
@@ -592,13 +600,14 @@ public theorem huppert_II_6_13
           apply Subtype.ext
           apply LinearEquiv.ext
           intro x
-          simp [LinearEquiv.transvection.apply, LinearMap.transvection.apply]
+          simp
         map_add_eq_mul' := by
           intro f g
           apply Subtype.ext
-          simpa only [SpecialLinearGroup.coe_mul] using
-            (LinearEquiv.transvection.trans_of_right_eq
-              (haf f) (haf g) (haf (f + g))).symm }
+          apply LinearEquiv.ext
+          intro x
+          exact
+            (LinearMap.transvection.comp_of_right_eq_apply (haf f)).symm }
     let eSL := Matrix.SpecialLinearGroup.toLin'_equiv
       (R := K) (n := Fin n)
     let rootSL : AddChar A SL :=
@@ -649,7 +658,8 @@ public theorem huppert_II_6_13
       change Projectivization.mk K (eB w) _ =
         Projectivization.mk K w hw at hg
       rcases (Projectivization.mk_eq_mk_iff K _ _ _ _).1 hg with ⟨s, hs⟩
-      have hsK : (s : K) • w = eB w := by simpa using hs
+      have hsK : (s : K) • w = eB w := by
+        simpa [Units.smul_def] using hs
       have hs_inv : eB.symm w = ((s⁻¹ : Kˣ) : K) • w := by
         apply eB.injective
         rw [eB.apply_symm_apply, map_smul, ← hsK]
@@ -673,8 +683,8 @@ public theorem huppert_II_6_13
         intro z
         change eB ((LinearEquiv.transvection (haf f)) (eB.symm z)) =
           (LinearEquiv.transvection (haf fA)) z
-        simp only [LinearEquiv.transvection.apply,
-          LinearMap.transvection.apply, map_add, eB.apply_symm_apply]
+        simp only [LinearEquiv.transvection.apply, map_add,
+          eB.apply_symm_apply]
         rw [map_smul]
         change z + (f : Module.Dual K V) (eB.symm z) • eB w =
           z + fB z • w
@@ -721,7 +731,8 @@ public theorem huppert_II_6_13
         change Projectivization.mk K (eB w) _ =
           Projectivization.mk K vi hvi at hga
         rcases (Projectivization.mk_eq_mk_iff K _ _ _ _).1 hga with ⟨s, hs⟩
-        have hsK : (s : K) • vi = eB w := by simpa using hs
+        have hsK : (s : K) • vi = eB w := by
+          simpa [Units.smul_def] using hs
         let ft : Module.Dual K V := c • huppert613_coord j
         have hft : ft vi = 0 := by
           change c * ((Pi.single i (1 : K) : Fin n → K) j) = 0
@@ -750,8 +761,8 @@ public theorem huppert_II_6_13
           intro z
           change eB ((LinearEquiv.transvection (haf fp)) (eB.symm z)) =
             (LinearEquiv.transvection hft) z
-          simp only [LinearEquiv.transvection.apply,
-            LinearMap.transvection.apply, map_add, eB.apply_symm_apply]
+          simp only [LinearEquiv.transvection.apply, map_add,
+            eB.apply_symm_apply]
           rw [map_smul]
           change z + fpre (eB.symm z) • eB w = z + ft z • vi
           rw [← hsK]
@@ -797,8 +808,9 @@ public theorem huppert_II_6_13
       apply hrho
       apply Equiv.ext
       intro x
-      change rho g x = rho 1 x
-      simpa using hg x)
+      have hgx := hg x
+      change rho g x = x at hgx
+      simpa using hgx)
     let i0 : Fin n := ⟨0, by omega⟩
     let i1 : Fin n := ⟨1, by omega⟩
     let p0 : P := Projectivization.mk K (huppert613_basisVector i0)

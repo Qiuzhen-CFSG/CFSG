@@ -2,6 +2,8 @@ name = "CFSG"
 defaultTargets = ["FeitThompson", "BenderSuzuki"]
 lintDriver = "batteries/runLinter"
 
+enableArtifactCache = true
+
 [leanOptions]
 pp.unicode.fun = true
 autoImplicit = false
@@ -10,7 +12,7 @@ relaxedAutoImplicit = false
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.29.0-rc8"
+rev = "v4.32.0"
 
 [[lean_lib]]
 name = "FeitThompson"

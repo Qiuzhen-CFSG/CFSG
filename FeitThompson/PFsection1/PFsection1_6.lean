@@ -72,7 +72,7 @@ lemma subgroupInKernel'_conjugate
     simpa using hA.conj_mem (a : G) a.2 x
   have hmem := hker ⟨x * (a : G) * x⁻¹, hxax⟩
   dsimp [conjugateClassFunction, degree]
-  simpa using hmem
+  simpa [degree] using hmem
 
 lemma subgroupInKernel'_conjugate_iff
     {G : Type*} [Group G]

@@ -176,11 +176,11 @@ public theorem hkt_ambient_invariant_of_subgroupOf_characteristic
     have : invariantSubgroupAut φ S hSφ qS ∈ H.subgroupOf S := by
       rw [← hmap]
       exact Subgroup.mem_map_of_mem (invariantSubgroupAut φ S hSφ).toMonoidHom hqSub
-    simpa [qS, invariantSubgroupAut] using this
+    simpa [qS, invariantSubgroupAut, Subgroup.mem_subgroupOf] using this
   · intro hq
     let qS : S := ⟨q, (hSφ q).mpr (hH_le hq)⟩
     have hφqSub : invariantSubgroupAut φ S hSφ qS ∈ H.subgroupOf S := by
-      simpa [qS, invariantSubgroupAut] using hq
+      simpa [qS, invariantSubgroupAut, Subgroup.mem_subgroupOf] using hq
     have hmap : (H.subgroupOf S).map (invariantSubgroupAut φ S hSφ).symm.toMonoidHom =
         H.subgroupOf S :=
       Subgroup.characteristic_iff_map_eq.mp hchar (invariantSubgroupAut φ S hSφ).symm
@@ -188,7 +188,7 @@ public theorem hkt_ambient_invariant_of_subgroupOf_characteristic
         H.subgroupOf S := by
       rw [← hmap]
       exact Subgroup.mem_map_of_mem (invariantSubgroupAut φ S hSφ).symm.toMonoidHom hφqSub
-    simpa [qS, invariantSubgroupAut] using this
+    simpa [qS, invariantSubgroupAut, Subgroup.mem_subgroupOf] using this
 
 /-- `J(S)` is invariant when the Sylow subgroup `S` is invariant. -/
 public theorem hkt_thompsonSubgroup_invariant_of_invariant_sylow
@@ -339,7 +339,8 @@ public theorem hkt_exists_invariant_sylow_of_prime_period_not_dvd_sylow_card
   let a : A := ⟨φ, by simp [A]⟩
   have hsmulS : a • S = S := (MulAction.mem_fixedPoints.mp hSfix) a
   have hsub_eq : a • (S : Subgroup Q) = (S : Subgroup Q) := by
-    simpa using congrArg (fun T : Sylow q Q => (T : Subgroup Q)) hsmulS
+    simpa [MulAction.subgroup_smul_def, Sylow.pointwise_smul_def] using
+      congrArg (fun T : Sylow q Q => (T : Subgroup Q)) hsmulS
   intro x
   constructor
   · intro hx
@@ -350,7 +351,8 @@ public theorem hkt_exists_invariant_sylow_of_prime_period_not_dvd_sylow_card
   · intro hx
     have hsmulSinv : a⁻¹ • (S : Subgroup Q) = (S : Subgroup Q) := by
       have hfix := (MulAction.mem_fixedPoints.mp hSfix) a⁻¹
-      simpa using congrArg (fun T : Sylow q Q => (T : Subgroup Q)) hfix
+      simpa [MulAction.subgroup_smul_def, Sylow.pointwise_smul_def] using
+        congrArg (fun T : Sylow q Q => (T : Subgroup Q)) hfix
     have hx' : a⁻¹ • (a • x) ∈ a⁻¹ • (S : Subgroup Q) :=
       Subgroup.smul_mem_pointwise_smul (a • x) a⁻¹ (S : Subgroup Q) (by
         change φ x ∈ (S : Subgroup Q) at hx

@@ -21,14 +21,13 @@ public theorem subgroupSum_eq_sum {G : Type*} [Group G] [Finite G] {F : Type*} [
 
 private noncomputable def conjByEquiv {G : Type*} [Group G] (R : Subgroup G) (x : G) :
     R ≃ R.conjBy x := by
-  simpa [Subgroup.conjBy] using
-    (R.equivMapOfInjective (MulAut.conj x).toMonoidHom (EquivLike.injective (MulAut.conj x))).toEquiv
+  simpa only [Subgroup.conjBy, MulEquiv.toMonoidHom_eq_coe] using
+    (MulEquiv.subgroupMap (MulAut.conj x) R).toEquiv
 
 private theorem conjByEquiv_apply_coe {G : Type*} [Group G] (R : Subgroup G) (x : G) (r : R) :
     (((conjByEquiv R x) r : R.conjBy x) : G) = x * (r : G) * x⁻¹ := by
-  simpa [conjByEquiv, Subgroup.conjBy, MulAut.conj_apply, mul_assoc] using
-    (Subgroup.coe_equivMapOfInjective_apply R (MulAut.conj x).toMonoidHom
-      (EquivLike.injective (MulAut.conj x)) r)
+  change (MulAut.conj x) (r : G) = x * (r : G) * x⁻¹
+  simp [MulAut.conj_apply, mul_assoc]
 
 private theorem fixed_mem_of_fixed_conjBy {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V) (R : Subgroup G)
@@ -198,7 +197,6 @@ public theorem subgroupSum_conjBy_eq {G : Type*} [Group G] [Finite G] {F : Type*
       (fun s : R.conjBy x => ρ s v)
       (by
         intro r
-        change ρ (x * (r : G) * x⁻¹) v = ρ ((e r : R.conjBy x) : G) v
         rw [conjByEquiv_apply_coe])
   simpa [subgroupSum] using hsum.symm
 

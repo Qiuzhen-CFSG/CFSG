@@ -802,7 +802,7 @@ private theorem lemma_4_elementary_subgroupOf
   · letI : IsMulCommutative H := hcomm
     exact ⟨⟨fun x y => by
       apply e.injective
-      simpa [e] using mul_comm (e x) (e y)⟩⟩
+      simpa [e] using show (e x) * (e y) = (e y) * (e x) from hcomm.is_comm.comm (e x) (e y)⟩⟩
   · intro x
     apply e.injective
     simpa [e] using hsq (e x)
@@ -1420,8 +1420,7 @@ private theorem lemma_4_psl2_matrix_group_obligation
   let orbitClass : MulAction.orbitRel.Quotient L Ω := Quotient.mk'' α
   let ΩL : Type v := orbitClass.orbit
   let αL : ΩL := ⟨α, by
-    simpa [orbitClass] using (MulAction.mem_orbit_self α :
-      α ∈ MulAction.orbit L α)⟩
+    simp [orbitClass, MulAction.mem_orbit_self]⟩
   let β : Ω := t⁻¹ • α
   let βL : ΩL := w⁻¹ • αL
   have htinv : t⁻¹ = t := hsec.section2.hA.A1.involution_t.inv_eq_self
@@ -1462,7 +1461,8 @@ private theorem lemma_4_psl2_matrix_group_obligation
       x = αL ∨ ∃ q : U, q • βL = x := by
     intro x
     have hxOrbit : (x : Ω) ∈ MulAction.orbit L α := by
-      simpa [ΩL, orbitClass] using x.property
+      dsimp [ΩL, orbitClass] at *
+      exact x.property
     rcases hxOrbit with ⟨l, hl⟩
     have hlUnion : (l : G) ∈ q0KUnionQ0KtQ0 Q0 K t := by
       rw [← lemma_4_generated_subgroup_eq_obligation
@@ -1514,7 +1514,15 @@ private theorem lemma_4_psl2_matrix_group_obligation
       let q₁Q : Q := ⟨(q₁ : G), hsec.section2.Q0_le_Q q₁.property⟩
       let q₂Q : Q := ⟨(q₂ : G), hsec.section2.Q0_le_Q q₂.property⟩
       have hqEq : q₁Q = q₂Q := hQregular.2.1 trivial trivial (by
-        simpa [q₁Q, q₂Q, hβL_val] using hqG)
+        calc
+          (q₁Q : Q) • β = (q₁ : G) • β := by simp [q₁Q]
+          _ = (q₁ : G) • (βL : Ω) := by rw [hβL_val]
+          _ = (q₁ • βL : ΩL).val := rfl
+          _ = (q₂ • βL : ΩL).val := hqG
+          _ = (q₂ : G) • (βL : Ω) := rfl
+          _ = (q₂ : G) • β := by rw [hβL_val]
+          _ = (q₂Q : Q) • β := by simp [q₂Q]
+      )
       have hqEqG : (q₁Q : G) = (q₂Q : G) :=
         congrArg (fun z : Q => (z : G)) hqEq
       exact Subtype.ext (Subtype.ext hqEqG)
@@ -1559,7 +1567,7 @@ private theorem lemma_4_psl2_matrix_group_obligation
           rw [show (q₁ : L)⁻¹ • αL = αL by
             simpa using hU_fixes_alpha q₁⁻¹]
         _ = lc⁻¹ • αL := by rw [hU_fixes_alpha q₂]
-        _ = c := by rw [← hlc]; simp [mul_smul]
+        _ = c := by rw [← hlc]; simp
     · calc
         (lc⁻¹ * (q₂ : L) * (q₁ : L)⁻¹ * la) • b =
             lc⁻¹ • ((q₂ : L) • ((q₁ : L)⁻¹ • (la • b))) := by
@@ -1570,7 +1578,7 @@ private theorem lemma_4_psl2_matrix_group_obligation
         _ = lc⁻¹ • (lc • d) := by
           have hq₂' : (q₂ : L) • βL = lc • d := hq₂
           rw [hq₂']
-        _ = d := by simp [mul_smul]
+        _ = d := by simp
   let HL : Subgroup L := MulAction.stabilizer L αL
   have hHL_factor : ∀ x : HL, ∃ q : U, ∃ k : T, (x : L) = q * k := by
     intro x
@@ -1605,7 +1613,15 @@ private theorem lemma_4_psl2_matrix_group_obligation
               rw [show t • α = β by simp [β, htinv]]
             _ = q • β := by rw [hK_fixes_beta k hk]
         _ = (x : G) • α := by rw [hxEq]
-        _ = α := by simpa [αL] using hval
+        _ = α := by
+          have hval' : ((x : L) : G) • α = α := by
+            calc
+              ((x : L) : G) • α = (((x : L) • αL : ΩL) : Ω) := rfl
+              _ = α := by
+                calc
+                  (((x : L) • αL : ΩL) : Ω) = (αL : Ω) := congrArg (fun z : ΩL => (z : Ω)) hxfix
+                  _ = α := rfl
+          exact hval'
   have hU_le_HL : U ≤ HL := by
     intro q hq
     change (q : L) • αL = αL
@@ -1645,12 +1661,28 @@ private theorem lemma_4_psl2_matrix_group_obligation
       rfl
     constructor
     · intro hxK
-      exact ⟨by apply Subtype.ext; exact hK_fixes_alpha _ hxK,
-        by apply Subtype.ext; simpa [hβL_val] using hK_fixes_beta _ hxK⟩
+      refine ⟨Subtype.ext (hK_fixes_alpha _ hxK), ?_⟩
+      apply Subtype.ext
+      calc
+        (x : G) • (βL : Ω) = (x : G) • β := by rw [hβL_val]
+        _ = β := hK_fixes_beta _ hxK
+        _ = (βL : Ω) := by rw [hβL_val]
     · rintro ⟨hxα, hxβ⟩
-      have hxD : (x : G) ∈ D := hpair.mpr ⟨by
-        simpa [αL] using congrArg Subtype.val hxα, by
-        simpa [hβL_val] using congrArg Subtype.val hxβ⟩
+      have hxαG : ((x : L) : G) • α = α := by
+        calc
+          ((x : L) : G) • α = ((x : L) : G) • (αL : Ω) := rfl
+          _ = Subtype.val ((x : L) • αL) := rfl
+          _ = Subtype.val αL := by rw [hxα]
+          _ = (αL : Ω) := rfl
+          _ = α := rfl
+      have hxβG : ((x : L) : G) • β = β := by
+        calc
+          ((x : L) : G) • β = ((x : L) : G) • (βL : Ω) := by rw [hβL_val]
+          _ = Subtype.val ((x : L) • βL) := rfl
+          _ = Subtype.val βL := by rw [hxβ]
+          _ = (βL : Ω) := rfl
+          _ = β := by rw [hβL_val]
+      have hxD : (x : G) ∈ D := hpair.mpr ⟨hxαG, hxβG⟩
       have hxInf : (x : G) ∈ D ⊓ L := ⟨hxD, x.property⟩
       rw [lemma_4_D_inf_generated_eq_K
         H D Q K V W Q0 S Q1 t s hsec hst] at hxInf
@@ -1670,7 +1702,7 @@ private theorem lemma_4_psl2_matrix_group_obligation
       simpa [rightConjugateElem] using hkConj
     have hmem := Q0.mul_mem
       (Q0.mul_mem q.property hinner) (Q0.inv_mem q.property)
-    simpa only [mul_inv_rev, mul_assoc] using hmem
+    simpa only [Subgroup.coe_subtype, Subgroup.coe_mk, mul_inv_rev, mul_assoc] using hmem
   have hUeven : Even (Nat.card U) := by
     have hcardU : Nat.card U = Nat.card Q0 :=
       Nat.card_congr
@@ -1723,8 +1755,15 @@ private theorem lemma_4_psl2_matrix_group_obligation
                   simp only [mul_smul]
             _ = (x : L) • (qL • βL) := by rw [hxβinv]
             _ = qL • βL := hxfix (qU • βL)
-        have hactVal := congrArg (fun z : ΩL => (z : Ω)) hactEqL
-        simpa [q₁Q, q₂Q, qL, hβL_val] using hactVal
+        calc
+          (q₁Q : G) • β = ((x : G) * q * (x : G)⁻¹) • β := rfl
+          _ = ((x : L) * qL * (x : L)⁻¹ : G) • β := by simp [qL]
+          _ = ((x : L) * qL * (x : L)⁻¹ : G) • (βL : Ω) := by rw [hβL_val]
+          _ = Subtype.val (((x : L) * qL * (x : L)⁻¹) • βL) := rfl
+          _ = Subtype.val (qL • βL) := by rw [hactEqL]
+          _ = (qL : G) • (βL : Ω) := rfl
+          _ = q • β := by simp [qL, hβL_val]
+          _ = (q₂Q : G) • β := rfl
       have hqEq : q₁Q = q₂Q := hQregular.2.1 trivial trivial hactEq
       have hconjEq : (x : G) * q * (x : G)⁻¹ = q :=
         congrArg Subtype.val hqEq
@@ -2006,7 +2045,7 @@ private theorem lemma_4_psl2_matrix_group_obligation
       simpa [xL] using hmap
     letI : IsMulCommutative R :=
       lemma_4_isMulCommutative_of_forall_sq_one hRsq
-    letI : CommGroup R := CommGroup.ofIsMulCommutative
+    letI : CommGroup R := IsMulCommutative.instCommGroup
     have hcommbot : commutator R = ⊥ :=
       (commutator_eq_bot_iff_center_eq_top (G := R)).2
         CommGroup.center_eq_top

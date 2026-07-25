@@ -48,6 +48,7 @@ public theorem huppert_III_8_8_exists_invariant_index_two_of_involutive_aut
   have hQelem : IsElementaryAbelian 2 (P ⧸ frattini P) :=
     isElementaryAbelian_quotient_frattini
   letI : IsElementaryAbelian 2 (P ⧸ frattini P) := hQelem
+  letI : CommGroup (P ⧸ frattini P) := IsMulCommutative.instCommGroup
   let V := Additive (P ⧸ frattini P)
   letI : AddCommGroup V := Additive.addCommGroup
   letI : Module (ZMod 2) V := inferInstance
@@ -116,7 +117,8 @@ public theorem huppert_III_8_8_exists_invariant_index_two_of_involutive_aut
   have hg_invariant (q : P ⧸ frattini P) :
       g (Additive.ofMul (φQ q)) = g (Additive.ofMul q) := by
     have h := congrArg (fun f : D => f (Additive.ofMul q)) hgfix
-    simpa [σ, dLin, eLin, eAdd, LinearEquiv.dualMap_apply] using h
+    change g (Additive.ofMul (φQ q)) = g (Additive.ofMul q) at h
+    exact h
   have hχ_invariant (q : P ⧸ frattini P) : χ (φQ q) = χ q := by
     simpa [χ] using congrArg Multiplicative.ofAdd (hg_invariant q)
   let ψ : P →* Multiplicative (ZMod 2) :=
@@ -188,5 +190,8 @@ public theorem huppert_XI_2_5_invariantIndexTwo_of_pResidual_ne_top
   refine ⟨M, hMnormal, hMindex, ?_⟩
   intro x
   change π x ∈ Mbar ↔ π (φ x) ∈ Mbar
-  simpa [π, φQ, invariantQuotientAut_mk'] using hMbarInv (π x)
+  have hφπ : φQ (π x) = π (φ x) := by
+    exact invariantQuotientAut_mk' φ R hRinv x
+  rw [← hφπ]
+  exact hMbarInv (π x)
 end BenderSuzuki.External

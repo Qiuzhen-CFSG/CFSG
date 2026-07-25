@@ -98,7 +98,6 @@ private abbrev theorem_b_claim15_data
                     ∀ x : G, x ∈ L ⊔ V →
                       (x ^ 3 = 1 ↔ x ∈ Z1 ⊔ Sigma ⊔ P)
 
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem theorem_b_B2_contradiction_after_claim15
     {G : Type u} {Ω : Type v} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -140,12 +139,11 @@ private theorem theorem_b_B2_contradiction_after_claim15
       hWdisjP hWcases hfactor hR1p hphi hNormalizerSplit hR1DisjointS
       hNormalizerNormR1 hCenterR1 hIndex
 
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem theorem_b_B2_contradiction_after_claim14
     {G : Type u} {Ω F : Type v}
     [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (H D Q K V W Q0 S Q1 P Sigma Z1 R T R1 R2 : Subgroup G)
     (t s : G) (p : ℕ)
     (hch : theorem_b_context (G := G) (Ω := Ω) H D Q K V W Q0 S Q1 P t s p)
@@ -207,7 +205,6 @@ private theorem theorem_b_B2_contradiction_after_claim14
 -/
 
 
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 public theorem theorem_b_B2_contradiction
     {G : Type u} {Ω : Type v} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]

@@ -146,9 +146,8 @@ public theorem exists_puncturedInducedFamily
       rcases hθirr with ⟨n, ρ, hρ, rfl⟩
       refine ⟨?_, ?_⟩
       · exact ⟨n, ρ, rfl⟩
-      · have hnorm :=
-          (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρ
-        simpa [Section1.classFunctionInner_toConjClassFunction] using hnorm
+      · rw [Section1.classFunctionInner_toConjClassFunction]
+        exact Section1.scalarProduct_representation_char_self (G := H) ρ hρ
     rcases hχ.2.1 (Section1.toConjClassFunction θ hθclass) hθrepirr with
       ⟨i, hi⟩
     have hψθ : ψ i = θ := by
@@ -800,8 +799,8 @@ public theorem isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
   constructor
   · exact isCharacter_of_isIrreducibleCharacterOnGroup ⟨n, ρ, hirr, hchar⟩
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    rw [hchar]
+    exact Section1.scalarProduct_representation_char_self (G := G) ρ hirr
 
 /-- An irreducible character has scalar square norm one. -/
 public theorem scalarProduct_self_of_isIrreducibleCharacterOnGroup
@@ -1566,8 +1565,8 @@ public theorem isBookIrreducibleCharacter_of_representation_irreducible
     exact (uliftRepresentation_character
       (G := G) (V := Fin n → ℂ) (ρ := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using hirr
+    rw [Section1.scalarProduct_ofConjClassFunction]
+    exact hirr
 
 /-- Decompose any character as a finite nonnegative integer combination of the
 irreducible characters. -/
@@ -1679,7 +1678,8 @@ public theorem exists_positive_irreducible_decomposition_of_character
   refine ⟨γ, inferInstance, inferInstance, e, ψ, i0, ?_, ?_, ?_, ?_⟩
   · intro i
     have hi_mem : i.1 ∈ Finset.univ.filter (fun i : β => e0 i ≠ 0) := by
-      simpa [s] using i.2
+      change i.1 ∈ s
+      exact i.2
     exact Nat.pos_of_ne_zero (Finset.mem_filter.mp hi_mem).2
   · intro i
     exact hψ0 i.1
@@ -2759,7 +2759,8 @@ public theorem isVirtualCharacter_evalCoeff
   refine isVirtualCharacter_finset_sum (Finset.univ : Finset ι)
     (fun i => ((v i : ℤ) : ℂ) • μ i) ?_
   intro i _hi
-  simpa using isVirtualCharacter_zsmul (v i) (hμ i)
+  rw [Int.cast_smul_eq_zsmul ℂ]
+  exact isVirtualCharacter_zsmul (v i) (hμ i)
 
 /-- Every element of the integral span of a virtual-character family is a
 virtual character. -/
@@ -2812,7 +2813,6 @@ public theorem integerSpan_mono
       hsub
       (by
         intro y _hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach,
     ← S2.sum_attach] using hsum
@@ -3008,7 +3008,7 @@ public theorem one_not_mem_dadeSupport_of_hypothesis2_core
     rw [Section2.elementCentralizer, Subgroup.mem_centralizer_iff]
     intro y hy
     have hy' : y = a := by simpa using hy
-    simpa [hy']
+    simp [hy']
   have haCL : a ∈ Section2.centralizerIn L a := by
     exact Subgroup.mem_inf.mpr ⟨h22.subset_L a ha, haCent⟩
   have haInf : a ∈ R a ⊓ Section2.centralizerIn L a := by
@@ -3371,8 +3371,15 @@ public theorem not_subgroupInKernel'_of_subgroupRestriction_eq_smul_nonprincipal
         _ = φ (1 : L) := rfl
         _ = φ (1 : H.subgroupOf L) := by rfl
         _ = c * θ 1 := by
-          simpa [Section1.subgroupRestriction, Section1.subgroupOfClassFunction]
-            using hres_one
+          change φ (1 : H.subgroupOf L) =
+            c * θ ⟨((1 : H.subgroupOf L) : L), (1 : H.subgroupOf L).2⟩ at hres_one
+          have hone :
+              (⟨((1 : H.subgroupOf L) : L), (1 : H.subgroupOf L).2⟩ : H) =
+                (1 : H) := by
+            apply Subtype.ext
+            rfl
+          rw [hone] at hres_one
+          exact hres_one
     exact mul_left_cancel₀ hc hmul
   exact hθne
     (eq_principalCharacter_of_isBookIrreducibleCharacter_subgroupInKernel_top
@@ -3933,8 +3940,7 @@ public theorem constituentFamily_hypothesis_5_2_a_of_parts
       φ ∈ SXall ↔ ∃ χ : S, φ ∈ SX χ) :
     Section5.hypothesis_5_2_a_statement S →
     Section5.hypothesis_5_2_a_statement SXall := by
-  intro h52a
-  intro φ
+  intro h52a φ
   exact ⟨constituentFamily_conjugate_mem_of_parts hsets hmem h52a φ.property,
     constituentFamily_ne_conjugate_of_parts
       L H S SX R τ SXall hhyp hodd hsets hmem φ.property⟩
@@ -4471,7 +4477,7 @@ public theorem constituentFamilyData_of_singletons
     · rintro ⟨χ, hφχ⟩
       have hφeq : φ = (χ : Section1.ClassFunction L) := by
         simpa [SX] using hφχ
-      simpa [hφeq] using χ.property
+      simp [hφeq]
 
 /-- PF Hypothesis `(5.2)` with a specified family `R(χ)`. -/
 @[expose] public def hypothesis52WithRData
@@ -5459,8 +5465,7 @@ public theorem scalarProduct_sub_right_pf12
     Section1.scalarProduct G φ (ψ₁ - ψ₂) =
       Section1.scalarProduct G φ ψ₁ - Section1.scalarProduct G φ ψ₂ := by
   unfold Section1.scalarProduct
-  simp [sub_eq_add_neg, Finset.sum_add_distrib, mul_add, mul_comm,
-    mul_left_comm, mul_assoc, add_comm, add_left_comm, add_assoc]
+  simp [sub_eq_add_neg, Finset.sum_add_distrib, mul_add]
 
 /-- Coefficient equality for two local constituents once the source proof has
 identified their transformed difference as an integral combination of `R(χ)`.
@@ -8033,7 +8038,8 @@ public theorem frobeniusWithKernel_of_section12FrobeniusJoinWithKernel
         (IsFrobeniusGroupWithKernelComplement.normal hfrobM)
         (IsFrobeniusGroupWithKernelComplement.isComplement' hfrobM)).1
         hfrobM r hrne
-    simpa [Section2.centralizerIn] using hcentM
+    simpa [Section2.centralizerIn, Section2.elementCentralizer, elementCentralizerIn]
+      using hcentM
 
 /-- PF `(8.2.b)` supplies the Frobenius join for a Type-F complement once all
 Sylow subgroups of the complement are cyclic; the local Section 12 bridge then
@@ -8074,7 +8080,7 @@ all-maximal-Type-I hypothesis. -/
 (L_i)_F` choices from the all-maximal-Type-I hypothesis in PF `(12.17)`. -/
 public theorem theorem_12_17_exists_representative_system_data
     {G : Type u} [Group G] [Finite G]
-    (hmin : IsMinCE G)
+    (_hmin : IsMinCE G)
     (hall : ∀ M : Subgroup G, M ∈ section9MaximalSubgroups G →
       ∃ MF : Subgroup G,
         section16MFSubgroup M MF ∧ section16TypeI M MF ∧
@@ -8082,7 +8088,7 @@ public theorem theorem_12_17_exists_representative_system_data
     ∃ Ms : List (Subgroup G), ∃ MF : Subgroup G → Subgroup G,
       theorem_12_17_representative_system_data Ms MF := by
   classical
-  letI : IsMinCE G := hmin
+  letI : IsMinCE G := _hmin
   rcases section16_exists_maximalConjugacyRepresentatives (G := G) with
     ⟨Ms, hMs⟩
   let MF : Subgroup G → Subgroup G :=

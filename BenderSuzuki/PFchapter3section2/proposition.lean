@@ -65,8 +65,9 @@ public theorem proposition
     have hxQ : x ∈ Q := by simpa [hSQ] using hx
     let xH : H := ⟨x, hch.1.section2.hA.A1.Q_le_H hxQ⟩
     let kH : H := ⟨k, hkH⟩
-    have hmem := hch.1.section2.hA.A1.Q_normal_in_H.conj_mem xH hxQ kH
-    simpa [xH, kH, hSQ] using hmem
+    have hmem := hch.1.section2.hA.A1.Q_normal_in_H.conj_mem xH (by
+      simpa [xH, Subgroup.mem_subgroupOf] using hxQ) kH
+    simpa [xH, kH, hSQ, Subgroup.mem_subgroupOf] using hmem
   have hSuzuki : IsSuzukiTwoGroup S := by
     have hnoncomm : ¬ IsMulCommutative S := by
       intro hcomm
@@ -270,11 +271,11 @@ public theorem proposition
     rcases (Subgroup.mem_sup_of_normal_left
         (s := QH) (t := DH) (x := p.1)).1 hp1sup with
       ⟨qH, hqH, dH, hdH, hqd⟩
-    have hqQ : (qH : G) ∈ Q := by simpa [QH] using hqH
-    have hdD : (dH : G) ∈ D := by simpa [DH] using hdH
+    have hqQ : (qH : G) ∈ Q := by simpa [QH, Subgroup.mem_subgroupOf] using hqH
+    have hdD : (dH : G) ∈ D := by simpa [DH, Subgroup.mem_subgroupOf] using hdH
     refine ⟨qH, ?_, dH, hdD, p.2, ?_, ?_⟩
     · simpa [hSQ] using hqQ
-    · simpa [hSQ] using p.2.property
+    · simp [hSQ]
     · have hqdG : (qH : G) * (dH : G) = (p.1 : G) :=
         congrArg Subtype.val hqd
       calc
@@ -350,9 +351,12 @@ public theorem proposition
         _ = a * (g * d * t * f) * a⁻¹ := by rw [htaInv, hta, htxt]
         _ = gc * dc * t * fc := by
           calc
-            a * (g * d * t * f) * a⁻¹ = a * g * d * t * f * a⁻¹ := by group
-            _ = a * g * d * (a * t * a) * f * a⁻¹ := by rw [hat]; group
-            _ = gc * dc * t * fc := by dsimp [gc, dc, fc]; group
+            a * (g * d * t * f) * a⁻¹ = a * g * d * t * f * a⁻¹ := by
+              simp [mul_assoc]
+            _ = a * g * d * (a * t * a) * f * a⁻¹ := by rw [hat]
+            _ = gc * dc * t * fc := by
+              dsimp [gc, dc, fc]
+              simp [mul_assoc, mul_inv_cancel_right, inv_mul_cancel_left]
     have hgcQ : gc ∈ Q := by simpa [hSQ] using hgcS
     have hg'Q : g' ∈ Q := by simpa [hSQ] using hg'S
     have hgcH : gc ∈ H := hch.1.section2.hA.A1.Q_le_H hgcQ
@@ -405,10 +409,11 @@ public theorem proposition
       _ = a * (g * d * t * f) * a⁻¹ := by rw [htaInv, hta, hdecomp]
       _ = (a * g * a⁻¹) * (a * d * a) * t * (a * f * a⁻¹) := by
         calc
-          a * (g * d * t * f) * a⁻¹ = a * g * d * t * f * a⁻¹ := by group
-          _ = a * g * d * (a * t * a) * f * a⁻¹ := by rw [hat]; group
-          _ = (a * g * a⁻¹) * (a * d * a) * t * (a * f * a⁻¹) := by
-            group
+          a * (g * d * t * f) * a⁻¹ = a * g * d * t * f * a⁻¹ := by
+              simp [mul_assoc]
+            _ = a * g * d * (a * t * a) * f * a⁻¹ := by rw [hat]
+            _ = (a * g * a⁻¹) * (a * d * a) * t * (a * f * a⁻¹) := by
+              simp [mul_assoc, mul_inv_cancel_right, inv_mul_cancel_left]
   have hcanonicalUnique :
       ∀ x : G, x ∈ S → x ≠ 1 →
         ∀ g₁ : G, g₁ ∈ S → ∀ d₁ : G, d₁ ∈ D → ∀ f₁ : G, f₁ ∈ S →
@@ -1396,7 +1401,9 @@ public theorem proposition
               ⟨rightConjugateElem (rInvS : G) (k.1 : G), hconjS⟩
             have hrInvBeta : beta rInvS = 1 := by
               have hinv := hbetaInv rS
-              simpa [rInvS, rS, hbetaR] using hinv
+              have h_eq : rInvS = (rS : S)⁻¹ := by
+                ext; simp [rInvS, rS]
+              simpa [h_eq, hbetaR] using hinv
             have hconjBeta : beta rConjS = kappa k.1 := by
               calc
                 beta rConjS = kappa k.1 * beta rInvS := by
@@ -1433,7 +1440,9 @@ public theorem proposition
               simpa [rS, rInvS, rConjS] using hg
             have hrInvBeta : beta rInvS = 1 := by
               have hinv := hbetaInv rS
-              simpa [rInvS, rS, hbetaR] using hinv
+              have h_eq : rInvS = (rS : S)⁻¹ := by
+                ext; simp [rInvS, rS]
+              simpa [h_eq, hbetaR] using hinv
             have hconjBeta : beta rConjS = (kappa ell)⁻¹ := by
               calc
                 beta rConjS = kappa ell⁻¹ * beta rInvS :=
@@ -1466,7 +1475,9 @@ public theorem proposition
               simpa [firstS, secondS, a₁, a₂] using hf
             have hrInvBeta : beta (⟨r⁻¹, hrInvS⟩ : S) = 1 := by
               have hinv := hbetaInv rS
-              simpa [rS, hbetaR] using hinv
+              have h_eq : (⟨r⁻¹, hrInvS⟩ : S) = (rS : S)⁻¹ := by
+                apply Subtype.ext; simp [rS, Subgroup.coe_inv]
+              simpa [h_eq, hbetaR] using hinv
             have hkappaA₁ :
                 kappa a₁ = (kappa ell)⁻¹ * (kappa k)⁻¹ ^ 2 := by
               calc
@@ -1937,18 +1948,61 @@ public theorem proposition
               apply Subtype.ext
               exact hd₂Eq.trans hd02
             have hdRel : d₂K = aK * d₁K * aK := by
-              apply Subtype.ext
-              exact huniq.2.1.symm
+              ext; simpa [d₁K, d₂K, aK] using huniq.2.1.symm
+            have h_sq_mul (x y : G) (hx : x ∈ K) (hy : y ∈ K) : (x * y) ^ 2 = x ^ 2 * y ^ 2 := by
+              have hcomm_xy : x * y = y * x := hKcomm x hx y hy
+              calc
+                (x * y) ^ 2 = (x * y) * (x * y) := by simp [pow_two]
+                _ = x * (y * x) * y := by simp [mul_assoc]
+                _ = x * (x * y) * y := by rw [hcomm_xy]
+                _ = (x * x) * (y * y) := by simp [mul_assoc]
+                _ = x ^ 2 * y ^ 2 := by simp [pow_two]
             have hsquareK :
                 (ell₂ * k₂.1) ^ 2 = (aK * ell₁ * k₁.1) ^ 2 := by
+              apply Subtype.ext
               calc
-                (ell₂ * k₂.1) ^ 2 = ell₂ ^ 2 * k₂.1 ^ 2 := by
-                  simp [pow_two, mul_comm, mul_left_comm, mul_assoc]
-                _ = d₂K := hd₂Form.symm
-                _ = aK * d₁K * aK := hdRel
-                _ = (aK * ell₁ * k₁.1) ^ 2 := by
-                  rw [hd₁Form]
-                  simp [pow_two, mul_comm, mul_left_comm, mul_assoc]
+                ((ell₂ * k₂.1) ^ 2 : G) = ((ell₂ : G) * (k₂.1 : G)) ^ 2 := by simp
+                _ = (ell₂ : G) ^ 2 * (k₂.1 : G) ^ 2 :=
+                  h_sq_mul (ell₂ : G) (k₂.1 : G) ell₂.property k₂.1.property
+                _ = (ell₂ ^ 2 * k₂.1 ^ 2 : G) := by simp
+                _ = (d₂K : G) := by
+                  simpa [Subgroup.coe_mul, Subgroup.coe_pow] using
+                    congrArg Subtype.val hd₂Form.symm
+                _ = (aK * d₁K * aK : G) := by
+                  simpa [Subgroup.coe_mul, Subgroup.coe_pow] using
+                    congrArg Subtype.val hdRel
+                _ = (aK * (ell₁ ^ 2 * k₁.1 ^ 2) * aK : G) := by
+                  have hd₁FormG : (d₁K : G) = ((ell₁ ^ 2 * k₁.1 ^ 2 : K) : G) :=
+                    congrArg Subtype.val hd₁Form
+                  simp [Subgroup.coe_mul, hd₁FormG]
+                _ = (aK : G) * ((ell₁ : G) ^ 2 * (k₁.1 : G) ^ 2) * (aK : G) := by simp
+                _ = (aK : G) ^ 2 * (ell₁ : G) ^ 2 * (k₁.1 : G) ^ 2 := by
+                  have hcomm_aK_sq : (aK : G) * ((k₁.1 : G) ^ 2) = ((k₁.1 : G) ^ 2) * (aK : G) :=
+                    hKcomm (aK : G) aK.property ((k₁.1 : G) ^ 2) (K.pow_mem k₁.1.property 2)
+                  have hcomm_sq_aK : (ell₁ : G) ^ 2 * (aK : G) = (aK : G) * (ell₁ : G) ^ 2 :=
+                    hKcomm ((ell₁ : G) ^ 2) (K.pow_mem ell₁.property 2) (aK : G) aK.property
+                  calc
+                    (aK : G) * ((ell₁ : G) ^ 2 * (k₁.1 : G) ^ 2) * (aK : G) =
+                        (aK : G) * ((ell₁ : G) ^ 2) * ((k₁.1 : G) ^ 2) * (aK : G) := by
+                      simp [mul_assoc]
+                    _ = (aK : G) * ((ell₁ : G) ^ 2) * ((aK : G) * (k₁.1 : G) ^ 2) := by
+                      simp [mul_assoc, hcomm_aK_sq]
+                    _ = (aK : G) * ((ell₁ : G) ^ 2 * (aK : G)) * (k₁.1 : G) ^ 2 := by
+                      simp [mul_assoc]
+                    _ = (aK : G) * ((aK : G) * (ell₁ : G) ^ 2) * (k₁.1 : G) ^ 2 := by
+                      simp [hcomm_sq_aK, mul_assoc]
+                    _ = (aK : G) ^ 2 * (ell₁ : G) ^ 2 * (k₁.1 : G) ^ 2 := by
+                      simp [pow_two, mul_assoc]
+                _ = ((aK * ell₁ * k₁.1) ^ 2 : G) := by
+                  calc
+                    (aK : G) ^ 2 * (ell₁ : G) ^ 2 * (k₁.1 : G) ^ 2 =
+                        ((aK : G) ^ 2 * (ell₁ : G) ^ 2) * (k₁.1 : G) ^ 2 := by simp [mul_assoc]
+                    _ = ((aK : G) * (ell₁ : G)) ^ 2 * (k₁.1 : G) ^ 2 := by
+                      rw [h_sq_mul (aK : G) (ell₁ : G) aK.property ell₁.property]
+                    _ = (((aK : G) * (ell₁ : G)) * (k₁.1 : G)) ^ 2 := by
+                      rw [h_sq_mul ((aK : G) * (ell₁ : G)) (k₁.1 : G)
+                        (K.mul_mem aK.property ell₁.property) k₁.1.property]
+                    _ = ((aK * ell₁ * k₁.1) ^ 2 : G) := by simp [Subgroup.coe_mul]
             have hKodd : Odd (Nat.card K) :=
               odd_of_card_dvd hch.1.section2.hA.A1.D_odd
                 (Subgroup.card_dvd_of_le hch.1.section2.K_le_D)

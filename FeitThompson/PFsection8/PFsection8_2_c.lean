@@ -171,8 +171,7 @@ public theorem theorem_8_2_c
     (M MF U U1 U0 : Subgroup G)
     (θ : Section1.ClassFunction MF) :
     theorem_8_2_c_statement M MF U U1 U0 θ := by
-  intro hF hθirr hθne
-  intro hMFNormal
+  intro hF hθirr hθne hMFNormal
   letI : (MF.subgroupOf M).Normal := hMFNormal
   change
     ((Section1.inertiaSubgroup (MF.subgroupOf M)
@@ -231,7 +230,11 @@ public theorem theorem_8_2_c
     isIrreducibleCharacterOnGroup_classFunctionOnSubgroupOf
       (M := M) (MF := MF) hcomp.1 hθirr
   have hθM_fix : Section1.conjugateOnNormal (MF.subgroupOf M) θM m = θM := by
-    simpa [θM] using hmI
+    change Section1.conjugateOnNormal (MF.subgroupOf M)
+      (classFunctionOnSubgroupOf M MF θ) m = classFunctionOnSubgroupOf M MF θ
+    change Section1.conjugateOnNormal (MF.subgroupOf M)
+      (classFunctionOnSubgroupOf M MF θ) m = classFunctionOnSubgroupOf M MF θ at hmI
+    exact hmI
   have hprincipal_fix :
       Section1.conjugateOnNormal (MF.subgroupOf M)
           (Section1.principalCharacter (MF.subgroupOf M)) m =

@@ -104,7 +104,7 @@ public theorem natCard_ker_eq_card_div_of_surjective
 public theorem appendixC_complex_hasEnoughRootsOfUnity (n : ℕ) [NeZero n] :
     HasEnoughRootsOfUnity ℂ n := by
   exact HasEnoughRootsOfUnity.of_card_le (R := ℂ) (n := n)
-    (by simp [Complex.card_rootsOfUnity])
+    (Complex.card_rootsOfUnity n).ge
 
 /-- Orthogonality for all complex linear characters of a finite abelian group,
 using the ambient `Fintype` instance for the character group. -/

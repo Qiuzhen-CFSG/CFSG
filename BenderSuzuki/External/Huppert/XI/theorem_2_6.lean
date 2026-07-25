@@ -36,7 +36,7 @@ public theorem xi26_exists_square_add_one_nonsquare
   classical
   letI : Fintype K := Fintype.ofFinite K
   by_contra hex
-  push_neg at hex
+  push Not at hex
   have hadd {x y : K} (hx : IsSquare x) (hy : IsSquare y) :
       IsSquare (x + y) := by
     by_cases hy0 : y = 0
@@ -227,8 +227,10 @@ private theorem xi26_tau_inverse
     apply Equiv.ext
     intro y
     apply (T b).injective
-    rw [Equiv.Perm.apply_inv_self]
-    cases y <;> simp [hT_apply]
+    calc
+      (T b) ((T b)⁻¹ y) = y := Equiv.apply_symm_apply (T b) y
+      _ = (T b) (T (-b) y) := by
+        simp [hT_apply, T]
   have hT_cancel_left (b : K) : T (-b) * T b = 1 := by
     rw [← hT_inv]
     simp
@@ -307,7 +309,6 @@ private theorem xi26_tau_inverse
               T (-((theta a : Kˣ) : K))) * tau * T (a : K) * tau := by
           rw [hTau_mul_self]
           simp
-          group
         _ = tau * T (a : K) * tau := by
           rw [hT_cancel_right]
           simp

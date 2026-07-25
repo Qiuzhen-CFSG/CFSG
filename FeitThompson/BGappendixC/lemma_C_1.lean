@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGappendixC.Basic
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 noncomputable section
 
@@ -973,8 +973,10 @@ public theorem appendixC_nontrivial_noninverse_character_natCard
   have hχinv : χ⁻¹ ≠ (1 : (ZMod p)ˣ →* ℂˣ) := by
     intro h
     apply hχ
-    have := congrArg Inv.inv h
-    simpa using this
+    ext u
+    have hu : (χ u)⁻¹ = (1 : ℂˣ) := by
+      simpa using congrArg (fun ψ : (ZMod p)ˣ →* ℂˣ => ψ u) h
+    simpa using inv_eq_one.mp hu
   let e : {ψ : (ZMod p)ˣ →* ℂˣ // ψ ≠ 1 ∧ χ * ψ ≠ 1} ≃
       {ψ : (ZMod p)ˣ →* ℂˣ // ψ ≠ 1 ∧ ψ ≠ χ⁻¹} :=
     { toFun := fun ψ => ⟨ψ.1, ψ.2.1, by
@@ -1839,8 +1841,7 @@ public theorem appendixCH_exists_U_P0_U_decomposition
       exact ⟨c, rfl⟩
     refine ⟨u, v, ⟨sH, hsH⟩, ?_⟩
     ext
-    · apply_fun Multiplicative.toAdd
-      simp [sH, appendixCAction_apply_toAdd]
+    · simp [sH, appendixCAction_apply_toAdd]
       dsimp [z] at hz
       simpa [mul_comm] using hz
     · simp [sH, v, mul_assoc]
@@ -1874,7 +1875,8 @@ public theorem appendixCP0_mul_U_mul_P0_mem_U_core
     rw [appendixCUInH_mem_iff] at hmem
     rcases hmem with ⟨v, hv⟩
     have hleft := congrArg SemidirectProduct.left hv
-    simpa using hleft
+    simpa [appendixCAction_apply_toAdd] using
+      congrArg Multiplicative.toAdd hleft
   by_cases hc1 : c1 = 0
   · left
     constructor
@@ -3881,7 +3883,7 @@ public theorem appendixCH_commutator_ne_bot_of_nontrivial_normOneUnit
   have hc_mem : c ∈ commutator (appendixCH p q) := by
     change c ∈ ⁅(⊤ : Subgroup (appendixCH p q)),
       (⊤ : Subgroup (appendixCH p q))⁆
-    exact Subgroup.commutator_mem_commutator trivial trivial
+    exact Subgroup.commutator_mem_commutator (by simp) (by simp)
   have hc_bot : c ∈ (⊥ : Subgroup (appendixCH p q)) := by
     simpa [hbot] using hc_mem
   have hc_one : c = 1 := by
@@ -4307,7 +4309,7 @@ public theorem appendixCEmbedding_fixedPointSubgroup_inf_commutatorAction_eq_bot
   have hcop' : Nat.Coprime (Nat.card P0img) (Nat.card Q) := by
     simpa [hP0card] using hcop
   have hsolv : IsSolvable Q :=
-    isSolvable_of_comm (fun a b => mul_comm a b)
+    isSolvable_of_comm (fun a b => mul_comm' a b)
   have hcompl : IsCompl (fixedPointSubgroup P0img Q)
       (commutatorAction (A := P0img) (G := Q)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -4406,7 +4408,7 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
   have hcop' : Nat.Coprime (Nat.card P0img) (Nat.card Q) := by
     simpa [hP0card] using hcop
   have hsolv : IsSolvable Q :=
-    isSolvable_of_comm (fun a b => mul_comm a b)
+    isSolvable_of_comm (fun a b => mul_comm' a b)
   have hcompl : IsCompl (fixedPointSubgroup P0img Q)
       (commutatorAction (A := P0img) (G := Q)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -4415,7 +4417,7 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
   have hySup :
       yQ ∈ fixedPointSubgroup P0img Q ⊔ commutatorAction (A := P0img) (G := Q) := by
     simp [hcompl.sup_eq_top]
-  letI : CommGroup Q := { (inferInstance : Group Q) with mul_comm := fun a b => mul_comm a b }
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   rw [Subgroup.mem_sup] at hySup
   rcases hySup with ⟨f, hf, c, hc, hfc⟩
   refine ⟨(c : G), c.property, hc, ?_⟩
@@ -4608,7 +4610,11 @@ public theorem appendixCEmbedding_conjNormOneUnitsMulEquiv_apply
       ((e (((e.trans (Uimg.normalizerMonoidHom ⟨t, htnorm⟩)).trans e.symm) u) :
         Uimg) : G) = _
     simp [Subgroup.normalizerMonoidHom_apply_apply_coe]
-  simpa [e, appendixCEmbedding_CUInHEquiv_apply] using hval
+  have he_apply (v : appendixCNormOneUnits p q) :
+      ((e v : Uimg) : G) = σ (SemidirectProduct.inr v) := by
+    exact appendixCEmbedding_CUInHEquiv_apply (p := p) (q := q) σ hσ v
+  rw [he_apply, he_apply] at hval
+  exact hval
 
 /-- Value formula for the inverse of the normalizer-induced automorphism of
 `U`. This is the right-conjugation convention used in the source C4 product. -/

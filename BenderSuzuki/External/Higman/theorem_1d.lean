@@ -117,14 +117,25 @@ public theorem theorem1_order_center_cube_two_summands
         (MulDistribMulAction.toMulAut K P))
   have hU_rho : ∀ k : K,
       ∀ v ∈ U, rho k v ∈ U := by
-    simpa [rho] using hU_invariant
+    intro k v hv
+    change ((lowerCentralFactorLinearAutHom (H := P) 0)
+      (MulDistribMulAction.toMulAut K P k)) v ∈ U
+    change lowerCentralFactorLinearAut
+      (MulDistribMulAction.toMulAut K P k) 0 v ∈ U
+    exact hU_invariant k v hv
   obtain ⟨W, hUW, hW_rho⟩ :=
     exists_isCompl_invariant_of_odd_group hKodd rho U hU_rho
   have hW_invariant : ∀ k : K,
       ∀ v ∈ W,
         lowerCentralFactorLinearAut
           (MulDistribMulAction.toMulAut K P k) 0 v ∈ W := by
-    simpa [rho] using hW_rho
+    intro k v hv
+    have h := hW_rho k v hv
+    change ((lowerCentralFactorLinearAutHom (H := P) 0)
+      (MulDistribMulAction.toMulAut K P k)) v ∈ W at h
+    change lowerCentralFactorLinearAut
+      (MulDistribMulAction.toMulAut K P k) 0 v ∈ W at h
+    exact h
   have hfactor0_card_UW :
       Nat.card (LowerCentralFactor P 0) = Nat.card U * Nat.card W := by
     change Nat.card (Additive (LowerCentralFactor P 0)) =
@@ -231,7 +242,10 @@ public theorem theorem1_order_center_cube_two_summands
     have hpU : Additive.ofMul (q0 p) ∈ U := by
       have hmem : eQ (QuotientGroup.mk' (Subgroup.center P) p) ∈ UF := by
         simpa [Uq] using hq
-      simpa [UF, factorSubgroupEquiv, heQ_mk] using hmem
+      change Additive.ofMul
+          (eQ (QuotientGroup.mk' (Subgroup.center P) p)) ∈ U at hmem
+      rw [heQ_mk] at hmem
+      exact hmem
     have hfactor : Additive.ofMul
         (eQ (k • QuotientGroup.mk' (Subgroup.center P) p)) ∈ U := by
       rw [hquotient_action_compatible, heQ_mk, hq0_equivariant]
@@ -248,7 +262,10 @@ public theorem theorem1_order_center_cube_two_summands
     have hpW : Additive.ofMul (q0 p) ∈ W := by
       have hmem : eQ (QuotientGroup.mk' (Subgroup.center P) p) ∈ WF := by
         simpa [Vq] using hq
-      simpa [WF, factorSubgroupEquiv, heQ_mk] using hmem
+      change Additive.ofMul
+          (eQ (QuotientGroup.mk' (Subgroup.center P) p)) ∈ W at hmem
+      rw [heQ_mk] at hmem
+      exact hmem
     have hfactor : Additive.ofMul
         (eQ (k • QuotientGroup.mk' (Subgroup.center P) p)) ∈ W := by
       rw [hquotient_action_compatible, heQ_mk, hq0_equivariant]

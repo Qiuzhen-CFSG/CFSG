@@ -23,6 +23,7 @@ Wielandt's theorem. -/
     {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V]
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     (A : Subgroup G) : ℕ :=
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   letI : MulDistribMulAction A V :=
     MulDistribMulAction.compHom V A.subtype
   Module.finrank (ZMod p)

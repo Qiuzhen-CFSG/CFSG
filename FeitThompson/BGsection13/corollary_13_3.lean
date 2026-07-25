@@ -33,8 +33,9 @@ public theorem corollary_13_3_a
   have hE_le_M : E ≤ M := hE.1.2.1
   have hA_le_M : A ≤ M := hA_le_E.trans hE_le_M
   have hAp : IsPGroup p.val A := by
-    simpa [A, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup E)) P.isPGroup' E.subtype
+    change IsPGroup p.val ((P : Subgroup E).map E.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup E))
+      P.isPGroup' E.subtype
   have hAcyc : IsCyclic A := by
     simpa [A] using section13_ambient_sylow_is_cyclic (G := G) P hPcyc
   have hpτ13 : p ∈ section12Tau1Primes M ∪ section12Tau3Primes M :=
@@ -72,6 +73,7 @@ public theorem corollary_13_3_a
     intro a ha
     exact ((Subgroup.mem_centralizer_iff.mp (hA_cent ha)) y ⟨hy.1, hyMstar⟩).symm
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_ambientDerivedSubgroup_le_of_le
     {H K : Subgroup G} (hHK : H ≤ K) :
     ambientDerivedSubgroup H ≤ ambientDerivedSubgroup K := by
@@ -83,6 +85,7 @@ private theorem section13_ambientDerivedSubgroup_le_of_le
   change ((y : H) : G) ∈ ambientDerivedSubgroup K
   exact Subgroup.mem_map_of_mem K.subtype hyK
 
+omit [Finite G] [IsMinCE G] in
 private theorem section13_prime_mem_derivedSubgroup_of_mem_ambientDerived
     {M : Subgroup G} {p : Nat.Primes}
     (hp : p ∈ subgroupPrimeSet (ambientDerivedSubgroup M)) :
@@ -93,6 +96,7 @@ private theorem section13_prime_mem_derivedSubgroup_of_mem_ambientDerived
     (Nat.card_congr e.toEquiv).symm
   simpa [subgroupPrimeSet, hcard] using hp
 
+omit [IsMinCE G] in
 private theorem section13_isPiSubgroup_tau1_compl_of_le_ambientDerived
     {M X : Subgroup G}
     (hXD : X ≤ ambientDerivedSubgroup M) :
@@ -109,6 +113,7 @@ private theorem section13_isPiSubgroup_tau1_compl_of_le_ambientDerived
     ⟨_hp_not_sigma, hp_notD, _hrank⟩
   exact hp_notD hpD
 
+omit [IsMinCE G] in
 public theorem section13_le_normalizer_of_le_cyclic_normal
     {E E₃ X : Subgroup G}
     (hXE₃ : X ≤ E₃) (hE₃cyc : IsCyclic E₃)
@@ -130,6 +135,7 @@ public theorem section13_le_normalizer_of_le_cyclic_normal
     (Subgroup.normal_subgroupOf_iff_le_normalizer hE₃norm.1).1 hE₃norm.2
   simpa [hXmap] using hE_le_normE₃.trans hnormE₃_le_normX
 
+omit [Finite G] [IsMinCE G] in
 public theorem section13_tau3_of_prime_order_le_E3
     {M E E₃ X : Subgroup G} {q : Nat.Primes}
     (hE₃Hall : section12HallSubgroupIn (section12Tau3Primes M) E₃ E)

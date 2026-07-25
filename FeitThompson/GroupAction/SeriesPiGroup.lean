@@ -144,7 +144,9 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
       have ha' : φ a = 1 := ha
       have h : ∀ g, φ a g = g := fun g => by
         rw [ha', MulAut.one_apply]
-      have h' : ∀ g, a • g = g := fun g => by simpa using h g
+      have h' : ∀ g, a • g = g := fun g => by
+        change φ a g = g
+        exact h g
       exact (mem_fixingSubgroup_iff (M := A) (s := Set.univ)).mpr (fun g _ => h' g)
     · intro ha
       have h : ∀ g, a • g = g := hK_triv a ha

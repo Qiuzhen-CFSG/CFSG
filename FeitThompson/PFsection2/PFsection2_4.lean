@@ -398,7 +398,7 @@ private theorem hFactor_conjugate_eq {G : Type u} [Group G] [Finite G]
 
 private theorem conjBy_pow {G : Type u} [Group G] (x y : G) (n : ℕ) :
     conjBy x (y ^ n) = conjBy x y ^ n := by
-  simpa [conjBy, MulAut.conj_apply] using (MulAut.conj x).map_pow y n
+  simp [conjBy]
 
 private theorem conjugateIn_symm {G : Type u} [Group G] {a b : G}
     (h : conjugateIn a b) :

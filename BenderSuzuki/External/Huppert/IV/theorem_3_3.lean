@@ -26,6 +26,7 @@ namespace External
 
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
+set_option maxHeartbeats 0
 
 universe u
 
@@ -93,8 +94,9 @@ public theorem huppert_IV_3_3_sylow_inf_abelian_residual_eq_sylow_inf_commutator
     exact hrange_p.of_equiv e.symm
   have hpResidual_le_ker : hktPResidual q Q ≤ V.ker :=
     hktPResidual_le (Q := Q) (q := q) V.ker inferInstance hquot_ker_p
-  have hcomm_le_ker : commutator Q ≤ V.ker :=
-    Abelianization.commutator_subset_ker (f := V)
+  have hcomm_le_ker : commutator Q ≤ V.ker := by
+    open scoped IsMulCommutative in
+    exact Abelianization.commutator_subset_ker (f := V)
   have habResidual_le_ker : hktAbelianPResidual q Q ≤ V.ker :=
     hktAbelianPResidual_le (Q := Q) (q := q) (N := V.ker)
       hcomm_le_ker hpResidual_le_ker
@@ -141,11 +143,13 @@ public theorem huppert_IV_3_3_sylow_abelian_residual
       have hxinf : (x : Q) ∈ (S : Subgroup Q) ⊓ N := ⟨x.2, hxN⟩
       have hxcomm : (x : Q) ∈ (S : Subgroup Q) ⊓ commutator Q := by
         simpa [hSN] using hxinf
-      simpa [K, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using hxcomm.2
+      simpa [K, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using
+        Subgroup.mem_subgroupOf.mpr hxcomm.2
     · intro hxK
       have hxcomm : (x : Q) ∈ (S : Subgroup Q) ⊓ commutator Q := by
         refine ⟨x.2, ?_⟩
-        simpa [K, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using hxK
+        simpa [K, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using
+          Subgroup.mem_subgroupOf.mp hxK
       have hxN : (x : Q) ∈ (S : Subgroup Q) ⊓ N := by
         simpa [hSN] using hxcomm
       exact hxN.2
@@ -229,21 +233,37 @@ private theorem huppert_IV_3_3_transfer_kernel_inf_sylow
   classical
   let H : Subgroup Q := S
   let Y : Q →* Abelianization H := huppertIV33TransferToSylow (Q := Q) (q := q) S
-  let πF : H →* H ⧸ H.focalSubgroupOf := QuotientGroup.mk' H.focalSubgroupOf
-  have hkerF : (MonoidHom.transfer πF).ker ⊓ H = H.focalSubgroup := by
+  have hkerF : H.transferFocal.ker ⊓ H = H.focalSubgroup := by
     simpa [H] using Subgroup.ker_transferFocal_inf_eq_focalSubgroup (P := S)
-  let ρ : Abelianization H →* H ⧸ H.focalSubgroupOf :=
-    Abelianization.lift πF
-  have hcomp : ρ.comp Y = MonoidHom.transfer πF := by
-    simpa [Y, huppertIV33TransferToSylow, H, ρ, πF] using
-      (hkt_monoidHom_comp_transfer
-        (G := Q) (H := H) (A := Abelianization H) (B := H ⧸ H.focalSubgroupOf)
-        (Abelianization.of (G := H)) ρ)
+  let ρ : Abelianization H →* H ⧸ H.focalSubgroupOf := by
+    open scoped IsMulCommutative in
+    exact Abelianization.lift (QuotientGroup.mk' H.focalSubgroupOf)
+  have hcomp : ρ.comp Y = H.transferFocal := by
+    open scoped IsMulCommutative in
+    calc
+      ρ.comp Y = ρ.comp (MonoidHom.transfer (G := Q) (H := H)
+          (Abelianization.of (G := H))) := by
+        simp [Y, huppertIV33TransferToSylow, H]
+      _ = MonoidHom.transfer (G := Q) (H := H)
+          (ρ.comp (Abelianization.of (G := H))) :=
+        hkt_monoidHom_comp_transfer (G := Q) (H := H) (A := Abelianization H)
+          (B := H ⧸ H.focalSubgroupOf) (Abelianization.of (G := H)) ρ
+      _ = MonoidHom.transfer (G := Q) (H := H)
+          (QuotientGroup.mk' H.focalSubgroupOf) := by
+        have hρ_comp : ρ.comp (Abelianization.of (G := H)) = QuotientGroup.mk' H.focalSubgroupOf := by
+          calc
+            ρ.comp (Abelianization.of (G := H)) = Abelianization.lift.symm ρ := by
+              simp
+            _ = QuotientGroup.mk' H.focalSubgroupOf := by
+              simp [ρ]
+        rw [hρ_comp]
+      _ = H.transferFocal := by
+        simp [Subgroup.transferFocal, H]
   apply le_antisymm
   · intro x hx
     have hxY : x ∈ Y.ker := by
       simpa [Y] using hx.1
-    have hxFker : x ∈ (MonoidHom.transfer πF).ker ⊓ H := by
+    have hxFker : x ∈ H.transferFocal.ker ⊓ H := by
       refine ⟨?_, hx.2⟩
       rw [← hcomp]
       exact MonoidHom.mem_ker.mpr (by

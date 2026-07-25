@@ -366,7 +366,10 @@ public theorem lemma_a
       dsimp [y, z]
       simp
   have hcard : Nat.card X = Nat.card Y * Nat.card Z := by
-    simpa [Nat.card_prod] using hleft.ncard_eq.symm
+    calc
+      Nat.card X = (X : Set M).ncard := Nat.card_coe_set_eq _
+      _ = Nat.card Y * Nat.card Z := by
+        simpa [Nat.card_prod] using hleft.ncard_eq.symm
   exact ⟨hleft, hright, hcard⟩
 
 end PFchapter1section1

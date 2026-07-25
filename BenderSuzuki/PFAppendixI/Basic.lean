@@ -8,6 +8,8 @@ public import FeitThompson.Representation.ElementaryAbelianAction
 public import FeitThompson.Representation.RepMap
 public import Mathlib.FieldTheory.Finite.GaloisField
 
+open scoped IsMulCommutative
+
 namespace BenderSuzuki
 namespace PFAppendixI
 
@@ -116,7 +118,6 @@ public noncomputable def AppendixIFpT
 
 end PFAppendixI
 end BenderSuzuki
-
 
 
 

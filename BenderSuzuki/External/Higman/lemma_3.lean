@@ -17,6 +17,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped IsMulCommutative commutatorElement
 
 universe u
 
@@ -97,7 +98,6 @@ private def lemma3_conjDefect
     {P : Type u} [Group P] {A : Subgroup P}
     (hA_normal : A.Normal) (hA_abelian : IsMulCommutative A) (u : P) : A →* A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   letI : A.Normal := hA_normal
   exact (MulAut.conjNormal (H := A) u).toMonoidHom * (MonoidHom.id A)⁻¹
 
@@ -106,7 +106,6 @@ private theorem lemma3_conjDefect_val
     (hA_normal : A.Normal) (hA_abelian : IsMulCommutative A) (u : P) (a : A) :
     ((lemma3_conjDefect hA_normal hA_abelian u a : A) : P) = ⁅u, (a : P)⁆ := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   simp [lemma3_conjDefect, commutatorElement_def, MulAut.conjNormal_apply, mul_assoc]
 
 private theorem lemma3_conj_defect_lift_square
@@ -122,7 +121,6 @@ private theorem lemma3_conj_defect_lift_square
     ∃ eta : A →* A,
       ∀ a, lemma3_conjDefect hA_normal hA_abelian (u : P) a = (eta a) ^ 2 := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   obtain ⟨e, r, ⟨hA⟩, _⟩ :=
     lemma1_abelian_invariant_homocyclic hP hXtrans hA_abelian hA_X
   apply lemma2_endomorphism_power_root_of_homocyclic hA 2
@@ -157,7 +155,6 @@ private theorem lemma3_eta_four_torsion
     (hdef : ∀ a, lemma3_conjDefect hA_normal hA_abelian u a = (eta a) ^ 2) :
     ∀ a, (eta a * eta (eta a)) ^ 4 = 1 := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   letI : A.Normal := hA_normal
   let c : MulAut A := MulAut.conjNormal (H := A) u
   have hca (a : A) : c a = a * (eta a) ^ 2 := by
@@ -206,10 +203,8 @@ private theorem lemma3_frattini_eq_squareRange
     {P : Type u} [Group P] (hP : IsSuzukiTwoGroup P)
     {A : Subgroup P} (hA_abelian : IsMulCommutative A) :
     letI : IsMulCommutative A := hA_abelian
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
     frattini A = lemma3_squareRange A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   apply Subgroup.map_injective A.subtype_injective
   exact lemma3_frattini_eq_square_range_map hP hA_abelian
 
@@ -217,13 +212,11 @@ private theorem lemma3_squareQuotient_nontrivial
     {P : Type u} [Group P] (hP : IsSuzukiTwoGroup P)
     {A : Subgroup P} (hA_abelian : IsMulCommutative A) (hA_ne : A ≠ ⊥) :
     letI : IsMulCommutative A := hA_abelian
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
     ∃ q : A ⧸ lemma3_squareRange A, q ≠ 1 := by
   letI : Finite P := finite_of_isSuzukiTwoGroup hP
   letI : Finite A := inferInstance
   letI : Nontrivial A := (Subgroup.nontrivial_iff_ne_bot A).mpr hA_ne
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   have hsq_ne_top : lemma3_squareRange A ≠ ⊤ := by
     intro hsq
     have hphi : frattini A = ⊤ := by
@@ -244,7 +237,6 @@ private theorem lemma3_powerClosure_eq_range_map
     Subgroup.closure {x : P | ∃ a : A, (a : P) ^ n = x} =
       (powMonoidHom n : A →* A).range.map A.subtype := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   apply le_antisymm
   · rw [Subgroup.closure_le]
     rintro x ⟨a, rfl⟩
@@ -275,7 +267,6 @@ private theorem lemma3_eta_mod_square_idempotent
     (hdef : ∀ a, lemma3_conjDefect hA_normal hA_abelian u a = (eta a) ^ 2) :
     ∀ a, eta (eta a) / eta a ∈ lemma3_squareRange A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   intro a
   have hx := lemma3_eta_four_torsion hA_normal hA_abelian u hu_sq eta hdef a
   obtain ⟨y, hy⟩ := lemma3_four_torsion_is_square_of_homocyclic he hA hx
@@ -317,7 +308,6 @@ private theorem lemma3_conj_defect_mul_formula
           lemma3_conjDefect hA_normal hA_abelian u
             (lemma3_conjDefect hA_normal hA_abelian v a) := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   letI : A.Normal := hA_normal
   let d (w : P) : A →* A := lemma3_conjDefect hA_normal hA_abelian w
   let c (w : P) : MulAut A := MulAut.conjNormal (H := A) w
@@ -369,7 +359,6 @@ private theorem lemma3_etaBar_mul
       lemma3_conjDefect hA_normal hA_abelian (u * v) a = (etaUV a) ^ 2) :
     lemma3_etaBar etaUV = lemma3_etaBar etaU * lemma3_etaBar etaV := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   apply MonoidHom.ext
   intro q
   refine Quotient.inductionOn' q ?_
@@ -524,7 +513,6 @@ private theorem lemma3_etaBar_smul
     (hXU : ∀ a,
       lemma3_conjDefect hA_normal hA_abelian (x • u) a = (etaXU a) ^ 2) :
     letI : IsMulCommutative A := hA_abelian
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
     letI : IsInvariant X P A := ⟨hA_X⟩
     letI : IsInvariant X A (lemma3_squareRange A) :=
       lemma3_squareRange_isInvariant
@@ -535,7 +523,6 @@ private theorem lemma3_etaBar_smul
     ∀ q : A ⧸ lemma3_squareRange A,
       lemma3_etaBar etaXU (x • q) = x • lemma3_etaBar etaU q := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   letI : IsInvariant X P A := ⟨hA_X⟩
   letI : IsInvariant X A (lemma3_squareRange A) :=
     lemma3_squareRange_isInvariant
@@ -613,7 +600,8 @@ private theorem lemma3_squareQuotient_mk_transitive
   let xa : A := x • a
   have hpows : b ^ (2 ^ (e - 1)) = xa ^ (2 ^ (e - 1)) := by
     apply Subtype.ext
-    simpa [xa] using hx
+    change (b : P) ^ (2 ^ (e - 1)) = (x • (a : P)) ^ (2 ^ (e - 1))
+    simpa using hx
   have hkill : (b / xa) ^ (2 ^ (e - 1)) = 1 := by
     calc
       (b / xa) ^ (2 ^ (e - 1)) =
@@ -710,10 +698,8 @@ private theorem lemma3_etaBar_eq_one_iff_mem
     (hdef : ∀ a,
       lemma3_conjDefect hA_normal hA_abelian (u : P) a = (eta a) ^ 2) :
     letI : IsMulCommutative A := hA_abelian
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
     lemma3_etaBar eta = 1 ↔ (u : P) ∈ A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   constructor
   · intro heta
     by_contra hu
@@ -849,7 +835,6 @@ private theorem lemma3_outside_mul_inv_mem
     (u v : C) (hu : (u : P) ∉ A) (hv : (v : P) ∉ A) :
     (v : P) * (u : P)⁻¹ ∈ A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   have huinv : ((u⁻¹ : C) : P) ∉ A := by
     intro hui
     apply hu
@@ -881,7 +866,6 @@ private theorem lemma3_conjDefect_eq_of_mul_inv_mem
     lemma3_conjDefect hA_normal hA_abelian v =
       lemma3_conjDefect hA_normal hA_abelian u := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   apply MonoidHom.ext
   intro a
   apply Subtype.ext
@@ -970,7 +954,6 @@ private theorem lemma3_eta_mod_square_scalar
     (hA_ne : A ≠ ⊥) {e r : ℕ} (he : 3 ≤ e)
     (hA : A ≃* Multiplicative (Fin r → ZMod (2 ^ e))) :
     letI : IsMulCommutative A := hA_abelian
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
     ∃ eta : C → (A →* A),
       (∀ (u : C) (a : A),
         lemma3_conjDefect hA_normal hA_abelian (u : P) a = (eta u a) ^ 2) ∧
@@ -980,7 +963,6 @@ private theorem lemma3_eta_mod_square_scalar
   letI : Finite C := inferInstance
   letI : Fintype C := Fintype.ofFinite C
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   choose eta hdef using fun u : C =>
     lemma3_conj_defect_lift_square
       hP hXtrans hA_normal hA_abelian hA_X hAC hfrattini u
@@ -1031,7 +1013,9 @@ private theorem lemma3_eta_mod_square_scalar
       hA_normal hA_abelian hA_X he hA x (u : P)
         (eta u) (eta (x • u)) (hdef u) (by
           intro a
-          simpa using hdef (x • u) a) q
+          have hxu : ((x • u : C) : P) = x • (u : P) := rfl
+          rw [← hxu]
+          exact hdef (x • u) a) q
 /-- Higman Lemma 3: in the deferred covering case, the covered abelian subgroup
 has exponent at most four. -/
 public theorem lemma3_covering_phi_case_exponent_le_four
@@ -1056,7 +1040,6 @@ public theorem lemma3_covering_phi_case_exponent_le_four
     · letI : Finite P := finite_of_isSuzukiTwoGroup _hP
       letI : Finite A := inferInstance
       letI : IsMulCommutative A := _hA_abelian
-      letI : CommGroup A := CommGroup.ofIsMulCommutative
       letI : IsInvariant X P A := ⟨_hA_X⟩
       letI : IsInvariant X P C := ⟨_hC_X⟩
       have hr : 2 ≤ r :=
@@ -1133,7 +1116,9 @@ public theorem lemma3_covering_phi_case_exponent_le_four
         rw [show
           lemma3_conjDefect _hA_normal _hA_abelian (ku : P) (k • a) =
             k • lemma3_conjDefect _hA_normal _hA_abelian (u : P) a by
-          simpa [ku] using lemma3_conjDefect_smul
+          change lemma3_conjDefect _hA_normal _hA_abelian (k • (u : P)) (k • a) =
+            k • lemma3_conjDefect _hA_normal _hA_abelian (u : P) a
+          exact lemma3_conjDefect_smul
             _hA_normal _hA_abelian _hA_X k (u : P) a]
         simp [smul_mul']
       let D : Subgroup A := theta.range
@@ -1160,6 +1145,7 @@ public theorem lemma3_covering_phi_case_exponent_le_four
           have ha' : k⁻¹ • a ∈ D := (hD_internal k⁻¹ a).mp ha
           refine Subgroup.mem_map.mpr ⟨k⁻¹ • a, ha', ?_⟩
           have := congrArg (fun q : P => k⁻¹ • q) hval
+          change k⁻¹ • (a : P) = p
           simpa [smul_smul] using this
       by_cases hzD : z ∈ D
       · rcases MonoidHom.mem_range.mp hzD with ⟨a, ha⟩
@@ -1257,6 +1243,7 @@ public theorem lemma3_covering_phi_case_exponent_le_four
             have ha' : k⁻¹ • a ∈ B := (hB_internal k⁻¹ a).mp ha
             refine Subgroup.mem_map.mpr ⟨k⁻¹ • a, ha', ?_⟩
             have := congrArg (fun q : P => k⁻¹ • q) hval
+            change k⁻¹ • (a : P) = p
             simpa [smul_smul] using this
         have hDpA : Dp ≤ A := by
           rintro p ⟨a, -, rfl⟩
@@ -1358,11 +1345,6 @@ public theorem lemma3_covering_phi_case_exponent_le_four
 end Higman
 end External
 end BenderSuzuki
-
-
-
-
-
 
 
 

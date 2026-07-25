@@ -127,7 +127,8 @@ private theorem suzukiMatrixGroup_isPerfect
       intro hzero
       apply hs
       apply Units.ext
-      simpa only [CharTwo.neg_eq] using add_eq_zero_iff_eq_neg.mp hzero
+      simpa only [CharTwo.neg_eq, Units.val_one] using
+        add_eq_zero_iff_eq_neg.mp hzero
     let x : K := ((s : K) + 1)⁻¹ * a
     have hfirst : x + (s : K) * x = a := by
       dsimp only [x]

@@ -101,13 +101,19 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
       exact congrArg Subtype.val <|
-        (Subgroup.mem_centralizer_iff.mp hx) ⟨a, hA'leN ha⟩ (by simpa [A0N] using ha)
+        (Subgroup.mem_centralizer_iff.mp hx) ⟨a, hA'leN ha⟩ (by
+          change (a : G) ∈ A'
+          exact ha)
     · intro hx
       have hxC : ((x : N) : G) ∈ C := hx
       rw [Subgroup.mem_centralizer_iff]
       intro a ha
       apply Subtype.ext
-      exact (Subgroup.mem_centralizer_iff.mp hxC) (a : N) (by simpa [A0N] using ha)
+      exact (Subgroup.mem_centralizer_iff.mp hxC) (a : N) (by
+        change ((a : N) : G) ∈ A' at ha
+        exact ha)
+  have hCn_set_eq : (Cn : Set N) = (C.subgroupOf N : Set N) :=
+    congrArg (fun K : Subgroup N => (K : Set N)) hCn_eq
   have hCn_normal : Cn.Normal := by
     exact inferInstance
   letI : Cn.Normal := hCn_normal
@@ -122,9 +128,11 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
   have hA0N_p : IsPGroup p A0N := by
     have hAp : IsPGroup p A := P.2.to_subgroup A
     have hA'p : IsPGroup p A' := hAp.map (P : Subgroup G).subtype
-    simpa [A0N] using hA'p.comap_subtype (K := N)
+    change IsPGroup p (A'.comap N.subtype)
+    exact hA'p.comap_subtype (K := N)
   have hA0_p : IsPGroup p A0 := by
-    simpa [A0] using hA0N_p.comap_subtype (K := Cn)
+    change IsPGroup p (A0N.comap Cn.subtype)
+    exact hA0N_p.comap_subtype (K := Cn)
   have hA0_norm : A0.Normal := by
     simpa [A0] using hA0N_norm.subgroupOf Cn
   letI : A0.Normal := hA0_norm
@@ -135,25 +143,41 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
     · intro hx
       have hxG : (x : G) ∈ C ⊓ (P : Subgroup G) := by
         refine ⟨?_, hx.1⟩
-        simpa [hCn_eq] using hx.2
-      simpa [A0N, hPC_eq_A'] using hxG
+        have hxC : x ∈ Cn := hx.2
+        rw [hCn_eq] at hxC
+        change (x : G) ∈ C at hxC
+        exact hxC
+      change (x : G) ∈ A'
+      rw [← hPC_eq_A']
+      exact hxG
     · intro hx
-      have hxG : (x : G) ∈ A' := hx
+      have hxG : (x : G) ∈ A' := by
+        change (x : G) ∈ A' at hx
+        exact hx
       have hxPC : (x : G) ∈ C ⊓ (P : Subgroup G) := by simpa [hPC_eq_A'] using hxG
-      exact ⟨hxPC.2, by simpa [hCn_eq] using hxPC.1⟩
+      refine ⟨hxPC.2, ?_⟩
+      rw [hCn_eq]
+      exact hxPC.1
   obtain ⟨SA, hA0_le_SA⟩ := IsPGroup.exists_le_sylow (G := Cn) (p := p) hA0_p
   obtain ⟨Q, hQeq⟩ := SA.exists_comap_subtype_eq
   obtain ⟨n, hn⟩ := MulAction.exists_smul_eq N Q Pn
   let e : Cn ≃* Cn := MulAut.conjNormal (H := Cn) (n : N)
   have hQmap : (Q : Subgroup N).map (MulAut.conj (n : N)).toMonoidHom = (Pn : Subgroup N) := by
-    simpa [Sylow.coe_subgroup_smul, MulEquiv.coe_mapSubgroup] using
-      congrArg (fun S : Sylow p N => (S : Subgroup N)) hn
+    have hhom :
+        (MulAut.conj (n : N)).toMonoidHom =
+          MulDistribMulAction.toMonoidEnd (MulAut N) N (MulAut.conj (n : N)) := by
+      ext x
+      rfl
+    rw [hhom]
+    rw [← Subgroup.pointwise_smul_def]
+    exact congrArg (fun S : Sylow p N => (S : Subgroup N)) hn
   have hA0_map_fix : A0.map e.toMonoidHom = A0 := by
     ext x
     constructor
     · rintro ⟨y, hy, rfl⟩
       have hyA0N : (y : N) ∈ A0N := by
-        simpa [A0] using hy
+        change (y : N) ∈ A0N at hy
+        exact hy
       change ((e y : Cn) : N) ∈ A0N
       change ((n : N) : G) * (y : N) * ((n : N) : G)⁻¹ ∈ A'
       exact ((Subgroup.mem_normalizer_iff.mp n.2) (y : N)).1 hyA0N
@@ -161,14 +185,17 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
       have hyCn : (n : N)⁻¹ * (x : N) * (n : N) ∈ Cn := by
         exact hCn_normal.conj_mem' (n := (x : N)) x.2 (g := (n : N))
       have hxA0N : (x : N) ∈ A0N := by
-        simpa [A0] using hx
+        change (x : N) ∈ A0N at hx
+        exact hx
       have hyA0N : (n : N)⁻¹ * (x : N) * (n : N) ∈ A0N := by
         change ((n : N) : G)⁻¹ * (x : N) * (n : N) ∈ A'
+        change ((x : N) : G) ∈ A' at hxA0N
         exact ((Subgroup.mem_normalizer_iff.mp n.2) ((n : N)⁻¹ * (x : N) * (n : N))).2 <|
           by simpa [mul_assoc] using hxA0N
       refine Subgroup.mem_map.mpr ?_
       refine ⟨⟨(n : N)⁻¹ * (x : N) * (n : N), hyCn⟩, ?_, ?_⟩
-      · simpa [A0] using hyA0N
+      · change (n : N)⁻¹ * (x : N) * (n : N) ∈ A0N at hyA0N
+        exact hyA0N
       · apply Subtype.ext
         simp [e, mul_assoc]
   have hSA_map_eq_A0 : (SA : Subgroup Cn).map e.toMonoidHom = A0 := by
@@ -188,9 +215,12 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
       have hxPCN : (x : N) ∈ (Pn : Subgroup N) ⊓ Cn := ⟨hxPn, x.2⟩
       have hxA0N : (x : N) ∈ A0N := by
         simpa [hPCN_eq_A0N] using hxPCN
-      simpa [A0] using hxA0N
+      change x ∈ A0N.subgroupOf Cn
+      exact hxA0N
     · intro hx
-      have hxA0N : (x : N) ∈ A0N := by simpa [A0] using hx
+      have hxA0N : (x : N) ∈ A0N := by
+        change (x : N) ∈ A0N at hx
+        exact hx
       have hxPCN : (x : N) ∈ (Pn : Subgroup N) ⊓ Cn := by simpa [hPCN_eq_A0N] using hxA0N
       have hxQconj : (x : N) ∈ (Q : Subgroup N).map (MulAut.conj (n : N)).toMonoidHom := by
         rw [hQmap]
@@ -205,7 +235,9 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
         simpa [hy_eq] using hyCn'
       have hyS : ⟨y, hyCn⟩ ∈ SA := by
         have hyS' : ⟨y, hyCn⟩ ∈ (Q : Subgroup N).comap Cn.subtype := hyQ
-        simpa [hQeq] using hyS'
+        change ⟨y, hyCn⟩ ∈ (SA : Subgroup Cn)
+        rw [← hQeq]
+        exact hyS'
       refine Subgroup.mem_map.mpr ?_
       refine ⟨⟨y, hyCn⟩, hyS, ?_⟩
       apply Subtype.ext
@@ -236,9 +268,16 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
     ext x
     constructor
     · rintro ⟨y, -, rfl⟩
-      simpa [hCn_eq] using y.2
+      have hyCsub : (y : N) ∈ (C.subgroupOf N : Set N) := by
+        rw [← hCn_set_eq]
+        exact y.2
+      change ((y : N) : G) ∈ C at hyCsub
+      change ((y : N) : G) ∈ C
+      exact hyCsub
     · intro hx
-      refine ⟨⟨⟨x, hC_le_N hx⟩, by simpa [hCn_eq] using hx⟩, by simp, rfl⟩
+      refine ⟨⟨⟨x, hC_le_N hx⟩, ?_⟩, by simp, rfl⟩
+      rw [hCn_eq]
+      exact hx
   have hiC_injective : Function.Injective iC :=
     by
       intro x y hxy
@@ -261,7 +300,12 @@ public theorem proposition_4_4_b {G : Type*} [Group G] [Finite G] {p : ℕ} [Fac
   have hH_le_C : H ≤ C := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-    simpa [hCn_eq] using y.2
+    have hyCsub : (y : N) ∈ (C.subgroupOf N : Set N) := by
+      rw [← hCn_set_eq]
+      exact y.2
+    change ((y : N) : G) ∈ C at hyCsub
+    change ((y : N) : G) ∈ C
+    exact hyCsub
   refine ⟨H, hH_coprime, ?_, hdis, ?_⟩
   · simpa [A', C] using hcent_eq
   · exact

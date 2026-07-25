@@ -143,7 +143,7 @@ lemma linearEquiv_right_of_prod_linearEquiv_of_eq_inl
     calc
       p z.2 = (e (0, z.2)).2 := rfl
       _ = (e (z.1, 0) + e (0, z.2)).2 := by simp [h]
-      _ = (e z).2 := by rw [← e.map_add]; congr 2 <;> simp
+      _ = (e z).2 := by rw [← e.map_add]; congr 2; simp
       _ = y := by simp [z]
 lemma linearEquiv_cancel_of_isUnit_fst
     {R U A B : Type*} [Ring R]
@@ -168,14 +168,22 @@ lemma linearEquiv_cancel_of_isUnit_fst
   let r : (U × A) ≃ₗ[R] (U × A) :=
     { toFun := fun x => (x.1 - ae.symm (b x.2), x.2)
       invFun := fun x => (x.1 + ae.symm (b x.2), x.2)
-      map_add' := by intro x y; ext <;> simp <;> abel
+      map_add' := by
+        intro x y
+        ext
+        all_goals simp
+        all_goals abel
       map_smul' := by intro s x; ext <;> simp [smul_sub]
       left_inv := by intro x; ext <;> simp
       right_inv := by intro x; ext <;> simp }
   let l : (U × B) ≃ₗ[R] (U × B) :=
     { toFun := fun x => (ae.symm x.1, x.2 - c (ae.symm x.1))
       invFun := fun x => (ae x.1, x.2 + c x.1)
-      map_add' := by intro x y; ext <;> simp <;> abel
+      map_add' := by
+        intro x y
+        ext
+        all_goals simp
+        all_goals abel
       map_smul' := by intro s x; ext <;> simp [smul_sub]
       left_inv := by intro x; ext <;> simp
       right_inv := by intro x; ext <;> simp }
@@ -261,7 +269,11 @@ lemma linearEquiv_cancel_of_isUnit_cross
   let q : (U × (U × C)) ≃ₗ[R] (U × (U × C)) :=
     { toFun := fun x => (x.1 - a x.2.1, x.2)
       invFun := fun x => (x.1 + a x.2.1, x.2)
-      map_add' := by intro x y; ext <;> simp <;> abel
+      map_add' := by
+        intro x y
+        ext
+        all_goals simp
+        all_goals abel
       map_smul' := by intro r x; ext <;> simp [smul_sub]
       left_inv := by intro x; ext <;> simp
       right_inv := by intro x; ext <;> simp }
@@ -313,7 +325,7 @@ lemma linearEquiv_cancel_of_end_isLocalRing
       (e.symm (a u, 0)).1 + (e.symm (0, c u)).1 =
           (e.symm (a u, 0) + e.symm (0, c u)).1 := rfl
       _ = (e.symm ((a u, 0) + (0, c u))).1 := by rw [e.symm.map_add]
-      _ = (e.symm (a u, c u)).1 := by congr 3 <;> simp
+      _ = (e.symm (a u, c u)).1 := by congr 3; simp
       _ = (e.symm (e (u, 0))).1 := by rfl
       _ = u := by simp
   rcases IsLocalRing.isUnit_or_isUnit_of_add_one hsum with haa | hbc
@@ -407,7 +419,7 @@ lemma isSplitSummand_of_isCompl
     {R X : Type*} [Ring R] [AddCommGroup X] [Module R X]
     {U C : Submodule R X} (h : IsCompl U C) :
     IsSplitSummand R U X := by
-  refine ⟨U.subtype, U.linearProjOfIsCompl C h, ?_⟩
+  refine ⟨U.subtype, Submodule.projectionOnto U C h, ?_⟩
   ext u
   simp
 
@@ -618,4 +630,3 @@ public lemma linearEquiv_of_fin_copies_linearEquiv
         exact ⟨LinearEquiv.ofSubsingleton M N⟩
 
 end Module
-

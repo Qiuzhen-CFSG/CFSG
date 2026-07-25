@@ -75,8 +75,10 @@ private theorem section10_lemma_6_5_ambient_normalizer_endpoint
     intro x hx
     exact hPU hx
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup Dg)) P.isPGroup' Dg.subtype
+    change IsPGroup p.val
+      ((P : Subgroup (ambientDerivedSubgroup M)).map (ambientDerivedSubgroup M).subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup (ambientDerivedSubgroup M)))
+      P.isPGroup' (ambientDerivedSubgroup M).subtype
   have hHp : IsPGroup p.val H := by
     exact hPGp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := PG) (K := M) hPG_le_M).symm
@@ -129,7 +131,8 @@ private theorem section10_lemma_6_5_ambient_normalizer_endpoint
     simpa [hcomm_map] using hx_map
   have hx_map_comm : x ∈ (_root_.commutator U).map U.subtype := by
     simpa [Subgroup.map_subtype_commutator] using hx_comm_G
-  simpa [U, ambientDerivedSubgroup, derivedSubgroup, derivedSeries_one] using hx_map_comm
+  change x ∈ (_root_.commutator U).map U.subtype
+  exact hx_map_comm
 
 omit [Finite G] in
 private theorem section10_local_normalizer_le_subgroupNormalizerIn
@@ -155,7 +158,7 @@ private theorem section10_local_normalizer_le_subgroupNormalizerIn
       have hconjM :
           ((x : M) * yM * (x : M)⁻¹ : M) ∈ XM :=
         (Subgroup.mem_normalizer_iff.mp hx yM).1 hyXM
-      simpa [yM, XM, mul_assoc] using hconjM
+      simpa [yM, XM, Subgroup.mem_subgroupOf, mul_assoc] using hconjM
     · intro hconjX
       have hyM : y ∈ M := by
         have hxM : (x : G) ∈ M := x.property
@@ -167,10 +170,11 @@ private theorem section10_local_normalizer_le_subgroupNormalizerIn
       let yM : M := ⟨y, hyM⟩
       have hconjXM :
           ((x : M) * yM * (x : M)⁻¹ : M) ∈ XM := by
-        simpa [yM, XM, mul_assoc] using hconjX
+        simpa [yM, XM, Subgroup.mem_subgroupOf, mul_assoc] using hconjX
       exact (Subgroup.mem_normalizer_iff.mp hx yM).2 hconjXM
   · exact x.property
 
+omit [IsMinCE G] in
 private theorem section10_mbeta_sup_normalizer_of_frattini_join
     {M X : Subgroup G} {q : Nat.Primes} (hXleM : X ≤ M)
     {J : Subgroup M} [J.Normal]
@@ -247,7 +251,7 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
   have hLsubDnil : Group.IsNilpotent LsubD := by
     let e : L ≃* LsubD := (Subgroup.subgroupOfEquivOfLe hLD).symm
     letI : Group.IsNilpotent L := hLnil
-    exact nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
+    exact Group.nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
   have hXsubD_le_LsubD : XsubD ≤ LsubD := by
     intro x hx
     exact hXML hx
@@ -278,8 +282,8 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
       have hxXloc : xL ∈ Xloc := hxXsubD
       exact ⟨xD, ⟨xL, hxXloc, rfl⟩, rfl⟩
   let e : D ≃* Dg := by
-    simpa [D, Dg, ambientDerivedSubgroup] using
-      (Subgroup.equivMapOfInjective D M.subtype M.subtype_injective)
+    change D ≃* D.map M.subtype
+    exact Subgroup.equivMapOfInjective D M.subtype M.subtype_injective
   let P : Sylow p.val Dg := PD.mapSurjective (f := e.toMonoidHom) e.surjective
   refine ⟨P, ?_⟩
   intro y hy
@@ -293,8 +297,9 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
       (yDg : G) = (e yD : G) := by
         exact congrArg Subtype.val hyD_eq.symm
       _ = (((yD : D) : M) : G) := by
-        change (((yD : D) : M) : G) = (((yD : D) : M) : G)
-        rfl
+        unfold e
+        exact Subgroup.coe_equivMapOfInjective_apply
+          D M.subtype M.subtype_injective yD
   have hyLocal : ((yD : D) : M) ∈ section10AmbientSylowSubgroup D PD :=
     ⟨yD, hyPD, rfl⟩
   have hyCentXM : ((yD : D) : M) ∈ Subgroup.centralizer (XM : Set M) := by
@@ -306,8 +311,9 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
       ((yD : D) : M) ∈ (subgroupNormalizerIn M (X : Set G)).subgroupOf M :=
     section10_local_normalizer_le_subgroupNormalizerIn (G := G) hXleM hyNormXM
   change (yDg : G) ∈ subgroupNormalizerIn M (X : Set G)
-  simpa [hy_val] using hyUM
+  simpa [hy_val, Subgroup.mem_subgroupOf] using hyUM
 
+omit [IsMinCE G] in
 private theorem section10_sylow_ambientDerived_to_local
     {M : Subgroup G} {q : Nat.Primes}
     (X : Sylow q.val (ambientDerivedSubgroup M)) :
@@ -319,8 +325,8 @@ private theorem section10_sylow_ambientDerived_to_local
   let D : Subgroup M := derivedSubgroup M
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let e : D ≃* Dg := by
-    simpa [D, Dg, ambientDerivedSubgroup] using
-      (Subgroup.equivMapOfInjective D M.subtype M.subtype_injective)
+    change D ≃* D.map M.subtype
+    exact Subgroup.equivMapOfInjective D M.subtype M.subtype_injective
   let XD : Sylow q.val D := X.mapSurjective (f := e.symm.toMonoidHom) e.symm.surjective
   refine ⟨XD, ?_⟩
   ext x
@@ -328,13 +334,15 @@ private theorem section10_sylow_ambientDerived_to_local
   · intro hx
     rcases Subgroup.mem_map.mp hx with ⟨yD, hyXD, rfl⟩
     have hyXD' : yD ∈ (X : Subgroup Dg).map e.symm.toMonoidHom := by
-      simpa [XD] using hyXD
+      change yD ∈ (X : Subgroup Dg).map e.symm.toMonoidHom at hyXD
+      exact hyXD
     rcases Subgroup.mem_map.mp hyXD' with ⟨yDg, hyX, hy_eq⟩
     have hy_val : (((yD : D) : M) : G) = (yDg : G) := by
       calc
         (((yD : D) : M) : G) = (e yD : G) := by
-          change (((yD : D) : M) : G) = (((yD : D) : M) : G)
-          rfl
+          unfold e
+          exact (Subgroup.coe_equivMapOfInjective_apply
+            D M.subtype M.subtype_injective yD).symm
         _ = (yDg : G) := by
           have hy_e : e yD = yDg := by
             rw [← hy_eq]
@@ -350,8 +358,12 @@ private theorem section10_sylow_ambientDerived_to_local
         ⟨yDg, hyX, rfl⟩
     refine ⟨yD, hyXD, ?_⟩
     have hy_val : (((yD : D) : M) : G) = (yDg : G) := by
-      change (e (e.symm yDg) : G) = (yDg : G)
-      simp
+      calc
+        (((yD : D) : M) : G) = (e yD : G) := by
+          unfold e
+          exact (Subgroup.coe_equivMapOfInjective_apply
+            D M.subtype M.subtype_injective yD).symm
+        _ = (yDg : G) := congrArg Subtype.val (e.apply_symm_apply yDg)
     exact Subtype.ext (hy_val.trans hy_eq)
 
 private theorem section10_malpha_subgroupOf_derived_eq_piCore
@@ -532,13 +544,16 @@ private theorem section10_mbeta_sup_ambient_derived_sylow_normal
   have hKsubD_map : KsubD.map D.subtype = K := by
     simpa [KsubD, K, D] using
       (Subgroup.map_subgroupOf_eq_of_le (G := M) (H := K) (K := D) hKleD)
+  have hXDmap' : (XD : Subgroup D).map D.subtype = XM := by
+    change (XD : Subgroup (derivedSubgroup M)).map (derivedSubgroup M).subtype =
+      (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X).subgroupOf M
+    exact hXDmap
   have hLmap_eq : L.map D.subtype = K ⊔ XM := by
     calc
       L.map D.subtype =
           KsubD.map D.subtype ⊔ (XD : Subgroup D).map D.subtype := by
         simpa [L] using (Subgroup.map_sup KsubD (XD : Subgroup D) D.subtype)
-      _ = K ⊔ XM := by
-        simpa [hKsubD_map, XM] using congrArg (fun S : Subgroup M => K ⊔ S) hXDmap
+      _ = K ⊔ XM := by rw [hKsubD_map, hXDmap']
   have hJchar : (K ⊔ XM).Characteristic := by
     simpa [hLmap_eq] using hLmap_char
   letI : (K ⊔ XM).Characteristic := hJchar
@@ -598,13 +613,16 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
   have hKsubD_map : KsubD.map D.subtype = K := by
     simpa [KsubD, K, D] using
       (Subgroup.map_subgroupOf_eq_of_le (G := M) (H := K) (K := D) hKleD)
+  have hXDmap' : (XD : Subgroup D).map D.subtype = XM := by
+    change (XD : Subgroup (derivedSubgroup M)).map (derivedSubgroup M).subtype =
+      (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X).subgroupOf M
+    exact hXDmap
   have hLmap_eq : L.map D.subtype = K ⊔ XM := by
     calc
       L.map D.subtype =
           KsubD.map D.subtype ⊔ (XD : Subgroup D).map D.subtype := by
         simpa [L] using (Subgroup.map_sup KsubD (XD : Subgroup D) D.subtype)
-      _ = K ⊔ XM := by
-        simpa [hKsubD_map, XM] using congrArg (fun S : Subgroup M => K ⊔ S) hXDmap
+      _ = K ⊔ XM := by rw [hKsubD_map, hXDmap']
   have hJchar : (K ⊔ XM).Characteristic := by
     simpa [hLmap_eq] using hLmap_char
   letI : (K ⊔ XM).Characteristic := hJchar
@@ -698,8 +716,10 @@ public theorem corollary_10_9_a_3
     simpa [XG, Dg] using section10_ambient_sylow_le_base (G := G) X
   have hXG_le_M : XG ≤ M := hXG_le_Dg.trans hDg_le_M
   have hXG_q : IsPGroup q.val XG := by
-    simpa [XG, Dg, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (X : Subgroup Dg)) X.isPGroup' Dg.subtype
+    change IsPGroup q.val
+      ((X : Subgroup (ambientDerivedSubgroup M)).map (ambientDerivedSubgroup M).subtype)
+    exact IsPGroup.map (p := q.val) (H := (X : Subgroup (ambientDerivedSubgroup M)))
+      X.isPGroup' (ambientDerivedSubgroup M).subtype
   obtain ⟨P, hP_le_U⟩ :=
     section10_exists_ambient_derived_sylow_le_normalizer_of_le_derived
       (G := G) (M := M) (X := XG) (p := p) (q := q)

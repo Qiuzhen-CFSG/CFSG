@@ -174,23 +174,23 @@ public instance : Algebra F (End ρ) := {
     toFun := fun f ↦ smulLeft f
     map_one' := by simp only [smulLeft_eq, one_smul]; rfl
     map_mul' f₁ f₂ := by
-      ext
-      simp only [smulLeft_eq, smul_apply, id_coe, id_eq, mul_apply, RepMap.map_smul]
-      rw [← mul_smul, mul_comm]
+      ext x
+      simp [smulLeft_eq, RepMap.smul_apply, mul_apply, RepMap.map_smul, mul_smul]
+      rw [smul_smul, smul_smul, mul_comm]
     map_zero' := by simp only [smulLeft_eq, zero_smul]
     map_add' f₁ f₂ := by
-      ext
-      simp only [smulLeft_eq, smul_apply, id_coe, id_eq, add_apply, add_smul]
+      ext x
+      simp [smulLeft_eq, RepMap.smul_apply, RepMap.add_apply, add_smul]
   }
   commutes' f g := by
-    ext
-    simp only [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, mul_apply,
-      smul_apply, id_coe, id_eq, RepMap.map_smul]
+    ext x
+    simp [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, mul_apply,
+      RepMap.smul_apply, RepMap.map_smul]
   smul_def' f g := by
-    ext
-    simp only [smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-      mul_apply, id_coe, id_eq]
+    ext x
+    simp [RepMap.smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
+      mul_apply]
 }
 
 public theorem algebraMap_apply (f : F) : (algebraMap F (End ρ)) f = f • id (ρ := ρ) :=
-  rfl
+  by rw [show (algebraMap F (End ρ)) f = smulLeft f from rfl, smulLeft_eq]

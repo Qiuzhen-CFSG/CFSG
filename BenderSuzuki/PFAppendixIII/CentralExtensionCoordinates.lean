@@ -15,6 +15,7 @@ in Peterfalvi Appendix III, Lemma 1(c).
 -/
 
 open scoped BigOperators
+open scoped commutatorElement
 
 namespace BenderSuzuki
 namespace PFAppendixIII

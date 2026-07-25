@@ -20,6 +20,8 @@ import Mathlib.Data.ZMod.Defs
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.Tactic.Basic
 
+open scoped IsMulCommutative
+
 universe u
 
 /-- An *elementary abelian* `p`-group: a commutative group whose exponent divides `p`. -/
@@ -188,9 +190,8 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact { is_comm := ⟨fun x y => by exact mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -212,7 +213,8 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          letI : IsMulCommutative ↥(Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
             (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))

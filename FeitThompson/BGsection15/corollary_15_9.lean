@@ -17,6 +17,8 @@ open scoped Pointwise
 section Section15
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+
+omit [IsMinCE G] in
 private theorem section15_cor14_12_situation_exists_prime_mem_K
     {M H K Mstar U : Subgroup G}
     (hSituation : section15Corollary14_12Situation M H K Mstar U) :
@@ -31,6 +33,7 @@ private theorem section15_cor14_12_situation_exists_prime_mem_K
       (G := G) (π := section14KappaPrimes M) (K := K) (H := M)
       (p := q) hK hqκ hqM⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_E2_eq_bot_of_tau2_empty
     {M E₁₂ E₂ : Subgroup G}
     (hE₂ : section12HallSubgroupIn (section12Tau2Primes M) E₂ E₁₂)
@@ -49,8 +52,9 @@ private theorem section15_E2_eq_bot_of_tau2_empty
     simpa [q', hcard_sub] using hqdiv
   have hqτ2 : q' ∈ section12Tau2Primes M :=
     hHallE₂.p_in_pi_of_p_dvd_card q' hqdiv_sub
-  exact by simpa [hτ2empty] using hqτ2
+  simp [hτ2empty] at hqτ2
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_isCyclic_of_quotient_equiv_bot
     {E E₂ E₁ : Subgroup G}
     (hE₂bot : E₂ = ⊥)
@@ -63,12 +67,13 @@ private theorem section15_isCyclic_of_quotient_equiv_bot
   have hbot_subgroupOf :
       ((⊥ : Subgroup G).subgroupOf E) = (⊥ : Subgroup E) := by
     ext x
-    simp [Subgroup.mem_subgroupOf]
+    simp
   let eBot : E ⧸ ((⊥ : Subgroup G).subgroupOf E) ≃* E :=
     (QuotientGroup.quotientMulEquivOfEq hbot_subgroupOf).trans
       (QuotientGroup.quotientBot (G := E))
   exact eBot.isCyclic.1 (eQ.isCyclic.2 hE₁cyc)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_corollary15_9_msigma_member
     {M : Subgroup G} {x : G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -173,6 +178,7 @@ private theorem section15_corollary15_9_initial_data
     · exact hNP2
   exact ⟨hNP2, hrTau, hTau2N_le_sigmaM hrTau, hcompN⟩
 
+omit [Finite G] [IsMinCE G] in
 /-- Corollary 15.9 source bridge: the Sylow `r`-subgroup of the
 Proposition 14.2(a) complement `U` has normalizer contained in the original
 maximal subgroup `M`. -/
@@ -183,14 +189,15 @@ private theorem section15_ambientSylow_le
   rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
   exact y.2
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_ambientSylow_isPGroup
     {M : Subgroup G} {p : Nat.Primes} (S : Sylow p.val M) :
     IsPGroup p.val (section10AmbientSylowSubgroup M S) := by
-  simpa [section10AmbientSylowSubgroup] using
-    IsPGroup.map (p := p.val) (H := (S : Subgroup M)) S.isPGroup' M.subtype
+  change IsPGroup p.val ((S : Subgroup M).map M.subtype)
+  exact IsPGroup.map (p := p.val) (H := (S : Subgroup M)) S.isPGroup' M.subtype
 
 private theorem section15_exists_rankTwo_in_ambientSylow_of_tau2
-    {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) {p : Nat.Primes}
+    {M : Subgroup G} (_hM : M ∈ section9MaximalSubgroups G) {p : Nat.Primes}
     (hpτ2 : p ∈ section12Tau2Primes M) (S : Sylow p.val M) :
     ∃ A : Subgroup G,
       A ∈ section12RankTwoElementaryAbelianIn p M ∧
@@ -221,6 +228,7 @@ private theorem section15_exists_rankTwo_in_ambientSylow_of_tau2
   exact section12_rankTwo_mono hA_Pamb (by
     simpa [Pamb] using section15_ambientSylow_le (M := M) S)
 
+omit [IsMinCE G] in
 private theorem section15_ambientSylow_isSylow_of_hall
     {H K : Subgroup G} {π : Set Nat.Primes} {q : Nat.Primes}
     (hHall : section12HallSubgroupIn π K H) (hqπ : q ∈ π)
@@ -242,9 +250,7 @@ private theorem section15_ambientSylow_isSylow_of_hall
       (Subgroup.subgroupOfEquivOfLe
         (H := section10AmbientSylowSubgroup K Q) (K := H) hQamb_le_H).symm
   have hR_map : R.map H.subtype = section10AmbientSylowSubgroup K Q := by
-    simpa [R, inf_eq_left.2 hQamb_le_H] using
-      (Subgroup.subgroupOf_map_subtype
-        (H := section10AmbientSylowSubgroup K Q) (K := H))
+    simp [R, inf_eq_left.2 hQamb_le_H]
   have hR_not_dvd : ¬ q.val ∣ R.index := by
     intro hidx
     have hR_card : Nat.card R = Nat.card (Q : Subgroup K) := by
@@ -285,16 +291,17 @@ private theorem section15_ambientSylow_isSylow_of_hall
       simp [S, section10AmbientSylowSubgroup]
     _ = section10AmbientSylowSubgroup K Q := hR_map
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_corollary15_9_ambientSylow_U_le_M
     {M N K U : Subgroup G} {r : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hN : N ∈ section9MaximalSubgroups G)
-    (hcomp : section12ComplementIn N (section10Msigma N) (M ⊓ N))
-    (hKleMN : K ≤ M ⊓ N)
+    (_hM : M ∈ section9MaximalSubgroups G)
+    (_hN : N ∈ section9MaximalSubgroups G)
+    (_hcomp : section12ComplementIn N (section10Msigma N) (M ⊓ N))
+    (_hKleMN : K ≤ M ⊓ N)
     (hUleMN : U ≤ M ⊓ N)
-    (hrτ2 : r ∈ section12Tau2Primes N)
-    (hrσM : r ∈ section10SigmaPrimes M)
-    (hU : section14Proposition14_2AData N K U)
+    (_hrτ2 : r ∈ section12Tau2Primes N)
+    (_hrσM : r ∈ section10SigmaPrimes M)
+    (_hU : section14Proposition14_2AData N K U)
     (R : Sylow r.val U) :
     section10AmbientSylowSubgroup U R ≤ M := by
   intro x hx
@@ -304,7 +311,7 @@ private theorem section15_corollary15_9_ambientSylow_U_le_M
 private theorem section15_corollary15_9_ambientSylow_U_noncyclic
     {M N K U : Subgroup G} {r : Nat.Primes}
     (hN : N ∈ section9MaximalSubgroups G)
-    (hcomp : section12ComplementIn N (section10Msigma N) (M ⊓ N))
+    (_hcomp : section12ComplementIn N (section10Msigma N) (M ⊓ N))
     (hrτ2 : r ∈ section12Tau2Primes N)
     (hU : section14Proposition14_2AData N K U)
     (R : Sylow r.val U) :
@@ -353,8 +360,8 @@ private theorem section15_corollary15_9_normalizer_ambientSylow_U_le_M
     Subgroup.normalizer (section10AmbientSylowSubgroup U R : Set G) ≤ M := by
   classical
   have hPp : IsPGroup r.val (section10AmbientSylowSubgroup U R) := by
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := r.val) (H := (R : Subgroup U)) R.isPGroup' U.subtype
+    change IsPGroup r.val ((R : Subgroup U).map U.subtype)
+    exact IsPGroup.map (p := r.val) (H := (R : Subgroup U)) R.isPGroup' U.subtype
   exact corollary_12_10_d
     (G := G) (M := M) (P := section10AmbientSylowSubgroup U R) (p := r)
     hM hrσM hPp
@@ -407,7 +414,7 @@ private theorem section15_msigma_nilpotent_of_mem_MFamilyF
     ⟨⟨_hmax, hκnonempty⟩, _hκeq⟩
   rcases hκnonempty with ⟨p, hpκ⟩
   have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-    simpa [hMFam.2] using hpκ
+    simp [hMFam.2] at hpκ
   exact hpempty
 
 private theorem section15_msigma_le_fitting_of_mem_MFamilyF
@@ -449,7 +456,7 @@ private theorem section15_fitting_not_ti_of_mem_fitting_and_external_centralizer
     calc
       g⁻¹ * x * g = g⁻¹ * (x * g) := by rw [mul_assoc]
       _ = g⁻¹ * (g * x) := by rw [← hgcomm.eq]
-      _ = x := by simp [mul_assoc]
+      _ = x := by simp
   have hxConj :
       x ∈ section14SetConjBy (section8FittingSubgroup M : Set G) g := by
     exact ⟨x, hxF, hx_conj_eq.symm⟩
@@ -474,6 +481,7 @@ private theorem section15_fitting_not_ti_of_MFamilyF_msigma_element
         (G := G) (M := M) hMFam hxMσ)
       hxne hr hCGnot
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_fitting_intersection_ne_bot_of_mem_fitting_and_external_centralizer
     {M : Subgroup G} {x : G}
     (hxF : x ∈ section8FittingSubgroup M)
@@ -537,6 +545,7 @@ private theorem section15_complement_cyclic_of_tau2_empty
   exact section15_isCyclic_of_quotient_equiv_bot
     (G := G) hE2bot h15d.2.2.1 h15d.2.2.2
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_ne_bot_of_prime_mem_le_fitting
     {E K : Subgroup G} {q : Nat.Primes}
     (hKleF : K ≤ section8FittingSubgroup E)
@@ -601,9 +610,7 @@ private theorem section15_frobenius_msigma_of_tau2_empty
       have hyCentSub :
           ((y : elementCentralizerIn (section10MsigmaSubgroup M) (e : M)) : M) ∈
             elementCentralizerIn ((section10Msigma M).subgroupOf M) (e : M) := by
-        simpa [section15_msigma_subgroupOf_eq (M := M)] using
-          (show ((y : elementCentralizerIn (section10MsigmaSubgroup M) (e : M)) : M) ∈
-              elementCentralizerIn (section10MsigmaSubgroup M) (e : M) from y.property)
+        simp [section15_msigma_subgroupOf_eq (M := M)]
       rw [section15_elementCentralizerIn_subgroupOf_eq
           (S := M) (H := section10Msigma M) (x := ((e : M) : G))
           (hx := (e : M).property)] at hyCentSub
@@ -649,14 +656,14 @@ private theorem section15_frobenius_msigma_of_tau2_empty
         rw [subgroupPrimeSet]
         rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
           ⟨_hzle, hrcard⟩
-        simpa [hrcard]
+        simp [hrcard]
       simpa [section14ElementPrimeSupport] using
         section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hzpow) hrz
     rcases hcor with hκ | hτ2
     · have hrκ : r ∈ section14KappaPrimes M := hκ.1 hrSupp
-      simpa [hMFam.2] using hrκ
+      simp [hMFam.2] at hrκ
     · have hrτ2 : r ∈ section12Tau2Primes M := hτ2.1 hrSupp
-      simpa [hτ2empty] using hrτ2
+      simp [hτ2empty] at hrτ2
   simpa [section15_msigma_subgroupOf_eq (M := M)] using hFrobSub
 
 /-- Corollary 15.9 source core for parts (a)--(b): in the original
@@ -671,9 +678,9 @@ private theorem section15_corollary15_9_cyclic_frobenius_core
     (hM : M ∈ section9MaximalSubgroups G)
     (hxMσ : x ∈ section10Msigma M)
     (hxne : x ≠ 1)
-    (hN : N ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)))
+    (_hN : N ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)))
     (hCGnot : ¬ Subgroup.centralizer ({x} : Set G) ≤ M)
-    (hNnotF : N ∉ section14MFamilyF G)
+    (_hNnotF : N ∉ section14MFamilyF G)
     (hr : r ∈ subgroupPrimeSet (Subgroup.zpowers x))
     (hInitial :
       N ∈ section14MFamilyP2 G ∧
@@ -714,7 +721,7 @@ private theorem section15_corollary15_9_cyclic_frobenius_core
         (G := G) (M := N) (H := M) (K := K) (Mstar := Mstar)
         (U := U) (MFstar := MFstar) (q := q)
         hSituation hMFstar hτ2Mne hqK).2.2
-    exact by simpa [hτ2Nempty] using hrτ2N
+    simp [hτ2Nempty] at hrτ2N
   have hcyc : IsCyclic (M ⊓ Mstar : Subgroup G) :=
     section15_complement_cyclic_of_tau2_empty
       (G := G) (M := M) (E := M ⊓ Mstar) (E₁₂ := E₁₂)
@@ -735,7 +742,7 @@ private theorem section15_isMulCommutative_of_le
     {H K : Subgroup G} (hH : IsMulCommutative H) (hKH : K ≤ H) :
     IsMulCommutative K := by
   refine ⟨⟨fun x y => Subtype.ext ?_⟩⟩
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := H)
+  exact setLike_mul_comm (s := H)
     (hKH x.property) (hKH y.property)
 
 omit [Finite G] [IsMinCE G] in
@@ -882,7 +889,7 @@ private theorem section15_elementCentralizerIn_le_subgroupCentralizerIn_zpowers_
 /-- The strengthened internal package for the exact complement used in
 Corollary 15.9: it remembers the witnesses `K₁,U₁,M*` from the source
 construction, not just the final (a)--(b) conclusions. -/
-@[expose] private def section15Corollary15_9ChosenComplementData
+private def section15Corollary15_9ChosenComplementData
     (M N E : Subgroup G) (r : Nat.Primes) : Prop :=
   ∃ K U Mstar : Subgroup G,
     section12HallSubgroupIn (section14KappaPrimes N) K N ∧
@@ -901,6 +908,7 @@ construction, not just the final (a)--(b) conclusions. -/
                                 (∃ K₀ : Subgroup G, section14FrobeniusWithKernel M K₀) ∧
                                   r ∈ section12Tau2Primes N
 
+omit [IsMinCE G] in
 private theorem section15_corollary15_9ChosenComplementData_conclusions
     {M N E : Subgroup G} {r : Nat.Primes}
     (hChosen : section15Corollary15_9ChosenComplementData M N E r) :
@@ -974,7 +982,7 @@ private theorem section15_corollary15_9_zpowers_le_prop14_U
     haveI : Fact r.val.Prime := ⟨r.property⟩
     have hXpG : IsPGroup r.val X := by
       refine IsPGroup.of_card (p := r.val) (G := X) (n := 1) ?_
-      simpa [X, hxᵣorder, pow_one] using Nat.card_zpowers xᵣ
+      simp [X, hxᵣorder, pow_one]
     exact hXpG.of_equiv (Subgroup.subgroupOfEquivOfLe (H := X) (K := K ⊔ U) hXKU).symm
   have hXUsub : X.subgroupOf (K ⊔ U) ≤ U.subgroupOf (K ⊔ U) :=
     section15_pSubgroup_le_normal_hall_of_prime_mem
@@ -1031,8 +1039,8 @@ private theorem section15_corollary15_9_exists_chosen_complement_for_ab_of_initi
     (hCGnot : ¬ Subgroup.centralizer ({x} : Set G) ≤ M)
     (hNnotF : N ∉ section14MFamilyF G)
     (hr : r ∈ subgroupPrimeSet (Subgroup.zpowers x))
-    (hxᵣmem : xᵣ ∈ Subgroup.zpowers x)
-    (hxᵣorder : orderOf xᵣ = r.val)
+    (_hxᵣmem : xᵣ ∈ Subgroup.zpowers x)
+    (_hxᵣorder : orderOf xᵣ = r.val)
     (hInitial :
       N ∈ section14MFamilyP2 G ∧
         r ∈ section12Tau2Primes N ∧
@@ -1159,6 +1167,7 @@ private theorem section15_corollary15_9_exists_complement_for_ab
     section15_corollary15_9_exists_complement_for_ab_source
       hM hxMσ hxne hN hCGnot hNnotF hr hxᵣmem hxᵣorder
 
+omit [IsMinCE G] in
 private theorem section15_corollary15_9_inter_eq_k_of_chosen_factors
     {M N E K U : Subgroup G}
     (hNP2 : N ∈ section14MFamilyP2 G)
@@ -1201,8 +1210,8 @@ private theorem section15_corollary15_9_inter_eq_k_of_chosen_factors
       change u ∈ Subgroup.centralizer (K : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro a haK
-      exact Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := E) (hKleE haK) huE
+      exact setLike_mul_comm
+        (s := E) (hKleE haK) huE
     have huBot : u ∈ (⊥ : Subgroup G) := by
       simpa [hCUK_bot] using huCent
     have huOne : u = 1 := by
@@ -1225,11 +1234,11 @@ private theorem section15_corollary15_9_theorem15_1_endpoint
     (hxne : x ≠ 1)
     (hN : N ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)))
     (hCGnot : ¬ Subgroup.centralizer ({x} : Set G) ≤ M)
-    (hNnotF : N ∉ section14MFamilyF G)
-    (hr : r ∈ subgroupPrimeSet (Subgroup.zpowers x))
+    (_hNnotF : N ∉ section14MFamilyF G)
+    (_hr : r ∈ subgroupPrimeSet (Subgroup.zpowers x))
     (hxᵣmem : xᵣ ∈ Subgroup.zpowers x)
     (hxᵣorder : orderOf xᵣ = r.val)
-    (hInitial :
+    (_hInitial :
       N ∈ section14MFamilyP2 G ∧
         r ∈ section12Tau2Primes N ∧
           r ∈ section10SigmaPrimes M ∧
@@ -1251,7 +1260,7 @@ private theorem section15_corollary15_9_theorem15_1_endpoint
     intro hbot
     have hcard_bot : Nat.card X = 1 := (Subgroup.card_eq_one (H := X)).2 hbot
     have hcard_prime : Nat.card X = r.val := by
-      simpa [X, hxᵣorder] using Nat.card_zpowers xᵣ
+      simp [X, hxᵣorder]
     have hr_one : r.val = 1 := hcard_prime.symm.trans hcard_bot
     exact (Nat.Prime.ne_one r.property) hr_one
   have hCentNe :
@@ -1270,7 +1279,7 @@ private theorem section15_corollary15_9_theorem15_1_endpoint
       hNP2.1.1 hKU hXU hXne hCentNe
   have hXleN : X ≤ N := hXU.trans hU.2.2.1.1
   have hXprime : X ∈ section12PrimeOrderSubgroups N := by
-    exact ⟨hXleN, ⟨r, by simpa [X, hxᵣorder] using Nat.card_zpowers xᵣ⟩⟩
+    exact ⟨hXleN, ⟨r, by simp [X, hxᵣorder]⟩⟩
   have hNormalizer_le_N : Subgroup.normalizer (X : Set G) ≤ N :=
     section15_normalizer_le_of_unique_centralizer_primeOrder
       (G := G) (M := N) (A := N) (X := X) hNP2.1.1 hXprime h151c.1

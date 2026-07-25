@@ -157,7 +157,7 @@ public theorem theorem_4_18_c {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
       exact Subgroup.mem_map_of_mem φA x.property)
   have hψker_le_R : ψ.ker ≤ R.subgroupOf DQ := by
     intro x hx
-    have hx1 : ψ x = 1 := by simpa [MonoidHom.mem_ker] using hx
+    have hx1 : ψ x = 1 := (MonoidHom.mem_ker).mp hx
     have hx1φ : φ (x : Q) = 1 := by
       change ((((ψ x : derivedSubgroup A) : A) : MulAut R) = 1)
       simpa [ψ, φA] using congrArg Subtype.val (congrArg Subtype.val hx1)
@@ -169,13 +169,24 @@ public theorem theorem_4_18_c {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
   have hDQsub_ker_p : IsPGroup p DQ.subtype.ker :=
     IsPGroup.ker_isPGroup_of_injective (p := p) (ϕ := DQ.subtype) DQ.subtype_injective
   have hRsub_p : IsPGroup p (R.subgroupOf DQ) := by
-    simpa [Subgroup.comap_subtype] using hR_p.comap_of_ker_isPGroup DQ.subtype hDQsub_ker_p
+    have hRsub_p' := hR_p.comap_of_ker_isPGroup DQ.subtype hDQsub_ker_p
+    rw [Subgroup.comap_subtype] at hRsub_p'
+    exact hRsub_p'
   have hψker_p : IsPGroup p ψ.ker := hRsub_p.to_le hψker_le_R
   have hDQ_p : IsPGroup p DQ := by
     have htop_p : IsPGroup p (⊤ : Subgroup (derivedSubgroup A)) := by
       simpa using hAder_p.to_subgroup (⊤ : Subgroup (derivedSubgroup A))
     have htopDQ_p : IsPGroup p (⊤ : Subgroup DQ) := by
-      convert htop_p.comap_of_ker_isPGroup ψ hψker_p using 1
+      have htop_comap : Subgroup.comap ψ (⊤ : Subgroup (derivedSubgroup A)) = ⊤ := by
+        ext x
+        constructor
+        · intro _
+          exact Subgroup.mem_top x
+        · intro _
+          exact Subgroup.mem_top (ψ x)
+      have htopDQ_p' := htop_p.comap_of_ker_isPGroup ψ hψker_p
+      rw [htop_comap] at htopDQ_p'
+      exact htopDQ_p'
     exact htopDQ_p.of_equiv Subgroup.topEquiv
   let Dbar : Subgroup Q := D.map q
   have hDbar_eq_DQ : Dbar = DQ := by

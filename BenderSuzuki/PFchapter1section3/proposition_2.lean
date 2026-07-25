@@ -258,10 +258,15 @@ private theorem proposition_2_induction_context_obligation
     let f : Q → Q := fun x =>
       ⟨(x : G)⁻¹ * rightConjugateElem (x : G) k, by
         have hxConj : rightConjugateElem (x : G) k ∈ Q := by
+          have hxQH : (⟨(x : G), hsec.section2.hA.A1.Q_le_H x.property⟩ : H) ∈ Q.subgroupOf H :=
+            (Subgroup.mem_subgroupOf (h := (⟨(x : G), hsec.section2.hA.A1.Q_le_H x.property⟩ : H))).mpr x.property
           have hxNormal := hsec.section2.hA.A1.Q_normal_in_H.conj_mem
             (⟨(x : G), hsec.section2.hA.A1.Q_le_H x.property⟩ : H)
-            x.property kH⁻¹
-          simpa [kH, rightConjugateElem, mul_assoc] using hxNormal
+            hxQH kH⁻¹
+          have hmemQ : (k⁻¹ * (x : G) * k) ∈ Q := by
+            simpa [kH, mul_assoc] using
+              (Subgroup.mem_subgroupOf (h := (kH⁻¹ : H) * (⟨(x : G), hsec.section2.hA.A1.Q_le_H x.property⟩ : H) * ((kH⁻¹ : H)⁻¹ : H))).mp hxNormal
+          simpa [rightConjugateElem, mul_assoc] using hmemQ
         exact Q.mul_mem (Q.inv_mem x.property) hxConj⟩
     have hf_injective : Function.Injective f := by
       intro x y hxy
@@ -436,12 +441,24 @@ private theorem proposition_2_induction_context_obligation
     intro x hx
     exact hsec.section2.hA.A1.D_le_H hx
   have hQL_normal : (QL.subgroupOf HL).Normal := by
-    constructor
-    intro x hx y
-    let xH : H := ⟨(x : G), hsec.section2.hA.A1.Q_le_H hx⟩
-    let yH : H := ⟨(y : G), y.property⟩
-    have hconj := hsec.section2.hA.A1.Q_normal_in_H.conj_mem xH hx yH
-    simpa [xH, yH, QL, HL] using hconj
+    let f : HL →* H :=
+      { toFun := λ x => ⟨(x : G), x.2⟩
+        map_one' := by
+          ext; simp
+        map_mul' := λ x y => by
+          ext; simp }
+    have h_eq : (Q.subgroupOf H).comap f = QL.subgroupOf HL := by
+      ext x
+      have h1 : x ∈ (Q.subgroupOf H).comap f ↔ (x : G) ∈ Q := by
+        simp [Subgroup.mem_comap, f, Subgroup.mem_subgroupOf]
+      have h2 : x ∈ QL.subgroupOf HL ↔ (x : G) ∈ Q := by
+        rfl
+      rw [h1, h2]
+    haveI : (Q.subgroupOf H).Normal := hsec.section2.hA.A1.Q_normal_in_H
+    have h_norm_comap : ((Q.subgroupOf H).comap f).Normal :=
+      Subgroup.normal_comap (f := f)
+    rw [h_eq] at h_norm_comap
+    exact h_norm_comap
   have hQL_disjoint_DL : Disjoint QL DL := by
     rw [disjoint_iff, eq_bot_iff]
     intro x hx

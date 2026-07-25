@@ -211,9 +211,6 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
       rw [hM, External.hermitianUnipotentGL_val,
         External.hermitianUnipotentMatrix_eq]
     apply Subtype.ext
-    change (((coordR z : R) : ProjectiveSpecialUnitaryMatrixGroup J) :
-        Matrix.ProjGenLinGroup (Fin 3) E) =
-      (rootPSU z : Matrix.ProjGenLinGroup (Fin 3) E)
     calc
       (((coordR z : R) : ProjectiveSpecialUnitaryMatrixGroup J) :
           Matrix.ProjGenLinGroup (Fin 3) E) =
@@ -260,7 +257,7 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
     rw [Projectivization.mk_eq_mk_iff] at hval
     rcases hval with ⟨c, hc⟩
     have hc0 := congrFun hc (0 : Fin 3)
-    simpa [Units.smul_def] using hc0
+    simp at hc0
   have hroot_fix_inf (z : External.hermitianUnipotentCoord J) :
       rho (rootPSU z) pinf0 = pinf0 := by
     apply Subtype.ext
@@ -272,8 +269,7 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
     funext i
     fin_cases i <;>
       simp [hunipotentSU_coe, External.hermitianUnipotentGL,
-        External.hermitianUnipotentMatrix, Matrix.mulVec,
-        Fin.sum_univ_three]
+        External.hermitianUnipotentMatrix, Matrix.mulVec]
   have hR_fix_inf (r : R) :
       rho (r : ProjectiveSpecialUnitaryMatrixGroup J) pinf0 = pinf0 := by
     obtain ⟨z, rfl⟩ := coordR.surjective r
@@ -318,8 +314,7 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
     funext i
     fin_cases i <;>
       simp [hweylSU_coe, External.hermitianWeylGL,
-        External.hermitianWeylMatrix,
-        Matrix.mulVec, Fin.sum_univ_three]
+        External.hermitianWeylMatrix, Matrix.mulVec]
   have hT_involution : IsInvolution T := by
     constructor
     · intro hTone
@@ -354,8 +349,7 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
     funext i
     fin_cases i <;>
       simp [htorusSU_coe, External.hermitianTorusGL,
-        External.hermitianTorusMatrix,
-        Matrix.mulVec, Fin.sum_univ_three]
+        External.hermitianTorusMatrix, Matrix.mulVec]
   let U : Subgroup (ProjectiveSpecialUnitaryMatrixGroup J) :=
     MulAction.stabilizer (ProjectiveSpecialUnitaryMatrixGroup J) pinf0
   have hRleU : R ≤ U := hRle
@@ -463,8 +457,10 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
             apply hz
             apply Subtype.ext
             apply Prod.ext
-            · simpa [External.hermitianUnipotentOne] using hx
-            · simpa [External.hermitianUnipotentOne] using hy
+            · change z.1.1 = 0
+              exact hx
+            · change z.1.2 = 0
+              exact hy
           have hconjy : J.conj z.1.2 ≠ 0 := (map_ne_zero J.conj).2 hy
           change z.1.2⁻¹ + J.conj z.1.2⁻¹ +
               (z.1.1 / z.1.2) * J.conj (z.1.1 / z.1.2) = 0
@@ -486,8 +482,10 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
       apply hz
       apply Subtype.ext
       apply Prod.ext
-      · simpa [External.hermitianUnipotentOne] using hx
-      · simpa [External.hermitianUnipotentOne] using hy
+      · change z.1.1 = 0
+        exact hx
+      · change z.1.2 = 0
+        exact hy
     have hconjy : J.conj z.1.2 ≠ 0 := (map_ne_zero J.conj).2 hy
     apply Subtype.ext
     rw [hnatural T (cTarget (some (coordRMul z)))
@@ -500,7 +498,7 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
     fin_cases i <;>
       simp [hweylSU_coe, External.hermitianWeylGL,
         External.hermitianWeylMatrix, Matrix.mulVec, map_inv₀,
-        map_div₀, hy, hconjy, CharTwo.neg_eq]
+        map_div₀, hconjy, CharTwo.neg_eq]
     · field_simp [hconjy]
   have hnormalClosure_le :
       Subgroup.normalClosure (R : Set (ProjectiveSpecialUnitaryMatrixGroup J)) ≤
@@ -657,8 +655,10 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
                 apply hqcoord_ne
                 apply Subtype.ext
                 apply Prod.ext
-                · simpa [External.hermitianUnipotentOne] using hfirst
-                · simpa [External.hermitianUnipotentOne] using hy
+                · change (qCoord x).1.1 = 0
+                  exact hfirst
+                · change (qCoord x).1.2 = 0
+                  exact hy
               have hconjy : J.conj (qCoord x).1.2 ≠ 0 :=
                 (map_ne_zero J.conj).2 hy
               change (qCoord x).1.2⁻¹ + J.conj (qCoord x).1.2⁻¹ +
@@ -737,7 +737,10 @@ private theorem unitaryModelEquiv_of_rankOneCoordinates
       (Subgroup.mem_pointwise_smul_iff_inv_smul_mem
         (a := MulAut.conj c) (S := (P0 : Subgroup L)) (x := x)).mp hxsmul
     let y : L := (MulAut.conj c)⁻¹ x
-    have hyQ : y ∈ Q := by simpa [hQP0] using hyP0
+    have hyQ : y ∈ Q := by
+      change (MulAut.conj c)⁻¹ x ∈ Q
+      rw [hQP0]
+      exact hyP0
     have hynormal : y ∈ Subgroup.normalClosure (Q : Set L) :=
       Subgroup.le_normalClosure hyQ
     have hconj := (Subgroup.normalClosure_normal :
@@ -2422,9 +2425,6 @@ private theorem corollary_1_core
     have himage : kwIso aKW = kwIso zetaInvKW := by
       apply Subtype.ext
       apply Units.ext
-      change
-        (((kwIso aKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E) =
-          (((kwIso zetaInvKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E)
       calc
         (((kwIso aKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E) =
             kcoord ((kOf a) ^ 2) :=
@@ -2778,7 +2778,6 @@ private theorem corollary_1_core
           (((a : F) : E) ^ 4) := by
       rw [hdLeft_sigma, hdLeft_coord]
       field_simp [hzeta_coord_ne]
-      <;> ring
     have hdRight_norm :
         kcoord (dRight : G) * sigma (kcoord (dRight : G)) = 1 := by
       rw [hdRight_sigma, hdRight_coord]
@@ -2835,7 +2834,6 @@ private theorem corollary_1_core
       rw [hphiThetaOne htheta, hright_first, homega_conj_first,
         map_mul, map_inv₀, hzeta_coord_sigma, inv_inv]
       field_simp [hzeta_coord_ne, hdenom_ne a]
-      <;> ring
     have hseconds := congrArg Prod.snd (congrArg coordPair hgroup)
     rw [hcoordPair_mul, hcoordPair_mul, hleft_second, hcenter_coordPair,
       hright_second, homega_conj_second, hphi_zero_right, hphi_term] at hseconds
@@ -3022,7 +3020,7 @@ private theorem corollary_1_core
       rw [homegaS_inv_shape, hcoordPair_mul, hcenter_coordPair]
       apply Prod.ext
       · simp [omegaBar]
-      · simp only [Prod.snd, hphi_zero_right, add_zero]
+      · simp only [hphi_zero_right, add_zero]
         change omegaY + (alpha : E) = kcoord zeta
         rw [homegaY_eq, congrArg Subtype.val halpha_beta]
         change
@@ -3050,7 +3048,7 @@ private theorem corollary_1_core
         hkcoord_ne_zero zeta (Subgroup.mem_sup_right hzeta)
       apply Prod.ext
       · field_simp [hzeta_coord_ne]
-      · simp [hzeta_coord_ne]
+      · simp
     have htarget_valid : ValidPair (omegaBar / omegaY) omegaY⁻¹ :=
       hvalid_of_coord fOmegaS _ _ htarget_coord
     have hfOmega_mk :
@@ -3111,7 +3109,7 @@ private theorem corollary_1_core
       rw [hqPrime_shape, hcoordPair_mul, hcenter_coordPair]
       apply Prod.ext
       · simp [omegaBar]
-      · simp only [Prod.snd, hphi_zero_right, add_zero]
+      · simp only [hphi_zero_right, add_zero]
         change omegaY + ((alpha + 1 : F) : E) = kcoord zeta + 1
         rw [show ((alpha + 1 : F) : E) = (alpha : E) + 1 by
           exact map_add F.subtype alpha 1,
@@ -3292,7 +3290,7 @@ private theorem corollary_1_core
           (omegaBar / (omegaY + 1), (omegaY + 1)⁻¹) := by
       rw [hfpS_eq, hcoordPair_mul, hfq_coord, hsS_coordPair,
         hphi_zero_right, add_zero, homegaY_eq]
-      simp only [mul_zero, add_zero]
+      simp only [add_zero]
       have hzeta_coord_ne : kcoord zeta ≠ 0 :=
         hkcoord_ne_zero zeta (Subgroup.mem_sup_right hzeta)
       have hzeta_add_one_ne : kcoord zeta + 1 ≠ 0 := by
@@ -3440,7 +3438,11 @@ private theorem corollary_1_core
     intro x y hxy hx hy hformula d hd
     have hbar_one : bar (1 : G) = 0 := by
       rw [hbar_of_mem_Q 1 Q.one_mem]
-      simpa using congrArg Prod.fst hcoordPair_one
+      have honeS :
+          (⟨(1 : G), by simp [hSQ]⟩ : S) = 1 :=
+        Subtype.ext rfl
+      rw [honeS]
+      exact congrArg Prod.fst hcoordPair_one
     have hxy_ne_one : mk x y ≠ 1 := by
       intro hone
       have hxcoord := hbar_mk x y hxy
@@ -3493,7 +3495,7 @@ private theorem corollary_1_core
               (kcoord d * sigma (kcoord d) * y))
             (kcoord d * sigma (kcoord d) * y)⁻¹ := by
         rw [hdtcoord, map_inv₀, hsigma_sigma_dcoord]
-        congr 1 <;> field_simp [hdcoord_ne, hsigma_dcoord_ne, hy] <;> ring
+        congr 1 <;> field_simp [hdcoord_ne, hsigma_dcoord_ne, hy]
   have hformula_image : ∀ x y : E,
       ValidPair x y → x ≠ 0 → y ≠ 0 →
       f (mk x y) = mk (x / y) y⁻¹ →
@@ -3502,7 +3504,11 @@ private theorem corollary_1_core
     intro x y hxy hx hy hformula
     have hbar_one : bar (1 : G) = 0 := by
       rw [hbar_of_mem_Q 1 Q.one_mem]
-      simpa using congrArg Prod.fst hcoordPair_one
+      have honeS :
+          (⟨(1 : G), by simp [hSQ]⟩ : S) = 1 :=
+        Subtype.ext rfl
+      rw [honeS]
+      exact congrArg Prod.fst hcoordPair_one
     have hxy_ne_one : mk x y ≠ 1 := by
       intro hone
       have hxcoord := hbar_mk x y hxy
@@ -4451,7 +4457,10 @@ private theorem corollary_1_core
     have hr_solution :
         rhoU (r : ProjectiveSpecialUnitaryMatrixGroup J) (x • pinf) =
           x • pinf := by
-      simpa using hfix_moved r
+      have hfix := hfix_moved r
+      change rhoU (r : ProjectiveSpecialUnitaryMatrixGroup J) (x • pinf) =
+        x • pinf at hfix
+      exact hfix
     have hone_solution :
         rhoU ((1 : R) : ProjectiveSpecialUnitaryMatrixGroup J) (x • pinf) =
           x • pinf := by
@@ -4491,7 +4500,10 @@ private theorem corollary_1_core
       hfixedCard, ?_⟩
     refine ⟨eL, rhoU, eOmega, hnatural, ?_⟩
     intro l omega
-    simpa using hequivariant l omega
+    have heq := hequivariant l omega
+    change eOmega ((l : G) • omega) =
+      rhoU (eL l) (eOmega omega) at heq
+    exact heq
   exact ⟨L, inferInstance, q, rfl, hodd, ⟨nq, hnq⟩, hq_gt,
     hunitaryModel⟩
 

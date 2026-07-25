@@ -99,7 +99,8 @@ private theorem equivariant_linearEquiv_of_common_complement
   rw [← map_sub]
   apply hT
   apply (Submodule.Quotient.eq T).1
-  simp [e]
+  exact (Submodule.mk_quotientEquivOfIsCompl_apply
+    (p := T) (q := V) hTV (Submodule.Quotient.mk u)).symm
 
 private theorem canonical_equivariant_iso_of_isomorphic_complements
     {K E : Type*} [DivisionRing K] [Finite K]
@@ -222,47 +223,37 @@ private noncomputable def zmod2LinearEquivOfSubgroupMulEquiv
   let eAdd : (Φ U) ≃+ (Φ V) :=
     { toFun := fun u =>
         ⟨Additive.ofMul (e ⟨u.1.toMul, by
-            change u.1.toMul ∈ U
             exact u.property⟩), by
           change (e ⟨u.1.toMul, by
-            change u.1.toMul ∈ U
             exact u.property⟩ : V).1 ∈ V
           exact (e ⟨u.1.toMul, by
-            change u.1.toMul ∈ U
             exact u.property⟩).property⟩
       invFun := fun v =>
         ⟨Additive.ofMul (e.symm ⟨v.1.toMul, by
-            change v.1.toMul ∈ V
             exact v.property⟩), by
           change (e.symm ⟨v.1.toMul, by
-            change v.1.toMul ∈ V
             exact v.property⟩ : U).1 ∈ U
           exact (e.symm ⟨v.1.toMul, by
-            change v.1.toMul ∈ V
             exact v.property⟩).property⟩
       left_inv := by
         intro u
         apply Subtype.ext
         exact congrArg (fun x : U => Additive.ofMul (x : G))
           (e.symm_apply_apply ⟨u.1.toMul, by
-            change u.1.toMul ∈ U
             exact u.property⟩)
       right_inv := by
         intro v
         apply Subtype.ext
         exact congrArg (fun x : V => Additive.ofMul (x : G))
           (e.apply_symm_apply ⟨v.1.toMul, by
-            change v.1.toMul ∈ V
             exact v.property⟩)
       map_add' := by
         intro u v
         apply Subtype.ext
         change Additive.ofMul
             (e (⟨u.1.toMul, by
-                change u.1.toMul ∈ U
                 exact u.property⟩ *
               ⟨v.1.toMul, by
-                change v.1.toMul ∈ U
                 exact v.property⟩ : U) : G) = _
         rw [map_mul]
         rfl }
@@ -277,7 +268,9 @@ private noncomputable def LinearEquiv.restrictInvariant
     (T : E ≃ₗ[K] E) (U : Submodule K E)
     (hU : ∀ x : E, x ∈ U ↔ T x ∈ U) : U ≃ₗ[K] U where
   toFun u := ⟨T u, (hU u).mp u.property⟩
-  invFun u := ⟨T.symm u, (hU (T.symm u)).mpr (by simpa using u.property)⟩
+  invFun u := ⟨T.symm u, (hU (T.symm u)).mpr (by
+    rw [T.apply_symm_apply]
+    exact u.property)⟩
   map_add' x y := by apply Subtype.ext; exact map_add T (x : E) (y : E)
   map_smul' c x := by apply Subtype.ext; exact map_smul T c (x : E)
   left_inv x := by apply Subtype.ext; exact T.symm_apply_apply x
@@ -314,7 +307,6 @@ private theorem coe_zmod2LinearEquivOfSubgroupMulEquiv
         zmod2SubmoduleOfSubgroup V) : Additive G) =
       Additive.ofMul
         (e ⟨u.1.toMul, by
-          change u.1.toMul ∈ U
           exact u.property⟩ : G) := rfl
 
 /-- Explicit actor-equivariant isomorphic summands in the central quotient. -/
@@ -324,7 +316,7 @@ private theorem coe_zmod2LinearEquivOfSubgroupMulEquiv
       (U V : Subgroup (P ⧸ Subgroup.center P))
       (hU : @IsXInvariantSubgroup K (P ⧸ Subgroup.center P)
         _ _ quotientAction U)
-      (hV : @IsXInvariantSubgroup K (P ⧸ Subgroup.center P)
+      (_hV : @IsXInvariantSubgroup K (P ⧸ Subgroup.center P)
         _ _ quotientAction V)
       (e : U ≃* V),
     (∀ k : K, ∀ p : P,
@@ -364,8 +356,8 @@ public theorem theorem1_typeB_actor_of_isomorphic_summands
   letI : MulDistribMulAction K (P ⧸ Subgroup.center P) := hQAction
   have hQdata := theorem1_center_quotient_orders_and_exponent hP
   letI : IsMulCommutative (P ⧸ Subgroup.center P) := hQdata.1
-  letI : CommGroup (P ⧸ Subgroup.center P) := CommGroup.ofIsMulCommutative
-  letI : Uq.Normal := Subgroup.normal_of_comm Uq
+  letI : CommGroup (P ⧸ Subgroup.center P) := IsMulCommutative.instCommGroup
+  letI : Uq.Normal := Subgroup.normal_of_isMulCommutative Uq
   have hUqVqcompl : Uq.IsComplement' Vq := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
     · rw [disjoint_iff]

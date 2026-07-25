@@ -85,7 +85,7 @@ private theorem section13_theorem_13_10_exists_regular_tau3_sylow
     have hcardE3sub : Nat.card (E₃.subgroupOf E) = Nat.card E₃ := by
       exact natCard_subgroupOf_eq E₃ E hE3E
     exact hHallE₃.p_in_pi_of_p_dvd_card q (by
-      simpa [hcardE3sub] using hqE₃)
+      simpa [hcardE3sub, subgroupPrimeSet] using hqE₃)
   have hQbot : (section10AmbientSylowSubgroup E₃ S : Subgroup G) ≠ ⊥ := by
     intro hbot
     haveI : Fact q.val.Prime := ⟨q.property⟩
@@ -101,8 +101,9 @@ private theorem section13_theorem_13_10_exists_regular_tau3_sylow
     letI : IsCyclic E₃ := hE3cyc
     exact Subgroup.isCyclic_of_le hQ_E3
   have hQq : IsPGroup q.val (section10AmbientSylowSubgroup E₃ S : Subgroup G) := by
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (S : Subgroup E₃)) S.isPGroup' E₃.subtype
+    change IsPGroup q.val ((S : Subgroup E₃).map E₃.subtype)
+    exact IsPGroup.map (p := q.val) (H := (S : Subgroup E₃))
+      S.isPGroup' E₃.subtype
   have hE3_sylow_E :
       ∃ T : Sylow q.val E,
         section10AmbientSylowSubgroup E T = section10AmbientSylowSubgroup E₃ S := by
@@ -405,10 +406,10 @@ private theorem section13_theorem_13_10_beta_Qstar_data
   have hE_norm_C : E ≤ Subgroup.normalizer (C : Set G) := by
     simpa [C] using hEC.1
   have hE_norm_Qstar : E ≤ Subgroup.normalizer (Qstar : Set G) := by
-    simpa [Qstar, C] using
-      section13_le_normalizer_map_of_isInvariant
-        (G := G) (A := E) (H := C) (K := (S : Subgroup C))
-        hE_norm_C hSinv
+    change E ≤ Subgroup.normalizer ((S : Subgroup C).map C.subtype : Set G)
+    exact section13_le_normalizer_map_of_isInvariant
+      (G := G) (A := E) (H := C) (K := (S : Subgroup C))
+      hE_norm_C hSinv
   have hPnormQstar : P ≤ Subgroup.normalizer (Qstar : Set G) :=
     hP_E₁.trans (hE₁_le_E.trans hE_norm_Qstar)
   have hQstar_le_C : Qstar ≤ C :=
@@ -429,10 +430,12 @@ private theorem section13_theorem_13_10_beta_Qstar_data
     exact hNQ (centralizer_le_normalizer Q (hQstar_cent_Q hx))
   have hQstar_le_inf : Qstar ≤ M ⊓ Mstar := le_inf hQstar_le_M hQstar_le_Mstar
   have hQstarq : IsPGroup qstar.val Qstar := by
-    simpa [Qstar, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := qstar.val) (H := (S : Subgroup C)) S.isPGroup' C.subtype
+    change IsPGroup qstar.val ((S : Subgroup C).map C.subtype)
+    exact IsPGroup.map (p := qstar.val) (H := (S : Subgroup C))
+      S.isPGroup' C.subtype
   have hS_ne : (S : Subgroup C) ≠ ⊥ :=
-    Sylow.ne_bot_of_dvd_card (G := C) S (by simpa [C] using hqstarC)
+    Sylow.ne_bot_of_dvd_card (G := C) S (by
+      simpa [C, subgroupPrimeSet] using hqstarC)
   have hQstar_ne : Qstar ≠ ⊥ := by
     intro hbot
     have hSbot : (S : Subgroup C) = ⊥ :=
@@ -585,10 +588,10 @@ private theorem section13_theorem_13_10_not_beta_Qstar_data
   have hE_norm_C : E ≤ Subgroup.normalizer (C : Set G) := by
     simpa [C] using hEC.1
   have hE_norm_Qstar : E ≤ Subgroup.normalizer (Qstar : Set G) := by
-    simpa [Qstar, C] using
-      section13_le_normalizer_map_of_isInvariant
-        (G := G) (A := E) (H := C) (K := (S : Subgroup C))
-        hE_norm_C hSinv
+    change E ≤ Subgroup.normalizer ((S : Subgroup C).map C.subtype : Set G)
+    exact section13_le_normalizer_map_of_isInvariant
+      (G := G) (A := E) (H := C) (K := (S : Subgroup C))
+      hE_norm_C hSinv
   have hPnormQstar : P ≤ Subgroup.normalizer (Qstar : Set G) :=
     hP_E₁.trans (hE₁_le_E.trans hE_norm_Qstar)
   have hQstar_le_C : Qstar ≤ C :=
@@ -609,10 +612,12 @@ private theorem section13_theorem_13_10_not_beta_Qstar_data
     exact hNQ (centralizer_le_normalizer Q (hQstar_cent_Q hx))
   have hQstar_le_inf : Qstar ≤ M ⊓ Mstar := le_inf hQstar_le_M hQstar_le_Mstar
   have hQstarq : IsPGroup qstar.val Qstar := by
-    simpa [Qstar, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := qstar.val) (H := (S : Subgroup C)) S.isPGroup' C.subtype
+    change IsPGroup qstar.val ((S : Subgroup C).map C.subtype)
+    exact IsPGroup.map (p := qstar.val) (H := (S : Subgroup C))
+      S.isPGroup' C.subtype
   have hS_ne : (S : Subgroup C) ≠ ⊥ :=
-    Sylow.ne_bot_of_dvd_card (G := C) S (by simpa [C] using hqstarC)
+    Sylow.ne_bot_of_dvd_card (G := C) S (by
+      simpa [C, subgroupPrimeSet] using hqstarC)
   have hQstar_ne : Qstar ≠ ⊥ := by
     intro hbot
     have hSbot : (S : Subgroup C) = ⊥ :=

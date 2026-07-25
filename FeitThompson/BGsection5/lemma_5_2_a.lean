@@ -31,8 +31,14 @@ public theorem lemma_5_2_a
     letI : IsElementaryAbelian p Ωc := hΩcelem
     refine
       { toIsMulCommutative := by
-          simpa [Z, Ω₁Z, Ωc] using
-            (Subgroup.map_isMulCommutative (f := (Subgroup.center R).subtype) (H := Ωc))
+          refine IsMulCommutative.of_comm ?_
+          intro x y
+          apply Subtype.ext
+          have hxcenter : (x : R) ∈ Subgroup.center R := by
+            rcases Subgroup.mem_map.mp x.2 with ⟨x', _hx', hx⟩
+            rw [← hx]
+            exact x'.2
+          exact (Subgroup.mem_center_iff.mp hxcenter (y : R)).symm
         exponent_dvd_p := ?_ }
     refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
     intro x
@@ -96,7 +102,7 @@ public theorem lemma_5_2_a
       intro q hq
       rw [primeRank]
       refine csSup_le ?_ ?_
-      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le _⟩
+      · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le⟩
       intro n hn
       rcases hn with ⟨A, _hApA, hAcomm, hnA⟩
       letI : IsMulCommutative A := hAcomm
@@ -107,24 +113,28 @@ public theorem lemma_5_2_a
     have hgroupRank_le_one : groupRank R ≤ 1 := by
       rw [groupRank]
       refine csSup_le ?_ ?_
-      · exact ⟨0, p, Fact.out, zero_le _⟩
+      · exact ⟨0, p, Fact.out, zero_le⟩
       intro n hn
       rcases hn with ⟨q, hq, hnq⟩
       exact hnq.trans (hprimeRank_le_one q hq)
     exact (by decide : ¬ 3 ≤ (1 : ℕ)) (le_trans hR hgroupRank_le_one)
   have hW_noncyclic_raw :
-      ¬ IsCyclic (omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)) := by
+      ¬ IsCyclic (omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)) := by
     haveI : Fact (IsPGroup p R) := ⟨hpR⟩
     exact (lemma_4_5_c (R := R) (p := p) hpodd hR_not_cyclic).1
   have hW_noncyclic : ¬ IsCyclic W := by
     intro hWcyc
-    let Ωsub : Subgroup (upperCentralSeries R 2) := omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)
-    have hmapcyc : IsCyclic (Ωsub.map (upperCentralSeries R 2).subtype) := by
-      simpa [W, Ω₁Z₂, z2OmegaCandidate, Ωsub] using hWcyc
-    letI : IsCyclic (Ωsub.map (upperCentralSeries R 2).subtype) := hmapcyc
-    let e : Ωsub ≃* Ωsub.map (upperCentralSeries R 2).subtype :=
-      Subgroup.equivMapOfInjective Ωsub (upperCentralSeries R 2).subtype
-        (upperCentralSeries R 2).subtype_injective
+    let Ωsub : Subgroup (Subgroup.upperCentralSeries R 2) :=
+      omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)
+    have hmapcyc : IsCyclic (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype) := by
+      rcases (Subgroup.isCyclic_iff_exists_zpowers_eq_top W).mp hWcyc with ⟨g, hg⟩
+      apply (Subgroup.isCyclic_iff_exists_zpowers_eq_top
+        (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype)).mpr
+      exact ⟨g, by simpa [W, Ω₁Z₂, z2OmegaCandidate, Ωsub] using hg⟩
+    letI : IsCyclic (Ωsub.map (Subgroup.upperCentralSeries R 2).subtype) := hmapcyc
+    let e : Ωsub ≃* Ωsub.map (Subgroup.upperCentralSeries R 2).subtype :=
+      Subgroup.equivMapOfInjective Ωsub (Subgroup.upperCentralSeries R 2).subtype
+        (Subgroup.upperCentralSeries R 2).subtype_injective
     have hΩcyc : IsCyclic Ωsub := isCyclic_of_injective e.toMonoidHom e.injective
     exact hW_noncyclic_raw (by simpa [Ωsub] using hΩcyc)
   have hWcard : Nat.card W = p ^ 2 := by

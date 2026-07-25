@@ -230,7 +230,7 @@ public theorem equation_10_forces_ringAut_one
           X + exceptional + 1]
     have hy : ∃ Y : F, Y ∉ forbidden := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have huniv_le : (Finset.univ : Finset F) ⊆ forbidden := by
         intro Y _hY
         exact hnone Y
@@ -312,7 +312,7 @@ public theorem equation10_of_semilinear_relations
   have hzeta_ne : z ≠ 0 := by
     intro hz
     apply hzeta_not_mem
-    simpa [hz] using F.zero_mem
+    simp [hz]
   let normEquiv : F ≃ F :=
     Equiv.ofBijective (fun x : F => x * theta x)
       (PFchapter4section2.norm_bijective_of_odd_order theta hthetaOdd)
@@ -614,7 +614,8 @@ public theorem equation10_of_semilinear_relations
       _ = ((c : F) : E) := by simpa only [add_comm] using hc.symm
   have hB_mu : B + mu x = c := by
     apply F.subtype.injective
-    simpa only [Subfield.coe_add] using hB_mu_E
+    change ((B : F) : E) + ((mu x : F) : E) = (c : E)
+    exact hB_mu_E
   have hB_eq : B = c + mu x := by
     calc
       B = c - mu x := (eq_sub_iff_add_eq).2 hB_mu
@@ -749,8 +750,6 @@ private theorem semilinear_hom_of_normal_scalar_action
     refine ⟨(scalar t' : E), ?_⟩
     intro x
     rw [hscalar_eq_action, hscalar_eq_action]
-    change uadd u (uadd (t : U)⁻¹ x) =
-      uadd (t' : U)⁻¹ (uadd u x)
     calc
       uadd u (uadd (t : U)⁻¹ x) = uadd (u * (t : U)⁻¹) x := by
         rw [map_mul]
@@ -785,8 +784,6 @@ private theorem semilinear_hom_of_normal_scalar_action
               ((scalar t' : E) *
                 Multiplicative.toAdd (q0add (uadd u sTop)))) := by
       rw [hscalar_eq_action, hscalar_eq_action]
-      change uadd u (uadd (t : U)⁻¹ sTop) =
-        uadd (t' : U)⁻¹ (uadd u sTop)
       calc
         uadd u (uadd (t : U)⁻¹ sTop) =
             uadd (u * (t : U)⁻¹) sTop := by
@@ -822,7 +819,7 @@ private theorem semilinear_hom_of_normal_scalar_action
 
 private theorem quotient_mulEquiv_multiplicative_of_additive_coordinate
     {G E : Type*} [Group G] [Finite G] [Field E] [Finite E]
-    (Q Q0 : Subgroup G) (hQ0Q : Q0 ≤ Q)
+    (Q Q0 : Subgroup G) (_hQ0Q : Q0 ≤ Q)
     (bar : G → E)
     (hbar_mul : ∀ x : G, x ∈ Q → ∀ y : G, y ∈ Q →
       bar (x * y) = bar x + bar y)
@@ -930,7 +927,7 @@ public theorem case_v_ne_w
     (hh_mem : ∀ x : G, x ∈ Q → x ≠ 1 → h x ∈ D)
     (hcanonical_eq : ∀ x : G, x ∈ Q → x ≠ 1 →
       t * x * t = g x * h x * t * f x)
-    (hV_ne_W : V ≠ W) :
+    (_hV_ne_W : V ≠ W) :
     suzukiConclusion.{u, v} G Omega := by
   classical
   by_cases hD_fixed_point_free :
@@ -942,7 +939,7 @@ public theorem case_v_ne_w
         H D Q K V W Q0 S Q1 t s f g h hsection3 hC1 hC2 hC3 hQ_two
           hf_mem hg_mem hh_mem hcanonical_eq hD_fixed_point_free
     exact ⟨L, hL, q, hodd, hq, hq_gt, Or.inr (Or.inr hunitary)⟩
-  · push_neg at hD_fixed_point_free
+  · push Not at hD_fixed_point_free
     obtain ⟨d, hdD, hd_ne, x, hxQ, hx_not_Q0, hdx⟩ :=
       hD_fixed_point_free
     have hA1 := hsection3.section2.hA.A1
@@ -1088,7 +1085,8 @@ public theorem case_v_ne_w
       have hy_stab := hP_to_stabilizer y
       have hy_fix : pToD y • xbar = xbar := by
         simpa [A_D, MulAction.mem_stabilizer_iff] using hy_stab
-      simpa [MulAction.compHom_smul_def] using hy_fix
+      change y • xbar = xbar at hy_fix
+      exact hy_fix
     letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     letI : Group.IsNilpotent Q := hQ_two.isNilpotent
     have hQ_solvable : IsSolvable Q := by infer_instance
@@ -1120,7 +1118,7 @@ public theorem case_v_ne_w
     have hq_ne : (q : G) ≠ 1 := by
       intro hq_one
       apply hq_not_Q0
-      simpa [hq_one] using Q0.one_mem
+      simp [hq_one]
     have hq_centralizer : (q : G) ∈
         Subgroup.centralizer (P : Set G) := by
       rw [Subgroup.mem_centralizer_iff]
@@ -1372,7 +1370,7 @@ public theorem case_v_ne_w
         rw [hzeta1_eq] at htotal
         have hxcomm : y * zetaX = zetaX * y :=
           congrArg Subtype.val
-            (IsCyclic.commutative.comm
+            (mul_comm'
               (⟨y, hyX⟩ : X) (⟨zetaX, hzetaX_X⟩ : X))
         calc
           y * zeta = (y * (zeta * zetaX)) * zetaX⁻¹ := by group
@@ -2269,7 +2267,7 @@ public theorem case_v_ne_w
       have hT_apply (xbar : Q ⧸ Q0Q) :
           T (Multiplicative.toAdd (qBarEquiv xbar)) =
             Multiplicative.toAdd (qBarEquiv (rhoD etaInvD xbar)) := by
-        simpa [T, Tmul]
+        simp [T, Tmul]
       have hT_semilinear : ∀ lambda y : E3,
           T (lambda * y) = muE lambda * T y := by
         intro lambda y
@@ -2402,7 +2400,6 @@ public theorem case_v_ne_w
           apply Subtype.ext
           dsimp [zConj, zD, etaInvD]
           simp only [inv_inv]
-          change eta⁻¹ * zeta * eta = zeta
           calc
             eta⁻¹ * zeta * eta = eta⁻¹ * (zeta * eta) := by
               rw [mul_assoc]

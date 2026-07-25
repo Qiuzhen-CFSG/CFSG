@@ -338,13 +338,13 @@ public theorem section14_theorem_14_9_late_type_T1_active_sigma_mem_local_omegaS
     (δ δ' : ℕ → ℤ)
     (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
     (p q u v c d : ℕ)
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
+    (_ : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
-    (hNotation : Section13.hypothesis_13_1_characterNotationDataFor
+    (_ : Section13.hypothesis_13_1_characterNotationDataFor
       Smax Tmax W W1 W2 p q ω η μ ν μsum νsum δ δ' σ)
     (d52 : Section8.section8Hypothesis52FullData Tmax (Q ⊔ V) W2 W1
       (Section8.section8CentralizerUnion (ambientDerivedSubgroup Tmax) (Q ⊔ V)))
-    (hd52τ : d52.tau = τT)
+    (_ : d52.tau = τT)
     (hCompat :
       letI : Fintype d52.I := d52.instFintypeI
       letI : Fintype d52.J := d52.instFintypeJ
@@ -666,7 +666,7 @@ public theorem section14_theorem_14_9_late_type_T1_tauT_isVirtualCharacter_of_ty
     {p q u v c d : ℕ}
     (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
-    (hTtypeP : Section8.typePDefinitionData Tmax Q V W2 W1)
+    (_ : Section8.typePDefinitionData Tmax Q V W2 W1)
     {βT0 : Section1.ClassFunction Tmax}
     (hβT0Virt : Representation.IsVirtualCharacter βT0)
     (hβT0A0 : Section2.CFOn Tmax
@@ -1379,11 +1379,11 @@ public theorem section14_theorem_14_9_late_type_T1_delta_real_of_conjugation
     simpa using congrFun hdiff g
   have hτνζ_g :
       (τT (ν - ζ)) g = (τT ν) g - (τT ζ) g := by
-    simpa using congrFun (τT.map_sub ν ζ) g
+    exact congrFun (τT.map_sub ν ζ) g
   have hτνbar_g :
       (τT (ν - Section1.conjugateCharacter ζ)) g =
         (τT ν) g - (τT (Section1.conjugateCharacter ζ)) g := by
-    simpa using congrFun (τT.map_sub ν (Section1.conjugateCharacter ζ)) g
+    exact congrFun (τT.map_sub ν (Section1.conjugateCharacter ζ)) g
   have hτ1_eq :
       (τT1 ζ) g =
         (τT1 (Section1.conjugateCharacter ζ)) g +
@@ -1399,7 +1399,7 @@ public theorem section14_theorem_14_9_late_type_T1_delta_real_of_conjugation
   calc
     (τT (ν - ζ) - Section1.principalCharacter G + τT1 ζ) g =
         ((τT ν) g - (τT ζ) g) - 1 + (τT1 ζ) g := by
-          simp [hτνζ_g, Section1.principalCharacter]
+          simp
     _ = ((τT ν) g - (τT (Section1.conjugateCharacter ζ)) g) - 1 +
           (τT1 (Section1.conjugateCharacter ζ)) g := by
           rw [hτ1_eq]
@@ -1407,7 +1407,7 @@ public theorem section14_theorem_14_9_late_type_T1_delta_real_of_conjugation
     _ = (τT (ν - Section1.conjugateCharacter ζ) -
           Section1.principalCharacter G +
           τT1 (Section1.conjugateCharacter ζ)) g := by
-          simp [hτνbar_g, Section1.principalCharacter]
+          simp
     _ = (Section1.conjugateCharacter
           (τT (ν - ζ) - Section1.principalCharacter G + τT1 ζ)) g := by
           change
@@ -1640,7 +1640,7 @@ private theorem section14_order_dvd_p_of_mem_Psharp
   have hxpow : x ^ p = 1 :=
     elemPow_eq_one_of_isElementaryAbelian (p := p) (A := P) x hx.1
   have hxord : orderOf x = p := orderOf_eq_prime hxpow hx.2
-  simpa [hxord]
+  simp [hxord]
 
 private theorem section14_order_dvd_p_of_mem_W_diff
     {G : Type u} [Group G] [Finite G]
@@ -2195,7 +2195,13 @@ public theorem section14_theorem_14_9_late_type_T1_principalInducedCharacter_eq_
   have hxChar0 : xChar j0 = Section1.principalCharacter (derivedSubgroup Tmax) := by
     have hres := h45a.1 i0 j0
     rw [hbase.2] at hres
-    simpa [Section1.subgroupRestriction, Section1.principalCharacter] using hres.symm
+    have hprincipal :
+        Section1.subgroupRestriction (derivedSubgroup Tmax)
+            (Section1.principalCharacter Tmax) =
+          Section1.principalCharacter (derivedSubgroup Tmax) := by
+      ext x
+      simp [Section1.subgroupRestriction, Section1.principalCharacter]
+    exact hres.symm.trans hprincipal
   have hMuColumn_eq_indDer :
       Section10.muColumn μloc j0 =
         Section1.inducedCF (derivedSubgroup Tmax)
@@ -2658,7 +2664,7 @@ a non-base local row; its local column need not be the base column. -/
     have hprod : section12InternalDirectProduct W1 W2 W := hcaseB.1
     have hW_eq : W = W1 ⊔ W2 := hprod.2.2.1
     have hW_swap : W = W2 ⊔ W1 := by
-      simpa [hW_eq, sup_comm]
+      simp [hW_eq, sup_comm]
     rcases hTtypeP with
       ⟨_hQMF, _hW2cyc, _hW2ne, hW2Hall, _hTcomp, _hVleDer,
         _hVnil, _hW2norm, hDerComp, _hQnoncyc, _hSecond, _hFit, _hFitLe,
@@ -2704,7 +2710,7 @@ a non-base local row; its local column need not be the base column. -/
         ∀ x : Wloc, (((e.symm x : W) : G)) = (((x : Wloc) : Tmax) : G) := by
       intro x
       have hx := he_apply (e.symm x)
-      simpa using hx
+      simpa using hx.symm
     have hχloc_kernel :
         Section1.subgroupInKernel'
           (Section6.theorem_6_8_transportClassFunction e (ω 0 1))
@@ -2719,7 +2725,7 @@ a non-base local row; its local column need not be the base column. -/
           ⟨e.symm (a : Wloc), by
             simpa [Subgroup.mem_subgroupOf] using haW1⟩
       have hkerω : (ω 0 1) (e.symm (a : Wloc)) = (ω 0 1) 1 := by
-        simpa [hωNat 0 1 h0q h1p] using hker
+        simpa [hωNat 0 1 h0q h1p, Section1.degree] using hker
       simpa [Section6.theorem_6_8_transportClassFunction, Section1.degree] using hkerω
     rcases (hωloc.left_kernel_exact
         (Section6.theorem_6_8_transportClassFunction e (ω 0 1))
@@ -3180,7 +3186,7 @@ a non-base local row; its local column need not be the base column. -/
       (σloc : Section1.ClassFunction Wloc →ₗ[ℂ] Section1.ClassFunction G)
       (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
         Sfam Tfam τS τT p q u v c d)
-      (hTtypeP : Section8.typePDefinitionData Tmax Q V W2 W1)
+      (_ : Section8.typePDefinitionData Tmax Q V W2 W1)
       (hNotation : Section13.hypothesis_13_1_characterNotationDataFor
         Smax Tmax W W1 W2 p q ω η μ ν μsum νsum δ δ' σ)
       (hNotation10 : Section10.section10FourSixNotationSupportedData Tmax W2 W1
@@ -3903,9 +3909,12 @@ public theorem section14_signedOrthonormal_subsetSum_self_eq_card
         rw [hsumE, Section1.scalarProduct_fintype_sum_right]
         refine Finset.sum_eq_zero ?_
         intro ψ _hψ
-        exact hR.2 haR (hEsub' ψ.property) (by
+        have ha_ne_a : a ≠ ψ.val := by
           intro hEq
-          exact ha (by simpa [hEq] using ψ.property))
+          apply ha
+          subst hEq
+          exact ψ.property
+        exact hR.2 haR (hEsub' ψ.property) ha_ne_a
       have hEazero :
           Section1.scalarProduct G (Finset.sum E fun ψ => ψ) a = 0 := by
         have hstar := congrArg star haEzero
@@ -4176,7 +4185,7 @@ public theorem section14_theorem_14_9_late_type_T1_delta_correction_source_bridg
     (p q u v c d : ℕ)
     (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
-    (h143 : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
+    (_ : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
       Lfam RL τL τL₁ φ μ01 ν10 βS βT βL)
     (hLateType : Section8.typeIIIDefinitionData Tmax Q ∨
       Section8.typeIVDefinitionData Tmax Q ∨
@@ -4189,7 +4198,7 @@ public theorem section14_theorem_14_9_late_type_T1_delta_correction_source_bridg
     {τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
     (hCalT1 : Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T)
     (h52 : Section5.hypothesis_5_2_statement T1T τT)
-    (hdeg : ∀ ζ ξ : T1T,
+    (_ : ∀ ζ ξ : T1T,
       Section1.degree (ζ : Section1.ClassFunction Tmax) =
         Section1.degree (ξ : Section1.ClassFunction Tmax))
     (hcoh : Section6.coherentExtension T1T τT τT1)

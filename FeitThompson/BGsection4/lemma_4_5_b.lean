@@ -6,6 +6,8 @@ public import FeitThompson.Utils
 public import FeitThompson.BGsection4.Infrastructure
 public import FeitThompson.BGsection4.lemma_4_5_a
 
+open scoped IsMulCommutative commutatorElement
+
 section Main
 
 public theorem lemma_4_5_b {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]

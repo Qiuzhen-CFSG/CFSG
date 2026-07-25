@@ -46,9 +46,8 @@ public noncomputable def conjugateRep_equiv_mul_left
     Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ x) =
       rho ⟨(a * g) * h * (a * g)⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (a * g)⟩ (e x)
-  simpa [Representation.conjugateRep_apply, mul_assoc] using
-    Representation.IntertwiningMap.isIntertwining
-      (ρ := rho) (σ := Representation.conjugateRep rho a) e.toRepMap
+  simpa only [Representation.conjugateRep_apply, mul_inv_rev, mul_assoc] using
+    Representation.RepEquiv.isIntertwining e
       ⟨g * h * g⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ x
 
@@ -66,10 +65,11 @@ public noncomputable def conjugateRep_diff_equiv
   ext y
   let h' : H := ⟨g⁻¹ * h * g, by
     simpa using (inferInstance : H.Normal).conj_mem (h : G) h.2 g⁻¹⟩
-  simpa [h', Representation.conjugateRep_apply, mul_assoc] using
-    (Representation.IntertwiningMap.isIntertwining
-      (ρ := Representation.conjugateRep rho g)
-      (σ := Representation.conjugateRep rho x) e.toRepMap h' y)
+  change e (rho h y) = (rho.conjugateRep (x * g⁻¹)) h (e y)
+  simpa only [h', Representation.conjugateRep_apply, LinearMap.comp_apply,
+    mul_inv_rev, inv_inv, mul_inv_cancel, mul_inv_cancel_left, mul_inv_cancel_right,
+    mul_one, mul_assoc] using
+    (Representation.RepEquiv.isIntertwining e h' y)
 
 /-- The subgroup stabilizing the isomorphism class of a representation of a normal subgroup. -/
 public noncomputable def representationInertiaSubgroup

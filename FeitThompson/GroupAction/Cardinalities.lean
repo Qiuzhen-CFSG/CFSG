@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection3.Defs
 public import FeitThompson.GroupAction.Quotient
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
 open Subgroup
@@ -87,6 +87,7 @@ public lemma natCard_map_mk'_lt_of_ne_bot (K N : Subgroup G) [N.Normal] (hN_le_K
       natCard_map_mk'_eq K N
     _ < Nat.card K := natCard_quotient_lt_natCard_of_ne_bot (N.subgroupOf K) hNsub_ne_bot
 
+omit [Finite G] in
 /-- If `K.IsComplement' R` and `N ≤ K`, then `|R.map (mk' N)| = |R|`. -/
 public theorem natCard_map_mk'_eq_of_le_isComplement' (K R N : Subgroup G) [N.Normal]
     (hN_le_K : N ≤ K) (hKR : K.IsComplement' R) :
@@ -113,6 +114,7 @@ public theorem natCard_map_mk'_eq_of_le_isComplement' (K R N : Subgroup G) [N.No
     exact ⟨⟨r, hrR⟩, rfl⟩
   exact Nat.card_congr (Equiv.ofBijective f ⟨hf_inj, hf_surj⟩).symm
 
+omit [Finite G] in
 /-- If `p` is prime and `|R| = p`, then `|R.map (mk' N)|` is also prime (when `N ≤ K`). -/
 public theorem prime_card_map_mk'_of_le_isComplement' (K R N : Subgroup G) [N.Normal]
     (hN_le_K : N ≤ K) (hKR : K.IsComplement' R) (hR_prime : Nat.Prime (Nat.card R)) :
@@ -128,6 +130,7 @@ public theorem coprime_card_map_mk'_of_le_isComplement' (K R N : Subgroup G) [N.
   rw [natCard_map_mk'_eq_of_le_isComplement' K R N hN_le_K hKR]
   exact Nat.Coprime.of_dvd_left (natCard_map_mk'_dvd_card K N) hcop
 
+omit [Finite G] in
 /-- Coprimality of `|K|` and `|R|` gives coprimality of `|H.subgroupOf (H ⊔ R)|` and
   `|R.subgroupOf (H ⊔ R)|` when `H ≤ K`. -/
 public theorem coprime_card_subgroupOf_sup_of_le (H K R : Subgroup G) (hH_le_K : H ≤ K)

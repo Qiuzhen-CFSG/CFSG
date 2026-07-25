@@ -87,7 +87,10 @@ private theorem proposition_1_a_map_K_to_involutions_injective
     exact
       (hphi_surj.bijective_of_nat_card_le
         (by simpa [S] using le_of_eq (proposition_3 H D Q t hA1).1)).1
-  simpa [phi] using hphi_inj
+  intro x y hxy
+  apply hphi_inj
+  apply Subtype.ext
+  exact congrArg Subtype.val hxy
 
 private theorem proposition_1_a_fixed_cover_of_card_le_two
     {G Ω : Type*} [Group G] [MulAction G Ω] [Finite Ω]

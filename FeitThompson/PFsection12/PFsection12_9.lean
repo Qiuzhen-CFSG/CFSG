@@ -72,11 +72,11 @@ public theorem quotientHasNoncyclicSylow_of_quotient_mulEquiv
     have hP'Cyc : IsCyclic (P' : Subgroup Q) := by
       let ePbar :
           (Pbar : Subgroup (M ⧸ K.subgroupOf M)) ≃*
-            ((Pbar : Subgroup (M ⧸ K.subgroupOf M)).map e.toMonoidHom) :=
+            (P' : Subgroup Q) :=
         Subgroup.equivMapOfInjective
           (f := e.toMonoidHom) (Pbar : Subgroup (M ⧸ K.subgroupOf M))
           e.injective
-      simpa [P', Sylow.coe_mapSurjective] using ePbar.isCyclic.mp hPbarCyc
+      exact ePbar.isCyclic.mp hPbarCyc
     exact hPnoncyc ((Sylow.equiv P P').isCyclic.mpr hP'Cyc)
   exact ⟨hKM, hN, Pbar, hPbarNoncyc⟩
 
@@ -219,7 +219,9 @@ public theorem prime_coprime_card_of_not_mem_subgroupPrimeSet
     Nat.Coprime p (Nat.card H) := by
   exact hp.coprime_iff_not_dvd.2 (by
     intro hdiv
-    exact hnot (by simpa [subgroupPrimeSet] using hdiv))
+    apply hnot
+    change p ∣ Nat.card H
+    exact hdiv)
 
 /-- In the Hypothesis `(12.8)` setup, a prime producing a noncyclic Sylow
 subgroup in `M/K` is outside the prime support of the Hall subgroup `K`. -/
@@ -307,7 +309,7 @@ public theorem theorem_12_9_sylow_inf_mf_eq_bot
       Nat.Coprime (Nat.card (K.subgroupOf M)) (Nat.card (P : Subgroup M)) := by
     rw [hKcard, hPcard]
     exact Nat.Coprime.symm (Nat.Coprime.pow_left n hcopK)
-  exact Subgroup.inf_eq_bot_of_coprime hcop
+  exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
 
 /-- Transfer exact generator rank two and commutativity across a multiplicative
 equivalence, returning the Section 12 group-rank formulation. -/
@@ -320,17 +322,16 @@ public theorem theorem_12_9_rank_two_of_mulEquiv
     IsMulCommutative R ∧ groupRank R = 2 := by
   classical
   have hcommR : IsMulCommutative R := by
-    letI : IsMulCommutative S := hcommS
     refine ⟨⟨fun x y => ?_⟩⟩
     apply e.injective
     calc
       e (x * y) = e x * e y := e.map_mul x y
-      _ = e y * e x := by rw [mul_comm]
+      _ = e y * e x := hcommS.is_comm.comm _ _
       _ = e (y * x) := (e.map_mul y x).symm
   have hgen_le : generatorRank R ≤ 2 := by
     have hle : generatorRank R ≤ generatorRank S :=
       section12_generatorRank_le_of_equiv e.symm
-    exact hle.trans (by simpa [hgenS])
+    exact hle.trans (by simp [hgenS])
   have hgen_ge : 2 ≤ generatorRank R := by
     have hle : generatorRank S ≤ generatorRank R :=
       section12_generatorRank_le_of_equiv e
@@ -376,12 +377,11 @@ private theorem theorem_12_9_isMulCommutative_of_mulEquiv
     (e : R ≃* S)
     (hS : IsMulCommutative S) :
     IsMulCommutative R := by
-  letI : IsMulCommutative S := hS
   refine ⟨⟨fun x y => ?_⟩⟩
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := by rw [mul_comm]
+    _ = e y * e x := hS.is_comm.comm _ _
     _ = e (y * x) := (e.map_mul y x).symm
 
 private theorem theorem_12_9_hasAbelianSylowRankAtMostTwo_of_mulEquiv
@@ -392,20 +392,22 @@ private theorem theorem_12_9_hasAbelianSylowRankAtMostTwo_of_mulEquiv
   classical
   intro p P
   haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Q : Sylow p.val S := P.mapSurjective (f := e.toMonoidHom) e.surjective
+  let f : R →* S := e.toMonoidHom
+  let Q : Sylow p.val S := P.mapSurjective (f := f) e.surjective
   have hQ := hS p Q
-  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map e.toMonoidHom) :=
-    Subgroup.equivMapOfInjective (f := e.toMonoidHom) (P : Subgroup R) e.injective
-  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map e.toMonoidHom) := by
-    simpa [Q, Sylow.coe_mapSurjective] using hQ.1
+  change IsMulCommutative ((P : Subgroup R).map f) ∧
+    generatorRank ((P : Subgroup R).map f) ≤ 2 at hQ
+  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map f) :=
+    Subgroup.equivMapOfInjective (f := f) (P : Subgroup R) e.injective
+  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map f) := hQ.1
   have hcomm : IsMulCommutative (P : Subgroup R) :=
     theorem_12_9_isMulCommutative_of_mulEquiv ePmap hQmap_comm
   have hrank : generatorRank (P : Subgroup R) ≤ 2 := by
     have hle :
         generatorRank (P : Subgroup R) ≤
-          generatorRank ((P : Subgroup R).map e.toMonoidHom) :=
+          generatorRank ((P : Subgroup R).map f) :=
       generatorRank_le_of_equiv ePmap.symm
-    exact hle.trans (by simpa [Q, Sylow.coe_mapSurjective] using hQ.2)
+    exact hle.trans hQ.2
   exact ⟨hcomm, hrank⟩
 
 /-- PF `(8.12)(a)`, applied to source Type-I data, gives the quotient Sylow-rank
@@ -485,10 +487,9 @@ public theorem theorem_12_9_p0_rank_two_of_quotient_rank
     Subgroup.equivMapOfInjective
       (f := M.subtype) (P : Subgroup M) M.subtype_injective
   let eP0Pbar : section10AmbientSylowSubgroup M P ≃* (Pbar : Subgroup (M ⧸ K.subgroupOf M)) := by
-    simpa [Pbar, Sylow.coe_mapSurjective] using eP0.symm.trans ePbar
-  have hP0p : IsPGroup p (section10AmbientSylowSubgroup M P) := by
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    exact (eP0.symm.trans ePbar).trans (MulEquiv.subgroupCongr (by rfl))
+  have hP0p : IsPGroup p (section10AmbientSylowSubgroup M P) :=
+    section11_ambientSylow_isPGroup M P
   exact theorem_12_9_rank_two_of_mulEquiv eP0Pbar hPbar.1 hPbar.2 hP0p
 
 /-- First assertion of Peterfalvi `(12.9)` with the Section 8 source choice
@@ -661,7 +662,7 @@ public theorem theorem_12_9_exists_centralizer_witness
   classical
   haveI : Fact p.Prime := ⟨hp⟩
   letI : IsElementaryAbelian p P1 := hP1Elem
-  letI : CommGroup P1 := CommGroup.ofIsMulCommutative
+  letI : CommGroup P1 := IsMulCommutative.instCommGroup
   letI : Fact (IsPGroup p P1) := ⟨IsElementaryAbelian.isPGroup p P1⟩
   have hKleM : K ≤ M := section16MFSubgroup_le hMF
   have hMnormK : M ≤ Subgroup.normalizer (K : Set G) :=
@@ -726,7 +727,7 @@ public theorem theorem_12_9_exists_centralizer_witness
     haveI : IsSolvable K := hKsolv
     haveI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
     have hcomm_lt : derivedSubgroup K < (⊤ : Subgroup K) := by
-      simpa [derivedSubgroup, derivedSeries_one] using
+      simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
         IsSolvable.commutator_lt_top_of_nontrivial (G := K)
     refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
     intro hEq
@@ -781,8 +782,9 @@ public theorem theorem_12_9_exists_conjugate_le_typeF_complement
     intro q hqP0
     have hqpp : q ∈ ({pp} : Set Nat.Primes) := hsingle q hqP0
     have hqeq : q = pp := by simpa using hqpp
-    subst q
-    simpa [pp] using hpK
+    change q ∉ subgroupPrimeSet K
+    rw [hqeq]
+    exact hpK
   have hP0subpi :
       IsPiSubgroup (G := M) (subgroupPrimeSet K)ᶜ P0sub := by
     intro q hqP0sub
@@ -925,8 +927,7 @@ private theorem theorem_12_9_unique_maximal_centralizer
     have hmap :
         (Subgroup.zpowers x).map (MulAut.conj (g : G)).toMonoidHom =
           Subgroup.zpowers xg := by
-      simpa [xg, MulAut.conj_apply] using
-        (MonoidHom.map_zpowers (MulAut.conj (g : G)).toMonoidHom x)
+      simp [MonoidHom.map_zpowers, xg, MulAut.conj_apply]
     rw [← hmap]
     exact Subgroup.conjBy_inv (Subgroup.zpowers x) (g : G)
   have hMback : M.conjBy (g : G)⁻¹ = M := by
@@ -949,7 +950,7 @@ private theorem theorem_12_9_maximal_normalizer_eq_self
   have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
   have hMsigmaSub_ne : section10MsigmaSubgroup M ≠ ⊥ := by
     intro hbot
-    exact hMsigma_ne (by simpa [section10Msigma, hbot])
+    exact hMsigma_ne (by simp [section10Msigma, hbot])
   have hnorm :=
     section10_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       (G := G) hM (N := section10MsigmaSubgroup M) hMsigmaSub_ne
@@ -1063,7 +1064,9 @@ private theorem theorem_12_9_centralizer_not_le_choice
   have hpCardK : p ∣ Nat.card K := by
     rw [← horder]
     exact Subgroup.orderOf_dvd_natCard K hxK
-  exact hpK (by simpa [subgroupPrimeSet] using hpCardK)
+  apply hpK
+  change p ∣ Nat.card K
+  exact hpCardK
 
 /-- Source leaf for PF `(12.9)`.
 
@@ -1089,8 +1092,7 @@ public theorem theorem_12_9_source_data_of_hypothesis_12_8
     exact section11_ambientSylow_le M P
   have hP0p : IsPGroup p P0 := by
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    exact section11_ambientSylow_isPGroup M P
   rcases theorem_12_9_exists_maximal_msChoice_containing_p0
       P0 p hp hP0p hRank.2 with
     ⟨L, LF, Ls, hL, hLF, hLs, hP0Ls⟩

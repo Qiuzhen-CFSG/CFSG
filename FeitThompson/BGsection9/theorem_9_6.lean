@@ -36,7 +36,7 @@ private theorem section9_primeRank_le_natCard
     primeRank p G ≤ Nat.card G := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hApA, _hAcomm, hnA⟩
     exact hnA.trans <| (section9_generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)

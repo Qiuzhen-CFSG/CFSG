@@ -11,7 +11,7 @@ module
 public import FeitThompson.GroupAction.Invariant
 
 import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.Basic
 
 open scoped Pointwise

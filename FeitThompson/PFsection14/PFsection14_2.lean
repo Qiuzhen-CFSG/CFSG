@@ -28,8 +28,7 @@ public theorem section14_characteristicSubgroupIn_self
     characteristicSubgroupIn U U := by
   constructor
   · exact le_rfl
-  · change (U.subgroupOf U).Characteristic
-    have htop : U.subgroupOf U = ⊤ := by
+  · have htop : U.subgroupOf U = ⊤ := by
       ext x
       simp
     rw [htop]
@@ -199,7 +198,7 @@ public theorem section14_theorem_14_2_hypothesis_14_3_dade_source_bridge
     (hLmax : L ∈ section9MaximalSubgroups G)
     (hMF : section16MFSubgroup L H)
     (hTypeI : Section8.typeIDefinitionData L H)
-    (hPunct : Section7.puncturedInducedFamily (H.subgroupOf L) Lfam) :
+    (_ : Section7.puncturedInducedFamily (H.subgroupOf L) Lfam) :
     ∃ (RL : G → Subgroup G),
     ∃ (τL : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G),
       Section12.dadeIsometryRelativeToTypeIASet L H RL τL ∧
@@ -627,7 +626,7 @@ public theorem section14_theorem_14_2_hypothesis_14_10_dade_source_bridge
     (hNormVleM : Subgroup.normalizer (V : Set G) ≤ M)
     (hMF : section16MFSubgroup M K)
     (hTypeI : Section8.typeIDefinitionData M K)
-    (hPunct : Section7.puncturedInducedFamily (K.subgroupOf M) Mfam) :
+    (_ : Section7.puncturedInducedFamily (K.subgroupOf M) Mfam) :
     ∃ (R : G → Subgroup G),
     ∃ (τM : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G),
       Section12.dadeIsometryRelativeToTypeIASet M K R τM ∧
@@ -753,7 +752,7 @@ public theorem section14_theorem_14_2_hypothesis_14_10_coherent_family_source_br
     (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
     (hMmax : M ∈ section9MaximalSubgroups G)
-    (hModd : Odd (Nat.card M))
+    (_ : Odd (Nat.card M))
     (hNormVleM : Subgroup.normalizer (V : Set G) ≤ M)
     (hMF : section16MFSubgroup M K)
     (hTypeI : Section8.typeIDefinitionData M K) :

@@ -21,6 +21,8 @@ these packages remain in `FeitThompson.Wielandt`.
 
 noncomputable section
 
+open scoped IsMulCommutative
+
 namespace Wielandt
 
 universe u
@@ -421,7 +423,7 @@ public theorem
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
   · exact D.isCompl.disjoint
   · rw [← Subgroup.mul_normal, D.isCompl.sup_eq_top]
@@ -464,7 +466,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let φ : D.commutatorSubgroup × D.fixedSubgroup →* L.cover := {
     toFun := fun x => (x.1 : L.cover) * (x.2 : L.cover)
     map_one' := by simp
@@ -491,7 +493,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let φ : D.fixedSubgroup × D.commutatorSubgroup →* L.cover := {
     toFun := fun x => (x.1 : L.cover) * (x.2 : L.cover)
     map_one' := by simp
@@ -508,12 +510,12 @@ public noncomputable def
     (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     Module (ZMod (p ^ e)) (Additive L.cover) := by
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   exact AddCommGroup.zmodModule (n := p ^ e) (by
     intro x
     apply Additive.toMul.injective
@@ -557,7 +559,7 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -571,7 +573,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -599,7 +601,7 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -612,7 +614,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -642,7 +644,7 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -655,7 +657,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -685,7 +687,7 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -698,7 +700,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -728,7 +730,7 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -741,7 +743,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -771,7 +773,7 @@ public theorem
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -784,7 +786,7 @@ public theorem
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -811,7 +813,7 @@ public theorem
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -824,7 +826,7 @@ public theorem
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -851,7 +853,7 @@ public theorem
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -864,7 +866,7 @@ public theorem
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -898,7 +900,7 @@ public theorem
       (G := G) (V := V) (p := p) A L) :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -911,7 +913,7 @@ public theorem
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
     L.additiveCoverZModModule
   letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -1134,6 +1136,7 @@ public theorem
       (HomocyclicFrattiniCoverSubgroupCoordinateSplit
         (G := G) (V := V) (p := p) A L D) := by
   classical
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : Finite V :=
@@ -1148,13 +1151,7 @@ public theorem
       dsimp [fixedSubspaceFinrank]
       exact Submodule.finrank_le _
     have hcard : Fintype.card κ = Module.finrank (ZMod p) (Additive V) := by
-      simpa [κ, HomocyclicFrattiniCoverLinearLift.toCommonMatrixLift,
-        HomocyclicCommonLinearLift.toCommonMatrixLift,
-        HomocyclicQuotientLinearLift.toHomocyclicCommonLinearLift,
-        HomocyclicCoverLinearLift.toHomocyclicQuotientLinearLift,
-        HomocyclicCoverLinearLift.quotientMap,
-        HomocyclicFrattiniCoverLinearLift.toHomocyclicCoverLinearLift] using
-        L.card_matrixIndex
+      exact L.card_matrixIndex
     simpa [n, r, hcard] using hsub
   let leftIndex : Type u := ULift (Fin (n - r))
   let rightIndex : Type u := ULift (Fin r)
@@ -2277,7 +2274,7 @@ public structure HomocyclicFrattiniCoverSubgroupFactorFinrankData
   left_finrank :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.commutatorSubgroup) :=
@@ -2289,7 +2286,7 @@ public structure HomocyclicFrattiniCoverSubgroupFactorFinrankData
   right_finrank :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.fixedSubgroup) :=
@@ -2372,8 +2369,11 @@ public noncomputable def
               congr 1
         _ = a • L.frattiniQuotientEquiv
               (QuotientGroup.mk' (frattini L.cover) w) := by
-              simpa [MulAction.compHom_smul_def] using
-                L.quotientEquiv_action (a : G) w
+              change L.frattiniQuotientEquiv
+                (QuotientGroup.mk' (frattini L.cover) (L.coverAction (a : G) w)) =
+                (a : G) • L.frattiniQuotientEquiv
+                  (QuotientGroup.mk' (frattini L.cover) w)
+              exact L.quotientEquiv_action (a : G) w
         _ = a • L.frattiniQuotientEquiv x.1 := by rw [hw]
     exact hact.symm.trans hx'
   · rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
@@ -2391,8 +2391,11 @@ public noncomputable def
             (QuotientGroup.mk' (frattini L.cover) (L.coverAction (a : G) w)) := by
             congr 1
       _ = a • L.frattiniQuotientEquiv (QuotientGroup.mk' (frattini L.cover) w) := by
-            simpa [MulAction.compHom_smul_def] using
-              L.quotientEquiv_action (a : G) w
+            change L.frattiniQuotientEquiv
+              (QuotientGroup.mk' (frattini L.cover) (L.coverAction (a : G) w)) =
+              (a : G) • L.frattiniQuotientEquiv
+                (QuotientGroup.mk' (frattini L.cover) w)
+            exact L.quotientEquiv_action (a : G) w
       _ = a • y.1 := by rw [hw, L.frattiniQuotientEquiv.apply_symm_apply]
       _ = y.1 := hyfix
       _ = L.frattiniQuotientEquiv (L.frattiniQuotientEquiv.symm y.1) := by
@@ -2569,7 +2572,7 @@ public structure HomocyclicFrattiniCoverSubgroupFixedFactorFinrankData
   fixed_finrank :
     letI : Group L.cover := L.instGroupCover
     letI : IsMulCommutative L.cover := L.cover_commutative
-    letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+    letI : CommGroup L.cover := IsMulCommutative.instCommGroup
     letI : Module (ZMod (p ^ e)) (Additive L.cover) :=
       L.additiveCoverZModModule
     letI : Module (ZMod (p ^ e)) (Additive D.fixedSubgroup) :=
@@ -2593,7 +2596,6 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L}
     {C : HomocyclicFrattiniCoverSubgroupCoordinateSplit
       (G := G) (V := V) (p := p) A L D}
-    [Nontrivial (ZMod (p ^ e))]
     [IsLocalRing (ZMod (p ^ e))]
     (H : HomocyclicFrattiniCoverSubgroupFixedFactorCardData
       (G := G) (V := V) (p := p) A L D C) :
@@ -2604,7 +2606,7 @@ public noncomputable def
   letI : Fintype L.cover := L.instFintypeCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let R := ZMod (p ^ e)
   letI : Module R (Additive L.cover) :=
     L.additiveCoverZModModule
@@ -2656,7 +2658,6 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L}
     {C : HomocyclicFrattiniCoverSubgroupCoordinateSplit
       (G := G) (V := V) (p := p) A L D}
-    [Nontrivial (ZMod (p ^ e))]
     [IsLocalRing (ZMod (p ^ e))]
     (H : HomocyclicFrattiniCoverSubgroupFixedFactorFinrankData
       (G := G) (V := V) (p := p) A L D C) :
@@ -2666,7 +2667,7 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let R := ZMod (p ^ e)
   letI : Module R (Additive L.cover) :=
     L.additiveCoverZModModule
@@ -2767,7 +2768,6 @@ public noncomputable def
       (G := G) (V := V) (p := p) A L}
     {C : HomocyclicFrattiniCoverSubgroupCoordinateSplit
       (G := G) (V := V) (p := p) A L D}
-    [Nontrivial (ZMod (p ^ e))]
     [IsLocalRing (ZMod (p ^ e))]
     (H : HomocyclicFrattiniCoverSubgroupFactorFinrankData
       (G := G) (V := V) (p := p) A L D C) :
@@ -2777,7 +2777,7 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let R := ZMod (p ^ e)
   letI : Module R (Additive L.cover) :=
     L.additiveCoverZModModule
@@ -3044,7 +3044,7 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let C := H.coordinateSplit
   letI : Fintype C.leftIndex := C.instFintypeLeftIndex
   letI : Fintype C.rightIndex := C.instFintypeRightIndex
@@ -3226,7 +3226,7 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let C := H.coordinateSplit
   letI : Fintype C.leftIndex := C.instFintypeLeftIndex
   letI : Fintype C.rightIndex := C.instFintypeRightIndex
@@ -3875,7 +3875,7 @@ public noncomputable def
   classical
   letI : Group L.cover := L.instGroupCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   letI : Module (ZMod (p ^ e)) (Additive L.cover) := AddCommGroup.zmodModule (n := p ^ e) (by
     intro x
     apply Additive.toMul.injective
@@ -4004,16 +4004,14 @@ public noncomputable def
               (reindex (productCoordinateEquiv.symm (xL, (0 : Y))))) =
           ((Additive.toMul (H.leftCoordinateEquiv xL) : D.commutatorSubgroup) :
             L.cover) := by
-      simpa [P, C, R, X, Y, E, productCoordinateEquiv, reindex] using
-        H.leftCoordinate_compatible xL
+      exact H.leftCoordinate_compatible xL
     have hright :
         Additive.toMul
             (L.coordinateEquiv
               (reindex (productCoordinateEquiv.symm ((0 : X), xR)))) =
           ((Additive.toMul (H.rightCoordinateEquiv xR) : D.fixedSubgroup) :
             L.cover) := by
-      simpa [P, C, R, X, Y, E, productCoordinateEquiv, reindex] using
-        H.rightCoordinate_compatible xR
+      exact H.rightCoordinate_compatible xR
     calc
       Additive.toMul
           (L.coordinateEquiv (reindex (productCoordinateEquiv.symm (xL, xR)))) =
@@ -4216,7 +4214,7 @@ public noncomputable def
   letI : Group L.cover := L.instGroupCover
   letI : Finite L.cover := L.instFiniteCover
   letI : IsMulCommutative L.cover := L.cover_commutative
-  letI : CommGroup L.cover := CommGroup.ofIsMulCommutative
+  letI : CommGroup L.cover := IsMulCommutative.instCommGroup
   let P := H.productCoordinates
   let C := P.coordinateSplit
   letI : Fintype C.leftIndex := C.instFintypeLeftIndex
@@ -4235,8 +4233,7 @@ public noncomputable def
           (L.coordinateEquiv
             (reindex (productCoordinateEquiv.symm ((0 : X), y)))),
           by
-            simpa [P, C, R, X, Y, E, productCoordinateEquiv, reindex] using
-              H.rightInFixedSubgroup.right_mem_fixedSubgroup y⟩
+            exact H.rightInFixedSubgroup.right_mem_fixedSubgroup y⟩
     map_zero' := by
       ext
       change
@@ -4308,8 +4305,7 @@ public noncomputable def
           (L.coordinateEquiv
             (reindex (productCoordinateEquiv.symm (x, (0 : Y))))),
           by
-            simpa [P, C, R, X, Y, E, productCoordinateEquiv, reindex] using
-              H.leftInCommutatorSubgroup.left_mem_commutatorSubgroup x⟩
+            exact H.leftInCommutatorSubgroup.left_mem_commutatorSubgroup x⟩
     map_zero' := by
       ext
       change
@@ -4750,7 +4746,8 @@ public def homocyclicFrattiniCoverSubgroupProductCoordinateCommutatorOrbitSumZer
       LinearEquiv.funCongrLeft R R P.coordinateSplit.indexEquiv
     let xcover : L.cover := Additive.toMul (L.coordinateEquiv (reindex y))
     have hy' : xcover ∈ commutatorAction (A := A) (G := L.cover) := by
-      simpa [xcover, reindex, D.commutatorSubgroup_eq] using hy
+      rw [← D.commutatorSubgroup_eq]
+      exact hy
     have hsumCover : (∑ a : A, Additive.ofMul (a • xcover) : Additive L.cover) = 0 :=
       commutatorAction_orbit_additive_sum_eq_zero (G := L.cover) (A := A) hy'
     apply reindex.injective
@@ -4818,8 +4815,14 @@ public def homocyclicFrattiniCoverSubgroupProductCoordinateCommutatorOrbitSumZer
                   (LinearEquiv.funCongrLeft R R P.coordinateSplit.indexEquiv)
                   (f ((LinearEquiv.funCongrLeft R R P.coordinateSplit.indexEquiv) y))
             rw [hterm]
-            simpa [R, reindex, xcover, homocyclicFrattiniCoverSubgroupAction] using
-              L.linearLift_coordinate (a : G) (reindex y)
+            change L.coordinateEquiv
+                (((L.linearLift (a : G) :
+                    (Module.End R (L.matrixIndex → R))ˣ) :
+                  Module.End R (L.matrixIndex → R)) (reindex y)) =
+              Additive.ofMul
+                (L.coverAction (a : G)
+                  (Additive.toMul (L.coordinateEquiv (reindex y))))
+            exact L.linearLift_coordinate (a : G) (reindex y)
       _ = 0 := hsumCover
       _ = L.coordinateEquiv 0 := by simp
 
@@ -5366,8 +5369,22 @@ public noncomputable def
           (fun M : Matrix (C.leftIndex ⊕ C.rightIndex) (C.leftIndex ⊕ C.rightIndex) R =>
             Matrix.mulVec M x)
           hmat
-      simpa [leftColumnMap, rightColumnMap, topRowMap, bottomRowMap,
-        matrixOfBlockColumns_mul_matrixOfBlockRows, Matrix.add_mulVec] using hx
+      rw [matrixOfBlockColumns_mul_matrixOfBlockRows, Matrix.add_mulVec,
+        ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.one_mulVec] at hx
+      change
+        Matrix.mulVec
+              (identityBlockLeftColumn
+                (R := R) (l := C.leftIndex) (r := C.rightIndex))
+              (Matrix.mulVec
+                (identityBlockTopRow
+                  (R := R) (l := C.leftIndex) (r := C.rightIndex)) x) +
+            Matrix.mulVec
+              (identityBlockRightColumn
+                (R := R) (l := C.leftIndex) (r := C.rightIndex))
+              (Matrix.mulVec
+                (identityBlockBottomRow
+                  (R := R) (l := C.leftIndex) (r := C.rightIndex)) x) = x
+      exact hx
     bottom_right_identity := by
       intro a x
       have hmatrix := B.blockIdentities.bottom_right_identity a

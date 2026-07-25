@@ -129,9 +129,8 @@ public theorem theorem_12_11_source_leaf
       rw [← hP0eq]
       exact section11_ambientSylow_le M PM
     have hP0p : IsPGroup p P0 := by
-      rw [← hP0eq]
-      simpa [section10AmbientSylowSubgroup] using
-        IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+      rw [← hP0eq, section10AmbientSylowSubgroup]
+      exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
     let ML : Subgroup L := (M ⊓ L).subgroupOf L
     have hMLpi : IsPiSubgroup (G := L) (subgroupPrimeSet H) ML := by
       intro q hqML
@@ -166,7 +165,8 @@ public theorem theorem_12_11_source_leaf
       have hP0P : P0 ≤ P := by
         intro y hy
         exact Subgroup.mem_map.mpr
-          ⟨⟨y, hP0H hy⟩, hP0H_le_core (by simpa [P0H] using hy), rfl⟩
+          ⟨⟨y, hP0H hy⟩, hP0H_le_core (by
+            simpa [P0H, Subgroup.mem_subgroupOf] using hy), rfl⟩
       have hPp : IsPGroup p P := by
         simpa [P] using
           IsPGroup.map (p := p) (H := pCore p H)
@@ -530,7 +530,7 @@ public theorem theorem_12_11_source_leaf
       have hwne : w ≠ 1 := by
         intro hwone
         apply hwnotK'
-        simpa [hwone]
+        simp [hwone]
       have hxCentW : x ∈ elementCentralizerIn (M ⊓ L) w := by
         refine ⟨hxE, ?_⟩
         change x ∈ Subgroup.centralizer ({w} : Set G)
@@ -542,8 +542,8 @@ public theorem theorem_12_11_source_leaf
       have hAcentX : A ≤ Subgroup.centralizer ({x} : Set G) := by
         intro a haA
         rw [Subgroup.mem_centralizer_singleton_iff]
-        exact Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := E1) (hA_E1 haA) hxE1
+        exact setLike_mul_comm
+          (s := E1) (hA_E1 haA) hxE1
       have hzA : z ∈ A := Subgroup.mem_zpowers z
       have hznotH : z ∉ H := by
         intro hzH

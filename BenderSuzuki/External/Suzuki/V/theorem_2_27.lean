@@ -20,7 +20,7 @@ namespace V
 
 universe u
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 private noncomputable def sylowSubgroupOfNormal
     {H : Type u} [Group H] [Finite H] {p : ℕ} [Fact p.Prime]
@@ -46,8 +46,10 @@ private noncomputable def sylowSubgroupOfNormal
         (x : H) ∈ (S : Subgroup H)
     rw [← hQconjSub]
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    simpa [Sylow.smul_def] using
-      (MulAut.conjNormal_inv_apply (H := K) h x)
+    change
+      (((MulAut.conjNormal h : MulAut K)⁻¹ x : K) : H) ∈ (Q : Subgroup H) ↔
+        h⁻¹ * (x : H) * h ∈ (Q : Subgroup H)
+    rw [MulAut.conjNormal_inv_apply]
   have hcardQI :
       Nat.card ((Q : Subgroup H).comap K.subtype) = Nat.card I := by
     let e :
@@ -85,18 +87,18 @@ private theorem commutator_lt_of_normal_subgroup_pgroup
     Subgroup.commutator_le_left N ⊤
   refine lt_of_le_of_ne hle ?_
   intro heq
-  have hN_le_lcs : ∀ n, N ≤ lowerCentralSeries P n := by
+  have hN_le_lcs : ∀ n, N ≤ (⊤ : Subgroup P).lowerCentralSeries n := by
     intro n
     induction n with
     | zero => simp
     | succ n ih =>
         calc
           N = ⁅N, (⊤ : Subgroup P)⁆ := heq.symm
-          _ ≤ ⁅lowerCentralSeries P n, (⊤ : Subgroup P)⁆ :=
+          _ ≤ ⁅(⊤ : Subgroup P).lowerCentralSeries n, (⊤ : Subgroup P)⁆ :=
             Subgroup.commutator_mono ih le_rfl
-          _ = lowerCentralSeries P (n + 1) := rfl
+          _ = (⊤ : Subgroup P).lowerCentralSeries (n + 1) := rfl
   have hnil : Group.IsNilpotent P := IsPGroup.isNilpotent (p := p) hP
-  obtain ⟨n, hn⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
+  obtain ⟨n, hn⟩ := (Subgroup.nilpotent_iff_lowerCentralSeries (G := P)).mp hnil
   apply hN
   rw [eq_bot_iff]
   simpa [hn] using hN_le_lcs n
@@ -163,7 +165,20 @@ private theorem focalSubgroupOf_lt_top_of_controlled_fusion
         j ⟨g, hgT⟩ =
           ⁅j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩, z⁆ := by
       apply Subtype.ext
-      simpa [j, map_commutatorElement] using hfg
+      have hright :
+          ((⁅j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩, z⁆ : P) : G) =
+            ⁅(f x)⁻¹, (z : G)⁆ := by
+        calc
+          ((⁅j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩, z⁆ : P) : G) =
+              ⁅((j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩ : P) : G), (z : G)⁆ :=
+            map_commutatorElement (P : Subgroup G).subtype
+              (j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩) z
+          _ = ⁅f (x⁻¹), (z : G)⁆ := rfl
+          _ = ⁅(f x)⁻¹, (z : G)⁆ := by rw [map_inv]
+      calc
+        ((j ⟨g, hgT⟩ : P) : G) = f g := rfl
+        _ = ⁅(f x)⁻¹, (z : G)⁆ := hfg
+        _ = ((⁅j ⟨x⁻¹, (T : Subgroup H).inv_mem hx⟩, z⁆ : P) : G) := hright.symm
     have hC :
         j ⟨g, hgT⟩ ∈ C := by
       rw [hjg]
@@ -178,7 +193,8 @@ private theorem focalSubgroupOf_lt_top_of_controlled_fusion
       (T : Subgroup H).focalSubgroupOf ≤ C.comap j := by
     intro g hg
     have hgF : (g : H) ∈ (T : Subgroup H).focalSubgroup := by
-      simpa [Subgroup.focalSubgroupOf_def] using hg
+      change (g : H) ∈ (T : Subgroup H).focalSubgroup at hg
+      exact hg
     have hfgMap : f (g : H) ∈ C.map (P : Subgroup G).subtype :=
       hFmap (Subgroup.mem_map_of_mem f hgF)
     rcases Subgroup.mem_map.mp hfgMap with ⟨c, hc, hceq⟩

@@ -557,7 +557,7 @@ public theorem hkt_center_eq_bot_of_minimal_branch
       Group.IsNilpotent (Q ⧸ Subgroup.center Q)) :
     Subgroup.center Q = ⊥ := by
   by_contra hne
-  exact hnon_nil (of_quotient_center_nilpotent (hquot_nil_of_center_ne_bot hne))
+  exact hnon_nil (Group.of_quotient_center_nilpotent (hquot_nil_of_center_ne_bot hne))
 
 /-- A nonnilpotent group is nontrivial. -/
 public theorem hkt_nontrivial_of_not_nilpotent
@@ -609,7 +609,8 @@ public theorem hkt_zpowers_invariant_of_generator
   have hle : Subgroup.zpowers φ ≤ Stab := (Subgroup.zpowers_le).2 hN
   refine ⟨?_⟩
   intro a q
-  simpa [MulAut.smul_def] using hle a.2 q
+  change q ∈ N ↔ (a : MulAut Q) q ∈ N
+  exact hle a.2 q
 
 /-- Choose a minimal nontrivial normal subgroup invariant under the cyclic HKT action. -/
 public theorem hkt_exists_minimal_invariant_normal
@@ -694,8 +695,9 @@ public theorem hkt_quotient_no_proper_nontrivial_invariant_normal
       exact hkt_zpowers_invariant_generator (invariantQuotientAut φ N hNφ) L
     have hKφ : ∀ q : Q, q ∈ K ↔ φ q ∈ K := by
       intro q
-      change π q ∈ L ↔ π (φ q) ∈ L
-      simpa [π, invariantQuotientAut_mk'] using hLφbar (π q)
+      change QuotientGroup.mk' N q ∈ L ↔ QuotientGroup.mk' N (φ q) ∈ L
+      simpa only [invariantQuotientAut_mk'] using
+        hLφbar (QuotientGroup.mk' N q)
     have hKinv : IsInvariant (Subgroup.zpowers φ) Q K :=
       hkt_zpowers_invariant_of_generator φ K hKφ
     have hN_le_K : N ≤ K := by

@@ -94,7 +94,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
       intro i
       have he : (baseChange F' s) (b' i) = 0 := he ▸ zero_apply _
       rw [baseChange_apply, baseChange_tmul, Module.FaithfullyFlat.one_tmul_eq_zero_iff] at he
-      rw [zero_apply, he]
+      rw [LinearMap.zero_apply, he]
     · intro s'
       obtain ⟨s, hs1, hs2⟩ := s'.prop
       exact ⟨⟨s, hs1⟩, SetCoe.ext hs2⟩
@@ -158,14 +158,14 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
     have h : (∑ i, f i • (g i).val) (b' i') = (if i.2 = i' then b' i.1 else 0) := by
       rw [h, Module.Basis.linearMap_apply_apply,
          Module.Basis.baseChange_apply]
-    rw [Module.Basis.linearMap_apply_apply, sum_apply]
+    rw [Module.Basis.linearMap_apply_apply, LinearMap.sum_apply]
     split <;> (expose_names; simp only [h_3, ↓reduceIte] at h) <;> have h := LinearMap.congr_arg (f := Tf) h
     · rw [← sub_left_inj (a := b i.1), sub_self]
       rw [← sub_left_inj (a := Tf (b' i.1)), sub_self] at h
       suffices h : (1 : F') ⊗ₜ[F] (∑ d : Fin n, (k (f d) • (j.symm (g d)).val) (b i') - b i.1) = 0 by
         rw [Module.FaithfullyFlat.one_tmul_eq_zero_iff] at h
         exact h
-      rw [← h, sum_apply, map_sum]
+      rw [← h, LinearMap.sum_apply, map_sum]
       have : ∑ x, Tf ((f x • (g x).val) (b' i')) - Tf (b' i.1) = ∑ x, 1 ⊗ₜ (k (f x) • (j.symm (g x)).val (b i')) - (b' i.1) := by
         rw [hTf, ← add_left_inj (a := b' i.1), sub_add, sub_self, sub_zero, sub_add, sub_self, sub_zero, Finset.sum_congr rfl]
         intro x _
@@ -184,7 +184,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
         rw [Module.FaithfullyFlat.one_tmul_eq_zero_iff] at h
         exact h
       rw [map_zero] at h
-      rw [← h, sum_apply, map_sum]
+      rw [← h, LinearMap.sum_apply, map_sum]
       have : ∑ x, Tf ((f x • (g x).val) (b' i')) = ∑ x, 1 ⊗ₜ (k (f x) • (j.symm (g x)).val (b i')) := by
         rw [Finset.sum_congr rfl]
         intro x _
@@ -462,7 +462,7 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
     (extendScalars E rho).asAlgebraHom
         (MonoidAlgebra.mapRingHom G (algebraMap F E) b) =
       LinearMap.baseChange E (rho.asAlgebraHom b) := by
-  induction b using Finsupp.induction with
+  induction b using MonoidAlgebra.induction with
   | zero =>
       have hmzero :
           MonoidAlgebra.mapRingHom G (algebraMap F E) (0 : MonoidAlgebra F G) = 0 :=
@@ -479,8 +479,8 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
   | single_add g d b hg hd ih =>
       have hsingle :
           (extendScalars E rho).asAlgebraHom
-              (MonoidAlgebra.mapRingHom G (algebraMap F E) (Finsupp.single g d)) =
-            LinearMap.baseChange E (rho.asAlgebraHom (Finsupp.single g d)) := by
+              (MonoidAlgebra.mapRingHom G (algebraMap F E) (MonoidAlgebra.single g d)) =
+            LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) := by
         rw [MonoidAlgebra.mapRingHom_single,
           Representation.asAlgebraHom_single,
           Representation.asAlgebraHom_single,
@@ -496,19 +496,19 @@ public theorem extendScalars_asAlgebraHom_mapRingHom
       let m := MonoidAlgebra.mapRingHom G (algebraMap F E)
       let p := (extendScalars E rho).asAlgebraHom
       calc
-        p (m (Finsupp.single g d + b)) =
-            p (m (Finsupp.single g d) + m b) :=
-          congrArg p (map_add m (Finsupp.single g d) b)
-        _ = p (m (Finsupp.single g d)) + p (m b) :=
-          map_add p (m (Finsupp.single g d)) (m b)
-        _ = LinearMap.baseChange E (rho.asAlgebraHom (Finsupp.single g d)) +
+        p (m (MonoidAlgebra.single g d + b)) =
+            p (m (MonoidAlgebra.single g d) + m b) :=
+          congrArg p (map_add m (MonoidAlgebra.single g d) b)
+        _ = p (m (MonoidAlgebra.single g d)) + p (m b) :=
+          map_add p (m (MonoidAlgebra.single g d)) (m b)
+        _ = LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) +
             LinearMap.baseChange E (rho.asAlgebraHom b) := congrArg₂ (· + ·) hsingle ih
         _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (Finsupp.single g d) + rho.asAlgebraHom b) :=
+            (rho.asAlgebraHom (MonoidAlgebra.single g d) + rho.asAlgebraHom b) :=
           (LinearMap.baseChange_add _ _).symm
         _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (Finsupp.single g d + b)) :=
+            (rho.asAlgebraHom (MonoidAlgebra.single g d + b)) :=
           congrArg (LinearMap.baseChange E)
-            (map_add rho.asAlgebraHom (Finsupp.single g d) b).symm
+            (map_add rho.asAlgebraHom (MonoidAlgebra.single g d) b).symm
 
 end Representation

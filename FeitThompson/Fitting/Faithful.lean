@@ -10,7 +10,7 @@ public import Mathlib.Data.Finite.Defs
 public import Mathlib.GroupTheory.Solvable
 public import Mathlib.SetTheory.Cardinal.Finite
 
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.Basic
 
 import FeitThompson.Fitting.Centralizer
@@ -78,7 +78,9 @@ public theorem faithful_on_fitting_of_coprime {G : Type*} [Group G] [Finite G] {
 
       have hf_fix : a • f = f := by
         have := congrArg Subtype.val (ha ⟨f, hf⟩)
-        simpa using this
+        have hcoe :
+            ((a • (⟨f, hf⟩ : fittingSubgroup G) : fittingSubgroup G) : G) = a • f := rfl
+        exact hcoe.symm.trans this
 
       have hconj : g * f * g⁻¹ ∈ fittingSubgroup G :=
         Subgroup.Normal.conj_mem (inferInstance : (fittingSubgroup G).Normal) f hf g
@@ -115,7 +117,9 @@ public theorem faithful_on_fitting_of_coprime {G : Type*} [Group G] [Finite G] {
 
     have hx_fix : a • x = x := by
       have := congrArg Subtype.val (ha ⟨x, hx_mem_F⟩)
-      simpa using this
+      have hcoe :
+          ((a • (⟨x, hx_mem_F⟩ : fittingSubgroup G) : fittingSubgroup G) : G) = a • x := rfl
+      exact hcoe.symm.trans this
 
     have hx_fix_pow : ∀ n : ℕ, (a ^ n) • x = x := by
       intro n

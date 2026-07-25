@@ -29,7 +29,7 @@ private theorem not_twoRankAtLeastTwo_quotient_of_odd
     change pi n ∈ E
     have hpi : pi n = 1 := by
       exact (QuotientGroup.eq_one_iff (N := N) n).2 hn
-    simpa [hpi]
+    simp [hpi]
   let NM : Subgroup M := N.subgroupOf M
   let phi : M →* E :=
     (pi.restrict M).codRestrict E (by
@@ -123,7 +123,6 @@ private theorem faithfulSMul_quotient_pointStabilizerCore
   obtain ⟨g, rfl⟩ := QuotientGroup.mk'_surjective (pointStabilizerCore G Omega) a
   obtain ⟨h, rfl⟩ := QuotientGroup.mk'_surjective (pointStabilizerCore G Omega) b
   apply QuotientGroup.eq_iff_div_mem.mpr
-  change g / h ∈ pointStabilizerCore G Omega
   simp only [pointStabilizerCore, Subgroup.mem_iInf, MulAction.mem_stabilizer_iff]
   intro w
   calc
@@ -212,7 +211,7 @@ public theorem claim_2_b
             (QP.map (QuotientGroup.mk' (pointStabilizerCore C OmegaP)))
             (QuotientGroup.mk tP) ∧
           ∃ (F : Type v) (_ : PFAppendixII.RightNearField F) (_ : Finite F)
-              (_ : Nontrivial F) (unitEquiv : nearFieldStar Q P ≃* Fˣ),
+              (_ : Nontrivial F) (_ : nearFieldStar Q P ≃* Fˣ),
             PFAppendixII.PropositionOneConclusion
                 (HP.map (QuotientGroup.mk' (pointStabilizerCore C OmegaP)))
                 (DP.map (QuotientGroup.mk' (pointStabilizerCore C OmegaP)))

@@ -32,8 +32,9 @@ omit [Finite G] [IsMinCE G] in
 public theorem section14_ambientSylow_isPGroup
     {p : Nat.Primes} (M : Subgroup G) (S : Sylow p.val M) :
     IsPGroup p.val (section10AmbientSylowSubgroup M S) := by
-  simpa [section10AmbientSylowSubgroup] using
-    IsPGroup.map (p := p.val) (H := (S : Subgroup M)) S.isPGroup' M.subtype
+  change IsPGroup p.val ((S : Subgroup M).map M.subtype)
+  exact IsPGroup.map (p := p.val) (H := (S : Subgroup M))
+    S.isPGroup' M.subtype
 
 public theorem section14_tau_split_of_not_sigma
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) {p : Nat.Primes}
@@ -56,7 +57,7 @@ public theorem section14_tau_split_of_not_sigma
     simpa [section12Tau2Primes] using ⟨hp_not_sigma, hrank2⟩
 
 private theorem section14_exists_rankTwo_in_ambientSylow_of_tau2
-    {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) {p : Nat.Primes}
+    {M : Subgroup G} (_hM : M ∈ section9MaximalSubgroups G) {p : Nat.Primes}
     (hpτ2 : p ∈ section12Tau2Primes M) (S : Sylow p.val M) :
     ∃ A : Subgroup G,
       A ∈ section12RankTwoElementaryAbelianIn p M ∧
@@ -87,6 +88,7 @@ private theorem section14_exists_rankTwo_in_ambientSylow_of_tau2
   exact section12_rankTwo_mono hA_Pamb (by
     simpa [Pamb] using section14_ambientSylow_le (M := M) S)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
     {H R : Subgroup G} (hRnorm : R ≤ Subgroup.normalizer (H : Set G))
     (hinf : H ⊓ R = ⊥) :
@@ -143,7 +145,7 @@ private theorem section14_nilpotent_msigma_of_prime_order_fixed_free
     intro r hr
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := R) hx hr
+    exact setLike_mul_comm (s := R) hx hr
   have hKRinf_bot : K ⊓ R = ⊥ := by
     apply le_bot_iff.mp
     have hle : K ⊓ R ≤ subgroupCentralizerIn K R := by
@@ -153,8 +155,8 @@ private theorem section14_nilpotent_msigma_of_prime_order_fixed_free
   have hTne_top : T ≠ ⊤ := by
     intro hTtop
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
-      intro x hx
-      exact hT_le_M (by simpa [hTtop] using hx)
+      rw [← hTtop]
+      exact hT_le_M
     exact hM.1 (top_le_iff.mp htop_le_M)
   have hsolvT : IsSolvable T :=
     IsMinCE.proper_subgroups_solvable T (lt_top_iff_ne_top.2 hTne_top)
@@ -184,7 +186,7 @@ private theorem section14_nilpotent_msigma_of_prime_order_fixed_free
     Subgroup.subgroupOfEquivOfLe (H := K) (K := T) le_sup_right
   exact (by
     simpa [K] using
-      (nilpotent_of_mulEquiv (G := K.subgroupOf T) (G' := K) (_h := hnilKsub) e))
+      (Group.nilpotent_of_mulEquiv (G := K.subgroupOf T) (G' := K) (_h := hnilKsub) e))
 
 omit [Finite G] [IsMinCE G] in
 private theorem section14_ambientSylow_card
@@ -317,7 +319,7 @@ public theorem lemma_14_1
     have hAcard : Nat.card A = p.val ^ 2 :=
       (section12_rankTwo_elementary hA_M).1
     refine ⟨?_, ?_, ?_⟩
-    · simpa [hΩ, hAcard]
+    · simp [hΩ, hAcard]
     · simpa [hΩ] using theorem_12_5_d hM hpτ2 hA_M
     · exact theorem_12_5_a hM hpτ2 hA_M
   · let Ω : Subgroup G :=

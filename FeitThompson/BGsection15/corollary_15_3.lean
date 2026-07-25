@@ -62,7 +62,7 @@ private theorem section15_sigma_complement_of_kappa_um_sigma_complement
       have hxoneSub : (⟨x, hxM⟩ : M) = 1 := by
         simpa using hxbotSub
       simpa using congrArg Subtype.val hxoneSub
-    simpa [hxone]
+    simp [hxone]
   refine ⟨hSleM, hKUleM, ?_, ?_⟩
   · have hprod : M = K ⊔ (U ⊔ S) := by
       simpa [S] using hKcomp.2.2.1
@@ -81,7 +81,7 @@ private theorem section15_sigma_complement_of_kappa_um_sigma_complement
     have hk_Uσ : k ∈ U ⊔ S := by
       have hk_eq : k = u⁻¹ * x := by
         rw [← huk]
-        simp [mul_assoc]
+        simp
       rw [hk_eq]
       exact (U ⊔ S).mul_mem
         (Subgroup.mem_sup_left (U.inv_mem huU))
@@ -128,6 +128,7 @@ public theorem section15_KUData_of_proposition14_2AData
         (H := K) (N := U) hreg.1⟩
   exact ⟨hK, hKcomp, hKUcomp, hUHall, hreg, hnormComp.2, hUnormKU⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_empty_kappa_hall_bot
     {M : Subgroup G}
     (hκempty : section14KappaPrimes M = ∅) :
@@ -136,7 +137,7 @@ private theorem section15_empty_kappa_hall_bot
   have hbot_subgroupOf :
       ((⊥ : Subgroup G).subgroupOf M) = (⊥ : Subgroup M) := by
     ext x
-    simp [Subgroup.mem_subgroupOf]
+    simp
   rw [hκempty, hbot_subgroupOf]
   refine isHallSubgroup_of (G := M) (π := (∅ : Set Nat.Primes))
     (H := (⊥ : Subgroup M)) ?_ ?_
@@ -177,6 +178,7 @@ public theorem section15_KUData_of_empty_kappa_sigma_complement
       intro x hxbot _hxUS
       simpa using hxbot
   have hKUcomp : section12ComplementIn M S ((⊥ : Subgroup G) ⊔ U) := by
+    change section12ComplementIn M (section10Msigma M) U at hUcomp
     simpa [S] using hUcomp
   have hUHall : section12HallSubgroupIn
       ((section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ) U M := by
@@ -220,7 +222,7 @@ public theorem section15_exists_KUData_for_maximal
       · intro hp
         exact False.elim (hκ ⟨p, hp⟩)
       · intro hp
-        simpa using hp
+        simp at hp
     rcases section15_exists_sigma_complement (G := G) (M := M) hM with ⟨U, hUcomp⟩
     exact ⟨⊥, U,
       section15_KUData_of_empty_kappa_sigma_complement
@@ -326,7 +328,7 @@ private theorem section15_exists_sylow_overgroup_for_hall_subgroup
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := q.val) (H := T) hTp hTne)
   have hqT : q ∈ subgroupPrimeSet T := by
-    simpa [hTprimeSet]
+    simp [hTprimeSet]
   have hqH : q ∈ subgroupPrimeSet H := by
     have hq_dvd_T : q.val ∣ Nat.card T := by
       simpa [subgroupPrimeSet] using hqT
@@ -493,8 +495,8 @@ private theorem section15_corollary15_3_centralizer_kappa_compl
       ((Subgroup.map_eq_bot_iff_of_injective
         (H := (P : Subgroup H)) (f := H.subtype) H.subtype_injective).1 hmapbot)
   have hTp : IsPGroup q.val T := by
-    simpa [T, section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype)
+    change IsPGroup q.val ((P : Subgroup H).map H.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype
   have hTsub_eq : T.subgroupOf H = (P : Subgroup H) := by
     simpa [T, section10AmbientSylowSubgroup] using
       (subgroupOf_map_subtype_eq (K := H) (P : Subgroup H))
@@ -792,7 +794,7 @@ private theorem section15_corollary15_3_nontrivial_factor_conjugate_to_U
     · intro hx
       refine Subgroup.mem_map.mpr ⟨(a : G) * x * (a : G)⁻¹, ?_, ?_⟩
       · exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
-      · simp [MulAut.conj_apply, mul_assoc]
+      · simp [mul_assoc]
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyX₀, hyx⟩
       rcases Subgroup.mem_map.mp hyX₀ with ⟨z, hzX, hzy⟩
@@ -812,8 +814,8 @@ private theorem section15_corollary15_3_factor_cyclic_tau2
     {M H K U X X₀ : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hKU : section15KUData M K U)
-    (hHne : H ≠ ⊥)
-    (hHall : section15HallSubgroupOf H (section10Msigma M))
+    (_hHne : H ≠ ⊥)
+    (_hHall : section15HallSubgroupOf H (section10Msigma M))
     (hX₀U : X₀ ≤ U)
     (hX₀ne : X₀ ≠ ⊥)
     (hX₀cent : subgroupCentralizerIn (section10Msigma M) X₀ ≠ ⊥)
@@ -823,11 +825,13 @@ private theorem section15_corollary15_3_factor_cyclic_tau2
   have h151c := lemma_15_1_c
     (G := G) (M := M) (K := K) (U := U) (X := X₀)
     hM hKU hX₀U hX₀ne hX₀cent
-  let e : X₀ ≃* X₀.conjBy g := by
-    simpa [Subgroup.conjBy] using
-      (Subgroup.equivMapOfInjective
-        (f := (MulAut.conj g).toMonoidHom) X₀
-        (EquivLike.injective (MulAut.conj g)))
+  let eMap : X₀ ≃* X₀.map (MulAut.conj g).toMonoidHom :=
+    Subgroup.equivMapOfInjective
+      (f := (MulAut.conj g).toMonoidHom) X₀
+      (EquivLike.injective (MulAut.conj g))
+  have hmap : X₀.map (MulAut.conj g).toMonoidHom = X₀.conjBy g := by
+    rfl
+  let e : X₀ ≃* X₀.conjBy g := eMap.trans (MulEquiv.subgroupCongr hmap)
   refine ⟨?_, ?_⟩
   · exact e.isCyclic.1 h151c.2.1
   · intro p hp
@@ -946,7 +950,7 @@ public theorem section15_mem_normalizer_of_conjBy_eq
 private theorem section15_corollary15_3_conjugacy_into_M
     {M H : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hHne : H ≠ ⊥)
+    (_hHne : H ≠ ⊥)
     (hHall : section15HallSubgroupOf H (section10Msigma M))
     {x y : G} (hxH : x ∈ H) (hyH : y ∈ H)
     (hxy : section15ConjugateInSubgroup (⊤ : Subgroup G) x y) :
@@ -1013,12 +1017,13 @@ private theorem section15_corollary15_3_conjugacy_into_M
       _ = g * ((c : G) * x * (c : G)⁻¹) * g⁻¹ := by rw [hcx]
       _ = (g * (c : G)) * x * (g * (c : G))⁻¹ := by group
 
+omit [Finite G] [IsMinCE G] in
 /-- Corollary 15.3(b), normal case: if `H ⊲ M`, conjugacy inside `M`
 already uses an element of `N_M(H)`. -/
 private theorem section15_corollary15_3_conjugacy_normal_case
     {M H : Subgroup G}
     (hHnormal : section10NormalIn H M)
-    {x y : G} (hxH : x ∈ H) (hyH : y ∈ H)
+    {x y : G} (_hxH : x ∈ H) (_hyH : y ∈ H)
     (hxyM : section15ConjugateInSubgroup M x y) :
     section15ConjugateInSubgroup (subgroupNormalizerIn M (H : Set G)) x y := by
   rcases hHnormal with ⟨hHM, hHnormM⟩
@@ -1063,7 +1068,7 @@ private theorem section15_map_subgroupOf_map_conj_eq
     ext
     simp [z, MulAut.conj_apply, mul_assoc]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section15_conjNormal_subgroupOf_map_subtype
     {N H : Subgroup G} [N.Normal] (hHN : H ≤ N) (g : G) :
     ((H.subgroupOf N).map (MulAut.conjNormal (H := N) g).toMonoidHom).map N.subtype =
@@ -1084,7 +1089,7 @@ private theorem section15_conjNormal_subgroupOf_map_subtype
     let z : H.subgroupOf N := ⟨⟨y, hyN⟩, by simpa [Subgroup.mem_subgroupOf] using hyH⟩
     refine Subgroup.mem_map.mpr ⟨z, z.property, ?_⟩
     ext
-    simp [z, MulAut.conjNormal_apply, MulAut.conj_apply, mul_assoc]
+    simp [z, MulAut.conjNormal_apply, mul_assoc]
 
 omit [IsMinCE G] in
 private theorem section15_hall_frattini_sup_normalizer_eq_top
@@ -1177,6 +1182,7 @@ public theorem section15_hall_subgroup_normal_of_nilpotent
   rw [hEq]
   infer_instance
 
+omit [IsMinCE G] in
 private theorem section15_normalIn_of_MF_eq_msigma_hall
     {M MF H : Subgroup G}
     (hMF : section15MFSubgroup M MF)
@@ -1254,7 +1260,9 @@ public theorem section15_hallSubgroupOf_of_le
         simpa [Subgroup.mem_subgroupOf] using hy
       have hyHG : (((y : RsubS) : S) : G) ∈ H := by
         simpa [HsubS, Subgroup.mem_subgroupOf] using hyH
-      simpa [Subgroup.mem_subgroupOf, e] using hyHG
+      change ((e y : R) : G) ∈ H
+      convert hyHG using 1
+      rfl
     · intro hx
       have hxH : (x : G) ∈ H := by
         simpa [Subgroup.mem_subgroupOf] using hx
@@ -1303,6 +1311,7 @@ private theorem section15_hallSubgroupOf_subgroupOf_overgroup
   rw [← hmap]
   exact section15_isHallSubgroup_map_of_surjective hHallHR e.toMonoidHom e.surjective
 
+omit [IsMinCE G] in
 private theorem section15_sylowSubgroupIn_subgroupOf_characteristic
     {M S Q : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M)
@@ -1321,8 +1330,8 @@ private theorem section15_sylowSubgroupIn_subgroupOf_characteristic
       (subgroupOf_map_subtype_eq (K := M) (P : Subgroup M))
   have hQp : IsPGroup q.val Q := by
     rw [← hPamb]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hQloc_p : IsPGroup q.val Qloc :=
     hQp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := Q) (K := S) hQS).symm
@@ -1356,9 +1365,10 @@ private theorem section15_sylowSubgroupIn_subgroupOf_characteristic
     Sylow.characteristic_of_normal PS hPS_normal
   simpa [Qloc, hPS_eq] using hPS_char
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_quotient_nilpotent_of_normal_complement
     {S Q D : Subgroup G}
-    [hQnormalS : (Q.subgroupOf S).Normal]
+    [_hQnormalS : (Q.subgroupOf S).Normal]
     (hcomp : section12ComplementIn S Q D)
     (hQnorm : section10NormalIn Q S)
     (hDnil : Group.IsNilpotent D) :
@@ -1378,11 +1388,12 @@ private theorem section15_quotient_nilpotent_of_normal_complement
   have hDloc_nil : Group.IsNilpotent Dloc := by
     let e : Dloc ≃* D :=
       Subgroup.subgroupOfEquivOfLe (H := D) (K := S) hcomp.2.1
-    exact nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
   let e : S ⧸ Qloc ≃* Dloc := hcomp'.QuotientMulEquiv
-  exact nilpotent_of_mulEquiv (G := Dloc) (G' := S ⧸ Qloc)
+  exact Group.nilpotent_of_mulEquiv (G := Dloc) (G' := S ⧸ Qloc)
     (_h := hDloc_nil) e.symm
 
+omit [IsMinCE G] in
 private theorem section15_sup_hall_normalIn_of_quotient_piCore
     {M S Q H : Subgroup G}
     [hQcharS : (Q.subgroupOf S).Characteristic]
@@ -1463,9 +1474,9 @@ private theorem section15_Q_sup_H_normalIn_of_theorem15_2_context
     {M MF K Q D H : Subgroup G} {q : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hMFne : MF ≠ section10Msigma M)
+    (_hq : q.val = Nat.card (section14KStar M K))
     (hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
     (hQMF : Q ≤ MF)
@@ -1520,13 +1531,13 @@ private theorem section15_Q_disjoint_H_of_nonnormal
   by_contra hnot
   have hQHinf_ne_bot : Q ⊓ H ≠ ⊥ := by
     intro hbot
-    exact hnot (disjoint_iff_inf_le.mpr (by simpa [hbot]))
+    exact hnot (disjoint_iff_inf_le.mpr (by simp [hbot]))
   rcases hQ with ⟨P, hPamb⟩
   have hQp : IsPGroup q.val Q := by
     rw [← hPamb]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-        P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+      P.isPGroup' M.subtype
   have hQσ : Q ≤ section10Msigma M :=
     hQMF.trans (section15_MF_le_msigma hM hMF)
   have hQsubσ_p : IsPGroup q.val (Q.subgroupOf (section10Msigma M)) :=
@@ -1559,6 +1570,10 @@ private theorem section15_Q_disjoint_H_of_nonnormal
       simpa [hr_val] using hr_dvd_H
     simpa [subgroupPrimeSet] using hq_dvd_H
   have hQleH : Q ≤ H := by
+    have hqH' :
+        (⟨q.val, Fact.out⟩ : Nat.Primes) ∈ subgroupPrimeSet H := by
+      rw [show (⟨q.val, Fact.out⟩ : Nat.Primes) = q by exact Subtype.ext rfl]
+      exact hqH
     have hQsub_le_Hsub :
         Q.subgroupOf (section10Msigma M) ≤ H.subgroupOf (section10Msigma M) :=
       section12_normal_pSubgroup_le_of_isHallSubgroup_of_prime_mem
@@ -1566,7 +1581,7 @@ private theorem section15_Q_disjoint_H_of_nonnormal
         (π := subgroupPrimeSet H)
         (H := H.subgroupOf (section10Msigma M))
         (N := Q.subgroupOf (section10Msigma M))
-        (p := q.val) hQsubσ_p hHall.2 (by simpa using hqH)
+        (p := q.val) hQsubσ_p hHall.2 hqH'
     intro x hxQ
     have hxσ : x ∈ section10Msigma M := hQσ hxQ
     have hxQsub :
@@ -1642,7 +1657,7 @@ private theorem section15_conjugacy_from_Q_frattini
       hsolvN hHleN (by simpa [Hm, N] using hHallHN)
   let bM : M := ⟨b, hbM⟩
   have hbFrattini : bM ∈ N ⊔ Subgroup.normalizer (Hm : Set M) := by
-    simpa [hFrattini]
+    simp [hFrattini]
   obtain ⟨z, hzN, n, hnNorm, hzn⟩ :=
     (Subgroup.mem_sup_of_normal_left
       (s := N) (t := Subgroup.normalizer (Hm : Set M)) (x := bM)).1 hbFrattini
@@ -1762,7 +1777,7 @@ private theorem section15_corollary15_3_conjugacy_nonnormal_case
   have hHallHR : section15HallSubgroupOf H R :=
     section15_hallSubgroupOf_of_le
       (H := H) (R := R) (S := section10Msigma M)
-      hHall (by simpa [R] using le_sup_right) hRσ
+      hHall (by simp [R]) hRσ
   have hHallHN :
       IsHallSubgroup (subgroupPrimeSet H)
         ((H.subgroupOf M).subgroupOf (R.subgroupOf M)) :=

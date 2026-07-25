@@ -14,13 +14,13 @@ namespace PFchapter4section2
 public theorem claim_15_b
     (E : Type*) [Field E] (m : ℕ) (zeta alpha beta : E)
     (tau : E → E) (u d : ℕ → E)
-    (sigma : E → E) (hseq_zeta_ne_one : zeta ≠ 1) (hseq_alpha_ne_zero : alpha ≠ 0)
-    (hseq_beta_ne_zero : beta ≠ 0) (hseq_tau_nonzero : ∀ x : E, x ≠ 0 → tau x ≠ 0)
+    (_sigma : E → E) (_hseq_zeta_ne_one : zeta ≠ 1) (_hseq_alpha_ne_zero : alpha ≠ 0)
+    (_hseq_beta_ne_zero : beta ≠ 0) (_hseq_tau_nonzero : ∀ x : E, x ≠ 0 → tau x ≠ 0)
     (hseq_zeta_order : orderOf zeta = m)
-    (hseq_recurrence_u : ∀ i : ℕ, u i ≠ alpha → u (i + 1) = (alpha + u i)⁻¹)
-    (hseq_recurrence_d : ∀ i : ℕ, u i ≠ alpha →
+    (_hseq_recurrence_u : ∀ i : ℕ, u i ≠ alpha → u (i + 1) = (alpha + u i)⁻¹)
+    (_hseq_recurrence_d : ∀ i : ℕ, u i ≠ alpha →
       d (i + 1) = d i * zeta * tau ((u (i + 1))⁻¹ ^ 2))
-    (hseq_beta_characteristic_root : beta ^ 2 + alpha * beta + 1 = 0)
+    (_hseq_beta_characteristic_root : beta ^ 2 + alpha * beta + 1 = 0)
     (hseq_terminal_stop : ∃ r : ℕ, 1 ≤ r ∧ r ≤ m - 1 ∧ u r = alpha)
     (hseq_terminal_order : ∀ r : ℕ, 1 ≤ r → r ≤ m - 1 → u r = alpha →
       alpha = beta ^ r + (beta⁻¹) ^ r ∧ zeta ^ (r + 1) = 1) :
@@ -43,4 +43,3 @@ public theorem claim_15_b
 
 end PFchapter4section2
 end BenderSuzuki
-

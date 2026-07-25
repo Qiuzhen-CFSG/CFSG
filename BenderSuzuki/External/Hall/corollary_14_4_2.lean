@@ -17,6 +17,8 @@ Source interface for the Engel special case preceding Hall-Wielandt.
 namespace BenderSuzuki
 namespace External
 
+open scoped commutatorElement
+
 universe u
 
 private theorem hall_normal_commutator_lt_of_nilpotent
@@ -26,17 +28,17 @@ private theorem hall_normal_commutator_lt_of_nilpotent
   have hle : ⁅A, (⊤ : Subgroup S)⁆ ≤ A := Subgroup.commutator_le_left A ⊤
   refine lt_of_le_of_ne hle ?_
   intro heq
-  have hseries : ∀ n : ℕ, A ≤ lowerCentralSeries S n := by
+  have hseries : ∀ n : ℕ, A ≤ (⊤ : Subgroup S).lowerCentralSeries n := by
     intro n
     induction n with
-    | zero => simp [lowerCentralSeries_zero]
+    | zero => simp [Subgroup.lowerCentralSeries_zero]
     | succ n ih =>
         rw [← heq]
-        rw [show lowerCentralSeries S (n + 1) =
-          ⁅lowerCentralSeries S n, (⊤ : Subgroup S)⁆ by
-            exact lowerCentralSeries_succ n]
+        rw [show (⊤ : Subgroup S).lowerCentralSeries (n + 1) =
+          ⁅(⊤ : Subgroup S).lowerCentralSeries n, (⊤ : Subgroup S)⁆ by
+            exact Subgroup.lowerCentralSeries_succ (⊤ : Subgroup S) n]
         exact Subgroup.commutator_mono ih le_rfl
-  obtain ⟨n, hn⟩ := nilpotent_iff_lowerCentralSeries.mp
+  obtain ⟨n, hn⟩ := Subgroup.nilpotent_iff_lowerCentralSeries.mp
     (inferInstance : Group.IsNilpotent S)
   apply hA
   apply le_antisymm
@@ -160,7 +162,13 @@ public theorem hallTransferModulus_proper_of_residual_lt
         ⁅(f ⟨a, ha⟩ : H₁ ⧸ R), q ⟨b, hb⟩⁆ ∈ C :=
       Subgroup.commutator_mem_commutator
         (f ⟨a, ha⟩).2 (by simp)
-    simpa [f, φ, ι, xH, map_commutatorElement] using hcomm_mem
+    have hfx :
+        (f xH : H₁ ⧸ R) = ⁅(f ⟨a, ha⟩ : H₁ ⧸ R), q ⟨b, hb⟩⁆ := by
+      change q (ι xH) = ⁅q (ι ⟨a, ha⟩), q ⟨b, hb⟩⁆
+      rw [← map_commutatorElement]
+      congr 1
+    rw [hfx]
+    exact hcomm_mem
   have hres_le :
       (hallPResidual p H).map H.subtype ≤ K.map H.subtype := by
     rintro x ⟨h, hh, rfl⟩
@@ -263,7 +271,7 @@ public theorem hall_corollary_14_4_2e_engel_normalizer
         have hzP : z ∈ (P : Subgroup G) := hZs z hz
         have heng : engelSymbol p u z = 1 :=
           hengel u z huP hzP
-        simpa [heng] using (hallTransferModulus p H N).one_mem
+        simp [heng]
       have hclosure :
           Subgroup.closure E ≤ hallTransferModulus p H N :=
         (Subgroup.closure_le _).2 hE_le
@@ -285,5 +293,3 @@ public theorem hall_corollary_14_4_2e_engel_normalizer
 
 end External
 end BenderSuzuki
-
-

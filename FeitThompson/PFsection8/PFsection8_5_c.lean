@@ -250,9 +250,9 @@ private theorem typeP_W_isMulCommutative
     have hval := congrArg (fun z : D => (z : G)) hycd
     simpa [c, d] using hval.symm
   have hac : a * c = c * a :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := W1) haW1 hcW1
+    setLike_mul_comm (s := W1) haW1 hcW1
   have hbd : b * d = d * b :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := W2) hbW2 hdW2
+    setLike_mul_comm (s := W2) hbW2 hdW2
   have hbc : b * c = c * b :=
     (Subgroup.mem_centralizer_iff.mp (hW2centW1 hbW2) c hcW1).symm
   have had : a * d = d * a :=
@@ -290,7 +290,7 @@ private theorem typeP_hatW_nonempty
       have hx1 : x = 1 := by
         by_contra hxne
         exact hnone ⟨x, hx, hxne⟩
-      simpa [hx1]
+      simp [hx1]
     · exact bot_le
   obtain ⟨b, hbW2, hb1⟩ : ∃ b : G, b ∈ W2 ∧ b ≠ 1 := by
     by_contra hnone
@@ -300,7 +300,7 @@ private theorem typeP_hatW_nonempty
       have hx1 : x = 1 := by
         by_contra hxne
         exact hnone ⟨x, hx, hxne⟩
-      simpa [hx1]
+      simp [hx1]
     · exact bot_le
   refine ⟨a * b, ?_⟩
   constructor
@@ -474,7 +474,7 @@ private theorem typeP_mem_normalizer_singleton_of_mem_centralizer_singleton
   constructor
   · intro hy
     have hy_eq : y = a := by simpa using hy
-    simpa [hy_eq, hfix]
+    simp [hy_eq, hfix]
   · intro hy
     have hy_eq : c * y * c⁻¹ = a := by simpa using hy
     have hfix_inv : c⁻¹ * a * c = a := by
@@ -485,7 +485,7 @@ private theorem typeP_mem_normalizer_singleton_of_mem_centralizer_singleton
         y = c⁻¹ * (c * y * c⁻¹) * c := by group
         _ = c⁻¹ * a * c := by rw [hy_eq]
         _ = a := hfix_inv
-    simpa [hy_a]
+    simp [hy_a]
 
 private theorem typeP_mem_normalizer_of_conjBy_eq
     {G : Type u} [Group G] {H : Subgroup G} {g : G}
@@ -582,7 +582,7 @@ private theorem typeP_conjBy_W_le_W_of_hatW_inter_conj_nonempty
   have hcent : g * w * g⁻¹ ∈ Subgroup.centralizer ({v} : Set G) := by
     rw [Subgroup.mem_centralizer_singleton_iff]
     have hcomm : w * x = x * w :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := W) hwW (by simpa [W] using hx.1)
+      setLike_mul_comm (s := W) hwW (by simpa [W] using hx.1)
     rw [hv_eq]
     calc
       (g * w * g⁻¹) * (g * x * g⁻¹) = g * (w * x) * g⁻¹ := by group

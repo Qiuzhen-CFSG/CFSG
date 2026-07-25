@@ -120,7 +120,9 @@ public theorem section10_exists_sigma_prime_of_malpha_eq_bot
   let Bad : ℕ → Prop := fun k => ∃ hk : k < n + 1, series ⟨k, hk⟩ = ⊥
   have hBad_exists : ∃ k, Bad k := by
     refine ⟨n, ?_⟩
-    exact ⟨Nat.lt_succ_self n, by simpa using hbot⟩
+    refine ⟨Nat.lt_succ_self n, ?_⟩
+    change series (Fin.last n) = ⊥
+    exact hbot
   let k : ℕ := Nat.find hBad_exists
   have hkBad : Bad k := Nat.find_spec hBad_exists
   rcases hkBad with ⟨hk_lt, hk_bot⟩

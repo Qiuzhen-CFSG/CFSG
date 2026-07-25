@@ -29,7 +29,7 @@ private theorem section10_isNilpotent_of_hasNormalPComplements
     (hcomp : ∀ p : Nat.Primes, p.val ∣ Nat.card H → HasNormalPComplement p.val H) :
     Group.IsNilpotent H := by
   classical
-  have hnil_iff := (isNilpotent_of_finite_tfae (G := H)).out 0 3
+  have hnil_iff := (Group.isNilpotent_of_finite_tfae (G := H)).out 0 3
   rw [hnil_iff]
   intro p hp P
   by_cases hpH : p ∣ Nat.card H
@@ -207,11 +207,11 @@ private theorem section10_hasNilpotentHallSubgroup_of_normal_hall_quotient_nilpo
   have hCnil : Group.IsNilpotent C := by
     letI : Group.IsNilpotent (K ⧸ Nsub) := hquotNil
     let e : K ⧸ Nsub ≃* C := hcomp.symm.QuotientMulEquiv
-    exact nilpotent_of_mulEquiv (G := K ⧸ Nsub) (G' := C) e
+    exact Group.nilpotent_of_mulEquiv (G := K ⧸ Nsub) (G' := C) e
   have hLnil : Group.IsNilpotent L := by
     let e : C ≃* L := Subgroup.equivMapOfInjective C K.subtype K.subtype_injective
     letI : Group.IsNilpotent C := hCnil
-    exact nilpotent_of_mulEquiv (G := C) (G' := L) e
+    exact Group.nilpotent_of_mulEquiv (G := C) (G' := L) e
   exact ⟨L, hLK, by simpa [hLsub_eq] using hCHall, hLnil⟩
 
 /-- Lemma 10.8(b). -/

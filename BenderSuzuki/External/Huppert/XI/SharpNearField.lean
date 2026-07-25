@@ -360,7 +360,7 @@ public theorem huppert_blackburn_XI_sharpTriple_exists_rightNearField
   change IsFrobeniusGroupWithKernelComplement F D at hFrob
   letI : F.Normal := hFrob.normal
   letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := CommGroup.ofIsMulCommutative
+  letI : CommGroup F := IsMulCommutative.instCommGroup
   rcases huppert_blackburn_XI_twoPointStabilizer_exists_conjEquiv
       htwo hsharp a b hab F hFrob with ⟨z, hz, e, he⟩
   let punctureEquiv : {x : F // x ≠ 1} ≃ {x : Additive F // x ≠ 0} :=

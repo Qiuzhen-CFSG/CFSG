@@ -51,7 +51,7 @@ private theorem isVirtualCharacter_zsmul_23
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {chi : ClassFunction G}
     (hchi : Representation.IsVirtualCharacter chi) :
-    Representation.IsVirtualCharacter (n • chi) := by
+    Representation.IsVirtualCharacter ((n : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
@@ -311,7 +311,7 @@ private theorem exists_irreducibleCharacter_separates_ne_one_23
     ⟨ι, hι, chi, hchi, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hvalues : ∀ i : ι,
       chi i (ConjClasses.mk q) = chi i (ConjClasses.mk (1 : Q)) := by
     intro i

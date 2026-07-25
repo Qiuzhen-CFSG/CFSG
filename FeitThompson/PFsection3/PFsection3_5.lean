@@ -3070,10 +3070,10 @@ public theorem betaSignedMem_exists_third_of_two
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 : ℤ} {k1 k2 : ι}
-    (h1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_h1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i j ε1 k1)
-    (h2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_h2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i j ε2 k2) :
     ∃ ε3 k3,
@@ -4533,10 +4533,10 @@ public theorem betaSignedMem_pf3541_neg_x6_impossible
     (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
     (b : Module.Basis ι ℂ (Representation.ClassFunction G))
     (hb : ∀ k, b k = χ k)
-    (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
+    (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (_hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
-    (hir : i ≠ r) (hit : i ≠ t) (hiu : i ≠ u)
-    (hrt : r ≠ t) (hru : r ≠ u) (htu : t ≠ u) (hjq : j ≠ q)
+    (hir : i ≠ r) (hit : i ≠ t) (_hiu : i ≠ u)
+    (_hrt : r ≠ t) (_hru : r ≠ u) (_htu : t ≠ u) (hjq : j ≠ q)
     {ε1 ε2 ε3 ε4 ε5 ε6 ε7 : ℤ}
     {x1 x2 x3 x4 x5 x6 x7 : ι}
     (hBase_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
@@ -4545,10 +4545,10 @@ public theorem betaSignedMem_pf3541_neg_x6_impossible
     (hBase_x2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i q ε2 x2)
-    (hBase_x3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hBase_x3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i q ε3 x3)
-    (h12 : x1 ≠ x2) (h13 : x1 ≠ x3) (h23 : x2 ≠ x3)
+    (h12 : x1 ≠ x2) (_h13 : x1 ≠ x3) (_h23 : x2 ≠ x3)
     (hB_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r q ε1 x1)
@@ -4569,17 +4569,17 @@ public theorem betaSignedMem_pf3541_neg_x6_impossible
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ t q ε6 x6)
     (h24 : x2 ≠ x4) (h26 : x2 ≠ x6) (h46 : x4 ≠ x6)
-    (hD_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hD_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε1 x1)
-    (hD_x6 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hD_x6 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε6 x6)
-    (hD_x7 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hD_x7 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε7 x7)
-    (h16 : x1 ≠ x6) (h17 : x1 ≠ x7) (h47 : x4 ≠ x7)
-    (h56 : x5 ≠ x6) (h67 : x6 ≠ x7)
+    (h16 : x1 ≠ x6) (_h17 : x1 ≠ x7) (_h47 : x4 ≠ x7)
+    (h56 : x5 ≠ x6) (_h67 : x6 ≠ x7)
     (hA_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i j ε1 x1)
@@ -4850,8 +4850,8 @@ public theorem betaSignedMem_pf3541_second_assertion
     (hD_x7 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε7 x7)
-    (h16 : x1 ≠ x6) (h17 : x1 ≠ x7) (h47 : x4 ≠ x7)
-    (h56 : x5 ≠ x6) (h67 : x6 ≠ x7)
+    (h16 : x1 ≠ x6) (h17 : x1 ≠ x7) (_h47 : x4 ≠ x7)
+    (_h56 : x5 ≠ x6) (h67 : x6 ≠ x7)
     (h27 : x2 ≠ x7) (h36 : x3 ≠ x6)
     (hA_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -4940,8 +4940,8 @@ public theorem betaSignedMem_pf3541_third_assertion
     (hD_x7 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε7 x7)
-    (h16 : x1 ≠ x6) (h17 : x1 ≠ x7) (h47 : x4 ≠ x7)
-    (h56 : x5 ≠ x6) (h67 : x6 ≠ x7)
+    (h16 : x1 ≠ x6) (h17 : x1 ≠ x7) (_h47 : x4 ≠ x7)
+    (_h56 : x5 ≠ x6) (h67 : x6 ≠ x7)
     (h25 : x2 ≠ x5) (h34 : x3 ≠ x4)
     (hA_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -5565,7 +5565,7 @@ public theorem betaSignedMem_pf3544_gets_x5_of_no_x1
     (b : Module.Basis ι ℂ (Representation.ClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
-    (hir : i ≠ r) (hjq : j ≠ q)
+    (hir : i ≠ r) (_hjq : j ≠ q)
     {ε1 ε4 ε5 : ℤ} {x1 x4 x5 : ι}
     (hB_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -5580,13 +5580,13 @@ public theorem betaSignedMem_pf3544_gets_x5_of_no_x1
     (hA12_neg_x4 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i j (-ε4) x4)
-    (hA12_x5 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hA12_x5 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i j ε5 x5)
     (hnot_x1 : ¬ betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r j ε1 x1)
-    (hnot_neg_x4 : ¬ betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hnot_neg_x4 : ¬ betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r j (-ε4) x4)
     {ε : ℤ} {y : ι}
@@ -5654,7 +5654,7 @@ public theorem betaSignedMem_pf3544_gets_x8_of_no_neg_x3
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ t j ε8 x8)
     (h23 : x2 ≠ x3) (h28 : x2 ≠ x8) (h38 : x3 ≠ x8)
-    (hA22_x5 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hA22_x5 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r j ε5 x5)
     (hnot_x2 : ¬ betaSignedMem (W1 := W1) (W2 := W2) (W := W)
@@ -5790,7 +5790,7 @@ public theorem betaSignedMem_pf3544_assertion
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
-    (hir : i ≠ r) (hrt : r ≠ t) (hit : i ≠ t) (hjq : j ≠ q)
+    (hir : i ≠ r) (hrt : r ≠ t) (_hit : i ≠ t) (hjq : j ≠ q)
     {ε1 ε2 ε3 ε4 ε5 ε8 : ℤ}
     {x1 x2 x3 x4 x5 x8 : ι}
     (hBase_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
@@ -5963,7 +5963,7 @@ public theorem betaSignedMem_pf3545_caseI_impossible
     (hA22_x8 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r j ε8 x8)
-    (hA22_x9 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hA22_x9 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r j ε9 x9)
     (h58 : x5 ≠ x8)
@@ -6152,7 +6152,7 @@ public theorem betaSignedMem_pf3546_caseII_impossible_of_x1_neg_x4
     (hBase_x3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i q ε3 x3)
-    (h12 : x1 ≠ x2) (h13 : x1 ≠ x3) (h23 : x2 ≠ x3)
+    (h12 : x1 ≠ x2) (_h13 : x1 ≠ x3) (_h23 : x2 ≠ x3)
     (hC_x2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ t q ε2 x2)
@@ -6636,7 +6636,7 @@ public theorem betaSignedMem_pf354_caseI_fourth_row_pattern_of_x1
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hq : q ≠ j0)
-    (hir : i ≠ r) (hit : i ≠ t) (hiu : i ≠ u)
+    (_hir : i ≠ r) (_hit : i ≠ t) (hiu : i ≠ u)
     (hrt : r ≠ t) (hru : r ≠ u) (htu : t ≠ u)
     {ε1 ε2 ε3 ε4 ε5 ε6 : ℤ}
     {x1 x2 x3 x4 x5 x6 : ι}
@@ -6646,10 +6646,10 @@ public theorem betaSignedMem_pf354_caseI_fourth_row_pattern_of_x1
     (hBase_x2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i q ε2 x2)
-    (hBase_x3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
+    (_hBase_x3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ i q ε3 x3)
-    (h12 : x1 ≠ x2) (h13 : x1 ≠ x3) (h23 : x2 ≠ x3)
+    (h12 : x1 ≠ x2) (_h13 : x1 ≠ x3) (_h23 : x2 ≠ x3)
     (hB_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ r q ε1 x1)
@@ -6670,7 +6670,7 @@ public theorem betaSignedMem_pf354_caseI_fourth_row_pattern_of_x1
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ t q ε6 x6)
     (h24 : x2 ≠ x4) (h26 : x2 ≠ x6) (h46 : x4 ≠ x6)
-    (h16 : x1 ≠ x6)
+    (_h16 : x1 ≠ x6)
     (hD_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε1 x1) :
@@ -6767,9 +6767,9 @@ public theorem betaSignedMem_pf3542_x8_ne_caseI_old_terms
     (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
     (b : Module.Basis ι ℂ (Representation.ClassFunction G))
     (hb : ∀ k, b k = χ k)
-    (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
+    (_hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
-    (hir : i ≠ r) (hit : i ≠ t) (hiu : i ≠ u)
+    (_hir : i ≠ r) (_hit : i ≠ t) (_hiu : i ≠ u)
     (hrt : r ≠ t) (hru : r ≠ u) (htu : t ≠ u) (hjq : j ≠ q)
     {ε1 ε2 ε3 ε4 ε5 ε6 ε7 ε8 : ℤ}
     {x1 x2 x3 x4 x5 x6 x7 x8 : ι}
@@ -7766,7 +7766,7 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_fourth_row_x4
       (ω := ω) (χ := χ) h hω hχ t q ε6 x6)
     (h24 : x2 ≠ x4) (h26 : x2 ≠ x6) (h46 : x4 ≠ x6)
     (h25 : x2 ≠ x5) (h34 : x3 ≠ x4) (h35 : x3 ≠ x5)
-    (h16 : x1 ≠ x6) (h36 : x3 ≠ x6) (h56 : x5 ≠ x6)
+    (h16 : x1 ≠ x6) (_h36 : x3 ≠ x6) (h56 : x5 ≠ x6)
     (hD_x4 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω hχ u q ε4 x4) :
@@ -7805,7 +7805,7 @@ public theorem betaSignedMem_pf354_caseII_impossible_of_full_pattern
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
     (hir : i ≠ r) (hit : i ≠ t) (hiu : i ≠ u)
-    (hrt : r ≠ t) (hru : r ≠ u) (htu : t ≠ u) (hjq : j ≠ q)
+    (_hrt : r ≠ t) (_hru : r ≠ u) (_htu : t ≠ u) (hjq : j ≠ q)
     {ε1 ε2 ε3 ε4 ε5 ε6 : ℤ}
     {x1 x2 x3 x4 x5 x6 : ι}
     (hBase_x1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
@@ -8727,7 +8727,7 @@ public theorem exists_signed_principal_index_of_completeFamily
   rcases exists_principal_index_of_completeFamily (G := G) (ι := ι) (χ := χ) hχ with
     ⟨k, hk⟩
   refine ⟨1, k, Or.inl rfl, ?_⟩
-  simpa [hk]
+  simp [hk]
 
 public theorem inducedCF_alphaIJ_eq_principal_add_three_signed_of_betaSignedMem
     {G : Type u} [Group G] [Finite G]
@@ -9804,7 +9804,7 @@ public theorem eq_left_or_right_of_card_eq_three_of_ne_base_pair
     simp
   have hle := Finset.card_le_card hsub
   have : 4 ≤ 3 := by
-    simpa [hfour, hcard] using hle
+    simp [hfour, hcard] at hle
   omega
 
 public theorem exists_two_ne_base_of_fintype_card_eq_three
@@ -10468,7 +10468,7 @@ public theorem cyclicTISet_swap
     {G : Type u} [Group G] (W1 W2 W : Subgroup G) :
     cyclicTISet W2 W1 W = cyclicTISet W1 W2 W := by
   ext g
-  simp [cyclicTISet, Set.mem_diff, Set.mem_union, or_comm]
+  simp [cyclicTISet, Set.mem_union, or_comm]
 
 public theorem hypothesis_3_1_statement_swap
     {G : Type u} [Group G] [Finite G]
@@ -11265,7 +11265,7 @@ public theorem internalDirectProductMulEquiv_symm_left_eq_one_of_mem_right
     exact congrArg Subtype.val hmulW
   exact (internalDirectProduct_mul_unique_pf3 h
     ((e.symm w).1).2 (1 : W1).2 ((e.symm w).2).2 hw2 (by
-      simpa [hmulG])).1
+      simp [hmulG])).1
 
 public theorem internalDirectProductMulEquiv_symm_right_eq_one_of_mem_left
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
@@ -11278,7 +11278,7 @@ public theorem internalDirectProductMulEquiv_symm_right_eq_one_of_mem_left
     exact congrArg Subtype.val hmulW
   exact (internalDirectProduct_mul_unique_pf3 h
     ((e.symm w).1).2 hw1 ((e.symm w).2).2 (1 : W2).2 (by
-      simpa [hmulG])).2
+      simp [hmulG])).2
 
 public theorem internalDirectProductMulEquiv_apply_inl
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
@@ -11432,8 +11432,14 @@ public theorem linearCharacterProductOverInternalDirectProduct_irreducible
     (χ : W1 →* ℂˣ) (η : W2 →* ℂˣ) :
     Section1.IsIrreducibleCharacterOnGroup
       (linearCharacterProductOverInternalDirectProduct h χ η) := by
-  simpa [linearCharacterProductOverInternalDirectProduct,
-    Section1.characterInflationByHom] using
+  have hEq :
+      linearCharacterProductOverInternalDirectProduct h χ η =
+        Section1.characterInflationByHom (MonoidHom.id W)
+          (internalDirectProductLinearCharacter h χ η) := by
+    ext w
+    rfl
+  rw [hEq]
+  exact
     Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
       (MonoidHom.id W) (internalDirectProductLinearCharacter h χ η)
 
@@ -11538,7 +11544,7 @@ public theorem linearCharacterProductOverInternalDirectProduct_of_restrict
       _ = e.toMonoidHom p := by rw [hp]
       _ = w := by
             change e p = w
-            simpa [p, e] using MulEquiv.apply_symm_apply e w
+            simp [p, e]
   have hlam :
       lam (e.toMonoidHom (MonoidHom.inl W1 W2 p.1)) *
           lam (e.toMonoidHom (MonoidHom.inr W1 W2 p.2)) = lam w := by

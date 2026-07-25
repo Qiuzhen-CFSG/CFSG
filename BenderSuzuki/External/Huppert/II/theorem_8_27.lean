@@ -264,7 +264,7 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
       Matrix.SpecialLinearGroup.scalar_eq_self_of_mem_center hcenter (0 : Fin 2)
     have hab0 := congrFun (congrFun hscalar (0 : Fin 2)) (1 : Fin 2)
     apply sub_eq_zero.mp
-    simpa using hab0.symm
+    simpa [unipotentSL] using hab0.symm
   let U : Subgroup (PSL2MatrixGroup F) := unipotent.toMonoidHom.range
   have hUcard : Nat.card U = Nat.card F := by
     let e : Multiplicative F ≃ U :=
@@ -343,7 +343,7 @@ public theorem huppert_II_8_17_b_order_twelve_four_sylow_three
       Nat.prime_three.factorization_self,
       Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 4)]
   have hnormalizer_eq :
-      ∀ P : Ω, Subgroup.normalizer ((P : Subgroup G) : Set G) =
+      ∀ P : Ω, Subgroup.normalizer (P : Set G) =
         (P : Subgroup G) := by
     intro P
     have hPcard : Nat.card P = 3 := by
@@ -351,16 +351,18 @@ public theorem huppert_II_8_17_b_order_twelve_four_sylow_three
       rw [hfac12]
       norm_num
     have hindex :
-        (Subgroup.normalizer ((P : Subgroup G) : Set G)).index = 4 := by
+        (Subgroup.normalizer (P : Set G)).index = 4 := by
       rw [← P.card_eq_index_normalizer, hSylow]
     have hNcard :
-        Nat.card (Subgroup.normalizer ((P : Subgroup G) : Set G)) = 3 := by
+        Nat.card (Subgroup.normalizer (P : Set G)) = 3 := by
       have hmul :=
-        (Subgroup.normalizer ((P : Subgroup G) : Set G)).card_mul_index
+        (Subgroup.normalizer (P : Set G)).card_mul_index
       rw [hindex, hGcard] at hmul
       omega
     exact
-      (Subgroup.eq_of_le_of_card_ge Subgroup.le_normalizer (by omega)).symm
+      (Subgroup.eq_of_le_of_card_ge
+        (show (P : Subgroup G) ≤ Subgroup.normalizer (P : Set G) from
+          Subgroup.le_normalizer) (by omega)).symm
   let act := MulAction.toPermHom G Ω
   have hker_le : ∀ P : Ω, act.ker ≤ (P : Subgroup G) := by
     intro P x hx
@@ -455,16 +457,16 @@ public theorem huppert_II_8_17_c_order_twenty_four_four_sylow_three
     simpa [Ω, Nat.card_eq_fintype_card] using hSylow
   let act := MulAction.toPermHom G Ω
   have hnormalizer_card (P : Ω) :
-      Nat.card (Subgroup.normalizer ((P : Subgroup G) : Set G)) = 6 := by
+      Nat.card (Subgroup.normalizer (P : Set G)) = 6 := by
     have hindex :
-        (Subgroup.normalizer ((P : Subgroup G) : Set G)).index = 4 := by
+        (Subgroup.normalizer (P : Set G)).index = 4 := by
       rw [← P.card_eq_index_normalizer, hSylow]
     have hmul :=
-      (Subgroup.normalizer ((P : Subgroup G) : Set G)).card_mul_index
+      (Subgroup.normalizer (P : Set G)).card_mul_index
     rw [hindex, hGcard] at hmul
     omega
   have hker_le_normalizer (P : Ω) :
-      act.ker ≤ Subgroup.normalizer ((P : Subgroup G) : Set G) := by
+      act.ker ≤ Subgroup.normalizer (P : Set G) := by
     intro x hx
     have hxperm : act x = 1 := hx
     have hxfix : x • P = P := by
@@ -507,7 +509,7 @@ public theorem huppert_II_8_17_c_order_twenty_four_four_sylow_three
       rcases hy with ⟨n, rfl⟩
       exact act.ker.zpow_mem x.2 n
     have hPnormalizesQ :
-        (P : Subgroup G) ≤ Subgroup.normalizer ((Q : Subgroup G) : Set G) :=
+        (P : Subgroup G) ≤ Subgroup.normalizer (Q : Set G) :=
       fun y hy => hker_le_normalizer Q (hPker hy)
     have hsupP :
         IsPGroup 3 ((P : Subgroup G) ⊔ (Q : Subgroup G) : Subgroup G) :=
@@ -953,7 +955,6 @@ public theorem huppert_II_8_3_split_torus_reflection_data
       Nat.card (Subgroup.zpowers w) = 2 ∧
         Disjoint T (Subgroup.zpowers w) ∧
         Nat.card (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) : Subgroup (PSL2MatrixGroup F)) = 2 * Nat.card T := by
-    dsimp
     let Z : Subgroup (PSL2MatrixGroup F) := Subgroup.zpowers w
     have hw_ne_one : w ≠ 1 := by
       intro hw_one
@@ -1158,9 +1159,9 @@ public theorem huppert_II_8_3_split_torus_reflection_data
         (show splitTorus.range ≤
           splitTorus.range ⊔ splitWeylZ from le_sup_left)
             ⟨u, rfl⟩
-      rw [hAeq]
-      simpa [splitWeyl, splitTorus] using
-        (splitTorus.range ⊔ splitWeylZ).mul_mem hw hu
+      change qSL A ∈ splitTorus.range ⊔ splitWeylZ
+      rw [hAeq, map_mul]
+      exact (splitTorus.range ⊔ splitWeylZ).mul_mem hw hu
   have hsplit_normalizer_eq_candidate
       (R : Subgroup (PSL2MatrixGroup F))
       (hR_le : R ≤ splitTorus.range) (hR_ne : R ≠ ⊥) :
@@ -1366,7 +1367,6 @@ private theorem h84_nonsplit_torus_data
       Nat.card (Subgroup.zpowers w) = 2 ∧
         Disjoint T (Subgroup.zpowers w) ∧
         Nat.card (T ⊔ (Subgroup.zpowers w : Subgroup (PSL2MatrixGroup F)) : Subgroup (PSL2MatrixGroup F)) = 2 * Nat.card T := by
-    dsimp
     let Z : Subgroup (PSL2MatrixGroup F) := Subgroup.zpowers w
     have hw_ne_one : w ≠ 1 := by
       intro hw_one
@@ -1698,7 +1698,9 @@ private theorem h84_nonsplit_torus_data
     LinearMap.toMatrix b b sigma.toLinearEquiv
   have hsigma_inv (x : K) :
       sigma (x.1 : E) = ((x⁻¹ : K).1 : E) := by
-    simpa [sigma] using hfrob_inv x
+    rw [show sigma = FiniteField.Extension.frob F p 2 from rfl,
+      hfrob_inv x]
+    simp
   have hsigmaMat_mul (x : E) :
       sigmaMat * Algebra.leftMulMatrix b x =
         Algebra.leftMulMatrix b (sigma x) * sigmaMat := by
@@ -2054,7 +2056,7 @@ private theorem h84_nonsplit_torus_data
           rcases hz with (rfl | hz)
           · exact ⟨0, by simp⟩
           · have : z = 1 := hz
-            exact ⟨1, by simpa [this]⟩
+            exact ⟨1, by simp [this]⟩
       intro z
       rw [hrange] at hspan
       apply Submodule.mem_span_pair.mp
@@ -2063,7 +2065,7 @@ private theorem h84_nonsplit_torus_data
     let d : E := Aeq 1
     have hd : d ≠ 0 := by
       intro hd0
-      have h10 : (1 : E) = 0 := Aeq.injective (by simpa [d, hd0])
+      have h10 : (1 : E) = 0 := Aeq.injective (by simp [d, hd0])
       exact one_ne_zero h10
     let du : Eˣ := Units.mk0 d hd
     let phiLin : E →ₗ[F] E :=
@@ -2148,7 +2150,9 @@ private theorem h84_nonsplit_torus_data
       left
       refine ⟨x, ?_⟩
       apply Subtype.ext
-      simpa [x] using hAmatrix
+      change (A : Matrix (Fin 2) (Fin 2) F) =
+        Algebra.leftMulMatrix b d
+      exact hAmatrix
     · have hAeq_mul_sigma (z : E) : Aeq z = d * sigma z := by
         calc
           Aeq z = d * (d⁻¹ * Aeq z) := by
@@ -2202,7 +2206,10 @@ private theorem h84_nonsplit_torus_data
       right
       refine ⟨x, ?_⟩
       apply Subtype.ext
-      simpa [x] using hfactor
+      change (A : Matrix (Fin 2) (Fin 2) F) =
+        Algebra.leftMulMatrix b u *
+          (frobSL : Matrix (Fin 2) (Fin 2) F)
+      exact hfactor
   have hnonsplit_normalizer_lift_classification
       (A : Matrix.SpecialLinearGroup (Fin 2) F)
       (hA :
@@ -2438,7 +2445,7 @@ private theorem h84_nonsplit_torus_data
     let M : Matrix (Fin 2) (Fin 2) F := A
     let χ : Polynomial F := M.charpoly
     have hχdeg : χ.natDegree = 2 := by
-      simpa [χ, M] using Matrix.charpoly_natDegree_eq_dim M
+      simp [χ, M]
     have hχne : χ ≠ 0 := by
       exact (Matrix.charpoly_monic M).ne_zero
     have hno_root (μ : F) : ¬ χ.IsRoot μ := by
@@ -2514,13 +2521,13 @@ private theorem h84_nonsplit_torus_data
       simpa [E] using FiniteField.finrank_extension F p 2
     let bα : Module.Basis (Fin 2) F E :=
       basisOfLinearIndependentOfCardEqFinrank hαLI (by
-        simpa [hfinrankE])
+        simp [hfinrankE])
     let v : Fin 2 → F := ![1, 0]
     let w : Fin 2 → F := M.mulVec v
     have hv_ne : v ≠ 0 := by
       intro hv
       have := congrFun hv 0
-      simpa [v] using this
+      simp [v] at this
     let Afamily : Fin 2 → (Fin 2 → F) := ![w, v]
     have hALI : LinearIndependent F Afamily := by
       rw [linearIndependent_fin2]
@@ -2733,7 +2740,8 @@ private theorem hq_coprime_nonsplit_order (q : ℕ) (hq : 1 ≤ q) :
   apply ((Nat.coprime_self_add_right).mpr (Nat.coprime_one_right q)).coprime_dvd_right
   apply Nat.div_dvd_of_dvd
   convert Nat.dvd_add (Nat.gcd_dvd_left (q - 1) 2)
-    (Nat.gcd_dvd_right (q - 1) 2) using 1 <;> omega
+    (Nat.gcd_dvd_right (q - 1) 2) using 1
+  all_goals omega
 
 private theorem hsplit_nonsplit_order_coprime (q : ℕ) (hq : 2 ≤ q) :
     Nat.Coprime
@@ -2751,7 +2759,8 @@ private theorem hsplit_nonsplit_order_coprime (q : ℕ) (hq : 2 ≤ q) :
     simp only [Nat.div_one]
     have hcop : Nat.Coprime (q - 1) ((q - 1) + 2) :=
       (Nat.coprime_self_add_right).mpr hq_sub_one_odd.coprime_two_right
-    convert hcop using 1 <;> omega
+    convert hcop using 1
+    all_goals omega
   · have hq_odd : Odd q := Nat.not_even_iff_odd.mp hq_even
     have htwo_dvd : 2 ∣ q - 1 := by
       rcases hq_odd with ⟨k, hk⟩
@@ -2894,7 +2903,7 @@ private theorem hthree_family_unique_of_same_family
       exact hUS.symm) hx₁ hx₂)).elim
   · exact hsameS x hx g₁ g₂ hx₁ hx₂
 
-set_option maxHeartbeats 2000000 in
+set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- Huppert II.8.5(a), with the covering and TI uniqueness clauses tied to
@@ -2952,7 +2961,7 @@ public theorem huppert_II_8_5_a_psl2_cover
       Matrix.SpecialLinearGroup.scalar_eq_self_of_mem_center hcenter (0 : Fin 2)
     have hab0 := congrFun (congrFun hscalar (0 : Fin 2)) (1 : Fin 2)
     apply sub_eq_zero.mp
-    simpa using hab0.symm
+    simpa [unipotentSL] using hab0.symm
   let U₀ : Subgroup (PSL2MatrixGroup F) := unipotent.toMonoidHom.range
   have hU₀card : Nat.card U₀ = Nat.card F := by
     let e : Multiplicative F ≃ U₀ :=
@@ -2975,7 +2984,9 @@ public theorem huppert_II_8_5_a_psl2_cover
     have hkP' := congrArg
       (fun R : Sylow p (PSL2MatrixGroup F) =>
         (R : Subgroup (PSL2MatrixGroup F))) hkP
-    simpa [hU₀_eq_Q] using hkP'
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def,
+      ← hU₀_eq_Q] at hkP'
+    exact hkP'
   have hupper_unipotent_conj
       (A : Matrix.SpecialLinearGroup (Fin 2) F)
       (hA10 : (A : Matrix (Fin 2) (Fin 2) F) 1 0 = 0)
@@ -2995,11 +3006,11 @@ public theorem huppert_II_8_5_a_psl2_cover
       rw [mul_comm, hdet]
     apply Subtype.ext
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [unipotentSL, Matrix.SpecialLinearGroup.coe_inv,
-        Matrix.adjugate_fin_two, Matrix.mul_apply, hA10, hdet, hdet',
-        pow_two] <;>
-      ring
+    fin_cases i <;> fin_cases j
+    all_goals simp [unipotentSL, Matrix.SpecialLinearGroup.coe_inv,
+      Matrix.adjugate_fin_two, Matrix.mul_apply, hA10, hdet, hdet',
+      pow_two]
+    all_goals ring
   have hU₀_weakTI :
       ∀ y : PSL2MatrixGroup F, y ∈ U₀ → y ≠ 1 →
         ∀ g : PSL2MatrixGroup F,
@@ -3326,7 +3337,6 @@ public theorem huppert_II_8_5_a_psl2_cover
           linear_combination -hpoly
         _ = (μ + μ⁻¹) * μ := by
           field_simp [hμ_ne]
-          <;> ring
     have hμ_ne_inv : μ ≠ μ⁻¹ := by
       intro hμ
       apply hdisc_nonzero
@@ -3345,7 +3355,7 @@ public theorem huppert_II_8_5_a_psl2_cover
       have hpoly_inv : (μ⁻¹) ^ 2 - trA * μ⁻¹ + 1 = 0 := by
         rw [htrace_mu]
         field_simp [hμ_ne]
-        <;> ring
+        ring
       have hdet_inv :
           (Matrix.scalar (Fin 2) μ⁻¹ -
             (A : Matrix (Fin 2) (Fin 2) F)).det = 0 := by
@@ -3409,9 +3419,10 @@ public theorem huppert_II_8_5_a_psl2_cover
           let c : Fin 2 → F := ![w 0, -v 0]
           have hsum : ∑ i, c i • eigenvector i = 0 := by
             funext j
-            fin_cases j <;>
-              simp [Fin.sum_univ_two, c, eigenvector, hv1, hw1,
-                mul_comm] <;> ring
+            fin_cases j
+            all_goals simp [Fin.sum_univ_two, c, eigenvector, hv1, hw1,
+              mul_comm]
+            all_goals ring
           have hc := hcoeff c hsum 1
           exact hv0 (by simpa [c] using neg_eq_zero.mp hc)
         · let c : Fin 2 → F := ![w 1, -v 1]
@@ -3420,7 +3431,8 @@ public theorem huppert_II_8_5_a_psl2_cover
             fin_cases j
             · simpa [Fin.sum_univ_two, c, eigenvector, δ,
                 sub_eq_add_neg, mul_comm] using hδ
-            · simp [Fin.sum_univ_two, c, eigenvector, mul_comm] <;> ring
+            · simp [Fin.sum_univ_two, c, eigenvector]
+              ring
           have hc := hcoeff c hsum 1
           exact hv1 (by simpa [c] using neg_eq_zero.mp hc)
       let G : Matrix.SpecialLinearGroup (Fin 2) F :=
@@ -3703,11 +3715,10 @@ public theorem huppert_II_8_5_a_psl2_cover
         rcases h85_repeated_root_jordan_basis with ⟨G, t, hG⟩
         refine ⟨qSL G, ?_⟩
         refine ⟨unipotent t, ⟨Multiplicative.ofAdd t, rfl⟩, ?_⟩
-        change (MulAut.conj (qSL G)).toMonoidHom (unipotent t) = qSL A
         rw [hG]
         change qSL G * qSL (unipotentSL t) * (qSL G)⁻¹ =
           qSL (G * unipotentSL t * G⁻¹)
-        simp [qSL, unipotent]
+        simp [qSL]
       exact Or.inl h85_repeated_root_nonsplit_unipotent
   obtain ⟨S, hS_cyclic, hS_card, _hS_normalizer, _hS_reflection,
       hS_weakTI,
@@ -4103,7 +4114,9 @@ public theorem huppert_II_8_22_maximal_cyclic_representatives
     refine ⟨i, g⁻¹, ?_⟩
     have hgval :
         (g • W : Subgroup H) = Z i := by
-      simpa [c, Z] using congrArg Subtype.val hg
+      have hg' := congrArg Subtype.val hg
+      change (g • W : Subgroup H) = ((e i).out : C) at hg'
+      exact hg'
     have hback :=
       congrArg (fun T : Subgroup H => g⁻¹ • T) hgval
     change W = (g⁻¹ • Z i : Subgroup H)
@@ -4513,9 +4526,7 @@ private theorem outside_reflection_of_mem_sup
       _ = w * w := by rw [mul_inv_cancel, mul_one]
       _ = 1 := hw_sq
   · intro y hy
-    have hcomm : t * y = y * t := by
-      exact congrArg Subtype.val
-        (mul_comm (⟨t, ht⟩ : T) (⟨y, hy⟩ : T))
+    have hcomm : t * y = y * t := setLike_mul_comm ht hy
     rw [hg_eq, mul_inv_rev]
     calc
       w * t * y * (t⁻¹ * w⁻¹) =
@@ -5113,7 +5124,7 @@ private theorem h821_standard_borel_data
         hcenter (0 : Fin 2)
     have hab0 := congrFun (congrFun hscalar (0 : Fin 2)) (1 : Fin 2)
     apply sub_eq_zero.mp
-    simpa using hab0.symm
+    simpa [unipotentSL] using hab0.symm
   let U : Subgroup (PSL2MatrixGroup F) := unipotent.toMonoidHom.range
   have hUcard : Nat.card U = Nat.card F := by
     let e : Multiplicative F ≃ U :=
@@ -5612,8 +5623,9 @@ private theorem h821_borel_quotient_data
     have hg' := congrArg
       (fun S : Sylow p (PSL2MatrixGroup F) =>
         (S : Subgroup (PSL2MatrixGroup F))) hg
-    rw [hU_eq_Q0]
-    simpa using hg'
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def,
+      ← hU_eq_Q0] at hg'
+    exact hg'
   have hPconj_le_U : Pconj ≤ U := by
     rw [← hQconj_eq]
     exact Subgroup.map_mono hPmap_le_Q
@@ -5844,7 +5856,7 @@ private theorem h821_borel_quotient_data
       intro htone
       apply hn_not_U
       rw [← ht, htone]
-      simpa using huU
+      simp
     rcases hT_fixedPointFree t htT x' hx'U hfix' with htone | hx'one
     · exact htne htone
     · exact hx'ne hx'one
@@ -5996,11 +6008,12 @@ private theorem sylow_mem_normalizer_of_embed_mem_normalizer
         hK_map_le_U (Subgroup.mem_map_of_mem embed hkK)
       have hxU : embed x ∈ U :=
         hP_le_U (Subgroup.mem_map_of_mem embed hxP)
-      have hcomm_embed : embed k * embed x = embed x * embed k := by
-        exact congrArg Subtype.val
-          (mul_comm (⟨embed k, hkU⟩ : U) (⟨embed x, hxU⟩ : U))
+      have hcomm_embed : embed k * embed x = embed x * embed k :=
+        setLike_mul_comm hkU hxU
       have hcomm : k * x = x * k := hembed (by simpa using hcomm_embed)
-      simpa [MulAut.conj_apply, hcomm] using hxP
+      change k * x * k⁻¹ ∈ (P : Subgroup H)
+      rw [hcomm, mul_inv_cancel_right]
+      exact hxP
     · rw [Subgroup.card_map_of_injective (MulAut.conj k).injective]
   have hsup_p : IsPGroup p ((P : Subgroup H) ⊔ K : Subgroup H) :=
     P.isPGroup'.to_sup_of_normal_left' hK_p hK_le_normalizer
@@ -6082,9 +6095,9 @@ public theorem huppert_II_8_22_sylow_normalizer_shape
     (hFcard : Nat.card F = p ^ f) (H : Subgroup (PSL2MatrixGroup F))
     (P : Sylow p H) (hPcard : Nat.card P = p ^ m)
     (Z : Fin r → Subgroup H)
-    (hcyclic : ∀ i, IsCyclic (Z i))
-    (hcoprime : ∀ i, Nat.Coprime p (Nat.card (Z i)))
-    (hmaximal : ∀ i (W : Subgroup H),
+    (_hcyclic : ∀ i, IsCyclic (Z i))
+    (_hcoprime : ∀ i, Nat.Coprime p (Nat.card (Z i)))
+    (_hmaximal : ∀ i (W : Subgroup H),
       IsCyclic W → Z i ≤ W → W = Z i)
     (hrepresentative : ∀ W : Subgroup H,
       IsCyclic W → 1 < Nat.card W →
@@ -6106,7 +6119,7 @@ public theorem huppert_II_8_22_sylow_normalizer_shape
   let PN : Subgroup N := (P : Subgroup H).subgroupOf N
   letI : PN.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (by
-      simpa [N] : N ≤ Subgroup.normalizer (P : Set H))
+      simp [N])
   obtain ⟨hquotient_cyclic, hquotient_card_dvd,
       _hNormalizer_fixedPointFree, U, T, embed, hembed, hU_comm, hT_cyclic, hTcard,
       _hT_fixedPointFree, hP_map_le_U, hB_le_normalizer, hB_conjugate_torus,
@@ -6352,7 +6365,7 @@ private theorem huppert_II_8_22_partition_count_of_unique_family
     | Sum.inr z => (z.2.1 : Subgroup H)
   have hunique' : ∀ x : H, x ≠ 1 → ∃! A : Family, x ∈ carrier A := by
     intro x hx
-    simpa [Family, carrier] using hunique x hx
+    exact hunique x hx
   let Piece := Σ A : Family, {x : carrier A // (x : H) ≠ 1}
   let decode : Unit ⊕ Piece → H := fun z =>
     match z with
@@ -6387,7 +6400,7 @@ private theorem huppert_II_8_22_partition_count_of_unique_family
           rfl
     · intro x
       by_cases hx : x = 1
-      · exact ⟨Sum.inl (), by simpa [decode, hx]⟩
+      · exact ⟨Sum.inl (), by simp [decode, hx]⟩
       · obtain ⟨A, hxA⟩ := (hunique' x hx).exists
         refine ⟨Sum.inr ⟨A, ⟨⟨x, hxA⟩, hx⟩⟩, ?_⟩
         rfl
@@ -6499,7 +6512,7 @@ public theorem huppert_II_8_22_unique_family
     (hFcard : Nat.card F = p ^ f) (H : Subgroup (PSL2MatrixGroup F))
     (Z : Fin r → Subgroup H)
     (hcyclic : ∀ i, IsCyclic (Z i))
-    (hnontrivial : ∀ i, 1 < Nat.card (Z i))
+    (_hnontrivial : ∀ i, 1 < Nat.card (Z i))
     (hcoprime : ∀ i, Nat.Coprime p (Nat.card (Z i)))
     (hmaximal : ∀ i (W : Subgroup H),
       IsCyclic W → Z i ≤ W → W = Z i)
@@ -6653,7 +6666,8 @@ public theorem huppert_II_8_22_unique_family
     have hg' := congrArg
       (fun Q : Sylow p (PSL2MatrixGroup F) =>
         (Q : Subgroup (PSL2MatrixGroup F))) hg
-    simpa using hg'.symm
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def] at hg'
+    exact hg'.symm
   have hambient_eq_T (R : Sylow p (PSL2MatrixGroup F))
       (hxR : (x : PSL2MatrixGroup F) ∈
         (R : Subgroup (PSL2MatrixGroup F))) :
@@ -7080,9 +7094,7 @@ public theorem huppert_II_8_23_dickson_case_p_part_normalizer_self
         { toIsMulCommutative :=
             { is_comm := ⟨fun x y =>
                 Subtype.ext <|
-                  Subgroup.mul_comm_of_mem_isMulCommutative
-                    (H := (Q : Subgroup (PSL2MatrixGroup F)))
-                    (hHleQ x.2) (hHleQ y.2)⟩ }
+                  setLike_mul_comm (hHleQ x.2) (hHleQ y.2)⟩ }
           exponent_dvd_p := ?_ }
       rw [Monoid.exponent_dvd_iff_forall_pow_eq_one]
       intro x
@@ -7351,7 +7363,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
         hcoprime hmaximal hrepresentative hdistinct x hx using 1
       funext A
       rcases A with Q | z <;> rfl
-    simpa only [pow_zero, Nat.reduceSubDiff, zero_mul, zero_add, NZ] using hraw
+    simpa only [pow_zero, Nat.reduceSubDiff, zero_mul, add_zero, NZ] using hraw
   have h824_z_index_factor :
       ∀ i, (Nat.card (Z i) * s i) * (NZ i).index = Nat.card H := by
     intro i
@@ -7889,7 +7901,8 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                         1 + (Nat.card (Z 0) - 1) * (NZ 0).index +
                           (Nat.card (Z 1) - 1) * (NZ 1).index +
                             (Nat.card (Z 2) - 1) * (NZ 2).index := by
-                    simpa [add_assoc] using h824_partition_count
+                    simpa only [Fin.sum_univ_three, add_assoc] using
+                      h824_partition_count
                   have hquarter (a : Fin 3) :
                       Nat.card H ≤
                         4 * ((Nat.card (Z a) - 1) * (NZ a).index) := by
@@ -7970,7 +7983,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                     have huniv :
                         ({i, j, k} : Finset (Fin 3)) = Finset.univ := by
                       apply (Finset.card_eq_iff_eq_univ ({i, j, k} : Finset (Fin 3))).mp
-                      simp [hij, hik, hjk, Ne.symm]
+                      simp [hij, hik, hjk]
                     calc
                       (∑ a, (Nat.card (Z a) - 1) * (NZ a).index) =
                           ∑ a ∈ ({i, j, k} : Finset (Fin 3)),
@@ -7979,7 +7992,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                       _ = (Nat.card (Z i) - 1) * (NZ i).index +
                           (Nat.card (Z j) - 1) * (NZ j).index +
                             (Nat.card (Z k) - 1) * (NZ k).index := by
-                              simp [hij, hik, hjk, Ne.symm, add_assoc]
+                              simp [hij, hik, hjk, add_assoc]
                   have hcount :
                       Nat.card H =
                         1 + (Nat.card (Z i) - 1) * (NZ i).index +
@@ -8475,7 +8488,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                     apply
                                       (Finset.card_eq_iff_eq_univ
                                         ({i, j, k} : Finset (Fin 3))).mp
-                                    simp [hij, hik, hjk, Ne.symm]
+                                    simp [hij, hik, hjk]
                                   have hz_cases : z.1 = i ∨ z.1 = j ∨ z.1 = k := by
                                     have hzmem :
                                         z.1 ∈ ({i, j, k} : Finset (Fin 3)) := by
@@ -8746,7 +8759,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                     apply
                                       (Finset.card_eq_iff_eq_univ
                                         ({i, j, k} : Finset (Fin 3))).mp
-                                    simp [hij, hik, hjk, Ne.symm]
+                                    simp [hij, hik, hjk]
                                   have hz_cases : z.1 = i ∨ z.1 = j ∨ z.1 = k := by
                                     have hzmem :
                                         z.1 ∈ ({i, j, k} : Finset (Fin 3)) := by
@@ -8822,7 +8835,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                     apply
                                       (Finset.card_eq_iff_eq_univ
                                         ({i, j, k} : Finset (Fin 3))).mp
-                                    simp [hij, hik, hjk, Ne.symm]
+                                    simp [hij, hik, hjk]
                                   have hz_cases : z.1 = i ∨ z.1 = j ∨ z.1 = k := by
                                     have hzmem :
                                         z.1 ∈ ({i, j, k} : Finset (Fin 3)) := by
@@ -8896,7 +8909,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                       apply
                                         (Finset.card_eq_iff_eq_univ
                                           ({i, j, k} : Finset (Fin 3))).mp
-                                      simp [hij, hik, hjk, Ne.symm]
+                                      simp [hij, hik, hjk]
                                     have hz_cases :
                                         z.1 = i ∨ z.1 = j ∨ z.1 = k := by
                                       have hzmem :
@@ -8961,7 +8974,6 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                     x ∈ match A with
                                       | Sum.inl R => (R : Subgroup H)
                                       | Sum.inr z => (z.2.1 : Subgroup H) := by
-                                dsimp only
                                 intro x hxne
                                 obtain ⟨A, hxA, hAunique⟩ :=
                                   huppert_II_8_22_unique_family hFcard H Z
@@ -8991,7 +9003,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                     apply
                                       (Finset.card_eq_iff_eq_univ
                                         ({i, j, k} : Finset (Fin 3))).mp
-                                    simp [hij, hik, hjk, Ne.symm]
+                                    simp [hij, hik, hjk]
                                   have hz_cases :
                                       z.1 = i ∨ z.1 = j ∨ z.1 = k := by
                                     have hzmem :
@@ -9022,7 +9034,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                             {W : Subgroup H // ∃ g : H,
                                               W = (Z i).map
                                                 (MulAut.conj g).toMonoidHom} :=
-                                          ⟨V.1, by simpa using V.2⟩
+                                          ⟨V.1, by simpa [Zodd] using V.2⟩
                                         have heq :=
                                           hAunique (Sum.inr ⟨i, V0⟩) hxB
                                         cases heq
@@ -9031,7 +9043,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                             {W : Subgroup H // ∃ g : H,
                                               W = (Z j).map
                                                 (MulAut.conj g).toMonoidHom} :=
-                                          ⟨V.1, by simpa using V.2⟩
+                                          ⟨V.1, by simpa [Zodd] using V.2⟩
                                         have heq :=
                                           hAunique (Sum.inr ⟨j, V1⟩) hxB
                                         have hjza : j = z.1 :=
@@ -9061,7 +9073,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                             {W : Subgroup H // ∃ g : H,
                                               W = (Z i).map
                                                 (MulAut.conj g).toMonoidHom} :=
-                                          ⟨V.1, by simpa using V.2⟩
+                                          ⟨V.1, by simpa [Zodd] using V.2⟩
                                         have heq :=
                                           hAunique (Sum.inr ⟨i, V0⟩) hxB
                                         have hiza : i = z.1 :=
@@ -9074,7 +9086,7 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
                                             {W : Subgroup H // ∃ g : H,
                                               W = (Z j).map
                                                 (MulAut.conj g).toMonoidHom} :=
-                                          ⟨V.1, by simpa using V.2⟩
+                                          ⟨V.1, by simpa [Zodd] using V.2⟩
                                         have heq :=
                                           hAunique (Sum.inr ⟨j, V1⟩) hxB
                                         cases heq
@@ -9565,7 +9577,8 @@ public theorem huppert_II_8_24_dickson_case_no_p_part
         Nat.gcd_dvd_right _ _
       have hdvd_add : Nat.gcd (Nat.card F - 1) 2 ∣ Nat.card F + 1 := by
         have h := Nat.dvd_add hdvd_sub hdvd_two
-        convert h using 1 <;> omega
+        convert h using 1
+        all_goals omega
       rcases hA5_five_torus_quotient with hminus | hplus
       · exact Or.inl
           (dvd_trans hminus (Nat.div_dvd_of_dvd hdvd_sub))
@@ -9674,7 +9687,7 @@ public theorem huppert_II_4_7_primitive_degree_six_order_sixty
     · let act3 := MulAction.toPermHom G (Sylow 2 G)
       have hker_le_normalizer (Q : Sylow 2 G) :
           act3.ker ≤
-            Subgroup.normalizer ((Q : Subgroup G) : Set G) := by
+            Subgroup.normalizer (Q : Set G) := by
         intro x hx
         have hxperm : act3 x = 1 := hx
         have hxfix : x • Q = Q := by
@@ -9682,15 +9695,15 @@ public theorem huppert_II_4_7_primitive_degree_six_order_sixty
           simpa [act3] using h
         exact Sylow.smul_eq_iff_mem_normalizer.mp hxfix
       have hnormalizer_card_twenty :
-          Nat.card (Subgroup.normalizer ((P : Subgroup G) : Set G)) = 20 := by
+          Nat.card (Subgroup.normalizer (P : Set G)) = 20 := by
         have hindex :
-            (Subgroup.normalizer ((P : Subgroup G) : Set G)).index = 3 := by
+            (Subgroup.normalizer (P : Set G)).index = 3 := by
           calc
-            (Subgroup.normalizer ((P : Subgroup G) : Set G)).index =
+            (Subgroup.normalizer (P : Set G)).index =
                 Nat.card (Sylow 2 G) := P.card_eq_index_normalizer.symm
             _ = 3 := hcard3
         have hmul :=
-          (Subgroup.normalizer ((P : Subgroup G) : Set G)).card_mul_index
+          (Subgroup.normalizer (P : Set G)).card_mul_index
         rw [hindex, hGcard] at hmul
         omega
       have hker_card_dvd_twenty : Nat.card act3.ker ∣ 20 := by
@@ -9716,35 +9729,41 @@ public theorem huppert_II_4_7_primitive_degree_six_order_sixty
       omega
     · exact hcard5
     · have hnormalizer_card_four :
-          Nat.card (Subgroup.normalizer ((P : Subgroup G) : Set G)) = 4 := by
+          Nat.card (Subgroup.normalizer (P : Set G)) = 4 := by
         have hindex :
-            (Subgroup.normalizer ((P : Subgroup G) : Set G)).index = 15 := by
+            (Subgroup.normalizer (P : Set G)).index = 15 := by
           calc
-            (Subgroup.normalizer ((P : Subgroup G) : Set G)).index =
+            (Subgroup.normalizer (P : Set G)).index =
                 Nat.card (Sylow 2 G) := P.card_eq_index_normalizer.symm
             _ = 15 := hcard15
         have hmul :=
-          (Subgroup.normalizer ((P : Subgroup G) : Set G)).card_mul_index
+          (Subgroup.normalizer (P : Set G)).card_mul_index
         rw [hindex, hGcard] at hmul
         omega
       have hnormalizer_eq :
-          Subgroup.normalizer ((P : Subgroup G) : Set G) =
+          Subgroup.normalizer (P : Set G) =
             (P : Subgroup G) := by
         symm
-        apply Subgroup.eq_of_le_of_card_ge Subgroup.le_normalizer
+        apply Subgroup.eq_of_le_of_card_ge
+          (show (P : Subgroup G) ≤ Subgroup.normalizer (P : Set G) from
+            Subgroup.le_normalizer)
         rw [hnormalizer_card_four, hPcard]
       have hnormalizer_le_centralizer :
-          Subgroup.normalizer ((P : Subgroup G) : Set G) ≤
-            Subgroup.centralizer ((P : Subgroup G) : Set G) := by
+          Subgroup.normalizer (P : Set G) ≤
+            Subgroup.centralizer (P : Set G) := by
         rw [hnormalizer_eq]
         intro x hx
         rw [Subgroup.mem_centralizer_iff]
         intro y hy
         let xP : P := ⟨x, hx⟩
         let yP : P := ⟨y, hy⟩
+        letI : IsMulCommutative P :=
+          IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) (by
+            calc
+              Nat.card P = 4 := by simpa only [P.coe_coe] using hPcard
+              _ = 2 ^ 2 := by norm_num)
         exact congrArg Subtype.val
-          (IsPGroup.commutative_of_card_eq_prime_sq (p := 2)
-            (by simpa [Nat.card_eq_fintype_card] using hPcard) yP xP)
+          ((@IsMulCommutative.is_comm P _ inferInstance).comm yP xP)
       let K : Subgroup G :=
         (MonoidHom.transferSylow P hnormalizer_le_centralizer).ker
       letI : K.Normal := inferInstance
@@ -9763,7 +9782,7 @@ public theorem huppert_II_4_7_primitive_degree_six_order_sixty
       norm_num at hdiv
   let act2 := MulAction.toPermHom G (Sylow 2 G)
   have hker_le_normalizer (Q : Sylow 2 G) :
-      act2.ker ≤ Subgroup.normalizer ((Q : Subgroup G) : Set G) := by
+      act2.ker ≤ Subgroup.normalizer (Q : Set G) := by
     intro x hx
     have hxperm : act2 x = 1 := hx
     have hxfix : x • Q = Q := by
@@ -9771,15 +9790,15 @@ public theorem huppert_II_4_7_primitive_degree_six_order_sixty
       simpa [act2] using h
     exact Sylow.smul_eq_iff_mem_normalizer.mp hxfix
   have hnormalizer_card_twelve :
-      Nat.card (Subgroup.normalizer ((P : Subgroup G) : Set G)) = 12 := by
+      Nat.card (Subgroup.normalizer (P : Set G)) = 12 := by
     have hindex :
-        (Subgroup.normalizer ((P : Subgroup G) : Set G)).index = 5 := by
+        (Subgroup.normalizer (P : Set G)).index = 5 := by
       calc
-        (Subgroup.normalizer ((P : Subgroup G) : Set G)).index =
+        (Subgroup.normalizer (P : Set G)).index =
             Nat.card (Sylow 2 G) := P.card_eq_index_normalizer.symm
         _ = 5 := hSylow2card5
     have hmul :=
-      (Subgroup.normalizer ((P : Subgroup G) : Set G)).card_mul_index
+      (Subgroup.normalizer (P : Set G)).card_mul_index
     rw [hindex, hGcard] at hmul
     omega
   have hker_card_dvd_twelve : Nat.card act2.ker ∣ 12 := by
@@ -10120,7 +10139,7 @@ private theorem h826_subgroup_card_le_two_of_disjoint_le_normalizer
   letI : QN.Normal := by
     dsimp only [QN]
     exact Subgroup.normal_subgroupOf_of_le_normalizer (by
-      simpa [N] : N ≤ Subgroup.normalizer (Q : Set G))
+      simp [N])
   let φ : SN →* N ⧸ QN :=
     (QuotientGroup.mk' QN).comp SN.subtype
   have hφinj : Function.Injective φ := by
@@ -10828,7 +10847,12 @@ private theorem h826_pslToPGL_range_le_of_index_two
           rw [← hmul, map_mul, map_mul]
           exact M.mul_mem hB hC
       rcases hP with ⟨hdet, hmem⟩
-      simpa only [Subsingleton.elim hdet A.property] using hmem
+      have hAeq :
+          (⟨(A : Matrix (Fin 2) (Fin 2) K), hdet⟩ :
+            Matrix.SpecialLinearGroup (Fin 2) K) = A :=
+        Subtype.ext rfl
+      rw [hAeq] at hmem
+      exact hmem
 
 private theorem h826_pslToPGL_range_index_eq_two
     {K : Type u} [Field K] [Finite K]
@@ -10886,7 +10910,7 @@ private def h826_scalarStabilizer
   carrier := {a | ∀ x : F, x ∈ W → a * x ∈ W}
   zero_mem' := by
     intro x hx
-    simpa using W.zero_mem
+    simp
   one_mem' := by
     intro x hx
     simpa using hx
@@ -10907,7 +10931,7 @@ private def h826_scalarStabilizer
     by_cases ha0 : a = 0
     · subst a
       intro x hx
-      simpa using W.zero_mem
+      simp
     · let φ : W → W := fun x => ⟨a * (x : F), ha x x.property⟩
       have hφinj : Function.Injective φ := by
         intro x y hxy
@@ -11016,7 +11040,8 @@ private theorem h826_group_order_cases
       simpa [c, mul_assoc] using hk
     · right
       rw [hnlcm]
-      convert hk using 1 <;> ring
+      convert hk using 1
+      all_goals ring
   rcases hnshape with hn | hn
   · have hu : u = b := by
       apply Nat.eq_of_mul_eq_mul_left (by positivity : 0 < q * a)
@@ -11216,7 +11241,7 @@ private theorem h826_group_order_cases
         apply Nat.dvd_antisymm (Nat.gcd_dvd_right _ _)
         apply Nat.dvd_gcd
         · rcases hqodd' with ⟨r, hr⟩
-          exact ⟨r, by simpa [hr]⟩
+          exact ⟨r, by simp [hr]⟩
         · exact dvd_refl 2
       have htwoa : 2 * a = q - 1 := by
         have hqsub : q - 1 + 1 = q := Nat.sub_add_cancel hq.le
@@ -11659,7 +11684,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
       let PN : Subgroup NP := (P : Subgroup H).subgroupOf NP
       letI : PN.Normal :=
         Subgroup.normal_subgroupOf_of_le_normalizer (by
-          simpa [NP] : NP ≤ Subgroup.normalizer (P : Set H))
+          simp [NP])
       obtain ⟨hquotient_cyclic, hquotient_card_dvd,
           hNormalizer_fixedPointFree, U, T, conjH, hconjH_injective,
           hU_commutative, hT_cyclic, hTcard, hT_fixedPointFree,
@@ -11773,7 +11798,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           let Ai : (Sylow p H) ⊕
               (Σ k : Fin 2, {W : Subgroup H // ∃ a : H,
                 W = (Z k).map (MulAut.conj a).toMonoidHom}) :=
-            Sum.inr ⟨i, ⟨Z i, ⟨1, by ext y; simp [MulAut.conj_apply]⟩⟩⟩
+            Sum.inr ⟨i, ⟨Z i, ⟨1, by ext y; simp⟩⟩⟩
           let Aj : (Sylow p H) ⊕
               (Σ k : Fin 2, {W : Subgroup H // ∃ a : H,
                 W = (Z k).map (MulAut.conj a).toMonoidHom}) :=
@@ -11799,13 +11824,12 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
       letI : Nonempty X := ⟨base⟩
       have hbase_fixed (a : Z i0) : a • base = base := by
         apply Subtype.ext
-        change (a : H) • Z i0 = Z i0
-        simpa using Subgroup.conj_smul_eq_self_of_mem a.property
+        change MulAut.conj (a : H) • Z i0 = Z i0
+        exact Subgroup.conj_smul_eq_self_of_mem a.property
       let X0 : SubMulAction (Z i0) X :=
         { carrier := {W | W ≠ base}
           smul_mem' := by
-            intro a W hW
-            intro haW
+            intro a W hW haW
             apply hW
             calc
               W = a⁻¹ • (a • W) := (inv_smul_smul a W).symm
@@ -12153,7 +12177,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         { carrier := {x | unipotent x ∈ P0}
           zero_mem' := by
             change unipotent 0 ∈ P0
-            simpa using P0.one_mem
+            simp
           add_mem' := by
             intro x y hx hy
             change unipotent (x + y) ∈ P0
@@ -12357,8 +12381,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         refine ⟨1, ?_⟩
         ext i
         fin_cases i <;>
-          simp [Matrix.GeneralLinearGroup.toLin_apply,
-            Matrix.mulVec, dotProduct]
+          simp [Matrix.mulVec, dotProduct]
       have hsplit_fixes_inf (a : Fˣ) :
           splitTorus a • inf = inf := by
         rw [hsplitTorus_matrix]
@@ -12376,8 +12399,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         refine ⟨(a : F), ?_⟩
         ext i
         fin_cases i <;>
-          simp [Matrix.GeneralLinearGroup.toLin_apply,
-            Matrix.mulVec, dotProduct]
+          simp [Matrix.mulVec, dotProduct]
       have hsplit_fixes_zero (a : Fˣ) :
           splitTorus a • zero = zero := by
         rw [hsplitTorus_matrix]
@@ -12395,8 +12417,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         refine ⟨(a⁻¹ : F), ?_⟩
         ext i
         fin_cases i <;>
-          simp [Matrix.GeneralLinearGroup.toLin_apply,
-            Matrix.mulVec, dotProduct]
+          simp [Matrix.mulVec, dotProduct]
       have hunipotent_affine (w x : F) :
           unipotent w • affine x = affine (x + w) := by
         rw [hunipotent_matrix]
@@ -12414,8 +12435,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         refine ⟨1, ?_⟩
         ext i
         fin_cases i <;>
-          simp [Matrix.GeneralLinearGroup.toLin_apply,
-            Matrix.mulVec, dotProduct, add_comm]
+          simp [Matrix.mulVec, dotProduct, add_comm]
       have hunipotent_fixed_eq_inf
           (w : F) (hw : w ≠ 0) (z : Point)
           (hfix : unipotent w • z = z) :
@@ -12435,8 +12455,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           ⟨a, ha⟩
         have h0 := congrFun ha (0 : Fin 2)
         have h1 := congrFun ha (1 : Fin 2)
-        simp [Matrix.GeneralLinearGroup.toLin_apply,
-          Matrix.mulVec, dotProduct] at h0 h1
+        simp [Matrix.mulVec, dotProduct] at h0 h1
         by_cases hz1 : z.rep 1 = 0
         · rw [← Projectivization.mk_rep z]
           dsimp only [inf]
@@ -12445,7 +12464,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           ext i
           fin_cases i
           · simp
-          · simpa [hz1]
+          · simp [hz1]
         · have ha_one : a = 1 := by
             apply mul_right_cancel₀ hz1
             simpa using h1
@@ -12565,10 +12584,9 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           have hzU (z : H) (hz : z ∈ Qg) : conjH' z ∈ U :=
             hQg_map_le_U (Subgroup.mem_map_of_mem conjH' hz)
           have hcomm (z : H) (hz : z ∈ Qg) : Commute x z := by
+            letI : IsMulCommutative U := hU_commutative
             apply hconjH'_injective
-            simpa only [map_mul] using congrArg Subtype.val
-              ((@IsMulCommutative.is_comm U _ hU_commutative).comm
-                (⟨conjH' x, hxU⟩ : U) (⟨conjH' z, hzU z hz⟩ : U))
+            simpa only [map_mul] using setLike_mul_comm hxU (hzU z hz)
           constructor
           · intro hy
             have hxy : x * y * x⁻¹ = y := by
@@ -12640,7 +12658,8 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
         · intro hfix
           have hfix_val := congrArg Subtype.val hfix
           have : g • inf = inf := by
-            simpa only [MulAction.orbit.coe_smul] using hfix_val
+            rw [MulAction.orbit.coe_smul] at hfix_val
+            exact hfix_val
           rw [← MulAction.mem_stabilizer_iff, hstabilizer_inf] at this
           exact this
         · intro hg
@@ -12668,8 +12687,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           ⟨c0, hc0⟩
         have h0 := congrFun hc0 (0 : Fin 2)
         have h1 := congrFun hc0 (1 : Fin 2)
-        simp [Matrix.GeneralLinearGroup.toLin_apply,
-          Matrix.mulVec, dotProduct] at h0 h1
+        simp [Matrix.mulVec, dotProduct] at h0 h1
         by_cases hz0 : z.rep 0 = 0
         · right
           rw [← Projectivization.mk_rep z]
@@ -12678,7 +12696,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           refine ⟨z.rep 1, ?_⟩
           ext i
           fin_cases i
-          · simpa [hz0]
+          · simp [hz0]
           · simp
         · by_cases hz1 : z.rep 1 = 0
           · left
@@ -12689,7 +12707,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
             ext i
             fin_cases i
             · simp
-            · simpa [hz1]
+            · simp [hz1]
           · exfalso
             have hc_eq_a : c0 = (a : F) := by
               apply mul_right_cancel₀ hz0
@@ -12850,6 +12868,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           rw [mul_smul, hh0]
           change rho (conjH' g) zero = affine (w : F)
           rw [hg]
+          change unipotent (w : F) • affine 0 = affine (w : F)
           simpa using hunipotent_affine (w : F) 0
         have haffine_ne_inf (w : W) : affine (w : F) ≠ inf := by
           intro hwi
@@ -13048,14 +13067,14 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
                 Matrix.GeneralLinearGroup.map K.subtype Ak := by
             apply Matrix.GeneralLinearGroup.ext
             intro i j0
-            fin_cases i <;> fin_cases j0 <;>
-              simp [D, Di, Usl, Ak, Matrix.mul_apply, hx0_ne_zero, hk,
-                mul_comm] <;>
-              field_simp
+            fin_cases i
+            all_goals fin_cases j0
+            all_goals simp [D, Di, Usl, Ak, Matrix.mul_apply,
+              hx0_ne_zero, mul_comm]
+            all_goals field_simp
             simpa [mul_comm] using hk
           change toF x ∈ j.range
           refine ⟨Matrix.ProjGenLinGroup.mk Ak, ?_⟩
-          change j (Matrix.ProjGenLinGroup.mk Ak) = toF x
           rw [h826_pglMap_mk]
           have hiota :
               iotaF (conjH' x) =
@@ -13120,12 +13139,12 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
           have hBF_comm_D : Di * BF * D = BF := by
             apply Matrix.GeneralLinearGroup.ext
             intro i j0
-            fin_cases i <;> fin_cases j0 <;>
-              simp [D, Di, BF, Matrix.mul_apply, hx0_ne_zero] <;>
-              field_simp
+            fin_cases i
+            all_goals fin_cases j0
+            all_goals simp [D, Di, BF, Matrix.mul_apply]
+            all_goals field_simp
           change toF (cN : H) ∈ j.range
           refine ⟨Matrix.ProjGenLinGroup.mk Bk, ?_⟩
-          change j (Matrix.ProjGenLinGroup.mk Bk) = toF (cN : H)
           rw [h826_pglMap_mk, hmap_Bk]
           have hiota :
               iotaF (conjH' (cN : H)) =
@@ -13194,6 +13213,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
             rw [mul_smul, hswap_inf]
             change rho (conjH' g) zero = affine (x0 : F)
             rw [hg]
+            change unipotent (x0 : F) • affine 0 = affine (x0 : F)
             simpa using hunipotent_affine (x0 : F) 0
           let zswap : S :=
             ⟨hswap • affine (x0 : F), by
@@ -13241,8 +13261,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
             ⟨a0, ha0⟩
           have ha0_0 := congrFun ha0 (0 : Fin 2)
           have ha0_1 := congrFun ha0 (1 : Fin 2)
-          simp [Matrix.GeneralLinearGroup.toLin_apply,
-            Matrix.mulVec, dotProduct, hA00, hA11] at ha0_0 ha0_1
+          simp [Matrix.mulVec, dotProduct, hA00, hA11] at ha0_0 ha0_1
           let Ak : GL (Fin 2) K :=
             Matrix.GeneralLinearGroup.mkOfDetNeZero
               !![0, k; 1, 0]
@@ -13260,7 +13279,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
             · simp [D, Di, Ak, scale, Matrix.mul_apply, Matrix.vecMul,
                 dotProduct, hA00]
             · simp [D, Di, Ak, scale, Matrix.mul_apply, Matrix.vecMul,
-                dotProduct, hA00, hx0_ne_zero]
+                dotProduct, hA00]
               rw [← ha0_0, ha0_1, hk]
               field_simp
             · simp [D, Di, Ak, scale, Matrix.mul_apply, Matrix.vecMul,
@@ -13269,7 +13288,6 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
                 dotProduct, hA11]
           change toF hswap ∈ j.range
           refine ⟨Matrix.ProjGenLinGroup.mk Ak, ?_⟩
-          change j (Matrix.ProjGenLinGroup.mk Ak) = toF hswap
           rw [h826_pglMap_mk]
           have hiota :
               iotaF (conjH' hswap) =
@@ -13390,7 +13408,8 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
                   (Nat.gcd_dvd_left (Nat.card F - 1) 2)
                   (Nat.gcd_dvd_right (Nat.card F - 1) 2)
                 have hFpos : 0 < Nat.card F := Nat.card_pos
-                convert hadd using 1 <;> omega
+                convert hadd using 1
+                all_goals omega
               have hfive_factor :
                   5 ∣ Nat.card F - 1 ∨ 5 ∣ Nat.card F + 1 := by
                 rcases hfive_torus with hminus | hplus
@@ -14001,7 +14020,7 @@ public theorem huppert_II_8_26_dickson_case_p_part_normalizer_large
       let PN : Subgroup N := (P : Subgroup H).subgroupOf N
       letI : PN.Normal :=
         Subgroup.normal_subgroupOf_of_le_normalizer (by
-          simpa [N] : N ≤ Subgroup.normalizer (P : Set H))
+          simp [N])
       obtain ⟨hquotient_cyclic, hquotient_card_dvd,
           hNormalizer_fixedPointFree, _⟩ :=
         h821_borel_quotient_data hFcard H P

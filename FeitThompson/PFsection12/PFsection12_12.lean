@@ -124,8 +124,8 @@ public theorem theorem_12_12_source_leaf
     exact section11_ambientSylow_le M PM
   have hP0p : IsPGroup p P0 := by
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   have hLsL : Ls ≤ L := by
     rcases hLs with hEarly | hLate
     · rw [hEarly.2]
@@ -151,8 +151,9 @@ public theorem theorem_12_12_source_leaf
     exact hP0HleS.trans (le_sSup ⟨hSnormal, S.isPGroup'⟩)
   have hP0P : P0 ≤ P := by
     intro y hy
-    exact Subgroup.mem_map.mpr
-      ⟨⟨y, hP0H hy⟩, hP0HleCore (by simpa [P0H] using hy), rfl⟩
+    have hyP0H : (⟨y, hP0H hy⟩ : H) ∈ P0H := by
+      simpa [P0H, Subgroup.mem_subgroupOf] using hy
+    exact Subgroup.mem_map.mpr ⟨⟨y, hP0H hy⟩, hP0HleCore hyP0H, rfl⟩
   have hPp : IsPGroup p P := by
     simpa [P] using
       IsPGroup.map (p := p) (H := pCore p H)
@@ -266,13 +267,14 @@ public theorem theorem_12_12_source_leaf
         (IsElementaryAbelian.exponent_dvd_p p T) v.1
     exact hvpow
   letI : IsElementaryAbelian p V := hVelem
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   have hregularV : ActsRegularly E V :=
     ActsRegularly.invariantSubgroup hregularT V
   have hTcard : Nat.card T ≤ p ^ 2 := by
     by_contra hnot
     have hgt : p ^ 2 < Nat.card T := Nat.lt_of_not_ge hnot
     have hgen3 : 3 ≤ generatorRank T := by
-      letI : CommGroup T := CommGroup.ofIsMulCommutative
+      letI : CommGroup T := IsMulCommutative.instCommGroup
       have hcardDvd : Nat.card T ∣ p ^ Group.rank T := by
         simpa using card_dvd_exponent_pow_rank' (G := T) (n := p) (fun t =>
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -401,7 +403,7 @@ public theorem theorem_12_12_source_leaf
     let xV : V := ⟨xT, hxTV⟩
     have hxVcoe : (((xV : V) : T) : G) = x := by
       simpa [xV] using hxT
-    let ρ : Representation (ZMod p) E (Additive V) :=
+    let ρ :=
       Representation.ofElementaryAbelianAction (A := E) (G := V) (p := p)
     letI : FiniteDimensional (ZMod p) (Additive V) := Module.Finite.of_finite
     have hρdim : Module.finrank (ZMod p) (Additive V) = 2 := by
@@ -505,7 +507,7 @@ public theorem theorem_12_12_source_leaf
     have hEcomm : IsMulCommutative E :=
       theorem_2_6_a (F := ZMod p) hEodd hρdim hρinj hcharNotDvdE
     letI : IsMulCommutative E := hEcomm
-    letI : CommGroup E := CommGroup.ofIsMulCommutative
+    letI : CommGroup E := IsMulCommutative.instCommGroup
     have hnonScalar :
         ∀ y : E, y ≠ 1 →
           ¬ ∃ a : ZMod p, ∀ v : Additive V, ρ y v = a • v := by
@@ -515,9 +517,8 @@ public theorem theorem_12_12_source_leaf
         apply Additive.ofMul.injective
         calc
           Additive.ofMul (y • xV) = ρ y (Additive.ofMul xV) := by
-            simpa [ρ] using
-              (Representation.ofElementaryAbelianAction_apply_ofMul
-                (A := E) (G := V) (p := p) y xV).symm
+            apply (Representation.ofElementaryAbelianAction_apply_ofMul
+              (A := E) (G := V) (p := p) y xV).symm
           _ = a • Additive.ofMul xV := ha (Additive.ofMul xV)
           _ = (a.val : ℕ) • Additive.ofMul xV := by
             nth_rw 1 [← ZMod.natCast_zmod_val a]
@@ -570,10 +571,10 @@ public theorem theorem_12_12_source_leaf
         ⟨_hHL, _hHnormal, R, hcompR, _hHne, hRne, _hfixedR⟩
       have hHtop : H.subgroupOf H = ⊤ := by
         ext h
-        simp [Subgroup.mem_subgroupOf]
+        simp
       have hRleBot : R ≤ (⊥ : Subgroup H) := by
         rw [← hcompR.disjoint.eq_bot]
-        simpa [hHtop]
+        simp
       exact hRne (le_bot_iff.mp hRleBot)
     have hEne : E ≠ ⊥ := by
       intro hEbot
@@ -715,11 +716,16 @@ public theorem theorem_12_12_source_leaf
     have hEndRepInj : Function.Injective (endFieldRep ρ) := by
       intro y z hyz
       apply hρinj
-      ext v
+      apply LinearMap.ext
+      intro v
       let m : ρ.asModule := ρ.asModuleEquiv.symm v
-      have happ := congrArg
-        (fun f : Module.End F2 ρ.asModule => ρ.asModuleEquiv (f m)) hyz
-      simpa [m, endFieldRep_apply'] using happ
+      have htemp : (ρ y) (ρ.asModuleEquiv m) = (ρ z) (ρ.asModuleEquiv m) := by
+        calc
+          (ρ y) (ρ.asModuleEquiv m) = ρ.asModuleEquiv ((endFieldRep ρ) y m) := by
+            rw [← endFieldRep_apply' ρ y m]
+          _ = ρ.asModuleEquiv ((endFieldRep ρ) z m) := by rw [hyz]
+          _ = (ρ z) (ρ.asModuleEquiv m) := by rw [endFieldRep_apply' ρ z m]
+      simpa [m] using htemp
     have hscalarHomInj : Function.Injective scalarHom := by
       intro y z hyz
       apply hEndRepInj
@@ -797,8 +803,12 @@ public theorem theorem_12_12_source_leaf
                 ρ z (ρ.asModuleEquiv m) := endFieldRep_apply' ρ z m
             _ = ρ z v := by simp [m]
         _ = ρ.asModuleEquiv (scalarHom z • m) := by
-          exact congrArg ρ.asModuleEquiv (by
-            simpa [scalarHom] using hscalarApply ((endFieldRep ρ) z) m)
+          have htemp : (endFieldRep ρ) z m = scalarHom z • m := by
+            calc
+              (endFieldRep ρ) z m = ((endFieldRep ρ) z) m := rfl
+              _ = scalarVal ((endFieldRep ρ) z) • m := hscalarApply ((endFieldRep ρ) z) m
+              _ = scalarHom z • m := rfl
+          rw [htemp]
         _ = ρ.asModuleEquiv
             ((algebraMap (ZMod p) F2) (a : ZMod p) • m) := by
           rw [hscalarEq]

@@ -234,7 +234,7 @@ public theorem prime_power_successor_trichotomy
 
 private theorem claim6_units_card_power_of_two
     {G F : Type*} [Group G] [Finite G]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (Q S Q1 P : Subgroup G)
     (hS_sylow : ∃ P2 : Sylow 2 Q, S = (P2 : Subgroup Q).map Q.subtype)
     (hQ1 : Q1 = ⊥) (hsup : S ⊔ Q1 = Q)
@@ -286,7 +286,7 @@ private theorem claim6_nearField_commutative_of_unitEquiv
 order one or three when the actual near-field has eight units. -/
 private theorem claim6_units_card_eight_sigma_card
     {X F : Type*} [Group X] [Finite X]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (H Sigma Q : Subgroup X)
     (hPO : PFAppendixII.PropositionOneConclusion H Sigma Q F)
     (hSigmaOdd : Odd (Nat.card Sigma))
@@ -391,8 +391,8 @@ private theorem claim6_units_card_eight_sigma_card
 /- Claim (6), field branch: the actual near-field order is its characteristic
 or nine. -/
 private theorem claim6_field_order_or_nine
-    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
-    (ell : ℕ) (hcomm : IsMulCommutative F)
+    {F : Type*} [PFAppendixII.RightNearField F] [Finite F]
+    (ell : ℕ) (_hcomm : IsMulCommutative F)
     (hchar : addOrderOf (1 : F) = ell)
     (hunits : ∃ b : ℕ, Nat.card Fˣ = 2 ^ b) :
     Nat.card F = ell ∨ Nat.card F = 9 := by
@@ -424,7 +424,7 @@ private theorem claim6_field_order_or_nine
       apply Nat.pow_right_injective (by norm_num : 2 ≤ 2)
       simpa [hellTwo] using hpowTwo
     left
-    simpa [hcard, haOne]
+    simp [hcard, haOne]
   · have hbpos : 0 < b := Nat.pos_of_ne_zero hb0
     rcases
         huppert_blackburn_IX_2_7_prime_power_successor_trichotomy
@@ -439,14 +439,14 @@ private theorem claim6_field_order_or_nine
       omega
     · left
       rcases hFermat with ⟨_htwo, haOne, _⟩
-      simpa [hcard, haOne]
+      simp [hcard, haOne]
     · right
       exact hcard.trans hNine.1
 
 /- Claim (6), field branch: the odd quotient automorphism factor is trivial. -/
 private theorem claim6_field_sigma_bot
     {X F : Type*} [Group X] [Finite X]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (H Sigma Q : Subgroup X) (ell : ℕ)
     (hPO : PFAppendixII.PropositionOneConclusion H Sigma Q F)
     (hSigmaOdd : Odd (Nat.card Sigma))
@@ -455,6 +455,8 @@ private theorem claim6_field_sigma_bot
     (horder : Nat.card F = ell ∨ Nat.card F = 9) :
     Sigma = ⊥ := by
   classical
+  have hCharDvdCard : addOrderOf (1 : F) ∣ Nat.card F :=
+    addOrderOf_dvd_natCard (1 : F)
   letI : IsMulCommutative F := hcomm
   let fieldF : Field F :=
     Field.ofMinimalAxioms F add_assoc zero_add neg_add_cancel mul_assoc
@@ -576,8 +578,8 @@ private theorem claim6_field_sigma_bot
       omega
     · have hellThree : ell = 3 := by
         have hCharDvdNine : ell ∣ 9 := by
-          rw [← hchar]
-          simpa [hFieldNine] using addOrderOf_dvd_natCard (1 : F)
+          rw [← hchar, ← hFieldNine]
+          exact hCharDvdCard
         exact Nat.prime_eq_prime_of_dvd_pow
           (m := 2) hellPrime Nat.prime_three (by simpa using hCharDvdNine)
       have hfinrank : Module.finrank (ZMod ell) F = 2 := by
@@ -618,9 +620,9 @@ public theorem claim_6
     let C : Subgroup G := Subgroup.centralizer (P : Set G)
     let OmegaP : Type _ := {w : Omega // w ∈ fixedPointsOfSubgroup G Omega P}
     letI : MulAction C OmegaP := fixedPointCentralizerAction G Omega P
-    let HP : Subgroup C := H.comap C.subtype
+    let _HP : Subgroup C := H.comap C.subtype
     let DP : Subgroup C := D.comap C.subtype
-    let QP : Subgroup C := Q.comap C.subtype
+    let _QP : Subgroup C := Q.comap C.subtype
     let core : Subgroup C := pointStabilizerCore C OmegaP
     ∃ hnormal : core.Normal,
       letI : core.Normal := hnormal

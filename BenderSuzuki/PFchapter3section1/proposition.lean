@@ -101,7 +101,7 @@ private theorem typeA_same_square_quotient_eq
     have hOddIter : theta^[period] c = c⁻¹ := by
       rw [hj]
       calc
-        theta^[2 * j + 1] c = theta^[1 + 2 * j] c := by congr 1 <;> omega
+        theta^[2 * j + 1] c = theta^[1 + 2 * j] c := by (congr 1; omega)
         _ = theta (theta^[2 * j] c) := by
           rw [Function.iterate_add_apply]
           simp
@@ -332,7 +332,6 @@ private theorem cubic_line_root_card
       simp [smul_smul]
   have horbitRight : Function.RightInverse unorbitRoot orbitRoot := by
     intro x
-    change orbitRoot (unorbitRoot x) = x
     apply Subtype.ext
     apply Subtype.ext
     change squareActor x • (squareActor x)⁻¹ • (x.1 : S) = (x.1 : S)
@@ -360,7 +359,8 @@ private theorem cubic_line_root_card
       have hsBot : s ∈ (⊥ : Subgroup S) := by simpa [hbot] using hsCenter
       simpa using hsBot
     have hcardGt := (Subgroup.center S).one_lt_card_iff_ne_bot.mpr hcenterNe
-    simpa [q] using hcardGt
+    have hq1lt : 1 < q := by simpa [q] using hcardGt
+    exact Nat.succ_le_of_lt hq1lt
   have hcardRoot : Nat.card Root = q := by
     rw [hKcard] at hcardEq
     have hfactor : q ^ 2 - q = (q - 1) * q := by
@@ -446,7 +446,6 @@ private theorem cubic_full_root_card
       exact hRootNoncentral kr.2 hrCenter⟩
   let unorbitRoot : NoncentralS → K × Root := fun x =>
     (squareActor x, ⟨(squareActor x)⁻¹ • x.1, by
-      change ((squareActor x)⁻¹ • (x.1 : S)) ^ 2 = s
       rw [← smul_pow', squareActor_spec x]
       simp [smul_smul]⟩)
   have horbitLeft : Function.LeftInverse unorbitRoot orbitRoot := by
@@ -486,7 +485,9 @@ private theorem cubic_full_root_card
       intro hbot
       have hsBot : s ∈ (⊥ : Subgroup S) := by simpa [hbot] using hsCenter
       exact hs.ne_one (by simpa using hsBot)
-    simpa [q] using (Subgroup.center S).one_lt_card_iff_ne_bot.mpr hcenterNe
+    have hq1lt : 1 < q := by
+      simpa [q] using (Subgroup.center S).one_lt_card_iff_ne_bot.mpr hcenterNe
+    exact Nat.succ_le_of_lt hq1lt
   have hfactor : q ^ 3 - q = (q - 1) * (q * (q + 1)) := by
     calc
       q ^ 3 - q = q * q ^ 2 - q * 1 := by congr 1 <;> ring
@@ -526,7 +527,7 @@ private theorem cubic_linear_contradiction
     (hSQ : S = Q) (hVleD : V ≤ D)
     (hDnormS : D ≤ Subgroup.normalizer (S : Set G))
     (hKnormalD : (K.subgroupOf D).Normal)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K S)
+    (hKcyclic : IsCyclic K) (_hKfaithful : FaithfulSMul K S)
     (hKregular : ActionRegularOn K S (involutions S))
     (hSuzuki : IsSuzukiTwoGroup S)
     (hcardCube : Nat.card S = Nat.card (Subgroup.center S) ^ 3)
@@ -568,7 +569,8 @@ private theorem cubic_linear_contradiction
         have : sS ∈ (⊥ : Subgroup S) := by simpa [hbot] using hsCenter
         simpa using this
       exact hsSInv.ne_one hsOne
-    simpa [q] using Z.one_lt_card_iff_ne_bot.mpr hZne
+    have hq1lt : 1 < q := by simpa [q] using Z.one_lt_card_iff_ne_bot.mpr hZne
+    exact Nat.succ_le_of_lt hq1lt
   have hKcard : Nat.card K = q - 1 := by
     let Inv : Type u := {x : S // x ∈ involutions S}
     let orbit : K → Inv := fun k =>
@@ -615,7 +617,7 @@ private theorem cubic_linear_contradiction
               apply Subtype.ext
               exact z.property.symm
             right_inv := by intro z; cases z; rfl }
-        simpa using Nat.card_congr oneEquiv
+        simp
       rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
         Fintype.card_eq_nat_card, honeCard] at hsplit
       omega
@@ -653,7 +655,22 @@ private theorem cubic_linear_contradiction
   have hRootCard : Nat.card Root = q * (q + 1) := by
     have hcard := cubic_full_root_card hSuzuki hKregular hKcard
       hcardCube sS hsSInv
-    simpa [Root, q] using hcard
+    have hEquiv : Root ≃ {x : S // x ^ 2 = sS} := by
+      refine
+        { toFun := λ x => ⟨x.1, ?_⟩
+          invFun := λ x => ⟨x.1, ?_⟩
+          left_inv := λ _ => rfl
+          right_inv := λ _ => rfl }
+      · have hxRoot : x.1 ∈ (Root : Set S) := x.2
+        have hRootSet : (Root : Set S) = {r | r ^ 2 = sS} := rfl
+        rw [hRootSet] at hxRoot
+        have : x.1 ^ 2 = sS := hxRoot
+        exact this
+      · show x.1 ∈ Root
+        simp [Root]
+    calc
+      Nat.card Root = Nat.card {x : S // x ^ 2 = sS} := Nat.card_congr hEquiv
+      _ = q * (q + 1) := by simpa [q] using hcard
   letI : Fact (Nat.Prime p) := ⟨hp⟩
   have hPpgroup : IsPGroup p P :=
     IsPGroup.of_card (n := 1) (by simpa using hPcard)
@@ -664,7 +681,7 @@ private theorem cubic_linear_contradiction
   have hpNeTwo : p ≠ 2 := by
     intro hpTwo
     apply hpOdd.not_two_dvd_nat
-    simpa [hpTwo]
+    simp [hpTwo]
   have hpNotDvdQ : ¬ p ∣ q := by
     intro hpq
     rw [hqPow] at hpq
@@ -716,7 +733,7 @@ private theorem cubic_linear_contradiction
     intro hpSub
     have hpTwo : p ∣ 2 := by
       have h := Nat.dvd_sub hpDvdQPlus hpSub
-      convert h using 1 <;> omega
+      (convert h using 1; omega)
     rcases (Nat.dvd_prime Nat.prime_two).mp hpTwo with hpOne | hpTwo
     · exact hp.ne_one hpOne
     · exact hpNeTwo hpTwo
@@ -739,7 +756,7 @@ private theorem cubic_linear_contradiction
       have hmem := hKnormalD.conj_mem kcD hconjK cD⁻¹
       simpa [cD, kcD, Subgroup.mem_subgroupOf, mul_assoc] using hmem
   letI : Subgroup.Normalizes P K := ⟨hPnormK⟩
-  have hKcomm : IsMulCommutative K := ⟨hKcyclic.commutative⟩
+  have hKcomm : IsMulCommutative K := hKcyclic.isMulCommutative
   let Cfix : Subgroup K := fixedPointSubgroup P K
   let Ccomm : Subgroup K := commutatorAction (A := P) (G := K)
   have hKsolvable : IsSolvable K := by
@@ -845,7 +862,8 @@ private theorem cubic_linear_contradiction
         (⟨k, Subgroup.mem_zpowers k⟩ : A) • x = x := by
       obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective Z x
       change QuotientGroup.mk' Z (k • y) = QuotientGroup.mk' Z y
-      simpa [defaultKAction] using hkx
+      dsimp [defaultKAction] at hkx
+      exact hkx
     have hxFixed : x ∈ fixedPointSubgroup A E := by
       change ∀ a : A, a • x = x
       intro a
@@ -1052,7 +1070,7 @@ private theorem cubic_linear_contradiction
     have hxZ : x ∈ Z := hfixedSLeZ hx
     have hxOne : QuotientGroup.mk' Z x = 1 :=
       (QuotientGroup.eq_one_iff x).mpr hxZ
-    simpa [hxOne]
+    simp [hxOne]
   have hPfixedE : fixedPointSubgroup P E = ⊥ := by
     rw [hfixedEq]
     exact hfixedMapBot
@@ -1066,17 +1084,41 @@ private theorem cubic_linear_contradiction
       ⟨SemidirectProduct.inl c, ⟨c, rfl⟩⟩
     have hkcFix : kc • x = x := hx kc
     have hsdFix : (SemidirectProduct.inl c : SD) • x = x := by
-      simpa [kc, MulAction.compHom_smul_def] using hkcFix
+      have : (kc : KSD) • x = (SemidirectProduct.inl c : SD) • x := by
+        calc
+          (kc : KSD) • x = (KSD.subtype (kc : KSD) : SD) • x := by
+            simpa using (MulAction.compHom_smul_def (KSD.subtype : KSD →* SD) (kc : KSD) x)
+          _ = (SemidirectProduct.inl c : SD) • x := by simp [kc]
+      rw [← this, hkcFix]
     have hcFix :
         @SMul.smul K E defaultKAction.toSMul (c : K) x = x := by
-      simpa [kc, KSD, sdToD, cToD, MulAction.compHom_smul_def,
-        defaultDAction, defaultKAction] using hsdFix
+      have hK_smul_eq : (c : K) • x = (SemidirectProduct.inl c : SD) • x := by
+        calc
+          (c : K) • x = (cToD c : D) • x := by
+            obtain ⟨s, rfl⟩ := QuotientGroup.mk'_surjective Z x
+            calc
+              (c : K) • QuotientGroup.mk' Z s = QuotientGroup.mk' Z ((c : K) • s) := by
+                simp
+              _ = QuotientGroup.mk' Z ((cToD c : D) • s) := by
+                have : (cToD c : D) • s = (c : K) • s := by
+                  dsimp [cToD]; rfl
+                rw [this]
+              _ = (cToD c : D) • QuotientGroup.mk' Z s := by
+                simp
+          _ = sdToD (SemidirectProduct.inl c) • x := by
+            dsimp [sdToD]; rw [SemidirectProduct.lift_inl]
+          _ = (SemidirectProduct.inl c : SD) • x := by
+            simpa using (MulAction.compHom_smul_def sdToD (SemidirectProduct.inl c : SD) x).symm
+      calc
+        @SMul.smul K E defaultKAction.toSMul (c : K) x = (c : K) • x := rfl
+        _ = (SemidirectProduct.inl c : SD) • x := hK_smul_eq
+        _ = x := hsdFix
     have hcKne : (c : K) ≠ 1 := by
       intro hcOne
       apply hc
       exact Subtype.ext hcOne
     have hxOne : x = 1 := hKfixedFree (c : K) hcKne x hcFix
-    simpa [hxOne]
+    simp [hxOne]
   letI : MulDistribMulAction RSD E :=
     MulDistribMulAction.compHom E RSD.subtype
   have hRSDfixedE : fixedPointSubgroup RSD E = ⊥ := by
@@ -1089,9 +1131,35 @@ private theorem cubic_linear_contradiction
         ⟨SemidirectProduct.inr a, ⟨a, rfl⟩⟩
       have hraFix : ra • x = x := hx ra
       have hsdFix : (SemidirectProduct.inr a : SD) • x = x := by
-        simpa [ra, MulAction.compHom_smul_def] using hraFix
-      simpa [sdToD, pToD, MulAction.compHom_smul_def,
-        defaultDAction, defaultPAction] using hsdFix
+        have : (ra : RSD) • x = (SemidirectProduct.inr a : SD) • x := by
+          calc
+            (ra : RSD) • x = (RSD.subtype (ra : RSD) : SD) • x := by
+              simpa using (MulAction.compHom_smul_def (RSD.subtype : RSD →* SD) (ra : RSD) x)
+            _ = (SemidirectProduct.inr a : SD) • x := by simp [ra]
+        rw [← this, hraFix]
+      have haFix : (a : P) • x = x := by
+        have hP_smul_eq : (a : P) • x = (SemidirectProduct.inr a : SD) • x := by
+          calc
+            (a : P) • x = (pToD a : D) • x := by
+              obtain ⟨s, rfl⟩ := QuotientGroup.mk'_surjective Z x
+              calc
+                (a : P) • QuotientGroup.mk' Z s = QuotientGroup.mk' Z ((a : P) • s) := by
+                  simp
+                _ = QuotientGroup.mk' Z ((pToD a : D) • s) := by
+                  have : (pToD a : D) • s = (a : P) • s := by
+                    dsimp [pToD]; rfl
+                  rw [this]
+                _ = (pToD a : D) • QuotientGroup.mk' Z s := by
+                  simp
+            _ = sdToD (SemidirectProduct.inr a) • x := by
+              dsimp [sdToD]; rw [SemidirectProduct.lift_inr]
+            _ = (SemidirectProduct.inr a : SD) • x := by
+              simpa using (MulAction.compHom_smul_def sdToD (SemidirectProduct.inr a : SD) x).symm
+        calc
+          @SMul.smul P E defaultPAction.toSMul (a : P) x = (a : P) • x := rfl
+          _ = (SemidirectProduct.inr a : SD) • x := hP_smul_eq
+          _ = x := hsdFix
+      exact haFix
     have hxBot : x ∈ (⊥ : Subgroup E) := by
       rw [← hPfixedE]
       exact hxP
@@ -1110,7 +1178,9 @@ private theorem cubic_linear_contradiction
   letI : Finite SD :=
     Finite.of_equiv (Ccomm × P)
       (SemidirectProduct.equivProd (φ := phi)).symm
-  let rho : Representation (ZMod 2) SD (Additive E) :=
+  letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
+  letI : CommGroup E := IsMulCommutative.instCommGroup
+  let rho :=
     Representation.ofElementaryAbelianAction (A := SD) (G := E) (p := 2)
   have hKSDNotKer : ¬ KSD ≤ rho.ker := by
     intro hKSDker
@@ -1201,7 +1271,7 @@ private theorem psu_sylow_normalizer_center_witness
       rw [hM, External.hermitianUnipotentGL_val,
         External.hermitianUnipotentMatrix_eq]
     apply Subtype.ext
-    change (((coordR z : R) : G0) : Matrix.ProjGenLinGroup (Fin 3) E) =
+    show (((coordR z : R) : G0) : Matrix.ProjGenLinGroup (Fin 3) E) =
       (rootPSU z : Matrix.ProjGenLinGroup (Fin 3) E)
     calc
       (((coordR z : R) : G0) : Matrix.ProjGenLinGroup (Fin 3) E) =
@@ -1704,7 +1774,17 @@ private theorem cubic_fixed_root
   have hRootCard : Nat.card Root = Nat.card (Subgroup.center S) := by
     have hcard := cubic_line_root_card hSuzuki hKregular hKcard
       kAction hKquotient T hTinv hTcard s hs
-    simpa only [Root, Plane, Z, E] using hcard
+    let rootEquiv : Root ≃
+        {x : Plane // ((x : Plane) : S) ^ 2 = s} :=
+      { toFun := fun x ↦ ⟨x, x.property⟩
+        invFun := fun x ↦ ⟨x, x.property⟩
+        left_inv := by intro x; rfl
+        right_inv := by intro x; rfl }
+    calc
+      Nat.card Root = Nat.card {x : Plane // ((x : Plane) : S) ^ 2 = s} :=
+        Nat.card_congr rootEquiv
+      _ = Nat.card (Subgroup.center S) := by
+        simpa [Plane, Z, E] using hcard
   have hpNotDvdRoot : ¬ p ∣ Nat.card Root := by
     rw [hRootCard]
     exact hpNotDvdCenter
@@ -1782,7 +1862,7 @@ private theorem cubic_fixed_roots_contradiction
     exact zCX.property.2⟩
   have hzCenterS : zS ∈ Z := by
     by_cases hzOne : zS = 1
-    · simpa [zS, hzOne]
+    · simp [zS, hzOne]
     · have hzInv : zS ∈ involutions S :=
         ⟨hzOne, Subtype.ext (congrArg (fun z : CX => (z : G)) hzSqCX)⟩
       rw [(higmanTheorem_involutions_center hSuzuki).1] at hzInv
@@ -2160,7 +2240,7 @@ private theorem cubic_order_five_contradiction
               apply Subtype.ext
               exact z.property.symm
             right_inv := by intro z; cases z; rfl }
-        simpa using Nat.card_congr oneEquiv
+        simp
       rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card,
         Fintype.card_eq_nat_card, honeCard] at hsplit
       omega
@@ -2180,7 +2260,11 @@ private theorem cubic_order_five_contradiction
     apply MulDistribMulAction.ext
     funext k x
     obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective Z x
-    simpa [defaultKAction, E, Z] using hquotientAction k y
+    calc
+      @SMul.smul K E quotientAction.toSMul k (QuotientGroup.mk' Z y) =
+          QuotientGroup.mk' Z (k • y) := hquotientAction k y
+      _ = @SMul.smul K E defaultKAction.toSMul k (QuotientGroup.mk' Z y) := by
+        rfl
   subst quotientAction
   letI : MulDistribMulAction K E := defaultKAction
   have hPnormS : P ≤ Subgroup.normalizer (S : Set G) :=
@@ -2202,7 +2286,7 @@ private theorem cubic_order_five_contradiction
     have hcV := hPV hc
     rw [hVeq] at hcV
     exact hcV.2
-  have hKcomm : IsMulCommutative K := ⟨hKcyclic.commutative⟩
+  have hKcomm : IsMulCommutative K := hKcyclic.isMulCommutative
   have hKfixedFree :
       ∀ k : K, k ≠ 1 → ∀ x : E,
         @SMul.smul K E defaultKAction.toSMul k x = x → x = 1 := by
@@ -2219,7 +2303,8 @@ private theorem cubic_order_five_contradiction
         (⟨k, Subgroup.mem_zpowers k⟩ : A) • x = x := by
       obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective Z x
       change QuotientGroup.mk' Z (k • y) = QuotientGroup.mk' Z y
-      simpa [defaultKAction] using hkx
+      dsimp [defaultKAction] at hkx
+      exact hkx
     have hxFixed : x ∈ fixedPointSubgroup A E := by
       change ∀ a : A, a • x = x
       intro a
@@ -2586,7 +2671,7 @@ private theorem cubic_order_five_contradiction
           rw [Subgroup.pointwise_smul_def, Subgroup.mem_map] at hx
           rcases hx with ⟨y, hyX, rfl⟩
           rcases (hXorbit y).mp hyX with rfl | ⟨k, rfl⟩
-          · simpa using X.one_mem
+          · simp
           · apply (hXorbit _).mpr
             let k' : K := conjK c⁻¹ k
             have hback : conjK c k' = k := by
@@ -2624,14 +2709,12 @@ private theorem cubic_order_five_contradiction
         have hDActionK : ∀ k : KD, ∀ x : E,
             ((k : D) • x) =
               (⟨((k : D) : G), by
-                change ((k : D) : G) ∈ K
                 exact k.property⟩ : K) • x := by
           intro k x
           obtain ⟨r, rfl⟩ := QuotientGroup.mk'_surjective Z x
           change QuotientGroup.mk' Z ((k : D) • r) =
             QuotientGroup.mk' Z
               ((⟨((k : D) : G), by
-                change ((k : D) : G) ∈ K
                 exact k.property⟩ : K) • r)
           apply congrArg (QuotientGroup.mk' Z)
           apply Subtype.ext
@@ -2639,14 +2722,12 @@ private theorem cubic_order_five_contradiction
         have hDActionP : ∀ c : PD, ∀ x : E,
             ((c : D) • x) =
               (⟨((c : D) : G), by
-                change ((c : D) : G) ∈ P
                 exact c.property⟩ : P) • x := by
           intro c x
           obtain ⟨r, rfl⟩ := QuotientGroup.mk'_surjective Z x
           change QuotientGroup.mk' Z ((c : D) • r) =
             QuotientGroup.mk' Z
               ((⟨((c : D) : G), by
-                change ((c : D) : G) ∈ P
                 exact c.property⟩ : P) • r)
           apply congrArg (QuotientGroup.mk' Z)
           apply Subtype.ext
@@ -2659,10 +2740,8 @@ private theorem cubic_order_five_contradiction
             let kKD : KD := ⟨k, hk⟩
             let cPD : PD := ⟨c, hc⟩
             let kK : K := ⟨((k : D) : G), by
-              change ((k : D) : G) ∈ K
               exact hk⟩
             let cP : P := ⟨((c : D) : G), by
-              change ((c : D) : G) ∈ P
               exact hc⟩
             have hcMem : cP • x ∈ X := by
               have : cP • x ∈ cP • X :=
@@ -2685,7 +2764,9 @@ private theorem cubic_order_five_contradiction
           Subgroup.card_subgroup_dvd_card A
         have hAodd : Odd (Nat.card A) :=
           hA1.D_odd.of_dvd_nat hAcardDvd
-        let ρ : Representation (ZMod 2) A (Additive E) :=
+        letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
+        letI : CommGroup E := IsMulCommutative.instCommGroup
+        let ρ :=
           Representation.ofElementaryAbelianAction (A := A) (G := E) (p := 2)
         let instAdd : AddCommGroup ρ.asModule :=
           Representation.instAddCommGroupAsModule ρ
@@ -2788,7 +2869,7 @@ private theorem cubic_order_five_contradiction
         have hYinvK : IsXInvariantSubgroup K Y := by
           intro k y
           let kKD : KD := ⟨⟨(k : G), hKleD k.property⟩, by
-            simpa [KD, Subgroup.mem_subgroupOf] using k.property⟩
+            exact k.property⟩
           let kA : A := ⟨(kKD : D), Subgroup.mem_sup_left kKD.property⟩
           have hact : kA • y = k • y := by
             exact hDActionK kKD y
@@ -2802,7 +2883,7 @@ private theorem cubic_order_five_contradiction
         have hPfixY : ∀ c : P, c • Y = Y := by
           intro c
           let cPD : PD := ⟨⟨(c : G), hPleD c.property⟩, by
-            simpa [PD, Subgroup.mem_subgroupOf] using c.property⟩
+            exact c.property⟩
           let cA : A := ⟨(cPD : D), Subgroup.mem_sup_right cPD.property⟩
           have hact : ∀ y : E, cA • y = c • y := hDActionP cPD
           apply le_antisymm
@@ -2815,7 +2896,7 @@ private theorem cubic_order_five_contradiction
           · intro y hyY
             have hback : c⁻¹ • y ∈ Y := by
               let ciPD : PD := ⟨⟨((c⁻¹ : P) : G), hPleD (c⁻¹).property⟩, by
-                simpa [PD, Subgroup.mem_subgroupOf] using (c⁻¹).property⟩
+                exact (c⁻¹).property⟩
               let ciA : A :=
                 ⟨(ciPD : D), Subgroup.mem_sup_right ciPD.property⟩
               have hacti : ciA • y = c⁻¹ • y := hDActionP ciPD y
@@ -3000,7 +3081,7 @@ private theorem cubic_order_five_contradiction
   have hpOdd : Odd p := hA1.D_odd.of_dvd_nat hpDvdD
   have hpNeTwo : p ≠ 2 := by
     intro hpTwo
-    exact hpOdd.not_two_dvd_nat (by simpa [hpTwo])
+    exact hpOdd.not_two_dvd_nat (by simp [hpTwo])
   have hpNotDvdCenter : ¬ p ∣ Nat.card (Subgroup.center S) := by
     rw [show Nat.card (Subgroup.center S) = 2 ^ n by
       simpa only [Z] using hqPow]
@@ -3164,7 +3245,7 @@ public theorem proposition
       exact MulAction.mem_stabilizer_iff.mp (hxAll omega)
     have hxOne : x = 1 :=
       (faithfulSMul_iff.mp hch.1.1.hA.A2) x hfix
-    simpa [hxOne]
+    simp [hxOne]
   letI : (Q.subgroupOf H).Normal := hch.1.1.hA.A1.Q_normal_in_H
   have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
     Subgroup.le_normalizer_of_normal_subgroupOf hch.1.1.hA.A1.Q_le_H
@@ -3518,7 +3599,7 @@ public theorem proposition
       (PFchapter1section2.proposition_1_c
         H D Q K V W Q0 S Q1 t hch.1.1).2.2
     letI : IsMulCommutative S := hcomm
-    letI : CommGroup S := CommGroup.ofIsMulCommutative
+    letI : CommGroup S := IsMulCommutative.instCommGroup
     have hVeq :
         V = D ⊓ Subgroup.centralizer ({s} : Set G) := by
       calc
@@ -3572,7 +3653,6 @@ public theorem proposition
           intro q
           apply Subtype.ext
           dsimp
-          change (xSub : G)⁻¹ * ((xSub : G) * (q : G)) = (q : G)
           simp
         right_inv := by
           intro r
@@ -3588,7 +3668,7 @@ public theorem proposition
     have hpNeTwo : p ≠ 2 := by
       intro hpTwo
       apply hpOdd.not_two_dvd_nat
-      simpa [hpTwo]
+      simp [hpTwo]
     have hpNotDvdRoot : ¬ p ∣ Nat.card Root := by
       intro hpRoot
       have hpQ0 : p ∣ Nat.card Q0 := by
@@ -3658,7 +3738,7 @@ public theorem proposition
         exact MulAction.mem_stabilizer_iff.mp (hxAll omega)
       have hxOne : x = 1 :=
         (faithfulSMul_iff.mp hch.1.1.1.A2) x hfix
-      simpa [hxOne]
+      simp [hxOne]
     have hSuzuki : IsSuzukiTwoGroup S := by
       rcases PFchapter1section2.corollary
           H D Q K V W Q0 S Q1 t hch.1.1 with hcomm | hSuzuki
@@ -3935,7 +4015,7 @@ public theorem proposition
         have hOddIter : theta^[period] c = c⁻¹ := by
           rw [hj]
           calc
-            theta^[2 * j + 1] c = theta^[1 + 2 * j] c := by congr 1 <;> omega
+            theta^[2 * j + 1] c = theta^[1 + 2 * j] c := by (congr 1; omega)
             _ = theta (theta^[2 * j] c) := by
               rw [Function.iterate_add_apply]
               simp
@@ -4083,7 +4163,7 @@ public theorem proposition
         have hpNeTwo : p ≠ 2 := by
           intro hpTwo
           apply hpOdd.not_two_dvd_nat
-          simpa [hpTwo]
+          simp [hpTwo]
         have hpNotDvdRoot : ¬ p ∣ Nat.card Root := by
           rw [hRootCard]
           intro hpPow
@@ -4535,7 +4615,7 @@ public theorem proposition
           Subgroup.center S ⊓ fixedPointSubgroup P S = CQ0S := by
         rw [← hQ0SCenter, hFixSEq]
         ext x
-        simp only [Subgroup.mem_inf, Subgroup.mem_subgroupOf]
+        simp only [Subgroup.mem_inf]
         change ((x : G) ∈ Q0 ∧
             (x : G) ∈ Subgroup.centralizer (P : Set G) ∧ (x : G) ∈ S) ↔
           (x : G) ∈ Subgroup.centralizer (P : Set G) ∧ (x : G) ∈ Q0
@@ -4590,7 +4670,7 @@ public theorem proposition
         Classical.choose_spec (hLiftFixed y)
       have hSquareCenter (f : S) : f ^ 2 ∈ Subgroup.center S := by
         by_cases hfSq : f ^ 2 = 1
-        · simpa [hfSq]
+        · simp [hfSq]
         · have hfFourth : f ^ 4 = 1 :=
             (higmanTheorem_center_quotient_orders_and_exponent hSuzuki).2.2.2.2 f
           have hfInv : IsInvolution (f ^ 2) := by
@@ -4691,7 +4771,7 @@ public theorem proposition
     have hepsilonZero : epsilon = 0 := by
       calc
         epsilon = 1 * theta 1 + epsilon * 1 * theta 1 + 1 * theta 1 := by
-          simp only [map_one, mul_one, one_mul]
+          simp only [map_one, mul_one]
           rw [show (1 : BinaryGaloisField n) + epsilon + 1 =
               epsilon + (1 + 1) by ring,
             CharTwo.add_self_eq_zero, add_zero]
@@ -4703,8 +4783,7 @@ public theorem proposition
         _ = (1 + cocycle 1 0 0 1) +
               (cocycle 0 1 1 0 + 1) := by
           rw [hdiag, hdiag]
-          simp only [map_one, map_zero, mul_one, mul_zero, zero_mul,
-            add_zero, zero_add]
+          simp only [map_one, map_zero, mul_one, mul_zero, add_zero, zero_add]
         _ = cocycle 1 0 0 1 + cocycle 0 1 1 0 := by
           rw [show (1 + cocycle 1 0 0 1) +
               (cocycle 0 1 1 0 + 1) =
@@ -4894,11 +4973,11 @@ public theorem proposition
         exact add_right_cancel (add_left_cancel h')
       have haPow : a ^ (2 ^ (n - 1)) = 0 :=
         (mul_eq_zero.mp haTerm).resolve_left hepsilon
-      have ha : a = 0 := pow_eq_zero haPow
+      have ha : a = 0 := eq_zero_of_pow_eq_zero haPow
       subst a
       have hbTerm : epsilon * theta (b ^ 2) = 0 := by
         have h := hcommCoord 0 1 0
-        simp only [map_zero, zero_mul, mul_zero, zero_add, one_mul,
+        simp only [map_zero, zero_mul, mul_zero, zero_add,
           one_pow, add_zero, zero_pow hpowPos.ne'] at h
         have h' : z + 0 = z + epsilon * theta (b ^ 2) := by
           simpa using h
@@ -4906,7 +4985,7 @@ public theorem proposition
       have hthetaB : theta (b ^ 2) = 0 :=
         (mul_eq_zero.mp hbTerm).resolve_left hepsilon
       have hbSq : b ^ 2 = 0 := (map_eq_zero theta).mp hthetaB
-      have hb : b = 0 := pow_eq_zero hbSq
+      have hb : b = 0 := eq_zero_of_pow_eq_zero hbSq
       subst b
       refine ⟨z, ?_⟩
       apply Subtype.ext
@@ -4968,7 +5047,8 @@ public theorem proposition
     have hthetaPowFive : theta ^ 5 = 1 := by
       apply DFunLike.ext _ _
       intro x
-      simpa only [Equiv.Perm.iterate_eq_pow] using hperiod x
+      change theta (theta (theta (theta (theta x)))) = x
+      simpa [Function.iterate_succ_apply] using hperiod x
     have hthetaNeOne : theta ≠ 1 := by
       rintro rfl
       rcases hthetaNontrivial with ⟨x, hx⟩
@@ -5190,16 +5270,20 @@ public theorem proposition
           let pV : V := pToV pP
           rcases hvAction pV q with ⟨hqConj, hqImage⟩
           have hxFixed : rhoP pP (x : F) = x := x.property pP
+          have hrhoP : rhoP pP =
+              (vmodWAut (QuotientGroup.mk pV) : F ≃+* F) := by
+            rfl
           have hforward :
               (vmodWAut (QuotientGroup.mk pV) : F ≃+* F) (x : F) = x := by
-            simpa [rhoP, pToV, pP, pV] using hxFixed
+            rw [← hrhoP]
+            exact hxFixed
           have hbackward :
               (vmodWAut (QuotientGroup.mk pV) : F ≃+* F).symm (x : F) = x := by
             apply (vmodWAut (QuotientGroup.mk pV) : F ≃+* F).injective
             simpa using hforward.symm
           have hqImage' :
               q0Add ⟨rightConjugateElem (q : G) p, hqConj⟩ = q0Add q := by
-            simpa [q, hbackward] using hqImage
+            simpa [q, hbackward, pV, pToV, pP] using hqImage
           have hright : rightConjugateElem (q : G) p = (q : G) :=
             congrArg Subtype.val (q0Add.injective hqImage')
           calc
@@ -5235,16 +5319,38 @@ public theorem proposition
       let sigma : F ≃ₐ[FixedPoints.subfield P F] F :=
         AlgEquiv.ofRingEquiv
           (f := (vmodWAut (QuotientGroup.mk vV) : F ≃+* F))
-          (fun x => hvFixes x)
+          (by
+            intro r
+            have htemp : algebraMap (FixedPoints.subfield P F) F r = (r : F) := rfl
+            simpa [htemp] using hvFixes r)
       obtain ⟨p, hpSigma⟩ :=
         FixedPoints.toAlgAut_surjective P F sigma
       have hAutEq :
           (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) =
             rhoP p := by
-        apply DFunLike.ext _ _
-        intro x
-        have hx := DFunLike.congr_fun hpSigma x
-        simpa [sigma, rhoP] using hx.symm
+        have htemp : (sigma : F ≃+* F) =
+            (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) := by
+          dsimp [sigma]
+          rfl
+        have htemp' : (sigma : F ≃+* F) = (rhoP p : F ≃+* F) := by
+          calc
+            (sigma : F ≃+* F) =
+                ((MulSemiringAction.toAlgAut (↥P)
+                  (↥(FixedPoints.subfield (↥P) F)) F) p : F ≃+* F) := by
+              simpa using congrArg
+                (fun e : F ≃ₐ[FixedPoints.subfield P F] F => (e : F ≃+* F))
+                hpSigma.symm
+            _ = (rhoP p : F ≃+* F) := by
+              ext x
+              calc
+                ((MulSemiringAction.toAlgAut (↥P)
+                    (↥(FixedPoints.subfield (↥P) F)) F) p : F → F) x =
+                    p • x := rfl
+                _ = rhoP p x := rfl
+        calc
+          (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) =
+              (sigma : F ≃+* F) := htemp.symm
+          _ = (rhoP p : F ≃+* F) := htemp'
       have hQuotientEq :
           QuotientGroup.mk' (W.subgroupOf V) vV =
             QuotientGroup.mk' (W.subgroupOf V) (pToV p) := by
@@ -5259,7 +5365,7 @@ public theorem proposition
       have hvEq : vV = pToV p := div_eq_one.mp hdivOne
       have hvG : v = (p : G) := by
         simpa [vV, pToV] using congrArg (fun z : V => (z : G)) hvEq
-      simpa [hvG] using p.property
+      simp [hvG]
     · intro p hpP
       refine ⟨hPV hpP, ?_⟩
       change ∀ q : G,
@@ -5492,7 +5598,13 @@ public theorem proposition
               exact (Subgroup.centerCongr eP0Model ⟨z0, hz0⟩).property
             have hcommM := (hgMcenter zM hzM).eq
             apply eF.injective
-            simpa [gQ, zM, z0, eP0Model, eCFXP0, eCFXP0, qF] using hcommM
+            rw [map_mul, map_mul]
+            have hgEq : eF gQ = gM := eF.apply_symm_apply gM
+            rw [hgEq]
+            have hzEq : eF (qF (z : F)) = (zM : ProjectiveSpecialUnitaryMatrixGroup J) := by
+              rfl
+            rw [hzEq]
+            exact hcommM
           have hZFGcard :
               Nat.card ZFG = Nat.card (Subgroup.center F) := by
             simpa [ZFG] using
@@ -5625,7 +5737,7 @@ public theorem proposition
               have hxCenterCX : xCX ∈ Subgroup.center CX := by
                 rcases (hch.1.1.Q0_def x).mp hx.1 with hxOne | hxInv
                 · have hxOneCX : xCX = 1 := Subtype.ext hxOne
-                  simpa [hxOneCX]
+                  simp [hxOneCX]
                 · have hxInvCX : IsInvolution xCX :=
                     ⟨fun hxOne => hxInv.2.ne_one
                         (congrArg (fun z : CX => (z : G)) hxOne),

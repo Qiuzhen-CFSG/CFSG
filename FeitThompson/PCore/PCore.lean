@@ -6,6 +6,8 @@ module
 
 public import FeitThompson.PCore.Defs
 
+open scoped commutatorElement
+
 variable (p : ℕ) (G : Type*) [Group G]
 
 section pCore_properties
@@ -125,7 +127,7 @@ variable [Finite G]
 
 public theorem Group.IsNilpotent.sylow_normal (h : Group.IsNilpotent G)
     (p : ℕ) [Fact p.Prime] (P : Sylow p G) : (P : Subgroup G).Normal :=
-  have h_nc : NormalizerCondition G := @normalizerCondition_of_isNilpotent G _ h
+  have h_nc : NormalizerCondition G := @Group.normalizerCondition_of_isNilpotent G _ h
   have h_coatom : ∀ H : Subgroup G, IsCoatom H → H.Normal :=
     fun H hH => Subgroup.NormalizerCondition.normal_of_coatom H h_nc hH
   Sylow.normal_of_all_max_subgroups_normal h_coatom P
@@ -205,7 +207,7 @@ public theorem isNilpotent_iSup_pCore : Group.IsNilpotent (↥(⨆ (p : (Nat.car
       intro i
       exact pCore_isPGroup.isNilpotent
     infer_instance
-  exact nilpotent_of_mulEquiv e
+  exact Group.nilpotent_of_mulEquiv e
 
 /-- A finite nilpotent group is the supremum of its Sylow subgroups. -/
 public theorem Sylow.iSup_sylow_eq_top :

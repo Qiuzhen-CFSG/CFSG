@@ -155,7 +155,7 @@ public theorem theorem_16_E_2
         exact hpσM
       rcases List.mem_iff_get.mp hRmem with ⟨iM, hiM⟩
       let i : Fin (Ms.map section10SigmaPrimes).length :=
-        ⟨iM.1, by simpa [List.length_map] using iM.2⟩
+        ⟨iM.1, by simp [List.length_map]⟩
       refine ⟨i, ?_⟩
       have hpσMi : q ∈ section10SigmaPrimes (Ms.get iM) := by
         simpa [hiM.symm] using hpσR
@@ -172,9 +172,9 @@ public theorem theorem_16_E_2
     let Mi : Subgroup G := Ms.get iM
     let Mj : Subgroup G := Ms.get jM
     have hMi_mem : Mi ∈ Ms := by
-      simpa [Mi] using List.get_mem Ms iM
+      simp [Mi]
     have hMj_mem : Mj ∈ Ms := by
-      simpa [Mj] using List.get_mem Ms jM
+      simp [Mj]
     have hMi : Mi ∈ section9MaximalSubgroups G := hMs.1 Mi hMi_mem
     have hMj : Mj ∈ section9MaximalSubgroups G := hMs.1 Mj hMj_mem
     have hnotconj : section12NotConjugate Mj Mi := by
@@ -234,7 +234,7 @@ public theorem theorem_16_E_3_tilde_disjointUnion
       let i : Fin (Ms.map fun N =>
           section16ConjugatesOfSetBySet
             (section16TildeM N (fun x : G => section14R x)) Set.univ).length :=
-        ⟨iN.1, by simpa [List.length_map] using iN.2⟩
+        ⟨iN.1, by simp [List.length_map]⟩
       refine ⟨i, ?_⟩
       have hyGet :
           y ∈ section16ConjugatesOfSetBySet
@@ -343,7 +343,7 @@ public theorem theorem_16_E_3
         let i : Fin (Ms.map fun N =>
             section16ConjugatesOfSetBySet
               (section16TildeM N (fun x : G => section14R x)) Set.univ).length :=
-          ⟨iN.1, by simpa [List.length_map] using iN.2⟩
+          ⟨iN.1, by simp [List.length_map]⟩
         refine ⟨i, ?_⟩
         have hyGet :
             y ∈ section16ConjugatesOfSetBySet

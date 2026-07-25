@@ -63,7 +63,12 @@ public theorem corollary_10_7_d
   obtain ⟨x, hxT⟩ := MulAction.exists_smul_eq G T P
   have hTconjP : (T : Subgroup G).conjBy x = (P : Subgroup G) := by
     have hxT' := congrArg (fun S : Sylow p.val G => (S : Subgroup G)) hxT
-    simpa [Subgroup.conjBy] using hxT'
+    have hTconj_smul :
+        (T : Subgroup G).conjBy x = ((x • T : Sylow p.val G) : Subgroup G) := by
+      rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+      ext y
+      constructor <;> rintro ⟨z, hz, rfl⟩ <;> exact ⟨z, hz, rfl⟩
+    exact hTconj_smul.trans hxT'
   have hSGxP : SG.conjBy x ≤ (P : Subgroup G) := by
     exact (section10_conjBy_mono hSG_le_T x).trans (le_of_eq hTconjP)
   have hQxP : Q.conjBy x ≤ (P : Subgroup G) :=
@@ -126,4 +131,3 @@ public theorem corollary_10_7_d
     _ = NPQ := by
       simpa [NPQsub] using
         (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := NPQ) (K := NQ) hNPQ_le_NQ)
-

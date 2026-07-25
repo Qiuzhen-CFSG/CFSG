@@ -22,6 +22,8 @@ namespace BenderSuzuki
 namespace External
 namespace Higman
 
+open scoped IsMulCommutative commutatorElement
+
 open PFAppendixIII
 
 universe u
@@ -571,8 +573,8 @@ private theorem lemma13_frattini_le_of_sup_and_squares
     (hY_sq : ∀ y : Y, (y : Q) ^ 2 ∈ C) :
     frattini Q ≤ C := by
   have hquotient_comm : IsMulCommutative (Q ⧸ C) :=
-    ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (N := C)).mpr hcomm_le_C⟩
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le
+      (N := C)).mpr hcomm_le_C
   letI : IsMulCommutative (Q ⧸ C) := hquotient_comm
   have hsq : ∀ q : Q, q ^ 2 ∈ C := by
     intro q
@@ -618,13 +620,13 @@ private theorem lemma13_square_mem_bottom_of_chain_actor_data
   intro p
   have hpker : p ^ 2 ∈ q0.ker := by
     rw [MonoidHom.mem_ker]
-    let p0 : lowerCentralSeries P 0 := Subgroup.topEquiv.symm p
+    let p0 : (⊤ : Subgroup P).lowerCentralSeries 0 := Subgroup.topEquiv.symm p
     have hp0sq : p0 ^ 2 ∈ lowerCentralFactorKernel P 0 := by
       unfold lowerCentralFactorKernel
       exact (le_sup_left :
-        squaresSubgroup (lowerCentralSeries P 0) ≤
-          squaresSubgroup (lowerCentralSeries P 0) ⊔
-            (lowerCentralSeries P 1).subgroupOf (lowerCentralSeries P 0))
+        squaresSubgroup ((⊤ : Subgroup P).lowerCentralSeries 0) ≤
+          squaresSubgroup ((⊤ : Subgroup P).lowerCentralSeries 0) ⊔
+            ((⊤ : Subgroup P).lowerCentralSeries 1).subgroupOf ((⊤ : Subgroup P).lowerCentralSeries 0))
         (Subgroup.subset_closure ⟨p0, rfl⟩)
     calc
       q0 (p ^ 2) = (q0 p) ^ 2 := by rw [map_pow]
@@ -642,42 +644,45 @@ private theorem lemma13_square_mem_bottom_of_chain_actor_data
 
 private theorem lemma13_commutator_one_one_le_three
     {H : Type u} [Group H] :
-    ⁅lowerCentralSeries H 1, lowerCentralSeries H 1⁆ ≤
-      lowerCentralSeries H 3 := by
-  let q : H →* H ⧸ lowerCentralSeries H 3 :=
-    QuotientGroup.mk' (lowerCentralSeries H 3)
-  have hmap3 : (lowerCentralSeries H 3).map q = ⊥ := by
+    ⁅(⊤ : Subgroup H).lowerCentralSeries 1, (⊤ : Subgroup H).lowerCentralSeries 1⁆ ≤
+      (⊤ : Subgroup H).lowerCentralSeries 3 := by
+  let q : H →* H ⧸ (⊤ : Subgroup H).lowerCentralSeries 3 :=
+    QuotientGroup.mk' ((⊤ : Subgroup H).lowerCentralSeries 3)
+  have hmap3 : ((⊤ : Subgroup H).lowerCentralSeries 3).map q = ⊥ := by
     rw [Subgroup.map_eq_bot_iff]
-    change lowerCentralSeries H 3 ≤
-      (QuotientGroup.mk' (lowerCentralSeries H 3)).ker
+    change (⊤ : Subgroup H).lowerCentralSeries 3 ≤
+      (QuotientGroup.mk' ((⊤ : Subgroup H).lowerCentralSeries 3)).ker
     rw [QuotientGroup.ker_mk']
   have hrotate1 :
-      ⁅⁅(lowerCentralSeries H 0).map q,
-          (lowerCentralSeries H 1).map q⁆,
-        (lowerCentralSeries H 0).map q⁆ = ⊥ := by
+      ⁅⁅((⊤ : Subgroup H).lowerCentralSeries 0).map q,
+          ((⊤ : Subgroup H).lowerCentralSeries 1).map q⁆,
+        ((⊤ : Subgroup H).lowerCentralSeries 0).map q⁆ = ⊥ := by
     rw [← Subgroup.map_commutator, ← Subgroup.map_commutator]
-    rw [Subgroup.commutator_comm (lowerCentralSeries H 0)
-      (lowerCentralSeries H 1)]
-    change (lowerCentralSeries H 3).map q = ⊥
+    rw [Subgroup.commutator_comm ((⊤ : Subgroup H).lowerCentralSeries 0)
+      ((⊤ : Subgroup H).lowerCentralSeries 1)]
+    change ((⊤ : Subgroup H).lowerCentralSeries 3).map q = ⊥
     exact hmap3
   have hrotate2 :
-      ⁅⁅(lowerCentralSeries H 1).map q,
-          (lowerCentralSeries H 0).map q⁆,
-        (lowerCentralSeries H 0).map q⁆ = ⊥ := by
+      ⁅⁅((⊤ : Subgroup H).lowerCentralSeries 1).map q,
+          ((⊤ : Subgroup H).lowerCentralSeries 0).map q⁆,
+        ((⊤ : Subgroup H).lowerCentralSeries 0).map q⁆ = ⊥ := by
     rw [← Subgroup.map_commutator, ← Subgroup.map_commutator]
-    change (lowerCentralSeries H 3).map q = ⊥
+    change ((⊤ : Subgroup H).lowerCentralSeries 3).map q = ⊥
     exact hmap3
   have hthree := Subgroup.commutator_commutator_eq_bot_of_rotate
-    (H₁ := (lowerCentralSeries H 0).map q)
-    (H₂ := (lowerCentralSeries H 0).map q)
-    (H₃ := (lowerCentralSeries H 1).map q)
+    (H₁ := ((⊤ : Subgroup H).lowerCentralSeries 0).map q)
+    (H₂ := ((⊤ : Subgroup H).lowerCentralSeries 0).map q)
+    (H₃ := ((⊤ : Subgroup H).lowerCentralSeries 1).map q)
     hrotate1 hrotate2
   rw [← Subgroup.map_commutator, ← Subgroup.map_commutator] at hthree
-  change (⁅lowerCentralSeries H 1, lowerCentralSeries H 1⁆).map q = ⊥ at hthree
+  change (⁅(⊤ : Subgroup H).lowerCentralSeries 1, (⊤ : Subgroup H).lowerCentralSeries 1⁆).map q = ⊥ at hthree
   have hle := (Subgroup.map_eq_bot_iff
-    ⁅lowerCentralSeries H 1, lowerCentralSeries H 1⁆).mp hthree
-  change ⁅lowerCentralSeries H 1, lowerCentralSeries H 1⁆ ≤ q.ker at hle
-  simpa [q] using hle
+    ⁅(⊤ : Subgroup H).lowerCentralSeries 1, (⊤ : Subgroup H).lowerCentralSeries 1⁆).mp hthree
+  change ⁅(⊤ : Subgroup H).lowerCentralSeries 1, (⊤ : Subgroup H).lowerCentralSeries 1⁆ ≤ q.ker at hle
+  change ⁅(⊤ : Subgroup H).lowerCentralSeries 1, (⊤ : Subgroup H).lowerCentralSeries 1⁆ ≤
+    (QuotientGroup.mk' ((⊤ : Subgroup H).lowerCentralSeries 3)).ker at hle
+  rw [QuotientGroup.ker_mk'] at hle
+  exact hle
 
 private theorem lemma13_commutator_sq_eq_one_of_square_commutes
     {G : Type*} [Group G] (x y : G)
@@ -707,59 +712,59 @@ private theorem lemma13_commutator_sq_eq_one_of_square_commutes
 
 private def lemma13_nextBracketLift
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
-    lowerCentralSeries H 2 :=
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
+    (⊤ : Subgroup H).lowerCentralSeries 2 :=
   ⟨⁅(x : H), (c : H)⁆, by
-    have hcx : ⁅(c : H), (x : H)⁆ ∈ lowerCentralSeries H 2 := by
-      rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ]
+    have hcx : ⁅(c : H), (x : H)⁆ ∈ (⊤ : Subgroup H).lowerCentralSeries 2 := by
+      rw [show 2 = 1 + 1 by omega, Subgroup.lowerCentralSeries_succ]
       exact Subgroup.subset_closure
         ⟨(c : H), c.property, (x : H), trivial, rfl⟩
-    have hinv := (lowerCentralSeries H 2).inv_mem hcx
+    have hinv := ((⊤ : Subgroup H).lowerCentralSeries 2).inv_mem hcx
     simpa only [commutatorElement_inv] using hinv⟩
 
 private def lemma13_deeperBracketLift
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (d : lowerCentralSeries H 2) :
-    lowerCentralSeries H 2 :=
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (d : (⊤ : Subgroup H).lowerCentralSeries 2) :
+    (⊤ : Subgroup H).lowerCentralSeries 2 :=
   ⟨⁅(x : H), (d : H)⁆, by
-    apply lowerCentralSeries_antitone (by omega : 2 ≤ 3)
-    have hdx : ⁅(d : H), (x : H)⁆ ∈ lowerCentralSeries H 3 := by
-      rw [show 3 = 2 + 1 by omega, lowerCentralSeries_succ]
+    apply (⊤ : Subgroup H).lowerCentralSeries_antitone (by omega : 2 ≤ 3)
+    have hdx : ⁅(d : H), (x : H)⁆ ∈ (⊤ : Subgroup H).lowerCentralSeries 3 := by
+      rw [show 3 = 2 + 1 by omega, Subgroup.lowerCentralSeries_succ]
       exact Subgroup.subset_closure
         ⟨(d : H), d.property, (x : H), trivial, rfl⟩
-    have hinv := (lowerCentralSeries H 3).inv_mem hdx
+    have hinv := ((⊤ : Subgroup H).lowerCentralSeries 3).inv_mem hdx
     simpa only [commutatorElement_inv] using hinv⟩
 
 private theorem lemma13_deeperBracketLift_mem_kernel
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (d : lowerCentralSeries H 2) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (d : (⊤ : Subgroup H).lowerCentralSeries 2) :
     lemma13_deeperBracketLift x d ∈ lowerCentralFactorKernel H 2 := by
   apply (show
-    (lowerCentralSeries H 3).subgroupOf (lowerCentralSeries H 2) ≤
+    ((⊤ : Subgroup H).lowerCentralSeries 3).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 2) ≤
       lowerCentralFactorKernel H 2 by
     rw [lowerCentralFactorKernel]
     exact le_sup_right)
-  change ⁅(x : H), (d : H)⁆ ∈ lowerCentralSeries H 3
-  have hdx : ⁅(d : H), (x : H)⁆ ∈ lowerCentralSeries H 3 := by
-    rw [show 3 = 2 + 1 by omega, lowerCentralSeries_succ]
+  change ⁅(x : H), (d : H)⁆ ∈ (⊤ : Subgroup H).lowerCentralSeries 3
+  have hdx : ⁅(d : H), (x : H)⁆ ∈ (⊤ : Subgroup H).lowerCentralSeries 3 := by
+    rw [show 3 = 2 + 1 by omega, Subgroup.lowerCentralSeries_succ]
     exact Subgroup.subset_closure
       ⟨(d : H), d.property, (x : H), trivial, rfl⟩
-  have hinv := (lowerCentralSeries H 3).inv_mem hdx
+  have hinv := ((⊤ : Subgroup H).lowerCentralSeries 3).inv_mem hdx
   simpa only [commutatorElement_inv] using hinv
 
 private theorem lemma13_quotient_conj_eq
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (d : lowerCentralSeries H 2) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (d : (⊤ : Subgroup H).lowerCentralSeries 2) :
     QuotientGroup.mk' (lowerCentralFactorKernel H 2)
         (⟨(x : H) * (d : H) * (x : H)⁻¹,
-          (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
-            (d : H) d.property (x : H)⟩ : lowerCentralSeries H 2) =
+          (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
+            (d : H) d.property (x : H)⟩ : (⊤ : Subgroup H).lowerCentralSeries 2) =
       QuotientGroup.mk' (lowerCentralFactorKernel H 2) d := by
   let q := QuotientGroup.mk' (lowerCentralFactorKernel H 2)
   have hfactor :
       (⟨(x : H) * (d : H) * (x : H)⁻¹,
-        (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
-          (d : H) d.property (x : H)⟩ : lowerCentralSeries H 2) =
+        (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
+          (d : H) d.property (x : H)⟩ : (⊤ : Subgroup H).lowerCentralSeries 2) =
         lemma13_deeperBracketLift x d * d := by
     apply Subtype.ext
     change (x : H) * (d : H) * (x : H)⁻¹ =
@@ -772,8 +777,8 @@ private theorem lemma13_quotient_conj_eq
   rw [hkernel, one_mul]
 
 private def lemma13_bracketRightHom
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
-    lowerCentralSeries H 1 →* LowerCentralFactor H 2 where
+    {H : Type u} [Group H] (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
+    (⊤ : Subgroup H).lowerCentralSeries 1 →* LowerCentralFactor H 2 where
   toFun c :=
     QuotientGroup.mk' (lowerCentralFactorKernel H 2)
       (lemma13_nextBracketLift x c)
@@ -787,10 +792,10 @@ private def lemma13_bracketRightHom
         lemma13_nextBracketLift x (c * d) =
           lemma13_nextBracketLift x c *
             (⟨(c : H) * (lemma13_nextBracketLift x d : H) * (c : H)⁻¹,
-              (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
+              (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
                 (lemma13_nextBracketLift x d : H)
                 (lemma13_nextBracketLift x d).property (c : H)⟩ :
-              lowerCentralSeries H 2) := by
+              (⊤ : Subgroup H).lowerCentralSeries 2) := by
       apply Subtype.ext
       change ⁅(x : H), (c : H) * (d : H)⁆ =
         ⁅(x : H), (c : H)⁆ *
@@ -804,12 +809,14 @@ private def lemma13_bracketRightHom
         QuotientGroup.mk' (lowerCentralFactorKernel H 2)
           (lemma13_nextBracketLift x d)
     rw [hfactor, map_mul]
-    let c0 : lowerCentralSeries H 0 :=
-      ⟨(c : H), lowerCentralSeries_antitone (by omega : 0 ≤ 1) c.property⟩
+    let c0 : (⊤ : Subgroup H).lowerCentralSeries 0 :=
+      ⟨(c : H),
+        (⊤ : Subgroup H).lowerCentralSeries_antitone
+          (by omega : 0 ≤ 1) c.property⟩
     rw [lemma13_quotient_conj_eq c0 (lemma13_nextBracketLift x d)]
 
 private theorem lemma13_bracketRightHom_kernel
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
+    {H : Type u} [Group H] (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
     lowerCentralFactorKernel H 1 ≤ (lemma13_bracketRightHom x).ker := by
   rw [lowerCentralFactorKernel]
   apply sup_le
@@ -822,7 +829,7 @@ private theorem lemma13_bracketRightHom_kernel
     change QuotientGroup.mk' (lowerCentralFactorKernel H 2)
       (lemma13_nextBracketLift x d) = 1
     apply (QuotientGroup.eq_one_iff _).2
-    let d' : lowerCentralSeries H 2 := ⟨(d : H), hd⟩
+    let d' : (⊤ : Subgroup H).lowerCentralSeries 2 := ⟨(d : H), hd⟩
     have heq : lemma13_nextBracketLift x d = lemma13_deeperBracketLift x d' := by
       apply Subtype.ext
       rfl
@@ -830,14 +837,14 @@ private theorem lemma13_bracketRightHom_kernel
     exact lemma13_deeperBracketLift_mem_kernel x d'
 
 private def lemma13_bracketRightFactorHom
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
+    {H : Type u} [Group H] (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
     LowerCentralFactor H 1 →* LowerCentralFactor H 2 :=
   QuotientGroup.lift (lowerCentralFactorKernel H 1)
     (lemma13_bracketRightHom x) (lemma13_bracketRightHom_kernel x)
 
 private theorem lemma13_bracketRightFactorHom_mk
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
     lemma13_bracketRightFactorHom x
         (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
       QuotientGroup.mk' (lowerCentralFactorKernel H 2)
@@ -846,7 +853,7 @@ private theorem lemma13_bracketRightFactorHom_mk
 
 private def lemma13_bracketLeftHom
     {H : Type u} [Group H] :
-    lowerCentralSeries H 0 →*
+    (⊤ : Subgroup H).lowerCentralSeries 0 →*
       (LowerCentralFactor H 1 →* LowerCentralFactor H 2) where
   toFun x := lemma13_bracketRightFactorHom x
   map_one' := by
@@ -868,10 +875,10 @@ private def lemma13_bracketLeftHom
     have hfactor :
         lemma13_nextBracketLift (x * z) c =
           (⟨(x : H) * (lemma13_nextBracketLift z c : H) * (x : H)⁻¹,
-            (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
+            (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
               (lemma13_nextBracketLift z c : H)
               (lemma13_nextBracketLift z c).property (x : H)⟩ :
-            lowerCentralSeries H 2) *
+            (⊤ : Subgroup H).lowerCentralSeries 2) *
           lemma13_nextBracketLift x c := by
       apply Subtype.ext
       change ⁅(x : H) * (z : H), (c : H)⁆ =
@@ -893,8 +900,8 @@ private theorem lemma13_bracketLeftHom_kernel
     lowerCentralFactorKernel H 0 ≤
       (lemma13_bracketLeftHom (H := H)).ker := by
   change
-    (squaresSubgroup (lowerCentralSeries H 0) ⊔
-      (lowerCentralSeries H 1).subgroupOf (lowerCentralSeries H 0)) ≤ _
+    (squaresSubgroup ((⊤ : Subgroup H).lowerCentralSeries 0) ⊔
+      ((⊤ : Subgroup H).lowerCentralSeries 1).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0)) ≤ _
   apply sup_le
   · rw [squaresSubgroup, Subgroup.closure_le]
     rintro _ ⟨x, rfl⟩
@@ -914,7 +921,7 @@ private theorem lemma13_bracketLeftHom_kernel
       (lemma13_nextBracketLift x c) = 1
     apply (QuotientGroup.eq_one_iff _).2
     apply (show
-      (lowerCentralSeries H 3).subgroupOf (lowerCentralSeries H 2) ≤
+      ((⊤ : Subgroup H).lowerCentralSeries 3).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 2) ≤
         lowerCentralFactorKernel H 2 by
       rw [lowerCentralFactorKernel]
       exact le_sup_right)
@@ -931,7 +938,7 @@ private def lemma13_bracketFactorHom
 
 private theorem lemma13_bracketFactorHom_mk_mk
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
     lemma13_bracketFactorHom
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)
         (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
@@ -939,7 +946,7 @@ private theorem lemma13_bracketFactorHom_mk_mk
         (lemma13_nextBracketLift x c) :=
   rfl
 
-private def lemma13_bracketFactorAddHom
+private noncomputable def lemma13_bracketFactorAddHom
     {H : Type u} [Group H] :
     Additive (LowerCentralFactor H 0) →+
       (Additive (LowerCentralFactor H 1) →ₗ[ZMod 2]
@@ -967,7 +974,7 @@ private noncomputable def lemma13_lowerCentralIteratedBracket
 
 private theorem lemma13_lowerCentralIteratedBracket_mk_mk
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
     lemma13_lowerCentralIteratedBracket
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -980,7 +987,7 @@ private theorem lemma13_lowerCentralIteratedBracket_mk_mk
 
 private theorem lemma13_nextBracketLift_equivariant
     {H : Type u} [Group H] (theta : MulAut H)
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
     lowerCentralSeriesMulAut theta 2 (lemma13_nextBracketLift x c) =
       lemma13_nextBracketLift
         (lowerCentralSeriesMulAut theta 0 x)
@@ -1028,8 +1035,8 @@ private theorem lemma13_lowerCentralJacobi
     (bracket : Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor H 1))
-    (hbracket_mk : ∀ x y : lowerCentralSeries H 0,
-      ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+    (hbracket_mk : ∀ x y : (⊤ : Subgroup H).lowerCentralSeries 0,
+      ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ (⊤ : Subgroup H).lowerCentralSeries 1,
         bracket
             (Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -1061,14 +1068,14 @@ private theorem lemma13_lowerCentralJacobi
     apply Additive.toMul.injective
     exact hz0.symm
   rw [hx, hy, hz]
-  let cYZ : lowerCentralSeries H 1 := ⟨⁅(y0 : H), (z0 : H)⁆, by
-    rw [lowerCentralSeries_one]
+  let cYZ : (⊤ : Subgroup H).lowerCentralSeries 1 := ⟨⁅(y0 : H), (z0 : H)⁆, by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by simp) (by simp)⟩
-  let cZX : lowerCentralSeries H 1 := ⟨⁅(z0 : H), (x0 : H)⁆, by
-    rw [lowerCentralSeries_one]
+  let cZX : (⊤ : Subgroup H).lowerCentralSeries 1 := ⟨⁅(z0 : H), (x0 : H)⁆, by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by simp) (by simp)⟩
-  let cXY : lowerCentralSeries H 1 := ⟨⁅(x0 : H), (y0 : H)⁆, by
-    rw [lowerCentralSeries_one]
+  let cXY : (⊤ : Subgroup H).lowerCentralSeries 1 := ⟨⁅(x0 : H), (y0 : H)⁆, by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by simp) (by simp)⟩
   rw [hbracket_mk y0 z0 cYZ.property,
     hbracket_mk z0 x0 cZX.property,
@@ -1087,20 +1094,20 @@ private theorem lemma13_lowerCentralJacobi
   let q0 := QuotientGroup.mk' (lowerCentralFactorKernel H 0)
   let q1 := QuotientGroup.mk' (lowerCentralFactorKernel H 1)
   let q2 := QuotientGroup.mk' (lowerCentralFactorKernel H 2)
-  let xInv : lowerCentralSeries H 0 := x0⁻¹
-  let yInv : lowerCentralSeries H 0 := y0⁻¹
-  let zInv : lowerCentralSeries H 0 := z0⁻¹
-  let cZinvXinv : lowerCentralSeries H 1 :=
+  let xInv : (⊤ : Subgroup H).lowerCentralSeries 0 := x0⁻¹
+  let yInv : (⊤ : Subgroup H).lowerCentralSeries 0 := y0⁻¹
+  let zInv : (⊤ : Subgroup H).lowerCentralSeries 0 := z0⁻¹
+  let cZinvXinv : (⊤ : Subgroup H).lowerCentralSeries 1 :=
     ⟨⁅(zInv : H), (xInv : H)⁆, by
-      rw [lowerCentralSeries_one]
+      rw [Subgroup.top_lowerCentralSeries_one]
       exact Subgroup.commutator_mem_commutator (by simp) (by simp)⟩
-  let cYinvZ : lowerCentralSeries H 1 :=
+  let cYinvZ : (⊤ : Subgroup H).lowerCentralSeries 1 :=
     ⟨⁅(yInv : H), (z0 : H)⁆, by
-      rw [lowerCentralSeries_one]
+      rw [Subgroup.top_lowerCentralSeries_one]
       exact Subgroup.commutator_mem_commutator (by simp) (by simp)⟩
-  let tA : lowerCentralSeries H 2 :=
+  let tA : (⊤ : Subgroup H).lowerCentralSeries 2 :=
     lemma13_nextBracketLift y0 cZinvXinv
-  let tB : lowerCentralSeries H 2 :=
+  let tB : (⊤ : Subgroup H).lowerCentralSeries 2 :=
     lemma13_nextBracketLift xInv cYinvZ
   have hcA : q1 cZinvXinv = q1 cZX := by
     apply Additive.ofMul.injective
@@ -1156,18 +1163,18 @@ private theorem lemma13_lowerCentralJacobi
       _ = Additive.ofMul
             (q2 (lemma13_nextBracketLift x0 cYZ)) :=
         lemma13_lowerCentralIteratedBracket_mk_mk x0 cYZ
-  let zConjTA : lowerCentralSeries H 2 :=
+  let zConjTA : (⊤ : Subgroup H).lowerCentralSeries 2 :=
     ⟨(z0 : H) * (tA : H)⁻¹ * (z0 : H)⁻¹,
-      (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
-        ((tA : H)⁻¹) ((lowerCentralSeries H 2).inv_mem tA.property) (z0 : H)⟩
-  let yConjTB : lowerCentralSeries H 2 :=
+      (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
+        ((tA : H)⁻¹) (((⊤ : Subgroup H).lowerCentralSeries 2).inv_mem tA.property) (z0 : H)⟩
+  let yConjTB : (⊤ : Subgroup H).lowerCentralSeries 2 :=
     ⟨(y0 : H) * (tB : H)⁻¹ * (y0 : H)⁻¹,
-      (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
-        ((tB : H)⁻¹) ((lowerCentralSeries H 2).inv_mem tB.property) (y0 : H)⟩
-  let inner : lowerCentralSeries H 2 := zConjTA * yConjTB
-  let rhs : lowerCentralSeries H 2 :=
+      (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
+        ((tB : H)⁻¹) (((⊤ : Subgroup H).lowerCentralSeries 2).inv_mem tB.property) (y0 : H)⟩
+  let inner : (⊤ : Subgroup H).lowerCentralSeries 2 := zConjTA * yConjTB
+  let rhs : (⊤ : Subgroup H).lowerCentralSeries 2 :=
     ⟨(x0 : H) * (inner : H) * (x0 : H)⁻¹,
-      (inferInstance : (lowerCentralSeries H 2).Normal).conj_mem
+      (inferInstance : ((⊤ : Subgroup H).lowerCentralSeries 2).Normal).conj_mem
         (inner : H) inner.property (x0 : H)⟩
   have hHallRaw :
       ⁅(z0 : H), ⁅(x0 : H), (y0 : H)⁆⁆ =
@@ -1180,9 +1187,10 @@ private theorem lemma13_lowerCentralJacobi
   have hHallSub :
       lemma13_nextBracketLift z0 cXY = rhs := by
     apply Subtype.ext
-    simpa [rhs, inner, zConjTA, yConjTB, tA, tB,
+    simpa only [rhs, inner, zConjTA, yConjTB, tA, tB,
       cXY, cZinvXinv, cYinvZ, xInv, yInv, zInv,
-      lemma13_nextBracketLift, mul_assoc] using hHallRaw
+      lemma13_nextBracketLift, Subgroup.coe_mul, Subgroup.coe_inv,
+      Subtype.coe_mk, mul_assoc] using hHallRaw
   have hqRhs : q2 rhs = q2 (tA⁻¹) * q2 (tB⁻¹) := by
     calc
       q2 rhs = q2 inner := by
@@ -1190,9 +1198,11 @@ private theorem lemma13_lowerCentralJacobi
       _ = q2 zConjTA * q2 yConjTB := by rw [map_mul]
       _ = q2 (tA⁻¹) * q2 (tB⁻¹) := by
         rw [show q2 zConjTA = q2 (tA⁻¹) by
-          simpa only [zConjTA] using lemma13_quotient_conj_eq z0 (tA⁻¹)]
+          simpa only [q2, zConjTA, Subgroup.coe_inv] using
+            lemma13_quotient_conj_eq z0 (tA⁻¹)]
         rw [show q2 yConjTB = q2 (tB⁻¹) by
-          simpa only [yConjTB] using lemma13_quotient_conj_eq y0 (tB⁻¹)]
+          simpa only [q2, yConjTB, Subgroup.coe_inv] using
+            lemma13_quotient_conj_eq y0 (tB⁻¹)]
   have hqHall :
       q2 (lemma13_nextBracketLift z0 cXY) =
         (q2 tA)⁻¹ * (q2 tB)⁻¹ := by
@@ -1206,6 +1216,8 @@ private theorem lemma13_lowerCentralJacobi
   rw [← htB, ← htA]
   rw [← hinvSelf (q2 tA), ← hinvSelf (q2 tB)]
   rw [mul_comm (q2 tB)⁻¹ (q2 tA)⁻¹, ← hqHall]
+  change q2 (lemma13_nextBracketLift z0 cXY) *
+    q2 (lemma13_nextBracketLift z0 cXY) = 1
   simpa [pow_two] using
     lowerCentralFactor_sq_eq_one 2
       (q2 (lemma13_nextBracketLift z0 cXY))
@@ -1259,10 +1271,10 @@ private theorem lemma13_exists_nontrivial_middle_outer_commutator
     (hU (u : Additive (LowerCentralFactor P 0))).mp u.property
   rcases huMap with ⟨x, hxA, hqx⟩
   obtain ⟨y, hqy⟩ := hq0_surj (v : Additive (LowerCentralFactor P 0)).toMul
-  let x0 : lowerCentralSeries P 0 := Subgroup.topEquiv.symm x
-  let y0 : lowerCentralSeries P 0 := Subgroup.topEquiv.symm y
-  have hcomm : ⁅(x0 : P), (y0 : P)⁆ ∈ lowerCentralSeries P 1 := by
-    rw [lowerCentralSeries_one]
+  let x0 : (⊤ : Subgroup P).lowerCentralSeries 0 := Subgroup.topEquiv.symm x
+  let y0 : (⊤ : Subgroup P).lowerCentralSeries 0 := Subgroup.topEquiv.symm y
+  have hcomm : ⁅(x0 : P), (y0 : P)⁆ ∈ (⊤ : Subgroup P).lowerCentralSeries 1 := by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by simp) (by simp)
   have hxmk :
       Additive.ofMul
@@ -1297,7 +1309,7 @@ private theorem lemma13_exists_nontrivial_middle_outer_commutator
     apply hout_ne
     have honeSub :
         (⟨⁅(x0 : P), (y0 : P)⁆, hcomm⟩ :
-          lowerCentralSeries P 1) = 1 := Subtype.ext hone
+          (⊤ : Subgroup P).lowerCentralSeries 1) = 1 := Subtype.ext hone
     rw [honeSub, map_one, ofMul_one]
   exact ⟨x, hxA, y, by simpa [x0, y0] using hcomm_ne⟩
 
@@ -1311,25 +1323,29 @@ private theorem lemma13_lowerCentralFactorKernel_zero_eq_of_canonical_ker
       QuotientGroup.mk' (lowerCentralFactorKernel H 0)
         (Subgroup.topEquiv.symm p)) :
     lowerCentralFactorKernel H 0 =
-      B.subgroupOf (lowerCentralSeries H 0) := by
+      B.subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0) := by
   ext x
+  have hx_top : Subgroup.topEquiv.symm (x : H) = x := by
+    apply Subtype.ext
+    rfl
   constructor
   · intro hx
     change (x : H) ∈ B
     rw [← hq_ker, MonoidHom.mem_ker, hq_mk]
     apply (QuotientGroup.eq_one_iff _).2
-    simpa using hx
+    simpa only [hx_top] using hx
   · intro hx
-    apply (QuotientGroup.eq_one_iff _).1
+    rw [← QuotientGroup.ker_mk' (lowerCentralFactorKernel H 0),
+      MonoidHom.mem_ker]
     have hqone : q (x : H) = 1 := by
       rw [← MonoidHom.mem_ker, hq_ker]
       exact hx
     rw [hq_mk] at hqone
-    simpa using hqone
+    simpa only [hx_top] using hqone
 
 private def lemma13_factorZeroInclusionMonoidHom
     {Q : Type u} [Group Q] (H : Subgroup Q) :
-    lowerCentralSeries H 0 →* lowerCentralSeries Q 0 where
+    (⊤ : Subgroup H).lowerCentralSeries 0 →* (⊤ : Subgroup Q).lowerCentralSeries 0 where
   toFun x := ⟨((x : H) : Q), by trivial⟩
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -1339,9 +1355,9 @@ private def lemma13_factorZeroInclusionHom
     (H Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0)) :
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0)) :
     LowerCentralFactor H 0 →* LowerCentralFactor Q 0 :=
   QuotientGroup.lift (lowerCentralFactorKernel H 0)
     ((QuotientGroup.mk' (lowerCentralFactorKernel Q 0)).comp
@@ -1357,10 +1373,10 @@ private theorem lemma13_factorZeroInclusionHom_mk
     (H Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
-    (x : lowerCentralSeries H 0) :
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
     lemma13_factorZeroInclusionHom H Phi C hC_le_Phi hkernelH hkernelQ
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x) =
       QuotientGroup.mk' (lowerCentralFactorKernel Q 0)
@@ -1371,9 +1387,9 @@ private noncomputable def lemma13_factorZeroInclusionLinearMap
     (H Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0)) :
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0)) :
     Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor Q 0) :=
   (lemma13_factorZeroInclusionHom H Phi C hC_le_Phi hkernelH hkernelQ).toAdditive.toZModLinearMap 2
@@ -1383,10 +1399,10 @@ private theorem lemma13_factorZeroInclusionLinearMap_mk
     (H Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
-    (x : lowerCentralSeries H 0) :
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
+    (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
     lemma13_factorZeroInclusionLinearMap H Phi C hC_le_Phi hkernelH hkernelQ
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
@@ -1401,9 +1417,9 @@ private theorem lemma13_factorZeroInclusionLinearMap_eq_zero_of_mem
     (U : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0)))
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
     (hqH_mk : ∀ p : H, qH p =
       QuotientGroup.mk' (lowerCentralFactorKernel H 0)
         (Subgroup.topEquiv.symm p))
@@ -1429,9 +1445,9 @@ private noncomputable def lemma13_factorZeroComplementLinearMap
     (V : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0)))
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0)) :
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0)) :
     V →ₗ[ZMod 2] Additive (LowerCentralFactor Q 0) :=
   (lemma13_factorZeroInclusionLinearMap H Phi C hC_le_Phi hkernelH hkernelQ).comp
     V.subtype
@@ -1443,9 +1459,9 @@ private theorem lemma13_factorZeroInclusion_eq_complement
     (U V : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0)))
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
     (hqH_mk : ∀ p : H, qH p =
       QuotientGroup.mk' (lowerCentralFactorKernel H 0)
         (Subgroup.topEquiv.symm p))
@@ -1484,14 +1500,14 @@ set_option maxHeartbeats 800000 in
 private theorem lemma13_factorZeroComplementLinearMap_injective
     {Q : Type u} [Group Q]
     (H Phi C : Subgroup Q)
-    (hPhi_le_H : Phi ≤ H)
+    (_hPhi_le_H : Phi ≤ H)
     (U V : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0)))
     (qH : H →* LowerCentralFactor H 0)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
     (hqH_mk : ∀ p : H, qH p =
       QuotientGroup.mk' (lowerCentralFactorKernel H 0)
         (Subgroup.topEquiv.symm p))
@@ -1507,7 +1523,11 @@ private theorem lemma13_factorZeroComplementLinearMap_injective
     let p : H := (x : H)
     have hrepr : ((v : Additive (LowerCentralFactor H 0)) - w).toMul = qH p := by
       rw [hqH_mk]
-      simpa [p] using hx.symm
+      have hx_top : Subgroup.topEquiv.symm p = x := by
+        apply Subtype.ext
+        rfl
+      rw [hx_top]
+      exact hx.symm
     apply (hU _).2
     have htargetZero :
         lemma13_factorZeroInclusionLinearMap H Phi C hC_le_Phi hkernelH hkernelQ
@@ -1536,7 +1556,7 @@ private theorem lemma13_factorZeroComplementLinearMap_injective
       rw [hkernelQ] at hxker
       exact hxker
     let pPhi : Phi.subgroupOf H := ⟨p, hxPhi⟩
-    exact ⟨pPhi, pPhi.property, by simpa [hrepr, pPhi]⟩
+    exact ⟨pPhi, pPhi.property, by simp [hrepr, pPhi]⟩
   have hsubV : (v : Additive (LowerCentralFactor H 0)) - w ∈ V :=
     V.sub_mem v.property w.property
   have hbot : (v : Additive (LowerCentralFactor H 0)) - w ∈ (⊥ :
@@ -1554,9 +1574,9 @@ private theorem lemma13_factorZeroInclusionLinearMap_equivariant
     (H Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi)
     (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf (lowerCentralSeries H 0))
+      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
     (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
     (thetaQ : MulAut Q) (thetaH : MulAut H)
     (hcompat : ∀ x : H, thetaQ (x : Q) = (thetaH x : H))
     (v : Additive (LowerCentralFactor H 0)) :
@@ -1596,27 +1616,27 @@ private noncomputable def lemma13_centerFactorMulEquiv
     {Q : Type u} [Group Q]
     (A C : Subgroup Q)
     (hC_le_A : C ≤ A)
-    (hL1A : lowerCentralSeries A 1 = C.subgroupOf A)
+    (hL1A : (⊤ : Subgroup A).lowerCentralSeries 1 = C.subgroupOf A)
     (hkernel1A : lowerCentralFactorKernel A 1 = ⊥)
-    (hL2Q : lowerCentralSeries Q 2 = C)
+    (hL2Q : (⊤ : Subgroup Q).lowerCentralSeries 2 = C)
     (hkernel2Q : lowerCentralFactorKernel Q 2 = ⊥) :
     LowerCentralFactor A 1 ≃* LowerCentralFactor Q 2 :=
   ((QuotientGroup.quotientMulEquivOfEq hkernel1A).trans
-      (QuotientGroup.quotientBot (G := lowerCentralSeries A 1))).trans
+      (QuotientGroup.quotientBot (G := (⊤ : Subgroup A).lowerCentralSeries 1))).trans
     ((MulEquiv.subgroupCongr hL1A).trans
       ((Subgroup.subgroupOfEquivOfLe hC_le_A).trans
         ((MulEquiv.subgroupCongr hL2Q).symm.trans
           ((QuotientGroup.quotientMulEquivOfEq hkernel2Q).trans
             (QuotientGroup.quotientBot
-              (G := lowerCentralSeries Q 2))).symm)))
+              (G := (⊤ : Subgroup Q).lowerCentralSeries 2))).symm)))
 
 private noncomputable def lemma13_centerFactorLinearEquiv
     {Q : Type u} [Group Q]
     (A C : Subgroup Q)
     (hC_le_A : C ≤ A)
-    (hL1A : lowerCentralSeries A 1 = C.subgroupOf A)
+    (hL1A : (⊤ : Subgroup A).lowerCentralSeries 1 = C.subgroupOf A)
     (hkernel1A : lowerCentralFactorKernel A 1 = ⊥)
-    (hL2Q : lowerCentralSeries Q 2 = C)
+    (hL2Q : (⊤ : Subgroup Q).lowerCentralSeries 2 = C)
     (hkernel2Q : lowerCentralFactorKernel Q 2 = ⊥) :
     Additive (LowerCentralFactor A 1) ≃ₗ[ZMod 2]
       Additive (LowerCentralFactor Q 2) :=
@@ -1626,9 +1646,9 @@ private noncomputable def lemma13_centerFactorLinearEquiv
 private def lemma13_centerSeriesInclusion
     {Q : Type u} [Group Q]
     (A C : Subgroup Q)
-    (hL1A : lowerCentralSeries A 1 = C.subgroupOf A)
-    (hL2Q : lowerCentralSeries Q 2 = C)
-    (x : lowerCentralSeries A 1) : lowerCentralSeries Q 2 :=
+    (hL1A : (⊤ : Subgroup A).lowerCentralSeries 1 = C.subgroupOf A)
+    (hL2Q : (⊤ : Subgroup Q).lowerCentralSeries 2 = C)
+    (x : (⊤ : Subgroup A).lowerCentralSeries 1) : (⊤ : Subgroup Q).lowerCentralSeries 2 :=
   ⟨((x : A) : Q), by
     rw [hL2Q]
     have hxC : (x : A) ∈ C.subgroupOf A := by
@@ -1640,11 +1660,11 @@ private theorem lemma13_centerFactorLinearEquiv_mk
     {Q : Type u} [Group Q]
     (A C : Subgroup Q)
     (hC_le_A : C ≤ A)
-    (hL1A : lowerCentralSeries A 1 = C.subgroupOf A)
+    (hL1A : (⊤ : Subgroup A).lowerCentralSeries 1 = C.subgroupOf A)
     (hkernel1A : lowerCentralFactorKernel A 1 = ⊥)
-    (hL2Q : lowerCentralSeries Q 2 = C)
+    (hL2Q : (⊤ : Subgroup Q).lowerCentralSeries 2 = C)
     (hkernel2Q : lowerCentralFactorKernel Q 2 = ⊥)
-    (x : lowerCentralSeries A 1) :
+    (x : (⊤ : Subgroup A).lowerCentralSeries 1) :
     lemma13_centerFactorLinearEquiv A C hC_le_A hL1A hkernel1A hL2Q hkernel2Q
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel A 1) x)) =
@@ -1663,11 +1683,11 @@ private noncomputable def lemma13_middleFactorLinearEquiv
     (hqA_ker : qA.ker = C.subgroupOf A)
     (hU : ∀ u : Additive (LowerCentralFactor A 0),
       u ∈ U ↔ u.toMul ∈ (Phi.subgroupOf A).map qA)
-    (hL1_eq_Phi : lowerCentralSeries Q 1 = Phi)
+    (hL1_eq_Phi : (⊤ : Subgroup Q).lowerCentralSeries 1 = Phi)
     (hkernel1_eq_C : lowerCentralFactorKernel Q 1 =
-      C.subgroupOf (lowerCentralSeries Q 1)) :
+      C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1)) :
     Additive (LowerCentralFactor Q 1) ≃ₗ[ZMod 2] U := by
-  let f0 : lowerCentralSeries Q 1 →* Multiplicative U :=
+  let f0 : (⊤ : Subgroup Q).lowerCentralSeries 1 →* Multiplicative U :=
     { toFun := fun x =>
         let xA : A := ⟨(x : Q), hPhi_le_A (by
           rw [← hL1_eq_Phi]
@@ -1731,7 +1751,7 @@ private noncomputable def lemma13_middleFactorLinearEquiv
         (Phi.subgroupOf A).map qA :=
       (hU _).1 u.toAdd.property
     rcases huMap with ⟨xPhiA, hxPhiA, hxq⟩
-    let x : lowerCentralSeries Q 1 := ⟨((xPhiA : A) : Q), by
+    let x : (⊤ : Subgroup Q).lowerCentralSeries 1 := ⟨((xPhiA : A) : Q), by
       rw [hL1_eq_Phi]
       exact hxPhiA⟩
     refine ⟨x, ?_⟩
@@ -1780,10 +1800,10 @@ private theorem lemma13_middleFactorLinearEquiv_mk
     (hqA_ker : qA.ker = C.subgroupOf A)
     (hU : ∀ u : Additive (LowerCentralFactor A 0),
       u ∈ U ↔ u.toMul ∈ (Phi.subgroupOf A).map qA)
-    (hL1_eq_Phi : lowerCentralSeries Q 1 = Phi)
+    (hL1_eq_Phi : (⊤ : Subgroup Q).lowerCentralSeries 1 = Phi)
     (hkernel1_eq_C : lowerCentralFactorKernel Q 1 =
-      C.subgroupOf (lowerCentralSeries Q 1))
-    (x : lowerCentralSeries Q 1) :
+      C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1))
+    (x : (⊤ : Subgroup Q).lowerCentralSeries 1) :
     ((lemma13_middleFactorLinearEquiv A C Phi hPhi_le_A qA U hqA_ker hU
         hL1_eq_Phi hkernel1_eq_C
         (Additive.ofMul
@@ -1813,16 +1833,16 @@ private theorem lemma13_factorZeroInclusion_bracket_eq_zero
     (A Phi C : Subgroup Q)
     (hC_le_Phi : C ≤ Phi) (hcommAA_le_C : ⁅A, A⁆ ≤ C)
     (hkernel0A : lowerCentralFactorKernel A 0 =
-      (C.subgroupOf A).subgroupOf (lowerCentralSeries A 0))
+      (C.subgroupOf A).subgroupOf ((⊤ : Subgroup A).lowerCentralSeries 0))
     (hkernel0Q : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
     (hkernel1Q : lowerCentralFactorKernel Q 1 =
-      C.subgroupOf (lowerCentralSeries Q 1))
+      C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1))
     (bracketQ : Additive (LowerCentralFactor Q 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor Q 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor Q 1))
-    (hbracketQ_mk : ∀ x y : lowerCentralSeries Q 0,
-      ∀ hcomm : ⁅(x : Q), (y : Q)⁆ ∈ lowerCentralSeries Q 1,
+    (hbracketQ_mk : ∀ x y : (⊤ : Subgroup Q).lowerCentralSeries 0,
+      ∀ hcomm : ⁅(x : Q), (y : Q)⁆ ∈ (⊤ : Subgroup Q).lowerCentralSeries 1,
         bracketQ
             (Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel Q 0) x))
@@ -1849,10 +1869,10 @@ private theorem lemma13_factorZeroInclusion_bracket_eq_zero
       (QuotientGroup.mk' (lowerCentralFactorKernel A 0) y) := by
     apply Additive.toMul.injective
     exact hy.symm
-  let xQ : lowerCentralSeries Q 0 := lemma13_factorZeroInclusionMonoidHom A x
-  let yQ : lowerCentralSeries Q 0 := lemma13_factorZeroInclusionMonoidHom A y
-  have hcommQ : ⁅(xQ : Q), (yQ : Q)⁆ ∈ lowerCentralSeries Q 1 := by
-    rw [lowerCentralSeries_one]
+  let xQ : (⊤ : Subgroup Q).lowerCentralSeries 0 := lemma13_factorZeroInclusionMonoidHom A x
+  let yQ : (⊤ : Subgroup Q).lowerCentralSeries 0 := lemma13_factorZeroInclusionMonoidHom A y
+  have hcommQ : ⁅(xQ : Q), (yQ : Q)⁆ ∈ (⊤ : Subgroup Q).lowerCentralSeries 1 := by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by trivial) (by trivial)
   rw [ha, hb, lemma13_factorZeroInclusionLinearMap_mk,
     lemma13_factorZeroInclusionLinearMap_mk,
@@ -1879,21 +1899,21 @@ private theorem lemma13_localBracket_to_ambientIterated
     (hU : ∀ u : Additive (LowerCentralFactor A 0),
       u ∈ U ↔ u.toMul ∈ (Phi.subgroupOf A).map qA)
     (hkernel0A : lowerCentralFactorKernel A 0 =
-      (C.subgroupOf A).subgroupOf (lowerCentralSeries A 0))
+      (C.subgroupOf A).subgroupOf ((⊤ : Subgroup A).lowerCentralSeries 0))
     (hkernel0Q : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf (lowerCentralSeries Q 0))
-    (hL1A : lowerCentralSeries A 1 = C.subgroupOf A)
+      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
+    (hL1A : (⊤ : Subgroup A).lowerCentralSeries 1 = C.subgroupOf A)
     (hkernel1A : lowerCentralFactorKernel A 1 = ⊥)
-    (hL1Q : lowerCentralSeries Q 1 = Phi)
+    (hL1Q : (⊤ : Subgroup Q).lowerCentralSeries 1 = Phi)
     (hkernel1Q : lowerCentralFactorKernel Q 1 =
-      C.subgroupOf (lowerCentralSeries Q 1))
-    (hL2Q : lowerCentralSeries Q 2 = C)
+      C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1))
+    (hL2Q : (⊤ : Subgroup Q).lowerCentralSeries 2 = C)
     (hkernel2Q : lowerCentralFactorKernel Q 2 = ⊥)
     (bracketA : Additive (LowerCentralFactor A 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor A 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor A 1))
-    (hbracketA : ∀ x y : lowerCentralSeries A 0,
-      ∀ hcomm : ⁅(x : A), (y : A)⁆ ∈ lowerCentralSeries A 1,
+    (hbracketA : ∀ x y : (⊤ : Subgroup A).lowerCentralSeries 0,
+      ∀ hcomm : ⁅(x : A), (y : A)⁆ ∈ (⊤ : Subgroup A).lowerCentralSeries 1,
         bracketA
             (Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel A 0) x))
@@ -1927,7 +1947,7 @@ private theorem lemma13_localBracket_to_ambientIterated
   let cA : A := ⟨(c : Q), hPhi_le_A (by
     rw [← hL1Q]
     exact c.property)⟩
-  let c0A : lowerCentralSeries A 0 := Subgroup.topEquiv.symm cA
+  let c0A : (⊤ : Subgroup A).lowerCentralSeries 0 := Subgroup.topEquiv.symm cA
   have hmiddle :
       ((lemma13_middleFactorLinearEquiv A C Phi hPhi_le_A qA U hqA_ker hU
           hL1Q hkernel1Q w : U) :
@@ -1935,8 +1955,8 @@ private theorem lemma13_localBracket_to_ambientIterated
         Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel A 0) c0A) := by
     rw [hw, lemma13_middleFactorLinearEquiv_mk, hqA_mk]
-  have hcommA : ⁅(c0A : A), (x : A)⁆ ∈ lowerCentralSeries A 1 := by
-    rw [lowerCentralSeries_one]
+  have hcommA : ⁅(c0A : A), (x : A)⁆ ∈ (⊤ : Subgroup A).lowerCentralSeries 1 := by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact Subgroup.commutator_mem_commutator (by trivial) (by trivial)
   rw [hmiddle, ha, hbracketA c0A x hcommA,
     lemma13_centerFactorLinearEquiv_mk,
@@ -1989,9 +2009,9 @@ private theorem lemma13_middleFactorLinearEquiv_equivariant
     (hqA_ker : qA.ker = C.subgroupOf A)
     (hU : ∀ u : Additive (LowerCentralFactor A 0),
       u ∈ U ↔ u.toMul ∈ (Phi.subgroupOf A).map qA)
-    (hL1_eq_Phi : lowerCentralSeries Q 1 = Phi)
+    (hL1_eq_Phi : (⊤ : Subgroup Q).lowerCentralSeries 1 = Phi)
     (hkernel1_eq_C : lowerCentralFactorKernel Q 1 =
-      C.subgroupOf (lowerCentralSeries Q 1))
+      C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1))
     (thetaQ : MulAut Q) (thetaA : MulAut A)
     (hcompat : ∀ a : A, thetaQ (a : Q) = (thetaA a : A))
     (hqA_equivariant : ∀ a : A,
@@ -2069,7 +2089,7 @@ private theorem lemma13_exists_frobenius_conjugate_of_equivariant_linearEquiv
         ring)
   have hcoeff : ∃ i j, coeff i j ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     have hbad := hexpansion 1 (L.symm 1)
     dsimp [B] at hbad
     simp only [L.apply_symm_apply, one_mul] at hbad
@@ -2208,7 +2228,7 @@ private theorem lemma13_exists_normalized_field_equiv_of_cross_functional
       map_add' := Tlin.map_add }
   refine ⟨T, ?_⟩
   intro x
-  simpa [T, hTlin, c, d]
+  simp [T, hTlin, c, d]
 
 private theorem lemma13_frobenius_index_modEq_of_primitive
     (n a b : ℕ) (hn : 2 ≤ n)
@@ -2403,7 +2423,7 @@ private theorem lemma13_typeC_jacobi_rank_one
         calc
           2 * 2 ^ (n - 1) = 2 ^ (n - 1) * 2 := Nat.mul_comm _ _
           _ = 2 ^ ((n - 1) + 1) := (pow_succ 2 (n - 1)).symm
-          _ = 2 ^ n := by congr 1 <;> omega
+          _ = 2 ^ n := by congr 1; omega
       _ = x := by
         have h := FiniteField.pow_card (K := K) x
         have hcard : Fintype.card K = 2 ^ n := by
@@ -2429,7 +2449,6 @@ private theorem lemma13_typeC_jacobi_rank_one
       _ = lambda := hthetaSquare lambda
   have hsigma_sq : (sigma lambda) ^ 2 = theta lambda := by
     apply theta.injective
-    change theta ((sigma lambda) ^ 2) = theta (theta lambda)
     change psi (sigma lambda) = theta (theta lambda)
     rw [show psi (sigma lambda) = sqrt lambda by
       exact psi.apply_symm_apply (sqrt lambda)]
@@ -2473,7 +2492,7 @@ private def Lemma13JacobiSpectralData
     [AddCommGroup W] [Module (ZMod 2) W]
     (xi : MulAut P) (n : ℕ)
     (U V : Submodule (ZMod 2) (Additive (LowerCentralFactor P 0)))
-    (bracket : Additive (LowerCentralFactor P 0) →ₗ[ZMod 2]
+    (_bracket : Additive (LowerCentralFactor P 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor P 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor P 1))
     (cross : V →ₗ[ZMod 2] W →ₗ[ZMod 2] U) : Prop :=
@@ -2618,7 +2637,7 @@ private theorem lemma13_jacobi_spectral_contradiction
         simpa using hEE
       have hRone : R = 1 := hER.symm.trans hEone
       apply lemma13_primitive_frobenius_ne_one n 0 hn R hR hRorder
-      simpa [hRone]
+      simp [hRone]
     · rcases hbranchA with ⟨hER, hUR⟩
       have hE : E ≠ 0 := hER.symm ▸ hR
       have hU : U ≠ 0 := hUR.symm ▸ hR
@@ -2678,7 +2697,8 @@ private theorem lemma13_jacobi_spectral_contradiction
         simpa using hsum.mul_left 2
       have hsumTwoPlus :
           Nat.ModEq n (2 * ((s : ℕ) + (t : ℕ)) + 2) 0 := by
-        convert hs.add ht using 1 <;> omega
+        convert hs.add ht using 1
+        all_goals omega
       have hsumTwoToTwo :
           Nat.ModEq n (2 * ((s : ℕ) + (t : ℕ)) + 2) 2 := by
         simpa using hsumTwo.add_right 2
@@ -2861,10 +2881,10 @@ public theorem lemma13_no_length_greater_than_three
         rw [hPhiTop_eq]
         infer_instance
       have hPhiX : IsXInvariantSubgroup X PhiTop := by
+        change ∀ x : X, ∀ a : Q, a ∈ PhiTop ↔ x • a ∈ PhiTop
         rw [hPhiTop_eq]
-        simpa using
-          (isInvariant_of_characteristic (A := X) (G := Q)
-            (frattini Q)).invariant
+        exact (isInvariant_of_characteristic (A := X) (G := Q)
+          (frattini Q)).invariant
       have hPhiNe : PhiTop ≠ ⊥ := by
         intro hPhiBot
         have hcomm_le : commutator Q ≤ frattini Q :=
@@ -2982,7 +3002,9 @@ public theorem lemma13_no_length_greater_than_three
       have he_pos : 0 < 2 ^ e := by positivity
       omega
     letI : IsInvariant X Q (frattini Q) := ⟨by
-      simpa [← hPhiTop_eq] using hPhiX⟩
+      have hPhiX' := hPhiX
+      change ∀ x : X, ∀ a : Q, a ∈ PhiTop ↔ x • a ∈ PhiTop at hPhiX'
+      simpa only [hPhiTop_eq] using hPhiX'⟩
     letI : MulAction.QuotientAction X (frattini Q) :=
       quotientAction_of_isInvariant (A := X) (G := Q) (frattini Q)
         inferInstance
@@ -2991,7 +3013,7 @@ public theorem lemma13_no_length_greater_than_three
         inferInstance
     letI : IsElementaryAbelian 2 (Q ⧸ frattini Q) :=
       isElementaryAbelian_quotient_frattini (R := Q) (p := 2)
-    letI : CommGroup (Q ⧸ frattini Q) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (Q ⧸ frattini Q) := IsMulCommutative.instCommGroup
     let AQ : Subgroup (Q ⧸ frattini Q) :=
       A.map (QuotientGroup.mk' (frattini Q))
     letI : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
@@ -3027,15 +3049,14 @@ public theorem lemma13_no_length_greater_than_three
       dsimp [Ylift]
       exact (isInvariant_comap_quotient WQ (by
         intro k q
-        simpa using
-          (MulAction.Quotient.smul_coe (H := frattini Q) k q))).invariant
+        simp)).invariant
     have hAQ_inf_WQ : AQ ⊓ WQ = ⊥ := disjoint_iff.mp hAQWQ.1
     have hAQ_sup_WQ : AQ ⊔ WQ = ⊤ := codisjoint_iff.mp hAQWQ.2
     have hXlift_inf_Ylift : Xlift ⊓ Ylift = PhiTop := by
       dsimp [Xlift, Ylift]
       rw [← Subgroup.comap_inf AQ WQ
         (QuotientGroup.mk' (frattini Q)), hAQ_inf_WQ]
-      simpa [hPhiTop_eq]
+      simp [hPhiTop_eq]
     have hXlift_sup_Ylift : Xlift ⊔ Ylift = ⊤ := by
       dsimp [Xlift, Ylift]
       rw [Subgroup.comap_sup_eq (QuotientGroup.mk' (frattini Q)) AQ WQ
@@ -3124,8 +3145,7 @@ public theorem lemma13_no_length_greater_than_three
             dsimp [D]
             exact (isInvariant_comap_quotient L (by
               intro k q
-              simpa using
-                (MulAction.Quotient.smul_coe (H := frattini Q) k q))).invariant
+              simp)).invariant
           have hC_D : C ≤ D := by
             intro c hc
             change QuotientGroup.mk' (frattini Q) c ∈ L
@@ -3168,8 +3188,7 @@ public theorem lemma13_no_length_greater_than_three
             dsimp [D]
             exact (isInvariant_comap_quotient (BQ ⊔ L) (by
               intro k q
-              simpa using
-                (MulAction.Quotient.smul_coe (H := frattini Q) k q))).invariant
+              simp)).invariant
           have hB_D : B ≤ D := by
             rw [← hBQ_comap]
             exact Subgroup.comap_mono le_sup_left
@@ -3236,8 +3255,7 @@ public theorem lemma13_no_length_greater_than_three
             dsimp [D]
             exact (isInvariant_comap_quotient (AQ ⊔ L) (by
               intro k q
-              simpa using
-                (MulAction.Quotient.smul_coe (H := frattini Q) k q))).invariant
+              simp)).invariant
           have hA_D : A ≤ D := by
             rw [← hXlift_eq_A]
             exact Subgroup.comap_mono le_sup_left
@@ -3349,36 +3367,36 @@ public theorem lemma13_no_length_greater_than_three
               bot_le hcomm_le_C with hbot | hC
           · exact False.elim (hcomm_ne_bot hbot)
           · exact hC
-        have hL1_eq_C : lowerCentralSeries Q 1 = C := by
-          rw [lowerCentralSeries_one]
+        have hL1_eq_C : (⊤ : Subgroup Q).lowerCentralSeries 1 = C := by
+          rw [Subgroup.top_lowerCentralSeries_one]
           exact hcommutator_eq_C
-        have hclass_two : lowerCentralSeries Q 2 = ⊥ := by
-          have hL2_normal : (lowerCentralSeries Q 2).Normal := by infer_instance
-          have hL2_X : IsXInvariantSubgroup X (lowerCentralSeries Q 2) :=
+        have hclass_two : (⊤ : Subgroup Q).lowerCentralSeries 2 = ⊥ := by
+          have hL2_normal : ((⊤ : Subgroup Q).lowerCentralSeries 2).Normal := by infer_instance
+          have hL2_X : IsXInvariantSubgroup X ((⊤ : Subgroup Q).lowerCentralSeries 2) :=
             (isInvariant_of_characteristic (A := X) (G := Q)
-              (lowerCentralSeries Q 2)).invariant
-          have hL2_le_C : lowerCentralSeries Q 2 ≤ C := by
+              ((⊤ : Subgroup Q).lowerCentralSeries 2)).invariant
+          have hL2_le_C : (⊤ : Subgroup Q).lowerCentralSeries 2 ≤ C := by
             calc
-              lowerCentralSeries Q 2 ≤ lowerCentralSeries Q 1 :=
-                lowerCentralSeries_antitone (by omega)
+              (⊤ : Subgroup Q).lowerCentralSeries 2 ≤ (⊤ : Subgroup Q).lowerCentralSeries 1 :=
+                (⊤ : Subgroup Q).lowerCentralSeries_antitone (by omega)
               _ = C := hL1_eq_C
-          rcases hbottom.2.2.2.2.2 (lowerCentralSeries Q 2)
+          rcases hbottom.2.2.2.2.2 ((⊤ : Subgroup Q).lowerCentralSeries 2)
               hL2_normal hL2_X bot_le hL2_le_C with hbot | hC
           · exact hbot
           · exfalso
-            have hstable : ∀ n : ℕ, 1 ≤ n → lowerCentralSeries Q n = C := by
+            have hstable : ∀ n : ℕ, 1 ≤ n → (⊤ : Subgroup Q).lowerCentralSeries n = C := by
               intro n hn
               obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hn
               induction k with
               | zero => simpa using hL1_eq_C
               | succ k ih =>
-                  change ⁅lowerCentralSeries Q (1 + k), (⊤ : Subgroup Q)⁆ = C
+                  change ⁅(⊤ : Subgroup Q).lowerCentralSeries (1 + k), (⊤ : Subgroup Q)⁆ = C
                   rw [ih (by omega)]
                   calc
                     ⁅C, (⊤ : Subgroup Q)⁆ =
-                        ⁅lowerCentralSeries Q 1, (⊤ : Subgroup Q)⁆ := by
+                        ⁅(⊤ : Subgroup Q).lowerCentralSeries 1, (⊤ : Subgroup Q)⁆ := by
                           rw [hL1_eq_C]
-                    _ = lowerCentralSeries Q 2 := rfl
+                    _ = (⊤ : Subgroup Q).lowerCentralSeries 2 := rfl
                     _ = C := hC
             letI : Group.IsNilpotent Q :=
               IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup hQ)
@@ -3387,19 +3405,19 @@ public theorem lemma13_no_length_greater_than_three
               apply Nat.pos_of_ne_zero
               intro hc
               have hsub : Subsingleton Q :=
-                (nilpotencyClass_zero_iff_subsingleton (G := Q)).mp hc
+                (Group.nilpotencyClass_zero_iff_subsingleton (G := Q)).mp hc
               rcases hQ.2.2.1 with ⟨x, y, _hx, _hy, hxy⟩
               exact hxy (hsub.elim x y)
-            have hcC : lowerCentralSeries Q c = C := hstable c (by omega)
-            have hcbot : lowerCentralSeries Q c = ⊥ := by
+            have hcC : (⊤ : Subgroup Q).lowerCentralSeries c = C := hstable c (by omega)
+            have hcbot : (⊤ : Subgroup Q).lowerCentralSeries c = ⊥ := by
               dsimp [c]
-              exact lowerCentralSeries_nilpotencyClass
+              exact Subgroup.lowerCentralSeries_nilpotencyClass
             exact hbottom.1.ne (hcC.symm.trans hcbot).symm
         have hC_le_center : C ≤ Subgroup.center Q := by
           rw [← hcommutator_eq_C]
           have hclass := hclass_two
-          rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ,
-            lowerCentralSeries_one] at hclass
+          rw [show 2 = 1 + 1 by omega, Subgroup.lowerCentralSeries_succ,
+            Subgroup.top_lowerCentralSeries_one] at hclass
           change ⁅commutator Q, (⊤ : Subgroup Q)⁆ = ⊥ at hclass
           rw [Subgroup.commutator_eq_bot_iff_le_centralizer] at hclass
           simpa [← Subgroup.centralizer_univ, ← Subgroup.coe_top] using hclass
@@ -3420,30 +3438,31 @@ public theorem lemma13_no_length_greater_than_three
               let c : C := ⟨x, hL1_eq_C ▸ x.property⟩
               simpa [c] using congrArg Subtype.val (hCData.2 c)
             · intro x hx
-              change (x : Q) ∈ lowerCentralSeries Q 2 at hx
+              change (x : Q) ∈ (⊤ : Subgroup Q).lowerCentralSeries 2 at hx
               rw [hclass_two] at hx
               simpa using hx
           · exact bot_le
         have hkernel0_map_C :
             (lowerCentralFactorKernel Q 0).map
-                (lowerCentralSeries Q 0).subtype = C := by
+                ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = C := by
           have hsquares_map :
-              (squaresSubgroup (lowerCentralSeries Q 0)).map
-                  (lowerCentralSeries Q 0).subtype = squaresSubgroup Q := by
+              (squaresSubgroup ((⊤ : Subgroup Q).lowerCentralSeries 0)).map
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = squaresSubgroup Q := by
             apply le_antisymm
             · rw [squaresSubgroup, MonoidHom.map_closure, Subgroup.closure_le]
               rintro _ ⟨x, ⟨y, rfl⟩, rfl⟩
               exact Subgroup.subset_closure ⟨(y : Q), rfl⟩
             · rw [squaresSubgroup, Subgroup.closure_le]
               rintro _ ⟨y, rfl⟩
-              let yt : lowerCentralSeries Q 0 := ⟨y, trivial⟩
+              let yt : (⊤ : Subgroup Q).lowerCentralSeries 0 := ⟨y, trivial⟩
               exact ⟨yt ^ 2, Subgroup.subset_closure ⟨yt, rfl⟩, rfl⟩
           have hnext_map :
-              ((lowerCentralSeries Q 1).subgroupOf
-                  (lowerCentralSeries Q 0)).map
-                    (lowerCentralSeries Q 0).subtype = lowerCentralSeries Q 1 :=
+              (((⊤ : Subgroup Q).lowerCentralSeries 1).subgroupOf
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0)).map
+                    ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = (⊤ : Subgroup Q).lowerCentralSeries 1 :=
             Subgroup.map_subgroupOf_eq_of_le
-              (lowerCentralSeries_antitone (by omega : 0 ≤ 1))
+              ((⊤ : Subgroup Q).lowerCentralSeries_antitone
+                (by omega : 0 ≤ 1))
           rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map,
             hnext_map, hL1_eq_C]
           exact sup_eq_right.mpr (by simpa [hL1_eq_C] using hsquares_le_C)
@@ -3488,7 +3507,7 @@ public theorem lemma13_no_length_greater_than_three
           · intro hp
             have hpmap : p ∈
                 (lowerCentralFactorKernel Q 0).map
-                  (lowerCentralSeries Q 0).subtype := by
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype := by
               rw [hkernel0_map_C]
               rwa [← hfrattini_eq_C]
             rcases hpmap with ⟨z, hz, hzp⟩
@@ -3511,7 +3530,11 @@ public theorem lemma13_no_length_greater_than_three
             hbracket_equivariant, hbracket_self, hbracket_mk,
             _hbracket_span, hsquare_mk, hsquare_equivariant, hsquare_add⟩ :=
           lemma5_square_map_normal_form_quadratic_core
-            tau nC (by rwa [hL1_eq_C])
+            tau nC (by
+              change squaresSubgroup Q ≤
+                (⊤ : Subgroup Q).lowerCentralSeries 1
+              rw [hL1_eq_C]
+              exact hsquares_le_C)
         have hsquare_anisotropic :
             ∀ v : Additive (LowerCentralFactor Q 0), squareMap v = 0 → v = 0 := by
           intro v hv
@@ -3521,7 +3544,7 @@ public theorem lemma13_no_length_greater_than_three
               (QuotientGroup.mk' (lowerCentralFactorKernel Q 0) x) := by
             apply Additive.toMul.injective
             exact hx.symm
-          have hxsquare_mem : (x : Q) ^ 2 ∈ lowerCentralSeries Q 1 := by
+          have hxsquare_mem : (x : Q) ^ 2 ∈ (⊤ : Subgroup Q).lowerCentralSeries 1 := by
             rw [hL1_eq_C]
             exact hsquares_le_C (Subgroup.subset_closure ⟨(x : Q), rfl⟩)
           have hmk_zero :
@@ -3536,15 +3559,15 @@ public theorem lemma13_no_length_greater_than_three
             apply Additive.ofMul.injective
             simpa using hmk_zero
           have hsqker :
-              (⟨(x : Q) ^ 2, hxsquare_mem⟩ : lowerCentralSeries Q 1) ∈
+              (⟨(x : Q) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup Q).lowerCentralSeries 1) ∈
                 lowerCentralFactorKernel Q 1 :=
             (QuotientGroup.eq_one_iff
               (N := lowerCentralFactorKernel Q 1)
-              (⟨(x : Q) ^ 2, hxsquare_mem⟩ : lowerCentralSeries Q 1)).mp hmk_one
+              (⟨(x : Q) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup Q).lowerCentralSeries 1)).mp hmk_one
           rw [hkernel1_bot] at hsqker
           have hxsquare : (x : Q) ^ 2 = 1 := by
             have hsquare_one :
-                (⟨(x : Q) ^ 2, hxsquare_mem⟩ : lowerCentralSeries Q 1) = 1 := by
+                (⟨(x : Q) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup Q).lowerCentralSeries 1) = 1 := by
               simpa using hsqker
             exact congrArg Subtype.val hsquare_one
           by_cases hxone : (x : Q) = 1
@@ -3557,7 +3580,7 @@ public theorem lemma13_no_length_greater_than_three
           · have hxC : (x : Q) ∈ C := hAllInvC (x : Q) ⟨hxone, hxsquare⟩
             have hxmap : (x : Q) ∈
                 (lowerCentralFactorKernel Q 0).map
-                  (lowerCentralSeries Q 0).subtype := by
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype := by
               rw [hkernel0_map_C]
               exact hxC
             rcases hxmap with ⟨z, hz, hzx⟩
@@ -3615,11 +3638,11 @@ public theorem lemma13_no_length_greater_than_three
         have hfactor1_card : Nat.card (LowerCentralFactor Q 1) = 2 ^ nC := by
           calc
             Nat.card (LowerCentralFactor Q 1) =
-                Nat.card (lowerCentralSeries Q 1) :=
+                Nat.card ((⊤ : Subgroup Q).lowerCentralSeries 1) :=
               Nat.card_congr
                 (((QuotientGroup.quotientMulEquivOfEq hkernel1_bot).trans
                   (QuotientGroup.quotientBot
-                    (G := lowerCentralSeries Q 1))).toEquiv)
+                    (G := (⊤ : Subgroup Q).lowerCentralSeries 1))).toEquiv)
             _ = Nat.card C := by rw [hL1_eq_C]
             _ = 2 ^ nC := hC_card
         have hS_transitive :
@@ -3768,7 +3791,11 @@ public theorem lemma13_no_length_greater_than_three
                 (IsInvariant.invariant (A := X) (G := Q ⧸ frattini Q)
                   (H := U) (g ^ j) u).1 u.property⟩
               have hgu : gu ∈ L0 := by
+                have hgu_eq : gu = g ^ j • u := by
+                  apply Subtype.ext
+                  rfl
                 change Additive.ofMul gu ∈ eU (eU.symm W)
+                rw [hgu_eq]
                 simpa only [eU.apply_symm_apply] using hpowW
               exact ⟨gu, hgu, rfl⟩
             have hLinv : IsInvariant X (Q ⧸ frattini Q) L := by
@@ -3834,7 +3861,8 @@ public theorem lemma13_no_length_greater_than_three
               hq_nonzero hT_order_dvd
           have hcard := Module.natCard_eq_pow_finrank
             (K := ZMod 2) (V := Additive U)
-          simpa [hfinrank] using hcard
+          exact (Nat.card_congr Additive.toMul).symm.trans
+            (by simpa [hfinrank] using hcard)
         have hUQ_card : Nat.card UQ = 2 ^ nC :=
           hLayerCard UQ hUQinv hUQirr hUQ_ne
         have hVQ_card : Nat.card VQ = 2 ^ nC :=
@@ -3882,7 +3910,8 @@ public theorem lemma13_no_length_greater_than_three
           calc
             Nat.card AQ = 2 ^ nC * 2 ^ nC := hcard.symm
             _ = 2 ^ (nC + nC) := by rw [pow_add]
-            _ = 2 ^ (2 * nC) := by congr 1 <;> omega
+            _ = 2 ^ (2 * nC) :=
+              congrArg (fun k : ℕ => 2 ^ k) (by omega)
         have hAQW_isCompl : IsCompl AQ WQ'' := by
           constructor
           · rw [disjoint_iff, hAQinfWQ]
@@ -3902,7 +3931,8 @@ public theorem lemma13_no_length_greater_than_three
             Nat.card (Q ⧸ frattini Q) = 2 ^ (2 * nC) * 2 ^ nC :=
               hcard.symm
             _ = 2 ^ (2 * nC + nC) := by rw [pow_add]
-            _ = 2 ^ (3 * nC) := by congr 1 <;> omega
+            _ = 2 ^ (3 * nC) :=
+              congrArg (fun k : ℕ => 2 ^ k) (by omega)
         have hfactor0_card :
             Nat.card (LowerCentralFactor Q 0) = 2 ^ (3 * nC) := by
           calc
@@ -3926,12 +3956,12 @@ public theorem lemma13_no_length_greater_than_three
             Module.finrank (ZMod 2) (Additive (LowerCentralFactor Q 0)) =
               3 * nC :=
           finrank_eq_of_card (Additive (LowerCentralFactor Q 0))
-            (3 * nC) (by simpa using hfactor0_card)
+            (3 * nC) ((Nat.card_congr Additive.toMul).trans hfactor0_card)
         have hfactor1_finrank :
             Module.finrank (ZMod 2) (Additive (LowerCentralFactor Q 1)) =
               nC :=
           finrank_eq_of_card (Additive (LowerCentralFactor Q 1)) nC
-            (by simpa using hfactor1_card)
+            ((Nat.card_congr Additive.toMul).trans hfactor1_card)
         have hsquare_zero : squareMap 0 = 0 := by
           simpa using hsquare_add 0 0
         have hdim :
@@ -3948,7 +3978,7 @@ public theorem lemma13_no_length_greater_than_three
         exact hv (hsquare_anisotropic v hvzero)
       exact hexponentTwoCase
     · have hPhiOrderFour : ∃ x : PhiTop, x ^ 2 ≠ 1 ∧ x ^ 4 = 1 := by
-        push_neg at hPhiExpTwo
+        push Not at hPhiExpTwo
         rcases hPhiExpTwo with ⟨x, hx⟩
         exact ⟨x, hx, hPhiData.2 x⟩
       let PhiSq : Subgroup Q :=
@@ -3979,7 +4009,8 @@ public theorem lemma13_no_length_greater_than_three
           rintro _ ⟨x, rfl⟩
           change (x : Q) ^ 2 ∈ C
           by_cases hx_sq : (x : Q) ^ 2 = 1
-          · simpa [hx_sq] using C.one_mem
+          · rw [hx_sq]
+            exact C.one_mem
           · apply hAllInvC ((x : Q) ^ 2)
             refine ⟨hx_sq, ?_⟩
             calc
@@ -4298,24 +4329,26 @@ public theorem lemma13_no_length_greater_than_three
               C ≤ Subgroup.centralizer (⊤ : Set Q) := by
             have hcomm_bot : ⁅C, (⊤ : Subgroup Q)⁆ = ⊥ := by
               simpa [D] using hD_bot
-            simpa only [Subgroup.coe_top] using
-              (Subgroup.commutator_eq_bot_iff_le_centralizer.mp hcomm_bot)
+            change C ≤ Subgroup.centralizer
+              (↑(⊤ : Subgroup Q) : Set Q)
+            exact Subgroup.commutator_eq_bot_iff_le_centralizer.mp hcomm_bot
           simpa [← Subgroup.centralizer_univ, ← Subgroup.coe_top] using
             hcentralizer
         · exfalso
           have hC_eq_comm : C = ⁅C, (⊤ : Subgroup Q)⁆ := by
             simpa [D] using hD_C.symm
-          have hC_le_series : ∀ i : ℕ, C ≤ lowerCentralSeries Q i := by
+          have hC_le_series : ∀ i : ℕ, C ≤ (⊤ : Subgroup Q).lowerCentralSeries i := by
             intro i
             induction i with
-            | zero => simpa
+            | zero => simp
             | succ i ih =>
-                rw [lowerCentralSeries_succ, hC_eq_comm]
+                rw [Subgroup.lowerCentralSeries_succ, hC_eq_comm]
                 exact Subgroup.commutator_mono ih le_rfl
           letI : Group.IsNilpotent Q :=
             IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup hQ)
           have hnil : Group.IsNilpotent Q := inferInstance
-          obtain ⟨i, hi⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
+          obtain ⟨i, hi⟩ :=
+            Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
           have hC_bot : C ≤ (⊥ : Subgroup Q) := by
             rw [← hi]
             exact hC_le_series i
@@ -4334,8 +4367,9 @@ public theorem lemma13_no_length_greater_than_three
           map_mul' := by
             intro x y
             apply Subtype.ext
-            simpa only [Subgroup.coe_mul, Subtype.coe_mk] using
-              congrArg Subtype.val (mul_pow x y 2) }
+            change ((x : Q) * (y : Q)) ^ 2 =
+              (x : Q) ^ 2 * (y : Q) ^ 2
+            exact congrArg Subtype.val (mul_pow x y 2) }
       have hsquareToC_ker : squareToC.ker = C.subgroupOf PhiTop := by
         ext x
         simp only [MonoidHom.mem_ker, Subgroup.mem_subgroupOf]
@@ -4344,7 +4378,7 @@ public theorem lemma13_no_length_greater_than_three
           have hxQ : (x : Q) ^ 2 = 1 := by
             simpa [squareToC] using congrArg Subtype.val hx
           by_cases hx_one : (x : Q) = 1
-          · simpa [hx_one] using C.one_mem
+          · simp [hx_one]
           · exact hAllInvC (x : Q) ⟨hx_one, hxQ⟩
         · intro hx
           let xC : C := ⟨x, hx⟩
@@ -4513,8 +4547,8 @@ public theorem lemma13_no_length_greater_than_three
         refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
         apply Subtype.ext
         apply Subtype.ext
-        exact Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := PhiTop) a.property b.property
+        exact setLike_mul_comm
+          (s := PhiTop) a.property b.property
       have hAResult :=
         lemma12_chain_typeBCD hASuzuki hXcyclic hAfaithful
           hAtrans hAprimeSupport g hg hAChain.1 hAChain.2.1 hAChain.2.2
@@ -4567,13 +4601,13 @@ public theorem lemma13_no_length_greater_than_three
         have hfactor1A_card_eq_C :
             Nat.card (LowerCentralFactor A 1) = Nat.card C := by
           change Nat.card
-              ((lowerCentralSeries A 1) ⧸ lowerCentralFactorKernel A 1) =
+              (((⊤ : Subgroup A).lowerCentralSeries 1) ⧸ lowerCentralFactorKernel A 1) =
             Nat.card C
           rw [hkernel1A]
           calc
-            Nat.card ((lowerCentralSeries A 1) ⧸
-                  (⊥ : Subgroup (lowerCentralSeries A 1))) =
-                Nat.card (lowerCentralSeries A 1) :=
+            Nat.card (((⊤ : Subgroup A).lowerCentralSeries 1) ⧸
+                  (⊥ : Subgroup ((⊤ : Subgroup A).lowerCentralSeries 1))) =
+                Nat.card ((⊤ : Subgroup A).lowerCentralSeries 1) :=
               Nat.card_congr QuotientGroup.quotientBot.toEquiv
             _ = Nat.card (C.subgroupOf A) := by rw [hL1A]
             _ = Nat.card C :=
@@ -4582,13 +4616,13 @@ public theorem lemma13_no_length_greater_than_three
         have hfactor1Y_card_eq_C :
             Nat.card (LowerCentralFactor Ylift 1) = Nat.card C := by
           change Nat.card
-              ((lowerCentralSeries Ylift 1) ⧸
+              (((⊤ : Subgroup Ylift).lowerCentralSeries 1) ⧸
                 lowerCentralFactorKernel Ylift 1) = Nat.card C
           rw [hkernel1Y]
           calc
-            Nat.card ((lowerCentralSeries Ylift 1) ⧸
-                  (⊥ : Subgroup (lowerCentralSeries Ylift 1))) =
-                Nat.card (lowerCentralSeries Ylift 1) :=
+            Nat.card (((⊤ : Subgroup Ylift).lowerCentralSeries 1) ⧸
+                  (⊥ : Subgroup ((⊤ : Subgroup Ylift).lowerCentralSeries 1))) =
+                Nat.card ((⊤ : Subgroup Ylift).lowerCentralSeries 1) :=
               Nat.card_congr QuotientGroup.quotientBot.toEquiv
             _ = Nat.card (C.subgroupOf Ylift) := by rw [hL1Y]
             _ = Nat.card C :=
@@ -4664,14 +4698,14 @@ public theorem lemma13_no_length_greater_than_three
             ⁅A, A⁆ = (commutator A).map A.subtype :=
               (Subgroup.map_subtype_commutator A).symm
             _ = (C.subgroupOf A).map A.subtype := by
-              rw [← lowerCentralSeries_one, hL1A]
+              rw [← Subgroup.top_lowerCentralSeries_one, hL1A]
             _ = C := Subgroup.map_subgroupOf_eq_of_le hC_le_A
         have hcommYlift_eq_C : ⁅Ylift, Ylift⁆ = C := by
           calc
             ⁅Ylift, Ylift⁆ = (commutator Ylift).map Ylift.subtype :=
               (Subgroup.map_subtype_commutator Ylift).symm
             _ = (C.subgroupOf Ylift).map Ylift.subtype := by
-              rw [← lowerCentralSeries_one, hL1Y]
+              rw [← Subgroup.top_lowerCentralSeries_one, hL1Y]
             _ = C := Subgroup.map_subgroupOf_eq_of_le hC_le_Ylift
         have hC_le_commutator : C ≤ commutator Q := by
           calc
@@ -4698,8 +4732,8 @@ public theorem lemma13_no_length_greater_than_three
                 hA_sup_Ylift (by rw [hcomm_C]) hA_sq_C hYlift_sq_C
             exact False.elim (hC_lt_Phi.2 hPhi_le_C)
           · exact hcomm_Phi
-        have hL1_eq_Phi : lowerCentralSeries Q 1 = PhiTop := by
-          rw [lowerCentralSeries_one]
+        have hL1_eq_Phi : (⊤ : Subgroup Q).lowerCentralSeries 1 = PhiTop := by
+          rw [Subgroup.top_lowerCentralSeries_one]
           exact hcommutator_eq_Phi
         have hPhi_comm_A_le_C : ⁅PhiTop, A⁆ ≤ C := by
           calc
@@ -4716,19 +4750,19 @@ public theorem lemma13_no_length_greater_than_three
           letI : C.Normal := hbottom.2.1
           exact lemma13_commutator_sup_right_le
             hPhi_comm_A_le_C hPhi_comm_Ylift_le_C
-        have hL2_le_C : lowerCentralSeries Q 2 ≤ C := by
-          change ⁅lowerCentralSeries Q 1, (⊤ : Subgroup Q)⁆ ≤ C
+        have hL2_le_C : (⊤ : Subgroup Q).lowerCentralSeries 2 ≤ C := by
+          change ⁅(⊤ : Subgroup Q).lowerCentralSeries 1, (⊤ : Subgroup Q)⁆ ≤ C
           rw [hL1_eq_Phi]
           exact hPhi_comm_top_le_C
-        have hL2_ne_bot : lowerCentralSeries Q 2 ≠ ⊥ := by
+        have hL2_ne_bot : (⊤ : Subgroup Q).lowerCentralSeries 2 ≠ ⊥ := by
           rcases hA_internal_comm with ⟨x, hxPhi, y, hxy_ne⟩
           have hxyQ_ne : ⁅(x : Q), (y : Q)⁆ ≠ 1 := by
             intro hxy
             apply hxy_ne
             exact Subtype.ext hxy
-          have hxy_mem : ⁅(x : Q), (y : Q)⁆ ∈ lowerCentralSeries Q 2 := by
+          have hxy_mem : ⁅(x : Q), (y : Q)⁆ ∈ (⊤ : Subgroup Q).lowerCentralSeries 2 := by
             change ⁅(x : Q), (y : Q)⁆ ∈
-              ⁅lowerCentralSeries Q 1, (⊤ : Subgroup Q)⁆
+              ⁅(⊤ : Subgroup Q).lowerCentralSeries 1, (⊤ : Subgroup Q)⁆
             apply Subgroup.commutator_mem_commutator
             · rw [hL1_eq_Phi]
               exact hxPhi
@@ -4739,27 +4773,27 @@ public theorem lemma13_no_length_greater_than_three
             rw [← hbot]
             exact hxy_mem
           simpa using this
-        have hL2_X : IsXInvariantSubgroup X (lowerCentralSeries Q 2) :=
+        have hL2_X : IsXInvariantSubgroup X ((⊤ : Subgroup Q).lowerCentralSeries 2) :=
           (isInvariant_of_characteristic (A := X) (G := Q)
-            (lowerCentralSeries Q 2)).invariant
-        have hL2_eq_C : lowerCentralSeries Q 2 = C := by
-          rcases hC_min_X (lowerCentralSeries Q 2) hL2_X hL2_le_C with
+            ((⊤ : Subgroup Q).lowerCentralSeries 2)).invariant
+        have hL2_eq_C : (⊤ : Subgroup Q).lowerCentralSeries 2 = C := by
+          rcases hC_min_X ((⊤ : Subgroup Q).lowerCentralSeries 2) hL2_X hL2_le_C with
             hbot | hC
           · exact False.elim (hL2_ne_bot hbot)
           · exact hC
         have hkernel0_map_eq_Phi :
             (lowerCentralFactorKernel Q 0).map
-                (lowerCentralSeries Q 0).subtype = PhiTop := by
+                ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = PhiTop := by
           have hsquares_map :
-              (squaresSubgroup (lowerCentralSeries Q 0)).map
-                  (lowerCentralSeries Q 0).subtype = squaresSubgroup Q := by
+              (squaresSubgroup ((⊤ : Subgroup Q).lowerCentralSeries 0)).map
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = squaresSubgroup Q := by
             apply le_antisymm
             · rw [squaresSubgroup, MonoidHom.map_closure, Subgroup.closure_le]
               rintro _ ⟨x, ⟨y, rfl⟩, rfl⟩
               exact Subgroup.subset_closure ⟨(y : Q), rfl⟩
             · rw [squaresSubgroup, Subgroup.closure_le]
               rintro _ ⟨y, rfl⟩
-              let yt : lowerCentralSeries Q 0 := ⟨y, trivial⟩
+              let yt : (⊤ : Subgroup Q).lowerCentralSeries 0 := ⟨y, trivial⟩
               exact ⟨yt ^ 2, Subgroup.subset_closure ⟨yt, rfl⟩, rfl⟩
           have hsquares_le_Phi : squaresSubgroup Q ≤ PhiTop := by
             rw [squaresSubgroup, Subgroup.closure_le]
@@ -4768,66 +4802,69 @@ public theorem lemma13_no_length_greater_than_three
             exact pth_power_mem_frattini_of_isPGroup
               (R := Q) (p := 2) y
           have hnext_map :
-              ((lowerCentralSeries Q 1).subgroupOf
-                  (lowerCentralSeries Q 0)).map
-                    (lowerCentralSeries Q 0).subtype =
-                lowerCentralSeries Q 1 :=
+              (((⊤ : Subgroup Q).lowerCentralSeries 1).subgroupOf
+                  ((⊤ : Subgroup Q).lowerCentralSeries 0)).map
+                    ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype =
+                (⊤ : Subgroup Q).lowerCentralSeries 1 :=
             Subgroup.map_subgroupOf_eq_of_le
-              (lowerCentralSeries_antitone (by omega : 0 ≤ 1))
+              ((⊤ : Subgroup Q).lowerCentralSeries_antitone
+                (by omega : 0 ≤ 1))
           rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map,
             hnext_map, hL1_eq_Phi]
           exact sup_eq_right.mpr hsquares_le_Phi
-        have hPhi_le_L0 : PhiTop ≤ lowerCentralSeries Q 0 := by
+        have hPhi_le_L0 : PhiTop ≤ (⊤ : Subgroup Q).lowerCentralSeries 0 := by
           intro x hx
           trivial
         have hkernel0_eq_Phi :
             lowerCentralFactorKernel Q 0 =
-              PhiTop.subgroupOf (lowerCentralSeries Q 0) := by
+              PhiTop.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0) := by
           apply (Subgroup.map_injective
-            (lowerCentralSeries Q 0).subtype_injective)
+            ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype_injective)
           calc
             (lowerCentralFactorKernel Q 0).map
-                (lowerCentralSeries Q 0).subtype = PhiTop :=
+                ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype = PhiTop :=
               hkernel0_map_eq_Phi
-            _ = (PhiTop.subgroupOf (lowerCentralSeries Q 0)).map
-                (lowerCentralSeries Q 0).subtype :=
+            _ = (PhiTop.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0)).map
+                ((⊤ : Subgroup Q).lowerCentralSeries 0).subtype :=
               (Subgroup.map_subgroupOf_eq_of_le hPhi_le_L0).symm
         have hkernel1_map_eq_C :
             (lowerCentralFactorKernel Q 1).map
-                (lowerCentralSeries Q 1).subtype = C := by
+                ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype = C := by
           have hsquares_map :
-              (squaresSubgroup (lowerCentralSeries Q 1)).map
-                  (lowerCentralSeries Q 1).subtype = PhiSq := by
+              (squaresSubgroup ((⊤ : Subgroup Q).lowerCentralSeries 1)).map
+                  ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype = PhiSq := by
             rw [hL1_eq_Phi]
           have hnext_map :
-              ((lowerCentralSeries Q 2).subgroupOf
-                  (lowerCentralSeries Q 1)).map
-                    (lowerCentralSeries Q 1).subtype =
-                lowerCentralSeries Q 2 :=
+              (((⊤ : Subgroup Q).lowerCentralSeries 2).subgroupOf
+                  ((⊤ : Subgroup Q).lowerCentralSeries 1)).map
+                    ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype =
+                (⊤ : Subgroup Q).lowerCentralSeries 2 :=
             Subgroup.map_subgroupOf_eq_of_le
-              (lowerCentralSeries_antitone (by omega : 1 ≤ 2))
+              ((⊤ : Subgroup Q).lowerCentralSeries_antitone
+                (by omega : 1 ≤ 2))
           rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map,
             hnext_map, hPhiSq_eq_C, hL2_eq_C, sup_idem]
-        have hC_le_L1 : C ≤ lowerCentralSeries Q 1 := by
+        have hC_le_L1 : C ≤ (⊤ : Subgroup Q).lowerCentralSeries 1 := by
           rw [hL1_eq_Phi]
           exact hC_le_Phi
         have hkernel1_eq_C :
             lowerCentralFactorKernel Q 1 =
-              C.subgroupOf (lowerCentralSeries Q 1) := by
+              C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1) := by
           apply (Subgroup.map_injective
-            (lowerCentralSeries Q 1).subtype_injective)
+            ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype_injective)
           calc
             (lowerCentralFactorKernel Q 1).map
-                (lowerCentralSeries Q 1).subtype = C := hkernel1_map_eq_C
-            _ = (C.subgroupOf (lowerCentralSeries Q 1)).map
-                (lowerCentralSeries Q 1).subtype :=
+                ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype = C := hkernel1_map_eq_C
+            _ = (C.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 1)).map
+                ((⊤ : Subgroup Q).lowerCentralSeries 1).subtype :=
               (Subgroup.map_subgroupOf_eq_of_le hC_le_L1).symm
-        have hL3_eq_bot : lowerCentralSeries Q 3 = ⊥ := by
-          have hL2_le_center : lowerCentralSeries Q 2 ≤ Subgroup.center Q := by
+        have hL3_eq_bot : (⊤ : Subgroup Q).lowerCentralSeries 3 = ⊥ := by
+          have hL2_le_center : (⊤ : Subgroup Q).lowerCentralSeries 2 ≤ Subgroup.center Q := by
             rw [hL2_eq_C]
             exact hC_le_center
           simpa using
-            (lowerCentralSeries_succ_eq_bot (G := Q) (n := 2)
+            (Subgroup.lowerCentralSeries_succ_eq_bot
+              (⊤ : Subgroup Q) (n := 2)
               hL2_le_center)
         have hkernel2_bot : lowerCentralFactorKernel Q 2 = ⊥ := by
           apply le_antisymm
@@ -4841,17 +4878,17 @@ public theorem lemma13_no_length_greater_than_three
               let c : C := ⟨x, hL2_eq_C ▸ x.property⟩
               simpa [c] using congrArg Subtype.val (hCData.2 c)
             · intro x hx
-              change (x : Q) ∈ lowerCentralSeries Q 3 at hx
+              change (x : Q) ∈ (⊤ : Subgroup Q).lowerCentralSeries 3 at hx
               rw [hL3_eq_bot] at hx
               simpa using hx
           · exact bot_le
         have hkernel0A_eq_C : lowerCentralFactorKernel A 0 =
-            (C.subgroupOf A).subgroupOf (lowerCentralSeries A 0) :=
+            (C.subgroupOf A).subgroupOf ((⊤ : Subgroup A).lowerCentralSeries 0) :=
           lemma13_lowerCentralFactorKernel_zero_eq_of_canonical_ker
             (C.subgroupOf A) qA hqA_ker hqA_mk
         have hkernel0Y_eq_C : lowerCentralFactorKernel Ylift 0 =
             (C.subgroupOf Ylift).subgroupOf
-              (lowerCentralSeries Ylift 0) :=
+              ((⊤ : Subgroup Ylift).lowerCentralSeries 0) :=
           lemma13_lowerCentralFactorKernel_zero_eq_of_canonical_ker
             (C.subgroupOf Ylift) qY hqY_ker hqY_mk
         let outerA : VA →ₗ[ZMod 2]
@@ -5287,7 +5324,7 @@ public theorem lemma13_no_length_greater_than_three
           exact h
         have hF_ne : ∃ a y : BinaryGaloisField nA, F a y ≠ 0 := by
           by_contra hF_zero
-          push_neg at hF_zero
+          push Not at hF_zero
           have hcross_zero (v : VA) (w : VY) :
               bracketQ (outerA v) (outerY w) = 0 := by
             apply middleA.injective
@@ -5314,8 +5351,8 @@ public theorem lemma13_no_length_greater_than_three
               Ylift PhiTop C qY UY VY hC_le_Phi hkernel0Y_eq_C
                 hkernel0_eq_Phi hqY_mk hUY hUVY
                   (Additive.ofMul (qY yY))
-            let a0 : lowerCentralSeries Q 0 := ⟨a, by trivial⟩
-            let y0 : lowerCentralSeries Q 0 := ⟨y, by trivial⟩
+            let a0 : (⊤ : Subgroup Q).lowerCentralSeries 0 := ⟨a, by trivial⟩
+            let y0 : (⊤ : Subgroup Q).lowerCentralSeries 0 := ⟨y, by trivial⟩
             have hclassA : Additive.ofMul
                   (QuotientGroup.mk' (lowerCentralFactorKernel Q 0) a0) =
                 outerA v := by
@@ -5342,8 +5379,8 @@ public theorem lemma13_no_length_greater_than_three
                             lemma13_factorZeroInclusionLinearMap_mk]
                           rfl
                 _ = outerY w := hw
-            have hcomm : ⁅(a0 : Q), (y0 : Q)⁆ ∈ lowerCentralSeries Q 1 := by
-              rw [lowerCentralSeries_one]
+            have hcomm : ⁅(a0 : Q), (y0 : Q)⁆ ∈ (⊤ : Subgroup Q).lowerCentralSeries 1 := by
+              rw [Subgroup.top_lowerCentralSeries_one]
               exact Subgroup.commutator_mem_commutator (by trivial) (by trivial)
             have hbr := hbracketQ_mk a0 y0 hcomm
             rw [hclassA, hclassY, hcross_zero] at hbr
@@ -5692,17 +5729,35 @@ public theorem lemma13_no_length_greater_than_three
           let B3 : Subgroup Q := subgroups ⟨3, by omega⟩
           let B4 : Subgroup Q := subgroups ⟨4, by omega⟩
           have hB2_lt : B2 < H := by
-            simpa [B2, H] using (hsteps ⟨1, by omega⟩).1
+            have hstep := (hsteps ⟨1, by omega⟩).1
+            change subgroups ⟨2, by omega⟩ <
+              subgroups ⟨1, by omega⟩ at hstep
+            simpa only [B2, H] using hstep
           have hB3_lt : B3 < B2 := by
-            simpa [B3, B2] using (hsteps ⟨2, by omega⟩).1
+            have hstep := (hsteps ⟨2, by omega⟩).1
+            change subgroups ⟨3, by omega⟩ <
+              subgroups ⟨2, by omega⟩ at hstep
+            simpa only [B3, B2] using hstep
           have hB4_lt : B4 < B3 := by
-            simpa [B4, B3] using (hsteps ⟨3, by omega⟩).1
+            have hstep := (hsteps ⟨3, by omega⟩).1
+            change subgroups ⟨4, by omega⟩ <
+              subgroups ⟨3, by omega⟩ at hstep
+            simpa only [B4, B3] using hstep
           have hB2_X : IsXInvariantSubgroup X B2 := by
-            simpa [B2] using (hsteps ⟨1, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨1, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨2, by omega⟩) at hstep
+            simpa only [B2] using hstep
           have hB3_X : IsXInvariantSubgroup X B3 := by
-            simpa [B3] using (hsteps ⟨2, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨2, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨3, by omega⟩) at hstep
+            simpa only [B3] using hstep
           have hB4_X : IsXInvariantSubgroup X B4 := by
-            simpa [B4] using (hsteps ⟨3, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨3, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨4, by omega⟩) at hstep
+            simpa only [B4] using hstep
           let Pow (s : ℕ) : Subgroup Q := Subgroup.closure
             {x : Q | ∃ a : H, (a : Q) ^ (2 ^ s) = x}
           obtain ⟨sH, hsH_le, hsH⟩ := hpower H le_rfl hH_X
@@ -5832,13 +5887,25 @@ public theorem lemma13_no_length_greater_than_three
           let B4Q : Subgroup Q := subgroups ⟨4, by omega⟩
           let B5Q : Subgroup Q := subgroups ⟨5, by omega⟩
           have hB2Q_lt : B2Q < H := by
-            simpa [B2Q, H] using (hsteps ⟨1, by omega⟩).1
+            have hstep := (hsteps ⟨1, by omega⟩).1
+            change subgroups ⟨2, by omega⟩ <
+              subgroups ⟨1, by omega⟩ at hstep
+            simpa only [B2Q, H] using hstep
           have hB3Q_lt : B3Q < B2Q := by
-            simpa [B3Q, B2Q] using (hsteps ⟨2, by omega⟩).1
+            have hstep := (hsteps ⟨2, by omega⟩).1
+            change subgroups ⟨3, by omega⟩ <
+              subgroups ⟨2, by omega⟩ at hstep
+            simpa only [B3Q, B2Q] using hstep
           have hB4Q_lt : B4Q < B3Q := by
-            simpa [B4Q, B3Q] using (hsteps ⟨3, by omega⟩).1
+            have hstep := (hsteps ⟨3, by omega⟩).1
+            change subgroups ⟨4, by omega⟩ <
+              subgroups ⟨3, by omega⟩ at hstep
+            simpa only [B4Q, B3Q] using hstep
           have hB5Q_lt : B5Q < B4Q := by
-            simpa [B5Q, B4Q] using (hsteps ⟨4, by omega⟩).1
+            have hstep := (hsteps ⟨4, by omega⟩).1
+            change subgroups ⟨5, by omega⟩ <
+              subgroups ⟨4, by omega⟩ at hstep
+            simpa only [B5Q, B4Q] using hstep
           have hB3Q_le_H : B3Q ≤ H := hB3Q_lt.le.trans hB2Q_lt.le
           have hB4Q_le_H : B4Q ≤ H := hB4Q_lt.le.trans hB3Q_le_H
           let B2 : Subgroup H := B2Q.subgroupOf H
@@ -5880,11 +5947,17 @@ public theorem lemma13_no_length_greater_than_three
           have hbot_lt_B4 : (⊥ : Subgroup H) < B4 :=
             bot_lt_iff_ne_bot.mpr hB4_ne_bot
           have hB2Q_normal : B2Q.Normal := by
-            simpa [B2Q] using (hsteps ⟨1, by omega⟩).2.2.1
+            have hstep := (hsteps ⟨1, by omega⟩).2.2.1
+            change (subgroups ⟨2, by omega⟩).Normal at hstep
+            simpa only [B2Q] using hstep
           have hB3Q_normal : B3Q.Normal := by
-            simpa [B3Q] using (hsteps ⟨2, by omega⟩).2.2.1
+            have hstep := (hsteps ⟨2, by omega⟩).2.2.1
+            change (subgroups ⟨3, by omega⟩).Normal at hstep
+            simpa only [B3Q] using hstep
           have hB4Q_normal : B4Q.Normal := by
-            simpa [B4Q] using (hsteps ⟨3, by omega⟩).2.2.1
+            have hstep := (hsteps ⟨3, by omega⟩).2.2.1
+            change (subgroups ⟨4, by omega⟩).Normal at hstep
+            simpa only [B4Q] using hstep
           have hB2_normal : B2.Normal := by
             rw [Subgroup.normal_subgroupOf_iff hB2Q_lt.le]
             intro b k hb _hk
@@ -5898,11 +5971,20 @@ public theorem lemma13_no_length_greater_than_three
             intro b k hb _hk
             exact hB4Q_normal.conj_mem b hb k
           have hB2Q_X : IsXInvariantSubgroup X B2Q := by
-            simpa [B2Q] using (hsteps ⟨1, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨1, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨2, by omega⟩) at hstep
+            simpa only [B2Q] using hstep
           have hB3Q_X : IsXInvariantSubgroup X B3Q := by
-            simpa [B3Q] using (hsteps ⟨2, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨2, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨3, by omega⟩) at hstep
+            simpa only [B3Q] using hstep
           have hB4Q_X : IsXInvariantSubgroup X B4Q := by
-            simpa [B4Q] using (hsteps ⟨3, by omega⟩).2.2.2.2.1
+            have hstep := (hsteps ⟨3, by omega⟩).2.2.2.2.1
+            change IsXInvariantSubgroup X
+              (subgroups ⟨4, by omega⟩) at hstep
+            simpa only [B4Q] using hstep
           have hB2_X : IsXInvariantSubgroup X B2 := by
             intro x b
             exact hB2Q_X x (b : Q)
@@ -5964,12 +6046,12 @@ public theorem lemma13_no_length_greater_than_three
             ?_, ?_, ?_, ?_⟩
           · have hTop : t.reverse.head = (⊤ : α) := by
               simpa using hlast
-            simpa [RelSeries.head] using congrArg Subtype.val hTop
+            change (t.reverse.head.1 : Subgroup H) = ⊤
+            exact congrArg Subtype.val hTop
           · have hBot : t.reverse.last = (⊥ : α) := by
               simpa using hhead
-            change ((t ((Fin.last t.length).rev)).1 : Subgroup H) = ⊥
-            rw [Fin.rev_last]
-            simpa [RelSeries.last] using congrArg Subtype.val hBot
+            change (t.reverse.last.1 : Subgroup H) = ⊥
+            exact congrArg Subtype.val hBot
           · intro j
             have hcov : t.reverse j.succ ⋖ t.reverse j.castSucc := by
               simpa using (t.reverse.step j)

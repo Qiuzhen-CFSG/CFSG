@@ -115,8 +115,7 @@ public theorem huppert_II_10_4_conj_eq_frobenius
   calc
     x ^ q = x ^ Nat.card k0 := by rw [hk0card]
     _ = fr x := by
-      simpa [fr, Nat.card_eq_fintype_card] using
-        (congrFun (FiniteField.coe_frobeniusAlgEquivOfAlgebraic k0 K) x).symm
+      simp [fr, Nat.card_eq_fintype_card]
     _ = c x := by rw [hcfr]
     _ = J.conj x := rfl
 
@@ -157,7 +156,7 @@ public theorem huppert_II_10_4_norm_surjective
     simp [Finset.prod_range_succ]
     rw [← Nat.card_eq_fintype_card, hk0card, hpow]
   rw [← hnorm]
-  simpa [au, a0] using hbval
+  simpa [au, a0, Subfield.algebraMap_ofSubfield] using hbval
 
 /-- The trace form used in II.10.12: every element fixed by the quadratic
 Hermitian involution is `b + conj b`. -/
@@ -219,7 +218,7 @@ public theorem huppert_II_10_4_a_orthonormal_basis
     rw [map_add]⟩
   have htrace_nonzero : ∃ a : K, a + J.conj a ≠ 0 := by
     by_contra htrace
-    push_neg at htrace
+    push Not at htrace
     have hchar : (1 : K) + 1 = 0 := by
       simpa using htrace 1
     have hconj : ∀ a : K, J.conj a = a := by

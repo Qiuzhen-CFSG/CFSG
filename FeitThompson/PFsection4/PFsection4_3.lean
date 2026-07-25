@@ -377,7 +377,7 @@ private theorem exists_ne_one_mem_of_natCard_ne_one
   have hH_ne_bot : H ≠ ⊥ := by
     intro hbot
     apply hH
-    simpa [hbot] using (Subgroup.card_bot (G := G))
+    simp [hbot]
   rcases Subgroup.ne_bot_iff_exists_ne_one.mp hH_ne_bot with ⟨x, hx1⟩
   exact ⟨x, x.2, by simpa using hx1⟩
 
@@ -503,7 +503,9 @@ private theorem rightProjection_top_eq_self_of_mem_right_pf43
     (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) K W1)
     {x : L} (hx : x ∈ W1) :
     internalSemidirectRightProjection_pf43 hsemi ⟨x, by trivial⟩ = ⟨x, hx⟩ := by
-  simpa using internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := K.one_mem) (hk₀ := hx)
+  change internalSemidirectRightComponent_pf43 hsemi ⟨x, by trivial⟩ = ⟨x, hx⟩
+  simpa only [one_mul] using
+    (internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := K.one_mem) (hk₀ := hx))
 
 private theorem rightProjection_top_eq_right_of_mul_pf43
     {L : Type u} [Group L]
@@ -511,7 +513,8 @@ private theorem rightProjection_top_eq_right_of_mul_pf43
     (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) K W1)
     {k x : L} (hk : k ∈ K) (hx : x ∈ W1) :
     internalSemidirectRightProjection_pf43 hsemi ⟨k * x, by trivial⟩ = ⟨x, hx⟩ := by
-  simpa using internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := hk) (hk₀ := hx)
+  change internalSemidirectRightComponent_pf43 hsemi ⟨k * x, by trivial⟩ = ⟨x, hx⟩
+  exact internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := hk) (hk₀ := hx)
 
 private theorem rightProjection_top_conj_eq_self_pf43
     {L : Type u} [Group L]
@@ -694,9 +697,8 @@ private theorem isTISubsetWithNormalizer_wMinusW2_of_hypothesis_4_2
   · rcases exists_ne_one_mem_of_natCard_ne_one W1 hcard1 with ⟨x, hxW1, hx1⟩
     refine ⟨x * 1, ?_⟩
     simpa using mul_mem_wMinusW2_of_left_ne_one hW hxW1 hx1 W2.one_mem
-  · intro a ha
-    intro ha1
-    exact ha.2 (by simpa [ha1] using W2.one_mem)
+  · intro a ha ha1
+    exact ha.2 (by simp [ha1])
   · intro g hgInter
     rcases hgInter with ⟨a, haA, haConj⟩
     rcases haConj with ⟨b, hbA, hab⟩
@@ -743,9 +745,8 @@ private theorem isTISubsetWithNormalizer_cyclicTISet_of_hypothesis_4_2
           simpa [hW.inf_eq_bot] using hybot
         simpa using hyBot'
       exact hy1 hyEq1
-  · intro a ha
-    intro ha1
-    exact (Section3.cyclicTISet_not_mem_left W1 W2 W ha) (by simpa [ha1] using W1.one_mem)
+  · intro a ha ha1
+    exact (Section3.cyclicTISet_not_mem_left W1 W2 W ha) (by simp [ha1])
   · intro g hgInter
     rcases hgInter with ⟨a, haA, haConj⟩
     rcases haConj with ⟨b, hbA, hab⟩
@@ -907,7 +908,7 @@ private theorem scalarProduct_sub_right_pf43
           rw [scalarProduct_add_right_pf43]
     _ = Section1.scalarProduct H φ ψ - Section1.scalarProduct H φ η := by
           rw [scalarProduct_smul_right_pf43]
-          simpa [sub_eq_add_neg]
+          simp [sub_eq_add_neg]
 
 private theorem scalarProduct_sum_left_pf43
     {H : Type*} [Finite H] {ι : Type*} [Fintype ι]
@@ -931,8 +932,7 @@ private theorem scalarProduct_sum_right_pf43
   | empty =>
       simp [Section1.scalarProduct]
   | @insert i s hi hs =>
-      simp [hi, hs, scalarProduct_add_right_pf43, scalarProduct_smul_right_pf43,
-        mul_add, add_comm, add_left_comm, add_assoc]
+      simp [hi, hs, scalarProduct_add_right_pf43, scalarProduct_smul_right_pf43]
 
 private theorem supportedOn_basis_pf43
     {H J : Type*} [Finite H] [Fintype J]
@@ -1071,9 +1071,9 @@ private theorem classFunctionsOn_finrank_eq_card_pf43
         Module.finrank ℂ ({x : H // x ∈ A} → ℂ) := by
           exact LinearEquiv.finrank_eq (classFunctionsOnEquivFun_pf43 A)
     _ = Nat.card {x : H // x ∈ A} := by
-          simpa using
-            (Module.finrank_fintype_fun_eq_card (R := ℂ)
-              (η := {x : H // x ∈ A}))
+          rw [Nat.card_eq_fintype_card]
+          exact Module.finrank_fintype_fun_eq_card (R := ℂ)
+            (η := {x : H // x ∈ A})
 
 private noncomputable def subgroupSubtypeEquiv_pf43
     {L : Type u} [Group L] {S T : Subgroup L} (hST : S ≤ T) :
@@ -1102,9 +1102,8 @@ private theorem wMinusW2_card_pf43
     have hcardCompl' :
         Fintype.card {x : W // (x : L) ∉ W2} =
           Fintype.card W - Fintype.card {x : W // (x : L) ∈ W2} := by
-      simpa using
-        (Fintype.card_subtype_compl (p := fun x : W => (x : L) ∈ W2))
-    simpa [Nat.card_eq_fintype_card] using hcardCompl'
+      exact Fintype.card_subtype_compl (p := fun x : W => (x : L) ∈ W2)
+    simpa only [Nat.card_eq_fintype_card] using hcardCompl'
   have hcardRight :
       Nat.card {x : W // (x : L) ∈ W2} = Nat.card W2 := by
     simpa [Nat.card_eq_fintype_card] using
@@ -1124,8 +1123,7 @@ private theorem wMinusW2_card_pf43
           have hW1split : Nat.card W1 = (Nat.card W1 - 1) + 1 := by
             exact (Nat.sub_add_cancel hW1ge).symm
           rw [hW1split, Nat.add_mul, one_mul]
-          simpa [Nat.add_comm] using
-            (Nat.add_sub_cancel_left (Nat.card W2) ((Nat.card W1 - 1) * Nat.card W2))
+          exact Nat.add_sub_cancel_right ((Nat.card W1 - 1) * Nat.card W2) (Nat.card W2)
 
 private theorem omega_eq_baseRow_of_mem_W2_pf43
     {L : Type u} [Group L] [Finite L]
@@ -1161,7 +1159,7 @@ private theorem omegaRowDifference_CFOn_wMinusW2_pf43
       exact hx ⟨x.2, hxnot⟩
     have hEq : ω i j x = ω i0 j x :=
       omega_eq_baseRow_of_mem_W2_pf43 hω i j hxW2
-    simpa [Pi.sub_apply, hEq]
+    simp [Pi.sub_apply, hEq]
 
 private theorem omegaRowDifference_scalarProduct_omega_pf43
     {L : Type u} [Group L] [Finite L]
@@ -1275,8 +1273,7 @@ private theorem basis_wMinusW2_pf43
       Fintype.card {p : I × J // p.1 ≠ i0} =
         (Nat.card W1 - 1) * Nat.card W2 := by
     have hI : Fintype.card {i : I // i ≠ i0} = Nat.card W1 - 1 := by
-      simpa [hω.card_left] using
-        (Fintype.card_subtype_compl (p := fun i : I => i = i0))
+      simp [hω.card_left]
     calc
       Fintype.card {p : I × J // p.1 ≠ i0} =
           Fintype.card ({i : I // i ≠ i0} × J) := by
@@ -1325,7 +1322,9 @@ private theorem basis_wMinusW2_pf43
       intro x hx
       have hxW2 : (x : L) ∈ W2 := by
         by_contra hxW2
-        exact hx (by simpa [Aw] using hxW2)
+        apply hx
+        change (x : L) ∉ W2
+        exact hxW2
       exact (h_support p).2 x (by simpa [A] using hxW2)⟩
   have h_li_sub : LinearIndependent ℂ e := by
     simpa [e, row] using
@@ -1346,7 +1345,9 @@ private theorem basis_wMinusW2_pf43
     intro x hx
     have hxW2 : (x : L) ∈ W2 := by
       by_contra hxW2
-      exact hx (by simpa [Aw] using hxW2)
+      apply hx
+      change (x : L) ∉ W2
+      exact hxW2
     exact hψ.2 x (by simpa [A] using hxW2)⟩
   refine ⟨hbasis.repr x, ?_⟩
   have hx :
@@ -1465,8 +1466,7 @@ private theorem exists_wMinusW2_basis_pf43
       Fintype.card {p : I × J // p.1 ≠ i0} =
         (Nat.card W1 - 1) * Nat.card W2 := by
     have hI : Fintype.card {i : I // i ≠ i0} = Nat.card W1 - 1 := by
-      simpa [hω.card_left] using
-        (Fintype.card_subtype_compl (p := fun i : I => i = i0))
+      simp [hω.card_left]
     calc
       Fintype.card {p : I × J // p.1 ≠ i0} =
           Fintype.card ({i : I // i ≠ i0} × J) := by
@@ -1515,7 +1515,9 @@ private theorem exists_wMinusW2_basis_pf43
       intro x hx
       have hxW2 : (x : L) ∈ W2 := by
         by_contra hxW2
-        exact hx (by simpa [Aw] using hxW2)
+        apply hx
+        change (x : L) ∉ W2
+        exact hxW2
       exact
         (omegaRowDifference_CFOn_wMinusW2_pf43
           (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
@@ -1573,7 +1575,7 @@ private theorem positiveNatDegree_of_irreducible_pf43
       simp [Section1.degree_representation_character ρ, hn0]
     exact Section3.degree_ne_zero_of_isIrreducibleCharacterOnGroup
       ρ.character ⟨n, ρ, hρ, rfl⟩ hdeg
-  · simpa [Section1.degree_representation_character ρ]
+  · simp [Section1.degree_representation_character ρ]
 
 private theorem degree_evalCoeff_pf43
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
@@ -1608,8 +1610,7 @@ private theorem degree_evalCoeff_pf43
           intro x hx
           simp
     _ = (((Section1.coeffSupport v).sum fun x => v x * (d x : Int)) : ℂ) := by
-          simpa using
-            (Int.cast_sum (R := ℂ) (Section1.coeffSupport v) (fun x => v x * (d x : Int))).symm
+          simp
     _ = (Section1.coeffDegree d v : Int) := by
           simp [Section1.coeffDegree]
 
@@ -1825,8 +1826,7 @@ private theorem exists_character_family_fixed_column_pf43
     intro k
     exact Section3.ofConjClassFunction_isIrreducibleCharacterOnGroup (hirr k)
   have hmuPairwiseRaw : Pairwise (fun a b : ι => muBasis a ≠ muBasis b) := by
-    intro a b hab
-    intro hEq
+    intro a b hab hEq
     apply hab
     apply hinj
     ext c
@@ -1965,7 +1965,7 @@ private theorem exists_character_family_fixed_column_pf43
     calc
       Section1.inducedCF W (ω i j - ω i0 j)
           = Section1.inducedCF W (omegaCol (e.symm i) - omegaCol 0) := by
-              simp [omegaCol, he0, he0symm]
+              simp [omegaCol, he0]
       _ = Section1.evalCoeff muBasis (v (e.symm i)) := hT (e.symm i)
       _ = Section1.evalCoeff muBasis
             (Section1.signedBasisDifference eps (nu 0) (nu (e.symm i))) := by
@@ -2052,8 +2052,28 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf43
       (uliftRepresentation_pf43_character
         (G := G) (V := Fin n → ℂ) (ρ := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G χ χ =
+          Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_irreducible_self_pf43
     {G : Type u} [Group G] [Finite G]
@@ -2126,7 +2146,7 @@ private theorem exists_other_row_pf43
   intro hi
   have h10 : (⟨1, hlt⟩ : Fin (Fintype.card I)) = 0 := by
     apply e.injective
-    simpa [e, equivFinWithBase_apply_zero_pf43 (a0 := i0), hi]
+    simp [e, equivFinWithBase_apply_zero_pf43 (a0 := i0), hi]
   have : (1 : ℕ) = 0 := by
     simpa using congrArg Fin.val h10
   omega
@@ -2578,7 +2598,8 @@ private theorem pairwiseDistinct_character_table_pf43
     have hself : Section1.scalarProduct L (piChar q.1 q.2) (piChar q.1 q.2) = 1 :=
       scalarProduct_irreducible_self_pf43 (hirr q.1 q.2)
     have : (1 : ℂ) = 0 := by
-      simpa [hself] using hzero
+      rw [hself] at hzero
+      exact hzero
     exact one_ne_zero this
 
 private theorem exists_character_family_global_pf43
@@ -2753,16 +2774,12 @@ private theorem theorem_4_3_c_values_and_vanishing_pf43
                   (∑ x : I × J,
                     if x = (i, j) then deltaSign j * piChar x.1 x.2 g else 0) =
                       deltaSign j * piChar i j g := by
-                simpa using
-                  (Finset.sum_ite_eq' (i := (i, j))
-                    (f := fun x : I × J => deltaSign j * piChar x.1 x.2 g))
+                simp
               have h2 :
                   (∑ x : I × J,
                     if x = (i0, j) then -(deltaSign j * piChar x.1 x.2 g) else 0) =
                       -(deltaSign j * piChar i0 j g) := by
-                simpa using
-                  (Finset.sum_ite_eq' (i := (i0, j))
-                    (f := fun x : I × J => -(deltaSign j * piChar x.1 x.2 g)))
+                simp
               have hsplit :
                   (∑ c : I × J,
                     (if c = (i, j) then deltaSign j • piChar c.1 c.2
@@ -3080,7 +3097,13 @@ private theorem mapsVirtualCharacters_sigmaOfPF35_pf43
       · simpa [hEq] using Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hψ
       · simpa [hEq] using Section3.isVirtualCharacter_neg
           (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hψ)
-    simpa [zsmul_eq_mul] using isVirtualCharacter_zsmul_pf43 z hχvirt
+    have hsmul :
+        (z : ℂ) • χ p.1 p.2 =
+          (z • χ p.1 p.2 : Section1.ClassFunction L) := by
+      ext g
+      simp [zsmul_eq_mul]
+    rw [hsmul]
+    exact isVirtualCharacter_zsmul_pf43 z hχvirt
   have hsum :
       Representation.IsVirtualCharacter
         (Section1.weightedFamilySum
@@ -3289,8 +3312,7 @@ public theorem theorem_4_3_b
         (W1 := W1) (W2 := W2) (W := W)
         (I := I) (J := J) (i0 := i0) (j0 := j0)
         (ω := ω) (χ := χ) h31 hω horth hsigned h00 hInd α hα
-    · intro α _hα
-      intro x g
+    · intro α _hα x g
       change
         Section1.weightedFamilySum
             (fun p : I × J => Section1.scalarProduct W α (ω p.1 p.2))
@@ -3419,7 +3441,7 @@ public theorem theorem_4_3_d
     calc
       ξ 1 = (Nat.card Hsub : ℂ) * ((Nat.card Hsub : ℂ)⁻¹ * ξ 1) := by
         rw [← mul_assoc]
-        simp [hcard_ne]
+        simp
       _ = (Nat.card Hsub : ℂ) *
           Section1.scalarProduct Hsub ξ (Section1.principalCharacter Hsub) := by
             rw [hsp]

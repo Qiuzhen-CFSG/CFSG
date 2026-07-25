@@ -74,8 +74,9 @@ private theorem section12_mem_normalizer_of_conjBy_eq_local
 omit [IsMinCE G] in
 public theorem section12Mbeta_subgroupOf_eq {M : Subgroup G} :
     (section10Mbeta M).subgroupOf M = section10MbetaSubgroup M := by
-  simpa [section10Mbeta, section10MbetaSubgroup] using
-    (piCore_map_subtype_subgroupOf (G := G) (section10BetaPrimes M) M)
+  change (piCoreIn (section10BetaPrimes M) M).subgroupOf M =
+    piCore (section10BetaPrimes M) M
+  exact piCore_map_subtype_subgroupOf (G := G) (section10BetaPrimes M) M
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_local_sup_eq_top_of_sup_eq
@@ -150,7 +151,7 @@ public theorem section12_rankTwo_noncyclic
 
 private theorem section12_exists_rankTwo_in_product_factor_of_rankTwo
     {H K U A : Subgroup G} {π : Set Nat.Primes} {p : Nat.Primes}
-    (hKH : K ≤ H) (hUH : U ≤ H)
+    (_hKH : K ≤ H) (_hUH : U ≤ H)
     [hKnorm : (K.subgroupOf H).Normal]
     (hKHall : IsHallSubgroup π (K.subgroupOf H))
     (hpπ : p ∉ π)
@@ -226,7 +227,7 @@ private theorem section12_exists_rankTwo_in_product_factor_of_rankTwo
 private theorem section12_conjugate_pi_subgroup_into_product_factor
     {H K U Z : Subgroup G} {π ρ : Set Nat.Primes}
     (hH : H ∈ section9MaximalSubgroups G)
-    (hZH : Z ≤ H) (hUH : U ≤ H)
+    (hZH : Z ≤ H) (_hUH : U ≤ H)
     (hZπ : IsPiSubgroup (G := G) π Z)
     [hKnorm : (K.subgroupOf H).Normal]
     (hKHall : IsHallSubgroup ρ (K.subgroupOf H))
@@ -427,7 +428,7 @@ public theorem section12_exists_characteristic_pSubgroup_of_nontrivial
         (G := G) (H := Y) (K := PF)
   exact ⟨q, X, hXleY, hXne, hXq, hNormY_le_NormX⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_subgroupNormalizerIn_conjBy_eq_local
     (H Y : Subgroup G) (g : G) :
     subgroupNormalizerIn (H.conjBy g) (Y.conjBy g : Set G) =
@@ -774,7 +775,9 @@ public theorem section12_corollary_12_16_exists_conjugating_element
       have hmap : X.conjBy a⁻¹ ≤ (M.conjBy a).conjBy a⁻¹ := Subgroup.map_mono hX_le_Ma
       simpa [Xg, section11_conjBy_inv] using hmap
     have hXg_le_Yg : Xg ≤ Yg := by
-      simpa [Xg, Yg] using Subgroup.map_mono hXleY
+      change X.map ((MulAut.conj a⁻¹).toMonoidHom) ≤
+        Y.map ((MulAut.conj a⁻¹).toMonoidHom)
+      exact Subgroup.map_mono hXleY
     have hYgσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Yg := by
       intro p hpYg
       have hpY : p ∈ subgroupPrimeSet Y := by
@@ -791,8 +794,9 @@ public theorem section12_corollary_12_16_exists_conjugating_element
           _ = ⊥ := by simp [Subgroup.conjBy]
       exact hXne hXbot
     have hXgq : IsPGroup q.val Xg := by
-      simpa [Xg] using
-        IsPGroup.map (p := q.val) (H := X) hXq (MulAut.conj a⁻¹).toMonoidHom
+      change IsPGroup q.val (X.map ((MulAut.conj a⁻¹).toMonoidHom))
+      exact IsPGroup.map (p := q.val) (H := X) hXq
+        ((MulAut.conj a⁻¹).toMonoidHom)
     have hNormYg_le_NormXg :
         Subgroup.normalizer (Yg : Set G) ≤ Subgroup.normalizer (Xg : Set G) := by
       intro n hnYg
@@ -991,7 +995,9 @@ private theorem section12_corollary_12_16_rank_bound
     exact hYσ r hrY
   have hHg_cont : Hg ∈ section9MaximalSubgroupsContaining Yg := by
     refine ⟨section12_maximal_conjBy_local (G := G) hH.1 g, ?_⟩
-    simpa [Yg, Hg] using Subgroup.map_mono hH.2
+    change Y.map ((MulAut.conj g).toMonoidHom) ≤
+      H.map ((MulAut.conj g).toMonoidHom)
+    exact Subgroup.map_mono hH.2
   have hHg_not : section12NotConjugate Hg M := by
     intro k hk
     exact hHnot (k * g) (by

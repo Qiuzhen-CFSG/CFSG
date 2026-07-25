@@ -743,8 +743,6 @@ private theorem theorem_13_18_betaSupport_subset_typeP_AZeroSetFromP
   rcases hx with hxP | hxV
   · left
     refine ⟨x, hxP, ?_⟩
-    change x ∈ section16NonidentityElements
-      ((elementCentralizerIn (ambientDerivedSubgroup Smax) x : Subgroup G) : Set G)
     refine ⟨?_, hxP.2⟩
     change x ∈ elementCentralizerIn (ambientDerivedSubgroup Smax) x
     rw [elementCentralizerIn]

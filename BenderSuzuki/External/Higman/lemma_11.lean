@@ -25,6 +25,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped IsMulCommutative commutatorElement
 
 universe u
 
@@ -312,6 +313,11 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     lemma9_maximal_abelian_contains_frattini
       _hP _hXcyclic _hXfaithful _hXtrans
         hlower.2.1 hA_abelian hlower.2.2.2.1 hA_maximal_abelian
+  have hcommutator_map_top :
+      commutator P =
+        (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype := by
+    rw [_root_.commutator_def]
+    exact (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
   have hcommutator_eq_A :
       (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype = A := by
     let D : Subgroup P :=
@@ -347,7 +353,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       apply _hP.2.1
       have hcomm_bot : commutator P = ⊥ := by
         rw [← hD_bot]
-        simpa [D] using (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
+        simpa only [D] using hcommutator_map_top
       have hcenter_top : Subgroup.center P = ⊤ :=
         (commutator_eq_bot_iff_center_eq_top P).mp hcomm_bot
       letI : CommGroup P := Group.commGroupOfCenterEqTop hcenter_top
@@ -375,64 +381,66 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     rcases ha with ⟨c, hc, rfl⟩
     exact ⟨c, commutator_le_frattini_of_isPGroup
       (R := (⊤ : Subgroup P)) (p := 2) hc, rfl⟩
-  have hclass_two : lowerCentralSeries P 2 = ⊥ := by
-    have hL1 : lowerCentralSeries P 1 = A := by
-      rw [lowerCentralSeries_one]
+  have hclass_two : higmanLowerCentralSeries P 2 = ⊥ := by
+    have hL1 : higmanLowerCentralSeries P 1 = A := by
       calc
-        commutator P =
+        higmanLowerCentralSeries P 1 = commutator P :=
+          Subgroup.top_lowerCentralSeries_one
+        _ =
             (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype := by
-              simpa using (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
+              exact hcommutator_map_top
         _ = A := hcommutator_eq_A
-    have hL2_normal : (lowerCentralSeries P 2).Normal := by infer_instance
-    have hL2_X : IsXInvariantSubgroup X (lowerCentralSeries P 2) :=
+    have hL2_normal : (higmanLowerCentralSeries P 2).Normal := by infer_instance
+    have hL2_X : IsXInvariantSubgroup X (higmanLowerCentralSeries P 2) :=
       (isInvariant_of_characteristic (A := X) (G := P)
-        (lowerCentralSeries P 2)).invariant
-    have hL2_le_A : lowerCentralSeries P 2 ≤ A := by
+        (higmanLowerCentralSeries P 2)).invariant
+    have hL2_le_A : higmanLowerCentralSeries P 2 ≤ A := by
       calc
-        lowerCentralSeries P 2 ≤ lowerCentralSeries P 1 :=
-          lowerCentralSeries_antitone (by omega)
+        higmanLowerCentralSeries P 2 ≤ higmanLowerCentralSeries P 1 :=
+          (⊤ : Subgroup P).lowerCentralSeries_antitone (by omega)
         _ = A := hL1
-    rcases hlower.2.2.2.2.2 (lowerCentralSeries P 2) hL2_normal hL2_X
+    rcases hlower.2.2.2.2.2 (higmanLowerCentralSeries P 2) hL2_normal hL2_X
         bot_le hL2_le_A with hbot | hA
     · exact hbot
     · exfalso
-      have hstable : ∀ n : ℕ, 1 ≤ n → lowerCentralSeries P n = A := by
+      have hstable : ∀ n : ℕ, 1 ≤ n → higmanLowerCentralSeries P n = A := by
         intro n hn
         obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hn
         induction k with
         | zero => simpa using hL1
         | succ k ih =>
-            change ⁅lowerCentralSeries P (1 + k), (⊤ : Subgroup P)⁆ = A
+            change ⁅higmanLowerCentralSeries P (1 + k), (⊤ : Subgroup P)⁆ = A
             rw [ih (by omega)]
             calc
               ⁅A, (⊤ : Subgroup P)⁆ =
-                  ⁅lowerCentralSeries P 1, (⊤ : Subgroup P)⁆ := by rw [hL1]
-              _ = lowerCentralSeries P 2 := rfl
+                  ⁅higmanLowerCentralSeries P 1, (⊤ : Subgroup P)⁆ := by rw [hL1]
+              _ = higmanLowerCentralSeries P 2 := rfl
               _ = A := hA
       let c := Group.nilpotencyClass P
       have hc_pos : 0 < c := by
         apply Nat.pos_of_ne_zero
         intro hc
         have hsub : Subsingleton P :=
-          (nilpotencyClass_zero_iff_subsingleton (G := P)).mp hc
+          (Group.nilpotencyClass_zero_iff_subsingleton (G := P)).mp hc
         rcases _hP.2.2.1 with ⟨x, y, _hx, _hy, hxy⟩
         exact hxy (hsub.elim x y)
-      have hcA : lowerCentralSeries P c = A := hstable c (by omega)
-      have hcbot : lowerCentralSeries P c = ⊥ := by
+      have hcA : higmanLowerCentralSeries P c = A := hstable c (by omega)
+      have hcbot : higmanLowerCentralSeries P c = ⊥ := by
         dsimp [c]
-        exact lowerCentralSeries_nilpotencyClass
+        exact Subgroup.lowerCentralSeries_nilpotencyClass
       exact hlower.1.ne (hcA.symm.trans hcbot).symm
   have hA_eq_center : A = Subgroup.center P := by
     have hcommutatorP_eq_A : commutator P = A := by
       calc
         commutator P =
             (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype := by
-              simpa using (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
+              exact hcommutator_map_top
         _ = A := hcommutator_eq_A
     have hcommutator_le_center : commutator P ≤ Subgroup.center P := by
       have hclass := hclass_two
-      rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ,
-        lowerCentralSeries_one] at hclass
+      change (⊤ : Subgroup P).lowerCentralSeries (1 + 1) = ⊥ at hclass
+      rw [Subgroup.lowerCentralSeries_succ,
+        Subgroup.top_lowerCentralSeries_one] at hclass
       change ⁅commutator P, (⊤ : Subgroup P)⁆ = ⊥ at hclass
       rw [Subgroup.commutator_eq_bot_iff_le_centralizer] at hclass
       simpa [← Subgroup.centralizer_univ, ← Subgroup.coe_top] using hclass
@@ -475,7 +483,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         orderOf xi = 2 ^ n - 1 ∧
         lowerCentralFactorKernel P 1 = ⊥ ∧
         (lowerCentralFactorKernel P 0).map
-          (lowerCentralSeries P 0).subtype = A ∧
+          (higmanLowerCentralSeries P 0).subtype = A ∧
         (∀ W : Submodule (ZMod 2) (Additive (LowerCentralFactor P 0)),
           (∀ v : Additive (LowerCentralFactor P 0), v ∈ W →
             lowerCentralFactorLinearAut xi 0 v ∈ W) →
@@ -483,7 +491,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         (∀ x : Additive (LowerCentralFactor P 1), x ≠ 0 →
           ∀ y : Additive (LowerCentralFactor P 1), y ≠ 0 →
             ∃ k : ℕ, (lowerCentralFactorLinearAut xi 1 ^ k) x = y) ∧
-        squaresSubgroup P ≤ lowerCentralSeries P 1 := by
+        squaresSubgroup P ≤ higmanLowerCentralSeries P 1 := by
     letI : FaithfulSMul X P := _hXfaithful
     have htoMulAut_injective :
         Function.Injective (MulDistribMulAction.toMulAut X P) := by
@@ -510,12 +518,13 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       change Odd (orderOf (tau ^ (2 ^ k)))
       rw [horder]
       exact hm_odd
-    have hL1_eq_A : lowerCentralSeries P 1 = A := by
-      rw [lowerCentralSeries_one]
+    have hL1_eq_A : higmanLowerCentralSeries P 1 = A := by
       calc
-        commutator P =
+        higmanLowerCentralSeries P 1 = commutator P :=
+          Subgroup.top_lowerCentralSeries_one
+        _ =
             (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype := by
-              simpa using (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
+              exact hcommutator_map_top
         _ = A := hcommutator_eq_A
     have hkernel1_bot : lowerCentralFactorKernel P 1 = ⊥ := by
       apply le_antisymm
@@ -529,11 +538,12 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           let a : A := ⟨x, hL1_eq_A ▸ x.property⟩
           simpa [a] using congrArg Subtype.val (hA_exponent_two a)
         · intro x hx
-          change (x : P) ∈ lowerCentralSeries P 2 at hx
+          change (x : P) ∈ higmanLowerCentralSeries P 2 at hx
           rw [hclass_two] at hx
-          simpa using hx
+          exact Subgroup.mem_bot.mpr
+            (Subtype.ext (Subgroup.mem_bot.mp hx))
       · exact bot_le
-    have hsquares_le : squaresSubgroup P ≤ lowerCentralSeries P 1 := by
+    have hsquares_le : squaresSubgroup P ≤ higmanLowerCentralSeries P 1 := by
       rw [squaresSubgroup, Subgroup.closure_le]
       rintro _ ⟨y, rfl⟩
       rw [hL1_eq_A]
@@ -547,10 +557,10 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       exact Subgroup.subset_closure (Or.inr ⟨yt, rfl⟩)
     have hkernel0_map_A :
         (lowerCentralFactorKernel P 0).map
-          (lowerCentralSeries P 0).subtype = A := by
+          (higmanLowerCentralSeries P 0).subtype = A := by
       have hsquares_map :
-          (squaresSubgroup (lowerCentralSeries P 0)).map
-              (lowerCentralSeries P 0).subtype = squaresSubgroup P := by
+          (squaresSubgroup (higmanLowerCentralSeries P 0)).map
+              (higmanLowerCentralSeries P 0).subtype = squaresSubgroup P := by
         apply le_antisymm
         · rw [squaresSubgroup, MonoidHom.map_closure, Subgroup.closure_le]
           rintro y ⟨z, hz, rfl⟩
@@ -558,36 +568,41 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           exact Subgroup.subset_closure ⟨(w : P), rfl⟩
         · rw [squaresSubgroup, Subgroup.closure_le]
           rintro _ ⟨p, rfl⟩
-          let p0 : lowerCentralSeries P 0 := ⟨p, by simp⟩
+          let p0 : higmanLowerCentralSeries P 0 := ⟨p, by simp⟩
           refine ⟨p0 ^ 2, Subgroup.subset_closure ⟨p0, rfl⟩, rfl⟩
       have hnext_map :
-          ((lowerCentralSeries P 1).subgroupOf
-              (lowerCentralSeries P 0)).map
-            (lowerCentralSeries P 0).subtype = lowerCentralSeries P 1 :=
+          ((higmanLowerCentralSeries P 1).subgroupOf
+              (higmanLowerCentralSeries P 0)).map
+            (higmanLowerCentralSeries P 0).subtype = higmanLowerCentralSeries P 1 :=
         Subgroup.map_subgroupOf_eq_of_le
-          (lowerCentralSeries_antitone (by omega : 0 ≤ 1))
+          ((⊤ : Subgroup P).lowerCentralSeries_antitone (by omega : 0 ≤ 1))
       rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map, hnext_map,
         hL1_eq_A]
-      exact sup_eq_right.mpr (by simpa [hL1_eq_A] using hsquares_le)
+      rw [hL1_eq_A] at hsquares_le
+      exact sup_eq_right.mpr hsquares_le
     have hfactor1_card :
         ∃ n : ℕ, 2 ≤ n ∧ Nat.card (LowerCentralFactor P 1) = 2 ^ n := by
       let n := Module.finrank (ZMod 2) (Additive (LowerCentralFactor P 1))
       have hcard : Nat.card (LowerCentralFactor P 1) = 2 ^ n := by
         have h := Module.natCard_eq_pow_finrank
           (K := ZMod 2) (V := Additive (LowerCentralFactor P 1))
-        simpa [n] using h
+        calc
+          Nat.card (LowerCentralFactor P 1) =
+              Nat.card (Additive (LowerCentralFactor P 1)) :=
+            (Nat.card_congr Additive.toMul).symm
+          _ = 2 ^ n := by simpa [n] using h
       have hfactor_card_eq_A :
           Nat.card (LowerCentralFactor P 1) = Nat.card A := by
         change
-          Nat.card ((lowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
+          Nat.card ((higmanLowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
             Nat.card A
         rw [hkernel1_bot]
         calc
-          Nat.card ((lowerCentralSeries P 1) ⧸
-                (⊥ : Subgroup (lowerCentralSeries P 1))) =
-              Nat.card (lowerCentralSeries P 1) :=
+          Nat.card ((higmanLowerCentralSeries P 1) ⧸
+                (⊥ : Subgroup (higmanLowerCentralSeries P 1))) =
+              Nat.card (higmanLowerCentralSeries P 1) :=
             Nat.card_congr (QuotientGroup.quotientBot
-              (G := lowerCentralSeries P 1)).toEquiv
+              (G := higmanLowerCentralSeries P 1)).toEquiv
           _ = Nat.card A := by rw [hL1_eq_A]
       rcases _hP.2.2.1 with ⟨x, y, hx, hy, hxy⟩
       have hxcenter : x ∈ Subgroup.center P := by
@@ -681,7 +696,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         rw [MonoidHom.mem_ker.mp haKer]
         exact Wsub.one_mem
       have hcomm_le_A : commutator P ≤ A := by
-        rw [← hL1_eq_A, lowerCentralSeries_one]
+        rw [hcommutator_map_top, hcommutator_eq_A]
       have hB_normal : B.Normal := by
         constructor
         intro b hb p
@@ -813,11 +828,12 @@ public theorem lemma11_length_two_typeA_actor_coordinates
                 (Additive (LowerCentralFactor P 0)) :=
               LinearEquiv.fixedSubmodule_eq_top_iff.mp htop
             apply hU_ne
-            simpa using hU_refl
+            rw [hU_refl]
+            rfl
           obtain ⟨v, hv⟩ :
               ∃ v : Additive (LowerCentralFactor P 0), U v ≠ v := by
             by_contra h
-            push_neg at h
+            push Not at h
             apply hU_ne
             ext v
             simpa using h v
@@ -987,7 +1003,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     have hx0A : x0 ∈ A :=
       lemma1_involutions_mem_of_nontrivial_invariant
         _hP _hXtrans hlower.2.2.2.1 (ne_of_gt hlower.1) x0 hx0
-    let x1 : lowerCentralSeries P 1 :=
+    let x1 : higmanLowerCentralSeries P 1 :=
       ⟨x0, hL1_eq_A.symm ▸ hx0A⟩
     let v : Additive (LowerCentralFactor P 1) :=
       Additive.ofMul
@@ -1015,7 +1031,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     have hx1fix :
         lowerCentralSeriesMulAut (xi ^ (2 ^ n - 1)) 1 x1 = x1 := by
       apply div_eq_one.mp
-      simpa using hdiv
+      exact Subgroup.mem_bot.mp hdiv
     have hxi_fix : (xi ^ (2 ^ n - 1)) x0 = x0 :=
       congrArg Subtype.val hx1fix
     have hxi_actor :
@@ -1049,20 +1065,21 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       (orderOf_dvd_iff_pow_eq_one).2 hxi_pow
     have hq_dvd : 2 ^ n - 1 ∣ orderOf xi := by
       rw [← hS_order]
-      simpa [S] using
-        (orderOf_map_dvd (lowerCentralFactorLinearAutHom (H := P) 1) xi)
+      change orderOf ((lowerCentralFactorLinearAutHom (H := P) 1) xi) ∣
+        orderOf xi
+      exact orderOf_map_dvd (lowerCentralFactorLinearAutHom (H := P) 1) xi
     have hxi_order : orderOf xi = 2 ^ n - 1 :=
       Nat.dvd_antisymm hxi_dvd hq_dvd
     have hfactor1_card_eq_A :
         Nat.card (LowerCentralFactor P 1) = Nat.card A := by
       change Nat.card
-          ((lowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
+          ((higmanLowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
         Nat.card A
       rw [hkernel1_bot]
       calc
-        Nat.card ((lowerCentralSeries P 1) ⧸
-              (⊥ : Subgroup (lowerCentralSeries P 1))) =
-            Nat.card (lowerCentralSeries P 1) := by
+        Nat.card ((higmanLowerCentralSeries P 1) ⧸
+              (⊥ : Subgroup (higmanLowerCentralSeries P 1))) =
+            Nat.card (higmanLowerCentralSeries P 1) := by
               exact Nat.card_congr QuotientGroup.quotientBot.toEquiv
         _ = Nat.card A := Nat.card_congr
           (Equiv.setCongr (congrArg (fun R : Subgroup P => (R : Set P))
@@ -1170,8 +1187,9 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       exact hS_dvd_T
     have hT_dvd_q : orderOf T ∣ 2 ^ n - 1 := by
       rw [← hxi_order]
-      simpa [T] using
-        (orderOf_map_dvd (lowerCentralFactorLinearAutHom (H := P) 0) xi)
+      change orderOf ((lowerCentralFactorLinearAutHom (H := P) 0) xi) ∣
+        orderOf xi
+      exact orderOf_map_dvd (lowerCentralFactorLinearAutHom (H := P) 0) xi
     have hT_order : orderOf T = 2 ^ n - 1 :=
       Nat.dvd_antisymm hT_dvd_q hq_dvd_T
     have hL1_card_n : Nat.card (LowerCentralFactor P 0) = 2 ^ n :=
@@ -1183,7 +1201,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     subst m
     have hL2_add_card :
         Nat.card (Additive (LowerCentralFactor P 1)) = 2 ^ n := by
-      simpa using hL2_card
+      exact (Nat.card_congr Additive.toMul).trans hL2_card
     have hL2_card_gt :
         1 < Nat.card (Additive (LowerCentralFactor P 1)) := by
       rw [hL2_add_card]
@@ -1267,7 +1285,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           (QuotientGroup.mk' (lowerCentralFactorKernel P 0) x) := by
         apply Additive.toMul.injective
         exact hx.symm
-      have hxsquare_mem : (x : P) ^ 2 ∈ lowerCentralSeries P 1 :=
+      have hxsquare_mem : (x : P) ^ 2 ∈ higmanLowerCentralSeries P 1 :=
         hP_square (Subgroup.subset_closure ⟨(x : P), rfl⟩)
       have hmk_zero :
           Additive.ofMul
@@ -1281,16 +1299,16 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         apply Additive.ofMul.injective
         simpa using hmk_zero
       have hsqker :
-          (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1) ∈
+          (⟨(x : P) ^ 2, hxsquare_mem⟩ : higmanLowerCentralSeries P 1) ∈
             lowerCentralFactorKernel P 1 :=
         (QuotientGroup.eq_one_iff
           (N := lowerCentralFactorKernel P 1)
-          (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1)).mp hmk_one
+          (⟨(x : P) ^ 2, hxsquare_mem⟩ : higmanLowerCentralSeries P 1)).mp hmk_one
       rw [hkernel1_bot] at hsqker
       have hxsquare : (x : P) ^ 2 = 1 := by
         have hsquare_one :
-            (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1) = 1 := by
-          simpa using hsqker
+            (⟨(x : P) ^ 2, hxsquare_mem⟩ : higmanLowerCentralSeries P 1) = 1 := by
+          exact Subgroup.mem_bot.mp hsqker
         exact congrArg Subtype.val hsquare_one
       by_cases hxone : (x : P) = 1
       · apply Additive.toMul.injective
@@ -1311,7 +1329,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           exact hxcenter
         have hxmap : (x : P) ∈
             (lowerCentralFactorKernel P 0).map
-              (lowerCentralSeries P 0).subtype := by
+              (higmanLowerCentralSeries P 0).subtype := by
           rw [hkernel0_map_A]
           exact hxA
         rcases hxmap with ⟨z, hz, hzx⟩
@@ -1332,8 +1350,6 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         (ZMod 2) (BinaryGaloisField n)
     have hsigma_apply (a : BinaryGaloisField n) (t : ℕ) :
         (sigma ^ t) a = a ^ (2 ^ t) := by
-      change ((sigma ^ t : BinaryGaloisField n ≃ₐ[ZMod 2]
-        BinaryGaloisField n) : BinaryGaloisField n → BinaryGaloisField n) a = _
       rw [AlgEquiv.coe_pow,
         FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
       simp [ZMod.card]
@@ -1500,7 +1516,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       apply (mul_left_cancel_iff_of_pos hq_pos).mp
       simpa using hcancel
     have hgap_dvd : 2 ^ r + 1 ∣ e := by
-      simpa [r, e] using
+      simpa only [r, e, lemma6_finPairGap] using
         lemma11_two_pow_gap_add_one_dvd_sum (i : ℕ) (j : ℕ)
     have hcop_gap : Nat.Coprime (2 ^ n - 1) (2 ^ r + 1) :=
       hcop_e.of_dvd_right hgap_dvd
@@ -1541,7 +1557,8 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         exact DFunLike.congr_fun htheta a
       have hsigma_eq : sigma ^ (j : ℕ) = sigma ^ (i : ℕ) := by
         have h : sigma ^ (j : ℕ) * (sigma ^ (i : ℕ))⁻¹ = 1 := by
-          simpa [thetaAlg, rho] using hthetaAlg_one
+          change sigma ^ (j : ℕ) * (sigma ^ (i : ℕ)).symm = 1
+          simpa only [thetaAlg, rho] using hthetaAlg_one
         exact mul_inv_eq_one.mp h
       have hmod : Nat.ModEq n (j : ℕ) (i : ℕ) := by
         have h := pow_eq_pow_iff_modEq.mp hsigma_eq
@@ -1550,7 +1567,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     have htheta_nontrivial :
         ∃ a : BinaryGaloisField n, theta a ≠ a := by
       by_contra h
-      push_neg at h
+      push Not at h
       apply htheta_ne_one
       ext a
       simpa using h a
@@ -1602,7 +1619,8 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         refine ⟨Subgroup.topEquiv x, ?_⟩
         change QuotientGroup.mk' (lowerCentralFactorKernel P 0)
             (Subgroup.topEquiv.symm (Subgroup.topEquiv x)) = v
-        simpa using hx
+        rw [MulEquiv.symm_apply_apply]
+        exact hx
       have hpi_surj : Function.Surjective pi :=
         factorZeroCoordinates.surjective.comp hfactorZeroQuotient_surj
       have hfactorZero_actor (p : P) :
@@ -1646,15 +1664,15 @@ public theorem lemma11_length_two_typeA_actor_coordinates
               quotientCoordinates.symm (quotientCoordinates a) := by
                 rw [quotientCoordinates.symm_apply_apply]
       let factorOneEquiv : LowerCentralFactor P 1 ≃*
-          lowerCentralSeries P 1 := by
+          higmanLowerCentralSeries P 1 := by
         exact (QuotientGroup.quotientMulEquivOfEq hkernel1_bot).trans
-          (QuotientGroup.quotientBot (G := lowerCentralSeries P 1))
+          (QuotientGroup.quotientBot (G := higmanLowerCentralSeries P 1))
       let centerCoordinatesMul : Multiplicative (BinaryGaloisField n) ≃*
           LowerCentralFactor P 1 :=
         finalCenterCoordinates.toAddEquiv.toMultiplicative.trans
           MulEquiv.toMultiplicative_toAdditive
       let iota : Multiplicative (BinaryGaloisField n) →* P :=
-        (lowerCentralSeries P 1).subtype.comp
+        (higmanLowerCentralSeries P 1).subtype.comp
           (factorOneEquiv.toMonoidHom.comp centerCoordinatesMul.toMonoidHom)
       have hiota : Function.Injective iota := by
         intro z w h
@@ -1662,13 +1680,13 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         apply factorOneEquiv.injective
         apply Subtype.ext
         exact h
-      have hL1_eq_A : lowerCentralSeries P 1 = A := by
-        rw [lowerCentralSeries_one]
+      have hL1_eq_A : higmanLowerCentralSeries P 1 = A := by
         calc
-          commutator P =
+          higmanLowerCentralSeries P 1 = commutator P :=
+            Subgroup.top_lowerCentralSeries_one
+          _ =
               (commutator (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype := by
-                simpa using
-                  (Subgroup.map_subtype_commutator (⊤ : Subgroup P)).symm
+                exact hcommutator_map_top
           _ = A := hcommutator_eq_A
       have hiota_range : iota.range = Subgroup.center P := by
         rw [← hA_eq_center, ← hL1_eq_A]
@@ -1677,12 +1695,12 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         · rintro ⟨z, rfl⟩
           exact (factorOneEquiv (centerCoordinatesMul z)).property
         · intro hp
-          let p1 : lowerCentralSeries P 1 := ⟨p, hp⟩
+          let p1 : higmanLowerCentralSeries P 1 := ⟨p, hp⟩
           let z : Multiplicative (BinaryGaloisField n) :=
             centerCoordinatesMul.symm (factorOneEquiv.symm p1)
           refine ⟨z, ?_⟩
           change ((factorOneEquiv (centerCoordinatesMul z) :
-            lowerCentralSeries P 1) : P) = p
+            higmanLowerCentralSeries P 1) : P) = p
           have hz : centerCoordinatesMul z = factorOneEquiv.symm p1 := by
             simp [z]
           rw [hz]
@@ -1744,15 +1762,15 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         intro x p
         rw [heQ_mk, heQ_mk]
         exact hpi_action x p
-      have hfactorOne_mk_outer (y : lowerCentralSeries P 1) :
+      have hfactorOne_mk_outer (y : higmanLowerCentralSeries P 1) :
           factorOneEquiv
             (QuotientGroup.mk' (lowerCentralFactorKernel P 1) y) = y := by
         have hmk :
             (QuotientGroup.quotientMulEquivOfEq hkernel1_bot)
                 ((QuotientGroup.mk' (lowerCentralFactorKernel P 1)) y) =
               (QuotientGroup.mk y :
-                lowerCentralSeries P 1 ⧸
-                  (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                higmanLowerCentralSeries P 1 ⧸
+                  (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by
           simpa only [QuotientGroup.mk'_apply] using
             (QuotientGroup.quotientMulEquivOfEq_mk hkernel1_bot y)
         calc
@@ -1765,13 +1783,14 @@ public theorem lemma11_length_two_typeA_actor_coordinates
                     rfl
           _ = QuotientGroup.quotientBot
               (QuotientGroup.mk y :
-                lowerCentralSeries P 1 ⧸
-                  (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                higmanLowerCentralSeries P 1 ⧸
+                  (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by
                     rw [hmk]
           _ = y := by
-            simpa [QuotientGroup.quotientBot] using
-              (QuotientGroup.kerLift_mk
-                (φ := MonoidHom.id (lowerCentralSeries P 1)) y)
+            change (QuotientGroup.kerLift
+              (MonoidHom.id (higmanLowerCentralSeries P 1))) ↑y = y
+            rw [QuotientGroup.kerLift_mk]
+            rfl
       have hfactorOne_mk_equiv (v : LowerCentralFactor P 1) :
           QuotientGroup.mk' (lowerCentralFactorKernel P 1)
               (factorOneEquiv v) = v := by
@@ -1797,11 +1816,11 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           actor • iota (Multiplicative.ofAdd z) =
             iota (Multiplicative.ofAdd
               (lambdaFinal * theta lambdaFinal * z)) := by
-        let y : lowerCentralSeries P 1 :=
+        let y : higmanLowerCentralSeries P 1 :=
           factorOneEquiv (centerCoordinatesMul (Multiplicative.ofAdd z))
         have hy_action : actor • (y : P) =
             ((lowerCentralSeriesMulAut xi 1 y :
-              lowerCentralSeries P 1) : P) := by
+              higmanLowerCentralSeries P 1) : P) := by
           change actor • (y : P) = xi (y : P)
           rw [hxi_actor]
           rfl
@@ -1810,7 +1829,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
             (centerCoordinatesMul
               (Multiplicative.ofAdd
                 (lambdaFinal * theta lambdaFinal * z))) :
-                  lowerCentralSeries P 1) : P)
+                  higmanLowerCentralSeries P 1) : P)
         rw [hy_action]
         apply congrArg Subtype.val
         calc
@@ -1900,8 +1919,8 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         fun a => a * theta a
       have hsquare_extension (x : P) :
           iota (Multiplicative.ofAdd (q (pi x).toAdd)) = x ^ 2 := by
-        let x0 : lowerCentralSeries P 0 := Subgroup.topEquiv.symm x
-        have hx2mem : x ^ 2 ∈ lowerCentralSeries P 1 :=
+        let x0 : higmanLowerCentralSeries P 0 := Subgroup.topEquiv.symm x
+        have hx2mem : x ^ 2 ∈ higmanLowerCentralSeries P 1 :=
           hP_square (Subgroup.subset_closure ⟨x, rfl⟩)
         have hpi_coordinates :
             quotientCoordinates (pi x).toAdd =
@@ -1942,7 +1961,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
                 ⟨x ^ 2, hx2mem⟩ := by
           change (finalCenterCoordinates (q (pi x).toAdd)).toMul = _
           exact congrArg Additive.toMul hcenter_coordinates
-        have hfactorOne_mk (y : lowerCentralSeries P 1) :
+        have hfactorOne_mk (y : higmanLowerCentralSeries P 1) :
             factorOneEquiv
               (QuotientGroup.mk' (lowerCentralFactorKernel P 1) y) = y := by
           have hmk :
@@ -1950,8 +1969,8 @@ public theorem lemma11_length_two_typeA_actor_coordinates
                   ((QuotientGroup.mk'
                     (lowerCentralFactorKernel P 1)) y) =
                 (QuotientGroup.mk y :
-                  lowerCentralSeries P 1 ⧸
-                    (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                  higmanLowerCentralSeries P 1 ⧸
+                    (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by
             simpa only [QuotientGroup.mk'_apply] using
               (QuotientGroup.quotientMulEquivOfEq_mk hkernel1_bot y)
           calc
@@ -1965,17 +1984,18 @@ public theorem lemma11_length_two_typeA_actor_coordinates
                       rfl
             _ = QuotientGroup.quotientBot
                 (QuotientGroup.mk y :
-                  lowerCentralSeries P 1 ⧸
-                    (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                  higmanLowerCentralSeries P 1 ⧸
+                    (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by
                       rw [hmk]
             _ = y := by
-              simpa [QuotientGroup.quotientBot] using
-                (QuotientGroup.kerLift_mk
-                  (φ := MonoidHom.id (lowerCentralSeries P 1)) y)
+              change (QuotientGroup.kerLift
+                (MonoidHom.id (higmanLowerCentralSeries P 1))) ↑y = y
+              rw [QuotientGroup.kerLift_mk]
+              rfl
         change ((factorOneEquiv
           (centerCoordinatesMul
             (Multiplicative.ofAdd (q (pi x).toAdd))) :
-              lowerCentralSeries P 1) : P) = x ^ 2
+              higmanLowerCentralSeries P 1) : P) = x ^ 2
         rw [hcenter_mul, hfactorOne_mk]
       obtain ⟨pairLift, cocycle, hcocLeft, hcocRight, hcocDiag,
           hpairOne, hpairSurj, hpairInj, hpairMul,

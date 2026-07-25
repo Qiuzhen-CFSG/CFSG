@@ -10,7 +10,7 @@ import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-! # Theorem 15 2 from BG Section 15 -/
 
@@ -79,7 +79,7 @@ public theorem section15_prime_mem_sigma_of_nilpotentNormalHallIn
   let PS : Sylow p.val S := P.subtype (by simpa [S] using hP_le_Hsub)
   have hS_nil : Group.IsNilpotent S := by
     let e : S ≃* H := Subgroup.subgroupOfEquivOfLe (H := H) (K := M) hHM
-    exact nilpotent_of_mulEquiv (G := H) (G' := S) (_h := hHnil) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := H) (G' := S) (_h := hHnil) e.symm
   have hPS_normal : (PS : Subgroup S).Normal :=
     Group.IsNilpotent.sylow_normal hS_nil p.val PS
   haveI : (PS : Subgroup S).Characteristic :=
@@ -148,7 +148,7 @@ public theorem section15_MF_le_msigma
     section8_le_piCoreIn_of_normal_isPiSubgroup hMFM hMFnormM hMFπ
   simpa [section10Msigma, section10MsigmaSubgroup, piCoreIn] using hcore
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_hallSubgroupIn_map_subtype
     {π : Set Nat.Primes} {H : Subgroup G} {K : Subgroup H}
     (hK : IsHallSubgroup π K) :
@@ -332,7 +332,7 @@ public theorem section15_exists_kappa_hallSubgroupIn_le_sigma_complement
   have hcompTo : section12ComplementToMsigma N D := by
     simpa [D, section12ComplementToMsigma] using hcomp
   have hDN : D ≤ N := by
-    simpa [D] using hcomp.2.1
+    simp [D]
   have hDproper : D ≠ ⊤ := by
     intro hDtop
     have htop_le_N : (⊤ : Subgroup G) ≤ N := by
@@ -389,7 +389,7 @@ public theorem section15_exists_kappa_hallSubgroupIn_le_sigma_complement
           (by simpa [Subgroup.relIndex] using hpDN)) hpσc
   exact ⟨K, hKHallN, by simpa [D] using hKD⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section15_nontrivial_of_prime_card_subgroup
     {K MF : Subgroup G} {q : Nat.Primes}
     (hq : q.val = Nat.card K)
@@ -437,7 +437,9 @@ private theorem section15_ambientDerived_lt_maximal
       exact Subgroup.subgroupOf_eq_top.2 le_rfl
     simpa [section15_ambientDerived_subgroupOf_eq] using hsubtop
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
-    simpa [derivedSubgroup, derivedSeries_one] using hDtop
+    change derivedSeries M 1 = ⊤ at hDtop
+    rw [derivedSeries_one] at hDtop
+    exact hDtop
   exact hcomm_lt.ne hcomm_top
 
 /-- If `M_σ` is nilpotent, then it is one of the nilpotent normal Hall
@@ -704,7 +706,7 @@ private theorem section15_map_fittingSubgroupOf_subgroupOf_le_fitting
       rintro ⟨x, hx⟩
       rcases hx with ⟨y, hy, rfl⟩
       exact ⟨⟨y, hy⟩, rfl⟩
-    exact nilpotent_of_surjective (G := fittingSubgroup Lsub) (G' := F1) ψ hψ_surj
+    exact Group.nilpotent_of_surjective (G := fittingSubgroup Lsub) (G' := F1) ψ hψ_surj
   have hF1_le_fit : F1 ≤ fittingSubgroup L := le_sSup ⟨hF1_normal, hF1_nil⟩
   have hcomp :
       L.subtype.comp e.toMonoidHom = B.subtype.comp Lsub.subtype := by
@@ -908,7 +910,7 @@ private theorem section15_kstar_meets_fitting_of_MF_ne_msigma
         section8FittingSubgroup (section10Msigma M) ≃*
           section10Msigma M :=
       MulEquiv.subgroupCongr hfit_eq
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := section8FittingSubgroup (section10Msigma M))
       (G' := section10Msigma M)
       (_h := section8FittingSubgroup_isNilpotent (section10Msigma M)) e
@@ -934,7 +936,7 @@ public theorem section15_le_of_prime_card_inf_ne_bot
       simpa [hEq] using hxA
     exact hxInf.2
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_isPGroup_of_prime_card
     {A : Subgroup G} {q : Nat.Primes}
     (hcard : q.val = Nat.card A) :
@@ -942,6 +944,7 @@ public theorem section15_isPGroup_of_prime_card
   refine IsPGroup.of_card (p := q.val) (G := A) (n := 1) ?_
   simpa [pow_one] using hcard.symm
 
+omit [IsMinCE G] in
 private theorem section15_kstar_le_pCoreIn_of_meets_fitting
     {M K : Subgroup G} {q : Nat.Primes}
     (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
@@ -975,7 +978,7 @@ private theorem section15_kstar_le_pCoreIn_of_meets_fitting
     _ = section15PCoreIn q M := by
       simp [section15PCoreIn, section8_piCoreIn_singleton_eq_pCore_map]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_pCoreIn_le
     (q : Nat.Primes) (M : Subgroup G) :
     section15PCoreIn q M ≤ M := by
@@ -986,16 +989,16 @@ public theorem section15_pCoreIn_le
   rcases Subgroup.mem_map.mp hxmap with ⟨y, _hy, rfl⟩
   exact y.property
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_pCoreIn_isPGroup
     (q : Nat.Primes) (M : Subgroup G) :
     IsPGroup q.val (section15PCoreIn q M) := by
   classical
-  simpa [section15PCoreIn] using
-    (IsPGroup.map (p := q.val) (H := pCore q.val M)
-      (pCore_isPGroup (G := M) (p := q.val)) M.subtype)
+  change IsPGroup q.val ((pCore q.val M).map M.subtype)
+  exact IsPGroup.map (p := q.val) (H := pCore q.val M)
+    (pCore_isPGroup (G := M) (p := q.val)) M.subtype
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_pCoreIn_subgroupOf_eq
     (q : Nat.Primes) (M : Subgroup G) :
     (section15PCoreIn q M).subgroupOf M = pCore q.val M := by
@@ -1003,7 +1006,7 @@ public theorem section15_pCoreIn_subgroupOf_eq
   simpa [section15PCoreIn] using
     (subgroupOf_map_subtype_eq (K := M) (pCore q.val M))
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section15_pCoreIn_normalIn
     (q : Nat.Primes) (M : Subgroup G) :
     section10NormalIn (section15PCoreIn q M) M := by
@@ -1071,6 +1074,7 @@ private theorem section15_normal_sylowSubgroupIn_subgroupOf_eq_pCore
   rw [hQsub_eq]
   exact le_antisymm hP_le_core hcore_le_P
 
+omit [IsMinCE G] in
 private theorem section15_kstar_le_normal_sylow_of_prime_card
     {M K Q : Subgroup G} {q : Nat.Primes}
     (hq : q.val = Nat.card (section14KStar M K))
@@ -1101,7 +1105,7 @@ private theorem section15_kstar_le_normal_sylow_of_prime_card
   obtain ⟨T, hA_le_T⟩ := IsPGroup.exists_le_sylow (G := M) (p := q.val) hA_p
   have hT_eq_P : (T : Subgroup M) = (P : Subgroup M) := by
     have hTP : T = P := Subsingleton.elim T P
-    simpa [hTP]
+    simp [hTP]
   intro x hx
   let xM : M := ⟨x, hKstar_le_M hx⟩
   have hxA : xM ∈ A := by
@@ -1180,6 +1184,7 @@ private theorem section15_msigmaSubgroup_disjoint_kappaHall_of_MF_ne
     exact hpκ.2 hpσ
   exact section15_disjoint_of_hall_disjoint_primes hHallH hHallK hπdisj
 
+omit [IsMinCE G] in
 public theorem section15_hall_kappa_ne_bot
     {M K : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
@@ -1439,7 +1444,7 @@ private theorem section15_msigma_quotient_pCore_nilpotent_of_kstar_le
     Subgroup.subgroupOfEquivOfLe (H := Sbar) (K := T) le_sup_left
   exact (by
     simpa [Sbar] using
-      (nilpotent_of_mulEquiv
+      (Group.nilpotent_of_mulEquiv
         (G := Sbar.subgroupOf T) (G' := Sbar) (_h := hnilSbarT) e))
 
 omit [Group G] [Finite G] [IsMinCE G] in
@@ -1515,9 +1520,9 @@ private theorem section15_nilpotentNormalHallIn_of_normal_sylow
       (subgroupOf_map_subtype_eq (K := M) (P : Subgroup M))
   have hQp : IsPGroup q.val Q := by
     rw [← hPamb]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-        P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+      P.isPGroup' M.subtype
   have hQnil : Group.IsNilpotent Q := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
     exact IsPGroup.isNilpotent (p := q.val) (G := Q) hQp
@@ -1609,7 +1614,8 @@ private theorem section15_normal_sylow_q_in_MF_of_kstar_meets_fitting
         (by simpa [S] using hdiv)) hqσ
     have hQloc_index_eq : Qloc.index = (Qloc.subgroupOf S).index * S.index := by
       have hrel := Subgroup.relIndex_mul_index (H := Qloc) (K := S) hQloc_le_S
-      simpa [S, Qloc] using hrel.symm
+      change Qloc.index = Qloc.relIndex S * S.index
+      exact hrel.symm
     have hnot_Qloc_index : ¬ q.val ∣ Qloc.index := by
       intro hdiv
       have hprod :
@@ -1621,7 +1627,7 @@ private theorem section15_normal_sylow_q_in_MF_of_kstar_meets_fitting
     let P : Sylow q.val M :=
       (pCore_isPGroup (G := M) (p := q.val)).toSylow hnot_Qloc_index
     refine ⟨P, ?_⟩
-    simpa [Q, Qloc, P, section15PCoreIn, section10AmbientSylowSubgroup,
+    simp [Q, Qloc, P, section15PCoreIn, section10AmbientSylowSubgroup,
       IsPGroup.toSylow_coe]
   have hQMF : Q ≤ MF :=
     hMF.2 Q (section15_nilpotentNormalHallIn_of_normal_sylow hQsylow hQnormal)
@@ -1721,7 +1727,8 @@ private theorem section15_msigma_eq_ambientDerived_of_MF_ne
       simpa [xM, S, Sloc, Subgroup.mem_subgroupOf] using hxS
     have hxbot : xM ∈ (⊥ : Subgroup M) :=
       Subgroup.disjoint_def.mp hloc_disj hxKloc hxSloc
-    simpa [xM] using congrArg Subtype.val (by simpa using hxbot)
+    change (xM : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
   have hcomp : section12ComplementIn M K S := by
     refine ⟨hK.1, hSleM, ?_, hdisjKS⟩
     simpa [S] using hprod
@@ -1743,19 +1750,20 @@ private theorem section15_msigma_eq_ambientDerived_of_MF_ne
   have hKloc_comm : IsMulCommutative Kloc := by
     refine ⟨⟨fun x y => Subtype.ext ?_⟩⟩
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := K) x.property y.property
+    exact setLike_mul_comm
+      (s := K) x.property y.property
   haveI : Sloc.Normal := by
     simpa [S, Sloc] using hSnormM.2
   let eQ : M ⧸ Sloc ≃* Kloc := hcomp'.QuotientMulEquiv
   have hquot_comm : IsMulCommutative (M ⧸ Sloc) := by
     letI : IsMulCommutative Kloc := hKloc_comm
+    letI : CommGroup Kloc := IsMulCommutative.instCommGroup
     refine ⟨⟨fun x y => ?_⟩⟩
     apply eQ.injective
     simpa [map_mul] using (mul_comm (eQ x) (eQ y))
   have hder_le_Sloc : derivedSubgroup M ≤ Sloc :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (N := Sloc)).1 hquot_comm.is_comm
+      (N := Sloc)).1 hquot_comm
   have hDleS : ambientDerivedSubgroup M ≤ S := by
     intro x hxD
     have hxM : x ∈ M := section15_ambientDerived_le hxD
@@ -1778,7 +1786,7 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
     (hMF : section15MFSubgroup M MF)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
+    (_hq : q.val = Nat.card (section14KStar M K))
     (hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
     (hQMF : Q ≤ MF) :
@@ -1884,7 +1892,7 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
   have hQloc_p : IsPGroup q.val Qloc := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
     rcases IsPGroup.iff_card.mp P.isPGroup' with ⟨n, hn⟩
-    exact IsPGroup.iff_card.mpr ⟨n, by simpa [hQloc_card, hn]⟩
+    exact IsPGroup.iff_card.mpr ⟨n, by simp [hQloc_card, hn]⟩
   have hQloc_not_dvd_index : ¬ q.val ∣ Qloc.index := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
     intro hqidx
@@ -1939,7 +1947,7 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
       let xS : S := ⟨x, by simpa [S] using hxS⟩
       have hxTop : xS ∈ (⊤ : Subgroup S) := by simp
       have hxSup : xS ∈ Qloc ⊔ Dloc := by
-        simpa [hcompl.sup_eq_top] using hxTop
+        simp [hcompl.sup_eq_top]
       have hDleS : D ≤ S := by
         intro x hxD
         rcases Subgroup.mem_map.mp hxD with ⟨y, _hy, rfl⟩
@@ -1973,7 +1981,8 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
       simpa [D, section8SubgroupInAmbient_subgroupOf_eq] using hxDsub
     have hxbot : xS ∈ (⊥ : Subgroup S) :=
       Subgroup.disjoint_def.mp hcompl.disjoint hxQloc hxDloc
-    simpa [xS] using congrArg Subtype.val (by simpa using hxbot)
+    change (xS : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
 
 /-- Theorem 15.2 L004-S0030: the complement `D` is nilpotent because it maps
 isomorphically to the nilpotent quotient `M_σ / Q`. -/
@@ -1986,7 +1995,7 @@ private theorem section15_complement_to_Q_nilpotent
     (hq : q.val = Nat.card (section14KStar M K))
     (hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
+    (_hQMF : Q ≤ MF)
     (hDcompl : section12ComplementIn (section10Msigma M) Q D) :
     Group.IsNilpotent D := by
   classical
@@ -2048,7 +2057,7 @@ private theorem section15_complement_to_Q_nilpotent
     let e : (Dloc.map qM).subgroupOf (Sloc.map qM) ≃* Dloc.map qM :=
       Subgroup.subgroupOfEquivOfLe (H := Dloc.map qM) (K := Sloc.map qM)
         hDmap_le_Sbar
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := (Dloc.map qM).subgroupOf (Sloc.map qM)) (G' := Dloc.map qM)
       (_h := hDmap_sub_nil) e
   have hQlocDloc_bot : Qloc.subgroupOf Dloc = ⊥ := by
@@ -2068,25 +2077,25 @@ private theorem section15_complement_to_Q_nilpotent
       have hxone : x = 1 := by
         apply Subtype.ext
         exact Subtype.ext hxoneG
-      simpa [hxone]
+      simp [hxone]
     · intro hx
       rw [hx]
       exact Subgroup.one_mem (Qloc.subgroupOf Dloc)
   have hDquot_nil : Group.IsNilpotent (Dloc ⧸ Qloc.subgroupOf Dloc) := by
     let e : Dloc ⧸ Qloc.subgroupOf Dloc ≃* Dloc.map qM :=
       quotientSubgroupRangeEquiv Dloc Qloc
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Dloc.map qM) (G' := Dloc ⧸ Qloc.subgroupOf Dloc)
       (_h := hDmap_nil) e.symm
   have hDloc_nil : Group.IsNilpotent Dloc := by
     let e : Dloc ⧸ Qloc.subgroupOf Dloc ≃* Dloc :=
       (QuotientGroup.quotientMulEquivOfEq hQlocDloc_bot).trans QuotientGroup.quotientBot
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Dloc ⧸ Qloc.subgroupOf Dloc) (G' := Dloc)
       (_h := hDquot_nil) e
   let eD : Dloc ≃* D :=
     Subgroup.subgroupOfEquivOfLe (H := D) (K := M) hDleM
-  exact nilpotent_of_mulEquiv (G := Dloc) (G' := D) (_h := hDloc_nil) eD
+  exact Group.nilpotent_of_mulEquiv (G := Dloc) (G' := D) (_h := hDloc_nil) eD
 
 /-- Theorem 15.2 L004: package the nilpotent complement data. -/
 private theorem section15_theorem15_2_nilpotent_complement
@@ -2108,34 +2117,36 @@ private theorem section15_theorem15_2_nilpotent_complement
   · exact section15_complement_to_Q_nilpotent
       hM hMF hK hMFne hq hQ hQnormal hQMF hDcompl
 
+omit [Finite G] [IsMinCE G] in
 /-- Theorem 15.2 L005-S0010: the complement `D` may be chosen `K`-invariant
 by Proposition 1.5(a). -/
 private theorem section15_complement_D_K_invariant
     {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
+    (_hM : M ∈ section9MaximalSubgroups G)
+    (_hMF : section15MFSubgroup M MF)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hMFne : MF ≠ section10Msigma M)
+    (_hq : q.val = Nat.card (section14KStar M K))
+    (_hQ : section12SylowSubgroupIn q Q M)
+    (_hQnormal : section10NormalIn Q M)
+    (_hQMF : Q ≤ MF)
     (hD : section15Theorem15_2ComplementData M K Q D) :
     K ≤ Subgroup.normalizer (D : Set G) := by
   exact hD.2.2.2
 
+omit [Finite G] [IsMinCE G] in
 /-- Theorem 15.2 L005-S0020: a `K`-invariant complement makes
 `Q₀ = C_Q(D)` invariant under `KD`. -/
 private theorem section15_Q0_KD_invariant_of_K_invariant_complement
     {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
+    (_hM : M ∈ section9MaximalSubgroups G)
+    (_hMF : section15MFSubgroup M MF)
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
+    (_hMFne : MF ≠ section10Msigma M)
+    (_hq : q.val = Nat.card (section14KStar M K))
+    (_hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
+    (_hQMF : Q ≤ MF)
     (hD : section15Theorem15_2ComplementData M K Q D)
     (hDkinv : K ≤ Subgroup.normalizer (D : Set G)) :
     K ⊔ D ≤ Subgroup.normalizer (subgroupCentralizerIn Q D : Set G) := by
@@ -2178,6 +2189,7 @@ private def section15QuotientElementaryCard
         (Q.subgroupOf M).map (QuotientGroup.mk' (Q₀.subgroupOf M))
       IsElementaryAbelian q.val Qbar ∧ Nat.card Qbar = q.val ^ p.val
 
+omit [IsMinCE G] in
 private theorem section15_sylowSubgroupIn_nilpotent
     {M Q : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M) :
@@ -2186,9 +2198,9 @@ private theorem section15_sylowSubgroupIn_nilpotent
   rcases hQ with ⟨P, hP⟩
   have hQp : IsPGroup q.val Q := by
     rw [← hP]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-        P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+      P.isPGroup' M.subtype
   haveI : Fact q.val.Prime := ⟨q.property⟩
   exact IsPGroup.isNilpotent (p := q.val) (G := Q) hQp
 
@@ -2263,15 +2275,15 @@ public theorem section15_nilpotent_of_central_complement
     exact SemidirectProduct.mulEquivProd
   have hQloc_nil : Group.IsNilpotent Qloc := by
     let e : Qloc ≃* Q := Subgroup.subgroupOfEquivOfLe hcomp.1
-    exact nilpotent_of_mulEquiv (G := Q) (G' := Qloc) (_h := hQnil) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := Q) (G' := Qloc) (_h := hQnil) e.symm
   have hDloc_nil : Group.IsNilpotent Dloc := by
     let e : Dloc ≃* D := Subgroup.subgroupOfEquivOfLe hcomp.2.1
-    exact nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
+    exact Group.nilpotent_of_mulEquiv (G := D) (G' := Dloc) (_h := hDnil) e.symm
   have hprod_nil : Group.IsNilpotent (Qloc × Dloc) := by
     letI : Group.IsNilpotent Qloc := hQloc_nil
     letI : Group.IsNilpotent Dloc := hDloc_nil
     infer_instance
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := Qloc × Dloc) (G' := S) (_h := hprod_nil) (eprod.symm.trans eSD)
 
 omit [Finite G] [IsMinCE G] in
@@ -2287,10 +2299,10 @@ private theorem section15_lt_inf_normalizer_of_lt_of_nilpotent
     rw [lt_top_iff_ne_top]
     intro htop
     have hxCq : (⟨x, hxQ⟩ : Q) ∈ Cq := by
-      simpa [htop]
+      simp [htop]
     exact hxC (by simpa [Cq, Subgroup.mem_subgroupOf] using hxCq)
   letI : Group.IsNilpotent Q := hQnil
-  have hnc : NormalizerCondition Q := normalizerCondition_of_isNilpotent (G := Q)
+  have hnc : NormalizerCondition Q := Group.normalizerCondition_of_isNilpotent (G := Q)
   have hCq_lt_norm : Cq < Subgroup.normalizer (Cq : Set Q) :=
     hnc Cq hCq_lt_top
   refine lt_of_le_of_ne ?_ ?_
@@ -2331,12 +2343,12 @@ private theorem section15_Q0_lt_Q
     {M MF K Q D : Subgroup G} {q : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
     (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
+    (_hq : q.val = Nat.card (section14KStar M K))
     (hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
+    (_hQMF : Q ≤ MF)
     (hD : section15Theorem15_2ComplementData M K Q D) :
     subgroupCentralizerIn Q D < Q := by
   classical
@@ -2492,18 +2504,19 @@ private theorem section15_le_normalizer_map_subtype_of_normal
     exact Subgroup.mem_map.mpr
       ⟨nN⁻¹ * l * (nN⁻¹)⁻¹, hx', hcoerce⟩
 
+omit [Finite G] [IsMinCE G] in
 /-- In the normalizer quotient step, `Q₀` is normal in `N_M(Q₀)`. -/
 private theorem section15_Q0_normalIn_normalizerIn_M
     {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
+    (_hM : M ∈ section9MaximalSubgroups G)
+    (_hMF : section15MFSubgroup M MF)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hMFne : MF ≠ section10Msigma M)
+    (_hq : q.val = Nat.card (section14KStar M K))
+    (_hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
+    (_hQMF : Q ≤ MF)
+    (_hD : section15Theorem15_2ComplementData M K Q D) :
     section10NormalIn (subgroupCentralizerIn Q D)
       (M ⊓ Subgroup.normalizer (subgroupCentralizerIn Q D : Set G)) := by
   have hQ₀Q : subgroupCentralizerIn Q D ≤ Q := inf_le_left
@@ -2563,6 +2576,7 @@ private def section15NormalizerQuotientLiftData
             (∀ R : Subgroup (N ⧸ Q₀.subgroupOf N),
               R.Normal → R ≤ Q₁bar → R = ⊥ ∨ R = Q₁bar)
 
+omit [IsMinCE G] in
 /-- Generic normalizer-quotient selection used twice in the source proof:
 if `A<Q`, then `N_M(A)/A` has a nontrivial minimal normal subgroup
 coming from `N_Q(A)`. -/
@@ -2619,7 +2633,7 @@ private theorem section15_exists_normalizer_quotient_lift_of_lt
     change qN x ∈ Qbar
     have hxker : qN x = 1 := by
       simpa [qN, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf] using hx
-    simpa [hxker]
+    simp [hxker]
   have hQ₁_ne_A : Q₁ ≠ A.subgroupOf N := by
     intro hEq
     have hQbar_bot : Qbar = ⊥ := by
@@ -2691,6 +2705,7 @@ private def section15AmbientNormalizerLiftData
     (B.subgroupOf N).Normal ∧
       K ⊔ D ≤ Subgroup.normalizer (B : Set G)
 
+omit [IsMinCE G] in
 /-- Generic ambient lift: from a `KD`-invariant proper subgroup `A<Q`, choose
 `B` with `A<B≤Q` which is normal in `N_M(A)` and remains `KD`-invariant. -/
 private theorem section15_exists_ambient_lift_in_normalizer_quotient_of_lt
@@ -2787,7 +2802,7 @@ omit [IsMinCE G] in
 private theorem section15_kstar_inf_le_of_le_or_not_le
     {M K A B : Subgroup G} {q : Nat.Primes}
     (hq : q.val = Nat.card (section14KStar M K))
-    (hA_le_B : A ≤ B)
+    (_hA_le_B : A ≤ B)
     (hpos : section14KStar M K ≤ A ∨ ¬ section14KStar M K ≤ B) :
     section14KStar M K ⊓ B ≤ A := by
   classical
@@ -2803,8 +2818,9 @@ private theorem section15_kstar_inf_le_of_le_or_not_le
       simpa [hInf_bot] using hx
     have hxone : x = 1 := by
       simpa using hxbot
-    simpa [hxone] using (Subgroup.one_mem A)
+    simp [hxone]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_kstar_inf_sup_le_of_complement
     {M K Q D B : Subgroup G}
     (hDcomp : section12ComplementIn (section10Msigma M) Q D)
@@ -2827,7 +2843,7 @@ private theorem section15_kstar_inf_sup_le_of_complement
       calc
         d = (1 : G) * d := by simp
         _ = (b⁻¹ * b) * d := by simp
-        _ = b⁻¹ * (b * d) := by simp [mul_assoc]
+        _ = b⁻¹ * (b * d) := by simp
         _ = b⁻¹ * x := by rw [hbd]
     rw [hd_eq]
     exact Q.mul_mem (Q.inv_mem hbQ) hxQ
@@ -2839,6 +2855,7 @@ private theorem section15_kstar_inf_sup_le_of_complement
       _ = b := by simp [hd_one]
   simpa [hx_eq_b] using hbB
 
+omit [IsMinCE G] in
 private theorem section15_kstar_inf_sup_le_of_position
     {M K Q D A B : Subgroup G} {q : Nat.Primes}
     (hq : q.val = Nat.card (section14KStar M K))
@@ -2859,6 +2876,7 @@ private theorem section15_kstar_inf_sup_le_of_position
       (M := M) (K := K) (A := A) (B := B) hq hA_le_B hpos
       ⟨hx.1, hxB⟩
 
+omit [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_sup_le_of_kstar_position
     {M K Q D A B R : Subgroup G} {q : Nat.Primes}
     (hq : q.val = Nat.card (section14KStar M K))
@@ -2979,7 +2997,7 @@ private theorem section15_nilpotentNormalHallIn_sup
       infer_instance
     let e : (A ⊔ B : Subgroup G).subgroupOf F ≃* (A ⊔ B : Subgroup G) :=
       Subgroup.subgroupOfEquivOfLe (H := (A ⊔ B : Subgroup G)) (K := F) hSupF
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := (A ⊔ B : Subgroup G).subgroupOf F)
       (G' := (A ⊔ B : Subgroup G)) (_h := hSupSubNil) e
   · have hsub_eq :
@@ -3046,14 +3064,14 @@ private theorem section15_bot_nilpotentNormalHallIn
   · have hbot_subgroupOf :
         ((⊥ : Subgroup G).subgroupOf M) = (⊥ : Subgroup M) := by
       ext x
-      simp [Subgroup.mem_subgroupOf]
+      simp
     rw [hbot_subgroupOf]
     infer_instance
   · infer_instance
   · have hbot_subgroupOf :
         ((⊥ : Subgroup G).subgroupOf M) = (⊥ : Subgroup M) := by
       ext x
-      simp [Subgroup.mem_subgroupOf]
+      simp
     rw [hbot_subgroupOf]
     refine isHallSubgroup_of
       (G := M) (π := subgroupPrimeSet (⊥ : Subgroup G))
@@ -3134,14 +3152,14 @@ public theorem section15_sylowSubgroupIn_isPiSubgroup_singleton
   rcases hQ with ⟨P, hP⟩
   have hQp : IsPGroup q.val Q := by
     rw [← hP]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-        P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+      P.isPGroup' M.subtype
   exact section8_isPiSubgroup_singleton_of_isPGroup hQp
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_le_of_subgroupOf_map_mk'_eq_bot
-    {S A B : Subgroup G} (hAS : A ≤ S) (hBS : B ≤ S)
+    {S A B : Subgroup G} (_hAS : A ≤ S) (hBS : B ≤ S)
     (hAnorm : (A.subgroupOf S).Normal)
     (hmap :
       letI : (A.subgroupOf S).Normal := hAnorm
@@ -3162,6 +3180,7 @@ private theorem section15_le_of_subgroupOf_map_mk'_eq_bot
     simpa [qS, QuotientGroup.eq_one_iff] using hxone
   simpa [xS, Subgroup.mem_subgroupOf] using hxker
 
+omit [IsMinCE G] in
 private theorem section15_q_subgroup_le_normal_sylow
     {M Q A : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M)
@@ -3186,7 +3205,7 @@ private theorem section15_q_subgroup_le_normal_sylow
   obtain ⟨T, hAloc_le_T⟩ := IsPGroup.exists_le_sylow (G := M) (p := q.val) hAloc_q
   have hT_eq_P : (T : Subgroup M) = (P : Subgroup M) := by
     have hTP : T = P := Subsingleton.elim T P
-    simpa [hTP]
+    simp [hTP]
   intro x hxA
   let xM : M := ⟨x, hAM hxA⟩
   have hxAloc : xM ∈ Aloc := by
@@ -3198,6 +3217,7 @@ private theorem section15_q_subgroup_le_normal_sylow
     simpa [hQsub_eq] using hxP
   simpa [xM, Subgroup.mem_subgroupOf] using hxQsub
 
+omit [IsMinCE G] in
 private theorem section15_complement_to_normal_sylow_isPiSubgroup_compl
     {M Q D : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M)
@@ -3232,8 +3252,9 @@ private theorem section15_complement_to_normal_sylow_isPiSubgroup_compl
       exact (Subgroup.map_eq_bot_iff_of_injective
         (H := (P : Subgroup D)) (f := D.subtype) D.subtype_injective).1 hPG_bot
     exact (hPne hPbot).elim
-  · simpa [Set.mem_compl_iff, hpq]
+  · simp [Set.mem_compl_iff, hpq]
 
+omit [IsMinCE G] in
 private theorem section15_complement_D_isPiSubgroup_q_compl
     {M Q D : Subgroup G} {q : Nat.Primes}
     (hQ : section12SylowSubgroupIn q Q M)
@@ -3292,12 +3313,12 @@ private theorem section15_pSubgroup_le_centralizer_piSubgroup_of_nilpotent_overg
     have hXsub_nil : Group.IsNilpotent Xsub := by infer_instance
     let e : Xsub ≃* X := Subgroup.subgroupOfEquivOfLe (H := X) (K := L) hXL
     letI : Group.IsNilpotent Xsub := hXsub_nil
-    exact nilpotent_of_mulEquiv (G := Xsub) (G' := X) e
+    exact Group.nilpotent_of_mulEquiv (G := Xsub) (G' := X) e
   letI : Group.IsNilpotent X := hXnil
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup X) := by
     let e : X ≃* (⊤ : Subgroup X) :=
       (Subgroup.topEquiv : (⊤ : Subgroup X) ≃* X).symm
-    exact nilpotent_of_mulEquiv (G := X) (G' := (⊤ : Subgroup X)) e
+    exact Group.nilpotent_of_mulEquiv (G := X) (G' := (⊤ : Subgroup X)) e
   have htop_le_sup :
       (⊤ : Subgroup X) ≤
         ⨆ q : (Nat.card X).primeFactors.attach, pCore q.1.1 X :=
@@ -3336,7 +3357,8 @@ private theorem section15_pSubgroup_le_centralizer_piSubgroup_of_nilpotent_overg
     let xX : X := ⟨x, hx⟩
     have hxC : xX ∈ (Subgroup.centralizer (P : Set G)).comap X.subtype :=
       hsup_le_cent (htop_le_sup (Subgroup.mem_top xX))
-    simpa [xX] using hxC
+    change x ∈ Subgroup.centralizer (P : Set G) at hxC
+    exact hxC
   exact section15_le_centralizer_of_le_centralizer (G := G) hXcentP
 
 omit [IsMinCE G] in
@@ -3352,12 +3374,12 @@ private theorem section15_isPiSubgroup_le_centralizer_of_nilpotent_disjoint
     have hAsub_nil : Group.IsNilpotent Asub := by infer_instance
     let e : Asub ≃* A := Subgroup.subgroupOfEquivOfLe (H := A) (K := L) hAL
     letI : Group.IsNilpotent Asub := hAsub_nil
-    exact nilpotent_of_mulEquiv (G := Asub) (G' := A) e
+    exact Group.nilpotent_of_mulEquiv (G := Asub) (G' := A) e
   letI : Group.IsNilpotent A := hAnil
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup A) := by
     let e : A ≃* (⊤ : Subgroup A) :=
       (Subgroup.topEquiv : (⊤ : Subgroup A) ≃* A).symm
-    exact nilpotent_of_mulEquiv (G := A) (G' := (⊤ : Subgroup A)) e
+    exact Group.nilpotent_of_mulEquiv (G := A) (G' := (⊤ : Subgroup A)) e
   have htop_le_sup :
       (⊤ : Subgroup A) ≤
         ⨆ q : (Nat.card A).primeFactors.attach, pCore q.1.1 A :=
@@ -3393,7 +3415,8 @@ private theorem section15_isPiSubgroup_le_centralizer_of_nilpotent_disjoint
   let aA : A := ⟨a, ha⟩
   have haC : aA ∈ (Subgroup.centralizer (B : Set G)).comap A.subtype :=
     hsup_le_cent (htop_le_sup (Subgroup.mem_top aA))
-  simpa [aA] using haC
+  change a ∈ Subgroup.centralizer (B : Set G) at haC
+  exact haC
 
 private theorem section15_le_of_nilpotent_sup_quotient
     {M K Q D A B : Subgroup G} {q : Nat.Primes}
@@ -3404,7 +3427,7 @@ private theorem section15_le_of_nilpotent_sup_quotient
     (hQ₀_le_A : subgroupCentralizerIn Q D ≤ A)
     (hA_le_B : A ≤ B)
     (hB_le_Q : B ≤ Q)
-    (hB_norm_A : B ≤ Subgroup.normalizer (A : Set G))
+    (_hB_norm_A : B ≤ Subgroup.normalizer (A : Set G))
     (hD_norm_A : D ≤ Subgroup.normalizer (A : Set G))
     (hD_norm_B : D ≤ Subgroup.normalizer (B : Set G))
     (hAnormS : (A.subgroupOf (B ⊔ D)).Normal)
@@ -3430,7 +3453,7 @@ private theorem section15_le_of_nilpotent_sup_quotient
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup (S ⧸ Asub)) := by
     let e : (S ⧸ Asub) ≃* (⊤ : Subgroup (S ⧸ Asub)) :=
       (Subgroup.topEquiv : (⊤ : Subgroup (S ⧸ Asub)) ≃* (S ⧸ Asub)).symm
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := S ⧸ Asub) (G' := (⊤ : Subgroup (S ⧸ Asub)))
       (_h := hquot_nil) e
   have hQπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q :=
@@ -3932,9 +3955,9 @@ private theorem section15_le_of_kstar_position
           (N := R) (A := B) (B := D) hR_norm_B hR_norm_D
     let H : Subgroup G := S ⊔ R
     have hS_le_H : S ≤ H := by
-      simpa [H] using (le_sup_left : S ≤ S ⊔ R)
+      simp [H]
     have hR_le_H : R ≤ H := by
-      simpa [H] using (le_sup_right : R ≤ S ⊔ R)
+      simp [H]
     have hA_le_S : A ≤ S := by
       simpa [S] using hAS
     have hA_le_H : A ≤ H := hA_le_S.trans hS_le_H
@@ -3978,7 +4001,7 @@ private theorem section15_le_of_kstar_position
         have hyMone : yM = 1 := by
           simpa using hybotM
         exact congrArg Subtype.val hyMone
-      simpa [hyone]
+      simp [hyone]
     have hSsub_Rsub_disj : Disjoint Ssub Rsub := by
       rw [Subgroup.disjoint_def]
       intro y hyS hyR
@@ -3993,7 +4016,7 @@ private theorem section15_le_of_kstar_position
       have hyoneH : y = 1 := by
         apply Subtype.ext
         exact hyoneG
-      simpa [hyoneH]
+      simp [hyoneH]
     have hAsubH_le_Ssub : AsubH ≤ Ssub := by
       intro y hyA
       have hyAG : ((y : H) : G) ∈ A := by
@@ -4171,7 +4194,7 @@ private theorem section15_le_of_kstar_position
     have hnilSbar : Group.IsNilpotent Sbar := by
       let e : Sbar.subgroupOf T ≃* Sbar :=
         Subgroup.subgroupOfEquivOfLe (H := Sbar) (K := T) le_sup_left
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (G := Sbar.subgroupOf T) (G' := Sbar) (_h := hnilSbarT) e
     let AsubS : Subgroup S := A.subgroupOf S
     have hAnormSlocal : AsubS.Normal := by
@@ -4198,14 +4221,15 @@ private theorem section15_le_of_kstar_position
             simpa [AsubH, Subgroup.mem_subgroupOf] using hy
           simpa [a, AsubS, Subgroup.mem_subgroupOf] using hyA
         refine ⟨a, haA, ?_⟩
-        ext <;> rfl
+        ext
+        rfl
     let eQuot : S ⧸ AsubS ≃* Ssub ⧸ AsubH.subgroupOf Ssub :=
       QuotientGroup.congr AsubS (AsubH.subgroupOf Ssub) eS hAsub_map
     let eRange : Ssub ⧸ AsubH.subgroupOf Ssub ≃* Sbar :=
       quotientSubgroupRangeEquiv Ssub AsubH
     let e : S ⧸ AsubS ≃* Sbar := eQuot.trans eRange
     have hnilSquot : Group.IsNilpotent (S ⧸ AsubS) :=
-      nilpotent_of_mulEquiv (G := Sbar) (G' := S ⧸ AsubS)
+      Group.nilpotent_of_mulEquiv (G := Sbar) (G' := S ⧸ AsubS)
         (_h := hnilSbar) e.symm
     simpa [S, AsubS] using hnilSquot
   exact
@@ -4214,6 +4238,7 @@ private theorem section15_le_of_kstar_position
       hM hQ hQnormal hD hQ₀_le_A hA_le_B hB_le_Q hB_norm_A
       hD_norm_A hD_norm_B hAnormS hnil
 
+omit [Finite G] [IsMinCE G] in
 /-- Once the selected normalizer-quotient subgroup is all of `Q`, its
 minimality data packages as the desired `M/Q₀` minimal-normal quotient. -/
 private theorem section15_quotient_minimal_normal_of_Q1_eq_Q
@@ -4308,7 +4333,7 @@ private theorem section15_quotient_minimal_normal_of_Q1_eq_Q
       · have hxNM : eNM xN = x := by
           ext
           simp [eNM, xN]
-        simpa [eQ, hxNM]
+        simp [eQ, hxNM]
   refine ⟨hQ₀M, hQM, hQ₀Q, hQ₀NormM, ?_, ?_, ?_⟩
   · change (Q.subgroupOf M).map
         (QuotientGroup.mk' (Q₀.subgroupOf M)) ≠ ⊥
@@ -4552,7 +4577,7 @@ private theorem section15_KD_frobenius_with_kernel_D
   have hDnormalS : Dsub.Normal := by
     simpa [Dsub, S] using
       (Subgroup.normal_subgroupOf_iff_le_normalizer
-        (show D ≤ S by simpa [S] using (le_sup_left : D ≤ D ⊔ K))).2 hS_norm_D
+        (show D ≤ S by simp [S])).2 hS_norm_D
   have hP1 : M ∈ section14MFamilyP1 G :=
     (section15_MF_ne_msigma_implies_P1 hM hMF hK hMFne).1
   have hKne : K ≠ ⊥ := section15_hall_kappa_ne_bot hP1.1 hK
@@ -4590,8 +4615,8 @@ private theorem section15_KD_frobenius_with_kernel_D
         Dsub ⊔ Ksub = (D ⊔ K).subgroupOf S := by
           symm
           exact Subgroup.subgroupOf_sup (A := D) (A' := K) (B := S)
-            (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
-            (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))
+            (by simp [S])
+            (by simp [S])
         _ = ⊤ := by simp [S]
     letI : Dsub.Normal := hDnormalS
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
@@ -4668,7 +4693,7 @@ private theorem section15_KD_frobenius_with_kernel_D
   have hyoneS : y = 1 := by
     apply Subtype.ext
     exact hyoneG
-  simpa [hyoneS]
+  simp [hyoneS]
 
 private theorem section15_subgroupCentralizerIn_eq_of_between
     {G : Type*} [Group G] {A B R : Subgroup G}
@@ -4680,6 +4705,7 @@ private theorem section15_subgroupCentralizerIn_eq_of_between
   · intro x hx
     exact ⟨hCB_le_A hx, hx.2⟩
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_eq_kstar_of_between
     {M K Q : Subgroup G}
     (hQ_le_sigma : Q ≤ section10Msigma M)
@@ -4691,6 +4717,7 @@ private theorem section15_subgroupCentralizerIn_eq_kstar_of_between
   · intro x hx
     exact ⟨hKstarQ hx, hx.2⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section15_mem_centralizer_of_mem_kstar
     {M K : Subgroup G} {x : G}
     (hx : x ∈ section14KStar M K) :
@@ -4698,6 +4725,7 @@ public theorem section15_mem_centralizer_of_mem_kstar
   change x ∈ subgroupCentralizerIn (section10Msigma M) K at hx
   exact hx.2
 
+omit [IsMinCE G] in
 private theorem section15_zpowers_centralizer_eq_kstar_of_prime_manner
     {M K Q : Subgroup G} {x : G}
     (hQ_le_sigma : Q ≤ section10Msigma M)
@@ -4729,6 +4757,7 @@ private theorem section15_zpowers_centralizer_eq_kstar_of_prime_manner
       (show (Subgroup.zpowers x : Set G) ⊆ (K : Set G) from
         fun z hz => (Subgroup.zpowers_le.2 hxK) hz)) hyCentK
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_subgroupOf_eq_of_ambient
     {M A B C : Subgroup G} (hB_le_M : B ≤ M)
     (hC : subgroupCentralizerIn A B = C) :
@@ -4739,6 +4768,7 @@ private theorem section15_subgroupCentralizerIn_subgroupOf_eq_of_ambient
       exact subgroupCentralizerIn_subgroupOf_eq M A B hB_le_M
     _ = C.subgroupOf M := by rw [hC]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_subgroupOf_eq_kstar_of_between
     {M K Q : Subgroup G} (hK_le_M : K ≤ M)
     (hQ_le_sigma : Q ≤ section10Msigma M)
@@ -4748,6 +4778,7 @@ private theorem section15_subgroupCentralizerIn_subgroupOf_eq_kstar_of_between
   section15_subgroupCentralizerIn_subgroupOf_eq_of_ambient hK_le_M
     (section15_subgroupCentralizerIn_eq_kstar_of_between hQ_le_sigma hKstarQ)
 
+omit [IsMinCE G] in
 private theorem section15_zpowers_centralizer_subgroupOf_eq_kstar_of_prime_manner
     {M K Q : Subgroup G} {x : G}
     (hzpow_le_M : Subgroup.zpowers x ≤ M)
@@ -4761,12 +4792,14 @@ private theorem section15_zpowers_centralizer_subgroupOf_eq_kstar_of_prime_manne
     (section15_zpowers_centralizer_eq_kstar_of_prime_manner
       hQ_le_sigma hprime hxK hxne hKstarQ)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupOf_le_normalizer_of_normalIn
     {M Q R : Subgroup G} (hQnormal : section10NormalIn Q M) :
     R.subgroupOf M ≤ Subgroup.normalizer ((Q.subgroupOf M : Subgroup M) : Set M) := by
   letI : (Q.subgroupOf M).Normal := hQnormal.2
   exact le_top.trans (Subgroup.le_normalizer_of_normal (H := Q.subgroupOf M))
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupOf_solvable_of_solvable
     {M Q : Subgroup G} (hsolvM : IsSolvable M) :
     IsSolvable (Q.subgroupOf M) := by
@@ -4920,15 +4953,15 @@ private theorem section15_p_card_prime_of_theorem15_2_context
     rcases hQ with ⟨P, hP⟩
     have hQp : IsPGroup q.val Q := by
       rw [← hP]
-      simpa [section10AmbientSylowSubgroup] using
-        (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-          P.isPGroup' M.subtype)
+      change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+      exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+        P.isPGroup' M.subtype
     have hQloc_p : IsPGroup q.val (Q.subgroupOf M) := by
       have hcard : Nat.card (Q.subgroupOf M) = Nat.card Q := by
         exact Nat.card_congr
           (Subgroup.subgroupOfEquivOfLe (H := Q) (K := M) hQM).toEquiv
       rcases IsPGroup.iff_card.mp hQp with ⟨n, hn⟩
-      exact IsPGroup.iff_card.mpr ⟨n, by simpa [hcard, hn]⟩
+      exact IsPGroup.iff_card.mpr ⟨n, by simp [hcard, hn]⟩
     simpa [Qbar, qM] using IsPGroup.map (p := q.val) (H := Q.subgroupOf M) hQloc_p qM
   have hnilQbar : Group.IsNilpotent Qbar := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
@@ -4941,11 +4974,11 @@ private theorem section15_p_card_prime_of_theorem15_2_context
     have hDsubπ : IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ Dsub := by
       simpa [Dsub] using
         section15_isPiSubgroup_subgroupOf
-          (G := G) (H := S) (K := D) hDπ (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
+          (G := G) (H := S) (K := D) hDπ (by simp [S])
     have hKsubπ : IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ Ksub := by
       simpa [Ksub] using
         section15_isPiSubgroup_subgroupOf
-          (G := G) (H := S) (K := K) hKπ (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))
+          (G := G) (H := S) (K := K) hKπ (by simp [S])
     have hStopπ :
         IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ (⊤ : Subgroup S) := by
       have hDsub_normal : Dsub.Normal := hfrob.normal
@@ -5004,7 +5037,7 @@ private theorem section15_p_card_prime_of_theorem15_2_context
       have ha_eq : aM = Subgroup.inclusion hS_le_M aS := by
         apply Subtype.ext
         rfl
-      simpa [toQ, qM, aM] using (congrArg qM ha_eq).symm
+      simpa [toQ, qM, aM] using congrArg qM ha_eq
     · intro hz
       rcases Subgroup.mem_map.mp hz with ⟨aM, haA, rfl⟩
       have haAamb : (aM : G) ∈ A := by
@@ -5079,7 +5112,7 @@ private theorem section15_p_card_prime_of_theorem15_2_context
     let Dbar : Subgroup (M ⧸ Q0M) := Dloc.map qM
     have hDbar_eq : Dsub.map toQ = Dbar := by
       simpa [Dsub, Dloc, Dbar] using
-        hmap_subgroupOf D (by simpa [S] using (le_sup_left : D ≤ D ⊔ K)) hD_le_M
+        hmap_subgroupOf D (by simp [S]) hD_le_M
     have hfix_eq :
         fixedPointSubgroup (↥Dsub) Qbar =
           (subgroupCentralizerIn Qbar Dbar).subgroupOf Qbar := by
@@ -5142,7 +5175,7 @@ private theorem section15_p_card_prime_of_theorem15_2_context
             (subgroupCentralizerIn Qloc Dloc).map qM := hcent_map
         _ = Q0M.map qM := by rw [hcent_local_eq]
         _ = ⊥ := hQ0_map_bot
-    simpa [hfix_eq, hcent_bot]
+    simp [hfix_eq, hcent_bot]
   have hfixK :
       ∀ x : Ksub, x ≠ 1 →
         fixedPointSubgroup (↥(Subgroup.zpowers (x : S))) Qbar =
@@ -5257,7 +5290,7 @@ private theorem section15_p_card_prime_of_theorem15_2_context
   have hKsub_card : Nat.card Ksub = Nat.card K := by
     exact Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe
-        (H := K) (K := S) (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))).toEquiv
+        (H := K) (K := S) (by simp [S])).toEquiv
   exact ⟨⟨Nat.card K, by simpa [hKsub_card] using hmain.2⟩, rfl⟩
 
 omit [IsMinCE G] in
@@ -5358,15 +5391,15 @@ private theorem section15_Qbar_elementary_card
     rcases hQ with ⟨P, hP⟩
     have hQp : IsPGroup q.val Q := by
       rw [← hP]
-      simpa [section10AmbientSylowSubgroup] using
-        (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-          P.isPGroup' M.subtype)
+      change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+      exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+        P.isPGroup' M.subtype
     have hQloc_p : IsPGroup q.val (Q.subgroupOf M) := by
       have hcard : Nat.card (Q.subgroupOf M) = Nat.card Q := by
         exact Nat.card_congr
           (Subgroup.subgroupOfEquivOfLe (H := Q) (K := M) hQM).toEquiv
       rcases IsPGroup.iff_card.mp hQp with ⟨n, hn⟩
-      exact IsPGroup.iff_card.mpr ⟨n, by simpa [hcard, hn]⟩
+      exact IsPGroup.iff_card.mpr ⟨n, by simp [hcard, hn]⟩
     simpa [Qbar, qM] using IsPGroup.map (p := q.val) (H := Q.subgroupOf M) hQloc_p qM
   have hQbar_elem : IsElementaryAbelian q.val Qbar := by
     haveI : IsMinimalNormal Qbar := {
@@ -5398,11 +5431,11 @@ private theorem section15_Qbar_elementary_card
     have hDsubπ : IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ Dsub := by
       simpa [Dsub] using
         section15_isPiSubgroup_subgroupOf
-          (G := G) (H := S) (K := D) hDπ (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
+          (G := G) (H := S) (K := D) hDπ (by simp [S])
     have hKsubπ : IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ Ksub := by
       simpa [Ksub] using
         section15_isPiSubgroup_subgroupOf
-          (G := G) (H := S) (K := K) hKπ (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))
+          (G := G) (H := S) (K := K) hKπ (by simp [S])
     have hStopπ :
         IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ (⊤ : Subgroup S) := by
       have hDsub_normal : Dsub.Normal := hfrob.normal
@@ -5461,7 +5494,7 @@ private theorem section15_Qbar_elementary_card
       have ha_eq : aM = Subgroup.inclusion hS_le_M aS := by
         apply Subtype.ext
         rfl
-      simpa [toQ, qM, aM] using (congrArg qM ha_eq).symm
+      simpa [toQ, qM, aM] using congrArg qM ha_eq
     · intro hz
       rcases Subgroup.mem_map.mp hz with ⟨aM, haA, rfl⟩
       have haAamb : (aM : G) ∈ A := by
@@ -5536,7 +5569,7 @@ private theorem section15_Qbar_elementary_card
     let Dbar : Subgroup (M ⧸ Q0M) := Dloc.map qM
     have hDbar_eq : Dsub.map toQ = Dbar := by
       simpa [Dsub, Dloc, Dbar] using
-        hmap_subgroupOf D (by simpa [S] using (le_sup_left : D ≤ D ⊔ K)) hD_le_M
+        hmap_subgroupOf D (by simp [S]) hD_le_M
     have hfix_eq :
         fixedPointSubgroup (↥Dsub) Qbar =
           (subgroupCentralizerIn Qbar Dbar).subgroupOf Qbar := by
@@ -5599,7 +5632,7 @@ private theorem section15_Qbar_elementary_card
             (subgroupCentralizerIn Qloc Dloc).map qM := hcent_map
         _ = Q0M.map qM := by rw [hcent_local_eq]
         _ = ⊥ := hQ0_map_bot
-    simpa [hfix_eq, hcent_bot]
+    simp [hfix_eq, hcent_bot]
   have hfixK :
       ∀ x : Ksub, x ≠ 1 →
         fixedPointSubgroup (↥(Subgroup.zpowers (x : S))) Qbar =
@@ -5796,7 +5829,7 @@ private theorem section15_Qbar_elementary_card
   have hKsub_card : Nat.card Ksub = Nat.card K := by
     exact Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe
-        (H := K) (K := S) (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))).toEquiv
+        (H := K) (K := S) (by simp [S])).toEquiv
   have hQbar_card : Nat.card Qbar = q.val ^ p.val := by
     calc
       Nat.card Qbar =
@@ -5918,11 +5951,7 @@ private theorem section15_fitting_le_pCore_sup_pPrimeCore_map
     rw [Subgroup.map_sup]
     exact sup_le
       (by
-        simpa [section15PCoreIn] using
-          (le_sup_left :
-            (pCore q.val M).map M.subtype ≤
-              (pCore q.val M).map M.subtype ⊔
-                (pPrimeCore q.val M).map M.subtype))
+        simp [section15PCoreIn])
       le_sup_right
   simpa [section8FittingSubgroup, fittingSubgroupOf] using hmap.trans htarget
 
@@ -5961,7 +5990,7 @@ private theorem section15_fitting_le_Q_sup_centralizer_Q_of_pcore
 omit [Finite G] [IsMinCE G] in
 private theorem section15_Q_sup_centralizer_Q_le_quotient_centralizer
     {M Q N : Subgroup G}
-    (hNM : N ≤ M) (hQM : Q ≤ M) (hNQ : N ≤ Q)
+    (_hNM : N ≤ M) (hQM : Q ≤ M) (_hNQ : N ≤ Q)
     (hNnorm : (N.subgroupOf M).Normal)
     (hQbar_comm :
       IsMulCommutative
@@ -5990,8 +6019,8 @@ private theorem section15_Q_sup_centralizer_Q_le_quotient_centralizer
       refine Subgroup.mem_map.mpr ⟨xM, ?_, rfl⟩
       simpa [xM, Subgroup.mem_subgroupOf] using hxQ
     exact
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := Qbar) hyQbar hxQbar)
+      (setLike_mul_comm
+        (s := Qbar) hyQbar hxQbar)
   · intro x hxC
     let xM : M := ⟨x, hxC.1⟩
     refine Subgroup.mem_map.mpr ⟨xM, ?_, rfl⟩
@@ -6098,7 +6127,7 @@ private theorem section15_Qbar_D_centralizer_eq_bot_of_theorem15_2_context
 omit [Finite G] [IsMinCE G] in
 private theorem section15_quotient_centralizer_normalIn
     {M Q N : Subgroup G}
-    (hNM : N ≤ M) (hQM : Q ≤ M)
+    (_hNM : N ≤ M) (_hQM : Q ≤ M)
     (hNnorm : (N.subgroupOf M).Normal)
     (hQbar_norm :
       ((Q.subgroupOf M).map (QuotientGroup.mk' (N.subgroupOf M))).Normal) :
@@ -6150,7 +6179,7 @@ private theorem section15_quotient_centralizer_normalIn
 omit [Finite G] [IsMinCE G] in
 private theorem section15_le_normalizer_quotient_centralizer
     {H N A R : Subgroup G}
-    (hNH : N ≤ H) (hAH : A ≤ H)
+    (_hNH : N ≤ H) (hAH : A ≤ H)
     (hNnorm : (N.subgroupOf H).Normal)
     (hRH : R ≤ Subgroup.normalizer (H : Set G))
     (hRN : R ≤ Subgroup.normalizer (N : Set G))
@@ -6206,7 +6235,8 @@ private theorem section15_le_normalizer_quotient_centralizer
     apply (QuotientGroup.eq_iff_div_mem (N := Nloc)).2
     have hdelta : a' * xH / (xH * a') ∈ Nloc := by
       apply (QuotientGroup.eq_iff_div_mem (N := Nloc)).1
-      simpa [map_mul] using hcomm
+      change qH (a' * xH) = qH (xH * a')
+      simpa only [map_mul] using hcomm
     have hdeltaG : (((a' * xH / (xH * a') : H) : G)) ∈ N := by
       simpa [Nloc, Subgroup.mem_subgroupOf] using hdelta
     have hconjN :
@@ -6219,7 +6249,6 @@ private theorem section15_le_normalizer_quotient_centralizer
       dsimp [a', rxH]
       rw [hxH_eq]
       simp [div_eq_mul_inv, mul_assoc]
-      group
     have htargetG : (((aH * rxH / (rxH * aH) : H) : G)) ∈ N := by
       rw [htarget_eq]
       exact hconjN
@@ -6243,7 +6272,7 @@ private theorem section15_le_normalizer_quotient_centralizer
 omit [Finite G] [IsMinCE G] in
 private theorem section15_quotient_centralizer_le_of_minimal_normal
     {M Q N A C : Subgroup G}
-    (hNM : N ≤ M) (hQM : Q ≤ M) (hAM : A ≤ M) (hCM : C ≤ M)
+    (_hNM : N ≤ M) (_hQM : Q ≤ M) (_hAM : A ≤ M) (hCM : C ≤ M)
     (hAQ : A ≤ Q)
     (hNnorm : (N.subgroupOf M).Normal)
     (hQbar_norm :
@@ -6345,6 +6374,7 @@ private theorem section15_quotient_centralizer_le_of_minimal_normal
       ⟨xM, by simpa [xM, Subgroup.mem_subgroupOf] using hxC, rfl⟩
   exact (Subgroup.mem_centralizer_iff.mp hyCent (qM xM) hxCbar).symm
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_Q_sup_D_centralizer_Q_nilpotent
     {M Q D : Subgroup G}
     (hDcomp : section12ComplementIn (section10Msigma M) Q D)
@@ -6380,7 +6410,7 @@ private theorem section15_Q_sup_D_centralizer_Q_nilpotent
       letI : Group.IsNilpotent D := hDnil
       infer_instance
     let e : Eloc ≃* E := Subgroup.subgroupOfEquivOfLe (H := E) (K := D) hE_le_D
-    exact nilpotent_of_mulEquiv (G := Eloc) (G' := E) (_h := hEloc_nil) e
+    exact Group.nilpotent_of_mulEquiv (G := Eloc) (G' := E) (_h := hEloc_nil) e
   have hQcentE : Q ≤ Subgroup.centralizer (E : Set G) := by
     intro x hxQ
     rw [Subgroup.mem_centralizer_iff]
@@ -6476,7 +6506,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
           infer_instance
         let e : Dsub ≃* D :=
           Subgroup.subgroupOfEquivOfLe
-            (H := D) (K := S) (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
+            (H := D) (K := S) (by simp [S])
         exact solvable_of_surjective (f := e.symm.toMonoidHom) e.symm.surjective
       let Qloc : Subgroup M := Q.subgroupOf M
       let Dloc : Subgroup M := D.subgroupOf M
@@ -6496,7 +6526,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
           have ha_eq : aM = Subgroup.inclusion hS_le_M aS := by
             apply Subtype.ext
             rfl
-          simpa [toQ, qM, aM] using (congrArg qM ha_eq).symm
+          simpa [toQ, qM, aM] using congrArg qM ha_eq
         · intro hz
           rcases Subgroup.mem_map.mp hz with ⟨aM, haA, rfl⟩
           have haAamb : (aM : G) ∈ A := by
@@ -6550,7 +6580,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
           exact hconj
       have hDbar_eq : Dsub.map toQ = Dbar := by
         simpa [Dsub, Dloc, Dbar] using
-          hmap_subgroupOf D (by simpa [S] using (le_sup_left : D ≤ D ⊔ K)) hD_le_M
+          hmap_subgroupOf D (by simp [S]) hD_le_M
       have hcent_D_bot : subgroupCentralizerIn Qbar Dbar = ⊥ := by
         simpa [Qbar, Dbar, Qloc, Dloc, Q0M, qM, Q₀] using
           section15_Qbar_D_centralizer_eq_bot_of_theorem15_2_context
@@ -6565,7 +6595,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
               hfix_toQ_eq Dsub
             _ = (subgroupCentralizerIn Qbar Dbar).subgroupOf Qbar := by
               rw [hDbar_eq]
-        simpa [hfix_eq, hcent_D_bot]
+        simp [hfix_eq, hcent_D_bot]
       let N : Subgroup S := (MulDistribMulAction.toMulAut S Qbar).ker
       haveI : N.Normal := by
         dsimp [N]
@@ -6581,7 +6611,8 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
           have hdker : MulDistribMulAction.toMulAut S Qbar (d : S) = 1 := by
             exact MonoidHom.mem_ker.mp (by simpa [N] using hdN)
           have hact := congrArg (fun f : MulAut Qbar => f y) hdker
-          simpa using hact
+          change (d : S) • y = y
+          exact hact
         have htop_bot : (⊤ : Subgroup Qbar) = ⊥ := hfix_top.symm.trans hfixD
         exact (top_ne_bot : (⊤ : Subgroup Qbar) ≠ (⊥ : Subgroup Qbar)) htop_bot
       have hker_le_D : N ≤ Dsub :=
@@ -6669,8 +6700,8 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
       have hqg_cent : qM qgM ∈ Subgroup.centralizer (Qbar : Set (M ⧸ Q0M)) := by
         rw [Subgroup.mem_centralizer_iff]
         intro y hyQbar
-        exact Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := Qbar) hyQbar hqgQbar
+        exact setLike_mul_comm
+          (s := Qbar) hyQbar hqgQbar
       let Cq : Subgroup (M ⧸ Q0M) := Subgroup.centralizer (Qbar : Set (M ⧸ Q0M))
       have hsbar_cent : qM sM ∈ Cq := by
         have hprod : qM qgM * qM sM ∈ Cq := by
@@ -6684,7 +6715,8 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
         have hsM_eq : Subgroup.inclusion hS_le_M sS = sM := by
           apply Subtype.ext
           rfl
-        simpa [toQ] using congrArg qM hsM_eq
+        change qM (Subgroup.inclusion hS_le_M sS) = qM sM
+        exact congrArg qM hsM_eq
       have hs_cent : toQ sS ∈ Subgroup.centralizer (Qbar : Set (M ⧸ Q0M)) := by
         simpa [hs_toQ] using (by simpa [Cq] using hsbar_cent)
       have hsN : sS ∈ N := by
@@ -6777,8 +6809,8 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
     have hqg_cent : qM qgM ∈ Subgroup.centralizer (Qbar : Set (M ⧸ Q0M)) := by
       rw [Subgroup.mem_centralizer_iff]
       intro y hyQbar
-      exact Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := Qbar) hyQbar hqgQbar
+      exact setLike_mul_comm
+        (s := Qbar) hyQbar hqgQbar
     let Cq : Subgroup (M ⧸ Q0M) := Subgroup.centralizer (Qbar : Set (M ⧸ Q0M))
     have hdgbar_cent : qM dgM ∈ Cq := by
       have hprod : qM qgM * qM dgM ∈ Cq := by
@@ -6814,7 +6846,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
           hRnormQloc hsolvQloc hcopQRloc hQ0invRloc
     have hRloc_map :
         Rloc.map qM = Subgroup.zpowers (qM dgM) := by
-      simpa [Rloc] using (MonoidHom.map_zpowers qM dgM)
+      simp [Rloc]
     have hcent_quot_top :
         subgroupCentralizerIn (Qloc.map qM) (Rloc.map qM) = Qloc.map qM := by
       apply le_antisymm
@@ -6909,7 +6941,7 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
     let e : Csub ≃* Cbar :=
       Subgroup.subgroupOfEquivOfLe (H := Cbar)
         (K := Q ⊔ subgroupCentralizerIn D Q) hCbar_le_QE
-    exact nilpotent_of_mulEquiv (G := Csub) (G' := Cbar) (_h := hCsub_nil) e
+    exact Group.nilpotent_of_mulEquiv (G := Csub) (G' := Cbar) (_h := hCsub_nil) e
   have hCbar_le_F : Cbar ≤ section8FittingSubgroup M := by
     simpa [section8FittingSubgroup] using
       section12_le_fittingSubgroupOf_of_normalIn_nilpotent
@@ -6943,21 +6975,19 @@ private theorem section15_derived_le_sup_commutator_of_normal_sup_top
     calc
       QuotientGroup.mk' Q ⁅p, q⁆ =
           ⁅((p : G) : G ⧸ Q), ((q : G) : G ⧸ Q)⁆ := by
-        simpa using
-          (map_commutatorElement (f := QuotientGroup.mk' Q) (g₁ := p) (g₂ := q))
+        simp
       _ = ⁅(((q₁ * d₁ : G) : G) : G ⧸ Q), (((q₂ * d₂ : G) : G) : G ⧸ Q)⁆ := by
         rw [← hq₁d₁, ← hq₂d₂]
       _ = ⁅(d₁ : G ⧸ Q), (d₂ : G ⧸ Q)⁆ := by
         rw [hq₁eq, hq₂eq]
       _ = QuotientGroup.mk' Q c := by
-        simpa [c] using
-          (map_commutatorElement (f := QuotientGroup.mk' Q) (g₁ := d₁) (g₂ := d₂)).symm
+        simp [c]
   have hq₀Q : ⁅p, q⁆ * c⁻¹ ∈ Q := by
     apply (QuotientGroup.eq_one_iff (N := Q) (x := ⁅p, q⁆ * c⁻¹)).mp
     calc
       QuotientGroup.mk' Q (⁅p, q⁆ * c⁻¹) =
           QuotientGroup.mk' Q ⁅p, q⁆ * (QuotientGroup.mk' Q c)⁻¹ := by
-        simp
+        rw [map_mul, map_inv]
       _ = QuotientGroup.mk' Q c * (QuotientGroup.mk' Q c)⁻¹ := by
         rw [hmap_eq]
       _ = 1 := by simp
@@ -6969,6 +6999,7 @@ private theorem section15_derived_le_sup_commutator_of_normal_sup_top
   exact (Q ⊔ ⁅D, D⁆).mul_mem (Subgroup.mem_sup_left hq₀Q)
     (Subgroup.mem_sup_right hcDD)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_ambientDerived_le_sup_commutator_of_complement
     {S Q D : Subgroup G}
     (hcomp : section12ComplementIn S Q D)
@@ -7031,7 +7062,7 @@ private theorem section15_fitting_eq_Q_sup_centralizer_Q_of_theorem15_2_context
     (hQnormal : section10NormalIn Q M)
     (hQMF : Q ≤ MF)
     (hD : section15Theorem15_2ComplementData M K Q D)
-    (hQ_le_F : Q ≤ section8FittingSubgroup M)
+    (_hQ_le_F : Q ≤ section8FittingSubgroup M)
     (hQ_eq_pcore : Q = section15PCoreIn q M) :
     section8FittingSubgroup M = Q ⊔ subgroupCentralizerIn M Q ∧
       section15QuotientCentralizerEquals
@@ -7213,12 +7244,12 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       simpa [Dsub] using
         section15_isPiSubgroup_subgroupOf
           (G := G) (H := S) (K := D) hDπ
-          (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
+          (by simp [S])
     have hKsubπ : IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ Ksub := by
       simpa [Ksub] using
         section15_isPiSubgroup_subgroupOf
           (G := G) (H := S) (K := K) hKπ
-          (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))
+          (by simp [S])
     have hStopπ :
         IsPiSubgroup (G := S) ({q} : Set Nat.Primes)ᶜ (⊤ : Subgroup S) := by
       have hDsub_normal : Dsub.Normal := hfrob.normal
@@ -7258,7 +7289,7 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       have ha_eq : aM = Subgroup.inclusion hS_le_M aS := by
         apply Subtype.ext
         rfl
-      simpa [toQ, qM, aM] using (congrArg qM ha_eq).symm
+      simpa [toQ, qM, aM] using congrArg qM ha_eq
     · intro hz
       rcases Subgroup.mem_map.mp hz with ⟨aM, haA, rfl⟩
       have haAamb : (aM : G) ∈ A := by
@@ -7316,7 +7347,7 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
     let Dbar : Subgroup (M ⧸ Q0M) := Dloc.map qM
     have hDbar_eq : Dsub.map toQ = Dbar := by
       simpa [Dsub, Dloc, Dbar] using
-        hmap_subgroupOf D (by simpa [S] using (le_sup_left : D ≤ D ⊔ K)) hD_le_M
+        hmap_subgroupOf D (by simp [S]) hD_le_M
     have hcent_D_bot : subgroupCentralizerIn Qbar Dbar = ⊥ := by
       simpa [Qbar, Dbar, Qloc, Dloc, Q0M, qM, Q₀] using
         section15_Qbar_D_centralizer_eq_bot_of_theorem15_2_context
@@ -7330,11 +7361,11 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
           hfix_toQ_eq Dsub
         _ = (subgroupCentralizerIn Qbar Dbar).subgroupOf Qbar := by
           rw [hDbar_eq]
-    simpa [hfix_eq, hcent_D_bot]
+    simp [hfix_eq, hcent_D_bot]
   have hKsub_card : Nat.card Ksub = Nat.card K := by
     exact Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe
-        (H := K) (K := S) (by simpa [S] using (le_sup_right : K ≤ D ⊔ K))).toEquiv
+        (H := K) (K := S) (by simp [S])).toEquiv
   have hKsub_card_p : Nat.card Ksub = p.val := by
     calc
       Nat.card Ksub = Nat.card K := hKsub_card
@@ -7350,7 +7381,7 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       zpowers_eq_top_of_prime_card_of_ne_one hKsub_prime hx
     have hmap_zpow :
         (Subgroup.zpowers x).map Ksub.subtype = Subgroup.zpowers (x : S) := by
-      simpa using (MonoidHom.map_zpowers Ksub.subtype x)
+      simp
     have htop_map : (⊤ : Subgroup Ksub).map Ksub.subtype = Ksub := by
       ext y
       constructor
@@ -7398,8 +7429,8 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       simpa [Dsub] using
         (commutator_subgroupOf_map_eq
           (S := S) (H := D) (R := D)
-          (by simpa [S] using (le_sup_left : D ≤ D ⊔ K))
-          (by simpa [S] using (le_sup_left : D ≤ D ⊔ K)))
+          (by simp [S])
+          (by simp [S]))
     have hxMap : x ∈ (⁅Dsub, Dsub⁆).map S.subtype := by
       simpa [hDcomm_map] using hxComm
     rcases Subgroup.mem_map.mp hxMap with ⟨xS, hxSComm, hxSx⟩
@@ -7430,7 +7461,8 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       apply Subtype.ext
       exact hxSx
     have hx_toQ : qM xM = toQ xS := by
-      simpa [toQ] using (congrArg qM hxM_eq).symm
+      change qM xM = qM (Subgroup.inclusion hS_le_M xS)
+      exact (congrArg qM hxM_eq).symm
     simpa [hx_toQ] using hxS_cent
   exact hder_le_QDcomm.trans (by
     simpa [Cbar, Qbar, Qloc, Q0M, qM, Q₀] using
@@ -7559,7 +7591,8 @@ private theorem section15_kstar_quotient_centralizer_eq_fitting_of_theorem15_2_c
     apply (QuotientGroup.eq_iff_div_mem (N := Q₀.subgroupOf σ)).2
     have hdivM : kM * xM / (xM * kM) ∈ Q₀.subgroupOf M := by
       apply (QuotientGroup.eq_iff_div_mem (N := Q₀.subgroupOf M)).1
-      simpa [map_mul] using hcommM
+      change qM (kM * xM) = qM (xM * kM)
+      simpa only [map_mul] using hcommM
     have hdivG : ((kσ * xσ / (xσ * kσ) : σ) : G) ∈ Q₀ := by
       have hdivG_M : ((kM * xM / (xM * kM) : M) : G) ∈ Q₀ := by
         simpa [Subgroup.mem_subgroupOf] using hdivM
@@ -7627,7 +7660,8 @@ private theorem section15_kstar_quotient_centralizer_eq_fitting_of_theorem15_2_c
       apply (QuotientGroup.eq_iff_div_mem (N := Q₀.subgroupOf M)).2
       have hdivσ : kσ * xσ / (xσ * kσ) ∈ Q₀.subgroupOf σ := by
         apply (QuotientGroup.eq_iff_div_mem (N := Q₀.subgroupOf σ)).1
-        simpa [map_mul] using hcommσ
+        change qσ (kσ * xσ) = qσ (xσ * kσ)
+        simpa only [map_mul] using hcommσ
       have hdivG : ((kM * xM / (xM * kM) : M) : G) ∈ Q₀ := by
         have hdivGσ : ((kσ * xσ / (xσ * kσ) : σ) : G) ∈ Q₀ := by
           simpa [Subgroup.mem_subgroupOf] using hdivσ
@@ -7811,22 +7845,26 @@ private theorem section15_le_centralizer_of_sylow_images
     change ((y : X) : G) ∈ Subgroup.centralizer (K : Set G)
     have hy_map : ((y : X) : G) ∈ ((S : Subgroup X).map X.subtype : Subgroup G) :=
       Subgroup.mem_map_of_mem X.subtype hyS
-    exact hSylowCent p (by simpa [p] using Nat.dvd_of_mem_primeFactors hr) S hy_map
+    have hpX : p ∈ subgroupPrimeSet X := by
+      change p.val ∣ Nat.card X
+      exact Nat.dvd_of_mem_primeFactors hr
+    exact hSylowCent p hpX S hy_map
   intro x hxX
   let xX : X := ⟨x, hxX⟩
   have hxC : xX ∈ C := htop_le_C (show xX ∈ (⊤ : Subgroup X) by simp)
-  simpa [C, xX] using hxC
+  change x ∈ Subgroup.centralizer (K : Set G) at hxC
+  exact hxC
 
 private theorem section15_D_le_centralizer_Q_of_not_mem_beta
     {M MF K Q D : Subgroup G} {q : Nat.Primes}
     (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
+    (_hMF : section15MFSubgroup M MF)
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hMFne : MF ≠ section10Msigma M)
+    (_hq : q.val = Nat.card (section14KStar M K))
     (hQ : section12SylowSubgroupIn q Q M)
     (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
+    (_hQMF : Q ≤ MF)
     (hD : section15Theorem15_2ComplementData M K Q D)
     (hqβ : q ∉ section10BetaPrimes M) :
     D ≤ Subgroup.centralizer (Q : Set G) := by
@@ -7834,9 +7872,9 @@ private theorem section15_D_le_centralizer_Q_of_not_mem_beta
   have hQq : IsPGroup q.val Q := by
     rcases hQ with ⟨P, hP⟩
     rw [← hP]
-    simpa [section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := q.val) (H := (P : Subgroup M))
-        P.isPGroup' M.subtype)
+    change IsPGroup q.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (P : Subgroup M))
+      P.isPGroup' M.subtype
   have hQnarrow : IsNarrowPGroup q.val Q := by
     rcases hQ with ⟨P, hP⟩
     have hPnarrow :
@@ -7926,6 +7964,7 @@ private theorem section15_q_mem_beta_of_theorem15_2_context
   exact (section15_MF_ne_msigma_not_nilpotent hM hMF hMFne) (by
     simpa [S] using hSnil)
 
+omit [Finite G] [IsMinCE G] in
 /-- Theorem 15.2(b), `q ∈ π(M_F)` part, extracted from `Q ≤ M_F`. -/
 private theorem section15_q_mem_MF_primeSet_of_normal_sylow
     {M MF K Q : Subgroup G} {q : Nat.Primes}

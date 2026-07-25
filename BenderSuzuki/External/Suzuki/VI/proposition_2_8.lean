@@ -61,7 +61,7 @@ public theorem suzuki_ch6_proposition_2_8
         by_contra hgH
         obtain ⟨k, hkK, hk_ne⟩ := hKnontrivial
         have hgNorm' : ∀ x : G, x ∈ K ↔ g * x * g⁻¹ ∈ K := by
-          simpa only [Subgroup.mem_normalizer_iff] using hgNorm
+          exact Subgroup.mem_set_normalizer_iff.mp hgNorm
         have hmem : g * k * g⁻¹ ∈
             ((fun x : G => g * x * g⁻¹) '' K) ∩ K :=
           ⟨⟨k, hkK, rfl⟩, (hgNorm' k).1 hkK⟩

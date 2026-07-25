@@ -21,6 +21,7 @@ namespace External
 
 open MatrixGroups
 open scoped LinearAlgebra.Projectivization
+open scoped commutatorElement
 
 universe u
 
@@ -345,13 +346,14 @@ public theorem huppert_II_10_13
     letI : RU.Normal :=
       Subgroup.normal_subgroupOf_of_le_normalizer hRnormal
     letI : IsCyclic H := hHcyclic
+    letI : IsMulCommutative H := IsCyclic.isMulCommutative
     have hHUcomm : IsMulCommutative HU := by
       refine ⟨⟨?_⟩⟩
       intro x y
       let xH : H := ⟨((x : U) : G), x.property⟩
       let yH : H := ⟨((y : U) : G), y.property⟩
       have hcomm : xH * yH = yH * xH :=
-        IsCyclic.commutative.comm _ _
+        (IsMulCommutative.is_comm (M := H)).comm _ _
       apply Subtype.ext
       apply Subtype.ext
       exact congrArg (fun z : H => (z : G)) hcomm
@@ -376,8 +378,6 @@ public theorem huppert_II_10_13
           (hermitianUnipotentGL J₀ z : Matrix (Fin 3) (Fin 3) K) i j
         rw [hM, hermitianUnipotentGL_val, hermitianUnipotentMatrix_eq]
       apply Subtype.ext
-      change (((coordR z : R) : G) : Matrix.ProjGenLinGroup (Fin 3) K) =
-        (rootPSU z : Matrix.ProjGenLinGroup (Fin 3) K)
       calc
         (((coordR z : R) : G) : Matrix.ProjGenLinGroup (Fin 3) K) =
             Matrix.ProjGenLinGroup.mk M := hMproj
@@ -418,9 +418,6 @@ public theorem huppert_II_10_13
         rfl
       have hh_torus : (h : G) = hermitianTorusPSU J₀ hJ₀standard k := by
         apply Subtype.ext
-        change (((h : H) : G) : Matrix.ProjGenLinGroup (Fin 3) K) =
-          ((hermitianTorusPSU J₀ hJ₀standard k : G) :
-            Matrix.ProjGenLinGroup (Fin 3) K)
         rw [hMproj, hermitianTorusPSU_val, hMtorus]
       intro r hr
       let z := coordRMul.symm ⟨r, hr⟩
@@ -538,8 +535,13 @@ public theorem huppert_II_10_13
           have hdc : z = d * c := by
             dsimp [d]
             group
-          simpa only [map_mul] using
-            congrArg (fun x => ((coordRMul x : R) : G)) hdc
+          calc
+            ((coordRMul z : R) : G) =
+                (((coordRMul d * coordRMul c : R)) : G) := by
+              apply congrArg (fun x : R => (x : G))
+              rw [hdc, map_mul]
+            _ = ((coordRMul d : R) : G) * ((coordRMul c : R) : G) :=
+              map_mul R.subtype _ _
         _ = ((coordRMul d : R) : G) * ((⁅rwU, hU⁆ : U) : G) := by
           congr 1
           change ((coordRMul c : R) : G) = (cR : G)
@@ -563,9 +565,6 @@ public theorem huppert_II_10_13
           (hermitianUnipotentGL J₀ z : Matrix (Fin 3) (Fin 3) K) i j
         rw [hM, hermitianUnipotentGL_val, hermitianUnipotentMatrix_eq]
       apply Subtype.ext
-      change (((coordR z : R) : G) :
-          Matrix.ProjGenLinGroup (Fin 3) K) =
-        (rootPSU z : Matrix.ProjGenLinGroup (Fin 3) K)
       calc
         (((coordR z : R) : G) : Matrix.ProjGenLinGroup (Fin 3) K) =
             Matrix.ProjGenLinGroup.mk M := hMproj
@@ -665,7 +664,7 @@ public theorem huppert_II_10_13
           all_goals field_simp [hk0, hconjk0]
           all_goals try rw [J₀.conj_involutive]
           all_goals try linear_combination (k : K) * hparam
-          all_goals try ring
+          all_goals ring_nf
           exact hparam.symm
         apply Subtype.ext
         change
@@ -716,8 +715,6 @@ public theorem huppert_II_10_13
       rfl
     have hh_torus : h = torusPSU k := by
       apply Subtype.ext
-      change (h : Matrix.ProjGenLinGroup (Fin 3) K) =
-        (torusPSU k : Matrix.ProjGenLinGroup (Fin 3) K)
       rw [hMproj, hermitianTorusPSU_val, hMtorus]
     rw [hh_torus]
     have hk := htorus_weyl_mem k

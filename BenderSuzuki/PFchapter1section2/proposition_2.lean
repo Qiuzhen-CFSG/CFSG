@@ -11,6 +11,10 @@ import FeitThompson.BGsection3.Remaining
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.SubgroupConj
 
+open scoped IsMulCommutative
+
+attribute [local instance] commutatorElement
+
 namespace BenderSuzuki
 namespace PFchapter1section2
 
@@ -109,7 +113,7 @@ private theorem proposition_2_fitting_eq_antiFixed_of_involutiveMulAut
         rw [map_inv, ha] }
   let B : Subgroup X := A.comap pi
   have hBnormal : B.Normal := by
-    letI : CommGroup (X ⧸ F) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (X ⧸ F) := IsMulCommutative.instCommGroup
     exact Subgroup.Normal.comap (inferInstance : A.Normal) pi
   have hBstable : ∀ x : X, x ∈ B → tau x ∈ B := by
     intro x hx
@@ -178,7 +182,13 @@ private theorem proposition_2_fitting_eq_antiFixed_of_involutiveMulAut
     simpa using hcomm.symm
   have hBleF : B ≤ F := by
     letI : IsMulCommutative B := hBcomm
-    have hBnil : Group.IsNilpotent B := by infer_instance
+    have hBnil : Group.IsNilpotent B := by
+      letI : IsMulCommutative B := hBcomm
+      refine ⟨1, ?_⟩
+      have hcenter : Subgroup.center B = ⊤ := by
+        ext x
+        simp [Subgroup.mem_center_iff, mul_comm]
+      simpa [Subgroup.upperCentralSeries_one] using hcenter
     exact le_sSup
       (show B.Normal ∧ Group.IsNilpotent B from ⟨hBnormal, hBnil⟩)
   have hFleB : F ≤ B := by
@@ -476,7 +486,7 @@ private theorem proposition_2_canonical_quotient_fitting
       simpa [pow_two, mul_assoc] using h
     have hwone : w = 1 :=
       proposition_2_eq_one_of_sq_eq_one_of_odd_card hA1.D_odd w hwsq
-    have htaud : tauD d = d := by simpa [htau_eq, hwone]
+    have htaud : tauD d = d := by simp [htau_eq, hwone]
     refine ⟨d.property, ?_⟩
     change (d : G) ∈ Subgroup.centralizer ({t} : Set G)
     rw [Subgroup.mem_centralizer_singleton_iff]
@@ -940,7 +950,7 @@ private theorem proposition_2_order_bound_of_isZGroup
   letI : IsZGroup K := hZ
   letI : IsMulCommutative K :=
     proposition_2_K_isMulCommutative H D Q K V W Q0 S Q1 t hsec
-  letI : CommGroup K := CommGroup.ofIsMulCommutative
+  letI : CommGroup K := IsMulCommutative.instCommGroup
   letI : Group.IsNilpotent K := by infer_instance
   have hcyc : IsCyclic K := by infer_instance
   rcases (isCyclic_iff_exists_zpowers_eq_top (α := K)).1 hcyc with ⟨k, hk_top⟩

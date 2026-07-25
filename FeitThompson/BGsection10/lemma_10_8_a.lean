@@ -26,6 +26,7 @@ section Section10
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [IsMinCE G] in
 public theorem section10_beta_subset_alpha
     (M : Subgroup G) :
     section10BetaPrimes M ⊆ section10AlphaPrimes M := by
@@ -38,6 +39,7 @@ private theorem section10_beta_subset_sigma
   intro p hpβ
   exact section10_alpha_subset_sigma hM hpβ.1
 
+omit [IsMinCE G] in
 private theorem section10_mbetaSubgroup_le_malphaSubgroup
     (M : Subgroup G) :
     section10MbetaSubgroup M ≤ section10MalphaSubgroup M := by
@@ -167,6 +169,7 @@ private theorem section10_groupRank_le_two_of_primeRank_le_two_of_isPGroup_local
     groupRank R ≤ 2 :=
   (section10_groupRank_le_primeRank_of_isPGroup_local (R := R) (p := p) hRp).trans hrank
 
+omit [IsMinCE G] in
 public theorem section10_sylow_narrow_of_not_mem_alpha
     {M : Subgroup G} {p : Nat.Primes} (hpα : p ∉ section10AlphaPrimes M)
     (P : Sylow p.val M) :
@@ -290,7 +293,8 @@ private theorem section10_sylow_narrow_of_mem_alpha_not_mem_beta
     exact hnotIdeal ⟨hrankG, hall⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype)
   obtain ⟨S, hPGS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hPGp
   have hS_eq_PG : (S : Subgroup G) = PG := by
@@ -300,8 +304,11 @@ private theorem section10_sylow_narrow_of_mem_alpha_not_mem_beta
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S₀ S
   let S₀map : Subgroup G := (S₀ : Subgroup G).map (MulAut.conj g).toMonoidHom
   have hS₀map_eq : S₀map = (S : Subgroup G) := by
-    simpa [S₀map, Sylow.coe_subgroup_smul] using
-      congrArg (fun T : Sylow p.val G => (T : Subgroup G)) hg
+    change (S₀ : Subgroup G).map (MulAut.conj g).toMonoidHom =
+      (S : Subgroup G)
+    have hg' := congrArg (fun T : Sylow p.val G => (T : Subgroup G)) hg
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def] at hg'
+    exact hg'
   let eS₀Smap : (S₀ : Subgroup G) ≃* S₀map :=
     Subgroup.equivMapOfInjective
       (f := (MulAut.conj g).toMonoidHom) (S₀ : Subgroup G)
@@ -498,6 +505,7 @@ private theorem section10_iInf_pPrimeCore_characteristic
   rw [hfixed] at hmap
   exact hmap
 
+omit [IsMinCE G] in
 private theorem section10_betaCoreIntersection_isPiSubgroup
     {M : Subgroup G} :
     IsPiSubgroup (G := derivedSubgroup M) (section10BetaPrimes M)
@@ -549,8 +557,10 @@ private theorem section10_betaHallSubgroup_le_mbetaSubgroup
         (H := D) {p : Nat.Primes | p ∈ subgroupPrimeSet M ∧
           p ∉ section10BetaPrimes M}
   have hCπ : IsPiSubgroup (G := D) (section10BetaPrimes M) C := by
-    simpa [C, I] using
-      section10_betaCoreIntersection_isPiSubgroup (G := G) (M := M)
+    change IsPiSubgroup (G := derivedSubgroup M) (section10BetaPrimes M)
+      (⨅ p : {p : Nat.Primes // p ∈ subgroupPrimeSet M ∧
+          p ∉ section10BetaPrimes M}, pPrimeCore p.val (derivedSubgroup M))
+    exact section10_betaCoreIntersection_isPiSubgroup (G := G) (M := M)
   have hCmapπ : IsPiSubgroup (G := M) (section10BetaPrimes M) (C.map D.subtype) :=
     by
       intro p hp_dvd

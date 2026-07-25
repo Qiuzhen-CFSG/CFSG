@@ -32,7 +32,10 @@ namespace External
 
 open MatrixGroups
 open XI1115ThetaEquationExtraction
-open scoped Pointwise
+open scoped Pointwise commutatorElement IsMulCommutative
+
+attribute [local simp] MulAction.subgroup_smul_def Subgroup.orderOf_coe
+set_option synthInstance.maxHeartbeats 40000
 
 universe u v
 
@@ -1156,7 +1159,7 @@ private theorem xi1115_rho_zero_or_one_of_orbit_exclusion
         · rw [map_one, mul_one]
           calc
             rho + (rho + 1) + 1 = (rho + rho) + (1 + 1) := by abel
-            _ = 0 := by simp only [CharTwo.add_self_eq_zero, zero_add]
+            _ = 0 := by simp only [CharTwo.add_self_eq_zero]
       _ = 1 := hone
   have hxOrbit : g⁻¹ * (h⁻¹ • g) = d • g := by
     rw [hgInv, hg, hactor, hactor, hmul]
@@ -1583,7 +1586,7 @@ private theorem xi1115_adjoin_add_one_eq_top
     (Algebra.adjoin (ZMod 2) ({a + 1} : Set K)).add_mem
       (Algebra.subset_adjoin (Set.mem_singleton (a + 1)))
       (Subalgebra.one_mem _)
-  simpa only [add_assoc, CharTwo.add_self_eq_zero, add_zero] using hsum
+  simpa [add_assoc, CharTwo.add_self_eq_zero, add_zero] using hsum
 
 private theorem xi1115_quadratic_impossible_of_binary_generator
     (n : ℕ) (hn : 3 ≤ n)
@@ -2122,8 +2125,16 @@ private theorem xi1115_suzukiTorusGL_injective (m : ℕ) :
   have h11 := congrArg
     (fun A : GL (Fin 4) K =>
       (((A : GL (Fin 4) K) : Matrix (Fin 4) (Fin 4) K) 1 1)) hxy
-  simpa [frob, iterateFrobeniusEquiv_def,
-    SuzukiTorusGL, SuzukiTorusMatrix] using h11
+  have hpow : (x : K) ^ 2 ^ m = (y : K) ^ 2 ^ m := by
+    simpa [SuzukiTorusGL, SuzukiTorusMatrix] using h11
+  have hfrob : frob (x : K) = frob (y : K) := by
+    calc
+      frob (x : K) = (x : K) ^ 2 ^ m := by
+        simpa [frob] using (iterateFrobeniusEquiv_def (R := K) (p := 2) (n := m) (x : K))
+      _ = (y : K) ^ 2 ^ m := hpow
+      _ = frob (y : K) := by
+        simpa [frob] using (iterateFrobeniusEquiv_def (R := K) (p := 2) (n := m) (y : K)).symm
+  exact hfrob
 private theorem xi1115_nonsplit_centralizer_numeric_impossible
     (aCard cCard rCard dCard l r e : ℕ)
     (hl : 0 < l)
@@ -2395,9 +2406,6 @@ private theorem xi1115_standard_bruhat_of_coordinate_embeddings_with_weyl_spec
         ⟨a, z, hxaz⟩
       refine ⟨pair a z, ?_⟩
       apply Subtype.ext
-      change
-        ((phiF (pair a z) : SuzukiMatrixGroup m) : GL (Fin 4) K) =
-          (x : GL (Fin 4) K)
       rw [hphiFSpec]
       exact hxaz.symm
   have hHmem (x : SuzukiMatrixGroup m) :
@@ -2411,9 +2419,6 @@ private theorem xi1115_standard_bruhat_of_coordinate_embeddings_with_weyl_spec
         m (x : GL (Fin 4) K)).mp hx with ⟨u, hxu⟩
       refine ⟨eD.symm u, ?_⟩
       apply Subtype.ext
-      change
-        ((phiD (eD.symm u) : SuzukiMatrixGroup m) : GL (Fin 4) K) =
-          (x : GL (Fin 4) K)
       rw [hphiDSpec, eD.apply_symm_apply]
       exact hxu.symm
   have hnormal : HGL ≤ Subgroup.normalizer FGL :=
@@ -2924,7 +2929,6 @@ private theorem xi1115_standard_weyl_not_in_borel
           Matrix (Fin 4) (Fin 4)
             (PFAppendixIII.BinaryGaloisField (2 * m + 1))) 3 0))
     hvalue
-  dsimp only at hentry
   rw [hwstd] at hentry
   change
     (((SuzukiWeylGL m :
@@ -3373,7 +3377,7 @@ private theorem xi1115_twoPointStabilizer_normalizer_index_two
         (x : G) • a = b ∧ (x : G) • b = a := by
       exact xi1115_twoPointStabilizer_normalizer_notMem_swaps
         hat_most_two_fixed_points a b hab F hFrob (x : G)
-        (by simpa [T] using x.property) (by simpa [H, D, Dg] using hxD)
+        (by exact x.property) (by exact hxD)
     left
     change ((x * sT : T) : G) ∈ Dg
     apply (xi1115_twoPointStabilizer_map_mem_iff a b hab ((x * sT : T) : G)).mpr
@@ -3450,7 +3454,7 @@ private theorem xi1115_odd_twoPointStabilizer_exists_swap_involution
         (((c : C) : T) : G) • b = a := by
     apply xi1115_twoPointStabilizer_normalizer_notMem_swaps
       hat_most_two_fixed_points a b hab F hFrob
-    · simpa [T] using (c : T).property
+    · exact (c : T).property
     · intro hcDg
       apply hcnotD
       exact hcDg
@@ -3647,8 +3651,7 @@ private theorem xi1115_odd_twoPointNormalizer_isZGroup
         natCard_subgroupOf_eq Dg T Subgroup.le_normalizer
       _ = Nat.card D := hDgcard
   letI : IsZGroup D :=
-    isZGroup_of_frobenius_complement_of_odd F D (by simpa [D] using hFrob)
-      (by simpa [D] using hodd)
+    isZGroup_of_frobenius_complement_of_odd F D (by simpa [D] using hFrob) hodd
   let eDg : D ≃* Dg :=
     Subgroup.equivMapOfInjective D H.subtype H.subtype_injective
   let eDsub : Dsub ≃* Dg :=
@@ -3809,7 +3812,9 @@ private theorem xi1115_odd_twoPointStabilizer_cyclic_and_commutator_eq
         Subgroup.normalizer ((QTsub : Subgroup T) : Set T) ≤
           Subgroup.centralizer (QTsub : Set T) := by
       rcases Sylow.normalizer_le_centralizer_or_le_commutator QT with hcent | hle
-      · simpa [hQTcoe] using hcent
+      · have hQTcoe_set : (QT : Set T) = (QTsub : Set T) := by
+          simpa using congrArg (fun (s : Subgroup T) => (s : Set T)) hQTcoe
+        simpa [hQTcoe_set] using hcent
       · exfalso
         apply hqcommNot
         exact (QT.dvd_card_of_dvd_card hqT).trans
@@ -3833,13 +3838,13 @@ private theorem xi1115_odd_twoPointStabilizer_cyclic_and_commutator_eq
       intro hqF
       have hqone : q ∣ 1 := by
         have := Nat.dvd_sub hqF hqFsub
-        convert this using 1 <;> omega
+        convert this using 1; omega
       exact hq.not_dvd_one hqone
     have hqFplusNot : ¬ q ∣ Nat.card F + 1 := by
       intro hqFplus
       have hqtwo : q ∣ 2 := by
         have := Nat.dvd_sub hqFplus hqFsub
-        convert this using 1 <;> omega
+        convert this using 1; omega
       rcases (Nat.dvd_prime Nat.prime_two).mp hqtwo with hq1 | hq2eq
       · exact hq.ne_one hq1
       · exact hqne hq2eq
@@ -4067,19 +4072,19 @@ private theorem xi1115_isMulCommutative_sup_of_le_centralizer
     (hBcentral : B ≤ Subgroup.centralizer (A : Set Q)) :
     IsMulCommutative (A ⊔ B : Subgroup Q) := by
   rw [Subgroup.sup_eq_closure]
-  letI : CommGroup (Subgroup.closure ((A : Set Q) ∪ (B : Set Q))) :=
-    Subgroup.closureCommGroupOfComm (by
+  haveI : IsMulCommutative (Subgroup.closure ((A : Set Q) ∪ (B : Set Q))) :=
+    Subgroup.isMulCommutative_closure (by
       intro x hx y hy
       rcases hx with hxA | hxB
       · rcases hy with hyA | hyB
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) hxA hyA
+        · exact setLike_mul_comm
+            (s := A) hxA hyA
         · exact Subgroup.mem_centralizer_iff.mp (hBcentral hyB) x hxA
       · rcases hy with hyA | hyB
         · exact (Subgroup.mem_centralizer_iff.mp (hBcentral hxB) y hyA).symm
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := B) hxB hyB)
-  exact ⟨⟨fun x y => mul_comm x y⟩⟩
+        · exact setLike_mul_comm
+            (s := B) hxB hyB)
+  exact inferInstance
 
 /-- XI.1.5, inversion part: every element interchanging the two points acts
 by inversion on the odd cyclic two-point stabilizer. -/
@@ -4154,7 +4159,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
   have hcTne : cT ≠ 1 := by
     intro hcOne
     apply hcTnotD
-    simpa [hcOne]
+    simp [hcOne]
   have hcTSq : cT ^ 2 = 1 := by
     apply Subtype.ext
     exact hcSq
@@ -4165,7 +4170,8 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hcTorder : orderOf cT = 2 := orderOf_eq_prime hcTSq hcTne
   have hRcard : Nat.card R = 2 := by
-    simpa [R, hcTorder] using Nat.card_zpowers cT
+    simp [R, hcTorder]
+
   have hsup : Dsub ⊔ R = ⊤ := by
     apply top_unique
     intro x _hx
@@ -4178,7 +4184,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
           exact hxD hxDg
         exact xi1115_twoPointStabilizer_normalizer_notMem_swaps
           hat_most_two_fixed_points a b hab F hFrob ((x : T) : G)
-          (by simpa [T] using x.property) hxnotDg
+          (by exact x.property) hxnotDg
       have hxcDg : (((x * cT : T) : G)) ∈ Dg := by
         apply (xi1115_twoPointStabilizer_map_mem_iff a b hab ((x * cT : T) : G)).mpr
         constructor
@@ -4187,7 +4193,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
         · change (((x : T) : G) * c) • b = b
           rw [mul_smul, hcb, hxswap.1]
       have hxcD : x * cT ∈ Dsub := by
-        simpa [Dsub] using hxcDg
+        simpa [Dsub, Subgroup.mem_subgroupOf] using hxcDg
       have hcR : cT ∈ R := Subgroup.mem_zpowers cT
       have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
       have hxrepr : x = (x * cT) * cT := by
@@ -4196,7 +4202,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
       exact (Dsub ⊔ R).mul_mem
         (Subgroup.mem_sup_left hxcD) (Subgroup.mem_sup_right hcR)
   have hRnormD : R ≤ Subgroup.normalizer (Dsub : Set T) := by
-    simpa [Dsub.normalizer_eq_top]
+    simp [Dsub.normalizer_eq_top]
   let N : Subgroup T := ⁅Dsub, R⁆
   haveI : N.Normal := by
     have hNnormal := commutator_normal_in_sup Dsub R
@@ -4219,8 +4225,8 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := Dsub) hxD hyD)
+      (setLike_mul_comm
+        (s := Dsub) hxD hyD)
   have hBcomm : IsMulCommutative B := by
     refine ⟨⟨fun x y => ?_⟩⟩
     apply Subtype.ext
@@ -4229,8 +4235,8 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := R) hxR hyR)
+      (setLike_mul_comm
+        (s := R) hxR hyR)
   have hBcentralA : B ≤ Subgroup.centralizer (A : Set (T ⧸ N)) := by
     intro rbar hrbar
     rcases hrbar with ⟨r, hrR, rfl⟩
@@ -4263,7 +4269,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
     exact congrArg Subtype.val hxy
   have hcommLeN : commutator T ≤ N :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp
-      hquotComm.is_comm
+      hquotComm
   have hNleComm : N ≤ commutator T := by
     exact Subgroup.commutator_mono le_top le_top
   have hNeqD : N = Dsub :=
@@ -4317,7 +4323,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
         congrArg Subtype.val hx
     have hccomm : Commute cT (x : T) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hconjFix, mul_assoc]
+      simp [commutatorElement_def, hconjFix]
     have hxFixed : x ∈ fixedPointSubgroup R Dsub := by
       change ∀ r : R, r • x = x
       intro r
@@ -4353,14 +4359,14 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
       rw [mul_smul, hca, hsb]
     · change (s * c) • b = b
       rw [mul_smul, hcb, hsa]
-  let dT : Dsub := ⟨sT * cT, by simpa [Dsub] using hscDg⟩
+  let dT : Dsub := ⟨sT * cT, by simpa [Dsub, Subgroup.mem_subgroupOf] using hscDg⟩
   have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
   have hsEq : sT = (dT : T) * cT := by
     change sT = (sT * cT) * cT
     rw [mul_assoc, hcMul, mul_one]
   have hdcomm : Commute (dT : T) (xDsub : T) := by
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := Dsub) dT.property xDsub.property
+    exact setLike_mul_comm
+      (s := Dsub) dT.property xDsub.property
   have hcalc :
       sT * (xDsub : T) * sT⁻¹ = ((xDsub⁻¹ : Dsub) : T) := by
     calc
@@ -5010,7 +5016,7 @@ private theorem xi1115_distinctFixedPoint_involution_centralizers_inf_eq_bot
   have hgOne : g = 1 := by
     rw [← hgx]
     exact congrArg Subtype.val hgxOne
-  simpa [hgOne]
+  simp [hgOne]
 
 private theorem xi1115_distinctFixedPoint_involutions_isConj
     {G Omega : Type*} [Group G] [Finite G] [MulAction G Omega]
@@ -5188,7 +5194,7 @@ private theorem xi1115_sameFixedPoint_involutions_commute
     simpa [tF, uF, tH, uH] using congrArg
       (fun z : F => (((z : F) : MulAction.stabilizer G a) : G)) hcommF
   have hback := congrArg (fun z : G => k⁻¹ * z * k) hcommConj
-  simpa [t', u', mul_assoc] using hback
+  simpa [Commute, SemiconjBy, t', u', mul_assoc] using hback
 private theorem xi1115_stronglyReal_sq_ne_one_order_odd
     {G Omega : Type*} [Group G] [Finite G] [MulAction G Omega]
     [Fintype Omega] [FaithfulSMul G Omega]
@@ -5275,7 +5281,10 @@ private theorem xi1115_frobeniusKernel_involutions_D_orbit
     xi1115_exists_central_involution (F := F) inferInstance hF2
   let z : F := (zC : F)
   have hzorder : orderOf z = 2 := by
-    simpa [z, Subgroup.orderOf_mk] using hzCorder
+    calc
+      orderOf z = orderOf (zC : F) := rfl
+      _ = orderOf zC := (Subgroup.orderOf_coe (zC : Subgroup.center F))
+      _ = 2 := hzCorder
   have hzcenter : z ∈ Subgroup.center F := zC.property
   refine ⟨z, hzorder, hzcenter, ?_⟩
   intro w hworder
@@ -5446,10 +5455,12 @@ private theorem xi1115_normal_stabilizer_contains_frobeniusKernel
           (a := a) hcomp hNtrans
       intro x y
       obtain ⟨r, hr, hrunique⟩ := hregularTop x y
-      refine ⟨(r : N), by simpa using hr, ?_⟩
+      refine ⟨(r : N), by
+        simpa [MulAction.subgroup_smul_def] using hr
+      , ?_⟩
       intro n hn
       let nTop : (⊤ : Subgroup N) := ⟨n, trivial⟩
-      have hnTop : (nTop : N) • x = y := by simpa [nTop] using hn
+      have hnTop : (nTop : N) • x = y := by simpa [nTop, Subtype.coe_mk] using hn
       have heq : nTop = r := hrunique nTop hnTop
       exact congrArg Subtype.val heq
     have hRproper : R ≠ ⊤ := by
@@ -5459,8 +5470,8 @@ private theorem xi1115_normal_stabilizer_contains_frobeniusKernel
       have hfix : n • a = a := MulAction.mem_stabilizer_iff.mp hnR
       exact hab (hfix.symm.trans hn)
     let rToH : R → H := fun r =>
-      ⟨((r : N) : G), by
-        simpa using MulAction.mem_stabilizer_iff.mp r.property⟩
+      ⟨((r : N) : G), MulAction.mem_stabilizer_iff.mpr (by
+        simpa using MulAction.mem_stabilizer_iff.mp r.property)⟩
     have hRtoF : ∀ r : R, rToH r ∈ F := by
       intro r
       apply hNaF
@@ -5801,7 +5812,7 @@ private theorem xi1115_derangement_mem_normal
     rw [Equiv.Perm.sum_cycleType, hsupport, Finset.card_univ]
   have hexOdd : ∃ k : ℕ, k ∈ σ.cycleType ∧ Odd k := by
     by_contra h
-    push_neg at h
+    push Not at h
     have htwoDvd : 2 ∣ σ.cycleType.sum :=
       Multiset.dvd_sum (fun k hk =>
         even_iff_two_dvd.mp (Nat.not_odd_iff_even.mp (h k hk)))
@@ -5879,7 +5890,7 @@ private theorem xi1115_derangement_mem_normal
   have hqDvdTwo : orderOf qg ∣ 2 := by
     have hsub := Nat.dvd_sub hqDvdDegree hqDvdFsub
     have hFpos : 0 < Nat.card F := Nat.card_pos
-    convert hsub using 1 <;> omega
+    convert hsub using 1; omega
   have hqOrderOne : orderOf qg = 1 := by
     rcases (Nat.dvd_prime Nat.prime_two).mp hqDvdTwo with h | h
     · exact h
@@ -5952,7 +5963,7 @@ private theorem xi1115_simple
     have hgOne : g ≠ 1 := by
       intro hg
       apply hgN
-      simpa [hg] using N.one_mem
+      simp [hg]
     have hle := hfixLe g hgOne
     have hneZero : fix g ≠ 0 := by
       intro hzero
@@ -6017,14 +6028,13 @@ private theorem xi1115_simple
   let Gout := {g : G // g ∉ N}
   letI : Fintype Gout := Fintype.ofFinite Gout
   have hcardOut : Fintype.card Gout = Nat.card G - Nat.card N := by
-    have h := Fintype.card_subtype_compl (fun g : G => g ∈ N)
-    simpa [Gout, Nat.card_eq_fintype_card] using h
+    simp [Gout, Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
   have hsumOutside : ∑ g ∈ outside, fix g = 2 * (Nat.card G - Nat.card N) := by
     calc
       ∑ g ∈ outside, fix g = ∑ g : Gout, fix (g : G) := by
         apply Finset.sum_subtype outside
         intro g
-        simp [outside, Gout]
+        simp [outside]
       _ = ∑ _g : Gout, 2 := by
         apply Finset.sum_congr rfl
         intro g _hg
@@ -6293,7 +6303,7 @@ private theorem xi1115_kernel_involution_inverts_zpowers
           congrArg Subtype.val hx
     have hxcomm : Commute zG (x : G) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hxconj, mul_assoc]
+      simp [commutatorElement_def, hxconj]
     have hxcent :
         (x : G) ∈ Subgroup.centralizer ({zG} : Set G) :=
       Subgroup.mem_centralizer_singleton_iff.mpr hxcomm.eq.symm
@@ -6305,7 +6315,7 @@ private theorem xi1115_kernel_involution_inverts_zpowers
     have hxbot :
         (x : G) ∈ Subgroup.zpowers r ⊓
           F.map (MulAction.stabilizer G a).subtype :=
-      ⟨by simpa [U] using x.property, hxF⟩
+      ⟨by exact x.property, hxF⟩
     have hxoneG : (x : G) = 1 := by
       have : (x : G) ∈ (⊥ : Subgroup G) := by
         simpa [hcap] using hxbot
@@ -6505,8 +6515,7 @@ private theorem xi1115_structureEquation_power
     have h := congrArg (fun x : F => t * x) hvone
     simpa [v, mul_assoc] using h
   rw [hjt]
-  simpa [t] using
-    (Subgroup.zpowers g).pow_mem (Subgroup.mem_zpowers g) (2 ^ q)
+  exact (Subgroup.zpowers g).pow_mem (Subgroup.mem_zpowers g) (2 ^ q)
 
 
 private theorem xi1115_cyclic_power_order_four
@@ -7092,9 +7101,16 @@ private theorem xi1115_involution_centralizer_card_eq_kernel
   let zF : F := zc
   let zG : G := (((zF : F) : H) : G)
   have hzForder : orderOf zF = 2 := by
-    simpa [zF] using hzcorder
+    calc
+      orderOf zF = orderOf (zc : F) := rfl
+      _ = orderOf zc := (Subgroup.orderOf_coe (zc : Subgroup.center F))
+      _ = 2 := hzcorder
   have hzGorder : orderOf zG = 2 := by
-    simpa [zG, H, zF] using hzcorder
+    calc
+      orderOf zG = orderOf ((zF : H) : G) := rfl
+      _ = orderOf (zF : H) := (Subgroup.orderOf_coe (zF : H))
+      _ = orderOf zF := (Subgroup.orderOf_coe (zF : F))
+      _ = 2 := hzForder
   have hzFne : zF ≠ 1 := (orderOf_eq_prime_iff.mp hzForder).2
   have hCzLe : Subgroup.centralizer ({zG} : Set G) ≤ F.map H.subtype := by
     simpa [H, zG] using
@@ -7164,7 +7180,7 @@ private theorem xi1115_stronglyReal_centralizer_card_odd
   have hyGorder : orderOf yG = 2 := by
     calc
       orderOf yG = orderOf y := by
-        simpa [yG] using Subgroup.orderOf_coe y
+        simp [yG]
       _ = 2 := hyorder
   have hallY : ∀ u : G, orderOf u = 2 → IsConj u yG := by
     intro u huorder
@@ -7302,7 +7318,7 @@ private theorem xi1115_stronglyReal_centralizer_structure
           congrArg Subtype.val hz
     have htcommz : Commute t (z : G) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hzconj, mul_assoc]
+      simp [commutatorElement_def, hzconj]
     let zCt : Subgroup.centralizer ({t} : Set G) :=
       ⟨z, Subgroup.mem_centralizer_singleton_iff.mpr htcommz.eq.symm⟩
     have hzOdd : Odd (orderOf z) :=
@@ -7507,7 +7523,7 @@ private theorem xi1115_inverting_involutions_conj_by_centralizer
     (hCcentralizer : C = Subgroup.centralizer ({x} : Set G))
     (hxC : x ∈ C) (_hxne : x ≠ 1)
     (hCcomm : IsMulCommutative C) (hCodd : Odd (Nat.card C))
-    (hss : s * s = 1) (htt : t * t = 1)
+    (_hss : s * s = 1) (htt : t * t = 1)
     (hsInv : ∀ z : G, z ∈ C → s * z * s⁻¹ = z⁻¹)
     (htInv : ∀ z : G, z ∈ C → t * z * t⁻¹ = z⁻¹) :
     ∃ c : G, c ∈ C ∧ c * t * c⁻¹ = s := by
@@ -7614,7 +7630,7 @@ private theorem xi1115_involution_inverts_odd_centralizer
           congrArg Subtype.val hz
     have htcommz : Commute t (z : G) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hzconj, mul_assoc]
+      simp [commutatorElement_def, hzconj]
     let zCt : Subgroup.centralizer ({t} : Set G) :=
       ⟨z, Subgroup.mem_centralizer_singleton_iff.mpr htcommz.eq.symm⟩
     have hzOdd : Odd (orderOf z) :=
@@ -8416,7 +8432,7 @@ private theorem xi1115_centralizer_card_coprime_index_core
     exact not_le_of_gt hPmap_lt_Q
   letI : Group.IsNilpotent Q := Q.isPGroup'.isNilpotent
   have hnormalizer : K < Subgroup.normalizer (K : Set Q) :=
-    normalizerCondition_of_isNilpotent K hKlt
+    Group.normalizerCondition_of_isNilpotent K hKlt
   obtain ⟨b, hbNormalizer, hbNotK⟩ := SetLike.exists_of_lt hnormalizer
   have hPne : (P : Subgroup A) ≠ ⊥ :=
     P.ne_bot_of_dvd_card hpCard
@@ -8457,7 +8473,9 @@ private theorem xi1115_centralizer_card_coprime_index_core
   let zG : G := (((z : N) : Q) : G)
   let bG : G := ((b : Q) : G)
   have hzPmap : zG ∈ Pmap := by
-    simpa [zG, KN, N, K] using hzKN
+    have hzK : (z : Q) ∈ K := Subgroup.mem_subgroupOf.mp hzKN
+    have hzPmap' : ((z : Q) : G) ∈ Pmap := Subgroup.mem_subgroupOf.mp hzK
+    simpa [zG] using hzPmap'
   have hzA : zG ∈ A := hPmap_le_A hzPmap
   have hzGne : zG ≠ 1 := by
     intro hzG
@@ -8583,7 +8601,7 @@ private theorem xi1115_rankOneSet_weyl_of_regular_conjugates
     change s * 1 * s ∈ B ∨
       ∃ b ∈ B, ∃ i ∈ I, s * 1 * s = b * s * i
     left
-    simpa [hss] using B.one_mem
+    simp [hss]
   · rcases horbit y hyI hyOne with ⟨h, hhH, hy⟩
     have hsh : s * h * s = h⁻¹ := hInverts h hhH
     have hsinvMove : s * h⁻¹ = h * s := by
@@ -9480,7 +9498,7 @@ private theorem xi1115_kernel_suzukiActionData
   obtain ⟨d, hd⟩ := exists_ne (1 : D)
   let w : F := d • z
   have hwInv : PFAppendixIII.IsInvolution w := by
-    simpa [w] using hregular.1 z hzInv d
+    simpa [w, PFAppendixIII.involutions] using hregular.1 z hzInv d
   have hzw : z ≠ w := by
     intro h
     rcases hzOrbit' z hzInv with ⟨e, he, huniq⟩
@@ -10011,13 +10029,11 @@ private theorem xi1115_sharpTriple_charTwo_pgl
   have hac : a ≠ c := by
     intro h
     have heq := congrArg ePoint h
-    simpa [c, hPointA] using heq
+    simp [c, hPointA] at heq
   have hbc : b ≠ c := by
     intro h
     have heq := congrArg ePoint h
-    have : (0 : K) = 1 := Option.some.inj (by
-      simpa [c, hPointB] using heq)
-    exact zero_ne_one this
+    simp [c, hPointB] at heq
   have hrhoInjective : Function.Injective rho := by
     intro g h hgh
     have hactionEq (x : Omega) : g • x = h • x := by
@@ -10460,9 +10476,23 @@ private theorem xi1115_rankOneOrbit_charTwo_pgl
   have hstabO : H = (I ⊔ R).subgroupOf M := by
     ext x
     have hx := SetLike.ext_iff.mp hstab x
-    simpa only [H, MulAction.mem_stabilizer_iff,
-      Subgroup.mem_subgroupOf, Subtype.ext_iff,
-      MulAction.orbit.coe_smul] using hx
+    constructor
+    · intro hxH
+      have hx_stab : x • aO = aO := MulAction.mem_stabilizer_iff.mp hxH
+      have hx_a : (x : M) • a = a := congrArg Subtype.val hx_stab
+      have hx_stabM : x ∈ MulAction.stabilizer M a :=
+        MulAction.mem_stabilizer_iff.mpr (by
+          -- (x : M) • a = (x : G) • a since M is a subgroup of G
+          simpa using hx_a)
+      exact (hx.mp hx_stabM)
+    · intro hx_mem
+      have hx_stabM : x • a = a :=
+        MulAction.mem_stabilizer_iff.mp (hx.mpr hx_mem)
+      have hx_a : (x : M) • a = a := by
+        -- (x : M) • a = (x : G) • a
+        simpa using hx_stabM
+      have hx_stab : x • aO = aO := Subtype.ext hx_a
+      exact MulAction.mem_stabilizer_iff.mpr hx_stab
   let S0 : Subgroup M := K0 ⊔ R0
   have hS0 : S0 = H := by
     calc
@@ -10478,7 +10508,7 @@ private theorem xi1115_rankOneOrbit_charTwo_pgl
     change (d : G) ∈ R at hd
     rw [Subgroup.mem_normalizer_iff]
     intro x
-    simpa [K0] using
+    simpa [K0, Subgroup.mem_subgroupOf] using
       ((Subgroup.mem_normalizer_iff.mp (hRnormalizesI hd)) (x : G))
   have hdisjoint0 : Disjoint K0 R0 := by
     rw [Subgroup.disjoint_def]
@@ -10516,19 +10546,23 @@ private theorem xi1115_rankOneOrbit_charTwo_pgl
       MulAction.stabilizer H bH = R0.subgroupOf H := by
     ext x
     have hxa : (((x : H) : M) : G) • a = a := by
-      simpa [H, aO] using congrArg Subtype.val x.property
+      have hx_stab : x • aO = aO := MulAction.mem_stabilizer_iff.mp x.property
+      exact congrArg Subtype.val hx_stab
     constructor
     · intro hx
       have hxbH := MulAction.mem_stabilizer_iff.mp hx
       have hxb : (((x : H) : M) : G) • b = b := by
-        simpa [bH, bO] using congrArg
-          (fun q : SubMulAction.ofStabilizer M aO => ((q : O) : Omega)) hxbH
+        calc
+          (((x : H) : M) : G) • b = (x • bH : Omega) := by
+            simp [bH, bO, H, aO]
+          _ = (bH : Omega) := congrArg (fun q : SubMulAction.ofStabilizer M aO => (q : Omega)) hxbH
+          _ = b := by simp [bH, bO]
       have hxR : (((x : H) : M) : G) ∈ R :=
         (hRmem _).2 ⟨hxa, hxb⟩
-      simpa [R0] using hxR
+      simpa [R0, Subgroup.mem_subgroupOf] using hxR
     · intro hx
       have hxR : (((x : H) : M) : G) ∈ R := by
-        simpa [R0] using hx
+        simpa [R0, Subgroup.mem_subgroupOf] using hx
       have hxb : (((x : H) : M) : G) • b = b :=
         ((hRmem _).1 hxR).2
       rw [MulAction.mem_stabilizer_iff]
@@ -11034,7 +11068,7 @@ private theorem xi1115_conjClass_range_card_of_fusion_inverse
   simp_rw [hfiber] at hcardSigma
   rw [Finset.sum_const, Finset.card_univ] at hcardSigma
   have hcardSigma' : Nat.card (Set.range cls) * 2 = Nat.card X := by
-    simpa only [Nat.card_eq_fintype_card, nsmul_eq_mul] using hcardSigma
+    simpa only [Nat.card_eq_fintype_card, nsmul_eq_mul, Nat.cast_id] using hcardSigma
   simpa [X, cls] using hcardSigma'.trans
     (xi1115_punctured_subgroup_card A)
 
@@ -11483,19 +11517,19 @@ private theorem xi1115_pgl_charTwo_threeFamilyPartition
       refine ⟨e.symm g, ?_⟩
       apply Subgroup.ext
       intro x
-      simp [P1, Subgroup.mem_map_equiv, MulAut.conj_apply]
+      simp [P1]
     · right
       left
       refine ⟨e.symm g, ?_⟩
       apply Subgroup.ext
       intro x
-      simp [U1, Subgroup.mem_map_equiv, MulAut.conj_apply]
+      simp [U1]
     · right
       right
       refine ⟨e.symm g, ?_⟩
       apply Subgroup.ext
       intro x
-      simp [S1, Subgroup.mem_map_equiv, MulAut.conj_apply]
+      simp [S1]
   refine ⟨P1, U1, S1, hP1, hP1card, hU1cyclic, hU1card,
     hS1cyclic, hS1card, ?_⟩
   intro x hx
@@ -12192,7 +12226,7 @@ private theorem xi1115_nonsplit_centralizer_eq
       exact hCodd.not_two_dvd_nat htwoDvd
     let tN : N := ⟨t, htNormalizerC⟩
     have htNnotCN : tN ∉ CN := by
-      simpa [tN, CN] using htNotC
+      simpa [tN, CN, Subgroup.mem_subgroupOf] using htNotC
     let tq : N ⧸ CN := QuotientGroup.mk' CN tN
     have htqSq : tq ^ 2 = 1 := by
       have htNsq : tN ^ 2 = 1 := by
@@ -12233,7 +12267,7 @@ private theorem xi1115_nonsplit_centralizer_eq
       rcases hc with ⟨hcCN, hccomm⟩
       by_contra hcne
       have hcG : (((c : N) : G)) ∈ C := by
-        simpa [CN] using hcCN
+        simpa [CN, Subgroup.mem_subgroupOf] using hcCN
       have hcGne : (((c : N) : G)) ≠ 1 := by
         intro h
         apply hcne
@@ -12250,7 +12284,7 @@ private theorem xi1115_nonsplit_centralizer_eq
         rw [← hCc]
         exact Subgroup.mem_centralizer_singleton_iff.mpr hrcomm
       have hrCN : (r : N) ∈ CN := by
-        simpa [CN] using hrC
+        simpa [CN, Subgroup.mem_subgroupOf] using hrC
       have hrOneN : (r : N) = 1 :=
         Subgroup.disjoint_def.mp hcomp.disjoint hrCN r.property
       exact hrne (Subtype.ext hrOneN)
@@ -12390,7 +12424,7 @@ private theorem xi1115_nonsplit_centralizer_eq
         have hkC : (k : G) ∈ C := by
           rw [← hCx]
           exact Subgroup.mem_centralizer_singleton_iff.mpr hkcomm
-        have hkCN : k ∈ CN := by simpa [CN] using hkC
+        have hkCN : k ∈ CN := by simpa [CN, Subgroup.mem_subgroupOf] using hkC
         have hkR : k ∈ R := R.mul_mem (R.inv_mem s.property) r.property
         have hkOne : k = 1 :=
           Subgroup.disjoint_def.mp hCNRdisjoint hkCN hkR
@@ -12447,7 +12481,7 @@ private theorem xi1115_nonsplit_centralizer_eq
         apply Subtype.ext
         apply Subtype.ext
         apply Subtype.ext
-        have hcG : (cN : G) ∈ C := by simpa [CN] using hcN
+        have hcG : (cN : G) ∈ C := by simpa [CN, Subgroup.mem_subgroupOf] using hcN
         have hrxC :
             (rN : G) * (x : G) * (rN : G)⁻¹ ∈ C :=
           (conjX r0 x).1.property
@@ -12483,7 +12517,7 @@ private theorem xi1115_nonsplit_centralizer_eq
     rw [Finset.sum_const, Finset.card_univ] at hcardSigma
     have hXcard : Nat.card X = Nat.card NonsplitClasses * Nat.card R := by
       have htemp : Nat.card X = Nat.card (Set.range clsC) * Nat.card R := by
-        simpa only [Nat.card_eq_fintype_card, nsmul_eq_mul] using
+        simpa only [Nat.card_eq_fintype_card, nsmul_eq_mul, Nat.cast_id] using
           hcardSigma.symm
       rw [hRangeEq] at htemp
       exact htemp
@@ -12539,7 +12573,7 @@ private theorem xi1115_nonsplit_centralizer_eq
     have hb0ne : (b0 : G) ≠ 1 := by
       intro hb0one
       apply hb0A
-      simpa [hb0one] using A.one_mem
+      simp [hb0one]
     obtain ⟨y0, hy0A, hb0y0⟩ := hCConjA (b0 : G) hb0C hb0ne
     have hy0ne : y0 ≠ 1 := by
       intro hy0one
@@ -13549,17 +13583,16 @@ private theorem xi1115_product_bruhat_coordinates
                               ((((coord x₂).2.1 : D) : H) : G)⁻¹ *
                                 ((((coord x₂).2.2 : F) : H) : G) := by
                                   rw [hGammaTwoSwap]
-                                  group
   have hcandEq : candidate = coord x₁₂ := hunique x₁₂ candidate hcandidate
   dsimp
   constructor
   · simpa [candidate, x₁₂, z] using
       (congrArg (fun p : F × D × F => p.1) hcandEq).symm
-  constructor
-  · simpa [candidate, x₁₂, z] using
-      (congrArg (fun p : F × D × F => p.2.1) hcandEq).symm
-  · simpa [candidate, x₁₂, z] using
-      (congrArg (fun p : F × D × F => p.2.2) hcandEq).symm
+  · constructor
+    · simpa [candidate, x₁₂, z] using
+        (congrArg (fun p : F × D × F => p.2.1) hcandEq).symm
+    · simpa [candidate, x₁₂, z] using
+        (congrArg (fun p : F × D × F => p.2.2) hcandEq).symm
 
 private theorem xi1115_structure_special_bruhat_coordinates
     {G : Type*} [Group G]
@@ -13933,7 +13966,7 @@ private theorem xi1115_structure_family_not_orbit
               calc
                 rho + (rho + 1) + 1 =
                     (rho + rho) + (1 + 1) := by abel
-                _ = 0 := by simp only [CharTwo.add_self_eq_zero, zero_add]
+                _ = 0 := by simp only [CharTwo.add_self_eq_zero]
       _ = 1 := hone
   have hrInvScalar : (eK ((h * h * k⁻¹)⁻¹) : K) = 1 := by
     rw [hj, hgInv, hg, haction, haction, hmul] at hbeta
@@ -14013,8 +14046,7 @@ private theorem xi1115_existsUnique_bruhatEval
   let p : H × F := (hleft, f)
   have hp : x = xi1115_bruhatEval H F s p := by
     rw [hxEval, h₂df]
-    simp only [xi1115_bruhatEval, p, hleft, Subgroup.coe_mul,
-      MonoidHom.coe_coe, Function.comp_apply]
+    simp only [xi1115_bruhatEval, p, hleft, Subgroup.coe_mul]
     calc
       (h₁ : G) * s *
           ((((d : D) : H) : G) * (((f : F) : H) : G)) =
@@ -14170,7 +14202,7 @@ private theorem xi1115_bruhatTransport_left_H
     change phiH q.1 * w * phiH (F.subtype q.2) =
       phiH h * (phiH p.1 * w * phiH (F.subtype p.2))
     rw [hqp]
-    simp only [candidate, map_mul, Prod.fst, Prod.snd]
+    simp only [candidate, map_mul]
     group
 
 private theorem xi1115_bruhatTransport_right_F
@@ -14221,7 +14253,7 @@ private theorem xi1115_bruhatTransport_right_F
     change phiH q.1 * w * phiH (F.subtype q.2) =
       (phiH p.1 * w * phiH (F.subtype p.2)) * phiH (F.subtype f)
     rw [hqp]
-    simp only [candidate, map_mul, Prod.fst, Prod.snd]
+    simp only [candidate, map_mul]
     group
 
 private theorem xi1115_bruhatTransport_swap_F
@@ -14761,9 +14793,11 @@ private theorem xi1115_direct_structure_alignment
     j = pair 0 1 ∧ g = pair 1 1 ∧ g⁻¹ = pair 1 0 := by
   have hpairInv : pair 1 0 = (pair 1 1)⁻¹ := by
     apply eq_inv_of_mul_eq_one_left
-    rw [hmul, map_one]
-    convert hone using 1 <;>
-      simp only [zero_add, add_zero, mul_one, CharTwo.add_self_eq_zero]
+    calc
+      pair 1 0 * pair 1 1 = pair (1 + 1) (0 + 1 + 1 * pi 1) := hmul 1 0 1 1
+      _ = pair 0 0 := by
+        simp [map_one, CharTwo.add_self_eq_zero]
+      _ = 1 := hone
   exact ⟨hj, hg, (congrArg Inv.inv hg).trans (by simpa using hpairInv.symm)⟩
 
 /-- The inverse-theta coordinate change aligns the other branch with the same
@@ -14780,9 +14814,11 @@ private theorem xi1115_inverse_structure_alignment
     j = pair' 0 1 ∧ g = pair' 1 1 ∧ g⁻¹ = pair' 1 0 := by
   have hpairInv : pair 1 1 = (pair 1 0)⁻¹ := by
     apply eq_inv_of_mul_eq_one_left
-    rw [hmul, map_one]
-    convert hone using 1 <;>
-      simp only [add_zero, mul_one, CharTwo.add_self_eq_zero]
+    calc
+      pair 1 1 * pair 1 0 = pair (1 + 1) (1 + 0 + 1 * theta 1) := hmul 1 1 1 0
+      _ = pair 0 0 := by
+        simp [map_one, CharTwo.add_self_eq_zero]
+      _ = 1 := hone
   constructor
   · calc
       j = pair 0 1 := hj
@@ -14874,7 +14910,7 @@ private theorem xi1115_structure_scalar_identities
     (theta : K ≃+* K)
     (hthetaSq : ∀ x, theta (theta x) = x ^ 2)
     (lambda kappa : K)
-    (hlambda : lambda ≠ 0) (hlambdaOne : lambda ≠ 1)
+    (hlambda : lambda ≠ 0) (_hlambdaOne : lambda ≠ 1)
     (hn : 1 + lambda ^ 2 * theta lambda ≠ 0)
     (hkappa : kappa = theta lambda * (1 + lambda) *
       (1 + lambda ^ 2 * theta lambda)⁻¹ + lambda⁻¹) :
@@ -14915,7 +14951,7 @@ private theorem xi1115_structure_scalar_identities
     field_simp [hlambda, hn0]
     dsimp [n]
     ring_nf
-    simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+    simp only [CharTwo.two_eq_zero, mul_zero, add_zero]
   have hthetaT : theta t = 1 + theta c := by
     have h := congrArg theta ht
     simp only [map_add, map_one] at h
@@ -14942,14 +14978,14 @@ private theorem xi1115_structure_scalar_identities
         (4 : K) = 2 + 2 := by norm_num
         _ = 0 + 0 := by rw [htwo]
         _ = 0 := add_zero 0
-    simp only [htwo, hfour, mul_zero, add_zero, zero_add]
+    simp only [htwo, hfour, mul_zero, add_zero]
   have hke : kappa + lambda⁻¹ = e := by
     have hn0 : n ≠ 0 := by simpa [n] using hn
     dsimp [e, z]
     rw [hkappa']
     field_simp [hlambda, hn0]
     ring_nf
-    simp only [htwo, mul_zero, add_zero, zero_add]
+    simp only [htwo, mul_zero, add_zero]
   have hlast : lambda⁻¹ * theta (lambda⁻¹) +
       kappa * theta (lambda⁻¹) = f := by
     simp only [map_inv₀]
@@ -15028,8 +15064,8 @@ private theorem xi1115_structure_swap
     have hpairInv : pair 1 0 = (pair 1 1)⁻¹ := by
       apply eq_inv_of_mul_eq_one_left
       rw [hmul, map_one]
-      convert hone using 1 <;>
-        simp only [zero_add, add_zero, mul_one, CharTwo.add_self_eq_zero]
+      (convert hone using 1;
+        simp only [zero_add, mul_one, CharTwo.add_self_eq_zero])
     exact (congrArg Inv.inv hg).trans (by simpa using hpairInv.symm)
   have hnorm : kappa⁻¹ * theta kappa⁻¹ =
       lambda ^ 2 * (theta lambda) ^ 2 + lambda * theta lambda := by
@@ -15061,10 +15097,8 @@ private theorem xi1115_structure_swap
   have hbeta : g⁻¹ * (r⁻¹ • g) = pair c d := by
     rw [hginv, hg, hactor, hmul, herinv]
     apply congrArg₂ pair
-    · change 1 + t * 1 = c
-      simpa only [mul_one, add_comm, c, n, t] using hscalars.1
-    · change 0 + t * theta t * 1 + 1 * theta (t * 1) = d
-      calc
+    · simpa only [mul_one, add_comm, c, n, t] using hscalars.1
+    · calc
         0 + t * theta t * 1 + 1 * theta (t * 1) =
             theta t * (t + 1) := by ring
         _ = d := by simpa only [d, c, n, t] using hscalars.2.1
@@ -15075,7 +15109,6 @@ private theorem xi1115_structure_swap
     apply eD.injective
     apply Units.ext
     simp only [MulEquiv.apply_symm_apply, Units.val_mk0]
-    change (eD (r⁻¹ * r⁻¹ * (h * h)) : K) = uval
     have hleft : (eD (r⁻¹ * r⁻¹ * (h * h)) : K) =
         kappa ^ 2 * lambda ^ 2 := by
       simp only [map_mul, Units.val_mul]
@@ -15365,15 +15398,15 @@ private theorem xi1115_structure_representative_standard_alpha
     have hpairInv : pair 1 0 = (pair 1 1)⁻¹ := by
       apply eq_inv_of_mul_eq_one_left
       rw [hmul, map_one]
-      convert hone using 1 <;>
-        simp only [zero_add, add_zero, mul_one, CharTwo.add_self_eq_zero]
+      (convert hone using 1;
+        simp only [zero_add, mul_one, CharTwo.add_self_eq_zero])
     exact (congrArg Inv.inv hg).trans (by simpa using hpairInv.symm)
   have halphaPair : alpha (g⁻¹ * (h⁻¹ • g)) =
       pair (kappa + (eD h : K))
         ((eD h : K) * theta (eD h : K) +
           kappa * theta (eD h : K)) := by
     rw [halpha, hginv, hg, hactor, hactor, hmul]
-    simpa [kappa]
+    simp [kappa]
   have hnValue :
       (1 + lambda) * (lambda * theta lambda + theta lambda) +
           theta (1 + lambda) * (1 + lambda) ^ 2 +
@@ -15411,13 +15444,13 @@ private theorem xi1115_structure_representative_standard_alpha
     field_simp [hlambda, show 1 + lambda ^ 2 * theta lambda ≠ 0 by
       simpa [lambda] using hnNe]
     ring_nf
-    simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+    simp only [CharTwo.two_eq_zero, zero_add]
   · dsimp [lambda, kappa]
-    simp only [map_add, map_one, map_mul, map_inv₀, hthetaSq]
+    simp only [map_inv₀]
     field_simp [hlambda, (map_ne_zero theta).mpr hlambda,
       show 1 + lambda ^ 2 * theta lambda ≠ 0 by simpa [lambda] using hnNe]
     ring_nf
-    simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+    simp only [CharTwo.two_eq_zero, zero_add]
 
 private theorem xi1115_bruhatTransport_injective
     {G K : Type*} [Group G] [Group K]
@@ -15712,7 +15745,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
       have hcoe :=
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
           D F d x
-      simpa [H0] using congrArg
+      exact congrArg
         (fun q : MulAction.stabilizer G a => (q : G)) hcoe
     have hM :=
       xi1115_center_rankOneSubgroup_of_self
@@ -15721,7 +15754,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
     simpa [H0, phiFG, Icenter, Dg, Bcenter] using hM
   have hIcenter_le_H0 : Icenter ≤ H0 := by
     rintro x ⟨z, hz, rfl⟩
-    simpa [phiFG, H0] using (z : H0).property
+    exact (z : H0).property
   have hDg_le_H0 : Dg ≤ H0 := by
     rintro x ⟨d, hd, rfl⟩
     exact (d : H0).property
@@ -15762,7 +15795,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
     have hcoe :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
         D F d x
-    simpa [H0] using congrArg
+    exact congrArg
       (fun q : MulAction.stabilizer G a => (q : G)) hcoe
   have hDg_conj_Icenter :
       ∀ h : G, h ∈ Dg →
@@ -15827,9 +15860,9 @@ public theorem huppert_XI_11_15_suzukiRecognition
     have hxOrderDvd : orderOf x ∣ Nat.card D := by
       calc
         orderOf x = orderOf xH := by
-          simpa [xH] using Subgroup.orderOf_coe xH
+          exact Subgroup.orderOf_coe xH
         _ = orderOf xD := by
-          simpa [xD] using Subgroup.orderOf_coe xD
+          exact Subgroup.orderOf_coe xD
         _ ∣ Nat.card D := orderOf_dvd_natCard xD
     have hxOdd : Odd (orderOf x) :=
       Odd.of_dvd_nat hDodd hxOrderDvd
@@ -16294,7 +16327,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
         have hyDM : yM ∈ DM := by
           rw [hDalign]
           exact ⟨u, hu, rfl⟩
-        let y : Dg := ⟨(yM : M), by simpa [DM] using hyDM⟩
+        let y : Dg := ⟨(yM : M), by simpa [DM, Subgroup.mem_subgroupOf] using hyDM⟩
         refine ⟨y, ?_⟩
         rw [isConj_iff]
         refine ⟨((gD * g⁻¹ : M) : G), ?_⟩
@@ -16352,7 +16385,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
         have hyAM : yM ∈ AM := by
           rw [hAalign]
           exact ⟨u, hu, rfl⟩
-        let y : A := ⟨(yM : M), by simpa [AM] using hyAM⟩
+        let y : A := ⟨(yM : M), by simpa [AM, Subgroup.mem_subgroupOf] using hyAM⟩
         refine ⟨y, ?_⟩
         rw [isConj_iff]
         refine ⟨((gA * g⁻¹ : M) : G), ?_⟩
@@ -16506,7 +16539,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
           have hwNe : w ≠ 1 := by
             intro hw
             apply hwNotMem
-            simpa [hw] using A.one_mem
+            rw [hw]; exact A.one_mem
           have hwInvElem : PFAppendixIII.IsInvolution w := by
             exact ⟨hwNe, by simpa [pow_two] using hwsq⟩
           have hwinv : w⁻¹ = w :=
@@ -16692,7 +16725,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
           have hxfixb : x • b = b := ((hDgMem x).1 hxD).2
           have hxfix (c : Omega) (hc : x • c = c) : c = a ∨ c = b := by
             by_contra hcnot
-            push_neg at hcnot
+            push Not at hcnot
             exact (hat_most_two_fixed_points x hxne a b c
               hab hcnot.1.symm hcnot.2.symm
               ⟨hxfixa, hxfixb, hc⟩)
@@ -16760,7 +16793,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
       have hACentralizer : ∀ x : G, x ∈ A → x ≠ 1 →
           Subgroup.centralizer ({x} : Set G) = A := by
         letI : IsCyclic A := hAcyclic
-        letI : IsMulCommutative A := ⟨hAcyclic.commutative⟩
+        letI : IsMulCommutative A := hAcyclic.isMulCommutative
         obtain ⟨agen, hagengen⟩ := IsCyclic.exists_generator (α := A)
         let x0 : G := (agen : G)
         have hx0order : orderOf agen = Nat.card A :=
@@ -16787,7 +16820,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
         have hwNe : w ≠ 1 := by
           intro hwone
           apply hwNotMem
-          simpa [hwone] using A.one_mem
+          rw [hwone]; exact A.one_mem
         have hwInvElem : PFAppendixIII.IsInvolution w :=
           ⟨hwNe, by simpa [pow_two] using hwsq⟩
         let v : G := w * x0
@@ -17418,9 +17451,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
       intro hz
       have hzCoord := congrArg
         (fun z : Subgroup.center F => (eZ z).toAdd) hz
-      exact (one_ne_zero :
-        (1 : PFAppendixIII.BinaryGaloisField (2 * m + 1)) ≠ 0)
-          (by simpa [z0C] using hzCoord)
+      simp [z0C] at hzCoord
     have hz0ne : z0 ≠ 1 := by
       intro hz
       apply hz0Cne
@@ -17558,7 +17589,7 @@ public theorem huppert_XI_11_15_suzukiRecognition
                 (cocycle b a + cocycle b a) +
                 (cocycle b b + cocycle b b) := by abel
             _ = 0 := by
-              simp only [CharTwo.add_self_eq_zero, zero_add]
+              simp only [CharTwo.add_self_eq_zero]
     have ha : a = 0 := by
       by_contra ha
       have hThetaFixed : ∀ y, theta y = y := by
@@ -17763,13 +17794,20 @@ public theorem huppert_XI_11_15_suzukiRecognition
         (((p₂.2 : D) : H0) : G)⁻¹ * s =
           s * (((p₂.2 : D) : H0) : G) := by
       rw [← hd₂Inv, hd₂InvConj]
-      simpa [mul_assoc, hss]
+      simp [mul_assoc, hss]
     have halpha :
         (((((p₂.2 : D)⁻¹ : D) • p₂.1 : F) : H0) : G) =
           ((((p₂.2 : D)⁻¹ : D) : H0) : G) *
             (((p₂.1 : F) : H0) : G) *
               (((p₂.2 : D) : H0) : G) := by
-      simpa using hactionMain (p₂.2 : D)⁻¹ p₂.1
+      calc
+        (((((p₂.2 : D)⁻¹ : D) • p₂.1 : F) : H0) : G)
+            = ((((p₂.2 : D)⁻¹ : D) : H0) : G) * (((p₂.1 : F) : H0) : G) *
+                ((((p₂.2 : D)⁻¹ : D) : H0) : G)⁻¹ :=
+          hactionMain (p₂.2 : D)⁻¹ p₂.1
+        _ = ((((p₂.2 : D)⁻¹ : D) : H0) : G) * (((p₂.1 : F) : H0) : G) *
+            (((p₂.2 : D) : H0) : G) := by
+          simp
     have hgamma :
         ((((p₁.2 * p₂.2⁻¹ : D) : D) : H0) : G) =
           (((p₁.2 : D) : H0) : G) *
@@ -18420,7 +18458,8 @@ public theorem huppert_XI_11_15_suzukiRecognition
       wstdAligned, hwstdAligned, hwstdAlignedSq, hStandardBruhatFD,
       hStandardSwapAligned, hTargetWeylInvertsD,
       hwstdAlignedNotB⟩ := hCompatibleRootTorusEmbedding
-  let rho : D →* MulAut F := MulDistribMulAction.toMulAut D F
+  let rho : D →* MulAut F :=
+    (F.normalizerMonoidHom).comp (Subgroup.inclusion (F.normalizer_eq_top ▸ le_top))
   let eH : F ⋊[rho] D ≃* H0 := by
     simpa [rho, H0] using
       (SemidirectProduct.mulEquivSubgroup hFrobD.isComplement')
@@ -18601,10 +18640,13 @@ public theorem huppert_XI_11_15_suzukiRecognition
           x.1 = d⁻¹ • (d • x.1) := (inv_smul_smul d x.1).symm
           _ = d⁻¹ • 1 := by rw [h]
           _ = 1 := smul_one _⟩
-      have hccRaw := xi1115_conjugate_bruhat_coordinates H0 F D s hss
-        (by simpa [H0] using hsInvertsD) hactionMain bruhatCoord
-        (fun y => by simpa [bruhatEval] using hBruhatFormula y)
-        hcoordUnique d x
+      have hccRaw : (bruhatCoord dx).1 = d⁻¹ • (bruhatCoord x).1 ∧
+          (bruhatCoord dx).2.1 = d⁻¹ * d⁻¹ * (bruhatCoord x).2.1 ∧
+          (bruhatCoord dx).2.2 = d⁻¹ • (bruhatCoord x).2.2 :=
+        xi1115_conjugate_bruhat_coordinates H0 F D s hss
+          (by simpa [H0] using hsInvertsD) hactionMain bruhatCoord
+          (fun y => by simpa [bruhatEval] using hBruhatFormula y)
+          hcoordUnique d x
       have hcc : bruhatCoord dx =
           (d⁻¹ • (bruhatCoord x).1,
             d⁻¹ * d⁻¹ * (bruhatCoord x).2.1,
@@ -18616,12 +18658,18 @@ public theorem huppert_XI_11_15_suzukiRecognition
     have hpairAlignedInv :
         pairAligned 1 0 = (pairAligned 1 1)⁻¹ := by
       apply eq_inv_of_mul_eq_one_left
-      rw [hpairAlignedMul, map_one]
-      convert hpairAlignedOne using 1 <;>
-        simp only [zero_add, add_zero, mul_one, CharTwo.add_self_eq_zero]
+      calc
+        pairAligned 1 0 * pairAligned 1 1 =
+            pairAligned (1 + 1) (0 + 1 + 1 * piAligned 1) := hpairAlignedMul 1 0 1 1
+        _ = pairAligned 0 0 := by
+          simp [map_one, CharTwo.add_self_eq_zero]
+        _ = 1 := hpairAlignedOne
     have hphiPairAlignedInv :
         phiF (pairAligned 1 0) = (phiF (pairAligned 1 1))⁻¹ := by
-      rw [hpairAlignedInv, map_inv]
+      set_option synthInstance.maxHeartbeats 0 in
+      calc
+        phiF (pairAligned 1 0) = phiF ((pairAligned 1 1)⁻¹) := by rw [hpairAlignedInv]
+        _ = (phiF (pairAligned 1 1))⁻¹ := map_inv _ _
     have hJswap :
         phiF (bruhatCoord ⟨j, hjne⟩).1 *
             phiD (bruhatCoord ⟨j, hjne⟩).2.1 * wstdAligned *
@@ -18729,8 +18777,8 @@ public theorem huppert_XI_11_15_suzukiRecognition
     have hq :
         s * (((x : F) : H0) : G) * s =
           xi1115_bruhatEval H0 F s q := by
-      simpa only [x0, xi1115_bruhatEval, q, Subgroup.coe_mul,
-        Prod.fst, Prod.snd] using hBruhatCoord x0
+      simpa [x0, xi1115_bruhatEval, q, Subgroup.coe_mul,
+        Prod.fst, Prod.snd, Subtype.coe_mk] using hBruhatCoord x0
     let p := xi1115_bruhatCoord H0 F s hBig
       (s * (((x : F) : H0) : G) * s) (hswapKernelNotH x hx)
     have hpq : p = q :=

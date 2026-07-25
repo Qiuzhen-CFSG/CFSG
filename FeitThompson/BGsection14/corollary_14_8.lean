@@ -13,6 +13,8 @@ open scoped Pointwise
 section Section14
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+
+omit [Finite G] [IsMinCE G] in
 public theorem section14_subgroupPrimeSet_conjBy
     (M : Subgroup G) (a : G) :
     subgroupPrimeSet (M.conjBy a) = subgroupPrimeSet M := by
@@ -45,6 +47,7 @@ private theorem section14_derived_card_conjBy
     _ = Nat.card (derivedSubgroup M) :=
       Subgroup.card_map_of_injective e.injective
 
+omit [IsMinCE G] in
 private theorem section14_tau1Primes_conjBy
     (M : Subgroup G) (a : G) :
     section12Tau1Primes (M.conjBy a) = section12Tau1Primes M := by
@@ -74,6 +77,7 @@ private theorem section14_tau1Primes_conjBy
       exact hp.2.1 hpder'
     · simpa [section14_primeRank_conjBy_eq (G := G) M p.val a] using hp.2.2
 
+omit [IsMinCE G] in
 private theorem section14_tau3Primes_conjBy
     (M : Subgroup G) (a : G) :
     section12Tau3Primes (M.conjBy a) = section12Tau3Primes M := by
@@ -97,6 +101,7 @@ private theorem section14_tau3Primes_conjBy
       simpa [subgroupPrimeSet] using hp.2.1
     · simpa [section14_primeRank_conjBy_eq (G := G) M p.val a] using hp.2.2
 
+omit [IsMinCE G] in
 public theorem section14_tau2Primes_conjBy
     (M : Subgroup G) (a : G) :
     section12Tau2Primes (M.conjBy a) = section12Tau2Primes M := by
@@ -114,6 +119,7 @@ public theorem section14_tau2Primes_conjBy
       exact hp.1 (by simpa [section11_conjBy_inv] using hpBack)
     · simpa [section14_primeRank_conjBy_eq (G := G) M p.val a] using hp.2
 
+omit [Finite G] [IsMinCE G] in
 public theorem section14_primeOrderSubgroupsIn_conjBy
     {M X : Subgroup G} {p : Nat.Primes}
     (a : G) (hX : X ∈ section10PrimeOrderSubgroupsIn p M) :
@@ -121,6 +127,7 @@ public theorem section14_primeOrderSubgroupsIn_conjBy
   refine ⟨Subgroup.map_mono hX.1, ?_⟩
   simpa [section14_card_conjBy (G := G) X a] using hX.2
 
+omit [IsMinCE G] in
 private theorem section14_mem_kappaPrimes_conjBy
     {M : Subgroup G} {p : Nat.Primes}
     (a : G) (hp : p ∈ section14KappaPrimes M) :
@@ -136,6 +143,7 @@ private theorem section14_mem_kappaPrimes_conjBy
       (section11_subgroupCentralizerIn_conjBy_ne_bot
         (R := section10Msigma M) (X := P) (g := a) hC)
 
+omit [IsMinCE G] in
 public theorem section14_kappaPrimes_conjBy
     (M : Subgroup G) (a : G) :
     section14KappaPrimes (M.conjBy a) = section14KappaPrimes M := by
@@ -149,6 +157,7 @@ public theorem section14_kappaPrimes_conjBy
   · intro hp
     exact section14_mem_kappaPrimes_conjBy (G := G) (M := M) (p := p) a hp
 
+omit [IsMinCE G] in
 public theorem section14_mem_P_conjBy
     {M : Subgroup G}
     (a : G) (hM : M ∈ section14MFamilyP G) :
@@ -158,6 +167,7 @@ public theorem section14_mem_P_conjBy
   exact ⟨section14_maximal_conjBy (G := G) hMmax a,
     ⟨p, section14_mem_kappaPrimes_conjBy (G := G) (M := M) (p := p) a hp⟩⟩
 
+omit [IsMinCE G] in
 /-- The Section 14 Type-`P` family is closed under conjugating the maximal
 subgroup. -/
 public theorem section14_mFamilyP_conjBy
@@ -166,6 +176,7 @@ public theorem section14_mFamilyP_conjBy
     M.conjBy a ∈ section14MFamilyP G :=
   section14_mem_P_conjBy (G := G) a hM
 
+omit [IsMinCE G] in
 private theorem section14_mem_P2_conjBy
     {M : Subgroup G}
     (a : G) (hM : M ∈ section14MFamilyP2 G) :
@@ -182,6 +193,7 @@ private theorem section14_mem_P2_conjBy
       rw [section14_subgroupPrimeSet_conjBy (G := G) M a,
         section14_sigmaPrimes_conjBy (G := G) M a]
 
+omit [IsMinCE G] in
 public theorem section14_mem_P2_of_conjugate
     {H M : Subgroup G}
     (hHM : section14ConjugateSubgroups H M)

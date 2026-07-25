@@ -66,8 +66,8 @@ permutation representations. -/
       exact le_sup_right.trans le_sup_left
     exact hC ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
   letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
-    ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm⟩
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := CommGroup.ofIsMulCommutative
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
+  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
   let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
   let π : H →* H ⧸ H₀.subgroupOf H := QuotientGroup.mk' (H₀.subgroupOf H)
@@ -127,8 +127,8 @@ permutation representations. -/
       exact le_sup_right.trans le_sup_left
     exact hC ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
   letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
-    ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm⟩
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := CommGroup.ofIsMulCommutative
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
+  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   let HG₀ : Subgroup G₀ := H.subgroupOf G₀
   let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
   let π : H →* H ⧸ H₀.subgroupOf H := QuotientGroup.mk' (H₀.subgroupOf H)
@@ -279,13 +279,16 @@ private theorem hall_zmod_cycle_cast
   cases p with
   | zero => exact (NeZero.ne 0 rfl).elim
   | succ p =>
-      simpa [ZMod.val] using
-        (ZMod.natCast_zmod_val ((ZMod.finEquiv (p + 1)) k)).symm
+      calc
+        (ZMod.finEquiv (p + 1)) k =
+            (((ZMod.finEquiv (p + 1) k).val : ℕ) : ZMod (p + 1)) :=
+          (ZMod.natCast_zmod_val ((ZMod.finEquiv (p + 1)) k)).symm
+        _ = (k.val : ZMod (p + 1)) := by rfl
 private noncomputable def hallPrimeCycleEquiv
     {X : Type u} [Finite X] (p : ℕ) [Fact p.Prime]
     (z : Equiv.Perm X) (hzorder : orderOf z = p)
     (hzfree : ∀ x : X, z x ≠ x) :
-    (Σ q : Quotient (MulAction.orbitRel (Subgroup.zpowers z) X), Fin p) ≃ X :=
+    (Σ _q : Quotient (MulAction.orbitRel (Subgroup.zpowers z) X), Fin p) ≃ X :=
   (Equiv.sigmaCongrRight fun q =>
     (ZMod.finEquiv p).toEquiv |>.trans
       (ZMod.ringEquivCongr
@@ -316,7 +319,7 @@ private noncomputable def hallPrimeCycleEquivOfPowFree
     {X : Type u} [Finite X] (p : ℕ) [Fact p.Prime]
     (z : Equiv.Perm X) (hzpow : z ^ p = 1)
     (hzfree : ∀ x : X, z x ≠ x) :
-    (Σ q : Quotient (MulAction.orbitRel (Subgroup.zpowers z) X), Fin p) ≃ X := by
+    (Σ _q : Quotient (MulAction.orbitRel (Subgroup.zpowers z) X), Fin p) ≃ X := by
   classical
   by_cases hX : Nonempty X
   · letI : Nonempty X := hX
@@ -398,7 +401,7 @@ private theorem hall_fwdDiff_prime_pred_eq_sum
   have hneg : (-1 : ZMod p) ^ (p - 1) = 1 := by
     rcases (Fact.out : p.Prime).eq_two_or_odd with hp2 | hpodd
     · subst p
-      simpa using hall_zmod_two_neg_one
+      simp
     · exact (Nat.Odd.sub_odd ((Nat.odd_iff).2 hpodd) odd_one).neg_one_pow
   have hcoeff : ∀ k < p,
       (((-1 : ℤ) ^ (p - 1 - k) * (Nat.choose (p - 1) k : ℤ) : ℤ) :
@@ -441,7 +444,7 @@ private theorem hall_cyclic_recurrence_prime_pred_eq_prod
         change Additive.ofMul (a (r + 1) k) =
           (fwdDiff (-1 : ZMod p)) ((fwdDiff (-1 : ZMod p))^[r] f) k
         rw [hrec r k]
-        simpa [fwdDiff, ih, sub_eq_add_neg, add_comm]
+        simp [fwdDiff, ih, sub_eq_add_neg, add_comm]
   change Additive.ofMul (a (p - 1) y) =
     Additive.ofMul (∏ k ∈ Finset.range p, a 0 (y - (k : ZMod p)))
   rw [hiter]
@@ -649,7 +652,12 @@ private theorem hall_exists_central_prime_order_action
   obtain ⟨c, hc⟩ := exists_prime_orderOf_dvd_card' p hpdvd
   obtain ⟨z, hz⟩ := c.1.property
   refine ⟨z, ?_, ?_, ?_⟩
-  · simpa [ρ, hz, Subgroup.orderOf_coe] using hc
+  · calc
+      orderOf (ρ z) = orderOf c.1 := by
+        rw [hz]
+        exact Subgroup.orderOf_coe c.1
+      _ = orderOf c := Subgroup.orderOf_coe c
+      _ = p := hc
   · intro g
     let sg : S := ⟨ρ g, ⟨g, rfl⟩⟩
     have hcommS : Commute c.1 sg := by
@@ -678,7 +686,12 @@ private theorem hall_exists_central_prime_order_action
     have hone : ρ z = 1 := Equiv.Perm.ext (by intro q; simpa using hfix q)
     have horder_one : orderOf (ρ z) = 1 := by rw [hone, orderOf_one]
     have horder_p : orderOf (ρ z) = p := by
-      simpa [ρ, hz, Subgroup.orderOf_coe] using hc
+      calc
+        orderOf (ρ z) = orderOf c.1 := by
+          rw [hz]
+          exact Subgroup.orderOf_coe c.1
+        _ = orderOf c := Subgroup.orderOf_coe c
+        _ = p := hc
     exact (Fact.out : p.Prime).ne_one (horder_p.symm.trans horder_one)
 
 private theorem hall_exists_central_prime_order_action_in_normal
@@ -791,7 +804,7 @@ private theorem hall_nonprincipal_weakly_closed_orbit_moved
     ∃ z : P, (z : G) ∈ Q ∧ ((z : G) • q0 : G ⧸ H) ≠ q0 := by
   classical
   by_contra hmove
-  push_neg at hmove
+  push Not at hmove
   let t : G := q0.out
   have htq : (t : G ⧸ H) = q0 := Quotient.out_eq q0
   let f : Q →* G :=
@@ -911,7 +924,7 @@ private theorem hall_nonprincipal_sylow_orbit_moved
     ∃ z : P₁, ((z : G) • q : G ⧸ H₁) ≠ q := by
   classical
   by_contra hmove
-  push_neg at hmove
+  push Not at hmove
   let t : G := q.out
   have htq : (t : G ⧸ H₁) = q := Quotient.out_eq q
   have hconj_le :
@@ -919,7 +932,12 @@ private theorem hall_nonprincipal_sylow_orbit_moved
     intro x hx
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at hx
     let z : P₁ := ⟨t * x * t⁻¹, by
-      simpa [MulAut.conj_apply, mul_assoc] using hx⟩
+      rw [show (MulAut.conj t⁻¹)⁻¹ = MulAut.conj t by simp] at hx
+      rw [MulAut.smul_def, MulAut.conj_apply] at hx
+      change t * x * t⁻¹ ∈ ((P₁ : Subgroup G) : Set G) at hx
+      change t * x * t⁻¹ ∈ (P₁ : Set G)
+      rw [← P₁.coe_coe]
+      exact hx⟩
     have hzfix := hmove z
     have hzfix' :
         ((z : G) • (t : G ⧸ H₁) : G ⧸ H₁) = (t : G ⧸ H₁) := by
@@ -1172,8 +1190,8 @@ private theorem hallActiveCycle_factor_engel_congruence
         ((c.w 0 : G) * engelSymbol p (u : G) (c.z : G) *
           (c.w 0 : G)⁻¹) ∈ H₀ := by
   letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
-    ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcommH⟩
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := CommGroup.ofIsMulCommutative
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcommH
+  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   let π : H →* H ⧸ H₀.subgroupOf H := QuotientGroup.mk' (H₀.subgroupOf H)
   let a : ℕ → ZMod p → H := fun r k =>
     ⟨(c.w k : G) * iteratedInverseFirstCommutator r (u : G) (c.z : G) *
@@ -1198,7 +1216,8 @@ private theorem hallActiveCycle_factor_engel_congruence
   have ha_zero (k : ZMod p) : a 0 k = c.h k := by
     apply Subtype.ext
     rw [ha 0 k]
-    simpa using c.conj k
+    rw [show iteratedInverseFirstCommutator 0 (u : G) (c.z : G) = (u : G) by rfl]
+    exact c.conj k
   have hcyc :
       π (a (p - 1) 0) =
         ∏ k ∈ Finset.range p, π (a 0 (0 - (k : ZMod p))) :=
@@ -1388,7 +1407,6 @@ private noncomputable def hallResidualFixedCosetEquiv
     change e (hallResidualCosetLeftMul G₀ H (uH : G₀) (e.symm q.1)) =
       e (e.symm q.1)
     rw [hallResidualCosetEquiv_leftMul, e.apply_symm_apply]
-    change ((uH : G₀) : G) • q.1 = q.1
     simpa [hu] using hq
   · intro q
     apply Subtype.ext
@@ -1402,7 +1420,7 @@ private def hallPrincipalFixedCoset
   ⟨QuotientGroup.mk (1 : G), by
     rw [Function.minimalPeriod_eq_one_iff_isFixedPt]
     apply QuotientGroup.eq.mpr
-    simpa using H.inv_mem u.property⟩
+    simpa only [smul_eq_mul, mul_one] using H.inv_mem u.property⟩
 
 private theorem hallResidualFixedCosetEquiv_principal
     {G : Type u} [Group G] (G₀ H₁ H : Subgroup G) [G₀.Normal]
@@ -1544,9 +1562,9 @@ private theorem hallDiagonalDefect_eq_prod_ne_principal
 private theorem hall_lemma_14_4_5_double_coset_cycle_data
     {G : Type u} [Group G] [Finite G] {A : Type u} [CommGroup A]
     (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ G₀ H P H₀ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
+    (P₁ : Sylow p G) (N₁ H₁ G₀ H P _H₀ : Subgroup G)
+    (_hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
+    (_hN₁_le_H₁ : N₁ ≤ H₁)
     (hG₀ : G₀ = hallPResidual p G)
     (hH : H = G₀ ⊓ H₁)
     (hP : P = G₀ ⊓ (P₁ : Subgroup G))
@@ -1671,7 +1689,10 @@ private theorem hall_lemma_14_4_5_double_coset_cycle_data
       have hs := congrArg
         (fun x : hallOrbitFixedCoset P₁ H₁ uP c.1 => (x.1.1 : G ⧸ H₁))
         (hpointSucc c j)
-      simpa [zFix, zPerm, ρ] using hs
+      rw [hallFixedPointRestriction_apply] at hs
+      change ((z c.1 : G) • ((point c j).2.1.1 : G ⧸ H₁)) =
+        ((point c (j + 1)).2.1.1 : G ⧸ H₁) at hs
+      exact hs
     have hrSucc : ∀ c : CycleIndex, ∀ j : ZMod p,
         ((z c.1 : G) • ((((r c j).1.out : G₀) : G)) : G ⧸ H₁) =
           (((((r c (j + 1)).1.out : G₀) : G)) : G ⧸ H₁) := by
@@ -1740,7 +1761,7 @@ private theorem hall_lemma_14_4_5_double_coset_cycle_data
           r c (k.val : ZMod p) := by
         dsimp [eIndex, r]
         apply congrArg (fun x => (eRes.symm x).1)
-        simpa using heCycle c k
+        exact (Equiv.symm_symm_apply eCycle ⟨c, k⟩).trans (heCycle c k)
       simp only [termCK, termR]
       rw [hindex, ← hmake]
     calc
@@ -1819,8 +1840,8 @@ private theorem hall_lemma_14_4_5_cycle_factor_data_core_of_choice
     rw [Subgroup.map_subtype_commutator] at hxmap
     exact hcomm ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
   letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
-    ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcommH⟩
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := CommGroup.ofIsMulCommutative
+    (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcommH
+  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
   have hG₀_normal : G₀.Normal := by
     subst G₀
     exact hallPResidual_normal p G
@@ -2009,12 +2030,6 @@ public theorem hall_lemma_14_4_5_generated_by_cycle_factors
 
 end External
 end BenderSuzuki
-
-
-
-
-
-
 
 
 

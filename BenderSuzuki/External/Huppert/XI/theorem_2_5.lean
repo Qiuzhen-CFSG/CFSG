@@ -43,7 +43,7 @@ private theorem finiteField_ringAut_isCyclic
 /-- XI.2.5(e): the characteristic cyclic subgroup cannot act irreducibly on
 the additive prime-field module. -/
 private theorem huppert_XI_2_5_restriction_reducible
-    {K : Type u} [PFAppendixII.RightNearField K] [Finite K] [Nontrivial K]
+    {K : Type u} [PFAppendixII.RightNearField K] [Finite K]
     {p f : ℕ} (hp : Nat.Prime p) (hp2 : p ≠ 2)
     (hKcard : Nat.card K = p ^ f)
     (hNFchar : addOrderOf (1 : K) = p)
@@ -58,7 +58,7 @@ private theorem huppert_XI_2_5_restriction_reducible
        letI : Module (ZMod p) K := hNFchar ▸ PFAppendixII.rightNearFieldZModModule K
        letI : IsElementaryAbelian p (Multiplicative K) :=
          hNFchar ▸ PFAppendixII.rightNearFieldMultiplicativeIsElementaryAbelian
-       letI : IsMulCommutative Z := ⟨hZcyclic.commutative⟩
+       letI : IsMulCommutative Z := hZcyclic.isMulCommutative
        letI : MulDistribMulAction Z (Multiplicative K) :=
          PFAppendixII.rightNearFieldUnitsMulDistribMulAction Z
        let T : Subgroup Z := ⊤
@@ -72,7 +72,7 @@ private theorem huppert_XI_2_5_restriction_reducible
     PFAppendixII.rightNearFieldZModModule K
   letI : IsElementaryAbelian (addOrderOf (1 : K)) (Multiplicative K) :=
     PFAppendixII.rightNearFieldMultiplicativeIsElementaryAbelian
-  letI : IsMulCommutative Z := ⟨hZcyclic.commutative⟩
+  letI : IsMulCommutative Z := hZcyclic.isMulCommutative
   letI : MulDistribMulAction Z (Multiplicative K) :=
     PFAppendixII.rightNearFieldUnitsMulDistribMulAction Z
   letI : Z.Characteristic := hZchar
@@ -186,7 +186,7 @@ private theorem huppert_XI_2_5_restriction_reducible
 /-- The full opposite-unit right-multiplication representation is irreducible:
 any nonzero vector can be carried to any other nonzero vector. -/
 private theorem rightNearFieldRightMulRepresentation_irreducible
-    {K : Type u} [PFAppendixII.RightNearField K] [Finite K] [Nontrivial K] :
+    {K : Type u} [PFAppendixII.RightNearField K] [Finite K] :
     letI : Fact (Nat.Prime (addOrderOf (1 : K))) :=
       ⟨PFAppendixII.rightNearField_addOrderOf_one_prime⟩
     letI : Module (ZMod (addOrderOf (1 : K))) K :=
@@ -224,7 +224,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- XI.2.5(f): Clifford decomposition and fixed-point-free orbit counting
 force a two-block decomposition with a constituent of size below twelve. -/
 private theorem huppert_XI_2_5_clifford_small_constituent
-    {K : Type u} [PFAppendixII.RightNearField K] [Finite K] [Nontrivial K]
+    {K : Type u} [PFAppendixII.RightNearField K] [Finite K]
     {p f : ℕ} (hp : Nat.Prime p) (hp2 : p ≠ 2) (_hf : 0 < f)
     (hKcard : Nat.card K = p ^ f)
     (hNFchar : addOrderOf (1 : K) = p)
@@ -236,7 +236,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
            hNFchar ▸ PFAppendixII.rightNearFieldZModModule K
          letI : IsElementaryAbelian p (Multiplicative K) :=
            hNFchar ▸ PFAppendixII.rightNearFieldMultiplicativeIsElementaryAbelian
-         letI : IsMulCommutative Z := ⟨hZcyclic.commutative⟩
+         letI : IsMulCommutative Z := hZcyclic.isMulCommutative
          letI : MulDistribMulAction Z (Multiplicative K) :=
            PFAppendixII.rightNearFieldUnitsMulDistribMulAction Z
          let T : Subgroup Z := ⊤
@@ -285,7 +285,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
     apply hred
     letI : IsElementaryAbelian (addOrderOf (1 : K)) (Multiplicative K) :=
       PFAppendixII.rightNearFieldMultiplicativeIsElementaryAbelian
-    letI : IsMulCommutative Z := ⟨hZcyclic.commutative⟩
+    letI : IsMulCommutative Z := hZcyclic.isMulCommutative
     letI : MulDistribMulAction Z (Multiplicative K) :=
       PFAppendixII.rightNearFieldUnitsMulDistribMulAction Z
     let T : Subgroup Z := ⊤
@@ -309,7 +309,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
         simp only [Subgroup.coe_mul, MulOpposite.unop_op,
           MulOpposite.unop_mul]
         exact congrArg Subtype.val
-          (hZcyclic.commutative.comm (x : Z) (y : Z)) }
+          (hZcyclic.isMulCommutative.is_comm.comm (x : Z) (y : Z)) }
     have heGbij : Function.Bijective eGhom := by
       constructor
       · intro x y hxy
@@ -362,7 +362,14 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       rw [hSH] at hxmap
       change x = 0
       apply eLin.injective
-      simpa using hxmap
+      have h0 : eLin.toLinearMap.toFun x = 0 :=
+        (Submodule.mem_bot (R := ZMod (addOrderOf (1 : K))) (M := K) (x := eLin.toLinearMap.toFun x)).mp hxmap
+      apply eAdd.injective
+      calc
+        eAdd x = eLin.toLinearMap.toFun x := by
+          simp [eLin]
+        _ = 0 := h0
+        _ = eAdd 0 := by simp
     have hSHtop := (hIrrH.eq_bot_or_eq_top SH).resolve_left hSHne
     apply Subrepresentation.toSubmodule_injective
     apply top_unique
@@ -383,7 +390,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       change IsSimpleOrder (Subrepresentation rhoH)
       rw [isSimpleOrder_iff]
       exact ⟨inferInstance, h⟩
-    push_neg at hnotSimple
+    push Not at hnotSimple
     obtain ⟨U, hUneBot, hUneTop⟩ := hnotSimple
     have hUneBot' : U.toSubmodule ≠ ⊥ := by
       intro h
@@ -394,7 +401,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       Submodule.exists_mem_ne_zero_of_ne_bot hUneBot'
     have hy : ∃ y : K, y ∉ U := by
       by_contra h
-      push_neg at h
+      push Not at h
       apply hUneTop
       apply Subrepresentation.toSubmodule_injective
       apply top_unique
@@ -409,7 +416,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       intro h
       obtain ⟨x, hxU, hx0⟩ := hUbot
       rw [h] at hxU
-      exact hx0 (by simpa using hxU)
+      exact hx0 ((Submodule.mem_bot (R := ZMod (addOrderOf (1 : K))) (M := K) (x := x)).mp hxU)
     letI : Finite (Subrepresentation rhoH) :=
       Finite.of_injective
         (fun S : Subrepresentation rhoH => (S : Set K))
@@ -428,7 +435,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
   rcases hWexists with ⟨W, hWatom, hWleU⟩
   have hwExists : ∃ w : K, w ∈ W ∧ w ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hWatom.ne_bot
     apply Subrepresentation.toSubmodule_injective
     ext x
@@ -438,7 +445,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       subst x
       exact Submodule.zero_mem _
     · intro hx
-      have hx0 : x = 0 := by simpa using hx
+      have hx0 : x = 0 := (Submodule.mem_bot (R := ZMod (addOrderOf (1 : K))) (M := K) (x := x)).mp hx
       subst x
       exact W.toSubmodule.zero_mem
   obtain ⟨w, hwW, hw0⟩ := hwExists
@@ -488,7 +495,10 @@ private theorem huppert_XI_2_5_clifford_small_constituent
           have hback : (rho (g i)).toFun y.1 = x := by
             rw [← hxy]
             simp
-          simpa [hback] using hxW⟩
+          have hgoal : (rho (g i)).toFun y.1 ∈ W.toSubmodule := by
+            rw [hback]
+            exact hxW
+          exact hgoal⟩
         left_inv := by
           intro x
           apply Subtype.ext
@@ -559,7 +569,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
       classical
       letI : Fintype VW := Fintype.ofFinite VW
       letI : Fintype VW0 := Fintype.ofFinite VW0
-      simpa [VW0, Nat.card_eq_fintype_card] using (Set.card_ne_eq (0 : VW))
+      simp [VW0, Nat.card_eq_fintype_card]
     have hcardVW : Nat.card VW = addOrderOf (1 : K) ^ r := by
       letI : Fintype VW := Fintype.ofFinite VW
       have hcard := Module.card_eq_pow_finrank
@@ -637,7 +647,7 @@ private theorem huppert_XI_2_5_clifford_small_constituent
 /-- Huppert--Blackburn XI.2.5(c)--(f), with the omitted near-field module
 restored.  In the top-residual branch the source hypotheses are contradictory. -/
 public theorem huppert_XI_2_5_topResidual_false
-    {K : Type u} [PFAppendixII.RightNearField K] [Finite K] [Nontrivial K]
+    {K : Type u} [PFAppendixII.RightNearField K] [Finite K]
     {p f : ℕ} (hp : Nat.Prime p) (hp2 : p ≠ 2)
     (hf : 0 < f)
     (hKcard : Nat.card K = p ^ f)
@@ -741,7 +751,7 @@ public theorem huppert_XI_2_5_topResidual_false
           exact Nat.pow_dvd_pow 3 haTwo
         exact hnotNine (hnineQ.trans (Subgroup.card_subgroup_dvd_card (Q : Subgroup Kˣ)))
       have : a = 1 := by omega
-      simpa [ha, this]
+      simp [ha, this]
     have hQnormal : (Q : Subgroup Kˣ).Normal := by
       refine ⟨fun x hx g => ?_⟩
       let Qg : Subgroup Kˣ := (Q : Subgroup Kˣ).map (MulAut.conj g).toMonoidHom
@@ -769,7 +779,7 @@ public theorem huppert_XI_2_5_topResidual_false
       rw [ha, hQcard]
       exact Nat.Coprime.pow_left a (by norm_num)
     have hPQbot : (P : Subgroup Kˣ) ⊓ (Q : Subgroup Kˣ) = ⊥ :=
-      Subgroup.inf_eq_bot_of_coprime hPQcop
+      (Subgroup.disjoint_of_coprime_natCard hPQcop).eq_bot
     have hqPInjective : Function.Injective (fun x : P => q (x : Kˣ)) := by
       intro x y hxy
       apply Subtype.ext
@@ -799,8 +809,9 @@ public theorem huppert_XI_2_5_topResidual_false
     let ePmap : P ≃* (P : Subgroup Kˣ).map q :=
       MulEquiv.ofBijective qP
         ⟨hqPInjective', MonoidHom.subgroupMap_surjective q (P : Subgroup Kˣ)⟩
-    let ePbar : Pbar ≃* P := by
-      simpa [Pbar] using ePmap.symm
+    have hPbarSubgroup : (Pbar : Subgroup (Kˣ ⧸ (Q : Subgroup Kˣ))) = Subgroup.map q (P : Subgroup Kˣ) := rfl
+    let ePbar : Pbar ≃* P :=
+      (MulEquiv.subgroupCongr hPbarSubgroup).trans ePmap.symm
     have hPbarQuaternion :
         ∃ k : ℕ, 2 ≤ k ∧ IsPGroup 2 (QuaternionGroup k) ∧
           Nonempty (Pbar ≃* QuaternionGroup k) := by

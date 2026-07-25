@@ -9,6 +9,8 @@ public import Mathlib.RepresentationTheory.Invariants
 public import FeitThompson.ElementaryAbelian
 public import FeitThompson.GroupAction.Defs
 
+open scoped IsMulCommutative
+
 /-!
 Representations attached to actions on elementary abelian groups.
 

@@ -332,9 +332,7 @@ private theorem cfSupportedOn_finrank_eq_card
         Module.finrank ℂ ({x : W // (x : G) ∈ A} → ℂ) := by
           exact LinearEquiv.finrank_eq (cfSupportedOnEquivFun W A)
     _ = Fintype.card {x : W // (x : G) ∈ A} := by
-          simpa using
-            (Module.finrank_fintype_fun_eq_card (R := ℂ)
-              (η := {x : W // (x : G) ∈ A}))
+          simp
 
 public theorem cyclicTISetSubgroup_card
     {G : Type u} [Group G] [Finite G]
@@ -421,10 +419,10 @@ public theorem cyclicTISetSubgroup_card
       (Fintype.card_congr (pairSubtypeEquiv (X := W1) (Y := W2) (1 : W1) (1 : W2)))
   have hW1card :
       Fintype.card {x : W1 // x ≠ 1} = Nat.card W1 - 1 := by
-    simpa using (Fintype.card_subtype_compl (fun x : W1 => x = 1))
+    simp [Nat.card_eq_fintype_card]
   have hW2card :
       Fintype.card {y : W2 // y ≠ 1} = Nat.card W2 - 1 := by
-    simpa using (Fintype.card_subtype_compl (fun y : W2 => y = 1))
+    simp [Nat.card_eq_fintype_card]
   calc
     Nat.card (cyclicTISetSubgroup W1 W2 W) =
         Fintype.card {p : W1 × W2 // p.1 ≠ 1 ∧ p.2 ≠ 1} := by
@@ -477,7 +475,7 @@ private theorem alphaIJ_linearIndependent
     simp [hcoord]
   exact hcoeff ▸ hinner
 
-  public theorem proposition_3_4
+public theorem proposition_3_4
     {G : Type u} [Group G] [Finite G]
     (W1 W2 W : Subgroup G)
     (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
@@ -502,11 +500,9 @@ private theorem alphaIJ_linearIndependent
       Fintype.card {p : I × J // p.1 ≠ i0 ∧ p.2 ≠ j0} =
         (Nat.card W1 - 1) * (Nat.card W2 - 1) := by
     have hI : Fintype.card {i : I // i ≠ i0} = Nat.card W1 - 1 := by
-      simpa [homega.card_left] using
-        (Fintype.card_subtype_compl (fun i : I => i = i0))
+      simp [homega.card_left]
     have hJ : Fintype.card {j : J // j ≠ j0} = Nat.card W2 - 1 := by
-      simpa [homega.card_right] using
-        (Fintype.card_subtype_compl (fun j : J => j = j0))
+      simp [homega.card_right]
     calc
       Fintype.card {p : I × J // p.1 ≠ i0 ∧ p.2 ≠ j0} =
           Fintype.card ({i : I // i ≠ i0} × {j : J // j ≠ j0}) := by
@@ -521,7 +517,16 @@ private theorem alphaIJ_linearIndependent
   have hfinrank_V :
       Module.finrank ℂ (cfSupportedOn W V) =
         Fintype.card (cyclicTISetSubgroup W1 W2 W) := by
-    simpa [V] using (cfSupportedOn_finrank_eq_card (W := W) (A := V))
+    have hV :
+        ({x : W | (x : G) ∈ V} : Set W) = cyclicTISetSubgroup W1 W2 W := by
+      ext x
+      simp [V, cyclicTISetSubgroup]
+    calc
+      Module.finrank ℂ (cfSupportedOn W V) =
+          Fintype.card {x : W // (x : G) ∈ V} :=
+        cfSupportedOn_finrank_eq_card W V
+      _ = Fintype.card (cyclicTISetSubgroup W1 W2 W) :=
+        Fintype.card_congr (Equiv.setCongr hV)
   have hcard :
       Fintype.card {p : I × J // p.1 ≠ i0 ∧ p.2 ≠ j0} =
         Module.finrank ℂ (cfSupportedOn W V) := by

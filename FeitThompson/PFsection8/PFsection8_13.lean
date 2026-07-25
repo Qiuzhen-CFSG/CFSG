@@ -748,7 +748,8 @@ private theorem theorem_8_13_semidirect_of_normalComplementIn
       simpa [xC, Subgroup.mem_subgroupOf] using hxH
     have hxbot : xC ∈ (⊥ : Subgroup C) :=
       Subgroup.disjoint_def.mp hIsComp.symm.disjoint hxRloc hxHloc
-    simpa [xC] using congrArg Subtype.val (by simpa using hxbot)
+    change (xC : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
 
 private theorem theorem_8_13_semidirect_centralizer_of_theoremDComplement
     {G : Type u} [Group G] [Finite G]
@@ -1220,9 +1221,9 @@ private theorem theorem_8_13_typeP_W_isMulCommutative
     have hval := congrArg (fun z : W => (z : G)) hycd
     simpa [c, d] using hval.symm
   have hac : a * c = c * a :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := W1) haW1 hcW1
+    setLike_mul_comm (s := W1) haW1 hcW1
   have hbd : b * d = d * b :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := W2) hbW2 hdW2
+    setLike_mul_comm (s := W2) hbW2 hdW2
   have hbc : b * c = c * b :=
     (Subgroup.mem_centralizer_iff.mp (hW2centW1 hbW2) c hcW1).symm
   have had : a * d = d * a :=
@@ -1265,8 +1266,8 @@ private theorem theorem_8_13_typeP_W_le_elementCentralizerIn_of_W2
   refine ⟨hWM ha, ?_⟩
   change a ∈ Subgroup.centralizer ({z} : Set G)
   rw [Subgroup.mem_centralizer_singleton_iff]
-  exact Subgroup.mul_comm_of_mem_isMulCommutative
-    (H := W1 ⊔ W2) ha ((le_sup_right : W2 ≤ W1 ⊔ W2) hzW2)
+  exact setLike_mul_comm
+    (s := W1 ⊔ W2) ha ((le_sup_right : W2 ≤ W1 ⊔ W2) hzW2)
 
 private theorem theorem_8_13_typeP_hatW_not_mem_ambientDerived
     {G : Type u} [Group G] [Finite G]
@@ -1905,7 +1906,7 @@ public theorem exists_notation_8_14_source_data_of_theorem_8_13
       ⟨_hLmax, hLFOf, _hContain, _hSemiL, _hSemiC, _hCoprime, _hType⟩
     have hLF_eq : LFOf x hxD = LF :=
       le_antisymm (hLF.2 (LFOf x hxD) hLFOf.1) (hLFOf.2 LF hLF.1)
-    simpa [hLF_eq]
+    simp [hLF_eq]
 
 /-- The PF `(8.13)` support conclusion constructs the mixed PF `(8.14)`
 package with the original `A ⊆ A₀` notation, not only the diagonal

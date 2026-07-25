@@ -461,9 +461,26 @@ public theorem corollary_9_3
     dsimp [Cc]
     exact IsPGroup.map hCp (MulAut.conj g).toMonoidHom
   have hCccomm : IsMulCommutative Cc := by
-    dsimp [Cc]
     letI : IsMulCommutative C := hCcomm
-    simpa using (Subgroup.map_isMulCommutative (f := (MulAut.conj g).toMonoidHom) (H := C))
+    refine ⟨⟨fun (x y : Cc) => ?_⟩⟩
+    apply Subtype.ext
+    change (x : G) * (y : G) = (y : G) * (x : G)
+    have hx : (x : G) ∈ C.map (MulAut.conj g).toMonoidHom := by
+      simp [Cc, Subgroup.conjBy]
+    have hy : (y : G) ∈ C.map (MulAut.conj g).toMonoidHom := by
+      simp [Cc, Subgroup.conjBy]
+    obtain ⟨x₀, hx₀, hx_eq⟩ := Subgroup.mem_map.mp hx
+    obtain ⟨y₀, hy₀, hy_eq⟩ := Subgroup.mem_map.mp hy
+    change (MulAut.conj g) x₀ = (x : G) at hx_eq
+    change (MulAut.conj g) y₀ = (y : G) at hy_eq
+    calc
+      (x : G) * (y : G) = (MulAut.conj g) x₀ * (MulAut.conj g) y₀ := by
+        rw [hx_eq, hy_eq]
+      _ = (MulAut.conj g) (x₀ * y₀) := by rw [map_mul]
+      _ = (MulAut.conj g) (y₀ * x₀) := by
+        rw [setLike_mul_comm (s := C) hx₀ hy₀]
+      _ = (MulAut.conj g) y₀ * (MulAut.conj g) x₀ := by rw [map_mul]
+      _ = (y : G) * (x : G) := by rw [hx_eq, hy_eq]
   have hCcgen_eq : generatorRank Cc = generatorRank C := by
     simpa [Cc] using section9_c93_generatorRank_conjBy_eq (G := G) C g
   have hCcgen : 3 ≤ generatorRank Cc := by
@@ -513,7 +530,7 @@ public theorem corollary_9_3
     rw [Subgroup.mem_centralizer_iff]
     intro a ha
     have hxA : x ∈ A := hKA_le_A hx
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hxA ha).symm
+    exact (setLike_mul_comm (s := A) hxA ha).symm
   have hKAunique : KA ∈ section9UniqueSubgroups G :=
     corollary_9_2 (L := A) (K := KA) hAunique hKA_le_centA hKArank
   have hKA_le_cent_DG : KA ≤ Subgroup.centralizer (DG : Set G) := by
@@ -551,7 +568,7 @@ public theorem corollary_9_3
     intro c hc
     rw [Subgroup.mem_centralizer_iff]
     intro k hk
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := Cc) hc (hKC_le_Cc hk)).symm
+    exact (setLike_mul_comm (s := Cc) hc (hKC_le_Cc hk)).symm
   have hCcunique : Cc ∈ section9UniqueSubgroups G :=
     corollary_9_2 (L := KC) (K := Cc) hKCunique hCc_le_cent_KC hCcrank
   have hBcrank : 2 ≤ groupRank Bc := by

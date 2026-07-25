@@ -44,6 +44,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup V) [IsInvariant A V B] :
     ∃ C : Subgroup V, IsCompl B C ∧ IsInvariant A V C := by
   classical
+  letI : CommGroup V := IsMulCommutative.instCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
     Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
@@ -176,8 +177,9 @@ private theorem section12_E2_commutative_of_tau2_nonabelian
     (theorem_12_5_b hM hp hA_M).1 T
   have hTamb_comm : IsMulCommutative (section10AmbientSylowSubgroup M T) := by
     letI : IsMulCommutative (T : Subgroup M) := hTcomm
-    simpa [section10AmbientSylowSubgroup] using
-      (Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M)))
+    change IsMulCommutative ((T : Subgroup M).map M.subtype)
+    exact Subgroup.map_isMulCommutative
+      (f := M.subtype) (H := (T : Subgroup M))
   have hE2_amb_le_T : E₂ ≤ section10AmbientSylowSubgroup M T := by
     intro x hx
     exact Subgroup.mem_map.mpr
@@ -185,8 +187,8 @@ private theorem section12_E2_commutative_of_tau2_nonabelian
         hE2sub_le_T (by simpa [E₂sub, Subgroup.mem_subgroupOf] using hx), rfl⟩
   refine ⟨⟨fun x y => ?_⟩⟩
   exact Subtype.ext <|
-    Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := section10AmbientSylowSubgroup M T)
+    setLike_mul_comm
+      (s := section10AmbientSylowSubgroup M T)
       (hE2_amb_le_T x.property) (hE2_amb_le_T y.property)
 
 public theorem section12_E2_le_centralizer_rankTwo_tau2_of_theorem_12_7
@@ -209,8 +211,8 @@ public theorem section12_E2_le_centralizer_rankTwo_tau2_of_theorem_12_7
   intro x hx
   rw [Subgroup.mem_centralizer_iff]
   intro a ha
-  exact (Subgroup.mul_comm_of_mem_isMulCommutative
-    (H := E₂) hx (hA_le_E2 ha)).symm
+  exact (setLike_mul_comm
+    (s := E₂) hx (hA_le_E2 ha)).symm
 
 private theorem section12_global_sylow_not_le_M_of_nonabelian
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
@@ -245,15 +247,16 @@ private theorem section12_global_sylow_not_le_M_of_nonabelian
   have hScomm : IsMulCommutative (S : Subgroup G) := by
     refine ⟨⟨fun x y => ?_⟩⟩
     have hxsub : (⟨(x : G), hSleM x.property⟩ : M) ∈ (SM : Subgroup M) := by
-      simpa [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf] using x.property
+      simp [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf]
     have hysub : (⟨(y : G), hSleM y.property⟩ : M) ∈ (SM : Subgroup M) := by
-      simpa [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf] using y.property
+      simp [SM, Ssub, IsPGroup.toSylow_coe, Subgroup.mem_subgroupOf]
     apply Subtype.ext
     exact congrArg (fun z : M => (z : G)) <|
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := (SM : Subgroup M)) hxsub hysub
+      setLike_mul_comm
+        (s := (SM : Subgroup M)) hxsub hysub
   exact hSnonab hScomm
 
+omit [IsMinCE G] in
 public theorem section12_le_unique_maximal_of_le
     {Y X M : Subgroup G} (hYX : Y ≤ X) (hXproper : X ≠ ⊤)
     (hMuniq : section9MaximalSubgroupsContaining Y = {M}) :
@@ -269,6 +272,7 @@ public theorem section12_le_unique_maximal_of_le
     simpa using hNsingle
   simpa [hNM] using hXN
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_omegaOneCenter_centralizes
     {p : Nat.Primes} (P : Subgroup G) :
     section10OmegaOneCenter p P ≤ Subgroup.centralizer (P : Set G) := by
@@ -311,7 +315,7 @@ private theorem section12_CA_msigma_ne_omegaOneCenter_of_tau2
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
     (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
-    (hPnonab : ¬ IsMulCommutative P)
+    (_hPnonab : ¬ IsMulCommutative P)
     (hPnotM : ¬ P ≤ M)
     (hCcard : Nat.card (subgroupCentralizerIn A (section10Msigma M)) = p.val) :
     subgroupCentralizerIn A (section10Msigma M) ≠ section10OmegaOneCenter p P := by
@@ -382,7 +386,7 @@ private theorem section12_isInvariant_comap_quotient_local
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     {N : Subgroup G} [N.Normal] [IsInvariant A G N]
     (H : Subgroup (G ⧸ N))
-    [hQ : MulDistribMulAction A (G ⧸ N)] [IsInvariant A (G ⧸ N) H]
+    [MulDistribMulAction A (G ⧸ N)] [IsInvariant A (G ⧸ N) H]
     (hq : ∀ a : A, ∀ g : G,
       a • ((QuotientGroup.mk' N) g) = (QuotientGroup.mk' N) (a • g)) :
     IsInvariant A G (H.comap (QuotientGroup.mk' N)) := by
@@ -427,9 +431,9 @@ public theorem section12_CA_msigma_split_E2_cyclic_factor
     obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S Sbad
     have hconj_comm : IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
       letI : IsMulCommutative (S : Subgroup G) := hScomm
-      simpa [Sylow.coe_subgroup_smul] using
-        (Subgroup.map_isMulCommutative
-          (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G)))
+      rw [Sylow.coe_subgroup_smul]
+      exact Subgroup.map_isMulCommutative
+        (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
     have hSbad_comm : IsMulCommutative (Sbad : Subgroup G) := by
       rw [← hg]
       exact hconj_comm
@@ -603,12 +607,13 @@ private theorem section12_CA_msigma_not_le_frattini_E2
     simpa [C, hCbot] using hCcard.symm
   exact p.2.ne_one hp_one
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_coprime_card_E1_tau2
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
+    (_hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
+    (_hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
     Nat.Coprime p.val (Nat.card E₁) := by
   classical
   rcases hE with ⟨_hcomp, _hE12, hE1, _hE2, _hE3⟩
@@ -852,6 +857,7 @@ public theorem section12_CA_msigma_complement_in_E2
       have hx' := hforward (e₁⁻¹) hx
       simpa [e₁, mul_assoc] using hx'
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_coprime_card_E1_E2
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃) :
@@ -873,6 +879,7 @@ public theorem section12_coprime_card_E1_E2
   have h2 : primeRank r.val M = 2 := hr2.2
   omega
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_coprime_card_E12_E3
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃) :
@@ -938,7 +945,7 @@ private theorem section12_pack_complement_from_E2
       _ = E₁ ⊔ (C ⊔ P₀) ⊔ E₃ := by
         simpa [C] using congrArg (fun X : Subgroup G => E₁ ⊔ X ⊔ E₃) hE₂eq
       _ = C ⊔ E₀ := by
-        simp [D, E₀, sup_assoc, sup_left_comm, sup_comm]
+        simp [D, E₀, sup_left_comm, sup_comm]
   · rw [Subgroup.disjoint_def]
     intro x hxC hxE₀
     have hxE2 : x ∈ E₂ := hCE2 hxC
@@ -980,13 +987,13 @@ private theorem section12_pack_complement_from_E2
     have hzE12 : z ∈ E₁₂ := by
       have hz_eq : z = d⁻¹ * x := by
         rw [← hdz_eq_x]
-        simp [mul_assoc]
+        simp
       rw [hz_eq]
       exact E₁₂.mul_mem (E₁₂.inv_mem (hDE12 hdD)) hxE12
     have hE12E3_bot : E₁₂ ⊓ E₃ = ⊥ :=
-      Subgroup.inf_eq_bot_of_coprime
+      (Subgroup.disjoint_of_coprime_natCard
         (section12_coprime_card_E12_E3 (G := G) (M := M) (E := E)
-          (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+          (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
     have hz_one : z = 1 := by
       have hzbot : z ∈ (⊥ : Subgroup G) := by
         simpa [hE12E3_bot] using (show z ∈ E₁₂ ⊓ E₃ from ⟨hzE12, hzE3⟩)
@@ -1030,9 +1037,9 @@ private theorem section12_pack_complement_from_E2
       rw [he_eq]
       exact E₂.mul_mem hdE2 (E₂.inv_mem hrE2)
     have hE1E2_bot : E₁ ⊓ E₂ = ⊥ :=
-      Subgroup.inf_eq_bot_of_coprime
+      (Subgroup.disjoint_of_coprime_natCard
         (section12_coprime_card_E1_E2 (G := G) (M := M) (E := E)
-          (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)
+          (E₁₂ := E₁₂) (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hE)).eq_bot
     have he_one : e = 1 := by
       have hebot : e ∈ (⊥ : Subgroup G) := by
         simpa [hE1E2_bot] using (show e ∈ E₁ ⊓ E₂ from ⟨heE1', heE2⟩)
@@ -1118,8 +1125,8 @@ public theorem theorem_12_12_a
       have hA₀comm : IsMulCommutative A₀ := by
         refine ⟨⟨fun x y => ?_⟩⟩
         exact Subtype.ext <|
-          Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) x.property.1 y.property.1
+          setLike_mul_comm
+            (s := A) x.property.1 y.property.1
       have hA₀norm : section10NormalIn A₀ E := by
         simpa [A₀] using
           section12_CA_msigma_normalIn_E

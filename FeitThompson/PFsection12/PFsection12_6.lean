@@ -111,7 +111,7 @@ public theorem theorem_12_6_isTISubsetWithNormalizer_subgroupImagePuncturedSet
       exact Subgroup.mem_bot.mpr (Subtype.ext (Subgroup.mem_bot.mp hxBot))
     · intro hx
       have hxone : x = 1 := Subgroup.mem_bot.mp hx
-      simpa [hxone]
+      simp [hxone]
   have hLmax8 : L ∈ section8MaximalSubgroups G :=
     section8_maximal_of_section9_maximal (G := G) hmax
   have hNormH : Subgroup.normalizer ((H : Set G)) = L :=
@@ -122,7 +122,8 @@ public theorem theorem_12_6_isTISubsetWithNormalizer_subgroupImagePuncturedSet
     constructor
     · intro hx
       rcases hx with ⟨y, hyH, hyx⟩
-      simpa [← hyx] using hyH
+      have hyH' : ((y : L) : G) ∈ H := Subgroup.mem_subgroupOf.mp hyH
+      simpa [← hyx] using hyH'
     · intro hx
       exact ⟨⟨x, hHL hx⟩, hx, rfl⟩
   have hAeq :
@@ -220,7 +221,7 @@ public theorem theorem_12_6_transformAgreesWithInductionOn_of_TI
       exact (h : L).property
     have hane : a ≠ 1 := by
       intro ha1
-      exact hhne (Subtype.ext (by simpa [hha, ha1]))
+      exact hhne (Subtype.ext (by simp [hha, ha1]))
     refine ⟨haL, hane, a, haH, hane, ?_⟩
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
@@ -301,7 +302,7 @@ public theorem theorem_12_6_theorem_6_8_hypothesis_of_TI
       Section6.theorem_6_8_internalSemidirectProduct_top_of_normal_isComplement'
         hcomp
   · exact odd_card_of_typeIDefinitionData L H hTypeI
-  · exact nilpotent_of_mulEquiv (G := H) (G' := H.subgroupOf L)
+  · exact Group.nilpotent_of_mulEquiv (G := H) (G' := H.subgroupOf L)
       (Subgroup.subgroupOfEquivOfLe hHL).symm
   · exact theorem_12_6_isTISubsetWithNormalizer_subgroupImagePuncturedSet
       L H hmax hHL hHnorm hHne hTI
@@ -332,7 +333,7 @@ public theorem theorem_12_6_theorem_6_8_hypothesis_of_TI
         exact Subgroup.mem_bot.mpr (Subtype.ext_iff.mp hxEq)
       · intro hx
         have hxEq : x = 1 := Subgroup.mem_bot.mp hx
-        simpa [hxEq]
+        simp [hxEq]
     have hRneTop : Rtop ≠ ⊥ := by
       intro hbot
       apply hRne
@@ -350,7 +351,7 @@ public theorem theorem_12_6_theorem_6_8_hypothesis_of_TI
         exact Subgroup.mem_bot.mpr (Subtype.ext_iff.mp hxEq)
       · intro hx
         have hxEq : x = 1 := Subgroup.mem_bot.mp hx
-        simpa [hxEq]
+        simp [hxEq]
     have hcompTop :
         ((H.subgroupOf L).subgroupOf (⊤ : Subgroup L)).IsComplement' Rtop := by
       refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
@@ -449,14 +450,19 @@ public theorem theorem_12_6_equal_degree_of_rank_two
     refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
     apply Subtype.ext
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := H) a.property b.property
+    exact setLike_mul_comm (s := H) a.property b.property
   have hquot :
       IsMulCommutative
         ((H.subgroupOf L) ⧸
           (⊥ : Subgroup L).subgroupOf (H.subgroupOf L)) := by
-    letI : IsMulCommutative (H.subgroupOf L) := hKcomm
-    refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
-    exact mul_comm a b
+    refine IsMulCommutative.of_comm ?_
+    intro a b
+    refine Quotient.inductionOn₂ a b ?_
+    intro x y
+    calc
+      QuotientGroup.mk x * QuotientGroup.mk y = QuotientGroup.mk (x * y) := by simp
+      _ = QuotientGroup.mk (y * x) := by rw [hKcomm.is_comm.comm x y]
+      _ = QuotientGroup.mk y * QuotientGroup.mk x := by simp
   intro X Y
   have hX :=
     Section6.inducedKernelFamily_degree_eq_relIndex_of_quotient_commutative
@@ -524,7 +530,7 @@ public theorem theorem_12_6_hypothesis_6_4_of_exponent_case
     rcases hfrob with ⟨_hHLf, _hHnormf, _Rcomp, _hcomp, hHne, _hRne, _hcent⟩
     exact hHne
   have hnilLocal : Group.IsNilpotent (H.subgroupOf L) := by
-    exact nilpotent_of_mulEquiv (G := H) (G' := H.subgroupOf L)
+    exact Group.nilpotent_of_mulEquiv (G := H) (G' := H.subgroupOf L)
       (Subgroup.subgroupOfEquivOfLe _hHL).symm
   have hfrobQuot :
       Section6.frobeniusQuotientWithKernel

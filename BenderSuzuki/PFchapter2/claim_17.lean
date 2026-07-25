@@ -20,6 +20,8 @@ open PFchapter1section1 PFAppendixIII
 open PFchapter1section3
 open scoped Pointwise
 
+attribute [local instance] commutatorElement
+
 /-!
 # Peterfalvi, Part II, Chapter II, Claim (17), conclusion
 -/
@@ -413,7 +415,7 @@ private theorem chapter2_claim17_normal_of_index_eq_prime_of_isPGroup
       apply le_antisymm le_top
       intro x hx
       have hxone : x = 1 := Subsingleton.elim x 1
-      simpa [hxone]
+      simp [hxone]
     have hp_one : p = 1 := by simpa [hAtop] using hindex.symm
     exact (Fact.out : Nat.Prime p).ne_one hp_one
   apply Subgroup.normal_of_index_eq_minFac_card
@@ -482,7 +484,7 @@ private theorem chapter2_claim17_commutative
     exact inf_le_right
   letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   letI : IsMulCommutative P :=
-    ⟨(isCyclic_of_prime_card hPcard).commutative⟩
+    (isCyclic_of_prime_card hPcard).isMulCommutative
   have hA_le_CA : A ≤ Subgroup.centralizer (A : Set G) := by
     intro a ha
     rw [Subgroup.mem_centralizer_iff]
@@ -907,8 +909,7 @@ private theorem chapter2_claim17_commutator_le_zpowers_of_center_sup_two_generat
     rw [hUclosure] at hu
     refine Subgroup.closure_induction (p := fun u _ =>
       ∀ v : G, v ∈ U → ⁅u, v⁆ ∈ C) ?_ ?_ ?_ ?_ hu
-    · intro u hu
-      intro v hv
+    · intro u hu v hv
       rw [hUclosure] at hv
       refine Subgroup.closure_induction (p := fun v _ => ⁅u, v⁆ ∈ C)
         ?_ ?_ ?_ ?_ hv
@@ -936,12 +937,10 @@ private theorem chapter2_claim17_commutator_le_zpowers_of_center_sup_two_generat
         exact C.inv_mem ha
     · intro v hv
       simpa [C] using C.one_mem
-    · intro a b _ _ ha hb
-      intro v hv
+    · intro a b _ _ ha hb v hv
       rw [TBSBaer.commutator_mul_left_of_commutator_le_center hcomm]
       exact C.mul_mem (ha v hv) (hb v hv)
-    · intro a _ ha
-      intro v hv
+    · intro a _ ha v hv
       have hprod : ⁅a, v⁆ * ⁅a⁻¹, v⁆ = 1 := by
         rw [← TBSBaer.commutator_mul_left_of_commutator_le_center hcomm]
         simp
@@ -1031,48 +1030,44 @@ private theorem chapter2_claim17_commutator_card_le_three_of_center_index_le_nin
   · have hVcard : Nat.card (G ⧸ Z) = 1 := by simpa using hn
     haveI : Subsingleton (G ⧸ Z) := (Nat.card_eq_one_iff_unique.mp hVcard).1
     haveI : IsCyclic (G ⧸ Z) := isCyclic_of_subsingleton
-    have hmul : ∀ a b : G, a * b = b * a := by
-      intro a b
-      exact commutative_of_cyclic_center_quotient q (by simp [q, Z]) a b
+    haveI hmul : IsMulCommutative G :=
+      MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center q (by simp [q, Z])
     have hbot : _root_.commutator G = ⊥ := by
       rw [commutator_eq_closure]
       apply le_antisymm
       · rw [Subgroup.closure_le]
         rintro c ⟨a, b, rfl⟩
-        simpa [commutatorElement_eq_one_iff_mul_comm, hmul a b]
+        simpa [commutatorElement_eq_one_iff_mul_comm, hmul.is_comm.comm a b]
       · exact bot_le
     simp [hbot]
   · have hVcard : Nat.card (G ⧸ Z) = 3 := by simpa using hn
     haveI : IsCyclic (G ⧸ Z) := isCyclic_of_prime_card hVcard
-    have hmul : ∀ a b : G, a * b = b * a := by
-      intro a b
-      exact commutative_of_cyclic_center_quotient q (by simp [q, Z]) a b
+    haveI hmul : IsMulCommutative G :=
+      MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center q (by simp [q, Z])
     have hbot : _root_.commutator G = ⊥ := by
       rw [commutator_eq_closure]
       apply le_antisymm
       · rw [Subgroup.closure_le]
         rintro c ⟨a, b, rfl⟩
-        simpa [commutatorElement_eq_one_iff_mul_comm, hmul a b]
+        simpa [commutatorElement_eq_one_iff_mul_comm, hmul.is_comm.comm a b]
       · exact bot_le
     simp [hbot]
   · have hVcard : Nat.card (G ⧸ Z) = 9 := by simpa using hn
     by_cases hVcyc : IsCyclic (G ⧸ Z)
     · letI : IsCyclic (G ⧸ Z) := hVcyc
-      have hmul : ∀ a b : G, a * b = b * a := by
-        intro a b
-        exact commutative_of_cyclic_center_quotient q (by simp [q, Z]) a b
+      haveI hmul : IsMulCommutative G :=
+        MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center q (by simp [q, Z])
       have hbot : _root_.commutator G = ⊥ := by
         rw [commutator_eq_closure]
         apply le_antisymm
         · rw [Subgroup.closure_le]
           rintro c ⟨a, b, rfl⟩
-          simpa [commutatorElement_eq_one_iff_mul_comm, hmul a b]
+          simpa [commutatorElement_eq_one_iff_mul_comm, hmul.is_comm.comm a b]
         · exact bot_le
       simp [hbot]
     · have hVcomm : IsMulCommutative (G ⧸ Z) :=
-        ⟨Std.Commutative.mk (fun a b =>
-          IsPGroup.commutative_of_card_eq_prime_sq (p := 3)
-            (by simpa using hVcard) a b)⟩
+        IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3)
+          (by simpa using hVcard)
       letI : IsMulCommutative (G ⧸ Z) := hVcomm
       have hVexp : Monoid.exponent (G ⧸ Z) = 3 :=
         (not_isCyclic_iff_exponent_eq_prime Nat.prime_three
@@ -1136,8 +1131,9 @@ private theorem chapter2_claim17_commutator_card_le_three_of_center_index_le_nin
         simpa [mul_assoc] using hgh
       have hcomm : _root_.commutator G ≤ Subgroup.center G := by
         change _root_.commutator G ≤ Z
+        haveI : IsMulCommutative (G ⧸ Z) := hVcomm
         exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := Z)).mp
-          ⟨fun a b => IsMulCommutative.is_comm.comm a b⟩
+          inferInstance
       have hcomm_le : _root_.commutator G ≤ Subgroup.zpowers ⁅x, y⁆ :=
         chapter2_claim17_commutator_le_zpowers_of_center_sup_two_generators x y hcomm (by
           simpa [H0, Z] using hgen)
@@ -1534,7 +1530,7 @@ private theorem chapter2_claim17_hallWielandt_data
       (∀ u z : G, u ∈ Q → z ∈ Q →
         External.engelSymbol (3 - 1) u z = 1) ∨
       Q.subgroupOf (R2s : Subgroup G) ≤
-        upperCentralSeries (R2s : Subgroup G) (3 - 1) := by
+        Subgroup.upperCentralSeries (R2s : Subgroup G) (3 - 1) := by
     right
     left
     intro u z hu hz
@@ -1706,8 +1702,7 @@ private theorem chapter2_claim17_perm_fin_three_eq_one_of_cube_commute_involutio
   have hAcard : Nat.card A = 3 := by dsimp [A]; rw [Nat.card_zpowers, haord]
   have hBcard : Nat.card B = 2 := by dsimp [B]; rw [Nat.card_zpowers, hbord]
   have hdisj : Disjoint A B := by
-    apply disjoint_iff.mpr
-    apply Subgroup.inf_eq_bot_of_coprime
+    apply Subgroup.disjoint_of_coprime_natCard
     rw [hAcard, hBcard]
     norm_num
   have habComm : Commute a b := hab
@@ -1863,8 +1858,10 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
     let B0 : Subgroup G := P ⊔ Sigma
     have hsI : IsInvolution s := hch.section3.s_involution
     have hCcard : Nat.card C = 2 := by
-      simpa [C] using chapter2_claim17_closure_involution_card s hsI
-    have hCp : IsPGroup 2 C := IsPGroup.of_card (n := 1) (by simpa [hCcard])
+      calc
+        Nat.card C = Nat.card (Subgroup.closure ({s} : Set G)) := by simp [C]
+        _ = 2 := chapter2_claim17_closure_involution_card s hsI
+    have hCp : IsPGroup 2 C := IsPGroup.of_card (n := 1) (by rw [hCcard]; norm_num)
     rcases hphiPack with ⟨phi, hphiSurj, hphiKer⟩
     have hR1card : Nat.card R1 = 243 :=
       chapter2_claim17_R1_card RS R1 s (by simpa [RS] using hRScard) hsI phi
@@ -2023,16 +2020,30 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
         omega
       have hQp : IsPGroup 3 (R1 ⧸ Zsub) := hR1p.to_quotient Zsub
       have hDqCard : Nat.card (derivedSubgroup (R1 ⧸ Zsub)) ≤ 3 := by
-        simpa [derivedSubgroup, derivedSeries_one] using
-          chapter2_claim17_commutator_card_le_three_of_center_index_le_nine
-            hQp hcenterIndexLe
+        have htemp := chapter2_claim17_commutator_card_le_three_of_center_index_le_nine
+          hQp hcenterIndexLe
+        have h_eq : derivedSubgroup (R1 ⧸ Zsub) = commutator (R1 ⧸ Zsub) := by
+          dsimp [derivedSubgroup]
+        simpa [h_eq] using htemp
       have hqZtop : (⊤ : Subgroup R1).map qZ = ⊤ :=
         Subgroup.map_top_of_surjective qZ (QuotientGroup.mk'_surjective Zsub)
       have hmapDerived : (derivedSubgroup R1).map qZ =
           derivedSubgroup (R1 ⧸ Zsub) := by
-        simpa [derivedSubgroup, hqZtop] using
-          (Subgroup.map_commutator (H₁ := (⊤ : Subgroup R1))
-            (H₂ := (⊤ : Subgroup R1)) qZ)
+        have h_eq1 : derivedSubgroup R1 = commutator R1 := by
+          dsimp [derivedSubgroup]
+        have h_eq2 : derivedSubgroup (R1 ⧸ Zsub) = commutator (R1 ⧸ Zsub) := by
+          dsimp [derivedSubgroup]
+        have h_comm_map : (commutator R1).map qZ = commutator (R1 ⧸ Zsub) := by
+          calc
+            Subgroup.map qZ (commutator R1) = Subgroup.map qZ (⁅(⊤ : Subgroup R1), (⊤ : Subgroup R1)⁆) := rfl
+            _ = ⁅Subgroup.map qZ (⊤ : Subgroup R1), Subgroup.map qZ (⊤ : Subgroup R1)⁆ := by
+              rw [Subgroup.map_commutator]
+            _ = ⁅⊤, ⊤⁆ := by rw [hqZtop]
+            _ = commutator (R1 ⧸ Zsub) := rfl
+        calc
+          (derivedSubgroup R1).map qZ = (commutator R1).map qZ := by rw [h_eq1]
+          _ = commutator (R1 ⧸ Zsub) := h_comm_map
+          _ = derivedSubgroup (R1 ⧸ Zsub) := by rw [h_eq2]
       have hB0notDerived : ¬ Bsub ≤ derivedSubgroup R1 := by
         intro hle
         have hmapLe : Bbar ≤ (derivedSubgroup R1).map qZ := by
@@ -2081,12 +2092,11 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
       have hphiAbB : phiAb bAb = bAb := by
         change phiAb (qD b) = qD b
         rw [External.invariantQuotientAut_mk', hphiRb]
-      have hAbcomm : IsMulCommutative (R1 ⧸ D1) := by
-        apply IsMulCommutative.mk
-        exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := D1)).mpr
+      have hAbcomm : IsMulCommutative (R1 ⧸ D1) :=
+        (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := D1)).mpr
           (by exact le_rfl)
       letI : IsMulCommutative (R1 ⧸ D1) := hAbcomm
-      letI : CommGroup (R1 ⧸ D1) := CommGroup.ofIsMulCommutative
+      letI : CommGroup (R1 ⧸ D1) := IsMulCommutative.instCommGroup
       have hAbp : IsPGroup 3 (R1 ⧸ D1) := hR1p.to_quotient D1
       let plus : (R1 ⧸ D1) →* (R1 ⧸ D1) :=
         phiAb.toMonoidHom * MonoidHom.id (R1 ⧸ D1)
@@ -2167,7 +2177,16 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
       have hpsiS (r : R1) :
           psi ⟨s * (r : G) * s⁻¹,
             (Subgroup.mem_normalizer_iff.mp (hC_norm_R1 hsC) (r : G)).1 r.2⟩ = psi r := by
-        simpa [phiR, sNorm] using hpsiPhi r
+        have hphiR_apply : (phiR r : G) = s * (r : G) * s⁻¹ := by
+          calc
+            (phiR r : G) = ((R1.normalizerMonoidHom sNorm) r : G) := rfl
+            _ = (sNorm : G) * (r : G) * (sNorm : G)⁻¹ :=
+              Subgroup.normalizerMonoidHom_apply_apply_coe R1 sNorm r
+            _ = s * (r : G) * s⁻¹ := by simp [sNorm]
+        have hphiR_subtype : phiR r = ⟨s * (r : G) * s⁻¹,
+            (Subgroup.mem_normalizer_iff.mp (hC_norm_R1 hsC) (r : G)).1 r.2⟩ :=
+          Subtype.ext hphiR_apply
+        simpa [hphiR_subtype] using hpsiPhi r
       have hpsiC : ∀ v : C, ∀ r : R1,
           psi ⟨Section2.conjBy (v : G) (r : G),
             (Subgroup.mem_normalizer_iff.mp (hC_norm_R1 v.2) (r : G)).1 r.2⟩ = psi r := by
@@ -2179,7 +2198,9 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
           apply Subtype.ext
           simp [Section2.conjBy, hvG]
         · have hvG : (v : G) = s := hv
-          simpa [Section2.conjBy, hvG] using hpsiS r
+          have h_goal := hpsiS r
+          simp [Section2.conjBy, hvG] at h_goal ⊢
+          exact h_goal
       have hloc := chapter2_claim17_local_index_of_invariant_character
         R1 C hC_norm_R1 hdisjR1C psi hpsi hpsiC
       change ∃ M : Subgroup ↥(R2 ⊔ C), M.Normal ∧ Nat.card (↥(R2 ⊔ C) ⧸ M) = 3
@@ -2409,16 +2430,21 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
           exact (le_sup_right : C ≤ R2 ⊔ C) hv
         exact hvNZ1
       have hdisjR2C : Disjoint R2 C := by
-        apply disjoint_iff.mpr
-        apply Subgroup.inf_eq_bot_of_coprime
+        apply Subgroup.disjoint_of_coprime_natCard
         rw [hR2card9, hCcard]
         norm_num
       let sNorm2 : Subgroup.normalizer (R2 : Set G) := ⟨s, hC_norm_R2 hsC⟩
       let phiR2 : MulAut R2 := R2.normalizerMonoidHom sNorm2
+      have hphiR2_apply (r : R2) : (phiR2 r : G) = s * (r : G) * s⁻¹ := by
+        calc
+          (phiR2 r : G) = ((R2.normalizerMonoidHom sNorm2) r : G) := rfl
+          _ = (sNorm2 : G) * (r : G) * (sNorm2 : G)⁻¹ :=
+            Subgroup.normalizerMonoidHom_apply_apply_coe R2 sNorm2 r
+          _ = s * (r : G) * s⁻¹ := by simp [sNorm2]
       have hR1inv : ∀ r : R2, r ∈ R1sub ↔ phiR2 r ∈ R1sub := by
         intro r
         have hnorm := Subgroup.mem_normalizer_iff.mp (hC_norm_R1 hsC) (r : G)
-        simpa [R1sub, phiR2, sNorm2] using hnorm
+        simpa [R1sub, hphiR2_apply r, Subgroup.mem_subgroupOf] using hnorm
       let phiQ : MulAut (R2 ⧸ R1sub) :=
         External.invariantQuotientAut phiR2 R1sub hR1inv
       have hphiQfixed : ∀ x : R2 ⧸ R1sub, phiQ x = x := by
@@ -2453,7 +2479,12 @@ private theorem chapter2_claim17_normal_index_from_hallWielandt_cases_source_int
           apply Subtype.ext
           simp [Section2.conjBy, hvG]
         · have hvG : (v : G) = s := hv
-          simpa [Section2.conjBy, hvG, phiR2, sNorm2] using hqS r
+          have hphiR2_subtype : phiR2 r = ⟨s * (r : G) * s⁻¹,
+              (Subgroup.mem_normalizer_iff.mp (hC_norm_R2 hsC) (r : G)).1 r.2⟩ :=
+            Subtype.ext (hphiR2_apply r)
+          have h_goal := hqS r
+          simp [Section2.conjBy, hvG, hphiR2_subtype] at h_goal ⊢
+          exact h_goal
       have hloc := chapter2_claim17_local_index_of_invariant_character
         R2 C hC_norm_R2 hdisjR2C qR
           (QuotientGroup.mk'_surjective R1sub) hqC

@@ -126,13 +126,13 @@ private theorem isaacs_15_15_no_nontrivial_conj_of_fpf
   classical
   let φ : H →* MulAut N := MulDistribMulAction.toMulAut H N
   let SD := N ⋊[φ] H
+  letI : Group SD := inferInstanceAs (Group (N ⋊[φ] H))
   letI : Finite SD :=
     Finite.of_equiv (N × H)
       (SemidirectProduct.equivProd (N := N) (G := H) (φ := φ)).symm
-  let inl : N →* SD := SemidirectProduct.inl (φ := φ)
-  let inr : H →* SD := SemidirectProduct.inr (φ := φ)
-  let rightHom : SD →* H :=
-    SemidirectProduct.rightHom (N := N) (G := H) (φ := φ)
+  let inl := SemidirectProduct.inl (φ := φ)
+  let inr := SemidirectProduct.inr (φ := φ)
+  let rightHom := SemidirectProduct.rightHom (N := N) (G := H) (φ := φ)
   let KN : Subgroup SD := inl.range
   let KH : Subgroup SD := inr.range
   have hKNker : KN = rightHom.ker := by
@@ -145,24 +145,27 @@ private theorem isaacs_15_15_no_nontrivial_conj_of_fpf
     have hxmem : inl x ∈ (⊥ : Subgroup SD) := by
       rw [← hbot]
       exact ⟨x, rfl⟩
-    have hxone : inl x = 1 := by simpa using hxmem
+    have hxone : inl x = (1 : SD) := by simpa using hxmem
     apply hx
-    exact SemidirectProduct.inl_injective (by simpa using hxone)
+    apply SemidirectProduct.inl_injective (φ := φ)
+    simpa using hxone
   have hKH : KH ≠ ⊥ := by
     intro hbot
     have hbmem : inr b ∈ (⊥ : Subgroup SD) := by
       rw [← hbot]
       exact ⟨b, rfl⟩
-    have hbone : inr b = 1 := by simpa using hbmem
+    have hbone : inr b = (1 : SD) := by simpa using hbmem
     apply hb
-    exact SemidirectProduct.inr_injective (by simpa using hbone)
+    apply SemidirectProduct.inr_injective (φ := φ)
+    simpa using hbone
   have hprod : KN ⊔ KH = ⊤ := by
     apply top_unique
     intro z _
-    rw [← SemidirectProduct.inl_left_mul_inr_right z]
-    exact (KN ⊔ KH).mul_mem
-      ((show KN ≤ KN ⊔ KH from le_sup_left) ⟨z.left, rfl⟩)
-      ((show KH ≤ KN ⊔ KH from le_sup_right) ⟨z.right, rfl⟩)
+    have hmem : inl z.left * inr z.right ∈ KN ⊔ KH :=
+      (KN ⊔ KH).mul_mem
+        ((show KN ≤ KN ⊔ KH from le_sup_left) ⟨z.left, rfl⟩)
+        ((show KH ≤ KN ⊔ KH from le_sup_right) ⟨z.right, rfl⟩)
+    simpa [inl, inr, SemidirectProduct.inl_left_mul_inr_right (φ := φ) z] using hmem
   have hdisj : Disjoint KN KH := by
     rw [disjoint_iff, Subgroup.eq_bot_iff_forall]
     intro z hz
@@ -171,12 +174,10 @@ private theorem isaacs_15_15_no_nontrivial_conj_of_fpf
     have haone : a = 1 := by
       have hright := congrArg SemidirectProduct.right (ha.trans hn.symm)
       simpa [inl, inr] using hright
-    have hzone : z = 1 := by
-      calc
-        z = inr a := ha.symm
-        _ = inr 1 := by rw [haone]
-        _ = 1 := map_one inr
-    simpa [hzone]
+    calc
+      z = inr a := ha.symm
+      _ = inr 1 := by rw [haone]
+      _ = (1 : SD) := map_one inr
   have hB :
       ∀ n : KN, n ≠ 1 → ∀ h : KH,
         (h : SD) * (n : SD) = (n : SD) * (h : SD) → h = 1 := by
@@ -265,7 +266,7 @@ public theorem isaacs_lemma_15_15
     intro haone
     apply hne
     calc
-      h = k * (k⁻¹ * h) := by simp [mul_assoc]
+      h = k * (k⁻¹ * h) := by simp
       _ = k := by rw [haone, mul_one]
   let e : psi ≃ₗ psi.comp
       (MulDistribMulAction.toMonoidHom N (k⁻¹ * h)) :=

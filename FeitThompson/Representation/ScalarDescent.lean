@@ -144,7 +144,7 @@ variable {F E G V W : Type*} [Field F] [Field E] [Algebra F E] [Group G]
 public def intertwiningConstraint (rho : Representation F G V) (sigma : Representation F G W)
     (g : G) : (V →ₗ[F] W) →ₗ[F] (V →ₗ[F] W) :=
   { toFun := fun f => f.comp (rho g) - (sigma g).comp f
-    map_add' := by intro f h; ext x; simp <;> abel
+    map_add' := by intro f h; ext x; simp; abel
     map_smul' := by intro a f; ext x; simp [smul_sub] }
 
 public def intertwiningConstraintSpan (rho : Representation F G V)
@@ -231,7 +231,9 @@ public theorem baseChangedEnd_intertwiningConstraint
   intro f
   obtain ⟨t, rfl⟩ := e.surjective f
   induction t using TensorProduct.induction_on with
-  | zero => simp [baseChangedEnd, intertwiningConstraint, e]
+  | zero =>
+      simp [baseChangedEnd, intertwiningConstraint, e, sub_eq_add_neg]
+      abel
   | add x y hx hy =>
       simp only [map_add]
       rw [hx, hy]
@@ -489,6 +491,7 @@ public noncomputable def intertwinerDeterminantPolynomial
     MvPolynomial.C (LinearMap.toMatrix bV bW (b k).toLinearMap i j) *
       MvPolynomial.X k
 
+omit [FiniteDimensional F V] [FiniteDimensional F W] [DecidableEq κ] in
 /-- Evaluating the generic determinant after scalar extension gives the
 matrix determinant of the corresponding linear combination of base-changed
 intertwiners. -/
@@ -506,6 +509,7 @@ public theorem aeval_intertwinerDeterminantPolynomial
   simp [LinearMap.toMatrix_apply, Algebra.smul_def, mul_comm]
 
 
+omit [Fintype κ] [DecidableEq κ] in
 /-- A nonzero multivariate polynomial over a field has a nonzero evaluation in
 an algebraic closure. -/
 public theorem exists_aeval_ne_zero_algebraicClosure
@@ -513,7 +517,7 @@ public theorem exists_aeval_ne_zero_algebraicClosure
     ∃ x : κ → AlgebraicClosure F, MvPolynomial.aeval x p ≠ 0 := by
   classical
   by_contra h
-  push_neg at h
+  push Not at h
   apply hp
   apply MvPolynomial.map_injective (algebraMap F (AlgebraicClosure F))
     (FaithfulSMul.algebraMap_injective F (AlgebraicClosure F))
@@ -521,6 +525,7 @@ public theorem exists_aeval_ne_zero_algebraicClosure
   intro x
   simpa [MvPolynomial.aeval_def] using h x
 
+omit [FiniteDimensional F V] [FiniteDimensional F W] [DecidableEq κ] in
 /-- A specialization of the generic intertwiner determinant to a nonzero
 value yields an equivalence of the scalar-extended representations. -/
 public theorem repEquiv_of_aeval_intertwinerDeterminantPolynomial_ne_zero
@@ -586,6 +591,7 @@ public noncomputable def baseChangeEquivFinCopies
   (TensorProduct.equivFinsuppOfBasisLeft (Module.finBasis F S)).trans
     (Finsupp.linearEquivFunOnFinite F X (Fin (Module.finrank F S)))
 
+omit [FiniteDimensional F V] in
 /-- Finite-copy coordinates intertwine the base-changed action with the
 coordinatewise original action. -/
 public theorem baseChangeEquivFinCopies_map_extendScalars
@@ -604,8 +610,7 @@ public theorem baseChangeEquivFinCopies_map_extendScalars
   | tmul s v =>
       ext i
       simp [baseChangeEquivFinCopies, extendScalars_apply,
-        LinearMap.baseChange_tmul,
-        TensorProduct.equivFinsuppOfBasisLeft_apply_tmul_apply]
+        LinearMap.baseChange_tmul]
 
 /-- Noether-Deuring descent over a finite field extension, obtained by
 restricting scalars and cancelling a nonzero finite number of copies. -/
@@ -680,6 +685,7 @@ public theorem repEquiv_of_finite_extension
       (M := V) (N := W) n hn eR
   exact ⟨repEquivOfModuleEquiv rho sigma e⟩
 
+omit [DecidableEq κ] in
 /-- A nonzero generic intertwiner determinant gives an equivalence over a
 finite algebraic extension, hence over the base field. -/
 public theorem repEquiv_of_intertwinerDeterminantPolynomial_ne_zero
@@ -797,4 +803,3 @@ public theorem repEquiv_of_extendScalars
     rho sigma bV bW b hp
 end DeterminantSpecialization
 end Representation
-

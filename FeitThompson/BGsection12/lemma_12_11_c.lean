@@ -62,13 +62,13 @@ private theorem section12_mem_conjugates_of_conjBy_eq
     N ∈ section10ConjugatesContaining M X := by
   exact ⟨g⁻¹, section12_eq_conjBy_inv_of_conjBy_eq hconj, hXN⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_mem_conjugates_forward_of_conjBy_eq
     {M N X : Subgroup G} {g : G} (hconj : M.conjBy g = N) (hXN : X ≤ N) :
     N ∈ section10ConjugatesContaining M X := by
   exact ⟨g, hconj.symm, hXN⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_eq_of_conjugation_transitive_and_centralizer_le
     {Ω : Set (Subgroup G)} {Q₁ Q₂ X : Subgroup G}
     (htrans : ConjugationActionTransitiveOn (Subgroup.centralizer (X : Set G)) Ω)
@@ -93,6 +93,7 @@ private theorem section12_eq_of_conjugation_transitive_and_centralizer_le
       · simp [mul_assoc]
   exact hc.trans hfix
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_normalizer_le_normalizer_centralizer
     (A : Subgroup G) :
     Subgroup.normalizer (A : Set G) ≤
@@ -167,13 +168,11 @@ public theorem lemma_12_11_c
     simpa [h6.2.1] using h6.1 hx
   have hC_eq_CGA : C = Subgroup.centralizer (A : Set G) := by
     apply le_antisymm
-    · simpa [C, subgroupCentralizerIn] using
-        (inf_le_right : E ⊓ Subgroup.centralizer (A : Set G) ≤ Subgroup.centralizer (A : Set G))
+    · simp [C, subgroupCentralizerIn]
     · intro x hx
       exact ⟨hCGA_le_E hx, hx⟩
   have hC_le_E : C ≤ E := by
-    simpa [C, subgroupCentralizerIn] using
-      (inf_le_left : E ⊓ Subgroup.centralizer (A : Set G) ≤ E)
+    simp [C, subgroupCentralizerIn]
   have hC_le_M : C ≤ M := hC_le_E.trans hE.1.2.1
   have hqC : q ∈ subgroupPrimeSet C := by simpa [C] using hqCent
   have hqrankC_le_one : primeRank q.val C ≤ 1 := by
@@ -356,7 +355,7 @@ public theorem lemma_12_11_c
       (p := p) hM hE hp hA hMtwoA) hp
   have hpσtwo : p ∈ section10SigmaPrimes Mtwo := hp_data_two.1
   have hqrank_two : 2 ≤ primeRank q.val Mtwo := by
-    simpa [hqτ2two.2] using (show 2 ≤ 2 by decide)
+    simp [hqτ2two.2]
   obtain ⟨Bqsub, hBqsub_p, hBqsub_comm, hBqsub_gen⟩ :=
     section12_exists_pSubgroup_two_le_generatorRank_of_two_le_primeRank
       (p := q.val) (R := Mtwo) hqrank_two
@@ -374,8 +373,8 @@ public theorem lemma_12_11_c
     omega
   let SqG : Subgroup G := section10AmbientSylowSubgroup Mtwo Sq
   have hSqG_p : IsPGroup q.val SqG := by
-    simpa [SqG, section10AmbientSylowSubgroup] using
-      IsPGroup.map Sq.isPGroup' Mtwo.subtype
+    change IsPGroup q.val ((Sq : Subgroup Mtwo).map Mtwo.subtype)
+    exact IsPGroup.map Sq.isPGroup' Mtwo.subtype
   have hSqG_le_Mtwo : SqG ≤ Mtwo := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -423,7 +422,7 @@ public theorem lemma_12_11_c
       Subgroup.subgroupOfEquivOfLe
         (H := section10Msigma Mstar) (K := Mstar) hσ_le_Mstar
     have hnilSσ : Group.IsNilpotent Sσ :=
-      nilpotent_of_mulEquiv (G := section10Msigma Mstar) (G' := Sσ) eσ.symm
+      Group.nilpotent_of_mulEquiv (G := section10Msigma Mstar) (G' := Sσ) eσ.symm
     let Pσ : Sylow p.val Sσ := Classical.choice (Sylow.nonempty (p := p.val) (G := Sσ))
     have hPσ_norm : (Pσ : Subgroup Sσ).Normal := by
       letI : Group.IsNilpotent Sσ := hnilSσ
@@ -449,7 +448,7 @@ public theorem lemma_12_11_c
       · exact hp_not_Sσ_index hp_Sσ
     let Pstar : Sylow p.val Mstar := hPsubMstar_p.toSylow hp_not_PsubMstar_index
     have hPstar_eq : (Pstar : Subgroup Mstar) = PsubMstar := by
-      simpa [Pstar, IsPGroup.toSylow_coe]
+      simp [Pstar, IsPGroup.toSylow_coe]
     have hPσ_char : (Pσ : Subgroup Sσ).Characteristic :=
       Sylow.characteristic_of_normal Pσ hPσ_norm
     have hnormSσ_eq_top : Subgroup.normalizer (Sσ : Set Mstar) = ⊤ := by
@@ -535,8 +534,8 @@ public theorem lemma_12_11_c
     obtain ⟨Qe, hQ0E_le_Qe⟩ := IsPGroup.exists_le_sylow (G := E) (p := q.val) hQ0E_p
     let QE : Subgroup G := section10AmbientSylowSubgroup E Qe
     have hQE_p : IsPGroup q.val QE := by
-      simpa [QE, section10AmbientSylowSubgroup] using
-        IsPGroup.map Qe.isPGroup' E.subtype
+      change IsPGroup q.val ((Qe : Subgroup E).map E.subtype)
+      exact IsPGroup.map Qe.isPGroup' E.subtype
     have hQE_le_E : QE ≤ E := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -702,7 +701,7 @@ public theorem lemma_12_11_c
       have hWp : IsPGroup q.val W := by
         intro x
         have hxQE : ((x : W) : G) ∈ QE := by
-          exact (show ((x : W) : G) ∈ QE ⊓ Vstar by simpa [W] using x.property).1
+          exact (show ((x : W) : G) ∈ QE ⊓ Vstar by simp [W]).1
         rcases hQE_p ⟨x, hxQE⟩ with ⟨k, hk⟩
         refine ⟨k, ?_⟩
         apply Subtype.ext
@@ -741,8 +740,8 @@ public theorem lemma_12_11_c
       have hxCent : x ∈ Subgroup.centralizer (Q0 : Set G) := by
         rw [Subgroup.mem_centralizer_iff]
         intro y hyQ0
-        exact (Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := (Q : Subgroup G)) hxQ (hQ0_le_Q hyQ0)).symm
+        exact (setLike_mul_comm
+          (s := (Q : Subgroup G)) hxQ (hQ0_le_Q hyQ0)).symm
       exact hCentQ0_le_Mstar hxCent
     exact ⟨hQ_le_Mstar, hQcomm⟩
 

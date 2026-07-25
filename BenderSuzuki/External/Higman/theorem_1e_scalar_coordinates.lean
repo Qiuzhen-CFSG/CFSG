@@ -21,7 +21,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 universe u
 
@@ -44,7 +44,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
           (eK k : BinaryGaloisField n) * (eE x).toAdd := by
   classical
   letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := CommGroup.ofIsMulCommutative
+  letI : CommGroup E := IsMulCommutative.instCommGroup
   have hq_gt : 1 < q := by
     have hpos : 0 < Nat.card K := Nat.card_pos
     omega
@@ -184,7 +184,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
     have hcard_upper : Nat.card W ≤ Nat.card (Additive E) :=
       Nat.card_le_card_of_injective W.subtype Subtype.val_injective
     have hEcard_add : Nat.card (Additive E) = q := by
-      simpa using hEcard
+      exact (Nat.card_congr Additive.toMul).trans hEcard
     have hWcard : Nat.card W = Nat.card (Additive E) := by
       apply Nat.le_antisymm hcard_upper
       simpa [hEcard_add] using hcard_lower
@@ -329,7 +329,7 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
     (hUinv : IsXInvariantSubgroup K U)
     (hVinv : IsXInvariantSubgroup K V)
     (hUcard : Nat.card U = q)
-    (hVcard : Nat.card V = q)
+    (_hVcard : Nat.card V = q)
     (hUVinf : U ⊓ V = ⊥)
     (hUVsup : U ⊔ V = ⊤)
     (e : U ≃* V)
@@ -347,7 +347,7 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
             (eK k : BinaryGaloisField n) * (eQ x).toAdd.2) := by
   classical
   letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := CommGroup.ofIsMulCommutative
+  letI : CommGroup E := IsMulCommutative.instCommGroup
   letI : IsInvariant K E U := ⟨hUinv⟩
   have hUcomm : IsMulCommutative U := inferInstance
   have hUsq : ∀ u : U, u ^ 2 = 1 := by
@@ -376,7 +376,7 @@ public theorem quotient_scalar_coordinates_from_isomorphic_summands
       (eV (k • v)).toAdd =
         ((eK k : F) * (eV v).toAdd) := by
     simpa [eV, he_symm_subtype] using heU_action k (e.symm v)
-  letI : U.Normal := Subgroup.normal_of_comm U
+  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUVdisjoint : Disjoint U V := disjoint_iff.mpr hUVinf
   have hUVmul : (U : Set E) * (V : Set E) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
@@ -623,8 +623,6 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
           rw [Subgroup.mem_center_iff]
           intro x
           rcases hsurj x (Subgroup.mem_top x) with ⟨d, a, b, hx⟩
-          change x * tripleLift c.toAdd 0 0 =
-            tripleLift c.toAdd 0 0 * x
           rw [hx, hmul, hmul, hzeroLeft, hzeroRight]
           simp [add_comm]⟩
       map_one' := by
@@ -699,7 +697,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
                 (cocycle e f a b + cocycle e f a b) +
                 (cocycle e f e f + cocycle e f e f) := by abel
             _ = 0 := by
-              simp only [CharTwo.add_self_eq_zero, zero_add]
+              simp only [CharTwo.add_self_eq_zero]
     have hab : a = 0 ∧ b = 0 := by
       by_cases ha : a = 0
       · subst a
@@ -713,7 +711,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
       · by_cases hb : b = 0
         · subst b
           have h := hpolar 0 1
-          simp only [map_zero, map_one, zero_mul, one_mul, mul_zero,
+          simp only [map_zero, map_one, zero_mul, mul_zero,
             add_zero, zero_add] at h
           have h' : epsilonB * a = 0 := by simpa [mul_assoc] using h
           exact False.elim ((mul_ne_zero hepsilonB ha) h')
@@ -795,7 +793,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
     · intro hp
       have hpOne : piNat p = 1 := MonoidHom.mem_ker.mp hp
       let cab := tripleEquiv.symm p
-      have hab : cab.2 = (0, 0) := by
+      have hab : cab.2 = 0 := by
         apply Multiplicative.ofAdd.injective
         simpa [piNat, cab] using hpOne
       have ha : cab.2.1 = 0 := congrArg Prod.fst hab
@@ -869,14 +867,14 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
       _ = (cocycle 1 0 1 0 + cocycle 1 0 0 1) +
             (cocycle 0 1 1 0 + cocycle 0 1 0 1) := by
               rw [hdiag, hdiag]
-              simp only [map_one, map_zero, mul_one, mul_zero, zero_mul,
+              simp only [map_one, map_zero, mul_one, mul_zero,
                 add_zero, zero_add]
       _ = cocycle 1 0 1 1 + cocycle 0 1 1 1 := by
               rw [hsplitFirst, hsplitSecond]
       _ = cocycle 1 1 1 1 := hsplitLeft.symm
       _ = epsilonB := by
         rw [hdiag]
-        simp only [map_one, mul_one, one_mul]
+        simp only [map_one, mul_one]
         rw [show (1 : FB) + epsilonB + 1 =
             epsilonB + (1 + 1) by ring,
           CharTwo.add_self_eq_zero, add_zero]
@@ -1115,7 +1113,16 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
       hQAction.toMulAction.toSMul g
       (QuotientGroup.mk' (Subgroup.center P) p))).toAdd = _ at h
     rw [hQAction_mk] at h
-    simpa [lambda, Prod.smul_mk] using h
+    have hsmul :
+        lambda •
+            (eQ (QuotientGroup.mk' (Subgroup.center P) p)).toAdd =
+          (lambda *
+              (eQ (QuotientGroup.mk' (Subgroup.center P) p)).toAdd.1,
+            lambda *
+              (eQ (QuotientGroup.mk' (Subgroup.center P) p)).toAdd.2) := by
+      ext <;> simp [smul_eq_mul]
+    rw [hsmul]
+    simpa [lambda] using h
   have hcommCenter_action (p r : P) :
       g • commCenter p r = commCenter (g • p) (g • r) := by
     apply Subtype.ext
@@ -1153,7 +1160,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
         rw [← hpCoord, ← hrCoord, hBcoord_comm]
   have hBcoord_value : ∃ v w : FB × FB, Bcoord v w ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hBcoord_nonzero
     apply LinearMap.ext
     intro v
@@ -1197,7 +1204,7 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
       n (Nat.pos_of_ne_zero hn) Baxis lambda lambda mu hBaxis_equivariant
   have hcoeff_nonzero : ∃ i j : Fin n, coeff i j ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hBaxis_nonzero
     rw [hcoeffExpansion]
     simp [h]
@@ -1244,7 +1251,6 @@ public theorem theorem1_isomorphic_summands_scalar_coordinates
   let theta : FB ≃+* FB := thetaAlg.toRingEquiv
   have hsigma_apply (x : FB) (t : ℕ) :
       (sigma ^ t) x = x ^ (2 ^ t) := by
-    change ((sigma ^ t : FB ≃ₐ[ZMod 2] FB) : FB → FB) x = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]

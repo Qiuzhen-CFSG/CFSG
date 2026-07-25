@@ -154,7 +154,7 @@ public theorem lemma_6_3_a_2
       _ = eQ b * eQ a := by
             exact
               ((Subgroup.Normal.quotient_commutative_iff_commutator_le
-                (N := (_root_.commutator H))).mpr le_rfl).comm (eQ a) (eQ b)
+                (N := (_root_.commutator H))).mpr le_rfl).is_comm.comm (eQ a) (eQ b)
       _ = eQ (b * a) := by simp [eQ]
   have hcomplQ :
       IsCompl (fixedPointSubgroup (↥K) (↥H ⧸ Xsub))
@@ -174,4 +174,3 @@ public theorem lemma_6_3_a_2
     simpa [Subgroup.mem_subgroupOf] using hx
   have hxXsub : (⟨x, hx.1⟩ : H) ∈ Xsub := hle_sub hx_sub
   simpa [X, Xsub, Subgroup.mem_subgroupOf] using hxXsub
-

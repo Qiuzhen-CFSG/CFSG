@@ -20,7 +20,7 @@ public instance instFactNatPrimeTwo : Fact (Nat.Prime 2) :=
   ⟨Nat.prime_two⟩
 
 /-- The finite field of order `2^m`, constructed over `ZMod 2`. -/
-@[expose] public abbrev BinaryGaloisField (m : ℕ) : Type :=
+public abbrev BinaryGaloisField (m : ℕ) : Type :=
   GaloisField 2 m
 
 /-- An involution is a nonidentity element whose square is one. -/

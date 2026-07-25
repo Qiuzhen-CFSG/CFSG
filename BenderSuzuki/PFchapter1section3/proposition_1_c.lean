@@ -118,7 +118,7 @@ private theorem suzuki_exists_simultaneous_standardizer
       act x⁻¹ (act x z) = z := by
     calc
       act x⁻¹ (act x z) = act (x⁻¹ * x) z := (hact_mul x⁻¹ x z).symm
-      _ = act 1 z := by congr 1 <;> simp
+      _ = act 1 z := by simp
       _ = z := hact_one z
   have hnatural := External.huppert_blackburn_XI_3_3 k hk pi hpi
   rcases hnatural with
@@ -145,12 +145,14 @@ private theorem suzuki_exists_simultaneous_standardizer
     · intro hy
       apply (hPstd_root_iff _).2
       have hyroot := (hPstd_root_iff y).1 hy
-      simpa only [K, Froot] using hconj_iff.mp hyroot
+      rw [Subgroup.coe_mul, Subgroup.coe_mul, InvMemClass.coe_inv]
+      exact hconj_iff.mp hyroot
     · intro hy
       apply (hPstd_root_iff y).2
       have hyroot := (hPstd_root_iff (x * y * x⁻¹)).1 hy
       apply hconj_iff.mpr
-      simpa only [K, Froot] using hyroot
+      rw [Subgroup.coe_mul, Subgroup.coe_mul, InvMemClass.coe_inv] at hyroot
+      exact hyroot
   let c0 : SuzukiMatrixGroup k :=
     Classical.choose
       (MulAction.exists_smul_eq (SuzukiMatrixGroup k) P Pstd)
@@ -191,14 +193,17 @@ private theorem suzuki_exists_simultaneous_standardizer
         tm = c0⁻¹ * u * c0 := by simp [u]; group
         _ = c0⁻¹ * (c0 * x * c0⁻¹) * c0 := by rw [hux']
         _ = x := by group
-    simpa [htm_eq] using hx
+    change tm ∈ (P : Set (SuzukiMatrixGroup k))
+    rw [htm_eq]
+    exact hx
   have hu_moves_infinity : act u pinf ≠ pinf := by
     intro hu_fix
     have hu_norm :
         u ∈ Subgroup.normalizer (Pstd : Set (SuzukiMatrixGroup k)) := by
       apply hnormalizes_Pstd u
-      exact hstabilizer u |>.mp
-        (by simpa [act, K, Froot, Htorus] using hu_fix)
+      apply (hstabilizer u).mp
+      change act u pinf = pinf
+      exact hu_fix
     have hU_pgroup : IsPGroup 2 (Subgroup.zpowers u) := by
       refine IsPGroup.of_card (n := 1) ?_
       rw [Nat.card_zpowers,
@@ -208,13 +213,8 @@ private theorem suzuki_exists_simultaneous_standardizer
           Subgroup.normalizer (Pstd : Set (SuzukiMatrixGroup k)) :=
       ⟨Subgroup.mem_zpowers u, hu_norm⟩
     have hinf := hU_pgroup.inf_normalizer_sylow Pstd
-    have hu_inf' :
-        u ∈ Subgroup.zpowers u ⊓
-          Subgroup.normalizer
-            (((Pstd : Subgroup (SuzukiMatrixGroup k)) :
-              Set (SuzukiMatrixGroup k))) := hu_inf
-    rw [hinf] at hu_inf'
-    exact hu_not_mem hu_inf'.2
+    rw [hinf] at hu_inf
+    exact hu_not_mem hu_inf.2
   have hpinf_mem : pinf ∈ O := Or.inl rfl
   have hpzero_mem : p 0 0 ∈ O := Or.inr ⟨(0, 0), rfl⟩
   have huinf_mem : act u pinf ∈ O := by
@@ -225,14 +225,16 @@ private theorem suzuki_exists_simultaneous_standardizer
     rw [Projectivization.mk_eq_mk_iff] at h
     rcases h with ⟨c, hc⟩
     have hc0 := congrFun hc (0 : Fin 4)
-    simpa [Units.smul_def] using hc0
+    simp at hc0
   rcases htwo_transitive pinf (act u pinf) pinf (p 0 0)
       hpinf_mem huinf_mem hpinf_mem hpzero_mem hu_moves_infinity.symm
       hpinf_ne_zero with ⟨b, hb_inf, hb_uinf⟩
   have hb_normalizer :
       b ∈ Subgroup.normalizer (Pstd : Set (SuzukiMatrixGroup k)) := by
     apply hnormalizes_Pstd b
-    exact hstabilizer b |>.mp (by simpa [act, K, Froot, Htorus] using hb_inf)
+    apply (hstabilizer b).mp
+    change act b pinf = pinf
+    exact hb_inf
   have hb_inv_inf : act b⁻¹ pinf = pinf := by
     calc
       act b⁻¹ pinf = act b⁻¹ (act b pinf) :=
@@ -298,7 +300,9 @@ private theorem suzuki_exists_simultaneous_standardizer
     change act (u1 * T) (p 0 0) = p 0 0
     rw [hact_mul, hT_zero, hu1_inf]
   have hd_B : (d : GL (Fin 4) K) ∈ Froot ⊔ Htorus := by
-    exact hstabilizer d |>.mp (by simpa [act, K, Froot, Htorus] using hd_inf)
+    apply (hstabilizer d).mp
+    change act d pinf = pinf
+    exact hd_inf
   have hroot_zero : ∀ a b : K,
       (Matrix.GeneralLinearGroup.toLin
         (SuzukiRootGL k a b)).toLinearEquiv • p 0 0 =
@@ -455,7 +459,7 @@ private theorem suzuki_exists_simultaneous_standardizer
       have h03 := congrArg
         (fun A : GL (Fin 4) (BinaryGaloisField (2 * k + 1)) =>
           A.val (0 : Fin 4) (3 : Fin 4)) hval
-      simpa [T, SuzukiWeylGL, SuzukiWeylMatrix] using h03
+      simp [T, SuzukiWeylGL, SuzukiWeylMatrix] at h03
     · simpa [pow_two] using hT_sq
   have hT_semiconj_d : SemiconjBy T d d⁻¹ := by
     change T * (u1 * T) = (u1 * T)⁻¹ * T
@@ -657,7 +661,7 @@ private theorem psu_exists_simultaneous_standardizer
     rw [Projectivization.mk_eq_mk_iff] at hval
     rcases hval with ⟨c, hc⟩
     have hc0 := congrFun hc (0 : Fin 3)
-    simpa [Units.smul_def] using hc0
+    simp at hc0
   have hunipotentSU_coe (z : External.hermitianUnipotentCoord J) :
       ((External.hermitianUnipotentSU J hJstandard z : J.specialSubgroup) :
         GL (Fin 3) E) = External.hermitianUnipotentGL J z := rfl
@@ -680,12 +684,6 @@ private theorem psu_exists_simultaneous_standardizer
       rw [hM, External.hermitianUnipotentGL_val,
         External.hermitianUnipotentMatrix_eq]
     apply Subtype.ext
-    change
-      (((coordR z : R) : ProjectiveSpecialUnitaryMatrixGroup J) :
-          Matrix.ProjGenLinGroup (Fin 3) E) =
-        ((External.hermitianUnipotentPSU J hJstandard z :
-          ProjectiveSpecialUnitaryMatrixGroup J) :
-            Matrix.ProjGenLinGroup (Fin 3) E)
     calc
       (((coordR z : R) : ProjectiveSpecialUnitaryMatrixGroup J) :
           Matrix.ProjGenLinGroup (Fin 3) E) =
@@ -707,8 +705,7 @@ private theorem psu_exists_simultaneous_standardizer
     funext i
     fin_cases i <;>
       simp [hunipotentSU_coe, External.hermitianUnipotentGL,
-        External.hermitianUnipotentMatrix, Matrix.mulVec,
-        Fin.sum_univ_three]
+        External.hermitianUnipotentMatrix, Matrix.mulVec]
   have hR_fix_inf (r : R) : rho (r : ProjectiveSpecialUnitaryMatrixGroup J)
       pinf0 = pinf0 := by
     obtain ⟨z, rfl⟩ := coordR.surjective r
@@ -738,8 +735,7 @@ private theorem psu_exists_simultaneous_standardizer
     funext i
     fin_cases i <;>
       simp [hweylSU_coe, External.hermitianWeylGL,
-        External.hermitianWeylMatrix, Matrix.mulVec,
-        Fin.sum_univ_three, htwoE]
+        External.hermitianWeylMatrix, Matrix.mulVec]
   have hT_zero : rho T pzero = pinf0 := by
     calc
       rho T pzero = rho T (rho T pinf0) := by rw [hT_inf]
@@ -771,8 +767,7 @@ private theorem psu_exists_simultaneous_standardizer
     funext i
     fin_cases i <;>
       simp [htorusSU_coe, External.hermitianTorusGL,
-        External.hermitianTorusMatrix, Matrix.mulVec,
-        Fin.sum_univ_three]
+        External.hermitianTorusMatrix, Matrix.mulVec]
   have hj_moves_zero : rho j pzero ≠ pzero := by
     intro hfix
     have hval := congrArg Subtype.val hfix
@@ -782,9 +777,8 @@ private theorem psu_exists_simultaneous_standardizer
     rw [Projectivization.smul_mk, Projectivization.mk_eq_mk_iff] at hval
     rcases hval with ⟨c, hc⟩
     have hc0 := congrFun hc (0 : Fin 3)
-    simpa [z0, hunipotentSU_coe, External.hermitianUnipotentGL,
-      External.hermitianUnipotentMatrix, Matrix.mulVec,
-      Fin.sum_univ_three, Units.smul_def] using hc0
+    simp [z0, hunipotentSU_coe, External.hermitianUnipotentGL,
+      External.hermitianUnipotentMatrix, Matrix.mulVec] at hc0
   have hj_involution : IsInvolution j := by
     constructor
     · intro hj_one
@@ -920,7 +914,9 @@ private theorem psu_exists_simultaneous_standardizer
         tm = c0⁻¹ * u * c0 := by simp [u]; group
         _ = c0⁻¹ * (c0 * x * c0⁻¹) * c0 := by rw [hux']
         _ = x := by group
-    simpa [htm_eq_x] using hx
+    change tm ∈ (P : Set (ProjectiveSpecialUnitaryMatrixGroup J))
+    rw [htm_eq_x]
+    exact hx
   have hu_moves_inf : rho u pinf0 ≠ pinf0 := by
     intro hu_fix
     have huU : u ∈
@@ -1448,6 +1444,12 @@ public theorem proposition_1_c
   have hQbar_iso := h4c.2.2.2.1
   have horder_quotient := h4c.2.2.2.2
   let π : L →* L ⧸ N := QuotientGroup.mk' N
+  have hπ_apply (x : L) : π x = (x : L ⧸ N) := by
+    change QuotientGroup.mk' N x = QuotientGroup.mk x
+    rfl
+  have hπ_sq_eq_one (x : L) (hx : x ^ 2 = 1) :
+      (x : L ⧸ N) ^ 2 = 1 := by
+    rw [← hπ_apply x, ← map_pow, hx, map_one]
   let Hbar : Subgroup (L ⧸ N) := HX.map π
   let Dbar : Subgroup (L ⧸ N) := DX.map π
   let Qbar : Subgroup (L ⧸ N) := QX.map π
@@ -3017,7 +3019,8 @@ public theorem proposition_1_c
           exact hA1bar.involution_t.ne_one (congrArg Subtype.val htM_one)
         · have htM_sq : tM ^ 2 = 1 := by
             apply Subtype.ext
-            simpa [tM] using hA1bar.involution_t.sq_eq_one
+            change tbar ^ 2 = 1
+            exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
           calc
             tm ^ 2 = eM (tM ^ 2) := (map_pow eM tM 2).symm
             _ = eM 1 := congrArg eM htM_sq
@@ -3055,19 +3058,35 @@ public theorem proposition_1_c
               (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)).map
                 (MulAut.conj g).toMonoidHom := by
           refine ⟨g₁, ?_⟩
-          simpa using
-            (congrArg
-              (fun R : Sylow 2 (PSL2BinaryMatrixGroup k) =>
-                (R : Subgroup (PSL2BinaryMatrixGroup k))) hg₁).symm
+          calc
+            (P₁ : Subgroup (PSL2BinaryMatrixGroup k)) =
+                (g₁ • Pmodel : Sylow 2 (PSL2BinaryMatrixGroup k)) :=
+              (congrArg
+                (fun R : Sylow 2 (PSL2BinaryMatrixGroup k) =>
+                  (R : Subgroup (PSL2BinaryMatrixGroup k))) hg₁).symm
+            _ = MulAut.conj g₁ •
+                (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)) :=
+              Sylow.coe_subgroup_smul
+            _ = (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)).map
+                (MulAut.conj g₁).toMonoidHom :=
+              Subgroup.pointwise_smul_def _
         have hP₂_family :
             ∃ g, (P₂ : Subgroup (PSL2BinaryMatrixGroup k)) =
               (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)).map
                 (MulAut.conj g).toMonoidHom := by
           refine ⟨g₂, ?_⟩
-          simpa using
-            (congrArg
-              (fun R : Sylow 2 (PSL2BinaryMatrixGroup k) =>
-                (R : Subgroup (PSL2BinaryMatrixGroup k))) hg₂).symm
+          calc
+            (P₂ : Subgroup (PSL2BinaryMatrixGroup k)) =
+                (g₂ • Pmodel : Sylow 2 (PSL2BinaryMatrixGroup k)) :=
+              (congrArg
+                (fun R : Sylow 2 (PSL2BinaryMatrixGroup k) =>
+                  (R : Subgroup (PSL2BinaryMatrixGroup k))) hg₂).symm
+            _ = MulAut.conj g₂ •
+                (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)) :=
+              Sylow.coe_subgroup_smul
+            _ = (Pmodel : Subgroup (PSL2BinaryMatrixGroup k)).map
+                (MulAut.conj g₂).toMonoidHom :=
+              Subgroup.pointwise_smul_def _
         rcases hpartition x hx_ne with ⟨T, _hT, hT_unique⟩
         have hP₁_eq : (P₁ : Subgroup (PSL2BinaryMatrixGroup k)) = T :=
           hT_unique _ ⟨hxP₁, Or.inl hP₁_family⟩
@@ -3229,10 +3248,11 @@ public theorem proposition_1_c
             exact eM.injective hEm
           exact congrArg Subtype.val hM_braid)
       have hsbar_sq : sbar * sbar = 1 := by
-        have hs_sq := congrArg π hsX_involution.sq_eq_one
-        simpa [sbar, pow_two] using hs_sq
+        rw [← pow_two]
+        exact hπ_sq_eq_one sX hsX_involution.sq_eq_one
       have htbar_sq : tbar * tbar = 1 := by
-        simpa only [tbar, pow_two] using hA1bar.involution_t.sq_eq_one
+        rw [← pow_two]
+        exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
       have hbar_pow : (sbar * tbar) ^ 3 = 1 := by
         rw [pow_three]
         calc
@@ -3351,24 +3371,30 @@ public theorem proposition_1_c
               SuzukiRootGL k 0 1 ∈ SuzukiMatrixGeneratorSet k := by
             rw [SuzukiMatrixGeneratorSet]
             exact Or.inl ⟨0, 1, rfl⟩
-          simpa only [SuzukiMatrixSubgroup] using
-            Subgroup.subset_closure hj_gen⟩
+          change SuzukiRootGL k 0 1 ∈
+            (Subgroup.closure (SuzukiMatrixGeneratorSet k) :
+              Set (GL (Fin 4) (BinaryGaloisField (2 * k + 1))))
+          exact Subgroup.subset_closure hj_gen⟩
       let g : SuzukiMatrixGroup k :=
         ⟨SuzukiRootGL k 1 0, by
           have hg_gen :
               SuzukiRootGL k 1 0 ∈ SuzukiMatrixGeneratorSet k := by
             rw [SuzukiMatrixGeneratorSet]
             exact Or.inl ⟨1, 0, rfl⟩
-          simpa only [SuzukiMatrixSubgroup] using
-            Subgroup.subset_closure hg_gen⟩
+          change SuzukiRootGL k 1 0 ∈
+            (Subgroup.closure (SuzukiMatrixGeneratorSet k) :
+              Set (GL (Fin 4) (BinaryGaloisField (2 * k + 1))))
+          exact Subgroup.subset_closure hg_gen⟩
       let T : SuzukiMatrixGroup k :=
         ⟨SuzukiWeylGL k, by
           have hT_gen :
               SuzukiWeylGL k ∈ SuzukiMatrixGeneratorSet k := by
             rw [SuzukiMatrixGeneratorSet]
             exact Or.inr (Or.inr rfl)
-          simpa only [SuzukiMatrixSubgroup] using
-            Subgroup.subset_closure hT_gen⟩
+          change SuzukiWeylGL k ∈
+            (Subgroup.closure (SuzukiMatrixGeneratorSet k) :
+              Set (GL (Fin 4) (BinaryGaloisField (2 * k + 1))))
+          exact Subgroup.subset_closure hT_gen⟩
       have hsm_mem_P : sm ∈ (Pmodel : Subgroup (SuzukiMatrixGroup k)) := by
         have hsM_mem_PM : sM ∈ (PM : Subgroup M) := by
           change sbar ∈ (Pbar : Subgroup (L ⧸ N))
@@ -3399,7 +3425,8 @@ public theorem proposition_1_c
       have hsm_sq : sm * sm = 1 := by
         have hsM_sq : sM ^ 2 = 1 := by
           apply Subtype.ext
-          simpa [sM, sbar] using congrArg π hsX_involution.sq_eq_one
+          change sbar ^ 2 = 1
+          exact hπ_sq_eq_one sX hsX_involution.sq_eq_one
         calc
           sm * sm = sm ^ 2 := by simp [pow_two]
           _ = eM (sM ^ 2) := (map_pow eM sM 2).symm
@@ -3408,7 +3435,8 @@ public theorem proposition_1_c
       have htm_sq : tm * tm = 1 := by
         have htM_sq : tM ^ 2 = 1 := by
           apply Subtype.ext
-          simpa [tM] using hA1bar.involution_t.sq_eq_one
+          change tbar ^ 2 = 1
+          exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
         calc
           tm * tm = tm ^ 2 := by simp [pow_two]
           _ = eM (tM ^ 2) := (map_pow eM tM 2).symm
@@ -3453,9 +3481,8 @@ public theorem proposition_1_c
                 (fun A : GL (Fin 4) (BinaryGaloisField (2 * k + 1)) => A.val)
                 hGL) (0 : Fin 4)) (3 : Fin 4)
             have h10 : (1 : BinaryGaloisField (2 * k + 1)) = 0 := by
-              simpa [SuzukiRootGL, SuzukiRootMatrix, SuzukiWeylGL,
-                SuzukiWeylMatrix, Matrix.mul_apply, Fin.sum_univ_four,
-                Matrix.one_apply] using h03
+              simp [SuzukiRootGL, SuzukiRootMatrix, SuzukiWeylGL,
+                SuzukiWeylMatrix, Matrix.mul_apply, Fin.sum_univ_four] at h03
             exact one_ne_zero h10
         have hstandard_suzuki_pair_pow : (j * T) ^ 5 = 1 := by
           have hpow := pow_orderOf_eq_one (j * T)
@@ -3524,7 +3551,9 @@ public theorem proposition_1_c
               have hback : c⁻¹ * x * c = y := by
                 rw [← hxy']
                 group
-              simpa [hback] using hy
+              rw [hback]
+              change y ∈ (Pmodel : Set (SuzukiMatrixGroup k))
+              exact hy
             have hj_back : c⁻¹ * j * c ∈
                 (Pmodel : Subgroup (SuzukiMatrixGroup k)) :=
               hback_mem j hj_mem_Pstd
@@ -3547,7 +3576,10 @@ public theorem proposition_1_c
                 calc
                   eM z = c⁻¹ * j * c := hz_eq
                   _ = eM sjM := by simp [sjM, cM, jM]
-              simpa [hz_eq_sjM] using hz
+              change sjM ∈ (PM : Set M)
+              rw [← hz_eq_sjM]
+              change z ∈ (PM : Set M) at hz
+              exact hz
             have hrjM_mem_PM : rjM ∈ (PM : Subgroup M) := by
               change c⁻¹ * g * c ∈
                 (PM : Subgroup M).map eM.toMonoidHom at hg_back
@@ -3557,7 +3589,10 @@ public theorem proposition_1_c
                 calc
                   eM z = c⁻¹ * g * c := hz_eq
                   _ = eM rjM := by simp [rjM, cM, gM]
-              simpa [hz_eq_rjM] using hz
+              change rjM ∈ (PM : Set M)
+              rw [← hz_eq_rjM]
+              change z ∈ (PM : Set M) at hz
+              exact hz
             have hsjbar_mem_Qbar : sjbar ∈ Qbar := by
               rw [hPbar]
               change (sjM : L ⧸ N) ∈
@@ -3581,7 +3616,7 @@ public theorem proposition_1_c
               have h02 := congrArg
                 (fun A : GL (Fin 4) (BinaryGaloisField (2 * k + 1)) =>
                   A.val (0 : Fin 4) (2 : Fin 4)) hval
-              simpa [j, SuzukiRootGL, SuzukiRootMatrix] using h02
+              simp [j, SuzukiRootGL, SuzukiRootMatrix] at h02
             have hjM_involution : IsInvolution jM := by
               constructor
               · intro hjM_one
@@ -3943,7 +3978,8 @@ public theorem proposition_1_c
       have hsm_sq : sm * sm = 1 := by
         have hsM_sq : sM ^ 2 = 1 := by
           apply Subtype.ext
-          simpa [sM, sbar] using congrArg π hsX_involution.sq_eq_one
+          change sbar ^ 2 = 1
+          exact hπ_sq_eq_one sX hsX_involution.sq_eq_one
         calc
           sm * sm = sm ^ 2 := by simp [pow_two]
           _ = eM (sM ^ 2) := (map_pow eM sM 2).symm
@@ -3952,7 +3988,8 @@ public theorem proposition_1_c
       have htm_sq : tm * tm = 1 := by
         have htM_sq : tM ^ 2 = 1 := by
           apply Subtype.ext
-          simpa [tM] using hA1bar.involution_t.sq_eq_one
+          change tbar ^ 2 = 1
+          exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
         calc
           tm * tm = tm ^ 2 := by simp [pow_two]
           _ = eM (tM ^ 2) := (map_pow eM tM 2).symm
@@ -4005,7 +4042,9 @@ public theorem proposition_1_c
         have hback : c⁻¹ * x * c = y := by
           rw [← hxy']
           group
-        simpa [hback] using hy
+        rw [hback]
+        change y ∈ (Pmodel : Set (ProjectiveSpecialUnitaryMatrixGroup J))
+        exact hy
       have hj_back : c⁻¹ * j * c ∈
           (Pmodel : Subgroup (ProjectiveSpecialUnitaryMatrixGroup J)) :=
         hback_mem j hj_mem_Pstd
@@ -4023,7 +4062,10 @@ public theorem proposition_1_c
           calc
             eM z = c⁻¹ * j * c := hz_eq
             _ = eM sjM := by simp [sjM, cM, jM]
-        simpa [hz_eq_sjM] using hz
+        change sjM ∈ (PM : Set M)
+        rw [← hz_eq_sjM]
+        change z ∈ (PM : Set M) at hz
+        exact hz
       have hsjbar_mem_Qbar : sjbar ∈ Qbar := by
         rw [hPbar]
         change (sjM : L ⧸ N) ∈ (Pbar : Subgroup (L ⧸ N))
@@ -4154,10 +4196,11 @@ public theorem proposition_1_c
           simpa [tm, sm] using hmodel_braid
         exact congrArg Subtype.val hM_braid
       have hsbar_sq : sbar * sbar = 1 := by
-        have hs_sq := congrArg π hsX_involution.sq_eq_one
-        simpa [sbar, pow_two] using hs_sq
+        rw [← pow_two]
+        exact hπ_sq_eq_one sX hsX_involution.sq_eq_one
       have htbar_sq : tbar * tbar = 1 := by
-        simpa only [tbar, pow_two] using hA1bar.involution_t.sq_eq_one
+        rw [← pow_two]
+        exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
       have hbar_pow : (sbar * tbar) ^ 3 = 1 := by
         rw [pow_three]
         calc
@@ -4266,7 +4309,8 @@ public theorem proposition_1_c
         exact hA1bar.t_not_mem_H (hA1bar.Q_le_H htbar_mem_Qbar)
       have htM_sq : tM ^ 2 = 1 := by
         apply Subtype.ext
-        simpa [tM] using hA1bar.involution_t.sq_eq_one
+        change tbar ^ 2 = 1
+        exact hπ_sq_eq_one tX hA1X.involution_t.sq_eq_one
       have htm_involution : IsInvolution tm := by
         constructor
         · intro htm_one
@@ -4600,7 +4644,7 @@ public theorem proposition_1_c
         dsimp [lhsL, rhsL]
         simp only [map_mul, map_pow, map_inv]
         rw [homega_lift, hgamma_lift, hzeta_lift]
-        simpa [tM, tbar] using congrArg Subtype.val hseedM
+        simpa [tM, tbar, hπ_apply] using congrArg Subtype.val hseedM
       let deltaL : L := rhsL⁻¹ * lhsL
       have hdelta_lift : π deltaL = 1 := by
         dsimp [deltaL]
@@ -4766,9 +4810,8 @@ public theorem proposition_1_c
           intro hR_comm
           letI : IsMulCommutative R := hR_comm
           have hcommutator_bot : commutator R = ⊥ := by
-            rw [commutator_eq_bot_iff_center_eq_top]
-            ext x
-            simp [Subgroup.mem_center_iff, mul_comm]
+            exact (commutator_eq_bot_iff_center_eq_top (G := R)).2
+              Subgroup.center_eq_top
           have hcommutator_card_one : Nat.card (commutator R) = 1 := by
             rw [hcommutator_bot]
             simp
@@ -5169,7 +5212,7 @@ public theorem proposition_1_c
               simp only [scaleR, Equiv.symm_apply_apply]
               apply Subtype.ext
               apply Prod.ext
-              · simpa [actionR, scaleR, scaleCoord, z, w, hz_first, hw_first]
+              · simp [scaleCoord, hz_first, hw_first]
               · simpa [actionR, scaleR, scaleCoord, z, w, zu, wu, z0, w0] using
                   hval.symm
           obtain ⟨d, hd⟩ := hsq_units_surjective (wu * zu⁻¹)

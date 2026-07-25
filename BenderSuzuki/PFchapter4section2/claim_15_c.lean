@@ -36,6 +36,7 @@ public theorem claim_15_c
     (∃ d q0 : G, d ∈ KW ∧ q0 ∈ Q0 ∧ f (omegaCoord x) = rightConjugateElem omega d * q0) →
       ∃ i : ℕ, 1 ≤ i ∧ i ≤ m - 1 ∧ x = u i := by
   classical
+  have _ := sigma
   have _ := hseq_zeta_ne_one
   have _ := hseq_alpha_ne_zero
   have _ := hseq_beta_ne_zero
@@ -73,4 +74,3 @@ public theorem claim_15_c
 
 end PFchapter4section2
 end BenderSuzuki
-

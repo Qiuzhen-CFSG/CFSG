@@ -23,7 +23,7 @@ namespace BenderSuzuki
 namespace PFchapter1section3
 
 open PFchapter1section1 PFAppendixIII External.Higman
-open scoped Pointwise LinearAlgebra.Projectivization
+open scoped Pointwise LinearAlgebra.Projectivization IsMulCommutative
 
 universe u v
 
@@ -453,8 +453,9 @@ private theorem lemma_5_cubic_line_root_card
       apply Subtype.ext
       have hsBot : s ∈ (⊥ : Subgroup S) := by simpa [hbot] using hsCenter
       simpa using hsBot
-    have hlt := (Subgroup.center S).one_lt_card_iff_ne_bot.mpr hcenterNe
-    simpa [q] using hlt
+    have hlt : 1 < q := by
+      simpa [q] using (Subgroup.center S).one_lt_card_iff_ne_bot.mpr hcenterNe
+    omega
   have hcardRoot : Nat.card Root = q := by
     rw [hKcard] at hcardEq
     have hfactor : q ^ 2 - q = (q - 1) * q := by
@@ -602,12 +603,12 @@ private theorem cyclic_and_card_dvd_of_projective_stabilizers_bot
       intro h
       apply hRbot
       apply Subrepresentation.toSubmodule_injective
-      simpa using h
+      simpa
     have hSubTop : R.toSubmodule ≠ ⊤ := by
       intro h
       apply hRtop
       apply Subrepresentation.toSubmodule_injective
-      simpa using h
+      simpa
     rcases R.toSubmodule.ne_bot_iff.mp hSubBot with ⟨v, hvR, hv⟩
     have hspanLe : F ∙ v ≤ R.toSubmodule :=
       Submodule.span_le.mpr (Set.singleton_subset_iff.mpr hvR)
@@ -660,7 +661,14 @@ private theorem cyclic_and_card_dvd_of_projective_stabilizers_bot
     center_cyclic_of_representation_faithful_irreducible rho hrhoInjective
   have hWcyclic : IsCyclic W := by
     letI : IsMulCommutative W := hWcomm
-    have hcenterTop : Subgroup.center W = ⊤ := CommGroup.center_eq_top
+    have hcenterTop : Subgroup.center W = ⊤ := by
+      ext x; constructor
+      · intro hx; exact Subgroup.mem_top x
+      · intro hx
+        rw [Subgroup.mem_center_iff]
+        intro y
+        haveI : IsMulCommutative W := hWcomm
+        exact mul_comm y x
     have htopCyclic : IsCyclic (⊤ : Subgroup W) := by
       rw [← hcenterTop]
       exact hcenterCyclic
@@ -697,7 +705,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
             (eK k : BinaryGaloisField n) * (eQ x).toAdd.2)) := by
   classical
   letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := CommGroup.ofIsMulCommutative
+  letI : CommGroup E := IsMulCommutative.instCommGroup
   have hq_gt : 1 < q := by
     have hpos : 0 < Nat.card K := Nat.card_pos
     omega
@@ -842,9 +850,15 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
         _ = Nat.card (Option K) := Finite.card_option.symm
         _ ≤ Nat.card W := Nat.card_le_card_of_injective f hf
     have hcard_upper : Nat.card W ≤ Nat.card (Additive U) :=
-      Nat.card_le_card_of_injective W.subtype Subtype.val_injective
+      Nat.card_le_card_of_injective (Subtype.val : W → Additive U) Subtype.val_injective
     have hUcard_add : Nat.card (Additive U) = q := by
-      simpa using hUcard
+      have hcard_eq : Nat.card (Additive U) = Nat.card U :=
+        Nat.card_congr
+          { toFun := Additive.toMul
+            invFun := Additive.ofMul
+            left_inv := by intro x; cases x; rfl
+            right_inv := by intro x; rfl }
+      rw [hcard_eq, hUcard]
     have hWcard : Nat.card W = Nat.card (Additive U) := by
       apply Nat.le_antisymm hcard_upper
       simpa [hUcard_add] using hcard_lower
@@ -994,7 +1008,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
       (eV (k • v)).toAdd =
         ((eK k : F) * (eV v).toAdd) := by
     simpa [eV, he_symm_subtype] using heU_action k (e.symm v)
-  letI : U.Normal := Subgroup.normal_of_comm U
+  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUVdisjoint : Disjoint U V :=
     disjoint_iff.mpr hUVinf
   have hUVmul : (U : Set E) * (V : Set E) = Set.univ := by
@@ -1507,7 +1521,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       _ = q - 1 := hZSharpCard
   obtain ⟨nq, hqPow⟩ :=
     (hQp.to_subgroup (Subgroup.center Q)).exists_card_eq
-  have hKcomm : IsMulCommutative K := ⟨IsCyclic.commutative⟩
+  have hKcomm : IsMulCommutative K := inferInstance
   have hKfixedFree :
       ∀ k : K, k ≠ 1 → ∀ x : E,
         k • x = x → x = 1 := by
@@ -1717,7 +1731,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
         have : pToW c • qmap x ∈ pToW c • L :=
           Subgroup.smul_mem_pointwise_smul (qmap x) (pToW c) L hx
         have hfixL : pToW c • L = L := by
-          simpa [pToW] using hPfixL c
+          apply hPfixL c
         rw [hfixL] at this
         exact this
       · intro hx
@@ -1725,7 +1739,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
           Subgroup.smul_mem_pointwise_smul
             (pToW c • qmap x) (pToW c)⁻¹ L hx
         have hfixInv : (pToW c)⁻¹ • L = L := by
-          simpa using hPfixL c⁻¹
+          apply hPfixL c⁻¹
         rw [hfixInv] at this
         simpa [smul_smul] using this
     letI : IsInvariant P Q Plane := hPlaneInv
@@ -1745,7 +1759,17 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     have hRootCard : Nat.card Root = q := by
       have hcard := lemma_5_cubic_line_root_card hQ hKregular hKcard
         quotientActionK hquotientActionK L hLinv hLcard sQ hsQInv
-      simpa [Root, Plane, qmap, E] using hcard
+      have hRootEquiv : Root ≃ {r : Plane // (r : Q) ^ 2 = sQ} :=
+        { toFun := fun r => ⟨r.1, r.2⟩
+          invFun := fun r => ⟨r, r.2⟩
+          left_inv := fun _ => rfl
+          right_inv := fun _ => rfl }
+      have hcardRootEq : Nat.card Root = Nat.card {r : Plane // (r : Q) ^ 2 = sQ} :=
+        Nat.card_congr hRootEquiv
+      calc
+        Nat.card Root = Nat.card {r : Plane // (r : Q) ^ 2 = sQ} := hcardRootEq
+        _ = Nat.card (Subgroup.center Q) := hcard
+        _ = q := rfl
     have hpDvdD : p ∣ Nat.card D := by
       rw [← hPcard]
       exact Subgroup.card_dvd_of_le (hPW.trans hWleD)
@@ -1825,7 +1849,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
   obtain ⟨P, p, hPW, hp, hPcard⟩ := hprimeSubgroup W hWbot
   let A : Subgroup W := P.subgroupOf W
   have hmoveU := hprimeMovesLine P p hPW hp hPcard U hUinvK hUcard
-  push_neg at hmoveU
+  push Not at hmoveU
   rcases hmoveU with ⟨c, hcU⟩
   let cW : W := ⟨(c : G), hPW c.property⟩
   have hcWU : cW • U ≠ U := by simpa [cW] using hcU
@@ -1919,8 +1943,8 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
   have hEdata := higmanTheorem_center_quotient_orders_and_exponent hQ
   have hEcomm : IsMulCommutative E := by simpa [E] using hEdata.1
   letI : IsMulCommutative E := hEcomm
-  letI : CommGroup E := CommGroup.ofIsMulCommutative
-  letI : U.Normal := Subgroup.normal_of_comm U
+  letI : CommGroup E := IsMulCommutative.instCommGroup
+  letI : U.Normal := Subgroup.normal_of_isMulCommutative U
   have hUTcompl : U.IsComplement' T := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
     · rw [disjoint_iff]
@@ -1935,7 +1959,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     have hmul := hUTcompl.card_mul
     rw [hUcard, hTcard] at hmul
     simpa [E, q, pow_two] using hmul.symm
-  letI : Vline.Normal := Subgroup.normal_of_comm Vline
+  letI : Vline.Normal := Subgroup.normal_of_isMulCommutative Vline
   have hUVcomp : U.IsComplement' Vline :=
     Subgroup.isComplement'_of_card_mul_and_disjoint
       (by rw [hUcard, hVcard, hEcard, pow_two])
@@ -2062,8 +2086,12 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     apply Additive.toMul.injective
     apply eQ.injective
     apply Multiplicative.toAdd.injective
+    have ha_smul : (a • x : X) = (a * x.1, a * x.2) := by
+      calc
+        a • (x.1, x.2) = (a • x.1, a • x.2) := rfl
+        _ = (a * x.1, a * x.2) := by simp
     have hs := hscalarQuot k (Additive.toMul (eAdd x))
-    simpa [eAdd, k, F, X] using hs.symm
+    simpa [eAdd, k, eK.apply_symm_apply, Units.val_mk0, ha_smul, smul_eq_mul] using hs.symm
   have hWscalar : ∀ w : W, ∀ a : F, ∀ x : X,
       w • (a • x) = a • (w • x) := by
     intro w a x

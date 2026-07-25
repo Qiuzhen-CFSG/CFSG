@@ -143,7 +143,7 @@ public theorem theorem_4_12_c {R A : Type*} [Group R] [Finite R] [Group A] [Fini
     exact hT_ne_top hTtop
   have hncycR : ¬ IsCyclic R := by
     intro hcyc
-    exact hnab ⟨hcyc.commutative⟩
+    exact hnab hcyc.isMulCommutative
   have hΩR_card : Nat.card (omega₁ (G := R) (p := p)) = p ^ 2 :=
     (lemma_4_10 (R := R) (p := p) hpodd hmeta hncycR).1
   let ΩT : Subgroup R := (omega₁ (G := T) (p := p)).map T.subtype
@@ -225,7 +225,8 @@ public theorem theorem_4_12_c {R A : Type*} [Group R] [Finite R] [Group A] [Fini
     have hcomm_le : _root_.commutator R ≤ T :=
       Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
         (N := T) (H := C) hsupTC hCcomm
-    simpa [derivedSubgroup, derivedSeries_one] using hcomm_le
+    change _root_.commutator R ≤ T
+    exact hcomm_le
   exact ⟨by simpa [T] using hT_ne_bot, by simpa [T] using hTcyc,
     by simpa [C] using hC_ne_bot, by simpa [C] using hCcyc,
     by simpa [T] using hder_le_T⟩

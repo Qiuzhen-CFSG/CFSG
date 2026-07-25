@@ -159,7 +159,7 @@ private theorem problem71_D_imp_B
       have hx1 : x.1 = 1 := by
         have ht := congrArg (fun t : G => g⁻¹ * t * g) hg1
         simpa [mul_assoc] using ht
-      exact x.2 (by simpa [hx1] using N.one_mem)
+      exact x.2 (by simp [hx1])
     let p : N × {h : H // h ≠ 1} := ⟨⟨n, hnN⟩, ⟨s, hs1⟩⟩
     refine ⟨p, ?_⟩
     apply Subtype.ext
@@ -288,9 +288,9 @@ private theorem problem71_E_imp_D
       calc
         x = (n : G) * (h : G) := hnh.symm
         _ = (n : G) := by simp [hh1]
-    simpa [hx] using n.2
+    simp [hx]
   rcases hE h hh n with ⟨g, hg⟩
-  exact ⟨h, g, by simpa [hnh] using hg⟩
+  exact ⟨h, g, by { rw [← hnh]; exact hg }⟩
 
 private theorem problem71_F_imp_E
     {G : Type*} [Group G] [Finite G]

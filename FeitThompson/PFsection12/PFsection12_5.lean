@@ -23,7 +23,7 @@ import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 noncomputable section
 
-open scoped BigOperators
+open scoped BigOperators commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -477,13 +477,15 @@ public theorem ambientDerivedSubgroupInSubgroupOf_normal
   intro n hn g
   have hnormal : ((ambientDerivedSubgroup H).subgroupOf H).Normal :=
     (section12_normalIn_ambientDerivedSubgroup (G := G) (E := H)).2
-  let nH : H := ⟨(n : G), section12_ambientDerivedSubgroup_le hn⟩
+  have hnG : (n : G) ∈ ambientDerivedSubgroup H := by
+    simpa [ambientDerivedSubgroupInSubgroupOf] using hn
+  let nH : H := ⟨(n : G), section12_ambientDerivedSubgroup_le hnG⟩
   let gH : H := ⟨(g : G), (show (g : G) ∈ H from g.property)⟩
   have hnH : nH ∈ (ambientDerivedSubgroup H).subgroupOf H := by
-    simpa [nH, Subgroup.mem_subgroupOf] using hn
+    simpa [nH, Subgroup.mem_subgroupOf] using hnG
   have hconj := hnormal.conj_mem nH hnH gH
   change ((g : G) * (n : G) * (g : G)⁻¹) ∈ ambientDerivedSubgroup H
-  simpa [nH, gH] using hconj
+  simpa [nH, gH] using (Subgroup.mem_subgroupOf.mp hconj)
 
 public instance ambientDerivedSubgroupInSubgroupOf_normal_inst
     {G : Type u} [Group G] [Finite G] (L H : Subgroup G) :
@@ -1235,10 +1237,19 @@ public theorem invariants_eq_bot_of_irreducible_not_subgroupInKernel
     { toSubmodule := Representation.invariants (ρ.comp K.subtype)
       apply_mem_toSubmodule := Representation.le_comap_invariants ρ K }
   rcases IsSimpleOrder.eq_bot_or_eq_top S with hS | hS
-  · exact (by
-      simpa [S] using congrArg Subrepresentation.toSubmodule hS)
+  · have hSsub : Representation.invariants (ρ.comp K.subtype) = (⊥ : Submodule ℂ V) := by
+      calc
+        Representation.invariants (ρ.comp K.subtype) = S.toSubmodule := rfl
+        _ = (⊥ : Subrepresentation ρ).toSubmodule := by
+          simpa [S] using congrArg Subrepresentation.toSubmodule hS
+        _ = (⊥ : Submodule ℂ V) := rfl
+    exact hSsub
   · have hStop : Representation.invariants (ρ.comp K.subtype) = ⊤ := by
-      simpa [S] using congrArg Subrepresentation.toSubmodule hS
+      calc
+        Representation.invariants (ρ.comp K.subtype) = S.toSubmodule := rfl
+        _ = (⊤ : Subrepresentation ρ).toSubmodule := by
+          simpa [S] using congrArg Subrepresentation.toSubmodule hS
+        _ = (⊤ : Submodule ℂ V) := rfl
     exfalso
     apply hKker
     exact (Section1.subgroupInKernel_iff ρ K).mpr
@@ -1287,7 +1298,7 @@ public theorem scalarProduct_subgroupRestriction_principal_eq_zero_of_not_subgro
     simp
   rw [hθeq]
   simpa [Section1.scalarProduct, Section1.subgroupRestriction,
-    Section1.principalCharacter, ρK] using havg0
+    Section1.principalCharacter, ρK, Representation.character] using havg0
 
 /-- `Ind_K^T(1_K)` has scalar product one with a kernel-supported irreducible
 when `T/K` is abelian. -/
@@ -1797,10 +1808,7 @@ public theorem theorem_12_5_induced_decomposition_exists
               (weightedFamilySum_split_by_pred
                 (fun i : ι => Section1.subgroupInKernel' (η i) K) c η)
   let Q : Type u := T ⧸ K
-  haveI : IsMulCommutative Q := by
-    change IsMulCommutative (T ⧸ K)
-    constructor
-    constructor
+  have hQcomm : ∀ (q r : Q), q * r = r * q := by
     intro q r
     refine QuotientGroup.induction_on q ?_
     intro x
@@ -1817,14 +1825,17 @@ public theorem theorem_12_5_induced_decomposition_exists
     change ((((x * y)⁻¹ * (y * x) : T) : G) ∈ ambientDerivedSubgroup H)
     rw [section12_ambientDerivedSubgroup_eq_commutator]
     simpa [T, K, commutatorElement_def, mul_assoc] using hcomm
-  letI : CommGroup Q := inferInstance
+  haveI : IsMulCommutative Q := IsMulCommutative.of_comm hQcomm
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
+  haveI : Finite Q := by
+    infer_instance
   letI : DecidableEq Q := Classical.decEq Q
+  haveI : NeZero (Monoid.exponent Q) := Monoid.neZero_exponent_of_finite
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   let π : T →* Q := QuotientGroup.mk' K
   have hker : ∀ t : T, π t = 1 ↔ t ∈ K := by
     intro t
-    show QuotientGroup.mk' K t = 1 ↔ t ∈ K
     exact (QuotientGroup.eq_one_iff (N := K) t)
   have hcard : Nat.card Q = Subgroup.index K := by
     exact (Subgroup.index_eq_card K).symm
@@ -1835,7 +1846,7 @@ public theorem theorem_12_5_induced_decomposition_exists
     have hξK : ∀ k : K, ξ k = 1 := by
       intro k
       have hk : π (k : T) = 1 := (hker (k : T)).2 k.property
-      simp [ξ, Section1.characterInflationByHom, hk]
+      simp [ξ, Section1.characterInflationByHom, hk, χ.map_one]
     rcases characterInflation_twist_irreducible_family_equiv
         π η hηirr hηpair hηcomplete χ with
       ⟨e, he⟩
@@ -1951,8 +1962,15 @@ public theorem theorem_12_5_induced_decomposition_exists
         b • Section1.inducedCF K (Section1.principalCharacter K) +
           Section1.weightedFamilySum aδ
             (fun i : ιδ => Section1.inducedCF K (lamδ i)) := by
-    simpa [I, lamI, aI] using
-      (weightedFamilySum_option_inducedCF_principal_add K lamδ aδ b)
+    have haI_eq : aI = (fun o : Option (ULift.{u, 0} ιδ) => match o with | none => b | some i => aδ i.down) := by
+      ext x
+      cases x <;> simp [aI]
+    have hlamI_eq : (fun i : I => Section1.inducedCF K (lamI i)) =
+        (fun o : Option (ULift.{u, 0} ιδ) => Section1.inducedCF K (match o with | none => Section1.principalCharacter K | some i => lamδ i.down)) := by
+      ext x
+      cases x <;> simp [lamI, I]
+    rw [haI_eq, hlamI_eq]
+    exact weightedFamilySum_option_inducedCF_principal_add K lamδ aδ b
   refine ⟨I, Fintype.ofFinite I, lamI, aI, a, ?_, ?_, ?_⟩
   · intro i
     cases i with

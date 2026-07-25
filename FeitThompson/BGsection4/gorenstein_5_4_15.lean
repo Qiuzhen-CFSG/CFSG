@@ -11,7 +11,7 @@ public import FeitThompson.BGsection4.proposition_4_6
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints IsMulCommutative commutatorElement
 public theorem exists_maximal_normal_abelian_subgroup_local'
     {G : Type*} [Group G] [Finite G] :
     ∃ A : Subgroup G,
@@ -611,7 +611,7 @@ private theorem exists_order_p_subgroup_in_centralizer_quotient_of_lt
     intro htop
     have hC_le_E : C ≤ E := by
       intro x hx
-      have hxEsub : (⟨x, hx⟩ : C) ∈ Esub := by simpa [htop]
+      have hxEsub : (⟨x, hx⟩ : C) ∈ Esub := by simp [htop]
       simpa [Esub, Subgroup.mem_subgroupOf] using hxEsub
     exact hlt.2 hC_le_E
   have hEsub_ne_top : Esub ≠ ⊤ := hEsub_lt_top.ne
@@ -730,8 +730,9 @@ private theorem isMulCommutative_of_contains_normal_subgroup_le_centralizer_and_
   have hquot_cyc : IsCyclic (B ⧸ E.subgroupOf B) := by
     exact isCyclic_of_prime_card (α := B ⧸ E.subgroupOf B) hquot_card
   letI : IsCyclic (B ⧸ E.subgroupOf B) := hquot_cyc
-  exact ⟨⟨fun x y => commutative_of_cyclic_center_quotient
-    (QuotientGroup.mk' (E.subgroupOf B)) (by simpa [QuotientGroup.ker_mk'] using hEsub_le_center) x y⟩⟩
+  exact MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center
+    (QuotientGroup.mk' (E.subgroupOf B))
+    (by simpa [QuotientGroup.ker_mk'] using hEsub_le_center)
 
 private theorem lift_order_p_quotient_subgroup_to_normal_prime_index_overgroup
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -769,7 +770,7 @@ private theorem lift_order_p_quotient_subgroup_to_normal_prime_index_overgroup
 private theorem exists_abelian_normal_prime_index_overgroup_between_of_lt
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
     [Fact (IsPGroup p R)]
-    {E L : Subgroup R} (hEnorm : E.Normal) (hEcomm : IsMulCommutative E)
+    {E L : Subgroup R} (hEnorm : E.Normal) (_hEcomm : IsMulCommutative E)
     (hLnorm : L.Normal) (hE_le_L : E ≤ L)
     (hL_le_cent : L ≤ Subgroup.centralizer (E : Set R)) (hlt : E < L) :
     ∃ B : Subgroup R, E ≤ B ∧ B.Normal ∧ IsMulCommutative B ∧
@@ -794,7 +795,7 @@ private theorem exists_abelian_normal_prime_index_overgroup_between_of_lt
     intro htop
     have hL_le_E : L ≤ E := by
       intro x hx
-      have hxEsub : (⟨x, hx⟩ : L) ∈ Esub := by simpa [htop]
+      have hxEsub : (⟨x, hx⟩ : L) ∈ Esub := by simp [htop]
       simpa [Esub, Subgroup.mem_subgroupOf] using hxEsub
     exact hlt.2 hL_le_E
   have hquot_nontriv : Nontrivial (L ⧸ Esub) :=
@@ -912,7 +913,7 @@ public theorem natCard_abelian_subgroup_le_p_sq_of_rank_le_two_and_exponent_dvd_
     (hAle : generatorRank A ≤ 2) (hexp : Monoid.exponent A ∣ p) :
     Nat.card A ≤ p ^ 2 := by
   letI : IsMulCommutative A := hAcomm
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hpow : ∀ a : A, a ^ p = 1 := by
     intro a
     exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp hexp a
@@ -952,8 +953,11 @@ public theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq
   letI : FiniteDimensional (ZMod p) Q := Module.Finite.of_finite
   have hp_one_lt : 1 < p := hp_prime.one_lt
   have hcardQ : Nat.card A = p ^ Module.finrank (ZMod p) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
+    calc
+      Nat.card A = Nat.card Q := Nat.card_congr Additive.ofMul
+      _ = p ^ Module.finrank (ZMod p) Q :=
+        by simpa only [Nat.card_zmod] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
   have hdim_le_two : Module.finrank (ZMod p) Q ≤ 2 := by
     have hpow_le : p ^ Module.finrank (ZMod p) Q ≤ p ^ 2 := by
       simpa [hcardQ] using hAcard
@@ -978,7 +982,6 @@ public theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq
     intro a b hab
     apply Subtype.ext
     ext x
-    apply Additive.toMul.injective
     have hx :=
       congrArg
         (fun f : LinearMap.GeneralLinearGroup (ZMod p) Q => (f : Q → Q) (Additive.ofMul x))
@@ -1080,8 +1083,11 @@ private theorem prime_dvd_natCard_mulAut_of_elementaryAbelian_card_le_p_sq
   letI : FiniteDimensional (ZMod p) Q := Module.Finite.of_finite
   have hp_one_lt : 1 < p := hp_prime.one_lt
   have hcardQ : Nat.card A = p ^ Module.finrank (ZMod p) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
+    calc
+      Nat.card A = Nat.card Q := Nat.card_congr Additive.ofMul
+      _ = p ^ Module.finrank (ZMod p) Q :=
+        by simpa only [Nat.card_zmod] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Q))
   have hdim_le_two : Module.finrank (ZMod p) Q ≤ 2 := by
     have hpow_le : p ^ Module.finrank (ZMod p) Q ≤ p ^ 2 := by
       simpa [hcardQ] using hAcard
@@ -1105,7 +1111,6 @@ private theorem prime_dvd_natCard_mulAut_of_elementaryAbelian_card_le_p_sq
   have hψ_inj : Function.Injective ψ := by
     intro a b hab
     ext x
-    apply Additive.toMul.injective
     have hx :=
       congrArg
         (fun f : LinearMap.GeneralLinearGroup (ZMod p) Q => (f : Q → Q) (Additive.ofMul x))
@@ -1261,7 +1266,11 @@ private theorem elementaryAbelian_card_ge_pow_generatorRank_local
     (G : Type*) [Group G] [Finite G] [IsElementaryAbelian p G] :
     p ^ generatorRank G ≤ Nat.card G := by
   have hcard : Nat.card G = p ^ Module.finrank (ZMod p) (Additive G) := by
-    simpa using Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G)
+    calc
+      Nat.card G = Nat.card (Additive G) := Nat.card_congr Additive.ofMul
+      _ = p ^ Module.finrank (ZMod p) (Additive G) :=
+        by simpa only [Nat.card_zmod] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G))
   have hgr_le_finrank : generatorRank G ≤ Module.finrank (ZMod p) (Additive G) :=
     generatorRank_le_finrank_of_elementaryAbelian (p := p) G
   rw [hcard]
@@ -1315,7 +1324,7 @@ private theorem omega₁_card_eq_card_quotient_frattini_of_commutative_local
     (G : Type*) [Group G] [Finite G] [IsMulCommutative G] [Fact (IsPGroup p G)] :
     Nat.card (omega₁ (G := G) (p := p)) = Nat.card (G ⧸ frattini G) := by
   classical
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   let φ : G →* G := powMonoidHom p
   have hφker : φ.ker = omega₁ (G := G) (p := p) := by
     ext x
@@ -1325,7 +1334,6 @@ private theorem omega₁_card_eq_card_quotient_frattini_of_commutative_local
       refine Subgroup.subset_closure ?_
       simpa [φ, pow_one] using hx
     · intro hx
-      change x ∈ φ.ker
       refine
         Subgroup.closure_induction (k := {y : G | y ^ (p ^ 1) = 1})
           (p := fun z _hz => z ∈ φ.ker) (x := x) (by
@@ -1349,7 +1357,8 @@ private theorem omega₁_card_eq_card_quotient_frattini_of_commutative_local
         (Subgroup.commutator_eq_bot_iff_le_centralizer).2 hcomm_top
       simpa [_root_.commutator_def] using htop_comm_bot
     have hderived_bot : derivedSubgroup G = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using hcomm_bot
+      change _root_.commutator G = ⊥
+      exact hcomm_bot
     have hrange :
         Set.range (fun x : G => x ^ p) = ((φ.range : Subgroup G) : Set G) := by
       ext y
@@ -1465,8 +1474,11 @@ private theorem elementaryAbelian_card_eq_pow_generatorRank_local
     (G : Type*) [Group G] [Finite G] [IsElementaryAbelian p G] :
     Nat.card G = p ^ generatorRank G := by
   have hcard : Nat.card G = p ^ Module.finrank (ZMod p) (Additive G) := by
-    simpa [Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G))
+    calc
+      Nat.card G = Nat.card (Additive G) := Nat.card_congr Additive.ofMul
+      _ = p ^ Module.finrank (ZMod p) (Additive G) :=
+        by simpa only [Nat.card_zmod] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G))
   have hfin_le_gen :
       Module.finrank (ZMod p) (Additive G) ≤ generatorRank G :=
     elementaryAbelian_finrank_le_generatorRank_local (p := p) G
@@ -1559,13 +1571,13 @@ public theorem groupRank_le_generatorRank_of_commutative_pgroup
   haveI : Fact (IsPGroup p R) := ⟨hRp⟩
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, p, Fact.out, zero_le _⟩
+  · exact ⟨0, p, Fact.out, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hq, hnq⟩
     rw [primeRank] at hnq
     refine hnq.trans ?_
     refine csSup_le ?_ ?_
-    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le _⟩
+    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩
     · intro m hm
       rcases hm with ⟨A, _hAq, hAcomm, hmA⟩
       have htop_comm : IsMulCommutative (⊤ : Subgroup R) := by
@@ -1588,7 +1600,7 @@ private theorem isElementaryAbelian_of_le_local
         exact
           { is_comm := ⟨fun x y =>
               Subtype.ext <|
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := K)
+                setLike_mul_comm (s := K)
                   (hHK x.2) (hHK y.2)⟩ }
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
@@ -1638,12 +1650,8 @@ public theorem isElementaryAbelian_sup_of_le_centralizer_local
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup (Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact
-          { is_comm :=
-              ⟨fun x y => by
-                exact mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -1665,7 +1673,9 @@ public theorem isElementaryAbelian_sup_of_le_centralizer_local
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup (Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          letI : IsMulCommutative (Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
+          letI : CommGroup (Subgroup.closure s) := IsMulCommutative.instCommGroup
           show y * z = z * y
           simpa using congrArg Subtype.val
             (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
@@ -1678,7 +1688,7 @@ public theorem isElementaryAbelian_sup_of_le_centralizer_local
 private theorem isElementaryAbelian_map_of_injective_local
     {p : ℕ} [Fact p.Prime]
     {G H : Type*} [Group G] [Group H] {K : Subgroup G}
-    [IsElementaryAbelian p K] (f : G →* H) (hf : Function.Injective f) :
+    [IsElementaryAbelian p K] (f : G →* H) (_hf : Function.Injective f) :
     IsElementaryAbelian p (K.map f) := by
   refine
     { toIsMulCommutative := by
@@ -1739,7 +1749,7 @@ private theorem subgroup_le_omega₁_centralizer_map_of_isElementaryAbelian
   have hxC : x ∈ Subgroup.centralizer (Ω : Set G) := by
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := Ω) hy hxΩ
+    exact setLike_mul_comm (s := Ω) hy hxΩ
   have hxpow : x ^ p = 1 := by
     let xΩ : Ω := ⟨x, hxΩ⟩
     have hxΩpow : xΩ ^ p = 1 :=
@@ -1843,7 +1853,7 @@ private theorem exists_elementaryAbelian_subgroup_order_p_cubed_of_two_lt_groupR
 
 private theorem false_of_two_lt_groupRank_and_normal_elementaryAbelian_order_p_sq_selfCentralizing
     {R : Type*} [Group R] [Finite R] {p : Nat} [Fact p.Prime]
-    (hpodd : p ≠ 2) (hRp : IsPGroup p R) (hrank : 2 < groupRank R)
+    (_hpodd : p ≠ 2) (hRp : IsPGroup p R) (hrank : 2 < groupRank R)
     {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
     (hEelem : IsElementaryAbelian p E) (hEself : Subgroup.centralizer (E : Set R) = E) :
     False := by
@@ -1992,7 +2002,7 @@ private theorem generatorRank_at_least_three_of_elementaryAbelian_card_p3_for_41
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 3) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -2056,7 +2066,7 @@ public theorem natCard_frattini_quotient_le_p_sq_of_groupRank_le_two_and_exponen
   have hRelem : IsElementaryAbelian p R :=
     (frattini_eq_bot_iff_isElementaryAbelian (R := R) (p := p)).1 hΦ_bot
   have hRcard : Nat.card R = p ^ 3 := by
-    have hmul' : Nat.card R = p ^ 3 * 1 := by simpa [hmul, hQcard, hΦ_card]
+    have hmul' : Nat.card R = p ^ 3 * 1 := by simp [hmul, hQcard, hΦ_card]
     simpa using hmul'
   letI : IsElementaryAbelian p R := hRelem
   have hgen_three : 3 ≤ generatorRank R :=
@@ -2080,11 +2090,9 @@ private theorem mulAut_commute_of_trivial_on_subgroup_and_quotient
   let y : H := ⟨φ g * g⁻¹, hφquot g⟩
   let z : H := ⟨ψ g * g⁻¹, hψquot g⟩
   have hφg : φ g = (y : G) * g := by
-    have h := congrArg (fun t : G => t * g) (show (y : G) = φ g * g⁻¹ by rfl)
-    simpa [mul_assoc, y] using h
+    simp [y, mul_assoc]
   have hψg : ψ g = (z : G) * g := by
-    have h := congrArg (fun t : G => t * g) (show (z : G) = ψ g * g⁻¹ by rfl)
-    simpa [mul_assoc, z] using h
+    simp [z, mul_assoc]
   have hφz : φ (z : G) = z := hφH z
   have hψy : ψ (y : G) = y := hψH y
   have hyz : (y : G) * (z : G) = (z : G) * (y : G) := by
@@ -2114,13 +2122,9 @@ private theorem mulAut_subgroup_isMulCommutative_of_trivial_on_subgroup_and_quot
   let y : H := ⟨(φ : MulAut G) g * g⁻¹, hquot φ g⟩
   let z : H := ⟨(ψ : MulAut G) g * g⁻¹, hquot ψ g⟩
   have hφg : (φ : MulAut G) g = (y : G) * g := by
-    have h := congrArg (fun t : G => t * g)
-      (show (y : G) = (φ : MulAut G) g * g⁻¹ by rfl)
-    simpa [mul_assoc, y] using h
+    simp [y, mul_assoc]
   have hψg : (ψ : MulAut G) g = (z : G) * g := by
-    have h := congrArg (fun t : G => t * g)
-      (show (z : G) = (ψ : MulAut G) g * g⁻¹ by rfl)
-    simpa [mul_assoc, z] using h
+    simp [z, mul_assoc]
   have hφz : (φ : MulAut G) (z : G) = z := hfixH φ z
   have hψy : (ψ : MulAut G) (y : G) = y := hfixH ψ y
   have hyz : (y : G) * (z : G) = (z : G) * (y : G) := by
@@ -2181,7 +2185,7 @@ private theorem commutator_mem_centralizer_of_conjNormal_commute
 
 private theorem commutator_mem_centralizer_of_stabilizes_omega_series
     {R : Type*} [Group R] {A Ω : Subgroup R} [A.Normal]
-    (hΩ_le_A : Ω ≤ A) (hΩcomm : IsMulCommutative Ω)
+    (_hΩ_le_A : Ω ≤ A) (hΩcomm : IsMulCommutative Ω)
     {x y : R}
     (hxΩC : x ∈ Subgroup.centralizer (Ω : Set R))
     (hyΩC : y ∈ Subgroup.centralizer (Ω : Set R))
@@ -2193,8 +2197,8 @@ private theorem commutator_mem_centralizer_of_stabilizes_omega_series
     refine ⟨⟨fun u v => ?_⟩⟩
     apply Subtype.ext
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := Ω) (show (u : R) ∈ Ω from u.2) (show (v : R) ∈ Ω from v.2)
+    exact setLike_mul_comm
+      (s := Ω) (show (u : R) ∈ Ω from u.2) (show (v : R) ∈ Ω from v.2)
   let φx : MulAut A := MulAut.conjNormal (H := A) x
   let φy : MulAut A := MulAut.conjNormal (H := A) y
   have hφx_fix : ∀ h : Ωsub, φx (h : A) = h := by
@@ -2204,7 +2208,7 @@ private theorem commutator_mem_centralizer_of_stabilizes_omega_series
       (Subgroup.mem_centralizer_iff.mp hxΩC (h : R) h.2)
     calc
       ((φx (h : A) : A) : R) = x * (h : R) * x⁻¹ := by
-        simp [φx, MulAut.conjNormal_apply, MulAut.conj_apply]
+        simp [φx, MulAut.conjNormal_apply]
       _ = ((h : R) * x) * x⁻¹ := by rw [← hcomm]
       _ = h := by simp [mul_assoc]
   have hφy_fix : ∀ h : Ωsub, φy (h : A) = h := by
@@ -2214,18 +2218,16 @@ private theorem commutator_mem_centralizer_of_stabilizes_omega_series
       (Subgroup.mem_centralizer_iff.mp hyΩC (h : R) h.2)
     calc
       ((φy (h : A) : A) : R) = y * (h : R) * y⁻¹ := by
-        simp [φy, MulAut.conjNormal_apply, MulAut.conj_apply]
+        simp [φy, MulAut.conjNormal_apply]
       _ = ((h : R) * y) * y⁻¹ := by rw [← hcomm]
       _ = h := by simp [mul_assoc]
   have hφx_quot : ∀ a : A, φx a * a⁻¹ ∈ Ωsub := by
     intro a
-    change ((φx a : A) * a⁻¹ : A) ∈ Ωsub
     change ((φx a : A) * a⁻¹ : R) ∈ Ω
     simpa [φx, MulAut.conjNormal_apply, MulAut.conj_apply, commutatorElement_def, mul_assoc]
       using hxquot (a : R) a.2
   have hφy_quot : ∀ a : A, φy a * a⁻¹ ∈ Ωsub := by
     intro a
-    change ((φy a : A) * a⁻¹ : A) ∈ Ωsub
     change ((φy a : A) * a⁻¹ : R) ∈ Ω
     simpa [φy, MulAut.conjNormal_apply, MulAut.conj_apply, commutatorElement_def, mul_assoc]
       using hyquot (a : R) a.2
@@ -2261,7 +2263,6 @@ private theorem closure_pair_conj_lt_top_of_not_isCyclic_pgroup
     exact Subgroup.subset_closure (Or.inl hcomm_top)
   have hq_conj : q (x * y * x⁻¹) = q y := by
     apply (QuotientGroup.eq_iff_div_mem).2
-    change (x * y * x⁻¹) / y ∈ Φ
     simpa [q, Φ, div_eq_mul_inv, commutatorElement_def, mul_assoc] using hcomm_mem
   have hLmap_le : L.map q ≤ Subgroup.zpowers (q y) := by
     dsimp [L]
@@ -2361,10 +2362,10 @@ private theorem closure_pair_conj_lt_closure_pair_of_not_isCyclic
       (x := z) ?_ ?_ ?_ ?_ hzL
     · intro r hr hrT
       rcases hr with rfl | hr
-      · exact Subgroup.subset_closure (by simp [Lsub, yT])
+      · exact Subgroup.subset_closure (by simp [yT])
       · have hr_eq : r = x * y * x⁻¹ := by simpa using hr
         subst r
-        exact Subgroup.subset_closure (by simp [Lsub, cT])
+        exact Subgroup.subset_closure (by simp [cT])
     · intro h1T
       change (1 : T) ∈ Lsub
       exact Lsub.one_mem
@@ -2386,7 +2387,7 @@ private theorem closure_pair_conj_lt_closure_pair_of_not_isCyclic
       exact hxT
     simpa [xT] using hmem_Lsub_of_mem_L hxL hxT
   have hyT_mem_Lsub : yT ∈ Lsub := by
-    exact Subgroup.subset_closure (by simp [Lsub, yT])
+    exact Subgroup.subset_closure (by simp [yT])
   have hLsub_top : Lsub = ⊤ := by
     apply top_unique
     rw [← hxyT_top]
@@ -2592,7 +2593,7 @@ private theorem closure_omega_adjoin_isMulCommutative
     intro y hy z hz
     rcases hy with hyΩ | hyx
     · rcases hz with hzΩ | hzx
-      · exact Subgroup.mul_comm_of_mem_isMulCommutative (H := ΩA) hyΩ hzΩ
+      · exact setLike_mul_comm (s := ΩA) hyΩ hzΩ
       · have hz_eq : z = x := by simpa using hzx
         rw [hz_eq]
         exact (Subgroup.mem_centralizer_iff.mp hxC) y hyΩ
@@ -2602,11 +2603,7 @@ private theorem closure_omega_adjoin_isMulCommutative
       · exact ((Subgroup.mem_centralizer_iff.mp hxC) z hzΩ).symm
       · have hz_eq : z = x := by simpa using hzx
         rw [hz_eq]
-  letI : CommGroup B₁ :=
-    Subgroup.closureCommGroupOfComm
-      (k := ((ΩA : Set R) ∪ {x})) hcomm_generators
-  exact
-    { is_comm := ⟨fun y z => mul_comm y z⟩ }
+  exact Subgroup.isMulCommutative_closure hcomm_generators
 
 private theorem intermediate_inf_A_sup_closure_omega_adjoin_eq_top
     {R : Type*} [Group R] {p : ℕ} {A : Subgroup R} [A.Normal] {x : R}
@@ -2723,7 +2720,7 @@ private theorem intermediate_nilpotencyClassLe_two_of_closure_omega_normal
       exact y.2.1
     have hzA : ((z : M) : R) ∈ A := by
       exact z.2.1
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hyA hzA
+    exact setLike_mul_comm (s := A) hyA hzA
   have hcomm_le_B : _root_.commutator M ≤ Bsub :=
     Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
       (N := Bsub) (H := Csub) hBC_top hCsubcomm
@@ -2737,7 +2734,7 @@ private theorem intermediate_nilpotencyClassLe_two_of_closure_omega_normal
     rw [Subgroup.mem_center_iff]
     intro w
     have hw_sup : w ∈ Csub ⊔ Bsub := by
-      simpa [hCB_top]
+      simp [hCB_top]
     rcases (Subgroup.mem_sup_of_normal_left
         (x := w) (s := Csub) (t := Bsub)).1 hw_sup with
       ⟨c, hcC, b, hbB, hcb_eq⟩
@@ -2748,13 +2745,13 @@ private theorem intermediate_nilpotencyClassLe_two_of_closure_omega_normal
       change ((c : M) : R) * ((z : M) : R) = ((z : M) : R) * ((c : M) : R)
       have hcA : ((c : M) : R) ∈ A := hcC.1
       have hzA : ((z : M) : R) ∈ A := hzC.1
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hcA hzA
+      exact setLike_mul_comm (s := A) hcA hzA
     have hzb : b * z = z * b := by
       apply Subtype.ext
       change ((b : M) : R) * ((z : M) : R) = ((z : M) : R) * ((b : M) : R)
       have hbB₁ : ((b : M) : R) ∈ B₁ := hbB
       have hzB₁ : ((z : M) : R) ∈ B₁ := hzB
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := B₁) hbB₁ hzB₁
+      exact setLike_mul_comm (s := B₁) hbB₁ hzB₁
     calc
       w * z = (c * b) * z := by rw [hcb_eq]
       _ = c * (b * z) := by simp [mul_assoc]
@@ -2765,18 +2762,20 @@ private theorem intermediate_nilpotencyClassLe_two_of_closure_omega_normal
       _ = z * w := by rw [hcb_eq]
   have hcomm_center : _root_.commutator M ≤ Subgroup.center M :=
     hcomm_le_inf.trans hinf_le_center
-  have hL1_le_center : lowerCentralSeries M 1 ≤ Subgroup.center M := by
-    simpa [lowerCentralSeries_one] using hcomm_center
-  have hL2_bot : lowerCentralSeries M 2 = ⊥ := by
-    simpa [Nat.succ_eq_add_one] using
-      (lowerCentralSeries_succ_eq_bot (G := M) (n := 1) hL1_le_center)
+  have hL1_le_center :
+      (Subgroup.lowerCentralSeries (⊤ : Subgroup M) 1) ≤ Subgroup.center M := by
+    rw [Subgroup.top_lowerCentralSeries_one]
+    exact hcomm_center
+  have hL2_bot : Subgroup.lowerCentralSeries (⊤ : Subgroup M) 2 = ⊥ := by
+    simpa using
+      (Subgroup.lowerCentralSeries_succ_eq_bot (⊤ : Subgroup M) hL1_le_center)
   have hnil : Group.IsNilpotent M :=
-    (nilpotent_iff_lowerCentralSeries (G := M)).2 ⟨2, hL2_bot⟩
+    (Subgroup.nilpotent_iff_lowerCentralSeries (G := M)).2 ⟨2, hL2_bot⟩
   letI : Group.IsNilpotent M := hnil
   have hclass : Group.nilpotencyClass M ≤ 2 :=
-    (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := M)).1 hL2_bot
+    (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := M)).1 hL2_bot
   unfold NilpotencyClassLe
-  exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := M)).2 hclass
+  exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := M)).2 hclass
 
 private theorem closure_omega_adjoin_pow_eq_one
     {R : Type*} [Group R] {p : ℕ} [Fact p.Prime]
@@ -2926,7 +2925,7 @@ private theorem intermediate_order_p_mem_closure_omega_adjoin_of_normal
         (R := R) (p := p) (A := A) hAcomm (x := x) hxC hxpow
   let zM : M := ⟨z, hzM⟩
   have hzM_top : zM ∈ Csub ⊔ Bsub := by
-    simpa [hCB_top]
+    simp [hCB_top]
   rcases (Subgroup.mem_sup_of_normal_left
       (x := zM) (s := Csub) (t := Bsub)).1 hzM_top with
     ⟨aM, haC, bM, hbB, hab_eq⟩
@@ -3023,7 +3022,8 @@ private theorem closure_omega_adjoin_order_p_normalized_by_closure_adjoin
         (Subgroup.mem_normalizer_iff.mp hg_norm yH).1 hyNsub
       have hconjN : (g : R) * y * (g : R)⁻¹ ∈ N := by
         have hconjNraw : ((g * yH * g⁻¹ : H) : R) ∈ N := by
-          simpa [Nsub] using hconjNsub
+          change ((g * yH * g⁻¹ : H) : R) ∈ N at hconjNsub
+          exact hconjNsub
         have hconjN' : (g : R) * (y * (g : R)⁻¹) ∈ N := by
           simpa [yH, mul_assoc] using hconjNraw
         simpa [mul_assoc] using hconjN'
@@ -3068,7 +3068,7 @@ private theorem closure_omega_adjoin_order_p_normalized_by_closure_adjoin
     have hH_nil : Group.IsNilpotent H :=
       IsPGroup.isNilpotent (p := p) (G := H) (h := Fact.out)
     letI : Group.IsNilpotent H := hH_nil
-    have hnc : NormalizerCondition H := normalizerCondition_of_isNilpotent (G := H)
+    have hnc : NormalizerCondition H := Group.normalizerCondition_of_isNilpotent (G := H)
     have hNsub_top : Nsub = ⊤ :=
       (normalizerCondition_iff_only_full_group_self_normalizing.mp hnc)
         Nsub hNsub_self
@@ -3086,7 +3086,6 @@ private theorem closure_omega_adjoin_order_p_normalized_by_closure_adjoin
   have hA_le_norm_B₁ : A ≤ Subgroup.normalizer (B₁ : Set R) := by
     refine subgroup_le_normalizer_of_conj_mem B₁ A ?_
     intro a y hyB₁
-    change (a : R) * y * (a : R)⁻¹ ∈ B₁
     refine Subgroup.closure_induction
       (p := fun y _hy => (a : R) * y * (a : R)⁻¹ ∈ B₁)
       (x := y) ?_ ?_ ?_ ?_ hyB₁
@@ -3141,7 +3140,7 @@ private theorem closure_omega_adjoin_order_p_normalized_by_closure_adjoin
               calc
                 x⁻¹ * z * x = x⁻¹ * (z * x) := by simp [mul_assoc]
                 _ = x⁻¹ * (x * z) := by rw [hcomm]
-                _ = z := by simp [mul_assoc]
+                _ = z := by simp
             rw [hconj_eq]
             exact hΩ_le_B₁ hzΩ
           · have hz_eq : z = x := by simpa using hzx
@@ -3187,7 +3186,7 @@ private theorem order_p_centralizer_stabilizes_omega₁_quotient
   · have hxΩ : x ∈ ΩA :=
       mem_omega₁_map_subtype_of_mem_pow_eq_one (A := A) hxA hxpow
     have hcomm : Commute x a :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := A) hxA ha
+      setLike_mul_comm (s := A) hxA ha
     have hcomm_eq_one : ⁅x, a⁆ = 1 :=
       commutatorElement_eq_one_iff_commute.mpr hcomm
     rw [hcomm_eq_one]
@@ -3210,7 +3209,7 @@ private theorem order_p_centralizer_stabilizes_omega₁_quotient
     exact B₁.mul_mem hconjB₁ (B₁.inv_mem hxB₁)
   have hcomm_xa_B₁ : ⁅x, a⁆ ∈ B₁ := by
     have hinv : ⁅x, a⁆ = ⁅a, x⁆⁻¹ := by
-      simpa [commutatorElement_inv]
+      exact (commutatorElement_inv a x).symm
     rw [hinv]
     exact B₁.inv_mem hcomm_ax_B₁
   have hcomm_xa_A : ⁅x, a⁆ ∈ A := by
@@ -3270,7 +3269,7 @@ private theorem pairwise_mul_pow_eq_one_of_order_p_centralizer_stabilizes_omega�
         let vT : T := ⟨v, hvT⟩
         have hcomm_uv : Commute uT vT := by
           letI : IsCyclic T := hTcyc
-          exact (IsCyclic.commutative (α := T)).comm uT vT
+          exact (IsCyclic.isMulCommutative (α := T)).is_comm.comm uT vT
         have huTp : uT ^ p = 1 := by
           apply Subtype.ext
           simpa [uT] using hup
@@ -3311,7 +3310,7 @@ private theorem pairwise_mul_pow_eq_one_of_order_p_centralizer_stabilizes_omega�
       have hconjp : (u * v * u⁻¹) ^ p = 1 := by
         calc
           (u * v * u⁻¹) ^ p = u * v ^ p * u⁻¹ := by
-            simpa using (conj_pow (a := u) (b := v) (i := p))
+            exact conj_pow
           _ = 1 := by simp [hvp]
       have hvInvC : v⁻¹ ∈ C := C.inv_mem hvC
       have hvInvp : v⁻¹ ^ p = 1 := by
@@ -3324,7 +3323,7 @@ private theorem pairwise_mul_pow_eq_one_of_order_p_centralizer_stabilizes_omega�
         simpa [commutatorElement_def, mul_assoc] using hsmall
       have hvu_pow : ⁅v, u⁆ ^ p = 1 := by
         have hinv : ⁅v, u⁆ = ⁅u, v⁆⁻¹ := by
-          simpa [commutatorElement_inv]
+          exact (commutatorElement_inv u v).symm
         rw [hinv, inv_pow, huv_pow]
         simp
       have hv_stab : ∀ a : R, a ∈ A → ⁅v, a⁆ ∈ ΩA := by
@@ -3377,18 +3376,18 @@ private theorem omega₁_map_subtype_pow_eq_one_of_pairwise_mul
 private theorem gorenstein_5_4_14_centralizer_control_for_maximal_normal_abelian
     {R : Type*} [Group R] [Finite R] {p : Nat} [Fact p.Prime]
     (hpodd : p ≠ 2) (hRp : IsPGroup p R)
-    (hA3 : selfCentralizingAbelianSubgroupsAtLeast R 3 = ∅)
+    (_hA3 : selfCentralizingAbelianSubgroupsAtLeast R 3 = ∅)
     {A : Subgroup R}
     (hAnorm : A.Normal) (hAcomm : IsMulCommutative A)
     (hAself : Subgroup.centralizer (A : Set R) = A)
-    (hArank : generatorRank A ≤ 2)
+    (_hArank : generatorRank A ≤ 2)
     (hAmaxRank :
       ∀ B : Subgroup R, B.Normal → IsMulCommutative B →
         generatorRank B ≤ generatorRank A)
     (hΩnorm : ((omega₁ (G := A) (p := p)).map A.subtype).Normal)
     (hΩelem : IsElementaryAbelian p ((omega₁ (G := A) (p := p)).map A.subtype))
-    (hΩcard : Nat.card ((omega₁ (G := A) (p := p)).map A.subtype) ≤ p ^ 2)
-    {E : Subgroup R} (hEcard : Nat.card E = p ^ 3) (hEelem : IsElementaryAbelian p E) :
+    (_hΩcard : Nat.card ((omega₁ (G := A) (p := p)).map A.subtype) ≤ p ^ 2)
+    {E : Subgroup R} (_hEcard : Nat.card E = p ^ 3) (hEelem : IsElementaryAbelian p E) :
     E ⊓ Subgroup.centralizer
         ((((omega₁ (G := A) (p := p)).map A.subtype) : Subgroup R) : Set R) ≤
       ((omega₁ (G := A) (p := p)).map A.subtype) := by
@@ -3565,7 +3564,8 @@ private theorem gorenstein_5_4_15_preceding_lemma_package
     have hA_mem : A ∈ selfCentralizingAbelianSubgroupsAtLeast R 3 := by
       exact ⟨⟨hAnorm, hAself⟩, hA_rank_three⟩
     have hA_empty : A ∈ (∅ : Set (Subgroup R)) := by
-      simpa [hA3] using hA_mem
+      rw [hA3] at hA_mem
+      exact hA_mem
     exact hA_empty
   let Ωsub : Subgroup A := omega₁ (G := A) (p := p)
   let ΩA : Subgroup R := Ωsub.map A.subtype
@@ -3836,7 +3836,8 @@ private theorem gorenstein_theorem_5_4_15_automorphism_dvd
     let Aψ : Subgroup (MulAut R) := Subgroup.zpowers ψ
     letI : MulDistribMulAction Aψ R := inferInstance
     have hAψ_card : Nat.card Aψ = q := by
-      simpa [Aψ, hψ_order] using Nat.card_zpowers ψ
+      change Nat.card (Subgroup.zpowers ψ) = q
+      rw [Nat.card_zpowers, hψ_order]
     have hcop_Aψ_H : Nat.Coprime (Nat.card Aψ) (Nat.card H) := by
       obtain ⟨n, hHcard⟩ := hHp.exists_card_eq
       have hq_coprime_p : Nat.Coprime q p :=

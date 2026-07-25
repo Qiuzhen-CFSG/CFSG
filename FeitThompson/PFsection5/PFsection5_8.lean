@@ -185,8 +185,28 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf58
   constructor
   · exact isCharacter_of_isIrreducibleCharacterOnGroup_pf58 ⟨n, ρ, hirr, hchar⟩
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct G χ χ =
+          Section1.scalarProduct G ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private theorem scalarProduct_zero_of_distinct_irreducibles_pf58
     {G : Type u} [Group G] [Finite G]
@@ -235,7 +255,6 @@ private theorem integerSpan_mono_pf58
       hsub
       (by
         intro y hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach, ← S2.sum_attach] using
     hsum
@@ -322,7 +341,7 @@ private theorem supportedOn_puncturedSet_iff_degree_eq_zero_pf58
     intro g hg
     have hg1 : g = 1 := by
       by_contra hne
-      exact hg (by simpa [puncturedSet, hne])
+      exact hg (by simp [puncturedSet, hne])
     subst hg1
     simpa [Section1.degree_apply] using hdeg
 
@@ -637,7 +656,7 @@ private theorem isSignedIrreducibleCharacter_sign_smul_pf58
   rcases hφ with ⟨η, hη, μ, hμ, rfl⟩
   refine ⟨ε * η, isSign_mul_pf58 hε hη, μ, hμ, ?_⟩
   ext g
-  simp [smul_smul, mul_assoc]
+  simp [mul_assoc]
 
 private theorem signedOrthonormalFinset_image_pf58
     {G : Type u} [Group G] [Finite G]
@@ -656,7 +675,7 @@ private theorem signedOrthonormalFinset_image_pf58
     exact hOrth i i' (by
       intro hii'
       apply hneq
-      simpa [hii'])
+      simp [hii'])
 
 private noncomputable def muSignedFamily_pf58
     {G : Type u} [Group G] [Finite G]
@@ -703,7 +722,7 @@ private theorem muSignedFamily_orthogonal_pf58
       have hii' : i ≠ i' := by
         intro h
         apply hpq
-        simpa [h]
+        simp [h]
       have hbase : Section1.scalarProduct G (chi i j) (chi i' j) = 0 := by
         simpa [hii'] using hChiOrth (i, j) (i', j)
       simpa [muSignedFamily_pf58] using
@@ -731,7 +750,7 @@ private theorem muSignedFamily_orthogonal_pf58
       have hii' : i ≠ i' := by
         intro h
         apply hpq
-        simpa [h]
+        simp [h]
       have hbase : Section1.scalarProduct G (chi i k) (chi i' k) = 0 := by
         simpa [hii'] using hChiOrth (i, k) (i', k)
       simpa [muSignedFamily_pf58] using
@@ -787,7 +806,7 @@ private theorem muSignedFamily_injective_pf58
         (muSignedFamily_pf58 deltaLeft deltaRight chi j k p) = 0 := by
     simpa [hEq] using hzero
   have hcontr : (1 : ℂ) = 0 := by
-    simpa [hself] using hzero'
+    simp [hself] at hzero'
   norm_num at hcontr
 
 private theorem muSignedFamily_sum_pf58
@@ -1092,9 +1111,9 @@ private theorem piColumn_difference_family_pf58
             simp [muG, tj, tk]
       _ = deltaSign k • (∑ i : I, chi i k) -
             deltaSign j • (∑ i : I, chi i j) := by
-        simpa [Section4Scratch.omegaColumnSigma, hChiSigma, muG, tj, tk]
+        simp [Section4Scratch.omegaColumnSigma, hChiSigma]
       _ = (∑ i : I, deltaSign k • chi i k) + ∑ i : I, (-deltaSign j) • chi i j := by
-            simpa [sub_eq_add_neg, Finset.smul_sum]
+            simp [sub_eq_add_neg, Finset.smul_sum]
   let Rμ : Finset (Section1.ClassFunction G) :=
     Finset.univ.image (muSignedFamily_pf58 (deltaSign k) (-deltaSign j) chi k j)
   have hRμorth : signedOrthonormalFinset Rμ := by
@@ -1446,7 +1465,7 @@ private theorem scalarProduct_piColumn_piChar_eq_ite_pf58
     (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (h43b : Section4.theorem_4_3_b_statement
       W1 W2 W I J i0 j0 ω σL piChar deltaSign hω)
-    (r i : I) (s q : J) :
+    (_r i : I) (s q : J) :
     Section1.scalarProduct L
         (Section4Scratch.piColumn piChar s)
         (piChar i q) =
@@ -1678,10 +1697,7 @@ private theorem scalarProduct_subsetSum_muSignedFamily_left_chi_pf58
   let ψ := muSignedFamily_pf58 deltaLeft deltaRight chi j k (Sum.inl i)
   have hψR :
       ψ ∈ Finset.univ.image (muSignedFamily_pf58 deltaLeft deltaRight chi j k) := by
-    simpa [ψ] using
-      (muSignedFamily_left_mem_image_pf58
-        (deltaLeft := deltaLeft) (deltaRight := deltaRight)
-        (chi := chi) (j := j) (k := k) i)
+    simp [ψ]
   have hcoeff :
       Section1.scalarProduct G (Finset.sum E fun φ => φ) ψ =
         if ψ ∈ E then (1 : ℂ) else 0 :=
@@ -1732,10 +1748,7 @@ private theorem scalarProduct_subsetSum_muSignedFamily_right_chi_pf58
   let ψ := muSignedFamily_pf58 deltaLeft deltaRight chi j k (Sum.inr i)
   have hψR :
       ψ ∈ Finset.univ.image (muSignedFamily_pf58 deltaLeft deltaRight chi j k) := by
-    simpa [ψ] using
-      (muSignedFamily_right_mem_image_pf58
-        (deltaLeft := deltaLeft) (deltaRight := deltaRight)
-        (chi := chi) (j := j) (k := k) i)
+    simp [ψ]
   have hcoeff :
       Section1.scalarProduct G (Finset.sum E fun φ => φ) ψ =
         if ψ ∈ E then (1 : ℂ) else 0 :=
@@ -1909,7 +1922,7 @@ private theorem subsetSum_piColumn_of_conjugate_pf58
     have hmem :
         (X : Section1.ClassFunction L) ∈
           ({muA, muB} : Finset (Section1.ClassFunction L)) := by
-      simpa [pairS] using X.2
+      simp [pairS]
     rcases Finset.mem_insert.mp hmem with hX | hX
     · exact Or.inl hX
     · exact Or.inr (Finset.mem_singleton.mp hX)
@@ -1925,10 +1938,10 @@ private theorem subsetSum_piColumn_of_conjugate_pf58
     intro X
     rcases hpairOr X with hX | hX
     · refine ⟨?_, ?_⟩
-      · simpa [hX, pairS, hconj, muA, muB]
+      · simp [hX, pairS, hconj, muA, muB]
       · simpa [hX] using (h52a ⟨muA, by simpa [muA] using haS⟩).2
     · refine ⟨?_, ?_⟩
-      · simpa [hX, pairS, hconjSymm, muA, muB]
+      · simp [hX, pairS, hconjSymm, muA, muB]
       · intro hEq
         exact hmuBA (by simpa [hX, hconjSymm] using hEq)
   have hpair52b : hypothesis_5_2_b_statement pairS τ := by
@@ -1986,7 +1999,7 @@ private theorem subsetSum_piColumn_of_conjugate_pf58
   have hpairSetSubset :
       ({muA, Section1.conjugateCharacter muA} : Finset (Section1.ClassFunction L)) ⊆ S := by
     intro ψ hψ
-    simp [hconj, muA, muB] at hψ
+    simp [hconj, muA] at hψ
     rcases hψ with rfl | rfl
     · simpa [muA] using haS
     · exact hbS
@@ -2049,7 +2062,7 @@ private theorem source_bridge_eq_induced_alphaIJ_pf58
           piChar i j0 + piChar i0 j0
         = deltaSign j • (piChar i j - piChar i0 j) -
             deltaSign j0 • (piChar i j0 - piChar i0 j0) := by
-              simp [hδ0, smul_sub, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+              simp [hδ0, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
     _ = Section1.inducedCF W (ω i j - ω i0 j) -
           Section1.inducedCF W (ω i j0 - ω i0 j0) := by
             rw [hind i j, hind i j0]
@@ -2064,7 +2077,7 @@ private theorem source_bridge_eq_induced_alphaIJ_pf58
 
 private theorem source_bridge_supportedOn_primeDadeA0_pf58
     {L : Type u} [Group L] [Finite L]
-    {K W1 W2 W H : Subgroup L}
+    {W1 W2 W : Subgroup L}
     {A : Set L}
     {I J : Type*} [Fintype I] [Fintype J]
     [DecidableEq I] [DecidableEq J]
@@ -2126,9 +2139,9 @@ private theorem supportedOn_punctured_iff_supportedOn_of_supportedOn_withOne_pf5
     rw [Section1.supportedOn_iff]
     intro x hxA
     by_cases hx1 : x = 1
-    · exact (Section1.supportedOn_iff.mp hpunct) x (by simpa [puncturedSet, hx1])
+    · exact (Section1.supportedOn_iff.mp hpunct) x (by simp [puncturedSet, hx1])
     · exact (Section1.supportedOn_iff.mp hφ) x
-        (by simpa [Section4Scratch.withOne, hxA, hx1])
+        (by simp [Section4Scratch.withOne, hxA, hx1])
   · intro hAon
     rw [Section1.supportedOn_iff]
     intro x hxpunct
@@ -2275,12 +2288,12 @@ public theorem theorem_5_8_core
           simp [Section1.conjugateCharacter]
         _ = Section1.conjugateCharacter muJ := by rw [hconj]
         _ = Section1.conjugateCharacter (Section4Scratch.piColumn piChar j0) := by
-              simpa [muJ, hjEq]
+              simp [muJ, hjEq]
         _ = Section4Scratch.piColumn piChar j0 := hbase
     have hkSelf : Section1.conjugateCharacter muK = muK := by
       calc
         Section1.conjugateCharacter muK = muJ := hconj
-        _ = Section4Scratch.piColumn piChar j0 := by simpa [muJ, hjEq]
+        _ = Section4Scratch.piColumn piChar j0 := by simp [muJ, hjEq]
         _ = muK := hkBase.symm
     exact (h52a ⟨muK, hkS⟩).2 hkSelf.symm
   let Rμk : Finset (Section1.ClassFunction G) :=
@@ -2322,7 +2335,7 @@ public theorem theorem_5_8_core
     have hmem :
         (X : Section1.ClassFunction L) ∈
           ({muK, muJ} : Finset (Section1.ClassFunction L)) := by
-      simpa [pairS] using X.2
+      simp [pairS]
     rcases Finset.mem_insert.mp hmem with hX | hX
     · exact Or.inl hX
     · exact Or.inr (Finset.mem_singleton.mp hX)
@@ -2338,10 +2351,10 @@ public theorem theorem_5_8_core
     intro X
     rcases hpairOr X with hX | hX
     · refine ⟨?_, ?_⟩
-      · simpa [hX, pairS, hconj, muK, muJ]
+      · simp [hX, pairS, hconj, muK, muJ]
       · simpa [hX] using (h52a ⟨muK, hkS⟩).2
     · refine ⟨?_, ?_⟩
-      · simpa [hX, pairS, hconjSymm, muK, muJ]
+      · simp [hX, pairS, hconjSymm, muK, muJ]
       · intro hEq
         exact hmuJK (by simpa [hX, hconjSymm] using hEq)
   have hpair52b : hypothesis_5_2_b_statement pairS τ := by
@@ -2399,7 +2412,7 @@ public theorem theorem_5_8_core
   have hpairSetSubset :
       ({muK, Section1.conjugateCharacter muK} : Finset (Section1.ClassFunction L)) ⊆ S := by
     intro ψ hψ
-    simp [hconj] at hψ
+    simp at hψ
     rcases hψ with rfl | rfl
     · exact hkS
     · rw [hconj]
@@ -2542,7 +2555,7 @@ public theorem theorem_5_8_core
           (Section4Scratch.primeDadeA0Set W1 W2 W A) := by
       simpa [bridge] using
         source_bridge_supportedOn_primeDadeA0_pf58
-          (K := K) (H := H) (A := A) hω h43b i q
+          (A := A) hω h43b i q
     have hcomboClass : Section1.IsClassFunction combo := by
       have hmuClass : Section1.IsClassFunction muK :=
         Section1.isCharacter_isClassFunction muK hkChar

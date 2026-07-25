@@ -153,9 +153,9 @@ private theorem section12_exists_hall_betaCompl_fixed_by_sylow_derivedE
   have hSproper : S ≠ ⊤ := by
     intro htop
     have hMtop : M = ⊤ := by
-      exact eq_top_iff.2 (by
-        intro x _hx
-        exact section12_Msigma_le (G := G) M (by simpa [S, htop]))
+      apply eq_top_iff.2
+      rw [← htop]
+      exact section12_Msigma_le (G := G) M
     exact hM.1 hMtop
   have hSsolv : IsSolvable S :=
     IsMinCE.proper_subgroups_solvable S (lt_top_iff_ne_top.2 hSproper)
@@ -208,16 +208,18 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
   have hSproper : S ≠ ⊤ := by
     intro htop
     have hMtop : M = ⊤ := by
-      exact eq_top_iff.2 (by
-        intro x _hx
-        exact section12_Msigma_le (G := G) M (by simpa [S, htop]))
+      apply eq_top_iff.2
+      rw [← htop]
+      exact section12_Msigma_le (G := G) M
     exact hM.1 hMtop
   have hSsolv : IsSolvable S :=
     IsMinCE.proper_subgroups_solvable S (lt_top_iff_ne_top.2 hSproper)
   have hDπ : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ D := by
     simpa [D] using section12_ambientDerivedSubgroup_sigma_compl (G := G) hM hE.1
   have hSπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-    simpa [S] using ((theorem_10_2_b (G := G) hM).1).p_in_pi_of_p_dvd_card
+    intro p hp
+    exact ((theorem_10_2_b (G := G) hM).1).p_in_pi_of_p_dvd_card p
+      (by simpa [S] using hp)
   have hσdisj : Disjoint ((section10SigmaPrimes M)ᶜ : Set Nat.Primes)
       (section10SigmaPrimes M) := by
     rw [Set.disjoint_left]
@@ -258,7 +260,8 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
     have hHinvQ : IsInvariant (Q : Subgroup D) S H := by
       refine ⟨?_⟩
       intro a y
-      simpa using (IsInvariant.invariant (A := D) (G := S) (H := H) (a : D) y)
+      change y ∈ H ↔ (a : D) • y ∈ H
+      exact IsInvariant.invariant (A := D) (G := S) (H := H) (a : D) y
     have hLinvQ : IsInvariant (Q : Subgroup D) S L :=
       section12_isInvariant_of_le_fixedPointSubgroup_current hLfix
     obtain ⟨g, hgfix, hH_eq⟩ :=
@@ -324,7 +327,9 @@ private theorem section12_exists_invariant_hall_betaCompl_msigma
   have hDπ : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ D := by
     simpa [D] using section12_ambientDerivedSubgroup_sigma_compl (G := G) hM hE.1
   have hSπ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-    simpa [S] using ((theorem_10_2_b (G := G) hM).1).p_in_pi_of_p_dvd_card
+    intro p hp
+    exact ((theorem_10_2_b (G := G) hM).1).p_in_pi_of_p_dvd_card p
+      (by simpa [S] using hp)
   have hσdisj : Disjoint ((section10SigmaPrimes M)ᶜ : Set Nat.Primes)
       (section10SigmaPrimes M) := by
     rw [Set.disjoint_left]

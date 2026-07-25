@@ -37,11 +37,12 @@ public theorem section12_isMulCommutative_of_nilpotent_of_sylow
     haveI : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
     have hcomm : IsMulCommutative (P : Subgroup K) := hSyl p.val P
     exact Subtype.ext <|
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := (P : Subgroup K))
+      setLike_mul_comm (s := (P : Subgroup K))
         (x' p P).property (y' p P).property
   have hxy := congrArg e hxy'
   simpa [x', y'] using hxy
 
+omit [IsMinCE G] in
 public theorem section12_primeRank_at_least_two_of_rankTwo
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -130,6 +131,7 @@ public theorem section12_isPiSubgroup_subgroupOf
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hKH).toEquiv
   exact hKπ p (by rwa [hcard] at hp)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_complementToMsigma_of_local_complement
     {M : Subgroup G} {E : Subgroup M}
     (hcomp : (section10MsigmaSubgroup M).IsComplement' E) :
@@ -179,6 +181,7 @@ public theorem section12_complementToMsigma_of_local_complement
       x = (y : M) := hyx.symm
       _ = 1 := by simpa using congrArg (fun t : M => (t : G)) hyone
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_extend_complementIn_from_complementToMsigma
     {M E K L : Subgroup G}
     (hME : section12ComplementToMsigma M E)
@@ -189,7 +192,7 @@ public theorem section12_extend_complementIn_from_complementToMsigma
       M = section10Msigma M ⊔ E := hME.2.2.1
       _ = section10Msigma M ⊔ (K ⊔ L) := by rw [hKL.2.2.1]
       _ = K ⊔ (section10Msigma M ⊔ L) := by
-        simp [sup_assoc, sup_comm, sup_left_comm]
+        simp [sup_comm, sup_left_comm]
   · rw [Subgroup.disjoint_def]
     intro x hxK hxsup
     have hxE : x ∈ E := hKL.1 hxK
@@ -213,6 +216,7 @@ public theorem section12_extend_complementIn_from_complementToMsigma
     have hxL : x ∈ L := hx_eq_l ▸ hlL
     exact (Subgroup.disjoint_def.mp hKL.2.2.2) hxK hxL
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_subgroupCentralizerIn_commute
     (A S : Subgroup G) :
     S ≤ Subgroup.centralizer (subgroupCentralizerIn A S : Set G) := by
@@ -221,6 +225,7 @@ public theorem section12_subgroupCentralizerIn_commute
   intro c hc
   exact (Subgroup.mem_centralizer_iff.mp hc.2 s hs).symm
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_E_le_normalizer_CA_msigma
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -283,6 +288,7 @@ public theorem section12_E_le_normalizer_CA_msigma
           _ = (e⁻¹ * (e * x * e⁻¹) * (e⁻¹)⁻¹) * y := by group
     simpa [C, mul_assoc] using hx'
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_CA_msigma_normalIn_E
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -295,6 +301,7 @@ public theorem section12_CA_msigma_normalIn_E
   exact (Subgroup.normal_subgroupOf_iff_le_normalizer hCE).2
     (by simpa [C] using section12_E_le_normalizer_CA_msigma (G := G) hE hAnorm)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_complementIn_of_normal_isComplement'
     {H K L : Subgroup G}
     (hKL : section12ComplementIn H K L) (hKnorm : section10NormalIn K H) :
@@ -428,7 +435,7 @@ public theorem section12_mem_omegaOneSubgroup_of_mem_pow_eq_one
     exact Subgroup.subset_closure (by simpa [xH] using hxp)
   exact Subgroup.mem_map.mpr ⟨xH, hxΩ, rfl⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_primeOrder_le_omegaOneSubgroup_of_le
     {H X : Subgroup G} {p : Nat.Primes}
     (hX : X ∈ section10PrimeOrderSubgroupsIn p H) :
@@ -696,6 +703,7 @@ public theorem section12_isMulCommutative_of_mulEquiv
   classical
   refine ⟨⟨fun x y => ?_⟩⟩
   letI : IsMulCommutative B := hB
+  letI : CommGroup B := IsMulCommutative.instCommGroup
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
@@ -771,12 +779,12 @@ public theorem section12_sylow_abelian_of_sigma_compl_nilpotent_subgroup
         hPsubM_le_T (by simpa [PsubM, Subgroup.mem_subgroupOf] using hx), rfl⟩
   have hTamb_comm : IsMulCommutative Tamb := by
     letI : IsMulCommutative (T : Subgroup M) := hM_sylow_ab T
-    simpa [Tamb, section10AmbientSylowSubgroup] using
-      (Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M)))
+    change IsMulCommutative ((T : Subgroup M).map M.subtype)
+    exact Subgroup.map_isMulCommutative (f := M.subtype) (H := (T : Subgroup M))
   have hPamb_comm : IsMulCommutative Pamb := by
     refine ⟨⟨fun x y => ?_⟩⟩
     exact Subtype.ext <|
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := Tamb)
+      setLike_mul_comm (s := Tamb)
         (hPamb_le_Tamb x.property) (hPamb_le_Tamb y.property)
   let e : (P : Subgroup K) ≃* Pamb :=
     Subgroup.equivMapOfInjective (f := K.subtype) (P : Subgroup K) K.subtype_injective

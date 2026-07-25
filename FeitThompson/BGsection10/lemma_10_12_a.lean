@@ -31,8 +31,8 @@ private theorem section10_alpha_sigma_primes_disjoint_of_nonconj
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype
   have hPG_le_M : PG ≤ M := by
     simpa [PG] using section10_ambient_sylow_le_base (G := G) P
   rcases section10_exists_conjBy_le_of_isPGroup_of_sigma

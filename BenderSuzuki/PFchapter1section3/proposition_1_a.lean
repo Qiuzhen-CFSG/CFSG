@@ -82,6 +82,7 @@ private theorem proposition_1_a_restricted_hypothesisA1
       rw [MulAction.mem_stabilizer_iff]
       apply Subtype.ext
       have hlH : (l : G) ∈ H := hl
+      change (l : G) • base = base
       simpa [hHbase, MulAction.mem_stabilizer_iff] using hlH
     · intro hl
       change (l : G) ∈ H

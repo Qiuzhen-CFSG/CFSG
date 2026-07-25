@@ -12,6 +12,8 @@ public import FeitThompson.PFsection9.Basic
 
 noncomputable section
 
+open scoped IsMulCommutative commutatorElement
+
 namespace Section9
 
 universe u v w
@@ -1010,7 +1012,9 @@ private theorem theorem_9_nb_redM_M_mod_K_quotient_centralizer_sec9
             (r : M ⧸ K.subgroupOf M) * y :=
         Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
       have hcomm_qw : Commute y (qM w) := by
-        simpa [hwq] using hcomm_r
+        change y * qM w = qM w * y
+        rw [hwq]
+        exact hcomm_r
       have hcomm_qb : Commute y (qM b) := by
         rw [← hn]
         simpa [qM] using hcomm_qw.zpow_right n
@@ -1579,7 +1583,9 @@ private theorem case_9_7_a_M_mod_H0_quotient_centralizer_sec9
             (r : M ⧸ H0.subgroupOf M) * y :=
         Subgroup.mem_centralizer_singleton_iff.mp hyElem.2
       have hcomm_qw : Commute y (qM w) := by
-        simpa [hwq] using hcomm_r
+        change y * qM w = qM w * y
+        rw [hwq]
+        exact hcomm_r
       have hcomm_qb : Commute y (qM b) := by
         rw [← hn]
         simpa [qM] using hcomm_qw.zpow_right n
@@ -1926,8 +1932,8 @@ private theorem theorem_9_reducible_filter_pair_count_of_transport_data_sec9
 
 private def nbRedMQuotientTransportData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M K : Subgroup G) [hKnormal : (K.subgroupOf M).Normal]
-    (Wbar : Subgroup (M ⧸ K.subgroupOf M))
+    (M K : Subgroup G) [_hKnormal : (K.subgroupOf M).Normal]
+    (_Wbar : Subgroup (M ⧸ K.subgroupOf M))
     (p : ℕ)
     (S : Finset (Section1.ClassFunction M)) : Prop :=
   ∃ ι : Type u, ∃ instFintype : Fintype ι, ∃ instDecidableEq : DecidableEq ι,
@@ -1945,8 +1951,8 @@ private def nbRedMQuotientTransportData_sec9
 
 private def nbRedMQuotientLowerTransportData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M K : Subgroup G) [hKnormal : (K.subgroupOf M).Normal]
-    (Wbar : Subgroup (M ⧸ K.subgroupOf M))
+    (M K : Subgroup G) [_hKnormal : (K.subgroupOf M).Normal]
+    (_Wbar : Subgroup (M ⧸ K.subgroupOf M))
     (p : ℕ)
     (S : Finset (Section1.ClassFunction M)) : Prop :=
   ∃ ι : Type u, ∃ instFintype : Fintype ι, ∃ instDecidableEq : DecidableEq ι,
@@ -2834,9 +2840,8 @@ private theorem exists_quotient_character_of_subgroupInKernel_sec9
   let θbar : Section1.ClassFunction (H.map (QuotientGroup.mk' Z)) := by
     simpa [Section1.quotientImageSubgroup] using θbarRep.character
   have hθbar_irr' : Section1.IsIrreducibleCharacterOnGroup θbar := by
-    simpa [θbar, θbarRep, Section1.quotientImageSubgroup] using
-      (⟨n, θbarRep, hθbar_irr, rfl⟩ :
-        Section1.IsIrreducibleCharacterOnGroup θbarRep.character)
+    unfold Section1.IsIrreducibleCharacterOnGroup
+    exact ⟨n, θbarRep, hθbar_irr, rfl⟩
   refine ⟨θbar, hθbar_irr', ?_⟩
   ext h
   let qH : H →* H.map (QuotientGroup.mk' Z) := (QuotientGroup.mk' Z).subgroupMap H
@@ -4574,7 +4579,7 @@ public theorem theorem_9_8_MF_U_internalSemidirect_ambientDerived_sec9
   have hsupM :
       (MF.subgroupOf M) ⊔ (U.subgroupOf M) = D.subgroupOf M := by
     rw [← Subgroup.subgroupOf_sup (A := MF) (A' := U) (B := M) hMFleM hUleM]
-    simpa [D, hD_eq]
+    simp [D, hD_eq]
   have hdisj : Disjoint K W := by
     rw [disjoint_iff]
     apply le_antisymm
@@ -4769,10 +4774,10 @@ private theorem theorem_9_8_nonprincipal_MF_constituent_quotient_linear_characte
     let zM : M := ⟨(z : G), hMFleM hzMF⟩
     let zD : D.subgroupOf M := ⟨zM, by
       exact hMFsubD (by
-        simpa [zM, Subgroup.mem_subgroupOf] using hzMF)⟩
+        simp [zM, Subgroup.mem_subgroupOf])⟩
     let zK : K := ⟨zD, by
       change (zD : M) ∈ MF.subgroupOf M
-      simpa [zD, zM, Subgroup.mem_subgroupOf] using hzMF⟩
+      simp [zD, zM, Subgroup.mem_subgroupOf]⟩
     let zA :
         ((H0.subgroupOf M).subgroupOf (D.subgroupOf M)).subgroupOf K :=
       ⟨zK, by
@@ -4880,7 +4885,9 @@ private theorem theorem_9_8_semidirect_index_eq_inf_complement_index_sec9
         have hxTop : (x : L) ∈ (⊤ : Subgroup L) := by simp
         rcases hsemi.mul_surjective (x : L) hxTop with ⟨k, hkK, w, hwW, hxkw⟩
         have hkT : k ∈ T := hKT hkK
-        have hkwT : k * w ∈ T := by simpa [hxkw.symm] using hxT
+        have hkwT : k * w ∈ T := by
+          rw [← hxkw]
+          exact hxT
         have hwT : w ∈ T := by
           have hleft : k⁻¹ * (k * w) ∈ T := T.mul_mem (T.inv_mem hkT) hkwT
           simpa [mul_assoc] using hleft
@@ -5040,10 +5047,10 @@ private theorem
       let hM : M := ⟨(h : G), hMFleM h.property⟩
       let hD : D.subgroupOf M := ⟨hM, by
         exact hMFsubD (by
-          simpa [hM, Subgroup.mem_subgroupOf] using h.property)⟩
+          simp [hM, Subgroup.mem_subgroupOf])⟩
       let hK : K := ⟨hD, by
         change (hD : M) ∈ MF.subgroupOf M
-        simpa [hD, hM, Subgroup.mem_subgroupOf] using h.property⟩
+        simp [hD, hM, Subgroup.mem_subgroupOf]⟩
       let hConj : MF := ⟨(xU : G)⁻¹ * (h : G) * (xU : G), hconjMF h⟩
       let hConjM : M := ⟨(hConj : G), hMFleM hConj.property⟩
       let hConjD : D.subgroupOf M := ⟨hConjM, by
@@ -5080,9 +5087,15 @@ private theorem
                   ((x : (ambientDerivedSubgroup M).subgroupOf M)⁻¹)⟩ : K) =
               hConjK := by
           ext
-          simp [D, K, hK, hD, hM, hConjK, hConjD, hConjM, hConj, xU,
+          simp [D, hK, hD, hM, hConjK, hConjD, hConjM, hConj, xU,
             theorem_9_8_ambientDerived_U_subgroupOf_to_U_sec9, mul_assoc]
-        simpa [Section1.conjugateOnNormal, hsame] using hraw
+        change
+          ψ (⟨((x : D.subgroupOf M)⁻¹) * (hK : D.subgroupOf M) *
+                ((x : D.subgroupOf M)⁻¹)⁻¹,
+              hKnormal.conj_mem (hK : D.subgroupOf M) hK.property
+                ((x : D.subgroupOf M)⁻¹)⟩ : K) = ψ hK at hraw
+        rw [hsame] at hraw
+        exact hraw
       have hχ_h :
           ψ hK = (χ (QuotientGroup.mk' (H0.subgroupOf MF) h) : ℂ) := by
         have heval := congrArg (fun θ => θ h) hψχ
@@ -5201,10 +5214,14 @@ public theorem
               (ambientDerivedSubgroup M).subgroupOf M) : M) ∈ MF.subgroupOf M
           change (hM : G) ∈ MF
           exact h.property⟩
-    have hB_eval := hψχ hB
-    simpa [pullbackClassFunctionOfSubgroupOfEquiv_sec9,
-      Section1.quotientCharacterInflation, Subgroup.subgroupOfEquivOfLe,
-      hM, hB] using hB_eval
+    have hToMF :
+        (Subgroup.subgroupOfEquivOfLe hMFleM)
+            ((Subgroup.subgroupOfEquivOfLe hMFsubD) hB) = h := by
+      apply Subtype.ext
+      rfl
+    change ψ hB = (χ (QuotientGroup.mk' (H0.subgroupOf MF) h) : ℂ)
+    rw [← hToMF]
+    exact hψχ hB
   let u : U := ⟨(((x :
       (ambientDerivedSubgroup M).subgroupOf M) : M) : G), by
     have hxUM :
@@ -5308,10 +5325,14 @@ public theorem
               (ambientDerivedSubgroup M).subgroupOf M) : M) ∈ MF.subgroupOf M
           change (hM : G) ∈ MF
           exact h.property⟩
-    have hB_eval := hψχ hB
-    simpa [pullbackClassFunctionOfSubgroupOfEquiv_sec9,
-      Section1.quotientCharacterInflation, Subgroup.subgroupOfEquivOfLe,
-      hM, hB] using hB_eval
+    have hToMF :
+        (Subgroup.subgroupOfEquivOfLe hMFleM)
+            ((Subgroup.subgroupOfEquivOfLe hMFsubD) hB) = h := by
+      apply Subtype.ext
+      rfl
+    change ψ hB = (χ (QuotientGroup.mk' (H0.subgroupOf MF) h) : ℂ)
+    rw [← hToMF]
+    exact hψχ hB
   let u : U := ⟨(((x :
       (ambientDerivedSubgroup M).subgroupOf M) : M) : G), by
     have hxUM :
@@ -5524,7 +5545,7 @@ private theorem theorem_9_8_nonprincipal_MF_constituent_inertia_index_dvd_source
     let uW : W :=
       ⟨uD, by
         change (uD : M) ∈ U.subgroupOf M
-        simpa [uD, uM, Subgroup.mem_subgroupOf] using u0.property⟩
+        simp [uD, uM, Subgroup.mem_subgroupOf]⟩
     exact ⟨uW, by
       ext
       rfl⟩
@@ -5955,7 +5976,7 @@ public def H0CLinearCandidateXmuDmuData_sec9
 
 private def H0CLinearCandidateXmuFinalImageData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M MF H0 C : Subgroup G)
+    (M _MF _H0 _C : Subgroup G)
     (p : ℕ)
     (SH0C : Finset (Section1.ClassFunction M))
     (ι : Type u) [Fintype ι] [DecidableEq ι]
@@ -5992,7 +6013,7 @@ private theorem exists_irreducible_of_reducibles_proper_subset_sec9
     have hχred : ¬ Section1.IsIrreducibleCharacterOnGroup χ := by
       intro hχirr
       exact hno ⟨χ, hχX, hχirr⟩
-    simpa [reducibleCharacterFilter_sec9, hχSH0C, hχred]
+    simp [reducibleCharacterFilter_sec9, hχSH0C, hχred]
   have hXeqRed :
       Xtheta = reducibleCharacterFilter_sec9 M SH0C :=
     Finset.Subset.antisymm hXsubRed hred_sub
@@ -6309,7 +6330,6 @@ private theorem internalDirectProduct_comap_mulEquiv_top_sec9
     trivial
   · intro a ha b hb
     apply e.injective
-    change e (a * b) = e (b * a)
     rw [map_mul, map_mul]
     exact h.commute (e a) ha (e b) hb
   · ext a
@@ -6466,8 +6486,7 @@ private theorem finiteInternalProductMulAut_apply_mulSingle_sec9
     · subst hji
       simp
     · simp [Pi.mulSingle, hji]
-  simpa [finiteInternalProductMulAut_sec9, hpi] using
-    finiteInternalProductMulEquiv_apply_mulSingle_sec9 H hcomm hind hsup i (α i x)
+  simp [finiteInternalProductMulAut_sec9, hpi]
 
 private noncomputable def finiteInternalProductLinearCharacter_sec9
     {ι : Type v} [Fintype ι]
@@ -6875,7 +6894,7 @@ private theorem finiteCommutativeLinearCharacterFamily_sec9
                 (fun x : A => (lam j x : ℂ)) ∧
                 Section1.degree (fun x : A => (lam j x : ℂ)) = 1) := by
   classical
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent A) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent A)
   let Lam : Type u := A →* ℂˣ
@@ -6892,9 +6911,10 @@ private theorem finiteCommutativeLinearCharacterFamily_sec9
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity A ℂ
   · intro χ
     constructor
-    · simpa [Section1.characterInflationByHom] using
-        Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
-          (MonoidHom.id A) χ
+    · change Section1.IsIrreducibleCharacterOnGroup
+        (Section1.characterInflationByHom (MonoidHom.id A) χ)
+      exact Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
+        (MonoidHom.id A) χ
     · exact Section1.linearCharacter_degree χ
 
 @[reducible] private noncomputable def linearCharacterMulAction_sec9
@@ -6945,7 +6965,7 @@ private noncomputable def mulAutHomInvOfCommDomain_sec9
     rw [hcomm, map_mul]
     simp
 
-@[reducible] private def kernelQuotientConjQuotientAction_sec9
+private theorem kernelQuotientConjQuotientAction_sec9
     {G : Type u} {A : Type v} [Group G] [Group A]
     (f : G →* A) (N : Subgroup G) [N.Normal] :
     let K : Subgroup G := f.ker
@@ -7063,7 +7083,7 @@ private theorem kernelQuotientConjHomFromDomain_ker_le_sec9
   letI : MulDistribMulAction G (K ⧸ Hsub) :=
     kernelQuotientConjMulDistribMulAction_sec9 f N
   haveI : IsMulCommutative (K ⧸ Hsub) := hcomm
-  letI : CommGroup (K ⧸ Hsub) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (K ⧸ Hsub) := IsMulCommutative.instCommGroup
   let kk : K := ⟨k, hk⟩
   have hconj :
       (⟨k * (x : G) * k⁻¹, (inferInstance : K.Normal).conj_mem
@@ -7170,9 +7190,9 @@ private theorem kernelQuotientConjHomOfSurjective_apply_mk_sec9
       (QuotientGroup.quotientKerEquivOfSurjective f hf).symm (f g) =
         QuotientGroup.mk' K g := by
     apply (QuotientGroup.quotientKerEquivOfSurjective f hf).injective
-    simpa [QuotientGroup.quotientKerEquivOfSurjective,
-      QuotientGroup.quotientKerEquivOfRightInverse, QuotientGroup.kerLift_mk]
-      using (hf.hasRightInverse.choose_spec (f g))
+    rw [MulEquiv.apply_symm_apply]
+    change f g = QuotientGroup.kerLift f (QuotientGroup.mk' K g)
+    exact (QuotientGroup.kerLift_mk f g).symm
   change
       (ψbar.comp (QuotientGroup.quotientKerEquivOfSurjective f hf).symm.toMonoidHom)
           (f g) (QuotientGroup.mk' Hsub x) =
@@ -7239,7 +7259,7 @@ private theorem nonprincipalLinearCharacter_card_eq_pred_sec9
     (p : ℕ) (hcard : Nat.card Q = p) :
     Nat.card {χ : Q →* ℂˣ // χ ≠ 1} = p - 1 := by
   classical
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite _
@@ -7448,17 +7468,8 @@ public theorem componentProductOptionalLinearCharacter_apply_subgroup_sec9
       | none => (1 : H i →* ℂˣ)
       | some k => ((nonprincipalLinearCharacterEquivFin_sec9 (H i) p (hHcard i)) k).1) x := by
   classical
-  let hcomm : Pairwise fun i j : Fin q =>
-      ∀ x y : G, x ∈ H i → y ∈ H j → Commute x y := by
-    intro _i _j _hij x y _hx _hy
-    exact mul_comm x y
-  simpa [componentProductOptionalLinearCharacter_sec9, hcomm] using
-    finiteInternalProductLinearCharacter_apply_subgroup_sec9 H hcomm hHindep hHsup
-      (fun i =>
-        match f i with
-        | none => 1
-        | some k => ((nonprincipalLinearCharacterEquivFin_sec9 (H i) p (hHcard i)) k).1)
-      i x
+  unfold componentProductOptionalLinearCharacter_sec9
+  apply finiteInternalProductLinearCharacter_apply_subgroup_sec9
 
 public theorem componentProductOptionalLinearCharacter_ne_one_sec9
     {G : Type u} [Group G] [Finite G] [IsMulCommutative G]
@@ -8179,7 +8190,7 @@ private theorem rawCoordinateMulAction_quotient_eq_one_of_fixed_sec9
     simpa [haction_eq] using hactioni_fix
   have huInvC : (u : G)⁻¹ ∈ C := by
     have huInvU : (u : G)⁻¹ ∈ U := by
-      simpa using U.inv_mem u.property
+      exact U.inv_mem u.property
     rw [(case_9_7_a_quotientCentralizerIn_sec9 hcase).2 ((u : G)⁻¹) huInvU]
     intro h hhMF
     have hfix_mk : ∀ z : MF,
@@ -8290,7 +8301,16 @@ private theorem rawCoordinateMulAction_quotient_eq_of_component_actions_eq_sec9
     have hspec :=
       nonprincipalLinearCharacterIndexMulAction_spec_sec9
         p (hHcard i) (ρ i) (y * x⁻¹) (f.down i)
-    simpa [hρone] using hspec
+    apply MonoidHom.ext
+    intro z
+    have hspecz := congrArg (fun χ : H i →* ℂˣ => χ z) hspec
+    have hone :
+        (MulEquiv.symm (1 : MulAut (H i))).toMonoidHom z = z := by
+      rfl
+    rw [hρone] at hspecz
+    rw [MonoidHom.comp_apply] at hspecz
+    rw [hone] at hspecz
+    exact hspecz
   have hstab :=
     rawCoordinateMulAction_stabilizer_eq_bot_sec9
       hcase H hHcard hHnorm hHsup ρ hρaction f
@@ -8384,7 +8404,7 @@ private theorem H0COrderedXmuCoordinateData_of_ordered_sec9
           ∃ hnormalC : (C.subgroupOf U).Normal,
             letI : (C.subgroupOf U).Normal := hnormalC
             ∃ H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF),
-              ∃ hHcard : ∀ i, Nat.card (H i) = p,
+              ∃ _hHcard : ∀ i, Nat.card (H i) = p,
                 (∀ i, quotientSubgroupNormalizedBy MF H0 U (H i)) ∧
                   iSupIndep H ∧
                   iSup H = ⊤ ∧
@@ -8856,7 +8876,7 @@ private theorem theorem_9_8_weak_orbit_nonidentity_moves_base_sec9
     letI : DecidableEq W1 := Classical.decEq W1
     by_contra hnot
     rw [Function.Surjective] at hnot
-    push_neg at hnot
+    push Not at hnot
     rcases hnot with ⟨w0, hw0⟩
     have hw0not : w0 ∉ (Finset.univ : Finset (Fin q)).image v := by
       intro hwmem
@@ -9018,8 +9038,8 @@ private def H0CLinearCandidateXmuTransportedRawCoordinateOfConjData_sec9
       H0CLinearCandidateXthetaRawIndex_sec9.{u} p q) : Prop :=
   ∃ hqpos : 0 < q,
     let base : Fin q := ⟨0, hqpos⟩
-    ∃ w : ∀ j : Fin q, W,
-      ∃ hw : ∀ j : Fin q,
+    ∃ w : ∀ _j : Fin q, W,
+      ∃ _hw : ∀ j : Fin q,
         quotientSubgroupConjugateByElement MF H0 (H base) (H j) (w j : G),
         ∃ E : ∀ j : Fin q, H base ≃* H j,
           (∀ j : Fin q,
@@ -9083,7 +9103,7 @@ private def H0CLinearCandidateXmuOrderedTransportedRawCoordinateData_sec9
       H0CLinearCandidateXthetaRawIndex_sec9.{u} p q) : Prop :=
   ∃ hqpos : 0 < q,
     let base : Fin q := ⟨0, hqpos⟩
-    ∃ hw : ∀ j : Fin q,
+    ∃ _hw : ∀ j : Fin q,
       quotientSubgroupConjugateByElement MF H0 (H base) (H j)
         ((w0 ^ j.1 : W1) : G),
       ∃ E : ∀ j : Fin q, H base ≃* H j,
@@ -9424,7 +9444,7 @@ private def H0CLinearCandidateXmuConstantW1InertiaDataWithRaw_sec9
 
 private def H0CLinearCandidateXmuConcreteFinalImageData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M MF H0 C : Subgroup G)
+    (M _MF _H0 _C : Subgroup G)
     (p q : ℕ)
     (SH0C : Finset (Section1.ClassFunction M))
     (ι : Type u) [Fintype ι] [DecidableEq ι]
@@ -9447,7 +9467,7 @@ private def H0CLinearCandidateXmuConcreteFinalImageData_sec9
 
 private def H0CLinearCandidateXmuFinalSeparationData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M MF H0 C : Subgroup G)
+    (M _MF _H0 _C : Subgroup G)
     (p q : ℕ)
     (SH0C : Finset (Section1.ClassFunction M))
     (ι : Type u) [Fintype ι] [DecidableEq ι]
@@ -9468,7 +9488,7 @@ private def H0CLinearCandidateXmuFinalSeparationData_sec9
 
 private def H0CLinearCandidateXmuSmuData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M MF H0 C : Subgroup G)
+    (M _MF _H0 _C : Subgroup G)
     (p q : ℕ)
     (SH0C : Finset (Section1.ClassFunction M))
     (ι : Type u) [Fintype ι] [DecidableEq ι]
@@ -9504,7 +9524,7 @@ private def H0CLinearCandidateXmuFinalInjectiveData_sec9
 
 private def H0CLinearCandidateXmuSmuCoreData_sec9
     {G : Type u} [Group G] [Finite G]
-    (M MF H0 C : Subgroup G)
+    (M _MF _H0 _C : Subgroup G)
     (p q : ℕ)
     (SH0C : Finset (Section1.ClassFunction M))
     (ι : Type u) [Fintype ι] [DecidableEq ι]
@@ -10598,7 +10618,8 @@ private theorem subgroupInKernel'_subgroupOfClassFunction_sec9
   let aH : A.subgroupOf H := ⟨⟨(((a : H.subgroupOf T) : T) : G), hAH haA⟩, by
     simpa [Subgroup.mem_subgroupOf] using haA⟩
   have ha := hθker aH
-  simpa [Section1.subgroupOfClassFunction, aH]
+  simpa [Section1.subgroupOfClassFunction, aH,
+    Section1.degree_subgroupOfClassFunction]
     using ha
 
 private theorem subgroupInKernel'_of_subgroupOfClassFunction_sec9
@@ -10613,7 +10634,7 @@ private theorem subgroupInKernel'_of_subgroupOfClassFunction_sec9
   have haA : ((a : H) : G) ∈ A := by
     exact (a : A.subgroupOf H).property
   let aT : H.subgroupOf T := ⟨⟨((a : H) : G), hAT haA⟩, by
-    simpa [Subgroup.mem_subgroupOf] using (a : H).property⟩
+    exact (a : H).property⟩
   have haT : (aT : T) ∈ A.subgroupOf T := by
     simpa [aT, Subgroup.mem_subgroupOf] using haA
   let aHT : (A.subgroupOf T).subgroupOf (H.subgroupOf T) := ⟨aT, haT⟩
@@ -10654,7 +10675,9 @@ private theorem inertiaSubgroup_eq_of_semidirect_no_nontrivial_complement_fixed_
     intro x hx
     change Section1.conjugateOnNormal K X x = X
     funext h
-    simpa [Section1.conjugateOnNormal] using hXclass ⟨x, hx⟩ h
+    unfold Section1.conjugateOnNormal
+    change X ((⟨x, hx⟩ : K) * h * (⟨x, hx⟩ : K)⁻¹) = X h
+    exact hXclass ⟨x, hx⟩ h
   apply le_antisymm
   · intro g hgI
     rcases hsemi.mul_surjective g (by trivial) with ⟨k, hkK, w, hwW, hkw⟩
@@ -10823,9 +10846,10 @@ private theorem theorem_9_8_H0C_linear_candidate_Xtheta_thetaH_source_core_sec9
   · intro f
     simpa [θH] using Section1.linearCharacter_degree (θH f)
   · intro f
-    simpa [θH, Section1.characterInflationByHom] using
-      Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
-        (MonoidHom.id (MF ⧸ H0.subgroupOf MF)) (θH f)
+    change Section1.IsIrreducibleCharacterOnGroup
+      (Section1.characterInflationByHom (MonoidHom.id _) (θH f))
+    exact Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
+      (MonoidHom.id _) (θH f)
 
 public theorem theorem_9_8_HC_le_ambientDerived_of_case_a_sec9
     {G : Type u} [Group G] [Finite G]
@@ -11274,9 +11298,9 @@ private theorem degree_eq_one_of_irreducible_subgroupInKernel_commutator_sec9
       (QuotientGroup.mk'_surjective (_root_.commutator G))
     simpa [hcomp_eq] using hρirr
   haveI : IsMulCommutative (G ⧸ _root_.commutator G) :=
-    ⟨Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
+    Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
       intro x hx
-      exact hx)⟩
+      exact hx)
   have hn : n = 1 := by
     haveI : Representation.IsIrreducible ρq := hρqirr
     simpa using
@@ -11293,7 +11317,8 @@ private theorem monoidHom_mem_commutator_of_mem_sec9
   · rintro y ⟨a, b, rfl⟩
     exact Subgroup.subset_closure
       ⟨f a, f b, by rw [map_commutatorElement]⟩
-  · simpa using (_root_.commutator H).one_mem
+  · rw [map_one]
+    exact (Subgroup.closure (commutatorSet H)).one_mem
   · intro a b _ha_mem _hb_mem ha hb
     simpa [map_mul] using (Subgroup.closure (commutatorSet H)).mul_mem ha hb
   · intro a _ha_mem ha
@@ -11333,6 +11358,7 @@ private theorem commutator_le_subgroupOf_of_isComplement'_pairwise_sec9
     exact (QuotientGroup.eq_one_iff (N := N.subgroupOf K) ⁅u, v⁆).mpr (by
       rw [Subgroup.mem_subgroupOf]
       exact hBB (Subgroup.commutator_mem_commutator huB hvB))
+  refine ⟨?_⟩
   apply Std.Commutative.mk
   intro x
   obtain ⟨x0, rfl⟩ := QuotientGroup.mk'_surjective (N.subgroupOf K) x
@@ -11426,7 +11452,6 @@ private theorem theorem_9_8_HC_commutator_le_H0_subgroupOf_sec9
         ⟨(((x : Dm) : M) : G), by
           have hxHCm : ((x : Dm) : M) ∈ HC.subgroupOf M := by
             have hxK : (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm := by
-              change (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm
               exact x.property
             change ((x : Dm) : M) ∈ HC.subgroupOf M at hxK
             exact hxK
@@ -11600,7 +11625,6 @@ private theorem theorem_9_8_HC_commutator_le_H0Cprime_subgroupOf_case_a_sec9
         ⟨(((x : Dm) : M) : G), by
           have hxHCm : ((x : Dm) : M) ∈ HC.subgroupOf M := by
             have hxK : (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm := by
-              change (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm
               exact x.property
             change ((x : Dm) : M) ∈ HC.subgroupOf M at hxK
             exact hxK
@@ -11860,7 +11884,14 @@ public theorem theorem_9_8_case_a_underlying_constituent_degree_le_barU_of_H0Cpr
           QuotientGroup.mk' (H0C.subgroupOf HC) b := by
       rw [← hab]
       simp [ha]
-    simpa [φ, bMF] using hqeq.symm
+    have hb_incl : Subgroup.inclusion hMFHC bMF = b := by
+      apply Subtype.ext
+      rfl
+    change QuotientGroup.mk' (H0C.subgroupOf HC)
+        (Subgroup.inclusion hMFHC bMF) =
+      QuotientGroup.mk' (H0C.subgroupOf HC) h
+    rw [hb_incl]
+    exact hqeq.symm
   haveI : φ.ker.Normal := MonoidHom.normal_ker φ
   exact (QuotientGroup.quotientMulEquivOfEq hφker.symm).trans
     (QuotientGroup.quotientKerEquivOfSurjective φ hφsurj)
@@ -12131,7 +12162,7 @@ private theorem quotientInfSupEquiv_symm_conj_eq_finiteInternalProductMulAut_sym
     let uM : M := ⟨(u : G), hUleM u.property⟩
     let hM : M := ⟨(h : G), hH0CleM h.property⟩
     let hH0CM : H0C.subgroupOf M := ⟨hM, by
-      simpa [H0C, hM, Subgroup.mem_subgroupOf] using h.property⟩
+      simp [H0C, hM, Subgroup.mem_subgroupOf]⟩
     have hmem :
         uM * hH0CM * uM⁻¹ ∈ H0C.subgroupOf M :=
       hH0CnormalM.conj_mem hH0CM hH0CM.property uM
@@ -12140,17 +12171,19 @@ private theorem quotientInfSupEquiv_symm_conj_eq_finiteInternalProductMulAut_sym
     intro h
     let uM : M := ⟨(u : G), hUleM u.property⟩
     let uD : Dm := ⟨uM, by
-      simpa [D, uM, Subgroup.mem_subgroupOf] using hUleD u.property⟩
+      change (u : G) ∈ D
+      exact hUleD u.property⟩
     let hM : M := ⟨(h : G), hHCleM h.property⟩
     let hD : Dm := ⟨hM, by
-      simpa [D, hM, Subgroup.mem_subgroupOf] using hHCleD h.property⟩
+      change (h : G) ∈ D
+      exact hHCleD h.property⟩
     let hHCD : HCD := ⟨hD, by
-      change (hD : M) ∈ HCm
-      simpa [HCm, HC, hD, hM, Subgroup.mem_subgroupOf] using h.property⟩
+      change (h : G) ∈ HC
+      exact h.property⟩
     have hmem : uD * hHCD * uD⁻¹ ∈ HCD :=
       hnormalHCD.conj_mem hHCD hHCD.property uD
-    simpa [HCD, HCm, HC, Dm, D, uD, uM, hHCD, hD, hM,
-      Subgroup.mem_subgroupOf, mul_assoc] using hmem
+    change (u : G) * (h : G) * (u : G)⁻¹ ∈ HC at hmem
+    exact hmem
   refine ⟨hconjHC, ?_⟩
   intro h
   exact quotientInfSupEquiv_symm_conj_eq_mulAut_sec9
@@ -12506,6 +12539,7 @@ private theorem
           g⁻¹ * (g * (d : G) * g⁻¹) * (g⁻¹)⁻¹ ∈ K :=
         hK.conj_mem (g * (d : G) * g⁻¹)
           (by simpa [Subgroup.mem_subgroupOf] using hd) g⁻¹
+      change (d : G) ∈ K
       simpa [mul_assoc] using hback
   · intro h
     exact hθη h
@@ -12679,8 +12713,6 @@ private theorem rawCoordinate_eq_of_restricted_quotientCharacterInflation_eq_sec
            fun f => Section1.quotientCharacterInflation H0C HC (θHC f))) →
         ∀ k l : H0CLinearCandidateXthetaRawIndex_sec9.{u} p q,
           let Dm : Subgroup M := (ambientDerivedSubgroup M).subgroupOf M
-          let HCm : Subgroup M := (MF ⊔ C).subgroupOf M
-          let HCD : Subgroup Dm := HCm.subgroupOf Dm
           Section1.subgroupOfClassFunction (T := Dm)
               (Section1.subgroupOfClassFunction (T := M) (ψHC k)) =
             Section1.subgroupOfClassFunction (T := Dm)
@@ -12696,7 +12728,6 @@ private theorem rawCoordinate_eq_of_restricted_quotientCharacterInflation_eq_sec
   let D : Subgroup G := ambientDerivedSubgroup M
   let Dm : Subgroup M := D.subgroupOf M
   let HCm : Subgroup M := HC.subgroupOf M
-  let HCD : Subgroup Dm := HCm.subgroupOf Dm
   let e : (MF ⧸ H0.subgroupOf MF) ≃* (HC ⧸ H0C.subgroupOf HC) :=
     quotientInfSupEquiv_sec9 MF H0 HC H0C le_sup_left hH0CinfMF hsup
   let θH : κ → (MF ⧸ H0.subgroupOf MF) →* ℂˣ :=
@@ -12718,7 +12749,7 @@ private theorem rawCoordinate_eq_of_restricted_quotientCharacterInflation_eq_sec
           (Section1.subgroupOfClassFunction (T := M) (ψHC k)) =
         Section1.subgroupOfClassFunction (T := Dm)
           (Section1.subgroupOfClassFunction (T := M) (ψHC l)) := by
-    simpa [D, Dm, HCm, HCD] using hres
+    simpa [D, Dm, HCm] using hres
   have hψM :
       Section1.subgroupOfClassFunction (T := M) (ψHC k) =
         Section1.subgroupOfClassFunction (T := M) (ψHC l) :=
@@ -12752,8 +12783,18 @@ private theorem subgroupOfClassFunction_isClassFunction_sec9
     (hθ : Section1.IsClassFunction θ) :
     Section1.IsClassFunction (Section1.subgroupOfClassFunction (T := T) θ) := by
   intro x g
-  simpa [Section1.subgroupOfClassFunction, mul_assoc] using
-    hθ ⟨(x : T), x.property⟩ ⟨(g : T), g.property⟩
+  unfold Section1.subgroupOfClassFunction
+  let xH : H := ⟨(x : T), x.property⟩
+  let gH : H := ⟨(g : T), g.property⟩
+  let lhsH : H :=
+    ⟨((x * g * x⁻¹ : H.subgroupOf T) : T),
+      (x * g * x⁻¹ : H.subgroupOf T).property⟩
+  change θ lhsH = θ gH
+  have hlhs : lhsH = xH * gH * xH⁻¹ := by
+    apply Subtype.ext
+    rfl
+  rw [hlhs]
+  exact hθ xH gH
 
 private theorem conjugateOnNormal_mul_left_of_mem_sec9
     {G : Type u} [Group G] {H : Subgroup G} [H.Normal]
@@ -13048,7 +13089,7 @@ private theorem theorem_9_8_H0C_linear_candidate_Xtheta_thetaHC_concrete_source_
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf] using x.property⟩
+          simp [Subgroup.mem_subgroupOf]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [Section1.quotientCharacterInflation_degree] at hxval
@@ -13184,7 +13225,7 @@ private theorem theorem_9_8_H0C_linear_candidate_Xtheta_thetaHC_concrete_fields_
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf] using x.property⟩
+          simp [Subgroup.mem_subgroupOf]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [Section1.quotientCharacterInflation_degree] at hxval
@@ -13392,7 +13433,7 @@ private theorem theorem_9_8_H0C_linear_candidate_Xtheta_raw_count_of_theta_data_
   let instFintypeκ : Fintype κ := inferInstance
   let instDecidableEqκ : DecidableEq κ := Classical.decEq κ
   have hκcard : Fintype.card κ = (p - 1) ^ q := by
-    simpa [κ] using theorem_9_8_Ftheta_raw_choice_card_sec9 (u := u) p q
+    exact theorem_9_8_Ftheta_raw_choice_card_sec9 p q
   exact
     ⟨κ, instFintypeκ, instDecidableEqκ, hκcard,
       ι, instFintypeι, instDecidableEqι, orbit, hfiber, θ, ψ, hθinj, hθψ⟩
@@ -13467,7 +13508,7 @@ private theorem theorem_9_8_H0C_linear_candidate_Xtheta_thetaHC_source_core_sec9
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf] using x.property⟩
+          simp [Subgroup.mem_subgroupOf]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [Section1.quotientCharacterInflation_degree] at hxval
@@ -13903,8 +13944,8 @@ private theorem
     (hHsup : iSup H = ⊤)
     [hnormalC : (C.subgroupOf U).Normal]
     (ρ : ∀ i, (U ⧸ C.subgroupOf U) →* MulAut (H i))
-    (hρcyc : ∀ i, IsCyclic (ρ i).range)
-    (hρcard : ∀ i, Nat.card (ρ i).range = aρ)
+    (_hρcyc : ∀ i, IsCyclic (ρ i).range)
+    (_hρcard : ∀ i, Nat.card (ρ i).range = aρ)
     (hρaction :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -13914,7 +13955,7 @@ private theorem
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρker :
+    (_hρker :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ρ i x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -14871,7 +14912,7 @@ private theorem H0CLinearCandidateXmu_transported_generator_raw_smul_source_core
     rcases QuotientGroup.mk'_surjective (H0.subgroupOf MF)
         (z : MF ⧸ H0.subgroupOf MF) with ⟨m, hm⟩
     have hmBase : QuotientGroup.mk' (H0.subgroupOf MF) m ∈ H base := by
-      simpa [base, hm] using z.property
+      simp [base, hm]
     have hzmk :
         z = ⟨QuotientGroup.mk' (H0.subgroupOf MF) m, hmBase⟩ := by
       apply Subtype.ext
@@ -14944,7 +14985,7 @@ private theorem H0CLinearCandidateXmu_transported_generator_raw_smul_source_core
     rcases QuotientGroup.mk'_surjective (H0.subgroupOf MF)
         (y : MF ⧸ H0.subgroupOf MF) with ⟨m, hm⟩
     have hmK : QuotientGroup.mk' (H0.subgroupOf MF) m ∈ H k := by
-      simpa [hm] using y.property
+      simp [hm]
     have hymk : y = ⟨QuotientGroup.mk' (H0.subgroupOf MF) m, hmK⟩ := by
       apply Subtype.ext
       simpa using hm.symm
@@ -15021,7 +15062,7 @@ private theorem H0CLinearCandidateXmu_transported_generator_raw_smul_source_core
             ((x • μraw j).down sk)).1 (eStep z) =
             ((nonprincipalLinearCharacterEquivFin_sec9 (H sk) p (hHcard sk))
               ((μraw j).down sk)).1 ((ρ sk x).symm (eStep z)) := by
-              simpa [rawCoordinateMulAction_down_sec9,
+              simp [rawCoordinateMulAction_down_sec9,
                 nonprincipalLinearCharacterIndexMulAction_spec_sec9,
                 MonoidHom.comp_apply]
         _ = ((nonprincipalLinearCharacterEquivFin_sec9 (H base) p
@@ -15063,8 +15104,8 @@ private theorem H0CLinearCandidateXmu_transported_muorbit_injective_source_core_
     (hHsup : iSup H = ⊤)
     [hnormalC : (C.subgroupOf U).Normal]
     (ρ : ∀ i, (U ⧸ C.subgroupOf U) →* MulAut (H i))
-    (hρcyc : ∀ i, IsCyclic (ρ i).range)
-    (hρcard : ∀ i, Nat.card (ρ i).range = aρ)
+    (_hρcyc : ∀ i, IsCyclic (ρ i).range)
+    (_hρcard : ∀ i, Nat.card (ρ i).range = aρ)
     (hρaction :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -15074,16 +15115,16 @@ private theorem H0CLinearCandidateXmu_transported_muorbit_injective_source_core_
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρker :
+    (_hρker :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ρ i x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
             quotientSubgroupCentralizedByElement MF H0 (H i) (u : G))
-    (hconj : ∃ hqpos : 0 < q,
+    (_hconj : ∃ hqpos : 0 < q,
       ∀ i : Fin q,
         ∃ w : W1,
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i) (w : G))
-    (horderedXmu : H0COrderedXmuCoordinateData_sec9 MF U W1 H0 C q aρ H ρ)
+    (_horderedXmu : H0COrderedXmuCoordinateData_sec9 MF U W1 H0 C q aρ H ρ)
     [hnormalH0C : ((H0 ⊔ C).subgroupOf (MF ⊔ C)).Normal]
     (hH0CinfMF : (H0 ⊔ C) ⊓ MF = H0)
     (hsup : ((H0 ⊔ C).subgroupOf (MF ⊔ C)) ⊔
@@ -15094,7 +15135,7 @@ private theorem H0CLinearCandidateXmu_transported_muorbit_injective_source_core_
       H0CLinearCandidateXmuOrderedTransportedRawActionData_sec9
         (MF := MF) (U := U) (W1 := W1) (H0 := H0) (C := C)
         p q aρ H hHcard ρ μraw)
-    (hW1Inertia :
+    (_hW1Inertia :
       let κ : Type u := H0CLinearCandidateXthetaRawIndex_sec9.{u} p q
       let Dm : Subgroup M := (ambientDerivedSubgroup M).subgroupOf M
       let HCm : Subgroup M := (MF ⊔ C).subgroupOf M
@@ -15461,7 +15502,7 @@ private theorem H0CLinearCandidateXmu_transported_final_injective_source_core_se
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf, HC] using x.property⟩
+          simp [Subgroup.mem_subgroupOf, HC]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [hψformula', Section1.quotientCharacterInflation_degree] at hxval
@@ -15523,14 +15564,14 @@ private theorem H0CLinearCandidateXmu_transported_W1_generator_orbit_source_core
     [hcomm : IsMulCommutative (MF ⧸ H0.subgroupOf MF)]
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hHcard : ∀ i, Nat.card (H i) = p)
-    (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
+    (_hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
     (hHindep : iSupIndep H)
     (hHsup : iSup H = ⊤)
     [hnormalC : (C.subgroupOf U).Normal]
     (ρ : ∀ i, (U ⧸ C.subgroupOf U) →* MulAut (H i))
-    (hρcyc : ∀ i, IsCyclic (ρ i).range)
-    (hρcard : ∀ i, Nat.card (ρ i).range = aρ)
-    (hρaction :
+    (_hρcyc : ∀ i, IsCyclic (ρ i).range)
+    (_hρcard : ∀ i, Nat.card (ρ i).range = aρ)
+    (_hρaction :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
           ∃ hconjMF : ∀ h : MF, (u : G)⁻¹ * (h : G) * (u : G) ∈ MF,
@@ -15539,12 +15580,12 @@ private theorem H0CLinearCandidateXmu_transported_W1_generator_orbit_source_core
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρker :
+    (_hρker :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ρ i x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
             quotientSubgroupCentralizedByElement MF H0 (H i) (u : G))
-    (hconj : ∃ hqpos : 0 < q,
+    (_hconj : ∃ hqpos : 0 < q,
       ∀ i : Fin q,
         ∃ w : W1,
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i) (w : G))
@@ -15555,7 +15596,7 @@ private theorem H0CLinearCandidateXmu_transported_W1_generator_orbit_source_core
       MF.subgroupOf (MF ⊔ C) = ⊤)
     (μraw : H0CLinearCandidateXmuRawIndex_sec9 p →
       H0CLinearCandidateXthetaRawIndex_sec9.{u} p q)
-    (hμrawOrderedActionData :
+    (_hμrawOrderedActionData :
       H0CLinearCandidateXmuOrderedTransportedRawActionData_sec9
         (MF := MF) (U := U) (W1 := W1) (H0 := H0) (C := C)
         p q aρ H hHcard ρ μraw) :
@@ -15576,7 +15617,7 @@ private theorem H0CLinearCandidateXmu_transported_W1_generator_orbit_source_core
          fun f => Section1.quotientCharacterInflation H0C HC (θHC f))) →
     case_9_7_a_data M MF U W1 W2 H0 C p q a →
       quotientBarUCardinality U C ubar →
-        ∃ hW1M : W1 ≤ M,
+        ∃ _hW1M : W1 ≤ M,
           ∃ w0 : W1,
             Subgroup.zpowers w0 = ⊤ ∧
               let κ : Type u := H0CLinearCandidateXthetaRawIndex_sec9.{u} p q
@@ -15615,14 +15656,14 @@ private theorem
     [hcomm : IsMulCommutative (MF ⧸ H0.subgroupOf MF)]
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hHcard : ∀ i, Nat.card (H i) = p)
-    (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
+    (_hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
     (hHindep : iSupIndep H)
     (hHsup : iSup H = ⊤)
-    [hnormalC : (C.subgroupOf U).Normal]
+    [_hnormalC : (C.subgroupOf U).Normal]
     (ρ : ∀ i, (U ⧸ C.subgroupOf U) →* MulAut (H i))
-    (hρcyc : ∀ i, IsCyclic (ρ i).range)
-    (hρcard : ∀ i, Nat.card (ρ i).range = aρ)
-    (hρaction :
+    (_hρcyc : ∀ i, IsCyclic (ρ i).range)
+    (_hρcard : ∀ i, Nat.card (ρ i).range = aρ)
+    (_hρaction :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
           ∃ hconjMF : ∀ h : MF, (u : G)⁻¹ * (h : G) * (u : G) ∈ MF,
@@ -15631,16 +15672,16 @@ private theorem
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρker :
+    (_hρker :
       ∀ i, ∀ x : U ⧸ C.subgroupOf U,
         ρ i x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
             quotientSubgroupCentralizedByElement MF H0 (H i) (u : G))
-    (hconj : ∃ hqpos : 0 < q,
+    (_hconj : ∃ hqpos : 0 < q,
       ∀ i : Fin q,
         ∃ w : W1,
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i) (w : G))
-    (horderedXmu : H0COrderedXmuCoordinateData_sec9 MF U W1 H0 C q aρ H ρ)
+    (_horderedXmu : H0COrderedXmuCoordinateData_sec9 MF U W1 H0 C q aρ H ρ)
     [hnormalH0C : ((H0 ⊔ C).subgroupOf (MF ⊔ C)).Normal]
     (hH0CinfMF : (H0 ⊔ C) ⊓ MF = H0)
     (hsup : ((H0 ⊔ C).subgroupOf (MF ⊔ C)) ⊔
@@ -15661,10 +15702,10 @@ private theorem
           (H i) (H (theorem_9_7_fin_cyclic_succ_sec9 hqpos i)) (w0 : G))
     (χbar : Fin q → (U ⧸ C.subgroupOf U) →*
       Multiplicative (ZMod aρ))
-    (hχsep :
+    (_hχsep :
       ∀ i, ∀ x y : U ⧸ C.subgroupOf U,
         χbar i x = χbar i y → ρ i x = ρ i y)
-    (hχtransition :
+    (_hχtransition :
       letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
       ∀ x : U,
         ∀ i,
@@ -15672,7 +15713,7 @@ private theorem
             χbar (theorem_9_7_fin_cyclic_succ_sec9 hqpos i)
               (QuotientGroup.mk' (C.subgroupOf U) x))
     (hcase : case_9_7_a_data M MF U W1 W2 H0 C p q a)
-    (hBarU : quotientBarUCardinality U C ubar) :
+    (_hBarU : quotientBarUCardinality U C ubar) :
     let HC : Subgroup G := MF ⊔ C
     let H0C : Subgroup G := H0 ⊔ C
     let e : (MF ⧸ H0.subgroupOf MF) ≃* (HC ⧸ H0C.subgroupOf HC) :=
@@ -15749,7 +15790,7 @@ private theorem
     intro h
     let hM : M := ⟨(h : G), hH0CleM h.property⟩
     let hH0CM : H0C.subgroupOf M := ⟨hM, by
-      simpa [H0C, hM, Subgroup.mem_subgroupOf] using h.property⟩
+      simp [H0C, hM, Subgroup.mem_subgroupOf]⟩
     have hmem :
         w0M * hH0CM * w0M⁻¹ ∈ H0C.subgroupOf M :=
       hH0CnormalM.conj_mem hH0CM hH0CM.property w0M
@@ -15855,7 +15896,7 @@ private theorem
             (z : MF ⧸ H0.subgroupOf MF) with
           ⟨m, hm⟩
         have hmBase : QuotientGroup.mk' (H0.subgroupOf MF) m ∈ H base := by
-          simpa [base, hm] using z.property
+          simp [base, hm]
         have hzmk :
             z = ⟨QuotientGroup.mk' (H0.subgroupOf MF) m, hmBase⟩ := by
           apply Subtype.ext
@@ -16118,7 +16159,7 @@ private theorem H0CLinearCandidateXmu_ordered_generator_source_conjugation_core_
     intro h
     let hM : M := ⟨(h : G), hHCleM h.property⟩
     let hHCm : HCm := ⟨hM, by
-      simpa [HCm, HC, hM, Subgroup.mem_subgroupOf] using h.property⟩
+      simp [HCm, HC, hM, Subgroup.mem_subgroupOf]⟩
     have hmem : w0M * hHCm * w0M⁻¹ ∈ HCm :=
       hHCnormal.conj_mem hHCm hHCm.property w0M
     simpa [HCm, HC, hM, hHCm, w0M, Subgroup.mem_subgroupOf, mul_assoc] using hmem
@@ -16333,7 +16374,7 @@ private theorem H0CLinearCandidateXmu_ordered_generator_inertia_bridge_sec9
       MulAction.orbitRel (U ⧸ C.subgroupOf U) κ
         (Quotient.out (μorbit i)) (μraw i) := by
     rw [← Quotient.eq'']
-    simpa [μorbit, orbit] using (Quotient.out_eq' (μorbit i)).symm
+    simp [μorbit, orbit]
   have htheta_out :
       θ (μorbit i) =
         Section1.inducedCF HCD
@@ -17098,7 +17139,7 @@ private theorem H0CLinearCandidateXmu_transported_final_image_source_core_sec9
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf, HC] using x.property⟩
+          simp [Subgroup.mem_subgroupOf, HC]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [hψformula', Section1.quotientCharacterInflation_degree] at hxval
@@ -17360,7 +17401,7 @@ private theorem H0CLinearCandidateXmu_transported_residual_data_source_core_sec9
       have hxker : ψHC f (Subgroup.inclusion hMFHC x) =
           Section1.degree (ψHC f) := by
         exact hkerMF ⟨Subgroup.inclusion hMFHC x, by
-          simpa [Subgroup.mem_subgroupOf, HC] using x.property⟩
+          simp [Subgroup.mem_subgroupOf, HC]⟩
       have hqval : θH f x = 1 := by
         have hxval := hxker
         rw [hψformula', Section1.quotientCharacterInflation_degree] at hxval
@@ -17444,7 +17485,7 @@ private theorem H0CLinearCandidateXmu_transported_residual_data_source_core_sec9
   refine ⟨ULift.{u} (H0CLinearCandidateXmuRawIndex_sec9 p), inferInstance,
     Classical.decEq _, ?_⟩
   refine ⟨fun i => θ (μorbit i.down), ?_, ?_, ?_, ?_⟩
-  · simpa using H0CLinearCandidateXmuRawIndex_card_sec9 p
+  · simp
   · intro i j hij
     apply ULift.ext
     apply hfinalInj
@@ -17471,7 +17512,7 @@ private theorem H0CLinearCandidateXmu_transported_residual_data_source_core_sec9
       simpa [μfinal, Dm] using hij
     have hSmuCard : Smu.card = p - 1 := by
       rw [Finset.card_image_of_injective _ hfinalInjLift]
-      simpa using H0CLinearCandidateXmuRawIndex_card_sec9 p
+      simp
     have hSmuEq : Smu = reducibleCharacterFilter_sec9 M SH0C :=
       Finset.eq_of_subset_of_card_le hSmuSub (by rw [hredCard, hSmuCard])
     have hχSmu : χ ∈ Smu := by
@@ -17494,7 +17535,7 @@ private theorem H0CLinearCandidateXmu_final_subfamily_of_orbit_data_source_core_
     (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
     (hHindep : iSupIndep H)
     (hHsup : iSup H = ⊤)
-    (hfac : ∀ i, quotientFactorActionCentralizerData MF H0 U C (H i) aρ)
+    (_hfac : ∀ i, quotientFactorActionCentralizerData MF H0 U C (H i) aρ)
     (hconj : ∃ hqpos : 0 < q,
       ∀ i : Fin q,
         ∃ w : W1,
@@ -17858,7 +17899,7 @@ private theorem theorem_9_8_H0C_linear_candidate_Xmu_Dmu_source_core_sec9
   have hχirr : Section1.IsIrreducibleCharacterOnGroup (Section1.inducedCF Dm (θ j)) := by
     by_contra hnot
     exact hχred_not (by
-      simpa [reducibleCharacterFilter_sec9, hχSH0C, hnot])
+      simp [reducibleCharacterFilter_sec9, hχSH0C, hnot])
   have hχlin : inducedFromLinearCharacterOfHC M MF C (Section1.inducedCF Dm (θ j)) :=
     hlinear_induced j
   have hχdeg : Section1.degree (Section1.inducedCF Dm (θ j)) = (q * u : ℂ) := by
@@ -18957,7 +18998,6 @@ private theorem theorem_9_8_initial_constituent_Mtheta_clam_kernel_quotient_comm
   letI : Hsub.Normal :=
     (theorem_9_8_initial_constituent_Mtheta_uprime_subgroupOf_normal_sec9
       U Uprime hUprimeEq).subgroupOf K
-  refine ⟨?_⟩
   apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
   intro x hx
   change (x : U) ∈ Uprime.subgroupOf U
@@ -19546,7 +19586,7 @@ private def
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -19618,7 +19658,7 @@ private def
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -19696,7 +19736,7 @@ private def
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -19765,13 +19805,13 @@ private def
     (M MF U H0 C Uprime : Subgroup G)
     (p q a : ℕ)
     [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hcomm : IsMulCommutative (MF ⧸ H0.subgroupOf MF)]
+    [_hcomm : IsMulCommutative (MF ⧸ H0.subgroupOf MF)]
     [hnormalC : (C.subgroupOf U).Normal]
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hqpos : 0 < q)
-    (hHcard : ∀ i, Nat.card (H i) = p)
+    (_hHcard : ∀ i, Nat.card (H i) = p)
     (ρBase : (U ⧸ C.subgroupOf U) →* MulAut (H ⟨0, hqpos⟩))
-    (hρcycBase : IsCyclic ρBase.range)
+    (_hρcycBase : IsCyclic ρBase.range)
     (hUprimeEq : Uprime = (_root_.commutator U).map U.subtype) : Prop := by
   classical
   let f : U →* ρBase.range :=
@@ -19884,7 +19924,7 @@ private def
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -19993,7 +20033,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -20076,7 +20116,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -20160,7 +20200,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -20321,14 +20361,14 @@ private theorem
     [hnormalC : (C.subgroupOf U).Normal]
     (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
     (hqpos : 0 < q)
-    (hHcard : ∀ i, Nat.card (H i) = p)
+    (_hHcard : ∀ i, Nat.card (H i) = p)
     (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
     (hHindep : iSupIndep H)
     (hHsup : iSup H = ⊤)
     (ρBase : (U ⧸ C.subgroupOf U) →* MulAut (H ⟨0, hqpos⟩))
-    (hρcycBase : IsCyclic ρBase.range)
-    (hρcardBase : Nat.card ρBase.range = a)
-    (hρactionBase :
+    (_hρcycBase : IsCyclic ρBase.range)
+    (_hρcardBase : Nat.card ρBase.range = a)
+    (_hρactionBase :
       ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
           ∃ hconjMF : ∀ h : MF, (u : G)⁻¹ * (h : G) * (u : G) ∈ MF,
@@ -20343,13 +20383,13 @@ private theorem
         ρBase x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
             quotientSubgroupCentralizedByElement MF H0 (H ⟨0, hqpos⟩) (u : G))
-    (hconjBase :
+    (_hconjBase :
       ∀ i : Fin q,
         ∃ w : W1,
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i)
             (w : G))
     (hcase : case_9_7_a_data M MF U W1 W2 H0 C p q a)
-    (hBarU : quotientBarUCardinality U C u)
+    (_hBarU : quotientBarUCardinality U C u)
     (hUprimeEq : Uprime = (_root_.commutator U).map U.subtype)
     (B : Subgroup ((ambientDerivedSubgroup M).subgroupOf M))
     (hBnormal : B.Normal)
@@ -20408,9 +20448,9 @@ private theorem
     ∃ QH1 : Subgroup Q,
     ∃ QClam : Subgroup Q,
     ∃ QH1CH1 : Subgroup Q,
-    ∃ hsemi : Section2.IsInternalSemidirectProduct
+    ∃ _hsemi : Section2.IsInternalSemidirectProduct
         (⊤ : Subgroup Q) QH1c QH1CH1,
-        ∃ hprod : Section2.IsInternalDirectProduct QH1CH1 QH1 QClam,
+        ∃ _hprod : Section2.IsInternalDirectProduct QH1CH1 QH1 QClam,
         ∃ eH1 : QH1 ≃* H ⟨0, hqpos⟩,
         ∃ eClam : QClam ≃* Clam,
         (∀ m : MFDsubB,
@@ -20634,15 +20674,23 @@ private theorem
             (QuotientGroup.mk' Nsub w) =
           ⟨qB w, ⟨w, w.property, rfl⟩⟩ := by
       apply Subtype.ext
-      simpa [qB, Nsub] using
-        quotientSubgroupRangeEquiv_apply_mk WBsubB (A.subgroupOf B) w
+      change
+        ((quotientSubgroupRangeEquiv WBsubB (A.subgroupOf B))
+            (QuotientGroup.mk' ((A.subgroupOf B).subgroupOf WBsubB) w) :
+          B ⧸ A.subgroupOf B) =
+            QuotientGroup.mk' (A.subgroupOf B) (w : B)
+      exact quotientSubgroupRangeEquiv_apply_mk WBsubB (A.subgroupOf B) w
     have hRange_symm :
         (quotientSubgroupRangeEquiv WBsubB (A.subgroupOf B)).symm
             ⟨qB w, ⟨w, w.property, rfl⟩⟩ =
           QuotientGroup.mk' Nsub w := by
       rw [← hRange]
       simp
-    simpa [hQClam_equiv, hRange_symm, wWB, Nsub] using hWBHsub_apply wWB
+    have heWBsub :
+        (Subgroup.subgroupOfEquivOfLe inf_le_right : WBsubB ≃* WB) w = wWB := by
+      apply Subtype.ext
+      rfl
+    simpa [hQClam_equiv, hRange_symm, wWB, Nsub, heWBsub] using hWBHsub_apply wWB
   let MFD : Subgroup Dm := (MF.subgroupOf M).subgroupOf Dm
   let MFDsubB : Subgroup B := MFD.subgroupOf B
   let QMF : Subgroup Q := MFDsubB.map qB
@@ -20681,10 +20729,10 @@ private theorem
       let yM : M := ⟨(x : G),
         (hMFleD.trans (section12_ambientDerivedSubgroup_le (E := M))) x.property⟩
       have hyDmem : yM ∈ Dm := hMFDsubD (by
-        simpa [Subgroup.mem_subgroupOf, yM] using x.property)
+        simp [Subgroup.mem_subgroupOf, yM])
       let yD : Dm := ⟨yM, hyDmem⟩
       have hyMFDmem : yD ∈ MFD := by
-        simpa [MFD, Subgroup.mem_subgroupOf, yD, yM] using x.property
+        simp [MFD, Subgroup.mem_subgroupOf, yD, yM]
       let y : MFD := ⟨yD, hyMFDmem⟩
       refine ⟨y, ?_, ?_⟩
       · have hxH0 : (x : G) ∈ H0 := by
@@ -20725,7 +20773,7 @@ private theorem
     · intro hx
       let yB : B := ⟨(x : Dm), hBsemi.left_le x.property⟩
       have hyMFDsub : yB ∈ MFDsubB := by
-        simpa [MFDsubB, MFD, Subgroup.mem_subgroupOf, yB] using x.property
+        simp [MFDsubB, MFD, Subgroup.mem_subgroupOf, yB]
       let y : MFDsubB := ⟨yB, hyMFDsub⟩
       refine ⟨y, ?_, ?_⟩
       · have hxH0D : (x : Dm) ∈ H0D := by
@@ -20767,7 +20815,7 @@ private theorem
       let yQMF : QMF := hQMF_equiv.symm (x : MF ⧸ H0.subgroupOf MF)
       have hyQH1 : yQMF ∈ QH1sub := by
         change hQMF_equiv yQMF ∈ H ⟨0, hqpos⟩
-        simpa [yQMF] using x.property
+        simp [yQMF]
       refine ⟨⟨yQMF, hyQH1⟩, ?_⟩
       ext
       change hQMF_equiv yQMF = (x : MF ⧸ H0.subgroupOf MF)
@@ -20824,8 +20872,12 @@ private theorem
         eRangeMFD (QuotientGroup.mk' NMFsub m) =
           ⟨qB m, ⟨m, m.property, rfl⟩⟩ := by
       apply Subtype.ext
-      simpa [eRangeMFD, qB, NMFsub] using
-        quotientSubgroupRangeEquiv_apply_mk MFDsubB (A.subgroupOf B) m
+      change
+        ((quotientSubgroupRangeEquiv MFDsubB (A.subgroupOf B))
+            (QuotientGroup.mk' ((A.subgroupOf B).subgroupOf MFDsubB) m) :
+          B ⧸ A.subgroupOf B) =
+            QuotientGroup.mk' (A.subgroupOf B) (m : B)
+      exact quotientSubgroupRangeEquiv_apply_mk MFDsubB (A.subgroupOf B) m
     have hRange_symm :
         eRangeMFD.symm ⟨qB m, ⟨m, m.property, rfl⟩⟩ =
           QuotientGroup.mk' NMFsub m := by
@@ -20853,7 +20905,7 @@ private theorem
       simp [hQH1_range_equiv, ysub, qm, qB]
       rfl
     let hmQH1 : QuotientGroup.mk' (A.subgroupOf B) m ∈ QH1 := by
-      simpa [← hQH1_image_val] using (hQH1_range_equiv ysub).property
+      simp [← hQH1_image_val]
     refine ⟨hmQH1, ?_⟩
     have hQH1_image :
         (⟨QuotientGroup.mk' (A.subgroupOf B) m, hmQH1⟩ : QH1) =
@@ -20962,8 +21014,8 @@ private theorem
               ((((wWB : WB) : Dm) : M) : G), hconjMF mMF⟩ / mMF : MF) : G)) ∈
             H0 := by
         simpa [Subgroup.mem_subgroupOf] using hdeltaH0
-      simpa [H0D, Subgroup.mem_subgroupOf, conjB, mMF, mSub, wWB,
-        div_eq_mul_inv, mul_assoc] using hdeltaH0G
+      simpa [H0D, Subgroup.mem_subgroupOf, conjB, mMF, mSub, wWB, eMFD,
+        eMFDsub, Subgroup.subgroupOfEquivOfLe, div_eq_mul_inv, mul_assoc] using hdeltaH0G
     have hconj_eq_m : qB conjB = qB m := by
       apply QuotientGroup.eq_iff_div_mem.mpr
       have hdeltaA : ((conjB / m : B) : Dm) ∈ A := by
@@ -21023,7 +21075,7 @@ private theorem
         (QuotientGroup.eq_one_iff (N := A.subgroupOf B) (x := m)).2 hmA_B'
       have hx_one : x = 1 := by
         rw [← hmx, hq_m_one]
-      simpa [hx_one]
+      simp [hx_one]
     · exact bot_le
   have hQH1_le_QMF : QH1 ≤ QMF := by
     intro x hx
@@ -21066,7 +21118,6 @@ private theorem
         simpa [MFDsubB, Subgroup.mem_subgroupOf, conjB] using hconjMFD
       refine ⟨conjB, hconjB_MFDsub, ?_⟩
       rw [← hwk, ← hmh]
-      change qB conjB = Section2.conjBy (qB w) (qB m)
       have hconjB_eq : conjB = w * m * w⁻¹ := by
         apply Subtype.ext
         rfl
@@ -21079,9 +21130,11 @@ private theorem
       let mB : B := ⟨m, hBsemi.left_le hmMFD⟩
       let wB : B := ⟨w, hwWB.2⟩
       have hmB_MFDsub : mB ∈ MFDsubB := by
-        simpa [MFDsubB, Subgroup.mem_subgroupOf, mB] using hmMFD
+        change (m : Dm) ∈ MFD
+        exact hmMFD
       have hwB_WBsub : wB ∈ WBsubB := by
-        simpa [WBsubB, Subgroup.mem_subgroupOf, wB] using hwWB
+        change (w : Dm) ∈ WB
+        exact hwWB
       refine ⟨qB mB, ⟨mB, hmB_MFDsub, rfl⟩,
         qB wB, ⟨wB, hwB_WBsub, rfl⟩, ?_⟩
       have hb_eq : b = mB * wB := by
@@ -21139,7 +21192,7 @@ private theorem
       have hu_eq :
           (((uK : K) : U) : G) = ((((wWB : WB) : Dm) : M) : G) := by
         simpa [uK] using hWBK_compat' wWB
-      simpa [conjSub, conjB, conjMF, mSub, mMF, wWB, hu_eq, eMFD, eMFDsub,
+      simp [conjSub, conjB, conjMF, mSub, mMF, wWB, hu_eq, eMFD, eMFDsub,
         Subgroup.subgroupOfEquivOfLe, Section2.conjBy, mul_assoc]
     have hyConj_QH1csub : yConj ∈ QH1csub := by
       change hQMF_equiv yConj ∈ H1cMF
@@ -21199,7 +21252,7 @@ private theorem
         have hqcQMF : qc ∈ QMF := by
           have hqc_eq : qc = q1⁻¹ * x := by
             rw [hxprod]
-            simp [mul_assoc]
+            simp
           rw [hqc_eq]
           exact QMF.mul_mem (QMF.inv_mem hq1QMF) hxQMF
         have hqcInf : qc ∈ QMF ⊓ QClam := ⟨hqcQMF, hqc⟩
@@ -21274,7 +21327,7 @@ private theorem
         let hwQClam : QuotientGroup.mk' (A.subgroupOf B) w ∈ QClam := by
           exact ⟨w, w.property, rfl⟩
         refine ⟨hwQClam, ?_⟩
-        simpa [hwQClam] using hQClam_equiv_apply_mk w),
+        exact hQClam_equiv_apply_mk w),
     QMF, rfl, hQMF_split_in_Q, hQH1_le_QMF⟩
 
 set_option maxHeartbeats 2000000 in
@@ -21372,9 +21425,9 @@ private theorem
       ∃ QH1 : Subgroup Q,
       ∃ QClam : Subgroup Q,
       ∃ QH1CH1 : Subgroup Q,
-      ∃ hsemi : Section2.IsInternalSemidirectProduct
+      ∃ _hsemi : Section2.IsInternalSemidirectProduct
           (⊤ : Subgroup Q) QH1c QH1CH1,
-      ∃ hprod : Section2.IsInternalDirectProduct QH1CH1 QH1 QClam,
+      ∃ _hprod : Section2.IsInternalDirectProduct QH1CH1 QH1 QClam,
       ∃ eH1 : QH1 ≃* H ⟨0, hqpos⟩,
       ∃ eClam : QClam ≃* Clam,
         (∀ m : MFDsubB,
@@ -21510,7 +21563,7 @@ private theorem
     let uW : W :=
       ⟨uD, by
         change (uD : M) ∈ U.subgroupOf M
-        simpa [uD, uM, Subgroup.mem_subgroupOf] using u0.property⟩
+        simp [uD, uM, Subgroup.mem_subgroupOf]⟩
     exact ⟨uW, by
       ext
       rfl⟩
@@ -21539,7 +21592,7 @@ private theorem
       simpa using
         internalSemidirectRightProjectionTop_apply_left_sec9 hsemi
           ⟨(x : Dm), hx⟩
-    simpa [Φ, hproj]
+    simp [Φ, hproj]
   have hBsemi : Section2.IsInternalSemidirectProduct B MFD (W ⊓ B) := by
     refine
       { left_le := hMFD_to_B
@@ -21562,7 +21615,7 @@ private theorem
       have hwB : w ∈ B := by
         have hw_eq : w = m⁻¹ * c := by
           calc
-            w = m⁻¹ * (m * w) := by simp [mul_assoc]
+            w = m⁻¹ * (m * w) := by simp
             _ = m⁻¹ * c := by rw [← hmw]
         rw [hw_eq]
         exact B.mul_mem (B.inv_mem hmB) hc
@@ -21601,7 +21654,7 @@ private theorem
         simpa [Dm, Subgroup.mem_subgroupOf, uM] using hUleD (k : U).property⟩
     have huW : uD ∈ W := by
       change (uD : M) ∈ U.subgroupOf M
-      simpa [uD, uM, Subgroup.mem_subgroupOf] using (k : U).property
+      simp [uD, uM, Subgroup.mem_subgroupOf]
     let uW : W := ⟨uD, huW⟩
     have huB : uD ∈ B := by
       change Φ uD = 1
@@ -21670,13 +21723,13 @@ private theorem
       change ((eWBK x : K) : U) ∈ Uprime.subgroupOf U
       change ((rightToK x : K) : U) ∈ Uprime.subgroupOf U
       change ((toU ⟨(x : Dm), x.property.1⟩ : U) : G) ∈ Uprime
-      simpa [toU] using hxUprime
+      simpa [toU, theorem_9_8_ambientDerived_U_subgroupOf_to_U_sec9] using hxUprime
     · intro hk
       change ((eWBK x : K) : U) ∈ Uprime.subgroupOf U at hk
       change ((rightToK x : K) : U) ∈ Uprime.subgroupOf U at hk
       change ((toU ⟨(x : Dm), x.property.1⟩ : U) : G) ∈ Uprime at hk
       have hxUprime : (((x : Dm) : M) : G) ∈ Uprime := by
-        simpa [toU] using hk
+        simpa [toU, theorem_9_8_ambientDerived_U_subgroupOf_to_U_sec9] using hk
       simpa [WBUprime, UprimeD, Subgroup.mem_subgroupOf] using hxUprime
   let WBHsub : Subgroup ↥(W ⊓ B) := Hsub.comap eWBK.toMonoidHom
   have hWBHsub_map : WBHsub.map eWBK.toMonoidHom = Hsub := by
@@ -21710,7 +21763,7 @@ private theorem
       simpa using
         internalSemidirectRightProjectionTop_apply_left_sec9 hsemi
           ⟨(x : Dm), hxMFD⟩
-    simpa [Φ, hproj]
+    simp [Φ, hproj]
   have hUprime_to_B : (Uprime.subgroupOf M).subgroupOf Dm ≤ B := by
     intro x hx
     change Φ x = 1
@@ -21724,7 +21777,8 @@ private theorem
       simpa [w] using internalSemidirectRightProjectionTop_apply_right_sec9 hsemi w
     have htoU_Uprime : toU w ∈ Uprime.subgroupOf U := by
       change ((toU w : U) : G) ∈ Uprime
-      simpa [toU, w] using hxUprime
+      simpa [toU, w,
+        theorem_9_8_ambientDerived_U_subgroupOf_to_U_sec9] using hxUprime
     have hfU : fU (toU w) = 1 := hUprime_le_fUker htoU_Uprime
     calc
       Φ x = fU (toU w) := by simp [Φ, hproj]
@@ -21795,8 +21849,8 @@ private theorem
     (hHsup : iSup H = ⊤)
     (ρBase : (U ⧸ C.subgroupOf U) →* MulAut (H ⟨0, hqpos⟩))
     (hρcycBase : IsCyclic ρBase.range)
-    (hρcardBase : Nat.card ρBase.range = a)
-    (hρactionBase :
+    (_hρcardBase : Nat.card ρBase.range = a)
+    (_hρactionBase :
       ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
           ∃ hconjMF : ∀ h : MF, (u : G)⁻¹ * (h : G) * (u : G) ∈ MF,
@@ -21806,7 +21860,7 @@ private theorem
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρkerBase :
+    (_hρkerBase :
       ∀ x : U ⧸ C.subgroupOf U,
         ρBase x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -21817,7 +21871,7 @@ private theorem
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i)
             (w : G))
     (hcase : case_9_7_a_data M MF U W1 W2 H0 C p q a)
-    (hBarU : quotientBarUCardinality U C u)
+    (_hBarU : quotientBarUCardinality U C u)
     (hUprimeEq : Uprime = (_root_.commutator U).map U.subtype) :
     let f : U →* ρBase.range :=
       ρBase.rangeRestrict.comp (QuotientGroup.mk' (C.subgroupOf U))
@@ -21840,7 +21894,7 @@ private theorem
       rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
       exact ⟨u, rfl⟩
     letI : IsCyclic ρBase.range := hρcycBase
-    letI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+    letI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
     let σ : ρBase.range →* MulAut Clam :=
       mulAutHomInvOfCommDomain_sec9
         (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -21859,11 +21913,11 @@ private theorem
     let MFD : Subgroup Dm := ((MF.subgroupOf M).subgroupOf Dm)
     let W : Subgroup Dm := (U.subgroupOf M).subgroupOf Dm
     ∀ (B : Subgroup Dm) (hBnormal : B.Normal) (hAnormal : A.Normal),
-    ∀ (hA_le_B : A ≤ B)
-      (hMFD_le_B : MFD ≤ B)
+    ∀ (_hA_le_B : A ≤ B)
+      (_hMFD_le_B : MFD ≤ B)
       (hBsemi : Section2.IsInternalSemidirectProduct B MFD (W ⊓ B))
       (eWBK : ↥(W ⊓ B) ≃* K)
-      (hWBK_compat :
+      (_hWBK_compat :
         ∀ x : ↥(W ⊓ B),
           (((eWBK x : K) : U) : G) = ((((x : Dm) : M) : G))),
     letI : B.Normal := hBnormal
@@ -21877,7 +21931,7 @@ private theorem
       (hprod : Section2.IsInternalDirectProduct QH1CH1 QH1 QClam)
       (eH1 : QH1 ≃* H ⟨0, hqpos⟩)
       (eClam : QClam ≃* Clam),
-    ∀ (hQH1_apply :
+    ∀ (_hQH1_apply :
         ∀ (m : MFD.subgroupOf B)
           (hmH1 :
             QuotientGroup.mk' (H0.subgroupOf MF)
@@ -21890,14 +21944,14 @@ private theorem
                     (theorem_9_8_MFDSubgroupOf_to_MF_sec9 M MF
                       ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) m)),
                   hmH1⟩)
-      (hQH1c_apply :
+      (_hQH1c_apply :
         ∀ m : MFD.subgroupOf B,
           QuotientGroup.mk' (H0.subgroupOf MF)
               (theorem_9_8_MFDSubgroupOf_to_MF_sec9 M MF
                 ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) m)) ∈
             (⨆ i, ⨆ _ : i ≠ ⟨0, hqpos⟩, H i) →
           QuotientGroup.mk' (A.subgroupOf B) m ∈ QH1c)
-      (hQClam_apply :
+      (_hQClam_apply :
         ∀ w : (W ⊓ B).subgroupOf B,
           ∃ hwQClam : QuotientGroup.mk' (A.subgroupOf B) w ∈ QClam,
             eClam ⟨QuotientGroup.mk' (A.subgroupOf B) w, hwQClam⟩ =
@@ -21907,10 +21961,10 @@ private theorem
                     simpa [W, Subgroup.mem_subgroupOf] using w.property⟩ :
                     ↥(W ⊓ B))))
       (QMF : Subgroup Q)
-      (hQMF_eq :
+      (_hQMF_eq :
         QMF = ((MFD.subgroupOf B).map (QuotientGroup.mk' (A.subgroupOf B))))
-      (hQMF_split_in_Q : Section2.IsInternalDirectProduct QMF QH1c QH1)
-      (hQH1_le_QMF : QH1 ≤ QMF),
+      (_hQMF_split_in_Q : Section2.IsInternalDirectProduct QMF QH1c QH1)
+      (_hQH1_le_QMF : QH1 ≤ QMF),
     let ψlin : Fin (p - 1) × Lam → Q →* ℂˣ := fun k =>
       semidirectProductOfInternalDirectProductLinearCharacter_sec9
         hsemi hprod
@@ -21918,11 +21972,11 @@ private theorem
               (H ⟨0, hqpos⟩) p (hHcard ⟨0, hqpos⟩)) k.1).1.comp
           eH1.toMonoidHom)
         (k.2.comp eClam.toMonoidHom)
-    ∀ (hIeq :
+    ∀ (_hIeq :
         ∀ k : Fin (p - 1) × Lam,
           Section1.inertiaSubgroup B
             (Section1.quotientCharacterInflation A B (ψlin k)) = B),
-    ∀ (hθnotMF :
+    ∀ (_hθnotMF :
         ∀ k : Fin (p - 1) × Lam,
           ¬ Section1.subgroupInKernel'
             (Section1.inducedCF B
@@ -21935,10 +21989,8 @@ private theorem
   classical
   dsimp
   intro B hBnormal hAnormal hA_le_B hMFD_le_B hBsemi eWBK hWBK_compat
-  intro QH1c QH1 QClam QH1CH1 hsemi hprod eH1 eClam
-  intro hQH1_apply hQH1c_apply hQClam_apply QMF hQMF_eq hQMF_split_in_Q
-    hQH1_le_QMF
-  intro hIeq hθnotMF k
+    QH1c QH1 QClam QH1CH1 hsemi hprod eH1 eClam hQH1_apply hQH1c_apply
+    hQClam_apply QMF hQMF_eq hQMF_split_in_Q hQH1_le_QMF hIeq hθnotMF k
   let f : U →* ρBase.range :=
     ρBase.rangeRestrict.comp (QuotientGroup.mk' (C.subgroupOf U))
   let K : Subgroup U := f.ker
@@ -21960,7 +22012,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   letI : IsCyclic ρBase.range := hρcycBase
-  letI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  letI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -22124,7 +22176,7 @@ private theorem
         simpa [Dm, Subgroup.mem_subgroupOf, mM] using hMFleD mMF.property⟩
       let mMFD : MFD := ⟨mD, by
         change (mD : M) ∈ MF.subgroupOf M
-        simpa [mD, mM, Subgroup.mem_subgroupOf] using mMF.property⟩
+        simp [mD, mM, Subgroup.mem_subgroupOf]⟩
       refine ⟨mMFD, ?_⟩
       rfl
     have hMF_Hsplit :
@@ -22288,7 +22340,7 @@ private theorem
       have hconj_eq :
           conjMFD = mMFD * wConjMFD * mMFD⁻¹ := by
         apply Subtype.ext
-        simpa [conjMFD, mMFD, wConjMFD, hn0_eq, hxmw, mul_assoc]
+        simp [conjMFD, mMFD, wConjMFD, hxmw, mul_assoc]
       rw [hconj_eq]
       change qMFD (mMFD * wConjMFD * mMFD⁻¹) ∈ H1cMF
       simpa [map_mul, map_inv, mul_assoc] using
@@ -22318,6 +22370,7 @@ private theorem
         change (zConjD : M) ∈ MF.subgroupOf M
         have hzMFconj := hconjMF_move zMF
         simpa [zConjD, zD, zMF, gW1inv, gW1,
+          theorem_9_8_MFDSubgroupOf_to_MF_sec9,
           Subgroup.mem_subgroupOf, mul_assoc] using hzMFconj
       let zConjMFD : MFD := ⟨zConjD, hzConjMFD⟩
       have hzConjH1cSub : zConjMFD ∈ MFDH1cSub := by
@@ -22334,7 +22387,7 @@ private theorem
               (Section1.quotientCharacterInflation A B (ψlin k)) zConjD =
             Section1.inducedCF B
               (Section1.quotientCharacterInflation A B (ψlin k)) (z : Dm) := by
-        simpa [Section1.conjugateOnNormal, zConjD, zD, hz0_eq] using hfix_eval
+        simpa [Section1.conjugateOnNormal, zConjD, zD, hz0_eq, ψlin] using hfix_eval
       exact hX_conj_eq.symm.trans hker_conj
     have hkerJoin :
         Section1.subgroupInKernel'
@@ -22365,7 +22418,7 @@ private theorem
     (hHsup : iSup H = ⊤)
     (ρBase : (U ⧸ C.subgroupOf U) →* MulAut (H ⟨0, hqpos⟩))
     (hρcycBase : IsCyclic ρBase.range)
-    (hρcardBase : Nat.card ρBase.range = a)
+    (_hρcardBase : Nat.card ρBase.range = a)
     (hρactionBase :
       ∀ x : U ⧸ C.subgroupOf U,
         ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -22376,7 +22429,7 @@ private theorem
                   MF ⧸ H0.subgroupOf MF) =
                 QuotientGroup.mk' (H0.subgroupOf MF)
                   ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩)
-    (hρkerBase :
+    (_hρkerBase :
       ∀ x : U ⧸ C.subgroupOf U,
         ρBase x = 1 ↔
           ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
@@ -22387,7 +22440,7 @@ private theorem
           quotientSubgroupConjugateByElement MF H0 (H ⟨0, hqpos⟩) (H i)
             (w : G))
     (hcase : case_9_7_a_data M MF U W1 W2 H0 C p q a)
-    (hBarU : quotientBarUCardinality U C u)
+    (_hBarU : quotientBarUCardinality U C u)
     (hUprimeEq : Uprime = (_root_.commutator U).map U.subtype) :
     let f : U →* ρBase.range :=
       ρBase.rangeRestrict.comp (QuotientGroup.mk' (C.subgroupOf U))
@@ -22410,7 +22463,7 @@ private theorem
       rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
       exact ⟨u, rfl⟩
     letI : IsCyclic ρBase.range := hρcycBase
-    letI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+    letI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
     let σ : ρBase.range →* MulAut Clam :=
       mulAutHomInvOfCommDomain_sec9
         (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -22429,10 +22482,10 @@ private theorem
     let MFD : Subgroup Dm := ((MF.subgroupOf M).subgroupOf Dm)
     let W : Subgroup Dm := (U.subgroupOf M).subgroupOf Dm
     ∀ (B : Subgroup Dm) (hBnormal : B.Normal) (hAnormal : A.Normal),
-    ∀ (hMFD_le_B : MFD ≤ B)
+    ∀ (_hMFD_le_B : MFD ≤ B)
       (hBsemi : Section2.IsInternalSemidirectProduct B MFD (W ⊓ B))
       (eWBK : ↥(W ⊓ B) ≃* K)
-      (hWBK_compat :
+      (_hWBK_compat :
         ∀ x : ↥(W ⊓ B),
           (((eWBK x : K) : U) : G) = ((((x : Dm) : M) : G))),
     letI : B.Normal := hBnormal
@@ -22453,7 +22506,7 @@ private theorem
               (H ⟨0, hqpos⟩) p (hHcard ⟨0, hqpos⟩)) k.1).1.comp
           eH1.toMonoidHom)
         (k.2.comp eClam.toMonoidHom)
-    ∀ (hQH1_apply :
+    ∀ (_hQH1_apply :
         ∀ (m : MFD.subgroupOf B)
           (hmH1 :
             QuotientGroup.mk' (H0.subgroupOf MF)
@@ -22466,14 +22519,14 @@ private theorem
                     (theorem_9_8_MFDSubgroupOf_to_MF_sec9 M MF
                       ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) m)),
                   hmH1⟩)
-      (hQH1c_apply :
+      (_hQH1c_apply :
         ∀ m : MFD.subgroupOf B,
           QuotientGroup.mk' (H0.subgroupOf MF)
               (theorem_9_8_MFDSubgroupOf_to_MF_sec9 M MF
                 ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) m)) ∈
             (⨆ i, ⨆ _ : i ≠ ⟨0, hqpos⟩, H i) →
           QuotientGroup.mk' (A.subgroupOf B) m ∈ QH1c)
-      (hQClam_apply :
+      (_hQClam_apply :
         ∀ w : (W ⊓ B).subgroupOf B,
           ∃ hwQClam : QuotientGroup.mk' (A.subgroupOf B) w ∈ QClam,
             eClam ⟨QuotientGroup.mk' (A.subgroupOf B) w, hwQClam⟩ =
@@ -22482,17 +22535,17 @@ private theorem
                   (⟨((w : B) : Dm), by
                     simpa [W, Subgroup.mem_subgroupOf] using w.property⟩ :
                     ↥(W ⊓ B)))),
-    ∀ (hIeq :
+    ∀ (_hIeq :
         ∀ k : Fin (p - 1) × Lam,
           Section1.inertiaSubgroup B
             (Section1.quotientCharacterInflation A B (ψlin k)) = B)
-      (hθnotMF :
+      (_hθnotMF :
         ∀ k : Fin (p - 1) × Lam,
           ¬ Section1.subgroupInKernel'
             (Section1.inducedCF B
               (Section1.quotientCharacterInflation A B (ψlin k))) MFD)
-      (hψlin_injective : Function.Injective ψlin)
-      (hpairStabilizer :
+      (_hψlin_injective : Function.Injective ψlin)
+      (_hpairStabilizer :
         ∀ k : Fin (p - 1) × Lam,
           MulAction.stabilizer ρBase.range k = ⊥),
     ∀ k l : Fin (p - 1) × Lam,
@@ -22505,10 +22558,9 @@ private theorem
       MulAction.orbitRel ρBase.range (Fin (p - 1) × Lam) k l := by
   classical
   dsimp
-  intro B hBnormal hAnormal hMFD_le_B hBsemi eWBK hWBK_compat
-  intro QH1c QH1 QClam QH1CH1 hsemi hprod eH1 eClam
-  intro hQH1_apply hQH1c_apply hQClam_apply hIeq hθnotMF hψlin_injective
-    hpairStabilizer
+  intro B hBnormal hAnormal hMFD_le_B hBsemi eWBK hWBK_compat QH1c QH1 QClam
+    QH1CH1 hsemi hprod eH1 eClam hQH1_apply hQH1c_apply hQClam_apply hIeq
+    hθnotMF hψlin_injective hpairStabilizer
   let f : U →* ρBase.range :=
     ρBase.rangeRestrict.comp (QuotientGroup.mk' (C.subgroupOf U))
   let K : Subgroup U := f.ker
@@ -22530,7 +22582,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   haveI : IsCyclic ρBase.range := hρcycBase
-  haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -22748,7 +22800,7 @@ private theorem
             simpa [Dm, Subgroup.mem_subgroupOf, mM] using hMFleD mMF.property⟩
           let mMFD : MFD := ⟨mD, by
             change (mD : M) ∈ MF.subgroupOf M
-            simpa [mD, mM, Subgroup.mem_subgroupOf] using mMF.property⟩
+            simp [mD, mM, Subgroup.mem_subgroupOf]⟩
           exact ⟨mMFD, rfl⟩
         have hMF_Hsplit :
             Section2.IsInternalDirectProduct
@@ -22879,7 +22931,7 @@ private theorem
           have hconj_eq :
               conjMFD = mMFD * wConjMFD * mMFD⁻¹ := by
             apply Subtype.ext
-            simpa [conjMFD, mMFD, wConjMFD, hn0_eq, hxmw, mul_assoc]
+            simp [conjMFD, mMFD, wConjMFD, hxmw, mul_assoc]
           rw [hconj_eq]
           change qMFD (mMFD * wConjMFD * mMFD⁻¹) ∈ H1cMF
           simpa [map_mul, map_inv, mul_assoc] using
@@ -22941,6 +22993,7 @@ private theorem
             change (zConjD : M) ∈ MF.subgroupOf M
             have hzMFconj := hconjMF_move zMF
             simpa [zConjD, zD, zMF, w0W1inv, w0W1,
+              theorem_9_8_MFDSubgroupOf_to_MF_sec9,
               Subgroup.mem_subgroupOf, mul_assoc] using hzMFconj
           let zConjMFD : MFD := ⟨zConjD, hzConjMFD⟩
           have hzConjH1cSub : zConjMFD ∈ MFDH1cSub := by
@@ -22958,7 +23011,6 @@ private theorem
                 Section1.degree
                     (Section1.inducedCF B
                       (Section1.quotientCharacterInflation A B (ψlin k))) := by
-            have hdeg := congrFun hconjW (1 : Dm)
             have hdegree_kl :
                 Section1.degree
                     (Section1.inducedCF B
@@ -22966,7 +23018,20 @@ private theorem
                   Section1.degree
                     (Section1.inducedCF B
                       (Section1.quotientCharacterInflation A B (ψlin l))) := by
-              simpa [Section1.degree, Section1.conjugateOnNormal] using hdeg
+              have hdegree_conj :
+                  Section1.degree
+                      (Section1.conjugateOnNormal Dm
+                        (Section1.inducedCF B
+                          (Section1.quotientCharacterInflation A B (ψlin l))) w0) =
+                    Section1.degree
+                      (Section1.inducedCF B
+                        (Section1.quotientCharacterInflation A B (ψlin l))) := by
+                unfold Section1.degree Section1.conjugateOnNormal
+                exact congrArg
+                  (Section1.inducedCF B
+                    (Section1.quotientCharacterInflation A B (ψlin l)))
+                  (Subtype.ext (by simp))
+              exact (congrArg Section1.degree hconjW).trans hdegree_conj
             exact hdegree_kl.symm
           have hconj_eval := congrFun hconjW (z : Dm)
           have hX_conj_eq :
@@ -23057,7 +23122,7 @@ private theorem
           simpa [Dm, Subgroup.mem_subgroupOf, mM] using hMFleD mMF.property⟩
         have hmD_MFD : mD ∈ MFD := by
           change (mD : M) ∈ MF.subgroupOf M
-          simpa [mD, mM, Subgroup.mem_subgroupOf] using mMF.property
+          simp [mD, mM, Subgroup.mem_subgroupOf]
         let mB : B := ⟨mD, hMFD_le_B hmD_MFD⟩
         have hmB_MFDsub : mB ∈ MFD.subgroupOf B := by
           simpa [MFD, Subgroup.mem_subgroupOf, mB] using hmD_MFD
@@ -23103,7 +23168,7 @@ private theorem
                   simp [MonoidHom.comp_apply, hcoord_x]
         have hu0W : u0 ∈ W := by
           change ((u0 : Dm) : M) ∈ U.subgroupOf M
-          simpa [Subgroup.mem_subgroupOf, hu0] using uU.property
+          simp [Subgroup.mem_subgroupOf, hu0]
         have hconjMFD : Section2.conjBy u0 mD ∈ MFD :=
           hsemiTop.right_normalizes_left u0 hu0W mD hmD_MFD
         let mConjB : B := ⟨Section2.conjBy u0 mD, hMFD_le_B hconjMFD⟩
@@ -23127,7 +23192,7 @@ private theorem
             ((ρRange (f uU)).symm x : MF ⧸ H0.subgroupOf MF) =
               (ρBase (QuotientGroup.mk' (C.subgroupOf U) (uU⁻¹)) x :
                 MF ⧸ H0.subgroupOf MF) := by
-          simpa [ρRange, f]
+          simp [ρRange, f]
         have hact_x :
             (ρBase (QuotientGroup.mk' (C.subgroupOf U) (uU⁻¹)) x :
                 MF ⧸ H0.subgroupOf MF) =
@@ -23144,7 +23209,7 @@ private theorem
                 ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) mConjSub) =
               conjMF := by
           apply Subtype.ext
-          simpa [mConjSub, mConjB, mD, mM, conjMF, Section2.conjBy,
+          simp [mConjSub, mConjB, mD, mM, conjMF, Section2.conjBy,
             theorem_9_8_MFDSubgroupOf_to_MF_sec9, hu0, mul_assoc]
         have hconjCoord :
             QuotientGroup.mk' (H0.subgroupOf MF)
@@ -23240,7 +23305,7 @@ private theorem
         rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
         exact ⟨u, rfl⟩
       haveI : IsCyclic ρBase.range := hρcycBase
-      haveI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+      haveI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
       let σ0 : ρBase.range →* MulAut Clam :=
         kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
           simpa [Clam, Hsub, K, f] using hClamComm) hf_surj
@@ -23258,7 +23323,7 @@ private theorem
       let wB : B := ⟨(wWB : Dm), wWB.property.2⟩
       have hwB_mem : wB ∈ (W ⊓ B).subgroupOf B := by
         exact (Subgroup.mem_subgroupOf (H := W ⊓ B) (K := B)).mpr (by
-          simpa [wB] using wWB.property)
+          simp [wB])
       let wSub : (W ⊓ B).subgroupOf B := ⟨wB, hwB_mem⟩
       rcases hQClam_apply wSub with ⟨hwQClam, hwCoord⟩
       let y : QClam :=
@@ -23304,7 +23369,7 @@ private theorem
                 simp [MonoidHom.comp_apply, hy_coord]
       have hu0W : u0 ∈ W := by
         change ((u0 : Dm) : M) ∈ U.subgroupOf M
-        simpa [Subgroup.mem_subgroupOf, hu0] using uU.property
+        simp [Subgroup.mem_subgroupOf, hu0]
       let wConjB : B :=
         ⟨u0 * (wB : Dm) * u0⁻¹,
           hBnormal.conj_mem (wB : Dm) wB.property u0⟩
@@ -23340,9 +23405,9 @@ private theorem
           ((((wConjWB : ↥(W ⊓ B)) : Dm) : M) : G) =
               (((u0 : Dm) : M) : G) * ((((wWB : ↥(W ⊓ B)) : Dm) : M) : G) *
                 (((u0 : Dm) : M) : G)⁻¹ := by
-                simpa [wConjWB, wConjB, wB, mul_assoc]
+                simp [wConjWB, wConjB, wB, mul_assoc]
           _ = (uU : G) * (((xK : K) : U) : G) * (uU : G)⁻¹ := by
-                simpa [hu0, hxK_compat, mul_assoc]
+                simp [hu0, hxK_compat, mul_assoc]
       have heWBK_conj :
           eWBK wConjWB = xConjK := by
         apply Subtype.ext
@@ -23522,7 +23587,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   letI : IsCyclic ρBase.range := hρcycBase
-  letI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  letI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by
@@ -23705,7 +23770,7 @@ private theorem
         simpa [Dm, Subgroup.mem_subgroupOf, mM] using hMFleD mMF.property⟩
       have hmD_MFD : mD ∈ MFD := by
         change (mD : M) ∈ MF.subgroupOf M
-        simpa [mD, mM, Subgroup.mem_subgroupOf] using mMF.property
+        simp [mD, mM, Subgroup.mem_subgroupOf]
       let mB : B := ⟨mD, hMFD_le_B hmD_MFD⟩
       have hmB_MFDsub : mB ∈ MFD.subgroupOf B := by
         simpa [MFD, Subgroup.mem_subgroupOf, mB] using hmD_MFD
@@ -23751,7 +23816,7 @@ private theorem
                 simp [MonoidHom.comp_apply, hcoord_x]
       have hu0W : u0 ∈ W := by
         change ((u0 : Dm) : M) ∈ U.subgroupOf M
-        simpa [Subgroup.mem_subgroupOf, hu0] using uU.property
+        simp [Subgroup.mem_subgroupOf, hu0]
       have hconjMFD : Section2.conjBy u0 mD ∈ MFD :=
         hsemiTop.right_normalizes_left u0 hu0W mD hmD_MFD
       let mConjB : B := ⟨Section2.conjBy u0 mD, hMFD_le_B hconjMFD⟩
@@ -23775,7 +23840,7 @@ private theorem
           ((ρRange (f uU)).symm x : MF ⧸ H0.subgroupOf MF) =
             (ρBase (QuotientGroup.mk' (C.subgroupOf U) (uU⁻¹)) x :
               MF ⧸ H0.subgroupOf MF) := by
-        simpa [ρRange, f]
+        simp [ρRange, f]
       have hact_x :
           (ρBase (QuotientGroup.mk' (C.subgroupOf U) (uU⁻¹)) x :
               MF ⧸ H0.subgroupOf MF) =
@@ -23792,7 +23857,7 @@ private theorem
               ((Subgroup.subgroupOfEquivOfLe hBsemi.left_le) mConjSub) =
             conjMF := by
         apply Subtype.ext
-        simpa [mConjSub, mConjB, mD, mM, conjMF, Section2.conjBy,
+        simp [mConjSub, mConjB, mD, mM, conjMF, Section2.conjBy,
           theorem_9_8_MFDSubgroupOf_to_MF_sec9, hu0, mul_assoc]
       have hconjCoord :
           QuotientGroup.mk' (H0.subgroupOf MF)
@@ -24043,23 +24108,22 @@ private theorem
         (H := H) (hqpos := hqpos) (hHcard := hHcard)
         (hHnorm := hHnorm) (hHindep := hHindep) (hHsup := hHsup)
         (ρBase := ρBase) (hρcycBase := hρcycBase)
-        (hρcardBase := hρcardBase) (hρactionBase := hρactionBase)
-        (hρkerBase := hρkerBase) (hconjBase := hconjBase)
-        (hcase := hcase) (hBarU := hBarU) (hUprimeEq := hUprimeEq)
+        (_hρcardBase := hρcardBase) (_hρactionBase := hρactionBase)
+        (_hρkerBase := hρkerBase) (hconjBase := hconjBase)
+        (hcase := hcase) (_hBarU := hBarU) (hUprimeEq := hUprimeEq)
         (B := B) (hBnormal := hBnormal) (hAnormal := hAnormal)
-        (hA_le_B := hA_le_B) (hMFD_le_B := hMFD_le_B) (hBsemi := hBsemi)
-        (eWBK := eWBK) (hWBK_compat := hWBK_compat)
+        (_hA_le_B := hA_le_B) (_hMFD_le_B := hMFD_le_B) (hBsemi := hBsemi)
+        (eWBK := eWBK) (_hWBK_compat := hWBK_compat)
         (QH1c := QH1c) (QH1 := QH1) (QClam := QClam)
         (QH1CH1 := QH1CH1) (hsemi := hsemi) (hprod := hprod)
         (eH1 := eH1) (eClam := eClam)
-        (hQH1_apply := hQH1_apply) (hQH1c_apply := hQH1c_apply)
-        (hQClam_apply := hQClam_apply)
-        (QMF := QMF) (hQMF_eq := hQMF_eq)
-        (hQMF_split_in_Q := hQMF_split_in_Q) (hQH1_le_QMF := hQH1_le_QMF)
-        (hIeq := hIeq) (hθnotMF := hθnotMF) k
+        (_hQH1_apply := hQH1_apply) (_hQH1c_apply := hQH1c_apply)
+        (_hQClam_apply := hQClam_apply)
+        (QMF := QMF) (_hQMF_eq := hQMF_eq)
+        (_hQMF_split_in_Q := hQMF_split_in_Q) (_hQH1_le_QMF := hQH1_le_QMF)
+        (_hIeq := hIeq) (_hθnotMF := hθnotMF) k
   ·
-    intro k l
-    intro hInd
+    intro k l hInd
     exact
       theorem_9_8_initial_constituent_Mtheta_clam_kernel_quotient_theta_semidirect_product_formula_character_inj_Xtheta_core_sec9
         (M := M) (MF := MF) (U := U) (W1 := W1) (W2 := W2)
@@ -24068,20 +24132,20 @@ private theorem
         (H := H) (hqpos := hqpos) (hHcard := hHcard)
         (hHnorm := hHnorm) (hHindep := hHindep) (hHsup := hHsup)
         (ρBase := ρBase) (hρcycBase := hρcycBase)
-        (hρcardBase := hρcardBase) (hρactionBase := hρactionBase)
-        (hρkerBase := hρkerBase) (hconjBase := hconjBase)
-        (hcase := hcase) (hBarU := hBarU) (hUprimeEq := hUprimeEq)
+        (_hρcardBase := hρcardBase) (hρactionBase := hρactionBase)
+        (_hρkerBase := hρkerBase) (hconjBase := hconjBase)
+        (hcase := hcase) (_hBarU := hBarU) (hUprimeEq := hUprimeEq)
         (B := B) (hBnormal := hBnormal) (hAnormal := hAnormal)
-        (hMFD_le_B := hMFD_le_B) (hBsemi := hBsemi)
-        (eWBK := eWBK) (hWBK_compat := hWBK_compat)
+        (_hMFD_le_B := hMFD_le_B) (hBsemi := hBsemi)
+        (eWBK := eWBK) (_hWBK_compat := hWBK_compat)
         (QH1c := QH1c) (QH1 := QH1) (QClam := QClam)
           (QH1CH1 := QH1CH1) (hsemi := hsemi) (hprod := hprod)
           (eH1 := eH1) (eClam := eClam)
-          (hQH1_apply := hQH1_apply) (hQH1c_apply := hQH1c_apply)
-          (hQClam_apply := hQClam_apply) (hIeq := hIeq)
-          (hθnotMF := hθnotMF)
-          (hψlin_injective := hψlin_injective)
-        (hpairStabilizer := hpairStabilizer) k l hInd
+          (_hQH1_apply := hQH1_apply) (_hQH1c_apply := hQH1c_apply)
+          (_hQClam_apply := hQClam_apply) (_hIeq := hIeq)
+          (_hθnotMF := hθnotMF)
+          (_hψlin_injective := hψlin_injective)
+        (_hpairStabilizer := hpairStabilizer) k l hInd
 
 private theorem
     theorem_9_8_initial_constituent_Mtheta_clam_kernel_quotient_theta_semidirect_product_formula_source_core_sec9
@@ -24351,7 +24415,7 @@ private theorem
       theorem_9_8_initial_constituent_Mtheta_clam_kernel_quotient_comm_sec9
         U C Uprime ρBase hUprimeEq
   letI : IsMulCommutative Clam := hClamComm
-  letI : CommGroup Clam := CommGroup.ofIsMulCommutative
+  letI : CommGroup Clam := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Clam) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Clam)
   let Lam : Type u := Clam →* ℂˣ
@@ -24374,9 +24438,10 @@ private theorem
         Section1.degree (fun x : Clam => (lam j x : ℂ)) = 1 := by
     intro χ
     constructor
-    · simpa [lam, Section1.characterInflationByHom] using
-        Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
-          (MonoidHom.id Clam) χ
+    · change Section1.IsIrreducibleCharacterOnGroup
+        (Section1.characterInflationByHom (MonoidHom.id Clam) χ)
+      exact Section1.characterInflationByHom_isIrreducibleCharacterOnGroup
+        (MonoidHom.id Clam) χ
     · simpa [lam] using Section1.linearCharacter_degree χ
   have hf_surj : Function.Surjective f := by
     intro y
@@ -24385,7 +24450,7 @@ private theorem
     rcases QuotientGroup.mk'_surjective (C.subgroupOf U) x with ⟨u, rfl⟩
     exact ⟨u, rfl⟩
   letI : IsCyclic ρBase.range := hρcycBase
-  letI : IsMulCommutative ρBase.range := ⟨IsCyclic.commutative⟩
+  letI : IsMulCommutative ρBase.range := IsCyclic.isMulCommutative
   let σ : ρBase.range →* MulAut Clam :=
     mulAutHomInvOfCommDomain_sec9
       (kernelQuotientConjHomOfSurjective_sec9 f (Uprime.subgroupOf U) (by

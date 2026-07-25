@@ -67,12 +67,10 @@ public theorem norm_bijective_of_odd_order
       | succ k ih =>
           rw [pow_succ, RingAut.mul_apply, htheta_sq_z, ih]
     rcases hthetaOdd with ⟨k, hk⟩
-    have horder_apply := congrArg (fun e : F ≃+* F => e (z : F))
-      (pow_orderOf_eq_one theta)
     have hz_inv : (z : F) = (z : F)⁻¹ := by
       calc
         (z : F) = (theta ^ orderOf theta) (z : F) := by
-          simpa using horder_apply.symm
+          simp
         _ = (theta ^ (2 * k + 1)) (z : F) := by rw [hk]
         _ = theta ((theta ^ (2 * k)) (z : F)) := by
           rw [pow_succ', RingAut.mul_apply]
@@ -89,6 +87,7 @@ public theorem norm_bijective_of_odd_order
         rw [CharTwo.add_sq, hz_sq, one_pow, CharTwo.add_self_eq_zero]
       exact eq_zero_of_pow_eq_zero hfactor
     have hz_neg : (z : F) = -1 := eq_neg_of_add_eq_zero_left hz_add
+    change (z : F) = (1 : F)
     simpa only [CharTwo.neg_eq] using hz_neg
   have hinj : Function.Injective (fun x : F => x * theta x) := by
     intro x y hxy
@@ -261,10 +260,11 @@ public theorem mem_normal_of_pow_card_eq_one_of_isZGroup
             hC_dvd_N p)
       letI : Fintype PC := Fintype.ofFinite PC
       have hroot_card_le :
-          {y : PC | y ^ Nat.card R = 1}.ncard ≤ Nat.card R := by
+          {y : (PC : Subgroup A) | y ^ Nat.card R = 1}.ncard ≤ Nat.card R := by
         rw [Set.ncard_eq_toFinset_card']
         simpa [Nat.card_eq_fintype_card] using
-          (IsCyclic.card_pow_eq_one_le (α := PC) (Nat.card_pos (α := R)))
+          (IsCyclic.card_pow_eq_one_le (α := (PC : Subgroup A))
+            (Nat.card_pos (α := R)))
       have hRinP_roots : (RinP : Set PC) ⊆ {y : PC | y ^ Nat.card R = 1} := by
         intro y hy
         let yr : RinP := ⟨y, hy⟩
@@ -278,7 +278,7 @@ public theorem mem_normal_of_pow_card_eq_one_of_isZGroup
           change {y : PC | y ^ Nat.card R = 1}.ncard ≤ Nat.card RinP
           rw [hRinP_card]
           exact hroot_card_le
-        simpa [heq]
+        simp [heq]
       have hSA_le_RA' : (S : Subgroup C).map C.subtype ≤ RA' := by
         intro y hy
         have hyPC : y ∈ PC := hSA_le_PC hy
@@ -320,4 +320,3 @@ public theorem mem_normal_of_pow_card_eq_one_of_isZGroup
 
 end PFchapter4section2
 end BenderSuzuki
-

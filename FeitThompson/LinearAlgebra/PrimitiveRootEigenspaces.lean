@@ -397,7 +397,7 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
       intro i j h
       exact vals_injective_finset i (Finset.mem_univ i) j (Finset.mem_univ j) h
     have := (Module.End.eigenspaces_iSupIndep g.toLinearMap).comp hinj
-    simpa [vals_eq_zpow] using this
+    simpa [Function.comp_def, vals_eq_zpow] using this
   · -- supremum equals top
     ext v
     simp_rw [Submodule.mem_iSup, Submodule.mem_top, iff_true]
@@ -527,7 +527,7 @@ public lemma eigenspace_eq_intCast
   have hmod : ((i : ℤ) % h).toNat = i.1 := by
     rw [Int.emod_eq_of_lt hnonneg hlt]
     simp
-  simpa [Fin.val_intCast] using hmod
+  exact (Fin.val_intCast (n := h) (i : ℤ)).trans hmod
 
 @[simp] lemma fin_intCast_emod
     {h : ℕ} [NeZero h] (z : ℤ) :
@@ -663,7 +663,7 @@ public theorem proposition_2_4_f
     have hf : Function.Injective f := by
       intro i j hij
       exact congrArg Prod.fst hij
-    simpa [B, f] using h_indep_all.comp hf
+    simpa [B, f, Function.comp_def] using h_indep_all.comp hf
   have hX_map (X : Module.End F V) (hX : X ∈ N) (i : Fin h) {v : V} (hv : v ∈ A i) :
       X v ∈ A (τ i) := by
     have hXeq : g.toLinearMap * X = X * (ε ^ m • g.toLinearMap) := hX
@@ -1144,8 +1144,16 @@ public theorem proposition_2_4_j
       exact sq_nonneg _)).mp hR1_eq_zero i hi
   have hs1_idx (m : ℕ) (hm : j.val + m + 1 < h) :
       s1 (⟨j.val + m, by omega⟩ : Fin h) = (⟨j.val + (m + 1), by omega⟩ : Fin h) := by
-    simpa [s1] using
-      (fin_intCast_coe (h := h) (i := (⟨j.val + (m + 1), hm⟩ : Fin h)))
+    have harg :
+        ((⟨j.val + m, by omega⟩ : Fin h) : Int) + 1 =
+          ((⟨j.val + (m + 1), hm⟩ : Fin h) : Int) := by
+      simp
+      omega
+    change @Fin.intCast h (by infer_instance)
+      (((⟨j.val + m, by omega⟩ : Fin h) : Int) + 1) =
+        (⟨j.val + (m + 1), hm⟩ : Fin h)
+    rw [harg]
+    exact fin_intCast_coe (h := h) (i := (⟨j.val + (m + 1), hm⟩ : Fin h))
   have hblock_const_nat :
       ∀ m : ℕ, ∀ hm : m ≤ k.val - j.val,
         d (⟨j.val + m, by omega⟩ : Fin h) = d j := by
@@ -1317,7 +1325,10 @@ public theorem proposition_2_4_j
       · simpa using hqeq
       · calc
           (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : Int)) : Int) = d 0 := by
-            simpa using hcast_rank (0 : Int)
+            have hzero : @Fin.intCast h (by infer_instance) (0 : Int) = (0 : Fin h) := by
+              exact fin_intCast_coe (h := h) (i := (0 : Fin h))
+            rw [← hzero]
+            exact hcast_rank (0 : Int)
           _ = d j + (d 0 - d j) := by omega
       · intro z hz
         have ht0 : @Fin.intCast h (by infer_instance) z ≠ 0 := by

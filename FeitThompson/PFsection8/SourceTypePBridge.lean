@@ -1974,7 +1974,9 @@ public theorem subgroupImageEquiv_symm_mem_subgroupOf
   rcases x.2 with ⟨s, hs, hsx⟩
   have hxG : ((x.1 : Section4Scratch.subgroupImage M W) : G) =
       ((s : M) : G) := by
-    simpa [Section4Scratch.subgroupImage] using hsx.symm
+    change ((s : M) : G) =
+      ((x.1 : Section4Scratch.subgroupImage M W) : G) at hsx
+    exact hsx.symm
   have hxM : (((subgroupImageEquiv M W).symm x.1 : W) : M) = s := by
     apply M.subtype_injective
     calc
@@ -2011,7 +2013,8 @@ public theorem subgroupImageEquiv_mem_cyclicTISet
         subgroupImageEquiv_symm_mem_subgroupOf
           (M := M) (S := W1) (W := W)
           ⟨subgroupImageEquiv M W x, hleft⟩
-      simpa using hlocal)
+      rw [← (subgroupImageEquiv M W).symm_apply_apply x]
+      exact (Subgroup.mem_subgroupOf (H := W1) (K := W)).mp hlocal)
   · intro hright
     exact hx.2.2 (by
       change ((x : W) : M) ∈ W2
@@ -2024,7 +2027,8 @@ public theorem subgroupImageEquiv_mem_cyclicTISet
         subgroupImageEquiv_symm_mem_subgroupOf
           (M := M) (S := W2) (W := W)
           ⟨subgroupImageEquiv M W x, hright⟩
-      simpa using hlocal)
+      rw [← (subgroupImageEquiv M W).symm_apply_apply x]
+      exact (Subgroup.mem_subgroupOf (H := W2) (K := W)).mp hlocal)
 
 /-- Membership in the ambient-image cyclic-TI carrier pulls back along
 `subgroupImageEquiv` to membership in the relative cyclic-TI carrier. -/
@@ -2046,14 +2050,20 @@ public theorem subgroupImageEquiv_symm_mem_cyclicTISet
       have himage := subgroupImageEquiv_apply_mem_subgroupOf
         (M := M) (S := W1) (W := W)
         (x := (subgroupImageEquiv M W).symm x) hleft
-      simpa using himage)
+      rw [← (subgroupImageEquiv M W).apply_symm_apply x]
+      exact (Subgroup.mem_subgroupOf
+        (H := Section4Scratch.subgroupImage M W1)
+        (K := Section4Scratch.subgroupImage M W)).mp himage)
   · intro hright
     exact hx.2.2 (by
       change (x : G) ∈ Section4Scratch.subgroupImage M W2
       have himage := subgroupImageEquiv_apply_mem_subgroupOf
         (M := M) (S := W2) (W := W)
         (x := (subgroupImageEquiv M W).symm x) hright
-      simpa using himage)
+      rw [← (subgroupImageEquiv M W).apply_symm_apply x]
+      exact (Subgroup.mem_subgroupOf
+        (H := Section4Scratch.subgroupImage M W2)
+        (K := Section4Scratch.subgroupImage M W)).mp himage)
 
 public theorem inducedCF_subgroupImage_eq_inducedCF_trans
     {G : Type u} [Group G] [Finite G]
@@ -2087,14 +2097,16 @@ public theorem inducedCF_subgroupImage_eq_inducedCF_trans
     by_cases hxW : x * m * x⁻¹ ∈ W
     · have hxH : x * m * x⁻¹ ∈ H.subgroupOf M := by
         simpa [H, mem_subgroupImage_subgroupOf_iff M W] using hxW
+      have hxHG : (((x * m * x⁻¹ : M) : G)) ∈ H :=
+        (Subgroup.mem_subgroupOf (H := H) (K := M)).mp hxH
       have harg :
           (⟨x * m * x⁻¹, hxW⟩ : W) =
             (subgroupImageEquiv M W).symm
-              (⟨((x * m * x⁻¹ : M) : G), by simpa [H] using hxH⟩ : H) := by
+              (⟨((x * m * x⁻¹ : M) : G), hxHG⟩ : H) := by
         apply Subtype.ext
         apply M.subtype_injective
         exact (subgroupImageEquiv_symm_apply_coe M W
-          (⟨((x * m * x⁻¹ : M) : G), by simpa [H] using hxH⟩ : H)).symm
+          (⟨((x * m * x⁻¹ : M) : G), hxHG⟩ : H)).symm
       simp [hxW, hxH, Section1.subgroupOfClassFunction,
         Section1.classFunctionLinearEquivOfMulEquiv, H, harg]
     · have hxH : ¬ x * m * x⁻¹ ∈ H.subgroupOf M := by
@@ -4230,7 +4242,7 @@ public theorem theorem_4_8_primeDade
     have hxLocalData :=
       (Section3.cyclicTISet_mem_iff W1 W2 W).1 hxLocal
     have hxMW : xM ∈ W := by
-      simpa [hxMEq] using xW.2
+      simp [hxMEq]
     have hxMW2 : xM ∉ W2 := by
       intro hxW2
       exact hxLocalData.2.2 (by simpa [hxMEq] using hxW2)
@@ -4922,7 +4934,7 @@ public theorem typeII_section16ASet_subset_notation_A_source_data
     have hcomm : Commute x a :=
       Subgroup.mem_centralizer_singleton_iff.mp hxCentA
     exact ⟨haD, by
-      simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm⟩
+      simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.symm.eq⟩
   intro x hx
   exact hMem.2 x hSrcII (hASetCentralizer hx)
 
@@ -7415,10 +7427,15 @@ public theorem section8Hypothesis52FullData_baseRow_of_late_notation_source_data
       Section2.Hypothesis2
         (Section4Scratch.subgroupImageSet M
           (section8CyclicA0Set M W1 W2 A)) M d52.H_A0 := by
-    simpa [d52, hPkgH] using h22A0_raw
+    change Section2.Hypothesis2
+      (Section4Scratch.subgroupImageSet M
+        (section8CyclicA0Set M W1 W2 A)) M pkg.H_A0
+    rw [hPkgH]
+    exact h22A0_raw
   refine ⟨d52, ?_, hA0M, ?_⟩
-  · simpa [section8Hypothesis52BaseRowConjugateData, d52] using
-      hAmbientPF39BaseRow
+  · change Section4Scratch.ambientRelativePF39BaseRowConjugateData
+      ((W1 ⊔ W2).subgroupOf M) i0 j0 omega sigma
+    exact hAmbientPF39BaseRow
   · intro α
     change pkg.tau α =
       Section2.dadeTransform pkg.H_A0 hA0M.subset_L α
@@ -7781,12 +7798,17 @@ public theorem section8Hypothesis52FullData_baseRow_dadeRelative_of_typeII_sourc
       Section2.Hypothesis2
         (A ∪ section16ConjugatesOfSetBySet
           (section16HatW W1 W2) (M : Set G)) M d52.H_A0 := by
-    simpa [d52, hPkgH] using h22A0_raw
+    change Section2.Hypothesis2 A0 M pkg.H_A0
+    rw [hPkgH]
+    exact h22A0_raw
   refine ⟨d52, ?_, pkg.H_A0, hAMG, ?_, ?_, ?_⟩
-  · simpa [section8Hypothesis52BaseRowConjugateData, d52] using
-      hAmbientPF39BaseRow
+  · change Section4Scratch.ambientRelativePF39BaseRowConjugateData
+      ((W1 ⊔ W2).subgroupOf M) i0 j0 omega sigma
+    exact hAmbientPF39BaseRow
   · intro α hα
-    simpa [d52] using hTauAMG α hα
+    change pkg.tau α =
+      Section2.dadeTransform pkg.H_A0 hAMG.subset_L α
+    exact hTauAMG α hα
   · simpa [A] using hA0M
   · intro α
     change pkg.tau α =

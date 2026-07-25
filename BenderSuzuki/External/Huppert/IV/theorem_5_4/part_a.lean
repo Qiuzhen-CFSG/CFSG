@@ -136,7 +136,7 @@ private theorem hkt_iv54_generated_coprime_action_trivial_from_complement
     have hcop : Nat.Coprime (Nat.card AH) (Nat.card K) := by
       rw [hn]
       exact hKcop.pow_left n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hcomm_bot : ⁅AH, K⁆ = ⊥ := by
     have hleft : ⁅AH, K⁆ ≤ AH := by
       letI : AH.Normal := hAHnormal
@@ -154,8 +154,8 @@ private theorem hkt_iv54_generated_coprime_action_trivial_from_complement
       hcomm_K_AH
   intro a ha
   let aH : H := ⟨a, hA_le_generated ha⟩
-  have haH : aH ∈ AH := by
-    simpa [AH, aH, H] using ha
+  have haH : aH ∈ AH :=
+    (Subgroup.mem_subgroupOf (h := aH) (H := A) (K := H)).mpr ha
   have hcommH : aH * xH = xH * aH :=
     (Subgroup.mem_centralizer_iff.mp (hK_le_centAH hxH_mem_K)) aH haH
   exact congrArg Subtype.val hcommH
@@ -949,7 +949,9 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
                       hkt_hasNormalPComplement_normalizer_map_quotient_of_normalizer
                         (G := Q) (p := q) (N := Z) (T := (S : Subgroup Q))
                         hZ_le_S hNcomp
-                  simpa [Qbar, Z, πZ, Sbar, Sylow.coe_mapSurjective] using hcomp_norm_image
+                  have hSbar_subgroup_eq : (Sbar : Subgroup Qbar) = (S : Subgroup Q).map πZ := by
+                    simp [Sbar, Sylow.coe_mapSurjective]
+                  convert hcomp_norm_image
                 have hNbar_quot :
                     IsPGroup q
                       ((Subgroup.normalizer ((Sbar : Subgroup Qbar) : Set Qbar)) ⧸

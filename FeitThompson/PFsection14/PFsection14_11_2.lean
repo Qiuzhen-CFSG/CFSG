@@ -613,7 +613,7 @@ public theorem section14_hypothesis_3_6_of_projection
     simp [hβorth_base]
   · ext g
     dsimp [β]
-    simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+    simp [sub_eq_add_neg]
   · intro x g
     dsimp [β]
     rw [hψclass x g]
@@ -621,8 +621,6 @@ public theorem section14_hypothesis_3_6_of_projection
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     refine Finset.sum_congr rfl ?_
     intro p _hp
-    change coeff p.1 p.2 * σ (ω p.1 p.2) (x * g * x⁻¹) =
-      coeff p.1 p.2 * σ (ω p.1 p.2) g
     congr 1
     exact hσ.2.2.2.1 (ω p.1 p.2) (hω.is_class p.1 p.2) x g
 
@@ -873,7 +871,7 @@ public theorem section14_inducedFamilyNotation_insert_principal_of_punctured
     rcases hχ with hχ | hχ
     · refine ⟨Section1.principalCharacter H, ?_, ?_⟩
       · exact Section3.principalCharacter_isIrreducibleCharacterOnGroup
-      · simpa [hχ]
+      · simp [hχ]
     · rcases (hS χ).mp hχ with ⟨θ, hθirr, _hθne, hχeq⟩
       exact ⟨θ, hθirr, hχeq⟩
   · intro hχ
@@ -1264,8 +1262,7 @@ public theorem section14_coefficients_pred_lower_of_row_col_exchange
       _ ≤ s.sum (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) :=
         Finset.sum_le_sum hge
   have hcard : s.card = p * q - 1 := by
-    simpa [s, base, Fintype.card_prod, Nat.mul_comm, Nat.mul_left_comm,
-      Nat.mul_assoc]
+    simp [s, base, Fintype.card_prod, Nat.mul_comm]
   have hreal : ((p * q - 1 : ℕ) : ℝ) ≤ ((e - 1 : ℕ) : ℝ) := by
     calc
       ((p * q - 1 : ℕ) : ℝ) = (s.card : ℝ) := by rw [hcard]
@@ -1328,7 +1325,7 @@ public theorem section14_coefficients_normSq_sum_le_card_of_off_base_bound
             have hnat : 1 + (e - 1) = e := by omega
             exact_mod_cast hnat
   have hcard : Fintype.card (Fin q × Fin p) = p * q := by
-    simp [Fintype.card_prod, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
+    simp [Fintype.card_prod, Nat.mul_comm]
   have hupperR : (e : ℝ) ≤ (Fintype.card (Fin q × Fin p) : ℝ) := by
     rw [hcard]
     exact_mod_cast hupper
@@ -1496,7 +1493,7 @@ public theorem section14_theorem_14_11_2_off_base_bound_source_bridge
         p q ωNat ηNat μ ν μsum νsum δ δ' σ)
     (hωNat_eq_ω : ∀ i j, ∀ hi : i < q, ∀ hj : j < p,
       ωNat i j = ω ⟨i, hi⟩ ⟨j, hj⟩)
-    (h31 : Section3.hypothesis_3_1_statement W1 W2 W)
+    (_ : Section3.hypothesis_3_1_statement W1 W2 W)
     (hω : Section3.notation_3_3_statement W1 W2 W (Fin q) (Fin p) i0 j0 ω)
     (hσ : Section3.theorem_3_2_map_statement W1 W2 W σ)
     (coeff : Fin q → Fin p → ℤ)
@@ -2037,7 +2034,8 @@ public theorem section14_int_weighted_sigma_double_sum_isVirtualCharacter
     hσ.2.1 (ω i j)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
         (hωirr i j))
-  simpa using Section12.isVirtualCharacter_zsmul (coeff i j) hbase
+  rw [Int.cast_smul_eq_zsmul ℂ]
+  exact Section12.isVirtualCharacter_zsmul (coeff i j) hbase
 
 public theorem section14_scalarProduct_self_eq_of_virtual_cfNormSq_nat
     {G : Type u} [Group G] [Finite G]
@@ -2348,7 +2346,7 @@ public theorem section14_scalarProduct_right_weightedFamilySum_int_eq_sum_normSq
   · refine Finset.sum_congr rfl ?_
     intro i _hi
     rw [← hcoeff i]
-    simp [Complex.normSq_eq_conj_mul_self]
+    simp
   · simp
 
 public theorem section14_scalarProduct_left_weightedFamilySum_int_eq_sum_normSq
@@ -2688,7 +2686,7 @@ public theorem section14_coefficients_normSq_sum_eq_relIndex_source_bridge
         (Fintype.card (Fin q × Fin p) : ℝ) :=
     le_antisymm hcoeffSumLeCard hcardLeCoeffSum
   have hcard : Fintype.card (Fin q × Fin p) = p * q := by
-    simp [Fintype.card_prod, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
+    simp [Fintype.card_prod, Nat.mul_comm]
   calc
     (Finset.univ : Finset (Fin q × Fin p)).sum
         (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) =

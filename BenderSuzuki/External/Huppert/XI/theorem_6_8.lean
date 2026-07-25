@@ -23,6 +23,10 @@ import Mathlib.RingTheory.IntegralDomain
 import Mathlib.RingTheory.SimpleModule.Basic
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
+open scoped commutatorElement IsMulCommutative
+
+attribute [local instance] commutatorElement
+
 /-!
 # Huppert--Blackburn XI.6.8
 
@@ -93,7 +97,7 @@ private theorem huppert_XI_6_8_scalar_coordinates
           ∀ d x, eAdd (rho d x) = eAdd x * (scalar d : K) := by
   classical
   letI : IsMulCommutative D := hDcomm
-  letI : CommGroup D := CommGroup.ofIsMulCommutative
+  letI : CommGroup D := IsMulCommutative.instCommGroup
   let V := Additive F
   let A : Subalgebra (ZMod p) (Module.End (ZMod p) V) :=
     Algebra.adjoin (ZMod p) (Set.range rho)
@@ -101,7 +105,8 @@ private theorem huppert_XI_6_8_scalar_coordinates
     rintro _ ⟨d, rfl⟩ _ ⟨e, rfl⟩
     rw [← map_mul, ← map_mul]
     exact congrArg rho (mul_comm d e)
-  letI : CommRing A := Algebra.adjoinCommRingOfComm (ZMod p) hgenComm
+  haveI : IsMulCommutative A := Algebra.isMulCommutative_adjoin (ZMod p) hgenComm
+  letI : CommRing A := inferInstance
   letI : Module A V := inferInstance
   let scalarA : D →* A := {
     toFun := fun d => ⟨rho d, Algebra.subset_adjoin ⟨d, rfl⟩⟩
@@ -170,7 +175,8 @@ private theorem huppert_XI_6_8_scalar_coordinates
       apply Subtype.ext
       ext x
       have hx := congrArg (fun f : V →ₗ[A] V => f x) hzero
-      simpa [fa] using hx
+      dsimp [fa] at hx ⊢
+      exact hx
     have hfainj : Function.Injective fa :=
       LinearMap.injective_of_ne_zero (R := A) (M := V) (N := V) hfa
     apply Subtype.ext
@@ -327,7 +333,6 @@ private theorem huppert_XI_6_8_elementary_kernel
       simpa [mul_assoc] using h
     have hxF : (x : H) ∈ F := by
       rcases x.property with ⟨y, hy, hxy⟩
-      change (x : H) ∈ F
       rw [← hxy]
       exact y.property
     have hxcent : (x : H) ∈ elementCentralizerIn F (d : H) :=
@@ -492,7 +497,9 @@ private theorem huppert_XI_6_8_irreducible_complement_action
   have hWgt : 1 < Nat.card W := Finite.one_lt_card
   have hDle : Nat.card D ≤ Nat.card W - 1 := by
     apply Nat.le_of_dvd (Nat.sub_pos_of_lt hWgt)
-    simpa using hdiv
+    have hcardEq : Nat.card (Multiplicative W) = Nat.card W :=
+      Nat.card_congr (Multiplicative.toAdd)
+    simpa [hcardEq] using hdiv
   letI : FiniteDimensional (ZMod p) (Additive F) := Module.Finite.of_finite
   have hfinlt : Module.finrank (ZMod p) W <
       Module.finrank (ZMod p) (Additive F) := Submodule.finrank_lt hWtop
@@ -500,7 +507,9 @@ private theorem huppert_XI_6_8_irreducible_complement_action
     simpa [ZMod.card p] using
       (Module.natCard_eq_pow_finrank (K := ZMod p) (V := W))
   have hcardV : Nat.card F = p ^ Module.finrank (ZMod p) (Additive F) := by
-    simpa [ZMod.card p] using
+    have hcardAdd : Nat.card (Additive F) = Nat.card F :=
+      (Nat.card_congr (Additive.ofMul)).symm
+    simpa [ZMod.card p, hcardAdd] using
       (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive F))
   have hpowStep : p ^ (Module.finrank (ZMod p) W + 1) ≤
       p ^ Module.finrank (ZMod p) (Additive F) :=
@@ -582,9 +591,24 @@ private theorem huppert_XI_6_8_field_coordinates
       f hf hFcard hDcomm rho hrho hirr
   refine ⟨K, hKfield, hKfinite, eAdd, scalar, hscalar, ?_⟩
   intro d x
-  simpa [rho,
-    Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using
-      haction d (Additive.ofMul x)
+  have htemp := haction d (Additive.ofMul x)
+  calc
+    eAdd (Additive.ofMul
+      (⟨(d : H) * (x : H) * (d : H)⁻¹,
+        hFrob.normal.conj_mem (x : H) x.property (d : H)⟩ : F))
+        = eAdd (rho d (Additive.ofMul x)) := by
+          have h1 : (⟨(d : H) * (x : H) * (d : H)⁻¹,
+            hFrob.normal.conj_mem (x : H) x.property (d : H)⟩ : F) = d • x :=
+            Subtype.ext ((Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
+              (A := D) (K := F) d x).symm)
+          calc
+            eAdd (Additive.ofMul
+              (⟨(d : H) * (x : H) * (d : H)⁻¹,
+                hFrob.normal.conj_mem (x : H) x.property (d : H)⟩ : F))
+                = eAdd (Additive.ofMul (d • x)) := by rw [h1]
+            _ = eAdd (rho d (Additive.ofMul x)) := by
+              rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+    _ = eAdd (Additive.ofMul x) * (scalar d : K) := htemp
 private theorem huppert_XI_6_8_quadraticChar_div_nonsquare
     {K : Type*} [Field K] [Fintype K] [DecidableEq K]
     (x y : K) (hx : x ≠ 0) (hy : y ≠ 0)
@@ -1099,9 +1123,13 @@ private theorem huppert_XI_6_8_odd_swap_coordinates
         have hPointR_symm : ePoint.symm (some x) = (((r : H) : G) • b) := by
           apply ePoint.injective
           rw [ePoint.apply_symm_apply, hPointR]
+        have h_stab : d • (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) =
+          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) :=
+          MulAction.mem_stabilizer_iff.mp d.property
         have hdb : (((d : H) : G)) • b = b := by
-          simpa using congrArg Subtype.val
-            (MulAction.mem_stabilizer_iff.mp d.property)
+          have h_subtype := MulAction.mem_stabilizer_iff.mp d.property
+          have h_val := congrArg Subtype.val h_subtype
+          simpa [MulAction.subgroup_smul_def] using h_val
         calc
           ePoint ((((d : H) : G)) • ePoint.symm (some x)) =
               ePoint ((((d : H) : G)) • (((r : H) : G) • b)) := by
@@ -1452,7 +1480,7 @@ private theorem huppert_XI_6_8_even_complement_commutative
   change Even (Nat.card D) at heven
   change 2 * Nat.card D = Nat.card F - 1 at hhalf
   letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := CommGroup.ofIsMulCommutative
+  letI : CommGroup F := IsMulCommutative.instCommGroup
   let eAdd : Additive F ≃+ Additive F := AddEquiv.refl (Additive F)
   obtain ⟨ePoint, hPointA, hPointB, hPointF⟩ :=
     huppert_blackburn_XI_pointStabilizer_exists_projectivePointEquiv
@@ -1505,9 +1533,12 @@ private theorem huppert_XI_6_8_even_complement_commutative
             ePoint.symm (some x) = (((fx : H) : G)) • b := by
           apply ePoint.injective
           rw [ePoint.apply_symm_apply, hPointFx]
+        have h_stab_d' : d • (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) =
+          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) :=
+          MulAction.mem_stabilizer_iff.mp d.property
         have hdb : (((d : H) : G)) • b = b := by
-          simpa [b'] using
-            congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp d.property)
+          have h_val := congrArg Subtype.val h_stab_d'
+          simpa [MulAction.subgroup_smul_def] using h_val
         calc
           ePoint ((((d : H) : G)) • ePoint.symm (some x)) =
               ePoint ((((d : H) : G)) • ((((fx : H) : G)) • b)) := by
@@ -1545,9 +1576,12 @@ private theorem huppert_XI_6_8_even_complement_commutative
   have htsqG : tG ^ 2 = 1 := by
     simpa [tG] using congrArg (fun x : D => (((x : H) : G))) htsqD
   have hta : tG • a = a := (t : H).property
+  have h_stab_t : t • (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) =
+    (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) :=
+    MulAction.mem_stabilizer_iff.mp t.property
   have htb : tG • b = b := by
-    simpa [tG, b'] using
-      congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp t.property)
+    have h_val := congrArg Subtype.val h_stab_t
+    simpa [tG, MulAction.subgroup_smul_def] using h_val
   have htsa : (s * tG * s) • a = a := by
     simp [mul_smul, hsa, hsb, htb]
   have htsb : (s * tG * s) • b = b := by
@@ -1664,9 +1698,11 @@ private theorem huppert_XI_6_8_even_complement_commutative
       s * (((x.1 : F) : H) : G) * s =
         (((f1 : H) : G)) * s * (((f2 : H) : G)) * (((d : H) : G)) := by
     intro x
-    simpa [F0] using
-      zassenhaus_swap_kernel_bruhat_decomposition
-        htwo a b hab F hFrob s hssq hsa hsb x.1 x.2
+    have htemp := zassenhaus_swap_kernel_bruhat_decomposition
+      htwo a b hab F hFrob s hssq hsa hsb (x.1 : F) x.2
+    rcases htemp with ⟨f1, f2, d, h⟩
+    refine ⟨f1, f2, d, ?_⟩
+    simpa [H, D, F0] using h
   choose f1 f2 d hdecomp using hBruhat
   let k (x : F0) : Additive F := Additive.ofMul x.1
   let ell (x : F0) : Additive F := Additive.ofMul (f1 x)
@@ -1909,9 +1945,12 @@ private theorem huppert_XI_6_8_even_complement_commutative
       rw [ePoint.apply_symm_apply, hsqAction, Option.map_some, hActNegEll]
       exact hTauK x
     have hqa : qG • a = a := (q : H).property
+    have h_stab_q : q • (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) =
+      (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) :=
+      MulAction.mem_stabilizer_iff.mp q.property
     have hqb : qG • b = b := by
-      simpa [qG, b'] using
-        congrArg Subtype.val (MulAction.mem_stabilizer_iff.mp q.property)
+      have h_val := congrArg Subtype.val h_stab_q
+      simpa [qG, MulAction.subgroup_smul_def] using h_val
     have hfixa : (s * qG) ^ 2 • a = a := by
       simp [pow_two, mul_smul, hqa, hqb, hsa, hsb]
     have hfixb : (s * qG) ^ 2 • b = b := by
@@ -2060,9 +2099,13 @@ private theorem huppert_XI_6_8_even_swap_coordinates
         have hPointR_symm : ePoint.symm (some x) = (((r : H) : G) • b) := by
           apply ePoint.injective
           rw [ePoint.apply_symm_apply, hPointR]
+        have h_stab : d • (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) =
+          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) :=
+          MulAction.mem_stabilizer_iff.mp d.property
         have hdb : (((d : H) : G)) • b = b := by
-          simpa using congrArg Subtype.val
-            (MulAction.mem_stabilizer_iff.mp d.property)
+          have h_subtype := MulAction.mem_stabilizer_iff.mp d.property
+          have h_val := congrArg Subtype.val h_subtype
+          simpa [MulAction.subgroup_smul_def] using h_val
         calc
           ePoint ((((d : H) : G)) • ePoint.symm (some x)) =
               ePoint ((((d : H) : G)) • (((r : H) : G) • b)) := by
@@ -2334,8 +2377,8 @@ private theorem huppert_XI_6_8_even_swap_coordinates
   have hs0a : s0 • a = b := by
     dsimp [s0]
     rw [mul_smul, hsa]
-    simpa [d0G] using congrArg Subtype.val
-      (MulAction.mem_stabilizer_iff.mp d0.property)
+    have h_d0_subtype := MulAction.mem_stabilizer_iff.mp d0.property
+    simpa [d0G, MulAction.subgroup_smul_def] using congrArg Subtype.val h_d0_subtype
   have hs0b : s0 • b = a := by
     dsimp [s0]
     rw [mul_smul, hsb]
@@ -2562,10 +2605,14 @@ private theorem huppert_XI_6_8_even_swap_coordinates
   have hzNotSq : ¬ IsSquare (z : K) := by
     intro hzSq
     apply hem1NotSq
-    have hprod := hzSq.mul heSq
-    convert hprod using 1
-    dsimp [z, zK]
-    field_simp
+    have hprod_eq : (z : K) * (eK : K) = (eK : K) - 1 := by
+      calc
+        (z : K) * (eK : K) = zK * (eK : K) := by simp [z]
+        _ = ((eK : K) - 1) / (eK : K) * (eK : K) := by simp [zK]
+        _ = (eK : K) - 1 := by field_simp [heNe0]
+    have hsq_prod : IsSquare ((z : K) * (eK : K)) := hzSq.mul heSq
+    rw [hprod_eq] at hsq_prod
+    exact hsq_prod
   have hPhiE : phi (some eK) = some zK := by
     have hThetaEVal : (theta0 e : K) = (-1 : K) * eK⁻¹ := by
       have hval := congrArg (fun q : Kˣ => (q : K))
@@ -2859,8 +2906,11 @@ public theorem huppert_XI_6_8_abelianKernel_psl
         htwo_transitive hat_most_two_fixed_points a b hab F hFrob
           hFcomm heven hhalf
     have hFnil : Group.IsNilpotent F := by
-      letI : IsMulCommutative F := hFcomm
-      infer_instance
+      haveI : IsMulCommutative F := hFcomm
+      refine ⟨1, ?_⟩
+      have hcenter : Subgroup.center F = ⊤ :=
+        Subgroup.center_eq_top_iff.mpr hFcomm
+      simpa [Subgroup.upperCentralSeries_one] using hcenter
     obtain ⟨p, f, hp, hf, hFcard⟩ :=
       huppert_XI_6_1_frobeniusKernel_card_primePower
         htwo_transitive hat_most_two_fixed_points hno_regular_normal
@@ -3138,10 +3188,15 @@ public theorem huppert_XI_6_8_abelianKernel_psl
         apply MulAction.mem_stabilizer_iff.mpr
         apply Subtype.ext
         have hyfix := MulAction.mem_stabilizer_iff.mp hyD
-        have hyfixOmega : (((y : Na) : H) : G) • b = b :=
-          congrArg Subtype.val hyfix
-        rw [← hyx]
-        simpa [eNa, normalSubgroup_pointStabilizerEquiv] using hyfixOmega
+        have hyfixOmega : (((y : Na) : H) : G) • b = b := by
+          have h_temp := congrArg Subtype.val hyfix
+          simpa [MulAction.subgroup_smul_def] using h_temp
+        calc
+          ((x : HN) : G) • b = ((eNa.toMonoidHom y : HN) : G) • b := by rw [hyx]
+          _ = (((y : Na) : H) : G) • b := by
+            dsimp [eNa, normalSubgroup_pointStabilizerEquiv]
+            rfl
+          _ = b := hyfixOmega
       · intro hx
         let y : Na := eNa.symm x
         refine ⟨y, ?_, eNa.apply_symm_apply x⟩
@@ -3149,9 +3204,15 @@ public theorem huppert_XI_6_8_abelianKernel_psl
         apply MulAction.mem_stabilizer_iff.mpr
         apply Subtype.ext
         have hxfix := MulAction.mem_stabilizer_iff.mp hx
-        have hxfixOmega : (((x : HN) : N) : G) • b = b :=
-          congrArg Subtype.val hxfix
-        simpa [y, eNa, normalSubgroup_pointStabilizerEquiv] using hxfixOmega
+        have hxfixOmega : (((x : HN) : N) : G) • b = b := by
+          have h_temp := congrArg Subtype.val hxfix
+          simpa [MulAction.subgroup_smul_def] using h_temp
+        calc
+          (((y : Na) : H) : G) • b = ((eNa.symm x : Na) : G) • b := rfl
+          _ = (((x : HN) : N) : G) • b := by
+            dsimp [eNa, normalSubgroup_pointStabilizerEquiv]
+            rfl
+          _ = b := hxfixOmega
     have hDNne : DN ≠ ⊥ := by
       simpa [HN, DN] using hFother.complement_ne_bot
     have hDNa_ne : DNa ≠ ⊥ := by
@@ -3171,10 +3232,9 @@ public theorem huppert_XI_6_8_abelianKernel_psl
       simpa [FN] using hmap
     have hFcardN : Nat.card FN = Nat.card F := by
       calc
-        Nat.card FN = Nat.card (F.subgroupOf Na) := by
-          simpa [FN] using
-            (Subgroup.card_map_of_injective
-              (K := F.subgroupOf Na) (f := eNa.toMonoidHom) eNa.injective)
+        Nat.card FN = Nat.card ((F.subgroupOf Na).map eNa.toMonoidHom) := rfl
+        _ = Nat.card (F.subgroupOf Na) :=
+          Subgroup.card_map_of_injective eNa.injective
         _ = Nat.card F := natCard_subgroupOf_eq F Na hFNa
     have hDNle : Nat.card DN ≤ Nat.card D := by
       rw [← hDmap]
@@ -3225,8 +3285,11 @@ public theorem huppert_XI_6_8_abelianKernel_psl
     let H := MulAction.stabilizer G a
     change IsFrobeniusGroupWithKernelComplement F D at hFrob
     have hFnil : Group.IsNilpotent F := by
-      letI : IsMulCommutative F := hFcomm
-      infer_instance
+      haveI : IsMulCommutative F := hFcomm
+      refine ⟨1, ?_⟩
+      have hcenter : Subgroup.center F = ⊤ :=
+        Subgroup.center_eq_top_iff.mpr hFcomm
+      simpa [Subgroup.upperCentralSeries_one] using hcenter
     obtain ⟨p, f, hp, hf, hFcard⟩ :=
       huppert_XI_6_1_frobeniusKernel_card_primePower
         htwo_transitive hat_most_two_fixed_points hno_regular_normal
@@ -3235,7 +3298,7 @@ public theorem huppert_XI_6_8_abelianKernel_psl
       zassenhaus_odd_twoPointStabilizer_isCyclic
         htwo_transitive hat_most_two_fixed_points hsimple
           a b hab F hFrob hodd
-    have hDcomm : IsMulCommutative D := ⟨hDcyclic.commutative⟩
+    have hDcomm : IsMulCommutative D := hDcyclic.isMulCommutative
     obtain ⟨K, fieldInst, finiteInst, eAdd, scalar, hscalar, haction⟩ :=
       huppert_XI_6_8_field_coordinates F D hFrob hFcomm hDcomm
         hhalf p f hp hf hFcard

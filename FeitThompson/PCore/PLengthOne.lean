@@ -12,6 +12,7 @@ section PLengthOne
 
 variable {G : Type*} [Group G] [Finite G]
 
+omit [Finite G] in
 /-- If `p` is coprime to `|G|`, then `G` has p-length 1. -/
 public theorem hasPLengthOne_of_coprime_card {p : ℕ} [Fact p.Prime]
     (hcop : Nat.Coprime p (Nat.card G)) :

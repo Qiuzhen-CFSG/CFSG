@@ -13,7 +13,7 @@ import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Fitting.Centralizer
 public import FeitThompson.Representation.ElementaryAbelianAction
 
-open scoped Pointwise TensorProduct
+open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
 
 public theorem theorem_3_7_elementCentralizer_eq_bot {G : Type*} [Group G] [Finite G]
     (K R : Subgroup G) (hR_prime : Nat.Prime (Nat.card R))
@@ -132,7 +132,8 @@ public theorem theorem_3_7_hasPLengthOne {G : Type*} [Group G] [Finite G]
 public theorem theorem_3_7_elementaryAbelianAction_fixedSubspace_iff
     {A V : Type*} [Group A] [Group V] {q : ℕ} [Fact q.Prime]
     [IsElementaryAbelian q V] [MulDistribMulAction A V] (x : Additive V) :
-    x ∈ (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q)).invariants ↔
+    x ∈ (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+      Representation (ZMod q) A (Additive V)).invariants ↔
       Additive.toMul x ∈ fixedPointSubgroup A V :=
   Representation.mem_invariants_ofElementaryAbelianAction_iff
     (A := A) (G := V) (p := q) x
@@ -142,7 +143,8 @@ public theorem theorem_3_7_fixedSubspace_eq_bot_of_fixedPointSubgroup_eq_bot
     [IsElementaryAbelian q V] [MulDistribMulAction A V] (R : Subgroup A) :
     letI : MulDistribMulAction (↥R) V := MulDistribMulAction.compHom V R.subtype
     fixedPointSubgroup (↥R) V = ⊥ →
-      (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q)).fixedSubspace R =
+      (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+        Representation (ZMod q) A (Additive V)).fixedSubspace R =
         ⊥ := by
   classical
   letI : MulDistribMulAction (↥R) V := MulDistribMulAction.compHom V R.subtype
@@ -166,7 +168,8 @@ public theorem theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
     [IsElementaryAbelian q V] [MulDistribMulAction A V] (H : Subgroup A)
     (hcent :
       H ≤
-        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q)).centralizerIn
+        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+          Representation (ZMod q) A (Additive V)).centralizerIn
           H) :
     letI : MulDistribMulAction (↥H) V := MulDistribMulAction.compHom V H.subtype
     fixedPointSubgroup (↥H) V = ⊤ := by
@@ -178,7 +181,8 @@ public theorem theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
   intro h
   have hhker :
       (h : A) ∈
-        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q)).ker :=
+        (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := q) :
+          Representation (ZMod q) A (Additive V)).ker :=
     (hcent h.property).2
   rw [MonoidHom.mem_ker] at hhker
   have hlin :=
@@ -601,7 +605,7 @@ public theorem theorem_3_7_le_fitting_of_nilpotent_normal
   haveI : Group.IsNilpotent Lsub := by
     let e := (Subgroup.subgroupOfEquivOfLe (G := G) (H := L) (K := K) hL_le_K).symm
     have : Group.IsNilpotent (↥L) := hL_nil
-    exact nilpotent_of_mulEquiv (G := L) (G' := Lsub) e
+    exact Group.nilpotent_of_mulEquiv (G := L) (G' := Lsub) e
   have hLsub_le : Lsub ≤ fittingSubgroup (↥K) :=
     le_sSup ⟨hLsub_normal, inferInstance⟩
   have hmap_le : Lsub.map K.subtype ≤ fittingSubgroupOf (G := G) K :=
@@ -667,7 +671,7 @@ public theorem theorem_3_7_nilpotent_of_lt_of_induction
       hRsub_prime hfixS
   let e : ↥(L.subgroupOf S) ≃* ↥L :=
     Subgroup.subgroupOfEquivOfLe (G := G) (H := L) (K := S) le_sup_left
-  exact nilpotent_of_mulEquiv (G := L.subgroupOf S) (G' := L) e
+  exact Group.nilpotent_of_mulEquiv (G := L.subgroupOf S) (G' := L) e
 
 public theorem theorem_3_7_le_fitting_of_lt_of_induction
     {G : Type*} [Group G] [Finite G] (K R L : Subgroup G) (hind : Theorem37IndHyp K)
@@ -786,13 +790,14 @@ private theorem theorem_3_7_commutator_le_of_maximal_normal_solvable
       infer_instance
     haveI : IsSolvable ↥KL := by infer_instance
     exact minimalNormal_solvable_isMulCommutative KL
+  letI : IsMulCommutative ↥KL := hKL_comm
   let e : K ⧸ L.subgroupOf K ≃* KL := quotientSubgroupRangeEquiv K L
   have hquot_comm' : ∀ a b : K ⧸ L.subgroupOf K, a * b = b * a := by
     intro a b
     apply e.injective
-    change e (a * b) = e (b * a)
-    simpa using mul_comm (e a) (e b)
-  have hquot_comm : Std.Commutative (· * · : K ⧸ L.subgroupOf K → _ → _) := ⟨hquot_comm'⟩
+    simpa only [map_mul] using IsMulCommutative.is_comm.comm (e a) (e b)
+  have hquot_comm : IsMulCommutative (K ⧸ L.subgroupOf K) :=
+    IsMulCommutative.mk ⟨hquot_comm'⟩
   have hcomm_sub : _root_.commutator K ≤ L.subgroupOf K :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
       (G := K) (N := L.subgroupOf K)).1 hquot_comm
@@ -880,8 +885,7 @@ private theorem theorem_3_7_chief_factor_maximal_quotient_exists_pgroup
       refine Subgroup.mem_map.mpr ?_
       refine ⟨qLq (πV k), ?_, ?_⟩
       · exact Subgroup.mem_map.mpr ⟨πV k, Subgroup.mem_map.mpr ⟨k, hkK, rfl⟩, rfl⟩
-      · change e.toMonoidHom (qLq (πV k)) = x
-        rw [← hkx]
+      · rw [← hkx]
         exact
           QuotientGroup.quotientQuotientEquivQuotientAux_mk_mk
             (N := V) (M := L) (h := hV_le_L) k
@@ -907,7 +911,8 @@ private theorem theorem_3_7_chief_quotient_map_le_ker_of_le_centralizer
     letI : IsElementaryAbelian q (↥Uq) := by simpa using hUq_elem
     letI : MulDistribMulAction (G ⧸ cf.V) Uq :=
       MulDistribMulAction.compHom Uq (MulAut.conjNormal (G := G ⧸ cf.V) (H := Uq))
-    let ρ := Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
+    let ρ : Representation (ZMod q) (G ⧸ cf.V) (Additive Uq) :=
+      Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
     L.map π ≤ ρ.ker := by
   classical
   haveI : cf.V.Normal := cf.isChief.normal_K
@@ -917,12 +922,14 @@ private theorem theorem_3_7_chief_quotient_map_le_ker_of_le_centralizer
   letI : IsElementaryAbelian q (↥Uq) := by simpa using hUq_elem
   letI : MulDistribMulAction (G ⧸ cf.V) Uq :=
     MulDistribMulAction.compHom Uq (MulAut.conjNormal (G := G ⧸ cf.V) (H := Uq))
-  let ρ := Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
+  let ρ : Representation (ZMod q) (G ⧸ cf.V) (Additive Uq) :=
+    Representation.ofElementaryAbelianAction (A := G ⧸ cf.V) (G := Uq) (p := q)
   change ∀ x ∈ L.map π, x ∈ ρ.ker
   intro x hx
   rcases Subgroup.mem_map.mp hx with ⟨l, hlL, rfl⟩
   rw [MonoidHom.mem_ker]
-  ext u
+  apply LinearMap.ext
+  intro u
   simp [ρ]
   apply Subtype.ext
   rcases Subgroup.mem_map.mp (Additive.toMul u).2 with ⟨y, hyU, hyu⟩
@@ -984,8 +991,9 @@ private theorem theorem_3_7_chief_quotient_fixedPointSubgroup_eq_top_of_pgroup
     obtain ⟨u, hu_fix, hu_ne_one'⟩ :=
       hP_p.exists_fixed_point_of_prime_dvd_card_of_fixed_point (α := Uq) hq_dvd_cardUq hone_fix
     have hu_mem : u ∈ F := by
-      simpa [F, FixedPoints.mem_subgroup] using
-        MulAction.mem_fixedPoints.mp hu_fix
+      change u ∈ fixedPointSubgroup (↥P) Uq
+      rw [FixedPoints.mem_subgroup]
+      exact MulAction.mem_fixedPoints.mp hu_fix
     intro hF_bot
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by simpa [F, hF_bot] using hu_mem
     exact hu_ne_one' (Subgroup.mem_bot.mp hu_bot).symm
@@ -1003,7 +1011,10 @@ private theorem theorem_3_7_chief_quotient_fixedPointSubgroup_eq_top_of_pgroup
       change u ∈ fixedPointSubgroup (↥P) Uq
       rw [FixedPoints.mem_subgroup] at hu ⊢
       have hsmul := smul_mem_fixedPoints_of_normal (H := P) a⁻¹ hu
-      simpa [mul_smul] using hsmul
+      intro p
+      have hp := hsmul p
+      rw [inv_smul_smul] at hp
+      exact hp
   let Fmap : Subgroup (G ⧸ cf.V) := F.map Uq.subtype
   have hFmap_normal : Fmap.Normal := by
     refine ⟨?_⟩
@@ -1077,8 +1088,9 @@ private theorem theorem_3_7_chief_conj_range_pCore_eq_bot
       exact hu_ne_one' hu.symm
     intro hbot
     have hu_mem : u ∈ F := by
-      simpa [F, FixedPoints.mem_subgroup] using
-        MulAction.mem_fixedPoints.mp hu_fix
+      change u ∈ fixedPointSubgroup P Uq
+      rw [FixedPoints.mem_subgroup]
+      exact MulAction.mem_fixedPoints.mp hu_fix
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by
       simpa [hbot] using hu_mem
     exact hu_ne_one (Subgroup.mem_bot.mp hu_bot)
@@ -1099,7 +1111,8 @@ private theorem theorem_3_7_chief_conj_range_pCore_eq_bot
       change u ∈ fixedPointSubgroup P Uq
       rw [FixedPoints.mem_subgroup] at hu ⊢
       have hsmul := smul_mem_fixedPoints_of_normal (H := P) a⁻¹ hu
-      simpa [mul_smul] using hsmul
+      intro p
+      simpa [mul_smul] using hsmul p
   let Fmap : Subgroup (G ⧸ cf.V) := F.map Uq.subtype
   have hFmap_normal : Fmap.Normal := by
     refine ⟨?_⟩
@@ -1139,7 +1152,8 @@ private theorem theorem_3_7_chief_conj_range_pCore_eq_bot
     intro a b
     apply Subtype.ext
     ext u
-    simpa using congrArg Subtype.val ((htriv a u).trans (htriv b u).symm)
+    exact congrArg (fun z : Uq => (z : G ⧸ cf.V))
+      ((htriv a u).trans (htriv b u).symm)
   have hcard_one : Nat.card P = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
@@ -1214,7 +1228,8 @@ public theorem theorem_3_7_chief_factor_bridge {G : Type u37} [Group G] [Finite 
       letI : IsElementaryAbelian q (↥Uq) := by simpa [π, Uq] using hUq_elem
       let φ : (G' ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
       letI : MulDistribMulAction (G' ⧸ cf.V) Uq := MulDistribMulAction.compHom Uq φ
-      let ρ := Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
+      let ρ : Representation (ZMod q) (G' ⧸ cf.V) (Additive Uq) :=
+        Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
       have hρker_eq : ρ.ker = φ.ker := by
         rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
         rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
@@ -1414,10 +1429,10 @@ public theorem theorem_3_7_chief_factor_bridge {G : Type u37} [Group G] [Finite 
       have hKq_cent : Kq ≤ ρ.centralizerIn Kq := by
         intro x hx
         exact ⟨hx, hKq_ker hx⟩
+      letI : MulDistribMulAction Kq Uq := MulDistribMulAction.compHom Uq Kq.subtype
       have hfixKq_top : fixedPointSubgroup (↥Kq) Uq = ⊤ := by
-        simpa [Kq, Uq, ρ] using
-          theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
-            (A := G' ⧸ cf.V) (V := Uq) (q := q) Kq hKq_cent
+        exact theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
+          (A := G' ⧸ cf.V) (V := Uq) (q := q) Kq hKq_cent
       exact
         theorem_3_7_le_centralizerOfChiefFactor_of_fixedPointSubgroup_top
           K' cf hKq_normUq hfixKq_top
@@ -1682,7 +1697,7 @@ private theorem theorem_3_8_subambient_card_lt_of_right_lt
     (hgen : K ⊔ R = ⊤) (hcop : Nat.Coprime (Nat.card R) (Nat.card K)) (hR₀R : R₀ < R) :
     Nat.card ↥(K ⊔ R₀) < Nat.card G := by
   let S : Subgroup G := K ⊔ R₀
-  have hKR_inf : K ⊓ R = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop.symm
+  have hKR_inf : K ⊓ R = ⊥ := (Subgroup.disjoint_of_coprime_natCard hcop.symm).eq_bot
   have hKR_disj : Disjoint K R := by
     rw [disjoint_iff_inf_le, hKR_inf]
   have hmul_eq_univ : (K : Set G) * (R : Set G) = Set.univ := by
@@ -1732,7 +1747,7 @@ private theorem theorem_3_8_map_fittingSubgroupOf_subambient_le_fitting
       rintro ⟨x, hx⟩
       rcases hx with ⟨y, hy, rfl⟩
       exact ⟨⟨y, hy⟩, rfl⟩
-    exact nilpotent_of_surjective (G := ↥(fittingSubgroup (↥Lsub))) (G' := ↥F1) ψ hψ_surj
+    exact Group.nilpotent_of_surjective (G := ↥(fittingSubgroup (↥Lsub))) (G' := ↥F1) ψ hψ_surj
   have hF1_le_fit : F1 ≤ fittingSubgroup (↥L) := le_sSup ⟨hF1_normal, hF1_nil⟩
   have hcomp :
       L.subtype.comp e.toMonoidHom = S.subtype.comp Lsub.subtype := by
@@ -1856,7 +1871,8 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
       rcases Classical.not_forall.mp hr with ⟨f, hf⟩
       have h_ne : (r : G') * (f : G') * (r : G')⁻¹ ≠ (f : G') := hf
       -- From coprime condition, K' and R' have trivial intersection
-      have h_disjoint_inf : K' ⊓ R' = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop'.symm
+      have h_disjoint_inf : K' ⊓ R' = ⊥ :=
+        (Subgroup.disjoint_of_coprime_natCard hcop'.symm).eq_bot
       have h_disjoint : Disjoint K' R' :=
         disjoint_iff_inf_le.mpr (h_disjoint_inf.symm ▸ le_rfl)
       -- Since K' is normal, the set product equals the supremum
@@ -2167,7 +2183,8 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
               haveI : Nontrivial Uq := (Subgroup.nontrivial_iff_ne_bot Uq).2 hUq_ne_bot
               let φ : (G' ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
               letI : MulDistribMulAction (G' ⧸ cf.V) Uq := MulDistribMulAction.compHom Uq φ
-              let ρ := Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
+              let ρ : Representation (ZMod q) (G' ⧸ cf.V) (Additive Uq) :=
+                Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
               have hρker_eq : ρ.ker = φ.ker := by
                 rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
                 rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
@@ -2268,8 +2285,7 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
                   refine Subgroup.mem_map.mpr ?_
                   refine ⟨qFq (π k), ?_, ?_⟩
                   · exact Subgroup.mem_map.mpr ⟨π k, Subgroup.mem_map.mpr ⟨k, hkK, rfl⟩, rfl⟩
-                  · change eQQ.toMonoidHom (qFq (π k)) = x
-                    rw [← hkx]
+                  · rw [← hkx]
                     exact
                       QuotientGroup.quotientQuotientEquivQuotientAux_mk_mk
                         (N := cf.V) (M := F') (h := hV_le_F) k
@@ -2350,10 +2366,10 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
                 have hKq_cent : Kq ≤ ρ.centralizerIn Kq := by
                   intro x hx
                   exact ⟨hx, hKq_ker hx⟩
+                letI : MulDistribMulAction Kq Uq := MulDistribMulAction.compHom Uq Kq.subtype
                 have hfixKq_top : fixedPointSubgroup (↥Kq) Uq = ⊤ := by
-                  simpa [Kq, Uq, ρ] using
-                    theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
-                      (A := G' ⧸ cf.V) (V := Uq) (q := q) Kq hKq_cent
+                  exact theorem_3_7_fixedPointSubgroup_eq_top_of_le_centralizerIn
+                    (A := G' ⧸ cf.V) (V := Uq) (q := q) Kq hKq_cent
                 exact
                   (Subgroup.commutator_le_left (H₁ := K') (H₂ := R')).trans
                     (theorem_3_7_le_centralizerOfChiefFactor_of_fixedPointSubgroup_top
@@ -2745,7 +2761,7 @@ private theorem proposition_3_9_pth_mul_eq_mul_pows_of_class2
   have hcomm_mem : ⁅v, u⁆ ∈ Subgroup.center T := by
     exact hcomm_le (Subgroup.commutator_mem_commutator (by simp) (by simp))
   have hc_der : ⁅v, u⁆ ∈ derivedSubgroup T := by
-    simpa [derivedSubgroup] using
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
       (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup T)) (H₂ := (⊤ : Subgroup T))
         (by simp) (by simp))
   have hc_choose : ⁅v, u⁆ ^ Nat.choose p 2 = 1 := by
@@ -2757,16 +2773,19 @@ private theorem proposition_3_9_pth_mul_eq_mul_pows_of_class2
           (by simp [commutatorElement_def, mul_assoc])
           (by
             show Commute ⁅v, u⁆ u
-            simpa [Commute] using (Subgroup.mem_center_iff.mp hcomm_mem u).symm)
+            rw [commute_iff_eq]
+            exact (Subgroup.mem_center_iff.mp hcomm_mem u).symm)
           (by
             show Commute ⁅v, u⁆ v
-            simpa [Commute] using (Subgroup.mem_center_iff.mp hcomm_mem v).symm) p
+            rw [commute_iff_eq]
+            exact (Subgroup.mem_center_iff.mp hcomm_mem v).symm) p
     _ = u ^ p * v ^ p * ⁅v, u⁆ ^ Nat.choose p 2 := by
       have hc_center : ⁅v, u⁆ ^ Nat.choose p 2 ∈ Subgroup.center T :=
         (Subgroup.center T).pow_mem hcomm_mem (Nat.choose p 2)
       have hcomm_uv : Commute (⁅v, u⁆ ^ Nat.choose p 2) (u ^ p * v ^ p) := by
         show Commute (⁅v, u⁆ ^ Nat.choose p 2) (u ^ p * v ^ p)
-        simpa [Commute] using (Subgroup.mem_center_iff.mp hc_center (u ^ p * v ^ p)).symm
+        rw [commute_iff_eq]
+        exact (Subgroup.mem_center_iff.mp hc_center (u ^ p * v ^ p)).symm
       simpa [Commute, mul_assoc] using hcomm_uv.eq
     _ = u ^ p * v ^ p := by simp [hc_choose]
 
@@ -2812,17 +2831,19 @@ private theorem proposition_3_9_exists_elementaryAbelian_p2_preimage_case
   have hder_le_ZT : _root_.commutator T ≤ ZT := by
     letI : IsMulCommutative (T.map q) := hTmap_comm
     letI : CommGroup ↥qT.range := by infer_instance
-    have hquot_comm : Std.Commutative (· * · : T ⧸ qT.ker → _ → _) := by
+    have hquot_comm' : Std.Commutative (· * · : T ⧸ qT.ker → _ → _) := by
       let e : T ⧸ qT.ker ≃* qT.range := QuotientGroup.quotientKerEquivRange qT
       letI : CommGroup (T ⧸ qT.ker) := MonoidHom.commGroupOfInjective e.toMonoidHom e.injective
       infer_instance
+    have hquot_comm : IsMulCommutative (T ⧸ qT.ker) := ⟨hquot_comm'⟩
     have hder_le_ker : _root_.commutator T ≤ qT.ker := by
       exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := qT.ker)).1 hquot_comm
     simpa [qT, ZT, Subgroup.ker_subgroupMap] using hder_le_ker
   have hZT_le_centerT : ZT ≤ Subgroup.center T := by
     intro z hz
     have hzZ : ((z : T) : R) ∈ Z := by
-      simpa [ZT, q, QuotientGroup.ker_mk'] using hz
+      change ((z : T) : R) ∈ q.ker at hz
+      simpa [q, QuotientGroup.ker_mk'] using hz
     have hzcenter : ((z : T) : R) ∈ Subgroup.center R := hZ_le_center hzZ
     rw [Subgroup.mem_center_iff]
     intro t
@@ -2830,18 +2851,19 @@ private theorem proposition_3_9_exists_elementaryAbelian_p2_preimage_case
     exact (Subgroup.mem_center_iff.mp hzcenter) (t : R)
   have hclassT : NilpotencyClassLe 2 T := by
     have hcomm_sub : _root_.commutator T ≤ Subgroup.center T := hder_le_ZT.trans hZT_le_centerT
-    have hL1_le_center : lowerCentralSeries T 1 ≤ Subgroup.center T := by
-      simpa [lowerCentralSeries_one] using hcomm_sub
-    have hL2_bot : lowerCentralSeries T 2 = ⊥ := by
+    have hL1_le_center :
+        (⊤ : Subgroup T).lowerCentralSeries 1 ≤ Subgroup.center T := by
+      simpa [Subgroup.top_lowerCentralSeries_one, _root_.commutator_def] using hcomm_sub
+    have hL2_bot : (⊤ : Subgroup T).lowerCentralSeries 2 = ⊥ := by
       simpa [Nat.succ_eq_add_one] using
-        (lowerCentralSeries_succ_eq_bot (G := T) (n := 1) hL1_le_center)
+        (Subgroup.lowerCentralSeries_succ_eq_bot (⊤ : Subgroup T) hL1_le_center)
     have hnil : Group.IsNilpotent T :=
-      (nilpotent_iff_lowerCentralSeries (G := T)).2 ⟨2, hL2_bot⟩
+      (Subgroup.nilpotent_iff_lowerCentralSeries (G := T)).2 ⟨2, hL2_bot⟩
     letI : Group.IsNilpotent T := hnil
     have hclass : Group.nilpotencyClass T ≤ 2 :=
-      (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := T)).1 hL2_bot
+      (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := T)).1 hL2_bot
     unfold NilpotencyClassLe
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := T)).2 hclass
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := T)).2 hclass
   let φ : T →* ZT :=
     { toFun := fun x =>
         ⟨x ^ p, by
@@ -3013,7 +3035,7 @@ private theorem proposition_3_9_exists_elementaryAbelian_p2_cyclic_case
     commGroupOfCyclicCenterQuotient (QuotientGroup.mk' (Subgroup.center R))
       (QuotientGroup.ker_mk' (Subgroup.center R)).le
   let C' : Subgroup R := C
-  letI : C'.Normal := Subgroup.normal_of_comm C'
+  letI : C'.Normal := Subgroup.normal_of_isMulCommutative C'
   have hx_ne : x ≠ 1 := by
     intro hx1
     have hCbot : C' = ⊥ := by simp [C', C, hx1]
@@ -3043,7 +3065,7 @@ private theorem proposition_3_9_exists_elementaryAbelian_p2_cyclic_case
     intro hUZ
     exact hZ_not_le_C (hUZ ▸ hU_le_C)
   let Ω : Subgroup R := U ⊔ Z
-  letI : Ω.Normal := Subgroup.normal_of_comm Ω
+  letI : Ω.Normal := Subgroup.normal_of_isMulCommutative Ω
   have hOmega_pow : ∀ y : Ω, y ^ p = 1 := by
     intro y
     rcases (Subgroup.mem_sup_of_normal_right).1 y.2 with ⟨u, huU, z, hzZ, huz⟩
@@ -3194,7 +3216,7 @@ public theorem proposition_3_9 {p : ℕ} {H R : Type*} [Group H] [Finite H] [Non
     obtain ⟨S, hS_normal, hS_card, hS_elem⟩ :=
       proposition_3_9_exists_elementaryAbelian_p2 (p := p) (R := R) hp hpodd hR_pgroup hR_cyc
     letI : IsMulCommutative S := hS_elem.toIsMulCommutative
-    letI : CommGroup S := CommGroup.ofIsMulCommutative
+    letI : CommGroup S := IsMulCommutative.instCommGroup
     letI : Fact (IsPGroup p S) := ⟨IsElementaryAbelian.isPGroup p S⟩
     have hS_card_gt_one : 1 < Nat.card S := by
       simpa [hS_card] using one_lt_pow₀ hp.one_lt (by decide : 2 ≠ 0)
@@ -3216,7 +3238,8 @@ public theorem proposition_3_9 {p : ℕ} {H R : Type*} [Group H] [Finite H] [Non
       let a1 : Subgroup.zpowers a := ⟨a, Subgroup.mem_zpowers a⟩
       have hax : (a • x : Q) = x := hx a1
       have haxR : ((a : R) • x : Q) = x := by
-        simpa [MulAction.compHom_smul_def] using hax
+        change ((a : R) • x : Q) = x at hax
+        exact hax
       have hxR : x ∈ fixedPointSubgroup (↥(Subgroup.zpowers (a : R))) Q := by
         rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
         intro y
@@ -3342,7 +3365,8 @@ public theorem ActsRegularly.subgroup {H R : Type*} [Group H] [Group R]
     intro hEq
     exact ha (Subtype.ext hEq)
   have haxR : ((a : R) • x : H) = x := by
-    simpa [MulAction.compHom_smul_def] using hax
+    change ((a : R) • x : H) = x at hax
+    exact hax
   have hxR : x ∈ fixedPointSubgroup (↥(Subgroup.zpowers (a : R))) H := by
     rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
     intro y
@@ -3405,7 +3429,8 @@ public theorem isCyclic_of_odd_regular_pSubgroup {p : ℕ} {H R : Type*}
         intro hEq
         exact ha (Subtype.ext hEq)
       have haxR : ((a : R) • x : H) = x := by
-        simpa [MulAction.compHom_smul_def] using hax
+        change ((a : R) • x : H) = x at hax
+        exact hax
       have hxR : x ∈ fixedPointSubgroup (↥(Subgroup.zpowers (a : R))) H := by
         rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
         intro y
@@ -3435,8 +3460,8 @@ public theorem isCyclic_of_odd_regular_pSubgroup {p : ℕ} {H R : Type*}
         hP_p.exists_fixed_point_of_prime_dvd_card_of_fixed_point
           (α := H) hpdvdH hone_fix
       have hy_mem : y ∈ fixedPointSubgroup P H := by
-        simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
-          MulAction.mem_fixedPoints.mp hy_fix
+        rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
+        exact MulAction.mem_fixedPoints.mp hy_fix
       have hy_bot : y ∈ (⊥ : Subgroup H) := by
         simpa [hfixP_bot] using hy_mem
       exact hy_ne_one (Subgroup.mem_bot.mp hy_bot).symm
@@ -3710,7 +3735,8 @@ private theorem exists_principal_cocycle_of_pgroup_operator_coprime_bg3
   intro a
   have hx : c a * smul0 a x = x := by
     have := (MulAction.mem_fixedPoints.mp hxfix) a
-    simpa [MulAction.fixedPoints, smul0] using this
+    change c a * smul0 a x = x at this
+    exact this
   show c a = x * (smul0 a x)⁻¹
   calc
     c a = (c a * smul0 a x) * (smul0 a x)⁻¹ := by simp
@@ -3829,7 +3855,8 @@ private theorem exists_principal_cocycle_of_solvable_operator_coprime_bg3
             (b : A') • c1 a = c1 ((b : A') * a) := h1.symm
             _ = c1 (a * (b' : A')) := by rw [hba]
             _ = c1 a := h2
-        simpa [MulAction.compHom_smul_def] using this
+        change (b : A') • c1 a = c1 a
+        exact this
       let F : Subgroup G' := fixedPointSubgroup B G'
       have hcop_Q_F : Nat.Coprime (Nat.card (A' ⧸ B)) (Nat.card F) := by
         have hquot_dvd : Nat.card (A' ⧸ B) ∣ Nat.card A' :=
@@ -3875,7 +3902,9 @@ private theorem exists_principal_cocycle_of_solvable_operator_coprime_bg3
       intro a
       have hy_a : c1 a = (y : G') * (a • (y : G'))⁻¹ := by
         have h := congrArg Subtype.val (hy (a : A' ⧸ B))
-        simpa [hcQ_mk] using h
+        rw [hcQ_mk] at h
+        change c1 a = (y : G') * (a • (y : G'))⁻¹ at h
+        exact h
       have hc_rearr : c' a = x0 * c1 a * (a • x0)⁻¹ := by
         have hdef := hc1_def a
         calc
@@ -4426,8 +4455,10 @@ private theorem exists_sylow_normalized_by_semidirect_right_of_solvable_coprime
       rcases hinlN_surj y with ⟨g, hg⟩
       refine ⟨g, ?_, ?_⟩
       · have hgPN : inlN g ∈ (PN : Subgroup N) := by
-          simpa [hg] using hyPN
-        simpa [P, inlN] using hgPN
+          rw [hg]
+          exact hyPN
+        change inlN g ∈ (PN : Subgroup N)
+        exact hgPN
       · exact congrArg Subtype.val hg
   refine ⟨P, ?_⟩
   change (⊤ : Subgroup A).map inr ≤ Subgroup.normalizer ((P : Subgroup G).map inl)
@@ -4488,7 +4519,8 @@ private theorem fixedPointSubgroup_subgroup_eq_bot_of_regular_of_prime_card
       intro z
       have hzP : (z : R) ∈ P := (Subgroup.zpowers_le).2 x.2 z.2
       have hyP := hy ⟨(z : R), hzP⟩
-      simpa [MulAction.compHom_smul_def] using hyP
+      change (z : R) • y = y at hyP
+      exact hyP
     simpa [hregular (x : R) hxR_ne] using hy_z
   · exact bot_le
 
@@ -4517,7 +4549,8 @@ private theorem coprime_card_of_regular_action
   obtain ⟨x, hx_fix, hx_ne_one⟩ :=
     hPp.exists_fixed_point_of_prime_dvd_card_of_fixed_point (α := H) hr_dvd_H hone_fix
   have hx_mem : x ∈ fixedPointSubgroup (↥P) H := by
-    simpa [FixedPoints.mem_subgroup] using MulAction.mem_fixedPoints.mp hx_fix
+    rw [FixedPoints.mem_subgroup]
+    exact MulAction.mem_fixedPoints.mp hx_fix
   have hx_bot : x ∈ (⊥ : Subgroup H) := by
     simpa [hfix] using hx_mem
   exact hx_ne_one (Subgroup.mem_bot.mp hx_bot).symm
@@ -4652,7 +4685,8 @@ private theorem regular_pq_complement_centralizes_of_elementaryAbelian
     subgroupCentralizerIn_eq_bot_of_not_le_centralizer_of_prime_card hQprime_card hnot
   have hfrob : IsFrobeniusGroupWithKernelComplement Q P :=
     theorem_3_7_frobenius Q P hQ_normal hQP hQ_ne_bot hPprime_card hcent_bot
-  let ρ := Representation.ofElementaryAbelianAction (A := R) (G := H) (p := r)
+  let ρ : Representation (ZMod r) R (Additive H) :=
+    Representation.ofElementaryAbelianAction (A := R) (G := H) (p := r)
   have hfixP : fixedPointSubgroup (↥P) H = ⊥ := by
     letI : MulDistribMulAction P H := MulDistribMulAction.compHom H P.subtype
     exact fixedPointSubgroup_subgroup_eq_bot_of_regular_of_prime_card hregular hPprime_card
@@ -4773,8 +4807,7 @@ public theorem regular_pq_prime_order_subgroups_centralize_of_odd_regular_action
     simpa [Qsyl, IsPGroup.toSylow_coe] using hQsyl_normal
   have hcop_QP : Nat.Coprime (Nat.card Q) (Nat.card P) := by
     simpa [hQcard, hPcard] using ((Nat.coprime_primes hq hp).2 (Ne.symm hpq))
-  have hQP_disj : Disjoint Q P :=
-    disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcop_QP)
+  have hQP_disj : Disjoint Q P := Subgroup.disjoint_of_coprime_natCard hcop_QP
   have hQP_card : Nat.card Q * Nat.card P = Nat.card R := by
     rw [hQcard, hPcard, hcardR, mul_comm]
   have hQP : Q.IsComplement' P :=
@@ -4883,7 +4916,7 @@ public theorem prime_order_subgroup_le_centralizer_pCore_of_omega₁_join_commut
       have hxS : (x : R) ∈ S := by
         exact (show ΩQ ≤ S from le_sup_right) hxΩQ
       have hmul : (a : R) * (x : R) = (x : R) * (a : R) := by
-        exact Subgroup.mul_comm_of_mem_isMulCommutative (H := S) haS hxS
+        exact setLike_mul_comm (s := S) haS hxS
       have hconj : (a : R) * (x : R) * (a : R)⁻¹ = (x : R) := by
         calc
           (a : R) * (x : R) * (a : R)⁻¹ = ((x : R) * (a : R)) * (a : R)⁻¹ := by
@@ -4990,7 +5023,7 @@ public theorem prime_order_subgroup_omega₁_pCore_join_commutative_of_odd_regul
     simpa [hΩQ_card] using
       ((Nat.coprime_primes hPprime (Fact.out : Nat.Prime q)).2 hp_ne_q)
   have hP_inf_ΩQ : P ⊓ ΩQ = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hPΩ_coprime
+    (Subgroup.disjoint_of_coprime_natCard hPΩ_coprime).eq_bot
   have hΩQ_inf_P : ΩQ ⊓ P = ⊥ := by
     simpa [inf_comm] using hP_inf_ΩQ
   have hΩQ_disj_P : Disjoint ΩQ P :=
@@ -5184,7 +5217,8 @@ private theorem theorem_3_10_fixedPointSubgroup_subgroupOf_eq
       hx ⟨⟨(a : G), hA_le a.2⟩, by
         show ((⟨(a : G), hA_le a.2⟩ : S) : G) ∈ A
         exact a.2⟩
-    simpa using ha
+    change (a : G) • x = x at ha
+    exact ha
   · intro hx a
     have hx' : ((⟨(a : S), by
       show ((a : S) : G) ∈ A
@@ -5192,7 +5226,8 @@ private theorem theorem_3_10_fixedPointSubgroup_subgroupOf_eq
       exact hx ⟨(a : S), by
         show ((a : S) : G) ∈ A
         exact a.2⟩
-    simpa using hx'
+    change (a : G) • x = x at hx'
+    exact hx'
 
 omit [Finite G] in
 private theorem theorem_3_10_zpowers_subgroupOf_eq
@@ -5303,8 +5338,10 @@ private theorem theorem_3_10_case2_irreducible
     (hminv :
       ∀ N : Subgroup M, N.Normal → IsInvariant G M N → N ≠ ⊥ → N = ⊤) :
     Representation.IsIrreducible
-      (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)) := by
-  let ρ := Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
+      (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+        Representation (ZMod p) G (Additive M)) := by
+  let ρ : Representation (ZMod p) G (Additive M) :=
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
   refine
     { toNontrivial := inferInstance
       eq_bot_or_eq_top := ?_ }
@@ -5314,7 +5351,8 @@ private theorem theorem_3_10_case2_irreducible
     have hmap_mem (g : G) {x : M} (hx : x ∈ N) : g • x ∈ N := by
       change Additive.ofMul (g • x) ∈ S.toSubmodule
       have hx' : Additive.ofMul x ∈ S.toSubmodule := by
-        simpa [Submodule.mem_toAddSubgroup] using hx
+        change Additive.ofMul x ∈ S.toSubmodule at hx
+        exact hx
       have hx'' := S.apply_mem_toSubmodule g hx'
       simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hx''
     refine { invariant := ?_ }
@@ -5336,7 +5374,18 @@ private theorem theorem_3_10_case2_irreducible
     · intro hx
       simpa [hx]
     · intro hx
-      simpa using hx
+      have hx' : x ∈ (⊥ : Submodule (ZMod p) (Additive M)) := by
+        let Z : Subrepresentation
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+              Representation (ZMod p) G (Additive M)) :=
+          { toSubmodule := ⊥
+            apply_mem_toSubmodule := by simp }
+        have hxZ : x ∈ Z :=
+          (show (⊥ : Subrepresentation
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p) :
+              Representation (ZMod p) G (Additive M))) ≤ Z from bot_le) hx
+        exact hxZ
+      simpa using hx'
   · right
     have hN_top : N = ⊤ := hminv N inferInstance hN_inv hN_bot
     apply Subrepresentation.toSubmodule_injective
@@ -5356,7 +5405,8 @@ private theorem theorem_3_10_case2_fixedPointSubgroup_ne_bot
     (hcop : Nat.Coprime (Nat.card G) (Nat.card M))
     (hfixK : fixedPointSubgroup (↥K) M = ⊥) :
     fixedPointSubgroup (↥R) M ≠ ⊥ := by
-  let ρ := Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
+  let ρ : Representation (ZMod p) G (Additive M) :=
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := p)
   have hp_cop_G : Nat.Coprime p (Nat.card G) := by
     obtain ⟨n, hn⟩ := (IsElementaryAbelian.isPGroup p M).exists_card_eq
     have hn_pos : 0 < n := by
@@ -5433,7 +5483,8 @@ private theorem theorem_3_10_case2_faithful_action
 private noncomputable def theorem_3_10_ofElementaryAbelianActionFixedSubspaceEquiv
     {A V : Type*} [Group A] [Group V] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p V] [MulDistribMulAction A V] (H : Subgroup A) :
-    ↥((Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)).fixedSubspace H) ≃
+    ↥((Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+      Representation (ZMod p) A (Additive V)).fixedSubspace H) ≃
       Additive ↥(fixedPointSubgroup (↥H) V) := by
   refine
     { toFun := fun x =>
@@ -5441,12 +5492,25 @@ private noncomputable def theorem_3_10_ofElementaryAbelianActionFixedSubspaceEqu
           rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
           intro h
           exact Additive.ofMul.injective (by
-            simpa using x.2 h)⟩
+            change Additive.ofMul ((h : A) • Additive.toMul x.1) = x.1
+            have hx := x.2 h
+            change
+              (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+                Representation (ZMod p) A (Additive V)) (h : A) x.1 = x.1 at hx
+            rw [Representation.ofElementaryAbelianAction_apply] at hx
+            exact hx)⟩
       invFun := fun y =>
         ⟨Additive.ofMul ((Additive.toMul y : ↥(fixedPointSubgroup (↥H) V)) : V), by
           intro h
-          have hy := (Additive.toMul y).2 h
-          simpa using congrArg Additive.ofMul hy⟩
+          let yH : fixedPointSubgroup (↥H) V := Additive.toMul y
+          have hy := yH.2 h
+          change (h : A) • (yH : V) = (yH : V) at hy
+          change
+            (Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p) :
+              Representation (ZMod p) A (Additive V)) (h : A) (Additive.ofMul (yH : V)) =
+                Additive.ofMul (yH : V)
+          rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+          exact congrArg Additive.ofMul hy⟩
       left_inv := by
         intro x
         ext
@@ -5475,7 +5539,8 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_invariant_subgroup
     fixedPointSubgroup (↥A) N = ⊥ := by
   letI : IsInvariant A M N :=
     { invariant := fun a g => by
-        simpa using (IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
   apply
     (Subgroup.map_eq_bot_iff_of_injective
       (H := fixedPointSubgroup (↥A) N) (f := N.subtype) N.subtype_injective).1
@@ -5492,11 +5557,13 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_invariant_subgroup
       fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) N = fixedPointSubgroup (↥R) N := by
   letI : IsInvariant (↥R) M N :=
     { invariant := fun a g => by
-        simpa using (IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
   intro x hx
   letI : IsInvariant (↥(Subgroup.zpowers (x : G))) M N :=
     { invariant := fun a g => by
-        simpa using (IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
   apply (Subgroup.map_injective (f := N.subtype) N.subtype_injective)
   rw [fixedPointSubgroup_map_subtype_eq_inf, fixedPointSubgroup_map_subtype_eq_inf, hfixR x hx]
 
@@ -5513,7 +5580,8 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
   letI : IsInvariant A M N :=
     { invariant := fun a g => by
-        simpa using (hNinv.invariant (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact hNinv.invariant (a : G) g }
   rw [fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
     (G := M) (A := ↥A) hsolvM hcopA (π := ∅) (H := N) inferInstance]
   simp [hfixA]
@@ -5535,7 +5603,8 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
   letI : IsInvariant (↥R) M N :=
     { invariant := fun a g => by
-        simpa using (hNinv.invariant (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact hNinv.invariant (a : G) g }
   intro x hx
   have hz_dvd : Nat.card (Subgroup.zpowers (x : G)) ∣ Nat.card R := by
     rw [← natCard_subgroupOf_eq (Subgroup.zpowers (x : G)) R (Subgroup.zpowers_le.2 x.2)]
@@ -5544,7 +5613,8 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
     exact Nat.Coprime.of_dvd_left hz_dvd hcopR
   letI : IsInvariant (↥(Subgroup.zpowers (x : G))) M N :=
     { invariant := fun a g => by
-        simpa using (hNinv.invariant (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact hNinv.invariant (a : G) g }
   calc
     fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) (M ⧸ N)
         = (fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M).map (QuotientGroup.mk' N) := by
@@ -5571,7 +5641,8 @@ private theorem theorem_3_10_fixedPointSubgroup_card_factor
   letI : MulAction.QuotientAction G N := quotientAction_of_isInvariant (A := G) N hNinv
   letI : IsInvariant (↥R) M N :=
     { invariant := fun a g => by
-        simpa using (hNinv.invariant (a : G) g) }
+        change g ∈ N ↔ (a : G) • g ∈ N
+        exact hNinv.invariant (a : G) g }
   let C : Subgroup M := fixedPointSubgroup (↥R) M
   let q : M →* M ⧸ N := QuotientGroup.mk' N
   have hCN_card : Nat.card (fixedPointSubgroup (↥R) N) = Nat.card (C.subgroupOf N) := by
@@ -5590,7 +5661,9 @@ private theorem theorem_3_10_fixedPointSubgroup_card_factor
       natCard_subgroupOf_eq (C ⊓ N) N inf_le_right,
       inf_comm]
   have hCQ_card : Nat.card (fixedPointSubgroup (↥R) (M ⧸ N)) = Nat.card (C.map q) := by
-    simpa [C] using congrArg (fun H : Subgroup (M ⧸ N) => Nat.card H)
+    change Nat.card (fixedPointSubgroup (↥R) (M ⧸ N)) =
+      Nat.card ((fixedPointSubgroup (↥R) M).map (QuotientGroup.mk' N))
+    exact congrArg (fun H : Subgroup (M ⧸ N) => Nat.card H)
       (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
         (G := M) (A := ↥R) hsolvM hcopR (π := ∅) (H := N) inferInstance)
   have hcard_mul : Nat.card C = Nat.card (C.map q) * Nat.card (N.subgroupOf C) := by
@@ -5750,9 +5823,10 @@ private theorem theorem_3_10_fixedPointSubgroup_map_mk'_eq_of_trivial
     have hma : (a : G) • m = m := hm ⟨a, haA⟩
     calc
       aq • m = (a : G) • m := by
-        simpa [haq] using
-          (theorem_3_10_quotientMulDistribMulActionOfTrivial_smul_mk'
-            (G := G) (M := M) hNfix (g := a) (m := m))
+        change (aq : G ⧸ N) • m = (a : G) • m
+        rw [← haq]
+        exact theorem_3_10_quotientMulDistribMulActionOfTrivial_smul_mk'
+          (G := G) (M := M) hNfix (g := a) (m := m)
       _ = m := hma
 
 private noncomputable abbrev theorem_3_10_endFieldRepFixedSubspace
@@ -5805,13 +5879,23 @@ private noncomputable def theorem_3_10_endFieldRepFixedSubspaceEquiv
           change ∀ a : A, (ρK.comp A.subtype) a x.1 = x.1 at hx
           change ∀ a : A, (ρ.comp A.subtype) a (ρ.asModuleEquiv x.1) = ρ.asModuleEquiv x.1
           intro a
-          simpa [ρK, endFieldRep_apply'] using congrArg ρ.asModuleEquiv (hx a)⟩
+          calc
+            ρ (a : G) (ρ.asModuleEquiv x.1) =
+                ρ.asModuleEquiv ((endFieldRep ρ) (a : G) x.1) :=
+              (endFieldRep_apply' ρ (a : G) x.1).symm
+            _ = ρ.asModuleEquiv x.1 := congrArg ρ.asModuleEquiv (hx a)⟩
       invFun := fun x => ⟨ρ.asModuleEquiv.symm x.1, by
           change ∀ a : A, (ρK.comp A.subtype) a (ρ.asModuleEquiv.symm x.1) =
             ρ.asModuleEquiv.symm x.1
           intro a
           apply ρ.asModuleEquiv.injective
-          simpa [ρK, endFieldRep_apply'] using x.2 a⟩
+          calc
+            ρ.asModuleEquiv ((endFieldRep ρ) (a : G) (ρ.asModuleEquiv.symm x.1)) =
+                ρ (a : G) x.1 := by
+              rw [endFieldRep_apply', ρ.asModuleEquiv.apply_symm_apply]
+            _ = x.1 := x.2 a
+            _ = ρ.asModuleEquiv (ρ.asModuleEquiv.symm x.1) :=
+              (ρ.asModuleEquiv.apply_symm_apply x.1).symm⟩
       left_inv := by
         intro x
         ext
@@ -5833,9 +5917,14 @@ private theorem theorem_3_10_endFieldRep_ker_le
   rw [MonoidHom.mem_ker] at hg ⊢
   ext v
   let m : ρ.asModule := ρ.asModuleEquiv.symm v
-  have hgm : ρ.asModuleEquiv (((endFieldRep ρ) g) m) = ρ.asModuleEquiv m := by
-    simpa [m] using congrArg (fun f => ρ.asModuleEquiv (f m)) hg
-  simpa [m, endFieldRep_apply'] using hgm
+  have hgm : ((endFieldRep ρ) g) m = m := by
+    exact DFunLike.congr_fun hg m
+  calc
+    ρ g v = ρ.asModuleEquiv (((endFieldRep ρ) g) m) := by
+      rw [endFieldRep_apply']
+      simp [m]
+    _ = ρ.asModuleEquiv m := congrArg ρ.asModuleEquiv hgm
+    _ = v := by simp [m]
 
 private noncomputable def theorem_3_10_scalarValFinrankOne
     {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
@@ -6098,6 +6187,34 @@ private noncomputable def theorem_3_10_fixedSubrepresentation_of_normal
       _ = ρ g (ρ h' v) := rfl
       _ = ρ g v := by rw [hvh']
 
+private theorem theorem_3_10_toSubmodule_bot
+    {F : Type*} [Field F] {G : Type*} [Group G] {V : Type*}
+    [AddCommGroup V] [Module F V] (rho : Representation F G V) :
+    (⊥ : Subrepresentation rho).toSubmodule = ⊥ := by
+  apply le_antisymm
+  · intro x hx
+    let Z : Subrepresentation rho :=
+      { toSubmodule := ⊥
+        apply_mem_toSubmodule := by simp }
+    have hxZ : x ∈ Z := (show (⊥ : Subrepresentation rho) ≤ Z from bot_le) hx
+    exact hxZ
+  · exact bot_le
+
+private theorem theorem_3_10_toSubmodule_top
+    {F : Type*} [Field F] {G : Type*} [Group G] {V : Type*}
+    [AddCommGroup V] [Module F V] (rho : Representation F G V) :
+    (⊤ : Subrepresentation rho).toSubmodule = ⊤ := by
+  apply le_antisymm
+  · exact le_top
+  · intro x _hx
+    let T : Subrepresentation rho :=
+      { toSubmodule := ⊤
+        apply_mem_toSubmodule := by simp }
+    have hxT : x ∈ T := by
+      change x ∈ (⊤ : Submodule F V)
+      exact Submodule.mem_top
+    exact (show T ≤ (⊤ : Subrepresentation rho) from le_top) hxT
+
 private theorem theorem_3_10_le_ker_of_normal_fixedSubspace_ne_bot
     {F : Type*} [Field F] {G : Type*} [Group G] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
@@ -6107,16 +6224,22 @@ private theorem theorem_3_10_le_ker_of_normal_fixedSubspace_ne_bot
   let S : Subrepresentation ρ := theorem_3_10_fixedSubrepresentation_of_normal ρ H
   have hS_ne : S ≠ ⊥ := by
     intro hS
-    exact hfix (by
-      simpa [S, theorem_3_10_fixedSubrepresentation_of_normal] using
-        congrArg Subrepresentation.toSubmodule hS)
+    apply hfix
+    have hsub := congrArg Subrepresentation.toSubmodule hS
+    change ρ.fixedSubspace H = (⊥ : Subrepresentation ρ).toSubmodule at hsub
+    calc
+      ρ.fixedSubspace H = (⊥ : Subrepresentation ρ).toSubmodule := hsub
+      _ = ⊥ := theorem_3_10_toSubmodule_bot ρ
   have hS_top : S = ⊤ := by
     rcases (inferInstance : Representation.IsIrreducible ρ).eq_bot_or_eq_top S with hbot | htop
     · exact False.elim (hS_ne hbot)
     · exact htop
   have htop_sub : ρ.fixedSubspace H = ⊤ := by
-    simpa [S, theorem_3_10_fixedSubrepresentation_of_normal] using
-      congrArg Subrepresentation.toSubmodule hS_top
+    have hsub := congrArg Subrepresentation.toSubmodule hS_top
+    change ρ.fixedSubspace H = (⊤ : Subrepresentation ρ).toSubmodule at hsub
+    calc
+      ρ.fixedSubspace H = (⊤ : Subrepresentation ρ).toSubmodule := hsub
+      _ = ⊤ := theorem_3_10_toSubmodule_top ρ
   intro h hh
   rw [MonoidHom.mem_ker]
   ext v
@@ -6265,9 +6388,14 @@ private theorem theorem_3_10_fixedSubspace_extendScalars_eq_baseChange
     (Representation.extendScalars L ρ).fixedSubspace H =
       (ρ.fixedSubspace H).baseChange L := by
   dsimp [Representation.fixedSubspace]
-  simpa [Representation.extendScalars_apply] using
-    theorem_3_10_invariants_extendScalars_eq_baseChange
-      (ρ := ρ.comp H.subtype) hF hL
+  have hrep :
+      (Representation.extendScalars L ρ).comp H.subtype =
+        Representation.extendScalars L (ρ.comp H.subtype) := by
+    ext h
+    rfl
+  rw [hrep]
+  exact theorem_3_10_invariants_extendScalars_eq_baseChange
+    (ρ := ρ.comp H.subtype) hF hL
 
 private theorem theorem_3_10_noNontrivialConj_of_faithful
     {F : Type*} [Field F] [IsAlgClosed F]
@@ -6386,15 +6514,21 @@ private noncomputable def theorem_3_10_coindMap
           ext g
           simp }
     intro h g
-    simpa [mul_assoc] using
-      (Representation.IntertwiningMap.isIntertwining
-        (ρ := σ.comp H.subtype) (σ := ρ) π h (σ g w))
+    have hinter := Representation.IntertwiningMap.isIntertwining
+      (ρ := σ.comp H.subtype) (σ := ρ) π h (σ g w)
+    calc
+      π (σ ((h : G) * g) w) = π (σ (h : G) (σ g w)) := by
+        rw [map_mul]
+        rfl
+      _ = ρ h (π (σ g w)) := hinter
   · intro g
     apply LinearMap.ext
     intro w
     apply Subtype.ext
     ext x
-    simp [coindRep, Representation.coind_apply]
+    change π (σ x (σ g w)) = π (σ (x * g) w)
+    rw [map_mul]
+    rfl
 
 private noncomputable def theorem_3_10_coindMapOfSubrep
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
@@ -6415,11 +6549,19 @@ private noncomputable def theorem_3_10_coindMapOfSubrep
   have hcompl_sub : IsCompl M.toSubmodule ψ.toSubmodule := by
     refine ⟨?_, ?_⟩
     · rw [disjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+      calc
+        M.toSubmodule ⊓ ψ.toSubmodule =
+            (⊥ : Subrepresentation σH).toSubmodule :=
+          congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+        _ = ⊥ := theorem_3_10_toSubmodule_bot σH
     · rw [codisjoint_iff]
-      simpa using congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+      calc
+        M.toSubmodule ⊔ ψ.toSubmodule =
+            (⊤ : Subrepresentation σH).toSubmodule :=
+          congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+        _ = ⊤ := theorem_3_10_toSubmodule_top σH
   let proj : V →ₗ[F] M.toSubmodule :=
-    Submodule.linearProjOfIsCompl M.toSubmodule ψ.toSubmodule hcompl_sub
+    Submodule.projectionOnto M.toSubmodule ψ.toSubmodule hcompl_sub
   have hproj_intertwining (h : H) :
       proj.comp (σH h) = (M.toRepresentation h).comp proj := by
     apply LinearMap.ext
@@ -6428,15 +6570,18 @@ private noncomputable def theorem_3_10_coindMapOfSubrep
     have hu_mem : (σH h) u ∈ M.toSubmodule := M.apply_mem_toSubmodule h u.2
     have hw_mem : (σH h) w ∈ ψ.toSubmodule := ψ.apply_mem_toSubmodule h w.2
     let projψ : V →ₗ[F] ψ.toSubmodule :=
-      Submodule.linearProjOfIsCompl ψ.toSubmodule M.toSubmodule hcompl_sub.symm
+      Submodule.projectionOnto ψ.toSubmodule M.toSubmodule hcompl_sub.symm
     have hdecomp : (proj v : V) + (projψ v : V) = v := by
-      simpa [proj, projψ] using Submodule.IsCompl.projection_add_projection_eq_self hcompl_sub v
+      simpa [proj, projψ] using
+        Submodule.projection_add_projection_eq_self hcompl_sub v
     have hproj_v : proj v = u := by
       exact huniq (proj v) (projψ v) hdecomp |>.1
     have hproj_hu : proj ((σH h) u) = ⟨(σH h) u, hu_mem⟩ := by
-      simpa [proj] using Submodule.linearProjOfIsCompl_apply_left hcompl_sub ⟨(σH h) u, hu_mem⟩
+      simpa [proj] using
+        Submodule.projectionOnto_apply_left hcompl_sub ⟨(σH h) u, hu_mem⟩
     have hproj_hw : proj ((σH h) w) = 0 := by
-      simpa [proj] using Submodule.linearProjOfIsCompl_apply_right hcompl_sub ⟨(σH h) w, hw_mem⟩
+      simpa [proj] using
+        Submodule.projectionOnto_apply_right hcompl_sub ⟨(σH h) w, hw_mem⟩
     apply Subtype.ext
     calc
       (((proj.comp (σH h)) v : M.toSubmodule) : V) =
@@ -6464,7 +6609,7 @@ private theorem theorem_3_10_coindMapOfSubrep_eval_one
       (theorem_3_10_coindMapOfSubrep σ hchar M m) = m := by
   classical
   unfold theorem_3_10_coindMapOfSubrep theorem_3_10_coindMap coindEval
-  simp [Submodule.linearProjOfIsCompl_apply_left]
+  simp
 
 private theorem theorem_3_10_coind_apply_baseFunctionAt
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
@@ -6546,8 +6691,9 @@ private theorem theorem_3_10_coindEval_surjective_fixedSubspace
         intro hq
         apply hrq
         simpa using hq.symm
-      simpa using
-        (coindEval_of_ne_coset (ρ := ρ) (x := (1 : G)) (g := (r : G)) hrq' v)
+      change coindEval (ρ := ρ) (1 : G)
+        (coindBaseFunctionAt (ρ := ρ) (r : G) v) = 0
+      exact coindEval_of_ne_coset (ρ := ρ) (x := (1 : G)) (g := (r : G)) hrq' v
     · intro hr
       exact False.elim (hr (Finset.mem_univ _))
 
@@ -6558,15 +6704,7 @@ private noncomputable def theorem_3_10_conj_diff_equiv
     (ρ : Representation F H V)
     (e : Representation.conjugateRep ρ g ≃ₗ Representation.conjugateRep ρ x) :
     ρ ≃ₗ Representation.conjugateRep ρ (x * g⁻¹) := by
-  refine Representation.RepEquiv.mk e.toLinearEquiv ?_
-  intro k
-  ext v
-  let k' : H := ⟨(g : G)⁻¹ * k * (g : G), by
-    simpa using (inferInstance : H.Normal).conj_mem (k : G) k.2 g⁻¹⟩
-  simpa [k', Representation.conjugateRep_apply, mul_assoc] using
-    (Representation.IntertwiningMap.isIntertwining
-      (ρ := Representation.conjugateRep ρ g)
-      (σ := Representation.conjugateRep ρ x) e.toRepMap k' v)
+  exact conj_diff_equiv (ρ := ρ) e
 
 private theorem theorem_3_10_coindRep_irreducible_of_noNontrivialConj
     {F : Type*} [Field F]
@@ -6803,7 +6941,13 @@ private noncomputable def theorem_3_10_coindEquivOfNoNontrivialConj
     intro hbot
     apply hf_ne
     apply Representation.RepMap.toLinearMap_injective
-    exact LinearMap.range_eq_bot.mp (by simpa using congrArg Subrepresentation.toSubmodule hbot)
+    apply LinearMap.range_eq_bot.mp
+    have hsub := congrArg Subrepresentation.toSubmodule hbot
+    change f.range.toSubmodule = (⊥ : Subrepresentation (coindRep M.toRepresentation)).toSubmodule at hsub
+    calc
+      LinearMap.range f.toLinearMap = f.range.toSubmodule := rfl
+      _ = (⊥ : Subrepresentation (coindRep M.toRepresentation)).toSubmodule := hsub
+      _ = ⊥ := theorem_3_10_toSubmodule_bot (coindRep M.toRepresentation)
   have hrange_top : f.range = ⊤ := by
     rcases (inferInstance : Representation.IsIrreducible (coindRep (ρ := M.toRepresentation))).eq_bot_or_eq_top f.range with
       hbot | htop
@@ -6811,7 +6955,12 @@ private noncomputable def theorem_3_10_coindEquivOfNoNontrivialConj
     · exact htop
   have hfsurj : Function.Surjective f := by
     exact LinearMap.range_eq_top.mp (by
-      simpa using congrArg Subrepresentation.toSubmodule hrange_top)
+      have hsub := congrArg Subrepresentation.toSubmodule hrange_top
+      change f.range.toSubmodule = (⊤ : Subrepresentation (coindRep M.toRepresentation)).toSubmodule at hsub
+      calc
+        LinearMap.range f.toLinearMap = f.range.toSubmodule := rfl
+        _ = (⊤ : Subrepresentation (coindRep M.toRepresentation)).toSubmodule := hsub
+        _ = ⊤ := theorem_3_10_toSubmodule_top (coindRep M.toRepresentation))
   let eLin : V ≃ₗ[F] Representation.coindV H.subtype M.toRepresentation :=
     LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩
   refine Representation.RepEquiv.mk eLin ?_
@@ -6876,7 +7025,13 @@ private noncomputable def theorem_3_10_coindFixedSubspaceEquiv
         have h_eval_one :
             (((f - g : (coindRep (ρ := ρ)).fixedSubspace R) :
                 Representation.coindV H.subtype ρ).1 (1 : G)) = 0 := by
-          simpa [eval] using hsub
+          change coindEval (ρ := ρ) (1 : G)
+            (((f - g : (coindRep (ρ := ρ)).fixedSubspace R) :
+              Representation.coindV H.subtype ρ)) = 0
+          change coindEval (ρ := ρ) (1 : G)
+            (((f - g : (coindRep (ρ := ρ)).fixedSubspace R) :
+              Representation.coindV H.subtype ρ)) = 0 at hsub
+          exact hsub
         calc
           (((f - g : (coindRep (ρ := ρ)).fixedSubspace R) :
               Representation.coindV H.subtype ρ).1 (rR : G))
@@ -6936,7 +7091,7 @@ private lemma coindRep_restriction_decomp
     DirectSum.IsInternal (fun (q : G ⧸ H) => (coindCosetSubrep (ρ := ρ) q).toSubmodule) := by
   haveI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
   have h_indep : iSupIndep (fun q : G ⧸ H => (coindCosetSubrep (ρ := ρ) q).toSubmodule) := by
-    rw [iSupIndep_iff_finset_sum_eq_zero_imp_eq_zero
+    rw [iSupIndep_iff_finsetSum_eq_zero_imp_eq_zero
       (p := fun q : G ⧸ H => (coindCosetSubrep (ρ := ρ) q).toSubmodule)]
     intro s
     refine Finset.induction_on s ?_ ?_
@@ -7018,7 +7173,7 @@ private lemma exists_coindProj_ne_zero_of_ne_zero
   classical
   haveI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   apply hf
   rw [← show (∑ q : G ⧸ H, coindProj (ρ := ρ) q f) = f by
     ext x
@@ -7257,12 +7412,18 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
     Nat.card M = Nat.card (fixedPointSubgroup (↥R) M) ^ Nat.card R := by
   classical
   letI : K.Normal := hfrob.normal
-  let ρ := Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q)
+  let ρ : Representation (ZMod q) G (Additive M) :=
+    Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q)
   have hirred :=
     theorem_3_10_case2_irreducible (G := G) (M := M) (p := q) hminv
   letI : Representation.IsIrreducible ρ := hirred
   letI : FiniteDimensional (ZMod q) (Additive M) :=
     finiteDimensional_of_irreducible_finite_group ρ hirred
+  let instNontrivρas : Nontrivial ρ.asModule :=
+    Function.Injective.nontrivial (f := ρ.asModuleEquiv.symm)
+      (LinearEquiv.injective ρ.asModuleEquiv.symm)
+  let instFiniteρas : Finite ρ.asModule :=
+    Finite.of_injective ρ.asModuleEquiv ρ.asModuleEquiv.injective
   have hfaith : actionCentralizerIn (A := G) (G := M) (⊤ : Subgroup G) = ⊥ :=
     theorem_3_10_case2_faithful_action (G := G) (M := M) (K := K) (R := R)
       hK_min hfrob hfixK
@@ -7307,8 +7468,7 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
   let κ : @Representation E G ρ.asModule instSemiringE inferInstance
       ρ.instAddCommMonoidAsModule instModuleE :=
     endFieldRep ρ
-  have hρasFinite : Finite ρ.asModule := Module.finite_iff_finite.mp
-    (inferInstance : FiniteDimensional (ZMod q) (Additive M))
+  have hρasFinite : Finite ρ.asModule := instFiniteρas
   let instFiniteE :
       @Module.Finite E ρ.asModule instSemiringE ρ.instAddCommMonoidAsModule instModuleE :=
     @Module.Finite.of_finite E ρ.asModule instSemiringE ρ.instAddCommMonoidAsModule
@@ -7348,7 +7508,7 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
   let instAlgebraEFalg : Algebra E Falg := inferInstance
   letI : Field Falg := instFieldFalg
   letI : Algebra E Falg := instAlgebraEFalg
-  let κ' :=
+  let κ' : Representation Falg G (Falg ⊗[E] ρ.asModule) :=
     @Representation.extendScalars E G ρ.asModule inferInstance (endField_field ρ)
       ρ.instAddCommGroupAsModule
       instModuleE Falg instFieldFalg instAlgebraEFalg κ
@@ -7361,21 +7521,14 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
         κ hfdE Falg instFieldFalg instAlgebraEFalg hκabs
   letI : Representation.IsIrreducible κ' := hκ'irr
   let instFDFalg : FiniteDimensional Falg (Falg ⊗[E] ρ.asModule) := by
-    simpa [κ'] using
-      (@Representation.extendScalars_finite_dimensional
-        E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
-        instModuleE
-        Falg instFieldFalg instAlgebraEFalg κ hfdE)
+    exact @Representation.extendScalars_finite_dimensional
+      E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
+      instModuleE Falg instFieldFalg instAlgebraEFalg κ hfdE
   haveI : FiniteDimensional Falg (Falg ⊗[E] ρ.asModule) := instFDFalg
-  let instNontrivρas : Nontrivial ρ.asModule :=
-    Function.Injective.nontrivial (f := ρ.asModuleEquiv.symm)
-      (LinearEquiv.injective ρ.asModuleEquiv.symm)
   let instNontrivFalg : Nontrivial (Falg ⊗[E] ρ.asModule) := by
-    simpa [κ'] using
-      (@Representation.extendScalars_nontrivial
-        E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
-        instModuleE
-        Falg instFieldFalg instAlgebraEFalg κ instNontrivρas)
+    exact @Representation.extendScalars_nontrivial
+      E G ρ.asModule inferInstance (endField_field ρ) ρ.instAddCommGroupAsModule
+      instModuleE Falg instFieldFalg instAlgebraEFalg κ instNontrivρas
   haveI : Nontrivial (Falg ⊗[E] ρ.asModule) := instNontrivFalg
   have hringCharE : ringChar E = q := by
     letI : Algebra (ZMod q) E :=
@@ -7428,17 +7581,17 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
       · exact Subgroup.mem_top k
       · change k ∈ fixingSubgroupOf G M Set.univ
         have hkρ : k ∈
-            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q)).ker := by
+            (Representation.ofElementaryAbelianAction (A := G) (G := M) (p := q) :
+              Representation (ZMod q) G (Additive M)).ker := by
           simpa [ρ] using hKkerρ hk
         simpa [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] using hkρ
     have hKbot : K = ⊥ :=
       le_antisymm (by simpa [hfaith] using hK_le_action) bot_le
     exact hfrob.kernel_ne_bot hKbot
-  let σ := κ'.comp K.subtype
-  obtain ⟨W, hWirr⟩ :
-      ∃ W : Subrepresentation σ, Representation.IsIrreducible W.toRepresentation :=
+  let σ : Representation Falg K (Falg ⊗[E] ρ.asModule) := κ'.comp K.subtype
+  obtain ⟨W, hWirr⟩ :=
     @Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
-      Falg K (Falg ⊗[E] ρ.asModule) instFieldFalg inferInstance inferInstance
+      Falg K (Falg ⊗[E] ρ.asModule) inferInstance inferInstance inferInstance
       inferInstance instFDFalg σ instNontrivFalg
   haveI : Representation.IsIrreducible W.toRepresentation := hWirr
   haveI : FiniteDimensional Falg W.toSubmodule :=
@@ -7507,10 +7660,7 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
     let p := κfix
     haveI : Module.Free E p := Module.Free.of_divisionRing E p
     have hbase_inj : Function.Injective (p.subtype.baseChange Falg) := by
-      simpa [LinearMap.baseChange_eq_ltensor] using
-        (TensorProduct.map_injective_of_flat_flat'
-          (LinearMap.id : Falg →ₗ[E] Falg) p.subtype
-          (fun _ _ h => h) (Subtype.val_injective : Function.Injective p.subtype))
+      simp [LinearMap.baseChange_eq_ltensor]
     have hto_inj : Function.Injective (p.toBaseChange Falg) := by
       intro x y hxy
       apply hbase_inj
@@ -7527,7 +7677,6 @@ private theorem theorem_3_10_case2_card_formula_rep_theory
       Module.finrank Falg ↥(κ'.fixedSubspace R) =
           Module.finrank Falg ↥(p.baseChange Falg) := by
             rw [hκfix_base]
-            rfl
       _ = Module.finrank Falg (Falg ⊗[E] p) := (LinearEquiv.finrank_eq ebc.symm)
       _ = Module.finrank E p := Module.finrank_baseChange
   have hdimE :
@@ -7911,9 +8060,10 @@ public theorem theorem_3_10
         simp [hR_card_eq, hnR_eq_two]
       have hcommR : IsMulCommutative R' := by
         refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
-        exact IsPGroup.commutative_of_card_eq_prime_sq (p := p) (G := R') hR_card_p2 a b
+        exact (IsPGroup.isMulCommutative_of_card_eq_prime_sq
+          (p := p) (G := R') hR_card_p2).is_comm.comm a b
       letI : IsMulCommutative R' := hcommR
-      letI : CommGroup R' := CommGroup.ofIsMulCommutative
+      letI : CommGroup R' := IsMulCommutative.instCommGroup
       letI : Fact (IsPGroup p ↥R') := ⟨hR_pgroup⟩
       have hfix_top :
           (⨆ (a : R') (_ : a ≠ 1), fixedPointSubgroup (↥(Subgroup.zpowers a)) (↥K')) = ⊤ := by
@@ -8233,7 +8383,8 @@ public theorem theorem_3_10
         simpa [hR_card_p] using hp
       refine ⟨hR_cyclic, hR_prime, hcardM, ?_⟩
       intro hcycFix
-      let ρ := Representation.ofElementaryAbelianAction (A := G') (G := M') (p := q)
+      let ρ : Representation (ZMod q) G' (Additive M') :=
+        Representation.ofElementaryAbelianAction (A := G') (G := M') (p := q)
       have hq_cop_G : Nat.Coprime q (Nat.card G') := by
         obtain ⟨nq, hM_card⟩ := (IsElementaryAbelian.isPGroup q M').exists_card_eq
         have hnq_pos : 0 < nq := by
@@ -8270,7 +8421,11 @@ public theorem theorem_3_10
         have hcard_fix : Nat.card (fixedPointSubgroup (↥R') M') = q :=
           theorem_3_10_natCard_eq_prime_of_cyclic_elementaryAbelian (p := q) hcycFix
         have hcard_add : Nat.card (Additive ↥(fixedPointSubgroup (↥R') M')) = q := by
-          simpa using hcard_fix
+          calc
+            Nat.card (Additive ↥(fixedPointSubgroup (↥R') M')) =
+                Nat.card ↥(fixedPointSubgroup (↥R') M') :=
+              Nat.card_congr Additive.toMul
+            _ = q := hcard_fix
         have hcard_sub : Nat.card ↥(ρ.fixedSubspace R') = q := by
           calc
             Nat.card ↥(ρ.fixedSubspace R') = Nat.card (Additive ↥(fixedPointSubgroup (↥R') M')) := by
@@ -8292,7 +8447,7 @@ public theorem theorem_3_10
       · exact (Subgroup.commutator_le_right (H₁ := K') (H₂ := K')) hg
       · rw [Representation.centralizerIn, Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup] at hgcent
         exact hgcent.2
-    · push_neg at hminv
+    · push Not at hminv
       rcases hminv with ⟨N, hN_normal, hN_inv, hN_ne_bot, hN_ne_top⟩
       letI : N.Normal := hN_normal
       letI : IsInvariant G' M' N := hN_inv
@@ -8367,32 +8522,8 @@ public theorem theorem_3_10
         letI : MulDistribMulAction A M' := MulDistribMulAction.compHom M' A.subtype
         letI : IsInvariant (↥R') M' N :=
           { invariant := fun a g => by
-              simpa using (hN_inv.invariant (a : G') g) }
-        have hN_invA : IsInvariant A M' N :=
-          { invariant := fun a g => by
-              simpa using (hN_inv.invariant (a : G') g) }
-        have htop_invA : IsInvariant A M' (⊤ : Subgroup M') := by
-          refine { invariant := ?_ }
-          intro a g
-          constructor <;> intro _ <;> simp
-        have hbot_invA : IsInvariant A M' (⊥ : Subgroup M') := by
-          refine { invariant := ?_ }
-          intro a g
-          constructor
-          · intro hg
-            have hg' : g = 1 := by simpa using hg
-            rw [Subgroup.mem_bot, hg']
-            exact smul_one a
-          · intro hg
-            have hsmul : a • g = 1 := by simpa using hg
-            have hg' : g = 1 := by
-              calc
-                g = a⁻¹ • (a • g) := by
-                  exact (inv_smul_smul a g).symm
-                _ = 1 := by
-                  rw [hsmul]
-                  exact smul_one a⁻¹
-            simp [hg']
+              change g ∈ N ↔ (a : G') • g ∈ N
+              exact hN_inv.invariant (a : G') g }
         have hcycFixN : IsCyclic (fixedPointSubgroup (↥R') N) := by
           let C : Subgroup M' := fixedPointSubgroup (↥R') M'
           let eCN : (C.subgroupOf N) ≃* (N.subgroupOf C) :=
@@ -8440,9 +8571,31 @@ public theorem theorem_3_10
             · simp [Gi]
           · intro i
             fin_cases i
-            · simpa [Gi] using htop_invA
-            · simpa [Gi] using hN_invA
-            · simpa [Gi] using hbot_invA
+            · change IsInvariant A M' (⊤ : Subgroup M')
+              refine { invariant := ?_ }
+              intro a g
+              constructor <;> intro _ <;> simp
+            · change IsInvariant A M' N
+              refine { invariant := ?_ }
+              intro a g
+              change g ∈ N ↔ (a : G') • g ∈ N
+              exact hN_inv.invariant (a : G') g
+            · change IsInvariant A M' (⊥ : Subgroup M')
+              refine { invariant := ?_ }
+              intro a g
+              constructor
+              · intro hg
+                have hg' : g = 1 := by simpa using hg
+                subst g
+                rw [Subgroup.mem_bot]
+                exact smul_one a
+              · intro hg
+                have hsmul : a • g = 1 := by simpa using hg
+                have hg' : g = 1 := by
+                  calc
+                    g = a⁻¹ • (a • g) := (inv_smul_smul a g).symm
+                    _ = 1 := by rw [hsmul]; exact smul_one a⁻¹
+                simp [hg']
           · intro i a g hg
             fin_cases i
             ·
@@ -8457,7 +8610,8 @@ public theorem theorem_3_10
                 simpa [gQ] using hfix
               have hdiv_mem : ((a : G') • g) / g ∈ N :=
                 (QuotientGroup.eq_iff_div_mem (N := N) (x := (a : G') • g) (y := g)).1 hmk_eq
-              simpa [Gi, next, div_eq_mul_inv] using hdiv_mem
+              change ((a : G') • g) * g⁻¹ ∈ N
+              simpa only [div_eq_mul_inv] using hdiv_mem
             ·
               have haFixN : (a : G') ∈ fixingSubgroupOf G' N (Set.univ : Set N) :=
                 ((hmainN.2.2.2 hcycFixN) a.2).2
@@ -8466,14 +8620,18 @@ public theorem theorem_3_10
                 (mem_fixingSubgroup_iff (M := G') (s := (Set.univ : Set N))).1 haFixN gN
                   (by trivial)
               have hEq : (a : G') • g = g := by
-                simpa [gN] using congrArg Subtype.val hfix
+                have hEq' := congrArg Subtype.val hfix
+                change (a : G') • g = g at hEq'
+                exact hEq'
               have hmem_bot : (((a : G') • g) * g⁻¹) ∈ (⊥ : Subgroup M') := by
                 simp [hEq]
-              simpa [Gi, next] using hmem_bot
+              change ((a : G') • g) * g⁻¹ ∈ (⊥ : Subgroup M')
+              exact hmem_bot
             ·
               have hg_one : g = 1 := by simpa [Gi] using hg
               subst g
-              simp [Gi, next]
+              change ((a : G') • (1 : M')) * 1⁻¹ ∈ (⊥ : Subgroup M')
+              simp
         have hker_eq :
             fixingSubgroupOf (↥A) M' (Set.univ : Set M') =
               (MulDistribMulAction.toMulAut (G := ↥A) (M := M')).ker :=

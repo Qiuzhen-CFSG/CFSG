@@ -105,8 +105,10 @@ private theorem proposition_6_b_H_decomp
   rcases (Subgroup.mem_sup_of_normal_left (s := QH) (t := DH) (x := hH)).mp hhH with
     ⟨qH, hqH, dH, hdH, hmul⟩
   refine ⟨qH, ?_, dH, ?_, ?_⟩
-  · simpa [QH] using hqH
-  · simpa [DH] using hdH
+  · change (qH : G) ∈ Q at hqH
+    exact hqH
+  · change (dH : G) ∈ D at hdH
+    exact hdH
   · exact congrArg Subtype.val hmul
 
 private theorem proposition_6_b_H_decomp_unique
@@ -436,7 +438,6 @@ public theorem proposition_6_b
     proposition_6_b_centralizer_involution_le_rightConjugate hA1 hsH hsI hur
   have huHr : u ∈ rightConjugate H r := by
     refine ⟨s, hsH, ?_⟩
-    change (MulEquiv.toMonoidHom (MulAut.conj r⁻¹)) s = u
     simpa [rightConjugateElem] using hur.symm
   let omega_u : Ω := r⁻¹ • base
   have hHr_stab :
@@ -487,4 +488,3 @@ public theorem proposition_6_b
 
 end PFchapter1section1
 end BenderSuzuki
-

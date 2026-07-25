@@ -92,13 +92,15 @@ public theorem suzuki_ch5_proposition_1_2_iii
   have hu_conj_t : u * t * u⁻¹ = t⁻¹ := by
     calc
       u * t * u⁻¹ = (u * w * u⁻¹) ^ m := by
-        simpa [t] using conjugate_pow u w m
+        change u * w ^ m * u⁻¹ = (u * w * u⁻¹) ^ m
+        exact conjugate_pow u w m
       _ = (w⁻¹) ^ m := by rw [hu_conj_w]
       _ = t⁻¹ := by simp [t]
   have hv_conj_t : v * t * v⁻¹ = t⁻¹ := by
     calc
       v * t * v⁻¹ = (v * w * v⁻¹) ^ m := by
-        simpa [t] using conjugate_pow v w m
+        change v * w ^ m * v⁻¹ = (v * w * v⁻¹) ^ m
+        exact conjugate_pow v w m
       _ = (w⁻¹) ^ m := by rw [hv_conj_w]
       _ = t⁻¹ := by simp [t]
   have hu_fix_t : u * t * u⁻¹ = t := hu_conj_t.trans ht.inv_eq_self
@@ -117,4 +119,3 @@ end V
 end Suzuki
 end External
 end BenderSuzuki
-

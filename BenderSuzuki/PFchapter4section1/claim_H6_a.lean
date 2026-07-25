@@ -27,7 +27,7 @@ public theorem h6_rightConjugateElem_mem_Q_of_mem_M
     convert hmem using 1
     ext
     simp [rightConjugateElem, mul_assoc]
-  simpa using htarget
+  simpa [Subgroup.mem_subgroupOf] using htarget
 
 public theorem h6_qd_D_unique
     {L : Type*} [Group L] {Q D : Subgroup L} {q₁ d₁ q₂ d₂ : L}
@@ -107,4 +107,3 @@ public theorem claim_H6_a
 
 end PFchapter4section1
 end BenderSuzuki
-

@@ -1536,8 +1536,6 @@ private theorem theorem_13_19_betaSupport_subset_typePFAZeroSet
   rcases hx with hxP | hxV
   · left
     refine ⟨x, hxP, ?_⟩
-    change x ∈ section16NonidentityElements
-      ((elementCentralizerIn (ambientDerivedSubgroup Smax) x : Subgroup G) : Set G)
     refine ⟨?_, hxP.2⟩
     change x ∈ elementCentralizerIn (ambientDerivedSubgroup Smax) x
     rw [elementCentralizerIn]
@@ -2503,7 +2501,7 @@ private theorem theorem_13_19_alternative_source
     exact_mod_cast hzEqC
   have hoddInts : Odd zS ∨ Odd zL := by
     by_contra hnot
-    push_neg at hnot
+    push Not at hnot
     have hzevenS : Even zS := Int.not_odd_iff_even.mp hnot.1
     have hzevenL : Even zL := Int.not_odd_iff_even.mp hnot.2
     have hzodd : Odd (zS + zL - 1) :=

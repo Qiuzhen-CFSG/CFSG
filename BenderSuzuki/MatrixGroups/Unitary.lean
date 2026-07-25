@@ -53,9 +53,9 @@ public def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
     ext i j
     by_cases h : i = j
     · subst j
-      simp [adjoint, HermitianForm.conjTranspose, Matrix.one_apply]
+      simp [adjoint, HermitianForm.conjTranspose]
     · have hji : j ≠ i := fun hji => h hji.symm
-      simp [adjoint, HermitianForm.conjTranspose, Matrix.one_apply, h, hji]
+      simp [adjoint, HermitianForm.conjTranspose, h, hji]
   refine
     { carrier := {A | adjoint (A : Matrix (Fin n) (Fin n) F) * J.form *
           (A : Matrix (Fin n) (Fin n) F) = J.form}
@@ -111,8 +111,7 @@ public def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
         have hmul :
             (A : Matrix (Fin n) (Fin n) F) *
                 ((A⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) = 1 := by
-          simpa using congrArg
-            (fun X : GL (Fin n) F => (X : Matrix (Fin n) (Fin n) F)) (mul_inv_cancel A)
+          simp
         rw [hmul, adjoint_one]
         simp
 

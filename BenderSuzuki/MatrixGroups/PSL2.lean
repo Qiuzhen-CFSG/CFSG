@@ -23,12 +23,12 @@ open PFAppendixIII
 universe w
 
 /-- The actual projective special linear matrix group `PSL(2,F)`. -/
-@[expose] public abbrev PSL2MatrixGroup (F : Type w) [Field F] :=
+public abbrev PSL2MatrixGroup (F : Type w) [Field F] :=
   Matrix.ProjectiveSpecialLinearGroup (Fin 2) F
 
 
 /-- The actual projective special linear matrix group over `GF(2^m)`. -/
-@[expose] public abbrev PSL2BinaryMatrixGroup (m : ℕ) :=
+public abbrev PSL2BinaryMatrixGroup (m : ℕ) :=
   PSL2MatrixGroup (BinaryGaloisField m)
 
 end MatrixGroups

@@ -97,7 +97,7 @@ public theorem TwoRankAtLeastTwo.exists_subgroup {G : Type*} [Group G]
   {y : G | ∃ x : G, x ∈ X ∧ y = rightConjugateElem x g}
 
 /-- Fixed points of a subgroup on a `G`-set. -/
-@[expose] public abbrev fixedPointsOfSubgroup (G Ω : Type*) [Group G] [MulAction G Ω]
+public abbrev fixedPointsOfSubgroup (G Ω : Type*) [Group G] [MulAction G Ω]
     (X : Subgroup G) : Set Ω :=
   {ω : Ω | ∀ x : G, x ∈ (X : Set G) → x • ω = ω}
 

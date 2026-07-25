@@ -53,9 +53,13 @@ lemma invariants_eq_bot_of_nontrivial
       apply_mem_toSubmodule := Representation.le_comap_invariants ρ H }
   rcases IsSimpleOrder.eq_bot_or_eq_top S with hS | hS
   · exact (by
-      simpa [S] using congrArg Subrepresentation.toSubmodule hS)
+      have h := congrArg Subrepresentation.toSubmodule hS
+      change Representation.invariants (ρ.comp H.subtype) = (⊥ : Submodule ℂ V) at h
+      exact h)
   · have hStop : Representation.invariants (ρ.comp H.subtype) = ⊤ := by
-      simpa [S] using congrArg Subrepresentation.toSubmodule hS
+      have h := congrArg Subrepresentation.toSubmodule hS
+      change Representation.invariants (ρ.comp H.subtype) = (⊤ : Submodule ℂ V) at h
+      exact h
     exfalso
     apply hHker
     refine ⟨?_⟩

@@ -17,13 +17,14 @@ open scoped Pointwise
 section Section15
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [IsMinCE G] in
 /-- Corollary 15.4: every nonidentity nilpotent Hall subgroup of `G` is
 contained in `M_σ` for a suitable maximal subgroup `M`. -/
 private theorem section15_corollary15_4_exists_nontrivial_sylow
     {H : Subgroup G}
     (hHne : H ≠ ⊥)
-    (hHall : section15HallSubgroupOf H (⊤ : Subgroup G))
-    (hNil : Group.IsNilpotent H) :
+    (_hHall : section15HallSubgroupOf H (⊤ : Subgroup G))
+    (_hNil : Group.IsNilpotent H) :
     ∃ p : Nat.Primes, ∃ S : Subgroup G,
       S ≤ H ∧ S ≠ ⊥ ∧ IsPGroup p.val S ∧ section15HallSubgroupOf S H := by
   classical
@@ -51,8 +52,8 @@ private theorem section15_corollary15_4_exists_nontrivial_sylow
       ((Subgroup.map_eq_bot_iff_of_injective
         (H := (P : Subgroup H)) (f := H.subtype) H.subtype_injective).1 hmapbot)
   have hSp : IsPGroup p'.val S := by
-    simpa [S, section10AmbientSylowSubgroup] using
-      (IsPGroup.map (p := p'.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype)
+    change IsPGroup p'.val ((P : Subgroup H).map H.subtype)
+    exact IsPGroup.map (p := p'.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype
   have hSsub_eq : S.subgroupOf H = (P : Subgroup H) := by
     simpa [S, section10AmbientSylowSubgroup] using
       (subgroupOf_map_subtype_eq (K := H) (P : Subgroup H))
@@ -120,7 +121,7 @@ private theorem section15_corollary15_4_exists_maximal_for_sylow
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := p.val) (H := S) hSp hSne)
   have hpS : p ∈ subgroupPrimeSet S := by
-    simpa [hSprimeSet]
+    simp [hSprimeSet]
   have hpH : p ∈ subgroupPrimeSet H :=
     hpS.trans (Subgroup.card_dvd_of_le hSleH)
   have hp_not_SsubH_index : ¬ p.val ∣ (S.subgroupOf H).index := by
@@ -158,7 +159,7 @@ private theorem section15_corollary15_4_exists_maximal_for_sylow
     · exact hp_not_H_index hpHidx
   let P : Sylow p.val G := hSp.toSylow hp_not_S_index
   have hP_eq_S : (P : Subgroup G) = S := by
-    simpa [P, IsPGroup.toSylow_coe]
+    simp [P, IsPGroup.toSylow_coe]
   have hnorm_proper : Subgroup.normalizer (S : Set G) ≠ ⊤ :=
     section15_normalizer_ne_top_of_nontrivial_pSubgroup
       (G := G) (S := S) (p := p) hSne hSp
@@ -238,6 +239,7 @@ private theorem section15_corollary15_4_exists_maximal_for_sylow
         exact dvd_mul_of_dvd_left hqidx (section10Msigma M).index)
   exact ⟨M, hMcont, hSsigma, hSHallSigma⟩
 
+omit [IsMinCE G] in
 /-- In a nilpotent subgroup, a nontrivial Hall `p`-subgroup is normal
 inside the ambient local group. -/
 private theorem section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
@@ -257,7 +259,7 @@ private theorem section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := p.val) (H := S) hSp hSne)
   have hpS : p ∈ subgroupPrimeSet S := by
-    simpa [hSprimeSet]
+    simp [hSprimeSet]
   have hSsub_p : IsPGroup p.val Ssub := by
     exact hSp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := S) (K := H) hSleH).symm
@@ -269,6 +271,7 @@ private theorem section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
     Group.IsNilpotent.sylow_normal hNil p.val P
   simpa [P, Ssub, IsPGroup.toSylow_coe] using hPnormal
 
+omit [IsMinCE G] in
 /-- In the Corollary 15.4 setup, a nontrivial Hall `q`-subgroup `T` of the
 ambient Hall subgroup `H`, once known to lie in `M`, is a Sylow `q`-subgroup
 of `M`. -/
@@ -292,7 +295,7 @@ private theorem section15_corollary15_4_exists_sylow_M_for_hall_subgroup
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := q.val) (H := T) hTp hTne)
   have hqT : q ∈ subgroupPrimeSet T := by
-    simpa [hTprimeSet]
+    simp [hTprimeSet]
   rcases hHall with ⟨_hHtop, hHHall⟩
   rcases hTHall with ⟨_hTH, hTHallH⟩
   have hqH : q ∈ subgroupPrimeSet H := by
@@ -370,7 +373,7 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
     {H S T M : Subgroup G} {q : Nat.Primes}
     (hHall : section15HallSubgroupOf H (⊤ : Subgroup G))
     (hM : M ∈ section9MaximalSubgroups G)
-    (hSsigma : S ≤ section10Msigma M)
+    (_hSsigma : S ≤ section10Msigma M)
     (hSne : S ≠ ⊥)
     (hSHallSigma : section15HallSubgroupOf S (section10Msigma M))
     (hTleH : T ≤ H)
@@ -380,7 +383,7 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
     T ≤ section10Msigma M := by
   classical
   by_cases hTbot : T = ⊥
-  · simpa [hTbot] using (bot_le : (⊥ : Subgroup G) ≤ section10Msigma M)
+  · simp [hTbot]
   have hTleM : T ≤ M := fun x hx => (hTcent hx).1
   rcases section15_corollary15_4_exists_sylow_M_for_hall_subgroup
       (H := H) (T := T) (M := M) (q := q)
@@ -462,7 +465,7 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
       have htop_le_M : (⊤ : Subgroup G) ≤ M := by
         intro x hx
         have hxC : x ∈ C := by
-          simpa [hCtop] using hx
+          simp [hCtop]
         exact hCleM hxC
       exact hM.1 (top_le_iff.mp htop_le_M)
     have hCsolv : IsSolvable C :=
@@ -532,7 +535,8 @@ private theorem section15_corollary15_4_centralizer_hall_le_msigma
     have hqτ2' : q ∉ section10SigmaPrimes M ∧ primeRank q.val M = 2 := by
       simpa [section12Tau2Primes] using hqτ2
     have htwo_le_one : (2 : ℕ) ≤ 1 := by
-      simpa [hqτ2'.2] using hqRank_le_one
+      rw [hqτ2'.2] at hqRank_le_one
+      exact hqRank_le_one
     omega
   · have hqτ2c : q ∈ (section12Tau2Primes M)ᶜ := by
       simpa [Set.mem_compl_iff] using hqτ2
@@ -581,7 +585,7 @@ private theorem section15_corollary15_4_centralizing_sylow_le_msigma
         simpa using
           (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
             (G := G) (p := p.val) (H := S) hSp hSne)
-      simpa [hSprimeSet]
+      simp [hSprimeSet]
     have hTsub_p : IsPGroup p.val (T.subgroupOf H) := by
       exact hTp.of_equiv
         (Subgroup.subgroupOfEquivOfLe (H := T) (K := H) hTleH).symm
@@ -644,7 +648,7 @@ private theorem section15_corollary15_4_centralizing_sylow_le_msigma
 of `H` is in `M_σ`, nilpotence gives `H ≤ M_σ`. -/
 private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
     {H S M : Subgroup G} {p : Nat.Primes}
-    (hHne : H ≠ ⊥)
+    (_hHne : H ≠ ⊥)
     (hHall : section15HallSubgroupOf H (⊤ : Subgroup G))
     (hNil : Group.IsNilpotent H)
     (hSleH : S ≤ H)
@@ -676,8 +680,8 @@ private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
       rcases Subgroup.mem_map.mp hxmap with ⟨y, _hy, rfl⟩
       exact y.property
     have hTp : IsPGroup q.val T := by
-      simpa [T, section10AmbientSylowSubgroup] using
-        (IsPGroup.map (p := q.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype)
+      change IsPGroup q.val ((P : Subgroup H).map H.subtype)
+      exact IsPGroup.map (p := q.val) (H := (P : Subgroup H)) P.isPGroup' H.subtype
     have hTsub_eq : T.subgroupOf H = (P : Subgroup H) := by
       simpa [T, section10AmbientSylowSubgroup] using
         (subgroupOf_map_subtype_eq (K := H) (P : Subgroup H))
@@ -687,14 +691,14 @@ private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
         have hcard : Nat.card (T.subgroupOf H) = Nat.card T :=
           Nat.card_congr (Subgroup.subgroupOfEquivOfLe hTleH).toEquiv
         have hs_dvd_sub : s.val ∣ Nat.card (T.subgroupOf H) := by
-          simpa [hcard] using hsT
+          simpa [subgroupPrimeSet, hcard] using hsT
         simpa [hTsub_eq] using hs_dvd_sub
       rcases P.isPGroup'.exists_card_eq with ⟨n, hn⟩
       have hs_dvd_pow : s.val ∣ q.val ^ n := by simpa [hn] using hs_dvd_P
       have hs_dvd_q : s.val ∣ q.val := s.property.dvd_of_dvd_pow hs_dvd_pow
       have hs_eq_q : s = q :=
         Subtype.ext ((Nat.prime_dvd_prime_iff_eq s.property q.property).mp hs_dvd_q)
-      simpa [hs_eq_q]
+      simp [hs_eq_q]
     have hPprimeSet_subset : subgroupPrimeSet (P : Subgroup H) ⊆ ({q} : Set Nat.Primes) := by
       intro s hsP
       rcases P.isPGroup'.exists_card_eq with ⟨n, hn⟩
@@ -702,7 +706,7 @@ private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
       have hs_dvd_q : s.val ∣ q.val := s.property.dvd_of_dvd_pow hs_dvd_pow
       have hs_eq_q : s = q :=
         Subtype.ext ((Nat.prime_dvd_prime_iff_eq s.property q.property).mp hs_dvd_q)
-      simpa [hs_eq_q]
+      simp [hs_eq_q]
     have hTHall : section15HallSubgroupOf T H := by
       refine ⟨hTleH, ?_⟩
       rw [hTsub_eq]
@@ -735,12 +739,11 @@ private theorem section15_corollary15_4_nilpotent_hall_le_msigma_of_chosen_sylow
     change (P : Subgroup H) ≤ C
     intro y hyP
     change ((y : H) : G) ∈ section10Msigma M
-    exact hT_msigma (by
-      change ((y : H) : G) ∈ T
-      exact Subgroup.mem_map_of_mem H.subtype hyP)
+    exact hT_msigma (Subgroup.mem_map_of_mem H.subtype hyP)
   intro x hxH
   have hxC : (⟨x, hxH⟩ : H) ∈ C := htop_le_C trivial
-  simpa [C, Subgroup.mem_comap] using hxC
+  change x ∈ section10Msigma M at hxC
+  exact hxC
 
 /-- Corollary 15.4: every nonidentity nilpotent Hall subgroup of `G` is
 contained in `M_σ` for a suitable maximal subgroup `M`. -/

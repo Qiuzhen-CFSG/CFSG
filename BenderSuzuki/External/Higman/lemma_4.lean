@@ -25,52 +25,58 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped commutatorElement
+open scoped IsMulCommutative
 
 universe u v w
 
 private def lemma4_iteratedCommutatorLift
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
-    lowerCentralSeries H 1 :=
+    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
+    higmanLowerCentralSeries H 1 :=
   ⟨⁅(x : H), (c : H)⁆, by
-    apply lowerCentralSeries_antitone (by omega : 1 ≤ 2)
-    have hcx : ⁅(c : H), (x : H)⁆ ∈ lowerCentralSeries H 2 := by
-      rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ]
+    apply (⊤ : Subgroup H).lowerCentralSeries_antitone (by omega : 1 ≤ 2)
+    have hcx : ⁅(c : H), (x : H)⁆ ∈ higmanLowerCentralSeries H 2 := by
+      change ⁅(c : H), (x : H)⁆ ∈
+        (⊤ : Subgroup H).lowerCentralSeries (1 + 1)
+      rw [Subgroup.lowerCentralSeries_succ]
       exact Subgroup.subset_closure
         ⟨(c : H), c.property, (x : H), trivial, rfl⟩
-    have hinv := (lowerCentralSeries H 2).inv_mem hcx
+    have hinv := (higmanLowerCentralSeries H 2).inv_mem hcx
     simpa only [commutatorElement_inv] using hinv⟩
 
 private theorem lemma4_iteratedCommutatorLift_mem_kernel
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
     lemma4_iteratedCommutatorLift x c ∈ lowerCentralFactorKernel H 1 := by
   apply (show
-    (lowerCentralSeries H 2).subgroupOf (lowerCentralSeries H 1) ≤
+    (higmanLowerCentralSeries H 2).subgroupOf (higmanLowerCentralSeries H 1) ≤
       lowerCentralFactorKernel H 1 by
     rw [lowerCentralFactorKernel]
     exact le_sup_right)
-  change ⁅(x : H), (c : H)⁆ ∈ lowerCentralSeries H 2
-  have hcx : ⁅(c : H), (x : H)⁆ ∈ lowerCentralSeries H 2 := by
-    rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ]
+  change ⁅(x : H), (c : H)⁆ ∈ higmanLowerCentralSeries H 2
+  have hcx : ⁅(c : H), (x : H)⁆ ∈ higmanLowerCentralSeries H 2 := by
+    change ⁅(c : H), (x : H)⁆ ∈
+      (⊤ : Subgroup H).lowerCentralSeries (1 + 1)
+    rw [Subgroup.lowerCentralSeries_succ]
     exact Subgroup.subset_closure
       ⟨(c : H), c.property, (x : H), trivial, rfl⟩
-  have hinv := (lowerCentralSeries H 2).inv_mem hcx
+  have hinv := (higmanLowerCentralSeries H 2).inv_mem hcx
   simpa only [commutatorElement_inv] using hinv
 
 private theorem lemma4_quotient_conj_eq
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
     QuotientGroup.mk' (lowerCentralFactorKernel H 1)
         (⟨(x : H) * (c : H) * (x : H)⁻¹,
-          (inferInstance : (lowerCentralSeries H 1).Normal).conj_mem
-            (c : H) c.property (x : H)⟩ : lowerCentralSeries H 1) =
+          (inferInstance : (higmanLowerCentralSeries H 1).Normal).conj_mem
+            (c : H) c.property (x : H)⟩ : higmanLowerCentralSeries H 1) =
       QuotientGroup.mk' (lowerCentralFactorKernel H 1) c := by
   let q := QuotientGroup.mk' (lowerCentralFactorKernel H 1)
   have hfactor :
       (⟨(x : H) * (c : H) * (x : H)⁻¹,
-        (inferInstance : (lowerCentralSeries H 1).Normal).conj_mem
-          (c : H) c.property (x : H)⟩ : lowerCentralSeries H 1) =
+        (inferInstance : (higmanLowerCentralSeries H 1).Normal).conj_mem
+          (c : H) c.property (x : H)⟩ : higmanLowerCentralSeries H 1) =
         lemma4_iteratedCommutatorLift x c * c := by
     apply Subtype.ext
     change (x : H) * (c : H) * (x : H)⁻¹ =
@@ -84,15 +90,17 @@ private theorem lemma4_quotient_conj_eq
 
 private def lemma4_commutatorLift
     {H : Type u} [Group H]
-    (x y : lowerCentralSeries H 0) : lowerCentralSeries H 1 :=
+    (x y : higmanLowerCentralSeries H 0) : higmanLowerCentralSeries H 1 :=
   ⟨⁅(x : H), (y : H)⁆, by
-    rw [show 1 = 0 + 1 by omega, lowerCentralSeries_succ]
+    change ⁅(x : H), (y : H)⁆ ∈
+      (⊤ : Subgroup H).lowerCentralSeries (0 + 1)
+    rw [Subgroup.lowerCentralSeries_succ]
     exact Subgroup.subset_closure
       ⟨(x : H), x.property, (y : H), trivial, rfl⟩⟩
 
 private def lemma4_commutatorRightHom
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
-    lowerCentralSeries H 0 →* LowerCentralFactor H 1 where
+    {H : Type u} [Group H] (x : higmanLowerCentralSeries H 0) :
+    higmanLowerCentralSeries H 0 →* LowerCentralFactor H 1 where
   toFun y :=
     QuotientGroup.mk' (lowerCentralFactorKernel H 1)
       (lemma4_commutatorLift x y)
@@ -106,10 +114,10 @@ private def lemma4_commutatorRightHom
         lemma4_commutatorLift x (y * z) =
           lemma4_commutatorLift x y *
             (⟨(y : H) * (lemma4_commutatorLift x z : H) * (y : H)⁻¹,
-              (inferInstance : (lowerCentralSeries H 1).Normal).conj_mem
+              (inferInstance : (higmanLowerCentralSeries H 1).Normal).conj_mem
                 (lemma4_commutatorLift x z : H)
                 (lemma4_commutatorLift x z).property (y : H)⟩ :
-              lowerCentralSeries H 1) := by
+              higmanLowerCentralSeries H 1) := by
       apply Subtype.ext
       change ⁅(x : H), (y : H) * (z : H)⁆ =
         ⁅(x : H), (y : H)⁆ *
@@ -125,7 +133,7 @@ private def lemma4_commutatorRightHom
     rw [hfactor, map_mul, lemma4_quotient_conj_eq]
 
 private theorem lemma4_commutatorRightHom_kernel
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
+    {H : Type u} [Group H] (x : higmanLowerCentralSeries H 0) :
     lowerCentralFactorKernel H 0 ≤ (lemma4_commutatorRightHom x).ker := by
   rw [lowerCentralFactorKernel]
   apply sup_le
@@ -140,7 +148,7 @@ private theorem lemma4_commutatorRightHom_kernel
     change QuotientGroup.mk' (lowerCentralFactorKernel H 1)
       (lemma4_commutatorLift x c) = 1
     apply (QuotientGroup.eq_one_iff _).2
-    let c' : lowerCentralSeries H 1 := ⟨(c : H), hc⟩
+    let c' : higmanLowerCentralSeries H 1 := ⟨(c : H), hc⟩
     have heq :
         lemma4_commutatorLift x c =
           lemma4_iteratedCommutatorLift x c' := by
@@ -150,14 +158,14 @@ private theorem lemma4_commutatorRightHom_kernel
     exact lemma4_iteratedCommutatorLift_mem_kernel x c'
 
 private def lemma4_commutatorRightFactorHom
-    {H : Type u} [Group H] (x : lowerCentralSeries H 0) :
+    {H : Type u} [Group H] (x : higmanLowerCentralSeries H 0) :
     LowerCentralFactor H 0 →* LowerCentralFactor H 1 :=
   QuotientGroup.lift (lowerCentralFactorKernel H 0)
     (lemma4_commutatorRightHom x) (lemma4_commutatorRightHom_kernel x)
 
 private theorem lemma4_commutatorRightFactorHom_mk
     {H : Type u} [Group H]
-    (x y : lowerCentralSeries H 0) :
+    (x y : higmanLowerCentralSeries H 0) :
     lemma4_commutatorRightFactorHom x
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) y) =
       QuotientGroup.mk' (lowerCentralFactorKernel H 1)
@@ -166,7 +174,7 @@ private theorem lemma4_commutatorRightFactorHom_mk
 
 private def lemma4_commutatorLeftHom
     {H : Type u} [Group H] :
-    lowerCentralSeries H 0 →*
+    higmanLowerCentralSeries H 0 →*
       (LowerCentralFactor H 0 →* LowerCentralFactor H 1) where
   toFun x := lemma4_commutatorRightFactorHom x
   map_one' := by
@@ -188,10 +196,10 @@ private def lemma4_commutatorLeftHom
     have hfactor :
         lemma4_commutatorLift (x * z) y =
           (⟨(x : H) * (lemma4_commutatorLift z y : H) * (x : H)⁻¹,
-            (inferInstance : (lowerCentralSeries H 1).Normal).conj_mem
+            (inferInstance : (higmanLowerCentralSeries H 1).Normal).conj_mem
               (lemma4_commutatorLift z y : H)
               (lemma4_commutatorLift z y).property (x : H)⟩ :
-            lowerCentralSeries H 1) *
+            higmanLowerCentralSeries H 1) *
           lemma4_commutatorLift x y := by
       apply Subtype.ext
       change ⁅(x : H) * (z : H), (y : H)⁆ =
@@ -213,8 +221,8 @@ private theorem lemma4_commutatorLeftHom_kernel
     lowerCentralFactorKernel H 0 ≤
       (lemma4_commutatorLeftHom (H := H)).ker := by
   change
-    (squaresSubgroup (lowerCentralSeries H 0) ⊔
-      (lowerCentralSeries H 1).subgroupOf (lowerCentralSeries H 0)) ≤ _
+    (squaresSubgroup (higmanLowerCentralSeries H 0) ⊔
+      (higmanLowerCentralSeries H 1).subgroupOf (higmanLowerCentralSeries H 0)) ≤ _
   apply sup_le
   · rw [squaresSubgroup, Subgroup.closure_le]
     rintro _ ⟨x, rfl⟩
@@ -233,7 +241,7 @@ private theorem lemma4_commutatorLeftHom_kernel
     change QuotientGroup.mk' (lowerCentralFactorKernel H 1)
       (lemma4_commutatorLift c y) = 1
     apply (QuotientGroup.eq_one_iff _).2
-    let c' : lowerCentralSeries H 1 := ⟨(c : H), hc⟩
+    let c' : higmanLowerCentralSeries H 1 := ⟨(c : H), hc⟩
     have heq :
         lemma4_commutatorLift c y =
           (lemma4_iteratedCommutatorLift y c')⁻¹ := by
@@ -253,7 +261,7 @@ private def lemma4_commutatorFactorHom
 
 private theorem lemma4_commutatorFactorHom_mk_mk
     {H : Type u} [Group H]
-    (x y : lowerCentralSeries H 0) :
+    (x y : higmanLowerCentralSeries H 0) :
     lemma4_commutatorFactorHom
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) y) =
@@ -261,7 +269,7 @@ private theorem lemma4_commutatorFactorHom_mk_mk
         (lemma4_commutatorLift x y) :=
   rfl
 
-private def lemma4_commutatorFactorAddHom
+private noncomputable def lemma4_commutatorFactorAddHom
     {H : Type u} [Group H] :
     Additive (LowerCentralFactor H 0) →+
       (Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
@@ -289,7 +297,7 @@ private noncomputable def lemma4_lowerCentralBracket
 
 private theorem lemma4_lowerCentralBracket_mk_mk
     {H : Type u} [Group H]
-    (x y : lowerCentralSeries H 0) :
+    (x y : higmanLowerCentralSeries H 0) :
     lemma4_lowerCentralBracket
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -302,7 +310,7 @@ private theorem lemma4_lowerCentralBracket_mk_mk
 
 private theorem lemma4_commutatorLift_equivariant
     {H : Type u} [Group H] (theta : MulAut H)
-    (x y : lowerCentralSeries H 0) :
+    (x y : higmanLowerCentralSeries H 0) :
     lowerCentralSeriesMulAut theta 1 (lemma4_commutatorLift x y) =
       lemma4_commutatorLift
         (lowerCentralSeriesMulAut theta 0 x)
@@ -313,7 +321,7 @@ private theorem lemma4_commutatorLift_equivariant
   exact map_commutatorElement theta (x : H) (y : H)
 
 private theorem lemma4_lowerCentralBracket_class_mem_span
-    {H : Type u} [Group H] (c : lowerCentralSeries H 1) :
+    {H : Type u} [Group H] (c : higmanLowerCentralSeries H 1) :
     Additive.ofMul
         (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) ∈
       Submodule.span (ZMod 2)
@@ -328,35 +336,38 @@ private theorem lemma4_lowerCentralBracket_class_mem_span
       lemma4_lowerCentralBracket p.1 p.2)
   let q := QuotientGroup.mk' (lowerCentralFactorKernel H 1)
   change Additive.ofMul (q c) ∈ W
-  have hc : (c : H) ∈ lowerCentralSeries H 1 := c.property
+  have hc : (c : H) ∈ higmanLowerCentralSeries H 1 := c.property
   change (c : H) ∈ Subgroup.closure
-    {z | ∃ x ∈ lowerCentralSeries H 0, ∃ y ∈ (⊤ : Subgroup H),
+    {z | ∃ x ∈ higmanLowerCentralSeries H 0, ∃ y ∈ (⊤ : Subgroup H),
       x * y * x⁻¹ * y⁻¹ = z} at hc
   refine Subgroup.closure_induction (p := fun z hz =>
     Additive.ofMul
-      (q (⟨z, hz⟩ : lowerCentralSeries H 1)) ∈ W) ?_ ?_ ?_ ?_ hc
+      (q (⟨z, hz⟩ : higmanLowerCentralSeries H 1)) ∈ W) ?_ ?_ ?_ ?_ hc
   · intro z hz
     rcases hz with ⟨x, hx, y, _hy, rfl⟩
-    let x' : lowerCentralSeries H 0 := ⟨x, hx⟩
-    let y' : lowerCentralSeries H 0 := ⟨y, trivial⟩
+    let x' : higmanLowerCentralSeries H 0 := ⟨x, hx⟩
+    let y' : higmanLowerCentralSeries H 0 := ⟨y, trivial⟩
     apply Submodule.subset_span
     refine ⟨(Additive.ofMul
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x'),
       Additive.ofMul
         (QuotientGroup.mk' (lowerCentralFactorKernel H 0) y')), ?_⟩
-    simpa [commutatorElement_def, x', y'] using
-      lemma4_lowerCentralBracket_mk_mk x' y'
-  · change Additive.ofMul (q (1 : lowerCentralSeries H 1)) ∈ W
+    refine (lemma4_lowerCentralBracket_mk_mk x' y').trans ?_
+    apply Additive.ofMul.injective
+    apply congrArg q
+    apply Subtype.ext
+    rfl
+  · change Additive.ofMul (q (1 : higmanLowerCentralSeries H 1)) ∈ W
     rw [map_one, ofMul_one]
     exact W.zero_mem
   · intro a b ha hb iha ihb
     change Additive.ofMul
-      (q ((⟨a, ha⟩ : lowerCentralSeries H 1) * ⟨b, hb⟩)) ∈ W
+      (q ((⟨a, ha⟩ : higmanLowerCentralSeries H 1) * ⟨b, hb⟩)) ∈ W
     rw [map_mul, ofMul_mul]
     exact W.add_mem iha ihb
   · intro a ha iha
     change Additive.ofMul
-      (q (⟨a, ha⟩ : lowerCentralSeries H 1)⁻¹) ∈ W
+      (q (⟨a, ha⟩ : higmanLowerCentralSeries H 1)⁻¹) ∈ W
     rw [map_inv, ofMul_inv]
     exact W.neg_mem iha
 
@@ -433,8 +444,8 @@ public theorem lemma4_exists_lowerCentralBracket
     ∃ bracket : Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
           Additive (LowerCentralFactor H 1),
-      (∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      (∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -457,7 +468,7 @@ public theorem lemma4_exists_lowerCentralBracket
     lemma4_lowerCentralBracket_span⟩
   · intro x y hcomm
     have hlift : lemma4_commutatorLift x y =
-        (⟨⁅(x : H), (y : H)⁆, hcomm⟩ : lowerCentralSeries H 1) :=
+        (⟨⁅(x : H), (y : H)⁆, hcomm⟩ : higmanLowerCentralSeries H 1) :=
       Subtype.ext (by rfl)
     simpa [hlift] using lemma4_lowerCentralBracket_mk_mk x y
   · exact lemma4_lowerCentralBracket_equivariant
@@ -580,7 +591,7 @@ private theorem lemma4_diagonal_alternating_span_forces_product
   classical
   intro k
   by_contra hproduct
-  push_neg at hproduct
+  push Not at hproduct
   have hcoord_T (z : W) :
       basis.coord k (T z) = mu k * basis.coord k z := by
     have hmaps :
@@ -759,11 +770,9 @@ private theorem lemma4_singer_frobenius_eigenvalue
     (sigma ^ i).toAlgHom.comp_algebraMap
   rw [hcomp] at hmapped
   have hsigma : (sigma ^ i) lambda = lambda ^ (2 ^ i) := by
-    change ((sigma ^ i : K ≃ₐ[ZMod 2] K) : K → K) lambda =
-      lambda ^ (2 ^ i)
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
-    simp [sigma, ZMod.card]
+    simp [ZMod.card]
   have hsigma' :
       ((sigma ^ i).toAlgHom.toRingHom) lambda =
         lambda ^ (2 ^ i) := by
@@ -829,7 +838,7 @@ private theorem lemma4_singer_primitive_root
       LinearEquiv.baseChange_one]
   have hf_eq :
       f = (T.baseChange (ZMod 2) K V V).toLinearMap := by
-    simpa [f] using (LinearEquiv.coe_baseChange T).symm
+    simp [f]
   have hfpow : f ^ (2 ^ n - 1) = 1 := by
     let eT := T.baseChange (ZMod 2) K V V
     have hmap :
@@ -850,11 +859,8 @@ private theorem lemma4_singer_primitive_root
   have hvpow := hv.pow_apply (2 ^ n - 1)
   rw [hfpow] at hvpow
   have hlambda_pow : lambda ^ (2 ^ n - 1) = 1 := by
-    have hsmul : (lambda ^ (2 ^ n - 1) - 1) • v = 0 := by
-      rw [sub_smul, one_smul]
-      exact sub_eq_zero.mpr hvpow.symm
-    exact sub_eq_zero.mp
-      ((smul_eq_zero.mp hsmul).resolve_right hv.2)
+    apply smul_left_injective K hv.2
+    simpa using hvpow.symm
   refine ⟨lambda, hlambda_eigen, ?_, ?_⟩
   · intro hlambda
     subst lambda
@@ -943,7 +949,7 @@ private theorem lemma4_singer_eigenbasis
   letI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
   let basis : Module.Basis (Fin n) K (BC V) :=
     basisOfLinearIndependentOfCardEqFinrank hv_linearIndependent
-      (by simpa [hfinrank_bc])
+      (by simp [hfinrank_bc])
   refine ⟨lambda, basis, hlambda_order, ?_⟩
   intro i
   have hi := (hv i).apply_eq_smul
@@ -1080,7 +1086,8 @@ private theorem lemma4_singer_baseChange_span
         · intro c x _ hx
           have h := S.smul_mem (algebraMap (ZMod 2) K c) hx
           simpa only [TensorProduct.tmul_smul, Algebra.smul_def,
-            TensorProduct.smul_tmul'] using h
+            TensorProduct.smul_tmul', Algebra.algebraMap_self,
+            RingHom.id_apply] using h
   apply top_unique
   intro z _
   exact hall z
@@ -1246,13 +1253,15 @@ public theorem lemma4_gorenstein_thompson_nonisomorphic_factors
         intro c v
         ext z
         simp }
+  have hV_card : Nat.card V = 2 ^ n :=
+    (Nat.card_congr Additive.toMul).trans hL2_card
   have hT_order : orderOf T = 2 ^ n - 1 :=
     lemma4_transitive_linearAut_order T
       (by simpa [V, T] using hL2_transitive) n hn
-      (by simpa [V] using hL2_card)
+      hV_card
   apply lemma4_singer_no_alternating_surjection T
     (by simpa [V, T] using hL2_transitive) n hn
-    (by simpa [V] using hL2_card) hT_order B
+    hV_card hT_order B
   · intro v
     simpa [B] using lemma4_lowerCentralBracket_self (e.symm v)
   · intro v w

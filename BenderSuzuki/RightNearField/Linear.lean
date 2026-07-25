@@ -34,7 +34,7 @@ public theorem rightNearField_nsmul_one_mul_nsmul_one {F : Type u} [RightNearFie
   rw [rightNearField_nsmul_one_mul]
   simpa [Nat.mul_comm] using (mul_nsmul (1 : F) n m).symm
 
-public theorem rightNearField_addOrderOf_one_prime {F : Type u} [RightNearField F] [Finite F] [Nontrivial F] :
+public theorem rightNearField_addOrderOf_one_prime {F : Type u} [RightNearField F] [Finite F] :
     Nat.Prime (addOrderOf (1 : F)) := by
   let p := addOrderOf (1 : F)
   change Nat.Prime p
@@ -95,7 +95,7 @@ field. -/
 /-- The finite additive group has prime-power cardinality, with prime equal
 to the near-field characteristic. -/
 public theorem rightNearField_natCard_eq_addOrderOf_one_pow
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F] :
+    {F : Type u} [RightNearField F] [Finite F] :
     ∃ n : ℕ, Nat.card F = addOrderOf (1 : F) ^ n := by
   let p := addOrderOf (1 : F)
   have hp : Nat.Prime p := rightNearField_addOrderOf_one_prime
@@ -109,7 +109,7 @@ public theorem rightNearField_natCard_eq_addOrderOf_one_pow
   simpa [Nat.card_eq_fintype_card] using hcard
 
 /-- The additive group of a finite right near-field, in multiplicative notation, is elementary abelian of its additive characteristic. -/
-@[expose, reducible] public def rightNearFieldMultiplicativeIsElementaryAbelian
+public theorem rightNearFieldMultiplicativeIsElementaryAbelian
     {F : Type u} [RightNearField F] :
     IsElementaryAbelian (addOrderOf (1 : F)) (Multiplicative F) :=
   { toIsMulCommutative := { is_comm := ⟨mul_comm⟩ }
@@ -137,8 +137,9 @@ public theorem rightNearField_natCard_eq_addOrderOf_one_pow
 The opposite multiplication records the reversal in composition of right
 translations. -/
 @[expose] public noncomputable def rightNearFieldRightMulAction
-    {F : Type u} [RightNearField F] : (Fˣ)ᵐᵒᵖ →* (F ≃+ F) where
-  toFun a := rightNearFieldRightMulAddEquiv a.unop
+    {F : Type u} [RightNearField F] :
+    (Fˣ)ᵐᵒᵖ →* Multiplicative (F ≃+ F) where
+  toFun a := Multiplicative.ofAdd (rightNearFieldRightMulAddEquiv a.unop)
   map_one' := by
     ext x
     change x * (1 : F) = x
@@ -152,13 +153,13 @@ translations. -/
 @[simp]
 public theorem rightNearFieldRightMulAction_apply
     {F : Type u} [RightNearField F] (a : (Fˣ)ᵐᵒᵖ) (x : F) :
-    rightNearFieldRightMulAction a x = x * (a.unop : F) := by
+    (rightNearFieldRightMulAction a).toAdd x = x * (a.unop : F) := by
   rfl
 
 /-- The prime-field representation of the opposite unit group by right
 multiplication. -/
 @[expose] public noncomputable def rightNearFieldRightMulRepresentation
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     [Module (ZMod (addOrderOf (1 : F))) F] :
     Representation (ZMod (addOrderOf (1 : F))) (Fˣ)ᵐᵒᵖ F := by
   let L : (F →+ F) ≃+ (F →ₗ[ZMod (addOrderOf (1 : F))] F) :=
@@ -178,7 +179,7 @@ multiplication. -/
 
 @[simp]
 public theorem rightNearFieldRightMulRepresentation_apply
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     [Module (ZMod (addOrderOf (1 : F))) F]
     (a : (Fˣ)ᵐᵒᵖ) (x : F) :
     rightNearFieldRightMulRepresentation a x = x * (a.unop : F) := by
@@ -188,7 +189,7 @@ public theorem rightNearFieldRightMulRepresentation_apply
 subgroup, stated directly to avoid elaboration diamonds for endomorphism
 composition. -/
 @[expose] public noncomputable def rightNearFieldRightMulSubgroupRepresentation
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     [Module (ZMod (addOrderOf (1 : F))) F]
     (A : Subgroup (Fˣ)ᵐᵒᵖ) :
     Representation (ZMod (addOrderOf (1 : F))) A F := by
@@ -209,7 +210,7 @@ composition. -/
 
 @[simp]
 public theorem rightNearFieldRightMulSubgroupRepresentation_apply
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     [Module (ZMod (addOrderOf (1 : F))) F]
     (A : Subgroup (Fˣ)ᵐᵒᵖ) (a : A) (x : F) :
     rightNearFieldRightMulSubgroupRepresentation A a x =
@@ -229,7 +230,7 @@ public theorem rightNearFieldRightMulSubgroupRepresentation_apply
       (Multiplicative.toAdd x * ((b : A) : Fˣ)) * ((a : A) : Fˣ)
     rw [Subgroup.coe_mul, Units.val_mul]
     have habU : (a : Fˣ) * (b : Fˣ) = (b : Fˣ) * (a : Fˣ) :=
-      congrArg Subtype.val (mul_comm a b)
+      congrArg Subtype.val ((IsMulCommutative.is_comm (M := A)).comm a b)
     have habF : ((a : Fˣ) : F) * (b : Fˣ) =
         ((b : Fˣ) : F) * (a : Fˣ) := congrArg Units.val habU
     rw [habF, mul_assoc]
@@ -244,7 +245,7 @@ public theorem rightNearFieldRightMulSubgroupRepresentation_apply
 
 /-- The corresponding prime-field representation. -/
 @[expose] public noncomputable def rightNearFieldUnitsRepresentation
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     [Module (ZMod (addOrderOf (1 : F))) F]
     (A : Subgroup Fˣ) [IsMulCommutative A] :
     Representation (ZMod (addOrderOf (1 : F))) A F := by
@@ -263,7 +264,7 @@ public theorem rightNearFieldRightMulSubgroupRepresentation_apply
           (x * ((b : A) : Fˣ)) * ((a : A) : Fˣ)
         rw [Subgroup.coe_mul, Units.val_mul]
         have habU : (a : Fˣ) * (b : Fˣ) = (b : Fˣ) * (a : Fˣ) :=
-          congrArg Subtype.val (mul_comm a b)
+          congrArg Subtype.val ((IsMulCommutative.is_comm (M := A)).comm a b)
         have habF : ((a : Fˣ) : F) * (b : Fˣ) =
             ((b : Fˣ) : F) * (a : Fˣ) :=
           congrArg Units.val habU

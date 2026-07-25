@@ -1290,11 +1290,11 @@ public theorem section14_theorem_14_16_case_b_l_support_coherence_source_bridge
                     (Fintype.ofFinite (Fin q × Fin p)) = q * p := by
               rw [← @Nat.card_eq_fintype_card (Fin q × Fin p)
                 (Fintype.ofFinite (Fin q × Fin p))]
-              simp [Nat.card_prod]
+              simp
             simp
             exact_mod_cast hcard_qp
     have hcard : Fintype.card (Fin q × Fin p) = p * q := by
-      simp [Fintype.card_prod, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
+      simp [Fintype.card_prod, Nat.mul_comm]
     calc
       (@Finset.univ (Fin q × Fin p) (Fintype.ofFinite (Fin q × Fin p))).sum
           (fun ij => Complex.normSq (coeffPair ij : ℂ)) =

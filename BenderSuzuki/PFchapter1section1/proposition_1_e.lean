@@ -215,7 +215,7 @@ private theorem pPrimeCore_two_le_pointStabilizerCore
     simpa [O] using (pPrimeCore_normal (p := 2) (G := G))
   have hAcomm : IsMulCommutative A := isMulCommutative_of_forall_sq_one hAsq
   letI : IsMulCommutative A := hAcomm
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup 2 A) := by
     refine ⟨IsPGroup.of_card (p := 2) (G := A) (n := 2) ?_⟩
     norm_num [hAcard]

@@ -115,11 +115,11 @@ private theorem section10_ambientDerived_nilpotent_of_malpha_bot
     have hquot_nil' : Group.IsNilpotent (D ⧸ KsubD) := by
       simpa [D, K, KsubD] using hquot_nil
     letI : Group.IsNilpotent (D ⧸ KsubD) := hquot_nil'
-    exact nilpotent_of_mulEquiv (G := D ⧸ KsubD) (G' := D) e
+    exact Group.nilpotent_of_mulEquiv (G := D ⧸ KsubD) (G' := D) e
   let eD : D ≃* ambientDerivedSubgroup M :=
     Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective
   letI : Group.IsNilpotent D := hDnil
-  exact nilpotent_of_mulEquiv (G := D) (G' := ambientDerivedSubgroup M) eD
+  exact Group.nilpotent_of_mulEquiv (G := D) (G' := ambientDerivedSubgroup M) eD
 
 omit [Finite G] [IsMinCE G] in
 public theorem section10_ambientDerivedSubgroup_le_base
@@ -129,6 +129,7 @@ public theorem section10_ambientDerivedSubgroup_le_base
   rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
   exact y.property
 
+omit [IsMinCE G] in
 private theorem section10_mem_section7HStarFamily_top_of_sylow_le_normalizer
     {A : Subgroup G} {q : Nat.Primes} (Q : Sylow q.val G)
     (hAQ : A ≤ Subgroup.normalizer ((Q : Subgroup G) : Set G)) :
@@ -173,11 +174,10 @@ private theorem section10_sigma_of_global_sylow_le_nilpotent_ambientDerived
     hp_dvd_P.trans (Subgroup.card_dvd_of_le hP_le_M)
   let D : Subgroup M := derivedSubgroup M
   have hDnil_local : Group.IsNilpotent D := by
-    let eD : D ≃* ambientDerivedSubgroup M := by
-      simpa [D, ambientDerivedSubgroup] using
-        (Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective)
+    let eD : D ≃* ambientDerivedSubgroup M :=
+      Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective
     letI : Group.IsNilpotent (ambientDerivedSubgroup M) := hDnil
-    exact nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M) (G' := D) eD.symm
+    exact Group.nilpotent_of_mulEquiv (G := ambientDerivedSubgroup M) (G' := D) eD.symm
   have hPM_le_D : (PM : Subgroup M) ≤ D := by
     intro x hx
     have hxP : ((x : M) : G) ∈ (P : Subgroup G) := by
@@ -349,8 +349,8 @@ public theorem proposition_10_11_b
     rcases Subgroup.mem_map.mp hx with ⟨y, hyQM, rfl⟩
     exact Subgroup.mem_map.mpr ⟨y, hQM_le_Msigma hyQM, rfl⟩
   have hQGp : IsPGroup q.val QG := by
-    simpa [QG, section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := q.val) (H := (QM : Subgroup M)) QM.isPGroup' M.subtype
+    change IsPGroup q.val ((QM : Subgroup M).map M.subtype)
+    exact IsPGroup.map (p := q.val) (H := (QM : Subgroup M)) QM.isPGroup' M.subtype
   obtain ⟨Q, hQGQ⟩ := IsPGroup.exists_le_sylow (G := G) (p := q.val) hQGp
   have hQ_eq_QG : (Q : Subgroup G) = QG :=
     section10_sigma_ambient_sylow_eq_of_le_sylow hqσ QM Q hQGQ

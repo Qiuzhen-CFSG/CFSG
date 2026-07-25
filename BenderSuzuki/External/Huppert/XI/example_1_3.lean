@@ -30,6 +30,7 @@ namespace External
 
 open MatrixGroups
 open scoped LinearAlgebra.Projectivization
+open scoped commutatorElement
 
 universe u
 
@@ -111,7 +112,7 @@ private theorem huppertXI13_alternating_fin_three_regular :
   refine ⟨g, hg, ?_⟩
   intro h hh
   apply horbit_inj
-  simpa [orbit] using hh.trans hg.symm
+  exact hh.trans hg.symm
 
 private def huppertXI13_kleinFourPerm : Subgroup (Equiv.Perm (Fin 4)) :=
   (alternatingGroup.kleinFour (Fin 4)).map
@@ -150,7 +151,7 @@ private theorem huppertXI13_kleinFourPerm_regular :
         norm_num
       have hsupport : (k : Equiv.Perm (Fin 4)).support = Finset.univ := by
         apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
-        simpa [hsupport_card]
+        simp [hsupport_card]
       have ha_support : a ∈ (k : Equiv.Perm (Fin 4)).support := by
         rw [hsupport]
         exact Finset.mem_univ a
@@ -485,7 +486,7 @@ public theorem huppert_blackburn_XI_example_1_3_a
     let Cgl : GL (Fin 2) K :=
       A * Matrix.SpecialLinearGroup.toGL B * A⁻¹
     have hCdet : Matrix.det (Cgl : Matrix (Fin 2) (Fin 2) K) = 1 := by
-      simp [Cgl, Matrix.SpecialLinearGroup.coeToGL_det, Matrix.GeneralLinearGroup.det_ne_zero A]
+      simp [Cgl, Matrix.GeneralLinearGroup.det_ne_zero A]
     let C : Matrix.SpecialLinearGroup (Fin 2) K := ⟨(Cgl : Matrix _ _ K), hCdet⟩
     refine ⟨QuotientGroup.mk'
       (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) K)) C, ?_⟩
@@ -623,9 +624,11 @@ public theorem huppert_blackburn_XI_example_1_3_a
         have hi : Projectivization.Independent ![a, b] :=
           (Projectivization.independent_pair_iff_ne a b).2 hab
         rw [Projectivization.independent_iff] at hi
-        convert hi using 1
-        ext i
-        fin_cases i <;> rfl
+        have hrep : Projectivization.rep ∘ ![a, b] = ![a.rep, b.rep] := by
+          ext i
+          fin_cases i <;> rfl
+        rw [← hrep]
+        exact hi
       let ba : Module.Basis (Fin 2) K (Fin 2 → K) :=
         basisOfPiSpaceOfLinearIndependent hli
       have hba : (ba : Fin 2 → (Fin 2 → K)) = ![a.rep, b.rep] := by
@@ -664,14 +667,14 @@ public theorem huppert_blackburn_XI_example_1_3_a
           _ = (sc : K) • (p • a.rep + q • b.rep) := by rw [hcdecomp]
       have hsa_sc : (sa : K) = (sc : K) := by
         have h0 := congrArg (fun v => ba.repr v 0) hrel
-        have hba0 : ba 0 = a.rep := by simpa [hba]
-        have hba1 : ba 1 = b.rep := by simpa [hba]
+        have hba0 : ba 0 = a.rep := by simp [hba]
+        have hba1 : ba 1 = b.rep := by simp [hba]
         simp [map_add, map_smul, ← hba0, ← hba1, p, q] at h0
         exact mul_left_cancel₀ hp (h0.trans (mul_comm _ _))
       have hsb_sc : (sb : K) = (sc : K) := by
         have h1 := congrArg (fun v => ba.repr v 1) hrel
-        have hba0 : ba 0 = a.rep := by simpa [hba]
-        have hba1 : ba 1 = b.rep := by simpa [hba]
+        have hba0 : ba 0 = a.rep := by simp [hba]
+        have hba1 : ba 1 = b.rep := by simp [hba]
         simp [map_add, map_smul, ← hba0, ← hba1, p, q] at h1
         exact mul_left_cancel₀ hq (h1.trans (mul_comm _ _))
       have hsa_sb : sa = sb := by
@@ -894,7 +897,7 @@ public theorem huppert_blackburn_XI_example_1_3_a
         exact hx_ne_one (hiota (by simpa using hiota_one))
     have hnoncomm : ∃ x y : PSL2, x * y ≠ y * x := by
       by_contra hcomm
-      push_neg at hcomm
+      push Not at hcomm
       apply hno_regular
       refine ⟨iota.range, hPSL_normal, ?_, ?_⟩
       · intro hbot

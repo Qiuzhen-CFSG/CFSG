@@ -137,7 +137,7 @@ private theorem section12_isNilpotent_of_hasNormalPComplements
     (hcomp : ∀ p : Nat.Primes, p.val ∣ Nat.card H → HasNormalPComplement p.val H) :
     Group.IsNilpotent H := by
   classical
-  have hnil_iff := (isNilpotent_of_finite_tfae (G := H)).out 0 3
+  have hnil_iff := (Group.isNilpotent_of_finite_tfae (G := H)).out 0 3
   rw [hnil_iff]
   intro p hp P
   by_cases hpH : p ∣ Nat.card H
@@ -257,7 +257,10 @@ private theorem section12_derived_quotient_mbeta_hasNormalPComplement
     exact hp_dvd_D.trans (Subgroup.card_subgroup_dvd_card D)
   have hp_dvd_Nidx : p.val ∣ N.index := by
     have hp_dvd_Nsubidx : p.val ∣ Nsub.index := by
-      simpa [Nsub, Subgroup.index_eq_card] using hp_dvd
+      rw [Subgroup.index_eq_card]
+      change p.val ∣ Nat.card
+        (derivedSubgroup M ⧸ (section10MbetaSubgroup M).subgroupOf (derivedSubgroup M))
+      exact hp_dvd
     have hmap : Nsub.map D.subtype = N := by
       ext x
       simp [Nsub, N, hNleD]
@@ -322,7 +325,7 @@ public theorem section12_sylow_inf_normal_ne_bot_of_prime_dvd_normal
   have hqD : (q : R) ∈ D := by
     rcases q.property with ⟨d, _hd, hdq⟩
     have hqd : (q : R) = d := hdq.symm
-    simpa [hqd] using d.property
+    simp [hqd]
   have hxS : x ∈ (S : Subgroup R) := by
     have hxConjT : x ∈ MulAut.conj g • (T : Subgroup R) := by
       simpa [x, MulAut.conj_apply] using
@@ -466,7 +469,8 @@ public theorem lemma_12_11_b
       exact y.property
     have hQG_le_Mstar : QG ≤ Mstar := hQG_le_E.trans hE_le_Mstar
     have hQG_q : IsPGroup q.val QG := by
-      simpa [QG] using IsPGroup.map Q.isPGroup' E.subtype
+      change IsPGroup q.val ((Q : Subgroup E).map E.subtype)
+      exact IsPGroup.map Q.isPGroup' E.subtype
     let QsubMstar : Subgroup Mstar := QG.subgroupOf Mstar
     have hQsub_q : IsPGroup q.val QsubMstar := by
       exact hQG_q.of_equiv
@@ -560,7 +564,7 @@ public theorem lemma_12_11_b
         (G := G) (M := Mstar) hMstar.1
     have hDbar_nil : Group.IsNilpotent Dbar := by
       let e : D ⧸ α.subgroupOf D ≃* Dbar := quotientSubgroupRangeEquiv D α
-      exact nilpotent_of_mulEquiv (G := D ⧸ α.subgroupOf D) (G' := Dbar) e
+      exact Group.nilpotent_of_mulEquiv (G := D ⧸ α.subgroupOf D) (G' := Dbar) e
     let QbarM : Subgroup (Mstar ⧸ α) := QsubMstar.map qMstar
     have hQbar_le_Dbar : QbarM ≤ Dbar := by
       intro y hy

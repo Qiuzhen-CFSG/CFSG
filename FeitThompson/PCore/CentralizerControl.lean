@@ -45,7 +45,7 @@ public lemma pPrimeCore_map_le_centralizer_pCore_map {G : Type*} [Group G] [Fini
     rw [hcardB]
     exact (Fact.out : Nat.Prime p).coprime_pow_of_not_dvd (m := n) hp_not_dvd_A
   have hdisj : Disjoint (pPrimeCore p (↥H)) (pCore p (↥H)) := by
-    exact disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hAcopB)
+    exact Subgroup.disjoint_of_coprime_natCard hAcopB
   have hcomm_bot : ⁅pPrimeCore p (↥H), pCore p (↥H)⁆ = ⊥ := by
     apply bot_unique
     calc
@@ -153,7 +153,7 @@ lemma normalizer_le_normalizer_centralizer {G : Type*} [Group G] (R : Subgroup G
     have hcomm' := congrArg (fun x : G => n⁻¹ * x * n) hcomm
     simpa [mul_assoc] using hcomm'
 
-  lemma subgroupOf_le_pPrimeCore_map {G : Type*} [Group G] [Finite G] {p : ℕ}
+lemma subgroupOf_le_pPrimeCore_map {G : Type*} [Group G] [Finite G] {p : ℕ}
     [Fact p.Prime] {K H : Subgroup G} (hKH : K ≤ H) [hKN : (K.subgroupOf H).Normal]
     (hcop : Nat.Coprime p (Nat.card K)) :
     K ≤ (pPrimeCore p (↥H)).map H.subtype := by
@@ -308,16 +308,21 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       intro a x
       constructor
       · intro hx
-        simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using
-          (Subgroup.mem_normalizer_iff.mp (hQleNormKN a.2) (x : G)).1 hx
+        apply Subgroup.mem_subgroupOf.mpr
+        rw [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
+        exact
+          (Subgroup.mem_normalizer_iff.mp (hQleNormKN a.2) (x : G)).1
+            (Subgroup.mem_subgroupOf.mp hx)
       · intro hx
         have haInv : ((a : G)⁻¹) ∈ Subgroup.normalizer (KN : Set G) := by
           exact (Subgroup.normalizer (KN : Set G)).inv_mem (hQleNormKN a.2)
         have hx' :
             (a : G)⁻¹ * (((a : G) * (x : G) * (a : G)⁻¹)) * (((a : G)⁻¹)⁻¹) ∈ KN :=
           (Subgroup.mem_normalizer_iff.mp haInv _).1 (by
-            simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hx)
-        simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, mul_assoc] using hx'
+            rw [← Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
+            exact Subgroup.mem_subgroupOf.mp hx)
+        apply Subgroup.mem_subgroupOf.mpr
+        simpa [mul_assoc] using hx'
     letI : IsInvariant (↥Q) (↥N) (KN.subgroupOf N) := hKNinv
     letI : MulAction.QuotientAction (↥Q) (KN.subgroupOf N) :=
       quotientAction_of_isInvariant (A := ↥Q) (G := ↥N) (KN.subgroupOf N) hKNinv
@@ -385,11 +390,11 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
           simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using
             congrArg Subtype.val (hxfix ⟨a, ha⟩)
         have hcomm : Commute (a : G) (x : G) := by
-          simpa [Commute] using
-            calc
-              (a : G) * (x : G) = ((a : G) * (x : G) * (a : G)⁻¹) * (a : G) := by
-                simp [mul_assoc]
-              _ = (x : G) * (a : G) := by rw [hconj]
+          rw [commute_iff_eq]
+          calc
+            (a : G) * (x : G) = ((a : G) * (x : G) * (a : G)⁻¹) * (a : G) := by
+              simp [mul_assoc]
+            _ = (x : G) * (a : G) := by rw [hconj]
         simpa [Commute] using (hcomm.zpow_right k).eq.symm
       have hQcentRX : Q ≤ Subgroup.centralizer ((R ⊔ X : Subgroup G) : Set G) := by
         rw [Subgroup.sup_eq_closure, Subgroup.centralizer_closure]
@@ -533,9 +538,13 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       constructor
       · intro hx
         have hxFS : (x : G) ∈ FS := ⟨x, hx, rfl⟩
-        simpa [FS, hFS_eq] using hxFS
+        apply Subgroup.mem_subgroupOf.mpr
+        rw [← hFS_eq]
+        exact hxFS
       · intro hx
-        have hxFS : (x : G) ∈ FS := by simpa [FS, hFS_eq] using hx
+        have hxFS : (x : G) ∈ FS := by
+          rw [hFS_eq]
+          exact Subgroup.mem_subgroupOf.mp hx
         rcases hxFS with ⟨y, hy, hyx⟩
         have hyEq : y = x := by
           apply Subtype.ext
@@ -568,7 +577,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       rw [hcardP]
       exact (Fact.out : Nat.Prime p).coprime_pow_of_not_dvd (m := nP) hpNotDvdQ
     have hQeqBot : Q = ⊥ := by
-      have hInf : Q ⊓ P = ⊥ := Subgroup.inf_eq_bot_of_coprime hQcopP
+      have hInf : Q ⊓ P = ⊥ := (Subgroup.disjoint_of_coprime_natCard hQcopP).eq_bot
       simpa [inf_eq_left.2 hQleP] using hInf
     exact (hQbot hQeqBot).elim
 
@@ -622,8 +631,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
             _ = QuotientGroup.quotientBot (QuotientGroup.mk x : H ⧸ (⊥ : Subgroup H)) := by
               rw [hmk]
             _ = x := by
-              simpa [QuotientGroup.quotientBot] using
-                (QuotientGroup.kerLift_mk (φ := MonoidHom.id H) x)
+              rfl
         have hcomap_eq_map (L : Subgroup (H ⧸ M)) :
             L.comap q = L.map e.toMonoidHom := by
           ext x
@@ -1423,7 +1431,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
         have hM_normal : M.Normal := by infer_instance
         have hMcop : Nat.Coprime p (Nat.card M) := by
           simpa [M] using (pPrimeCore_coprime_card (G := H) (p := p))
-        simpa [C] using
+        simpa [C, q] using
           (centralizer_map_quotient_eq_map_centralizer (G := H) (p := p) (T := R) (M := M) hM_normal hMcop)
       have h_pcore_bot : pPrimeCore p (H ⧸ M) = ⊥ := by
         simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := H) (p := p))

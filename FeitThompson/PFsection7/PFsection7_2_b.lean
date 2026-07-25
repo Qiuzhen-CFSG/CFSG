@@ -126,7 +126,9 @@ private theorem dadeProjectionOn_CFon_pf72
   constructor
   · intro x a
     have hxAiff : ((x * a * x⁻¹ : L) : G) ∈ A ↔ (a : G) ∈ A := by
-      simpa using h.L_le_normalizer x.2 (a : G)
+      have hxAiff' := h.L_le_normalizer x.2 (a : G)
+      change (↑x * ↑a * (↑x)⁻¹ : G) ∈ A ↔ (↑a : G) ∈ A at hxAiff'
+      exact hxAiff'
     by_cases ha : (a : G) ∈ A
     · have hxa : ((x * a * x⁻¹ : L) : G) ∈ A := hxAiff.2 ha
       have hxa' : (↑x * ↑a * (↑x)⁻¹ : G) ∈ A := by

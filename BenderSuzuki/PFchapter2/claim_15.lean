@@ -18,7 +18,7 @@ namespace PFchapter2
 
 open PFchapter1section1 PFAppendixII PFAppendixIII MatrixGroups
 open PFchapter1section2 PFchapter1section3
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 universe u v w
 
@@ -43,25 +43,61 @@ private theorem cyclic_order_nine_mulAut_eq_inv
   have hu_sq : u ^ 2 = 1 := by
     dsimp [u]
     rw [← map_pow, halpha_sq, map_one]
-  have hu_cases : u = 1 ∨ u = -1 := by
-    have hcases :
-        ∀ v : (ZMod (Nat.card C))ˣ, v ^ 2 = 1 → v = 1 ∨ v = -1 := by
-      rw [hcard]
-      decide
-    exact hcases u hu_sq
+  have hunit_cases :
+      ∀ v : (ZMod (Nat.card C))ˣ, v ^ 2 = 1 → v = 1 ∨ v = -1 := by
+    rw [hcard]
+    decide
+  have hu_cases : u = 1 ∨ u = -1 := hunit_cases u hu_sq
   have hu_ne : u ≠ 1 := by
     intro hu
     apply halpha_ne
     apply (IsCyclic.mulAutMulEquiv C).injective
     simpa [u] using hu
   have hu_neg : u = -1 := hu_cases.resolve_left hu_ne
-  intro x
-  have hform := IsCyclic.mulAutMulEquiv_symm_apply_apply C (-1) x
-  have halpha' : alpha = (IsCyclic.mulAutMulEquiv C).symm (-1) := by
+  letI : IsMulCommutative C := IsCyclic.isMulCommutative
+  let invAut : MulAut C :=
+    { toFun := fun x ↦ x⁻¹
+      invFun := fun x ↦ x⁻¹
+      left_inv := by intro x; simp
+      right_inv := by intro x; simp
+      map_mul' := by
+        intro x y
+        rw [mul_inv_rev]
+        exact IsMulCommutative.is_comm.comm (y⁻¹) (x⁻¹) }
+  have hinv_sq : invAut ^ 2 = 1 := by
+    ext x
+    simp [invAut, pow_two]
+  have hinv_ne : invAut ≠ 1 := by
+    intro hinv
+    obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := C)
+    have hginv : g⁻¹ = g := by
+      have h := DFunLike.congr_fun hinv g
+      simpa [invAut] using h
+    have hgpow : g ^ 2 = 1 := by
+      simpa [pow_two] using (inv_eq_iff_mul_eq_one.mp hginv)
+    have hdvd : orderOf g ∣ 2 := orderOf_dvd_iff_pow_eq_one.mpr hgpow
+    have hgtop : Subgroup.zpowers g = ⊤ :=
+      top_unique (fun x _hx ↦ hg x)
+    have horder : orderOf g = 9 :=
+      (orderOf_eq_card_of_zpowers_eq_top hgtop).trans hcard
+    rw [horder] at hdvd
+    norm_num at hdvd
+  let v : (ZMod (Nat.card C))ˣ := IsCyclic.mulAutMulEquiv C invAut
+  have hv_sq : v ^ 2 = 1 := by
+    dsimp [v]
+    rw [← map_pow, hinv_sq, map_one]
+  have hv_ne : v ≠ 1 := by
+    intro hv
+    apply hinv_ne
     apply (IsCyclic.mulAutMulEquiv C).injective
-    simpa [u] using hu_neg
-  rw [halpha', hform]
-  simp
+    simpa [v] using hv
+  have hv_neg : v = -1 := (hunit_cases v hv_sq).resolve_left hv_ne
+  have halpha_inv : alpha = invAut := by
+    apply (IsCyclic.mulAutMulEquiv C).injective
+    simpa [u, v] using hu_neg.trans hv_neg.symm
+  intro x
+  rw [halpha_inv]
+  rfl
 
 private theorem cyclic_order_nine_fixed_subgroup_eq
     {G : Type*} [Group G] [Finite G]
@@ -300,22 +336,20 @@ private theorem chapter2_claim15_commutator_mem_sup_cyclic_factors
     hW_le_CL.trans (centralizer_le_normalizer (R := L))
   have hAcomm : IsMulCommutative (L ⊔ W : Subgroup G) := by
     rw [Subgroup.sup_eq_closure]
-    letI : CommGroup (Subgroup.closure ((L : Set G) ∪ (W : Set G))) :=
-      Subgroup.closureCommGroupOfComm (by
-        intro x hx y hy
-        rcases hx with hxL | hxW
-        · rcases hy with hyL | hyW
-          · exact Subgroup.mul_comm_of_mem_isMulCommutative
-              (H := L) hxL hyL
-          · exact Subgroup.mem_centralizer_iff.mp (hW_le_CL hyW) x hxL
-        · rcases hy with hyL | hyW
-          · exact (Subgroup.mem_centralizer_iff.mp (hW_le_CL hxW) y hyL).symm
-          · exact Subgroup.mul_comm_of_mem_isMulCommutative
-              (H := W) hxW hyW)
-    exact ⟨⟨fun x y => mul_comm x y⟩⟩
+    letI : IsCyclic L := hLcyc
+    letI : IsCyclic W := hWcyc
+    exact Subgroup.isMulCommutative_closure (by
+      intro x hx y hy
+      rcases hx with hxL | hxW
+      · rcases hy with hyL | hyW
+        · exact setLike_mul_comm hxL hyL
+        · exact Subgroup.mem_centralizer_iff.mp (hW_le_CL hyW) x hxL
+      · rcases hy with hyL | hyW
+        · exact (Subgroup.mem_centralizer_iff.mp (hW_le_CL hxW) y hyL).symm
+        · exact setLike_mul_comm hxW hyW)
   let A : Subgroup G := L ⊔ W
   letI : IsMulCommutative A := by simpa [A] using hAcomm
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hP_norm_A : P ≤ Subgroup.normalizer (A : Set G) := by
     intro q hqP
     have hqL := hP_norm_L hqP
@@ -530,7 +564,7 @@ private theorem chapter2_claim15_s_inverts_cyclic_L
 
 private theorem chapter2_claim15_W_centralizes_generated_L
     {G : Type*} [Group G]
-    (H D K V W Q0 L : Subgroup G) (t s : G)
+    (H D K V W Q0 L : Subgroup G) (t _s : G)
     (hQ0_def : ∀ x : G, x ∈ Q0 ↔ x = 1 ∨ (x ∈ H ∧ IsInvolution x))
     (hV_eq : V = peterfalviV D t)
     (hW_eq : W = peterfalviW V (K : Set G))
@@ -766,10 +800,10 @@ private noncomputable def chapter2_claim15_inf_centralizer_mulEquiv
         calc
           (e.symm z : A) * ⟨x, hx⟩ =
               e.symm (z * e ⟨x, hx⟩) :=
-            by simpa using (e.symm.map_mul z (e ⟨x, hx⟩)).symm
+            by simp
           _ = e.symm (e ⟨x, hx⟩ * z) := hz
           _ = ⟨x, hx⟩ * (e.symm z : A) := by
-            simpa using e.symm.map_mul (e ⟨x, hx⟩) z
+            simp
       show (e.symm z : G) ∈ Subgroup.centralizer ({x} : Set G)
       rw [Subgroup.mem_centralizer_singleton_iff]
       exact congrArg Subtype.val hzA
@@ -987,7 +1021,7 @@ private theorem chapter2_claim15_normal_of_index_eq_prime_of_isPGroup
       apply le_antisymm le_top
       intro x _hx
       have hxone : x = 1 := Subsingleton.elim x 1
-      simpa [hxone]
+      simp [hxone]
     have hp_one : p = 1 := by simpa [hAtop] using hindex.symm
     exact (Fact.out : Nat.Prime p).ne_one hp_one
   apply Subgroup.normal_of_index_eq_minFac_card
@@ -1002,10 +1036,17 @@ private theorem chapter2_claim15_pgroup_le_normal_sylow
   let Ks : Sylow p G := hKp.toSylow hnot
   have hInf := hLp.inf_normalizer_sylow Ks
   have hKs : (Ks : Subgroup G) = K := by
-    simpa [Ks] using IsPGroup.toSylow_coe hKp hnot
-  have hInf' : L = L ⊓ K := by
-    simpa [hKs, K.normalizer_eq_top] using hInf
-  exact inf_eq_left.mp hInf'.symm
+    simp [Ks]
+  have hKsSet : (Ks : Set G) = (K : Set G) :=
+    congrArg (fun H : Subgroup G ↦ (H : Set G)) hKs
+  have hLnorm : L ≤ Subgroup.normalizer (Ks : Set G) := by
+    rw [hKsSet, K.normalizer_eq_top]
+    exact le_top
+  have hleft : L ⊓ Subgroup.normalizer (Ks : Set G) = L :=
+    inf_eq_left.mpr hLnorm
+  rw [hleft] at hInf
+  have hleKs : L ≤ (Ks : Subgroup G) := inf_eq_left.mp hInf.symm
+  simpa [hKs] using hleKs
 
 private theorem chapter2_claim15_isMulCommutative_sup_of_le_centralizer
     {G : Type*} [Group G] {A B : Subgroup G}
@@ -1013,19 +1054,17 @@ private theorem chapter2_claim15_isMulCommutative_sup_of_le_centralizer
     (hB_le_CA : B ≤ Subgroup.centralizer (A : Set G)) :
     IsMulCommutative (A ⊔ B : Subgroup G) := by
   rw [Subgroup.sup_eq_closure]
-  letI : CommGroup (Subgroup.closure ((A : Set G) ∪ (B : Set G))) :=
-    Subgroup.closureCommGroupOfComm (by
-      intro x hx y hy
-      rcases hx with hxA | hxB
-      · rcases hy with hyA | hyB
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) hxA hyA
-        · exact Subgroup.mem_centralizer_iff.mp (hB_le_CA hyB) x hxA
-      · rcases hy with hyA | hyB
-        · exact (Subgroup.mem_centralizer_iff.mp (hB_le_CA hxB) y hyA).symm
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := B) hxB hyB)
-  exact ⟨⟨fun x y => mul_comm x y⟩⟩
+  letI : IsMulCommutative A := hAcomm
+  letI : IsMulCommutative B := hBcomm
+  exact Subgroup.isMulCommutative_closure (by
+    intro x hx y hy
+    rcases hx with hxA | hxB
+    · rcases hy with hyA | hyB
+      · exact setLike_mul_comm hxA hyA
+      · exact Subgroup.mem_centralizer_iff.mp (hB_le_CA hyB) x hxA
+    · rcases hy with hyA | hyB
+      · exact (Subgroup.mem_centralizer_iff.mp (hB_le_CA hxB) y hyA).symm
+      · exact setLike_mul_comm hxB hyB)
 
 private theorem chapter2_claim15_P_normalizes_L
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -1352,7 +1391,7 @@ private theorem chapter2_claim15_V_normalizes_L_source_interface
   _root_.BenderSuzuki.PFchapter2.HypothesisB1 G V P p ∧
     _root_.BenderSuzuki.PFchapter2.HypothesisB2 G p))
     (hWP : W ⊔ P = V)
-    (h14 : Sigma ≤ Subgroup.normalizer (R : Set G) ∧
+    (_h14 : Sigma ≤ Subgroup.normalizer (R : Set G) ∧
       s ∈ Subgroup.normalizer (R : Set G) ∧
         s ∈ Subgroup.normalizer ((R ⊔ Sigma : Subgroup G) : Set G) ∧
           Z1 ⊔ P ≤ R ⊓ Subgroup.centralizer (R : Set G) ∧
@@ -1363,8 +1402,8 @@ private theorem chapter2_claim15_V_normalizes_L_source_interface
                   R2 = Subgroup.centralizer (Z1 : Set G) ∧
                     R1 ≤ R2)
     (hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
-    (hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
-    (hL_cyclic : IsCyclic L) :
+    (_hL_le_R1 : L ≤ R1) (_hL_order : Nat.card L = 9)
+    (_hL_cyclic : IsCyclic L) :
     V ≤ Subgroup.normalizer (L : Set G) := by
   have hP_norm : P ≤ Subgroup.normalizer (L : Set G) :=
     chapter2_claim15_P_normalizes_L H D Q K V W Q0 S Q1 P L t s
@@ -1437,7 +1476,7 @@ private theorem chapter2_claim15_W_centralizes_L
 private theorem chapter2_claim15_P_not_centralizes_L_source_interface
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (H D Q K V W Q0 S Q1 P Sigma Z1 R R1 R2 L : Subgroup G) (t s : G) (p : ℕ)
-    (hch : (((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
+    (_hch : (((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
   K ≤ D ∧
     (∀ x : G, x ∈ K ↔ x ∈ D ∧ _root_.BenderSuzuki.PFAppendixIII.rightConjugateElem x t = x⁻¹) ∧
       V = _root_.BenderSuzuki.PFchapter1section1.peterfalviV D t ∧
@@ -1533,10 +1572,10 @@ private theorem chapter2_claim15_LV_le_R2_source_interface
                 R ⊔ Sigma ≤ R1 ∧
                   R2 = Subgroup.centralizer (Z1 : Set G) ∧
                     R1 ≤ R2)
-    (hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
+    (_hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
     (hZ1 : Z1 = Subgroup.zpowers (s * t))
-    (hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
-    (hL_cyclic : IsCyclic L) :
+    (hL_le_R1 : L ≤ R1) (_hL_order : Nat.card L = 9)
+    (_hL_cyclic : IsCyclic L) :
     L ⊔ V ≤ R2 := by
   have hL_le_R2 : L ≤ R2 := by
     exact hL_le_R1.trans h14.2.2.2.2.2.2.2.2
@@ -1568,7 +1607,7 @@ private theorem chapter2_claim15_LV_index_source_interface
     ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r) ∧
   _root_.BenderSuzuki.PFchapter2.HypothesisB1 G V P p ∧
     _root_.BenderSuzuki.PFchapter2.HypothesisB2 G p))
-    (h14 : Sigma ≤ Subgroup.normalizer (R : Set G) ∧
+    (_h14 : Sigma ≤ Subgroup.normalizer (R : Set G) ∧
       s ∈ Subgroup.normalizer (R : Set G) ∧
         s ∈ Subgroup.normalizer ((R ⊔ Sigma : Subgroup G) : Set G) ∧
           Z1 ⊔ P ≤ R ⊓ Subgroup.centralizer (R : Set G) ∧
@@ -1578,8 +1617,8 @@ private theorem chapter2_claim15_LV_index_source_interface
                 R ⊔ Sigma ≤ R1 ∧
                   R2 = Subgroup.centralizer (Z1 : Set G) ∧
                     R1 ≤ R2)
-    (hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
-    (hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
+    (_hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
+    (_hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
     (hL_cyclic : IsCyclic L)
     (hWP : W ⊔ P = V) (hPcard : Nat.card P = 3)
     (hV_norm : V ≤ Subgroup.normalizer (L : Set G))
@@ -1627,7 +1666,7 @@ private theorem chapter2_claim15_LV_index_source_interface
         ((Subgroup.centralizer (L : Set G)).inv_mem hwCL) hxCL
       have hqeq : w⁻¹ * x = q := by
         rw [← hwq]
-        simp [mul_assoc]
+        simp
       simpa [hqeq] using hmem
     have hq_one : q = 1 := by
       by_contra hq_ne
@@ -1703,7 +1742,7 @@ private theorem chapter2_claim15_center_LV_source_interface
                   R2 = Subgroup.centralizer (Z1 : Set G) ∧
                     R1 ≤ R2)
     (hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
-    (hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
+    (_hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
     (hL_cyclic : IsCyclic L)
     (hZ1 : Z1 = Subgroup.zpowers (s * t))
     (hSigma : Sigma = W ⊓ Subgroup.centralizer (P : Set G))
@@ -1824,7 +1863,7 @@ private theorem chapter2_claim15_center_LV_source_interface
       have haCL := hA_le_CL haA
       have hmem := (Subgroup.centralizer (L : Set G)).mul_mem
         ((Subgroup.centralizer (L : Set G)).inv_mem haCL) hxCL
-      have hqeq : a⁻¹ * x = q := by rw [← haq]; simp [mul_assoc]
+      have hqeq : a⁻¹ * x = q := by rw [← haq]; simp
       simpa [hqeq] using hmem
     have hq_one : q = 1 := by
       by_contra hq_ne
@@ -1941,7 +1980,7 @@ private theorem chapter2_claim15_omega_one_LV_source_interface
                   R2 = Subgroup.centralizer (Z1 : Set G) ∧
                     R1 ≤ R2)
     (hL_constructed : L = Subgroup.centralizer ({s * t} : Set G) ⊓ psl2GeneratedSubgroup Q0 K t)
-    (hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
+    (_hL_le_R1 : L ≤ R1) (hL_order : Nat.card L = 9)
     (hL_cyclic : IsCyclic L)
     (hZ1 : Z1 = Subgroup.zpowers (s * t))
     (hSigma : Sigma = W ⊓ Subgroup.centralizer (P : Set G))
@@ -2088,7 +2127,7 @@ private theorem chapter2_claim15_omega_one_LV_source_interface
 public theorem claim_15
     {G : Type u} {Ω : Type v} {F : Type w}
     [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    [RightNearField F] [Finite F] [Nontrivial F]
+    [RightNearField F] [Finite F]
     (H D Q K V W Q0 S Q1 P Sigma Z1 R T R1 R2 : Subgroup G)
     (t s : G) (p : ℕ)
     (hch : (((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
@@ -2151,7 +2190,7 @@ public theorem claim_15
     (hNormalizerNormR1 :
       Subgroup.normalizer ((R ⊔ Sigma : Subgroup G) : Set G) ≤
         Subgroup.normalizer (R1 : Set G))
-    (hcenterR2 : R2 ⊓ Subgroup.centralizer (R2 : Set G) = Z1)
+    (_hcenterR2 : R2 ⊓ Subgroup.centralizer (R2 : Set G) = Z1)
     (hderived :
       ⁅(R ⊔ Sigma : Subgroup G), (R ⊔ Sigma : Subgroup G)⁆ = Z1)
     (hR2_inf_CP :
@@ -2211,7 +2250,7 @@ public theorem claim_15
           apply hP_not_cent
           have hP_le_L : P ≤ L := by
             intro x hxP
-            have hxLP : (⟨x, hxP⟩ : P) ∈ LP := by simpa [LP, htop]
+            have hxLP : (⟨x, hxP⟩ : P) ∈ LP := by simp [LP, htop]
             exact hxLP
           letI : CommGroup L := hL_cyclic.commGroup
           intro x hxP

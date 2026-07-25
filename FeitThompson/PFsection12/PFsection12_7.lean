@@ -192,9 +192,11 @@ public theorem theorem_12_17_representative_kernel_card_coprime
       IsPiSubgroup (G := G) (section10SigmaPrimes (Ms.get j)) (MF (Ms.get j)) :=
     theorem_12_17_mf_isPiSubgroup_sigma_of_maximal (G := G) hMj hMFj
   let i' : Fin (Ms.map section10SigmaPrimes).length :=
-    ⟨i.1, by simpa [List.length_map] using i.2⟩
+    ⟨i.1, by
+      simp [List.length_map]⟩
   let j' : Fin (Ms.map section10SigmaPrimes).length :=
-    ⟨j.1, by simpa [List.length_map] using j.2⟩
+    ⟨j.1, by
+      simp [List.length_map]⟩
   have hij' : i' ≠ j' := by
     intro h
     apply hij
@@ -225,7 +227,7 @@ public theorem theorem_12_17_isTISubsetWithNormalizer_puncturedSubgroupSet_of_se
     constructor
     · intro hx
       rcases hx with ⟨y, hyH, hyx⟩
-      simpa [← hyx] using hyH
+      simpa [← hyx] using (Subgroup.mem_subgroupOf.1 hyH)
     · intro hx
       exact ⟨⟨x, hHL hx⟩, hx, rfl⟩
   have hAeq :
@@ -253,7 +255,7 @@ private theorem theorem_12_17_subgroupOf_ne_bot_of_gt_bot
       simpa [hbot] using hxSub
     have hxoneL : (⟨x, hHL hxH⟩ : L) = 1 := Subgroup.mem_bot.mp hxBot
     have hxoneG : x = 1 := congrArg Subtype.val hxoneL
-    simpa [hxoneG]
+    simp [hxoneG]
   exact hHgt.ne' (le_antisymm hHleBot bot_le)
 
 private theorem theorem_12_17_puncturedSubgroupSet_nonempty_of_ne_bot
@@ -280,11 +282,11 @@ private theorem theorem_12_17_setNormalizer_puncturedSubgroupSet_eq
       constructor
       · intro hxH
         by_cases hx1 : x = 1
-        · simpa [hx1, Section2.conjBy]
+        · simp [hx1]
         · exact ((hg x).2 ⟨hxH, hx1⟩).1
       · intro hxH
         by_cases hx1 : x = 1
-        · simpa [hx1]
+        · simp [hx1]
         · have hxConjNe : Section2.conjBy g x ≠ 1 := by
             intro hconj
             apply hx1
@@ -362,8 +364,7 @@ public theorem theorem_12_17_isTISubsetWithNormalizer_puncturedSubgroupSet_of_ce
         refine ⟨1, by simp, c, ?_, by simp⟩
         exact ⟨hCent ha hc, hc⟩
     · intro a b ha hb
-      simpa [Subgroup.card_bot] using
-        (Nat.coprime_one_left (Nat.card (Section2.centralizerIn L b)))
+      simp
   exact (Section2.proposition_2_3 A L hAne).mpr hHyp
 
 
@@ -753,7 +754,7 @@ public theorem theorem_12_17_conjugate_kernel_cover_source_leaf
       (fun i : Fin Ms.length => MF (Ms.get i)) hmem hg1
   · intro hg
     by_cases hg1 : g = 1
-    · simpa [hg1]
+    · simp [hg1]
     · exact False.elim (hg.2
         (theorem_12_17_conjugate_kernel_cover_nonidentity_source_leaf
           hmin hall hRepSystem hTI hg1))
@@ -862,7 +863,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
       rw [Finset.mem_insert]
       by_cases hθ : θ = Section1.principalCharacter ((H i).subgroupOf (L i))
       · left
-        simp [T, Section7.principalInducedCharacter, hθ]
+        simp [Section7.principalInducedCharacter, hθ]
       · right
         exact (hS i _).mpr ⟨θ, hθirr, hθ, rfl⟩
   have h76 (i : I) :
@@ -1017,7 +1018,8 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
           intro φ _hφ
           exact hQ.2 hψQ (hEsub φ.property) (by
             intro heq
-            exact hψ (by simpa [heq] using φ.property))
+            exact hψ (by
+              simp [heq]))
         have hEψ : Section1.scalarProduct G (E.sum fun φ => φ) ψ = 0 := by
           have hstar := congrArg star hψE
           simpa [Section1.scalarProduct_star_swap] using hstar
@@ -1195,7 +1197,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
             ¬ Subgroup.centralizer ({x} : Set G) ≤ L i := by
         simpa [D, Section8.section8DSet] using hx
       exact False.elim (hx'.2 (hcentralizer i hx'.1))
-    · simpa [tildeA, hAeq i, A, Section8.a1Set,
+    · simp [tildeA, hAeq i, A, Section8.a1Set,
         Section7.puncturedSubgroupSet, section16NonidentityElements]
   have htildeDisjoint (i j : I) (hne : i ≠ j) :
       Disjoint (tildeA i) (tildeA j) := by
@@ -1709,16 +1711,13 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     refine ⟨m, ?_⟩
     let pG : Section1.ClassFunction G := Section1.principalCharacter G
     have hpGself : Section1.scalarProduct G pG pG = 1 := by
-      simp [pG, Section1.scalarProduct, Section1.principalCharacter]
+      simp [pG, Section1.scalarProduct]
     have hcorrExpand :
         Section1.scalarProduct G (β i + γ i - pG) (β j + γ j - pG) =
           Section1.scalarProduct G (β i + γ i) (β j + γ j) - 1 := by
       rw [Section5.scalarProduct_sub_left, Section5.scalarProduct_sub_right,
         Section5.scalarProduct_sub_right]
-      simpa [pG, hβγprincipal i, hprincipalβγ j, hpGself] using (by ring :
-        Section1.scalarProduct G (β i + γ i) (β j + γ j) - 1 -
-            (1 - 1) =
-          Section1.scalarProduct G (β i + γ i) (β j + γ j) - 1)
+      simp [pG, hβγprincipal i, hprincipalβγ j, hpGself]
     have htotal :
         Section1.scalarProduct G (β i + γ i) (β j + γ j) =
           (1 : ℂ) + 2 * (m : ℂ) := by
@@ -1765,43 +1764,44 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
   have h79nonzero (i j : I) (hne : i ≠ j) :
       Section1.scalarProduct G (β i) (γ j) ≠ 0 ∨
         Section1.scalarProduct G (β j) (γ i) ≠ 0 := by
-    let A₂ : Fin 2 → Set G :=
-      Fin.cases (typeIASet (L i) (H i))
-        (fun _ : Fin 1 => typeIASet (L j) (H j))
-    let L₂ : Fin 2 → Subgroup G :=
-      Fin.cases (L i) (fun _ : Fin 1 => L j)
-    let H₂ : Fin 2 → Subgroup G :=
-      Fin.cases (H i) (fun _ : Fin 1 => H j)
-    let K₂ : Fin 2 → G → Subgroup G :=
-      Fin.cases (R i) (fun _ : Fin 1 => R j)
-    let S₂ : (k : Fin 2) → Finset (Section1.ClassFunction (L₂ k)) :=
-      Fin.cases (motive := fun k => Finset (Section1.ClassFunction (L₂ k)))
-        (S i) (fun _ : Fin 1 => S j)
+    let A₂ : Fin 2 → Set G := λ
+      | 0 => typeIASet (L i) (H i)
+      | 1 => typeIASet (L j) (H j)
+    let L₂ : Fin 2 → Subgroup G := λ
+      | 0 => L i
+      | 1 => L j
+    let H₂ : Fin 2 → Subgroup G := λ
+      | 0 => H i
+      | 1 => H j
+    let K₂ : Fin 2 → G → Subgroup G := λ
+      | 0 => R i
+      | 1 => R j
+    let S₂ : (k : Fin 2) → Finset (Section1.ClassFunction (L₂ k)) := λ
+      | 0 => S i
+      | 1 => S j
     let τ₂ : (k : Fin 2) →
-        Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G :=
-      Fin.cases
-        (motive := fun k =>
-          Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G)
-        (τ i) (fun _ : Fin 1 => τ j)
+        Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G := λ
+      | 0 => τ i
+      | 1 => τ j
     let ν₂ : (k : Fin 2) →
-        Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G :=
-      Fin.cases
-        (motive := fun k =>
-          Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G)
-        (ν i) (fun _ : Fin 1 => ν j)
-    let ζ₂ : (k : Fin 2) → Section1.ClassFunction (L₂ k) :=
-      Fin.cases (motive := fun k => Section1.ClassFunction (L₂ k))
-        (ζ i) (fun _ : Fin 1 => ζ j)
-    let β₂ : Fin 2 → Section1.ClassFunction G :=
-      Fin.cases (β i) (fun _ : Fin 1 => β j)
-    let γ₂ : Fin 2 → Section1.ClassFunction G :=
-      Fin.cases (γ i) (fun _ : Fin 1 => γ j)
+        Section1.ClassFunction (L₂ k) →ₗ[ℂ] Section1.ClassFunction G := λ
+      | 0 => ν i
+      | 1 => ν j
+    let ζ₂ : (k : Fin 2) → Section1.ClassFunction (L₂ k) := λ
+      | 0 => ζ i
+      | 1 => ζ j
+    let β₂ : Fin 2 → Section1.ClassFunction G := λ
+      | 0 => β i
+      | 1 => β j
+    let γ₂ : Fin 2 → Section1.ClassFunction G := λ
+      | 0 => γ i
+      | 1 => γ j
     have hfamily : Section7.familyHypothesis A₂ L₂ K₂ := by
       refine ⟨?_, ?_⟩
       · intro k
         fin_cases k
-        · simpa [A₂, L₂, K₂] using h22 i
-        · simpa [A₂, L₂, K₂] using h22 j
+        · simpa [A₂, L₂, K₂, Section2.hypothesis_2_2_statement] using h22 i
+        · simpa [A₂, L₂, K₂, Section2.hypothesis_2_2_statement] using h22 j
       · intro k l hkl
         fin_cases k <;> fin_cases l
         · exact (hkl rfl).elim
@@ -1848,20 +1848,24 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         · simpa [H₂, L₂] using section16MFSubgroup_subgroupOf_normal (hMF j)
       · intro k
         fin_cases k
-        · simpa [A₂, H₂, A] using hAeq i
-        · simpa [A₂, H₂, A] using hAeq j
+        · simpa [A₂, H₂] using hAeq i
+        · simpa [A₂, H₂] using hAeq j
       · intro k
         fin_cases k
         · simpa [S₂, H₂, L₂] using hS i
         · simpa [S₂, H₂, L₂] using hS j
       · intro k
         fin_cases k
-        · simpa [S₂, τ₂] using (h126 i).2
-        · simpa [S₂, τ₂] using (h126 j).2
+        · simpa [L₂, S₂, τ₂] using (h126 i).2
+        · simpa [L₂, S₂, τ₂] using (h126 j).2
       · intro k
         fin_cases k
-        · simpa [S₂, τ₂, ν₂] using hν i
-        · simpa [S₂, τ₂, ν₂] using hν j
+        · dsimp [S₂, τ₂, ν₂]
+          rcases hν i with ⟨h1, h2, h3⟩
+          exact ⟨h1, h2, h3⟩
+        · dsimp [S₂, τ₂, ν₂]
+          rcases hν j with ⟨h1, h2, h3⟩
+          exact ⟨h1, h2, h3⟩
       · intro k
         fin_cases k
         · simpa [S₂, ζ₂, H₂, L₂] using hζ i
@@ -2131,7 +2135,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
             ((H k : Set G) \ {1}) := by
         ext g
         simp [Section7.puncturedSubgroupSet]
-      rw [hset, Set.ncard_diff_singleton_of_mem (H k).one_mem]
+      rw [hset, Set.ncard_sdiff_singleton_of_mem (H k).one_mem]
       exact congrArg (fun m : ℕ => m - 1)
         (Nat.card_coe_set_eq (H k : Set G)).symm
     have hcardHsub :
@@ -2184,7 +2188,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         Section7.puncturedSubgroupSet (H k) = ((H k : Set G) \ {1}) := by
       ext g
       simp [Section7.puncturedSubgroupSet]
-    rw [hset, Set.ncard_diff_singleton_of_mem (H k).one_mem]
+    rw [hset, Set.ncard_sdiff_singleton_of_mem (H k).one_mem]
     exact congrArg (fun m : ℕ => m - 1)
       (Nat.card_coe_set_eq (H k : Set G)).symm
   have hcardLAll (k : I) :
@@ -2432,11 +2436,7 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
         ∑ i : I,
           Section7.weightedProjectionEnergy
             (typeIASet (L i) (H i)) (L i) (R i) χ := by
-    simpa [rest] using
-      (Finset.sum_erase_add (Finset.univ : Finset I)
-        (fun i => Section7.weightedProjectionEnergy
-          (typeIASet (L i) (H i)) (L i) (R i) χ)
-        (Finset.mem_univ i1))
+    simp [rest]
   have hweightSumLower :
       1 - ((H i1).relIndex (L i1) : ℝ) / (Nat.card (H i1) : ℝ) +
           ∑ i ∈ calC, q i ≤
@@ -2446,12 +2446,11 @@ public theorem theorem_12_17_lowerBoundData_source_leaf
     linarith
   have hqPartition :
       (∑ i ∈ calB, q i) + (∑ i ∈ calC, q i) = ∑ i ∈ rest, q i := by
-    simpa [calB, calC] using
-      (Finset.sum_filter_add_sum_filter_not rest (fun i => coeff i = 0) q)
+    simp [calB, calC]
+    exact (Finset.sum_filter_add_sum_filter_not rest (fun i => coeff i = 0) q)
   have hqErase :
       (∑ i ∈ rest, q i) + q i1 = ∑ i : I, q i := by
-    simpa [rest] using
-      (Finset.sum_erase_add (Finset.univ : Finset I) q (Finset.mem_univ i1))
+    simp [rest]
   have hbase :
       1 - ((H i1).relIndex (L i1) : ℝ) / (Nat.card (H i1) : ℝ) -
           q i1 - sumB ≤ 0 := by

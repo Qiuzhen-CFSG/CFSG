@@ -156,13 +156,11 @@ private noncomputable def huppert611_projectivePairBasis
     {K : Type u} [Field K] {n : ℕ} (hn : 2 ≤ n)
     (a b : ℙ K (Fin n → K)) (hab : a ≠ b) :
     Module.Basis (Fin n) K (Fin n → K) := by
-  let v : Fin 2 → (Fin n → K) := ![a.rep, b.rep]
+  let v : Fin 2 → (Fin n → K) := Projectivization.rep ∘ ![a, b]
   have hv : LinearIndependent K v := by
     have hp : Projectivization.Independent ![a, b] :=
       (Projectivization.independent_pair_iff_ne a b).2 hab
-    convert (Projectivization.independent_iff.mp hp) using 1
-    funext i
-    fin_cases i <;> rfl
+    exact Projectivization.independent_iff.mp hp
   let bs := Module.Basis.sumExtend hv
   let E := Module.Basis.sumExtendIndex hv
   letI : Fintype (Fin 2 ⊕ E) :=
@@ -194,7 +192,8 @@ private theorem huppert611_projectivePairBasis_pairIndex
   simp only [huppert611_projectivePairBasis, Module.Basis.reindex_apply,
     Equiv.symm_symm]
   rw [huppert611_reindexEquiv_pairIndex]
-  exact huppert611_sumExtend_apply_inl _ _
+  rw [huppert611_sumExtend_apply_inl]
+  fin_cases i <;> rfl
 
 /-- Huppert II.6.11: the natural faithful action of `PSL(n,K)` on projective
 space is doubly transitive. -/
@@ -217,10 +216,11 @@ public theorem huppert_II_6_11_projective_action
   let PSL := Matrix.ProjectiveSpecialLinearGroup (Fin n) K
   let P := ℙ K (Fin n → K)
   let permHom : SL →* Equiv.Perm P := MulAction.toPermHom SL P
+  let hcenter_le_ker : Subgroup.center SL ≤ permHom.ker := by
+    intro A hA
+    exact huppert611_center_mem_projective_perm_ker n A hA
   let rho : PSL →* Equiv.Perm P :=
-    QuotientGroup.lift (Subgroup.center SL) permHom (by
-      intro A hA
-      exact huppert611_center_mem_projective_perm_ker n A hA)
+    QuotientGroup.lift (Subgroup.center SL) permHom hcenter_le_ker
   have hrho : Function.Injective rho := by
     rw [← MonoidHom.ker_eq_bot_iff]
     ext x
@@ -229,7 +229,10 @@ public theorem huppert_II_6_11_projective_action
       rcases QuotientGroup.mk'_surjective (Subgroup.center SL) x with ⟨A, rfl⟩
       rw [MonoidHom.mem_ker] at hx
       have hperm : permHom A = 1 := by
-        simpa [rho] using hx
+        change (rho.comp (QuotientGroup.mk' (Subgroup.center SL))) A = 1 at hx
+        rw [show rho.comp (QuotientGroup.mk' (Subgroup.center SL)) = permHom by
+          exact QuotientGroup.lift_comp_mk' (Subgroup.center SL) permHom hcenter_le_ker] at hx
+        exact hx
       have hfix : ∀ z : P, A • z = z := by
         intro z
         have hz := congrArg (fun f : Equiv.Perm P => f z) hperm

@@ -34,6 +34,7 @@ open scoped BigOperators
 open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
+open scoped commutatorElement
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.6
@@ -103,7 +104,7 @@ lemma covby_top_of_index_eq_prime {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
   · intro h_max
     simp only [covBy_top_iff] at h_max
     have G_nilpotent : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p) h
-    exact Subgroup.NormalizerCondition.normal_of_coatom H normalizerCondition_of_isNilpotent h_max
+    exact Subgroup.NormalizerCondition.normal_of_coatom H Group.normalizerCondition_of_isNilpotent h_max
 
 /-
 **Kind**: Theorem
@@ -116,6 +117,7 @@ Let $ρ$ be a faithful and irreducible representation of $G$ over $V$.
 Then $Z(G)$ is cyclic.
 -/
 
+open scoped IsMulCommutative in
 set_option backward.isDefEq.respectTransparency false in
 public theorem center_cyclic_of_representation_faithful_irreducible
     {F : Type*} [Field F]
@@ -152,8 +154,8 @@ public theorem center_cyclic_of_representation_faithful_irreducible
       exact this
   }
   let k := Subring.closure (Set.range f)
-  letI : CommRing k := by
-    apply Subring.closureCommRingOfComm
+  letI : IsMulCommutative k := by
+    apply Subring.isMulCommutative_closure
     intro x hx y hy
     rcases hx with ⟨cx, hcx⟩
     rcases hy with ⟨cy, hcy⟩
@@ -181,7 +183,7 @@ public theorem center_cyclic_of_representation_faithful_irreducible
   have : IsDomain k := {
     toIsCancelMulZero := by
       refine isCancelMulZero_iff_noZeroDivisors.mpr ?_
-      rw [noZeroDivisors_iff]
+      rw [_root_.noZeroDivisors_iff]
       intro a b hab
       have : DecidableEq (End F[G] ρ.asModule) := by exact Classical.typeDecidableEq (End F[G] ρ.asModule)
       have : IsSimpleModule F[G] ρ.asModule := (irreducible_iff_isSimpleModule_asModule ρ).mp inst
@@ -379,9 +381,13 @@ lemma subrepresentation_isCompl_toSubmodule
     IsCompl φ.toSubmodule ψ.toSubmodule := by
   refine ⟨?_, ?_⟩
   · rw [disjoint_iff]
-    simpa using congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+    have h := congrArg Subrepresentation.toSubmodule hcompl.inf_eq_bot
+    change φ.toSubmodule ⊓ ψ.toSubmodule = (⊥ : Submodule F V) at h
+    exact h
   · rw [codisjoint_iff]
-    simpa using congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+    have h := congrArg Subrepresentation.toSubmodule hcompl.sup_eq_top
+    change φ.toSubmodule ⊔ ψ.toSubmodule = (⊤ : Submodule F V) at h
+    exact h
 
 lemma det_eq_det_mul_det_of_isCompl_subrepresentation
     {F G V : Type*} [Field F] [Group G]
@@ -397,11 +403,15 @@ lemma det_eq_det_mul_det_of_isCompl_subrepresentation
         Submodule.mapQ φ.toSubmodule φ.toSubmodule (ρ x) (φ.apply_mem_toSubmodule x) ∘ₗ
         ((eQ.symm : ψ.toSubmodule ≃ₗ[F] (V ⧸ φ.toSubmodule)) : ψ.toSubmodule →ₗ[F] (V ⧸ φ.toSubmodule))) =
       ψ.toRepresentation x := by
-    ext w
-    simpa [eQ] using
-      (Submodule.quotientEquivOfIsCompl_apply_mk_coe
-        (p := φ.toSubmodule) (q := ψ.toSubmodule) hcompl
-        ⟨(ρ x) w, ψ.apply_mem_toSubmodule x w.2⟩)
+    apply LinearMap.ext
+    intro w
+    calc
+      _ = (⟨(ρ x) w, ψ.apply_mem_toSubmodule x w.2⟩ : ψ.toSubmodule) := by
+        simpa [eQ] using
+          (Submodule.quotientEquivOfIsCompl_apply_mk_right
+            (p := φ.toSubmodule) (q := ψ.toSubmodule) hcompl
+            ⟨(ρ x) w, ψ.apply_mem_toSubmodule x w.2⟩)
+      _ = ψ.toRepresentation x w := rfl
   have hdetq :
       LinearMap.det (Submodule.mapQ φ.toSubmodule φ.toSubmodule (ρ x) (φ.apply_mem_toSubmodule x)) =
         LinearMap.det (ψ.toRepresentation x) := by
@@ -595,7 +605,11 @@ lemma exists_central_element_orderOf_eq_prime_of_nontrivial_pgroup_subgroup
       omega
     · exact hdvd
   obtain ⟨z, hzq⟩ := exists_prime_orderOf_dvd_card' q hqdvd
-  refine ⟨z.1.1, z.1.2, by simpa using hzq, ?_, ?_, ?_⟩
+  refine ⟨z.1.1, z.1.2, ?_, ?_, ?_, ?_⟩
+  · calc
+      orderOf z.1.1 = orderOf z.1 := Subgroup.orderOf_coe z.1
+      _ = orderOf z := Subgroup.orderOf_coe z
+      _ = q := hzq
   · intro h hh
     have hzcomm : ∀ y : Q, z.1 * y = y * z.1 := by
       have hzmem : z.1 ∈ Subgroup.center Q := z.2
@@ -802,7 +816,7 @@ public theorem theorem_2_6_b
                 have htop : (C : Subgroup H) = ⊤ := by
                   simpa using (top_eq_sylow_zero hchar0 C).symm
                 rw [htop] at hCcomm
-                exact Subgroup.mul_comm_of_mem_isMulCommutative (⊤ : Subgroup H) trivial trivial
+                exact setLike_mul_comm (s := (⊤ : Subgroup H)) trivial trivial
               · haveI : Fact (Nat.Prime (ringChar F)) := ringChar_prime hchar0
                 have hQH_disj_C : Disjoint QH (C : Subgroup H) :=
                   IsPGroup.disjoint_of_ne q (ringChar F) hq_ne_char QH (C : Subgroup H) hQH_p C.isPGroup'
@@ -1036,7 +1050,7 @@ public theorem theorem_2_6_b
         exact hxne1 (hi hxeq)
       have hU_pos : 0 < Module.finrank F' U := by
         letI : Nontrivial U := (Submodule.nontrivial_iff_ne_bot).2 hU_ne_bot
-        exact Module.finrank_pos
+        exact Module.finrank_pos (R := F') (M := U)
       have hU_lt : Module.finrank F' U < 2 := by
         simpa [hdim] using (Submodule.finrank_lt (K := F') (V := V') hU_ne_top)
       have hU1 : Module.finrank F' U = 1 := by
@@ -1060,6 +1074,8 @@ public theorem theorem_2_6_b
           _ = ρ' g u := by simpa [sigma] using congrArg (fun z : V' => ρ' g z) hku
       let rhoU : Representation F' G U := Representation.subrepresentation ρ' U hU_stable
       let rhoQ : Representation F' G (V' ⧸ U) := Representation.quotient ρ' U hU_stable
+      letI : Module.Free F' U := Module.Free.of_divisionRing F' U
+      letI : Module.Free F' (V' ⧸ U) := Module.Free.of_divisionRing F' (V' ⧸ U)
       have hQ1 : Module.finrank F' (V' ⧸ U) = 1 := by
         have hsum := Submodule.finrank_quotient_add_finrank (R := F') (M := V') U
         omega
@@ -1245,7 +1261,7 @@ public theorem theorem_2_6_b
             (rhoU y) ^ orderOf y = rhoU ((y : G) ^ orderOf y) := by rw [← map_pow]
             _ = 1 := by rw [hy_pow, map_one]
         rw [hm] at hpow
-        have hdetpow := congrArg LinearMap.det hpow
+        have hdetpow := congrArg (fun f : Module.End F' U => LinearMap.det f) hpow
         rw [map_pow, hdet] at hdetpow
         have ha1 : a = 1 := hscalar_eq_one (by simpa using hdetpow)
         intro u
@@ -1265,7 +1281,8 @@ public theorem theorem_2_6_b
             (rhoQ y) ^ orderOf y = rhoQ ((y : G) ^ orderOf y) := by rw [← map_pow]
             _ = 1 := by rw [hy_pow, map_one]
         rw [hm] at hpow
-        have hdetpow := congrArg LinearMap.det hpow
+        have hdetpow :=
+          congrArg (fun f : Module.End F' (V' ⧸ U) => LinearMap.det f) hpow
         rw [map_pow, hdet] at hdetpow
         have ha1 : a = 1 := hscalar_eq_one (by simpa using hdetpow)
         intro z
@@ -1377,26 +1394,34 @@ public theorem theorem_2_6_b
       have hcompl_sub : IsCompl φ.toSubmodule ψ.toSubmodule :=
         subrepresentation_isCompl_toSubmodule hcompl
       letI : IsMulCommutative K := hK1.toIsMulCommutative
-      letI : IsIrreducible φ.toRepresentation := hφirr
+      letI := hφirr
       have hφ1 : Module.finrank F' φ.toSubmodule = 1 := by
         simpa using
           Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
-            (ρ := φ.toRepresentation)
+            (G := K) (k := F') (V := φ.toSubmodule) (ρ := φ.toRepresentation)
       have hψ1 : Module.finrank F' ψ.toSubmodule = 1 :=
         finrank_eq_one_of_isCompl_left_of_finrank_eq_two φ.toSubmodule ψ.toSubmodule hcompl_sub
           hφ1 hdim
       let xK : K := ⟨x, hxK⟩
+      letI : Module.Free F' φ.toSubmodule :=
+        Module.Free.of_divisionRing F' φ.toSubmodule
+      letI : Module.Free F' ψ.toSubmodule :=
+        Module.Free.of_divisionRing F' ψ.toSubmodule
       obtain ⟨a, ha, _⟩ :=
         LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one hφ1 (φ.toRepresentation xK)
       obtain ⟨b, hb, _⟩ :=
         LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one hψ1 (ψ.toRepresentation xK)
       have hφx : ∀ u : φ.toSubmodule, ρ' x u = a • u := by
-        simpa using subrepresentation_eq_smul_id_apply φ ha
+        simpa [σ, xK] using subrepresentation_eq_smul_id_apply φ ha
       have hψx : ∀ w : ψ.toSubmodule, ρ' x w = b • w := by
-        simpa using subrepresentation_eq_smul_id_apply ψ hb
-      have hdetφ : LinearMap.det (φ.toRepresentation xK) = a := by
+        simpa [σ, xK] using subrepresentation_eq_smul_id_apply ψ hb
+      have hdetφ :
+          (@LinearMap.det φ.toSubmodule φ.toSubmodule.addCommGroup F'
+            Field.toCommRing φ.toSubmodule.module) (φ.toRepresentation xK) = a := by
         rw [ha, LinearMap.det_smul, LinearMap.det_id, hφ1, pow_one, mul_one]
-      have hdetψ : LinearMap.det (ψ.toRepresentation xK) = b := by
+      have hdetψ :
+          (@LinearMap.det ψ.toSubmodule ψ.toSubmodule.addCommGroup F'
+            Field.toCommRing ψ.toSubmodule.module) (ψ.toRepresentation xK) = b := by
         rw [hb, LinearMap.det_smul, LinearMap.det_id, hψ1, pow_one, mul_one]
       have hab1 : a * b = 1 := by
         have hxGs : x ∈ Gs := hqC_le_Gs hxqC
@@ -1409,13 +1434,15 @@ public theorem theorem_2_6_b
       have haq : a ^ q = 1 := by
         have hpow : (φ.toRepresentation xK) ^ q = 1 := by
           rw [← map_pow, hxKpow, map_one]
-        have hdet := congrArg LinearMap.det hpow
+        have hdet :=
+          congrArg (fun f : Module.End F' φ.toSubmodule => LinearMap.det f) hpow
         rw [map_pow, hdetφ] at hdet
         simpa using hdet
       have hbq : b ^ q = 1 := by
         have hpow : (ψ.toRepresentation xK) ^ q = 1 := by
           rw [← map_pow, hxKpow, map_one]
-        have hdet := congrArg LinearMap.det hpow
+        have hdet :=
+          congrArg (fun f : Module.End F' ψ.toSubmodule => LinearMap.det f) hpow
         rw [map_pow, hdetψ] at hdet
         simpa using hdet
       have hqodd : Odd q := by
@@ -1733,7 +1760,7 @@ public theorem theorem_2_6_a
   refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b ↦ ?_
   by_cases h : ringChar F = 0
   · rw [← top_eq_sylow_zero h] at hC
-    exact Subgroup.mul_comm_of_mem_isMulCommutative ⊤ trivial trivial
+    exact setLike_mul_comm (s := (⊤ : Subgroup G)) trivial trivial
   · have : Fact (ringChar F).Prime := ringChar_prime h
     rw [card_not_dvd_sylow_eq_bot hc, commutator_def, Subgroup.commutator_le] at hC'
     exact commutatorElement_eq_one_iff_mul_comm.mp (hi (congrArg ρ (hC' a trivial b trivial)))
