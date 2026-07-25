@@ -3,6 +3,7 @@ defaultTargets = ["FeitThompson", "BenderSuzuki"]
 lintDriver = "batteries/runLinter"
 
 enableArtifactCache = true
+restoreAllArtifacts = true
 
 [leanOptions]
 pp.unicode.fun = true
