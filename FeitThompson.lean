@@ -1,4 +1,4 @@
-module  -- shake: keep-all
+module  -- shake: keep-all --deprecated_module: ignore
 
 public import FeitThompson.BGappendixC.Basic
 public import FeitThompson.BGappendixC.lemma_C_1

@@ -1,4 +1,4 @@
-module  -- shake: keep-all
+module  -- shake: keep-all --deprecated_module: ignore
 
 public import BenderSuzuki.External.Hall.Basic
 public import BenderSuzuki.External.Hall.corollary_14_4_1
