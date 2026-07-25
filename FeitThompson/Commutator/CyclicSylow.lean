@@ -2,6 +2,8 @@ module
 
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 
+open scoped IsMulCommutative
+
 /-!
 # Cyclic Sylow intersection with commutator
 -/
@@ -29,4 +31,3 @@ public theorem sylow_inf_commutator_eq_bot_or_le_commutator
       exact hnot_card_comm (hInfDvd.trans (Subgroup.card_dvd_of_le inf_le_right))
   · right
     exact hScomm
-

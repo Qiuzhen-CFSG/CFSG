@@ -328,7 +328,7 @@ public theorem section10_groupRank_at_least_two_of_elementaryAbelian_subgroup_ca
     2 ≤ groupRank K := by
   haveI : IsElementaryAbelian p A := hAelem
   have hAgen : 2 ≤ generatorRank A := by
-    letI : CommGroup A := CommGroup.ofIsMulCommutative
+    letI : CommGroup A := IsMulCommutative.instCommGroup
     have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
       simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -349,7 +349,7 @@ private theorem section10_generatorRank_at_least_three_of_elementaryAbelian_card
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hgt : p ^ 2 < Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -420,9 +420,8 @@ private theorem section10_isElementaryAbelian_sup_of_le_centralizer_early
     simpa [s] using (Subgroup.sup_eq_closure E C)
   refine
     { toIsMulCommutative := by
-        letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
         rw [hsup]
-        exact { is_comm := ⟨fun x y => mul_comm x y⟩ }
+        exact Subgroup.isMulCommutative_closure hcomm_s
       exponent_dvd_p := ?_ }
   refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
   intro x
@@ -444,10 +443,12 @@ private theorem section10_isElementaryAbelian_sup_of_le_centralizer_early
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : CommGroup ↥(Subgroup.closure s) := Subgroup.closureCommGroupOfComm hcomm_s
+          have hclosure_comm : IsMulCommutative ↥(Subgroup.closure s) :=
+            Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val
-            (mul_comm (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
+            (hclosure_comm.is_comm.comm
+              (⟨y, hy⟩ : Subgroup.closure s) (⟨z, hz⟩ : Subgroup.closure s))
         calc
           (y * z) ^ p = y ^ p * z ^ p := by simpa using hyz_comm.mul_pow p
           _ = 1 := by simp [hypow, hzpow]) (by

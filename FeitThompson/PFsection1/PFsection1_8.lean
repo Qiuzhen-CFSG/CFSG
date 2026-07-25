@@ -111,7 +111,11 @@ private theorem orbitSpanSubrepresentation_eq_top_of_irreducible
     have hS_le_bot : S.toSubmodule ≤ (⊥ : Submodule ℂ V) := by
       have hUsub :
           (orbitSpanSubrepresentation ρ S).toSubmodule = (⊥ : Submodule ℂ V) := by
-        simpa using congrArg Subrepresentation.toSubmodule hU
+        calc
+          (orbitSpanSubrepresentation ρ S).toSubmodule =
+              (⊥ : Subrepresentation ρ).toSubmodule :=
+            congrArg Subrepresentation.toSubmodule hU
+          _ = (⊥ : Submodule ℂ V) := rfl
       rw [← hUsub]
       exact subrepresentation_le_orbitSpan (ρ := ρ) S
     exact hS_ne_bot (le_antisymm hS_le_bot bot_le)
@@ -182,8 +186,12 @@ private theorem cosetOrbitMap_range_eq_top_of_irreducible
     LinearMap.range (cosetOrbitMap ρ C S) = ⊤ := by
   have hUtop :
       (orbitSpanSubrepresentation ρ S).toSubmodule = (⊤ : Submodule ℂ V) := by
-    simpa using congrArg Subrepresentation.toSubmodule
-      (orbitSpanSubrepresentation_eq_top_of_irreducible (ρ := ρ) S)
+    calc
+      (orbitSpanSubrepresentation ρ S).toSubmodule =
+          (⊤ : Subrepresentation ρ).toSubmodule :=
+        congrArg Subrepresentation.toSubmodule
+          (orbitSpanSubrepresentation_eq_top_of_irreducible (ρ := ρ) S)
+      _ = (⊤ : Submodule ℂ V) := rfl
   apply top_unique
   rw [← hUtop]
   exact orbitSpan_le_cosetOrbitMap_range ρ C S

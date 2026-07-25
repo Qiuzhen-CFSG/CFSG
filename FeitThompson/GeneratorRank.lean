@@ -6,7 +6,7 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
 import FeitThompson.ElementaryAbelian
 
-open scoped Subgroup
+open scoped IsMulCommutative Subgroup
 
 /-- The minimal number of generators of a group. -/
 @[expose] public noncomputable def generatorRank (G : Type*) [Group G] : ℕ :=
@@ -85,12 +85,19 @@ public theorem generatorRank_le_finrank_of_elementaryAbelian
                   (Set.range fun i => b i))
       _ = ⊤ := by simp [b.span_eq]
   have hgroup_top : Subgroup.closure (Set.range s) = ⊤ := by
+    have hrange :
+        Additive.ofMul ⁻¹' Set.range (fun i => b i) = Set.range s := by
+      ext g
+      constructor
+      · rintro ⟨i, hi⟩
+        exact ⟨i, by simpa [s] using congrArg Additive.toMul hi⟩
+      · rintro ⟨i, hi⟩
+        exact ⟨i, by simpa [s] using congrArg Additive.ofMul hi⟩
     calc
       Subgroup.closure (Set.range s)
           = (AddSubgroup.closure (Set.range fun i => b i)).toSubgroup' := by
               symm
-              simpa [s] using
-                (AddSubgroup.toSubgroup'_closure (Set.range fun i => b i))
+              rw [AddSubgroup.toSubgroup'_closure, hrange]
       _ = ⊤ := by simp [hadd_top]
   let S : Finset G := Finset.univ.image s
   have hS_top : Subgroup.closure (S : Set G) = ⊤ := by
@@ -172,8 +179,11 @@ public theorem elementaryAbelian_card_eq_pow_generatorRank
     (G : Type*) [Group G] [Finite G] [IsElementaryAbelian p G] :
     Nat.card G = p ^ generatorRank G := by
   have hcard : Nat.card G = p ^ Module.finrank (ZMod p) (Additive G) := by
-    simpa [Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G))
+    calc
+      Nat.card G = Nat.card (Additive G) := (Nat.card_congr Additive.toMul).symm
+      _ = p ^ Module.finrank (ZMod p) (Additive G) := by
+        simpa [ZMod.card] using
+          (Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive G))
   have hfin_le_gen :
       Module.finrank (ZMod p) (Additive G) ≤ generatorRank G :=
     elementaryAbelian_finrank_le_generatorRank (p := p) G
@@ -242,8 +252,7 @@ public theorem isMetacyclic_of_generatorRank_le_two_of_commutative
   obtain ⟨x, y, hxy_top⟩ := exists_two_generators_of_generatorRank_le_two G hG
   let N : Subgroup G := Subgroup.zpowers x
   have hNnorm : N.Normal := by
-    letI : CommGroup G := CommGroup.ofIsMulCommutative
-    exact Subgroup.normal_of_comm N
+    exact Subgroup.normal_of_isMulCommutative N
   refine ⟨N, hNnorm, inferInstance, ?_⟩
   let q : G →* G ⧸ N := QuotientGroup.mk' N
   have hq_surj : Function.Surjective q := QuotientGroup.mk'_surjective N
@@ -337,7 +346,8 @@ public theorem generatorRank_le_generatorRank_quotient_frattini
   have hn_memG :
       n ∈ { n : ℕ | ∃ t : Fin n → G, Subgroup.closure (Set.range t) = ⊤ } :=
     ⟨s, hH_top⟩
-  simpa [generatorRank] using Nat.sInf_le hn_memG
+  change sInf {m : ℕ | ∃ t : Fin m → G, Subgroup.closure (Set.range t) = ⊤} ≤ n
+  exact Nat.sInf_le hn_memG
 
 public theorem generatorRank_le_one_of_isCyclic {G : Type*} [Group G] (hcyc : IsCyclic G) :
     generatorRank G ≤ 1 := by

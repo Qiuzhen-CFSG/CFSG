@@ -128,10 +128,10 @@ private theorem lemma_4_5_a_preimage_case {R : Type*} [Group R] [Finite R] {p : 
     exact hSbar_elem.toIsMulCommutative
   have hder_le_ZT : _root_.commutator T ≤ ZT := by
     letI : IsMulCommutative (T.map q) := hTmap_comm
-    letI : CommGroup ↥qT.range := by infer_instance
-    have hquot_comm : Std.Commutative (· * · : T ⧸ qT.ker → _ → _) := by
+    letI : CommGroup ↥qT.range := IsMulCommutative.instCommGroup
+    have hquot_comm : IsMulCommutative (T ⧸ qT.ker) := by
       let e : T ⧸ qT.ker ≃* qT.range := QuotientGroup.quotientKerEquivRange qT
-      letI : CommGroup (T ⧸ qT.ker) := MonoidHom.commGroupOfInjective e.toMonoidHom e.injective
+      letI : CommGroup (T ⧸ qT.ker) := e.toMonoidHom.commGroupOfInjective e.injective
       infer_instance
     have hder_le_ker : _root_.commutator T ≤ qT.ker := by
       exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := qT.ker)).1 hquot_comm
@@ -139,7 +139,7 @@ private theorem lemma_4_5_a_preimage_case {R : Type*} [Group R] [Finite R] {p : 
   have hZT_le_centerT : ZT ≤ Subgroup.center T := by
     intro z hz
     have hzZ : ((z : T) : R) ∈ Z := by
-      simpa [ZT, q, QuotientGroup.ker_mk'] using hz
+      simpa [ZT, q, QuotientGroup.ker_mk', Subgroup.mem_subgroupOf] using hz
     have hzcenter : ((z : T) : R) ∈ Subgroup.center R := hZ_le_center hzZ
     rw [Subgroup.mem_center_iff]
     intro t
@@ -147,18 +147,18 @@ private theorem lemma_4_5_a_preimage_case {R : Type*} [Group R] [Finite R] {p : 
     exact (Subgroup.mem_center_iff.mp hzcenter) (t : R)
   have hclassT : NilpotencyClassLe 2 T := by
     have hcomm_sub : _root_.commutator T ≤ Subgroup.center T := hder_le_ZT.trans hZT_le_centerT
-    have hL1_le_center : lowerCentralSeries T 1 ≤ Subgroup.center T := by
-      simpa [lowerCentralSeries_one] using hcomm_sub
-    have hL2_bot : lowerCentralSeries T 2 = ⊥ := by
+    have hL1_le_center : (⊤ : Subgroup T).lowerCentralSeries 1 ≤ Subgroup.center T := by
+      simpa only [Subgroup.top_lowerCentralSeries_one] using hcomm_sub
+    have hL2_bot : (⊤ : Subgroup T).lowerCentralSeries 2 = ⊥ := by
       simpa [Nat.succ_eq_add_one] using
-        (lowerCentralSeries_succ_eq_bot (G := T) (n := 1) hL1_le_center)
+        (Subgroup.lowerCentralSeries_succ_eq_bot (⊤ : Subgroup T) (n := 1) hL1_le_center)
     have hnil : Group.IsNilpotent T :=
-      (nilpotent_iff_lowerCentralSeries (G := T)).2 ⟨2, hL2_bot⟩
+      (Subgroup.nilpotent_iff_lowerCentralSeries (G := T)).2 ⟨2, hL2_bot⟩
     letI : Group.IsNilpotent T := hnil
     have hclass : Group.nilpotencyClass T ≤ 2 :=
-      (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := T)).1 hL2_bot
+      (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := T)).1 hL2_bot
     unfold NilpotencyClassLe
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := T)).2 hclass
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := T)).2 hclass
   let ΩT : Subgroup T := omega₁ (G := T) (p := p)
   have hZT_le_omega : ZT ≤ ΩT := by
     intro z hz
@@ -307,7 +307,7 @@ private theorem lemma_4_5_a_cyclic_case {R : Type*} [Group R] [Finite R] {p : �
     isCyclic_of_surjective π hπ_surj
   letI : IsMulCommutative R := lemma_4_1 (G := R) hQcenter_cyc
   let C' : Subgroup R := C
-  letI : C'.Normal := Subgroup.normal_of_comm C'
+  letI : C'.Normal := Subgroup.normal_of_isMulCommutative C'
   have hx_ne : x ≠ 1 := by
     intro hx1
     have hCbot : C' = ⊥ := by simp [C', C, hx1]
@@ -337,7 +337,7 @@ private theorem lemma_4_5_a_cyclic_case {R : Type*} [Group R] [Finite R] {p : �
     intro hUZ
     exact hZ_not_le_C (hUZ ▸ hU_le_C)
   let Ω : Subgroup R := U ⊔ Z
-  letI : Ω.Normal := Subgroup.normal_of_comm Ω
+  letI : Ω.Normal := Subgroup.normal_of_isMulCommutative Ω
   have hOmega_pow : ∀ y : Ω, y ^ p = 1 := by
     intro y
     rcases (Subgroup.mem_sup_of_normal_right).1 y.2 with ⟨u, huU, z, hzZ, huz⟩
@@ -351,8 +351,10 @@ private theorem lemma_4_5_a_cyclic_case {R : Type*} [Group R] [Finite R] {p : �
       simpa [hZcard] using congrArg Subtype.val this
     apply Subtype.ext
     change ((y : R) ^ p = 1)
-    rw [← huz]
-    simp [mul_pow, hu_pow, hz_pow]
+    calc
+      (y : R) ^ p = (u * z) ^ p := congrArg (· ^ p) huz.symm
+      _ = u ^ p * z ^ p := Commute.mul_pow (mul_comm' u z) p
+      _ = 1 := by rw [hu_pow, hz_pow, one_mul]
   have hU_le_Ω : U ≤ Ω := le_sup_left
   have hZ_le_Ω : Z ≤ Ω := le_sup_right
   have hΩ_p : IsPGroup p Ω := (Fact.out : IsPGroup p R).to_subgroup Ω

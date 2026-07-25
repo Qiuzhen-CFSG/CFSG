@@ -24,7 +24,7 @@ variable {G A : Type*} [Group G] [Group A]
 /-- `C_G(A)`: the subgroup of elements of `G` fixed by the `A`-action. -/
 public abbrev fixedPointSubgroup (A : Type*) (G : Type*) [Group A] [Group G] [MulDistribMulAction A G] :
     Subgroup G :=
-  G ^* A
+  FixedPoints.subgroup A G
 
 /-- `C_A(S)`: the subgroup of `A` fixing every element of `S` pointwise. -/
 public abbrev fixingSubgroupOf (A : Type*) (G : Type*) [Group A] [MulAction A G]

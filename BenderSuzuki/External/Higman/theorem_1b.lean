@@ -52,7 +52,6 @@ public theorem theorem1b_typeA_data
       rw [Subgroup.mem_center_iff]
       intro x
       rcases hsurj x (Subgroup.mem_top x) with ⟨a, w, hx⟩
-      change x * pairLift 0 z = pairLift 0 z * x
       rw [hx, hmul, hmul, hzeroLeft, hzeroRight]
       simp [add_comm]⟩
   have hcenterMapInjective : Function.Injective centerMap := by
@@ -104,7 +103,7 @@ public theorem theorem1b_typeA_data
                 (cocycle b a + cocycle b a) +
                 (cocycle b b + cocycle b b) := by abel
             _ = 0 := by
-              simp only [CharTwo.add_self_eq_zero, zero_add]
+              simp only [CharTwo.add_self_eq_zero]
     have ha : a = 0 := by
       by_contra ha
       have hthetaFixed : ∀ y : F, theta y = y := by
@@ -201,7 +200,6 @@ public theorem theorem1b_typeB_data
       rw [Subgroup.mem_center_iff]
       intro x
       rcases hsurj x (Subgroup.mem_top x) with ⟨d, a, b, hx⟩
-      change x * tripleLift c 0 0 = tripleLift c 0 0 * x
       rw [hx, hmul, hmul, hzeroLeft, hzeroRight]
       simp [add_comm]⟩
   have hcenterMapInjective : Function.Injective centerMap := by
@@ -265,7 +263,7 @@ public theorem theorem1b_typeB_data
                 (cocycle e f a b + cocycle e f a b) +
                 (cocycle e f e f + cocycle e f e f) := by abel
             _ = 0 := by
-              simp only [CharTwo.add_self_eq_zero, zero_add]
+              simp only [CharTwo.add_self_eq_zero]
     have hab : a = 0 ∧ b = 0 := by
       by_cases ha : a = 0
       · subst a
@@ -279,7 +277,7 @@ public theorem theorem1b_typeB_data
       · by_cases hb : b = 0
         · subst b
           have h := hpolar 0 1
-          simp only [map_zero, map_one, zero_mul, one_mul, mul_zero,
+          simp only [map_zero, map_one, zero_mul, mul_zero,
             add_zero, zero_add] at h
           have h' : epsilon * a = 0 := by simpa [mul_assoc] using h
           exact False.elim ((mul_ne_zero hepsilon ha) h')
@@ -365,7 +363,6 @@ public theorem theorem1b_typeC_data
       rw [Subgroup.mem_center_iff]
       intro x
       rcases hsurj x (Subgroup.mem_top x) with ⟨w, c, d, hx⟩
-      change x * tripleLift z 0 0 = tripleLift z 0 0 * x
       rw [hx, hmul, hmul]
       simp [add_comm]⟩
   have hcenterMapInjective : Function.Injective centerMap := by
@@ -402,11 +399,11 @@ public theorem theorem1b_typeC_data
       exact add_right_cancel (add_left_cancel h')
     have haPow : a ^ (2 ^ (n - 1)) = 0 :=
       (mul_eq_zero.mp haTerm).resolve_left hepsilon
-    have ha : a = 0 := pow_eq_zero haPow
+    have ha : a = 0 := eq_zero_of_pow_eq_zero haPow
     subst a
     have hbTerm : epsilon * theta (b ^ 2) = 0 := by
       have h := hcommCoord 0 1 0
-      simp only [map_zero, zero_mul, mul_zero, zero_add, one_mul,
+      simp only [map_zero, zero_mul, mul_zero, zero_add,
         one_pow, add_zero, zero_pow hpowPos.ne'] at h
       have h' : z + 0 = z + epsilon * theta (b ^ 2) := by
         simpa using h
@@ -414,7 +411,7 @@ public theorem theorem1b_typeC_data
     have hthetaB : theta (b ^ 2) = 0 :=
       (mul_eq_zero.mp hbTerm).resolve_left hepsilon
     have hbSq : b ^ 2 = 0 := (map_eq_zero theta).mp hthetaB
-    have hb : b = 0 := pow_eq_zero hbSq
+    have hb : b = 0 := eq_zero_of_pow_eq_zero hbSq
     subst b
     refine ⟨z, ?_⟩
     apply Subtype.ext
@@ -490,7 +487,6 @@ public theorem theorem1b_typeD_data
       rw [Subgroup.mem_center_iff]
       intro x
       rcases hsurj x (Subgroup.mem_top x) with ⟨w, c, d, hx⟩
-      change x * tripleLift z 0 0 = tripleLift z 0 0 * x
       rw [hx, hmul, hmul]
       simp [add_comm]⟩
   have hcenterMapInjective : Function.Injective centerMap := by
@@ -501,7 +497,8 @@ public theorem theorem1b_typeD_data
   have hthetaPowFive : theta ^ 5 = 1 := by
     apply DFunLike.ext _ _
     intro x
-    simpa only [Equiv.Perm.iterate_eq_pow] using hperiod x
+    change (theta ^ 5) x = x
+    exact hperiod x
   have hthetaNeOne : theta ≠ 1 := by
     rintro rfl
     rcases hthetaNontrivial with ⟨x, hx⟩

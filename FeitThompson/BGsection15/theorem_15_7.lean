@@ -10,7 +10,7 @@ import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-! # Theorem 15 7 from BG Section 15 -/
 
@@ -252,6 +252,7 @@ private theorem section15_initial_pCoreIn_not_cyclic_of_X_prime
       (G := G) hM (by simpa [F] using section8FittingSubgroup_le M hzF) hzne
   exact hg (by simpa [hMnorm] using hg_norm_M)
 
+omit [IsMinCE G] in
 private theorem section15_initial_pCoreIn_le_sigma_compl_fitting_core_of_not_sigma
     {M : Subgroup G} {p : Nat.Primes}
     (hpσ : p ∉ section10SigmaPrimes M) :
@@ -298,10 +299,10 @@ private theorem section15_initial_prime_mem_sigma_of_fitting_intersection
     {M MF X : Subgroup G} {g : G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hnotTI : ¬ section14TISubgroup (section8FittingSubgroup M))
+    (_hnotTI : ¬ section14TISubgroup (section8FittingSubgroup M))
     (hg : g ∉ M)
     (hX : X = section8FittingSubgroup M ⊓ (section8FittingSubgroup M).conjBy g)
-    (hXne : X ≠ ⊥)
+    (_hXne : X ≠ ⊥)
     {p : Nat.Primes} (hpX : p ∈ subgroupPrimeSet X) :
     p ∈ section10SigmaPrimes M := by
   classical
@@ -400,7 +401,7 @@ private theorem section15_initial_prime_not_beta_of_MF
     {M MF X : Subgroup G} {g : G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hMF : section15MFSubgroup M MF)
-    (hnotTI : ¬ section14TISubgroup (section8FittingSubgroup M))
+    (_hnotTI : ¬ section14TISubgroup (section8FittingSubgroup M))
     (hg : g ∉ M)
     (hX : X = section8FittingSubgroup M ⊓ (section8FittingSubgroup M).conjBy g)
     (hXne : X ≠ ⊥)
@@ -488,9 +489,9 @@ private theorem section15_initial_prime_not_beta_of_MF
       have hyz : y = z := by simpa using hy
       subst y
       have ha_cent_X₁ : a ∈ Subgroup.centralizer (X₁ : Set G) := by
-        simpa [hcentTop]
+        simp [hcentTop]
       exact Subgroup.mem_centralizer_iff.mp ha_cent_X₁ z (by
-        simpa [X₁] using (Subgroup.mem_zpowers (z : G)))
+        simp [X₁])
     exact
       (section8_centralizer_singleton_ne_top_of_ne_one (G := G) hzne)
         (top_le_iff.mp htop_le_singleton)
@@ -526,9 +527,9 @@ private theorem section15_initial_prime_not_beta_of_MF
   · let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
     let PG : Subgroup G := section10AmbientSylowSubgroup M P
     have hPGp : IsPGroup p.val PG := by
-      simpa [PG, section10AmbientSylowSubgroup] using
-        (IsPGroup.map (p := p.val) (H := (P : Subgroup M))
-          P.isPGroup' M.subtype)
+      change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+      exact IsPGroup.map (p := p.val) (H := (P : Subgroup M))
+        P.isPGroup' M.subtype
     have hP_le_MFsub : (P : Subgroup M) ≤ MF.subgroupOf M := by
       haveI : (MF.subgroupOf M).Normal := hMFnormM
       exact section15_sylow_le_normal_hall_of_mem hMFHall hpMF P
@@ -764,7 +765,8 @@ private theorem section15_fitting_prime_mem_sigma_or_tau2_of_MF_eq_msigma
   let Ssub : Subgroup F := S.subgroupOf F
   let Ysub : Subgroup F := Y.subgroupOf F
   have hSσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) S := by
-    simpa [S] using (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card
+    intro p hp
+    exact (theorem_10_2_b (G := G) hM).1.p_in_pi_of_p_dvd_card p hp
   have hYτ2 : IsPiSubgroup (G := G) (section12Tau2Primes M) Y := by
     simpa [Y] using section15_sigma_complement_fitting_core_tau2 hM hMF
   have hSsubσ : IsPiSubgroup (G := F) (section10SigmaPrimes M) Ssub :=
@@ -926,17 +928,17 @@ private theorem section15_ambientDerived_nilpotent_of_mbetaSubgroup_eq_bot
     section10_quotient_mbeta_nilpotent_of_le_derived (G := G) hM hNleD (by simp [D])
   let Nsub : Subgroup D := N.subgroupOf D
   have hNsub_bot : Nsub = ⊥ := by
-    simpa [Nsub, N, hβbot]
+    simp [Nsub, N, hβbot]
   have hquotNil' : Group.IsNilpotent (D ⧸ Nsub) := by
     simpa [D, N, Nsub] using hquotNil
   have hDnil : Group.IsNilpotent D := by
     let e : D ⧸ Nsub ≃* D :=
       (QuotientGroup.quotientMulEquivOfEq hNsub_bot).trans QuotientGroup.quotientBot
-    exact nilpotent_of_mulEquiv (G := D ⧸ Nsub) (G' := D)
+    exact Group.nilpotent_of_mulEquiv (G := D ⧸ Nsub) (G' := D)
       (_h := hquotNil') e
   let eD : D ≃* ambientDerivedSubgroup M :=
     Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective
-  exact nilpotent_of_mulEquiv (G := D) (G' := ambientDerivedSubgroup M)
+  exact Group.nilpotent_of_mulEquiv (G := D) (G' := ambientDerivedSubgroup M)
     (_h := hDnil) eD
 
 private theorem section15_ambientDerived_le_fitting_of_msigma_beta_compl
@@ -1111,7 +1113,8 @@ public theorem section15_msigma_eq_ambientDerived_of_familyP1
       simpa [xM, S, Sloc, Subgroup.mem_subgroupOf] using hxS
     have hxbot : xM ∈ (⊥ : Subgroup M) :=
       Subgroup.disjoint_def.mp hloc_disj hxKloc hxSloc
-    simpa [xM] using congrArg Subtype.val (by simpa using hxbot)
+    change (xM : G) = (1 : G)
+    exact congrArg Subtype.val (by simpa using hxbot)
   have hcomp : section12ComplementIn M K S := by
     refine ⟨hK.1, hSleM, ?_, hdisjKS⟩
     simpa [S] using hprod
@@ -1131,19 +1134,20 @@ public theorem section15_msigma_eq_ambientDerived_of_familyP1
     letI : IsCyclic K := hKcyc
     refine ⟨⟨fun x y => Subtype.ext ?_⟩⟩
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := K) x.property y.property
+    exact setLike_mul_comm
+      (s := K) x.property y.property
   haveI : Sloc.Normal := by
     simpa [S, Sloc] using hSnormM.2
   let eQ : M ⧸ Sloc ≃* Kloc := hcomp'.QuotientMulEquiv
   have hquot_comm : IsMulCommutative (M ⧸ Sloc) := by
     letI : IsMulCommutative Kloc := hKloc_comm
+    letI : CommGroup Kloc := IsMulCommutative.instCommGroup
     refine ⟨⟨fun x y => ?_⟩⟩
     apply eQ.injective
     simpa [map_mul] using (mul_comm (eQ x) (eQ y))
   have hder_le_Sloc : derivedSubgroup M ≤ Sloc :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
-      (N := Sloc)).1 hquot_comm.is_comm
+      (N := Sloc)).1 hquot_comm
   have hDleS : ambientDerivedSubgroup M ≤ S := by
     intro x hxD
     have hxM : x ∈ M := section15_ambientDerived_le hxD
@@ -1292,9 +1296,9 @@ private theorem section15_theorem15_7_rank_MF_eq_two_of_abelian
       have hyz : y = z := by simpa using hy
       subst y
       have ha_cent_X₁ : a ∈ Subgroup.centralizer (X₁ : Set G) := by
-        simpa [hcentTop]
+        simp [hcentTop]
       exact Subgroup.mem_centralizer_iff.mp ha_cent_X₁ z (by
-        simpa [X₁] using (Subgroup.mem_zpowers (z : G)))
+        simp [X₁])
     exact
       (section8_centralizer_singleton_ne_top_of_ne_one (G := G) hzne)
         (top_le_iff.mp htop_le_singleton)
@@ -1332,8 +1336,8 @@ private theorem section15_theorem15_7_rank_MF_eq_two_of_abelian
       change x ∈ Subgroup.centralizer (X₁ : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro y hyX₁
-      exact Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := MF) (hX₁leMF hyX₁) hxMF
+      exact setLike_mul_comm
+        (s := MF) (hX₁leMF hyX₁) hxMF
   have hupper : groupRank MF ≤ 2 := by
     rw [← hCeqMF]
     exact hC_rank_le_two
@@ -1389,6 +1393,7 @@ public theorem section15_isMulCommutative_of_mulEquiv
   classical
   refine ⟨⟨fun x y => ?_⟩⟩
   letI : IsMulCommutative B := hB
+  letI : CommGroup B := IsMulCommutative.instCommGroup
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
@@ -1414,7 +1419,7 @@ private theorem section15_isMulCommutative_of_nilpotent_of_sylow
     haveI : Fact p.val.Prime := ⟨Nat.prime_of_mem_primeFactors p.property⟩
     have hcomm : IsMulCommutative (P : Subgroup K) := hSyl p.val P
     exact Subtype.ext <|
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := (P : Subgroup K))
+      setLike_mul_comm (s := (P : Subgroup K))
         (x' p P).property (y' p P).property
   have hxy := congrArg e hxy'
   simpa [x', y'] using hxy
@@ -1507,7 +1512,7 @@ private theorem section15_theorem15_7_prime_order_centralizer_facts
       have hyz : y = (z : G) := by simpa using hy
       subst y
       have ha_cent_X₁ : a ∈ Subgroup.centralizer (X₁ : Set G) := by
-        simpa [hcentTop]
+        simp [hcentTop]
       exact Subgroup.mem_centralizer_iff.mp ha_cent_X₁ (z : G) z.property
     exact
       (section8_centralizer_singleton_ne_top_of_ne_one (G := G) hzGne)
@@ -1561,7 +1566,7 @@ private theorem section15_theorem15_7_prime_order_centralizer_facts
             calc
               φ (x * y) = φ x * φ y := φ.map_mul x y
               _ = φ y * φ x :=
-                Subgroup.mul_comm_of_mem_isMulCommutative (H := Pamb) hxPamb hyPamb
+                setLike_mul_comm (s := Pamb) hxPamb hyPamb
               _ = φ (y * x) := (φ.map_mul y x).symm
           apply Subtype.ext
           apply Subtype.ext
@@ -1776,9 +1781,9 @@ private theorem section15_isMulCommutative_sup_of_le_centralizer
     have hval := congrArg (fun z : D => (z : G)) hycd
     simpa [c, d] using hval.symm
   have hac : a * c = c * a :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := A) haA hcA
+    setLike_mul_comm (s := A) haA hcA
   have hbd : b * d = d * b :=
-    Subgroup.mul_comm_of_mem_isMulCommutative (H := Y) hbY hdY
+    setLike_mul_comm (s := Y) hbY hdY
   have hbc : b * c = c * b :=
     (Subgroup.mem_centralizer_iff.mp (hYleCentA hbY) c hcA).symm
   have had : a * d = d * a :=
@@ -1840,8 +1845,8 @@ private theorem section15_theorem15_7_pCore_noncomm_of_primeOrder_centralizer
       exact Subgroup.mem_map.mpr ⟨(y : MF), hS_le_core y.property, rfl⟩
     have hxyG :
         (((x * y : S) : MF) : G) = (((y * x : S) : MF) : G) :=
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := section15PCoreIn p MF) hxP hyP
+      setLike_mul_comm
+        (s := section15PCoreIn p MF) hxP hyP
     apply Subtype.ext
     apply Subtype.ext
     exact hxyG
@@ -1884,7 +1889,7 @@ private theorem section15_theorem15_7_pCore_noncomm_of_primeOrder_centralizer
       simpa [C] using hfacts.2.2
     have hxyG :
         (((x * y : S) : MF) : G) = (((y * x : S) : MF) : G) :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := C) hxC hyC
+      setLike_mul_comm (s := C) hxC hyC
     apply Subtype.ext
     apply Subtype.ext
     exact hxyG
@@ -1958,11 +1963,11 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         refine ⟨⟨fun a b => ?_⟩⟩
         have hcommG :
             (a : G) * (b : G) = (b : G) * (a : G) :=
-          Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := C₂) (hP_le_C₂ a.property) (hP_le_C₂ b.property)
+          setLike_mul_comm
+            (s := C₂) (hP_le_C₂ a.property) (hP_le_C₂ b.property)
         exact Subtype.ext hcommG
       exact hPnoncomm hPcomm
-    simpa [hqeqp]
+    simp [hqeqp]
   have hXleP : X ≤ section15PCoreIn p MF :=
     section15_pSubgroup_le_pCoreIn_of_nilpotent
       (G := G) (H := MF) (X := X) (p := p) hMFnil hXleMF hXp
@@ -1986,8 +1991,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
           (a : G) * (b : G) = (b : G) * (a : G) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := subgroupCentralizerIn MF X₁) (hP_le_C a.property) (hP_le_C b.property)
+        setLike_mul_comm
+          (s := subgroupCentralizerIn MF X₁) (hP_le_C a.property) (hP_le_C b.property)
       exact Subtype.ext hcommG
     exact hPnoncomm (by simpa [P] using hPcomm)
   have hX₁neZ₀ : X₁ ≠ Z₀ := by
@@ -2007,7 +2012,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
   have hBleP : B ≤ P := by
     simpa [B] using sup_le hX₁leP hZ₀leP
   have hX₁B : X₁ ∈ section10PrimeOrderSubgroupsIn p B := by
-    exact ⟨by simpa [B] using le_sup_left, hX₁card⟩
+    exact ⟨by simp [B], hX₁card⟩
   have hBmax : B ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G := by
     haveI : Fact p.val.Prime := ⟨p.property⟩
     let C : Subgroup G := subgroupCentralizerIn MF X₁
@@ -2047,8 +2052,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
                 intro y hyX₁
                 haveI : IsElementaryAbelian p.val X₁ := hX₁elem
                 exact
-                  Subgroup.mul_comm_of_mem_isMulCommutative
-                    (H := X₁) hyX₁ hxX₁)
+                  setLike_mul_comm
+                    (s := X₁) hyX₁ hxX₁)
               hZ₀leCentX₁)
       intro x hxB
       exact ⟨section15_pCoreIn_le p MF (by simpa [P] using hBleP hxB),
@@ -2080,10 +2085,10 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         exact ⟨hZ₀leX₁ hz, hz⟩
       exact hZ₀nebot (le_bot_iff.mp (by simpa [hX₁infZ₀_bot] using hZ₀leInf))
     have hX₁ltB : X₁ < B := by
-      refine lt_of_le_of_ne (by simpa [B] using le_sup_left : X₁ ≤ B) ?_
+      refine lt_of_le_of_ne (by simp [B] : X₁ ≤ B) ?_
       intro hX₁eqB
       have hB_le_X₁ : B ≤ X₁ := by rw [← hX₁eqB]
-      exact hZ₀notleX₁ ((by simpa [B] using le_sup_right : Z₀ ≤ B).trans hB_le_X₁)
+      exact hZ₀notleX₁ ((by simp [B] : Z₀ ≤ B).trans hB_le_X₁)
     have hp_lt_cardB : p.val < Nat.card B := by
       simpa [hX₁card] using natCard_lt_of_subgroup_lt hX₁ltB
     have hBp : IsPGroup p.val B := by
@@ -2096,8 +2101,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         · have hp_lt_one : p.val < 1 := by simpa [hn, hn0] using hp_lt_cardB
           exact False.elim ((not_lt_of_ge p.property.one_lt.le) hp_lt_one)
         by_cases hn1 : n = 1
-        · have hp_lt_self : p.val < p.val := by simpa [hn, hn1] using hp_lt_cardB
-          exact False.elim ((lt_irrefl p.val) hp_lt_self)
+        · simp [hn, hn1] at hp_lt_cardB
         omega
       rw [hn]
       exact Nat.pow_le_pow_right p.property.pos hn_ge_two
@@ -2128,7 +2132,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
     have hBgen_le_two : generatorRank B ≤ 2 := hBgen_le_rankC.trans hCrank
     have hBcard_upper : Nat.card B ≤ p.val ^ 2 := by
       letI : IsElementaryAbelian p.val B := hBelem
-      letI : CommGroup B := CommGroup.ofIsMulCommutative
+      letI : CommGroup B := IsMulCommutative.instCommGroup
       have hcard_dvd : Nat.card B ∣ p.val ^ Group.rank B := by
         simpa using card_dvd_exponent_pow_rank' (G := B) (n := p.val) (fun b =>
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -2180,8 +2184,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
         have hz_eq : z = x := by simpa using hz
         subst z
         exact
-          Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := X) hxX (hX₁leX hyX₁)
+          setLike_mul_comm
+            (s := X) hxX (hX₁leX hyX₁)
       · intro y hyZ₀
         rw [Subgroup.mem_centralizer_iff]
         intro z hz
@@ -2242,13 +2246,13 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
     rw [Subgroup.mem_centralizer_iff]
     intro x hxX₁
     exact Subgroup.mem_centralizer_iff.mp (hZleCP hz).2 x
-      ((show X₁ ≤ B from by simpa [B] using (le_sup_left : X₁ ≤ X₁ ⊔ Z₀)) hxX₁)
+      ((show X₁ ≤ B from by simp [B]) hxX₁)
   have hX₁comm : IsMulCommutative X₁ := by
     refine ⟨⟨fun a b => ?_⟩⟩
     apply Subtype.ext
     exact
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := X) (hX₁leX a.property) (hX₁leX b.property)
+      setLike_mul_comm
+        (s := X) (hX₁leX a.property) (hX₁leX b.property)
   have hZcomm : IsMulCommutative Z := by
     letI : IsCyclic Z := hZcyc
     letI : CommGroup Z := IsCyclic.commGroup
@@ -2265,9 +2269,8 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
     let X₁D : Subgroup D := X₁.subgroupOf D
     let ZD : Subgroup D := Z.subgroupOf D
     haveI : IsMulCommutative D := by simpa [D] using hDcomm
-    letI : CommGroup D := CommGroup.ofIsMulCommutative
+    letI : CommGroup D := IsMulCommutative.instCommGroup
     haveI : X₁D.Normal := by
-      change Subgroup.Normal X₁D
       infer_instance
     have hX₁D_ZD_top : X₁D ⊔ ZD = ⊤ := by
       calc
@@ -2293,7 +2296,7 @@ private theorem section15_theorem15_7_X_eq_primeOrder_and_centralizer_split_of_n
       have haX : a ∈ X := hX₁leX haX₁
       have hz_eq : z = a⁻¹ * x := by
         calc
-          z = a⁻¹ * (a * z) := by simp [mul_assoc]
+          z = a⁻¹ * (a * z) := by simp
           _ = a⁻¹ * x := by rw [hx_eq]
       rw [hz_eq]
       exact X.mul_mem (X.inv_mem haX) hxX
@@ -2517,6 +2520,7 @@ private theorem section15_theorem15_7_nonabelian_setup
     section15_theorem15_7_pPrimeCore_MF_cyclic_of_source_prime
       hM hMF hnotTI hg hX hXne hE hMFnoncomm hpX⟩
 
+omit [Finite G] [IsMinCE G] in
 /-- If `U` is a normal-complement quotient representative for `M/H`, then an
 exponent bound on `U` is exactly the needed quotient exponent bound. -/
 private theorem section15QuotientExponentDvd_of_complement_exponent_dvd
@@ -2545,6 +2549,7 @@ private theorem section15QuotientExponentDvd_of_complement_exponent_dvd
       _ = Monoid.exponent U := hUsub_exp
   exact ⟨hHMnorm, hHnormal, by simpa [hquot_exp] using hdvd⟩
 
+omit [Finite G] [IsMinCE G] in
 /-- If `U` is a normal-complement quotient representative for `M/H`, then a
 cardinality bound on `U` is exactly the needed quotient cardinality bound. -/
 private theorem section15QuotientCardDvd_of_complement_card_dvd
@@ -2572,6 +2577,7 @@ private theorem section15QuotientCardDvd_of_complement_card_dvd
       _ = Nat.card U := hUsub_card
   exact ⟨hHMnorm, hHnormal, by simpa [hquot_card] using hdvd⟩
 
+omit [IsMinCE G] in
 /-- A faithful regular conjugation action on a cyclic subgroup of order `q`
 has exponent dividing `q - 1`, matching the source's `regular_norm_dvd_pred`
 use. -/
@@ -2607,8 +2613,13 @@ private theorem section15_exponent_dvd_prime_sub_one_of_regular_conj_action
           simpa [φ, MulDistribMulAction.toMulAut_apply] using
             congrArg (fun f : MulAut Z => f ⟨z, hzZ⟩) hφa
         have hconj : (a : G) * z * (a : G)⁻¹ = z := by
-          simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hAnormZ] using
-            congrArg Subtype.val hfix
+          calc
+            (a : G) * z * (a : G)⁻¹ =
+                (((Subgroup.conjMulDistribMulActionOfLeNormalizer
+                    (G := G) A Z hAnormZ).smul a ⟨z, hzZ⟩ : Z) : G) :=
+              (Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
+                (G := G) A Z hAnormZ a ⟨z, hzZ⟩).symm
+            _ = z := congrArg Subtype.val hfix
         have hcomm : z * (a : G) = (a : G) * z := by
           have h := congrArg (fun t : G => t * (a : G)) hconj
           simpa [mul_assoc] using h.symm
@@ -2899,6 +2910,7 @@ private theorem section15_omegaOneCenter_card_eq_prime_of_cyclic_pSubgroup
   exact hcard.trans
     (section15_natCard_omegaOne_cyclic_pGroup_eq_prime (H := H) (p := q) hHcyc)
 
+omit [IsMinCE G] in
 private theorem section15_frobeniusJoin_regular_on_subgroup
     {K R Z : Subgroup G}
     (hfrob : section12FrobeniusJoinWithKernel K R)
@@ -2940,8 +2952,9 @@ private theorem section15_frobeniusJoin_regular_on_subgroup
   have hyone : y = 1 := by
     have hySone : yS = 1 := by simpa using hybot
     simpa [yS] using congrArg (fun t : S => (t : G)) hySone
-  simpa [hyone]
+  simp [hyone]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_omegaOneCenter_normalized_by_complement_of_frobeniusJoin
     {K R : Subgroup G} {q : Nat.Primes}
     (hfrob : section12FrobeniusJoinWithKernel K R) :
@@ -2984,6 +2997,7 @@ private theorem section15_omegaOneCenter_normalized_by_complement_of_frobeniusJo
     simpa [section10OmegaOneCenter] using hnorm
   exact hR_norm_K.trans (hnorm_pcore.trans hnorm_Ω)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section15_omegaOneCenter_normalized_by_normalizer
     {H A : Subgroup G} {q : Nat.Primes}
     (hAnormH : A ≤ Subgroup.normalizer (H : Set G)) :
@@ -3065,8 +3079,8 @@ private theorem section15_ambientDerived_le_pCoreIn_of_nilpotent_pPrimeCore_cycl
   have hder_le_P : derivedSubgroup H ≤ P := by
     have hcomm_le : _root_.commutator H ≤ P :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le
-        (N := P)).1 hquot_comm.is_comm
-    simpa [derivedSubgroup, derivedSeries_one, P] using hcomm_le
+        (N := P)).1 hquot_comm
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def, P] using hcomm_le
   have hmap_le :
       (derivedSubgroup H).map H.subtype ≤ (pCore p.val H).map H.subtype :=
     Subgroup.map_mono hder_le_P
@@ -3097,7 +3111,8 @@ public theorem lemma_15_1_e_join
       (lemma_15_1_b hM hKU hK).2
     let E : Subgroup G := K ⊔ U
     have hEcomp : section12ComplementToMsigma M E := by
-      simpa [E] using hKU.2.2.1
+      change section12ComplementIn M (section10Msigma M) (K ⊔ U)
+      exact hKU.2.2.1
     rcases section15_exists_EData_for_fixed_sigma_complement
         (G := G) (M := M) (E := E) hM hEcomp with
       ⟨E₁₂, E₁, E₂, E₃, hE⟩
@@ -3164,7 +3179,7 @@ private theorem section15_complementToMsigma_ne_bot
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
     IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
-    simpa [derivedSubgroup, derivedSeries_one] using hder_top
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using hder_top
   exact hcomm_lt.ne hcomm_top
 
 private theorem section15_theorem15_7_source_p_omegaOneCenter_card
@@ -3176,7 +3191,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
     (hX : X = section8FittingSubgroup M ⊓ (section8FittingSubgroup M).conjBy g)
     (hXne : X ≠ ⊥)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hMFnoncomm : ¬ IsMulCommutative MF)
+    (_hMFnoncomm : ¬ IsMulCommutative MF)
     (hpX : p.val = Nat.card X)
     (hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF)) :
     Nat.card (section10OmegaOneCenter p (section15PCoreIn p MF)) = p.val := by
@@ -3214,8 +3229,8 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
           (a : G) * (b : G) = (b : G) * (a : G) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := subgroupCentralizerIn MF X) (hP_le_C a.property) (hP_le_C b.property)
+        setLike_mul_comm
+          (s := subgroupCentralizerIn MF X) (hP_le_C a.property) (hP_le_C b.property)
       exact Subtype.ext hcommG
     exact hpNoncomm (by simpa [P] using hPcomm)
   have hXneZ₀ : X ≠ Z₀ := by
@@ -3236,7 +3251,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
   have hBleP : B ≤ P := by
     simpa [B] using sup_le hXleP' hZ₀leP
   have hXB : X ∈ section10PrimeOrderSubgroupsIn p B := by
-    exact ⟨by simpa [B] using le_sup_left, hpX.symm⟩
+    exact ⟨by simp [B], hpX.symm⟩
   have hBmax : B ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G := by
     haveI : Fact p.val.Prime := ⟨p.property⟩
     let C : Subgroup G := subgroupCentralizerIn MF X
@@ -3276,8 +3291,8 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
                 intro y hyX
                 haveI : IsElementaryAbelian p.val X := hXelem
                 exact
-                  Subgroup.mul_comm_of_mem_isMulCommutative
-                    (H := X) hyX hxX)
+                  setLike_mul_comm
+                    (s := X) hyX hxX)
               hZ₀leCentX)
       intro x hxB
       exact ⟨section15_pCoreIn_le p MF (by simpa [P] using hBleP hxB),
@@ -3305,10 +3320,10 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
         exact ⟨hZ₀leX hz, hz⟩
       exact hZ₀nebot (le_bot_iff.mp (by simpa [hXinfZ₀_bot] using hZ₀leInf))
     have hXltB : X < B := by
-      refine lt_of_le_of_ne (by simpa [B] using le_sup_left : X ≤ B) ?_
+      refine lt_of_le_of_ne (by simp [B] : X ≤ B) ?_
       intro hXeqB
       have hB_le_X : B ≤ X := by rw [← hXeqB]
-      exact hZ₀notleX ((by simpa [B] using le_sup_right : Z₀ ≤ B).trans hB_le_X)
+      exact hZ₀notleX ((by simp [B] : Z₀ ≤ B).trans hB_le_X)
     have hp_lt_cardB : p.val < Nat.card B := by
       simpa [hpX] using natCard_lt_of_subgroup_lt hXltB
     have hBp : IsPGroup p.val B := by
@@ -3321,8 +3336,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
         · have hp_lt_one : p.val < 1 := by simpa [hn, hn0] using hp_lt_cardB
           exact False.elim ((not_lt_of_ge p.property.one_lt.le) hp_lt_one)
         by_cases hn1 : n = 1
-        · have hp_lt_self : p.val < p.val := by simpa [hn, hn1] using hp_lt_cardB
-          exact False.elim ((lt_irrefl p.val) hp_lt_self)
+        · simp [hn, hn1] at hp_lt_cardB
         omega
       rw [hn]
       exact Nat.pow_le_pow_right p.property.pos hn_ge_two
@@ -3353,7 +3367,7 @@ private theorem section15_theorem15_7_source_p_omegaOneCenter_card
     have hBgen_le_two : generatorRank B ≤ 2 := hBgen_le_rankC.trans hCrank
     have hBcard_upper : Nat.card B ≤ p.val ^ 2 := by
       letI : IsElementaryAbelian p.val B := hBelem
-      letI : CommGroup B := CommGroup.ofIsMulCommutative
+      letI : CommGroup B := IsMulCommutative.instCommGroup
       have hcard_dvd : Nat.card B ∣ p.val ^ Group.rank B := by
         simpa using card_dvd_exponent_pow_rank' (G := B) (n := p.val) (fun b =>
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -3443,8 +3457,8 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
       refine ⟨⟨fun a b => ?_⟩⟩
       have hcommG :
           (a : G) * (b : G) = (b : G) * (a : G) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := subgroupCentralizerIn MF X) (hP_le_C a.property) (hP_le_C b.property)
+        setLike_mul_comm
+          (s := subgroupCentralizerIn MF X) (hP_le_C a.property) (hP_le_C b.property)
       exact Subtype.ext hcommG
     exact hpNoncomm (by simpa [P] using hPcomm)
   have hZ₀card : Nat.card Z₀ = p.val := by
@@ -3498,8 +3512,8 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
                 intro y hyX
                 haveI : IsElementaryAbelian p.val X := hXelem
                 exact
-                  Subgroup.mul_comm_of_mem_isMulCommutative
-                    (H := X) hyX hxX)
+                  setLike_mul_comm
+                    (s := X) hyX hxX)
               hZ₀leCentX)
       intro x hxB
       exact ⟨section15_pCoreIn_le p MF (by simpa [P] using hBleP hxB),
@@ -3514,7 +3528,7 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
       have hX_norm : (X.subgroupOf B).Normal := by
         have hBcomm : IsMulCommutative B := hBelem.toIsMulCommutative
         letI : IsMulCommutative B := hBcomm
-        letI : CommGroup B := CommGroup.ofIsMulCommutative
+        letI : CommGroup B := IsMulCommutative.instCommGroup
         infer_instance
       have hcomp :
           (X.subgroupOf B).IsComplement' (Z₀.subgroupOf B) := by
@@ -3541,8 +3555,8 @@ private theorem section15_theorem15_7_source_p_rankTwoMaximal_pCore
             ⟨x, hxX, y, hyZ, hxy⟩
           exact ⟨x, hxX, y, hyZ, hxy⟩
       have hmul := hcomp.card_mul
-      rw [natCard_subgroupOf_eq X B (by simpa [B] using le_sup_left),
-        natCard_subgroupOf_eq Z₀ B (by simpa [B] using le_sup_right),
+      rw [natCard_subgroupOf_eq X B (by simp [B]),
+        natCard_subgroupOf_eq Z₀ B (by simp [B]),
         hpX.symm, hZ₀card] at hmul
       simpa [pow_two] using hmul.symm
     have hBrankTwo : B ∈ elementaryAbelianSubgroupsOfRank p.val 2 G := ⟨hBcard, hBelem⟩
@@ -3580,7 +3594,7 @@ private theorem section15_theorem15_7_F_exponent_divisibility
     (hMFnoncomm : ¬ IsMulCommutative MF)
     (hF : M ∈ section14MFamilyF G)
     (hpX : p.val = Nat.card X)
-    (hpσβ : p ∈ section10SigmaPrimes M \ section10BetaPrimes M)
+    (_hpσβ : p ∈ section10SigmaPrimes M \ section10BetaPrimes M)
     (hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF))
     (hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF)) :
     ∀ q : Nat.Primes, q ∈ subgroupPrimeSet MF →
@@ -3725,7 +3739,7 @@ private theorem section15_theorem15_7_P1_kstar_route_of_not_exponent_divisibilit
     have hnpos : 0 < n := by
       by_contra hnle
       have hn0 : n = 0 := by omega
-      have hcard_one : Nat.card Kstar = 1 := by simpa [hn, hn0] using hn
+      have hcard_one : Nat.card Kstar = 1 := by simp [hn, hn0]
       have hKstar_bot : Kstar = ⊥ := (Subgroup.card_eq_one (H := Kstar)).1 hcard_one
       exact h15_6.1 (by simpa [Kstar] using hKstar_bot)
     have hp_dvd_card : p.val ∣ Nat.card Kstar := by
@@ -3735,7 +3749,7 @@ private theorem section15_theorem15_7_P1_kstar_route_of_not_exponent_divisibilit
       simpa [Kstar, hr] using hp_dvd_card
     have hp_eq_r : p.val = r.val :=
       (Nat.prime_dvd_prime_iff_eq p.property r.property).1 hp_dvd_r
-    simpa [Kstar, hr, hp_eq_r]
+    simp [Kstar, hr, hp_eq_r]
   have hprime : section14ActsInPrimeManner K (section10Msigma M) := by
     rcases proposition_14_2_a (G := G) (M := M) (K := K) hP1.1 hK with
       ⟨U, hU⟩
@@ -3878,14 +3892,14 @@ private theorem section15_theorem15_7_P1_center_pCore_eq_kstar_of_omega_eq
     (hX : X = section8FittingSubgroup M ⊓ (section8FittingSubgroup M).conjBy g)
     (hXne : X ≠ ⊥)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hMFnoncomm : ¬ IsMulCommutative MF)
+    (_hMFnoncomm : ¬ IsMulCommutative MF)
     (hP1 : M ∈ section14MFamilyP1 G)
-    (hpX : p.val = Nat.card X)
+    (_hpX : p.val = Nat.card X)
     (hpσβ : p ∈ section10SigmaPrimes M \ section10BetaPrimes M)
-    (hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF))
-    (hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
+    (_hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF))
+    (_hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
+    (_hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
     (hOmega_eq : section10OmegaOneCenter p (section15PCoreIn p MF) = section14KStar M K) :
     centerIn (section15PCoreIn p MF) = section14KStar M K := by
   classical
@@ -4049,9 +4063,9 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
     (hpX : p.val = Nat.card X)
     (hpσβ : p ∈ section10SigmaPrimes M \ section10BetaPrimes M)
     (hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF))
-    (hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
+    (_hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
     (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
+    (_hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
     (hCenter_eq : centerIn (section15PCoreIn p MF) = section14KStar M K)
     (hKcard_not_dvd : ¬ Nat.card K ∣ p.val - 1) :
     groupRank (section15PCoreIn p MF) ≤ 2 := by
@@ -4270,7 +4284,7 @@ private theorem section15_theorem15_7_P1_pCore_global_sylow_of_msigma
     · exact hMF_not_index hright
   let S : Sylow p.val G := (section15_pCoreIn_isPGroup p MF).toSylow hP_not_index
   refine ⟨S, ?_⟩
-  simpa [S, P, IsPGroup.toSylow_coe]
+  simp [S, P, IsPGroup.toSylow_coe]
 
 
 private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_center_eq_kstar
@@ -4282,14 +4296,14 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
     (hX : X = section8FittingSubgroup M ⊓ (section8FittingSubgroup M).conjBy g)
     (hXne : X ≠ ⊥)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hMFnoncomm : ¬ IsMulCommutative MF)
-    (hP1 : M ∈ section14MFamilyP1 G)
-    (hpX : p.val = Nat.card X)
+    (_hMFnoncomm : ¬ IsMulCommutative MF)
+    (_hP1 : M ∈ section14MFamilyP1 G)
+    (_hpX : p.val = Nat.card X)
     (hpσβ : p ∈ section10SigmaPrimes M \ section10BetaPrimes M)
     (hpNoncomm : ¬ IsMulCommutative (section15PCoreIn p MF))
-    (hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
+    (_hpPrimeCyclic : IsCyclic (section10PPrimeCore p MF))
+    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
+    (_hKstar_le : section14KStar M K ≤ section15PCoreIn p MF)
     (hOmega_eq : section10OmegaOneCenter p (section15PCoreIn p MF) = section14KStar M K)
     (hCenter_eq : centerIn (section15PCoreIn p MF) = section14KStar M K)
     (hRank_le : groupRank (section15PCoreIn p MF) ≤ 2) :
@@ -4403,11 +4417,11 @@ private theorem section15_theorem15_7_P1_pCore_card_exponent_of_rank_le_two_cent
         P₁ = P₁ ⊔ P₂ := (sup_eq_left.mpr hP₂_le_P₁).symm
         _ = ⊤ := hsup12
     have hScard : Nat.card (S : Subgroup G) = Nat.card P₁ := by
-      simpa [hP₁top]
+      simp [hP₁top]
     constructor
     · calc
         Nat.card (section15PCoreIn p MF) = Nat.card (S : Subgroup G) := by
-          simpa [P, hS_eq_P]
+          simp [hS_eq_P]
         _ = Nat.card P₁ := hScard
         _ = p.val ^ 3 := hP₁card
     · have hTopExp : Monoid.exponent (⊤ : Subgroup (S : Subgroup G)) = p.val := by
@@ -4992,7 +5006,7 @@ public theorem theorem_15_7_source_prime_centralizer_split
     rw [Subgroup.mem_centralizer_iff]
     intro x hxX
     exact Subgroup.mem_centralizer_iff.mp (hZleCP hz).2 x
-      ((show X ≤ B from by simpa [B] using (le_sup_left : X ≤ X ⊔ Z₀)) hxX)
+      ((show X ≤ B from by simp [B]) hxX)
   have hZleCentralizerX : Z ≤ subgroupCentralizerIn P X := by
     intro z hz
     exact ⟨hZleP hz, hZleCentX hz⟩
@@ -5005,7 +5019,7 @@ public theorem theorem_15_7_source_prime_centralizer_split
     haveI : Fact p.val.Prime := ⟨p.property⟩
     letI : IsCyclic X := isCyclic_of_prime_card (p := p.val) hpX.symm
     letI : CommGroup X := IsCyclic.commGroup
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := X) hy hx
+    exact setLike_mul_comm (s := X) hy hx
   have hcentralizer_le_sup : subgroupCentralizerIn P X ≤ X ⊔ Z := by
     intro y hy
     have hyB : y ∈ subgroupCentralizerIn P B := by
@@ -5044,6 +5058,7 @@ public theorem theorem_15_7_source_prime_centralizer_split
   refine ⟨Z, hXleP, hpX.symm, hZleP, hZcyc, hcentralizer_eq, ?_⟩
   exact ⟨hXleCentralizerX, hZleCentralizerX, hcentralizer_eq, hdisjXZ, hXleCentZ⟩
 
+omit [IsMinCE G] in
 /-- A prime different from `p` has its `p`-core inside the `p'`-core. -/
 public theorem theorem_15_7_pCoreIn_le_pPrimeCore_of_ne
     {H : Subgroup G} {p q : Nat.Primes} (hqp : q ≠ p) :

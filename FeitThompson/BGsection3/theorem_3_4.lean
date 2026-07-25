@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.BGsection3.lemma_3_3
 
+open scoped commutatorElement IsMulCommutative
+
 public instance instMulDistribMulAction_subtype_local {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] {H : Subgroup G} [IsInvariant A G H] :
     MulDistribMulAction A H where
@@ -107,7 +109,8 @@ theorem faithful_on_selfCentralizing_of_coprime_local {G A : Type*} [Group G] [F
       intro c hc
       have hc_fix : a • c = c := by
         have := congrArg Subtype.val (ha ⟨c, hc⟩)
-        simpa using this
+        change a • c = c at this
+        exact this
       have hconj : g * c * g⁻¹ ∈ C := Subgroup.Normal.conj_mem inferInstance c hc g
       have hconj_fix : a • (g * c * g⁻¹) = g * c * g⁻¹ := by
         have h := congrArg Subtype.val (ha ⟨g * c * g⁻¹, hconj⟩)
@@ -133,7 +136,8 @@ theorem faithful_on_selfCentralizing_of_coprime_local {G A : Type*} [Group G] [F
     have hx_mem_C : x ∈ C := hcent hx_centralizer
     have hx_fix : a • x = x := by
       have := congrArg Subtype.val (ha ⟨x, hx_mem_C⟩)
-      simpa using this
+      change a • x = x at this
+      exact this
     have hx_fix_pow : ∀ n : ℕ, (a ^ n) • x = x := by
       intro n
       induction n with
@@ -253,9 +257,12 @@ theorem elementaryAbelian_invariant_complement_of_coprime_aut_local
     have hyTadd : Additive.ofMul y ∈ Tadd := by
       simpa [C, ψ] using hy
     have hyT : Additive.ofMul y ∈ T := by
-      simpa [Tadd] using hyTadd
+      change Additive.ofMul y ∈ Submodule.toAddSubgroup T at hyTadd
+      exact hyTadd
     have hσyT : f (Additive.ofMul y) ∈ T := hTinv hyT
-    simpa [f, eLin, eAdd, C, Tadd, ψ] using hσyT
+    change Additive.ofMul (σ y) ∈ Submodule.toAddSubgroup T at hσyT
+    change Additive.ofMul (σ y) ∈ Tadd
+    exact hσyT
   have hCcard : Nat.card (C.map σ.toMonoidHom) = Nat.card C := by
     simpa using (Subgroup.card_map_of_injective (K := C) (f := σ.toMonoidHom) σ.injective)
   have hCeq : C.map σ.toMonoidHom = C := by
@@ -356,11 +363,9 @@ public theorem isElementaryAbelian_quotient_center_of_commutator_le_center_of_ex
           (show Monoid.exponent K ∣ q by simp [hexp])) y
     simpa using congrArg (QuotientGroup.mk' (Subgroup.center K)) hyq
   refine
-    { toIsMulCommutative := by
-        refine ⟨⟨?_⟩⟩
-        exact
-          (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := Subgroup.center K)).mpr
-            hcomm |>.comm
+    { toIsMulCommutative :=
+        (Subgroup.Normal.quotient_commutative_iff_commutator_le
+          (N := Subgroup.center K)).mpr hcomm
       exponent_dvd_p := by
         simpa using hexpQ }
 
@@ -652,7 +657,8 @@ public theorem classTwo_exponent_prime_of_proper_characteristic_fixed
       ext x
       simp [centerIn, Subgroup.mem_center_iff, Subgroup.mem_centralizer_iff]
     refine ⟨?_, ?_⟩
-    · simpa [hcenter_top] using hHcomm
+    · rw [← _root_.commutator_def, hcenter_top] at hHcomm
+      exact hHcomm
     · simpa using hHexp
   · have hHfix : H ≤ fixedPointSubgroup A K := hproper H hHchar hHtop
     let Afix : Subgroup (MulAut K) := fixingSubgroup (M := MulAut K) (α := K) (H : Set K)
@@ -711,7 +717,7 @@ public theorem exists_prime_isPGroup_of_nilpotent_of_proper_characteristic_fixed
       ∀ H : Subgroup K, H.Characteristic → H ≠ ⊤ → H ≤ fixedPointSubgroup A K) :
     ∃ q : ℕ, Nat.Prime q ∧ IsPGroup q K := by
   by_contra hno
-  push_neg at hno
+  push Not at hno
   have hSylow_fix :
       ∀ p ∈ (Nat.card K).primeFactors,
         ((default : Sylow p K) : Subgroup K) ≤ fixedPointSubgroup A K := by
@@ -1254,7 +1260,9 @@ theorem theorem_3_4_quotient_center_fixfree_local
           (Subgroup.mem_map_of_mem K.subtype hx)
     intro x hx
     obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective (N := Z) x
-    have hy : y ∈ H := by simpa [H] using hx
+    have hy : y ∈ H := by
+      change qZ y ∈ Hbar at hx
+      exact hx
     rw [FixedPoints.mem_subgroup]
     intro τ
     rcases τ.property with ⟨n, hn⟩
@@ -1271,12 +1279,16 @@ theorem theorem_3_4_quotient_center_fixfree_local
     have hyfixσpow : ∀ n : ℤ, (σ ^ n) (((y : K) : Q)) = ((y : K) : Q) := by
       intro n
       have hyfix : ((y : K) : Q) ∈ MulAction.fixedBy Q σ := by
-        simpa [MulAction.mem_fixedBy] using hyfixσ
-      simpa [MulAction.mem_fixedBy] using
-        (MulAction.mem_fixedBy_zpow (α := Q) (g := σ) (a := ((y : K) : Q)) hyfix n)
+        change σ ((y : K) : Q) = ((y : K) : Q)
+        exact hyfixσ
+      have hyfixpow :=
+        MulAction.mem_fixedBy_zpow (α := Q) (g := σ) (a := ((y : K) : Q)) hyfix n
+      change (σ ^ n) ((y : K) : Q) = ((y : K) : Q) at hyfixpow
+      exact hyfixpow
     have hτ : (τ : MulAut Q) = σ ^ n := by simpa using hn.symm
     have hfixτ : (τ : MulAut Q) (((y : K) : Q)) = ((y : K) : Q) := by simpa [hτ] using hyfixσpow n
-    simpa using hfixτ
+    change (τ : MulAut Q) ((y : K) : Q) = ((y : K) : Q)
+    exact hfixτ
   have hfixσ :
       fixedPointSubgroup (↥(Subgroup.zpowers σ)) Q = ⊥ :=
     fixedPointSubgroup_zpowers_eq_bot_of_elementaryAbelian_of_proper_invariant_fixed
@@ -1305,14 +1317,17 @@ theorem theorem_3_4_quotient_center_fixfree_local
       intro τ
       rcases τ.property with ⟨n, hn⟩
       have hyσ : (((⟨y, hyK⟩ : K) : Q)) ∈ MulAction.fixedBy Q σ := by
-        simpa [MulAction.mem_fixedBy] using hyfixσ
+        change σ (((⟨y, hyK⟩ : K) : Q)) = ((⟨y, hyK⟩ : K) : Q)
+        exact hyfixσ
       have hyσpow :
           (((⟨y, hyK⟩ : K) : Q)) ∈ MulAction.fixedBy Q (σ ^ n) :=
         MulAction.mem_fixedBy_zpow (α := Q) (g := σ) (a := (((⟨y, hyK⟩ : K) : Q))) hyσ n
       have hτ : (τ : MulAut Q) = σ ^ n := by simpa using hn.symm
       have hfixτ : (τ : MulAut Q) (((⟨y, hyK⟩ : K) : Q)) = ((⟨y, hyK⟩ : K) : Q) := by
-        simpa [MulAction.mem_fixedBy, hτ] using hyσpow
-      simpa using hfixτ
+        change (σ ^ n) (((⟨y, hyK⟩ : K) : Q)) = ((⟨y, hyK⟩ : K) : Q) at hyσpow
+        simpa [hτ] using hyσpow
+      change (τ : MulAut Q) (((⟨y, hyK⟩ : K) : Q)) = ((⟨y, hyK⟩ : K) : Q)
+      exact hfixτ
     have hybot : (((⟨y, hyK⟩ : K) : Q)) ∈ (⊥ : Subgroup Q) := by simpa [hfixσ] using hyfix
     change QuotientGroup.mk' Z (⟨y, hyK⟩ : K) = 1 at hybot
     exact ⟨⟨y, hyK⟩, (QuotientGroup.eq_one_iff (N := Z) (⟨y, hyK⟩ : K)).1 hybot, rfl⟩
@@ -1696,7 +1711,9 @@ theorem theorem_3_4_quotient_center_irreducible_local
           (Subgroup.mem_map_of_mem K.subtype hx)
     intro x hx
     obtain ⟨y, rfl⟩ := QuotientGroup.mk'_surjective (N := Z) x
-    have hy : y ∈ H := by simpa [H] using hx
+    have hy : y ∈ H := by
+      change qZ y ∈ Hbar at hx
+      exact hx
     rw [FixedPoints.mem_subgroup]
     intro τ
     rcases τ.property with ⟨n, hn⟩
@@ -1713,12 +1730,16 @@ theorem theorem_3_4_quotient_center_irreducible_local
     have hyfixσpow : ∀ n : ℤ, (σ ^ n) (((y : K) : Q)) = ((y : K) : Q) := by
       intro n
       have hyfix : ((y : K) : Q) ∈ MulAction.fixedBy Q σ := by
-        simpa [MulAction.mem_fixedBy] using hyfixσ
-      simpa [MulAction.mem_fixedBy] using
-        (MulAction.mem_fixedBy_zpow (α := Q) (g := σ) (a := ((y : K) : Q)) hyfix n)
+        change σ ((y : K) : Q) = ((y : K) : Q)
+        exact hyfixσ
+      have hyfixpow :=
+        MulAction.mem_fixedBy_zpow (α := Q) (g := σ) (a := ((y : K) : Q)) hyfix n
+      change (σ ^ n) ((y : K) : Q) = ((y : K) : Q) at hyfixpow
+      exact hyfixpow
     have hτ : (τ : MulAut Q) = σ ^ n := by simpa using hn.symm
     have hfixτ : (τ : MulAut Q) (((y : K) : Q)) = ((y : K) : Q) := by simpa [hτ] using hyfixσpow n
-    simpa using hfixτ
+    change (τ : MulAut Q) ((y : K) : Q) = ((y : K) : Q)
+    exact hfixτ
   have hfixσ :
       fixedPointSubgroup (↥(Subgroup.zpowers σ)) Q = ⊥ :=
     fixedPointSubgroup_zpowers_eq_bot_of_elementaryAbelian_of_proper_invariant_fixed
@@ -1857,7 +1878,8 @@ theorem theorem_3_4_quotient_center_zpowers_fixfree_local
       fixedPointSubgroup (↥(Subgroup.zpowers σ)) Q = ⊥ :=
     fixedPointSubgroup_zpowers_eq_bot_of_elementaryAbelian_of_proper_invariant_fixed
       (σ := σ) hσ_ne hσcopq hproper
-  simpa [σ, quotientCenterConjAut, hRK, Z, hZinv, Q] using hfixσ
+  change fixedPointSubgroup (↥(Subgroup.zpowers σ)) Q = ⊥
+  exact hfixσ
 
 
 
@@ -1947,7 +1969,7 @@ public theorem subgroupCentralizerIn_map_mk'_eq_map_of_solvable_coprime
             _ = qG ((hH : H) : G) := by simp [hH, hhy]
         _ = (((e hbar : H.map qG) : G ⧸ X)) := by
           symm
-          simpa [e, qG, hH, Xsub] using quotientSubgroupRangeEquiv_apply_mk H X hH
+          simpa [e, qG, hH, hbar, Xsub] using quotientSubgroupRangeEquiv_apply_mk H X hH
     have hhbar_map :
         hbar ∈ ((subgroupCentralizerIn H R).subgroupOf H).map (QuotientGroup.mk' Xsub) := by
       simpa [hfixed_quot] using hhbar_fix
@@ -1957,7 +1979,7 @@ public theorem subgroupCentralizerIn_map_mk'_eq_map_of_solvable_coprime
         (y : G ⧸ X) = qG h := hhy.symm
         _ = (((e hbar : H.map qG) : G ⧸ X)) := by
               symm
-              simpa [e, qG, hH, Xsub] using quotientSubgroupRangeEquiv_apply_mk H X hH
+              simpa [e, qG, hH, hbar, Xsub] using quotientSubgroupRangeEquiv_apply_mk H X hH
         _ = (((e (QuotientGroup.mk' Xsub z) : H.map qG) : G ⧸ X)) := by simp [e, hzhbar]
         _ = QuotientGroup.mk' X (z : G) := by
               simpa [e, qG, Xsub] using quotientSubgroupRangeEquiv_apply_mk H X z
@@ -2002,10 +2024,12 @@ theorem elementCentralizerIn_map_mk'_eq_map_center_of_solvable_coprime
           ((((a : Subgroup.zpowers r) : R) • x : K) : G) ∈ N := by
         simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRK] using
           (inferInstance : N.Normal).conj_mem (x : G) hxN (((a : Subgroup.zpowers r) : R) : G)
-      simpa [Nsub, Subgroup.mem_subgroupOf] using hsmulN
+      change ((((a : Subgroup.zpowers r) : R) • x : K) : G) ∈ N
+      exact hsmulN
     · intro hx
       have hxN : ((((a : Subgroup.zpowers r) : R) • x : K) : G) ∈ N := by
-        simpa [Nsub, Subgroup.mem_subgroupOf] using hx
+        change ((((a : Subgroup.zpowers r) : R) • x : K) : G) ∈ N at hx
+        exact hx
       have hx' :
           ((((a : Subgroup.zpowers r) : R) : G)⁻¹ *
               ((((a : Subgroup.zpowers r) : R) • x : K) : G) *
@@ -2080,7 +2104,7 @@ theorem elementCentralizerIn_map_mk'_eq_map_center_of_solvable_coprime
         _ = qG ((kK : K) : G) := hqG_fix
         _ = (((e kbar : K.map qG) : G ⧸ N)) := by
               symm
-              simpa [e, qG, kK, Nsub] using quotientSubgroupRangeEquiv_apply_mk K N kK
+              simpa [e, qG, kK, kbar, Nsub] using quotientSubgroupRangeEquiv_apply_mk K N kK
     have hkbar_fix :
         kbar ∈ fixedPointSubgroup (↥(Subgroup.zpowers r)) (↥K ⧸ Nsub) := by
       rw [FixedPoints.mem_subgroup]
@@ -2103,7 +2127,7 @@ theorem elementCentralizerIn_map_mk'_eq_map_center_of_solvable_coprime
         (y : G ⧸ N) = qG k := hky.symm
         _ = (((e kbar : K.map qG) : G ⧸ N)) := by
               symm
-              simpa [e, qG, kK, Nsub] using quotientSubgroupRangeEquiv_apply_mk K N kK
+              simpa [e, qG, kK, kbar, Nsub] using quotientSubgroupRangeEquiv_apply_mk K N kK
         _ = (((e (QuotientGroup.mk' Nsub z) : K.map qG) : G ⧸ N)) := by simp [e, hzkbar]
         _ = QuotientGroup.mk' N (z : G) := by
               simpa [e, qG, Nsub] using quotientSubgroupRangeEquiv_apply_mk K N z
@@ -2142,7 +2166,7 @@ theorem exists_nontrivial_conjugation_of_center_centralizer_eq
     exact (Subgroup.mem_center_iff.mp hxcent y).symm
   have hx_exists : ∃ x : K, x ∉ Z := by
     by_contra hx_exists
-    push_neg at hx_exists
+    push Not at hx_exists
     apply hZ_top
     apply top_unique
     intro x hx
@@ -2208,7 +2232,7 @@ theorem theorem_3_4_extraspecial_center_kernel_constituent
       exact (Subgroup.mem_center_iff.mp hxcent y).symm
     have hx_exists : ∃ x : K, x ∉ Z := by
       by_contra hx_exists
-      push_neg at hx_exists
+      push Not at hx_exists
       apply hZ_top
       apply top_unique
       intro x hx
@@ -2295,7 +2319,7 @@ theorem theorem_3_4_extraspecial_center_kernel_constituent
       have h1 : quotientCenterConjAut K R hK_normal rR (qZ kK) = rR • (qZ kK) := by
         simp [quotientCenterConjAut, MulDistribMulAction.toMulAut_apply]
       have h2 : rR • (qZ kK) = qZ (rR • kK) :=
-        (MulAction.Quotient.smul_coe (β := ↥R) (H := Z) (b := rR) (a := (kK : K)))
+        (MulAction.Quotient.smul_coe (X := ↥R) (H := Z) (b := rR) (g := (kK : K)))
       have h3 : qZ (rR • kK) = qZ kK := QuotientGroup.eq.mpr (hkdiff_eq ▸ hz)
       exact h1.trans (h2.trans h3)
     have hkfix :
@@ -2766,7 +2790,7 @@ theorem natCard_eq_prime_pow_finrank_add_one_of_isExtraspecial_local
   letI : IsElementaryAbelian q Qmul :=
     IsExtraspecial.quotient_elementary_abelian q K
   letI : IsMulCommutative Qmul := (inferInstance : IsElementaryAbelian q Qmul).toIsMulCommutative
-  letI : CommGroup Qmul := CommGroup.ofIsMulCommutative
+  letI : CommGroup Qmul := IsMulCommutative.instCommGroup
   let Q := Additive Qmul
   letI : AddCommGroup Q := Additive.addCommGroup
   -- letI : Module (ZMod q) Q := IsElementaryAbelian.isVectorSpace q Qmul
@@ -2774,19 +2798,23 @@ theorem natCard_eq_prime_pow_finrank_add_one_of_isExtraspecial_local
   letI : FiniteDimensional (ZMod q) Q := Module.Finite.of_finite
   have hcardQ :
       Nat.card Qmul = q ^ Module.finrank (ZMod q) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod q) (V := Q))
+    calc
+      Nat.card Qmul = Nat.card Q :=
+        (Nat.card_congr (Additive.toMul : Q ≃ Qmul)).symm
+      _ = q ^ Module.finrank (ZMod q) Q := by
+        simpa [Nat.card_eq_fintype_card, ZMod.card] using
+          (Module.natCard_eq_pow_finrank (K := ZMod q) (V := Q))
   refine ⟨Module.finrank (ZMod q) Q, ?_⟩
   simpa [Q] using natCard_eq_prime_pow_succ_of_isExtraspecial_local (q := q) (K := K) hcardQ
 
 public noncomputable def centerAddEquivZMod_local
     {q : ℕ} [Fact q.Prime] {K : Type*} [Group K] [Finite K] [IsExtraspecial q K] :
     Additive (Subgroup.center K) ≃+ ZMod q := by
-  letI : CommGroup (Subgroup.center K) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (Subgroup.center K) := IsMulCommutative.instCommGroup
   exact
     addEquivOfPrimeCardEq
       (G := Additive (Subgroup.center K)) (G' := ZMod q)
-      (by simpa using IsExtraspecial.center_order_p q K)
+      ((Nat.card_congr Additive.toMul).trans (IsExtraspecial.center_order_p q K))
       (by simp [Nat.card_eq_fintype_card, ZMod.card])
 
 noncomputable def extraspecialCenterPairingRaw
@@ -2920,7 +2948,7 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
   let Qmul := K ⧸ Subgroup.center K
   letI : IsElementaryAbelian q Qmul := IsExtraspecial.quotient_elementary_abelian q K
   letI : IsMulCommutative Qmul := (inferInstance : IsElementaryAbelian q Qmul).toIsMulCommutative
-  letI : CommGroup Qmul := CommGroup.ofIsMulCommutative
+  letI : CommGroup Qmul := IsMulCommutative.instCommGroup
   let Q := Additive Qmul
   letI : AddCommGroup Q := Additive.addCommGroup
   -- letI : Module (ZMod q) Q := IsElementaryAbelian.isVectorSpace q Qmul
@@ -2944,7 +2972,8 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     intro x
     have hraw : extraspecialCenterPairingRaw (q := q) (K := K) x (1 : K) = 0 := by
       simp [extraspecialCenterPairingRaw]
-    simpa [QuotientGroup.mk_one, extraspecialCenterPairing_mk] using hraw
+    change extraspecialCenterPairingRaw (q := q) (K := K) x 1 = 0
+    exact hraw
   have hpair_add_right :
       ∀ x y₁ y₂ : Q,
         extraspecialCenterPairing (q := q) (K := K) x (y₁ + y₂) =
@@ -2954,8 +2983,10 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     rw [← ofMul_toMul x, ← ofMul_toMul y₁, ← ofMul_toMul y₂]
     refine Quotient.inductionOn₃ (Additive.toMul x) (Additive.toMul y₁) (Additive.toMul y₂) ?_
     intro x y₁ y₂
-    simpa [QuotientGroup.mk_mul, extraspecialCenterPairing_mk] using
-      (extraspecialCenterPairingRaw_mul_right (q := q) (K := K) x y₁ y₂)
+    change extraspecialCenterPairingRaw (q := q) (K := K) x (y₁ * y₂) =
+      extraspecialCenterPairingRaw (q := q) (K := K) x y₁ +
+        extraspecialCenterPairingRaw (q := q) (K := K) x y₂
+    exact extraspecialCenterPairingRaw_mul_right (q := q) (K := K) x y₁ y₂
   have hpair_zero_left :
       ∀ y : Q, extraspecialCenterPairing (q := q) (K := K) 0 y = 0 := by
     intro y
@@ -2964,7 +2995,8 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     intro y
     have hraw : extraspecialCenterPairingRaw (q := q) (K := K) (1 : K) y = 0 := by
       simp [extraspecialCenterPairingRaw]
-    simpa [QuotientGroup.mk_one, extraspecialCenterPairing_mk] using hraw
+    change extraspecialCenterPairingRaw (q := q) (K := K) 1 y = 0
+    exact hraw
   have hpair_add_left :
       ∀ x₁ x₂ y : Q,
         extraspecialCenterPairing (q := q) (K := K) (x₁ + x₂) y =
@@ -2974,8 +3006,10 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     rw [← ofMul_toMul x₁, ← ofMul_toMul x₂, ← ofMul_toMul y]
     refine Quotient.inductionOn₃ (Additive.toMul x₁) (Additive.toMul x₂) (Additive.toMul y) ?_
     intro x₁ x₂ y
-    simpa [QuotientGroup.mk_mul, extraspecialCenterPairing_mk] using
-      (extraspecialCenterPairingRaw_mul_left (q := q) (K := K) x₁ x₂ y)
+    change extraspecialCenterPairingRaw (q := q) (K := K) (x₁ * x₂) y =
+      extraspecialCenterPairingRaw (q := q) (K := K) x₁ y +
+        extraspecialCenterPairingRaw (q := q) (K := K) x₂ y
+    exact extraspecialCenterPairingRaw_mul_left (q := q) (K := K) x₁ x₂ y
   let pairingAdd : Q →+ AddMonoidHom Q (ZMod q) :=
     { toFun := fun x =>
         { toFun := fun y => extraspecialCenterPairing (q := q) (K := K) x y
@@ -3009,11 +3043,10 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     rw [← ofMul_toMul x]
     refine Quotient.inductionOn (Additive.toMul x) ?_
     intro x
-    simpa using
-      (show
-        B (Additive.ofMul (QuotientGroup.mk x)) (Additive.ofMul (QuotientGroup.mk x)) = 0 by
-        rw [hB_mk]
-        simp [extraspecialCenterPairingRaw])
+    change B (Additive.ofMul (QuotientGroup.mk x))
+      (Additive.ofMul (QuotientGroup.mk x)) = 0
+    rw [hB_mk]
+    simp [extraspecialCenterPairingRaw]
   have hSep : B.SeparatingLeft := by
     rw [LinearMap.separatingLeft_iff_linear_nontrivial]
     intro x hx
@@ -3021,6 +3054,7 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     revert hx
     refine Quotient.inductionOn (Additive.toMul x) ?_
     intro x hx
+    change B (Additive.ofMul (QuotientGroup.mk x)) = 0 at hx
     have hcent : x ∈ Subgroup.center K := by
       rw [Subgroup.mem_center_iff]
       intro y
@@ -3048,8 +3082,12 @@ theorem exists_natCard_eq_prime_pow_two_mul_add_one_of_isExtraspecial_local
     even_finrank_of_isAlt_nondegenerate_local (K := ZMod q) (V := Q) B hAlt hNondeg
   have hcardQ :
       Nat.card Qmul = q ^ Module.finrank (ZMod q) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod q) (V := Q))
+    calc
+      Nat.card Qmul = Nat.card Q :=
+        (Nat.card_congr (Additive.toMul : Q ≃ Qmul)).symm
+      _ = q ^ Module.finrank (ZMod q) Q := by
+        simpa [Nat.card_eq_fintype_card, ZMod.card] using
+          (Module.natCard_eq_pow_finrank (K := ZMod q) (V := Q))
   have hcardK :
       Nat.card K = q ^ (Module.finrank (ZMod q) Q + 1) := by
     simpa [Q] using natCard_eq_prime_pow_succ_of_isExtraspecial_local (q := q) (K := K) hcardQ
@@ -3637,7 +3675,7 @@ theorem theorem_3_4_faithful_endpoint {G : Type uG} [Group G] [Finite G] {F : Ty
       haveI : Group.IsNilpotent (fittingSubgroup (↥K)) := by infer_instance
       let e : (fittingSubgroup (↥K)) ≃* (↥K) :=
         (MulEquiv.subgroupCongr hfit_top).trans (Subgroup.topEquiv : (⊤ : Subgroup (↥K)) ≃* (↥K))
-      exact nilpotent_of_mulEquiv (G := fittingSubgroup (↥K)) (G' := ↥K) e
+      exact Group.nilpotent_of_mulEquiv (G := fittingSubgroup (↥K)) (G' := ↥K) e
     obtain ⟨q, hq_prime, hq_pgroup⟩ :=
       exists_prime_isPGroup_of_nilpotent_of_proper_characteristic_fixed
         (K := ↥K) (A := ↥R) hnilK hproper
@@ -3803,7 +3841,6 @@ theorem theorem_3_4_faithful_endpoint {G : Type uG} [Group G] [Finite G] {F : Ty
           rw [FixedPoints.mem_subgroup]
           intro τ
           rcases τ.property with ⟨n, hn⟩
-          apply Subtype.ext
           have hfix_r : ((r : R) : G) * ((x : K) : G) * ((r : R) : G)⁻¹ = x := hfixH r x hx
           have hxfixσ : σ x = x := by
             apply Subtype.ext
@@ -3817,7 +3854,8 @@ theorem theorem_3_4_faithful_endpoint {G : Type uG} [Group G] [Finite G] {F : Ty
               (MulAction.mem_fixedBy_zpow (α := ↥K) (g := σ) (a := x) hxfix n)
           have hτ : (τ : MulAut ↥K) = σ ^ n := by simpa using hn.symm
           have hfixτ : (τ : MulAut ↥K) x = x := by simpa [hτ] using hxfixσpow n
-          simpa using hfixτ
+          change (τ : MulAut ↥K) x = x
+          exact hfixτ
         exact
           fixedPointSubgroup_zpowers_eq_bot_of_elementaryAbelian_of_proper_invariant_fixed
             (σ := σ) hσ_ne hσcopq hproperσ
@@ -3850,7 +3888,8 @@ theorem theorem_3_4_faithful_endpoint {G : Type uG} [Group G] [Finite G] {F : Ty
           have hτ : (τ : MulAut ↥K) = σ ^ n := by simpa using hn.symm
           have hfixτ : (τ : MulAut ↥K) yK = yK := by
             simpa [MulAction.mem_fixedBy, hτ] using hyσpow
-          simpa using hfixτ
+          change (τ : MulAut ↥K) yK = yK
+          exact hfixτ
         have hybot : yK ∈ (⊥ : Subgroup K) := by simpa [hfixσ] using hyfix
         have hyone : yK = 1 := by simpa using hybot
         exact congrArg Subtype.val hyone
@@ -3865,7 +3904,7 @@ theorem theorem_3_4_faithful_endpoint {G : Type uG} [Group G] [Finite G] {F : Ty
           hK_nontrivial hfixR
     · have hnontrivAction : ∃ a : R, ∃ x : K, (a : G) * (x : G) * (a : G)⁻¹ ≠ x := by
         by_contra hcontra
-        push_neg at hcontra
+        push Not at hcontra
         apply htriv
         intro a x
         apply Subtype.ext
@@ -3978,7 +4017,7 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
   let Qmul := K ⧸ Subgroup.center K
   letI : IsElementaryAbelian q Qmul := IsExtraspecial.quotient_elementary_abelian q K
   letI : IsMulCommutative Qmul := (inferInstance : IsElementaryAbelian q Qmul).toIsMulCommutative
-  letI : CommGroup Qmul := CommGroup.ofIsMulCommutative
+  letI : CommGroup Qmul := IsMulCommutative.instCommGroup
   let Q := Additive Qmul
   letI : AddCommGroup Q := Additive.addCommGroup
   letI : Module (ZMod q) Q := inferInstance
@@ -4064,7 +4103,8 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
     intro x
     have hraw : extraspecialCenterPairingRaw (q := q) (K := K) x (1 : K) = 0 := by
       simp [extraspecialCenterPairingRaw]
-    simpa [QuotientGroup.mk_one, extraspecialCenterPairing_mk] using hraw
+    change extraspecialCenterPairingRaw (q := q) (K := K) x 1 = 0
+    exact hraw
   have hpair_add_right :
       ∀ x y₁ y₂ : Q,
         extraspecialCenterPairing (q := q) (K := K) x (y₁ + y₂) =
@@ -4074,8 +4114,10 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
     rw [← ofMul_toMul x, ← ofMul_toMul y₁, ← ofMul_toMul y₂]
     refine Quotient.inductionOn₃ (Additive.toMul x) (Additive.toMul y₁) (Additive.toMul y₂) ?_
     intro x y₁ y₂
-    simpa [QuotientGroup.mk_mul, extraspecialCenterPairing_mk] using
-      (extraspecialCenterPairingRaw_mul_right (q := q) (K := K) x y₁ y₂)
+    change extraspecialCenterPairingRaw (q := q) (K := K) x (y₁ * y₂) =
+      extraspecialCenterPairingRaw (q := q) (K := K) x y₁ +
+        extraspecialCenterPairingRaw (q := q) (K := K) x y₂
+    exact extraspecialCenterPairingRaw_mul_right (q := q) (K := K) x y₁ y₂
   have hpair_zero_left :
       ∀ y : Q, extraspecialCenterPairing (q := q) (K := K) 0 y = 0 := by
     intro y
@@ -4084,7 +4126,8 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
     intro y
     have hraw : extraspecialCenterPairingRaw (q := q) (K := K) (1 : K) y = 0 := by
       simp [extraspecialCenterPairingRaw]
-    simpa [QuotientGroup.mk_one, extraspecialCenterPairing_mk] using hraw
+    change extraspecialCenterPairingRaw (q := q) (K := K) 1 y = 0
+    exact hraw
   have hpair_add_left :
       ∀ x₁ x₂ y : Q,
         extraspecialCenterPairing (q := q) (K := K) (x₁ + x₂) y =
@@ -4094,8 +4137,10 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
     rw [← ofMul_toMul x₁, ← ofMul_toMul x₂, ← ofMul_toMul y]
     refine Quotient.inductionOn₃ (Additive.toMul x₁) (Additive.toMul x₂) (Additive.toMul y) ?_
     intro x₁ x₂ y
-    simpa [QuotientGroup.mk_mul, extraspecialCenterPairing_mk] using
-      (extraspecialCenterPairingRaw_mul_left (q := q) (K := K) x₁ x₂ y)
+    change extraspecialCenterPairingRaw (q := q) (K := K) (x₁ * x₂) y =
+      extraspecialCenterPairingRaw (q := q) (K := K) x₁ y +
+        extraspecialCenterPairingRaw (q := q) (K := K) x₂ y
+    exact extraspecialCenterPairingRaw_mul_left (q := q) (K := K) x₁ x₂ y
   let pairingAdd : Q →+ AddMonoidHom Q (ZMod q) :=
     { toFun := fun x =>
         { toFun := fun y => extraspecialCenterPairing (q := q) (K := K) x y
@@ -4131,6 +4176,7 @@ public theorem exists_inner_of_fix_center_and_quotient_of_isExtraspecial_local
     revert hx
     refine Quotient.inductionOn (Additive.toMul x) ?_
     intro x hx
+    change B (Additive.ofMul (QuotientGroup.mk x)) = 0 at hx
     have hcent : x ∈ Subgroup.center K := by
       rw [Subgroup.mem_center_iff]
       intro y

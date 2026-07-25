@@ -21,6 +21,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [IsMinCE G] in
 public theorem section12_eq_conjBy_inv_of_conjBy_eq_pre
     {H K : Subgroup G} {g : G} (h : H.conjBy g = K) :
     H = K.conjBy g⁻¹ := by
@@ -30,21 +31,25 @@ public theorem section12_eq_conjBy_inv_of_conjBy_eq_pre
       simpa using (section8_conjBy_one H).symm
     _ = K.conjBy g⁻¹ := by rw [h]
 
+omit [IsMinCE G] in
 public theorem section12_mem_conjugates_self_pre
     {M X : Subgroup G} (hXM : X ≤ M) :
     M ∈ section10ConjugatesContaining M X := by
   exact ⟨1, (section8_conjBy_one M).symm, hXM⟩
 
+omit [IsMinCE G] in
 public theorem section12_mem_conjugates_of_conjBy_eq_pre
     {M N X : Subgroup G} {g : G} (hconj : N.conjBy g = M) (hXN : X ≤ N) :
     N ∈ section10ConjugatesContaining M X := by
   exact ⟨g⁻¹, section12_eq_conjBy_inv_of_conjBy_eq_pre hconj, hXN⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_mem_conjugates_forward_of_conjBy_eq_pre
     {M N X : Subgroup G} {g : G} (hconj : M.conjBy g = N) (hXN : X ≤ N) :
     N ∈ section10ConjugatesContaining M X := by
   exact ⟨g, hconj.symm, hXN⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_eq_of_conjugation_transitive_and_centralizer_le_pre
     {Ω : Set (Subgroup G)} {Q₁ Q₂ X : Subgroup G}
     (htrans : ConjugationActionTransitiveOn (Subgroup.centralizer (X : Set G)) Ω)
@@ -69,6 +74,7 @@ public theorem section12_eq_of_conjugation_transitive_and_centralizer_le_pre
       · simp [mul_assoc]
   exact hc.trans hfix
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_tau13_not_sigma
     {M : Subgroup G} {p : Nat.Primes}
     (hp : p ∈ section12Tau1Primes M ∪ section12Tau3Primes M) :
@@ -79,6 +85,7 @@ public theorem section12_tau13_not_sigma
   · rcases (by simpa [section12Tau3Primes] using hpτ3) with ⟨hpσ, _hpD, _hrank⟩
     exact hpσ
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_tau13_primeRank_eq_one
     {M : Subgroup G} {p : Nat.Primes}
     (hp : p ∈ section12Tau1Primes M ∪ section12Tau3Primes M) :
@@ -89,6 +96,7 @@ public theorem section12_tau13_primeRank_eq_one
   · rcases (by simpa [section12Tau3Primes] using hpτ3) with ⟨_hpσ, _hpD, hrank⟩
     exact hrank
 
+omit [IsMinCE G] in
 public theorem section12_primeRank_conjBy_eq_pre
     (H : Subgroup G) (q : ℕ) (g : G) :
     primeRank q (H.conjBy g) = primeRank q H := by

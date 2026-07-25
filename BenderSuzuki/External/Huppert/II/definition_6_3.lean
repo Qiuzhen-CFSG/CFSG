@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.LinearAlgebra.Transvection
+public import Mathlib.LinearAlgebra.Transvection.Basic
 
 /-!
 # Huppert II.6.3

@@ -241,7 +241,7 @@ public theorem xi1115_theta_fixed_points_of_bruhat_product
     · simp only [add_zero]
     · rw [map_zero]
       ring_nf
-      simp only [CharTwo.two_eq_zero, mul_zero, add_zero, zero_add]
+      simp only [CharTwo.two_eq_zero, zero_add]
   have hmiddleNe : (coord xA).2.2 * (coord xG).1 ≠ 1 := by
     rw [hmiddleValue]
     exact xQ.2

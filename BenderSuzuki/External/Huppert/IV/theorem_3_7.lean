@@ -80,7 +80,7 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
     · intro hx
       rcases Subgroup.mem_map.mp hx with ⟨y, hyKZN, hyx⟩
       have hy_comm_ZN : ((y : (SN : Subgroup ZN)) : ZN) ∈ commutator ZN := by
-        simpa [KZN, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using hyKZN
+        simpa [KZN, huppertIV33SylowDerivedSubgroup] using Subgroup.mem_subgroupOf.mp hyKZN
       have hy_comm_Q : (((y : (SN : Subgroup ZN)) : ZN) : Q) ∈ commutator Q := by
         have hmap : (commutator ZN).map ZN.subtype ≤ commutator Q := by
           rw [Subgroup.map_subtype_commutator]
@@ -94,7 +94,7 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
       -- Huppert IV.3.4 in `Q` and in `ZN`, plus `q`-normality, give the
       -- reverse containment of the denominators.
       have hxQ : (x : Q) ∈ (S : Subgroup Q) ⊓ commutator Q := by
-        exact ⟨x.property, by simpa [KQ, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap] using hxKQ⟩
+        exact ⟨x.property, by simpa [KQ, huppertIV33SylowDerivedSubgroup] using Subgroup.mem_subgroupOf.mp hxKQ⟩
       have hxZNcomm : (⟨(x : Q), hS_le_ZN x.property⟩ : ZN) ∈ commutator ZN := by
         -- Source sentence: by IV.3.4, it is enough to check the two families
         -- generating `S ∩ Q'`.  The `N_Q(S)'` family lies in `ZN'` because
@@ -141,7 +141,6 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
                 map_mul' := by intro a b; ext; rfl }
             refine ⟨iNS_ZN c, ?_, rfl⟩
             have hmapc : (commutator NS).map iNS_ZN ≤ commutator ZN := by
-              change (commutator NS).map iNS_ZN ≤ commutator ZN
               rw [_root_.commutator_def, Subgroup.map_commutator]
               exact Subgroup.commutator_mono le_top le_top
             exact hmapc ⟨c, hc, rfl⟩
@@ -242,9 +241,15 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
                 IsPGroup.to_le S.isPGroup'
                   (show centerIn (G := Q) (S : Subgroup Q) ≤ (S : Subgroup Q) from inf_le_left)
               have hZg_p : IsPGroup q (rightConjugate (centerIn (G := Q) (S : Subgroup Q)) g) := by
-                simpa [rightConjugate, Subgroup.conjBy] using
-                  (IsPGroup.map (p := q) (H := centerIn (G := Q) (S : Subgroup Q))
-                    hZp (MulAut.conj g⁻¹).toMonoidHom)
+                have hmap : IsPGroup q ((centerIn (G := Q) (S : Subgroup Q)).map
+                    (MulAut.conj g⁻¹).toMonoidHom) :=
+                  IsPGroup.map (p := q) (H := centerIn (G := Q) (S : Subgroup Q))
+                    hZp (MulAut.conj g⁻¹).toMonoidHom
+                have h_eq : rightConjugate (centerIn (G := Q) (S : Subgroup Q)) g =
+                    (centerIn (G := Q) (S : Subgroup Q)).map (MulAut.conj g⁻¹).toMonoidHom := by
+                  simp [rightConjugate, Subgroup.conjBy]
+                rw [h_eq]
+                exact hmap
               exact hZg_p.of_equiv
                 (Subgroup.subgroupOfEquivOfLe
                   (H := rightConjugate (centerIn (G := Q) (S : Subgroup Q)) g)
@@ -261,9 +266,11 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
               let zN : NT := ⟨z, hZS_le_NT hz⟩
               have hzP1 : zN ∈ (P1 : Subgroup NT) := by
                 exact hZ_le_P1 (by simpa [Subgroup.mem_subgroupOf, zN] using hz)
-              have hzComap : zN ∈ (Pstar : Subgroup Q).comap NT.subtype := by
-                simpa [hPstar_comap] using hzP1
-              simpa [Subgroup.mem_comap, zN] using hzComap
+              have hzComap : zN ∈ (Pstar : Subgroup Q).subgroupOf NT := by
+                have hsub_eq : (Pstar : Subgroup Q).subgroupOf NT = (P1 : Subgroup NT) := hPstar_comap
+                rw [hsub_eq]
+                exact hzP1
+              simpa [zN] using Subgroup.mem_subgroupOf.mp hzComap
             have hZgs_le_Pstar :
                 rightConjugate (centerIn (G := Q) (S : Subgroup Q)) (g * s) ≤
                   (Pstar : Subgroup Q) := by
@@ -281,10 +288,12 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
               have hconj_P1 : (MulAut.conj sN) zgN ∈ (P1 : Subgroup NT) := by
                 rw [← hsN, Sylow.coe_subgroup_smul]
                 exact Subgroup.smul_mem_pointwise_smul zgN (MulAut.conj sN) (P2 : Subgroup NT) hzg_P2
-              have hconj_comap : (MulAut.conj sN) zgN ∈ (Pstar : Subgroup Q).comap NT.subtype := by
-                simpa [hPstar_comap] using hconj_P1
+              have hconj_comap : (MulAut.conj sN) zgN ∈ (Pstar : Subgroup Q).subgroupOf NT := by
+                have hsub_eq : (Pstar : Subgroup Q).subgroupOf NT = (P1 : Subgroup NT) := hPstar_comap
+                rw [hsub_eq]
+                exact hconj_P1
               have hconj_Q : (((MulAut.conj sN) zgN : NT) : Q) ∈ (Pstar : Subgroup Q) := by
-                simpa [Subgroup.mem_comap] using hconj_comap
+                simpa using Subgroup.mem_subgroupOf.mp hconj_comap
               have hval_eq :
                   (MulAut.conj sN : NT ≃* NT) zgN =
                     ⟨((sN : Q) * (g⁻¹ * (z0 * (g * (sN : Q)⁻¹)))), by
@@ -326,7 +335,7 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
                 have hcomp : (MulAut.conj a) ((MulAut.conj a⁻¹) z) = z := by
                   simp [a, MulAut.conj_apply, mul_assoc]
                 rw [hcomp] at hzImage
-                simpa [Pstar_a, Sylow.coe_subgroup_smul] using hzImage
+                simpa [Pstar_a, Sylow.pointwise_smul_def] using hzImage
               have hcenter_Pstar_a :
                   centerIn (G := Q) (S : Subgroup Q) =
                     centerIn (G := Q) (Pstar_a : Subgroup Q) :=
@@ -430,7 +439,6 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
                   map_mul' := by intro a b; ext; rfl }
               refine ⟨iS_ZN c, ?_, rfl⟩
               have hmapc : (commutator (S : Subgroup Q)).map iS_ZN ≤ commutator ZN := by
-                change (commutator (S : Subgroup Q)).map iS_ZN ≤ commutator ZN
                 rw [_root_.commutator_def, Subgroup.map_commutator]
                 exact Subgroup.commutator_mono le_top le_top
               exact hmapc ⟨c, hc, rfl⟩
@@ -483,7 +491,10 @@ private theorem huppert_IV_3_7_sylow_quotient_equiv_center_normalizer_source
         refine ⟨⟨(x : Q), hS_le_ZN x.property⟩, ?_⟩
         simp [SN, Subgroup.mem_subgroupOf]
       have hyKZN : y ∈ KZN := by
-        simpa [KZN, huppertIV33SylowDerivedSubgroup, Subgroup.mem_comap, y] using hxZNcomm
+        have hyZN_comm : (y : ZN) ∈ commutator ZN := by
+          simpa [y] using hxZNcomm
+        simpa [KZN, huppertIV33SylowDerivedSubgroup, y] using
+          Subgroup.mem_subgroupOf.mpr hyZN_comm
       refine ⟨y, hyKZN, ?_⟩
       ext
       rfl

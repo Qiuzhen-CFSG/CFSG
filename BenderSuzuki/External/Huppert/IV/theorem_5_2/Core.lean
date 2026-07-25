@@ -58,7 +58,7 @@ public theorem hkt_huppert_iv52_centers_eq_of_center_normalized
   let TN : Sylow q N := T.subtype hT_le_N
   obtain ⟨n, hn⟩ := MulAction.exists_smul_eq N TN SN
   have hTN_SN : (MulAut.conj n • (TN : Subgroup N) : Subgroup N) = (SN : Subgroup N) := by
-    simpa [Sylow.smul_def, Sylow.coe_subgroup_smul]
+    simpa only [Sylow.coe_subgroup_smul]
       using congrArg (fun P : Sylow q N => (P : Subgroup N)) hn
   have hconjT_eq_S :
       (MulAut.conj (n : Q) • (T : Subgroup Q) : Subgroup Q) = (S : Subgroup Q) := by
@@ -68,7 +68,8 @@ public theorem hkt_huppert_iv52_centers_eq_of_center_normalized
       rcases hx with ⟨y, hyT, rfl⟩
       let yN : N := ⟨y, hT_le_N hyT⟩
       have hyTN : yN ∈ (TN : Subgroup N) := by
-        simpa [TN, Sylow.coe_subtype, Subgroup.mem_subgroupOf, yN] using hyT
+        change (yN : Q) ∈ (T : Subgroup Q)
+        exact hyT
       have hySN : (MulAut.conj n) yN ∈ (SN : Subgroup N) := by
         simpa [hTN_SN] using
           Subgroup.smul_mem_pointwise_smul yN (MulAut.conj n) (TN : Subgroup N) hyTN
@@ -86,14 +87,19 @@ public theorem hkt_huppert_iv52_centers_eq_of_center_normalized
         simpa [hSN_TN] using
           Subgroup.smul_mem_pointwise_smul xN ((MulAut.conj n)⁻¹) (SN : Subgroup N) hxSN
       refine ⟨((MulAut.conj n)⁻¹ xN : N), ?_, ?_⟩
-      · simpa [TN, Sylow.coe_subtype, Subgroup.mem_subgroupOf, xN] using hxTN
+      · change ((((MulAut.conj n)⁻¹ xN : N) : Q)) ∈ (T : Subgroup Q)
+        exact hxTN
       · simp [MulAut.conj_apply, xN, mul_assoc]
+  have hmapT_eq_conjT :
+      (T : Subgroup Q).map (MulAut.conj (n : Q)).toMonoidHom =
+        (MulAut.conj (n : Q) • (T : Subgroup Q) : Subgroup Q) := by
+    ext x
+    constructor <;> rintro ⟨y, hy, rfl⟩ <;> exact ⟨y, hy, rfl⟩
   have hmap_centerT :
       (centerIn (G := Q) (T : Subgroup Q)).map (MulAut.conj (n : Q)).toMonoidHom =
         centerIn (G := Q) (S : Subgroup Q) := by
     rw [centerIn_map_mulEquiv (MulAut.conj (n : Q)) (T : Subgroup Q)]
-    simpa [Subgroup.pointwise_smul_def] using
-      congrArg (fun H : Subgroup Q => centerIn (G := Q) H) hconjT_eq_S
+    rw [hmapT_eq_conjT, hconjT_eq_S]
   have hmap_centerS :
       (centerIn (G := Q) (S : Subgroup Q)).map (MulAut.conj (n : Q)).toMonoidHom =
         centerIn (G := Q) (S : Subgroup Q) := by

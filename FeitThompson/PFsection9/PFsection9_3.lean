@@ -201,7 +201,7 @@ public theorem ambientDerived_disjoint_W1_of_hypothesis_9_2_sec9
   have hcop : Nat.Coprime (Nat.card (ambientDerivedSubgroup M)) (Nat.card W1) := by
     simpa [natCard_subgroupOf_eq (ambientDerivedSubgroup M) M hDleM, hindex] using
       hcopDsub
-  exact disjoint_iff.mpr (Subgroup.inf_eq_bot_of_coprime hcop)
+  exact Subgroup.disjoint_of_coprime_natCard hcop
 
 public theorem section12ComplementIn_U_sup_W1_of_hypothesis_9_2_sec9
     {G : Type u} [Group G] [Finite G]
@@ -616,7 +616,7 @@ private theorem maximal_normalizer_eq_self_sec9
   have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
   have hMsigmaSub_ne : section10MsigmaSubgroup M ≠ ⊥ := by
     intro hbot
-    exact hMsigma_ne (by simpa [section10Msigma, hbot])
+    exact hMsigma_ne (by simp [section10Msigma, hbot])
   have hnorm :=
     section10_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       (G := G) hM (N := section10MsigmaSubgroup M) hMsigmaSub_ne

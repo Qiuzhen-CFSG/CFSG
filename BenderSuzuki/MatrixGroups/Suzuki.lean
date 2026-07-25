@@ -116,7 +116,7 @@ Negative powers are written as inverses in the field.
   Subgroup.closure (SuzukiMatrixGeneratorSet m)
 
 /-- The finite Suzuki group `Sz(2^(2m+1))` in its concrete matrix model. -/
-@[expose] public noncomputable abbrev SuzukiMatrixGroup (m : ℕ) :=
+public noncomputable abbrev SuzukiMatrixGroup (m : ℕ) :=
   SuzukiMatrixSubgroup m
 
 end MatrixGroups

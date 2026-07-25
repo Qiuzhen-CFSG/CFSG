@@ -10,6 +10,8 @@ public import Mathlib.RepresentationTheory.Submodule
 import Mathlib.Algebra.Field.ZMod
 import FeitThompson.GroupAction.Invariant
 
+open scoped IsMulCommutative
+
 /-!
 # Invariant complements for odd-order actions over `ZMod 2`
 -/
@@ -97,9 +99,9 @@ public theorem exists_isCompl_invariant_subgroup_of_odd_group
     simpa [W] using hUWmod
   · intro a g hg
     have hgmod : Additive.ofMul g ∈ Wmod := by
-      simpa [W] using hg
+      simpa [W, e] using hg
     have hsmul := hWmod a (Additive.ofMul g) hgmod
-    simpa [W, rho] using hsmul
+    simpa [W, e, rho] using hsmul
 /-- An invariant subgroup of an elementary abelian `2`-group has an invariant
 complement inside any larger invariant subgroup. -/
 public theorem exists_isCompl_invariant_subgroup_within

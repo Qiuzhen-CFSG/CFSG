@@ -75,7 +75,7 @@ private theorem claim_5_Q1_eq_bot_from_star_card
 
 set_option backward.isDefEq.respectTransparency false in
 private theorem claim5_classify_dickson_of_cyclic_index_two_center_index
-    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type*} [PFAppendixII.RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hAcyc : IsCyclic A) (hAidx : A.index = 2)
     (hnoncomm : ¬ IsMulCommutative F)
     (hcenterIndex : (Subgroup.center Fˣ).index = 4) :
@@ -137,16 +137,16 @@ private theorem claim5_classify_dickson_of_cyclic_index_two_center_index
 set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 private theorem claim5_huppert_units_classification
-    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F] :
+    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] :
     (∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ P : Sylow p Fˣ, IsCyclic P) ∧
       (∀ P : Sylow 2 Fˣ,
         IsCyclic P ∨ ∃ k : ℕ, 2 ≤ k ∧ IsPGroup 2 (QuaternionGroup k) ∧
           Nonempty (P ≃* QuaternionGroup k)) := by
   classical
-  let rhoAdd : (Fˣ)ᵐᵒᵖ →* (F ≃+ F) :=
+  let rhoAdd : (Fˣ)ᵐᵒᵖ →* Multiplicative (F ≃+ F) :=
     PFAppendixII.rightNearFieldRightMulAction
   let rho : (Fˣ)ᵐᵒᵖ →* MulAut (Multiplicative F) :=
-    { toFun := fun a => (rhoAdd a).toMultiplicative
+    { toFun := fun a => (Multiplicative.toAdd (rhoAdd a)).toMultiplicative
       map_one' := by
         ext x
         change Multiplicative.ofAdd (rhoAdd 1 (Multiplicative.toAdd x)) = x
@@ -374,7 +374,7 @@ private theorem odd_normal_complement_isCyclic
 private theorem nilpotent_two_sylow_complement
     {A : Type u} [Group A] [Finite A]
     (hnil : Group.IsNilpotent A) (P : Sylow 2 A) :
-    ∃ N : Subgroup A, ∃ hNnormal : N.Normal,
+    ∃ N : Subgroup A, ∃ _hNnormal : N.Normal,
       Nat.Coprime 2 (Nat.card N) ∧ (P : Subgroup A).IsComplement' N := by
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rcases External.hkt_hasNormalPComplement_of_nilpotent (p := 2) hnil with
@@ -439,7 +439,7 @@ private theorem claim5_nilpotent_core
     letI : Group.IsNilpotent A := hnil
     letI : IsZGroup A := hAZ
     haveI : IsCyclic A := inferInstance
-    exact hnoncomm ⟨IsCyclic.commutative⟩
+    exact hnoncomm (inferInstance : IsMulCommutative A)
   rcases (htwo P).resolve_left hPnotcyclic with hPclass
   rcases quaternion_sylow_exponent_four_data hPclass (hexponent P hPnotcyclic) with
     ⟨X, hXcyclic, hXindex, hPcard, hcenterP⟩
@@ -458,7 +458,9 @@ private theorem claim5_nilpotent_core
   let fPN : P × N →* A :=
     (P : Subgroup A).subtype.noncommCoprod N.subtype hcommPN
   have hfPNbij : Function.Bijective fPN := by
-    simpa [fPN, MonoidHom.noncommCoprod_apply] using hPN
+    change Function.Bijective
+      (fun x : P × N => ((x.1 : A) * (x.2 : A)))
+    exact (Subgroup.isComplement_iff_bijective (P : Subgroup A) N).mp hPN
   let ePN : P × N ≃* A := MulEquiv.ofBijective fPN hfPNbij
   let fX : X →* A := (P : Subgroup A).subtype.comp X.subtype
   have hcommXN : ∀ x : X, ∀ n : N, Commute (fX x) (N.subtype n) := by
@@ -513,7 +515,8 @@ private theorem claim5_nilpotent_core
     apply le_antisymm le_top
     intro n _hn
     rw [Subgroup.mem_center_iff]
-    exact fun g => hNcyclic.commutative.comm g n
+    letI : IsCyclic N := hNcyclic
+    exact fun g => mul_comm' g n
   have hcenterProd :
       Subgroup.center (P × N) =
         (Subgroup.center P).prod (Subgroup.center N) := by
@@ -546,7 +549,7 @@ private theorem claim5_nilpotent_core
 
 private theorem claim5_noncyclic_sylow_two_exponent
     {G F : Type*} [Group G] [Finite G]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (Q S P : Subgroup G) (hQnil : Group.IsNilpotent Q)
     (hS_sylow : ∃ P2 : Sylow 2 Q, S = (P2 : Subgroup Q).map Q.subtype)
     (hSclass : IsMulCommutative S ∨ PFAppendixIII.IsSuzukiTwoGroup S)
@@ -622,7 +625,7 @@ group occurring inside the nilpotent group `Q` has a cyclic subgroup of index
 two and center of index four. -/
 private theorem claim5_units_structure_core
     {G F : Type*} [Group G] [Finite G]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (Q S P : Subgroup G) (hQnil : Group.IsNilpotent Q)
     (hS_sylow : ∃ P2 : Sylow 2 Q, S = (P2 : Subgroup Q).map Q.subtype)
     (hSclass : IsMulCommutative S ∨ PFAppendixIII.IsSuzukiTwoGroup S)
@@ -654,11 +657,11 @@ private theorem claim5_units_structure_core
       (nearFieldStar Q P).subgroupOf Q
     have hStarNilpotent : Group.IsNilpotent (nearFieldStar Q P) := by
       letI : Group.IsNilpotent starInQ := Subgroup.isNilpotent starInQ
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe
           (show nearFieldStar Q P ≤ Q from inf_le_left))
     letI : Group.IsNilpotent (nearFieldStar Q P) := hStarNilpotent
-    exact nilpotent_of_mulEquiv unitEquiv
+    exact Group.nilpotent_of_mulEquiv unitEquiv
   obtain ⟨⟨A, hAcyclic, hAindex⟩, hcenterCard⟩ :=
     claim5_nilpotent_core hUnitsNilpotent hClass.1 hClass.2 hUnitsNoncomm
       (fun R hRnotcyclic =>
@@ -675,7 +678,7 @@ private theorem claim5_units_structure_core
 near-field witness. -/
 public theorem claim_5_classify_nearFieldWitness
     {G F : Type*} [Group G] [Finite G]
-    [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [PFAppendixII.RightNearField F] [Finite F]
     (Q S P : Subgroup G) (hQnil : Group.IsNilpotent Q)
     (hS_sylow : ∃ P2 : Sylow 2 Q, S = (P2 : Subgroup Q).map Q.subtype)
     (hSclass : IsMulCommutative S ∨ PFAppendixIII.IsSuzukiTwoGroup S)
@@ -726,7 +729,7 @@ public theorem claim_5
         letI : core.Normal := hnormal
         let pi : C →* C ⧸ core := QuotientGroup.mk' core
         ∃ (F : Type v) (_ : PFAppendixII.RightNearField F) (_ : Finite F)
-            (_ : Nontrivial F) (unitEquiv : nearFieldStar Q P ≃* Fˣ),
+            (_ : Nontrivial F) (_unitEquiv : nearFieldStar Q P ≃* Fˣ),
           PFAppendixII.PropositionOneConclusion
               (HP.map pi) (DP.map pi) (QP.map pi) F ∧
             PFAppendixII.IsDicksonIndexTwoModel F 3 1 := by

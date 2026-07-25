@@ -91,7 +91,7 @@ public theorem theorem_5_3_d
     intro s hs
     rw [Subgroup.mem_centralizer_iff]
     intro t ht
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := S) ht hs
+    exact setLike_mul_comm (s := S) ht hs
   have hSZ_max : Z ⊔ S ∈ maximalElementaryAbelianSubgroups p R := by
     refine ⟨hSZ_elem, ?_⟩
     intro B hSZ_le_B hBelem
@@ -101,7 +101,7 @@ public theorem theorem_5_3_d
       rw [Subgroup.mem_centralizer_iff]
       intro s hs
       have hsB : s ∈ B := hSZ_le_B (Subgroup.mem_sup_right hs)
-      exact Subgroup.mul_comm_of_mem_isMulCommutative (H := B) hsB hb
+      exact setLike_mul_comm (s := B) hsB hb
     by_cases hB_eq : B = Z ⊔ S
     · exact hB_eq.symm
     · have hBSZ_ne : Z ⊔ S ≠ B := fun h => hB_eq h.symm
@@ -175,13 +175,15 @@ public theorem theorem_5_3_d
   have hSTcomp : S.IsComplement' T :=
     Subgroup.isComplement'_of_card_mul_and_disjoint hST_card hdisjST
   have hR'_le_T : derivedSubgroup R ≤ T := by
-    have hquot_comm : Std.Commutative (· * · : R ⧸ T → _ → _) := by
+    have hquot_comm : IsMulCommutative (R ⧸ T) := by
       letI : IsCyclic (R ⧸ T) := isCyclic_of_prime_card (α := R ⧸ T) hquot_card
       letI : CommGroup (R ⧸ T) := IsCyclic.commGroup
       infer_instance
     have hcomm_le : _root_.commutator R ≤ T :=
       (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := T)).1 hquot_comm
-    simpa [derivedSubgroup, derivedSeries_one] using hcomm_le
+    change derivedSeries R 1 ≤ T
+    rw [derivedSeries_one]
+    exact hcomm_le
   have hsup_le : S ⊔ subgroupCentralizerIn T S ≤ C := by
     refine sup_le hS_le_C ?_
     exact inf_le_right
@@ -233,7 +235,7 @@ public theorem theorem_5_3_d
     have hD_le_C : D ≤ C := sup_le hS_le_C hUmap_le_C
     have hDcard : Nat.card D = p ^ 3 := by
       letI : IsElementaryAbelian p D := hDelem
-      letI : CommGroup D := CommGroup.ofIsMulCommutative
+      letI : CommGroup D := IsMulCommutative.instCommGroup
       have hdisj_sub : Disjoint (S.subgroupOf D) (Umap.subgroupOf D) := by
         rw [Subgroup.disjoint_def]
         intro x hxS hxU

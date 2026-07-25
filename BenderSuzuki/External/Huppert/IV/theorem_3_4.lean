@@ -24,6 +24,9 @@ namespace External
 
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
+open scoped commutatorElement
+open scoped IsMulCommutative
+set_option maxHeartbeats 0
 
 universe u
 
@@ -97,7 +100,6 @@ private theorem huppert_IV_3_4_commutatorElement_mem_grunKernelSubgroup
   apply Subgroup.subset_closure
   right
   refine ⟨1, ?_, ?_⟩
-  dsimp only
   · exact P.mul_mem (P.mul_mem (P.mul_mem ha hb) (P.inv_mem ha)) (P.inv_mem hb)
   · let Pder : Subgroup Q := (commutator P).map P.subtype
     have hcommPder : ⁅a, b⁆ ∈ Pder := by
@@ -135,7 +137,8 @@ private instance huppert_IV_3_4_grunKernelSubgroup_subgroupOf_normal
     huppert_IV_3_4_sylow_commutator_le_grunKernelSubgroup (Q := Q) P
   have hcg : ⁅g, n⁆ ∈
       (huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P :=
-    hcomm (Subgroup.commutator_mem_commutator trivial trivial)
+    hcomm (Subgroup.commutator_mem_commutator (G := P) (H₁ := ⊤) (H₂ := ⊤)
+      (Subgroup.mem_top g) (Subgroup.mem_top n))
   have hmul : ⁅g, n⁆ * n ∈
       (huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P :=
     ((huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P).mul_mem hcg hn
@@ -149,9 +152,9 @@ private instance huppert_IV_3_4_grunKernelSubgroup_quotient_commutative
     IsMulCommutative
       (P ⧸ (huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P) := by
   classical
-  exact ⟨⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
+  exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
     (N := (huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P)).2
-      (huppert_IV_3_4_sylow_commutator_le_grunKernelSubgroup (Q := Q) P) |>.comm⟩⟩
+      (huppert_IV_3_4_sylow_commutator_le_grunKernelSubgroup (Q := Q) P) |>.is_comm⟩
 
 /-- IV.3.4 transfer-core, easy direction: the transfer to `S/D` kills the
 local normalizer-derived generators defining `D`. -/
@@ -199,7 +202,6 @@ private theorem huppert_IV_3_4_normalizer_commutator_mem_grunKernelSubgroup
   rw [huppertIV34GrunKernelSubgroup]
   apply Subgroup.subset_closure
   left
-  dsimp only
   let N : Subgroup Q := Subgroup.normalizer ((P : Subgroup Q) : Set Q)
   have haN : a ∈ N := by
     exact Subgroup.le_normalizer ha
@@ -255,7 +257,9 @@ private theorem huppert_IV_3_4_normalizer_conj_eq_mod_grunKernelSubgroup
         = πD (cS * aS) := by
           congr 1
           ext
-          simp [cS, aS, c, commutatorElement_def, mul_assoc]
+          dsimp [cS, aS, c]
+          rw [commutatorElement_def]
+          group
     _ = πD cS * πD aS := by rw [map_mul]
     _ = πD ⟨a, ha⟩ := by simp [aS, hc_one]
 
@@ -416,7 +420,8 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
       apply Quotient.sound'
       rw [MulAction.orbitRel_apply] at hab ⊢
       rcases MulAction.mem_orbit_iff.mp hab with ⟨z, hz⟩
-      exact ⟨⟨z, hzpowers_le_P z.property⟩, by simpa using hz⟩)
+      refine ⟨⟨(z : Q), hzpowers_le_P (show (z : Q) ∈ Subgroup.zpowers U₀ from z.2)⟩, ?_⟩
+      exact hz)
   let blockContribution : Δ → P ⧸ Dsub := fun δ =>
     ∏ ω : {ω : Ω // orbitBlock ω = δ}, cycleContribution ω.1
   have hregroup_transfer_product :
@@ -463,7 +468,8 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
         apply Quotient.sound'
         rw [MulAction.orbitRel_apply] at hrel ⊢
         rcases MulAction.mem_orbit_iff.mp hrel with ⟨z, hz⟩
-        exact ⟨⟨z, hzpowers_le_P z.property⟩, by simpa using hz⟩
+        refine ⟨⟨(z : Q), hzpowers_le_P (show (z : Q) ∈ Subgroup.zpowers U₀ from z.2)⟩, ?_⟩
+        exact hz
       have hδout_fixed : δ.out ∈ MulAction.fixedPoints P (Q ⧸ P) :=
         hδ δ.out (Quotient.out_eq' δ)
       have hfiber_eq_ω0 (ω : {ω : Ω // orbitBlock ω = δ}) : ω.1 = ω0 := by
@@ -494,7 +500,7 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
         hδ ω0.out hω0_out_block
       have hU₀_fix_ω0_out : U₀ • ω0.out = ω0.out := by
         have hfix := (MulAction.mem_fixedPoints.mp hω0_out_fixed) U₀P
-        simpa [U₀P] using hfix
+        exact hfix
       have hω0_len : cycleLength ω0 = 1 := by
         change Function.minimalPeriod (U₀ • ·) ω0.out = 1
         rw [Function.minimalPeriod_eq_one_iff_isFixedPt]
@@ -537,7 +543,8 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
         apply Quotient.sound'
         rw [MulAction.orbitRel_apply] at hrel ⊢
         rcases MulAction.mem_orbit_iff.mp hrel with ⟨z, hz⟩
-        exact ⟨⟨z, hzpowers_le_P z.property⟩, by simpa using hz⟩
+        refine ⟨⟨(z : Q), hzpowers_le_P (show (z : Q) ∈ Subgroup.zpowers U₀ from z.2)⟩, ?_⟩
+        exact hz
       let blockOrbit : Type u := MulAction.orbit P δ.out
       haveI : Fintype blockOrbit := Fintype.ofFinite _
       have hblockPower_eq_card : blockPower = Nat.card blockOrbit := by
@@ -556,8 +563,13 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
                 simpa [MulAction.orbitRel_apply] using hrel
               rcases MulAction.mem_orbit_iff.mp hωout_orbit with ⟨p0, hp0⟩
               rcases MulAction.mem_orbit_iff.mp x.2.2 with ⟨z, hz⟩
-              refine ⟨⟨z, hzpowers_le_P z.property⟩ * p0, ?_⟩
-              simpa [mul_smul, hp0] using hz⟩
+              let p : P := ⟨(z : Q), hzpowers_le_P (show (z : Q) ∈ Subgroup.zpowers U₀ from z.2)⟩
+              refine ⟨p * p0, ?_⟩
+              calc
+                (p * p0) • δ.out = p • (p0 • δ.out) := by rw [mul_smul]
+                _ = p • x.1.1.out := by rw [hp0]
+                _ = (z : Q) • x.1.1.out := rfl
+                _ = x.2 := hz⟩
           refine Equiv.ofBijective f ⟨?_, ?_⟩
           · intro x y hxy
             rcases x with ⟨ωx, ax⟩
@@ -595,9 +607,8 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
             let ωf : blockCycles := ⟨ω, hω_block⟩
             have hy_fine : (y : Q ⧸ P) ∈ MulAction.orbit (Subgroup.zpowers U₀) ωf.1.out := by
               have hmk : (Quotient.mk'' (y : Q ⧸ P) : Ω) =
-                  (Quotient.mk'' ω.out : Ω) := by
-                change (Quotient.mk'' (y : Q ⧸ P) : Ω) = (Quotient.mk'' ω.out : Ω)
-                exact (Quotient.out_eq' ω).symm
+                  (Quotient.mk'' ω.out : Ω) :=
+                (Quotient.out_eq' ω).symm
               have hrel : (MulAction.orbitRel (Subgroup.zpowers U₀) (Q ⧸ P))
                   (y : Q ⧸ P) ω.out :=
                 Quotient.exact hmk
@@ -1005,8 +1016,13 @@ private theorem huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow_le_gru
           _ = (Finset.univ.toList.map (fun ω : blockCycles => πD (blockRawFactor ω))).prod := by
             exact (Finset.prod_map_toList Finset.univ (fun ω : blockCycles => πD (blockRawFactor ω))).symm
           _ = πD ((Finset.univ.toList.map (fun ω : blockCycles => blockRawFactor ω)).prod) := by
-            simpa [List.map_map] using
-              (map_list_prod πD (Finset.univ.toList.map (fun ω : blockCycles => blockRawFactor ω))).symm
+            calc
+              (Finset.univ.toList.map (fun ω : blockCycles => πD (blockRawFactor ω))).prod
+                  = (List.map (⇑πD ∘ (fun ω : blockCycles => blockRawFactor ω)) Finset.univ.toList).prod := rfl
+              _ = (List.map πD (Finset.univ.toList.map (fun ω : blockCycles => blockRawFactor ω))).prod := by
+                simp [List.map_map]
+              _ = πD ((Finset.univ.toList.map (fun ω : blockCycles => blockRawFactor ω)).prod) :=
+                (map_list_prod πD (Finset.univ.toList.map (fun ω : blockCycles => blockRawFactor ω))).symm
           _ = πD ⟨g⁻¹ * U₀ ^ blockPower * g, hblockPower_conj_mem_P⟩ := by
             rw [hlist_raw_prod]
       calc

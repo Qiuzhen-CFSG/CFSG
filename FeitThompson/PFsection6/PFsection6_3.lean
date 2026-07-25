@@ -127,7 +127,7 @@ public theorem theorem_6_3_commutator_le_of_maximal
             Subgroup.subgroupOf_sup (A := B) (A' := C) (B := H)
               (hBA.le.trans hAH) hC_le_H
       rw [hsubsup, Subgroup.map_sup]
-      exact sup_le (by simpa [Bsub, hBsub_map_bot]) hCimage_le
+      exact sup_le (by simp [Bsub, hBsub_map_bot]) hCimage_le
     exact hcomm_lt.not_ge (hN_le_Eimage.trans hEimage_le)
   have hC_le_E : C ≤ E := le_sup_right
   intro x hx

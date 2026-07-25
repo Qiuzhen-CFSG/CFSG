@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection6.lemma_6_3_a_2
 
-open scoped MatrixGroups Pointwise TensorProduct
+open scoped MatrixGroups Pointwise TensorProduct commutatorElement IsMulCommutative
 
 /-! # lemma_6_3_b_1 from BG Section 6 -/
 
@@ -30,6 +30,9 @@ public theorem lemma_6_3_b_1
       Nat.eq_one_of_dvd_coprimes hK_coprime hK_dvd_p (dvd_rfl : Nat.card K ∣ Nat.card K)
     exact (Subgroup.card_eq_one (H := K)).1 hK_card_one
   let N : Subgroup G := pPrimeCore p G
+  letI : N.Normal := by
+    dsimp [N]
+    exact pPrimeCore_normal
   have hN_le_D : N ≤ D := pPrimeCore_le_of_quotient_eq_bot (G := G) (p := p) (N := D) hcoreQbot
   let q : G →* (G ⧸ N) := QuotientGroup.mk' N
   let Dq : Subgroup (G ⧸ N) := D.map q
@@ -43,7 +46,7 @@ public theorem lemma_6_3_b_1
     letI : Group.IsNilpotent ↥D := hdn
     infer_instance
   have hDq_nil : Group.IsNilpotent ↥Dq := by
-    exact nilpotent_of_surjective eDq.toMonoidHom eDq.surjective
+    exact Group.nilpotent_of_surjective eDq.toMonoidHom eDq.surjective
   have hcoreQN : pPrimeCore p (G ⧸ N) = ⊥ := by
     simpa [N] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
   have hDq_p : IsPGroup p Dq :=
@@ -54,7 +57,7 @@ public theorem lemma_6_3_b_1
     calc
       Dq = D.map q := rfl
       _ = derivedSubgroup (G ⧸ N) := by
-        simpa [D, derivedSubgroup, hq_top] using
+        simpa [D, derivedSubgroup, commutator, hq_top] using
           (Subgroup.map_commutator (H₁ := (⊤ : Subgroup G)) (H₂ := (⊤ : Subgroup G)) q)
   have hQab_card : Nat.card ((G ⧸ N) ⧸ derivedSubgroup (G ⧸ N)) = p := by
     calc
@@ -88,7 +91,7 @@ public theorem lemma_6_3_b_1
         Subgroup.closure
           (((derivedSubgroup (G ⧸ N) : Subgroup (G ⧸ N)) : Set (G ⧸ N)) ∪
             Set.range (fun x : G ⧸ N => x ^ p)) := by
-    simpa [Φ, derivedSubgroup, derivedSeries_one] using
+    simpa [Φ, derivedSubgroup, derivedSeries_one, commutator] using
       (frattini_eq_closure_commutator_union_powers (R := G ⧸ N) (p := p))
   have hcomm_le_Φ : derivedSubgroup (G ⧸ N) ≤ Φ := by
     intro x hx
@@ -150,7 +153,8 @@ public theorem lemma_6_3_b_1
   have hQ_cyclic : IsCyclic (G ⧸ N) := by
     exact (isCyclic_iff_exists_zpowers_eq_top).2 ⟨x, by simpa [H] using hH_top⟩
   letI : IsCyclic (G ⧸ N) := hQ_cyclic
-  letI : CommGroup (G ⧸ N) := hQ_cyclic.commGroup
+  letI : IsMulCommutative (G ⧸ N) := IsCyclic.isMulCommutative
+  letI : CommGroup (G ⧸ N) := IsMulCommutative.instCommGroup
   have hderivedQ_bot : derivedSubgroup (G ⧸ N) = ⊥ := by
     have htop_cent :
         (⊤ : Subgroup (G ⧸ N)) ≤
@@ -162,7 +166,7 @@ public theorem lemma_6_3_b_1
     have hcomm_bot :
         ⁅(⊤ : Subgroup (G ⧸ N)), (⊤ : Subgroup (G ⧸ N))⁆ = ⊥ :=
       (Subgroup.commutator_eq_bot_iff_le_centralizer).2 htop_cent
-    simpa [derivedSubgroup] using hcomm_bot
+    simpa [derivedSubgroup, commutator] using hcomm_bot
   have hDq_bot : Dq = ⊥ := by
     exact hderivedQ.trans hderivedQ_bot
   have hD_le_N : D ≤ N := by
@@ -180,4 +184,3 @@ public theorem lemma_6_3_b_1
     exact hq_dvd
   · intro q hq_mem hq_dvd_idx
     exact (Nat.not_coprime_of_dvd_of_dvd q.2.one_lt hq_mem hq_dvd_idx) hcop_index
-

@@ -176,10 +176,10 @@ public theorem section14_pf39_data_of_etaData
     ∃ hppos : 0 < p,
     ∃ ωFin : Fin q → Fin p → Section1.ClassFunction W,
     ∃ σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G,
-    ∃ h31 : Section3.hypothesis_3_1_statement W1 W2 W,
-    ∃ hω : Section3.notation_3_3_statement W1 W2 W
+    ∃ _ : Section3.hypothesis_3_1_statement W1 W2 W,
+    ∃ _ : Section3.notation_3_3_statement W1 W2 W
       (Fin q) (Fin p) ⟨0, hqpos⟩ ⟨0, hppos⟩ ωFin,
-    ∃ hσ : Section3.theorem_3_2_map_statement W1 W2 W σ,
+    ∃ _ : Section3.theorem_3_2_map_statement W1 W2 W σ,
       (∀ i j, η i j = σ (ωFin i j)) := by
   rcases heta with
     ⟨ωNat, ηNat, _μ, _ν, _μsum, _νsum, _δ, _δ', σ, hNotationFor, hηFin⟩
@@ -772,10 +772,10 @@ public theorem section14_pf39_package_of_etaData
     ∃ hppos : 0 < p,
     ∃ ωFin : Fin q → Fin p → Section1.ClassFunction W,
     ∃ σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G,
-    ∃ h31 : Section3.hypothesis_3_1_statement W1 W2 W,
-    ∃ hω : Section3.notation_3_3_statement W1 W2 W
+    ∃ (h31 : Section3.hypothesis_3_1_statement W1 W2 W),
+    ∃ _ : Section3.notation_3_3_statement W1 W2 W
       (Fin q) (Fin p) ⟨0, hqpos⟩ ⟨0, hppos⟩ ωFin,
-    ∃ hσ : Section3.theorem_3_2_map_statement W1 W2 W σ,
+    ∃ (hσ : Section3.theorem_3_2_map_statement W1 W2 W σ),
       Section3.proposition_3_9_statement W1 W2 W σ h31 hσ ∧
         (∀ i j, ∃ a : ℕ,
           Section3.exactCharacterValueOrder (ωFin i j) a) ∧
@@ -903,7 +903,7 @@ public theorem section14_not_mem_components_of_mem_G0
       ((g ∉ tildeAM ∧ g ∉ conjugatesOfPuncturedSubgroup W) ∧
           g ∉ conjugatesOfPuncturedSubgroup P) ∧
         g ∉ conjugatesOfPuncturedSubgroup Q := by
-    simpa [theorem_14_11_3_G0, Set.mem_diff, Set.mem_union, not_or] using hg
+    simpa [theorem_14_11_3_G0, Set.mem_sdiff, Set.mem_union, not_or] using hg
   rcases h with ⟨⟨⟨hnotTilde, hnotW⟩, hnotP⟩, hnotQ⟩
   exact ⟨hnotTilde, hnotW, hnotP, hnotQ⟩
 
@@ -1366,7 +1366,7 @@ public theorem section14_eta_conjugate_entry_of_etaData
   · have hij_base : (i, j) = base := by
       by_contra hne
       apply hij
-      simpa [base, hne]
+      simp [base, hne]
     have hi : (i : ℕ) = 0 := by
       simpa [base] using congrArg (fun ij : Fin q × Fin p => (ij.1 : ℕ)) hij_base
     have hj : (j : ℕ) = 0 := by
@@ -1533,8 +1533,7 @@ public theorem section14_dadeSupport_eq_of_dadeTransform_eq
         Section2.dadeTransform R₁ hA1 (Section1.principalCharacter L) g = 1 := by
       have hex : ∃ a ∈ A, ∃ h ∈ R₁ a, Section2.conjugateIn g (a * h) :=
         ⟨a, ha, r, hr, hconj⟩
-      dsimp [Section2.dadeTransform]
-      simp [hex, Section1.principalCharacter]
+      simp [Section2.dadeTransform, Section1.principalCharacter, hex]
     have hright :
         Section2.dadeTransform R₂ hA2 (Section1.principalCharacter L) g = 0 :=
       Section2.dadeTransform_eq_zero_of_not_mem_support
@@ -1553,8 +1552,7 @@ public theorem section14_dadeSupport_eq_of_dadeTransform_eq
         Section2.dadeTransform R₂ hA2 (Section1.principalCharacter L) g = 1 := by
       have hex : ∃ a ∈ A, ∃ h ∈ R₂ a, Section2.conjugateIn g (a * h) :=
         ⟨a, ha, r, hr, hconj⟩
-      dsimp [Section2.dadeTransform]
-      simp [hex, Section1.principalCharacter]
+      simp [Section2.dadeTransform, Section1.principalCharacter, hex]
     have heq := congrFun (hτ (Section1.principalCharacter L)) g
     rw [hleft, hright] at heq
     norm_num at heq
@@ -1852,7 +1850,7 @@ public theorem section14_typeP_MF_natCard_eq_prime_pow_of_case_9_7_b_source
     ⟨hnormal, hcardQuot⟩
   let H0sub : Subgroup MF := (⊥ : Subgroup G).subgroupOf MF
   haveI : H0sub.Normal := by
-    simpa [H0sub] using hnormal
+    simp [H0sub]
   have hH0sub_bot : H0sub = ⊥ := by
     dsimp [H0sub]
     exact section14_subgroupOf_eq_bot_of_eq_bot
@@ -1940,7 +1938,7 @@ public theorem section14_exists_conj_prime_order_mem_sylow_centralized_of_not_co
     hXQ (Subgroup.mem_zpowers (x : G))
   let a : G := y * (x : G) * y⁻¹
   have haP : a ∈ (P : Subgroup G) := by
-    have hxSmul : a ∈ (y • Q : Sylow p G) := by
+    have hxSmul : a ∈ ((y • Q : Sylow p G) : Subgroup G) := by
       change a ∈ MulAut.conj y • (Q : Set G)
       exact ⟨(x : G), hxQ, by simp [a, MulAut.conj_apply, mul_assoc]⟩
     simpa [hy] using hxSmul
@@ -1963,7 +1961,7 @@ public theorem section14_exists_conj_prime_order_mem_sylow_centralized_of_not_co
   have hcomm : Commute (y * g * y⁻¹) a := by
     dsimp [a]
     simpa [mul_assoc] using hcomm_xg.symm.conj y
-  exact ⟨by simp, by simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm⟩
+  exact ⟨by simp, by simpa [Subgroup.mem_centralizer_singleton_iff] using hcomm.eq⟩
 
 public theorem section14_exists_conj_typeP_MF_element_centralized_of_not_coprime_order
     {G : Type u} [Group G] [Finite G]
@@ -2173,7 +2171,7 @@ public theorem section14_section12FrobeniusJoinWithKernel_of_quotientFrobenius_b
   let S : Subgroup G := MF ⊔ U
   let N : Subgroup S := (⊥ : Subgroup G).subgroupOf S
   letI : N.Normal := by
-    simpa [N, S] using hnormal
+    simp [N, S]
   have hNbot : N = ⊥ :=
     section14_subgroupOf_eq_bot_of_eq_bot (C := (⊥ : Subgroup G)) (U := S) rfl
   let e : S ⧸ N ≃* S :=

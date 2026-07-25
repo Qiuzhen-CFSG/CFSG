@@ -158,7 +158,7 @@ private theorem theorem_13_4_difference_supportedOn_punctured
     simpa [Section1.degree_apply] using sub_eq_zero.mpr hdeg
   · have hxHsub : x ∉ (H.subgroupOf M : Set M) := by
       intro hxsub
-      exact hxH (by simpa using hxsub)
+      exact hxH (by simpa using (Subgroup.mem_subgroupOf.1 hxsub))
     simp [hφ x hxHsub, hψ x hxHsub]
 
 private theorem theorem_13_4_conjugateCharacter_supportedOn

@@ -5,7 +5,7 @@ public import FeitThompson.PFsection9.PFsection9_8
 
 noncomputable section
 
-open scoped Pointwise
+open scoped Pointwise IsMulCommutative commutatorElement
 
 namespace Section9
 
@@ -462,7 +462,7 @@ private theorem quotient_internalDirectProduct_top_of_le_inf_mul_surjective_sec9
         (QuotientGroup.eq_one_iff (N := A) (x := h)).2 hhA
       have hx_one : x = 1 := by
         rw [← hhx, hq_one]
-      simpa [hx_one]
+      simp [hx_one]
     · exact bot_le
   · intro x _hx
     rcases QuotientGroup.mk'_surjective (N := A) x with ⟨l, rfl⟩
@@ -1224,7 +1224,7 @@ private theorem theorem_9_9_MF_U_internalSemidirect_ambientDerived_sec9
   have hsupM :
       (MF.subgroupOf M) ⊔ (U.subgroupOf M) = D.subgroupOf M := by
     rw [← Subgroup.subgroupOf_sup (A := MF) (A' := U) (B := M) hMFleM hUleM]
-    simpa [D, hD_eq]
+    simp [D, hD_eq]
   have hdisj : Disjoint K W := by
     rw [disjoint_iff]
     apply le_antisymm
@@ -1261,7 +1261,9 @@ private theorem inertiaSubgroup_eq_of_semidirect_no_nontrivial_complement_fixed_
     intro x hx
     change Section1.conjugateOnNormal K X x = X
     funext h
-    simpa [Section1.conjugateOnNormal] using hXclass ⟨x, hx⟩ h
+    unfold Section1.conjugateOnNormal
+    change X ((⟨x, hx⟩ : K) * h * (⟨x, hx⟩ : K)⁻¹) = X h
+    exact hXclass ⟨x, hx⟩ h
   apply le_antisymm
   · intro g hgI
     rcases hsemi.mul_surjective g (by trivial) with ⟨k, hkK, w, hwW, hkw⟩
@@ -1319,7 +1321,9 @@ private theorem inertiaSubgroup_eq_of_semidirect_fixed_complement_mem_sec9
     intro x hx
     change Section1.conjugateOnNormal K X x = X
     funext h
-    simpa [Section1.conjugateOnNormal] using hXclass ⟨x, hx⟩ h
+    unfold Section1.conjugateOnNormal
+    change X ((⟨x, hx⟩ : K) * h * (⟨x, hx⟩ : K)⁻¹) = X h
+    exact hXclass ⟨x, hx⟩ h
   apply le_antisymm
   · intro g hgI
     rcases hsemi.mul_surjective g (by trivial) with ⟨b, hbB, w, hwW, hbw⟩
@@ -1557,9 +1561,9 @@ private theorem degree_eq_one_of_irreducible_subgroupInKernel_commutator_sec9
       (QuotientGroup.mk'_surjective (_root_.commutator G))
     simpa [hcomp_eq] using hρirr
   haveI : IsMulCommutative (G ⧸ _root_.commutator G) :=
-    ⟨Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
+    Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
       intro x hx
-      exact hx)⟩
+      exact hx)
   have hn : n = 1 := by
     haveI : Representation.IsIrreducible ρq := hρqirr
     simpa using
@@ -1643,7 +1647,8 @@ private theorem subgroupInKernel'_subgroupOfClassFunction_pf99_sec9
   let aH : A.subgroupOf H := ⟨⟨(((a : H.subgroupOf T) : T) : G), hAH haA⟩, by
     simpa [Subgroup.mem_subgroupOf] using haA⟩
   have ha := hθker aH
-  simpa [Section1.subgroupOfClassFunction, aH] using ha
+  simpa [Section1.subgroupOfClassFunction, aH,
+    Section1.degree_subgroupOfClassFunction] using ha
 
 private theorem subgroupInKernel'_of_subgroupOfClassFunction_pf99_sec9
     {G : Type u} [Group G] {H T A : Subgroup G}
@@ -1657,7 +1662,7 @@ private theorem subgroupInKernel'_of_subgroupOfClassFunction_pf99_sec9
   have haA : ((a : H) : G) ∈ A := by
     exact (a : A.subgroupOf H).property
   let aT : H.subgroupOf T := ⟨⟨((a : H) : G), hAT haA⟩, by
-    simpa [Subgroup.mem_subgroupOf] using (a : H).property⟩
+    exact (a : H).property⟩
   have haT : (aT : T) ∈ A.subgroupOf T := by
     simpa [aT, Subgroup.mem_subgroupOf] using haA
   let aHT : (A.subgroupOf T).subgroupOf (H.subgroupOf T) := ⟨aT, haT⟩
@@ -2074,7 +2079,8 @@ private theorem monoidHom_mem_commutator_of_mem_sec9
   · rintro y ⟨a, b, rfl⟩
     exact Subgroup.subset_closure
       ⟨f a, f b, by rw [map_commutatorElement]⟩
-  · simpa using (_root_.commutator H).one_mem
+  · rw [map_one]
+    exact (Subgroup.closure (commutatorSet H)).one_mem
   · intro a b _ha_mem _hb_mem ha hb
     simpa [map_mul] using (Subgroup.closure (commutatorSet H)).mul_mem ha hb
   · intro a _ha_mem ha
@@ -2114,7 +2120,7 @@ private theorem commutator_le_subgroupOf_of_isComplement'_pairwise_sec9
     exact (QuotientGroup.eq_one_iff (N := N.subgroupOf K) ⁅u, v⁆).mpr (by
       rw [Subgroup.mem_subgroupOf]
       exact hBB (Subgroup.commutator_mem_commutator huB hvB))
-  apply Std.Commutative.mk
+  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
   intro x
   obtain ⟨x0, rfl⟩ := QuotientGroup.mk'_surjective (N.subgroupOf K) x
   intro y
@@ -2263,7 +2269,6 @@ private theorem theorem_9_9_HC_commutator_le_H0Cprime_subgroupOf_sec9
         ⟨(((x : Dm) : M) : G), by
           have hxHCm : ((x : Dm) : M) ∈ HC.subgroupOf M := by
             have hxK : (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm := by
-              change (x : Dm) ∈ (HC.subgroupOf M).subgroupOf Dm
               exact x.property
             change ((x : Dm) : M) ∈ HC.subgroupOf M at hxK
             exact hxK
@@ -2384,7 +2389,8 @@ private theorem scalar_smul_one_ne_zero_sec9
   intro ha
   rcases hunit with ⟨f, hf⟩
   have hzero : (0 : Module.End ℂ V) = 1 := by
-    simpa [ha] using hf
+    subst a
+    simpa only [zero_smul, zero_mul] using hf
   exact zero_ne_one hzero
 
 private theorem representation_scalar_of_commutator_kernel_sec9
@@ -2438,7 +2444,10 @@ private theorem representation_scalar_of_commutator_kernel_sec9
         (f : Module.End ℂ V) := by
     simpa using congrArg
       (fun F : Representation.IntertwiningMap ρ ρ => (F : Module.End ℂ V)) ha
-  simpa [f, Representation.IntertwiningMap.algebraMap_apply] using hlin.symm
+  ext v
+  simpa [Representation.IntertwiningMap.algebraMap_apply, f,
+    Representation.IntertwiningMap.smul_apply] using
+    congrArg (fun F : Module.End ℂ V => F v) hlin.symm
 
 private theorem exists_nonprincipal_quotient_linear_character_of_central_subgroup_sec9
     {L : Type u} [Group L] [Finite L]
@@ -2522,8 +2531,6 @@ private theorem exists_nonprincipal_quotient_linear_character_of_central_subgrou
         (χ (QuotientGroup.mk' (A.subgroupOf B) b) : ℂ) := by
     intro b
     rw [hψeq]
-    change ρ.character (b : L) =
-      (n : ℂ) * (χ (QuotientGroup.mk' (A.subgroupOf B) b) : ℂ)
     have hχb :
         (χ (QuotientGroup.mk' (A.subgroupOf B) b) : ℂ) = scalar b := by
       simp [χ, lam]
@@ -2535,7 +2542,7 @@ private theorem exists_nonprincipal_quotient_linear_character_of_central_subgrou
     apply hψnotB
     intro b
     rw [hvalue b, hχ]
-    simp [hψeq, Section1.degree, Representation.character]
+    simp [hψeq, Section1.degree]
   · intro b
     rw [hvalue b]
     rw [hψeq]
@@ -2552,7 +2559,7 @@ private theorem linearCharacter_eq_one_of_fixed_by_fixedPointFree_sec9
     (hχfix : ∀ q : Q, χ (a • q) = χ q) :
     χ = 1 := by
   classical
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   let φ : Q → Q := fun q => (a • q) * q⁻¹
   have hφinj : Function.Injective φ := by
     intro x y hxy
@@ -2638,7 +2645,11 @@ private theorem theorem_9_9_nonprincipal_linear_character_fixed_U_mem_C_sec9
     have hcCMU : c ∈ CMU := by
       have hout_eq :
           QuotientGroup.mk' CMU hout = QuotientGroup.mk' CMU w⁻¹ := by
-        simpa [wbar, hout, CMU] using (Quotient.out_eq wbar)
+        calc
+          QuotientGroup.mk' CMU hout = wbar := by
+            simpa only [QuotientGroup.mk'_apply, hout] using
+              (Quotient.out_eq wbar)
+          _ = QuotientGroup.mk' CMU w⁻¹ := rfl
       exact QuotientGroup.eq_iff_div_mem.mp hout_eq
     have hcC : ((c : U) : G) ∈ C := by
       simpa [CMU, Subgroup.mem_subgroupOf] using hcCMU
@@ -2844,7 +2855,10 @@ private theorem theorem_9_9_fixed_nonMF_HC_constituent_U_component_mem_C_sec9
       theorem_9_9_HC_MF_commutator_le_H0_sec9
         M MF U W1 W2 H0 C p q u hcase
         (Subgroup.commutator_mem_commutator hlHC hbMF)
-    simpa [A, A0, Subgroup.mem_subgroupOf] using hcommG
+    change
+      ⁅((((l : K) : Dm) : M) : G),
+        (((((b : B) : K) : Dm) : M) : G)⁆ ∈ H0
+    exact hcommG
   have hψkerA : Section1.subgroupInKernel' ψ A := by
     simpa [A, A0, K, Dm, D] using hψkerH0
   have hψnotB : ¬ Section1.subgroupInKernel' ψ B := by
@@ -2874,7 +2888,8 @@ private theorem theorem_9_9_fixed_nonMF_HC_constituent_U_component_mem_C_sec9
     have hxA : eBMF.symm x ∈ A.subgroupOf B := by
       change ((eBMF.symm x : B) : K) ∈ A
       have hxH0 : (x : G) ∈ H0 := by
-        simpa [Subgroup.mem_subgroupOf] using hx
+        change (x : G) ∈ H0 at hx
+        exact hx
       simpa [eBMF, A, A0, B, B0, K, Dm, D, Subgroup.mem_subgroupOf]
         using hxH0
     have hmk_one_raw :
@@ -2886,16 +2901,13 @@ private theorem theorem_9_9_fixed_nonMF_HC_constituent_U_component_mem_C_sec9
         χ (((eBMF.symm x : B) : B ⧸ A.subgroupOf B)) =
           χ (((1 : B) : B ⧸ A.subgroupOf B)) :=
       congrArg χ hmk_one_raw
-    have hχone : χ (qB 1) = 1 :=
-      (χ.comp qB).map_one
     calc
       χ ((@QuotientGroup.mk' B _ (A.subgroupOf B)
           hA_subgroupOf_B_normal) (eBMF.symm x)) =
           χ ((@QuotientGroup.mk' B _ (A.subgroupOf B)
             hA_subgroupOf_B_normal) 1) := by
             simpa only [QuotientGroup.mk'_apply] using hχmk
-      _ = 1 := by
-            simpa [qB] using hχone
+      _ = 1 := (χ.comp qB).map_one
   let χMF : (MF ⧸ H0MF) →* ℂˣ :=
     QuotientGroup.lift H0MF
       (χ.comp (qB.comp eBMF.symm.toMonoidHom))
@@ -3375,7 +3387,8 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
         ∀ x : MF ⧸ H0MF, χ ((a⁻¹ : U) • x) = χ x := by
       intro x
       have h := congrFun (congrArg DFunLike.coe hfix) x
-      simpa [characterGroupContragredientMulDistribMulAction_sec9] using h
+      change χ ((a⁻¹ : U) • x) = χ x at h
+      exact h
     have hmemC : (((a⁻¹ : U) : U) : G) ∈ C :=
       theorem_9_9_nonprincipal_linear_character_fixed_U_mem_C_sec9
         M MF U W1 W2 H0 C p q u χ a⁻¹ hcase hχne hUnormMF hH0invU
@@ -3396,7 +3409,7 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
     simpa [H0MF] using hcardQ
   have hcharCard : Nat.card ((MF ⧸ H0MF) →* ℂˣ) = p ^ q := by
     let Q := MF ⧸ H0MF
-    letI : CommGroup Q := CommGroup.ofIsMulCommutative
+    letI : CommGroup Q := IsMulCommutative.instCommGroup
     haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
       Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
     have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q :=
@@ -3409,7 +3422,7 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
     have hCsub : C.subgroupOf U = ⊥ := by
       rw [hCbot]
       ext x
-      simp [Subgroup.mem_subgroupOf]
+      simp
     let e1 : U ⧸ C.subgroupOf U ≃* U ⧸ (⊥ : Subgroup U) :=
       QuotientGroup.quotientMulEquivOfEq hCsub
     let e : U ⧸ C.subgroupOf U ≃* U :=
@@ -4273,7 +4286,7 @@ private theorem theorem_9_9_nontrivial_C_exists_HC_character_source_bridge_sec9
     change ((x : HCm) : M) ∈ A0
     simpa [A0, HCm, Dm, D, incl, Subgroup.mem_subgroupOf] using hmem
   have hQcomm : IsMulCommutative (HCm ⧸ A) :=
-    ⟨Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr hcomm_le_A⟩
+    Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr hcomm_le_A
   letI : IsMulCommutative (HCm ⧸ A) := hQcomm
   have hQprod :
       Section2.IsInternalDirectProduct
@@ -4431,8 +4444,16 @@ private theorem theorem_9_9_nontrivial_C_exists_HC_character_source_bridge_sec9
           ((Section3.internalDirectProductLinearCharacter hQprod χMF χC)
             (Subgroup.topEquiv.symm (qHC m)) : ℂ) = 1 := by
         simpa [lam, lamTop] using hval
-      simpa [Section3.linearCharacterProductOverInternalDirectProduct, lamTop, hmq]
-        using htop
+      have hy :
+          (y : (⊤ : Subgroup (HCm ⧸ A))) =
+            Subgroup.topEquiv.symm (qHC m) := by
+        apply Subtype.ext
+        exact hmq.symm
+      change
+        ((Section3.internalDirectProductLinearCharacter hQprod χMF χC)
+          (y : (⊤ : Subgroup (HCm ⧸ A))) : ℂ) = 1
+      rw [hy]
+      exact htop
     have hχone :=
       (Section3.linearCharacterProductOverInternalDirectProduct_rightKernel_iff
         hQprod χMF χC).1 hprodKerMF
@@ -4458,8 +4479,16 @@ private theorem theorem_9_9_nontrivial_C_exists_HC_character_source_bridge_sec9
           ((Section3.internalDirectProductLinearCharacter hQprod χMF χC)
             (Subgroup.topEquiv.symm (qHC m)) : ℂ) = 1 := by
         simpa [lam, lamTop] using hval
-      simpa [Section3.linearCharacterProductOverInternalDirectProduct, lamTop, hmq]
-        using htop
+      have hy :
+          (y : (⊤ : Subgroup (HCm ⧸ A))) =
+            Subgroup.topEquiv.symm (qHC m) := by
+        apply Subtype.ext
+        exact hmq.symm
+      change
+        ((Section3.internalDirectProductLinearCharacter hQprod χMF χC)
+          (y : (⊤ : Subgroup (HCm ⧸ A))) : ℂ) = 1
+      rw [hy]
+      exact htop
     have hχone :=
       (Section3.linearCharacterProductOverInternalDirectProduct_leftKernel_iff
         hQprod χMF χC).1 hprodKerH0C
@@ -4943,9 +4972,9 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_induced_mem_SH0C_sec9
     intro x
     apply Units.ext
     let xM : MF.subgroupOf M := ⟨⟨(x : G), hMFleM x.2⟩, by
-      simpa [Subgroup.mem_subgroupOf] using x.2⟩
+      simp [Subgroup.mem_subgroupOf]⟩
     let xTop : (MF.subgroupOf M).subgroupOf (MF.subgroupOf M) := ⟨xM, by
-      simpa [Subgroup.mem_subgroupOf, xM] using x.2⟩
+      simp [xM]⟩
     have hval := hkerMF xTop
     have hdeg : Section1.degree ψMF = 1 := by
       dsimp [ψMF, ψG]
@@ -5109,9 +5138,9 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_data_sec9
     intro x
     apply Units.ext
     let xM : MF.subgroupOf M := ⟨⟨(x : G), hMFleM x.2⟩, by
-      simpa [Subgroup.mem_subgroupOf] using x.2⟩
+      simp [Subgroup.mem_subgroupOf]⟩
     let xTop : (MF.subgroupOf M).subgroupOf (MF.subgroupOf M) := ⟨xM, by
-      simpa [Subgroup.mem_subgroupOf, xM] using x.2⟩
+      simp [xM]⟩
     have hval := hkerMF xTop
     have hdeg : Section1.degree ψMF = 1 := by
       dsimp [ψMF, ψG]
@@ -5181,7 +5210,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_injective_
     simp
   let eHC : HCm ≃* MF.subgroupOf M := MulEquiv.subgroupCongr hHCeq
   let xM : MF.subgroupOf M := ⟨⟨(x : G), hMFleM x.2⟩, by
-    simpa [Subgroup.mem_subgroupOf] using x.2⟩
+    simp [Subgroup.mem_subgroupOf]⟩
   let xHC : HCm := eHC.symm xM
   have hx : eHC xHC = xM := by
     simp [xHC]
@@ -5330,7 +5359,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_smul_eq_co
       apply Subtype.ext
       change (((eHC yHC : MF.subgroupOf M) : M) : G) =
         (((a⁻¹ : U) • xMF : MF) : G)
-      simp [xMF, yMF, xHC, yHC, eHC, aD, HCm, hHCeq,
+      simp [xMF, xHC, yHC, eHC, aD, HCm,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, mul_assoc]
     have hsmul_mk :
         (a⁻¹ : U) • QuotientGroup.mk' H0MF xMF =
@@ -5395,7 +5424,8 @@ private theorem theorem_9_9_C_bot_intermediate_eq_of_induced_eq_of_no_irreducibl
       theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_sec9
           M MF H0 C hCbot η.1 ∈ SH0C := by
     simpa [theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_sec9,
-      H0MF] using
+      theorem_9_9_C_bot_quotientLinearCharacter_intermediateCharacter_sec9,
+      theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_sec9, H0MF] using
       theorem_9_9_C_bot_quotientLinearCharacter_induced_mem_SH0C_sec9
         M MF U W1 W2 H0 C p q u SH0C hcase hSH0C hCbot η.1 η.2
   have hηred :
@@ -5701,7 +5731,7 @@ private theorem theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_smul_
       apply Subtype.ext
       change (((eHC yHC : MF.subgroupOf M) : M) : G) =
         (((a⁻¹ : U) • xMF : MF) : G)
-      simp [xMF, yMF, xHC, yHC, eHC, aD, HCm, hHCeq,
+      simp [xMF, xHC, yHC, eHC, aD, HCm,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, mul_assoc]
     have hsmul_mk :
         (a⁻¹ : U) • QuotientGroup.mk' H0MF xMF =
@@ -5873,7 +5903,8 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_le_SH0
         (⟨theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_sec9
             M MF H0 C hCbot ψ.1, by
           simpa [theorem_9_9_C_bot_quotientLinearCharacter_inducedCharacter_sec9,
-            H0MF] using
+            theorem_9_9_C_bot_quotientLinearCharacter_intermediateCharacter_sec9,
+            theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_sec9, H0MF] using
             theorem_9_9_C_bot_quotientLinearCharacter_induced_mem_SH0C_sec9
               M MF U W1 W2 H0 C p q u SH0C hcase hSH0C hCbot ψ.1 ψ.2⟩ : β))
       (by

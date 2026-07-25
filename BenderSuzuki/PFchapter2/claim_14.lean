@@ -363,7 +363,7 @@ private lemma claim14_exists_a3_preimage
       calc
         2 = orderOf s := hs_order.symm
         _ = orderOf sR1 := by
-          simpa [sR1] using Subgroup.orderOf_coe sR1
+          simp [sR1]
         _ = 3 ^ k := hk
     cases k with
     | zero => norm_num at hpow
@@ -594,7 +594,12 @@ private lemma claim14_pgroup_le_centralizer_of_commutator_eq
     exact Subgroup.mem_bot.mp hact_mem
   have hrNker : rN ∈ Z.normalizerMonoidHom.ker := by
     rw [MonoidHom.mem_ker]
-    simpa [autHom, incl, rR1, rN] using hact
+    change Z.normalizerMonoidHom (incl rR1) = 1 at hact
+    have hincl_eq : incl rR1 = rN := by
+      apply Subtype.ext
+      rfl
+    rw [hincl_eq] at hact
+    exact hact
   rw [Subgroup.normalizerMonoidHom_ker] at hrNker
   exact hrNker
 
@@ -613,7 +618,7 @@ private lemma claim14_center_R_contains_Z1_sup_P
       rw [← map_mul, ← map_mul, mul_comm]⟩⟩
   letI : Fact (Nat.Prime 3) := ⟨by decide⟩
   letI : IsMulCommutative P :=
-    ⟨(isCyclic_of_prime_card hPcard).commutative⟩
+    (isCyclic_of_prime_card hPcard).isMulCommutative
   have hT_le_CT : T ≤ Subgroup.centralizer (T : Set G) := by
     intro x hxT
     rw [Subgroup.mem_centralizer_iff]
@@ -719,9 +724,9 @@ private theorem claim14_center_eq_of_index_nine_of_noncomm
       exfalso
       apply hnoncomm
       refine ⟨⟨fun a b => ?_⟩⟩
-      exact commutative_of_cyclic_center_quotient
-        (QuotientGroup.mk' Z) (by
-          rw [QuotientGroup.ker_mk']) a b
+      exact
+        ((QuotientGroup.mk' Z).isMulCommutative_of_isCyclic_of_ker_le_center
+          (by rw [QuotientGroup.ker_mk'])).is_comm.comm a b
     · simpa using hZindex_pow
   have hrel_one : C0X.relIndex Z = 1 := by
     have hmul := Subgroup.relIndex_mul_index hC0X_le_Z
@@ -746,7 +751,7 @@ private theorem claim14_commutator_eq_of_two_index_nine
     (X C0 T Z0 : Subgroup G)
     (hC0center : C0 ≤ X ⊓ Subgroup.centralizer (X : Set G))
     (hC0index : (C0.subgroupOf X).index = 9)
-    (hT_le_X : T ≤ X)
+    (_hT_le_X : T ≤ X)
     (hT_norm : X ≤ Subgroup.normalizer (T : Set G))
     (hTindex : (T.subgroupOf X).index = 9)
     (hinter : T ⊓ C0 = Z0)
@@ -777,17 +782,13 @@ private theorem claim14_commutator_eq_of_two_index_nine
     intro n hn g
     exact (Subgroup.mem_normalizer_iff.mp (hT_norm g.property) n).1 hn⟩
   have hC0quot_card : Nat.card (X ⧸ C0X) = 3 ^ 2 := by
-    simpa only [Subgroup.index] using hC0index
+    simpa [C0X, Subgroup.index] using hC0index
   have hTquot_card : Nat.card (X ⧸ TX) = 3 ^ 2 := by
-    simpa only [Subgroup.index] using hTindex
-  have hC0quot_comm : Std.Commutative (· * · : X ⧸ C0X → _ → _) := by
-    letI : CommGroup (X ⧸ C0X) :=
-      IsPGroup.commGroupOfCardEqPrimeSq hC0quot_card
-    infer_instance
-  have hTquot_comm : Std.Commutative (· * · : X ⧸ TX → _ → _) := by
-    letI : CommGroup (X ⧸ TX) :=
-      IsPGroup.commGroupOfCardEqPrimeSq hTquot_card
-    infer_instance
+    simpa [TX, Subgroup.index] using hTindex
+  have hC0quot_comm : IsMulCommutative (X ⧸ C0X) :=
+    IsPGroup.isMulCommutative_of_card_eq_prime_sq hC0quot_card
+  have hTquot_comm : IsMulCommutative (X ⧸ TX) :=
+    IsPGroup.isMulCommutative_of_card_eq_prime_sq hTquot_card
   have hcomm_le_C0X : _root_.commutator X ≤ C0X :=
     Subgroup.Normal.quotient_commutative_iff_commutator_le.mp hC0quot_comm
   have hcomm_le_TX : _root_.commutator X ≤ TX :=
@@ -917,7 +918,9 @@ private lemma claim14_order_three_subgroups_card
       have hAB : A.1 = B.1 :=
         claim14_prime_card_subgroups_eq_of_common_nontrivial
           A.1 B.1 Nat.prime_three A.2 B.2 x.1.2
-            (by simpa [hxy] using y.1.2) x.2
+            (by
+              rw [hxy]
+              exact y.1.2) x.2
       have hAeqB : A = B := Subtype.ext hAB
       subst B
       have hxeqy : x = y := by
@@ -1829,7 +1832,7 @@ private theorem chapter2_claim14_center_action_sylow_source_interface
           calc
             2 = orderOf s := hs_order.symm
             _ = orderOf sX := by
-              simpa [sX] using Subgroup.orderOf_coe sX
+              simp [sX]
             _ = 3 ^ k := hk
         cases k with
         | zero => norm_num at hpow
@@ -1861,8 +1864,11 @@ private theorem chapter2_claim14_center_action_sylow_source_interface
         have hy_dvd := orderOf_dvd_natCard y
         rwa [hy_order] at hy_dvd
       have hrange_dvd_six : Nat.card phi.range ∣ 6 := by
-        have hdiv := phi.range.card_subgroup_dvd_card
-        simpa [Nat.card_perm, Nat.card_fin, Nat.factorial] using hdiv
+        have hperm_card : Nat.card (Equiv.Perm (Fin 3)) = 6 := by
+          rw [Nat.card_perm, Nat.card_fin]
+          norm_num [Nat.factorial]
+        rw [← hperm_card]
+        exact phi.range.card_subgroup_dvd_card
       have hrange_card : Nat.card phi.range = 6 := by
         have hsix_dvd_range : 6 ∣ Nat.card phi.range := by
           simpa using

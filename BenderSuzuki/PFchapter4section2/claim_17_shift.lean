@@ -89,6 +89,14 @@ public theorem claim_17_u_closed_form_ratio
       u i =
         (1 + ((beta + beta⁻¹) / (beta ^ i + (beta⁻¹) ^ i)) ^ 2) *
           u (i + 1) := by
+  have _ := sigma
+  have _ := hseq_zeta_ne_one
+  have _ := hseq_alpha_ne_zero
+  have _ := hseq_tau_nonzero
+  have _ := hseq_zeta_order
+  have _ := hseq_recurrence_u
+  have _ := hseq_recurrence_d
+  have _ := hseq_beta_characteristic_root
   intro i hi hlt
   have hle : i ≤ m - 1 := by omega
   have hsucc_le : i + 1 ≤ m - 1 := by omega
@@ -122,6 +130,11 @@ public theorem claim_17_d_sigma_inverse
     ∀ i : ℕ, 1 ≤ i → i < m - 1 →
       (d i * sigma (d i))⁻¹ =
         ((beta + beta⁻¹) / (beta ^ i + (beta⁻¹) ^ i)) ^ 2 := by
+  have _ := hseq_zeta_ne_one
+  have _ := hseq_tau_nonzero
+  have _ := hseq_zeta_order
+  have _ := hseq_recurrence_u
+  have _ := hseq_recurrence_d
   intro i hi hlt
   have hle : i ≤ m - 1 := by omega
   have hden := hseq_closed.denominator_nonzero i hi hle

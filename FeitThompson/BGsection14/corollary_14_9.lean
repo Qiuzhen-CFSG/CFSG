@@ -409,7 +409,7 @@ public theorem corollary_14_9_b
                 (H := M) (Subgroup.le_normalizer m.property)] using hy0Mσ0
           have hy1centMap :
               a⁻¹ * y' * a ∈ (elementCentralizerIn H y).conjBy a⁻¹ := by
-            exact Subgroup.mem_map.mpr ⟨y', hy'cent, by simp [MulAut.conj_apply, mul_assoc]⟩
+            exact Subgroup.mem_map.mpr ⟨y', hy'cent, by simp [mul_assoc]⟩
           have hy1cent0 :
               a⁻¹ * y' * a ∈
                 elementCentralizerIn (H.conjBy a⁻¹) (a⁻¹ * y * a) := by
@@ -450,7 +450,7 @@ public theorem corollary_14_9_b
             simpa [hcomm0.eq] using hxyWidehat
           exact Or.inl <| by
             refine ⟨y0 * y0', htWidehat, (m : G) * a⁻¹, ?_⟩
-            simpa [y0, y0', hEq, mul_assoc]
+            simp [y0, y0', hEq, mul_assoc]
         · rcases hHPartner with ⟨a, hHa⟩
           have hyHσ : y ∈ section10Msigma H := hHy.2 (by simp)
           rw [hHa] at hyHσ
@@ -496,7 +496,7 @@ public theorem corollary_14_9_b
                 (H := Mstar) (Subgroup.le_normalizer m.property)] using hy0Mstarσ0
           have hy1centMap :
               a⁻¹ * y' * a ∈ (elementCentralizerIn H y).conjBy a⁻¹ := by
-            exact Subgroup.mem_map.mpr ⟨y', hy'cent, by simp [MulAut.conj_apply, mul_assoc]⟩
+            exact Subgroup.mem_map.mpr ⟨y', hy'cent, by simp [mul_assoc]⟩
           have hy1cent0 :
               a⁻¹ * y' * a ∈
                 elementCentralizerIn (H.conjBy a⁻¹) (a⁻¹ * y * a) := by
@@ -573,7 +573,7 @@ public theorem corollary_14_9_b
             exact hWidehatPartnerEq ▸ htWidehat0
           exact Or.inl <| by
             refine ⟨y0 * y0', htWidehat, (m : G) * a⁻¹, ?_⟩
-            simpa [y0, y0', hEq, mul_assoc]
+            simp [y0, y0', hEq, mul_assoc]
     · intro g hg
       rcases hg with hgWidehat | hgTilde
       · intro hg1

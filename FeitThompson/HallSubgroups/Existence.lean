@@ -7,7 +7,7 @@ module
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Group.Subgroup.Defs
 public import Mathlib.Data.Bracket
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.Data.Finite.Defs
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.Commutator.Basic
@@ -52,6 +52,8 @@ Let $\pi$ be a set of primes.
 -/
 
 universe u v
+
+open scoped IsMulCommutative
 
 
 -- Proposition 1.5(b)
@@ -133,7 +135,6 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       have hN_le_centralizer : N ≤ Subgroup.centralizer (N : Set G') :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := N) (H₂ := N)).1 hcomm_bot
       exact (Subgroup.le_centralizer_iff_isMulCommutative (K := N)).1 hN_le_centralizer
-    letI : CommGroup N := by infer_instance
     -- Pick a prime `p` dividing `|N|`.
     have hN_card_ne_one : Nat.card (↥N) ≠ 1 := by
       have : 1 < Nat.card (↥N) := (Subgroup.one_lt_card_iff_ne_bot (H := N)).2 hN_ne_bot
@@ -145,7 +146,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
     have hP₀_ne_bot : (P₀ : Subgroup N) ≠ ⊥ := Sylow.ne_bot_of_dvd_card (G := N) P₀ (by
       simpa using hp_dvd)
     have hP₀_normal : (P₀ : Subgroup N).Normal := by
-      simpa using (Subgroup.normal_of_comm (H := (P₀ : Subgroup N)))
+      simpa using (Subgroup.normal_of_isMulCommutative (H := (P₀ : Subgroup N)))
     haveI : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
     haveI : Subsingleton (Sylow p N) := by infer_instance
     haveI : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
@@ -185,7 +186,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       simpa [this] using hlt
     -- Consider the image of K' in Q.
     let f : G' →* Q := QuotientGroup.mk' Psub
-    have hf : Function.Surjective f := by simpa [f] using QuotientGroup.mk'_surjective Psub
+    have hf : Function.Surjective f := by
+      simpa only [f, Q] using QuotientGroup.mk'_surjective Psub
     have hker : f.ker = Psub := QuotientGroup.ker_mk' Psub
     haveI : MulAction.QuotientAction A Psub :=
       quotientAction_of_isInvariant (A := A) (G := G') Psub inferInstance
@@ -221,7 +223,11 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       ⟨by
         intro a g
         simp [K0, Subgroup.mem_comap]
-        simpa [MulAction.Quotient.smul_mk (H := Psub) a g] using hHbar_inv.invariant a (f g)⟩
+        have hsmul : a • f g = f (a • g) := by
+          simpa only [f, Q, QuotientGroup.mk'_apply] using
+            MulAction.Quotient.smul_mk (H := Psub) a g
+        rw [← hsmul]
+        exact hHbar_inv.invariant a (f g)⟩
     have hK'_le_K0 : K' ≤ K0 := by
       intro g hg
       have : f g ∈ K'_image := by
@@ -257,7 +263,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
           have hPsub_p : IsPGroup p Psub := by
             simpa [Psub] using (IsPGroup.map (p := p) (H := (P₀ : Subgroup N)) hP0_p N.subtype)
           have hPk_p : IsPGroup p Pk := by
-            simpa [Pk] using (IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0))
+            change IsPGroup p (Psub.comap K0.subtype)
+            exact IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0)
           rcases hPk_p.exists_card_eq with ⟨k, hk⟩
           have hq_dvd_pow : q.val ∣ p ^ k := by
             rw [hk] at hq_dvd_Pk
@@ -275,12 +282,11 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       let Pk : Subgroup K0 := Psub.subgroupOf K0
       haveI : Pk.Normal := by simpa [Pk] using (Subgroup.Normal.subgroupOf (H := Psub) (K := K0) inferInstance)
       haveI : IsMulCommutative (↥Pk) := by infer_instance
-      letI : CommGroup Pk := by infer_instance
       haveI : IsInvariant A K0 Pk := by
         refine ⟨?_⟩
         intro a x
-        change (x.1 ∈ Psub) ↔ ((a • x).1 ∈ Psub)
-        simpa using (IsInvariant.invariant (A := A) (G := G') (H := Psub) a x.1)
+        change (x.1 ∈ Psub) ↔ (a • x.1 ∈ Psub)
+        exact IsInvariant.invariant (A := A) (G := G') (H := Psub) a x.1
       have hPk_coprime_index : Nat.Coprime (Nat.card Pk) Pk.index := by
         classical
         have hcard_congr : Nat.card (K0 ⧸ Pk) = Nat.card Hbar := by
@@ -289,7 +295,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have hPsub_p : IsPGroup p Psub := by
           simpa [Psub] using (IsPGroup.map (p := p) (H := (P₀ : Subgroup N)) hP0_p N.subtype)
         have hPk_p : IsPGroup p Pk := by
-          simpa [Pk] using (IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0))
+          change IsPGroup p (Psub.comap K0.subtype)
+          exact IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0)
         refine Nat.coprime_of_dvd ?_
         intro q hqprime hq_dvd_card hq_dvd_idx
         rcases hPk_p.exists_card_eq with ⟨k, hk⟩
@@ -320,7 +327,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       have hPsub_p : IsPGroup p Psub := by
         simpa [Psub] using (IsPGroup.map (p := p) (H := (P₀ : Subgroup N)) hP0_p N.subtype)
       have hPk_p : IsPGroup p Pk := by
-        simpa [Pk] using (IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0))
+        change IsPGroup p (Psub.comap K0.subtype)
+        exact IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0)
       have hKk_coprime_Pk : Nat.Coprime (Nat.card Kk) (Nat.card Pk) := by
         refine Nat.coprime_of_dvd ?_
         intro q hqprime hq_dvd_Kk hq_dvd_Pk
@@ -336,12 +344,13 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have : (⟨q, hqprime⟩ : Nat.Primes) = p' := by
           apply Subtype.ext
           simpa [p'] using hq_eq
-        simpa [this] using hq_mem
+        rw [this] at hq_mem
+        exact hq_mem
       haveI : IsInvariant A K0 Kk := by
         refine ⟨?_⟩
         intro a x
-        change (x.1 ∈ K') ↔ ((a • x).1 ∈ K')
-        simpa using (IsInvariant.invariant (A := A) (G := G') (H := K') a x.1)
+        change (x.1 ∈ K') ↔ (a • x.1 ∈ K')
+        exact IsInvariant.invariant (A := A) (G := G') (H := K') a x.1
       let B := Kk ⋊[MulDistribMulAction.toMulAut A Kk] A
       have hB_card : Nat.card B = Nat.card Kk * Nat.card A := by
         simp [B]
@@ -546,7 +555,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
             have hPsub_p : IsPGroup p Psub := by
               simpa [Psub] using (IsPGroup.map (p := p) (H := (P₀ : Subgroup N)) hP0_p N.subtype)
             have hPk_p : IsPGroup p Pk := by
-              simpa [Pk] using (IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0))
+              change IsPGroup p (Psub.comap K0.subtype)
+              exact IsPGroup.comap_subtype (p := p) (H := Psub) hPsub_p (K := K0)
             rcases hPk_p.exists_card_eq with ⟨k, hk⟩
             have hq_dvd_pow : q.val ∣ p ^ k := by simpa [hL_index, hk] using hq_dvd_Lidx
             have hq_eq : q.val = p := Nat.prime_eq_prime_of_dvd_pow q.property hp_prime hq_dvd_pow

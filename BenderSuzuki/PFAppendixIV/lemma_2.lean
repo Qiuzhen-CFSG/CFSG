@@ -657,7 +657,21 @@ private theorem lemma_2_D_eq_one_of_mem_inertia
     refine ⟨Representation.RepEquiv.mk f.toLinearEquiv ?_⟩
     intro x
     ext w
-    simpa [sigma] using f.isIntertwining (eQK x) w
+    have htemp := f.isIntertwining (eQK x) w
+    have htemp_simp : f (W.toRepresentation (eQK.symm (eQK x)) w) = f w := by
+      calc
+        f (W.toRepresentation (eQK.symm (eQK x)) w) = f (sigma (eQK x) w) := by
+          dsimp [sigma]; rfl
+        _ = ((Representation.trivial ℂ NK ℂ) (eQK x)) (f w) := htemp
+        _ = f w := by simp
+    have h_eq_rep : W.toRepresentation (eQK.symm (eQK x)) = W.toRepresentation x :=
+      congrArg W.toRepresentation (MulEquiv.symm_apply_apply eQK x)
+    have htemp' : f (W.toRepresentation x w) = f w := by
+      calc
+        f (W.toRepresentation x w) = f (W.toRepresentation (eQK.symm (eQK x)) w) := by
+          rw [← h_eq_rep]
+        _ = f w := htemp_simp
+    simpa using htemp'
   let eK : K := ⟨(e : d.H), show (e : d.H) ∈ d.Q1 ⊔ d.D from
     (show d.D ≤ d.Q1 ⊔ d.D from le_sup_right) e.property⟩
   have hsigmaChar : sigma.character =
@@ -671,8 +685,24 @@ private theorem lemma_2_D_eq_one_of_mem_inertia
         rhoN.character exQ =
           rhoN.character xQ := by
       have hx := congrFun he (xQ : d.Q)
-      simpa [conjugateOnNormal, exQ, exK, xQ, eQK, eNQ, eNK,
-        eK, NK, NQ, K] using hx
+      have hx_exp : rho.character (show d.Q from
+          ⟨(e : d.H) * (((xQ : NQ) : d.Q) : d.H) * (e : d.H)⁻¹,
+            d.Q_normal.conj_mem ((xQ : NQ) : d.Q) (Subtype.mem _) (e : d.H)⟩) =
+          rho.character ((xQ : NQ) : d.Q) := by
+        simpa [conjugateOnNormal] using hx
+      have h_eq : ((exQ : NQ) : d.Q) = (show d.Q from
+          ⟨(e : d.H) * (((xQ : NQ) : d.Q) : d.H) * (e : d.H)⁻¹,
+            d.Q_normal.conj_mem ((xQ : NQ) : d.Q) (Subtype.mem _) (e : d.H)⟩) := by
+        apply Subtype.ext
+        simp [exQ, exK, xQ, eQK, eNQ, eNK, eK, NK, NQ, K]
+      rw [← h_eq] at hx_exp
+      -- hx_exp: rho.character ((exQ : NQ) : d.Q) = rho.character ((xQ : NQ) : d.Q)
+      have h_char (z : NQ) : rhoN.character z = rho.character ((z : NQ) : d.Q) := by
+        dsimp [rhoN, NQ]; rfl
+      calc
+        rhoN.character exQ = rho.character ((exQ : NQ) : d.Q) := h_char exQ
+        _ = rho.character ((xQ : NQ) : d.Q) := hx_exp
+        _ = rhoN.character xQ := (h_char xQ).symm
     have hmC : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hm
     have hWchar : W.toRepresentation.character exQ =
         W.toRepresentation.character xQ := by
@@ -801,7 +831,7 @@ private theorem lemma_2_inertia_eq_Q_nontrivial_complement_core
         hWnonprincipal hm hhom e heI
     have heOneH : (e : d.H) = 1 := congrArg Subtype.val heOne
     rw [← hqe, heOneH]
-    simpa using q.property
+    simp
   exact le_antisymm hIleQ hQleI
 
 private theorem lemma_2_inertia_eq_Q
@@ -1323,7 +1353,7 @@ private theorem lemma_2_c_character_self_of_induced_self
   have heOneH : (e : d.H) = 1 := congrArg Subtype.val heOne
   have hgQ : g ∈ d.Q := by
     rw [← hqe, heOneH]
-    simpa using q.property
+    simp
   have hclass : IsClassFunction rho.character := by
     intro x y
     simpa [mul_assoc] using Representation.char_conj (ρ := rho) y x
@@ -1393,7 +1423,8 @@ private theorem lemma_2_c_Q1_constituent_nonselfconjugate
   have hrhoNSelf : rhoN.character = conjugateCharacter rhoN.character := by
     funext x
     have hx := congrFun hself (x : d.Q)
-    simpa [rhoN, NQ, conjugateCharacter] using hx
+    dsimp [rhoN, NQ, conjugateCharacter, Representation.character] at *
+    simpa using hx
   have hscaledSelf : (m : ℂ) • W.toRepresentation.character =
       conjugateCharacter ((m : ℂ) • W.toRepresentation.character) := by
     simpa [rhoN, NQ, hhom] using hrhoNSelf

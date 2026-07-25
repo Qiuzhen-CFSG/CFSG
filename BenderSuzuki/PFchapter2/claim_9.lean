@@ -205,8 +205,9 @@ private theorem chapter2_claim9_rightTranslateLeftTransversal_apply
       ((T.2.leftQuotientEquiv q : G) * (h : G)) : G ⧸ H) = q
     rw [QuotientGroup.mk_mul_of_mem _ h.2]
     exact T.2.quotientGroupMk_leftQuotientEquiv q
-  simpa [chapter2_claim9_rightTranslateLeftTransversal, f] using
-    (Subgroup.IsComplement.leftQuotientEquiv_apply hf q)
+  change
+    ((Subgroup.isComplement_range_left hf).leftQuotientEquiv q : G) = f q
+  exact Subgroup.IsComplement.leftQuotientEquiv_apply hf q
 
 private theorem chapter2_claim9_leftQuotientEquiv_mk_of_mem
     {G : Type*} [Group G] {H : Subgroup G}
@@ -256,7 +257,8 @@ private noncomputable def chapter2_claim9_sourceLeftTransversal
     · exact hr1
     · have hrH : (r : G) ∈ H := by
         have hm := H.mul_mem hgH (H.inv_mem hr)
-        convert hm using 1 <;> group
+        convert hm using 1 ;
+          group
       have htH : t ∈ H := by
         have hm := H.mul_mem (H.inv_mem (hA1.Q_le_H q.property)) hrH
         simpa [hrq, mul_assoc] using hm
@@ -298,7 +300,7 @@ private noncomputable def chapter2_claim9_sourceLeftTransversal
         have hv := congrArg (fun z : Q => (z : G)) hq
         have hinv := congrArg Inv.inv hv
         simpa using hinv
-      simpa [r0, hrq, hqG]
+      simp [r0, hrq, hqG]
 
 private theorem chapter2_claim9_smul_sourceLeftTransversal_eq_rightTranslate
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -829,6 +831,5 @@ public theorem claim_9
 
 end PFchapter2
 end BenderSuzuki
-
 
 

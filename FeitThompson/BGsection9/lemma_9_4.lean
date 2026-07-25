@@ -25,7 +25,7 @@ public theorem section9_c94_generatorRank_at_least_three_of_elementaryAbelian_ca
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : p ^ 3 ≤ Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -179,9 +179,11 @@ public theorem lemma_9_4
   obtain ⟨E, hEelem, hEgen⟩ :=
     section9_c94_exists_elementaryAbelian_three_le_generatorRank_of_three_le_primeRank
       (p := p) (R := F) (by simpa [F] using hFittingRank)
+  have hFmap : F.map M.subtype = FG := rfl
   let eF : F ≃* FG := by
-    simpa [F, FG, section8FittingSubgroup, fittingSubgroupOf] using
-      (Subgroup.equivMapOfInjective (f := M.subtype) F M.subtype_injective)
+    exact
+      (Subgroup.equivMapOfInjective (f := M.subtype) F M.subtype_injective).trans
+        (MulEquiv.subgroupCongr hFmap)
   let E₀ : Subgroup FG := E.map eF.toMonoidHom
   have hE₀elem : IsElementaryAbelian p E₀ := by
     letI : IsElementaryAbelian p E := hEelem
@@ -280,28 +282,33 @@ public theorem lemma_9_4
       scnSubgroup_generatorRank_at_least_three
         (p := p) hpodd (R := ↥(P : Subgroup M)) P.isPGroup' hSscn
     have hSGp : IsPGroup p SG := by
+      let SM : Subgroup M := S.map (P : Subgroup M).subtype
+      have hSG_eq : SM.map M.subtype = SG := rfl
       have hSMp : IsPGroup p (S.map (P : Subgroup M).subtype) :=
         IsPGroup.map (p := p) (H := S) (P.isPGroup'.to_subgroup S)
           (P : Subgroup M).subtype
-      simpa [SG, section8SylowSubgroupInAmbient] using
-        IsPGroup.map (p := p) (H := S.map (P : Subgroup M).subtype) hSMp M.subtype
+      rw [← hSG_eq]
+      exact IsPGroup.map (p := p) (H := SM) hSMp M.subtype
     have hSGcomm : IsMulCommutative SG := by
       let SM : Subgroup M := S.map (P : Subgroup M).subtype
+      have hSG_eq : SM.map M.subtype = SG := rfl
       have hSMcomm : IsMulCommutative SM := by
         letI : IsMulCommutative S := hScomm
         simpa [SM] using
           (Subgroup.map_isMulCommutative (f := (P : Subgroup M).subtype) (H := S))
       letI : IsMulCommutative SM := hSMcomm
-      simpa [SG, section8SylowSubgroupInAmbient, SM] using
-        (Subgroup.map_isMulCommutative (f := M.subtype) (H := SM))
+      rw [← hSG_eq]
+      exact Subgroup.map_isMulCommutative (f := M.subtype) (H := SM)
     have hSGgen : 3 ≤ generatorRank SG := by
       let SM : Subgroup M := S.map (P : Subgroup M).subtype
+      have hSG_eq : SM.map M.subtype = SG := rfl
       have hSMgen_eq : generatorRank SM = generatorRank S := by
         simpa [SM] using
           section9_c92_generatorRank_map_injective_eq
             (A := S) (P : Subgroup M).subtype (P : Subgroup M).subtype_injective
       have hSGgen_eq : generatorRank SG = generatorRank SM := by
-        simpa [SG, section8SylowSubgroupInAmbient, SM] using
+        rw [← hSG_eq]
+        exact
           section9_c92_generatorRank_map_injective_eq
             (A := SM) M.subtype M.subtype_injective
       simpa [hSGgen_eq, hSMgen_eq] using hSgen

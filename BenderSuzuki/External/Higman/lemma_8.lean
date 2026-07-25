@@ -20,6 +20,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped commutatorElement
 
 universe u
 
@@ -56,7 +57,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
   have hC_nonabelian : ¬ IsMulCommutative C := by
     intro hC_comm
     letI : IsMulCommutative C := hC_comm
-    letI : CommGroup C := CommGroup.ofIsMulCommutative
+    letI : CommGroup C := IsMulCommutative.instCommGroup
     have hcomm_bot : commutator C = ⊥ := by
       rw [commutator_eq_bot_iff_center_eq_top]
       exact CommGroup.center_eq_top
@@ -109,7 +110,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
           (frattini_characteristic (G := C))
           (MulAut.conjNormal (H := C) p)) hc
       refine ⟨cp, hcp, ?_⟩
-      simp [cp, MulAut.conjNormal_apply, MulAut.conj_apply]
+      simp [cp, MulAut.conjNormal_apply]
     have hPhi_X : IsXInvariantSubgroup X Phi := by
       have hforward : ∀ x : X, ∀ p : P, p ∈ Phi → x • p ∈ Phi := by
         intro x p hp
@@ -160,14 +161,17 @@ public theorem lemma8_cover_commutator_case_exponent_two
     · exact False.elim
         (_hcover Phi hPhi_normal hPhi_X
           (lt_of_le_of_ne hA_le_Phi hEq) hPhi_lt_C)
-  have hC_square : squaresSubgroup C ≤ lowerCentralSeries C 1 := by
+  have hC_L1 : higmanLowerCentralSeries C 1 = commutator C := by
+    change (⊤ : Subgroup C).lowerCentralSeries 1 = commutator C
+    exact Subgroup.top_lowerCentralSeries_one
+  have hC_square : squaresSubgroup C ≤ higmanLowerCentralSeries C 1 := by
     have hsquares_le_phi : squaresSubgroup C ≤ frattini C := by
       rw [squaresSubgroup, Subgroup.closure_le]
       rintro _ ⟨z, rfl⟩
       rw [frattini_eq_closure_commutator_union_powers
         (R := C) (p := 2)]
       exact Subgroup.subset_closure (Or.inr ⟨z, rfl⟩)
-    rw [lowerCentralSeries_one]
+    rw [hC_L1]
     intro x hx
     have hxA : (x : P) ∈ A := by
       rw [hfrattini]
@@ -193,20 +197,22 @@ public theorem lemma8_cover_commutator_case_exponent_two
         haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         have hnil : Group.IsNilpotent P :=
           IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
-        obtain ⟨n, hn⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
-        have hC_le : ∀ i : ℕ, C ≤ lowerCentralSeries P i := by
+        obtain ⟨n, hn⟩ :=
+          Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
+        have hC_le : ∀ i : ℕ, C ≤ higmanLowerCentralSeries P i := by
           intro i
           induction i with
-          | zero => simpa
+          | zero => simp
           | succ i ih =>
-              rw [lowerCentralSeries_succ]
-              change C ≤ ⁅lowerCentralSeries P i, (⊤ : Subgroup P)⁆
+              change C ≤ (⊤ : Subgroup P).lowerCentralSeries (i + 1)
+              rw [Subgroup.lowerCentralSeries_succ]
+              change C ≤ ⁅higmanLowerCentralSeries P i, (⊤ : Subgroup P)⁆
               calc
                 C = ⁅(⊤ : Subgroup P), C⁆ := by
                   simpa [K] using hKC.symm
                 _ = ⁅C, (⊤ : Subgroup P)⁆ :=
                   Subgroup.commutator_comm _ _
-                _ ≤ ⁅lowerCentralSeries P i, (⊤ : Subgroup P)⁆ :=
+                _ ≤ ⁅higmanLowerCentralSeries P i, (⊤ : Subgroup P)⁆ :=
                   Subgroup.commutator_mono ih le_rfl
         have hbot : C ≤ ⊥ := by
           rw [← hn]
@@ -324,10 +330,10 @@ public theorem lemma8_cover_commutator_case_exponent_two
           W = ⊥ ∨ W = ⊤ := by
       have hkernel_map_frattini :
           (lowerCentralFactorKernel C 0).map
-              (lowerCentralSeries C 0).subtype = frattini C := by
+              (higmanLowerCentralSeries C 0).subtype = frattini C := by
         have hsquares_map :
-            (squaresSubgroup (lowerCentralSeries C 0)).map
-                (lowerCentralSeries C 0).subtype = squaresSubgroup C := by
+            (squaresSubgroup (higmanLowerCentralSeries C 0)).map
+                (higmanLowerCentralSeries C 0).subtype = squaresSubgroup C := by
           apply le_antisymm
           · rw [squaresSubgroup, MonoidHom.map_closure, Subgroup.closure_le]
             rintro y ⟨z, hz, rfl⟩
@@ -335,17 +341,19 @@ public theorem lemma8_cover_commutator_case_exponent_two
             exact Subgroup.subset_closure ⟨(w : C), rfl⟩
           · rw [squaresSubgroup, Subgroup.closure_le]
             rintro _ ⟨c, rfl⟩
-            let c0 : lowerCentralSeries C 0 := ⟨c, by simp⟩
+            let c0 : higmanLowerCentralSeries C 0 := ⟨c, by simp⟩
             refine ⟨c0 ^ 2, Subgroup.subset_closure ⟨c0, rfl⟩, ?_⟩
             rfl
         have hnext_map :
-            ((lowerCentralSeries C 1).subgroupOf
-                (lowerCentralSeries C 0)).map
-              (lowerCentralSeries C 0).subtype = lowerCentralSeries C 1 :=
+            ((higmanLowerCentralSeries C 1).subgroupOf
+                (higmanLowerCentralSeries C 0)).map
+              (higmanLowerCentralSeries C 0).subtype =
+                higmanLowerCentralSeries C 1 :=
           Subgroup.map_subgroupOf_eq_of_le
-            (lowerCentralSeries_antitone (by omega : 0 ≤ 1))
+            ((⊤ : Subgroup C).lowerCentralSeries_antitone
+              (by omega : 0 ≤ 1))
         rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map,
-          hnext_map, lowerCentralSeries_one,
+          hnext_map, hC_L1,
           frattini_eq_closure_commutator_union_powers (R := C) (p := 2)]
         apply le_antisymm
         · apply sup_le
@@ -426,7 +434,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
         have hcommB : ⁅p, b⁆ ∈ B :=
           hA_le_B (hPCcomm_le_A hcommK)
         have hprod := B.mul_mem hcommB hb
-        convert hprod using 1 <;> simp [commutatorElement_def] <;> group
+        convert hprod using 1
+        all_goals simp [commutatorElement_def]
       have hB_X : IsXInvariantSubgroup X B := by
         have hWpow : ∀ n : ℕ,
             ∀ v : Additive (LowerCentralFactor C 0), v ∈ W →
@@ -496,7 +505,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
           have hqone : qC c = 1 := MonoidHom.mem_ker.mp hcKer
           apply hv_ne
           apply Additive.toMul.injective
-          simpa [← hcval, hqone]
+          simp [← hcval, hqone]
         have hA_lt_B : A < B := by
           refine lt_of_le_of_ne hA_le_B ?_
           intro hEq
@@ -558,11 +567,14 @@ public theorem lemma8_cover_commutator_case_exponent_two
               (Additive (LowerCentralFactor C 0)) :=
             LinearEquiv.fixedSubmodule_eq_top_iff.mp htop
           apply hU_ne
-          simpa using hU_refl
+          rw [hU_refl]
+          apply LinearEquiv.ext
+          intro v
+          rfl
         obtain ⟨v, hv⟩ :
             ∃ v : Additive (LowerCentralFactor C 0), U v ≠ v := by
           by_contra h
-          push_neg at h
+          push Not at h
           apply hU_ne
           ext v
           simpa using h v
@@ -709,7 +721,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
     interval_cases r <;> norm_num at hle
   letI : IsInvariant X P A := ⟨_hA_X⟩
   letI : IsMulCommutative A := _hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   let Asq : Subgroup A := (powMonoidHom 2 : A →* A).range
   let AQ := A ⧸ Asq
   have hAQ_two : ∀ q : AQ, q ^ 2 = 1 := by
@@ -719,7 +731,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
     change ((a ^ 2 : A) : AQ) = 1
     rw [QuotientGroup.eq_one_iff]
     exact MonoidHom.mem_range.mpr
-      ⟨a, by simp [Asq, powMonoidHom]⟩
+      ⟨a, by simp [powMonoidHom]⟩
   letI : Module (ZMod 2) (Additive AQ) :=
     AddCommGroup.zmodModule <| by
       intro q
@@ -745,7 +757,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
         rintro x ⟨a, rfl⟩
         exact Subgroup.mem_map.mpr
           ⟨a ^ 2, MonoidHom.mem_range.mpr
-            ⟨a, by simp [Asq, powMonoidHom]⟩, rfl⟩
+            ⟨a, by simp [powMonoidHom]⟩, rfl⟩
       · rintro x hx
         rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
         rcases MonoidHom.mem_range.mp hy with ⟨a, rfl⟩
@@ -778,7 +790,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
     intro x a
     constructor
     · rintro ⟨b, rfl⟩
-      exact ⟨x • b, by simp [Asq, powMonoidHom]⟩
+      exact ⟨x • b, by simp [powMonoidHom]⟩
     · rintro ⟨b, hb⟩
       refine ⟨x⁻¹ • b, ?_⟩
       have h := congrArg (fun z : A => x⁻¹ • z) hb
@@ -872,7 +884,12 @@ public theorem lemma8_cover_commutator_case_exponent_two
       let za : A := z • a
       have hpows : b ^ (2 ^ (e - 1)) = za ^ (2 ^ (e - 1)) := by
         apply Subtype.ext
-        simpa [za] using hz
+        calc
+          (b : P) ^ (2 ^ (e - 1)) =
+              z • ((a : P) ^ (2 ^ (e - 1))) := hz
+          _ = (z • (a : P)) ^ (2 ^ (e - 1)) :=
+            smul_pow' z (a : P) (2 ^ (e - 1))
+          _ = (za : P) ^ (2 ^ (e - 1)) := rfl
       have hkill : (b / za) ^ (2 ^ (e - 1)) = 1 := by
         calc
           (b / za) ^ (2 ^ (e - 1)) =
@@ -969,45 +986,52 @@ public theorem lemma8_cover_commutator_case_exponent_two
         simpa [smul_smul] using hpinv
     obtain ⟨s, hs, hD_power⟩ := hApowers D hD_le_A hD_X
     have hL2_nontrivial : Nontrivial (LowerCentralFactor C 1) := by
-      have hH1_ne : lowerCentralSeries C 1 ≠ ⊥ := by
+      have hH1_ne : higmanLowerCentralSeries C 1 ≠ ⊥ := by
         intro hH1
         apply hD_ne
         apply le_antisymm
         · rintro x ⟨c, hc, rfl⟩
-          have hc' : c ∈ lowerCentralSeries C 1 := by
-            simpa [lowerCentralSeries_one] using hc
+          have hc' : c ∈ higmanLowerCentralSeries C 1 := by
+            rw [hC_L1]
+            exact hc
           rw [hH1] at hc'
           simpa using hc'
         · exact bot_le
-      have hnext_lt : lowerCentralSeries C 2 < lowerCentralSeries C 1 := by
-        refine lt_of_le_of_ne (lowerCentralSeries_antitone (by omega)) ?_
+      have hnext_lt :
+          higmanLowerCentralSeries C 2 < higmanLowerCentralSeries C 1 := by
+        refine lt_of_le_of_ne
+          ((⊤ : Subgroup C).lowerCentralSeries_antitone (by omega)) ?_
         intro heq
         have hle : ∀ i : ℕ,
-            lowerCentralSeries C 1 ≤ lowerCentralSeries C i := by
+            higmanLowerCentralSeries C 1 ≤ higmanLowerCentralSeries C i := by
           intro i
           induction i with
           | zero => simp
           | succ i ih =>
-              change lowerCentralSeries C 1 ≤
-                ⁅lowerCentralSeries C i, (⊤ : Subgroup C)⁆
+              change higmanLowerCentralSeries C 1 ≤
+                ⁅higmanLowerCentralSeries C i, (⊤ : Subgroup C)⁆
               calc
-                lowerCentralSeries C 1 = lowerCentralSeries C 2 := heq.symm
-                _ = ⁅lowerCentralSeries C 1, (⊤ : Subgroup C)⁆ := by rfl
-                _ ≤ ⁅lowerCentralSeries C i, (⊤ : Subgroup C)⁆ :=
+                higmanLowerCentralSeries C 1 =
+                    higmanLowerCentralSeries C 2 := heq.symm
+                _ = ⁅higmanLowerCentralSeries C 1,
+                    (⊤ : Subgroup C)⁆ := by rfl
+                _ ≤ ⁅higmanLowerCentralSeries C i, (⊤ : Subgroup C)⁆ :=
                   Subgroup.commutator_mono ih le_rfl
         have hnil : Group.IsNilpotent C :=
           IsPGroup.isNilpotent hC_two
-        obtain ⟨i, hi⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
+        obtain ⟨i, hi⟩ :=
+          Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
         apply hH1_ne
         apply bot_unique
         rw [← hi]
         exact hle i
-      let H1 := lowerCentralSeries C 1
+      let H1 := higmanLowerCentralSeries C 1
       let H2 : Subgroup H1 :=
-        (lowerCentralSeries C 2).subgroupOf (lowerCentralSeries C 1)
+        (higmanLowerCentralSeries C 2).subgroupOf
+          (higmanLowerCentralSeries C 1)
       letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       letI : Fact (IsPGroup 2 H1) :=
-        ⟨hC_two.to_subgroup (lowerCentralSeries C 1)⟩
+        ⟨hC_two.to_subgroup (higmanLowerCentralSeries C 1)⟩
       have hsquares_le_phi : squaresSubgroup H1 ≤ frattini H1 := by
         rw [squaresSubgroup, Subgroup.closure_le]
         rintro _ ⟨z, rfl⟩
@@ -1024,7 +1048,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
         have hH2_top : H2 = ⊤ :=
           frattini_nongenerating (by simpa [sup_comm] using hphi_sup)
         have hreverse :
-            lowerCentralSeries C 1 ≤ lowerCentralSeries C 2 := by
+            higmanLowerCentralSeries C 1 ≤ higmanLowerCentralSeries C 2 := by
           intro z hz
           have hzTop : (⟨z, hz⟩ : H1) ∈ (⊤ : Subgroup H1) := trivial
           rw [← hH2_top] at hzTop
@@ -1046,7 +1070,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
               f (Txi v) = lowerCentralFactorLinearAut xi 1 (f v) := by
       have hpow_mem (a : A) :
           (⟨(a : P) ^ (2 ^ s), _hAC.le (A.pow_mem a.property (2 ^ s))⟩ : C) ∈
-            lowerCentralSeries C 1 := by
+            higmanLowerCentralSeries C 1 := by
         have hpD : (a : P) ^ (2 ^ s) ∈ D := by
           rw [hD_power]
           exact Subgroup.subset_closure ⟨a, rfl⟩
@@ -1056,9 +1080,9 @@ public theorem lemma8_cover_commutator_case_exponent_two
               _hAC.le (A.pow_mem a.property (2 ^ s))⟩ : C) = c := by
           apply Subtype.ext
           exact hcval.symm
-        rw [hceq, lowerCentralSeries_one]
+        rw [hceq, hC_L1]
         exact hc
-      let powerToH1 : A →* lowerCentralSeries C 1 :=
+      let powerToH1 : A →* higmanLowerCentralSeries C 1 :=
         { toFun := fun a =>
             ⟨⟨(a : P) ^ (2 ^ s),
                 _hAC.le (A.pow_mem a.property (2 ^ s))⟩,
@@ -1085,7 +1109,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
             (powerToH1 (b ^ 2)) = 1
         rw [map_pow, QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff]
         exact (le_sup_left :
-          squaresSubgroup (lowerCentralSeries C 1) ≤
+          squaresSubgroup (higmanLowerCentralSeries C 1) ≤
             lowerCentralFactorKernel C 1)
           (Subgroup.subset_closure ⟨powerToH1 b, rfl⟩)
       let powerMul : AQ →* LowerCentralFactor C 1 :=
@@ -1112,11 +1136,11 @@ public theorem lemma8_cover_commutator_case_exponent_two
           exact Subgroup.subset_closure ⟨a, by simp [powMonoidHom]⟩
       have hpowerToH1_surj : Function.Surjective powerToH1 := by
         intro z
-        have hzD : (((z : lowerCentralSeries C 1) : C) : P) ∈ D := by
+        have hzD : (((z : higmanLowerCentralSeries C 1) : C) : P) ∈ D := by
           refine ⟨(z : C), ?_, rfl⟩
-          simpa [lowerCentralSeries_one] using z.property
+          exact hC_L1.le z.property
         have hzrange :
-            (((z : lowerCentralSeries C 1) : C) : P) ∈
+            (((z : higmanLowerCentralSeries C 1) : C) : P) ∈
               (powMonoidHom (2 ^ s) : A →* A).range.map A.subtype := by
           rw [← hclosure, ← hD_power]
           exact hzD
@@ -1157,7 +1181,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
         have hT :
             Ttau (Additive.ofMul (a : AQ)) =
               Additive.ofMul (g • (a : AQ)) := by
-          simpa using hTtau_pow 1 (a : AQ)
+          simpa only [pow_one] using hTtau_pow 1 (a : AQ)
         rw [hT]
         change
           Additive.ofMul
@@ -1291,25 +1315,29 @@ public theorem lemma8_cover_commutator_case_exponent_two
           q (lowerCentralFactorLinearAut xi 1 v) =
             lowerCentralFactorLinearAut xi 2 (q v) := by
     have hsq0 :
-        squaresSubgroup (lowerCentralSeries C 0) ≤
-          (lowerCentralSeries C 1).subgroupOf (lowerCentralSeries C 0) := by
+        squaresSubgroup (higmanLowerCentralSeries C 0) ≤
+          (higmanLowerCentralSeries C 1).subgroupOf
+            (higmanLowerCentralSeries C 0) := by
       rw [squaresSubgroup, Subgroup.closure_le]
       rintro _ ⟨x, rfl⟩
-      change (x : C) ^ 2 ∈ lowerCentralSeries C 1
+      change (x : C) ^ 2 ∈ higmanLowerCentralSeries C 1
       exact hC_square (Subgroup.subset_closure ⟨(x : C), rfl⟩)
     have hsq1 :
-        squaresSubgroup (lowerCentralSeries C 1) ≤
-          (lowerCentralSeries C 2).subgroupOf (lowerCentralSeries C 1) := by
+        squaresSubgroup (higmanLowerCentralSeries C 1) ≤
+          (higmanLowerCentralSeries C 2).subgroupOf
+            (higmanLowerCentralSeries C 1) := by
       simpa using
         BenderSuzuki.External.Higman.lemma6_squares_lowerCentralSeries_succ
           (H := C) 0 hsq0
-    let D : Subgroup P := (lowerCentralSeries C 2).map C.subtype
+    let D : Subgroup P := (higmanLowerCentralSeries C 2).map C.subtype
     have hD_le_A : D ≤ A := by
       rintro _ ⟨c, hc, rfl⟩
-      have hc1 : (c : C) ∈ lowerCentralSeries C 1 :=
-        lowerCentralSeries_antitone (by omega : 1 ≤ 2) hc
+      have hc1 : (c : C) ∈ higmanLowerCentralSeries C 1 :=
+        (⊤ : Subgroup C).lowerCentralSeries_antitone
+          (by omega : 1 ≤ 2) hc
+      rw [hC_L1] at hc1
       rw [← _hcomm]
-      exact ⟨c, by simpa [lowerCentralSeries_one] using hc1, rfl⟩
+      exact ⟨c, hc1, rfl⟩
     have hD_ne : D ≠ ⊥ := by
       intro hD
       apply hA_exponent
@@ -1318,10 +1346,11 @@ public theorem lemma8_cover_commutator_case_exponent_two
         rw [_hcomm]
         exact a.property
       rcases haComm with ⟨c, hc, hca⟩
-      let c1 : lowerCentralSeries C 1 :=
-        ⟨c, by simpa [lowerCentralSeries_one] using hc⟩
+      let c1 : higmanLowerCentralSeries C 1 :=
+        ⟨c, by rw [hC_L1]; exact hc⟩
       have hcSq : c1 ^ 2 ∈
-          (lowerCentralSeries C 2).subgroupOf (lowerCentralSeries C 1) :=
+          (higmanLowerCentralSeries C 2).subgroupOf
+            (higmanLowerCentralSeries C 1) :=
         hsq1 (Subgroup.subset_closure ⟨c1, rfl⟩)
       have hcSqD : ((c : C) : P) ^ 2 ∈ D := by
         refine ⟨(c : C) ^ 2, ?_, rfl⟩
@@ -1372,45 +1401,52 @@ public theorem lemma8_cover_commutator_case_exponent_two
               lowerCentralFactorLinearAut xi 2 (q v) := by
       obtain ⟨s, hs, hD_power⟩ := hApowers D hD_le_A hD_X
       have hL3_nontrivial : Nontrivial (LowerCentralFactor C 2) := by
-        have hH1_ne : lowerCentralSeries C 2 ≠ ⊥ := by
+        have hH1_ne : higmanLowerCentralSeries C 2 ≠ ⊥ := by
           intro hH1
           apply hD_ne
           apply le_antisymm
           · rintro x ⟨c, hc, rfl⟩
-            have hc' : c ∈ lowerCentralSeries C 2 := by
-              simpa [lowerCentralSeries_one] using hc
+            have hc' : c ∈ higmanLowerCentralSeries C 2 := by
+              exact hc
             rw [hH1] at hc'
             simpa using hc'
           · exact bot_le
-        have hnext_lt : lowerCentralSeries C 3 < lowerCentralSeries C 2 := by
-          refine lt_of_le_of_ne (lowerCentralSeries_antitone (by omega)) ?_
+        have hnext_lt :
+            higmanLowerCentralSeries C 3 < higmanLowerCentralSeries C 2 := by
+          refine lt_of_le_of_ne
+            ((⊤ : Subgroup C).lowerCentralSeries_antitone (by omega)) ?_
           intro heq
           have hle : ∀ i : ℕ,
-              lowerCentralSeries C 2 ≤ lowerCentralSeries C i := by
+              higmanLowerCentralSeries C 2 ≤ higmanLowerCentralSeries C i := by
             intro i
             induction i with
             | zero => simp
             | succ i ih =>
-                change lowerCentralSeries C 2 ≤
-                  ⁅lowerCentralSeries C i, (⊤ : Subgroup C)⁆
+                change higmanLowerCentralSeries C 2 ≤
+                  ⁅higmanLowerCentralSeries C i, (⊤ : Subgroup C)⁆
                 calc
-                  lowerCentralSeries C 2 = lowerCentralSeries C 3 := heq.symm
-                  _ = ⁅lowerCentralSeries C 2, (⊤ : Subgroup C)⁆ := by rfl
-                  _ ≤ ⁅lowerCentralSeries C i, (⊤ : Subgroup C)⁆ :=
+                  higmanLowerCentralSeries C 2 =
+                      higmanLowerCentralSeries C 3 := heq.symm
+                  _ = ⁅higmanLowerCentralSeries C 2,
+                      (⊤ : Subgroup C)⁆ := by rfl
+                  _ ≤ ⁅higmanLowerCentralSeries C i,
+                      (⊤ : Subgroup C)⁆ :=
                     Subgroup.commutator_mono ih le_rfl
           have hnil : Group.IsNilpotent C :=
             IsPGroup.isNilpotent hC_two
-          obtain ⟨i, hi⟩ := nilpotent_iff_lowerCentralSeries.mp hnil
+          obtain ⟨i, hi⟩ :=
+            Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
           apply hH1_ne
           apply bot_unique
           rw [← hi]
           exact hle i
-        let H1 := lowerCentralSeries C 2
+        let H1 := higmanLowerCentralSeries C 2
         let H2 : Subgroup H1 :=
-          (lowerCentralSeries C 3).subgroupOf (lowerCentralSeries C 2)
+          (higmanLowerCentralSeries C 3).subgroupOf
+            (higmanLowerCentralSeries C 2)
         letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         letI : Fact (IsPGroup 2 H1) :=
-          ⟨hC_two.to_subgroup (lowerCentralSeries C 2)⟩
+          ⟨hC_two.to_subgroup (higmanLowerCentralSeries C 2)⟩
         have hsquares_le_phi : squaresSubgroup H1 ≤ frattini H1 := by
           rw [squaresSubgroup, Subgroup.closure_le]
           rintro _ ⟨z, rfl⟩
@@ -1427,7 +1463,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
           have hH2_top : H2 = ⊤ :=
             frattini_nongenerating (by simpa [sup_comm] using hphi_sup)
           have hreverse :
-              lowerCentralSeries C 2 ≤ lowerCentralSeries C 3 := by
+              higmanLowerCentralSeries C 2 ≤
+                higmanLowerCentralSeries C 3 := by
             intro z hz
             have hzTop : (⟨z, hz⟩ : H1) ∈ (⊤ : Subgroup H1) := trivial
             rw [← hH2_top] at hzTop
@@ -1449,7 +1486,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
                 f (Txi v) = lowerCentralFactorLinearAut xi 2 (f v) := by
         have hpow_mem (a : A) :
             (⟨(a : P) ^ (2 ^ s), _hAC.le (A.pow_mem a.property (2 ^ s))⟩ : C) ∈
-              lowerCentralSeries C 2 := by
+              higmanLowerCentralSeries C 2 := by
           have hpD : (a : P) ^ (2 ^ s) ∈ D := by
             rw [hD_power]
             exact Subgroup.subset_closure ⟨a, rfl⟩
@@ -1461,7 +1498,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
             exact hcval.symm
           rw [hceq]
           exact hc
-        let powerToH1 : A →* lowerCentralSeries C 2 :=
+        let powerToH1 : A →* higmanLowerCentralSeries C 2 :=
           { toFun := fun a =>
               ⟨⟨(a : P) ^ (2 ^ s),
                   _hAC.le (A.pow_mem a.property (2 ^ s))⟩,
@@ -1488,7 +1525,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
               (powerToH1 (b ^ 2)) = 1
           rw [map_pow, QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff]
           exact (le_sup_left :
-            squaresSubgroup (lowerCentralSeries C 2) ≤
+            squaresSubgroup (higmanLowerCentralSeries C 2) ≤
               lowerCentralFactorKernel C 2)
             (Subgroup.subset_closure ⟨powerToH1 b, rfl⟩)
         let powerMul : AQ →* LowerCentralFactor C 2 :=
@@ -1515,11 +1552,12 @@ public theorem lemma8_cover_commutator_case_exponent_two
             exact Subgroup.subset_closure ⟨a, by simp [powMonoidHom]⟩
         have hpowerToH1_surj : Function.Surjective powerToH1 := by
           intro z
-          have hzD : (((z : lowerCentralSeries C 2) : C) : P) ∈ D := by
+          have hzD :
+              (((z : higmanLowerCentralSeries C 2) : C) : P) ∈ D := by
             refine ⟨(z : C), ?_, rfl⟩
-            simpa [lowerCentralSeries_one] using z.property
+            exact z.property
           have hzrange :
-              (((z : lowerCentralSeries C 2) : C) : P) ∈
+              (((z : higmanLowerCentralSeries C 2) : C) : P) ∈
                 (powMonoidHom (2 ^ s) : A →* A).range.map A.subtype := by
             rw [← hclosure, ← hD_power]
             exact hzD
@@ -1559,8 +1597,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
           rw [hv]
           have hT :
               Ttau (Additive.ofMul (a : AQ)) =
-                Additive.ofMul (g • (a : AQ)) := by
-            simpa using hTtau_pow 1 (a : AQ)
+              Additive.ofMul (g • (a : AQ)) := by
+            simpa only [pow_one] using hTtau_pow 1 (a : AQ)
           rw [hT]
           change
             Additive.ofMul

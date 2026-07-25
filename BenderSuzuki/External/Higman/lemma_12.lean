@@ -26,7 +26,7 @@ namespace BenderSuzuki
 namespace External
 namespace Higman
 
-open scoped TensorProduct
+open scoped TensorProduct commutatorElement
 
 open PFAppendixIII
 
@@ -142,7 +142,7 @@ the two lower-central factors. -/
       (vNorm : BinaryGaloisField n ≃ₗ[ZMod 2] V)
       (centerCoordinates : BinaryGaloisField n ≃ₗ[ZMod 2]
         Additive (LowerCentralFactor P 1))
-      (heta : eta ≠ 0) (hepsilon : epsilon ≠ 0),
+      (heta : eta ≠ 0) (_ : epsilon ≠ 0),
     orderOf (Units.mk0 eta heta) = 2 ^ n - 1 ∧
     (∀ a : BinaryGaloisField n,
       lowerCentralFactorLinearAut xi 0
@@ -183,7 +183,7 @@ the two lower-central factors. -/
       (centerCoordinates : BinaryGaloisField n ≃ₗ[ZMod 2]
         Additive (LowerCentralFactor P 1))
       (hlambda : lambda ≠ 0) (heta : eta ≠ 0)
-      (hepsilon : epsilon ≠ 0),
+      (_ : epsilon ≠ 0),
     (∃ r : ℕ, Odd r ∧ 0 < r ∧
       ∀ x : BinaryGaloisField n, theta^[r] x = x) ∧
     (∀ x : BinaryGaloisField n, theta (theta (x ^ 2)) = x) ∧
@@ -228,10 +228,10 @@ the two lower-central factors. -/
         (Subgroup.topEquiv.symm p)) ∧
     (∀ u : Additive (LowerCentralFactor P 0),
       u ∈ U ↔ u.toMul ∈ A.map q0) ∧
-    IsCompl U V ∧ lowerCentralSeries P 1 = B ∧
+    IsCompl U V ∧ (⊤ : Subgroup P).lowerCentralSeries 1 = B ∧
     lowerCentralFactorKernel P 1 = ⊥ ∧
-    (∀ x y : lowerCentralSeries P 0,
-      ∀ hcomm : ⁅(x : P), (y : P)⁆ ∈ lowerCentralSeries P 1,
+    (∀ x y : (⊤ : Subgroup P).lowerCentralSeries 0,
+      ∀ hcomm : ⁅(x : P), (y : P)⁆ ∈ (⊤ : Subgroup P).lowerCentralSeries 1,
         bracket
             (Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel P 0) x))
@@ -240,8 +240,8 @@ the two lower-central factors. -/
           Additive.ofMul
             (QuotientGroup.mk' (lowerCentralFactorKernel P 1)
               ⟨⁅(x : P), (y : P)⁆, hcomm⟩)) ∧
-    (∀ x : lowerCentralSeries P 0,
-      ∀ hsquare : (x : P) ^ 2 ∈ lowerCentralSeries P 1,
+    (∀ x : (⊤ : Subgroup P).lowerCentralSeries 0,
+      ∀ hsquare : (x : P) ^ 2 ∈ (⊤ : Subgroup P).lowerCentralSeries 1,
         squareMap
             (Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel P 0) x)) =
@@ -288,7 +288,7 @@ Type-B group predicate. -/
     (∀ p : P,
       Additive.ofMul (q0 (actor • p)) =
         lowerCentralFactorLinearAut xi 0 (Additive.ofMul (q0 p))) ∧
-    lowerCentralSeries P 1 = B ∧
+    (⊤ : Subgroup P).lowerCentralSeries 1 = B ∧
     lowerCentralFactorKernel P 1 = ⊥ ∧
     B ≤ Subgroup.center P ∧
     Nat.card B = 2 ^ n ∧
@@ -450,10 +450,10 @@ private theorem lemma12_irreducible_pow_two_of_irreducible
       have hS_refl : S = LinearEquiv.refl (ZMod 2) V :=
         LinearEquiv.fixedSubmodule_eq_top_iff.mp htop
       apply hS_ne
-      simpa using hS_refl
+      simpa only [LinearEquiv.one_eq_refl] using hS_refl
     obtain ⟨v, hv⟩ : ∃ v : V, S v ≠ v := by
       by_contra h
-      push_neg at h
+      push Not at h
       apply hS_ne
       ext v
       simpa using h v
@@ -677,8 +677,6 @@ private theorem lemma12_restricted_square_monomial
       (ZMod 2) (BinaryGaloisField n)
   have hsigma_apply (a : BinaryGaloisField n) (t : ℕ) :
       (sigma ^ t) a = a ^ (2 ^ t) := by
-    change ((sigma ^ t : BinaryGaloisField n ≃ₐ[ZMod 2]
-      BinaryGaloisField n) : BinaryGaloisField n → BinaryGaloisField n) a = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]
@@ -769,7 +767,7 @@ private theorem lemma12_restricted_square_monomial
       let i0 : Fin n := ⟨0, hn⟩
       obtain ⟨x, hx⟩ := hqK_surjective (centerBasis i0)
       by_contra h
-      push_neg at h
+      push Not at h
       apply centerBasis.ne_zero i0
       rw [← hx, ← uBasis.sum_repr x]
       rw [map_sum]
@@ -792,7 +790,11 @@ private theorem lemma12_restricted_square_monomial
     obtain ⟨s, hs⟩ := lemma6_diagonal_eigenvalue_eq_basis_eigenvalue
       SK.toLinearMap centerBasis
       (fun t : Fin n => nu ^ (2 ^ (t : ℕ)))
-      (by simpa [SK] using hcenterBasis_eigen)
+      (by
+        intro t
+        change
+          (S.baseChange (ZMod 2) (BinaryGaloisField n) W W) (centerBasis t) = _
+        exact hcenterBasis_eigen t)
       (qK (uBasis i)) (lambda ^ (2 ^ (i : ℕ))) hi_eigen hi
     obtain ⟨c, hc, hformula⟩ := singer_formula i s
       (2 ^ (i : ℕ)) (by positivity) hs
@@ -825,8 +827,6 @@ private theorem lemma12_single_monomial_normalize
   let rho := (sigma ^ (i : ℕ)).symm * sigma
   have hsigma_apply (a : BinaryGaloisField n) (t : ℕ) :
       (sigma ^ t) a = a ^ (2 ^ t) := by
-    change ((sigma ^ t : BinaryGaloisField n ≃ₐ[ZMod 2]
-      BinaryGaloisField n) : BinaryGaloisField n → BinaryGaloisField n) a = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]
@@ -863,8 +863,6 @@ private theorem lemma12_pair_monomial_normalize
   let theta := sigma ^ (j : ℕ) * rho
   have hsigma_apply (a : BinaryGaloisField n) (t : ℕ) :
       (sigma ^ t) a = a ^ (2 ^ t) := by
-    change ((sigma ^ t : BinaryGaloisField n ≃ₐ[ZMod 2]
-      BinaryGaloisField n) : BinaryGaloisField n → BinaryGaloisField n) a = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]
@@ -967,7 +965,6 @@ private theorem lemma12_frobenius_shift_normalize
     simpa only [hsigma_order] using h
   have hsigma_apply (x : K) (m : ℕ) :
       (sigma ^ m) x = x ^ (2 ^ m) := by
-    change ((sigma ^ m : K ≃ₐ[ZMod 2] K) : K → K) x = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]
@@ -1302,8 +1299,10 @@ private theorem lemma12_linear_pair_case_core
         (fun x : K => centerCoordinates.symm
           (squareMap (vCoordinates x :
             Additive (LowerCentralFactor P 0)))) hUformula a
-      simpa [sigma, rhoU, thetaAlg, theta, cUnit, outputTransform,
-        finalCenterCoordinates, uNorm] using hnormalize
+      change (cUnit.mulLeftLinearEquiv (ZMod 2) K).symm _ = _
+      rw [Units.symm_mulLeftLinearEquiv_apply]
+      simpa [K, sigma, rhoU, thetaAlg, theta, cUnit, uNorm] using
+        hnormalize
     have hthetaPeriod :
         ∃ r : ℕ, Odd r ∧ 0 < r ∧ ∀ x : K, theta^[r] x = x := by
       let gap := lemma6_finPairGap iu ju
@@ -1311,7 +1310,6 @@ private theorem lemma12_linear_pair_case_core
       have he_pos : 0 < e := by simp [e]
       have hsigma_apply (x : K) (t : ℕ) :
           (sigma ^ t) x = x ^ (2 ^ t) := by
-        change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
         rw [AlgEquiv.coe_pow,
           FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
         simp [ZMod.card]
@@ -1564,7 +1562,6 @@ private theorem lemma12_linear_pair_case_core
         nuNorm = lambdaNorm * theta lambdaNorm := by
       have hsigma_apply (x : K) (t : ℕ) :
           (sigma ^ t) x = x ^ (2 ^ t) := by
-        change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
         rw [AlgEquiv.coe_pow,
           FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
         simp [ZMod.card]
@@ -1748,7 +1745,7 @@ private theorem lemma12_linear_pair_case_core
             ∑ i : Fin n, ∑ j : Fin n,
               normalizedCoeff i j * a ^ (2 ^ (i : ℕ)) *
                 b ^ (2 ^ (j : ℕ)) := by
-      simpa [normalizedCross] using hnormalizedCrossExpansionRaw
+      simpa [K, normalizedCross] using hnormalizedCrossExpansionRaw
     have hmixedSupportedPowers :
         (∀ x : K, theta (theta (x ^ 2)) = x) ∧
           ∀ i j : Fin n, normalizedCoeff i j ≠ 0 →
@@ -1813,7 +1810,6 @@ private theorem lemma12_linear_pair_case_core
               (2 ^ 1 + 2 ^ (r + 1)) := by
         have hsigma_apply (x : K) (t : ℕ) :
             (sigma ^ t) x = x ^ (2 ^ t) := by
-          change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
           rw [AlgEquiv.coe_pow,
             FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
           simp [ZMod.card]
@@ -2069,7 +2065,6 @@ private theorem lemma12_linear_pair_case_core
           simpa using (pow_eq_pow_iff_modEq.mpr hmod_sigma)
         have hsigma_apply (x : K) (t : ℕ) :
             (sigma ^ t) x = x ^ (2 ^ t) := by
-          change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
           rw [AlgEquiv.coe_pow,
             FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
           simp [ZMod.card]
@@ -2100,7 +2095,6 @@ private theorem lemma12_linear_pair_case_core
               b ^ (2 ^ (j : ℕ)) = theta (b ^ 2) := by
         have hsigma_apply (x : K) (t : ℕ) :
             (sigma ^ t) x = x ^ (2 ^ t) := by
-          change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
           rw [AlgEquiv.coe_pow,
             FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
           simp [ZMod.card]
@@ -2157,7 +2151,11 @@ private theorem lemma12_linear_pair_case_core
             · rw [(hmixedSupportedPowers i j hij).1 a,
                 (hmixedSupportedPowers i j hij).2 b]
           _ = epsilon * a ^ (2 ^ (n - 1)) * theta (b ^ 2) := by
-            simp only [epsilon, Finset.sum_mul]
+            dsimp only [epsilon]
+            rw [Finset.sum_mul, Finset.sum_mul]
+            apply Finset.sum_congr rfl
+            intro i _hi
+            rw [Finset.sum_mul, Finset.sum_mul]
       have hepsilon : epsilon ≠ 0 := by
         intro hepsilon
         obtain ⟨u, v, huv⟩ := hswappedCross_nonzero
@@ -2182,7 +2180,6 @@ private theorem lemma12_linear_pair_case_core
         simpa only [hsigma_order] using this
       have hsigma_apply (x : K) (t : ℕ) :
           (sigma ^ t) x = x ^ (2 ^ t) := by
-        change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
         rw [AlgEquiv.coe_pow,
           FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
         simp [ZMod.card]
@@ -2426,7 +2423,7 @@ private theorem lemma12_cyclic_two_pow_normalize
         exact heq ▸ Nat.ModEq.refl _
     · have hshape : ∃ a rest, l = a ::ₘ a ::ₘ rest := by
         rw [Multiset.nodup_iff_ne_cons_cons] at hnodup
-        push_neg at hnodup
+        push Not at hnodup
         exact hnodup
       obtain ⟨a, rest, hl⟩ := hshape
       let a' : Fin n := ⟨(a.val + 1) % n, Nat.mod_lt _ hn⟩
@@ -2548,9 +2545,11 @@ private theorem lemma12_distinct_pair_support
   have hlmod : Nat.ModEq (2 ^ n - 1)
       ((l.map fun x => 2 ^ x.val).sum)
       (2 ^ 0 + 2 ^ r + 2 ^ s + 2 ^ (r + s)) := by
-    simpa only [l, iF, isF, jF, jrF, Multiset.map_cons,
-      Multiset.map_zero, Multiset.sum_cons, Multiset.sum_zero,
-      add_zero, add_assoc] using hmod
+    simpa only [l, iF, isF, jF, jrF, Multiset.insert_eq_cons,
+      Multiset.map_cons,
+      Multiset.map_singleton, Multiset.map_zero, Multiset.sum_cons,
+      Multiset.sum_singleton, Multiset.sum_zero,
+      Fin.val_mk, add_zero, add_assoc] using hmod
   have hTRmod : Nat.ModEq (2 ^ n - 1)
       (∑ x ∈ T, 2 ^ x) (∑ x ∈ R, 2 ^ x) := by
     rw [hTsum, hRsum]
@@ -2771,7 +2770,6 @@ private theorem lemma12_distinct_pair_gap_of_cross_seed
     simpa only [hsigma_order] using h
   have hsigma_apply (x : K) (t : ℕ) :
       (sigma ^ t) x = x ^ (2 ^ t) := by
-    change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
     rw [AlgEquiv.coe_pow,
       FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
     simp [ZMod.card]
@@ -3177,8 +3175,10 @@ private theorem lemma12_same_pair_typeB_core
       (fun x : K => centerCoordinates.symm
         (squareMap (uCoordinates x :
           Additive (LowerCentralFactor P 0)))) hUformula a
-    simpa [sigma, rhoU, thetaAlg, theta, cUnit, outputTransform,
-      finalCenterCoordinates, uNorm] using hnormalize
+    change (cUnit.mulLeftLinearEquiv (ZMod 2) K).symm _ = _
+    rw [Units.symm_mulLeftLinearEquiv_apply]
+    simpa [K, sigma, rhoU, thetaAlg, theta, cUnit, uNorm] using
+      hnormalize
   have hthetaPeriod :
       ∃ k : ℕ, Odd k ∧ 0 < k ∧ ∀ x : K, theta^[k] x = x := by
     let gap := lemma6_finPairGap iu ju
@@ -3186,7 +3186,6 @@ private theorem lemma12_same_pair_typeB_core
     have he_pos : 0 < e := by simp [e]
     have hsigma_apply (x : K) (t : ℕ) :
         (sigma ^ t) x = x ^ (2 ^ t) := by
-      change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
       rw [AlgEquiv.coe_pow,
         FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
       simp [ZMod.card]
@@ -3455,9 +3454,10 @@ private theorem lemma12_same_pair_typeB_core
                 (squareMap (vOwnNorm b :
                   Additive (LowerCentralFactor P 0))) =
               b * thetaV b := by
-          simpa [sigma, rhoV, thetaVAlg, thetaV, vUnit,
-            vOutputTransform, vOwnCenterCoordinates, vOwnNorm] using
-              hnormalize
+          change (vUnit.mulLeftLinearEquiv (ZMod 2) K).symm _ = _
+          rw [Units.symm_mulLeftLinearEquiv_apply]
+          simpa [K, sigma, rhoV, thetaVAlg, thetaV, vUnit, vOwnNorm]
+            using hnormalize
         simpa only [hthetaV_eq] using hv
       let psi : K ≃ₐ[ZMod 2] K :=
         sigma ^ (su : ℕ) * (sigma ^ (sv : ℕ)).symm
@@ -3594,7 +3594,6 @@ private theorem lemma12_same_pair_typeB_core
           nuNorm = lambdaNorm * theta lambdaNorm := by
         have hsigma_apply (x : K) (t : ℕ) :
             (sigma ^ t) x = x ^ (2 ^ t) := by
-          change ((sigma ^ t : K ≃ₐ[ZMod 2] K) : K → K) x = _
           rw [AlgEquiv.coe_pow,
             FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
           simp [ZMod.card]
@@ -3748,7 +3747,7 @@ private theorem lemma12_same_pair_typeB_core
             ∑ i : Fin n, ∑ j : Fin n,
               normalizedCoeff i j * a ^ (2 ^ (i : ℕ)) *
                 b ^ (2 ^ (j : ℕ)) := by
-      simpa [normalizedCross] using hnormalizedCrossExpansionRaw
+      simpa [K, normalizedCross] using hnormalizedCrossExpansionRaw
     have hsameSupportedPowers :
         ∀ i j : Fin n, normalizedCoeff i j ≠ 0 →
           ((∀ a : K, a ^ (2 ^ (i : ℕ)) = a) ∧
@@ -3904,11 +3903,11 @@ private theorem lemma12_same_pair_typeB_core
                 simp only [if_neg hfirst, hsecond.1 a, hsecond.2 b,
                   zero_mul, zero_add]
           _ = epsilon * a * theta b + delta * theta a * b := by
-            simp only [Finset.sum_add_distrib, Finset.sum_mul,
-              epsilon, delta]
+            simp only [epsilon, delta, Finset.sum_add_distrib,
+              ← Finset.sum_mul, mul_assoc]
       have hnonzero : epsilon ≠ 0 ∨ delta ≠ 0 := by
         by_contra hboth
-        push_neg at hboth
+        push Not at hboth
         obtain ⟨u, v, huv⟩ := hcross_nonzero
         have hzero :
             finalCenterCoordinates.symm (crossBracket u v) = 0 := by
@@ -4063,7 +4062,7 @@ private theorem lemma12_same_pair_typeB_core
           hsquare_anisotropic _ hsquareZero
         have hpairZero : ((0, 1) : K × K) = 0 := by
           apply shearedCoordinates.injective
-          simpa using hquotientZero
+          simp at hquotientZero
         have hone : (1 : K) = 0 := by
           simpa using congrArg Prod.snd hpairZero
         exact one_ne_zero hone
@@ -4121,7 +4120,7 @@ private theorem lemma12_same_pair_typeB_core
           hsquare_anisotropic _ hsquareZero
         have hpairZero : ((1, 1) : K × K) = 0 := by
           apply quotientCoordinates.injective
-          simpa using hquotientZero
+          simp at hquotientZero
         have hone : (1 : K) = 0 := by
           simpa using congrArg Prod.fst hpairZero
         exact one_ne_zero hone
@@ -4201,7 +4200,7 @@ private theorem lemma12_distinct_pair_typeD_forward_data
       (if iu.val ≤ ju.val then ju.val - iu.val else n - (iu.val - ju.val)) = r)
     (hsGap :
       (if iv.val ≤ jv.val then jv.val - iv.val else n - (iv.val - jv.val)) = s)
-    (hr_pos : 0 < r) (hs_pos : 0 < s)
+    (hr_pos : 0 < r) (_ : 0 < s)
     (hsr : s = 2 * r) (hn5 : n = 5 * r)
     (crossCoeff : Fin n → Fin n → BinaryGaloisField n)
     (hcrossExpansion : ∀ a b : BinaryGaloisField n,
@@ -4282,7 +4281,7 @@ private theorem lemma12_distinct_pair_typeD_forward_data
         simpa [theta, AlgEquiv.coe_pow] using h
       have hthetaNontrivial : ∃ x : K, theta x ≠ x := by
         by_contra hfixed
-        push_neg at hfixed
+        push Not at hfixed
         have hthetaAlg_one : thetaAlg = 1 := by
           ext x
           simpa [theta] using hfixed x
@@ -4310,8 +4309,10 @@ private theorem lemma12_distinct_pair_typeD_forward_data
           (fun x : K => centerCoordinates.symm
             (squareMap (uCoordinates x :
               Additive (LowerCentralFactor P 0)))) hUformula a
-        simpa [sigma, rhoU, thetaAlg, theta, cUnit, outputTransform,
-          centerD, uD] using hnormalize
+        change (cUnit.mulLeftLinearEquiv (ZMod 2) K).symm _ = _
+        rw [Units.symm_mulLeftLinearEquiv_apply]
+        simpa [K, sigma, rhoU, thetaAlg, theta, cUnit, uD] using
+          hnormalize
       let rhoV : K ≃ₐ[ZMod 2] K := (sigma ^ (iv : ℕ)).symm
       let thetaVAlg : K ≃ₐ[ZMod 2] K := sigma ^ (jv : ℕ) * rhoV
       let thetaV : K ≃+* K := thetaVAlg.toRingEquiv
@@ -4323,7 +4324,7 @@ private theorem lemma12_distinct_pair_typeD_forward_data
             rw [show forwardGap iv jv = s by
               simpa [forwardGap] using hsGap]
           _ = sigma ^ (2 * r) := by rw [hsr]
-          _ = sigma ^ (r * 2) := by congr 1 <;> omega
+          _ = sigma ^ (r * 2) := by congr 1; omega
           _ = (sigma ^ r) ^ 2 := by rw [pow_mul]
           _ = thetaAlg ^ 2 := by rw [hthetaAlg_eq]
       have hthetaV_apply (x : K) : thetaV x = theta^[2] x := by
@@ -4359,8 +4360,10 @@ private theorem lemma12_distinct_pair_typeD_forward_data
           (fun x : K => centerCoordinates.symm
             (squareMap (vCoordinates x :
               Additive (LowerCentralFactor P 0)))) hVformula b
-        simpa [sigma, rhoV, thetaVAlg, thetaV, vUnit,
-          vOutputTransform, vOwnCenter, vOwn] using hnormalize
+        change (vUnit.mulLeftLinearEquiv (ZMod 2) K).symm _ = _
+        rw [Units.symm_mulLeftLinearEquiv_apply]
+        simpa [K, sigma, rhoV, thetaVAlg, thetaV, vUnit, vOwn] using
+          hnormalize
       let psi : K ≃ₐ[ZMod 2] K :=
         sigma ^ (su : ℕ) * (sigma ^ (sv : ℕ)).symm
       have hpsiThetaVAlg : psi * thetaVAlg = thetaVAlg * psi := by
@@ -4432,7 +4435,6 @@ private theorem lemma12_distinct_pair_typeD_forward_data
         rw [hinputNorm, hthetaV_apply]
       have hsigma_apply (x : K) (m : ℕ) :
           (sigma ^ m) x = x ^ (2 ^ m) := by
-        change ((sigma ^ m : K ≃ₐ[ZMod 2] K) : K → K) x = _
         rw [AlgEquiv.coe_pow,
           FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
         simp [ZMod.card]
@@ -4484,11 +4486,11 @@ private theorem lemma12_distinct_pair_typeD_forward_data
           (sigma ^ (3 * r)) x = theta^[3] x := by
         have hpow : sigma ^ (3 * r) = thetaAlg ^ 3 := by
           calc
-            sigma ^ (3 * r) = sigma ^ (r * 3) := by congr 1 <;> omega
+            sigma ^ (3 * r) = sigma ^ (r * 3) := by congr 1; omega
             _ = (sigma ^ r) ^ 3 := by rw [pow_mul]
             _ = thetaAlg ^ 3 := by rw [← hthetaAlg_eq]
         rw [hpow]
-        simpa [theta, AlgEquiv.coe_pow]
+        simp [theta, AlgEquiv.coe_pow]
       let transformedCoeff (i j : Fin n) : K :=
         cu⁻¹ * (sigma ^ (su : ℕ))
           (crossCoeff i j * (rhoV t) ^ (2 ^ (j : ℕ)))
@@ -4543,8 +4545,7 @@ private theorem lemma12_distinct_pair_typeD_forward_data
       have hcrossD (a b : K) : centerD.symm
           (crossBracket (uD a) (vD b)) =
             epsilon * theta^[3] a * theta b := by
-        rw [hcrossRaw]
-        simp only [Finset.sum_mul, epsilon, mul_assoc]
+        simpa only [epsilon, ← Finset.sum_mul] using hcrossRaw a b
       have hepsilon : epsilon ≠ 0 := by
         intro hepsilonZero
         obtain ⟨u, v, huv⟩ := hcross_nonzero
@@ -4674,13 +4675,6 @@ private theorem lemma12_distinct_pair_typeD_normal_form_core
         (vD b : Additive (LowerCentralFactor P 0)))) = _
     rw [hsquare_add_cross]
     simp only [map_add]
-    change centerD.symm
-        (squareMap (uD a :
-          Additive (LowerCentralFactor P 0))) +
-      centerD.symm
-        (squareMap (vD b :
-          Additive (LowerCentralFactor P 0))) +
-      centerD.symm (crossBracket (uD a) (vD b)) = _
     rw [huD, hvD, hcrossD]
     ring
   · rcases hreverse with ⟨hrs, hn5⟩
@@ -4769,13 +4763,6 @@ private theorem lemma12_distinct_pair_typeD_normal_form_core
         (uD b : Additive (LowerCentralFactor P 0)))) = _
     rw [add_comm, hsquare_add_cross]
     simp only [map_add]
-    change centerD.symm
-        (squareMap (uD b :
-          Additive (LowerCentralFactor P 0))) +
-      centerD.symm
-        (squareMap (vD a :
-          Additive (LowerCentralFactor P 0))) +
-      centerD.symm (crossBracket (uD b) (vD a)) = _
     rw [huD, hvD, hcrossD]
     ring
 set_option backward.isDefEq.respectTransparency false in
@@ -4837,7 +4824,7 @@ private theorem lemma12_typeD_avoid_of_anisotropic
     hsquare_anisotropic _ hsquareZero
   have hpairZero : ((1, b) : BinaryGaloisField n × BinaryGaloisField n) = 0 := by
     apply quotientCoordinates.injective
-    simpa using hquotientZero
+    simp at hquotientZero
   exact (one_ne_zero : (1 : BinaryGaloisField n) ≠ 0)
     (by simpa using congrArg Prod.fst hpairZero)
 private theorem lemma12_eigenvalue_frobenius_conjugate_of_equivariant_linearEquiv
@@ -4878,14 +4865,14 @@ private theorem lemma12_eigenvalue_frobenius_conjugate_of_equivariant_linearEqui
       n hn B lambda 1 mu hB_equivariant
   have hf_one : f (1 : BinaryGaloisField n) ≠ 0 := by
     intro h
-    have h' : f (1 : BinaryGaloisField n) = f 0 := by simpa using h
+    have h' : f (1 : BinaryGaloisField n) = f 0 := by simp at h
     exact one_ne_zero (f.injective h')
   have hcoeff_nonzero : ∃ i j : Fin n, coeff i j ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hf_one
     have hexp := hcoeffExpansion 1 1
-    simpa [B, h] using hexp
+    simp [B, h] at hexp
   obtain ⟨i, j, hij⟩ := hcoeff_nonzero
   refine ⟨i, ?_⟩
   simpa using hcoeffSupport i j hij
@@ -5291,14 +5278,14 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     let my : M := ⟨y, hPhi_le_M y.property⟩
     apply Subtype.ext
     change (x : P) * (y : P) = (y : P) * (x : P)
-    exact congrArg Subtype.val (mul_comm mx my)
+    exact congrArg Subtype.val (hM_abelian.is_comm.comm mx my)
   have hPhi_normal : Phi.Normal := by
     dsimp [Phi]
     infer_instance
   have hPhi_X : IsXInvariantSubgroup X Phi := by
-    simpa [Phi] using
-      (isInvariant_of_characteristic (A := X) (G := P)
-        (frattini P)).invariant
+    change ∀ x : X, ∀ a : P, a ∈ frattini P ↔ x • a ∈ frattini P
+    exact (isInvariant_of_characteristic (A := X) (G := P)
+      (frattini P)).invariant
   have hPhi_le_A : Phi ≤ A := by
     let C : Subgroup P := A ⊔ Phi
     have hC_normal : C.Normal := by
@@ -5322,9 +5309,9 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     dsimp [D]
     infer_instance
   have hD_X : IsXInvariantSubgroup X D := by
-    simpa [D] using
-      (isInvariant_of_characteristic (A := X) (G := P)
-        (commutator P)).invariant
+    change ∀ x : X, ∀ a : P, a ∈ commutator P ↔ x • a ∈ commutator P
+    exact (isInvariant_of_characteristic (A := X) (G := P)
+      (commutator P)).invariant
   have hD_ne : D ≠ ⊥ := by
     intro hD_bot
     apply _hP.2.1
@@ -5367,20 +5354,20 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       have hcomm_map_eq_D :
           (commutator (⊤ : Subgroup P)).map
               (⊤ : Subgroup P).subtype = D := by
-        simpa [D] using
+        simpa [D, commutator_def] using
           (Subgroup.map_subtype_commutator (⊤ : Subgroup P))
       have hD_le_A : D ≤ A := hD_le_Phi.trans (le_of_eq hPhi_A)
       have hA_exponent_two : ∀ x : A, x ^ 2 = 1 := by
         rcases hmiddle.2.2.2.2.2 D hD_normal hD_X
             hB_le_D hD_le_A with hD_B | hD_A
         · by_contra hA_two
-          push_neg at hA_two
+          push Not at hA_two
           let PhiA : Subgroup P := (frattini A).map A.subtype
           have hPhiA_eq_squares :
               PhiA = Subgroup.closure
                 {x : P | ∃ a : A, (a : P) ^ 2 = x} := by
             letI : IsMulCommutative A := hA_abelian
-            letI : CommGroup A := CommGroup.ofIsMulCommutative
+            letI : CommGroup A := IsMulCommutative.instCommGroup
             let Asq : Subgroup A := (powMonoidHom 2 : A →* A).range
             have hPhi_internal : frattini A = Asq := by
               have hcomm : commutator A = ⊥ := by
@@ -5524,55 +5511,55 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     · exact hB_le_D
   have hcommutator_eq_B : commutator P = B := by
     simpa [D] using hD_eq_B
-  have hL1_eq_B : lowerCentralSeries P 1 = B := by
-    rw [lowerCentralSeries_one]
+  have hL1_eq_B : (⊤ : Subgroup P).lowerCentralSeries 1 = B := by
+    rw [Subgroup.top_lowerCentralSeries_one]
     exact hcommutator_eq_B
-  have hclass_two : lowerCentralSeries P 2 = ⊥ := by
-    have hL2_normal : (lowerCentralSeries P 2).Normal := by infer_instance
-    have hL2_X : IsXInvariantSubgroup X (lowerCentralSeries P 2) :=
+  have hclass_two : (⊤ : Subgroup P).lowerCentralSeries 2 = ⊥ := by
+    have hL2_normal : ((⊤ : Subgroup P).lowerCentralSeries 2).Normal := by infer_instance
+    have hL2_X : IsXInvariantSubgroup X ((⊤ : Subgroup P).lowerCentralSeries 2) :=
       (isInvariant_of_characteristic (A := X) (G := P)
-        (lowerCentralSeries P 2)).invariant
-    have hL2_le_B : lowerCentralSeries P 2 ≤ B := by
+        ((⊤ : Subgroup P).lowerCentralSeries 2)).invariant
+    have hL2_le_B : (⊤ : Subgroup P).lowerCentralSeries 2 ≤ B := by
       calc
-        lowerCentralSeries P 2 ≤ lowerCentralSeries P 1 :=
-          lowerCentralSeries_antitone (by omega)
+        (⊤ : Subgroup P).lowerCentralSeries 2 ≤ (⊤ : Subgroup P).lowerCentralSeries 1 :=
+          (⊤ : Subgroup P).lowerCentralSeries_antitone (by omega)
         _ = B := hL1_eq_B
-    rcases hlower.2.2.2.2.2 (lowerCentralSeries P 2) hL2_normal hL2_X
+    rcases hlower.2.2.2.2.2 ((⊤ : Subgroup P).lowerCentralSeries 2) hL2_normal hL2_X
         bot_le hL2_le_B with hbot | hB
     · exact hbot
     · exfalso
-      have hstable : ∀ n : ℕ, 1 ≤ n → lowerCentralSeries P n = B := by
+      have hstable : ∀ n : ℕ, 1 ≤ n → (⊤ : Subgroup P).lowerCentralSeries n = B := by
         intro n hn
         obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hn
         induction k with
         | zero => simpa using hL1_eq_B
         | succ k ih =>
-            change ⁅lowerCentralSeries P (1 + k), (⊤ : Subgroup P)⁆ = B
+            change ⁅(⊤ : Subgroup P).lowerCentralSeries (1 + k), (⊤ : Subgroup P)⁆ = B
             rw [ih (by omega)]
             calc
               ⁅B, (⊤ : Subgroup P)⁆ =
-                  ⁅lowerCentralSeries P 1, (⊤ : Subgroup P)⁆ := by
+                  ⁅(⊤ : Subgroup P).lowerCentralSeries 1, (⊤ : Subgroup P)⁆ := by
                     rw [hL1_eq_B]
-              _ = lowerCentralSeries P 2 := rfl
+              _ = (⊤ : Subgroup P).lowerCentralSeries 2 := rfl
               _ = B := hB
       let c := Group.nilpotencyClass P
       have hc_pos : 0 < c := by
         apply Nat.pos_of_ne_zero
         intro hc
         have hsub : Subsingleton P :=
-          (nilpotencyClass_zero_iff_subsingleton (G := P)).mp hc
+          (Group.nilpotencyClass_zero_iff_subsingleton (G := P)).mp hc
         rcases _hP.2.2.1 with ⟨x, y, _hx, _hy, hxy⟩
         exact hxy (hsub.elim x y)
-      have hcB : lowerCentralSeries P c = B := hstable c (by omega)
-      have hcbot : lowerCentralSeries P c = ⊥ := by
+      have hcB : (⊤ : Subgroup P).lowerCentralSeries c = B := hstable c (by omega)
+      have hcbot : (⊤ : Subgroup P).lowerCentralSeries c = ⊥ := by
         dsimp [c]
-        exact lowerCentralSeries_nilpotencyClass
+        exact Subgroup.lowerCentralSeries_nilpotencyClass
       exact hlower.1.ne (hcB.symm.trans hcbot).symm
   have hB_le_center : B ≤ Subgroup.center P := by
     rw [← hcommutator_eq_B]
     have hclass := hclass_two
-    rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ,
-      lowerCentralSeries_one] at hclass
+    rw [show 2 = 1 + 1 by omega, Subgroup.lowerCentralSeries_succ,
+      Subgroup.top_lowerCentralSeries_one] at hclass
     change ⁅commutator P, (⊤ : Subgroup P)⁆ = ⊥ at hclass
     rw [Subgroup.commutator_eq_bot_iff_le_centralizer] at hclass
     simpa [← Subgroup.centralizer_univ, ← Subgroup.coe_top] using hclass
@@ -5593,30 +5580,30 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         let b : B := ⟨x, hL1_eq_B ▸ x.property⟩
         simpa [b] using congrArg Subtype.val (hB_exponent_two b)
       · intro x hx
-        change (x : P) ∈ lowerCentralSeries P 2 at hx
+        change (x : P) ∈ (⊤ : Subgroup P).lowerCentralSeries 2 at hx
         rw [hclass_two] at hx
         simpa using hx
     · exact bot_le
   have hkernel0_map_B :
       (lowerCentralFactorKernel P 0).map
-          (lowerCentralSeries P 0).subtype = B := by
+          ((⊤ : Subgroup P).lowerCentralSeries 0).subtype = B := by
     have hsquares_map :
-        (squaresSubgroup (lowerCentralSeries P 0)).map
-            (lowerCentralSeries P 0).subtype = squaresSubgroup P := by
+        (squaresSubgroup ((⊤ : Subgroup P).lowerCentralSeries 0)).map
+            ((⊤ : Subgroup P).lowerCentralSeries 0).subtype = squaresSubgroup P := by
       apply le_antisymm
       · rw [squaresSubgroup, MonoidHom.map_closure, Subgroup.closure_le]
         rintro _ ⟨x, ⟨y, rfl⟩, rfl⟩
         exact Subgroup.subset_closure ⟨(y : P), rfl⟩
       · rw [squaresSubgroup, Subgroup.closure_le]
         rintro _ ⟨y, rfl⟩
-        let yt : lowerCentralSeries P 0 := ⟨y, trivial⟩
+        let yt : (⊤ : Subgroup P).lowerCentralSeries 0 := ⟨y, trivial⟩
         exact ⟨yt ^ 2, Subgroup.subset_closure ⟨yt, rfl⟩, rfl⟩
     have hnext_map :
-        ((lowerCentralSeries P 1).subgroupOf
-            (lowerCentralSeries P 0)).map
-              (lowerCentralSeries P 0).subtype = lowerCentralSeries P 1 :=
+        (((⊤ : Subgroup P).lowerCentralSeries 1).subgroupOf
+            ((⊤ : Subgroup P).lowerCentralSeries 0)).map
+              ((⊤ : Subgroup P).lowerCentralSeries 0).subtype = (⊤ : Subgroup P).lowerCentralSeries 1 :=
       Subgroup.map_subgroupOf_eq_of_le
-        (lowerCentralSeries_antitone (by omega : 0 ≤ 1))
+        ((⊤ : Subgroup P).lowerCentralSeries_antitone (by omega : 0 ≤ 1))
     rw [lowerCentralFactorKernel, Subgroup.map_sup, hsquares_map, hnext_map,
       hL1_eq_B]
     exact sup_eq_right.mpr (by simpa [hL1_eq_B] using hsquares_le_B)
@@ -5626,17 +5613,17 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     have hcard : Nat.card (LowerCentralFactor P 1) = 2 ^ n := by
       have h := Module.natCard_eq_pow_finrank
         (K := ZMod 2) (V := Additive (LowerCentralFactor P 1))
-      simpa [n] using h
+      exact (Nat.card_congr Additive.toMul).symm.trans (by simpa [n] using h)
     have hfactor_card_eq_B :
         Nat.card (LowerCentralFactor P 1) = Nat.card B := by
       change Nat.card
-          ((lowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
+          (((⊤ : Subgroup P).lowerCentralSeries 1) ⧸ lowerCentralFactorKernel P 1) =
         Nat.card B
       rw [hkernel1_bot]
       calc
-        Nat.card ((lowerCentralSeries P 1) ⧸
-              (⊥ : Subgroup (lowerCentralSeries P 1))) =
-            Nat.card (lowerCentralSeries P 1) := by
+        Nat.card (((⊤ : Subgroup P).lowerCentralSeries 1) ⧸
+              (⊥ : Subgroup ((⊤ : Subgroup P).lowerCentralSeries 1))) =
+            Nat.card ((⊤ : Subgroup P).lowerCentralSeries 1) := by
               exact Nat.card_congr QuotientGroup.quotientBot.toEquiv
         _ = Nat.card B := Nat.card_congr
           (Equiv.setCongr (congrArg (fun S : Subgroup P => (S : Set P))
@@ -6105,8 +6092,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         intro u hu
         exact hU_tau u hu)
   letI : Finite (Additive (LowerCentralFactor P 0) ⧸ U) :=
-    Finite.of_surjective U.mkQ (by
-      simpa using Submodule.Quotient.mk_surjective U)
+    Finite.of_surjective U.mkQ U.mkQ_surjective
   have htauQMap_surjective : Function.Surjective tauQMap := by
     intro z
     obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective U z
@@ -6300,14 +6286,14 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
           (v : Additive (LowerCentralFactor P 0)) by rfl,
         hxiQ_mk]
       simpa [eQ, w] using
-        (Submodule.quotientEquivOfIsCompl_apply_mk_coe
+        (Submodule.quotientEquivOfIsCompl_apply_mk_right
           (p := U) (q := V) hUV w)
     exact congrArg Subtype.val hxiV_eq
   letI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU_ne_bot
   letI : Nontrivial V := Submodule.nontrivial_iff_ne_bot.mpr hV_ne_bot
   have hfactor1_add_card :
       Nat.card (Additive (LowerCentralFactor P 1)) = 2 ^ n := by
-    simpa using hfactor1_card_n
+    exact (Nat.card_congr Additive.toMul).trans hfactor1_card_n
   have hfactor1_card_gt :
       1 < Nat.card (Additive (LowerCentralFactor P 1)) := by
     rw [hfactor1_add_card]
@@ -6334,7 +6320,10 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       hbracket_equivariant, hbracket_self, hbracket_mk, hbracket_span,
       hsquare_mk, hsquare_equivariant, hsquare_add⟩ :=
     lemma5_square_map_normal_form_quadratic_core xi n
-      (by simpa [hL1_eq_B] using hsquares_le_B)
+      (by
+        change squaresSubgroup P ≤ (⊤ : Subgroup P).lowerCentralSeries 1
+        rw [hL1_eq_B]
+        exact hsquares_le_B)
   have hsquare_anisotropic :
       ∀ v : Additive (LowerCentralFactor P 0), squareMap v = 0 → v = 0 := by
     intro v hv
@@ -6344,7 +6333,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         (QuotientGroup.mk' (lowerCentralFactorKernel P 0) x) := by
       apply Additive.toMul.injective
       exact hx.symm
-    have hxsquare_mem : (x : P) ^ 2 ∈ lowerCentralSeries P 1 := by
+    have hxsquare_mem : (x : P) ^ 2 ∈ (⊤ : Subgroup P).lowerCentralSeries 1 := by
       rw [hL1_eq_B]
       exact hsquares_le_B (Subgroup.subset_closure ⟨(x : P), rfl⟩)
     have hmk_zero :
@@ -6359,15 +6348,15 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       apply Additive.ofMul.injective
       simpa using hmk_zero
     have hsqker :
-        (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1) ∈
+        (⟨(x : P) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup P).lowerCentralSeries 1) ∈
           lowerCentralFactorKernel P 1 :=
       (QuotientGroup.eq_one_iff
         (N := lowerCentralFactorKernel P 1)
-        (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1)).mp hmk_one
+        (⟨(x : P) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup P).lowerCentralSeries 1)).mp hmk_one
     rw [hkernel1_bot] at hsqker
     have hxsquare : (x : P) ^ 2 = 1 := by
       have hsquare_one :
-          (⟨(x : P) ^ 2, hxsquare_mem⟩ : lowerCentralSeries P 1) = 1 := by
+          (⟨(x : P) ^ 2, hxsquare_mem⟩ : (⊤ : Subgroup P).lowerCentralSeries 1) = 1 := by
         simpa using hsqker
       exact congrArg Subtype.val hsquare_one
     by_cases hxone : (x : P) = 1
@@ -6383,7 +6372,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
             (x : P) ⟨hxone, hxsquare⟩
       have hxmap : (x : P) ∈
           (lowerCentralFactorKernel P 0).map
-            (lowerCentralSeries P 0).subtype := by
+            ((⊤ : Subgroup P).lowerCentralSeries 0).subtype := by
         rw [hkernel0_map_B]
         exact hxB
       rcases hxmap with ⟨z, hz, hzx⟩
@@ -6471,7 +6460,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         bracket (u : Additive (LowerCentralFactor P 0))
           (v : Additive (LowerCentralFactor P 0)) ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     obtain ⟨z, hz⟩ := exists_ne
       (0 : Additive (LowerCentralFactor P 1))
     obtain ⟨u, hu⟩ := hsquareU_surjective z
@@ -6577,13 +6566,13 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
   have hfactor1_card_eq_B :
       Nat.card (LowerCentralFactor P 1) = Nat.card B := by
     change Nat.card
-        ((lowerCentralSeries P 1) ⧸ lowerCentralFactorKernel P 1) =
+        (((⊤ : Subgroup P).lowerCentralSeries 1) ⧸ lowerCentralFactorKernel P 1) =
       Nat.card B
     rw [hkernel1_bot]
     calc
-      Nat.card ((lowerCentralSeries P 1) ⧸
-            (⊥ : Subgroup (lowerCentralSeries P 1))) =
-          Nat.card (lowerCentralSeries P 1) := by
+      Nat.card (((⊤ : Subgroup P).lowerCentralSeries 1) ⧸
+            (⊥ : Subgroup ((⊤ : Subgroup P).lowerCentralSeries 1))) =
+          Nat.card ((⊤ : Subgroup P).lowerCentralSeries 1) := by
             exact Nat.card_congr QuotientGroup.quotientBot.toEquiv
       _ = Nat.card B := Nat.card_congr
         (Equiv.setCongr (congrArg (fun R : Subgroup P => (R : Set P))
@@ -7144,7 +7133,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
           apply LinearMap.ext
           intro b
           simp }
-    simpa [crossCoordinate] using
+    simpa [K, crossCoordinate] using
       (PFAppendixIII.frobeniusBilinear_expansion n (by omega) crossCoordinate)
   obtain ⟨crossCoeff, hcrossExpansion⟩ := hcrossExpansion
   have hcrossCoefficientSupport :
@@ -7341,15 +7330,15 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       have hpi_surj : Function.Surjective pi :=
         factorZeroCoordinates.surjective.comp hq0_surj
       let factorOneEquiv : LowerCentralFactor P 1 ≃*
-          lowerCentralSeries P 1 :=
+          (⊤ : Subgroup P).lowerCentralSeries 1 :=
         (QuotientGroup.quotientMulEquivOfEq hkernel1_bot).trans
-          (QuotientGroup.quotientBot (G := lowerCentralSeries P 1))
+          (QuotientGroup.quotientBot (G := (⊤ : Subgroup P).lowerCentralSeries 1))
       let centerCoordinatesMul : Multiplicative K ≃*
           LowerCentralFactor P 1 :=
         finalCenterCoordinates.toAddEquiv.toMultiplicative.trans
           MulEquiv.toMultiplicative_toAdditive
       let iota : Multiplicative K →* P :=
-        (lowerCentralSeries P 1).subtype.comp
+        ((⊤ : Subgroup P).lowerCentralSeries 1).subtype.comp
           (factorOneEquiv.toMonoidHom.comp
             centerCoordinatesMul.toMonoidHom)
       have hiota : Function.Injective iota := by
@@ -7365,12 +7354,12 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         · rintro ⟨z, rfl⟩
           exact (factorOneEquiv (centerCoordinatesMul z)).property
         · intro hp
-          let p1 : lowerCentralSeries P 1 := ⟨p, hp⟩
+          let p1 : (⊤ : Subgroup P).lowerCentralSeries 1 := ⟨p, hp⟩
           let z : Multiplicative K :=
             centerCoordinatesMul.symm (factorOneEquiv.symm p1)
           refine ⟨z, ?_⟩
           change ((factorOneEquiv (centerCoordinatesMul z) :
-            lowerCentralSeries P 1) : P) = p
+            (⊤ : Subgroup P).lowerCentralSeries 1) : P) = p
           have hz :
               centerCoordinatesMul z = factorOneEquiv.symm p1 := by
             simp [z]
@@ -7394,8 +7383,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         exact (hq x.1 x.2).symm
       have hsquare_extension (x : P) :
           iota (Multiplicative.ofAdd (q (pi x).toAdd)) = x ^ 2 := by
-        let x0 : lowerCentralSeries P 0 := Subgroup.topEquiv.symm x
-        have hx2mem : x ^ 2 ∈ lowerCentralSeries P 1 := by
+        let x0 : (⊤ : Subgroup P).lowerCentralSeries 0 := Subgroup.topEquiv.symm x
+        have hx2mem : x ^ 2 ∈ (⊤ : Subgroup P).lowerCentralSeries 1 := by
           rw [hL1_eq_B]
           exact hsquares_le_B (Subgroup.subset_closure ⟨x, rfl⟩)
         have hpi_coordinates :
@@ -7429,7 +7418,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
                 ⟨x ^ 2, hx2mem⟩ := by
           change (finalCenterCoordinates (q (pi x).toAdd)).toMul = _
           exact congrArg Additive.toMul hcenter_coordinates
-        have hfactorOne_mk (y : lowerCentralSeries P 1) :
+        have hfactorOne_mk (y : (⊤ : Subgroup P).lowerCentralSeries 1) :
             factorOneEquiv
                 (QuotientGroup.mk' (lowerCentralFactorKernel P 1) y) = y := by
           have hmk :
@@ -7437,8 +7426,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
                   ((QuotientGroup.mk'
                     (lowerCentralFactorKernel P 1)) y) =
                 (QuotientGroup.mk y :
-                  lowerCentralSeries P 1 ⧸
-                    (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                  (⊤ : Subgroup P).lowerCentralSeries 1 ⧸
+                    (⊥ : Subgroup ((⊤ : Subgroup P).lowerCentralSeries 1))) := by
             simpa only [QuotientGroup.mk'_apply] using
               (QuotientGroup.quotientMulEquivOfEq_mk hkernel1_bot y)
           calc
@@ -7452,17 +7441,15 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
                 rfl
             _ = QuotientGroup.quotientBot
                 (QuotientGroup.mk y :
-                  lowerCentralSeries P 1 ⧸
-                    (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+                  (⊤ : Subgroup P).lowerCentralSeries 1 ⧸
+                    (⊥ : Subgroup ((⊤ : Subgroup P).lowerCentralSeries 1))) := by
                 rw [hmk]
             _ = y := by
-              simpa [QuotientGroup.quotientBot] using
-                (QuotientGroup.kerLift_mk
-                  (φ := MonoidHom.id (lowerCentralSeries P 1)) y)
+              rfl
         change ((factorOneEquiv
           (centerCoordinatesMul
             (Multiplicative.ofAdd (q (pi x).toAdd))) :
-              lowerCentralSeries P 1) : P) = x ^ 2
+              (⊤ : Subgroup P).lowerCentralSeries 1) : P) = x ^ 2
         rw [hcenter_mul, hfactorOne_mk]
       obtain ⟨pairLift, hpairOne, hpairSurj, hpairInj, hpairMul⟩ :=
         exists_coordinates_with_prescribed_bilinear_defect
@@ -7471,7 +7458,9 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       let tripleLift : K → K → K → P :=
         fun z a b => pairLift (a, b) z
       refine ⟨tripleLift, ?_, ?_, ?_, ?_⟩
-      · simpa [tripleLift] using hpairOne
+      · change pairLift (0, 0) 0 = 1
+        rw [show (0, 0) = (0 : K × K) by ext <;> rfl]
+        exact hpairOne
       · intro x
         obtain ⟨ab, z, hx⟩ := hpairSurj x
         exact ⟨z, ab.1, ab.2, by simpa [tripleLift] using hx⟩
@@ -8151,8 +8140,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
                 etaUnit ^ (2 ^ (i : ℕ) + 2 ^ (j : ℕ)) =
                   etaUnit ^ 2 := by
               apply Units.ext
-              simpa only [etaUnit, Units.val_pow_eq_pow_val, Units.val_mk0,
-                pow_add] using hseed
+              simpa only [K, etaUnit, Units.val_pow_eq_pow_val, Units.val_mk0,
+                Units.val_mul, pow_add] using hseed
             have hmod := pow_eq_pow_iff_modEq.mp hunit
             change Nat.ModEq (orderOf (Units.mk0 eta heta_nonzero))
               (2 ^ (i : ℕ) + 2 ^ (j : ℕ)) 2 at hmod
@@ -8400,12 +8389,13 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         let aA : A := ⟨a, haA⟩
         let bA : A := ⟨b, hbA⟩
         have hab : a * b = b * a := by
-          simpa [aA, bA] using congrArg Subtype.val (mul_comm aA bA)
+          simpa [aA, bA] using
+            congrArg Subtype.val (hAcomm.is_comm.comm aA bA)
         have hcommOne : ⁅a, b⁆ = 1 :=
           commutatorElement_eq_one_iff_mul_comm.mpr hab
-        let aTop : lowerCentralSeries P 0 := ⟨a, trivial⟩
-        let bTop : lowerCentralSeries P 0 := ⟨b, trivial⟩
-        have hcommMem : ⁅(aTop : P), (bTop : P)⁆ ∈ lowerCentralSeries P 1 := by
+        let aTop : (⊤ : Subgroup P).lowerCentralSeries 0 := ⟨a, trivial⟩
+        let bTop : (⊤ : Subgroup P).lowerCentralSeries 0 := ⟨b, trivial⟩
+        have hcommMem : ⁅(aTop : P), (bTop : P)⁆ ∈ (⊤ : Subgroup P).lowerCentralSeries 1 := by
           rw [hcommOne]
           exact Subgroup.one_mem _
         have hu :
@@ -8427,7 +8417,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         rw [hbracket_mk aTop bTop hcommMem]
         have hcommSubtypeOne :
             (⟨⁅(aTop : P), (bTop : P)⁆, hcommMem⟩ :
-              lowerCentralSeries P 1) = 1 := by
+              (⊤ : Subgroup P).lowerCentralSeries 1) = 1 := by
           apply Subtype.ext
           simpa [aTop, bTop] using hcommOne
         rw [hcommSubtypeOne]
@@ -8808,7 +8798,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
               have hcrossCoeffNonzero :
                   ∃ iCross jCross : Fin n, crossCoeff iCross jCross ≠ 0 := by
                 by_contra hzero
-                push_neg at hzero
+                push Not at hzero
                 obtain ⟨u, v, huv⟩ := hcross_nonzero
                 have hcoordinateZero :
                     centerCoordinates.symm (crossBracket u v) = 0 := by

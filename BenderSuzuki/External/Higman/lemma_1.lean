@@ -16,6 +16,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped IsMulCommutative
 
 universe u
 
@@ -45,7 +46,6 @@ private theorem lemma1_abelian_two_group_decomposition
         Nonempty (A ≃* ((i : ι) → Multiplicative (ZMod (2 ^ e i)))) := by
   letI : Finite A := lemma1_finite_A hP A
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   obtain ⟨ι, hι, n, hn, ⟨f⟩⟩ :=
     CommGroup.equiv_prod_multiplicative_zmod_of_finite A
   letI : Fintype ι := hι
@@ -594,7 +594,6 @@ public theorem lemma1_power_closure_card
     Nat.card (Subgroup.closure
       {x : P | ∃ a : A, (a : P) ^ (2 ^ (e - f)) = x}) = (2 ^ f) ^ r := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   let power : A →* A := powMonoidHom (2 ^ (e - f))
   have hclosure : Subgroup.closure
       {x : P | ∃ a : A, (a : P) ^ (2 ^ (e - f)) = x} =
@@ -689,6 +688,5 @@ public theorem lemma1_abelian_invariant_homocyclic
 end Higman
 end External
 end BenderSuzuki
-
 
 

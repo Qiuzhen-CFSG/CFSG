@@ -24,6 +24,8 @@ public import FeitThompson.ElementaryAbelian
 public import FeitThompson.Fitting.Core
 import FeitThompson.PGroup.Omega
 
+open scoped IsMulCommutative commutatorElement
+
 /-- The center of a subgroup, viewed as a subgroup of the ambient group. -/
 @[expose]
 public def centerIn {G : Type*} [Group G] (H : Subgroup G) : Subgroup G :=
@@ -228,7 +230,7 @@ public theorem minimalNormal_solvable_le_centerIn_fittingSubgroup {G : Type*} [G
             rw [Subgroup.mem_center_iff]
             intro y
             simpa using (IsMulCommutative.is_comm (M := (↥M))).comm y x
-        simpa [upperCentralSeries_one] using hcenter
+        simpa [Subgroup.upperCentralSeries_one] using hcenter
       exact le_sSup ⟨inferInstance, hnil⟩
 
     -- Now show `M` centralizes `F(G)` by nilpotence of `F(G)` and minimality of `M`.
@@ -238,14 +240,15 @@ public theorem minimalNormal_solvable_le_centerIn_fittingSubgroup {G : Type*} [G
     haveI : Group.IsNilpotent (↥F) := by
       simpa [F] using (inferInstance : Group.IsNilpotent (fittingSubgroup G))
     obtain ⟨n, hn⟩ :=
-      (nilpotent_iff_lowerCentralSeries (G := (↥F))).1
+      (Subgroup.nilpotent_iff_lowerCentralSeries (G := (↥F))).1
         (show Group.IsNilpotent (↥F) from inferInstance)
 
     -- Iterated commutators of `M` with `F`.
     let N : ℕ → Subgroup G :=
       fun k => Nat.rec (motive := fun _ => Subgroup G) M (fun _ Nk => ⁅Nk, F⁆) k
     -- Image of the lower central series of the nilpotent subgroup `F`.
-    let L : ℕ → Subgroup G := fun k => (lowerCentralSeries (↥F) k).map F.subtype
+    let L : ℕ → Subgroup G :=
+      fun k => ((⊤ : Subgroup (↥F)).lowerCentralSeries k).map F.subtype
     have htop_map : (⊤ : Subgroup (↥F)).map F.subtype = F := by
       simpa [MonoidHom.range_eq_map] using (F.range_subtype : F.subtype.range = F)
 
@@ -254,12 +257,12 @@ public theorem minimalNormal_solvable_le_centerIn_fittingSubgroup {G : Type*} [G
       induction k with
       | zero =>
           -- `N 0 = M` and `L 0 = F`.
-          simpa [N, L, lowerCentralSeries, htop_map, F] using hM_le_F
+          simpa [N, L, Subgroup.lowerCentralSeries, htop_map, F] using hM_le_F
       | succ k ih =>
           have h1 : ⁅N k, F⁆ ≤ ⁅L k, F⁆ :=
             Subgroup.commutator_mono ih (le_rfl)
           have hL_succ : L (k + 1) = ⁅L k, F⁆ := by
-            simp [L, lowerCentralSeries, Subgroup.map_commutator, htop_map]
+            simp [L]
           simpa [N, hL_succ] using h1
 
     have hN_bot : N n = ⊥ := by

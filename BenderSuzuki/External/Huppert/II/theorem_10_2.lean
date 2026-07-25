@@ -31,21 +31,20 @@ private theorem hermitian_exists_anisotropic
     (B : V →ₛₗ[(sigma : K →+* K)] V →ₗ[K] K)
     (hB : B.IsSymm) (hsep : B.SeparatingLeft)
     (htrace : ∃ a : K, a + sigma a ≠ 0) :
-    ∃ x : V, ¬ B.IsOrtho x x := by
+    ∃ x : V, B x x ≠ 0 := by
   obtain ⟨u, hu⟩ := exists_ne (0 : V)
   have hnotall : ¬ ∀ w : V, B u w = 0 := fun h => hu (hsep u h)
-  push_neg at hnotall
+  push Not at hnotall
   obtain ⟨w, hw⟩ := hnotall
   let z := (B u w)⁻¹ • w
   have huz : B u z = 1 := by simp [z, hw]
   have hzu : B z u = 1 := by rw [← hB.eq, huz, map_one]
   rcases htrace with ⟨a, ha⟩
   by_contra hall
-  push_neg at hall
+  push Not at hall
   have hu0 := hall u
   have hz0 := hall z
   have hsum := hall (u + a • z)
-  rw [LinearMap.IsOrtho] at hu0 hz0 hsum
   simp [map_add, map_smul, map_smulₛₗ, hu0, hz0, huz, hzu] at hsum
   exact ha (by simpa [add_comm] using hsum)
 
@@ -53,23 +52,23 @@ private theorem hermitian_isCompl_span_singleton_orthogonal
     {K : Type u} [Field K] {V : Type v} [AddCommGroup V] [Module K V]
     (sigma : K ≃+* K)
     (B : V →ₛₗ[(sigma : K →+* K)] V →ₗ[K] K)
-    {x : V} (hx : ¬ B.IsOrtho x x) :
-    IsCompl (K ∙ x) (Submodule.orthogonalBilin (K ∙ x) B) := by
+    {x : V} (hx : B x x ≠ 0) :
+    IsCompl (K ∙ x) ((K ∙ x).orthogonalBilin B) := by
   refine
     { disjoint := disjoint_iff.2 <|
         LinearMap.span_singleton_inf_orthogonal_eq_bot B x hx
       codisjoint := codisjoint_iff.2 ?_ }
   rw [eq_top_iff]
   intro y _
-  have hxx : B x x ≠ 0 := by simpa [LinearMap.IsOrtho] using hx
+  have hxx : B x x ≠ 0 := hx
   have hbase : B x (y + (-B x y / B x x) • x) = 0 := by
     rw [map_add, map_smul, smul_eq_mul, div_mul_cancel₀ _ hxx, add_neg_cancel]
   have hyorth :
       y + (-B x y / B x x) • x ∈
-        Submodule.orthogonalBilin (K ∙ x) B := by
+        (K ∙ x).orthogonalBilin B := by
     intro z hz
     obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
-    rw [LinearMap.IsOrtho, map_smulₛₗ]
+    rw [map_smulₛₗ]
     change sigma c * B x (y + (-B x y / B x x) • x) = 0
     rw [hbase, mul_zero]
   have hxspan :
@@ -77,14 +76,14 @@ private theorem hermitian_isCompl_span_singleton_orthogonal
     Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self x)
   have hxspanSup :
       (B x y / B x x) • x ∈
-        (K ∙ x) ⊔ Submodule.orthogonalBilin (K ∙ x) B :=
+        (K ∙ x) ⊔ (K ∙ x).orthogonalBilin B :=
     (show (K ∙ x) ≤
-      (K ∙ x) ⊔ Submodule.orthogonalBilin (K ∙ x) B from le_sup_left) hxspan
+      (K ∙ x) ⊔ (K ∙ x).orthogonalBilin B from le_sup_left) hxspan
   have hyorthSup :
       y + (-B x y / B x x) • x ∈
-        (K ∙ x) ⊔ Submodule.orthogonalBilin (K ∙ x) B :=
-    (show Submodule.orthogonalBilin (K ∙ x) B ≤
-      (K ∙ x) ⊔ Submodule.orthogonalBilin (K ∙ x) B from le_sup_right) hyorth
+        (K ∙ x) ⊔ (K ∙ x).orthogonalBilin B :=
+    (show (K ∙ x).orthogonalBilin B ≤
+      (K ∙ x) ⊔ (K ∙ x).orthogonalBilin B from le_sup_right) hyorth
   have hadd := Submodule.add_mem _ hxspanSup hyorthSup
   simpa [neg_div, add_comm, add_left_comm, add_assoc] using hadd
 
@@ -93,22 +92,22 @@ private theorem hermitian_orthogonal_restrict_separatingLeft
     (sigma : K ≃+* K)
     (B : V →ₛₗ[(sigma : K →+* K)] V →ₗ[K] K)
     (hB : B.IsSymm) (hsep : B.SeparatingLeft)
-    {x : V} (hx : ¬ B.IsOrtho x x) :
+    {x : V} (hx : B x x ≠ 0) :
     (B.domRestrict₁₂
-      (Submodule.orthogonalBilin (K ∙ x) B)
-      (Submodule.orthogonalBilin (K ∙ x) B)).SeparatingLeft := by
-  let N := Submodule.orthogonalBilin (K ∙ x) B
+      ((K ∙ x).orthogonalBilin B)
+      ((K ∙ x).orthogonalBilin B)).SeparatingLeft := by
+  let N := (K ∙ x).orthogonalBilin B
   intro z hz
   apply Subtype.ext
   apply hsep z.1
   intro y
-  have hxx : B x x ≠ 0 := by simpa [LinearMap.IsOrtho] using hx
+  have hxx : B x x ≠ 0 := hx
   have hybase : B x (y + (-B x y / B x x) • x) = 0 := by
     rw [map_add, map_smul, smul_eq_mul, div_mul_cancel₀ _ hxx, add_neg_cancel]
   have hyN : y + (-B x y / B x x) • x ∈ N := by
     intro z hz
     obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
-    rw [LinearMap.IsOrtho, map_smulₛₗ]
+    rw [map_smulₛₗ]
     change sigma c * B x (y + (-B x y / B x x) • x) = 0
     rw [hybase, mul_zero]
   let y0 : N := ⟨y + (-B x y / B x x) • x, hyN⟩
@@ -135,7 +134,7 @@ private theorem hermitian_exists_orthogonal_basis
   | succ d ih =>
       letI : Nontrivial V := Module.nontrivial_of_finrank_eq_succ hd
       obtain ⟨x, hx⟩ := hermitian_exists_anisotropic sigma B hB hsep htrace
-      let N := Submodule.orthogonalBilin (K ∙ x) B
+      let N := (K ∙ x).orthogonalBilin B
       have hcompl : IsCompl (K ∙ x) N :=
         hermitian_isCompl_span_singleton_orthogonal sigma B hx
       rw [← Submodule.finrank_add_eq_of_isCompl hcompl.symm,
@@ -162,9 +161,8 @@ private theorem hermitian_exists_orthogonal_basis
             refine ⟨-B x y / B x x, ?_⟩
             intro z hz
             obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz
-            have hxx : B x x ≠ 0 := by
-              simpa [LinearMap.IsOrtho] using hx
-            rw [LinearMap.IsOrtho, map_smulₛₗ]
+            have hxx : B x x ≠ 0 := hx
+            rw [map_smulₛₗ]
             change sigma c * B x (y + (-B x y / B x x) • x) = 0
             rw [map_add, map_smul, smul_eq_mul, div_mul_cancel₀ _ hxx,
               add_neg_cancel, mul_zero])
@@ -175,7 +173,7 @@ private theorem hermitian_exists_orthogonal_basis
         refine Fin.cases ?_ (fun j => ?_) j <;> intro hij <;>
         simp only [Function.onFun, Fin.cons_zero, Fin.cons_succ, Function.comp_apply]
       · exact (hij rfl).elim
-      · rw [LinearMap.IsOrtho, ← hB.eq]
+      · rw [← hB.eq]
         have hxo : B x (b' j) = 0 :=
           (b' j).prop _ (Submodule.mem_span_singleton_self x)
         rw [hxo, map_zero]
@@ -199,7 +197,7 @@ public theorem huppert_II_10_2_a_exists_anisotropic
         (fun l => J.conj ((Pi.single k c : Fin n → K) l)) =
           (Pi.single k (J.conj c) : Fin n → K) := by
       ext l
-      by_cases hl : l = k <;> simp [Pi.single_apply, hl]
+      by_cases hl : l = k <;> simp [hl]
     have hcross (k l : Fin n) (c d : K) :
         dotProduct (fun r => J.conj ((Pi.single k c : Fin n → K) r))
             (J.form.mulVec (Pi.single l d)) =
@@ -215,10 +213,10 @@ public theorem huppert_II_10_2_a_exists_anisotropic
       intro hzero
       apply J.form_nondegenerate
       rw [hzero]
-      exact Matrix.det_zero (show Nonempty (Fin n) from inferInstance)
+      exact Matrix.det_zero
     have hexists : ∃ i j, J.form i j ≠ 0 := by
       by_contra hentries
-      push_neg at hentries
+      push Not at hentries
       apply hJne
       ext i j
       exact hentries i j
@@ -317,7 +315,21 @@ public theorem huppert_II_10_2_b_orthogonal_basis
           simp [hx]
         rw [apply_eq_dotProduct_toMatrix₂_mulVec e e B (e i) x] at hBix
         change J.form.mulVec x i = 0
-        simpa [B, e, dotProduct, Pi.single_apply] using hBix
+        have hrepr : ((Pi.basisFun K (Fin n)).repr x : Fin n → K) = x := by
+          ext j
+          simp
+        have hrepr_i :
+            ((Pi.basisFun K (Fin n)).repr (e i) : Fin n → K) = Pi.single i 1 := by
+          ext j
+          simp [e]
+        rw [hrepr, hrepr_i] at hBix
+        have hconj_single :
+            ((↑J.conj : K →+* K) ∘ (Pi.single i 1 : Fin n → K)) =
+              Pi.single i (J.conj 1) := by
+          ext j
+          by_cases h : j = i <;> simp [h]
+        rw [hconj_single, single_dotProduct] at hBix
+        simpa [B, Matrix.toLinearMapₛₗ₂_apply] using hBix
       by_contra hx0
       apply J.form_nondegenerate
       exact Matrix.exists_mulVec_eq_zero_iff.mp ⟨x, hx0, hmul⟩
@@ -347,7 +359,7 @@ public theorem huppert_II_10_2_b_orthogonal_basis
         intro l _
         ac_rfl
       rw [hgram]
-      simpa [LinearMap.IsOrtho] using hb hij
+      exact hb hij
     · intro i
       have hgram :
           (J.conjTranspose (P : Matrix (Fin n) (Fin n) K) * J.form *
@@ -364,8 +376,7 @@ public theorem huppert_II_10_2_b_orthogonal_basis
         intro l _
         ac_rfl
       rw [hgram]
-      simpa [LinearMap.IsOrtho] using
-        hb.not_isOrtho_basis_self_of_separatingLeft hsep i
+      exact hb.not_isOrtho_basis_self_of_separatingLeft hsep i
   exact horthogonal_basis
 
 end External

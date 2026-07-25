@@ -36,12 +36,10 @@ private theorem section11_conjBy_le_centralizer_self
     y * x = g * (y0 * x0) * g⁻¹ := by
       rw [← hx_eq, ← hy_eq]
       simp [MulAut.conj_apply]
-      group
     _ = g * (x0 * y0) * g⁻¹ := by rw [← hcomm]
     _ = x * y := by
       rw [← hx_eq, ← hy_eq]
       simp [MulAut.conj_apply]
-      group
 
 omit [Finite G] [IsMinCE G] in
 private theorem section11_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_normalizer
@@ -78,6 +76,7 @@ private theorem section11_isComplement'_subgroupOf_sup_of_inf_eq_bot_of_le_norma
       ⟨h, hhH, r, hrR, hmul⟩
     exact ⟨h, hhH, r, hrR, hmul⟩
 
+omit [IsMinCE G] in
 public theorem section11_obtain_g_and_A_le_Mg
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) :
@@ -177,6 +176,6 @@ public theorem theorem_11_3
     Subgroup.subgroupOfEquivOfLe (H := K) (K := S) le_sup_right
   exact (by
     simpa [K] using
-      (nilpotent_of_mulEquiv (G := K.subgroupOf S) (G' := K) (_h := hnilKsub) e))
+      (Group.nilpotent_of_mulEquiv (G := K.subgroupOf S) (G' := K) (_h := hnilKsub) e))
 
 end Section11

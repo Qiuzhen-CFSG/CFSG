@@ -104,6 +104,7 @@ variable {G : Type*} [Group G] [Finite G]
   section16NilpotentNormalHallIn MF M ∧
     ∀ H : Subgroup G, section16NilpotentNormalHallIn H M → H ≤ MF
 
+omit [Finite G] in
 /-- The subgroup `M_F` is unique when it exists. -/
 public theorem section16MFSubgroup_unique
     {M MF NF : Subgroup G}

@@ -326,7 +326,6 @@ private theorem transport_action_via_frobenius_kernel
       ∀ g : G, g • base = base ↔ rho (eG' g) a = a := by
     intro g
     rw [← MulAction.mem_stabilizer_iff]
-    change g ∈ MulAction.stabilizer G base ↔ rho (eG' g) a = a
     rw [← hHbase]
     constructor
     · intro hg
@@ -503,7 +502,9 @@ private noncomputable def projectiveEquiv_of_ringEquiv
         rw [Projectivization.map_mk, Projectivization.map_mk,
           Projectivization.mk_eq_mk_iff']
         refine ⟨1, ?_⟩
-        simpa only [one_smul] using (eV.left_inv v).symm
+        simp only [one_smul]
+        change v = eV.invFun (eV.toFun v)
+        exact (eV.left_inv v).symm
   · intro z
     induction z using Projectivization.ind with
     | h v hv =>
@@ -514,7 +515,9 @@ private noncomputable def projectiveEquiv_of_ringEquiv
         rw [Projectivization.map_mk, Projectivization.map_mk,
           Projectivization.mk_eq_mk_iff']
         refine ⟨1, ?_⟩
-        simpa only [one_smul] using (eV.right_inv v).symm
+        simp only [one_smul]
+        change v = eV.toFun (eV.invFun v)
+        exact (eV.right_inv v).symm
 
 private theorem projectiveEquiv_natural
     {K L : Type*} [Field K] [Field L] (e : K ≃+* L)
@@ -545,11 +548,13 @@ private theorem projectiveEquiv_natural
       refine ⟨1, ?_⟩
       simp only [one_smul]
       ext i
-      simpa only [Matrix.SpecialLinearGroup.toLin'_apply,
-        Matrix.toLin'_apply, Matrix.SpecialLinearGroup.map_apply_coe,
-        finTwoSemilinearEquiv_of_ringEquiv, Function.comp_apply] using
-          (RingHom.map_mulVec e.toRingHom
-            (A : Matrix (Fin 2) (Fin 2) K) v i).symm
+      change
+        (((A : Matrix (Fin 2) (Fin 2) K).map e.toRingHom).mulVec
+            (e.toRingHom ∘ v)) i =
+          e.toRingHom
+            (((A : Matrix (Fin 2) (Fin 2) K).mulVec v) i)
+      exact (RingHom.map_mulVec e.toRingHom
+        (A : Matrix (Fin 2) (Fin 2) K) v i).symm
 
 set_option maxHeartbeats 800000
 
@@ -768,7 +773,7 @@ public theorem case_v_eq_bot
   have hQgt : 2 < Nat.card Q := by
     rcases hA.A3 with ⟨E, hEcard, hEsq⟩
     have hEp : IsPGroup 2 E := by
-      exact IsPGroup.of_card (n := 2) (by simpa [hEcard])
+      exact IsPGroup.of_card (n := 2) (by simp [hEcard])
     obtain ⟨SE, hEle⟩ := hEp.exists_le_sylow
     obtain ⟨P, hPleQ⟩ := proposition_1_c H D Q t hA.A1
     have hE_le_SE : Nat.card E ≤ Nat.card SE :=
@@ -908,7 +913,11 @@ public theorem case_v_eq_bot
           R.Normal ∧ R ≠ ⊥ ∧
             ∀ x y : ℙ K (Fin 2 → K), ∃! r : R,
               (r : Matrix.ProjGenLinGroup (Fin 2) K) • x = y := by
-      simpa using hnoRegularPGL
+      change ¬ ∃ R : Subgroup (Matrix.ProjGenLinGroup (Fin 2) K),
+        R.Normal ∧ R ≠ ⊥ ∧
+          ∀ x y : ℙ K (Fin 2 → K), ∃! r : R,
+            rhoPGL (r : Matrix.ProjGenLinGroup (Fin 2) K) x = y
+      exact hnoRegularPGL
     obtain ⟨F, hFrob⟩ :=
       External.huppert_blackburn_XI_pointStabilizer_frobeniusKernel_exists
         htwoPGL hatMostTwoPGL hnoRegularPGL' a b hab
@@ -1105,8 +1114,11 @@ public theorem case_v_eq_bot
       apply hfaithfulRaw g
       intro z hz
       let zX : Xmodel := ⟨z, hz⟩
-      simpa only [SubMulAction.val_smul] using
-        congrArg Subtype.val (hg zX)
+      have hfix := congrArg Subtype.val (hg zX)
+      change
+        ((Matrix.GeneralLinearGroup.toLin
+            (g : GL (Fin 4) K)).toLinearEquiv • z) = z at hfix
+      exact hfix
     have htwoModel :
         MulAction.IsMultiplyPretransitive
           (SuzukiMatrixGroup m) Xmodel 2 := by
@@ -1145,7 +1157,9 @@ public theorem case_v_eq_bot
     letI : Fintype Xmodel := Fintype.ofFinite Xmodel
     have hXcard :
         Nat.card Xmodel = (2 ^ (2 * m + 1)) ^ 2 + 1 := by
-      simpa [Xmodel] using hOcard
+      change Nat.card {z : ℙ K (Fin 4 → K) // z ∈ O} =
+        (2 ^ (2 * m + 1)) ^ 2 + 1
+      exact hOcard
     have hXcardGt : 1 < Fintype.card Xmodel := by
       rw [← Nat.card_eq_fintype_card, hXcard]
       omega
@@ -1258,7 +1272,8 @@ public theorem case_v_eq_bot
     · intro g z
       rfl
     · intro l w
-      simpa [eTop] using hequiv (l : G) w
+      change eOmega ((l : G) • w) = rho (eG' (l : G)) (eOmega w)
+      exact hequiv (l : G) w
 
 private theorem theorem_c_Q_hasPrimePowerOrder_of_Q1_eq_bot
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -1687,7 +1702,11 @@ private theorem theorem_c_of_Q1_ne_bot
         dH⁻¹ * yH * (dH⁻¹)⁻¹ ∈ Q1.subgroupOf H :=
       hQ1_normal_in_H.conj_mem yH hyQ1H dH⁻¹
     have hyConjQ1 : rightConjugateElem y (d : G) ∈ Q1 := by
-      simpa [dH, yH, rightConjugateElem] using hyConjQ1H
+      have hmem :
+          (((dH⁻¹ * yH * (dH⁻¹)⁻¹ : H) : G)) ∈ Q1 :=
+        hyConjQ1H
+      simpa only [rightConjugateElem, Subgroup.coe_mul,
+        Subgroup.coe_inv, dH, yH, inv_inv] using hmem
     have hyConjCentral :
         rightConjugateElem y (d : G) ∈
           Subgroup.centralizer (X : Set G) := by
@@ -1816,7 +1835,10 @@ private theorem theorem_c_of_Q1_ne_bot
       ⟨q, hch.1.section2.hA.A1.Q_le_H
         (hch.1.section2.Q1_le_Q hq)⟩
     have hqH : qH ∈ Q1.subgroupOf H := hq
-    simpa [dH, qH] using hQ1_normal_in_H.conj_mem qH hqH dH
+    have hconj := hQ1_normal_in_H.conj_mem qH hqH dH
+    change (d : G) * q * (d : G)⁻¹ ∈ Q1
+    change (d : G) * q * (d : G)⁻¹ ∈ Q1 at hconj
+    exact hconj
   have hfeitSibleyData :
       ∃ (d : FeitSibleyData G)
           (chars : Finset (Section1.ClassFunction d.H)),
@@ -2126,7 +2148,7 @@ private theorem theorem_c_of_Q1_ne_bot
         Q1_odd := by simpa [hcardQ1H] using hch.1.section2.Q1_odd_order
         S_nilpotent := by
           letI : Group.IsNilpotent S := hSnil
-          exact nilpotent_of_mulEquiv
+          exact Group.nilpotent_of_mulEquiv
             (Subgroup.subgroupOfEquivOfLe
               (hch.1.section2.S_le_Q.trans
                 hch.1.section2.hA.A1.Q_le_H)).symm }
@@ -2207,7 +2229,8 @@ private theorem theorem_c_of_Q1_ne_bot
               (e * q0 * e⁻¹) * (e * k * e⁻¹) ∈ QK :=
             QK.mul_mem (Subgroup.mem_sup_left heq0)
               (Subgroup.mem_sup_right hek)
-          convert hprod using 1 <;> group
+          convert hprod using 1 ;
+            group
         have hqQK : q ∈ QK := Subgroup.mem_sup_left hq
         have hconj : q * (e * x * e⁻¹) * q⁻¹ ∈ QK :=
           QK.mul_mem (QK.mul_mem hqQK hex) (QK.inv_mem hqQK)
@@ -2319,7 +2342,7 @@ private theorem theorem_c_of_Q1_ne_bot
             Odd.of_dvd_nat hch.1.section2.hA.A1.D_odd
               (orderOf_dvd_natCard vD)
           exact horderOdd.not_two_dvd_nat htwo
-        exact hvne (by simpa [hvDone])
+        exact hvne (by simp [hvDone])
       letI : IsSolvable (d.H ⧸ QK) := hquotient_solvable
       letI : Nontrivial (d.H ⧸ QK) := hquotient_nontrivial
       obtain ⟨eta, hetaNe⟩ :=
@@ -2731,7 +2754,10 @@ private theorem theorem_c_of_Q1_ne_bot
                 d.Q_disjoint_D.le_bot ⟨hqQ, hqD⟩
               simpa using hqBot
             have hxEqK : x = k := by simpa [hqOne] using hqk.symm
-            have hkV : (k : G) ∈ V := by simpa [hxEqK] using hxV
+            have hkV : (k : G) ∈ V := by
+              change (x : G) ∈ V at hxV
+              rw [hxEqK] at hxV
+              exact hxV
             have hkBot : (k : G) ∈ (⊥ : Subgroup G) :=
               hKdisjV.le_bot ⟨hkK, hkV⟩
             apply Subtype.ext
@@ -2957,8 +2983,8 @@ private theorem theorem_c_of_Q1_ne_bot
                       lambda ⟨g * (x : G) * g⁻¹, hxg⟩ = lambda z ∧
                         (z : G) = g * (y : G) * g⁻¹ := by
           have hcardH : Nat.card d.H = Nat.card QK * QK.index := by
-            simpa [Nat.mul_comm] using
-              (Subgroup.index_mul_card (H := QK)).symm
+            rw [Nat.mul_comm]
+            exact (Subgroup.index_mul_card (H := QK)).symm
           have hcoprimeIndex : Nat.Coprime (Nat.card QK) QK.index :=
             hQKHall.card_coprime_index
           let e : ℕ := Nat.chineseRemainder hcoprimeIndex 0 1
@@ -2993,7 +3019,8 @@ private theorem theorem_c_of_Q1_ne_bot
             let c : d.H := a * (a ^ e)⁻¹
             have haQKIndex :
                 (a ^ Nat.card QK) ^ QK.index = 1 := by
-              simpa [← pow_mul] using hacard
+              rw [← pow_mul]
+              exact hacard
             have haeQK :
                 (a ^ e) ^ Nat.card QK = a ^ Nat.card QK := by
               calc
@@ -3047,9 +3074,9 @@ private theorem theorem_c_of_Q1_ne_bot
           refine ⟨x ^ e, xg ^ e, (hcomponentValue x).1,
             (hcomponentValue xg).1, (hcomponentValue x).2,
             (hcomponentValue xg).2, ?_⟩
-          change ((xg ^ e : d.H) : G) = g * (((x ^ e : d.H) : G)) * g⁻¹
-          simpa [xg, MulAut.conj_apply] using
-            (map_pow (MulAut.conj g) (x : G) e).symm
+          change (g * (x : G) * g⁻¹) ^ e =
+            g * ((x : G) ^ e) * g⁻¹
+          exact (map_pow (MulAut.conj g) (x : G) e).symm
         have hHallConjugateIntoV :
             ∀ y : d.H, Nat.Coprime (orderOf y) (Nat.card QK) →
               ∃ h : d.H, ((h * y * h⁻¹ : d.H) : G) ∈ V := by
@@ -3089,7 +3116,9 @@ private theorem theorem_c_of_Q1_ne_bot
               J.map (MulAut.conj h).toMonoidHom :=
             Subgroup.mem_map_of_mem (MulAut.conj h).toMonoidHom hyJ
           rw [← hconj] at hyMap
-          simpa [VH, MulAut.conj_apply] using hyMap
+          change ((h * y * h⁻¹ : d.H) : G) ∈ V
+          change h * y * h⁻¹ ∈ V.subgroupOf d.H at hyMap
+          exact hyMap
         have hVFusionValues :
             ∀ (y z : d.H),
               Nat.Coprime (orderOf y) (Nat.card QK) →
@@ -3356,7 +3385,7 @@ private theorem theorem_c_of_Q1_ne_bot
         congr 1
         apply Finset.sum_congr rfl
         intro x _
-        simp only [Pi.mul_apply, map_mul, Section1.principalCharacter,
+        simp only [Pi.mul_apply, Section1.principalCharacter,
           one_mul]
         rw [star_mul]
         calc
@@ -3389,7 +3418,14 @@ private theorem theorem_c_of_Q1_ne_bot
           simp [Section1.principalCharacter]
         rw [Section1.scalarProduct_inducedCF_left d.H lambda
           (Section1.principalCharacter G) hprincipalClass]
-        simpa [Section1.subgroupRestriction, Section1.principalCharacter] using
+        have hprincipalRestriction :
+            Section1.subgroupRestriction d.H
+                (Section1.principalCharacter G) =
+              Section1.principalCharacter d.H := by
+          ext x
+          rfl
+        rw [hprincipalRestriction]
+        exact
           Section1.scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne
             hlambdaIrr hlambdaNe
       exact ⟨lambda, hlambdaIrr, hlambdaNe, hlambdaDegree,
@@ -4251,7 +4287,8 @@ private theorem theorem_c_of_Q1_ne_bot
         refine ⟨Vf, inferInstance, inferInstance, inferInstance,
           rho.comp d.H.subtype, ?_⟩
         ext x
-        simpa [res, Section1.subgroupRestriction] using congrFun hrho x
+        change f (x : G) = rho.character (x : G)
+        exact congrFun hrho (x : G)
       have hexceptionalDegreePackage :
           ∃ chi0 : chars, ∃ a : chars → ℕ,
             a chi0 = 1 ∧
@@ -4324,7 +4361,7 @@ private theorem theorem_c_of_Q1_ne_bot
             (Nat.card d.D : ℕ)
           rw [Section1.degree_inducedClassFunction]
           rw [Section3.linearCharacterProductOverInternalDirectProduct_degree]
-          simp [Subgroup.relIndex_top_right, hQindex]
+          simp [hQindex]
         have hfactor :
             ∀ chi : chars, ∃ m : ℕ, 0 < m ∧
               Section1.degree
@@ -4349,7 +4386,7 @@ private theorem theorem_c_of_Q1_ne_bot
                 phi hphiIrr) hdeg0
           refine ⟨m, hmPos, ?_⟩
           rw [← hind, Section1.degree_inducedClassFunction, hmDegree]
-          simp [Subgroup.relIndex_top_right, hQindex, Nat.cast_mul]
+          simp [hQindex, Nat.cast_mul]
           ring
         let a : chars → ℕ := fun chi =>
           Classical.choose (hfactor chi)
@@ -4648,7 +4685,7 @@ private theorem theorem_c_of_Q1_ne_bot
             psi i = (chi : Section1.ClassFunction d.H) := by
           intro chi
           by_contra hnone
-          push_neg at hnone
+          push Not at hnone
           have hzero :
               Section1.scalarProduct d.H res
                 (chi : Section1.ClassFunction d.H) = 0 := by
@@ -4868,7 +4905,7 @@ private theorem theorem_c_of_Q1_ne_bot
     have hQ1cardLarge : 2 < Nat.card Q1 := by omega
     have hbzero : b1 = 0 ∨ b2 = 0 := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hsumPos : 2 ≤ b1 + b2 := by omega
       have hmul := Nat.mul_le_mul_right (Nat.card Q1 - 1) hsumPos
       have hcontra : 2 * (Nat.card Q1 - 1) ≤ Nat.card Q1 :=
@@ -4913,7 +4950,9 @@ private theorem theorem_c_of_Q1_ne_bot
           refine Finset.sum_congr rfl ?_
           intro g _hg
           have hg := hker ⟨g, by simp⟩
-          simpa using hg
+          change f g = f 1 at hg
+          rw [star_one, mul_one]
+          exact hg
         rw [hsum]
         simp
       have hdeg0 : Section1.degree f = 0 := by

@@ -13,13 +13,14 @@ import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic.Basic
 public import FeitThompson.ElementaryAbelian
 
+open scoped IsMulCommutative
+
 /-- The Omega subgroup. -/
 @[expose]
 public def omega (G : Type*) [Group G] {p : ℕ} (k : ℕ) : Subgroup G :=
   Subgroup.closure {x : G | x ^ (p ^ k) = 1}
 
 /-- The first omega subgroup `Ω₁(G)` with respect to the prime `p`. -/
-@[expose]
 public abbrev omega₁ (G : Type*) [Group G] {p : ℕ} : Subgroup G :=
   omega (G := G) (p := p) 1
 

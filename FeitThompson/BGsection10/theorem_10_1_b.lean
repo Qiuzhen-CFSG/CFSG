@@ -297,7 +297,8 @@ public theorem section10_subgroup_normalizer_le_of_subgroupNormalizerIn_le
     · intro hyQ
       have hyK : (⟨y, hQU hyQ⟩ : U) ∈ Q.subgroupOf U := hyQ
       have hconj := (Subgroup.mem_normalizer_iff.mp hx (⟨y, hQU hyQ⟩ : U)).1 hyK
-      simpa using hconj
+      change (((x : U) * ⟨y, hQU hyQ⟩ * (x : U)⁻¹ : U) : G) ∈ Q at hconj
+      exact hconj
     · intro hyQ
       have hxinv : x⁻¹ ∈ Subgroup.normalizer ((Q.subgroupOf U : Subgroup U) : Set U) :=
         (Subgroup.normalizer ((Q.subgroupOf U : Subgroup U) : Set U)).inv_mem hx
@@ -782,7 +783,8 @@ public theorem section10_Op_p'p_le_sylow_sup_pPrimeCore
   rcases (Subgroup.mem_sup_of_normal_right (s := (PL : Subgroup L)) (t := N)).1 hxLsup with
     ⟨y, hyP, z, hzM, hyz⟩
   have hyG : (y : H) ∈ (P : Subgroup H) := by
-    simpa [PL, Sylow.subtype] using hyP
+    change (y : H) ∈ (P : Subgroup H) at hyP
+    exact hyP
   have hzG : (z : H) ∈ M := by
     simpa [N, M, Subgroup.mem_subgroupOf] using hzM
   have hmul : (y : H) * (z : H) = x := congrArg Subtype.val hyz
@@ -833,7 +835,8 @@ public theorem section10_normalizer_pPrimeCore_factor_of_rank_le_two
     section10_normalizer_sup_pPrimeCore_eq_top_of_rank_le_two hsolv hodd hp_mem hrank P
   have ht :
       t ∈ Subgroup.normalizer ((P : Subgroup H) : Set H) ⊔ pPrimeCore p.val H := by
-    simp [htop]
+    rw [htop]
+    exact Subgroup.mem_top t
   rcases (Subgroup.mem_sup_of_normal_right
       (s := Subgroup.normalizer ((P : Subgroup H) : Set H))
       (t := pPrimeCore p.val H)).1 ht with
@@ -896,7 +899,8 @@ public theorem section10_rank_le_two_factor_in_ambient_normalizer_centralizer
         have hzL_eq : zL = (uL : L) * yL * (uL : L)⁻¹ := by
           ext
           simpa [yL, mul_assoc] using hz_val
-        simpa [hzL_eq] using hzP
+        rw [← hzL_eq]
+        exact hzP
       have huNorm := uL.property yL
       have hyP : yL ∈ P := huNorm.2 hyPconj
       change y ∈ PG
@@ -928,7 +932,7 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_pgroup
     exact hXS.ne (le_antisymm hX_le_S hS_le_X)
   have hnc : NormalizerCondition S := by
     letI : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
-    exact normalizerCondition_of_isNilpotent (G := S)
+    exact Group.normalizerCondition_of_isNilpotent (G := S)
   let NS : Subgroup S := Subgroup.normalizer (XS : Set S)
   have hXS_lt_NS : XS < NS := by
     simpa [NS] using hnc XS hXS_lt_top
@@ -1047,7 +1051,8 @@ public theorem section10_exists_conjBy_le_of_isPGroup_of_sigma
   rcases hpσ with ⟨_hpM, P₀, _hN₀⟩
   let PG₀ : Subgroup G := section10AmbientSylowSubgroup M P₀
   have hPG₀p : IsPGroup p.val PG₀ := by
-    simpa [PG₀, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P₀ : Subgroup M).map M.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P₀ : Subgroup M)) P₀.isPGroup' M.subtype)
   have hPG₀_le_M : PG₀ ≤ M := by
     intro x hx
@@ -1102,7 +1107,8 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_sylow
     rcases hx with ⟨y, _hy, rfl⟩
     exact y.property
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup M).map M.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P : Subgroup M)) P.isPGroup' M.subtype)
   let XP : Subgroup PG := X.subgroupOf PG
   have hXP_lt_top : XP < ⊤ := by
@@ -1117,7 +1123,7 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_sylow
     exact hXPG.ne (le_antisymm hX_le_PG hPG_le_X)
   have hnc : NormalizerCondition PG := by
     letI : Group.IsNilpotent PG := IsPGroup.isNilpotent (p := p.val) (G := PG) hPGp
-    exact normalizerCondition_of_isNilpotent (G := PG)
+    exact Group.normalizerCondition_of_isNilpotent (G := PG)
   let NPG : Subgroup PG := Subgroup.normalizer (XP : Set PG)
   have hXP_lt_NPG : XP < NPG := by
     simpa [NPG] using hnc XP hXP_lt_top
@@ -1202,7 +1208,7 @@ public theorem section10_primeRank_le_natCard_pre
     primeRank q H ≤ Nat.card H := by
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, _hAq, _hAcomm, hnA⟩
     exact hnA.trans <|
@@ -1326,7 +1332,7 @@ public theorem section10_primeRank_le_groupRank_sylow_pre
   haveI : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, zero_le _⟩
+  · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨A, hAp, hAcomm, hnA⟩
     obtain ⟨Q, hAQ⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
@@ -1673,7 +1679,8 @@ public theorem theorem_10_1_b
     rcases hy with ⟨yL, _hyP, rfl⟩
     exact yL.property
   have hPGp : IsPGroup p.val PG := by
-    simpa [PG, section10AmbientSylowSubgroup] using
+    change IsPGroup p.val ((P : Subgroup L).map L.subtype)
+    simpa using
       (IsPGroup.map (p := p.val) (H := (P : Subgroup L)) P.isPGroup' L.subtype)
   let Y₂L : Subgroup L := Y₂.subgroupOf L
   have hY₂Lp : IsPGroup p.val Y₂L :=

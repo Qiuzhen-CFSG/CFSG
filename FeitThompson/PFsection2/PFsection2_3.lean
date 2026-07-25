@@ -77,7 +77,7 @@ public theorem proposition_2_3 {G : Type u} [Group G] [Finite G]
         simpa [setNormalizer] using hTI a hinter
       simpa [hnormEq] using hnorm
     ·
-      simpa [hnormEq]
+      simp [hnormEq]
     · intro a b ha hb hconj
       rcases hconj with ⟨g, hg⟩
       have hinter : (A ∩ conjugateImage A g).Nonempty := by
@@ -94,8 +94,7 @@ public theorem proposition_2_3 {G : Type u} [Group G] [Finite G]
         have hx1 : x = 1 := by simpa using hx
         subst hx1
         simp [elementCentralizer]
-      · simpa [centralizerIn] using (Subgroup.inf_le_right :
-          L ⊓ elementCentralizer a ≤ elementCentralizer a)
+      · simp [centralizerIn]
       · intro k hk h hh
         have hh1 : h = 1 := by simpa using hh
         subst h
@@ -122,8 +121,7 @@ public theorem proposition_2_3 {G : Type u} [Group G] [Finite G]
           simpa [hnormEq] using hnorm
         refine ⟨1, by simp, c, ⟨hcL, hc⟩, by simp⟩
     · intro a b ha hb
-      simpa [Subgroup.card_bot] using
-        (Nat.coprime_one_left (Nat.card (centralizerIn L b)))
+      simp
   · intro hH2
     refine ⟨hAne, ?_, ?_, ?_⟩
     · exact hH2.subset_punctured

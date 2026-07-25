@@ -174,12 +174,15 @@ private theorem subgroupInKernel'_subgroupRestriction_iff_pf44
     (H A : Subgroup G) (hAH : A ≤ H) (phi : Section1.ClassFunction G) :
     Section1.subgroupInKernel' (Section1.subgroupRestriction H phi) (A.subgroupOf H) ↔
       Section1.subgroupInKernel' phi A := by
+  have hdegree :
+      Section1.degree (Section1.subgroupRestriction H phi) = Section1.degree phi := by
+    simp [Section1.degree, Section1.subgroupRestriction]
   constructor
   · intro h a
-    simpa [Section1.subgroupRestriction] using
+    simpa [Section1.subgroupRestriction, hdegree] using
       h ⟨⟨(a : G), hAH a.2⟩, a.2⟩
   · intro h a
-    simpa [Section1.subgroupRestriction] using
+    simpa [Section1.subgroupRestriction, hdegree] using
       h ⟨((a : A.subgroupOf H) : H), a.2⟩
 
 private theorem subgroupInKernel'_characterInflationByHom_mk'_pf44

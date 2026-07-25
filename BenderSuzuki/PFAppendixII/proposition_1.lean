@@ -57,7 +57,8 @@ private theorem unique_order_two_subgroup_of_not_twoRank
   obtain ⟨Zc, hZc_card⟩ :=
     Sylow.exists_subgroup_card_pow_prime_of_le_card
       (G := Subgroup.center G) (n := 1) (p := 2) Nat.prime_two hcenter_p (by
-        simpa using (Finite.one_lt_card_iff_nontrivial.mpr hcenter_nontrivial))
+        exact Nat.succ_le_of_lt
+          (Finite.one_lt_card_iff_nontrivial.mpr hcenter_nontrivial))
   let Z : Subgroup G := Zc.map (Subgroup.center G).subtype
   have hZ_card : Nat.card Z = 2 := by
     rw [Subgroup.card_map_of_injective (Subgroup.center G).subtype_injective]
@@ -91,7 +92,7 @@ private theorem unique_order_two_subgroup_of_not_twoRank
         have hvI : (⟨v, hv⟩ : V) ∈ I := by simp [I, hItop]
         have hvInf : v ∈ V ⊓ Z := hvI
         exact hvInf.2
-      · simpa [hV_card, hZ_card]
+      · simp [hV_card, hZ_card]
   let E : Subgroup G := V ⊔ Z
   have hV_le_E : V ≤ E := by simp [E]
   have hZ_le_E : Z ≤ E := by simp [E]
@@ -133,7 +134,7 @@ private theorem unique_order_two_subgroup_of_not_twoRank
         apply Subtype.ext
         exact hz
     · intro e
-      have he_mem : (e : G) ∈ V ⊔ Z := by simpa [E] using e.2
+      have he_mem : (e : G) ∈ V ⊔ Z := e.2
       rcases (Subgroup.mem_sup_of_normal_right.mp he_mem) with ⟨v, hv, z, hz, hvz⟩
       let vE : VE := ⟨⟨v, hV_le_E hv⟩, hv⟩
       let zE : ZE := ⟨⟨z, hZ_le_E hz⟩, hz⟩
@@ -150,7 +151,7 @@ private theorem unique_order_two_subgroup_of_not_twoRank
   apply h2rank
   refine ⟨E, hE_card, ?_⟩
   intro e
-  have he_mem : (e : G) ∈ V ⊔ Z := by simpa [E] using e.2
+  have he_mem : (e : G) ∈ V ⊔ Z := e.2
   rcases (Subgroup.mem_sup_of_normal_right.mp he_mem) with ⟨v, hv, z, hz, hvz⟩
   letI : Fintype V := Fintype.ofFinite V
   letI : Fintype Z := Fintype.ofFinite Z
@@ -218,6 +219,7 @@ private theorem proposition_1_factorization_of_cyclic_sylow_two
   have hScyc : IsCyclic S :=
     isCyclic_of_surjective (P.equiv S) (P.equiv S).surjective
   letI : IsCyclic S := hScyc
+  haveI : IsMulCommutative S := hScyc.isMulCommutative
   have hScentral : (S : Subgroup G) ≤ Subgroup.centralizer ({u} : Set G) := by
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
@@ -225,7 +227,8 @@ private theorem proposition_1_factorization_of_cyclic_sylow_two
     simp only [Set.mem_singleton_iff] at hy
     subst y
     exact congrArg Subtype.val
-      (IsCyclic.commutative.comm (⟨u, huS⟩ : S) (⟨x, hx⟩ : S))
+      (hScyc.isMulCommutative.is_comm.comm
+        (⟨u, huS⟩ : (S : Subgroup G)) (⟨x, hx⟩ : (S : Subgroup G)))
   let K : Subgroup G :=
     (MonoidHom.transferSylow S (hScyc.normalizer_le_centralizer hmin)).ker
   have hcomp : K.IsComplement' (S : Subgroup G) := by
@@ -367,15 +370,19 @@ private lemma appendixII_commuting_involutions_eq
   have hcoe : ((g • S : Sylow 2 G) : Subgroup G) = (Q : Subgroup G) :=
     congrArg (fun P : Sylow 2 G => (P : Subgroup G)) hg
   let ug : Q := ⟨g * u * g⁻¹, by
-    have hmem : g * u * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
+    have hmem' : g * u * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
       rw [Sylow.coe_subgroup_smul]
       exact Set.mem_smul_set.mpr ⟨u, huS, rfl⟩
-    simpa [hcoe] using hmem⟩
+    have hmem : g * u * g⁻¹ ∈ (Q : Subgroup G) := by
+      simpa [hcoe] using hmem'
+    exact hmem⟩
   let vg : Q := ⟨g * v * g⁻¹, by
-    have hmem : g * v * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
+    have hmem' : g * v * g⁻¹ ∈ ((g • S : Sylow 2 G) : Subgroup G) := by
       rw [Sylow.coe_subgroup_smul]
       exact Set.mem_smul_set.mpr ⟨v, hvS, rfl⟩
-    simpa [hcoe] using hmem⟩
+    have hmem : g * v * g⁻¹ ∈ (Q : Subgroup G) := by
+      simpa [hcoe] using hmem'
+    exact hmem⟩
   have hugAmbient : IsInvolution (g * u * g⁻¹) := by
     simpa [rightConjugateElem] using
       isInvolution_rightConjugateElem (g := g⁻¹) hu
@@ -429,7 +436,10 @@ private lemma appendixII_quotient_sylow
       exact congrArg Subtype.val (hqinj (congrArg Subtype.val hxy))
     · intro y
       have hy : (y : G ⧸ N) ∈ (Q : Subgroup G).map q := by
-        simpa [Qbar, Sylow.coe_mapSurjective] using y.2
+        have htemp : (Qbar : Subgroup (G ⧸ N)) = (Q : Subgroup G).map q := by
+          simp [Qbar, Sylow.coe_mapSurjective]
+        rw [← htemp]
+        exact y.2
       rcases Subgroup.mem_map.mp hy with ⟨x, hx, hxy⟩
       refine ⟨⟨x, hx⟩, ?_⟩
       apply Subtype.ext
@@ -489,7 +499,8 @@ private lemma appendixII_quotient_involution_central
     exact (Subgroup.mem_center_iff.mp z.2 (q u)).symm
   have hzu : (z : G ⧸ N) = q u :=
     appendixII_commuting_involutions_eq Qbar huniqueQbar hzI hquI hcomm
-  simpa [q, N, ← hzu] using z.2
+  rw [← hzu]
+  exact z.2
 
 private lemma appendixII_factorization_of_quotient_involution_central
     {G : Type u} [Group G] [Finite G] (u : G) (huI : IsInvolution u)
@@ -518,13 +529,13 @@ private lemma appendixII_factorization_of_quotient_involution_central
       Subgroup.centralizer
           ((T.map q : Subgroup (G ⧸ N)) : Set (G ⧸ N)) =
         (Subgroup.centralizer (T : Set G)).map q := by
-    simpa using
+    simpa [q] using
       (centralizer_map_quotient_eq_map_centralizer
         (G := G) (p := 2) (T := T) (M := N) hNnormal hcop)
   have hquCenter' : q u ∈ Subgroup.center (G ⧸ N) := by
     simpa [q, N] using hcentral
-  have hTmap : T.map q = Subgroup.zpowers (q u) := by
-    simpa [T] using (MonoidHom.map_zpowers q u)
+  have hTmap : T.map q = Subgroup.zpowers (q u) :=
+    MonoidHom.map_zpowers q u
   apply top_unique
   intro g _
   have hqgCent :
@@ -821,6 +832,8 @@ public theorem proposition_1
   letI : F.Normal := hFnorm
   letI : IsElementaryAbelian p F := hFelem
   letI : IsMulCommutative F := hFelem.toIsMulCommutative
+  letI : CommGroup F :=
+    { mul_comm := hFelem.toIsMulCommutative.is_comm.comm }
   letI : Nontrivial F := (Subgroup.nontrivial_iff_ne_bot F).2 hF_ne_bot
   letI : Fact p.Prime := ⟨hp⟩
   obtain ⟨base, hHbase⟩ := hA1.point_stabilizer
@@ -857,9 +870,10 @@ public theorem proposition_1
   let addCoord : Ω ≃ Additive F := orbitEquiv.symm.trans Additive.ofMul
   letI : AddCommGroup Ω := addCoord.addCommGroup
   have hzero_eq_base : (0 : Ω) = base := by
-    rw [Equiv.zero_def addCoord]
-    dsimp [addCoord, orbitEquiv]
-    simp
+    calc
+      (0 : Ω) = addCoord.symm (0 : Additive F) := rfl
+      _ = orbitEquiv (1 : F) := by simp [addCoord, orbitEquiv]
+      _ = base := by simp [orbitEquiv]
   let withZeroEquiv : WithZero Q ≃ Ω :=
     (Equiv.optionCongr qEquiv).trans (Equiv.optionSubtypeNe base)
   let mulCoord : Ω ≃ WithZero Q := withZeroEquiv.symm
@@ -913,9 +927,16 @@ public theorem proposition_1
       simp
   have horbit_add (a b : Ω) :
       orbitEquiv.symm (a + b) = orbitEquiv.symm a * orbitEquiv.symm b := by
-    rw [Equiv.add_def addCoord]
-    dsimp [addCoord]
-    simp
+    calc
+      orbitEquiv.symm (a + b) =
+          orbitEquiv.symm (addCoord.symm (addCoord a + addCoord b)) := rfl
+      _ = Additive.ofMul.symm (addCoord a + addCoord b) := by
+        simp [addCoord, orbitEquiv]
+      _ = Additive.ofMul.symm (Additive.ofMul (orbitEquiv.symm a) +
+          Additive.ofMul (orbitEquiv.symm b)) := by simp [addCoord, orbitEquiv]
+      _ = Additive.ofMul.symm
+          (Additive.ofMul (orbitEquiv.symm a * orbitEquiv.symm b)) := by simp
+      _ = orbitEquiv.symm a * orbitEquiv.symm b := by simp
   have hcoord_smul (q : Q) (a : Ω) :
       orbitEquiv.symm ((q : G)⁻¹ • a) =
         MulAut.conjNormal (H := F) (q : G)⁻¹ (orbitEquiv.symm a) := by
@@ -929,9 +950,8 @@ public theorem proposition_1
     have hconj_val :
         ((MulAut.conjNormal (H := F) (q : G)⁻¹
           (orbitEquiv.symm a) : F) : G) =
-          (q : G)⁻¹ * (orbitEquiv.symm a : G) * (q : G) := by
-      simpa using
-        (MulAut.conjNormal_symm_apply (H := F) (q : G) (orbitEquiv.symm a))
+          (q : G)⁻¹ * (orbitEquiv.symm a : G) * (q : G) :=
+      (MulAut.conjNormal_symm_apply (H := F) (q : G) (orbitEquiv.symm a))
     calc
       (q : G)⁻¹ • a =
           (q : G)⁻¹ • ((orbitEquiv.symm a : F) • base) := by rw [ha_orbit]
@@ -1011,9 +1031,8 @@ public theorem proposition_1
     have hconj_val :
         ((MulAut.conjNormal (H := F) (d : G)⁻¹
           (orbitEquiv.symm a) : F) : G) =
-          (d : G)⁻¹ * (orbitEquiv.symm a : G) * (d : G) := by
-      simpa using
-        (MulAut.conjNormal_symm_apply (H := F) (d : G) (orbitEquiv.symm a))
+          (d : G)⁻¹ * (orbitEquiv.symm a : G) * (d : G) :=
+      (MulAut.conjNormal_symm_apply (H := F) (d : G) (orbitEquiv.symm a))
     calc
       (d : G)⁻¹ • a =
           (d : G)⁻¹ • ((orbitEquiv.symm a : F) • base) := by rw [ha_orbit]
@@ -1042,7 +1061,10 @@ public theorem proposition_1
       have hqSub : qH ∈ Q.subgroupOf (MulAction.stabilizer G base) := q.property
       have hmem :=
         hA1.Q_normal_in_H.conj_mem qH hqSub dH⁻¹
-      simpa [dH, qH] using hmem⟩
+      have hmem' : (d : G)⁻¹ * (q : G) * (d : G) ∈ Q := by
+        have htemp := Subgroup.mem_subgroupOf.mp hmem
+        simpa [dH, qH] using htemp
+      exact hmem'⟩
   have dConjQ_mul (d : D) (q r : Q) :
       dConjQ d (q * r) = dConjQ d q * dConjQ d r := by
     apply Subtype.ext
@@ -1051,8 +1073,6 @@ public theorem proposition_1
   have hsigma_qEquiv (d : D) (q : Q) :
       (d : G)⁻¹ • (qEquiv q : Ω) = (qEquiv (dConjQ d q) : Ω) := by
     rw [hqEquiv_apply, hqEquiv_apply]
-    change (d : G)⁻¹ • ((q : G)⁻¹ • beta) =
-      ((dConjQ d q : Q) : G)⁻¹ • beta
     have hconj_inv :
         ((dConjQ d q : Q) : G)⁻¹ =
           (d : G)⁻¹ * (q : G)⁻¹ * (d : G) := by
@@ -1129,9 +1149,8 @@ public theorem proposition_1
       (q : G)⁻¹ * (orbitEquiv.symm a : G) * (q : G) =
           ((MulAut.conjNormal (H := F) (q : G)⁻¹
             (orbitEquiv.symm a) : F) : G) := by
-            symm
-            simpa using
-              (MulAut.conjNormal_symm_apply (H := F) (q : G) (orbitEquiv.symm a))
+            exact (MulAut.conjNormal_symm_apply (H := F) (q : G)
+              (orbitEquiv.symm a)).symm
       _ = (orbitEquiv.symm ((q : G)⁻¹ • a) : G) :=
         congrArg (fun f : F => (f : G)) (hcoord_smul q a).symm
       _ = (orbitEquiv.symm (a * (x : Ω)) : G) := by
@@ -1164,10 +1183,9 @@ public theorem proposition_1
     calc
       (d : G)⁻¹ * (orbitEquiv.symm a : G) * (d : G) =
           ((MulAut.conjNormal (H := F) (d : G)⁻¹
-            (orbitEquiv.symm a) : F) : G) := by
-            symm
-            simpa using
-              (MulAut.conjNormal_symm_apply (H := F) (d : G) (orbitEquiv.symm a))
+            (orbitEquiv.symm a) : F) : G) :=
+          (MulAut.conjNormal_symm_apply (H := F) (d : G)
+            (orbitEquiv.symm a)).symm
       _ = (orbitEquiv.symm ((d : G)⁻¹ • a) : G) :=
         congrArg (fun f : F => (f : G)) (hcoord_smul_D d a).symm
   have hcoordinate_bijective : Function.Bijective

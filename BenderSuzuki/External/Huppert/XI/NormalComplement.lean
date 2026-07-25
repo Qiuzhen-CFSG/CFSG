@@ -96,13 +96,17 @@ public theorem huppert_IV_5_9_odd_prime_eq_three_of_dvd_mulAut_elementaryAbelian
     q = 3 := by
   let Q := Additive E
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  letI : CommGroup E :=
+    { mul_comm := (inferInstance : IsMulCommutative E).is_comm.comm }
   letI : AddCommGroup Q := Additive.addCommGroup
   letI : Module (ZMod 2) Q := inferInstance
   letI : Finite Q := inferInstance
   letI : FiniteDimensional (ZMod 2) Q := Module.Finite.of_finite
   have hcardQ : Nat.card E = 2 ^ Module.finrank (ZMod 2) Q := by
-    simpa [Q, Nat.card_eq_fintype_card, ZMod.card] using
-      (Module.natCard_eq_pow_finrank (K := ZMod 2) (V := Q))
+    have htemp := Module.natCard_eq_pow_finrank (K := ZMod 2) (V := Q)
+    have hcard_additive : Nat.card (Additive E) = Nat.card E :=
+      (Nat.card_congr Additive.ofMul).symm
+    simpa [Q, hcard_additive, Nat.card_eq_fintype_card, ZMod.card] using htemp
   have hdim : Module.finrank (ZMod 2) Q ≤ 2 := by
     have hpow : 2 ^ Module.finrank (ZMod 2) Q ≤ 2 ^ 2 := by
       simpa [hcardQ] using hEcard
@@ -121,11 +125,13 @@ public theorem huppert_IV_5_9_odd_prime_eq_three_of_dvd_mulAut_elementaryAbelian
   have hψ : Function.Injective ψ := by
     intro a b hab
     ext x
-    apply Additive.toMul.injective
     have hx := congrArg
       (fun f : LinearMap.GeneralLinearGroup (ZMod 2) Q =>
         (f : Q → Q) (Additive.ofMul x)) hab
-    simpa [ψ, ψfun, Q] using hx
+    have hx' : Additive.ofMul (a x) = Additive.ofMul (b x) := by
+      simpa [ψ, ψfun, Q] using hx
+    apply_fun Additive.toMul at hx'
+    simpa using hx'
   let n := Module.finrank (ZMod 2) Q
   let basis : Module.Basis (Fin n) (ZMod 2) Q := Module.finBasis (ZMod 2) Q
   let χ : MulAut E →* GL (Fin n) (ZMod 2) :=
@@ -389,7 +395,7 @@ public theorem quaternionGroup_frattiniQuotient_card_eq_four
     refine ⟨⟨fun x y => ?_⟩⟩
     apply e.symm.injective
     rw [map_mul, map_mul]
-    exact IsCyclic.commutative.comm _ _
+    exact (IsCyclic.isMulCommutative (α := Q)).is_comm.comm _ _
   have hQrank_le : generatorRank Q ≤ 2 := by
     rw [hkt_generatorRank_eq_of_mulEquiv e]
     exact huppert_IV_5_10_generatorRank_le_two_of_isMetacyclic
@@ -741,7 +747,8 @@ public noncomputable def quotientPPrimeCoreEquivSylowOfHasNormalPComplement
     have hcop : Nat.Coprime (Nat.card (S : Subgroup G)) (Nat.card N) := by
       rw [hn]
       exact Nat.Coprime.pow_left n hN_cop
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    rw [← disjoint_iff]
+    exact Subgroup.disjoint_of_coprime_natCard hcop
   have hqS_ker : qS.ker = ⊥ := by
     have hker : qS.ker = N.subgroupOf (S : Subgroup G) := by
       simpa [qS, q, N, QuotientGroup.ker_mk'] using
@@ -831,8 +838,9 @@ public theorem huppert_XI_2_5_hasNormalPComplement_two_pPrimeCore_three
       ∃ k : ℕ, 2 ≤ k ∧ IsPGroup 2 (QuaternionGroup k) ∧
         Nonempty (PR ≃* QuaternionGroup k) := by
     rcases hPquaternion with ⟨k, hk, hkP, ⟨eP⟩⟩
-    let ePR : PR ≃* P := by
-      simpa [PR, Sylow.subtype] using
+    let ePR : PR ≃* P :=
+      (MulEquiv.subgroupCongr (by
+        simp [PR, Sylow.subtype])).trans
         (Subgroup.subgroupOfEquivOfLe hP_le_R)
     exact ⟨k, hk, hkP, ⟨ePR.trans eP⟩⟩
   have hRthree : ¬ 3 ∣ Nat.card R := by
@@ -916,9 +924,14 @@ public theorem huppert_XI_2_5_hasNormalPComplement_three_of_top_twoResidual
     apply MulEquiv.ext
     intro y
     apply Subtype.ext
-    let qQ : Q := ⟨((q : N) : G), by
-      simpa [QN, Sylow.subtype, Subgroup.mem_subgroupOf] using hq⟩
-    have hcommQ : qQ * y = y * qQ := IsCyclic.commutative.comm qQ y
+    have hq_mem : (q : G) ∈ (Q : Subgroup G) := by
+      have hQN_eq : (QN : Subgroup N) = (Q : Subgroup G).subgroupOf N := by
+        simp [QN, Sylow.subtype]
+      have hq_sub : q ∈ (Q : Subgroup G).subgroupOf N := by
+        simpa [hQN_eq] using hq
+      exact (Subgroup.mem_subgroupOf.mp hq_sub)
+    let qQ : Q := ⟨(q : G), hq_mem⟩
+    have hcommQ : qQ * y = y * qQ := (IsCyclic.isMulCommutative (α := Q)).is_comm.comm qQ y
     have hcomm : (qQ : G) * (y : G) = (y : G) * (qQ : G) :=
       congrArg Subtype.val hcommQ
     have hconj : (qQ : G) * (y : G) * (qQ : G)⁻¹ = (y : G) := by
@@ -981,9 +994,22 @@ public theorem huppert_XI_2_5_hasNormalPComplement_three_of_top_twoResidual
     let yQ : Q := ⟨y, hy⟩
     have hfix : a • yQ = yQ := hRangeTrivial a yQ
     have hconj : n * y * n⁻¹ = y := by
-      simpa [a, yQ, nN, φ,
-        Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hNleNormalizer] using
-          congrArg Subtype.val hfix
+      have hsmul : nN • (yQ : Q) = yQ := by
+        calc
+          nN • (yQ : Q) = (MulDistribMulAction.toMulAut N Q nN) (yQ : Q) := rfl
+          _ = (φ nN) (yQ : Q) := rfl
+          _ = ((a : φ.range) : MulAut Q) (yQ : Q) := by simp [a]
+          _ = a • (yQ : Q) := rfl
+          _ = yQ := hfix
+      calc
+        n * y * n⁻¹ = (nN : G) * (yQ : G) * (nN : G)⁻¹ := by
+          simp [nN, yQ]
+        _ = ((nN • (yQ : Q) : Q) : G) := by
+          symm
+          exact Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe N (Q : Subgroup G) nN yQ
+        _ = (yQ : G) := by
+          simp [hsmul]
+        _ = y := rfl
     have hmul := congrArg (fun z : G => z * n) hconj
     simpa [mul_assoc] using hmul
   exact hkt_hasNormalPComplement_of_sylow_le_center_normalizer Q hQcenter
@@ -1113,8 +1139,8 @@ public theorem huppert_XI_2_5_exists_characteristic_index_twelve_of_top_two_resi
     infer_instance
   letI : E.Characteristic := hEchar
   have hEcomm : IsMulCommutative E := by
-    refine ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq (p := 2) (G := E) ?_⟩⟩
-    simpa [hEcard]
+    apply IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) (G := E)
+    simp [hEcard]
   let C : Subgroup Q := Subgroup.centralizer (E : Set Q)
   have hCchar : C.Characteristic := by
     dsimp [C]
@@ -1152,7 +1178,7 @@ public theorem huppert_XI_2_5_exists_characteristic_index_twelve_of_top_two_resi
         ((x : C) : Q) hxE
       exact hycent.symm
     letI : Group.IsNilpotent Cbar := hCbar3.isNilpotent
-    exact isNilpotent_of_ker_le_center f hfker
+    exact Subgroup.isNilpotent_of_ker_le_center f hfker
   let phi : Q →* MulAut E := MulAut.conjNormal (H := E)
   have hphiKer : phi.ker = C := by
     simpa [phi, C] using conjNormal_ker_eq_centralizer (H := E)
@@ -1182,9 +1208,9 @@ public theorem huppert_XI_2_5_exists_characteristic_index_twelve_of_top_two_resi
       exact hycent.symm
     have hQnil : Group.IsNilpotent Q := by
       letI : Group.IsNilpotent (Q ⧸ E) := hQquotE3.isNilpotent
-      apply isNilpotent_of_ker_le_center qE
+      apply Subgroup.isNilpotent_of_ker_le_center qE
       rw [show qE.ker = E by
-        simpa [qE] using (QuotientGroup.ker_mk' E)]
+        simp [qE, QuotientGroup.ker_mk' E]]
       exact hEcenter
     have hcompTwoQ : HasNormalPComplement 2 Q :=
       hkt_hasNormalPComplement_of_nilpotent (p := 2) hQnil
@@ -1213,12 +1239,13 @@ public theorem huppert_XI_2_5_exists_characteristic_index_twelve_of_top_two_resi
       hQNbar2.of_equiv eN
     have hres_le : hktPResidual 2 G ≤ N :=
       hktPResidual_le N hNnormal hGN2
-    have hNtop : N = ⊤ := by
-      apply top_unique
-      simpa [hres] using hres_le
+    have hNtop : N = ⊤ :=
+      le_antisymm le_top (by
+        rw [hres.symm]
+        exact hres_le)
     have hNbarTop : Nbar = ⊤ := by
       apply Subgroup.comap_injective (QuotientGroup.mk'_surjective M)
-      simpa [N, qM, hNtop]
+      simp [N, qM, hNtop]
     have htwoQ : 2 ∣ Nat.card Q := by
       have htwoE : 2 ∣ Nat.card E := by rw [hEcard]; norm_num
       exact htwoE.trans (Subgroup.card_subgroup_dvd_card E)

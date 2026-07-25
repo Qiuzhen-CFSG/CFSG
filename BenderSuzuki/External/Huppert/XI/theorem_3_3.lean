@@ -1249,7 +1249,7 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
       _ = q := by
         dsimp only [tExp, q]
         rw [← pow_add]
-        congr 1 <;> omega
+        congr 1; omega
   let pyLeft : Polynomial K :=
     Polynomial.C alpha * Polynomial.X ^ tExp +
       Polynomial.C c1 * Polynomial.X ^ 1
@@ -1264,7 +1264,7 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
     dsimp only [pyLeft, pyRight]
     simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C,
       Polynomial.eval_pow, Polynomial.eval_X, zero_mul, zero_add, map_mul,
-      hpi_formula, mul_pow, pow_add, pow_one] at h ⊢
+      hpi_formula, pow_add, pow_one] at h ⊢
     dsimp only [tExp]
     ring_nf at h ⊢
     convert h using 1 <;> ring
@@ -1858,18 +1858,18 @@ public theorem suzukiWeyl_root_weyl_bruhat
     linear_combination -(a ^ 2 * b * pi a) * htwo
   have hpoly_11 : a * b + pi s = n := by
     dsimp only [s, n]
-    simp only [map_add, map_mul, map_pow, hpi_sq]
+    simp only [map_add, map_mul, hpi_sq]
     ring
   have hpoly_21 : s * b + pi n = pi a * n := by
     dsimp only [s, n]
-    simp only [map_add, map_mul, map_pow, hpi_sq, hpi_a_sq]
+    simp only [map_add, map_mul, hpi_sq, hpi_a_sq]
     linear_combination (b ^ 2) * htwo
   have hpoly_22 : s * a + pi b = n := by
     dsimp only [s, n]
     ring
   have hpoly_12 : a ^ 2 * pi n + pi s * pi b + n ^ 2 = 0 := by
     dsimp only [s, n]
-    simp only [map_add, map_mul, map_pow, hpi_sq, hpi_a_sq]
+    simp only [map_add, map_mul, hpi_sq, hpi_a_sq]
     linear_combination
       (a ^ 2 * pi a * pi b + a ^ 4 * pi a ^ 2 +
         a ^ 2 * b ^ 2 + pi b ^ 2 + a * b * pi b +
@@ -2029,7 +2029,6 @@ public theorem suzukiWeyl_root_weyl_bruhat
       _ = (a * pi n + pi s * s + n * b) *
             n⁻¹ * (pi n)⁻¹ := by
         field_simp [hn, hpin]
-        <;> ring
       _ = 0 := by rw [hpoly_13]; simp
   have h21 : c * n * e + pi n * n⁻¹ = pi a := by
     rw [hc_n]
@@ -2064,7 +2063,7 @@ public theorem suzukiWeyl_root_weyl_bruhat
           s * n⁻¹ + s * n⁻¹ := by
         rw [hc_n]
         field_simp [hn, hpin]
-        <;> ring
+        ring
       _ = 0 := CharTwo.add_self_eq_zero _
   have h01 :
       (c * d + pi c * c ^ 2 + pi d) * n * e +
@@ -2137,7 +2136,8 @@ public theorem suzukiWeyl_root_weyl_bruhat
            0, 0, 0, 1] := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [SuzukiRootMatrix, hpi_formula, pow_add] <;> ring
+      simp [SuzukiRootMatrix, hpi_formula, pow_add]
+    all_goals ring
   have htorus :
       SuzukiTorusMatrix m u =
         !![n⁻¹, 0, 0, 0;
@@ -2146,7 +2146,7 @@ public theorem suzukiWeyl_root_weyl_bruhat
            0, 0, 0, n] := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [SuzukiTorusMatrix, hq, hp, hn, hpin] <;> ring
+      simp [SuzukiTorusMatrix, hq, hp]
   ext i j
   change
     (SuzukiWeylMatrix m * SuzukiRootMatrix m a b * SuzukiWeylMatrix m) i j =

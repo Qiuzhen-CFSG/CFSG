@@ -1105,8 +1105,8 @@ private theorem theorem_13_7_nonzero_of_congruent_one_mod_one_sub
   let A := Representation.cyclotomicOrder etaRoot
   let oneSub : A := ⟨1 - eps, A.sub_mem A.one_mem hepsMem⟩
   let zA : A := ⟨z, hzMem⟩
-  have hcongA : Representation.congruentModIn A oneSub zA (1 : A) := by
-    simpa [Representation.CongruentModOneSub, A, oneSub, zA] using hcong
+  have hcongA : Representation.congruentModIn A oneSub zA (1 : A) :=
+    hcong
   rw [Representation.congruentModIn_iff_dvd] at hcongA
   have hdivOne : oneSub ∣ (1 : A) := by
     obtain ⟨r, hr⟩ := hcongA
@@ -1116,14 +1116,17 @@ private theorem theorem_13_7_nonzero_of_congruent_one_mod_one_sub
       (1 : A) = -(zA - 1) := by simp [hzA0]
       _ = -(oneSub * r) := by rw [hr]
       _ = oneSub * (-r) := by ring
-  have hcongA10 : Representation.congruentModIn A oneSub (1 : A) 0 := by
+  have hcongA10 : Representation.congruentModIn A oneSub (1 : A) (0 : A) := by
     rw [Representation.congruentModIn_iff_dvd]
     simpa using hdivOne
   have hcong10 : Representation.CongruentModOneSub etaRoot eps (((1 : ℤ) : ℂ)) 0
       hepsMem
       (Representation.intCast_mem_cyclotomicOrder etaRoot (1 : ℤ))
       (Representation.cyclotomicOrder etaRoot).zero_mem := by
-    simpa [Representation.CongruentModOneSub, A, oneSub] using hcongA10
+    unfold Representation.CongruentModOneSub
+    convert hcongA10 using 1
+    · apply Subtype.ext; simp
+    · apply Subtype.ext; simp
   have hdivInt : (p : ℤ) ∣ (1 : ℤ) :=
     Representation.prime_dvd_int_of_congruent_zero_mod_one_sub hp heps heta_int
       hepsMem (1 : ℤ) hcong10
@@ -2111,16 +2114,15 @@ private theorem theorem_13_7_card_puncturedSubgroupSet_eq_sub_one
         exact x.property.2 (congrArg (fun y : H => (y : G)) hx)⟩
       left_inv := by
         intro x
-        ext
         rfl
       right_inv := by
         intro x
-        ext
         rfl }
   have hcardSubtype : Nat.card {x : H // x ≠ 1} = Nat.card H - 1 := by
     have hcompl := Fintype.card_subtype_compl (fun x : H => x = 1)
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     convert hcompl using 1
+    · simp
   exact (Nat.card_congr e.symm).trans hcardSubtype
 
 private theorem theorem_13_7_H_isMulCommutative_of_source
@@ -2153,7 +2155,7 @@ private theorem theorem_13_7_H_isMulCommutative_of_source
   have hCcomm : IsMulCommutative C := by
     refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
     apply Subtype.ext
-    exact Subgroup.mul_comm_of_mem_isMulCommutative (H := U) (hCU x.property) (hCU y.property)
+    exact setLike_mul_comm (s := U) (hCU x.property) (hCU y.property)
   letI : IsMulCommutative C := hCcomm
   have hCcent : C ≤ Subgroup.centralizer (P : Set G) := by
     intro z hz

@@ -48,10 +48,10 @@ section
   (omega₁ (G := Subgroup.center G) (p := p)).map (Subgroup.center G).subtype
 
 /-- The subgroup `Ω₁(Z₂(G))` inside `G`. -/
-@[expose] public abbrev Ω₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
+public abbrev Ω₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
   z2OmegaCandidate p
 
-@[expose] public abbrev CΩ₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
+public abbrev CΩ₁Z₂ (p : ℕ) (G : Type*) [Group G] : Subgroup G :=
   Subgroup.centralizer (Ω₁Z₂ p G : Set G)
 
 /-- A finite `p`-group is narrow if it has rank at most two, or if it admits a subgroup of
@@ -82,7 +82,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     intro q
     rw [primeRank]
     refine csSup_le ?_ ?_
-    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, zero_le _⟩
+    · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
       rcases hn with ⟨A, _hAp, _hAcomm, hnA⟩
       exact hnA.trans <| (generatorRank_le_natCard_local A).trans (Subgroup.card_le_card_group A)

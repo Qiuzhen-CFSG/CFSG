@@ -20,6 +20,8 @@ namespace External
 
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
+open scoped IsMulCommutative
+set_option maxHeartbeats 0
 
 universe u v
 
@@ -143,9 +145,9 @@ public theorem hktAbelianPResidual_ne_top_of_hasNormalPComplement_of_dvd_card
     exact hcomm_ne_top hcomm_top
   have hab_le_ker : hktAbelianPResidual q G ≤ φ.ker := by
     have hcomm_le : commutator G ≤ φ.ker := by
-      haveI : IsMulCommutative ((G ⧸ N) ⧸ commutator (G ⧸ N)) := by
-        exact ⟨⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
-          (N := commutator (G ⧸ N))).mpr le_rfl |>.comm⟩⟩
+      haveI : IsMulCommutative ((G ⧸ N) ⧸ commutator (G ⧸ N)) :=
+        (Subgroup.Normal.quotient_commutative_iff_commutator_le
+          (N := commutator (G ⧸ N))).mpr le_rfl
       exact Abelianization.commutator_subset_ker (f := φ)
     have hquot_ker_p : IsPGroup q (G ⧸ φ.ker) := by
       let e : G ⧸ φ.ker ≃* φ.range := QuotientGroup.quotientKerEquivRange φ

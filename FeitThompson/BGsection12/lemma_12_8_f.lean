@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection12.lemma_12_8_d
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 section Section12
 
@@ -83,7 +83,8 @@ public theorem lemma_12_8_f
         (G := G) (K := (S : Subgroup G)) (A := X) hXN
   have hCSX_le_N : subgroupCentralizerIn (S : Subgroup G) X ≤ N := by
     intro y hy
-    exact hS_le_N (by simpa [subgroupCentralizerIn] using hy.1)
+    exact hS_le_N
+      ((show subgroupCentralizerIn (S : Subgroup G) X ≤ (S : Subgroup G) from inf_le_left) hy)
   have hSX_le_N : ⁅(S : Subgroup G), X⁆ ≤ N := hSX_le_S.trans hS_le_N
   have hconj_C {n y : G} (hn : n ∈ N)
       (hy : y ∈ subgroupCentralizerIn (S : Subgroup G) X) :

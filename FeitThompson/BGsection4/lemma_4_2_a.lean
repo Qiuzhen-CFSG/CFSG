@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection4.Defs
 
+open scoped commutatorElement
+
 section Main
 
 public theorem lemma_4_2_a {G : Type*} [Group G] {x y : G} (n : ℕ) (hn : 1 < n)

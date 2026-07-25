@@ -49,7 +49,12 @@ public theorem corollary_10_7_e
   obtain ⟨x, hxS⟩ := MulAction.exists_smul_eq G S P
   have hSxP : (S : Subgroup G).conjBy x = (P : Subgroup G) := by
     have hxS' := congrArg (fun T : Sylow p.val G => (T : Subgroup G)) hxS
-    simpa [Subgroup.conjBy] using hxS'
+    have hSconj_smul :
+        (S : Subgroup G).conjBy x = ((x • S : Sylow p.val G) : Subgroup G) := by
+      rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+      ext y
+      constructor <;> rintro ⟨z, hz, rfl⟩ <;> exact ⟨z, hz, rfl⟩
+    exact hSconj_smul.trans hxS'
   have hRxP : R.conjBy x ≤ (P : Subgroup G) := by
     exact (section10_conjBy_mono hRleS x).trans (le_of_eq hSxP)
   have hQxP : Q.conjBy x ≤ (P : Subgroup G) := by
@@ -90,4 +95,3 @@ public theorem corollary_10_7_e
         _ = Q := hxinvQ
     exact section10_mem_normalizer_of_conjBy_eq hQy_eq_Q
   exact section10_normalIn_of_le_normalizer hQ_le_NR hNR_le_NQ
-

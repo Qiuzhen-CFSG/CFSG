@@ -761,7 +761,7 @@ private theorem claim_13_generated_subgroup_card
     have haHt : a ∈ rightConjugate H t := by
       rw [rightConjugate, Subgroup.conjBy, Subgroup.mem_map]
       refine ⟨t * a * t⁻¹, hconjH, ?_⟩
-      simp [MulAut.conj_apply, mul_assoc]
+      simp [mul_assoc]
     have haD : a ∈ D := by
       rw [hD_eq]
       exact ⟨haH, haHt⟩
@@ -946,7 +946,7 @@ private theorem claim_13_centralizer_order_seven_le_D
   let X : Subgroup G := Subgroup.zpowers k
   have hk_ne : k ≠ 1 := by
     intro hk
-    simpa [hk] using hkorder
+    simp [hk] at hkorder
   have hX_le_D : X ≤ D :=
     Subgroup.zpowers_le_of_mem (hsec.K_le_D hkK)
   have hfixed_le :
@@ -1057,7 +1057,7 @@ private theorem claim_13_centralizer_order_seven_le_D
     have htt : t * t = 1 := by
       simpa [pow_two] using hsec.hA.A1.involution_t.sq_eq_one
     have htbase : t • base = beta := by simp [beta, ht_inv]
-    have htbeta : t • beta = base := by simp [beta, smul_smul, htt]
+    have htbeta : t • beta = base := by simp [beta, smul_smul]
     have hdbase : d • base = base := by
       simp only [d, mul_smul, htbase, hcbeta]
     have hdbeta : d • beta = beta := by
@@ -1087,7 +1087,7 @@ private theorem claim_13_centralizer_order_seven_le_D
         _ = d * k⁻¹ * d⁻¹ := by rw [hd_inverts]
         _ = k := hd_inverts_inv
     have hd2_comm : Commute (d ^ 2) k := by
-      rw [Commute]
+      apply (commute_iff_eq _ _).2
       have h := congrArg (fun z : G => z * d ^ 2) hd2_fixes
       simpa [mul_assoc] using h
     have hd_order_odd : Odd (orderOf d) := by
@@ -1178,8 +1178,12 @@ private theorem claim_13_exists_prime_order_invertingSet
   have hJ_dvd_X : Nat.card J ∣ Nat.card X := by
     refine ⟨Nat.card Y, ?_⟩
     simpa [Nat.mul_comm] using hfactor
+  have hr_dvd_J : r ∣ Nat.card J := by
+    change r ∣ Nat.card {x : M //
+      x ∈ ({y : M | y ∈ X ∧ rightConjugateElem y t = y⁻¹} : Set M)}
+    exact hrdvd
   have hr_dvd_X : r ∣ Nat.card X := by
-    exact hrdvd.trans (by simpa [J] using hJ_dvd_X)
+    exact hr_dvd_J.trans hJ_dvd_X
   have hr_ne_two : r ≠ 2 := by
     intro hr2
     exact hXodd.not_two_dvd_nat (by simpa [hr2] using hr_dvd_X)
@@ -1197,7 +1201,8 @@ private theorem claim_13_exists_prime_order_invertingSet
   have hP_not_le_YX : ¬ (P : Subgroup X) ≤ YX := by
     intro hP_le
     have hr_dvd_YXindex : r ∣ YX.index := by
-      simpa [hYXindex, J] using hrdvd
+      rw [hYXindex]
+      exact hr_dvd_J
     have hindex_dvd : YX.index ∣ (P : Subgroup X).index :=
       Subgroup.index_dvd_of_le hP_le
     exact P.not_dvd_index (hr_dvd_YXindex.trans hindex_dvd)
@@ -1220,8 +1225,9 @@ private theorem claim_13_exists_prime_order_invertingSet
       rcases hx with ⟨xX, hxP, rfl⟩
       let a : A := ⟨phi, Subgroup.mem_zpowers phi⟩
       have hmem : phi xX ∈ (P : Subgroup X) := by
-        simpa only [MulAut.smul_def, a] using
-          (hPinv.invariant a xX).mp hxP
+        have hmem' := (hPinv.invariant a xX).mp hxP
+        change phi xX ∈ (P : Subgroup X) at hmem'
+        exact hmem'
       refine ⟨phi xX, hmem, ?_⟩
       rfl
     intro x
@@ -1270,7 +1276,7 @@ private theorem claim_13_exists_prime_order_invertingSet
     intro hk0
     apply hz0_ne
     apply orderOf_eq_one_iff.mp
-    simpa [hz0_order, hk0]
+    simp [hz0_order, hk0]
   obtain ⟨l, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hk_ne
   have hr_dvd_order : r ∣ orderOf z0 := by
     rw [hz0_order, pow_succ]
@@ -1805,7 +1811,7 @@ private theorem chapter2_claim13_psl28_excludes_seven_in_invertingSet
     intro q hq
     let k1K : K := ⟨k1, hk1K⟩
     let qK : K := ⟨q, hq⟩
-    exact congrArg Subtype.val (mul_comm qK k1K)
+    exact congrArg Subtype.val (mul_comm' qK k1K)
   have hvCK : v ∈ Subgroup.centralizer (K : Set G) := by
     rw [Subgroup.mem_centralizer_iff]
     intro q hq
@@ -1844,7 +1850,7 @@ private theorem chapter2_claim13_psl28_excludes_seven_in_invertingSet
       nth_rw 2 [ha_inv]
       exact mul_inv_cancel a
     by_cases ha1 : a = 1
-    · simpa [ha1]
+    · simp [ha1]
     · have haorder : orderOf a = 2 := orderOf_eq_prime ha2 ha1
       have htwoD : 2 ∣ Nat.card D := by
         rw [← haorder]
@@ -2032,7 +2038,7 @@ public theorem claim_13
         calc
           t = 1 * t := by simp
           _ = (s⁻¹ * s) * t := by simp
-          _ = s⁻¹ * (s * t) := by simp [mul_assoc]
+          _ = s⁻¹ * (s * t) := by simp
           _ = s⁻¹ := by rw [hst]; simp
       rw [ht_eq]
       exact H.inv_mem hsH
@@ -2096,9 +2102,18 @@ public theorem claim_13
             Nat.card {x : G // x ∈ ({y : G |
               y ∈ Subgroup.centralizer (Z1 : Set G) ∧
                 rightConjugateElem y s = y⁻¹} : Set G)} := by
-      simpa using
+      have hfactor' :=
         (lemma_a (M := G) s (Subgroup.centralizer (Z1 : Set G)) hsI
           hCZ1_odd hs_normalizes_CZ1).2.2
+      change
+        Nat.card (Subgroup.centralizer (Z1 : Set G)) =
+          Nat.card
+              ((Subgroup.centralizer (Z1 : Set G) ⊓
+                Subgroup.centralizer ({s} : Set G)) : Subgroup G) *
+            Nat.card {x : G // x ∈ ({y : G |
+              y ∈ Subgroup.centralizer (Z1 : Set G) ∧
+                rightConjugateElem y s = y⁻¹} : Set G)} at hfactor'
+      exact hfactor'
     have hsQ : s ∈ Q :=
       involution_mem_Q_of_mem_H H D Q t hA1 s hsH hsI
     have hCs_le_H : Subgroup.centralizer ({s} : Set G) ≤ H := by

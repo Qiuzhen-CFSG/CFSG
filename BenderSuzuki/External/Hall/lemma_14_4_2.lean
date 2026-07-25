@@ -130,10 +130,12 @@ private theorem hallDiagonalContribution_inv
       constructor
       · intro h
         change u⁻¹ • q = q at h
+        change u • q = q
         have := congrArg (fun x : G ⧸ H => u • x) h
         simpa [smul_smul] using this.symm
       · intro h
         change u • q = q at h
+        change u⁻¹ • q = q
         have := congrArg (fun x : G ⧸ H => u⁻¹ • x) h
         simpa [smul_smul] using this.symm)
   let term : {q : G ⧸ H // Function.minimalPeriod (u • ·) q = 1} → A := fun q =>

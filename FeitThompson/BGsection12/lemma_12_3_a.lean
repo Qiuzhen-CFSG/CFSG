@@ -12,7 +12,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_le
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -20,7 +20,7 @@ public theorem section12_rankTwo_le
   rcases (by simpa [section12RankTwoElementaryAbelianIn] using hA) with ⟨hAM, _hA⟩
   exact hAM
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_elementary
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -28,7 +28,7 @@ public theorem section12_rankTwo_elementary
   rcases (by simpa [section12RankTwoElementaryAbelianIn] using hA) with ⟨_hAM, hA⟩
   exact hA
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_subgroupOf_isPGroup
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -41,7 +41,7 @@ public theorem section12_rankTwo_subgroupOf_isPGroup
     exact IsElementaryAbelian.isPGroup p.val A
   exact hAp.of_equiv e.symm
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_prime_mem
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
@@ -164,21 +164,21 @@ public theorem section12_exists_section11Data_of_not_sigma_pre
   exact ⟨⟨hM, hpσ, hA₀inM, hNA₀⟩, hprank, hideal, hA₀A, hAM, hArank,
     hA_le_Pamb, hPnorm_not, hCentA₀M, hCentA_le_CentA₀, hCentAM, hAmaxRank⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_mono
     {H K A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p H) (hHK : H ≤ K) :
     A ∈ section12RankTwoElementaryAbelianIn p K := by
   exact ⟨(section12_rankTwo_le hA).trans hHK, section12_rankTwo_elementary hA⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_of_inf_left_pre
     {H K A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (H ⊓ K)) :
     A ∈ section12RankTwoElementaryAbelianIn p H :=
   section12_rankTwo_mono hA inf_le_left
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_of_inf_right_pre
     {H K A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (H ⊓ K)) :
@@ -210,11 +210,13 @@ public theorem section12_map_subtype_le_normalizer_of_normal_pre
           rw [hhx']
         _ = x := by simp [mul_assoc]
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_le_normalizer_msigma {M : Subgroup G} :
     M ≤ Subgroup.normalizer (section10Msigma M : Set G) := by
   simpa [section10Msigma] using
     section12_map_subtype_le_normalizer_of_normal_pre M (section10MsigmaSubgroup M)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_le_normalizer_malpha_pre {M : Subgroup G} :
     M ≤ Subgroup.normalizer (section10Malpha M : Set G) := by
   simpa [section10Malpha] using
@@ -229,6 +231,7 @@ public theorem section12_le_normalizer_inf_pre
   intro a ha
   exact Subgroup.inf_normalizer_le_normalizer_inf ⟨hAH ha, hAK ha⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_le_normalizer_msigma_inf_pre
     {M Mstar A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (M ⊓ Mstar)) :
@@ -239,6 +242,7 @@ public theorem section12_rankTwo_le_normalizer_msigma_inf_pre
     (H := section10Msigma M) (K := Mstar)
     (hAM.trans section12_le_normalizer_msigma) (hAMstar.trans Subgroup.le_normalizer)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_rankTwo_le_normalizer_malpha_inf_pre
     {M Mstar A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (M ⊓ Mstar)) :
@@ -249,7 +253,7 @@ public theorem section12_rankTwo_le_normalizer_malpha_inf_pre
     (H := section10Malpha M) (K := Mstar)
     (hAM.trans section12_le_normalizer_malpha_pre) (hAMstar.trans Subgroup.le_normalizer)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_card_coprime_rankTwo_pPrime_pre
     {A K : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G)
@@ -272,7 +276,7 @@ public theorem section12_isInvariant_subgroupOf_of_le_normalizer_pre
     {A H K : Subgroup G}
     (hAH : A ≤ Subgroup.normalizer (H : Set G))
     (hAK : A ≤ Subgroup.normalizer (K : Set G))
-    (hKH : K ≤ H) :
+    (_hKH : K ≤ H) :
     haveI : Subgroup.Normalizes A H := ⟨hAH⟩
     IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
   haveI : Subgroup.Normalizes A H := ⟨hAH⟩
@@ -281,7 +285,7 @@ public theorem section12_isInvariant_subgroupOf_of_le_normalizer_pre
   change ((x : H) : G) ∈ K ↔ ((a : G) * ((x : H) : G) * (a : G)⁻¹) ∈ K
   exact Subgroup.mem_normalizer_iff.mp (hAK a.property) ((x : H) : G)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_isPiSubgroup_subgroupOf_pre
     {π : Set Nat.Primes} {H K : Subgroup G}
     (hKπ : IsPiSubgroup (G := G) π K) (hKH : K ≤ H) :
@@ -552,7 +556,7 @@ public theorem section12_commutator_le_malpha_of_sigma_rankTwo_pre
   haveI : Dbar.Normal := hDbar_norm
   have hDbar_nil : Group.IsNilpotent Dbar := by
     let e : D ⧸ α.subgroupOf D ≃* Dbar := quotientSubgroupRangeEquiv D α
-    exact nilpotent_of_mulEquiv (G := D ⧸ α.subgroupOf D) (G' := Dbar) e
+    exact Group.nilpotent_of_mulEquiv (G := D ⧸ α.subgroupOf D) (G' := Dbar) e
   let PbarSub : Subgroup Dbar := pCore p.val Dbar
   have hPbarSub_char : PbarSub.Characteristic := by
     dsimp [PbarSub]
@@ -676,7 +680,7 @@ public theorem section12_commutator_le_malpha_of_sigma_rankTwo_pre
 
 public theorem section12_not_conjugate_of_sigma_rankTwo_pre
     {M Mstar A A₀ : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
+    (_hM : M ∈ section9MaximalSubgroups G)
     (hMstar : Mstar ∈ section9MaximalSubgroups G) (hMstar_ne : Mstar ≠ M)
     (hpσstar : p ∈ section10SigmaPrimes Mstar)
     (hA : A ∈ section12RankTwoElementaryAbelianIn p (M ⊓ Mstar))

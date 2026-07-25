@@ -45,12 +45,13 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
                 ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N))
     (_hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ)) :
     ∀ n : N,
+      letI : CommGroup N := IsMulCommutative.instCommGroup
       letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
       (∏ x : Q ⧸ N, quotientConjNormal N x n) =
         n ^ Nat.card (Q ⧸ N) := by
   classical
   intro n
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   have hcard : Nat.card (Subgroup.zpowers ψ) = p :=
     _hquot_action_distinct.2.2.1
@@ -259,7 +260,8 @@ public theorem hkt_centralizer_eq_top_of_quotientConjNormal_trivial
   apply hkt_centralizer_eq_top_of_conjNormal_trivial
   intro q
   have hq := htriv (QuotientGroup.mk' N q)
-  simpa [quotientConjNormal_mk'] using hq
+  rw [quotientConjNormal_mk'] at hq
+  exact hq
 
 /--
 Huppert V.8.13 (3b), the still-unformalized Frobenius-partition double-count
@@ -291,6 +293,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
                 ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N))
     (hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ)) :
     ∀ n : N,
+      letI : CommGroup N := IsMulCommutative.instCommGroup
       letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
       letI : MulDistribMulAction (Q ⧸ N) N :=
         MulDistribMulAction.compHom N (quotientConjNormal N)
@@ -299,7 +302,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
         (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by
   classical
   intro n
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   letI : MulDistribMulAction (Q ⧸ N) N :=
     MulDistribMulAction.compHom N (quotientConjNormal N)
@@ -355,7 +358,7 @@ public theorem huppertMQ_double_count_eval
   classical
   intro n
   apply Additive.ofMul.injective
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   letI : MulDistribMulAction (Q ⧸ N) N :=
     MulDistribMulAction.compHom N (quotientConjNormal N)
@@ -896,7 +899,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
       simp
     map_mul' x y := by
       have hαβ : Commute α β := by
-        simpa [Commute] using hαβ_comm
+        exact (commute_iff_eq α β).2 hαβ_comm
       have hyx : Commute (y.1 : MulAut N) (x.2 : MulAut N) := by
         rcases Subgroup.mem_zpowers_iff.mp y.1.2 with ⟨m, hm⟩
         rcases Subgroup.mem_zpowers_iff.mp x.2.2 with ⟨n, hn⟩
@@ -947,9 +950,11 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
     apply Prod.ext
     · have hz1pow_card : z.1 ^ Nat.card (Subgroup.zpowers α) = 1 :=
         pow_card_eq_one' (x := z.1)
+      change z.1 ^ p = (1 : Subgroup.zpowers α)
       simpa [hα_card] using hz1pow_card
     · have hz2pow_card : z.2 ^ Nat.card (Subgroup.zpowers β) = 1 :=
         pow_card_eq_one' (x := z.2)
+      change z.2 ^ p = (1 : Subgroup.zpowers β)
       simpa [hβ_card] using hz2pow_card
   have hA_noncyclic : ¬ IsCyclic A := by
     intro hA_cyclic
@@ -982,14 +987,16 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
     exact hx_mem_fixed ⟨z, Subgroup.mem_zpowers z⟩
   have hz_mulAut_x : (((z.1 : Subgroup.zpowers α) : MulAut N) *
         ((z.2 : Subgroup.zpowers β) : MulAut N)) x = x := by
-    simpa [A, ρ, MulAut.smul_def] using hz_smul_x
+    change ρ z x = x at hz_smul_x
+    simpa [ρ] using hz_smul_x
   have hz_fst_ne_one : z.1 ≠ 1 := by
     intro hz1
     have hz2_ne_one : z.2 ≠ 1 := by
       intro hz2
       exact hz_ne_one (Prod.ext hz1 hz2)
     have hz2_x : z.2 • x = x := by
-      simpa [hz1, MulAut.smul_def] using hz_mulAut_x
+      change (z.2 : MulAut N) x = x
+      simpa [hz1] using hz_mulAut_x
     have hx_mem_z2 :
         x ∈ fixedPointSubgroup (↥(Subgroup.zpowers z.2)) N := by
       rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
@@ -1004,7 +1011,8 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
       intro hz1
       exact hz_ne_one (Prod.ext hz1 hz2)
     have hz1_x : z.1 • x = x := by
-      simpa [hz2, MulAut.smul_def] using hz_mulAut_x
+      change (z.1 : MulAut N) x = x
+      simpa [hz2] using hz_mulAut_x
     have hx_mem_z1 :
         x ∈ fixedPointSubgroup (↥(Subgroup.zpowers z.1)) N := by
       rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
@@ -1037,7 +1045,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
       Commute ((z.1 : Subgroup.zpowers α) : MulAut N)
         ((z.2 : Subgroup.zpowers β) : MulAut N) := by
     have hαβ_commute : Commute α β := by
-      simpa [Commute] using hαβ_comm
+      exact (commute_iff_eq α β).2 hαβ_comm
     rcases Subgroup.mem_zpowers_iff.mp z.1.2 with ⟨i, hz1_pow⟩
     rcases Subgroup.mem_zpowers_iff.mp z.2.2 with ⟨j, hz2_pow⟩
     rw [← hz1_pow, ← hz2_pow]
@@ -1328,4 +1336,3 @@ public theorem hkt_false_of_solvable_maximal_branch_core
       hquot_proposition_3_9_if_distinct
 end External
 end BenderSuzuki
-

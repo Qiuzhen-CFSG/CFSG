@@ -75,7 +75,7 @@ public theorem hkt_hasNormalPComplement_of_nilpotent
         pCore p (Q ⧸ pPrimeCore p Q) ⊔ pPrimeCore p (Q ⧸ pPrimeCore p Q) := by
     haveI : Group.IsNilpotent (Q ⧸ pPrimeCore p Q) := hquot_nil
     have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup (Q ⧸ pPrimeCore p Q))) := by
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (G := Q ⧸ pPrimeCore p Q) (G' := ↥(⊤ : Subgroup (Q ⧸ pPrimeCore p Q)))
         (Subgroup.topEquiv.symm :
           (Q ⧸ pPrimeCore p Q) ≃* ↥(⊤ : Subgroup (Q ⧸ pPrimeCore p Q)))
@@ -120,7 +120,7 @@ complement. -/
 public theorem hkt_nilpotent_sylow_complement
     {Q : Type u} [Group Q] [Finite Q] {p : ℕ} [Fact p.Prime]
     (hQ_nil : Group.IsNilpotent Q) (P : Sylow p Q) :
-    ∃ N : Subgroup Q, ∃ hNnormal : N.Normal,
+    ∃ N : Subgroup Q, ∃ _hNnormal : N.Normal,
       Nat.Coprime p (Nat.card N) ∧ (P : Subgroup Q).IsComplement' N := by
   rcases hkt_hasNormalPComplement_of_nilpotent (p := p) hQ_nil with
     ⟨N, hNnormal, hNcop, hquotp⟩
@@ -163,7 +163,8 @@ public noncomputable def normalComplementProdMulEquiv
         p n p.property n.property
   let f : P × N →* Q := P.subtype.noncommCoprod N.subtype hcomm
   exact MulEquiv.ofBijective f (by
-    simpa [f, MonoidHom.noncommCoprod_apply] using hPN)
+    change Function.Bijective (fun x : P × N => (x.1 : Q) * (x.2 : Q))
+    exact hPN)
 
 /-- Repackage the definition of a normal `p`-complement using the canonical
 `p'`-core quotient. This direction is only definitional: the real work is to
@@ -347,7 +348,7 @@ public theorem hkt_centerIn_map_quotient_subgroup_eq
         refine ⟨e (QuotientGroup.mk' NP k), ?_, ?_⟩
         · exact Subgroup.mem_map.mpr ⟨QuotientGroup.mk' NP k,
             (by simpa [K] using hkK), rfl⟩
-        · simpa [e] using quotientSubgroupRangeEquiv_apply_mk P N k
+        · simpa [e, q] using quotientSubgroupRangeEquiv_apply_mk P N k
       · intro hx
         rcases Subgroup.mem_map.mp hx with ⟨z, hz, hzval⟩
         rcases Subgroup.mem_map.mp hz with ⟨zq, hzZ, rfl⟩
@@ -355,7 +356,7 @@ public theorem hkt_centerIn_map_quotient_subgroup_eq
         refine Subgroup.mem_map.mpr ⟨k, hzZ, ?_⟩
         calc
           q (k : G) = (e (QuotientGroup.mk' NP k) : G ⧸ N) := by
-            simpa [e] using (quotientSubgroupRangeEquiv_apply_mk P N k).symm
+            simpa [e, q] using (quotientSubgroupRangeEquiv_apply_mk P N k).symm
           _ = x := hzval
     _ = (centerIn (G := P.map q) (⊤ : Subgroup (P.map q))).map (P.map q).subtype := by
       have hcenter_map :
@@ -400,7 +401,7 @@ public theorem hkt_thompsonSubgroup_map_quotient_subgroup_eq
         refine ⟨e (QuotientGroup.mk' NP k), ?_, ?_⟩
         · exact Subgroup.mem_map.mpr ⟨QuotientGroup.mk' NP k,
             (by simpa [K] using hkK), rfl⟩
-        · simpa [e] using quotientSubgroupRangeEquiv_apply_mk P N k
+        · simpa [e, q] using quotientSubgroupRangeEquiv_apply_mk P N k
       · intro hx
         rcases Subgroup.mem_map.mp hx with ⟨z, hz, hzval⟩
         rcases Subgroup.mem_map.mp hz with ⟨zq, hzJ, rfl⟩
@@ -408,7 +409,7 @@ public theorem hkt_thompsonSubgroup_map_quotient_subgroup_eq
         refine Subgroup.mem_map.mpr ⟨k, hzJ, ?_⟩
         calc
           q (k : G) = (e (QuotientGroup.mk' NP k) : G ⧸ N) := by
-            simpa [e] using (quotientSubgroupRangeEquiv_apply_mk P N k).symm
+            simpa [e, q] using (quotientSubgroupRangeEquiv_apply_mk P N k).symm
           _ = x := hzval
     _ = (thompsonSubgroup (G := P.map q) (⊤ : Subgroup (P.map q))).map
           (P.map q).subtype := by

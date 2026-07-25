@@ -33,7 +33,8 @@ private theorem theorem_8_12_isMulCommutative_of_mulEquiv
   apply e.injective
   calc
     e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := by rw [mul_comm]
+    _ = e y * e x :=
+      (IsMulCommutative.is_comm (M := S)).comm (e x) (e y)
     _ = e (y * x) := (e.map_mul y x).symm
 
 private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_mulEquiv
@@ -44,20 +45,22 @@ private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_mulEquiv
   classical
   intro p P
   haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Q : Sylow p.val S := P.mapSurjective (f := e.toMonoidHom) e.surjective
+  let f : R →* S := e.toMonoidHom
+  let Q : Sylow p.val S := P.mapSurjective (f := f) e.surjective
   have hQ := hS p Q
-  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map e.toMonoidHom) :=
-    Subgroup.equivMapOfInjective (f := e.toMonoidHom) (P : Subgroup R) e.injective
-  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map e.toMonoidHom) := by
-    simpa [Q, Sylow.coe_mapSurjective] using hQ.1
+  change IsMulCommutative ((P : Subgroup R).map f) ∧
+    generatorRank ((P : Subgroup R).map f) ≤ 2 at hQ
+  let ePmap : (P : Subgroup R) ≃* ((P : Subgroup R).map f) :=
+    Subgroup.equivMapOfInjective (f := f) (P : Subgroup R) e.injective
+  have hQmap_comm : IsMulCommutative ((P : Subgroup R).map f) := hQ.1
   have hcomm : IsMulCommutative (P : Subgroup R) :=
     theorem_8_12_isMulCommutative_of_mulEquiv ePmap hQmap_comm
   have hrank : generatorRank (P : Subgroup R) ≤ 2 := by
     have hle :
         generatorRank (P : Subgroup R) ≤
-          generatorRank ((P : Subgroup R).map e.toMonoidHom) :=
+          generatorRank ((P : Subgroup R).map f) :=
       generatorRank_le_of_equiv ePmap.symm
-    exact hle.trans (by simpa [Q, Sylow.coe_mapSurjective] using hQ.2)
+    exact hle.trans hQ.2
   exact ⟨hcomm, hrank⟩
 
 private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_quotient_complement
@@ -372,7 +375,7 @@ private theorem theorem_8_12_source_diff_eq_ASet_diff_msigma_of_complement
       simpa [hMF_eq] using hxSigma
     have hxne : x ≠ 1 := by
       intro hxone
-      exact hxCne (Subtype.ext (by simpa [x, hxone]))
+      exact hxCne (Subtype.ext (by simp [x, hxone]))
     have hyCentX : y ∈ Subgroup.centralizer ({x} : Set G) := by
       have hxCentY : x ∈ Subgroup.centralizer ({y} : Set G) := xC.property.2
       rw [Subgroup.mem_centralizer_singleton_iff]
@@ -716,6 +719,7 @@ public theorem theorem_8_12_typeII_groupRank_le_two_of_source
   have hUc_rank : groupRank Uc ≤ 2 := by
     let E : Subgroup G := K ⊔ Uc
     have hEcomp : section12ComplementToMsigma M E := by
+      change section12ComplementIn M (section10Msigma M) E
       simpa [E, section16KUData] using hKU.2.2.1
     have hE_rank : groupRank E ≤ 2 :=
       section12_groupRank_E_le_two (G := G) hM hEcomp
@@ -727,10 +731,8 @@ public theorem theorem_8_12_typeII_groupRank_le_two_of_source
     exact ((groupRank_le_of_equiv eU).trans
       (groupRank_le_of_subgroup (R := E) (Uc.subgroupOf E))).trans hE_rank
   subst U
-  let eUmap : Uc ≃* Uc.map (MulAut.conj (d : G)).toMonoidHom :=
-    Subgroup.equivMapOfInjective (f := (MulAut.conj (d : G)).toMonoidHom)
-      Uc (MulAut.conj (d : G)).injective
-  simpa [Subgroup.conjBy] using (groupRank_le_of_equiv eUmap).trans hUc_rank
+  let eU : Uc ≃* Uc.conjBy (d : G) := (MulAut.conj (d : G)).subgroupMap Uc
+  exact (groupRank_le_of_equiv eU).trans hUc_rank
 
 private theorem theorem_8_12_typeII_conclusion_of_source
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

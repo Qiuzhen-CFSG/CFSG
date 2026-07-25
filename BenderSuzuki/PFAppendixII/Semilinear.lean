@@ -22,7 +22,7 @@ set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 500000 in
 private theorem appendixIFpT_exists_normalized_addEquiv
     {p : ℕ} [Fact (Nat.Prime p)]
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) [IsMulCommutative A]
     [MulDistribMulAction A (Multiplicative F)]
     [IsElementaryAbelian p (Multiplicative F)]
@@ -77,7 +77,8 @@ private theorem appendixIFpT_exists_normalized_addEquiv
       have hv1bot : v1 ∈ (⊥ : Subrepresentation rhoT) := by
         rw [← hW]
         exact hdv1
-      exact hv1 (by simpa [W] using hv1bot)
+      exact hv1 ((Submodule.mem_bot (ZMod p)).mp
+        (show v1 ∈ (⊥ : Subrepresentation rhoT).toSubmodule from hv1bot))
     have hWtop : W = ⊤ :=
       (hIrr.eq_bot_or_eq_top W).resolve_left hW_ne_bot
     apply Subtype.ext
@@ -85,7 +86,7 @@ private theorem appendixIFpT_exists_normalized_addEquiv
     change d = 0
     ext x
     have hxW : x ∈ W := by rw [hWtop]; exact Submodule.mem_top
-    simpa [W] using hxW
+    exact LinearMap.mem_ker.mp (show x ∈ LinearMap.ker d from hxW)
   have heval_surjective : Function.Surjective eval := by
     by_contra hsurj
     have hlt := Fintype.card_lt_of_injective_not_surjective eval
@@ -104,7 +105,7 @@ set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 500000 in
 set_option backward.isDefEq.respectTransparency false in
 public theorem rightNearField_irreducible_cyclic_field_coordinates
-    {F : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type u} [RightNearField F] [Finite F]
     (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A)
     (hIrrA :
       let p := addOrderOf (1 : F)
@@ -112,7 +113,7 @@ public theorem rightNearField_irreducible_cyclic_field_coordinates
       letI : Module (ZMod p) F := rightNearFieldZModModule F
       letI : IsElementaryAbelian p (Multiplicative F) :=
         rightNearFieldMultiplicativeIsElementaryAbelian
-      letI : IsMulCommutative A := ⟨hA_cyclic.commutative⟩
+      letI : IsMulCommutative A := hA_cyclic.isMulCommutative
       letI : MulDistribMulAction A (Multiplicative F) :=
         rightNearFieldUnitsMulDistribMulAction A
       let T : Subgroup A := ⊤
@@ -130,7 +131,7 @@ public theorem rightNearField_irreducible_cyclic_field_coordinates
   let p := addOrderOf (1 : F)
   letI : Fact (Nat.Prime p) := ⟨rightNearField_addOrderOf_one_prime⟩
   letI : Module (ZMod p) F := rightNearFieldZModModule F
-  letI : IsMulCommutative A := ⟨hA_cyclic.commutative⟩
+  letI : IsMulCommutative A := hA_cyclic.isMulCommutative
   letI : MulDistribMulAction A (Multiplicative F) :=
     rightNearFieldUnitsMulDistribMulAction A
   letI : FaithfulSMul A (Multiplicative F) := {
@@ -243,7 +244,7 @@ set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 500000 in
 set_option backward.isDefEq.respectTransparency false in
 public theorem rightNearField_semilinear_coordinates
-    {F K : Type u} [RightNearField F] [Finite F] [Nontrivial F]
+    {F K : Type u} [RightNearField F] [Finite F]
     {p : ℕ} [Fact (Nat.Prime p)] [Field K] [Finite K] [Algebra (ZMod p) K]
     (A : Subgroup Fˣ) (hAnormal : A.Normal) (e : F ≃+ K) (he1 : e 1 = 1)
     (hscalar : ∀ (x : F) (a : A),

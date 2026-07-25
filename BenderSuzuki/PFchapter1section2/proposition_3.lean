@@ -13,6 +13,8 @@ namespace BenderSuzuki
 namespace PFchapter1section2
 
 open PFchapter1section1 PFAppendixI PFAppendixIII
+open Representation
+open scoped IsMulCommutative
 
 /-!
 # Peterfalvi, Part II, Chapter I, Section 2, Proposition 3
@@ -93,7 +95,6 @@ public theorem proposition_3_Q0_rightConjugate_mem_of_D
     simpa [rightConjugateElem] using
       H.mul_mem (H.mul_mem hdH hq.1) (H.inv_mem hdH)
 
-set_option backward.isDefEq.respectTransparency false in
 private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
     {p : ℕ} [Fact p.Prime]
     {E U : Type*} [Group E] [Finite E] [Nontrivial E]
@@ -103,10 +104,8 @@ private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
       ∀ x : E, x ≠ 1 →
         ∀ y : E, y ≠ 1 →
           ∃ τ : T, (τ : U) • x = y) :
-    Representation.IsIrreducible
-      (AppendixIRepresentationOfT (p := p) (E := E) T) := by
+    IsSimpleOrder (Subrepresentation (AppendixIRepresentationOfT (p := p) (E := E) T)) := by
   let ρ := AppendixIRepresentationOfT (p := p) (E := E) T
-  change IsSimpleOrder (Subrepresentation ρ)
   refine
     { toNontrivial := ?_
       eq_bot_or_eq_top := ?_ }
@@ -119,7 +118,7 @@ private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
         intro h
         apply hLbot
         apply Subrepresentation.toSubmodule_injective
-        simpa using h
+        exact h
       obtain ⟨x, hxL, hx0⟩ :=
         Submodule.exists_mem_ne_zero_of_ne_bot hLsub
       apply top_unique
@@ -132,11 +131,23 @@ private theorem proposition_3_appendixIRepresentation_irreducible_of_transitive
         obtain ⟨τ, hτ⟩ :=
           htrans (Additive.toMul x) hx1 (Additive.toMul y) hy1
         have hρxy : ρ τ x = y := by
-          simpa [ρ, AppendixIRepresentationOfT,
-            Representation.ofElementaryAbelianAction_apply] using
-              congrArg Additive.ofMul hτ
+          calc
+            ρ τ x = Additive.ofMul ((τ : U) • Additive.toMul x) := by
+              dsimp [ρ, AppendixIRepresentationOfT]
+              have h_rep : (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x = Additive.ofMul (τ • Additive.toMul x) := by
+                calc
+                  (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ x
+                      = (Representation.ofElementaryAbelianAction (A := T) (G := E) (p := p)) τ (Additive.ofMul (Additive.toMul x)) := by
+                        cases x; rfl
+                  _ = Additive.ofMul (τ • Additive.toMul x) :=
+                    Representation.ofElementaryAbelianAction_apply_ofMul (A := T) (G := E) (p := p) τ (Additive.toMul x)
+              have h_smul : τ • Additive.toMul x = (τ : U) • Additive.toMul x := rfl
+              rw [h_rep, h_smul]
+            _ = Additive.ofMul (Additive.toMul y) := congrArg Additive.ofMul hτ
+            _ = y := by simp
         have hmem := L.apply_mem_toSubmodule τ hxL
-        simpa [hρxy] using hmem
+        rw [← hρxy]
+        exact hmem
 
 private theorem proposition_3_quotient_conjugation_action
     {G : Type*} [Group G]
@@ -232,8 +243,7 @@ private theorem proposition_3_quotient_conjugation_action
       (QuotientGroup.mk d) q = _
   rw [QuotientGroup.lift_mk]
   apply Subtype.ext
-  simpa [conjHom, rightConjugateElem] using
-    (Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe D Q0 d q)
+  simp [conjHom, rightConjugateElem]
 
 private theorem proposition_3_quotient_transitive_on_Q0_nontrivial
     {G : Type*} [Group G]
@@ -274,8 +284,6 @@ private theorem proposition_3_quotient_transitive_on_Q0_nontrivial
   let u : D ⧸ W.subgroupOf D := QuotientGroup.mk d
   have huT : u ∈ ((K ⊔ W).subgroupOf D).map
       (QuotientGroup.mk' (W.subgroupOf D)) := by
-    change u ∈ ((K ⊔ W).subgroupOf D).map
-      (QuotientGroup.mk' (W.subgroupOf D))
     refine ⟨d, ?_, rfl⟩
     change (d : G) ∈ K ⊔ W
     exact (K ⊔ W).inv_mem a.property
@@ -454,9 +462,7 @@ public theorem proposition_3_field_model_with_q0_card
     simpa [T] using
       proposition_3_quotient_transitive_on_Q0_nontrivial
         D K W Q0 hKWleD hWD rhoD hrhoD_coe htrans
-  letI :
-      Representation.IsIrreducible
-        (AppendixIRepresentationOfT (p := 2) (E := Q0) T) :=
+  haveI : IsSimpleOrder (Subrepresentation (AppendixIRepresentationOfT (p := 2) (E := Q0) T)) :=
     proposition_3_appendixIRepresentation_irreducible_of_transitive T htransT
   obtain ⟨fieldInst, hfield⟩ :=
     peterfalvi_appendixI_proposition_2_a
@@ -547,15 +553,13 @@ public theorem proposition_3_field_model_with_q0_card
       toQ0 (coord.symm
           (Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x))) =
           Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x) := by
-            simpa [coord] using
-              coord.apply_symm_apply
-                (Additive.ofMul ((tau : D ⧸ W.subgroupOf D) • x))
+            simp [coord]
       _ = (tauF0 tau).1 (Additive.ofMul x) := by
             simp [tauF0, AppendixITActionEnd_apply]
       _ = (tauF0 tau).1 (toQ0 (coord.symm (Additive.ofMul x))) := by
             rw [show toQ0 (coord.symm (Additive.ofMul x)) =
               Additive.ofMul x by
-                simpa [coord] using coord.apply_symm_apply (Additive.ofMul x)]
+                simp [coord]]
       _ = toQ0 (tauF0 tau * coord.symm (Additive.ofMul x)) := rfl
   let F : Type := GaloisField 2 n
   letI : Fintype F := Fintype.ofFinite F
@@ -576,7 +580,7 @@ public theorem proposition_3_field_model_with_q0_card
         exact g.map_add _ _ }
   let q0_add : Q0 ≃* Multiplicative F := q0_add0.trans gMul
   have hq0_add_s : q0_add sQ0 = Multiplicative.ofAdd 1 := by
-    simpa [q0_add, gMul, hq0_add0_s] using (map_one g)
+    simp [q0_add, gMul, hq0_add0_s, map_one g]
   let tauF : T →* F := g.toMonoidHom.comp tauF0
   have htauF_q0 (tau : T) (x : Q0) :
       q0_add ((tau : D ⧸ W.subgroupOf D) • x) =
@@ -1295,7 +1299,7 @@ public theorem proposition_3_V_inf_centralizer_fixed_Q0_le_sup
         simpa using hforward.symm
       have hqImage' :
           q0Add ⟨rightConjugateElem (q : G) p, hqConj⟩ = q0Add q := by
-        simpa [q, hbackward] using hqImage
+        simpa [q, hbackward, pV, pToV, pP] using hqImage
       have hright : rightConjugateElem (q : G) p = (q : G) :=
         congrArg Subtype.val (q0Add.injective hqImage')
       calc
@@ -1325,17 +1329,35 @@ public theorem proposition_3_V_inf_centralizer_fixed_Q0_le_sup
         _ = Multiplicative.ofAdd (x : F) := by simp [q]
     apply (vmodWAut (QuotientGroup.mk vV) : F ≃+* F).symm.injective
     simpa using hbackward.symm
+  have h_algebraMap_eq_val' :
+      (algebraMap (FixedPoints.subfield P F) F : FixedPoints.subfield P F → F) = Subtype.val := by
+    ext x; rfl
   let sigma : F ≃ₐ[FixedPoints.subfield P F] F :=
     AlgEquiv.ofRingEquiv
       (f := (vmodWAut (QuotientGroup.mk vV) : F ≃+* F))
-      (fun x => hvFixes x)
+      (by
+        intro r
+        have htemp : algebraMap (FixedPoints.subfield P F) F r = (r : F) := rfl
+        simpa [htemp] using hvFixes r)
   obtain ⟨p, hpSigma⟩ := FixedPoints.toAlgAut_surjective P F sigma
   have hAutEq :
       (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) = rhoP p := by
-    apply DFunLike.ext _ _
-    intro x
-    have hx := DFunLike.congr_fun hpSigma x
-    simpa [sigma, rhoP] using hx.symm
+    have htemp : (sigma : F ≃+* F) = (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) := by
+      dsimp [sigma]
+      rfl
+    have htemp' : (sigma : F ≃+* F) = (rhoP p : F ≃+* F) := by
+      calc
+        (sigma : F ≃+* F) = ((MulSemiringAction.toAlgAut (↥P) (↥(FixedPoints.subfield (↥P) F)) F) p : F ≃+* F) := by
+          simpa using congrArg (fun e : F ≃ₐ[FixedPoints.subfield P F] F => (e : F ≃+* F)) hpSigma.symm
+        _ = (rhoP p : F ≃+* F) := by
+          ext x
+          calc
+            ((MulSemiringAction.toAlgAut (↥P) (↥(FixedPoints.subfield (↥P) F)) F) p : F → F) x =
+              p • x := rfl
+            _ = rhoP p x := rfl
+    calc
+      (vmodWAut (QuotientGroup.mk vV) : F ≃+* F) = (sigma : F ≃+* F) := htemp.symm
+      _ = (rhoP p : F ≃+* F) := htemp'
   have hQuotientEq :
       QuotientGroup.mk' (W.subgroupOf V) vV =
         QuotientGroup.mk' (W.subgroupOf V) (pToV p) := by

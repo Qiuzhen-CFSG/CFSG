@@ -16,6 +16,7 @@ open scoped Pointwise
 section MainResults
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
+omit [Finite G] [IsMinCE G] in
 private theorem section16_primeOrderSubgroupOf_to_section12
     {X H : Subgroup G}
     (hX : section16PrimeOrderSubgroupOf X H) :
@@ -24,6 +25,7 @@ private theorem section16_primeOrderSubgroupOf_to_section12
   rcases hprime with ⟨p, hp⟩
   exact ⟨hXH, ⟨p, hp⟩⟩
 
+omit [IsMinCE G] in
 public theorem section16_exists_primeOrderSubgroup_of_ne_bot
     {H : Subgroup G}
     (hHne : H ≠ ⊥) :
@@ -41,8 +43,9 @@ public theorem section16_exists_primeOrderSubgroup_of_ne_bot
   have hz_order : orderOf z = p := by
     simpa [z, Subgroup.orderOf_coe] using hzH_order
   refine ⟨Subgroup.zpowers_le.mpr hzH, ⟨⟨p, hpprime⟩, ?_⟩⟩
-  simpa [z, Nat.card_zpowers, hz_order]
+  simp [z, Nat.card_zpowers, hz_order]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_section14TISet_to_section16TISubset
     {X : Set G}
     (hTI : section14TISet X) :
@@ -77,6 +80,7 @@ private theorem section16_section14TISet_to_section16TISubset
         exact ⟨y, hyX, by simpa [section14SetConjBy] using hxy⟩
     exact hTI.2 g⁻¹ hginv hx14
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_section14TISet_to_section16TISubsetWithNormalizer
     {X : Set G} {N : Subgroup G}
     (hTI : section14TISet X)
@@ -84,6 +88,7 @@ public theorem section16_section14TISet_to_section16TISubsetWithNormalizer
     section16TISubsetWithNormalizer X N :=
   ⟨section16_section14TISet_to_section16TISubset (G := G) hTI, hNorm⟩
 
+omit [IsMinCE G] in
 public theorem section16_MFamilyP1_of_U_eq_bot
     {M K U : Subgroup G}
     (hMP : M ∈ section14MFamilyP G)
@@ -124,11 +129,12 @@ public theorem section16_MFamilyP1_of_U_eq_bot
         exact Subtype.ext (Subgroup.mem_bot.mp hxbot)
       · intro hx
         have hxone : x = 1 := Subgroup.mem_bot.mp hx
-        simpa [hxone, Subgroup.mem_subgroupOf]
+        simp [hxone]
     have hpidx : p.val ∣ (U.subgroupOf M).index := by
       simpa [hUsub_bot, subgroupPrimeSet, Subgroup.index_bot] using hp.1
     exact (hUHall.2.p_in_pi_of_p_dvd_index p hpidx) hpcompl
 
+omit [IsMinCE G] in
 public theorem section16_U_ne_bot_of_MFamilyP2
     {M K U : Subgroup G}
     (hKU : section15KUData M K U)
@@ -325,6 +331,7 @@ private theorem section16_conjugatesBySet_TI_of_outside_disjoint
         ⟨hxX, hx_conj⟩)
     simp at hx_empty
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_kappa_subset_not_sigma
     {M : Subgroup G} :
     section14KappaPrimes M ⊆ (section10SigmaPrimes M)ᶜ := by
@@ -370,6 +377,7 @@ public theorem section16_mem_msigma_of_primeSupport_subset
   simpa [q, QuotientGroup.ker_mk'] using
     (MonoidHom.mem_ker (f := q) (x := ⟨x, hxM⟩)).2 hxQeq1
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_elementPrimeSupport_conj_subset
     {x g : G} :
     section14ElementPrimeSupport (g * x * g⁻¹) ⊆ section14ElementPrimeSupport x := by
@@ -466,7 +474,7 @@ private theorem section16HallSubgroupOf_self
   simpa [section16HallSubgroupOf, section15HallSubgroupOf] using
     section16_section15HallSubgroupOf_self (G := G) H
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section16HallSubgroupOf_of_le
     {H K L : Subgroup G}
     (hHall : section16HallSubgroupOf H L)
@@ -607,6 +615,7 @@ private theorem section16_conjugatesContaining_subset_msigmaElement
     simpa [MulAut.conj_apply] using hzx
   simpa [hconj_eq] using hxσ_conj
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_sharpTransitiveOn_conjugates
     {M R : Subgroup G} {x : G}
     (hsubset : ∀ N : Subgroup G, N ∈ section16ConjugatesContainingElement M x →
@@ -666,7 +675,7 @@ private theorem section16_isComplement'_subgroupOf_of_disjoint_mul_eq_univ
 
 omit [Finite G] [IsMinCE G] in
 private theorem section16_hallSubgroupOf_of_complement_normalHall
-    {K H R : Subgroup G} (hHK : H ≤ K) (hRK : R ≤ K)
+    {K H R : Subgroup G} (hHK : H ≤ K) (_hRK : R ≤ K)
     (hRHall : ∃ π : Set Nat.Primes, IsHallSubgroup π (R.subgroupOf K))
     (hcomp : (H.subgroupOf K).IsComplement' (R.subgroupOf K)) :
     section16HallSubgroupOf H K := by
@@ -740,8 +749,8 @@ public theorem section16_msigmaElement_card_gt_one_of_not_centralizer_le
     intro hEq
     exact hneq (congrArg Subtype.val hEq).symm
   haveI : Nontrivial Ωx := ⟨L₁, L₂, hL₁_ne_L₂⟩
-  have hcard : 1 < Fintype.card Ωx := Fintype.one_lt_card
-  simpa [Ωx, Nat.card_eq_fintype_card] using hcard
+  change 1 < Nat.card Ωx
+  exact Finite.one_lt_card
 
 public theorem section16_section14R_eq_bot_of_centralizer_le
     {M : Subgroup G}
@@ -775,8 +784,8 @@ public theorem section16_section14R_eq_bot_of_centralizer_le
       Subgroup.disjoint_def.mp hcompN.2.2.2 hxNσ hxMN
     exact hxne (by simpa using hxbot)
   have hcard' :
-      ¬ 1 < Fintype.card {L : Subgroup G // L ∈ section14MsigmaElement x} := by
-    simpa [Nat.card_eq_fintype_card] using hnotcard
+      ¬ 1 < (section14MsigmaElement x).ncard := by
+    simpa only [Nat.card_coe_set_eq] using hnotcard
   simp [section14R, hxne, hσ, hcard']
 
 public theorem section16_theoremDComplement
@@ -921,7 +930,7 @@ private theorem section16_mem_zpowers_mul_of_commute_of_coprime_order
     _ = a := by
           simpa using hn
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section16_exists_prime_mem_elementPrimeSupport
     {x : G} (hxne : x ≠ 1) :
     (section14ElementPrimeSupport x).Nonempty := by
@@ -983,6 +992,7 @@ private theorem section16_msigma_mfSubgroup_of_nilpotent
       section8_le_piCoreIn_of_normal_isPiSubgroup hHM hHnormM hHπ
     simpa [section10Msigma, section10MsigmaSubgroup, piCoreIn] using hcore
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16NilpotentNormalHallIn_bot
     (M : Subgroup G) :
     section16NilpotentNormalHallIn (⊥ : Subgroup G) M := by
@@ -1000,6 +1010,7 @@ private theorem section16NilpotentNormalHallIn_bot
   · intro p hp hpidx
     exact p.property.not_dvd_one (by simpa [subgroupPrimeSet] using hp)
 
+omit [IsMinCE G] in
 private theorem section16NilpotentNormalHallIn_sup
     {M H K : Subgroup G}
     (hH : section16NilpotentNormalHallIn H M)
@@ -1050,7 +1061,7 @@ private theorem section16NilpotentNormalHallIn_sup
     let e :=
       Subgroup.subgroupOfEquivOfLe (G := G) (H := SK)
         (K := section8FittingSubgroup M) hSKleF
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := SK.subgroupOf (section8FittingSubgroup M)) (G' := SK) e
   refine ⟨hSKM, hSKnormM, hSKnil, ?_⟩
   refine isHallSubgroup_of (G := M) (π := subgroupPrimeSet SK)
@@ -1083,6 +1094,7 @@ private theorem section16NilpotentNormalHallIn_sup
         exact dvd_mul_of_dvd_right hpidx (Km.relIndex (SK.subgroupOf M))
       exact (hKHall.p_in_pi_of_p_dvd_index p hpidxK) hpK
 
+omit [IsMinCE G] in
 /-- Every finite subgroup has a largest nilpotent normal Hall subgroup in the
 Section 16 sense. -/
 public theorem section16_exists_mfSubgroup
@@ -1122,6 +1134,7 @@ public theorem section16_complementIn_normal_isComplement'
   exact section16_isComplement'_subgroupOf_of_disjoint_mul_eq_univ
     (G := G) hcomp.1 hcomp.2.1 hcomp.2.2.2 hmul
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_mem_normal_complement_of_support_disjoint_hall
     {M K L : Subgroup G} {π : Set Nat.Primes}
     (hKHall : section12HallSubgroupIn π K M)
@@ -1165,6 +1178,7 @@ private theorem section16_mem_normal_complement_of_support_disjoint_hall
     (QuotientGroup.eq_one_iff (N := Lsub) xM).1 hq_eq_one
   simpa [Lsub, xM, Subgroup.mem_subgroupOf] using hxLsub
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_mem_U_mul_msigma_of_support_tau2
     {M K U : Subgroup G}
     (hKU : section15KUData M K U)
@@ -1192,6 +1206,7 @@ private theorem section16_mem_U_mul_msigma_of_support_tau2
       Subgroup.coe_mul_of_left_le_normalizer_right U (section10Msigma M) hU_norm_sigma
   exact hprod ▸ hxL
 
+set_option linter.unusedVariables false in
 public theorem section16_theoremD_auxiliary_data
     {M N : Subgroup G} {x : G}
     (hxne : x ≠ 1)
@@ -1213,9 +1228,7 @@ public theorem section16_theoremD_auxiliary_data
     · have hNnotP1 : N ∉ section14MFamilyP1 G := by
         intro hP1
         rcases hP1.1.2 with ⟨p, hpκ⟩
-        have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-          simpa [hNF.2] using hpκ
-        exact hpempty
+        simp [hNF.2] at hpκ
       rcases section16_exists_prime_mem_elementPrimeSupport (G := G) hxne with ⟨p, hpSupp⟩
       have hpTau2 : p ∈ section12Tau2Primes N := hsupp hpSupp
       have hpN : p ∈ subgroupPrimeSet N :=
@@ -1223,9 +1236,7 @@ public theorem section16_theoremD_auxiliary_data
       have hpNotSigma : p ∉ section10SigmaPrimes N := hpTau2.1
       have hpNotKappa : p ∉ section14KappaPrimes N := by
         intro hpκ
-        have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-          simpa [hNF.2] using hpκ
-        exact hpempty
+        simp [hNF.2] at hpκ
       let S : Sylow p.val N := Classical.choice (Sylow.nonempty (p := p.val) (G := N))
       exact (lemma_14_1 (G := G) hNF.1 hNnotP1
         (p := p) ⟨hpN, by
@@ -1292,9 +1303,7 @@ public theorem section16_MF_eq_msigma_of_typeF
   have hP1 := theorem_15_2_a (G := G) (M := M) (MF := MF) (K := K)
     hM hMF hK hne
   rcases hP1.1.1.2 with ⟨p, hpκ⟩
-  have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-    simpa [hF.2] using hpκ
-  exact hpempty
+  simp [hF.2] at hpκ
 
 private theorem section16_section15KUData_bot_of_typeF_cyclic_complement
     {M E : Subgroup G}
@@ -1313,9 +1322,7 @@ private theorem section16_section15KUData_bot_of_typeF_cyclic_complement
         simp
       exact False.elim (p.property.not_dvd_one (by simpa [hcard] using hp))
     · intro p hpκ hpidx
-      have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-        simpa [hF.2] using hpκ
-      exact hpempty
+      simp [hF.2] at hpκ
   have hCompLeft :
       section12ComplementIn M (⊥ : Subgroup G) (E ⊔ section10Msigma M) := by
     refine ⟨bot_le, sup_le hcomp.2.1 hcomp.1, ?_, disjoint_bot_left⟩
@@ -1325,7 +1332,7 @@ private theorem section16_section15KUData_bot_of_typeF_cyclic_complement
       _ = (⊥ : Subgroup G) ⊔ (E ⊔ section10Msigma M) := by simp
   have hCompRight :
       section12ComplementIn M (section10Msigma M) ((⊥ : Subgroup G) ⊔ E) := by
-    simpa using hcomp
+    simpa [section12ComplementToMsigma] using hcomp
   have hUcomm : IsMulCommutative E := by
     letI : IsCyclic E := hcyc
     infer_instance
@@ -1353,12 +1360,12 @@ private theorem section16_section15KUData_bot_of_typeF_cyclic_complement
       exact hcomp.2.2.1.symm
     have hNormalSelf : section10NormalIn M M := by
       refine ⟨le_rfl, ?_⟩
-      simpa using (show (⊤ : Subgroup M).Normal from inferInstance)
+      simp
     exact ⟨hCompBot, by simpa [hEMsigma_eq] using hNormalSelf⟩
   have hUnorm : section10NormalIn E ((⊥ : Subgroup G) ⊔ E) := by
     simpa using
       (show section10NormalIn E E from
-        ⟨le_rfl, by simpa using (show (⊤ : Subgroup E).Normal from inferInstance)⟩)
+        ⟨le_rfl, by simp⟩)
   exact ⟨hKHall, hCompLeft, hCompRight, hUHall, hActsReg, hNormComp.2, hUnorm⟩
 
 public theorem section16_frobeniusWithCyclicComplement_of_typeF_cyclic_msigma_complement
@@ -1400,7 +1407,7 @@ public theorem section16_frobeniusWithCyclicComplement_of_typeF_cyclic_msigma_co
   have hE₀_eq : E₀ = E :=
     Subgroup.eq_of_le_of_card_ge hE₀E (by rw [← hcard_eq])
   refine ⟨E, ?_, ?_, hcyc⟩
-  · simpa [hMF_eq] using hcomp
+  · simpa [section12ComplementToMsigma, hMF_eq] using hcomp
   · have hFrobE : section12FrobeniusJoinWithKernel (section10Msigma M) E := by
       simpa [hE₀_eq] using hFrobE₀
     simpa [hMF_eq] using hFrobE
@@ -1413,12 +1420,13 @@ private theorem section16_msigma_normalizer_eq_self
   have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
   have hMsigmaSub_ne : section10MsigmaSubgroup M ≠ ⊥ := by
     intro hbot
-    exact hMsigma_ne (by simpa [section10Msigma, hbot])
+    exact hMsigma_ne (by simp [section10Msigma, hbot])
   have hnorm :=
     section10_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       (G := G) hM (N := section10MsigmaSubgroup M) hMsigmaSub_ne
   simpa [section10Msigma] using hnorm
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_mem_normalizer_of_conjugateSet_eq
     {X : Set G} {g : G}
     (hconj : section16ConjugateSet X g = X) :
@@ -1441,6 +1449,7 @@ public theorem section16_mem_normalizer_of_conjugateSet_eq
         _ = y := by group
     simpa [hxy] using hy
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_normalizer_le_of_nonempty_subset_ti
     {X : Set G} {W : Subgroup G} {W0 : Set G}
     (hTI : section16TISubsetWithNormalizer X W)
@@ -1455,7 +1464,8 @@ private theorem section16_normalizer_le_of_nonempty_subset_ti
     intro hx
     exact hOne (by simpa [hx] using hxX)
   have hgnorm : ∀ y : G, y ∈ W0 ↔ g * y * g⁻¹ ∈ W0 := by
-    simpa [Subgroup.mem_normalizer_iff] using hg
+    change ∀ y : G, y ∈ W0 ↔ g * y * g⁻¹ ∈ W0 at hg
+    exact hg
   have hgxW0 : g * x * g⁻¹ ∈ W0 := (hgnorm x).1 hxW0
   have hgxX : g * x * g⁻¹ ∈ X := hW0sub hgxW0
   have hgxConj : g * x * g⁻¹ ∈ section16ConjugateSet X g :=
@@ -1474,6 +1484,7 @@ private theorem section16_normalizer_le_of_nonempty_subset_ti
         _ = 1 := by rw [hgx_one]; simp
     exact False.elim (hxne hx_one)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_commutative_subgroup_le_normalizer_of_subset
     {W : Subgroup G} {W0 : Set G}
     (hWcomm : IsMulCommutative W)
@@ -1486,7 +1497,7 @@ private theorem section16_commutative_subgroup_le_normalizer_of_subset
   · intro hxW0
     have hxW : x ∈ W := hW0sub hxW0
     have hcomm : z * x = x * z :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := W) hzW hxW
+      setLike_mul_comm (s := W) hzW hxW
     simpa [hcomm, mul_assoc] using hxW0
   · intro hxW0
     have hzInvW : z⁻¹ ∈ W := W.inv_mem hzW
@@ -1494,7 +1505,7 @@ private theorem section16_commutative_subgroup_le_normalizer_of_subset
     have hyW0 : y ∈ W0 := by simpa [y] using hxW0
     have hyW : y ∈ W := hW0sub hyW0
     have hcomm : z⁻¹ * y = y * z⁻¹ :=
-      Subgroup.mul_comm_of_mem_isMulCommutative (H := W) hzInvW hyW
+      setLike_mul_comm (s := W) hzInvW hyW
     have h_eq : z⁻¹ * y * z = y := by
       calc
         z⁻¹ * y * z = (y * z⁻¹) * z := by rw [hcomm]
@@ -1507,12 +1518,14 @@ private theorem section16_commutative_subgroup_le_normalizer_of_subset
       group
     simpa [hx_eq] using hpre
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_one_not_mem_hatW
     {W1 W2 : Subgroup G} :
     (1 : G) ∉ section16HatW W1 W2 := by
   intro h
   exact h.2 (Or.inl W1.one_mem)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_hatW_subset_normalizer_eq_of_ti
     {W1 W2 : Subgroup G} {W0 : Set G}
     (hTI :
@@ -1549,8 +1562,8 @@ public theorem section16_hatW_subset_normalizer_eq_of_caseP
           (G := G) h147e.1 h147e.2.1)
     simpa [section16HatW, section16HatZ, section16ZSubgroup] using hTI0
   have hZcyc : IsCyclic (K ⊔ Kstar : Subgroup G) := by
-    simpa [Kstar, section16ZSubgroup, section16Kstar, section14Z, section14KStar]
-      using h147d.2.1
+    change IsCyclic (section14Z M K)
+    exact h147d.2.1
   have hWcomm : IsMulCommutative (K ⊔ Kstar : Subgroup G) := by
     letI : IsCyclic (K ⊔ Kstar : Subgroup G) := hZcyc
     infer_instance
@@ -1614,14 +1627,15 @@ public theorem section16_hatZ_decomp_with_kstar_zpower
     intro x hxK
     exact (centralizer_le_normalizer (section14KStar M K)) (hZdp.2.2.2.2 hxK)
   have hKstarNormal : ((section14KStar M K).subgroupOf Z).Normal := by
-    simpa [Z, section14Z] using
-      (Subgroup.normal_subgroupOf_sup_of_le_normalizer
-        (H := K) (N := section14KStar M K) hK_norm_Kstar)
+    change ((section14KStar M K).subgroupOf (K ⊔ section14KStar M K)).Normal
+    exact Subgroup.normal_subgroupOf_sup_of_le_normalizer
+      (H := K) (N := section14KStar M K) hK_norm_Kstar
   letI : ((section14KStar M K).subgroupOf Z).Normal := hKstarNormal
   have htop0 : (K.subgroupOf Z) ⊔ ((section14KStar M K).subgroupOf Z) = ⊤ := by
-    simpa [Z, section14Z] using
-      (Subgroup.subgroupOf_sup
-        (A := K) (A' := section14KStar M K) (B := Z) le_sup_left le_sup_right).symm
+    change
+      K.subgroupOf (K ⊔ section14KStar M K) ⊔
+          (section14KStar M K).subgroupOf (K ⊔ section14KStar M K) = ⊤
+    exact (Subgroup.codisjoint_subgroupOf_sup K (section14KStar M K)).eq_top
   have htop :
       ((section14KStar M K).subgroupOf Z) ⊔ (K.subgroupOf Z) = ⊤ := by
     simpa [sup_comm] using htop0
@@ -1834,7 +1848,7 @@ private theorem section16_conjugates_hatZ_subset_A0_diff_A
     have ht_ne : t ≠ 1 := by
       intro ht_one
       exact htHat.2 (Or.inl (by
-        simpa [ht_one] using K.one_mem))
+        simp [ht_one]))
     intro h
     exact ht_ne (by
       have h' := congrArg (fun z : G => m⁻¹ * z * m) h
@@ -2130,7 +2144,8 @@ public theorem theorem_16_C
     ?_,
     Mstar,
     ?_⟩
-  · simpa [Kstar, section16Kstar, section14KStar] using h156.2.1
+  · change IsCyclic (section14KStar M K)
+    exact h156.2.1
   · simpa [Kstar, section16Kstar, section14KStar] using h156.2.2.1
   · exact h156.2.2.2.2
   · simpa [Kstar, section16Kstar, section14KStar,
@@ -2162,8 +2177,8 @@ public theorem theorem_16_C
         using hInterData.1
     · simpa [Kstar, section16ZSubgroup, section16Kstar, section14ZInternalDirectProduct,
         section14Z, section14KStar] using h147d.1
-    · simpa [Kstar, section16ZSubgroup, section16Kstar, section14Z, section14KStar]
-        using h147d.2.1
+    · change IsCyclic (section14Z M K)
+      exact h147d.2.1
     · exact hCase
     · intro H hH
       simpa [Mstar, section16MaximalTypeP, section14ConjugateSubgroups] using

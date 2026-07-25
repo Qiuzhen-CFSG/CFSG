@@ -65,7 +65,7 @@ public theorem typeB_not_isMulCommutative
   have hepsilonZero : epsilon = 0 := by
     calc
       epsilon = 1 * theta 1 + epsilon * 1 * theta 1 + 1 * theta 1 := by
-        simp only [map_one, mul_one, one_mul]
+        simp only [map_one, mul_one]
         rw [show (1 : BinaryGaloisField n) + epsilon + 1 =
             epsilon + (1 + 1) by ring,
           CharTwo.add_self_eq_zero, add_zero]
@@ -77,7 +77,7 @@ public theorem typeB_not_isMulCommutative
       _ = (1 + cocycle 1 0 0 1) +
             (cocycle 0 1 1 0 + 1) := by
         rw [hdiag, hdiag]
-        simp only [map_one, map_zero, mul_one, mul_zero, zero_mul,
+        simp only [map_one, map_zero, mul_one, mul_zero,
           add_zero, zero_add]
       _ = cocycle 1 0 0 1 + cocycle 0 1 1 0 := by
         rw [show (1 + cocycle 1 0 0 1) +
@@ -207,7 +207,7 @@ private theorem q0_card_eq_center_card
 private theorem q0_mem_iff_center
     {G : Type*} [Group G]
     (H Q Q0 S : Subgroup G)
-    (hQleH : Q ≤ H) (hQ0leQ : Q0 ≤ Q)
+    (hQleH : Q ≤ H) (_hQ0leQ : Q0 ≤ Q)
     (hQ0def : ∀ x : G, x ∈ Q0 ↔
       x = 1 ∨ (x ∈ H ∧ IsInvolution x))
     (hSQ : S = Q) (hS : IsSuzukiTwoGroup S) (x : S) :
@@ -312,8 +312,8 @@ private noncomputable def centerQuotientAction
       QuotientGroup.mk' (Subgroup.center P) x
     rw [alpha.symm_apply_apply]
   have hdescend_inv_right (alpha : MulAut P) :
-      Function.RightInverse (descend alpha.symm) (descend alpha) := by
-    simpa using hdescend_inv_left alpha.symm
+      Function.RightInverse (descend alpha.symm) (descend alpha) :=
+    hdescend_inv_left alpha.symm
   let descendAut (alpha : MulAut P) : MulAut (P ⧸ Subgroup.center P) :=
     { toFun := descend alpha
       invFun := descend alpha.symm
@@ -364,7 +364,7 @@ private theorem actualK_action_on_S
       intro omega
       exact MulAction.mem_stabilizer_iff.mp (hxAll omega)
     have hxOne : x = 1 := (faithfulSMul_iff.mp hA.A2) x hfix
-    simpa [hxOne]
+    simp [hxOne]
   letI : (Q.subgroupOf H).Normal := hA.A1.Q_normal_in_H
   have hHnormQ : H ≤ Subgroup.normalizer (Q : Set G) :=
     Subgroup.le_normalizer_of_normal_subgroupOf hA.A1.Q_le_H
@@ -566,10 +566,10 @@ private theorem cyclic_irreducible_plane_field_model
   let M : Matrix (Fin 2) (Fin 2) F :=
     LinearMap.toMatrix' (rhoFin w0).1
   have hM_apply (x : Fin 2 → F) : M.mulVec x = (rhoFin w0).1 x := by
-    simpa [M] using LinearMap.toMatrix'_mulVec (rhoFin w0).1 x
+    simp [M, LinearMap.toMatrix'_mulVec]
   let chi : Polynomial F := M.charpoly
   have hchiDeg : chi.natDegree = 2 := by
-    simpa [chi, M] using Matrix.charpoly_natDegree_eq_dim M
+    simp [chi, M, Matrix.charpoly_natDegree_eq_dim]
   have hchiNe : chi ≠ 0 := (Matrix.charpoly_monic M).ne_zero
   have hnoRoot (mu : F) : ¬ chi.IsRoot mu := by
     intro hroot
@@ -653,13 +653,13 @@ private theorem cyclic_irreducible_plane_field_model
   have hfinrankE : Module.finrank F E = 2 := by
     simpa [E] using FiniteField.finrank_extension F 2 2
   let bAlpha : Module.Basis (Fin 2) F E :=
-    basisOfLinearIndependentOfCardEqFinrank halphaLI (by simpa [hfinrankE])
+    basisOfLinearIndependentOfCardEqFinrank halphaLI (by simp [hfinrankE])
   let v : Fin 2 → F := ![1, 0]
   let wv : Fin 2 → F := M.mulVec v
   have hv : v ≠ 0 := by
     intro hv0
     have := congrFun hv0 0
-    simpa [v] using this
+    simp [v] at this
   let actionFamily : Fin 2 → (Fin 2 → F) := ![wv, v]
   have hactionLI : LinearIndependent F actionFamily := by
     rw [linearIndependent_fin2]
@@ -893,9 +893,11 @@ private theorem typeB_group_model :
       simp [hphiZeroRight]
   have hmul_left_cancel (a b c : Carrier) (h : a * b = a * c) : b = c := by
     have hv := congrArg (fun z : Carrier => (z.1 : E × E)) h
-    have hfirst : b.1.1 = c.1.1 := by
-      apply add_left_cancel
-      simpa only using congrArg Prod.fst hv
+    have hfirst : b.1.1 = c.1.1 :=
+      (IsLeftCancelAdd.add_left_cancel (a.1.1)) (by
+        have h := congrArg Prod.fst hv
+        dsimp [Mul.mul, mulCarrier] at h
+        exact h)
     apply Subtype.ext
     apply Prod.ext
     · exact hfirst
@@ -1113,7 +1115,7 @@ private theorem align_odd_actions_on_binary_central_extension
     · intro hu
       have hback := hconjModel_mem a⁻¹
         ⟨rhoM a * u * (rhoM a)⁻¹, hu⟩
-      convert hback using 1 <;> simp only [map_inv] <;> group
+      convert hback using 1; simp only [map_inv]; group
   letI : MulDistribMulAction rhoM.range U :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer
       rhoM.range U hrhoM_normalizes
@@ -1125,7 +1127,7 @@ private theorem align_odd_actions_on_binary_central_extension
     apply Subtype.ext
     change delta (a * b) = delta a *
       (rhoM a * delta b * (rhoM a)⁻¹)
-    simp only [delta, map_mul, map_inv]
+    simp only [delta, map_mul]
     group
   have hUcommutative : IsMulCommutative U := by
     refine IsMulCommutative.mk ⟨?_⟩
@@ -1138,14 +1140,25 @@ private theorem align_odd_actions_on_binary_central_extension
     congr 1
     exact mul_comm f g
   letI : IsMulCommutative U := hUcommutative
-  letI : CommGroup U := by infer_instance
-  have hUsolvable : IsSolvable U := by infer_instance
+  haveI : CommGroup U :=
+    { mul_comm := by
+        intro a b
+        have h := (isMulCommutative_iff.mp hUcommutative) a b
+        exact h }
   let kernelIso : Multiplicative KernelParam ≃* U :=
     (MonoidHom.ofInjective hencodeHom_injective).trans
       (MulEquiv.subgroupCongr rfl)
-  letI : Finite U :=
-    Finite.of_injective (fun u : U => kernelIso.symm u)
-      kernelIso.symm.injective
+  have hUsolvable : IsSolvable U := by
+    haveI : IsSolvable (Multiplicative KernelParam) := by
+      -- Multiplicative KernelParam is an abelian group (it's a ZMod 2-vector space)
+      infer_instance
+    refine solvable_of_surjective (f := kernelIso.toMonoidHom) ?_
+    -- kernelIso is an isomorphism, so it's surjective
+    intro x
+    refine ⟨kernelIso.symm x, ?_⟩
+    simp
+  haveI : Finite U :=
+    Finite.of_injective (fun u : U => kernelIso.symm u) (kernelIso.symm.injective)
   have hcardU : Nat.card U =
       2 ^ Module.finrank (ZMod 2) KernelParam := by
     calc
@@ -1347,7 +1360,7 @@ private theorem typeB_model_central_extension_data
     rw [hphi_zero_left, hphi_zero_right]
     apply Prod.ext
     · simp
-    · simpa only [Prod.snd, add_zero, add_comm]
+    · simp only [add_comm]
   have hsquareModel (x : S1) :
       iotaModel (Multiplicative.ofAdd (qF (piModel x).toAdd)) = x ^ 2 := by
     apply coord.injective
@@ -1452,10 +1465,10 @@ private theorem phi_twisted_additive_core
   dsimp
   constructor
   · intro x y z
-    simp [add_mul, mul_add]
+    simp [mul_add]
     ring
   · intro x y z
-    simp [add_mul, mul_add]
+    simp [mul_add]
     ring
 
 set_option maxHeartbeats 800000 in
@@ -1519,7 +1532,7 @@ private theorem phi_twisted_polar_decomp_core
     exact h3
   have h4p : S0 + T = (dTheta : E) * V := by
     dsimp [S0, T, V]
-    rw [QuadraticMap.polar_comm qNorm ((cTheta : E) * y) x, hdTheta]
+    simp [QuadraticMap.polar_comm qNorm ((cTheta : E) * y) x, hdTheta, QuadraticMap.polarBilin_apply_apply]
     exact h4
   have hT : T = S0 + (dTheta : E) * V := by
     calc
@@ -1556,7 +1569,7 @@ private theorem phi_twisted_polar_decomp_core
         have htwo : (2 : E) = 0 := by
           simpa only [one_add_one_eq_two] using
             (CharTwo.add_self_eq_zero (1 : E))
-        simp only [htwo, zero_mul, mul_zero, add_zero]
+        simp only [htwo, mul_zero, add_zero]
   change U =
     (a : E) * ((dTheta⁻¹ : E) *
       (S0 + (theta cTheta : E) * V)) +
@@ -1623,7 +1636,7 @@ private theorem phi_twisted_smul_left_core
   have htwo : (2 : E) = 0 := by
     simpa only [one_add_one_eq_two] using
       (CharTwo.add_self_eq_zero (1 : E))
-  simp only [htwo, zero_mul, mul_zero, add_zero]
+  simp only [htwo, mul_zero, add_zero]
 
 set_option maxHeartbeats 800000 in
 private theorem typeB_model_target_involution
@@ -1877,7 +1890,7 @@ private theorem typeB_natCard_eq_cube
     intro c
     have hsq : tripleLift c 0 0 ^ 2 = 1 := by
       rw [pow_two, hmul, hcocycle_zero]
-      simp only [CharTwo.add_self_eq_zero, zero_add]
+      simp only [CharTwo.add_self_eq_zero]
       exact hone
     by_cases hone' : tripleLift c 0 0 = 1
     · exact hone' ▸ Q0.one_mem
@@ -2110,7 +2123,7 @@ public theorem proposition_of_KW_fixed_point_free
                             S ⊔ Q1 = Q) ∧
   s ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution s ∧
     ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r))
-    (hC1 : HypothesisC1 G V)
+    (_hC1 : HypothesisC1 G V)
     (hC2 : HypothesisC2 G S W t s)
     (hWcyclic : IsCyclic W)
     (hIsoPackage : ∃ hKnormS : K ≤ Subgroup.normalizer (S : Set G),
@@ -2210,7 +2223,7 @@ public theorem proposition_of_KW_fixed_point_free
       ((rhoActual a x : S) : G) =
         (a : G) * (x : G) * (a : G)⁻¹ := by
     intro a x
-    simpa [rhoActual,
+    simp [rhoActual,
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have htypeBNotCommutative : ¬ IsMulCommutative S :=
     typeB_not_isMulCommutative S hC2.S_type_B
@@ -2264,15 +2277,21 @@ public theorem proposition_of_KW_fixed_point_free
       hsection3.1.Q0_le_Q hsection3.1.Q0_def hSQ hS_suzuki
   have hcenterCardH :
       Nat.card (Subgroup.center S) = Nat.card (BinaryGaloisField nH) := by
-    simpa using Nat.card_congr eZ.toEquiv
+    simpa [Multiplicative] using Nat.card_congr eZ.toEquiv
   have hcardH_Q0 : Nat.card (BinaryGaloisField nH) = Nat.card Q0 :=
     hcenterCardH.symm.trans hQ0CenterCard.symm
   let quotientAction : (K ⊔ W : Subgroup G) →*
-      AddAut (BinaryGaloisField nH × BinaryGaloisField nH) :=
+      Multiplicative (AddAut (BinaryGaloisField nH × BinaryGaloisField nH)) :=
     (MulAutMultiplicative
       (BinaryGaloisField nH × BinaryGaloisField nH)).toMonoidHom.comp
       ((MulAut.congr eQ).toMonoidHom.comp
         ((centerQuotientAction S).comp rhoActual))
+  let qact (a : (K ⊔ W : Subgroup G)) (v : BinaryGaloisField nH × BinaryGaloisField nH) :=
+    ((quotientAction a).toAdd : AddAut (BinaryGaloisField nH × BinaryGaloisField nH)) v
+  let qAction (a : (K ⊔ W : Subgroup G)) : AddAut (BinaryGaloisField nH × BinaryGaloisField nH) :=
+    (quotientAction a).toAdd
+  let qact (a : (K ⊔ W : Subgroup G)) (v : BinaryGaloisField nH × BinaryGaloisField nH) :=
+    ((quotientAction a).toAdd : AddAut (BinaryGaloisField nH × BinaryGaloisField nH)) v
   let kIncl : K →* (K ⊔ W : Subgroup G) :=
     Subgroup.inclusion le_sup_left
   let wIncl : W →* (K ⊔ W : Subgroup G) :=
@@ -2282,7 +2301,11 @@ public theorem proposition_of_KW_fixed_point_free
           (eQ (QuotientGroup.mk' (Subgroup.center S) x)).toAdd =
         (eQ (QuotientGroup.mk' (Subgroup.center S)
           (rhoActual a x))).toAdd := by
-    simp [quotientAction, centerQuotientAction]
+    change (eQ ((centerQuotientAction S (rhoActual a))
+      (eQ.symm (eQ (QuotientGroup.mk' (Subgroup.center S) x))))).toAdd =
+        (eQ (QuotientGroup.mk' (Subgroup.center S) (rhoActual a x))).toAdd
+    rw [eQ.symm_apply_apply]
+    rfl
   have hKAction_mk (k : K) (x : S) :
       quotientAction (kIncl k)
           (eQ (QuotientGroup.mk' (Subgroup.center S) x)).toAdd =
@@ -2324,14 +2347,25 @@ public theorem proposition_of_KW_fixed_point_free
     · let aUnit : (BinaryGaloisField nH)ˣ := Units.mk0 a ha
       obtain ⟨k, hk⟩ := eK.surjective aUnit
       have hcomm := congrArg quotientAction (hWKcommute w k)
-      have hv := DFunLike.congr_fun hcomm v
-      rw [map_mul, map_mul] at hv
-      change quotientAction (wIncl w) (quotientAction (kIncl k) v) =
-        quotientAction (kIncl k) (quotientAction (wIncl w) v) at hv
-      rw [hKAction, hKAction] at hv
+      have hv : quotientAction (wIncl w) (quotientAction (kIncl k) v) =
+          quotientAction (kIncl k) (quotientAction (wIncl w) v) := by
+        calc
+          quotientAction (wIncl w) (quotientAction (kIncl k) v) =
+              (quotientAction (wIncl w) * quotientAction (kIncl k)) v := by
+            simp
+          _ = quotientAction (wIncl w * kIncl k) v := by simp
+          _ = quotientAction (kIncl k * wIncl w) v := by rw [hWKcommute w k]
+          _ = (quotientAction (kIncl k) * quotientAction (wIncl w)) v := by simp
+          _ = quotientAction (kIncl k) (quotientAction (wIncl w) v) := by simp
       have hka : (eK k : BinaryGaloisField nH) = a := by
         simpa [aUnit] using congrArg Units.val hk
-      simpa [hka, Prod.smul_mk] using hv
+      rw [hKAction, hKAction, hka] at hv
+      rcases v with ⟨v1, v2⟩
+      apply Prod.ext
+      · have hfst := congrArg Prod.fst hv
+        simpa [Prod.smul_mk, smul_eq_mul] using hfst
+      · have hsnd := congrArg Prod.snd hv
+        simpa [Prod.smul_mk, smul_eq_mul] using hsnd
   let wLinear (w : W) :
       (BinaryGaloisField nH × BinaryGaloisField nH) ≃ₗ[BinaryGaloisField nH]
         (BinaryGaloisField nH × BinaryGaloisField nH) :=
@@ -2433,13 +2467,16 @@ public theorem proposition_of_KW_fixed_point_free
       let dKW : (K ⊔ W : Subgroup G) := wIncl w * (kIncl k)⁻¹
       have hdFix : quotientAction dKW v = v := by
         have hcommInv := hWKcommute w k⁻¹
-        have hcommInvAction := congrArg quotientAction hcommInv
-        have hcommInvV := DFunLike.congr_fun hcommInvAction v
-        rw [map_mul, map_mul] at hcommInvV
-        change quotientAction (wIncl w)
-            (quotientAction (kIncl k⁻¹) v) =
-          quotientAction (kIncl k⁻¹)
-            (quotientAction (wIncl w) v) at hcommInvV
+        have hcommInvV : quotientAction (wIncl w) (quotientAction (kIncl k⁻¹) v) =
+            quotientAction (kIncl k⁻¹) (quotientAction (wIncl w) v) := by
+          calc
+            quotientAction (wIncl w) (quotientAction (kIncl k⁻¹) v) =
+                (quotientAction (wIncl w) * quotientAction (kIncl k⁻¹)) v := by
+              simp
+            _ = quotientAction (wIncl w * kIncl k⁻¹) v := by simp
+            _ = quotientAction (kIncl k⁻¹ * wIncl w) v := by rw [hcommInv]
+            _ = (quotientAction (kIncl k⁻¹) * quotientAction (wIncl w)) v := by simp
+            _ = quotientAction (kIncl k⁻¹) (quotientAction (wIncl w) v) := by simp
         calc
           quotientAction dKW v = quotientAction (wIncl w)
               (quotientAction ((kIncl k)⁻¹) v) := by
@@ -2531,8 +2568,6 @@ public theorem proposition_of_KW_fixed_point_free
       (v : BinaryGaloisField nH × BinaryGaloisField nH) :
       quotientAction a (c • v) = c • quotientAction a v := by
     obtain ⟨k, w, rfl⟩ := hKW_decomp a
-    change quotientAction (kIncl k * wIncl w) (c • v) =
-      c • quotientAction (kIncl k * wIncl w) v
     simp only [map_mul]
     change quotientAction (kIncl k) (quotientAction (wIncl w) (c • v)) =
       c • quotientAction (kIncl k) (quotientAction (wIncl w) v)
@@ -2551,13 +2586,19 @@ public theorem proposition_of_KW_fixed_point_free
         apply Units.ext
         apply LinearMap.ext
         intro v
-        simp [kwLinear]
+        change (Multiplicative.toAdd (quotientAction 1)) v = v
+        rw [map_one]
+        rfl
       map_mul' := by
         intro a b
         apply Units.ext
         apply LinearMap.ext
         intro v
-        simp [kwLinear] }
+        change (Multiplicative.toAdd (quotientAction (a * b))) v =
+          (Multiplicative.toAdd (quotientAction a))
+            ((Multiplicative.toAdd (quotientAction b)) v)
+        rw [map_mul]
+        rfl }
   have hActorComm (a : (K ⊔ W : Subgroup G)) :
       a * wIncl w0 = wIncl w0 * a := by
     apply Subtype.ext
@@ -2577,11 +2618,12 @@ public theorem proposition_of_KW_fixed_point_free
       simp
     let v : BinaryGaloisField nH × BinaryGaloisField nH := (1, 0)
     have hv : v ≠ 0 := by simp [v]
-    have hfix : quotientAction d v = v := by
+    have hfix : (Multiplicative.toAdd (quotientAction d)) v = v := by
       have h := congrArg
         (fun g : LinearMap.GeneralLinearGroup (BinaryGaloisField nH)
           (BinaryGaloisField nH × BinaryGaloisField nH) => g.1 v) hdOne
-      simpa [kwLinearGL, kwLinear] using h
+      simpa [kwLinearGL, kwLinear, Multiplicative.toAdd,
+        Multiplicative.ofAdd] using h
     exact hKW_no_fixed_vector d hdne v hv hfix
   have hActorNoEigen :
       ∀ v : BinaryGaloisField nH × BinaryGaloisField nH, v ≠ 0 →
@@ -2832,7 +2874,7 @@ public theorem proposition_of_KW_fixed_point_free
           (Subgroup.mem_center_iff.mp x.property (y : S)).symm⟩
       ⟨hquotientData.2.1, by
         intro x y
-        exact mul_comm x y⟩
+        exact (isMulCommutative_iff.mp hquotientData.1) x y⟩
   let fieldToQuot : Multiplicative Eact ≃* S ⧸ Subgroup.center S :=
     quotientFieldEquiv.toAddEquiv.toMultiplicative.trans eQ.symm
   let baseAdd : BinaryGaloisField nH →+ Eact :=
@@ -3020,7 +3062,7 @@ public theorem proposition_of_KW_fixed_point_free
     · let aUnit : Fˣ := Units.mk0 a ha
       let k : K := eK.symm (baseUnitsEquiv.symm aUnit)
       have hkVal : (eK k : BinaryGaloisField nH) = baseEquiv a := by
-        simpa [k, aUnit, baseUnitsEquiv]
+        simp [k, aUnit, baseUnitsEquiv]
       have hkw : (kwUnits (kIncl k) : Eact) = (a : Eact) := by
         rw [hkwUnitsK, hkVal, ← hbaseCoe]
       have h := hqActualK k x
@@ -3279,8 +3321,6 @@ public theorem proposition_of_KW_fixed_point_free
       restrictIndex u = thetaIndex := by
     apply baseQuadBasis.injective
     ext a
-    change (baseQuadBasis (restrictIndex u) a : Eact) =
-      (baseQuadBasis thetaIndex a : Eact)
     rw [hbaseQuadBasis_restrict, hqCoeff_scalar u hu,
       hbaseQuadBasis_theta]
     simp
@@ -3289,8 +3329,7 @@ public theorem proposition_of_KW_fixed_point_free
   let bar : Eact ≃+* Eact := barAlg.toRingEquiv
   have hbar_apply (x : Eact) :
       bar x = x ^ Nat.card F := by
-    simpa [bar, barAlg, Nat.card_eq_fintype_card] using
-      congrFun (FiniteField.coe_frobeniusAlgEquivOfAlgebraic F Eact) x
+    simp [bar, barAlg]
   have hbar_fixes (a : F) : bar (a : Eact) = (a : Eact) := by
     change barAlg (algebraMap F Eact a) = algebraMap F Eact a
     exact barAlg.commutes a
@@ -3390,11 +3429,11 @@ public theorem proposition_of_KW_fixed_point_free
       (theta traceW : Eact) + (traceW : Eact) := by
       simpa using hsame
     rw [hpolarZero] at hsame'
-    apply F.subtype_injective
     have hsum : (theta traceW : Eact) + (traceW : Eact) = 0 :=
       hsame'.symm
     have hneg : (theta traceW : Eact) = -(traceW : Eact) :=
       eq_neg_of_add_eq_zero_left hsum
+    apply Subtype.ext
     simpa only [ZModModule.neg_eq_self] using hneg
   let thetaAlg : F ≃ₐ[ZMod 2] F :=
     AlgEquiv.ofRingEquiv (f := theta) (by
@@ -3450,7 +3489,7 @@ public theorem proposition_of_KW_fixed_point_free
       intro hy
       apply Units.ne_zero (w0 : Eactˣ)
       apply sigma0.injective
-      simpa [y] using hy
+      simp [y] at hy
     have hyMul : y * y + 1 = (traceW : Eact) * y := by
       have h := congrArg (fun z : Eact => z * y) hsigma0_trace
       change (y + y⁻¹) * y = (traceW : Eact) * y at h
@@ -3580,8 +3619,7 @@ public theorem proposition_of_KW_fixed_point_free
   have hphiTwisted_diag (htheta : theta ≠ 1) (x : Eact) :
       phiTwisted x x = qNorm x := by
     have hself : qNorm.polarBilin x x = 0 := by
-      simpa [two_smul, CharTwo.add_self_eq_zero] using
-        (QuadraticMap.polar_self qNorm x)
+      simp [two_smul, CharTwo.add_self_eq_zero, QuadraticMap.polar_self]
     have hsame := hqNormPolar_same cTheta (1 : F) x
     have hsame' : qNorm.polarBilin ((cTheta : Eact) * x) x =
         ((cTheta : Eact) + (theta cTheta : Eact)) * qNorm x := by
@@ -3671,14 +3709,6 @@ public theorem proposition_of_KW_fixed_point_free
       phiTwisted ((w : Eact) * x) ((w : Eact) * y) =
         phiTwisted x y := by
     dsimp [phiTwisted]
-    change (dTheta⁻¹ : Eact) *
-        (qNorm.polarBilin ((cTheta : Eact) * ((w : Eact) * x))
-            ((w : Eact) * y) +
-          (theta cTheta : Eact) *
-            qNorm.polarBilin ((w : Eact) * x) ((w : Eact) * y)) =
-      (dTheta⁻¹ : Eact) *
-        (qNorm.polarBilin ((cTheta : Eact) * x) y +
-          (theta cTheta : Eact) * qNorm.polarBilin x y)
     rw [show (cTheta : Eact) * ((w : Eact) * x) =
       (w : Eact) * ((cTheta : Eact) * x) by ring,
       show qNorm.polarBilin ((w : Eact) * ((cTheta : Eact) * x))
@@ -3725,7 +3755,7 @@ public theorem proposition_of_KW_fixed_point_free
         ((w0 : Eactˣ) : Eact)⁻¹ := by
       calc
         ((w0 : Eactˣ) : Eact) = bar ((w0 : Eactˣ) : Eact) := by
-          simpa [hbarOne]
+          simp [hbarOne]
         _ = ((w0 : Eactˣ) : Eact)⁻¹ :=
           hbarW1 (w0 : Eactˣ) w0.property
     have hwSq : ((w0 : Eactˣ) : Eact) * ((w0 : Eactˣ) : Eact) = 1 := by
@@ -3753,6 +3783,7 @@ public theorem proposition_of_KW_fixed_point_free
     apply Units.ext
     have hneg : ((w0 : Eactˣ) : Eact) = -(1 : Eact) :=
       eq_neg_of_add_eq_zero_left hplus
+    change ((w0 : Eactˣ) : Eact) = (1 : Eact)
     simpa only [ZModModule.neg_eq_self] using hneg
   have hAut_fixF (tau : Eact ≃+* Eact)
       (htau : restrictAut tau = 1) : tau = 1 ∨ tau = bar := by
@@ -3839,9 +3870,9 @@ public theorem proposition_of_KW_fixed_point_free
       rcases hAut_fixF upsilon (hrestrict upsilon hupsilonMem) with hups | hups
     · exact (hne (htau.trans hups.symm)).elim
     · apply Subtype.ext
-      simpa [hpair, normIndex, htau, hups]
+      simp [hpair, normIndex, htau, hups]
     · apply Subtype.ext
-      simpa [hpair, normIndex, htau, hups, Finset.pair_comm]
+      simp [hpair, normIndex, htau, hups, Finset.pair_comm]
     · exact (hne (htau.trans hups.symm)).elim
   have hqCoeff_zero_of_ne (htheta : theta = 1)
       (u : QIndex) (hne : u ≠ normIndex) : qCoeff u = 0 := by
@@ -3924,15 +3955,25 @@ public theorem proposition_of_KW_fixed_point_free
     congr 2
   have hmemF_of_bar_fixed (x : Eact) (hx : bar x = x) : x ∈ F := by
     have hfixed : Function.IsFixedPt (barAlg : Eact → Eact) x := by
-      simpa [bar] using hx
+      have hx' : barAlg.toRingEquiv x = x := by
+        simpa only [bar] using hx
+      have hfun :
+          (barAlg.toRingEquiv : Eact → Eact) = (barAlg : Eact → Eact) :=
+        AlgEquiv.coe_ringEquiv barAlg
+      change barAlg x = x
+      rw [← hfun]
+      exact hx'
     have hrange : x ∈ Set.range (algebraMap F Eact) := by
       apply (IsGalois.mem_range_algebraMap_iff_fixed x).2
       intro tau
       obtain ⟨i, rfl⟩ :=
         (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow
           F Eact).surjective tau
-      change (FiniteField.frobeniusAlgEquivOfAlgebraic F Eact ^ i.1) x = x
-      simpa [AlgEquiv.coe_pow, barAlg] using hfixed.iterate i.1
+      have hiter := hfixed.iterate i.1
+      change ((barAlg : Eact → Eact)^[i.1]) x = x at hiter
+      change (barAlg ^ i.1) x = x
+      rw [AlgEquiv.coe_pow]
+      exact hiter
     rcases hrange with ⟨a, rfl⟩
     exact a.property
   have hphi_zero_left (z : Eact) : phi 0 z = 0 := by
@@ -3956,7 +3997,7 @@ public theorem proposition_of_KW_fixed_point_free
       exact hdouble
     have hsnd := congrArg Prod.snd h
     rw [hfstZero, hphi_zero_left] at hsnd
-    simp only [Prod.snd, add_zero] at hsnd
+    simp only [add_zero] at hsnd
     have hsndZero : (coord (1 : S1)).1.2 = 0 := by
       have hdouble : (coord (1 : S1)).1.2 +
           (coord (1 : S1)).1.2 = 0 :=
@@ -4504,7 +4545,7 @@ public theorem proposition
   have hsq_mem_Q0 : ∀ x : G, x ∈ Q → x ^ 2 = 1 → x ∈ Q0 := by
     intro x hxQ hx2
     by_cases hxone : x = 1
-    · simpa [hxone] using Q0.one_mem
+    · simp [hxone, Q0.one_mem]
     · exact (hsection3.section2.Q0_def x).2
         (Or.inr ⟨hsection3.section2.hA.A1.Q_le_H hxQ, hxone, hx2⟩)
   have hsquare : ∀ x : G, x ∈ Q → x ^ 2 ∈ Q0 := by

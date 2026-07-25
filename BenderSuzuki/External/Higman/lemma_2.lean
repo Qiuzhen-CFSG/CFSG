@@ -17,6 +17,7 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped IsMulCommutative commutatorElement
 
 universe u
 
@@ -30,7 +31,6 @@ private def lemma2_conjDefect
     {P : Type u} [Group P] {A : Subgroup P}
     (hA_normal : A.Normal) (hA_abelian : IsMulCommutative A) (u : P) : A →* A := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   exact (lemma2_conjAut_restrict hA_normal u).toMonoidHom * (MonoidHom.id A)⁻¹
 
 private theorem lemma2_conjDefect_val
@@ -38,7 +38,6 @@ private theorem lemma2_conjDefect_val
     (hA_normal : A.Normal) (hA_abelian : IsMulCommutative A) (u : P) (a : A) :
     ((lemma2_conjDefect hA_normal hA_abelian u a : A) : P) = ⁅u, (a : P)⁆ := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   simp [lemma2_conjDefect, lemma2_conjAut_restrict, commutatorElement_def,
     MulAut.conjNormal_apply, mul_assoc]
 private theorem lemma2_linearMap_factor_n
@@ -56,10 +55,10 @@ private theorem lemma2_linearMap_factor_n
     change (k : ZMod n) • g (Pi.basisFun (ZMod n) (Fin r) i) =
       f (Pi.basisFun (ZMod n) (Fin r) i)
     rw [(Pi.basisFun (ZMod n) (Fin r)).constr_basis (ZMod n) y i]
-    simpa using hy i
+    simpa [Nat.cast_smul_eq_nsmul] using hy i
   refine ⟨g, fun x => ?_⟩
   have hx := LinearMap.congr_fun hgf x
-  simpa using hx
+  simpa [Nat.cast_smul_eq_nsmul] using hx
 
 private def lemma2_transportEndomorphism
     {A : Type*} [CommGroup A] {n r : ℕ}
@@ -99,7 +98,9 @@ public theorem lemma2_endomorphism_power_root_of_homocyclic
     simp [alpha, lemma2_untransportEndomorphism]]
   rw [← ofAdd_nsmul]
   have ha := hg (hA a).toAdd
-  simpa [dLin, dAdd, lemma2_transportEndomorphism] using ha.symm
+  apply Multiplicative.toAdd.injective
+  simpa [dLin, dAdd, lemma2_transportEndomorphism,
+    Nat.cast_smul_eq_nsmul] using ha.symm
 
 private theorem lemma2_powerClosure_eq_range
     {P : Type*} [Group P] {A : Subgroup P}
@@ -107,7 +108,6 @@ private theorem lemma2_powerClosure_eq_range
     Subgroup.closure {x : P | ∃ a : A, (a : P) ^ n = x} =
       (powMonoidHom n : A →* A).range.map A.subtype := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   apply le_antisymm
   · rw [Subgroup.closure_le]
     rintro x ⟨a, rfl⟩
@@ -132,7 +132,6 @@ private theorem lemma2_conj_defect_lift_fourth_power
     ∃ alpha : A →* A,
       ∀ a, lemma2_conjDefect hA_normal hA_abelian u a = (alpha a) ^ 4 := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   obtain ⟨e, r, ⟨hA⟩, _⟩ :=
     lemma1_abelian_invariant_homocyclic hP hXtrans hA_abelian hA_X
   apply lemma2_endomorphism_power_root_of_homocyclic hA 4
@@ -195,7 +194,6 @@ private theorem lemma2_choose_square_correction
       Subgroup.closure {x : P | ∃ a : A, (a : P) ^ 2 = x}) :
     ∃ a : A, ((a * (alpha a) ^ 2 : A) : P) ^ 2 = (u ^ 2)⁻¹ := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   rw [lemma2_powerClosure_eq_range hA_abelian 2] at hu_sq
   rcases Subgroup.mem_map.mp hu_sq with ⟨y, hy, hyval⟩
   rcases MonoidHom.mem_range.mp hy with ⟨c, rfl⟩
@@ -215,7 +213,6 @@ private theorem lemma2_corrected_element_isInvolution
     (hcorr : ((a * (alpha a) ^ 2 : A) : P) ^ 2 = (u ^ 2)⁻¹) :
     IsInvolution ((a : P) * u) := by
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   have hcomm_alpha : ⁅u, (a : P)⁆ = ((alpha a : A) : P) ^ 4 := by
     rw [← lemma2_conjDefect_val hA_normal hA_abelian u a]
     exact congrArg A.subtype (hdef a)
@@ -275,7 +272,6 @@ public theorem lemma2_no_external_square_commutator_exception
   intro hA_ne u hu_not
   rintro ⟨hu_sq, hu_comm⟩
   letI : IsMulCommutative A := hA_abelian
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
   obtain ⟨e, r, ⟨hA⟩, _⟩ :=
     lemma1_abelian_invariant_homocyclic hP hXtrans hA_abelian hA_X
   obtain ⟨alpha, hdef⟩ :=
@@ -296,5 +292,3 @@ public theorem lemma2_no_external_square_commutator_exception
 end Higman
 end External
 end BenderSuzuki
-
-

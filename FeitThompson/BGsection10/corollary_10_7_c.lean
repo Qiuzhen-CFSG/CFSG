@@ -119,11 +119,8 @@ public theorem corollary_10_7_c
           (G := G) (M := M) (P := (P : Subgroup G)) (Q := (PM : Subgroup M))
           hPMmap (by simpa [N] using hNM)
     have hyMnorm_ambient : ((yM : M) : G) ∈ N := by
-      have hy_map :
-          ((yM : M) : G) ∈
-            (Subgroup.normalizer (((PM : Subgroup M) : Set M))).map M.subtype :=
-        Subgroup.mem_map_of_mem M.subtype hyMnorm
-      simpa [hNMmap] using hy_map
+      rw [← hNMmap]
+      exact Subgroup.mem_map_of_mem M.subtype hyMnorm
     refine ⟨⟨((yM : M) : G), by simpa [N] using hyMnorm_ambient⟩, ?_⟩
     calc
       Q.conjBy x = Q.conjBy (m : G) := hQx_eq_Qm

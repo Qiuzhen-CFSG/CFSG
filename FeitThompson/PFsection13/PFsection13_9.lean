@@ -282,7 +282,7 @@ private theorem theorem_13_9_supportedOn_Hsharp_of_supportedOn_H_and_degree_eq
     simpa [Section1.degree_apply] using sub_eq_zero.mpr hdeg
   · have hxHsub : x ∉ (H.subgroupOf Smax : Set Smax) := by
       intro hxsub
-      exact hxH (by simpa using hxsub)
+      exact hxH (by simpa using (Subgroup.mem_subgroupOf.1 hxsub))
     simp [hφ x hxHsub, hψ x hxHsub]
 
 
@@ -972,7 +972,7 @@ private theorem theorem_13_9_zeroColumn_linearCharacter_eq_leftComponent
       _ = e.toMonoidHom p := by rw [hp]
       _ = w := by
             change e p = w
-            simpa [p, e] using MulEquiv.apply_symm_apply e w
+            simp [p]
   have hright :
       lin (e.toMonoidHom (MonoidHom.inr W1 W2 p.2)) = 1 := by
     simpa [e] using
@@ -1590,7 +1590,7 @@ private theorem theorem_13_9_nonvanishing_eta_column_zero_eta10_alpha_vanishes_s
       alphaNat = Section3.alphaIJ W zeroQ zeroP ωFin iFin oneP := by
     ext y
     simp [alphaNat, Section3.alphaIJ, iFin, zeroQ, oneP, zeroP,
-      hωeq i 0 hi hp0, hωeq 0 0 hq0 hp0, hωeq 0 1 hq0 hp1,
+      hωeq i 0 hi hp0, hωeq 0 1 hq0 hp1,
       hωeq i 1 hi hp1]
   have halphaCFOn :
       Section2.CFOn W (Section3.cyclicTISet W1 W2 W) alphaNat := by
@@ -2497,7 +2497,7 @@ private theorem theorem_13_9_zpowers_subtype_eq_top_iff
     · intro g hg
       have htop : (⟨g, hg⟩ : H) ∈ (⊤ : Subgroup H) := by simp
       have hmem : (⟨g, hg⟩ : H) ∈ Subgroup.zpowers y := by
-        simpa [hy] using htop
+        rw [hy]; exact htop
       rcases Subgroup.mem_zpowers_iff.mp hmem with ⟨n, hn⟩
       exact Subgroup.mem_zpowers_iff.mpr ⟨n, by simpa using congrArg Subtype.val hn⟩
   · intro hy
@@ -2505,7 +2505,7 @@ private theorem theorem_13_9_zpowers_subtype_eq_top_iff
     · exact le_top
     · intro h _hh
       have hmemG : (h : G) ∈ Subgroup.zpowers (y : G) := by
-        simpa [hy]
+        simp [hy]
       rcases Subgroup.mem_zpowers_iff.mp hmemG with ⟨n, hn⟩
       exact Subgroup.mem_zpowers_iff.mpr ⟨n, Subtype.ext hn⟩
 
@@ -2695,9 +2695,8 @@ private theorem theorem_13_9_sum_normSq_cyclic_repeated_linear_characters_genera
     intro y
     exact _hx.ge (Subgroup.mem_top y)
   haveI : IsCyclic H := (isCyclic_iff_exists_zpowers_eq_top (α := H)).2 ⟨x, _hx⟩
-  have hcardRoots : Nat.card (rootsOfUnity n ℂ) = n := by
-    rw [Nat.card_eq_fintype_card]
-    exact Complex.card_rootsOfUnity n
+  have hcardRoots : Nat.card (rootsOfUnity n ℂ) = n :=
+    Complex.card_rootsOfUnity n
   have hcard : Nat.card H = Nat.card (rootsOfUnity n ℂ) := by
     rw [hcardRoots]
   let rootEquiv : H ≃* rootsOfUnity n ℂ :=
@@ -2819,7 +2818,7 @@ private theorem theorem_13_9_sum_normSq_cyclic_repeated_linear_characters_genera
           simp [hlam]
     _ = Polynomial.eval (χ y.1 : ℂ) (P.map (Int.castRingHom ℂ)) := by
           rw [Polynomial.eval_map]
-          simp [P, Polynomial.eval₂_finset_sum, Polynomial.eval₂_mul,
+          simp [P, Polynomial.eval₂_finsetSum, Polynomial.eval₂_mul,
             Polynomial.eval₂_X_pow, Polynomial.eval₂_natCast]
     _ = Polynomial.eval (reindex y).1 (P.map (Int.castRingHom ℂ)) := by
           rw [hindex y]
@@ -3317,7 +3316,7 @@ private theorem theorem_13_9_signed_nonzero_support_cycle_representative_core_so
           χ := by
   intro x hx hχx
   rw [theorem_13_9_supportEnergy_eq_sum_subtype]
-  simpa using
+  apply
     theorem_13_9_signed_nonzero_support_cycle_representative_sum_normSq_source
       H Q G0 χ hG0 hχsigned x hx hχx
 
@@ -3399,7 +3398,7 @@ private theorem theorem_13_9_signed_nonzero_support_energy_lower_of_cycle_fibers
     calc
       (Nat.card ({x : G | x ∈ G0 ∧ χ x ≠ 0} : Set G) : ℝ) =
           ∑ _y : α, (1 : ℝ) := by
-        simp [α, Nat.card_eq_fintype_card]
+        simp [α, Nat.card_eq_fintype_card, Fintype.card_subtype]
       _ = ∑ L : Subgroup G,
           ∑ y ∈ (Finset.univ : Finset α).filter (fun y => cycα y = L),
             (1 : ℝ) := by

@@ -7,7 +7,7 @@ module
 public import FeitThompson.BGsection6.lemma_6_6_d
 public import FeitThompson.BGsection5.Defs
 
-open scoped MatrixGroups Pointwise TensorProduct
+open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 
 /-! # Theorem 6.7 from BG Section 6 -/
 
@@ -58,7 +58,8 @@ private theorem theorem_6_7_reduced
       rcases S.isPGroup'.exists_card_eq with ⟨n, hn⟩
       rw [hn]
       exact Nat.Coprime.pow_left n hLp'
-    have hSL_bot : (S : Subgroup G) ⊓ L = ⊥ := Subgroup.inf_eq_bot_of_coprime hSL_cop
+    have hSL_bot : (S : Subgroup G) ⊓ L = ⊥ :=
+      (Subgroup.disjoint_of_coprime_natCard hSL_cop).eq_bot
     have hcomm_bot : ⁅e, x⁆ ∈ (⊥ : Subgroup G) := by
       simpa [hSL_bot] using hcomm_mem
     simpa using hcomm_bot
@@ -123,7 +124,8 @@ private theorem theorem_6_7_reduced
             · exact (Subgroup.mem_centralizer_iff.mp hg_centE y hyE).symm
             · rcases Set.mem_singleton_iff.mp hyg with rfl
               simp
-        letI : CommGroup B := Subgroup.closureCommGroupOfComm hB_comm
+        letI : IsMulCommutative B := Subgroup.isMulCommutative_closure hB_comm
+        letI : CommGroup B := IsMulCommutative.instCommGroup
         have hB_elem : IsElementaryAbelian p ↥B := by
           refine
             { toIsMulCommutative := by
@@ -301,7 +303,7 @@ public theorem theorem_6_7
           rw [hn]
           simpa [K] using Nat.Coprime.pow_left n (pPrimeCore_coprime_card (G := G) (p := p))
         have hKS_bot : K ⊓ (S : Subgroup G) = ⊥ := by
-          exact Subgroup.inf_eq_bot_of_coprime hSK_cop.symm
+          exact (Subgroup.disjoint_of_coprime_natCard hSK_cop.symm).eq_bot
         let Sbar : Sylow p (G ⧸ K) :=
           S.mapSurjective (f := q) (hf := QuotientGroup.mk'_surjective K)
         have hSbar_norm_top :

@@ -25,7 +25,7 @@ Type-B branch of Lemma 12. -/
 public theorem theorem1_typeB_coordinates
     {K P : Type u} [Group K] [Group P] [MulDistribMulAction K P]
     (hP : IsSuzukiTwoGroup P)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
+    (_hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
     (hKregular : ActionRegularOn K P (involutions P))
     (hBActor : ∃ (B : Subgroup P) (actor : K),
       Lemma12TypeBActorBranchData K P actor B) :
@@ -280,15 +280,15 @@ public theorem theorem1_typeB_coordinates
     rw [heQ_mk, heQ_mk]
     exact hpi_action k p
   let factorOneEquiv : LowerCentralFactor P 1 ≃*
-      lowerCentralSeries P 1 :=
+      higmanLowerCentralSeries P 1 :=
     (QuotientGroup.quotientMulEquivOfEq hkernel1_bot).trans
-      (QuotientGroup.quotientBot (G := lowerCentralSeries P 1))
+      (QuotientGroup.quotientBot (G := higmanLowerCentralSeries P 1))
   let centerCoordinatesMul : Multiplicative (BinaryGaloisField n) ≃*
       LowerCentralFactor P 1 :=
     centerCoordinates.toAddEquiv.toMultiplicative.trans
       MulEquiv.toMultiplicative_toAdditive
   let iota : Multiplicative (BinaryGaloisField n) →* P :=
-    (lowerCentralSeries P 1).subtype.comp
+    (higmanLowerCentralSeries P 1).subtype.comp
       (factorOneEquiv.toMonoidHom.comp centerCoordinatesMul.toMonoidHom)
   have hiota : Function.Injective iota := by
     intro z w h
@@ -296,7 +296,7 @@ public theorem theorem1_typeB_coordinates
     apply factorOneEquiv.injective
     apply Subtype.ext
     exact h
-  have hL1_eq_center : lowerCentralSeries P 1 = Subgroup.center P :=
+  have hL1_eq_center : higmanLowerCentralSeries P 1 = Subgroup.center P :=
     hL1_eq_B.trans hB_eq_center
   have hiota_range : iota.range = Subgroup.center P := by
     rw [← hL1_eq_center]
@@ -305,24 +305,24 @@ public theorem theorem1_typeB_coordinates
     · rintro ⟨z, rfl⟩
       exact (factorOneEquiv (centerCoordinatesMul z)).property
     · intro hp
-      let p1 : lowerCentralSeries P 1 := ⟨p, hp⟩
+      let p1 : higmanLowerCentralSeries P 1 := ⟨p, hp⟩
       let z : Multiplicative (BinaryGaloisField n) :=
         centerCoordinatesMul.symm (factorOneEquiv.symm p1)
       refine ⟨z, ?_⟩
       change ((factorOneEquiv (centerCoordinatesMul z) :
-        lowerCentralSeries P 1) : P) = p
+        higmanLowerCentralSeries P 1) : P) = p
       have hz : centerCoordinatesMul z = factorOneEquiv.symm p1 := by
         simp [z]
       rw [hz]
       exact congrArg Subtype.val (factorOneEquiv.apply_symm_apply p1)
-  have hfactorOne_mk_outer (y : lowerCentralSeries P 1) :
+  have hfactorOne_mk_outer (y : higmanLowerCentralSeries P 1) :
       factorOneEquiv
           (QuotientGroup.mk' (lowerCentralFactorKernel P 1) y) = y := by
     have hmk :
         (QuotientGroup.quotientMulEquivOfEq hkernel1_bot)
             ((QuotientGroup.mk' (lowerCentralFactorKernel P 1)) y) =
-          (QuotientGroup.mk y : lowerCentralSeries P 1 ⧸
-            (⊥ : Subgroup (lowerCentralSeries P 1))) := by
+          (QuotientGroup.mk y : higmanLowerCentralSeries P 1 ⧸
+            (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by
       simpa only [QuotientGroup.mk'_apply] using
         (QuotientGroup.quotientMulEquivOfEq_mk hkernel1_bot y)
     calc
@@ -333,12 +333,10 @@ public theorem theorem1_typeB_coordinates
             ((QuotientGroup.mk'
               (lowerCentralFactorKernel P 1)) y)) := by rfl
       _ = QuotientGroup.quotientBot
-          (QuotientGroup.mk y : lowerCentralSeries P 1 ⧸
-            (⊥ : Subgroup (lowerCentralSeries P 1))) := by rw [hmk]
+          (QuotientGroup.mk y : higmanLowerCentralSeries P 1 ⧸
+            (⊥ : Subgroup (higmanLowerCentralSeries P 1))) := by rw [hmk]
       _ = y := by
-        simpa [QuotientGroup.quotientBot] using
-          (QuotientGroup.kerLift_mk
-            (φ := MonoidHom.id (lowerCentralSeries P 1)) y)
+        rfl
   have hfactorOne_mk_equiv (v : LowerCentralFactor P 1) :
       QuotientGroup.mk' (lowerCentralFactorKernel P 1)
           (factorOneEquiv v) = v := by
@@ -366,11 +364,11 @@ public theorem theorem1_typeB_coordinates
         iota (Multiplicative.ofAdd
           ((lambdaUnit : BinaryGaloisField n) *
             theta (lambdaUnit : BinaryGaloisField n) * z)) := by
-    let y : lowerCentralSeries P 1 :=
+    let y : higmanLowerCentralSeries P 1 :=
       factorOneEquiv (centerCoordinatesMul (Multiplicative.ofAdd z))
     have hy_action : actor • (y : P) =
         ((lowerCentralSeriesMulAut xi 1 y :
-          lowerCentralSeries P 1) : P) := by
+          higmanLowerCentralSeries P 1) : P) := by
       change actor • (y : P) = xi (y : P)
       rw [hxi_actor]
       rfl
@@ -380,7 +378,7 @@ public theorem theorem1_typeB_coordinates
           (Multiplicative.ofAdd
             ((lambdaUnit : BinaryGaloisField n) *
               theta (lambdaUnit : BinaryGaloisField n) * z))) :
-            lowerCentralSeries P 1) : P)
+            higmanLowerCentralSeries P 1) : P)
     rw [hy_action]
     apply congrArg Subtype.val
     calc
@@ -505,7 +503,7 @@ public theorem theorem1_isomorphic_summands_of_typeB_actor
         intro a b ha hb
         change (eQ a).toAdd.2 = 0 at ha
         change (eQ b).toAdd.2 = 0 at hb
-        simpa [map_mul, ha, hb]
+        simp [map_mul, ha, hb]
       inv_mem' := by
         intro a ha
         simpa [map_inv, ha] }
@@ -516,7 +514,7 @@ public theorem theorem1_isomorphic_summands_of_typeB_actor
         intro a b ha hb
         change (eQ a).toAdd.1 = 0 at ha
         change (eQ b).toAdd.1 = 0 at hb
-        simpa [map_mul, ha, hb]
+        simp [map_mul, ha, hb]
       inv_mem' := by
         intro a ha
         simpa [map_inv, ha] }
@@ -553,10 +551,12 @@ public theorem theorem1_isomorphic_summands_of_typeB_actor
     eQ.trans (swapMul.trans eQ.symm)
   have hswapU (q : P ⧸ Subgroup.center P) (hq : q ∈ U) :
       swapQ q ∈ V := by
+    change (eQ q).toAdd.2 = 0 at hq
     change (eQ (swapQ q)).toAdd.1 = 0
     simpa [swapQ, swapMul] using hq
   have hswapV (q : P ⧸ Subgroup.center P) (hq : q ∈ V) :
       swapQ q ∈ U := by
+    change (eQ q).toAdd.1 = 0 at hq
     change (eQ (swapQ q)).toAdd.2 = 0
     simpa [swapQ, swapMul] using hq
   let eUV : U ≃* V :=
@@ -617,11 +617,15 @@ public theorem theorem1_isomorphic_summands_of_typeB_actor
     apply le_antisymm
     · intro q hq
       rw [Subgroup.mem_bot]
+      have hqU := hq.1
+      have hqV := hq.2
+      change (eQ q).toAdd.2 = 0 at hqU
+      change (eQ q).toAdd.1 = 0 at hqV
       apply eQ.injective
-      apply Multiplicative.ofAdd.injective
+      apply Multiplicative.toAdd.injective
       apply Prod.ext
-      · simpa using hq.2
-      · simpa using hq.1
+      · simpa using hqV
+      · simpa using hqU
     · exact bot_le
   have hUVsup : U ⊔ V = ⊤ := by
     apply top_unique

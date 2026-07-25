@@ -30,7 +30,7 @@ symbol `e_p(u,z)` is trivial. This is the condition (3) to condition (1)
 commutator calculation in Hall-Wielandt. -/
 public theorem hallWielandt_engel_of_mem_upperCentralSeries
     {R : Type u} [Group R] (p : ℕ) [Fact p.Prime] {z : R}
-    (hz : z ∈ upperCentralSeries R (p - 1)) :
+    (hz : z ∈ Subgroup.upperCentralSeries R (p - 1)) :
     ∀ u : R, engelSymbol p u z = 1 := by
   have hiter_succ : ∀ (n : ℕ) (a b : R),
       iteratedInverseFirstCommutator (n + 1) a b =
@@ -45,33 +45,33 @@ public theorem hallWielandt_engel_of_mem_upperCentralSeries
         rw [ih a b]
         rfl
   have hleft_desc : ∀ (n : ℕ) {x z : R},
-      x ∈ upperCentralSeries R n → iteratedInverseFirstCommutator n x z = 1 := by
+      x ∈ Subgroup.upperCentralSeries R n → iteratedInverseFirstCommutator n x z = 1 := by
     intro n
     induction n with
     | zero =>
         intro x z hx
-        simpa [iteratedInverseFirstCommutator, upperCentralSeries_zero] using hx
+        simpa [iteratedInverseFirstCommutator, Subgroup.upperCentralSeries_zero] using hx
     | succ n ih =>
         intro x z hx
-        have hxstep : inverseFirstCommutator x z ∈ upperCentralSeries R n := by
-          have hxinv : x⁻¹ ∈ upperCentralSeries R (n + 1) :=
-            (upperCentralSeries R (n + 1)).inv_mem hx
-          simpa [inverseFirstCommutator, mul_assoc] using
-            (mem_upperCentralSeries_succ_iff (G := R) (n := n) (x := x⁻¹)).1 hxinv z⁻¹
+        have hxstep : inverseFirstCommutator x z ∈ Subgroup.upperCentralSeries R n := by
+          have hxinv : x⁻¹ ∈ Subgroup.upperCentralSeries R (n + 1) :=
+            (Subgroup.upperCentralSeries R (n + 1)).inv_mem hx
+          simpa [inverseFirstCommutator, commutatorElement_def] using
+            (Subgroup.mem_upperCentralSeries_succ_iff (G := R) (n := n) (x := x⁻¹)).1 hxinv z⁻¹
         rw [hiter_succ n x z]
         exact ih hxstep
   intro u
   have hp_two : 2 ≤ p := (Fact.out : Nat.Prime p).two_le
   have hpred : p - 2 + 1 = p - 1 := by omega
-  have hfirst : inverseFirstCommutator u z ∈ upperCentralSeries R (p - 2) := by
-    have hzinv : z⁻¹ ∈ upperCentralSeries R (p - 1) :=
-      (upperCentralSeries R (p - 1)).inv_mem hz
+  have hfirst : inverseFirstCommutator u z ∈ Subgroup.upperCentralSeries R (p - 2) := by
+    have hzinv : z⁻¹ ∈ Subgroup.upperCentralSeries R (p - 1) :=
+      (Subgroup.upperCentralSeries R (p - 1)).inv_mem hz
     rw [← hpred] at hzinv
-    have hreverse : inverseFirstCommutator z u ∈ upperCentralSeries R (p - 2) := by
-      simpa [inverseFirstCommutator, mul_assoc] using
-        (mem_upperCentralSeries_succ_iff (G := R) (n := p - 2) (x := z⁻¹)).1 hzinv u⁻¹
+    have hreverse : inverseFirstCommutator z u ∈ Subgroup.upperCentralSeries R (p - 2) := by
+      simpa [inverseFirstCommutator, commutatorElement_def] using
+        (Subgroup.mem_upperCentralSeries_succ_iff (G := R) (n := p - 2) (x := z⁻¹)).1 hzinv u⁻¹
     simpa [inverseFirstCommutator, mul_assoc] using
-      (upperCentralSeries R (p - 2)).inv_mem hreverse
+      (Subgroup.upperCentralSeries R (p - 2)).inv_mem hreverse
   unfold engelSymbol
   have hp_sub : p - 1 = p - 2 + 1 := hpred.symm
   rw [hp_sub, hiter_succ (p - 2) u z]
@@ -102,12 +102,12 @@ public theorem engelSymbol_subtype_coe
 public theorem hallWielandt_engel_condition_three_implies_first
     {G : Type u} [Group G] (p : ℕ) [Fact p.Prime]
     (P Q : Subgroup G) (hQ_le_P : Q ≤ P)
-    (h3 : Q.subgroupOf P ≤ upperCentralSeries P (p - 1)) :
+    (h3 : Q.subgroupOf P ≤ Subgroup.upperCentralSeries P (p - 1)) :
     ∀ u z : G, u ∈ P → z ∈ Q → engelSymbol p u z = 1 := by
   intro u z hu hz
   let up : P := ⟨u, hu⟩
   let zp : P := ⟨z, hQ_le_P hz⟩
-  have hzP : zp ∈ upperCentralSeries P (p - 1) := h3 hz
+  have hzP : zp ∈ Subgroup.upperCentralSeries P (p - 1) := h3 hz
   have hP : engelSymbol p up zp = 1 :=
     hallWielandt_engel_of_mem_upperCentralSeries (R := P) p hzP up
   have hcoe := congrArg Subtype.val hP
@@ -132,8 +132,10 @@ public theorem hallWielandt_engel_condition_two_implies_first
     have hz_sub' : zp ∈ Q.subgroupOf P := hz
     have hprod : up⁻¹ * zp⁻¹ * up * zp ∈ Q.subgroupOf P :=
       (Q.subgroupOf P).mul_mem hconj hz_sub'
+    have hprod' : ((up⁻¹ * zp⁻¹ * up * zp : P) : G) ∈ Q :=
+      Subgroup.mem_subgroupOf.mp hprod
     change inverseFirstCommutator u z ∈ Q
-    simpa [inverseFirstCommutator, up, zp, mul_assoc] using hprod
+    simpa [inverseFirstCommutator, up, zp, mul_assoc] using hprod'
   have hiter_succ : ∀ (n : ℕ) (a b : G),
       iteratedInverseFirstCommutator (n + 1) a b =
         iteratedInverseFirstCommutator n (inverseFirstCommutator a b) b := by
@@ -174,7 +176,8 @@ public theorem hallWielandt_residual_intersection
     (hcondition :
       (∀ u z : G, u ∈ (P : Subgroup G) → z ∈ Q → engelSymbol p u z = 1) ∨
         (∀ u z : G, u ∈ Q → z ∈ Q → engelSymbol (p - 1) u z = 1) ∨
-          Q.subgroupOf (P : Subgroup G) ≤ upperCentralSeries (P : Subgroup G) (p - 1)) :
+          Q.subgroupOf (P : Subgroup G) ≤
+            Subgroup.upperCentralSeries (P : Subgroup G) (p - 1)) :
     (hallPResidual p H).map H.subtype = H ⊓ hallPResidual p G ∧
       letI : (hallPResidual p G).Normal := hallPResidual_normal p G
       letI : (hallPResidual p H).Normal := hallPResidual_normal p H
@@ -218,7 +221,7 @@ public theorem hallWielandt_residual_intersection
         have huP : u ∈ (P : Subgroup G) := hu.2
         have hzQ : z ∈ Q := hZs z hz
         have heng : engelSymbol p u z = 1 := hengel u z huP hzQ
-        simpa [heng] using (hallTransferModulus p Hcap H).one_mem
+        simp [heng]
       have hclosure :
           Subgroup.closure E ≤ hallTransferModulus p Hcap H :=
         (Subgroup.closure_le _).2 hE_le
@@ -252,5 +255,4 @@ public theorem hallWielandt_residual_intersection
 
 end External
 end BenderSuzuki
-
 

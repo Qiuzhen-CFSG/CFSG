@@ -6,6 +6,8 @@ public import FeitThompson.PFsection9.Basic
 
 noncomputable section
 
+open scoped IsMulCommutative commutatorElement
+
 namespace Section9
 
 universe v
@@ -196,11 +198,13 @@ private theorem quotient_isInvariant_sup_of_isInvariant_left_right_sec9
       · have hiff :=
           IsInvariant.invariant (A := U) (G := MF ⧸ H0MF) (H := Q)
             (a := ⟨y, hyU⟩) x
-        simpa [H0MF, UW1] using hiff
+        change x ∈ Q ↔ (⟨y, hyUW1⟩ : UW1) • x ∈ Q at hiff
+        exact hiff
       · have hiff :=
           IsInvariant.invariant (A := W1) (G := MF ⧸ H0MF) (H := Q)
             (a := ⟨y, hyW1⟩) x
-        simpa [H0MF, UW1] using hiff
+        change x ∈ Q ↔ (⟨y, hyUW1⟩ : UW1) • x ∈ Q at hiff
+        exact hiff
     · intro h1 x
       have hone : (⟨1, h1⟩ : UW1) = 1 := by
         ext
@@ -279,7 +283,13 @@ private theorem intermediateQuotientSubgroup_normalizedBy_sec9
       hN_normal.conj_mem xM hxM aM
     have hsmulG : ((a • x : MF) : G) = (a : G) * (x : G) * (a : G)⁻¹ := by
       simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
-    simpa [aM, xM, hsmulG] using hconjN
+    have hsmulM :
+        (⟨((a • x : MF) : G), hMF_le_M (a • x).property⟩ : M) =
+          aM * xM * aM⁻¹ := by
+      apply M.subtype_injective
+      simp [aM, xM, hsmulG]
+    rw [hsmulM]
+    exact hconjN
   have hforwardQ : ∀ (a : A) {x : MF ⧸ H0MF}, x ∈ Q → a • x ∈ Q := by
     intro a x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
@@ -441,7 +451,8 @@ private theorem quotient_U_fixedPointSubgroup_subgroupOf_eq_bot_sec9
           by
             change (u : G) ∈ U
             exact u.property⟩
-      simpa using hsub
+      change u • x = x at hsub
+      exact hsub
     have hxbot : x ∈ (⊥ : Subgroup (MF ⧸ H0MF)) := by
       rw [← hUbot]
       exact hxU
@@ -494,7 +505,8 @@ private theorem quotient_W1_subgroupOf_fixedPointSubgroup_card_eq_sec9
           by
             change (w : G) ∈ W1
             exact w.property⟩
-      simpa using hsub
+      change w • x = x at hsub
+      exact hsub
     · intro hx
       change ∀ w : W1.subgroupOf (U ⊔ W1 : Subgroup G), w • x = x
       intro w
@@ -503,7 +515,8 @@ private theorem quotient_W1_subgroupOf_fixedPointSubgroup_card_eq_sec9
       have hfix : wW1 • x = x := by
         change ∀ w : W1, w • x = x at hx
         exact hx wW1
-      simpa [wW1] using hfix
+      change w • x = x at hfix
+      exact hfix
   rw [heq]
 
 private theorem fixedPointSubgroup_quotient_normalizedBy_self_sec9
@@ -544,7 +557,9 @@ private theorem fixedPointSubgroup_quotient_normalizedBy_self_sec9
           change ∀ u : U, u • x = x at hx
           exact hx a⁻¹
         exact Subgroup.mem_map.mpr
-          ⟨x, hx, by simpa [MulDistribMulAction.toMulAut_apply] using hfix⟩
+          ⟨x, hx, by
+            change (a⁻¹ : U) • x = x
+            exact hfix⟩
       · intro x hx
         rcases Subgroup.mem_map.mp hx with ⟨y, hy, hxy⟩
         have hfix : (a⁻¹ : U) • y = y := by
@@ -552,7 +567,8 @@ private theorem fixedPointSubgroup_quotient_normalizedBy_self_sec9
           exact hy a⁻¹
         have hmapy :
             (MulDistribMulAction.toMulAut U (MF ⧸ H0MF) a⁻¹) y = y := by
-          simpa [MulDistribMulAction.toMulAut_apply] using hfix
+          change (a⁻¹ : U) • y = y
+          exact hfix
         have hxy' : x = y := hxy.symm.trans hmapy
         simpa [hxy'] using hy
 
@@ -786,7 +802,8 @@ private theorem fixedPointSubgroup_quotient_normalizedBy_of_normalizes_sec9
             (MulDistribMulAction.toMulAut A (MF ⧸ H0MF) a⁻¹) y ∈
               fixedPointSubgroup U (MF ⧸ H0MF) :=
           hpreserve a⁻¹ y hy
-        simpa [← hxy, MulDistribMulAction.toMulAut_apply] using hy'
+        rw [← hxy]
+        exact hy'
 
 private theorem quotientSubgroup_dichotomy_of_chief_factor_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1018,7 +1035,7 @@ private theorem solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
   let W1sub : Subgroup S := W1.subgroupOf S
   have hUnil_sub : Group.IsNilpotent Usub := by
     haveI : Group.IsNilpotent U := hUnil
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (Subgroup.subgroupOfEquivOfLe (H := U) (K := S)
         (by
           change U ≤ U ⊔ W1
@@ -1292,7 +1309,7 @@ private theorem theorem_9_6_quotient_cardinality_formula_of_U_fixed_bot_sec9
         U W1 hUnil hW1cyc hfrob
   have hquot_nil : Group.IsNilpotent (MF ⧸ H0MF) := by
     haveI : Group.IsNilpotent MF := hMFnil
-    exact nilpotent_of_surjective
+    exact Group.nilpotent_of_surjective
       (QuotientGroup.mk' H0MF) (QuotientGroup.mk'_surjective H0MF)
   have hquot_dvd_MF : Nat.card (MF ⧸ H0MF) ∣ Nat.card MF :=
     Subgroup.card_quotient_dvd_card H0MF
@@ -1879,14 +1896,16 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
         change wUW1 ∈ W1.subgroupOf UW1
         exact Subgroup.mem_subgroupOf.mpr w.property⟩
       have hx' : wSub • x = x := hx wSub
-      simpa [wSub, wUW1, UW1, W1sub, K, H0MF] using hx'
+      change w • x = x at hx'
+      exact hx'
     · intro hx wSub
       have hwSub : (wSub : UW1) ∈ W1.subgroupOf UW1 := by
         change (wSub : UW1) ∈ W1sub
         exact wSub.property
       let w : W1 := ⟨((wSub : UW1) : G), Subgroup.mem_subgroupOf.mp hwSub⟩
       have hx' : w • x = x := hx w
-      simpa [w, UW1, W1sub, K, H0MF] using hx'
+      change wSub • x = x at hx'
+      exact hx'
   have hL_W1sub_fixed_bot :
       fixedPointSubgroup (↥W1sub) L = ⊥ := by
     simpa [hL_W1sub_fixed_eq] using hL_W1_fixed_bot
@@ -1906,9 +1925,10 @@ private theorem theorem_9_6_typeII_factor_fixed_bottom_contradiction_sec9
         have hx' : u • x = x := hx u
         exact congrArg Subtype.val hx'
       have hxK_bot : ((x : L) : K) ∈ (⊥ : Subgroup K) := by
-        simpa [hUsub_fixed_bot_K] using hxK
-      have hxK_one : ((x : L) : K) = 1 := by
-        simpa using hxK_bot
+        rw [← hUsub_fixed_bot_K]
+        exact hxK
+      have hxK_one : ((x : L) : K) = 1 :=
+        Subgroup.mem_bot.mp hxK_bot
       exact Subgroup.mem_bot.mpr (Subtype.ext hxK_one)
     · exact bot_le
   have hUW1_solv : IsSolvable UW1 := by
@@ -2020,7 +2040,8 @@ private theorem quotient_isInvariant_W1_of_isInvariant_UW1_sec9
       (a := ⟨(w : G), by
         change (w : G) ∈ U ⊔ W1
         exact (le_sup_right : W1 ≤ U ⊔ W1) w.property⟩) x
-  simpa [H0MF, UW1] using hiff
+  change x ∈ Q ↔ w • x ∈ Q at hiff
+  exact hiff
 
 private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -2201,9 +2222,9 @@ private theorem theorem_9_6_typeII_maschke_factor_fixed_choice_source_sec9
     simp [yK]
   have hyK_inf : yK ∈ Q ⊓ Qcompl := ⟨hyK_mem_Q, hyK_mem_Qcompl⟩
   have hyK_bot : yK ∈ (⊥ : Subgroup K) := by
-    simpa [hQcompl.inf_eq_bot] using hyK_inf
-  have hyK_one : yK = 1 := by
-    simpa using hyK_bot
+    rw [← hQcompl.inf_eq_bot]
+    exact hyK_inf
+  have hyK_one : yK = 1 := Subgroup.mem_bot.mp hyK_bot
   apply hy_ne
   exact Subtype.ext (Subtype.ext hyK_one)
 
@@ -2946,7 +2967,7 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_formula_of_U_fixed_pr
         U W1 hUnil hW1cyc hfrob
   have hquot_nil : Group.IsNilpotent (MF ⧸ H0MF) := by
     haveI : Group.IsNilpotent MF := hMFnil
-    exact nilpotent_of_surjective
+    exact Group.nilpotent_of_surjective
       (QuotientGroup.mk' H0MF) (QuotientGroup.mk'_surjective H0MF)
   have hquot_dvd_MF : Nat.card (MF ⧸ H0MF) ∣ Nat.card MF :=
     Subgroup.card_quotient_dvd_card H0MF

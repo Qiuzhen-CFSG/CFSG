@@ -36,8 +36,9 @@ public theorem lemma_1_7_c {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Pr
 public theorem lemma_1_7_d {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
     frattini R =
       Subgroup.closure ((derivedSubgroup R : Set R) ∪ Set.range (fun x : R => x ^ p)) := by
-  simpa [derivedSubgroup, derivedSeries_one] using
-    frattini_eq_closure_commutator_union_powers (R := R) (p := p)
+  have h := frattini_eq_closure_commutator_union_powers (R := R) (p := p)
+  rw [← derivedSeries_one] at h
+  exact h
 
 
 end

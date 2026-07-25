@@ -9,7 +9,7 @@ public import FeitThompson.BGsection4.theorem_4_16
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Statements from BG Section 10
@@ -45,7 +45,9 @@ public theorem section10_exists_complementInNormalizer
     exact y.property
   · have hVsub_eq : ((Vsub.map N.subtype).subgroupOf N) = Vsub := by
       simpa [N] using (subgroupOf_map_subtype_eq (K := N) Vsub)
-    simpa [section10ComplementInNormalizer, Psub, N, hVsub_eq] using hVsub
+    change Psub.IsComplement' ((Vsub.map N.subtype).subgroupOf N)
+    rw [hVsub_eq]
+    exact hVsub
 
 private theorem section10_commutatorAction_range_toMulAut_eq
     {R A : Type*} [Group R] [Group A] [MulDistribMulAction A R] :
@@ -306,8 +308,9 @@ private theorem section10_nilpotencyClassLe_of_card_le_p_cubed
   · letI : Subsingleton R := hsub
     haveI : Group.IsNilpotent R := Group.isNilpotent_of_subsingleton
     have hnil : Group.nilpotencyClass R = 0 :=
-      (nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 <| by
+      (Group.nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le
+      (G := R) (n := 2)).2 <| by
       simp [hnil]
   letI : Nontrivial R := hnontriv
   letI : Group.IsNilpotent R := hRp.isNilpotent
@@ -356,31 +359,32 @@ private theorem section10_nilpotencyClassLe_of_card_le_p_cubed
         exact (Nat.pow_le_pow_iff_right hp.one_lt).1 this
       interval_cases n <;> simp [hn]
     rcases hcard_quot_eq with h2 | h1 | h0
-    · exact ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq
-          (p := p) (G := R ⧸ Subgroup.center R) h2⟩⟩
+    · exact IsPGroup.isMulCommutative_of_card_eq_prime_sq
+        (p := p) (G := R ⧸ Subgroup.center R) h2
     · have hcyc : IsCyclic (R ⧸ Subgroup.center R) :=
         isCyclic_of_prime_card (α := R ⧸ Subgroup.center R) (by simpa using h1)
-      exact ⟨hcyc.commutative⟩
+      exact hcyc.isMulCommutative
     · have hsub : Subsingleton (R ⧸ Subgroup.center R) :=
         (Nat.card_eq_one_iff_unique.mp (by simpa using h0)).1
       letI : Subsingleton (R ⧸ Subgroup.center R) := hsub
       exact ⟨⟨fun a b => Subsingleton.elim _ _⟩⟩
   have hnil_cls : Group.nilpotencyClass R ≤ 2 := by
     letI : IsMulCommutative (R ⧸ Subgroup.center R) := hquot_comm
-    letI : CommGroup (R ⧸ Subgroup.center R) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (R ⧸ Subgroup.center R) := IsMulCommutative.instCommGroup
     have hquot_nil : Group.nilpotencyClass (R ⧸ Subgroup.center R) ≤ 1 := by
       simpa using (CommGroup.nilpotencyClass_le_one (G := R ⧸ Subgroup.center R))
     have hker_center : (QuotientGroup.mk' (Subgroup.center R) :
         R →* R ⧸ Subgroup.center R).ker ≤ Subgroup.center R := by
       simp [QuotientGroup.ker_mk']
     have hbound :=
-      nilpotencyClass_le_of_ker_le_center
+      Group.nilpotencyClass_le_of_ker_le_center
         (QuotientGroup.mk' (Subgroup.center R)) hker_center
     calc
       Group.nilpotencyClass R ≤ Group.nilpotencyClass (R ⧸ Subgroup.center R) + 1 := hbound
       _ ≤ 1 + 1 := Nat.add_le_add_right hquot_nil 1
       _ = 2 := by norm_num
-  exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 hnil_cls
+  exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le
+    (G := R) (n := 2)).2 hnil_cls
 
 omit [Finite G] [IsMinCE G] in
 private theorem section10_natCard_lt_of_subgroup_lt
@@ -473,10 +477,9 @@ public theorem section10_isExtraspecial_of_noncommutative_card_p3_exponent_p
       isCyclic_of_prime_card (α := K ⧸ Subgroup.center K) hquot_card
     letI : IsCyclic (K ⧸ Subgroup.center K) := hquot_cyc
     apply hKnoncomm
-    refine ⟨⟨fun x y => ?_⟩⟩
-    exact commutative_of_cyclic_center_quotient
+    exact MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center
       (QuotientGroup.mk' (Subgroup.center K))
-      (by simp [QuotientGroup.ker_mk']) x y
+      (by simp [QuotientGroup.ker_mk'])
   have hcenter_card : Nat.card (Subgroup.center K) = p := by
     simpa [hm_eq_one] using hm
   have hquot_nontriv : Nontrivial (K ⧸ Subgroup.center K) := by
@@ -510,7 +513,9 @@ public theorem section10_derivedSubgroup_map_subtype_eq_center_map_subtype_of_is
     have hder_ne_bot : derivedSubgroup S ≠ ⊥ := by
       intro hder_bot
       have hcomm_le_bot : commutator S ≤ (⊥ : Subgroup S) := by
-        simpa [derivedSubgroup, derivedSeries_one] using le_of_eq hder_bot
+        change derivedSeries S 1 = ⊥ at hder_bot
+        rw [derivedSeries_one] at hder_bot
+        exact le_of_eq hder_bot
       have hcommS : IsMulCommutative S := by
         refine ⟨⟨?_⟩⟩
         intro x y
@@ -527,7 +532,7 @@ public theorem section10_derivedSubgroup_map_subtype_eq_center_map_subtype_of_is
         · intro _
           rw [Subgroup.mem_center_iff]
           intro y
-          exact (mul_comm x y).symm
+          exact (hcommS.is_comm.comm x y).symm
       have hquot_subsingleton : Subsingleton (S ⧸ Subgroup.center S) := by
         exact (QuotientGroup.subsingleton_iff (N := Subgroup.center S)).2 hcenter_top
       exact not_nontrivial_iff_subsingleton.mpr hquot_subsingleton

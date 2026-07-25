@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection12.lemma_12_1_d
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # lemma_12_1_e
@@ -23,16 +23,17 @@ private theorem section12_normal_of_derivedSubgroup_le
   refine Subgroup.Normal.mk ?_
   intro n hn g
   have hcomm : ⁅g, n⁆ ∈ derivedSubgroup R := by
-    simpa [derivedSubgroup] using
-      (Subgroup.commutator_mem_commutator
-        (H₁ := (⊤ : Subgroup R)) (H₂ := (⊤ : Subgroup R)) (by simp) (by simp))
+    change ⁅g, n⁆ ∈ derivedSeries R 1
+    rw [derivedSeries_one]
+    exact Subgroup.commutator_mem_commutator
+      (H₁ := (⊤ : Subgroup R)) (H₂ := (⊤ : Subgroup R)) (by simp) (by simp)
   have hconj_eq : g * n * g⁻¹ = ⁅g, n⁆ * n := by
     rw [commutatorElement_def]
     group
   rw [hconj_eq]
   exact N.mul_mem (hder hcomm) hn
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_normalIn_of_ambientDerivedSubgroup_le
     {H K : Subgroup G} (hKH : K ≤ H) (hder : ambientDerivedSubgroup H ≤ K) :
     section10NormalIn K H := by
@@ -134,10 +135,11 @@ private theorem section12_nilpotent_ambientDerivedSubgroup_of_le
   have hsubnil :
       Group.IsNilpotent ((ambientDerivedSubgroup H).subgroupOf (ambientDerivedSubgroup K)) :=
     inferInstance
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := (ambientDerivedSubgroup H).subgroupOf (ambientDerivedSubgroup K))
     (G' := ambientDerivedSubgroup H) e
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_E1_hall_in_E
     {M E E₁₂ E₁ : Subgroup G}
     (hE12 : section12HallSubgroupIn
@@ -168,6 +170,7 @@ public theorem section12_E1_hall_in_E
     · exact (hHallE12.p_in_pi_of_p_dvd_index p
         (by simpa [Subgroup.relIndex] using hpidx12)) (Or.inl hpτ1)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_E2_hall_in_E
     {M E E₁₂ E₂ : Subgroup G}
     (hE12 : section12HallSubgroupIn
@@ -198,6 +201,7 @@ public theorem section12_E2_hall_in_E
     · exact (hHallE12.p_in_pi_of_p_dvd_index p
         (by simpa [Subgroup.relIndex] using hpidx12)) (Or.inr hpτ2)
 
+omit [IsMinCE G] in
 private theorem section12_no_tau1_prime_dvd_derivedSubgroup
     {M H E₁ : Subgroup G}
     (hHM : H ≤ M)
@@ -299,9 +303,10 @@ public theorem section12_normal_pSubgroup_le_of_isHallSubgroup_of_prime_mem
     simpa [hg] using hN_le_gQ
   exact le_trans hN_le_S hS_le_H
 
+omit [IsMinCE G] in
 private theorem section12_ambientDerivedSubgroup_E12_le_E2
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
+    (_hM : M ∈ section9MaximalSubgroups G)
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
     (hnilE : Group.IsNilpotent (ambientDerivedSubgroup E)) :
     ambientDerivedSubgroup E₁₂ ≤ E₂ := by
@@ -338,6 +343,7 @@ private theorem section12_ambientDerivedSubgroup_E12_le_E2
     simpa [section12_ambientDerivedSubgroup_subgroupOf_eq] using hxsub
   exact hD12_le_E2sub hxD12
 
+omit [Finite G] [IsMinCE G] in
 set_option maxHeartbeats 800000 in
 private theorem section12_E12_eq_E1_sup_E2
     {M E E₁₂ E₁ E₂ : Subgroup G}
@@ -450,6 +456,7 @@ private theorem section12_E12_sup_E3_eq_E
   have hsup_le : E₁₂ ⊔ E₃ ≤ E := sup_le hE12E hE3E
   exact le_antisymm hE_le hsup_le
 
+omit [IsMinCE G] in
 public theorem section12_E2_sup_E3_hall_in_E
     {M E E₁₂ E₂ E₃ : Subgroup G}
     (hE12 : section12HallSubgroupIn
@@ -550,6 +557,7 @@ private theorem section12_ambientDerivedSubgroup_E_le_E2_sup_E3
   exact hD_le_K23sub hxD
 
 omit [Finite G] [IsMinCE G] in
+set_option maxHeartbeats 800000 in
 public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
     (P : Sylow p R) (hPcyc : IsCyclic (P : Subgroup R))
@@ -580,7 +588,8 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   letI : IsCyclic (PN : Subgroup Nrm) := hPN_cyc
   haveI : (PN : Subgroup Nrm).Normal := hPN_norm
   have hcopPloc : Nat.Coprime (Nat.card Ploc) Ploc.index := by
-    simpa [Ploc] using PN.card_coprime_index
+    rw [← hPN_eq]
+    exact PN.card_coprime_index
   obtain ⟨K, hKcomp⟩ :=
     Subgroup.exists_left_complement'_of_coprime (N := Ploc) hcopPloc
   have hcomm_or : ⁅K, Ploc⁆ = ⊥ ∨ ⁅K, Ploc⁆ = Ploc := by
@@ -607,11 +616,14 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
         let nN : Nrm := ⟨n, hn⟩
         let aN : Nrm := ⟨a, by simpa [PE, Nrm] using P.le_normalizer haPE⟩
         have haPloc : aN ∈ Ploc := by
-          simpa [Ploc, PE] using haPE
+          change a ∈ PE
+          exact haPE
         have hncent : nN ∈ Subgroup.centralizer (Ploc : Set Nrm) := htop_le_cent trivial
         have hcomm : aN * nN = nN * aN :=
           Subgroup.mem_centralizer_iff.mp hncent aN haPloc
         exact congrArg Subtype.val hcomm
+      letI : IsCyclic PE := by simpa [PE] using hPcyc
+      letI : CommGroup PE := IsCyclic.commGroup
       let tr := MonoidHom.transferSylow P hNrm_le_cent
       have hP_le_ker : PE ≤ tr.ker := by
         intro x hx
@@ -627,7 +639,7 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
     · exact hcomm_self
   have hKnormPloc : K ≤ Subgroup.normalizer (Ploc : Set Nrm) := by
     intro k _hk
-    simpa [Ploc.normalizer_eq_top] using (show (k : Nrm) ∈ (⊤ : Subgroup Nrm) by simp)
+    simp [Ploc.normalizer_eq_top]
   haveI : Subgroup.Normalizes K Ploc := ⟨hKnormPloc⟩
   have hcomm_self' : ⁅Ploc, K⁆ = Ploc := by
     simpa [Subgroup.commutator_comm] using hcomm_self
@@ -665,7 +677,9 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   apply le_bot_iff.mp
   intro x hx
   let xN : Nrm := ⟨x, by simpa [PE, Nrm] using P.le_normalizer hx.1⟩
-  let xP : Ploc := ⟨xN, by simpa [Ploc, PE, xN] using hx.1⟩
+  let xP : Ploc := ⟨xN, by
+    change x ∈ PE
+    exact hx.1⟩
   have hxfix : xP ∈ fixedPointSubgroup K Ploc := by
     rw [FixedPoints.mem_subgroup]
     intro k
@@ -683,7 +697,7 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   have hxoneP : xP = 1 := by simpa using hxbot
   have hxone : x = 1 := by
     simpa [xP, xN] using congrArg (fun y : Ploc => ((y : Nrm) : R)) hxoneP
-  simpa [hxone]
+  simp [hxone]
 
 /-- Lemma 12.1(e). -/
 public theorem lemma_12_1_e

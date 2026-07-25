@@ -63,8 +63,8 @@ public theorem nilpotencyClassLe_of_card_le_p_cubed
   · letI : Subsingleton R := hsub
     haveI : Group.IsNilpotent R := Group.isNilpotent_of_subsingleton
     have hnil : Group.nilpotencyClass R = 0 :=
-      (nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 <| by
+      (Group.nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 <| by
       simp [hnil]
   letI : Nontrivial R := hnontriv
   letI : Group.IsNilpotent R := hRp.isNilpotent
@@ -111,31 +111,31 @@ public theorem nilpotencyClassLe_of_card_le_p_cubed
         exact (Nat.pow_le_pow_iff_right hp_one_lt).1 this
       interval_cases n <;> simp [hn]
     rcases hcard_quot_eq with h2 | h1 | h0
-    · exact ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq
-          (p := p) (G := R ⧸ Subgroup.center R) h2⟩⟩
+    · exact IsPGroup.isMulCommutative_of_card_eq_prime_sq
+        (p := p) (G := R ⧸ Subgroup.center R) h2
     · have hcyc : IsCyclic (R ⧸ Subgroup.center R) :=
         isCyclic_of_prime_card (α := (R ⧸ Subgroup.center R)) (by simpa using h1)
-      exact ⟨hcyc.commutative⟩
+      exact hcyc.isMulCommutative
     · have hsub : Subsingleton (R ⧸ Subgroup.center R) :=
         (Nat.card_eq_one_iff_unique.mp (by simpa using h0)).1
       letI : Subsingleton (R ⧸ Subgroup.center R) := hsub
       exact ⟨⟨fun a b => Subsingleton.elim _ _⟩⟩
   have hnil_cls : Group.nilpotencyClass R ≤ 2 := by
     letI : IsMulCommutative (R ⧸ Subgroup.center R) := hquot_comm
-    letI : CommGroup (R ⧸ Subgroup.center R) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (R ⧸ Subgroup.center R) := IsMulCommutative.instCommGroup
     have hquot_nil : Group.nilpotencyClass (R ⧸ Subgroup.center R) ≤ 1 := by
       simpa using (CommGroup.nilpotencyClass_le_one (G := R ⧸ Subgroup.center R))
     have hker_center : (QuotientGroup.mk' (Subgroup.center R) : R →* R ⧸ Subgroup.center R).ker ≤
         Subgroup.center R := by
       simp [QuotientGroup.ker_mk']
     have hbound :=
-      nilpotencyClass_le_of_ker_le_center
+      Group.nilpotencyClass_le_of_ker_le_center
         (QuotientGroup.mk' (Subgroup.center R)) hker_center
     calc
       Group.nilpotencyClass R ≤ Group.nilpotencyClass (R ⧸ Subgroup.center R) + 1 := hbound
       _ ≤ 1 + 1 := Nat.add_le_add_right hquot_nil 1
       _ = 2 := by norm_num
-  exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 hnil_cls
+  exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 2)).2 hnil_cls
 
 public theorem nilpotencyClassLe_of_card_le_p_four
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -147,8 +147,8 @@ public theorem nilpotencyClassLe_of_card_le_p_four
   · letI : Subsingleton R := hsub
     haveI : Group.IsNilpotent R := Group.isNilpotent_of_subsingleton
     have hnil : Group.nilpotencyClass R = 0 :=
-      (nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 3)).2 <| by
+      (Group.nilpotencyClass_zero_iff_subsingleton (G := R)).2 hsub
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 3)).2 <| by
       simp [hnil]
   letI : Nontrivial R := hnontriv
   letI : Group.IsNilpotent R := hRp.isNilpotent
@@ -188,20 +188,21 @@ public theorem nilpotencyClassLe_of_card_le_p_four
   have hquot_class : NilpotencyClassLe 2 (R ⧸ Subgroup.center R) :=
     nilpotencyClassLe_of_card_le_p_cubed (R := R ⧸ Subgroup.center R) (p := p) hquot_card_le
   have hquot_nil : Group.nilpotencyClass (R ⧸ Subgroup.center R) ≤ 2 := by
-    exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R ⧸ Subgroup.center R) (n := 2)).1
+    exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le
+      (G := R ⧸ Subgroup.center R) (n := 2)).1
       hquot_class
   have hker_center : (QuotientGroup.mk' (Subgroup.center R) : R →* R ⧸ Subgroup.center R).ker ≤
       Subgroup.center R := by
     simp [QuotientGroup.ker_mk']
   have hbound :=
-    nilpotencyClass_le_of_ker_le_center
+    Group.nilpotencyClass_le_of_ker_le_center
       (QuotientGroup.mk' (Subgroup.center R)) hker_center
   have hnil_cls : Group.nilpotencyClass R ≤ 3 := by
     calc
       Group.nilpotencyClass R ≤ Group.nilpotencyClass (R ⧸ Subgroup.center R) + 1 := hbound
       _ ≤ 2 + 1 := Nat.add_le_add_right hquot_nil 1
       _ = 3 := by norm_num
-  exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 3)).2 hnil_cls
+  exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R) (n := 3)).2 hnil_cls
 
 public theorem natCard_lt_of_subgroup_lt_local {G : Type*} [Group G] [Finite G]
     {H K : Subgroup G} (hHK : H < K) :
@@ -228,7 +229,7 @@ public theorem coatom_normal_of_isPGroup_local {G : Type*} [Group G] [Finite G] 
     K.Normal := by
   have hnil : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p) (G := G) (h := Fact.out)
   letI : Group.IsNilpotent G := hnil
-  have hnc : NormalizerCondition G := normalizerCondition_of_isNilpotent (G := G)
+  have hnc : NormalizerCondition G := Group.normalizerCondition_of_isNilpotent (G := G)
   exact Subgroup.NormalizerCondition.normal_of_coatom K hnc hK
 
 
@@ -390,7 +391,7 @@ private theorem proposition_4_8_b_aux {G : Type u} [Group G] [Finite G] {p : ℕ
         have hnil : Group.nilpotencyClass H ≤ 1 := by
           simpa using (CommGroup.nilpotencyClass_le_one (G := H))
         have hclass2 : NilpotencyClassLe 2 H := by
-          exact (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := H) (n := 2)).2
+          exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := H) (n := 2)).2
             (le_trans hnil (by decide))
         exact False.elim <| hbad (proposition_4_3_a (R := H) (p := p) hpodd (Or.inl hclass2))
       · obtain htop | ⟨M, hM_coatom, hMx⟩ := eq_top_or_exists_le_coatom (Subgroup.zpowers x)

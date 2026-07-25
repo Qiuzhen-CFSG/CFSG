@@ -24,6 +24,8 @@ namespace External
 open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
 
+attribute [local instance] commutatorElement
+
 universe u v
 
 set_option maxHeartbeats 0
@@ -165,7 +167,7 @@ private theorem huppert_IV_6_2_c_centerIn_sylow_le_centerIn_local_sylow_map_of_l
       exact hu
   let zN : N := ⟨z, hzN⟩
   have hzK : zN ∈ K := by
-    simpa [K, zN] using hzS
+    simpa [K, zN, Subgroup.mem_subgroupOf] using hzS
   have hzP : zN ∈ (P : Subgroup N) := by
     simpa [hK_eq_P] using hzK
   refine Subgroup.mem_map.mpr ⟨zN, ?_, rfl⟩
@@ -689,7 +691,7 @@ private theorem hkt_nilpotent_of_odd_prime_period_product_identity_not_two_group
         intro B hB_le hB_comm
         exact (hA.2.2 B hB_le hB_comm).trans hA_rank_le_AZ
       have hZ_le_AZ : Z ≤ AZ := by
-        simpa [AZ] using (le_sup_right : Z ≤ A ⊔ Z)
+        simp [AZ]
       have hAZ_le_Jrank : AZ ≤ Jrank := by
         change AZ ≤
           sSup (huppertRankThompsonAbelianSubgroups
@@ -1071,8 +1073,7 @@ public theorem thompson_fixedPointFree_conjugation_nilpotent_subgroup
     Group.IsNilpotent Q := by
   classical
   by_cases hQsub : Subsingleton Q
-  · change Group.IsNilpotent Q
-    exact Group.isNilpotent_of_subsingleton
+  · exact Group.isNilpotent_of_subsingleton
   let conjHom : K →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hK_norm_Q)
   let A : Subgroup (MulAut Q) := Subgroup.map conjHom ⊤

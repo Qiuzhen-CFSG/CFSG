@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection12.lemma_12_8_f
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 section Section12
 
@@ -32,6 +32,7 @@ public theorem section12_fitting_sigma_compl
     (G := G) (M := M) (E := E) (K := section8FittingSubgroup E)
     hM hcomp (by simpa using section8FittingSubgroup_le E)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_commutator_normal_of_normal_and_derived_le_centralizer
     {N K X : Subgroup G}
     (hKN : section10NormalIn K N) (hXN : X ≤ N)
@@ -294,7 +295,7 @@ public theorem corollary_12_9_a
         refine (Subgroup.nontrivial_iff_ne_bot (H := C)).2 ?_
         intro hCbot
         apply hcomm
-        exact le_bot_iff.mp (hAQ_le_C.trans (by simpa [hCbot]))
+        exact le_bot_iff.mp (hAQ_le_C.trans (by simp [hCbot]))
       have hC_card_gt_one : 1 < Nat.card C := by
         simpa using (Finite.one_lt_card_iff_nontrivial (α := ↥C)).2 hC_nontriv
       omega

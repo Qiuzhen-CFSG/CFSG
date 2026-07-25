@@ -6,6 +6,8 @@ public import FeitThompson.BGsection4.lemma_4_2_b
 
 /-! # Infrastructure for BG Section 4 -/
 
+open scoped commutatorElement
+
 section Main
 
 public theorem commutator_pow_left_of_mem_center {G : Type*} [Group G] {x y : G}
@@ -63,18 +65,20 @@ public theorem conjugate_eq_commutator_mul {G : Type*} [Group G] (a b : G) :
 
 public theorem lowerCentralSeries_two_le_center_of_class3
     {R : Type*} [Group R] (hclass : NilpotencyClassLe 3 R) :
-    lowerCentralSeries R 2 ≤ Subgroup.center R := by
+    (⊤ : Subgroup R).lowerCentralSeries 2 ≤ Subgroup.center R := by
   letI : Group.IsNilpotent R :=
-    (nilpotent_iff_finite_ascending_central_series (G := R)).2
-      ⟨3, upperCentralSeries R, upperCentralSeries_isAscendingCentralSeries R, hclass⟩
+    (Subgroup.nilpotent_iff_finite_ascending_central_series (G := R)).2
+      ⟨3, Subgroup.upperCentralSeries R,
+        Subgroup.upperCentralSeries_isAscendingCentralSeries R, hclass⟩
   have hclass' : Group.nilpotencyClass R ≤ 3 :=
-    (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R)).1 hclass
-  have hL3_bot : lowerCentralSeries R 3 = ⊥ :=
-    (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := R)).2 hclass'
-  have hcomm_bot : ⁅lowerCentralSeries R 2, (⊤ : Subgroup R)⁆ = ⊥ := by
-    simpa [lowerCentralSeries, Nat.succ_eq_add_one] using hL3_bot
+    (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R)).1 hclass
+  have hL3_bot : (⊤ : Subgroup R).lowerCentralSeries 3 = ⊥ :=
+    (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := R)).2 hclass'
+  have hcomm_bot : ⁅(⊤ : Subgroup R).lowerCentralSeries 2, (⊤ : Subgroup R)⁆ = ⊥ := by
+    simpa [Subgroup.lowerCentralSeries, Nat.succ_eq_add_one] using hL3_bot
   have hcent :
-      lowerCentralSeries R 2 ≤ Subgroup.centralizer ((⊤ : Subgroup R) : Set R) :=
+      (⊤ : Subgroup R).lowerCentralSeries 2 ≤
+        Subgroup.centralizer ((⊤ : Subgroup R) : Set R) :=
     (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hcomm_bot
   intro x hx
   rw [Subgroup.mem_center_iff]
@@ -148,42 +152,46 @@ public theorem commutator_pow_formula
 
 public theorem lowerCentralSeries_three_eq_bot_of_class3
     {R : Type*} [Group R] (hclass : NilpotencyClassLe 3 R) :
-    lowerCentralSeries R 3 = ⊥ := by
+    (⊤ : Subgroup R).lowerCentralSeries 3 = ⊥ := by
   letI : Group.IsNilpotent R :=
-    (nilpotent_iff_finite_ascending_central_series (G := R)).2
-      ⟨3, upperCentralSeries R, upperCentralSeries_isAscendingCentralSeries R, hclass⟩
+    (Subgroup.nilpotent_iff_finite_ascending_central_series (G := R)).2
+      ⟨3, Subgroup.upperCentralSeries R,
+        Subgroup.upperCentralSeries_isAscendingCentralSeries R, hclass⟩
   have hclass' : Group.nilpotencyClass R ≤ 3 :=
-    (upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R)).1 hclass
-  exact (lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := R)).2 hclass'
+    (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := R)).1 hclass
+  exact (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := R)).2 hclass'
 
 public theorem commutator_mem_lowerCentralSeries_one
     {R : Type*} [Group R] (x y : R) :
-    ⁅x, y⁆ ∈ lowerCentralSeries R 1 := by
-  simpa [lowerCentralSeries_one] using
+    ⁅x, y⁆ ∈ (⊤ : Subgroup R).lowerCentralSeries 1 := by
+  simpa [Subgroup.top_lowerCentralSeries_one] using
     (Subgroup.commutator_mem_commutator (H₁ := (⊤ : Subgroup R)) (H₂ := (⊤ : Subgroup R))
       (by simp : x ∈ (⊤ : Subgroup R)) (by simp : y ∈ (⊤ : Subgroup R)))
 
 public theorem triple_commutator_mem_lowerCentralSeries_two
     {R : Type*} [Group R] (x y z : R) :
-    ⁅⁅x, y⁆, z⁆ ∈ lowerCentralSeries R 2 := by
-  have hxy : ⁅x, y⁆ ∈ lowerCentralSeries R 1 :=
+    ⁅⁅x, y⁆, z⁆ ∈ (⊤ : Subgroup R).lowerCentralSeries 2 := by
+  have hxy : ⁅x, y⁆ ∈ (⊤ : Subgroup R).lowerCentralSeries 1 :=
     commutator_mem_lowerCentralSeries_one (R := R) x y
-  simpa [lowerCentralSeries, Nat.succ_eq_add_one] using
-    (Subgroup.commutator_mem_commutator (H₁ := lowerCentralSeries R 1) (H₂ := (⊤ : Subgroup R))
+  simpa [Subgroup.lowerCentralSeries, Nat.succ_eq_add_one] using
+    (Subgroup.commutator_mem_commutator
+      (H₁ := (⊤ : Subgroup R).lowerCentralSeries 1) (H₂ := (⊤ : Subgroup R))
       hxy (by simp : z ∈ (⊤ : Subgroup R)))
 
 public theorem commutator_eq_one_of_mem_lowerCentralSeries_two
     {R : Type*} [Group R] (hclass : NilpotencyClassLe 3 R)
-    {a b : R} (ha : a ∈ lowerCentralSeries R 2) :
+    {a b : R} (ha : a ∈ (⊤ : Subgroup R).lowerCentralSeries 2) :
     ⁅a, b⁆ = 1 := by
-  have hL3_bot : lowerCentralSeries R 3 = ⊥ :=
+  have hL3_bot : (⊤ : Subgroup R).lowerCentralSeries 3 = ⊥ :=
     lowerCentralSeries_three_eq_bot_of_class3 (R := R) hclass
-  have hab : ⁅a, b⁆ ∈ lowerCentralSeries R 3 := by
-    simpa [lowerCentralSeries, Nat.succ_eq_add_one] using
-      (Subgroup.commutator_mem_commutator (H₁ := lowerCentralSeries R 2) (H₂ := (⊤ : Subgroup R))
+  have hab : ⁅a, b⁆ ∈ (⊤ : Subgroup R).lowerCentralSeries 3 := by
+    simpa [Subgroup.lowerCentralSeries, Nat.succ_eq_add_one] using
+      (Subgroup.commutator_mem_commutator
+        (H₁ := (⊤ : Subgroup R).lowerCentralSeries 2) (H₂ := (⊤ : Subgroup R))
         ha (by simp : b ∈ (⊤ : Subgroup R)))
   have hab_bot : ⁅a, b⁆ ∈ (⊥ : Subgroup R) := by
-    simpa [hL3_bot] using hab
+    rw [hL3_bot] at hab
+    exact hab
   simpa using hab_bot
 
 public theorem mul_pow_formula_front {G : Type*} [Group G] {u v : G}
@@ -448,12 +456,12 @@ public theorem pth_mul_eq_one_of_class3
   let c : R := ⁅v, u⁆
   let du : R := ⁅c, u⁆
   let dv : R := ⁅c, v⁆
-  have hL2 : lowerCentralSeries R 2 ≤ Subgroup.center R :=
+  have hL2 : (⊤ : Subgroup R).lowerCentralSeries 2 ≤ Subgroup.center R :=
     lowerCentralSeries_two_le_center_of_class3 (R := R) hclass
-  have hdu_mem_l2 : du ∈ lowerCentralSeries R 2 := by
+  have hdu_mem_l2 : du ∈ (⊤ : Subgroup R).lowerCentralSeries 2 := by
     simpa [c, du] using
       (triple_commutator_mem_lowerCentralSeries_two (R := R) v u u)
-  have hdv_mem_l2 : dv ∈ lowerCentralSeries R 2 := by
+  have hdv_mem_l2 : dv ∈ (⊤ : Subgroup R).lowerCentralSeries 2 := by
     simpa [c, dv] using
       (triple_commutator_mem_lowerCentralSeries_two (R := R) v u v)
   have hdu_cent : du ∈ Subgroup.center R := hL2 hdu_mem_l2

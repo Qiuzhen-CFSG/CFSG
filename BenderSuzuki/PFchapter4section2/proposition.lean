@@ -63,7 +63,7 @@ public theorem natCard_eq_cube_of_isSuzukiTwoTypeB
     intro c
     have hsq : tripleLift c 0 0 ^ 2 = 1 := by
       rw [pow_two, hmul, hcocycle_zero]
-      simp only [CharTwo.add_self_eq_zero, zero_add]
+      simp only [CharTwo.add_self_eq_zero]
       exact hone
     by_cases hone' : tripleLift c 0 0 = 1
     · exact hone' ▸ Q0.one_mem
@@ -472,7 +472,7 @@ public theorem proposition
   have hcenter_mem_Q0 : ∀ u : F, center u ∈ Q0 := by
     intro u
     by_cases hcenter_one : center u = 1
-    · simpa [hcenter_one] using Q0.one_mem
+    · simp [hcenter_one, Q0.one_mem]
     · apply (hsec.Q0_def (center u)).2
       refine Or.inr ⟨?_, hcenter_one, hcenter_sq u⟩
       apply hsec.hA.A1.Q_le_H
@@ -601,8 +601,6 @@ public theorem proposition
     have himage : kwIso bcKW = kwIso prodKW := by
       apply Subtype.ext
       apply Units.ext
-      change (((kwIso bcKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E) =
-        (((kwIso prodKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E)
       rw [show prodKW =
           (⟨kOf b, Subgroup.mem_sup_left (hkOf_mem b)⟩ :
               (K ⊔ W : Subgroup G)) *
@@ -928,6 +926,7 @@ public theorem proposition
       rw [hs_center]
       exact hcenter_conj_W zeta hzeta 1
     have hmul := congrArg (zeta * ·) hconj
+    change s * zeta = zeta * s
     simpa [rightConjugateElem, mul_assoc] using hmul
   have hrightConjugateElem_mul : ∀ x y d : G,
       rightConjugateElem (x * y) d =
@@ -1882,7 +1881,7 @@ public theorem proposition
     calc
       zeta ^ (j + 1) * (kNow * a⁻¹ ^ 2)⁻¹ =
           zeta ^ j * zeta * (a ^ 2 * kNow⁻¹) := by
-        simp [pow_succ, pow_two, mul_inv_rev, mul_assoc]
+        simp [pow_succ, mul_inv_rev, mul_assoc]
       _ = (zeta ^ j * kNow⁻¹) * zeta * a ^ 2 := by
         symm
         calc
@@ -1999,7 +1998,7 @@ public theorem proposition
     intro d q
     rcases (hsec.Q0_def (q : G)).1 q.property with hq_one | ⟨hqH, hqI⟩
     · rw [hq_one]
-      simpa [rightConjugateElem] using Q0.one_mem
+      simp [rightConjugateElem]
     · apply (hsec.Q0_def _).2
       refine Or.inr ⟨?_, isInvolution_rightConjugateElem hqI⟩
       have hdH : (d : G) ∈ H := hsec.hA.A1.D_le_H d.property
@@ -2067,9 +2066,6 @@ public theorem proposition
       have himage : kwIso kKW = kwIso aKW := by
         apply Subtype.ext
         apply Units.ext
-        change
-          ((((kwIso kKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E)) =
-            ((((kwIso aKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E))
         calc
           ((((kwIso kKW : (K1 ⊔ W1 : Subgroup Eˣ)) : Eˣ) : E)) =
               ((b : F) : E) := hkOf_coord b
@@ -2398,8 +2394,8 @@ public theorem proposition
   have hcardQuotientNontrivial :
       Nat.card QuotientNontrivial = Nat.card (Q ⧸ Q0Q) - 1 := by
     letI := Fintype.ofFinite (Q ⧸ Q0Q)
-    simpa [QuotientNontrivial, Nat.card_eq_fintype_card] using
-      (Fintype.card_subtype_compl (fun qbar : Q ⧸ Q0Q ↦ qbar = 1))
+    simp [QuotientNontrivial, Nat.card_eq_fintype_card,
+      Fintype.card_subtype_compl]
   have horbit_card : n * ((Nat.card Q0 - 1) * m) = Nat.card Q0 ^ 2 - 1 := by
     calc
       n * ((Nat.card Q0 - 1) * m) = Nat.card ValidIndex * Nat.card KW := by
@@ -2661,7 +2657,7 @@ public theorem proposition
       infer_instance
     have hcardJ : Nat.card J = m - 1 := by
       rw [Nat.card_eq_fintype_card]
-      simpa [J] using Nat.card_Icc 1 (m - 1)
+      simp [J, Nat.card_Icc]
     have hcandidate_bijective : Function.Bijective candidate :=
       hcandidate_injective.bijective_of_nat_card_le (by rw [hcardFiber, hcardJ])
     let xf : Fiber := ⟨center x, hcenter_mem_Q0 x, hx⟩
@@ -2883,7 +2879,7 @@ public theorem proposition
       have hcomm : center r * omega (k : ℕ) = omega (k : ℕ) * center r :=
         hQ0_commutes_Q (center r) (hcenter_mem_Q0 r)
           (omega (k : ℕ)) (homega_valid k).1
-      simp [x0, hcenter_inv, hcomm, mul_assoc]
+      simp [x0, hcenter_inv, hcomm]
     have hTx0 : T x0 = rightConjugateElem z da := by
       simpa [T, z, hx0_inv] using hcycle_one
     have hTz : T z = rightConjugateElem (omega (baseIndex : ℕ)) zeta⁻¹ := by
@@ -3890,7 +3886,7 @@ public theorem proposition
         infer_instance
       have hcardJ : Nat.card J = m - 1 := by
         rw [Nat.card_eq_fintype_card]
-        simpa [J] using Nat.card_Icc 1 (m - 1)
+        simp [J, Nat.card_Icc]
       have hcardOptionJ : Nat.card (Option J) = m := by
         rw [Nat.card_eq_fintype_card, Fintype.card_option, ← Nat.card_eq_fintype_card, hcardJ]
         omega

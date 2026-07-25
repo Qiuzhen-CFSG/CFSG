@@ -20,6 +20,11 @@ namespace External
 namespace Higman
 
 open PFAppendixIII
+open scoped commutatorElement
+open scoped IsMulCommutative
+
+public abbrev higmanLowerCentralSeries (H : Type*) [Group H] : ℕ → Subgroup H :=
+  (⊤ : Subgroup H).lowerCentralSeries
 
 universe u
 /-- Higman's type-C groups, with the coordinates and multiplication law from
@@ -86,11 +91,11 @@ public instance squaresSubgroupCharacteristic (J : Type*) [Group J] :
   exact Subgroup.subset_closure ⟨phi y, by simp⟩
 
 /-- The source denominator H_i² H_{i+1}. Lean index i represents Higman's
-source index i + 1, since lowerCentralSeries H 0 = H. -/
+source index i + 1, since higmanLowerCentralSeries H 0 = H. -/
 @[expose] public def lowerCentralFactorKernel (H : Type*) [Group H] (i : ℕ) :
-    Subgroup (lowerCentralSeries H i) :=
-  squaresSubgroup (lowerCentralSeries H i) ⊔
-    (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i)
+    Subgroup (higmanLowerCentralSeries H i) :=
+  squaresSubgroup (higmanLowerCentralSeries H i) ⊔
+    (higmanLowerCentralSeries H (i + 1)).subgroupOf (higmanLowerCentralSeries H i)
 
 public instance lowerCentralFactorKernelNormal (H : Type*) [Group H] (i : ℕ) :
     (lowerCentralFactorKernel H i).Normal := by
@@ -100,11 +105,11 @@ public instance lowerCentralFactorKernelNormal (H : Type*) [Group H] (i : ℕ) :
 /-- Higman's L_{i+1} = H_{i+1} / (H_{i+1}² H_{i+2}), with Lean's
 zero-based lower-central indexing. -/
 public abbrev LowerCentralFactor (H : Type*) [Group H] (i : ℕ) :=
-  (lowerCentralSeries H i) ⧸ lowerCentralFactorKernel H i
+  (higmanLowerCentralSeries H i) ⧸ lowerCentralFactorKernel H i
 
 /-- The restriction of an automorphism to a characteristic lower-central term. -/
 @[expose] public def lowerCentralSeriesMulAut {H : Type*} [Group H]
-    (theta : MulAut H) (i : ℕ) : MulAut (lowerCentralSeries H i) where
+    (theta : MulAut H) (i : ℕ) : MulAut (higmanLowerCentralSeries H i) where
   toFun x :=
     ⟨theta x, (Subgroup.characteristic_iff_le_comap.mp inferInstance theta) x.property⟩
   invFun x :=
@@ -116,29 +121,28 @@ public abbrev LowerCentralFactor (H : Type*) [Group H] (i : ℕ) :=
 
 public theorem lowerCentralSeriesMulAut_apply
     {H : Type*} [Group H] (theta : MulAut H) (i : ℕ)
-    (x : lowerCentralSeries H i) :
-    ((lowerCentralSeriesMulAut theta i x : lowerCentralSeries H i) : H) =
+    (x : higmanLowerCentralSeries H i) :
+    ((lowerCentralSeriesMulAut theta i x : higmanLowerCentralSeries H i) : H) =
       theta (x : H) := rfl
 public theorem lowerCentralSeries_map_eq_of_surjective
     {G : Type u} {Q : Type*} [Group G] [Group Q]
     (f : G →* Q) (hf : Function.Surjective f) :
-    ∀ i : ℕ, (lowerCentralSeries G i).map f = lowerCentralSeries Q i := by
+    ∀ i : ℕ, (higmanLowerCentralSeries G i).map f = higmanLowerCentralSeries Q i := by
   intro i
   induction i with
   | zero =>
       change (⊤ : Subgroup G).map f = ⊤
       exact Subgroup.map_top_of_surjective f hf
   | succ i ih =>
-      rw [lowerCentralSeries_succ, lowerCentralSeries_succ]
-      change (⁅lowerCentralSeries G i, (⊤ : Subgroup G)⁆).map f =
-        ⁅lowerCentralSeries Q i, (⊤ : Subgroup Q)⁆
-      rw [Subgroup.map_commutator, ih,
+      change (Subgroup.map f ((⊤ : Subgroup G).lowerCentralSeries (i + 1))) =
+        (⊤ : Subgroup Q).lowerCentralSeries (i + 1)
+      rw [Subgroup.map_lowerCentralSeries,
         Subgroup.map_top_of_surjective f hf]
 
 public theorem lowerCentralSeries_map_mulAut
     {H : Type u} [Group H] (theta : MulAut H) (i : ℕ) :
-    (lowerCentralSeries H i).map theta.toMonoidHom =
-      lowerCentralSeries H i := by
+    (higmanLowerCentralSeries H i).map theta.toMonoidHom =
+      higmanLowerCentralSeries H i := by
   apply le_antisymm
   · rintro y ⟨x, hx, rfl⟩
     exact (Subgroup.characteristic_iff_le_comap.mp inferInstance theta) hx
@@ -149,35 +153,35 @@ public theorem lowerCentralSeries_map_mulAut
 /-- The automorphism induced on the quotient by a lower-central term. -/
 @[expose] public def lowerCentralQuotientMulAut
     {H : Type u} [Group H] (theta : MulAut H) (i : ℕ) :
-    MulAut (H ⧸ lowerCentralSeries H i) :=
+    MulAut (H ⧸ higmanLowerCentralSeries H i) :=
   QuotientGroup.congr
-    (G' := lowerCentralSeries H i) (H' := lowerCentralSeries H i)
+    (G' := higmanLowerCentralSeries H i) (H' := higmanLowerCentralSeries H i)
     (e := theta) (lowerCentralSeries_map_mulAut theta i)
 
 public theorem lowerCentralQuotientMulAut_mk
     {H : Type u} [Group H] (theta : MulAut H) (i : ℕ) (x : H) :
     lowerCentralQuotientMulAut theta i
-        (QuotientGroup.mk' (lowerCentralSeries H i) x) =
-      QuotientGroup.mk' (lowerCentralSeries H i) (theta x) := by
+        (QuotientGroup.mk' (higmanLowerCentralSeries H i) x) =
+      QuotientGroup.mk' (higmanLowerCentralSeries H i) (theta x) := by
   rfl
 
 /-- Inducing an automorphism on a fixed lower-central quotient is a group
 homomorphism. -/
 @[expose] public def lowerCentralQuotientMulAutHom
     {H : Type u} [Group H] (i : ℕ) :
-    MulAut H →* MulAut (H ⧸ lowerCentralSeries H i) where
+    MulAut H →* MulAut (H ⧸ higmanLowerCentralSeries H i) where
   toFun theta := lowerCentralQuotientMulAut theta i
   map_one' := by
     apply MulEquiv.ext
     intro q
     obtain ⟨x, rfl⟩ :=
-      QuotientGroup.mk'_surjective (lowerCentralSeries H i) q
+      QuotientGroup.mk'_surjective (higmanLowerCentralSeries H i) q
     rfl
   map_mul' a b := by
     apply MulEquiv.ext
     intro q
     obtain ⟨x, rfl⟩ :=
-      QuotientGroup.mk'_surjective (lowerCentralSeries H i) q
+      QuotientGroup.mk'_surjective (higmanLowerCentralSeries H i) q
     rfl
 
 public theorem lowerCentralQuotientMulAut_pow
@@ -199,13 +203,13 @@ public theorem lowerCentralFactorKernel_le_comap {H : Type*} [Group H]
     change lowerCentralSeriesMulAut theta i x ∈ lowerCentralFactorKernel H i
     rw [lowerCentralFactorKernel]
     have hnext : lowerCentralSeriesMulAut theta i x ∈
-        (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i) := by
-      change theta (x : H) ∈ lowerCentralSeries H (i + 1)
+        (higmanLowerCentralSeries H (i + 1)).subgroupOf (higmanLowerCentralSeries H i) := by
+      change theta (x : H) ∈ higmanLowerCentralSeries H (i + 1)
       exact (Subgroup.characteristic_iff_le_comap.mp inferInstance theta)
-        (show (x : H) ∈ lowerCentralSeries H (i + 1) from hx)
-    exact (show (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i) ≤
-        squaresSubgroup (lowerCentralSeries H i) ⊔
-          (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i)
+        (show (x : H) ∈ higmanLowerCentralSeries H (i + 1) from hx)
+    exact (show (higmanLowerCentralSeries H (i + 1)).subgroupOf (higmanLowerCentralSeries H i) ≤
+        squaresSubgroup (higmanLowerCentralSeries H i) ⊔
+          (higmanLowerCentralSeries H (i + 1)).subgroupOf (higmanLowerCentralSeries H i)
       from le_sup_right) hnext
 
 @[expose] public def lowerCentralFactorEnd {H : Type*} [Group H]
@@ -234,7 +238,7 @@ L_{i+1}. -/
 
 public theorem lowerCentralFactorMulAut_mk
     {H : Type*} [Group H] (theta : MulAut H) (i : ℕ)
-    (x : lowerCentralSeries H i) :
+    (x : higmanLowerCentralSeries H i) :
     lowerCentralFactorMulAut theta i
         (QuotientGroup.mk' (lowerCentralFactorKernel H i) x) =
       QuotientGroup.mk' (lowerCentralFactorKernel H i)
@@ -244,22 +248,23 @@ public theorem lowerCentralFactorMulAut_mk
 /-- Higman's lower-central factors are elementary abelian: commutators of
 H_{i+1} lie in H_{i+2}. -/
 public instance lowerCentralFactorCommGroup {H : Type*} [Group H] (i : ℕ) :
-    CommGroup (LowerCentralFactor H i) :=
-  CommGroup.mk <|
-    (show Std.Commutative (fun x y : LowerCentralFactor H i => x * y) from by
-      rw [Subgroup.Normal.quotient_commutative_iff_commutator_le]
-      intro x hx
-      rw [lowerCentralFactorKernel]
-      apply (show (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i) ≤
-        squaresSubgroup (lowerCentralSeries H i) ⊔
-          (lowerCentralSeries H (i + 1)).subgroupOf (lowerCentralSeries H i)
-        from le_sup_right)
-      change (x : H) ∈ lowerCentralSeries H (i + 1)
-      have hmap : (x : H) ∈
-          ⁅lowerCentralSeries H i, lowerCentralSeries H i⁆ := by
-        rw [← (lowerCentralSeries H i).map_subtype_commutator]
-        exact ⟨x, hx, rfl⟩
-      exact (Subgroup.commutator_mono le_rfl le_top) hmap).comm
+    CommGroup (LowerCentralFactor H i) := by
+  have hcomm : IsMulCommutative (LowerCentralFactor H i) := by
+    rw [Subgroup.Normal.quotient_commutative_iff_commutator_le]
+    intro x hx
+    rw [lowerCentralFactorKernel]
+    apply (show (higmanLowerCentralSeries H (i + 1)).subgroupOf
+        (higmanLowerCentralSeries H i) ≤
+      squaresSubgroup (higmanLowerCentralSeries H i) ⊔
+        (higmanLowerCentralSeries H (i + 1)).subgroupOf (higmanLowerCentralSeries H i)
+      from le_sup_right)
+    change (x : H) ∈ higmanLowerCentralSeries H (i + 1)
+    have hmap : (x : H) ∈
+        ⁅higmanLowerCentralSeries H i, higmanLowerCentralSeries H i⁆ := by
+      rw [← (higmanLowerCentralSeries H i).map_subtype_commutator]
+      exact ⟨x, hx, rfl⟩
+    exact (Subgroup.commutator_mono le_rfl le_top) hmap
+  exact { mul_comm := hcomm.is_comm.comm }
 
 public theorem lowerCentralFactor_sq_eq_one {H : Type*} [Group H] (i : ℕ)
     (x : LowerCentralFactor H i) : x ^ 2 = 1 := by
@@ -267,7 +272,7 @@ public theorem lowerCentralFactor_sq_eq_one {H : Type*} [Group H] (i : ℕ)
   intro y
   change QuotientGroup.mk' (lowerCentralFactorKernel H i) (y ^ 2) = 1
   apply (QuotientGroup.eq_one_iff (N := lowerCentralFactorKernel H i) (y ^ 2)).2
-  apply (show squaresSubgroup (lowerCentralSeries H i) ≤ lowerCentralFactorKernel H i by
+  apply (show squaresSubgroup (higmanLowerCentralSeries H i) ≤ lowerCentralFactorKernel H i by
     rw [lowerCentralFactorKernel]
     exact le_sup_left)
   exact Subgroup.subset_closure ⟨y, rfl⟩
@@ -299,7 +304,7 @@ public theorem lowerCentralFactorLinearAut_toMul
 
 public theorem lowerCentralFactorLinearAut_ofMul_mk
     {H : Type*} [Group H] (theta : MulAut H) (i : ℕ)
-    (x : lowerCentralSeries H i) :
+    (x : higmanLowerCentralSeries H i) :
     lowerCentralFactorLinearAut theta i
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H i) x)) =
@@ -517,20 +522,20 @@ public theorem exists_omegaLength_of_isSuzukiTwoGroup
     LTSeries.exists_relSeries_covBy_and_head_eq_bot_and_last_eq_bot s
   refine ⟨t.length, fun i => ((t.reverse i).1 : Subgroup P), ?_, ?_, ?_, ?_⟩
   · have hTop : t.reverse.head = (⊤ : α) := by
-      simpa using hlast
-    simpa [RelSeries.head] using congrArg Subtype.val hTop
+      rw [RelSeries.head_reverse]
+      exact hlast
+    change ((t.reverse.head).1 : Subgroup P) = ⊤
+    exact congrArg Subtype.val hTop
   · have hBot : t.reverse.last = (⊥ : α) := by
-      simpa using hhead
-    change ((t ((Fin.last t.length).rev)).1 : Subgroup P) = ⊥
-    rw [Fin.rev_last]
-    simpa [RelSeries.last] using congrArg Subtype.val hBot
+      rw [RelSeries.last_reverse]
+      exact hhead
+    change ((t.reverse.last).1 : Subgroup P) = ⊥
+    exact congrArg Subtype.val hBot
   · intro i
-    have hcov : t.reverse i.succ ⋖ t.reverse i.castSucc := by
-      simpa using (t.reverse.step i)
+    have hcov := t.reverse.step i
     exact hcov.le
   · intro i
-    have hcov : t.reverse i.succ ⋖ t.reverse i.castSucc := by
-      simpa using (t.reverse.step i)
+    have hcov := t.reverse.step i
     refine ⟨hcov.lt, (t.reverse i.castSucc).2.1, (t.reverse i.succ).2.1,
       (t.reverse i.castSucc).2.2, (t.reverse i.succ).2.2, ?_⟩
     intro L hLnormal hLX hML hLN

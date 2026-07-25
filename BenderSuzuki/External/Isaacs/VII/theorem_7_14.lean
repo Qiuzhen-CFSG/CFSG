@@ -50,7 +50,7 @@ private theorem isaacs_7_14_isVirtualCharacter_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : Int) {phi : ClassFunction G}
     (hphi : Representation.IsVirtualCharacter phi) :
-    Representation.IsVirtualCharacter (n • phi) := by
+    Representation.IsVirtualCharacter ((n : Complex) • phi) := by
   classical
   rcases hphi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
@@ -379,7 +379,7 @@ private theorem isaacs_7_14_extension_fields
           hchi_irreducible)
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
           (hirreducible0 psi))
-        (fun h => hchi_not_mem (by simpa [h] using psi.2))
+        (fun h => hchi_not_mem (by simp [h, psi.2]))
     have hpsiChi : scalarProduct N (psi : ClassFunction N) chi = 0 := by
       have hstar := congrArg star hchiPsi
       simpa [Section1.scalarProduct_star_swap] using hstar
@@ -387,7 +387,6 @@ private theorem isaacs_7_14_extension_fields
       Section5.scalarProduct_sub_right, Section1.scalarProduct_smul_left,
       Section1.scalarProduct_smul_right, hchiSelf, hsourceSelf psi,
       hchiPsi, hpsiChi]
-    push_cast
     ring
   have hTauAlphaSelf :
       scalarProduct G (tau alpha) (tau alpha) = 1 + (d : Complex) ^ 2 := by
@@ -441,7 +440,6 @@ private theorem isaacs_7_14_extension_fields
       change (w psi : Complex) * degree (xi : ClassFunction N) -
         (w xi : Complex) * degree (psi : ClassFunction N) = 0
       rw [hwdeg xi, hwdeg psi]
-      push_cast
       ring
     have hXiOn0 : integerSpanOn Y0 puncturedSet Xi :=
       ⟨hXiSpan0, (supportedOn_puncturedSet_iff_degree_eq_zero Xi).2 hXiDegree⟩
@@ -501,7 +499,6 @@ private theorem isaacs_7_14_extension_fields
       Section5.scalarProduct_sub_right, Section1.scalarProduct_smul_left,
       Section1.scalarProduct_smul_right, hxiChi, hpsiChi, hxiPsi,
       hsourceSelf psi] at hIso
-    push_cast at hIso
     exact_mod_cast (sub_eq_zero.mp hIso)
   have hnorm :
       scalarProduct G A A + ((∑ xi : Y0, (b xi) ^ 2 : Int) : Complex) =
@@ -791,8 +788,7 @@ private theorem isaacs_7_14_extension_fields
           (integerSpan_of_mem Y0 X0.2) (integerSpan_of_mem Y0 Y0'.2)
   apply exists_extension_fields_of_image_family_pf57 S tau img
     hsourceCrossS hsourceSelfNe himgVirt hgram
-  intro Tnew hTnew
-  intro phi hphi
+  intro Tnew hTnew phi hphi
   rcases hphi with ⟨⟨v, hv⟩, hphiSupport⟩
   let chiS : S := ⟨chi, by simp [S]⟩
   let vOld : CoeffVector Y0 := fun xi =>
@@ -826,7 +822,6 @@ private theorem isaacs_7_14_extension_fields
     rw [hphiSplit]
     ext g
     simp [oldPart, alpha, smul_eq_mul]
-    push_cast
     ring
   have hphiDegree : degree phi = 0 :=
     (supportedOn_puncturedSet_iff_degree_eq_zero phi).1 hphiSupport

@@ -59,8 +59,8 @@ private theorem chapter2_claim8_fixed_field
         Nat.card (nearFieldStar Q P) + 1 = 9 ^ Nat.card Sigma) := by
   have hStarComm : IsMulCommutative ↥(nearFieldStar Q P) := by
     by_contra hnotcomm
-    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch (by
-      simpa [nearFieldStar] using hnotcomm)).2.1
+    change ¬ IsMulCommutative ↥(Q ⊓ Subgroup.centralizer (P : Set G)) at hnotcomm
+    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch hnotcomm).2.1
   exact
     chapter2_fixed_field_orders_of_Q1_ne_bot
       H D Q K V W Q0 S Q1 P Sigma t s p hch hind hSigma hStarComm he
@@ -104,8 +104,8 @@ public theorem claim_8
           Nat.card (nearFieldStar Q P) + 1 = 9 ^ e) := by
   have hStarComm : IsMulCommutative ↥(nearFieldStar Q P) := by
     by_contra hnotcomm
-    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch (by
-      simpa [nearFieldStar] using hnotcomm)).2.1
+    change ¬ IsMulCommutative ↥(Q ⊓ Subgroup.centralizer (P : Set G)) at hnotcomm
+    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch hnotcomm).2.1
   rcases
     chapter2_claim8_fixed_field
       H D Q K V W Q0 S Q1 P Sigma t s p hch hind hSigma hQ1 he with
@@ -114,6 +114,5 @@ public theorem claim_8
 
 end PFchapter2
 end BenderSuzuki
-
 
 

@@ -82,7 +82,8 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
     have hXleZ : X ≤ Z := by
       intro y hy
       have hy_top : (⟨y, hy⟩ : X) ∈ (⊤ : Subgroup X) := by simp
-      exact (show y ∈ Z from by simpa [← hZsubX_top] using hy_top)
+      exact Subgroup.mem_subgroupOf.mp
+        (by simpa [← hZsubX_top] using hy_top)
     have hZXcard : Nat.card Z ≤ Nat.card X := by
       rw [hZcard, hXcard]
     have hXZ : X = Z := Subgroup.eq_of_le_of_card_ge hXleZ hZXcard
@@ -94,7 +95,7 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
   have hcommSup : IsMulCommutative (Z ⊔ X : Subgroup G) := inferInstance
   have hZ_norm : (Z.subgroupOf (Z ⊔ X : Subgroup G)).Normal := by
     letI : IsMulCommutative (Z ⊔ X : Subgroup G) := hcommSup
-    letI : CommGroup (Z ⊔ X : Subgroup G) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (Z ⊔ X : Subgroup G) := IsMulCommutative.instCommGroup
     infer_instance
   have hcomp :
       (Z.subgroupOf (Z ⊔ X : Subgroup G)).IsComplement'
@@ -263,7 +264,7 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
     simpa [ZQ] using IsExtraspecial.quotient_elementary_abelian p.val Q
   haveI : IsMulCommutative (Q ⧸ ZQ) :=
     (inferInstance : IsElementaryAbelian p.val (Q ⧸ ZQ)).toIsMulCommutative
-  letI : CommGroup (Q ⧸ ZQ) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (Q ⧸ ZQ) := IsMulCommutative.instCommGroup
   haveI : Fact (IsPGroup p.val (Q ⧸ ZQ)) :=
     ⟨IsElementaryAbelian.isPGroup p.val (Q ⧸ ZQ)⟩
   have hquot_card : Nat.card (Q ⧸ ZQ) = p.val ^ 2 := by
@@ -373,7 +374,7 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
     have hmap :
         XQ.map (QuotientGroup.mk' ZQ) =
           Subgroup.zpowers (QuotientGroup.mk' ZQ q) := by
-      simpa [XQ] using MonoidHom.map_zpowers (QuotientGroup.mk' ZQ) q
+      simp [XQ, MonoidHom.map_zpowers]
     have hfixed_quot_eq_XQ :
         fixedPointSubgroup (↥(Subgroup.zpowers (QuotientGroup.mk' ZQ q))) K =
           fixedPointSubgroup (↥XQ) K := by
@@ -497,9 +498,7 @@ private theorem section12_subgroupNormalizerIn_le_of_malpha_centralizer_le
     have hKmap : K.map M.subtype = section10Malpha M := by
       rfl
     have hUmap : U.map M.subtype = Mstar ⊓ M := by
-      simpa [U] using
-        (Subgroup.map_subgroupOf_eq_of_le (H := Mstar ⊓ M) (K := M)
-          inf_le_right)
+      simp [U]
     calc
       (K ⊔ U).map M.subtype =
           section10Malpha M ⊔ (Mstar ⊓ M) := by
@@ -642,8 +641,8 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
     have hA_le_Pamb : A ≤ Pamb :=
       (section12_rankTwo_le hA_P).trans hP_le_Pamb
     have hPamb_p : IsPGroup p.val Pamb := by
-      simpa [Pamb, I, section10AmbientSylowSubgroup] using
-        IsPGroup.map (p := p.val) (H := (S : Subgroup I)) S.isPGroup' I.subtype
+      change IsPGroup p.val ((S : Subgroup I).map I.subtype)
+      exact IsPGroup.map S.isPGroup' I.subtype
     have hPamb_le_M : Pamb ≤ M := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -663,9 +662,9 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
       have hxPamb : (x : G) ∈ Pamb := hP_le_Pamb x.property
       have hyPamb : (y : G) ∈ Pamb := hP_le_Pamb y.property
       have hxy :
-          (x : G) * (y : G) = (y : G) * (x : G) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := Pamb) hxPamb hyPamb
+        (x : G) * (y : G) = (y : G) * (x : G) :=
+        setLike_mul_comm
+          (s := Pamb) hxPamb hyPamb
       exact Subtype.ext hxy
     have hPamb_proper : Pamb ≠ ⊤ := by
       intro htop
@@ -727,13 +726,13 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
       letI : IsMulCommutative (Sg : Subgroup G) := hcomm
       refine ⟨⟨fun x y => ?_⟩⟩
       have hxSg : (x : G) ∈ (Sg : Subgroup G) := by
-        simpa [← hPamb_eq_Sg] using x.property
+        exact hPamb_eq_Sg.le x.property
       have hySg : (y : G) ∈ (Sg : Subgroup G) := by
-        simpa [← hPamb_eq_Sg] using y.property
+        exact hPamb_eq_Sg.le y.property
       have hxy :
-          (x : G) * (y : G) = (y : G) * (x : G) :=
-        Subgroup.mul_comm_of_mem_isMulCommutative
-          (H := (Sg : Subgroup G)) hxSg hySg
+        (x : G) * (y : G) = (y : G) * (x : G) :=
+        setLike_mul_comm
+          (s := (Sg : Subgroup G)) hxSg hySg
       exact Subtype.ext hxy
     have hSg_shape : section10SpecialRankTwoSylowShape (H := (Sg : Subgroup G)) p := by
       rcases corollary_10_7_b (G := G) Sg hSg_rank_le_two with hSg_comm | hshape
@@ -868,7 +867,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
       have hEmpty :
           section10RankTwoMaximalElementaryAbelianSubgroups p G = ∅ :=
         (proposition_10_14_a (G := G) (p := p) hpβ.2 Sg).2
-      simpa [hEmpty] using hA10
+      simp [hEmpty] at hA10
     have hpnotαMstar : p ∉ section10AlphaPrimes Mstar := by
       intro hpα
       have hpβ : p ∈ section10BetaPrimes Mstar := by
@@ -876,7 +875,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
       have hEmpty :
           section10RankTwoMaximalElementaryAbelianSubgroups p G = ∅ :=
         (proposition_10_14_a (G := G) (p := p) hpβ.2 Sg).2
-      simpa [hEmpty] using hA10
+      simp [hEmpty] at hA10
     have hZnotM :
         section9MaximalSubgroupsContaining (Subgroup.normalizer (Z : Set G)) ≠ {M} := by
       have hNZ_le_Mstar :
@@ -973,7 +972,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
           (k : G)⁻¹ * n * (k : G) ∈
             (Subgroup.normalizer (A₀star : Set G)).conjBy ((k : G)⁻¹) := by
         rw [Subgroup.conjBy, Subgroup.mem_map]
-        exact ⟨n, hn, by simp [MulAut.conj_apply, mul_assoc]⟩
+        exact ⟨n, hn, by simp [mul_assoc]⟩
       have hn_conj_M : (k : G)⁻¹ * n * (k : G) ∈ M :=
         hnormA₀_le_M (hnormA₀star_conj_le hn_conj)
       have hn_eq : n = (k : G) * ((k : G)⁻¹ * n * (k : G)) * (k : G)⁻¹ := by

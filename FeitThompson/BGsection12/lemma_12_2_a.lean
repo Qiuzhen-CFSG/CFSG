@@ -93,7 +93,7 @@ private theorem section12_lemma_10_5_nontrivial_pSubgroup_rank
   have hPcyc : IsCyclic (P : Subgroup M) := by
     have hpG : p.val ∣ Nat.card G := hpM.trans (Subgroup.card_subgroup_dvd_card M)
     have hpodd : p.val ≠ 2 := Odd.ne_two_of_dvd_nat IsMinCE.odd_order hpG
-    exact section12_sylow_cyclic_of_primeRank_le_one hpodd (by simpa [hrank1]) P
+    exact section12_sylow_cyclic_of_primeRank_le_one hpodd (by simp [hrank1]) P
   let XG : Subgroup G := X
   have hXG_eq : XG = X := rfl
   have hXG_le_Pamb : XG ≤ section10AmbientSylowSubgroup M P := by
@@ -135,8 +135,8 @@ private theorem section12_lemma_10_5_nontrivial_pSubgroup_rank
 /-- Lemma 12.2(a). -/
 public theorem lemma_12_2_a
     {M Mstar X : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hpX : IsPGroup p.val X) (hXne : X ≠ ⊥) (hXM : X ≤ M)
+    (_hM : M ∈ section9MaximalSubgroups G)
+    (hpX : IsPGroup p.val X) (hXne : X ≠ ⊥) (_hXM : X ≤ M)
     (hMstar : Mstar ∈ section9MaximalSubgroupsContaining (Subgroup.normalizer (X : Set G))) :
     p ∈ section10SigmaPrimes Mstar ∪ section12Tau2Primes Mstar := by
   by_cases hpσstar : p ∈ section10SigmaPrimes Mstar

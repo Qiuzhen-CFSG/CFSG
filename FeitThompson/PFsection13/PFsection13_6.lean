@@ -969,7 +969,7 @@ private theorem section13_subgroupInKernel'_of_irreducible_constituent_of_kernel
     exact_mod_cast hzero
   have hexists : ∃ f : Representation.IntertwiningMap φρ χρ, f ≠ 0 := by
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hsub : Subsingleton (Representation.IntertwiningMap φρ χρ) := by
       refine ⟨fun f g => ?_⟩
       rw [hnone f, hnone g]
@@ -1204,7 +1204,7 @@ table-indexing interface. -/
     [DecidableEq I]
     [Fintype J]
     [DecidableEq J]
-    (Smax P U W1 W2 : Subgroup G)
+    (Smax P _ W1 W2 : Subgroup G)
     (Wsec : Subgroup Smax)
     (A0 : Set Smax)
     (i0 : I)
@@ -4229,7 +4229,7 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_entry_matchin
       Sfam Tfam τS τT p q u v c d)
     (_hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ) :
-    ∀ (hq0 : 0 < q) (hp0 : 0 < p),
+    ∀ (_hq0 : 0 < q) (_hp0 : 0 < p),
       ∀ {I J : Type u}
         [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J],
         ∀ (Wsec : Subgroup Smax)
@@ -4283,7 +4283,7 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_raw_
       Sfam Tfam τS τT p q u v c d)
     (_hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ) :
-    ∀ (hq0 : 0 < q) (hp0 : 0 < p),
+    ∀ (_hq0 : 0 < q) (_hp0 : 0 < p),
       ∀ {I J : Type u}
         [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J],
         ∀ (Wsec : Subgroup Smax)
@@ -4362,7 +4362,7 @@ public theorem section13_typeP_prTIres_pf4_primeTIirr_spec_product_matching_base
     (_hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
       ω η μ ν μsum νsum δ δ' σ) :
     μ 0 0 = Section1.principalCharacter Smax ∧
-      ∀ (hq0 : 0 < q) (hp0 : 0 < p),
+      ∀ (_hq0 : 0 < q) (_hp0 : 0 < p),
         ∀ {I J : Type u}
           [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J],
           ∀ (Wsec : Subgroup Smax)
@@ -6259,7 +6259,7 @@ private theorem section13_scalarProduct_characters_ne_zero_of_common_irreducible
       (φs i) (hφsbook i)
   have hoccurs : ∃ i : ι, φs i = φ := by
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     apply hχφ
     rw [hχdecomp, Section1.scalarProduct_weightedFamilySum_left]
     exact Finset.sum_eq_zero fun i _hi => by
@@ -8682,9 +8682,12 @@ private theorem theorem_13_6_energy_identity_of_lambda_normSq_one
       ((Nat.card Smax : ℝ) - Complex.normSq (lam 1)) -
         2 * ((u * q : ℕ) : ℝ) * ((q : ℝ) * (b : ℝ)) +
           Section7.subgroupSupportEnergy H (Section7.puncturedSubgroupSet H) α := by
-  rcases hres with ⟨_hHS, hres_eval⟩
+  rcases hres with ⟨hHS, hres_eval⟩
   have hlamH_one : lamH 1 = lam 1 := by
-    simpa using hres_eval 1
+    have htemp := hres_eval (1 : H)
+    have hone : (⟨(1 : G), hHS (Subgroup.one_mem H)⟩ : Smax) = (1 : Smax) :=
+      Subtype.ext (by simp)
+    simpa [hone] using htemp
   have hlam_one : lam 1 = ((u * q : ℕ) : ℂ) := by
     simpa [Section1.degree_apply, Nat.cast_mul] using hdeg
   unfold theorem_13_5_squareSumFormula at hformula

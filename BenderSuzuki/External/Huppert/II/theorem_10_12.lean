@@ -31,6 +31,7 @@ namespace External
 open MatrixGroups
 open scoped LinearAlgebra.Projectivization
 open scoped Matrix
+open scoped commutatorElement
 
 universe u
 
@@ -102,16 +103,20 @@ private theorem standard_hermitian_isotropic_fixing_mem_center
   obtain ⟨c2, hc2⟩ := hfix e2 he2 he2iso
   have h10 : Mmat 1 0 = 0 := by
     have h := congrFun hc0 1
-    simpa [e0, Mmat, Matrix.mulVec, Fin.sum_univ_three] using h.symm
+    simpa [e0, Mmat, Matrix.mulVec, Fin.sum_univ_three,
+      Matrix.vecHead] using h.symm
   have h20 : Mmat 2 0 = 0 := by
     have h := congrFun hc0 2
-    simpa [e0, Mmat, Matrix.mulVec, Fin.sum_univ_three] using h.symm
+    simpa [e0, Mmat, Matrix.mulVec, Fin.sum_univ_three,
+      Matrix.vecHead] using h.symm
   have h02 : Mmat 0 2 = 0 := by
     have h := congrFun hc2 0
-    simpa [e2, Mmat, Matrix.mulVec, Fin.sum_univ_three] using h.symm
+    simpa [e2, Mmat, Matrix.mulVec, Fin.sum_univ_three,
+      Matrix.vecHead, Matrix.vecTail] using h.symm
   have h12 : Mmat 1 2 = 0 := by
     have h := congrFun hc2 1
-    simpa [e2, Mmat, Matrix.mulVec, Fin.sum_univ_three] using h.symm
+    simpa [e2, Mmat, Matrix.mulVec, Fin.sum_univ_three,
+      Matrix.vecHead, Matrix.vecTail] using h.symm
   have hq : 1 < q := by
     let k0 := FixedBy.subfield K J.conj
     have hk0card : Nat.card k0 = q := by
@@ -145,7 +150,7 @@ private theorem standard_hermitian_isotropic_fixing_mem_center
     J q hKcard hfixed_card (-(a * J.conj a)) (hnegNorm_fixed a)
   have hnonfixed : ∃ u : K, J.conj u ≠ u := by
     by_contra h
-    push_neg at h
+    push Not at h
     let e : {r : K // J.conj r = r} ≃ K :=
       { toFun := fun r => r
         invFun := fun r => ⟨r, h r⟩
@@ -310,17 +315,17 @@ public abbrev hermitianUnipotentCoord
     rw [map_neg, J.conj_involutive]
     linear_combination z.2⟩
 
-@[expose] public instance hermitianUnipotentCoordMul
+public instance hermitianUnipotentCoordMul
     {K : Type u} [Field K] {n : ℕ} (J : HermitianForm n K) :
     Mul (hermitianUnipotentCoord J) :=
   ⟨hermitianUnipotentMul J⟩
 
-@[expose] public instance hermitianUnipotentCoordOne
+public instance hermitianUnipotentCoordOne
     {K : Type u} [Field K] {n : ℕ} (J : HermitianForm n K) :
     One (hermitianUnipotentCoord J) :=
   ⟨hermitianUnipotentOne J⟩
 
-@[expose] public instance hermitianUnipotentCoordInv
+public instance hermitianUnipotentCoordInv
     {K : Type u} [Field K] {n : ℕ} (J : HermitianForm n K) :
     Inv (hermitianUnipotentCoord J) :=
   ⟨hermitianUnipotentInv J⟩
@@ -789,8 +794,8 @@ public theorem hermitianWeylPSU_mul_unipotent_mul_weyl
     all_goals field_simp [hz, hconjz]
     all_goals try rw [J.conj_involutive]
     all_goals try linear_combination z.1.2 * z.2
-    all_goals try ring
-    exact z.2.symm
+    all_goals try (ring_nf; done)
+    simpa [add_comm, add_left_comm, add_assoc] using z.2.symm
   apply Subtype.ext
   change
     Matrix.ProjGenLinGroup.mk (hermitianWeylGL (K := K)) *
@@ -1847,9 +1852,8 @@ public theorem huppert_II_10_12
         apply Subtype.ext
         change (g : Matrix.ProjGenLinGroup (Fin 3) K) = 1
         rw [← hMg, hMeq, Matrix.ProjGenLinGroup.mk_scalar])
-      simpa [rho] using
-        (MulAction.toPerm_injective : Function.Injective
-          (MulAction.toPerm : G → Equiv.Perm Omega))
+      exact (MulAction.toPerm_injective : Function.Injective
+        (MulAction.toPerm : G → Equiv.Perm Omega))
     refine ⟨rho, h1012_curve_action_faithful, ?_⟩
     intro g z M hMg
     change (g : Matrix.ProjGenLinGroup (Fin 3) K) • (z : P) = _
@@ -2075,7 +2079,7 @@ public theorem huppert_II_10_12
     exact Finite.one_lt_card
   have hnonfixed : ∃ u : K, J.conj u ≠ u := by
     by_contra h
-    push_neg at h
+    push Not at h
     let efixed : {r : K // J.conj r = r} ≃ K :=
       { toFun := fun r => r
         invFun := fun r => ⟨r, h r⟩
@@ -2752,25 +2756,31 @@ public theorem huppert_II_10_12
     obtain ⟨c, hc⟩ := (Projectivization.mk_eq_mk_iff'
       K _ _ _ _).mp hzero
     have h00 : Mmat 0 0 = a := by
-      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three] using
+      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three,
+        Matrix.vecHead] using
         (congrFun ha (0 : Fin 3)).symm
     have h10 : Mmat 1 0 = 0 := by
-      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three] using
+      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three,
+        Matrix.vecHead] using
         (congrFun ha (1 : Fin 3)).symm
     have h20 : Mmat 2 0 = 0 := by
-      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three] using
+      simpa [Mmat, vinf, Matrix.mulVec, Fin.sum_univ_three,
+        Matrix.vecHead] using
         (congrFun ha (2 : Fin 3)).symm
     have h02 : Mmat 0 2 = 0 := by
       simpa [Mmat, vaff, rootZero, hermitianUnipotentOne,
-        Matrix.mulVec, Fin.sum_univ_three] using
+        Matrix.mulVec, Fin.sum_univ_three, Matrix.vecHead,
+        Matrix.vecTail] using
           (congrFun hc (0 : Fin 3)).symm
     have h12 : Mmat 1 2 = 0 := by
       simpa [Mmat, vaff, rootZero, hermitianUnipotentOne,
-        Matrix.mulVec, Fin.sum_univ_three] using
+        Matrix.mulVec, Fin.sum_univ_three, Matrix.vecHead,
+        Matrix.vecTail] using
           (congrFun hc (1 : Fin 3)).symm
     have h22 : Mmat 2 2 = c := by
       simpa [Mmat, vaff, rootZero, hermitianUnipotentOne,
-        Matrix.mulVec, Fin.sum_univ_three] using
+        Matrix.mulVec, Fin.sum_univ_three, Matrix.vecHead,
+        Matrix.vecTail] using
           (congrFun hc (2 : Fin 3)).symm
     have ha0 : a ≠ 0 := by
       intro hazero

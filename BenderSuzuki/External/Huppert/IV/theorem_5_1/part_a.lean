@@ -347,7 +347,9 @@ private theorem hkt_burnside_iv51_witness_of_normalizer_growth
     y.property,
     by
       intro hy_cent
-      exact hy_not_C (by simpa [C, N] using hy_cent)⟩
+      apply hy_not_C
+      change (y : Q) ∈ Subgroup.centralizer (Dsub : Set Q)
+      exact hy_cent⟩
 
 /-- Huppert IV.5.2 in the form needed by IV.5.3: from the weak-closure
 failure of `Z(S)`, produce the Burnside IV.5.1 field data. -/
@@ -453,7 +455,7 @@ public theorem hkt_huppert_iv53_witness_of_not_pNormal
                 x ∈ Subgroup.normalizer (A : Set Q) ∧
                   x ∉ Subgroup.centralizer (A : Set Q) := by
   classical
-  push_neg at hnot_pnormal
+  push Not at hnot_pnormal
   rcases hnot_pnormal with ⟨T, hcenter_le_T, hcenter_ne_T⟩
   obtain ⟨M, hM_p, hM_le_S, hS_le_normalizer_M, hM_le_T, hfail⟩ :=
     hkt_huppert_iv52_burnside_fields_of_center_failure

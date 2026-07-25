@@ -95,6 +95,7 @@ public theorem lemma_12_8_e
   have hKleF : K ≤ section8FittingSubgroup E := by
     have hE2_le_F : E₂ ≤ section8FittingSubgroup E := by
       letI : IsMulCommutative E₂ := h8a.1
+      letI : CommGroup E₂ := IsMulCommutative.instCommGroup
       have hE2nil : Group.IsNilpotent E₂ := by infer_instance
       simpa [section8FittingSubgroup] using
         section12_le_fittingSubgroupOf_of_normalIn_nilpotent
@@ -116,8 +117,8 @@ public theorem lemma_12_8_e
   have hKcomm : IsMulCommutative K := by
     refine ⟨⟨fun x y => ?_⟩⟩
     exact Subtype.ext <|
-      Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := section8FittingSubgroup E) (hKleF x.property) (hKleF y.property)
+      setLike_mul_comm
+        (s := section8FittingSubgroup E) (hKleF x.property) (hKleF y.property)
   have hKp' : IsPiSubgroup (G := G) (section10PPrimeSet q) K := by
     intro r hrK
     have hrKτ :
@@ -157,8 +158,8 @@ public theorem lemma_12_8_e
     rw [Subgroup.mem_centralizer_iff]
     intro k hk
     have hxF : x ∈ section8FittingSubgroup E := h8c.2.1 hx
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := section8FittingSubgroup E) hxF (hKleF hk)).symm
+    exact (setLike_mul_comm
+      (s := section8FittingSubgroup E) hxF (hKleF hk)).symm
   have hKXnormN : section10NormalIn (⁅K, X⁆) N :=
     section12_commutator_normal_of_normal_and_derived_le_centralizer
       (G := G) (N := N) (K := K) (X := X) (by
@@ -167,7 +168,7 @@ public theorem lemma_12_8_e
           exact Subgroup.le_normalizer
         refine ⟨hKN, ?_⟩
         exact (Subgroup.normal_subgroupOf_iff_le_normalizer hKN).2
-          (by simpa [hNS_eq_NK] using (show N ≤ N from le_rfl)))
+          (by simp [hNS_eq_NK]))
       hX_le_N hDcentK
   have hKXbot : ⁅K, X⁆ = ⊥ := by
     by_contra hne
@@ -219,7 +220,7 @@ public theorem lemma_12_8_e
     intro y hy
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative (H := E₁) hy (hXE1 hx)).symm
+    exact (setLike_mul_comm (s := E₁) hy (hXE1 hx)).symm
   have hE1supK_centX : E₁ ⊔ K ≤ Subgroup.centralizer (X : Set G) := by
     exact sup_le hE1_centX hK_le_centX
   have hE_centX : E ≤ Subgroup.centralizer (X : Set G) := by

@@ -3394,7 +3394,7 @@ public theorem minimalCounterexampleReduction_theorem :
       Nat.card G = n ∧ Odd (Nat.card G) ∧ ¬ IsSolvable G
   have hBadExists : ∃ n, Bad n := by
     dsimp [oddOrderTheorem] at hnotTheorem
-    push_neg at hnotTheorem
+    push Not at hnotTheorem
     rcases hnotTheorem with ⟨G, hG, hfin, hodd, hnotSolv⟩
     exact ⟨Nat.card G, G, hG, hfin, rfl, hodd, hnotSolv⟩
   let n := Nat.find hBadExists

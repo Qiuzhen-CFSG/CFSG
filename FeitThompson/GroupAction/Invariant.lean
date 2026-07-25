@@ -9,6 +9,8 @@ public import FeitThompson.GroupAction.Defs
 import Mathlib.Algebra.Group.Subgroup.Lattice
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 
+open scoped commutatorElement
+
 public lemma isInvariant_of_characteristic {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H : Subgroup G) [H.Characteristic] : IsInvariant A G H := by
   refine ⟨?_⟩
@@ -139,6 +141,7 @@ public lemma isInvariant_commutator {G A : Type*} [Group G] [Group A]
   have hforward : ∀ a : A, ∀ x : G, x ∈ ⁅H, K⁆ → a • x ∈ ⁅H, K⁆ := by
     intro a x hx
     rw [Subgroup.commutator_def] at hx ⊢
+    change x ∈ Subgroup.closure S at hx
     refine Subgroup.closure_induction (k := S) (p := fun y _ => a • y ∈ Subgroup.closure S) (x := x)
       ?mem ?one ?mul ?inv hx
     · rintro y ⟨h, hh, k, hk, rfl⟩
@@ -212,12 +215,14 @@ public lemma isInvariant_subgroupOf {G A : Type*} [Group G] [Group A]
     have hx' : (x : G) ∈ H := hx
     have hmem : (a • (x : K) : K) ∈ H.subgroupOf K := by
       have : (a • (x : K) : G) ∈ H := by
-        simpa using (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).1 hx'
-      simpa [Subgroup.mem_subgroupOf] using this
+        exact (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).1 hx'
+      change a • (x : G) ∈ H
+      exact this
     exact hmem
   · intro hx
+    change (a • (x : G)) ∈ H at hx
     have hx' : (a • (x : K) : G) ∈ H := by
-      simpa [Subgroup.mem_subgroupOf] using hx
+      exact hx
     have hx_inv : (x : G) ∈ H := by
       simpa using (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).2 hx'
     exact hx_inv

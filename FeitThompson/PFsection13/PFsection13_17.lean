@@ -13,7 +13,7 @@ import FeitThompson.PFsection8.SourceTypePBridge
 
 noncomputable section
 
-open scoped BigOperators Pointwise
+open scoped BigOperators Pointwise commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -90,9 +90,9 @@ private theorem section13_theorem_13_17_theorem_12_7_sourceData_of_sourceContext
     (p q u v c d : ℕ)
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
-    (hLmax : L ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup L H)
-    (hTypeI : Section8.typeIDefinitionData L H) :
+    (_hLmax : L ∈ section9MaximalSubgroups G)
+    (_hMF : section16MFSubgroup L H)
+    (_hTypeI : Section8.typeIDefinitionData L H) :
     Section12.theorem_12_7_source_data L H := by
   rcases hsource with
     ⟨_hcase, _hptypeS, _hptypeT, _hp_card, _hq_card, _hC, _hD, _hc_card,
@@ -497,7 +497,7 @@ private theorem section13_theorem_13_17_U_le_H_from_centralizer_inf
   have hyU : y ∈ U := hy.1
   let uU : U := ⟨u, hu⟩
   let yU : U := ⟨y, hyU⟩
-  have hcomm : uU * yU = yU * uU := mul_comm uU yU
+  have hcomm : uU * yU = yU * uU := mul_comm' uU yU
   exact (congrArg (fun z : U => (z : G)) hcomm).symm
 
 private theorem section13_centralizer_nontrivial_kernel_subgroup_le_of_fixedPointFree
@@ -862,7 +862,7 @@ private theorem section13_complementIn_of_isComplement'_subgroupOf
       let xD : D := ⟨x, hxD⟩
       have hxTop : xD ∈ (⊤ : Subgroup D) := by simp
       have hxSup : xD ∈ H.subgroupOf D ⊔ Vloc := by
-        simpa [hcomp.sup_eq_top] using hxTop
+        simp [hcomp.sup_eq_top, hxTop]
       have hxSub : xD ∈ (H ⊔ section8SubgroupInAmbient Vloc).subgroupOf D := by
         have hsub_eq :
             (H ⊔ section8SubgroupInAmbient Vloc).subgroupOf D =
@@ -889,7 +889,9 @@ private theorem section13_complementIn_of_isComplement'_subgroupOf
       simpa [section8SubgroupInAmbient_subgroupOf_eq] using hxVsub
     have hxbot : xD ∈ (⊥ : Subgroup D) :=
       Subgroup.disjoint_def.mp hcomp.disjoint hxHloc hxVloc
-    simpa [xD] using congrArg Subtype.val (by simpa using hxbot)
+    have hxbot_val : (xD : G) = (1 : G) :=
+      congrArg Subtype.val (by simpa using hxbot)
+    simpa [xD] using hxbot_val
 
 private theorem section13_frobeniusWithKernel_exists_complementIn
     {G : Type u} [Group G] {L H : Subgroup G}
@@ -913,12 +915,12 @@ private theorem section13_subgroupOf_ne_bot_of_ne_bot
       simpa [hbot] using hxloc
     have hx_eq : x = 1 := by
       exact congrArg Subtype.val (by simpa using hxbot : (⟨x, hHL hx⟩ : L) = 1)
-    simpa [hx_eq]
+    simp [hx_eq]
   · exact bot_le
 
 private theorem section13_centralizerIn_subgroupOf_eq_bot_of_ambient
     {G : Type u} [Group G] {L H : Subgroup G}
-    (hHL : H ≤ L) {x : L}
+    (_hHL : H ≤ L) {x : L}
     (hcent : Section2.centralizerIn H (x : G) = ⊥) :
     Section2.centralizerIn (H.subgroupOf L) x = ⊥ := by
   rw [Subgroup.eq_bot_iff_forall]
@@ -957,7 +959,7 @@ private theorem section13_frobeniusWithKernel_complementIn_isFrobenius
   have he_not_H : ((e : L) : G) ∉ H := by
     intro heH
     have heE : ((e : L) : G) ∈ E := by
-      exact Subgroup.mem_subgroupOf.mp (by simpa [Eloc] using e.property)
+      exact Subgroup.mem_subgroupOf.mp (by simp [Eloc, e.property])
     have heInf : ((e : L) : G) ∈ H ⊓ E := ⟨heH, heE⟩
     have heBot : ((e : L) : G) ∈ (⊥ : Subgroup G) := by
       simpa [hcompE.2.2.2.eq_bot] using heInf
@@ -1044,7 +1046,10 @@ private theorem section13_coprime_card_of_prime_not_mem_subgroupPrimeSet
   rw [Nat.coprime_comm]
   exact (hq.coprime_iff_not_dvd).2 (by
     intro hdiv
-    exact hnot (by simpa [subgroupPrimeSet] using hdiv))
+    have hmem : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet H := by
+      apply Set.mem_setOf.mpr
+      simpa using hdiv
+    exact hnot hmem)
 
 private theorem section13_subgroupPrimeSet_section10Msigma_eq
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -1110,15 +1115,17 @@ private theorem section13_mf_le_msChoiceSource_of_typeP
   have hMFleD : MF ≤ ambientDerivedSubgroup M := hCompD.1
   rcases hMs with hI | hII | hIII | hIV | hV
   · rcases hI with ⟨_hI, _hnotII, _hnotIII, _hnotIV, _hnotV, hMs_eq⟩
-    simpa [hMs_eq]
+    simp [hMs_eq]
   · rcases hII with ⟨_hnotI, _hII, _hnotIII, _hnotIV, _hnotV, hMs_eq⟩
-    simpa [hMs_eq]
+    simp [hMs_eq]
   · rcases hIII with ⟨_hnotI, _hnotII, _hIII, _hnotIV, _hnotV, hMs_eq⟩
-    simpa [hMs_eq] using hMFleD
+    simp [hMs_eq]
+    exact hMFleD
   · rcases hIV with ⟨_hnotI, _hnotII, _hnotIII, _hIV, _hnotV, hMs_eq⟩
-    simpa [hMs_eq] using hMFleD
+    simp [hMs_eq]
+    exact hMFleD
   · rcases hV with ⟨_hnotI, _hnotII, _hnotIII, _hnotIV, _hV, hMs_eq⟩
-    simpa [hMs_eq]
+    simp [hMs_eq]
 
 
 public theorem section13_coprime_card_typeI_mf_of_typeP_prime
@@ -1186,7 +1193,10 @@ public theorem section13_coprime_card_typeI_mf_of_typeP_prime
   rw [Nat.coprime_comm]
   exact (hr.coprime_iff_not_dvd).2 (by
     intro hrH
-    exact hrNotH (by simpa [subgroupPrimeSet] using hrH))
+    have hmem : (⟨r, hr⟩ : Nat.Primes) ∈ subgroupPrimeSet H := by
+      apply Set.mem_setOf.mpr
+      simpa using hrH
+    exact hrNotH hmem)
 
 private theorem section13_subgroupPrimeSet_conjBy
     {G : Type u} [Group G] [Finite G] (H : Subgroup G) (g : G) :
@@ -1254,7 +1264,7 @@ private theorem section13_section16NilpotentNormalHallIn_conjBy
           _ = x⁻¹ * (x * y * x⁻¹) * x := by rw [hmx, hhy]
           _ = y := by group
   · let e : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
-    exact nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) e
+    exact Group.nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) e
   · have hcardSub :
         Nat.card ((H.conjBy g).subgroupOf (M.conjBy g)) = Nat.card (H.subgroupOf M) := by
       calc
@@ -1449,7 +1459,7 @@ private theorem section13_theorem_13_17_UinfH_eq_bot_of_L_conj_Tmax_sourceContex
   have hUH : Nat.Coprime (Nat.card U) (Nat.card H) := by
     rw [hHcard]
     exact hUq.pow_right p
-  exact Subgroup.inf_eq_bot_of_coprime hUH
+  exact (Subgroup.disjoint_of_coprime_natCard hUH).eq_bot
 
 private theorem section13_theorem_13_17_W1_le_H_of_L_conj_Tmax_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -1701,11 +1711,10 @@ private theorem section13_theorem_13_17_q_not_mem_H_primeSet_of_sourceContext
     intro x hx
     exact (hW1le hx).1
   have hqQ : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet Q := by
-    rw [subgroupPrimeSet]
-    exact (by
-      have hcard : Nat.card W1 ∣ Nat.card Q :=
-        Subgroup.card_dvd_of_le hW1leQ
-      simpa [hq_card] using hcard)
+    apply Set.mem_setOf.mpr
+    have hcard : Nat.card W1 ∣ Nat.card Q :=
+      Subgroup.card_dvd_of_le hW1leQ
+    simpa [hq_card] using hcard
   have hqMsT : (⟨q, hq⟩ : Nat.Primes) ∈ subgroupPrimeSet MsT := by
     rw [subgroupPrimeSet] at hqQ ⊢
     exact Nat.dvd_trans hqQ (Subgroup.card_dvd_of_le hQleMsT)
@@ -2120,10 +2129,8 @@ private theorem section13_pSubgroup_le_centralizer_pCore_of_cyclic_sylow
   intro y hyCore
   have hxS : x ∈ (S : Subgroup E) := hP_le_S hxP
   have hyS : y ∈ (S : Subgroup E) := hcore_le_S hyCore
-  haveI : IsMulCommutative (S : Subgroup E) := by
-    haveI : IsCyclic (S : Subgroup E) := hcycSylow S
-    exact ⟨IsCyclic.commutative⟩
-  exact Subgroup.mul_comm_of_mem_isMulCommutative (H := (S : Subgroup E)) hyS hxS
+  haveI : IsMulCommutative (S : Subgroup E) := inferInstance
+  exact setLike_mul_comm (s := (S : Subgroup E)) hyS hxS
 
 private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
     {E : Type u} [Group E] [Finite E] [IsSolvable E] {P : Subgroup E}
@@ -2212,11 +2219,11 @@ private theorem section13_huppert_prime_order_subgroup_le_centralizer_fitting_of
         apply e.injective
         simp [hn]
       let y : Subgroup.zpowers a := ⟨e.symm z, hzE⟩
-      have hyfix : (y : E) • x = x := by
-        simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using hx y
       have hzy : e (y : E) = z := by
         simp [y]
-      simpa [MulAction.compHom_smul_def, hzy] using hyfix
+      have hyfix : (y : E) • x = x := by
+        simpa [← Subgroup.smul_def] using hx y
+      simpa [Subgroup.smul_def, MulAction.compHom_smul_def, hzy] using hyfix
     have haSub : e a ≠ 1 := by
       intro h
       exact ha (e.injective (by simpa using h))
@@ -2940,7 +2947,7 @@ private theorem section13_E_card_eq_W1_mul_p_of_QW2_classifierData
     constructor
     · rintro ⟨x, rfl⟩
       refine ⟨ι x, ?_, rfl⟩
-      simpa [ι, Esub, Subgroup.mem_subgroupOf] using x.2
+      simp [ι, Esub, Subgroup.mem_subgroupOf, x.2]
     · rintro ⟨x, hxEsub, rfl⟩
       have hxE : (x : G) ∈ E := by
         simpa [Esub, Subgroup.mem_subgroupOf] using hxEsub
@@ -3012,12 +3019,10 @@ private theorem section13_exists_order_p_subgroup_sup_eq_E_of_QW2_classifierData
       intro hq_dvd_p
       exact hpne ((hp.dvd_iff_eq hq.ne_one).1 hq_dvd_p))
   have hdisj : Disjoint W1E PE := by
-    apply disjoint_iff.mpr
-    apply Subgroup.inf_eq_bot_of_coprime
     have hcop_cards : Nat.Coprime (Nat.card W1E) (Nat.card PE) := by
       rw [hW1Ecard, hW1card, hPEcard_pow, pow_one]
       exact hcop_qp
-    exact hcop_cards
+    exact Subgroup.disjoint_of_coprime_natCard hcop_cards
   have hcard_mul : Nat.card W1E * Nat.card PE = Nat.card E := by
     rw [hW1Ecard, hPEcard_pow, pow_one, hEcard]
   have hcomp : W1E.IsComplement' PE :=
@@ -3043,7 +3048,7 @@ private theorem section13_exists_order_p_subgroup_sup_eq_E_of_QW2_classifierData
       let xE : E := ⟨x, hxE⟩
       have hxTop : xE ∈ (⊤ : Subgroup E) := trivial
       have hxSub : xE ∈ (W1 ⊔ P).subgroupOf E := by
-        simpa [hsup_subgroupOf] using hxTop
+        simp [hsup_subgroupOf, hxTop]
       simpa [xE, Subgroup.mem_subgroupOf] using hxSub
   exact ⟨P, hPleE, hPcard, hsup_eq_E.symm⟩
 
@@ -3073,10 +3078,8 @@ private theorem section13_order_p_subgroup_conj_W2_of_QW2_classifierData
   letI : IsMulCommutative ↥QK := by
     refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
     have haQ : ((a : K) : G) ∈ Q := by
-      change ((a : K) : G) ∈ Q
       exact a.2
     have hbQ : ((b : K) : G) ∈ Q := by
-      change ((b : K) : G) ∈ Q
       exact b.2
     have hcomm :
         (⟨((a : K) : G), haQ⟩ : Q) *

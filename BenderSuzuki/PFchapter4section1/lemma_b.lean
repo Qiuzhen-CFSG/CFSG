@@ -60,7 +60,9 @@ private theorem generated_by_pointStabilizer_and_mover
         (⟨t • a, hta_ne⟩ : SubMulAction.ofStabilizer L a)
         (⟨x, hx⟩ : SubMulAction.ofStabilizer L a)
       have hmX : (m : L) • (t • a) = x := by
-        simpa [SetLike.val_smul] using congrArg Subtype.val hm
+        have hm' := congrArg Subtype.val hm
+        change (m : L) • (t • a) = x at hm'
+        exact hm'
       have hmM : (m : L) ∈ M := by
         rw [hM]
         exact m.property
@@ -70,7 +72,8 @@ private theorem generated_by_pointStabilizer_and_mover
   intro l
   obtain ⟨h, hh⟩ := hH_base (l • a)
   have hhL : (h : L) • a = l • a := by
-    simpa using hh
+    change (h : L) • a = l • a at hh
+    exact hh
   have hfix : ((h : L)⁻¹ * l) ∈ MulAction.stabilizer L a := by
     rw [MulAction.mem_stabilizer_iff]
     calc
@@ -228,4 +231,3 @@ public theorem lemma_b
       hQ_sup_D' hf_mem' hg_mem' hh_mem' hcanonical_eq' hM'
 end PFchapter4section1
 end BenderSuzuki
-

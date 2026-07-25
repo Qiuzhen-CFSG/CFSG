@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 private theorem section12_tau2_not_tau3
     {M : Subgroup G} {p : Nat.Primes}
     (hp : p ∈ section12Tau2Primes M) :
@@ -25,6 +26,7 @@ private theorem section12_tau2_not_tau3
   have h1 : primeRank p.val M = 1 := hp3.2.2
   omega
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_subgroupCentralizerIn_normal_of_normal
     {E A : Subgroup G} (hAnorm : section10NormalIn A E) :
     section10NormalIn (subgroupCentralizerIn E A) E := by
@@ -57,6 +59,7 @@ public theorem section12_subgroupCentralizerIn_normal_of_normal
   rw [hCsub_eq]
   exact Subgroup.normal_centralizer
 
+omit [IsMinCE G] in
 private theorem section12_rankTwo_tau2_disjoint_E3_subgroupOf
     {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
     (hE : section12EData M E E₁₂ E₁ E₂ E₃)
@@ -158,8 +161,8 @@ private theorem section12_E2_sup_E3_le_centralizer_rankTwo_tau2
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
     intro a ha
-    exact (Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := E₂) hx (hA_le_E2 ha)).symm
+    exact (setLike_mul_comm
+      (s := E₂) hx (hA_le_E2 ha)).symm
   have hE3_cent_A : E₃ ≤ Subgroup.centralizer (A : Set G) :=
     section12_E3_le_centralizer_rankTwo_tau2
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)

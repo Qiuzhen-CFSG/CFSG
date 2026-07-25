@@ -39,10 +39,10 @@ public theorem proposition2_automorphisms_semilinear
     (hsquare : ∀ p : P,
       p ^ 2 =
         iota (Multiplicative.ofAdd (norm (pi p).toAdd))) :
-    ∃ induced : MulAut P →* AddAut E,
+    ∃ induced : MulAut P →* Multiplicative (AddAut E),
       (∀ alpha : MulAut P, ∀ p : P,
-        Multiplicative.ofAdd (induced alpha (pi p).toAdd) = pi (alpha p)) ∧
-      (∀ f : AddAut E, f ∈ induced.range ↔
+        Multiplicative.ofAdd ((induced alpha).toAdd (pi p).toAdd) = pi (alpha p)) ∧
+      (∀ f : AddAut E, Multiplicative.ofAdd f ∈ induced.range ↔
         ∃ (lambda : Eˣ) (sigma : E ≃+* E),
           ∀ x : E, f x = (lambda : E) * sigma x) ∧
       IsMulCommutative induced.ker ∧
@@ -90,13 +90,13 @@ public theorem proposition2_automorphisms_semilinear
       rw [(hnorm_zero_iff (pi p).toAdd).mp hnorm_pi]
       simp
   have hinduced_actions :
-      ∃ inducedE : MulAut P →* AddAut E,
+      ∃ inducedE : MulAut P →* Multiplicative (AddAut E),
         (∀ alpha : MulAut P, ∀ p : P,
-          Multiplicative.ofAdd (inducedE alpha (pi p).toAdd) = pi (alpha p)) ∧
-        ∃ inducedF : MulAut P →* AddAut F,
+          Multiplicative.ofAdd ((inducedE alpha).toAdd (pi p).toAdd) = pi (alpha p)) ∧
+        ∃ inducedF : MulAut P →* Multiplicative (AddAut F),
           ∀ alpha : MulAut P, ∀ z : Multiplicative F,
             alpha (iota z) =
-              iota (Multiplicative.ofAdd (inducedF alpha z.toAdd)) := by
+              iota (Multiplicative.ofAdd ((inducedF alpha).toAdd z.toAdd)) := by
     have hdescend_surjective
         {A B : Type u} [Group A] [Group B]
         (q : A →* B) (hq : Function.Surjective q)
@@ -235,39 +235,39 @@ public theorem proposition2_automorphisms_semilinear
     obtain ⟨actionF, hactionF⟩ :=
       hrestrict_injective iota hiota hiota_range_preserved
     have hconvert_actions :
-        ∃ inducedE : MulAut P →* AddAut E,
+        ∃ inducedE : MulAut P →* Multiplicative (AddAut E),
           (∀ alpha : MulAut P, ∀ p : P,
-            Multiplicative.ofAdd (inducedE alpha (pi p).toAdd) = pi (alpha p)) ∧
-          ∃ inducedF : MulAut P →* AddAut F,
+            Multiplicative.ofAdd ((inducedE alpha).toAdd (pi p).toAdd) = pi (alpha p)) ∧
+          ∃ inducedF : MulAut P →* Multiplicative (AddAut F),
             ∀ alpha : MulAut P, ∀ z : Multiplicative F,
               alpha (iota z) =
-                iota (Multiplicative.ofAdd (inducedF alpha z.toAdd)) := by
-      let inducedE : MulAut P →* AddAut E :=
+                iota (Multiplicative.ofAdd ((inducedF alpha).toAdd z.toAdd)) := by
+      let inducedE : MulAut P →* Multiplicative (AddAut E) :=
         (MulAutMultiplicative E).toMonoidHom.comp actionE
-      let inducedF : MulAut P →* AddAut F :=
+      let inducedF : MulAut P →* Multiplicative (AddAut F) :=
         (MulAutMultiplicative F).toMonoidHom.comp actionF
       refine ⟨inducedE, ?_, inducedF, ?_⟩
       · intro alpha p
-        simpa [inducedE, MulAutMultiplicative_apply_apply] using
-          hactionE alpha p
+        change Multiplicative.ofAdd ((actionE alpha) (pi p)) = pi (alpha p)
+        exact hactionE alpha p
       · intro alpha z
-        simpa [inducedF, MulAutMultiplicative_apply_apply] using
-          hactionF alpha z
+        change alpha (iota z) = iota ((actionF alpha) z)
+        exact hactionF alpha z
     exact hconvert_actions
   obtain ⟨induced, hinduced_pi, inducedF, hinduced_iota⟩ := hinduced_actions
   have hinduced_norm (alpha : MulAut P) (x : E) :
-      inducedF alpha (norm x) = norm (induced alpha x) := by
+      (inducedF alpha).toAdd (norm x) = norm ((induced alpha).toAdd x) := by
     obtain ⟨p, hp⟩ := hpi (Multiplicative.ofAdd x)
     have hp_toAdd : (pi p).toAdd = x := congrArg Multiplicative.toAdd hp
     have hpi_alpha_toAdd :
-        induced alpha x = (pi (alpha p)).toAdd := by
+        (induced alpha).toAdd x = (pi (alpha p)).toAdd := by
       have h := congrArg Multiplicative.toAdd (hinduced_pi alpha p)
       simpa [hp_toAdd] using h
-    change Multiplicative.ofAdd (inducedF alpha (norm x)) =
-      Multiplicative.ofAdd (norm (induced alpha x))
+    change Multiplicative.ofAdd ((inducedF alpha).toAdd (norm x)) =
+      Multiplicative.ofAdd (norm ((induced alpha).toAdd x))
     apply hiota
     calc
-      iota (Multiplicative.ofAdd (inducedF alpha (norm x))) =
+      iota (Multiplicative.ofAdd ((inducedF alpha).toAdd (norm x))) =
           alpha (iota (Multiplicative.ofAdd (norm x))) :=
         (hinduced_iota alpha (Multiplicative.ofAdd (norm x))).symm
       _ = alpha (iota (Multiplicative.ofAdd (norm (pi p).toAdd))) := by
@@ -276,7 +276,7 @@ public theorem proposition2_automorphisms_semilinear
       _ = (alpha p) ^ 2 := map_pow alpha p 2
       _ = iota (Multiplicative.ofAdd (norm (pi (alpha p)).toAdd)) :=
         hsquare (alpha p)
-      _ = iota (Multiplicative.ofAdd (norm (induced alpha x))) := by
+      _ = iota (Multiplicative.ofAdd (norm ((induced alpha).toAdd x))) := by
         rw [hpi_alpha_toAdd]
   have hnorm_surjective : Function.Surjective norm := by
     have hsquare_surjective_F :
@@ -438,7 +438,7 @@ public theorem proposition2_automorphisms_semilinear
           f x = ∑ sigma, a sigma * sigma x := by
         have hsum :
             ∑ sigma, a sigma • autBasis sigma = fLinear := by
-          simpa [a] using autBasis.sum_repr fLinear
+          simp [a]
         calc
           f x = fLinear x := rfl
           _ = (∑ sigma, a sigma • autBasis sigma) x :=
@@ -451,7 +451,8 @@ public theorem proposition2_automorphisms_semilinear
         simpa [hzero] using hf_sum 1
       have hone_zero : (1 : E) = 0 := by
         apply f.injective
-        simpa using hf_one
+        rw [hf_one]
+        simp
       exact one_ne_zero hone_zero
     obtain ⟨a, hf_expansion, sigma, hsigma⟩ := hf_expansion
     obtain ⟨quadBasis, hQuadBasis⟩ :=
@@ -509,7 +510,7 @@ public theorem proposition2_automorphisms_semilinear
         intro y
         have hsum :
             ∑ rho, mu rho • autBasis rho = gLinear := by
-          simpa [mu] using autBasis.sum_repr gLinear
+          simp [mu]
         calc
           g y = gLinear y := rfl
           _ = (∑ rho, mu rho • autBasis rho) y :=
@@ -856,7 +857,7 @@ public theorem proposition2_automorphisms_semilinear
       _ = (lambda : E) * sigma x := by rfl
   have hsemilinear_lifts (lambda : Eˣ) (sigma : E ≃+* E) :
       ∃ alpha : MulAut P,
-        ∀ x : E, induced alpha x = (lambda : E) * sigma x := by
+        ∀ x : E, (induced alpha).toAdd x = (lambda : E) * sigma x := by
     letI : Algebra (ZMod 2) E := ZMod.algebra E 2
     letI : Algebra (ZMod 2) F := ZMod.algebra F 2
     letI : IsScalarTower (ZMod 2) F E :=
@@ -1001,28 +1002,31 @@ public theorem proposition2_automorphisms_semilinear
     have hp_toAdd : (pi p).toAdd = x :=
       congrArg Multiplicative.toAdd hp
     have hinduced_toAdd :
-        induced e x = (pi (e p)).toAdd := by
+        (induced e).toAdd x = (pi (e p)).toAdd := by
       have h := congrArg Multiplicative.toAdd (hinduced_pi e p)
       simpa [hp_toAdd] using h
     calc
-      induced e x = (pi (e p)).toAdd := hinduced_toAdd
+      (induced e).toAdd x = (pi (e p)).toAdd := hinduced_toAdd
       _ = fLinear (pi p).toAdd := he_pi p
       _ = (lambda : E) * sigma x := by
         rw [hfLinear, hp_toAdd]
-  have himage (f : AddAut E) : f ∈ induced.range ↔
+  have himage (f : AddAut E) : Multiplicative.ofAdd f ∈ induced.range ↔
       ∃ (lambda : Eˣ) (sigma : E ≃+* E),
         ∀ x : E, f x = (lambda : E) * sigma x := by
     constructor
     · rintro ⟨alpha, rfl⟩
-      exact hnorm_similitude_semilinear (induced alpha) (inducedF alpha)
+      exact hnorm_similitude_semilinear (induced alpha).toAdd (inducedF alpha).toAdd
         (hinduced_norm alpha)
     · rintro ⟨lambda, sigma, hf⟩
       obtain ⟨alpha, halpha⟩ := hsemilinear_lifts lambda sigma
       refine ⟨alpha, ?_⟩
-      ext x
+      apply Multiplicative.ext
+      apply DFunLike.ext _ _
+      intro x
       exact (halpha x).trans (hf x).symm
   have hinducedF_eq_one_of_mem_ker (alpha : induced.ker) :
       inducedF alpha.1 = 1 := by
+    apply Multiplicative.ext
     apply DFunLike.ext _ _
     intro y
     obtain ⟨x, rfl⟩ := hnorm_surjective y
@@ -1085,5 +1089,3 @@ public theorem proposition2_automorphisms_semilinear
 
 end PFAppendixIII
 end BenderSuzuki
-
-

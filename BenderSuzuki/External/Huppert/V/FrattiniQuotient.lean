@@ -51,7 +51,7 @@ public theorem hkt_maximal_invariant_quotient_exists_isElementaryAbelian
     simpa [M] using hKtop
   haveI : Group.IsNilpotent (Q ⧸ N) := hquot_nil
   have hM_nil : Group.IsNilpotent M := by
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (G := Q ⧸ N) (G' := M)
       (Subgroup.topEquiv.symm : (Q ⧸ N) ≃* M)
   obtain ⟨r, hr_prime, hM_elem⟩ :=
@@ -66,7 +66,7 @@ public theorem hkt_nilpotent_of_injective_to_nilpotent
     (f : G →* H) (hf : Function.Injective f) :
     Group.IsNilpotent G := by
   let e : G ≃* f.range := MulEquiv.ofBijective f.rangeRestrict ⟨?_, ?_⟩
-  · exact nilpotent_of_mulEquiv (G := f.range) (G' := G) e.symm
+  · exact Group.nilpotent_of_mulEquiv (G := f.range) (G' := G) e.symm
   · intro x y hxy
     exact hf (congrArg Subtype.val hxy)
   · exact f.rangeRestrict_surjective
@@ -207,7 +207,8 @@ public theorem hkt_maximal_lower_nilpotent_exists_isPGroup
       exact hs_ne_r hrs.symm
     have hcop : Nat.Coprime (Nat.card Ramb) (Nat.card Samb) :=
       IsPGroup.coprime_card_of_ne r s hrs Ramb Samb hRamb_p hSamb_p
-    have hRS_bot : Ramb ⊓ Samb = ⊥ := Subgroup.inf_eq_bot_of_coprime hcop
+    have hRS_bot : Ramb ⊓ Samb = ⊥ :=
+      (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
     haveI : Ramb.Normal := hRamb_normal
     haveI : Samb.Normal := hSamb_normal
     exact hnon_nil
@@ -341,7 +342,7 @@ public theorem hkt_nilpotent_quotient_frattini_of_quotient_le_frattini
   let e : (G ⧸ K) ⧸ (frattini G).map (QuotientGroup.mk' K) ≃* G ⧸ frattini G :=
     QuotientGroup.quotientQuotientEquivQuotient (N := K) (M := frattini G)
       hK_le_frattini
-  exact nilpotent_of_mulEquiv
+  exact Group.nilpotent_of_mulEquiv
     (G := (G ⧸ K) ⧸ (frattini G).map (QuotientGroup.mk' K))
     (G' := G ⧸ frattini G) e
 
@@ -405,12 +406,12 @@ public theorem hkt_nilpotent_of_quotient_frattini_nilpotent
         (by simpa [q] using hΦ_le_H) hH
     have hHbar_normal : Hbar.Normal := by
       exact Subgroup.NormalizerCondition.normal_of_coatom Hbar
-        (normalizerCondition_of_isNilpotent (G := G ⧸ frattini G)) hHbar_coatom
+        (Group.normalizerCondition_of_isNilpotent (G := G ⧸ frattini G)) hHbar_coatom
     have hcomap_Hbar : Hbar.comap q = H := by
       simp [Hbar, q, QuotientGroup.comap_map_mk', sup_eq_right.mpr hΦ_le_H]
     have hcomap_normal : (Hbar.comap q).Normal := hHbar_normal.comap q
     simpa [hcomap_Hbar] using hcomap_normal
-  exact ((isNilpotent_of_finite_tfae (G := G)).out 2 0).mp hmax_normal
+  exact ((Group.isNilpotent_of_finite_tfae (G := G)).out 2 0).mp hmax_normal
 
 /--
 Huppert III.3.3(b), in the exact ambient-image form needed here.  If `N` is
@@ -534,7 +535,8 @@ public theorem hkt_centralizer_lower_eq_self_of_maximal_elementary_branch
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
-    simpa using congrArg Subtype.val (mul_comm (⟨x, hx⟩ : N) (⟨y, hy⟩ : N)).symm
+    simpa using congrArg Subtype.val
+      ((IsMulCommutative.is_comm (M := N)).comm ⟨y, hy⟩ ⟨x, hx⟩)
   have hC_normal : C.Normal := by
     simpa [C] using (inferInstance : (Subgroup.centralizer (N : Set Q)).Normal)
   have hC_invariant : IsInvariant (Subgroup.zpowers φ) Q C := by
@@ -762,7 +764,8 @@ public theorem hkt_quotient_fixed_top_forces_lift_div_mem
     simpa [hψ] using hfixed_a
   have hquot_eq :
       QuotientGroup.mk' N (φ a) = QuotientGroup.mk' N a := by
-    simpa [invariantQuotientAut_mk'] using hfixed_hkt
+    change QuotientGroup.mk' N (φ a) = QuotientGroup.mk' N a at hfixed_hkt
+    exact hfixed_hkt
   simpa [div_eq_mul_inv] using
     (QuotientGroup.eq_iff_div_mem (N := N) (x := φ a) (y := a)).1 hquot_eq
 
@@ -785,7 +788,8 @@ public theorem hkt_conjNormal_fixedPointSubgroup_eq_bot_of_sup_zpowers_center
     have hxconj : a * (x : Q) * a⁻¹ = x := by
       simpa [MulAut.conjNormal_apply, MulAut.conj_apply] using congrArg Subtype.val hxfix
     have hmul := congrArg (fun t : Q => t * a) hxconj
-    simpa [Commute, mul_assoc] using hmul
+    change a * (x : Q) = (x : Q) * a
+    simpa [mul_assoc] using hmul
   have hx_center : (x : Q) ∈ Subgroup.center Q := by
     rw [Subgroup.mem_center_iff]
     intro y
@@ -1003,8 +1007,7 @@ public theorem hkt_same_prime_quotient_fixedPointSubgroup_ne_bot
       (α := Q ⧸ N) hp_dvd_card hone_fixed
   refine Subgroup.ne_bot_iff_exists_ne_one.mpr ?_
   refine ⟨⟨x, ?_⟩, ?_⟩
-  · change x ∈ fixedPointSubgroup (↥(Subgroup.zpowers ψ)) (Q ⧸ N)
-    simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
+  · simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
       MulAction.mem_fixedPoints.mp hx_fixed
   · intro hx_one
     exact hx_ne_one_left (by
@@ -1054,8 +1057,7 @@ public theorem hkt_quotient_fixedPointSubgroup_eq_top_of_ne_bot
     fixedPointSubgroup (↥(Subgroup.zpowers ψ)) (Q ⧸ N) = ⊤ := by
   let C : Subgroup (Q ⧸ N) := fixedPointSubgroup (↥(Subgroup.zpowers ψ)) (Q ⧸ N)
   have hC_normal : C.Normal := by
-    letI : CommGroup (Q ⧸ N) := CommGroup.ofIsMulCommutative
-    exact Subgroup.normal_of_comm C
+    exact Subgroup.normal_of_isMulCommutative C
   have hC_invariant_ψ :
       IsInvariant (Subgroup.zpowers ψ) (Q ⧸ N) C := by
     haveI : IsMulCommutative (Subgroup.zpowers ψ) :=
@@ -1090,8 +1092,7 @@ public theorem hkt_quotient_isCyclic_of_fixedPointSubgroup_eq_top
   obtain ⟨x, hx_ne_one⟩ := exists_ne (1 : Q ⧸ N)
   let L : Subgroup (Q ⧸ N) := Subgroup.zpowers x
   have hL_normal : L.Normal := by
-    letI : CommGroup (Q ⧸ N) := CommGroup.ofIsMulCommutative
-    exact Subgroup.normal_of_comm L
+    exact Subgroup.normal_of_isMulCommutative L
   have hLφψ : ∀ y : Q ⧸ N, y ∈ L ↔ ψ y ∈ L := by
     intro y
     have hy_fixed : ψ y = y := by
@@ -1151,7 +1152,7 @@ public theorem hkt_conjNormal_eq_one_of_mem_of_comm
   have hcomm :
       n * (x : Q) = (x : Q) * n := by
     simpa using congrArg Subtype.val
-      (mul_comm (⟨n, hn⟩ : N) x)
+      ((IsMulCommutative.is_comm (M := N)).comm ⟨n, hn⟩ x)
   calc
     ((MulAut.conjNormal (H := N) n x : N) : Q)
         = n * (x : Q) * n⁻¹ := by
@@ -1432,7 +1433,8 @@ public theorem actsRegularly_zmod_of_zpowers
     change ((b : Subgroup.zpowers ψ) : MulAut A) x = x
     have hxz' :
         zmodZPowersMulAutHom ψ hcard (z : Multiplicative (ZMod p)) x = x := by
-      simpa [MulDistribMulAction.compHom] using hxz
+      change zmodZPowersMulAutHom ψ hcard (z : Multiplicative (ZMod p)) x = x at hxz
+      exact hxz
     rw [hmap] at hxz'
     simpa using hxz'
   have hx_bot : x ∈ (⊥ : Subgroup A) := by
@@ -1446,7 +1448,7 @@ public noncomputable def huppertMQ
     {Q : Type u} [Group Q] [Finite Q] (N : Subgroup Q) [N.Normal]
     [IsMulCommutative N] (n : N) : N := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   exact ∏ x : Q ⧸ N, quotientConjNormal N x n
 
@@ -1463,6 +1465,7 @@ public theorem huppertMQSemidirect_kernel_subgroupSum_eq_huppertMQ
     (hψ : ψ = invariantQuotientAut φ N hNφ)
     (hcard : Nat.card (Subgroup.zpowers ψ) = p)
     (n : N) :
+    letI : CommGroup N := IsMulCommutative.instCommGroup
     let SD : Type u :=
       (Q ⧸ N) ⋊[zmodZPowersMulAutHom ψ hcard] Multiplicative (ZMod p)
     letI : Finite SD :=
@@ -1481,7 +1484,7 @@ public theorem huppertMQSemidirect_kernel_subgroupSum_eq_huppertMQ
         K (Additive.ofMul n) =
       Additive.ofMul (huppertMQ N n) := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   letI : MulDistribMulAction (Multiplicative (ZMod p)) (Q ⧸ N) :=
     MulDistribMulAction.compHom (Q ⧸ N) (zmodZPowersMulAutHom ψ hcard)
@@ -1677,6 +1680,7 @@ public theorem zmodPeriod_sum_eq_zero_of_product_identity
       ∀ g : G,
         ((List.range p).map (fun k ↦ (fun x : G => α x)^[k] g)).prod = 1)
     (g : G) :
+    letI : CommGroup G := IsMulCommutative.instCommGroup
     letI : MulDistribMulAction (Multiplicative (ZMod p)) G :=
       MulDistribMulAction.compHom G (zmodPeriodMulAutHom α hαp)
     ∑ z : Multiplicative (ZMod p),
@@ -1685,7 +1689,7 @@ public theorem zmodPeriod_sum_eq_zero_of_product_identity
           z (Additive.ofMul g) = 0 := by
   classical
   haveI : NeZero p := ⟨(Fact.out : Nat.Prime p).ne_zero⟩
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   letI : MulDistribMulAction (Multiplicative (ZMod p)) G :=
     MulDistribMulAction.compHom G (zmodPeriodMulAutHom α hαp)
   let ρ : Representation (ZMod s) (Multiplicative (ZMod p)) (Additive G) :=
@@ -1770,6 +1774,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
     (hψ : ψ = invariantQuotientAut φ N hNφ)
     (hcard : Nat.card (Subgroup.zpowers ψ) = p)
     (n : N) :
+    letI : CommGroup N := IsMulCommutative.instCommGroup
     let SD : Type u :=
       (Q ⧸ N) ⋊[zmodZPowersMulAutHom ψ hcard] Multiplicative (ZMod p)
     letI : Finite SD :=
@@ -1788,7 +1793,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
         R (Additive.ofMul n) =
       0 := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   letI : MulDistribMulAction (Multiplicative (ZMod p)) (Q ⧸ N) :=
     MulDistribMulAction.compHom (Q ⧸ N) (zmodZPowersMulAutHom ψ hcard)
@@ -1827,6 +1832,8 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
   let α : MulAut N := invariantSubgroupAut φ N hNφ
   let hαp : α ^ p = 1 :=
     invariantSubgroupAut_pow_eq_one_of_period φ N hNφ hperiod
+  letI : MulDistribMulAction (Multiplicative (ZMod p)) N :=
+    MulDistribMulAction.compHom N (zmodPeriodMulAutHom α hαp)
   have hprodN :
       ∀ n : N,
         ((List.range p).map (fun k ↦ (fun x : N => α x)^[k] n)).prod = 1 := by
@@ -1863,9 +1870,14 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
           Additive.ofMul ((zmodPeriodMulAutHom α hαp g) n) := by
             exact Finset.sum_congr rfl (by intro g _hg; exact hsummand g)
     _ = 0 := by
-            simpa [α, hαp] using
+            have hzero :=
               zmodPeriod_sum_eq_zero_of_product_identity
                 hN_elem α hαp hprodN n
+            simp_rw [Representation.ofElementaryAbelianAction_apply_ofMul] at hzero
+            have hsmul (g : Multiplicative (ZMod p)) :
+                g • n = (zmodPeriodMulAutHom α hαp g) n := by
+              rfl
+            simpa only [hsmul] using hzero
 
 /-- The quotient-conjugation norm is invariant under the quotient action.
 This is the formal reindexing part of Huppert's `M(Q)` calculation. -/
@@ -1874,7 +1886,7 @@ public theorem huppertMQ_quotientConjNormal
     [IsMulCommutative N] (x : Q ⧸ N) (n : N) :
     huppertMQ N (quotientConjNormal N x n) = huppertMQ N n := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   unfold huppertMQ
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   have hcomp : ∀ y : Q ⧸ N,
@@ -1904,6 +1916,7 @@ public theorem huppertMQ_eq_representation_norm
     {Q : Type u} [Group Q] [Finite Q] {s : ℕ} [Fact s.Prime]
     (N : Subgroup Q) [N.Normal] [IsMulCommutative N]
     (hN_elem : IsElementaryAbelian s N) (n : N) :
+    letI : CommGroup N := IsMulCommutative.instCommGroup
     letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
     letI : MulDistribMulAction (Q ⧸ N) N :=
       MulDistribMulAction.compHom N (quotientConjNormal N)
@@ -1911,11 +1924,14 @@ public theorem huppertMQ_eq_representation_norm
       (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
         (Additive.ofMul n) := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
   letI : MulDistribMulAction (Q ⧸ N) N :=
     MulDistribMulAction.compHom N (quotientConjNormal N)
-  simp [huppertMQ, Representation.norm, Finset.sum_apply]
+  unfold huppertMQ
+  rw [Representation.norm]
+  rw [LinearMap.sum_apply]
+  simp_rw [Representation.ofElementaryAbelianAction_apply_ofMul]
   change
     (∑ i : Q ⧸ N, Additive.ofMul (((quotientConjNormal N) i) n)) =
       ∑ x : Q ⧸ N, Additive.ofMul (((quotientConjNormal N) x) n)
@@ -1935,7 +1951,7 @@ public theorem quotientConjNormal_trivial_of_huppertMQ_eval
     (hmq_eval : ∀ n : N, huppertMQ N n = n ^ Nat.card (Q ⧸ N)) :
     ∀ x : Q ⧸ N, quotientConjNormal N x = 1 := by
   classical
-  letI : CommGroup N := CommGroup.ofIsMulCommutative
+  letI : CommGroup N := IsMulCommutative.instCommGroup
   intro x
   ext n
   let m := Nat.card (Q ⧸ N)
@@ -1974,4 +1990,3 @@ public theorem quotientConjNormal_trivial_of_huppertMQ_eval
 
 end External
 end BenderSuzuki
-

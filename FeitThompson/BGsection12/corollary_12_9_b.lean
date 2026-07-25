@@ -46,7 +46,7 @@ public lemma unique_subgroup_of_prime_order_in_cyclic_pre
     have hL_ne_bot : L ≠ ⊥ := by
       intro hbot
       have hcard1 : Nat.card L = 1 := by
-        simpa [hbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+        simp [hbot]
       rw [hL] at hcard1; exact hp_prime.ne_one hcard1
     haveI : Nontrivial L := (Subgroup.nontrivial_iff_ne_bot L).mpr hL_ne_bot
     obtain ⟨h, hh⟩ := IsCyclic.exists_monoid_generator (α := L)
@@ -235,7 +235,7 @@ public theorem corollary_12_9_b
       have h_order_Q : orderOf (g : Q) = Nat.card Q :=
         orderOf_eq_card_of_forall_mem_zpowers (fun x => hg x)
       have h_order_gG : orderOf gG = orderOf (g : Q) := by
-        simp [gG, Subgroup.orderOf_coe]
+        simp [gG]
       rw [h_order_gG, h_order_Q, hQ_card]
     have hAnormE : section10NormalIn A E :=
       section12_rankTwo_normalIn_complement_of_tau2_pre hM hE hp hA
@@ -251,7 +251,7 @@ public theorem corollary_12_9_b
     have h_varphi_in_A0 : ∀ a : A, ((a : G)⁻¹ * gG * (a : G) * gG⁻¹) ∈ A0 := by
       intro a
       have ha_inv_mem : (a⁻¹ : G) ∈ A := by
-        simpa using Subgroup.inv_mem A a.property
+        simp
       have hmem := Subgroup.commutator_mem_commutator
         (g₁ := (a : G)⁻¹) (g₂ := gG) (H₁ := A) (H₂ := Q) ha_inv_mem hgG_mem_Q
       simpa [A0, commutatorElement_def] using hmem
@@ -430,7 +430,7 @@ public theorem corollary_12_9_b
   have hX_ne_bot : X ≠ ⊥ := by
     intro hbot
     have hcard1 : Nat.card X = 1 := by
-      simpa [hbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+      simp [hbot]
     rw [hX_card] at hcard1
     have hq_ne_one : q.val ≠ 1 := Nat.Prime.ne_one q.2
     exact hq_ne_one hcard1
@@ -467,7 +467,7 @@ public theorem corollary_12_9_b
   have h_q_rank : primeRank q.val M = 1 := hq.2.2
   have h_sylow_cyclic : ∀ P : Sylow q.val M, IsCyclic (P : Subgroup M) :=
     section12_sylow_cyclic_of_primeRank_le_one h_q_odd
-      (by simpa [h_q_rank] using le_of_eq h_q_rank)
+      (le_of_eq h_q_rank)
   -- Get Sylow q-subgroups
   obtain ⟨SQ, hQsub_le_SQ⟩ :=
     IsPGroup.exists_le_sylow (G := M) (p := q.val) hQsub_p

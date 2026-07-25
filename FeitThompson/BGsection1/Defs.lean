@@ -8,7 +8,7 @@ public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Group.Subgroup.Defs
 public import Mathlib.Data.Bracket
 public import Mathlib.Data.Finite.Defs
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.SetTheory.Cardinal.Finite
@@ -144,7 +144,7 @@ public def HasNormalPComplement (p : ℕ) (G : Type*) [Group G] : Prop :=
 /-- Nilpotency class at most `n`, phrased via the upper central series. -/
 @[expose]
 public def NilpotencyClassLe (n : ℕ) (X : Type*) [Group X] : Prop :=
-  upperCentralSeries X n = ⊤
+  Subgroup.upperCentralSeries X n = ⊤
 
 end BackgroundDefs
 

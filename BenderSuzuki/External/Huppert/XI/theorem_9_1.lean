@@ -25,7 +25,7 @@ namespace External
 
 noncomputable section
 
-open scoped BigOperators
+open scoped BigOperators commutatorElement
 
 open Section1
 
@@ -422,7 +422,7 @@ private theorem xi91_twoPointStabilizer_normalizer_index_two
         (x : G) • a = b ∧ (x : G) • b = a := by
       exact xi91_twoPointStabilizer_normalizer_notMem_swaps
         hat_most_two_fixed_points a b hab F hFrob (x : G)
-        (by simpa [T] using x.property) (by simpa [H, D, Dg] using hxD)
+        x.property (by simpa [H, D, Dg] using hxD)
     left
     change ((x * sT : T) : G) ∈ Dg
     apply (xi91_twoPointStabilizer_map_mem_iff a b hab ((x * sT : T) : G)).mpr
@@ -499,7 +499,7 @@ private theorem xi91_odd_twoPointStabilizer_exists_swap_involution
         (((c : C) : T) : G) • b = a := by
     apply xi91_twoPointStabilizer_normalizer_notMem_swaps
       hat_most_two_fixed_points a b hab F hFrob
-    · simpa [T] using (c : T).property
+    · exact (c : T).property
     · intro hcDg
       apply hcnotD
       exact hcDg
@@ -696,8 +696,8 @@ private theorem xi91_odd_twoPointNormalizer_isZGroup
         natCard_subgroupOf_eq Dg T Subgroup.le_normalizer
       _ = Nat.card D := hDgcard
   letI : IsZGroup D :=
-    isZGroup_of_frobenius_complement_of_odd F D (by simpa [D] using hFrob)
-      (by simpa [D] using hodd)
+    isZGroup_of_frobenius_complement_of_odd F D (by
+      simpa [D] using hFrob) hodd
   let eDg : D ≃* Dg :=
     Subgroup.equivMapOfInjective D H.subtype H.subtype_injective
   let eDsub : Dsub ≃* Dg :=
@@ -858,7 +858,7 @@ private theorem xi91_odd_twoPointStabilizer_cyclic_and_commutator_eq
         Subgroup.normalizer ((QTsub : Subgroup T) : Set T) ≤
           Subgroup.centralizer (QTsub : Set T) := by
       rcases Sylow.normalizer_le_centralizer_or_le_commutator QT with hcent | hle
-      · simpa [hQTcoe] using hcent
+      · simpa [← hQTcoe] using hcent
       · exfalso
         apply hqcommNot
         exact (QT.dvd_card_of_dvd_card hqT).trans
@@ -882,13 +882,13 @@ private theorem xi91_odd_twoPointStabilizer_cyclic_and_commutator_eq
       intro hqF
       have hqone : q ∣ 1 := by
         have := Nat.dvd_sub hqF hqFsub
-        convert this using 1 <;> omega
+        convert this using 1; omega
       exact hq.not_dvd_one hqone
     have hqFplusNot : ¬ q ∣ Nat.card F + 1 := by
       intro hqFplus
       have hqtwo : q ∣ 2 := by
         have := Nat.dvd_sub hqFplus hqFsub
-        convert this using 1 <;> omega
+        convert this using 1; omega
       rcases (Nat.dvd_prime Nat.prime_two).mp hqtwo with hq1 | hq2eq
       · exact hq.ne_one hq1
       · exact hqne hq2eq
@@ -1116,19 +1116,15 @@ private theorem xi91_isMulCommutative_sup_of_le_centralizer
     (hBcentral : B ≤ Subgroup.centralizer (A : Set Q)) :
     IsMulCommutative (A ⊔ B : Subgroup Q) := by
   rw [Subgroup.sup_eq_closure]
-  letI : CommGroup (Subgroup.closure ((A : Set Q) ∪ (B : Set Q))) :=
-    Subgroup.closureCommGroupOfComm (by
-      intro x hx y hy
-      rcases hx with hxA | hxB
-      · rcases hy with hyA | hyB
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := A) hxA hyA
-        · exact Subgroup.mem_centralizer_iff.mp (hBcentral hyB) x hxA
-      · rcases hy with hyA | hyB
-        · exact (Subgroup.mem_centralizer_iff.mp (hBcentral hxB) y hyA).symm
-        · exact Subgroup.mul_comm_of_mem_isMulCommutative
-            (H := B) hxB hyB)
-  exact ⟨⟨fun x y => mul_comm x y⟩⟩
+  apply Subgroup.isMulCommutative_closure
+  intro x hx y hy
+  rcases hx with hxA | hxB
+  · rcases hy with hyA | hyB
+    · exact setLike_mul_comm (s := A) hxA hyA
+    · exact Subgroup.mem_centralizer_iff.mp (hBcentral hyB) x hxA
+  · rcases hy with hyA | hyB
+    · exact (Subgroup.mem_centralizer_iff.mp (hBcentral hxB) y hyA).symm
+    · exact setLike_mul_comm (s := B) hxB hyB
 
 /-- XI.1.5, inversion part: every element interchanging the two points acts
 by inversion on the odd cyclic two-point stabilizer. -/
@@ -1203,7 +1199,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
   have hcTne : cT ≠ 1 := by
     intro hcOne
     apply hcTnotD
-    simpa [hcOne]
+    simp [hcOne]
   have hcTSq : cT ^ 2 = 1 := by
     apply Subtype.ext
     exact hcSq
@@ -1214,7 +1210,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hcTorder : orderOf cT = 2 := orderOf_eq_prime hcTSq hcTne
   have hRcard : Nat.card R = 2 := by
-    simpa [R, hcTorder] using Nat.card_zpowers cT
+    simp [R, hcTorder]
   have hsup : Dsub ⊔ R = ⊤ := by
     apply top_unique
     intro x _hx
@@ -1227,7 +1223,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
           exact hxD hxDg
         exact xi91_twoPointStabilizer_normalizer_notMem_swaps
           hat_most_two_fixed_points a b hab F hFrob ((x : T) : G)
-          (by simpa [T] using x.property) hxnotDg
+          x.property hxnotDg
       have hxcDg : (((x * cT : T) : G)) ∈ Dg := by
         apply (xi91_twoPointStabilizer_map_mem_iff a b hab ((x * cT : T) : G)).mpr
         constructor
@@ -1236,7 +1232,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
         · change (((x : T) : G) * c) • b = b
           rw [mul_smul, hcb, hxswap.1]
       have hxcD : x * cT ∈ Dsub := by
-        simpa [Dsub] using hxcDg
+        simpa [Dsub] using Subgroup.mem_subgroupOf.mpr hxcDg
       have hcR : cT ∈ R := Subgroup.mem_zpowers cT
       have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
       have hxrepr : x = (x * cT) * cT := by
@@ -1245,7 +1241,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
       exact (Dsub ⊔ R).mul_mem
         (Subgroup.mem_sup_left hxcD) (Subgroup.mem_sup_right hcR)
   have hRnormD : R ≤ Subgroup.normalizer (Dsub : Set T) := by
-    simpa [Dsub.normalizer_eq_top]
+    simp [Dsub.normalizer_eq_top]
   let N : Subgroup T := ⁅Dsub, R⁆
   haveI : N.Normal := by
     have hNnormal := commutator_normal_in_sup Dsub R
@@ -1268,8 +1264,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := Dsub) hxD hyD)
+      (setLike_mul_comm (s := Dsub) hxD hyD)
   have hBcomm : IsMulCommutative B := by
     refine ⟨⟨fun x y => ?_⟩⟩
     apply Subtype.ext
@@ -1278,8 +1273,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
     change (x : T ⧸ N) * y = y * x
     rw [← hx, ← hy]
     exact congrArg pi
-      (Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := R) hxR hyR)
+      (setLike_mul_comm (s := R) hxR hyR)
   have hBcentralA : B ≤ Subgroup.centralizer (A : Set (T ⧸ N)) := by
     intro rbar hrbar
     rcases hrbar with ⟨r, hrR, rfl⟩
@@ -1304,15 +1298,14 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
   have hquotComm : IsMulCommutative (T ⧸ N) := by
     have h := xi91_isMulCommutative_sup_of_le_centralizer hAcomm hBcomm hBcentralA
     rw [hABtop] at h
-    letI : IsMulCommutative (⊤ : Subgroup (T ⧸ N)) := h
     refine ⟨⟨fun x y => ?_⟩⟩
     have hxy :
         (⟨x, trivial⟩ : (⊤ : Subgroup (T ⧸ N))) * ⟨y, trivial⟩ =
-          ⟨y, trivial⟩ * ⟨x, trivial⟩ := mul_comm _ _
+          ⟨y, trivial⟩ * ⟨x, trivial⟩ := h.is_comm.comm _ _
     exact congrArg Subtype.val hxy
   have hcommLeN : commutator T ≤ N :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp
-      hquotComm.is_comm
+      hquotComm
   have hNleComm : N ≤ commutator T := by
     exact Subgroup.commutator_mono le_top le_top
   have hNeqD : N = Dsub :=
@@ -1366,7 +1359,7 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
         congrArg Subtype.val hx
     have hccomm : Commute cT (x : T) := by
       apply commutatorElement_eq_one_iff_commute.mp
-      simpa [commutatorElement_def, hconjFix, mul_assoc]
+      simp [commutatorElement_def, hconjFix]
     have hxFixed : x ∈ fixedPointSubgroup R Dsub := by
       change ∀ r : R, r • x = x
       intro r
@@ -1402,14 +1395,13 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
       rw [mul_smul, hca, hsb]
     · change (s * c) • b = b
       rw [mul_smul, hcb, hsa]
-  let dT : Dsub := ⟨sT * cT, by simpa [Dsub] using hscDg⟩
+  let dT : Dsub := ⟨sT * cT, by simpa [Dsub] using Subgroup.mem_subgroupOf.mpr hscDg⟩
   have hcMul : cT * cT = 1 := by simpa [pow_two] using hcTSq
   have hsEq : sT = (dT : T) * cT := by
     change sT = (sT * cT) * cT
     rw [mul_assoc, hcMul, mul_one]
   have hdcomm : Commute (dT : T) (xDsub : T) := by
-    exact Subgroup.mul_comm_of_mem_isMulCommutative
-      (H := Dsub) dT.property xDsub.property
+    exact setLike_mul_comm (s := Dsub) dT.property xDsub.property
   have hcalc :
       sT * (xDsub : T) * sT⁻¹ = ((xDsub⁻¹ : Dsub) : T) := by
     calc
@@ -1935,10 +1927,12 @@ private theorem xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
           (a := a) hcomp hNtrans
       intro x y
       obtain ⟨r, hr, hrunique⟩ := hregularTop x y
-      refine ⟨(r : N), by simpa using hr, ?_⟩
+      refine ⟨(r : N), ?_, ?_⟩
+      · simpa [Subgroup.smul_def] using hr
       intro n hn
       let nTop : (⊤ : Subgroup N) := ⟨n, trivial⟩
-      have hnTop : (nTop : N) • x = y := by simpa [nTop] using hn
+      have hnTop : (nTop : N) • x = y := by
+        simpa [nTop, Subgroup.smul_def] using hn
       have heq : nTop = r := hrunique nTop hnTop
       exact congrArg Subtype.val heq
     have hRproper : R ≠ ⊤ := by
@@ -1949,7 +1943,9 @@ private theorem xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
       exact hab (hfix.symm.trans hn)
     let rToH : R → H := fun r =>
       ⟨((r : N) : G), by
-        simpa using MulAction.mem_stabilizer_iff.mp r.property⟩
+        have hfix : (r : N) • a = a := MulAction.mem_stabilizer_iff.mp r.property
+        have hfix' : ((r : N) : G) • a = a := by simpa [Subgroup.smul_def] using hfix
+        exact MulAction.mem_stabilizer_iff.mpr hfix'⟩
     have hRtoF : ∀ r : R, rToH r ∈ F := by
       intro r
       apply hNaF
@@ -1977,7 +1973,7 @@ private theorem xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
         have hxvalG : ((x : N) : G) =
             ((g : N) : G) * ((r : N) : G) * ((g : N) : G)⁻¹ := by
           exact congrArg Subtype.val hxval
-        have hrfixG : ((r : N) : G) • a = a := by simpa using hrfix
+        have hrfixG : ((r : N) : G) • a = a := by simpa [Subgroup.smul_def] using hrfix
         calc
           ((x : N) : G) • (((g : N) : G) • a) =
               (((g : N) : G) * ((r : N) : G) * ((g : N) : G)⁻¹) •
@@ -1989,7 +1985,7 @@ private theorem xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
         (xi91_frobeniusKernel_uniqueFixedPoint
           htwo a b hab F hFrob xF hxFne (((g : N) : G) • a)).mp (by simpa [xF, rToH] using hxfixga)
       apply hgR
-      exact MulAction.mem_stabilizer_iff.mpr (by simpa using hga)
+      exact MulAction.mem_stabilizer_iff.mpr (by simpa [Subgroup.smul_def] using hga)
     obtain ⟨K, hKFrob⟩ :=
       Suzuki.VI.suzuki_ch6_theorem_2_3 R hRne hRproper hRTI
     let Kmap : Subgroup G := K.map N.subtype
@@ -2011,7 +2007,7 @@ private theorem xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
     intro x y
     obtain ⟨k, hk, hkunique⟩ := hKregular x y
     let kg : Kmap := ⟨((k : N) : G), ⟨(k : N), k.property, rfl⟩⟩
-    refine ⟨kg, by simpa [kg] using hk, ?_⟩
+    refine ⟨kg, by simpa [Kmap, kg, Subgroup.smul_def] using hk, ?_⟩
     intro z hz
     rcases z.property with ⟨n, hnK, hnz⟩
     let nK : K := ⟨n, hnK⟩
@@ -2102,7 +2098,7 @@ private theorem xi91_zassenhaus_nontrivial_normal_is_two_pretransitive
       change ((f : H) : G) • a = a
       exact MulAction.mem_stabilizer_iff.mp (f : H).property
     have hfY : fN • (n0 • y) = b := by
-      simpa [fN, ySub, bSub] using congrArg Subtype.val hf
+      simpa [fN, ySub, bSub, Subgroup.smul_def] using congrArg Subtype.val hf
     refine ⟨fN * n0, ?_, ?_⟩
     · rw [mul_smul, hn0x, hfixa]
     · rw [mul_smul, hfY]
@@ -2313,7 +2309,7 @@ private theorem xi91_zassenhaus_regular_normal_unique
     (htwo : MulAction.IsMultiplyPretransitive N X 2)
     (a : X) (M R : Subgroup N)
     (hMnormal : M.Normal) (hRnormal : R.Normal)
-    (hMne : M ≠ ⊥) (hRne : R ≠ ⊥)
+    (hMne : M ≠ ⊥) (_hRne : R ≠ ⊥)
     (hMregular :
       ∀ x y : X, ∃! m : M, (m : N) • x = y)
     (hRregular :
@@ -2355,7 +2351,7 @@ private theorem xi91_zassenhaus_regular_normal_unique
       obtain ⟨j, hj⟩ := hJtrans.exists_smul_eq a (m • a)
       let jM : M := ⟨(j : N), j.property.1⟩
       obtain ⟨m0, hm0, huniq⟩ := hMregular a (m • a)
-      have hjm0 : jM = m0 := huniq jM (by simpa [jM] using hj)
+      have hjm0 : jM = m0 := huniq jM (by simpa [jM, Subgroup.smul_def] using hj)
       have hmm0 : mM = m0 := huniq mM rfl
       have hmj : m = (j : N) :=
         congrArg Subtype.val (hmm0.trans hjm0.symm)
@@ -2367,7 +2363,7 @@ private theorem xi91_zassenhaus_regular_normal_unique
       obtain ⟨j, hj⟩ := hJtrans.exists_smul_eq a (r • a)
       let jR : R := ⟨(j : N), j.property.2⟩
       obtain ⟨r0, hr0, huniq⟩ := hRregular a (r • a)
-      have hjr0 : jR = r0 := huniq jR (by simpa [jR] using hj)
+      have hjr0 : jR = r0 := huniq jR (by simpa [jR, Subgroup.smul_def] using hj)
       have hrr0 : rR = r0 := huniq rR rfl
       have hrj : r = (j : N) :=
         congrArg Subtype.val (hrr0.trans hjr0.symm)
@@ -2396,7 +2392,7 @@ private theorem xi91_zassenhaus_regular_normal_unique
         have hrk : r * (k : N) = (k : N) * r :=
           (Subgroup.mem_centralizer_iff.mp (hMcentR k.property)) r hr
         have hkm : (k : N) * (m : N) = (m : N) * (k : N) :=
-          congrArg Subtype.val (mul_comm k m)
+          congrArg Subtype.val (mul_comm' k m)
         calc
           r • x = r • ((k : N) • a) := by rw [hkact]
           _ = (r * (k : N)) • a := (mul_smul r (k : N) a).symm
@@ -2466,7 +2462,8 @@ private theorem xi91_zassenhaus_normal_subgroup_no_regular_normal
           (g * ((m : N) : G) * g⁻¹) • x =
               g • (((m : N) : G) • (g⁻¹ • x)) := by
                 simp only [mul_smul]
-          _ = g • (g⁻¹ • y) := by simpa using congrArg (fun z => g • z) hmact
+          _ = g • (g⁻¹ • y) := by
+            simpa [Subgroup.smul_def] using congrArg (fun z => g • z) hmact
           _ = y := smul_inv_smul g y
       refine ⟨mg, hmgact, ?_⟩
       intro z hz
@@ -2489,7 +2486,7 @@ private theorem xi91_zassenhaus_normal_subgroup_no_regular_normal
                 mul_smul g⁻¹ (g * ((n : N) : G) * g⁻¹) x
           _ = g⁻¹ • (((z : N) : G) • x) := by rw [hnzG]
           _ = g⁻¹ • y := by
-            simpa using congrArg (fun q => g⁻¹ • q) hz
+            simpa [Subgroup.smul_def] using congrArg (fun q => g⁻¹ • q) hz
       have hnm : nM = m := hmunique nM hnact
       apply Subtype.ext
       calc
@@ -2526,7 +2523,7 @@ private theorem xi91_zassenhaus_normal_subgroup_no_regular_normal
   obtain ⟨m, hmact, hmunique⟩ := hMregular x y
   let kg : K :=
     ⟨((m : N) : G), ⟨(m : N), m.property, rfl⟩⟩
-  refine ⟨kg, by simpa [kg] using hmact, ?_⟩
+  refine ⟨kg, by simpa [kg, Subgroup.smul_def] using hmact, ?_⟩
   intro z hz
   rcases z.property with ⟨n, hnM, hnz⟩
   let nM : M := ⟨n, hnM⟩
@@ -2663,7 +2660,7 @@ lemma xi91_representation_exists_nonzero_hom_to_dual_of_fixed_conjugate
       Module.finrank ℂ (Representation.IntertwiningMap ρ ρ.dual) = 1 :=
     xi91_representation_self_dual_hom_finrank_eq_one_of_fixed_conjugate ρ hρ_irreducible hfixed
   by_contra hzero
-  push_neg at hzero
+  push Not at hzero
   have hsub :
       Subsingleton (Representation.IntertwiningMap ρ ρ.dual) := by
     refine ⟨fun f g => ?_⟩
@@ -3174,7 +3171,7 @@ private theorem xi91_frobeniusSchurIndicator_sq_eq_one_of_fixed_conjugate
         rho hirr hfixed
   have hp_nonzero : ∃ x : p, x ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     have hsub : Subsingleton p := ⟨fun x y => (hzero x).trans (hzero y).symm⟩
     have hfinzero : Module.finrank ℂ p = 0 :=
       @Module.finrank_zero_of_subsingleton ℂ p _ _ _ _ hsub
@@ -3328,7 +3325,7 @@ private theorem xi91_unique_zero_indicator_arithmetic
     exact_mod_cast huSumZ
   have hex : ∃ i : I, u i ≠ 0 := by
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have : ∑ i : I, u i = 0 := by simp [hnone]
     omega
   obtain ⟨i0, hi0ne⟩ := hex
@@ -3726,10 +3723,10 @@ private theorem xi91_kernelCarrier_relativeTI
     {G : Type*} [Group G] (chi : G →* ℂˣ) : Representation ℂ G ℂ where
   toFun g := (chi g : ℂ) • LinearMap.id
   map_one' := by
-    ext z
+    ext
     simp
   map_mul' g h := by
-    ext z
+    ext
     simp [mul_smul, mul_comm]
 
 private theorem xi91_linearCharacterRepresentation_character
@@ -3746,9 +3743,13 @@ private theorem xi91_linearCharacterRepresentation_irreducible
   have hsimple : IsSimpleOrder (Submodule ℂ ℂ) := by infer_instance
   rcases hsimple.eq_bot_or_eq_top S.toSubmodule with hbot | htop
   · left
-    exact Subrepresentation.toSubmodule_injective (by simpa using hbot)
+    have hbot' : S.toSubmodule = (⊥ : Subrepresentation (xi91_linearCharacterRepresentation chi)).toSubmodule :=
+      hbot
+    exact Subrepresentation.toSubmodule_injective hbot'
   · right
-    exact Subrepresentation.toSubmodule_injective (by simpa using htop)
+    have htop' : S.toSubmodule = (⊤ : Subrepresentation (xi91_linearCharacterRepresentation chi)).toSubmodule :=
+      htop
+    exact Subrepresentation.toSubmodule_injective htop'
 
 private theorem xi91_complement_fixes_only_principal_section1
     {H V : Type*} [Group H] [Finite H]
@@ -3774,10 +3775,18 @@ private theorem xi91_complement_fixes_only_principal_section1
     ext c
     rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
     have hx := congrFun hfixInv x
-    simpa [chi, Representation.classFunctionConjLinearEquiv,
-      Representation.conjClassesConjPerm_symm_mk,
-      conjugateOnNormal, Representation.normalSubgroupConjMulEquiv,
-      mul_assoc] using hx
+    have hchi_apply (y : F) : chi (ConjClasses.mk y) = rho.character y := by
+      rfl
+    calc
+      (Representation.classFunctionConjLinearEquiv F (d : H) chi) (ConjClasses.mk x)
+          = chi ((Representation.conjClassesConjPerm F (d : H)).symm (ConjClasses.mk x)) := rfl
+      _ = chi (ConjClasses.mk ((Representation.normalSubgroupConjMulEquiv F (d : H)).symm x)) := by
+        simp [Representation.conjClassesConjPerm_symm_mk]
+      _ = rho.character ((Representation.normalSubgroupConjMulEquiv F (d : H)).symm x) :=
+        hchi_apply ((Representation.normalSubgroupConjMulEquiv F (d : H)).symm x)
+      _ = rho.character x := by
+        simpa [conjugateOnNormal, Representation.normalSubgroupConjMulEquiv, mul_assoc] using hx
+      _ = chi (ConjClasses.mk x) := (hchi_apply x).symm
   have htriv := xi91_complement_fixes_only_principal_irreducible
     F D hFrob d hd chi hchiIrr hchiFix
   ext x
@@ -3816,14 +3825,18 @@ private theorem xi91_linearCharacter_inertia_eq_kernel
       change conjugateOnNormal F rho.character f = rho.character
       let fF : F := ⟨f, hf⟩
       ext z
-      simpa [conjugateOnNormal, mul_assoc] using
-        (Representation.char_conj (ρ := rho) z fF)
+      have hchar_conj := Representation.char_conj (ρ := rho) z (fF : F)
+      have h_eq : (fF * z * fF⁻¹ : F) = (⟨(f : H) * (z.1 : H) * (f : H)⁻¹,
+        hFrob.normal.conj_mem (z.1 : H) z.2 (f : H)⟩ : F) := by
+        apply Subtype.ext
+        simp [fF, mul_assoc]
+      simpa [conjugateOnNormal, fF, h_eq, mul_assoc] using hchar_conj
     have hfI : (fd.1 : H) ∈ inertiaSubgroup F rho.character :=
       hFleI fd.1.property
     have hdI : (fd.2 : H) ∈ inertiaSubgroup F rho.character := by
       have hdEq : (fd.2 : H) = (fd.1 : H)⁻¹ * x := by
         rw [← hfd]
-        simp [mul_assoc]
+        simp
       rw [hdEq]
       exact (inertiaSubgroup F rho.character).mul_mem
         ((inertiaSubgroup F rho.character).inv_mem hfI) hx
@@ -3842,8 +3855,12 @@ private theorem xi91_linearCharacter_inertia_eq_kernel
     change conjugateOnNormal F rho.character f = rho.character
     let fF : F := ⟨f, hf⟩
     ext z
-    simpa [conjugateOnNormal, mul_assoc] using
-      (Representation.char_conj (ρ := rho) z fF)
+    have hchar_conj := Representation.char_conj (ρ := rho) z (fF : F)
+    have h_eq : (fF * z * fF⁻¹ : F) = (⟨(f : H) * (z.1 : H) * (f : H)⁻¹,
+      hFrob.normal.conj_mem (z.1 : H) z.2 (f : H)⟩ : F) := by
+      apply Subtype.ext
+      simp [fF, mul_assoc]
+    simpa [conjugateOnNormal, fF, h_eq, mul_assoc] using hchar_conj
 
 private theorem xi91_relativeTI_induced_scalarProduct_self
     {G : Type*} [Group G] [Finite G]
@@ -4018,8 +4035,8 @@ private theorem xi91_linearCharacter_ambient_induced_norm
   have hlambdaSelf : scalarProduct H lambda lambda = 1 :=
     scalarProduct_irreducibleCharacter_self hlambdaIrr
   have hlambdaOne : lambda 1 = (Nat.card D : ℂ) := by
-    simpa [lambda, D] using
-      xi91_induced_linearCharacter_degree F D hFrob chi
+    have h := xi91_induced_linearCharacter_degree F D hFrob chi
+    simpa [lambda] using h
   have hHindex : H.index = n + 1 := by
     calc
       H.index = Nat.card Omega := by
@@ -4109,7 +4126,7 @@ private theorem xi91_inducedSquareTerm_decomposition
             have hyne : y ≠ 1 := by
               intro hyone
               apply hyH
-              simpa [hyone] using H.one_mem
+              simp [hyone]
             exact (hyOrder (orderOf_eq_prime
               (by simpa [pow_two] using hySq) hyne)).elim
           · apply xi91_induced_linearCharacter_support F chi ySqH
@@ -4173,8 +4190,8 @@ private theorem xi91_linearCharacter_ambient_induced_indicator
   have hlambdaIrr : IsIrreducibleCharacterOnGroup lambda :=
     xi91_linearCharacter_induced_irreducible F D hFrob chi hchi
   have hlambdaOne : lambda 1 = (Nat.card D : ℂ) := by
-    simpa [lambda, D] using
-      xi91_induced_linearCharacter_degree F D hFrob chi
+    have h := xi91_induced_linearCharacter_degree F D hFrob chi
+    simpa [lambda] using h
   have hterm : ∀ y : G,
       xi91_inducedSquareTerm H lambda y =
         xi91_stabilizerSquareTerm H lambda y +
@@ -4427,7 +4444,7 @@ private theorem xi91_involution_class_card_ge_kernel_mul_complement
     (hFrob : IsFrobeniusGroupWithKernelComplement F
       (MulAction.stabilizer (MulAction.stabilizer G a)
         (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)))
-    (s : G) (hsfree : ∀ x : Omega, s • x ≠ x)
+    (s : G) (_hsfree : ∀ x : Omega, s • x ≠ x)
     (hcentralizerFree :
       ∀ c : Subgroup.centralizer ({s} : Set G), c ≠ 1 →
         ∀ x : Omega, (c : G) • x = x → False) :
@@ -4636,7 +4653,7 @@ private theorem xi91_exists_involution_classSumTest
     refine ⟨j, ?_⟩
     ext g
     have hg := congrFun hj (ConjClasses.mk g)
-    simpa [chi, toConjClassFunction_apply] using hg
+    simpa [chi, toConjClassFunction_apply, ofConjClassFunction] using hg
   have hspIrreducible : ∀ theta : ClassFunction G,
       IsIrreducibleCharacterOnGroup theta →
         scalarProduct G theta omega = theta s ^ 2 / theta 1 := by
@@ -4837,15 +4854,23 @@ private theorem xi91_norm_two_principal_split
     ext g
     unfold weightedFamilySum
     rw [hunivOfFinite]
-    simp [hmip, hmia, hthetaIp, hiaNe, Ne.symm hiaNe,
-      principalCharacter]
+    have hip_not_mem_ia : ip ∉ ({ia} : Finset J) := by
+      simpa using Ne.symm hiaNe
+    calc
+      ∑ x ∈ ({ip, ia} : Finset J), (m x : ℂ) * theta x g
+          = ((m ip : ℂ) * theta ip g) + ((m ia : ℂ) * theta ia g) := by
+        simp [Finset.sum_insert hip_not_mem_ia, Finset.sum_singleton]
+      _ = ((1 : ℂ) * ((principalCharacter G) g)) + ((1 : ℂ) * theta ia g) := by
+        simp [hmip, hmia, hthetaIp]
+      _ = (1 : ℂ) * (1 : ℂ) + theta ia g := by simp
+      _ = 1 + theta ia g := by ring
 
 /-- Locate an irreducible constituent of multiplicity one in a positive
 decomposition from its scalar product. -/
 private theorem xi91_decomposition_index_of_scalar_one
     {G I : Type*} [Group G] [Finite G] [Fintype I] [DecidableEq I]
     (Phi : ClassFunction G) (e : I → ℕ) (psi : I → ClassFunction G)
-    (hepos : ∀ i, 0 < e i)
+    (_hepos : ∀ i, 0 < e i)
     (hpsi : ∀ i, IsBookIrreducibleCharacter (psi i))
     (hpair : Pairwise fun i j : I => psi i ≠ psi j)
     (hdecomp : Phi = weightedFamilySum (fun i => (e i : ℂ)) psi)
@@ -5011,7 +5036,14 @@ private theorem xi91_exponent_quotient_le_two
     simpa [mul_assoc] using hfour
   have hmul : d * (n + 1) < d * (4 * d ^ 3) := by
     have htrans := hleft.trans hright
-    convert htrans using 1 <;> ring
+    have hEq : d * (4 * d ^ 3) = 4 * d ^ 4 := by
+      calc
+        d * (4 * d ^ 3) = 4 * (d * d ^ 3) := by
+          ring
+        _ = 4 * d ^ 4 := by simp [pow_succ, mul_assoc]
+    calc
+      d * (n + 1) < 4 * d ^ 4 := htrans
+      _ = d * (4 * d ^ 3) := by symm; exact hEq
   have hnSuccLt : n + 1 < 4 * d ^ 3 :=
     Nat.lt_of_mul_lt_mul_left hmul
   have hnLt : n < 4 * d ^ 3 := by omega
@@ -5216,7 +5248,7 @@ private theorem xi91_involution_value_divisibility_core
     simpa [value0, Int.natAbs_pos] using hzNe
   have hvalueAbs : |(chi s).re| = (value0 : ℝ) := by
     rw [hvalueReal]
-    simp [value0, Int.cast_natAbs]
+    simp [value0, Nat.cast_natAbs]
   letI : Representation.IsIrreducible rho := hrhoIrr
   have hclassIntegral :=
     Representation.classSumScalar_isIntegral rho (ConjClasses.mk s)
@@ -5258,7 +5290,7 @@ private theorem xi91_positive_decomposition_index_of_scalar_ne_zero
     ∃ i : I, psi i = alpha := by
   classical
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   apply hscalar
   rw [hdecomp, scalarProduct_weightedFamilySum_left]
   apply Finset.sum_eq_zero
@@ -5339,8 +5371,7 @@ private theorem xi91_nonreal_restriction_constituent_induced
   let eQ : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := eQ.isCyclic.mpr hDcyclic
   letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   have hthetaNotKer : ¬ subgroupInKernel' theta F := by
     intro hthetaKer
     have hkernelPairZero :
@@ -5532,7 +5563,7 @@ private theorem xi91_other_linear_source_pairing_zero
     (hPhiDiff :
       inducedCF H lambda - conjugateCharacter (inducedCF H lambda) =
         psi0 - chi2)
-    (hpsi0Phi : scalarProduct G psi0 (inducedCF H lambda) = 1)
+    (_hpsi0Phi : scalarProduct G psi0 (inducedCF H lambda) = 1)
     (hPhi'Char : IsCharacter (inducedCF H lambda'))
     (hPhi'Norm :
       scalarProduct G (inducedCF H lambda') (inducedCF H lambda') =
@@ -5817,8 +5848,7 @@ private theorem xi91_frobenius_induced_source_ne_principal
   let eQ : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := eQ.isCyclic.mpr hDcyclic
   letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   have hthetaKer : subgroupInKernel' theta F := by
     rw [hthetaInduced, hsourcePrincipal]
     intro y
@@ -6033,8 +6063,7 @@ private theorem xi91_nonreal_restriction_degree_coprime
   let eQ : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := eQ.isCyclic.mpr hDcyclic
   letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   have hpsi0Irr : IsIrreducibleCharacterOnGroup psi0 :=
     isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
       psi0 hpsi0Book
@@ -6823,8 +6852,8 @@ private theorem xi91_zassenhaus_restriction_degree_coprime
     simpa [hPhiPsi0] using hswap.symm
   exact xi91_nonreal_restriction_degree_coprime
     H F D (by simpa [D] using hFrob) (by simpa [D] using hDcyclic)
-    (by simpa [D] using hDgt) p hp hFp lambda hlambdaIrr
-    (by simpa [D] using hlambdaDegree) hlambdaSupportK hkernelTI
+    hDgt p hp hFp lambda hlambdaIrr
+    hlambdaDegree hlambdaSupportK hkernelTI
     hAmbientNormAll hAmbientIndicatorAll
     (psi i0) chi2 alpha (hpsi i0) hchi2Book
     hpsi0Nonreal hchi2Nonreal hchi2Ne halphaBook hpsi0NeAlpha
@@ -6832,7 +6861,7 @@ private theorem xi91_zassenhaus_restriction_degree_coprime
     (by rw [← hPhiDef]; exact hpsi0Phi)
     (by rw [← hPiDef]; exact hPiSplit)
     B hBirr hBmem hBreal degree0 x hdegree0Pos hdegree0
-    (by simpa [D] using hdegreeEq)
+    hdegreeEq
 
 
 set_option maxHeartbeats 800000 in
@@ -6945,16 +6974,16 @@ private theorem xi91_zassenhaus_restriction_degree_odd
       (G := G) (phi := psi i0) (psi := Phi)
     simpa [hPhiPsi0] using hswap.symm
   exact xi91_nonreal_restriction_degree_odd
-    H F D (by simpa [D] using hFrob) (by simpa [D] using hDcyclic)
-    (by simpa [D] using hDgt) (by simpa [H] using hpointOdd)
-    lambda hlambdaIrr (by simpa [D] using hlambdaDegree)
+    H F D hFrob hDcyclic
+    hDgt hpointOdd
+    lambda hlambdaIrr hlambdaDegree
     hlambdaSupportK hkernelTI (psi i0) chi2 alpha (hpsi i0)
     hchi2Def hchi2Book hchi2Ne hpsi0Nonreal halphaBook hpsi0NeAlpha
     (by rw [← hPhiDef]; simpa using hPhiDiff)
     (by rw [← hPhiDef]; exact hpsi0Phi)
     (by rw [← hPiDef]; exact hPiSplit)
     B hBirr hBmem hBreal degree0 x hdegree0Pos hdegree0
-    (by simpa [D] using hdegreeEq)
+    hdegreeEq
 
 
 set_option maxHeartbeats 800000 in
@@ -7101,7 +7130,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
   have hsimple :
       ∀ N : Subgroup G, N.Normal → N ≠ ⊥ → N = ⊤ := by
     by_contra hsimple
-    push_neg at hsimple
+    push Not at hsimple
     obtain ⟨N, hNnormal, hNne, hNtop⟩ := hsimple
     have hNtwo : MulAction.IsMultiplyPretransitive N Omega 2 :=
       xi91_zassenhaus_nontrivial_normal_is_two_pretransitive
@@ -7131,7 +7160,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
       huppert_blackburn_XI_pointStabilizer_frobeniusKernel_exists
         hNtwo hatN hnoN a b hab
     let H := MulAction.stabilizer G a
-    let Na : Subgroup H := N.comap H.subtype
+    let Na : Subgroup (MulAction.stabilizer G a) := N.comap H.subtype
     have hFNa : F ≤ Na := by
       simpa [H, Na] using
         xi91_zassenhaus_normal_stabilizer_contains_frobeniusKernel
@@ -7155,7 +7184,11 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
             (((y : Na) : H) : G) • b = b :=
           congrArg Subtype.val hyfix
         rw [← hyx]
-        simpa [eNa, normalSubgroup_pointStabilizerEquiv] using hyfixOmega
+        calc
+          ((eNa.toMonoidHom y : HN) : G) • b = (((y : Na) : H) : G) • b := by
+            dsimp [eNa, normalSubgroup_pointStabilizerEquiv]
+            rfl
+          _ = b := hyfixOmega
       · intro hx
         let y : Na := eNa.symm x
         refine ⟨y, ?_, eNa.apply_symm_apply x⟩
@@ -7165,7 +7198,12 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
         have hxfix := MulAction.mem_stabilizer_iff.mp hx
         have hxfixOmega : (((x : HN) : N) : G) • b = b :=
           congrArg Subtype.val hxfix
-        simpa [y, eNa, normalSubgroup_pointStabilizerEquiv] using hxfixOmega
+        calc
+          (((y : Na) : H) : G) • b = ((eNa.symm x : Na) : G) • b := rfl
+          _ = (((x : HN) : N) : G) • b := by
+            dsimp [eNa, normalSubgroup_pointStabilizerEquiv]
+            rfl
+          _ = b := hxfixOmega
     have hDNne : DN ≠ ⊥ := by
       simpa [HN, DN] using hFother.complement_ne_bot
     have hDNa_ne : DNa ≠ ⊥ := by
@@ -7176,7 +7214,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
     have hFrobNa :
         IsFrobeniusGroupWithKernelComplement
           (F.subgroupOf Na) DNa := by
-      simpa [DNa] using
+      simpa [H, DNa] using
         xi91_frobenius_restrict_to_subgroup_containing_kernel
           F D Na hFrob hFNa (by simpa [DNa] using hDNa_ne)
     let FN : Subgroup HN := (F.subgroupOf Na).map eNa.toMonoidHom
@@ -7197,7 +7235,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
       letI : IsMulCommutative FN := hFNcomm
       refine ⟨⟨fun x y => ?_⟩⟩
       apply eFtoFN.injective
-      simpa only [map_mul] using mul_comm (eFtoFN x) (eFtoFN y)
+      simpa only [map_mul] using mul_comm' (eFtoFN x) (eFtoFN y)
     have hFNp : IsPGroup p FN := by
       have hFsubp : IsPGroup p (F.subgroupOf Na) :=
         hFp.of_equiv eFsub.symm
@@ -7467,9 +7505,11 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
     have hetaInvOne : eta⁻¹ ≠ 1 := by
       intro h
       apply heta
-      have := congrArg
-        (fun z : Q →* ℂˣ => z⁻¹) h
-      simpa using this
+      calc
+        eta = (eta⁻¹)⁻¹ := by
+          ext x; simp
+        _ = 1⁻¹ := by rw [h]
+        _ = 1 := by ext x; simp
     have hInvMem : ind eta⁻¹ ∈ B := by
       apply (hBmem (ind eta⁻¹)).mpr
       exact ⟨eta⁻¹, hetaInvOne, by rfl⟩
@@ -7561,7 +7601,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
       let S := {y : G // y * g * y⁻¹ ∈ H}
       let eS : H ≃ S :=
         { toFun := fun h => ⟨(h : G) * x, by
-            change ((h : G) * x) * g * ((h : G) * x)⁻¹ ∈ H
+            show ((h : G) * x) * g * ((h : G) * x)⁻¹ ∈ H
             have hzH : x * g * x⁻¹ ∈ H := hxH
             have hconj : ((h : G) * x) * g * ((h : G) * x)⁻¹ =
                 (h : G) * (x * g * x⁻¹) * (h : G)⁻¹ := by group
@@ -7689,7 +7729,9 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
           (isBookIrreducibleCharacter_isClassFunction
             (principalCharacter G) hprincipalGBook)
       _ = 1 := by
-        simpa [subgroupRestriction, principalCharacter] using hprincipalHSelf
+        have hsub : subgroupRestriction H (principalCharacter G) = principalCharacter H := by
+          ext x; simp [subgroupRestriction, principalCharacter]
+        simpa [hsub] using hprincipalHSelf
   obtain ⟨alpha, halphaBook, halphaNePrincipal, hPiSplit⟩ :=
     xi91_norm_two_principal_split Pi hPiChar hPiNorm hPiPrincipal
   have hDgt : 1 < Nat.card D :=
@@ -7722,7 +7764,9 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
           (isBookIrreducibleCharacter_isClassFunction
             (principalCharacter G) hprincipalGBook)
       _ = 0 := by
-        simpa [subgroupRestriction, principalCharacter] using hlambdaPrincipal
+        have hsub : subgroupRestriction H (principalCharacter G) = principalCharacter H := by
+          ext x; simp [subgroupRestriction, principalCharacter]
+        simpa [hsub] using hlambdaPrincipal
   have hlambdaOnD : ∀ z : D,
       subgroupRestriction D lambda z =
         if z = 1 then (Nat.card D : ℂ) else 0 := by
@@ -7791,7 +7835,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
     have hreal := congrFun hPiReal g
     rw [hPiSplit] at hreal
     change 1 + alpha g = star (1 + alpha g) at hreal
-    simpa using congrArg (fun z : ℂ => z - 1) hreal
+    simpa [conjugateCharacter] using congrArg (fun z : ℂ => z - 1) hreal
   have hiAlphaNe : iAlpha ≠ i0 := by
     intro hEq
     apply hpsi0Nonreal
@@ -7839,8 +7883,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
     let eQD : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
     have hQcyclic : IsCyclic Q := eQD.isCyclic.mpr hDcyclic
     letI : IsCyclic Q := hQcyclic
-    letI : IsMulCommutative Q := ⟨IsCyclic.commutative⟩
-    letI : CommGroup Q := CommGroup.ofIsMulCommutative
+    letI : CommGroup Q := IsMulCommutative.instCommGroup
     letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
     letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
       haveI : NeZero (Monoid.exponent Q) := by infer_instance
@@ -7994,7 +8037,9 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
       rw [htotal] at hsplit
       exact add_right_cancel hsplit
     have hi0S : i0 ∈ S := by
-      simp [S, hiAlphaNe, Ne.symm hiAlphaNe]
+      dsimp [S]
+      rw [Finset.mem_erase]
+      exact ⟨Ne.symm hiAlphaNe, Finset.mem_univ _⟩
     let R : Finset I := S.erase i0
     have hsumR : T i0 + ∑ i ∈ R, T i = 1 := by
       have hsplit := Finset.sum_erase_add (s := S) T hi0S
@@ -8309,7 +8354,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
     have hexIndex : ∀ z : Option B, ∃ j : J, theta j = selected z := by
       intro z
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hzero : scalarProduct G tensorChar (selected z) = 0 := by
         rw [htensorDecomp, scalarProduct_weightedFamilySum_left]
         apply Finset.sum_eq_zero
@@ -8345,7 +8390,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
               exfalso
               have hdegEq := congrArg degree hselEq
               rw [show degree (selected none) = 1 by
-                    simp [selected, degree, principalCharacter],
+                    simp [selected, degree_apply, principalCharacter_apply],
                   show degree (selected (some beta)) = (n + 1 : ℂ) by
                     simpa [selected] using hBdegree beta] at hdegEq
               have : (1 : ℕ) = n + 1 := by exact_mod_cast hdegEq
@@ -8358,7 +8403,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
               rw [show degree (selected (some beta)) = (n + 1 : ℂ) by
                     simpa [selected] using hBdegree beta,
                   show degree (selected none) = 1 by
-                    simp [selected, degree, principalCharacter]] at hdegEq
+                    simp [selected, degree_apply, principalCharacter_apply]] at hdegEq
               have : n + 1 = 1 := by exact_mod_cast hdegEq
               omega
           | some gamma =>
@@ -8384,7 +8429,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
                 (hdegreeTheta (index none)).symm
               _ = degree (selected none) :=
                 congrArg degree (hindexEq none)
-              _ = 1 := by simp [selected, degree, principalCharacter]
+              _ = 1 := by simp [selected, degree_apply, principalCharacter_apply]
           have hdegreeNat : degreeTheta (index none) = 1 := by
             exact_mod_cast hdegreeComplex
           simpa [selectedDegree] using hdegreeNat
@@ -8524,11 +8569,13 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
           exact Subgroup.mem_top y
         exact Subgroup.mem_center_iff.mp hy x
       apply hFnoncomm
-      exact ⟨⟨fun x y => by
-        apply Subtype.ext
-        apply H.subtype_injective
-        simpa only [Subgroup.coe_mul] using
-          hGcomm (((x : F) : H) : G) (((y : F) : H) : G)⟩⟩
+      refine ⟨⟨fun x y => ?_⟩⟩
+      apply Subtype.ext
+      apply H.subtype_injective
+      calc
+        H.subtype (↑x * ↑y) = (x : G) * (y : G) := by simp
+        _ = (y : G) * (x : G) := hGcomm (x : G) (y : G)
+        _ = H.subtype (↑y * ↑x) := by simp
     have hcommTop : commutator G = ⊤ :=
       hsimple (commutator G) (inferInstance : (commutator G).Normal)
         hcommNeBot
@@ -8606,7 +8653,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
         exact hDFree d hd z hzd
       rw [hfixF] at hquot
       have hfixQuot : fixedPointSubgroup (↥S) (F ⧸ C) = ⊥ := by
-        simpa using hquot
+        simpa [C] using hquot
       set_option synthInstance.maxHeartbeats 200000 in
       have hxS : x ∈ fixedPointSubgroup (↥S) (F ⧸ C) := by
         change ∀ s : S, s • x = x
@@ -8617,7 +8664,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
           exact Subgroup.mem_zpowers_iff.mpr ⟨m, Subtype.ext hm⟩
         · simpa [S] using hx
       rw [hfixQuot] at hxS
-      simpa using hxS
+      simpa [C] using hxS
     have hDdivAb : Nat.card D ∣ Nat.card (F ⧸ C) - 1 :=
       xi91_actor_card_dvd_group_card_sub_one hfreeAb
     have hAbOneLt : 1 < Nat.card (F ⧸ C) := by

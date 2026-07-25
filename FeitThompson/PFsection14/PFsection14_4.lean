@@ -21,20 +21,20 @@ universe u v w
 /-- Peterfalvi `(14.4)`. -/
 @[expose] public def theorem_14_4_statement
     {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
+    (Smax Tmax W W1 W2 P Q U V C D L _ : Subgroup G)
     (Sfam : Finset (Section1.ClassFunction Smax))
     (Tfam : Finset (Section1.ClassFunction Tmax))
     (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
     (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
+    (_ : Finset (Section1.ClassFunction L))
+    (_ : G → Subgroup G)
+    (_ _ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
+    (_ : Section1.ClassFunction L)
+    (_ : Section1.ClassFunction Smax)
+    (_ : Section1.ClassFunction Tmax)
+    (_ : Section1.ClassFunction Smax)
+    (_ : Section1.ClassFunction Tmax)
+    (_ : Section1.ClassFunction L)
     (p q u v c d : ℕ) : Prop :=
   hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d →
@@ -243,20 +243,20 @@ public theorem theorem_14_4
     {G : Type u}
     [Group G]
     [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
+    (Smax Tmax W W1 W2 P Q U V C D L _ : Subgroup G)
     (Sfam : Finset (Section1.ClassFunction Smax))
     (Tfam : Finset (Section1.ClassFunction Tmax))
     (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
     (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
+    (_ : Finset (Section1.ClassFunction L))
+    (_ : G → Subgroup G)
+    (_ _ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
+    (_ : Section1.ClassFunction L)
+    (_ : Section1.ClassFunction Smax)
+    (_ : Section1.ClassFunction Tmax)
+    (_ : Section1.ClassFunction Smax)
+    (_ : Section1.ClassFunction Tmax)
+    (_ : Section1.ClassFunction L)
     (p q u v c d : ℕ)
     : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
         Sfam Tfam τS τT p q u v c d →

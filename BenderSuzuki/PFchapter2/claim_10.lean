@@ -255,7 +255,7 @@ private theorem chapter2_claim10_fixed_field_classification_of_local_control
         exact Subgroup.mem_top x
       exact (Subgroup.zpowers_le.mpr a.property) hxzp
   letI : IsMulCommutative A :=
-    ⟨⟨fun x y => IsCyclic.commutative.comm x y⟩⟩
+    IsCyclic.isMulCommutative
   have hAprime : Nat.Prime (Nat.card A) :=
     (Group.is_simple_iff_prime_card (α := A)).mp hsimple
   obtain ⟨a, ha⟩ := exists_ne (1 : A)
@@ -659,9 +659,8 @@ private theorem chapter2_claim10_proposition_one_units_equiv
 private theorem chapter2_claim10_fixed_unit_image_mem_actor_centralizer
     {G : Type u} {X : Type u} {F : Type v}
     [Group G] [Finite G] [Group X] [Finite X]
-    [Field F] [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
-    (Q W P : Subgroup G) (Hbar A Qbar : Subgroup X)
-    (hPO : PFAppendixII.PropositionOneConclusion Hbar A Qbar F)
+    [Field F] [Finite F]
+    (Q W P : Subgroup G) (A : Subgroup X)
     (rho : A →* (F ≃+* F))
     (toStar : Fˣ →* nearFieldStar Q P)
     (e : A ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)))
@@ -693,7 +692,8 @@ private theorem chapter2_claim10_fixed_unit_image_mem_actor_centralizer
   have hinvMem : rhoAlg a⁻¹ ∈ Subgroup.zpowers (rhoAlg a) := by
     have h :=
       (Subgroup.zpowers (rhoAlg a)).inv_mem (Subgroup.mem_zpowers (rhoAlg a))
-    simpa using h
+    rw [map_inv]
+    exact h
   have hfixedAlg : rhoAlg a⁻¹ ((x : E) : F) = ((x : E) : F) := by
     rw [IntermediateField.mem_fixedField_iff] at hxmem
     exact hxmem _ hinvMem
@@ -721,9 +721,8 @@ control. -/
 private theorem chapter2_claim10_fixed_units_embedding_actor_centralizer
     {G : Type u} {X : Type u} {F : Type v}
     [Group G] [Finite G] [Group X] [Finite X]
-    [Field F] [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
-    (Q W P : Subgroup G) (Hbar A Qbar : Subgroup X)
-    (hPO : PFAppendixII.PropositionOneConclusion Hbar A Qbar F)
+    [Field F] [Finite F]
+    (Q W P : Subgroup G) (A : Subgroup X)
     (rho : A →* (F ≃+* F))
     (toStar : Fˣ →* nearFieldStar Q P) (htoStar : Function.Injective toStar)
     (e : A ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)))
@@ -752,7 +751,7 @@ private theorem chapter2_claim10_fixed_units_embedding_actor_centralizer
     refine ⟨?_, (toStarE x).property.1⟩
     simpa [E, inclUnits, toStarE] using
       chapter2_claim10_fixed_unit_image_mem_actor_centralizer
-        Q W P Hbar A Qbar hPO rho toStar e hcoordinateConj ell a ha x
+        Q W P A rho toStar e hcoordinateConj ell a ha x
   let f : Eˣ →* C :=
     ((nearFieldStar Q P).subtype.comp toStarE).codRestrict C hmem
   refine ⟨f, ?_⟩
@@ -768,9 +767,8 @@ private theorem chapter2_claim10_fixed_units_embedding_actor_centralizer
 private theorem chapter2_claim10_fixed_units_card_dvd_actor_centralizer
     {G : Type u} {X : Type u} {F : Type v}
     [Group G] [Finite G] [Group X] [Finite X]
-    [Field F] [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
-    (Q W P : Subgroup G) (Hbar A Qbar : Subgroup X)
-    (hPO : PFAppendixII.PropositionOneConclusion Hbar A Qbar F)
+    [Field F] [Finite F]
+    (Q W P : Subgroup G) (A : Subgroup X)
     (rho : A →* (F ≃+* F))
     (toStar : Fˣ →* nearFieldStar Q P) (htoStar : Function.Injective toStar)
     (e : A ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)))
@@ -787,7 +785,7 @@ private theorem chapter2_claim10_fixed_units_card_dvd_actor_centralizer
   intro a ha
   obtain ⟨f, hf⟩ :=
     chapter2_claim10_fixed_units_embedding_actor_centralizer
-      Q W P Hbar A Qbar hPO rho toStar htoStar e hcoordinateConj ell a ha
+      Q W P A rho toStar htoStar e hcoordinateConj ell a ha
   exact Subgroup.card_dvd_of_injective f hf
 /-- Checked local fixed-field control assembled from the environment 2-group
 calculation and the checked coordinate-compatibility construction. -/
@@ -795,7 +793,7 @@ private theorem chapter2_claim10_fixed_field_units_local_control
     {G : Type u} {Ω : Type v} {X : Type u} {F : Type v}
     [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     [Group X] [Finite X]
-    [Field F] [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    [Field F] [Finite F]
     (H D Q K V W Q0 S Q1 P : Subgroup G) (t s : G) (p : ℕ)
     (hch : (((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
   K ≤ D ∧
@@ -823,8 +821,7 @@ private theorem chapter2_claim10_fixed_field_units_local_control
           Nat.card L < Nat.card G →
             HypothesisA L ΩL HL DL QL tL →
               suzukiConclusion L ΩL)
-    (Hbar A Qbar : Subgroup X)
-    (hPO : PFAppendixII.PropositionOneConclusion Hbar A Qbar F)
+    (A : Subgroup X)
     (rho : A →* (F ≃+* F))
     (toStar : Fˣ →* nearFieldStar Q P) (htoStar : Function.Injective toStar)
     (e : A ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)))
@@ -843,7 +840,7 @@ private theorem chapter2_claim10_fixed_field_units_local_control
   intro a ha
   have hdvd :=
     chapter2_claim10_fixed_units_card_dvd_actor_centralizer
-      Q W P Hbar A Qbar hPO rho toStar htoStar e hcoordinateConj ell a ha
+      Q W P A rho toStar htoStar e hcoordinateConj ell a ha
   obtain ⟨n, hn⟩ := (hcentralizer a ha).exists_card_eq
   rw [hn] at hdvd
   obtain ⟨b, _hb_le, hcard⟩ :=
@@ -918,12 +915,12 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
   let SigmaBar : Subgroup (C ⧸ core) :=
     DP.map (QuotientGroup.mk' core)
   let eSigmaBar : SigmaBar ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)) := by
-    simpa [SigmaBar, C] using eSigma
+    simpa [SigmaBar, DP, core, OmegaP, C] using eSigma
   have heSigmaBar (a : SigmaBar) :
       QuotientGroup.mk' core
           ⟨(eSigmaBar a : G), (eSigmaBar a).property.2⟩ =
         (a : C ⧸ core) := by
-    simpa [SigmaBar, C, eSigmaBar] using heSigma a
+    simpa [SigmaBar, DP, core, OmegaP, C, eSigmaBar] using heSigma a
   have hSigmaBarCard : Nat.card SigmaBar = Nat.card Sigma := by
     calc
       Nat.card SigmaBar =
@@ -946,7 +943,7 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
       H D Q K V W Q0 S Q1 t hch.section3.section2
   have hP_le_D : P ≤ D := hch.B1.P_le_V.trans hV_le_D
   have hNcoreLocal : N.subgroupOf C = core := by
-    simpa [N, C, core] using hNcore
+    simpa [N, C, core, OmegaP] using hNcore
   have hQP_core_disjoint : Disjoint QP core := by
     rw [Subgroup.disjoint_def]
     intro x hxQ hxcore
@@ -955,7 +952,8 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
     have hxP : (x : G) ∈ P := by
       simpa [Subgroup.mem_subgroupOf] using hxPsub
     have hxQG : (x : G) ∈ Q := by
-      simpa [QP] using hxQ
+      change (x : G) ∈ Q at hxQ
+      exact hxQ
     have hxBot : (x : G) ∈ (⊥ : Subgroup G) :=
       hch.section3.section2.hA.A1.Q_disjoint_D.le_bot
         ⟨hxQG, hP_le_D hxP⟩
@@ -1047,7 +1045,8 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
         fieldToNear hfieldToNear_injective)
   let ell : ℕ := orderOf (s * t)
   have hcharEll : addOrderOf (1 : F) = ell := by
-    simpa [ell] using hcharacteristic
+    change @addOrderOf F hF.toAddCommGroup.toAddMonoid (1 : F) = orderOf (s * t)
+    exact hcharacteristic
   have hellPrime : Nat.Prime ell := by
     rw [← hcharEll]
     exact PFAppendixII.rightNearField_addOrderOf_one_prime
@@ -1214,8 +1213,7 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
   have hlocal :=
     chapter2_claim10_fixed_field_units_local_control
       H D Q K V W Q0 S Q1 P t s p hch hind
-        (HP.map (QuotientGroup.mk' core)) SigmaBar
-        (QP.map (QuotientGroup.mk' core)) hPO sigmaRingHom
+        SigmaBar sigmaRingHom
         fieldUnitsToStar hfieldUnitsToStar_injective eSigmaBar hcoordinateConj ell
   have hclassified :=
     chapter2_claim10_fixed_field_classification_of_local_control
@@ -1369,8 +1367,8 @@ private theorem chapter2_claim10_Q1_eq_bot_of_p_dvd_sigma
   by_contra hQ1
   have hStarComm : IsMulCommutative (nearFieldStar Q P) := by
     by_contra hnotcomm
-    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch (by
-      simpa [nearFieldStar] using hnotcomm)).2.1
+    change ¬ IsMulCommutative ↥(Q ⊓ Subgroup.centralizer (P : Set G)) at hnotcomm
+    exact hQ1 (claim_5 H D Q K V W Q0 S Q1 P t s p hch hnotcomm).2.1
   have hSigma_ne_one : Nat.card Sigma ≠ 1 := by
     intro hSigmaOne
     have hpOne : p = 1 := Nat.dvd_one.mp (by simpa [hSigmaOne] using hpSigma)
@@ -1655,7 +1653,11 @@ private theorem chapter2_claim10_card_structure
       Int.prime_dvd_pow_self_sub hch.B1.p_prime 2
     have hp1 : (p : ℤ) ∣ 1 := by
       have hdiff := dvd_sub hdvdZ hfermat
-      convert hdiff using 1 <;> ring
+      have hdiff_eq :
+          (2 : ℤ) ^ p - 1 - ((2 : ℤ) ^ p - 2) = 1 := by
+        ring
+      rw [hdiff_eq] at hdiff
+      exact hdiff
     have hp1Nat : p ∣ 1 := by
       exact_mod_cast hp1
     exact hch.B1.p_prime.ne_one (Nat.dvd_one.mp hp1Nat)
@@ -1677,7 +1679,8 @@ private theorem chapter2_claim10_card_structure
     letI : Subgroup.Normalizes P W := ⟨hPnormW⟩
     have hPgroup : IsPGroup p P := by
       apply IsPGroup.of_card (n := 1)
-      simpa [hch.B1.P_card]
+      rw [pow_one]
+      exact hch.B1.P_card
     have hfix :
         fixedPointSubgroup (↥P) (↥W) =
           (subgroupCentralizerIn W P).subgroupOf W := by
@@ -1781,8 +1784,9 @@ private theorem chapter2_claim10_p_part
         by simpa using
           (padicValNat.pow_add_pow hpOdd hpDvdBaseSucc hpNotDvdBase hpOdd)
       _ = m + 1 := by
-        rw [Nat.sub_add_cancel hpow_one, padicValNat.prime_pow]
-        simpa using congrArg (fun n => n + 1) (padicValNat.prime_pow m)
+        have hpval : padicValNat p p = 1 := by
+          simpa only [pow_one] using (padicValNat.prime_pow (p := p) 1)
+        rw [Nat.sub_add_cancel hpow_one, padicValNat.prime_pow, hpval]
   let uQ : ℕ := (Nat.card Q + 1).divMaxPow p
   have hQplusDecomp : Nat.card Q + 1 = p ^ (m + 1) * uQ := by
     rw [← hVal]
@@ -1826,7 +1830,7 @@ private theorem chapter2_claim10_p_part
         ring
 
 private theorem claim_10_addOrderOf_one_eq_three_of_dickson_model
-    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type*} [PFAppendixII.RightNearField F] [Finite F]
     (hmodel : PFAppendixII.IsDicksonIndexTwoModel F 3 1) :
     addOrderOf (1 : F) = 3 := by
   rw [PFAppendixII.IsDicksonIndexTwoModel] at hmodel

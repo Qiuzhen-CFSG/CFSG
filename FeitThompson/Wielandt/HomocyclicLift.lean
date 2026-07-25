@@ -27,6 +27,7 @@ public structure HomocyclicCommonLinearLift
   [instDecidableEqMatrixIndex : DecidableEq matrixIndex]
   linearLift : G →* (Module.End (ZMod (p ^ e)) (matrixIndex → ZMod (p ^ e)))ˣ
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -47,6 +48,7 @@ public structure HomocyclicQuotientLinearLift
           Module.End (ZMod (p ^ e)) (matrixIndex → ZMod (p ^ e))) x) =
       Additive.ofMul (g • Additive.toMul (quotientMap x))
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -82,6 +84,7 @@ public structure HomocyclicCoverLinearLift
     quotientEquiv (QuotientGroup.mk' kernel (coverAction g w)) =
       g • quotientEquiv (QuotientGroup.mk' kernel w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- The quotient-cover part of the homocyclic Frattini construction.
@@ -115,6 +118,7 @@ public structure HomocyclicFrattiniQuotientCover
       frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
         g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- The cover-only part of the homocyclic Frattini construction.
@@ -148,6 +152,7 @@ public structure HomocyclicFrattiniCover
       frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
         g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Free `ZMod (p ^ e)` coordinates for a fixed homocyclic Frattini quotient
@@ -165,6 +170,7 @@ public structure HomocyclicFrattiniCoverCoordinateData
     letI : Group C.cover := C.instGroupCover
     (matrixIndex → ZMod (p ^ e)) ≃+ Additive C.cover
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Assemble a quotient cover and coordinate data into the cover package used by
@@ -226,6 +232,7 @@ public structure HomocyclicFrattiniCoverLinearLift
     frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
       g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- A lifted `G`-action on a fixed homocyclic Frattini cover, compatible with

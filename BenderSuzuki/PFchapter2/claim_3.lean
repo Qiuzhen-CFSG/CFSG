@@ -24,7 +24,7 @@ namespace PFchapter2
 open PFchapter1section1 PFAppendixIII
 open External PFAppendixI PFAppendixII Representation
 open PFchapter1section2 PFchapter1section3
-open scoped Pointwise BigOperators DirectSum
+open scoped Pointwise BigOperators DirectSum IsMulCommutative
 
 /-!
 # Peterfalvi, Part II, Chapter II, Claim (3)
@@ -34,30 +34,58 @@ universe uNF vNF wNF uF uL uV uFix
 
 /-- The action induced by an embedding in the unit group of a right near-field.
 The opposite unit group corrects the order of composition of right translations. -/
+private noncomputable def rightNearFieldEmbeddedMulAction_aux
+    {F : Type uNF} [RightNearField F]
+    {E : Type vNF} [Group E] [IsMulCommutative E]
+    (f : E →* Fˣ) (e : E) : MulAut (Multiplicative F) :=
+  { toFun := fun x => Multiplicative.ofAdd (Multiplicative.toAdd x * (f e : F))
+    invFun := fun x => Multiplicative.ofAdd (Multiplicative.toAdd x * ((f e)⁻¹ : F))
+    left_inv := by
+      intro x
+      simp
+    right_inv := by
+      intro x
+      simp
+    map_mul' := by
+      intro x y
+      simp [RightNearField.right_distrib] }
+
+private lemma rightNearFieldEmbeddedMulAction_aux_map_mul
+    {F : Type uNF} [RightNearField F]
+    {E : Type vNF} [Group E] [IsMulCommutative E]
+    (f : E →* Fˣ) (a b : E) :
+    rightNearFieldEmbeddedMulAction_aux f (a * b) =
+      rightNearFieldEmbeddedMulAction_aux f a *
+        rightNearFieldEmbeddedMulAction_aux f b := by
+  ext x
+  have hcomm : (f a : F) * (f b : F) = (f b : F) * (f a : F) := by
+    calc
+      (f a : F) * (f b : F) = ((f a * f b : Fˣ) : F) := rfl
+      _ = ((f (a * b) : Fˣ) : F) := by simp
+      _ = ((f (b * a) : Fˣ) : F) := by rw [mul_comm a b]
+      _ = ((f b * f a : Fˣ) : F) := by simp
+      _ = (f b : F) * (f a : F) := rfl
+  calc
+    rightNearFieldEmbeddedMulAction_aux f (a * b) x
+        = Multiplicative.ofAdd (Multiplicative.toAdd x * (f (a * b) : F)) := rfl
+    _ = Multiplicative.ofAdd (Multiplicative.toAdd x * ((f a : F) * (f b : F))) := by simp
+    _ = Multiplicative.ofAdd (Multiplicative.toAdd x * ((f b : F) * (f a : F))) := by rw [hcomm]
+    _ = Multiplicative.ofAdd ((Multiplicative.toAdd x * (f b : F)) * (f a : F)) := by
+      simp [mul_assoc]
+    _ = (rightNearFieldEmbeddedMulAction_aux f a * rightNearFieldEmbeddedMulAction_aux f b) x := by
+      rw [MulAut.mul_apply]
+      rfl
+
 private noncomputable def rightNearFieldEmbeddedRightMulAction
     {F : Type uNF} [RightNearField F]
     {E : Type vNF} [Group E] [IsMulCommutative E]
-    (f : E →* Fˣ) : E →* MulAut (Multiplicative F) := by
-  let eop : E →* Eᵐᵒᵖ :=
-    (MulOpposite.opMulEquiv : E ≃* Eᵐᵒᵖ).toMonoidHom
-  let fop : Eᵐᵒᵖ →* (Fˣ)ᵐᵒᵖ := MonoidHom.op f
-  let rhoAdd : E →* (F ≃+ F) :=
-    rightNearFieldRightMulAction.comp (fop.comp eop)
-  exact
-    { toFun := fun e => (rhoAdd e).toMultiplicative
-      map_one' := by
-        ext x
-        change Multiplicative.ofAdd (rhoAdd 1 (Multiplicative.toAdd x)) = x
-        rw [rhoAdd.map_one]
-        rfl
-      map_mul' := by
-        intro x y
-        ext z
-        change Multiplicative.ofAdd (rhoAdd (x * y) (Multiplicative.toAdd z)) =
-          Multiplicative.ofAdd
-            (rhoAdd x (rhoAdd y (Multiplicative.toAdd z)))
-        rw [rhoAdd.map_mul]
-        rfl }
+    (f : E →* Fˣ) : E →* MulAut (Multiplicative F) :=
+  { toFun := rightNearFieldEmbeddedMulAction_aux f
+    map_one' := by
+      ext x
+      unfold rightNearFieldEmbeddedMulAction_aux
+      simp [map_one, mul_one]
+    map_mul' := rightNearFieldEmbeddedMulAction_aux_map_mul f }
 
 private theorem rightNearFieldEmbeddedRightMulAction_apply
     {F : Type uNF} [RightNearField F]
@@ -65,7 +93,9 @@ private theorem rightNearFieldEmbeddedRightMulAction_apply
     (f : E →* Fˣ) (e : E) (x : F) :
     rightNearFieldEmbeddedRightMulAction f e (Multiplicative.ofAdd x) =
       Multiplicative.ofAdd (x * (f e : F)) := by
-  simp [rightNearFieldEmbeddedRightMulAction, rightNearFieldRightMulAction_apply]
+  unfold rightNearFieldEmbeddedRightMulAction
+  unfold rightNearFieldEmbeddedMulAction_aux
+  rfl
 
 private theorem rightNearFieldEmbeddedRightMulAction_injective
     {F : Type uNF} [RightNearField F]
@@ -131,8 +161,12 @@ private theorem elementaryAbelian_card_eq_prime_of_injective_to_rightNearField_u
     simp [Nat.Prime.not_dvd_one (Fact.out : r.Prime)]
   let R : Sylow r A := htop_r.toSylow htop_index
   have hR_cyclic : IsCyclic R := hclassification.1 r hr_two R
+  have hRtop : (R : Subgroup A) = (⊤ : Subgroup A) := by
+    ext x
+    simp [R]
   have htop_cyclic : IsCyclic (⊤ : Subgroup A) := by
-    simpa [R] using hR_cyclic
+    -- hRtop gives equality of the underlying subgroups, so we can transport IsCyclic
+    exact (hRtop ▸ hR_cyclic)
   have hA_cyclic : IsCyclic A :=
     (Subgroup.topEquiv : (⊤ : Subgroup A) ≃* A).isCyclic.mp htop_cyclic
   have hE_cyclic : IsCyclic E := eA.isCyclic.mpr hA_cyclic
@@ -144,7 +178,7 @@ private theorem elementaryAbelian_card_eq_prime_of_injective_to_rightNearField_u
 factor with the unit group of the resulting right near-field. -/
 private theorem propositionOneConclusion_exists_injective_to_rightNearField_units
     {B : Type uNF} [Group B] (H D Q : Subgroup B)
-    {F : Type vNF} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type vNF} [RightNearField F] [Finite F]
     (hPO : PropositionOneConclusion H D Q F)
     {E : Type wNF} [Group E] (j : E →* Q) (hj : Function.Injective j) :
     ∃ f : E →* Fˣ, Function.Injective f := by
@@ -285,7 +319,7 @@ private theorem claim3_fixedPointSubgroup_card_eq_prime_of_propositionOneConclus
     (hcore_le_DP : core ≤
       D.comap (Subgroup.centralizer (P : Set G)).subtype)
     (Hbar Dbar : Subgroup (Subgroup.centralizer (P : Set G) ⧸ core))
-    {F : Type vNF} [RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type vNF} [RightNearField F] [Finite F]
     (hPO : PropositionOneConclusion Hbar Dbar
       ((Q.comap (Subgroup.centralizer (P : Set G)).subtype).map
         (QuotientGroup.mk' core)) F)
@@ -395,6 +429,7 @@ private theorem clifford_prime_finrank_restriction
     subst n
     have hUtop : U 0 = ⊤ := by
       apply Subrepresentation.toSubmodule_injective
+      change (U 0).toSubmodule = (⊤ : Submodule F V)
       simpa using hInternal.submodule_iSup_eq_top
     have htopIrr := hUirr 0
     change Representation.IsIrreducible (U 0).toRepresentation at htopIrr
@@ -478,7 +513,10 @@ private theorem claim3_appendixI_scalar_adapter
   have hcardN : Nat.card N = r ^ p := by
     have hcard := Module.natCard_eq_pow_finrank
       (K := ZMod r) (V := Additive N)
-    simpa [hdim] using hcard
+    calc
+      Nat.card N = Nat.card (Additive N) :=
+        (Nat.card_congr Additive.toMul).symm
+      _ = r ^ p := by simpa [hdim] using hcard
   let Fr := AppendixIFpT (p := r) (E := N) K
   obtain ⟨fieldInst, hfield⟩ :=
     peterfalvi_appendixI_proposition_2_a
@@ -730,7 +768,7 @@ private theorem claim3_actor_card_dvd_prime_sub_one_of_oneDim_subrepresentation
       (K := ZMod r) (V := W.toSubmodule)
     simpa [ZMod.card, hWdim] using hnat
   have hmultCard : Nat.card (Multiplicative W.toSubmodule) = r := by
-    simpa using hWcard
+    exact (Nat.card_congr Multiplicative.toAdd).trans hWcard
   have hdvd := Section6.natCard_actor_dvd_group_card_sub_one hfreeW
   simpa [hmultCard] using hdvd
 
@@ -1024,7 +1062,8 @@ private theorem claim3_q1_subgroupOf_characteristic
     constructor
     · rintro ⟨y, hy, heq⟩
       have hyx : y = x := Q.subtype_injective heq
-      simpa [hyx] using hy
+      rw [← hyx]
+      exact hy
     · intro hx
       exact ⟨x, hx, rfl⟩
   have hSQcard : Nat.card SQ = 2 ^ (Nat.card Q).factorization 2 := by
@@ -1057,7 +1096,7 @@ private theorem claim3_normalizer_le_normalizer_map_subtype_of_characteristic
     (Subgroup.normalizer (H : Set G)) ?_
   intro g x hx
   rcases Subgroup.mem_map.mp hx with ⟨xH, hxK, rfl⟩
-  let gH : Subgroup.normalizer (H : Set G) := ⟨g, by simpa using g.property⟩
+  let gH : Subgroup.normalizer (H : Set G) := ⟨g, by simp⟩
   have hfix :
       Subgroup.comap (Subgroup.normalizerMonoidHom H gH).toMonoidHom K = K :=
     (inferInstance : K.Characteristic).fixed (Subgroup.normalizerMonoidHom H gH)
@@ -1067,7 +1106,7 @@ private theorem claim3_normalizer_le_normalizer_map_subtype_of_characteristic
     exact hxK
   have hxImage : (Subgroup.normalizerMonoidHom H gH) xH ∈ K := hxComap
   exact ⟨(Subgroup.normalizerMonoidHom H gH) xH, hxImage, by
-    simpa [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
+    simp [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
 
 private theorem claim3_frobenius_sup_of_prime_complement
     {G : Type*} [Group G] [Finite G]
@@ -1296,6 +1335,7 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
   by_cases hT0bot : T0 = ⊥
   · left
     apply Subrepresentation.toSubmodule_injective
+    change S.toSubmodule = (⊥ : Submodule (ZMod r) (Additive N))
     ext x
     have hxT0 : Additive.toMul x ∈ T0 ↔ x ∈ S.toSubmodule := by
       simp [T0]
@@ -1304,11 +1344,13 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
     · intro hx
       simpa [hx]
     · intro hx
-      simpa using hx
+      change x = 0 at hx
+      subst x
+      simp
   · right
     letI : IsInvariant L N T0 := hT0inv
     let T : Subgroup M := T0.map N.subtype
-    have hTnormal : T.Normal := Subgroup.normal_of_comm T
+    have hTnormal : T.Normal := Subgroup.normal_of_isMulCommutative T
     have hTinv : IsInvariant L M T := by
       exact isInvariant_map_subtype (A := L) (G := M) N T0
     have hTne : T ≠ ⊥ := by
@@ -1350,7 +1392,7 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
       letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
       ∃ M : Subgroup R, ∃ hMinv : IsInvariant L R M,
         letI : IsInvariant L R M := hMinv
-        ∃ N : Subgroup M, ∃ hNinv : IsInvariant L M N,
+        ∃ N : Subgroup M, ∃ _hNinv : IsInvariant L M N,
           IsElementaryAbelian r M ∧ IsElementaryAbelian r N ∧ N ≠ ⊥ ∧
             ∀ T : Subgroup M, T.Normal → IsInvariant L M T →
               T ≠ ⊥ → T ≤ N → T = N := by
@@ -1394,7 +1436,7 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
       intro ha0
       apply hMne
       apply (Subgroup.eq_bot_iff_card (H := M)).2
-      simpa [ha, ha0]
+      simp [ha, ha0]
     have hrM : r ∣ Nat.card M := by
       rw [ha]
       exact dvd_pow_self r ha0
@@ -1492,7 +1534,7 @@ private theorem claim3_ringChar_not_dvd_actor_card_of_fixedPointFree
   obtain ⟨n, hNcard⟩ := hNp.exists_card_eq
   have hn : n ≠ 0 := by
     intro hn
-    have hcardOne : Nat.card N = 1 := by simpa [hNcard, hn]
+    have hcardOne : Nat.card N = 1 := by simp [hNcard, hn]
     exact not_subsingleton_iff_nontrivial.mpr hNne
       (Nat.card_eq_one_iff_unique.mp hcardOne).1
   have hrN : r ∣ Nat.card N := by
@@ -1577,7 +1619,11 @@ private theorem claim3_fixedSubspace_finrank_eq_one_of_fixedPointSubgroup_card_e
     (A := L) (M := N) (p := r) P
   have hsubcard : Nat.card (rho.fixedSubspace P) =
       Nat.card (fixedPointSubgroup P N) := by
-    simpa [rho, e] using Nat.card_congr e
+    calc
+      Nat.card (rho.fixedSubspace P) =
+          Nat.card (Additive (fixedPointSubgroup P N)) := Nat.card_congr e
+      _ = Nat.card (fixedPointSubgroup P N) :=
+        Nat.card_congr Additive.toMul
   have hnat := Module.natCard_eq_pow_finrank
     (K := ZMod r) (V := rho.fixedSubspace P)
   have hpow : r ^ Module.finrank (ZMod r) (rho.fixedSubspace P) = r ^ 1 := by
@@ -1895,7 +1941,7 @@ private theorem claim3_chapterI_field_model
                           (∀ s : G, s ∈ S → ∀ q1 : G, q1 ∈ Q1 →
                             s * q1 = q1 * s) ∧
                             S ⊔ Q1 = Q))
-    (hP_le_V : P ≤ V) (hQ0card : Nat.card Q0 = 2 ^ p)
+    (_hP_le_V : P ≤ V) (hQ0card : Nat.card Q0 = 2 ^ p)
     {K0 P0 : Type*} [Group K0] [Group P0]
     (kToK : K0 →* K) (hkToK : Function.Injective kToK)
     (pToV : P0 →* V) (act : P0 →* MulAut K0)
@@ -1903,7 +1949,7 @@ private theorem claim3_chapterI_field_model
       (((kToK (act a k) : K) : G)) =
         ((pToV a : V) : G) * ((kToK k : K) : G) *
           ((pToV a : V) : G)⁻¹) :
-    ∃ (n : Nat) (hn : n ≠ 0),
+    ∃ (n : Nat) (_hn : n ≠ 0),
       let F2 : Type := GaloisField 2 n
       ∃ (scalar2 : K0 →* F2ˣ) (sigma2 : P0 →* (F2 ≃+* F2)),
         Module.finrank (ZMod 2) F2 = p ∧
@@ -2029,9 +2075,9 @@ private theorem chapter2_claim3_irreducible_branch
   have hact_coe : ∀ (a : Psub) (k : Ksub),
       (((act a) k : Ksub) : L) = (a : L) * (k : L) * (a : L)⁻¹ := by
     intro a k
-    simpa [act, MulDistribMulAction.toMulAut_apply] using
-      (Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
-        Psub Ksub hPnormK a k)
+    change ((a • k : Ksub) : L) = (a : L) * (k : L) * (a : L)⁻¹
+    exact Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
+      Psub Ksub hPnormK a k
   have hregular : ActsRegularly Psub Ksub :=
     IsFrobeniusGroupWithKernelComplement.regular_conj_action
       (K := Ksub) (R := Psub) hfrob'
@@ -2063,7 +2109,9 @@ private theorem chapter2_claim3_irreducible_branch
       Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe_explicit
         Psub Ksub hPnormK a k
     have hconjG := congrArg L.subtype hconj
-    simpa [pToV, eK, eP, act, MulDistribMulAction.toMulAut_apply] using hconjG
+    change (((a • k : Ksub) : L) : G) =
+      ((a : L) : G) * ((k : L) : G) * ((a : L) : G)⁻¹
+    exact hconjG
   rcases claim3_chapterI_field_model
       H D Q K V W Q0 S Q1 P t p hsec hP_le_V hQ0card
       eK.toMonoidHom eK.injective pToV act hactG with
@@ -2124,7 +2172,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
   have hnilQ1 : Group.IsNilpotent Q1 := by
     let Q1Q : Subgroup Q := Q1.subgroupOf Q
     letI : Group.IsNilpotent Q1Q := Subgroup.isNilpotent Q1Q
-    exact nilpotent_of_mulEquiv
+    exact Group.nilpotent_of_mulEquiv
       (Subgroup.subgroupOfEquivOfLe hch.section3.section2.Q1_le_Q)
   obtain ⟨R, hRinv, M, hMinv, N, hNinv, hMelem, hNelem, hNne, hNmin⟩ :=
     claim3_exists_minimal_invariant_elementaryAbelian
@@ -2242,7 +2290,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
     have hfreeVec : ∀ k : Ksub, k ≠ 1 →
         ∀ x : Additive N, rhoK k x = x → x = 0 := by
       intro k hk x hx
-      have hxmul : k • Additive.toMul x = Additive.toMul x := by
+      have hxmul : (k : L) • Additive.toMul x = Additive.toMul x := by
         apply Additive.ofMul.injective
         simpa [rhoK, rhoL] using hx
       have hone := hKfree k hk (Additive.toMul x) hxmul

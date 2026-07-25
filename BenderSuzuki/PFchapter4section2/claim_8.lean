@@ -16,38 +16,31 @@ open PFchapter1section1 PFAppendixIII PFchapter3section1 PFchapter3section3
 private theorem claim_8_upper_sum_of_product_eq_succ
     (m n q b : ℕ) (hn : n * m = q + 1) (hb : b ∈ Finset.Icc 1 n) :
     Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m)) = q := by
-  have hcard : (Finset.Icc 1 n).card = n := by simp
-  have hn_one : 1 ≤ n := (Finset.mem_Icc.mp hb).1.trans (Finset.mem_Icc.mp hb).2
-  calc
-    Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m)) =
-        (m - 1) + ((Finset.Icc 1 n) \ {b}).card * m := by
-      rw [Finset.sum_eq_add_sum_diff_singleton_of_mem hb]
-      simp only [if_pos rfl]
-      congr 1
-      have hsum :
-          (∑ x ∈ Finset.Icc 1 n \ {b}, if x = b then m - 1 else m) =
-            ∑ _x ∈ Finset.Icc 1 n \ {b}, m := by
-        apply Finset.sum_congr rfl
-        intro x hx
-        simp only [Finset.mem_sdiff, Finset.mem_singleton] at hx
-        simp [hx.2]
-      rw [hsum]
-      simp
-    _ = n * m - 1 := by
-      have hdiff : Finset.Icc 1 n \ {b} = (Finset.Icc 1 n).erase b := by
-        ext x
-        simp [and_left_comm, and_assoc, and_comm]
-      rw [hdiff, Finset.card_erase_of_mem hb, hcard]
-      by_cases hm0 : m = 0
-      · simp [hm0]
-      · have hm : 1 ≤ m := Nat.one_le_iff_ne_zero.mpr hm0
-        rw [Nat.add_comm, ← Nat.add_sub_assoc hm]
-        congr 1
-        calc
-          (n - 1) * m + m = (n - 1) * m + 1 * m := by simp
-          _ = ((n - 1) + 1) * m := (Nat.add_mul (n - 1) 1 m).symm
-          _ = n * m := by rw [Nat.sub_add_cancel hn_one]
-    _ = q := by omega
+  obtain ⟨hb1, hb2⟩ := Finset.mem_Icc.mp hb
+  have hn_pos : 1 ≤ n := hb1.trans hb2
+  have hm_pos : 1 ≤ m := by
+    by_contra hm0
+    have hm0' : m = 0 := by omega
+    rw [hm0', mul_zero] at hn
+    omega
+  have hsum_one : Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then 1 else 0)) = 1 := by
+    simp [hb]
+  have hsum_m : Finset.sum (Finset.Icc 1 n) (fun _ : ℕ => m) = n * m := by
+    simp
+  have h_eq : Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m)) + 1 = n * m := by
+    calc
+      Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m)) + 1 =
+          Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m)) +
+          Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then 1 else 0)) := by rw [hsum_one]
+      _ = Finset.sum (Finset.Icc 1 n) (fun j => (if j = b then m - 1 else m) + (if j = b then 1 else 0)) :=
+        by rw [Finset.sum_add_distrib]
+      _ = Finset.sum (Finset.Icc 1 n) (fun _ : ℕ => m) := by
+        refine Finset.sum_congr rfl (fun j hj => ?_)
+        by_cases hj_eq : j = b
+        · subst j; simp [Nat.sub_add_cancel hm_pos]
+        · simp [hj_eq]
+      _ = n * m := hsum_m
+  omega
 
 public theorem claim_8
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
@@ -134,7 +127,7 @@ public theorem claim_8
     intro q a hqQ0 haD
     have haH := PFchapter4section1.rankOneSplit_D_le_M hD_eq haD
     rcases (hsec2.Q0_def q).1 hqQ0 with rfl | ⟨hqH, hqI⟩
-    · simpa [rightConjugateElem] using Q0.one_mem
+    · simp [rightConjugateElem]
     · exact (hsec2.Q0_def _).2 (Or.inr
         ⟨H.mul_mem (H.mul_mem (H.inv_mem haH) hqH) haH,
           isInvolution_rightConjugateElem hqI⟩)
@@ -287,8 +280,11 @@ public theorem claim_8
         hphi_inj (congrArg Subtype.val huv)
       have hcardWne : Nat.card {w : W // w ≠ 1} = Nat.card W - 1 := by
         letI := Fintype.ofFinite W
-        simpa [Nat.card_eq_fintype_card] using
-          (Fintype.card_subtype_compl (fun w : W => w = 1))
+        calc
+          Nat.card {w : W // w ≠ 1} = Fintype.card {w : W // w ≠ 1} := by simp
+          _ = Fintype.card W - 1 := by
+            simp
+          _ = Nat.card W - 1 := by simp
       have hle := Nat.card_le_card_of_injective phi0 hphi0_inj
       simpa [Fiber, hj_eq, hWorder, hcardWne] using hle
     · have hle := Nat.card_le_card_of_injective phi hphi_inj
@@ -456,7 +452,7 @@ public theorem claim_8_exists_crossing_in_K
     intro q a hqQ0 haD
     have haH := PFchapter4section1.rankOneSplit_D_le_M hD_eq haD
     rcases (hsec2.Q0_def q).1 hqQ0 with rfl | ⟨hqH, hqI⟩
-    · simpa [rightConjugateElem] using Q0.one_mem
+    · simp [rightConjugateElem]
     · exact (hsec2.Q0_def _).2 (Or.inr
         ⟨H.mul_mem (H.mul_mem (H.inv_mem haH) hqH) haH,
           isInvolution_rightConjugateElem hqI⟩)

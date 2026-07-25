@@ -105,7 +105,8 @@ private theorem quotient_Op_p'p_card_dvd_normalizer_card
       Nat.card (N ⧸ L.subgroupOf N) = Nat.card (N.map (QuotientGroup.mk' L)) := hcard_map.symm
       _ = Nat.card (⊤ : Subgroup (G ⧸ L)) := by rw [hmap_top]
       _ = Nat.card (G ⧸ L) := by rw [Subgroup.card_top]
-  exact ⟨1, by simp [N, L, hcard_eq]⟩
+  change Nat.card (G ⧸ L) ∣ Nat.card (N ⧸ L.subgroupOf N)
+  rw [hcard_eq]
 
 private theorem quotient_Op_p'p_card_dvd_automorphism_image_card
     {G : Type*} [Group G] [Finite G] [IsSolvable G] {p : ℕ} [Fact p.Prime]

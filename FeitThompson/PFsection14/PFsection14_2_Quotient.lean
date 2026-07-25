@@ -51,7 +51,7 @@ public theorem section14_quotient_bot_equiv_apply_eq_out
       (QuotientGroup.mk' N) (e x) = e.symm (e x) := by rw [hsymm]
       _ = x := e.left_inv x
   have hmk_out : (QuotientGroup.mk' N) (Quotient.out x) = x := by
-    simpa [QuotientGroup.mk'] using Quotient.out_eq' x
+    simp [QuotientGroup.mk']
   have hmk_eq : (QuotientGroup.mk' N) (e x) =
       (QuotientGroup.mk' N) (Quotient.out x) := hmk_e.trans hmk_out.symm
   rw [QuotientGroup.mk'_eq_mk'] at hmk_eq
@@ -69,7 +69,7 @@ public theorem section14_quotient_bot_equiv_mk'_apply
       (((QuotientGroup.quotientMulEquivOfEq hN).trans
         (QuotientGroup.quotientBot (G := A))) x) = x := by
   rw [section14_quotient_bot_equiv_apply_eq_out hN x]
-  simpa [QuotientGroup.mk'] using Quotient.out_eq' x
+  simp [QuotientGroup.mk']
 
 public theorem section14_quotient_bot_equiv_mk'_apply_eq
     {A : Type u} [Group A] {N : Subgroup A} [N.Normal]
@@ -349,7 +349,7 @@ public theorem section14_appendixCP0InP_map_ePfield_eq_zpowers
     {A : Type u} [Group A] {K L : Subgroup A} (h : K = L) :
     K ≃* L :=
   { toFun := fun x => ⟨x, by simpa [h] using x.property⟩
-    invFun := fun x => ⟨x, by simpa [h] using x.property⟩
+    invFun := fun x => ⟨x, by simp [h]⟩
     left_inv := by
       intro x
       rfl

@@ -30,7 +30,7 @@ public theorem irreducible_iff_end_dimension_one
   constructor
   · intro hρ
     letI : Representation.IsIrreducible ρ := hρ
-    simpa using (Representation.IsIrreducible.finrank_intertwiningMap_self (ρ := ρ))
+    exact Representation.IsIrreducible.finrank_intertwiningMap_self (ρ := ρ)
   · intro hend
     have hpos : 0 < Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) := by
       omega
@@ -44,10 +44,9 @@ public theorem irreducible_iff_end_dimension_one
         exact hsub.elim _ _
       exact one_ne_zero hzero
     haveI : Nontrivial V := hV_nontrivial
+    letI : Nontrivial ρ.asModule := hV_nontrivial
     rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
-    letI : Module (MonoidAlgebra ℂ G) V :=
-      Module.compHom V (Representation.asAlgebraHom ρ).toRingHom
-    change IsSimpleOrder (Submodule (MonoidAlgebra ℂ G) V)
+    change IsSimpleOrder (Submodule (MonoidAlgebra ℂ G) ρ.asModule)
     refine
       { toNontrivial := ?_
         eq_bot_or_eq_top := ?_ }
@@ -59,17 +58,18 @@ public theorem irreducible_iff_end_dimension_one
         · exact Or.inr hNtop
         · exfalso
           have hcompl :
-              ∃ P : Submodule (MonoidAlgebra ℂ G) V, IsCompl N P :=
+              ∃ P : Submodule (MonoidAlgebra ℂ G) ρ.asModule, IsCompl N P :=
             MonoidAlgebra.Submodule.exists_isCompl'
-              (k := ℂ) (G := G) (V := V) N
+              (k := ℂ) (G := G) (V := ρ.asModule) N
           obtain ⟨P, hPcompl⟩ := hcompl
-          let eEnd : Module.End (MonoidAlgebra ℂ G) V := Submodule.IsCompl.projection hPcompl
+          let eEnd : Module.End (MonoidAlgebra ℂ G) ρ.asModule :=
+            Submodule.projection N P hPcompl
           let e : Representation.IntertwiningMap ρ ρ :=
             (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)).symm eEnd
           have heEnd_ne_zero : eEnd ≠ 0 := by
             obtain ⟨x, hxN, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hNbot
             have hxproj : eEnd x = x := by
-              simpa [eEnd] using Submodule.IsCompl.projection_apply_left hPcompl (⟨x, hxN⟩ : N)
+              simpa [eEnd] using Submodule.projection_apply_left hPcompl (⟨x, hxN⟩ : N)
             intro he0
             exact hx0 (by simpa [he0] using hxproj.symm)
           have he_ne_zero : e ≠ 0 := by
@@ -87,7 +87,7 @@ public theorem irreducible_iff_end_dimension_one
             obtain ⟨y, hyP, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP_nonbot
             have hyproj : eEnd y = 0 := by
               simpa [eEnd] using
-                (Submodule.IsCompl.projection_apply_eq_zero_iff hPcompl (x := y)).2 hyP
+                (Submodule.projection_apply_eq_zero_iff hPcompl (x := y)).2 hyP
             intro he1
             exact hy0 (by simpa [he1] using hyproj)
           have he_ne_one : e ≠ 1 := by
@@ -97,7 +97,7 @@ public theorem irreducible_iff_end_dimension_one
               congrArg (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)) he1
           have he_idem : e * e = e := by
             apply (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)).injective
-            simpa [e] using (Submodule.IsCompl.projection_isIdempotentElem hPcompl).eq
+            simpa [e] using (Submodule.isIdempotentElem_projection hPcompl).eq
           obtain ⟨c, hc⟩ :
               ∃ c : ℂ, c • (1 : Representation.IntertwiningMap ρ ρ) = e := by
             exact
@@ -256,7 +256,3 @@ public theorem repEquiv_of_irreducible_char_eq
   rcases equiv_of_irreducible_char_eq (ρ := ρ) (σ := σ) hc hchar with ⟨e⟩
   exact ⟨RepEquiv.ofRepresentationEquiv e⟩
 end Representation
-
-
-
-

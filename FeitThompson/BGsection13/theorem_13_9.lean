@@ -60,6 +60,7 @@ private theorem section13_theorem_13_9_tau2_empty_of_common_sigma
   · intro hpempty
     cases hpempty
 
+omit [IsMinCE G] in
 /-- Once `E₁` is nontrivial, choose a prime-order subgroup of `E₁` and record
 the corresponding `τ₁(M)` prime. -/
 private theorem section13_theorem_13_9_tau1_prime_order_choice
@@ -94,7 +95,7 @@ private theorem section13_conjBy_inv' (H : Subgroup G) (a : G) :
     (H.conjBy a⁻¹).conjBy a = H := by
   simpa using section13_conjBy_inv (G := G) H a⁻¹
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_top_conjBy (a : G) :
     (⊤ : Subgroup G).conjBy a = ⊤ := by
   ext x
@@ -126,10 +127,10 @@ private theorem section13_mem_normalizer_of_conjBy_eq
     have hx_inv_conj : x ∈ H.conjBy g⁻¹ := by
       rw [Subgroup.conjBy, Subgroup.mem_map]
       refine ⟨g * x * g⁻¹, hx, ?_⟩
-      simp [MulAut.conj_apply, mul_assoc]
+      simp [mul_assoc]
     simpa [hginv] using hx_inv_conj
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_le_conjBy_inv_of_conjBy_le
     {H K : Subgroup G} {a : G} (hHK : H.conjBy a ≤ K) :
     H ≤ K.conjBy a⁻¹ := by
@@ -141,7 +142,7 @@ private theorem section13_le_conjBy_inv_of_conjBy_le
     exact ⟨x, hx, by simp [MulAut.conj_apply]⟩
   · simp [mul_assoc]
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section13_maximal_conjBy
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) (a : G) :
     M.conjBy a ∈ section9MaximalSubgroups G := by
@@ -286,11 +287,14 @@ private theorem section13_exists_E_invariant_msigma_sylow
   have hMsigma_solv : IsSolvable (section10Msigma M) :=
     IsMinCE.proper_subgroups_solvable (section10Msigma M)
       (lt_top_iff_ne_top.2 hMsigma_ne_top)
+  have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
+    ext
+    rfl
   exact
     exists_invariant_sylow_of_pi_complement_action
       (G := section10Msigma M) (A := E)
       (π := section10SigmaPrimes M) (p := q.val)
-      hMsigmaπ hEπ hMsigma_solv (by simpa using hqσ)
+      hMsigmaπ hEπ hMsigma_solv (by rw [hq_eq]; exact hqσ)
 
 public theorem section13_exists_E_invariant_msigma_centralizer_sylow
     {M E E₁₂ E₁ E₂ E₃ Q : Subgroup G} {q : Nat.Primes}
@@ -354,10 +358,13 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.2 hC_ne_top)
   have hqσ : q ∈ section10SigmaPrimes M :=
     section13_sigma_of_mem_centralizer_msigma (G := G) hM (P := Q) hqC
+  have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
+    ext
+    rfl
   simpa [C] using
     exists_invariant_sylow_of_pi_complement_action
       (G := C) (A := E) (π := section10SigmaPrimes M) (p := q.val)
-      hCπ hEπ hCsolv (by simpa using hqσ)
+      hCπ hEπ hCsolv (by rw [hq_eq]; exact hqσ)
 
 omit [IsMinCE G] in
 private theorem section13_hall_sylow_map_to_overgroup_sylow
@@ -473,6 +480,7 @@ public theorem section13_normalizer_sylowSubgroupIn_le_of_sigma
   rw [hS, section13_conjBy_eq_of_mem_normalizer (G := G) (H := Q) hg, ← hS]
   exact section13_ambient_sylow_le_base (G := G) M S
 
+omit [IsMinCE G] in
 public theorem section13_commutator_eq_left_of_fixedpoint_free_pgroup
     {P Q H : Subgroup G} {p q : Nat.Primes}
     (hP : P ∈ section10PrimeOrderSubgroupsIn p H)

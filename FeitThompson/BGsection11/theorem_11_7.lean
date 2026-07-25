@@ -7,6 +7,8 @@ module
 public import FeitThompson.BGsection11.corollary_11_6_c
 import Mathlib.GroupTheory.Schreier
 
+open scoped commutatorElement
+
 /-!
 # Theorem 11.7
 
@@ -63,11 +65,11 @@ private theorem section11_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
         exact Subtype.ext (show (n : G) = 1 by simpa using hn_one_G)
       · intro hn
         rw [Subgroup.mem_bot] at hn
-        simpa [hn]
+        simp [hn]
     · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
         intro x hx
         have hxNG : x ∈ NG := by
-          simpa [NG, htopNG] using hx
+          simp [NG, htopNG]
         exact hNG_le_M hxNG
       exact hM.ne_top (top_le_iff.mp htop_le_M)
   exact (hM.le_iff_eq hnorm_proper).mp hM_le_norm
@@ -96,7 +98,7 @@ private theorem section11_isPiSubgroup_singleton_of_isPGroup
   obtain ⟨n, hncard⟩ := hH.exists_card_eq
   have hpdvdq : p.val ∣ q.val := p.2.dvd_of_dvd_pow (by simpa [hncard] using hp)
   have hpq : p = q := Subtype.ext ((Nat.prime_dvd_prime_iff_eq p.2 q.2).mp hpdvdq)
-  simpa [hpq]
+  simp [hpq]
 
 omit [Finite G] [IsMinCE G] in
 private theorem section11_isPiSubgroup_sigma_compl_of_singleton
@@ -144,7 +146,7 @@ private theorem section11_normalizer_le_maximal_of_normal_subgroup
       simpa using congrArg Subtype.val (Subgroup.mem_bot.mp hxbot)
     · intro hx
       rw [Subgroup.mem_bot] at hx
-      simpa [hx]
+      simp [hx]
   have hNmap : (N.subgroupOf M).map M.subtype = N := by
     ext x
     constructor
@@ -202,7 +204,7 @@ private theorem section11_coprime_index_of_isHall_compl
     by_contra hnot
     exact hq_notπc hnot)
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section11_card_eq_index_of_isHall_compl
     {π : Set Nat.Primes} {N E : Subgroup G}
     (hN : IsHallSubgroup π N) (hE : IsHallSubgroup πᶜ E) :
@@ -336,6 +338,7 @@ private theorem section11_prime_not_sigma_of_dvd_msigma_complement
     q ∉ section10SigmaPrimes M := by
   exact (section11_msigma_complement_isHall_sigma_compl hM hcomp).p_in_pi_of_p_dvd_card q hqE
 
+omit [IsMinCE G] in
 private theorem section11_A_subgroupOf_le_sylow
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) :
@@ -347,6 +350,7 @@ private theorem section11_A_subgroupOf_le_sylow
   have hya : y = a := Subtype.ext hy_eq
   simpa [hya] using hyP
 
+omit [IsMinCE G] in
 private theorem section11_A_subgroupOf_ne_bot
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) :
@@ -362,8 +366,9 @@ private theorem section11_A_subgroupOf_ne_bot
       simpa using congrArg Subtype.val (Subgroup.mem_bot.mp hxbot)
     · intro hx
       rw [Subgroup.mem_bot] at hx
-      simpa [hx])
+      simp [hx])
 
+omit [IsMinCE G] in
 private theorem section11_prime_dvd_complement_of_contains_P
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -384,6 +389,7 @@ private theorem section11_prime_dvd_complement_of_contains_P
     · exact hpdiv
   exact hpP.trans (Subgroup.card_dvd_of_le hPleE)
 
+omit [IsMinCE G] in
 private theorem section11_normalIn_msigma_sup_of_complement_A_normal
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -515,7 +521,7 @@ private theorem section11_complement_piCore_gt_isHall
   have hcore_le_K : piCore π E ≤ K := by
     have hcoreπ : IsPiSubgroup (G := E) π (piCore π E) := piCore_isPiSubgroup (G := E) π
     have hcore_norm_K : piCore π E ≤ Subgroup.normalizer (K : Set E) := by
-      simpa [Subgroup.normalizer_eq_top] using (show piCore π E ≤ (⊤ : Subgroup E) from le_top)
+      simp [Subgroup.normalizer_eq_top]
     exact section11_hall_le_of_isPiSubgroup_of_le_normalizer
       (G := E) hKhall hcoreπ hcore_norm_K
   have hcore_eq : piCore π E = K := le_antisymm hcore_le_K hK_le_core
@@ -523,8 +529,9 @@ private theorem section11_complement_piCore_gt_isHall
   rw [hcore_eq]
   simpa [π] using hKhall
 
+omit [IsMinCE G] in
 private theorem section11_complement_sylow_le_hall_ge
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
+    {M : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     {E : Subgroup M} (hPleE : (P : Subgroup M) ≤ E)
     {L : Subgroup E} (hLchar : L.Characteristic)
     (hLhall : IsHallSubgroup ({q : Nat.Primes | p.val ≤ q.val}) L) :
@@ -544,11 +551,11 @@ private theorem section11_complement_sylow_le_hall_ge
       (P.subtype hPleE : Subgroup E) ≤ Subgroup.normalizer (L : Set E) := by
     letI : L.Characteristic := hLchar
     haveI : L.Normal := by infer_instance
-    simpa [Subgroup.normalizer_eq_top] using
-      (show (P.subtype hPleE : Subgroup E) ≤ (⊤ : Subgroup E) from le_top)
+    simp [Subgroup.normalizer_eq_top]
   exact section11_hall_le_of_isPiSubgroup_of_le_normalizer
     (G := E) hLhall hPπ hP_norm_L
 
+omit [IsMinCE G] in
 private theorem section11_complement_A_le_hall_ge
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -562,7 +569,7 @@ private theorem section11_complement_A_le_hall_ge
     exact section11_A_subgroupOf_le_sylow h11 hx
   exact hA_le_Psub.trans
     (section11_complement_sylow_le_hall_ge
-      (M := M) (A0 := A0) (A := A) (p := p) (P := P) hPleE hLchar hLhall)
+      (M := M) (p := p) (P := P) hPleE hLchar hLhall)
 
 omit [IsMinCE G] in
 private theorem section11_complement_piCore_gt_le_hall_ge
@@ -608,7 +615,7 @@ private theorem section11_complement_exists_normal_hall_ge_containing_tail_and_s
   · exact section11_complement_piCore_gt_le_hall_ge
       (M := M) (p := p) (E := E) (L := L) hLchar hLhall
   · exact section11_complement_sylow_le_hall_ge
-      (M := M) (A0 := A0) (A := A) (p := p) (P := P)
+      (M := M) (p := p) (P := P)
       hPleE hLchar hLhall
   · exact section11_complement_A_le_hall_ge h11 hPleE hLchar hLhall
 
@@ -622,7 +629,7 @@ private theorem section11_complement_piCore_gt_subgroupOf_hall_ge_isHall
       ((piCore ({q : Nat.Primes | p.val < q.val}) E).subgroupOf L) := by
   exact (section11_complement_piCore_gt_isHall h11 hcomp hPleE).subgroupOf hKleL
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section11_complement_piCore_gt_subgroupOf_hall_ge_normal
     {M : Subgroup G} {p : Nat.Primes} {E : Subgroup M} {L : Subgroup E} :
     ((piCore ({q : Nat.Primes | p.val < q.val}) E).subgroupOf L).Normal := by
@@ -695,7 +702,8 @@ private theorem section11_complement_piCore_gt_subgroupOf_hall_ge_isHall_p_compl
     intro hqmem
     have hq_eq_p : q = p := by simpa using hqmem
     have hp_lt_p : p.val < p.val := by
-      simpa [hq_eq_p] using hqgt
+      rw [hq_eq_p] at hqgt
+      exact hqgt
     exact (Nat.lt_irrefl p.val) hp_lt_p
   · intro q hq_not_p hq_idx
     have hqL : q.val ∣ Nat.card L :=
@@ -735,7 +743,7 @@ private theorem section11_theorem_11_7_complement_setup
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P)
     (hnot : ¬ section10NormalIn (section10Msigma M ⊔ A) M) :
-    ∃ E : Subgroup M, ∃ hcomp : (section10MsigmaSubgroup M).IsComplement' E,
+    ∃ E : Subgroup M, ∃ _hcomp : (section10MsigmaSubgroup M).IsComplement' E,
       ∃ hPleE : (P : Subgroup M) ≤ E, ∃ L : Subgroup E,
         L.Characteristic ∧ L.Normal ∧
           IsHallSubgroup ({q : Nat.Primes | p.val ≤ q.val}) L ∧
@@ -800,7 +808,8 @@ private theorem section11_mem_omegaOne_pow_eq_one_of_isMulCommutative
       (by simp)
       (by
         intro y z _hy _hz hypow hzpow
-        have hyz : Commute y z := mul_comm y z
+        have hyz : Commute y z :=
+          (IsMulCommutative.is_comm (M := H)).comm y z
         calc
           (y * z) ^ p = y ^ p * z ^ p := hyz.mul_pow p
           _ = 1 := by simp [hypow, hzpow])
@@ -820,6 +829,7 @@ private theorem section11_pCore_le_sylow
     S.3 hsup_p le_sup_left
   exact sup_eq_left.mp hEq
 
+omit [IsMinCE G] in
 private theorem section11_complement_pCore_hall_ge_le_sylow
     {M : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     {E : Subgroup M} (hPleE : (P : Subgroup M) ≤ E) {L : Subgroup E}
@@ -856,7 +866,7 @@ private theorem section11_complement_sylow_subgroupOf_hall_ge_isMulCommutative
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
     (hPleE : (P : Subgroup M) ≤ E) {L : Subgroup E}
-    (hPLeL : (P.subtype hPleE : Subgroup E) ≤ L) :
+    (_hPLeL : (P.subtype hPleE : Subgroup E) ≤ L) :
     IsMulCommutative ((P.subtype hPleE : Subgroup E).subgroupOf L) := by
   classical
   have hPcomm : IsMulCommutative (P : Subgroup M) := theorem_11_5 h11 P
@@ -887,7 +897,7 @@ private theorem section11_complement_sylow_subgroupOf_hall_ge_isMulCommutative
       change (((y : ((P.subtype hPleE : Subgroup E).subgroupOf L)) : L) : E) ∈
         (P.subtype hPleE : Subgroup E)
       exact y.property⟩
-  simpa [xp, yp] using (mul_comm xp yp)
+  simpa [xp, yp] using hPcomm.is_comm.comm xp yp
 
 private theorem section11_complement_pCore_hall_ge_isMulCommutative
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
@@ -906,7 +916,8 @@ private theorem section11_complement_pCore_hall_ge_isMulCommutative
   apply Subtype.ext
   let xPL : PL := ⟨(x : L), hcore_le_PL x.property⟩
   let yPL : PL := ⟨(y : L), hcore_le_PL y.property⟩
-  simpa [xPL, yPL] using congrArg Subtype.val (mul_comm xPL yPL)
+  simpa [xPL, yPL] using congrArg Subtype.val
+    ((IsMulCommutative.is_comm (M := PL)).comm xPL yPL)
 
 private theorem section11_complement_A_normal_in_hall_ge_of_centralizes_tail
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
@@ -939,14 +950,15 @@ private theorem section11_complement_A_normal_in_hall_ge_of_centralizes_tail
     change (((r : L) : E) : M) * ((a : L) : E) * (((r : L) : E) : M)⁻¹ =
       (((a : L) : E) : M)
     have hrP_M : (((r : L) : E) : M) ∈ (P : Subgroup M) := by
-      simpa [PE] using hrP
+      change (((r : L) : E) : M) ∈ (P : Subgroup M) at hrP
+      exact hrP
     have haP_M : (((a : L) : E) : M) ∈ (P : Subgroup M) := by
       exact hA_le_P haAE
     let rp : (P : Subgroup M) := ⟨(((r : L) : E) : M), hrP_M⟩
     let ap : (P : Subgroup M) := ⟨(((a : L) : E) : M), haP_M⟩
     have hcomm : (((r : L) : E) : M) * (((a : L) : E) : M) =
         (((a : L) : E) : M) * (((r : L) : E) : M) := by
-      simpa [rp, ap] using (mul_comm rp ap)
+      simpa [rp, ap] using hPcomm.is_comm.comm rp ap
     rw [hcomm]
     simp [mul_assoc]
   have hk_norm_a : ((k : L) : E) * (a : E) * ((k : L) : E)⁻¹ = (a : E) := by
@@ -1104,7 +1116,8 @@ private theorem section11_complement_omega_pCore_le_A_subgroupOf_hall_ge
     let aP : (P : Subgroup M) := ⟨aM, haP⟩
     have hcommM :
         (((xcore : L) : E) : M) * aM = aM * (((xcore : L) : E) : M) := by
-      simpa [xP, aP] using (mul_comm xP aP)
+      simpa [xP, aP] using
+        (IsMulCommutative.is_comm (M := (P : Subgroup M))).comm xP aP
     simpa [aM] using congrArg (fun m : M => (m : G)) hcommM.symm
   have hxA : (((((xcore : L) : E) : M) : G) ∈ A) := by
     change (((((xcore : L) : E) : M) : G) ∈ (A : Set G))
@@ -1213,8 +1226,9 @@ private theorem section11_complement_not_A_centralizes_tail
     (section11_complement_A_normal_of_centralizes_tail
       (G := G) h11 hPleE hLnorm hPLeL hALeL hKPcomp hAcent)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section11_exists_A_tail_noncommuting_of_not_centralizes_tail
-    {M A0 A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
+    {M A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
     (hnot :
       ¬ (A.subgroupOf M).subgroupOf E ≤
           Subgroup.centralizer (piCore ({q : Nat.Primes | p.val < q.val}) E : Set E)) :
@@ -1229,8 +1243,9 @@ private theorem section11_exists_A_tail_noncommuting_of_not_centralizes_tail
   by_contra hne
   exact hnone ⟨a, ha, k, hk, hne⟩
 
+omit [IsMinCE G] in
 private theorem section11_exists_prime_dvd_tail_of_not_centralizes_tail
-    {M A0 A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
+    {M A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
     (hnot :
       ¬ (A.subgroupOf M).subgroupOf E ≤
           Subgroup.centralizer (piCore ({q : Nat.Primes | p.val < q.val}) E : Set E)) :
@@ -1239,7 +1254,7 @@ private theorem section11_exists_prime_dvd_tail_of_not_centralizes_tail
   classical
   obtain ⟨a, _ha, k, hkK, hka_ne⟩ :=
     section11_exists_A_tail_noncommuting_of_not_centralizes_tail
-      (G := G) (M := M) (A0 := A0) (A := A) (p := p) (E := E) hnot
+      (G := G) (M := M) (A := A) (p := p) (E := E) hnot
   have hk_ne_one : k ≠ 1 := by
     intro hk
     exact hka_ne (by simp [hk])
@@ -1254,14 +1269,18 @@ private theorem section11_exists_prime_dvd_tail_of_not_centralizes_tail
   obtain ⟨q0, hq0prime, hq0dvd⟩ := Nat.exists_prime_and_dvd hK_card_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
   have hqtail : p.val < q.val := by
-    simpa [K, q] using
-      piCore_isPiSubgroup (G := E) ({r : Nat.Primes | p.val < r.val}) q hq0dvd
+    have hqtail' :=
+      piCore_isPiSubgroup (G := E) ({r : Nat.Primes | p.val < r.val}) q (by
+        simpa [K, q] using hq0dvd)
+    change p.val < q.val at hqtail'
+    exact hqtail'
   exact ⟨q, hqtail, by simpa [K, q] using hq0dvd⟩
 
+omit [IsMinCE G] in
 private theorem section11_complement_exists_A_invariant_tail_sylow
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
-    (hPleE : (P : Subgroup M) ≤ E) (hp_lt_q : p.val < q.val) :
+    (hPleE : (P : Subgroup M) ≤ E) (_hp_lt_q : p.val < q.val) :
     ∃ Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E),
       IsInvariant ((A.subgroupOf M).subgroupOf E)
         (piCore ({r : Nat.Primes | p.val < r.val}) E) (Q : Subgroup _) := by
@@ -1294,8 +1313,9 @@ private theorem section11_complement_exists_A_invariant_tail_sylow
       (G := K) (A := AE) (r := p.val) (p := q.val) hcop
   exact ⟨Q, hQinv⟩
 
+omit [IsMinCE G] in
 private theorem section11_exists_prime_dvd_tail_centralizer_index_of_not_centralizes_tail
-    {M A0 A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
+    {M A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
     (hnot :
       ¬ (A.subgroupOf M).subgroupOf E ≤
           Subgroup.centralizer (piCore ({q : Nat.Primes | p.val < q.val}) E : Set E)) :
@@ -1313,7 +1333,7 @@ private theorem section11_exists_prime_dvd_tail_centralizer_index_of_not_central
   let CK : Subgroup K := C.subgroupOf K
   obtain ⟨a, haAE, k, hkK, hka_ne⟩ :=
     section11_exists_A_tail_noncommuting_of_not_centralizes_tail
-      (G := G) (M := M) (A0 := A0) (A := A) (p := p) (E := E) hnot
+      (G := G) (M := M) (A := A) (p := p) (E := E) hnot
   have hCK_ne_top : CK ≠ ⊤ := by
     intro htop
     have hkCK : (⟨k, by simpa [K] using hkK⟩ : K) ∈ CK := by
@@ -1334,10 +1354,14 @@ private theorem section11_exists_prime_dvd_tail_centralizer_index_of_not_central
       simpa [q] using hq0dvd
     exact hqidx'.trans (Subgroup.index_dvd_card (H := CK))
   have hqtail : p.val < q.val := by
-    simpa [K, q] using
-      piCore_isPiSubgroup (G := E) ({r : Nat.Primes | p.val < r.val}) q hqK
+    have hqtail' :=
+      piCore_isPiSubgroup (G := E) ({r : Nat.Primes | p.val < r.val}) q (by
+        simpa [K] using hqK)
+    change p.val < q.val at hqtail'
+    exact hqtail'
   exact ⟨q, hqtail, by simpa [K, AE, C, CK, q] using hq0dvd⟩
 
+omit [IsMinCE G] in
 private theorem section11_complement_exists_noncentral_A_invariant_tail_sylow
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -1362,7 +1386,7 @@ private theorem section11_complement_exists_noncentral_A_invariant_tail_sylow
   let CK : Subgroup K := C.subgroupOf K
   obtain ⟨q, hp_lt_q, hqidx⟩ :=
     section11_exists_prime_dvd_tail_centralizer_index_of_not_centralizes_tail
-      (G := G) (M := M) (A0 := A0) (A := A) (p := p) (E := E) hnot
+      (G := G) (M := M) (A := A) (p := p) (E := E) hnot
   haveI : Fact q.val.Prime := ⟨q.property⟩
   have hqidx' : q.val ∣ CK.index := by
     simpa [K, AE, C, CK] using hqidx
@@ -1395,6 +1419,7 @@ private theorem section11_complement_exists_noncentral_A_invariant_tail_sylow
   exact ⟨q, Q, hp_lt_q, by simpa [K] using hqK, by simpa [K, AE] using hQinv,
     by simpa [K, AE] using hQ_not_cent⟩
 
+omit [IsMinCE G] in
 private theorem section11_complement_A_normalizes_tail_sylow_ambient
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -1436,7 +1461,7 @@ private theorem section11_complement_A_normalizes_tail_sylow_ambient
   have haE_AE : aE ∈ AE := by
     change (aE : M) ∈ A.subgroupOf M
     change ((aE : M) : G) ∈ A
-    simpa [aE, aM] using a.property
+    simp [aE, aM]
   have hx_conj_QE : aE * xE * aE⁻¹ ∈ QE :=
     (Subgroup.mem_normalizer_iff.mp (hAE_norm_QE haE_AE) (xE : E)).1 hxQE
   have hx_conj_QM : ((aE * xE * aE⁻¹ : E) : M) ∈ QM :=
@@ -1445,6 +1470,7 @@ private theorem section11_complement_A_normalizes_tail_sylow_ambient
   refine ⟨((aE * xE * aE⁻¹ : E) : M), hx_conj_QM, ?_⟩
   simp [aE, aM, mul_assoc]
 
+omit [IsMinCE G] in
 private theorem section11_prime_mem_centralizer_of_tail_sylow_fixed_ne_bot
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -1518,10 +1544,9 @@ private theorem section11_prime_mem_centralizer_of_tail_sylow_fixed_ne_bot
     simpa [hcard_CGsub] using hqCG
   exact hqCGsub.trans (Subgroup.card_subgroup_dvd_card CGsub)
 
+omit [Finite G] [IsMinCE G] in
 private theorem section11_tail_sylow_centralizer_of_ambient
-    {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) {E : Subgroup M}
-    (hPleE : (P : Subgroup M) ≤ E)
+    {M A : Subgroup G} {p q : Nat.Primes} {E : Subgroup M}
     {Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)}
     (hAcent :
       A ≤ Subgroup.centralizer
@@ -1610,7 +1635,7 @@ private theorem section11_generatorRank_at_least_two_of_elementaryAbelian_card_p
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -1621,6 +1646,7 @@ private theorem section11_generatorRank_at_least_two_of_elementaryAbelian_card_p
     (Nat.pow_dvd_pow_iff_le_right (Nat.Prime.one_lt (Fact.out : Nat.Prime p))).mp hcard_dvd
   simpa [generatorRank_eq_group_rank] using hle_rank
 
+omit [IsMinCE G] in
 private theorem section11_primeRank_at_least_two_of_rank_two_subgroup
     {M B : Subgroup G} {q : Nat.Primes} (hBM : B ≤ M)
     (hB : B ∈ elementaryAbelianSubgroupsOfRank q.val 2 G) :
@@ -1667,7 +1693,7 @@ private theorem section11_primeRank_at_least_two_of_rank_two_subgroup
       (section11_generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)
   · exact ⟨Bsub, hBsub_p, hBsub_comm, hBsub_gen⟩
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section11_rankTwoMaximal_subgroupOf_of_le
     {p : Nat.Primes} {A S : Subgroup G} (hAS : A ≤ S)
     (hArankTwo : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G)
@@ -1802,21 +1828,21 @@ private theorem section11_star_shape_of_noncyclic_tail_subgroup
     section11_rankTwoMaximal_subgroupOf_of_le
       (G := G) (p := q) hBG_le_Qstar hBGrank hBGmax⟩
 
-@[expose] private def section11TailSylowInE
+private def section11TailSylowInE
     {M : Subgroup G} {p q : Nat.Primes} {E : Subgroup M}
     (Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)) :
     Subgroup E :=
   (Q : Subgroup (piCore ({r : Nat.Primes | p.val < r.val}) E)).map
     (piCore ({r : Nat.Primes | p.val < r.val}) E).subtype
 
-@[expose] private def section11TailSylowInM
+private def section11TailSylowInM
     {M : Subgroup G} {p q : Nat.Primes} {E : Subgroup M}
     (Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)) :
     Subgroup M :=
   (section11TailSylowInE (G := G) (M := M) (p := p) (q := q) (E := E) Q).map
     E.subtype
 
-@[expose] private def section11TailSylowInG
+private def section11TailSylowInG
     {M : Subgroup G} {p q : Nat.Primes} {E : Subgroup M}
     (Q : Sylow q.val (piCore ({r : Nat.Primes | p.val < r.val}) E)) :
     Subgroup G :=
@@ -1858,6 +1884,7 @@ private theorem section11_cyclic_pgroup_action_trivial_of_fixed_ne_bot
       simpa [hcomm_top] using hcompl.inf_eq_bot
     exact False.elim (hfix_ne hfix_bot)
 
+omit [IsMinCE G] in
 private theorem section11_tail_sylow_noncyclic_of_fixed_ne_bot
     {M A0 A : Subgroup G} {p q : Nat.Primes} {P : Sylow p.val M}
     (h11 : section11Data M A0 A p P) {E : Subgroup M}
@@ -1896,8 +1923,8 @@ private theorem section11_tail_sylow_noncyclic_of_fixed_ne_bot
   letI : Subgroup.Normalizes AE QE := ⟨hAE_norm_QE⟩
   have hQE_cyc : IsCyclic QE := by
     have hQGcyc' : IsCyclic QG := by
-      simpa [K, QE, QM, QG, section11TailSylowInG, section11TailSylowInM,
-        section11TailSylowInE] using hQGcyc
+      change IsCyclic QG at hQGcyc
+      exact hQGcyc
     have hQM_cyc : IsCyclic QM := by
       exact (Subgroup.equivMapOfInjective (f := M.subtype) QM M.subtype_injective).isCyclic.2
         hQGcyc'
@@ -1937,7 +1964,7 @@ private theorem section11_tail_sylow_noncyclic_of_fixed_ne_bot
       simpa using congrArg Subtype.val (Subgroup.mem_bot.mp hxbot)
     · intro hx
       rw [Subgroup.mem_bot] at hx
-      simpa [hx]
+      simp [hx]
   have htriv : ActsTrivially (A := AE) (G := QE) :=
     section11_cyclic_pgroup_action_trivial_of_fixed_ne_bot hQE_p hQE_cyc hcop hfix_ne
   apply hAQ_noncentral
@@ -1997,8 +2024,8 @@ private theorem section11_tail_sylow_fixed_point_free_of_star_shape
   apply hAQ_noncentral
   simpa using
     section11_tail_sylow_centralizer_of_ambient
-      (G := G) (M := M) (A0 := A0) (A := A) (p := p) (q := q) (P := P)
-      h11 hPleE (Q := Q) hAcentAmbient
+      (G := G) (M := M) (A := A) (p := p) (q := q) (E := E)
+      (Q := Q) hAcentAmbient
 
 omit [Finite G] [IsMinCE G] in
 private theorem section11_sylow_ne_bot_of_prime_dvd_card
@@ -2072,7 +2099,7 @@ private theorem section11_rank_two_prime_order_product_decomposition
         _ = (z.1 : G)⁻¹ * ((z.1 : G) * (z.2 : G)) * (y.2 : G)⁻¹ := by
                 rw [hprod]
         _ = (z.2 : G) * (y.2 : G)⁻¹ := by
-                simp [mul_assoc]
+                simp
     have hleft_mem : (z.1 : G)⁻¹ * (y.1 : G) ∈ A1 ⊓ A2 := by
       refine ⟨A1.mul_mem (A1.inv_mem z.1.2) y.1.2, ?_⟩
       rw [hleft_eq]
@@ -2132,7 +2159,8 @@ public theorem theorem_11_7
         (Subgroup.card_subgroup_dvd_card E))
   have hq_ne_p : q ≠ p := by
     intro hqp
-    exact (Nat.lt_irrefl p.val) (by simpa [hqp] using hp_lt_q)
+    rw [hqp] at hp_lt_q
+    exact (Nat.lt_irrefl p.val) hp_lt_q
   let Ktail : Subgroup E := piCore ({r : Nat.Primes | p.val < r.val}) E
   let QE : Subgroup E := (Q : Subgroup Ktail).map Ktail.subtype
   let QM : Subgroup M := QE.map E.subtype
@@ -2161,11 +2189,11 @@ public theorem theorem_11_7
       subgroupCentralizerIn QE ((A.subgroupOf M).subgroupOf E) = ⊥ := by
     by_contra hCne
     have hQG_noncyc : ¬ IsCyclic QG := by
-      simpa [Ktail, QE, QM, QG, section11TailSylowInG, section11TailSylowInM,
-        section11TailSylowInE] using
-        section11_tail_sylow_noncyclic_of_fixed_ne_bot
-          (G := G) (M := M) (A0 := A0) (A := A) (p := p) (q := q) (P := P)
-          h11 hPleE hQinv hq_ne_p (by simpa [Ktail, QE] using hCne) hAQ_noncentral
+      change ¬ IsCyclic
+        (section11TailSylowInG (G := G) (M := M) (p := p) (q := q) (E := E) Q)
+      exact section11_tail_sylow_noncyclic_of_fixed_ne_bot
+        (G := G) (M := M) (A0 := A0) (A := A) (p := p) (q := q) (P := P)
+        h11 hPleE hQinv hq_ne_p (by simpa [Ktail, QE] using hCne) hAQ_noncentral
     have hQG_le_M : QG ≤ M := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨m, _hm, rfl⟩
@@ -2286,7 +2314,8 @@ public theorem theorem_11_7
       intro a haA
       have haG : (((a : E) : M) : G) ∈ A := by
         change ((a : E) : M) ∈ A.subgroupOf M at haA
-        simpa using haA
+        change (((a : E) : M) : G) ∈ A at haA
+        exact haA
       have hcommG : (((a : E) : M) : G) * (((xE : E) : M) : G) =
           (((xE : E) : M) : G) * (((a : E) : M) : G) := by
         exact Subgroup.mem_centralizer_iff.mp hx.2 _ haG
@@ -2399,7 +2428,6 @@ public theorem theorem_11_7
     rw [← ha12]
     have hc1 : ⁅x, a1⁆ ∈ Nsup := by
       exact Subgroup.mem_sup_left (by
-        change ⁅x, a1⁆ ∈ N1
         exact Subgroup.commutator_mem_commutator hx ha1)
     have hc2_N2 : ⁅x, a2⁆ ∈ N2 := by
       exact Subgroup.commutator_mem_commutator hx ha2
@@ -2412,7 +2440,7 @@ public theorem theorem_11_7
         Subgroup.Normal.conj_mem hNsup_norm (⟨⁅x, a2⁆, hc2M⟩ : M) hc2_sub
           (⟨a1, ha1M⟩ : M)
       change ((a1 * ⁅x, a2⁆) * a1⁻¹) ∈ Nsup
-      simpa using hconj_sub
+      exact Subgroup.mem_subgroupOf.mp hconj_sub
     have hcomm_eq : ⁅x, a1 * a2⁆ = ⁅x, a1⁆ * (a1 * ⁅x, a2⁆ * a1⁻¹) := by
       simp [commutatorElement_def, mul_assoc]
     rw [hcomm_eq]

@@ -293,9 +293,9 @@ public theorem hktAbelianPResidual_quotient_isMulCommutative
   classical
   letI : (hktAbelianPResidual q Q).Normal :=
     hktAbelianPResidual_normal (Q := Q) (q := q)
-  refine ⟨⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le
-    (N := hktAbelianPResidual q Q)).mpr ?_ |>.comm⟩⟩
-  exact commutator_le_hktAbelianPResidual (Q := Q) (q := q)
+  exact (Subgroup.Normal.quotient_commutative_iff_commutator_le
+    (N := hktAbelianPResidual q Q)).mpr
+      (commutator_le_hktAbelianPResidual (Q := Q) (q := q))
 
 public theorem hktAbelianPResidual_le
     {Q : Type u} [Group Q] {q : ℕ} {N : Subgroup Q}

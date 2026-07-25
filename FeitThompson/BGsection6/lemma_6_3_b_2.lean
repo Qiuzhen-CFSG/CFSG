@@ -23,7 +23,5 @@ public theorem lemma_6_3_b_2
   apply le_antisymm
   · rw [hcomm]
     exact Subgroup.commutator_mono le_top le_rfl
-  · simpa [derivedSubgroup] using
-      (Subgroup.commutator_mono (H₁ := (⊤ : Subgroup G)) (H₂ := K)
-        (K₁ := (⊤ : Subgroup G)) (K₂ := (⊤ : Subgroup G)) le_rfl le_top)
-
+  · change ⁅(⊤ : Subgroup G), K⁆ ≤ ⁅(⊤ : Subgroup G), (⊤ : Subgroup G)⁆
+    exact Subgroup.commutator_mono le_rfl le_top

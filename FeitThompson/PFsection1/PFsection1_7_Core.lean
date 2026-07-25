@@ -135,7 +135,9 @@ public theorem isBookIrreducibleCharacter_representation_witness_irreducible
             intro g _hg
             rw [representation_character_inv_eq_star_character rho g]
       _ = 1 := by
-            simpa [hχ] using hirr
+            change scalarProduct G chi chi = 1 at hirr
+            rw [hχ] at hirr
+            exact hirr
   have hfinC :
       (Module.finrank ℂ (Representation.IntertwiningMap rho rho) : ℂ) = 1 := by
     calc
@@ -596,8 +598,7 @@ public theorem isBookIrreducibleCharacter_of_representation_irreducible
     rw [hchi_eq]
     exact (uliftRepresentation_character (G := G) (V := Fin n → ℂ) (rho := rho) g).symm
   · rw [IsIrreducibleCharacter]
-    simpa [classFunctionInner_toConjClassFunction,
-      toConjClassFunction_ofConjClassFunction] using hirr
+    exact (scalarProduct_ofConjClassFunction chi chi).trans hirr
 
 public theorem isCharacter_of_isIrreducibleCharacterOnGroup
     {G : Type u} [Group G] [Finite G]
@@ -621,8 +622,9 @@ public theorem isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
   · exact isCharacter_of_isIrreducibleCharacterOnGroup
       ⟨n, rho, hirr, hchar⟩
   · rw [IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := rho)).1 hirr
+    rw [hchar, ← ofConjClassFunction_characterClassFunction rho,
+      scalarProduct_ofConjClassFunction]
+    exact (Representation.irreducible_iff_character_norm_one (ρ := rho)).1 hirr
 
 public theorem isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
     {G : Type u} [Group G] [Finite G]
@@ -740,7 +742,7 @@ public theorem exists_positive_irreducible_decomposition_of_character
   refine ⟨γ, inferInstance, inferInstance, e, psi, i0, ?_, ?_, ?_, ?_⟩
   · intro i
     have hi_mem : i.1 ∈ Finset.univ.filter (fun i : β => e0 i ≠ 0) := by
-      simpa [s] using i.2
+      exact i.2
     exact Nat.pos_of_ne_zero (Finset.mem_filter.mp hi_mem).2
   · intro i
     exact hpsi0 i.1
@@ -1031,11 +1033,10 @@ public theorem representation_classFunctionInner_star_swap
     (φ ψ : Representation.ClassFunction G) :
     star (Representation.classFunctionInner ψ φ) =
       Representation.classFunctionInner φ ψ := by
-  classical
-  have h := scalarProduct_star_swap (G := G)
+  rw [← scalarProduct_ofConjClassFunction,
+    ← scalarProduct_ofConjClassFunction]
+  exact scalarProduct_star_swap (G := G)
     (phi := ofConjClassFunction φ) (psi := ofConjClassFunction ψ)
-  simpa [classFunctionInner_toConjClassFunction,
-    toConjClassFunction_ofConjClassFunction] using h
 
 public theorem toConjClassFunction_isIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
     {G : Type u} [Group G] [Finite G]
@@ -1229,7 +1230,8 @@ public theorem scalarProduct_real_virtualCharacters_eq_one_add_two_mul
     intro i
     ext g
     have h := congrFun (hτ_spec i) (ConjClasses.mk g)
-    simpa [μ, toConjClassFunction_apply] using h
+    change ξ (τ i) (ConjClasses.mk g) = conjugateCharacter (μ i) g
+    exact h.trans (toConjClassFunction_apply _ _ g)
   have hofConj_inj : Function.Injective
       (fun η : Representation.ClassFunction G => ofConjClassFunction η) := by
     intro η θ hηθ
@@ -1370,7 +1372,8 @@ public theorem proposition_1_7_inertia_contains_H
   intro x hx
   change conjugateOnNormal H theta x = theta
   funext h
-  simpa [conjugateOnNormal] using hclass ⟨x, hx⟩ h
+  change theta ⟨x * (h : G) * x⁻¹, _⟩ = theta h
+  exact (congrArg theta (Subtype.ext rfl)).trans (hclass ⟨x, hx⟩ h)
 
 public theorem conjugateOnNormal_subgroupOfClassFunction_of_inertia
     {G : Type*} [Group G] (H : Subgroup G) [H.Normal]
@@ -2070,6 +2073,15 @@ public theorem characterInflationByHom_apply
     (pi : T →* Q) (chi : Q →* ℂˣ) (t : T) :
     characterInflationByHom pi chi t = (chi (pi t) : ℂ) := rfl
 
+private theorem quotientCharacterInflation_eq_characterInflationByHom
+    {G : Type*} [Group G] (H T : Subgroup G)
+    [(H.subgroupOf T).Normal]
+    (chi : (T ⧸ H.subgroupOf T) →* ℂˣ) :
+    quotientCharacterInflation H T chi =
+      characterInflationByHom (QuotientGroup.mk' (H.subgroupOf T)) chi := by
+  ext t
+  rfl
+
 public theorem characterInflationByHom_one_on_kernel
     {T Q : Type*} [Group T] [Group Q]
     (S : Subgroup T) (pi : T →* Q)
@@ -2099,9 +2111,9 @@ public theorem quotientCharacterInflation_isClassFunction
     [(H.subgroupOf T).Normal]
     (chi : (T ⧸ H.subgroupOf T) →* ℂˣ) :
     IsClassFunction (quotientCharacterInflation H T chi) := by
-  simpa [quotientCharacterInflation, characterInflationByHom] using
-    characterInflationByHom_isClassFunction
-      (QuotientGroup.mk' (H.subgroupOf T)) chi
+  rw [quotientCharacterInflation_eq_characterInflationByHom]
+  exact characterInflationByHom_isClassFunction
+    (QuotientGroup.mk' (H.subgroupOf T)) chi
 
 public theorem representationCharacter_mul_of_fin_one
     {G : Type*} [Group G]
@@ -2436,10 +2448,10 @@ public theorem induced_restriction_eq_regular_quotient_twist_sum
     intro t
     change (t : T ⧸ H.subgroupOf T) = 1 ↔ t ∈ H.subgroupOf T
     exact QuotientGroup.eq_one_iff (N := H.subgroupOf T) t
-  simpa [quotientCharacterInflation, characterInflationByHom] using
-    (induced_restriction_eq_regular_inflated_character_sum
-      (H := H) (T := T) (Q := T ⧸ H.subgroupOf T) psi
-      (QuotientGroup.mk' (H.subgroupOf T)) hpsi hker rfl)
+  simp_rw [quotientCharacterInflation_eq_characterInflationByHom]
+  exact induced_restriction_eq_regular_inflated_character_sum
+    (H := H) (T := T) (Q := T ⧸ H.subgroupOf T) psi
+    (QuotientGroup.mk' (H.subgroupOf T)) hpsi hker rfl
 
 public theorem quotient_twist_sum_eq_smul_induced_of_restriction
     {G : Type*} [Group G] [Finite G]
@@ -2477,7 +2489,7 @@ public theorem quotient_twist_sum_eq_smul_induced_of_restriction
 public theorem complex_hasEnoughRootsOfUnity (n : ℕ) [NeZero n] :
     HasEnoughRootsOfUnity ℂ n := by
   exact HasEnoughRootsOfUnity.of_card_le (R := ℂ) (n := n)
-    (by simp [Complex.card_rootsOfUnity])
+    (Complex.card_rootsOfUnity n).ge
 
 public theorem quotientIsAbelian_commutative
     {G : Type*} [Group G] (H T : Subgroup G)
@@ -2615,9 +2627,9 @@ public theorem quotientCharacterInflation_isIrreducibleCharacterOnGroup
     [(H.subgroupOf T).Normal]
     (χ : (T ⧸ H.subgroupOf T) →* ℂˣ) :
     IsIrreducibleCharacterOnGroup (quotientCharacterInflation H T χ) := by
-  simpa [quotientCharacterInflation, characterInflationByHom] using
-    characterInflationByHom_isIrreducibleCharacterOnGroup
-      (QuotientGroup.mk' (H.subgroupOf T)) χ
+  rw [quotientCharacterInflation_eq_characterInflationByHom]
+  exact characterInflationByHom_isIrreducibleCharacterOnGroup
+    (QuotientGroup.mk' (H.subgroupOf T)) χ
 
 public theorem quotientCharacterInflation_injective
     {G : Type u} [Group G] (H T : Subgroup G) [(H.subgroupOf T).Normal] :
@@ -3062,10 +3074,18 @@ public theorem exists_externalProductConjClassFunction_of_isIrreducibleCharacter
   ext c
   rcases ConjClasses.exists_rep c with ⟨k, rfl⟩
   have hk := congrFun hfactor k
-  simpa [theta', phibar, psibar,
-    conjClassFunctionLinearEquivOfMulEquiv_apply_mk,
-    externalProductConjClassFunction, externalProductClassFunction,
-    toConjClassFunction_apply, ofConjClassFunction] using hk
+  rw [conjClassFunctionLinearEquivOfMulEquiv_apply_mk,
+    externalProductConjClassFunction, toConjClassFunction_apply]
+  calc
+    theta (ConjClasses.mk k) = theta' k := rfl
+    _ = classFunctionLinearEquivOfMulEquiv e
+        (externalProductClassFunction phi psi) k := hk
+    _ = externalProductClassFunction phi psi (e.symm k) :=
+      classFunctionLinearEquivOfMulEquiv_apply e _ k
+    _ = phibar (ConjClasses.mk (e.symm k).1) *
+        psibar (ConjClasses.mk (e.symm k).2) := by
+      simp only [phibar, psibar, toConjClassFunction_apply]
+      rfl
 
 public theorem classFunctionInner_externalProductConjClassFunction
     {G H : Type*} [Group G] [Finite G] [Group H] [Finite H]
@@ -3159,7 +3179,8 @@ public theorem externalProductConjClassFunction_isCompleteIrreducibleCharacterFa
     change ofConjClassFunction (chi i) g *
         ofConjClassFunction (psi j) h = theta (ConjClasses.mk (g, h))
     rw [hi, hj]
-    simpa [phibar, taubar, theta'] using hvalue.symm
+    simpa only [phibar, taubar, theta', ofConjClassFunction_apply,
+      toConjClassFunction_apply, externalProductClassFunction] using hvalue.symm
   · rintro ⟨i, j⟩ ⟨i', j'⟩ hij
     change xi (i, j) = xi (i', j') at hij
     have hcross :
@@ -3280,7 +3301,15 @@ public theorem completeIrreducibleCharacterFamily_degree_one_card
       ext x
       rfl
     have hg := congrFun hEq g
-    simpa [toQ, inflated, characterInflationByHom] using hg
+    have hlift :
+        toQ (ofQ psi) (g : Q) = linChar (ofQ psi) g := by
+      exact QuotientGroup.lift_mk (commutator G)
+        (Abelianization.commutator_subset_ker (linChar (ofQ psi))) g
+    calc
+      (toQ (ofQ psi) (g : Q) : ℂ) =
+          (linChar (ofQ psi) g : ℂ) := congrArg Units.val hlift
+      _ = inflated psi g := hg
+      _ = (psi (g : Q) : ℂ) := rfl
   have htoQInj : Function.Injective toQ := by
     intro i j hij
     have hval : i.1 = j.1 := by
@@ -3310,8 +3339,8 @@ public theorem completeIrreducibleCharacterFamily_degree_one_card
         (fun i => chi i (ConjClasses.mk (1 : G)) = 1)).symm
   have hQcard : Nat.card QChar = Nat.card Q := by
     letI : IsMulCommutative Q :=
-      ⟨Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr le_rfl⟩
-    letI : CommGroup Q := CommGroup.ofIsMulCommutative
+      Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr le_rfl
+    letI : CommGroup Q := IsMulCommutative.instCommGroup
     letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
       complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity Q ℂ
@@ -3345,8 +3374,8 @@ public theorem quotient_twist_isBookIrreducibleCharacter
     (hpsi : IsBookIrreducibleCharacter psi) :
     IsBookIrreducibleCharacter (quotientCharacterInflation H T chi * psi) := by
   let lambda : T →* ℂˣ := chi.comp (QuotientGroup.mk' (H.subgroupOf T))
-  simpa [lambda, quotientCharacterInflation] using
-    isBookIrreducibleCharacter_twistByCharacter lambda psi hpsi
+  rw [quotientCharacterInflation_eq_characterInflationByHom]
+  exact isBookIrreducibleCharacter_twistByCharacter lambda psi hpsi
 
 public theorem degree_mul_left_eq_of_degree_one
     {G : Type*} [One G] (lambda psi : ClassFunction G)
@@ -3374,7 +3403,9 @@ public theorem degree_eq_of_subgroupRestriction_eq_smul_subgroupOf
         c • subgroupOfClassFunction theta) :
     degree psi = c * degree theta := by
   have h := congrFun hres (1 : H.subgroupOf T)
-  simpa [degree, subgroupRestriction, subgroupOfClassFunction] using h
+  change psi (1 : T) = c * theta ⟨(1 : G), H.one_mem⟩ at h
+  change psi (1 : T) = c * theta (1 : H)
+  exact h
 
 public theorem scalarProduct_subgroupOfClassFunction
     {G : Type*} [Group G] {H T : Subgroup G} [Finite H] [Finite T]
@@ -3392,8 +3423,12 @@ public theorem scalarProduct_subgroupOfClassFunction
       (∑ h : Hsub,
         subgroupOfClassFunction theta h * star (subgroupOfClassFunction phi h)) =
         ∑ h : H, theta h * star (phi h) := by
-    simpa [Hsub, e, subgroupOfClassFunction] using
-      (Equiv.sum_comp e (fun h : H => theta h * star (phi h)))
+    calc
+      _ = ∑ h : Hsub, theta (e h) * star (phi (e h)) := by
+        apply Finset.sum_congr rfl
+        intro h _hh
+        rfl
+      _ = _ := Equiv.sum_comp e (fun h : H => theta h * star (phi h))
   unfold scalarProduct
   rw [hcard]
   exact congrArg (fun z => (Nat.card H : ℂ)⁻¹ * z) hsum

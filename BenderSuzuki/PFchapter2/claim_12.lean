@@ -18,7 +18,7 @@ universe u v
 
 open PFchapter1section1 PFAppendixIII
 open PFchapter1section3
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Peterfalvi, Part II, Chapter II, Claim (12)
@@ -98,7 +98,7 @@ reaches the Hall--Wielandt upper-central-series bound for odd `p`. -/
 private theorem chapter2_claim12_upperCentralSeries_of_card_prime_cube
     {P : Type*} [Group P] [Finite P] (p : ℕ) [Fact (Nat.Prime p)]
     (hcard : Nat.card P = p ^ 3) (hp3 : 3 ≤ p) :
-    (⊤ : Subgroup P) ≤ upperCentralSeries P (p - 1) := by
+    (⊤ : Subgroup P) ≤ Subgroup.upperCentralSeries P (p - 1) := by
   have hPp : IsPGroup p P := IsPGroup.of_card hcard
   obtain ⟨k, hkpos, hcenterCard⟩ :=
     IsPGroup.card_center_eq_prime_pow hcard (by norm_num)
@@ -125,29 +125,29 @@ private theorem chapter2_claim12_upperCentralSeries_of_card_prime_cube
     calc
       Nat.card Q = Z.index := (Subgroup.index_eq_card Z).symm
       _ = p ^ (3 - k) := hindex
-  have hQcomm : Std.Commutative (fun a b : Q => a * b) := by
+  have hQcomm : IsMulCommutative Q := by
     rcases hkCases with hk1 | hk23
     · have hQcard2 : Nat.card Q = p ^ 2 := by simpa [hk1] using hQcard
-      exact ⟨IsPGroup.commutative_of_card_eq_prime_sq hQcard2⟩
+      exact IsPGroup.isMulCommutative_of_card_eq_prime_sq hQcard2
     · rcases hk23 with hk2 | hk3
       · have hQcard1 : Nat.card Q = p := by simpa [hk2] using hQcard
-        exact ⟨(isCyclic_of_prime_card hQcard1).commutative.comm⟩
+        exact (isCyclic_of_prime_card hQcard1).isMulCommutative
       · have hQcardOne : Nat.card Q = 1 := by simpa [hk3] using hQcard
         haveI : Subsingleton Q := (Nat.card_eq_one_iff_unique.mp hQcardOne).1
-        exact ⟨fun _ _ => Subsingleton.elim _ _⟩
+        exact IsMulCommutative.of_comm fun _ _ => Subsingleton.elim _ _
   have hcomm_le : _root_.commutator P ≤ Subgroup.center P :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).mp hQcomm
-  have hlowerTwo : lowerCentralSeries P 2 = ⊥ := by
-    apply lowerCentralSeries_succ_eq_bot (G := P) (n := 1)
-    simpa using hcomm_le
+  have hlowerTwo : Subgroup.lowerCentralSeries (⊤ : Subgroup P) 2 = ⊥ := by
+    apply Subgroup.lowerCentralSeries_succ_eq_bot (G := P) (n := 1)
+    simpa [_root_.commutator_def] using hcomm_le
   letI : Group.IsNilpotent P := hPp.isNilpotent
   have hclass : Group.nilpotencyClass P ≤ 2 :=
-    lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp hlowerTwo
-  have hupperTwo : upperCentralSeries P 2 = ⊤ :=
-    upperCentralSeries_eq_top_iff_nilpotencyClass_le.mpr hclass
+    Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le.mp hlowerTwo
+  have hupperTwo : Subgroup.upperCentralSeries P 2 = ⊤ :=
+    Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le.mpr hclass
   have htwo_le : 2 ≤ p - 1 := by omega
   rw [← hupperTwo]
-  exact upperCentralSeries_mono P htwo_le
+  exact Subgroup.upperCentralSeries_mono P htwo_le
 
 /-- Hall--Wielandt for a Sylow subgroup that reaches the required term of
 its upper central series.  A Sylow subgroup is weakly closed in itself. -/
@@ -155,7 +155,7 @@ private theorem chapter2_claim12_hallWielandt_of_upperCentralSeries
     {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact (Nat.Prime p)]
     (P : Sylow p G) (H : Subgroup G)
     (hH : H = Subgroup.normalizer ((P : Subgroup G) : Set G))
-    (hupper : (⊤ : Subgroup P) ≤ upperCentralSeries P (p - 1)) :
+    (hupper : (⊤ : Subgroup P) ≤ Subgroup.upperCentralSeries P (p - 1)) :
     letI : (External.hallPResidual p G).Normal :=
       External.hallPResidual_normal p G
     letI : (External.hallPResidual p H).Normal :=
@@ -171,7 +171,7 @@ private theorem chapter2_claim12_hallWielandt_of_upperCentralSeries
     exact (Subgroup.card_map_of_injective (MulAut.conj g⁻¹).injective).ge
   have hupper' :
       (P : Subgroup G).subgroupOf (P : Subgroup G) ≤
-        upperCentralSeries P (p - 1) := by
+        Subgroup.upperCentralSeries P (p - 1) := by
     simpa using hupper
   exact (External.hallWielandt_residual_intersection
     p P (P : Subgroup G) H hH hweak (Or.inr (Or.inr hupper'))).2
@@ -189,7 +189,7 @@ private theorem chapter2_claim12_normal_of_index_eq_prime_of_isPGroup
       apply le_antisymm le_top
       intro x hx
       have hxone : x = 1 := Subsingleton.elim x 1
-      simpa [hxone]
+      simp [hxone]
     have hp_one : p = 1 := by simpa [hAtop] using hindex.symm
     exact (Fact.out : Nat.Prime p).ne_one hp_one
   apply Subgroup.normal_of_index_eq_minFac_card
@@ -269,7 +269,7 @@ private theorem chapter2_claim12_stronglyReal_of_inverted_by_involution
     intro hsx
     have hxEq : x = s⁻¹ := by
       calc
-        x = s⁻¹ * (s * x) := by simp [mul_assoc]
+        x = s⁻¹ * (s * x) := by simp
         _ = s⁻¹ := by rw [hsx, mul_one]
     apply hx2
     rw [hxEq, hsInv]
@@ -376,7 +376,7 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
   rcases hcase10_1 with ⟨_k, u, _hk, hGcard, hu⟩
   have hP_le_C : P ≤ C := by
     letI : IsMulCommutative P :=
-      ⟨(isCyclic_of_prime_card hch.B1.P_card).commutative⟩
+      (isCyclic_of_prime_card hch.B1.P_card).isMulCommutative
     exact Subgroup.le_centralizer_iff_isMulCommutative.mpr inferInstance
   have hP_le_R : P ≤ R := by
     rw [hR.1]
@@ -493,7 +493,8 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
     intro hP1P
     have hgStab : g ∈ MulAction.stabilizer G P := by
       rw [MulAction.mem_stabilizer_iff]
-      simpa [P1, gNR] using hP1P
+      change g • P = P at hP1P
+      exact hP1P
     rw [hstabG, (claim_1 H D Q K V W Q0 S Q1 P t s p hch).2.2.1] at hgStab
     exact hgC hgStab
   let X := MulAction.orbit NR P
@@ -518,7 +519,8 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
     have hcStab : (c : G) ∈ MulAction.stabilizer G P := by
       rwa [hstabG]
     rw [MulAction.mem_stabilizer_iff] at hcStab
-    simpa [cNR] using hcStab
+    change (c : G) • P = P
+    exact hcStab
   let f : Option CQ → X
     | none => base
     | some c =>
@@ -594,6 +596,7 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
   have hstabCard : Nat.card (MulAction.stabilizer NR P) = Nat.card C := by
     rw [hstabNR]
     exact Nat.card_congr (Subgroup.subgroupOfEquivOfLe hC_le_NR').toEquiv
+  letI : Fintype X := Fintype.ofFinite X
   have hOrbitMul :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group NR P
   have hXcardF : Fintype.card X = p ^ m := by
@@ -613,7 +616,9 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
     calc
       p ^ m * (p ^ (m + 1) * c) = (p ^ m * p ^ (m + 1)) * c := by ac_rfl
       _ = p ^ (m + (m + 1)) * c := by rw [← pow_add]
-      _ = p ^ (2 * m + 1) * c := by congr 2 <;> omega
+      _ = p ^ (2 * m + 1) * c := by
+        congr 2
+        omega
   have hpow_dvd_G : p ^ (2 * m + 1) ∣ Nat.card G :=
     hpow_dvd_NR.trans (Subgroup.card_subgroup_dvd_card NR)
   have hpow_dvd_main : p ^ (2 * m + 1) ∣ p ^ (m + 2) := by
@@ -709,7 +714,9 @@ private theorem chapter2_claim12_orbit_forces_m_eq_one
     let aNR : NR := ⟨a, ha⟩
     have haStab : a ∈ MulAction.stabilizer G T := by
       rw [MulAction.mem_stabilizer_iff]
-      simpa [aNR] using hNRfixT aNR
+      have hfix := hNRfixT aNR
+      change a • T = T at hfix
+      exact hfix
     rwa [hstabT] at haStab
   exact ⟨hm1, by simpa [NR, C] using hNRcard, by simpa [NR] using hNR_le_normalizer_T⟩
 
@@ -773,7 +780,7 @@ private theorem chapter2_claim12_commutator_quotient_hom
               (show y ∈ (⊤ : Subgroup K) by trivial)))⟩
       map_one' := by
         apply Subtype.ext
-        simp [commutatorElement_def]
+        simp
       map_mul' := by
         intro x z
         apply Subtype.ext
@@ -822,6 +829,11 @@ private theorem chapter2_claim12_prime_order_subgroups_card_of_elementaryAbelian
     [IsElementaryAbelian p E] (hEcard : Nat.card E = p ^ 2) :
     Nat.card {X : Subgroup E // Nat.card X = p} = p + 1 := by
   classical
+  letI : IsMulCommutative E :=
+    (inferInstance : IsElementaryAbelian p E).toIsMulCommutative
+  letI : CommGroup E :=
+    { (inferInstance : Group E) with
+      mul_comm := mul_comm' }
   let eta : Subgroup E ≃o Submodule (ZMod p) (Additive E) :=
     Subgroup.toAddSubgroup.trans
       (AddSubgroup.toZModSubmodule (n := p))
@@ -868,14 +880,19 @@ private theorem chapter2_claim12_prime_order_subgroups_card_of_elementaryAbelian
     { toFun := fun X => ⟨eta X.1, (hfinrank_iff X.1).2 X.2⟩
       invFun := fun L =>
         ⟨eta.symm L.1,
-          (hfinrank_iff (eta.symm L.1)).1 (by simpa using L.2)⟩
+          (hfinrank_iff (eta.symm L.1)).1 (by
+            rw [eta.apply_symm_apply]
+            exact L.2)⟩
       left_inv := fun X => Subtype.ext (eta.symm_apply_apply X.1)
       right_inv := fun L => Subtype.ext (eta.apply_symm_apply L.1) }
   have hdimE : Module.finrank (ZMod p) (Additive E) = 2 := by
     have hnat := Module.natCard_eq_pow_finrank
       (K := ZMod p) (V := Additive E)
     have hEcardAdd : Nat.card (Additive E) = p ^ 2 := by
-      simpa using hEcard
+      calc
+        Nat.card (Additive E) = Nat.card E :=
+          Nat.card_congr Additive.toMul
+        _ = p ^ 2 := hEcard
     have hpow : p ^ Module.finrank (ZMod p) (Additive E) = p ^ 2 := by
       simpa [ZMod.card, hEcardAdd] using hnat.symm
     exact Nat.pow_right_injective (Fact.out : Nat.Prime p).one_lt hpow
@@ -1062,7 +1079,7 @@ private theorem chapter2_claim12_regular_complement_action_faithful
     have hzT : z ∈ T := hBT (Subgroup.mem_zpowers z)
     have hyT : (yP : G) ∈ T := by
       have heq : (xT : G)⁻¹ * z = (yP : G) := by
-        simp [z, mul_assoc]
+        simp [z]
       rw [← heq]
       exact T.mul_mem (T.inv_mem xT.property) hzT
     have hyBot : (yP : G) ∈ (⊥ : Subgroup G) :=
@@ -1075,7 +1092,7 @@ private theorem chapter2_claim12_regular_complement_action_faithful
       exact Subgroup.mem_zpowers z
     have hxP : (xT : G) ∈ P := by
       have heq : z * (yP : G)⁻¹ = (xT : G) := by
-        simp [z, mul_assoc]
+        simp [z]
       rw [← heq]
       exact P.mul_mem hzP (P.inv_mem yP.property)
     have hxBot : (xT : G) ∈ (⊥ : Subgroup G) :=
@@ -1440,7 +1457,7 @@ private theorem chapter2_claim12_projective_orbit_forces_normalizers_eq
                 calc
                   incl (d⁻¹ * c) • A0 = incl d⁻¹ • (incl c • A0) := by simp [mul_smul]
                   _ = incl d⁻¹ • (incl d • A0) := by rw [heq0]
-                  _ = A0 := by simpa using inv_smul_smul (incl d) A0
+                  _ = A0 := by simp
               have hdc : d⁻¹ * c = 1 :=
                 hCQ_free_third (d⁻¹ * c) A0 hA0card hA0neP hA0neJ hstab
               exact congrArg Subtype.val (eq_of_inv_mul_eq_one hdc).symm
@@ -1456,6 +1473,7 @@ private theorem chapter2_claim12_projective_orbit_forces_normalizers_eq
         _ ≤ Nat.card X := hcard
     have hXcard : Nat.card X = p := le_antisymm hXcard_le hp_le_X
     letI : Fintype H12 := Fintype.ofFinite H12
+    letI : Fintype X := Fintype.ofFinite X
     letI : Fintype (MulAction.stabilizer H12 Pbar) := Fintype.ofFinite _
     have hOrbitMul := MulAction.card_orbit_mul_card_stabilizer_eq_card_group H12 Pbar
     have hXcardF : Fintype.card X = p := by
@@ -1481,7 +1499,8 @@ private theorem chapter2_claim12_projective_orbit_forces_normalizers_eq
       exact hOrbitMul.symm
     have hp4_dvd_H12 : p ^ 4 ∣ Nat.card H12 := by
       rw [hH12cardEq]
-      convert Nat.mul_dvd_mul_left p hp3_dvd_stab using 1 <;> ring
+      convert Nat.mul_dvd_mul_left p hp3_dvd_stab using 1
+      ring
     have hp4_dvd_G : p ^ 4 ∣ Nat.card G :=
       hp4_dvd_H12.trans (Subgroup.card_subgroup_dvd_card H12)
     have hp4_dvd_p3u : p ^ 4 ∣ p ^ 3 * u := by
@@ -1490,7 +1509,334 @@ private theorem chapter2_claim12_projective_orbit_forces_normalizers_eq
       p u (Fact.out : Nat.Prime p) hu) hp4_dvd_p3u
   · exact hNR_le_H12
 
-set_option maxHeartbeats 800000 in
+private theorem chapter2_claim12_delta_mem_right_complement
+    {A U : Type*} [Group A] [Group U] [MulDistribMulAction A U]
+    [IsMulCommutative U] (F J : Subgroup U) [IsInvariant A U J]
+    (hcompl : F.IsComplement' J)
+    (hfixed : ∀ (a : A) {u : U}, u ∈ F → a • u = u)
+    (a : A) (u : U) : (a • u) * u⁻¹ ∈ J := by
+  rcases (hcompl.existsUnique u).exists with ⟨⟨f, j⟩, hfj⟩
+  have hcf : a • (f : U) = (f : U) := hfixed a f.property
+  have hcj : a • (j : U) ∈ J :=
+    (IsInvariant.invariant (A := A) (G := U) (H := J) a (j : U)).1
+      j.property
+  have hEq : (a • u) * u⁻¹ = (a • (j : U)) * ((j : U)⁻¹) := by
+    rw [← hfj, smul_mul', hcf, mul_inv_rev]
+    calc
+      (f : U) * (a • (j : U)) * ((j : U)⁻¹ * (f : U)⁻¹) =
+          ((f : U) * (f : U)⁻¹) *
+            ((a • (j : U)) * (j : U)⁻¹) := by ac_rfl
+      _ = (a • (j : U)) * ((j : U)⁻¹) := by simp
+  rw [hEq]
+  exact J.mul_mem hcj (J.inv_mem j.property)
+
+private theorem chapter2_claim12_faithful_of_surjective_commutator
+    {G U : Type*} [Group G] [Finite G] [Group U]
+    (p : ℕ) [Fact p.Prime]
+    (T P R CQ : Subgroup G) (R1 : Sylow p G) (TR1 : Subgroup R1)
+    [MulDistribMulAction CQ R1] [MulDistribMulAction CQ U]
+    (J : Subgroup U) (phi : U →* TR1)
+    (hTcard : Nat.card T = p) (hPcard : Nat.card P = p)
+    (hR_eq : R = T ⊔ P) (hTPdisj : Disjoint T P)
+    (hTcentralP : T ≤ Subgroup.centralizer (P : Set G))
+    (hCQcentralP : CQ ≤ Subgroup.centralizer (P : Set G))
+    (hreg : ∀ A B : Subgroup G,
+      A ≤ R → B ≤ R → Nat.card A = p → Nat.card B = p →
+        ¬ A ≤ T → ¬ B ≤ T → A ≠ P → B ≠ P →
+          ∃! d : G, d ∈ CQ ∧ B = rightConjugate A d)
+    (hT_le_R1 : T ≤ (R1 : Subgroup G))
+    (hTR1 : TR1 = T.subgroupOf (R1 : Subgroup G))
+    (hphiJ_surj : ∀ z : TR1, ∃ j : J, phi (j : U) = z)
+    (hphi_CQ : ∀ (c : CQ) (u : U),
+      ((phi (c • u) : TR1) : R1) = c • ((phi u : TR1) : R1))
+    (hsmul_coe : ∀ (c : CQ) (x : R1),
+      ((c • x : R1) : G) = (c : G) * (x : G) * (c : G)⁻¹)
+    (yP : P) (hyPne : yP ≠ 1) (c : CQ)
+    (hfix : ∀ j : J, c • (j : U) = (j : U)) : c = 1 := by
+  have hfixTR1 (z : TR1) : c • (z : R1) = (z : R1) := by
+    rcases hphiJ_surj z with ⟨j, hj⟩
+    calc
+      c • (z : R1) = c • ((phi (j : U) : TR1) : R1) :=
+        congrArg (fun w : R1 => c • w) (congrArg Subtype.val hj.symm)
+      _ = ((phi (c • (j : U)) : TR1) : R1) := (hphi_CQ c (j : U)).symm
+      _ = ((phi (j : U) : TR1) : R1) :=
+        congrArg (fun u : U => ((phi u : TR1) : R1)) (hfix j)
+      _ = (z : R1) := congrArg Subtype.val hj
+  have hfixT (x : G) (hxT : x ∈ T) :
+      (c : G) * x * (c : G)⁻¹ = x := by
+    let xR1 : R1 := ⟨x, hT_le_R1 hxT⟩
+    let xTR1 : TR1 := ⟨xR1, by rw [hTR1]; exact hxT⟩
+    have hxR1 : c • xR1 = xR1 := hfixTR1 xTR1
+    calc
+      (c : G) * x * (c : G)⁻¹ = ((c • xR1 : R1) : G) :=
+        (hsmul_coe c xR1).symm
+      _ = (xR1 : G) := congrArg (fun z : R1 => (z : G)) hxR1
+      _ = x := rfl
+  exact chapter2_claim12_regular_complement_action_faithful
+    p T P R CQ hTcard hPcard hR_eq hTPdisj hTcentralP hCQcentralP
+      hreg yP hyPne c hfixT
+
+private theorem chapter2_claim12_le_normalizer_map_comap_quotient
+    {G U : Type*} [Group G] [Group U] (A R : Subgroup G)
+    [MulDistribMulAction A R] [MulDistribMulAction A U]
+    (q : R →* U) (J : Subgroup U) [IsInvariant A U J]
+    (hcompat : ∀ (a : A) (x : R),
+      a • q x = q (a • x))
+    (hsmul_coe : ∀ (a : A) (x : R),
+      (((a • x : R) : G)) = (a : G) * (x : G) * (a : G)⁻¹) :
+    A ≤ Subgroup.normalizer
+      ((J.comap q).map R.subtype : Set G) := by
+  have hInv : IsInvariant A R (J.comap q) := by
+    constructor
+    intro a x
+    change q x ∈ J ↔ q (a • x) ∈ J
+    rw [← hcompat]
+    exact IsInvariant.invariant (A := A) (G := U) (H := J) a (q x)
+  exact chapter2_claim12_le_normalizer_map_of_isInvariant
+    A R (J.comap q) hInv hsmul_coe
+
+private theorem chapter2_claim12_subgroup_ne_complement_of_prime_card
+    {U : Type*} [Group U] (p : ℕ) [Fact p.Prime]
+    (L F J : Subgroup U) (hLcard : Nat.card L = p)
+    (hL_le_F : L ≤ F) (hFJcompl : IsCompl F J) : L ≠ J := by
+  intro heq
+  have hL_le_J : L ≤ J := by rw [heq]
+  have hdisjLJ : Disjoint L J := hFJcompl.disjoint.mono hL_le_F le_rfl
+  have hLbot : L = ⊥ := by
+    apply le_antisymm
+    · intro x hx
+      have hxInf : x ∈ L ⊓ J := ⟨hx, hL_le_J hx⟩
+      rw [disjoint_iff.mp hdisjLJ] at hxInf
+      exact hxInf
+    · exact bot_le
+  have hpOne : p = 1 := by rw [← hLcard, hLbot]; simp
+  exact (Fact.out : p.Prime).ne_one hpOne
+
+private theorem chapter2_claim12_fix_image_iff_mem_normalizer
+    {G U : Type*} [Group G] [Group U] [Finite U]
+    (H R K : Subgroup G)
+    [MulDistribMulAction H K] [MulDistribMulAction H U]
+    [MulAction H (Subgroup U)]
+    (q : K →* U) (L : Subgroup U)
+    (hR_le_K : R ≤ K)
+    (hpre : L.comap q = R.subgroupOf K)
+    (hcompat : ∀ (a : H) (x : K), a • q x = q (a • x))
+    (hsmul_coe : ∀ (a : H) (x : K),
+      ((a • x : K) : G) = (a : G) * (x : G) * (a : G)⁻¹)
+    (hq_surj : Function.Surjective q)
+    (hsmul_mem : ∀ (a : H) {u : U}, u ∈ L → a • u ∈ a • L)
+    (hmem_smul : ∀ (a : H) {u : U}, u ∈ a • L →
+      ∃ v : U, v ∈ L ∧ u = a • v)
+    (hcard_smul : ∀ a : H, Nat.card (a • L : Subgroup U) = Nat.card L)
+    (a : H) : a • L = L ↔ (a : G) ∈ Subgroup.normalizer (R : Set G) := by
+  have hforward (b : H) (hbfix : b • L = L) :
+      ∀ x : G, x ∈ R → (b : G) * x * (b : G)⁻¹ ∈ R := by
+    intro x hxR
+    let xK : K := ⟨x, hR_le_K hxR⟩
+    have hxPre : xK ∈ L.comap q := by
+      rw [hpre]
+      exact hxR
+    have hqMem : b • q xK ∈ L := by
+      have hmem := hsmul_mem b hxPre
+      rwa [hbfix] at hmem
+    rw [hcompat] at hqMem
+    have hbPre : b • xK ∈ L.comap q := hqMem
+    rw [hpre] at hbPre
+    change ((b • xK : K) : G) ∈ R at hbPre
+    rw [hsmul_coe] at hbPre
+    exact hbPre
+  constructor
+  · intro hfix
+    have hfixInv : a⁻¹ • L = L := by
+      calc
+        a⁻¹ • L = a⁻¹ • (a • L) := by rw [hfix]
+        _ = L := inv_smul_smul a L
+    apply chapter2_claim12_mem_normalizer_of_conj_mem R (a : G)
+    · exact hforward a hfix
+    · exact hforward a⁻¹ hfixInv
+  · intro haNorm
+    apply Subgroup.eq_of_le_of_card_ge
+    · intro u hu
+      rcases hmem_smul a hu with ⟨v, hv, rfl⟩
+      obtain ⟨x, rfl⟩ := hq_surj v
+      rw [hcompat]
+      have hxPre : x ∈ L.comap q := hv
+      rw [hpre] at hxPre
+      have hconjR : (a : G) * (x : G) * (a : G)⁻¹ ∈ R :=
+        (Subgroup.mem_normalizer_iff.mp haNorm (x : G)).1 hxPre
+      change a • x ∈ L.comap q
+      rw [hpre]
+      change ((a • x : K) : G) ∈ R
+      rw [hsmul_coe]
+      exact hconjR
+    · exact (hcard_smul a).symm.le
+
+private theorem chapter2_claim12_fix_image_iff_mem_normalizer_compHom
+    {G U : Type*} [Group G] [Group U] [Finite U]
+    (H R K : Subgroup G)
+    [MulDistribMulAction H K] [MulDistribMulAction H U]
+    (aut : H →* MulAut U) (haut : ∀ (a : H) (u : U), aut a u = a • u)
+    (q : K →* U) (L : Subgroup U)
+    (hR_le_K : R ≤ K) (hpre : L.comap q = R.subgroupOf K)
+    (hcompat : ∀ (a : H) (x : K), a • q x = q (a • x))
+    (hsmul_coe : ∀ (a : H) (x : K),
+      ((a • x : K) : G) = (a : G) * (x : G) * (a : G)⁻¹)
+    (hq_surj : Function.Surjective q) (a : H) :
+    letI : MulAction H (Subgroup U) := MulAction.compHom _ aut
+    a • L = L ↔ (a : G) ∈ Subgroup.normalizer (R : Set G) := by
+  letI : MulAction H (Subgroup U) := MulAction.compHom _ aut
+  exact chapter2_claim12_fix_image_iff_mem_normalizer
+    H R K q L hR_le_K hpre hcompat hsmul_coe hq_surj
+      (fun b u hu => by
+        change b • u ∈ L.map (aut b).toMonoidHom
+        exact Subgroup.mem_map.mpr ⟨u, hu, haut b u⟩)
+      (fun b u hu => by
+        change u ∈ L.map (aut b).toMonoidHom at hu
+        rcases Subgroup.mem_map.mp hu with ⟨v, hv, hvu⟩
+        refine ⟨v, hv, ?_⟩
+        exact hvu.symm.trans (haut b v))
+      (fun b => Nat.card_congr ((aut b).subgroupMap L).toEquiv.symm) a
+
+private theorem chapter2_claim12_comap_map_quotient_eq_subgroupOf_sup
+    {G : Type*} [Group G] (K T P R : Subgroup G)
+    (N A : Subgroup K) [N.Normal]
+    (hN : N = T.subgroupOf K) (hA : A = P.subgroupOf K)
+    (hT_le_K : T ≤ K) (hP_le_K : P ≤ K) (hR : R = T ⊔ P) :
+    (A.map (QuotientGroup.mk' N)).comap (QuotientGroup.mk' N) =
+      R.subgroupOf K := by
+  rw [Subgroup.comap_map_eq, QuotientGroup.ker_mk', hN, hA, sup_comm,
+    ← Subgroup.subgroupOf_sup hT_le_K hP_le_K, ← hR]
+
+private theorem chapter2_claim12_restrict_surjective_of_complement_ker
+    {U T : Type*} [Group U] [Finite U] [Group T] [Finite T]
+    (F J : Subgroup U) (phi : U →* T)
+    (hker : phi.ker = F) (hcompl : IsCompl F J)
+    (hcard : Nat.card J = Nat.card T) :
+    Function.Surjective (phi.comp J.subtype) := by
+  have hinj : Function.Injective (phi.comp J.subtype) := by
+    intro a b hab
+    change phi (a : U) = phi (b : U) at hab
+    have hdiffKer : (a : U) * (b : U)⁻¹ ∈ phi.ker := by
+      rw [MonoidHom.mem_ker, map_mul, map_inv, hab, mul_inv_cancel]
+    have hdiffF : (a : U) * (b : U)⁻¹ ∈ F := by
+      rw [← hker]
+      exact hdiffKer
+    have hdiffJ : (a : U) * (b : U)⁻¹ ∈ J :=
+      J.mul_mem a.property (J.inv_mem b.property)
+    have hdiffBot : (a : U) * (b : U)⁻¹ ∈ (⊥ : Subgroup U) :=
+      (Subgroup.disjoint_def.mp hcompl.disjoint) hdiffF hdiffJ
+    exact Subtype.ext (mul_inv_eq_one.mp (Subgroup.mem_bot.mp hdiffBot))
+  exact ((Nat.bijective_iff_injective_and_card (phi.comp J.subtype)).2
+    ⟨hinj, hcard⟩).2
+
+private theorem chapter2_claim12_construct_local_index_subgroup
+    {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
+    (H12 NR R1 T1 P CQ : Subgroup G)
+    (hH12_eq_NR : H12 = NR) (hNR_le_H12 : NR ≤ H12)
+    (hR1_le_NR : R1 ≤ NR) (hCQ_le_NR : CQ ≤ NR)
+    (hCQ_le_normalizer_R1 : CQ ≤ Subgroup.normalizer (R1 : Set G))
+    (hT1_le_R1 : T1 ≤ R1)
+    (hR1card : Nat.card R1 = p ^ 3) (hCQcard : Nat.card CQ = p - 1)
+    (hNRcard : Nat.card NR = p ^ 3 * (p - 1))
+    (hR1_eq_T1_sup_P : R1 = T1 ⊔ P) (hP_le_R1 : P ≤ R1)
+    (hR1_le_normalizer_T1 : R1 ≤ Subgroup.normalizer (T1 : Set G))
+    (hCQ_le_normalizer_T1 : CQ ≤ Subgroup.normalizer (T1 : Set G))
+    (hCQ_le_centralizer_P : CQ ≤ Subgroup.centralizer (P : Set G))
+    (hT1card : Nat.card T1 = p ^ 2) :
+    ∃ M : Subgroup H12, M.Normal ∧ Nat.card (H12 ⧸ M) = p := by
+  have hpPredPos : 0 < p - 1 := by
+    have hp2 := (Fact.out : p.Prime).two_le
+    omega
+  have hpPredLt : p - 1 < p := by
+    have hp2 := (Fact.out : p.Prime).two_le
+    omega
+  have hCQ_le_H12 : CQ ≤ H12 := hCQ_le_NR.trans hNR_le_H12
+  have hR1_le_H12 : R1 ≤ H12 := hR1_le_NR.trans hNR_le_H12
+  have hT1_le_H12 : T1 ≤ H12 := hT1_le_R1.trans hR1_le_H12
+  have hR1_disj_CQ : Disjoint R1 CQ := by
+    rw [disjoint_iff]
+    let I : Subgroup G := R1 ⊓ CQ
+    have hIdvdR1 : Nat.card I ∣ p ^ 3 := by
+      rw [← hR1card]
+      exact Subgroup.card_dvd_of_le inf_le_left
+    have hIdvdCQ : Nat.card I ∣ p - 1 := by
+      rw [← hCQcard]
+      exact Subgroup.card_dvd_of_le inf_le_right
+    have hcop : Nat.Coprime (p ^ 3) (p - 1) :=
+      Nat.Coprime.pow_left 3
+        ((Fact.out : p.Prime).coprime_iff_not_dvd.mpr
+          (Nat.not_dvd_of_pos_of_lt hpPredPos hpPredLt))
+    exact Subgroup.card_eq_one.mp
+      (Nat.eq_one_of_dvd_coprimes hcop hIdvdR1 hIdvdCQ)
+  have hR1_sup_CQ_card :
+      Nat.card (R1 ⊔ CQ : Subgroup G) = p ^ 3 * (p - 1) := by
+    calc
+      Nat.card (R1 ⊔ CQ : Subgroup G) = Nat.card R1 * Nat.card CQ :=
+        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+          R1 CQ hCQ_le_normalizer_R1 hR1_disj_CQ
+      _ = p ^ 3 * (p - 1) := by rw [hR1card, hCQcard]
+  have hNR_eq_R1_sup_CQ : NR = R1 ⊔ CQ := by
+    symm
+    apply Subgroup.eq_of_le_of_card_ge
+    · exact sup_le hR1_le_NR hCQ_le_NR
+    · rw [hR1_sup_CQ_card, hNRcard]
+  let M0 : Subgroup G := T1 ⊔ CQ
+  have hM0_le_H12 : M0 ≤ H12 := sup_le hT1_le_H12 hCQ_le_H12
+  have hP_le_normalizer_CQ : P ≤ Subgroup.normalizer (CQ : Set G) := by
+    intro x hxP
+    apply centralizer_le_normalizer CQ
+    rw [Subgroup.mem_centralizer_iff]
+    intro c hcCQ
+    exact (Subgroup.mem_centralizer_iff.mp
+      (hCQ_le_centralizer_P hcCQ) x hxP).symm
+  have hP_le_normalizer_M0 : P ≤ Subgroup.normalizer (M0 : Set G) := by
+    intro x hxP
+    exact chapter2_claim12_mem_normalizer_sup
+      (hR1_le_normalizer_T1 (hP_le_R1 hxP))
+      (hP_le_normalizer_CQ hxP)
+  have hT1_le_normalizer_M0 : T1 ≤ Subgroup.normalizer (M0 : Set G) :=
+    le_sup_left.trans (Subgroup.le_normalizer (H := M0))
+  have hCQ_le_normalizer_M0 : CQ ≤ Subgroup.normalizer (M0 : Set G) := by
+    intro c hc
+    exact chapter2_claim12_mem_normalizer_sup (hCQ_le_normalizer_T1 hc)
+      (Subgroup.le_normalizer (H := CQ) hc)
+  have hR1_le_normalizer_M0 : R1 ≤ Subgroup.normalizer (M0 : Set G) := by
+    rw [hR1_eq_T1_sup_P]
+    exact sup_le hT1_le_normalizer_M0 hP_le_normalizer_M0
+  have hH12_le_normalizer_M0 : H12 ≤ Subgroup.normalizer (M0 : Set G) := by
+    rw [hH12_eq_NR, hNR_eq_R1_sup_CQ]
+    exact sup_le hR1_le_normalizer_M0 hCQ_le_normalizer_M0
+  have hM0normal : (M0.subgroupOf H12).Normal :=
+    (Subgroup.normal_subgroupOf_iff_le_normalizer hM0_le_H12).2
+      hH12_le_normalizer_M0
+  have hT1_disj_CQ : Disjoint T1 CQ := hR1_disj_CQ.mono hT1_le_R1 le_rfl
+  have hM0card : Nat.card M0 = p ^ 2 * (p - 1) := by
+    calc
+      Nat.card M0 = Nat.card T1 * Nat.card CQ :=
+        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
+          T1 CQ hCQ_le_normalizer_T1 hT1_disj_CQ
+      _ = p ^ 2 * (p - 1) := by rw [hT1card, hCQcard]
+  let M : Subgroup H12 := M0.subgroupOf H12
+  have hMcard : Nat.card M = p ^ 2 * (p - 1) := by
+    calc
+      Nat.card M = Nat.card M0 :=
+        Nat.card_congr (Subgroup.subgroupOfEquivOfLe hM0_le_H12).toEquiv
+      _ = p ^ 2 * (p - 1) := hM0card
+  have hH12card : Nat.card H12 = p ^ 3 * (p - 1) := by
+    rw [hH12_eq_NR]
+    exact hNRcard
+  have hMindex : M.index = p := by
+    apply Nat.eq_of_mul_eq_mul_left (Nat.card_pos (α := M))
+    calc
+      Nat.card M * M.index = Nat.card H12 := M.card_mul_index
+      _ = p ^ 3 * (p - 1) := hH12card
+      _ = (p ^ 2 * (p - 1)) * p := by ring
+      _ = Nat.card M * p := congrArg (fun n : ℕ => n * p) hMcard.symm
+  refine ⟨M, hM0normal, ?_⟩
+  calc
+    Nat.card (H12 ⧸ M) = M.index := (Subgroup.index_eq_card M).symm
+    _ = p := hMindex
+
 set_option backward.isDefEq.respectTransparency false in
 /-- After the Sylow subgroup and Hall--Wielandt quotient are fixed, construct
 the local normal subgroup of index `p`. -/
@@ -1516,8 +1862,8 @@ private theorem chapter2_claim12_local_index_after_sylow
     ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r) ∧
   _root_.BenderSuzuki.PFchapter2.HypothesisB1 G V P p ∧
     _root_.BenderSuzuki.PFchapter2.HypothesisB2 G p))
-    (hSigma : Sigma = W ⊓ Subgroup.centralizer (P : Set G))
-    (hStarComm_order : Nat.card (nearFieldStar Q P) + 1 = p ^ m)
+    (_hSigma : Sigma = W ⊓ Subgroup.centralizer (P : Set G))
+    (_hStarComm_order : Nat.card (nearFieldStar Q P) + 1 = p ^ m)
     (hR : R = T ⊔ P ∧
         Disjoint T P ∧
           T ≤ Subgroup.centralizer (P : Set G) ∧
@@ -1576,7 +1922,7 @@ private theorem chapter2_claim12_local_index_after_sylow
     ⟨hsCQ, hCQCommS, hSigmaBot, hCdecomp⟩
   have hP_le_C : P ≤ C := by
     letI : IsMulCommutative P :=
-      ⟨(isCyclic_of_prime_card hch.B1.P_card).commutative⟩
+      (isCyclic_of_prime_card hch.B1.P_card).isMulCommutative
     exact Subgroup.le_centralizer_iff_isMulCommutative.mpr inferInstance
   have hP_le_R : P ≤ R := by rw [hR.1]; exact le_sup_right
   have hR_le_C : R ≤ C := by
@@ -1707,17 +2053,8 @@ private theorem chapter2_claim12_local_index_after_sylow
       Nat.card TR1 = Nat.card T :=
         Nat.card_congr (Subgroup.subgroupOfEquivOfLe hT_le_R1).toEquiv
       _ = p := hTcard
-  have hR1noncomm : ¬ IsMulCommutative R1 := by
-    intro hcomm
-    letI : IsMulCommutative R1 := hcomm
-    have hR1_le_C : (R1 : Subgroup G) ≤ C := by
-      intro x hxR1
-      rw [Subgroup.mem_centralizer_iff]
-      intro y hyP
-      let xR1 : R1 := ⟨x, hxR1⟩
-      let yR1 : R1 := ⟨y, hR_le_R1 (hP_le_R hyP)⟩
-      exact (congrArg Subtype.val
-        ((IsMulCommutative.is_comm (M := R1)).comm xR1 yR1)).symm
+  have hR1_not_le_C : ¬ (R1 : Subgroup G) ≤ C := by
+    intro hR1_le_C
     rcases hCaseOne.2.2.2 with ⟨RC, hRC⟩
     let R1C : Subgroup C := (R1 : Subgroup G).subgroupOf C
     have hR1Ccard : Nat.card R1C = p ^ 3 := by
@@ -1741,8 +2078,20 @@ private theorem chapter2_claim12_local_index_after_sylow
         _ = p ^ 2 := hRcardTwo
     change Nat.card R1C = Nat.card (RC : Subgroup C) at hcardEq
     rw [hR1Ccard, hRCcard] at hcardEq
-    have hpgt : 1 < p := hch.B1.p_prime.one_lt
-    nlinarith [pow_pos hch.B1.p_prime.pos 2]
+    have h32 : (3 : ℕ) = 2 :=
+      Nat.pow_right_injective hch.B1.p_prime.one_lt hcardEq
+    omega
+  have hR1noncomm : ¬ IsMulCommutative R1 := by
+    intro hcomm
+    apply hR1_not_le_C
+    letI : IsMulCommutative R1 := hcomm
+    intro x hxR1
+    rw [Subgroup.mem_centralizer_iff]
+    intro y hyP
+    let xR1 : R1 := ⟨x, hxR1⟩
+    let yR1 : R1 := ⟨y, hR_le_R1 (hP_le_R hyP)⟩
+    exact (congrArg Subtype.val
+      ((IsMulCommutative.is_comm (M := R1)).comm xR1 yR1)).symm
   have hTR1index : TR1.index = p ^ 2 := by
     apply Nat.eq_of_mul_eq_mul_left hch.B1.p_prime.pos
     calc
@@ -1755,8 +2104,8 @@ private theorem chapter2_claim12_local_index_after_sylow
     calc
       Nat.card U = TR1.index := (Subgroup.index_eq_card TR1).symm
       _ = p ^ 2 := hTR1index
-  have hUcomm : Std.Commutative (fun a b : U => a * b) :=
-    ⟨IsPGroup.commutative_of_card_eq_prime_sq hUcard⟩
+  have hUcomm : IsMulCommutative U :=
+    IsPGroup.isMulCommutative_of_card_eq_prime_sq hUcard
   have hcomm_le : _root_.commutator R1 ≤ TR1 :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le).mp hUcomm
   let Kcomm : Subgroup TR1 := (_root_.commutator R1).subgroupOf TR1
@@ -1819,7 +2168,7 @@ private theorem chapter2_claim12_local_index_after_sylow
       hA_norm_R1 hA_norm_T hT_le_R1
   letI : MulDistribMulAction A U :=
     quotientMulDistribMulAction (A := A) (G := R1) TR1 hTR1invA
-  letI : IsMulCommutative U := ⟨hUcomm⟩
+  letI : IsMulCommutative U := hUcomm
   have hsOrder : orderOf s = 2 :=
     orderOf_eq_prime_iff.mpr
       ⟨hch.section3.s_involution.sq_eq_one,
@@ -1840,7 +2189,9 @@ private theorem chapter2_claim12_local_index_after_sylow
   have hcopAU : Nat.Coprime (Nat.card A) (Nat.card U) := by
     rw [hAcard]
     exact hUodd.coprime_two_left
-  have hsolvU : IsSolvable U := by infer_instance
+  letI : IsMulCommutative U := hUcomm
+  have hsolvU : IsSolvable U := by
+    exact isSolvable_of_comm (fun x y => mul_comm' x y)
   let Ffix : Subgroup U := fixedPointSubgroup A U
   let Jcomm : Subgroup U := commutatorAction (A := A) (G := U)
   have hFJcompl : IsCompl Ffix Jcomm := by
@@ -1915,37 +2266,11 @@ private theorem chapter2_claim12_local_index_after_sylow
   obtain ⟨yP, hyPne⟩ :=
     Subgroup.ne_bot_iff_exists_ne_one.mp hPne
   letI : IsMulCommutative P :=
-    ⟨(isCyclic_of_prime_card hch.B1.P_card).commutative⟩
+    (isCyclic_of_prime_card hch.B1.P_card).isMulCommutative
   let yR1 : R1 := ⟨(yP : G), hP_le_R1 yP.property⟩
   obtain ⟨phi, hphi⟩ :=
     chapter2_claim12_commutator_quotient_hom TR1
       (by rw [hcomm_eq_TR1]) hTR1center yR1
-  have hR1_not_le_C : ¬ (R1 : Subgroup G) ≤ C := by
-    intro hR1_le_C
-    rcases hCaseOne.2.2.2 with ⟨RC, hRC⟩
-    let R1C : Subgroup C := (R1 : Subgroup G).subgroupOf C
-    have hR1Ccard : Nat.card R1C = p ^ 3 := by
-      calc
-        Nat.card R1C = Nat.card R1 :=
-          Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR1_le_C).toEquiv
-        _ = p ^ 3 := hR1card
-    have hR1Cp : IsPGroup p R1C := IsPGroup.of_card hR1Ccard
-    have hRC_le_R1C : (RC : Subgroup C) ≤ R1C := by
-      rw [hRC]
-      intro x hxR
-      exact hR_le_R1 hxR
-    have hEq : R1C = (RC : Subgroup C) :=
-      RC.is_maximal' hR1Cp hRC_le_R1C
-    have hcardEq := congrArg (fun B : Subgroup C => Nat.card B) hEq
-    change Nat.card R1C = Nat.card (RC : Subgroup C) at hcardEq
-    have hRCcard : Nat.card (RC : Subgroup C) = p ^ 2 := by
-      calc
-        Nat.card (RC : Subgroup C) = Nat.card (R.subgroupOf C) := by rw [hRC]
-        _ = Nat.card R :=
-          Nat.card_congr (Subgroup.subgroupOfEquivOfLe hR_le_C).toEquiv
-        _ = p ^ 2 := hRcardTwo
-    rw [hR1Ccard, hRCcard] at hcardEq
-    nlinarith [pow_pos hch.B1.p_prime.pos 2]
   have hphi_range_ne_bot : phi.range ≠ ⊥ := by
     intro hrange
     apply hR1_not_le_C
@@ -2177,7 +2502,7 @@ private theorem chapter2_claim12_local_index_after_sylow
     have hxBot : xR1 ∈ (⊥ : Subgroup R1) :=
       (Subgroup.disjoint_def.mp hT1R_disj_PR1) hxT1R hxPR1
     have hxOne : xR1 = 1 := Subgroup.mem_bot.mp hxBot
-    simpa [← hxval, hxOne]
+    simp [← hxval, hxOne]
   have hR1_eq_T1_sup_P : (R1 : Subgroup G) = T1 ⊔ P := by
     have hmapPR1 : PR1.map (R1 : Subgroup G).subtype = P :=
       Subgroup.map_subgroupOf_eq_of_le hP_le_R1
@@ -2225,7 +2550,8 @@ private theorem chapter2_claim12_local_index_after_sylow
     have hvJ : v ∈ Jcomm := by
       exact Jcomm.mul_mem hu ((IsInvariant.invariant sA u).mp hu)
     have hvFixedGen : sA • v = v := by
-      simp [v, smul_mul', smul_smul, hsA_sq, mul_comm]
+      simp only [v, smul_mul', smul_smul, hsA_sq, one_smul]
+      exact mul_comm' _ _
     have hvF : v ∈ Ffix := by
       change ∀ a : A, a • v = v
       intro a
@@ -2280,8 +2606,9 @@ private theorem chapter2_claim12_local_index_after_sylow
     let v : T1R := x * (sA • x)
     have hvfix : sA • v = v := by
       letI : IsMulCommutative T1R :=
-        ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq hT1Rcard⟩⟩
-      simp [v, smul_mul', smul_smul, hsA_sq, mul_comm]
+        IsPGroup.isMulCommutative_of_card_eq_prime_sq hT1Rcard
+      simp only [v, smul_mul', smul_smul, hsA_sq, one_smul]
+      exact mul_comm' _ _
     have hvOne : v = 1 := hs_fixed_T1R_eq_one hvfix
     exact eq_inv_of_mul_eq_one_right hvOne
   have hT1_inverted : ∀ x : G, x ∈ T1 →
@@ -2292,8 +2619,8 @@ private theorem chapter2_claim12_local_index_after_sylow
     have hxInv := hT1R_inverted xT1R
     have hxInvG := congrArg (fun z : T1R => (((z : R1) : G))) hxInv
     have hxConj : s * (xR1 : G) * s⁻¹ = ((xR1 : G))⁻¹ := by
-      simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
-        using hxInvG
+      change s * (xR1 : G) * s⁻¹ = ((xR1 : G))⁻¹ at hxInvG
+      exact hxInvG
     rw [← hxval]
     simpa [rightConjugateElem,
       hch.section3.s_involution.inv_eq_self] using hxConj
@@ -2327,7 +2654,8 @@ private theorem chapter2_claim12_local_index_after_sylow
           _ = sA • u := by rw [hfj]
           _ = u⁻¹ := huInv
           _ = (f * j)⁻¹ := by rw [hfj]
-          _ = f⁻¹ * j⁻¹ := by simp [mul_comm]
+          _ = f⁻¹ * j⁻¹ := by
+            rw [mul_inv_rev, mul_comm']
       have hfEqInv : f = f⁻¹ := mul_right_cancel hEq
       have hfOne : f = 1 := by
         by_contra hfNe
@@ -2365,9 +2693,10 @@ private theorem chapter2_claim12_local_index_after_sylow
         simpa only [hJcommcard] using orderOf_dvd_natCard jJ)
     have hfPow : f ^ p = 1 := congrArg Subtype.val hfPowSub
     have hjPow : j ^ p = 1 := congrArg Subtype.val hjPowSub
-    rw [← hfj, mul_pow, hfPow, hjPow, one_mul]
+    have hfj_comm : Commute f j := mul_comm' f j
+    rw [← hfj, hfj_comm.mul_pow, hfPow, hjPow, one_mul]
   letI : IsElementaryAbelian p U :=
-    { is_comm := hUcomm
+    { is_comm := hUcomm.is_comm
       exponent_dvd_p :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mpr hUpow }
   have hLinesAll : Nat.card {L : Subgroup U // Nat.card L = p} = p + 1 :=
@@ -2375,9 +2704,9 @@ private theorem chapter2_claim12_local_index_after_sylow
       p hUcard
   let Lines := {L : Subgroup U // Nat.card L = p ∧ L ≠ Jcomm}
   have hLinesCard : Nat.card Lines = p := by
-    simpa [Lines] using
-      chapter2_claim12_prime_order_subgroups_ne_card
-        p Jcomm hJcommcard hLinesAll
+    change Nat.card {L : Subgroup U // Nat.card L = p ∧ L ≠ Jcomm} = p
+    exact chapter2_claim12_prime_order_subgroups_ne_card
+      p Jcomm hJcommcard hLinesAll
   have hCQ_le_H12_pre : CQ ≤ H12 := hCQ_le_NR.trans hNR_le_H12
   have hCQ_norm_R1 : CQ ≤ Subgroup.normalizer ((R1 : Subgroup G) : Set G) := by
     simpa [H12] using hCQ_le_H12_pre
@@ -2449,26 +2778,11 @@ private theorem chapter2_claim12_local_index_after_sylow
       simpa using hback
   letI : IsInvariant CQ U Jcomm := hJcomm_invCQ
   letI : IsInvariant CQ R1 TR1 := hTR1invCQ
-  let phiJ : Jcomm →* TR1 :=
-    { toFun := fun j => phi (j : U)
-      map_one' := phi.map_one
-      map_mul' := fun a b => phi.map_mul (a : U) (b : U) }
-  have hphiJ_inj : Function.Injective phiJ := by
-    intro a b hab
-    change phi (a : U) = phi (b : U) at hab
-    have hdiffKer : (a : U) * (b : U)⁻¹ ∈ phi.ker := by
-      rw [MonoidHom.mem_ker, map_mul, map_inv, hab, mul_inv_cancel]
-    have hdiffF : (a : U) * (b : U)⁻¹ ∈ Ffix := by
-      rw [hFfix_eq_Pbar, ← hphi_ker_eq_Pbar]
-      exact hdiffKer
-    have hdiffJ : (a : U) * (b : U)⁻¹ ∈ Jcomm :=
-      Jcomm.mul_mem a.property (Jcomm.inv_mem b.property)
-    have hdiffBot : (a : U) * (b : U)⁻¹ ∈ (⊥ : Subgroup U) :=
-      (Subgroup.disjoint_def.mp hFJcompl.disjoint) hdiffF hdiffJ
-    exact Subtype.ext (mul_inv_eq_one.mp (Subgroup.mem_bot.mp hdiffBot))
-  have hphiJ_surj : Function.Surjective phiJ :=
-    ((Nat.bijective_iff_injective_and_card phiJ).2
-      ⟨hphiJ_inj, by rw [hJcommcard, hTR1card]⟩).2
+  let phiJ : Jcomm →* TR1 := phi.comp Jcomm.subtype
+  have hphiJ_surj : Function.Surjective phiJ := by
+    exact chapter2_claim12_restrict_surjective_of_complement_ker
+      Ffix Jcomm phi (hphi_ker_eq_Pbar.trans hFfix_eq_Pbar.symm)
+        hFJcompl (hJcommcard.trans hTR1card.symm)
   have hphi_CQ (c : CQ) (u : U) :
       ((phi (c • u) : TR1) : R1) = c • ((phi u : TR1) : R1) := by
     obtain ⟨x, rfl⟩ := QuotientGroup.mk'_surjective TR1 u
@@ -2487,7 +2801,9 @@ private theorem chapter2_claim12_local_index_after_sylow
         _ = beta ⁅x, yR1⁆ :=
           (map_commutatorElement
             (f := beta.toMonoidHom) (g₁ := x) (g₂ := yR1)).symm
-    simpa [beta] using hmap
+    change ⁅c • x, yR1⁆ = c • ⁅x, yR1⁆
+    change ⁅beta x, yR1⁆ = beta ⁅x, yR1⁆
+    exact hmap
   have hCQ_fixed_Ffix (c : CQ) {u : U} (hu : u ∈ Ffix) : c • u = u := by
     rw [hFfix_eq_Pbar] at hu
     rcases Subgroup.mem_map.mp hu with ⟨x, hxP, rfl⟩
@@ -2504,151 +2820,55 @@ private theorem chapter2_claim12_local_index_after_sylow
       _ = (x : G) := by simp [mul_assoc]
   have hCQ_delta_mem_Jcomm (c : CQ) (u : U) :
       (c • u) * u⁻¹ ∈ Jcomm := by
-    rcases (hFJisComplement.existsUnique u).exists with ⟨⟨f, j⟩, hfj⟩
-    have hcf : c • (f : U) = (f : U) := hCQ_fixed_Ffix c f.property
-    have hcj : c • (j : U) ∈ Jcomm :=
-      (IsInvariant.invariant (A := CQ) (G := U) (H := Jcomm) c (j : U)).1
-        j.property
-    have hEq : (c • u) * u⁻¹ = (c • (j : U)) * ((j : U)⁻¹) := by
-      rw [← hfj, smul_mul', hcf, mul_inv_rev]
-      calc
-        (f : U) * (c • (j : U)) * ((j : U)⁻¹ * (f : U)⁻¹) =
-            ((f : U) * (f : U)⁻¹) *
-              ((c • (j : U)) * (j : U)⁻¹) := by ac_rfl
-        _ = (c • (j : U)) * ((j : U)⁻¹) := by simp
-    rw [hEq]
-    exact Jcomm.mul_mem hcj (Jcomm.inv_mem j.property)
+    exact chapter2_claim12_delta_mem_right_complement
+      Ffix Jcomm hFJisComplement hCQ_fixed_Ffix c u
   have hCQ_faithful_Jcomm (c : CQ)
       (hfix : ∀ j : Jcomm, c • (j : U) = (j : U)) : c = 1 := by
-    have hfixTR1 (z : TR1) : c • (z : R1) = (z : R1) := by
-      rcases hphiJ_surj z with ⟨j, hj⟩
-      change phi (j : U) = z at hj
-      calc
-        c • (z : R1) = c • ((phi (j : U) : TR1) : R1) :=
-          congrArg (fun w : R1 => c • w) (congrArg Subtype.val hj.symm)
-        _ = ((phi (c • (j : U)) : TR1) : R1) :=
-          (hphi_CQ c (j : U)).symm
-        _ = ((phi (j : U) : TR1) : R1) :=
-          congrArg (fun u : U => ((phi u : TR1) : R1)) (hfix j)
-        _ = (z : R1) := congrArg Subtype.val hj
-    have hfixT (x : G) (hxT : x ∈ T) :
-        (c : G) * x * (c : G)⁻¹ = x := by
-      let xR1 : R1 := ⟨x, hT_le_R1 hxT⟩
-      let xTR1 : TR1 := ⟨xR1, hxT⟩
-      have hxR1 : c • xR1 = xR1 := hfixTR1 xTR1
-      have hxG := congrArg Subtype.val hxR1
-      simpa only [xR1,
-        Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hxG
-    exact chapter2_claim12_regular_complement_action_faithful
-      p T P R (Q ⊓ Subgroup.centralizer (P : Set G))
-        hTcard hch.B1.P_card hR.1 hR.2.1 hR.2.2.1 inf_le_right
-          hR.2.2.2.2.2 yP hyPne c hfixT
-  have hT1RinvCQ' : IsInvariant CQ R1 T1R := by
-    dsimp [T1R]
-    exact isInvariant_comap_quotient (A := CQ) (G := R1)
-      (N := TR1) Jcomm hqU_compat_CQ
+    exact chapter2_claim12_faithful_of_surjective_commutator
+      p T P R CQ R1 TR1 Jcomm phi hTcard hch.B1.P_card hR.1 hR.2.1
+        hR.2.2.1 inf_le_right hR.2.2.2.2.2 hT_le_R1 rfl
+          (fun z => by
+            rcases hphiJ_surj z with ⟨j, hj⟩
+            exact ⟨j, hj⟩)
+          hphi_CQ
+          (fun _ _ => rfl)
+          yP hyPne c hfix
   have hCQ_le_normalizer_T1 : CQ ≤ Subgroup.normalizer (T1 : Set G) := by
-    simpa [T1] using
-      chapter2_claim12_le_normalizer_map_of_isInvariant
-        CQ (R1 : Subgroup G) T1R hT1RinvCQ'
-          (fun a x => by
-            simpa only [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe])
+    simpa [T1, T1R, qU] using
+      chapter2_claim12_le_normalizer_map_comap_quotient
+        CQ (R1 : Subgroup G) qU Jcomm hqU_compat_CQ (fun _ _ => rfl)
   have hH12_eq_NR : H12 = NR := by
     by_contra hne
     obtain ⟨_kH, uH, _hkH, hGcardH, huH⟩ := hcase10_1.2
     have hNRlt : NR < H12 :=
       ⟨hNR_le_H12, fun hrev => hne (le_antisymm hNR_le_H12 hrev).symm⟩
-    have hCQ_actions_agree (c : CQ) (u : U) :
-        inclCQH c • u = c • u := by
-      obtain ⟨x, rfl⟩ := QuotientGroup.mk'_surjective TR1 u
-      rw [hqU_compat_H12, hqU_compat_CQ]
-      rfl
-    have hCQH_fix_Pbar_elem (c : CQ) {u : U} (hu : u ∈ Pbar) :
-        inclCQH c • u = u := by
-      calc
-        inclCQH c • u = c • u := hCQ_actions_agree c u
-        _ = u := hCQ_fixed_Ffix c (hPbar_le_Ffix hu)
     have hCQH_fix_Pbar (c : CQ) : inclCQH c • Pbar = Pbar := by
       exact chapter2_claim12_subgroup_compHom_smul_eq_self_of_fixed
-        h12AutHom Pbar (inclCQH c) (hCQH_fix_Pbar_elem c)
-    have hCQH_mem_Jcomm (c : CQ) {u : U} (hu : u ∈ Jcomm) :
-        inclCQH c • u ∈ Jcomm := by
-      rw [hCQ_actions_agree c u]
-      exact hJcomm_forward c hu
-    have hPbar_ne_Jcomm : Pbar ≠ Jcomm := by
-      intro heq
-      have hPbar_le_J : Pbar ≤ Jcomm := by rw [heq]
-      have hdisjPJ : Disjoint Pbar Jcomm :=
-        hFJcompl.disjoint.mono hPbar_le_Ffix le_rfl
-      have hPbar_bot : Pbar = ⊥ := by
-        apply le_antisymm
-        · intro x hx
-          have hxInf : x ∈ Pbar ⊓ Jcomm := ⟨hx, hPbar_le_J hx⟩
-          rw [disjoint_iff.mp hdisjPJ] at hxInf
-          exact hxInf
-        · exact bot_le
-      have hpOne : p = 1 := by rw [← hPbarcard, hPbar_bot]; simp
-      exact hch.B1.p_prime.ne_one hpOne
-    have hqUker : qU.ker = TR1 := by
-      dsimp [qU]
-      exact QuotientGroup.ker_mk' (G := R1) (N := TR1)
+        h12AutHom Pbar (inclCQH c)
+          (fun hu => hCQ_fixed_Ffix c (hPbar_le_Ffix hu))
+    have hPbar_ne_Jcomm : Pbar ≠ Jcomm :=
+      chapter2_claim12_subgroup_ne_complement_of_prime_card
+        p Pbar Ffix Jcomm hPbarcard hPbar_le_Ffix hFJcompl
     have hprePbar : Pbar.comap qU = RR1 := by
-      change (PR1.map qU).comap qU = RR1
-      rw [Subgroup.comap_map_eq, hqUker, sup_comm,
-        ← Subgroup.subgroupOf_sup hT_le_R1 hP_le_R1, ← hR.1]
+      change (PR1.map (QuotientGroup.mk' TR1)).comap
+        (QuotientGroup.mk' TR1) = R.subgroupOf (R1 : Subgroup G)
+      exact chapter2_claim12_comap_map_quotient_eq_subgroupOf_sup
+        (R1 : Subgroup G) T P R TR1 PR1 rfl rfl
+          hT_le_R1 hP_le_R1 hR.1
     have hfixPbar_iff_mem_NR (a : H12) :
         a • Pbar = Pbar ↔ (a : G) ∈ NR := by
-      have hforward (b : H12) (hbfix : b • Pbar = Pbar) :
-          ∀ x : G, x ∈ R → (b : G) * x * (b : G)⁻¹ ∈ R := by
-        intro x hxR
-        let xR1 : R1 := ⟨x, hR_le_R1 hxR⟩
-        have hxPre : xR1 ∈ Pbar.comap qU := by
-          rw [hprePbar]
-          exact hxR
-        have hqMem : b • qU xR1 ∈ Pbar := by
-          rw [← hbfix]
-          change b • qU xR1 ∈ Pbar.map (h12AutHom b).toMonoidHom
-          exact Subgroup.mem_map.mpr ⟨qU xR1, hxPre, rfl⟩
-        rw [hqU_compat_H12] at hqMem
-        have hbPre : b • xR1 ∈ Pbar.comap qU := hqMem
-        rw [hprePbar] at hbPre
-        exact hbPre
-      constructor
-      · intro hfix
-        have hfixInv : a⁻¹ • Pbar = Pbar := by
-          calc
-            a⁻¹ • Pbar = a⁻¹ • (a • Pbar) := by rw [hfix]
-            _ = Pbar := inv_smul_smul a Pbar
-        apply chapter2_claim12_mem_normalizer_of_conj_mem R (a : G)
-        · exact hforward a hfix
-        · exact hforward a⁻¹ hfixInv
-      · intro haNR
-        have haNorm : (a : G) ∈ Subgroup.normalizer (R : Set G) := by
-          simpa [NR] using haNR
-        apply Subgroup.eq_of_le_of_card_ge
-        · intro u hu
-          change u ∈ Pbar.map (h12AutHom a).toMonoidHom at hu
-          rcases Subgroup.mem_map.mp hu with ⟨v, hv, rfl⟩
-          obtain ⟨x, rfl⟩ := QuotientGroup.mk'_surjective TR1 v
-          change qU (a • x) ∈ Pbar
-          have hxPre : x ∈ Pbar.comap qU := hv
-          rw [hprePbar] at hxPre
-          have hconjR : (a : G) * (x : G) * (a : G)⁻¹ ∈ R :=
-            (Subgroup.mem_normalizer_iff.mp haNorm (x : G)).1
-              (show (x : G) ∈ R from hxPre)
-          change a • x ∈ Pbar.comap qU
-          rw [hprePbar]
-          exact hconjR
-        · have hcard : Nat.card (a • Pbar : Subgroup U) = Nat.card Pbar := by
-            change Nat.card ((h12AutHom a) • Pbar : Subgroup U) = Nat.card Pbar
-            exact Nat.card_congr ((h12AutHom a).subgroupMap Pbar).toEquiv.symm
-          exact hcard.symm.le
+      change a • Pbar = Pbar ↔
+        (a : G) ∈ Subgroup.normalizer (R : Set G)
+      exact chapter2_claim12_fix_image_iff_mem_normalizer_compHom
+        H12 R (R1 : Subgroup G) h12AutHom (fun _ _ => rfl) qU Pbar
+          hR_le_R1 hprePbar hqU_compat_H12 (fun _ _ => rfl)
+            (QuotientGroup.mk'_surjective TR1) a
     have horbit_avoids_J : ∀ a : H12, a • Pbar ≠ Jcomm :=
       chapter2_claim12_orbit_avoids_inverted_line (G := G) (U := U)
         H12 (R1 : Subgroup G) V P qU PR1 Pbar Jcomm T1R T1 yR1 yP s
           rfl (by exact yP.property) rfl rfl hqU_compat_H12
             (fun a x => by
-              simpa only [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe])
+              simp only [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe])
             rfl hyPne (by simpa [hch.B1.P_card] using hpOdd) hch.B1.P_le_V
               (fun x =>
                 chapter2_claim12_not_stronglyReal_of_mem_peterfalviV
@@ -2660,112 +2880,18 @@ private theorem chapter2_claim12_local_index_after_sylow
       p H12 NR (R1 : Subgroup G) CQ inclCQH Pbar Jcomm Ffix hNR_le_H12
         hPbarcard hLinesCard hCQcard hFfixcard
           hJcommcard hFJisComplement hFfix_eq_Pbar hCQ_fixed_Ffix
-            hCQ_delta_mem_Jcomm hCQ_faithful_Jcomm hCQ_actions_agree
+            hCQ_delta_mem_Jcomm hCQ_faithful_Jcomm
+              (fun c u =>
+                (chapter2_claim12_mulDistrib_compHom_smul inclCQH c u).symm)
               hR1card hR1_le_NR m uH hm1 hGcardH huH
                 hCQH_fix_Pbar hfixPbar_iff_mem_NR horbit_avoids_J
 
-  have hCQ_le_H12 : CQ ≤ H12 := hCQ_le_NR.trans hNR_le_H12
+  exact chapter2_claim12_construct_local_index_subgroup
+    p H12 NR (R1 : Subgroup G) T1 P CQ hH12_eq_NR hNR_le_H12
+      hR1_le_NR hCQ_le_NR hCQ_norm_R1 hT1_le_R1 hR1card hCQcard hNRcard
+        hR1_eq_T1_sup_P hP_le_R1 hR1_le_normalizer_T1
+          hCQ_le_normalizer_T1 inf_le_right hT1card
 
-  have hR1_le_H12 : (R1 : Subgroup G) ≤ H12 := by
-    change (R1 : Subgroup G) ≤ Subgroup.normalizer ((R1 : Subgroup G) : Set G)
-    exact Subgroup.le_normalizer
-  have hT1_le_H12 : T1 ≤ H12 := hT1_le_R1.trans hR1_le_H12
-  have hCQ_le_normalizer_R1 :
-      CQ ≤ Subgroup.normalizer ((R1 : Subgroup G) : Set G) := by
-    simpa [H12] using hCQ_le_H12
-  have hR1_disj_CQ : Disjoint (R1 : Subgroup G) CQ := by
-    rw [disjoint_iff]
-    let I : Subgroup G := (R1 : Subgroup G) ⊓ CQ
-    have hIdvdR1 : Nat.card I ∣ p ^ 3 := by
-      rw [← hR1card]
-      exact Subgroup.card_dvd_of_le inf_le_left
-    have hIdvdCQ : Nat.card I ∣ p - 1 := by
-      rw [← hCQcard]
-      exact Subgroup.card_dvd_of_le inf_le_right
-    have hcop : Nat.Coprime (p ^ 3) (p - 1) :=
-      Nat.Coprime.pow_left 3
-        (hch.B1.p_prime.coprime_iff_not_dvd.mpr
-          (Nat.not_dvd_of_pos_of_lt hpPredPos hpPredLt))
-    exact Subgroup.card_eq_one.mp
-      (Nat.eq_one_of_dvd_coprimes hcop hIdvdR1 hIdvdCQ)
-  have hR1_sup_CQ_card :
-      Nat.card ((R1 : Subgroup G) ⊔ CQ : Subgroup G) = p ^ 3 * (p - 1) := by
-    calc
-      Nat.card ((R1 : Subgroup G) ⊔ CQ : Subgroup G) = Nat.card R1 * Nat.card CQ :=
-        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-          (R1 : Subgroup G) CQ hCQ_le_normalizer_R1 hR1_disj_CQ
-      _ = p ^ 3 * (p - 1) := by rw [hR1card, hCQcard]
-  have hNR_eq_R1_sup_CQ : NR = (R1 : Subgroup G) ⊔ CQ := by
-    symm
-    apply Subgroup.eq_of_le_of_card_ge
-    · exact sup_le hR1_le_NR hCQ_le_NR
-    · rw [hR1_sup_CQ_card, hNRcard]
-  have hnormalizer_sup
-      {A0 B0 : Subgroup G} {x : G}
-      (hA0 : x ∈ Subgroup.normalizer (A0 : Set G))
-      (hB0 : x ∈ Subgroup.normalizer (B0 : Set G)) :
-      x ∈ Subgroup.normalizer ((A0 ⊔ B0 : Subgroup G) : Set G) :=
-    chapter2_claim12_mem_normalizer_sup hA0 hB0
-  let M0 : Subgroup G := T1 ⊔ CQ
-  have hM0_le_H12 : M0 ≤ H12 := sup_le hT1_le_H12 hCQ_le_H12
-  have hP_le_normalizer_CQ : P ≤ Subgroup.normalizer (CQ : Set G) := by
-    intro x hxP
-    apply centralizer_le_normalizer CQ
-    rw [Subgroup.mem_centralizer_iff]
-    intro c hcCQ
-    exact (Subgroup.mem_centralizer_iff.mp hcCQ.2 x hxP).symm
-  have hP_le_normalizer_M0 : P ≤ Subgroup.normalizer (M0 : Set G) := by
-    intro x hxP
-    exact hnormalizer_sup
-      (hR1_le_normalizer_T1 (hP_le_R1 hxP))
-      (hP_le_normalizer_CQ hxP)
-  have hT1_le_normalizer_M0 : T1 ≤ Subgroup.normalizer (M0 : Set G) := by
-    exact le_sup_left.trans (Subgroup.le_normalizer (H := M0))
-  have hCQ_le_normalizer_M0 : CQ ≤ Subgroup.normalizer (M0 : Set G) := by
-    intro c hc
-    exact hnormalizer_sup (hCQ_le_normalizer_T1 hc)
-      (Subgroup.le_normalizer (H := CQ) hc)
-  have hR1_le_normalizer_M0 :
-      (R1 : Subgroup G) ≤ Subgroup.normalizer (M0 : Set G) := by
-    rw [hR1_eq_T1_sup_P]
-    exact sup_le hT1_le_normalizer_M0 hP_le_normalizer_M0
-  have hH12_le_normalizer_M0 : H12 ≤ Subgroup.normalizer (M0 : Set G) := by
-    rw [hH12_eq_NR, hNR_eq_R1_sup_CQ]
-    exact sup_le hR1_le_normalizer_M0 hCQ_le_normalizer_M0
-  have hM0normal : (M0.subgroupOf H12).Normal :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hM0_le_H12).2
-      hH12_le_normalizer_M0
-  have hT1_disj_CQ : Disjoint T1 CQ := hR1_disj_CQ.mono hT1_le_R1 le_rfl
-  have hM0card : Nat.card M0 = p ^ 2 * (p - 1) := by
-    calc
-      Nat.card M0 = Nat.card T1 * Nat.card CQ :=
-        chapter2_claim12_natCard_sup_eq_mul_of_disjoint_of_le_normalizer
-          T1 CQ hCQ_le_normalizer_T1 hT1_disj_CQ
-      _ = p ^ 2 * (p - 1) := by rw [hT1card, hCQcard]
-  let M : Subgroup H12 := M0.subgroupOf H12
-  have hMcard : Nat.card M = p ^ 2 * (p - 1) := by
-    calc
-      Nat.card M = Nat.card M0 :=
-        Nat.card_congr
-          (Subgroup.subgroupOfEquivOfLe hM0_le_H12).toEquiv
-      _ = p ^ 2 * (p - 1) := hM0card
-  have hH12card : Nat.card H12 = p ^ 3 * (p - 1) := by
-    rw [hH12_eq_NR]
-    exact hNRcard
-  have hMindex : M.index = p := by
-    apply Nat.eq_of_mul_eq_mul_left (Nat.card_pos (α := M))
-    calc
-      Nat.card M * M.index = Nat.card H12 := M.card_mul_index
-      _ = p ^ 3 * (p - 1) := hH12card
-      _ = (p ^ 2 * (p - 1)) * p := by ring
-      _ = Nat.card M * p :=
-        congrArg (fun n : ℕ => n * p) hMcard.symm
-  refine ⟨M, hM0normal, ?_⟩
-  calc
-    Nat.card (H12 ⧸ M) = M.index := (Subgroup.index_eq_card M).symm
-    _ = p := hMindex
-
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- The source-specific endpoint of TeX lines 334-372: Hall-Wielandt gives the
 ambient/local residual quotient equivalence, and the local normalizer has a
@@ -2888,7 +3014,7 @@ private theorem chapter2_claim12_case_10_1_local_hall_index_source_interface
         exact hpOdd.not_two_dvd_nat (dvd_refl 2)
       omega
     have hupper :
-        (⊤ : Subgroup R1) ≤ upperCentralSeries R1 (p - 1) :=
+        (⊤ : Subgroup R1) ≤ Subgroup.upperCentralSeries R1 (p - 1) :=
       chapter2_claim12_upperCentralSeries_of_card_prime_cube p hR1card hp3
     let H12 : Subgroup G := Subgroup.normalizer ((R1 : Subgroup G) : Set G)
     refine ⟨R1, hm1, hR_le_R1, hR1card, ?_⟩

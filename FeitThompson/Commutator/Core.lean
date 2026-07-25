@@ -6,6 +6,8 @@ module
 
 public import Mathlib.GroupTheory.Commutator.Basic
 
+open scoped commutatorElement
+
 universe u
 
 /-- The commutator of `H` and `K` is a subgroup of `H ⊔ K`. -/

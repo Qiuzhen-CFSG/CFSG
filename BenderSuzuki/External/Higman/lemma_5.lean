@@ -19,6 +19,8 @@ import Mathlib.RingTheory.TensorProduct.Maps
 noncomputable section
 
 open scoped TensorProduct
+open scoped commutatorElement
+open scoped IsMulCommutative
 
 /-!
 # Higman Lemma 5
@@ -500,7 +502,7 @@ private theorem lemma5_conjugate_eigenbasis
   letI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
   let u : Module.Basis (Fin m) K (K ⊗[F2] V) :=
     basisOfLinearIndependentOfCardEqFinrank huv_li
-      (by simpa [htensor_finrank])
+      (by simp [htensor_finrank])
   have hu_apply (i : Fin m) : u i = uv i := by
     simp [u]
   have hreval (x : K ⊗[F2] V) (k : Fin m) :
@@ -612,8 +614,8 @@ public theorem lemma5_lowerCentralBracket_interfaces
         bracketK (1 ⊗ₜ[F2] v) (1 ⊗ₜ[F2] w) =
           1 ⊗ₜ[F2] bracket v w)
     (hbracket_mk :
-      ∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      ∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -661,8 +663,10 @@ public theorem lemma5_lowerCentralBracket_interfaces
       apply Additive.toMul.injective
       exact hy.symm
     rw [hv, hw]
-    have hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1 := by
-      rw [show 1 = 0 + 1 by omega, lowerCentralSeries_succ]
+    have hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1 := by
+      change ⁅(x : H), (y : H)⁆ ∈
+        (⊤ : Subgroup H).lowerCentralSeries (0 + 1)
+      rw [Subgroup.lowerCentralSeries_succ]
       exact Subgroup.subset_closure
         ⟨(x : H), x.property, (y : H), trivial, rfl⟩
     exact (hbracket_mk x y hcomm).trans
@@ -780,69 +784,73 @@ public theorem lemma5_lowerCentralBracket_interfaces
     hbracket_self, hbracketK_self, hbracket_span⟩
 private theorem lemma5_lowerCentralFactorKernel_zero_le
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1) :
     lowerCentralFactorKernel H 0 ≤
-      (lowerCentralSeries H 1).subgroupOf (lowerCentralSeries H 0) := by
+      (higmanLowerCentralSeries H 1).subgroupOf (higmanLowerCentralSeries H 0) := by
   rw [lowerCentralFactorKernel]
   apply sup_le
   · rw [squaresSubgroup, Subgroup.closure_le]
     rintro _ ⟨x, rfl⟩
-    change (x : H) ^ 2 ∈ lowerCentralSeries H 1
+    change (x : H) ^ 2 ∈ higmanLowerCentralSeries H 1
     exact hH_square (Subgroup.subset_closure ⟨(x : H), rfl⟩)
   · exact le_rfl
 
 private def lemma5_squareLift
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
-    (x : lowerCentralSeries H 0) :
-    lowerCentralSeries H 1 :=
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
+    (x : higmanLowerCentralSeries H 0) :
+    higmanLowerCentralSeries H 1 :=
   ⟨(x : H) ^ 2, by
     exact hH_square (Subgroup.subset_closure ⟨(x : H), rfl⟩)⟩
 
 private def lemma5_squareCommutatorLift
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
-    lowerCentralSeries H 1 :=
+    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
+    higmanLowerCentralSeries H 1 :=
   ⟨⁅(x : H)⁻¹, (c : H)⁆, by
-    apply lowerCentralSeries_antitone (by omega : 1 ≤ 2)
-    have hcx : ⁅(c : H), (x : H)⁻¹⁆ ∈ lowerCentralSeries H 2 := by
-      rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ]
+    apply (⊤ : Subgroup H).lowerCentralSeries_antitone (by omega : 1 ≤ 2)
+    have hcx : ⁅(c : H), (x : H)⁻¹⁆ ∈ higmanLowerCentralSeries H 2 := by
+      change ⁅(c : H), (x : H)⁻¹⁆ ∈
+        (⊤ : Subgroup H).lowerCentralSeries (1 + 1)
+      rw [Subgroup.lowerCentralSeries_succ]
       exact Subgroup.subset_closure
         ⟨(c : H), c.property, (x : H)⁻¹, trivial, rfl⟩
-    have hinv := (lowerCentralSeries H 2).inv_mem hcx
+    have hinv := (higmanLowerCentralSeries H 2).inv_mem hcx
     simpa only [commutatorElement_inv] using hinv⟩
 
 private theorem lemma5_squareCommutatorLift_mem_kernel
     {H : Type u} [Group H]
-    (x : lowerCentralSeries H 0) (c : lowerCentralSeries H 1) :
+    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
     lemma5_squareCommutatorLift x c ∈ lowerCentralFactorKernel H 1 := by
   apply (show
-    (lowerCentralSeries H 2).subgroupOf (lowerCentralSeries H 1) ≤
+    (higmanLowerCentralSeries H 2).subgroupOf (higmanLowerCentralSeries H 1) ≤
       lowerCentralFactorKernel H 1 by
     rw [lowerCentralFactorKernel]
     exact le_sup_right)
-  change ⁅(x : H)⁻¹, (c : H)⁆ ∈ lowerCentralSeries H 2
-  have hcx : ⁅(c : H), (x : H)⁻¹⁆ ∈ lowerCentralSeries H 2 := by
-    rw [show 2 = 1 + 1 by omega, lowerCentralSeries_succ]
+  change ⁅(x : H)⁻¹, (c : H)⁆ ∈ higmanLowerCentralSeries H 2
+  have hcx : ⁅(c : H), (x : H)⁻¹⁆ ∈ higmanLowerCentralSeries H 2 := by
+    change ⁅(c : H), (x : H)⁻¹⁆ ∈
+      (⊤ : Subgroup H).lowerCentralSeries (1 + 1)
+    rw [Subgroup.lowerCentralSeries_succ]
     exact Subgroup.subset_closure
       ⟨(c : H), c.property, (x : H)⁻¹, trivial, rfl⟩
-  have hinv := (lowerCentralSeries H 2).inv_mem hcx
+  have hinv := (higmanLowerCentralSeries H 2).inv_mem hcx
   simpa only [commutatorElement_inv] using hinv
 
 private theorem lemma5_squareLift_eq_of_rel
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
-    (x y : lowerCentralSeries H 0)
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
+    (x y : higmanLowerCentralSeries H 0)
     (hxy : x⁻¹ * y ∈ lowerCentralFactorKernel H 0) :
     QuotientGroup.mk' (lowerCentralFactorKernel H 1)
         (lemma5_squareLift hH_square x) =
       QuotientGroup.mk' (lowerCentralFactorKernel H 1)
         (lemma5_squareLift hH_square y) := by
-  let k : lowerCentralSeries H 0 := x⁻¹ * y
+  let k : higmanLowerCentralSeries H 0 := x⁻¹ * y
   have hk : k ∈
-      (lowerCentralSeries H 1).subgroupOf (lowerCentralSeries H 0) :=
+      (higmanLowerCentralSeries H 1).subgroupOf (higmanLowerCentralSeries H 0) :=
     lemma5_lowerCentralFactorKernel_zero_le hH_square hxy
-  let c : lowerCentralSeries H 1 := ⟨(k : H), hk⟩
+  let c : higmanLowerCentralSeries H 1 := ⟨(k : H), hk⟩
   have hy : (y : H) = (x : H) * (c : H) := by
     change (y : H) = (x : H) * ((x : H)⁻¹ * (y : H))
     group
@@ -862,7 +870,7 @@ private theorem lemma5_squareLift_eq_of_rel
     exact lemma5_squareCommutatorLift_mem_kernel x c
   have hcsq : q (c ^ 2) = 1 := by
     apply (QuotientGroup.eq_one_iff _).2
-    apply (show squaresSubgroup (lowerCentralSeries H 1) ≤
+    apply (show squaresSubgroup (higmanLowerCentralSeries H 1) ≤
         lowerCentralFactorKernel H 1 by
       rw [lowerCentralFactorKernel]
       exact le_sup_left)
@@ -881,7 +889,7 @@ private theorem lemma5_squareLift_eq_of_rel
 
 private def lemma5_lowerCentralSquareMap
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1) :
     Additive (LowerCentralFactor H 0) →
       Additive (LowerCentralFactor H 1) :=
   fun v =>
@@ -895,8 +903,8 @@ private def lemma5_lowerCentralSquareMap
 
 private theorem lemma5_lowerCentralSquareMap_mk
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
-    (x : lowerCentralSeries H 0) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
+    (x : higmanLowerCentralSeries H 0) :
     lemma5_lowerCentralSquareMap hH_square
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
@@ -907,15 +915,15 @@ private theorem lemma5_lowerCentralSquareMap_mk
 
 private theorem lemma5_lowerCentralSquareMap_mk'
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
-    (x : lowerCentralSeries H 0)
-    (hsquare : (x : H) ^ 2 ∈ lowerCentralSeries H 1) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
+    (x : higmanLowerCentralSeries H 0)
+    (hsquare : (x : H) ^ 2 ∈ higmanLowerCentralSeries H 1) :
     lemma5_lowerCentralSquareMap hH_square
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
       Additive.ofMul
         (QuotientGroup.mk' (lowerCentralFactorKernel H 1)
-          (⟨(x : H) ^ 2, hsquare⟩ : lowerCentralSeries H 1)) := by
+          (⟨(x : H) ^ 2, hsquare⟩ : higmanLowerCentralSeries H 1)) := by
   rw [lemma5_lowerCentralSquareMap_mk]
   apply Additive.toMul.injective
   exact congrArg (QuotientGroup.mk' (lowerCentralFactorKernel H 1))
@@ -923,7 +931,7 @@ private theorem lemma5_lowerCentralSquareMap_mk'
 
 private theorem lemma5_lowerCentralSquareMap_equivariant
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
     (theta : MulAut H)
     (v : Additive (LowerCentralFactor H 0)) :
     lemma5_lowerCentralSquareMap hH_square
@@ -946,22 +954,24 @@ private theorem lemma5_lowerCentralSquareMap_equivariant
 
 private def lemma5_commutatorLift
     {H : Type u} [Group H]
-    (x y : lowerCentralSeries H 0) :
-    lowerCentralSeries H 1 :=
+    (x y : higmanLowerCentralSeries H 0) :
+    higmanLowerCentralSeries H 1 :=
   ⟨⁅(x : H), (y : H)⁆, by
-    rw [show 1 = 0 + 1 by omega, lowerCentralSeries_succ]
+    change ⁅(x : H), (y : H)⁆ ∈
+      (⊤ : Subgroup H).lowerCentralSeries (0 + 1)
+    rw [Subgroup.lowerCentralSeries_succ]
     exact Subgroup.subset_closure
       ⟨(x : H), x.property, (y : H), trivial, rfl⟩⟩
 
 private theorem lemma5_lowerCentralSquareMap_add_mk
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
     (bracket : Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor H 1))
     (hbracket :
-      ∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      ∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -970,7 +980,7 @@ private theorem lemma5_lowerCentralSquareMap_add_mk
             Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel H 1)
                 ⟨⁅(x : H), (y : H)⁆, hcomm⟩))
-    (x y : lowerCentralSeries H 0) :
+    (x y : higmanLowerCentralSeries H 0) :
     lemma5_lowerCentralSquareMap hH_square
         (Additive.ofMul
           (QuotientGroup.mk' (lowerCentralFactorKernel H 0) (x * y))) =
@@ -1055,13 +1065,13 @@ private theorem lemma5_lowerCentralSquareMap_add_mk
 
 private theorem lemma5_lowerCentralSquareMap_add
     {H : Type u} [Group H]
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
     (bracket : Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
       Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
         Additive (LowerCentralFactor H 1))
     (hbracket :
-      ∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      ∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -1137,7 +1147,7 @@ private theorem lemma5_square_map_normal_form_field_core
   have hL1_exists :
       ∃ v : Additive (LowerCentralFactor H 0), v ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     have hrange :
         Set.range (fun p :
           Additive (LowerCentralFactor H 0) ×
@@ -1185,7 +1195,7 @@ public theorem lemma5_square_map_normal_form_quadratic_core
     {H : Type u} [Group H]
     (xi : MulAut H)
     (m : ℕ)
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1) :
     ∃ (bracket : Additive (LowerCentralFactor H 0) →ₗ[F2]
           Additive (LowerCentralFactor H 0) →ₗ[F2]
             Additive (LowerCentralFactor H 1))
@@ -1203,8 +1213,8 @@ public theorem lemma5_square_map_normal_form_quadratic_core
         bracket (lowerCentralFactorLinearAut xi 0 v)
             (lowerCentralFactorLinearAut xi 0 w) =
           lowerCentralFactorLinearAut xi 1 (bracket v w)) ∧      (∀ v : Additive (LowerCentralFactor H 0), bracket v v = 0) ∧
-      (∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      (∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -1216,8 +1226,8 @@ public theorem lemma5_square_map_normal_form_quadratic_core
       Submodule.span F2
         (Set.range fun p : Additive (LowerCentralFactor H 0) ×
           Additive (LowerCentralFactor H 0) => bracket p.1 p.2) = ⊤ ∧
-      (∀ x : lowerCentralSeries H 0,
-        ∀ hsquare : (x : H) ^ 2 ∈ lowerCentralSeries H 1,
+      (∀ x : higmanLowerCentralSeries H 0,
+        ∀ hsquare : (x : H) ^ 2 ∈ higmanLowerCentralSeries H 1,
           squareMap
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
@@ -1333,7 +1343,7 @@ private theorem lemma5_no_scalarExtension_copy
   have hdne' : d ≠ 0 := hdne
   have hexists : ∃ v : V1, d v ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     apply hdne'
     ext v
     exact hzero v
@@ -1341,7 +1351,7 @@ private theorem lemma5_no_scalarExtension_copy
   have hnot_all_eval : ¬ ∀ i, eval i (d v) = 0 := by
     intro hall
     exact hv (heval_separates (d v) hall)
-  push_neg at hnot_all_eval
+  push Not at hnot_all_eval
   obtain ⟨i, hi⟩ := hnot_all_eval
   let f : V1 →ₗ[F2] V2 := (eval i).comp d
   have hfne : f ≠ 0 := by
@@ -1366,7 +1376,7 @@ private theorem lemma5_no_scalarExtension_copy
     exact LinearMap.mem_ker.mp (htop ▸ trivial)
   have hker_bot : f.ker = ⊥ := by
     rcases hL1_irreducible f.ker
-        (by simpa [T] using hker_invariant) with hbot | htop
+        (fun w hw => hker_invariant w hw) with hbot | htop
     · exact hbot
     · exact (hker_ne_top htop).elim
   have hf_injective : Function.Injective f :=
@@ -1639,7 +1649,7 @@ private theorem lemma5_square_formula_candidate
               hbracket_equivariant,
               LinearEquiv.baseChange_tmul]
         | add y z hy hz =>
-            simp only [map_add, LinearMap.add_apply]
+            simp only [map_add]
             rw [hy, hz]
     | add x y hx hy =>
         simp only [map_add, LinearMap.add_apply]
@@ -1683,7 +1693,7 @@ private theorem lemma5_square_formula_candidate
       _ = lambda ^ (2 ^ (i : ℕ) + 2 ^ (j : ℕ)) •
           bracketK (u i) (u j) := by
         rw [map_smul, LinearMap.map_smul₂, smul_smul, ← pow_add]
-        simpa [add_comm]
+        simp [add_comm]
   have hcandidate_equivariant (v : V1) :
       candidate (T v) = SK (candidate v) := by
     let alpha : K := coordinates.symm v
@@ -1725,8 +1735,8 @@ private theorem lemma5_square_map_normal_form_uniqueness_core
           ∃ k : ℕ, (lowerCentralFactorLinearAut xi 1 ^ k) x = y)
     (n : ℕ) (hn : 2 ≤ n)
     (hL2_card : Nat.card (LowerCentralFactor H 1) = 2 ^ n)
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1)
-    (m : ℕ) (hm : 0 < m)
+    (_hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1)
+    (m : ℕ) (_hm : 0 < m)
     (lambda : BinaryGaloisField m)
     (coordinates : BinaryGaloisField m ≃ₗ[F2]
       Additive (LowerCentralFactor H 0))
@@ -1748,8 +1758,8 @@ private theorem lemma5_square_map_normal_form_uniqueness_core
               Additive (LowerCentralFactor H 1)))
     (squareMap : Additive (LowerCentralFactor H 0) →
       Additive (LowerCentralFactor H 1))
-    (hL1_card : Nat.card (LowerCentralFactor H 0) = 2 ^ m)
-    (hlambda : lambda ≠ 0)
+    (_hL1_card : Nat.card (LowerCentralFactor H 0) = 2 ^ m)
+    (_hlambda : lambda ≠ 0)
     (hxiK_tmul :
       ∀ v : Additive (LowerCentralFactor H 0),
         xiK (1 ⊗ₜ[F2] v) =
@@ -1776,9 +1786,9 @@ private theorem lemma5_square_map_normal_form_uniqueness_core
           lowerCentralFactorLinearAut xi 1 (bracket v w))
     (hbracket_self :
       ∀ v : Additive (LowerCentralFactor H 0), bracket v v = 0)
-    (hbracket_mk :
-      ∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+    (_hbracket_mk :
+      ∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -1787,9 +1797,9 @@ private theorem lemma5_square_map_normal_form_uniqueness_core
             Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel H 1)
                 ⟨⁅(x : H), (y : H)⁆, hcomm⟩))
-    (hsquare_mk :
-      ∀ x : lowerCentralSeries H 0,
-        ∀ hsquare : (x : H) ^ 2 ∈ lowerCentralSeries H 1,
+    (_hsquare_mk :
+      ∀ x : higmanLowerCentralSeries H 0,
+        ∀ hsquare : (x : H) ^ 2 ∈ higmanLowerCentralSeries H 1,
           squareMap
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
@@ -1898,7 +1908,7 @@ public theorem lemma5_square_map_normal_form
           ∃ k : ℕ, (lowerCentralFactorLinearAut xi 1 ^ k) x = y)
     (n : ℕ) (hn : 2 ≤ n)
     (hL2_card : Nat.card (LowerCentralFactor H 1) = 2 ^ n)
-    (hH_square : squaresSubgroup H ≤ lowerCentralSeries H 1) :
+    (hH_square : squaresSubgroup H ≤ higmanLowerCentralSeries H 1) :
     ∃ (m : ℕ) (_hm : 0 < m)
         (lambda : BinaryGaloisField m)
         (coordinates : BinaryGaloisField m ≃ₗ[F2]
@@ -1937,8 +1947,8 @@ public theorem lemma5_square_map_normal_form
       (∀ v w : Additive (LowerCentralFactor H 0),
         bracketK (1 ⊗ₜ[F2] v) (1 ⊗ₜ[F2] w) =
           1 ⊗ₜ[F2] bracket v w) ∧
-      (∀ x y : lowerCentralSeries H 0,
-        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ lowerCentralSeries H 1,
+      (∀ x y : higmanLowerCentralSeries H 0,
+        ∀ hcomm : ⁅(x : H), (y : H)⁆ ∈ higmanLowerCentralSeries H 1,
           bracket
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x))
@@ -1947,8 +1957,8 @@ public theorem lemma5_square_map_normal_form
             Additive.ofMul
               (QuotientGroup.mk' (lowerCentralFactorKernel H 1)
                 ⟨⁅(x : H), (y : H)⁆, hcomm⟩)) ∧
-      (∀ x : lowerCentralSeries H 0,
-        ∀ hsquare : (x : H) ^ 2 ∈ lowerCentralSeries H 1,
+      (∀ x : higmanLowerCentralSeries H 0,
+        ∀ hsquare : (x : H) ^ 2 ∈ higmanLowerCentralSeries H 1,
           squareMap
               (Additive.ofMul
                 (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)) =
@@ -1989,11 +1999,6 @@ public theorem lemma5_square_map_normal_form
 end Higman
 end External
 end BenderSuzuki
-
-
-
-
-
 
 
 

@@ -5,14 +5,16 @@ import FeitThompson.Utils
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_5_a
 
+open scoped commutatorElement
+
 section Main
 
 public theorem lemma_4_5_c {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
     (hpodd : p ≠ 2) [Fact (IsPGroup p R)] (hncyc : ¬ IsCyclic R) :
-    ¬ IsCyclic (omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)) ∧
-      Monoid.exponent ↥(omega₁ (G := ↥(upperCentralSeries R 2)) (p := p)) = p := by
+    ¬ IsCyclic (omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)) ∧
+      Monoid.exponent ↥(omega₁ (G := ↥(Subgroup.upperCentralSeries R 2)) (p := p)) = p := by
   classical
-  let Z2 : Subgroup R := upperCentralSeries R 2
+  let Z2 : Subgroup R := Subgroup.upperCentralSeries R 2
   let Ω : Subgroup Z2 := omega₁ (G := ↥Z2) (p := p)
   obtain ⟨A, hA_normal, hAcard, hAelem⟩ := lemma_4_5_a (R := R) (p := p) hpodd hncyc
   letI : A.Normal := hA_normal
@@ -77,7 +79,7 @@ public theorem lemma_4_5_c {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Pr
     normal_subgroup_card_eq_prime_le_center (G := R ⧸ Z) (p := p) (N := Abar) hAbar_card
   have hA_le_Z2 : A ≤ Z2 := by
     intro a ha
-    refine (mem_upperCentralSeries_succ_iff (G := R) (n := 1) (x := a)).2 ?_
+    refine (Subgroup.mem_upperCentralSeries_succ_iff (G := R) (n := 1) (x := a)).2 ?_
     intro r
     have haq : q a ∈ Abar := Subgroup.mem_map.mpr ⟨a, ha, rfl⟩
     have hqa_center : q a ∈ Subgroup.center (R ⧸ Z) := hAbar_le_center haq
@@ -89,7 +91,7 @@ public theorem lemma_4_5_c {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Pr
       calc
         q ⁅a, r⁆ = ⁅q a, q r⁆ := by simp [q, commutatorElement_def, MonoidHom.map_mul]
         _ = 1 := hcomm_eq_one
-    simpa [upperCentralSeries_one] using hZ_le_center hcomm_mem_Z
+    simpa [Subgroup.upperCentralSeries_one] using hZ_le_center hcomm_mem_Z
   let A2 : Subgroup Z2 := A.subgroupOf Z2
   have hA2_card : Nat.card A2 = p ^ 2 := by
     calc

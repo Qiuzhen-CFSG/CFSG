@@ -17,7 +17,7 @@ public import FeitThompson.BGsection7.lemma_7_1
 public import FeitThompson.BGsection7.theorem_7_2
 public import FeitThompson.BGsection7.theorem_7_3
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # Statements from BG Section 7
@@ -203,7 +203,8 @@ private lemma isSubnormalIn_of_normal_subgroupOf
     simpa using hAP
   · intro i
     fin_cases i
-    simpa using (inferInstance : (A.subgroupOf P).Normal)
+    change (A.subgroupOf P).Normal
+    exact (inferInstance : (A.subgroupOf P).Normal)
 
 private theorem le_normalizer_section7K_of_le_normalizer
     {G : Type*} [Group G] [Finite G] {A P : Subgroup G}
@@ -237,7 +238,8 @@ private theorem le_normalizer_section7K_of_le_normalizer
   let pC : Subgroup.normalizer (C : Set G) := ⟨p, hP_le_normC p.property⟩
   let xC : C := ⟨x, hK_le_C hx⟩
   have hxC : xC ∈ (section7K A).subgroupOf C := by
-    simpa [xC] using hx
+    change x ∈ section7K A
+    exact hx
   have hfix :
       Subgroup.comap (Subgroup.normalizerMonoidHom C pC).toMonoidHom ((section7K A).subgroupOf C) =
         (section7K A).subgroupOf C :=
@@ -294,7 +296,7 @@ private theorem isHallSubgroup_subgroupOf_sup_section7K
   have hdisj : Disjoint Ksub Psub := by
     have hbot : Ksub ⊓ Psub = ⊥ := by
       rw [inf_comm]
-      exact Subgroup.inf_eq_bot_of_coprime hcop_sub
+      exact (Subgroup.disjoint_of_coprime_natCard hcop_sub).eq_bot
     rw [Subgroup.disjoint_def]
     intro x hxK hxP
     have hxbot : x ∈ (⊥ : Subgroup KP) := by
@@ -346,7 +348,8 @@ private theorem mem_subgroupCentralizerIn_of_mem_section7K_of_mem_normalizer
     have hp_notin : p' ∉ subgroupPrimeSet A := by
       simpa using hK_pi' p' hpK
     exact hp_notin hp_in
-  have hPK_bot : P ⊓ section7K A = ⊥ := Subgroup.inf_eq_bot_of_coprime hcopPK
+  have hPK_bot : P ⊓ section7K A = ⊥ :=
+    (Subgroup.disjoint_of_coprime_natCard hcopPK).eq_bot
   refine ⟨hxK, ?_⟩
   change x ∈ Subgroup.centralizer (P : Set G)
   rw [Subgroup.mem_centralizer_iff_commutator_eq_one]
@@ -362,7 +365,7 @@ private theorem mem_subgroupCentralizerIn_of_mem_section7K_of_mem_normalizer
   have hcommInf : p * x * p⁻¹ * x⁻¹ ∈ P ⊓ section7K A := ⟨hcommP, hcommK⟩
   have hcommBot : p * x * p⁻¹ * x⁻¹ ∈ (⊥ : Subgroup G) := by
     simpa [hPK_bot] using hcommInf
-  simpa [hPK_bot] using hcommBot
+  simpa [commutatorElement_def] using hcommBot
 
 private theorem ne_top_of_isPiSubgroup_singleton_ne_bot
     {G : Type*} [Group G] [Finite G] [IsMinCE G]
@@ -415,7 +418,8 @@ private theorem normal_or_exists_intermediate_of_chain
       have hchain0_norm :
           ∀ i : Fin n, ((chain0 i.castSucc).subgroupOf (chain0 i.succ)).Normal := by
         intro i
-        simpa [chain0] using hnorm i.castSucc
+        change ((chain i.castSucc.castSucc).subgroupOf (chain i.castSucc.succ)).Normal
+        exact hnorm i.castSucc
       have hAC : IsSubnormalIn A C := by
         exact
           ⟨n, chain0, hchain00, hchain0_last, hchain0_step, hchain0_norm⟩
@@ -432,12 +436,13 @@ private theorem normal_or_exists_intermediate_of_chain
         · subst hACeq
           exact Or.inl <| by
             rw [← hlast]
-            simpa [C] using hnorm (Fin.last n)
+            change ((chain (Fin.last n).castSucc).subgroupOf (chain (Fin.last n).succ)).Normal
+            exact hnorm (Fin.last n)
         · refine Or.inr ⟨C, ?_, hC_lt_B, hAC, ?_⟩
           · exact lt_of_le_of_ne hAC.le hACeq
-          · change (C.subgroupOf B).Normal
-            rw [← hlast]
-            simpa [C] using hnorm (Fin.last n)
+          · rw [← hlast]
+            change ((chain (Fin.last n).castSucc).subgroupOf (chain (Fin.last n).succ)).Normal
+            exact hnorm (Fin.last n)
 
 private theorem IsSubnormalIn.normal_or_exists_intermediate
     {G : Type*} [Group G] {A P : Subgroup G} (hAP : IsSubnormalIn A P) :
@@ -463,7 +468,8 @@ public theorem le_normalizer_piCoreIn_of_le_normalizer
   let pH : Subgroup.normalizer (H : Set G) := ⟨p, hPH p.property⟩
   let xH : H := ⟨x, hpi_le_H hx⟩
   have hxH : xH ∈ (piCoreIn π H).subgroupOf H := by
-    simpa [xH] using hx
+    change x ∈ piCoreIn π H
+    exact hx
   have hfix :
       Subgroup.comap (Subgroup.normalizerMonoidHom H pH).toMonoidHom ((piCoreIn π H).subgroupOf H) =
         (piCoreIn π H).subgroupOf H :=
@@ -660,7 +666,7 @@ private theorem exists_mem_section7HStarFamily_normalized_by_of_normal_no_interm
       refine ⟨Fintype.card (MulAction.stabilizer (section7K A) Q₀sub), ?_⟩
       simpa [Nat.card_eq_fintype_card, hOrbit_univ] using
         (MulAction.card_orbit_mul_card_stabilizer_eq_card_group
-          (α := section7K A) (β := Ωsub) Q₀sub).symm
+          (section7K A) Q₀sub).symm
     have hr_dvd_P : r.val ∣ Nat.card P := by
       simpa [r] using Subgroup.card_quotient_dvd_card (s := A.subgroupOf P)
     have hr_in_pi : r ∈ subgroupPrimeSet A := hPπ r hr_dvd_P
@@ -1038,7 +1044,7 @@ private theorem theorem_7_4_normal_case
       have hPkKP_hall : IsHallSubgroup (subgroupPrimeSet A) PkKP := by
         simpa [PkKP] using hPHallKP.map_conj kKP
       have hPkKP_map_eq : PkKP.map KP.subtype = P.conjBy (k : G) := by
-        simpa [PkKP] using
+        simpa [PkKP, Subgroup.conjBy] using
           map_subgroupOf_map_conj_eq (K0 := KP) (K := P) le_sup_right kKP
       have hPnormQ₁ : P ≤ Subgroup.normalizer (Q₁ : Set G) := hQ₁famP.2.2
       have hPk_le_normQ₂ : P.conjBy (k : G) ≤ Subgroup.normalizer (Q₂ : Set G) := by
@@ -1132,7 +1138,7 @@ private theorem theorem_7_4_normal_case
                   map_subgroupOf_map_conj_eq
                     (K0 := Nsub) (K := P.subgroupOf KP) hPsubKP_le_Nsub x
           _ = P.conjBy ((((x : Nsub) : KP) : G)) := by
-                simpa using
+                simpa [Subgroup.conjBy] using
                   map_subgroupOf_map_conj_eq
                     (K0 := KP) (K := P) le_sup_right ((x : Nsub) : KP)
       have hφconj := congrArg (fun S : Subgroup Nsub => S.map φ) hxconj
@@ -1408,10 +1414,8 @@ private theorem theorem_7_4_normal_case
           simpa using commutator_subgroupOf_map_eq Nq L L hL_le_Nq hL_le_Nq
         rw [← hcomm_map_eq_Nq]
         have hcomm_le_derNq : ⁅L.subgroupOf Nq, L.subgroupOf Nq⁆ ≤ derivedSubgroup Nq := by
-          simpa [derivedSubgroup] using
-            (Subgroup.commutator_mono
-              (show L.subgroupOf Nq ≤ (⊤ : Subgroup Nq) by simp)
-              (show L.subgroupOf Nq ≤ (⊤ : Subgroup Nq) by simp))
+          change ⁅L.subgroupOf Nq, L.subgroupOf Nq⁆ ≤ ⁅(⊤ : Subgroup Nq), ⊤⁆
+          exact Subgroup.commutator_mono le_top le_top
         exact Subgroup.map_mono hcomm_le_derNq
       have hright_le :
           ((P.subgroupOf Np ⊓ ⁅L.subgroupOf Np, L.subgroupOf Np⁆).map Np.subtype) ≤

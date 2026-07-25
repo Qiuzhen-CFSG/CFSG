@@ -19,13 +19,13 @@ universe u
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints commutatorElement
 
 private theorem generatorRank_at_least_three_of_elementaryAbelian_card_p3_local
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 3) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := CommGroup.ofIsMulCommutative
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -41,7 +41,7 @@ private theorem generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3_loc
     {B : Subgroup G} [IsElementaryAbelian p B] (hBcard : Nat.card B = p ^ 3) :
     3 ≤ generatorRank G := by
   classical
-  letI : CommGroup G := CommGroup.ofIsMulCommutative
+  letI : CommGroup G := IsMulCommutative.instCommGroup
   by_contra hlt
   have hle_two : generatorRank G ≤ 2 := by omega
   have hmeta : IsMetacyclic G :=
@@ -107,7 +107,7 @@ private theorem commutatorAction_eq_bot_of_actsTrivially_local
   · rw [Subgroup.closure_le]
     rintro x ⟨a, r, rfl⟩
     have hfix : a • r = r := htriv a r
-    simpa [hfix]
+    simp [hfix]
   · exact bot_le
 
 private theorem subgroup_top_ne_bot_of_nontrivial
@@ -210,7 +210,7 @@ private theorem theorem_4_16_small_omega_commutative
     exact (MulEquiv.subgroupCongr hcomm).isCyclic.1 hTcyc
   have hRcyc : IsCyclic R :=
     (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R).isCyclic.1 htop_cyc
-  exact hncomm ⟨hRcyc.commutative⟩
+  exact hncomm hRcyc.isMulCommutative
 
 private theorem theorem_4_16_large_omega_card_exp
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
@@ -224,7 +224,7 @@ private theorem theorem_4_16_large_omega_card_exp
     rcases proposition_4_8_b (R := R) (p := p) hpgt hrank with hExpOne | hExpP
     · haveI : Subsingleton Ω := (Monoid.exp_eq_one_iff (G := Ω)).mp hExpOne
       have hΩcard_one : Nat.card Ω = 1 := by
-        simpa using (Nat.card_unique Ω)
+        simp
       have hΩ_le : Nat.card Ω ≤ p ^ 2 := by
         rw [hΩcard_one]
         exact Nat.succ_le_of_lt (pow_pos (Fact.out : Nat.Prime p).pos 2)
@@ -342,10 +342,9 @@ public theorem isExtraspecial_of_noncommutative_card_p3_exponent_p
       isCyclic_of_prime_card (α := K ⧸ Subgroup.center K) hquot_card
     letI : IsCyclic (K ⧸ Subgroup.center K) := hquot_cyc
     apply hKnoncomm
-    refine ⟨⟨fun x y => ?_⟩⟩
-    exact commutative_of_cyclic_center_quotient
+    exact MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center
       (QuotientGroup.mk' (Subgroup.center K))
-      (by simp [QuotientGroup.ker_mk']) x y
+      (by simp [QuotientGroup.ker_mk'])
   have hcenter_card : Nat.card (Subgroup.center K) = p := by
     simpa [hm_eq_one] using hm
   have hquot_nontriv : Nontrivial (K ⧸ Subgroup.center K) := by
@@ -378,7 +377,9 @@ public theorem derivedSubgroup_map_subtype_eq_center_map_subtype_of_isExtraspeci
     have hder_ne_bot : derivedSubgroup S ≠ ⊥ := by
       intro hder_bot
       have hcomm_le_bot : commutator S ≤ (⊥ : Subgroup S) := by
-        simpa [derivedSubgroup, derivedSeries_one] using le_of_eq hder_bot
+        change derivedSeries S 1 = ⊥ at hder_bot
+        change derivedSeries S 1 ≤ ⊥
+        exact hder_bot.le
       have hcommS : IsMulCommutative S := by
         refine ⟨⟨?_⟩⟩
         intro x y
@@ -388,6 +389,7 @@ public theorem derivedSubgroup_map_subtype_eq_center_map_subtype_of_isExtraspeci
         have hxy_bot : ⁅x, y⁆ ∈ (⊥ : Subgroup S) := hcomm_le_bot hxy_mem
         have hxy_one : ⁅x, y⁆ = 1 := by simpa using hxy_bot
         exact commutatorElement_eq_one_iff_mul_comm.mp hxy_one
+      letI : IsMulCommutative S := hcommS
       have hcenter_top : Subgroup.center S = ⊤ := by
         ext x
         constructor
@@ -395,7 +397,7 @@ public theorem derivedSubgroup_map_subtype_eq_center_map_subtype_of_isExtraspeci
         · intro _
           rw [Subgroup.mem_center_iff]
           intro y
-          exact (mul_comm x y).symm
+          exact ((IsMulCommutative.is_comm (M := S)).comm x y).symm
       have hquot_subsingleton : Subsingleton (S ⧸ Subgroup.center S) := by
         exact (QuotientGroup.subsingleton_iff (N := Subgroup.center S)).2 hcenter_top
       exact not_nontrivial_iff_subsingleton.mpr hquot_subsingleton
@@ -555,26 +557,28 @@ private theorem commutator_with_top_lt_of_nontrivial_normal_pSubgroup
   refine lt_of_le_of_ne (Subgroup.commutator_le_left (H₁ := S) (H₂ := (⊤ : Subgroup R))) ?_
   intro hcomm_eq
   have hnil : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
-  obtain ⟨n, hn_bot⟩ := (nilpotent_iff_lowerCentralSeries (G := R)).1 hnil
-  have hS_le_lower : ∀ n : ℕ, S ≤ lowerCentralSeries R n := by
+  obtain ⟨n, hn_bot⟩ := (Subgroup.nilpotent_iff_lowerCentralSeries (G := R)).1 hnil
+  have hS_le_lower : ∀ n : ℕ, S ≤ Subgroup.lowerCentralSeries (⊤ : Subgroup R) n := by
     intro n
     induction n with
     | zero =>
         intro x _hx
-        simp [lowerCentralSeries_zero]
+        simp [Subgroup.lowerCentralSeries_zero]
     | succ n ih =>
-        have hstep : ⁅S, (⊤ : Subgroup R)⁆ ≤ lowerCentralSeries R (n + 1) := by
+        have hstep : ⁅S, (⊤ : Subgroup R)⁆ ≤
+            Subgroup.lowerCentralSeries (⊤ : Subgroup R) (n + 1) := by
           calc
-            ⁅S, (⊤ : Subgroup R)⁆ ≤ ⁅lowerCentralSeries R n, (⊤ : Subgroup R)⁆ :=
+            ⁅S, (⊤ : Subgroup R)⁆ ≤
+                ⁅Subgroup.lowerCentralSeries (⊤ : Subgroup R) n, (⊤ : Subgroup R)⁆ :=
               Subgroup.commutator_mono ih le_rfl
-            _ = lowerCentralSeries R (n + 1) := by
-              simpa [Subgroup.commutator_def] using (lowerCentralSeries_succ (G := R) n).symm
+            _ = Subgroup.lowerCentralSeries (⊤ : Subgroup R) (n + 1) := by
+              exact (Subgroup.lowerCentralSeries_succ (⊤ : Subgroup R) n).symm
         intro x hx
         exact hstep (by simpa [hcomm_eq] using hx)
   have hS_bot : S = ⊥ := by
     apply eq_bot_iff.2
     intro x hx
-    have hx_lower : x ∈ lowerCentralSeries R n := hS_le_lower n hx
+    have hx_lower : x ∈ Subgroup.lowerCentralSeries (⊤ : Subgroup R) n := hS_le_lower n hx
     simpa [hn_bot] using hx_lower
   have hS_sub : Subsingleton S := by
     constructor
@@ -863,7 +867,7 @@ private theorem omega₁_centralizer_noncentral_eq_commutator_for_416
             have hxΩ_one : (⟨xC, hxCΩ⟩ : ΩC) = 1 := Subsingleton.elim _ _
             simpa using congrArg ΩC.subtype hxΩ_one
           simpa [hxC_eq] using congrArg C_T.subtype hxC_one
-        exact False.elim (hxT (by simpa [hx_one] using (T.one_mem : (1 : R) ∈ T)))
+        exact False.elim (hxT (by simp [hx_one]))
       · have hxΩpow : (⟨xC, hxCΩ⟩ : ΩC) ^ p = 1 :=
           Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
           (show Monoid.exponent ΩC ∣ p by
@@ -1121,7 +1125,8 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
               have hxmap :
                   x⁻¹ * (a • x) ∈
                     (commutatorAction (A := A) (G := S)).map S.subtype := by
-                simpa using Subgroup.mem_map_of_mem S.subtype hxcommS
+                refine ⟨(⟨x, hxS⟩ : S)⁻¹ * (a • (⟨x, hxS⟩ : S)), hxcommS, ?_⟩
+                rfl
               exact hT_le_CT (hS_action_le_T hxmap)
             · have haxCT : a • x ∈ C_T :=
                 (IsInvariant.invariant (A := A) (G := R) (H := C_T) a x).1 hxCT
@@ -1134,19 +1139,17 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
               C_T.mul_mem hconj hyCT
             convert hprod using 1
             simp [smul_mul', mul_assoc]
-            group
           · intro x _hx hxCT
             have hcinv : (x⁻¹ * (a • x))⁻¹ ∈ C_T := C_T.inv_mem hxCT
             have hconj : (x⁻¹)⁻¹ * (x⁻¹ * (a • x))⁻¹ * x⁻¹ ∈ C_T :=
               hCT_normal.conj_mem' (n := (x⁻¹ * (a • x))⁻¹) hcinv (g := x⁻¹)
             convert hconj using 1
-            simp [smul_inv_smul, mul_assoc]
-            group
+            simp [mul_assoc]
         have htop_le_CT : (⊤ : Subgroup R) ≤ C_T := by
           rw [← hcomm, commutatorAction_eq_closure]
           refine (Subgroup.closure_le (K := C_T)).2 ?_
           rintro x ⟨a, r, rfl⟩
-          exact hgen_mem a r (by simpa [hSCT_top'])
+          exact hgen_mem a r (by simp [hSCT_top'])
         exact hS_not_le_CT fun s _hs => htop_le_CT (by simp)
       have h_exists_alpha_s_not_T :
           ∃ a : A, ∃ s : S, (s : R)⁻¹ * (a • (s : R)) ∉ T := by
@@ -1369,7 +1372,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         intro s hs
         let sS : S := ⟨s, hs⟩
         have hs_sup : sS ∈ Tsub ⊔ Subgroup.zpowers yS := by
-          simpa [hTsub_sup_y]
+          simp [hTsub_sup_y]
         rcases (Subgroup.mem_sup_of_normal_left
             (x := sS) (s := Tsub) (t := Subgroup.zpowers yS)).1 hs_sup with
           ⟨t, htTsub, z, hzpow, htz⟩
@@ -1446,7 +1449,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
             simpa [MonoidHom.mem_ker] using hθ_pow
           have hCsub_mem : cT ^ p ∈ C.subgroupOf C_T := by
             simpa [hker_theta_eq_Csub] using hker_mem
-          simpa [cT] using hCsub_mem
+          exact hCsub_mem
       letI : IsElementaryAbelian p Q := hQ_elem
       letI : IsInvariant A Q B := hB_inv
       obtain ⟨Y, hBY, hY_inv⟩ :=
@@ -1465,15 +1468,18 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           rfl
         · rintro ⟨yq, hyY, hg⟩
           refine ⟨a⁻¹ • yq, (IsInvariant.invariant (A := A) (G := Q) (H := Y) a⁻¹ yq).1 hyY, ?_⟩
-          have h := congrArg (fun z : R ⧸ C => a⁻¹ • z) hg
-          simpa [inv_smul_smul] using h
+          change ((a⁻¹ • yq : Q) : R ⧸ C) = g
+          calc
+            ((a⁻¹ • yq : Q) : R ⧸ C) = a⁻¹ • (yq : R ⧸ C) := rfl
+            _ = a⁻¹ • (a • g) := congrArg (fun z : R ⧸ C => a⁻¹ • z) hg
+            _ = g := inv_smul_smul a g
       letI : IsInvariant A (R ⧸ C) Ybar := hYbar_inv
       let X : Subgroup R := Ybar.comap qC
       have hX_inv : IsInvariant A R X := by
         refine isInvariant_comap_quotient
           (A := A) (G := R) (N := C) Ybar ?_
         intro a g
-        simp [qC, MulAction.Quotient.smul_mk]
+        simp [MulAction.Quotient.smul_mk]
       letI : IsInvariant A R X := hX_inv
       have hC_le_X : C ≤ X := by
         simpa [X, qC, QuotientGroup.ker_mk'] using
@@ -1583,18 +1589,17 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hXcyc : IsCyclic X :=
         isCyclic_of_natCard_omega₁_eq_prime (G := X) (p := p) hpodd hΩX_card
       have hCT_le_TX : C_T ≤ T ⊔ X := by
-        letI : CommGroup Q := CommGroup.ofIsMulCommutative
-        letI : B.Normal := Subgroup.normal_of_comm B
+        letI : CommGroup Q := IsMulCommutative.instCommGroup
+        letI : B.Normal := Subgroup.normal_of_isMulCommutative B
         letI : T.Normal := hT_normal
         intro c hcCT
         have hcQ : qC c ∈ Q := ⟨c, hcCT, rfl⟩
         let cq : Q := ⟨qC c, hcQ⟩
         have hcq_sup : cq ∈ B ⊔ Y := by
-          simpa [hBY.sup_eq_top]
+          simp [hBY.sup_eq_top]
         rcases (Subgroup.mem_sup_of_normal_left (s := B) (t := Y) (x := cq)).1 hcq_sup with
           ⟨b, hbB, yQ, hyY, hby⟩
         have hbBq : (b : R ⧸ C) ∈ Bq := by
-          change (b : R ⧸ C) ∈ Bq
           exact hbB
         rcases Subgroup.mem_map.mp hbBq with ⟨t, htT, hqtb⟩
         have hyYbar : (yQ : R ⧸ C) ∈ Ybar := by
@@ -1628,7 +1633,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           rw [Subgroup.commutator_le]
           intro s hs r _hr
           have hrSX : r ∈ S ⊔ X := by
-            simpa [hSX_top]
+            simp [hSX_top]
           rcases (Subgroup.mem_sup_of_normal_left (s := S) (t := X) (x := r)).1 hrSX with
             ⟨s0, hs0, x0, hx0, hsx⟩
           have hss0 : ⁅s, s0⁆ ∈ D :=
@@ -1729,7 +1734,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           simpa [x, xX'] using (congrArg Subtype.val hxm).symm
         let sS : S := ⟨s, hs⟩
         have hs_sup : sS ∈ Tsub ⊔ Subgroup.zpowers yS := by
-          simpa [hTsub_sup_y]
+          simp [hTsub_sup_y]
         rcases (Subgroup.mem_sup_of_normal_left
             (x := sS) (s := Tsub) (t := Subgroup.zpowers yS)).1 hs_sup with
           ⟨tS, htTsub, uS, huZ, htu⟩
@@ -1778,7 +1783,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           intro s'
           let sR : R := (s' : S)
           have hs_sup : s' ∈ Tsub ⊔ Subgroup.zpowers yS := by
-            simpa [hTsub_sup_y]
+            simp [hTsub_sup_y]
           rcases (Subgroup.mem_sup_of_normal_left
               (x := s') (s := Tsub) (t := Subgroup.zpowers yS)).1 hs_sup with
             ⟨t0, ht0T, u0, hu0, htu0⟩
@@ -1876,7 +1881,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         calc
           α • ⁅y, z⁆ = α • (x ^ n_yz) := by rw [hyz_eq_x_pow]
           _ = (α • x) ^ n_yz := by
-            simpa using (map_pow (MulDistribMulAction.toMulAut A R α) x n_yz)
+            simp
           _ = (x ^ i) ^ n_yz := by rw [hiR]
           _ = x ^ (i * n_yz) := by exact (pow_mul x i n_yz).symm
           _ = x ^ (n_yz * i) := by rw [Nat.mul_comm]
@@ -1922,13 +1927,15 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
             (⟨ty, htyT⟩ : T) * ⟨z ^ k, hzkT⟩ =
               ⟨z ^ k, hzkT⟩ * ⟨ty, htyT⟩ :=
           (IsMulCommutative.is_comm (M := T)).comm ⟨ty, htyT⟩ ⟨z ^ k, hzkT⟩
-        simpa using congrArg T.subtype hcommT
+        change ty * z ^ k = z ^ k * ty
+        exact congrArg T.subtype hcommT
       have hty_dz : Commute ty dz := by
         have hcommT :
             (⟨ty, htyT⟩ : T) * ⟨dz, hdzT⟩ =
               ⟨dz, hdzT⟩ * ⟨ty, htyT⟩ :=
           (IsMulCommutative.is_comm (M := T)).comm ⟨ty, htyT⟩ ⟨dz, hdzT⟩
-        simpa using congrArg T.subtype hcommT
+        change ty * dz = dz * ty
+        exact congrArg T.subtype hcommT
       have hyjS : y ^ j ∈ S := S.pow_mem hyS j
       have hyj_dz : Commute (y ^ j) dz := by
         have hdz_map : dz ∈ (Subgroup.center S).map S.subtype := by
@@ -1956,9 +1963,23 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         have hScomm :=
           commutator_pow_pow_of_mem_center (G := S) (x := yS) (y := zS) j k
             hyz_centerS
-        simpa [yS, zS] using congrArg S.subtype hScomm
+        calc
+          ⁅y ^ j, z ^ k⁆ = ⁅S.subtype (yS ^ j), S.subtype (zS ^ k)⁆ := by
+            rfl
+          _ = S.subtype ⁅yS ^ j, zS ^ k⁆ :=
+            (map_commutatorElement S.subtype (yS ^ j) (zS ^ k)).symm
+          _ = S.subtype (⁅yS, zS⁆ ^ (j * k)) := congrArg S.subtype hScomm
+          _ = (S.subtype ⁅yS, zS⁆) ^ (j * k) := map_pow S.subtype ⁅yS, zS⁆ (j * k)
+          _ = ⁅y, z⁆ ^ (j * k) := by
+            rw [map_commutatorElement]
+            rfl
       have hα_yz_comm : α • ⁅y, z⁆ = ⁅α • y, α • z⁆ := by
-        simpa using (map_commutatorElement (MulDistribMulAction.toMulAut A R α) y z)
+        calc
+          α • ⁅y, z⁆ = (MulDistribMulAction.toMulAut A R α) ⁅y, z⁆ := rfl
+          _ = ⁅(MulDistribMulAction.toMulAut A R α) y,
+                (MulDistribMulAction.toMulAut A R α) z⁆ :=
+            map_commutatorElement (MulDistribMulAction.toMulAut A R α) y z
+          _ = ⁅α • y, α • z⁆ := rfl
       have hyz_pow_i_eq_jk : ⁅y, z⁆ ^ i = ⁅y, z⁆ ^ (j * k) := by
         calc
           ⁅y, z⁆ ^ i = α • ⁅y, z⁆ := hα_yz_eq_pow_i.symm
@@ -2018,7 +2039,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
       have hRT_mem_D : ∀ r : R, ∀ t ∈ T, ⁅r, t⁆ ∈ D := by
         intro r t ht
         have hrSX : r ∈ S ⊔ X := by
-          simpa [hSX_top]
+          simp [hSX_top]
         rcases (Subgroup.mem_sup_of_normal_left (x := r) (s := S) (t := X)).1 hrSX with
           ⟨s0, hs0, x0, hx0, hsx⟩
         have hs0tD : ⁅s0, t⁆ ∈ D :=
@@ -2029,7 +2050,7 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           exact (commutatorElement_eq_one_iff_mul_comm).2 hcent.symm
         have hcomm_eq : ⁅r, t⁆ = ⁅s0, t⁆ := by
           rw [← hsx, commutator_mul_left, hx0t_one]
-          simp [mul_assoc]
+          simp
         simpa [hcomm_eq] using hs0tD
       have hxi_ty_one : ⁅x ^ i, ty⁆ = 1 := by
         have hxiX : x ^ i ∈ X := X.pow_mem hxX_mem i
@@ -2038,7 +2059,12 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         exact (commutatorElement_eq_one_iff_mul_comm).2 hcent.symm
       have hα_xy_eq_xiyj : α • ⁅x, y⁆ = ⁅x ^ i, y ^ j⁆ := by
         have hα_xy_comm : α • ⁅x, y⁆ = ⁅α • x, α • y⁆ := by
-          simpa using (map_commutatorElement (MulDistribMulAction.toMulAut A R α) x y)
+          calc
+            α • ⁅x, y⁆ = (MulDistribMulAction.toMulAut A R α) ⁅x, y⁆ := rfl
+            _ = ⁅(MulDistribMulAction.toMulAut A R α) x,
+                  (MulDistribMulAction.toMulAut A R α) y⁆ :=
+              map_commutatorElement (MulDistribMulAction.toMulAut A R α) x y
+            _ = ⁅α • x, α • y⁆ := rfl
         calc
           α • ⁅x, y⁆ = ⁅α • x, α • y⁆ := hα_xy_comm
           _ = ⁅x ^ i, y ^ j * ty⁆ := by rw [← hiR, hαy_eq]
@@ -2061,7 +2087,12 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         have hpow :=
           commutator_pow_pow_of_mem_center (G := R ⧸ D) (x := qD x) (y := qD y) i j
             hqDxy_center
-        simpa [qD, map_commutatorElement] using hpow
+        calc
+          qD ⁅x ^ i, y ^ j⁆ = ⁅qD (x ^ i), qD (y ^ j)⁆ :=
+            map_commutatorElement qD (x ^ i) (y ^ j)
+          _ = ⁅(qD x) ^ i, (qD y) ^ j⁆ := by rw [map_pow, map_pow]
+          _ = ⁅qD x, qD y⁆ ^ (i * j) := hpow
+          _ = qD (⁅x, y⁆ ^ (i * j)) := by rw [map_pow, map_commutatorElement]
       have hqD_alpha_xy :
           qD (α • ⁅x, y⁆) = qD (⁅x, y⁆ ^ (i * j)) := by
         rw [hα_xy_eq_xiyj]
@@ -2075,7 +2106,8 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
           _ = qDsubT (xyT ^ (i * j)) := by
             apply (QuotientGroup.eq).2
             change (((α • xyT)⁻¹ * xyT ^ (i * j) : T) : R) ∈ D
-            simpa [xyT] using hdiff_alpha_xy_D
+            change ((α • ⁅x, y⁆)⁻¹ * ⁅x, y⁆ ^ (i * j)) ∈ D
+            exact hdiff_alpha_xy_D
           _ = (qDsubT xyT) ^ (i * j) := by
             simp
       have hxy_pow_k_eq_ij : (qDsubT xyT) ^ k = (qDsubT xyT) ^ (i * j) := by
@@ -2175,4 +2207,3 @@ public theorem theorem_4_16 {R A : Type*} [Group R] [Finite R] [Nontrivial R] [G
         change ((sα⁻¹ * (α • sα) : S) : R) ∈ T
         exact hsα_Tsub
       exact False.elim (hsα_not_T hsα_T)
-

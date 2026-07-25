@@ -149,9 +149,14 @@ public theorem suzuki_ch6_proposition_2_9
         Section1.IsClassFunction (Section1.principalCharacter G) := by
       intro x g
       rfl
-    simpa [Section1.subgroupRestriction, Section1.principalCharacter] using
-      (Section1.inducedClassFunction_frobenius_general
-        H theta (Section1.principalCharacter G) hprincipalClass)
+    have hprincipalRestriction :
+        Section1.subgroupRestriction H (Section1.principalCharacter G) =
+          Section1.principalCharacter H := by
+      ext h
+      rfl
+    rw [Section1.inducedClassFunction_frobenius_general
+      H theta (Section1.principalCharacter G) hprincipalClass,
+      hprincipalRestriction]
   · intro hthetaOne phi hphiVirtual hphiSupport
     have hphiClass : Section1.IsClassFunction phi :=
       Section1.isVirtualCharacter_isClassFunction hphiVirtual

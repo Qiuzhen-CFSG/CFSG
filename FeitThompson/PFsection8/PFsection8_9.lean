@@ -360,8 +360,8 @@ private theorem caseB_W2S_le_W2
       (Subgroup.mem_centralizer_iff.mp (hW2S_cent_W1 hyW2S) a haW1).symm
     have hyb : y * b = b * y := by
       letI : IsCyclic W2S := hW2Scyc
-      exact Subgroup.mul_comm_of_mem_isMulCommutative
-        (H := W2S) hyW2S (hW2_le_W2S hbW2)
+      exact setLike_mul_comm
+        (s := W2S) hyW2S (hW2_le_W2S hbW2)
     calc
       y * v = y * (a * b) := rfl
       _ = (y * a) * b := by simp [mul_assoc]

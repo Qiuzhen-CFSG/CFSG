@@ -294,8 +294,7 @@ private theorem theorem_12_16_value_abs_ge
   let zA : A :=
     ⟨(z : ℂ), Representation.intCast_mem_cyclotomicOrder etaRoot z⟩
   have heMem : (e : ℂ) ∈ A := by
-    simpa using
-      (Representation.intCast_mem_cyclotomicOrder etaRoot (e : ℤ))
+    simp
   let eA : A := ⟨(e : ℂ), heMem⟩
   have hpsiGEq : (⟨psi g, hpsiGMem⟩ : A) = zA := by
     apply Subtype.ext
@@ -313,8 +312,10 @@ private theorem theorem_12_16_value_abs_ge
         (((z - (e : ℤ) : ℤ) : ℂ)) 0 hepsMem
         (Representation.intCast_mem_cyclotomicOrder etaRoot (z - (e : ℤ)))
         A.zero_mem := by
-    simpa [Representation.CongruentModOneSub, A, oneSub, zA, eA] using
-      hdiffCong
+    unfold Representation.CongruentModOneSub
+    convert hdiffCong
+    · simp [A, zA, eA]
+    · simp [A, eA]
   have hpdiff : (p : ℤ) ∣ z - (e : ℤ) :=
     Representation.prime_dvd_int_of_congruent_zero_mod_one_sub hp heps
       (hetaRoot.isIntegral (Nat.card_pos (α := G))) hepsMem
@@ -395,7 +396,7 @@ private theorem theorem_12_16_projection_energy_lower
     have hmne : (m : G) ≠ 1 := by
       intro hm1
       apply hm.2
-      simpa [hm1]
+      simp [hm1]
     have hmA1 : (m : G) ∈ Section8.a1Set K := by
       simp [Section8.a1Set, section16NonidentityElements, hm.1, hmne]
     have hvalue :
@@ -575,7 +576,7 @@ private theorem theorem_12_16_projection_energy_lower_frobenius
 
 private theorem theorem_12_16_quotient_card_lt_four_arithmetic
     {m k k' h e : ℕ} {energyM energyL : ℝ}
-    (hmpos : 0 < m) (hkpos : 0 < k) (hk'pos : 0 < k') (hhpos : 0 < h)
+    (hmpos : 0 < m) (hkpos : 0 < k) (_hk'pos : 0 < k') (hhpos : 0 < h)
     (hk'le : k' ≤ k) (hegt : 2 < e) (hmle : m ≤ k * h)
     (hlowerM :
       ((k - k' : ℕ) : ℝ) / (m : ℝ) * ((e : ℝ) - 1) ^ 2 ≤ energyM)
@@ -594,9 +595,11 @@ private theorem theorem_12_16_quotient_card_lt_four_arithmetic
     nlinarith
   have henergy' :
       (((k : ℝ) - k') * ((e : ℝ) - 1) ^ 2) / m < (e : ℝ) / h := by
-    convert henergy using 1 <;> ring
+    (convert henergy using 1; ring)
   rw [div_lt_div_iff₀ hmR hhR] at henergy'
-  have heNonneg : (0 : ℝ) ≤ e := by positivity
+  have heNonneg : (0 : ℝ) ≤ e := by
+    have : 0 ≤ (e : ℝ) := by exact_mod_cast (Nat.zero_le e)
+    exact this
   have hem : (e : ℝ) * m ≤ (e : ℝ) * ((k : ℝ) * h) :=
     mul_le_mul_of_nonneg_left hmleR heNonneg
   have hcancel :
@@ -718,7 +721,9 @@ private theorem theorem_12_16_prime_dvd_frobenius_kernel_quotient_card_sub_one
   obtain ⟨z, hzorder⟩ := exists_prime_orderOf_dvd_card' p hpRmap
   let zQ : Q ⧸ N := z
   have hzQorder : orderOf zQ = p := by
-    simpa [zQ, Subgroup.orderOf_coe] using hzorder
+    dsimp [zQ]
+    rw [Subgroup.orderOf_coe z]
+    exact hzorder
   let Z : Subgroup (Q ⧸ N) := Subgroup.zpowers zQ
   have hZle : Z ≤ R.map q := Subgroup.zpowers_le.mpr z.property
   have hZcard : Nat.card Z = p := by
@@ -776,8 +781,8 @@ private theorem theorem_12_16_prime_dvd_quotient_card_sub_one
   have hP0p : IsPGroup p P0 := by
     rcases hP0Sylow with ⟨PM, hP0eq⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   have hxP0 : x ∈ P0 := by
     rcases hxOmega with ⟨y, _hy, rfl⟩
     exact y.property
@@ -859,12 +864,12 @@ private theorem theorem_12_16_prime_dvd_quotient_card_sub_one
       let yS : S := ⟨y, hKleS hy⟩
       have hyKsub : yS ∈ Ksub := by simpa [yS, Ksub]
       have hyN := hle hyKsub
-      simpa [yS, N] using hyN
+      simpa [yS, N] using (Subgroup.mem_subgroupOf.mp hyN)
     have hDlt : ambientDerivedSubgroup K < K := by
       letI : IsSolvable K := hKsolv
       letI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
       have hcommLt : derivedSubgroup K < (⊤ : Subgroup K) := by
-        simpa [derivedSubgroup, derivedSeries_one] using
+        simpa [derivedSubgroup, derivedSeries_one, commutator] using
           IsSolvable.commutator_lt_top_of_nontrivial (G := K)
       refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
       intro hEq
@@ -1026,7 +1031,7 @@ private theorem theorem_12_16_exists_notation_12_13_data
       rw [Finset.mem_insert]
       by_cases htheta : theta = Section1.principalCharacter (H.subgroupOf L)
       · left
-        simp [T, Section7.principalInducedCharacter, htheta]
+        simp [Section7.principalInducedCharacter, htheta]
       · right
         exact (hS _).mpr ⟨theta, hthetaIrr, htheta, rfl⟩
   have hAeq : typeIASet L H = Section7.puncturedSubgroupSet H := by
@@ -1132,7 +1137,9 @@ private theorem theorem_12_16_not_frobenius_of_quotient_noncyclic
       Subgroup.equivMapOfInjective
         (f := e.toMonoidHom) (P : Subgroup (M ⧸ K.subgroupOf M)) e.injective
     apply eP.isCyclic.mpr
-    simpa [PR, Sylow.coe_mapSurjective] using hPRcyclic
+    have hPR_subgroup : (PR : Subgroup R) = Subgroup.map e (P : Subgroup (M ⧸ K.subgroupOf M)) := by
+      simp [PR, Sylow.coe_mapSurjective]
+    exact hPR_subgroup.symm ▸ hPRcyclic
   exact hPnoncyclic hPcyclic
 
 /-- Construct the canonical `M`-side PF `(8.14)` map and the Dade projection
@@ -1281,7 +1288,13 @@ private theorem theorem_12_16_projection_supports_disjoint
     intro y hy
     let xZ : Subgroup.zpowers x := ⟨x, Subgroup.mem_zpowers x⟩
     let yZ : Subgroup.zpowers x := ⟨y, hy⟩
-    exact (congrArg Subtype.val (mul_comm xZ yZ)).symm
+    have hcomm : Commute (xZ : G) (yZ : G) := by
+      have hx_mem : (xZ : G) ∈ Subgroup.zpowers (x : G) := xZ.property
+      have hy_mem : (yZ : G) ∈ Subgroup.zpowers (x : G) := yZ.property
+      rcases Subgroup.mem_zpowers_iff.mp hx_mem with ⟨m, hm⟩
+      rcases Subgroup.mem_zpowers_iff.mp hy_mem with ⟨n, hn⟩
+      simpa [hm, hn] using (Commute.refl (x : G)).zpow_zpow m n
+    exact hcomm.symm.eq
   rcases Set.not_subset.mp hcentK with ⟨g0, hg0cent, hg0notK'⟩
   have hg0ne : g0 ≠ 1 := by
     intro hg0
@@ -1367,8 +1380,8 @@ private theorem theorem_12_16_contradiction_of_projection_packages
     rcases h128copy.2.2.2.2.2.2.2.2.2 with ⟨PM, hP0eq⟩
     letI : Fact p.Prime := ⟨hp⟩
     rw [← hP0eq]
-    simpa [section10AmbientSylowSubgroup] using
-      IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
+    dsimp [section10AmbientSylowSubgroup]
+    exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
   let P1 : Subgroup G := section12OmegaOneSubgroup ⟨p, hp⟩ P0
   letI : Fact p.Prime := ⟨hp⟩
   letI : IsElementaryAbelian p P1 := by
@@ -1454,7 +1467,7 @@ private theorem theorem_12_16_contradiction_of_projection_packages
     haveI : IsSolvable K := hKsolv
     haveI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
     have hcommLt : derivedSubgroup K < (⊤ : Subgroup K) := by
-      simpa [derivedSubgroup, derivedSeries_one] using
+      simpa [derivedSubgroup, derivedSeries_one, commutator] using
         IsSolvable.commutator_lt_top_of_nontrivial (G := K)
     refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
     intro hEq

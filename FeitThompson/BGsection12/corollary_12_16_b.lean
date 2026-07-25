@@ -6,7 +6,7 @@ module
 
 public import FeitThompson.BGsection12.corollary_12_16_a
 
-open scoped Pointwise
+open scoped Pointwise commutatorElement
 
 /-!
 # corollary_12_16_b
@@ -90,7 +90,8 @@ private theorem section12_derived_le_sup_commutator_local
     ⟨k₂, hk₂K, u₂, hu₂U, hk₂u₂⟩
   let c : G := ⁅u₁, u₂⁆
   have hcUU : c ∈ ⁅U, U⁆ :=
-    Subgroup.commutator_mem_commutator (H₁ := U) (H₂ := U) hu₁U hu₂U
+    by
+      exact Subgroup.commutator_mem_commutator (H₁ := U) (H₂ := U) hu₁U hu₂U
   have hk₁eq : (((k₁ * u₁ : G) : G) : G ⧸ K) = (u₁ : G ⧸ K) := by
     rw [QuotientGroup.eq_iff_div_mem]
     simpa [div_eq_mul_inv, mul_assoc] using hk₁K
@@ -101,20 +102,20 @@ private theorem section12_derived_le_sup_commutator_local
     calc
       QuotientGroup.mk' K ⁅p, q⁆
           = ⁅((p : G) : G ⧸ K), ((q : G) : G ⧸ K)⁆ := by
-              simpa using
+              exact
                 (map_commutatorElement (f := QuotientGroup.mk' K) (g₁ := p) (g₂ := q))
       _ = ⁅(((k₁ * u₁ : G) : G) : G ⧸ K), (((k₂ * u₂ : G) : G) : G ⧸ K)⁆ := by
             rw [← hk₁u₁, ← hk₂u₂]
       _ = ⁅(u₁ : G ⧸ K), (u₂ : G ⧸ K)⁆ := by rw [hk₁eq, hk₂eq]
       _ = QuotientGroup.mk' K c := by
-            simpa [c] using
+            exact
               (map_commutatorElement (f := QuotientGroup.mk' K) (g₁ := u₁) (g₂ := u₂)).symm
   let k₀ : G := ⁅p, q⁆ * c⁻¹
   have hk₀K : k₀ ∈ K := by
     apply (QuotientGroup.eq_one_iff (N := K) (x := k₀)).mp
     calc
       QuotientGroup.mk' K k₀ = QuotientGroup.mk' K ⁅p, q⁆ * (QuotientGroup.mk' K c)⁻¹ := by
-        simp [k₀]
+        simp only [k₀, map_mul, map_inv]
       _ = QuotientGroup.mk' K c * (QuotientGroup.mk' K c)⁻¹ := by rw [hmap_eq]
       _ = 1 := by simp
   have hrepr : ⁅p, q⁆ = k₀ * c := by
@@ -329,7 +330,9 @@ private theorem section12_corollary_12_16_derived_exclusion_of_le_msigma
               Nat.card ((section10Mbeta Mstar).subgroupOf Mstar) =
                 Nat.card (section10Mbeta Mstar) :=
             section12_card_subgroupOf_eq (section12_Mbeta_le Mstar)
-          exact hpβstar (hβHall.p_in_pi_of_p_dvd_card p (by simpa [hcard] using hpK))
+          exact hpβstar
+            (hβHall.p_in_pi_of_p_dvd_card p
+              (by simpa [subgroupPrimeSet, hcard] using hpK))
         have hKU :
             (section10Mbeta Mstar).subgroupOf Mstar ⊔ U.subgroupOf Mstar = ⊤ := by
           have hsup : section10Mbeta Mstar ⊔ U = Mstar := by
@@ -364,7 +367,9 @@ private theorem section12_corollary_12_16_derived_exclusion_of_le_msigma
               Nat.card ((section10Msigma Mstar).subgroupOf Mstar) =
                 Nat.card (section10Msigma Mstar) :=
             section12_card_subgroupOf_eq (section12_Msigma_le Mstar)
-          exact hpσstar (hσHall.p_in_pi_of_p_dvd_card p (by simpa [hcard] using hpK))
+          exact hpσstar
+            (hσHall.p_in_pi_of_p_dvd_card p
+              (by simpa [subgroupPrimeSet, hcard] using hpK))
         have hKU :
             (section10Msigma Mstar).subgroupOf Mstar ⊔ U.subgroupOf Mstar = ⊤ := by
           have hsup : section10Msigma Mstar ⊔ U = Mstar := by
@@ -409,7 +414,9 @@ private theorem section12_corollary_12_16_derived_exclusion
     exact hYσ r hrY
   have hHg_cont : Hg ∈ section9MaximalSubgroupsContaining Yg := by
     refine ⟨section12_maximal_conjBy_local (G := G) hH.1 g, ?_⟩
-    simpa [Yg, Hg] using Subgroup.map_mono hH.2
+    change Y.map ((MulAut.conj g).toMonoidHom) ≤
+      H.map ((MulAut.conj g).toMonoidHom)
+    exact Subgroup.map_mono hH.2
   have hcore :
       p ∉ subgroupPrimeSet
         (ambientDerivedSubgroup (subgroupNormalizerIn Hg (Yg : Set G))) :=

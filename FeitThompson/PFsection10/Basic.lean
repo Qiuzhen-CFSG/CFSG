@@ -17,7 +17,7 @@ This file records book-facing vocabulary for Peterfalvi, Section 10,
 
 noncomputable section
 
-open scoped BigOperators Pointwise
+open scoped BigOperators Pointwise commutatorElement
 
 attribute [local instance] Fintype.ofFinite
 
@@ -933,14 +933,14 @@ public theorem typePDefinitionData_ambientDerived_solvable
   have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
       haveI : Group.IsNilpotent MF := hMFnil
-      exact nilpotent_of_mulEquiv
+      exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcomp.1)).symm
     haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
   have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
       haveI : Group.IsNilpotent U := hUnil
-      exact nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
+      exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
     haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
     haveI : IsSolvable (U.subgroupOf D) := by infer_instance
     exact solvable_of_solvable_injective (f := hcompl.QuotientMulEquiv.toMonoidHom)
@@ -1055,7 +1055,9 @@ public theorem inertiaSubgroup_eq_of_semidirect_no_nontrivial_complement_fixed
     intro x hx
     change Section1.conjugateOnNormal K X x = X
     funext h
-    simpa [Section1.conjugateOnNormal] using hXclass ⟨x, hx⟩ h
+    have hclass := hXclass ⟨x, hx⟩ h
+    change X ⟨x * (h : L) * x⁻¹, _⟩ = X h at hclass
+    exact hclass
   apply le_antisymm
   · intro g hgI
     rcases hsemi.mul_surjective g (by trivial) with ⟨k, hkK, w, hwW, hkw⟩
@@ -1114,7 +1116,7 @@ public theorem linearCharacter_eq_one_of_fixed_by_fixedPointFree
     (hχfix : ∀ q : Q, χ (a • q) = χ q) :
     χ = 1 := by
   classical
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   let φ : Q → Q := fun q => (a • q) * q⁻¹
   have hφinj : Function.Injective φ := by
     intro x y hxy
@@ -1329,8 +1331,8 @@ public theorem isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup_sec10
       (Section1.uliftRepresentation_character
         (G := G) (V := Fin n → ℂ) (rho := ρ) g).symm
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    rw [hchar]
+    exact Section1.scalarProduct_representation_char_self (G := G) ρ hirr
 
 /-- Convert the book-style irreducible-character package used by Section 1 into
 the standardized Section 10 witness. This local copy avoids depending on later
@@ -1372,9 +1374,8 @@ public theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10
     ext c
     rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
     rfl
-  · have hnorm :=
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-    simpa [Section1.classFunctionInner_toConjClassFunction] using hnorm
+  · rw [Section1.classFunctionInner_toConjClassFunction]
+    exact Section1.scalarProduct_representation_char_self (G := G) ρ hρirr
 
 /-- Convert a representation-facing irreducible character into the
 standardized Section 10 package. -/
@@ -1404,7 +1405,7 @@ public theorem exists_irreducibleCharacterOnGroup_separates_ne_one_sec10
     ⟨ι, hι, χ, hχ, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hvalues : ∀ i : ι,
       χ i (ConjClasses.mk q) = χ i (ConjClasses.mk (1 : Q)) := by
     intro i
@@ -1499,7 +1500,7 @@ public theorem exists_irreducibleCharacterOnGroup_kernel_not_subgroup_kernel_of_
   classical
   have hnot : ¬ A ≤ Z := hZA_lt.not_ge
   rw [SetLike.le_def] at hnot
-  push_neg at hnot
+  push Not at hnot
   rcases hnot with ⟨a, haA, haZ⟩
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   let qH : H →* H.map q := q.subgroupMap H
@@ -3007,7 +3008,6 @@ public theorem integerSpan_mono
       hsub
       (by
         intro y _hyS2 hyS1
-        dsimp
         simp [hyS1])
   simpa +contextual [Section1.evalCoeff, w, smul_eq_mul, ← S1.sum_attach,
     ← S2.sum_attach] using hsum
@@ -3354,7 +3354,7 @@ public theorem exists_supportedFourSixData_of_section10FourSixNotationSupportedD
     ∃ H : Subgroup M,
       ∃ sigmaM : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction M,
         ∃ xChar : J → Section1.ClassFunction (derivedSubgroup M),
-          ∃ H_A H_A0 : G → Subgroup G,
+          ∃ H_A _H_A0 : G → Subgroup G,
             Section4Scratch.hypothesis_4_6_supported_statement M
               (derivedSubgroup M) (W1.subgroupOf M) (W2.subgroupOf M) W
               H A i0 j0 omega sigmaM sigma mu xChar
@@ -3389,7 +3389,7 @@ public theorem derivedSupportedFourSixData_of_section10FourSixNotationSupportedD
       mu deltaSign omega sigma tau) :
     ∃ sigmaM : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction M,
       ∃ xChar : J → Section1.ClassFunction (derivedSubgroup M),
-        ∃ H_A H_A0 : G → Subgroup G,
+        ∃ H_A _H_A0 : G → Subgroup G,
           Section4Scratch.hypothesis_4_6_supported_statement M
             (derivedSubgroup M) (W1.subgroupOf M) (W2.subgroupOf M) W
             (derivedSubgroup M) A i0 j0 omega sigmaM sigma mu xChar
@@ -5742,7 +5742,9 @@ public theorem ambientDerivedSubgroup_subgroupOf_derived_eq
   · intro hx
     have hxG : (((x : derivedSubgroup M) : M) : G) ∈
         ambientDerivedSubgroup (ambientDerivedSubgroup M) := by
-      simpa [Subgroup.mem_subgroupOf] using hx
+      change (((x : derivedSubgroup M) : M) : G) ∈
+        ambientDerivedSubgroup (ambientDerivedSubgroup M) at hx
+      exact hx
     rcases Subgroup.mem_map.mp hxG with ⟨y, hy, hyval⟩
     have hysym : e.symm y ∈ derivedSubgroup (derivedSubgroup M) := by
       have hy_map : e.symm y ∈
@@ -5754,9 +5756,9 @@ public theorem ambientDerivedSubgroup_subgroupOf_derived_eq
       apply M.subtype_injective
       have hcoe : ((e (e.symm y) : ambientDerivedSubgroup M) : G) =
           (((e.symm y : derivedSubgroup M) : M) : G) := by
-        simpa [e] using
-          (Subgroup.coe_equivMapOfInjective_apply (derivedSubgroup M) M.subtype
-            M.subtype_injective (e.symm y))
+        unfold e
+        exact Subgroup.coe_equivMapOfInjective_apply
+          (derivedSubgroup M) M.subtype M.subtype_injective (e.symm y)
       calc
         (((e.symm y : derivedSubgroup M) : M) : G) =
             ((e (e.symm y) : ambientDerivedSubgroup M) : G) := hcoe.symm
@@ -5776,10 +5778,13 @@ public theorem ambientDerivedSubgroup_subgroupOf_derived_eq
       Subgroup.mem_map_of_mem (ambientDerivedSubgroup M).subtype hex
     have hcoe : ((e x : ambientDerivedSubgroup M) : G) =
         (((x : derivedSubgroup M) : M) : G) := by
-      simpa [e] using
-        (Subgroup.coe_equivMapOfInjective_apply (derivedSubgroup M) M.subtype
-          M.subtype_injective x)
-    simpa [Subgroup.mem_subgroupOf, hcoe] using hxG
+      unfold e
+      exact Subgroup.coe_equivMapOfInjective_apply
+        (derivedSubgroup M) M.subtype M.subtype_injective x
+    change (((x : derivedSubgroup M) : M) : G) ∈
+      ambientDerivedSubgroup (ambientDerivedSubgroup M)
+    rw [← hcoe]
+    exact hxG
 
 /-- The ambient second derived subgroup, viewed inside `M`, lies in the
 ordinary internal derived subgroup. -/
@@ -5839,7 +5844,7 @@ public theorem typePDefinitionData_secondDerived_lt_derivedSubgroup
   haveI : Nontrivial (derivedSubgroup M) :=
     (Subgroup.nontrivial_iff_ne_bot (H := derivedSubgroup M)).2 hKne
   have hDlt : derivedSubgroup (derivedSubgroup M) < (⊤ : Subgroup (derivedSubgroup M)) := by
-    simpa [derivedSubgroup, derivedSeries_one] using
+    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
       IsSolvable.commutator_lt_top_of_nontrivial (G := derivedSubgroup M)
   refine lt_of_le_of_ne hle ?_
   intro heq
@@ -6016,7 +6021,6 @@ public theorem typeVReduction_kernelQuotient_isMulCommutative
     (h : typeVReductionData M MF H H' W1 W2 p) :
     IsMulCommutative
       (derivedSubgroup M ⧸ (H'.subgroupOf M).subgroupOf (derivedSubgroup M)) := by
-  refine ⟨?_⟩
   apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
   rw [typeVReduction_Hprime_subgroupOf_derived_eq h]
   exact le_rfl
@@ -6250,7 +6254,7 @@ public theorem typeVReduction_source_degree_eq_prime_of_ne_one
       intro d
       refine ⟨1, ?_⟩
       have hd : (d : derivedSubgroup M) = 1 := by
-        simpa using d.2
+        exact Subgroup.mem_bot.mp d.2
       rw [hd]
       simpa using map_one ρ
     have h := Representation.irreducible_finrank_sq_le_index_of_scalar_on_subgroup
@@ -6575,7 +6579,6 @@ public theorem typeVReduction_kernelSubfamily_degree_eq_card_W1
     hnormal.subgroupOf (derivedSubgroup M)
   have hcomm : IsMulCommutative
       (derivedSubgroup M ⧸ (H'.subgroupOf M).subgroupOf (derivedSubgroup M)) := by
-    refine ⟨?_⟩
     apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     exact le_rfl
@@ -6792,7 +6795,7 @@ public theorem typeVReduction_kernelQuotient_linearCharacter_card_eq_sq
   classical
   let Q := derivedSubgroup M ⧸
     (H'.subgroupOf M).subgroupOf (derivedSubgroup M)
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hchars : Nat.card (Q →* ℂˣ) = Nat.card Q := by
@@ -7214,12 +7217,17 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpow
   have hW2leN : (W2.subgroupOf M).subgroupOf (derivedSubgroup M) ≤ N := by
     intro x hx
     have hxW2M : ((x : derivedSubgroup M) : M) ∈ W2.subgroupOf M := by
-      simpa [Subgroup.mem_subgroupOf] using hx
+      change (((x : derivedSubgroup M) : M) : G) ∈ W2 at hx
+      exact hx
     have hxSecondM :
         ((x : derivedSubgroup M) : M) ∈
           (section16SecondDerivedSubgroup M).subgroupOf M :=
       typePDefinitionData_W2_subgroupOf_le_secondDerived_subgroupOf hP hxW2M
-    simpa [N, Subgroup.mem_subgroupOf] using hxSecondM
+    change (((x : derivedSubgroup M) : M) : G) ∈
+      section16SecondDerivedSubgroup M at hxSecondM
+    change (((x : derivedSubgroup M) : M) : G) ∈
+      section16SecondDerivedSubgroup M
+    exact hxSecondM
   rw [hfixQuot, hfixedK]
   ext q
   constructor
@@ -7310,7 +7318,15 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
       (⟨(a : M), Subgroup.mem_zpowers (a : M)⟩ : A) •
         ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) =
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) := by
-    simpa [A] using hfix
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) at hfix
+    exact hfix
   have hqmem :
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) ∈
         fixedPointSubgroup A (derivedSubgroup M ⧸ N) := by
@@ -7329,7 +7345,7 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
     typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpowers_eq_bot
       hP h10 a ha
   rw [hfixBot] at hqmem
-  simpa using hqmem
+  exact Subgroup.mem_bot.mp hqmem
 
 /-- Non-principal quotient characters of `M'/M''` induce irreducibly to `M`
 in the Type `P` setup. -/
@@ -7416,10 +7432,15 @@ public theorem typePDefinitionData_inducedCF_secondDerivedQuotient_isIrreducible
     intro x
     apply Units.ext
     have hxfix := congrFun hfix x
-    change ((χ (a • ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ) =
-      (χ (((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ))
-    simpa [Section1.quotientCharacterInflation, Section1.conjugateOnNormal, a,
-      Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hxfix
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ))
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ)) at hxfix
+    exact hxfix
   exact linearCharacter_eq_one_of_fixed_by_fixedPointFree a hfreea χ hχfix
 
 /-- Supported-data variant of
@@ -7517,12 +7538,17 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpow
   have hW2leN : (W2.subgroupOf M).subgroupOf (derivedSubgroup M) ≤ N := by
     intro x hx
     have hxW2M : ((x : derivedSubgroup M) : M) ∈ W2.subgroupOf M := by
-      simpa [Subgroup.mem_subgroupOf] using hx
+      change (((x : derivedSubgroup M) : M) : G) ∈ W2 at hx
+      exact hx
     have hxSecondM :
         ((x : derivedSubgroup M) : M) ∈
           (section16SecondDerivedSubgroup M).subgroupOf M :=
       typePDefinitionData_W2_subgroupOf_le_secondDerived_subgroupOf hP hxW2M
-    simpa [N, Subgroup.mem_subgroupOf] using hxSecondM
+    change (((x : derivedSubgroup M) : M) : G) ∈
+      section16SecondDerivedSubgroup M at hxSecondM
+    change (((x : derivedSubgroup M) : M) : G) ∈
+      section16SecondDerivedSubgroup M
+    exact hxSecondM
   rw [hfixQuot, hfixedK]
   ext q
   constructor
@@ -7613,7 +7639,15 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
       (⟨(a : M), Subgroup.mem_zpowers (a : M)⟩ : A) •
         ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) =
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) := by
-    simpa [A] using hfix
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) at hfix
+    exact hfix
   have hqmem :
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) ∈
         fixedPointSubgroup A (derivedSubgroup M ⧸ N) := by
@@ -7632,7 +7666,7 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
     typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpowers_eq_bot_supported
       hP h10 a ha
   rw [hfixBot] at hqmem
-  simpa using hqmem
+  exact Subgroup.mem_bot.mp hqmem
 
 /-- Supported-data variant of
 `typePDefinitionData_inducedCF_secondDerivedQuotient_isIrreducible`. -/
@@ -7720,10 +7754,15 @@ public theorem typePDefinitionData_inducedCF_secondDerivedQuotient_isIrreducible
     intro x
     apply Units.ext
     have hxfix := congrFun hfix x
-    change ((χ (a • ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ) =
-      (χ (((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ))
-    simpa [Section1.quotientCharacterInflation, Section1.conjugateOnNormal, a,
-      Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hxfix
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ))
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ)) at hxfix
+    exact hxfix
   exact linearCharacter_eq_one_of_fixed_by_fixedPointFree a hfreea χ hχfix
 
 /-- The action induced on the nonidentity elements of a group by any
@@ -7867,7 +7906,7 @@ public theorem quotientCharacterInflation_conjugate_kernel_eq
     rfl
   have hq : (y : K ⧸ A.subgroupOf K) =
       ((x : K) : K ⧸ A.subgroupOf K) := by
-    letI : CommGroup (K ⧸ A.subgroupOf K) := CommGroup.ofIsMulCommutative
+    letI : CommGroup (K ⧸ A.subgroupOf K) := IsMulCommutative.instCommGroup
     rw [hy]
     change QuotientGroup.mk' (A.subgroupOf K) (k * x * k⁻¹) =
       QuotientGroup.mk' (A.subgroupOf K) x
@@ -8509,7 +8548,15 @@ public theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one
       (⟨(a : M), Subgroup.mem_zpowers (a : M)⟩ : A) •
         ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) =
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) := by
-    simpa [A] using hfix
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)
+    change
+      ((⟨(a : M) * (x : M) * (a : M)⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) =
+        ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) at hfix
+    exact hfix
   have hqmem :
       ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) ∈
         fixedPointSubgroup A (derivedSubgroup M ⧸ N) := by
@@ -8528,7 +8575,7 @@ public theorem typeVReduction_kernelQuotient_fixed_eq_one_of_W1_ne_one
     typeVReduction_kernelQuotient_fixedPointSubgroup_zpowers_eq_bot
       hred h10 a ha
   rw [hfixBot] at hqmem
-  simpa using hqmem
+  exact Subgroup.mem_bot.mp hqmem
 
 /-- The `W₁`-orbit quotient of nonprincipal linear characters of `M'/H'` has
 the PF `(10.10.2)` source cardinality. -/
@@ -8610,7 +8657,7 @@ public theorem typeVReduction_nonprincipalLinearCharacterOrbitQuotient_card_eq_d
     have hχfix : ∀ q : derivedSubgroup M ⧸ N, χ (a⁻¹ • q) = χ q := by
       intro q
       have h := congrFun (congrArg DFunLike.coe hfix) q
-      simpa [characterGroupContragredientMulDistribMulAction] using h
+      simpa [characterGroupContragredient_smul_apply] using h
     exact linearCharacter_eq_one_of_fixed_by_fixedPointFree a⁻¹ hfreeInv χ hχfix
   have horbit := nonidentityOrbitQuotient_card_eq_div
     (A := W1.subgroupOf M)
@@ -8927,12 +8974,10 @@ public theorem typeVReduction_quotientCharacterInflation_conjugate_derived_eq
         ((k : M) * (x : M) * (k : M)⁻¹ * (x : M)⁻¹)
       rfl
     rw [hdiv]
-    simpa [derivedSubgroup, derivedSeries_one] using
-      (Subgroup.commutator_mem_commutator (G := derivedSubgroup M)
-        (H₁ := (⊤ : Subgroup (derivedSubgroup M)))
-        (H₂ := (⊤ : Subgroup (derivedSubgroup M)))
-        (show k ∈ (⊤ : Subgroup (derivedSubgroup M)) by trivial)
-        (show x ∈ (⊤ : Subgroup (derivedSubgroup M)) by trivial))
+    change ⁅k, x⁆ ∈ ⁅(⊤ : Subgroup (derivedSubgroup M)), ⊤⁆
+    exact Subgroup.commutator_mem_commutator
+      (show k ∈ (⊤ : Subgroup (derivedSubgroup M)) by trivial)
+      (show x ∈ (⊤ : Subgroup (derivedSubgroup M)) by trivial)
   rw [hq]
 
 /-- Equality of induced quotient-character inflations identifies the source
@@ -9275,10 +9320,15 @@ public theorem typeVReduction_inducedCF_quotientCharacterInflation_isIrreducible
     intro x
     apply Units.ext
     have hxfix := congrFun hfix x
-    change ((χ (a • ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ) =
-      (χ (((x : derivedSubgroup M) : derivedSubgroup M ⧸ N)) : ℂ))
-    simpa [Section1.quotientCharacterInflation, Section1.conjugateOnNormal, a,
-      Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using hxfix
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ))
+    change
+      ((χ ((⟨g * (x : M) * g⁻¹, _⟩ : derivedSubgroup M) :
+          derivedSubgroup M ⧸ N) : ℂ) =
+        (χ ((x : derivedSubgroup M) : derivedSubgroup M ⧸ N) : ℂ)) at hxfix
+    exact hxfix
   exact linearCharacter_eq_one_of_fixed_by_fixedPointFree a hfreea χ hχfix
 
 /-- Arithmetic form used in PF `(10.10.3)` after `(10.10.1)`. -/

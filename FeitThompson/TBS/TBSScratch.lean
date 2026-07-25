@@ -6,6 +6,8 @@ universe u
 
 namespace TBSScratch
 
+open scoped commutatorElement IsMulCommutative
+
 structure Baer (r : ℕ) (G : Type u) where
   val : G
 

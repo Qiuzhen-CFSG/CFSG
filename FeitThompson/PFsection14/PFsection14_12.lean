@@ -119,7 +119,7 @@ public theorem section14_section16NilpotentNormalHallIn_conjBy
     rw [hsub_eq]
     exact Subgroup.Normal.map hNorm eM.toMonoidHom eM.surjective
   · let eH : H ≃* H.conjBy g := (MulAut.conj g).subgroupMap H
-    exact nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) eH
+    exact Group.nilpotent_of_mulEquiv (G := H) (G' := H.conjBy g) eH
   · have hsub_eq :
         (H.conjBy g).subgroupOf (M.conjBy g) =
           (H.subgroupOf M).map eM.toMonoidHom :=

@@ -53,16 +53,20 @@ and the fact that it is also a Hall `sigma(M)`-subgroup of `G`. -/
       U = ⊥ ∧ section16TISubset (section8FittingSubgroup M : Set G) ∧
         section16HasPrimeOrder K)
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_msigma_le (M : Subgroup G) :
     section10Msigma M ≤ M := by
   rw [section10_msigma_eq_piCoreIn]
   exact piCoreIn_le (section10SigmaPrimes M) M
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_msigma_subgroupOf_eq {M : Subgroup G} :
     (section10Msigma M).subgroupOf M = section10MsigmaSubgroup M := by
-  simpa [section10Msigma, section10MsigmaSubgroup] using
-    (piCore_map_subtype_subgroupOf (G := G) (section10SigmaPrimes M) M)
+  change (piCoreIn (section10SigmaPrimes M) M).subgroupOf M =
+    piCore (section10SigmaPrimes M) M
+  exact piCore_map_subtype_subgroupOf (G := G) (section10SigmaPrimes M) M
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_subgroupCentralizerIn_bot (H : Subgroup G) :
     subgroupCentralizerIn H (⊥ : Subgroup G) = H := by
   ext x
@@ -78,6 +82,7 @@ private theorem section16_subgroupCentralizerIn_bot (H : Subgroup G) :
     subst hy_one
     simp
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_mf_to_section15
     {M MF : Subgroup G}
     (hMF : section16MFSubgroup M MF) :
@@ -85,18 +90,21 @@ public theorem section16_mf_to_section15
   simpa [section16MFSubgroup, section15MFSubgroup,
     section16NilpotentNormalHallIn, section15NilpotentNormalHallIn] using hMF
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_KUData_of_section15
     {M K U : Subgroup G}
     (hKU : section15KUData M K U) :
     section16KUData M K U := by
   simpa [section16KUData] using hKU
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_kudata_to_section15
     {M K U : Subgroup G}
     (hKU : section16KUData M K U) :
     section15KUData M K U := by
   simpa [section16KUData] using hKU
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_U_normal_in_UK_of_section15
     {M K U : Subgroup G}
     (hKU : section15KUData M K U) :
@@ -104,6 +112,7 @@ private theorem section16_U_normal_in_UK_of_section15
   rw [sup_comm]
   exact hKU.2.2.2.2.2.2
 
+omit [IsMinCE G] in
 public theorem section16_MFamilyP_of_nontrivial_hall_kappa
     {M K : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -124,6 +133,7 @@ public theorem section16_MFamilyP_of_nontrivial_hall_kappa
     simpa [q, hcard_sub] using hq0dvd
   exact ⟨hM, ⟨q, hKHall.p_in_pi_of_p_dvd_card q hq_sub⟩⟩
 
+omit [IsMinCE G] in
 /-- A nontrivial Section 16 `K` attached to a maximal subgroup places that
 maximal subgroup in the BG Type `P` family. -/
 public theorem section16_maximalTypeP_of_KUData_ne_bot
@@ -138,6 +148,7 @@ public theorem section16_maximalTypeP_of_KUData_ne_bot
     section16_MFamilyP_of_nontrivial_hall_kappa (G := G) hM hKU15.1 hKne
   simpa [section16MaximalTypeP] using hMP
 
+omit [IsMinCE G] in
 public theorem section16_K_ne_bot_of_MFamilyP
     {M K : Subgroup G}
     (hM : M ∈ section14MFamilyP G)
@@ -199,6 +210,7 @@ private theorem section16_theoremA1_of_maximal
       simpa [hlocal] using hxLocal
     simpa [Subgroup.mem_subgroupOf] using hxSLocal
 
+omit [Finite G] [IsMinCE G] in
 private theorem section16_section14TI_to_section16TISubset
     {H : Subgroup G}
     (hTI : section14TISubgroup H) :
@@ -266,12 +278,12 @@ private theorem section16_fitting_section14TI_of_proper
         (F : Set G) ∩ section14SetConjBy (F : Set G) g ⊆ ({1} : Set G) := by
     intro hall
     exact hnotTISet ⟨hnonempty, hall⟩
-  push_neg at hnotForall
+  push Not at hnotForall
   rcases hnotForall with ⟨a, haNotNorm, haNotSubset⟩
   rcases Set.not_subset.mp haNotSubset with ⟨x, hx, hxnotone⟩
   have hxne : x ≠ 1 := by
     intro hxone
-    exact hxnotone (by simpa [hxone])
+    exact hxnotone (by simp [hxone])
   let g : G := a⁻¹
   let X : Subgroup G := F ⊓ F.conjBy g
   have hxConj : x ∈ F.conjBy g := by
@@ -304,6 +316,7 @@ private theorem section16_fitting_section14TI_of_proper
     hM hMF hnotTISubgroup hgM (by rfl) hXne hE
   exact hMFne h157.2
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_complement_eq_bot_of_left_eq
     {M A U : Subgroup G}
     (hcomp : section12ComplementIn M A U)
@@ -427,7 +440,7 @@ public theorem section16_complement_k_msigma_of_KUData
     have hkSU : k ∈ S ⊔ U := by
       have hk_eq : k = s⁻¹ * x := by
         rw [← hskG]
-        simp [mul_assoc]
+        simp
       rw [hk_eq]
       exact (S ⊔ U).mul_mem (Subgroup.mem_sup_left (S.inv_mem hsS'))
         (Subgroup.mem_sup_right hxU)
@@ -461,7 +474,7 @@ public theorem section16_complement_k_msigma_of_KUData
       have hxoneSub : (⟨x, hxM⟩ : M) = 1 := by
         simpa using hxbotSub
       simpa using congrArg Subtype.val hxoneSub
-    simpa [hxone]
+    simp [hxone]
 
 private theorem section16_U_eq_bot_of_MFamilyP1
     {M K U : Subgroup G}
@@ -510,6 +523,7 @@ public theorem section16_proper_branch_of_section15
   exact ⟨hUbot, section16_section14TI_to_section16TISubset (G := G) hTI14,
     hPrimeK⟩
 
+omit [Finite G] [IsMinCE G] in
 public theorem section16_hasPrimeOrder_of_prime_card
     {K : Subgroup G}
     (hprime : Nat.Prime (Nat.card K)) :
@@ -573,12 +587,12 @@ private theorem section16_fitting_section14TI_of_nontrivial_U
         (F : Set G) ∩ section14SetConjBy (F : Set G) g ⊆ ({1} : Set G) := by
     intro hall
     exact hnotTISet ⟨hnonempty, hall⟩
-  push_neg at hnotForall
+  push Not at hnotForall
   rcases hnotForall with ⟨a, haNotNorm, haNotSubset⟩
   rcases Set.not_subset.mp haNotSubset with ⟨x, hx, hxnotone⟩
   have hxne : x ≠ 1 := by
     intro hxone
-    exact hxnotone (by simpa [hxone])
+    exact hxnotone (by simp [hxone])
   let g : G := a⁻¹
   let X : Subgroup G := F ⊓ F.conjBy g
   have hxConj : x ∈ F.conjBy g := by
@@ -614,9 +628,7 @@ private theorem section16_fitting_section14TI_of_nontrivial_U
   have hnotF : M ∉ section14MFamilyF G := by
     intro hF
     rcases hMP.2 with ⟨p, hp⟩
-    have hpempty : p ∈ (∅ : Set Nat.Primes) := by
-      simpa [hF.2] using hp
-    simpa using hpempty
+    simp [hF.2] at hp
   rcases h157.1 with hF | hP1
   · exact hnotF hF
   · exact hUne (section16_U_eq_bot_of_MFamilyP1 (G := G) hKU hP1)

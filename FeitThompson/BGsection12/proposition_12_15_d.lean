@@ -16,6 +16,7 @@ section Section12
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_ambient_sylow_le
     {M : Subgroup G} {p : Nat.Primes} (P : Sylow p.val M) :
     section10AmbientSylowSubgroup M P ≤ M := by
@@ -23,6 +24,7 @@ public theorem section12_ambient_sylow_le
   rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
   exact y.property
 
+omit [IsMinCE G] in
 private theorem section12_normalizer_inf_sylow_le_right_of_sigma
     {M Mstar : Subgroup G} {q : Nat.Primes}
     {S : Sylow q.val (M ⊓ Mstar : Subgroup G)}
@@ -79,6 +81,7 @@ private theorem section12_Mbeta_eq_Malpha_of_alphaPrimes_eq_betaPrimes
   simp [section10Mbeta, section10Malpha, section10MbetaSubgroup,
     section10MalphaSubgroup, hαβ]
 
+omit [IsMinCE G] in
 private theorem section12_Mbeta_ne_bot_of_inf_sup_mbeta_eq
     {M Mstar : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
@@ -98,14 +101,14 @@ private theorem section12_Mbeta_ne_bot_of_inf_sup_mbeta_eq
   have hM_eq_Mstar : M = Mstar := (hMstar.le_iff_eq hM.1).mp hMstar_le_M
   exact hMstar_ne hM_eq_Mstar.symm
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 public theorem section12_Msigma_le (M : Subgroup G) :
     section10Msigma M ≤ M := by
   intro x hx
   rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
   exact y.property
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_Malpha_le (M : Subgroup G) :
     section10Malpha M ≤ M := by
   intro x hx
@@ -119,6 +122,7 @@ public theorem section12_Mbeta_le (M : Subgroup G) :
   rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
   exact y.property
 
+omit [Finite G] [IsMinCE G] in
 public theorem section12_complementIn_inf_of_complementToMsigma_le_of_inf_bot
     {M N E : Subgroup G}
     (hcomp : section12ComplementToMsigma N E)
@@ -154,13 +158,14 @@ public theorem section12_complementIn_inf_of_complementToMsigma_le_of_inf_bot
       simpa [hσ_inf_M] using (show x ∈ section10Msigma N ⊓ M from ⟨hxσ, hxMN.1⟩)
     simpa using hxbot
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12Malpha_subgroupOf_eq {M : Subgroup G} :
     (section10Malpha M).subgroupOf M = section10MalphaSubgroup M := by
-  simpa [section10Malpha, section10MalphaSubgroup] using
-    (piCore_map_subtype_subgroupOf (G := G) (section10AlphaPrimes M) M)
+  change (piCoreIn (section10AlphaPrimes M) M).subgroupOf M =
+    piCore (section10AlphaPrimes M) M
+  exact piCore_map_subtype_subgroupOf (G := G) (section10AlphaPrimes M) M
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_local_sup_malpha_eq_top
     {L N : Subgroup G} (hLN : L ≤ N)
     (hjoin : L ⊔ section10Malpha N = N) :
@@ -177,7 +182,7 @@ private theorem section12_local_sup_malpha_eq_top
       rw [sup_comm, hjoin]
       simp
 
-omit [IsMinCE G] in
+omit [Finite G] [IsMinCE G] in
 private theorem section12_local_inf_sup_malpha_eq_top
     {M N : Subgroup G}
     (hjoin : M ⊓ N ⊔ section10Malpha N = N) :
@@ -200,7 +205,7 @@ public theorem section12_prime_dvd_card_of_primeRank_pos
     exact hnA.trans <|
       (section8_generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)
   have hTnonempty : T.Nonempty :=
-    ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, zero_le _⟩
+    ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   have hSup_mem : sSup T ∈ T := Nat.sSup_mem hTnonempty hTbdd
   rcases hSup_mem with ⟨A, hAp, _hAcomm, hAgen⟩
   have hAgen_pos : 0 < generatorRank A := by
@@ -214,7 +219,7 @@ public theorem section12_prime_dvd_card_of_primeRank_pos
     have hgen0 : generatorRank A = 0 := by
       rw [generatorRank_eq_group_rank]
       haveI : Group.FG A := Group.fg_of_finite
-      apply le_antisymm ?_ (zero_le _)
+      apply le_antisymm ?_ (Nat.zero_le _)
       refine Group.rank_le (G := A) (S := ∅) ?_
       rw [Finset.coe_empty, Subgroup.closure_empty]
       exact (Subsingleton.elim (⊤ : Subgroup A) ⊥).symm
@@ -341,7 +346,7 @@ public theorem section12_sylow_map_subtype_of_sup_hall
     · exact S.not_dvd_index hpS
     · exact hU_not_index hpU
   let T : Sylow p.val H := hSGp.toSylow hSG_not_index
-  exact ⟨T, by simpa [T, SG] using IsPGroup.toSylow_coe hSGp hSG_not_index⟩
+  exact ⟨T, IsPGroup.toSylow_coe hSGp hSG_not_index⟩
 
 private theorem section12_tau1_transfer_of_malpha_products
     {M Mstar : Subgroup G}
@@ -529,7 +534,7 @@ private theorem section12_tau1_transfer_of_malpha_products
         simpa [Subgroup.map_subtype_commutator] using hxCommStarG
       rcases Subgroup.mem_map.mp hxmap with ⟨z, hz, hzx⟩
       have hz_eq : z = xStar := Subtype.ext hzx
-      simpa [xStar, hz_eq, derivedSubgroup, derivedSeries_one] using hz
+      simpa [xStar, hz_eq, derivedSubgroup, derivedSeries_one, commutator] using hz
     have hxSMstar : xStar ∈ (SMstar : Subgroup Mstar) := by
       let ystar : Ustar := eU xU
       have hystar_SU : ystar ∈ (SUstar : Subgroup Ustar) := by

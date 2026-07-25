@@ -90,7 +90,7 @@ public theorem hkt_normalizer_quotient_centralizer_isPGroup_of_hasNormalPComplem
     have hcop : Nat.Coprime (Nat.card UN) (Nat.card K) := by
       rw [hn]
       exact hKcop.pow_left n
-    exact Subgroup.inf_eq_bot_of_coprime hcop
+    exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hcomm_bot : ⁅UN, K⁆ = ⊥ := by
     have hleft : ⁅UN, K⁆ ≤ UN := by
       letI : UN.Normal := hUNnorm
@@ -114,7 +114,8 @@ public theorem hkt_normalizer_quotient_centralizer_isPGroup_of_hasNormalPComplem
     intro u hu
     let uN : N := ⟨u, hU_le_N hu⟩
     have huN : uN ∈ UN := by
-      simpa [UN, uN] using hu
+      change (uN : Q) ∈ U
+      exact hu
     have hcommN : uN * (k : N) = (k : N) * uN :=
       (Subgroup.mem_centralizer_iff.mp (hK_le_centUN hk)) uN huN
     exact congrArg Subtype.val hcommN
@@ -1002,8 +1003,7 @@ private theorem huppert_I_14_9_conj_inverts_of_cyclic_index_two
                 intro hx1
                 have htwo_one : (2 : ℤ) ∣ 1 := by
                   have h := dvd_sub hx1 hx2
-                  convert h using 1
-                  ring
+                  simpa only [add_sub_cancel_left] using h
                 norm_num at htwo_one
               have hcop2 : IsCoprime (2 : ℤ) (x + 1) :=
                 (hprime2.coprime_iff_not_dvd).mpr hnot
@@ -1038,8 +1038,7 @@ private theorem huppert_I_14_9_conj_inverts_of_cyclic_index_two
             · have htwo_rr : (2 : ℤ) ∣ r * r := dvd_mul_of_dvd_left (by rw[← even_iff_two_dvd]; exact hr_even) r
               have htwo_one : (2 : ℤ) ∣ 1 := by
                 have h := dvd_sub htwo_rr htwo_dvd_sq
-                convert h using 1
-                ring
+                simpa only [sub_sub_cancel] using h
               norm_num at htwo_one
             · exact hr_odd
           rcases hodd_r with ⟨t, ht⟩
@@ -1684,8 +1683,7 @@ public theorem huppert_I_14_9_generalizedQuaternion_mulEquiv_of_cyclic_index_two
                 intro hx1
                 have htwo_one : (2 : ℤ) ∣ 1 := by
                   have h := dvd_sub hx1 hx2
-                  convert h using 1
-                  ring
+                  simpa only [add_sub_cancel_left] using h
                 norm_num at htwo_one
               have hcop2 : IsCoprime (2 : ℤ) (x + 1) :=
                 (hprime2.coprime_iff_not_dvd).mpr hnot
@@ -1720,8 +1718,7 @@ public theorem huppert_I_14_9_generalizedQuaternion_mulEquiv_of_cyclic_index_two
             · have htwo_rr : (2 : ℤ) ∣ r * r := dvd_mul_of_dvd_left (by rw[← even_iff_two_dvd]; exact hr_even) r
               have htwo_one : (2 : ℤ) ∣ 1 := by
                 have h := dvd_sub htwo_rr htwo_dvd_sq
-                convert h using 1
-                ring
+                simpa only [sub_sub_cancel] using h
               norm_num at htwo_one
             · exact hr_odd
           rcases hodd_r with ⟨t, ht⟩
@@ -1926,15 +1923,11 @@ private theorem huppert_III_7_6b_isCyclic_of_isMulCommutative_unique_order_two
       by_cases hx1 : x = 1
       · have hy1 : y = 1 := by
           by_contra hy1
-          have hxval : f x = true := by simp [f, hx1]
-          have hyval : f y = false := by simp [f, hy1]
-          cases (by simpa [hxval, hyval] using hxy : true = false)
-        simpa [hx1, hy1]
+          simp [f, hx1, hy1] at hxy
+        simp [hx1, hy1]
       · have hy1 : y ≠ 1 := by
           intro hy1
-          have hxval : f x = false := by simp [f, hx1]
-          have hyval : f y = true := by simp [f, hy1]
-          cases (by simpa [hxval, hyval] using hxy : false = true)
+          simp [f, hx1, hy1] at hxy
         apply Subtype.ext
         apply Subtype.ext
         have hxpow : x ^ (2 : ℕ) = 1 := by
@@ -2128,7 +2121,7 @@ private theorem huppert_III_7_5b_covby_top_of_index_eq_prime
     simp only [covBy_top_iff] at hmax
     have hnil : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p) h
     exact Subgroup.NormalizerCondition.normal_of_coatom H
-      (normalizerCondition_of_isNilpotent (G := G)) hmax
+      (Group.normalizerCondition_of_isNilpotent (G := G)) hmax
 
 /-- In a finite `2`-group, any subgroup whose index divides `2` contains the Frattini subgroup. -/
 private theorem huppert_III_7_5b_frattini_le_of_index_dvd_two
@@ -2167,7 +2160,7 @@ private theorem huppert_III_7_5b_noncomm_order_eight_branch
   by_cases hL_elem : IsElementaryAbelian 2 L
   · exact ⟨L, hL_normal, hL_le_M.trans hM_le_N, hL_card, hL_elem⟩
   · have hL_comm : IsMulCommutative L :=
-      ⟨⟨IsPGroup.commutative_of_card_eq_prime_sq (p := 2) (G := L) hL_card⟩⟩
+      IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) (G := L) hL_card
     have hL_cyclic : IsCyclic L := by
       by_contra hL_not_cyclic
       have hL_exp : Monoid.exponent L = 2 :=
@@ -2284,9 +2277,10 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
           _ = Nat.card (S ⧸ Z) * 2 := by rw [hZ_card]
       have hQ_lt : Nat.card (S ⧸ Z) < Nat.card S := by
         rw [hQ_card]
-        simpa [one_mul] using
-          (Nat.mul_lt_mul_of_pos_left (by decide : 1 < 2)
-            (Nat.card_pos (α := S ⧸ Z)))
+        have hlt := Nat.mul_lt_mul_of_pos_left (by decide : 1 < 2)
+          (Nat.card_pos (α := S ⧸ Z))
+        rw [mul_one] at hlt
+        exact hlt
       have hQp : IsPGroup 2 (S ⧸ Z) := hSp.to_quotient Z
       letI : Fact (IsPGroup 2 (S ⧸ Z)) := ⟨hQp⟩
       obtain ⟨Kbar, hKbar_normal, hKbar_le_Nbar, hKbar_card, hKbar_elem⟩ :=
@@ -2408,7 +2402,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
         exponent_dvd_p := ?_ }
     · have hcomm_le : _root_.commutator G ≤ A :=
         (commutator_le_frattini_of_isPGroup (R := G) (p := 2)).trans hPhi_le_A
-      exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le (N := A)).2 hcomm_le⟩
+      exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := A)).2 hcomm_le
     · refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
       intro x
       refine QuotientGroup.induction_on x ?_
@@ -2456,7 +2450,8 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       · intro hxA
         have hxA_top : (⟨x, hxA⟩ : A) ∈ (⊤ : Subgroup A) := by simp
         have hxA_zpow : (⟨x, hxA⟩ : A) ∈ Subgroup.zpowers aA := by
-          simpa [haA_top]
+          rw [haA_top]
+          exact hxA_top
         rcases Subgroup.mem_zpowers_iff.mp hxA_zpow with ⟨z, hz⟩
         refine Subgroup.mem_zpowers_iff.mpr ⟨z, ?_⟩
         exact Subtype.ext_iff.mp hz
@@ -2612,7 +2607,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       simpa [aB, bB, a] using hz
     have hquot_has_nonone : ∃ x : G ⧸ A, x ≠ 1 := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hsub : Subsingleton (G ⧸ A) := ⟨fun x y => by rw [hnone x, hnone y]⟩
       exact hquot_not_subsingleton hsub
     obtain ⟨x, hx_ne_one⟩ := hquot_has_nonone
@@ -2626,7 +2621,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       exact hquot_cyclic ((isCyclic_iff_exists_zpowers_eq_top (α := G ⧸ A)).2 ⟨x, hx_top⟩)
     have hquot_has_y : ∃ y : G ⧸ A, y ∉ Subgroup.zpowers x := by
       by_contra hyall_not
-      push_neg at hyall_not
+      push Not at hyall_not
       exact hx_zpowers_ne_top ((Subgroup.eq_top_iff' (H := Subgroup.zpowers x)).2 hyall_not)
     obtain ⟨y, hy_not_zpowers⟩ := hquot_has_y
     have hy_ne_one : y ≠ 1 := by
@@ -2672,7 +2667,9 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
         _ = x⁻¹ := by rw [hxy_one]; simp
     have hx_inv_mem : x⁻¹ ∈ Subgroup.zpowers x :=
       (Subgroup.zpowers x).inv_mem (Subgroup.mem_zpowers x)
-    exact False.elim (hy_not_zpowers (by simpa [hy_eq_inv] using hx_inv_mem))/--
+    exact False.elim (hy_not_zpowers (by rw [hy_eq_inv]; exact hx_inv_mem))
+
+/--
 Huppert III.7.6(b), specialized to the use in III.8.2: a noncyclic finite
 `2`-group whose abelian normal subgroups are forced cyclic by the unique
 involution hypothesis has a cyclic normal subgroup of index `2`.
@@ -2711,7 +2708,8 @@ public theorem huppert_III_7_6b_cyclic_normal_index_two_of_unique_order_two
     · intro hxA
       have hxA_top : (⟨x, hxA⟩ : A) ∈ (⊤ : Subgroup A) := by simp
       have hxA_zpow : (⟨x, hxA⟩ : A) ∈ Subgroup.zpowers aA := by
-        simpa [haA_top]
+        rw [haA_top]
+        exact hxA_top
       rcases Subgroup.mem_zpowers_iff.mp hxA_zpow with ⟨z, hz⟩
       refine Subgroup.mem_zpowers_iff.mpr ⟨z, ?_⟩
       exact Subtype.ext_iff.mp hz
@@ -3114,7 +3112,7 @@ public theorem huppert_III_8_8_card_quotient_coatom_eq_two
   have hnil : Group.IsNilpotent G := IsPGroup.isNilpotent (p := 2) hG
   have hMnormal : M.Normal :=
     Subgroup.NormalizerCondition.normal_of_coatom M
-      (normalizerCondition_of_isNilpotent (G := G)) hM
+      (Group.normalizerCondition_of_isNilpotent (G := G)) hM
   letI : M.Normal := hMnormal
   have hq_pgroup : IsPGroup 2 (G ⧸ M) := hG.to_quotient M
   rcases hq_pgroup.exists_card_eq with ⟨n, hn⟩
@@ -3152,7 +3150,7 @@ public theorem huppert_III_8_8_card_quotient_coatom_eq_two
       have hpow_eq' : 2 ^ n = 2 ^ 1 := by simpa using hpow_eq
       have hn_eq_one : n = 1 :=
         (Nat.pow_right_injective (by decide : 2 ≤ 2)) hpow_eq'
-      exact Nat.not_succ_le_self 1 (by simpa [hn_eq_one] using hn_ge_two)
+      omega
     have hbot_or_top :=
       huppert_III_8_8_quotient_subgroup_eq_bot_or_top_of_coatom
         (M := M) hM H
@@ -3214,7 +3212,7 @@ public theorem huppert_III_8_8_maximalSubgroups_card_odd
       · exact ⟨x, htarget_unique.unique hy hx |>.symm⟩
     have hindex : f.1.ker.index = 2 := by
       rw [Subgroup.index_ker, MonoidHom.range_eq_top.mpr hsurj]
-      simpa using htarget_card
+      simp
     have hcov :=
       huppert_III_7_5b_covby_top_of_index_eq_prime
         (p := 2) (G := G) hG hindex
@@ -3239,7 +3237,7 @@ public theorem huppert_III_8_8_maximalSubgroups_card_odd
     have hnil : Group.IsNilpotent G := IsPGroup.isNilpotent (p := 2) hG
     have hMnormal : M.1.Normal :=
       Subgroup.NormalizerCondition.normal_of_coatom M.1
-        (normalizerCondition_of_isNilpotent (G := G)) M.2
+        (Group.normalizerCondition_of_isNilpotent (G := G)) M.2
     letI : M.1.Normal := hMnormal
     have hquotCard : Nat.card (G ⧸ M.1) = 2 :=
       huppert_III_8_8_card_quotient_coatom_eq_two hG M.2
@@ -3290,9 +3288,7 @@ public theorem huppert_III_8_8_maximalSubgroups_card_odd
       Nat.card {f : G →* Multiplicative (ZMod 2) // f ≠ 1} =
         Nat.card (G →* Multiplicative (ZMod 2)) - 1 := by
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-    simpa using
-      (Fintype.card_subtype_compl
-        (fun f : G →* Multiplicative (ZMod 2) => f = 1))
+    simp
   rw [hcard_eq, hsubtype_card, hn]
   obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn_ne_zero
   rw [pow_succ]

@@ -51,7 +51,7 @@ public theorem lemma_14_13_a
         rw [subgroupPrimeSet]
         rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
           ⟨_hzle, hrcard⟩
-        simpa [hrcard]
+        simp [hrcard]
       simpa [section14ElementPrimeSupport] using
         section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hz_zpowx) hrz
     have hrTau2N : r ∈ section12Tau2Primes N := hSupp_tau2N hrSupp
@@ -107,7 +107,7 @@ public theorem lemma_14_13_a
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hrcard⟩
-          simpa [hrcard]
+          simp [hrcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hz_zpowx) hrz
       have hrTau2N : r ∈ section12Tau2Primes N := hxτ2N hrSupp
@@ -201,7 +201,7 @@ public theorem lemma_14_13_a
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hrcard⟩
-          simpa [hrcard]
+          simp [hrcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hz_zpowx) hrz
       have hrTau2N : r ∈ section12Tau2Primes N := hSupp_tau2N hrSupp
@@ -249,8 +249,7 @@ public theorem lemma_14_13_a
             Nat.card ((section14KStar M K).subgroupOf Mstar0) *
                 ((section14KStar M K).subgroupOf Mstar0).index =
               Nat.card Mstar0 := by
-          simpa using (Subgroup.card_mul_index
-            (H := (section14KStar M K).subgroupOf Mstar0))
+          simp
         have hprod : r.val ∣ Nat.card ((section14KStar M K).subgroupOf Mstar0) *
             ((section14KStar M K).subgroupOf Mstar0).index := by
           rw [hcard_mul]
@@ -374,7 +373,7 @@ public theorem lemma_14_13_a
         by_contra hCQne
         have hqκ : q ∈ section14KappaPrimes M :=
           ⟨Or.inl hqτ1M, ⟨Q, hQ, hCQne⟩⟩
-        simpa [hMF.2] using hqκ
+        simp [hMF.2] at hqκ
       have h12_9a :=
         corollary_12_9_a
           (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
@@ -460,7 +459,7 @@ public theorem lemma_14_13_a
             Nat.card Q = Nat.card (Q.subgroupOf M) := by
               symm
               exact section12_card_subgroupOf_eq (H := Q) (K := M) hQ.1
-            _ = 1 := by simpa [hbot]
+            _ = 1 := by simp [hbot]
         exact q.2.ne_one (hQ.2.symm.trans hcardQ)
       intro hbot
       have hQsub_le : Q.subgroupOf M ≤ Esub := by
@@ -468,7 +467,7 @@ public theorem lemma_14_13_a
         have hyQ : (y : G) ∈ Q := by
           simpa [Subgroup.mem_subgroupOf] using hy
         simpa [Esub, Subgroup.mem_subgroupOf] using hQleE hyQ
-      exact hQsub_ne (le_bot_iff.mp (hQsub_le.trans (by simpa [hbot])))
+      exact hQsub_ne (le_bot_iff.mp (hQsub_le.trans (by simp [hbot])))
     refine ⟨section14_msigma_le M, Esub, ?_⟩
     have hFrobSub :
         IsFrobeniusGroupWithKernelComplement (section10MsigmaSubgroup M) Esub := by
@@ -485,9 +484,7 @@ public theorem lemma_14_13_a
         have hyCentSub :
             ((y : elementCentralizerIn (section10MsigmaSubgroup M) (e : M)) : M) ∈
               elementCentralizerIn ((section10Msigma M).subgroupOf M) (e : M) := by
-          simpa [section14_msigma_subgroupOf_eq (M := M)] using
-            (show ((y : elementCentralizerIn (section10MsigmaSubgroup M) (e : M)) : M) ∈
-                elementCentralizerIn (section10MsigmaSubgroup M) (e : M) from y.property)
+          simp [section14_msigma_subgroupOf_eq (M := M)]
         rw [section14_elementCentralizerIn_subgroupOf_eq
             (S := M) (A := section10Msigma M) (x := (e : M))] at hyCentSub
         exact hyCentSub
@@ -532,14 +529,14 @@ public theorem lemma_14_13_a
           rw [subgroupPrimeSet]
           rcases (by simpa [section10PrimeOrderSubgroupsIn] using hzprime) with
             ⟨_hzle, hrcard⟩
-          simpa [hrcard]
+          simp [hrcard]
         simpa [section14ElementPrimeSupport] using
           section8_subgroupPrimeSet_mono (Subgroup.zpowers_le.2 hzpow) hrz
       rcases hcor with hκ | hτ2
       · have hrκ : r ∈ section14KappaPrimes M := hκ.1 hrSupp
-        simpa [hMF.2] using hrκ
+        simp [hMF.2] at hrκ
       · have hrτ2 : r ∈ section12Tau2Primes M := hτ2.1 hrSupp
-        simpa [hTau2_empty] using hrτ2
+        simp [hTau2_empty] at hrτ2
     simpa [section14_msigma_subgroupOf_eq (M := M)] using hFrobSub
   exact ⟨hMF, hTau2_empty, hFrob⟩
 
@@ -638,10 +635,10 @@ public theorem lemma_14_13_b
           simpa using hmap_hn
       _ = ((M ⊓ section14N y).conjBy g).map
             (MulAut.conj (nN : G)).toMonoidHom := by
-          simpa using
-            (section14_subgroupOf_conjBy_map_subtype
-              (M := N) (H := (M ⊓ section14N y).conjBy g) hcompg.2.1
-              (m := nN))
+          change
+            ((((M ⊓ section14N y).conjBy g).subgroupOf N).conjBy nN).map N.subtype =
+              ((M ⊓ section14N y).conjBy g).conjBy (nN : G)
+          exact section14_subgroupOf_conjBy_map_subtype hcompg.2.1 nN
       _ = ((M ⊓ section14N y).conjBy g).conjBy nG := rfl
   have hconjInf' :
       M ⊓ N = (M ⊓ section14N y).conjBy (nG * g) := by

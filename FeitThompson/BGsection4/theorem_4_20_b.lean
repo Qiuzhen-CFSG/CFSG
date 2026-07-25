@@ -47,9 +47,9 @@ public theorem theorem_4_20_b {G : Type*} [Group G] [Finite G]
   have hTG_le_D : TG ≤ D := hTG_le_der
   have hTG_le_F : TG ≤ F := hTG_le_D.trans hD_le_F
   have hQcomm : IsMulCommutative (G ⧸ F) := by
-    exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hD_le_F⟩
+    exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hD_le_F
   letI : IsMulCommutative (G ⧸ F) := hQcomm
-  letI : CommGroup (G ⧸ F) := CommGroup.ofIsMulCommutative
+  letI : CommGroup (G ⧸ F) := IsMulCommutative.instCommGroup
   let q : G →* (G ⧸ F) := QuotientGroup.mk' F
   have hFS_normal : (F ⊔ (S : Subgroup G)).Normal := by
     have hEq : ((S : Subgroup G).map q).comap q = F ⊔ (S : Subgroup G) := by
@@ -91,7 +91,9 @@ public theorem theorem_4_20_b {G : Type*} [Group G] [Finite G]
     have hyImage : (Subgroup.normalizerMonoidHom (S : Subgroup G) gN) yS ∈ T := hyComap
     have hyMap : (((Subgroup.normalizerMonoidHom (S : Subgroup G) gN) yS : S) : G) ∈ TG := by
       exact Subgroup.mem_map_of_mem (S : Subgroup G).subtype hyImage
-    simpa [TG, gN, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe] using hyMap
+    change g * (yS : G) * g⁻¹ ∈ TG
+    change g * (yS : G) * g⁻¹ ∈ TG at hyMap
+    exact hyMap
   have hnormS_le_normTG :
       Subgroup.normalizer ((S : Subgroup G) : Set G) ≤ Subgroup.normalizer (TG : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem TG

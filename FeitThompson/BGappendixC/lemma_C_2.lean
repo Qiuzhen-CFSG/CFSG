@@ -96,7 +96,7 @@ public theorem exists_appendixCCubic_without_zmod_root
     (hp2 : p ≠ 2) :
     ∃ c : ZMod p, ∀ x : ZMod p, (appendixCCubic p c).eval x ≠ 0 := by
   by_contra hnot
-  push_neg at hnot
+  push Not at hnot
   let root : ZMod p → ZMod p := fun c => Classical.choose (hnot c)
   have hroot : ∀ c, (appendixCCubic p c).eval (root c) = 0 := by
     intro c

@@ -37,7 +37,10 @@ public theorem pElementsSubgroup_characteristic (p : ℕ) (G : Type*) [Group G] 
       exact (isPElement_aut_iff (p := p) φ y).2 hy
     · intro hx
       refine ⟨φ⁻¹ x, ?_, by simp⟩
-      exact (isPElement_aut_iff (p := p) φ (φ⁻¹ x)).1 (by simpa using hx)
+      change IsPElement (p := p) (φ⁻¹ x)
+      apply (isPElement_aut_iff (p := p) φ (φ⁻¹ x)).1
+      change IsPElement (p := p) x at hx
+      simpa using hx
   calc
     (pElementsSubgroup p G).map φ.toMonoidHom
         = (Subgroup.closure S).map φ.toMonoidHom := by rfl
@@ -234,7 +237,10 @@ public theorem pElementsSubgroup_map_equiv (p : ℕ) {G' : Type*} [Group G']
       exact (isPElement_equiv_iff (p := p) (e := e) y).2 hy
     · intro hx
       refine ⟨e.symm x, ?_, by simp⟩
-      exact (isPElement_equiv_iff (p := p) (e := e) (e.symm x)).1 (by simpa using hx)
+      change IsPElement (p := p) (e.symm x)
+      apply (isPElement_equiv_iff (p := p) (e := e) (e.symm x)).1
+      change IsPElement (p := p) x at hx
+      simpa using hx
   calc
     (pElementsSubgroup p G).map e.toMonoidHom
         = (Subgroup.closure S).map e.toMonoidHom := by rfl

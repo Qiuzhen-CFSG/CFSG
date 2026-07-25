@@ -52,7 +52,7 @@ private theorem conjugateCosetPiece_eq_of_left_mul_centralizer {G : Type u} [Gro
     mem_elementCentralizer_commute (Subgroup.mem_inf.mp hcC).2
   have hci : g * c⁻¹ = c⁻¹ * g := by
     calc
-      g * c⁻¹ = c⁻¹ * (c * g) * c⁻¹ := by simp [mul_assoc]
+      g * c⁻¹ = c⁻¹ * (c * g) * c⁻¹ := by simp
       _ = c⁻¹ * (g * c) * c⁻¹ := by rw [← hccomm]
       _ = c⁻¹ * g := by simp [mul_assoc]
   have hcg : c * g * c⁻¹ = g := by
@@ -101,7 +101,7 @@ private theorem exists_multiple_card_pow_eq_self {G : Type u} [Group G]
 private theorem conjugate_eq_of_piece_inter {G : Type u} [Group G] [Finite G]
     {H : Subgroup G} {g x y : G}
     (hcoprime : Nat.Coprime (orderOf g) (Nat.card H))
-    (hxH : x ∈ H) (hyH : y ∈ H)
+    (_hxH : x ∈ H) (_hyH : y ∈ H)
     (hz : (conjugateCosetPiece H g x ∩ conjugateCosetPiece H g y).Nonempty) :
     conjBy x g = conjBy y g := by
   rcases hz with ⟨z, hzx, hzy⟩
@@ -251,7 +251,7 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
         simpa [mul_comm] using hScomp.card_mul_card.symm
       _ = Nat.card Csub * Nat.card S := by rw [mul_comm]
   have hSfin : repsH.card = Nat.card S := by
-    simpa [repsH] using (Set.ncard_eq_toFinset_card S)
+    simp [repsH]
   have hReps_card : reps.card = Nat.card H / Nat.card (centralizerIn H g) := by
     dsimp [reps]
     rw [Finset.card_map, hSfin, hS_card]
@@ -264,8 +264,7 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
     rcases Finset.mem_map.mp hx with ⟨xH, hxH, rfl⟩
     rcases Finset.mem_map.mp hy with ⟨yH, hyH, rfl⟩
     refine Set.disjoint_left.2 ?_
-    intro z hz
-    intro hz'
+    intro z hz hz'
     have hinter : (conjugateCosetPiece H g (xH : G) ∩ conjugateCosetPiece H g (yH : G)).Nonempty :=
       ⟨z, hz, hz'⟩
     have hcent : ((xH : G)⁻¹ * (yH : G)) ∈ centralizerIn H g :=
@@ -276,9 +275,10 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
       simpa [repsH] using hyH
     have huniq := (Subgroup.isComplement_iff_existsUnique_inv_mul_mem.mp hScomp) (yH : H)
     have hxprop : ((⟨xH, hxS⟩ : S) : H)⁻¹ * (yH : H) ∈ Csub := by
-      simpa [Csub] using hcent
+      change ((xH : G)⁻¹ * (yH : G)) ∈ centralizerIn H g
+      exact hcent
     have hyprop : ((⟨yH, hyS⟩ : S) : H)⁻¹ * (yH : H) ∈ Csub := by
-      simpa [Csub]
+      simp [Csub]
     have hEqS : (⟨xH, hxS⟩ : S) = ⟨yH, hyS⟩ := huniq.unique hxprop hyprop
     have hEqH : (xH : H) = yH := by
       exact congrArg (fun s : S => (s : H)) hEqS
@@ -291,8 +291,7 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
       rcases Finset.mem_map.mp hx with ⟨xH, hxH, rfl⟩
       rcases Finset.mem_map.mp hy with ⟨yH, hyH, rfl⟩
       refine Set.disjoint_left.2 ?_
-      intro z hz
-      intro hz'
+      intro z hz hz'
       have hinter : (conjugateCosetPiece H g (xH : G) ∩ conjugateCosetPiece H g (yH : G)).Nonempty :=
         ⟨z, hz, hz'⟩
       have hcent : ((xH : G)⁻¹ * (yH : G)) ∈ centralizerIn H g :=
@@ -303,9 +302,10 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
         simpa [repsH] using hyH
       have huniq := (Subgroup.isComplement_iff_existsUnique_inv_mul_mem.mp hScomp) (yH : H)
       have hxprop : ((⟨xH, hxS⟩ : S) : H)⁻¹ * (yH : H) ∈ Csub := by
-        simpa [Csub] using hcent
+        change ((xH : G)⁻¹ * (yH : G)) ∈ centralizerIn H g
+        exact hcent
       have hyprop : ((⟨yH, hyS⟩ : S) : H)⁻¹ * (yH : H) ∈ Csub := by
-        simpa [Csub]
+        simp [Csub]
       have hEqS : (⟨xH, hxS⟩ : S) = ⟨yH, hyS⟩ := huniq.unique hxprop hyprop
       have hEqH : (xH : H) = yH := by
         exact congrArg (fun s : S => (s : H)) hEqS
@@ -316,7 +316,7 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
         (fun x _ => Set.toFinite (conjugateCosetPiece H g x)) hpair]
       rw [finsum_mem_eq_finite_toFinset_sum _ (Set.toFinite (reps : Set G))]
       rw [show ((↑reps : Set G).toFinite).toFinset = reps by
-        simpa using (Finset.finite_toSet_toFinset reps)]
+        simp]
       exact Finset.sum_const_nat (s := reps)
         (f := fun x => (conjugateCosetPiece H g x).ncard)
         (m := Nat.card (centralizerIn H g)) (by

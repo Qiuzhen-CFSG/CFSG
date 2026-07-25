@@ -47,11 +47,10 @@ public theorem huppert_IV_3_2_abelian_p_residual
   · intro N hN hquot_p hquot_comm
     letI : N.Normal := hN
     have hcomm : commutator Q ≤ N :=
-      (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp hquot_comm.is_comm
+      (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp hquot_comm
     exact hktAbelianPResidual_le
       (Q := Q) (q := q) (N := N) hcomm
       (hktPResidual_le (Q := Q) (q := q) N hN hquot_p)
 
 end External
 end BenderSuzuki
-

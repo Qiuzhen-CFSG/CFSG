@@ -413,7 +413,8 @@ def dualCoannihilatorSubrepresentation
     have hS : rho.dual g⁻¹ f ∈ S.toSubmodule :=
       S.apply_mem_toSubmodule g⁻¹ hf
     have hvzero := hv (rho.dual g⁻¹ f) hS
-    simpa using hvzero
+    rw [Representation.dual_apply, inv_inv, Module.Dual.transpose_apply] at hvzero
+    exact hvzero
 
 lemma dualCoannihilatorSubrepresentation_eq_top_of_eq_bot
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -463,7 +464,10 @@ public theorem representation_dual_irreducible
         change S.toSubmodule.dualCoannihilator = (⊥ : Submodule ℂ V) at htmp
         exact htmp
       rw [hNsub] at hdual
-      simpa using hdual.symm
+      calc
+        S.toSubmodule =
+            (⊥ : Submodule ℂ V).dualAnnihilator := hdual.symm
+        _ = ⊤ := by simp
     · left
       apply Subrepresentation.toSubmodule_injective
       apply le_antisymm ?_ bot_le
@@ -1877,7 +1881,7 @@ public theorem scalarProduct_externalProductClassFunction
         ∑ g ∈ (Finset.univ : Finset G),
           ∑ h ∈ (Finset.univ : Finset H),
             phi g * psi h * star (phi' g * psi' h) := by
-    simpa only using
+    simpa only [Finset.product_eq_sprod] using
       (Finset.sum_product (Finset.univ : Finset G)
         (Finset.univ : Finset H)
         (fun x : G × H =>
@@ -2550,7 +2554,11 @@ lemma subgroup_le_inertia_of_isClassFunction
   intro x hx
   rw [mem_inertiaSubgroup_iff]
   funext h
-  simpa [conjugateOnNormal] using hclass ⟨x, hx⟩ h
+  change theta ⟨x * (h : G) * x⁻¹, _⟩ = theta h
+  convert hclass ⟨x, hx⟩ h using 1
+  apply congrArg theta
+  apply Subtype.ext
+  rfl
 
 lemma inertia_card_eq_card_mul_relIndex
     {G : Type*} [Group G] [Finite G]
@@ -3033,7 +3041,10 @@ public theorem proposition_1_5_b_irreducible_rep_orbit_relIndex_canonical
     exact (Representation.irreducible_iff_character_norm_one
       (ρ := Representation.ind H.subtype thetaRep)).2
       (by
-        simpa [inducedCF_eq_representation_character_pf15 H thetaRep] using hnorm)
+        change scalarProduct G (Representation.ind H.subtype thetaRep).character
+          (Representation.ind H.subtype thetaRep).character = 1
+        rw [← inducedCF_eq_representation_character_pf15 H thetaRep]
+        exact hnorm)
   simpa [inducedCF_eq_representation_character_pf15 H thetaRep] using
     isIrreducibleCharacterOnGroup_of_representation
       (Representation.ind H.subtype thetaRep) hIndIrr

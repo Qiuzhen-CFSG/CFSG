@@ -79,14 +79,19 @@ theorem isaacs_6_34_inertia
       change (show Representation ℂ N V from
         phi.comp (Representation.normalSubgroupConjMulEquiv N g⁻¹).symm.toMonoidHom).character x =
           phi.character x
-      simpa [Representation.normalSubgroupConjMulEquiv, Representation.conjugateRep_apply] using
-        (congrFun (Representation.char_iso
-          (Representation.Equiv.mk e.toLinearEquiv e.isIntertwining')) x).symm
+      have hconj :
+          (Representation.normalSubgroupConjMulEquiv N g⁻¹).symm =
+            Representation.normalSubgroupConjMulEquiv N g := by
+        ext y
+        simp [Representation.normalSubgroupConjMulEquiv, mul_assoc]
+      rw [hconj]
+      change (Representation.conjugateRep phi g).character x = phi.character x
+      exact (congrFun (Representation.char_iso
+        (Representation.Equiv.mk e.toLinearEquiv e.isIntertwining')) x).symm
     have htauFix :
         Representation.classFunctionConjLinearEquiv N g⁻¹
             (Representation.characterClassFunction tau) =
           Representation.characterClassFunction tau := by
-      dsimp [chi]
       rw [Representation.classFunctionConjLinearEquiv_characterClassFunction]
       ext c
       rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
@@ -225,11 +230,6 @@ public theorem isaacs_theorem_6_34
   · intro W _ _ _ chi hchi hN
     letI : Representation.IsIrreducible chi := hchi
     let chiN : Representation ℂ N W := chi.comp N.subtype
-    let moduleChiNW : Module (MonoidAlgebra ℂ N) W :=
-      Module.compHom W (Representation.asAlgebraHom chiN).toRingHom
-    have moduleChiN : Module (MonoidAlgebra ℂ N) chiN.asModule := by
-      simpa [chiN, Representation.asModule] using moduleChiNW
-    letI : Module (MonoidAlgebra ℂ N) chiN.asModule := moduleChiN
     have hcr : chiN.IsCompletelyReducible :=
       Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
         (ρ := chiN) (Or.inl ringChar.eq_zero)
@@ -291,4 +291,3 @@ end VI
 end Isaacs
 end External
 end BenderSuzuki
-

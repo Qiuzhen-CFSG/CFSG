@@ -185,12 +185,15 @@ private theorem hasOrderedCharacteristicSylowSeries_of_isPGroup
         rw [Subgroup.bot_subgroupOf]
         infer_instance
       refine ⟨inferInstance, S, ?_, ⟨?_⟩⟩
-      · convert hnorm_bot
+      · change ((⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)).Normal
+        exact hnorm_bot
       let eTopQuot :
           ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
             G ⧸ (⊥ : Subgroup G) :=
         topQuotientSubgroupOfEquivQuotient (G := G) (⊥ : Subgroup G)
-      simpa [series] using eTopQuot.trans
+      change ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
+        ↥(S : Subgroup G)
+      exact eTopQuot.trans
         (QuotientGroup.quotientBot.trans
           (Subgroup.topEquiv.symm.trans (MulEquiv.subgroupCongr hS_top.symm)))
 
@@ -268,12 +271,15 @@ private theorem hasOrderedCharacteristicSylowSeriesWithPrimeDivisors_of_isPGroup
         rw [Subgroup.bot_subgroupOf]
         infer_instance
       refine ⟨inferInstance, S, ?_, ⟨?_⟩⟩
-      · convert hnorm_bot
+      · change ((⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)).Normal
+        exact hnorm_bot
       let eTopQuot :
           ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
             G ⧸ (⊥ : Subgroup G) :=
         topQuotientSubgroupOfEquivQuotient (G := G) (⊥ : Subgroup G)
-      simpa [series] using eTopQuot.trans
+      change ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
+        ↥(S : Subgroup G)
+      exact eTopQuot.trans
         (QuotientGroup.quotientBot.trans
           (Subgroup.topEquiv.symm.trans (MulEquiv.subgroupCongr hS_top.symm)))
   · intro i
@@ -342,11 +348,14 @@ private theorem sylow_equiv_of_normal_quotient_pgroup_ne
   let Qsub : Sylow q K := Q.subtype hQ_le_K
   have hQsub_eq : Qsub = P := by
     apply Sylow.ext
-    change (Qsub : Subgroup K) = (P : Subgroup K)
     simpa [Qsub, Sylow.coe_subtype] using hQcomap
-  let eQ : ↥(Qsub : Subgroup K) ≃* ↥(Q : Subgroup G) := by
-    simpa [Qsub, Sylow.coe_subtype] using
-      (Subgroup.subgroupOfEquivOfLe (G := G) (H := (Q : Subgroup G)) (K := K) hQ_le_K)
+  have hQsub_coe : (Qsub : Subgroup K) = (Q : Subgroup G).subgroupOf K := by
+    exact Sylow.coe_subtype (P := Q) hQ_le_K
+  let eQsub : ↥(Qsub : Subgroup K) ≃* ↥((Q : Subgroup G).subgroupOf K) :=
+    MulEquiv.subgroupCongr hQsub_coe
+  let eQbase : ↥((Q : Subgroup G).subgroupOf K) ≃* ↥(Q : Subgroup G) :=
+    Subgroup.subgroupOfEquivOfLe (G := G) (H := (Q : Subgroup G)) (K := K) hQ_le_K
+  let eQ : ↥(Qsub : Subgroup K) ≃* ↥(Q : Subgroup G) := eQsub.trans eQbase
   let eP : ↥(P : Subgroup K) ≃* ↥(Qsub : Subgroup K) :=
     MulEquiv.subgroupCongr (by
       simpa using congrArg (fun S : Sylow q K => (S : Subgroup K)) hQsub_eq.symm)
@@ -383,14 +392,14 @@ private theorem sylow_map_subtype_of_normal_quotient_pgroup_ne
   let Qsub : Sylow q K := Q.subtype hQ_le_K
   have hQsub_eq : Qsub = P := by
     apply Sylow.ext
-    change (Qsub : Subgroup K) = (P : Subgroup K)
     simpa [Qsub, Sylow.coe_subtype] using hQcomap
   refine ⟨Q, ?_⟩
   ext x
   constructor
   · intro hxQ
     have hxQsub : (⟨x, hQ_le_K hxQ⟩ : K) ∈ (Qsub : Subgroup K) := by
-      simpa [Qsub, Sylow.coe_subtype] using hxQ
+      change x ∈ (Q : Subgroup G)
+      exact hxQ
     have hxP : (⟨x, hQ_le_K hxQ⟩ : K) ∈ (P : Subgroup K) := by
       simpa [hQsub_eq] using hxQsub
     exact ⟨⟨x, hQ_le_K hxQ⟩, hxP, rfl⟩
@@ -398,7 +407,8 @@ private theorem sylow_map_subtype_of_normal_quotient_pgroup_ne
     rcases Subgroup.mem_map.mp hxPmap with ⟨xK, hxP, rfl⟩
     have hxQsub : xK ∈ (Qsub : Subgroup K) := by
       simpa [hQsub_eq] using hxP
-    simpa [Qsub, Sylow.coe_subtype] using hxQsub
+    change (xK : G) ∈ (Q : Subgroup G)
+    exact hxQsub
 
 private theorem minFac_natCard_isSmallestPrimeDivisor
     (G : Type*) [Group G] [Finite G] [Nontrivial G] :
@@ -432,7 +442,7 @@ private theorem isPGroup_quotient_pPrimeCore_of_commutative
   have hcore_bot : pPrimeCore p Qbar = ⊥ := by
     simpa [Qbar, M] using pPrimeCore_quotient_pPrimeCore_eq_bot (G := Q) (p := p)
   haveI : IsMulCommutative Q := hcomm
-  letI : CommGroup Q := CommGroup.ofIsMulCommutative
+  letI : CommGroup Q := IsMulCommutative.instCommGroup
   haveI : CommGroup Qbar := by infer_instance
   have hnil : Group.IsNilpotent (⊤ : Subgroup Qbar) := by infer_instance
   have htop : IsPGroup p (⊤ : Subgroup Qbar) :=
@@ -492,7 +502,8 @@ private theorem primeRank_le_of_pSubgroups_map_le
       haveI : IsMulCommutative A' := by infer_instance
       refine ⟨⟨fun x y => ?_⟩⟩
       apply eSub.injective
-      simpa using (mul_comm (eSub x) (eSub y))
+      simpa only [map_mul] using
+        (IsMulCommutative.is_comm.comm (eSub x) (eSub y))
     have hgen_le : generatorRank A ≤ generatorRank B :=
       generatorRank_le_of_equiv (G := B) (H := A) eAB.symm
     have hmem : generatorRank A ∈
@@ -544,8 +555,7 @@ private theorem isPGroup_quotient_comap_pPrimeCore_of_commutative
   have hker : ψ.ker = K.comap q := by
     ext x
     change (QuotientGroup.mk' K) (q x) = 1 ↔ q x ∈ K
-    simpa [ψ, K, MonoidHom.mem_ker] using
-      (QuotientGroup.eq_one_iff (N := K) (x := q x))
+    simp [K]
   have hψsurj : Function.Surjective ψ := by
     intro y
     refine QuotientGroup.induction_on y ?_
@@ -600,7 +610,7 @@ private theorem theorem_4_20_intermediate_primeRank_le_two
     have hF_le_two : primeRank p F ≤ 2 :=
       (primeRank_le_groupRank (R := F) (q := p) Fact.out).trans hF
     have hker_eq : q.ker = F := by
-      simpa [q] using (QuotientGroup.ker_mk' F)
+      simp [q]
     rw [hker_eq]
     exact hF_le_two
   exact hle_ker.trans hker_le_two
@@ -689,7 +699,7 @@ private theorem hasNormalPComplement_minFac_of_fitting_rank_le_two
   have hD_le_F : derivedSubgroup G ≤ F := by
     exact le_sSup ⟨inferInstance, hder_nil⟩
   have hQcomm : IsMulCommutative (G ⧸ F) := by
-    exact ⟨(Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hD_le_F⟩
+    exact (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := F)).2 hD_le_F
   have hGHp : IsPGroup p (G ⧸ H) := by
     simpa [H, q, F] using
       theorem_4_20_intermediate_quotient_isPGroup (G := G) (p := p) hQcomm
@@ -861,7 +871,7 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
       have hK₀_ne_top : K₀ ≠ ⊤ := by
         intro htop
         have hcardK₀ : Nat.card K₀ = Nat.card H := by
-          simpa [htop] using (Subgroup.card_top (G := H))
+          simp [htop]
         exact hr_not_dvd_K₀ (by simpa [hcardK₀] using hr_small.2.1)
       have hK₀ltH : Nat.card K₀ < Nat.card H := by
         have hle : Nat.card K₀ ≤ Nat.card H := Subgroup.card_le_card_group (H := K₀)
@@ -961,7 +971,7 @@ public theorem theorem_4_20_c_with_prime_divisors
         have hK_ne_top : K ≠ ⊤ := by
           intro htop
           have hcardK : Nat.card K = Nat.card H := by
-            simpa [htop] using (Subgroup.card_top (G := H))
+            simp [htop]
           have hp_dvd_K : p ∣ Nat.card K := by
             simpa [hcardK] using hp_small.2.1
           exact hp_not_dvd_K hp_dvd_K
@@ -1001,7 +1011,7 @@ public theorem theorem_4_20_c_with_prime_divisors
         let primes : Fin (n + 1) → ℕ := Fin.cases p primesK
         refine ⟨n + 1, series, primes, rfl, ?_, ?_, ?_, ?_, ?_⟩
         · change (seriesK (Fin.last n)).map K.subtype = ⊥
-          simpa [hbotK]
+          simp [hbotK]
         · intro i
           cases i using Fin.cases with
           | zero =>
@@ -1031,7 +1041,7 @@ public theorem theorem_4_20_c_with_prime_divisors
           cases i using Fin.cases with
           | zero =>
               refine ⟨?_, ?_⟩
-              · simpa [series, htopK] using (show K ≤ (⊤ : Subgroup H) from le_top)
+              · simp [series]
               · let S : Sylow p H := Classical.choice (Sylow.nonempty (p := p) (G := H))
                 have hnormKtop : (K.subgroupOf (⊤ : Subgroup H)).Normal := by
                   infer_instance
@@ -1065,10 +1075,12 @@ public theorem theorem_4_20_c_with_prime_divisors
                   let eTopQuot :
                     ((⊤ : Subgroup H) ⧸ K.subgroupOf (⊤ : Subgroup H)) ≃* H ⧸ K :=
                     topQuotientSubgroupOfEquivQuotient (G := H) K
-                  simpa [series] using
-                    eAdjust.trans <| eTopQuot.trans
-                      (quotientPPrimeCoreEquivSylowOfHasNormalPComplement
-                        (G := H) (p := p) hcomp S)
+                  change ((⊤ : Subgroup H) ⧸
+                      (series (1 : Fin ((n + 1) + 1))).subgroupOf (⊤ : Subgroup H)) ≃*
+                    ↥(S : Subgroup H)
+                  exact eAdjust.trans <| eTopQuot.trans
+                    (quotientPPrimeCoreEquivSylowOfHasNormalPComplement
+                      (G := H) (p := p) hcomp S)
           | succ j =>
               rcases hstepK j with ⟨hleK, hfactorK⟩
               refine ⟨?_, ?_⟩
@@ -1084,8 +1096,14 @@ public theorem theorem_4_20_c_with_prime_divisors
                 obtain ⟨Qj, ⟨eSylow⟩⟩ :=
                   sylow_equiv_of_normal_quotient_pgroup_ne (G := H) K hquotp hq_ne_p Pj
                 refine ⟨hqFact, Qj, ?_, ⟨?_⟩⟩
-                · simpa [series] using hnormG
-                · simpa [series] using eGquot.trans (eKquot.trans eSylow)
+                · change (((seriesK j.succ).map K.subtype).subgroupOf
+                    ((seriesK j.castSucc).map K.subtype)).Normal
+                  exact hnormG
+                · change (((seriesK j.castSucc).map K.subtype) ⧸
+                      ((seriesK j.succ).map K.subtype).subgroupOf
+                        ((seriesK j.castSucc).map K.subtype)) ≃*
+                    ↥(Qj : Subgroup H)
+                  exact eGquot.trans (eKquot.trans eSylow)
         · intro i
           cases i using Fin.cases with
           | zero =>
@@ -1205,7 +1223,7 @@ public theorem theorem_4_20_largest_prime_normal_sylow
       have hK_ne_top : K ≠ ⊤ := by
         intro htop
         have hcardK : Nat.card K = Nat.card H := by
-          simpa [htop] using (Subgroup.card_top (G := H))
+          simp [htop]
         have hr_dvd_K : r ∣ Nat.card K := by
           simpa [hcardK] using hr_small.2.1
         have hKcop : Nat.Coprime r (Nat.card K) := by

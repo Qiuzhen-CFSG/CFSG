@@ -82,8 +82,7 @@ viewed in that normal subgroup. -/
         (x : G) ∈ (S : Subgroup G)
     rw [← hQconjSub]
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    simpa [Sylow.smul_def] using
-      (MulAut.conjNormal_inv_apply (H := K) g x)
+    simp
   have hcardQI :
       Nat.card ((Q : Subgroup G).comap K.subtype) = Nat.card I := by
     let e :
@@ -148,7 +147,6 @@ public theorem hallPResidual_quotient_isPGroup
   refine ⟨k, ?_⟩
   rw [← QuotientGroup.mk_pow]
   apply (QuotientGroup.eq_one_iff _).mpr
-  change g ^ p ^ k ∈ hallPResidual p G
   apply Subgroup.subset_closure
   have horder_ne : orderOf g ≠ 0 := (orderOf_pos g).ne'
   have hpow_dvd : p ^ k ∣ orderOf g := by

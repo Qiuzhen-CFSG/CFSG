@@ -12,6 +12,8 @@ public import FeitThompson.BGsection4.corollary_4_19
 
 /-! # Theorem 5.7 from BG Section 5 -/
 
+open scoped commutatorElement
+
 private theorem chiefFactor_exists_isPFactor
     {G : Type*} [Group G] [Finite G] [IsSolvable G] (cf : ChiefFactor G) :
     ∃ q : ℕ, q.Prime ∧ cf.IsPFactor q := by
@@ -115,7 +117,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
     let e :
         ↥(cf.U.subgroupOf (fittingSubgroup G)) ≃* ↥cf.U :=
       Subgroup.subgroupOfEquivOfLe (G := G) (H := cf.U) (K := fittingSubgroup G) hcfU
-    exact nilpotent_of_mulEquiv (G := ↥(cf.U.subgroupOf (fittingSubgroup G))) (G' := ↥cf.U) e
+    exact Group.nilpotent_of_mulEquiv (G := ↥(cf.U.subgroupOf (fittingSubgroup G))) (G' := ↥cf.U) e
   let N : Subgroup G := P.map cf.U.subtype
   have hN_le_R : N ≤ R := by
     simpa [N, R] using
@@ -400,7 +402,11 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
     intro a b
     apply Subtype.ext
     ext u
-    simpa using congrArg Subtype.val ((htriv a u).trans (htriv b u).symm)
+    have ha := htriv a u
+    have hb := htriv b u
+    change ((a : A) : MulAut Uq) u = u at ha
+    change ((b : A) : MulAut Uq) u = u at hb
+    exact congrArg Subtype.val (ha.trans hb.symm)
   have hcard_one : Nat.card P = 1 := Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
@@ -503,7 +509,7 @@ private theorem theorem_5_7_chief_factor_centralized
       have heS : eR ∈ S := by
         simpa [S, Subgroup.mem_subgroupOf] using he
       exact congrArg Subtype.val <|
-        (Subgroup.mul_comm_of_mem_isMulCommutative (H := S) heS hsS)
+        (setLike_mul_comm (s := S) heS hsS)
     have hEZ_le_C : Z ⊔ S ≤ C := sup_le hZ_le_C hS_le_C
     have hZ_ne_bot : Z ≠ ⊥ := by
       have hR_nontrivial : Nontrivial R := by
@@ -642,7 +648,7 @@ private theorem theorem_5_7_chief_factor_centralized
           simpa [S, Subgroup.mem_subgroupOf] using he
         have heB : eR ∈ B := hEZ_le_B (Subgroup.mem_sup_right heS)
         exact congrArg Subtype.val <|
-          (Subgroup.mul_comm_of_mem_isMulCommutative (H := B) heB hb)
+          (setLike_mul_comm (s := B) heB hb)
       by_cases hB_eq : B = Z ⊔ S
       · exact hB_eq.symm
       · have hlt_card : Nat.card (Z ⊔ S : Subgroup R) < Nat.card B := by
@@ -758,8 +764,13 @@ private theorem theorem_5_7_chief_factor_centralized
         map_derivedSeries_eq (f := ψ) hψ_surj 1
     have hmap_subtype_p :
         IsPGroup p (((derivedSubgroup G).map ψ).map A.subtype) := by
-      rw [Subgroup.map_map]
-      simpa [ψ, φ] using hderUq_p
+      have hmap_map :
+          ((derivedSubgroup G).map ψ).map A.subtype =
+            (derivedSubgroup G).map ((MulAut.conjNormal (H := Uq)).comp π) := by
+        rw [Subgroup.map_map]
+        congr 1
+      rw [hmap_map]
+      exact hderUq_p
     have hderA_p : IsPGroup p (derivedSubgroup A) := by
       rw [← hmap_eq]
       exact hmap_subtype_p.of_equiv

@@ -12,6 +12,8 @@ public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
 public import FeitThompson.ElementaryAbelian
 
+open scoped IsMulCommutative
+
 /-!
 # Standard homocyclic coordinate covers
 
@@ -220,13 +222,6 @@ public theorem standardHomocyclicCoverModPLinearActionOfEquiv_coordinate
         (G := G) (V := V) (p := p) quotientToV g (Multiplicative.ofAdd x) := by
   classical
   dsimp [standardHomocyclicCoverModPLinearActionOfEquiv]
-  have hx :
-      Additive.toMul (standardHomocyclicCoverCoordinateEquiv κ p x) =
-        Multiplicative.ofAdd x := by
-    rw [standardHomocyclicCoverCoordinateEquiv_apply]
-    rfl
-  rw [hx]
-  rw [standardHomocyclicCoverCoordinateEquiv_symm_apply]
   rfl
 
 /-- A quotient map from the standard mod-`p` cover to a `ZMod p`-module fixes
@@ -272,7 +267,9 @@ public theorem standardHomocyclicCoverQuotientEquiv_card_matrixIndex
     (quotientToV : StandardHomocyclicCover κ p ≃* V) :
     Fintype.card κ = Module.finrank (ZMod p) (Additive V) := by
   exact standardHomocyclicCoverQuotientEquiv_card_index
-    (p := p) (quotientToV := quotientToV)
+    (p := p)
+    (quotientToV := quotientToV.trans
+      (MulEquiv.toMultiplicative_toAdditive (G := V)).symm)
 
 /-- A standard mod-`p` cover equivalent to a nontrivial group has at least one
 coordinate. -/

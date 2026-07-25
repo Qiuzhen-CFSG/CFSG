@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Finite.Card
+public import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.GroupTheory.GroupAction.Quotient
 public import Mathlib.GroupTheory.Index
 
@@ -55,4 +55,3 @@ public theorem natCard_orbitRelQuotient_subgroup
       rw [H.index_eq_card, Nat.mul_comm]
 
 end MulAction
-

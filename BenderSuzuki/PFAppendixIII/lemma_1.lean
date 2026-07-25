@@ -17,13 +17,15 @@ public import Mathlib.GroupTheory.PGroup
 namespace BenderSuzuki
 namespace PFAppendixIII
 
+open scoped commutatorElement
+
 universe u v w
 
 /-- Appendix III, Lemma 1(a). The polar map is written multiplicatively on
 the elementary abelian groups P/W and W. -/
 public theorem lemma1a_square_induces_quadratic
     {P : Type u} [Group P] [Finite P]
-    (hP_two : IsPGroup 2 P)
+    (_hP_two : IsPGroup 2 P)
     (W : Subgroup P)
     (hW_center : W ≤ Subgroup.center P) :
     letI : W.Normal := ⟨fun w hw g => by
@@ -357,12 +359,14 @@ public theorem lemma1c_central_extensions_equivalent_iff
     have hbasisWord_pi (v : V) : (pi (basisWord v)).toAdd = v := by
       simp only [basisWord, map_list_prod, List.map_ofFn, Function.comp_apply,
         map_pow, hxLift_pi, toAdd_list_sum, toAdd_pow, List.sum_ofFn]
-      simpa only [← Nat.cast_smul_eq_nsmul (ZMod 2), ZMod.natCast_zmod_val] using
+      simpa only [toAdd_ofAdd,
+        ← Nat.cast_smul_eq_nsmul (ZMod 2), ZMod.natCast_zmod_val] using
         basis.sum_repr v
     have hbasisWord'_pi (v : V) : (pi' (basisWord' v)).toAdd = f v := by
       simp only [basisWord', map_list_prod, List.map_ofFn, Function.comp_apply,
         map_pow, hyLift_pi, toAdd_list_sum, toAdd_pow, List.sum_ofFn]
-      simpa only [map_sum, map_smul, ← Nat.cast_smul_eq_nsmul (ZMod 2),
+      simpa only [toAdd_ofAdd, map_sum, map_smul,
+        ← Nat.cast_smul_eq_nsmul (ZMod 2),
         ZMod.natCast_zmod_val] using congrArg f (basis.sum_repr v)
     let residue (x : P) : P := (basisWord (pi x).toAdd)⁻¹ * x
     let residue' (x : P') : P' :=
@@ -398,7 +402,8 @@ public theorem lemma1c_central_extensions_equivalent_iff
         yLift i ^ 2 =
           iota' (Multiplicative.ofAdd (g (q (basis i)))) := by
       constructor
-      · simpa only [hxLift_pi] using (hsquare (xLift i)).symm
+      · simpa only [hxLift_pi, toAdd_ofAdd] using
+          (hsquare (xLift i)).symm
       · calc
           yLift i ^ 2 =
               iota' (Multiplicative.ofAdd (q' (pi' (yLift i)).toAdd)) :=
@@ -600,7 +605,8 @@ public theorem lemma1c_central_extensions_equivalent_iff
         Multiplicative.ofAdd (g (z₁ * z₂).toAdd) =
           Multiplicative.ofAdd (g z₁.toAdd) *
             Multiplicative.ofAdd (g z₂.toAdd) := by
-      simpa using congrArg Multiplicative.ofAdd (g.map_add z₁.toAdd z₂.toAdd)
+      rw [← ofAdd_add]
+      exact congrArg Multiplicative.ofAdd (g.map_add z₁.toAdd z₂.toAdd)
     have hword_mul_compatible
         (l : List (Fin (Module.finrank (ZMod 2) V))) (v₁ v₂ : V) :
         ∃ z : Multiplicative W,

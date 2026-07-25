@@ -673,7 +673,7 @@ private theorem theorem_7_8_principal_orthogonal_to_image
             (Section1.principalCharacter G) (Section1.principalCharacter G) = 1 := by
           simp [Section1.scalarProduct, Section1.principalCharacter]
         rcases hcases with hζeq | hζeqneg
-        · simpa [spToPrincipal, principalG, hζeq, hpp]
+        · simp [spToPrincipal, principalG, hζeq, hpp]
         · dsimp [spToPrincipal, principalG]
           rw [hζeqneg]
           rw [show (-(Section1.principalCharacter G) : Section1.ClassFunction G) =
@@ -998,7 +998,11 @@ public theorem theorem_7_8_beta_virtual
     hτ_eq βL hCFOn
   have hDadeVirt :=
     (Section2.theorem_2_6 A L K h71 hAL).2 βL hβLvirtOn
-  simpa [theorem_7_8_beta, βL, hτβ] using hDadeVirt
+  change Representation.IsVirtualCharacter
+    (Section2.dadeTransform K hAL βL) at hDadeVirt
+  change Representation.IsVirtualCharacter (τ βL)
+  rw [hτβ]
+  exact hDadeVirt
 
 private theorem theorem_7_8_beta_principal_scalar
     {G : Type u} [Group G] [Finite G]

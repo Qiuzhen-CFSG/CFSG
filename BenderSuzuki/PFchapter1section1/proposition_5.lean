@@ -200,7 +200,11 @@ public theorem proposition_5
     have hlemma :=
       lemma_a (M := G) t D hA1.involution_t hA1.D_odd
         (proposition_5_involution_t_mem_normalizer_D H D Q t hA1)
-    simpa [peterfalviV, peterfalviKSet] using hlemma.1
+    have hleft := hlemma.1
+    change Set.BijOn
+      (fun p : (peterfalviV D t) × {x : G // x ∈ peterfalviKSet D t} =>
+        (p.1 : G) * (p.2 : G)) Set.univ (D : Set G) at hleft
+    exact hleft
   have hprop3 := proposition_3 H D Q t hA1
   let S : Set G := {x : G | x ∈ H ∧ IsInvolution x}
   let phi : {x : G // x ∈ peterfalviKSet D t} → {x : G // x ∈ S} := fun k =>
@@ -401,10 +405,20 @@ public theorem proposition_5_involution_mem_D_conjugacy_orbit
       Nat.card D =
         Nat.card (peterfalviV D t) *
           Nat.card {x : G // x ∈ peterfalviKSet D t} := by
-    simpa [peterfalviV, peterfalviKSet] using hlemma.2.2
+    calc
+      Nat.card D = Nat.card (peterfalviV D t) * (peterfalviKSet D t).ncard := by
+        simpa [peterfalviV, peterfalviKSet] using hlemma.2.2
+      _ = Nat.card (peterfalviV D t) *
+          Nat.card {x : G // x ∈ peterfalviKSet D t} := by
+        rw [Nat.card_coe_set_eq]
   have hK_card :
       Nat.card {x : G // x ∈ peterfalviKSet D t} = Nat.card S := by
-    simpa [S] using (proposition_3 H D Q t hA1).1
+    calc
+      Nat.card {x : G // x ∈ peterfalviKSet D t} = (peterfalviKSet D t).ncard :=
+        Nat.card_coe_set_eq _
+      _ = Nat.card {x : G // x ∈ H ∧ IsInvolution x} :=
+        (proposition_3 H D Q t hA1).1
+      _ = Nat.card S := by rfl
   have hOrbit_subset : MulAction.orbit D s ⊆ S := by
     intro z hz
     rcases (MulAction.mem_orbit_iff.mp hz) with ⟨d, rfl⟩
@@ -413,7 +427,8 @@ public theorem proposition_5_involution_mem_D_conjugacy_orbit
         H.mul_mem
           (H.mul_mem (hA1.D_le_H d.property) hsH)
           (H.inv_mem (hA1.D_le_H d.property))
-    · simpa [rightConjugateElem] using
+    · change IsInvolution ((d : G) * s * (d : G)⁻¹)
+      simpa [rightConjugateElem] using
         (isInvolution_rightConjugateElem (x := s) (g := ((d : G)⁻¹)) hsI)
   have hstab_card :
       Nat.card (MulAction.stabilizer D s) = Nat.card (peterfalviV D t) := by
@@ -454,7 +469,7 @@ public theorem proposition_5_involution_mem_D_conjugacy_orbit
       Nat.card (MulAction.orbit D s) * Nat.card (MulAction.stabilizer D s) =
         Nat.card D := by
     simpa [Nat.card_eq_fintype_card] using
-      (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (α := D) (β := G) s)
+      (MulAction.card_orbit_mul_card_stabilizer_eq_card_group D s)
   have hV_pos : 0 < Nat.card (peterfalviV D t) := Nat.card_pos
   have hOrbit_card :
       Nat.card (MulAction.orbit D s) = Nat.card S := by
@@ -681,4 +696,3 @@ public theorem proposition_5_fixed_point_card_ge_three
 
 end PFchapter1section1
 end BenderSuzuki
-

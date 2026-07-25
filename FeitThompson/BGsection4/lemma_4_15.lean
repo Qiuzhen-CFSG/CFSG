@@ -6,6 +6,8 @@ public import FeitThompson.BGsection4.lemma_4_5_a
 
 /-! # Lemma 4.15 from BG Section 4 -/
 
+open scoped commutatorElement IsMulCommutative
+
 section Main
 
 public theorem lemma_4_15 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -56,7 +58,10 @@ public theorem lemma_4_15 {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Pri
     have hder_ne_bot : derivedSubgroup S ≠ ⊥ := by
       intro hder_bot
       have hcomm_le_bot : commutator S ≤ (⊥ : Subgroup S) := by
-        simpa [derivedSubgroup, derivedSeries_one] using le_of_eq hder_bot
+        have hcomm_eq_bot : commutator S = (⊥ : Subgroup S) := by
+          rw [← derivedSeries_one]
+          exact hder_bot
+        exact hcomm_eq_bot.le
       have hcommS : IsMulCommutative S := by
         refine ⟨⟨?_⟩⟩
         intro x y

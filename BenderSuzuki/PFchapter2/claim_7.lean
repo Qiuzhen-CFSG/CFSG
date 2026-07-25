@@ -123,7 +123,7 @@ private theorem claim_7_sigmaBar_mulEquiv_CW
       QuotientGroup.eq_iff_div_mem.mp hpi
     rw [← hNcore, hNP] at hdivCore
     have hdivP : (x : G) / (y : G) ∈ P := by
-      simpa using hdivCore
+      exact Subgroup.mem_subgroupOf.mp hdivCore
     have hdivWc : (x : G) / (y : G) ∈ Wc :=
       Wc.div_mem x.2 y.2
     have hdivBot : (x : G) / (y : G) ∈ (⊥ : Subgroup G) :=
@@ -135,7 +135,8 @@ private theorem claim_7_sigmaBar_mulEquiv_CW
     intro z
     rcases Subgroup.mem_map.mp z.2 with ⟨d, hdDP, hdpi⟩
     have hdD : (d : G) ∈ D := by
-      simpa [DP] using hdDP
+      change (d : G) ∈ D at hdDP
+      exact hdDP
     let dDCP : DCP := ⟨(d : G), hdD, d.2⟩
     have hWc_normal_DCP : (Wc.subgroupOf DCP).Normal := by
       rw [Subgroup.normal_subgroupOf_iff_le_normalizer hWC_le_DCP]
@@ -150,7 +151,10 @@ private theorem claim_7_sigmaBar_mulEquiv_CW
         have hback :
             h⁻¹ * (h * a * h⁻¹) * (h⁻¹)⁻¹ ∈ Wc :=
           hWC_norm_DCP h⁻¹ (h * a * h⁻¹) hinvDCP hconj
-        simpa [mul_assoc] using hback
+        have hback_eq : h⁻¹ * (h * a * h⁻¹) * (h⁻¹)⁻¹ = a := by
+          group
+        rw [hback_eq] at hback
+        exact hback
     letI : (Wc.subgroupOf DCP).Normal := hWc_normal_DCP
     have hsup_top :
         Wc.subgroupOf DCP ⊔ P.subgroupOf DCP = ⊤ := by
@@ -267,7 +271,7 @@ private theorem claim_7_N_decomposition_obligation
   · exact sup_le inf_le_left hP_le_N
 
 private theorem claim_7_addOrderOf_one_eq_three_of_dickson_model
-    {F : Type*} [PFAppendixII.RightNearField F] [Finite F] [Nontrivial F]
+    {F : Type*} [PFAppendixII.RightNearField F] [Finite F]
     (hmodel : PFAppendixII.IsDicksonIndexTwoModel F 3 1) :
     addOrderOf (1 : F) = 3 := by
   rw [PFAppendixII.IsDicksonIndexTwoModel] at hmodel

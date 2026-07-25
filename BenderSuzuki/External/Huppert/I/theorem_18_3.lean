@@ -170,7 +170,8 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_pgroup_operator
   intro a
   have hx : c a * originalSmul a x = x := by
     have hfix := (MulAction.mem_fixedPoints.mp hxfix) a
-    simpa [MulAction.fixedPoints, originalSmul] using hfix
+    have h_smul : (a • x : X) = c a * originalSmul a x := rfl
+    simpa [h_smul, originalSmul] using hfix
   show c a = x * (originalSmul a x)⁻¹
   calc
     c a = (c a * originalSmul a x) * (originalSmul a x)⁻¹ := by simp
@@ -284,7 +285,7 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
             (b : A') • c1 a = c1 ((b : A') * a) := h1.symm
             _ = c1 (a * (b' : A')) := by rw [hba]
             _ = c1 a := h2
-        simpa [MulAction.compHom_smul_def] using hfixed
+        simpa [Subgroup.smul_def] using hfixed
       let F : Subgroup X' := fixedPointSubgroup B X'
       have hcop_Q_F : Nat.Coprime (Nat.card (A' ⧸ B)) (Nat.card F) := by
         have hquot_dvd : Nat.card (A' ⧸ B) ∣ Nat.card A' :=
@@ -330,7 +331,21 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
       intro a
       have hy_a : c1 a = (y : X') * (a • (y : X'))⁻¹ := by
         have h := congrArg Subtype.val (hy (a : A' ⧸ B))
-        simpa [hcQ_mk] using h
+        have hmem : (y : X') ∈ MulAction.fixedPoints (↥B) X' := by
+          have h' : (y : X') ∈ fixedPointSubgroup B X' := y.property
+          rw [fixedPointSubgroup] at h'
+          rw [FixedPoints.mem_subgroup] at h'
+          rw [MulAction.mem_fixedPoints]
+          exact h'
+        have h_smul_val : Subtype.val ((a : A' ⧸ B) • (y : F)) = a • (y : X') := by
+          have htemp := MulAction.coe_quotient_smul_fixedPoints (a : A')
+            (⟨(y : X'), hmem⟩ : MulAction.fixedPoints (↥B) X')
+          have htemp_val := congrArg Subtype.val htemp
+          calc
+            Subtype.val ((a : A' ⧸ B) • (y : F)) = Subtype.val ((a : A' ⧸ B) • (⟨(y : X'), hmem⟩ : MulAction.fixedPoints (↥B) X')) := rfl
+            _ = Subtype.val (a • (⟨(y : X'), hmem⟩ : MulAction.fixedPoints (↥B) X')) := htemp_val
+            _ = a • (y : X') := rfl
+        simpa [hcQ_mk, h_smul_val] using h
       have hc_rearrange : c' a = x0 * c1 a * (a • x0)⁻¹ := by
         have hdef := hc1_def a
         calc

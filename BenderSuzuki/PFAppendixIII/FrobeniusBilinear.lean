@@ -108,7 +108,22 @@ public theorem frobeniusBilinear_expansion
       simp only [coeff, hbasis, hfrob_apply]
     _ = ∑ i : Fin n, ∑ j : Fin n,
           coeff i j * a ^ (2 ^ (i : ℕ)) * b ^ (2 ^ (j : ℕ)) := by
-      simp_rw [Finset.sum_mul]
+      have hdist (j : Fin n) :
+          (∑ i : Fin n, coeff i j * a ^ (2 ^ (i : ℕ))) *
+              b ^ (2 ^ (j : ℕ)) =
+            ∑ i : Fin n,
+              (coeff i j * a ^ (2 ^ (i : ℕ))) * b ^ (2 ^ (j : ℕ)) := by
+        simpa using (Finset.sum_mul (Finset.univ : Finset (Fin n))
+          (fun i : Fin n => coeff i j * a ^ (2 ^ (i : ℕ)))
+          (b ^ (2 ^ (j : ℕ))))
+      rw [show (∑ j : Fin n,
+          (∑ i : Fin n, coeff i j * a ^ (2 ^ (i : ℕ))) *
+            b ^ (2 ^ (j : ℕ))) =
+          ∑ j : Fin n, ∑ i : Fin n,
+            (coeff i j * a ^ (2 ^ (i : ℕ))) * b ^ (2 ^ (j : ℕ)) by
+        apply Finset.sum_congr rfl
+        intro j _hj
+        exact hdist j]
       rw [Finset.sum_comm]
 
 set_option backward.isDefEq.respectTransparency false in

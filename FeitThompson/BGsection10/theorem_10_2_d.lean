@@ -34,7 +34,7 @@ private theorem section10_quotient_malpha_groupRank_le_two
   have hKHall : IsHallSubgroup π K := section10_malphaSubgroup_isHall hM
   rw [groupRank]
   refine csSup_le ?_ ?_
-  · exact ⟨0, 2, Nat.prime_two, zero_le _⟩
+  · exact ⟨0, 2, Nat.prime_two, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hqprime, hnq⟩
     by_cases hn_le_two : n ≤ 2
@@ -51,9 +51,11 @@ private theorem section10_quotient_malpha_groupRank_le_two
       exact (hKHall.p_in_pi_of_p_dvd_index p (by
         simpa [Q, K, Subgroup.index_eq_card] using hp_dvd_Q)) hpα
     have hprankQ_le_M : primeRank p.val Q ≤ primeRank p.val M := by
-      simpa [Q, K, π, section10MalphaSubgroup] using
-        section10_primeRank_quotient_piCore_le_of_not_mem
-          (H := M) (π := π) (p := p) hp_not_alpha
+      change primeRank p.val (M ⧸ piCore (section10AlphaPrimes M) M) ≤
+        primeRank p.val M
+      exact section10_primeRank_quotient_piCore_le_of_not_mem
+        (H := M) (π := section10AlphaPrimes M) (p := p) (by
+          simpa [π] using hp_not_alpha)
     have hp_dvd_M : p.val ∣ Nat.card M :=
       hp_dvd_Q.trans (Subgroup.card_quotient_dvd_card (s := K))
     have hprankM_le_two : primeRank p.val M ≤ 2 := by

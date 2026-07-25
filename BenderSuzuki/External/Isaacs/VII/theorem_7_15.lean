@@ -89,8 +89,7 @@ private theorem isaacs_7_15_agrees_on_equal_degree_lattice
         ((s : Complex) • (X : ClassFunction N)) - phi := by
     rw [hv]
     ext g
-    simp [Section1.evalCoeff, s, Pi.smul_apply, mul_add, add_mul,
-      mul_comm, mul_left_comm, mul_assoc, mul_sub]
+    simp [Section1.evalCoeff, s, Pi.smul_apply, mul_comm, mul_sub]
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl ?_
     intro Z _
@@ -181,9 +180,11 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     intro i j
     by_cases hij : i = j
     · subst j
-      simpa [chi] using
+      have hself :=
         (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
           (hirr (e i))).2
+      change scalarProduct N (e i : ClassFunction N) (e i : ClassFunction N) = 1 at hself
+      simpa [chi] using hself
     · have hne : (e i : ClassFunction N) ≠ (e j : ClassFunction N) := by
         intro hEq
         apply hij
@@ -318,7 +319,8 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     calc
       tau ((X : ClassFunction N) - (Z : ClassFunction N)) =
           tau (-((Z : ClassFunction N) - (X : ClassFunction N))) := by
-            congr 1 <;> abel
+            congr 1
+            abel
       _ = -tau ((Z : ClassFunction N) - (X : ClassFunction N)) := by
         rw [map_neg]
       _ = -(eps • (mu (e.symm Z) - mu 0)) := by
@@ -365,7 +367,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
       (isBookIrreducibleCharacter_of_isIrreducibleCharacterOnGroup
         (hmu.1 (e.symm W))) hmune
     rw [scalarProduct_smul_left, scalarProduct_smul_right]
-    simp [img, hzero]
+    simp [hzero]
   have hgram : forall Z W : Y,
       scalarProduct G (img Z) (img W) =
         scalarProduct N (Z : ClassFunction N) (W : ClassFunction N) := by

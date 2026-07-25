@@ -131,7 +131,7 @@ private theorem corollary_map_K_to_H_involutions_injective
     exact
       (hphi_surj.bijective_of_nat_card_le
         (by simpa [Sset] using le_of_eq (PFchapter1section1.proposition_3 H D Q t hA1).1)).1
-  simpa [phi] using hphi_inj
+  simpa [phi, Sset] using hphi_inj
 
 public theorem corollary_K_regular_on_S_involutions
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]

@@ -10,7 +10,7 @@ universe u
 
 section Main
 
-open scoped FixedPoints
+open scoped FixedPoints commutatorElement
 
 private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p_sq_odd
     {B V : Type*} [Group B] [Finite B] [Group V] [Finite V]
@@ -63,11 +63,13 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
       intro y
       exact (IsMulCommutative.is_comm (M := B)).comm y x
     have hD_bot : derivedSubgroup B = ⊥ := by
-      simpa [derivedSubgroup, derivedSeries_one] using
-        (commutator_eq_bot_iff_center_eq_top B).2 hcenter
+      change derivedSeries B 1 = ⊥
+      rw [derivedSeries_one]
+      exact (commutator_eq_bot_iff_center_eq_top B).2 hcenter
     rw [hD_bot]
     exact IsPGroup.of_card (p := p) (G := (⊥ : Subgroup B)) (n := 0) (by simp)
   · have hVcardp2 : Nat.card V = p ^ 2 := by simpa using hn
+    letI : CommGroup V := IsMulCommutative.instCommGroup
     let ρ : Representation (ZMod p) B (Additive V) :=
       Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
     have hρinj : Function.Injective ρ := by
@@ -78,7 +80,10 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
       exact Additive.ofMul.injective (by simpa [ρ] using h)
     have hdim : Module.finrank (ZMod p) (Additive V) = 2 := by
       have hnat := Module.natCard_eq_pow_finrank (K := ZMod p) (V := Additive V)
-      have hVcardp2_add : Nat.card (Additive V) = p ^ 2 := by simpa using hVcardp2
+      have hVcardp2_add : Nat.card (Additive V) = p ^ 2 := by
+        calc
+          Nat.card (Additive V) = Nat.card V := Nat.card_congr Additive.toMul
+          _ = p ^ 2 := hVcardp2
       have hpow : p ^ Module.finrank (ZMod p) (Additive V) = p ^ 2 := by
         simpa [ZMod.card, hVcardp2_add] using hnat.symm
       exact Nat.pow_right_injective hp.one_lt hpow
@@ -86,7 +91,8 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
       theorem_2_6_b (F := ZMod p) (G := B) hoddB hdim (ρ := ρ) hρinj
     let D : Subgroup B := derivedSubgroup B
     have hD_le_C : D ≤ (C : Subgroup B) := by
-      simpa [D, derivedSubgroup, derivedSeries_one] using hcomm_le_C
+      change ⁅(⊤ : Subgroup B), (⊤ : Subgroup B)⁆ ≤ (C : Subgroup B)
+      exact hcomm_le_C
     have hDsub_p : IsPGroup p (D.subgroupOf (C : Subgroup B)) := by
       simpa [ZMod.ringChar_zmod_n] using
         C.isPGroup'.to_subgroup (D.subgroupOf (C : Subgroup B))
@@ -106,6 +112,7 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
     (hrank : groupRank R ≤ 2) (hAodd : Odd (Nat.card A)) :
     IsPGroup p (derivedSubgroup A) := by
   classical
+  rcases hsolvA with ⟨_hsolvA⟩
   by_cases hRsub : Subsingleton R
   · letI : Subsingleton R := hRsub
     have hAsub : Subsingleton A :=
@@ -154,7 +161,7 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
           _ = q := ha_order
       let Aq : Subgroup A := Subgroup.zpowers (a : A)
       have hAq_card : Nat.card Aq = q := by
-        simpa [Aq, ha_order_A] using Nat.card_zpowers (a : A)
+        simp [Aq, ha_order_A]
       have hAq_le_ker : Aq ≤ φ.ker := by
         intro b hb
         rcases Subgroup.mem_zpowers_iff.mp hb with ⟨k, hk⟩
@@ -167,6 +174,7 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
         have hbker : (b : A) ∈ φ.ker := hAq_le_ker b.2
         have hbφ : φ (b : A) = 1 := by simpa [MonoidHom.mem_ker] using hbker
         have hv := congrArg (fun f : MulAut V => f v) hbφ
+        change (b : A) • v = v
         simpa [φ, MulDistribMulAction.toMulAut_apply] using hv
       have hcop_Aq_H : Nat.Coprime (Nat.card Aq) (Nat.card H) := by
         obtain ⟨m, hHcard⟩ := hHp.exists_card_eq
@@ -265,4 +273,3 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
       simpa [pow_mul] using hnval
     change ((d : A) ^ (p ^ (m + n)) : A) = 1
     simpa [Nat.pow_add] using hdn
-

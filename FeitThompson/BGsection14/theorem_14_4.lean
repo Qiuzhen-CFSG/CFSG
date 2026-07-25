@@ -36,11 +36,11 @@ public theorem theorem_14_4_exists_R
       exact hzord
     have hXle_zpow : X ≤ Subgroup.zpowers x := Subgroup.zpowers_le.2 hz_zpowx
     have hXcard : Nat.card X = q.val := by
-      simpa [X, hXorder] using (Nat.card_zpowers z)
+      simp [X, hXorder]
     have hXne : X ≠ ⊥ := by
       intro hXbot
       have hcard_one : Nat.card X = 1 := by
-        simpa [hXbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+        simp [hXbot]
       exact q.2.ne_one (hXcard.symm.trans hcard_one)
     have hXq : IsPGroup q.val X := by
       exact IsPGroup.of_card (n := 1) (by simpa [pow_one] using hXcard)
@@ -207,7 +207,7 @@ public theorem theorem_14_4_exists_R
       have huTop : (⟨u, huN⟩ : N) ∈ section10MsigmaSubgroup N ⊔ T := by
         have htop : section10MsigmaSubgroup N ⊔ T = ⊤ := hTcomp.symm.sup_eq_top
         have : (⟨u, huN⟩ : N) ∈ (⊤ : Subgroup N) := by simp
-        simpa [htop] using this
+        simp [htop]
       haveI : (section10MsigmaSubgroup N).Normal := inferInstance
       rcases (Subgroup.mem_sup_of_normal_left
           (s := section10MsigmaSubgroup N) (t := T) (x := (⟨u, huN⟩ : N))).1 huTop with
@@ -298,6 +298,7 @@ public theorem theorem_14_4_exists_R
       have hrσx_val : x⁻¹ * (rσ : G) * x = (rσ : G) := congrArg Subtype.val hrσx_eq
       have hrσ_comm : Commute (rσ : G) x := by
         have hmul_eq := congrArg (fun t : G => x * t) hrσx_val
+        change (rσ : G) * x = x * (rσ : G)
         simpa [mul_assoc] using hmul_eq
       have hrσR : (rσ : G) ∈ R := by
         exact ⟨rσ.property, Subgroup.mem_centralizer_singleton_iff.mpr hrσ_comm⟩
@@ -431,10 +432,9 @@ public theorem theorem_14_4_exists_R
           have hval : (z : G) = (y : G) := congrArg Subtype.val hzy
           exact hval ▸ ⟨hzσG, hzCxG⟩
         · intro hy
-          change y ∈ (A.subgroupOf CxN).map eCx.toMonoidHom
           have hyN : (y : G) ∈ N := hCx_le_N y.property
           let yN : CxN := ⟨⟨(y : G), hyN⟩, by
-            simpa [CxN, Subgroup.mem_subgroupOf] using y.property⟩
+            simp [CxN, Subgroup.mem_subgroupOf]⟩
           have hyA : (yN : N) ∈ A := by
             refine ⟨?_, ?_⟩
             · have hyσsub : (yN : N) ∈ (section10Msigma N).subgroupOf N := by
@@ -520,11 +520,11 @@ public theorem theorem_14_4_unique_N
     exact hzord
   have hXle_zpow : X ≤ Subgroup.zpowers x := Subgroup.zpowers_le.2 hz_zpowx
   have hXcard : Nat.card X = q.val := by
-    simpa [X, hXorder] using (Nat.card_zpowers z)
+    simp [X, hXorder]
   have hXne : X ≠ ⊥ := by
     intro hXbot
     have hcard_one : Nat.card X = 1 := by
-      simpa [hXbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+      simp [hXbot]
     exact q.2.ne_one (hXcard.symm.trans hcard_one)
   have hXq : IsPGroup q.val X := by
     exact IsPGroup.of_card (n := 1) (by simpa [pow_one] using hXcard)
@@ -685,7 +685,7 @@ public theorem theorem_14_4_unique_N
     have huTop : (⟨u, huN⟩ : N) ∈ section10MsigmaSubgroup N ⊔ T := by
       have htop : section10MsigmaSubgroup N ⊔ T = ⊤ := hTcomp.symm.sup_eq_top
       have : (⟨u, huN⟩ : N) ∈ (⊤ : Subgroup N) := by simp
-      simpa [htop] using this
+      simp [htop]
     haveI : (section10MsigmaSubgroup N).Normal := inferInstance
     rcases (Subgroup.mem_sup_of_normal_left
         (s := section10MsigmaSubgroup N) (t := T) (x := (⟨u, huN⟩ : N))).1 huTop with
@@ -772,6 +772,7 @@ public theorem theorem_14_4_unique_N
   have hrσx_val : x⁻¹ * (rσ : G) * x = (rσ : G) := congrArg Subtype.val hrσx_eq
   have hrσ_comm : Commute (rσ : G) x := by
     have hmul_eq := congrArg (fun t : G => x * t) hrσx_val
+    change (rσ : G) * x = x * (rσ : G)
     simpa [mul_assoc] using hmul_eq
   have hrσR : (rσ : G) ∈ R := by
     exact ⟨rσ.property, Subgroup.mem_centralizer_singleton_iff.mpr hrσ_comm⟩
@@ -851,8 +852,8 @@ public theorem section14N_mem_of_nonsingleton
       section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) := by
   classical
   have hcard' :
-      1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-    simpa using hcard
+      1 < (section14MsigmaElement x).ncard := by
+    simpa only [Nat.card_coe_set_eq] using hcard
   have hNdef :
       section14N x =
         Classical.choose
@@ -871,12 +872,12 @@ public theorem section14_nonsingleton_of_conjBy_eq_maximal
     1 < Nat.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
   by_contra hcard
   have hcard' :
-      ¬ 1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-    simpa using hcard
+      ¬ 1 < (section14MsigmaElement x).ncard := by
+    simpa only [Nat.card_coe_set_eq] using hcard
   have htop : section14N x = ⊤ := by
     simp [section14N, hx, hσ, hcard']
   have htop_conj : ((⊤ : Subgroup G).conjBy g) = ⊤ := by
-    simpa [Subgroup.conjBy] using (Subgroup.map_top (MulAut.conj g).toMonoidHom)
+    simp [Subgroup.conjBy]
   have hNtop : N = ⊤ := by
     calc
       N = (section14N x).conjBy g := hgN.symm
@@ -891,8 +892,8 @@ private theorem section14R_eq_of_nonsingleton
     section14R x = elementCentralizerIn (section10Msigma (section14N x)) x := by
   classical
   have hcard' :
-      1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-    simpa using hcard
+      1 < (section14MsigmaElement x).ncard := by
+    simpa only [Nat.card_coe_set_eq] using hcard
   simp [section14R, hx, hσ, hcard']
 
 private theorem section14_nonsingleton_member_data
@@ -917,11 +918,11 @@ private theorem section14_nonsingleton_member_data
     exact hzord
   have hXle_zpow : X ≤ Subgroup.zpowers x := Subgroup.zpowers_le.2 hz_zpowx
   have hXcard : Nat.card X = q.val := by
-    simpa [X, hXorder] using (Nat.card_zpowers z)
+    simp [X, hXorder]
   have hXne : X ≠ ⊥ := by
     intro hXbot
     have hcard_one : Nat.card X = 1 := by
-      simpa [hXbot] using (by simp : Nat.card (⊥ : Subgroup G) = 1)
+      simp [hXbot]
     exact q.2.ne_one (hXcard.symm.trans hcard_one)
   have hXq : IsPGroup q.val X := by
     exact IsPGroup.of_card (n := 1) (by simpa [pow_one] using hXcard)
@@ -1088,7 +1089,7 @@ private theorem section14_nonsingleton_member_data
     have huTop : (⟨u, huN⟩ : N) ∈ section10MsigmaSubgroup N ⊔ T := by
       have htop : section10MsigmaSubgroup N ⊔ T = ⊤ := hTcomp.symm.sup_eq_top
       have : (⟨u, huN⟩ : N) ∈ (⊤ : Subgroup N) := by simp
-      simpa [htop] using this
+      simp [htop]
     haveI : (section10MsigmaSubgroup N).Normal := inferInstance
     rcases (Subgroup.mem_sup_of_normal_left
         (s := section10MsigmaSubgroup N) (t := T) (x := (⟨u, huN⟩ : N))).1 huTop with
@@ -1179,6 +1180,7 @@ private theorem section14_nonsingleton_member_data
     have hrσx_val : x⁻¹ * (rσ : G) * x = (rσ : G) := congrArg Subtype.val hrσx_eq
     have hrσ_comm : Commute (rσ : G) x := by
       have hmul_eq := congrArg (fun t : G => x * t) hrσx_val
+      change (rσ : G) * x = x * (rσ : G)
       simpa [mul_assoc] using hmul_eq
     have hrσR : (rσ : G) ∈ R := by
       exact ⟨rσ.property, Subgroup.mem_centralizer_singleton_iff.mpr hrσ_comm⟩
@@ -1312,10 +1314,9 @@ private theorem section14_nonsingleton_member_data
         have hval : (z : G) = (y : G) := congrArg Subtype.val hzy
         exact hval ▸ ⟨hzσG, hzCxG⟩
       · intro hy
-        change y ∈ (A.subgroupOf CxN).map eCx.toMonoidHom
         have hyN : (y : G) ∈ N := hCx_le_N y.property
         let yN : CxN := ⟨⟨(y : G), hyN⟩, by
-          simpa [CxN, Subgroup.mem_subgroupOf] using y.property⟩
+          simp [CxN, Subgroup.mem_subgroupOf]⟩
         have hyA : (yN : N) ∈ A := by
           refine ⟨?_, ?_⟩
           · have hyσsub : (yN : N) ∈ (section10Msigma N).subgroupOf N := by
@@ -1379,6 +1380,7 @@ private theorem section14_nonsingleton_member_data
   have hrσx_val : x⁻¹ * (rσ : G) * x = (rσ : G) := congrArg Subtype.val hrσx_eq
   have hrσ_comm : Commute (rσ : G) x := by
     have hmul_eq := congrArg (fun t : G => x * t) hrσx_val
+    change (rσ : G) * x = x * (rσ : G)
     simpa [mul_assoc] using hmul_eq
   have hrσR : (rσ : G) ∈ R := by
     exact ⟨rσ.property, Subgroup.mem_centralizer_singleton_iff.mpr hrσ_comm⟩
@@ -1438,7 +1440,7 @@ private theorem section14_nonsingleton_member_data
       have hcTop : (⟨c, hcN⟩ : N) ∈ section10MsigmaSubgroup N ⊔ T := by
         have htop : section10MsigmaSubgroup N ⊔ T = ⊤ := hTcomp.symm.sup_eq_top
         have : (⟨c, hcN⟩ : N) ∈ (⊤ : Subgroup N) := by simp
-        simpa [htop] using this
+        simp [htop]
       haveI : (section10MsigmaSubgroup N).Normal := inferInstance
       rcases (Subgroup.mem_sup_of_normal_left
           (s := section10MsigmaSubgroup N) (t := T) (x := (⟨c, hcN⟩ : N))).1 hcTop with
@@ -1528,6 +1530,7 @@ private theorem section14_nonsingleton_member_data
           x⁻¹ * (rσc : G) * x = (rσc : G) := congrArg Subtype.val hrσxc_eq
       have hrσc_comm : Commute (rσc : G) x := by
         have hmul_eq := congrArg (fun t : G => x * t) hrσxc_val
+        change (rσc : G) * x = x * (rσc : G)
         simpa [mul_assoc] using hmul_eq
       have hrσcR : (rσc : G) ∈ R := by
         exact ⟨rσc.property, Subgroup.mem_centralizer_singleton_iff.mpr hrσc_comm⟩
@@ -1759,8 +1762,8 @@ public theorem theorem_14_4
         Nat.card_pos_iff.mpr ⟨hΩne, inferInstance⟩
       omega
     have hcard' :
-        ¬ 1 < Fintype.card {M : Subgroup G // M ∈ section14MsigmaElement x} := by
-      simpa using hcard
+        ¬ 1 < (section14MsigmaElement x).ncard := by
+      simpa only [Nat.card_coe_set_eq] using hcard
     have hRbot : section14R x = ⊥ := by
       simp [section14R, hx, hσ, hcard']
     have hHallBot :

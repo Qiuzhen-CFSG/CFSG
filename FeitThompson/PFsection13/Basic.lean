@@ -173,9 +173,9 @@ public theorem exists_nonkernelInducedFamily
       rcases hθirr with ⟨n, ρ, hρ, rfl⟩
       refine ⟨?_, ?_⟩
       · exact ⟨n, ρ, rfl⟩
-      · have hnorm :=
-          (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρ
-        simpa [Section1.classFunctionInner_toConjClassFunction] using hnorm
+      · rw [Section1.classFunctionInner_toConjClassFunction]
+        exact Section1.scalarProduct_representation_char_self
+          (G := H.subgroupOf M) ρ hρ
     rcases hχ.2.1 (Section1.toConjClassFunction θ hθclass) hθrepirr with
       ⟨i, hi⟩
     have hψθ : ψ i = θ := by
@@ -233,7 +233,7 @@ Hypothesis `(5.2)(b)`.  The book and prime-Dade carriers attached to a selected
 Type-P witness are recorded separately in `typePFourSixTauSourceData`. -/
 @[expose] public def dadeIsometryRelativeToAZero
     {G : Type u} [Group G] [Finite G]
-    (M K : Subgroup G)
+    (M _K : Subgroup G)
     (F : Finset (Section1.ClassFunction M))
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
   Section5.hypothesis_5_2_b_statement F τ
@@ -257,7 +257,7 @@ set after viewing the cyclic-TI data inside the maximal subgroup `M`. -/
 
 @[expose] public def typePFourSixTauSourceData
     {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
+    (M MF _U W1 W2 : Subgroup G)
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
   ∃ I : Type u, ∃ instI : Fintype I, ∃ decI : DecidableEq I,
     ∃ J : Type u, ∃ instJ : Fintype J, ∃ decJ : DecidableEq J,
@@ -309,7 +309,7 @@ slot for older consumers; the mathematical content is the type-P universal
 field. -/
 @[expose] public def agreesWithInductionOnAZero
     {G : Type u} [Group G] [Finite G]
-    (M K U W1 W2 : Subgroup G)
+    (M K _U W1 W2 : Subgroup G)
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
   True ∧
     ∀ χ : Section1.ClassFunction M,

@@ -146,7 +146,9 @@ private theorem rankOne_coordinate_surjective
         (⟨t • a, ht_ne⟩ : SubMulAction.ofStabilizer L a)
         (⟨y, hy⟩ : SubMulAction.ofStabilizer L a)
     have hmX : (m : L) • (t • a) = y := by
-      simpa [SetLike.val_smul] using congrArg Subtype.val hm
+      have hm' := congrArg Subtype.val hm
+      change (m : L) • (t • a) = y at hm'
+      exact hm'
     let mM : M := ⟨m, by rw [hM]; exact m.property⟩
     obtain ⟨q, d, hqd⟩ :=
       rankOne_QD_decomposition M Q D hQ_le_M hD_le_M hQ_normal_in_M
@@ -292,7 +294,8 @@ public theorem rankOne_bruhat_decomposition
         apply hlM
         rw [hM, MulAction.mem_stabilizer_iff]
         have hlinv : l⁻¹ • a = a := by
-          simpa [c, rankOneCoordinate] using hz.symm
+          change a = l⁻¹ • a at hz
+          exact hz.symm
         calc
           l • a = l • (l⁻¹ • a) := by rw [hlinv]
           _ = a := by simp
@@ -303,8 +306,8 @@ public theorem rankOne_bruhat_decomposition
             m • a = l • ((q : L)⁻¹ • (t • a)) := by
               simp [m, mul_smul]
             _ = l • (l⁻¹ • a) := by
-              rw [show (q : L)⁻¹ • (t • a) = l⁻¹ • a by
-                simpa [c, rankOneCoordinate] using hz]
+              change (q : L)⁻¹ • (t • a) = l⁻¹ • a at hz
+              rw [hz]
             _ = a := by simp
         have hmM : m ∈ M := by
           rw [hM, MulAction.mem_stabilizer_iff]
@@ -770,7 +773,8 @@ public theorem rankOnePointEquiv_transport_M
   have hQ'_le_M' : Q' ≤ M' := rankOneSplit_Q_le_M hQ_sup_D'
   have hD'_le_M' : D' ≤ M' := rankOneSplit_D_le_M hD_eq'
   have he_none : e (c none) = c' none := by
-    simpa [c, c'] using he_base
+    change e a = a'
+    exact he_base
   have he_some : ∀ x : Q, e (c (some x)) = c' (some (qIso x)) := by
     intro x
     change e ((x : L)⁻¹ • (t • a)) =

@@ -225,7 +225,6 @@ public theorem section14_normalizedSupportEnergy_principal
         (Nat.card X : ℝ) := by
     rw [Section7.supportEnergy]
     simp [Section1.principalCharacter]
-    exact (Fintype.card_subtype (fun g : G => g ∈ X)).symm
   rw [hsupp]
   ring
 
@@ -470,7 +469,7 @@ public theorem section14_theorem_14_11_4_cover_subset_of_le
         intro h
         exact hnot (Or.inr (Or.inr h))
       apply hG0
-      simpa [theorem_14_11_3_G0, Set.mem_diff, Set.mem_union, not_or]
+      simpa [theorem_14_11_3_G0, Set.mem_sdiff, Set.mem_union, not_or]
         using ⟨⟨⟨hg_not_tilde, hnotW⟩, hnotP⟩, hnotQ⟩
     rcases hmem_union with hW | hP | hQ
     · rcases hW with ⟨x, hxW, hxne, a, rfl⟩

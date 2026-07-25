@@ -259,8 +259,28 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf53
   constructor
   · exact isCharacter_of_group_irreducible_pf53 ⟨n, ρ, hirr, hchar⟩
   · rw [Section1.IsIrreducibleCharacter]
-    simpa [hchar] using
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+    have hρclass : Section1.IsClassFunction ρ.character := by
+      intro x g
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
+    have htoeq :
+        Section1.toConjClassFunction ρ.character hρclass =
+          Representation.characterClassFunction ρ := by
+      apply Section1.toConjClassFunction_eq_of_apply
+      intro g
+      rfl
+    calc
+      Section1.scalarProduct X χ χ =
+          Section1.scalarProduct X ρ.character ρ.character := by rw [hchar]
+      _ = Representation.classFunctionInner
+          (Section1.toConjClassFunction ρ.character hρclass)
+          (Section1.toConjClassFunction ρ.character hρclass) :=
+        (Section1.classFunctionInner_toConjClassFunction
+          ρ.character ρ.character hρclass hρclass).symm
+      _ = Representation.classFunctionInner
+          (Representation.characterClassFunction ρ)
+          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = 1 :=
+        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private noncomputable def standardizeRepresentation_pf53
     {G : Type u} {V : Type v} [Group G]
@@ -304,8 +324,7 @@ private theorem standardizeRepresentation_irreducible_pf53
     ext v i
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
-    simpa [standardizeRepresentation_pf53, b.equivFun_apply, Matrix.mulVec_eq_sum,
-      LinearMap.toMatrix_apply'] using h.symm
+    simp [standardizeRepresentation_pf53, e, b, b.equivFun_apply]
   exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private def dualCoannihilatorSubrepresentation_pf53
@@ -320,7 +339,8 @@ private def dualCoannihilatorSubrepresentation_pf53
     have hS : ρ.dual g⁻¹ f ∈ S.toSubmodule :=
       S.apply_mem_toSubmodule g⁻¹ hf
     have hvzero := hv (ρ.dual g⁻¹ f) hS
-    simpa using hvzero
+    simpa only [Representation.dual_apply, inv_inv, Module.Dual.transpose_apply,
+      LinearMap.comp_apply] using hvzero
 
 private theorem dualCoannihilatorSubrepresentation_eq_top_of_eq_bot_pf53
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -371,7 +391,8 @@ private theorem representation_dual_irreducible_of_pf53
         change S.toSubmodule.dualCoannihilator = (⊥ : Submodule ℂ V) at htmp
         exact htmp
       rw [hNsub] at hdual
-      simpa using hdual.symm
+      change S.toSubmodule = (⊤ : Submodule ℂ (Module.Dual ℂ V))
+      simpa only [Submodule.dualAnnihilator_bot] using hdual.symm
     · left
       apply Subrepresentation.toSubmodule_injective
       apply le_antisymm ?_ bot_le
@@ -950,10 +971,11 @@ private theorem signed_irreducible_of_virtual_norm_one_pf53
       ∀ i j,
         Section1.scalarProduct G (ψ i) (ψ j) = if i = j then 1 else 0 := by
     intro i j
-    simpa [ψ, Section1.classFunctionInner_toConjClassFunction,
-      Section1.toConjClassFunction_ofConjClassFunction] using
-      (Section1.representation_completeFamily_orthonormal
-        (chi := χ) ⟨hirr, hall, _hinj⟩ i j)
+    change Section1.scalarProduct G (Section1.ofConjClassFunction (χ i))
+      (Section1.ofConjClassFunction (χ j)) = if i = j then 1 else 0
+    rw [Section1.scalarProduct_ofConjClassFunction]
+    exact Section1.representation_completeFamily_orthonormal
+      (chi := χ) ⟨hirr, hall, _hinj⟩ i j
   have hcoeff_int :
       ∀ i, ∃ z : ℤ, Section1.scalarProduct G φ (ψ i) = (z : ℂ) := by
     intro i
@@ -1170,7 +1192,7 @@ private theorem difference_mem_integerSpanOn_of_character_pf53
     subst g
     rcases hXchar with ⟨V, _instAdd, _instMod, _instFD, ρ, hρchar⟩
     rw [hρchar, conjugateCharacter_representationCharacter_eq_dual_pf53]
-    simp [Section1.degree_representation_character ρ]
+    simp
 
 private noncomputable def pair_decomposition_of_irreducible_pf53
     {L : Type u} [Group L] [Finite L]
@@ -2144,7 +2166,7 @@ private theorem isSignedIrreducibleCharacter_sign_smul_pf53
   rcases hφ with ⟨η, hη, μ, hμ, rfl⟩
   refine ⟨ε * η, isSign_mul_pf53 hε hη, μ, hμ, ?_⟩
   ext g
-  simp [smul_smul, mul_assoc]
+  simp [mul_assoc]
 
 private theorem signedOrthonormalFinset_image_pf53
     {G : Type u} [Group G] [Finite G]
@@ -2163,7 +2185,7 @@ private theorem signedOrthonormalFinset_image_pf53
     exact hOrth i i' (by
       intro hii'
       apply hneq
-      simpa [hii'])
+      simp [hii'])
 
 private noncomputable def muSignedFamily_pf53
     {G : Type u} [Group G] [Finite G]
@@ -2210,7 +2232,7 @@ private theorem muSignedFamily_orthogonal_pf53
       have hii' : i ≠ i' := by
         intro h
         apply hpq
-        simpa [h]
+        simp [h]
       have hbase : Section1.scalarProduct G (chi i j) (chi i' j) = 0 := by
         simpa [hii'] using hChiOrth (i, j) (i', j)
       simpa [muSignedFamily_pf53] using
@@ -2238,7 +2260,7 @@ private theorem muSignedFamily_orthogonal_pf53
       have hii' : i ≠ i' := by
         intro h
         apply hpq
-        simpa [h]
+        simp [h]
       have hbase : Section1.scalarProduct G (chi i k) (chi i' k) = 0 := by
         simpa [hii'] using hChiOrth (i, k) (i', k)
       simpa [muSignedFamily_pf53] using
@@ -2294,7 +2316,8 @@ private theorem muSignedFamily_injective_pf53
         (muSignedFamily_pf53 deltaLeft deltaRight chi j k p) = 0 := by
     simpa [hEq] using hzero
   have hcontr : (1 : ℂ) = 0 := by
-    simpa [hself] using hzero'
+    rw [hself] at hzero'
+    exact hzero'
   norm_num at hcontr
 
 private theorem muSignedFamily_sum_pf53
@@ -2479,7 +2502,7 @@ private theorem theorem_5_3_b_mu_case_pf53
     apply hXneqbar
     calc
       (X : Section1.ClassFunction L) = Section4Scratch.piColumn piChar j := hXj
-      _ = Section4Scratch.piColumn piChar k := by simpa [hjk']
+      _ = Section4Scratch.piColumn piChar k := by simp [hjk']
       _ = Section1.conjugateCharacter (X : Section1.ClassFunction L) := hconjXk.symm
   let T : Type _ := Section4Scratch.equalDegreeColumnIndex piChar j0 k
   let tj : T := ⟨j, ⟨hj0, hdegjk⟩⟩
@@ -2572,7 +2595,7 @@ private theorem theorem_5_3_b_mu_case_pf53
             deltaSign k • (∑ i : I, chi i k) := by
             simp [Section4Scratch.omegaColumnSigma, hChiSigma]
       _ = (∑ i : I, deltaSign j • chi i j) + ∑ i : I, (-deltaSign k) • chi i k := by
-            simpa [sub_eq_add_neg, Finset.smul_sum]
+            simp [sub_eq_add_neg, Finset.smul_sum]
   let Rμ : Finset (Section1.ClassFunction G) :=
     Finset.univ.image (muSignedFamily_pf53 (deltaSign j) (-deltaSign k) chi j k)
   have hRμ_eq :
@@ -2861,7 +2884,7 @@ private theorem vanishesOn_wMinusW2_of_irreducible_member_pf53
     (h43b : Section4.theorem_4_3_b_statement
       W1 W2 W I J i0 j0 ω σL piChar deltaSign hω)
     (h43c : Section4.theorem_4_3_c_statement W2 W I J piChar deltaSign ω)
-    (h43d : Section4.theorem_4_3_d_statement W1 I J piChar deltaSign)
+    (_h43d : Section4.theorem_4_3_d_statement W1 I J piChar deltaSign)
     (h45a : Section4Scratch.theorem_4_5_a_statement K piChar xChar)
     (h45b : Section4Scratch.theorem_4_5_b_statement K piChar xChar)
     (hInd : inducedFromNonkernelFamily_statement K H S)
@@ -3085,7 +3108,7 @@ public theorem scalarProduct_irreducible_source_bridge_eq_zero_pf53
                 scalarProduct_add_right_pf53, scalarProduct_neg_right_pf53,
                 scalarProduct_neg_right_pf53, Section1.scalarProduct_smul_right,
                 Section1.scalarProduct_smul_right]
-              simpa [hdeltaStar]
+              simp [hdeltaStar]
     _ = 0 := by
       simp [Section1.scalarProduct_smul_right, hdeltaStar, hij, hi0j, hij0, hi0j0]
 
@@ -3133,8 +3156,7 @@ public theorem scalarProduct_irreducible_row_bridge_eq_zero_pf53
               (piChar i j) := by
                 rw [scalarProduct_sub_left_pf53]
       _ = 0 := by
-            simp [diffY,
-              scalarProduct_irreducible_piChar_eq_zero_pf53
+            simp [scalarProduct_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b hInd Y hYirr i j,
               scalarProduct_conjugate_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b h52a hInd Y hYirr i j]
@@ -3149,8 +3171,7 @@ public theorem scalarProduct_irreducible_row_bridge_eq_zero_pf53
               (piChar i0 j) := by
                 rw [scalarProduct_sub_left_pf53]
       _ = 0 := by
-            simp [diffY,
-              scalarProduct_irreducible_piChar_eq_zero_pf53
+            simp [scalarProduct_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b hInd Y hYirr i0 j,
               scalarProduct_conjugate_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b h52a hInd Y hYirr i0 j]
@@ -3165,8 +3186,7 @@ public theorem scalarProduct_irreducible_row_bridge_eq_zero_pf53
               (piChar i j0) := by
                 rw [scalarProduct_sub_left_pf53]
       _ = 0 := by
-            simp [diffY,
-              scalarProduct_irreducible_piChar_eq_zero_pf53
+            simp [scalarProduct_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b hInd Y hYirr i j0,
               scalarProduct_conjugate_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b h52a hInd Y hYirr i j0]
@@ -3181,8 +3201,7 @@ public theorem scalarProduct_irreducible_row_bridge_eq_zero_pf53
               (piChar i0 j0) := by
                 rw [scalarProduct_sub_left_pf53]
       _ = 0 := by
-            simp [diffY,
-              scalarProduct_irreducible_piChar_eq_zero_pf53
+            simp [scalarProduct_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b hInd Y hYirr i0 j0,
               scalarProduct_conjugate_irreducible_piChar_eq_zero_pf53
                 h46 hω h43b h45a h45b h52a hInd Y hYirr i0 j0]
@@ -3212,7 +3231,7 @@ public theorem scalarProduct_irreducible_row_bridge_eq_zero_pf53
                 scalarProduct_add_right_pf53, scalarProduct_neg_right_pf53,
                 scalarProduct_neg_right_pf53, Section1.scalarProduct_smul_right,
                 Section1.scalarProduct_smul_right]
-              simpa [hdeltaStar]
+              simp [hdeltaStar]
     _ = 0 := by
       simp [Section1.scalarProduct_smul_right, hdeltaStar, hij, hi0j, hij0, hi0j0]
 
@@ -3380,7 +3399,7 @@ private theorem source_bridge_eq_induced_alphaIJ_pf53
           piChar i j0 + piChar i0 j0
         = deltaSign j • (piChar i j - piChar i0 j) -
             deltaSign j0 • (piChar i j0 - piChar i0 j0) := by
-              simp [hδ0, smul_sub, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+              simp [hδ0, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
     _ = Section1.inducedCF W (ω i j - ω i0 j) -
           Section1.inducedCF W (ω i j0 - ω i0 j0) := by
             rw [hind i j, hind i j0]
@@ -3395,7 +3414,7 @@ private theorem source_bridge_eq_induced_alphaIJ_pf53
 
 private theorem source_bridge_supportedOn_primeDadeA0_pf53
     {L : Type u} [Group L] [Finite L]
-    {K W1 W2 W H : Subgroup L}
+    {W1 W2 W : Subgroup L}
     {A : Set L}
     {I J : Type*} [Fintype I] [Fintype J]
     [DecidableEq I] [DecidableEq J]
@@ -3427,7 +3446,7 @@ private theorem pair_decomposition_orthogonal_of_difference_coeff_zero_pf53
     {G : Type u} [Group G] [Finite G]
     {α β χ : Section1.ClassFunction G}
     (hα : Section3.IsSignedIrreducibleCharacter α)
-    (hβ : Section3.IsSignedIrreducibleCharacter β)
+    (_hβ : Section3.IsSignedIrreducibleCharacter β)
     (hχ : Section3.IsSignedIrreducibleCharacter χ)
     (hαβ : Section1.scalarProduct G α β = 0)
     (hdiff : Section1.scalarProduct G (α - β) χ = 0) :
@@ -3638,7 +3657,7 @@ private theorem scalarProduct_piColumn_self_ne_zero_pf53
     refine Finset.sum_congr rfl ?_
     intro i _hi
     rcases hirr i j with ⟨n, ρ, hρirr, hρchar⟩
-    simpa [hρchar] using Section1.representationCharacter_isClassFunction ρ x g
+    simp [hρchar]
   have hresCol :
       Section1.subgroupRestriction K (Section4Scratch.piColumn piChar j) =
         (Fintype.card I : ℂ) • xChar j := by
@@ -3955,9 +3974,9 @@ private theorem induced_family_supportedOn_primeDadeA0_of_punctured_mixed_pf53
     rw [Section1.supportedOn_iff]
     intro x hxA
     by_cases hx1 : x = 1
-    · exact (Section1.supportedOn_iff.mp hχpunct) x (by simpa [puncturedSet, hx1])
+    · exact (Section1.supportedOn_iff.mp hχpunct) x (by simp [puncturedSet, hx1])
     · exact (Section1.supportedOn_iff.mp hwithOne) x
-        (by simpa [Section4Scratch.withOne, hxA, hx1])
+        (by simp [Section4Scratch.withOne, hxA, hx1])
   rw [Section1.supportedOn_iff] at hA ⊢
   intro x hxA0
   exact hA x (fun hxA => hxA0 (Or.inl hxA))
@@ -3996,7 +4015,7 @@ private theorem theorem_5_3_b_mixed_orthogonal_pf53
     (h49a : ∀ k : J, k ≠ j0 → Section4Scratch.theorem_4_9_a_statement A j0 k piChar)
     (h49b : ∀ k : J, k ≠ j0 →
       Section4Scratch.theorem_4_9_b_statement A j0 k W ω σ piChar deltaSign τ)
-    (h410 : Section4Scratch.theorem_4_10_statement i0 j0 ω σ piChar deltaSign τ)
+    (_h410 : Section4Scratch.theorem_4_10_statement i0 j0 ω σ piChar deltaSign τ)
     (h52a : hypothesis_5_2_a_statement S)
     (h52b : hypothesis_5_2_b_statement S τ)
     (hChiOrth : Section3.IsOrthonormalDoubleFamily chi)
@@ -4222,7 +4241,7 @@ private theorem theorem_5_3_b_mixed_orthogonal_pf53
               (Section1.conjugateCharacter (Y : Section1.ClassFunction L))
               (Section1.conjugateCharacter (X : Section1.ClassFunction L))) := by
               rw [scalarProduct_sub_right_pf53, scalarProduct_sub_right_pf53]
-      _ = 0 := by simp [diffX, hYX, hYXbar, hYbarX, hYbarXbar]
+      _ = 0 := by simp [hYX, hYXbar, hYbarX, hYbarXbar]
   have hsumCross :
       Section1.scalarProduct G
         (α - β)
@@ -4375,7 +4394,7 @@ private theorem theorem_5_3_b_mixed_orthogonal_pf53
           (-1 : ℂ) • (deltaSign DX.j • chi i DX.k) := by
       have hdeltaEq : deltaSign DX.j = deltaSign DX.k := (h48 i DX.j DX.k DX.hj0 DX.hk0 (hDXdeg i)).2.1
       ext g
-      simp [hdeltaEq, mul_assoc]
+      simp [hdeltaEq]
     rcases hmemφ with rfl | rfl
     · rw [muSignedFamily_pf53, hright]
       rw [Section1.scalarProduct_smul_right, hαδ]
@@ -4423,9 +4442,9 @@ private theorem supportedOn_punctured_iff_supportedOn_of_supportedOn_withOne_pf5
     rw [Section1.supportedOn_iff]
     intro x hxA
     by_cases hx1 : x = 1
-    · exact (Section1.supportedOn_iff.mp hpunct) x (by simpa [puncturedSet, hx1])
+    · exact (Section1.supportedOn_iff.mp hpunct) x (by simp [puncturedSet, hx1])
     · exact (Section1.supportedOn_iff.mp hφ) x
-        (by simpa [Section4Scratch.withOne, hxA, hx1])
+        (by simp [Section4Scratch.withOne, hxA, hx1])
   · intro hAon
     rw [Section1.supportedOn_iff]
     intro x hxpunct
@@ -4803,7 +4822,7 @@ private theorem irreducible_pair_orthogonal_chi_pf53
     (h46 : Section4Scratch.hypothesis_4_6_statement K W1 W2 W H A)
     (hτisoA0 : Section4Scratch.tau_isometry_on_primeDadeA0_statement
       W1 W2 W A τ)
-    (hτpunctA0 : Section4Scratch.tau_maps_primeDadeA0_to_punctured_statement
+    (_hτpunctA0 : Section4Scratch.tau_maps_primeDadeA0_to_punctured_statement
       W1 W2 W A τ)
     (h47 : Section4Scratch.theorem_4_7_statement K H A)
     (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
@@ -4884,7 +4903,7 @@ private theorem irreducible_pair_orthogonal_chi_pf53
       intro r s
       simpa [bridge] using
         source_bridge_supportedOn_primeDadeA0_pf53
-          (K := K) (H := H) (A := A) hω h43b_full r s
+          (A := A) hω h43b_full r s
     have hsourceZero : ∀ r s,
         Section1.scalarProduct L diffY (bridge r s) = 0 := by
       intro r s

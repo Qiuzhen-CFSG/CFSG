@@ -156,19 +156,22 @@ private theorem hypothesisA1_H_card_eq_complement_mul_D_card
     constructor
     · intro hx
       apply Subtype.ext
+      change (x : G) • beta = beta
       have hxD : (x : G) ∈ MulAction.stabilizer G beta := by
-        exact (show (x : G) ∈
-            MulAction.stabilizer G alpha ⊓ MulAction.stabilizer G beta from
-          by simpa [hD] using hx).2
-      simpa [betaComp] using hxD
+        have hxD' : (x : G) ∈ D := Subgroup.mem_subgroupOf.mp hx
+        exact (hD ▸ hxD').2
+      exact hxD
     · intro hx
       have hxBeta : (x : G) • beta = beta := by
-        simpa [betaComp] using congrArg Subtype.val hx
+        have hx' := congrArg Subtype.val hx
+        change (x : G) • beta = beta at hx'
+        exact hx'
       have hxInf :
           (x : G) ∈ MulAction.stabilizer G alpha ⊓
             MulAction.stabilizer G beta := by
         exact ⟨x.property, hxBeta⟩
-      simpa [hD] using hxInf
+      apply Subgroup.mem_subgroupOf.mpr
+      exact hD.symm ▸ hxInf
   haveI : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
   haveI : MulAction.IsPretransitive G Ω :=
     MulAction.isPretransitive_of_is_two_pretransitive
@@ -390,8 +393,8 @@ public theorem psl2Realization_subgroup_le_twoPrimeResidual
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (Q : Subgroup G) (hQ_two : ∃ n : ℕ, Nat.card Q = 2 ^ n)
     (hQ_ne : Q ≠ ⊥)
-    {L : Subgroup G} (hL : L.Normal) {q : ℕ}
-    (hodd : Odd (Nat.card (G ⧸ L))) (hq : ∃ n : ℕ, q = 2 ^ n) (hq_gt : 2 < q)
+    {L : Subgroup G} (_hL : L.Normal) {q : ℕ}
+    (_hodd : Odd (Nat.card (G ⧸ L))) (hq : ∃ n : ℕ, q = 2 ^ n) (hq_gt : 2 < q)
     (m : ℕ) (hm_ne : m ≠ 0) (hq_model : q = 2 ^ m)
     (e : L ≃* PSL2BinaryMatrixGroup m)
     (hQ_le_L : Q ≤ L) :
@@ -423,9 +426,9 @@ public theorem suzukiRealization_subgroup_le_twoPrimeResidual
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (Q : Subgroup G) (hQ_two : ∃ n : ℕ, Nat.card Q = 2 ^ n)
     (hQ_ne : Q ≠ ⊥)
-    {L : Subgroup G} (hL : L.Normal) {q : ℕ}
-    (hodd : Odd (Nat.card (G ⧸ L))) (hq : ∃ n : ℕ, q = 2 ^ n) (hq_gt : 2 < q)
-    (m : ℕ) (hm_ne : m ≠ 0) (hq_model : q = 2 ^ (2 * m + 1))
+    {L : Subgroup G} (_hL : L.Normal) {q : ℕ}
+    (_hodd : Odd (Nat.card (G ⧸ L))) (_hq : ∃ n : ℕ, q = 2 ^ n) (_hq_gt : 2 < q)
+    (m : ℕ) (hm_ne : m ≠ 0) (_hq_model : q = 2 ^ (2 * m + 1))
     (e : L ≃* SuzukiMatrixGroup m)
     (hQ_le_L : Q ≤ L) :
     L ≤ twoPrimeResidual G := by
@@ -445,8 +448,8 @@ public theorem psuRealization_subgroup_le_twoPrimeResidual
     [Field E] [Finite E]
     (Q : Subgroup G) (hQ_two : ∃ n : ℕ, Nat.card Q = 2 ^ n)
     (hQ_ne : Q ≠ ⊥)
-    {L : Subgroup G} (hL : L.Normal) {q : ℕ}
-    (hodd : Odd (Nat.card (G ⧸ L))) (hq : ∃ n : ℕ, q = 2 ^ n) (hq_gt : 2 < q)
+    {L : Subgroup G} (_hL : L.Normal) {q : ℕ}
+    (_hodd : Odd (Nat.card (G ⧸ L))) (_hq : ∃ n : ℕ, q = 2 ^ n) (hq_gt : 2 < q)
     (J : HermitianForm 3 E)
     (hEcard : Nat.card E = q ^ 2)
     (hfixedCard : Nat.card {z : E // J.conj z = z} = q)

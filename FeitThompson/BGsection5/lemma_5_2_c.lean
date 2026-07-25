@@ -47,7 +47,6 @@ public theorem lemma_5_2_c
         simpa [mul_assoc] using (congrArg (fun t : R => t * r) hconj).symm
       exact hmul
     · intro hr
-      change φ r = 1
       ext w
       have hrcent : r ∈ Subgroup.centralizer (W : Set R) := hr
       have hmul : ((w : W) : R) * r = r * ((w : W) : R) :=

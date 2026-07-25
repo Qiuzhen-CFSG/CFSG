@@ -223,7 +223,7 @@ private theorem chapter2_claim16_normal_of_index_eq_prime_of_isPGroup
       apply le_antisymm le_top
       intro x hx
       have hxone : x = 1 := Subsingleton.elim x 1
-      simpa [hxone]
+      simp [hxone]
     have hp_one : p = 1 := by simpa [hAtop] using hindex.symm
     exact (Fact.out : Nat.Prime p).ne_one hp_one
   apply Subgroup.normal_of_index_eq_minFac_card
@@ -377,12 +377,114 @@ private theorem chapter2_claim16_cyclic_order_three_mulAut_eq_id_or_inv
     simpa [u] using hu
   · right
     intro x
-    have hform := IsCyclic.mulAutMulEquiv_symm_apply_apply C (-1) x
+    haveI : Fintype C := Fintype.ofFinite _
+    haveI : Fintype (MulAut C) := Fintype.ofFinite _
+    haveI : DecidableEq (MulAut C) := Classical.decEq _
     have halpha : alpha = (IsCyclic.mulAutMulEquiv C).symm (-1) := by
       apply (IsCyclic.mulAutMulEquiv C).injective
       simpa [u] using hu
-    rw [halpha, hform]
-    simp
+    rw [halpha]
+    have h_card_mulAut : Nat.card (MulAut C) = 2 := by
+      calc
+        Nat.card (MulAut C) = (Nat.card C).totient := IsCyclic.card_mulAut (C)
+        _ = 2 := by
+          rw [hcard]
+          decide
+    have h_neg_one_ne_one : (-1 : (ZMod (Nat.card C))ˣ) ≠ 1 := by
+      rw [hcard]; decide
+    have h_phi_ne_one : (IsCyclic.mulAutMulEquiv C).symm (-1 : (ZMod (Nat.card C))ˣ) ≠ 1 := by
+      intro h
+      apply h_neg_one_ne_one
+      calc
+        (-1 : (ZMod (Nat.card C))ˣ) = (IsCyclic.mulAutMulEquiv C) ((IsCyclic.mulAutMulEquiv C).symm (-1)) := by
+          simp
+        _ = (IsCyclic.mulAutMulEquiv C) 1 := by rw [h]
+        _ = 1 := by simp
+    haveI : IsMulCommutative C := IsCyclic.isMulCommutative
+    letI : CommGroup C := IsMulCommutative.instCommGroup
+    let inv_aut : MulAut C :=
+      { toFun := λ x : C => x⁻¹
+        invFun := λ x : C => x⁻¹
+        left_inv := λ x => by simp
+        right_inv := λ x => by simp
+        map_mul' := λ x y => by
+          have hc : IsMulCommutative C := IsCyclic.isMulCommutative
+          calc
+            (x * y)⁻¹ = y⁻¹ * x⁻¹ := by simp
+            _ = x⁻¹ * y⁻¹ := hc.is_comm.comm (y⁻¹) (x⁻¹) }
+    have h_inv_ne_one : inv_aut ≠ (1 : MulAut C) := by
+      have h_card3 : Fintype.card C = 3 := by
+        simpa [Nat.card_eq_fintype_card] using hcard
+      have h_gt1 : 1 < Fintype.card C := by
+        rw [h_card3]; norm_num
+      have h_nontriv : Nontrivial C := Fintype.one_lt_card_iff_nontrivial.mp h_gt1
+      have h_exists : ∃ (x : C), x ≠ 1 := by
+        obtain ⟨x, y, hxy⟩ := h_nontriv.exists_pair_ne
+        by_cases hx1 : x = 1
+        · refine ⟨y, ?_⟩
+          intro hy1; apply hxy; rw [hx1, hy1]
+        · exact ⟨x, hx1⟩
+      rcases h_exists with ⟨z, hz⟩
+      intro h
+      have hz_inv_eq_z : z⁻¹ = z := by
+        calc
+          z⁻¹ = inv_aut z := rfl
+          _ = (1 : MulAut C) z := by rw [h]
+          _ = z := rfl
+      have hz_sq_one : z ^ 2 = 1 := by
+        have h_zz_one : z * z = 1 := by
+          calc
+            z * z = z * z⁻¹ := by rw [hz_inv_eq_z]
+            _ = 1 := by simp
+        calc
+          z ^ 2 = z * z := by simp [pow_two]
+          _ = 1 := h_zz_one
+      have h_dvd2 : orderOf z ∣ 2 := orderOf_dvd_of_pow_eq_one hz_sq_one
+      have h_dvd3 : orderOf z ∣ 3 := by
+        haveI : Fintype C := Fintype.ofFinite _
+        have h := orderOf_dvd_card (x := z)
+        have h_card3 : Fintype.card C = 3 := by
+          simpa [Nat.card_eq_fintype_card] using hcard
+        rw [h_card3] at h
+        exact h
+      have h_dvd1 : orderOf z ∣ 1 := by
+        have h_gcd := Nat.dvd_gcd h_dvd2 h_dvd3
+        simpa [show Nat.gcd 2 3 = 1 from by norm_num] using h_gcd
+      have h_order1 : orderOf z = 1 := by
+        exact Nat.dvd_one.mp h_dvd1
+      apply hz
+      exact orderOf_eq_one_iff.mp h_order1
+    have h_card_fintype : Fintype.card (MulAut C) = 2 := by
+      calc
+        Fintype.card (MulAut C) = Nat.card (MulAut C) := (Nat.card_eq_fintype_card (α := MulAut C)).symm
+        _ = 2 := h_card_mulAut
+    have h_all_auts : (Finset.univ : Finset (MulAut C)) = {1, inv_aut} := by
+      refine (Finset.eq_of_subset_of_card_le ?_ ?_).symm
+      · exact Finset.subset_univ _
+      · have h_card_goal : Finset.card (Finset.univ : Finset (MulAut C)) ≤ Finset.card ({1, inv_aut} : Finset (MulAut C)) := by
+          calc
+            Finset.card (Finset.univ : Finset (MulAut C)) = Fintype.card (MulAut C) := by simp
+            _ = 2 := h_card_fintype
+            _ ≤ Finset.card ({1, inv_aut} : Finset (MulAut C)) := by
+              have h_eq : Finset.card ({1, inv_aut} : Finset (MulAut C)) = 2 := by
+                rw [Finset.card_insert_eq_ite]
+                have h_not_mem : 1 ∉ ({inv_aut} : Finset (MulAut C)) := by
+                  intro h; apply Ne.symm h_inv_ne_one; simpa using h
+                rw [if_neg h_not_mem]
+                norm_num
+              rw [h_eq]
+        exact h_card_goal
+    have h_mem : (IsCyclic.mulAutMulEquiv C).symm (-1 : (ZMod (Nat.card C))ˣ) ∈ (Finset.univ : Finset (MulAut C)) :=
+      Finset.mem_univ _
+    rw [h_all_auts] at h_mem
+    have h_mem_cases : (IsCyclic.mulAutMulEquiv C).symm (-1 : (ZMod (Nat.card C))ˣ) = 1 ∨
+      (IsCyclic.mulAutMulEquiv C).symm (-1 : (ZMod (Nat.card C))ˣ) = inv_aut := by
+      simpa using h_mem
+    rcases h_mem_cases with (h | h)
+    · exact False.elim (h_phi_ne_one h)
+    · calc
+        ((IsCyclic.mulAutMulEquiv C).symm (-1 : (ZMod (Nat.card C))ˣ)) x = inv_aut x := by rw [h]
+        _ = x⁻¹ := rfl
 
 private theorem chapter2_claim16_normalizer_Z1_eq
     {G : Type*} [Group G] [Finite G]
@@ -477,7 +579,7 @@ private theorem chapter2_claim16_claim16_commutative
     rw [← hcenter]
     exact inf_le_right
   letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : IsMulCommutative P := ⟨(isCyclic_of_prime_card hPcard).commutative⟩
+  letI : IsMulCommutative P := (isCyclic_of_prime_card hPcard).isMulCommutative
   have hA_le_CA : A ≤ Subgroup.centralizer (A : Set G) := by
     intro a ha
     rw [Subgroup.mem_centralizer_iff]
@@ -537,7 +639,7 @@ private theorem chapter2_claim16_z_mul_three_element_stronglyReal
     rw [hcenter] at huCenter
     exact huCenter
   rw [Subgroup.mem_centralizer_iff] at hx_not_C
-  push_neg at hx_not_C
+  push Not at hx_not_C
   obtain ⟨y, hy, hyx⟩ := hx_not_C
   let c : G := x * y * x⁻¹ * y⁻¹
   have hcCenter : c ∈ R ⊓ Subgroup.centralizer (R : Set G) :=
@@ -548,7 +650,9 @@ private theorem chapter2_claim16_z_mul_three_element_stronglyReal
     apply hyx
     have hxy : x * y = y * x := by
       calc
-        x * y = c * (y * x) := by simp [c]; group
+        x * y = c * (y * x) := by
+          dsimp [c]
+          group
         _ = y * x := by rw [hc]; simp
     exact hxy.symm
   have hc_comm_y : c * y = y * c :=
@@ -906,7 +1010,7 @@ private theorem chapter2_claim16_claim16_unique
     (hSigma : Sigma = W ⊓ Subgroup.centralizer (P : Set G))
     (hp3 : p = 3) (hSigmaCard : Nat.card Sigma = 3)
     (hZ1 : Z1 = Subgroup.zpowers (s * t)) (hst3 : orderOf (s * t) = 3)
-    (hL_le_R1 : L ≤ R1)
+    (_hL_le_R1 : L ≤ R1)
     (hW_cent_L : W ≤ Subgroup.centralizer (L : Set G))
     (hP_not_cent_L : ¬ P ≤ Subgroup.centralizer (L : Set G))
     (hcenterLV : (L ⊔ V) ⊓ Subgroup.centralizer ((L ⊔ V : Subgroup G) : Set G) =

@@ -305,7 +305,8 @@ public theorem isaacs_theorem_6_5
   have hInternal : DirectSum.IsInternal A :=
     DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top hAind hAsup
   refine ⟨n, g, ?_, ?_, ?_, ?_⟩
-  · simpa [A, Aall, eSub, U, rhoH] using hInternal
+  · change DirectSum.IsInternal (fun i : Fin n => eSub (U (g i)))
+    simpa [A, Aall, eSub, U] using hInternal
   · intro i
     exact (Subrepresentation.irreducible_iff_isAtom (U (g i))).mpr (hUatom (g i))
   · intro i
@@ -355,9 +356,10 @@ public theorem isaacs_theorem_6_5
     have hLeft (i : Fin n) :
         Nonempty ((U (g i)).toRepresentation ≃ₗ W.toRepresentation) ↔
           Nonempty ((A i) ≃ₗ[MonoidAlgebra F H] eSub W) := by
-      simpa [A, Aall, eSub] using
-        (isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
-          (U (g i)) W)
+      change Nonempty ((U (g i)).toRepresentation ≃ₗ W.toRepresentation) ↔
+        Nonempty ((U (g i)).asSubmodule ≃ₗ[MonoidAlgebra F H] W.asSubmodule)
+      exact isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
+        (U (g i)) W
     have hRight (i : Fin n) :
         Nonempty ((B i) ≃ₗ[MonoidAlgebra F H] eSub W) ↔
           Nonempty ((U (g i)).toRepresentation ≃ₗ sigma) := by
@@ -369,7 +371,8 @@ public theorem isaacs_theorem_6_5
           apply
             (isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
               (C (U (g i))) W).mpr
-          simpa [B, Cmod, A, Aall, eSub] using hBi
+          change Nonempty ((B i) ≃ₗ[MonoidAlgebra F H] eSub W)
+          exact hBi
         have hCUiCUx :
             Nonempty
               ((C (U (g i))).toRepresentation ≃ₗ
@@ -393,7 +396,9 @@ public theorem isaacs_theorem_6_5
         have hLinear :=
           (isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
             (C (U (g i))) W).mp hCUiW
-        simpa [B, Cmod, A, Aall, eSub] using hLinear
+        change Nonempty ((C (U (g i))).asSubmodule ≃ₗ[MonoidAlgebra F H] W.asSubmodule) at hLinear
+        change Nonempty ((B i) ≃ₗ[MonoidAlgebra F H] eSub W)
+        exact hLinear
     calc
       Nat.card {i : Fin n // Nonempty
           ((U (g i)).toRepresentation ≃ₗ W.toRepresentation)} =

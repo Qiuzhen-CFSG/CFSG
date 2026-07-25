@@ -352,7 +352,8 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
       (Subgroup.normal_subgroupOf_iff_le_normalizer
         (show K ≤ K ⊔ P from le_sup_left)).2 hKnormalizer
   have hP_le_centralizer : P ≤ Subgroup.centralizer (P : Set G) := by
-    haveI : IsCyclic P := isCyclic_of_prime_card hch.B1.P_card
+    have hPcyclic : IsCyclic P := isCyclic_of_prime_card hch.B1.P_card
+    letI : CommGroup P := hPcyclic.commGroup
     intro x hxP
     rw [Subgroup.mem_centralizer_iff]
     intro y hyP
@@ -454,8 +455,11 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
     let kKP : ↥(K ⊔ P) := ⟨k, (show K ≤ K ⊔ P from le_sup_left) hkK⟩
     let kKsrc : Ksrc := ⟨kKP, hkK⟩
     have hfix : kKsrc • q = q := hqfix kKsrc
+    have hfixQ : kKP • q = q := by
+      change kKsrc • q = q
+      exact hfix
     have hfixG : ((kKP • q : Q) : G) = (q : G) := by
-      simpa [kKsrc, MulAction.compHom_smul_def] using congrArg Subtype.val hfix
+      exact congrArg (fun z : Q => (z : G)) hfixQ
     have hconj : k * (q : G) * k⁻¹ = (q : G) := by
       have hact := haction_conj kKP q
       exact hact.symm.trans hfixG

@@ -557,7 +557,7 @@ private theorem sl2_orderThree_no_eigenvector
   have htrace : Matrix.trace (A : Matrix (Fin 2) (Fin 2) F) = 0 := by
     dsimp [M] at hMdet
     rw [Matrix.det_fin_two] at hMdet
-    simp [Matrix.sub_apply, Matrix.one_apply] at hMdet
+    simp [Matrix.sub_apply] at hMdet
     have hdetA : Matrix.det (A : Matrix (Fin 2) (Fin 2) F) = 1 := A.property
     rw [Matrix.det_fin_two] at hdetA
     change
@@ -620,7 +620,7 @@ private theorem sl2_commuting_matrix_eq_linear
       (A : Matrix (Fin 2) (Fin 2) F) 0 1 ≠ 0 ∨
         (A : Matrix (Fin 2) (Fin 2) F) 1 0 ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hnoeig ((A : Matrix (Fin 2) (Fin 2) F) 0 0) ![1, 0] (by
       intro hv
       exact one_ne_zero (congrFun hv 0))
@@ -639,12 +639,12 @@ private theorem sl2_commuting_matrix_eq_linear
         B 0 1 / (A : Matrix (Fin 2) (Fin 2) F) 0 1, ?_⟩
     ext i j
     fin_cases i <;> fin_cases j
-    · simp [Matrix.one_apply]
-    · simp [Matrix.one_apply, hb]
-    · simp [Matrix.one_apply]
+    · simp
+    · simp [hb]
+    · simp
       field_simp [hb]
       linear_combination h00
-    · simp [Matrix.one_apply]
+    · simp
       field_simp [hb]
       linear_combination h01
   · refine
@@ -653,12 +653,12 @@ private theorem sl2_commuting_matrix_eq_linear
         B 1 0 / (A : Matrix (Fin 2) (Fin 2) F) 1 0, ?_⟩
     ext i j
     fin_cases i <;> fin_cases j
-    · simp [Matrix.one_apply]
-    · simp [Matrix.one_apply]
+    · simp
+    · simp
       field_simp [hc]
       linear_combination h11
-    · simp [Matrix.one_apply, hc]
-    · simp [Matrix.one_apply]
+    · simp [hc]
+    · simp
       field_simp [hc]
       linear_combination -h10
 
@@ -906,7 +906,8 @@ private theorem sl2_orderThree_centralizer_order_ne_two
     have h :=
       congrArg Subtype.val
         (Subgroup.mem_centralizer_singleton_iff.mp B.property).symm
-    simpa using h
+    rw [commute_iff_eq]
+    exact h
   let X : C :=
     ⟨(B.1 : Matrix (Fin 2) (Fin 2) F) - 1, by
       intro Y hY
@@ -1004,8 +1005,8 @@ private theorem psl28_binary3_orderThree_centralizer_card
     intro y hy
     rw [Subgroup.mem_centralizer_singleton_iff]
     have hcomm :=
-      IsPGroup.commutative_of_card_eq_prime_sq
-        (p := 3) (G := P) (by simpa [pow_two] using hPcard)
+      (IsPGroup.isMulCommutative_of_card_eq_prime_sq
+        (p := 3) (G := P) (by simpa [pow_two] using hPcard)).is_comm.comm
         ⟨y, hy⟩ ⟨x, hxP⟩
     exact congrArg Subtype.val hcomm
   have h9dvd : 9 ∣ Nat.card C := by
@@ -1074,7 +1075,7 @@ private theorem psl28_binary3_orderThree_centralizer_card
     simpa [Nat.Prime.factorization Nat.prime_three, hfac9, k] using hf3
   have hk : k = 2 := by omega
   rw [hCpow]
-  simpa [k, hk]
+  simp [k, hk]
 
 
 /-- In `PSL(2,8)`, the centralizer of an element of order three is the

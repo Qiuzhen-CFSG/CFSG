@@ -48,14 +48,12 @@ public theorem claim_3_a
       | succ k ih =>
           rw [pow_succ, RingAut.mul_apply, htheta_sq_x, ih]
     rcases hthetaOdd with ⟨k, hk⟩
-    have horder_apply := congrArg (fun e : F ≃+* F => e x)
-      (pow_orderOf_eq_one theta)
     apply hx
     calc
       theta x = theta ((theta ^ (2 * k)) x) := by rw [htheta_even_x]
       _ = (theta ^ (2 * k + 1)) x := by rw [pow_succ', RingAut.mul_apply]
       _ = (theta ^ orderOf theta) x := by rw [hk]
-      _ = x := by simpa using horder_apply
+      _ = x := by simp
   have hthetax0 : theta x ≠ 0 := by
     intro h
     apply hx0
@@ -104,7 +102,7 @@ public theorem claim_3_a
       ∃ x : F, x ∉ s := by
     letI : Fintype F := Fintype.ofFinite F
     by_contra h
-    push_neg at h
+    push Not at h
     have hsub : Finset.univ ⊆ s := by
       intro z _hz
       exact h z
@@ -175,4 +173,3 @@ public theorem claim_3_a
 
 end PFchapter4section3
 end BenderSuzuki
-

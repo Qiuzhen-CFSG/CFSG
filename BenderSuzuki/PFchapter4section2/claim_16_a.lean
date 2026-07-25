@@ -15,18 +15,18 @@ namespace PFchapter4section2
 public theorem claim_16_a
     (E : Type*) [Field E] [Finite E] [CharP E 2] (W : Subgroup Eˣ) (m : ℕ)
     (zeta alpha beta : E) (zetaUnit betaUnit : Eˣ) (u : ℕ → E)
-    (hzeta_coe : (zetaUnit : E) = zeta)
+    (_hzeta_coe : (zetaUnit : E) = zeta)
     (hbeta_coe : (betaUnit : E) = beta)
-    (hzeta_generator : Subgroup.closure ({zetaUnit} : Set Eˣ) = W)
+    (_hzeta_generator : Subgroup.closure ({zetaUnit} : Set Eˣ) = W)
     (hWcard : Nat.card W = m)
-    (hbeta_mem : betaUnit ∈ W) (hbeta_ne : beta ≠ 0)
-    (hroot : beta ^ 2 + alpha * beta + 1 = 0)
-    (hu_closed : ∀ i : ℕ, 1 ≤ i → i ≤ m - 1 →
+    (hbeta_mem : betaUnit ∈ W) (_hbeta_ne : beta ≠ 0)
+    (_hroot : beta ^ 2 + alpha * beta + 1 = 0)
+    (_hu_closed : ∀ i : ℕ, 1 ≤ i → i ≤ m - 1 →
       u i = (beta ^ (i - 1) + (beta⁻¹) ^ (i - 1)) /
         (beta ^ i + (beta⁻¹) ^ i))
     (hden : ∀ i : ℕ, 1 ≤ i → i ≤ m - 1 →
       beta ^ i + (beta⁻¹) ^ i ≠ 0)
-    (huterminal : u (m - 1) = alpha) :
+    (_huterminal : u (m - 1) = alpha) :
     Subgroup.closure ({betaUnit} : Set Eˣ) = W := by
   have hm_pos : 0 < m := by
     rw [← hWcard]

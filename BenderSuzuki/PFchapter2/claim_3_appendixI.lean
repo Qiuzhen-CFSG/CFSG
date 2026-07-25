@@ -12,6 +12,7 @@ namespace BenderSuzuki
 namespace PFchapter2
 
 open PFAppendixI Representation
+open scoped IsMulCommutative
 
 universe uL uN
 
@@ -60,7 +61,10 @@ public theorem claim3_appendixI_scalar_adapter_KP
   have hcardN : Nat.card N = r ^ p := by
     have hcard := Module.natCard_eq_pow_finrank
       (K := ZMod r) (V := Additive N)
-    simpa [hdim] using hcard
+    calc
+      Nat.card N = Nat.card (Additive N) :=
+        (Nat.card_congr Additive.toMul).symm
+      _ = r ^ p := by simpa [hdim] using hcard
   have hFrCard : Nat.card Fr = r ^ p := by
     obtain ⟨fieldInst, hfield⟩ :=
       peterfalvi_appendixI_proposition_2_a
@@ -84,6 +88,7 @@ public theorem claim3_appendixI_scalar_adapter_KP
     MonoidHom.toHomUnits (G := T) (M := Fr) tauF
   let toTop : K →* T := (Subgroup.topEquiv : T ≃* K).symm.toMonoidHom
   let scalarR : K →* Frˣ := scalarTop.comp toTop
+  have hK_smul (k : K) (x : N) : k • x = (k : L) • x := rfl
   have hscalar_apply (k : K) (x : Additive N) :
       (scalarR k : Fr) • x =
         (Representation.ofElementaryAbelianAction
@@ -102,7 +107,8 @@ public theorem claim3_appendixI_scalar_adapter_KP
         (scalarR b : Fr) • (Additive.ofMul x : Additive N) at h
     rw [hscalar_apply, hscalar_apply] at h
     apply Additive.ofMul.injective
-    simpa only [Representation.ofElementaryAbelianAction_apply_ofMul] using h
+    simpa only [Representation.ofElementaryAbelianAction_apply_ofMul,
+      hK_smul] using h
   have hscalar_end (k : K) :
       (scalarR k : Fr).1 =
         AppendixITActionEnd (p := r) (E := N) T (toTop k) := by
@@ -111,7 +117,7 @@ public theorem claim3_appendixI_scalar_adapter_KP
         (Representation.ofElementaryAbelianAction
           (A := L) (G := N) (p := r)) (k : L) x :=
       hscalar_apply k x
-    simpa [AppendixITActionEnd_apply, toTop, T] using h
+    simpa [AppendixITActionEnd_apply, toTop, T, hK_smul] using h
   let scalarSet : Set Fr := Set.range fun k : K => (scalarR k : Fr)
   have hscalarSet_closure : Subring.closure scalarSet = ⊤ := by
     apply top_unique
@@ -326,7 +332,6 @@ private theorem claim3_appendixI_sigmaHom_of_per_element
               ((σ u * σ v) lambda *
                 Multiplicative.toAdd (q0_add (u_add (u * v) x)))) := by
               have huv : u_add (u * v) x = u_add u (u_add v x) := by
-                change (u_add (u * v)) x = u_add u (u_add v x)
                 rw [map_mul]
                 rfl
               rw [huv]
@@ -364,6 +369,7 @@ public theorem claim3_appendixI_sigma_adapter_KP
         scalarR ((act a) k) =
           Units.map (sigmaR a).toMonoidWithZeroHom (scalarR k) := by
   classical
+  have hP_smul (a : P) (x : N) : a • x = (a : L) • x := rfl
   obtain ⟨s, hs⟩ : ∃ s : N, s ≠ 1 := exists_ne 1
   let sAdd : Additive N := Additive.ofMul s
   have hsAdd : sAdd ≠ 0 := by simpa [sAdd] using hs
@@ -458,7 +464,7 @@ public theorem claim3_appendixI_sigma_adapter_KP
     apply Subtype.ext
     rw [hu_add_apply]
     apply Additive.ofMul.injective
-    simpa [hu_add_apply,
+    simpa [hu_add_apply, hP_smul,
       Representation.ofElementaryAbelianAction_apply_ofMul] using
       hscalar_conj a k (Additive.ofMul ((x : Q0) : N))
   let sQ0 : Q0 := ⟨s, Subgroup.mem_top s⟩
@@ -479,7 +485,7 @@ public theorem claim3_appendixI_sigma_adapter_KP
     have h := hsemilinear a lambda xQ0
     rw [hq0_scalar, hq0_scalar] at h
     have hN := congrArg (fun y : Q0 => Additive.ofMul ((y : Q0) : N)) h
-    simpa [xQ0, hu_add_apply,
+    simpa [xQ0, hu_add_apply, hP_smul,
       Representation.ofElementaryAbelianAction_apply] using hN
   refine ⟨sigmaR, ?_⟩
   intro a k

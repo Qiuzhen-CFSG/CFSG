@@ -380,7 +380,7 @@ public theorem section14_dadeSupport_eq_tildeA1_of_notation_8_14_source_data
 public theorem section14_supportedOn_dadeTransform_of_CFon_subset
     {G : Type u} [Group G]
     {A A1 : Set G} {L : Subgroup G} {R : G → Subgroup G}
-    (hA1A : A1 ⊆ A)
+    (_ : A1 ⊆ A)
     (hAL : ∀ a : G, a ∈ A → a ∈ L)
     {α : Section1.ClassFunction L}
     (hα : Section2.CFOn L A1 α) :
@@ -1109,15 +1109,13 @@ public theorem section14_delta_odd_equation_of_corrected_even
   refine ⟨m, ?_⟩
   let pG : Section1.ClassFunction G := Section1.principalCharacter G
   have hpGself : Section1.scalarProduct G pG pG = 1 := by
-    simp [pG, Section1.scalarProduct, Section1.principalCharacter]
+    simp [pG, Section1.scalarProduct]
   have hcorr_expand :
       Section1.scalarProduct G (βM + γM - pG) (βL + γL - pG) =
         Section1.scalarProduct G (βM + γM) (βL + γL) - 1 := by
     rw [Section5.scalarProduct_sub_left, Section5.scalarProduct_sub_right,
       Section5.scalarProduct_sub_right]
-    simpa [pG, hΔMprincipal, hprincipalΔL, hpGself] using (by ring :
-      Section1.scalarProduct G (βM + γM) (βL + γL) - 1 - (1 - 1) =
-        Section1.scalarProduct G (βM + γM) (βL + γL) - 1)
+    simp [pG, hΔMprincipal, hprincipalΔL, hpGself]
   have hdelta :
       Section1.scalarProduct G (βM + γM) (βL + γL) =
         (1 : ℂ) + 2 * (m : ℂ) := by
@@ -1810,7 +1808,8 @@ public theorem section14_theorem_14_14_pf79_parity_source_bridge
       p q u v c d h hctx h143 h1410 h1413 with
     ⟨hγ10_raw, _hconjγ10⟩
   have hγ10 : Section1.scalarProduct G (γidx 1) (γidx 0) = 0 := by
-    simpa [γidx] using hγ10_raw
+    change Section1.scalarProduct G (τL₁ φ) (τM₁ ψ) = 0
+    exact hγ10_raw
   have hγ01 : Section1.scalarProduct G (γidx 0) (γidx 1) = 0 := by
     have hswap := Section1.scalarProduct_star_swap (G := G) (γidx 1) (γidx 0)
     have hstarzero : star (Section1.scalarProduct G (γidx 0) (γidx 1)) = 0 := by
@@ -1826,7 +1825,11 @@ public theorem section14_theorem_14_14_pf79_parity_source_bridge
         Section1.scalarProduct G (γidx 0) (βidx 1 + γidx 1) +
             Section1.scalarProduct G (γidx 1) (βidx 0 + γidx 0) =
           (1 : ℂ) + 2 * (z : ℂ) := by
-    simpa [βidx, γidx] using hodd_raw
+    change ∃ z : ℤ,
+      Section1.scalarProduct G (τM₁ ψ) (τL βL + τL₁ φ) +
+          Section1.scalarProduct G (τL₁ φ) (τM βM + τM₁ ψ) =
+        (1 : ℂ) + 2 * (z : ℂ)
+    exact hodd_raw
   exact Section7.theorem_7_9_parityData_of_delta_odd hγ01 hγ10 hodd
 
 public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
@@ -1984,7 +1987,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [Aidx, Lidx, Kidx] using h22M
-      · simpa [Aidx, Lidx, Kidx] using h22L
+      · change Section2.hypothesis_2_2_statement (Section8.a1Set H) L RL
+        exact h22L
     · intro i j hij
       fin_cases i <;> fin_cases j
       · exact (hij rfl).elim
@@ -2016,7 +2020,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [Aidx, Lidx, Kidx, τidx] using hAgreeM
-      · simpa [Aidx, Lidx, Kidx, τidx] using hAgreeL
+      · change Section7.agreesWithDadeTransform (Section8.a1Set H) L RL τL
+        exact hAgreeL
     · intro i
       fin_cases i
       · exact Section12.section16MFSubgroup_le hKMF
@@ -2029,24 +2034,29 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
       fin_cases i
       · change Section8.a1Set K = Section7.puncturedSubgroupSet K
         ext g
-        simp [Aidx, Hidx, Section7.puncturedSubgroupSet, Section8.a1Set,
+        simp [Section7.puncturedSubgroupSet, Section8.a1Set,
           section16NonidentityElements]
       · change Section8.a1Set H = Section7.puncturedSubgroupSet H
         ext g
-        simp [Aidx, Hidx, Section7.puncturedSubgroupSet, Section8.a1Set,
+        simp [Section7.puncturedSubgroupSet, Section8.a1Set,
           section16NonidentityElements]
     · intro i
       fin_cases i
       · simpa [Sidx, Hidx, Lidx] using hPunctM
-      · simpa [Sidx, Hidx, Lidx] using hPunctL
+      · change Section7.puncturedInducedFamily (H.subgroupOf L) Lfam
+        exact hPunctL
     · intro i
       fin_cases i
-      · simpa [Sidx, τidx] using hCohM
-      · simpa [Sidx, τidx] using hCohL
+      · change Section6.coherentFamily Mfam τM
+        exact hCohM
+      · change Section6.coherentFamily Lfam τL
+        exact hCohL
     · intro i
       fin_cases i
-      · simpa [Sidx, τidx, νidx] using hExtM
-      · simpa [Sidx, τidx, νidx] using hExtL
+      · change Section7.isCoherentExtension Mfam τM τM₁
+        exact hExtM
+      · change Section7.isCoherentExtension Lfam τL τL₁
+        exact hExtL
     · intro i
       fin_cases i
       · simpa [Sidx, ζidx, Hidx, Lidx] using ⟨hψmem, hψirr, hψdeg⟩
@@ -2054,7 +2064,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     · intro i
       fin_cases i
       · simpa [βidx, τidx, ζidx, Lidx, Hidx] using hβMτ
-      · simpa [βidx, τidx, ζidx, Lidx, Hidx] using hβLτ
+      · change τL βL = Section7.theorem_7_8_beta L H τL φ
+        exact hβLτ
     · intro i
       fin_cases i
       · rfl
@@ -2068,7 +2079,10 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
         p q u v c d h hctxraw h143raw h1410raw h1413)
   have h79 :=
     Section7.theorem_7_9 Aidx Lidx Hidx Kidx Sidx τidx νidx ζidx βidx γidx
-  simpa [βidx, γidx] using h79 hsource79 hparity
+  change
+    (Section1.scalarProduct G (βidx 0) (γidx 1) ≠ 0 ∨
+      Section1.scalarProduct G (βidx 1) (γidx 0) ≠ 0)
+  exact h79 hsource79 hparity
 
 @[expose] public def section14_typeI_core_ltr_pf78Setup
     {G : Type u} [Group G] [Finite G]
@@ -2399,7 +2413,7 @@ public theorem section14_typeI_core_ltr_cross_scalarProduct_normSq_ge_one
     ⟨n, hn⟩
   have hn_ne : n ≠ 0 := by
     intro hn0
-    exact hnonzero (by simpa [hn, hn0])
+    exact hnonzero (by simp [hn, hn0])
   rw [hn]
   exact section14_normSq_ge_one_of_intCast_ne_zero_for_oddScalarProduct n hn_ne
 

@@ -328,7 +328,6 @@ private theorem theorem_9_10_field_unit_fixed_eq_one_sec9
         z = 1 := by
   intro ha hfix
   apply Multiplicative.toAdd.injective
-  change Multiplicative.toAdd z = Multiplicative.toAdd (1 : Multiplicative F)
   simp
   have hz : (a : F) * Multiplicative.toAdd z = Multiplicative.toAdd z := by
     simpa using congrArg Multiplicative.toAdd hfix

@@ -8,6 +8,8 @@ public import Mathlib.Data.Nat.Choose.Basic
 public import Mathlib.GroupTheory.Commutator.Basic
 import Mathlib.Tactic.Group
 
+open scoped commutatorElement
+
 /-!
 # Huppert III.1.3
 
