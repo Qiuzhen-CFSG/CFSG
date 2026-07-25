@@ -1,0 +1,19 @@
+name = "CFSG"
+defaultTargets = ["FeitThompson", "BenderSuzuki"]
+lintDriver = "batteries/runLinter"
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.29.0-rc8"
+
+[[lean_lib]]
+name = "FeitThompson"
+
+[[lean_lib]]
+name = "BenderSuzuki"
