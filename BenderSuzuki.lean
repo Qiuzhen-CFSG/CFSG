@@ -33,8 +33,6 @@ public import BenderSuzuki.External.Higman.theorem_1d
 public import BenderSuzuki.External.Higman.theorem_1e_coordinates
 public import BenderSuzuki.External.Higman.theorem_1e_isomorphic_summands
 public import BenderSuzuki.External.Higman.theorem_1e_scalar_coordinates
-public import BenderSuzuki.External.Huppert.I.theorem_18_3
-public import BenderSuzuki.External.Huppert.II.definition_6_3
 public import BenderSuzuki.External.Huppert.II.theorem_10_12
 public import BenderSuzuki.External.Huppert.II.theorem_10_13
 public import BenderSuzuki.External.Huppert.II.theorem_10_2
@@ -65,9 +63,6 @@ public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
 public import BenderSuzuki.External.Huppert.IV.theorem_5_3
 public import BenderSuzuki.External.Huppert.IV.theorem_5_4
 public import BenderSuzuki.External.Huppert.IV.theorem_5_4.part_a
-public import BenderSuzuki.External.Huppert.IV.theorem_5_4.part_b
-public import BenderSuzuki.External.Huppert.IV.theorem_5_4.part_c
-public import BenderSuzuki.External.Huppert.IV.theorem_5_4.part_d
 public import BenderSuzuki.External.Huppert.IV.theorem_6_2
 public import BenderSuzuki.External.Huppert.V.ComplementTransfer
 public import BenderSuzuki.External.Huppert.V.FrattiniQuotient
@@ -138,7 +133,6 @@ public import BenderSuzuki.PFAppendixIII.FrobeniusBilinear
 public import BenderSuzuki.PFAppendixIII.lemma_1
 public import BenderSuzuki.PFAppendixIII.lemma_2
 public import BenderSuzuki.PFAppendixIII.proposition_1
-public import BenderSuzuki.PFAppendixIII.proposition_2
 public import BenderSuzuki.PFAppendixIII.theorem
 public import BenderSuzuki.PFAppendixIV.Inertia
 public import BenderSuzuki.PFAppendixIV.lemma_1
@@ -224,15 +218,9 @@ public import BenderSuzuki.PFchapter4section1.lemma_a
 public import BenderSuzuki.PFchapter4section1.lemma_b
 public import BenderSuzuki.PFchapter4section2.Basic
 public import BenderSuzuki.PFchapter4section2.claim_11
-public import BenderSuzuki.PFchapter4section2.claim_12_a
-public import BenderSuzuki.PFchapter4section2.claim_12_b
 public import BenderSuzuki.PFchapter4section2.claim_13
 public import BenderSuzuki.PFchapter4section2.claim_14
 public import BenderSuzuki.PFchapter4section2.claim_15_a
-public import BenderSuzuki.PFchapter4section2.claim_15_b
-public import BenderSuzuki.PFchapter4section2.claim_15_c
-public import BenderSuzuki.PFchapter4section2.claim_16_a
-public import BenderSuzuki.PFchapter4section2.claim_16_b
 public import BenderSuzuki.PFchapter4section2.claim_17
 public import BenderSuzuki.PFchapter4section2.claim_17_shift
 public import BenderSuzuki.PFchapter4section2.claim_1_a
