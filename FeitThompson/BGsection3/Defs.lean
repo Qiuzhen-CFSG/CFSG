@@ -98,23 +98,6 @@ public theorem IsFrobeniusGroupWithKernelComplement.complement_ne_bot {G : Type*
     R ≠ ⊥ :=
   hfrob.2.2.2.2
 
-public theorem IsFrobeniusGroupWithKernelComplement.kernel_ne_top {G : Type*} [Group G]
-    {K R : Subgroup G} (hfrob : IsFrobeniusGroupWithKernelComplement K R) :
-    K ≠ ⊤ := by
-  intro hK_top
-  apply hfrob.complement_ne_bot
-  rw [Subgroup.eq_bot_iff_forall]
-  intro r hrR
-  exact (Subgroup.disjoint_def.mp (hK_top ▸ hfrob.isComplement'.disjoint)) (by simp) hrR
-
-public theorem IsFrobeniusGroupWithKernelComplement.complement_ne_top {G : Type*} [Group G]
-    {K R : Subgroup G} (hfrob : IsFrobeniusGroupWithKernelComplement K R) :
-    R ≠ ⊤ := by
-  intro hR_top
-  apply hfrob.kernel_ne_bot
-  rw [Subgroup.eq_bot_iff_forall]
-  intro k hkK
-  exact (Subgroup.disjoint_def.mp (hR_top ▸ hfrob.isComplement'.disjoint)) hkK (by simp)
 
 /-- Transport a Frobenius kernel/complement decomposition across a group
 equivalence. -/

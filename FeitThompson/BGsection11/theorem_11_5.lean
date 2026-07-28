@@ -310,23 +310,6 @@ public theorem section11_normalizer_le_normalizer_omegaOne
     section11_normalizer_le_normalizer_map_subtype_of_characteristic
       (G := G) P Ω
 
-private theorem section11_prime_dvd_msigma_card_of_sigma
-    {M : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G) (hqσ : q ∈ section10SigmaPrimes M) :
-    q.val ∣ Nat.card (section10Msigma M) := by
-  have hHallSub : IsHallSubgroup (section10SigmaPrimes M) (section10MsigmaSubgroup M) :=
-    (theorem_10_2_b hM).2
-  have hqM : q.val ∣ Nat.card M := hqσ.1
-  have hprod :
-      q.val ∣ (section10MsigmaSubgroup M).index * Nat.card (section10MsigmaSubgroup M) := by
-    simpa [Subgroup.index_mul_card (H := section10MsigmaSubgroup M)] using hqM
-  rcases q.property.dvd_mul.mp hprod with hqidx | hqcard
-  · exact False.elim ((hHallSub.p_in_pi_of_p_dvd_index q hqidx) hqσ)
-  · have hcard_map : Nat.card (section10Msigma M) = Nat.card (section10MsigmaSubgroup M) := by
-      simpa [section10Msigma] using
-        (Subgroup.card_map_of_injective
-          (K := section10MsigmaSubgroup M) (f := M.subtype) M.subtype_injective)
-    simpa [hcard_map]
 
 omit [IsMinCE G] in
 public theorem section11_ambientSylow_ne_bot_of_prime_dvd

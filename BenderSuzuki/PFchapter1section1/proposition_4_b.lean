@@ -80,11 +80,6 @@ private theorem proposition_4_b_exists_H_involution
     exact hq'.2 (Subtype.ext h)
   · simpa using congrArg Subtype.val hq'.1
 
-private theorem proposition_4_b_rightConjugateElem_mem_rightConjugate
-    {G : Type*} [Group G] {H : Subgroup G} {a t : G}
-    (ha : a ∈ H) : rightConjugateElem a t ∈ rightConjugate H t := by
-  rw [rightConjugate, rightConjugateElem, Subgroup.conjBy, Subgroup.mem_map]
-  exact ⟨a, ha, by simp⟩
 
 private theorem proposition_4_b_mem_rightConjugate_of_conj_mem
     {G : Type*} [Group G] {H : Subgroup G} {a t : G}

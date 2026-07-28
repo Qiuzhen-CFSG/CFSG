@@ -82,20 +82,5 @@ public theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbel
         (Additive.toMul x) (Set.mem_univ _)
     simp [hfix]
 
-/-- For the representation associated to an elementary abelian group action, invariant vectors are
-the additive form of the fixed-point subgroup. -/
-public theorem mem_invariants_ofElementaryAbelianAction_iff [IsElementaryAbelian p G]
-    [MulDistribMulAction A G] (x : Additive G) :
-    x ∈ (ofElementaryAbelianAction (A := A) (G := G) (p := p)).invariants ↔
-      Additive.toMul x ∈ fixedPointSubgroup A G := by
-  rw [Representation.mem_invariants]
-  constructor
-  · intro hx
-    rw [FixedPoints.mem_subgroup]
-    intro a
-    exact Additive.ofMul.injective (by simpa using hx a)
-  · intro hx a
-    rw [FixedPoints.mem_subgroup] at hx
-    simp [hx a]
 
 end Representation

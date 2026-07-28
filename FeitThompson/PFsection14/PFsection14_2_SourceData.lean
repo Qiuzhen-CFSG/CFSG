@@ -91,31 +91,6 @@ public theorem section14_section12InternalDirectProduct_swap
     intro y hy
     exact (Subgroup.mem_centralizer_iff.mp (hcent hy) x hx).symm
 
-public theorem section14_theorem_8_8_source_case_b_data_swap
-    {G : Type u} [Group G] [Finite G]
-    {W W1 W2 S T SF TF : Subgroup G}
-    (hcase : Section8.theorem_8_8_source_case_b_data W W1 W2 S T SF TF) :
-    Section8.theorem_8_8_source_case_b_data W W2 W1 T S TF SF := by
-  rcases hcase with
-    ⟨hprod, hcyc, hW1ne, hW2ne, hnorm, hSmax, hTmax, hSF, hTF,
-      hSeq, hTeq, hSdisj, hTdisj, hST, hTypeII, hSType, hTType, hCover⟩
-  refine
-    ⟨section14_section12InternalDirectProduct_swap hprod, hcyc, hW2ne, hW1ne,
-      ?_, hTmax, hSmax, hTF, hSF, hTeq, hSeq, hTdisj, hSdisj, ?_, ?_,
-      hTType, hSType, ?_⟩
-  · intro W0 hW0ne hW0sub
-    exact hnorm W0 hW0ne (by
-      intro x hx
-      simpa [Set.union_comm] using hW0sub hx)
-  · simpa [inf_comm] using hST
-  · rcases hTypeII with hSII | hTII
-    · exact Or.inr hSII
-    · exact Or.inl hTII
-  · intro M hM
-    rcases hCover M hM with hS | hT | hI
-    · exact Or.inr (Or.inl hS)
-    · exact Or.inl hT
-    · exact Or.inr (Or.inr hI)
 
 public theorem section14_theorem_3_2_map_statement_swap
     {G : Type u} [Group G] [Finite G]
@@ -203,16 +178,6 @@ public theorem section14_hypothesis_13_1_characterNotationDataFor_swap
   · intro i k hi0 hip hk0 hkp
     exact hμzeroDegree i k hi0 hip hk0 hkp
 
-public theorem section14_hypothesis_13_1_characterNotationData_swap
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 : Subgroup G} {p q : ℕ}
-    (h : Section13.hypothesis_13_1_characterNotationData Smax Tmax W W1 W2 p q) :
-    Section13.hypothesis_13_1_characterNotationData Tmax Smax W W2 W1 q p := by
-  rcases h with ⟨ω, η, μ, ν, μsum, νsum, δ, δ', σ, hfor⟩
-  exact
-    ⟨fun i j => ω j i, fun i j => η j i, fun i j => ν j i,
-      fun i j => μ j i, fun i => νsum i, fun i => μsum i, δ', δ, σ,
-      section14_hypothesis_13_1_characterNotationDataFor_swap hfor⟩
 
 public theorem section14_hypothesis_13_1_sourceData_swap
     {G : Type u} [Group G] [Finite G]

@@ -119,10 +119,6 @@ lemma scalarProduct_zero_left
     scalarProduct G 0 phi = 0 := by
   simp [scalarProduct]
 
-lemma scalarProduct_zero_right
-    {G : Type*} [Finite G] (phi : ClassFunction G) :
-    scalarProduct G phi 0 = 0 := by
-  simp [scalarProduct]
 
 public lemma scalarProduct_add_left
     {G : Type*} [Finite G] (phi1 phi2 psi : ClassFunction G) :
@@ -142,20 +138,6 @@ public lemma scalarProduct_smul_left
     _ = z * scalarProduct G phi psi := by
           simp [scalarProduct, mul_left_comm]
 
-lemma scalarProduct_eq_zero_of_right_vanishes
-    {G : Type*} [Finite G] [Group G]
-    (phi psi : ClassFunction G) (H : Subgroup G)
-    (hphi : supportedOnSubgroup phi H)
-    (hpsi : ∀ g : G, g ∈ H → psi g = 0) :
-    scalarProduct G phi psi = 0 := by
-  have hsum : ∑ g : G, phi g * star (psi g) = 0 := by
-    refine Finset.sum_eq_zero ?_
-    intro g hg
-    by_cases hgH : g ∈ H
-    · simp [hpsi g hgH]
-    · simp [hphi g hgH]
-  rw [scalarProduct, hsum]
-  simp
 
 lemma eq_of_eqOn_subgroup_and_supportedOnSubgroup
     {G : Type*} [Group G]
@@ -169,10 +151,6 @@ lemma eq_of_eqOn_subgroup_and_supportedOnSubgroup
   · exact hEq ⟨g, hg⟩
   · rw [hphi g hg, hpsi g hg]
 
-lemma degree_conjugateCharacter
-    {G : Type*} [One G] (phi : ClassFunction G) :
-    degree (conjugateCharacter phi) = star (degree phi) := by
-  simp [degree_apply, conjugateCharacter]
 
 lemma representationCharacter_isClassFunction
     {G V : Type*} [Group G] [Finite G]
@@ -242,18 +220,6 @@ public theorem classFunctionLinearEquivOfMulEquiv_apply
     (e : A ≃* B) (φ : ClassFunction A) (b : B) :
     classFunctionLinearEquivOfMulEquiv e φ b = φ (e.symm b) := rfl
 
-public theorem classFunctionLinearEquivOfMulEquiv_symm_apply
-    {A : Type*} {B : Type*} [Group A] [Group B]
-    (e : A ≃* B) (ψ : ClassFunction B) (a : A) :
-    (classFunctionLinearEquivOfMulEquiv e).symm ψ a = ψ (e a) := rfl
-
-public theorem classFunctionLinearEquivOfMulEquiv_symm_eq
-    {A : Type*} {B : Type*} [Group A] [Group B]
-    (e : A ≃* B) :
-    (classFunctionLinearEquivOfMulEquiv e).symm =
-      classFunctionLinearEquivOfMulEquiv e.symm := by
-  ext ψ a
-  rfl
 
 public theorem conjugateCharacter_classFunctionLinearEquivOfMulEquiv
     {A : Type*} {B : Type*} [Group A] [Group B]
@@ -683,12 +649,6 @@ public lemma inducedClassFunction_eq_zero_of_not_mem_of_normal
     inducedClassFunction H theta g = 0 :=
   inducedClassFunction_eq_zero_of_not_mem H theta hg
 
-public lemma inducedClassFunction_supportedOnSubgroup_of_normal
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] [hH : H.Normal]
-    (theta : ClassFunction H) :
-    supportedOnSubgroup (inducedClassFunction H theta) H :=
-  inducedClassFunction_supportedOnSubgroup H theta
 
 lemma inducedClassFunction_conjugateOnNormal
     {G : Type*} [Group G] [Finite G]
@@ -816,51 +776,6 @@ public lemma inducedCF_isClassFunction
     IsClassFunction (inducedCF H theta) :=
   inducedClassFunction_isClassFunction H theta
 
-lemma subgroupRestriction_isClassFunction
-    {G : Type*} [Group G] (H : Subgroup G) [_hH : H.Normal]
-    (phi : ClassFunction G) (hphi : IsClassFunction phi) :
-    IsClassFunction (subgroupRestriction H phi) := by
-  intro x h
-  exact hphi x h
-
-lemma conjugateOnNormal_isClassFunction
-    {G : Type*} [Group G] (H : Subgroup G) [hH : H.Normal]
-    (theta : ClassFunction H) (htheta : IsClassFunction theta) (g : G) :
-    IsClassFunction (conjugateOnNormal H theta g) := by
-  intro x h
-  dsimp [conjugateOnNormal]
-  have hmem1 : g * ((x : H).1 * h.1 * (x : H).1⁻¹) * g⁻¹ ∈ H := by
-    simpa using hH.conj_mem ((x : H).1 * h.1 * (x : H).1⁻¹)
-      (hH.conj_mem h.1 h.2 (x : H).1) g
-  have hmemgxhx : g * x.1 * g⁻¹ ∈ H := by
-    simpa using hH.conj_mem x.1 x.2 g
-  let u : H := ⟨g * x.1 * g⁻¹, hmemgxhx⟩
-  have hmem2 : (u : G) * (g * h.1 * g⁻¹) * (u : G)⁻¹ ∈ H := by
-    simpa using hH.conj_mem (g * h.1 * g⁻¹)
-      (hH.conj_mem h.1 h.2 g) (u : G)
-  change theta ⟨g * ((x : H).1 * h.1 * (x : H).1⁻¹) * g⁻¹, hmem1⟩ =
-    theta ⟨g * h.1 * g⁻¹, hH.conj_mem h.1 h.2 g⟩
-  have hcalc :
-      (u : G) * (g * h.1 * g⁻¹) * (u : G)⁻¹ =
-        g * ((x : H).1 * h.1 * (x : H).1⁻¹) * g⁻¹ := by
-    dsimp [u]
-    group
-  have := htheta u ⟨g * h.1 * g⁻¹, hH.conj_mem h.1 h.2 g⟩
-  have hsub :
-      (u * ⟨g * h.1 * g⁻¹, hH.conj_mem h.1 h.2 g⟩ * u⁻¹ : H) =
-        ⟨g * ((x : H).1 * h.1 * (x : H).1⁻¹) * g⁻¹, hmem1⟩ := by
-    apply Subtype.ext
-    simpa [mul_assoc] using hcalc
-  simpa [hsub] using this
-
-lemma inducedClassFunction_zero
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] :
-    inducedClassFunction H (0 : ClassFunction H) = 0 := by
-  classical
-  funext g
-  unfold inducedClassFunction
-  simp
 
 public lemma inducedClassFunction_add
     {G : Type*} [Group G] [Finite G]
@@ -1036,18 +951,6 @@ lemma sum_eq_sum_subgroup_of_supported
           (p := fun g : G => g ∈ H) f).symm
     _ = ∑ h : H, f h := hsub
 
-def subgroupConjEquiv {G : Type*} [Group G]
-    (H : Subgroup G) [hH : H.Normal] (x : G) : H ≃ H where
-  toFun h := ⟨x * h.1 * x⁻¹, hH.conj_mem h.1 h.2 x⟩
-  invFun h := ⟨x⁻¹ * h.1 * x, by simpa using hH.conj_mem h.1 h.2 x⁻¹⟩
-  left_inv h := by
-    apply Subtype.ext
-    dsimp
-    group
-  right_inv h := by
-    apply Subtype.ext
-    dsimp
-    group
 
 public lemma inducedClassFunction_frobenius_general
     {G : Type*} [Group G] [Finite G]
@@ -1332,18 +1235,6 @@ lemma proposition_1_5_part_d
           intro i hi
           rw [hdegTheta i]
 
-lemma proposition_1_5_part_c_equal
-    {G : Type*} [Group G]
-    (H : Subgroup G) (phi psi : ClassFunction G)
-    (hEq : subgroupRestriction H phi = subgroupRestriction H psi)
-    (hphi : supportedOnSubgroup phi H)
-    (hpsi : supportedOnSubgroup psi H) :
-    phi = psi := by
-  apply eq_of_eqOn_subgroup_and_supportedOnSubgroup H phi psi
-  · intro h
-    exact congrArg (fun f => f h) hEq
-  · exact hphi
-  · exact hpsi
 
 lemma proposition_1_5_part_c_orthogonal
     {G H ι : Type*} [Finite G] [Finite H] [Fintype ι]
@@ -1368,14 +1259,6 @@ lemma proposition_1_5_part_c_orthogonal
           exact horth i
     _ = 0 := by simp
 
-lemma proposition_1_5_part_c_conjugate
-    {G : Type*} [Group G]
-    (H : Subgroup G) (indPhi chi : ClassFunction G)
-    (hresEq : subgroupRestriction H indPhi = subgroupRestriction H chi)
-    (hSupp_ind : supportedOnSubgroup indPhi H)
-    (hSupp_chi : supportedOnSubgroup chi H) :
-    indPhi = chi := by
-  exact proposition_1_5_part_c_equal H indPhi chi hresEq hSupp_ind hSupp_chi
 
 lemma proposition_1_5_part_c_nonconjugate
     {G H ι : Type*} [Finite G] [Finite H] [Fintype ι]
@@ -1392,20 +1275,6 @@ lemma proposition_1_5_part_c_nonconjugate
     exact horthDistinct i (hnotConj i)
   exact proposition_1_5_part_c_orthogonal phi conjs r indPhi chi chiRes hFR hres horth
 
-lemma proposition_1_5_part_c_conjugate_induced
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (phi theta : ClassFunction H)
-    (hresEq :
-      subgroupRestriction H (inducedCF H phi) =
-        subgroupRestriction H (inducedCF H theta)) :
-    inducedCF H phi = inducedCF H theta := by
-  have hSupp_phi : supportedOnSubgroup (inducedCF H phi) H := by
-    exact inducedClassFunction_supportedOnSubgroup H phi
-  have hSupp_theta : supportedOnSubgroup (inducedCF H theta) H := by
-    exact inducedClassFunction_supportedOnSubgroup H theta
-  exact proposition_1_5_part_c_conjugate H (inducedCF H phi) (inducedCF H theta)
-    hresEq hSupp_phi hSupp_theta
 
 lemma proposition_1_5_part_c_conjugate_induced_of_eq
     {G : Type*} [Group G] [Finite G]
@@ -1488,73 +1357,6 @@ lemma proposition_1_5_part_c_nonconjugate_induced
   exact proposition_1_5_part_c_nonconjugate phi conjs r (inducedCF H phi) (inducedCF H theta)
     (subgroupRestriction H (inducedCF H theta)) hFR hparta hnotConj horthDistinct
 
-lemma proposition_1_5_part_c_induced_dichotomy
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    [DecidableEq ι] (H : Subgroup G) [Finite H] [H.Normal]
-    (phi theta : ClassFunction H) (conjs : ι → ClassFunction H)
-    (fiber : G → ι) (r : ℕ)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (horthDistinct :
-      ∀ i : ι, phi ≠ conjs i → scalarProduct H phi (conjs i) = 0)
-    (hcases :
-      (∃ i : ι, phi = conjs i ∧ ∃ g : G, fiber g = i) ∨
-        (∀ i : ι, phi ≠ conjs i)) :
-    inducedCF H phi = inducedCF H theta ∨
-      scalarProduct G (inducedCF H phi) (inducedCF H theta) = 0 := by
-  rcases hcases with hconj | hnotConj
-  · rcases hconj with ⟨i, hphi, hexists⟩
-    left
-    exact proposition_1_5_part_c_conjugate_induced_of_exists
-      H theta phi conjs fiber i hfiber hphi hexists
-  · right
-    exact proposition_1_5_part_c_nonconjugate_induced
-      H phi theta conjs fiber r hfiber hcount hnotConj horthDistinct
-
-lemma proposition_1_5_part_c_induced_dichotomy'
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    [DecidableEq ι] (H : Subgroup G) [Finite H] [H.Normal]
-    (phi theta : ClassFunction H) (conjs : ι → ClassFunction H)
-    (fiber : G → ι) (r : ℕ)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (hr : r ≠ 0)
-    (horthDistinct :
-      ∀ i : ι, phi ≠ conjs i → scalarProduct H phi (conjs i) = 0)
-    (hcases :
-      (∃ i : ι, phi = conjs i) ∨
-        (∀ i : ι, phi ≠ conjs i)) :
-    inducedCF H phi = inducedCF H theta ∨
-      scalarProduct G (inducedCF H phi) (inducedCF H theta) = 0 := by
-  rcases hcases with hconj | hnotConj
-  · rcases hconj with ⟨i, hphi⟩
-    left
-    exact proposition_1_5_part_c_conjugate_induced_of_exists
-      H theta phi conjs fiber i hfiber hphi
-      (fiber_exists_of_count H fiber r hcount hr i)
-  · right
-    exact proposition_1_5_part_c_nonconjugate_induced
-      H phi theta conjs fiber r hfiber hcount hnotConj horthDistinct
-
-lemma proposition_1_5_part_c_exists_of_nonzero
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    [DecidableEq ι] (H : Subgroup G) [Finite H] [H.Normal]
-    (phi theta : ClassFunction H) (conjs : ι → ClassFunction H)
-    (fiber : G → ι) (r : ℕ)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (horthDistinct :
-      ∀ i : ι, phi ≠ conjs i → scalarProduct H phi (conjs i) = 0)
-    (hcases :
-      (∃ i : ι, phi = conjs i ∧ ∃ g : G, fiber g = i) ∨
-        (∀ i : ι, phi ≠ conjs i))
-    (hne : scalarProduct G (inducedCF H phi) (inducedCF H theta) ≠ 0) :
-    ∃ i : ι, phi = conjs i ∧ ∃ g : G, fiber g = i := by
-  rcases hcases with hconj | hnotConj
-  · exact hconj
-  · exfalso
-    exact hne <| proposition_1_5_part_c_nonconjugate_induced
-      H phi theta conjs fiber r hfiber hcount hnotConj horthDistinct
 
 lemma proposition_1_5_part_c_exists_of_nonzero'
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
@@ -1834,132 +1636,6 @@ public def conjClassesProdEquiv
     (Setoid.prodQuotientEquiv
       (IsConj.setoid G) (IsConj.setoid H)).symm
 
-public theorem card_conjClasses_prod
-    {G H : Type*} [Group G] [Group H] [Finite G] [Finite H] :
-    Nat.card (ConjClasses (G × H)) =
-      Nat.card (ConjClasses G) * Nat.card (ConjClasses H) := by
-  rw [Nat.card_congr (conjClassesProdEquiv G H), Nat.card_prod]
-
-/-- External product of two Peterfalvi class functions. -/
-@[expose] public def externalProductClassFunction
-    {G H : Type*} (phi : ClassFunction G) (psi : ClassFunction H) :
-    ClassFunction (G × H) :=
-  fun x => phi x.1 * psi x.2
-
-public theorem externalProductClassFunction_isClassFunction
-    {G H : Type*} [Group G] [Group H]
-    {phi : ClassFunction G} {psi : ClassFunction H}
-    (hphi : IsClassFunction phi) (hpsi : IsClassFunction psi) :
-    IsClassFunction (externalProductClassFunction phi psi) := by
-  intro x g
-  change
-    phi (x.1 * g.1 * x.1⁻¹) * psi (x.2 * g.2 * x.2⁻¹) =
-      phi g.1 * psi g.2
-  rw [hphi, hpsi]
-
-public theorem scalarProduct_externalProductClassFunction
-    {G H : Type*} [Group G] [Finite G] [Group H] [Finite H]
-    (phi phi' : ClassFunction G) (psi psi' : ClassFunction H) :
-    scalarProduct (G × H) (externalProductClassFunction phi psi)
-        (externalProductClassFunction phi' psi') =
-      scalarProduct G phi phi' * scalarProduct H psi psi' := by
-  classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype H := Fintype.ofFinite H
-  letI : Fintype (G × H) := Fintype.ofFinite (G × H)
-  unfold scalarProduct externalProductClassFunction
-  rw [Nat.card_prod, Nat.cast_mul, mul_inv_rev]
-  have huniv :
-      (Finset.univ : Finset (G × H)) =
-        (Finset.univ : Finset G).product (Finset.univ : Finset H) := by
-    ext x
-    simp
-  rw [huniv]
-  have hproduct :
-      (∑ x ∈ (Finset.univ : Finset G).product (Finset.univ : Finset H),
-        phi x.1 * psi x.2 * star (phi' x.1 * psi' x.2)) =
-        ∑ g ∈ (Finset.univ : Finset G),
-          ∑ h ∈ (Finset.univ : Finset H),
-            phi g * psi h * star (phi' g * psi' h) := by
-    simpa only [Finset.product_eq_sprod] using
-      (Finset.sum_product (Finset.univ : Finset G)
-        (Finset.univ : Finset H)
-        (fun x : G × H =>
-          phi x.1 * psi x.2 * star (phi' x.1 * psi' x.2)))
-  rw [hproduct]
-  have hsumFactor :
-      (∑ g ∈ (Finset.univ : Finset G),
-        ∑ h ∈ (Finset.univ : Finset H),
-          phi g * psi h * star (phi' g * psi' h)) =
-        (∑ g : G, phi g * star (phi' g)) *
-          ∑ h : H, psi h * star (psi' h) := by
-    calc
-      _ = ∑ g ∈ (Finset.univ : Finset G),
-          ∑ h ∈ (Finset.univ : Finset H),
-            (phi g * star (phi' g)) * (psi h * star (psi' h)) := by
-        apply Finset.sum_congr rfl
-        intro g _hg
-        apply Finset.sum_congr rfl
-        intro h _hh
-        rw [star_mul]
-        ring
-      _ = ∑ g ∈ (Finset.univ : Finset G),
-          (phi g * star (phi' g)) *
-            ∑ h ∈ (Finset.univ : Finset H),
-              psi h * star (psi' h) := by
-        apply Finset.sum_congr rfl
-        intro g _hg
-        rw [Finset.mul_sum]
-      _ = (∑ g : G, phi g * star (phi' g)) *
-          ∑ h : H, psi h * star (psi' h) := by
-        rw [Finset.sum_mul]
-  rw [hsumFactor]
-  ring
-
-public theorem externalProductClassFunction_degree
-    {G H : Type*} [One G] [One H]
-    (phi : ClassFunction G) (psi : ClassFunction H) :
-    degree (externalProductClassFunction phi psi) = degree phi * degree psi := by
-  rfl
-
-public theorem externalProductClassFunction_isIrreducibleCharacterOnGroup
-    {G H : Type*} [Group G] [Finite G] [Group H] [Finite H]
-    {phi : ClassFunction G} {psi : ClassFunction H}
-    (hphi : IsIrreducibleCharacterOnGroup phi)
-    (hpsi : IsIrreducibleCharacterOnGroup psi) :
-    IsIrreducibleCharacterOnGroup (externalProductClassFunction phi psi) := by
-  classical
-  letI : Fintype (G × H) := Fintype.ofFinite (G × H)
-  rcases hphi with ⟨n, rho, hrho, hphi⟩
-  rcases hpsi with ⟨m, sigma, hsigma, hpsi⟩
-  let tau : Representation ℂ (G × H)
-      (TensorProduct ℂ (Fin n → ℂ) (Fin m → ℂ)) :=
-    Representation.tprod (rho.comp (MonoidHom.fst G H))
-      (sigma.comp (MonoidHom.snd G H))
-  have htauChar : tau.character = externalProductClassFunction phi psi := by
-    ext x
-    change (Representation.tprod
-        (rho.comp (MonoidHom.fst G H))
-        (sigma.comp (MonoidHom.snd G H))).character x = _
-    rw [Representation.char_tensor]
-    simp [externalProductClassFunction, hphi, hpsi, Representation.character]
-  have hrhoNorm : scalarProduct G phi phi = 1 := by
-    rw [hphi]
-    exact scalarProduct_representation_char_self rho hrho
-  have hsigmaNorm : scalarProduct H psi psi = 1 := by
-    rw [hpsi]
-    exact scalarProduct_representation_char_self sigma hsigma
-  have htauNorm :
-      scalarProduct (G × H) tau.character tau.character = 1 := by
-    rw [htauChar, scalarProduct_externalProductClassFunction,
-      hrhoNorm, hsigmaNorm, mul_one]
-  have htauIrr : Representation.IsIrreducible tau := by
-    apply (Representation.irreducible_iff_character_norm_one (ρ := tau)).2
-    change (Nat.card (G × H) : ℂ)⁻¹ *
-      ∑ x : G × H, tau.character x * star (tau.character x) = 1
-    exact htauNorm
-  rw [← htauChar]
-  exact isIrreducibleCharacterOnGroup_of_representation tau htauIrr
 
 public lemma conjugateCharacter_representationCharacter_eq_dual
     {G V : Type*} [Group G] [Finite G]
@@ -1999,29 +1675,6 @@ public theorem conjugateCharacter_principalCharacter
   ext g
   simp [conjugateCharacter, principalCharacter]
 
-lemma irreducible_representationCharacter_orthogonal_family
-    {G ι V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (theta : ClassFunction G) (conjs : ι → ClassFunction G)
-    (barRep : Representation ℂ G V)
-    (conjRep : ι → Representation ℂ G V)
-    (hbar : conjugateCharacter theta = barRep.character)
-    (hconjs : ∀ i : ι, conjs i = (conjRep i).character)
-    (hbar_irreducible : Representation.IsIrreducible barRep)
-    (hconj_irreducible : ∀ i : ι, Representation.IsIrreducible (conjRep i)) :
-    ∀ i : ι, conjugateCharacter theta ≠ conjs i →
-      scalarProduct G (conjugateCharacter theta) (conjs i) = 0 := by
-  intro i hne
-  have hne' : barRep.character ≠ (conjRep i).character := by
-    intro hchars
-    apply hne
-    rw [hbar, hconjs i]
-    exact hchars
-  rw [hbar, hconjs i]
-  letI : Representation.IsIrreducible barRep := hbar_irreducible
-  letI : Representation.IsIrreducible (conjRep i) := hconj_irreducible i
-  exact scalarProduct_representation_char_eq_zero_of_ne
-    barRep (conjRep i) hne'
 
 public lemma scalarProduct_irreducible_representationCharacter_eq_zero_of_ne
     {G V W : Type*} [Group G] [Finite G]
@@ -2109,21 +1762,6 @@ theorem proposition_1_5_b
     (subgroupRestriction H (inducedCF H theta))
     hbase hFR_chi hparta hself horth_theta
 
-theorem proposition_1_5_b_irreducible
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    (H : Subgroup G) [Finite H] [H.Normal] (base : ι)
-    (theta : ClassFunction H) (conjs : ι → ClassFunction H) (fiber : G → ι)
-    (r : ℕ)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (hbase : conjs base = theta)
-    (hself : scalarProduct H (conjs base) (conjs base) = 1)
-    (horth_theta :
-      ∀ i : ι, i ≠ base → scalarProduct H (conjs i) theta = 0)
-    (hr1 : r = 1) :
-    scalarProduct G (inducedCF H theta) (inducedCF H theta) = 1 := by
-  simp [proposition_1_5_b H base theta conjs fiber r hfiber hcount
-    hbase hself horth_theta, hr1]
 
 theorem proposition_1_5_b_rep
     {G ι V : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
@@ -2155,28 +1793,6 @@ theorem proposition_1_5_b_rep
   exact proposition_1_5_b H base theta conjs fiber r
     hfiber hcount hbase hself horth_theta
 
-theorem proposition_1_5_b_irreducible_rep
-    {G ι V : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (H : Subgroup G) [Finite H] [H.Normal] (base : ι)
-    (theta : ClassFunction H) (conjs : ι → ClassFunction H) (fiber : G → ι)
-    (r : ℕ)
-    (thetaRep : Representation ℂ H V)
-    (conjRep : ι → Representation ℂ H V)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (hbase : conjs base = theta)
-    (htheta : theta = thetaRep.character)
-    (hconjs : ∀ i : ι, conjs i = (conjRep i).character)
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (hconj_irreducible : ∀ i : ι, Representation.IsIrreducible (conjRep i))
-    (hdistinct : ∀ i : ι, i ≠ base → conjs i ≠ theta)
-    (hr1 : r = 1) :
-    scalarProduct G (inducedCF H theta) (inducedCF H theta) = 1 := by
-  have hnorm := proposition_1_5_b_rep H base theta conjs fiber r
-    thetaRep conjRep hfiber hcount hbase htheta hconjs
-    htheta_irreducible hconj_irreducible hdistinct
-  simp [hnorm, hr1]
 
 theorem proposition_1_5_d
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
@@ -2248,13 +1864,6 @@ theorem proposition_1_5_c_conjugate
   proposition_1_5_part_c_conjugate_induced_of_exists
     H theta phi conjs fiber i hfiber hphi hexists
 
-theorem proposition_1_5_c_conjugate_of_eq
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta phi : ClassFunction H) (g : G)
-    (hphi : phi = conjugateOnNormal H theta g) :
-    inducedCF H phi = inducedCF H theta :=
-  proposition_1_5_part_c_conjugate_induced_of_eq H phi theta g hphi
 
 theorem proposition_1_5_c_nonconjugate
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
@@ -2338,33 +1947,6 @@ theorem proposition_1_5_e_rep
   exact proposition_1_5_e H theta conjs fiber r hfiber hcount
     hr hodd horthDistinct_bar hexclude
 
-theorem proposition_1_5_e_rep_orthogonal_family
-    {G ι V : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta : ClassFunction H) (conjs : ι → ClassFunction H) (fiber : G → ι)
-    (r : ℕ)
-    (thetaRep barRep : Representation ℂ H V)
-    (conjRep : ι → Representation ℂ H V)
-    (hfiber : ∀ x : G, conjugateOnNormal H theta x = conjs (fiber x))
-    (hcount : ∀ i : ι, Nat.card {x // fiber x = i} = Nat.card H * r)
-    (hr : r ≠ 0)
-    (hodd : Odd (Nat.card G))
-    (htheta : theta = thetaRep.character)
-    (hbar : conjugateCharacter theta = barRep.character)
-    (hconjs : ∀ i : ι, conjs i = (conjRep i).character)
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (hbar_irreducible : Representation.IsIrreducible barRep)
-    (hconj_irreducible : ∀ i : ι, Representation.IsIrreducible (conjRep i))
-    (hne_principal : thetaRep.character ≠ principalCharacter H) :
-    orthogonal G (inducedCF H theta) (conjugateCharacter (inducedCF H theta)) := by
-  have horthDistinct_bar :
-      ∀ i : ι, conjugateCharacter theta ≠ conjs i →
-        scalarProduct H (conjugateCharacter theta) (conjs i) = 0 :=
-    irreducible_representationCharacter_orthogonal_family
-      theta conjs barRep conjRep hbar hconjs hbar_irreducible hconj_irreducible
-  exact proposition_1_5_e_rep H theta conjs fiber r thetaRep
-    hfiber hcount hr hodd horthDistinct_bar htheta htheta_irreducible hne_principal
 
 theorem proposition_1_5_e_rep_dual_family
     {G ι V : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
@@ -2475,77 +2057,6 @@ public lemma conjugateOrbit_fiber_count_of_inertia_card
   rcases conjugateOrbit_exists_fiber H theta i with ⟨a, rfl⟩
   rw [conjugateOrbit_fiber_card_eq_inertia H theta a, hcardI]
 
-/-- A finite map with constant fiber cardinality splits the cardinality of
-its source as the fiber cardinality times the cardinality of its target. -/
-public theorem fintype_card_eq_mul_card_of_fiber_card
-    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq β]
-    (f : α → β) (n : ℕ)
-    (hfiber : ∀ b : β, Fintype.card {a : α // f a = b} = n) :
-    Fintype.card α = n * Fintype.card β := by
-  classical
-  let e : α ≃ Σ b : β, {a : α // f a = b} :=
-    { toFun := fun a => ⟨f a, ⟨a, rfl⟩⟩
-      invFun := fun p => p.2.1
-      left_inv := by
-        intro a
-        rfl
-      right_inv := by
-        intro p
-        rcases p with ⟨b, a, ha⟩
-        dsimp at ha ⊢
-        subst ha
-        rfl }
-  calc
-    Fintype.card α = Fintype.card (Σ b : β, {a : α // f a = b}) :=
-      Fintype.card_congr e
-    _ = ∑ b : β, Fintype.card {a : α // f a = b} := Fintype.card_sigma
-    _ = ∑ _b : β, n := by simp [hfiber]
-    _ = n * Fintype.card β := by simp [Nat.mul_comm]
-
-/-- If the inertia subgroup of a class function is exactly the normal
-subgroup, its conjugate orbit has cardinality equal to the subgroup index. -/
-public theorem card_conjugateOrbitIndex_eq_index_of_inertia_eq_self
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [H.Normal]
-    (theta : ClassFunction H)
-    (hI : inertiaSubgroup H theta = H) :
-    Nat.card (conjugateOrbitIndex H theta) = H.index := by
-  classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype H := Fintype.ofFinite H
-  letI : DecidableRel (conjugateOrbitSetoid H theta).r := Classical.decRel _
-  letI : Fintype (conjugateOrbitIndex H theta) :=
-    Quotient.fintype (conjugateOrbitSetoid H theta)
-  letI : DecidableEq (conjugateOrbitIndex H theta) := Classical.decEq _
-  have hfiber :
-      ∀ i : conjugateOrbitIndex H theta,
-        Fintype.card {x : G // conjugateOrbitFiber H theta x = i} = Nat.card H := by
-    intro i
-    have hcount := conjugateOrbit_fiber_count_of_inertia_card H theta 1 (by
-      rw [hI]
-      simp)
-    simpa [Nat.card_eq_fintype_card] using hcount i
-  have hcardG :
-      Fintype.card G =
-        Nat.card H * Fintype.card (conjugateOrbitIndex H theta) :=
-    fintype_card_eq_mul_card_of_fiber_card
-      (conjugateOrbitFiber H theta) (Nat.card H) hfiber
-  have hindex : H.index * Nat.card H = Nat.card G := H.index_mul_card
-  have hmul :
-      Nat.card H * Fintype.card (conjugateOrbitIndex H theta) =
-        H.index * Nat.card H := by
-    calc
-      Nat.card H * Fintype.card (conjugateOrbitIndex H theta) =
-          Fintype.card G := hcardG.symm
-      _ = Nat.card G := (Nat.card_eq_fintype_card (α := G)).symm
-      _ = H.index * Nat.card H := hindex.symm
-  have hmul' :
-      Fintype.card (conjugateOrbitIndex H theta) * Nat.card H =
-        H.index * Nat.card H := by
-    simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hmul
-  have hcard : Fintype.card (conjugateOrbitIndex H theta) = H.index :=
-    Nat.mul_right_cancel (Nat.card_pos (α := H)) hmul'
-  simpa [Nat.card_eq_fintype_card] using hcard
 
 lemma subgroup_le_inertia_of_isClassFunction
     {G : Type*} [Group G] (H : Subgroup G) [H.Normal]
@@ -2756,107 +2267,6 @@ theorem proposition_1_5_e_rep_dual_orbit
     (conjugateOrbit_hfiber H theta) hcount hr hodd htheta hconjs
     htheta_irreducible hconj_irreducible hne_principal
 
-theorem proposition_1_5_a_orbit_of_inertia_card
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta : ClassFunction H) (r : ℕ)
-    (hcardI : Nat.card (inertiaSubgroup H theta) = Nat.card H * r) :
-    subgroupRestriction H (inducedCF H theta) =
-      fun h => (r : ℂ) * ∑ i : conjugateOrbitIndex H theta,
-        conjugateOrbitConj H theta i h :=
-  proposition_1_5_a_orbit H theta r
-    (conjugateOrbit_fiber_count_of_inertia_card H theta r hcardI)
-
-theorem proposition_1_5_b_rep_orbit_of_inertia_card
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta : ClassFunction H) (r : ℕ)
-    (thetaRep : Representation ℂ H V)
-    (conjRep : conjugateOrbitIndex H theta → Representation ℂ H V)
-    (hcardI : Nat.card (inertiaSubgroup H theta) = Nat.card H * r)
-    (htheta : theta = thetaRep.character)
-    (hconjs :
-      ∀ i : conjugateOrbitIndex H theta,
-        conjugateOrbitConj H theta i = (conjRep i).character)
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (hconj_irreducible :
-      ∀ i : conjugateOrbitIndex H theta, Representation.IsIrreducible (conjRep i)) :
-    scalarProduct G (inducedCF H theta) (inducedCF H theta) = r :=
-  proposition_1_5_b_rep_orbit H theta r thetaRep conjRep
-    (conjugateOrbit_fiber_count_of_inertia_card H theta r hcardI)
-    htheta hconjs htheta_irreducible hconj_irreducible
-
-theorem proposition_1_5_c_nonconjugate_rep_orbit_of_inertia_card
-    {G V W : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (phi theta : ClassFunction H) (r : ℕ)
-    (phiRep : Representation ℂ H V)
-    (conjRep : conjugateOrbitIndex H theta → Representation ℂ H W)
-    (hcardI : Nat.card (inertiaSubgroup H theta) = Nat.card H * r)
-    (hphi : phi = phiRep.character)
-    (hconjs :
-      ∀ i : conjugateOrbitIndex H theta,
-        conjugateOrbitConj H theta i = (conjRep i).character)
-    (hphi_irreducible : Representation.IsIrreducible phiRep)
-    (hconj_irreducible :
-      ∀ i : conjugateOrbitIndex H theta, Representation.IsIrreducible (conjRep i))
-    (hnotConj : ∀ i : conjugateOrbitIndex H theta, phi ≠ conjugateOrbitConj H theta i) :
-    scalarProduct G (inducedCF H phi) (inducedCF H theta) = 0 :=
-  proposition_1_5_c_nonconjugate_rep_orbit H phi theta r phiRep conjRep
-    (conjugateOrbit_fiber_count_of_inertia_card H theta r hcardI)
-    hphi hconjs hphi_irreducible hconj_irreducible hnotConj
-
-theorem proposition_1_5_d_rep_orbit_of_inertia_card
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta : ClassFunction H) (r : ℕ)
-    (thetaRep : Representation ℂ H V)
-    (conjRep : conjugateOrbitIndex H theta → Representation ℂ H V)
-    (hcardI : Nat.card (inertiaSubgroup H theta) = Nat.card H * r)
-    (htheta : theta = thetaRep.character)
-    (hconjs :
-      ∀ i : conjugateOrbitIndex H theta,
-        conjugateOrbitConj H theta i = (conjRep i).character)
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (hconj_irreducible :
-      ∀ i : conjugateOrbitIndex H theta, Representation.IsIrreducible (conjRep i))
-    (hr : r ≠ 0) :
-    (((degree (inducedCF H theta)) /
-        scalarProduct G (inducedCF H theta) (inducedCF H theta)) •
-        subgroupRestriction H (inducedCF H theta)) =
-      (Subgroup.index H : ℂ) • fun h =>
-        ∑ i : conjugateOrbitIndex H theta,
-          degree (conjugateOrbitConj H theta i) * conjugateOrbitConj H theta i h :=
-  proposition_1_5_d_rep_orbit H theta r thetaRep conjRep
-    (conjugateOrbit_fiber_count_of_inertia_card H theta r hcardI)
-    htheta hconjs htheta_irreducible hconj_irreducible hr
-
-theorem proposition_1_5_e_rep_dual_orbit_of_inertia_card
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (H : Subgroup G) [Finite H] [H.Normal]
-    (theta : ClassFunction H) (r : ℕ)
-    (thetaRep : Representation ℂ H V)
-    (conjRep : conjugateOrbitIndex H theta → Representation ℂ H V)
-    (hcardI : Nat.card (inertiaSubgroup H theta) = Nat.card H * r)
-    (hr : r ≠ 0)
-    (hodd : Odd (Nat.card G))
-    (htheta : theta = thetaRep.character)
-    (hconjs :
-      ∀ i : conjugateOrbitIndex H theta,
-        conjugateOrbitConj H theta i = (conjRep i).character)
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (hconj_irreducible :
-      ∀ i : conjugateOrbitIndex H theta, Representation.IsIrreducible (conjRep i))
-    (hne_principal : thetaRep.character ≠ principalCharacter H) :
-    orthogonal G (inducedCF H theta) (conjugateCharacter (inducedCF H theta)) :=
-  proposition_1_5_e_rep_dual_orbit H theta r thetaRep conjRep
-    (conjugateOrbit_fiber_count_of_inertia_card H theta r hcardI)
-    hr hodd htheta hconjs htheta_irreducible hconj_irreducible hne_principal
 
 theorem proposition_1_5_a_orbit_relIndex
     {G : Type*} [Group G] [Finite G]

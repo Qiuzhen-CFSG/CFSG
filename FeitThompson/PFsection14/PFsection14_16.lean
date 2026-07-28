@@ -22,36 +22,6 @@ universe u v w
 
 /-! ## (14.16) -/
 
-/-- Peterfalvi `(14.16)`. -/
-@[expose] public def theorem_14_16_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d h : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-        hypothesis_14_13_statement L M H h →
-          H = U
-
-
-
 
 public theorem section14_theorem_14_16_mul_lt_two_geom_quotient
     {p q : ℕ}
@@ -220,16 +190,6 @@ public def section14_theorem_14_16_case_b_post_coefficients_data
             (Section1.scalarProduct G χ φτ = 1 ∨
               Section1.scalarProduct G χ (Section1.conjugateCharacter φτ) = -1)
 
-public theorem section14_theorem_14_16_case_b_norm_one_remainder_data_of_beta_eq
-    {G : Type u} [Group G] [Finite G]
-    {p q : ℕ}
-    {η : Fin q → Fin p → Section1.ClassFunction G}
-    {βLτ βLτ' φτ ψτ : Section1.ClassFunction G}
-    (hβ : βLτ = βLτ')
-    (hdata :
-      section14_theorem_14_16_case_b_norm_one_remainder_data η βLτ' φτ ψτ) :
-    section14_theorem_14_16_case_b_norm_one_remainder_data η βLτ φτ ψτ := by
-  simpa [hβ] using hdata
 
 public theorem section14_theorem_14_16_case_b_signed_remainder_data_of_norm_one
     {G : Type u} [Group G] [Finite G]
@@ -1946,39 +1906,5 @@ public theorem section14_theorem_14_16_source_bridge
     Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
     p q u v c d h hctx h143 h1410 h1413 hneq
 
-
-/-- Proof placeholder for `theorem_14_16_statement`. -/
-public theorem theorem_14_16
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d h : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          hypothesis_14_13_statement L M H h →
-            H = U := by
-  exact section14_theorem_14_16_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H M K Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
-    p q u v c d h
 
 end Section14

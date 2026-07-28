@@ -501,49 +501,6 @@ public theorem section14_isPiSubgroup_map
   intro p hp
   exact hH p (hp.trans (Subgroup.card_map_dvd (H := H) f))
 
-private theorem section14_isPiSubgroup_sup_of_normal_right
-    {R : Type*} [Group R] [Finite R] {π : Set Nat.Primes} {H K : Subgroup R}
-    (hH : IsPiSubgroup (G := R) π H) (hK : IsPiSubgroup (G := R) π K)
-    [K.Normal] :
-    IsPiSubgroup (G := R) π (H ⊔ K) := by
-  intro p hpSup
-  have hmul : (↑(H ⊔ K) : Set R) = (H : Set R) * (K : Set R) := by
-    simpa using (Subgroup.mul_normal H K)
-  have hcard_sup_set :
-      Nat.card (↑(H ⊔ K) : Set R) =
-        Nat.card ((H : Set R) * (K : Set R) : Set R) :=
-    Nat.card_congr (Equiv.setCongr hmul)
-  have hcard_sup :
-      Nat.card (↥(H ⊔ K)) =
-        Nat.card ((H : Set R) * (K : Set R) : Set R) := by
-    simpa using hcard_sup_set
-  have hcard_mul :
-      Nat.card ((H : Set R) * (K : Set R) : Set R) =
-        Nat.card K * Nat.card ((H : Set R).image (↑) : Set (R ⧸ K)) := by
-    simpa using
-      (Subgroup.card_mul_eq_card_subgroup_mul_card_quotient
-        (s := K) (t := (H : Set R)))
-  have hset_image :
-      ((H : Set R).image (↑) : Set (R ⧸ K)) =
-        (H.map (QuotientGroup.mk' K) : Set (R ⧸ K)) := by
-    simp [Subgroup.coe_map]
-  have hcard_image_set :
-      Nat.card ((H : Set R).image (↑) : Set (R ⧸ K)) =
-        Nat.card (H.map (QuotientGroup.mk' K) : Set (R ⧸ K)) :=
-    Nat.card_congr (Equiv.setCongr hset_image)
-  have hcard_image_subgroup :
-      Nat.card ((H : Set R).image (↑) : Set (R ⧸ K)) =
-        Nat.card (H.map (QuotientGroup.mk' K)) := by
-    exact hcard_image_set
-  have hp_mul :
-      p.val ∣ Nat.card K * Nat.card ((H : Set R).image (↑) : Set (R ⧸ K)) := by
-    rw [← hcard_mul, ← hcard_sup]
-    exact hpSup
-  rcases p.2.dvd_mul.mp hp_mul with hpK | hpImg
-  · exact hK p hpK
-  · have hpMap : p.val ∣ Nat.card (H.map (QuotientGroup.mk' K)) := by
-      rwa [hcard_image_subgroup] at hpImg
-    exact (section14_isPiSubgroup_map hH (QuotientGroup.mk' K)) p hpMap
 
 omit [IsMinCE G] in
 public theorem section14_exists_primeOrderSubgroupIn_of_dvd_card
@@ -624,19 +581,6 @@ private theorem section14_prime_manner_centralizer_ne_bot_of_exists
     section14_prime_manner_centralizer_ne_bot hA hP hCP
   exact section14_subgroupCentralizerIn_antitone_ne_bot hQ.1 hCA
 
-omit [Finite G] [IsMinCE G] in
-private theorem section14_mem_kappa_of_prime_manner_witness
-    {M A P Q : Subgroup G} {p : Nat.Primes}
-    (hpτ13 : p ∈ section12Tau1Primes M ∪ section12Tau3Primes M)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p M)
-    (hPA : P ≤ A)
-    (hA : section14ActsInPrimeManner A (section10Msigma M))
-    (hQ : Q ∈ section12PrimeOrderSubgroups A)
-    (hCQ : subgroupCentralizerIn (section10Msigma M) Q ≠ ⊥) :
-    p ∈ section14KappaPrimes M := by
-  refine ⟨hpτ13, ⟨P, hP, ?_⟩⟩
-  exact section14_subgroupCentralizerIn_antitone_ne_bot hPA
-    (section14_prime_manner_centralizer_ne_bot hA hQ hCQ)
 
 omit [Finite G] [IsMinCE G] in
 private theorem section14_not_regular_of_primeOrder_centralizer_ne_bot
@@ -2237,38 +2181,6 @@ private theorem section14_tau1_case_U_regular
     exact hQne (le_bot_iff.mp (by
       simpa [hregE3.2 x hxE₁ hxne] using hQ_le_CE3))
 
-private theorem section14_tau1_case_E1_regular_on_E2
-    {M K E E₁₂ E₁ E₂ E₃ : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hKE₁ : K ≤ E₁)
-    (hκτ1 : section14KappaPrimes M ⊆ section12Tau1Primes M) :
-    section14ActsRegularlyOn E₁ E₂ := by
-  classical
-  have hK_eq_E₁ : K = E₁ :=
-    section14_tau1_case_K_eq_E1
-      (G := G) (M := M) (K := K) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) hM hK hE hKE₁ hκτ1
-  have hUregK :=
-    section14_tau1_case_U_regular
-      (G := G) (M := M) (K := K) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) hM hK hE hKE₁ hκτ1
-  have hUregE₁ : section14ActsRegularlyOn E₁ (E₂ ⊔ E₃) := by
-    simpa [hK_eq_E₁] using hUregK
-  have h12 := lemma_12_1_e (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-    (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hM.1 hE
-  have hE₁E₁₂ : E₁ ≤ E₁₂ := hE.2.2.1.1
-  have hnormE₂ : E₁ ≤ Subgroup.normalizer (E₂ : Set G) :=
-    hE₁E₁₂.trans
-      ((Subgroup.normal_subgroupOf_iff_le_normalizer h12.2.2.2.1).1 h12.2.2.2.2)
-  refine ⟨hnormE₂, ?_⟩
-  intro x hxE₁ hxne
-  apply le_bot_iff.mp
-  intro y hy
-  have hyU : y ∈ E₂ ⊔ E₃ := (le_sup_left : E₂ ≤ E₂ ⊔ E₃) hy.1
-  have hyCU : y ∈ elementCentralizerIn (E₂ ⊔ E₃) x := ⟨hyU, hy.2⟩
-  simpa [hUregE₁.2 x hxE₁ hxne] using hyCU
 
 private theorem section14_tau1_case_U_abelian
     {M K E E₁₂ E₁ E₂ E₃ : Subgroup G}

@@ -41,11 +41,6 @@ universe u
             θ ≠ Section1.principalCharacter K ∧
             χ = Section1.inducedCF K θ
 
-public theorem inducedKernelFamily_le
-    {L : Type u} [Group L] [Finite L]
-    {K A : Subgroup L} {S : Finset (Section1.ClassFunction L)}
-    (hS : inducedKernelFamily K A S) : A ≤ K :=
-  hS.1
 
 public theorem subgroupInKernel'_subgroupOf_mono
     {G : Type u} [Group G]
@@ -96,131 +91,6 @@ public theorem inducedKernelFamily_unique
   ext χ
   exact (hS₁.2 χ).trans (hS₂.2 χ).symm
 
-/-- The family of characters induced from the nonprincipal irreducible
-characters of a subgroup is finite. -/
-public theorem exists_inducedKernelFamily
-    {L : Type u} [Group L] [Finite L] (K : Subgroup L) :
-    ∃ S : Finset (Section1.ClassFunction L), inducedKernelFamily K ⊥ S := by
-  classical
-  rcases Representation.irreducible_characters_form_basis (G := K) with
-    ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
-  let θ : ι → Section1.ClassFunction K := fun i =>
-    Section1.ofConjClassFunction (χ i)
-  let S : Finset (Section1.ClassFunction L) :=
-    (Finset.univ.filter fun i : ι =>
-      θ i ≠ Section1.principalCharacter K).image
-        (fun i => Section1.inducedCF K (θ i))
-  refine ⟨S, bot_le, ?_⟩
-  intro phi
-  constructor
-  · intro hphi
-    rcases Finset.mem_image.mp hphi with ⟨i, hi, rfl⟩
-    have hine : θ i ≠ Section1.principalCharacter K := by
-      simpa [S] using hi
-    refine ⟨θ i,
-      Section3.ofConjClassFunction_isIrreducibleCharacterOnGroup (hχ.1 i),
-      ?_, hine, rfl⟩
-    intro a
-    have ha : (a : K) = 1 := by
-      apply Subtype.ext
-      simpa using a.property
-    simp [ha, Section1.degree]
-  · rintro ⟨eta, hetaIrr, _hetaBot, hetaNe, rfl⟩
-    rcases hetaIrr with ⟨n, rho, hrho, hetaEq⟩
-    have hrhoCharIrr :
-        Representation.IsIrreducibleCharacter
-          (Representation.characterClassFunction rho) :=
-      Representation.isIrreducibleCharacter_characterClassFunction rho hrho
-    rcases hχ.2.1 (Representation.characterClassFunction rho) hrhoCharIrr with
-      ⟨i, hi⟩
-    refine Finset.mem_image.mpr ⟨i, ?_, ?_⟩
-    · simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      intro hthetaPrincipal
-      apply hetaNe
-      calc
-        eta = rho.character := hetaEq
-        _ = Section1.ofConjClassFunction
-              (Representation.characterClassFunction rho) :=
-          (Section1.ofConjClassFunction_characterClassFunction rho).symm
-        _ = Section1.ofConjClassFunction (χ i) := by rw [hi]
-        _ = θ i := rfl
-        _ = Section1.principalCharacter K := hthetaPrincipal
-    · dsimp [θ]
-      congr 1
-      calc
-        Section1.ofConjClassFunction (χ i) =
-            Section1.ofConjClassFunction
-              (Representation.characterClassFunction rho) := by
-          rw [hi]
-        _ = rho.character :=
-          Section1.ofConjClassFunction_characterClassFunction rho
-        _ = eta := hetaEq.symm
-
-/-- A nonprincipal irreducible character is nontrivial on the whole group. -/
-public theorem not_subgroupInKernel_top_of_irreducible_ne_principal
-    {H : Type u} [Group H] [Finite H]
-    {theta : Section1.ClassFunction H}
-    (hthetaIrr : Section1.IsIrreducibleCharacterOnGroup theta)
-    (hthetaNe : theta ≠ Section1.principalCharacter H) :
-    ¬ Section1.subgroupInKernel' theta (⊤ : Subgroup H) := by
-  intro hker
-  have horth :=
-    Section1.scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne
-      hthetaIrr hthetaNe
-  have hspdeg :
-      Section1.scalarProduct H theta (Section1.principalCharacter H) =
-        Section1.degree theta := by
-    unfold Section1.scalarProduct Section1.principalCharacter Section1.degree
-    have hsum :
-        (∑ g : H, theta g * star (1 : ℂ)) = ∑ _g : H, theta 1 := by
-      refine Finset.sum_congr rfl ?_
-      intro g _hg
-      have hg := hker ⟨g, by simp⟩
-      simpa [Section1.degree] using hg
-    rw [hsum]
-    simp
-  have hdeg0 : Section1.degree theta = 0 := by
-    rw [← hspdeg, horth]
-  rcases hthetaIrr with ⟨_n, rho, hrhoIrr, hthetaEq⟩
-  have hself : Section1.scalarProduct H theta theta = 1 := by
-    rw [hthetaEq]
-    exact Section1.scalarProduct_representation_char_self rho hrhoIrr
-  have hself0 : Section1.scalarProduct H theta theta = 0 := by
-    unfold Section1.scalarProduct Section1.degree at hdeg0
-    unfold Section1.scalarProduct
-    have hzero : ∀ g : H, theta g = 0 := by
-      intro g
-      have hg := hker ⟨g, by simp⟩
-      simpa [Section1.degree, hdeg0] using hg
-    simp [hzero]
-  norm_num [hself0] at hself
-
-/-- If the inducing subgroup is normal, a member of `S(1)` is nontrivial on
-that subgroup. -/
-public theorem inducedKernelFamily_not_subgroupInKernel
-    {L : Type u} [Group L] [Finite L]
-    {K : Subgroup L} [K.Normal]
-    {S : Finset (Section1.ClassFunction L)}
-    (hS : inducedKernelFamily K ⊥ S)
-    {chi : Section1.ClassFunction L} (hchi : chi ∈ S) :
-    ¬ Section1.subgroupInKernel' chi K := by
-  rintro hchiKer
-  rcases (hS.2 chi).mp hchi with
-    ⟨theta, hthetaIrr, _hthetaBot, hthetaNe, rfl⟩
-  rcases hthetaIrr with ⟨n, rho, hrhoIrr, hthetaEq⟩
-  have hindKer :
-      Section1.subgroupInKernel' (Section1.inducedCF K rho.character) K := by
-    simpa [hthetaEq] using hchiKer
-  have hsourceKer :
-      Section1.subgroupInKernel' rho.character (K.subgroupOf K) :=
-    (Section1.proposition_1_6_a K K le_rfl rho).mpr hindKer
-  have hsourceTop :
-      Section1.subgroupInKernel' theta (⊤ : Subgroup K) := by
-    rw [hthetaEq]
-    simpa using hsourceKer
-  exact not_subgroupInKernel_top_of_irreducible_ne_principal
-    ⟨n, rho, hrhoIrr, hthetaEq⟩ hthetaNe hsourceTop
 
 /-- The canonical finite family `S(A)` inside a base family `S = S(1)`. -/
 public noncomputable def inducedKernelFamilyOf
@@ -565,12 +435,6 @@ public theorem inducedKernelFamily_union_conjugate_closed
   · exact Finset.mem_union.mpr (Or.inl (inducedKernelFamily_conjugate_mem hSA hχA))
   · exact Finset.mem_union.mpr (Or.inr (inducedKernelFamily_conjugate_mem hSB hχB))
 
-public noncomputable def adjoinConjugatePair
-    {L : Type u} [Group L]
-    (S : Finset (Section1.ClassFunction L))
-    (ψ : Section1.ClassFunction L) : Finset (Section1.ClassFunction L) := by
-  classical
-  exact S ∪ ({ψ, Section1.conjugateCharacter ψ} : Finset (Section1.ClassFunction L))
 
 /-- Coherence of a sec6 family, always relative to the punctured support. -/
 @[expose] public def coherentFamily
@@ -785,31 +649,12 @@ public theorem centralQuotient_B_normal
     (h : centralQuotientHypothesis K B C D) : B.Normal :=
   h.2.2.2.1
 
-public theorem centralQuotient_C_normal
-    {L : Type u} [Group L] {K B C D : Subgroup L}
-    (h : centralQuotientHypothesis K B C D) : C.Normal :=
-  h.2.2.2.2.1
-
-public theorem centralQuotient_D_normal
-    {L : Type u} [Group L] {K B C D : Subgroup L}
-    (h : centralQuotientHypothesis K B C D) : D.Normal :=
-  h.2.2.2.2.2.1
 
 public theorem centralQuotient_commutator_le
     {L : Type u} [Group L] {K B C D : Subgroup L}
     (h : centralQuotientHypothesis K B C D) : ⁅D, C⁆ ≤ B :=
   h.2.2.2.2.2.2
 
-public theorem centralQuotient_B_le_K
-    {L : Type u} [Group L] {K B C D : Subgroup L}
-    (h : centralQuotientHypothesis K B C D) : B ≤ K :=
-  (centralQuotient_B_le_D h).trans
-    ((centralQuotient_D_lt_C h).trans (centralQuotient_C_le_K h))
-
-public theorem centralQuotient_D_le_K
-    {L : Type u} [Group L] {K B C D : Subgroup L}
-    (h : centralQuotientHypothesis K B C D) : D ≤ K :=
-  (centralQuotient_D_lt_C h).trans (centralQuotient_C_le_K h)
 
 /-- The quotient `K/M` is nilpotent. -/
 @[expose] public def nilpotentQuotient

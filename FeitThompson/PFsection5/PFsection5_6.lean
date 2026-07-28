@@ -205,15 +205,6 @@ private theorem integerSpanOn_add_pf56
   rintro ⟨hφ_span, hφ_on⟩ ⟨hψ_span, hψ_on⟩
   exact ⟨integerSpan_add_pf56 hφ_span hψ_span, supportedOn_add_pf56 hφ_on hψ_on⟩
 
-private theorem integerSpanOn_neg_pf56
-    {H : Type*} [Group H]
-    {S : Finset (Section1.ClassFunction H)}
-    {A : Set H}
-    {φ : Section1.ClassFunction H} :
-    integerSpanOn S A φ → integerSpanOn S A (-φ) := by
-  rintro ⟨hφ_span, hφ_on⟩
-  refine ⟨integerSpan_neg_pf56 hφ_span, ?_⟩
-  simpa using supportedOn_smul_pf56 (-1 : ℂ) hφ_on
 
 private theorem integerSpanOn_zsmul_pf56
     {H : Type*} [Group H]
@@ -570,20 +561,6 @@ private theorem isVirtualCharacter_of_signedIrreducible_pf56
   · simpa using Section3.isVirtualCharacter_neg
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hμ)
 
-private theorem int_mul_pred_nonneg_pf56 (n : Int) :
-    0 ≤ n * (n - 1) := by
-  rcases le_or_gt n 0 with hn | hn
-  · have hpred : n - 1 ≤ 0 := by omega
-    exact mul_nonneg_of_nonpos_of_nonpos hn hpred
-  · have hnonneg : 0 ≤ n := le_of_lt hn
-    have hpred : 0 ≤ n - 1 := by omega
-    exact mul_nonneg hnonneg hpred
-
-private theorem int_cast_sq_sub_self_nonneg_pf56 (n : Int) :
-    0 ≤ (n : ℝ) * (n : ℝ) - (n : ℝ) := by
-  have hnonneg : 0 ≤ (n : ℝ) * ((n : ℝ) - 1) := by
-    exact_mod_cast int_mul_pred_nonneg_pf56 n
-  nlinarith
 
 private theorem scalarProduct_weightedFamilySum_left_pf56
     {G ι : Type*} [Finite G] [Finite ι]

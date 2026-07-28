@@ -886,11 +886,4 @@ public theorem theorem_12_6
           hfrob hF hexp
 
 
-/-- Peterfalvi Hypothesis `(12.8)`. -/
-@[expose] public def hypothesis_12_8_statement
-    {G : Type u} [Group G] [Finite G]
-    (M K K' P0 : Subgroup G)
-    (p : ℕ) : Prop :=
-  hypothesis_12_8_data M K K' P0 p
-
 end Section12

@@ -14,10 +14,6 @@ variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMon
   [Module F V] [Module F W] (ρ : Representation F G V) (σ : Representation F G W)
   (f : V ≃ₗ[F] W)
 
-/-- Predicate asserting that a linear equivalence intertwines two representations. -/
-@[mk_iff]
-public structure IsIntertwiningEquiv : Prop where
-  isIntertwining (g : G) (v : V) : f (ρ g v) = σ g (f v)
 
 /-- Bundled linear equivalences intertwining the actions of two representations. -/
 @[ext]
@@ -152,17 +148,6 @@ public def symm (e : ρ ≃ₗ σ) : σ ≃ₗ ρ :=
 public def Simps.apply (e : ρ ≃ₗ σ) : V → W :=
   e
 
-/-- Inverse application projection for `RepEquiv`. -/
-@[expose]
-public def Simps.symm_apply (e : ρ ≃ₗ σ) : W → V :=
-  e.symm
-
-initialize_simps_projections RepEquiv (toFun → apply, invFun → symm_apply)
-
-public theorem invFun_eq_symm : e.invFun = e.symm :=
-  rfl
-
-public theorem coe_toEquiv_symm : e.toEquiv.symm = e.symm := rfl
 
 @[simp]
 public theorem toEquiv_symm : e.symm.toEquiv = e.toEquiv.symm :=
@@ -201,9 +186,6 @@ variable {e₁₂} {e₂₃} {e : ρ ≃ₗ σ}
 public theorem trans_apply (c : V) : (e₁₂.trans e₂₃) c = e₂₃ (e₁₂ c) :=
   rfl
 
-public theorem coe_trans :
-    (e₁₂.trans e₂₃).toRepMap = e₂₃.toRepMap.comp e₁₂:=
-  rfl
 
 @[simp]
 public theorem apply_symm_apply (c : W) : e (e.symm c) = c :=
@@ -213,25 +195,11 @@ public theorem apply_symm_apply (c : W) : e (e.symm c) = c :=
 public theorem symm_apply_apply (b : V) : e.symm (e b) = b :=
   e.left_inv b
 
-public theorem comp_symm : e.toLinearMap ∘ₗ e.symm.toLinearMap = LinearMap.id :=
-  LinearMap.ext e.apply_symm_apply
-
-public theorem symm_comp : e.symm.toLinearMap ∘ₗ e.toLinearMap = LinearMap.id :=
-  LinearMap.ext e.symm_apply_apply
-
-public lemma comp_symm_assoc (f : ϕ →ₗ σ):
-    e₁₂.toRepMap ∘ e₁₂.symm.toRepMap ∘ f = f := by ext; simp
-
-public lemma symm_comp_assoc (f : ϕ →ₗ ρ):
-    e₁₂.symm.toRepMap ∘ e₁₂.toRepMap ∘ f = f := by ext; simp
 
 @[simp]
 public theorem trans_symm : (e₁₂.trans e₂₃ : ρ ≃ₗ ϕ).symm = e₂₃.symm.trans e₁₂.symm :=
   rfl
 
-public theorem symm_trans_apply (c : X) :
-    (e₁₂.trans e₂₃ : ρ ≃ₗ ϕ).symm c = e₁₂.symm (e₂₃.symm c) :=
-  rfl
 
 @[simp]
 public theorem trans_refl : e.trans (refl σ) = e :=
@@ -244,28 +212,12 @@ public theorem refl_trans : (refl ρ).trans e = e :=
 public theorem symm_apply_eq {x y} : e.symm x = y ↔ x = e y :=
   e.toEquiv.symm_apply_eq
 
-public theorem eq_symm_apply {x y} : y = e.symm x ↔ e y = x :=
-  e.toEquiv.eq_symm_apply
-
-public theorem eq_comp_symm {α : Type*} (f : W → α) (g : V → α) : f = g ∘ e₁₂.symm ↔ f ∘ e₁₂ = g :=
-  e₁₂.toEquiv.eq_comp_symm f g
-
-public theorem comp_symm_eq {α : Type*} (f : W → α) (g : V → α) : g ∘ e₁₂.symm = f ↔ g = f ∘ e₁₂ :=
-  e₁₂.toEquiv.comp_symm_eq f g
-
-public theorem eq_symm_comp {α : Type*} (f : α → V) (g : α → W) : f = e₁₂.symm ∘ g ↔ e₁₂ ∘ f = g :=
-  e₁₂.toEquiv.eq_symm_comp f g
-
-public theorem symm_comp_eq {α : Type*} (f : α → V) (g : α → W) : e₁₂.symm ∘ g = f ↔ g = e₁₂ ∘ f :=
-  e₁₂.toEquiv.symm_comp_eq f g
 
 @[simp]
 public theorem comp_coe (f : ρ ≃ₗ σ) (f' : σ ≃ₗ ϕ) :
     f'.toRepMap.comp f.toRepMap = (f.trans f').toRepMap :=
   rfl
 
-public lemma trans_assoc (e₁₂ : ρ ≃ₗ σ) (e₂₃ : σ ≃ₗ ϕ) (e₃₄ : ϕ ≃ₗ φ) :
-    (e₁₂.trans e₂₃).trans e₃₄ = e₁₂.trans (e₂₃.trans e₃₄) := rfl
 
 public theorem eq_comp_toRepMap_symm (f : σ →ₗ ϕ) (g : ρ →ₗ ϕ) :
     f = g.comp e₁₂.symm.toRepMap ↔ f.comp e₁₂.toRepMap = g := by
@@ -273,11 +225,6 @@ public theorem eq_comp_toRepMap_symm (f : σ →ₗ ϕ) (g : ρ →ₗ ϕ) :
   · simp [H]
   · simp [← H]
 
-public theorem comp_toRepMap_symm_eq (f : σ →ₗ ϕ) (g : ρ →ₗ ϕ) :
-    g.comp e₁₂.symm.toRepMap = f ↔ g = f.comp e₁₂.toRepMap := by
-  constructor <;> intro H <;> ext
-  · simp [← H]
-  · simp [H]
 
 public theorem eq_toRepMap_symm_comp (f : ϕ →ₗ ρ) (g : ϕ →ₗ σ) :
     f = e₁₂.symm.toRepMap.comp g ↔ e₁₂.toRepMap.comp f = g := by
@@ -306,29 +253,6 @@ public theorem eq_comp_toRepMap_iff (f g : σ →ₗ ϕ) :
   refine ⟨fun h => ?_, fun a ↦ congrFun (congrArg RepMap.comp a) e₁₂.toRepMap⟩
   rw [(eq_comp_toRepMap_symm g (f.comp e₁₂.toRepMap)).mpr h.symm, eq_comp_toRepMap_symm]
 
-public lemma comp_symm_cancel_left (e : ρ ≃ₗ σ) (f : ϕ →ₗ σ) :
-    e.toRepMap ∘ (e.symm.toRepMap ∘ f) = f := by ext; simp
-
-public lemma symm_comp_cancel_left (e : ρ ≃ₗ σ) (f : ϕ →ₗ ρ) :
-    e.symm.toRepMap ∘ (e.toRepMap ∘ f) = f := by ext; simp
-
-public lemma comp_symm_cancel_right (e : ρ ≃ₗ σ) (f : σ →ₗ ϕ) :
-    (f ∘ e.toRepMap) ∘ e.symm.toRepMap = f := by ext; simp
-
-public lemma symm_comp_cancel_right (e : ρ ≃ₗ σ) (f : ρ →ₗ ϕ) :
-    (f ∘ e.symm.toRepMap) ∘ e.toRepMap = f := by ext; simp
-
-public lemma trans_symm_cancel_left (e : ρ ≃ₗ σ) (f : ρ ≃ₗ ϕ) :
-    e.trans (e.symm.trans f) = f := by ext; simp
-
-public lemma symm_trans_cancel_left (e : ρ ≃ₗ σ) (f : σ ≃ₗ ϕ) :
-    e.symm.trans (e.trans f) = f := by ext; simp
-
-public lemma trans_symm_cancel_right (e : ρ ≃ₗ σ) (f : ϕ ≃ₗ ρ) :
-    (f.trans e).trans e.symm = f := by ext; simp
-
-public lemma symm_trans_cancel_right (e : ρ ≃ₗ σ) (f : ϕ ≃ₗ σ) :
-    (f.trans e.symm).trans e = f := by ext; simp
 
 @[simp]
 public theorem refl_symm : (refl ρ).symm = RepEquiv.refl ρ :=
@@ -369,9 +293,6 @@ public theorem map_ne_zero_iff {x : V} : e x ≠ 0 ↔ x ≠ 0 :=
 @[simp]
 public theorem symm_symm : e.symm.symm = e := rfl
 
-public theorem symm_bijective:
-    Function.Bijective (symm : (ρ ≃ₗ σ) → (σ ≃ₗ ρ)) :=
-  Function.bijective_iff_has_inverse.mpr ⟨symm, fun _ ↦ symm_symm, fun _ ↦ symm_symm⟩
 
 public protected theorem bijective : Function.Bijective e :=
   e.toEquiv.bijective
@@ -382,11 +303,6 @@ public protected theorem injective : Function.Injective e :=
 public protected theorem surjective : Function.Surjective e :=
   e.toEquiv.surjective
 
-public protected theorem image_eq_preimage_symm (s : Set V) : e '' s = e.symm ⁻¹' s :=
-  e.toEquiv.image_eq_preimage_symm s
-
-public protected theorem image_symm_eq_preimage (s : Set W) : e.symm '' s = e ⁻¹' s :=
-  e.toEquiv.symm.image_eq_preimage_symm s
 
 variable {F G V W : Type*} [Field F] [Monoid G] [AddCommGroup V] [AddCommGroup W]
   [Module F V] [Module F W] {ρ : Representation F G V} {σ : Representation F G W}

@@ -163,15 +163,6 @@ private theorem integerSpanOn_add_pf57
   rintro ⟨hφ_span, hφ_on⟩ ⟨hψ_span, hψ_on⟩
   exact ⟨integerSpan_add_pf57 hφ_span hψ_span, supportedOn_add_pf57 hφ_on hψ_on⟩
 
-private theorem integerSpanOn_neg_pf57
-    {H : Type*} [Group H]
-    {S : Finset (Section1.ClassFunction H)}
-    {A : Set H}
-    {φ : Section1.ClassFunction H} :
-    integerSpanOn S A φ → integerSpanOn S A (-φ) := by
-  rintro ⟨hφ_span, hφ_on⟩
-  refine ⟨integerSpan_neg_pf57 hφ_span, ?_⟩
-  simpa using supportedOn_smul_pf57 (-1 : ℂ) hφ_on
 
 private theorem integerSpanOn_zsmul_pf57
     {H : Type*} [Group H]
@@ -1037,17 +1028,6 @@ private theorem diff_memOn_of_equal_degree_pf57
     rw [hdeg]
     simp
 
-private theorem pairDiff_memOn_of_card_two_pf57
-    {L : Type u} [Group L] [Finite L]
-    (S : Finset (Section1.ClassFunction L))
-    (hsetup : hypothesis_5_2_setup_statement S)
-    (h52a : hypothesis_5_2_a_statement S)
-    (X : S)
-    (_hcard2 : S.card = 2) :
-    integerSpanOn S puncturedSet
-      ((X : Section1.ClassFunction L) -
-        Section1.conjugateCharacter (X : Section1.ClassFunction L)) := by
-  simpa using pairDiff_memOn_pf57 S hsetup h52a X
 
 private theorem card_R_eq_twice_selfNat_pf57
     {L : Type u} [Group L] [Finite L]
@@ -1704,77 +1684,6 @@ private theorem theorem_5_7_projection_data_pf57
   exact ⟨Xbig, Y, hXbig_span, hY_orth, by simpa [diffψ] using hTdiffψ_eq,
     h54.1, h54.2⟩
 
-private theorem hypothesis_5_2_setup_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    (hne : S1.Nonempty)
-    (hsetup : hypothesis_5_2_setup_statement S) :
-    hypothesis_5_2_setup_statement S1 := by
-  exact ⟨hne, fun X => hsetup.2 ⟨(X : Section1.ClassFunction L), hsub X.2⟩⟩
-
-private theorem hypothesis_5_2_a_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    (hclosed : ∀ χ : Section1.ClassFunction L, χ ∈ S1 →
-      Section1.conjugateCharacter χ ∈ S1)
-    (h52a : hypothesis_5_2_a_statement S) :
-    hypothesis_5_2_a_statement S1 := by
-  intro X
-  exact ⟨hclosed (X : Section1.ClassFunction L) X.2,
-    (h52a ⟨(X : Section1.ClassFunction L), hsub X.2⟩).2⟩
-
-private theorem hypothesis_5_2_b_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {G : Type u} [Group G] [Finite G]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h52b : hypothesis_5_2_b_statement S T) :
-    hypothesis_5_2_b_statement S1 T := by
-  constructor
-  · intro φ ψ hφ hψ
-    exact h52b.1 φ ψ
-      ⟨integerSpan_mono_pf57 hsub hφ.1, hφ.2⟩
-      ⟨integerSpan_mono_pf57 hsub hψ.1, hψ.2⟩
-  · intro χ hχ
-    exact h52b.2 χ ⟨integerSpan_mono_pf57 hsub hχ.1, hχ.2⟩
-
-private theorem hypothesis_5_2_c_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    (h52c : hypothesis_5_2_c_statement S) :
-    hypothesis_5_2_c_statement S1 := by
-  intro χ ψ hχ hψ hne
-  exact h52c (hsub hχ) (hsub hψ) hne
-
-private theorem hypothesis_5_2_d_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {G : Type u} [Group G] [Finite G]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {R : S → Finset (Section1.ClassFunction G)}
-    (h52d : hypothesis_5_2_d_statement S T R) :
-    hypothesis_5_2_d_statement S1 T
-      (fun X : S1 => R ⟨(X : Section1.ClassFunction L), hsub X.2⟩) := by
-  intro X
-  exact h52d ⟨(X : Section1.ClassFunction L), hsub X.2⟩
-
-private theorem hypothesis_5_2_e_subset_pf57
-    {L : Type u} [Group L] [Finite L]
-    {G : Type u} [Group G] [Finite G]
-    {S1 S : Finset (Section1.ClassFunction L)}
-    (hsub : S1 ⊆ S)
-    {R : S → Finset (Section1.ClassFunction G)}
-    (h52e : hypothesis_5_2_e_statement S R) :
-    hypothesis_5_2_e_statement S1
-      (fun X : S1 => R ⟨(X : Section1.ClassFunction L), hsub X.2⟩) := by
-  intro X Y hYX hYbarX
-  exact h52e ⟨(X : Section1.ClassFunction L), hsub X.2⟩
-    ⟨(Y : Section1.ClassFunction L), hsub Y.2⟩ hYX hYbarX
 
 set_option maxHeartbeats 1000000 in
 set_option linter.unusedSimpArgs false in

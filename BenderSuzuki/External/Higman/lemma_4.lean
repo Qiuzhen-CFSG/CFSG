@@ -163,14 +163,6 @@ private def lemma4_commutatorRightFactorHom
   QuotientGroup.lift (lowerCentralFactorKernel H 0)
     (lemma4_commutatorRightHom x) (lemma4_commutatorRightHom_kernel x)
 
-private theorem lemma4_commutatorRightFactorHom_mk
-    {H : Type u} [Group H]
-    (x y : higmanLowerCentralSeries H 0) :
-    lemma4_commutatorRightFactorHom x
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) y) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 1)
-        (lemma4_commutatorLift x y) :=
-  rfl
 
 private def lemma4_commutatorLeftHom
     {H : Type u} [Group H] :
@@ -259,15 +251,6 @@ private def lemma4_commutatorFactorHom
     (lemma4_commutatorLeftHom (H := H))
     (lemma4_commutatorLeftHom_kernel (H := H))
 
-private theorem lemma4_commutatorFactorHom_mk_mk
-    {H : Type u} [Group H]
-    (x y : higmanLowerCentralSeries H 0) :
-    lemma4_commutatorFactorHom
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) y) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 1)
-        (lemma4_commutatorLift x y) :=
-  rfl
 
 private noncomputable def lemma4_commutatorFactorAddHom
     {H : Type u} [Group H] :
@@ -532,47 +515,6 @@ public theorem lemma4_transitive_linearAut_order
     simp
   rw [Nat.card_zpowers] at horbit_card
   rw [horbit_card, hnonzero_card, hcard]
-private theorem lemma4_binaryGaloisField_mulLeft_singer
-    (n : ℕ) (hn : n ≠ 0) :
-    ∃ lambda : (BinaryGaloisField n)ˣ,
-      orderOf lambda = 2 ^ n - 1 ∧
-      orderOf
-          (lambda.mulLeftLinearEquiv (ZMod 2) (BinaryGaloisField n)) =
-        2 ^ n - 1 ∧
-      ∀ x : BinaryGaloisField n, x ≠ 0 →
-        ∀ y : BinaryGaloisField n, y ≠ 0 →
-          ∃ k : ℕ,
-            ((lambda.mulLeftLinearEquiv (ZMod 2)
-              (BinaryGaloisField n)) ^ k) x = y := by
-  classical
-  obtain ⟨lambda, hlambda⟩ :=
-    IsCyclic.exists_generator (α := (BinaryGaloisField n)ˣ)
-  have hlambda_order : orderOf lambda = 2 ^ n - 1 := by
-    rw [orderOf_eq_card_of_forall_mem_zpowers hlambda,
-      Nat.card_units, GaloisField.card 2 n hn]
-  have hmul_injective :
-      Function.Injective
-        (Units.mulLeftLinearEquiv (ZMod 2) (BinaryGaloisField n)) := by
-    intro a b hab
-    apply Units.ext
-    have happ := LinearEquiv.congr_fun hab (1 : BinaryGaloisField n)
-    simpa using happ
-  refine ⟨lambda, hlambda_order,
-    (orderOf_injective
-      (Units.mulLeftLinearEquiv (ZMod 2) (BinaryGaloisField n))
-      hmul_injective lambda).trans hlambda_order, ?_⟩
-  intro x hx y hy
-  let xu : (BinaryGaloisField n)ˣ := Units.mk0 x hx
-  let yu : (BinaryGaloisField n)ˣ := Units.mk0 y hy
-  let r : (BinaryGaloisField n)ˣ := yu * xu⁻¹
-  obtain ⟨k, hk⟩ :
-      ∃ k : ℕ, lambda ^ k = r :=
-    (mem_powers_iff_mem_zpowers.mpr (hlambda r))
-  refine ⟨k, ?_⟩
-  rw [← map_pow, hk]
-  change (r : BinaryGaloisField n) * x = y
-  simp only [r, xu, yu, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_mk0]
-  rw [mul_assoc, inv_mul_cancel₀ hx, mul_one]
 
 private theorem lemma4_diagonal_alternating_span_forces_product
     {K : Type u} {W : Type v} {ι : Type w}

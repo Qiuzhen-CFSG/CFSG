@@ -27,27 +27,6 @@ open Section1 Section2 Section3
 
 /-! ## (3.5) -/
 
-/--
-Peterfalvi (3.5): there is an orthonormal family `χᵢⱼ` in `ℤ Irr(G)` such
-that `χ₀₀ = 1_G` and induction of `αᵢⱼ` is
-`1_G - χᵢ₀ - χ₀ⱼ + χᵢⱼ`.
--/
-@[expose] public def proposition_3_5_statement
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J]
-    [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (_h : hypothesis_3_1_statement W1 W2 W)
-    (_hω : notation_3_3_statement W1 W2 W I J i0 j0 ω) : Prop :=
-  ∃ χ : I → J → Section1.ClassFunction G,
-    IsOrthonormalDoubleFamily χ ∧
-      (∀ i j, Representation.IsVirtualCharacter (χ i j)) ∧
-      χ i0 j0 = Section1.principalCharacter G ∧
-      ∀ i j, i ≠ i0 → j ≠ j0 →
-        Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-          Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j
 
 /--
 Strengthened PF (3.5) package used by later PF3 constructions: the source
@@ -775,21 +754,6 @@ public theorem betaIJ_scalarProduct_principal
   rw [h1, principal_scalarProduct_principal]
   ring
 
-public theorem scalarProduct_betaIJ_principal_eq_zero
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0) :
-    ∃ z : ℤ,
-      Section1.scalarProduct G (betaIJ W i0 j0 ω i j)
-        (Section1.principalCharacter G) = (z : ℂ) ∧ z = 0 := by
-  refine ⟨0, ?_, rfl⟩
-  simpa using betaIJ_scalarProduct_principal
-    (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
-    (i0 := i0) (j0 := j0) (ω := ω) hω hi hj
 
 public theorem betaIJ_scalarProduct_betaIJ_same
     {G : Type u} [Group G] [Finite G]
@@ -1159,23 +1123,6 @@ private theorem scalarProduct_evalCoeff_eq_coeffDot
     _ = (v i * w i : ℤ) := by
           simp [Int.cast_mul]
 
-public theorem irreducibleBasis_evalCoeff_self
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {χ : ι → Representation.ClassFunction G}
-    (_b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (_hb : ∀ i, _b i = χ i) (i : ι) :
-    Section1.evalCoeff (fun k => Section1.ofConjClassFunction (χ k))
-        (Section1.basisVector i) =
-      Section1.ofConjClassFunction (χ i) := by
-  classical
-  simp only [Section1.evalCoeff]
-  ext g
-  rw [Finset.sum_eq_single i]
-  · simp [Section1.basisVector]
-  · intro k _hk hki
-    simp [Section1.basisVector, hki]
-  · intro hi
-    exact (hi (Finset.mem_univ i)).elim
 
 public theorem irreducibleBasis_scalarProduct_evalCoeff
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
@@ -1536,31 +1483,6 @@ private theorem coeffDot_self_eq_support_sum_sq
       exact hxnot (by simp [coeffSupport3, hneq])
     simp [hx0]
 
-private theorem coeffSupport3_card_le_three_of_dot_eq_three
-    {J : Type*} [Fintype J] [DecidableEq J]
-    (v : Section1.CoeffVector J) (hdot : Section1.coeffDot v v = 3) :
-    (coeffSupport3 v).card ≤ 3 := by
-  classical
-  by_contra hle
-  have hfour : 4 ≤ (coeffSupport3 v).card := by omega
-  have hsum_ge : ((coeffSupport3 v).card : ℤ) ≤ Section1.coeffDot v v := by
-    rw [coeffDot_self_eq_support_sum_sq v]
-    calc
-      ((coeffSupport3 v).card : ℤ) =
-          ((Finset.sum (coeffSupport3 v) (fun _ : J => (1 : ℤ)) : ℤ)) := by simp
-      _ ≤ Finset.sum (coeffSupport3 v) (fun j => v j * v j) := by
-        refine Finset.sum_le_sum ?_
-        intro j hj
-        have hvne : v j ≠ 0 := by
-          simpa [coeffSupport3] using hj
-        have hpos : (0 : ℤ) < (v j) ^ 2 := sq_pos_of_ne_zero hvne
-        nlinarith [hpos]
-  have hbad : (4 : ℤ) ≤ 3 := by
-    calc
-      (4 : ℤ) ≤ ((coeffSupport3 v).card : ℤ) := by exact_mod_cast hfour
-      _ ≤ Section1.coeffDot v v := hsum_ge
-      _ = 3 := by rw [hdot]
-  omega
 
 private theorem coeffSupport3_coeff_eq_sign_of_dot_eq_three
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -1612,32 +1534,6 @@ private theorem coeffSupport3_card_eq_three_of_dot_eq_three
   rw [hdot] at hcard
   exact_mod_cast hcard.symm
 
-public theorem betaIJCoeff_support_card_le_three
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0) :
-    (coeffSupport3
-        (betaIJCoeff (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ i j)).card ≤ 3 := by
-  classical
-  exact coeffSupport3_card_le_three_of_dot_eq_three
-    (betaIJCoeff (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j)
-    (betaIJCoeff_self_dot (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ b hb hi hj)
 
 public theorem betaIJCoeff_support_card_eq_three
     {G : Type u} [Group G] [Finite G]
@@ -2121,22 +2017,6 @@ private theorem same_plus_opposite_card_le_left
     · exact sameSignSupport_subset_left v w hs
     · exact oppositeSignSupport_subset_left v w ho)
 
-private theorem same_plus_opposite_card_le_right
-    {J : Type*} [Fintype J] [DecidableEq J]
-    (v w : Section1.CoeffVector J) :
-    (sameSignSupport v w).card + (oppositeSignSupport v w).card ≤
-      (coeffSupport3 w).card := by
-  have hcard_union :
-      ((sameSignSupport v w) ∪ (oppositeSignSupport v w)).card =
-        (sameSignSupport v w).card + (oppositeSignSupport v w).card := by
-    exact Finset.card_union_of_disjoint
-      (sameSignSupport_disjoint_oppositeSignSupport v w)
-  rw [← hcard_union]
-  exact Finset.card_le_card (by
-    intro j hj
-    rcases Finset.mem_union.mp hj with hs | ho
-    · exact sameSignSupport_subset_right v w hs
-    · exact oppositeSignSupport_subset_right v w ho)
 
 private theorem same_opposite_card_cases_of_dot_eq_one
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -2227,35 +2107,6 @@ private theorem coeff_sub_support_subset_union
     simpa [coeffSupport3] using hj
   exact hne hdiff
 
-private theorem coeff_sub_eq_zero_of_not_mem_same_or_opposite
-    {J : Type*} [Fintype J] [DecidableEq J]
-    {v w : Section1.CoeffVector J}
-    (hv : ∀ j, v j = 0 ∨ v j = 1 ∨ v j = -1)
-    (hw : ∀ j, w j = 0 ∨ w j = 1 ∨ w j = -1)
-    {j : J}
-    (hjv : j ∈ coeffSupport3 v)
-    (hjw : j ∈ coeffSupport3 w)
-    (hnotSame : j ∉ sameSignSupport v w)
-    (hnotOpp : j ∉ oppositeSignSupport v w) :
-    v j - w j = 0 := by
-  have hvne : v j ≠ 0 := by
-    simpa [coeffSupport3] using hjv
-  have hwne : w j ≠ 0 := by
-    simpa [coeffSupport3] using hjw
-  rcases hv j with hv0 | hv1 | hvn <;> rcases hw j with hw0 | hw1 | hwn
-  all_goals try contradiction
-  · rw [hv1, hw1]
-    exfalso
-    exact hnotSame (by simp [sameSignSupport, hv1, hw1])
-  · rw [hv1, hwn]
-    exfalso
-    exact hnotOpp (by simp [oppositeSignSupport, hv1, hwn])
-  · rw [hvn, hw1]
-    exfalso
-    exact hnotOpp (by simp [oppositeSignSupport, hvn, hw1])
-  · rw [hvn, hwn]
-    exfalso
-    exact hnotSame (by simp [sameSignSupport, hvn, hwn])
 
 private theorem support_sub_eq_opposite_of_cards
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -2685,26 +2536,6 @@ public theorem signedCoeffMem_mem_support
     j ∈ coeffSupport3 v := by
   rcases hmem.1 with rfl | rfl <;> simp [coeffSupport3, hmem.2]
 
-public theorem betaSignedMem_mem_support
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    {h : hypothesis_3_1_statement W1 W2 W}
-    {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
-    {i : I} {j : J} {ε : ℤ} {k : ι}
-    (hmem : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k) :
-    k ∈ coeffSupport3
-      (betaIJCoeff (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j) := by
-  exact signedCoeffMem_mem_support hmem
 
 public theorem betaSignedMem_isSignInt
     {G : Type u} [Group G] [Finite G]
@@ -2742,34 +2573,6 @@ public theorem betaSignedMem_neg_sign_for_output
     Section1.IsSignInt (-ε) := by
   rcases betaSignedMem_isSignInt hmem with rfl | rfl <;> simp [Section1.IsSignInt]
 
-public theorem betaSignedMem_exists_of_support
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    {k : ι}
-    (hk : k ∈ coeffSupport3
-      (betaIJCoeff (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j)) :
-    ∃ ε, betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k := by
-  rcases betaIJCoeff_mem_support_eq_sign
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj hk with hsign | hsign
-  · exact ⟨1, Or.inl rfl, hsign⟩
-  · exact ⟨-1, Or.inr rfl, hsign⟩
 
 public theorem signedCoeffMem_sign_unique
     {J : Type*} {v : Section1.CoeffVector J} {ε δ : ℤ} {j : J}
@@ -2828,40 +2631,6 @@ public theorem betaSignedMem_neg_not_same
       (ω := ω) (χ := χ) h hω hχ i j (-ε) k := by
   exact signedCoeffMem_neg_not_same hε
 
-public theorem betaSignedMem_common_index_ne_of_absent
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    {h : hypothesis_3_1_statement W1 W2 W}
-    {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
-    {i p r : I} {j q s : J}
-    {ε δ : ℤ} {k l : ι}
-    (hA : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (_hB : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ p q ε k)
-    (hA' : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j δ l)
-    (hC' : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r s δ l)
-    (habs : ¬ betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r s ε k) :
-    k ≠ l := by
-  intro hkl
-  subst hkl
-  have hδε : δ = ε := betaSignedMem_sign_unique hA' hA
-  subst hδε
-  exact habs hC'
 
 public theorem coeffSupport3_eq_triple_of_signedCoeffMem
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -3126,9 +2895,6 @@ private theorem isSignInt_ne_zero {ε : ℤ} (hε : Section1.IsSignInt ε) :
     ε ≠ 0 := by
   rcases hε with rfl | rfl <;> norm_num
 
-private theorem isSignInt_neg {ε : ℤ} (hε : Section1.IsSignInt ε) :
-    Section1.IsSignInt (-ε) := by
-  rcases hε with rfl | rfl <;> simp [Section1.IsSignInt]
 
 private theorem mem_sameSignSupport_of_signedCoeffMem_same
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -3853,103 +3619,6 @@ public theorem betaSignedMem_off_common_forces_opposite
       (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
       h hω hχ b hb hi hj hp hq hip hjq hv hw)
 
-public theorem betaSignedMem_off_common_forces_opposite_cases_left
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
-    {ε1 ε2 ε3 ε : ℤ} {k1 k2 k3 k : ι}
-    (h1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε1 k1)
-    (h2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε2 k2)
-    (h3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε3 k3)
-    (h12 : k1 ≠ k2) (h13 : k1 ≠ k3) (h23 : k2 ≠ k3)
-    (hv : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (hw : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ p q ε k) :
-    betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q (-ε1) k1 ∨
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q (-ε2) k2 ∨
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q (-ε3) k3 := by
-  classical
-  rcases betaSignedMem_off_common_forces_opposite
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj hp hq hip hjq hv hw with
-    ⟨δ, l, hv', hw'⟩
-  rcases betaSignedMem_cases_of_three
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj h1 h2 h3 h12 h13 h23 hv' with
-    hcase | hcase | hcase
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inl hw'
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inr <| Or.inl hw'
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inr <| Or.inr hw'
-
-public theorem betaSignedMem_off_no_common_if_no_opposite
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
-    (hnoOpp : ∀ δ l,
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j δ l →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q (-δ) l →
-        False)
-    {ε : ℤ} {k : ι}
-    (hv : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (hw : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ p q ε k) :
-    False := by
-  classical
-  rcases betaSignedMem_off_common_forces_opposite
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj hp hq hip hjq hv hw with
-    ⟨δ, l, hv', hw'⟩
-  exact hnoOpp δ l hv' hw'
 
 public theorem betaSignedMem_off_opposite_forces_common
     {G : Type u} [Group G] [Finite G]
@@ -3987,64 +3656,6 @@ public theorem betaSignedMem_off_opposite_forces_common
       (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
       h hω hχ b hb hi hj hp hq hip hjq hv hw)
 
-public theorem betaSignedMem_off_opposite_forces_common_cases_left
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
-    {ε1 ε2 ε3 ε : ℤ} {k1 k2 k3 k : ι}
-    (h1 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε1 k1)
-    (h2 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε2 k2)
-    (h3 : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε3 k3)
-    (h12 : k1 ≠ k2) (h13 : k1 ≠ k3) (h23 : k2 ≠ k3)
-    (hv : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (hw : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ p q (-ε) k) :
-    betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q ε1 k1 ∨
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q ε2 k2 ∨
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q ε3 k3 := by
-  classical
-  rcases betaSignedMem_off_opposite_forces_common
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj hp hq hip hjq hv hw with
-    ⟨δ, l, hv', hw'⟩
-  rcases betaSignedMem_cases_of_three
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj h1 h2 h3 h12 h13 h23 hv' with
-    hcase | hcase | hcase
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inl hw'
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inr <| Or.inl hw'
-  · rcases hcase with ⟨rfl, rfl⟩
-    exact Or.inr <| Or.inr hw'
 
 public theorem betaSignedMem_off_common_forces_opposite_cases_right
     {G : Type u} [Group G] [Finite G]
@@ -7972,100 +7583,6 @@ public theorem betaSignedMem_pf354_caseII_impossible_of_full_pattern
         hB_x1 hB_x5 hB_x4 h15 h14 (fun hx => h45 hx.symm)
         h36 h34 h35 (fun hx => h56 hx.symm) hA_x3 hA_neg_x6
 
-public theorem betaSignedMem_off_no_opposite_if_no_common
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
-    (hnoCommon : ∀ δ l,
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j δ l →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ p q δ l →
-        False)
-    {ε : ℤ} {k : ι}
-    (hv : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (hw : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ p q (-ε) k) :
-    False := by
-  classical
-  rcases betaSignedMem_off_opposite_forces_common
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hi hj hp hq hip hjq hv hw with
-    ⟨δ, l, hv', hw'⟩
-  exact hnoCommon δ l hv' hw'
-
-public theorem betaSignedMem_pf355_off_pm_common_produces_new_in_target
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {i r : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
-    (hr : r ≠ i0) (hq : q ≠ j0) (hir : i ≠ r) (hjq : j ≠ q)
-    {ε δ : ℤ} {k : ι}
-    (hij : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ i j ε k)
-    (hrq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r q δ k)
-    (hδ : δ = ε ∨ δ = -ε) :
-    ∃ η l,
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ r q η l ∧
-      l ≠ k := by
-  classical
-  rcases hδ with hδε | hδe
-  · rw [hδε] at hrq
-    rcases betaSignedMem_off_common_forces_opposite
-        (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-        (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-        h hω hχ b hb hi hj hr hq hir hjq hij hrq with
-      ⟨η, l, hij', hrq'⟩
-    refine ⟨-η, l, hrq', ?_⟩
-    intro hl
-    subst hl
-    have hη : η = ε := betaSignedMem_sign_unique hij' hij
-    subst hη
-    exact betaSignedMem_neg_not_same hrq hrq'
-  · rw [hδe] at hrq
-    rcases betaSignedMem_off_opposite_forces_common
-        (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-        (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-        h hω hχ b hb hi hj hr hq hir hjq hij hrq with
-      ⟨η, l, hij', hrq'⟩
-    refine ⟨η, l, ?_, ?_⟩
-    · simpa using hrq'
-    intro hl
-    subst hl
-    have hη : η = ε := betaSignedMem_sign_unique hij' hij
-    subst hη
-    exact betaSignedMem_neg_not_same hrq (by simpa using hrq')
 
 public theorem betaSignedMem_pf355_off_pm_common_produces_new_pm_common
     {G : Type u} [Group G] [Finite G]
@@ -8562,93 +8079,6 @@ public theorem betaIJ_eq_three_signed_of_betaSignedMem
       h hω hχ b hb hi hj)
     h1 h2 h3 h12 h13 h23
 
-public theorem betaIJ_pf355_two_col_decomposition
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {a r s t : I} {j q : J}
-    (ha : a ≠ i0) (hr : r ≠ i0) (hs : s ≠ i0) (ht : t ≠ i0)
-    (hj : j ≠ j0) (hq : q ≠ j0)
-    (har : a ≠ r) (has : a ≠ s) (hat : a ≠ t)
-    (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) (hjq : j ≠ q)
-    {εj εq : ℤ} {xj xq : ι}
-    (hR_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r j εj xj)
-    (hS_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ s j εj xj)
-    (hT_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ t j εj xj)
-    (hR_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r q εq xq)
-    (hS_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ s q εq xq)
-    (hT_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ t q εq xq)
-    (hA_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ a j εj xj)
-    (hA_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ a q εq xq) :
-    ∃ (η : ℤ) (x : ι) (ηj : ℤ) (yj : ι) (ηq : ℤ) (yq : ι),
-      betaIJ W i0 j0 ω a j =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηj : ℂ) • Section1.ofConjClassFunction (χ yj) +
-              (εj : ℂ) • Section1.ofConjClassFunction (χ xj) ∧
-        betaIJ W i0 j0 ω a q =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηq : ℂ) • Section1.ofConjClassFunction (χ yq) +
-              (εq : ℂ) • Section1.ofConjClassFunction (χ xq) ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q η x := by
-  classical
-  rcases betaSignedMem_pf355_two_col_decomposition_supports
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hr hs ht hj hq har has hat hrs hrt hst hjq
-      hR_xj hS_xj hT_xj hR_xq hS_xq hT_xq hA_xj hA_xq with
-    ⟨η, x, ηj, yj, ηq, yq, hAj_x, hAq_x, hAj_yj, hAq_yq,
-      hx_ne_xj, hx_ne_xq, hyj_ne_x, hyj_ne_xj, hyq_ne_x, hyq_ne_xq⟩
-  have hAj :
-      betaIJ W i0 j0 ω a j =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηj : ℂ) • Section1.ofConjClassFunction (χ yj) +
-              (εj : ℂ) • Section1.ofConjClassFunction (χ xj) := by
-    exact betaIJ_eq_three_signed_of_betaSignedMem
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hj hAj_x hAj_yj hA_xj
-      (fun hxy => hyj_ne_x hxy.symm) hx_ne_xj hyj_ne_xj
-  have hAq :
-      betaIJ W i0 j0 ω a q =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηq : ℂ) • Section1.ofConjClassFunction (χ yq) +
-              (εq : ℂ) • Section1.ofConjClassFunction (χ xq) := by
-    exact betaIJ_eq_three_signed_of_betaSignedMem
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hq hAq_x hAq_yq hA_xq
-      (fun hxy => hyq_ne_x hxy.symm) hx_ne_xq hyq_ne_xq
-  exact ⟨η, x, ηj, yj, ηq, yq, hAj, hAq, hAj_x, hAq_x⟩
 
 public theorem inducedCF_alphaIJ_eq_principal_add_of_betaIJ_eq
     {G : Type u} [Group G] [Finite G]
@@ -8664,15 +8094,6 @@ public theorem inducedCF_alphaIJ_eq_principal_add_of_betaIJ_eq
   ext g
   simp [betaIJ, sub_eq_add_neg, add_comm]
 
-public theorem signedIrreducible_of_completeFamily
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ) (k : ι) :
-    IsSignedIrreducibleCharacter (Section1.ofConjClassFunction (χ k)) := by
-  refine ⟨1, ?_, Section1.ofConjClassFunction (χ k), ?_, ?_⟩
-  · simp [Section1.IsSign]
-  · exact ofConjClassFunction_isIrreducibleCharacterOnGroup (hχ.1 k)
-  · simp
 
 public theorem signedIrreducible_smul_of_completeFamily
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
@@ -8716,18 +8137,6 @@ public theorem exists_principal_index_of_completeFamily
   change Section1.ofConjClassFunction (χ k) = Section1.ofConjClassFunction χ0
   rw [hk]
 
-public theorem exists_signed_principal_index_of_completeFamily
-    {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ) :
-    ∃ ε : ℤ, ∃ k : ι,
-      Section1.IsSignInt ε ∧
-        (ε : ℂ) • Section1.ofConjClassFunction (χ k) =
-          Section1.principalCharacter G := by
-  rcases exists_principal_index_of_completeFamily (G := G) (ι := ι) (χ := χ) hχ with
-    ⟨k, hk⟩
-  refine ⟨1, k, Or.inl rfl, ?_⟩
-  simp [hk]
 
 public theorem inducedCF_alphaIJ_eq_principal_add_three_signed_of_betaSignedMem
     {G : Type u} [Group G] [Finite G]
@@ -8805,103 +8214,6 @@ public theorem inducedCF_alphaIJ_eq_principal_sub_sub_add_of_betaSignedMem
   have hg := congrFun hInd g
   simpa [sub_eq_add_neg, add_assoc] using hg
 
-public theorem inducedCF_alphaIJ_pf355_two_col_decomposition
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    {a r s t : I} {j q : J}
-    (ha : a ≠ i0) (hr : r ≠ i0) (hs : s ≠ i0) (ht : t ≠ i0)
-    (hj : j ≠ j0) (hq : q ≠ j0)
-    (har : a ≠ r) (has : a ≠ s) (hat : a ≠ t)
-    (hrs : r ≠ s) (hrt : r ≠ t) (hst : s ≠ t) (hjq : j ≠ q)
-    {εj εq : ℤ} {xj xq : ι}
-    (hR_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r j εj xj)
-    (hS_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ s j εj xj)
-    (hT_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ t j εj xj)
-    (hR_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ r q εq xq)
-    (hS_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ s q εq xq)
-    (hT_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ t q εq xq)
-    (hA_xj : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ a j εj xj)
-    (hA_xq : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hχ a q εq xq) :
-    ∃ (η : ℤ) (x : ι) (ηj : ℤ) (yj : ι) (ηq : ℤ) (yq : ι),
-      Section1.inducedCF W (alphaIJ W i0 j0 ω a j) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εj : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xj)) +
-            ((ηj : ℂ) • Section1.ofConjClassFunction (χ yj)) ∧
-        Section1.inducedCF W (alphaIJ W i0 j0 ω a q) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εq : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xq)) +
-            ((ηq : ℂ) • Section1.ofConjClassFunction (χ yq)) ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j ηj yj ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q ηq yq := by
-  classical
-  rcases betaSignedMem_pf355_two_col_decomposition_supports
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hr hs ht hj hq har has hat hrs hrt hst hjq
-      hR_xj hS_xj hT_xj hR_xq hS_xq hT_xq hA_xj hA_xq with
-    ⟨η, x, ηj, yj, ηq, yq, hAj_x, hAq_x, hAj_yj, hAq_yq,
-      hx_ne_xj, hx_ne_xq, hyj_ne_x, hyj_ne_xj, hyq_ne_x, hyq_ne_xq⟩
-  have hInd_j :
-      Section1.inducedCF W (alphaIJ W i0 j0 ω a j) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εj : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xj)) +
-            ((ηj : ℂ) • Section1.ofConjClassFunction (χ yj)) := by
-    exact inducedCF_alphaIJ_eq_principal_sub_sub_add_of_betaSignedMem
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hj (by simpa using hAj_x) (by simpa using hA_xj) hAj_yj
-      hx_ne_xj (fun hxy => hyj_ne_x hxy.symm) (fun hxy => hyj_ne_xj hxy.symm)
-  have hInd_q :
-      Section1.inducedCF W (alphaIJ W i0 j0 ω a q) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εq : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xq)) +
-            ((ηq : ℂ) • Section1.ofConjClassFunction (χ yq)) := by
-    exact inducedCF_alphaIJ_eq_principal_sub_sub_add_of_betaSignedMem
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb ha hq (by simpa using hAq_x) (by simpa using hA_xq) hAq_yq
-      hx_ne_xq (fun hxy => hyq_ne_x hxy.symm) (fun hxy => hyq_ne_xq hxy.symm)
-  exact ⟨η, x, ηj, yj, ηq, yq, hInd_j, hInd_q, hAj_x, hAq_x, hAj_yj, hAq_yq⟩
 
 public theorem orthonormalDoubleFamily_of_completeFamily_injective_indices
     {G ι I J : Type*} [Group G] [Finite G] [Fintype ι]
@@ -9335,17 +8647,6 @@ public theorem exists_other_col_ne_base_of_card_right_ge_three
   exact exists_other_ne_base_of_fintype_card_ge_three j0 j hj (by
     simpa [hω.card_right] using hcard)
 
-public theorem exists_other_row_ne_base_of_card_left_ge_three
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    {i : I} (hi : i ≠ i0) (hcard : 3 ≤ Nat.card W1) :
-    ∃ p : I, p ≠ i0 ∧ p ≠ i := by
-  exact exists_other_ne_base_of_fintype_card_ge_three i0 i hi (by
-    simpa [hω.card_left] using hcard)
 
 public theorem exists_four_rows_ne_base_of_card_left_ge_five
     {G : Type u} [Group G] [Finite G]
@@ -9637,119 +8938,6 @@ public theorem betaSignedMem_pf355_two_col_decomposition_supports_of_column_comm
     (hcolq r hr) (hcolq s hs) (hcolq t ht)
     (hcolj a ha) (hcolq a ha)
 
-public theorem betaIJ_pf355_two_col_decomposition_of_column_commons
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    (hcard : 5 ≤ Nat.card W1)
-    {a : I} {j q : J}
-    (ha : a ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0) (hjq : j ≠ q)
-    {εj εq : ℤ} {xj xq : ι}
-    (hcolj : ∀ i, i ≠ i0 →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j εj xj)
-    (hcolq : ∀ i, i ≠ i0 →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i q εq xq) :
-    ∃ (η : ℤ) (x : ι) (ηj : ℤ) (yj : ι) (ηq : ℤ) (yq : ι),
-      betaIJ W i0 j0 ω a j =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηj : ℂ) • Section1.ofConjClassFunction (χ yj) +
-              (εj : ℂ) • Section1.ofConjClassFunction (χ xj) ∧
-        betaIJ W i0 j0 ω a q =
-          (η : ℂ) • Section1.ofConjClassFunction (χ x) +
-            (ηq : ℂ) • Section1.ofConjClassFunction (χ yq) +
-              (εq : ℂ) • Section1.ofConjClassFunction (χ xq) ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q η x := by
-  classical
-  rcases exists_three_other_rows_ne_base_of_card_left_ge_five
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
-      (i0 := i0) (j0 := j0) (ω := ω) hω ha hcard with
-    ⟨r, s, t, hr, hs, ht, har, has, hat, hrs, hrt, hst⟩
-  exact betaIJ_pf355_two_col_decomposition
-    (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-    (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-    h hω hχ b hb ha hr hs ht hj hq har has hat hrs hrt hst hjq
-    (hcolj r hr) (hcolj s hs) (hcolj t ht)
-    (hcolq r hr) (hcolq s hs) (hcolq t ht)
-    (hcolj a ha) (hcolq a ha)
-
-public theorem inducedCF_alphaIJ_pf355_two_col_decomposition_of_column_commons
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    (hcard : 5 ≤ Nat.card W1)
-    {a : I} {j q : J}
-    (ha : a ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0) (hjq : j ≠ q)
-    {εj εq : ℤ} {xj xq : ι}
-    (hcolj : ∀ i, i ≠ i0 →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i j εj xj)
-    (hcolq : ∀ i, i ≠ i0 →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ i q εq xq) :
-    ∃ (η : ℤ) (x : ι) (ηj : ℤ) (yj : ι) (ηq : ℤ) (yq : ι),
-      Section1.inducedCF W (alphaIJ W i0 j0 ω a j) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εj : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xj)) +
-            ((ηj : ℂ) • Section1.ofConjClassFunction (χ yj)) ∧
-        Section1.inducedCF W (alphaIJ W i0 j0 ω a q) =
-          Section1.principalCharacter G -
-            (((-η : ℤ) : ℂ) • Section1.ofConjClassFunction (χ x)) -
-            (((-εq : ℤ) : ℂ) • Section1.ofConjClassFunction (χ xq)) +
-            ((ηq : ℂ) • Section1.ofConjClassFunction (χ yq)) ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q η x ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a j ηj yj ∧
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a q ηq yq := by
-  classical
-  rcases exists_three_other_rows_ne_base_of_card_left_ge_five
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
-      (i0 := i0) (j0 := j0) (ω := ω) hω ha hcard with
-    ⟨r, s, t, hr, hs, ht, har, has, hat, hrs, hrt, hst⟩
-  exact inducedCF_alphaIJ_pf355_two_col_decomposition
-    (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-    (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-    h hω hχ b hb ha hr hs ht hj hq har has hat hrs hrt hst hjq
-    (hcolj r hr) (hcolj s hs) (hcolj t ht)
-    (hcolq r hr) (hcolq s hs) (hcolq t ht)
-    (hcolj a ha) (hcolq a ha)
 
 public theorem exists_four_cols_ne_base_of_card_right_ge_five
     {G : Type u} [Group G] [Finite G]
@@ -9766,20 +8954,6 @@ public theorem exists_four_cols_ne_base_of_card_right_ge_five
   exact exists_four_ne_base_of_fintype_card_ge_five j0 (by
     simpa [hω.card_right] using hcard)
 
-public theorem exists_three_other_cols_ne_base_of_card_right_ge_five
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    {a : J} (ha : a ≠ j0) (hcard : 5 ≤ Nat.card W2) :
-    ∃ r s t : J,
-      r ≠ j0 ∧ s ≠ j0 ∧ t ≠ j0 ∧
-      a ≠ r ∧ a ≠ s ∧ a ≠ t ∧
-      r ≠ s ∧ r ≠ t ∧ s ≠ t := by
-  exact exists_three_other_ne_base_of_fintype_card_ge_five j0 a ha (by
-    simpa [hω.card_right] using hcard)
 
 public theorem eq_left_or_right_of_card_eq_three_of_ne_base_pair
     {J : Type*} [Fintype J] [DecidableEq J]
@@ -9829,53 +9003,6 @@ public theorem exists_two_ne_base_of_fintype_card_eq_three
   have hq_ne_j0 : q ≠ j0 := (Finset.mem_erase.mp hq_s).1
   exact ⟨j, q, hj_ne_j0, hq_ne_j0, fun hjq => hq_ne_j hjq.symm⟩
 
-public theorem betaSignedMem_pf355_row_common_all_cols_of_right_card_three
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3)
-    {a : I} {j q : J}
-    (ha : a ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0) (hjq : j ≠ q) :
-    ∃ η x, ∀ r, r ≠ j0 →
-      betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hχ a r η x := by
-  classical
-  rcases betaSignedMem_pf354_column_common_exists
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left hj with
-    ⟨εj, xj, hcolj⟩
-  rcases betaSignedMem_pf354_column_common_exists
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left hq with
-    ⟨εq, xq, hcolq⟩
-  rcases betaSignedMem_pf355_two_col_decomposition_supports_of_column_commons
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left ha hj hq hjq hcolj hcolq with
-    ⟨η, x, _ηj, _yj, _ηq, _yq, hAj, hAq, _hAjy, _hAqy,
-      _hxj, _hxq, _hyjx, _hyjxj, _hyqx, _hyqxq⟩
-  refine ⟨η, x, ?_⟩
-  intro r hr
-  have hJcard : Fintype.card J = 3 := by
-    simpa [hω.card_right] using hcard_right
-  rcases eq_left_or_right_of_card_eq_three_of_ne_base_pair
-      (J := J) (j0 := j0) (j := j) (q := q) (r := r)
-      hJcard hj hq hjq hr with
-    rfl | rfl
-  · exact hAj
-  · exact hAq
 
 public theorem betaSignedMem_pf355_row_common_all_cols_of_right_card_three_of_column_commons
     {G : Type u} [Group G] [Finite G]
@@ -9926,63 +9053,6 @@ public theorem betaSignedMem_pf355_row_common_all_cols_of_right_card_three_of_co
   · exact hAj
   · exact hAq
 
-public theorem betaSignedMem_pf355_row_common_all_cols_of_right_card_three_with_distinct
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J ι : Type*} [Fintype I] [Fintype J] [Fintype ι]
-    [DecidableEq I] [DecidableEq J] [DecidableEq ι]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
-    (hb : ∀ k, b k = χ k)
-    (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3)
-    {a : I} {j q : J}
-    (ha : a ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0) (hjq : j ≠ q) :
-    ∃ η x εj xj εq xq,
-      (∀ r, r ≠ j0 →
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ a r η x) ∧
-      (∀ i, i ≠ i0 →
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ i j εj xj) ∧
-      (∀ i, i ≠ i0 →
-        betaSignedMem (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) h hω hχ i q εq xq) ∧
-      x ≠ xj ∧ x ≠ xq := by
-  classical
-  rcases betaSignedMem_pf354_column_common_exists
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left hj with
-    ⟨εj, xj, hcolj⟩
-  rcases betaSignedMem_pf354_column_common_exists
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left hq with
-    ⟨εq, xq, hcolq⟩
-  rcases betaSignedMem_pf355_two_col_decomposition_supports_of_column_commons
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)
-      (i0 := i0) (j0 := j0) (ω := ω) (χ := χ)
-      h hω hχ b hb hcard_left ha hj hq hjq hcolj hcolq with
-    ⟨η, x, _ηj, _yj, _ηq, _yq, hAj, hAq, _hAjy, _hAqy,
-      hxj, hxq, _hyjx, _hyjxj, _hyqx, _hyqxq⟩
-  refine ⟨η, x, εj, xj, εq, xq, ?_, hcolj, hcolq, hxj, hxq⟩
-  intro r hr
-  have hJcard : Fintype.card J = 3 := by
-    simpa [hω.card_right] using hcard_right
-  rcases eq_left_or_right_of_card_eq_three_of_ne_base_pair
-      (J := J) (j0 := j0) (j := j) (q := q) (r := r)
-      hJcard hj hq hjq hr with
-    rfl | rfl
-  · exact hAj
-  · exact hAq
 
 public theorem betaSignedMem_pf355_right_card_three_global_supports
     {G : Type u} [Group G] [Finite G]
@@ -11325,15 +10395,6 @@ public theorem internalDirectProductMulEquiv_symm_apply_inr
     (χ : W1 →* ℂˣ) (η : W2 →* ℂˣ) : Section1.ClassFunction W :=
   fun w => (internalDirectProductLinearCharacter h χ η w : ℂ)
 
-public theorem linearCharacterProductOverInternalDirectProduct_apply
-    {G : Type u} [Group G] {W1 W2 W : Subgroup G}
-    (h : Section2.IsInternalDirectProduct W W1 W2)
-    (χ : W1 →* ℂˣ) (η : W2 →* ℂˣ) (w : W) :
-    linearCharacterProductOverInternalDirectProduct h χ η w =
-      (χ ((internalDirectProductMulEquiv h).symm w).1 *
-        η ((internalDirectProductMulEquiv h).symm w).2 : ℂ) := by
-  simp [linearCharacterProductOverInternalDirectProduct,
-    internalDirectProductLinearCharacter]
 
 public theorem linearCharacterProductOverInternalDirectProduct_principal
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
@@ -11885,20 +10946,5 @@ public theorem proposition_3_5_signed
       (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
       (i0 := i0) (j0 := j0) (ω := ω) h hω hswap
 
-public theorem proposition_3_5
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J]
-    [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω) :
-    proposition_3_5_statement W1 W2 W I J i0 j0 ω h hω := by
-  rcases proposition_3_5_signed
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0) (ω := ω) h hω with
-    ⟨χ, horth, hvirt, _hsigned, h00, hInd⟩
-  exact ⟨χ, horth, hvirt, h00, hInd⟩
 
 end Section3

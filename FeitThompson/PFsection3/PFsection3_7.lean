@@ -300,52 +300,6 @@ private theorem scalarProduct_psi_sigma_rectangle_eq_coeff_rectangle
   simp [sigma_rectangle_inner_eq_coeff_rectangle (W1 := W1) (W2 := W2) (W := W)
     (i0 := i0) (j0 := j0) hω hσ i i' j j']
 
-public theorem scalarProduct_sum_orthonormal_rectangle_eq_coeff_rectangle
-    {G : Type u} [Group G] [Finite G]
-    {_W1 _W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {_i0 : I} {_j0 : J}
-    {_ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    {a : I → J → ℂ}
-    (hχ : IsOrthonormalDoubleFamily χ)
-    (i i' : I) (j j' : J) :
-    Section1.scalarProduct G
-        (∑ p : I × J, a p.1 p.2 • χ p.1 p.2)
-        (χ i j + χ i' j' - χ i j' - χ i' j) =
-      a i j + a i' j' - a i j' - a i' j := by
-  classical
-  have hsumfun :
-      (∑ p : I × J, a p.1 p.2 • χ p.1 p.2) =
-        (fun g : G => ∑ p : I × J, (a p.1 p.2 • χ p.1 p.2) g) := by
-    ext g
-    simp
-  rw [hsumfun]
-  rw [Section1.scalarProduct_fintype_sum_left]
-  simp_rw [Section1.scalarProduct_smul_left]
-  calc
-    ∑ p : I × J,
-        a p.1 p.2 *
-          Section1.scalarProduct G (χ p.1 p.2)
-            (χ i j + χ i' j' - χ i j' - χ i' j) =
-        ∑ p : I × J,
-          a p.1 p.2 *
-            ((if p = (i, j) then (1 : ℂ) else 0) +
-              (if p = (i', j') then (1 : ℂ) else 0) -
-              (if p = (i, j') then (1 : ℂ) else 0) -
-              (if p = (i', j) then (1 : ℂ) else 0)) := by
-          refine Finset.sum_congr rfl ?_
-          intro p _hp
-          have hsp : ∀ q : I × J,
-              Section1.scalarProduct G (χ p.1 p.2) (χ q.1 q.2) =
-                if p = q then 1 else 0 := by
-            intro q
-            exact isOrthonormalDoubleFamily_apply hχ p q
-          rw [scalarProduct_sub_right_pf37, scalarProduct_sub_right_pf37,
-            scalarProduct_add_right_pf37, hsp (i, j), hsp (i', j'),
-            hsp (i, j'), hsp (i', j)]
-    _ = a i j + a i' j' - a i j' - a i' j := by
-          simp [Finset.sum_add_distrib, Finset.sum_sub_distrib, mul_add, mul_sub]
 
 public theorem scalarProduct_vanishes_rectangle_eq_zero_of_agrees
     {G : Type u} [Group G] [Finite G]

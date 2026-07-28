@@ -465,81 +465,6 @@ public theorem theorem_9_7_quotient_component_pullback_C_le_ker_sec9
   rw [hxq]
   simp
 
-public theorem theorem_9_7_quotient_component_character_exists_of_factor_action_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (hnormalC : (C.subgroupOf U).Normal)
-    {Q : Subgroup (MF ⧸ H0.subgroupOf MF)} {a : ℕ}
-    (hfac : quotientFactorActionCentralizerData MF H0 U C Q a) :
-    letI : (C.subgroupOf U).Normal := hnormalC
-    ∃ χbar : (U ⧸ C.subgroupOf U) →* Multiplicative (ZMod a),
-      Function.Surjective χbar ∧ Nat.card (MonoidHom.range χbar) = a := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  rcases hfac with ⟨_hnormal, ρ, hcyc, hcard, _haction, _hker⟩
-  haveI : IsCyclic ρ.range := hcyc
-  have htarget : Nat.card (Multiplicative (ZMod a)) = a := by
-    rw [Nat.card_congr (Multiplicative.toAdd : Multiplicative (ZMod a) ≃ ZMod a),
-      Nat.card_zmod]
-  let e : ρ.range ≃* Multiplicative (ZMod a) :=
-    mulEquivOfCyclicCardEq (G := ρ.range) (G' := Multiplicative (ZMod a))
-      (hcard.trans htarget.symm)
-  let χbar : (U ⧸ C.subgroupOf U) →* Multiplicative (ZMod a) :=
-    e.toMonoidHom.comp ρ.rangeRestrict
-  have hχsurj : Function.Surjective χbar := by
-    intro y
-    rcases e.surjective y with ⟨z, hz⟩
-    rcases ρ.rangeRestrict_surjective z with ⟨x, hx⟩
-    exact ⟨x, by simpa [χbar, hz] using congrArg e hx⟩
-  have hχrange : Nat.card (MonoidHom.range χbar) = a := by
-    rw [MonoidHom.range_eq_top.mpr hχsurj, Subgroup.card_top]
-    exact htarget
-  exact ⟨χbar, hχsurj, hχrange⟩
-
-private theorem
-    theorem_9_7_quotient_component_character_action_exists_of_factor_action_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (hnormalC : (C.subgroupOf U).Normal)
-    {Q : Subgroup (MF ⧸ H0.subgroupOf MF)} {a : ℕ}
-    (hfac : quotientFactorActionCentralizerData MF H0 U C Q a) :
-    letI : (C.subgroupOf U).Normal := hnormalC
-    ∃ χbar : (U ⧸ C.subgroupOf U) →* Multiplicative (ZMod a),
-      ∃ ρ : (U ⧸ C.subgroupOf U) →* MulAut Q,
-        IsCyclic ρ.range ∧
-          Nat.card ρ.range = a ∧
-          (∀ x : U ⧸ C.subgroupOf U,
-            ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
-              ∃ hconjMF : ∀ h : MF, (u : G)⁻¹ * (h : G) * (u : G) ∈ MF,
-                ∀ h : MF, ∀ hhQ : QuotientGroup.mk' (H0.subgroupOf MF) h ∈ Q,
-                  (ρ x ⟨QuotientGroup.mk' (H0.subgroupOf MF) h, hhQ⟩ :
-                      MF ⧸ H0.subgroupOf MF) =
-                    QuotientGroup.mk' (H0.subgroupOf MF)
-                      ⟨(u : G)⁻¹ * (h : G) * (u : G), hconjMF h⟩) ∧
-          (∀ x : U ⧸ C.subgroupOf U,
-            ρ x = 1 ↔
-              ∀ u : U, QuotientGroup.mk' (C.subgroupOf U) u = x →
-                quotientSubgroupCentralizedByElement MF H0 Q (u : G)) ∧
-          ∀ x y : U ⧸ C.subgroupOf U,
-            χbar x = χbar y → ρ x = ρ y := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  rcases hfac with ⟨_hnormal, ρ, hcyc, hcard, haction, hker⟩
-  haveI : IsCyclic ρ.range := hcyc
-  have htarget : Nat.card (Multiplicative (ZMod a)) = a := by
-    rw [Nat.card_congr (Multiplicative.toAdd : Multiplicative (ZMod a) ≃ ZMod a),
-      Nat.card_zmod]
-  let e : ρ.range ≃* Multiplicative (ZMod a) :=
-    mulEquivOfCyclicCardEq (G := ρ.range) (G' := Multiplicative (ZMod a))
-      (hcard.trans htarget.symm)
-  let χbar : (U ⧸ C.subgroupOf U) →* Multiplicative (ZMod a) :=
-    e.toMonoidHom.comp ρ.rangeRestrict
-  refine ⟨χbar, ρ, hcyc, hcard, haction, hker, ?_⟩
-  intro x y hxy
-  change e (ρ.rangeRestrict x) = e (ρ.rangeRestrict y) at hxy
-  exact congrArg Subtype.val (e.injective hxy)
 
 private theorem theorem_9_7_factorAction_unique_of_action_field_sec9
     {G : Type u} [Group G] [Finite G]
@@ -642,30 +567,6 @@ private theorem theorem_9_7_transportFactorAction_range_eq_map_sec9
     rw [← hα, ← hx]
     rfl
 
-private theorem theorem_9_7_transportFactorAction_range_card_sec9
-    {X : Type u} [Group X]
-    {Q : Type v} {R : Type*} [Group Q] [Group R]
-    (e : Q ≃* R) (ρ : X →* MulAut Q) :
-    Nat.card (MonoidHom.range (theorem_9_7_transportFactorAction_sec9 e ρ)) =
-      Nat.card (MonoidHom.range ρ) := by
-  rw [theorem_9_7_transportFactorAction_range_eq_map_sec9 e ρ]
-  exact Nat.card_congr
-    ((theorem_9_7_mulAutConjEquiv_sec9 e).subgroupMap
-      (MonoidHom.range ρ)).symm.toEquiv
-
-private theorem theorem_9_7_transportFactorAction_range_isCyclic_sec9
-    {X : Type u} [Group X]
-    {Q : Type v} {R : Type*} [Group Q] [Group R]
-    (e : Q ≃* R) (ρ : X →* MulAut Q)
-    [IsCyclic (MonoidHom.range ρ)] :
-    IsCyclic (MonoidHom.range (theorem_9_7_transportFactorAction_sec9 e ρ)) := by
-  rw [theorem_9_7_transportFactorAction_range_eq_map_sec9 e ρ]
-  exact
-    isCyclic_of_surjective
-      (f := ((theorem_9_7_mulAutConjEquiv_sec9 e).subgroupMap
-        (MonoidHom.range ρ)).toMonoidHom)
-      ((theorem_9_7_mulAutConjEquiv_sec9 e).subgroupMap
-        (MonoidHom.range ρ)).surjective
 
 private theorem theorem_9_7_monoidHom_range_comp_mulEquiv_sec9
     {X A : Type u} [Group X] [Group A]
@@ -679,20 +580,6 @@ private theorem theorem_9_7_monoidHom_range_comp_mulEquiv_sec9
     refine ⟨τ.symm x, ?_⟩
     simp
 
-private theorem theorem_9_7_monoidHom_range_comp_mulEquiv_card_sec9
-    {X A : Type u} [Group X] [Group A]
-    (τ : X ≃* X) (ρ : X →* A) :
-    Nat.card (MonoidHom.range (ρ.comp τ.toMonoidHom)) =
-      Nat.card (MonoidHom.range ρ) := by
-  rw [theorem_9_7_monoidHom_range_comp_mulEquiv_sec9 τ ρ]
-
-private theorem theorem_9_7_monoidHom_range_comp_mulEquiv_isCyclic_sec9
-    {X A : Type u} [Group X] [Group A]
-    (τ : X ≃* X) (ρ : X →* A)
-    [IsCyclic (MonoidHom.range ρ)] :
-    IsCyclic (MonoidHom.range (ρ.comp τ.toMonoidHom)) := by
-  rw [theorem_9_7_monoidHom_range_comp_mulEquiv_sec9 τ ρ]
-  infer_instance
 
 public noncomputable def theorem_9_7_successorTransportFactorAction_sec9
     {G : Type u} [Group G] [Finite G]
@@ -735,65 +622,6 @@ public theorem theorem_9_7_successorTransportFactorAction_apply_mk_sec9
   rw [theorem_9_7_transportFactorAction_apply_sec9]
   rfl
 
-private theorem theorem_9_7_successorTransportFactorAction_range_card_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U W1 C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
-    (w0 : W1)
-    {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
-    (e : Q ≃* R)
-    (ρ : (U ⧸ C.subgroupOf U) →* MulAut Q) :
-    Nat.card (MonoidHom.range
-        (theorem_9_7_successorTransportFactorAction_sec9
-          hnormalC hCinv w0 e ρ)) =
-      Nat.card (MonoidHom.range ρ) := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
-    quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
-  let τ : (U ⧸ C.subgroupOf U) ≃* (U ⧸ C.subgroupOf U) :=
-    (MulDistribMulAction.toMulAut W1 (U ⧸ C.subgroupOf U)) w0
-  change Nat.card (MonoidHom.range
-      (theorem_9_7_transportFactorAction_sec9 e (ρ.comp τ.toMonoidHom))) =
-    Nat.card (MonoidHom.range ρ)
-  calc
-    Nat.card (MonoidHom.range
-        (theorem_9_7_transportFactorAction_sec9 e (ρ.comp τ.toMonoidHom))) =
-        Nat.card (MonoidHom.range (ρ.comp τ.toMonoidHom)) :=
-      theorem_9_7_transportFactorAction_range_card_sec9 e (ρ.comp τ.toMonoidHom)
-    _ = Nat.card (MonoidHom.range ρ) :=
-      theorem_9_7_monoidHom_range_comp_mulEquiv_card_sec9 τ ρ
-
-private theorem theorem_9_7_successorTransportFactorAction_range_isCyclic_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U W1 C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
-    (w0 : W1)
-    {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)}
-    (e : Q ≃* R)
-    (ρ : (U ⧸ C.subgroupOf U) →* MulAut Q)
-    [IsCyclic (MonoidHom.range ρ)] :
-    IsCyclic (MonoidHom.range
-      (theorem_9_7_successorTransportFactorAction_sec9
-        hnormalC hCinv w0 e ρ)) := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
-    quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
-  let τ : (U ⧸ C.subgroupOf U) ≃* (U ⧸ C.subgroupOf U) :=
-    (MulDistribMulAction.toMulAut W1 (U ⧸ C.subgroupOf U)) w0
-  change IsCyclic (MonoidHom.range
-    (theorem_9_7_transportFactorAction_sec9 e (ρ.comp τ.toMonoidHom)))
-  haveI : IsCyclic (MonoidHom.range (ρ.comp τ.toMonoidHom)) :=
-    theorem_9_7_monoidHom_range_comp_mulEquiv_isCyclic_sec9 τ ρ
-  exact theorem_9_7_transportFactorAction_range_isCyclic_sec9 e
-    (ρ.comp τ.toMonoidHom)
 
 private noncomputable def theorem_9_7_successorTransportFactorAction_rangeEquiv_sec9
     {G : Type u} [Group G] [Finite G]
@@ -904,24 +732,6 @@ private theorem theorem_9_7_generator_pow_eq_one_of_card_sec9
   rw [← hW1card]
   exact theorem_9_7_generator_pow_card_eq_one_sec9 w0 hw0gen
 
-private theorem theorem_9_7_zpowers_pow_generator_of_prime_card_sec9
-    {G : Type u} [Group G] [Finite G]
-    {W1 : Subgroup G} {q d : ℕ}
-    (hqprime : Nat.Prime q)
-    (hW1card : Nat.card W1 = q)
-    (w0 : W1)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (hdpos : 0 < d) (hdlt : d < q) :
-    Subgroup.zpowers (w0 ^ d) = ⊤ := by
-  have hW1prime : Nat.Prime (Nat.card W1) := by
-    simpa [hW1card] using hqprime
-  refine zpowers_eq_top_of_prime_card_of_ne_one hW1prime ?_
-  intro hpow
-  have horder : orderOf w0 = q := by
-    rw [orderOf_eq_card_of_zpowers_eq_top hw0gen, hW1card]
-  exact
-    (pow_ne_one_of_lt_orderOf (x := w0) (Nat.ne_of_gt hdpos)
-      (by simpa [horder] using hdlt)) hpow
 
 private theorem theorem_9_7_generator_quotient_action_pow_eq_one_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1156,24 +966,6 @@ private theorem theorem_9_7_successor_range_zmod_equivs_sec9
       rfl
     rw [hleft_symm, hright_symm]
 
-public theorem theorem_9_7_quotient_component_character_family_exists_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (hnormalC : (C.subgroupOf U).Normal)
-    {q a : ℕ} {H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF)}
-    (hfac : ∀ i, quotientFactorActionCentralizerData MF H0 U C (H i) a) :
-    letI : (C.subgroupOf U).Normal := hnormalC
-    ∃ χbar : Fin q → (U ⧸ C.subgroupOf U) →* Multiplicative (ZMod a),
-      ∀ i, Function.Surjective (χbar i) ∧
-        Nat.card (MonoidHom.range (χbar i)) = a := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  choose χbar hsurj hrange using
-    (fun i =>
-      theorem_9_7_quotient_component_character_exists_of_factor_action_sec9
-        (MF := MF) (H0 := H0) (U := U) (C := C) hnormalC (hfac i))
-  exact ⟨χbar, fun i => ⟨hsurj i, hrange i⟩⟩
 
 private theorem theorem_9_7_quotient_cardinality_from_chief_data_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1354,56 +1146,6 @@ public theorem theorem_9_7_quotient_finrank_eq_q_sec9
     hnat'.symm.trans hcard_add
   exact Nat.pow_right_injective hpprime.two_le hpow
 
-private theorem theorem_9_7_prime_coprime_U_card_of_hypothesis_9_2_finrank_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 : Subgroup G} {p q : ℕ}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (h92 : hypothesis_9_2_statement M MF U W1 W2 q)
-    (hpprime : Nat.Prime p)
-    (hqprime : Nat.Prime q)
-    (hbarElem : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
-    (hbarFinrank :
-      letI : Fact p.Prime := ⟨hpprime⟩
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-      Module.finrank (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) = q) :
-    Nat.Coprime p (Nat.card U) := by
-  classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-  have hquotCard : Nat.card (MF ⧸ H0.subgroupOf MF) = p ^ q := by
-    have hnat := Module.natCard_eq_pow_finrank (K := ZMod p)
-      (V := Additive (MF ⧸ H0.subgroupOf MF))
-    have hcardAdd :
-        Nat.card (Additive (MF ⧸ H0.subgroupOf MF)) =
-          Nat.card (MF ⧸ H0.subgroupOf MF) :=
-      Nat.card_congr
-        { toFun := Additive.toMul
-          invFun := Additive.ofMul
-          left_inv := by intro x; rfl
-          right_inv := by intro x; rfl }
-    calc
-      Nat.card (MF ⧸ H0.subgroupOf MF) =
-          Nat.card (Additive (MF ⧸ H0.subgroupOf MF)) := hcardAdd.symm
-      _ = p ^ Module.finrank (ZMod p)
-            (Additive (MF ⧸ H0.subgroupOf MF)) := by
-          simpa [Nat.card_eq_fintype_card, ZMod.card] using hnat
-      _ = p ^ q := by rw [hbarFinrank]
-  have hp_dvd_quot : p ∣ Nat.card (MF ⧸ H0.subgroupOf MF) := by
-    rw [hquotCard]
-    exact Nat.div_pow_of_pos p q hqprime.pos
-  have hp_dvd_MF : p ∣ Nat.card MF :=
-    dvd_trans hp_dvd_quot
-      (Subgroup.card_quotient_dvd_card (H0.subgroupOf MF))
-  have hcopMF_UW :
-      Nat.Coprime (Nat.card MF) (Nat.card (U ⊔ W1 : Subgroup G)) :=
-    nat_card_MF_coprime_U_sup_W1_of_hypothesis_9_2_sec9
-      M MF U W1 W2 q h92
-  have hU_dvd_UW : Nat.card U ∣ Nat.card (U ⊔ W1 : Subgroup G) :=
-    Subgroup.card_dvd_of_le le_sup_left
-  have hcopMF_U : Nat.Coprime (Nat.card MF) (Nat.card U) :=
-    Nat.Coprime.of_dvd_right hU_dvd_UW hcopMF_UW
-  exact Nat.Coprime.of_dvd_left hp_dvd_MF hcopMF_U
 
 private theorem theorem_9_7_quotientBarUCyclicData_of_field_model_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1814,32 +1556,6 @@ public theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_of_isInvariant_sec9
       (C.subgroupOf U) hCinv
   rw [hfix_quot_eq, hfix_map_bot]
 
-private theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G} {q : ℕ} {p : Nat.Primes}
-    (h92 : hypothesis_9_2_statement M MF U W1 W2 q)
-    (hpData : hoReductionData M MF U W2 H0 p)
-    (hC : quotientCentralizerIn MF H0 U C)
-    (hnormalC : (C.subgroupOf U).Normal)
-    (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G)) :
-    ∃ hW1normU : W1 ≤ Subgroup.normalizer (U : Set G),
-      letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-      ∃ hCinv : IsInvariant W1 U (C.subgroupOf U),
-        letI : MulDistribMulAction W1 (U ⧸ C.subgroupOf U) :=
-          quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
-        fixedPointSubgroup W1 (U ⧸ C.subgroupOf U) = ⊥ := by
-  classical
-  have hW1normU : W1 ≤ Subgroup.normalizer (U : Set G) :=
-    theorem_9_7_W1_le_normalizer_U_of_hypothesis_9_2_sec9 h92
-  refine ⟨hW1normU, ?_⟩
-  letI : Subgroup.Normalizes W1 U := ⟨hW1normU⟩
-  have hCinv : IsInvariant W1 U (C.subgroupOf U) :=
-    theorem_9_7_quotientCentralizerIn_isInvariant_W1_sec9 h92 hpData hC
-      hW1normU hW1normMF
-  refine ⟨hCinv, ?_⟩
-  exact
-    theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_of_isInvariant_sec9
-      h92 hnormalC hW1normU hCinv
 
 private theorem theorem_9_7_W1_le_normalizer_MF_of_hypothesis_9_2_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2315,32 +2031,6 @@ private theorem theorem_9_7_conj_inv_mem_of_conj_mem_finite_sec9
       _ = g * (h : G) * g⁻¹ := by rw [hkval]
   simp [← hk_eq, k.property]
 
-private theorem theorem_9_7_quotientSubgroupConjugateByElement_equiv_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 : Subgroup G}
-    [hnormal : (H0.subgroupOf MF).Normal]
-    {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)} {g : G}
-    (hQR : quotientSubgroupConjugateByElement MF H0 Q R g) :
-    ∃ e : Q ≃* R,
-      ∃ hconjMF : ∀ h : MF, g⁻¹ * (h : G) * g ∈ MF,
-        ∀ h : MF, ∀ hhQ : QuotientGroup.mk' (H0.subgroupOf MF) h ∈ Q,
-          (e ⟨QuotientGroup.mk' (H0.subgroupOf MF) h, hhQ⟩ :
-              MF ⧸ H0.subgroupOf MF) =
-            QuotientGroup.mk' (H0.subgroupOf MF)
-              ⟨g⁻¹ * (h : G) * g, hconjMF h⟩ := by
-  classical
-  rcases hQR with ⟨hconjMF, action, haction, hR⟩
-  let e0 : Q ≃* Q.map action.toMonoidHom := action.subgroupMap Q
-  let e : Q ≃* R := e0.trans (MulEquiv.subgroupCongr hR.symm)
-  refine ⟨e, hconjMF, ?_⟩
-  intro h hhQ
-  have heval :
-      (e ⟨QuotientGroup.mk' (H0.subgroupOf MF) h, hhQ⟩ :
-          MF ⧸ H0.subgroupOf MF) =
-        action (QuotientGroup.mk' (H0.subgroupOf MF) h) := by
-    rfl
-  rw [heval]
-  exact haction h
 
 private theorem theorem_9_7_quotientSubgroupConjugateByElement_equiv_bi_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2572,36 +2262,6 @@ public theorem theorem_9_7_successorTransportFactorAction_eq_of_action_field_sec
     theorem_9_7_factorAction_unique_of_action_field_sec9
       hactionTransport hactionσ⟩
 
-private theorem theorem_9_7_successorFactorAction_transport_eq_of_factor_data_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U W1 C : Subgroup G}
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hnormalC : (C.subgroupOf U).Normal)
-    (hCinv : IsInvariant W1 U (C.subgroupOf U))
-    (w0 : W1)
-    {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)} {a : ℕ}
-    (hQR : quotientSubgroupConjugateByElement MF H0 Q R (w0 : G))
-    (hfacQ : quotientFactorActionCentralizerData MF H0 U C Q a)
-    (hfacR : quotientFactorActionCentralizerData MF H0 U C R a) :
-    letI : (C.subgroupOf U).Normal := hnormalC
-    ∃ ρQ : (U ⧸ C.subgroupOf U) →* MulAut Q,
-      ∃ ρR : (U ⧸ C.subgroupOf U) →* MulAut R,
-        ∃ e : Q ≃* R,
-          IsCyclic ρQ.range ∧
-            Nat.card ρQ.range = a ∧
-            IsCyclic ρR.range ∧
-            Nat.card ρR.range = a ∧
-            theorem_9_7_successorTransportFactorAction_sec9
-              hnormalC hCinv w0 e ρQ = ρR := by
-  classical
-  letI : (C.subgroupOf U).Normal := hnormalC
-  rcases hfacQ with ⟨_hnormalQ, ρQ, hcycQ, hcardQ, hactionQ, _hkerQ⟩
-  rcases hfacR with ⟨_hnormalR, ρR, hcycR, hcardR, hactionR, _hkerR⟩
-  rcases theorem_9_7_successorTransportFactorAction_eq_of_action_field_sec9
-      hnormalC hCinv w0 hQR hactionQ hactionR with
-    ⟨e, _heData, heq⟩
-  exact ⟨ρQ, ρR, e, hcycQ, hcardQ, hcycR, hcardR, heq⟩
 
 private theorem theorem_9_7_quotientSubgroupConjugateByElement_symm_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2885,57 +2545,6 @@ private theorem
     (theorem_9_7_quotientSubgroupNormalizedBy_of_generator_conjugates_self_sec9
       w0 hw0gen hw0Q)
 
-private theorem
-    theorem_9_7_base_repeat_normalizedBy_of_successor_conjugates_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 W1 : Subgroup G}
-    [hnormal : (H0.subgroupOf MF).Normal]
-    {q d : ℕ}
-    (hqprime : Nat.Prime q)
-    (hW1card : Nat.card W1 = q)
-    (w0 : W1)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hsucc :
-      ∀ i : Fin q,
-        quotientSubgroupConjugateByElement MF H0 (H i)
-          (H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i)) (w0 : G))
-    (hdpos : 0 < d) (hdlt : d < q)
-    (hd_eq_zero : H ⟨d, hdlt⟩ = H ⟨0, hqprime.pos⟩) :
-    quotientSubgroupNormalizedBy MF H0 W1 (H ⟨0, hqprime.pos⟩) := by
-  have hbase_d :
-      quotientSubgroupConjugateByElement MF H0
-        (H ⟨0, hqprime.pos⟩) (H ⟨d, hdlt⟩) ((w0 ^ d : W1) : G) :=
-    theorem_9_7_successor_conjugates_pow_sec9 hqprime.pos H w0 hsucc d hdlt
-  have hpowgen : Subgroup.zpowers (w0 ^ d) = ⊤ :=
-    theorem_9_7_zpowers_pow_generator_of_prime_card_sec9
-      hqprime hW1card w0 hw0gen hdpos hdlt
-  exact
-    theorem_9_7_quotientSubgroupNormalizedBy_of_generator_conjugates_self_sec9
-      (w0 ^ d : W1) hpowgen (by simpa [hd_eq_zero] using hbase_d)
-
-private theorem theorem_9_7_base_repeat_ne_of_not_normalized_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 W1 : Subgroup G}
-    [hnormal : (H0.subgroupOf MF).Normal]
-    {q d : ℕ}
-    (hqprime : Nat.Prime q)
-    (hW1card : Nat.card W1 = q)
-    (w0 : W1)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hsucc :
-      ∀ i : Fin q,
-        quotientSubgroupConjugateByElement MF H0 (H i)
-          (H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i)) (w0 : G))
-    (hH0notW1 :
-      ¬ quotientSubgroupNormalizedBy MF H0 W1 (H ⟨0, hqprime.pos⟩))
-    (hdpos : 0 < d) (hdlt : d < q) :
-    H ⟨d, hdlt⟩ ≠ H ⟨0, hqprime.pos⟩ := by
-  intro hd_eq_zero
-  exact hH0notW1
-    (theorem_9_7_base_repeat_normalizedBy_of_successor_conjugates_sec9
-      hqprime hW1card w0 hw0gen H hsucc hdpos hdlt hd_eq_zero)
 
 private theorem theorem_9_7_base_normalizedBy_of_equal_conjugates_distinct_sec9
     {G : Type u} [Group G] [Finite G]
@@ -3075,35 +2684,6 @@ private theorem theorem_9_7_not_W1_normalized_of_UW1_minimal_sec9
   · exact hQneBot hQbot
   · exact hQneTop hQtop
 
-private theorem
-    theorem_9_7_exists_proper_U_normalized_not_W1_of_reducible_minimal_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 U W1 : Subgroup G}
-    (hnormal : (H0.subgroupOf MF).Normal)
-    (hUW1minimal :
-      letI : (H0.subgroupOf MF).Normal := hnormal
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          quotientSubgroupNormalizedBy MF H0 W1 R →
-            R = ⊥ ∨ R = ⊤)
-    (hnonUirred : ¬ quotientIrreducibleActionData MF H0 U) :
-    letI : (H0.subgroupOf MF).Normal := hnormal
-    ∃ Q : Subgroup (MF ⧸ H0.subgroupOf MF),
-      quotientSubgroupNormalizedBy MF H0 U Q ∧
-        Q ≠ ⊥ ∧
-        Q ≠ ⊤ ∧
-        ¬ quotientSubgroupNormalizedBy MF H0 W1 Q := by
-  classical
-  letI : (H0.subgroupOf MF).Normal := hnormal
-  rcases
-      theorem_9_7_exists_proper_U_normalized_quotient_subgroup_of_not_irreducible_sec9
-        (MF := MF) (H0 := H0) (U := U) hnormal hnonUirred with
-    ⟨Q, hQnorm, hQneBot, hQneTop⟩
-  exact
-    ⟨Q, hQnorm, hQneBot, hQneTop,
-      theorem_9_7_not_W1_normalized_of_UW1_minimal_sec9
-        (MF := MF) (H0 := H0) (U := U) (W1 := W1)
-        hUW1minimal hQnorm hQneBot hQneTop⟩
 
 private theorem
     theorem_9_7_exists_minimal_U_normalized_not_W1_of_reducible_minimal_sec9
@@ -3591,16 +3171,6 @@ private def theorem_9_7_orderedCliffordComponentData_sec9
         quotientSubgroupConjugateByElement MF H0
           (H i) (H (theorem_9_7_fin_cyclic_succ_sec9 hqpos i)) (w0 : G)
 
-private def theorem_9_7_orderedCliffordOrbitFieldData_sec9
-    {G : Type u} [Group G] [Finite G]
-    (MF H0 U C : Subgroup G)
-    (p q a : ℕ)
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF)) : Prop :=
-  (∀ i, Nat.card (H i) = p) ∧
-    iSupIndep H ∧
-    iSup H = ⊤ ∧
-    ∀ i, quotientFactorActionCentralizerData MF H0 U C (H i) a
 
 private def theorem_9_7_orderedCliffordOrbitFactorData_sec9
     {G : Type u} [Group G] [Finite G]
@@ -4107,188 +3677,6 @@ private theorem theorem_9_7_subrepresentation_le_of_nonzero_mem_sec9
     trivial
   exact hwU
 
-private theorem
-    theorem_9_7_subrepresentation_carriers_iSupIndep_of_irreducible_pairwise_not_equiv_sec9
-    {F A V : Type*} [Field F] [Group A] [AddCommGroup V] [Module F V]
-    (ρ : Representation F A V)
-    {ι : Type v} [Fintype ι] [DecidableEq ι]
-    (S : ι → Subrepresentation ρ)
-    (hSirr : ∀ i, Representation.IsIrreducible (S i).toRepresentation)
-    (hSnotEquiv :
-      Pairwise fun i j => IsEmpty ((S i).toRepresentation ≃ₗ (S j).toRepresentation)) :
-    iSupIndep fun i => (S i).toSubmodule := by
-  classical
-  have hS_disjoint_biSup :
-      ∀ q : ι, ∀ s : Finset ι, q ∉ s →
-        Disjoint (S q).toSubmodule (⨆ q' ∈ s, (S q').toSubmodule) := by
-    intro q s hq
-    rw [disjoint_iff]
-    apply bot_unique
-    intro w hw
-    rcases Submodule.mem_inf.mp hw with ⟨hwq, hws⟩
-    by_cases hw0 : w = 0
-    · simp [hw0]
-    · let U : Subrepresentation ρ := ⨆ r ∈ s, S r
-      let Umod : Submodule F[A] (Representation.asModule ρ) :=
-        ⨆ r : s, ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))
-      have hUmod_eq : U.asSubmodule = Umod := by
-        calc
-          U.asSubmodule
-              = (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)) U := rfl
-          _ = (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ))
-                (⨆ r ∈ s, S r) := by rfl
-          _ = ⨆ r ∈ s,
-                (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)) (S r) := by
-                  simp
-          _ = ⨆ r ∈ s,
-                ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ)) := by
-                  simp
-          _ = Umod := by
-                simp [Umod, iSup_subtype]
-      have hleU_toSubmodule : (⨆ r ∈ s, (S r).toSubmodule) ≤ U.toSubmodule := by
-        refine iSup_le fun r => iSup_le fun hr => ?_
-        change (S r).toSubmodule ≤ U.toSubmodule
-        exact show S r ≤ U from le_iSup_of_le r (le_iSup_of_le hr le_rfl)
-      have hwU : w ∈ U.toSubmodule := hleU_toSubmodule hws
-      haveI : Representation.IsIrreducible (S q).toRepresentation := hSirr q
-      have hleU : S q ≤ U := by
-        exact theorem_9_7_subrepresentation_le_of_nonzero_mem_sec9
-          (S := S q) (T := U) hwq hwU hw0
-      have hleMod : (S q).asSubmodule ≤ Umod := by
-        rw [← hUmod_eq]
-        intro x hx
-        exact hleU hx
-      let sSet : Set (Submodule F[A] (Representation.asModule ρ)) :=
-        Set.range fun r : s =>
-          ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))
-      have hU_eq : sSup sSet = Umod := by
-        simpa [sSet, Umod] using
-          (sSup_range
-            (f := fun r : s =>
-              ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))))
-      have hleSet : (S q).asSubmodule ≤ sSup sSet := by
-        rw [hU_eq]
-        exact hleMod
-      have hsimple (r : s) :
-          IsSimpleModule F[A]
-            (((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))) := by
-        have hAtom : IsAtom
-            ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ)) := by
-          exact
-            ((Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)).isAtom_iff
-              (a := S r)).2 <|
-              (Subrepresentation.irreducible_iff_isAtom (φ := S r)).1 (hSirr r)
-        exact
-          (@isSimpleModule_iff_isAtom
-            (F[A]) (MonoidAlgebra.ring)
-            (Representation.asModule ρ) (Representation.instAddCommGroupAsModule ρ)
-            (Representation.instModuleMonoidAlgebraAsModule ρ)
-            ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ))).2 hAtom
-      have hsimpleSet (m : sSet) : IsSimpleModule F[A] m := by
-        rcases m with ⟨m, hm⟩
-        rcases hm with ⟨r, rfl⟩
-        exact hsimple r
-      have hsimpleq :
-          IsSimpleModule F[A]
-            (((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ))) := by
-        have hAtom : IsAtom
-            ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ)) := by
-          exact
-            ((Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)).isAtom_iff
-              (a := S q)).2 <|
-              (Subrepresentation.irreducible_iff_isAtom (φ := S q)).1 (hSirr q)
-        exact
-          (@isSimpleModule_iff_isAtom
-            (F[A]) (MonoidAlgebra.ring)
-            (Representation.asModule ρ) (Representation.instAddCommGroupAsModule ρ)
-            (Representation.instModuleMonoidAlgebraAsModule ρ)
-            ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ))).2 hAtom
-      obtain ⟨S', hS', ⟨eS⟩⟩ :=
-        @Submodule.linearEquiv_of_le_sSup
-          (F[A]) (Representation.asModule ρ) (MonoidAlgebra.ring)
-          (Representation.instAddCommGroupAsModule ρ)
-          (Representation.instModuleMonoidAlgebraAsModule ρ)
-          ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ))
-          hsimpleq sSet hsimpleSet hleSet
-      rcases hS' with ⟨r, rfl⟩
-      let eS' :
-          ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ)) ≃ₗ[F[A]]
-            ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ)) := eS
-      have hqr : q ≠ r := by
-        intro hqr'
-        apply hq
-        simp [hqr']
-      have heqA : (S q).toRepresentation ≃ₗ (S r).toRepresentation := by
-        refine Representation.RepEquiv.mk (eS'.restrictScalars F) ?_
-        intro a
-        apply LinearMap.ext
-        intro v
-        let v' : ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ)) :=
-          ⟨v.1, v.2⟩
-        apply Subtype.ext
-        calc
-          ρ.asModuleEquiv ↑(eS' (((S q).toRepresentation a) v))
-              = ρ.asModuleEquiv ↑(eS' ((MonoidAlgebra.single a (1 : F)) • v')) := by
-                  have hv' :
-                      (((S q).toRepresentation a) v) =
-                        ((MonoidAlgebra.single a (1 : F)) • v' :
-                          ((S q).asSubmodule :
-                            Submodule F[A] (Representation.asModule ρ))) := by
-                    have : ((MonoidAlgebra.single a (1 : F)) • v' :
-                        ((S q).asSubmodule : Submodule F[A] (Representation.asModule ρ))) =
-                        (S q).toRepresentation a v' := by
-                      apply Subtype.ext
-                      simp only [SetLike.val_smul, Representation.single_smul, one_smul]
-                      rfl
-                    rw [this]
-                    rfl
-                  exact congrArg (fun z => ρ.asModuleEquiv ↑(eS' z)) hv'
-          _ = ρ.asModuleEquiv ↑(((MonoidAlgebra.single a (1 : F)) • eS' v' :
-                ((S r).asSubmodule : Submodule F[A] (Representation.asModule ρ)))) := by
-                  exact congrArg (fun z => ρ.asModuleEquiv (Subtype.val z))
-                    (eS'.map_smul (MonoidAlgebra.single a (1 : F)) v')
-          _ = (ρ a) (ρ.asModuleEquiv ↑(eS' v')) := by
-                  simp only [SetLike.val_smul, Representation.single_smul, one_smul]
-                  rfl
-          _ = (ρ a) (ρ.asModuleEquiv ↑(eS' v)) := by
-                  rfl
-      exact False.elim ((hSnotEquiv hqr).false heqA)
-  rw [iSupIndep_iff_finsetSum_eq_zero_imp_eq_zero
-    (p := fun i : ι => (S i).toSubmodule)]
-  intro s
-  refine Finset.induction_on s ?_ ?_
-  · intro v hv _hv0 i hi
-    exact False.elim (by simp at hi)
-  · intro q s hq ih v hv hv0 i hi
-    have hv0_orig := hv0
-    have hvq : v q ∈ (S q).toSubmodule := hv q (by simp)
-    have hvs : ∀ j ∈ s, v j ∈ (S j).toSubmodule := by
-      intro j hj
-      exact hv j (by simp [hj])
-    have hdisj : Disjoint (S q).toSubmodule (⨆ j ∈ s, (S j).toSubmodule) :=
-      hS_disjoint_biSup q s hq
-    have hsum_mem : ∑ j ∈ s, v j ∈ ⨆ j ∈ s, (S j).toSubmodule := by
-      exact Submodule.sum_mem_biSup hvs
-    have hvq_eq : v q = -(∑ j ∈ s, v j) := by
-      rw [Finset.sum_insert hq, add_eq_zero_iff_eq_neg] at hv0
-      exact hv0
-    have hvq_mem : v q ∈ ⨆ j ∈ s, (S j).toSubmodule := by
-      rw [hvq_eq]
-      exact (⨆ j ∈ s, (S j).toSubmodule).neg_mem hsum_mem
-    have hvq_zero : v q = 0 := by
-      have hmem : v q ∈ (S q).toSubmodule ⊓ ⨆ j ∈ s, (S j).toSubmodule := by
-        exact Submodule.mem_inf.mpr ⟨hvq, hvq_mem⟩
-      have : v q ∈ (⊥ : Submodule F V) := by
-        simpa [hdisj.eq_bot] using hmem
-      simpa using this
-    have hv0_sum : ∑ j ∈ s, v j = 0 := by
-      rw [Finset.sum_insert hq, hvq_zero, zero_add] at hv0_orig
-      exact hv0_orig
-    by_cases hiq : i = q
-    · simpa [hiq] using hvq_zero
-    · have hi_s : i ∈ s := by
-        simpa [hiq] using hi
-      exact ih v hvs hv0_sum i hi_s
 
 private theorem
     theorem_9_7_zmod_submodule_mem_invtSubmodule_of_quotientSubgroupNormalizedBy_sec9
@@ -5966,234 +5354,6 @@ private theorem
       (R := ZMod p) (ι := Fin q) (M := Additive (MF ⧸ H0.subgroupOf MF))
       (A := fun i => η (H i))).mp hInternal).1
 
-private theorem
-    theorem_9_7_base_dimension_eq_of_minimal_generator_orbit_source_bridge_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
-    (p q : ℕ)
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hpprime : Nat.Prime p)
-    (hqprime : Nat.Prime q)
-    (hbarElem : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
-    (hbarFinrank :
-      letI : Fact p.Prime := ⟨hpprime⟩
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-      Module.finrank (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) = q)
-    (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invU :
-      letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
-    (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invW1 :
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
-    (w0 : W1)
-    (hW1card : Nat.card W1 = q)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (hUW1minimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          quotientSubgroupNormalizedBy MF H0 W1 R →
-            R = ⊥ ∨ R = ⊤)
-    (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
-    (hQneBot : Q ≠ ⊥)
-    (hQneTop : Q ≠ ⊤)
-    (hQminimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          R ≠ ⊥ → R ≤ Q → Q ≤ R)
-    (hQnotW1 : ¬ quotientSubgroupNormalizedBy MF H0 W1 Q)
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hHzero_eq_Q : H ⟨0, hqprime.pos⟩ = Q)
-    (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
-    (hHneBot : ∀ i, H i ≠ ⊥)
-    (hHneTop : ∀ i, H i ≠ ⊤)
-    (hHnotW1 : ∀ i, ¬ quotientSubgroupNormalizedBy MF H0 W1 (H i))
-    (hHcardEqQ : ∀ i, Nat.card (H i) = Nat.card Q)
-    (hHsup : iSup H = ⊤)
-    (hsucc :
-      ∀ i : Fin q,
-        quotientSubgroupConjugateByElement MF H0
-          (H i) (H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i)) (w0 : G))
-    (hHsucc_ne :
-      ∀ i : Fin q, H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i) ≠ H i) :
-    letI : Fact p.Prime := ⟨hpprime⟩
-    letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-    let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
-        Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-      Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-    q = q * Module.finrank (ZMod p) (η Q) := by
-  classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-  let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
-      Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-  have hHindepZ : iSupIndep fun i => η (H i) := by
-    simpa [η] using
-      theorem_9_7_zmod_submodule_iSupIndep_of_minimal_generator_orbit_source_bridge_sec9
-        (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
-        p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
-        hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
-        hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop hHnotW1
-        hHcardEqQ hHsup hsucc hHsucc_ne
-  have hQrank : Module.finrank (ZMod p) (η Q) = 1 :=
-    theorem_9_7_base_finrank_one_of_zmod_submodule_iSupIndep_equal_card_span_sec9
-      hpprime hqprime hbarElem hbarFinrank Q H hHcardEqQ hHsup
-      (by simpa [η] using hHindepZ)
-  change q = q * Module.finrank (ZMod p) (η Q)
-  rw [hQrank, Nat.mul_one]
-
-private theorem
-    theorem_9_7_base_finrank_one_of_minimal_generator_orbit_source_bridge_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
-    (p q : ℕ)
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hpprime : Nat.Prime p)
-    (hqprime : Nat.Prime q)
-    (hbarElem : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
-    (hbarFinrank :
-      letI : Fact p.Prime := ⟨hpprime⟩
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-      Module.finrank (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) = q)
-    (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invU :
-      letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
-    (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invW1 :
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
-    (w0 : W1)
-    (hW1card : Nat.card W1 = q)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (hUW1minimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          quotientSubgroupNormalizedBy MF H0 W1 R →
-            R = ⊥ ∨ R = ⊤)
-    (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
-    (hQneBot : Q ≠ ⊥)
-    (hQneTop : Q ≠ ⊤)
-    (hQminimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          R ≠ ⊥ → R ≤ Q → Q ≤ R)
-    (hQnotW1 : ¬ quotientSubgroupNormalizedBy MF H0 W1 Q)
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hHzero_eq_Q : H ⟨0, hqprime.pos⟩ = Q)
-    (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
-    (hHneBot : ∀ i, H i ≠ ⊥)
-    (hHneTop : ∀ i, H i ≠ ⊤)
-    (hHnotW1 : ∀ i, ¬ quotientSubgroupNormalizedBy MF H0 W1 (H i))
-    (hHcardEqQ : ∀ i, Nat.card (H i) = Nat.card Q)
-    (hHsup : iSup H = ⊤)
-    (hsucc :
-      ∀ i : Fin q,
-        quotientSubgroupConjugateByElement MF H0
-          (H i) (H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i)) (w0 : G))
-    (hHsucc_ne :
-      ∀ i : Fin q, H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i) ≠ H i) :
-    letI : Fact p.Prime := ⟨hpprime⟩
-    letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-    let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
-        Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-      Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-    Module.finrank (ZMod p) (η Q) = 1 := by
-  classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-  let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
-      Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-  have hdim :
-      q = q * Module.finrank (ZMod p) (η Q) :=
-    theorem_9_7_base_dimension_eq_of_minimal_generator_orbit_source_bridge_sec9
-      (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
-      p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
-      hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
-      hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop hHnotW1
-      hHcardEqQ hHsup hsucc hHsucc_ne
-  exact theorem_9_7_finrank_one_of_prime_dimension_eq_sec9 hqprime.pos hdim
-
-private theorem
-    theorem_9_7_prime_card_of_minimal_generator_orbit_source_bridge_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {MF H0 U W1 C : Subgroup G}
-    (p q : ℕ)
-    [hnormalH0 : (H0.subgroupOf MF).Normal]
-    [hW1normU : Subgroup.Normalizes W1 U]
-    (hpprime : Nat.Prime p)
-    (hqprime : Nat.Prime q)
-    (hbarElem : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF))
-    (hbarFinrank :
-      letI : Fact p.Prime := ⟨hpprime⟩
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-      Module.finrank (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) = q)
-    (hUnormMF : U ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invU :
-      letI : Subgroup.Normalizes U MF := ⟨hUnormMF⟩
-      IsInvariant U MF (H0.subgroupOf MF))
-    (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invW1 :
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
-    (w0 : W1)
-    (hW1card : Nat.card W1 = q)
-    (hw0gen : Subgroup.zpowers w0 = ⊤)
-    (hUW1minimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          quotientSubgroupNormalizedBy MF H0 W1 R →
-            R = ⊥ ∨ R = ⊤)
-    (Q : Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hQnorm : quotientSubgroupNormalizedBy MF H0 U Q)
-    (hQneBot : Q ≠ ⊥)
-    (hQneTop : Q ≠ ⊤)
-    (hQminimal :
-      ∀ R : Subgroup (MF ⧸ H0.subgroupOf MF),
-        quotientSubgroupNormalizedBy MF H0 U R →
-          R ≠ ⊥ → R ≤ Q → Q ≤ R)
-    (hQnotW1 : ¬ quotientSubgroupNormalizedBy MF H0 W1 Q)
-    (H : Fin q → Subgroup (MF ⧸ H0.subgroupOf MF))
-    (hHzero_eq_Q : H ⟨0, hqprime.pos⟩ = Q)
-    (hHnorm : ∀ i, quotientSubgroupNormalizedBy MF H0 U (H i))
-    (hHneBot : ∀ i, H i ≠ ⊥)
-    (hHneTop : ∀ i, H i ≠ ⊤)
-    (hHnotW1 : ∀ i, ¬ quotientSubgroupNormalizedBy MF H0 W1 (H i))
-    (hHcardEqQ : ∀ i, Nat.card (H i) = Nat.card Q)
-    (hHsup : iSup H = ⊤)
-    (hsucc :
-      ∀ i : Fin q,
-        quotientSubgroupConjugateByElement MF H0
-          (H i) (H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i)) (w0 : G))
-    (hHsucc_ne :
-      ∀ i : Fin q, H (theorem_9_7_fin_cyclic_succ_sec9 hqprime.pos i) ≠ H i) :
-    Nat.card Q = p := by
-  classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : IsElementaryAbelian p (MF ⧸ H0.subgroupOf MF) := hbarElem
-  let η : Subgroup (MF ⧸ H0.subgroupOf MF) ≃o
-      Submodule (ZMod p) (Additive (MF ⧸ H0.subgroupOf MF)) :=
-    Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
-  have hQrank : Module.finrank (ZMod p) (η Q) = 1 :=
-    theorem_9_7_base_finrank_one_of_minimal_generator_orbit_source_bridge_sec9
-      (MF := MF) (H0 := H0) (U := U) (W1 := W1) (C := C)
-      p q hpprime hqprime hbarElem hbarFinrank hUnormMF hH0invU
-      hW1normMF hH0invW1 w0 hW1card hw0gen hUW1minimal Q hQnorm
-      hQneBot hQneTop hQminimal hQnotW1 H hHzero_eq_Q hHnorm hHneBot hHneTop hHnotW1
-      hHcardEqQ hHsup hsucc hHsucc_ne
-  exact
-    theorem_9_7_prime_card_of_zmod_submodule_finrank_one_sec9
-      (V := MF ⧸ H0.subgroupOf MF) (p := p) Q hQrank
 
 private theorem
     theorem_9_7_orderedCliffordZModSubmoduleIndep_of_minimal_generator_orbit_source_bridge_sec9
@@ -9850,11 +9010,6 @@ private theorem theorem_9_7_schurEndFieldFullData_of_commutative_barU_sec9
     exact hqprime.ne_one hq_one
   · exact hfull
 
-private noncomputable def theorem_9_7_oneDimAddEquivOfFinrankEqOne_sec9
-    {E W : Type*} [Field E] [AddCommGroup W] [Module E W]
-    [Module.Finite E W] [Module.Free E W]
-    (hfin : Module.finrank E W = 1) : W ≃+ E :=
-  (Module.nonempty_linearEquiv_of_finrank_eq_one hfin).some.symm.toAddEquiv
 
 private noncomputable def theorem_9_7_oneDimLinearEquivOfFinrankEqOne_sec9
     {E W : Type*} [Field E] [AddCommGroup W] [Module E W]
@@ -9890,15 +9045,6 @@ private theorem theorem_9_7_exists_oneDimLinearEquiv_apply_eq_one_sec9
   change (e0 v)⁻¹ * e0 v = 1
   exact inv_mul_cancel₀ hc
 
-private noncomputable def theorem_9_7_addCoordOfRepresentationAsModuleFinrankOne_sec9
-    {F G V E : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
-    (ρ : Representation F G V) [fieldE : Field E]
-    [moduleE : Module E ρ.asModule]
-    [finiteE : Module.Finite E ρ.asModule] [freeE : Module.Free E ρ.asModule]
-    (hfin : Module.finrank E ρ.asModule = 1) : V ≃+ E :=
-  ρ.asModuleEquiv.symm.toAddEquiv.trans
-    (@theorem_9_7_oneDimAddEquivOfFinrankEqOne_sec9
-      E ρ.asModule fieldE inferInstance moduleE finiteE freeE hfin)
 
 private noncomputable def theorem_9_7_endUnitScalarEquivOfLinearEquiv_sec9
     {E W : Type*} [Field E] [AddCommGroup W] [Module E W]
@@ -10875,99 +10021,6 @@ private theorem
       F fieldInst fintypeInst Ustar φHadd φU hUactionRep hfixedOne
   exact ⟨hspan, hcompat⟩
 
-private theorem theorem_9_7_W2_image_prime_field_of_fixed_generator_sec9
-    {G : Type u} [Group G] [Finite G]
-    {MF H0 W1 W2 : Subgroup G} {p : ℕ}
-    (hpprime : Nat.Prime p)
-    (hnormalH0 : (H0.subgroupOf MF).Normal)
-    (hW1normMF : W1 ≤ Subgroup.normalizer (MF : Set G))
-    (hH0invW1 :
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      IsInvariant W1 MF (H0.subgroupOf MF))
-    (hfixedCard :
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-        quotientMulDistribMulAction (A := W1) (G := MF)
-          (H0.subgroupOf MF) hH0invW1
-      Nat.card (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF)) = p)
-    (hfixed_eq :
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-        quotientMulDistribMulAction (A := W1) (G := MF)
-          (H0.subgroupOf MF) hH0invW1
-      fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF) =
-        (W2.subgroupOf MF).map (QuotientGroup.mk' (H0.subgroupOf MF)))
-    (F : Type u) [Field F]
-    (φHadd : Additive (MF ⧸ H0.subgroupOf MF) ≃+ F)
-    (sQ : MF ⧸ H0.subgroupOf MF)
-    (hsQfixed :
-      letI : (H0.subgroupOf MF).Normal := hnormalH0
-      letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-      letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-        quotientMulDistribMulAction (A := W1) (G := MF)
-          (H0.subgroupOf MF) hH0invW1
-      sQ ∈ fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF))
-    (hsQne : sQ ≠ 1)
-    (hφs : φHadd (Additive.ofMul sQ) = 1) :
-    letI : (H0.subgroupOf MF).Normal := hnormalH0
-    Subgroup.map
-      (theorem_9_7_addEquivToMulEquivMultiplicative_sec9
-        (MF ⧸ H0.subgroupOf MF) F φHadd).toMonoidHom
-      ((W2.subgroupOf MF).map (QuotientGroup.mk' (H0.subgroupOf MF))) =
-    Subgroup.zpowers (Multiplicative.ofAdd (1 : F)) := by
-  classical
-  let H0MF : Subgroup MF := H0.subgroupOf MF
-  letI : H0MF.Normal := hnormalH0
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1normMF⟩
-  haveI : Fact (Nat.Prime p) := ⟨hpprime⟩
-  letI : MulDistribMulAction W1 (MF ⧸ H0MF) :=
-    quotientMulDistribMulAction (A := W1) (G := MF) H0MF hH0invW1
-  let K : Subgroup (MF ⧸ H0MF) := fixedPointSubgroup W1 (MF ⧸ H0MF)
-  have hKcard : Nat.card K = p := by
-    simpa [K, H0MF] using hfixedCard
-  have hsK : sQ ∈ K := by
-    simpa [K, H0MF] using hsQfixed
-  have hK_eq_zpowers : K = Subgroup.zpowers sQ := by
-    apply le_antisymm
-    · intro x hx
-      let sK : K := ⟨sQ, hsK⟩
-      have hsK_ne : sK ≠ 1 := by
-        intro h
-        exact hsQne (congrArg Subtype.val h)
-      have hKprime : Nat.Prime (Nat.card K) := by
-        simpa [hKcard] using hpprime
-      have htop : Subgroup.zpowers sK = ⊤ :=
-        zpowers_eq_top_of_prime_card_of_ne_one hKprime hsK_ne
-      have hx_z : (⟨x, hx⟩ : K) ∈ Subgroup.zpowers sK := by
-        rw [htop]
-        exact Subgroup.mem_top _
-      rcases Subgroup.mem_zpowers_iff.mp hx_z with ⟨n, hn⟩
-      exact Subgroup.mem_zpowers_iff.mpr ⟨n, congrArg Subtype.val hn⟩
-    · exact Subgroup.zpowers_le.mpr hsK
-  let φH : (MF ⧸ H0.subgroupOf MF) ≃* Multiplicative F :=
-    theorem_9_7_addEquivToMulEquivMultiplicative_sec9
-      (MF ⧸ H0.subgroupOf MF) F φHadd
-  have hφs_mul : φH sQ = Multiplicative.ofAdd (1 : F) := by
-    change Multiplicative.ofAdd (φHadd (Additive.ofMul sQ)) =
-      Multiplicative.ofAdd (1 : F)
-    rw [hφs]
-  have hK_eq_zpowers_orig :
-      fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF) = Subgroup.zpowers sQ := by
-    simpa [K, H0MF] using hK_eq_zpowers
-  calc
-    Subgroup.map φH.toMonoidHom
-        ((W2.subgroupOf MF).map (QuotientGroup.mk' (H0.subgroupOf MF))) =
-      Subgroup.map φH.toMonoidHom
-        (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF)) := by
-        rw [← hfixed_eq]
-    _ = Subgroup.map φH.toMonoidHom (Subgroup.zpowers sQ) := by
-        rw [hK_eq_zpowers_orig]
-    _ = Subgroup.zpowers (φH sQ) := by
-        exact MonoidHom.map_zpowers φH.toMonoidHom sQ
-    _ = Subgroup.zpowers (Multiplicative.ofAdd (1 : F)) := by
-        rw [hφs_mul]
 
 private def theorem_9_7_schurFieldHomCompatibilityAdditiveRawData_sec9
     {G : Type u} [Group G] [Finite G]
@@ -13799,23 +12852,5 @@ public theorem theorem_9_7_source_core_sec9
     M MF U W1 W2 H0 C p q u h92 ⟨hp, hp_eq, hpData, h96⟩ hC hBarU
       hpprime hqprime
 
-public theorem theorem_9_7
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-  hypothesis_9_2_statement M MF U W1 W2 q →
-    (∃ hp : Nat.Primes,
-      hp.val = p ∧
-        hoReductionData M MF U W2 H0 hp ∧
-        quotientChiefFactorData_9_6 M MF H0 W1 hp) →
-      quotientCentralizerIn MF H0 U C →
-        quotientBarUCardinality U C u →
-          Nat.Prime p →
-            Nat.Prime q →
-              (∃ a : ℕ, case_9_7_a_data M MF U W1 W2 H0 C p q a) ∨
-          case_9_7_b_data M MF U W1 W2 H0 C p q u := by
-  intro h92 hp96 hC hBarU _hpprime _hqprime
-  exact theorem_9_7_source_core_sec9 M MF U W1 W2 H0 C p q u
-    h92 hp96 hC hBarU
 
 end Section9

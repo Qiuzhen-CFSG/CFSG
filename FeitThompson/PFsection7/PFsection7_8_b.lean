@@ -343,40 +343,6 @@ private theorem theorem_7_8_b_induced_contribution_eq_orbit_normSq_sum
   field_simp [heR, hcf_ne]
   nlinarith
 
-private theorem theorem_7_8_b_member_induced_representation
-    {G : Type u} [Group G] [Finite G]
-    {L H : Subgroup G}
-    {T S : Finset (Section1.ClassFunction L)}
-    {τ ν : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {ζ X : Section1.ClassFunction L}
-    (h78 : theorem_7_8_hypothesis L H T S τ ν ζ)
-    (hX : X ∈ S) :
-    ∃ (n : ℕ), ∃ thetaRep : Representation ℂ (H.subgroupOf L) (Fin n → ℂ),
-      Representation.IsIrreducible thetaRep ∧
-        X = Section1.inducedCF (H.subgroupOf L) thetaRep.character := by
-  rcases h78 with ⟨_hHL, _hST, hpunctured, _hcoherent, _hν, _hζS, _hζ, _hdegζ⟩
-  rcases (hpunctured X).mp hX with ⟨θ, hθ, _hθne, hXeq⟩
-  rcases hθ with ⟨n, thetaRep, htheta_irreducible, htheta_eq⟩
-  refine ⟨n, thetaRep, htheta_irreducible, ?_⟩
-  rw [hXeq, htheta_eq]
-
-private theorem theorem_7_8_b_nonprincipal_induced_mem
-    {G : Type u} [Group G] [Finite G]
-    {L H : Subgroup G}
-    {T S : Finset (Section1.ClassFunction L)}
-    {τ ν : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {ζ : Section1.ClassFunction L} {n : ℕ}
-    (h78 : theorem_7_8_hypothesis L H T S τ ν ζ)
-    (thetaRep : Representation ℂ (H.subgroupOf L) (Fin n → ℂ))
-    (htheta_irreducible : Representation.IsIrreducible thetaRep)
-    (htheta_ne : thetaRep.character ≠
-      Section1.principalCharacter (H.subgroupOf L)) :
-    Section1.inducedCF (H.subgroupOf L) thetaRep.character ∈ S := by
-  rcases h78 with ⟨_hHL, _hST, hpunctured, _hcoherent, _hν, _hζS, _hζ, _hdegζ⟩
-  exact (hpunctured
-    (Section1.inducedCF (H.subgroupOf L) thetaRep.character)).2
-    ⟨thetaRep.character, ⟨n, thetaRep, htheta_irreducible, rfl⟩,
-      htheta_ne, rfl⟩
 
 private theorem theorem_7_8_b_isIrreducibleOnGroup_of_isBook
     {G : Type u} [Group G] [Finite G]
@@ -648,78 +614,6 @@ private theorem theorem_7_8_b_nonprincipal_book_induced_mem
   exact (hpunctured (Section1.inducedCF (H.subgroupOf L) θ)).2
     ⟨θ, theorem_7_8_b_isIrreducibleOnGroup_of_isBook hθ, hθ_ne, rfl⟩
 
-private theorem theorem_7_8_b_exists_complete_nonprincipal_induced_mem
-    {G : Type u} [Group G] [Finite G]
-    {L H : Subgroup G}
-    {T S : Finset (Section1.ClassFunction L)}
-    {τ ν : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {ζ : Section1.ClassFunction L}
-    (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
-    ∃ (ι : Type) (_ : Fintype ι) (_ : DecidableEq ι)
-      (θ : ι → Section1.ClassFunction (H.subgroupOf L)) (i0 : ι),
-      (∀ i, Section1.IsBookIrreducibleCharacter (θ i)) ∧
-        θ i0 = Section1.principalCharacter (H.subgroupOf L) ∧
-        Finset.sum (Finset.univ.erase i0)
-            (fun i => Complex.normSq (θ i 1)) =
-          (Nat.card (H.subgroupOf L) : ℝ) - 1 ∧
-        ∀ i, i ∈ Finset.univ.erase i0 →
-          Section1.inducedCF (H.subgroupOf L) (θ i) ∈ S := by
-  classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
-      (G := H.subgroupOf L) with
-    ⟨ι, hι, χ, hχ, hsum⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
-  rcases Section1.exists_principal_index_of_completeFamily
-      (G := H.subgroupOf L) (chi := χ) hχ with
-    ⟨i0, hprincipal⟩
-  let θ : ι → Section1.ClassFunction (H.subgroupOf L) :=
-    fun i => Section1.ofConjClassFunction (χ i)
-  have hθ :
-      ∀ i, Section1.IsBookIrreducibleCharacter (θ i) := by
-    intro i
-    exact Section1.isBookIrreducibleCharacter_of_representation_irreducible
-      (χ i) (hχ.1 i)
-  have hsum_nonprincipal :
-      Finset.sum (Finset.univ.erase i0)
-          (fun i => Complex.normSq (θ i 1)) =
-        (Nat.card (H.subgroupOf L) : ℝ) - 1 := by
-    have hsum_book :
-        ∑ i : ι, Complex.normSq (θ i (1 : H.subgroupOf L)) =
-          (Nat.card (H.subgroupOf L) : ℝ) := by
-      simpa [θ, Section1.ofConjClassFunction_apply] using hsum
-    have hterm : Complex.normSq (θ i0 (1 : H.subgroupOf L)) = 1 := by
-      simp [θ, hprincipal, Section1.principalCharacter]
-    have hsplit := Finset.sum_erase_add (Finset.univ : Finset ι)
-      (fun i => Complex.normSq (θ i (1 : H.subgroupOf L)))
-      (Finset.mem_univ i0)
-    rw [hsum_book] at hsplit
-    have hsplit' :
-        Finset.sum (Finset.univ.erase i0)
-            (fun i => Complex.normSq (θ i (1 : H.subgroupOf L))) + 1 =
-          (Nat.card (H.subgroupOf L) : ℝ) := by
-      simpa [hterm] using hsplit
-    nlinarith
-  refine ⟨ι, hι, inferInstance, θ, i0, hθ, hprincipal, hsum_nonprincipal, ?_⟩
-  intro i hi
-  have hθ_ne : θ i ≠ Section1.principalCharacter (H.subgroupOf L) := by
-    intro hθprin
-    have hi0 : i ≠ i0 := by
-      exact Finset.mem_erase.mp hi |>.1
-    have hof_eq : θ i = θ i0 := by
-      calc
-        θ i = Section1.principalCharacter (H.subgroupOf L) := hθprin
-        _ = θ i0 := by simpa [θ] using hprincipal.symm
-    have hof_eq' :
-        Section1.ofConjClassFunction (χ i) =
-          Section1.ofConjClassFunction (χ i0) := by
-      simpa [θ] using hof_eq
-    have hχ_eq : χ i = χ i0 := by
-      ext c
-      rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
-      exact congrFun hof_eq' g
-    exact hi0 (hχ.2.2 hχ_eq)
-  exact theorem_7_8_b_nonprincipal_book_induced_mem h78 (hθ i) hθ_ne
 
 private theorem theorem_7_8_b_exists_complete_nonprincipal_family
     {G : Type u} [Group G] [Finite G]

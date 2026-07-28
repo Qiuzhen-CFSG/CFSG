@@ -330,13 +330,6 @@ public theorem huppert_II_6_11_projective_action
     rw [hSlin]
     simpa using (hg 1).symm
 
-/-- The finite-field degree clause of Huppert II.6.11. -/
-public theorem huppert_II_6_11_projective_degree
-    (K : Type u) [Field K] [Finite K] (n : ℕ) :
-    Nat.card (ℙ K (Fin n → K)) =
-      ∑ i ∈ Finset.range n, Nat.card K ^ i := by
-  apply Projectivization.card_of_finrank
-  simp
 
 end External
 end BenderSuzuki

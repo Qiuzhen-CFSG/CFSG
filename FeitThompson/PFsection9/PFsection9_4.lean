@@ -261,126 +261,6 @@ private theorem theorem_9_4_typeIIIIV_pf93_facts_sec9
   refine ⟨?_, hcent, p, hW2card, hcardMF⟩
   simpa [hW2card] using hpprime
 
-private theorem theorem_9_4_typeIIIIV_not_quotientCentralized_bot_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      (section16TypeIII M MF ∨ section16TypeIV M MF) →
-        ¬ quotientCentralizedBy MF ⊥ U := by
-  classical
-  intro h92 hIIIIV hcentU
-  have h92full : hypothesis_9_2_statement M MF U W1 W2 q := h92
-  rcases theorem_9_4_typeIIIIV_pf93_facts_sec9 M MF U W1 W2 q h92 hIIIIV with
-    ⟨_hW2prime, hUW1centBot, _hMFcard⟩
-  have hW2ne : W2 ≠ ⊥ := by
-    rcases h92.typeP with ⟨_hMFtype, hcommon⟩
-    rcases hcommon with
-      ⟨_hhall, _hMFder, _hcomp, _hnil, _hW1norm, _hW1cyc, _hW1card,
-        _hMFnotcyc, _hsecond, _hfitting, _hfittingDer, _hW2le, hW2ne,
-        _hW2cyc, _hcentralizer, _hhat, _hprimeCentralizer⟩
-    exact hW2ne
-  have hCW1 :
-      subgroupCentralizerIn MF W1 = W2 :=
-    subgroupCentralizerIn_W1_eq_W2_of_hypothesis_9_2_sec9
-      M MF U W1 W2 q h92full
-  have hW2le :
-      W2 ≤ subgroupCentralizerIn MF (U ⊔ W1) := by
-    intro x hxW2
-    have hxCW1 : x ∈ subgroupCentralizerIn MF W1 := by
-      simpa [hCW1] using hxW2
-    have hxCW1' :
-        x ∈ MF ∧ x ∈ Subgroup.centralizer (W1 : Set G) := by
-      simpa [subgroupCentralizerIn] using hxCW1
-    have hUleCentSingleton : U ≤ Subgroup.centralizer ({x} : Set G) := by
-      intro u hu
-      rw [Subgroup.mem_centralizer_iff]
-      intro y hy
-      have hyx : y = x := by simpa using hy
-      subst y
-      have hcommBot : ⁅u, x⁆ ∈ (⊥ : Subgroup G) :=
-        hcentU u hu x hxCW1'.1
-      have hcommOne : ⁅u, x⁆ = 1 := by
-        simpa using hcommBot
-      exact (commutatorElement_eq_one_iff_mul_comm.mp hcommOne).symm
-    have hW1leCentSingleton : W1 ≤ Subgroup.centralizer ({x} : Set G) := by
-      intro w hw
-      rw [Subgroup.mem_centralizer_iff]
-      intro y hy
-      have hyx : y = x := by simpa using hy
-      subst y
-      exact ((Subgroup.mem_centralizer_iff.mp hxCW1'.2) w hw).symm
-    have hsup_le : U ⊔ W1 ≤ Subgroup.centralizer ({x} : Set G) :=
-      sup_le hUleCentSingleton hW1leCentSingleton
-    have hxCentSup :
-        x ∈ Subgroup.centralizer ((U ⊔ W1 : Subgroup G) : Set G) := by
-      rw [Subgroup.mem_centralizer_iff]
-      intro y hy
-      exact ((Subgroup.mem_centralizer_iff.mp (hsup_le hy)) x (by simp)).symm
-    simpa [subgroupCentralizerIn] using And.intro hxCW1'.1 hxCentSup
-  have hUW1ne : subgroupCentralizerIn MF (U ⊔ W1) ≠ ⊥ := by
-    intro hbot
-    apply hW2ne
-    apply le_antisymm
-    · intro x hx
-      have hxC : x ∈ subgroupCentralizerIn MF (U ⊔ W1) := hW2le hx
-      simpa [hbot] using hxC
-    · exact bot_le
-  exact hUW1ne hUW1centBot
-
-private theorem theorem_9_4_typeIIIIV_exists_noncommuting_MF_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      (section16TypeIII M MF ∨ section16TypeIV M MF) →
-        ∃ u : G, u ∈ U ∧ ∃ h : G, h ∈ MF ∧ ⁅u, h⁆ ≠ 1 := by
-  intro h92 hIIIIV
-  by_contra hnone
-  have hcent : quotientCentralizedBy MF ⊥ U := by
-    intro u hu h hh
-    have hcomm : ⁅u, h⁆ = 1 := by
-      by_contra hne
-      exact hnone ⟨u, hu, h, hh, hne⟩
-    simp [hcomm]
-  exact theorem_9_4_typeIIIIV_not_quotientCentralized_bot_sec9
-    M MF U W1 W2 q h92 hIIIIV hcent
-
-private theorem not_actsTrivially_MF_of_not_quotientCentralized_bot_sec9
-    {G : Type u} [Group G] [Finite G]
-    (MF U : Subgroup G)
-    [Subgroup.Normalizes U MF] :
-    ¬ quotientCentralizedBy MF ⊥ U →
-      ¬ ActsTrivially (A := U) (G := MF) := by
-  intro hnon htriv
-  apply hnon
-  intro u hu h hh
-  let uU : U := ⟨u, hu⟩
-  let hMF : MF := ⟨h, hh⟩
-  have hfix : uU • hMF = hMF := htriv uU hMF
-  have hconj : u * h * u⁻¹ = h := by
-    simpa [uU, hMF, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
-      using congrArg Subtype.val hfix
-  have hcomm : u * h = h * u := by
-    calc
-      u * h = (u * h * u⁻¹) * u := by group
-      _ = h * u := by rw [hconj]
-  have hcomm_one : ⁅u, h⁆ = 1 :=
-    commutatorElement_eq_one_iff_mul_comm.mpr hcomm
-  simp [hcomm_one]
-
-private theorem theorem_9_4_typeIIIIV_not_actsTrivially_MF_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ)
-    [Subgroup.Normalizes U MF] :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      (section16TypeIII M MF ∨ section16TypeIV M MF) →
-        ¬ ActsTrivially (A := U) (G := MF) := by
-  intro h92 hIIIIV
-  exact not_actsTrivially_MF_of_not_quotientCentralized_bot_sec9 MF U
-    (theorem_9_4_typeIIIIV_not_quotientCentralized_bot_sec9
-      M MF U W1 W2 q h92 hIIIIV)
 
 private theorem not_actsTrivially_frattini_quotient_of_not_actsTrivially_sec9
     {R A : Type u} [Group R] [Finite R] [Group A] [Finite A]
@@ -866,17 +746,6 @@ private theorem not_actsTrivially_quotient_of_isCompl_nontrivial_subgroup_sec9
   change (h : A) • (q : V) = (q : V) at heqH
   exact heqH
 
-private theorem not_actsTrivially_of_action_transfer_sec9
-    {A H X : Type u} [SMul A X] [SMul H X]
-    (toA : H → A)
-    (hcompat : ∀ h : H, ∀ x : X, h • x = toA h • x)
-    (hnot : ¬ ActsTrivially (A := H) (G := X)) :
-    ¬ ActsTrivially (A := A) (G := X) := by
-  intro htriv
-  apply hnot
-  intro h x
-  rw [hcompat h x]
-  exact htriv (toA h) x
 
 private noncomputable def theorem_9_4_typeIIIIV_liftedH0_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2168,53 +2037,6 @@ private theorem theorem_9_4_typeIIIIV_maschke_frattini_source_sec9
       (by simpa [UW1, V, P] using hQ_eq) hQcompl_inv_U
       (by simpa [UW1, V, P] using hQcompl_nontriv_U)
 
-private theorem quotientCentralizedBy_actsTrivially_quotient_sec9
-    {G : Type u} [Group G] [Finite G]
-    (MF H0 U : Subgroup G)
-    [Subgroup.Normalizes U MF]
-    [hnormal : (H0.subgroupOf MF).Normal]
-    (hH0_inv : IsInvariant U MF (H0.subgroupOf MF)) :
-    quotientCentralizedBy MF H0 U →
-      letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
-        quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0_inv
-      ActsTrivially (A := U) (G := MF ⧸ H0.subgroupOf MF) := by
-  classical
-  intro hcent
-  let H0MF : Subgroup MF := H0.subgroupOf MF
-  haveI : H0MF.Normal := hnormal
-  letI : MulAction.QuotientAction U H0MF :=
-    quotientAction_of_isInvariant (A := U) (G := MF) H0MF hH0_inv
-  letI : MulDistribMulAction U (MF ⧸ H0MF) :=
-    quotientMulDistribMulAction (A := U) (G := MF) H0MF hH0_inv
-  intro u x
-  rcases QuotientGroup.mk'_surjective H0MF x with ⟨h, rfl⟩
-  have hsmul_mk :
-      u • QuotientGroup.mk' H0MF h = QuotientGroup.mk' H0MF (u • h) := by
-    simpa only [QuotientGroup.mk'_apply] using
-      (MulAction.Quotient.smul_mk (H := H0MF) u h)
-  rw [hsmul_mk]
-  apply (QuotientGroup.eq_iff_div_mem).2
-  change ((u • h : MF) / h : MF) ∈ H0MF
-  have hcomm : ⁅(u : G), (h : G)⁆ ∈ H0 :=
-    hcent (u : G) u.property (h : G) h.property
-  have hval : (((u • h : MF) / h : MF) : G) = ⁅(u : G), (h : G)⁆ := by
-    simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe,
-      commutatorElement_def, div_eq_mul_inv, mul_assoc]
-  simpa [H0MF, Subgroup.mem_subgroupOf, hval] using hcomm
-
-private theorem not_quotientCentralizedBy_of_not_actsTrivially_quotient_sec9
-    {G : Type u} [Group G] [Finite G]
-    (MF H0 U : Subgroup G)
-    [Subgroup.Normalizes U MF]
-    [hnormal : (H0.subgroupOf MF).Normal]
-    (hH0_inv : IsInvariant U MF (H0.subgroupOf MF)) :
-    (letI : MulDistribMulAction U (MF ⧸ H0.subgroupOf MF) :=
-      quotientMulDistribMulAction (A := U) (G := MF) (H0.subgroupOf MF) hH0_inv;
-      ¬ ActsTrivially (A := U) (G := MF ⧸ H0.subgroupOf MF)) →
-      ¬ quotientCentralizedBy MF H0 U := by
-  intro hnot hcent
-  exact hnot (quotientCentralizedBy_actsTrivially_quotient_sec9
-    MF H0 U hH0_inv hcent)
 
 private theorem index_dvd_card_of_sup_eq_top_normal_sec9
     {Q : Type u} [Group Q] [Finite Q]

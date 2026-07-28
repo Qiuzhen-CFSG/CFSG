@@ -883,33 +883,6 @@ public theorem section14_oddScalarProduct_of_sub_one_eq_even_integer
     _ = (z - 1) + 1 := by rw [← hm]
     _ = z := by ring
 
-@[expose] public def section14_theorem_14_9_late_type_T1FamilySourceData
-    {G : Type u} [Group G] [Finite G]
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (p q v : ℕ) : Prop :=
-  ∃ T1 : Finset (Section1.ClassFunction G),
-    ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ (T1.card : ℝ) ∧
-      (∀ χ ∈ T1, Section1.scalarProduct G χ χ = 1) ∧
-      (∀ χ ∈ T1, ∀ ψ ∈ T1, χ ≠ ψ →
-        Section1.scalarProduct G χ ψ = 0) ∧
-      (∀ χ ∈ T1, ∀ i k : ℕ, i < q → k < p →
-        Section1.scalarProduct G (η i k) χ = 0)
-
-@[expose] public def section14_theorem_14_9_late_type_T1ImageSourceData
-    {G : Type u} [Group G] [Finite G]
-    (Tmax : Subgroup G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (p q v : ℕ) : Prop :=
-  ∃ (T1T : Finset (Section1.ClassFunction Tmax))
-    (τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G),
-    ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ (T1T.card : ℝ) ∧
-      (∀ ζ ∈ T1T, Section1.scalarProduct Tmax ζ ζ = 1) ∧
-      (∀ ζ ∈ T1T, ∀ ξ ∈ T1T, ζ ≠ ξ →
-        Section1.scalarProduct Tmax ζ ξ = 0) ∧
-      Section6.coherentExtension T1T τT τT1 ∧
-      (∀ ζ ∈ T1T, ∀ i k : ℕ, i < q → k < p →
-        Section1.scalarProduct G (η i k) (τT1 ζ) = 0)
 
 @[expose] public def section14_theorem_14_9_late_type_T1ImageDeltaSourceData
     {G : Type u} [Group G] [Finite G]
@@ -931,68 +904,6 @@ public theorem section14_oddScalarProduct_of_sub_one_eq_even_integer
         ∃ Δ : Section1.ClassFunction G,
           section14_theorem_14_9_late_type_T1DeltaCorrection Γ (τT1 ζ) Δ)
 
-public theorem section14_theorem_14_9_late_type_T1ImageSourceData_of_imageDeltaSourceData
-    {G : Type u} [Group G] [Finite G]
-    {Tmax : Subgroup G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {η : ℕ → ℕ → Section1.ClassFunction G}
-    {Γ : Section1.ClassFunction G}
-    {p q v : ℕ}
-    (hsrc : section14_theorem_14_9_late_type_T1ImageDeltaSourceData Tmax τT η Γ p q v) :
-    section14_theorem_14_9_late_type_T1ImageSourceData Tmax τT η p q v := by
-  rcases hsrc with
-    ⟨T1T, τT1, hcard, hselfT, horthT, hcohT1, hηorthT, _hDeltaT⟩
-  exact ⟨T1T, τT1, hcard, hselfT, horthT, hcohT1, hηorthT⟩
-
-public theorem section14_theorem_14_9_late_type_T1FamilySourceData_of_imageSourceData
-    {G : Type u} [Group G] [Finite G]
-    (Tmax : Subgroup G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    {η : ℕ → ℕ → Section1.ClassFunction G}
-    {p q v : ℕ}
-    (hsrc : section14_theorem_14_9_late_type_T1ImageSourceData Tmax τT η p q v) :
-    section14_theorem_14_9_late_type_T1FamilySourceData η p q v := by
-  classical
-  rcases hsrc with
-    ⟨T1T, τT1, hcard, hselfT, horthT, hcohT1, hηorthT⟩
-  rcases hcohT1 with ⟨hIsoT1, _hVirtT1, _hAgreeT1⟩
-  let T1 : Finset (Section1.ClassFunction G) := T1T.image τT1
-  have hinjOn : Set.InjOn (fun ζ : Section1.ClassFunction Tmax => τT1 ζ) (↑T1T : Set _) := by
-    intro ζ hζ ξ hξ hmap
-    by_contra hne
-    have hselfG :
-        Section1.scalarProduct G (τT1 ζ) (τT1 ζ) = 1 := by
-      rw [Section5.isCFLinearIsometryOnSpan_apply_of_mem hIsoT1 hζ hζ]
-      exact hselfT ζ hζ
-    have hcrossG :
-        Section1.scalarProduct G (τT1 ζ) (τT1 ξ) = 0 := by
-      rw [Section5.isCFLinearIsometryOnSpan_apply_of_mem hIsoT1 hζ hξ]
-      exact horthT ζ hζ ξ hξ hne
-    change τT1 ζ = τT1 ξ at hmap
-    rw [← hmap] at hcrossG
-    rw [hselfG] at hcrossG
-    exact one_ne_zero hcrossG
-  have hcardImage : T1.card = T1T.card := by
-    dsimp [T1]
-    exact Finset.card_image_of_injOn hinjOn
-  refine ⟨T1, ?_, ?_, ?_, ?_⟩
-  · rw [hcardImage]
-    exact hcard
-  · intro χ hχ
-    rcases Finset.mem_image.mp hχ with ⟨ζ, hζ, rfl⟩
-    rw [Section5.isCFLinearIsometryOnSpan_apply_of_mem hIsoT1 hζ hζ]
-    exact hselfT ζ hζ
-  · intro χ hχ ψ hψ hne
-    rcases Finset.mem_image.mp hχ with ⟨ζ, hζ, rfl⟩
-    rcases Finset.mem_image.mp hψ with ⟨ξ, hξ, rfl⟩
-    have hζξ : ζ ≠ ξ := by
-      intro hEq
-      exact hne (by rw [hEq])
-    rw [Section5.isCFLinearIsometryOnSpan_apply_of_mem hIsoT1 hζ hξ]
-    exact horthT ζ hζ ξ hξ hζξ
-  · intro χ hχ i k hi hk
-    rcases Finset.mem_image.mp hχ with ⟨ζ, hζ, rfl⟩
-    exact hηorthT ζ hζ i k hi hk
 
 public theorem section14_theorem_14_9_late_type_T1SourceData_of_imageDeltaSourceData
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

@@ -59,10 +59,6 @@ public theorem generatorRank_eq_group_rank
       simpa [generatorRank, T] using (Finset.card_image_le (f := t) (s := Finset.univ))
     exact (Group.rank_le hU_top).trans hU_card
 
-public theorem group_rank_le_generatorRank
-    (G : Type*) [Group G] [Finite G] :
-    Group.rank G ≤ generatorRank G := by
-  rw [generatorRank_eq_group_rank]
 
 set_option maxHeartbeats 800000 in
 public theorem generatorRank_le_finrank_of_elementaryAbelian

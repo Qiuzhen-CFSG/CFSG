@@ -39,12 +39,6 @@ private theorem section10_beta_subset_sigma
   intro p hpβ
   exact section10_alpha_subset_sigma hM hpβ.1
 
-omit [IsMinCE G] in
-private theorem section10_mbetaSubgroup_le_malphaSubgroup
-    (M : Subgroup G) :
-    section10MbetaSubgroup M ≤ section10MalphaSubgroup M := by
-  simpa [section10MbetaSubgroup, section10MalphaSubgroup] using
-    section10_piCore_mono (H := M) (section10_beta_subset_alpha (G := G) M)
 
 public theorem section10_mbetaSubgroup_le_msigmaSubgroup
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :

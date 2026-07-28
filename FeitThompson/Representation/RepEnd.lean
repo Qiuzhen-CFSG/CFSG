@@ -83,18 +83,6 @@ public theorem coe_pow (f : End  ρ) (n : ℕ) : ⇑(f ^ n) = f^[n] := hom_coe_p
 
 public theorem pow_apply (f : End ρ) (n : ℕ) (m : V) : (f ^ n) m = f^[n] m := congr_fun (coe_pow f n) m
 
-public theorem pow_map_zero_of_le {f : End ρ} {m : V} {k l : ℕ} (hk : k ≤ l)
-    (hm : (f ^ k) m = 0) : (f ^ l) m = 0 := by
-  rw [← Nat.sub_add_cancel hk, pow_add, mul_apply, hm, RepMap.map_zero]
-
-public theorem commute_pow_left_of_commute
-    {W : Type*} [AddCommMonoid W] [Module F W] {σ : Representation F G W}
-    {f : ρ →ₗ σ} {g : End ρ} {g₂ : End σ}
-    (h : g₂.comp f = f.comp g) (k : ℕ) : (g₂ ^ k).comp f = f.comp (g ^ k) := by
-  induction k with
-  | zero => ext; simp only [pow_zero, coe_comp, Function.comp_apply, one_apply]
-  | succ k ih => rw [pow_succ', pow_succ', mul_eq_comp, RepMap.comp_assoc, ih,
-    ← RepMap.comp_assoc, h, RepMap.comp_assoc, mul_eq_comp]
 
 @[simp]
 public theorem id_pow (n : ℕ) : (id : End ρ) ^ n = .id :=
@@ -104,33 +92,6 @@ variable {f' : End ρ}
 
 public theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = .comp (f' ^ n) f' := by rw [pow_succ, mul_eq_comp]
 
-public theorem iterate_surjective (h : Surjective f') : ∀ n : ℕ, Surjective (f' ^ n)
-  | 0 => surjective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact (iterate_surjective h n).comp h
-
-public theorem iterate_injective (h : Injective f') : ∀ n : ℕ, Injective (f' ^ n)
-  | 0 => injective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact (iterate_injective h n).comp h
-
-public theorem iterate_bijective (h : Bijective f') : ∀ n : ℕ, Bijective (f' ^ n)
-  | 0 => bijective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact (iterate_bijective h n).comp h
-
-public theorem injective_of_iterate_injective {n : ℕ} (hn : n ≠ 0) (h : Injective (f' ^ n)) :
-    Injective f' := by
-  rw [← Nat.succ_pred_eq_of_pos (show 0 < n by lia), iterate_succ, coe_comp] at h
-  exact h.of_comp
-
-public theorem surjective_of_iterate_surjective {n : ℕ} (hn : n ≠ 0) (h : Surjective (f' ^ n)) :
-    Surjective f' := by
-  rw [← Nat.succ_pred_eq_of_pos (Nat.pos_iff_ne_zero.mpr hn), pow_succ', coe_mul] at h
-  exact Surjective.of_comp h
 
 /-- Scalar multiplication by `α` as an endomorphism of `ρ`. -/
 @[expose]

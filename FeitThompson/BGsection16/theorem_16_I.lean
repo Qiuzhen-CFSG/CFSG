@@ -109,26 +109,6 @@ private theorem section16_typeII_to_V_of_K_ne_bot
   · exact Or.inl
       (section16_typeII_of_caseP2 (G := G) hM hMF hKU ⟨hKne, hUbot⟩)
 
-/-- A maximal subgroup that is not Type I is one of Types II--V. This is the
-public classification corollary used by final-module source/BG bridge code. -/
-public theorem section16_typeII_to_V_of_not_typeI
-    {M MF : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hnotI : ¬ section16TypeI M MF) :
-    section16TypeII M MF ∨ section16TypeIII M MF ∨ section16TypeIV M MF ∨
-      section16TypeV M MF := by
-  classical
-  rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
-    ⟨K, U, hKU15⟩
-  have hKU : section16KUData M K U := by
-    simpa [section16KUData] using hKU15
-  by_cases hKne : K ≠ ⊥
-  · exact section16_typeII_to_V_of_K_ne_bot (G := G) hM hMF hKU hKne
-  · have hKbot : K = ⊥ := not_not.mp hKne
-    have hCaseF : section16CaseF K U :=
-      (section16_caseF_iff_K_eq_bot (G := G) hM hMF hKU).2 hKbot
-    exact False.elim (hnotI (section16_typeI_of_caseF (G := G) hM hMF hKU hCaseF))
 
 /-- The five BG16 types exhaust the possibilities for a maximal subgroup and
 its `M_F`. -/

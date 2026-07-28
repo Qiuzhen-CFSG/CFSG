@@ -14,25 +14,6 @@ section Main
 
 open scoped FixedPoints
 
-private theorem hasOrderedCharacteristicSylowSeries_of_subsingleton
-    {G : Type*} [Group G] [Finite G] [Subsingleton G] :
-    HasOrderedCharacteristicSylowSeries G := by
-  classical
-  refine ⟨0, (fun _ : Fin 1 => (⊤ : Subgroup G)), (fun i : Fin 0 => Fin.elim0 i),
-    rfl, ?_, ?_, ?_, ?_⟩
-  · ext x
-    constructor
-    · intro _hx
-      have hx : x = 1 := Subsingleton.elim x 1
-      simp [hx]
-    · intro hx
-      simp
-  · intro i
-    exact inferInstance
-  · intro i
-    exact Fin.elim0 i
-  · intro i
-    exact Fin.elim0 i
 
 public theorem theorem_4_20_rank_hyp_of_normal_subgroup
     {G : Type*} [Group G] [Finite G] (K : Subgroup G) [K.Normal]
@@ -152,50 +133,6 @@ private noncomputable def quotientPPrimeCoreEquivSylowOfHasNormalPComplement
     eKer.symm.trans (eImage.trans ((MulEquiv.subgroupCongr hSmap_top).trans Subgroup.topEquiv))
   exact eToQuot.symm
 
-private theorem hasOrderedCharacteristicSylowSeries_of_isPGroup
-    {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hGp : IsPGroup p G) :
-    HasOrderedCharacteristicSylowSeries G := by
-  classical
-  let series : Fin 2 → Subgroup G := Fin.cases (⊤ : Subgroup G) (fun _ : Fin 1 => ⊥)
-  let primes : Fin 1 → ℕ := fun _ => p
-  refine ⟨1, series, primes, rfl, ?_, ?_, ?_, ?_⟩
-  · rfl
-  · intro i
-    fin_cases i
-    · change (⊤ : Subgroup G).Characteristic
-      infer_instance
-    · change (⊥ : Subgroup G).Characteristic
-      infer_instance
-  · intro i j hij
-    fin_cases i
-    fin_cases j
-    simp at hij
-  · intro i
-    fin_cases i
-    refine ⟨?_, ?_⟩
-    · simp [series]
-    · have htop_p : IsPGroup p (⊤ : Subgroup G) := hGp.to_subgroup (⊤ : Subgroup G)
-      let S : Sylow p G :=
-        IsPGroup.toSylow (G := G) (p := p) htop_p (by
-          simpa using (Fact.out : Nat.Prime p).not_dvd_one)
-      have hS_top : (S : Subgroup G) = ⊤ := by
-        simp [S, IsPGroup.toSylow_coe]
-      have hnorm_bot : ((⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)).Normal := by
-        rw [Subgroup.bot_subgroupOf]
-        infer_instance
-      refine ⟨inferInstance, S, ?_, ⟨?_⟩⟩
-      · change ((⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)).Normal
-        exact hnorm_bot
-      let eTopQuot :
-          ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
-            G ⧸ (⊥ : Subgroup G) :=
-        topQuotientSubgroupOfEquivQuotient (G := G) (⊥ : Subgroup G)
-      change ((⊤ : Subgroup G) ⧸ (⊥ : Subgroup G).subgroupOf (⊤ : Subgroup G)) ≃*
-        ↥(S : Subgroup G)
-      exact eTopQuot.trans
-        (QuotientGroup.quotientBot.trans
-          (Subgroup.topEquiv.symm.trans (MulEquiv.subgroupCongr hS_top.symm)))
 
 @[expose] public def HasOrderedCharacteristicSylowSeriesWithPrimeDivisors
     (G : Type*) [Group G] [Finite G] : Prop :=

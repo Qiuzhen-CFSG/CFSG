@@ -1176,10 +1176,6 @@ private theorem chapter2_claim12_mem_normalizer_sup
   rw [Subgroup.conjAct_pointwise_smul_eq_self hA,
     Subgroup.conjAct_pointwise_smul_eq_self hB]
 
-private theorem chapter2_claim12_smul_subtype_coe
-    {A G : Type*} [Group A] [Group G] [MulDistribMulAction A G]
-    {H : Subgroup G} [IsInvariant A G H] (a : A) (x : H) :
-    ((a • x : H) : G) = a • (x : G) := rfl
 
 private theorem chapter2_claim12_mulDistrib_compHom_smul
     {A B X : Type*} [Monoid A] [Monoid B] [Group X]

@@ -768,11 +768,6 @@ private theorem crossCharConjClassesPerm_mk
     crossCharConjClassesPerm α (ConjClasses.mk x) =
       ConjClasses.mk (α x) := rfl
 
-private theorem crossCharConjClassesPerm_symm_mk
-    {G : Type*} [Group G] (α : G ≃* G) (x : G) :
-    (crossCharConjClassesPerm α).symm (ConjClasses.mk x) =
-      ConjClasses.mk (α.symm x) := by
-  rfl
 
 private noncomputable def crossCharClassFunctionMapLinearEquiv
     {F G : Type*} [Field F] [Group G] (α : G ≃* G) :

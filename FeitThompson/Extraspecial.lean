@@ -12,14 +12,6 @@ public class IsExtraspecial (p : ℕ) (G : Type*) [Group G] : Prop where
   quotient_elementary_abelian (p) (G): IsElementaryAbelian p (G ⧸ (Subgroup.center G))
   quotient_nontrivial (p) (G) : Nontrivial (G ⧸ (Subgroup.center G))
 
-public theorem IsExtraspecial.center_finite (p : ℕ) [Fact p.Prime] (G : Type*) [Group G] [IsExtraspecial p G] :
-    Finite (Subgroup.center G) := by
-    apply Nat.finite_of_card_ne_zero
-    rw[IsExtraspecial.center_order_p p G]
-    exact Ne.symm (NeZero.ne' p)
-
-public theorem IsExtraspecial.center_cyclic (p : ℕ) [Fact p.Prime] (G : Type*) [Group G] [IsExtraspecial p G] :
-    IsCyclic (Subgroup.center G) := isCyclic_of_prime_card (IsExtraspecial.center_order_p p G)
 
 public theorem IsExtraspecial.center_isPGroup (p : ℕ) (G : Type*) [Group G] [IsExtraspecial p G] :
     IsPGroup p (Subgroup.center G) := by

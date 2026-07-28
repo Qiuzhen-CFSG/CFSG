@@ -18,8 +18,6 @@ variable {G : Type*} [Group G] {H : Type*} [Monoid H] (φ : G →* H)
 @[expose]
 public def kerLift' : G ⧸ φ.ker →* H := lift _ φ fun _g => mem_ker.mp
 
-public theorem kerLift'_mk (g : G) : (kerLift' φ) g = φ g := by
-  rfl
 
 public theorem kerLift'_injective : Injective (kerLift' φ) := fun a b =>
   Quotient.inductionOn₂' a b fun a b (h : φ a = φ b) =>

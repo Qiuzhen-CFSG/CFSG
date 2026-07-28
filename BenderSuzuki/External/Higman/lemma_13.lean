@@ -684,31 +684,6 @@ private theorem lemma13_commutator_one_one_le_three
   rw [QuotientGroup.ker_mk'] at hle
   exact hle
 
-private theorem lemma13_commutator_sq_eq_one_of_square_commutes
-    {G : Type*} [Group G] (x y : G)
-    (hc : Commute ⁅x, y⁆ x)
-    (hx2 : Commute (x ^ 2) y) :
-    ⁅x, y⁆ ^ 2 = 1 := by
-  let c : G := ⁅x, y⁆
-  have hxy : x * y = c * y * x := by
-    dsimp [c]
-    simp only [commutatorElement_def]
-    group
-  have hcalc : x ^ 2 * y = c ^ 2 * (y * x ^ 2) := by
-    calc
-      x ^ 2 * y = x * (x * y) := by simp [pow_two, mul_assoc]
-      _ = x * (c * y * x) := by rw [hxy]
-      _ = (x * c) * (y * x) := by simp only [mul_assoc]
-      _ = (c * x) * (y * x) := by rw [hc.symm.eq]
-      _ = c * (x * y) * x := by simp only [mul_assoc]
-      _ = c * (c * y * x) * x := by rw [hxy]
-      _ = c ^ 2 * (y * x ^ 2) := by simp [pow_two, mul_assoc]
-  have hcancel : (1 : G) * (y * x ^ 2) = c ^ 2 * (y * x ^ 2) := by
-    calc
-      (1 : G) * (y * x ^ 2) = y * x ^ 2 := one_mul _
-      _ = x ^ 2 * y := hx2.eq.symm
-      _ = c ^ 2 * (y * x ^ 2) := hcalc
-  exact (mul_right_cancel hcancel).symm
 
 private def lemma13_nextBracketLift
     {H : Type u} [Group H]
@@ -842,14 +817,6 @@ private def lemma13_bracketRightFactorHom
   QuotientGroup.lift (lowerCentralFactorKernel H 1)
     (lemma13_bracketRightHom x) (lemma13_bracketRightHom_kernel x)
 
-private theorem lemma13_bracketRightFactorHom_mk
-    {H : Type u} [Group H]
-    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
-    lemma13_bracketRightFactorHom x
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 2)
-        (lemma13_nextBracketLift x c) :=
-  rfl
 
 private def lemma13_bracketLeftHom
     {H : Type u} [Group H] :
@@ -936,15 +903,6 @@ private def lemma13_bracketFactorHom
     (lemma13_bracketLeftHom (H := H))
     (lemma13_bracketLeftHom_kernel (H := H))
 
-private theorem lemma13_bracketFactorHom_mk_mk
-    {H : Type u} [Group H]
-    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
-    lemma13_bracketFactorHom
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 2)
-        (lemma13_nextBracketLift x c) :=
-  rfl
 
 private noncomputable def lemma13_bracketFactorAddHom
     {H : Type u} [Group H] :
@@ -985,49 +943,6 @@ private theorem lemma13_lowerCentralIteratedBracket_mk_mk
           (lemma13_nextBracketLift x c)) :=
   rfl
 
-private theorem lemma13_nextBracketLift_equivariant
-    {H : Type u} [Group H] (theta : MulAut H)
-    (x : (⊤ : Subgroup H).lowerCentralSeries 0) (c : (⊤ : Subgroup H).lowerCentralSeries 1) :
-    lowerCentralSeriesMulAut theta 2 (lemma13_nextBracketLift x c) =
-      lemma13_nextBracketLift
-        (lowerCentralSeriesMulAut theta 0 x)
-        (lowerCentralSeriesMulAut theta 1 c) := by
-  apply Subtype.ext
-  rw [BenderSuzuki.External.Higman.lowerCentralSeriesMulAut_apply]
-  change theta ⁅(x : H), (c : H)⁆ = ⁅theta (x : H), theta (c : H)⁆
-  exact map_commutatorElement theta (x : H) (c : H)
-
-private theorem lemma13_lowerCentralIteratedBracket_equivariant
-    {H : Type u} [Group H] (theta : MulAut H)
-    (v : Additive (LowerCentralFactor H 0))
-    (w : Additive (LowerCentralFactor H 1)) :
-    lemma13_lowerCentralIteratedBracket
-        (lowerCentralFactorLinearAut theta 0 v)
-        (lowerCentralFactorLinearAut theta 1 w) =
-      lowerCentralFactorLinearAut theta 2
-        (lemma13_lowerCentralIteratedBracket v w) := by
-  obtain ⟨x, hx⟩ :=
-    QuotientGroup.mk'_surjective (lowerCentralFactorKernel H 0) v.toMul
-  obtain ⟨c, hc⟩ :=
-    QuotientGroup.mk'_surjective (lowerCentralFactorKernel H 1) w.toMul
-  have hv :
-      v = Additive.ofMul
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x) := by
-    apply Additive.toMul.injective
-    exact hx.symm
-  have hw :
-      w = Additive.ofMul
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) := by
-    apply Additive.toMul.injective
-    exact hc.symm
-  rw [hv, hw, lowerCentralFactorLinearAut_ofMul_mk,
-    lowerCentralFactorLinearAut_ofMul_mk,
-    lemma13_lowerCentralIteratedBracket_mk_mk,
-    lemma13_lowerCentralIteratedBracket_mk_mk,
-    lowerCentralFactorLinearAut_ofMul_mk]
-  apply Additive.ofMul.injective
-  exact congrArg (QuotientGroup.mk' (lowerCentralFactorKernel H 2))
-    (lemma13_nextBracketLift_equivariant theta x c).symm
 
 set_option maxHeartbeats 800000 in
 private theorem lemma13_lowerCentralJacobi
@@ -1368,19 +1283,6 @@ private def lemma13_factorZeroInclusionHom
         rw [hkernelQ]
         exact hC_le_Phi hx)
 
-private theorem lemma13_factorZeroInclusionHom_mk
-    {Q : Type u} [Group Q]
-    (H Phi C : Subgroup Q)
-    (hC_le_Phi : C ≤ Phi)
-    (hkernelH : lowerCentralFactorKernel H 0 =
-      (C.subgroupOf H).subgroupOf ((⊤ : Subgroup H).lowerCentralSeries 0))
-    (hkernelQ : lowerCentralFactorKernel Q 0 =
-      Phi.subgroupOf ((⊤ : Subgroup Q).lowerCentralSeries 0))
-    (x : (⊤ : Subgroup H).lowerCentralSeries 0) :
-    lemma13_factorZeroInclusionHom H Phi C hC_le_Phi hkernelH hkernelQ
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x) =
-      QuotientGroup.mk' (lowerCentralFactorKernel Q 0)
-        (lemma13_factorZeroInclusionMonoidHom H x) := rfl
 
 private noncomputable def lemma13_factorZeroInclusionLinearMap
     {Q : Type u} [Group Q]
@@ -2099,68 +2001,7 @@ private theorem lemma13_exists_frobenius_conjugate_of_equivariant_linearEquiv
   refine ⟨j, ?_⟩
   simpa using hsupport i j hij
 
-private def Lemma13SpectralPackageData
-    {H : Type u} [Group H]
-    (xi : MulAut H) (n : ℕ)
-    (U V : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0))) : Prop :=
-  ∃ (eta rho : BinaryGaloisField n)
-      (middleNorm : BinaryGaloisField n ≃ₗ[ZMod 2] U)
-      (outerNorm : BinaryGaloisField n ≃ₗ[ZMod 2] V)
-      (heta : eta ≠ 0) (hrho : rho ≠ 0),
-    orderOf (Units.mk0 eta heta) = 2 ^ n - 1 ∧
-    orderOf (Units.mk0 rho hrho) = 2 ^ n - 1 ∧
-    (∃ s : Fin n, eta ^ 2 = rho * rho ^ (2 ^ (s : ℕ))) ∧
-    (∀ b : BinaryGaloisField n,
-      lowerCentralFactorLinearAut xi 0
-          (middleNorm b : Additive (LowerCentralFactor H 0)) =
-        (middleNorm (eta * b) : Additive (LowerCentralFactor H 0))) ∧
-    ∀ a : BinaryGaloisField n,
-      lowerCentralFactorLinearAut xi 0
-          (outerNorm a : Additive (LowerCentralFactor H 0)) =
-        (outerNorm (rho * a) : Additive (LowerCentralFactor H 0))
 
-set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
-private theorem lemma13_spectralPackageData_of_normalized
-    {H : Type u} [Group H]
-    (xi : MulAut H) (n : ℕ) (hn : 2 ≤ n)
-    (U V : Submodule (ZMod 2) (Additive (LowerCentralFactor H 0)))
-    (bracket : Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
-      Additive (LowerCentralFactor H 0) →ₗ[ZMod 2]
-        Additive (LowerCentralFactor H 1))
-    (squareMap : Additive (LowerCentralFactor H 0) →
-      Additive (LowerCentralFactor H 1))
-    (hform : Lemma12TypeBNormalizedData xi n U V bracket squareMap ∨
-      Lemma12TypeCNormalizedData xi n U V bracket squareMap) :
-    Lemma13SpectralPackageData xi n U V := by
-  rcases hform with hformB | hformC
-  · unfold Lemma12TypeBNormalizedData at hformB
-    rcases hformB with
-      ⟨eta, epsilon, uNorm, vNorm, centerCoordinates,
-        heta, hepsilon, horder, huAction, hvAction, hcenterAction,
-        hsquareU, hsquareV, hcrossFormula⟩
-    refine ⟨eta, eta, uNorm, vNorm, heta, heta, horder, horder, ?_,
-      huAction, hvAction⟩
-    let s : Fin n := ⟨0, by omega⟩
-    refine ⟨s, ?_⟩
-    simp [s, pow_two]
-  · unfold Lemma12TypeCNormalizedData at hformC
-    rcases hformC with
-      ⟨theta, lambda, eta, epsilon, outerNorm, middleNorm,
-        centerCoordinates, hlambda, heta, hepsilon, hthetaOrder,
-        hthetaSquare, hlambdaOrder, hetaOrder, hetaRelation,
-        houterAction, hmiddleAction, hcenterAction, hsquareMiddle,
-        hcrossFormula⟩
-    obtain ⟨s, hs⟩ :=
-      lemma13_exists_frobenius_conjugate_of_equivariant_linearEquiv
-        n (by omega) (theta.toAddEquiv.toLinearEquiv (fun c x => by
-          simpa using (ZMod.map_smul theta.toAddMonoidHom c x))) lambda (theta lambda) (by
-          intro x
-          exact theta.map_mul lambda x)
-    refine ⟨eta, lambda, middleNorm, outerNorm, heta, hlambda,
-      hetaOrder, hlambdaOrder, ⟨s, ?_⟩, hmiddleAction, houterAction⟩
-    rw [hs]
-    exact hetaRelation
 private theorem lemma13_exists_normalized_field_equiv_of_cross_functional
     (n : ℕ)
     (F : BinaryGaloisField n →ₗ[ZMod 2]

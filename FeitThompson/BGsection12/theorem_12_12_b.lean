@@ -1188,28 +1188,6 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
     rw [← hTOmegaZ, hTI]
     exact hCI
 
-private theorem section12_exists_tau2_cyclic_factor_in_E2_of_abelian_sylow_of_theorem_12_12_b
-    {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes} {S : Sylow p.val G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
-    (hAS : A ≤ (S : Subgroup G))
-    (hScomm : IsMulCommutative (S : Subgroup G)) :
-    ∃ Z : Subgroup G, Z ≤ E₂ ∧ IsCyclic Z ∧
-      Monoid.exponent Z = Monoid.exponent (S : Subgroup G) ∧
-      subgroupCentralizerIn (section10Msigma M) (section12OmegaOneSubgroup p Z) = ⊥ := by
-  have hSleE2 :=
-    section12_tau2_sylow_le_E2_of_abelian
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
-      hM hE hp hA hAS hScomm
-  obtain ⟨Z, hZleS, hZcyc, hZexp, hCZ⟩ :=
-    section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_12_12_b
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
-      hM hE hp hA hAS hScomm
-  exact ⟨Z, hZleS.trans hSleE2, hZcyc, hZexp, hCZ⟩
 
 private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centralizer_abelian_sylow
     {M E E₁₂ E₁ E₂ E₃ A Q : Subgroup G} {p q : Nat.Primes} {S : Sylow p.val G}
@@ -1688,28 +1666,6 @@ public theorem section12_fixedPointSubgroup_map_mk'_eq_of_trivial
             (A := A) (M := M) hNfix (a := b) (m := m))
       _ = m := hmb
 
-omit [Finite G] [IsMinCE G] in
-private theorem section12_subgroupCentralizerIn_zpowers_eq_elementCentralizerIn
-    {Q : Subgroup G} (a : G) :
-    subgroupCentralizerIn Q (Subgroup.zpowers a) = elementCentralizerIn Q a := by
-  ext x
-  constructor
-  · intro hx
-    refine ⟨hx.1, ?_⟩
-    exact Subgroup.mem_centralizer_singleton_iff.mpr <| by
-      have hxcent : x ∈ Subgroup.centralizer ((Subgroup.zpowers a) : Set G) := hx.2
-      have hcomm : a * x = x * a :=
-        Subgroup.mem_centralizer_iff.mp hxcent a (Subgroup.mem_zpowers a)
-      exact hcomm.symm
-  · intro hx
-    refine ⟨hx.1, ?_⟩
-    change x ∈ Subgroup.centralizer ((Subgroup.zpowers a : Subgroup G) : Set G)
-    rw [Subgroup.mem_centralizer_iff]
-    intro y hy
-    rcases Subgroup.mem_zpowers_iff.mp hy with ⟨n, rfl⟩
-    have hcomm : Commute a x :=
-      (Subgroup.mem_centralizer_singleton_iff.mp hx.2).symm
-    simpa using (hcomm.zpow_left n).eq
 
 omit [IsMinCE G] in
 private noncomputable def section12_mulEquiv_iSup_of_pairwise_coprime_order
@@ -1745,19 +1701,6 @@ private noncomputable def section12_mulEquiv_iSup_of_pairwise_coprime_order
     exact ⟨a, Subtype.ext ha⟩
   exact MulEquiv.ofBijective ϕ' ⟨hinj', hsurj'⟩
 
-omit [IsMinCE G] in
-private theorem section12_isMulCommutative_of_mulEquiv_pre
-    {A B : Type*} [Group A] [Group B] (e : A ≃* B)
-    (hB : IsMulCommutative B) :
-    IsMulCommutative A := by
-  classical
-  refine ⟨⟨fun x y => ?_⟩⟩
-  letI : IsMulCommutative B := hB
-  apply e.injective
-  calc
-    e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := mul_comm' (e x) (e y)
-    _ = e (y * x) := (e.map_mul y x).symm
 
 omit [IsMinCE G] in
 private theorem section12_exponent_eq_iSup_of_pairwise_coprime_order
@@ -2124,50 +2067,6 @@ private theorem section12_elementCentralizerIn_E_le_E2_of_abelian
     hYsub_le_E2sub hyYsub
   simpa [Subgroup.mem_subgroupOf] using hyE2sub
 
-private theorem
-    section12_exists_tau2_normal_cyclic_factor_of_centralizer_eq_top_of_theorem_12_12_b
-    {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes} {S : Sylow p.val G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E)
-    (hAS : A ≤ (S : Subgroup G))
-    (hScomm : IsMulCommutative (S : Subgroup G))
-    (hCES : subgroupCentralizerIn E (S : Subgroup G) = E) :
-    ∃ Z : Subgroup G, Z ≤ E₂ ∧ IsCyclic Z ∧
-      Monoid.exponent Z = Monoid.exponent (S : Subgroup G) ∧
-      section10NormalIn Z E ∧
-      subgroupCentralizerIn (section10Msigma M) (section12OmegaOneSubgroup p Z) = ⊥ := by
-  rcases section12_tau2_sylow_omegaOne_eq_rankTwo_of_abelian
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
-      hM hE hp hA hAS hScomm with
-    ⟨hSleE, _hOmegaS, _hNormS_not⟩
-  have hSleE2 :=
-    section12_tau2_sylow_le_E2_of_abelian
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
-      hM hE hp hA hAS hScomm
-  obtain ⟨Z, hZleS, hZcyc, hZexp, hCZ⟩ :=
-    section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_12_12_b
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
-      hM hE hp hA hAS hScomm
-  have hZleE : Z ≤ E := hZleS.trans hSleE
-  have hE_le_centS : E ≤ Subgroup.centralizer ((S : Subgroup G) : Set G) := by
-    intro e heE
-    have heCent : e ∈ subgroupCentralizerIn E (S : Subgroup G) := by
-      simpa [hCES] using heE
-    exact heCent.2
-  have hE_le_normZ : E ≤ Subgroup.normalizer (Z : Set G) := by
-    refine hE_le_centS.trans ?_
-    exact
-      (Subgroup.centralizer_le (show (Z : Set G) ⊆ ((S : Subgroup G) : Set G) from hZleS)).trans
-        (centralizer_le_normalizer Z)
-  have hZnormE : section10NormalIn Z E := by
-    refine ⟨hZleE, ?_⟩
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer hZleE).2 hE_le_normZ
-  exact ⟨Z, hZleS.trans hSleE2, hZcyc, hZexp, hZnormE, hCZ⟩
 
 private theorem
     section12_exists_tau1_cyclic_sylow_of_noncentral_sylow_centralizer

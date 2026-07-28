@@ -34,30 +34,6 @@ open Section1 Section2 Section3 Section4
 
 /-! ## (13.2) -/
 
-/-- Peterfalvi `(13.2)`. -/
-@[expose] public def theorem_13_2_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    section16MFSubgroup Smax P ∧
-      (Section8.typeIIDefinitionData Smax P ∨ Section8.typeIIIDefinitionData Smax P) ∧
-      (q < p → Section8.typeIIDefinitionData Smax P) ∧
-      IsMulCommutative U ∧
-      section12FrobeniusJoinWithKernel U W1 ∧
-      IsElementaryAbelian p P ∧
-      Nat.card P = p ^ q ∧
-      u ≤ (p ^ q - 1) / (p - 1) ∧
-      Section6.coherentFamily Sfam τS ∧
-      agreesWithInductionOnBookAZero Smax P U W1 W2 τS ∧
-      agreesWithInductionOnAZero Smax P U W1 W2 τS ∧
-      (q < p → ¬ Subgroup.normalizer (U : Set G) ≤ Smax)
-
 
 private theorem section13_exists_transformedIrreducibleFamily
     {G : Type u} [Group G] [Finite G]
@@ -1923,41 +1899,6 @@ private theorem section13_section16TypeIV_of_source_typeIV_with_fusionData
     section13_section16TypeIIToIVExtra_of_sourceCondition hExtra, hncomm,
     hnorm⟩
 
-private theorem section13_typeCommonT6_unique_maximal_of_set
-    {G : Type u} [Group G] [Finite G]
-    {M MF U : Subgroup G}
-    (hdata : theorem_13_2_typeCommonT6FusionUniqueData M MF U)
-    {A : Set G}
-    (hAne : A.Nonempty)
-    (_hAD : A ⊆ ambientDerivedSubgroup M)
-    (hAU : A ⊆ section16NonidentityElements (U : Set G))
-    (hCent : section16CentralizerInSet MF A ≠ ⊥) :
-    section9MaximalSubgroupsContaining (Subgroup.centralizer A) = {M} := by
-  let Asub : Subgroup G := Subgroup.closure A
-  have hAsubU : Asub ≤ U := by
-    refine (Subgroup.closure_le (K := U)).2 ?_
-    intro x hxA
-    exact (hAU hxA).1
-  have hAsubNe : Asub ≠ ⊥ := by
-    rcases hAne with ⟨x, hxA⟩
-    have hxne : x ≠ 1 := (hAU hxA).2
-    have hxSub : x ∈ Asub := Subgroup.subset_closure hxA
-    intro hbot
-    exact hxne (by simpa [Asub, hbot] using hxSub)
-  have hCentSubNe : subgroupCentralizerIn MF Asub ≠ ⊥ := by
-    rcases Subgroup.ne_bot_iff_exists_ne_one.mp hCent with ⟨yC, hyCne⟩
-    let yCsub : subgroupCentralizerIn MF Asub :=
-      ⟨(yC : G), yC.property.1, by
-        simpa [Asub, Subgroup.centralizer_closure] using yC.property.2⟩
-    refine Subgroup.ne_bot_iff_exists_ne_one.mpr ⟨yCsub, ?_⟩
-    intro hyOne
-    exact hyCne (Subtype.ext (by
-      simpa [yCsub] using congrArg Subtype.val hyOne))
-  have huniq :
-      section9MaximalSubgroupsContaining
-        (Subgroup.centralizer (Asub : Set G)) = {M} :=
-    hdata.2.2 Asub hAsubU hAsubNe hCentSubNe
-  simpa [Asub, Subgroup.centralizer_closure] using huniq
 
 private theorem section13_normalizer_le_of_unique_maximal_centralizer
     {G : Type u} [Group G] [Finite G]
@@ -1995,17 +1936,6 @@ private theorem section13_normalizer_le_of_unique_maximal_centralizer
     section10_mem_normalizer_of_conjBy_eq (G := G) hMconj_eq
   simpa [hSelfNorm] using hgNormM
 
-private theorem section13_typeII_normalizer_le_of_fusionData
-    {G : Type u} [Group G] [Finite G]
-    {M MF U : Subgroup G}
-    (hdata : theorem_13_2_typeCommonT6FusionUniqueData M MF U) :
-    ∀ A : Set G, A.Nonempty → A ⊆ ambientDerivedSubgroup M →
-      A ⊆ section16NonidentityElements (U : Set G) →
-        section16CentralizerInSet MF A ≠ ⊥ → Subgroup.normalizer A ≤ M := by
-  intro A hAne hAD hAU hCent
-  exact section13_normalizer_le_of_unique_maximal_centralizer
-    hdata.1 hdata.2.1
-    (section13_typeCommonT6_unique_maximal_of_set hdata hAne hAD hAU hCent)
 
 private theorem section13_typeII_theorem_8_12_conclusion
     {G : Type u} [Group G] [Finite G]
@@ -2079,69 +2009,6 @@ private theorem section13_typeII_theorem_8_12_conclusion
     Section8.theorem_8_12 M MF U Ms Abook A0book (Section8.a1Set MF) hMin hSrc
   simpa [Abook] using hConclusion
 
-private theorem section13_typeII_typePFAZero_TI_of_source
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hMin : IsMinCE G)
-    (hM : M ∈ section9MaximalSubgroups G)
-    {Ms : Subgroup G}
-    (hMs : Section8.msChoiceSource M MF Ms)
-    (hP : Section8.typePDefinitionData M MF U W1 W2)
-    (hII : Section8.typeIIDefinitionData M MF) :
-    section16TISubsetWithNormalizer (typePFAZeroSet M W1 W2 MF) M := by
-  classical
-  letI : IsMinCE G := hMin
-  let Abook : Set G :=
-    Section8.section8CentralizerUnion (ambientDerivedSubgroup M) MF
-  let A0book : Set G := typePFAZeroSet M W1 W2 MF
-  have hMsEq : Ms = MF := by
-    rcases hMs with hChoiceI | hrest
-    · exact False.elim (hChoiceI.2.1 hII)
-    rcases hrest with hChoiceII | hrest
-    · exact hChoiceII.2.2.2.2.2
-    rcases hrest with hChoiceIII | hrest
-    · exact False.elim (hChoiceIII.2.1 hII)
-    rcases hrest with hChoiceIV | hChoiceV
-    · exact False.elim (hChoiceIV.2.1 hII)
-    · exact False.elim (hChoiceV.2.1 hII)
-  have hNoLate :
-      ¬ (Section8.typeIIIDefinitionData M MF ∨
-        Section8.typeIVDefinitionData M MF ∨
-          Section8.typeVDefinitionData M MF) := by
-    intro hlate
-    rcases hMs with hChoiceI | hrest
-    · exact hChoiceI.2.1 hII
-    rcases hrest with hChoiceII | hrest
-    · rcases hlate with hIII | hlate
-      · exact hChoiceII.2.2.1 hIII
-      rcases hlate with hIV | hV
-      · exact hChoiceII.2.2.2.1 hIV
-      · exact hChoiceII.2.2.2.2.1 hV
-    rcases hrest with hChoiceIII | hrest
-    · exact hChoiceIII.2.1 hII
-    rcases hrest with hChoiceIV | hChoiceV
-    · exact hChoiceIV.2.1 hII
-    · exact hChoiceV.2.1 hII
-  have hNotation :
-      Section8.notation_8_10_source_data M MF Ms Abook A0book
-        (Section8.a1Set MF) := by
-    have hA1 : Section8.a1Set MF = Section8.a1Set Ms := by
-      simp [hMsEq]
-    have hAbook :
-        Abook = Section8.section8CentralizerUnion (ambientDerivedSubgroup M) Ms := by
-      simp [Abook, hMsEq]
-    have hA0book :
-        A0book =
-          Abook ∪ section16ConjugatesOfSetBySet (section16HatW W1 W2)
-            (M : Set G) := by
-      rfl
-    refine ⟨hM, hP.1, hMs, hA1, Or.inr ?_⟩
-    refine ⟨U, W1, W2, hP, Or.inl hII, hAbook, hA0book, ?_⟩
-    intro hlate
-    exact False.elim (hNoLate hlate)
-  exact
-    (Section8.theorem_8_16 M MF Ms Abook A0book (Section8.a1Set MF)
-      hMin hNotation hII).1
 
 private theorem section13_typeII_fusionData_of_theorem_8_12
     {G : Type u} [Group G] [Finite G]
@@ -3784,13 +3651,6 @@ private theorem section13_le_setNormalizer_of_le_normalizer
   change ∀ a : G, a ∈ A ↔ m * a * m⁻¹ ∈ A at hmnorm
   simpa [Section2.conjBy] using (hmnorm a).symm
 
-private theorem section13_CFOn_mono
-    {G : Type u} [Group G] {M : Subgroup G}
-    {A B : Set G} {χ : Section1.ClassFunction M}
-    (hAB : A ⊆ B) :
-    Section2.CFOn M A χ → Section2.CFOn M B χ := by
-  intro hχ
-  exact ⟨hχ.1, fun m hmB => hχ.2 m (fun hmA => hmB (hAB hmA))⟩
 
 private theorem section13_theorem_13_2_Smax_maximal_of_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -3913,129 +3773,6 @@ private theorem section13_typeP_ASet_le_setNormalizer_of_sourceContext
       (section16_ASet_le_normalizer_public
         (G := G) (M := Smax) (K := K) (U := U) hSmaxMax hKU)
 
-private theorem section13_typeP_ASet_subset_typePFAZeroSet_of_mf_eq_msigma
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hMFeq : MF = section10Msigma M)
-    (hMFleDer : MF ≤ ambientDerivedSubgroup M)
-    (hUleDer : U ≤ ambientDerivedSubgroup M) :
-    section16ASet M U ⊆ typePFAZeroSet M W1 W2 MF := by
-  intro x hx
-  left
-  rcases hx with ⟨hxHat, hxUSigma, hxne⟩
-  rcases hxHat with ⟨_hxM, hxCent⟩
-  rcases Subgroup.ne_bot_iff_exists_ne_one.mp hxCent with ⟨y, hyne⟩
-  rw [Set.mem_mul] at hxUSigma
-  rcases hxUSigma with ⟨u0, huU, s0, hsSigma, hx_eq⟩
-  have hsDer : s0 ∈ ambientDerivedSubgroup M := by
-    exact hMFleDer (by simpa [hMFeq] using hsSigma)
-  have hxDer : x ∈ ambientDerivedSubgroup M := by
-    rw [← hx_eq]
-    exact (ambientDerivedSubgroup M).mul_mem (hUleDer huU) hsDer
-  have hxCentY : x ∈ Subgroup.centralizer ({(y : G)} : Set G) := by
-    have hyCentX : (y : G) ∈ Subgroup.centralizer ({x} : Set G) := y.property.2
-    rw [Subgroup.mem_centralizer_singleton_iff] at hyCentX
-    rw [Subgroup.mem_centralizer_singleton_iff]
-    exact (Commute.symm hyCentX).eq
-  refine ⟨(y : G), ?_, ?_⟩
-  · constructor
-    · simpa [hMFeq] using y.property.1
-    · intro hy
-      exact hyne (Subtype.ext hy)
-  · constructor
-    · exact ⟨hxDer, hxCentY⟩
-    · exact hxne
-
-private theorem section13_typeP_ASet_subset_typePFAZeroSet_of_not_le_msigma
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hmin : IsMinCE G)
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hUnotσ : ¬ U ≤ section10Msigma M)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    section16ASet M U ⊆ typePFAZeroSet M W1 W2 MF := by
-  have hPfull := hP
-  rcases hP with
-    ⟨hMF, _hW1cyc, _hW1ne, _hW1Hall, _hMcomp, hUleDer, _hUnil,
-      _hW1norm, hDerComp, _hMFnotcyc, _hSecond, _hFit, _hFitLe,
-      _hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hNormalizer⟩
-  have hMFeq : MF = section10Msigma M :=
-    source_typeP_MF_eq_msigma_of_not_le_msigma hmin hM hMF hUnotσ hPfull
-  exact section13_typeP_ASet_subset_typePFAZeroSet_of_mf_eq_msigma
-    (G := G) (M := M) (MF := MF) (U := U) (W1 := W1) (W2 := W2)
-    hMFeq hDerComp.1 hUleDer
-
-private theorem section13_typeP_ASet_subset_section16AZeroSet_of_le_msigma
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hmin : IsMinCE G)
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hUσ : U ≤ section10Msigma M)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    section16ASet M U ⊆ section16AZeroSet M W1 := by
-  classical
-  letI : IsMinCE G := hmin
-  rcases Section8.sourceTypeP_exists_KUData_of_aligned_complement
-      (G := G) hM hP with
-    ⟨Uc, hKU⟩
-  intro x hx
-  rcases hx with ⟨_hxHat, hxUSigma, hxne⟩
-  have hxσ : x ∈ section10Msigma M := by
-    rw [Set.mem_mul] at hxUSigma
-    rcases hxUSigma with ⟨u, huU, s, hsσ, rfl⟩
-    exact (section10Msigma M).mul_mem (hUσ huU) hsσ
-  exact section16_msigma_nonidentity_mem_AZeroSet_public
-    (G := G) (M := M) (K := W1) (U := Uc) hKU hxσ hxne
-
-private theorem section13_typeP_W2_eq_section16Kstar_of_typeP
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hmin : IsMinCE G)
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    W2 = section16Kstar M W1 := by
-  classical
-  letI : IsMinCE G := hmin
-  rcases hP with
-    ⟨hMF, _hW1cyc, hW1ne, _hW1Hall, _hMcomp, _hUleDer,
-      _hUnil, _hW1norm, _hDerComp, _hMFnotcyc, _hSecond, _hFit,
-      _hFitLe, _hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hNormalizer⟩
-  have hPfull : Section8.typePDefinitionData M MF U W1 W2 :=
-    ⟨hMF, _hW1cyc, hW1ne, _hW1Hall, _hMcomp, _hUleDer,
-      _hUnil, _hW1norm, _hDerComp, _hMFnotcyc, _hSecond, _hFit,
-      _hFitLe, _hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hNormalizer⟩
-  have hT6 :=
-    source_typeP_T6_for_not_typeI_core hmin hM hMF hPfull
-  have hCommonSource : section16TypeCommon M MF U W1 W2 :=
-    (section13_typePData_of_typePDefinitionData_T6 hPfull hT6).2
-  rcases Section8.sourceTypeP_exists_KUData_of_aligned_complement
-      (G := G) hM hPfull with
-    ⟨Uc, hKU⟩
-  rcases section16_exists_typeCommon_of_K_ne_bot
-      (G := G) (M := M) (MF := MF) (K := W1) (U := Uc)
-      hM hMF hKU hW1ne with
-    ⟨V, hCommonKstar⟩
-  rcases Subgroup.ne_bot_iff_exists_ne_one.mp hW1ne with ⟨x, hxne⟩
-  let xG : G := x
-  have hxW1 : xG ∈ W1 := x.property
-  have hxGne : xG ≠ 1 := by
-    intro hx
-    exact hxne (by simpa [xG] using hx)
-  rcases hCommonSource with
-    ⟨_hHallD₁, _hMFleD₁, _hComp₁, _hUnil₁, _hW1norm₁, _hW1cyc₁,
-      _hW1card₁, _hMFnotcyc₁, _hSecond₁, _hFit₁, _hFitLe₁, _hW2le₁,
-      _hW2ne₁, _hW2cyc₁, hCentralizerSource, _hNormalizer₁, _hT6₁,
-      _hW2Second₁⟩
-  rcases hCommonKstar with
-    ⟨_hHallD₂, _hMFleD₂, _hComp₂, _hVnil₂, _hW1norm₂, _hW1cyc₂,
-      _hW1card₂, _hMFnotcyc₂, _hSecond₂, _hFit₂, _hFitLe₂, _hKstarle₂,
-      _hKstarne₂, _hKstarcyc₂, hCentralizerKstar, _hNormalizer₂, _hT6₂,
-      _hKstarSecond₂⟩
-  calc
-    W2 = elementCentralizerIn (ambientDerivedSubgroup M) xG :=
-      (hCentralizerSource xG hxW1 hxGne).symm
-    _ = section16Kstar M W1 :=
-      hCentralizerKstar xG hxW1 hxGne
 
 private theorem section13_typeP_ASet_subset_A0book_of_typePFourSix_source
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -4444,11 +4181,6 @@ private def theorem_13_2_typeAndUCurrentBranchData
     Section8.typeIIToIVSourceCondition Smax U W1 ∧
     IsMulCommutative U
 
-private def theorem_13_2_typeIIIIVTheorem119OutputData
-    {G : Type u} [Group G] [Finite G]
-    (Smax P : Subgroup G) (p q : ℕ) :
-    Prop :=
-  q > p ∧ section16TypeIII Smax P
 
 private theorem section13_theorem_13_2_hypothesis11_of_typeIIIIV_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -4686,37 +4418,6 @@ private theorem section13_theorem_13_2_typeIV_contradiction_of_sourceContext
     Section8.theorem_8_8_typeIII_to_source_public (G := G) hSmax hMF hIIIbg
   exact (section13_sourceChoice_not_typeIII_of_typeIV hChoice hSmax hMF _hIV) hIII
 
-private theorem section13_theorem_13_2_typeIIIIVTheorem119OutputData_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hTypeIIIIV :
-      Section8.typeIIIDefinitionData Smax P ∨ Section8.typeIVDefinitionData Smax P) :
-    theorem_13_2_typeIIIIVTheorem119OutputData Smax P p q := by
-  rcases _hTypeIIIIV with hIII | hIV
-  · have hFusion : ∀ {U' W1' W2' : Subgroup G},
-        Section8.typePDefinitionData Smax P U' W1' W2' →
-          theorem_13_2_typeCommonT6FusionData Smax P U' := by
-      intro U' W1' W2' hP
-      exact
-        section13_theorem_13_2_typeCommonT6FusionData_of_sourceTypeP
-          Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-          _hsource hP
-    exact ⟨
-      section13_theorem_13_2_typeIII_q_gt_p_of_sourceContext
-        Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-        _hsource hIII,
-      section13_section16TypeIII_of_source_typeIII_with_fusionData hIII hFusion⟩
-  · exact False.elim
-      (section13_theorem_13_2_typeIV_contradiction_of_sourceContext
-        Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-        _hsource hIV)
 
 private theorem section13_theorem_13_2_typeAlternatives_of_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -4810,28 +4511,6 @@ public theorem section13_theorem_13_2_typeIIIIVVData_of_sourceContext
     rcases h92full.typeIVSource hIVbg with ⟨hncomm, hnorm⟩
     exact Or.inr (Or.inl ⟨h92full.typeIIToIVSourceCondition, hncomm, hnorm⟩)
 
-private theorem section13_theorem_13_2_typeIIISection16Types_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hIII : Section8.typeIIIDefinitionData Smax P) :
-    section16TypeIII Smax P ∨ section16TypeIV Smax P := by
-  have hFusion : ∀ {U' W1' W2' : Subgroup G},
-      Section8.typePDefinitionData Smax P U' W1' W2' →
-        theorem_13_2_typeCommonT6FusionData Smax P U' := by
-    intro U' W1' W2' hP
-    exact
-      section13_theorem_13_2_typeCommonT6FusionData_of_sourceTypeP
-        Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-        _hsource hP
-  exact Or.inl
-    (section13_section16TypeIII_of_source_typeIII_with_fusionData _hIII hFusion)
 
 public theorem theorem_13_2_section16TypeIII_of_source_typeIII
     {G : Type u} [Group G] [Finite G]
@@ -4855,33 +4534,6 @@ public theorem theorem_13_2_section16TypeIII_of_source_typeIII
         hsource hP
   exact section13_section16TypeIII_of_source_typeIII_with_fusionData hIII hFusion
 
-private theorem section13_theorem_13_2_typeIIIIVSection16Types_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hTypeIIIIV :
-      Section8.typeIIIDefinitionData Smax P ∨ Section8.typeIVDefinitionData Smax P) :
-    section16TypeIII Smax P ∨ section16TypeIV Smax P := by
-  rcases _hTypeIIIIV with hIII | hIV
-  · exact section13_theorem_13_2_typeIIISection16Types_of_sourceContext
-      Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-      _hsource hIII
-  · have hFusion : ∀ {U' W1' W2' : Subgroup G},
-        Section8.typePDefinitionData Smax P U' W1' W2' →
-          theorem_13_2_typeCommonT6FusionData Smax P U' := by
-      intro U' W1' W2' hP
-      exact
-        section13_theorem_13_2_typeCommonT6FusionData_of_sourceTypeP
-          Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-          _hsource hP
-    exact Or.inr
-      (section13_section16TypeIV_of_source_typeIV_with_fusionData hIV hFusion)
 
 public theorem section13_odd_card_subgroup_of_odd_group
     {G : Type u} [Group G] [Finite G]
@@ -4889,74 +4541,6 @@ public theorem section13_odd_card_subgroup_of_odd_group
     Odd (Nat.card M) :=
   odd_of_card_dvd hoddG (Subgroup.card_subgroup_dvd_card M)
 
-private theorem section13_theorem_13_2_isMinCE_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hIII : Section8.typeIIIDefinitionData Smax P) :
-    IsMinCE G := by
-  exact section13_theorem_13_2_global_isMinCE_of_sourceContext
-    Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
-    p q u v c d _hsource
-
-private theorem section13_theorem_13_2_ambient_odd_order_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hIII : Section8.typeIIIDefinitionData Smax P) :
-    Odd (Nat.card G) := by
-  letI : IsMinCE G :=
-    section13_theorem_13_2_isMinCE_of_sourceContext
-      Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
-      p q u v c d _hsource _hIII
-  exact IsMinCE.odd_order
-
-private theorem section13_theorem_13_2_typeIII_oddSmax_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hIII : Section8.typeIIIDefinitionData Smax P) :
-    Odd (Nat.card Smax) := by
-  exact section13_odd_card_subgroup_of_odd_group Smax
-    (section13_theorem_13_2_ambient_odd_order_of_sourceContext
-      Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
-      _hsource _hIII)
-
-private theorem section13_theorem_13_2_oddSmax_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (_hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d) :
-    Odd (Nat.card Smax) := by
-  exact section13_odd_card_subgroup_of_odd_group Smax
-    (letI : IsMinCE G :=
-      section13_theorem_13_2_global_isMinCE_of_sourceContext
-        Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
-        p q u v c d _hsource
-     IsMinCE.odd_order)
 
 private theorem section13_theorem_13_2_not_typeIV_of_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -5882,100 +5466,6 @@ private theorem section13_theorem_13_2_coherence_of_sourceContext
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
       _hsource)
 
-private theorem section13_AZeroSet_le_normalizer
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M K : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G) :
-    M ≤ Subgroup.normalizer (section16AZeroSet M K) := by
-  intro m hm
-  change ∀ x : G, x ∈ section16AZeroSet M K ↔
-    m * x * m⁻¹ ∈ section16AZeroSet M K
-  intro x
-  constructor
-  · intro hx
-    exact section16_AZeroSet_conj_mem_of_mem_M (G := G) hM hm hx
-  · intro hx
-    have hback :
-        m⁻¹ * (m * x * m⁻¹) * (m⁻¹)⁻¹ ∈ section16AZeroSet M K :=
-      section16_AZeroSet_conj_mem_of_mem_M (G := G) hM (M.inv_mem hm) hx
-    simpa [mul_assoc] using hback
-
-private theorem section13_AZeroSet_nonempty_of_typeP_source
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF U W1 W2 : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    ∃ x : G, x ∈ section16AZeroSet M W1 ∧ x ≠ 1 := by
-  classical
-  rcases Section8.sourceTypeP_exists_KUData_of_aligned_complement
-      (G := G) hM hP with
-    ⟨Uc, hKU⟩
-  have hMsigma_ne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
-  rcases Subgroup.ne_bot_iff_exists_ne_one.mp hMsigma_ne with ⟨x, hxne⟩
-  refine ⟨x, ?_, ?_⟩
-  · exact section16_msigma_nonidentity_mem_AZeroSet_public
-      (G := G) (M := M) (K := W1) (U := Uc) hKU x.property
-      (by simpa using hxne)
-  · simpa using hxne
-
-private theorem section13_typeI_ASet_branch_contradiction_of_theorem_12_7
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {L U : Subgroup G} {x : G}
-    (hLmax : L ∈ section9MaximalSubgroups G)
-    (hLF : section16MFSubgroup L (section10Msigma L))
-    (hTypeI : Section8.typeIDefinitionData L (section10Msigma L))
-    (hxA : x ∈ section16ASet L U \ (section10Msigma L : Set G)) :
-    False := by
-  have hfrob : Section7.frobeniusWithKernel L (section10Msigma L) :=
-    Section12.theorem_12_7 L (section10Msigma L) hLmax hLF hTypeI
-  have hxAminus :
-      x ∈ Section8.section8CentralizerUnion L (section10Msigma L) \
-        Section8.a1Set (section10Msigma L) :=
-    Section8.theorem_8_13_source_typeI_mem_A_diff_A1_of_ASet
-      (G := G) (L := L) (U := U) (x := x) hxA
-  have hxTypeIA : x ∈ Section12.typeIASet L (section10Msigma L) := by
-    simpa [Section12.typeIASet_eq_section8CentralizerUnion L (section10Msigma L)]
-      using hxAminus.1
-  have hxSharp :
-      x ∈ section16NonidentityElements (section10Msigma L : Set G) := by
-    simpa [
-      Section12.typeIASet_eq_nonidentity_kernel_of_frobenius
-        L (section10Msigma L) hfrob] using hxTypeIA
-  have hxA1 : x ∈ Section8.a1Set (section10Msigma L) := by
-    simpa [Section8.a1Set] using hxSharp
-  exact hxAminus.2 hxA1
-
-private theorem section13_AZero_TheoremII_D_empty_of_typeP_source
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF U W1 W2 : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    ∀ x : G, x ∈ section16TheoremIIDSet M (section16AZeroSet M W1) → False := by
-  classical
-  rcases Section8.sourceTypeP_exists_KUData_of_aligned_complement
-      (G := G) hM hP with
-    ⟨Uc, hKU⟩
-  have hX : section16AChoice M W1 Uc (section16AZeroSet M W1) := Or.inr rfl
-  have hMP : section16MaximalTypeP M := by
-    simpa [section16MaximalTypeP] using
-      Section8.sourceTypeP_mFamilyP_of_source_typeP (G := G) hM hP
-  have hNotTypeI : ¬ section16TypeI M MF :=
-    section16_not_typeI_of_maximalTypeP (G := G) hMP hP.1
-  intro x hxD
-  rcases theorem_16_II_canonical_D_data
-      (G := G) (M := M) (MF := MF) (K := W1) (U := Uc)
-      (X := section16AZeroSet M W1) hM hP.1 hKU hX hxD with
-    ⟨NK, NU, hNcont, hNMF, _hNKU, hxA, hNtype, _hNcomp, hNTypeII⟩
-  rcases hNtype with hNtypeI | hNtypeII
-  · have hSrcI :
-        Section8.typeIDefinitionData (section14N x) (section10Msigma (section14N x)) :=
-      Section8.theorem_8_8_typeI_to_source_public
-        (G := G) hNcont.1 hNMF hNtypeI
-    exact
-      section13_typeI_ASet_branch_contradiction_of_theorem_12_7
-        (G := G) (L := section14N x) (U := NU) (x := x)
-        hNcont.1 hNMF hSrcI hxA
-  · exact hNotTypeI (hNTypeII hNtypeII).2.1
 
 private theorem section13_typeP_not_frobeniusWithKernel
     {G : Type u} [Group G] [Finite G]
@@ -6263,118 +5753,6 @@ public theorem section13_dadeTransform_eq_inducedCFLinear_of_section16TI
       A A M R subset_rfl h22 h22.subset_L χ hχ hconst
   simpa [Section1.inducedCFLinear_apply] using hdade
 
-private theorem section13_centralizerUnion_self_eq_a1Set
-    {G : Type u} [Group G]
-    (D : Subgroup G) :
-    Section8.section8CentralizerUnion D D = Section8.a1Set D := by
-  ext y
-  constructor
-  · rintro ⟨x, hxD, hyCent⟩
-    exact ⟨hyCent.1.1, hyCent.2⟩
-  · intro hyD
-    refine ⟨y, hyD, ?_⟩
-    refine ⟨?_, hyD.2⟩
-    exact ⟨hyD.1, Subgroup.mem_centralizer_singleton_iff.mpr rfl⟩
-
-private theorem section13_typeP_AZero_TI_of_typeP_source
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF Ms U W1 W2 : Subgroup G} {A A0 A1 : Set G}
-    (hNotation : Section8.notation_8_10_source_data M MF Ms A A0 A1)
-    (hA : A = Section8.section8CentralizerUnion (ambientDerivedSubgroup M) Ms)
-    (hA0 :
-      A0 = A ∪ section16ConjugatesOfSetBySet (section16HatW W1 W2) (M : Set G))
-    (hMFleMs : MF ≤ Ms)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    section16TISubsetWithNormalizer (typePFAZeroSet M W1 W2 MF) M := by
-  classical
-  have hPfull := hP
-  rcases hP with
-    ⟨hMF, _hW1cyc, _hW1ne, _hW1Hall, _hMcomp, _hUleDer,
-      _hUnil, _hW1norm, hDerComp, _hMFnotcyc, _hSecond, _hFit,
-      _hFitLe, hW2le, _hW2cyc, hW2ne, _hCentralizer, _hNormalizer⟩
-  rcases hMF.1 with ⟨hMFleM, hMFnorm, _hMFnil, _hMFHall⟩
-  have h13 :=
-    Section8.theorem_8_13 M MF Ms A A0 A1 A0 (by infer_instance)
-      hNotation (Or.inr rfl)
-  have hDempty : ∀ x : G, x ∈ Section8.section8DSet M A0 → False := by
-    intro x hxD
-    rcases h13.2.2.1 x hxD with ⟨L, hLmem, _hLuniq⟩
-    rcases h13.2.2.2 x hxD L hLmem with ⟨LF, hSupp⟩
-    have hSuppFull := hSupp
-    rcases hSupp with
-      ⟨_hLmax, _hLF, _hUnique, _hSemiL, _hSemiC, _hCoprime, hCases⟩
-    rcases hCases with hTypeI | hTypeII
-    · exact
-        section13_typeI_support_branch_contradiction_of_theorem_12_7
-          (G := G) hSuppFull hTypeI.1 hTypeI.2
-    · exact section13_typeP_not_section8FrobeniusGroupWithKernel
-        hPfull hTypeII.2.2
-  have hXsubA0 : typePFAZeroSet M W1 W2 MF ⊆ A0 := by
-    intro z hz
-    rw [hA0, hA]
-    rw [typePFAZeroSet] at hz
-    rcases hz with hzA | hzHat
-    · left
-      rcases hzA with ⟨x, hxMF, hzCent⟩
-      exact ⟨x, ⟨hMFleMs hxMF.1, hxMF.2⟩, hzCent⟩
-    · exact Or.inr hzHat
-  have hDleM : ambientDerivedSubgroup M ≤ M :=
-    section12_ambientDerivedSubgroup_le (G := G) (E := M)
-  have hDnorm : ((ambientDerivedSubgroup M).subgroupOf M).Normal :=
-    (section12_normalIn_ambientDerivedSubgroup (G := G) (E := M)).2
-  have hMnormD : M ≤ Subgroup.normalizer ((ambientDerivedSubgroup M : Subgroup G) : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hDleM).1 hDnorm
-  have hMnormMF : M ≤ Subgroup.normalizer (MF : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hMFleM).1 hMFnorm
-  have hMnormA :
-      M ≤ Subgroup.normalizer
-        (Section8.section8CentralizerUnion (ambientDerivedSubgroup M) MF) :=
-    Section8.theorem_8_16_le_normalizer_centralizerUnion
-      (G := G) (M := M) (C := ambientDerivedSubgroup M) (H := MF)
-      hMnormD hMnormMF
-  have hMnormHat :
-      M ≤ Subgroup.normalizer
-        (section16ConjugatesOfSetBySet (section16HatW W1 W2) (M : Set G)) :=
-    Section8.theorem_8_16_le_normalizer_conjugates_by_M
-      (G := G) (M := M) (X := section16HatW W1 W2)
-  have hMnormX :
-      M ≤ Subgroup.normalizer (typePFAZeroSet M W1 W2 MF) := by
-    simpa [typePFAZeroSet] using
-      Section8.theorem_8_16_le_normalizer_union
-        (G := G) (M := M)
-        (X := Section8.section8CentralizerUnion (ambientDerivedSubgroup M) MF)
-        (Y := section16ConjugatesOfSetBySet (section16HatW W1 W2) (M : Set G))
-        hMnormA hMnormHat
-  have hXne : ∃ x : G, x ∈ typePFAZeroSet M W1 W2 MF ∧ x ≠ 1 := by
-    rcases Subgroup.ne_bot_iff_exists_ne_one.mp hW2ne with ⟨yW2, hyW2ne⟩
-    let y : G := yW2
-    have hyW2 : y ∈ W2 := yW2.property
-    have hyne : y ≠ 1 := by
-      intro hy
-      exact hyW2ne (Subtype.ext hy)
-    have hyMF : y ∈ MF := (hW2le hyW2).1
-    have hyDer : y ∈ ambientDerivedSubgroup M := hDerComp.1 hyMF
-    refine ⟨y, Or.inl ?_, hyne⟩
-    refine ⟨y, ⟨hyMF, hyne⟩, ?_⟩
-    exact ⟨⟨hyDer, Subgroup.mem_centralizer_singleton_iff.mpr rfl⟩, hyne⟩
-  have hfusion :
-      ∀ x y : G, x ∈ typePFAZeroSet M W1 W2 MF →
-        y ∈ typePFAZeroSet M W1 W2 MF →
-          section16ConjugateInSubgroup ⊤ x y →
-            section16ConjugateInSubgroup M x y := by
-    intro x y hx hy hxy
-    exact h13.1 x y (hXsubA0 hx) (hXsubA0 hy) hxy
-  have hcent :
-      ∀ x : G, x ∈ typePFAZeroSet M W1 W2 MF → x ≠ 1 →
-        Subgroup.centralizer ({x} : Set G) ≤ M := by
-    intro x hx _hxne
-    by_cases hle : Subgroup.centralizer ({x} : Set G) ≤ M
-    · exact hle
-    · exact False.elim (hDempty x ⟨hXsubA0 hx, hle⟩)
-  exact
-    Section8.theorem_8_16_tiWithNormalizer_of_fusion_centralizers
-      (G := G) (M := M) (X := typePFAZeroSet M W1 W2 MF)
-      hMnormX hXne hfusion hcent
 
 private def section13_bookAZeroData
     {G : Type u} [Group G] [Finite G]

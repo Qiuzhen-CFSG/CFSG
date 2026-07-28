@@ -10,15 +10,6 @@ universe v
 universe w
 universe u
 
-@[expose] public def theorem_8_8_statement
-    {G : Type u} [Group G] [Finite G]
-    : Prop :=
-  IsMinCE G →
-    ((∀ M : Subgroup G, M ∈ section9MaximalSubgroups G →
-      ∃ MF : Subgroup G, section16MFSubgroup M MF ∧
-        section16TypeI M MF ∧ typeIDefinitionData M MF) ∨
-      ∃ W W1 W2 S T SF TF : Subgroup G,
-        theorem_8_8_source_case_b_data W W1 W2 S T SF TF)
 
 /-- Peterfalvi `(8.9)`. -/
 
@@ -493,24 +484,6 @@ private theorem theorem_8_8_typeII_typeFData_of_canonical
       intro x hxMF hxne y hy
       exact hy.1), hU0le, hExp, hFrobMF⟩
 
-private theorem theorem_8_8_typeII_to_source_of_adapters
-    {G : Type u} [Group G] [Finite G]
-    {M MF : Subgroup G}
-    (hType : section16TypeII M MF)
-    (hP : ∀ U W1 W2 : Subgroup G,
-      section16TypeCommon M MF U W1 W2 → typePDefinitionData M MF U W1 W2)
-    (hF : ∀ U W1 W2 : Subgroup G,
-      section16TypeCommon M MF U W1 W2 →
-        ∃ U1 U0 : Subgroup G,
-          typeFData (ambientDerivedSubgroup M) MF U U1 U0) :
-    typeIIDefinitionData M MF := by
-  rcases hType with
-    ⟨U, W1, W2, hCommon, hExtra, hUcomm, _hRank, _hUne, hNormNotLe,
-      _hSubsets⟩
-  rcases hF U W1 W2 hCommon with ⟨U1, U0, hFdata⟩
-  exact ⟨U, W1, W2, U1, U0, hP U W1 W2 hCommon,
-    ⟨_hUne, hExtra.1, theorem_8_8_ti_nonidentity_of_ti hExtra.2⟩,
-    hUcomm, hNormNotLe, hFdata⟩
 
 private theorem theorem_8_8_typeII_to_source_of_canonical
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -632,19 +605,6 @@ private theorem theorem_8_8_typeV_to_source_of_typeP_adapter
     · rcases hCard with ⟨p, hpMF, _hpPi, hpCyc, hpCard, hCardDvd⟩
       exact Or.inr <| Or.inr ⟨p, hpMF, hpCard, hCardDvd, hpCyc⟩
 
-private theorem theorem_8_8_all_typeI_to_source
-    {G : Type u} [Group G] [Finite G]
-    (hAll : ∀ M : Subgroup G, M ∈ section9MaximalSubgroups G →
-      ∃ MF : Subgroup G, section16MFSubgroup M MF ∧ section16TypeI M MF)
-    (hI : ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-      section16MFSubgroup M MF →
-      section16TypeI M MF → typeIDefinitionData M MF) :
-    ∀ M : Subgroup G, M ∈ section9MaximalSubgroups G →
-      ∃ MF : Subgroup G, section16MFSubgroup M MF ∧
-        section16TypeI M MF ∧ typeIDefinitionData M MF := by
-  intro M hM
-  rcases hAll M hM with ⟨MF, hMF, hTypeI⟩
-  exact ⟨MF, hMF, hTypeI, hI M MF hM hMF hTypeI⟩
 
 private theorem theorem_8_8_case_b_data_to_source
     {G : Type u} [Group G] [Finite G]
@@ -817,71 +777,6 @@ public theorem theorem_8_8_source_type_fields_of_case_b_data
       _hSeq, _hTeq, _hSdisj, _hTdisj, _hST, hTypeII, hSType, hTType, hCover⟩
   exact ⟨hTypeII, hSType, hTType, hCover⟩
 
-private theorem theorem_8_8_source_dichotomy
-    {G : Type u} [Group G] [Finite G] [IsMinCE G] :
-    (∀ M : Subgroup G, M ∈ section9MaximalSubgroups G →
-      ∃ MF : Subgroup G, section16MFSubgroup M MF ∧
-        section16TypeI M MF ∧ typeIDefinitionData M MF) ∨
-      ∃ W W1 W2 S T SF TF : Subgroup G,
-        theorem_8_8_source_case_b_data W W1 W2 S T SF TF := by
-  classical
-  let hTypeP :
-      ∀ M MF : Subgroup G,
-        M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        ∀ U W1 W2 : Subgroup G,
-          section16TypeCommon M MF U W1 W2 →
-            typePDefinitionData M MF U W1 W2 := by
-    intro M MF hM hMF U W1 W2 hCommon
-    rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
-      ⟨K, KU, hKU15⟩
-    have hKU : section16KUData M K KU := by
-      simpa [section16KUData] using hKU15
-    exact theorem_8_8_typeCommon_to_typePDefinitionData
-      (G := G) hM hMF hKU hCommon
-  let hI :
-      ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        section16TypeI M MF → typeIDefinitionData M MF := by
-    intro M MF hM hMF hType
-    exact theorem_8_8_typeI_to_source
-      (G := G) hM hMF hType
-  let hII :
-      ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        section16TypeII M MF → typeIIDefinitionData M MF := by
-    intro M MF hM hMF hType
-    exact theorem_8_8_typeII_to_source_of_canonical
-      (G := G) hM hMF hType
-  let hIII :
-      ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        section16TypeIII M MF → typeIIIDefinitionData M MF := by
-    intro M MF hM hMF hType
-    exact theorem_8_8_typeIII_to_source_of_typeP_adapter
-      (G := G) hM hType (hTypeP M MF hM hMF)
-  let hIV :
-      ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        section16TypeIV M MF → typeIVDefinitionData M MF := by
-    intro M MF hM hMF hType
-    exact theorem_8_8_typeIV_to_source_of_typeP_adapter
-      (G := G) hType (hTypeP M MF hM hMF)
-  let hV :
-      ∀ M MF : Subgroup G, M ∈ section9MaximalSubgroups G →
-        section16MFSubgroup M MF →
-        section16TypeV M MF → typeVDefinitionData M MF := by
-    intro M MF hM hMF hType
-    exact theorem_8_8_typeV_to_source_of_typeP_adapter
-      (G := G) hType (hTypeP M MF hM hMF)
-  rcases (theorem_16_I (G := G)).2 with hAll | hCase
-  · exact Or.inl (theorem_8_8_all_typeI_to_source hAll hI)
-  · rcases hCase with ⟨W, W1, W2, S, T, SF, TF, hcase⟩
-    have hcase' : theorem_8_8_case_b_data W W1 W2 S T SF TF := by
-      simpa [theorem_8_8_case_b_data] using hcase
-    exact Or.inr
-      ⟨W, W1, W2, S, T, SF, TF,
-        theorem_8_8_case_b_data_to_source hcase' hI hII hIII hIV hV⟩
 
 /-- Public source-facing adapter from BG16 Type I to PF8 Type I data. -/
 public theorem theorem_8_8_typeI_to_source_public
@@ -903,40 +798,6 @@ public theorem theorem_8_8_typeII_to_source_public
     typeIIDefinitionData M MF :=
   theorem_8_8_typeII_to_source_of_canonical (G := G) hM hMF hType
 
-/-- Public Type-II adapter that preserves the canonical BG Type-P data used to
-construct the source-facing Type-II package. -/
-public theorem theorem_8_8_typeII_to_source_with_typePData_public
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hType : section16TypeII M MF) :
-    ∃ U W1 W2 U1 U0 : Subgroup G,
-      typePData M MF U W1 W2 ∧
-        typePDefinitionData M MF U W1 W2 ∧
-          typeIIToIVSourceCondition M U W1 ∧
-            IsMulCommutative U ∧
-              ¬ Subgroup.normalizer (U : Set G) ≤ M ∧
-                typeFData (ambientDerivedSubgroup M) MF U U1 U0 := by
-  classical
-  rcases section15_exists_KUData_for_maximal (G := G) (M := M) hM with
-    ⟨K, U, hKU15⟩
-  have hKU : section16KUData M K U := by
-    simpa [section16KUData] using hKU15
-  rcases section16_typeII_canonical_caseP2_data
-      (G := G) (M := M) (MF := MF) (K := K) (U := U)
-      hM hMF hKU hType with
-    ⟨hCommon, hExtra, hUcomm, hUne, hNormNotLe, _hMF_eq⟩
-  have hPDef : typePDefinitionData M MF U K (section16Kstar M K) :=
-    theorem_8_8_typeCommon_to_typePDefinitionData
-      (G := G) hM hMF hKU hCommon
-  rcases theorem_8_8_typeII_typeFData_of_canonical
-      (G := G) (M := M) (MF := MF) (K := K) (U := U)
-      hM hMF hKU hType with
-    ⟨U1, U0, hF⟩
-  exact ⟨U, K, section16Kstar M K, U1, U0, ⟨hMF, hCommon⟩, hPDef,
-    ⟨hUne, hExtra.1, theorem_8_8_ti_nonidentity_of_ti hExtra.2⟩,
-    hUcomm, hNormNotLe, hF⟩
 
 /-- Public source-facing adapter from BG16 Type III to PF8 Type III data. -/
 public theorem theorem_8_8_typeIII_to_source_public
@@ -1124,11 +985,5 @@ public theorem typePDefinitionData_frobeniusJoinWithKernel
   exact (lemma_3_1 (G := S) (K := U.subgroupOf S) (R := W1.subgroupOf S)
     hUsub_ne hW1sub_ne hUnormalS hUWcompSub).2 hcent
 
-public theorem theorem_8_8
-    {G : Type u} [Group G] [Finite G] :
-    theorem_8_8_statement (G := G) := by
-  intro hG
-  letI : IsMinCE G := hG
-  exact theorem_8_8_source_dichotomy (G := G)
 
 end Section8

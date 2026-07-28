@@ -63,16 +63,6 @@ public theorem trace_pi_map_perm {R : Type*} [Field R]
     have hne : i ≠ e i := fun hi => h hi.symm
     simp [B, hT, hne]
 
-/-- Trace of a monomial map on the finite-support basis. Only basis vectors
-whose index is fixed by the underlying permutation contribute to the trace. -/
-public theorem trace_finsupp_monomial_perm {F : Type*} [Field F]
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (f : (ι →₀ F) →ₗ[F] (ι →₀ F)) (σ : ι → ι) (c : ι → F)
-    (hf : ∀ i, f (Finsupp.single i (1 : F)) = c i • Finsupp.single (σ i) 1) :
-    LinearMap.trace F (ι →₀ F) f = ∑ i : ι, if σ i = i then c i else 0 := by
-  let b : Module.Basis ι F (ι →₀ F) := Finsupp.basisSingleOne
-  rw [LinearMap.trace_eq_matrix_trace F b]
-  simp [Matrix.trace, LinearMap.toMatrix_apply, b, hf, Finsupp.single_apply]
 
 end TracePi
 

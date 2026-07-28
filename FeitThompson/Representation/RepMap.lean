@@ -50,10 +50,6 @@ public lemma coe_smul (a : F) (f : RepMap ρ σ) :
 public lemma coe_nsmul (n : ℕ) (f : RepMap ρ σ) :
     ((n • f : RepMap ρ σ) : V → W) = n • f := rfl
 
-/-- Coercion of intertwining maps to functions as an additive monoid hom. -/
-@[expose]
-public def coeFnAddMonoidHom : RepMap ρ σ →+ V → W :=
-  IntertwiningMap.coeFnAddMonoidHom _ _
 
 /-- Identification of intertwining maps with linear maps on the corresponding `F[G]`-modules. -/
 @[expose]
@@ -87,8 +83,6 @@ public protected def copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ρ
 public theorem coe_copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' :=
   by rfl
 
-public theorem copy_eq (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : f.copy f' h = f :=
-  DFunLike.ext' h
 
 /-- Build an intertwining map from a linear map commuting with the actions. -/
 @[expose]
@@ -207,13 +201,6 @@ public lemma _root_.Function.Injective.injective_RepMapComp_left (hf : Injective
     Injective fun g : ρ₁ →ₗ ρ₂ ↦ f.comp g :=
   fun g₁ g₂ (h : f.comp g₁ = f.comp g₂) ↦ ext fun x ↦ hf <| by rw [← comp_apply, h, comp_apply]
 
-public theorem surjective_comp_left_of_exists_rightInverse
-    (hf : ∃ f' : ρ₃ →ₗ ρ₂, f.comp f' = .id) :
-    Surjective fun g : ρ₁ →ₗ ρ₂ ↦ f.comp g := by
-  intro h
-  obtain ⟨f', hf'⟩ := hf
-  refine ⟨f'.comp h, ?_⟩
-  simp_rw [← comp_assoc, hf', id_comp]
 
 @[simp]
 public theorem cancel_left (hf : Injective f) : f.comp g = f.comp g' ↔ g = g' :=
@@ -248,11 +235,6 @@ variable (f : ρ →ₗ σ) (g : σ →ₗ ρ) (h : g.comp f = .id)
 
 include h
 
-public theorem injective_of_comp_eq_id : Injective f :=
-  .of_comp (f := g) <| by simp_rw [← coe_comp, h, id_coe, bijective_id.1]
-
-public theorem surjective_of_comp_eq_id : Surjective g :=
-  .of_comp (g := f) <| by simp_rw [← coe_comp, h, id_coe, bijective_id.2]
 
 end
 
@@ -305,10 +287,6 @@ public theorem ne_zero_of_injective [Nontrivial V] (hf : Injective f) : f ≠ 0 
   have ⟨x, ne⟩ := exists_ne (0 : V)
   fun h ↦ hf.ne ne <| by simp [h]
 
-public theorem ne_zero_of_surjective [Nontrivial W] {f : ρ →ₗ σ} (hf : Surjective f) : f ≠ 0 := by
-  have ⟨y, ne⟩ := exists_ne (0 : W)
-  obtain ⟨x, rfl⟩ := hf y
-  exact fun h ↦ ne congr($h x)
 
 @[simp]
 public theorem add_apply (f g : ρ →ₗ σ) (x : V) : (f + g) x = f x + g x :=
@@ -367,13 +345,6 @@ public instance : Sub (ρ →ₗ σ) :=
 public theorem sub_apply (f g : ρ →ₗ σ) (x : V) : (f - g) x = f x - g x :=
   rfl
 
-public theorem sub_comp (f : ρ₁ →ₗ ρ₂) (g h : ρ₂ →ₗ ρ₃) :
-    (g - h).comp f = g.comp f - h.comp f :=
-  rfl
-
-public theorem comp_sub (f g : ρ₁ →ₗ ρ₂) (h : ρ₂ →ₗ ρ₃) :
-    h.comp (g - f) = h.comp g - h.comp f :=
-  ext fun _ ↦ by simp only [coe_comp, Function.comp_apply, sub_apply, RepMap.map_sub]
 
 public instance zsmul : SMul ℤ (ρ₁ →ₗ ρ₂) where
   smul := fun n f ↦ RepMap.mk (n • f.toLinearMap) (fun h ↦ by ext v; simp [f.isIntertwining])

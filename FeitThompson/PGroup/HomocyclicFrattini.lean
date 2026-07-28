@@ -140,12 +140,3 @@ coordinate cover. -/
       (φ := standardHomocyclicCoverReduction κ p e he)
       (standardHomocyclicCoverReduction_surjective κ p e he))
 
-/-- The standard Frattini quotient equivalence sends a quotient class to its
-coordinatewise mod-`p` reduction. -/
-public theorem standardHomocyclicCoverFrattiniQuotientEquiv_mk'
-    (κ : Type u) [Fintype κ] (p e : ℕ) [Fact p.Prime] (he : 1 ≤ e)
-    (x : StandardHomocyclicCover κ (p ^ e)) :
-    standardHomocyclicCoverFrattiniQuotientEquiv κ p e he
-      (QuotientGroup.mk' (frattini (StandardHomocyclicCover κ (p ^ e))) x) =
-      standardHomocyclicCoverReduction κ p e he x := by
-  rfl

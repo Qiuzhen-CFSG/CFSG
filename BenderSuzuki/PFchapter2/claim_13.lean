@@ -696,8 +696,6 @@ private theorem lemma_4_generated_subgroup_eq_obligation
       hsec.section2.hA.A1.involution_t hst)
 
 
-
-
 private theorem claim_13_generated_subgroup_card
     {G : Type*} [Group G] [Finite G]
     (H D Q K Q0 : Subgroup G) (t : G)
@@ -1357,41 +1355,6 @@ private theorem claim_13_invertingSet_mem_strongly_real
     claim_13_strongly_real_of_inverted_by_involution
       hch.section3.s_involution hxJ.2 hx2
 
-private theorem claim_13_invertingSet_mem_strongly_real_of_prime_order_ne_two
-    {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    (H D Q K V W Q0 S Q1 P Z1 : Subgroup G) (t s x : G) (p r : ℕ)
-    (hch : (((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
-  K ≤ D ∧
-    (∀ x : G, x ∈ K ↔ x ∈ D ∧ _root_.BenderSuzuki.PFAppendixIII.rightConjugateElem x t = x⁻¹) ∧
-      V = _root_.BenderSuzuki.PFchapter1section1.peterfalviV D t ∧
-        W ≤ V ∧
-          W = _root_.BenderSuzuki.PFchapter1section1.peterfalviW V (K : Set G) ∧
-            Q0 ≤ Q ∧
-              (∀ x : G, x ∈ Q0 ↔ x = 1 ∨ (x ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution x)) ∧
-                S ≤ Q ∧
-                  Q1 ≤ Q ∧
-                    (∃ P : Sylow 2 Q, S = (P : Subgroup Q).map Q.subtype) ∧
-                      Odd (Nat.card Q1) ∧
-                        Disjoint S Q1 ∧
-                          (∀ s : G, s ∈ S → ∀ q1 : G, q1 ∈ Q1 → s * q1 = q1 * s) ∧
-                            S ⊔ Q1 = Q) ∧
-  s ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution s ∧
-    ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r) ∧
-  _root_.BenderSuzuki.PFchapter2.HypothesisB1 G V P p ∧
-    _root_.BenderSuzuki.PFchapter2.HypothesisB2 G p))
-    (hxJ : x ∈ ({y : G | y ∈ Subgroup.centralizer (Z1 : Set G) ∧ rightConjugateElem y s = y⁻¹} : Set G))
-    (horder : orderOf x = r) (hr : Nat.Prime r) (hr_ne_two : r ≠ 2) :
-    IsStronglyReal x := by
-  refine
-    claim_13_invertingSet_mem_strongly_real
-      H D Q K V W Q0 S Q1 P Z1 t s x p hch hxJ ?_
-  intro hx2
-  have hr_dvd_two : r ∣ 2 := by
-    rw [← horder]
-    exact orderOf_dvd_of_pow_eq_one hx2
-  rcases (Nat.dvd_prime Nat.prime_two).1 hr_dvd_two with hr_one | hr_two
-  · exact hr.ne_one hr_one
-  · exact hr_ne_two hr_two
 
 private theorem claim_13_card_three_power_of_prime_divisors
     {G : Type*} [Group G] [Finite G] (Z1 : Subgroup G) (s : G)

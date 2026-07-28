@@ -371,24 +371,6 @@ private theorem section9_c95_pCore_le_pPrimeCore_of_ne
     (show pCore q G ∈ {K : Subgroup G | K.Normal ∧ Nat.Coprime p (Nat.card K)} from
       ⟨inferInstance, hqcore_coprime⟩)
 
-omit [IsMinCE G] in
-private theorem section9_c95_exists_largest_prime_divisor_of_nontrivial
-    (H : Type*) [Group H] [Finite H] [Nontrivial H] :
-    ∃ q : Nat.Primes, IsLargestPrimeDivisor q.val (Nat.card H) := by
-  classical
-  have hcard_gt : 1 < Nat.card H :=
-    Finite.one_lt_card_iff_nontrivial.mpr inferInstance
-  have hpf_nonempty : (Nat.card H).primeFactors.Nonempty := by
-    simpa using (Nat.nonempty_primeFactors (n := Nat.card H)).2 hcard_gt
-  let q0 := (Nat.card H).primeFactors.max' hpf_nonempty
-  have hq0_mem : q0 ∈ (Nat.card H).primeFactors := Finset.max'_mem _ _
-  refine ⟨⟨q0, Nat.prime_of_mem_primeFactors hq0_mem⟩, ?_, ?_, ?_⟩
-  · exact Nat.prime_of_mem_primeFactors hq0_mem
-  · exact Nat.dvd_of_mem_primeFactors hq0_mem
-  · intro r hr hrdvd
-    have hr_mem : r ∈ (Nat.card H).primeFactors :=
-      Nat.Prime.mem_primeFactors hr hrdvd Nat.card_pos.ne'
-    exact Finset.le_max' _ _ hr_mem
 
 omit [IsMinCE G] in
 private theorem section9_c95_exists_star_containing_fitting_qCore

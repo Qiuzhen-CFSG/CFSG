@@ -85,19 +85,6 @@ lemma commutator_mem_focalSubgroup (a b : G) (ha : a ∈ (S : Subgroup G)) (hb :
     group
   exact Subgroup.subset_closure ⟨a * b, hab, b * a, hba, hconj, rfl⟩
 
-/-- The commutator subgroup `⁅S, S⁆` is contained in `S`. -/
-lemma commutator_sylow_le_sylow : ⁅(S : Subgroup G), (S : Subgroup G)⁆ ≤ (S : Subgroup G) := by
-  rw [Subgroup.commutator_le]
-  intro a ha b hb
-  have hab : a * b ∈ (S : Subgroup G) := (S : Subgroup G).mul_mem ha hb
-  have hab_inv : (a * b) * a⁻¹ ∈ (S : Subgroup G) := (S : Subgroup G).mul_mem hab ((S : Subgroup G).inv_mem ha)
-  have hab_inv_inv : ((a * b) * a⁻¹) * b⁻¹ ∈ (S : Subgroup G) :=
-    (S : Subgroup G).mul_mem hab_inv ((S : Subgroup G).inv_mem hb)
-  -- now show ⁅a,b⁆ = ((a * b) * a⁻¹) * b⁻¹
-  have h_eq : ⁅a, b⁆ = ((a * b) * a⁻¹) * b⁻¹ := by
-    rw [commutatorElement_def]
-  rw [h_eq]
-  exact hab_inv_inv
 
 /-- The quotient group `S / F` is a commutative group. -/
 instance commGroupQuotient : CommGroup ((S : Subgroup G) ⧸ (focalSubgroup p S).subgroupOf (S : Subgroup G)) := by
@@ -135,38 +122,6 @@ lemma π_eq_of_diff_mem_focal (a b : G) (ha : a ∈ (S : Subgroup G)) (hb : b �
   apply QuotientGroup.eq.2
   exact Subgroup.mem_subgroupOf.2 h
 
-/-- For `s ∈ S`, each factor in the transfer formula belongs to `S`. -/
-lemma transfer_factor_mem_sylow (s : G)
-    (q : Quotient (MulAction.orbitRel (Subgroup.zpowers s) (G ⧸ (S : Subgroup G)))) :
-    (Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q) ∈ (S : Subgroup G) := by
-  let Q := G ⧸ (S : Subgroup G)
-  let c : Q := Quotient.out q
-  exact QuotientGroup.out_conj_pow_minimalPeriod_mem (H := (S : Subgroup G)) s c
-
-/-- For `s ∈ S`, each factor `t⁻¹ * s ^ m * t` and `s ^ m` are conjugate. -/
-lemma transfer_factor_isConj_pow (s : G) (_ : s ∈ (S : Subgroup G))
-    (q : Quotient (MulAction.orbitRel (Subgroup.zpowers s) (G ⧸ (S : Subgroup G)))) :
-    IsConj (s ^ Function.minimalPeriod (s • ·) (Quotient.out q))
-      ((Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q)) := by
-  refine isConj_iff.2 ⟨(Quotient.out (Quotient.out q))⁻¹, ?_⟩
-  simp
-
-/-- The difference between `s ^ m` and the factor lies in the focal subgroup. -/
-lemma transfer_factor_div_mem_focalSubgroup (s : G) (hs : s ∈ (S : Subgroup G))
-    (q : Quotient (MulAction.orbitRel (Subgroup.zpowers s) (G ⧸ (S : Subgroup G)))) :
-    (s ^ Function.minimalPeriod (s • ·) (Quotient.out q))⁻¹ *
-      ((Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q)) ∈ focalSubgroup p S := by
-  have h1 : s ^ Function.minimalPeriod (s • ·) (Quotient.out q) ∈ (S : Subgroup G) :=
-    (S : Subgroup G).pow_mem hs (Function.minimalPeriod (s • ·) (Quotient.out q))
-  have h2 : (Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q) ∈ (S : Subgroup G) := by
-    haveI : MulAction.QuotientAction G (S : Subgroup G) := MulAction.left_quotientAction (H := (S : Subgroup G))
-    exact QuotientGroup.out_conj_pow_minimalPeriod_mem (H := (S : Subgroup G)) s (Quotient.out q)
-  have hconj : IsConj (s ^ Function.minimalPeriod (s • ·) (Quotient.out q))
-      ((Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q)) := by
-    refine isConj_iff.2 ⟨(Quotient.out (Quotient.out q))⁻¹, ?_⟩
-    simp
-  exact Subgroup.subset_closure ⟨s ^ Function.minimalPeriod (s • ·) (Quotient.out q), h1,
-    (Quotient.out (Quotient.out q))⁻¹ * s ^ Function.minimalPeriod (s • ·) (Quotient.out q) * Quotient.out (Quotient.out q), h2, hconj, rfl⟩
 
 section Transfer
 

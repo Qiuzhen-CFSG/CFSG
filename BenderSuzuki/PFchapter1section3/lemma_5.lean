@@ -2243,47 +2243,6 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
   exact ⟨hcycDiv.1, hdivQ0, fun _ => htypeB,
     fun _ => ⟨hKnormQ, hIso⟩⟩
 
-/--
-Peterfalvi source obligation for Lemma 5's type-B refinement.
-
-The abstract `IsSuzukiTwoGroup Q` predicate records the group-theoretic Suzuki
-2-group definition. The source's nontrivial-`W` case uses Appendix III to
-identify the explicit type-B coordinate model.
--/
-private theorem lemma_5_typeB_obligation
-    {G : Type u} {Ω : Type v}
-    [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    (H D Q K V W Q0 S Q1 : Subgroup G) (t s : G)
-    (hsec : ((_root_.BenderSuzuki.PFchapter1section1.HypothesisA G Ω H D Q t ∧
-  K ≤ D ∧
-    (∀ x : G, x ∈ K ↔ x ∈ D ∧ _root_.BenderSuzuki.PFAppendixIII.rightConjugateElem x t = x⁻¹) ∧
-      V = _root_.BenderSuzuki.PFchapter1section1.peterfalviV D t ∧
-        W ≤ V ∧
-          W = _root_.BenderSuzuki.PFchapter1section1.peterfalviW V (K : Set G) ∧
-            Q0 ≤ Q ∧
-              (∀ x : G, x ∈ Q0 ↔ x = 1 ∨ (x ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution x)) ∧
-                S ≤ Q ∧
-                  Q1 ≤ Q ∧
-                    (∃ P : Sylow 2 Q, S = (P : Subgroup Q).map Q.subtype) ∧
-                      Odd (Nat.card Q1) ∧
-                        Disjoint S Q1 ∧
-                          (∀ s : G, s ∈ S → ∀ q1 : G, q1 ∈ Q1 → s * q1 = q1 * s) ∧
-                            S ⊔ Q1 = Q) ∧
-  s ∈ H ∧ _root_.BenderSuzuki.PFAppendixIII.IsInvolution s ∧
-    ∃ r : G, r ∈ Q ∧ t * s * t = r⁻¹ * t * r))
-    (hind :
-      ∀ (L : Type u) [Group L] [Finite L],
-        ∀ (ΩL : Type v) [MulAction L ΩL] [Finite ΩL]
-          (HL DL QL : Subgroup L) (tL : L),
-          Nat.card L < Nat.card G →
-            HypothesisA L ΩL HL DL QL tL →
-              suzukiConclusion.{u, v} L ΩL)
-    (hst : orderOf (s * t) = 3)
-    (hQ : IsSuzukiTwoGroup Q)
-    (hQ_card : Nat.card Q = Nat.card Q0 ^ 3) :
-    W ≠ ⊥ → IsSuzukiTwoTypeB Q := by
-  exact (lemma_5_W_cyclic_and_divides_obligation
-    H D Q K V W Q0 S Q1 t s hsec hind hst hQ hQ_card).2.2.1
 
 public theorem lemma_5
     {G : Type u} {Ω : Type v}

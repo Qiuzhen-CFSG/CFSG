@@ -171,27 +171,6 @@ private theorem hypothesis7_1_of_le_isPiSubgroup
           exact le_sSup hXfam
         simpa [hπeq] using this
 
-private theorem exists_hall_of_isPiSubgroup_solvable
-    {G : Type*} [Group G] [Finite G] {π : Set Nat.Primes}
-    {H K : Subgroup G} (hKH : K ≤ H) (hsolvH : IsSolvable H)
-    (hKπ : IsPiSubgroup (G := G) π K) :
-    ∃ L : Subgroup H, IsHallSubgroup π L ∧ K.subgroupOf H ≤ L := by
-  letI : MulDistribMulAction Unit H := {
-    smul := fun _ x => x
-    one_smul := fun _ => rfl
-    mul_smul := fun _ _ _ => rfl
-    smul_mul := fun _ _ _ => rfl
-    smul_one := fun _ => rfl }
-  have hcop : Nat.Coprime (Nat.card Unit) (Nat.card H) := by simp
-  have hKπ' : IsPiSubgroup (G := H) π (K.subgroupOf H) :=
-    hKπ.subgroupOf hKH
-  have hKinv : IsInvariant Unit H (K.subgroupOf H) := by
-    refine ⟨?_⟩
-    intro _ x
-    simp
-  obtain ⟨L, hHall, _hInv, hK_le_L⟩ :=
-    proposition_1_5_b (G := ↥H) (A := Unit) hsolvH hcop π (K.subgroupOf H) hKπ' hKinv
-  exact ⟨L, hHall, hK_le_L⟩
 
 private lemma isSubnormalIn_of_normal_subgroupOf
     {G : Type*} [Group G] {A P : Subgroup G} (hAP : A ≤ P)
@@ -496,35 +475,6 @@ private theorem normalizer_ne_top_of_ne_bot_ne_top
   · exact hQ_ne_bot hQbot
   · exact hQ_ne_top hQtop
 
-private theorem normalizer_ne_top_of_hypothesis
-    {G : Type*} [Group G] [Finite G] [IsMinCE G] {A : Subgroup G}
-    (hA : Hypothesis7_1 A) :
-    Subgroup.normalizer (A : Set G) ≠ ⊤ :=
-  normalizer_ne_top_of_ne_bot_ne_top hA.1 hA.2.1
-
-private theorem centralizer_ne_top_of_hypothesis
-    {G : Type*} [Group G] [Finite G] [IsMinCE G] {A : Subgroup G}
-    (hA : Hypothesis7_1 A) :
-    Subgroup.centralizer (A : Set G) ≠ ⊤ := by
-  intro hCtop
-  have hA_center : (A : Set G) ⊆ Subgroup.center G :=
-    (Subgroup.centralizer_eq_top_iff_subset).mp hCtop
-  have hAbot : A = ⊥ := by
-    apply bot_unique
-    intro a ha
-    have ha_center : a ∈ Subgroup.center G := hA_center ha
-    simpa [center_eq_bot_of_min_ce (G := G)] using ha_center
-  exact hA.1 hAbot
-
-private theorem section7K_ne_top_of_hypothesis
-    {G : Type*} [Group G] [Finite G] [IsMinCE G] {A : Subgroup G}
-    (hA : Hypothesis7_1 A) :
-    section7K A ≠ ⊤ := by
-  intro hKtop
-  have hCtop : Subgroup.centralizer (A : Set G) = ⊤ := by
-    apply top_unique
-    simpa [hKtop] using section7K_le_centralizer (G := G) A
-  exact centralizer_ne_top_of_hypothesis hA hCtop
 
 private theorem quotient_card_prime_of_normal_no_intermediate
     {G : Type*} [Group G] [Finite G] {A P : Subgroup G}

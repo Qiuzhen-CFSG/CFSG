@@ -21,33 +21,6 @@ universe u v
 
 /-! ## (13.5) -/
 
-/-- Peterfalvi `(13.5)`. -/
-@[expose] public def theorem_13_5_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (S1 : Finset (Section1.ClassFunction Smax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ζ0 ζ1 : Section1.ClassFunction Smax)
-    (ζ1H : Section1.ClassFunction H)
-    (χ : Section1.ClassFunction G)
-    (a : ℂ)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    theorem_13_5_hypothesis Smax H P C S1 τS ζ0 ζ1 χ a →
-    classFunctionRestrictionData H Smax ζ1 ζ1H →
-      ∃ α : Section1.ClassFunction H,
-        virtualCharacterKernelConstituentData H P α ∧
-          (∀ x : H, (x : G) ≠ 1 →
-            χ (x : G) =
-              (a / (Section5.cfNormSq ζ1 : ℂ)) * ζ1H x + α x) ∧
-          theorem_13_5_squareSumFormula Smax H ζ1 ζ1H α χ a ∧
-          ((Nat.card P - 1 : ℕ) : ℝ) * Complex.normSq (α 1) ≤
-            Section7.subgroupSupportEnergy H (Section7.puncturedSubgroupSet H) α
-
 
 private theorem theorem_13_5_virtualCharacter_one_eq_int
     {K : Type u}

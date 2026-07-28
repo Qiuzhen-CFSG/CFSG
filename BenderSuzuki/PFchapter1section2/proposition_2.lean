@@ -269,12 +269,6 @@ private def proposition_2_D_conjugationMulAut
     apply Subtype.ext
     simp [rightConjugateElem, mul_assoc]
 
-private theorem proposition_2_D_conjugationMulAut_coe
-    {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
-    (H D Q : Subgroup G) (t : G) (hA1 : HypothesisA1 G Ω H D Q t)
-    (d : D) :
-    ((proposition_2_D_conjugationMulAut H D Q t hA1 d : D) : G) =
-      rightConjugateElem (d : G) t := rfl
 
 private theorem proposition_2_D_conjugationMulAut_eq_self_of_mem_V
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]

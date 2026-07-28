@@ -27,8 +27,6 @@ namespace PFchapter1section1
 universe u v w
 
 
-
-
 /--
 The right-conjugate `H^g = g⁻¹ H g`, matching the exponent convention in the
 Peterfalvi text. The project-level `Subgroup.conjBy g` is left conjugation
@@ -37,10 +35,6 @@ Peterfalvi text. The project-level `Subgroup.conjBy g` is left conjugation
 @[expose] public def rightConjugate {G : Type u} [Group G] (H : Subgroup G) (g : G) : Subgroup G :=
   H.conjBy g⁻¹
 
-/-- Membership in a right-conjugate, unfolded as a membership in `Subgroup.conjBy`. -/
-public theorem mem_rightConjugate_iff {G : Type u} [Group G] {H : Subgroup G} {g x : G} :
-    x ∈ rightConjugate H g ↔ x ∈ H.conjBy g⁻¹ := by
-  rfl
 
 public theorem rightConjugate_stabilizer {G : Type u} [Group G] {Ω : Type*} [MulAction G Ω]
     (ω : Ω) (g : G) :

@@ -40,32 +40,6 @@ universe u
     transformAgreesWithInductionOn L S T ∧
     (frobeniusWithKernel (⊤ : Subgroup L) H ∨ caseC2Hypothesis L H W1 W2 W T)
 
-/-- Peterfalvi `(6.8.1)`. -/
-@[expose] public def theorem_6_8_1_statement
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G)
-    (H W1 W2 W Z : Subgroup L)
-    (S SZ X Y : Finset (Section1.ClassFunction L))
-    (T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  theorem_6_8_hypothesis L H W1 W2 W S T →
-    (∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p) →
-      theorem_6_8_caseAData H W2 Z →
-        theorem_6_8_familyData H Z S SZ X Y →
-          coherentFamily (X ∪ Y) T
-
-/-- Peterfalvi `(6.8.2)`. -/
-@[expose] public def theorem_6_8_2_statement
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G)
-    (H W1 W2 W Z : Subgroup L)
-    (S SZ X Y : Finset (Section1.ClassFunction L))
-    (T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  theorem_6_8_hypothesis L H W1 W2 W S T →
-    (∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p) →
-      caseC2Hypothesis L H W1 W2 W T →
-        theorem_6_8_caseBData H W2 Z →
-          theorem_6_8_familyData H Z S SZ X Y →
-            coherentFamily (X ∪ Y) T
 
 /-- Peterfalvi `(6.8.2.1)`. -/
 @[expose] public def theorem_6_8_2_1_statement
@@ -135,7 +109,6 @@ universe u
         (caseC2Hypothesis L H W1 W2 W T ∧ theorem_6_8_caseBData H W2 Z)) →
         theorem_6_8_familyData H Z S SZ X Y →
           coherentFamily S T
-
 
 
 theorem theorem_6_7_restriction_principalMultiplicity_nat
@@ -424,22 +397,6 @@ theorem theorem_6_7_algebraicIntegerCongruentModNat_mul_right
     convert hqγ using 1
     ring
 
-theorem theorem_6_7_algebraicIntegerCongruentModNat_add
-    {n : ℕ} {α β γ δ : ℂ}
-    (h₁ : algebraicIntegerCongruentModNat n α β)
-    (h₂ : algebraicIntegerCongruentModNat n γ δ) :
-    algebraicIntegerCongruentModNat n (α + γ) (β + δ) := by
-  rcases h₁ with ⟨hα, hβ, hq₁⟩
-  rcases h₂ with ⟨hγ, hδ, hq₂⟩
-  unfold algebraicIntegerCongruentModNat
-  constructor
-  · exact hα.add hγ
-  constructor
-  · exact hβ.add hδ
-  · have hq : IsIntegral ℤ (((α - β) / (n : ℂ)) + ((γ - δ) / (n : ℂ))) :=
-      hq₁.add hq₂
-    convert hq using 1
-    ring
 
 theorem theorem_6_7_algebraicIntegerCongruentModNat_sum
     {n : ℕ} {ι : Type*} (s : Finset ι) (α β : ι → ℂ)

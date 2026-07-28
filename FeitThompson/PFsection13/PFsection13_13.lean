@@ -20,20 +20,6 @@ universe u
 
 /-! ## (13.13) -/
 
-/-- Peterfalvi `(13.13)`. -/
-@[expose] public def theorem_13_13_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    case_9_7_a_sourceDataForSection13 Smax P U W1 W2 C p q u →
-      q = 3 ∧ u = (p - 1) ^ 2 / 4
-
 
 private theorem section13_three_le_of_odd_prime_for_13_13 {n : ℕ}
     (hn : Nat.Prime n) (hodd : Odd n) :

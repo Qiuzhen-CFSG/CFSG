@@ -82,14 +82,6 @@ lemma IsPiGroup.pi {π : Set Nat.Primes} {α G : Type*} [Finite α] [Group G] [F
   exact (IsPiGroup_iff π G).1 hG p <|
     p.2.dvd_of_dvd_pow (by simpa [Nat.card_fun] using hp)
 
-lemma IsPiGroup.mulOpposite {π : Set Nat.Primes} {G : Type*} [Group G] [Finite G]
-    (hG : IsPiGroup π G) :
-    IsPiGroup π Gᵐᵒᵖ := by
-  let e : G ≃ Gᵐᵒᵖ := MulOpposite.opEquiv
-  letI : Finite Gᵐᵒᵖ := Finite.of_equiv G e
-  rw [IsPiGroup_iff π Gᵐᵒᵖ]
-  intro p hp
-  exact (IsPiGroup_iff π G).1 hG p (by simpa [Nat.card_congr e] using hp)
 
 lemma IsPiGroup.of_normal_subgroup_and_quotient {π : Set Nat.Primes} {G : Type*} [Group G] [Finite G]
     (H : Subgroup G) [H.Normal] (hH : IsPiSubgroup (G := G) π H)

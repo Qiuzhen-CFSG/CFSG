@@ -33,28 +33,6 @@ public theorem matrix_trace_reindex
   rw [Matrix.trace, Matrix.trace]
   exact (e.symm.sum_comp (fun i => M i i)).trans (by rfl)
 
-/-- Trace of a monomial matrix: only fixed columns of the underlying index map
-contribute to the diagonal sum. -/
-public theorem matrix_trace_monomial
-    {R ι : Type*} [AddCommMonoid R] [Fintype ι] [DecidableEq ι]
-    (M : Matrix ι ι R) (σ : ι → ι) (c : ι → R)
-    (hM : ∀ i j, M i j = if σ j = i then c j else 0) :
-    Matrix.trace M = ∑ i : ι, if σ i = i then c i else 0 := by
-  simp [Matrix.trace, Matrix.diag, hM]
-
-/-- Trace of a finite sum of monomial matrices, stated over an arbitrary
-additive coefficient type. -/
-public theorem matrix_trace_sum_monomial
-    {R α ι : Type*} [AddCommMonoid R]
-    [Fintype α] [Fintype ι] [DecidableEq ι]
-    (M : α → Matrix ι ι R) (σ : α → ι → ι) (c : α → ι → R)
-    (hM : ∀ a i j, M a i j = if σ a j = i then c a j else 0) :
-    Matrix.trace (∑ a, M a) =
-      ∑ a, ∑ i : ι, if σ a i = i then c a i else 0 := by
-  rw [Matrix.trace_sum]
-  apply Finset.sum_congr rfl
-  intro a _ha
-  exact matrix_trace_monomial (M a) (σ a) (c a) (hM a)
 
 /-- Block trace reduction for a finite sum of conjugated block matrices. -/
 public theorem matrix_trace_sum_of_block_trace_data

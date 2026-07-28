@@ -56,35 +56,6 @@ public theorem section14_theorem_14_11_1_arithmetic_source_bridge
       Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d hctx h143).2
   exact ⟨hp, hq, hu, hv⟩
 
-public theorem section14_index_ratio_le_of_bounds {p q v k e : ℕ}
-    (hp : 0 < p) (hq : 0 < q) (hqp : q < p)
-    (hepos : 0 < e) (hkgt : 2 * p * v < k) (he_le : e ≤ p * q) :
-    ((v - 1 : ℕ) : ℝ) / (p : ℝ) ≤ ((k - 1 : ℕ) : ℝ) / (e : ℝ) := by
-  by_cases hv0 : v = 0
-  · simp [hv0]
-    positivity
-  have hv : 0 < v := Nat.pos_of_ne_zero hv0
-  have hq_lt_2p : q < 2 * p := by nlinarith
-  have hqv_lt_k : q * v < k := by
-    have hqv_lt_2pv : q * v < (2 * p) * v :=
-      Nat.mul_lt_mul_of_pos_right hq_lt_2p hv
-    exact lt_trans
-      (by simpa [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hqv_lt_2pv)
-      hkgt
-  have hqv_le_k_sub : q * v ≤ k - 1 := by omega
-  have hq_v_sub_le : q * (v - 1) ≤ k - 1 := by
-    exact le_trans (Nat.mul_le_mul_left q (Nat.sub_le v 1)) hqv_le_k_sub
-  have hnat : e * (v - 1) ≤ p * (k - 1) := by
-    calc
-      e * (v - 1) ≤ (p * q) * (v - 1) := Nat.mul_le_mul_right (v - 1) he_le
-      _ = p * (q * (v - 1)) := by ring
-      _ ≤ p * (k - 1) := Nat.mul_le_mul_left p hq_v_sub_le
-  have hpR : (0 : ℝ) < p := by exact_mod_cast hp
-  have heR : (0 : ℝ) < e := by exact_mod_cast hepos
-  field_simp [ne_of_gt hpR, ne_of_gt heR]
-  simpa [mul_comm] using
-    (show ((e * (v - 1) : ℕ) : ℝ) ≤ ((p * (k - 1) : ℕ) : ℝ) by
-      exact_mod_cast hnat)
 
 public theorem section14_index_ratio_lt_of_bounds {p q v k e : ℕ}
     (hp : 0 < p) (hq : 0 < q) (hv : 0 < v) (hqp : q < p)
@@ -712,42 +683,6 @@ public theorem section14_theorem_14_11_1_K_index_congruence_fixedPoint_source_br
   rcases htail x hxcard with ⟨hxOdd, hrel_le⟩
   exact ⟨⟨x, hxcard, hxOdd, hxne, hxdvd⟩, hrel_le⟩
 
-public theorem section14_theorem_14_11_1_K_index_congruence_source_bridge
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (M K : Subgroup G)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d : ℕ) :
-    hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          K ≠ V →
-            Odd (Nat.card W1) ∧
-              (∃ x : ℕ, Nat.card K = v * x ∧ Odd x ∧ x ≠ 1 ∧ p ∣ x - 1) ∧
-              K.relIndex M ≤ p * q := by
-  intro hctx h143 h1410 hKV
-  rcases section14_theorem_14_11_1_K_index_congruence_fixedPoint_source_bridge
-      Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
-      Lfam RL τL τL₁ φ μ01 ν10 βS βT βL
-      M K Mfam τM τM₁ ψ βM p q u v c d hctx h143 h1410 hKV with
-    ⟨hxpack, hrel_le⟩
-  exact ⟨section14_odd_W1_of_sourceData hctx, hxpack, hrel_le⟩
 
 public theorem section14_theorem_14_11_1_K_index_bounds_source_bridge
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -1005,40 +940,5 @@ public theorem section14_theorem_14_11_1_source_bridge
     section14_ratio_ineq_of_bounds hp hq h2q hctx.2 hu hv hpow
   exact ⟨hKgt, hratio, hKineq⟩
 
-
-/-- Proof placeholder for `theorem_14_11_1_statement`. -/
-public theorem theorem_14_11_1
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (M K V : Subgroup G)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          K ≠ V →
-            theorem_14_11_1_data M K p q u v := by
-  exact section14_theorem_14_11_1_source_bridge
-    Smax Tmax W W1 W2 P Q U C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL M K V Mfam τM τM₁ ψ βM
-    p q u v c d
 
 end Section14

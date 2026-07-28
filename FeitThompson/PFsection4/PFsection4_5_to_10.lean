@@ -320,29 +320,6 @@ private theorem omegaRowDifference_CFOn_wMinusW2_pf45
       omega_eq_baseRow_of_mem_W2_pf45 hω i j hxW2
     simp [Pi.sub_apply, hEq]
 
-private theorem omegaBaseRowDifference_CFOn_wMinusW1_pf45
-    {L : Type u} [Group L] [Finite L]
-    {W1 W2 W : Subgroup L}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → ClassFunction W}
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (j k : J) :
-    Section2.CFOn W ((W : Set L) \ (W1 : Set L)) (ω i0 j - ω i0 k) := by
-  constructor
-  · intro x g
-    simp [hω.is_class i0 j x g, hω.is_class i0 k x g]
-  · intro x hx
-    have hxW1 : (x : L) ∈ W1 := by
-      by_contra hxnot
-      exact hx ⟨x.2, hxnot⟩
-    have hEqj : ω i0 j x = 1 := by
-      have hker := hω.right_kernel j ⟨x, hxW1⟩
-      simpa [hω.degree_one i0 j] using hker
-    have hEqk : ω i0 k x = 1 := by
-      have hker := hω.right_kernel k ⟨x, hxW1⟩
-      simpa [hω.degree_one i0 k] using hker
-    simp [Pi.sub_apply, hEqj, hEqk]
 
 private theorem not_mem_conjugateSet_wMinusW2_of_mem_K_pf45
     {L : Type u} [Group L] [Finite L]
@@ -527,12 +504,6 @@ private theorem sign_star_eq_self_pf45
     star z = z := by
   rcases hz with h | h <;> simp [h]
 
-private theorem signed_irreducible_of_irreducible_pf45
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Section3.IsSignedIrreducibleCharacter χ := by
-  exact ⟨1, Or.inl rfl, χ, hχ, by simp⟩
 
 private theorem mem_subgroup_iff_conj_mem_pf45
     {G : Type*} [Group G] (H : Subgroup G) [H.Normal]
@@ -883,20 +854,6 @@ private theorem positive_degree_nat_of_isIrreducibleCharacterOnGroup_pf45
   · rw [hχchar]
     simpa using Section1.degree_representation_character ρ
 
-private theorem degree_conjugateCharacter_eq_of_isIrreducibleCharacterOnGroup_pf45
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Section1.degree (Section1.conjugateCharacter χ) = Section1.degree χ := by
-  rcases degree_eq_nat_of_isIrreducibleCharacterOnGroup_pf45 hχ with ⟨n, hdeg⟩
-  have hdeg' : χ 1 = (n : ℂ) := by
-    simpa [Section1.degree] using hdeg
-  calc
-    Section1.degree (Section1.conjugateCharacter χ) = star (χ 1) := by
-      simp [Section1.degree, Section1.conjugateCharacter]
-    _ = χ 1 := by
-      rw [hdeg']
-      simp
 
 private theorem supportedOn_diff_of_supportedOn_withOne_and_equal_degree_pf45
     {G : Type u} [Group G]
@@ -968,17 +925,6 @@ private theorem subgroupInRepresentationKernel_of_subgroupInKernel_pf45
   change (ρ.comp A.subtype) a = LinearMap.id
   simpa only [Module.End.one_eq_id] using Representation.isTrivial_def (ρ.comp A.subtype) a
 
-private theorem subgroupInKernel_of_subgroupInRepresentationKernel_pf45
-    {G V : Type*} [Group G]
-    [AddCommGroup V] [Module ℂ V]
-    (ρ : Representation ℂ G V) (A : Subgroup G)
-    (hA : Section1.subgroupInRepresentationKernel ρ A) :
-    Section1.subgroupInKernel ρ A := by
-  refine (Section1.subgroupInKernel_iff ρ A).mpr ?_
-  refine ⟨?_⟩
-  intro a
-  change ρ (a : G) = LinearMap.id
-  exact hA a
 
 private theorem subgroupInKernel'_subgroupRestriction_iff_pf45
     {G : Type*} [Group G]
@@ -2953,62 +2899,6 @@ private theorem irreducibleCharacterOnGroup_set_finite_pf45
   exact ofConjClassFunction_toConjClassFunction_pf45 φ
     (isClassFunction_of_irreducibleCharacterOnGroup_pf45 hφ)
 
-private theorem fixed_irreducible_card_le_conjClasses_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal]
-    {g : L} :
-    Nat.card {X : ClassFunction K |
-        Section1.IsIrreducibleCharacterOnGroup X ∧
-          Section1.conjugateOnNormal K X g = X} ≤
-      Nat.card (ConjClasses K) := by
-  classical
-  let fixedSet : Set (ClassFunction K) :=
-    {X : ClassFunction K |
-      Section1.IsIrreducibleCharacterOnGroup X ∧
-        Section1.conjugateOnNormal K X g = X}
-  let irredSet : Set (ClassFunction K) :=
-    {X : ClassFunction K | Section1.IsIrreducibleCharacterOnGroup X}
-  have hfixedFinite : fixedSet.Finite :=
-    (irreducibleCharacterOnGroup_set_finite_pf45 (G := K)).subset (by
-      intro X hX
-      exact hX.1)
-  rcases Representation.card_irreducible_characters_eq_card_conjClasses
-      (G := K) with
-    ⟨ι, hι, χ, hχ, hcardχ⟩
-  letI : Fintype ι := hι
-  let χold : ι → ClassFunction K := fun i => Section1.ofConjClassFunction (χ i)
-  have hfixed_subset_range : fixedSet ⊆ Set.range χold := by
-    intro X hX
-    have hXirr : Section1.IsIrreducibleCharacterOnGroup X := hX.1
-    rcases hχ.2.1
-        (Section1.toConjClassFunction X
-          (isClassFunction_of_irreducibleCharacterOnGroup_pf45 hXirr))
-        (toConjClassFunction_isIrreducibleCharacter_of_onGroup_pf45 hXirr) with
-      ⟨i, hi⟩
-    refine ⟨i, ?_⟩
-    dsimp [χold]
-    rw [hi]
-    exact ofConjClassFunction_toConjClassFunction_pf45 X
-      (isClassFunction_of_irreducibleCharacterOnGroup_pf45 hXirr)
-  let fixedToRange : fixedSet → Set.range χold := fun X =>
-    ⟨X.1, hfixed_subset_range X.2⟩
-  have hfixedToRange_inj : Function.Injective fixedToRange := by
-    intro X Y hXY
-    apply Subtype.ext
-    exact congrArg (fun Z : Set.range χold => (Z : ClassFunction K)) hXY
-  have hle_range : Nat.card fixedSet ≤ Nat.card (Set.range χold) :=
-    Nat.card_le_card_of_injective fixedToRange hfixedToRange_inj
-  have hχold_inj : Function.Injective χold := by
-    intro i j hij
-    apply hχ.2.2
-    ext c
-    rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
-    exact congrFun hij x
-  have hrange_card : Nat.card (Set.range χold) = Nat.card ι :=
-    Nat.card_range_of_injective hχold_inj
-  have hcardι : Nat.card ι = Fintype.card ι := by
-    rw [Nat.card_eq_fintype_card]
-  exact hle_range.trans (by rw [hrange_card, hcardι, hcardχ])
 
 private theorem isIrreducibleCharacterOnGroup_conjugateOnNormal_pf45
     {L : Type u} [Group L] [Finite L]
@@ -3023,53 +2913,6 @@ private theorem isIrreducibleCharacterOnGroup_conjugateOnNormal_pf45
     exact Section1.irreducible_conjugateRepresentation K ρ g
   · exact (Section1.representationCharacter_conjugateRepresentation K ρ g).symm
 
-private noncomputable def irreducibleCharacterConjPerm_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal] (g : L) :
-    Equiv.Perm {X : ClassFunction K // Section1.IsIrreducibleCharacterOnGroup X} where
-  toFun X :=
-    ⟨Section1.conjugateOnNormal K X.1 g,
-      isIrreducibleCharacterOnGroup_conjugateOnNormal_pf45 K X.2 g⟩
-  invFun X :=
-    ⟨Section1.conjugateOnNormal K X.1 g⁻¹,
-      isIrreducibleCharacterOnGroup_conjugateOnNormal_pf45 K X.2 g⁻¹⟩
-  left_inv X := by
-    apply Subtype.ext
-    calc
-      Section1.conjugateOnNormal K (Section1.conjugateOnNormal K X.1 g) g⁻¹ =
-          Section1.conjugateOnNormal K X.1 (g * g⁻¹) := by
-            rw [← conjugateOnNormal_mul_pf45]
-      _ = X.1 := by
-            simp [conjugateOnNormal_one_pf45]
-  right_inv X := by
-    apply Subtype.ext
-    calc
-      Section1.conjugateOnNormal K (Section1.conjugateOnNormal K X.1 g⁻¹) g =
-          Section1.conjugateOnNormal K X.1 (g⁻¹ * g) := by
-            rw [← conjugateOnNormal_mul_pf45]
-      _ = X.1 := by
-            simp [conjugateOnNormal_one_pf45]
-
-private theorem fixed_irreducible_natCard_eq_fixedPoints_perm_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal] {g : L} :
-    Nat.card {X : ClassFunction K |
-        Section1.IsIrreducibleCharacterOnGroup X ∧
-          Section1.conjugateOnNormal K X g = X} =
-      Nat.card
-        (Function.fixedPoints (irreducibleCharacterConjPerm_pf45 K g)) := by
-  refine Nat.card_congr ?_
-  refine
-    { toFun := fun X =>
-        ⟨⟨X.1, X.2.1⟩, Subtype.ext X.2.2⟩
-      invFun := fun X =>
-        ⟨X.1.1, ⟨X.1.2, congrArg Subtype.val X.2⟩⟩
-      left_inv := ?_
-      right_inv := ?_ }
-  · intro X
-    rfl
-  · intro X
-    rfl
 
 private theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis_pf45
     {ι M : Type*} [Fintype ι] [DecidableEq ι]
@@ -3601,51 +3444,6 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
             rw [natCard_set_eq_ncard_pf45]
   exact_mod_cast hcast
 
-private noncomputable def completeFamilyConjIndex_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal]
-    {ι : Type*} [Fintype ι]
-    (χ : ι → Representation.ClassFunction K)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (g : L) (i : ι) : ι :=
-  Classical.choose
-    (hχ.2.1
-      (classFunctionConjLinearEquiv_pf45 K g (χ i))
-      (classFunctionConjLinearEquiv_isIrreducibleCharacter_pf45 K g (hχ.1 i)))
-
-private theorem completeFamilyConjIndex_spec_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal]
-    {ι : Type*} [Fintype ι]
-    (χ : ι → Representation.ClassFunction K)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (g : L) (i : ι) :
-    χ (completeFamilyConjIndex_pf45 K χ hχ g i) =
-      classFunctionConjLinearEquiv_pf45 K g (χ i) :=
-  Classical.choose_spec
-    (hχ.2.1
-      (classFunctionConjLinearEquiv_pf45 K g (χ i))
-      (classFunctionConjLinearEquiv_isIrreducibleCharacter_pf45 K g (hχ.1 i)))
-
-private theorem completeFamilyConjIndex_injective_pf45
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal]
-    {ι : Type*} [Fintype ι]
-    (χ : ι → Representation.ClassFunction K)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (g : L) :
-    Function.Injective (completeFamilyConjIndex_pf45 K χ hχ g) := by
-  intro i j hij
-  apply hχ.2.2
-  apply (classFunctionConjLinearEquiv_pf45 K g).injective
-  calc
-    classFunctionConjLinearEquiv_pf45 K g (χ i) =
-        χ (completeFamilyConjIndex_pf45 K χ hχ g i) := by
-          exact (completeFamilyConjIndex_spec_pf45 K χ hχ g i).symm
-    _ = χ (completeFamilyConjIndex_pf45 K χ hχ g j) := by
-          rw [hij]
-    _ = classFunctionConjLinearEquiv_pf45 K g (χ j) := by
-          exact completeFamilyConjIndex_spec_pf45 K χ hχ g j
 
 private theorem mem_fixedPoints_conjClassesConjPerm_mk_iff_pf45
     {L : Type u} [Group L]
@@ -4951,30 +4749,6 @@ private theorem conjugate_piChar_baseRow_eq_of_conjugate_omega_pf45
     nlinarith
   · simpa [hj, hj'] using hscaled
 
-private theorem conjugate_piChar_baseRow_eq_pf45
-    {L : Type u} [Group L] [Finite L]
-    (W1 W2 W : Subgroup L)
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction L)
-    (piChar : I → J → ClassFunction L)
-    (deltaSign : J → ℂ)
-    (h31 : Section3.hypothesis_3_1_statement W1 W2 W)
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (h43b : Section4.theorem_4_3_b_statement
-      W1 W2 W I J i0 j0 ω σ piChar deltaSign hω)
-    (h43c : Section4.theorem_4_3_c_statement W2 W I J piChar deltaSign ω)
-    (j : J) :
-    ∃ j', Section1.conjugateCharacter (piChar i0 j) = piChar i0 j' := by
-  rcases conjugate_omega_baseRow_eq_pf45
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0) h31 hω j with
-    ⟨j', hbarOmega⟩
-  exact ⟨j', conjugate_piChar_baseRow_eq_of_conjugate_omega_pf45
-    (W1 := W1) (W2 := W2) (W := W) (i0 := i0) (j0 := j0)
-    (ω := ω) (σ := σ) (piChar := piChar) (deltaSign := deltaSign)
-    h31 hω h43b h43c hbarOmega⟩
 
 private theorem baseRow_linearCharacter_left_eq_one_pf45
     {L : Type u} [Group L] [Finite L]
@@ -5366,39 +5140,6 @@ private theorem baseRowGaloisConjugate_pf45
     _ = Section3.classFunctionGaloisConjugate γ (deltaSign k • piChar i0 k) := by
           rw [hSigma i0 k]
 
-public theorem baseRowGaloisConjugate_of_hypothesis_4_6_full_statement
-    {G : Type v} [Group G] [Finite G]
-    (L : Subgroup G) [Finite L]
-    {K W1 W2 W H : Subgroup L}
-    {A : Set L}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → ClassFunction W}
-    {σL : ClassFunction W →ₗ[ℂ] ClassFunction L}
-    {σ : ClassFunction W →ₗ[ℂ] ClassFunction G}
-    {piChar : I → J → ClassFunction L}
-    {xChar : J → ClassFunction K}
-    {deltaSign : J → ℂ}
-    {τ : ClassFunction L →ₗ[ℂ] ClassFunction G}
-    {H_A H_A0 : G → Subgroup G}
-    (_hFull :
-      hypothesis_4_6_full_statement L K W1 W2 W H A i0 j0 ω σL σ
-        piChar xChar deltaSign τ H_A H_A0)
-    (_hW2prime : Nat.Prime (Nat.card W2)) :
-    ∀ j k, j ≠ j0 → k ≠ j0 →
-      ∃ γ : Gal(ℂ/ℚ),
-        deltaSign j • piChar i0 j =
-          Section3.classFunctionGaloisConjugate γ (deltaSign k • piChar i0 k) := by
-  rcases _hFull with
-    ⟨h46, _hW2K, _h31img, _hIso, _hVirt, _hClass, _hPrin, _h22A,
-      _h22A0, _hDadeA0, hRest⟩
-  rcases hRest with
-    ⟨hω, h43b, _h43c, _h43d, _h45a, _h45b, _hτσ, _hτA0,
-      _hτiso, _hτpunct, _hτvirt, _hPF39⟩
-  have h31 : Section3.hypothesis_3_1_statement W1 W2 W :=
-    hypothesis_3_1_of_hypothesis_4_6_pf45 h46
-  exact baseRowGaloisConjugate_pf45 W1 W2 W i0 j0 ω σL piChar
-    deltaSign h31 _hW2prime hω h43b
 
 public theorem baseRowGaloisConjugate_of_hypothesis_4_6_supported_statement
     {G : Type v} [Group G] [Finite G]
@@ -5434,77 +5175,6 @@ public theorem baseRowGaloisConjugate_of_hypothesis_4_6_supported_statement
   exact baseRowGaloisConjugate_pf45 W1 W2 W i0 j0 ω σL piChar
     deltaSign h31 _hW2prime hω h43b
 
-public theorem tau_eq_dadeTransform_on_a0_of_hypothesis_4_6_full_statement
-    {G : Type v} [Group G] [Finite G]
-    (L : Subgroup G) [Finite L]
-    {K W1 W2 W H : Subgroup L}
-    {A : Set L}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → ClassFunction W}
-    {σL : ClassFunction W →ₗ[ℂ] ClassFunction L}
-    {σ : ClassFunction W →ₗ[ℂ] ClassFunction G}
-    {piChar : I → J → ClassFunction L}
-    {xChar : J → ClassFunction K}
-    {deltaSign : J → ℂ}
-    {τ : ClassFunction L →ₗ[ℂ] ClassFunction G}
-    {H_A H_A0 : G → Subgroup G}
-    (_hFull :
-      hypothesis_4_6_full_statement L K W1 W2 W H A i0 j0 ω σL σ
-        piChar xChar deltaSign τ H_A H_A0)
-    (hA0 :
-      Section2.Hypothesis2 (subgroupImageSet L (a0Set W2 W A)) L H_A0) :
-    ∀ α : ClassFunction L,
-      τ α = Section2.dadeTransform H_A0 hA0.subset_L α := by
-  rcases _hFull with
-    ⟨_h46, _hW2K, _h31, _hIso, _hVirt, _hClass, _hPrin, _h22A,
-      _h22A0, hDadeA0, _hRest⟩
-  exact hDadeA0 hA0
-
-/-- The PF `(4.9.a)` zero-row conjugation step for the selected Section
-`(4.6)` table: every non-base zero-row character has a distinct non-base
-conjugate zero-row character. -/
-public theorem theorem_4_9_a_baseRow_conjugate
-    {L : Type u} [Group L] [Finite L]
-    (K W1 W2 W H : Subgroup L)
-    (A : Set L)
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction L)
-    (piChar : I → J → ClassFunction L)
-    (deltaSign : J → ℂ)
-    (h46 : hypothesis_4_6_statement K W1 W2 W H A)
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (h43b : Section4.theorem_4_3_b_statement
-      W1 W2 W I J i0 j0 ω σ piChar deltaSign hω)
-    (h43c : Section4.theorem_4_3_c_statement W2 W I J piChar deltaSign ω)
-    {j : J} (hj : j ≠ j0) :
-    ∃ j' : J, j' ≠ j0 ∧ j' ≠ j ∧
-      Section1.conjugateCharacter (piChar i0 j) = piChar i0 j' := by
-  have h31 : Section3.hypothesis_3_1_statement W1 W2 W :=
-    hypothesis_3_1_of_hypothesis_4_6_pf45 h46
-  rcases conjugate_omega_baseRow_ne_pf45
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) h31 hω hj with
-    ⟨j', hbarOmega, hj'ne⟩
-  have hj'0 : j' ≠ j0 := by
-    intro hj'0
-    have hbar0 :
-        Section1.conjugateCharacter (ω i0 j) = Section1.principalCharacter W := by
-      simpa [hj'0, hω.principal] using hbarOmega
-    have hprincipal : ω i0 j = Section1.principalCharacter W := by
-      ext x
-      have hx := congrFun hbar0 x
-      simpa [Section1.conjugateCharacter, Section1.principalCharacter] using congrArg star hx
-    exact hj ((hω.pairwise_eq (i := i0) (i' := i0) (j := j) (j' := j0)
-      (by simpa [hω.principal] using hprincipal)).2)
-  refine ⟨j', hj'0, hj'ne, ?_⟩
-  exact conjugate_piChar_baseRow_eq_of_conjugate_omega_pf45
-    (W1 := W1) (W2 := W2) (W := W) (i0 := i0) (j0 := j0)
-    (ω := ω) (σ := σ) (piChar := piChar) (deltaSign := deltaSign)
-    h31 hω h43b h43c hbarOmega
 
 /-- The PF `(4.9.a)` zero-row conjugation step, retaining the cyclic-TI
 `ω` conjugation witness as well as its selected `Π`-character consequence. -/
@@ -6571,39 +6241,6 @@ public theorem theorem_4_9_b
             simp [smul_sub]
       _ = Section1.evalCoeff muG v := hEvalG.symm
 
-public theorem theorem_4_9_b_full
-    {L : Type u} [Group L] [Finite L]
-    {G : Type v} [Group G] [Finite G]
-    (K W1 W2 W : Subgroup L)
-    (A : Set L)
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq J]
-    [DecidableEq I]
-    (i0 : I)
-    (j0 k : J)
-    (ω : I → J → ClassFunction W)
-    (σL : ClassFunction W →ₗ[ℂ] ClassFunction L)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (piChar : I → J → ClassFunction L)
-    (xChar : J → ClassFunction K)
-    (deltaSign : J → ℂ)
-    (τ : ClassFunction L →ₗ[ℂ] ClassFunction G)
-    (hσiso : ∀ α β, Section1.scalarProduct G (σ α) (σ β) =
-      Section1.scalarProduct W α β)
-    (hσvirt : ∀ α : ClassFunction W, Representation.IsVirtualCharacter α →
-      Representation.IsVirtualCharacter (σ α))
-    (h45a : theorem_4_5_a_statement K piChar xChar)
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (h43b : Section4.theorem_4_3_b_statement
-      W1 W2 W I J i0 j0 ω σL piChar deltaSign hω)
-    (h49a : theorem_4_9_a_statement A j0 k piChar)
-    (h48 : theorem_4_8_statement (W2 := W2) (W := W) A j0 ω σ piChar deltaSign τ) :
-    theorem_4_9_b_full_statement A j0 k W ω σ piChar deltaSign τ := by
-  exact ⟨
-    theorem_4_9_b_lands_in_zIrr
-      K W1 W2 W i0 j0 k ω σL σ piChar deltaSign hσvirt hω h43b,
-    theorem_4_9_b
-      K W1 W2 W A i0 j0 k ω σL σ piChar xChar deltaSign τ
-      hσiso h45a hω h43b h49a h48⟩
 
 public theorem theorem_4_10
     {L : Type u} [Group L] [Finite L]

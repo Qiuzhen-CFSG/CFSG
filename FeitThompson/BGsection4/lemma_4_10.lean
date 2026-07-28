@@ -63,44 +63,6 @@ public theorem omega₁_map_subtype_le_map_subtype_of_le
     exact Subgroup.subset_closure (by simpa [xK, pow_one] using hxG)
   exact Subgroup.mem_map_of_mem K.subtype hxΩK
 
-private theorem omega₁_subtype_eq_self
-    {G : Type*} [Group G] {p : ℕ} :
-    (omega₁ (G := omega₁ (G := G) (p := p)) (p := p)).map
-        (omega₁ (G := G) (p := p)).subtype =
-      omega₁ (G := G) (p := p) := by
-  refine le_antisymm ?_ ?_
-  · exact omega₁_map_subtype_le (G := G) (p := p) (omega₁ (G := G) (p := p))
-  · rw [omega₁, omega]
-    refine (Subgroup.closure_le
-      (K := (omega₁ (G := omega₁ (G := G) (p := p)) (p := p)).map
-        (omega₁ (G := G) (p := p)).subtype)).2 ?_
-    intro x hx
-    have hxΩ : x ∈ omega₁ (G := G) (p := p) := by
-      exact Subgroup.subset_closure hx
-    have hxmem :
-        (⟨x, hxΩ⟩ : omega₁ (G := G) (p := p)) ∈
-          omega₁ (G := omega₁ (G := G) (p := p)) (p := p) := by
-      change (⟨x, hxΩ⟩ : omega₁ (G := G) (p := p)) ∈
-        Subgroup.closure
-          {y : omega₁ (G := G) (p := p) | y ^ (p ^ 1) = 1}
-      refine Subgroup.subset_closure ?_
-      simpa [pow_one] using hx
-    exact Subgroup.mem_map_of_mem (omega₁ (G := G) (p := p)).subtype hxmem
-
-private theorem natCard_omega₁_subgroup_omega₁_eq
-    {G : Type*} [Group G] [Finite G] {p : ℕ} :
-    Nat.card (omega₁ (G := omega₁ (G := G) (p := p)) (p := p)) =
-      Nat.card (omega₁ (G := G) (p := p)) := by
-  calc
-    Nat.card (omega₁ (G := omega₁ (G := G) (p := p)) (p := p))
-        = Nat.card ((omega₁ (G := omega₁ (G := G) (p := p)) (p := p)).map
-            (omega₁ (G := G) (p := p)).subtype) :=
-          (Subgroup.card_map_of_injective
-            (K := omega₁ (G := omega₁ (G := G) (p := p)) (p := p))
-            (f := (omega₁ (G := G) (p := p)).subtype)
-            (omega₁ (G := G) (p := p)).subtype_injective).symm
-    _ = Nat.card (omega₁ (G := G) (p := p)) := by
-          rw [omega₁_subtype_eq_self]
 
 private theorem omega₁_le_map_subtype_of_forall_pow_eq_one_mem
     {G : Type*} [Group G] {p : ℕ} (H : Subgroup G)

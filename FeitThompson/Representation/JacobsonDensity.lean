@@ -427,26 +427,6 @@ public theorem jacobson_density_surjective
   rw [this]
   simp only [Finsupp.univ_sum_single_apply]
 
-public theorem jacobson_density_bijective
-    {F : Type*} [Field F]
-    {A : Type*} [Ring A] [Algebra F A]
-    {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    [Module A V] [IsScalarTower F A V] [FaithfulSMul A V] [IsSimpleModule A V]
-    (hs : Function.Surjective (algebraMap F (Module.End A V))) :
-    Function.Bijective (jacobson_density_mapping F A V) :=
-  ⟨fun _ _ h ↦ FaithfulSMul.eq_of_smul_eq_smul (α := V) fun v ↦ DFunLike.congr_fun h v,
-    jacobson_density_surjective hs⟩
-
-/-- The algebra equivalence produced by the Jacobson density theorem. -/
-@[expose]
-public noncomputable def jacobson_density_equiv
-    (F : Type*) [Field F]
-    (A : Type*) [Ring A] [Algebra F A]
-    (V : Type*) [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    [Module A V] [IsScalarTower F A V] [FaithfulSMul A V] [IsSimpleModule A V]
-    (hs : Function.Surjective (algebraMap F (Module.End A V))) :
-    A ≃ₐ[F] Module.End F V :=
-  AlgEquiv.ofBijective (jacobson_density_mapping F A V) (jacobson_density_bijective hs)
 
 public theorem _root_.AlgebraicClosure.jacobson_density_condition
     {F : Type*} [Field F] [IsAlgClosed F]
@@ -491,13 +471,6 @@ public theorem jacobson_density_surjective_isAlgClosed
     Function.Surjective (jacobson_density_mapping F A V) :=
   jacobson_density_surjective AlgebraicClosure.jacobson_density_condition
 
-public theorem jacobson_density_bijective_isAlgClosed
-    {F : Type*} [Field F] [IsAlgClosed F]
-    {A : Type*} [Ring A] [Algebra F A]
-    {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    [Module A V] [IsScalarTower F A V] [FaithfulSMul A V] [IsSimpleModule A V] :
-    Function.Bijective (jacobson_density_mapping F A V) :=
-  jacobson_density_bijective AlgebraicClosure.jacobson_density_condition
 
 set_option backward.isDefEq.respectTransparency false in
 public theorem adjoin_univ_iff_surjective

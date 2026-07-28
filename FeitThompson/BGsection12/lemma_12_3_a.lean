@@ -253,37 +253,6 @@ public theorem section12_rankTwo_le_normalizer_malpha_inf_pre
     (H := section10Malpha M) (K := Mstar)
     (hAM.trans section12_le_normalizer_malpha_pre) (hAMstar.trans Subgroup.le_normalizer)
 
-omit [Finite G] [IsMinCE G] in
-public theorem section12_card_coprime_rankTwo_pPrime_pre
-    {A K : Subgroup G} {p : Nat.Primes}
-    (hA : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G)
-    (hK : IsPiSubgroup (section10PPrimeSet p) K) :
-    Nat.Coprime (Nat.card A) (Nat.card K) := by
-  rcases hA with ⟨hcard, _hElem⟩
-  refine Nat.coprime_of_dvd ?_
-  intro q hqPrime hqA hqK
-  let q' : Nat.Primes := ⟨q, hqPrime⟩
-  have hq_eq_p : q' = p := by
-    have hqp : q ∣ p.val :=
-      q'.2.dvd_of_dvd_pow (by simpa [hcard] using hqA)
-    exact Subtype.ext ((Nat.prime_dvd_prime_iff_eq q'.2 p.2).mp hqp)
-  have hq_not : q' ∉ ({p} : Set Nat.Primes) := by
-    simpa [section10PPrimeSet] using hK q' hqK
-  exact hq_not (by simp [hq_eq_p])
-
-omit [Finite G] [IsMinCE G] in
-public theorem section12_isInvariant_subgroupOf_of_le_normalizer_pre
-    {A H K : Subgroup G}
-    (hAH : A ≤ Subgroup.normalizer (H : Set G))
-    (hAK : A ≤ Subgroup.normalizer (K : Set G))
-    (_hKH : K ≤ H) :
-    haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-    IsInvariant (↥A) (↥H) (K.subgroupOf H) := by
-  haveI : Subgroup.Normalizes A H := ⟨hAH⟩
-  refine ⟨?_⟩
-  intro a x
-  change ((x : H) : G) ∈ K ↔ ((a : G) * ((x : H) : G) * (a : G)⁻¹) ∈ K
-  exact Subgroup.mem_normalizer_iff.mp (hAK a.property) ((x : H) : G)
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_isPiSubgroup_subgroupOf_pre

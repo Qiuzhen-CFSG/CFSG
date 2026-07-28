@@ -102,13 +102,6 @@ private theorem lemma_3_rightConjugateElem_mem_centralizer_singleton
     _ = rightConjugateElem y g * rightConjugateElem x g :=
       lemma_3_rightConjugateElem_mul y x g
 
-private theorem lemma_3_mem_rightConjugate_of_le
-    {G : Type*} [Group G] {A B : Subgroup G} {x g : G}
-    (hAB : A ≤ B) (hx : x ∈ rightConjugate A g) :
-    x ∈ rightConjugate B g := by
-  rw [rightConjugate] at hx ⊢
-  rcases hx with ⟨y, hy, rfl⟩
-  exact ⟨y, hAB hy, rfl⟩
 
 private theorem lemma_3_mem_rightConjugate_Q0_of_mem_rightConjugate_H
     {G : Type*} [Group G] {H Q0 : Subgroup G} {q t : G}

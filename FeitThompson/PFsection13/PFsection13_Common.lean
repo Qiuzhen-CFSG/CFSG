@@ -1487,29 +1487,6 @@ public theorem section13_hypothesis_13_1_conjugateBetaTauDataFor_swap
   · intro i k hi0 hi hk0 hk hν
     exact hS i k hi0 hi hk0 hk hν
 
-public theorem section13_hypothesis_13_1_betaSupportNormDataFor_swap
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q : Subgroup G} {p q u v : ℕ}
-    (h :
-      hypothesis_13_1_betaSupportNormDataFor Smax Tmax W W1 W2 P Q p q u v) :
-    hypothesis_13_1_betaSupportNormDataFor Tmax Smax W W2 W1 Q P q p v u := by
-  refine ⟨?_, ?_⟩
-  · intro ω η μ ν μsum νsum δ δ' σ βT j hnotation hj0 hj hβT
-    have hnotationOrig :
-        hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-          (fun i j => ω j i) (fun i j => η j i) (fun i j => ν j i)
-          (fun i j => μ j i) νsum μsum δ' δ σ :=
-      section13_hypothesis_13_1_characterNotationDataFor_swap hnotation
-    exact (h.2 (fun i j => ω j i) (fun i j => η j i) (fun i j => ν j i)
-      (fun i j => μ j i) νsum μsum δ' δ σ βT j hnotationOrig hj0 hj hβT)
-  · intro ω η μ ν μsum νsum δ δ' σ βS i hnotation hi0 hi hβS
-    have hnotationOrig :
-        hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-          (fun i j => ω j i) (fun i j => η j i) (fun i j => ν j i)
-          (fun i j => μ j i) νsum μsum δ' δ σ :=
-      section13_hypothesis_13_1_characterNotationDataFor_swap hnotation
-    exact (h.1 (fun i j => ω j i) (fun i j => η j i) (fun i j => ν j i)
-      (fun i j => μ j i) νsum μsum δ' δ σ βS i hnotationOrig hi0 hi hβS)
 
 public theorem section13_hypothesis_13_1_sourceData_swap
     {G : Type u} [Group G] [Finite G]
@@ -1537,16 +1514,6 @@ public theorem section13_hypothesis_13_1_sourceData_swap
     section13_hypothesis_13_1_conjugateBetaTauDataFor_swap hConjBetaTau,
     hChoice, hMin, hFourSixT, hFourSixS⟩
 
-public theorem section13_supportEnergy_nonneg
-    {G : Type u} [Group G] [Finite G]
-    (X : Set G) (χ : Section1.ClassFunction G) :
-    0 ≤ Section7.supportEnergy X χ := by
-  classical
-  unfold Section7.supportEnergy
-  exact Finset.sum_nonneg (fun g _ => by
-    split
-    · exact Complex.normSq_nonneg (χ g)
-    · norm_num)
 
 public theorem section13_supportEnergy_mono
     {G : Type u} [Group G] [Finite G]

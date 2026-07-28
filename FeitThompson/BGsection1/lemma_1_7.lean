@@ -23,9 +23,6 @@ Let $R$ be a $p$-group for some prime $p$.
 -/
 
 -- Lemma 1.7(b)
-public theorem lemma_1_7_b {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
-    IsElementaryAbelian p (R ⧸ frattini R) := by
-  simpa using isElementaryAbelian_quotient_frattini (R := R) (p := p)
 
 -- Lemma 1.7(c)
 public theorem lemma_1_7_c {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :

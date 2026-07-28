@@ -340,27 +340,6 @@ public def extendScalars_map (e : ρ →ₗ σ) :
 public theorem extendScalars_map_toLinearMap {e : ρ →ₗ σ} :
   (extendScalars_map F' e).toLinearMap = baseChange F' e.toLinearMap := by rfl
 
-public theorem extendScalars_map_inj_of_inj {e : ρ →ₗ σ} (h : Function.Injective e) :
-    Function.Injective ((extendScalars_map F' e)) := by
-  apply Module.Flat.lTensor_preserves_injective_linearMap
-  exact h
-
-/-- Extend a representation equivalence along scalar extension. -/
-@[expose]
-public def extendScalars_equiv (e : ρ ≃ₗ σ) :
-    extendScalars F' ρ ≃ₗ extendScalars F' σ :=
-  RepEquiv.mk (LinearEquiv.baseChange F F' V W e.toLinearEquiv) (by
-    intro g
-    ext x
-    simp only [LinearEquiv.coe_baseChange, extendScalars_apply,
-      TensorProduct.AlgebraTensorModule.curry_apply, restrictScalars_comp,
-      TensorProduct.curry_apply, coe_comp, coe_restrictScalars, Function.comp_apply,
-      baseChange_tmul, LinearEquiv.coe_coe]
-    show 1 ⊗ₜ[F] e ((ρ g) x) = 1 ⊗ₜ[F] (σ g) (e x)
-    rw [e.isIntertwining])
-
-public theorem extendScalars_equiv_toLinearEquiv {e : ρ ≃ₗ σ} :
-  (extendScalars_equiv F' e).toLinearEquiv = LinearEquiv.baseChange F F' V W e.toLinearEquiv := by rfl
 
 /-- Iterated scalar extension is canonically equivalent to direct scalar extension. -/
 @[expose]
@@ -453,62 +432,5 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     _ = LinearMap.range (LinearMap.baseChange F' avg) := by rw [havg_eq]
     _ = S.baseChange F' := hrange_avg_bc
 
-
-/-- Extending coefficients in the group algebra agrees with base change of its action. -/
-public theorem extendScalars_asAlgebraHom_mapRingHom
-    {F E G V : Type*} [Field F] [Field E] [Algebra F E] [Group G]
-    [AddCommGroup V] [Module F V]
-    (rho : Representation F G V) (b : MonoidAlgebra F G) :
-    (extendScalars E rho).asAlgebraHom
-        (MonoidAlgebra.mapRingHom G (algebraMap F E) b) =
-      LinearMap.baseChange E (rho.asAlgebraHom b) := by
-  induction b using MonoidAlgebra.induction with
-  | zero =>
-      have hmzero :
-          MonoidAlgebra.mapRingHom G (algebraMap F E) (0 : MonoidAlgebra F G) = 0 :=
-        map_zero _
-      calc
-        (extendScalars E rho).asAlgebraHom
-            (MonoidAlgebra.mapRingHom G (algebraMap F E) 0) =
-            (extendScalars E rho).asAlgebraHom 0 :=
-          congrArg (extendScalars E rho).asAlgebraHom hmzero
-        _ = 0 := map_zero _
-        _ = LinearMap.baseChange E 0 := LinearMap.baseChange_zero.symm
-        _ = LinearMap.baseChange E (rho.asAlgebraHom 0) :=
-          congrArg (LinearMap.baseChange E) (map_zero rho.asAlgebraHom).symm
-  | single_add g d b hg hd ih =>
-      have hsingle :
-          (extendScalars E rho).asAlgebraHom
-              (MonoidAlgebra.mapRingHom G (algebraMap F E) (MonoidAlgebra.single g d)) =
-            LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) := by
-        rw [MonoidAlgebra.mapRingHom_single,
-          Representation.asAlgebraHom_single,
-          Representation.asAlgebraHom_single,
-          LinearMap.baseChange_smul]
-        apply LinearMap.ext
-        intro x
-        induction x using TensorProduct.induction_on with
-        | zero => simp
-        | tmul e v =>
-            simp [extendScalars_apply, LinearMap.baseChange_tmul,
-              TensorProduct.smul_tmul', Algebra.smul_def, mul_comm]
-        | add x y hx hy => simp
-      let m := MonoidAlgebra.mapRingHom G (algebraMap F E)
-      let p := (extendScalars E rho).asAlgebraHom
-      calc
-        p (m (MonoidAlgebra.single g d + b)) =
-            p (m (MonoidAlgebra.single g d) + m b) :=
-          congrArg p (map_add m (MonoidAlgebra.single g d) b)
-        _ = p (m (MonoidAlgebra.single g d)) + p (m b) :=
-          map_add p (m (MonoidAlgebra.single g d)) (m b)
-        _ = LinearMap.baseChange E (rho.asAlgebraHom (MonoidAlgebra.single g d)) +
-            LinearMap.baseChange E (rho.asAlgebraHom b) := congrArg₂ (· + ·) hsingle ih
-        _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (MonoidAlgebra.single g d) + rho.asAlgebraHom b) :=
-          (LinearMap.baseChange_add _ _).symm
-        _ = LinearMap.baseChange E
-            (rho.asAlgebraHom (MonoidAlgebra.single g d + b)) :=
-          congrArg (LinearMap.baseChange E)
-            (map_add rho.asAlgebraHom (MonoidAlgebra.single g d) b).symm
 
 end Representation

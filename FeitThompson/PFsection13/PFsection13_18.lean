@@ -19,52 +19,6 @@ universe u
 
 /-! ## (13.18) -/
 
-/-- Peterfalvi `(13.18)`. -/
-@[expose] public def theorem_13_18_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (βS : Section1.ClassFunction Smax)
-    (βτ : Section1.ClassFunction G)
-    (j p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ →
-      theorem_13_18_hypothesis Smax P W1 (μ 0 j) βS j p →
-        βτ = τS βS →
-          ∃ Γ X Y η0j : Section1.ClassFunction G,
-            Section1.supportedOn βS
-                (subgroupSetPreimage Smax
-                  ((section16NonidentityElements (P : Set G)) ∪
-                    section16ConjugatesOfSetBySet
-                      ((W : Set G) \ ((W1 : Set G) ∪ (W2 : Set G))) (Smax : Set G))) ∧
-              Section1.supportedOn βS (subgroupSetPreimage Smax (typePFAZeroSet Smax W1 W2 P)) ∧
-              Section5.cfNormSq βS = ((u - 1 : ℕ) : ℝ) / (q : ℝ) + 2 ∧
-              η0j = η 0 j ∧
-              Γ = βτ - Section1.principalCharacter G + η0j ∧
-              (∀ k : ℕ, 0 < k → k < p →
-                ∃ (μ0k βSk : Section1.ClassFunction Smax) (βτk : Section1.ClassFunction G),
-                  theorem_13_18_hypothesis Smax P W1 μ0k βSk k p ∧
-                    βτk = τS βSk ∧
-                    Γ = βτk - Section1.principalCharacter G + η 0 k) ∧
-              Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0 ∧
-              Γ = Section1.conjugateCharacter Γ ∧
-              Γ = X + Y ∧
-              theorem_13_18_decompositionData p q η X Y ∧
-              Section5.cfNormSq Y ≤ ((u - 1 : ℕ) : ℝ) / (q : ℝ)
-
 
 private def theorem_13_18_betaData
     {G : Type u} [Group G] [Finite G]
@@ -371,15 +325,6 @@ private theorem theorem_13_18_decomposition_scalarProduct_Y_X_eq_zero
   rw [hYη i k (Finset.mem_range.mp hi) (Finset.mem_range.mp hk)]
   simp
 
-private theorem theorem_13_18_decomposition_scalarProduct_X_Y_eq_zero
-    {G : Type u} [Group G] [Finite G]
-    {p q : ℕ} {η : ℕ → ℕ → Section1.ClassFunction G}
-    {X Y : Section1.ClassFunction G}
-    (hdecomp : theorem_13_18_decompositionData p q η X Y) :
-    Section1.scalarProduct G X Y = 0 := by
-  have hYX : Section1.scalarProduct G Y X = 0 :=
-    theorem_13_18_decomposition_scalarProduct_Y_X_eq_zero hdecomp
-  simpa [Section1.scalarProduct_star_swap] using congrArg star hYX
 
 public theorem theorem_13_18_scalarProduct_principalCharacter_self
     {G : Type u} [Group G] [Finite G] :

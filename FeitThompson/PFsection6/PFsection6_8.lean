@@ -1069,28 +1069,6 @@ theorem theorem_6_8_caseC2_xChar_injective
   exact Section4Scratch.xChar_injective_pf45
     H d.piChar d.xChar h45a d.i0 d.j0 d.omega d.sigmaL d.deltaSign hω h43b
 
-theorem theorem_6_8_caseC2_range_xChar_card_eq_W2
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W : Subgroup L}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (d : caseC2FullData L H W1 W2 W T) :
-    letI : Fintype d.I := d.instFintypeI
-    letI : Fintype d.J := d.instFintypeJ
-    letI : DecidableEq d.I := d.instDecidableEqI
-    letI : DecidableEq d.J := d.instDecidableEqJ
-    Nat.card (Set.range d.xChar) = Nat.card W2 := by
-  classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  rcases d.fullHypothesis with
-    ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
-      hω, h43b, _h43c, _h43d, h45a, _h45b, _hτcyclic,
-      _hτA0, _hτisoA0, _hτpunctA0, _hτvirtA0⟩
-  exact Section4Scratch.natCard_range_xChar_eq_natCard_W2_pf45
-    H d.piChar d.xChar h45a d.i0 d.j0 d.omega d.sigmaL d.deltaSign hω h43b
 
 theorem theorem_6_8_caseC2_piColumn_injective
     {G : Type u} [Group G] [Finite G]
@@ -1354,70 +1332,6 @@ theorem theorem_6_8_reducible_subfamily_card_lower_of_injective
     Fintype.card_of_subtype redSZ (fun χ => Iff.rfl)
   simpa [redSZ, red, hredCard] using hcard
 
-theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_lower_of_nonbase_injective
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W : Subgroup L}
-    {SZ : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (d : caseC2FullData L H W1 W2 W T)
-    (f :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      {j : d.J // j ∈ Finset.univ.erase d.j0} →
-        Section1.ClassFunction L)
-    (hmem :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j, f j ∈ SZ)
-    (hred :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j, ¬ Section1.IsIrreducibleCharacterOnGroup (f j))
-    (hinj :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      Function.Injective f) :
-    letI : Fintype d.I := d.instFintypeI
-    letI : Fintype d.J := d.instFintypeJ
-    letI : DecidableEq d.I := d.instDecidableEqI
-    letI : DecidableEq d.J := d.instDecidableEqJ
-    Nat.card W2 - 1 ≤
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
-  classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  let nonbaseJ : Finset d.J := Finset.univ.erase d.j0
-  have hlower :
-      Fintype.card {j : d.J // j ∈ nonbaseJ} ≤
-        (SZ.filter fun χ =>
-          ¬ Section1.IsIrreducibleCharacterOnGroup χ).card :=
-    theorem_6_8_reducible_subfamily_card_lower_of_injective
-      (SZ := SZ) (ι := {j : d.J // j ∈ nonbaseJ}) f hmem hred hinj
-  rcases d.fullHypothesis with
-    ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
-      hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
-      _hτA0, _hτisoA0, _hτpunctA0, _hτvirtA0⟩
-  have hnonbaseCard :
-      Fintype.card {j : d.J // j ∈ nonbaseJ} = Nat.card W2 - 1 := by
-    have hsub :
-        Fintype.card {j : d.J // j ∈ nonbaseJ} = nonbaseJ.card :=
-      Fintype.card_of_subtype nonbaseJ (fun j => Iff.rfl)
-    have herase : nonbaseJ.card = Fintype.card d.J - 1 := by
-      simp [nonbaseJ]
-    rw [hsub, herase, hω.card_right]
-  simpa [hnonbaseCard] using hlower
 
 theorem theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_reducible_card_eq
     {G : Type u} [Group G] [Finite G]
@@ -1456,54 +1370,6 @@ theorem theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_reducible_card_eq
       ⟨_hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩ d j hj)
     (theorem_6_8_caseC2_nonbase_piColumn_not_irreducible d j)
 
-theorem theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_xChar_Z_kernel
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (d : caseC2FullData L H W1 W2 W T)
-    (hker :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j : d.J, j ≠ d.j0 →
-        Section1.subgroupInKernel' (d.xChar j) (Z.subgroupOf H)) :
-    letI : Fintype d.I := d.instFintypeI
-    letI : Fintype d.J := d.instFintypeJ
-    letI : DecidableEq d.I := d.instDecidableEqI
-    letI : DecidableEq d.J := d.instDecidableEqJ
-    ∀ j : d.J, j ≠ d.j0 →
-      Section4Scratch.piColumn d.piChar j ∈ SZ := by
-  classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  intro j hj
-  rcases hfamily with ⟨_hZH, hSZ, _hXeq, _hY⟩
-  rcases d.fullHypothesis with
-    ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
-      hω, h43b, h43c, _h43d, h45a, _h45b, _hτcyclic,
-      _hτA0, _hτisoA0, _hτpunctA0, _hτvirtA0⟩
-  let A : Set L := {h : L | h ∈ H ∧ h ≠ 1}
-  have h47 : Section4Scratch.theorem_4_7_statement H H A :=
-    Section4Scratch.theorem_4_7 H W1 W2 W H A h46
-  have hnonker :
-      ¬ Section1.subgroupInKernel' (d.xChar j) (H.subgroupOf H) :=
-    (Section4Scratch.theorem_4_7_nonbase_column H W1 W2 W H A d.i0 d.j0
-      d.omega d.sigmaL d.piChar d.xChar d.deltaSign
-      h46 h45a hω h43b h43c h47 j hj).1
-  have hne_principal : d.xChar j ≠ Section1.principalCharacter H := by
-    intro hprincipal
-    apply hnonker
-    rw [hprincipal]
-    intro a
-    simp [Section1.principalCharacter, Section1.degree]
-  exact (hSZ.2 (Section4Scratch.piColumn d.piChar j)).mpr
-    ⟨d.xChar j, h45a.2.1 j, hker j hj, hne_principal, (h45a.2.2 j).symm⟩
 
 theorem theorem_6_8_caseC2_nonirreducible_mem_SZ_piColumn
     {G : Type u} [Group G] [Finite G]
@@ -1669,60 +1535,6 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_eq_of_lower_bound
     theorem_6_8_caseC2_reducible_subfamily_card_SZ_le hfamily d
   exact le_antisymm hupper hlower
 
-theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_eq_of_nonbase_piColumn_mem_SZ
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (d : caseC2FullData L H W1 W2 W T)
-    (hpiSZ :
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j : d.J, j ≠ d.j0 →
-        Section4Scratch.piColumn d.piChar j ∈ SZ) :
-    letI : Fintype d.I := d.instFintypeI
-    letI : Fintype d.J := d.instFintypeJ
-    letI : DecidableEq d.I := d.instDecidableEqI
-    letI : DecidableEq d.J := d.instDecidableEqJ
-    (SZ.filter fun χ =>
-      ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-        Nat.card W2 - 1 := by
-  classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  let red : Section1.ClassFunction L → Prop :=
-    fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  rcases hfamily with ⟨_hZH, hSZ, _hXeq, _hY⟩
-  have hSZsubS : SZ ⊆ S := inducedKernelFamily_subset_base hSbot hSZ
-  have hredEq : SZ.filter red = S.filter red := by
-    apply Finset.ext
-    intro χ
-    constructor
-    · intro hχ
-      rw [Finset.mem_filter] at hχ ⊢
-      exact ⟨hSZsubS hχ.1, hχ.2⟩
-    · intro hχ
-      rw [Finset.mem_filter] at hχ ⊢
-      rcases theorem_6_8_caseC2_nonirreducible_mem_piColumn_of_fullData
-          h68' d hχ.1 hχ.2 with
-        ⟨j, hj, hχeq⟩
-      exact ⟨by rw [hχeq]; exact hpiSZ j hj, hχ.2⟩
-  have hScount :
-      (S.filter red).card = Nat.card W2 - 1 := by
-    simpa [red] using theorem_6_8_caseC2_reducible_subfamily_card_S_eq h68' d
-  change (SZ.filter red).card = Nat.card W2 - 1
-  rw [hredEq]
-  exact hScount
 
 theorem theorem_6_8_isComplement_of_semidirect_top
     {L : Type u} [Group L]
@@ -2678,21 +2490,6 @@ theorem theorem_6_8_caseB_Z_prime_card
   rw [hZcard]
   exact hp
 
-theorem theorem_6_8_constantOnSubgroupImageNonidentity_of_prime_card_zpow
-    {G : Type u} [Group G]
-    {L : Subgroup G} {Z : Subgroup L}
-    {ψ : Section1.ClassFunction G}
-    (hprime : Nat.Prime (Nat.card Z))
-    (hpow : ∀ z : Z, z ≠ 1 → ∀ n : ℤ,
-      ψ ((((z ^ n : Z) : L) : G)) = ψ ((z : L) : G)) :
-    constantOnSubgroupImageNonidentity L Z ψ := by
-  intro z1 z2 hz1 _hz2
-  haveI : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
-  have hz2pow : z2 ∈ Subgroup.zpowers z1 := by
-    exact mem_zpowers_of_prime_card (G := Z) (p := Nat.card Z) rfl hz1
-  rcases Subgroup.mem_zpowers_iff.mp hz2pow with ⟨n, hn⟩
-  subst z2
-  exact (hpow z1 hz1 n).symm
 
 theorem theorem_6_8_constantOnSubgroupImageNonidentity_of_prime_card_zpow_nontrivial
     {G : Type u} [Group G]
@@ -2756,17 +2553,6 @@ theorem theorem_6_8_constantCentralizerOrderOnNonidentity_of_prime_card
       simpa using (Commute.zpow_right hcomm n).eq
   rw [hcent_eq]
 
-theorem theorem_6_8_caseB_constantCentralizerOrderOnNonidentity
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    (L0 : Subgroup L) :
-    constantCentralizerOrderOnNonidentity Z L0 := by
-  exact theorem_6_8_constantCentralizerOrderOnNonidentity_of_prime_card
-    (theorem_6_8_caseB_Z_prime_card hcase hB)
 
 theorem theorem_6_8_sylow_of_nonabelianPQuotient_bot
     {G : Type u} [Group G] [Finite G]
@@ -2992,88 +2778,6 @@ theorem theorem_6_8_constantOnSubgroupImageNonidentity_map_subtype
     simpa using congrArg (fun z : Z => ((z : L) : G)) hl2
   exact hconst ⟨l1, hl1Z⟩ ⟨l2, hl2Z⟩ hl1ne hl2ne
 
-theorem theorem_6_8_constantOnNonidentitySubgroup_subgroupRestriction
-    {G : Type u} [Group G]
-    {L : Subgroup G} {Z : Subgroup L}
-    {ψ : Section1.ClassFunction G}
-    (hconst : constantOnSubgroupImageNonidentity L Z ψ) :
-    constantOnNonidentitySubgroup Z (Section1.subgroupRestriction L ψ) := by
-  intro z1 z2 hz1 hz2
-  exact hconst z1 z2 hz1 hz2
-
-theorem theorem_6_8_isTISubsetWithNormalizer_Hsharp_subgroup
-    {G : Type u} [Group G]
-    {L : Subgroup G} {H : Subgroup L}
-    (hTI :
-      Section2.IsTISubsetWithNormalizer (subgroupImagePuncturedSet L H) L) :
-    Section2.IsTISubsetWithNormalizer
-      ({l : L | l ∈ H ∧ l ≠ 1}) (⊤ : Subgroup L) := by
-  classical
-  let A : Set L := {l : L | l ∈ H ∧ l ≠ 1}
-  let Aimg : Set G := subgroupImagePuncturedSet L H
-  have hmem : ∀ l : L, ((l : L) : G) ∈ Aimg ↔ l ∈ A := by
-    intro l
-    constructor
-    · rintro ⟨h, hhl, hhne⟩
-      have hEq : (h : L) = l := Subtype.ext (by simpa using hhl)
-      exact ⟨by simp [← hEq], by
-        intro hl
-        exact hhne (hEq.trans hl)⟩
-    · intro hl
-      exact ⟨⟨l, hl.1⟩, rfl, hl.2⟩
-  have hconj :
-      ∀ x y : L,
-        (((Section2.conjBy x y : L) : G) =
-          Section2.conjBy ((x : L) : G) ((y : L) : G)) := by
-    intro x y
-    simp [Section2.conjBy]
-  have hnormalizes_of_image :
-      ∀ x : L,
-        Section2.normalizesSet Aimg ((x : L) : G) →
-          Section2.normalizesSet A x := by
-    intro x hx y
-    calc
-      Section2.conjBy x y ∈ A
-          ↔ (((Section2.conjBy x y : L) : G) ∈ Aimg) := (hmem _).symm
-      _ ↔ Section2.conjBy ((x : L) : G) ((y : L) : G) ∈ Aimg := by
-        rw [hconj]
-      _ ↔ ((y : L) : G) ∈ Aimg := hx ((y : L) : G)
-      _ ↔ y ∈ A := hmem y
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rcases hTI.1 with ⟨g, hg⟩
-    rcases hg with ⟨h, _hhg, hhne⟩
-    exact ⟨(h : L), by exact ⟨h.property, hhne⟩⟩
-  · intro l hl
-    exact hl.2
-  · intro x hx
-    have hximg :
-        (Aimg ∩ Section2.conjugateImage Aimg ((x : L) : G)).Nonempty := by
-      rcases hx with ⟨a, haA, haConj⟩
-      rcases haConj with ⟨b, hbA, hab⟩
-      refine ⟨((a : L) : G), ?_, ?_⟩
-      · exact (hmem a).2 haA
-      · refine ⟨((b : L) : G), (hmem b).2 hbA, ?_⟩
-        exact (congrArg (fun l : L => ((l : L) : G)) hab).trans (hconj x b)
-    exact hnormalizes_of_image x (hTI.2.2.1 ((x : L) : G) hximg)
-  · apply le_antisymm
-    · intro x _hx
-      trivial
-    · intro x _hx
-      have hximg : ((x : L) : G) ∈ Section2.setNormalizer Aimg := by
-        rw [hTI.2.2.2]
-        exact x.property
-      exact hnormalizes_of_image x hximg
-
-theorem theorem_6_8_top_eq_normalizer_of_sylow_eq_normal
-    {L : Type u} [Group L] [Finite L]
-    {H : Subgroup L} [H.Normal]
-    {p : ℕ} [Fact p.Prime] {P : Sylow p L}
-    (hP : (P : Subgroup L) = H) :
-    (⊤ : Subgroup L) = Subgroup.normalizer (((P : Subgroup L) : Set L)) := by
-  apply le_antisymm
-  · rw [hP]
-    exact Subgroup.le_normalizer_of_normal (H := H)
-  · exact le_top
 
 public theorem theorem_6_8_subgroupOf_top_normal_of_normal
     {L : Type u} [Group L] {Z : Subgroup L} [Z.Normal] :
@@ -3081,28 +2785,6 @@ public theorem theorem_6_8_subgroupOf_top_normal_of_normal
   exact (Subgroup.normal_subgroupOf_iff_le_normalizer (show Z ≤ (⊤ : Subgroup L) from le_top)).2
     (Subgroup.le_normalizer_of_normal (H := Z))
 
-theorem theorem_6_8_2_1_of_zpow_invariance
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hpow :
-      theorem_6_8_hypothesis L H W1 W2 W S T →
-        (∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p) →
-          caseC2Hypothesis L H W1 W2 W T →
-            theorem_6_8_caseBData H W2 Z →
-              theorem_6_8_familyData H Z S SZ X Y →
-                coherentExtension Y T τ₁ →
-                  ∀ η : Section1.ClassFunction L, η ∈ Y →
-                    ∀ z : Z, z ≠ 1 → ∀ n : ℤ,
-                      (τ₁ η) ((((z ^ n : Z) : L) : G)) =
-                        (τ₁ η) ((z : L) : G)) :
-    theorem_6_8_2_1_statement L H W1 W2 W Z S SZ X Y T τ₁ := by
-  intro h68 hpQ hcase hB hfamily hτ₁ η hηY
-  exact theorem_6_8_constantOnSubgroupImageNonidentity_of_prime_card_zpow
-    (theorem_6_8_caseB_Z_prime_card hcase hB)
-    (hpow h68 hpQ hcase hB hfamily hτ₁ η hηY)
 
 theorem theorem_6_8_2_1_of_zpow_invariance_nontrivial
     {G : Type u} [Group G] [Finite G]
@@ -3337,13 +3019,6 @@ theorem theorem_6_8_isCoprime_int_orderOf_of_prime_card_zpow_ne_one
     (Nat.Prime.coprime_iff_not_dvd hprime_order).2 hnot_dvd
   exact theorem_6_8_int_isCoprime_of_natAbs_coprime hcop_left.symm
 
-theorem theorem_6_8_degree_eq_of_classFunctionArgumentPow
-    {L : Type u} [Group L]
-    {φ ψ : Section1.ClassFunction L} {e : ℕ}
-    (harg : Section3.classFunctionArgumentPow φ ψ e) :
-    Section1.degree ψ = Section1.degree φ := by
-  rw [Section1.degree_apply, Section1.degree_apply]
-  simpa using harg 1
 
 theorem theorem_6_8_argumentPow_diff_integerSpanOn_punctured
     {L : Type u} [Group L]
@@ -3826,33 +3501,6 @@ theorem theorem_6_8_2_2_restriction_regular_add_of_821_statement
       hfamily hτ₁ hηY)
     zG hzG
 
-theorem theorem_6_8_familyData_union_subset_S
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    X ∪ Y ⊆ S := by
-  intro χ hχ
-  rcases Finset.mem_union.mp hχ with hχX | hχY
-  · exact theorem_6_8_familyData_X_subset_S hfamily hχX
-  · exact theorem_6_8_familyData_Y_subset_S hSbot hfamily hχY
-
-theorem theorem_6_8_familyData_union_conjugate_closed
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    ∀ χ : Section1.ClassFunction L, χ ∈ X ∪ Y →
-      Section1.conjugateCharacter χ ∈ X ∪ Y := by
-  rcases hfamily with ⟨_hZH, hSZ, hXeq, hY⟩
-  intro χ hχ
-  rcases Finset.mem_union.mp hχ with hχX | hχY
-  · exact Finset.mem_union.mpr
-      (Or.inl (theorem_6_6_diff_conjugate_closed hSbot hSZ hXeq χ hχX))
-  · exact Finset.mem_union.mpr
-      (Or.inr (inducedKernelFamily_conjugate_mem hY hχY))
 
 theorem theorem_6_8_centerIn_normal_of_normal
     {L : Type u} [Group L] {H : Subgroup L} [H.Normal] :
@@ -4619,54 +4267,6 @@ theorem theorem_6_8_center_restriction_nonprincipal_of_mem_X_caseB
   exact ⟨θ, φ, hθ, hφ, hφne, hχeq,
     theorem_6_8_degree_ratio_eq_of_induced_from_H h68.1 hχeq, hres⟩
 
-theorem theorem_6_8_theorem_6_7_base_hypothesis_ambient_of_caseB
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    {p : ℕ} [Fact p.Prime]
-    (hpQ : nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z) :
-    ∃ P : Sylow p G,
-      theorem_6_7_base_hypothesis p P L (Z.map L.subtype) := by
-  classical
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  rcases theorem_6_8_sylow_of_nonabelianPQuotient_bot h68' hpQ with
-    ⟨PL, hPL⟩
-  have hnormHmap :
-      Subgroup.normalizer (((H.map L.subtype : Subgroup G) : Set G)) = L := by
-    rw [theorem_6_8_normalizer_map_subtype_eq_setNormalizer_punctured]
-    exact hTI.2.2.2
-  rcases theorem_6_8_sylow_map_subtype_of_sylow_normalizer PL hPL hnormHmap with
-    ⟨Pamb, hPamb⟩
-  refine ⟨Pamb, ?_⟩
-  rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68' hcase hB with
-    ⟨hZne, hZcent, hZnorm⟩
-  haveI : Z.Normal := hZnorm
-  have hZprimeMap : Nat.Prime (Nat.card (Z.map L.subtype)) := by
-    have hcard : Nat.card (Z.map L.subtype) = Nat.card Z := by
-      exact Subgroup.card_map_of_injective (K := Z) (f := L.subtype)
-        L.subtype_injective
-    rw [hcard]
-    exact theorem_6_8_caseB_Z_prime_card hcase hB
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · rw [hPamb]
-    exact hnormHmap.symm
-  · exact hodd
-  · simpa [hPamb, theorem_6_8_subgroupImagePuncturedSet_eq_map_punctured
-      (L := L) (H := H)] using hTI
-  · exact theorem_6_8_map_subtype_ne_bot hZne
-  · simpa [hPamb] using
-      theorem_6_8_map_subtype_le_centerIn
-        (G := G) (L := L) (H := H) (Z := Z) hZcent
-  · exact theorem_6_8_map_subtype_normal_subgroupOf (G := G) (L := L) (Z := Z)
-  · exact theorem_6_8_constantCentralizerOrderOnNonidentity_of_prime_card
-      (L0 := L) hZprimeMap
 
 theorem theorem_6_8_theorem_6_7_base_hypothesis_ambient_card_of_caseB
     {G : Type u} [Group G] [Finite G]
@@ -5174,27 +4774,6 @@ public noncomputable def theorem_6_8_map_mk'_equiv_of_inf_eq_bot
     apply Subtype.ext
     simp
 
-theorem theorem_6_8_mem_map_mk'_iff_of_le_inf_eq_bot
-    {L : Type u} [Group L]
-    {K W Z : Subgroup L} [Z.Normal]
-    (hKW : K ≤ W) (hZW : Z ⊓ W = ⊥) (x : W) :
-    ((x : L) ∈ K) ↔
-      QuotientGroup.mk' Z (x : L) ∈ K.map (QuotientGroup.mk' Z) := by
-  constructor
-  · intro hx
-    exact ⟨(x : L), hx, rfl⟩
-  · intro hx
-    rcases hx with ⟨y, hyK, hyq⟩
-    have hdiffZ : y⁻¹ * (x : L) ∈ Z := QuotientGroup.eq.mp hyq
-    have hdiffW : y⁻¹ * (x : L) ∈ W :=
-      W.mul_mem (W.inv_mem (hKW hyK)) x.2
-    have hdiffBot : y⁻¹ * (x : L) ∈ (⊥ : Subgroup L) := by
-      have hdiffInf : y⁻¹ * (x : L) ∈ Z ⊓ W := ⟨hdiffZ, hdiffW⟩
-      simpa [hZW] using hdiffInf
-    have hdiffOne : y⁻¹ * (x : L) = 1 := by
-      simpa using hdiffBot
-    have hyx : y = (x : L) := inv_mul_eq_one.mp hdiffOne
-    simpa [← hyx] using hyK
 
 @[expose] public def theorem_6_8_transportClassFunction
     {G H : Type u} [Group G] [Group H]
@@ -5512,17 +5091,6 @@ theorem theorem_6_8_caseA_quotient_notation_3_3
     simpa [eW, q] using hx.symm
   exact theorem_6_8_notation_3_3_transport eW hcard1 hcard2 hV1 hV2 hω
 
-theorem theorem_6_8_quotientInflatedClassFunction_injective
-    {L : Type u} [Group L] [Finite L]
-    (H Z : Subgroup L) [Z.Normal] :
-    Function.Injective
-      (fun θbar : Section1.ClassFunction (H.map (QuotientGroup.mk' Z)) =>
-        (fun h : H => θbar (((QuotientGroup.mk' Z).subgroupMap H) h))) := by
-  classical
-  intro θ η hEq
-  ext y
-  rcases MonoidHom.subgroupMap_surjective (QuotientGroup.mk' Z) H y with ⟨h, rfl⟩
-  exact congrFun hEq h
 
 theorem theorem_6_8_quotientInducedCF_eq_of_inducedCF_eq
     {L : Type u} [Group L] [Finite L]
@@ -6321,49 +5889,6 @@ theorem theorem_6_8_Z_center_normal_ne_bot_of_caseData
     exact ⟨hZne, hZdata.1, hZdata.2⟩
   · exact theorem_6_8_caseB_Z_center_normal_ne_bot h68' hB.1 hB.2
 
-theorem theorem_6_8_theorem_6_7_base_hypothesis_of_caseB
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    {p : ℕ} [Fact p.Prime] {P : Sylow p L}
-    (hP : (P : Subgroup L) = H) :
-    theorem_6_7_base_hypothesis p P (⊤ : Subgroup L) Z := by
-  classical
-  rcases h68 with ⟨hsemi, hodd, _hHne, _hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, _hHne, _hnil, hTI, hSbot, hT, hbranch⟩
-  have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68' hcase hB with
-    ⟨hZne, hZcenter, hZnorm⟩
-  haveI : Z.Normal := hZnorm
-  have hnormalizer :
-      (⊤ : Subgroup L) = Subgroup.normalizer (((P : Subgroup L) : Set L)) :=
-    theorem_6_8_top_eq_normalizer_of_sylow_eq_normal hP
-  have hoddTop : Odd (Nat.card (⊤ : Subgroup L)) := by
-    simpa [Subgroup.card_top] using hodd
-  have hTIH :
-      Section2.IsTISubsetWithNormalizer
-        ({l : L | l ∈ H ∧ l ≠ 1}) (⊤ : Subgroup L) :=
-    theorem_6_8_isTISubsetWithNormalizer_Hsharp_subgroup hTI
-  have hTIP :
-      Section2.IsTISubsetWithNormalizer
-        ({g : L | g ∈ (P : Subgroup L) ∧ g ≠ 1}) (⊤ : Subgroup L) := by
-    simpa [hP] using hTIH
-  have hZcenterP : Z ≤ centerIn (P : Subgroup L) := by
-    simpa [hP] using hZcenter
-  have hZsubTop :
-      ∃ _hZL : Z ≤ (⊤ : Subgroup L), (Z.subgroupOf (⊤ : Subgroup L)).Normal :=
-    ⟨le_top, theorem_6_8_subgroupOf_top_normal_of_normal (Z := Z)⟩
-  have hconst :
-      constantCentralizerOrderOnNonidentity Z (⊤ : Subgroup L) :=
-    theorem_6_8_caseB_constantCentralizerOrderOnNonidentity hcase hB (⊤ : Subgroup L)
-  exact ⟨hnormalizer, hoddTop, hTIP, hZne, hZcenterP, hZsubTop, hconst⟩
 
 theorem theorem_6_8_X_data_of_Z_data
     {G : Type u} [Group G] [Finite G]
@@ -6387,21 +5912,6 @@ theorem theorem_6_8_X_data_of_Z_data
     (theorem_6_8_hypothesis_6_4_commutator_of_branch h68)
     hZne hZcenter hZnorm hSZ hXeq hXirr
 
-theorem theorem_6_8_X_coherent_of_Z_data
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hZne : Z ≠ ⊥)
-    (hZcenter : Z ≤ centerIn H)
-    (hZnorm : Z.Normal)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hXirr : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      Section1.IsIrreducibleCharacterOnGroup χ) :
-    coherentFamily X T :=
-  (theorem_6_8_X_data_of_Z_data h68 hZne hZcenter hZnorm hfamily hXirr).2
 
 theorem theorem_6_8_X_irreducible_of_frobenius
     {G : Type u} [Group G] [Finite G]
@@ -6418,148 +5928,6 @@ theorem theorem_6_8_X_irreducible_of_frobenius
   exact theorem_6_8_irreducible_members_of_frobenius h68 hfrob
     ⟨χ, theorem_6_8_familyData_X_subset_S hfamily hχX⟩
 
-theorem theorem_6_8_X_coherent_of_frobenius_Z_data
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfrob : frobeniusWithKernel (⊤ : Subgroup L) H)
-    (hZne : Z ≠ ⊥)
-    (hZcenter : Z ≤ centerIn H)
-    (hZnorm : Z.Normal)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    coherentFamily X T :=
-  theorem_6_8_X_coherent_of_Z_data h68 hZne hZcenter hZnorm hfamily
-    (theorem_6_8_X_irreducible_of_frobenius h68 hfrob hfamily)
-
-theorem theorem_6_8_caseA_X_coherent_of_frobenius
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfrob : frobeniusWithKernel (⊤ : Subgroup L) H)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    coherentFamily X T := by
-  rcases theorem_6_8_Z_center_normal_ne_bot_of_caseData h68 hpQ
-      (Or.inl hA) with
-    ⟨hZne, hZcenter, hZnorm⟩
-  exact theorem_6_8_X_coherent_of_frobenius_Z_data
-    h68 hfrob hZne hZcenter hZnorm hfamily
-
-theorem theorem_6_8_caseA_X_coherent_of_caseC2
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hpiSZ : ∀ d : caseC2FullData L H W1 W2 W T,
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j : d.J, j ≠ d.j0 →
-        Section4Scratch.piColumn d.piChar j ∈ SZ) :
-    coherentFamily X T := by
-  rcases theorem_6_8_Z_center_normal_ne_bot_of_caseData h68 hpQ
-      (Or.inl hA) with
-    ⟨hZne, hZcenter, hZnorm⟩
-  exact theorem_6_8_X_coherent_of_Z_data
-    h68 hZne hZcenter hZnorm hfamily
-    (theorem_6_8_caseC2_X_irreducible_of_nonbase_piColumn_mem_SZ
-      h68 hcase hfamily hpiSZ)
-
-theorem theorem_6_8_caseA_X_coherent_of_caseC2_reducible_card_eq
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hcard :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-      (S.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card) :
-    coherentFamily X T := by
-  exact theorem_6_8_caseA_X_coherent_of_caseC2 h68 hcase hpQ hA hfamily
-    (fun d =>
-      theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_reducible_card_eq
-        h68 hfamily hcard d)
-
-theorem theorem_6_8_caseA_X_coherent_of_caseC2_SZ_count
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hSZcount :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1) :
-    coherentFamily X T := by
-  classical
-  rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  have hScount :
-      (S.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1 := by
-    simpa using theorem_6_8_caseC2_reducible_subfamily_card_S_eq h68 d
-  have hcard :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-      (S.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
-    exact hSZcount.trans hScount.symm
-  exact theorem_6_8_caseA_X_coherent_of_caseC2_reducible_card_eq
-    h68 ⟨⟨d⟩, _hprime, _hW2comm⟩ hpQ hA hfamily hcard
-
-theorem theorem_6_8_caseA_X_coherent_of_branch_SZ_count
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hSZcount :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1) :
-    coherentFamily X T := by
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  rcases hbranch with hfrob | hcaseC2
-  · exact theorem_6_8_caseA_X_coherent_of_frobenius
-      h68' hfrob hpQ hA hfamily
-  · exact theorem_6_8_caseA_X_coherent_of_caseC2_SZ_count
-      h68' hcaseC2 hpQ hA hfamily hSZcount
 
 theorem theorem_6_8_caseA_X_data_of_frobenius
     {G : Type u} [Group G] [Finite G]
@@ -6671,111 +6039,6 @@ theorem theorem_6_8_caseA_X_data_of_quotient_pf45
   exact theorem_6_8_caseA_X_data_of_caseC2_SZ_count
     h68 hcase hpQ hA hfamily hSZcount
 
-theorem theorem_6_8_caseA_X_data_of_branch_SZ_count
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hA : theorem_6_8_caseAData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hSZcount :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1) :
-    (∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-        Section1.IsIrreducibleCharacterOnGroup χ ∧
-          ¬ Section1.subgroupInKernel' χ Z) ∧
-      coherentFamily X T := by
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  rcases hbranch with hfrob | hcaseC2
-  · exact theorem_6_8_caseA_X_data_of_frobenius
-      h68' hfrob hpQ hA hfamily
-  · exact theorem_6_8_caseA_X_data_of_caseC2_SZ_count
-      h68' hcaseC2 hpQ hA hfamily hSZcount
-
-theorem theorem_6_8_caseB_X_data_of_nonbase_piColumn_mem_SZ
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hpiSZ : ∀ d : caseC2FullData L H W1 W2 W T,
-      letI : Fintype d.I := d.instFintypeI
-      letI : Fintype d.J := d.instFintypeJ
-      letI : DecidableEq d.I := d.instDecidableEqI
-      letI : DecidableEq d.J := d.instDecidableEqJ
-      ∀ j : d.J, j ≠ d.j0 →
-        Section4Scratch.piColumn d.piChar j ∈ SZ) :
-    (∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-        Section1.IsIrreducibleCharacterOnGroup χ ∧
-          ¬ Section1.subgroupInKernel' χ Z) ∧
-      coherentFamily X T := by
-  rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68 hcase hB with
-    ⟨hZne, hZcenter, hZnorm⟩
-  exact theorem_6_8_X_data_of_Z_data
-    h68 hZne hZcenter hZnorm hfamily
-    (theorem_6_8_caseC2_X_irreducible_of_nonbase_piColumn_mem_SZ
-      h68 hcase hfamily hpiSZ)
-
-theorem theorem_6_8_caseB_X_data_of_caseC2_SZ_count
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hSZcount :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1) :
-    (∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-        Section1.IsIrreducibleCharacterOnGroup χ ∧
-          ¬ Section1.subgroupInKernel' χ Z) ∧
-      coherentFamily X T := by
-  classical
-  rcases hcase with ⟨⟨d⟩, hprime, hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
-  have hScount :
-      (S.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-          Nat.card W2 - 1 := by
-    simpa using theorem_6_8_caseC2_reducible_subfamily_card_S_eq h68 d
-  have hcard :
-      (SZ.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
-      (S.filter fun χ =>
-        ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
-    exact hSZcount.trans hScount.symm
-  have hcase' : caseC2Hypothesis L H W1 W2 W T :=
-    ⟨⟨d⟩, hprime, hW2comm⟩
-  have hpiSZ :
-      ∀ d' : caseC2FullData L H W1 W2 W T,
-        letI : Fintype d'.I := d'.instFintypeI
-        letI : Fintype d'.J := d'.instFintypeJ
-        letI : DecidableEq d'.I := d'.instDecidableEqI
-        letI : DecidableEq d'.J := d'.instDecidableEqJ
-        ∀ j : d'.J, j ≠ d'.j0 →
-          Section4Scratch.piColumn d'.piChar j ∈ SZ := by
-    intro d'
-    exact theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_reducible_card_eq
-      h68 hfamily hcard d'
-  exact theorem_6_8_caseB_X_data_of_nonbase_piColumn_mem_SZ
-    h68 hcase' hB hfamily hpiSZ
 
 theorem theorem_6_8_Y_coherent_of_familyData
     {G : Type u} [Group G] [Finite G]
@@ -7152,22 +6415,6 @@ theorem theorem_6_8_regular_add_coefficient_eq_sub_values
   field_simp [hcard_ne]
   ring
 
-theorem theorem_6_8_regular_add_coefficient_star_eq_self_of_int_values
-    {G : Type u} [Group G] [Finite G]
-    {Z : Subgroup G}
-    {ψ : Section1.ClassFunction G}
-    {a b : ℂ}
-    (hres : Section1.subgroupRestriction Z ψ =
-      a • regularCharacter Z + b • Section1.principalCharacter Z)
-    (z : Z) (hz : z ≠ 1)
-    (hψ1 : ψ 1 ∈ Set.range (fun n : ℤ => (n : ℂ)))
-    (hψz : ψ (z : G) ∈ Set.range (fun n : ℤ => (n : ℂ))) :
-    star a = a := by
-  rcases hψ1 with ⟨m, hm⟩
-  rcases hψz with ⟨n, hn⟩
-  rw [theorem_6_8_regular_add_coefficient_eq_sub_values hres z hz]
-  rw [← hm, ← hn]
-  simp
 
 theorem theorem_6_8_regular_add_coefficient_multiple_of_congruent_values
     {G : Type u} [Group G] [Finite G]
@@ -7218,39 +6465,6 @@ theorem theorem_6_8_source_coeff_multiple_of_regular_coeff_multiple
       _ = q * c := hlink
   exact hcancel.symm
 
-theorem theorem_6_8_source_coeff_multiple_of_relIndex_regular_coeff_multiple
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} {a c r : ℂ}
-    (hlink : r * a = (Z.relIndex H : ℂ) * c)
-    (hr : ∃ k : ℤ, r = (Z.relIndex H : ℂ) * ((k : ℤ) : ℂ)) :
-    ∃ k : ℤ, c = a * ((k : ℤ) : ℂ) := by
-  have hq : (Z.relIndex H : ℂ) ≠ 0 := by
-    have hqnat : Z.relIndex H ≠ 0 := by
-      rw [Subgroup.relIndex]
-      exact Subgroup.index_ne_zero_of_finite
-    exact_mod_cast hqnat
-  exact theorem_6_8_source_coeff_multiple_of_regular_coeff_multiple hq hlink hr
-
-theorem theorem_6_8_regular_add_coefficient_multiple_of_theorem_6_7
-    {G : Type u} [Group G] [Finite G]
-    {p : ℕ} [Fact p.Prime]
-    (P : Sylow p G) (L0 Z : Subgroup G)
-    {ψ : Section1.ClassFunction G}
-    {a b : ℂ}
-    (h67 : theorem_6_7_hypothesis p P L0 Z ψ)
-    (hres : Section1.subgroupRestriction Z ψ =
-      a • regularCharacter Z + b • Section1.principalCharacter Z)
-    (z : Z) (hz : z ≠ 1)
-    {q : ℕ}
-    (hfactor : Nat.card (P : Subgroup G) = Nat.card Z * q) :
-    ∃ k : ℤ, a = (q : ℂ) * (k : ℂ) := by
-  rcases theorem_6_7 p P L0 Z ψ h67 with ⟨hint, hcongr⟩
-  rcases theorem_6_7_degree_nat_of_irreducible h67.2.1 with ⟨d, hd⟩
-  have hψ1 : ψ 1 ∈ Set.range (fun m : ℤ => (m : ℂ)) := by
-    exact ⟨d, hd.symm⟩
-  exact theorem_6_8_regular_add_coefficient_multiple_of_congruent_values
-    hres z hz (Nat.card_pos (α := (P : Subgroup G))).ne'
-    hfactor hψ1 (hint z hz) (hcongr z hz)
 
 theorem theorem_6_8_theorem_6_7_signed_outputs
     {G : Type u} [Group G] [Finite G]
@@ -8463,37 +7677,6 @@ theorem theorem_6_8_2_2_commonY_of_right_orthogonal_data
   exact theorem_6_8_decomposition_of_orthogonal_add_smul
     (horth φ hφirr hφne)
 
-theorem theorem_6_8_union_nonempty_of_familyData
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    (X ∪ Y).Nonempty := by
-  rcases theorem_6_8_exists_Y_degree_relIndex h68 hfamily with
-    ⟨η, hηY, _hηdeg⟩
-  exact ⟨η, Finset.mem_union.mpr (Or.inr hηY)⟩
-
-set_option maxHeartbeats 160000000 in
-theorem theorem_6_8_union_hypothesis_5_2_of_familyData
-    {G : Type u} [Group G] [Finite G]
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hnonempty : (X ∪ Y).Nonempty)
-    (h52 : Section5.hypothesis_5_2_statement S T) :
-    Section5.hypothesis_5_2_statement (X ∪ Y) T := by
-  exact Section5.hypothesis_5_2_statement_subset
-    (S1 := X ∪ Y) (S := S) (T := T)
-    (theorem_6_8_familyData_union_subset_S hSbot hfamily)
-    hnonempty
-    (theorem_6_8_familyData_union_conjugate_closed hSbot hfamily)
-    h52
 
 theorem theorem_6_8_coherentFamily_of_hypothesis_5_2_and_extension
     {G : Type u} [Group G] [Finite G]
@@ -8516,39 +7699,6 @@ theorem theorem_6_8_coherentFamily_of_hypothesis_5_2_and_extension
   rcases hext with ⟨hIso, hvirt, hagree⟩
   exact ⟨hsrc, hnonempty, T', hIso, hvirt, hagree⟩
 
-theorem theorem_6_8_union_coherent_of_extension
-    {G : Type u} [Group G] [Finite G]
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T T' : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hnonempty : (X ∪ Y).Nonempty)
-    (h52 : Section5.hypothesis_5_2_statement S T)
-    (hext : coherentExtension (X ∪ Y) T T') :
-    coherentFamily (X ∪ Y) T := by
-  exact theorem_6_8_coherentFamily_of_hypothesis_5_2_and_extension
-    (theorem_6_8_union_hypothesis_5_2_of_familyData
-      hSbot hfamily hnonempty h52)
-    hext
-
-theorem theorem_6_8_union_coherent_of_exists_extension
-    {G : Type u} [Group G] [Finite G]
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hnonempty : (X ∪ Y).Nonempty)
-    (h52 : Section5.hypothesis_5_2_statement S T)
-    (hext : ∃ T' : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G,
-      coherentExtension (X ∪ Y) T T') :
-    coherentFamily (X ∪ Y) T := by
-  rcases hext with ⟨T', hext⟩
-  exact theorem_6_8_union_coherent_of_extension
-    hSbot hfamily hnonempty h52 hext
 
 theorem theorem_6_8_scalarProduct_self_ne_zero_of_character_not_conjugate
     {L : Type u} [Group L] [Finite L]
@@ -8568,29 +7718,6 @@ theorem theorem_6_8_scalarProduct_self_ne_zero_of_character_not_conjugate
   ext g
   simp [hχzero, Section1.conjugateCharacter]
 
-theorem theorem_6_8_union_image_family_orth_self_inputs
-    {G : Type u} [Group G] [Finite G]
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hnonempty : (X ∪ Y).Nonempty)
-    (h52 : Section5.hypothesis_5_2_statement S T) :
-    Section5.hypothesis_5_2_c_statement (X ∪ Y) ∧
-      ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-        Section1.scalarProduct L (η : Section1.ClassFunction L)
-          (η : Section1.ClassFunction L) ≠ 0 := by
-  have h52union :
-      Section5.hypothesis_5_2_statement (X ∪ Y) T :=
-    theorem_6_8_union_hypothesis_5_2_of_familyData
-      hSbot hfamily hnonempty h52
-  rcases h52union with ⟨hsetup, R, h52a, _h52b, h52c, _h52d, _h52e⟩
-  refine ⟨h52c, ?_⟩
-  intro η
-  exact theorem_6_8_scalarProduct_self_ne_zero_of_character_not_conjugate
-    (hsetup.2 η) (h52a η).2
 
 theorem theorem_6_8_X_degree_eq_cardW1_mul
     {G : Type u} [Group G] [Finite G]
@@ -9339,42 +8466,6 @@ theorem theorem_6_8_induced_constituent_pf54_projection_scalar_data
       hIndX hηY hXbig_span
   exact theorem_6_8_projection_scalar_eq_neg_remainder hT hXzero
 
-theorem theorem_6_8_integerSpan_sum_zsmul
-    {L : Type u} [Group L]
-    {S : Finset (Section1.ClassFunction L)}
-    {ι : Type*} [DecidableEq ι]
-    (s : Finset ι) (z : ι → ℤ) (φ : ι → Section1.ClassFunction L)
-    (hφ : ∀ i, i ∈ s → Section5.integerSpan S (φ i)) :
-    Section5.integerSpan S (s.sum fun i => (z i : ℂ) • φ i) := by
-  classical
-  induction s using Finset.induction with
-  | empty =>
-      refine ⟨0, ?_⟩
-      ext g
-      simp [Section1.evalCoeff]
-  | insert a s has ih =>
-      rw [Finset.sum_insert has]
-      exact Section5.integerSpan_add
-        (Section5.integerSpan_zsmul (z a)
-          (hφ a (Finset.mem_insert_self a s)))
-        (ih (fun i hi => hφ i (Finset.mem_insert_of_mem hi)))
-
-theorem theorem_6_8_integerSpan_weightedFamilySum_nat
-    {L : Type u} [Group L]
-    {S : Finset (Section1.ClassFunction L)}
-    {ι : Type*} [Finite ι] [DecidableEq ι]
-    (e : ι → ℕ) (φ : ι → Section1.ClassFunction L)
-    (hφ : ∀ i, Section5.integerSpan S (φ i)) :
-    Section5.integerSpan S
-      (Section1.weightedFamilySum (fun i => (e i : ℂ)) φ) := by
-  letI : Fintype ι := Fintype.ofFinite ι
-  have hsum :=
-    theorem_6_8_integerSpan_sum_zsmul
-      (S := S) (s := Finset.univ) (z := fun i => (e i : ℤ)) (φ := φ)
-      (fun i _hi => hφ i)
-  convert hsum using 1
-  ext g
-  simp [Section1.weightedFamilySum, Finset.sum_apply]
 
 theorem theorem_6_8_integerSpan_sum_zsmul_of_nonzero
     {L : Type u} [Group L]
@@ -9421,41 +8512,6 @@ theorem theorem_6_8_integerSpan_weightedFamilySum_nat_of_nonzero
   ext g
   simp [Section1.weightedFamilySum, Finset.sum_apply]
 
-theorem theorem_6_8_induced_span_of_subgroup_decomposition
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H Z : Subgroup L}
-    {S : Finset (Section1.ClassFunction L)}
-    (hZH : Z ≤ H)
-    (hSbot : inducedKernelFamily H ⊥ S)
-    {ι : Type*} [Finite ι] [DecidableEq ι]
-    (e : ι → ℕ) (ψ : ι → Section1.ClassFunction H)
-    {φ : Section1.ClassFunction Z}
-    (hψirr : ∀ i, Section1.IsIrreducibleCharacterOnGroup (ψ i))
-    (hψne : ∀ i, ψ i ≠ Section1.principalCharacter H)
-    (hdecomp :
-      Section1.inducedCF (Z.subgroupOf H) (Section1.subgroupOfClassFunction φ) =
-        Section1.weightedFamilySum (fun i => (e i : ℂ)) ψ) :
-    Section5.integerSpan S (Section1.inducedCF Z φ) := by
-  have hdecompL :
-      Section1.inducedCF Z φ =
-        Section1.weightedFamilySum (fun i => (e i : ℂ))
-          (fun i => Section1.inducedCF H (ψ i)) :=
-    Section1.proposition_1_7_a_decomposition_from_subgroup Z H hZH e ψ φ hdecomp
-  rw [hdecompL]
-  exact theorem_6_8_integerSpan_weightedFamilySum_nat e
-    (fun i => Section1.inducedCF H (ψ i))
-    (fun i =>
-      Section5.integerSpan_of_mem S <|
-        (hSbot.2 (Section1.inducedCF H (ψ i))).mpr
-          ⟨ψ i, hψirr i, by
-            intro a
-            have ha : (a : H) = 1 := by
-              have hbot : (a : H) ∈ (⊥ : Subgroup L).subgroupOf H := a.property
-              simpa using hbot
-            rw [ha]
-            exact rfl,
-            hψne i, rfl⟩)
 
 theorem theorem_6_8_induced_shift_eq_weighted_alpha_of_decomposition
     {G : Type u} [Group G] [Finite G]
@@ -9526,38 +8582,6 @@ theorem theorem_6_8_scalarProduct_weightedFamilySum_left
     w i * Section1.scalarProduct G (φ i) ψ
   rw [Section1.scalarProduct_smul_left]
 
-theorem theorem_6_8_sum_sq_coeff_eq_relIndex_of_subgroup_decomposition
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L}
-    {ι : Type*} [Finite ι]
-    (e : ι → ℕ) (ψ : ι → Section1.ClassFunction H)
-    {φ : Section1.ClassFunction Z}
-    (hφone : Section1.degree φ = 1)
-    (hψdegree : ∀ i, Section1.degree (ψ i) = (e i : ℂ))
-    (hdecomp :
-      Section1.inducedCF (Z.subgroupOf H) (Section1.subgroupOfClassFunction φ) =
-        Section1.weightedFamilySum (fun i => (e i : ℂ)) ψ) :
-    (letI : Fintype ι := Fintype.ofFinite ι;
-      (∑ i : ι, (e i : ℂ) * (e i : ℂ)) = (Z.relIndex H : ℂ)) := by
-  classical
-  letI : Fintype ι := Fintype.ofFinite ι
-  have hpoint := congrFun hdecomp (1 : H)
-  have hleft :
-      Section1.inducedCF (Z.subgroupOf H) (Section1.subgroupOfClassFunction φ) (1 : H) =
-        (Z.relIndex H : ℂ) := by
-    have hdeg := Section1.degree_inducedClassFunction (Z.subgroupOf H)
-      (Section1.subgroupOfClassFunction (T := H) φ)
-    rw [Section1.degree_apply, Section1.degree_subgroupOfClassFunction, hφone] at hdeg
-    simpa [Subgroup.relIndex] using hdeg
-  have hψdegree_apply : ∀ i, ψ i 1 = (e i : ℂ) := by
-    intro i
-    simpa [Section1.degree_apply] using hψdegree i
-  have hright :
-      Section1.weightedFamilySum (fun i => (e i : ℂ)) ψ (1 : H) =
-        ∑ i : ι, (e i : ℂ) * (e i : ℂ) := by
-    simp [Section1.weightedFamilySum, hψdegree_apply]
-  rw [hleft, hright] at hpoint
-  exact hpoint.symm
 
 theorem theorem_6_8_sum_sq_coeff_eq_relIndex_of_subgroup_decomposition_nonzero
     {L : Type u} [Group L] [Finite L]
@@ -11865,91 +10889,6 @@ theorem theorem_6_8_weighted_shift_scalar_sum_eq_commonY_of_decomposition
   rw [theorem_6_8_scalarProduct_weightedFamilySum_left] at hscalar
   exact hscalar
 
-theorem theorem_6_8_nat_coeff_eq_of_weighted_sum_eq
-    {ι : Type*} [Fintype ι]
-    (e b : ι → ℕ) (i0 : ι)
-    (hb_le : ∀ i, b i ≤ e i)
-    (hsum : (∑ i : ι, e i * b i) = ∑ i : ι, e i * e i)
-    (hei0 : e i0 ≠ 0) :
-    b i0 = e i0 := by
-  classical
-  have hterm : ∀ i, e i * e i = e i * b i + e i * (e i - b i) := by
-    intro i
-    rw [← Nat.mul_add]
-    rw [Nat.add_sub_of_le (hb_le i)]
-  have hsumdecomp :
-      (∑ i : ι, e i * e i) =
-        (∑ i : ι, e i * b i) + (∑ i : ι, e i * (e i - b i)) := by
-    calc
-      (∑ i : ι, e i * e i) =
-          ∑ i : ι, (e i * b i + e i * (e i - b i)) := by
-            refine Finset.sum_congr rfl ?_
-            intro i _hi
-            exact hterm i
-      _ = (∑ i : ι, e i * b i) +
-          (∑ i : ι, e i * (e i - b i)) := by
-            rw [Finset.sum_add_distrib]
-  have hdiffsum : (∑ i : ι, e i * (e i - b i)) = 0 := by
-    omega
-  have hterm0 : e i0 * (e i0 - b i0) = 0 := by
-    exact (Finset.sum_eq_zero_iff.mp hdiffsum) i0 (Finset.mem_univ i0)
-  have hdiff0 : e i0 - b i0 = 0 := by
-    rcases Nat.mul_eq_zero.mp hterm0 with he | hd
-    · exact False.elim (hei0 he)
-    · exact hd
-  have hle : e i0 ≤ b i0 := (Nat.sub_eq_zero_iff_le).mp hdiff0
-  exact le_antisymm (hb_le i0) hle
-
-theorem theorem_6_8_selected_scalar_eq_of_weighted_projection_coefficients
-    {ι : Type*} [Fintype ι]
-    (e b : ι → ℕ) (i0 : ι)
-    {y : ℂ} {s : ι → ℂ}
-    (hscalar : ∀ i, s i = -(b i : ℂ) * y)
-    (hweighted : (∑ i : ι, (e i : ℂ) * s i) =
-      -(∑ i : ι, (e i : ℂ) * (e i : ℂ)) * y)
-    (hb_le : ∀ i, b i ≤ e i)
-    (hei0 : e i0 ≠ 0) :
-    s i0 = -(e i0 : ℂ) * y := by
-  classical
-  by_cases hy : y = 0
-  · simp [hscalar i0, hy]
-  · have hweighted' :
-        (∑ i : ι, (e i : ℂ) * (-(b i : ℂ) * y)) =
-          -(∑ i : ι, (e i : ℂ) * (e i : ℂ)) * y := by
-      simpa [hscalar] using hweighted
-    have hleft_factor :
-        (∑ i : ι, (e i : ℂ) * (-(b i : ℂ) * y)) =
-          -(∑ i : ι, ((e i * b i : ℕ) : ℂ)) * y := by
-      calc
-        (∑ i : ι, (e i : ℂ) * (-(b i : ℂ) * y)) =
-            ∑ i : ι, (-(((e i * b i : ℕ) : ℂ)) * y) := by
-              refine Finset.sum_congr rfl ?_
-              intro i _hi
-              norm_num [Nat.cast_mul]
-              ring
-        _ = -(∑ i : ι, ((e i * b i : ℕ) : ℂ)) * y := by
-              rw [← Finset.sum_neg_distrib, Finset.sum_mul]
-    have hright_factor :
-        -(∑ i : ι, (e i : ℂ) * (e i : ℂ)) * y =
-          -(∑ i : ι, ((e i * e i : ℕ) : ℂ)) * y := by
-      congr 2
-      refine Finset.sum_congr rfl ?_
-      intro i _hi
-      norm_num [Nat.cast_mul]
-    have hcancel :
-        -(∑ i : ι, ((e i * b i : ℕ) : ℂ)) =
-          -(∑ i : ι, ((e i * e i : ℕ) : ℂ)) := by
-      apply mul_right_cancel₀ hy
-      rw [← hleft_factor, hweighted', hright_factor]
-    have hcomplex :
-        (∑ i : ι, ((e i * b i : ℕ) : ℂ)) =
-          (∑ i : ι, ((e i * e i : ℕ) : ℂ)) :=
-      neg_injective hcancel
-    have hsum : (∑ i : ι, e i * b i) = ∑ i : ι, e i * e i := by
-      exact_mod_cast hcomplex
-    have hb_eq : b i0 = e i0 :=
-      theorem_6_8_nat_coeff_eq_of_weighted_sum_eq e b i0 hb_le hsum hei0
-    simp [hscalar i0, hb_eq]
 
 theorem theorem_6_8_mem_Y_cfNormSq_eq_one
     {G : Type u} [Group G] [Finite G]
@@ -12241,11 +11180,6 @@ theorem theorem_6_8_eq_nat_smul_of_scalarProduct_eq_and_cfNormSq_le
       hYself hcoeff_int hnorm_int
   simpa using hAeq
 
-theorem theorem_6_8_int_le_nat_of_sq_le
-    {b : ℤ} {e : ℕ}
-    (h : b ^ (2 : ℕ) ≤ ((e : ℤ) ^ (2 : ℕ))) :
-    b ≤ (e : ℤ) := by
-  nlinarith
 
 theorem theorem_6_8_int_coeff_eq_of_weighted_sum_eq
     {ι : Type*} [Fintype ι]
@@ -12340,114 +11274,6 @@ theorem theorem_6_8_selected_scalar_eq_of_weighted_projection_int_coefficients
       theorem_6_8_int_coeff_eq_of_weighted_sum_eq e b i0 hb_le hsum hei0
     simp [hscalar i0, hb_eq]
 
-theorem theorem_6_8_induced_constituent_projection_int_scalar_data
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (R : {χ : Section1.ClassFunction L // χ ∈ X ∪ Y} →
-      Finset (Section1.ClassFunction G))
-    (hsetup : Section5.hypothesis_5_2_setup_statement (X ∪ Y))
-    (h52a : Section5.hypothesis_5_2_a_statement (X ∪ Y))
-    (h52b : Section5.hypothesis_5_2_b_statement (X ∪ Y) T)
-    (h52c : Section5.hypothesis_5_2_c_statement (X ∪ Y))
-    (h52d : Section5.hypothesis_5_2_d_statement (X ∪ Y) T R)
-    (h52e : Section5.hypothesis_5_2_e_statement (X ∪ Y) R)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ : Section1.ClassFunction L} (hη₁Y : η₁ ∈ Y)
-    {Ycf : Section1.ClassFunction G}
-    (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf)
-    {ι : Type*}
-    (e : ι → ℕ) (ψ : ι → Section1.ClassFunction H) (i : ι)
-    (hdegree : Section1.degree (ψ i) = (e i : ℂ))
-    (hIndX : Section1.inducedCF H (ψ i) ∈ X) :
-    ∃ Yrem : Section1.ClassFunction G, ∃ b : ℤ,
-      b ≤ (e i : ℤ) ∧
-        Section1.scalarProduct G Yrem Ycf = (b : ℂ) ∧
-          ∀ η : Section1.ClassFunction L, η ∈ Y →
-            Section1.scalarProduct G
-                (T (Section1.inducedCF H (ψ i) - (e i : ℂ) • η₁)) (τ₁ η) =
-              -Section1.scalarProduct G Yrem (τ₁ η) := by
-  classical
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  rcases theorem_6_8_induced_constituent_pf54_projection_scalar_data
-      hSbot hsemi hfamily hZcomm R hsetup h52a h52b h52c h52d h52e
-      hτ₁ e ψ i hdegree hIndX hη₁Y with
-    ⟨Xbig, Yrem, hXbig_span, _hYrem_orth, hTproj, _hXbig_norm, hpf54,
-      hscalar_neg⟩
-  let χU : {χ : Section1.ClassFunction L // χ ∈ X ∪ Y} :=
-    ⟨Section1.inducedCF H (ψ i), Finset.mem_union.mpr (Or.inl hIndX)⟩
-  have hshift_span :
-      Section5.integerSpanOn (X ∪ Y) Section5.puncturedSet
-        (Section1.inducedCF H (ψ i) - (e i : ℂ) • η₁) :=
-    (theorem_6_8_induced_constituent_shift_integerSpanOn
-      hsemi hfamily e ψ i hdegree hIndX hη₁Y).2
-  have hYremvirt : Representation.IsVirtualCharacter Yrem :=
-    theorem_6_8_pf54_remainder_virtual
-      (U := X ∪ Y) (T := T) (R := R χU) h52b (h52d χU).1
-      hshift_span hXbig_span hTproj
-  rcases hcommon with ⟨_hη₁Ycommon, hYcfData, _hphiData⟩
-  have hYcfvirt : Representation.IsVirtualCharacter Ycf :=
-    by
-      rcases hτ₁ with ⟨_hIso, hvirt, _hagree⟩
-      rcases hYcfData with hYcf_eq | hYcf_alt
-      · have hη₁virt : Representation.IsVirtualCharacter (τ₁ η₁) :=
-          hvirt η₁ (Section5.integerSpan_of_mem Y hη₁Y)
-        simpa [hYcf_eq] using hη₁virt
-      · rcases hYcf_alt with ⟨η₂, _hcard, hη₂Y, _hη₂ne, hYcf_eq⟩
-        have hη₂virt : Representation.IsVirtualCharacter (τ₁ η₂) :=
-          hvirt η₂ (Section5.integerSpan_of_mem Y hη₂Y)
-        simpa [hYcf_eq] using Section3.isVirtualCharacter_neg hη₂virt
-  have hYself : Section1.scalarProduct G Ycf Ycf = 1 := by
-    rcases hτ₁ with ⟨hIso, _hvirt, _hagree⟩
-    rcases hYcfData with hYcf_eq | hYcf_alt
-    · have hη₁irr : Section1.IsIrreducibleCharacterOnGroup η₁ :=
-        theorem_6_8_Y_irreducible_of_familyData h68' hfamily η₁ hη₁Y
-      have hη₁self : Section1.scalarProduct L η₁ η₁ = 1 := by
-        rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
-        rw [hη₁eq]
-        exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-      calc
-        Section1.scalarProduct G Ycf Ycf =
-            Section1.scalarProduct G (τ₁ η₁) (τ₁ η₁) := by rw [hYcf_eq]
-        _ = Section1.scalarProduct L η₁ η₁ :=
-            Section5.isCFLinearIsometryOnSpan_apply_of_mem hIso hη₁Y hη₁Y
-        _ = 1 := hη₁self
-    · rcases hYcf_alt with ⟨η₂, _hcard, hη₂Y, _hη₂ne, hYcf_eq⟩
-      have hη₂irr : Section1.IsIrreducibleCharacterOnGroup η₂ :=
-        theorem_6_8_Y_irreducible_of_familyData h68' hfamily η₂ hη₂Y
-      have hη₂self : Section1.scalarProduct L η₂ η₂ = 1 := by
-        rcases hη₂irr with ⟨_n, ρ, hρirr, hη₂eq⟩
-        rw [hη₂eq]
-        exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-      have hneg :
-          Section1.scalarProduct G (-τ₁ η₂) (-τ₁ η₂) =
-            Section1.scalarProduct G (τ₁ η₂) (τ₁ η₂) := by
-        have hneg_eq : -τ₁ η₂ = (-1 : ℂ) • τ₁ η₂ := by
-          ext g
-          simp
-        rw [hneg_eq, Section1.scalarProduct_smul_left,
-          Section1.scalarProduct_smul_right]
-        simp
-      calc
-        Section1.scalarProduct G Ycf Ycf =
-            Section1.scalarProduct G (-τ₁ η₂) (-τ₁ η₂) := by rw [hYcf_eq]
-        _ = Section1.scalarProduct G (τ₁ η₂) (τ₁ η₂) := hneg
-        _ = Section1.scalarProduct L η₂ η₂ :=
-            Section5.isCFLinearIsometryOnSpan_apply_of_mem hIso hη₂Y hη₂Y
-        _ = 1 := hη₂self
-  rcases theorem_6_8_projection_int_coeff_le_of_pf54_norm
-      h68' hfamily hη₁Y hYremvirt hYcfvirt hYself hpf54 with
-    ⟨b, hbcoeff, hble⟩
-  exact ⟨Yrem, b, hble, hbcoeff, hscalar_neg⟩
 
 theorem theorem_6_8_shift_orthogonal_of_scalarProduct_eq_neg
     {G : Type u} [Group G] [Finite G]
@@ -12610,67 +11436,6 @@ theorem theorem_6_8_caseB_Y_generator_agreement
   exact hτ₁.2.2 (η - η₁)
     (theorem_6_8_Y_diff_eta_integerSpanOn_Y hsemi hfamily hηY hη₁Y)
 
-theorem theorem_6_8_caseB_Tnew_Y_generator_agreement
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {Tnew τ₁ T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η η₁ : Section1.ClassFunction L}
-    {Ycf : Section1.ClassFunction G}
-    (hTnewη : Tnew η = τ₁ η - τ₁ η₁ + Ycf)
-    (hTnewη₁ : Tnew η₁ = Ycf)
-    (hτ₁agree : τ₁ (η - η₁) = T (η - η₁)) :
-    Tnew (η - η₁) = T (η - η₁) := by
-  rw [map_sub, hTnewη, hTnewη₁, ← hτ₁agree, map_sub]
-  abel
-
-theorem theorem_6_8_caseB_Tnew_X_shift_agreement
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {Tnew T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {χ η₁ : Section1.ClassFunction L}
-    {X₁ Ycf : Section1.ClassFunction G}
-    (a : ℂ)
-    (hTnewχ : Tnew χ = X₁)
-    (hTnewη₁ : Tnew η₁ = Ycf)
-    (hshift : T (χ - a • η₁) = X₁ - a • Ycf) :
-    Tnew (χ - a • η₁) = T (χ - a • η₁) := by
-  rw [map_sub, map_smul, hTnewχ, hTnewη₁, hshift]
-
-theorem theorem_6_8_caseB_X_shift_generator_data
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {Tnew T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    {χ η₁ : Section1.ClassFunction L}
-    {X₁ Ycf : Section1.ClassFunction G}
-    (hχX : χ ∈ X) (hη₁Y : η₁ ∈ Y)
-    (hTnewχ : Tnew χ = X₁)
-    (hTnewη₁ : Tnew η₁ = Ycf)
-    (hshift : T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-      X₁ - (Section1.degree χ / (Nat.card W1 : ℂ)) • Ycf) :
-    ∃ a : ℕ,
-      Section1.degree χ = (a * Nat.card W1 : ℂ) ∧
-        Section1.degree χ / (Nat.card W1 : ℂ) = (a : ℂ) ∧
-          Section5.integerSpanOn (X ∪ Y) Section5.puncturedSet
-            (χ - (a : ℂ) • η₁) ∧
-            Tnew (χ - (a : ℂ) • η₁) = T (χ - (a : ℂ) • η₁) := by
-  rcases theorem_6_8_X_shift_eta_integerSpanOn
-      hSbot hsemi hfamily hχX hη₁Y with
-    ⟨a, hχdeg, hχdiv, hspan⟩
-  have hshift_a :
-      T (χ - (a : ℂ) • η₁) = X₁ - (a : ℂ) • Ycf := by
-    have hχdiv' : Section1.degree χ / (Fintype.card W1 : ℂ) = (a : ℂ) := by
-      simpa [Nat.card_eq_fintype_card] using hχdiv
-    simpa [hχdiv'] using hshift
-  have hagree :
-      Tnew (χ - (a : ℂ) • η₁) = T (χ - (a : ℂ) • η₁) :=
-    theorem_6_8_caseB_Tnew_X_shift_agreement
-      (a := (a : ℂ)) hTnewχ hTnewη₁ hshift_a
-  exact ⟨a, hχdeg, hχdiv, hspan, hagree⟩
 
 noncomputable def theorem_6_8_caseB_unionImage
     {G : Type u} [Group G] [Finite G]
@@ -12746,43 +11511,6 @@ theorem theorem_6_8_caseB_unionImage_X_spec
   simpa [theorem_6_8_caseB_unionImage, hηnotY] using
     Classical.choose_spec (hshift (η : Section1.ClassFunction L) hηX)
 
-theorem theorem_6_8_caseB_source_X_Y_orthogonal
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52c : Section5.hypothesis_5_2_c_statement (X ∪ Y))
-    {χ η : Section1.ClassFunction L}
-    (hχX : χ ∈ X) (hηY : η ∈ Y) :
-    Section1.scalarProduct L χ η = 0 := by
-  have hχU : χ ∈ X ∪ Y := Finset.mem_union.mpr (Or.inl hχX)
-  have hηU : η ∈ X ∪ Y := Finset.mem_union.mpr (Or.inr hηY)
-  have hηnotX : η ∉ X :=
-    theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hηY
-  have hχneη : χ ≠ η := by
-    intro hχeq
-    exact hηnotX (by simpa [hχeq] using hχX)
-  exact h52c hχU hηU hχneη
-
-theorem theorem_6_8_caseB_source_Y_X_orthogonal
-    {L : Type u} [Group L] [Finite L]
-    {H Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52c : Section5.hypothesis_5_2_c_statement (X ∪ Y))
-    {χ η : Section1.ClassFunction L}
-    (hχX : χ ∈ X) (hηY : η ∈ Y) :
-    Section1.scalarProduct L η χ = 0 := by
-  have hχU : χ ∈ X ∪ Y := Finset.mem_union.mpr (Or.inl hχX)
-  have hηU : η ∈ X ∪ Y := Finset.mem_union.mpr (Or.inr hηY)
-  have hηnotX : η ∉ X :=
-    theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hηY
-  have hηneχ : η ≠ χ := by
-      intro hηeq
-      exact hηnotX (by simpa [← hηeq] using hχX)
-  exact h52c hηU hχU hηneχ
 
 theorem theorem_6_8_scalarProduct_eq_nat_mul_base_of_left_sub_orthogonal
     {L : Type u} [Group L] [Finite L]
@@ -14044,34 +12772,6 @@ theorem theorem_6_8_caseB_commonY_self_gram
             simpa [hη₂eq] using
               theorem_6_8_scalarProduct_conjugateCharacter_self η₁
 
-theorem theorem_6_8_caseB_commonY_cfNormSq_eq_one
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η₁ : Section1.ClassFunction L}
-    {Ycf : Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (h52a : Section5.hypothesis_5_2_a_statement (X ∪ Y))
-    (hτ₁ : coherentExtension Y T τ₁)
-    (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf) :
-    Section5.cfNormSq Ycf = 1 := by
-  haveI : H.Normal := theorem_6_8_left_normal_of_semidirect_top h68.1
-  have hself :
-      Section1.scalarProduct G Ycf Ycf =
-        Section1.scalarProduct L η₁ η₁ :=
-    theorem_6_8_caseB_commonY_self_gram hfamily h52a hτ₁ hcommon
-  have hη₁irr : Section1.IsIrreducibleCharacterOnGroup η₁ :=
-    theorem_6_8_Y_irreducible_of_familyData h68 hfamily η₁ hcommon.1
-  have hη₁self : Section1.scalarProduct L η₁ η₁ = 1 := by
-    rcases hη₁irr with ⟨_n, ρ, hρirr, hη₁eq⟩
-    rw [hη₁eq]
-    exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
-  unfold Section5.cfNormSq
-  rw [hself, hη₁self]
-  simp
 
 theorem theorem_6_8_caseB_commonY_self_eq_one
     {G : Type u} [Group G] [Finite G]
@@ -14821,152 +13521,6 @@ theorem theorem_6_8_caseB_unionImage_virtual
       (W1 := W1) (hshift := hshift)
       hSbot hsemi hfamily h52union hτ₁ hcommon η hηX hηY
 
-theorem theorem_6_8_caseB_unionImage_eta₁
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {W1 : Subgroup L}
-    {X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η₁ : Section1.ClassFunction L}
-    {Ycf : Section1.ClassFunction G}
-    {hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      ∃ X₁ : Section1.ClassFunction G,
-        let a : ℂ := Section1.degree χ / (Nat.card W1 : ℂ)
-        orthogonalToTransformedFinset Y τ₁ X₁ ∧
-          T (χ - a • η₁) = X₁ - a • Ycf}
-    (hη₁Y : η₁ ∈ Y) :
-    theorem_6_8_caseB_unionImage
-        (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-        η₁ Ycf hshift ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩ =
-      Ycf := by
-  rw [theorem_6_8_caseB_unionImage_of_mem_Y
-    (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-    ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩ hη₁Y]
-  abel
-
-theorem theorem_6_8_caseB_unionImage_Y_generator_agreement
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {Tnew T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η₁ : Section1.ClassFunction L}
-    {Ycf : Section1.ClassFunction G}
-    {hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      ∃ X₁ : Section1.ClassFunction G,
-        let a : ℂ := Section1.degree χ / (Nat.card W1 : ℂ)
-        orthogonalToTransformedFinset Y τ₁ X₁ ∧
-          T (χ - a • η₁) = X₁ - a • Ycf}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hτ₁ : coherentExtension Y T τ₁)
-    (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf)
-    (hTnew : ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Tnew (η : Section1.ClassFunction L) =
-        theorem_6_8_caseB_unionImage
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          η₁ Ycf hshift η)
-    {η : Section1.ClassFunction L}
-    (hηY : η ∈ Y) :
-    Tnew (η - η₁) = T (η - η₁) := by
-  rcases hcommon with ⟨hη₁Y, _hcommonY, _hphi⟩
-  have hTnewη :
-      Tnew η = τ₁ η - τ₁ η₁ + Ycf := by
-    calc
-      Tnew η =
-          theorem_6_8_caseB_unionImage
-            (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-            η₁ Ycf hshift ⟨η, Finset.mem_union.mpr (Or.inr hηY)⟩ := by
-        simpa using hTnew ⟨η, Finset.mem_union.mpr (Or.inr hηY)⟩
-      _ = τ₁ η - τ₁ η₁ + Ycf :=
-        theorem_6_8_caseB_unionImage_of_mem_Y
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          ⟨η, Finset.mem_union.mpr (Or.inr hηY)⟩ hηY
-  have hTnewη₁ : Tnew η₁ = Ycf := by
-    calc
-      Tnew η₁ =
-          theorem_6_8_caseB_unionImage
-            (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-            η₁ Ycf hshift
-            ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩ := by
-        simpa using hTnew ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩
-      _ = Ycf :=
-        theorem_6_8_caseB_unionImage_eta₁
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          (hshift := hshift) hη₁Y
-  have hτ₁agree : τ₁ (η - η₁) = T (η - η₁) :=
-    theorem_6_8_caseB_Y_generator_agreement
-      hsemi hfamily hτ₁ hηY hη₁Y
-  exact theorem_6_8_caseB_Tnew_Y_generator_agreement
-    hTnewη hTnewη₁ hτ₁agree
-
-theorem theorem_6_8_caseB_unionImage_X_shift_generator_data
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {Tnew T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η₁ : Section1.ClassFunction L}
-    {Ycf : Section1.ClassFunction G}
-    {hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      ∃ X₁ : Section1.ClassFunction G,
-        let a : ℂ := Section1.degree χ / (Nat.card W1 : ℂ)
-        orthogonalToTransformedFinset Y τ₁ X₁ ∧
-          T (χ - a • η₁) = X₁ - a • Ycf}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf)
-    (hTnew : ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Tnew (η : Section1.ClassFunction L) =
-        theorem_6_8_caseB_unionImage
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          η₁ Ycf hshift η)
-    {χ : Section1.ClassFunction L}
-    (hχX : χ ∈ X) :
-    ∃ a : ℕ,
-      Section1.degree χ = (a * Nat.card W1 : ℂ) ∧
-        Section1.degree χ / (Nat.card W1 : ℂ) = (a : ℂ) ∧
-          Section5.integerSpanOn (X ∪ Y) Section5.puncturedSet
-            (χ - (a : ℂ) • η₁) ∧
-            Tnew (χ - (a : ℂ) • η₁) = T (χ - (a : ℂ) • η₁) := by
-  rcases hcommon with ⟨hη₁Y, _hcommonY, _hphi⟩
-  let χU : {η : Section1.ClassFunction L // η ∈ X ∪ Y} :=
-    ⟨χ, Finset.mem_union.mpr (Or.inl hχX)⟩
-  have hχnotY : χ ∉ Y := by
-    intro hχY
-    exact theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hχY hχX
-  have hTnewχ :
-      Tnew χ =
-        theorem_6_8_caseB_unionImage
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          η₁ Ycf hshift χU := by
-    simpa [χU] using hTnew χU
-  have hTnewη₁ : Tnew η₁ = Ycf := by
-    calc
-      Tnew η₁ =
-          theorem_6_8_caseB_unionImage
-            (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-            η₁ Ycf hshift
-            ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩ := by
-        simpa using hTnew ⟨η₁, Finset.mem_union.mpr (Or.inr hη₁Y)⟩
-      _ = Ycf :=
-        theorem_6_8_caseB_unionImage_eta₁
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          (hshift := hshift) hη₁Y
-  have hshiftχ :
-      T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-        theorem_6_8_caseB_unionImage
-          (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-          η₁ Ycf hshift χU -
-            (Section1.degree χ / (Nat.card W1 : ℂ)) • Ycf := by
-    simpa [χU] using
-      (theorem_6_8_caseB_unionImage_X_spec
-        (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
-        χU hχX hχnotY).2
-  exact theorem_6_8_caseB_X_shift_generator_data
-    hSbot hsemi hfamily hχX hη₁Y hTnewχ hTnewη₁ hshiftχ
 
 theorem theorem_6_8_caseB_unionImage_split
     {G : Type u} [Group G] [Finite G]
@@ -15546,309 +14100,6 @@ theorem theorem_6_8_coherentFamily_of_hypothesis_5_2_and_image_family
     ⟨Tnew, hext⟩
   exact theorem_6_8_coherentFamily_of_hypothesis_5_2_and_extension h52' hext
 
-noncomputable def theorem_6_8_caseA_unionImage
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {X Y : Finset (Section1.ClassFunction L)}
-    {τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (η : {η : Section1.ClassFunction L // η ∈ X ∪ Y}) :
-    Section1.ClassFunction G :=
-  if _hηX : (η : Section1.ClassFunction L) ∈ X then
-    τ₂ (η : Section1.ClassFunction L)
-  else
-    τ₁ (η : Section1.ClassFunction L)
-
-theorem theorem_6_8_caseA_unionImage_virtual
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (hτ₂ : coherentExtension X T τ₂)
-    (hτ₁ : coherentExtension Y T τ₁) :
-    ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Representation.IsVirtualCharacter
-        (theorem_6_8_caseA_unionImage
-          (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) η) := by
-  intro η
-  by_cases hηX : (η : Section1.ClassFunction L) ∈ X
-  · simp [theorem_6_8_caseA_unionImage, hηX]
-    exact hτ₂.2.1 (η : Section1.ClassFunction L)
-      (Section5.integerSpan_of_mem X hηX)
-  · have hηY : (η : Section1.ClassFunction L) ∈ Y := by
-      rcases Finset.mem_union.mp η.2 with hηX' | hηY
-      · exact (hηX hηX').elim
-      · exact hηY
-    have hηnotX : (η : Section1.ClassFunction L) ∉ X :=
-      theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hηY
-    simp [theorem_6_8_caseA_unionImage, hηnotX]
-    exact hτ₁.2.1 (η : Section1.ClassFunction L)
-      (Section5.integerSpan_of_mem Y hηY)
-
-theorem theorem_6_8_caseA_unionImage_gram
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (hτ₂ : coherentExtension X T τ₂)
-    (hτ₁ : coherentExtension Y T τ₁) :
-    ∀ η ξ : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Section1.scalarProduct G
-          (theorem_6_8_caseA_unionImage
-            (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) η)
-          (theorem_6_8_caseA_unionImage
-            (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) ξ) =
-        Section1.scalarProduct L (η : Section1.ClassFunction L)
-          (ξ : Section1.ClassFunction L) := by
-  classical
-  have h52union' : Section5.hypothesis_5_2_statement (X ∪ Y) T := h52union
-  rcases h52union with ⟨_hsetup, _R, _h52a, _h52b, h52c, _h52d, _h52e⟩
-  intro η ξ
-  by_cases hηX : (η : Section1.ClassFunction L) ∈ X
-  · by_cases hξX : (ξ : Section1.ClassFunction L) ∈ X
-    · simp [theorem_6_8_caseA_unionImage, hηX, hξX]
-      exact Section5.isCFLinearIsometryOnSpan_apply_of_mem
-        hτ₂.1 hηX hξX
-    · have hξY : (ξ : Section1.ClassFunction L) ∈ Y := by
-        rcases Finset.mem_union.mp ξ.2 with hξX' | hξY
-        · exact (hξX hξX').elim
-        · exact hξY
-      have hξnotX : (ξ : Section1.ClassFunction L) ∉ X :=
-        theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hξY
-      have htarget :
-          Section1.scalarProduct G
-              (τ₂ (η : Section1.ClassFunction L))
-              (τ₁ (ξ : Section1.ClassFunction L)) = 0 :=
-        theorem_6_8_transformed_X_Y_orthogonal_of_extensions
-          hSbot hfamily hZcomm h52union' hτ₂ hτ₁ hηX hξY
-      have hsource :
-          Section1.scalarProduct L (η : Section1.ClassFunction L)
-              (ξ : Section1.ClassFunction L) = 0 := by
-        have hηneξ :
-            (η : Section1.ClassFunction L) ≠
-              (ξ : Section1.ClassFunction L) := by
-          intro hEq
-          exact hξnotX (by simpa [hEq] using hηX)
-        exact h52c η.2 ξ.2 hηneξ
-      simp [theorem_6_8_caseA_unionImage, hηX, hξnotX, htarget, hsource]
-  · have hηY : (η : Section1.ClassFunction L) ∈ Y := by
-      rcases Finset.mem_union.mp η.2 with hηX' | hηY
-      · exact (hηX hηX').elim
-      · exact hηY
-    have hηnotX : (η : Section1.ClassFunction L) ∉ X :=
-      theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hηY
-    by_cases hξX : (ξ : Section1.ClassFunction L) ∈ X
-    · have htarget_rev :
-          Section1.scalarProduct G
-              (τ₂ (ξ : Section1.ClassFunction L))
-              (τ₁ (η : Section1.ClassFunction L)) = 0 :=
-        theorem_6_8_transformed_X_Y_orthogonal_of_extensions
-          hSbot hfamily hZcomm h52union' hτ₂ hτ₁ hξX hηY
-      have htarget :
-          Section1.scalarProduct G
-              (τ₁ (η : Section1.ClassFunction L))
-              (τ₂ (ξ : Section1.ClassFunction L)) = 0 := by
-        simpa [Section1.scalarProduct_star_swap] using congrArg star htarget_rev
-      have hsource :
-          Section1.scalarProduct L (η : Section1.ClassFunction L)
-              (ξ : Section1.ClassFunction L) = 0 := by
-        have hηneξ :
-            (η : Section1.ClassFunction L) ≠
-              (ξ : Section1.ClassFunction L) := by
-          intro hEq
-          exact hηnotX (by simpa [← hEq] using hξX)
-        exact h52c η.2 ξ.2 hηneξ
-      simp [theorem_6_8_caseA_unionImage, hηnotX, hξX, htarget, hsource]
-    · have hξY : (ξ : Section1.ClassFunction L) ∈ Y := by
-        rcases Finset.mem_union.mp ξ.2 with hξX' | hξY
-        · exact (hξX hξX').elim
-        · exact hξY
-      have hξnotX : (ξ : Section1.ClassFunction L) ∉ X :=
-        theorem_6_8_familyData_not_mem_X_of_mem_Y hfamily hZcomm hξY
-      simp [theorem_6_8_caseA_unionImage, hηnotX, hξnotX]
-      exact Section5.isCFLinearIsometryOnSpan_apply_of_mem
-        hτ₁.1 hηY hξY
-
-theorem theorem_6_8_caseA_unionImage_split_of_shift
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ : Section1.ClassFunction L} (hη₁Y : η₁ ∈ Y)
-    (hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • τ₁ η₁) :
-    ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      T ((η : Section1.ClassFunction L) -
-          (Section1.degree (η : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • η₁) =
-        theorem_6_8_caseA_unionImage
-            (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) η -
-          (Section1.degree (η : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • τ₁ η₁ := by
-  intro η
-  by_cases hηX : (η : Section1.ClassFunction L) ∈ X
-  · simpa [theorem_6_8_caseA_unionImage, hηX] using
-      hshift (η : Section1.ClassFunction L) hηX
-  · have hηY : (η : Section1.ClassFunction L) ∈ Y := by
-      rcases Finset.mem_union.mp η.2 with hηX' | hηY
-      · exact (hηX hηX').elim
-      · exact hηY
-    have hW1ne : (Nat.card W1 : ℂ) ≠ 0 := by
-      exact_mod_cast (Nat.card_pos (α := W1)).ne'
-    have hratio :
-        Section1.degree (η : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ) = 1 := by
-      rw [theorem_6_8_mem_Y_degree_eq_cardW1 hsemi hfamily hηY]
-      field_simp [hW1ne]
-    have hratioF :
-        Section1.degree (η : Section1.ClassFunction L) /
-            (Fintype.card W1 : ℂ) = 1 := by
-      simpa [Nat.card_eq_fintype_card] using hratio
-    have hagree :
-        τ₁ ((η : Section1.ClassFunction L) - η₁) =
-          T ((η : Section1.ClassFunction L) - η₁) :=
-      theorem_6_8_caseB_Y_generator_agreement
-        hsemi hfamily hτ₁ hηY hη₁Y
-    calc
-      T ((η : Section1.ClassFunction L) -
-          (Section1.degree (η : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • η₁) =
-          τ₁ ((η : Section1.ClassFunction L) - η₁) := by
-            simpa [hratioF, one_smul, map_sub] using hagree.symm
-      _ =
-          theorem_6_8_caseA_unionImage
-              (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) η -
-            (Section1.degree (η : Section1.ClassFunction L) /
-              (Nat.card W1 : ℂ)) • τ₁ η₁ := by
-            simp [theorem_6_8_caseA_unionImage, hηX, hratioF, map_sub]
-
-theorem theorem_6_8_caseA_unionImage_agreesOnIntegerSpanOn_of_shift
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {Tnew T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ : Section1.ClassFunction L} (hη₁Y : η₁ ∈ Y)
-    (hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • τ₁ η₁)
-    (hTnew : ∀ η : {η : Section1.ClassFunction L // η ∈ X ∪ Y},
-      Tnew (η : Section1.ClassFunction L) =
-        theorem_6_8_caseA_unionImage
-          (X := X) (Y := Y) (τ₂ := τ₂) (τ₁ := τ₁) η) :
-    Section5.agreesOnIntegerSpanOn (X ∪ Y) Section5.puncturedSet T Tnew := by
-  exact theorem_6_8_unionImage_agreesOnIntegerSpanOn_of_split
-    (W1 := W1) (U := X ∪ Y) (Tnew := Tnew) (T := T)
-    (η₁ := η₁) (Ycf := τ₁ η₁)
-    (img := theorem_6_8_caseA_unionImage (X := X) (Y := Y)
-      (τ₂ := τ₂) (τ₁ := τ₁))
-    (theorem_6_8_caseA_unionImage_split_of_shift
-      hsemi hfamily hτ₁ hη₁Y hshift)
-    hTnew
-
-theorem theorem_6_8_caseA_union_coherent_of_shift_agreement
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (hτ₂ : coherentExtension X T τ₂)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ : Section1.ClassFunction L} (hη₁Y : η₁ ∈ Y)
-    (hshift : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • τ₁ η₁) :
-    coherentFamily (X ∪ Y) T := by
-  let img : {η : Section1.ClassFunction L // η ∈ X ∪ Y} →
-      Section1.ClassFunction G :=
-    theorem_6_8_caseA_unionImage (X := X) (Y := Y)
-      (τ₂ := τ₂) (τ₁ := τ₁)
-  exact theorem_6_8_coherentFamily_of_hypothesis_5_2_and_image_family
-    (U := X ∪ Y) (T := T) (img := img) h52union
-    (theorem_6_8_caseA_unionImage_virtual hfamily hZcomm hτ₂ hτ₁)
-    (theorem_6_8_caseA_unionImage_gram
-      hSbot hfamily hZcomm h52union hτ₂ hτ₁)
-    (fun Tnew hTnew =>
-      theorem_6_8_caseA_unionImage_agreesOnIntegerSpanOn_of_shift
-        hsemi hfamily hτ₁ hη₁Y hshift hTnew)
-
-theorem theorem_6_8_caseA_shift_agreement_all_of_base
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {W1 : Subgroup L}
-    {X : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {η₁ χ₀ : Section1.ClassFunction L}
-    (hτ₂ : coherentExtension X T τ₂)
-    (hχ₀X : χ₀ ∈ X)
-    (hbase :
-      T (χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • τ₁ η₁)
-    (hmul : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      ∃ d : ℕ, Section1.degree χ = (d : ℂ) * Section1.degree χ₀) :
-    ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • τ₁ η₁ := by
-  intro χ hχX
-  rcases hmul χ hχX with ⟨d, hχdeg⟩
-  have hχspan : Section5.integerSpan X χ :=
-    Section5.integerSpan_of_mem X hχX
-  have hχ₀span : Section5.integerSpan X χ₀ :=
-    Section5.integerSpan_of_mem X hχ₀X
-  have hχ₀smul : Section5.integerSpan X ((d : ℂ) • χ₀) := by
-    simpa using Section5.integerSpan_zsmul (S := X) (φ := χ₀) (d : ℤ) hχ₀span
-  have hdiffSpan : Section5.integerSpan X (χ - (d : ℂ) • χ₀) :=
-    Section5.integerSpan_sub hχspan hχ₀smul
-  have hdiffDeg : Section1.degree (χ - (d : ℂ) • χ₀) = 0 := by
-    rw [Section1.degree_apply] at hχdeg ⊢
-    simp [Section1.degree_apply, hχdeg]
-  have hdiffOn :
-      Section5.integerSpanOn X Section5.puncturedSet (χ - (d : ℂ) • χ₀) :=
-    ⟨hdiffSpan, (Section5.supportedOn_puncturedSet_iff_degree_eq_zero _).2 hdiffDeg⟩
-  have hagree :
-      τ₂ (χ - (d : ℂ) • χ₀) = T (χ - (d : ℂ) • χ₀) :=
-    hτ₂.2.2 (χ - (d : ℂ) • χ₀) hdiffOn
-  let c₀ : ℂ := Section1.degree χ₀ / (Nat.card W1 : ℂ)
-  have hratio :
-      Section1.degree χ / (Nat.card W1 : ℂ) = (d : ℂ) * c₀ := by
-    simp [c₀, hχdeg]
-    ring
-  have hdecomp :
-      χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁ =
-        (χ - (d : ℂ) • χ₀) + (d : ℂ) • (χ₀ - c₀ • η₁) := by
-    rw [hratio, smul_sub, smul_smul]
-    simp [c₀]
-  calc
-    T (χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • η₁)
-        = T (χ - (d : ℂ) • χ₀) + (d : ℂ) • T (χ₀ - c₀ • η₁) := by
-          rw [hdecomp, map_add, map_smul]
-    _ = τ₂ (χ - (d : ℂ) • χ₀) +
-          (d : ℂ) • (τ₂ χ₀ - c₀ • τ₁ η₁) := by
-          rw [← hagree]
-          simpa [c₀] using congrArg ((d : ℂ) • ·) hbase
-    _ = τ₂ χ - (Section1.degree χ / (Nat.card W1 : ℂ)) • τ₁ η₁ := by
-          rw [map_sub, map_smul, hratio, smul_sub, smul_smul]
-          simp [c₀]
 
 theorem theorem_6_8_caseA_shift_data_all_of_base_decomposition
     {G : Type u} [Group G] [Finite G]
@@ -16042,63 +14293,6 @@ theorem theorem_6_8_caseA_exists_base_degree_multiple
     _ = (d : ℂ) * Section1.degree (χ₀ : Section1.ClassFunction L) := by
       rw [(hdegX χ₀).1]
 
-theorem theorem_6_8_caseA_union_coherent_of_base_shift_agreement
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (hτ₂ : coherentExtension X T τ₂)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ χ₀ : Section1.ClassFunction L}
-    (hη₁Y : η₁ ∈ Y)
-    (hχ₀X : χ₀ ∈ X)
-    (hbase :
-      T (χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • τ₁ η₁)
-    (hmul : ∀ χ : Section1.ClassFunction L, χ ∈ X →
-      ∃ d : ℕ, Section1.degree χ = (d : ℂ) * Section1.degree χ₀) :
-    coherentFamily (X ∪ Y) T := by
-  exact theorem_6_8_caseA_union_coherent_of_shift_agreement
-    hSbot hsemi hfamily hZcomm h52union hτ₂ hτ₁ hη₁Y
-    (theorem_6_8_caseA_shift_agreement_all_of_base
-      hτ₂ hχ₀X hbase hmul)
-
-theorem theorem_6_8_caseA_union_coherent_of_selected_base_shift
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L} [H.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₂ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    {p : ℕ}
-    (hpQ : nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hXnonempty : X.Nonempty)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (hτ₂ : coherentExtension X T τ₂)
-    (hτ₁ : coherentExtension Y T τ₁)
-    {η₁ : Section1.ClassFunction L}
-    (hη₁Y : η₁ ∈ Y)
-    (hbase : ∀ χ₀ : Section1.ClassFunction L, χ₀ ∈ X →
-      (∀ χ : Section1.ClassFunction L, χ ∈ X →
-        ∃ d : ℕ, Section1.degree χ = (d : ℂ) * Section1.degree χ₀) →
-      T (χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • η₁) =
-        τ₂ χ₀ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • τ₁ η₁) :
-    coherentFamily (X ∪ Y) T := by
-  rcases theorem_6_8_caseA_exists_base_degree_multiple
-      hSbot hfamily hpQ hXnonempty with
-    ⟨χ₀, hχ₀X, hmul⟩
-  exact theorem_6_8_caseA_union_coherent_of_base_shift_agreement
-    hSbot hsemi hfamily hZcomm h52union hτ₂ hτ₁ hη₁Y hχ₀X
-    (hbase χ₀ hχ₀X hmul) hmul
 
 theorem theorem_6_8_caseB_union_coherent_of_commonY_data
     {G : Type u} [Group G] [Finite G]
@@ -17232,73 +15426,6 @@ theorem theorem_6_8_Y_coherentExtension_of_familyData
   theorem_6_8_coherentExtension_of_coherentFamily
     (theorem_6_8_Y_coherent_of_familyData h68 hfamily)
 
-theorem theorem_6_8_caseB_commonY_shift_data_of_substatements
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h822 : ∀ τ₁ η₁,
-      theorem_6_8_2_2_statement L H W1 W2 W Z S SZ X Y T τ₁ η₁)
-    (h823 : ∀ τ₁ η₁ Ycf,
-      theorem_6_8_2_3_statement L H W1 W2 W Z S SZ X Y T τ₁ η₁ Ycf)
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    ∃ τ₁ η₁ Ycf,
-      coherentExtension Y T τ₁ ∧ η₁ ∈ Y ∧
-        theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf ∧
-          ∀ χ : Section1.ClassFunction L, χ ∈ X →
-            ∃ X₁ : Section1.ClassFunction G,
-              let a : ℂ := Section1.degree χ / (Nat.card W1 : ℂ)
-              orthogonalToTransformedFinset Y τ₁ X₁ ∧
-                T (χ - a • η₁) = X₁ - a • Ycf := by
-  rcases theorem_6_8_Y_coherentExtension_of_familyData h68 hfamily with
-    ⟨τ₁, hτ₁⟩
-  rcases theorem_6_8_exists_Y_degree_relIndex h68 hfamily with
-    ⟨η₁, hη₁Y, _hη₁deg⟩
-  rcases h822 τ₁ η₁ h68 hpQ hcase hB hfamily hτ₁ hη₁Y with
-    ⟨Ycf, hcommon⟩
-  have hshift :
-      ∀ χ : Section1.ClassFunction L, χ ∈ X →
-        ∃ X₁ : Section1.ClassFunction G,
-          let a : ℂ := Section1.degree χ / (Nat.card W1 : ℂ)
-          orthogonalToTransformedFinset Y τ₁ X₁ ∧
-            T (χ - a • η₁) = X₁ - a • Ycf :=
-    h823 τ₁ η₁ Ycf h68 hpQ hcase hB hfamily hcommon
-  exact ⟨τ₁, η₁, Ycf, hτ₁, hη₁Y, hcommon, hshift⟩
-
-theorem theorem_6_8_caseB_union_coherent_of_substatements
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h822 : ∀ τ₁ η₁,
-      theorem_6_8_2_2_statement L H W1 W2 W Z S SZ X Y T τ₁ η₁)
-    (h823 : ∀ τ₁ η₁ Ycf,
-      theorem_6_8_2_3_statement L H W1 W2 W Z S SZ X Y T τ₁ η₁ Ycf)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hcase : caseC2Hypothesis L H W1 W2 W T)
-    (hB : theorem_6_8_caseBData H W2 Z)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    coherentFamily (X ∪ Y) T := by
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-    ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
-  rcases theorem_6_8_caseB_commonY_shift_data_of_substatements
-      h822 h823 h68' hpQ hcase hB hfamily with
-    ⟨τ₁, η₁, Ycf, hτ₁, _hη₁Y, hcommon, hshift⟩
-  have hZcomm : Z ≤ ⁅H,H⁆ := by
-    rcases hB with ⟨_hW2ne, _hW2center, hW2comm, hZeq⟩
-    rw [hZeq]
-    exact hW2comm
-  exact theorem_6_8_caseB_union_coherent_of_commonY_data
-    (hshift := hshift) hSbot hsemi hfamily hZcomm h52union hτ₁ hcommon
 
 theorem theorem_6_8_caseB_commonY_shift_data_of_projection
     {G : Type u} [Group G] [Finite G]
@@ -17365,23 +15492,6 @@ theorem theorem_6_8_caseB_union_coherent_of_projection
   exact theorem_6_8_caseB_union_coherent_of_commonY_data
     (hshift := hshift) hSbot hsemi hfamily hZcomm h52union hτ₁ hcommon
 
-theorem theorem_6_8_union_coherent_of_prior_statements
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 W2 W Z : Subgroup L}
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h81 : theorem_6_8_1_statement L H W1 W2 W Z S SZ X Y T)
-    (h82 : theorem_6_8_2_statement L H W1 W2 W Z S SZ X Y T)
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p)
-    (hcase : theorem_6_8_caseAData H W2 Z ∨
-      (caseC2Hypothesis L H W1 W2 W T ∧ theorem_6_8_caseBData H W2 Z))
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y) :
-    coherentFamily (X ∪ Y) T := by
-  rcases hcase with hA | hB
-  · convert h81 h68 hpQ hA hfamily
-  · convert h82 h68 hpQ hB.1 hB.2 hfamily
 
 theorem theorem_6_8_union_eq_S_of_Z_eq_commutator
     {G : Type u} [Group G] [Finite G]
@@ -17781,92 +15891,6 @@ theorem theorem_6_8_scalarProduct_self_irreducible
   rw [hχchar]
   exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
-theorem theorem_6_8_cfNormSq_irreducible
-    {L : Type u} [Group L] [Finite L]
-    {χ : Section1.ClassFunction L}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Section5.cfNormSq χ = 1 := by
-  unfold Section5.cfNormSq
-  rw [theorem_6_8_scalarProduct_self_irreducible hχ]
-  simp
-
-theorem theorem_6_8_X_degree_sq_sum_le_intermediate_sum
-    {L : Type u} [Group L] [Finite L]
-    {Z : Subgroup L}
-    {X S1 : Finset (Section1.ClassFunction L)}
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (hXS1 : X ⊆ S1)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    (dS1 : S1 → ℕ)
-    (hdS1 : ∀ η : S1,
-      Section1.degree (η : Section1.ClassFunction L) = (dS1 η : ℂ)) :
-    (∑ χ : X, (dX χ : ℝ) ^ (2 : ℕ)) ≤
-      ∑ η : S1,
-        (((dS1 η : ℝ) ^ (2 : ℕ)) /
-          Section5.cfNormSq (η : Section1.ClassFunction L)) := by
-  classical
-  let emb : X ↪ S1 :=
-    { toFun := fun χ => ⟨(χ : Section1.ClassFunction L), hXS1 χ.2⟩
-      inj' := by
-        intro a b h
-        have hv :
-            ((⟨(a : Section1.ClassFunction L), hXS1 a.2⟩ : S1) :
-                Section1.ClassFunction L) =
-              ((⟨(b : Section1.ClassFunction L), hXS1 b.2⟩ : S1) :
-                Section1.ClassFunction L) :=
-          congrArg (fun y : S1 => (y : Section1.ClassFunction L)) h
-        exact Subtype.ext hv }
-  let term : S1 → ℝ := fun η =>
-    (((dS1 η : ℝ) ^ (2 : ℕ)) /
-      Section5.cfNormSq (η : Section1.ClassFunction L))
-  have hterm_nonneg : ∀ η : S1, 0 ≤ term η := by
-    intro η
-    dsimp [term]
-    exact div_nonneg (sq_nonneg _) (Section5.cfNormSq_nonneg _)
-  have hterm_emb : ∀ χ : X, term (emb χ) = (dX χ : ℝ) ^ (2 : ℕ) := by
-    intro χ
-    dsimp [term, emb]
-    have hdeg_eq :
-        dS1 ⟨(χ : Section1.ClassFunction L), hXS1 χ.2⟩ = dX χ := by
-      have hcast :
-          (dS1 ⟨(χ : Section1.ClassFunction L), hXS1 χ.2⟩ : ℂ) =
-            (dX χ : ℂ) := by
-        rw [← hdS1 ⟨(χ : Section1.ClassFunction L), hXS1 χ.2⟩,
-          hdegX χ]
-      exact_mod_cast hcast
-    have hcf : Section5.cfNormSq (χ : Section1.ClassFunction L) = 1 :=
-      theorem_6_8_cfNormSq_irreducible
-        ((hXchar (χ : Section1.ClassFunction L)).1 χ.2).1
-    simp [hdeg_eq, hcf]
-  have himage_sum :
-      (∑ η ∈ ((Finset.univ : Finset X).image emb), term η) =
-        ∑ χ : X, term (emb χ) := by
-    rw [Finset.sum_image]
-    intro a _ b _ h
-    exact Subtype.ext (by simpa [emb] using congrArg Subtype.val h)
-  have hsubset :
-      ((Finset.univ : Finset X).image emb) ⊆
-        (Finset.univ : Finset S1) := by
-    intro η _hη
-    simp
-  calc
-    (∑ χ : X, (dX χ : ℝ) ^ (2 : ℕ)) =
-        ∑ χ : X, term (emb χ) := by
-      refine Finset.sum_congr rfl ?_
-      intro χ _hχ
-      rw [hterm_emb]
-    _ = ∑ η ∈ ((Finset.univ : Finset X).image emb), term η := himage_sum.symm
-    _ ≤ ∑ η : S1, term η := by
-      simpa using Finset.sum_le_sum_of_subset_of_nonneg hsubset
-        (by intro η _hηuniv _hηnot; exact hterm_nonneg η)
-    _ = ∑ η : S1,
-        (((dS1 η : ℝ) ^ (2 : ℕ)) /
-          Section5.cfNormSq (η : Section1.ClassFunction L)) := by
-      rfl
 
 theorem theorem_6_8_X_degree_sq_sum_add_quotient_card
     {L : Type u} [Group L] [Finite L]
@@ -18278,43 +16302,6 @@ theorem theorem_6_8_caseA_regular_coeff_link_of_residual_kernel
   exact theorem_6_8_regular_coeff_ratio_link_of_residual_sub_values
     hsemi hZH hres z hz hsub hscale
 
-theorem theorem_6_8_caseA_source_coeff_multiple_of_residual_kernel_pf67
-    {L : Type u} [Group L] [Finite L]
-    {p : ℕ} [Fact p.Prime]
-    (P : Sylow p L) (L0 : Subgroup L)
-    {H W1 Z : Subgroup L} [Z.Normal]
-    {X : Finset (Section1.ClassFunction L)}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hZH : Z ≤ H)
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    {ψ : Section1.ClassFunction L}
-    {regularCoeff b ratio c A : ℂ}
-    (hbase : theorem_6_7_base_hypothesis p P L0 Z)
-    (hsigned : Section3.IsSignedIrreducibleCharacter ψ)
-    (hconst : constantOnNonidentitySubgroup Z ψ)
-    (hres : Section1.subgroupRestriction Z ψ =
-      regularCoeff • regularCharacter Z + b • Section1.principalCharacter Z)
-    (χ₀ : X)
-    (hA : A = c / (dX χ₀ : ℂ))
-    (hdeg0_ne : (dX χ₀ : ℂ) ≠ 0)
-    (hratio : (dX χ₀ : ℂ) = ratio * (Nat.card W1 : ℂ))
-    (hker : Section1.subgroupInKernel'
-      (ψ - A •
-        Section1.weightedFamilySum (fun χ : X => (dX χ : ℂ))
-          (fun χ : X => (χ : Section1.ClassFunction L))) Z)
-    (z : Z) (hz : z ≠ 1)
-    (hfactor : Nat.card (P : Subgroup L) = Nat.card Z * Z.relIndex H) :
-    ∃ k : ℤ, c = ratio * ((k : ℤ) : ℂ) := by
-  have hlink : regularCoeff * ratio = (Z.relIndex H : ℂ) * c :=
-    theorem_6_8_caseA_regular_coeff_link_of_residual_kernel
-      hsemi hZH hXchar dX hdegX hres χ₀ hA hdeg0_ne hratio hker z hz
-  exact theorem_6_8_source_coeff_multiple_of_pf67_signed_regular_add
-    P L0 Z hbase hsigned hconst hres z hz hfactor hlink
 
 theorem theorem_6_8_caseA_source_coeff_multiple_of_residual_kernel_pf67_ambient
     {G : Type u} [Group G] [Finite G]
@@ -18368,165 +16355,6 @@ theorem theorem_6_8_caseA_source_coeff_multiple_of_residual_kernel_pf67_ambient
     P L0 (Z.map L.subtype) hbase hsigned hconst hresMap zmap hzmap
     hfactor hlink
 
-theorem theorem_6_8_caseA_anchor_multiple_of_residual_kernel_pf67
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {p : ℕ} [Fact p.Prime]
-    (P : Sylow p L) (L0 : Subgroup L)
-    {H W1 W2 W Z : Subgroup L} [Z.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hτ₁ : coherentExtension Y T τ₁)
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    {η₁ : Section1.ClassFunction L}
-    {regularCoeff b A : ℂ}
-    (hbase : theorem_6_7_base_hypothesis p P L0 Z)
-    (hsigned :
-      Section3.IsSignedIrreducibleCharacter
-        (Section1.subgroupRestriction L (τ₁ η₁)))
-    (hconst :
-      constantOnNonidentitySubgroup Z
-        (Section1.subgroupRestriction L (τ₁ η₁)))
-    (hres :
-      Section1.subgroupRestriction Z
-          (Section1.subgroupRestriction L (τ₁ η₁)) =
-        regularCoeff • regularCharacter Z + b • Section1.principalCharacter Z)
-    (χ₀ : X)
-    (hη₁Y : η₁ ∈ Y)
-    (hA : A =
-      Section1.scalarProduct L (χ₀ : Section1.ClassFunction L)
-        (Section1.subgroupRestriction L (τ₁ η₁)) / (dX χ₀ : ℂ))
-    (hdeg0_ne : (dX χ₀ : ℂ) ≠ 0)
-    (hker : Section1.subgroupInKernel'
-      (Section1.subgroupRestriction L (τ₁ η₁) - A •
-        Section1.weightedFamilySum (fun χ : X => (dX χ : ℂ))
-          (fun χ : X => (χ : Section1.ClassFunction L))) Z)
-    (z : Z) (hz : z ≠ 1)
-    (hfactor : Nat.card (P : Subgroup L) = Nat.card Z * Z.relIndex H) :
-    ∃ k : ℤ,
-      Section1.scalarProduct G
-        (T ((χ₀ : Section1.ClassFunction L) -
-          (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • η₁))
-        (τ₁ η₁) =
-          (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) * ((k : ℤ) : ℂ) := by
-  have hZH : Z ≤ H := hfamily.1
-  have hW1_ne : (Nat.card W1 : ℂ) ≠ 0 := by
-    exact_mod_cast (Nat.card_pos (α := W1)).ne'
-  have hratio :
-      (dX χ₀ : ℂ) =
-        (Section1.degree (χ₀ : Section1.ClassFunction L) /
-          (Nat.card W1 : ℂ)) * (Nat.card W1 : ℂ) := by
-    calc
-      (dX χ₀ : ℂ) =
-          Section1.degree (χ₀ : Section1.ClassFunction L) := by
-            rw [hdegX χ₀]
-      _ =
-          (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) * (Nat.card W1 : ℂ) := by
-            field_simp [hW1_ne]
-  have hsource :
-      ∃ k : ℤ,
-        Section1.scalarProduct L (χ₀ : Section1.ClassFunction L)
-          (Section1.subgroupRestriction L (τ₁ η₁)) =
-          (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) * ((k : ℤ) : ℂ) :=
-    theorem_6_8_caseA_source_coeff_multiple_of_residual_kernel_pf67
-      P L0 hsemi hZH hXchar dX hdegX hbase hsigned hconst hres
-      χ₀ hA hdeg0_ne hratio hker z hz hfactor
-  exact theorem_6_8_caseA_anchor_multiple_of_source_coeff_multiple
-    h68 hSbot hsemi hfamily hτ₁ χ₀.2 hη₁Y hsource
-
-theorem theorem_6_8_caseA_base_shift_data_of_residual_kernel_pf67
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {p : ℕ} [Fact p.Prime]
-    (P : Sylow p L) (L0 : Subgroup L)
-    {H W1 W2 W Z : Subgroup L} [Z.Normal]
-    {S SZ X Y : Finset (Section1.ClassFunction L)}
-    {T τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h68 : theorem_6_8_hypothesis L H W1 W2 W S T)
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hZcomm : Z ≤ ⁅H,H⁆)
-    (h52union : Section5.hypothesis_5_2_statement (X ∪ Y) T)
-    (hτ₁ : coherentExtension Y T τ₁)
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    {η₁ : Section1.ClassFunction L}
-    {regularCoeff b A : ℂ}
-    (hbase : theorem_6_7_base_hypothesis p P L0 Z)
-    (hsigned :
-      Section3.IsSignedIrreducibleCharacter
-        (Section1.subgroupRestriction L (τ₁ η₁)))
-    (hconst :
-      constantOnNonidentitySubgroup Z
-        (Section1.subgroupRestriction L (τ₁ η₁)))
-    (hres :
-      Section1.subgroupRestriction Z
-          (Section1.subgroupRestriction L (τ₁ η₁)) =
-        regularCoeff • regularCharacter Z + b • Section1.principalCharacter Z)
-    (χ₀ : X)
-    (hη₁Y : η₁ ∈ Y)
-    (hA : A =
-      Section1.scalarProduct L (χ₀ : Section1.ClassFunction L)
-        (Section1.subgroupRestriction L (τ₁ η₁)) / (dX χ₀ : ℂ))
-    (hdeg0_ne : (dX χ₀ : ℂ) ≠ 0)
-    (hker : Section1.subgroupInKernel'
-      (Section1.subgroupRestriction L (τ₁ η₁) - A •
-        Section1.weightedFamilySum (fun χ : X => (dX χ : ℂ))
-          (fun χ : X => (χ : Section1.ClassFunction L))) Z)
-    (z : Z) (hz : z ≠ 1)
-    (hfactor : Nat.card (P : Subgroup L) = Nat.card Z * Z.relIndex H) :
-    (∃ X₁ : Section1.ClassFunction G,
-      orthogonalToTransformedFinset Y τ₁ X₁ ∧
-        T ((χ₀ : Section1.ClassFunction L) -
-          (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • η₁) =
-          X₁ - (Section1.degree (χ₀ : Section1.ClassFunction L) /
-            (Nat.card W1 : ℂ)) • τ₁ η₁) ∨
-      ∃ η₂ : Section1.ClassFunction L,
-        Y.card = 2 ∧ η₂ ∈ Y ∧ η₂ ≠ η₁ ∧
-          ∃ X₁ : Section1.ClassFunction G,
-            orthogonalToTransformedFinset Y τ₁ X₁ ∧
-              T ((χ₀ : Section1.ClassFunction L) -
-                (Section1.degree (χ₀ : Section1.ClassFunction L) /
-                  (Nat.card W1 : ℂ)) • η₁) =
-                X₁ - (Section1.degree (χ₀ : Section1.ClassFunction L) /
-                  (Nat.card W1 : ℂ)) • (-τ₁ η₂) := by
-  have hχ₀irr : Section1.IsIrreducibleCharacterOnGroup
-      (χ₀ : Section1.ClassFunction L) :=
-    ((hXchar (χ₀ : Section1.ClassFunction L)).1 χ₀.2).1
-  have hanchor :
-      ∃ k : ℤ,
-        Section1.scalarProduct G
-          (T ((χ₀ : Section1.ClassFunction L) -
-            (Section1.degree (χ₀ : Section1.ClassFunction L) /
-              (Nat.card W1 : ℂ)) • η₁))
-          (τ₁ η₁) =
-            (Section1.degree (χ₀ : Section1.ClassFunction L) /
-              (Nat.card W1 : ℂ)) * ((k : ℤ) : ℂ) :=
-    theorem_6_8_caseA_anchor_multiple_of_residual_kernel_pf67
-      P L0 h68 hSbot hsemi hfamily hτ₁ hXchar dX hdegX
-      hbase hsigned hconst hres χ₀ hη₁Y hA hdeg0_ne hker z hz hfactor
-  exact theorem_6_8_caseA_base_shift_data_of_anchor_multiple
-    h68 hSbot hsemi hfamily hZcomm h52union hτ₁
-    hχ₀irr χ₀.2 hη₁Y hanchor
 
 theorem theorem_6_8_caseA_anchor_multiple_of_residual_kernel_pf67_ambient
     {G : Type u} [Group G] [Finite G]
@@ -18796,83 +16624,6 @@ theorem theorem_6_8_caseA_base_shift_data_of_residual_kernel_selected
     hXchar dX hdegX hbase hsigned hconst hresMap hresLocal
     χ₀x hη₁Y (by rfl) hdeg0_ne hker z hz hfactor
 
-theorem theorem_6_8_X_card_sub_le_intermediate_sum
-    {L : Type u} [Group L] [Finite L]
-    {Z : Subgroup L} [Z.Normal]
-    {X S1 : Finset (Section1.ClassFunction L)}
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (hXS1 : X ⊆ S1)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    (dS1 : S1 → ℕ)
-    (hdS1 : ∀ η : S1,
-      Section1.degree (η : Section1.ClassFunction L) = (dS1 η : ℂ)) :
-    ((Nat.card L - Nat.card (L ⧸ Z) : ℕ) : ℝ) ≤
-      ∑ η : S1,
-        (((dS1 η : ℝ) ^ (2 : ℕ)) /
-          Section5.cfNormSq (η : Section1.ClassFunction L)) := by
-  have hsum_eq :
-      (∑ χ : X, dX χ ^ (2 : ℕ)) =
-        Nat.card L - Nat.card (L ⧸ Z) := by
-    exact Nat.eq_sub_of_add_eq
-      (theorem_6_8_X_degree_sq_sum_add_quotient_card hXchar dX hdegX)
-  have hle :=
-    theorem_6_8_X_degree_sq_sum_le_intermediate_sum
-      hXchar hXS1 dX hdegX dS1 hdS1
-  rw [← hsum_eq]
-  simpa [Nat.cast_sum, Nat.cast_pow] using hle
-
-theorem theorem_6_8_card_sub_quotient_eq_W1_mul_ZrelIndex
-    {L : Type u} [Group L] [Finite L]
-    {H W1 Z : Subgroup L} [Z.Normal]
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hZH : Z ≤ H) :
-    Nat.card L - Nat.card (L ⧸ Z) =
-      Nat.card W1 * Z.relIndex H * (Nat.card Z - 1) := by
-  have hcardL : Nat.card L = Nat.card (L ⧸ Z) * Nat.card Z :=
-    Subgroup.card_eq_card_quotient_mul_card_subgroup Z
-  have hquot : Nat.card (L ⧸ Z) =
-      Z.relIndex H * H.relIndex (⊤ : Subgroup L) := by
-    rw [← Subgroup.index_eq_card Z]
-    have hrel := Subgroup.relIndex_mul_index hZH
-    simpa [Subgroup.relIndex_top_right] using hrel.symm
-  have hHindex : H.relIndex (⊤ : Subgroup L) = Nat.card W1 := by
-    simpa using Section2.internalSemidirectProduct_left_relIndex_eq_card_right hsemi
-  rw [hcardL, hquot, hHindex]
-  rw [Nat.mul_sub_left_distrib, Nat.mul_one]
-  ring_nf
-
-theorem theorem_6_8_X_source_lower_bound
-    {L : Type u} [Group L] [Finite L]
-    {H W1 Z : Subgroup L} [Z.Normal]
-    {S SZ X Y S1 : Finset (Section1.ClassFunction L)}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (hXS1 : X ⊆ S1)
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ))
-    (dS1 : S1 → ℕ)
-    (hdS1 : ∀ η : S1,
-      Section1.degree (η : Section1.ClassFunction L) = (dS1 η : ℂ)) :
-    ((Nat.card W1 * Z.relIndex H * (Nat.card Z - 1) : ℕ) : ℝ) ≤
-      ∑ η : S1,
-        (((dS1 η : ℝ) ^ (2 : ℕ)) /
-          Section5.cfNormSq (η : Section1.ClassFunction L)) := by
-  have hcard : Nat.card L - Nat.card (L ⧸ Z) =
-      Nat.card W1 * Z.relIndex H * (Nat.card Z - 1) :=
-    theorem_6_8_card_sub_quotient_eq_W1_mul_ZrelIndex hsemi hfamily.1
-  have hle :=
-    theorem_6_8_X_card_sub_le_intermediate_sum
-      hXchar hXS1 dX hdegX dS1 hdS1
-  rw [← hcard]
-  exact hle
 
 theorem theorem_6_8_induced_indexed_degree_sum_le_intermediate_sum
     {L : Type u} [Group L] [Finite L]
@@ -19460,63 +17211,6 @@ theorem theorem_6_8_caseB_card_bounds
     ⟨theorem_6_8_caseB_relIndex_sq_lower_bound h68 hcase hB hZneComm,
       theorem_6_8_caseB_Z_sub_one_lower_bound hcase hB⟩
 
-theorem theorem_6_8_endpoint_numeric_bounds_of_obstruction
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {H W1 Z : Subgroup L}
-    {S SZ X Y S1 : Finset (Section1.ClassFunction L)}
-    {T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (h52 : Section5.hypothesis_5_2_statement S T)
-    (hSbot : inducedKernelFamily H ⊥ S)
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) H W1)
-    (hZnorm : Z.Normal)
-    (hfamily : theorem_6_8_familyData H Z S SZ X Y)
-    (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ X ↔
-      Section1.IsIrreducibleCharacterOnGroup χ ∧
-        ¬ Section1.subgroupInKernel' χ Z)
-    (hXS1 : X ⊆ S1)
-    (hS1sub : S1 ⊆ S)
-    (hS1closed : ∀ χ : Section1.ClassFunction L, χ ∈ S1 →
-      Section1.conjugateCharacter χ ∈ S1)
-    (hS1coh : coherentFamily S1 T)
-    {ψ : Section1.ClassFunction L}
-    (hψS : ψ ∈ S)
-    (hψnotS1 : ψ ∉ S1)
-    (hψnotUnion : ψ ∉ X ∪ Y)
-    (hnotPair : ¬ coherentFamily
-      (S1 ∪ ({ψ, Section1.conjugateCharacter ψ} :
-        Finset (Section1.ClassFunction L))) T)
-    (η1 : S1)
-    (hηdeg : Section1.degree (η1 : Section1.ClassFunction L) =
-      (H.relIndex (⊤ : Subgroup L) : ℂ))
-    (dX : X → ℕ)
-    (hdegX : ∀ χ : X,
-      Section1.degree (χ : Section1.ClassFunction L) = (dX χ : ℂ)) :
-    ∃ dS1 : S1 → ℕ,
-      (∀ η : S1,
-        Section1.degree (η : Section1.ClassFunction L) = (dS1 η : ℂ)) ∧
-        ∃ d dψ : ℕ,
-          d ^ (2 : ℕ) ≤ Z.relIndex H ∧
-            Section1.degree ψ = (dψ : ℂ) ∧
-              dψ = H.relIndex (⊤ : Subgroup L) * d ∧
-                ((Nat.card W1 * Z.relIndex H * (Nat.card Z - 1) : ℕ) : ℝ) ≤
-                  (∑ η : S1,
-                    (((dS1 η : ℝ) ^ (2 : ℕ)) /
-                      Section5.cfNormSq (η : Section1.ClassFunction L))) ∧
-                  (∑ η : S1,
-                    (((dS1 η : ℝ) ^ (2 : ℕ)) /
-                      Section5.cfNormSq (η : Section1.ClassFunction L))) ≤
-                    2 * (dψ : ℝ) *
-                      (H.relIndex (⊤ : Subgroup L) : ℝ) := by
-  haveI : Z.Normal := hZnorm
-  rcases theorem_6_8_pf56_numeric_obstruction_with_degree_data
-      h52 hSbot hZnorm hfamily hS1sub hS1closed hS1coh
-      hψS hψnotS1 hψnotUnion hnotPair η1 hηdeg with
-    ⟨dS1, hdS1, d, dψ, hdsq, hψdeg, hdψ, hupper⟩
-  have hlower :=
-    theorem_6_8_X_source_lower_bound
-      hsemi hfamily hXchar hXS1 dX hdegX dS1 hdS1
-  exact ⟨dS1, hdS1, d, dψ, hdsq, hψdeg, hdψ, hlower, hupper⟩
 
 theorem theorem_6_8_X_degree_data_of_character
     {L : Type u} [Group L] [Finite L]
@@ -19998,59 +17692,6 @@ public theorem theorem_6_8_nonabelianPQuotient_of_not_coherent
     theorem_6_8_hypothesis_6_4_commutator_of_source_bridges h68' h52 hfrob
   exact theorem_6_5_b H ⊥ ⁅H, H⁆ S S T h64 hSbot hnot
 
-theorem theorem_6_8_of_theorem_6_8_3_and_source_bridges
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G)
-    (H W1 W2 W : Subgroup L)
-    (S : Finset (Section1.ClassFunction L))
-    (T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (h52 : Section5.hypothesis_5_2_statement S T)
-    (hfrobQuot : frobeniusQuotientWithKernel H ⁅H, H⁆)
-    (h83 : ∀ {W2' Z : Subgroup L}
-        {SZ X Y : Finset (Section1.ClassFunction L)},
-        theorem_6_8_3_statement L H W1 W2' W Z S SZ X Y T) :
-    (theorem_6_8_hypothesis L H W1 W2 W S T → coherentFamily S T) := by
-  intro h68
-  by_contra hnot
-  have hpQ : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p :=
-    theorem_6_8_nonabelianPQuotient_of_not_coherent h68 h52 hfrobQuot hnot
-  rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hcase⟩
-  have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  let Z₀ : Subgroup L := centerIn H ⊓ ⁅H, H⁆
-  have hZ₀H : Z₀ ≤ H := by
-    exact inf_le_right.trans (Subgroup.commutator_le_left (H₁ := H) (H₂ := H))
-  have hfamily₀ := theorem_6_8_familyData_of_Z hHnorm hSbot hZ₀H
-  rcases hcase with hfrob | hcaseC2
-  · have h68bot : theorem_6_8_hypothesis L H W1 (⊥ : Subgroup L) W S T :=
-      theorem_6_8_hypothesis_with_bot_W2_of_frobenius
-        (L := L) (H := H) (W1 := W1) (W2 := W2) (W := W)
-        (S := S) (T := T)
-        ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, Or.inl hfrob⟩ hfrob
-    have hcaseData :
-        theorem_6_8_caseAData H (⊥ : Subgroup L) Z₀ ∨
-          (caseC2Hypothesis L H W1 (⊥ : Subgroup L) W T ∧
-            theorem_6_8_caseBData H (⊥ : Subgroup L) Z₀) := by
-      exact Or.inl (theorem_6_8_caseAData_bot H)
-    exact hnot (h83 h68bot hpQ hcaseData hfamily₀)
-  · rcases theorem_6_8_case_split_of_caseC2 hcaseC2 with hA | hB
-    · have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-        ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, Or.inr hcaseC2⟩
-      have hcaseData :
-          theorem_6_8_caseAData H W2 Z₀ ∨
-            (caseC2Hypothesis L H W1 W2 W T ∧ theorem_6_8_caseBData H W2 Z₀) := by
-        exact Or.inl hA
-      exact hnot (h83 h68' hpQ hcaseData hfamily₀)
-    · let ZB : Subgroup L := W2
-      have hZBH : ZB ≤ H := by
-        exact hB.2.2.1.trans (Subgroup.commutator_le_left (H₁ := H) (H₂ := H))
-      have hfamilyB := theorem_6_8_familyData_of_Z hHnorm hSbot hZBH
-      have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
-        ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, Or.inr hcaseC2⟩
-      have hcaseData :
-          theorem_6_8_caseAData H W2 ZB ∨
-            (caseC2Hypothesis L H W1 W2 W T ∧ theorem_6_8_caseBData H W2 ZB) := by
-        exact Or.inr ⟨hcaseC2, hB⟩
-      exact hnot (h83 h68' hpQ hcaseData hfamilyB)
 
 theorem theorem_6_8_of_theorem_6_8_3_and_branch_bridges
     {G : Type u} [Group G] [Finite G]

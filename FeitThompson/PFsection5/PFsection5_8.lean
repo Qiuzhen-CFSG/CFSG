@@ -603,21 +603,6 @@ private theorem scalarProduct_sub_right_pf58
           rw [Section1.scalarProduct_smul_right]
           simp [sub_eq_add_neg]
 
-private theorem scalarProduct_neg_right_pf58
-    {G : Type*} [Finite G] (φ ψ : Section1.ClassFunction G) :
-    Section1.scalarProduct G φ (-ψ) =
-      -Section1.scalarProduct G φ ψ := by
-  have hEq : (-ψ : Section1.ClassFunction G) = (-1 : ℂ) • ψ := by
-    ext g
-    simp
-  calc
-    Section1.scalarProduct G φ (-ψ)
-        = Section1.scalarProduct G φ ((-1 : ℂ) • ψ) := by
-            rw [hEq]
-    _ = star (-1 : ℂ) * Section1.scalarProduct G φ ψ := by
-          rw [Section1.scalarProduct_smul_right]
-    _ = -Section1.scalarProduct G φ ψ := by
-          norm_num
 
 private theorem scalarProduct_sub_left_pf58
     {G : Type*} [Finite G] (φ1 φ2 ψ : Section1.ClassFunction G) :
@@ -962,41 +947,6 @@ private theorem scalarProduct_omegaColumnSigma_chi_eq_ite_pf58
             simpa [hp] using hChiOrth (p, j) (i, k)
       _ = if j = k then (1 : ℂ) else 0 := by simp [hjk]
 
-private theorem scalarProduct_omegaColumnSigma_eq_card_ite_pf58
-    {L : Type u} [Group L]
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup L}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {chi : I → J → Section1.ClassFunction G}
-    (hChiOrth : Section3.IsOrthonormalDoubleFamily chi)
-    (hChiSigma : ∀ i j, σ (ω i j) = chi i j)
-    (j k : J) :
-    Section1.scalarProduct G
-        (Section4Scratch.omegaColumnSigma σ ω j)
-        (Section4Scratch.omegaColumnSigma σ ω k) =
-      if j = k then (Fintype.card I : ℂ) else 0 := by
-  classical
-  rw [omegaColumnSigma_eq_sumChi_pf58 hChiSigma k]
-  have hsum :
-      ((∑ i : I, chi i k : Section1.ClassFunction G)) =
-        fun g => ∑ i : I, chi i k g := by
-    ext g
-    simp
-  rw [hsum, Section1.scalarProduct_fintype_sum_right]
-  calc
-    ∑ i : I,
-        Section1.scalarProduct G
-          (Section4Scratch.omegaColumnSigma σ ω j) (chi i k)
-        =
-      ∑ i : I, if j = k then (1 : ℂ) else 0 := by
-        refine Finset.sum_congr rfl ?_
-        intro i _hi
-        exact scalarProduct_omegaColumnSigma_chi_eq_ite_pf58
-          hChiOrth hChiSigma i j k
-    _ = if j = k then (Fintype.card I : ℂ) else 0 := by
-      by_cases hjk : j = k <;> simp [hjk]
 
 private theorem piColumn_difference_family_pf58
     {L : Type u} [Group L] [Finite L]
@@ -1444,13 +1394,6 @@ private theorem scalarProduct_subsetSum_left_eq_zero_of_orthogonalFinsets_pf58
     intro χ hχ
     exact horth (hER hχ) hψ)
 
-private theorem hypothesis_3_1_of_hypothesis_4_6_pf58
-    {L : Type u} [Group L] [Finite L]
-    {K W1 W2 W H : Subgroup L}
-    {A : Set L}
-    (h46 : Section4Scratch.hypothesis_4_6_statement K W1 W2 W H A) :
-    Section3.hypothesis_3_1_statement W1 W2 W :=
-  (Section4.theorem_4_3_a K W1 W2 W h46.1).2
 
 private theorem scalarProduct_piColumn_piChar_eq_ite_pf58
     {L : Type u} [Group L] [Finite L]
@@ -1599,25 +1542,6 @@ private theorem iff_of_ite_one_zero_eq_pf58 {p q : Prop}
     p ↔ q := by
   by_cases hp : p <;> by_cases hq : q <;> simp [hp, hq] at h ⊢
 
-private theorem muSignedFamily_left_mem_image_pf58
-    {G : Type u} [Group G] [Finite G]
-    {I J : Type*} [Fintype I]
-    {deltaLeft deltaRight : ℂ}
-    {chi : I → J → Section1.ClassFunction G}
-    {j k : J} (i : I) :
-    muSignedFamily_pf58 deltaLeft deltaRight chi j k (Sum.inl i) ∈
-      Finset.univ.image (muSignedFamily_pf58 deltaLeft deltaRight chi j k) := by
-  exact Finset.mem_image.mpr ⟨Sum.inl i, by simp, rfl⟩
-
-private theorem muSignedFamily_right_mem_image_pf58
-    {G : Type u} [Group G] [Finite G]
-    {I J : Type*} [Fintype I]
-    {deltaLeft deltaRight : ℂ}
-    {chi : I → J → Section1.ClassFunction G}
-    {j k : J} (i : I) :
-    muSignedFamily_pf58 deltaLeft deltaRight chi j k (Sum.inr i) ∈
-      Finset.univ.image (muSignedFamily_pf58 deltaLeft deltaRight chi j k) := by
-  exact Finset.mem_image.mpr ⟨Sum.inr i, by simp, rfl⟩
 
 private theorem sum_image_muSignedFamily_left_pf58
     {G : Type u} [Group G] [Finite G]

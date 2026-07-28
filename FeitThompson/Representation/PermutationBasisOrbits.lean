@@ -284,28 +284,6 @@ private theorem primeOrder_perm_fixedPoints_orbit_formula
   rw [hfixed] at h
   simpa only [Nat.card_eq_fintype_card] using h
 
-/-- Prime-order permutations on equally large finite types have equally many
-fixed points when they have equally many orbits. -/
-public theorem primeOrder_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
-    {X Y : Type*} [Finite X] [Finite Y]
-    (σ : Equiv.Perm X) (τ : Equiv.Perm Y)
-    (horder : orderOf σ = orderOf τ)
-    (hprime : (orderOf σ).Prime)
-    (hcard : Nat.card X = Nat.card Y)
-    (horbit :
-      Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) =
-        Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers τ) Y)) :
-    Nat.card (Function.fixedPoints σ) =
-      Nat.card (Function.fixedPoints τ) := by
-  have hσ := primeOrder_perm_fixedPoints_orbit_formula σ hprime
-  have hτ := primeOrder_perm_fixedPoints_orbit_formula τ (horder ▸ hprime)
-  rw [← horder, ← hcard, ← horbit] at hτ
-  have hmul :
-      (orderOf σ - 1) * Nat.card (Function.fixedPoints σ) =
-        (orderOf σ - 1) * Nat.card (Function.fixedPoints τ) :=
-    Nat.add_left_cancel (hσ.trans hτ.symm)
-  exact Nat.mul_left_cancel (Nat.sub_pos_of_lt hprime.one_lt) hmul
-
 
 private def trivialPermFixedPointsEquiv
     (X : Type*) :

@@ -488,53 +488,6 @@ Then $G$ admits a characteristic subgroup $H$ with the following properties.
 (d) $C_{Aut(G)}(H)$ is a $p$-group.
 -/
 
-/-- Core existential package for Theorem 1.13 (critical-subgroup-style witness). -/
-public def CriticalSubgroupPackage (p : ℕ) (G : Type*) [Group G] [Finite G] : Prop := by
-  let _ := (inferInstance : Finite G)
-  exact ∃ H : Subgroup G,
-    H.Characteristic ∧
-      (⁅H, ⊤⁆ ≤ centerIn (G := G) H) ∧
-      NilpotencyClassLe 2 (↥H) ∧
-      (Monoid.exponent (↥H) = p) ∧
-      IsPGroup p (↥(fixingSubgroup (M := MulAut G) (α := G) (H : Set G)))
-
-/-- Bridge proposition: the canonical `Z₂`-omega candidate has exponent `p`. -/
-public def Z2OmegaCandidateExponentBridge (p : ℕ) (G : Type*) [Group G] [Finite G] : Prop := by
-  let _ := (inferInstance : Finite G)
-  exact Monoid.exponent (↥(z2OmegaCandidate (G := G) p)) = p
-
-/-- Bridge proposition: the automorphisms fixing the canonical `Z₂`-omega candidate form a
-`p`-group. -/
-public def Z2OmegaCandidateFixingPGroupBridge (p : ℕ) (G : Type*) [Group G] [Finite G] : Prop := by
-  let _ := (inferInstance : Finite G)
-  exact IsPGroup p
-    (↥(fixingSubgroup (M := MulAut G) (α := G)
-      ((z2OmegaCandidate (G := G) p : Subgroup G) : Set G)))
-
-/-- If the exponent and fixing-subgroup bridges hold for `z2OmegaCandidate`, then the
-critical-subgroup package holds. -/
-public theorem criticalSubgroupPackage_of_z2OmegaCandidate_bridges
-    {G : Type*} [Group G] [Finite G] {p : ℕ}
-    (hexp : Z2OmegaCandidateExponentBridge (p := p) (G := G))
-    (hfix : Z2OmegaCandidateFixingPGroupBridge (p := p) (G := G)) :
-    CriticalSubgroupPackage (p := p) (G := G) := by
-  refine ⟨z2OmegaCandidate (G := G) p, ?_⟩
-  refine ⟨z2OmegaCandidate_characteristic (G := G) p, ?_⟩
-  refine ⟨z2OmegaCandidate_commutator_le_centerIn (G := G) p, ?_⟩
-  refine ⟨z2OmegaCandidate_nilpotencyClassLe_two (G := G) p, ?_⟩
-  exact ⟨hexp, hfix⟩
-
-/-- Reduction of Theorem 1.13 to `CriticalSubgroupPackage`. -/
-public theorem theorem_1_13_of_criticalSubgroupPackage
-    {G : Type*} [Group G] [Finite G] {p : ℕ}
-    (hcrit : CriticalSubgroupPackage (p := p) (G := G)) :
-    ∃ H : Subgroup G,
-      H.Characteristic ∧
-        (⁅H, ⊤⁆ ≤ centerIn (G := G) H) ∧
-        NilpotencyClassLe 2 (↥H) ∧
-        (Monoid.exponent (↥H) = p) ∧
-        IsPGroup p (↥(fixingSubgroup (M := MulAut G) (α := G) (H : Set G))) := by
-  simpa [CriticalSubgroupPackage] using hcrit
 
 public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     [Fact (IsPGroup p G)] :

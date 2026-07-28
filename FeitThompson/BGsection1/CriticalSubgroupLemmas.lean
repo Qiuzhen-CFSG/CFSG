@@ -32,14 +32,6 @@ public theorem commutator_le_center_of_le_upperCentralSeries_two
   have hxy : x * y * x⁻¹ * y⁻¹ ∈ Subgroup.upperCentralSeries G 1 := hxStep y
   simpa [Subgroup.upperCentralSeries_one, commutatorElement_def] using hxy
 
-/-- Any subgroup of `Z₂(G)` satisfies `⁅H,G⁆ ≤ centerIn(H)`. -/
-public theorem commutator_le_centerIn_of_le_upperCentralSeries_two
-    (H : Subgroup G) [H.Normal] (hH : H ≤ Subgroup.upperCentralSeries G 2) :
-    ⁅H, (⊤ : Subgroup G)⁆ ≤ centerIn (G := G) H := by
-  intro x hx
-  refine ⟨(Subgroup.commutator_le_left (H₁ := H) (H₂ := (⊤ : Subgroup G)) hx), ?_⟩
-  exact Subgroup.center_le_centralizer (H : Set G)
-    ((commutator_le_center_of_le_upperCentralSeries_two (G := G) H hH) hx)
 
 /-- Convert an ambient commutator containment `⁅H,G⁆ ≤ centerIn(H)` into
 `commutator(H) ≤ center(H)` for the subgroup `H`. -/
@@ -85,12 +77,6 @@ public theorem nilpotencyClassLe_two_of_commutator_le_centerIn
   unfold NilpotencyClassLe
   exact (Subgroup.upperCentralSeries_eq_top_iff_nilpotencyClass_le (G := ↥H)).2 hclass
 
-/-- Any subgroup of `Z₂(G)` has nilpotency class at most `2`. -/
-public theorem nilpotencyClassLe_two_of_le_upperCentralSeries_two
-    (H : Subgroup G) [H.Normal] (hH : H ≤ Subgroup.upperCentralSeries G 2) :
-    NilpotencyClassLe 2 (↥H) :=
-  nilpotencyClassLe_two_of_commutator_le_centerIn (G := G) H
-    (commutator_le_centerIn_of_le_upperCentralSeries_two (G := G) H hH)
 
 /-- If `H` is characteristic in `G` and `K` is characteristic in `H`, then the image of `K` in
 `G` is characteristic. -/
@@ -117,22 +103,6 @@ public theorem characteristic_map_subtype_of_characteristic
           simp [Subgroup.map_map]
     _ = K.map H.subtype := by rw [hKmap]
 
-/-- The subgroup of a subgroup of automorphisms fixing all elements of `G` pointwise is trivial. -/
-public theorem fixingSubgroupOf_univ_eq_bot (A : Subgroup (MulAut G)) :
-    fixingSubgroupOf A G (Set.univ : Set G) = ⊥ := by
-  ext a
-  constructor
-  · intro ha
-    rw [Subgroup.mem_bot]
-    apply Subtype.ext
-    ext g
-    exact (mem_fixingSubgroup_iff (M := A) (s := (Set.univ : Set G))).1 ha g (Set.mem_univ g)
-  · intro ha
-    rw [Subgroup.mem_bot] at ha
-    subst ha
-    exact (mem_fixingSubgroup_iff (M := A) (s := (Set.univ : Set G))).2 (by
-      intro g hg
-      simp)
 
 /-- `p`-group criterion by prime-order elimination:
 if every prime-order element of a finite subgroup has order `p`,
@@ -293,39 +263,11 @@ lemma pth_pow_eq_one_of_mem_z2OmegaCandidate_raw [Fact p.Prime]
   (omega₁ (G := ↥(Subgroup.upperCentralSeries G 2)) (p := p)).map
     (Subgroup.upperCentralSeries G 2).subtype
 
-/-- Automorphisms of `G` fixing the canonical `Z₂`-omega candidate pointwise. -/
-@[expose] public def z2OmegaCandidateFixingSubgroup : Subgroup (MulAut G) :=
-  fixingSubgroup (M := MulAut G) (α := G)
-    ((z2OmegaCandidate (G := G) p : Subgroup G) : Set G)
 
 section PrimeOrderReduction
 
 variable [Finite G] [Fact p.Prime]
 
-set_option backward.isDefEq.respectTransparency false in
-/-- Prime-order elimination criterion specialized to the fixer of `z2OmegaCandidate`. -/
-public theorem isPGroup_z2OmegaCandidateFixingSubgroup_of_primeOrder_eq_p
-    (hprime :
-      ∀ σ : z2OmegaCandidateFixingSubgroup (G := G) p,
-        Nat.Prime (orderOf σ) → orderOf σ = p) :
-    IsPGroup p (↥(z2OmegaCandidateFixingSubgroup (G := G) p)) := by
-  simpa [z2OmegaCandidateFixingSubgroup] using
-    (isPGroup_of_prime_order_eq_p (G := MulAut G) (p := p)
-      (H := fixingSubgroup (M := MulAut G) (α := G)
-        ((z2OmegaCandidate (G := G) p : Subgroup G) : Set G)) hprime)
-
-omit [Finite G] [Fact (Nat.Prime p)] in
-/-- Convert a `q ≠ p` prime-order elimination statement into full prime-order equality to `p`. -/
-public theorem prime_order_eq_p_of_prime_ne_p_elimination
-    {H : Subgroup G}
-    (helim : ∀ x : H, Nat.Prime (orderOf x) → orderOf x ≠ p → x = 1) :
-    ∀ x : H, Nat.Prime (orderOf x) → orderOf x = p := by
-  intro x hxprime
-  by_cases hx : orderOf x = p
-  · exact hx
-  · have hx1 : x = 1 := helim x hxprime hx
-    have horder1 : orderOf x = 1 := by simp [hx1]
-    exact (hxprime.ne_one horder1).elim
 
 end PrimeOrderReduction
 
@@ -345,40 +287,6 @@ public theorem z2OmegaCandidate_characteristic :
   simpa [z2OmegaCandidate, Z2, Ω] using
     (characteristic_map_subtype_of_characteristic (G := G) Z2 Ω)
 
-public theorem z2OmegaCandidate_commutator_le_centerIn :
-    ⁅z2OmegaCandidate (G := G) p, (⊤ : Subgroup G)⁆ ≤
-      centerIn (G := G) (z2OmegaCandidate (G := G) p) := by
-  let H : Subgroup G := z2OmegaCandidate (G := G) p
-  have hHle : H ≤ Subgroup.upperCentralSeries G 2 :=
-    z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
-  have hHchar : H.Characteristic := by
-    simpa [H] using (z2OmegaCandidate_characteristic (G := G) p)
-  letI : H.Characteristic := hHchar
-  letI : H.Normal := inferInstance
-  simpa [H] using
-    (commutator_le_centerIn_of_le_upperCentralSeries_two (G := G) H hHle)
-
-public theorem z2OmegaCandidate_nilpotencyClassLe_two :
-    NilpotencyClassLe 2 (↥(z2OmegaCandidate (G := G) p)) := by
-  let H : Subgroup G := z2OmegaCandidate (G := G) p
-  have hHle : H ≤ Subgroup.upperCentralSeries G 2 :=
-    z2OmegaCandidate_le_upperCentralSeries_two (G := G) p
-  have hHchar : H.Characteristic := by
-    simpa [H] using (z2OmegaCandidate_characteristic (G := G) p)
-  letI : H.Characteristic := hHchar
-  letI : H.Normal := inferInstance
-  simpa [H] using
-    (nilpotencyClassLe_two_of_le_upperCentralSeries_two (G := G) H hHle)
-
-set_option backward.isDefEq.respectTransparency false in
-public theorem z2OmegaCandidate_isPGroup [Fact (IsPGroup p G)] :
-    IsPGroup p (↥(z2OmegaCandidate (G := G) p)) := by
-  let Z2 : Subgroup G := Subgroup.upperCentralSeries G 2
-  let Ω : Subgroup Z2 := omega₁ (G := ↥Z2) (p := p)
-  have hZ2p : IsPGroup p (↥Z2) := (Fact.out : IsPGroup p G).to_subgroup Z2
-  have hΩp : IsPGroup p Ω := hZ2p.to_subgroup Ω
-  have hmap : IsPGroup p (↥(Ω.map Z2.subtype)) := IsPGroup.map (p := p) hΩp Z2.subtype
-  simpa [z2OmegaCandidate, Z2, Ω] using hmap
 
 set_option backward.isDefEq.respectTransparency false in
 public theorem z2OmegaCandidate_exponent_dvd_p_of_odd [Fact p.Prime] (hpodd : p ≠ 2) :
@@ -389,67 +297,6 @@ public theorem z2OmegaCandidate_exponent_dvd_p_of_odd [Fact p.Prime] (hpodd : p 
   simpa [z2OmegaCandidate] using
     (pth_pow_eq_one_of_mem_z2OmegaCandidate_raw (G := G) (p := p) hpodd x.property)
 
-public theorem z2OmegaCandidate_ne_bot [Finite G] [Nontrivial G] [Fact p.Prime]
-    [Fact (IsPGroup p G)] :
-    z2OmegaCandidate (G := G) p ≠ ⊥ := by
-  let Z2 : Subgroup G := Subgroup.upperCentralSeries G 2
-  have hcenter_nontriv : Nontrivial (Subgroup.center G) :=
-    (Fact.out : IsPGroup p G).center_nontrivial
-  have hcenter_ne_bot : Subgroup.center G ≠ ⊥ :=
-    (Subgroup.nontrivial_iff_ne_bot (H := Subgroup.center G)).1 hcenter_nontriv
-  have hcenter_le_Z2 : Subgroup.center G ≤ Z2 := by
-    simpa [Z2, Subgroup.upperCentralSeries_one] using
-      (Subgroup.upperCentralSeries_mono (G := G) (show 1 ≤ 2 by decide))
-  have hZ2_ne_bot : Z2 ≠ ⊥ := by
-    intro hZ2bot
-    have hcenter_bot : Subgroup.center G = ⊥ :=
-      le_antisymm (hcenter_le_Z2.trans (by simp [hZ2bot])) bot_le
-    exact hcenter_ne_bot hcenter_bot
-  have hZ2_nontriv : Nontrivial (↥Z2) :=
-    (Subgroup.nontrivial_iff_ne_bot (H := Z2)).2 hZ2_ne_bot
-  have hZ2p : IsPGroup p (↥Z2) := (Fact.out : IsPGroup p G).to_subgroup Z2
-  rcases (IsPGroup.nontrivial_iff_card (p := p) (G := ↥Z2) (hG := hZ2p)).1 hZ2_nontriv with
-    ⟨n, hn, hcard⟩
-  have hpdvdZ2 : p ∣ Nat.card (↥Z2) := by
-    rw [hcard]
-    exact dvd_pow_self p (Nat.ne_of_gt hn)
-  simpa [z2OmegaCandidate, Z2] using omega₁_map_subtype_ne_bot (M := Z2) (p := p) hpdvdZ2
-
-public theorem z2OmegaCandidate_nontrivial [Finite G] [Nontrivial G] [Fact p.Prime]
-    [Fact (IsPGroup p G)] :
-    Nontrivial (↥(z2OmegaCandidate (G := G) p)) :=
-  (Subgroup.nontrivial_iff_ne_bot (H := z2OmegaCandidate (G := G) p)).2
-    (z2OmegaCandidate_ne_bot (G := G) (p := p))
-
-public theorem p_dvd_exponent_z2OmegaCandidate [Finite G] [Nontrivial G] [Fact p.Prime]
-    [Fact (IsPGroup p G)] :
-    p ∣ Monoid.exponent (↥(z2OmegaCandidate (G := G) p)) := by
-  let H : Subgroup G := z2OmegaCandidate (G := G) p
-  have hHp : IsPGroup p (↥H) := by
-    simpa [H] using z2OmegaCandidate_isPGroup (G := G) (p := p)
-  have hHnontriv : Nontrivial (↥H) := by
-    simpa [H] using z2OmegaCandidate_nontrivial (G := G) (p := p)
-  rcases (IsPGroup.nontrivial_iff_card (p := p) (G := ↥H) (hG := hHp)).1 hHnontriv with
-    ⟨n, hn, hcard⟩
-  have hpdvdH : p ∣ Nat.card (↥H) := by
-    rw [hcard]
-    exact dvd_pow_self p (Nat.ne_of_gt hn)
-  letI : Fintype (↥H) := Fintype.ofFinite (↥H)
-  have hpdvdHf : p ∣ Fintype.card (↥H) := by
-    simpa [Nat.card_eq_fintype_card] using hpdvdH
-  obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card (G := ↥H) p hpdvdHf
-  have horder_dvd : orderOf x ∣ Monoid.exponent (↥H) := Monoid.order_dvd_exponent x
-  have horder_eq_p : orderOf x = p := by simpa using hx
-  have hpdvdExpH : p ∣ Monoid.exponent (↥H) := by
-    simpa [horder_eq_p] using horder_dvd
-  simpa [H] using hpdvdExpH
-
-public theorem z2OmegaCandidate_exponent_eq_p_of_dvd [Finite G] [Nontrivial G] [Fact p.Prime]
-    [Fact (IsPGroup p G)]
-    (hexp_dvd : Monoid.exponent (↥(z2OmegaCandidate (G := G) p)) ∣ p) :
-    Monoid.exponent (↥(z2OmegaCandidate (G := G) p)) = p := by
-  exact Nat.dvd_antisymm hexp_dvd
-    (p_dvd_exponent_z2OmegaCandidate (G := G) (p := p))
 
 end Z2Omega
 

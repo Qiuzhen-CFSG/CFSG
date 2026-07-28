@@ -38,10 +38,6 @@ variable {G : Type*} [Group G] [Finite G]
 @[expose] public def section16ConjugatesOfSetBySet (X Y : Set G) : Set G :=
   {z | ∃ x ∈ X, ∃ y ∈ Y, z = y * x * y⁻¹}
 
-/-- The maximal subgroups of `G` containing an arbitrary subset. -/
-@[expose] public def section16MaximalSubgroupsContainingSet (X : Set G) :
-    Set (Subgroup G) :=
-  {M | M ∈ section9MaximalSubgroups G ∧ X ⊆ M}
 
 /-- The centralizer of an arbitrary subset inside a subgroup. -/
 @[expose] public def section16CentralizerInSet (H : Subgroup G) (X : Set G) :
@@ -169,9 +165,6 @@ public theorem section16MFSubgroup_unique
 @[expose] public def section16MaximalTypeF (M : Subgroup G) : Prop :=
   M ∈ section14MFamilyF G
 
-/-- Maximal subgroups in case `(P_1)`. -/
-@[expose] public def section16MaximalTypeP1 (M : Subgroup G) : Prop :=
-  M ∈ section14MFamilyP1 G
 
 /-- Maximal subgroups in case `(P_2)`. -/
 @[expose] public def section16MaximalTypeP2 (M : Subgroup G) : Prop :=
@@ -382,9 +375,6 @@ public theorem section16MFSubgroup_unique
     section16TypeCommon M H V W1 W2 ∧ V = ⊥ ∧
       section16TypeVAlternative M H W1
 
-/-- A Type I or Type II maximal subgroup. -/
-@[expose] public def section16TypeIOrII (M H : Subgroup G) : Prop :=
-  section16TypeI M H ∨ section16TypeII M H
 
 /-- `X` is one of the two Section 16 sets `A(M)` or `A_0(M)`. -/
 @[expose] public def section16AChoice

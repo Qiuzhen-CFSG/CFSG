@@ -705,8 +705,6 @@ private theorem hkt_isPElement_mem_pCore_of_sylow_absorption
     (hS (g * x * g⁻¹) hgS hgx_p)
 
 
-
-
 /- Huppert IV.6.2(f), internalized from the source paragraph so later have steps in this file do not depend on the old split part_f module. -/
 /-- Maximality of the selected bad subgroup forces every strictly larger normal
 layer inside the local Sylow subgroup to have an ambient normalizer with a normal
@@ -1852,37 +1850,6 @@ private theorem hkt_isElementaryAbelian_of_mulEquiv
   simpa [Monoid.exponent_eq_of_mulEquiv e] using
     (IsElementaryAbelian.exponent_dvd_p r G)
 
-/-- A minimal normal `r`-subgroup is elementary abelian. -/
-private theorem hkt_minimalNormal_isElementaryAbelian_of_isPGroup
-    {G : Type u} [Group G] [Finite G] {r : ℕ} [Fact r.Prime]
-    (M : Subgroup G) [M.Normal] [IsMinimalNormal M]
-    (hM_p : IsPGroup r M) :
-    IsElementaryAbelian r M := by
-  classical
-  by_cases hbot : M = ⊥
-  · subst M
-    refine
-      { toIsMulCommutative := by infer_instance
-        exponent_dvd_p := ?_ }
-    simp
-  · haveI : Group.IsNilpotent M := hM_p.isNilpotent
-    haveI : IsSolvable M := IsNilpotent.to_isSolvable
-    obtain ⟨s, hs, hElem⟩ :=
-      minimalNormal_solvable_exists_isElementaryAbelian (G := G) (M := M)
-    by_cases hsr : s = r
-    · subst s
-      exact hElem
-    · haveI : Fact s.Prime := ⟨hs⟩
-      haveI : IsElementaryAbelian s M := hElem
-      have hMs : IsPGroup s M := IsElementaryAbelian.isPGroup s M
-      have hrs : r ≠ s := fun h => hsr h.symm
-      have hcop : Nat.Coprime (Nat.card M) (Nat.card M) :=
-        IsPGroup.coprime_card_of_ne r s hrs M M hM_p hMs
-      have hcard_one : Nat.card M = 1 :=
-        Nat.eq_one_of_dvd_coprimes hcop dvd_rfl dvd_rfl
-      have hcard_gt : 1 < Nat.card M :=
-        (Subgroup.one_lt_card_iff_ne_bot (H := M)).2 hbot
-      omega
 
 /-- A finite nontrivial characteristically simple `r`-group is elementary abelian. -/
 private theorem hkt_characteristicallySimple_isElementaryAbelian_of_isPGroup
@@ -3295,51 +3262,6 @@ public theorem hkt_iv62_f_reduced_nonburnside_corrected_structure
     hcore_bot hnot_Qp hq2 S hq_dvd hnot_burnside hcentralizer_dvd
     hnormalizer_rank_dvd hproper_rec hsmall_rec hU_ne_bot hU_p hU_no_complement
     hUmax P hUS hUN_le_P hcardUP hNtop hU_eq_core
-/-- Compatibility projection for downstream files: later clauses currently
-consume only the solvability conclusion of Huppert IV.6.2(f). -/
-public theorem hkt_iv62_f_reduced_nonburnside_isSolvable
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (hcore_bot : pPrimeCore q Q = ⊥) (hnot_Qp : ¬ IsPGroup q Q)
-    (hq2 : q ≠ 2) (S : Sylow q Q) (hq_dvd : q ∣ Nat.card Q)
-    (hnot_burnside :
-      ¬ (S : Subgroup Q) ≤ centerIn (G := Q) (Subgroup.normalizer (S : Subgroup Q)))
-    (hcentralizer_dvd :
-      HasNormalPComplement q
-        (↥(Subgroup.centralizer
-          (centerIn (G := Q) (S : Subgroup Q) : Set Q))))
-    (hnormalizer_rank_dvd :
-      HasNormalPComplement q
-        (↥(Subgroup.normalizer
-          (huppertRankThompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q))))
-    (hproper_rec : ∀ (H : Subgroup Q) (T : Sylow q H), H ≠ ⊥ → H ≠ ⊤ → q ∣ Nat.card H → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := H) (T : Subgroup H) : Set H)) → HasNormalPComplement q (Subgroup.normalizer (huppertRankThompsonSubgroup (G := H) (T : Subgroup H) : Set H)) → HasNormalPComplement q H)
-    (hsmall_rec : ∀ {R : Type u} [Group R] [Finite R] (T : Sylow q R), Nat.card R < Nat.card Q → q ∣ Nat.card R → HasNormalPComplement q (Subgroup.centralizer (centerIn (G := R) (T : Subgroup R) : Set R)) → HasNormalPComplement q (Subgroup.normalizer (huppertRankThompsonSubgroup (G := R) (T : Subgroup R) : Set R)) → HasNormalPComplement q R)
-    {U : Subgroup Q}
-    (hU_ne_bot : U ≠ ⊥) (_hU_p : IsPGroup q U)
-    (_hU_no_complement : ¬ HasNormalPComplement q (↥(Subgroup.normalizer (U : Set Q))))
-    (hUmax :
-      ∀ W : Subgroup Q,
-        W ≠ ⊥ →
-        IsPGroup q W →
-          ¬ HasNormalPComplement q (↥(Subgroup.normalizer (W : Set Q))) →
-          Nat.factorization (Nat.card (Subgroup.normalizer (W : Set Q))) q * (Nat.card Q + 1) + Nat.card W ≤ Nat.factorization (Nat.card (Subgroup.normalizer (U : Set Q))) q * (Nat.card Q + 1) + Nat.card U)
-    (P : Sylow q (Subgroup.normalizer (U : Set Q)))
-    (hUS : U < (S : Subgroup Q))
-    (hUN_le_P :
-      U.subgroupOf (Subgroup.normalizer (U : Set Q)) ≤
-        (P : Subgroup (Subgroup.normalizer (U : Set Q))))
-    (hcardUP :
-      Nat.card U < Nat.card (P : Subgroup (Subgroup.normalizer (U : Set Q))))
-    (hNtop : Subgroup.normalizer (U : Set Q) = ⊤)
-    (hU_eq_core : U = pCore q Q) :
-    IsSolvable Q := by
-  obtain ⟨Kbar, hKbar_normal, _hKbar_minimal, hKbar_ne_bot, hKbar_ne_top, hKbar_coprime,
-      hquot_q, hquot_dvd, hquot_pcore_bot, hsolv⟩ :=
-    hkt_iv62_f_reduced_nonburnside_corrected_structure
-      (Q := Q) (q := q) (U := U)
-      hcore_bot hnot_Qp hq2 S hq_dvd hnot_burnside hcentralizer_dvd
-      hnormalizer_rank_dvd hproper_rec hsmall_rec hU_ne_bot _hU_p _hU_no_complement hUmax P hUS hUN_le_P hcardUP
-      hNtop hU_eq_core
-  exact hsolv
 
 
 private theorem hkt_omega₁_card_eq_pow_generatorRank_of_commutative_pgroup
@@ -3371,50 +3293,6 @@ private theorem hkt_omega₁_card_eq_pow_generatorRank_of_commutative_pgroup
     _ = p ^ generatorRank Qquot := hQcard
     _ = p ^ generatorRank G := by rw [hgen_eq]
 
-private theorem hkt_generatorRank_le_of_le_commutative_pgroup
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
-    {H K : Subgroup R} (hHcomm : IsMulCommutative H) (hKcomm : IsMulCommutative K)
-    (hHK : H ≤ K) :
-    generatorRank H ≤ generatorRank K := by
-  haveI : Fact (IsPGroup p H) := ⟨(Fact.out : IsPGroup p R).to_subgroup H⟩
-  haveI : Fact (IsPGroup p K) := ⟨(Fact.out : IsPGroup p R).to_subgroup K⟩
-  letI : IsMulCommutative H := hHcomm
-  letI : IsMulCommutative K := hKcomm
-  have hΩHcard : Nat.card (omega₁ (G := H) (p := p)) = p ^ generatorRank H :=
-    hkt_omega₁_card_eq_pow_generatorRank_of_commutative_pgroup (G := H) (p := p)
-  have hΩKcard : Nat.card (omega₁ (G := K) (p := p)) = p ^ generatorRank K :=
-    hkt_omega₁_card_eq_pow_generatorRank_of_commutative_pgroup (G := K) (p := p)
-  have hmap_le :
-      (omega₁ (G := H) (p := p)).map H.subtype ≤
-        (omega₁ (G := K) (p := p)).map K.subtype := by
-    rw [omega₁, omega, MonoidHom.map_closure]
-    refine (Subgroup.closure_le
-      (K := (omega₁ (G := K) (p := p)).map K.subtype)).2 ?_
-    rintro _ ⟨x, hx, rfl⟩
-    let xK : K := ⟨(x : R), hHK x.2⟩
-    have hxG : (x : R) ^ p = 1 := by
-      simpa using congrArg H.subtype hx
-    have hxΩK : xK ∈ omega₁ (G := K) (p := p) := by
-      change xK ∈ Subgroup.closure {y : K | y ^ (p ^ 1) = 1}
-      exact Subgroup.subset_closure (by simpa [xK, pow_one] using hxG)
-    exact Subgroup.mem_map_of_mem K.subtype hxΩK
-  have hcard_le :
-      Nat.card (omega₁ (G := H) (p := p)) ≤ Nat.card (omega₁ (G := K) (p := p)) := by
-    calc
-      Nat.card (omega₁ (G := H) (p := p)) =
-          Nat.card ((omega₁ (G := H) (p := p)).map H.subtype) := by
-            exact (Subgroup.card_map_of_injective
-              (K := omega₁ (G := H) (p := p)) (f := H.subtype)
-              H.subtype_injective).symm
-      _ ≤ Nat.card ((omega₁ (G := K) (p := p)).map K.subtype) :=
-            Subgroup.card_le_of_le hmap_le
-      _ = Nat.card (omega₁ (G := K) (p := p)) := by
-            exact Subgroup.card_map_of_injective
-              (K := omega₁ (G := K) (p := p)) (f := K.subtype)
-              K.subtype_injective
-  have hpow_le : p ^ generatorRank H ≤ p ^ generatorRank K := by
-    simpa [hΩHcard, hΩKcard] using hcard_le
-  exact (Nat.pow_le_pow_iff_right (Fact.out : Nat.Prime p).one_lt).1 hpow_le
 
 private theorem hkt_isElementaryAbelian_quotient_of_isElementaryAbelian
     {G : Type*} [Group G] {p : ℕ} [Fact p.Prime]
@@ -3438,26 +3316,6 @@ private theorem hkt_isElementaryAbelian_quotient_of_isElementaryAbelian
   · exact (Group.exponent_quotient_dvd (H := N)).trans
       (IsElementaryAbelian.exponent_dvd_p p G)
 
-private theorem hkt_iv62_o_conjugate_centralizer_card_bound
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    {B H1 H2 : Subgroup Q}
-    (hC1 : Nat.card (((Subgroup.centralizer (H1 : Set Q)).comap B.subtype)) ≤ q)
-    (hC2 : Nat.card (((Subgroup.centralizer (H2 : Set Q)).comap B.subtype)) ≤ q)
-    (encode : B →
-      ((Subgroup.centralizer (H1 : Set Q)).comap B.subtype) ×
-        ((Subgroup.centralizer (H2 : Set Q)).comap B.subtype))
-    (hencode : Function.Injective encode) :
-    Nat.card B ≤ q ^ 2 := by
-  classical
-  calc
-    Nat.card B ≤
-        Nat.card (((Subgroup.centralizer (H1 : Set Q)).comap B.subtype) ×
-          ((Subgroup.centralizer (H2 : Set Q)).comap B.subtype)) :=
-      Nat.card_le_card_of_injective encode hencode
-    _ = Nat.card (((Subgroup.centralizer (H1 : Set Q)).comap B.subtype)) *
-        Nat.card (((Subgroup.centralizer (H2 : Set Q)).comap B.subtype)) := by simp
-    _ ≤ q * q := Nat.mul_le_mul hC1 hC2
-    _ = q ^ 2 := by rw [pow_two]
 private theorem hkt_iv62_o_elementary_card_bound_to_rank_bound
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
     {B : Subgroup Q} (hB_elem : IsElementaryAbelian q B)
@@ -3734,16 +3592,6 @@ private theorem hkt_iv62_q_preterminal_layer_card_eq_two_dimensional
   have hrank_eq_two : generatorRank B = 2 :=
     le_antisymm B_rank_at_most_two htwo_le_rank
   simpa [hrank_eq_two] using hBcard_pow
-private theorem hkt_iv62_not_trivial_on_omega_of_not_trivial_on_pgroup
-    {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p G)]
-    [MulDistribMulAction A G]
-    (hp2 : p ≠ 2) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
-    (hnot_trivial : ¬ ActsTrivially (A := A) (G := G)) :
-    ¬ ActsTriviallyOnSubgroup (A := A) (G := G) (omega₁ (G := G) (p := p)) := by
-  intro hOmega
-  exact hnot_trivial
-    (theorem_1_11 (G := G) (A := A) (p := p) hp2 hcoprime hOmega)
 
 
 /-!

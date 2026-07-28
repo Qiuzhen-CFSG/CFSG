@@ -113,35 +113,6 @@ open Section1 Section2 Section3 Section4
           (fun t : equalDegreeColumnIndex piChar j0 k =>
             deltaSign k • omegaColumnSigma σ ω t.1) v)
 
-@[expose] public def theorem_4_9_b_full_statement
-    {L : Type u} [Group L] [Finite L]
-    {G : Type v} [Group G] [Finite G]
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq J]
-    (A : Set L)
-    (j0 k : J)
-    (W : Subgroup L)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (piChar : I → J → ClassFunction L)
-    (deltaSign : J → ℂ)
-    (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
-  theorem_4_9_b_lands_in_zIrr_statement j0 k W ω σ piChar deltaSign ∧
-    theorem_4_9_b_statement A j0 k W ω σ piChar deltaSign τ
-
-@[expose] public def theorem_4_9_full_statement
-    {L : Type u} [Group L] [Finite L]
-    {G : Type v} [Group G] [Finite G]
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq J]
-    (A : Set L)
-    (j0 k : J)
-    (W : Subgroup L)
-    (ω : I → J → ClassFunction W)
-    (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (piChar : I → J → ClassFunction L)
-    (deltaSign : J → ℂ)
-    (τ : ClassFunction L →ₗ[ℂ] ClassFunction G) : Prop :=
-  theorem_4_9_a_statement A j0 k piChar ∧
-    theorem_4_9_b_full_statement A j0 k W ω σ piChar deltaSign τ
 
 @[expose] public def tau_agrees_on_cyclicTI_induced_statement
     {L : Type u} [Group L] [Finite L]

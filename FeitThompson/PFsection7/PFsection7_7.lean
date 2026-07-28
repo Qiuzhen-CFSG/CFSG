@@ -507,37 +507,6 @@ private theorem induced_restriction_mem_span_zeta_of_CFon_pf77
         (A := A) (L := L) (H := H) (K := K) (T := T)
         (ζ := ζ) (d := d) h76 henum (hθirr i))
 
-private theorem mem_span_range_fintype_exists_fun_pf77
-    {ι V : Type*} [Fintype ι] [DecidableEq ι]
-    [AddCommMonoid V] [Module ℂ V]
-    (f : ι → V) {v : V}
-    (hv : v ∈ Submodule.span ℂ (Set.range f)) :
-    ∃ a : ι → ℂ, v = ∑ i : ι, a i • f i := by
-  classical
-  refine Submodule.span_induction
-    (p := fun v : V => fun _ : v ∈ Submodule.span ℂ (Set.range f) =>
-      ∃ a : ι → ℂ, v = ∑ i : ι, a i • f i)
-    ?hgen ?hzero ?hadd ?hsmul hv
-  · intro v hv
-    rcases hv with ⟨i, rfl⟩
-    refine ⟨fun j => if j = i then 1 else 0, ?_⟩
-    rw [Finset.sum_eq_single i]
-    · simp
-    · intro j _hj hji
-      simp [hji]
-    · intro hi
-      exact (hi (Finset.mem_univ i)).elim
-  · refine ⟨fun _ => 0, ?_⟩
-    simp
-  · intro v w _hv _hw hv hw
-    rcases hv with ⟨a, rfl⟩
-    rcases hw with ⟨b, rfl⟩
-    refine ⟨fun i => a i + b i, ?_⟩
-    simp [Finset.sum_add_distrib, add_smul]
-  · intro c v _hv hv
-    rcases hv with ⟨a, rfl⟩
-    refine ⟨fun i => c * a i, ?_⟩
-    simp [Finset.smul_sum, mul_smul]
 
 private theorem mem_span_psi_of_mem_span_zeta_and_value_one_zero_pf77
     {G : Type u} [Group G] [Finite G]

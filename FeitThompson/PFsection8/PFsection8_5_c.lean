@@ -16,23 +16,6 @@ universe u
   typePDefinitionData M MF U W1 W2 →
     section16TISubsetWithNormalizer (section16HatW W1 W2) (W1 ⊔ W2)
 
-/-- Peterfalvi Definition `(8.6)` for Type II. -/
-@[expose] public def definition_8_6_typeII_statement
-    {G : Type u} [Group G] [Finite G]
-    (M MF : Subgroup G) : Prop :=
-  section16MFSubgroup M MF ∧ typeIIDefinitionData M MF
-
-/-- Peterfalvi Definition `(8.6)` for Type III. -/
-@[expose] public def definition_8_6_typeIII_statement
-    {G : Type u} [Group G] [Finite G]
-    (M MF : Subgroup G) : Prop :=
-  section16MFSubgroup M MF ∧ typeIIIDefinitionData M MF
-
-/-- Peterfalvi Definition `(8.6)` for Type IV. -/
-@[expose] public def definition_8_6_typeIV_statement
-    {G : Type u} [Group G] [Finite G]
-    (M MF : Subgroup G) : Prop :=
-  section16MFSubgroup M MF ∧ typeIVDefinitionData M MF
 
 /-- Peterfalvi Definition `(8.7)`. -/
 
@@ -111,18 +94,6 @@ private theorem typeP_W2_le_M
   rcases hMF.1 with ⟨hMFM, _hMFnormM, _hMFnil, _hMFHallM⟩
   exact hW2le.trans inf_le_left |>.trans hMFM
 
-private theorem typeP_W2_le_ambientDerived
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hP : typePDefinitionData M MF U W1 W2) :
-    W2 ≤ ambientDerivedSubgroup M := by
-  rcases hP with
-    ⟨_hMF, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD, _hUnil, _hW1normU,
-      _hcompDU, _hMFnotcyc, _hM2le, _hFitEq, _hFitLeD, hW2le, _hW2cyc, _hW2ne,
-      _hcentW1, _hnormX⟩
-  exact hW2le.trans inf_le_right |>.trans
-    (section12_ambientDerivedSubgroup_mono (G := G)
-      (section12_ambientDerivedSubgroup_le (G := G) (E := M)))
 
 private theorem typeP_W1_inf_W2_eq_bot
     {G : Type u} [Group G] [Finite G]
@@ -147,23 +118,6 @@ private theorem typeP_W1_inf_W2_eq_bot
     simpa [hcompMW1.2.2.2.eq_bot] using hxInf
   · exact bot_le
 
-private theorem typeP_W2_le_centralizer_W1
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hP : typePDefinitionData M MF U W1 W2) :
-    W2 ≤ Subgroup.centralizer (W1 : Set G) := by
-  rcases hP with
-    ⟨_hMF, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD, _hUnil, _hW1normU,
-      _hcompDU, _hMFnotcyc, _hM2le, _hFitEq, _hFitLeD, hW2le, _hW2cyc, _hW2ne,
-      hcentW1, _hnormX⟩
-  intro y hy
-  rw [Subgroup.mem_centralizer_iff]
-  intro x hx
-  by_cases hx1 : x = 1
-  · simp [hx1]
-  · have hyCent : y ∈ elementCentralizerIn (ambientDerivedSubgroup M) x := by
-      simpa [hcentW1 x hx hx1] using hy
-    exact (Subgroup.mem_centralizer_singleton_iff.mp hyCent.2).symm
 
 private theorem typeP_W_isMulCommutative
     {G : Type u} [Group G] [Finite G]

@@ -263,28 +263,6 @@ private theorem huppert_IV_3_4_normalizer_conj_eq_mod_grunKernelSubgroup
     _ = πD cS * πD aS := by rw [map_mul]
     _ = πD ⟨a, ha⟩ := by simp [aS, hc_one]
 
-/-- Non-fixed-cycle quotient bridge used in IV.3.4: once the smaller power
-of the selected Sylow element lies in the Grün subgroup, its image in `S/D` is
-trivial. -/
-private theorem huppert_IV_3_4_pow_mem_grunKernelSubgroup_quotient_eq_one
-    {Q : Type u} [Group Q] {q n : ℕ} [Fact q.Prime] (S : Sylow q Q)
-    {x : (S : Subgroup Q)}
-    (hxpow : (x : Q) ^ n ∈ huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)) :
-    let D : Subgroup Q := huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)
-    let πD : (S : Subgroup Q) →*
-        (S : Subgroup Q) ⧸ D.subgroupOf (S : Subgroup Q) :=
-      QuotientGroup.mk' (D.subgroupOf (S : Subgroup Q))
-    πD x ^ n = 1 := by
-  classical
-  let D : Subgroup Q := huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)
-  let πD : (S : Subgroup Q) →*
-      (S : Subgroup Q) ⧸ D.subgroupOf (S : Subgroup Q) :=
-    QuotientGroup.mk' (D.subgroupOf (S : Subgroup Q))
-  change πD x ^ n = 1
-  rw [← map_pow]
-  exact (QuotientGroup.eq_one_iff (N := D.subgroupOf (S : Subgroup Q)) (x ^ n)).2 (by
-    simpa [D, Subgroup.mem_subgroupOf] using hxpow)
-
 
 /-- Multiplying a list of common conjugates of powers keeps the common
 conjugator and adds the exponents. This is the mechanical product calculation
@@ -1176,19 +1154,6 @@ public theorem huppert_IV_3_4_first_grun
   · exact huppert_IV_3_4_grunKernelSubgroup_le_sylow_inf_commutator
       (Q := Q) (S : Subgroup Q)
 
-
-/-- Huppert IV.3.4, transfer-kernel form, obtained from IV.3.3 and the
-first Grün equality. -/
-public theorem huppert_IV_3_4_transfer_kernel
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q) :
-    let Y := huppertIV33TransferToSylow (Q := Q) (q := q) S
-    Y.ker ⊓ (S : Subgroup Q) =
-      huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q) := by
-  classical
-  have h33 := (huppert_IV_3_3_transfer (Q := Q) (q := q) S).2
-  have h34 := huppert_IV_3_4_first_grun (Q := Q) (q := q) S
-  exact h33.trans h34
 
 end External
 end BenderSuzuki

@@ -411,21 +411,6 @@ private noncomputable def classFunctionCentralElementLinear :
     ext g
     simp [classFunctionCentralElement_coeff, smul_eq_mul]
 
-private lemma classFunctionCentralElement_single_comm (φ : ClassFunction G) (h : G) :
-    (MonoidAlgebra.single h (1 : ℂ) : GroupAlgebra (G := G)) *
-        classFunctionCentralElement (G := G) φ =
-      classFunctionCentralElement (G := G) φ *
-        MonoidAlgebra.single h (1 : ℂ) := by
-  classical
-  ext x
-  simp only [MonoidAlgebra.coeff_single_mul_apply,
-    MonoidAlgebra.coeff_mul_single_apply, one_mul, mul_one,
-    classFunctionCentralElement_coeff]
-  have hconj :
-      ConjClasses.mk ((h⁻¹ * x)⁻¹) = ConjClasses.mk ((x * h⁻¹)⁻¹) := by
-    rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
-    exact ⟨h, by group⟩
-  exact congrArg φ hconj
 
 private lemma classFunctionCentralElement_comm (φ : ClassFunction G) (a : GroupAlgebra (G := G)) :
     a * classFunctionCentralElement (G := G) φ =
@@ -491,39 +476,6 @@ private lemma blockAlgHom_classFunctionCentralElement_eq_scalar
   rcases hcenter with ⟨c, hc⟩
   exact ⟨c, hc.symm⟩
 
-private lemma blockCharacter_apply_eq_matrix_trace (i : wedderburnIndex G) (g : G) :
-    blockCharacter (G := G) i (ConjClasses.mk g) =
-      Matrix.trace (blockAlgHom (G := G) i
-        (MonoidAlgebra.single g (1 : ℂ))) := by
-  classical
-  dsimp [blockCharacter, characterClassFunction, classFunctionOfInvariant]
-  change (matrixBlockRepresentation (G := G) i).character g =
-    Matrix.trace (blockAlgHom (G := G) i
-      (MonoidAlgebra.single g (1 : ℂ)))
-  dsimp [Representation.character]
-  letI := matrixBlockModule (G := G) i
-  letI := matrixBlockIsScalarTower (G := G) i
-  change LinearMap.trace ℂ (Fin (wedderburnDim (G := G) i) → ℂ)
-      ((matrixBlockRepresentation (G := G) i) g) =
-    Matrix.trace (blockAlgHom (G := G) i
-      (MonoidAlgebra.single g (1 : ℂ)))
-  have hlin :
-      ((matrixBlockRepresentation (G := G) i) g) =
-        Matrix.toLin' (blockAlgHom (G := G) i
-          (MonoidAlgebra.single g (1 : ℂ))) := by
-    apply LinearMap.ext
-    intro v
-    funext a
-    change ((MonoidAlgebra.single g (1 : ℂ) : GroupAlgebra (G := G)) • v) a =
-      (Matrix.toLin' (blockAlgHom (G := G) i
-        (MonoidAlgebra.single g (1 : ℂ))) v) a
-    change (blockAlgHom (G := G) i
-        (MonoidAlgebra.single g (1 : ℂ)) • v) a =
-      (Matrix.toLin' (blockAlgHom (G := G) i
-        (MonoidAlgebra.single g (1 : ℂ))) v) a
-    simp [Matrix.toLin'_apply, Matrix.mulVec, dotProduct]
-  rw [hlin]
-  exact Matrix.trace_toLin'_eq _
 
 private lemma matrix_trace_scalar (i : wedderburnIndex G) (c : ℂ) :
     Matrix.trace (Matrix.scalar (Fin (wedderburnDim (G := G) i)) c) =

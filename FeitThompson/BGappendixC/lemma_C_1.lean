@@ -51,13 +51,6 @@ public theorem appendixCConditionA_iff_coprime_q_sub_one :
   rw [appendixCConditionA, Nat.Coprime]
   rw [hgcd]
 
-/-- For prime `q`, Appendix C condition `(A)` says exactly that `q` does not
-divide `p - 1`. -/
-public theorem appendixCConditionA_iff_not_dvd_q_sub_one
-    [Fact q.Prime] :
-    appendixCConditionA p q ↔ ¬ q ∣ p - 1 := by
-  rw [appendixCConditionA_iff_coprime_q_sub_one (p := p) (q := q)]
-  exact (Fact.out : Nat.Prime q).coprime_iff_not_dvd
 
 /-- The set `E = {a in F_{p^q} | N(a) = N(2-a) = 1}`. -/
 @[expose] public def appendixCE : Set (appendixCField p q) :=
@@ -130,49 +123,6 @@ public theorem appendixCField_two_pow_prime_eq_two
   norm_num at h
   simpa [pow_one] using h
 
-/-- The Frobenius map preserves the Appendix C set `E`. -/
-public theorem appendixCE_pow_prime_mem
-    [Fact q.Prime]
-    {a : appendixCField p q} (ha : a ∈ appendixCE p q) :
-    a ^ p ∈ appendixCE p q := by
-  constructor
-  · rw [map_pow (Algebra.norm (ZMod p) (S := appendixCField p q)) a p]
-    rw [ha.1]
-    simp
-  · have hsub :
-        ((2 : appendixCField p q) - a) ^ p =
-          (2 : appendixCField p q) - a ^ p := by
-      simpa [pow_one, appendixCField_two_pow_prime_eq_two (p := p) (q := q)] using
-        (sub_pow_char_pow (R := appendixCField p q) (x := (2 : appendixCField p q))
-          (y := a) (n := 1) (p := p))
-    rw [← hsub]
-    rw [map_pow (Algebra.norm (ZMod p) (S := appendixCField p q))
-      ((2 : appendixCField p q) - a) p]
-    rw [ha.2]
-    simp
-
-/-- Frobenius preserves nontriviality away from `1`. -/
-public theorem appendixCField_pow_prime_ne_one
-    [Fact q.Prime]
-    {a : appendixCField p q} (ha1 : a ≠ 1) :
-    a ^ p ≠ 1 := by
-  intro hpow
-  have hsub : (a - 1) ^ p = 0 := by
-    have h := (sub_pow_char_pow (R := appendixCField p q) (x := a)
-      (y := 1) (n := 1) (p := p))
-    rw [pow_one] at h
-    rw [h, hpow]
-    simp
-  have hsub_ne : a - 1 ≠ 0 := sub_ne_zero.mpr ha1
-  exact (pow_ne_zero p hsub_ne) hsub
-
-/-- Frobenius preserves membership in `E#`. -/
-public theorem appendixCE_pow_prime_mem_ne_one
-    [Fact q.Prime]
-    {a : appendixCField p q} (ha : a ∈ appendixCE p q) (ha1 : a ≠ 1) :
-    a ^ p ∈ appendixCE p q ∧ a ^ p ≠ 1 :=
-  ⟨appendixCE_pow_prime_mem (p := p) (q := q) ha,
-    appendixCField_pow_prime_ne_one (p := p) (q := q) ha1⟩
 
 /-- Every member of `E` is nonzero, since its norm is `1`. -/
 public theorem appendixCE_ne_zero
@@ -424,10 +374,6 @@ public theorem appendixCNormOneUnits_natCard
   rw [Nat.card_units, Nat.card_units]
   rw [GaloisField.card p q hq0, Nat.card_zmod]
 
-/-- The norm-one subgroup `U` is cyclic. -/
-public theorem appendixCNormOneUnits_isCyclic :
-    IsCyclic (appendixCNormOneUnits p q) := by
-  infer_instance
 
 /-- Under condition `(A)`, an element of the norm-one subgroup whose
 `(p - 1)`st power is trivial must itself be trivial. -/
@@ -612,77 +558,6 @@ public theorem appendixCE_of_units_mem_normOneUnits
   · exact (appendixCNormOneUnits_mem_iff (p := p) (q := q)
       (Units.mk0 ((2 : appendixCField p q) - z) h2z)).1 h2zU
 
-/-- The norm-one pairs `(u, v)` with `u + v = 2`. This is the finite-field
-solution set underlying the class-sum coefficient used in Appendix C Lemma C.2. -/
-public def appendixCUnitPairSolutions :
-    Set ((appendixCNormOneUnits p q) × (appendixCNormOneUnits p q)) :=
-  {uv | ((uv.1 : (appendixCField p q)ˣ) : appendixCField p q) +
-    ((uv.2 : (appendixCField p q)ˣ) : appendixCField p q) = 2}
-
-/-- The norm-one pair solution count is exactly `|E|`: a solution is
-equivalently a choice of `v ∈ U` such that `2 - v ∈ U`. -/
-public theorem appendixCUnitPairSolutions_natCard :
-    Nat.card (appendixCUnitPairSolutions p q) = Nat.card (appendixCE p q) := by
-  let toFun : appendixCE p q → appendixCUnitPairSolutions p q := fun a =>
-    let u : (appendixCField p q)ˣ :=
-      Units.mk0 ((2 : appendixCField p q) - a)
-        (appendixCE_two_sub_ne_zero (p := p) (q := q) a.property)
-    let v : (appendixCField p q)ˣ :=
-      Units.mk0 (a : appendixCField p q)
-        (appendixCE_ne_zero (p := p) (q := q) a.property)
-    have hu : u ∈ appendixCNormOneUnits p q := by
-      simpa [u] using
-        appendixCE_two_sub_unit_mem_normOneUnits (p := p) (q := q) a.property
-    have hv : v ∈ appendixCNormOneUnits p q := by
-      simpa [v] using appendixCE_unit_mem_normOneUnits (p := p) (q := q) a.property
-    ⟨(⟨u, hu⟩, ⟨v, hv⟩), by
-      dsimp [appendixCUnitPairSolutions, u, v]
-      ring⟩
-  let invFun : appendixCUnitPairSolutions p q → appendixCE p q := fun uv =>
-    let vField : appendixCField p q :=
-      ((uv.1.2 : (appendixCField p q)ˣ) : appendixCField p q)
-    have hvnorm :
-        (Algebra.norm (ZMod p) (S := appendixCField p q)) vField = 1 := by
-      exact (appendixCNormOneUnits_mem_iff (p := p) (q := q) uv.1.2).1
-        uv.1.2.property
-    have hsum :
-        ((uv.1.1 : (appendixCField p q)ˣ) : appendixCField p q) + vField =
-          2 := by
-      exact uv.property
-    have h2v : (2 : appendixCField p q) - vField =
-        ((uv.1.1 : (appendixCField p q)ˣ) : appendixCField p q) := by
-      rw [← hsum]
-      ring
-    have hunorm :
-        (Algebra.norm (ZMod p) (S := appendixCField p q))
-          ((uv.1.1 : (appendixCField p q)ˣ) : appendixCField p q) = 1 := by
-      exact (appendixCNormOneUnits_mem_iff (p := p) (q := q) uv.1.1).1
-        uv.1.1.property
-    ⟨vField, hvnorm, by simpa [h2v] using hunorm⟩
-  let e : appendixCE p q ≃ appendixCUnitPairSolutions p q :=
-    { toFun := toFun
-      invFun := invFun
-      left_inv := by
-        intro a
-        apply Subtype.ext
-        rfl
-      right_inv := by
-        intro uv
-        apply Subtype.ext
-        apply Prod.ext
-        · apply Subtype.ext
-          apply Units.ext
-          dsimp [toFun, invFun]
-          have hsum :
-              ((uv.1.1 : (appendixCField p q)ˣ) : appendixCField p q) +
-                ((uv.1.2 : (appendixCField p q)ˣ) : appendixCField p q) =
-                2 := uv.property
-          rw [← hsum]
-          ring
-        · apply Subtype.ext
-          apply Units.ext
-          rfl }
-  exact Nat.card_congr e.symm
 
 /-- A complex multiplicative character of `F_{p^q}` obtained by composing a
 character of `𝔽_pˣ` with the finite-field norm. This is the character-theoretic
@@ -1601,16 +1476,6 @@ public theorem appendixCAction_apply_toAdd
       (u : (appendixCField p q)ˣ) * Multiplicative.toAdd x := by
   rfl
 
-/-- The inverse automorphism in the Appendix C action is multiplication by the
-inverse of the underlying norm-one unit. -/
-public theorem appendixCAction_symm_apply_toAdd
-    (u : appendixCNormOneUnits p q) (x : appendixCP p q) :
-    Multiplicative.toAdd (((appendixCAction p q u).symm) x) =
-      (((u : appendixCNormOneUnits p q) : (appendixCField p q)ˣ)⁻¹ :
-        (appendixCField p q)ˣ) * Multiplicative.toAdd x := by
-  change Multiplicative.toAdd ((appendixCAction p q u⁻¹) x) = _
-  rw [appendixCAction_apply_toAdd]
-  rfl
 
 /-- The semidirect product `H = PU` from Theorem C. -/
 public abbrev appendixCH : Type :=
@@ -1718,34 +1583,6 @@ public theorem appendixCP0InH_le_appendixCPInH :
   exact (appendixCPInH_mem_iff (p := p) (q := q) _).2
     ⟨Multiplicative.ofAdd (algebraMap (ZMod p) (appendixCField p q) c), rfl⟩
 
-/-- In `H = PU`, the subgroups `P` and `U` intersect trivially. -/
-public theorem appendixCPInH_inf_appendixCUInH_eq_bot :
-    appendixCPInH p q ⊓ appendixCUInH p q = ⊥ := by
-  ext x
-  constructor
-  · intro hx
-    rcases hx with ⟨hxP, hxU⟩
-    rcases (appendixCPInH_mem_iff (p := p) (q := q) x).1 hxP with ⟨z, hz⟩
-    rcases (appendixCUInH_mem_iff (p := p) (q := q) x).1 hxU with ⟨u, hu⟩
-    have hzu : (SemidirectProduct.inl z : appendixCH p q) = SemidirectProduct.inr u := by
-      rw [← hz, hu]
-    have hright : u = 1 := by
-      have h := congrArg SemidirectProduct.right hzu
-      simpa using h.symm
-    subst u
-    have hleft : z = 1 := by
-      have h := congrArg SemidirectProduct.left hzu
-      simpa using h
-    have hx1 : x = 1 := by
-      rw [hz, hleft]
-      simp
-    simp [hx1]
-  · intro hx
-    simp at hx
-    subst x
-    constructor
-    · exact (appendixCPInH_mem_iff (p := p) (q := q) _).2 ⟨1, by simp⟩
-    · exact (appendixCUInH_mem_iff (p := p) (q := q) _).2 ⟨1, by simp⟩
 
 /-- The subgroups `P` and `U` generate the semidirect product `H = PU`. -/
 public theorem appendixCPInH_sup_appendixCUInH_eq_top :
@@ -1768,32 +1605,6 @@ public theorem appendixCH_exists_P_U_decomposition (x : appendixCH p q) :
   · exact (appendixCUInH_mem_iff (p := p) (q := q) _).2 ⟨x.right, rfl⟩
   · exact (SemidirectProduct.inl_left_mul_inr_right x).symm
 
-/-- An injective embedding preserves the trivial intersection `P ∩ U = 1`. -/
-public theorem appendixCEmbedding_CPInH_inf_CUInH_eq_bot
-    {G : Type u} [Group G] (σ : appendixCH p q →* G)
-    (hσ : Function.Injective σ) :
-    Subgroup.map σ (appendixCPInH p q) ⊓
-      Subgroup.map σ (appendixCUInH p q) = ⊥ := by
-  ext x
-  constructor
-  · intro hx
-    rcases hx with ⟨hxP, hxU⟩
-    rcases hxP with ⟨pH, hpH, rfl⟩
-    rcases hxU with ⟨uH, huH, hσu⟩
-    have hpu : pH = uH := hσ hσu.symm
-    have hpint : pH ∈ appendixCPInH p q ⊓ appendixCUInH p q :=
-      ⟨hpH, by simpa [hpu] using huH⟩
-    have hpbot : pH ∈ (⊥ : Subgroup (appendixCH p q)) := by
-      simpa [appendixCPInH_inf_appendixCUInH_eq_bot (p := p) (q := q)] using hpint
-    have hp1 : pH = 1 := by
-      simpa using hpbot
-    simp [hp1]
-  · intro hx
-    simp at hx
-    subst x
-    constructor
-    · exact ⟨1, by simp, by simp⟩
-    · exact ⟨1, by simp, by simp⟩
 
 /-- The embedded images of `P` and `U` generate the embedded image of `H`. -/
 public theorem appendixCEmbedding_CPInH_sup_CUInH_eq_image_top
@@ -1990,52 +1801,6 @@ public theorem appendixCEmbedding_P0_mul_U_mul_P0_mem_U_cases
     · simp [hu_one]
     · simpa [map_mul] using congrArg σ hs12_one
 
-/-- Final field-coordinate calculation used at the `k = 3` endpoint of
-Appendix C Lemma C.3, Step 4. If a nonzero prime-field element `s` satisfies
-`s^2 = s^v s^z` in `PU`, then the corresponding norm-one units have
-underlying field values summing to `2`. -/
-public theorem appendixCP0_conj_normOneUnits_add_eq_two_of_sq_eq_mul
-    {c : ZMod p} (hc : c ≠ 0) (v z : appendixCNormOneUnits p q)
-    (h :
-      ((SemidirectProduct.inl (Multiplicative.ofAdd
-        (algebraMap (ZMod p) (appendixCField p q) c)) : appendixCH p q) ^ 2) =
-      ((SemidirectProduct.inr v : appendixCH p q) *
-          SemidirectProduct.inl (Multiplicative.ofAdd
-            (algebraMap (ZMod p) (appendixCField p q) c)) *
-          (SemidirectProduct.inr v : appendixCH p q)⁻¹) *
-        ((SemidirectProduct.inr z : appendixCH p q) *
-          SemidirectProduct.inl (Multiplicative.ofAdd
-            (algebraMap (ZMod p) (appendixCField p q) c)) *
-          (SemidirectProduct.inr z : appendixCH p q)⁻¹)) :
-    (((v : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-        appendixCField p q) +
-      (((z : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-        appendixCField p q) = 2 := by
-  have hleft := congrArg SemidirectProduct.left h
-  have htoAdd := congrArg Multiplicative.toAdd hleft
-  have hcmap : algebraMap (ZMod p) (appendixCField p q) c ≠ 0 := by
-    exact (map_ne_zero (algebraMap (ZMod p) (appendixCField p q))).2 hc
-  have hmul :
-      (2 : appendixCField p q) *
-          algebraMap (ZMod p) (appendixCField p q) c =
-        ((((v : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-              appendixCField p q) +
-          (((z : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-              appendixCField p q)) *
-          algebraMap (ZMod p) (appendixCField p q) c := by
-    have htoAdd' :
-        (2 : appendixCField p q) *
-            algebraMap (ZMod p) (appendixCField p q) c =
-          (((v : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-              appendixCField p q) *
-              algebraMap (ZMod p) (appendixCField p q) c +
-            (((z : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-              appendixCField p q) *
-              algebraMap (ZMod p) (appendixCField p q) c := by
-      simpa [pow_two, appendixCAction_apply_toAdd, two_mul, mul_add, add_mul,
-        mul_assoc, mul_comm, mul_left_comm] using htoAdd
-    simpa [mul_add, add_mul, mul_assoc, mul_comm, mul_left_comm] using htoAdd'
-  exact (mul_right_cancel₀ hcmap hmul).symm
 
 /-- Forward field-coordinate calculation for Appendix C C.3, Step 4. If two
 norm-one units have underlying field values summing to `2`, then for every
@@ -2318,41 +2083,6 @@ public theorem appendixCEmbedding_CP0_conj_normOneUnits_C2_cyclic_product_of_add
         (p := p) (q := q) (c := c) v z hadd
   simpa [sH, map_mul, map_zpow] using congrArg σ hsrc
 
-/-- Embedded form of the final field-coordinate calculation used at the `k = 3`
-endpoint of Appendix C Lemma C.3, Step 4. This lets the ambient condition-`(B)`
-proof apply the semidirect-product calculation after transporting the square
-equation through the injective embedding `σ`. -/
-public theorem appendixCEmbedding_CP0_conj_normOneUnits_add_eq_two_of_sq_eq_mul
-    {G : Type u} [Group G] (σ : appendixCH p q →* G)
-    (hσ : Function.Injective σ) {c : ZMod p} (hc : c ≠ 0)
-    (v z : appendixCNormOneUnits p q)
-    (h :
-      (σ (SemidirectProduct.inl (Multiplicative.ofAdd
-        (algebraMap (ZMod p) (appendixCField p q) c) : appendixCP p q)) ^ 2) =
-        (σ (SemidirectProduct.inr v) *
-            σ (SemidirectProduct.inl (Multiplicative.ofAdd
-              (algebraMap (ZMod p) (appendixCField p q) c) : appendixCP p q)) *
-            (σ (SemidirectProduct.inr v))⁻¹) *
-          (σ (SemidirectProduct.inr z) *
-            σ (SemidirectProduct.inl (Multiplicative.ofAdd
-              (algebraMap (ZMod p) (appendixCField p q) c) : appendixCP p q)) *
-            (σ (SemidirectProduct.inr z))⁻¹)) :
-    (((v : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-        appendixCField p q) +
-      (((z : appendixCNormOneUnits p q) : (appendixCField p q)ˣ) :
-        appendixCField p q) = 2 := by
-  let sH : appendixCH p q := SemidirectProduct.inl (Multiplicative.ofAdd
-    (algebraMap (ZMod p) (appendixCField p q) c) : appendixCP p q)
-  have hH :
-      sH ^ 2 =
-        ((SemidirectProduct.inr v : appendixCH p q) * sH *
-            (SemidirectProduct.inr v : appendixCH p q)⁻¹) *
-          ((SemidirectProduct.inr z : appendixCH p q) * sH *
-            (SemidirectProduct.inr z : appendixCH p q)⁻¹) := by
-    apply hσ
-    simpa [sH, map_mul, map_inv, map_pow] using h
-  exact appendixCP0_conj_normOneUnits_add_eq_two_of_sq_eq_mul
-    (p := p) (q := q) hc v z hH
 
 /-- Embedded Step 2 corollary used repeatedly in Appendix C Lemma C.3, Step 4:
 a nontrivial `P₀` element cannot conjugate a `U` element back into `U` unless
@@ -2457,27 +2187,6 @@ public theorem
   exact appendixCEmbedding_normOneUnits_eq_one_of_P0_conj_pow_sub_one_mem_U
     (p := p) (q := q) hA σ hσ hs hsne w hU
 
-/-- Inverse-power variant of the C9 Step 2 package after using Step 3. -/
-public theorem
-    appendixCEmbedding_normOneUnits_eq_one_of_P0_conj_inv_pow_sub_one_mem_H_inf_conjBy
-    {G : Type u} [Group G] [Fact q.Prime]
-    (hA : appendixCConditionA p q) (σ : appendixCH p q →* G)
-    (hσ : Function.Injective σ) {t s : G}
-    (hStep3 :
-      Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) ⊓
-        (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))).conjBy t =
-          Subgroup.map σ (appendixCUInH p q))
-    (hs : s ∈ Subgroup.map σ (appendixCP0InH p q)) (hsne : s ≠ 1)
-    (w : appendixCNormOneUnits p q)
-    (hmem : s * σ (SemidirectProduct.inr (w⁻¹ ^ (p - 1))) * s⁻¹ ∈
-      Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) ⊓
-        (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))).conjBy t) :
-    w = 1 := by
-  have hU : s * σ (SemidirectProduct.inr (w⁻¹ ^ (p - 1))) * s⁻¹ ∈
-      Subgroup.map σ (appendixCUInH p q) := by
-    simpa [hStep3] using hmem
-  exact appendixCEmbedding_normOneUnits_eq_one_of_P0_conj_inv_pow_sub_one_mem_U
-    (p := p) (q := q) hA σ hσ hs hsne w hU
 
 /-- Pure C4 algebra in the source right-conjugation convention. If the C2
 product has source order `A, B, C` and the three elements `s⁻¹ t`,
@@ -3002,69 +2711,6 @@ public theorem appendixC_lemma_C_3_step4_C10_of_C7
           rw [hC7]
     _ = 1 := by group
 
-/-- C9 tail collapse in Appendix C C.3 Step 4. After the hard product rewrite
-has supplied the C9 intersection membership for `w₃` and the remaining tail
-equality, Step 3, Step 2, and condition `(A)` force all three `w_i` to be
-trivial. -/
-public theorem appendixC_lemma_C_3_step4_C9_tail_collapse
-    {G : Type u} [Group G] [Fact q.Prime]
-    (hA : appendixCConditionA p q) (σ : appendixCH p q →* G)
-    (hσ : Function.Injective σ) {t s1 s3 : G}
-    (hStep3 :
-      Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) ⊓
-        (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))).conjBy t =
-          Subgroup.map σ (appendixCUInH p q))
-    (hs1 : s1 ∈ Subgroup.map σ (appendixCP0InH p q)) (hs1ne : s1 ≠ 1)
-    (hs3 : s3 ∈ Subgroup.map σ (appendixCP0InH p q)) (hs3ne : s3 ≠ 1)
-    (w1 w2 w3 : appendixCNormOneUnits p q)
-    (hmem3 : s1 * σ (SemidirectProduct.inr (w3 ^ (p - 1))) * s1⁻¹ ∈
-      Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) ⊓
-        (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))).conjBy t)
-    (htail :
-      s3⁻¹ * σ (SemidirectProduct.inr (w1⁻¹ ^ (p - 1))) * s3 =
-        σ (SemidirectProduct.inr (w2 ^ (p - 1)))) :
-    w1 = 1 ∧ w2 = 1 ∧ w3 = 1 := by
-  have hw3 : w3 = 1 :=
-    appendixCEmbedding_normOneUnits_eq_one_of_P0_conj_pow_sub_one_mem_H_inf_conjBy
-      (p := p) (q := q) hA σ hσ hStep3 hs1 hs1ne w3 hmem3
-  have hs3inv : s3⁻¹ ∈ Subgroup.map σ (appendixCP0InH p q) :=
-    (Subgroup.map σ (appendixCP0InH p q)).inv_mem hs3
-  have hs3inv_ne : s3⁻¹ ≠ 1 := by
-    intro h
-    exact hs3ne (inv_eq_one.mp h)
-  have hw2pow_img : σ (SemidirectProduct.inr (w2 ^ (p - 1))) ∈
-      Subgroup.map σ (appendixCUInH p q) := by
-    exact ⟨SemidirectProduct.inr (w2 ^ (p - 1)),
-      (appendixCUInH_mem_iff (p := p) (q := q) _).2
-        ⟨w2 ^ (p - 1), rfl⟩, rfl⟩
-  have hmem1 :
-      s3⁻¹ * σ (SemidirectProduct.inr (w1⁻¹ ^ (p - 1))) * (s3⁻¹)⁻¹ ∈
-        Subgroup.map σ (appendixCUInH p q) := by
-    have hmem1' :
-        s3⁻¹ * σ (SemidirectProduct.inr (w1⁻¹ ^ (p - 1))) * s3 ∈
-          Subgroup.map σ (appendixCUInH p q) := by
-      rw [htail]
-      exact hw2pow_img
-    simpa using hmem1'
-  have hw1 : w1 = 1 :=
-    appendixCEmbedding_normOneUnits_eq_one_of_P0_conj_inv_pow_sub_one_mem_U
-      (p := p) (q := q) hA σ hσ hs3inv hs3inv_ne w1 hmem1
-  have hleft_one :
-      s3⁻¹ * σ (SemidirectProduct.inr (w1⁻¹ ^ (p - 1))) * s3 = 1 := by
-    simp [hw1]
-  have hσw2pow : σ (SemidirectProduct.inr (w2 ^ (p - 1))) = 1 := by
-    rw [← htail]
-    exact hleft_one
-  have hpow2 : w2 ^ (p - 1) = 1 := by
-    have hinr : SemidirectProduct.inr (w2 ^ (p - 1)) =
-        (1 : appendixCH p q) := by
-      apply hσ
-      simpa using hσw2pow
-    exact SemidirectProduct.inr_injective hinr
-  have hw2 : w2 = 1 :=
-    appendixCNormOneUnits_eq_one_of_pow_sub_one_eq_one
-      (p := p) (q := q) hA hpow2
-  exact ⟨hw1, hw2, hw3⟩
 
 /-- `A` normalizes `B`. -/
 @[expose] public def appendixCNormalizes {G : Type*} [Group G]
@@ -3935,17 +3581,6 @@ public theorem appendixCPInH_eq_commutator_of_nontrivial_normOneUnit
       hu hbot
   · exact htop.symm
 
-/-- Under condition `(A)`, a nontrivial norm-one unit makes `P`
-characteristic in `PU`. -/
-public theorem appendixCPInH_characteristic_of_nontrivial_normOneUnit
-    [Fact q.Prime]
-    (hA : appendixCConditionA p q)
-    {u : appendixCNormOneUnits p q} (hu : u ≠ 1) :
-    (appendixCPInH p q).Characteristic := by
-  have hEq : appendixCPInH p q = commutator (appendixCH p q) :=
-    appendixCPInH_eq_commutator_of_nontrivial_normOneUnit (p := p) (q := q) hA hu
-  rw [hEq]
-  infer_instance
 
 /-- Any element normalizing a subgroup also normalizes that subgroup's
 commutator subgroup. -/
@@ -4661,27 +4296,6 @@ public theorem appendixCEmbedding_conjNormOneUnitsMulEquiv_apply_of_mem
   simpa [appendixCEmbedding_CUInHEquiv_symm_apply
     (p := p) (q := q) σ hσ hu] using happly
 
-/-- Value formula for the inverse normalizer-induced automorphism, starting from
-an arbitrary embedded `U` element. This is the source right-conjugation
-convention for a named ambient `U` factor. -/
-public theorem appendixCEmbedding_conjNormOneUnitsMulEquiv_symm_apply_of_mem
-    {G : Type u} [Group G] (σ : appendixCH p q →* G)
-    (hσ : Function.Injective σ)
-    {t u0 : G}
-    (htnorm : t ∈ Subgroup.normalizer
-      (Subgroup.map σ (appendixCUInH p q) : Set G))
-    (hu : u0 ∈ Subgroup.map σ (appendixCUInH p q)) :
-    σ (SemidirectProduct.inr
-      ((appendixCEmbedding_conjNormOneUnitsMulEquiv (p := p) (q := q)
-        σ hσ htnorm).symm
-        ((appendixCEmbedding_CUInHEquiv (p := p) (q := q) σ hσ).symm
-          ⟨u0, hu⟩))) =
-      t⁻¹ * u0 * t := by
-  have happly := appendixCEmbedding_conjNormOneUnitsMulEquiv_symm_apply
-    (p := p) (q := q) σ hσ htnorm
-    ((appendixCEmbedding_CUInHEquiv (p := p) (q := q) σ hσ).symm ⟨u0, hu⟩)
-  simpa [appendixCEmbedding_CUInHEquiv_symm_apply
-    (p := p) (q := q) σ hσ hu] using happly
 
 /-- Conjugating the embedded `U` by `t⁻¹` induces the inverse of the
 normalizer-induced automorphism coming from conjugation by `t`. -/

@@ -47,7 +47,6 @@ public theorem generatorRank_at_least_three_of_elementaryAbelian_card_p3
   simpa [generatorRank_eq_group_rank] using hle_rank
 
 
-
 private theorem generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {G : Type*} [Group G] [Finite G] [IsMulCommutative G] [Fact (IsPGroup p G)]
@@ -74,7 +73,6 @@ private theorem generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3
     rw [← hBcard, ← hΩcard]
     exact Subgroup.card_le_of_le hB_le_Ω
   exact (Nat.pow_le_pow_iff_right (Nat.Prime.one_lt (Fact.out : Nat.Prime p))).mp hcard_le |>.not_gt (by decide : 2 < 3)
-
 
 
 private theorem scnSubgroup_contains_of_normal_elementaryAbelian_card_p3
@@ -350,20 +348,6 @@ public theorem quotient_centralizer_card_le_p_of_elementaryAbelian_rank_two
         _ = b • (u * y ^ k) := by simp
     exact (Nat.card_le_card_of_injective (f := φ) hφ_injective).trans hfix_card_eq_p.le
 
-private theorem exists_maximal_elementaryAbelianSubgroup_containing
-    {p : ℕ} [Fact p.Prime]
-    {G : Type*} [Group G] [Finite G] {E : Subgroup G}
-    (hEelem : IsElementaryAbelian p E) :
-    ∃ M : Subgroup G, E ≤ M ∧ M ∈ maximalElementaryAbelianSubgroups p G := by
-  classical
-  let s : Set (Subgroup G) := {A | E ≤ A ∧ IsElementaryAbelian p A}
-  have hsfin : s.Finite := Set.toFinite s
-  have hsne : s.Nonempty := ⟨E, le_rfl, hEelem⟩
-  obtain ⟨M, hMmax⟩ := hsfin.exists_maximal hsne
-  refine ⟨M, hMmax.1.1, ?_⟩
-  refine ⟨hMmax.1.2, ?_⟩
-  intro B hMB hBelem
-  exact le_antisymm hMB (hMmax.2 ⟨hMmax.1.1.trans hMB, hBelem⟩ hMB)
 
 public theorem scnSubgroup_normal_commutative
     {p : ℕ} [Fact p.Prime]
@@ -697,46 +681,6 @@ public theorem isElementaryAbelian_zpowers_of_pow_eq_one
     exact (orderOf_dvd_of_mem_zpowers y.2).trans (orderOf_dvd_of_pow_eq_one hxpow)
   simpa using (orderOf_dvd_iff_pow_eq_one.mp hy_dvd)
 
-private theorem omega1_image_normal_elementaryAbelian_of_scn
-    {p : ℕ} [Fact p.Prime]
-    {R : Type*} [Group R] [Finite R] (hpR : IsPGroup p R)
-    {A : Subgroup R} (hA : A ∈ scnSubgroups 3 R) :
-    ∃ Ω : Subgroup R, Ω.Normal ∧ IsElementaryAbelian p Ω ∧ Ω ≤ A := by
-  obtain ⟨hAnorm, hAcomm⟩ := scnSubgroup_normal_commutative (p := p) (R := R) hpR hA
-  let Ωsub : Subgroup A := omega₁ (G := A) (p := p)
-  let Ω : Subgroup R := Ωsub.map A.subtype
-  have hΩnorm : Ω.Normal := by
-    letI : A.Normal := hAnorm
-    letI : Ωsub.Characteristic := by
-      simpa [Ωsub] using (omega₁_characteristic (G := A) (p := p))
-    simpa [Ω] using (inferInstance : Ω.Normal)
-  have hΩle : Ω ≤ A := by
-    simpa [Ω] using (Subgroup.map_subtype_le Ωsub)
-  have hΩsub_elem : IsElementaryAbelian p Ωsub := by
-    letI : IsMulCommutative A := hAcomm
-    simpa [Ωsub] using omega1_isElementaryAbelian_of_commutative (p := p) A
-  letI : IsElementaryAbelian p Ωsub := hΩsub_elem
-  have hΩelem : IsElementaryAbelian p Ω := by
-    refine
-      { toIsMulCommutative := by
-          simpa [Ω] using (Subgroup.map_isMulCommutative (f := A.subtype) (H := Ωsub))
-        exponent_dvd_p := ?_ }
-    refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
-    intro x
-    apply Subtype.ext
-    rcases Subgroup.mem_map.mp x.2 with ⟨y, hyΩ, hyx⟩
-    let yΩ : Ωsub := ⟨y, hyΩ⟩
-    have hy_pow : yΩ ^ p = 1 := by
-      exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-        (IsElementaryAbelian.exponent_dvd_p p Ωsub) yΩ
-    have hy_pow_R : ((((yΩ : Ωsub) : A) : R) ^ p) = 1 := by
-      simpa using congrArg A.subtype (congrArg Subtype.val hy_pow)
-    have hx_eq : ((x : Ω) : R) = (((yΩ : Ωsub) : A) : R) := by
-      simpa [yΩ] using hyx.symm
-    calc
-      ((x : Ω) : R) ^ p = (((yΩ : Ωsub) : A) : R) ^ p := by simp [hx_eq]
-      _ = 1 := hy_pow_R
-  exact ⟨Ω, hΩnorm, hΩelem, hΩle⟩
 
 private theorem exists_normal_elementaryAbelian_card_p3_of_scn_three_checked
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)

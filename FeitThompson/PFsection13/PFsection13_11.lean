@@ -19,25 +19,6 @@ universe u
 
 /-! ## (13.11) -/
 
-/-- Peterfalvi `(13.11)`. -/
-@[expose] public def theorem_13_11_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) (m : ℝ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    theorem_13_10_hypothesis Smax P C Sfam p q u →
-    m = 1 - 1 / ((q - 1 : ℕ) : ℝ) - ((q - 1 : ℕ) : ℝ) / ((q : ℝ) ^ p) +
-      1 / (((q - 1 : ℕ) : ℝ) * ((q : ℝ) ^ p)) →
-  (3 ≤ p → 7 ≤ q → (8 : ℝ) / 10 < m) ∧
-    (3 ≤ p → 5 ≤ q → (7 : ℝ) / 10 < m) ∧
-    (5 ≤ p → q = 3 → (49 : ℝ) / 100 < m ∧
-      (u : ℝ) / (c : ℝ) > ((p : ℝ) ^ 2 - 1) / 6)
-
 
 /-! ## Numeric helpers for (13.11) -/
 

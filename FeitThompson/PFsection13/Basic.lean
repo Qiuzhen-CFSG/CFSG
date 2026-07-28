@@ -208,23 +208,6 @@ public theorem section13_irreducibleSubfamily_subset
   change φ ∈ F.filter (fun φ => Section1.IsIrreducibleCharacterOnGroup φ) at hφ
   exact (Finset.mem_filter.mp hφ).1
 
-public theorem section13_integerSpan_supportedOn_of_generators
-    {L : Type u} [Group L]
-    {S : Finset (Section1.ClassFunction L)}
-    {A : Set L}
-    (hS : ∀ χ : Section1.ClassFunction L, χ ∈ S → Section1.supportedOn χ A)
-    {χ : Section1.ClassFunction L}
-    (hχ : Section5.integerSpan S χ) :
-    Section1.supportedOn χ A := by
-  classical
-  rcases hχ with ⟨v, rfl⟩
-  rw [Section1.supportedOn_iff]
-  intro g hg
-  have hzero : ∀ X : S, (X : Section1.ClassFunction L) g = 0 := by
-    intro X
-    exact (Section1.supportedOn_iff.mp
-      (hS (X : Section1.ClassFunction L) X.2)) g hg
-  simp [Section1.evalCoeff, hzero]
 
 /-- The PF13 Dade map on the nonkernel induced family.
 
@@ -707,17 +690,6 @@ minimal-counterexample context carried into Section 13 by PF `(12.17)`. -/
         Section1.scalarProduct H α θ ≠ 0 →
           Section1.subgroupInKernel' θ (P.subgroupOf H)
 
-/-- The expansion package in PF `(13.5)`. -/
-@[expose] public def theorem_13_5_expansionData
-    {G : Type u} [Group G] [Finite G]
-    (H P : Subgroup G)
-    (X : Section1.ClassFunction G)
-    (_a : ℂ) : Prop :=
-  P ≤ H ∧
-    Representation.IsVirtualCharacter X ∧
-    ∃ α : Section1.ClassFunction H,
-      Representation.IsVirtualCharacter α ∧
-        Section1.subgroupInKernel' α (P.subgroupOf H)
 
 /-- A normalized square-sum lower bound used in PF `(13.6)`--`(13.10)`. -/
 @[expose] public def squareSumLowerBound
@@ -733,14 +705,6 @@ minimal-counterexample context carried into Section 13 by PF `(12.17)`. -/
   (∀ j, j < p → δ j = 1) ∧
     ∀ i, i < q → δ' i = 1
 
-/-- The sign-normalization package in PF `(13.3)(c)`. -/
-@[expose] public def theorem_13_3_signNormalizationData
-    {G : Type u} [Group G] [Finite G]
-    (_Smax : Subgroup G)
-    (p q : ℕ) : Prop :=
-  ∃ (δ : Fin p → ℤ) (δ' : Fin q → ℤ),
-    (∀ j, δ j = 1) ∧
-      (∀ i, δ' i = 1)
 
 /-- The source sign alternative in PF `(13.3)(c)`, stated for the transformed
 row sums rather than hiding the `ηᵢⱼ` equations. -/
@@ -775,23 +739,6 @@ for their Dade transforms.  These are the reducible prime-TI column sums; PF
       μsum j ∈ Sfam) ∧
     theorem_13_3_signAlternativeData p q (fun j => τ1 (μsum j)) η
 
-/-- The explicit PF `(13.3)(a,c)` character output: the named `μ_j`
-characters for `j ≥ 1`, their linear-source property, and the sign alternative
-for their Dade transforms. -/
-@[expose] public def theorem_13_3_characterOutputData
-    {G : Type u} [Group G] [Finite G]
-    (Smax P C : Subgroup G)
-    (τ1 : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u : ℕ) : Prop :=
-  ∃ (μ : ℕ → Section1.ClassFunction Smax)
-    (μτ : ℕ → Section1.ClassFunction G)
-    (η : ℕ → ℕ → Section1.ClassFunction G),
-      (∀ j, 0 < j → j < p →
-        Section1.IsCharacter (μ j) ∧
-          Section1.degree (μ j) = (u * q : ℂ) ∧
-          inducedFromLinearCharacterForSection13 Smax (P ⊔ C) (μ j) ∧
-          μτ j = τ1 (μ j)) ∧
-      theorem_13_3_signAlternativeData p q μτ η
 
 /-- The PF `(13.5)` setup: `H=PC`, the family `S₁` of induced characters
 with `P` not in the kernel, the distinguished `ζ₀, ζ₁`, the orthogonality
@@ -826,12 +773,6 @@ condition, and the definition of `a`. -/
         2 * a * ζ1H 1 * α 1 / (Section5.cfNormSq ζ1S : ℂ) +
           (Section7.subgroupSupportEnergy H (Section7.puncturedSubgroupSet H) α : ℂ)
 
-/-- A numeric shadow of PF case `(9.7)(a)` as reused by later sections. -/
-@[expose] public def case_9_7_a_for_section13
-    {G : Type u} [Group G] [Finite G]
-    (M C : Subgroup G)
-    (p q u : ℕ) : Prop :=
-  C ≤ M ∧ Nat.Prime p ∧ Nat.Prime q ∧ u ∣ (p - 1) ^ 2
 
 /-- The source case `(9.7)(a)` specialized to the Section 13 situation
 `H₀ = 1`, with `u = |U/C|`. -/

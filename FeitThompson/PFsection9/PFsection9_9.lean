@@ -311,105 +311,6 @@ private theorem theorem_9_9_case_b_H0_isInvariant_U_MF_sec9
   exact subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF U H0
     hMFleM hUleM hH0normalM hUnormMF
 
-private theorem theorem_9_9_H0_le_HC_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      H0 ≤ MF ⊔ C := by
-  intro hcase
-  exact (case_9_7_b_H0_le_MF_sec9 hcase).trans le_sup_left
-
-private theorem inf_sup_eq_of_disjoint_of_le_of_normalizes_sec9
-    {G : Type u} [Group G] {P Q P0 : Subgroup G}
-    (hP0P : P0 ≤ P)
-    (hP0Q : P0 ≤ Subgroup.normalizer (Q : Set G))
-    (hPQ : Disjoint P Q) :
-    P ⊓ (Q ⊔ P0) = P0 := by
-  apply le_antisymm
-  · intro x hx
-    have hxProd : x ∈ (Q : Set G) * (P0 : Set G) := by
-      have hsup := Subgroup.coe_mul_of_right_le_normalizer_left Q P0 hP0Q
-      rw [← hsup]
-      exact hx.2
-    rcases hxProd with ⟨q, hq, p0, hp0, hqpx⟩
-    have hx_eq : x = q * p0 := hqpx.symm
-    have hqP : q ∈ P := by
-      have hp0P : p0 ∈ P := hP0P hp0
-      have hqpP : q * p0 ∈ P := by
-        simpa [← hx_eq] using hx.1
-      have hcalc : q = (q * p0) * p0⁻¹ := by
-        group
-      rw [hcalc]
-      exact P.mul_mem hqpP (P.inv_mem hp0P)
-    have hqbot : q ∈ (⊥ : Subgroup G) := by
-      have hqinf : q ∈ P ⊓ Q := ⟨hqP, hq⟩
-      have hPQeq : P ⊓ Q = ⊥ := disjoint_iff.mp hPQ
-      simpa [hPQeq] using hqinf
-    have hq1 : q = 1 := by
-      simpa using hqbot
-    simpa [hx_eq, hq1] using hp0
-  · intro x hx
-    exact ⟨hP0P hx, Subgroup.mem_sup_right hx⟩
-
-private theorem theorem_9_9_HC_inf_U_eq_C_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      (MF ⊔ C) ⊓ U = C := by
-  intro hcase
-  rcases hcase with
-    ⟨h92, _hH0MF, hCentIn, _hpprime, _hqprime, _hpdata, _hcard, _hcentBy,
-      _hcyclic, _hirr, _hfield, _hcop, _hdiv⟩
-  rcases hCentIn with ⟨hC_le_U, _hCcentralizer⟩
-  rcases h92.mf.1 with ⟨hMFleM, hMFnormalM, _hMFnil, _hMFhall⟩
-  rcases h92.typeP with ⟨_hMFtype, hcommon⟩
-  rcases hcommon with
-    ⟨_hDhall, _hMFleD, hcompD, _hnil, _hW1norm, _hW1cyc, _hW1card,
-      _hMFnotcyc, _hsecond, _hfitting, _hfittingDer, _hW2le, _hW2ne,
-      _hW2cyc, _hcentralizer, _hhat, _hprimeCentralizer, _hW2der⟩
-  rcases hcompD with ⟨_hMFleD', hUleD, _hD_eq, hMFUdisj⟩
-  have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hMFleM).1 hMFnormalM
-  have hU_norm_MF : U ≤ Subgroup.normalizer (MF : Set G) :=
-    hUleD.trans (section12_ambientDerivedSubgroup_le.trans hM_norm_MF)
-  have hC_norm_MF : C ≤ Subgroup.normalizer (MF : Set G) :=
-    hC_le_U.trans hU_norm_MF
-  have hU_HC : U ⊓ (MF ⊔ C) = C :=
-    inf_sup_eq_of_disjoint_of_le_of_normalizes_sec9
-      (P := U) (Q := MF) (P0 := C) hC_le_U hC_norm_MF hMFUdisj.symm
-  simpa [inf_comm] using hU_HC
-
-private theorem theorem_9_9_H0C_inf_U_eq_C_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      (H0 ⊔ C) ⊓ U = C := by
-  intro hcase
-  have hH0C_le_HC : H0 ⊔ C ≤ MF ⊔ C :=
-    sup_le_sup (case_9_7_b_H0_le_MF_sec9 hcase) le_rfl
-  have hHCinf :
-      (MF ⊔ C) ⊓ U = C :=
-    theorem_9_9_HC_inf_U_eq_C_sec9 M MF U W1 W2 H0 C p q u hcase
-  have hC_le_U : C ≤ U :=
-    (case_9_7_b_quotientCentralizerIn_sec9 hcase).1
-  apply le_antisymm
-  · intro x hx
-    have hxHC : x ∈ (MF ⊔ C) ⊓ U := ⟨hH0C_le_HC hx.1, hx.2⟩
-    simpa [hHCinf] using hxHC
-  · intro x hx
-    exact ⟨Subgroup.mem_sup_right hx, hC_le_U hx⟩
-
-private theorem quotient_map_sup_left_eq_right_sec9
-    {L : Type u} [Group L] (H C : Subgroup L) [H.Normal] :
-    (H ⊔ C).map (QuotientGroup.mk' H) = C.map (QuotientGroup.mk' H) := by
-  rw [Subgroup.map_sup]
-  have hHmap : H.map (QuotientGroup.mk' H) = ⊥ := by
-    apply (Subgroup.map_eq_bot_iff (H := H) (f := QuotientGroup.mk' H)).2
-    simp [QuotientGroup.ker_mk']
-  rw [hHmap, bot_sup_eq]
 
 private theorem quotient_image_ne_bot_of_not_le_kernel_sec9
     {L : Type u} [Group L] (A B : Subgroup L) [A.Normal]
@@ -492,26 +393,6 @@ private theorem theorem_9_9_MF_normal_HC_sec9
   exact (Subgroup.normal_subgroupOf_iff_le_normalizer
     (show MF ≤ MF ⊔ C from le_sup_left)).2 hHC_le_norm_MF
 
-private theorem theorem_9_9_H0_normal_HC_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      (H0.subgroupOf (MF ⊔ C)).Normal := by
-  intro hcase
-  have hH0_le_HC : H0 ≤ MF ⊔ C :=
-    theorem_9_9_H0_le_HC_sec9 M MF U W1 W2 H0 C p q u hcase
-  have hHC_le_M : MF ⊔ C ≤ M :=
-    theorem_9_9_HC_le_M_sec9 M MF U W1 W2 H0 C p q u hcase
-  have hH0_le_M : H0 ≤ M :=
-    (case_9_7_b_H0_le_MF_sec9 hcase).trans (case_9_7_b_MF_le_M_sec9 hcase)
-  have hH0normalM : (H0.subgroupOf M).Normal :=
-    case_9_7_b_H0_normal_M_sec9 hcase
-  have hM_le_norm_H0 : M ≤ Subgroup.normalizer (H0 : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hH0_le_M).1 hH0normalM
-  have hHC_le_norm_H0 : MF ⊔ C ≤ Subgroup.normalizer (H0 : Set G) :=
-    hHC_le_M.trans hM_le_norm_H0
-  exact (Subgroup.normal_subgroupOf_iff_le_normalizer hH0_le_HC).2 hHC_le_norm_H0
 
 private theorem le_normalizer_sup_of_le_normalizer_sec9
     {G : Type u} [Group G] (A B N : Subgroup G)
@@ -785,31 +666,6 @@ private theorem subgroupOf_subgroupOf_normal_of_le_normalizer_sec9
       ((Subgroup.mem_normalizer_iff.mp (hDnormH hdG) ((x : M) : G)).mpr hconjG)
     simpa [Subgroup.mem_subgroupOf] using hxG
 
-private theorem theorem_9_9_MF_normal_ambientDerived_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      (MF.subgroupOf (ambientDerivedSubgroup M)).Normal := by
-  intro hcase
-  let D : Subgroup G := ambientDerivedSubgroup M
-  have h92 := case_9_7_b_hypothesis_9_2_sec9 hcase
-  rcases h92.mf.1 with ⟨hMFleM, hMFnormalM, _hMFnil, _hMFhall⟩
-  rcases h92.typeP with ⟨_hMFtype, hcommon⟩
-  rcases hcommon with
-    ⟨_hDhall, hMFleD, _hcompD, _hnil, _hW1norm, _hW1cyc, _hW1card,
-      _hMFnotcyc, _hsecond, _hfitting, _hfittingDer, _hW2le, _hW2ne,
-      _hW2cyc, _hcentralizer, _hhat, _hprimeCentralizer, _hW2der⟩
-  have hDleM : D ≤ M := by
-    dsimp [D]
-    exact section12_ambientDerivedSubgroup_le (E := M)
-  have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hMFleM).1 hMFnormalM
-  have hD_norm_MF : D ≤ Subgroup.normalizer (MF : Set G) :=
-    hDleM.trans hM_norm_MF
-  change (MF.subgroupOf D).Normal
-  exact (Subgroup.normal_subgroupOf_iff_le_normalizer (by simpa [D] using hMFleD)).2
-    hD_norm_MF
 
 private theorem theorem_9_9_MF_normal_ambientDerived_subgroupOf_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1065,123 +921,6 @@ private theorem theorem_9_9_H0C_normal_M_sec9
     exact hcompMW1.2.2.1
   simpa [hM_eq] using hDW1_norm_H0C
 
-private theorem theorem_9_9_H0C_quotient_map_eq_C_quotient_map_MF_sup_U_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q u : ℕ)
-    [hH0normalL : (H0.subgroupOf (MF ⊔ U)).Normal] :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      let qL : ↥(MF ⊔ U) →* ↥(MF ⊔ U) ⧸ H0.subgroupOf (MF ⊔ U) :=
-        QuotientGroup.mk' (H0.subgroupOf (MF ⊔ U))
-      ((H0 ⊔ C).subgroupOf (MF ⊔ U)).map qL =
-        (C.subgroupOf (MF ⊔ U)).map qL := by
-  intro hcase qL
-  have hH0_le_L : H0 ≤ MF ⊔ U :=
-    (case_9_7_b_H0_le_MF_sec9 hcase).trans le_sup_left
-  have hC_le_L : C ≤ MF ⊔ U :=
-    (case_9_7_b_quotientCentralizerIn_sec9 hcase).1.trans le_sup_right
-  have hsubsup :
-      (H0 ⊔ C).subgroupOf (MF ⊔ U) =
-        H0.subgroupOf (MF ⊔ U) ⊔ C.subgroupOf (MF ⊔ U) :=
-    Subgroup.subgroupOf_sup hH0_le_L hC_le_L
-  rw [hsubsup]
-  exact quotient_map_sup_left_eq_right_sec9
-    (H0.subgroupOf (MF ⊔ U)) (C.subgroupOf (MF ⊔ U))
-
-private theorem theorem_9_9_MF_normal_MF_sup_U_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      (MF.subgroupOf (MF ⊔ U)).Normal := by
-  intro h92
-  have hMF := h92.mf
-  rcases hMF.1 with ⟨hMFleM, hMFnormalM, _hMFnil, _hMFhall⟩
-  rcases h92.typeP with ⟨_hMFtype, hcommon⟩
-  rcases hcommon with
-    ⟨hhallD, hMFleD, hcompD, _hnil, _hW1norm, _hW1cyc, _hW1card,
-      _hMFnotcyc, _hsecond, _hfitting, _hfittingDer, _hW2le, _hW2ne,
-      _hW2cyc, _hcentralizer, _hhat, _hprimeCentralizer, _hW2der⟩
-  rcases hhallD with ⟨hDleM, _hDHall⟩
-  have hUleD : U ≤ ambientDerivedSubgroup M := hcompD.2.1
-  have hSleD : MF ⊔ U ≤ ambientDerivedSubgroup M := sup_le hMFleD hUleD
-  have hMleNormMF : M ≤ Subgroup.normalizer (MF : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hMFleM).1 hMFnormalM
-  exact (Subgroup.normal_subgroupOf_iff_le_normalizer
-    (H := MF) (K := MF ⊔ U) le_sup_left).2
-      (hSleD.trans (hDleM.trans hMleNormMF))
-
-private theorem theorem_9_9_MF_U_isComplement_MF_sup_U_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      (MF.subgroupOf (MF ⊔ U)).IsComplement' (U.subgroupOf (MF ⊔ U)) := by
-  intro h92
-  rcases h92.typeP with ⟨_hMFtype, hcommon⟩
-  rcases hcommon with
-    ⟨_hhallD, _hMFleD, hcompD, _hnil, _hW1norm, _hW1cyc, _hW1card,
-      _hMFnotcyc, _hsecond, _hfitting, _hfittingDer, _hW2le, _hW2ne,
-      _hW2cyc, _hcentralizer, _hhat, _hprimeCentralizer, _hW2der⟩
-  rcases hcompD with ⟨_hMFleD, _hUleD, _hD_eq, hMFUdisj⟩
-  have hMFnormalS : (MF.subgroupOf (MF ⊔ U)).Normal :=
-    theorem_9_9_MF_normal_MF_sup_U_sec9 M MF U W1 W2 q h92
-  have hMFUdisjSub :
-      Disjoint (MF.subgroupOf (MF ⊔ U)) (U.subgroupOf (MF ⊔ U)) := by
-    rw [disjoint_iff] at hMFUdisj ⊢
-    apply le_antisymm
-    · intro x hx
-      have hxAmb : (x : G) ∈ MF ⊓ U := by
-        exact ⟨by simpa [Subgroup.mem_subgroupOf] using hx.1,
-          by simpa [Subgroup.mem_subgroupOf] using hx.2⟩
-      have hxBot : (x : G) ∈ (⊥ : Subgroup G) := by
-        simpa [hMFUdisj] using hxAmb
-      ext
-      simpa using hxBot
-    · exact bot_le
-  have hMFUsupTop :
-      MF.subgroupOf (MF ⊔ U) ⊔ U.subgroupOf (MF ⊔ U) = ⊤ := by
-    rw [← Subgroup.subgroupOf_sup (A := MF) (A' := U) (B := MF ⊔ U)
-      le_sup_left le_sup_right]
-    exact Subgroup.subgroupOf_eq_top.2 le_rfl
-  letI : (MF.subgroupOf (MF ⊔ U)).Normal := hMFnormalS
-  exact isComplement'_of_disjoint_sup_eq_top_of_normal
-    (MF.subgroupOf (MF ⊔ U)) (U.subgroupOf (MF ⊔ U))
-    hMFUdisjSub hMFUsupTop
-
-private theorem theorem_9_9_MF_U_internalSemidirect_MF_sup_U_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      Section2.IsInternalSemidirectProduct
-        (⊤ : Subgroup ↥(MF ⊔ U))
-        (MF.subgroupOf (MF ⊔ U))
-        (U.subgroupOf (MF ⊔ U)) := by
-  intro h92
-  have hnormal : (MF.subgroupOf (MF ⊔ U)).Normal :=
-    theorem_9_9_MF_normal_MF_sup_U_sec9 M MF U W1 W2 q h92
-  letI : (MF.subgroupOf (MF ⊔ U)).Normal := hnormal
-  exact internalSemidirectProduct_top_of_normal_isComplement'_sec9
-    (theorem_9_9_MF_U_isComplement_MF_sup_U_sec9 M MF U W1 W2 q h92)
-
-private def theorem_9_9_ambientDerived_U_subgroupOf_to_U_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M U : Subgroup G) :
-    ((U.subgroupOf M).subgroupOf
-      ((ambientDerivedSubgroup M).subgroupOf M)) →* U where
-  toFun x :=
-    ⟨(((x : (ambientDerivedSubgroup M).subgroupOf M) : M) : G), by
-      have hxUM :
-          ((x : (ambientDerivedSubgroup M).subgroupOf M) : M) ∈ U.subgroupOf M :=
-        Subgroup.mem_subgroupOf.mp x.property
-      exact Subgroup.mem_subgroupOf.mp hxUM⟩
-  map_one' := by
-    ext
-    rfl
-  map_mul' x y := by
-    ext
-    rfl
 
 private theorem theorem_9_9_MF_U_internalSemidirect_ambientDerived_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1965,13 +1704,6 @@ private theorem theorem_9_9_exists_HC_restriction_constituent_sec9
   exact exists_restriction_constituent_kernelD_sec9 K A B hBK
     hθirr hθnotMF hθkerH0
 
-private theorem theorem_9_9_H0_le_H0Cprime_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 H0 C Cprime : Subgroup G)
-    (p q u : ℕ) :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      H0 ≤ H0 ⊔ Cprime :=
-  fun _hcase => le_sup_left
 
 private theorem theorem_9_9_H0Cprime_le_HC_sec9
     {G : Type u} [Group G] [Finite G]
@@ -3433,87 +3165,6 @@ private theorem theorem_9_9_C_bot_nonprincipalLinearCharacter_orbit_count_sec9
         (Nat.card ((MF ⧸ H0MF) →* ℂˣ) - 1) / Nat.card U := horbit
     _ = (p ^ q - 1) / u := by rw [hcharCard, hUcard]
 
-/-- The character of a representation on a one-dimensional `Fin 1` model is
-multiplicative. -/
-private theorem representationCharacter_mul_of_fin_one_sec9
-    {G : Type*} [Group G]
-    (ρ : Representation ℂ G (Fin 1 → ℂ)) (g h : G) :
-    ρ.character (g * h) = ρ.character g * ρ.character h := by
-  have hdim : Module.finrank ℂ (Fin 1 → ℂ) = 1 := by simp
-  obtain ⟨c, hc, _⟩ :=
-    LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one hdim (ρ g)
-  obtain ⟨d, hd, _⟩ :=
-    LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one hdim (ρ h)
-  have hρgh : ρ (g * h) = (c * d) • (1 : Module.End ℂ (Fin 1 → ℂ)) := by
-    rw [map_mul, hc, hd]
-    ext v i
-    simp [mul_smul, mul_left_comm]
-  have hρg : ρ.character g = c := by
-    rw [Representation.character, hc]
-    simp [hdim]
-  have hρh : ρ.character h = d := by
-    rw [Representation.character, hd]
-    simp [hdim]
-  rw [Representation.character, hρgh, hρg, hρh]
-  simp [hdim]
-
-/-- The character values of a one-dimensional representation are nonzero. -/
-private theorem representationCharacter_ne_zero_of_fin_one_sec9
-    {G : Type*} [Group G]
-    (ρ : Representation ℂ G (Fin 1 → ℂ)) (g : G) :
-    ρ.character g ≠ 0 := by
-  have hmul := representationCharacter_mul_of_fin_one_sec9 ρ g g⁻¹
-  have hone : ρ.character (g * g⁻¹) = 1 := by simp [Representation.character]
-  intro hzero
-  rw [hone, hzero] at hmul
-  simp at hmul
-
-/-- The linear character associated to a representation on `Fin 1 → ℂ`. -/
-private noncomputable def linearCharacterOfFinOneRepresentation_sec9
-    {G : Type*} [Group G]
-    (ρ : Representation ℂ G (Fin 1 → ℂ)) : G →* ℂˣ where
-  toFun g := Units.mk0 (ρ.character g) (representationCharacter_ne_zero_of_fin_one_sec9 ρ g)
-  map_one' := by
-    apply Units.ext
-    simp [Representation.character]
-  map_mul' g h := by
-    apply Units.ext
-    simp [representationCharacter_mul_of_fin_one_sec9 ρ g h]
-
-/-- A degree-one irreducible character with `H` in its kernel factors through
-`T/H` as a quotient linear character. -/
-private theorem exists_quotientLinearCharacter_of_irreducible_degree_one_kernel_sec9
-    {G : Type*} [Group G] (H T : Subgroup G) [Finite T]
-    [(H.subgroupOf T).Normal]
-    {θ : Section1.ClassFunction T}
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ)
-    (hθker : Section1.subgroupInKernel' θ (H.subgroupOf T))
-    (hθdeg : Section1.degree θ = 1) :
-    ∃ χ : (T ⧸ H.subgroupOf T) →* ℂˣ,
-      θ = Section1.quotientCharacterInflation H T χ := by
-  classical
-  rcases hθirr with ⟨n, ρ, _hρirr, hθeq⟩
-  have hnC : (n : ℂ) = 1 := by
-    simpa [hθeq, Section1.degree_representation_character ρ] using hθdeg
-  have hn : n = 1 := by exact_mod_cast hnC
-  subst n
-  let lam : T →* ℂˣ := linearCharacterOfFinOneRepresentation_sec9 ρ
-  have hHker : H.subgroupOf T ≤ lam.ker := by
-    intro h hh
-    change lam h = 1
-    apply Units.ext
-    change ρ.character h = 1
-    have hval : θ h = 1 := by
-      rw [hθker ⟨h, hh⟩]
-      exact hθdeg
-    simpa [hθeq] using hval
-  let χ : (T ⧸ H.subgroupOf T) →* ℂˣ :=
-    QuotientGroup.lift (H.subgroupOf T) lam hHker
-  refine ⟨χ, ?_⟩
-  ext t
-  change θ t = (χ (t : T ⧸ H.subgroupOf T) : ℂ)
-  rw [hθeq]
-  simp [χ, lam, linearCharacterOfFinOneRepresentation_sec9]
 
 private theorem theorem_9_9_case_b_clifford_induction_package_source_bridge_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

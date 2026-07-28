@@ -25,21 +25,6 @@ namespace External
 
 
 universe u
-/-- Huppert V.8.12, cyclic Frobenius-complement interface. -/
-public theorem huppert_V_8_12_frobenius_complement_cyclic_prime_of_fixedPoint_hypotheses
-    {G M : Type u} [Group G] [Finite G] [Group M] [Finite M]
-    [MulDistribMulAction G M] [Nontrivial M]
-    (K R : Subgroup G)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R)
-    (hsolvG : IsSolvable G)
-    (hnilM : Group.IsNilpotent M)
-    (hcop : Nat.Coprime (Nat.card G) (Nat.card M))
-    (hfixK : fixedPointSubgroup (↥K) M = ⊥)
-    (hfixR : ∀ x : R, x ≠ 1 →
-      fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M = fixedPointSubgroup (↥R) M) :
-    IsCyclic R ∧ Nat.Prime (Nat.card R) :=
-  hkt_frobenius_complement_cyclic_prime_of_fixedPoint_hypotheses
-    (G := G) (M := M) K R hfrob hsolvG hnilM hcop hfixK hfixR
 
 end External
 end BenderSuzuki

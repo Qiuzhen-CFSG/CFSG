@@ -85,66 +85,6 @@ permutation representations. -/
       {x : G | ∃ u : H, (u : G) ∈ P ∧
         ∃ d : H, d ∈ cycleFactors u ∧ x = (d : G)}
 
-set_option maxRecDepth 2000 in
-/-- Source-faithful cycle-factor data surrounding Hall Lemma 14.4.5.  The
-list records the active `p`-cycles for each `u`, while `Zs` records the
-finitely many fixed choices `z_i` coming from the nontrivial double-coset
-permutation representations. -/
-@[expose] public noncomputable def hallCycleFactorData
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ G₀ H P H₀ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hG₀ : G₀ = hallPResidual p G)
-    (hH : H = G₀ ⊓ H₁)
-    (hP : P = G₀ ⊓ (P₁ : Subgroup G))
-    (hH₀ : H₀ = hallTransferModulus p H H₁) : Prop := by
-  have hH_le_G₀ : H ≤ G₀ := by
-    rw [hH]
-    exact inf_le_left
-  have hH_le_H₁ : H ≤ H₁ := by
-    rw [hH]
-    exact inf_le_right
-  have hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁ :=
-    Subgroup.le_normalizer.trans (hN₁ ▸ hN₁_le_H₁)
-  have hP_le_H : P ≤ H := by
-    rw [hP, hH]
-    exact inf_le_inf le_rfl hP₁_le_H₁
-  have hH₀_le_H : H₀ ≤ H := by
-    rw [hH₀]
-    exact hallTransferModulus_le_of_inf p H₁ G₀ H hG₀ hH
-  have hH₀_normal : (H₀.subgroupOf H).Normal := by
-    subst H₀
-    exact hallTransferModulus_subgroupOf_normal p H H₁ hH_le_H₁
-      (hallTransferModulus_le_of_inf p H₁ G₀ H hG₀ hH)
-  have hcomm : commutator H ≤ H₀.subgroupOf H := by
-    intro x hx
-    have hxmap : H.subtype x ∈ (commutator H).map H.subtype :=
-      Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
-    rw [Subgroup.map_subtype_commutator] at hxmap
-    have hC : ⁅H, H₁⁆ ≤ H₀ := by
-      rw [hH₀]
-      exact le_sup_right.trans le_sup_left
-    exact hC ((Subgroup.commutator_mono le_rfl hH_le_H₁) hxmap)
-  letI : IsMulCommutative (H ⧸ H₀.subgroupOf H) :=
-    (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 hcomm
-  letI : CommGroup (H ⧸ H₀.subgroupOf H) := IsMulCommutative.instCommGroup
-  let HG₀ : Subgroup G₀ := H.subgroupOf G₀
-  let eH : HG₀ ≃* H := Subgroup.subgroupOfEquivOfLe hH_le_G₀
-  let π : H →* H ⧸ H₀.subgroupOf H := QuotientGroup.mk' (H₀.subgroupOf H)
-  let φ : HG₀ →* H ⧸ H₀.subgroupOf H := π.comp eH.toMonoidHom
-  exact ∃ Zs : Finset G, ∃ cycleFactors : H → List H,
-    (∀ z : G, z ∈ Zs → z ∈ (P₁ : Subgroup G)) ∧
-    (∀ u : H, (u : G) ∈ P →
-      hallDiagonalDefect (G := G₀) (H := HG₀) φ (eH.symm u) =
-        ((cycleFactors u).map π).prod) ∧
-    (∀ u : H, (u : G) ∈ P → ∀ d : H, d ∈ cycleFactors u →
-      ∃ z : G, z ∈ Zs ∧ ∃ w : G, w ∈ G₀ ∧
-        w * engelSymbol p (u : G) z * w⁻¹ ∈ H ∧
-        (d : G) / (w * engelSymbol p (u : G) z * w⁻¹) ∈ H₀) ∧
-    H ≤ H₀ ⊔ Subgroup.closure
-      {x : G | ∃ u : H, (u : G) ∈ P ∧
-        ∃ d : H, d ∈ cycleFactors u ∧ x = (d : G)}
 
 private noncomputable def hallResidualCosetEquiv
     {G : Type u} [Group G] (G₀ H₁ H : Subgroup G) [G₀.Normal]
@@ -179,16 +119,6 @@ private noncomputable def hallResidualCosetEquiv
     change (n : G)⁻¹ * (n * h) ∈ H₁
     simpa [mul_assoc] using hh
 
-@[reducible] private noncomputable def hallTransportedMulAction
-    {Γ X Y : Type*} [Monoid Γ] [MulAction Γ Y] (e : X ≃ Y) :
-    MulAction Γ X where
-  smul g x := e.symm (g • e x)
-  one_smul x := by
-    change e.symm (1 • e x) = x
-    rw [one_smul, e.symm_apply_apply]
-  mul_smul g h x := by
-    change e.symm ((g * h) • e x) = e.symm (g • e (e.symm (h • e x)))
-    rw [mul_smul, e.apply_symm_apply]
 
 private def hallResidualCosetLeftMul
     {G : Type u} [Group G] (G₀ H : Subgroup G) (u : G₀) :
@@ -244,21 +174,6 @@ private theorem hallFixedPointRestriction_pow
   rw [hzpow]
   rfl
 
-private theorem hallFixedPointRestriction_order
-    {X : Type u} [Finite X] (p : ℕ) [Fact p.Prime]
-    (u z : Equiv.Perm X) (hcomm : Commute z u)
-    (hzorder : orderOf z = p) (hzfree : ∀ x : X, z x ≠ x)
-    [Nonempty (Function.fixedPoints u)] :
-    orderOf (hallFixedPointRestriction u z hcomm) = p := by
-  apply orderOf_eq_prime
-  · apply hallFixedPointRestriction_pow p u z hcomm
-    rw [← hzorder]
-    exact pow_orderOf_eq_one z
-  · intro hone
-    let x : Function.fixedPoints u := Classical.choice inferInstance
-    have hx := congrArg (fun σ : Equiv.Perm (Function.fixedPoints u) => σ x) hone
-    apply hzfree x
-    exact congrArg Subtype.val hx
 
 private theorem hall_prime_action_minimalPeriod
     {X : Type u} [Finite X] (p : ℕ) [Fact p.Prime]
@@ -385,10 +300,6 @@ private theorem hall_prime_cast_choose_pred
             -((-1 : ZMod p) ^ k) := eq_neg_of_add_eq_zero_left (by simpa [add_comm] using hcast)
         _ = (-1 : ZMod p) ^ (k + 1) := by rw [pow_succ]; ring
 
-
-
-private theorem hall_zmod_two_neg_one : (-1 : ZMod 2) = 1 := by
-  decide
 
 private theorem hall_fwdDiff_prime_pred_eq_sum
     {A : Type*} [AddCommGroup A] (p : ℕ) [Fact p.Prime]
@@ -619,80 +530,6 @@ private theorem hall_lemma_14_4_5_generation_of_factorization
     (show H₀ ≤ K from le_sup_left) hdiv
   have hmulK := K.mul_mem hdivK hkK
   simpa [K] using hmulK
-private theorem hall_exists_central_prime_order_action
-    {P : Type u} {X : Type v} [Group P] [Finite P] [Finite X]
-    [MulAction P X] (p : ℕ) [Fact p.Prime] (hP : IsPGroup p P)
-    (x : X) (hmoved : ∃ g : P, g • x ≠ x) :
-    ∃ z : P,
-      orderOf ((MulAction.toPermHom P (MulAction.orbit P x)) z) = p ∧
-      (∀ g : P, Commute
-        ((MulAction.toPermHom P (MulAction.orbit P x)) z)
-        ((MulAction.toPermHom P (MulAction.orbit P x)) g)) ∧
-      ∀ y : MulAction.orbit P x,
-        ((MulAction.toPermHom P (MulAction.orbit P x)) z) y ≠ y := by
-  classical
-  let ρ := MulAction.toPermHom P (MulAction.orbit P x)
-  let S := ρ.range
-  have hS : IsPGroup p S :=
-    hP.of_surjective ρ.rangeRestrict ρ.rangeRestrict_surjective
-  haveI : Nontrivial S := by
-    rcases hmoved with ⟨g, hg⟩
-    let s : S := ⟨ρ g, ⟨g, rfl⟩⟩
-    have hs : s ≠ 1 := by
-      intro hs1
-      have hs1' : ρ g = 1 := congrArg Subtype.val hs1
-      have hfix := congrArg (fun σ : Equiv.Perm (MulAction.orbit P x) =>
-        σ ⟨x, MulAction.mem_orbit_self x⟩) hs1'
-      exact hg (by simpa [ρ] using congrArg Subtype.val hfix)
-    exact ⟨⟨s, 1, hs⟩⟩
-  haveI : Nontrivial (Subgroup.center S) := hS.center_nontrivial
-  have hC : IsPGroup p (Subgroup.center S) := hS.to_subgroup _
-  have hpdvd : p ∣ Nat.card (Subgroup.center S) :=
-    hC.card_eq_or_dvd.resolve_left (ne_of_gt Finite.one_lt_card)
-  obtain ⟨c, hc⟩ := exists_prime_orderOf_dvd_card' p hpdvd
-  obtain ⟨z, hz⟩ := c.1.property
-  refine ⟨z, ?_, ?_, ?_⟩
-  · calc
-      orderOf (ρ z) = orderOf c.1 := by
-        rw [hz]
-        exact Subgroup.orderOf_coe c.1
-      _ = orderOf c := Subgroup.orderOf_coe c
-      _ = p := hc
-  · intro g
-    let sg : S := ⟨ρ g, ⟨g, rfl⟩⟩
-    have hcommS : Commute c.1 sg := by
-      exact (Subgroup.mem_center_iff.mp c.property sg).symm
-    change Commute (ρ z) (ρ g)
-    rw [hz]
-    exact hcommS.map S.subtype
-  · intro y hy
-    have hfix : ∀ q : MulAction.orbit P x, ρ z q = q := by
-      intro q
-      obtain ⟨g, rfl⟩ := MulAction.exists_smul_eq P y q
-      calc
-        ρ z (g • y) = ρ z (ρ g y) := rfl
-        _ = ρ g (ρ z y) := by
-          have hcomm : Commute (ρ z) (ρ g) := by
-            rw [hz]
-            let sg : S := ⟨ρ g, ⟨g, rfl⟩⟩
-            have hcommS : Commute c.1 sg :=
-              (Subgroup.mem_center_iff.mp c.property sg).symm
-            exact hcommS.map S.subtype
-          have happ := congrArg
-            (fun σ : Equiv.Perm (MulAction.orbit P x) => σ y) hcomm.eq
-          simpa using happ
-        _ = ρ g y := by rw [hy]
-        _ = g • y := rfl
-    have hone : ρ z = 1 := Equiv.Perm.ext (by intro q; simpa using hfix q)
-    have horder_one : orderOf (ρ z) = 1 := by rw [hone, orderOf_one]
-    have horder_p : orderOf (ρ z) = p := by
-      calc
-        orderOf (ρ z) = orderOf c.1 := by
-          rw [hz]
-          exact Subgroup.orderOf_coe c.1
-        _ = orderOf c := Subgroup.orderOf_coe c
-        _ = p := hc
-    exact (Fact.out : p.Prime).ne_one (horder_p.symm.trans horder_one)
 
 private theorem hall_exists_central_prime_order_action_in_normal
     {P : Type*} {X : Type*} [Group P] [Finite P] [Finite X]
@@ -914,88 +751,7 @@ private theorem hall_nonprincipal_weakly_closed_orbit_central_prime_order_action
   rcases hall_nonprincipal_weakly_closed_orbit_moved
     p P₁ Q H₁ hH₁ hweak q hq with ⟨z, hzQ, hzmoved⟩
   exact ⟨z, hzQ, hzmoved⟩
-private theorem hall_nonprincipal_sylow_orbit_moved
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (q : G ⧸ H₁) (hq : q ≠ QuotientGroup.mk (1 : G)) :
-    ∃ z : P₁, ((z : G) • q : G ⧸ H₁) ≠ q := by
-  classical
-  by_contra hmove
-  push Not at hmove
-  let t : G := q.out
-  have htq : (t : G ⧸ H₁) = q := Quotient.out_eq q
-  have hconj_le :
-      (MulAut.conj t⁻¹ • (P₁ : Subgroup G) : Subgroup G) ≤ H₁ := by
-    intro x hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at hx
-    let z : P₁ := ⟨t * x * t⁻¹, by
-      rw [show (MulAut.conj t⁻¹)⁻¹ = MulAut.conj t by simp] at hx
-      rw [MulAut.smul_def, MulAut.conj_apply] at hx
-      change t * x * t⁻¹ ∈ ((P₁ : Subgroup G) : Set G) at hx
-      change t * x * t⁻¹ ∈ (P₁ : Set G)
-      rw [← P₁.coe_coe]
-      exact hx⟩
-    have hzfix := hmove z
-    have hzfix' :
-        ((z : G) • (t : G ⧸ H₁) : G ⧸ H₁) = (t : G ⧸ H₁) := by
-      simpa [htq] using hzfix
-    have hrel := QuotientGroup.eq.mp hzfix'
-    have hxinv : x⁻¹ ∈ H₁ := by
-      simpa [z, t, mul_assoc] using hrel
-    simpa using H₁.inv_mem hxinv
-  let T : Sylow p G := t⁻¹ • P₁
-  have hT_le : (T : Subgroup G) ≤ H₁ := by
-    simpa [T, Sylow.coe_subgroup_smul] using hconj_le
-  let S₁ : Sylow p H₁ := P₁.subtype hP₁_le_H₁
-  let T₁ : Sylow p H₁ := T.subtype hT_le
-  obtain ⟨y, hy⟩ := MulAction.exists_smul_eq H₁ T₁ S₁
-  have hambient : (y : G) • T = P₁ := by
-    apply Sylow.subtype_injective (N := H₁)
-    calc
-      ((y : G) • T).subtype (Sylow.smul_le hT_le y) =
-          y • T₁ := (Sylow.smul_subtype hT_le y).symm
-      _ = S₁ := hy
-      _ = P₁.subtype hP₁_le_H₁ := rfl
-  have hnormalizes : (y : G) * t⁻¹ ∈
-      Subgroup.normalizer ((P₁ : Subgroup G) : Set G) := by
-    apply Sylow.smul_eq_iff_mem_normalizer.mp
-    calc
-      ((y : G) * t⁻¹) • P₁ = (y : G) • (t⁻¹ • P₁) := mul_smul _ _ _
-      _ = (y : G) • T := rfl
-      _ = P₁ := hambient
-  have hcombined_H₁ : (y : G) * t⁻¹ ∈ H₁ :=
-    hN₁_le_H₁ (hN₁ ▸ hnormalizes)
-  have htinv_H₁ : t⁻¹ ∈ H₁ := by
-    have := H₁.mul_mem (H₁.inv_mem y.property) hcombined_H₁
-    simpa [mul_assoc] using this
-  have ht_H₁ : t ∈ H₁ := by simpa using H₁.inv_mem htinv_H₁
-  apply hq
-  calc
-    q = (t : G ⧸ H₁) := htq.symm
-    _ = QuotientGroup.mk (1 : G) := by
-      apply QuotientGroup.eq.mpr
-      simpa using H₁.inv_mem ht_H₁
 
-private theorem hall_nonprincipal_orbit_central_prime_order_action
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (q : G ⧸ H₁) (hq : q ≠ QuotientGroup.mk (1 : G)) :
-    ∃ z : P₁,
-      orderOf ((MulAction.toPermHom P₁ (MulAction.orbit P₁ q)) z) = p ∧
-      (∀ g : P₁, Commute
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ q)) z)
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ q)) g)) ∧
-      ∀ y : MulAction.orbit P₁ q,
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ q)) z) y ≠ y := by
-  apply hall_exists_central_prime_order_action p P₁.isPGroup' q
-  exact hall_nonprincipal_sylow_orbit_moved p P₁ N₁ H₁
-    hN₁ hN₁_le_H₁ hP₁_le_H₁ q hq
 
 private theorem hall_nonprincipal_orbit_out_ne_principal
     {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
@@ -1009,76 +765,13 @@ private theorem hall_nonprincipal_orbit_out_ne_principal
     o = Quotient.mk'' o.out := (Quotient.out_eq' o).symm
     _ = Quotient.mk'' (QuotientGroup.mk (1 : G) : G ⧸ H₁) := congrArg _ hout
 
-private noncomputable def hallNonprincipalOrbitZ
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (o : Quotient (MulAction.orbitRel P₁ (G ⧸ H₁)))
-    (ho : o ≠ Quotient.mk'' (QuotientGroup.mk (1 : G) : G ⧸ H₁)) : P₁ :=
-  Classical.choose (hall_nonprincipal_orbit_central_prime_order_action
-    p P₁ N₁ H₁ hN₁ hN₁_le_H₁ hP₁_le_H₁ o.out
-      (hall_nonprincipal_orbit_out_ne_principal p P₁ H₁ o ho))
 
-private theorem hallNonprincipalOrbitZ_spec
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (o : Quotient (MulAction.orbitRel P₁ (G ⧸ H₁)))
-    (ho : o ≠ Quotient.mk'' (QuotientGroup.mk (1 : G) : G ⧸ H₁)) :
-    let z := hallNonprincipalOrbitZ p P₁ N₁ H₁
-      hN₁ hN₁_le_H₁ hP₁_le_H₁ o ho
-    orderOf ((MulAction.toPermHom P₁ (MulAction.orbit P₁ o.out)) z) = p ∧
-      (∀ g : P₁, Commute
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ o.out)) z)
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ o.out)) g)) ∧
-      ∀ y : MulAction.orbit P₁ o.out,
-        ((MulAction.toPermHom P₁ (MulAction.orbit P₁ o.out)) z) y ≠ y := by
-  exact Classical.choose_spec (hall_nonprincipal_orbit_central_prime_order_action
-    p P₁ N₁ H₁ hN₁ hN₁_le_H₁ hP₁_le_H₁ o.out
-      (hall_nonprincipal_orbit_out_ne_principal p P₁ H₁ o ho))
 private abbrev hallNonprincipalOrbitIndex
     {G : Type u} [Group G] (p : ℕ) (P₁ : Sylow p G) (H₁ : Subgroup G) :=
   {o : Quotient (MulAction.orbitRel P₁ (G ⧸ H₁)) //
     o ≠ Quotient.mk'' (QuotientGroup.mk (1 : G) : G ⧸ H₁)}
 
-private noncomputable def hallNonprincipalOrbitZAt
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (i : hallNonprincipalOrbitIndex p P₁ H₁) : P₁ :=
-  hallNonprincipalOrbitZ p P₁ N₁ H₁ hN₁ hN₁_le_H₁ hP₁_le_H₁ i.1 i.2
 
-private noncomputable def hallNonprincipalOrbitZs
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁) : Finset G := by
-  classical
-  letI : Fintype (hallNonprincipalOrbitIndex p P₁ H₁) := Fintype.ofFinite _
-  exact (Finset.univ : Finset (hallNonprincipalOrbitIndex p P₁ H₁)).image fun i =>
-    (hallNonprincipalOrbitZAt p P₁ N₁ H₁
-      hN₁ hN₁_le_H₁ hP₁_le_H₁ i : G)
-
-private theorem hallNonprincipalOrbitZs_mem
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁)
-    (z : G) (hz : z ∈ hallNonprincipalOrbitZs p P₁ N₁ H₁
-      hN₁ hN₁_le_H₁ hP₁_le_H₁) : z ∈ (P₁ : Subgroup G) := by
-  classical
-  rw [hallNonprincipalOrbitZs, Finset.mem_image] at hz
-  rcases hz with ⟨i, _hi, rfl⟩
-  exact (hallNonprincipalOrbitZAt p P₁ N₁ H₁
-    hN₁ hN₁_le_H₁ hP₁_le_H₁ i).property
 private structure HallActiveCycle
     {G : Type u} [Group G] (p : ℕ) (P₁ : Sylow p G)
     (G₀ H₁ H : Subgroup G) (Zs : Finset G) (u : H) where
@@ -1891,48 +1584,6 @@ private theorem hall_lemma_14_4_5_cycle_factor_data_core_of_choice
       (fun u hu => (hdstar u).trans (hfactor u hu)) hgenerated
   exact ⟨Zs, cycleFactors, hz, hfactor, hengel, hgenerated_cycles⟩
 
-private theorem hall_lemma_14_4_5_cycle_factor_data_core
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ G₀ H P H₀ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hG₀ : G₀ = hallPResidual p G)
-    (hH : H = G₀ ⊓ H₁)
-    (hP : P = G₀ ⊓ (P₁ : Subgroup G))
-    (hH₀ : H₀ = hallTransferModulus p H H₁) :
-    hallCycleFactorData p P₁ N₁ H₁ G₀ H P H₀
-      hN₁ hN₁_le_H₁ hG₀ hH hP hH₀ := by
-  classical
-  have hP₁_le_H₁ : (P₁ : Subgroup G) ≤ H₁ :=
-    Subgroup.le_normalizer.trans (hN₁ ▸ hN₁_le_H₁)
-  let Zs : Finset G :=
-    hallNonprincipalOrbitZs p P₁ N₁ H₁ hN₁ hN₁_le_H₁ hP₁_le_H₁
-  let z : hallNonprincipalOrbitIndex p P₁ H₁ → P₁ := fun i =>
-    hallNonprincipalOrbitZAt p P₁ N₁ H₁
-      hN₁ hN₁_le_H₁ hP₁_le_H₁ i
-  have hzZs : ∀ i : hallNonprincipalOrbitIndex p P₁ H₁,
-      (z i : G) ∈ Zs := by
-    intro i
-    simp [Zs, z, hallNonprincipalOrbitZs]
-  have hzspec : ∀ i : hallNonprincipalOrbitIndex p P₁ H₁,
-      orderOf ((MulAction.toPermHom P₁ (MulAction.orbit P₁ i.1.out)) (z i)) = p ∧
-        (∀ g : P₁, Commute
-          ((MulAction.toPermHom P₁ (MulAction.orbit P₁ i.1.out)) (z i))
-          ((MulAction.toPermHom P₁ (MulAction.orbit P₁ i.1.out)) g)) ∧
-        ∀ x : MulAction.orbit P₁ i.1.out,
-          (MulAction.toPermHom P₁ (MulAction.orbit P₁ i.1.out)) (z i) x ≠ x := by
-    intro i
-    simpa [z, hallNonprincipalOrbitZAt] using
-      (hallNonprincipalOrbitZ_spec p P₁ N₁ H₁
-        hN₁ hN₁_le_H₁ hP₁_le_H₁ i.1 i.2)
-  have hZsP : ∀ x : G, x ∈ Zs → x ∈ (P₁ : Subgroup G) := by
-    intro x hx
-    exact hallNonprincipalOrbitZs_mem p P₁ N₁ H₁
-      hN₁ hN₁_le_H₁ hP₁_le_H₁ x hx
-  have hdata := hall_lemma_14_4_5_cycle_factor_data_core_of_choice
-    p P₁ N₁ H₁ G₀ H P H₀ (P₁ : Subgroup G)
-      hN₁ hN₁_le_H₁ hG₀ hH hP hH₀ Zs z hzZs hzspec hZsP
-  simpa only [hallCycleFactorData, hallCycleFactorDataIn] using hdata
 
 set_option maxRecDepth 2000 in
 /-- Hall Lemma 14.4.5 with Hall-Wielandt's weak-closure choice: every fixed
@@ -1988,55 +1639,9 @@ public theorem hall_lemma_14_4_5_cycle_factor_engel_congruence_of_weakly_closed
   exact hall_lemma_14_4_5_cycle_factor_data_core_of_choice
     p P₁ N₁ H₁ G₀ H P H₀ Q
       hN₁ hN₁_le_H₁ hG₀ hH hP hH₀ Zs z hzZs hzspec hZsQ
-set_option maxRecDepth 2000 in
-/-- The cycle factors selected in Hall Lemma 14.4.5 factor the actual diagonal
-defect, generate `H` with `H₀`, and are congruent to the source Engel
-coefficients. -/
-public theorem hall_lemma_14_4_5_cycle_factor_engel_congruence
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ G₀ H P H₀ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hG₀ : G₀ = hallPResidual p G)
-    (hH : H = G₀ ⊓ H₁)
-    (hP : P = G₀ ⊓ (P₁ : Subgroup G))
-    (hH₀ : H₀ = hallTransferModulus p H H₁) :
-    hallCycleFactorData p P₁ N₁ H₁ G₀ H P H₀
-      hN₁ hN₁_le_H₁ hG₀ hH hP hH₀ := by
-  exact hall_lemma_14_4_5_cycle_factor_data_core p P₁ N₁ H₁ G₀ H P H₀
-    hN₁ hN₁_le_H₁ hG₀ hH hP hH₀
 
-set_option maxRecDepth 2000 in
-/-- Hall Lemma 14.4.5: `H` is generated by `H₀` and the actual cycle factors
-`d_j(u)` occurring for `u ∈ P`. -/
-public theorem hall_lemma_14_4_5_generated_by_cycle_factors
-    {G : Type u} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (P₁ : Sylow p G) (N₁ H₁ G₀ H P H₀ : Subgroup G)
-    (hN₁ : N₁ = Subgroup.normalizer ((P₁ : Subgroup G) : Set G))
-    (hN₁_le_H₁ : N₁ ≤ H₁)
-    (hG₀ : G₀ = hallPResidual p G)
-    (hH : H = G₀ ⊓ H₁)
-    (hP : P = G₀ ⊓ (P₁ : Subgroup G))
-    (hH₀ : H₀ = hallTransferModulus p H H₁) :
-    ∃ cycleFactors : H → List H,
-      H ≤ H₀ ⊔ Subgroup.closure
-        {x : G | ∃ u : H, (u : G) ∈ P ∧
-          ∃ d : H, d ∈ cycleFactors u ∧ x = (d : G)} := by
-  have hdata := hall_lemma_14_4_5_cycle_factor_engel_congruence
-    p P₁ N₁ H₁ G₀ H P H₀ hN₁ hN₁_le_H₁ hG₀ hH hP hH₀
-  simp only [hallCycleFactorData] at hdata
-  rcases hdata with ⟨_Zs, cycleFactors, _hz, _hfactor, _hengel, hgenerated⟩
-  exact ⟨cycleFactors, hgenerated⟩
 
 end External
 end BenderSuzuki
-
-
-
-
-
-
-
-
 
 

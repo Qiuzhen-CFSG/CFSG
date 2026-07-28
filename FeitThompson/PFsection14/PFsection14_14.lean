@@ -25,39 +25,6 @@ universe u v w
 
 /-! ## (14.14) -/
 
-/-- Peterfalvi `(14.14)`. -/
-@[expose] public def theorem_14_14_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (βMτ βLτ φτ ψτ : Section1.ClassFunction G)
-    (p q u v c d h : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-        hypothesis_14_13_statement L M H h →
-          βMτ = τM βM →
-            βLτ = τL βL →
-              φτ = τL₁ φ →
-                ψτ = τM₁ ψ →
-                  theorem_14_14_alternative βMτ βLτ φτ ψτ p q h
-
 
 public theorem section14_theorem_14_14_aux_ineq_upper
     {p q : ℕ}
@@ -301,17 +268,6 @@ public theorem section14_agreesWithDadeTransform_of_dadeIsometryRelativeToTypeIA
   rcases hτdef with ⟨hAL, hτeq⟩
   exact ⟨hAL, hτeq⟩
 
-public theorem section14_agreesWithDadeTransform_of_dadeIsometryRelativeToASet
-    {G : Type u} [Group G] [Finite G]
-    {M U : Subgroup G}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    (hτ : Section9.dadeIsometryRelativeToASet M U τ) :
-    ∃ R : G → Subgroup G,
-      Section2.hypothesis_2_2_statement (section16ASet M U) M R ∧
-        Section7.agreesWithDadeTransform (section16ASet M U) M R τ := by
-  rcases hτ with ⟨R, hAMG, hτeq⟩
-  refine ⟨R, hAMG, ?_⟩
-  exact ⟨hAMG.subset_L, fun α hCF => hτeq α hCF⟩
 
 public theorem section14_scalarProduct_eq_zero_of_subsetSums_orthogonalFinsets
     {G : Type u} [Group G] [Finite G]
@@ -2417,105 +2373,6 @@ public theorem section14_typeI_core_ltr_cross_scalarProduct_normSq_ge_one
   rw [hn]
   exact section14_normSq_ge_one_of_intCast_ne_zero_for_oddScalarProduct n hn_ne
 
-public theorem section14_finite_orthogonal_coeff_normSq_div_sum_le_cfNormSq
-    {G ι : Type*} [Group G] [Finite G] [Finite ι] [DecidableEq ι]
-    (χ : ι → Section1.ClassFunction G)
-    (d : ι → ℝ)
-    (horth : ∀ i j : ι,
-      Section1.scalarProduct G (χ i) (χ j) = if i = j then (d i : ℂ) else 0)
-    (hdpos : ∀ i, 0 < d i)
-    (Y : Section1.ClassFunction G) :
-    ∑ i : ι, Complex.normSq (Section1.scalarProduct G Y (χ i)) / d i ≤
-      Section5.cfNormSq Y := by
-  classical
-  let c : ι → ℂ := fun i => Section1.scalarProduct G Y (χ i)
-  let w : ι → ℂ := fun i => c i / (d i : ℂ)
-  let P : Section1.ClassFunction G := Section1.weightedFamilySum w χ
-  let R : Section1.ClassFunction G := Y - P
-  have hdC : ∀ i : ι, (d i : ℂ) ≠ 0 := by
-    intro i
-    exact_mod_cast (ne_of_gt (hdpos i))
-  have hPχ_diag : ∀ i : ι,
-      Section1.scalarProduct G P (χ i) = w i * (d i : ℂ) := by
-    intro i
-    dsimp [P]
-    rw [Section1.scalarProduct_weightedFamilySum_left]
-    calc
-      (∑ j : ι, w j * Section1.scalarProduct G (χ j) (χ i)) =
-          ∑ j : ι, if j = i then w i * (d i : ℂ) else 0 := by
-        refine Finset.sum_congr rfl ?_
-        intro j _hj
-        rw [horth j i]
-        by_cases hji : j = i
-        · subst hji
-          simp
-        · simp [hji]
-      _ = w i * (d i : ℂ) := by simp
-  have hPχ : ∀ i : ι, Section1.scalarProduct G P (χ i) = c i := by
-    intro i
-    rw [hPχ_diag i]
-    dsimp [w]
-    exact div_mul_cancel₀ (c i) (hdC i)
-  have hRχ : ∀ i : ι, Section1.scalarProduct G R (χ i) = 0 := by
-    intro i
-    dsimp [R]
-    rw [Section5.scalarProduct_sub_left, hPχ i]
-    dsimp [c]
-    simp
-  have hRP : Section1.scalarProduct G R P = 0 := by
-    dsimp [P]
-    rw [Section1.scalarProduct_weightedFamilySum_right]
-    refine Finset.sum_eq_zero ?_
-    intro i _hi
-    rw [hRχ i]
-    simp
-  have hPR : Section1.scalarProduct G P R = 0 := by
-    simpa [Section1.scalarProduct_star_swap] using congrArg star hRP
-  have hdecomp : Y = R + P := by
-    dsimp [R, P]
-    ext g
-    simp [Pi.sub_apply, Pi.add_apply]
-  have hnorm_decomp :
-      Section5.cfNormSq Y = Section5.cfNormSq R + Section5.cfNormSq P := by
-    rw [hdecomp]
-    exact Section5.cfNormSq_add_eq_add_of_orthogonal hRP hPR
-  have hPnorm_le : Section5.cfNormSq P ≤ Section5.cfNormSq Y := by
-    have hRnonneg : 0 ≤ Section5.cfNormSq R := Section5.cfNormSq_nonneg R
-    nlinarith
-  have hPnorm :
-      Section5.cfNormSq P =
-        ∑ i : ι, Complex.normSq (c i) / d i := by
-    have hself :
-        Section1.scalarProduct G P P =
-          ∑ i : ι, star (w i) * (w i * (d i : ℂ)) := by
-      calc
-        Section1.scalarProduct G P P =
-            ∑ i : ι, star (w i) * Section1.scalarProduct G P (χ i) := by
-          simpa [P] using Section1.scalarProduct_weightedFamilySum_right P w χ
-        _ = ∑ i : ι, star (w i) * (w i * (d i : ℂ)) := by
-          refine Finset.sum_congr rfl ?_
-          intro i _hi
-          rw [hPχ_diag i]
-    unfold Section5.cfNormSq
-    rw [hself, Complex.re_sum]
-    refine Finset.sum_congr rfl ?_
-    intro i _hi
-    have hd_ne : d i ≠ 0 := ne_of_gt (hdpos i)
-    have hnormw :
-        Complex.normSq (w i) * d i = Complex.normSq (c i) / d i := by
-      dsimp [w]
-      rw [Complex.normSq_div, Complex.normSq_ofReal]
-      field_simp [hd_ne]
-    calc
-      Complex.re (star (w i) * (w i * (d i : ℂ))) =
-          Complex.normSq (w i) * d i := by
-        rw [← mul_assoc]
-        have hstar_mul : star (w i) * w i = (Complex.normSq (w i) : ℂ) := by
-          simpa using (Complex.normSq_eq_conj_mul_self (z := w i)).symm
-        rw [hstar_mul]
-        simp
-      _ = Complex.normSq (c i) / d i := hnormw
-  simpa [c, hPnorm] using hPnorm_le
 
 public theorem section14_scalarProduct_finset_sum_right
     {G ι : Type*} [Group G] [Finite G]
@@ -3860,44 +3717,5 @@ public theorem section14_theorem_14_14_source_bridge
       ⟨hq3, hp5⟩
     exact Or.inr ⟨hsp, hq3, hp5⟩
 
-
-/-- Proof placeholder for `theorem_14_14_statement`. -/
-public theorem theorem_14_14
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (βMτ βLτ φτ ψτ : Section1.ClassFunction G)
-    (p q u v c d h : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          hypothesis_14_13_statement L M H h →
-            βMτ = τM βM →
-              βLτ = τL βL →
-                φτ = τL₁ φ →
-                  ψτ = τM₁ ψ →
-                    theorem_14_14_alternative βMτ βLτ φτ ψτ p q h := by
-  exact section14_theorem_14_14_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H M K Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
-    βMτ βLτ φτ ψτ p q u v c d h
 
 end Section14

@@ -149,22 +149,11 @@ public theorem HermitianForm.specialSubgroup_le_unitarySubgroup
     J.specialSubgroup ≤ J.unitarySubgroup :=
   inf_le_left
 
-/-- The defining Gram-matrix identity for an element of the unitary subgroup. -/
-public theorem HermitianForm.unitary_property
-    {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F)
-    (M : J.unitarySubgroup) :
-    J.conjTranspose ((M : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) * J.form *
-        ((M : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) = J.form :=
-  (J.mem_unitarySubgroup_iff (M : GL (Fin n) F)).mp M.property
 
 /-- The projective special unitary group, as the image of `SU(J)` in `PGL`. -/
 public abbrev ProjectiveSpecialUnitaryMatrixGroup
     {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :=
   J.specialSubgroup.map Matrix.ProjGenLinGroup.mk
 
-/-- The projective unitary group, as the image of `U(J)` in `PGL`. -/
-public abbrev ProjectiveUnitaryMatrixGroup
-    {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :=
-  J.unitarySubgroup.map Matrix.ProjGenLinGroup.mk
 end MatrixGroups
 end BenderSuzuki

@@ -46,27 +46,6 @@ private theorem pPrimeCore_le_Op_p'p
     (QuotientGroup.eq_one_iff (N := pPrimeCore p G) (x := x)).2 hx
   simp [hx1]
 
-private theorem quotient_Op_p'p_card_dvd_quotient_pPrimeCore_card
-    {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime] :
-    Nat.card (G ⧸ Op_p'p p G) ∣ Nat.card (G ⧸ pPrimeCore p G) := by
-  let M : Subgroup G := pPrimeCore p G
-  let L : Subgroup G := Op_p'p p G
-  have hM_le_L : M ≤ L := by
-    simpa [M, L] using (pPrimeCore_le_Op_p'p (G := G) (p := p))
-  let Lbar : Subgroup (G ⧸ M) := L.map (QuotientGroup.mk' M)
-  let e : (G ⧸ M) ⧸ Lbar ≃* G ⧸ L :=
-    QuotientGroup.quotientQuotientEquivQuotient (N := M) (M := L) hM_le_L
-  have hcard_eq :
-      Nat.card (G ⧸ M) = Nat.card ((G ⧸ M) ⧸ Lbar) * Nat.card Lbar := by
-    simpa using
-      (Subgroup.card_eq_card_quotient_mul_card_subgroup (α := G ⧸ M) (s := Lbar))
-  refine ⟨Nat.card Lbar, ?_⟩
-  calc
-    Nat.card (G ⧸ pPrimeCore p G) = Nat.card (G ⧸ M) := rfl
-    _ = Nat.card ((G ⧸ M) ⧸ Lbar) * Nat.card Lbar := hcard_eq
-    _ = Nat.card (G ⧸ L) * Nat.card Lbar := by
-      rw [Nat.card_congr e.toEquiv]
-    _ = Nat.card (G ⧸ Op_p'p p G) * Nat.card Lbar := rfl
 
 private theorem quotient_Op_p'p_card_dvd_normalizer_card
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
@@ -276,24 +255,3 @@ public theorem theorem_5_6_a_high_rank_largest_prime
         Nat.le_of_dvd (Nat.sub_pos_of_lt (Fact.out : Nat.Prime p).one_lt) hq_dvd_pred
       omega
 
-public theorem theorem_5_6_a
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
-    {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
-    {S : Sylow p G} (hSnarrow : IsNarrowPGroup p S)
-    (hplen : 3 ≤ groupRank (S : Subgroup G) → HasPLengthOne p G)
-    {q : ℕ} [Fact q.Prime] (hcard : q ∣ Nat.card (G ⧸ pPrimeCore p G)) :
-    q ≤ p := by
-  classical
-  by_cases hSrank_le : groupRank (S : Subgroup G) ≤ 2
-  · have hprank : primeRank p G ≤ 2 :=
-      primeRank_le_two_of_sylow_groupRank_le_two (G := G) (p := p) (S := S) hSrank_le
-    have hlargest :
-        IsLargestPrimeDivisor p (Nat.card (G ⧸ pPrimeCore p G)) :=
-      theorem_4_18_a (G := G) (p := p) (inferInstance : IsSolvable G) hodd hp_dvd hprank
-    exact hlargest.2.2 q Fact.out hcard
-  · have hSrank : 3 ≤ groupRank (S : Subgroup G) := by omega
-    have hlargest :
-        IsLargestPrimeDivisor p (Nat.card (G ⧸ pPrimeCore p G)) :=
-      theorem_5_6_a_high_rank_largest_prime
-        (G := G) (p := p) hodd hp_dvd (S := S) hSnarrow hSrank (hplen hSrank)
-    exact hlargest.2.2 q Fact.out hcard

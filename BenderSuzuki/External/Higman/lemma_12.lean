@@ -809,39 +809,6 @@ private theorem lemma12_restricted_square_monomial
     exact ⟨i, j, s, c, hij, hseed, hc,
       by simpa [qBase, e] using hformula⟩
 
-private theorem lemma12_single_monomial_normalize
-    (n : ℕ) (i s : Fin n) (c : BinaryGaloisField n) (hc : c ≠ 0)
-    (q : BinaryGaloisField n → BinaryGaloisField n)
-    (hformula : ∀ a,
-      ((FiniteField.frobeniusAlgEquivOfAlgebraic
-        (ZMod 2) (BinaryGaloisField n)) ^ (s : ℕ)) (q a) =
-          c * a ^ (2 ^ (i : ℕ))) :
-    let sigma : BinaryGaloisField n ≃ₐ[ZMod 2] BinaryGaloisField n :=
-      FiniteField.frobeniusAlgEquivOfAlgebraic
-        (ZMod 2) (BinaryGaloisField n)
-    let rho := (sigma ^ (i : ℕ)).symm * sigma
-    ∀ a, c⁻¹ * (sigma ^ (s : ℕ)) (q (rho a)) = a ^ 2 := by
-  let sigma : BinaryGaloisField n ≃ₐ[ZMod 2] BinaryGaloisField n :=
-    FiniteField.frobeniusAlgEquivOfAlgebraic
-      (ZMod 2) (BinaryGaloisField n)
-  let rho := (sigma ^ (i : ℕ)).symm * sigma
-  have hsigma_apply (a : BinaryGaloisField n) (t : ℕ) :
-      (sigma ^ t) a = a ^ (2 ^ t) := by
-    rw [AlgEquiv.coe_pow,
-      FiniteField.coe_frobeniusAlgEquivOfAlgebraic_iterate]
-    simp [ZMod.card]
-  change ∀ a, c⁻¹ * (sigma ^ (s : ℕ)) (q (rho a)) = a ^ 2
-  intro a
-  rw [hformula]
-  have hpower : (rho a) ^ (2 ^ (i : ℕ)) = a ^ 2 := by
-    rw [← hsigma_apply]
-    change (sigma ^ (i : ℕ))
-      (((sigma ^ (i : ℕ)).symm * sigma) a) = a ^ 2
-    rw [AlgEquiv.mul_apply]
-    simp only [AlgEquiv.apply_symm_apply]
-    simpa using hsigma_apply a 1
-  rw [hpower]
-  simp [hc]
 
 private theorem lemma12_pair_monomial_normalize
     (n : ℕ) (i j s : Fin n) (c : BinaryGaloisField n) (hc : c ≠ 0)

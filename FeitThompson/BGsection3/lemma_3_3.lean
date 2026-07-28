@@ -143,15 +143,6 @@ theorem subgroupSum_eq_zero_of_fixedSubspace_eq_bot {G : Type*} [Group G] [Finit
   rw [hH] at hmem
   simpa using hmem
 
-theorem fixedSubspace_bot_eq_top {G : Type*} [Group G] {F : Type*} [Field F]
-    {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V) :
-    ρ.fixedSubspace (⊥ : Subgroup G) = ⊤ := by
-  rw [Submodule.eq_top_iff']
-  intro v
-  rw [Representation.fixedSubspace, Representation.mem_invariants]
-  intro x
-  have hx_eq_one : x = 1 := Subsingleton.elim _ _
-  simp [hx_eq_one]
 
 theorem fixedSubspace_conjBy_eq_bot {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V) (R : Subgroup G)

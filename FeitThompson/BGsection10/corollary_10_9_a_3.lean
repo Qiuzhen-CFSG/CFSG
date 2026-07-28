@@ -506,17 +506,6 @@ private theorem section10_mbeta_sup_local_derived_sylow_characteristic
   rw [hcomap_eq] at hcomap_char
   simpa [KsubD, K, D] using hcomap_char
 
-private theorem section10_mbeta_sup_local_derived_sylow_normal
-    {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
-    {q : Nat.Primes} (X : Sylow q.val (derivedSubgroup M)) :
-    ((section10MbetaSubgroup M).subgroupOf (derivedSubgroup M) ⊔
-        (X : Subgroup (derivedSubgroup M))).Normal := by
-  classical
-  letI :
-      ((section10MbetaSubgroup M).subgroupOf (derivedSubgroup M) ⊔
-        (X : Subgroup (derivedSubgroup M))).Characteristic :=
-    section10_mbeta_sup_local_derived_sylow_characteristic hM X
-  infer_instance
 
 private theorem section10_mbeta_sup_ambient_derived_sylow_normal
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)

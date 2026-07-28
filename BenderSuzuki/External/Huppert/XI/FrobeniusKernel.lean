@@ -312,71 +312,6 @@ public theorem huppert_blackburn_XI_pointStabilizer_exists_kernelPointEquiv
         exact ⟨f, hf⟩)
   exact ⟨e, fun _ => rfl⟩
 
-set_option backward.isDefEq.respectTransparency false in
-/-- In the sharp branch there is an involution interchanging two distinguished
-points and fixing a third point. -/
-public theorem huppert_blackburn_XI_sharpTriple_exists_swap_involution
-    {G Omega : Type*} [Group G] [MulAction G Omega]
-    (hsharp :
-      ∀ a b c a' b' c' : Omega,
-        a ≠ b → a ≠ c → b ≠ c →
-        a' ≠ b' → a' ≠ c' → b' ≠ c' →
-        ∃! g : G,
-          g • a = a' ∧ g • b = b' ∧ g • c = c')
-    (a b : Omega) (hab : a ≠ b)
-    (F : Subgroup (MulAction.stabilizer G a))
-    (hFrob :
-      IsFrobeniusGroupWithKernelComplement F
-        (MulAction.stabilizer (MulAction.stabilizer G a)
-          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a))) :
-    ∃ c : Omega, ∃ t : G,
-      c ≠ a ∧ c ≠ b ∧ t ≠ 1 ∧ t ^ 2 = 1 ∧
-        t • a = b ∧ t • b = a ∧ t • c = c := by
-  classical
-  let H := MulAction.stabilizer G a
-  let X := SubMulAction.ofStabilizer G a
-  let b' : X := ⟨b, hab.symm⟩
-  let D := MulAction.stabilizer H b'
-  change IsFrobeniusGroupWithKernelComplement F D at hFrob
-  letI : Nontrivial F :=
-    (Subgroup.nontrivial_iff_ne_bot F).mpr hFrob.kernel_ne_bot
-  obtain ⟨z, hz⟩ := exists_ne (1 : F)
-  let c' : X := (z : H) • b'
-  let c : Omega := c'
-  have hca : c ≠ a :=
-    SubMulAction.neq_of_mem_ofStabilizer G a
-  have hac : a ≠ c := hca.symm
-  have hcb : c ≠ b := by
-    intro hcb
-    have hfix : (z : H) • b' = b' := by
-      apply Subtype.ext
-      exact hcb
-    have hzD : (z : H) ∈ D :=
-      MulAction.mem_stabilizer_iff.mpr hfix
-    have hzbot : (z : H) ∈ (⊥ : Subgroup H) :=
-      hFrob.isComplement'.disjoint.le_bot ⟨z.property, hzD⟩
-    apply hz
-    exact Subtype.ext (Subgroup.mem_bot.mp hzbot)
-  have hbc : b ≠ c := hcb.symm
-  obtain ⟨t, ht, _ht_unique⟩ :=
-    hsharp a b c b a c hab hac hbc hab.symm hbc hac
-  rcases ht with ⟨hta, htb, htc⟩
-  have htne : t ≠ 1 := by
-    intro htone
-    apply hab
-    simpa [htone] using hta
-  have ht_sq_maps :
-      (t ^ 2) • a = a ∧ (t ^ 2) • b = b ∧ (t ^ 2) • c = c := by
-    constructor
-    · rw [pow_two, mul_smul, hta, htb]
-    constructor
-    · rw [pow_two, mul_smul, htb, hta]
-    · rw [pow_two, mul_smul, htc, htc]
-  have ht_sq : t ^ 2 = 1 :=
-    ExistsUnique.unique
-      (hsharp a b c a b c hab hac hbc hab hac hbc)
-      ht_sq_maps (by simp)
-  exact ⟨c, t, hca, hcb, htne, ht_sq, hta, htb, htc⟩
 
 set_option backward.isDefEq.respectTransparency false in
 /-- A point-stabilizer Frobenius kernel complementary to the two-point
@@ -597,32 +532,6 @@ public theorem huppert_blackburn_XI_twoPointStabilizer_exists_conjEquiv
   intro d
   rfl
 
-set_option backward.isDefEq.respectTransparency false in
-/-- In the sharply triply transitive branch, the two-point stabilizer is
-equivalent to the punctured Frobenius kernel. -/
-public theorem huppert_blackburn_XI_twoPointStabilizer_equiv_kernel_ne_one
-    {G Omega : Type*} [Group G] [Finite G] [MulAction G Omega]
-    [Fintype Omega]
-    (htwo : MulAction.IsMultiplyPretransitive G Omega 2)
-    (hsharp :
-      ∀ a b c a' b' c' : Omega,
-        a ≠ b → a ≠ c → b ≠ c →
-        a' ≠ b' → a' ≠ c' → b' ≠ c' →
-        ∃! g : G,
-          g • a = a' ∧ g • b = b' ∧ g • c = c')
-    (a b : Omega) (hab : a ≠ b)
-    (F : Subgroup (MulAction.stabilizer G a))
-    (hFrob :
-      IsFrobeniusGroupWithKernelComplement F
-        (MulAction.stabilizer (MulAction.stabilizer G a)
-          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a))) :
-    Nonempty
-      (MulAction.stabilizer (MulAction.stabilizer G a)
-          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a) ≃
-        {x : F // x ≠ 1}) := by
-  rcases huppert_blackburn_XI_twoPointStabilizer_exists_conjEquiv
-      htwo hsharp a b hab F hFrob with ⟨_z, _hz, e, _he⟩
-  exact ⟨e⟩
 
 set_option backward.isDefEq.respectTransparency false in
 /-- In the sharply triply transitive branch, the Frobenius kernel of a point

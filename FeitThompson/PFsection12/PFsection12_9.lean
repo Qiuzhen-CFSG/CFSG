@@ -343,20 +343,6 @@ public theorem theorem_12_9_rank_two_of_mulEquiv
     exact hgen_ge.trans (generatorRank_le_groupRank_of_commutative_pgroup (p := p) R)
   exact ⟨hcommR, le_antisymm hgroup_le hgroup_ge⟩
 
-/-- Source-data version of the first assertion of Peterfalvi `(12.9)`.
-
-The source package for `(12.9)` already contains the endpoint constructed from
-PF `(8.12)(a)`, `(8.17)`, `(8.11)`, and the BG centralizer lemmas.  This
-helper exposes just the leading `P0` rank-two assertion for step-by-step use. -/
-public theorem theorem_12_9_p0_rank_two_of_source_data
-    {G : Type u} [Group G] [Finite G]
-    (M K K' P0 : Subgroup G)
-    (p : ℕ)
-    (hsrc : theorem_12_9_source_data M K p)
-    (h128 : hypothesis_12_8_data M K K' P0 p) :
-    IsMulCommutative P0 ∧ groupRank P0 = 2 := by
-  rcases hsrc K' P0 h128 with ⟨L, LF, Ls, x, h129⟩
-  exact ⟨h129.1, h129.2.1⟩
 
 /-- Source-data endpoint for Peterfalvi `(12.9)`.
 
@@ -492,21 +478,6 @@ public theorem theorem_12_9_p0_rank_two_of_quotient_rank
     section11_ambientSylow_isPGroup M P
   exact theorem_12_9_rank_two_of_mulEquiv eP0Pbar hPbar.1 hPbar.2 hP0p
 
-/-- First assertion of Peterfalvi `(12.9)` with the Section 8 source choice
-made explicit. -/
-public theorem theorem_12_9_p0_rank_two_of_msChoiceSource
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M K K' P0 : Subgroup G)
-    (p : ℕ)
-    (hMs : Section8.msChoiceSource M K K)
-    (h128 : hypothesis_12_8_data M K K' P0 p) :
-    IsMulCommutative P0 ∧ groupRank P0 = 2 := by
-  rcases h128 with
-    ⟨hp, _hbad, _hmin, hM, hMF, hTypeI, _hMs, _hK', hnoncyc, hP0⟩
-  have hquotRank : section16QuotientHasAbelianSylowRankAtMostTwo K M :=
-    theorem_12_9_quotient_sylow_rank_of_typeI_source M K hM hMF hMs hTypeI
-  exact theorem_12_9_p0_rank_two_of_quotient_rank M K P0 p hp hMF
-    hquotRank hnoncyc hP0
 
 /-- First assertion of Peterfalvi `(12.9)`: from PF `(8.12)(a)` and
 Hypothesis `(12.8)`, the chosen Sylow subgroup `P0` is abelian of rank `2`. -/

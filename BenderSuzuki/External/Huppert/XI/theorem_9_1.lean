@@ -1421,7 +1421,6 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
   simpa [sT, xDsub, xDg] using hcalcG
 
 
-
 private theorem xi91_card_actor_dvd_of_fixedPointFree
     {A Omega : Type*} [Group A] [Finite A] [Finite Omega] [MulAction A Omega]
     (hfree : ∀ a : A, a ≠ 1 → ∀ x : Omega, a • x = x → False) :
@@ -2648,27 +2647,6 @@ lemma xi91_representation_self_dual_hom_finrank_eq_one_of_fixed_conjugate
   rw [hchars, horth] at hscalar
   exact_mod_cast hscalar.symm
 
-lemma xi91_representation_exists_nonzero_hom_to_dual_of_fixed_conjugate
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V)
-    (hρ_irreducible : Representation.IsIrreducible ρ)
-    (hfixed : ρ.character = conjugateCharacter ρ.character) :
-    ∃ f : Representation.IntertwiningMap ρ ρ.dual, f ≠ 0 := by
-  classical
-  have hfinrank :
-      Module.finrank ℂ (Representation.IntertwiningMap ρ ρ.dual) = 1 :=
-    xi91_representation_self_dual_hom_finrank_eq_one_of_fixed_conjugate ρ hρ_irreducible hfixed
-  by_contra hzero
-  push Not at hzero
-  have hsub :
-      Subsingleton (Representation.IntertwiningMap ρ ρ.dual) := by
-    refine ⟨fun f g => ?_⟩
-    rw [hzero f, hzero g]
-  have hfinrank_zero :
-      Module.finrank ℂ (Representation.IntertwiningMap ρ ρ.dual) = 0 :=
-    Module.finrank_zero_of_subsingleton
-  omega
 
 lemma xi91_representation_flip_linHom_dual_comm
     {G V : Type*} [Group G] [Finite G]
@@ -2786,7 +2764,6 @@ lemma xi91_representation_trace_flip_linHom_dual_eq_character_inv_mul_inv
     _ = LinearMap.trace ℂ V (ρ (g⁻¹ * g⁻¹)) := by
           rw [← MonoidHom.map_mul]
     _ = ρ.character (g⁻¹ * g⁻¹) := rfl
-
 
 
 private noncomputable def xi91_classFunctionIndicator
@@ -5830,47 +5807,6 @@ private theorem xi91_odd_irreducible_self_conjugate_eq_principal
         hthetaIrr)).mp hindicatorZero
   exact hnotReal hthetaReal
 
-set_option maxHeartbeats 800000 in
-private theorem xi91_frobenius_induced_source_ne_principal
-    {H : Type u} [Group H] [Finite H]
-    (F D : Subgroup H) [F.Normal]
-    (hFrob : IsFrobeniusGroupWithKernelComplement F D)
-    (hDcyclic : IsCyclic D)
-    (hDgt : 1 < Nat.card D)
-    (theta : ClassFunction H)
-    (hthetaIrr : IsIrreducibleCharacterOnGroup theta)
-    (source : ClassFunction F)
-    (hthetaInduced : theta = inducedCF F source) :
-    source ≠ principalCharacter F := by
-  classical
-  intro hsourcePrincipal
-  let Q := H ⧸ F
-  let eQ : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
-  have hQcyclic : IsCyclic Q := eQ.isCyclic.mpr hDcyclic
-  letI : IsCyclic Q := hQcyclic
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  have hthetaKer : subgroupInKernel' theta F := by
-    rw [hthetaInduced, hsourcePrincipal]
-    intro y
-    change inducedCF F (principalCharacter F) y =
-      inducedCF F (principalCharacter F) 1
-    unfold inducedCF inducedClassFunction
-    congr 1
-    apply Finset.sum_congr rfl
-    intro g _hg
-    have hgy : g * (y : H) * g⁻¹ ∈ F :=
-      hFrob.normal.conj_mem (y : H) y.property g
-    simp [hgy, principalCharacter]
-  have hthetaDegreeOne : degree theta = 1 :=
-    huppert_XI_5_3_degree_one_of_quotient_commutative
-      F theta hthetaIrr hthetaKer
-  have hthetaDegreeD : degree theta = (Nat.card D : ℂ) := by
-    rw [hthetaInduced, hsourcePrincipal, degree_inducedClassFunction,
-      hFrob.isComplement'.symm.index_eq_card]
-    simp [degree, principalCharacter]
-  rw [hthetaDegreeD] at hthetaDegreeOne
-  have hDone : Nat.card D = 1 := by exact_mod_cast hthetaDegreeOne
-  omega
 
 set_option maxHeartbeats 800000 in
 

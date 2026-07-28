@@ -387,22 +387,6 @@ public theorem typeVDefinitionData_mf_eq_ambientDerived
   rcases hTypeV with ⟨U, W1, W2, hP, hU, _halt⟩
   exact typePDefinitionData_mf_eq_ambientDerived_of_eq_bot hP hU
 
-/-- A Type-P source witness with trivial `U`, together with one of the Type-V
-alternatives, is exactly a source Type-V witness. -/
-public theorem typeVDefinitionData_of_typeP_bot_alt
-    {G : Type u} [Group G] [Finite G]
-    {M MF W1 W2 : Subgroup G}
-    (hP : typePDefinitionData M MF ⊥ W1 W2)
-    (hAlt :
-      section16TISubset (section16NonidentityElements (MF : Set G)) ∨
-        (∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-          Nat.card W1 ∣ p.val - 1 ∧ IsCyclic (section10PPrimeCore p MF)) ∨
-          ∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-            Nat.card (section16PCoreIn p MF) = p.val ^ 3 ∧
-            Nat.card W1 ∣ p.val + 1 ∧
-            IsCyclic (section10PPrimeCore p MF)) :
-    typeVDefinitionData M MF :=
-  ⟨⊥, W1, W2, hP, rfl, hAlt⟩
 
 /-- If a Type-P source witness with `U = 1` gives `M_F = M'`, then any
 complement to `M_F` inside `M'` is trivial. -/
@@ -518,31 +502,6 @@ public theorem msChoiceSource_eq_ambientDerived_of_late
   {y | ∃ x : G, x ∈ section16NonidentityElements (X : Set G) ∧
     y ∈ section16NonidentityElements (elementCentralizerIn C x : Set G)}
 
-/-- If `M_F = M'`, then the centralizer-union notation
-`⋃ x ∈ M_F#, C_{M'}(x)#` is just `M'#`: every nonidentity element centralizes
-itself. -/
-public theorem section8CentralizerUnion_ambientDerived_mf_eq_of_typeP_bot
-    {G : Type u} [Group G] [Finite G]
-    {M MF W1 W2 : Subgroup G}
-    (hP : typePDefinitionData M MF ⊥ W1 W2) :
-    section8CentralizerUnion (ambientDerivedSubgroup M) MF =
-      section16NonidentityElements (ambientDerivedSubgroup M : Set G) := by
-  classical
-  have hMF_eq_D : MF = ambientDerivedSubgroup M :=
-    typePDefinitionData_mf_eq_ambientDerived_of_eq_bot hP rfl
-  ext y
-  constructor
-  · rintro ⟨_x, _hxMF, hyCent⟩
-    rcases hyCent with ⟨hyCent, hyne⟩
-    exact ⟨hyCent.1, hyne⟩
-  · intro hyD
-    refine ⟨y, ?_, ?_⟩
-    · simpa [hMF_eq_D] using hyD
-    · refine ⟨?_, hyD.2⟩
-      change y ∈ elementCentralizerIn (ambientDerivedSubgroup M) y
-      rw [elementCentralizerIn]
-      refine ⟨hyD.1, ?_⟩
-      simp [Subgroup.mem_centralizer_iff]
 
 /-- The literal source notation from PF `(8.10)`: `M_s`, `A_1(M)`, `A(M)`,
 and `A_0(M)`, including the Type I / Type `P` case split. -/
@@ -788,12 +747,6 @@ for `M'`. -/
         x ∈ section8CentralizerUnion (ambientDerivedSubgroup L) LF \ a1Set LF ∧
           section8FrobeniusGroupWithKernel M MF))
 
-/-- `L` supports `M` through the set `D`. -/
-@[expose] public def supportsSubgroup
-    {G : Type u} [Group G]
-    (_M L : Subgroup G)
-    (D : Set G) : Prop :=
-  ∃ x : G, x ∈ D ∧ Subgroup.centralizer ({x} : Set G) ≤ L
 
 /-- The support relation from PF `(8.14)`: `L` is maximal and contains
 `C_G(x)` for some `x ∈ D`. -/
@@ -804,34 +757,6 @@ for `M'`. -/
   L ∈ section9MaximalSubgroups G ∧
     ∃ x : G, x ∈ D ∧ Subgroup.centralizer ({x} : Set G) ≤ L
 
-/-- A placeholder for the detailed conclusion in PF `(8.13)(c)`. -/
-@[expose] public def supportConclusionData
-    {G : Type u} [Group G] [Finite G]
-    (_M L MF K U : Subgroup G)
-    (x : G) : Prop :=
-  L ∈ section9MaximalSubgroups G ∧
-    section16MFSubgroup L MF ∧
-    section16KUData L K U ∧
-    (section16TypeI L MF ∨ section16TypeII L MF) ∧
-    x ∈ section16ASet L U
-
-/-- A book-facing PF `(8.14)` package for one fixed `M`; its `R` argument is
-the local function `R_M`, not a global function shared across maximal subgroups. -/
-@[expose] public def notation_8_14_data
-    {G : Type u} [Group G] [Finite G]
-    (M : Subgroup G)
-    (A A0 A1 D tildeA tildeA0 tildeA1 : Set G)
-    (R : G → Subgroup G) : Prop :=
-  A1 ⊆ A ∧
-    A ⊆ A0 ∧
-    D ⊆ A0 ∧
-    (∀ x : G, x ∈ D → section16TheoremDComplement M x (R x)) ∧
-    tildeA = {y | ∃ a : G, a ∈ A ∧ y ∈ section16ConjugatesOfSetBySet
-      (section16LeftCosetSet a (R a)) Set.univ} ∧
-    tildeA0 = {y | ∃ a : G, a ∈ A0 ∧ y ∈ section16ConjugatesOfSetBySet
-      (section16LeftCosetSet a (R a)) Set.univ} ∧
-    tildeA1 = {y | ∃ a : G, a ∈ A1 ∧ y ∈ section16ConjugatesOfSetBySet
-      (section16LeftCosetSet a (R a)) Set.univ}
 
 /-- The literal PF `(8.14)` notation of `R_M(x)` and the associated tilde sets
 for one fixed maximal subgroup `M`.
@@ -1024,14 +949,6 @@ public theorem theorem_8_15_proof_data.to_source_data
       theorem_8_15_source_data M MF Ms Abook A0 A1 A D tildeA tildeA0 tildeA1 R :=
   And.left
 
-public theorem theorem_8_15_proof_data.hypothesis52Source
-    {G : Type u} [Group G] [Finite G]
-    {M MF Ms : Subgroup G}
-    {Abook A0 A1 A D tildeA tildeA0 tildeA1 : Set G}
-    {R : G → Subgroup G} :
-    theorem_8_15_proof_data M MF Ms Abook A0 A1 A D tildeA tildeA0 tildeA1 R →
-      section8Hypothesis52Source M MF Ms Abook A0 A1 :=
-  And.right
 
 public instance instCoeOutTheorem_8_15_proof_dataSource
     {G : Type u} [Group G] [Finite G]
@@ -1151,17 +1068,5 @@ public instance instCoeOutTheorem_8_18_source_dataNotation
   notation_8_10_source_data M MF Ms A A0 A1 ∧
     notation_8_14_source_data M A A0 A1 D tildeA tildeA0 tildeA1 R
 
-/-- Source-facing PF `(8.17)` data for the whole representative system, carrying
-the `(8.10)` and `(8.14)` notation for every `M_i`. -/
-@[expose] public def theorem_8_17_source_data
-    {G : Type u} [Group G] [Finite G]
-    (Ms : List (Subgroup G))
-    (MF Msigma : Subgroup G → Subgroup G)
-    (A A0 A1 D tildeA tildeA0 tildeA1 : Subgroup G → Set G)
-    (R : Subgroup G → G → Subgroup G) : Prop :=
-  representativeSystemData Ms ∧
-    ∀ M : Subgroup G, M ∈ Ms →
-      theorem_8_17_representative_source_data M (MF M) (Msigma M)
-        (A M) (A0 M) (A1 M) (D M) (tildeA M) (tildeA0 M) (tildeA1 M) (R M)
 
 end Section8

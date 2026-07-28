@@ -20,20 +20,6 @@ universe u
 
 /-! ## (13.16) -/
 
-/-- Peterfalvi `(13.16)`. -/
-@[expose] public def theorem_13_16_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-  Subgroup.normalizer (W1 : Set G) = subgroupCentralizerIn (⊤ : Subgroup G) W1 ∧
-    subgroupCentralizerIn (⊤ : Subgroup G) W1 = Q ⊔ W2
-
 
 private theorem section13_theorem_13_16_Q_sup_W2_le_centralizer_W1_of_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -127,32 +113,6 @@ private theorem section13_theorem_13_16_normalizer_W1_le_Tmax_of_sourceContext
       p q u v c d hsourceOrig hD_bot)
     hW1ne hW1sharp
 
-private theorem section13_theorem_13_16_normalizer_W1_le_Q_sup_V_sup_W2_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hNleT : Subgroup.normalizer (W1 : Set G) ≤ Tmax) :
-    Subgroup.normalizer (W1 : Set G) ≤ (Q ⊔ V) ⊔ W2 := by
-  rcases hsource with
-    ⟨_hcase, _hptypeS, hptypeT, _hp_card, _hq_card, _hC, _hD, _hc_card,
-      _hd_card, _hU_card, _hV_card, _hSfam, _hTfam, _hDadeS, _hDadeT,
-      _hnotationData⟩
-  rcases hptypeT with
-    ⟨_hQMF, _hW2cyc, _hW2ne, _hW2Hall, hTcomp, _hVleDer, _hVnil, _hW2norm,
-      hDercomp, _hQnotcyc, _hsecond, _hfit, _hfitDer, _hW1leQinf,
-      _hW1cyc, _hW1ne, _hcent, _hnormType⟩
-  have hT_eq : Tmax = ambientDerivedSubgroup Tmax ⊔ W2 := hTcomp.2.2.1
-  have hDer_eq : ambientDerivedSubgroup Tmax = Q ⊔ V := hDercomp.2.2.1
-  calc
-    Subgroup.normalizer (W1 : Set G) ≤ Tmax := hNleT
-    _ = ambientDerivedSubgroup Tmax ⊔ W2 := hT_eq
-    _ = (Q ⊔ V) ⊔ W2 := by rw [hDer_eq]
 
 private theorem section13_theorem_13_16_normalizer_W1_le_Q_sup_VinfN_sup_W2_of_sourceContext
     {G : Type u} [Group G] [Finite G]

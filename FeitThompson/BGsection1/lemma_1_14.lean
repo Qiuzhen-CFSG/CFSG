@@ -24,18 +24,5 @@ and
 `N_{G/M}(TM/M) = NM/M`.
 -/
 
-public theorem lemma_1_14_a {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime] (T M : Subgroup G)
-    [Fact (IsPGroup p (↥T))] (hM : M.Normal) (hcop : Nat.Coprime p (Nat.card M)) :
-    let q : G →* G ⧸ M := QuotientGroup.mk' M
-    Subgroup.centralizer ((T.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
-      (Subgroup.centralizer (T : Set G)).map q := by
-  simpa using centralizer_map_quotient_eq_map_centralizer (G := G) (p := p) T M hM hcop
-
-public theorem lemma_1_14_b {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime] (T M : Subgroup G)
-    [Fact (IsPGroup p (↥T))] (hM : M.Normal) (hcop : Nat.Coprime p (Nat.card M)) :
-    let q : G →* G ⧸ M := QuotientGroup.mk' M
-    Subgroup.normalizer (T.map q) = (Subgroup.normalizer T).map q := by
-  simpa using normalizer_map_quotient_eq_map_normalizer (G := G) (p := p) T M hM hcop
-
 
 end

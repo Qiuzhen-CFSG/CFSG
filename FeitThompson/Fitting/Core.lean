@@ -87,12 +87,6 @@ lemma comap_mem_normalNilpotentSubgroups {G : Type*} [Group G] {N : Subgroup G}
   rcases hN with ⟨hN_normal, hN_nilp⟩
   exact normal_nilpotent_comap hN_normal hN_nilp φ
 
-lemma mem_normalNilpotentSubgroups_of_comap {G : Type*} [Group G] {N : Subgroup G}
-    (φ : G ≃* G) (hN : N.comap φ.toMonoidHom ∈ normalNilpotentSubgroups G) :
-    N ∈ normalNilpotentSubgroups G := by
-  rw [← comap_comap_eq_id φ N]
-  apply comap_mem_normalNilpotentSubgroups
-  exact hN
 
 lemma comap_image_normalNilpotentSubgroups {G : Type*} [Group G] (φ : G ≃* G) :
     (fun N : Subgroup G => N.comap φ.toMonoidHom) '' (normalNilpotentSubgroups G) =

@@ -813,25 +813,6 @@ public theorem fixedPointSubgroup_eq_bot_of_fixedPointSubgroup_subgroup_eq_bot
     simpa [hUbot] using hmU
   · exact bot_le
 
-/-- The fixed subspace for a subgroup acting by restriction is the ambient
-representation's fixed subspace for that subgroup. -/
-public theorem fixedSubspace_subgroupOf_top_eq
-    {A M : Type u} [Group A] [Group M] [MulDistribMulAction A M]
-    (R : Subgroup A) {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p M] :
-    letI : MulDistribMulAction (↥R) M := MulDistribMulAction.compHom M R.subtype
-    (Representation.ofElementaryAbelianAction (A := R) (G := M) (p := p)).fixedSubspace
-        (⊤ : Subgroup R) =
-      (Representation.ofElementaryAbelianAction (A := A) (G := M) (p := p)).fixedSubspace R := by
-  classical
-  letI : MulDistribMulAction (↥R) M := MulDistribMulAction.compHom M R.subtype
-  ext x
-  rw [Representation.fixedSubspace, Representation.mem_invariants]
-  rw [Representation.fixedSubspace, Representation.mem_invariants]
-  constructor
-  · intro hx r
-    simpa [MulAction.compHom_smul_def] using hx ⟨r, by simp⟩
-  · intro hx r
-    simpa [MulAction.compHom_smul_def] using hx r.1
 
 /-- A nontrivial solvable group with no proper nontrivial normal invariant
 subgroups for the actor action is elementary abelian. -/
@@ -992,35 +973,6 @@ public theorem fixedPointSubgroup_card_eq_mul_quotient_action
       hNinv hsolvM hcopTop
   simpa [fixedPointSubgroup_top_subgroup_eq] using hfactor
 
-/-- The quotient factorization step for a compatible subgroup actor. -/
-public theorem fixedPointSubgroup_card_eq_mul_quotient_of_compatible_le_actor
-    {G M : Type u} [Group G] [Finite G] [Group M] [Finite M]
-    (A B : Subgroup G)
-    [MulDistribMulAction A M] [MulDistribMulAction B M]
-    {N : Subgroup M} [N.Normal]
-    (hBA : B ≤ A)
-    (hcompat : ∀ (b : B) (m : M), b • m = (⟨(b : G), hBA b.2⟩ : A) • m)
-    (hAinv : IsInvariant A M N)
-    (hsolvM : IsSolvable M)
-    (hcopA : Nat.Coprime (Nat.card A) (Nat.card M)) :
-    let hBinv : IsInvariant B M N :=
-      isInvariant_of_compatible_le_actor A B hBA hcompat hAinv
-    letI : IsInvariant B M N := hBinv
-    letI : MulDistribMulAction B (M ⧸ N) :=
-      quotientMulDistribMulAction (A := B) (G := M) N hBinv
-    Nat.card (fixedPointSubgroup (↥B) M) =
-      Nat.card (fixedPointSubgroup (↥B) N) *
-        Nat.card (fixedPointSubgroup (↥B) (M ⧸ N)) := by
-  let hBinv : IsInvariant B M N :=
-    isInvariant_of_compatible_le_actor A B hBA hcompat hAinv
-  letI : IsInvariant B M N := hBinv
-  letI : MulDistribMulAction B (M ⧸ N) :=
-    quotientMulDistribMulAction (A := B) (G := M) N hBinv
-  have hcopB : Nat.Coprime (Nat.card B) (Nat.card M) := by
-    exact Nat.Coprime.of_dvd_left (Subgroup.card_dvd_of_le hBA) hcopA
-  simpa [hBinv] using
-    fixedPointSubgroup_card_eq_mul_quotient_action
-      (A := B) (M := M) (N := N) hBinv hsolvM hcopB
 
 /-- Arithmetic lift for product identities whose factors split over a normal
 subgroup and quotient. -/

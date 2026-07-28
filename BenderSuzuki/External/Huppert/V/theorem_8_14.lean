@@ -56,129 +56,6 @@ private theorem hkt_local_sylow_map_eq_ambient_of_normalizer_top
     (show Pmap ≤ (S : Subgroup Q) from by simpa [Pmap, N] using hPmap_le_S)
   rw [hPmap_card, hP_card_S]
 
-/-- Huppert IV.6.2(b), first choice step: if the selected bad subgroup `U`
-is proper in the fixed Sylow subgroup, then a Sylow `q`-subgroup of `N_Q(U)`
-contains `U` and is strictly larger than `U`. -/
-private theorem hkt_exists_larger_sylow_of_normalizer_of_lt_sylow
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q) {U : Subgroup Q} (hUp : IsPGroup q U)
-    (hUS : U < (S : Subgroup Q)) :
-    ∃ P : Sylow q (Subgroup.normalizer (U : Set Q)),
-      U.subgroupOf (Subgroup.normalizer (U : Set Q)) ≤ (P : Subgroup _) ∧
-        Nat.card U < Nat.card (P : Subgroup (Subgroup.normalizer (U : Set Q))) := by
-  classical
-  let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
-  have hU_le_N : U ≤ N := by
-    simpa [N] using (Subgroup.le_normalizer (H := U))
-  let UN : Subgroup N := U.subgroupOf N
-  have hUNp : IsPGroup q UN := by
-    simpa [UN, N] using
-      hUp.of_equiv
-        ((Subgroup.subgroupOfEquivOfLe (H := U) (K := N) hU_le_N).symm)
-  obtain ⟨P, hUN_le_P⟩ := IsPGroup.exists_le_sylow (G := N) (p := q) hUNp
-  refine ⟨P, by simpa [UN, N] using hUN_le_P, ?_⟩
-  have hfact_lt :
-      Nat.factorization (Nat.card U) q < Nat.factorization (Nat.card N) q := by
-    simpa [N] using hkt_factorization_lt_ambient_normalizer_of_lt_sylow (S := S) hUS
-  have hcardU : Nat.card U = q ^ Nat.factorization (Nat.card U) q :=
-    section8_card_eq_prime_pow_factorization_of_isPGroup (G := Q) (p := q) hUp
-  have hcardP :
-      Nat.card (P : Subgroup N) = q ^ Nat.factorization (Nat.card N) q := by
-    rw [section8_card_eq_prime_pow_factorization_of_isPGroup
-      (G := N) (p := q) (H := (P : Subgroup N)) P.isPGroup']
-    rw [section8_factorization_card_sylow (G := N) (p := q) P]
-  calc
-    Nat.card U = q ^ Nat.factorization (Nat.card U) q := hcardU
-    _ < q ^ Nat.factorization (Nat.card N) q :=
-      (Nat.pow_lt_pow_iff_right (Nat.Prime.one_lt (Fact.out : Nat.Prime q))).2 hfact_lt
-    _ = Nat.card (P : Subgroup N) := hcardP.symm
-
-/-- A bad `q`-subgroup has a normalizer whose order is still divisible by `q`.
-This is the cardinal input for treating `N_Q(U)` itself as a proper recursive
-candidate in Huppert IV.6.2(c). -/
-private theorem hkt_dvd_card_normalizer_of_nontrivial_pSubgroup
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    {U : Subgroup Q} (hU_ne_bot : U ≠ ⊥) (hUp : IsPGroup q U) :
-    q ∣ Nat.card (Subgroup.normalizer (U : Set Q)) := by
-  classical
-  have hU_nontrivial : Nontrivial U :=
-    (Subgroup.nontrivial_iff_ne_bot (H := U)).2 hU_ne_bot
-  rcases hUp.nontrivial_iff_card.mp hU_nontrivial with ⟨n, hn_pos, hcardU⟩
-  have hqU : q ∣ Nat.card U := by
-    rw [hcardU]
-    exact dvd_pow_self q hn_pos.ne'
-  exact hqU.trans (Subgroup.card_dvd_of_le (Subgroup.le_normalizer (H := U)))
-
-/-- Huppert IV.6.2(c), center bridge.  If the chosen Sylow subgroup `P` of
-`N_Q(U)` maps into the fixed ambient Sylow subgroup `S`, then `Z(S)` maps into
-the intrinsic center of `P`.  The point is the source calculation
-`S ∩ N_Q(U) = P`: the intersection is a `q`-subgroup of `N_Q(U)` containing
-the Sylow subgroup `P`, hence equals `P`. -/
-private theorem huppert_IV_6_2_c_centerIn_sylow_le_centerIn_local_sylow_map_of_le_ambient
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q) {U : Subgroup Q} (hUS : U ≤ (S : Subgroup Q))
-    (P : Sylow q (Subgroup.normalizer (U : Set Q)))
-    (hPmap_le_S :
-      (P : Subgroup (Subgroup.normalizer (U : Set Q))).map
-          (Subgroup.normalizer (U : Set Q)).subtype ≤ (S : Subgroup Q)) :
-    centerIn (G := Q) (S : Subgroup Q) ≤
-      (centerIn (G := Subgroup.normalizer (U : Set Q))
-        (P : Subgroup (Subgroup.normalizer (U : Set Q)))).map
-          (Subgroup.normalizer (U : Set Q)).subtype := by
-  classical
-  let N : Subgroup Q := Subgroup.normalizer (U : Set Q)
-  let K : Subgroup N := (S : Subgroup Q).comap N.subtype
-  have hKp : IsPGroup q K := by
-    simpa [K, N] using S.isPGroup'.comap_of_injective N.subtype N.subtype_injective
-  have hP_le_K : (P : Subgroup N) ≤ K := by
-    intro x hxP
-    exact hPmap_le_S (Subgroup.mem_map.mpr ⟨x, hxP, rfl⟩)
-  have hK_eq_P : K = (P : Subgroup N) := P.is_maximal' hKp hP_le_K
-  intro z hz
-  have hzS : z ∈ (S : Subgroup Q) := hz.1
-  have hzCentS : z ∈ Subgroup.centralizer ((S : Subgroup Q) : Set Q) := hz.2
-  have hzN : z ∈ N := by
-    rw [Subgroup.mem_normalizer_iff]
-    intro u
-    constructor
-    · intro hu
-      have hzu : z * u = u * z :=
-        (Subgroup.mem_centralizer_iff.mp hzCentS u (hUS hu)).symm
-      have hcalc : z * u * z⁻¹ = u := by
-        calc
-          z * u * z⁻¹ = (z * u) * z⁻¹ := by rw [mul_assoc]
-          _ = (u * z) * z⁻¹ := by rw [hzu]
-          _ = u := by simp
-      simpa [hcalc] using hu
-    · intro hu
-      let w : Q := z * u * z⁻¹
-      have hwS : w ∈ (S : Subgroup Q) := hUS hu
-      have hzw : z * w = w * z :=
-        (Subgroup.mem_centralizer_iff.mp hzCentS w hwS).symm
-      have hu_eq : u = w := by
-        calc
-          u = z⁻¹ * w * z := by simp [w, mul_assoc]
-          _ = w := by
-            calc
-              z⁻¹ * w * z = z⁻¹ * (w * z) := by rw [mul_assoc]
-              _ = z⁻¹ * (z * w) := by rw [← hzw]
-              _ = w := by simp
-      rw [hu_eq]
-      exact hu
-  let zN : N := ⟨z, hzN⟩
-  have hzK : zN ∈ K := by
-    simpa [K, zN, Subgroup.mem_subgroupOf] using hzS
-  have hzP : zN ∈ (P : Subgroup N) := by
-    simpa [hK_eq_P] using hzK
-  refine Subgroup.mem_map.mpr ⟨zN, ?_, rfl⟩
-  refine ⟨hzP, ?_⟩
-  change zN ∈ Subgroup.centralizer ((P : Subgroup N) : Set N)
-  rw [Subgroup.mem_centralizer_iff]
-  intro y hyP
-  apply Subtype.ext
-  have hyS : ((y : N) : Q) ∈ (S : Subgroup Q) :=
-    hPmap_le_S (Subgroup.mem_map.mpr ⟨y, hyP, rfl⟩)
-  exact Subgroup.mem_centralizer_iff.mp hzCentS ((y : N) : Q) hyS
 
 /-- A single `q`-element generates a `q`-group.  This tiny generator lemma is
 used in the Huppert IV.6.2(f)--(r) p-core absorption argument, where one tests
@@ -363,23 +240,6 @@ private theorem hkt_pCore_sup_zpowers_comm_mod_core_of_generator
   have hwN : ⁅w, n⁆ ∈ N :=
     (QuotientGroup.eq_one_iff (N := N) (x := ⁅w, n⁆)).1 hmk
   simpa [N] using hwN
-/-- If `U = O_q(Q)`, then the lifted core inside `N_Q(U)` maps to the ambient
-`q`-core. -/
-private theorem hkt_subgroupOf_normalizer_pCore_map_eq_of_eq_pCore
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ}
-    {U : Subgroup Q} (hU_eq_core : U = pCore q Q) :
-    (U.subgroupOf (Subgroup.normalizer (U : Set Q))).map
-        (Subgroup.normalizer (U : Set Q)).subtype =
-      pCore q Q := by
-  have hU_le_N : U ≤ Subgroup.normalizer (U : Set Q) :=
-    Subgroup.le_normalizer (H := U)
-  calc
-    (U.subgroupOf (Subgroup.normalizer (U : Set Q))).map
-        (Subgroup.normalizer (U : Set Q)).subtype =
-        U ⊓ Subgroup.normalizer (U : Set Q) := by
-          rw [Subgroup.subgroupOf_map_subtype]
-    _ = U := inf_eq_left.2 hU_le_N
-    _ = pCore q Q := hU_eq_core
 
 /-- A `q`-element can be conjugated into any fixed Sylow `q`-subgroup. -/
 private theorem hkt_exists_conj_mem_sylow_of_isPElement
@@ -1147,13 +1007,6 @@ public theorem thompson_fixedPointFree_conjugation_nilpotent_subgroup
     exact Subtype.ext (by simpa using hbot)
   exact thompson_fixedPointFree_automorphism_subgroup_nilpotent A hA_nontrivial hA_fixed
 
-/-- Huppert V.8.14, automorphism-subgroup Thompson fixed-point-free theorem. -/
-public theorem huppert_V_8_14_thompson_fixedPointFree_automorphism_subgroup_nilpotent
-    {Q : Type u} [Group Q] [Finite Q] (A : Subgroup (MulAut Q))
-    (hA_nontrivial : ∃ φ : A, φ ≠ 1)
-    (hfixed : ∀ φ : A, φ ≠ 1 → ∀ q : Q, (φ : MulAut Q) q = q → q = 1) :
-    Group.IsNilpotent Q :=
-  thompson_fixedPointFree_automorphism_subgroup_nilpotent (Q := Q) A hA_nontrivial hfixed
 
 /-- Huppert V.8.14, Peterfalvi/Suzuki-shaped conjugation interface. -/
 public theorem huppert_V_8_14_thompson_fixedPointFree_conjugation_nilpotent_subgroup

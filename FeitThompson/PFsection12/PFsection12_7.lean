@@ -36,19 +36,6 @@ universe u v
 
 /-! ## (12.7) -/
 
-/-- The source-data package for PF `(12.7)` implies the public Frobenius
-conclusion. -/
-public theorem theorem_12_7_of_source_data
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF : Subgroup G)
-    (hsrc : theorem_12_7_source_data M MF)
-    (hmax : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hTypeI : Section8.typeIDefinitionData M MF) :
-    Section7.frobeniusWithKernel M MF := by
-  by_contra hnot
-  rcases hsrc.1 hmax hMF hTypeI hnot with ⟨K', P0, p, h128⟩
-  exact False.elim (hsrc.2 K' P0 p h128)
 
 /-- Peterfalvi `(12.7)` Theorem.
 
@@ -366,43 +353,6 @@ public theorem theorem_12_17_isTISubsetWithNormalizer_puncturedSubgroupSet_of_ce
     · intro a b ha hb
       simp
   exact (Section2.proposition_2_3 A L hAne).mpr hHyp
-
-
-public theorem theorem_12_17_fusion_puncturedSubgroupSet_of_notation_8_10
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (L H : Subgroup G)
-    (hNotation :
-      Section8.notation_8_10_source_data L H H
-        (typeIASet L H) (typeIASet L H) (Section8.a1Set H)) :
-    ∀ ⦃a b : G⦄,
-      a ∈ Section7.puncturedSubgroupSet H →
-      b ∈ Section7.puncturedSubgroupSet H →
-      Section2.conjugateIn a b →
-        Section2.conjugateInSubgroup L a b := by
-  classical
-  rcases hNotation with ⟨hLmax, hMF, hMs, hA1, hCases⟩
-  have hNotation' :
-      Section8.notation_8_10_source_data L H H
-        (typeIASet L H) (typeIASet L H) (Section8.a1Set H) :=
-    ⟨hLmax, hMF, hMs, hA1, hCases⟩
-  have hWeak :
-      ∀ x y : G, x ∈ typeIASet L H → y ∈ typeIASet L H →
-        section16ConjugateInSubgroup ⊤ x y →
-          section16ConjugateInSubgroup L x y :=
-    ((Section8.theorem_8_13 (G := G) L H H
-      (typeIASet L H) (typeIASet L H) (Section8.a1Set H)
-      (typeIASet L H)) inferInstance hNotation' (Or.inl rfl)).1
-  have hHL : H ≤ L := hMF.1.1
-  intro a b ha hb hconj
-  have haA : a ∈ typeIASet L H := by
-    exact nonidentity_kernel_subset_typeIASet L H hHL ha
-  have hbA : b ∈ typeIASet L H := by
-    exact nonidentity_kernel_subset_typeIASet L H hHL hb
-  have hconj16 : section16ConjugateInSubgroup (⊤ : Subgroup G) a b := by
-    rcases hconj with ⟨g, hg⟩
-    exact ⟨g, by simp, by simpa [Section2.conjBy] using hg.symm⟩
-  rcases hWeak a b haA hbA hconj16 with ⟨g, hgL, hgb⟩
-  exact ⟨⟨g, hgL⟩, by simpa [Section2.conjBy] using hgb.symm⟩
 
 
 public theorem theorem_12_17_frobenius_kernel_centralizer_contradiction

@@ -4157,45 +4157,4 @@ public theorem section14_theorem_14_11_2_source_bridge
     hctx h143 h1410 heta hKV hβMτ hψτ h111 heq
 
 
-/-- Proof placeholder for `theorem_14_11_2_statement`. -/
-public theorem theorem_14_11_2
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (M K V : Subgroup G)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d e : ℕ)
-    (η : Fin q → Fin p → Section1.ClassFunction G)
-    (βMτ ψτ : Section1.ClassFunction G)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          section14EtaData Smax Tmax W W1 W2 p q η →
-            K ≠ V →
-              βMτ = τM βM →
-                ψτ = τM₁ ψ →
-                  e = K.relIndex M →
-                    theorem_14_11_2_data M K η βMτ ψτ e := by
-  exact section14_theorem_14_11_2_source_bridge
-    Smax Tmax W W1 W2 P Q U C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL M K V Mfam τM τM₁ ψ βM
-    p q u v c d e η βMτ ψτ
-
 end Section14

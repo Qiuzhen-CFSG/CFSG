@@ -71,35 +71,6 @@ public theorem free_apply_freeBasis_pair
       freeBasis K G alpha (a, g * h) := by
   convert free_apply_freeBasis K G alpha g (a, h) using 1; rfl
 
-/-- Every orbit of the canonical basis index of a free representation has the
-cardinality of the represented group. -/
-public theorem freeBasis_orbit_natCard
-    (G alpha : Type*) [Group G] [Finite G] (x : alpha × G) :
-    letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
-    Nat.card (MulAction.orbit G x) = Nat.card G := by
-  letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
-  classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Finite (MulAction.orbit G x) := by
-    simpa [Set.finite_coe_iff] using
-      (Finite.finite_mulAction_orbit (M := G) x)
-  letI : Fintype (MulAction.orbit G x) := Fintype.ofFinite _
-  letI : Fintype (MulAction.stabilizer G x) := Fintype.ofFinite _
-  have hstabilizer : MulAction.stabilizer G x = ⊥ := by
-    rcases x with ⟨i, h⟩
-    ext g
-    rw [MulAction.mem_stabilizer_iff, Subgroup.mem_bot]
-    change (i, g * h) = (i, h) ↔ g = 1
-    constructor
-    · intro hg
-      apply mul_right_cancel (b := h)
-      simpa using congrArg Prod.snd hg
-    · intro hg
-      subst g
-      rw [one_mul]
-  have horbit :=
-    MulAction.card_orbit_mul_card_stabilizer_eq_card_group G x
-  simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
 
 /-- A representation equivalent to a finite-rank free representation has a
 basis permuted freely by the represented group. -/
@@ -170,6 +141,5 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
       MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
     simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
 end Representation
-
 
 

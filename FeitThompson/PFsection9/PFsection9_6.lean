@@ -1424,86 +1424,6 @@ public theorem quotient_W1_fixedPointSubgroup_eq_W2_map_of_hypothesis_9_2_sec9
     simpa [hCW1] using hfix_eq
   simpa [H0MF] using hquot_fixed_eq.trans (by rw [hfixMF_eq])
 
-public theorem case_9_7_a_quotient_W1_fixedPointSubgroup_eq_W2_map_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q a : ℕ) :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      ∃ hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G),
-        letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
-        ∃ hnormal : (H0.subgroupOf MF).Normal,
-          letI : (H0.subgroupOf MF).Normal := hnormal
-          ∃ hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF),
-            letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-              quotientMulDistribMulAction (A := W1) (G := MF)
-                (H0.subgroupOf MF) hH0_inv_W1
-            fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF) =
-              (W2.subgroupOf MF).map (QuotientGroup.mk' (H0.subgroupOf MF)) := by
-  intro hcase
-  rcases hcase with
-    ⟨h92, _hH0MF, _hC, _hpprime, _hqprime, hpData, _hdecomp,
-      _hcard, _hadiv, _hinj⟩
-  rcases hpData with ⟨_hp, _hp_eq, hho, _h96⟩
-  rcases hho with
-    ⟨_hH0_le_MF, hMF_le_M, hH0_normal_M, hnormal, _hrest⟩
-  have h92Full := h92
-  have hMF := h92Full.mf
-  rcases hMF.1 with ⟨hMF_le_M', hMF_normal_M, _hMFnil, _hMFhall⟩
-  have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer hMF_le_M').1 hMF_normal_M
-  rcases h92Full.typePDefinitionData with
-    ⟨_hMFsource, _hW1cyc, _hW1ne, ⟨hW1_le_M, _hW1hall⟩,
-      _hcompMW1, _hUleD, _hUnil, _hW1normU, _hcompDU, _hMFnotcyc,
-      _hM2le, _hFitEq, _hFitLeD, _hW2le, _hW2cyc, _hW2ne,
-      _hcentW1, _hnormX⟩
-  have hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G) :=
-    hW1_le_M.trans hM_norm_MF
-  refine ⟨hW1_norm_MF, ?_⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
-  have hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF) :=
-    subgroupOf_MF_isInvariant_of_subgroupOf_M_normal_sec9 M MF W1 H0
-      hMF_le_M hW1_le_M hH0_normal_M hW1_norm_MF
-  refine ⟨hnormal, hH0_inv_W1, ?_⟩
-  exact quotient_W1_fixedPointSubgroup_eq_W2_map_of_hypothesis_9_2_sec9
-    M MF U W1 W2 H0 q h92 hnormal hH0_inv_W1
-
-public theorem case_9_7_a_quotient_W1_fixedPointSubgroup_isCyclic_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 H0 C : Subgroup G)
-    (p q a : ℕ) :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      ∃ hW1_norm_MF : W1 ≤ Subgroup.normalizer (MF : Set G),
-        letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
-        ∃ hnormal : (H0.subgroupOf MF).Normal,
-          letI : (H0.subgroupOf MF).Normal := hnormal
-          ∃ hH0_inv_W1 : IsInvariant W1 MF (H0.subgroupOf MF),
-            letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-              quotientMulDistribMulAction (A := W1) (G := MF)
-                (H0.subgroupOf MF) hH0_inv_W1
-            IsCyclic (fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF)) := by
-  intro hcase
-  rcases case_9_7_a_quotient_W1_fixedPointSubgroup_eq_W2_map_sec9
-      M MF U W1 W2 H0 C p q a hcase with
-    ⟨hW1_norm_MF, hnormal, hH0_inv_W1, hfixed_eq⟩
-  letI : Subgroup.Normalizes W1 MF := ⟨hW1_norm_MF⟩
-  letI : (H0.subgroupOf MF).Normal := hnormal
-  letI : MulDistribMulAction W1 (MF ⧸ H0.subgroupOf MF) :=
-    quotientMulDistribMulAction (A := W1) (G := MF)
-      (H0.subgroupOf MF) hH0_inv_W1
-  rcases hcase.1.typePDefinitionData with
-    ⟨_hMFsource, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD,
-      _hUnil, _hW1normU, _hcompDU, _hMFnotcyc, _hM2le, _hFitEq, _hFitLeD,
-      hW2le, hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
-  have hW2_le_MF : W2 ≤ MF := hW2le.trans inf_le_left
-  have hW2sub_cyclic : IsCyclic (W2.subgroupOf MF) :=
-    (Subgroup.subgroupOfEquivOfLe (H := W2) (K := MF) hW2_le_MF).isCyclic.mpr hW2cyc
-  refine ⟨hW1_norm_MF, hnormal, hH0_inv_W1, ?_⟩
-  letI : IsCyclic (W2.subgroupOf MF) := hW2sub_cyclic
-  rw [hfixed_eq]
-  exact isCyclic_of_surjective
-    (f := (QuotientGroup.mk' (H0.subgroupOf MF)).subgroupMap (W2.subgroupOf MF))
-    (MonoidHom.subgroupMap_surjective (QuotientGroup.mk' (H0.subgroupOf MF))
-      (W2.subgroupOf MF))
 
 private theorem theorem_9_6_typeII_cardinality_of_chief_factor_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -3251,33 +3171,6 @@ private theorem theorem_9_6_typeIIIIV_quotient_cardinality_payload_sec9
     ⟨hH0_le_MF, hMF_le_M, hH0_normal_M, hH0_normal_MF, hH0lt,
       helem, htypeIIIIVData⟩ hIIIIV hnormal hH0_inv hnotTop
 
-private theorem theorem_9_6_typeIIIIV_quotient_cardinality_source_bridge_sec9
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    (M MF U W1 W2 H0 C Cprime : Subgroup G)
-    (T : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (S : Finset (Section1.ClassFunction M))
-    (p : Nat.Primes) :
-    notation_9_5_data M MF U W1 W2 H0 C Cprime T S →
-      hoReductionData M MF U W2 H0 p →
-        (section16TypeIII M MF ∨ section16TypeIV M MF) →
-          (∃ hnormal : (H0.subgroupOf MF).Normal,
-            letI : (H0.subgroupOf MF).Normal := hnormal
-            Nat.card {x : MF ⧸ H0.subgroupOf MF //
-              ∀ h : MF, QuotientGroup.mk' (H0.subgroupOf MF) h = x →
-                ∀ w : G, w ∈ W1 → ⁅w, (h : G)⁆ ∈ H0} = Nat.card W2) ∧
-          Nat.card (MF ⧸ H0.subgroupOf MF) = Nat.card W2 ^ Nat.card W1 := by
-  intro h95 hp hIIIIV
-  rcases h95 with
-    ⟨h92, _hp95, _hC, _hBarU, _hCprimeC, _hCprimeEq, _hDade, _hS⟩
-  rcases hp with
-    ⟨hH0_le_MF, hMF_le_M, hH0_normal_M, hH0_normal_MF, hH0lt,
-      helem, htypeIIIIVData⟩
-  rcases theorem_9_6_typeIIIIV_quotient_cardinality_payload_sec9
-      M MF U W1 W2 H0 p h92
-      ⟨hH0_le_MF, hMF_le_M, hH0_normal_M, hH0_normal_MF, hH0lt,
-        helem, htypeIIIIVData⟩ hIIIIV hH0_normal_MF with
-    ⟨hWbar2, hHbar⟩
-  exact ⟨⟨hH0_normal_MF, hWbar2⟩, hHbar⟩
 
 public theorem theorem_9_6_typeIIIIV_cardinality_source_core_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

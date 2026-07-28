@@ -24,37 +24,6 @@ universe u
 
 /-! ## (13.3) -/
 
-/-- Peterfalvi `(13.3)`. -/
-@[expose] public def theorem_13_3_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-    hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    (∀ (ω : ℕ → ℕ → Section1.ClassFunction W)
-      (η : ℕ → ℕ → Section1.ClassFunction G)
-      (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-      (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-      (μsum : ℕ → Section1.ClassFunction Smax)
-      (νsum : ℕ → Section1.ClassFunction Tmax)
-      (δ δ' : ℕ → ℤ)
-      (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G),
-        hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-          ω η μ ν μsum νsum δ δ' σ →
-          theorem_13_3_signNormalizationFor p q δ δ' ∧
-            ∃ τ1 : Section1.ClassFunction Smax →ₗ[ℂ]
-                Section1.ClassFunction G,
-              Section6.coherentExtension Sfam τS τ1 ∧
-                theorem_13_3_characterOutputFor
-                  Smax P C Sfam τ1 p q u μsum η) ∧
-    (¬ theorem_13_10_hypothesis Smax P C Sfam p q u →
-      C = ⊥ ∧ case_9_7_b_sourceDataForSection13 Smax P U W1 W2 C p q u ∧
-        u = (p ^ q - 1) / (p - 1))
-
 
 private theorem theorem_13_3_isMulCommutative_sup_of_le_centralizer
     {G : Type u} [Group G]

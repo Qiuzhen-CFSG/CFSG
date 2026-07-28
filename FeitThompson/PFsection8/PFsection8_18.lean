@@ -31,7 +31,6 @@ universe w
         (Disjoint tildeA1S tildeAT ∨ Disjoint tildeA1T tildeAS)
 
 
-
 open scoped Pointwise
 
 private theorem theorem_8_18_conjugates_univ_eq_section14ConjugacyClosure
@@ -1266,13 +1265,6 @@ private theorem theorem_8_18_section16HasPrimeOrder_conjBy
   rcases hA with ⟨p, hcardA⟩
   exact ⟨p, by simpa [section11_card_conjBy (G := G) A g] using hcardA⟩
 
-private theorem theorem_8_18_section16HasPrimeOrder_conj_back
-    {G : Type u} [Group G] [Finite G]
-    {A : Subgroup G} (g : G)
-    (hA : section16HasPrimeOrder (A.conjBy g)) :
-    section16HasPrimeOrder A := by
-  rcases hA with ⟨p, hcardA⟩
-  exact ⟨p, by simpa [section11_card_conjBy (G := G) A g] using hcardA⟩
 
 public theorem theorem_8_18_typeFData_conj_back
     {G : Type u} [Group G] [Finite G]
@@ -1849,96 +1841,6 @@ private theorem theorem_8_18_support_witness_unique
   intro L hL
   exact (huniq L hL).trans hT_eq_L0.symm
 
-private theorem theorem_8_18_support_witness_unique_left
-    {G : Type u} [Group G] [Finite G]
-    {S T L SF TF SS TT : Subgroup G}
-    {AS A0S A1S DS tildeAS tildeA0S tildeA1S : Set G}
-    {AT A0T A1T DT tildeAT tildeA0T tildeA1T : Set G}
-    {RS RT : G → Subgroup G}
-    (hData : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT)
-    (hSupp : supportsSubgroupSource S L DS) :
-    ∃ x : G, x ∈ DS ∧
-      L ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) ∧
-      ∀ K : Subgroup G,
-        K ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) →
-          K = L := by
-  rcases hData with ⟨_hNonconj, _hS10, _hSmem, _hT10, _hTmem, hS14, _hT14⟩
-  rcases hS14 with
-    ⟨_hA1A, _hAA0, _hD, _hRbot, hUnique, _hReq,
-      _htildeA, _htildeA0, _htildeA1⟩
-  rcases hSupp with ⟨hLmax, x, hxD, hxCentL⟩
-  have hLmem :
-      L ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) :=
-    ⟨hLmax, hxCentL⟩
-  rcases hUnique x hxD with ⟨L0, _hL0, huniq⟩
-  have hL_eq_L0 : L = L0 := huniq L hLmem
-  refine ⟨x, hxD, hLmem, ?_⟩
-  intro K hK
-  exact (huniq K hK).trans hL_eq_L0.symm
-
-private theorem theorem_8_18_support_witness_mem_A1_left_of_support
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {S T L SF TF SS TT : Subgroup G}
-    {AS A0S A1S DS tildeAS tildeA0S tildeA1S : Set G}
-    {AT A0T A1T DT tildeAT tildeA0T tildeA1T : Set G}
-    {RS RT : G → Subgroup G}
-    (hData : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT)
-    (hSupp : supportsSubgroupSource S L DS) :
-    ∃ x : G, x ∈ A1S ∧
-      L ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) := by
-  rcases hData with ⟨hNonconj, hS10, hSmem, hT10, hTmem, hS14, hT14⟩
-  rcases hS14 with
-    ⟨_hA1A, _hAA0, hDS, _hRbot, _hUnique, _hReq,
-      _htildeA, _htildeA0, _htildeA1⟩
-  rcases theorem_8_18_support_witness_unique_left
-      (G := G) (L := L)
-      (hData := ⟨hNonconj, hS10, hSmem, hT10, hTmem,
-        ⟨_hA1A, _hAA0, hDS, _hRbot, _hUnique, _hReq,
-          _htildeA, _htildeA0, _htildeA1⟩,
-        hT14⟩)
-      hSupp with
-    ⟨x, hxD, hLmem, _huniqL⟩
-  have h13S :=
-    (theorem_8_13 (G := G) S SF SS AS A0S A1S A0S)
-      (inferInstance : IsMinCE G) hS10 (Or.inr rfl)
-  have hxD' : x ∈ section8DSet S A0S := by
-    simpa [hDS] using hxD
-  exact ⟨x, h13S.2.1 hxD', hLmem⟩
-
-private theorem theorem_8_18_support_witness_mem_A1_left
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {S T SF TF SS TT : Subgroup G}
-    {AS A0S A1S DS tildeAS tildeA0S tildeA1S : Set G}
-    {AT A0T A1T DT tildeAT tildeA0T tildeA1T : Set G}
-    {RS RT : G → Subgroup G}
-    (hData : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT)
-    (hSupp : supportsSubgroupSource S T DS) :
-    ∃ x : G, x ∈ A1S ∧
-      T ∈ section9MaximalSubgroupsContaining (Subgroup.centralizer ({x} : Set G)) := by
-  rcases hData with ⟨hNonconj, hS10, hSmem, hT10, hTmem, hS14, hT14⟩
-  rcases hS14 with
-    ⟨_hA1A, _hAA0, hDS, _hRbot, _hUnique, _hReq,
-      _htildeA, _htildeA0, _htildeA1⟩
-  rcases theorem_8_18_support_witness_unique
-      (G := G)
-      (hData := ⟨hNonconj, hS10, hSmem, hT10, hTmem,
-        ⟨_hA1A, _hAA0, hDS, _hRbot, _hUnique, _hReq,
-          _htildeA, _htildeA0, _htildeA1⟩,
-        hT14⟩)
-      hSupp with
-    ⟨x, hxD, hTmem, _huniqT⟩
-  have h13S :=
-    (theorem_8_13 (G := G) S SF SS AS A0S A1S A0S)
-      (inferInstance : IsMinCE G) hS10 (Or.inr rfl)
-  have hxD' : x ∈ section8DSet S A0S := by
-    simpa [hDS] using hxD
-  exact ⟨x, h13S.2.1 hxD', hTmem⟩
 
 private theorem theorem_8_18_support_witness_type_mem_left
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -2267,37 +2169,6 @@ private theorem theorem_8_18_support_conclusion_conj_back_mem_AT_of_typeI
     (theorem_8_18_support_conclusion_conj_back_mem_centralizerUnion
       (G := G) hTF hSupp)
 
-private theorem theorem_8_18_support_conclusion_conj_back_mem_AT_of_typeII_case
-    {G : Type u} [Group G] [Finite G]
-    {T TF LF : Subgroup G} {AT : Set G} {x g : G}
-    (hTF : section16MFSubgroup T TF)
-    (hTmem : notation_8_10_source_membership_data T TF AT)
-    (hTypeII : typeIIDefinitionData T TF)
-    (hLF : section16MFSubgroup (T.conjBy g) LF)
-    (hx :
-      x ∈ section8CentralizerUnion (ambientDerivedSubgroup (T.conjBy g)) LF \
-        a1Set LF) :
-    g⁻¹ * x * g ∈ AT := by
-  have hTFg : section16MFSubgroup (T.conjBy g) (TF.conjBy g) :=
-    theorem_8_18_mfSubgroup_conjBy (G := G) g hTF
-  have hLF_eq : LF = TF.conjBy g :=
-    theorem_8_18_mfSubgroup_eq (G := G) hLF hTFg
-  have hxUnion :
-      x ∈ section8CentralizerUnion
-        (ambientDerivedSubgroup (T.conjBy g)) (TF.conjBy g) := by
-    simpa [hLF_eq] using hx.1
-  have hxBack :=
-    theorem_8_18_section8CentralizerUnion_conj_back
-      (G := G) (C := ambientDerivedSubgroup (T.conjBy g))
-      (X := TF.conjBy g) (g := g) hxUnion
-  have hD :
-      ambientDerivedSubgroup (T.conjBy g) =
-        (ambientDerivedSubgroup T).conjBy g :=
-    theorem_8_18_ambientDerivedSubgroup_conjBy (G := G) T g
-  have hxOriginal :
-      g⁻¹ * x * g ∈ section8CentralizerUnion (ambientDerivedSubgroup T) TF := by
-    simpa [hD, Subgroup.conjBy_inv] using hxBack
-  exact hTmem.2 (g⁻¹ * x * g) hTypeII hxOriginal
 
 private theorem theorem_8_18_support_conj_implies_tilde_inter_of_right_typeI
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -2349,44 +2220,6 @@ private theorem theorem_8_18_support_conj_implies_tilde_inter_of_right_typeI
         (G := G) (hData := hData') (a := g⁻¹ * x * g) (g := g) hxATback
     simpa [mul_assoc] using hxTilde
 
-private theorem theorem_8_18_support_conj_implies_tilde_inter_of_right_typeII_case
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {S T SF TF SS TT : Subgroup G}
-    {AS A0S A1S DS tildeAS tildeA0S tildeA1S : Set G}
-    {AT A0T A1T DT tildeAT tildeA0T tildeA1T : Set G}
-    {RS RT : G → Subgroup G}
-    (hData : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT)
-    (hTypeII : typeIIDefinitionData T TF)
-    {g x : G} {LF : Subgroup G}
-    (hxA1S : x ∈ A1S)
-    (hSuppData : supportConclusionDataSource S SF S A0S x (T.conjBy g) LF)
-    (hxTypeII :
-      x ∈ section8CentralizerUnion (ambientDerivedSubgroup (T.conjBy g)) LF \
-        a1Set LF) :
-    (tildeA1S ∩ tildeAT).Nonempty := by
-  rcases hData with ⟨hNonconj, hS10, hSmem, hT10, hTmem, hS14, hT14⟩
-  rcases hT10 with ⟨_hTmax, hTF, _hTT, _hA1T, _hTcases⟩
-  rcases hSuppData with
-    ⟨_hTgmax, hLF, _hUnique, _hSemiT, _hSemiC, _hCoprime, _hCases⟩
-  have hData' : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT :=
-    ⟨hNonconj, hS10, hSmem, ⟨_hTmax, hTF, _hTT, _hA1T, _hTcases⟩,
-      hTmem, hS14, hT14⟩
-  have hxATback : g⁻¹ * x * g ∈ AT :=
-    theorem_8_18_support_conclusion_conj_back_mem_AT_of_typeII_case
-      (G := G) (T := T) (TF := TF) (LF := LF)
-      (AT := AT) (x := x) (g := g)
-      hTF hTmem hTypeII hLF hxTypeII
-  refine ⟨x, ?_, ?_⟩
-  · exact theorem_8_18_mem_tildeA1S_of_mem_A1S (G := G) hData' hxA1S
-  · have hxTilde :
-        g * (g⁻¹ * x * g) * g⁻¹ ∈ tildeAT :=
-      theorem_8_18_mem_tildeAT_of_conj_mem_AT
-        (G := G) (hData := hData') (a := g⁻¹ * x * g) (g := g) hxATback
-    simpa [mul_assoc] using hxTilde
 
 private theorem theorem_8_18_order_coprime_of_prime_disjoint
     {G : Type u} [Group G] [Finite G]
@@ -2605,29 +2438,6 @@ private theorem theorem_8_18_right_theorem_8_12_source_data_of_diff
         have hA_eq_A1 : AT = A1T := (hLate (Or.inr (Or.inr hTypeV))).2
         simpa [hA_eq_A1] using hxAT))
 
-private theorem theorem_8_18_centralizer_le_right_of_inter
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {S T SF TF SS TT : Subgroup G}
-    {AS A0S A1S DS tildeAS tildeA0S tildeA1S : Set G}
-    {AT A0T A1T DT tildeAT tildeA0T tildeA1T : Set G}
-    {RS RT : G → Subgroup G}
-    (hData : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT)
-    {x : G} (hx : x ∈ A1S ∩ AT) :
-    Subgroup.centralizer ({x} : Set G) ≤ T := by
-  have hData' : theorem_8_18_source_data S T SF TF SS TT
-      AS A0S A1S DS tildeAS tildeA0S tildeA1S
-      AT A0T A1T DT tildeAT tildeA0T tildeA1T RS RT := hData
-  rcases hData with ⟨_hNonconj, _hS10, _hSmem, hT10, _hTmem, _hS14, _hT14⟩
-  rcases theorem_8_18_prime_consequences_of_nonconj (G := G) hData' hx with
-    ⟨_hcop, hxNotA1T⟩
-  rcases theorem_8_18_right_theorem_8_12_source_data_of_diff
-      (G := G) hT10 hx.2 hxNotA1T with
-    ⟨U, hSrc12⟩
-  exact theorem_8_12_centralizer_le_of_source_diff
-    (G := G) (M := T) (MF := TF) (U := U) (Ms := TT)
-    (A := AT) (A0 := A0T) (A1 := A1T) hSrc12 ⟨hx.2, hxNotA1T⟩
 
 private theorem theorem_8_18_unique_overgroup_right_of_inter
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

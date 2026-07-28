@@ -294,9 +294,6 @@ public theorem hInter_mul_normalizer_mem_MOfSet {G : Type u} [Group G]
 
 /-! ## Peterfalvi (2.1) notation -/
 
-@[expose] public def cyclicProductSubgroup {G : Type u} [Group G]
-    (H : Subgroup G) (g : G) : Subgroup G :=
-  H ⊔ Subgroup.zpowers g
 
 @[expose] public def subgroupCosetByElement {G : Type u} [Group G]
     (H : Subgroup G) (g : G) : Set G :=

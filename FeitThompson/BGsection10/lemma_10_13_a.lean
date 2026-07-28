@@ -1621,20 +1621,6 @@ private theorem section10_centralizer_restrict_sup_inf
       (Subgroup.mem_sup_right ⟨hyY, hyP⟩)
   · exact sup_le hA₀leCS hYinf_le_CP
 
-omit [Finite G] [IsMinCE G] in
-private theorem section10_lemma_10_13_restrict_centralizer
-    {p : Nat.Primes} {A P A₀ Y : Subgroup G}
-    (_hAleP : A ≤ P)
-    (hZleY : section10OmegaOneCenter p P ≤ Y)
-    (hYleCS : Y ≤ subgroupCentralizerIn P A)
-    (hYcyc : IsCyclic Y) (hdisj : Disjoint A₀ Y)
-    (hCeqS : subgroupCentralizerIn P A = A₀ ⊔ Y) :
-    section10OmegaOneCenter p P ≤ Y ∧
-      Y ≤ subgroupCentralizerIn P A ∧
-      IsCyclic Y ∧
-      Disjoint A₀ Y ∧
-      subgroupCentralizerIn P A = A₀ ⊔ Y := by
-  exact ⟨hZleY, hYleCS, hYcyc, hdisj, hCeqS⟩
 
 omit [IsMinCE G] in
 private theorem section10_local_prime_order_subgroups_card_rank_two
@@ -2221,14 +2207,6 @@ private theorem section10_lemma_10_13_transitivity_from_split
     change Q₁.conjBy (k : G) = Q₂ at hkval
     exact hkval.symm⟩
 
-omit [Finite G] [IsMinCE G] in
-private theorem section10_lemma_10_13_centralizer_restrict_from_sylow
-    {_p : Nat.Primes} {A P A₀ Y : Subgroup G}
-    (_hA₀leP : A₀ ≤ P)
-    (_hYleCS : Y ≤ subgroupCentralizerIn P A)
-    (hCeqS : subgroupCentralizerIn P A = A₀ ⊔ Y) :
-    subgroupCentralizerIn P A = A₀ ⊔ Y := by
-  exact hCeqS
 
 public theorem section10_lemma_10_13_structural_package
     {p : Nat.Primes} {A P A₀ : Subgroup G}

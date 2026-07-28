@@ -19,16 +19,6 @@ universe u
 
 /-! ## (13.14) -/
 
-/-- Peterfalvi `(13.14)`. -/
-@[expose] public def theorem_13_14_statement
-    (p q x : ℕ) : Prop :=
-  Nat.Prime p → Nat.Prime q → Odd p → Odd q →
-  Odd ((p ^ q - 1) / (p - 1)) ∧
-    (p % q = 1 → q ∣ (p ^ q - 1) / (p - 1)) ∧
-    (p % q ≠ 1 →
-      Nat.Coprime ((p ^ q - 1) / (p - 1)) (p - 1) ∧
-        (0 < x → x ∣ (p ^ q - 1) / (p - 1) → x % q = 1))
-
 
 /-! ## Arithmetic helpers for (13.14) -/
 

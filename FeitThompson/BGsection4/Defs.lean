@@ -40,11 +40,6 @@ open scoped FixedPoints
     (n : ℕ) : Set (Subgroup R) :=
   { A : Subgroup R | A ∈ selfCentralizingAbelianSubgroups R ∧ n ≤ generatorRank A }
 
-/-- The normal abelian subgroups of `R` that are maximal among all abelian subgroups of `R`. -/
-@[expose] public def maximalNormalAbelianSubgroups (R : Type*) [Group R] : Set (Subgroup R) :=
-  { A : Subgroup R |
-      A.Normal ∧ IsMulCommutative A ∧
-        ∀ B : Subgroup R, A ≤ B → IsMulCommutative B → B = A }
 
 /-- An internal direct product decomposition of `G` into `H` and `K`. -/
 @[expose] public def IsInternalDirectProduct {G : Type*} [Group G] (H K : Subgroup G) : Prop :=

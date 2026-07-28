@@ -90,22 +90,6 @@ private theorem section13_conjBy_inv (H : Subgroup G) (a : G) :
       section8_conjBy_conjBy H a a⁻¹
     _ = H := by simpa using section8_conjBy_one (G := G) H
 
-omit [IsMinCE G] in
-private theorem section13_conjBy_inv' (H : Subgroup G) (a : G) :
-    (H.conjBy a⁻¹).conjBy a = H := by
-  simpa using section13_conjBy_inv (G := G) H a⁻¹
-
-omit [Finite G] [IsMinCE G] in
-private theorem section13_top_conjBy (a : G) :
-    (⊤ : Subgroup G).conjBy a = ⊤ := by
-  ext x
-  constructor
-  · intro _hx
-    simp
-  · intro _hx
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    refine ⟨a⁻¹ * x * a, by simp, ?_⟩
-    simp [MulAut.conj_apply, mul_assoc]
 
 omit [IsMinCE G] in
 private theorem section13_mem_normalizer_of_conjBy_eq
@@ -130,17 +114,6 @@ private theorem section13_mem_normalizer_of_conjBy_eq
       simp [mul_assoc]
     simpa [hginv] using hx_inv_conj
 
-omit [Finite G] [IsMinCE G] in
-private theorem section13_le_conjBy_inv_of_conjBy_le
-    {H K : Subgroup G} {a : G} (hHK : H.conjBy a ≤ K) :
-    H ≤ K.conjBy a⁻¹ := by
-  intro x hx
-  rw [Subgroup.conjBy, Subgroup.mem_map]
-  refine ⟨a * x * a⁻¹, ?_, ?_⟩
-  · apply hHK
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    exact ⟨x, hx, by simp [MulAut.conj_apply]⟩
-  · simp [mul_assoc]
 
 omit [Finite G] [IsMinCE G] in
 private theorem section13_maximal_conjBy

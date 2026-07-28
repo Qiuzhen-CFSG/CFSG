@@ -237,31 +237,6 @@ private lemma claim14_s_mem_centralizer_P
   exact pair.1.property
 
 
-private lemma claim14_Z1_le_centralizer_P
-    {G : Type*} [Group G] (P Z1 : Subgroup G) (s t : G)
-    (hsC : s ∈ Subgroup.centralizer (P : Set G))
-    (htC : t ∈ Subgroup.centralizer (P : Set G))
-    (hZ1 : Z1 = Subgroup.zpowers (s * t)) :
-    Z1 ≤ Subgroup.centralizer (P : Set G) := by
-  rw [hZ1]
-  exact Subgroup.zpowers_le.mpr
-    ((Subgroup.centralizer (P : Set G)).mul_mem hsC htC)
-
-private lemma claim14_isPGroup_of_le_centralizer_Z1
-    {G : Type*} [Group G] [Finite G]
-    (Z1 R1 : Subgroup G)
-    (hCZ1 : ∃ n : ℕ, Nat.card (Subgroup.centralizer (Z1 : Set G)) = 3 ^ n)
-    (hR1_le : R1 ≤ Subgroup.centralizer (Z1 : Set G)) :
-    IsPGroup 3 R1 := by
-  obtain ⟨n, hcard⟩ := hCZ1
-  have hcentralizer_p :
-      IsPGroup 3 (Subgroup.centralizer (Z1 : Set G)) :=
-    IsPGroup.of_card hcard
-  have hsub_p :=
-    hcentralizer_p.to_subgroup
-      (R1.subgroupOf (Subgroup.centralizer (Z1 : Set G)))
-  exact hsub_p.of_equiv (Subgroup.subgroupOfEquivOfLe hR1_le)
-
 /-- The inverse image of `A₃` under the three-point normalizer action is the
 normal 3-subgroup lying one factor of three above the action kernel. -/
 private lemma claim14_exists_a3_preimage

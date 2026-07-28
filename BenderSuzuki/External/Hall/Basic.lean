@@ -442,10 +442,6 @@ so `z` is repeated `n-1` times. -/
     {G : Type u} [Group G] (n : ℕ) (u z : G) : G :=
   iteratedInverseFirstCommutator (n - 1) u z
 
-/-- Strong closure of `B` in `H` with respect to the ambient group `G`. -/
-@[expose] public def StronglyClosedIn
-    {G : Type u} [Group G] (H B : Subgroup G) : Prop :=
-  B ≤ H ∧ ∀ g : G, H ⊓ rightConjugate B g ≤ B
 
 /--
 Weak closure of `Q` in `P` with respect to the ambient group `G`: every right
@@ -514,14 +510,5 @@ public theorem weaklyClosedIn_normalizer_le_normalizer
   simpa using (Subgroup.normalizer (Q : Set G)).inv_mem hninvQ
 end External
 end BenderSuzuki
-
-
-
-
-
-
-
-
-
 
 

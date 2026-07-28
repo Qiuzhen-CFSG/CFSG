@@ -259,48 +259,6 @@ public theorem appendixCCubic_adjoinRoot_norm_two_sub_root_eq_one
   simp
   ring_nf
 
-/-- A rootless source cubic has a root in `F_{p^3}` with norm one. This is the
-formal root-lifting part of the `q = 3` branch of Lemma C.2. -/
-public theorem appendixCCubic_exists_root_norm_one_in_q3
-    {c : ZMod p} (hrootless : ∀ x : ZMod p, (appendixCCubic p c).eval x ≠ 0) :
-    ∃ a : appendixCField p 3,
-      ((appendixCCubic p c).map (algebraMap (ZMod p) (appendixCField p 3))).eval a = 0 ∧
-      Algebra.norm (ZMod p) (S := appendixCField p 3) a = 1 := by
-  let f := appendixCCubic p c
-  have hfmonic : f.Monic := by
-    simpa [f] using appendixCCubic_monic (p := p) c
-  have hirr : Irreducible f := by
-    simpa [f] using appendixCCubic_irreducible_of_no_zmod_root (p := p) hrootless
-  haveI : Fact (Irreducible f) := ⟨hirr⟩
-  haveI : Module.Finite (ZMod p) (AdjoinRoot f) := hfmonic.finite_adjoinRoot
-  have hfinrank_adjoin : Module.finrank (ZMod p) (AdjoinRoot f) = 3 := by
-    change Module.finrank (ZMod p) (Polynomial (ZMod p) ⧸ Ideal.span {f}) = 3
-    rw [finrank_quotient_span_eq_natDegree]
-    simpa [f] using appendixCCubic_natDegree (p := p) c
-  have hfinrank_field : Module.finrank (ZMod p) (appendixCField p 3) = 3 :=
-    GaloisField.finrank p (n := 3) (by norm_num)
-  have hnonempty : Nonempty (AdjoinRoot f →ₐ[ZMod p] appendixCField p 3) := by
-    apply FiniteField.nonempty_algHom_of_finrank_dvd
-    rw [hfinrank_adjoin, hfinrank_field]
-  rcases hnonempty with ⟨φ⟩
-  haveI : Finite (AdjoinRoot f) := Module.finite_of_finite (ZMod p)
-  haveI : Fintype (AdjoinRoot f) := Fintype.ofFinite (AdjoinRoot f)
-  haveI : Fintype (appendixCField p 3) := Fintype.ofFinite (appendixCField p 3)
-  have hcardNat : Nat.card (AdjoinRoot f) = p ^ 3 := by
-    rw [@Module.natCard_eq_pow_finrank (ZMod p) (AdjoinRoot f)]
-    rw [hfinrank_adjoin, Nat.card_zmod]
-  have hcard : Fintype.card (AdjoinRoot f) = Fintype.card (appendixCField p 3) := by
-    rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card]
-    rw [hcardNat, GaloisField.card p (n := 3) (by norm_num)]
-  have hbij : Function.Bijective φ := by
-    rw [Fintype.bijective_iff_injective_and_card]
-    exact ⟨RingHom.injective φ.toRingHom, hcard⟩
-  let e : AdjoinRoot f ≃ₐ[ZMod p] appendixCField p 3 := AlgEquiv.ofBijective φ hbij
-  refine ⟨e (AdjoinRoot.root f), ?_, ?_⟩
-  · have hroot := AdjoinRoot.aeval_algHom_eq_zero f e.toAlgHom
-    simpa [Polynomial.aeval_def, Polynomial.eval_map, f] using hroot
-  · rw [Algebra.norm_eq_of_algEquiv e (AdjoinRoot.root f)]
-    simpa [f] using appendixCCubic_adjoinRoot_norm_root_eq_one (p := p) c
 
 /-- A rootless source cubic has a root in `F_{p^3}` lying in the Appendix C
 set `E`: both `a` and `2 - a` have norm one. -/
@@ -360,20 +318,6 @@ public theorem appendixCCubic_exists_root_mem_appendixCE_in_q3
     simpa [f] using
       appendixCCubic_adjoinRoot_norm_two_sub_root_eq_one (p := p) c
 
-/-- Combined source-cubic package for the `q = 3` branch of Lemma C.2:
-there is a parameter whose cubic has no prime-field root and has a norm-one
-root in `F_{p^3}`. -/
-public theorem exists_appendixCCubic_no_zmod_root_and_root_norm_one_in_q3
-    (hp2 : p ≠ 2) :
-    ∃ c : ZMod p,
-      (∀ x : ZMod p, (appendixCCubic p c).eval x ≠ 0) ∧
-        ∃ a : appendixCField p 3,
-          ((appendixCCubic p c).map
-            (algebraMap (ZMod p) (appendixCField p 3))).eval a = 0 ∧
-          Algebra.norm (ZMod p) (S := appendixCField p 3) a = 1 := by
-  rcases exists_appendixCCubic_without_zmod_root (p := p) hp2 with ⟨c, hrootless⟩
-  exact ⟨c, hrootless,
-    appendixCCubic_exists_root_norm_one_in_q3 (p := p) hrootless⟩
 
 /-- The root in `F_{p^3}` produced from a rootless source cubic is not `1`,
 because otherwise the source cubic would have the prime-field root `1`. -/
@@ -418,41 +362,6 @@ public theorem appendixC_prime_odd_ne_three_five_le
   have hq3' : q = 3 := by omega
   exact hq3 hq3'
 
-/-- The elementary arithmetic tail in the `q ≥ 5` branch of Lemma C.2:
-the source lower bound `p^(q-2) - p^(q/2)` is already at least `2`. -/
-public theorem appendixC_lemma_C_2_arithmetic_lower_bound
-    [Fact q.Prime] (hoddq : Odd q) (hq3 : q ≠ 3) :
-    2 ≤ p ^ (q - 2) - p ^ (q / 2) := by
-  have hp : Nat.Prime p := Fact.out
-  have hp2 : 2 ≤ p := hp.two_le
-  have hq5 : 5 ≤ q :=
-    appendixC_prime_odd_ne_three_five_le (q := q) hoddq hq3
-  rcases hoddq with ⟨k, hk⟩
-  have hk2 : 2 ≤ k := by omega
-  have hqdiv : q / 2 = k := by
-    rw [hk]
-    omega
-  have hqsub : q - 2 = 2 * k - 1 := by omega
-  have hExpSucc : q / 2 + 1 ≤ q - 2 := by
-    rw [hqdiv, hqsub]
-    omega
-  have hp_pos : 0 < p := hp.pos
-  have hpow_succ_le : p ^ (q / 2 + 1) ≤ p ^ (q - 2) :=
-    Nat.pow_le_pow_right hp_pos hExpSucc
-  have htwo_mul_le : 2 * p ^ (q / 2) ≤ p ^ (q / 2 + 1) := by
-    rw [pow_succ]
-    simpa [mul_comm] using Nat.mul_le_mul_right (p ^ (q / 2)) hp2
-  have htwo_mul_le_left : 2 * p ^ (q / 2) ≤ p ^ (q - 2) :=
-    htwo_mul_le.trans hpow_succ_le
-  have hpow_ge_two : 2 ≤ p ^ (q / 2) := by
-    have hqdiv_pos : 0 < q / 2 := by
-      rw [hqdiv]
-      omega
-    calc
-      2 ≤ p := hp2
-      _ = p ^ 1 := by rw [pow_one]
-      _ ≤ p ^ (q / 2) := Nat.pow_le_pow_right hp_pos hqdiv_pos
-  omega
 
 /-- The remaining character-counting estimate in the `q ≥ 5` branch of
 Lemma C.2. This uses the norm-character count formula: the trivial-trivial

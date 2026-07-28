@@ -165,22 +165,6 @@ private theorem section9_c93_conjNormal_ker_not_isCyclic
     isCyclic_of_card_dvd_prime hquot_card_dvd
   exact not_isCyclic_of_three_le_generatorRank_of_cyclic_quotient hAgen hquotcyc
 
-omit [IsMinCE G] in
-private theorem section9_c93_conjNormal_ker_groupRank_at_least_two
-    {p : ℕ} [Fact p.Prime] {R : Type*} [Group R] [Finite R]
-    {D A : Subgroup R} [D.Normal] [IsElementaryAbelian p D]
-    (hpodd : p ≠ 2) (hDcard : Nat.card D = p ^ 2) (hAp : IsPGroup p A)
-    (hAgen : 3 ≤ generatorRank A) :
-    2 ≤ groupRank (((MulAut.conjNormal (H := D)).comp A.subtype).ker) := by
-  let φ : A →* MulAut D := (MulAut.conjNormal (H := D)).comp A.subtype
-  change 2 ≤ groupRank φ.ker
-  have hkerp : IsPGroup p φ.ker := hAp.to_subgroup φ.ker
-  letI : Fact (IsPGroup p φ.ker) := ⟨hkerp⟩
-  exact
-    section9_c93_groupRank_at_least_two_of_noncyclic_pgroup
-      (p := p) φ.ker hpodd
-      (section9_c93_conjNormal_ker_not_isCyclic
-        (p := p) (D := D) (A := A) hDcard hAp hAgen)
 
 omit [IsMinCE G] in
 private theorem section9_c93_conjNormal_ker_image_groupRank_at_least_two

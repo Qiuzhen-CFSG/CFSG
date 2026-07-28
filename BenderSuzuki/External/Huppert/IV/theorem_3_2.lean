@@ -27,30 +27,5 @@ namespace External
 universe u
 
 
-/-- Huppert IV.3.2: `G'(q)` is the least normal subgroup with abelian
-`q`-group quotient. -/
-public theorem huppert_IV_3_2_abelian_p_residual
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime] :
-    letI : (hktAbelianPResidual q Q).Normal :=
-      hktAbelianPResidual_normal (Q := Q) (q := q)
-    IsPGroup q (Q ⧸ hktAbelianPResidual q Q) ∧
-      IsMulCommutative (Q ⧸ hktAbelianPResidual q Q) ∧
-        ∀ N : Subgroup Q, ∀ hN : N.Normal,
-          (letI : N.Normal := hN; IsPGroup q (Q ⧸ N)) →
-            (letI : N.Normal := hN; IsMulCommutative (Q ⧸ N)) →
-              hktAbelianPResidual q Q ≤ N := by
-  classical
-  constructor
-  · exact hktAbelianPResidual_quotient_isPGroup (Q := Q) (q := q)
-  constructor
-  · exact hktAbelianPResidual_quotient_isMulCommutative (Q := Q) (q := q)
-  · intro N hN hquot_p hquot_comm
-    letI : N.Normal := hN
-    have hcomm : commutator Q ≤ N :=
-      (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).mp hquot_comm
-    exact hktAbelianPResidual_le
-      (Q := Q) (q := q) (N := N) hcomm
-      (hktPResidual_le (Q := Q) (q := q) N hN hquot_p)
-
 end External
 end BenderSuzuki

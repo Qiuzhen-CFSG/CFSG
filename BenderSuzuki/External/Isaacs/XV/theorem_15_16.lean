@@ -61,38 +61,6 @@ private theorem isaacs_15_16_fixedSpace_of_freePermutationBasis
     _ = H0.index * Module.finrank K rho.invariants := by
       rw [Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
         rho b hb]
-private theorem isaacs_15_16_of_freePermutationBasis
-    {G K V : Type*} [Group G] [Finite G] [Field K]
-    [AddCommGroup V] [Module K V]
-    (rho : Representation K G V)
-    {iota : Type} [Fintype iota] [MulAction G iota] [IsCancelSMul G iota]
-    (b : Module.Basis iota K V)
-    (hb : forall g : G, forall i : iota, rho g (b i) = b (g • i)) :
-    (exists (jota : Type) (instFintype : Fintype jota)
-        (instAction : MulAction G jota),
-      letI : Fintype jota := instFintype
-      letI : MulAction G jota := instAction
-      exists c : Module.Basis jota K V,
-        (forall g : G, forall i : jota, rho g (c i) = c (g • i)) ∧
-          (forall i : jota, Nat.card (MulAction.orbit G i) = Nat.card G)) ∧
-      (forall H0 : Subgroup G,
-        Module.finrank K (Representation.fixedSubspace rho H0) =
-          H0.index * Module.finrank K rho.invariants) := by
-  classical
-  letI : Fintype G := Fintype.ofFinite G
-  have horbit (i : iota) :
-      Nat.card (MulAction.orbit G i) = Nat.card G := by
-    letI : Finite (MulAction.orbit G i) := by
-      simpa [Set.finite_coe_iff] using
-        (Finite.finite_mulAction_orbit (M := G) i)
-    letI : Fintype (MulAction.orbit G i) := Fintype.ofFinite _
-    letI : Fintype (MulAction.stabilizer G i) := Fintype.ofFinite _
-    have hcard :=
-      MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
-    simpa [Nat.card_eq_fintype_card, IsCancelSMul.stabilizer_eq_bot i] using hcard
-  constructor
-  · exact ⟨iota, inferInstance, inferInstance, b, hb, horbit⟩
-  · exact isaacs_15_16_fixedSpace_of_freePermutationBasis rho b hb
 private theorem isaacs_15_16_of_repEquiv_free
     {G K V : Type*} [Group G] [Finite G] [Field K]
     [AddCommGroup V] [Module K V]

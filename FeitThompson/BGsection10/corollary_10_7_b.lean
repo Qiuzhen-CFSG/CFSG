@@ -70,53 +70,6 @@ private theorem section10_commutatorAction_range_toMulAut_eq
     · exact ⟨a, rfl⟩
     · simp [ρ, MulDistribMulAction.toMulAut_apply]
 
-private theorem section10_complement_commutatorAction_eq_top
-    {p : Nat.Primes} (P : Sylow p.val G) {V : Subgroup G}
-    (hVcomp : section10ComplementInNormalizer P V) :
-    let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
-    let Psub : Subgroup N := (P : Subgroup G).subgroupOf N
-    let Vsub : Subgroup N := V.subgroupOf N
-    commutatorAction (A := Vsub) (G := Psub) = ⊤ := by
-  classical
-  let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
-  let Psub : Subgroup N := (P : Subgroup G).subgroupOf N
-  let Vsub : Subgroup N := V.subgroupOf N
-  rcases hVcomp with ⟨hVleN, _hcomp⟩
-  have hP_le_N : (P : Subgroup G) ≤ N := by
-    simpa [N] using (Subgroup.le_normalizer : (P : Subgroup G) ≤
-      Subgroup.normalizer (((P : Subgroup G) : Set G)))
-  have hcomm_ambient : ⁅(P : Subgroup G), V⁆ = (P : Subgroup G) :=
-    (corollary_10_7_a (G := G) P ⟨hVleN, _hcomp⟩).2
-  have hPmap : Psub.map N.subtype = (P : Subgroup G) := by
-    simpa [Psub, N] using
-      (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (P : Subgroup G)) (K := N) hP_le_N)
-  have hcomm_map :
-      (⁅Psub, Vsub⁆).map N.subtype = ⁅(P : Subgroup G), V⁆ := by
-    simpa [Psub, Vsub, N] using
-      (commutator_subgroupOf_map_eq (S := N) (H := V) (R := (P : Subgroup G))
-        hVleN hP_le_N)
-  have hlocal_comm : ⁅Psub, Vsub⁆ = Psub := by
-    apply (Subgroup.map_subtype_inj (H := N)).mp
-    calc
-      (⁅Psub, Vsub⁆).map N.subtype = ⁅(P : Subgroup G), V⁆ := hcomm_map
-      _ = (P : Subgroup G) := hcomm_ambient
-      _ = Psub.map N.subtype := hPmap.symm
-  haveI : Psub.Normal := by
-    simpa [Psub, N] using
-      (Subgroup.normal_in_normalizer (H := (P : Subgroup G)))
-  have hVnormP : Vsub ≤ Subgroup.normalizer (Psub : Set N) := by
-    exact Subgroup.le_normalizer_of_normal
-  have hcomm_action_map :
-      (commutatorAction (A := Vsub) (G := Psub)).map Psub.subtype = ⁅Psub, Vsub⁆ := by
-    simpa using commutatorAction_subgroup_conj_map_eq_commutator Psub Vsub hVnormP
-  apply (Subgroup.map_subtype_inj (H := Psub)).mp
-  calc
-    (commutatorAction (A := Vsub) (G := Psub)).map Psub.subtype = ⁅Psub, Vsub⁆ :=
-      hcomm_action_map
-    _ = Psub := hlocal_comm
-    _ = (⊤ : Subgroup Psub).map Psub.subtype := by
-      simpa [MonoidHom.range_eq_map] using
-        (Psub.range_subtype : Psub.subtype.range = Psub).symm
 
 omit [Finite G] [IsMinCE G] in
 public theorem section10_omega1_map_subtype_le
@@ -286,16 +239,6 @@ public theorem section10_subgroupOf_conjBy_map_subtype
     · change (m : G) * z * (m : G)⁻¹ = x
       simpa [MulAut.conj_apply, mul_assoc] using hzx
 
-omit [Finite G] [IsMinCE G] in
-public theorem section10_normal_pSubgroup_le_sylow
-    {H : Type*} [Group H] {p : ℕ} [Fact p.Prime]
-    {K : Subgroup H} [K.Normal] (hKp : IsPGroup p K) (S : Sylow p H) :
-    K ≤ (S : Subgroup H) := by
-  have hsup_p : IsPGroup p ((S : Subgroup H) ⊔ K : Subgroup H) :=
-    S.isPGroup'.to_sup_of_normal_right hKp
-  have hsup_eq : (S : Subgroup H) ⊔ K = (S : Subgroup H) :=
-    S.is_maximal' hsup_p le_sup_left
-  exact le_sup_right.trans (le_of_eq hsup_eq)
 
 omit [Finite G] [IsMinCE G] in
 private theorem section10_nilpotencyClassLe_of_card_le_p_cubed

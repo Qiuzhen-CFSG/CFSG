@@ -45,50 +45,6 @@ private theorem conjugateCosetPiece_subset_Hg {G : Type u} [Group G]
     exact H.mul_mem (H.mul_mem hxH hcH) hgx
   · simp [conjBy, mul_assoc]
 
-private theorem conjugateCosetPiece_eq_of_left_mul_centralizer {G : Type u} [Group G]
-    {H : Subgroup G} {g c x : G} (hcC : c ∈ centralizerIn H g) :
-    conjugateCosetPiece H g (x * c) = conjugateCosetPiece H g x := by
-  have hccomm : g * c = c * g :=
-    mem_elementCentralizer_commute (Subgroup.mem_inf.mp hcC).2
-  have hci : g * c⁻¹ = c⁻¹ * g := by
-    calc
-      g * c⁻¹ = c⁻¹ * (c * g) * c⁻¹ := by simp
-      _ = c⁻¹ * (g * c) * c⁻¹ := by rw [← hccomm]
-      _ = c⁻¹ * g := by simp [mul_assoc]
-  have hcg : c * g * c⁻¹ = g := by
-    calc
-      c * g * c⁻¹ = (c * g) * c⁻¹ := by simp [mul_assoc]
-      _ = (g * c) * c⁻¹ := by rw [hccomm]
-      _ = g := by simp [mul_assoc]
-  ext z
-  constructor
-  · rintro ⟨s, hs, rfl⟩
-    rcases hs with ⟨u, huC, rfl⟩
-    refine ⟨(c * u * c⁻¹) * g, ?_, ?_⟩
-    · exact ⟨c * u * c⁻¹,
-        (centralizerIn H g).mul_mem ((centralizerIn H g).mul_mem hcC huC)
-          ((centralizerIn H g).inv_mem hcC), rfl⟩
-    · have hinner : c * u * g * c⁻¹ = (c * u * c⁻¹) * g := by
-        calc
-          c * u * g * c⁻¹ = c * u * (g * c⁻¹) := by simp [mul_assoc]
-          _ = c * u * (c⁻¹ * g) := by rw [hci]
-          _ = (c * u * c⁻¹) * g := by simp [mul_assoc]
-      have := congrArg (fun t : G => x * t * x⁻¹) hinner
-      simpa [conjBy, mul_assoc] using this
-  · rintro ⟨s, hs, rfl⟩
-    rcases hs with ⟨u, huC, rfl⟩
-    refine ⟨(c⁻¹ * u * c) * g, ?_, ?_⟩
-    · exact ⟨c⁻¹ * u * c,
-        (centralizerIn H g).mul_mem
-          ((centralizerIn H g).mul_mem ((centralizerIn H g).inv_mem hcC) huC) hcC,
-        rfl⟩
-    · have hinner : c * (c⁻¹ * u * c) * g * c⁻¹ = u * g := by
-        calc
-          c * (c⁻¹ * u * c) * g * c⁻¹ = u * (c * g * c⁻¹) := by
-            simp [mul_assoc]
-          _ = u * g := by rw [hcg]
-      have := congrArg (fun t : G => x * t * x⁻¹) hinner
-      simpa [conjBy, mul_assoc] using this.symm
 
 private theorem exists_multiple_card_pow_eq_self {G : Type u} [Group G]
     (H : Subgroup G) (g : G) (hcoprime : Nat.Coprime (orderOf g) (Nat.card H)) :

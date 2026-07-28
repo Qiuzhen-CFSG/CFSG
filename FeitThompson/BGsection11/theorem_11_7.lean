@@ -74,20 +74,6 @@ private theorem section11_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
       exact hM.ne_top (top_le_iff.mp htop_le_M)
   exact (hM.le_iff_eq hnorm_proper).mp hM_le_norm
 
-private theorem section11_malpha_le_msigma
-    {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :
-    section10Malpha M ≤ section10Msigma M := by
-  intro x hx
-  rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-  exact Subgroup.mem_map.mpr ⟨y, (theorem_10_2_c hM).1 hy, rfl⟩
-
-private theorem section11_subgroupCentralizerIn_malpha_eq_bot_of_msigma_eq_bot
-    {M P0 : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
-    (hCσ : subgroupCentralizerIn (section10Msigma M) P0 = ⊥) :
-    subgroupCentralizerIn (section10Malpha M) P0 = ⊥ := by
-  apply le_bot_iff.mp
-  intro x hx
-  exact hCσ ▸ ⟨section11_malpha_le_msigma hM hx.1, hx.2⟩
 
 omit [IsMinCE G] in
 private theorem section11_isPiSubgroup_singleton_of_isPGroup
@@ -238,45 +224,6 @@ public theorem section11_isComplement_of_isHall_compl
   exact Subgroup.isComplement'_of_coprime hcard_mul
     (section11_coprime_card_of_isHall_compl hN hE)
 
-private theorem section11_exists_msigma_complement_containing_A
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) :
-    ∃ E : Subgroup M,
-      (section10MsigmaSubgroup M).IsComplement' E ∧ A.subgroupOf M ≤ E := by
-  classical
-  letI : MulDistribMulAction Unit M := {
-    smul := fun _ x => x
-    one_smul := fun _ => rfl
-    mul_smul := fun _ _ _ => rfl
-    smul_mul := fun _ _ _ => rfl
-    smul_one := fun _ => rfl }
-  have hAinv : IsInvariant Unit M (A.subgroupOf M) := by
-    refine ⟨?_⟩
-    intro _ x
-    simp
-  have hsolvM : IsSolvable M :=
-    IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr h11.maximal.1)
-  have hcop : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
-  have hAsub_p : IsPGroup p.val (A.subgroupOf M) := by
-    rcases h11.A_rank_two with ⟨_hcard, hAelem⟩
-    haveI : IsElementaryAbelian p.val A := hAelem
-    have hAp : IsPGroup p.val A := IsElementaryAbelian.isPGroup p.val A
-    exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := M) h11.A_le_M).symm
-  have hAsingle : IsPiSubgroup (G := M) ({p} : Set Nat.Primes) (A.subgroupOf M) :=
-    section11_isPiSubgroup_singleton_of_isPGroup (G := M) hAsub_p
-  have hAσc :
-      IsPiSubgroup (G := M) (section10SigmaPrimes M)ᶜ (A.subgroupOf M) := by
-    intro q hqA
-    have hqp : q ∈ ({p} : Set Nat.Primes) := hAsingle q hqA
-    have hq_eq : q = p := by simpa using hqp
-    simpa [hq_eq] using h11.not_sigma
-  obtain ⟨E, hEhall, _hEinv, hAleE⟩ :=
-    exists_isHallSubgroup_isInvariant_of_isPiSubgroup
-      (G := M) (A := Unit) hsolvM hcop (section10SigmaPrimes M)ᶜ
-      (A.subgroupOf M) hAσc hAinv
-  have hNhall : IsHallSubgroup (section10SigmaPrimes M) (section10MsigmaSubgroup M) :=
-    (theorem_10_2_b h11.maximal).2
-  exact ⟨E, section11_isComplement_of_isHall_compl hNhall hEhall, hAleE⟩
 
 private theorem section11_exists_msigma_complement_containing_P
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
@@ -459,22 +406,6 @@ private theorem section11_complement_groupRank_le_two
   exact section10_hall_compl_sigma_groupRank_le_two h11.maximal
     (section11_msigma_complement_isHall_sigma_compl h11.maximal hcomp)
 
-private theorem section11_complement_hasOrderedCharacteristicSylowSeriesWithPrimeDivisors
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) {E : Subgroup M}
-    (hcomp : (section10MsigmaSubgroup M).IsComplement' E) :
-    HasOrderedCharacteristicSylowSeriesWithPrimeDivisors E := by
-  classical
-  have hsolvM : IsSolvable M :=
-    IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr h11.maximal.1)
-  have hsolvE : IsSolvable E := by
-    letI : IsSolvable M := hsolvM
-    infer_instance
-  have hE_dvd_G : Nat.card E ∣ Nat.card G :=
-    (Subgroup.card_subgroup_dvd_card E).trans (Subgroup.card_subgroup_dvd_card M)
-  have hoddE : Odd (Nat.card E) := IsMinCE.odd_order.of_dvd_nat hE_dvd_G
-  exact theorem_4_20_c_with_prime_divisors
-    (G := E) hsolvE hoddE (Or.inl (section11_complement_groupRank_le_two h11 hcomp))
 
 private theorem section11_complement_characteristic_hall_ge_gt
     {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
@@ -629,17 +560,6 @@ private theorem section11_complement_piCore_gt_subgroupOf_hall_ge_isHall
       ((piCore ({q : Nat.Primes | p.val < q.val}) E).subgroupOf L) := by
   exact (section11_complement_piCore_gt_isHall h11 hcomp hPleE).subgroupOf hKleL
 
-omit [Finite G] [IsMinCE G] in
-private theorem section11_complement_piCore_gt_subgroupOf_hall_ge_normal
-    {M : Subgroup G} {p : Nat.Primes} {E : Subgroup M} {L : Subgroup E} :
-    ((piCore ({q : Nat.Primes | p.val < q.val}) E).subgroupOf L).Normal := by
-  let K : Subgroup E := piCore ({q : Nat.Primes | p.val < q.val}) E
-  have hL_norm_K : L ≤ Subgroup.normalizer (K : Set E) := by
-    haveI : K.Normal := by
-      dsimp [K]
-      infer_instance
-    simp [Subgroup.normalizer_eq_top]
-  simpa [K] using Subgroup.normal_subgroupOf_of_le_normalizer hL_norm_K
 
 omit [IsMinCE G] in
 private theorem section11_complement_sylow_subgroupOf_hall_ge_isHall_singleton
@@ -1243,38 +1163,6 @@ private theorem section11_exists_A_tail_noncommuting_of_not_centralizes_tail
   by_contra hne
   exact hnone ⟨a, ha, k, hk, hne⟩
 
-omit [IsMinCE G] in
-private theorem section11_exists_prime_dvd_tail_of_not_centralizes_tail
-    {M A : Subgroup G} {p : Nat.Primes} {E : Subgroup M}
-    (hnot :
-      ¬ (A.subgroupOf M).subgroupOf E ≤
-          Subgroup.centralizer (piCore ({q : Nat.Primes | p.val < q.val}) E : Set E)) :
-    ∃ q : Nat.Primes,
-      p.val < q.val ∧ q.val ∣ Nat.card (piCore ({r : Nat.Primes | p.val < r.val}) E) := by
-  classical
-  obtain ⟨a, _ha, k, hkK, hka_ne⟩ :=
-    section11_exists_A_tail_noncommuting_of_not_centralizes_tail
-      (G := G) (M := M) (A := A) (p := p) (E := E) hnot
-  have hk_ne_one : k ≠ 1 := by
-    intro hk
-    exact hka_ne (by simp [hk])
-  let K : Subgroup E := piCore ({q : Nat.Primes | p.val < q.val}) E
-  have hK_card_ne_one : Nat.card K ≠ 1 := by
-    intro hcard
-    have hKbot : K = ⊥ := (Subgroup.card_eq_one (H := K)).1 hcard
-    have hkK' : k ∈ K := by
-      simpa [K] using hkK
-    rw [hKbot] at hkK'
-    exact hk_ne_one (by simpa using hkK')
-  obtain ⟨q0, hq0prime, hq0dvd⟩ := Nat.exists_prime_and_dvd hK_card_ne_one
-  let q : Nat.Primes := ⟨q0, hq0prime⟩
-  have hqtail : p.val < q.val := by
-    have hqtail' :=
-      piCore_isPiSubgroup (G := E) ({r : Nat.Primes | p.val < r.val}) q (by
-        simpa [K, q] using hq0dvd)
-    change p.val < q.val at hqtail'
-    exact hqtail'
-  exact ⟨q, hqtail, by simpa [K, q] using hq0dvd⟩
 
 omit [IsMinCE G] in
 private theorem section11_complement_exists_A_invariant_tail_sylow

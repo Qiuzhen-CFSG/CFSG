@@ -72,39 +72,6 @@ public lemma representation_character_mem_cyclotomicOrder
     finite_order_end_trace_mem_cyclotomicOrder (η := η) (N := N) (M := Nat.card G)
       hη hcard_ne hNcard (f := ρ g) hN hpow
 
-/--
-Character values only depend on the exponent modulo the order of the group
-element.
--/
-public lemma representation_character_pow_eq_of_modEq
-    {G V : Type*} [Group G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V) (g : G) {r s : ℕ}
-    (hrs : r ≡ s [MOD orderOf g]) :
-    ρ.character (g ^ r) = ρ.character (g ^ s) := by
-  have hpow : (ρ g) ^ orderOf g = 1 := by
-    rw [← MonoidHom.map_pow, pow_orderOf_eq_one, MonoidHom.map_one]
-  have hend : (ρ g) ^ r = (ρ g) ^ s :=
-    pow_eq_pow_of_modEq hrs hpow
-  calc
-    ρ.character (g ^ r) = LinearMap.trace ℂ V ((ρ g) ^ r) := by
-      rw [Representation.character, MonoidHom.map_pow]
-    _ = LinearMap.trace ℂ V ((ρ g) ^ s) := by
-      rw [hend]
-    _ = ρ.character (g ^ s) := by
-      rw [Representation.character, MonoidHom.map_pow]
-
-/--
-If `r ≡ s (mod a)` and the order of `g` divides `a`, then the corresponding
-character values agree.
--/
-public lemma representation_character_pow_eq_of_modEq_of_order_dvd
-    {G V : Type*} [Group G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V) (g : G) {a r s : ℕ}
-    (hga : orderOf g ∣ a) (hrs : r ≡ s [MOD a]) :
-    ρ.character (g ^ r) = ρ.character (g ^ s) :=
-  representation_character_pow_eq_of_modEq ρ g (Nat.ModEq.of_dvd hga hrs)
 
 /-- A map commuting with `f` preserves each eigenspace of `f`. -/
 public lemma eigenspace_mapsTo_of_commute

@@ -469,12 +469,6 @@ public theorem intertwiningMapBaseChangeEquiv_tmul
     a • LinearMap.baseChange E f.toLinearMap
   exact LinearMap.baseChangeLinearMapEquiv_tmul F E V W a f.toLinearMap
 
-/-- Every intertwiner after scalar extension is an `E`-linear combination of
-base-changed intertwiners. -/
-public theorem intertwiningMap_baseChange_surjective
-    (rho : Representation F G V) (sigma : Representation F G W) :
-    Function.Surjective (intertwiningMapBaseChangeEquiv (E := E) rho sigma) :=
-  (intertwiningMapBaseChangeEquiv (E := E) rho sigma).surjective
 
 section DeterminantSpecialization
 
