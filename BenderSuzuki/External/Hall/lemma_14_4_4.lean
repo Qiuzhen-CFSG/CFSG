@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import BenderSuzuki.External.Hall.corollary_14_4_1
+public import BenderSuzuki.External.Hall.lemma_14_4_3
 
 open scoped IsMulCommutative
 

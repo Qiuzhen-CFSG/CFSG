@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection10.corollary_10_7_e
+public import FeitThompson.BGsection10.corollary_10_7_b
 public import FeitThompson.BGsection5.theorem_5_6_c
 public import FeitThompson.BGsection4.theorem_4_18_a
 import Mathlib.GroupTheory.Schreier

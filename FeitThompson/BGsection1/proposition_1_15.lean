@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.lemma_1_14
+public import FeitThompson.BGsection1.corollary_1_12
 
 open scoped Pointwise
 

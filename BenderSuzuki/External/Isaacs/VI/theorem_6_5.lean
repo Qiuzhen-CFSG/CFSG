@@ -5,7 +5,9 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Isaacs.I.lemma_1_13
-public import BenderSuzuki.External.Isaacs.VI.lemma_6_4
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.Representation.SubrepresentationLattice
+public import FeitThompson.Representation.RepEquiv
 
 /-!
 # Isaacs Theorem 6.5

@@ -12,7 +12,24 @@ public import FeitThompson.Representation.SolvableDimension
 public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
 public import FeitThompson.Representation.ExtraspecialFixedPoints
 public import FeitThompson.Representation.TwoDimensionalOddOrder
-public import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Mathlib.Algebra.CharP.LinearMaps
+public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+public import Mathlib.LinearAlgebra.Eigenspace.Zero
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.TensorProduct.Pi
+public import Mathlib.RepresentationTheory.Character
+public import Mathlib.RepresentationTheory.Coinduced
+public import Mathlib.RepresentationTheory.Semisimple
+public import Mathlib.RepresentationTheory.Submodule
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+public import Mathlib.RingTheory.SimpleModule.Isotypic
+public import Mathlib.RingTheory.ZMod.Torsion
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Extraspecial
+public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.BGsection2.EndFieldRep
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.CentralizerControl

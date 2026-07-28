@@ -9,7 +9,7 @@ public import BenderSuzuki.External.Suzuki.V.theorem_2_10
 public import BenderSuzuki.External.Suzuki.V.theorem_2_27
 public import BenderSuzuki.External.Suzuki.VI.formula_1_7
 public import BenderSuzuki.External.Suzuki.VI.theorem_1_8
-public import BenderSuzuki.External.Suzuki.VI.proposition_1_13
+public import FeitThompson.PFsection1.PFsection1_7_Core
 public import BenderSuzuki.External.Suzuki.VI.formula_1_15
 public import BenderSuzuki.External.Suzuki.VI.definition_2_7
 public import BenderSuzuki.External.Suzuki.VI.proposition_2_8

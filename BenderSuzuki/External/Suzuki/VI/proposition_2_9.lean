@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Isaacs.VII.lemma_7_7
-public import BenderSuzuki.External.Suzuki.VI.proposition_1_13
+public import FeitThompson.PFsection1.PFsection1_7_Core
 public import BenderSuzuki.External.Suzuki.VI.proposition_2_8
 public import FeitThompson.Representation.CharacterValues
 import Mathlib.Tactic.Group

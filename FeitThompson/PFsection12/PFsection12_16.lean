@@ -16,7 +16,7 @@ import FeitThompson.PFsection7.PFsection7_5
 import FeitThompson.PFsection7.PFsection7_7
 import FeitThompson.PFsection7.PFsection7_8_a
 import FeitThompson.PFsection7.PFsection7_8_b
-import FeitThompson.PFsection7.PFsection7_8_c
+import FeitThompson.PFsection7.PFsection7_6
 import FeitThompson.PFsection7.PFsection7_9
 import FeitThompson.PFsection8.PFsection8_16
 import FeitThompson.PFsection8.SourceTypePBridge

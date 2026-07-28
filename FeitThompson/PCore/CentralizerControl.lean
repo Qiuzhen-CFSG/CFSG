@@ -19,7 +19,8 @@ import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.GroupAction.Lemmas
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.SubgroupConjAction
-import FeitThompson.ZGroup.Hall
+import Mathlib.GroupTheory.SpecificGroups.ZGroup
+import FeitThompson.HallSubgroups.Core
 import FeitThompson.ChiefFactors.BaerCore
 
 open scoped Pointwise

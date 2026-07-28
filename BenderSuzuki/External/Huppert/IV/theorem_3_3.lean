@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.GroupTheory.Transfer
-public import BenderSuzuki.External.Huppert.IV.theorem_3_2
+public import BenderSuzuki.External.Huppert.IV.Residual
 
 /-!
 # Huppert IV.3.3

@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Huppert.IV.Basic
-public import BenderSuzuki.External.Huppert.IV.theorem_5_1
+public import BenderSuzuki.External.Huppert.IV.theorem_5_1.part_a
 public import BenderSuzuki.External.Huppert.IV.theorem_5_4
 public import FeitThompson.BGsection1.Basic
 public import FeitThompson.BGsection3.theorem_3_6

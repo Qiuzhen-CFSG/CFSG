@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import BenderSuzuki.PFchapter4section3.Basic
+public import BenderSuzuki.PFchapter4section2.Basic
 
 import BenderSuzuki.PFchapter4section1.claim_H3
 import BenderSuzuki.PFchapter4section2.claim_2

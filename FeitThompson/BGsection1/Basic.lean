@@ -26,7 +26,8 @@ public import FeitThompson.Fitting.Core
 public import FeitThompson.Fitting.Faithful
 public import FeitThompson.PGroup.NormalSubgroups
 public import FeitThompson.PGroup.OmegaFrattini
-public import FeitThompson.ZGroup.Hall
+public import Mathlib.GroupTheory.SpecificGroups.ZGroup
+public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.ChiefFactors.BaerCore
 
 open scoped Pointwise

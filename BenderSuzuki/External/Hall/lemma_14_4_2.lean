@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import BenderSuzuki.External.Hall.lemma_14_4_1
+public import BenderSuzuki.External.Hall.Basic
 
 /-!
 # Hall Lemma 14.4.2

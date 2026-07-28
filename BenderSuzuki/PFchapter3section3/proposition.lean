@@ -8,7 +8,9 @@ public import BenderSuzuki.PFchapter3section3.Basic
 public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.GroupTheory.OrderOfElement
 public import Mathlib.LinearAlgebra.Dimension.Finite
-import BenderSuzuki.PFAppendixIII.proposition_1
+import BenderSuzuki.PFAppendixIII.lemma_2
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 import BenderSuzuki.PFAppendixIII.lemma_1
 import BenderSuzuki.PFAppendixIII.theorem
 import FeitThompson.HallSubgroups.Conjugacy

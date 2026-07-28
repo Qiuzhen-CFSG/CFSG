@@ -8,7 +8,26 @@ public import FeitThompson.BGsection5.theorem_5_5_c_2
 public import FeitThompson.BGsection4.theorem_4_18_a
 import FeitThompson.PCore.PCore
 import FeitThompson.PGroup.NormalSubgroups
-import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+import Mathlib.Algebra.CharP.LinearMaps
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+import Mathlib.LinearAlgebra.Eigenspace.Zero
+import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.LinearAlgebra.Semisimple
+import Mathlib.LinearAlgebra.TensorProduct.Pi
+import Mathlib.RepresentationTheory.Character
+import Mathlib.RepresentationTheory.Coinduced
+import Mathlib.RepresentationTheory.Semisimple
+import Mathlib.RepresentationTheory.Submodule
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+import Mathlib.RingTheory.SimpleModule.Isotypic
+import Mathlib.RingTheory.ZMod.Torsion
+import FeitThompson.BGsection1.CriticalSubgroupLemmas
+import FeitThompson.Burnside.NormalComplement
+import FeitThompson.Extraspecial
+import FeitThompson.LinearAlgebra.BlockElementaryMap
+import FeitThompson.Representation.ConjugateRep
+import FeitThompson.BGsection2.EndFieldRep
+import FeitThompson.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
 
 /-! # Theorem 5.6(a) from BG Section 5 -/

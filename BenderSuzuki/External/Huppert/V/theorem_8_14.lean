@@ -5,7 +5,9 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Huppert.IV.theorem_6_2
-public import BenderSuzuki.External.Huppert.V.theorem_8_13
+public import BenderSuzuki.External.Huppert.V.Semidirect
+public import BenderSuzuki.External.Huppert.V.SamePrime
+public import BenderSuzuki.External.Huppert.V.ComplementTransfer
 
 /-!
 # Thompson fixed-point-free nilpotence interfaces
