@@ -82,74 +82,51 @@ public theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
 
 /-- A subgroup of an elementary abelian group, restricted to a larger subgroup, is still elementary
 abelian. -/
-public theorem IsElementaryAbelian.subgroupOf {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
+public theorem IsElementaryAbelian.subgroupOf {p : ℕ} {G : Type*} [Group G]
     {H K : Subgroup G} [IsElementaryAbelian p H] (_hHK : H ≤ K) :
     IsElementaryAbelian p (H.subgroupOf K) := by
   refine
     { toIsMulCommutative := inferInstance
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
+      exponent_dvd_p := Monoid.exponent_dvd_of_forall_pow_eq_one (G := H.subgroupOf K) ?_ }
   intro x
   apply Subtype.ext
   apply Subtype.ext
-  let xH : H := ⟨((x : H.subgroupOf K) : K), Subgroup.mem_subgroupOf.mp x.2⟩
-  have hxpow : xH ^ p = 1 :=
-    Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-      (IsElementaryAbelian.exponent_dvd_p p H) xH
-  simpa [xH] using congrArg (fun y : H => ((y : H) : G)) hxpow
-
-/-- The image of an elementary abelian subgroup under the subtype map into the ambient group is
-still elementary abelian. -/
-public theorem IsElementaryAbelian.map_subtype {p : ℕ} [Fact p.Prime] {G : Type*} [Group G]
-    {K : Subgroup G} {H : Subgroup K} [IsElementaryAbelian p H] :
-    IsElementaryAbelian p (H.map K.subtype) := by
-  refine
-    { toIsMulCommutative := inferInstance
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
-  intro x
-  apply Subtype.ext
-  rcases Subgroup.mem_map.mp x.2 with ⟨y, hy, hyx⟩
-  have hypow : (⟨y, hy⟩ : H) ^ p = 1 :=
-    Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-      (IsElementaryAbelian.exponent_dvd_p p H) ⟨y, hy⟩
-  have hy_pow_G : ((y : G) ^ p) = 1 := by
-    simpa using congrArg (fun (z : H) => ((z : H) : G)) hypow
-  have hx_eq : (x : G) = (y : G) := hyx.symm
-  simpa [hx_eq] using hy_pow_G
+  have hxpow : (((x : H.subgroupOf K) : K) : G) ^ p = 1 :=
+    elemPow_eq_one_of_isElementaryAbelian (((x : H.subgroupOf K) : K) : G)
+      (Subgroup.mem_subgroupOf.mp x.2)
+  simpa using hxpow
 
 /-- The image of an elementary abelian subgroup under a homomorphism is elementary abelian. -/
 public theorem IsElementaryAbelian.map
-    {p : ℕ} [Fact p.Prime] {R S : Type*} [Group R] [Group S]
+    {p : ℕ} {R S : Type*} [Group R] [Group S]
     {A : Subgroup R} [IsElementaryAbelian p A] (f : R →* S) :
     IsElementaryAbelian p (A.map f) := by
   refine
     { toIsMulCommutative := by
         simpa using (Subgroup.map_isMulCommutative (f := f) (H := A))
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
+      exponent_dvd_p := Monoid.exponent_dvd_of_forall_pow_eq_one ?_ }
   intro x
   apply Subtype.ext
   rcases Subgroup.mem_map.mp x.2 with ⟨y, hyA, hyx⟩
-  let yA : A := ⟨y, hyA⟩
-  have hypow : yA ^ p = 1 :=
-    Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-      (IsElementaryAbelian.exponent_dvd_p p A) yA
-  have hx_eq : (x : S) = f y := by simpa using hyx.symm
   calc
-    (x : S) ^ p = (f y) ^ p := by simp [hx_eq]
+    (x : S) ^ p = (f y) ^ p := by simp [hyx]
     _ = f (y ^ p) := by simp
-    _ = 1 := by simpa using congrArg f (congrArg Subtype.val hypow)
+    _ = 1 := by simpa using congrArg f (elemPow_eq_one_of_isElementaryAbelian y hyA)
+
+/-- The image of an elementary abelian subgroup under the subtype map into the ambient group is
+still elementary abelian. -/
+public theorem IsElementaryAbelian.map_subtype {p : ℕ} {G : Type*} [Group G]
+    {K : Subgroup G} {H : Subgroup K} [IsElementaryAbelian p H] :
+    IsElementaryAbelian p (H.map K.subtype) :=
+  IsElementaryAbelian.map (R := K) (S := G) (A := H) (f := K.subtype)
 
 public theorem IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq
-    {A : Type*} [Group A] [Finite A] {p : ℕ} [Fact p.Prime]
+    {A : Type*} [Group A] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p A] (hcard : Nat.card A = p ^ 2) :
     ¬ IsCyclic A := by
   intro hcyc
   have hdiv : p ^ 2 ∣ p ^ 1 := by
-    simpa [hcard] using (show Nat.card A ∣ p from by
-      rw [← hcyc.exponent_eq_card]
-      exact IsElementaryAbelian.exponent_dvd_p p A)
+    simpa [hcard, hcyc.exponent_eq_card] using IsElementaryAbelian.exponent_dvd_p p A
   have hp_one_lt : 1 < p := (Fact.out : Nat.Prime p).one_lt
   have : 2 ≤ 1 :=
     (Nat.pow_le_pow_iff_right hp_one_lt).mp (Nat.le_of_dvd (by positivity) hdiv)
@@ -160,8 +137,7 @@ public theorem IsElementaryAbelian.zpowers_of_pow_eq_one
     IsElementaryAbelian p (Subgroup.zpowers x) := by
   refine
     { toIsMulCommutative := by infer_instance
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
+      exponent_dvd_p := Monoid.exponent_dvd_of_forall_pow_eq_one (G := Subgroup.zpowers x) ?_ }
   intro y
   apply Subtype.ext
   have hy_dvd : orderOf ((y : Subgroup.zpowers x) : G) ∣ p := by
@@ -192,8 +168,7 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
     { toIsMulCommutative := by
         rw [hsup]
         exact Subgroup.isMulCommutative_closure hcomm_s
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
+      exponent_dvd_p := Monoid.exponent_dvd_of_forall_pow_eq_one ?_ }
   intro x
   apply Subtype.ext
   have hxcl : (x : G) ∈ Subgroup.closure s := by
@@ -203,14 +178,8 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
       (p := fun z _hz => z ^ p = 1) (x := (x : G)) (by
         intro y hy
         rcases hy with hyE | hyC
-        · have hypow : (⟨y, hyE⟩ : E) ^ p = 1 :=
-            Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-              (IsElementaryAbelian.exponent_dvd_p p E) ⟨y, hyE⟩
-          simpa using congrArg Subtype.val hypow
-        · have hypow : (⟨y, hyC⟩ : C) ^ p = 1 :=
-            Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-              (IsElementaryAbelian.exponent_dvd_p p C) ⟨y, hyC⟩
-          simpa using congrArg Subtype.val hypow) (by simp) (by
+        · exact elemPow_eq_one_of_isElementaryAbelian y hyE
+        · exact elemPow_eq_one_of_isElementaryAbelian y hyC) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
           letI : IsMulCommutative ↥(Subgroup.closure s) :=

@@ -7,7 +7,7 @@ import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 public import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Frattini.Core
-import FeitThompson.Commutator.Core
+import Mathlib.GroupTheory.Commutator.Basic
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.PCore.CentralizerControl
 public import FeitThompson.GeneratorRank

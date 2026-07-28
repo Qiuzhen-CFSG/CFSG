@@ -84,9 +84,6 @@ public import BenderSuzuki.External.Huppert.XI.theorem_6_8
 public import BenderSuzuki.External.Huppert.XI.theorem_9_1
 public import BenderSuzuki.External.Isaacs.I.definition_1_12
 public import BenderSuzuki.External.Isaacs.I.lemma_1_13
-public import FeitThompson.Representation.ConjugateRep
-public import FeitThompson.Representation.SubrepresentationLattice
-public import FeitThompson.Representation.RepEquiv
 public import BenderSuzuki.External.Isaacs.VI.theorem_6_34
 public import BenderSuzuki.External.Isaacs.VI.theorem_6_5
 public import BenderSuzuki.External.Isaacs.VII.lemma_7_7
@@ -101,7 +98,6 @@ public import BenderSuzuki.External.Suzuki.V.theorem_2_27
 public import BenderSuzuki.External.Suzuki.VI.definition_2_7
 public import BenderSuzuki.External.Suzuki.VI.formula_1_15
 public import BenderSuzuki.External.Suzuki.VI.formula_1_7
-public import FeitThompson.PFsection1.PFsection1_7_Core
 public import BenderSuzuki.External.Suzuki.VI.proposition_2_8
 public import BenderSuzuki.External.Suzuki.VI.proposition_2_9
 public import BenderSuzuki.External.Suzuki.VI.section_2_2.example_3
@@ -123,8 +119,6 @@ public import BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
 public import BenderSuzuki.PFAppendixIII.FrobeniusBilinear
 public import BenderSuzuki.PFAppendixIII.lemma_1
 public import BenderSuzuki.PFAppendixIII.lemma_2
-public import Mathlib.FieldTheory.Finite.Basic
-public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 public import BenderSuzuki.PFAppendixIII.theorem
 public import BenderSuzuki.PFAppendixIV.Inertia
 public import BenderSuzuki.PFAppendixIV.lemma_1

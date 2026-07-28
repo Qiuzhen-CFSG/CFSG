@@ -40,7 +40,7 @@ import FeitThompson.Burnside.NormalComplement
 import FeitThompson.Commutator.ActionTriviality
 import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.Commutator.CyclicSylow
-import FeitThompson.Commutator.Core
+import Mathlib.GroupTheory.Commutator.Basic
 import FeitThompson.ElementaryAbelian
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.Fitting.Core

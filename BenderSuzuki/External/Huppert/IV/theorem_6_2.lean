@@ -7031,12 +7031,12 @@ private theorem hkt_iv62_i_J_normalizers_local_extracted
       exact hK2X_coprime.symm.pow_right n
     exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hK2bar_le_sup : K2bar ≤ Kbar ⊔ Abar := by
-    simpa [K2bar] using commutator_le_sup Kbar Abar
+    simpa [K2bar] using (Subgroup.commutator_le_sup (H₁ := Kbar) (H₂ := Abar))
   have hsup_le_normalizer_K2bar :
       Kbar ⊔ Abar ≤
         Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) := by
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hK2bar_le_sup).mp
-      (by simpa [K2bar] using commutator_normal_in_sup Kbar Abar)
+      (by simpa [K2bar] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := Kbar) (H₂ := Abar)))
   have hXbar_le_normalizer_K2bar :
       Xbar ≤ Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) := by
     exact sup_le (Subgroup.le_normalizer (H := K2bar))
@@ -7179,12 +7179,12 @@ private theorem hkt_iv62_o_conjugate_centralizers_extracted
     exact sup_le (hK2bar_le_Kbar.trans le_sup_left) le_sup_right
   have hK2bar_normal : K2bar.Normal := by
     have hK2_le_sup : K2bar ≤ Kbar ⊔ Abar := by
-      simpa [K2bar] using commutator_le_sup Kbar Abar
+      simpa [K2bar] using (Subgroup.commutator_le_sup (H₁ := Kbar) (H₂ := Abar))
     have hsup_le_normalizer :
         Kbar ⊔ Abar ≤
           Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hK2_le_sup).mp
-        (by simpa [K2bar] using commutator_normal_in_sup Kbar Abar)
+        (by simpa [K2bar] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := Kbar) (H₂ := Abar)))
     apply Subgroup.normalizer_eq_top_iff.mp
     apply top_unique
     simpa [hKbar_sup_Abar_top] using hsup_le_normalizer
@@ -7598,12 +7598,12 @@ private theorem hkt_iv62_r_cyclic_nonscalar_actor_extracted
     exact sup_le (hK2bar_le_Kbar.trans le_sup_left) le_sup_right
   have hK2bar_normal : K2bar.Normal := by
     have hK2_le_sup : K2bar ≤ Kbar ⊔ Abar := by
-      simpa [K2bar] using commutator_le_sup Kbar Abar
+      simpa [K2bar] using (Subgroup.commutator_le_sup (H₁ := Kbar) (H₂ := Abar))
     have hsup_le_normalizer :
         Kbar ⊔ Abar ≤
           Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hK2_le_sup).mp
-        (by simpa [K2bar] using commutator_normal_in_sup Kbar Abar)
+        (by simpa [K2bar] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := Kbar) (H₂ := Abar)))
     apply Subgroup.normalizer_eq_top_iff.mp
     apply top_unique
     simpa [hKbar_sup_Abar_top] using hsup_le_normalizer
@@ -9101,11 +9101,12 @@ private theorem hkt_isPElement_mem_pCore_terminal_from_Wz
           have hAbar_normalizes_K2bar :
               Abar ≤ Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) := by
             have hK2_le_sup : K2bar ≤ step_f_Kbar ⊔ Abar := by
-              simpa [K2bar] using commutator_le_sup step_f_Kbar Abar
+              simpa [K2bar] using (Subgroup.commutator_le_sup (H₁ := step_f_Kbar) (H₂ := Abar))
             have hsup_le :
                 step_f_Kbar ⊔ Abar ≤ Subgroup.normalizer (K2bar : Set (Q ⧸ pCore q Q)) := by
               exact (Subgroup.normal_subgroupOf_iff_le_normalizer hK2_le_sup).mp
-                (by simpa [K2bar] using commutator_normal_in_sup step_f_Kbar Abar)
+                (by simpa [K2bar] using
+                  (Subgroup.normal_subgroupOf_commutator_sup (H₁ := step_f_Kbar) (H₂ := Abar)))
             exact le_sup_right.trans hsup_le
           obtain ⟨r, hr, hKbar_elementary⟩ := by
             letI : IsSolvable step_f_Kbar := inferInstance

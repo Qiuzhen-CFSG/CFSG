@@ -10,7 +10,7 @@ public import BenderSuzuki.External.Higman.lemma_12
 public import BenderSuzuki.External.Higman.InvariantComplement
 import Mathlib.Order.RelSeries
 import FeitThompson.Frattini.Core
-import FeitThompson.Commutator.Core
+import Mathlib.GroupTheory.Commutator.Basic
 import FeitThompson.GroupAction.Invariant
 import FeitThompson.GroupAction.Quotient
 
@@ -4150,7 +4150,8 @@ public theorem lemma13_no_length_greater_than_three
         have hD_normal : D.Normal := by
           have hnormal :
               (D.subgroupOf (C ⊔ (⊤ : Subgroup Q))).Normal := by
-            simpa [D] using commutator_normal_in_sup C (⊤ : Subgroup Q)
+            simpa [D] using
+              (Subgroup.normal_subgroupOf_commutator_sup (H₁ := C) (H₂ := (⊤ : Subgroup Q)))
           rw [sup_top_eq] at hnormal
           constructor
           intro d hd q

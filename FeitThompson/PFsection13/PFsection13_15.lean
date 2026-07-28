@@ -67,18 +67,8 @@ private theorem section13_15_primes_odd_ne
     have hcop_qq : Nat.Coprime q q := by
       simpa [hpq] using hcop_qp
     exact hqPrime.ne_one (Nat.Coprime.eq_one_of_dvd hcop_qq dvd_rfl)
-  have hp3 : 3 ≤ p := by
-    have h2le := hpPrime.two_le
-    have hp_ne_two : p ≠ 2 := by
-      intro hp2
-      exact (Nat.not_even_iff_odd.mpr hpOdd) (by rw [hp2]; exact even_two)
-    omega
-  have hq3 : 3 ≤ q := by
-    have h2le := hqPrime.two_le
-    have hq_ne_two : q ≠ 2 := by
-      intro hq2
-      exact (Nat.not_even_iff_odd.mpr hqOdd) (by rw [hq2]; exact even_two)
-    omega
+  have hp3 : 3 ≤ p := (Nat.Prime.odd_iff hpPrime).1 hpOdd
+  have hq3 : 3 ≤ q := (Nat.Prime.odd_iff hqPrime).1 hqOdd
   exact ⟨hpPrime, hqPrime, hpOdd, hqOdd, hp_ne_q, hp3, hq3⟩
 
 private theorem section13_15_u_le_div_of_factor_ge
@@ -168,8 +158,7 @@ private theorem section13_15_factor_gt_two_mul_q_contradiction
     have hqeq : q = 3 :=
       section13_q_eq_three_of_five_le_numeric hqPrime hp5 hq3 h11.2.1 hm_qp
     have hu_lower : ((p : ℝ) ^ 2 - 1) / 6 < (u : ℝ) := by
-      have h := (h11.2.2 hp5 hqeq).2
-      simpa [hc1] using h
+      simpa [hc1] using (h11.2.2 hp5 hqeq).2
     have hb7 : 7 ≤ b := by omega
     have hN3 : (p ^ 3 - 1) / (p - 1) = b * u := by
       simpa [hqeq] using hN
@@ -278,11 +267,8 @@ private theorem section13_15_factor_eq_one_of_mod_ne
   have hb_dvd : b ∣ (p ^ q - 1) / (p - 1) := ⟨u, hN⟩
   have hbmod : b % q = 1 := (h14.2.2 hmod_ne).2 hbpos hb_dvd
   have hq_dvd_b_sub_one : q ∣ b - 1 := by
-    have hbmodEq : b ≡ 1 [MOD q] := by
-      rw [Nat.ModEq]
-      have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hqPrime.one_lt
-      simpa [h1mod] using hbmod
-    exact (Nat.modEq_iff_dvd' (by omega : 1 ≤ b)).mp hbmodEq.symm
+    exact (Nat.modEq_iff_dvd' (by omega : 1 ≤ b)).mp
+      ((mod_eq_one_iff_ModEq_one hqPrime.one_lt).mp hbmod).symm
   rcases hq_dvd_b_sub_one with ⟨k, hk⟩
   have hb_eq : b = q * k + 1 := by
     omega
@@ -320,11 +306,8 @@ private theorem section13_15_factor_eq_q_of_mod_eq
   have hbOdd : Odd b := Nat.Odd.of_mul_left hNodd'
   have hq_dvd_N : q ∣ (p ^ q - 1) / (p - 1) := h14.2.1 hmod
   have hq_dvd_p_sub_one : q ∣ p - 1 := by
-    have hpmod : p ≡ 1 [MOD q] := by
-      rw [Nat.ModEq]
-      have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hqPrime.one_lt
-      simpa [h1mod] using hmod
-    exact (Nat.modEq_iff_dvd' hpPrime.one_le).mp hpmod.symm
+    exact (Nat.modEq_iff_dvd' hpPrime.one_le).mp
+      ((mod_eq_one_iff_ModEq_one hqPrime.one_lt).mp hmod).symm
   have huq : Nat.Coprime u q :=
     Nat.Coprime.coprime_dvd_right hq_dvd_p_sub_one hcop
   have hq_dvd_b : q ∣ b := by
@@ -338,10 +321,7 @@ private theorem section13_15_factor_eq_q_of_mod_eq
     have hk0 : k = 0 := Nat.eq_zero_of_not_pos hnot
     rw [hk0, Nat.mul_zero] at hk
     omega
-  have hprodOdd : Odd (q * k) := by
-    rw [← hk]
-    exact hbOdd
-  have hkOdd : Odd k := Nat.Odd.of_mul_right hprodOdd
+  have hkOdd : Odd k := Nat.Odd.of_mul_right (by rw [← hk]; exact hbOdd)
   have hk_le_two : k ≤ 2 := by
     by_contra hnot
     have hk3 : 3 ≤ k := by omega

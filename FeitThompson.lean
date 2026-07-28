@@ -280,7 +280,6 @@ public import FeitThompson.ChiefFactors.BaerCore
 public import FeitThompson.ChiefFactors.Core
 public import FeitThompson.ChiefFactors.Proposition12
 public import FeitThompson.Commutator.ActionTriviality
-public import FeitThompson.Commutator.Core
 public import FeitThompson.Commutator.CyclicSylow
 public import FeitThompson.Commutator.FocalSubgroup
 public import FeitThompson.ElementaryAbelian
@@ -506,19 +505,6 @@ public import FeitThompson.Representation.Cyclotomic
 public import FeitThompson.Representation.DegreeBounds
 public import FeitThompson.Representation.Divisibility
 public import FeitThompson.Representation.ElementaryAbelianAction
-public import Mathlib.Algebra.CharP.LinearMaps
-public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-public import Mathlib.LinearAlgebra.Eigenspace.Zero
-public import Mathlib.LinearAlgebra.Lagrange
-public import Mathlib.LinearAlgebra.Semisimple
-public import Mathlib.LinearAlgebra.TensorProduct.Pi
-public import Mathlib.RepresentationTheory.Character
-public import Mathlib.RepresentationTheory.Coinduced
-public import Mathlib.RepresentationTheory.Semisimple
-public import Mathlib.RepresentationTheory.Submodule
-public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-public import Mathlib.RingTheory.SimpleModule.Isotypic
-public import Mathlib.RingTheory.ZMod.Torsion
 public import FeitThompson.Representation.ExtendScalars
 public import FeitThompson.Representation.ExtraspecialFixedPoints
 public import FeitThompson.Representation.Foundations
@@ -550,4 +536,3 @@ public import FeitThompson.Wielandt.HomocyclicLift
 public import FeitThompson.Wielandt.MatrixTrace
 public import FeitThompson.Wielandt.StandardCover
 public import FeitThompson.Wielandt.SubgroupRectangular
-public import Mathlib.GroupTheory.SpecificGroups.ZGroup

@@ -9,7 +9,7 @@ public import FeitThompson.GroupAction.Defs
 public import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Tactic.Basic
 
-import FeitThompson.Commutator.Core
+import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.GroupTheory.PGroup
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
@@ -165,8 +165,9 @@ public theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Gr
     have : m = y := hinl_inj (by simpa [inl] using hmEq)
     simpa [this] using hm
 
-  have hC_normal : ((C).subgroupOf (HG ⊔ HA)).Normal := commutator_normal_in_sup HG HA
-  have hC_le : C ≤ HG ⊔ HA := commutator_le_sup HG HA
+  have hC_normal : ((C).subgroupOf (HG ⊔ HA)).Normal :=
+    Subgroup.normal_subgroupOf_commutator_sup (H₁ := HG) (H₂ := HA)
+  have hC_le : C ≤ HG ⊔ HA := Subgroup.commutator_le_sup (H₁ := HG) (H₂ := HA)
 
   have hconj : ∀ c s : SD, c ∈ C → s ∈ HG ⊔ HA → s * c * s⁻¹ ∈ C := by
     exact (Subgroup.normal_subgroupOf_iff (H := C) (K := HG ⊔ HA) hC_le).1 hC_normal

@@ -374,9 +374,9 @@ private theorem section13_theorem_13_4_noncentral_pgroup_not_alpha
     section13_isPGroup_of_le_pSubgroup (G := G) hSgq hQ_le_Sg
   have hSR_norm_Q : Sg ⊔ R ≤ Subgroup.normalizer (Q : Set G) := by
     have hQ_norm_sup : (Q.subgroupOf (Sg ⊔ R : Subgroup G)).Normal := by
-      simpa [Q] using commutator_normal_in_sup Sg R
+      simpa [Q] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := Sg) (H₂ := R))
     have hQ_le_sup : Q ≤ Sg ⊔ R := by
-      simpa [Q] using commutator_le_sup Sg R
+      simpa [Q] using (Subgroup.commutator_le_sup (H₁ := Sg) (H₂ := R))
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer
         (H := Q) (K := Sg ⊔ R) hQ_le_sup).mp hQ_norm_sup
@@ -852,9 +852,9 @@ private theorem section13_theorem_13_4_pr_invariant_sylow_noncentral_absurd
     exact section13_isPGroup_of_le_pSubgroup (G := G) hSgq hQ_le_Sg
   have hSR_norm_Q : Sg ⊔ R ≤ Subgroup.normalizer (Q : Set G) := by
     have hQ_norm_sup : (Q.subgroupOf (Sg ⊔ R : Subgroup G)).Normal := by
-      simpa [Q] using commutator_normal_in_sup Sg R
+      simpa [Q] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := Sg) (H₂ := R))
     have hQ_le_sup : Q ≤ Sg ⊔ R := by
-      simpa [Q] using commutator_le_sup Sg R
+      simpa [Q] using (Subgroup.commutator_le_sup (H₁ := Sg) (H₂ := R))
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer
         (H := Q) (K := Sg ⊔ R) hQ_le_sup).mp hQ_norm_sup

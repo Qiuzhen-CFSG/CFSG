@@ -1,6 +1,7 @@
 module
 
 public import FeitThompson.PFsection13.PFsection13_13
+import Mathlib.Algebra.BigOperators.Ring.Nat
 
 /-!
 # Peterfalvi, Section 13: PFsection13_14
@@ -28,37 +29,17 @@ public theorem section13_odd_geom_quotient
   rw [← Nat.geomSum_eq hp.two_le q]
   have hodd_sum : ∀ m : ℕ, Odd (∑ i ∈ Finset.range m, p ^ i) ↔ Odd m := by
     intro m
-    induction m with
-    | zero =>
-        simp
-    | succ m ih =>
-        rw [Finset.sum_range_succ]
-        have hpown : Odd (p ^ m) := hpOdd.pow
-        have hpown_not_even : ¬ Even (p ^ m) := Nat.not_even_iff_odd.mpr hpown
-        rw [Nat.odd_add]
-        simp [hpown_not_even, ih, Nat.odd_add_one]
+    rw [Finset.odd_sum_iff_odd_card_odd]
+    have hfilter : (Finset.range m).filter (fun i => Odd (p ^ i)) = Finset.range m := by
+      exact Finset.filter_eq_self.mpr (fun x _hx => hpOdd.pow)
+    simp [hfilter]
   exact (hodd_sum q).mpr hqOdd
 
-public theorem section13_geom_quotient_dvd_of_mod_eq_one
-    {p q : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q) (hpmod : p % q = 1) :
-    q ∣ (p ^ q - 1) / (p - 1) := by
-  rw [← Nat.geomSum_eq hp.two_le q]
-  have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-  have hpModEq : p ≡ 1 [MOD q] := by
-    rw [Nat.ModEq]
-    simpa [h1mod] using hpmod
-  have hsum_mod : ∀ m : ℕ, (∑ i ∈ Finset.range m, p ^ i) ≡ m [MOD q] := by
-    intro m
-    induction m with
-    | zero =>
-        simp [Nat.ModEq]
-    | succ m ih =>
-        rw [Finset.sum_range_succ]
-        have hpow : p ^ m ≡ 1 ^ m [MOD q] := Nat.ModEq.pow m hpModEq
-        have hpow1 : p ^ m ≡ 1 [MOD q] := by
-          simpa using hpow
-        simpa [Nat.succ_eq_add_one] using ih.add hpow1
-  exact Nat.modEq_zero_iff_dvd.mp ((hsum_mod q).trans Nat.modulus_modEq_zero)
+/-- `r ≡ 1 [MOD q]` is equivalent to `r % q = 1` when `1 < q`. -/
+public theorem mod_eq_one_iff_ModEq_one {q r : ℕ} (hq : 1 < q) :
+    r % q = 1 ↔ r ≡ 1 [MOD q] := by
+  rw [Nat.ModEq]
+  simp [Nat.mod_eq_of_lt hq]
 
 public theorem section13_geom_sum_modEq_card_of_modEq_one
     {p q r : ℕ} (hpmod : p ≡ 1 [MOD r]) :
@@ -72,6 +53,15 @@ public theorem section13_geom_sum_modEq_card_of_modEq_one
       have hpow1 : p ^ q ≡ 1 [MOD r] := by
         simpa using hpow
       simpa [Nat.succ_eq_add_one] using ih.add hpow1
+
+public theorem section13_geom_quotient_dvd_of_mod_eq_one
+    {p q : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q) (hpmod : p % q = 1) :
+    q ∣ (p ^ q - 1) / (p - 1) := by
+  rw [← Nat.geomSum_eq hp.two_le q]
+  have hpModEq : p ≡ 1 [MOD q] := (mod_eq_one_iff_ModEq_one hq.one_lt).mp hpmod
+  have hsum_mod : ∀ m : ℕ, (∑ i ∈ Finset.range m, p ^ i) ≡ m [MOD q] :=
+    fun m => section13_geom_sum_modEq_card_of_modEq_one hpModEq
+  exact Nat.modEq_zero_iff_dvd.mp ((hsum_mod q).trans Nat.modulus_modEq_zero)
 
 public theorem section13_prime_not_dvd_p_sub_one_of_dvd_geom_quotient
     {p q r : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q)
@@ -94,12 +84,7 @@ public theorem section13_prime_not_dvd_p_sub_one_of_dvd_geom_quotient
   have hq_dvd_sub : q ∣ p - 1 := by
     simpa [hr_eq_q] using hrdvd_sub
   have h1p_q : 1 ≡ p [MOD q] := (Nat.modEq_iff_dvd' hp.one_le).mpr hq_dvd_sub
-  have hpmod : p % q = 1 := by
-    have hpmodq : p ≡ 1 [MOD q] := h1p_q.symm
-    rw [Nat.ModEq] at hpmodq
-    have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-    simpa [h1mod] using hpmodq
-  exact hpmod_ne hpmod
+  exact hpmod_ne ((mod_eq_one_iff_ModEq_one hq.one_lt).mpr h1p_q.symm)
 
 public theorem section13_geom_quotient_coprime_p_sub_one_of_mod_ne_one
     {p q : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q)
@@ -150,13 +135,8 @@ public theorem section13_prime_dvd_geom_quotient_mod_eq_one
     · exact h
   have hq_dvd_sub : q ∣ r - 1 := by
     simpa [horder_eq_q] using (ZMod.orderOf_units_dvd_card_sub_one zunit)
-  have h1r_q : 1 ≡ r [MOD q] := (Nat.modEq_iff_dvd' hr.one_le).mpr hq_dvd_sub
-  have hrmod : r % q = 1 := by
-    have hrmodq : r ≡ 1 [MOD q] := h1r_q.symm
-    rw [Nat.ModEq] at hrmodq
-    have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-    simpa [h1mod] using hrmodq
-  exact hrmod
+  exact (mod_eq_one_iff_ModEq_one hq.one_lt).mpr
+    ((Nat.modEq_iff_dvd' hr.one_le).mpr hq_dvd_sub).symm
 
 public theorem section13_divisor_geom_quotient_mod_eq_one
     {p q x : ℕ} (hp : Nat.Prime p) (hq : Nat.Prime q)
@@ -180,22 +160,14 @@ public theorem section13_divisor_geom_quotient_mod_eq_one
         have hydvd : y ∣ (p ^ q - 1) / (p - 1) :=
           (Nat.div_dvd_of_dvd hrdvdx).trans hxdvd
         have hymod : y % q = 1 := ih y hylt hypos hydvd
-        have hrModEq : r ≡ 1 [MOD q] := by
-          rw [Nat.ModEq]
-          have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-          simpa [h1mod] using hrmod
-        have hyModEq : y ≡ 1 [MOD q] := by
-          rw [Nat.ModEq]
-          have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-          simpa [h1mod] using hymod
+        have hrModEq : r ≡ 1 [MOD q] := (mod_eq_one_iff_ModEq_one hq.one_lt).mp hrmod
+        have hyModEq : y ≡ 1 [MOD q] := (mod_eq_one_iff_ModEq_one hq.one_lt).mp hymod
         have hxModEq : x ≡ 1 [MOD q] := by
           have hmul : r * y ≡ 1 * 1 [MOD q] := hrModEq.mul hyModEq
           simpa [y, Nat.mul_div_cancel' hrdvdx] using hmul
-        rw [Nat.ModEq] at hxModEq
-        have h1mod : 1 % q = 1 := Nat.mod_eq_of_lt hq.one_lt
-        simpa [h1mod] using hxModEq
+        exact (mod_eq_one_iff_ModEq_one hq.one_lt).mpr hxModEq
 
-/-! ## Numeric helpers for (13.11) -/
+/-! ## Numeric helpers for (13.14) -/
 
 public theorem theorem_13_14
     (p q x : ℕ)

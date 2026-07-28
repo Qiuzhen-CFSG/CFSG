@@ -33,10 +33,11 @@ public theorem lemma_6_3_a_1
   have hHK_le_H : ⁅H, K⁆ ≤ H := Subgroup.commutator_le_left (H₁ := H) (H₂ := K)
   have hN_le_H : N ≤ H := sup_le hHH_le_H hHK_le_H
   have hHK_normal : (⁅H, K⁆).Normal := by
-    have hcomm_le_sup : ⁅H, K⁆ ≤ H ⊔ K := commutator_le_sup H K
+    have hcomm_le_sup : ⁅H, K⁆ ≤ H ⊔ K :=
+      Subgroup.commutator_le_sup (H₁ := H) (H₂ := K)
     have hsup_le_norm : H ⊔ K ≤ Subgroup.normalizer (((⁅H, K⁆ : Subgroup G) : Set G)) := by
       exact (Subgroup.normal_subgroupOf_iff_le_normalizer hcomm_le_sup).mp
-        (commutator_normal_in_sup H K)
+        (Subgroup.normal_subgroupOf_commutator_sup (H₁ := H) (H₂ := K))
     have hnorm_top : Subgroup.normalizer (((⁅H, K⁆ : Subgroup G) : Set G)) = ⊤ := by
       apply top_le_iff.mp
       rw [← hHK'.sup_eq_top]

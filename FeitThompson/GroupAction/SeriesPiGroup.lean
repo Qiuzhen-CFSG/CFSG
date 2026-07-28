@@ -8,8 +8,8 @@ public import FeitThompson.BGsection1.Defs
 
 lemma not_dvd_card_of_isPiGroup_of_prime_notMem (π : Set Nat.Primes) (G : Type*) [Group G] [Finite G]
     (hpi : IsPiGroup π G) (p : Nat.Primes) (hp : p ∉ π) : ¬ p.val ∣ Nat.card G := by
-  rw [IsPiGroup_iff] at hpi
-  exact fun hdiv => hp (hpi p hdiv)
+  intro hdiv
+  exact hp ((IsPiGroup_iff π G).mp hpi p hdiv)
 
 
 /-- If `H` is invariant under the action of `A`, then it is also invariant under any subgroup of `A`. -/
@@ -46,16 +46,13 @@ lemma actsTriviallyOn_subgroup_of_smul_div_mem_and_coprime {G A : Type _} [Group
           _ = a • (x ^ n * g) := by rw [ih]
           _ = (a • (x ^ n)) * (a • g) := by rw [MulDistribMulAction.smul_mul]
           _ = (x ^ n) * (a • g) := by rw [hax_pow n]
-          _ = (x ^ n) * ((a • g) * 1) := by simp
           _ = (x ^ n) * ((a • g) * (g⁻¹ * g)) := by group
           _ = (x ^ n) * (((a • g) * g⁻¹) * g) := by group
           _ = (x ^ n) * (x * g) := by rw [hx_def]
           _ = (x ^ n * x) * g := by rw [← mul_assoc]
           _ = (x ^ (n + 1)) * g := by rw [← pow_succ x n]
   -- Since A is a p-group, the order of a is a power of p
-  have h_order_a : ∃ k : ℕ, orderOf a = p ^ k := by
-    have h := (IsPGroup.iff_orderOf (p := p)).mp hP
-    exact h a
+  have h_order_a : ∃ k : ℕ, orderOf a = p ^ k := (IsPGroup.iff_orderOf (p := p)).mp hP a
   rcases h_order_a with ⟨k, hk⟩
   have ha_order : a ^ orderOf a = 1 := pow_orderOf_eq_one a
   have h_smul_eq : a ^ orderOf a • g = g := by
@@ -90,13 +87,8 @@ lemma actsTriviallyOn_subgroup_of_smul_div_mem_and_coprime {G A : Type _} [Group
   have h_coprime_pow : Nat.Coprime p (p ^ l) := by rwa [h_order_x_eq] at h_coprime'
   -- Since p is prime, Coprime p (p ^ l) forces l = 0
   have hl0 : l = 0 := by
-    by_cases hl0' : l = 0
-    · exact hl0'
-    · have hpos : 0 < l := Nat.pos_of_ne_zero hl0'
-      have h_dvd : p ∣ p ^ l := dvd_pow_self p hpos.ne'
-      have h_not_dvd : ¬ p ∣ p ^ l := hp.coprime_iff_not_dvd.mp h_coprime_pow
-      exfalso
-      exact h_not_dvd h_dvd
+    by_contra hl
+    exact (hp.coprime_iff_not_dvd.mp h_coprime_pow) (dvd_pow_self p hl)
   -- Therefore orderOf x = p ^ 0 = 1
   have h_order_x_eq_one : orderOf x = 1 := by
     rw [h_order_x_eq, hl0, pow_zero]
@@ -130,7 +122,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
     IsPiGroup (π := π) (A ⧸ fixingSubgroupOf A G (Set.univ : Set G)) := by
   let _ := hsolv
   let K := fixingSubgroupOf A G Set.univ
-  have hK_normal : K.Normal := hker
+  letI : K.Normal := hker
   have hK_triv : ∀ a ∈ K, ∀ g : G, a • g = g := by
     intro a ha g
     exact (mem_fixingSubgroup_iff (M := A) (s := Set.univ)).mp ha g (Set.mem_univ g)
@@ -141,21 +133,13 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
     ext a
     constructor
     · intro ha
-      have ha' : φ a = 1 := ha
-      have h : ∀ g, φ a g = g := fun g => by
-        rw [ha', MulAut.one_apply]
-      have h' : ∀ g, a • g = g := fun g => by
+      exact (mem_fixingSubgroup_iff (M := A) (s := Set.univ)).mpr (fun g _ => by
         change φ a g = g
-        exact h g
-      exact (mem_fixingSubgroup_iff (M := A) (s := Set.univ)).mpr (fun g _ => h' g)
+        rw [ha, MulAut.one_apply])
     · intro ha
       have h : ∀ g, a • g = g := hK_triv a ha
-      have ha' : φ a = 1 := by
-        ext g
-        exact h g
-      exact ha'
-  have hφ_lift : K ≤ φ.ker := by rw [hφ_ker]
-  letI : K.Normal := hK_normal
+      ext g
+      exact h g
   haveI : φ.ker.Normal := MonoidHom.normal_ker φ
   let ψ' : A ⧸ φ.ker →* MulAut G := QuotientGroup.kerLift φ
   have ψ'_inj : Function.Injective ψ' := QuotientGroup.kerLift_injective φ
@@ -174,7 +158,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
       rw [smul_def aQ g, MulAut.smul_def]
     simpa [h_smul] using h g
   rcases hstab with ⟨ι, Gi, next, hstab⟩
-  rcases hstab with ⟨⟨top, bottom, htop, hbottom, ⟨n, hn⟩⟩, hdesc, hnormal, hinv, hfactor⟩
+  rcases hstab with ⟨⟨top, bottom, htop, hbottom, ⟨n, hn⟩⟩, hdesc, hnormal, _, hfactor⟩
   have smul_eq : ∀ (a : A) (g : G), ((a : Q) • g) = a • g := by
     intro a g
     calc
@@ -236,33 +220,29 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
             ∀ a : P', ∀ g : G, g ∈ Gi (Nat.iterate next k top) → a • g = g := by
           intro k hk IH a g hg
           have h_desc : Gi (Nat.iterate next (k + 1) top) ≤ Gi (Nat.iterate next k top) := by
-            calc
-              Gi (Nat.iterate next (k + 1) top) = Gi (next (Nat.iterate next k top)) := by
-                rw [Function.iterate_succ_apply']
-              _ ≤ Gi (Nat.iterate next k top) := hdesc (Nat.iterate next k top)
-          have h_normal_H : (Gi (Nat.iterate next (k + 1) top)).Normal := hnormal _
-          have h_normal_K : (Gi (Nat.iterate next k top)).Normal := hnormal _
+            rw [Function.iterate_succ_apply']
+            exact hdesc (Nat.iterate next k top)
           haveI : IsInvariant P' G (Gi (Nat.iterate next (k + 1) top)) := hinvP _
           haveI : IsInvariant P' G (Gi (Nat.iterate next k top)) := hinvP _
           have h_factor : ∀ a : P', ∀ g : G, g ∈ Gi (Nat.iterate next k top) → (a • g) * g⁻¹ ∈ Gi (Nat.iterate next (k + 1) top) := by
             intro a' g' hg'
             have h := hfactorQ (Nat.iterate next k top) a' g' hg'
             have h_iter_eq : next (Nat.iterate next k top) = Nat.iterate next (k + 1) top := by
-              simpa using (Function.iterate_succ_apply' next k top).symm
+              rw [Function.iterate_succ_apply']
             rw [h_iter_eq] at h
             exact h
           have h_coprime : Nat.Coprime p.val (Nat.card (Gi (Nat.iterate next (k + 1) top))) := by
             refine Nat.Coprime.coprime_dvd_right (Subgroup.card_subgroup_dvd_card _) h_coprime_G
-          have hP_pgroup' : IsPGroup p.val P' := hP_pgroup
           exact actsTriviallyOn_subgroup_of_smul_div_mem_and_coprime (A := P') p.val hp_prime
             (Gi (Nat.iterate next (k + 1) top)) (Gi (Nat.iterate next k top))
-            hP_pgroup' h_coprime h_factor IH a g hg
+            hP_pgroup h_coprime h_factor IH a g hg
         intro k hk
         exact Nat.decreasingInduction step base hk
       have h_triv_all : ∀ a : P', ∀ g : G, a • g = g := by
         intro a g
-        have : g ∈ Gi top := by rw [htop]; trivial
-        exact h_triv_chain 0 (by omega) a g this
+        have : g ∈ Gi top := by
+          simp [htop]
+        exact h_triv_chain 0 (Nat.zero_le n) a g this
       have h_subsingleton : Subsingleton P' := ⟨fun a b => by
         apply Subtype.ext
         have ha : (a : Q) = 1 := faithful a (h_triv_all a)
@@ -271,7 +251,6 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
       haveI : Subsingleton P' := h_subsingleton
       have hP_trivial : P' = ⊥ := Subgroup.eq_bot_of_subsingleton (H := P')
       have h_card : p.val ∣ Nat.card P' := by
-        haveI : Fact (Nat.Prime p.val) := ⟨hp_prime⟩
         exact P.dvd_card_of_dvd_card h
       have h_card' : Nat.card P' = 1 := by
         calc

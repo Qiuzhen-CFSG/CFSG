@@ -1244,11 +1244,11 @@ private theorem xi91_odd_twoPointStabilizer_swap_inverts
     simp [Dsub.normalizer_eq_top]
   let N : Subgroup T := ⁅Dsub, R⁆
   haveI : N.Normal := by
-    have hNnormal := commutator_normal_in_sup Dsub R
+    have hNnormal := Subgroup.normal_subgroupOf_commutator_sup (H₁ := Dsub) (H₂ := R)
     have hsupLe : Dsub ⊔ R ≤ Subgroup.normalizer (N : Set T) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer
         (H := N) (K := Dsub ⊔ R)
-          (by simpa [N] using commutator_le_sup Dsub R)).mp
+          (by simpa [N] using (Subgroup.commutator_le_sup (H₁ := Dsub) (H₂ := R)))).mp
         (by simpa [N] using hNnormal)
     have htopLe : (⊤ : Subgroup T) ≤ Subgroup.normalizer (N : Set T) := by
       simpa [hsup] using hsupLe

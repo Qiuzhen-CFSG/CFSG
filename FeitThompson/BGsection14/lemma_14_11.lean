@@ -615,11 +615,11 @@ private theorem section14_lemma_14_11_exists_rankTwo_nontrivial_commutator
     simpa [commutatorElement_def, mul_assoc] using E.mul_mem he hconj
   have hK_norm_E : section10NormalIn K E := by
     have hK_norm_sup : ((⁅E, Q⁆).subgroupOf (E ⊔ Q)).Normal := by
-      exact commutator_normal_in_sup E Q
+      exact Subgroup.normal_subgroupOf_commutator_sup (H₁ := E) (H₂ := Q)
     have hsup_norm :
         E ⊔ Q ≤ Subgroup.normalizer ((⁅E, Q⁆ : Subgroup G) : Set G) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer
-        (H := ⁅E, Q⁆) (K := E ⊔ Q) (commutator_le_sup E Q)).1 hK_norm_sup
+        (H := ⁅E, Q⁆) (K := E ⊔ Q) (Subgroup.commutator_le_sup (H₁ := E) (H₂ := Q))).1 hK_norm_sup
     have hE_norm :
         E ≤ Subgroup.normalizer ((⁅E, Q⁆ : Subgroup G) : Set G) :=
       le_trans le_sup_left hsup_norm

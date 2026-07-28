@@ -378,10 +378,10 @@ private theorem section10_commutator_le_centralizer_msigma_of_10_11d
     exact sup_le hPleM hSleM
   have hK0norm_KP :
       (K0.subgroupOf (K ⊔ P : Subgroup G)).Normal := by
-    simpa [K0] using commutator_normal_in_sup K P
+    simpa [K0] using (Subgroup.normal_subgroupOf_commutator_sup (H₁ := K) (H₂ := P))
   have hKP_norm_K0 : K ⊔ P ≤ Subgroup.normalizer (K0 : Set G) := by
     have hK0leKP : K0 ≤ K ⊔ P := by
-      simpa [K0] using commutator_le_sup K P
+      simpa [K0] using (Subgroup.commutator_le_sup (H₁ := K) (H₂ := P))
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer
         (H := K0) (K := K ⊔ P) hK0leKP).mp hK0norm_KP

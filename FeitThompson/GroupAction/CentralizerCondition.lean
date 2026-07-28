@@ -11,26 +11,17 @@ open scoped commutatorElement
 public instance center_isInvariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     IsInvariant A G (Subgroup.center G) where
   invariant a g := by
-    have hcenter := Subgroup.centerCharacteristic.fixed (MulDistribMulAction.toMulAut A G a)
-    have mem_comap : g ∈ (Subgroup.center G).comap (MulDistribMulAction.toMulAut A G a).toMonoidHom ↔
-        (MulDistribMulAction.toMulAut A G a) g ∈ Subgroup.center G := Subgroup.mem_comap
-    have mem_iff : g ∈ Subgroup.center G ↔ (MulDistribMulAction.toMulAut A G a) g ∈ Subgroup.center G := by
-      rw [← mem_comap, hcenter]
-    have toMulAut_eq : (MulDistribMulAction.toMulAut A G a) g = a • g := by
-      simp
-    rw [toMulAut_eq] at mem_iff
-    exact mem_iff
+    have mem_iff : g ∈ Subgroup.center G ↔
+        (MulDistribMulAction.toMulAut A G a).toMonoidHom g ∈ Subgroup.center G := by
+      rw [← Subgroup.mem_comap]
+      rw [Subgroup.centerCharacteristic.fixed (MulDistribMulAction.toMulAut A G a)]
+    simpa using mem_iff
 
 public instance quotientAction_of_invariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     (H : Subgroup G) [IsInvariant A G H] : MulAction.QuotientAction A H := by
   constructor
   intro b a a' h
-  have h_inv : a⁻¹ * a' ∈ H := h
-  have h_smul : b • (a⁻¹ * a') ∈ H := (IsInvariant.invariant (A := A) (G := G) (H := H) b (a⁻¹ * a')).1 h_inv
-  have eq : b • (a⁻¹ * a') = (b • a)⁻¹ * b • a' := by
-    simp [smul_inv']
-  rw [eq] at h_smul
-  exact h_smul
+  simpa [smul_inv'] using (IsInvariant.invariant (A := A) (G := G) (H := H) b (a⁻¹ * a')).1 h
 
 public instance quotient_mulDistribMulAction {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     (H : Subgroup G) [H.Normal] [IsInvariant A G H] : MulDistribMulAction A (G ⧸ H) :=
@@ -40,48 +31,21 @@ public instance quotient_mulDistribMulAction {G A : Type*} [Group G] [Group A] [
       refine Quotient.ind₂ ?_
       intro x y
       calc
-        a • ((x : G ⧸ H) * (y : G ⧸ H)) = a • (QuotientGroup.mk (x * y)) := by rw [QuotientGroup.mk_mul]
+        a • ((x : G ⧸ H) * (y : G ⧸ H)) = a • (QuotientGroup.mk (x * y)) := by
+          rw [QuotientGroup.mk_mul]
         _ = QuotientGroup.mk (a • (x * y)) := by rw [MulAction.Quotient.smul_mk]
         _ = QuotientGroup.mk (a • x * a • y) := by rw [MulDistribMulAction.smul_mul]
         _ = QuotientGroup.mk (a • x) * QuotientGroup.mk (a • y) := by rw [QuotientGroup.mk_mul]
-        _ = ((a • x : G) : G ⧸ H) * ((a • y : G) : G ⧸ H) := by rfl
     smul_one := by
       intro a
       calc
         a • (1 : G ⧸ H) = a • (QuotientGroup.mk (1 : G)) := by rfl
         _ = QuotientGroup.mk (a • (1 : G)) := by rw [MulAction.Quotient.smul_mk]
         _ = QuotientGroup.mk (1 : G) := by rw [MulDistribMulAction.smul_one]
-        _ = (1 : G ⧸ H) := by rfl
-        }
+        _ = (1 : G ⧸ H) := by rw [QuotientGroup.mk_one] }
 
 
-/-**
-**[Subgoal 1: Abelian case]**
-If `G` is abelian, then the centralizer of any subgroup is the whole group. Hence under the
-hypothesis `hC` we have `fixedPointSubgroup A G = ⊤`, i.e. `∀ a g, a • g = g`.
-
-**Status**: Pending
-**Integration**: Import and apply at line 45 in `/mnt/prover_workspace/main.lean`
--/
-
-/-**
-**[Subgoal 2: Centre is characteristic]**
-The centre `Z(G)` is a characteristic subgroup of `G`. Consequently, any group action on `G`
-restricts to an action on `Z(G)`.
-
-**Status**: Pending
-**Integration**: Use to obtain an action on the centre and on the quotient `G/Z(G)`.
--/
-
-/-**
-**[Subgoal 3: Centralizer condition for the centre]**
-Assume the hypotheses of Proposition 1.10. Let `Z = Z(G)` and let `F = G ^* A`.
-If `z ∈ Z` centralizes `F ∩ Z`, then `z ∈ F ∩ Z`. In other words,
-`Z.centralizer (F ∩ Z) ≤ F ∩ Z`.
-
-**Status**: Pending
-**Integration**: Needed to apply the base case to the action on `Z`.
--/
+/-- If `z ∈ Z(G)` centralizes `F ∩ Z(G)`, then `z ∈ F ∩ Z(G)`. -/
 lemma centralizer_inf_center_le_fixedPoint_inf_center {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] (_ : Group.IsNilpotent G)
     (_ : Nat.Coprime (Nat.card A) (Nat.card G))
@@ -95,17 +59,8 @@ lemma centralizer_inf_center_le_fixedPoint_inf_center {G A : Type*} [Group G] [F
   have hz_F : z ∈ fixedPointSubgroup A G := hC hz_centralizer_F
   exact ⟨hz_F, hz_center⟩
 
-/-**
-**[Subgoal 4: Cocycle lifting]**
-Let `G` be a group with a `MulDistribMulAction` of a finite group `A` and let `F = G ^* A`.
-Suppose that for a given `x : G` we have `∀ a : A, x⁻¹ * (a • x) ∈ F`. Then there exists `f ∈ F`
-such that `x f⁻¹ ∈ F`, i.e. `x ∈ F`.
-
-This is a cohomological vanishing statement: the 1‑cocycle `a ↦ x⁻¹ * (a • x)` is a coboundary.
-
-**Status**: Pending
-**Integration**: Used to lift the centralizer condition from `G/Z` to `G`.
--/
+/-- If `∀ a, x⁻¹ * (a • x) ∈ F`, then `x ∈ F`.
+The 1-cocycle `a ↦ x⁻¹ * (a • x)` is a coboundary when `|A|` and `|G|` are coprime. -/
 lemma mem_fixedPointSubgroup_of_cocycle_condition {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (x : G) (hx : ∀ a : A, x⁻¹ * (a • x) ∈ fixedPointSubgroup A G) :
@@ -129,12 +84,10 @@ lemma mem_fixedPointSubgroup_of_cocycle_condition {G A : Type*} [Group G] [Finit
     have h := hF_fixed ⟨x⁻¹ * (b • x), hx b⟩ a
     calc
       x⁻¹ * ((a * b) • x) = x⁻¹ * (a • (b • x)) := by rw [mul_smul]
-      _ = x⁻¹ * (a • x) * (a • x)⁻¹ * (a • (b • x)) := by group
       _ = (x⁻¹ * (a • x)) * ((a • x)⁻¹ * (a • (b • x))) := by group
       _ = (x⁻¹ * (a • x)) * (a • (x⁻¹ * (b • x))) := by
         simp [smul_mul', smul_inv']
       _ = (x⁻¹ * (a • x)) * (x⁻¹ * (b • x)) := by rw [h]
-      _ = (x⁻¹ * (a • x)) * (x⁻¹ * (b • x)) := rfl
   -- ψ is a monoid homomorphism
   let ψ_hom : A →* F :=
     { toFun := ψ
@@ -156,31 +109,16 @@ lemma mem_fixedPointSubgroup_of_cocycle_condition {G A : Type*} [Group G] [Finit
       Nat.Coprime.gcd_eq_one hcoprimeF
     rw [hgcd] at hdvd
     exact Nat.eq_one_of_dvd_one hdvd
-  have hψ_triv : ∀ a, ψ a = 1 := by
-    intro a
-    have horder1 : orderOf (ψ a) = 1 := horder_coprime a
-    exact orderOf_eq_one_iff.mp horder1
+  have hψ_triv : ∀ a, ψ a = 1 := fun a => orderOf_eq_one_iff.mp (horder_coprime a)
   intro a
-  have h := hψ_triv a
-  dsimp [ψ] at h
-  have h' : (ψ a : G) = 1 := congr_arg Subtype.val h
-  dsimp [ψ] at h'
-  -- h' : x⁻¹ * (a • x) = 1
+  have h' : x⁻¹ * (a • x) = 1 := congr_arg Subtype.val (hψ_triv a)
   calc
-    a • x = x := by
-      calc
-        a • x = x * (x⁻¹ * a • x) := by group
-        _ = x * 1 := by rw [h']
-        _ = x := by simp
+    a • x = x * (x⁻¹ * a • x) := by group
+    _ = x := by rw [h', mul_one]
 
 
-/-**
-**[Trivial action on centre]**
-Assuming the hypotheses of Proposition 1.10, the action of `A` on the centre `Z(G)` is trivial.
-
-**Status**: Pending
-**Integration**: Used to apply the base case to the centre.
--/
+/-- Assuming the hypotheses of Proposition 1.10, the action of `A` on the centre `Z(G)` is
+trivial. -/
 lemma actsTrivially_center_of_nilpotent_coprime_centralizer_condition {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (hnil : Group.IsNilpotent G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (hC : Subgroup.centralizer (fixedPointSubgroup A G : Set G) ≤ fixedPointSubgroup A G) :
@@ -202,13 +140,8 @@ lemma actsTrivially_center_of_nilpotent_coprime_centralizer_condition {G A : Typ
   exact Subtype.ext hfix
 
 
-/-**
-**[Trivial action from trivial actions on centre and quotient]**
-If `A` acts trivially on `Z(G)` and on `G/Z(G)`, and `|A|` is coprime to `|G|`, then `A` acts trivially on `G`.
-
-**Status**: Pending
-**Integration**: Used in the induction step.
--/
+/-- If `A` acts trivially on `Z(G)` and on `G ⧸ Z(G)`, and `|A|` is coprime to `|G|`, then
+`A` acts trivially on `G`. -/
 lemma actsTrivially_of_center_and_quotient {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (hZtriv : ActsTrivially (A := A) (G := Subgroup.center G))
     (hQtriv : ActsTrivially (A := A) (G := G ⧸ Subgroup.center G))
@@ -223,14 +156,13 @@ lemma actsTrivially_of_center_and_quotient {G A : Type*} [Group G] [Finite G] [G
       rwa [hcoe] at h'
   have h_mem_center : ∀ (a : A) (g : G), (a • g) * g⁻¹ ∈ Subgroup.center G := by
     intro a g
+    rw [← QuotientGroup.eq_one_iff]
     have h := hQtriv a (QuotientGroup.mk g)
-    have h' : QuotientGroup.mk ((a • g) * g⁻¹) = (1 : G ⧸ Subgroup.center G) := by
-      calc
-        QuotientGroup.mk ((a • g) * g⁻¹) = QuotientGroup.mk (a • g) * (QuotientGroup.mk g)⁻¹ := by simp
-        _ = (a • QuotientGroup.mk g) * (QuotientGroup.mk g)⁻¹ := by simp
-        _ = (QuotientGroup.mk g) * (QuotientGroup.mk g)⁻¹ := by rw [h]
-        _ = (1 : G ⧸ Subgroup.center G) := by simp
-    rwa [QuotientGroup.eq_one_iff] at h'
+    calc
+      QuotientGroup.mk ((a • g) * g⁻¹) = (a • QuotientGroup.mk g) * (QuotientGroup.mk g)⁻¹ := by
+        simp
+      _ = (QuotientGroup.mk g) * (QuotientGroup.mk g)⁻¹ := by rw [h]
+      _ = 1 := by simp
   intro a g
   have hz' := h_mem_center a g
   have h_cond : ∀ a' : A, g⁻¹ * (a' • g) ∈ fixedPointSubgroup A G := by
@@ -245,11 +177,9 @@ lemma actsTrivially_of_center_and_quotient {G A : Type*} [Group G] [Finite G] [G
       calc
         g⁻¹ * (a' • g) = g⁻¹ * (((a' • g) * g⁻¹) * g) := by
           conv_lhs => arg 2; rw [h_eq1]
-        _ = (g⁻¹ * ((a' • g) * g⁻¹)) * g := by group
-        _ = (((a' • g) * g⁻¹) * g⁻¹) * g := by rw [h_comm']
-        _ = ((a' • g) * g⁻¹) * (g⁻¹ * g) := by group
-        _ = ((a' • g) * g⁻¹) * 1 := by simp
-        _ = (a' • g) * g⁻¹ := by simp
+        _ = (((a' • g) * g⁻¹) * g⁻¹) * g := by
+          rw [← mul_assoc, h_comm']
+        _ = (a' • g) * g⁻¹ := by group
     rw [eq]
     exact hZ_le_F hz''
   have hg : g ∈ fixedPointSubgroup A G :=
@@ -280,23 +210,16 @@ public lemma commutator_inv_right (a b : G) : ⁅a, b⁻¹⁆ = b⁻¹ * ⁅a, b
 lemma commutator_inv_mul_of_central_special (x f a : G)
     (heq : ⁅a • x, f⁆ = ⁅x, f⁆) : ⁅x⁻¹ * (a • x), f⁆ = 1 := by
   calc
-    ⁅x⁻¹ * (a • x), f⁆ = x⁻¹ * ⁅a • x, f⁆ * (x⁻¹)⁻¹ * ⁅x⁻¹, f⁆ := by rw [commutator_mul_left]
-    _ = x⁻¹ * ⁅a • x, f⁆ * x * ⁅x⁻¹, f⁆ := by simp
-    _ = x⁻¹ * ⁅x, f⁆ * x * ⁅x⁻¹, f⁆ := by rw [heq]
+    ⁅x⁻¹ * (a • x), f⁆ = x⁻¹ * ⁅x, f⁆ * x * ⁅x⁻¹, f⁆ := by
+      rw [commutator_mul_left, heq]
+      simp
     _ = x⁻¹ * ⁅x, f⁆ * x * (x⁻¹ * ⁅x, f⁆⁻¹ * x) := by rw [commutator_inv_eq_conjugate]
-    _ = (x⁻¹ * ⁅x, f⁆ * x) * (x⁻¹ * ⁅x, f⁆⁻¹ * x) := by group
-    _ = x⁻¹ * ⁅x, f⁆ * (x * x⁻¹) * ⁅x, f⁆⁻¹ * x := by group
-    _ = x⁻¹ * ⁅x, f⁆ * 1 * ⁅x, f⁆⁻¹ * x := by simp
-    _ = x⁻¹ * ⁅x, f⁆ * ⁅x, f⁆⁻¹ * x := by simp
-    _ = x⁻¹ * (⁅x, f⁆ * ⁅x, f⁆⁻¹) * x := by group
-    _ = x⁻¹ * 1 * x := by rw [mul_inv_cancel]
-    _ = 1 := by simp
+    _ = 1 := by group
 
 end CommutatorLemmas
 
-/-- **[Centralizer condition on quotient]**
-Assuming the hypotheses of Proposition 1.10, the centralizer condition also holds for the induced
-action of `A` on `G ⧸ Z(G)`. -/
+/-- Assuming the hypotheses of Proposition 1.10, the centralizer condition also holds for the
+induced action of `A` on `G ⧸ Z(G)`. -/
 lemma centralizer_condition_on_center_quotient {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     (hnil : Group.IsNilpotent G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (hC : Subgroup.centralizer (fixedPointSubgroup A G : Set G) ≤ fixedPointSubgroup A G) :
@@ -324,14 +247,9 @@ lemma centralizer_condition_on_center_quotient {G A : Type*} [Group G] [Finite G
     have hcomm := Subgroup.mem_centralizer_iff.mp hxbar_centralizer (π f) hfxbar
     rw [← QuotientGroup.eq_one_iff]
     calc
-      π ⁅x, f⁆ = π (x * f * x⁻¹ * f⁻¹) := rfl
-      _ = π x * π f * (π x)⁻¹ * (π f)⁻¹ := by simp [π, map_mul, map_inv]
-      _ = (π x * π f) * (π x)⁻¹ * (π f)⁻¹ := by group
-      _ = (π f * π x) * (π x)⁻¹ * (π f)⁻¹ := by rw [hcomm]
-      _ = π f * (π x * (π x)⁻¹) * (π f)⁻¹ := by group
-      _ = π f * 1 * (π f)⁻¹ := by simp
-      _ = π f * (π f)⁻¹ := by simp
-      _ = 1 := by simp
+      π ⁅x, f⁆ = π x * π f * (π x)⁻¹ * (π f)⁻¹ := by simp [commutatorElement_def, π]
+      _ = π f * π x * (π x)⁻¹ * (π f)⁻¹ := by rw [hcomm]
+      _ = 1 := by group
   have h_eq : ∀ a : A, ∀ f ∈ fixedPointSubgroup A G, ⁅a • x, f⁆ = ⁅x, f⁆ := by
     intro a f hf
     have hz := h_comm' f hf
@@ -343,9 +261,7 @@ lemma centralizer_condition_on_center_quotient {G A : Type*} [Group G] [Finite G
     calc
       ⁅a • x, f⁆ = a • ⁅x, f⁆ := by
         have haf : a • f = f := (FixedPoints.mem_subgroup (M := A) (a := f)).mp hf a
-        calc
-          ⁅a • x, f⁆ = ⁅a • x, a • f⁆ := by simp [haf]
-          _ = a • ⁅x, f⁆ := by simp [commutatorElement_def]
+        simp [haf, commutatorElement_def]
       _ = ⁅x, f⁆ := hZtriv''
   have h_cocycle : ∀ a : A, x⁻¹ * (a • x) ∈ fixedPointSubgroup A G := by
     intro a
@@ -362,8 +278,7 @@ lemma centralizer_condition_on_center_quotient {G A : Type*} [Group G] [Finite G
       calc
         f * (x⁻¹ * a • x) * f⁻¹ * (x⁻¹ * a • x)⁻¹ = ⁅f, x⁻¹ * a • x⁆ := by rw [commutatorElement_def]
         _ = (⁅x⁻¹ * a • x, f⁆)⁻¹ := by rw [commutatorElement_inv]
-        _ = 1⁻¹ := by rw [h1']
-        _ = 1 := by simp
+        _ = 1 := by rw [h1', inv_one]
     exact hC h'
   have hx_F : x ∈ fixedPointSubgroup A G :=
     mem_fixedPointSubgroup_of_cocycle_condition hcoprime x h_cocycle

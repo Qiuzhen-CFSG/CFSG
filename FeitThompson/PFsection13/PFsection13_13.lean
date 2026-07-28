@@ -24,12 +24,7 @@ universe u
 private theorem section13_three_le_of_odd_prime_for_13_13 {n : ℕ}
     (hn : Nat.Prime n) (hodd : Odd n) :
     3 ≤ n := by
-  have h2le : 2 ≤ n := hn.two_le
-  have hn_ne_two : n ≠ 2 := by
-    intro hn2
-    have hnot_even : ¬ Even n := Nat.not_even_iff_odd.mpr hodd
-    exact hnot_even (by rw [hn2]; exact even_two)
-  omega
+  exact (Nat.Prime.odd_iff hn).1 hodd
 
 private theorem section13_five_le_of_prime_three_le_ne_three_for_13_13 {n : ℕ}
     (hn : Nat.Prime n) (h3 : 3 ≤ n) (hne3 : n ≠ 3) :
@@ -245,10 +240,7 @@ public theorem theorem_13_13
     section13_three_le_of_odd_prime_for_13_13 hpPrime hpOdd
   have hq3le : 3 ≤ q :=
     section13_three_le_of_odd_prime_for_13_13 hqPrime hqOdd
-  have hp_ne_two : p ≠ 2 := by
-    intro hp2
-    have hnot_even : ¬ Even p := Nat.not_even_iff_odd.mpr hpOdd
-    exact hnot_even (by rw [hp2]; exact even_two)
+  have hp_ne_two : p ≠ 2 := by omega
   have hdivPow : u ∣ (p - 1) ^ (q - 1) :=
     Section9.theorem_9_7_case_a_barU_card_dvd_p_minus_one_pow_sec9
       Smax P U W1 W2 ⊥ C p q a u hcaseA97 hBarU
@@ -286,9 +278,7 @@ public theorem theorem_13_13
   have htwo_dvd_p_sub_one : 2 ∣ p - 1 :=
     even_iff_two_dvd.mp hp_even_sub_one
   have hp_sub_one_eq_two_mul : p - 1 = 2 * ((p - 1) / 2) := by
-    have h := Nat.div_mul_cancel htwo_dvd_p_sub_one
-    rw [mul_comm] at h
-    exact h.symm
+    simpa [mul_comm] using (Nat.div_mul_cancel htwo_dvd_p_sub_one).symm
   have hdivHalfPow : u ∣ ((p - 1) / 2) ^ (q - 1) := by
     have hdivEven : u ∣ (2 * ((p - 1) / 2)) ^ (q - 1) := by
       rw [← hp_sub_one_eq_two_mul]
@@ -326,21 +316,16 @@ public theorem theorem_13_13
   have hp5 : 5 ≤ p :=
     section13_five_le_of_prime_three_le_ne_three_for_13_13
       hpPrime hp3 hp_ne_three
+  have hhalfSq : ((p - 1) / 2) ^ 2 = (p - 1) ^ 2 / 4 := by
+    simpa using
+      (Nat.div_pow (a := 2) (b := p - 1) (c := 2) htwo_dvd_p_sub_one)
   have hdivTarget : u ∣ (p - 1) ^ 2 / 4 := by
     have hdivHalfSq : u ∣ ((p - 1) / 2) ^ 2 := by
       simpa [hq_eq_three] using hdivHalfPow
-    have hhalfSq :
-        ((p - 1) / 2) ^ 2 = (p - 1) ^ 2 / 4 := by
-      simpa using
-        (Nat.div_pow (a := 2) (b := p - 1) (c := 2) htwo_dvd_p_sub_one)
     simpa [hhalfSq] using hdivHalfSq
   by_cases hu_eq_target : u = (p - 1) ^ 2 / 4
   · exact ⟨hq_eq_three, hu_eq_target⟩
-  · have hhalfSq :
-        ((p - 1) / 2) ^ 2 = (p - 1) ^ 2 / 4 := by
-      simpa using
-        (Nat.div_pow (a := 2) (b := p - 1) (c := 2) htwo_dvd_p_sub_one)
-    have htarget_pos : 0 < (p - 1) ^ 2 / 4 := by
+  · have htarget_pos : 0 < (p - 1) ^ 2 / 4 := by
       rw [← hhalfSq]
       exact pow_pos hhalf_pos 2
     have hu_le_target_half :

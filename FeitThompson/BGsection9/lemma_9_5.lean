@@ -2224,8 +2224,8 @@ public theorem lemma_9_5
       have hcomm_normal :
           (⁅(P : Subgroup G), Subgroup.normalizer ((P : Subgroup G) : Set G)⁆.subgroupOf
             ((P : Subgroup G) ⊔ Subgroup.normalizer ((P : Subgroup G) : Set G))).Normal :=
-        commutator_normal_in_sup (P : Subgroup G)
-          (Subgroup.normalizer ((P : Subgroup G) : Set G))
+        Subgroup.normal_subgroupOf_commutator_sup (H₁ := (P : Subgroup G))
+          (H₂ := Subgroup.normalizer ((P : Subgroup G) : Set G))
       have hsup_eq :
           (P : Subgroup G) ⊔ Subgroup.normalizer ((P : Subgroup G) : Set G) =
             Subgroup.normalizer ((P : Subgroup G) : Set G) :=

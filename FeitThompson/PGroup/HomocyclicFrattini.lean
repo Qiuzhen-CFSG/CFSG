@@ -14,14 +14,16 @@ noncomputable section
 
 universe u
 
-private theorem zmod_cast_p_mul_eq_zero
+/-- Multiplication by `p` vanishes under coordinatewise mod-`p` reduction on `ZMod (p ^ e)`. -/
+public theorem zmod_cast_p_mul_eq_zero
     (p e : ℕ) (he : 1 ≤ e) (z : ZMod (p ^ e)) :
     ZMod.castHom (dvd_pow_self p (Nat.ne_of_gt he)) (ZMod p)
       ((p : ZMod (p ^ e)) * z) = 0 := by
   rw [map_mul]
   simp
 
-private theorem exists_zmod_p_mul_of_cast_eq_zero
+/-- An element of `ZMod (p ^ e)` killed by mod-`p` reduction is divisible by `p`. -/
+public theorem exists_zmod_p_mul_of_cast_eq_zero
     (p e : ℕ) [Fact p.Prime] (he : 1 ≤ e) (z : ZMod (p ^ e))
     (hz : ZMod.castHom (dvd_pow_self p (Nat.ne_of_gt he)) (ZMod p) z = 0) :
     ∃ y : ZMod (p ^ e), (p : ZMod (p ^ e)) * y = z := by
@@ -33,19 +35,15 @@ private theorem exists_zmod_p_mul_of_cast_eq_zero
   have hp_dvd_val : p ∣ z.val := (ZMod.natCast_eq_zero_iff z.val p).1 hzval
   obtain ⟨y, hy⟩ := hp_dvd_val
   refine ⟨(y : ZMod (p ^ e)), ?_⟩
-  rw [← ZMod.natCast_zmod_val z]
-  rw [hy]
+  rw [← ZMod.natCast_zmod_val z, hy]
   simp [Nat.cast_mul]
 
 /-- The standard homocyclic coordinate cover is abelian, so its commutator subgroup is trivial. -/
 public theorem standardHomocyclicCover_commutator_eq_bot
     (κ : Type u) (q : ℕ) :
     _root_.commutator (StandardHomocyclicCover κ q) = ⊥ := by
-  rw [commutator_eq_bot_iff_center_eq_top]
-  apply eq_top_iff.mpr
-  intro x _hx
-  exact Subgroup.mem_center_iff.mpr (fun y => by
-    exact ((standardHomocyclicCover_commutative κ q).1.1 x y).symm)
+  rw [commutator_eq_bot_iff]
+  exact standardHomocyclicCover_commutative κ q
 
 /-- Every `p`-th power in the standard `p ^ e` cover dies under coordinatewise mod-`p`
 reduction. -/
@@ -77,8 +75,7 @@ public theorem standardHomocyclicCover_frattini_le_reduction_ker
   · have hxbot : x ∈ (⊥ : Subgroup (StandardHomocyclicCover κ (p ^ e))) := by
       simpa [standardHomocyclicCover_commutator_eq_bot κ (p ^ e)] using hxcomm
     have hx1 : x = 1 := by
-      simp at hxbot
-      exact hxbot
+      simpa using hxbot
     simp [hx1]
   · exact standardHomocyclicCover_pthPower_mem_reduction_ker κ p e he y
 
@@ -95,8 +92,8 @@ public theorem standardHomocyclicCover_reduction_ker_le_powers_closure
   have hcoord : ∀ i : κ, ∃ y : ZMod (p ^ e),
       (p : ZMod (p ^ e)) * y = Multiplicative.toAdd x i := by
     intro i
-    exact exists_zmod_p_mul_of_cast_eq_zero p e he (Multiplicative.toAdd x i) (by
-      exact congrFun hx i)
+    exact exists_zmod_p_mul_of_cast_eq_zero p e he (Multiplicative.toAdd x i)
+      (congrFun hx i)
   choose y hy using hcoord
   have hpow : Multiplicative.ofAdd y ^ p = x := by
     apply Multiplicative.toAdd.injective

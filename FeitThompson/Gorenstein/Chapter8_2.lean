@@ -8,7 +8,7 @@ public import FeitThompson.BGsection1.lemma_1_22
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.PCore.CentralizerControl
 public import FeitThompson.PGroup.NormalSubgroups
-public import FeitThompson.Commutator.Core
+public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 
 /-!
@@ -145,11 +145,12 @@ theorem replacementCommChain_le_normalizer
       exact le_top
   | n + 1 => by
       let D : Subgroup G := replacementCommChain B A n
-      letI : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal := commutator_normal_in_sup D A
+      letI : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal :=
+        Subgroup.normal_subgroupOf_commutator_sup (H₁ := D) (H₂ := A)
       have hsup_norm : D ⊔ A ≤ Subgroup.normalizer (((⁅D, A⁆ : Subgroup G) : Set G)) := by
         exact
           Subgroup.le_normalizer_of_normal_subgroupOf
-            (H := ⁅D, A⁆) (K := D ⊔ A) (commutator_le_sup D A)
+            (H := ⁅D, A⁆) (K := D ⊔ A) (Subgroup.commutator_le_sup (H₁ := D) (H₂ := A))
       rw [replacementCommChain_succ]
       exact le_sup_right.trans hsup_norm
 
@@ -200,7 +201,7 @@ theorem replacementCommChain_le_sup
       calc
         replacementCommChain B A (n + 1) = ⁅replacementCommChain B A n, A⁆ := by
           rw [replacementCommChain_succ]
-        _ ≤ replacementCommChain B A n ⊔ A := commutator_le_sup _ _
+        _ ≤ replacementCommChain B A n ⊔ A := Subgroup.commutator_le_sup _ _
         _ ≤ B ⊔ A := sup_le (replacementCommChain_le_sup B A n) le_sup_right
 
 /-- The iterated commutator chain viewed inside `A ⊔ B`. -/
