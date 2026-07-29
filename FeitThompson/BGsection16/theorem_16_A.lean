@@ -133,20 +133,6 @@ public theorem section16_MFamilyP_of_nontrivial_hall_kappa
     simpa [q, hcard_sub] using hq0dvd
   exact ⟨hM, ⟨q, hKHall.p_in_pi_of_p_dvd_card q hq_sub⟩⟩
 
-omit [IsMinCE G] in
-/-- A nontrivial Section 16 `K` attached to a maximal subgroup places that
-maximal subgroup in the BG Type `P` family. -/
-public theorem section16_maximalTypeP_of_KUData_ne_bot
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section16KUData M K U)
-    (hKne : K ≠ ⊥) :
-    section16MaximalTypeP M := by
-  have hKU15 : section15KUData M K U :=
-    section16_kudata_to_section15 (G := G) hKU
-  have hMP : M ∈ section14MFamilyP G :=
-    section16_MFamilyP_of_nontrivial_hall_kappa (G := G) hM hKU15.1 hKne
-  simpa [section16MaximalTypeP] using hMP
 
 omit [IsMinCE G] in
 public theorem section16_K_ne_bot_of_MFamilyP

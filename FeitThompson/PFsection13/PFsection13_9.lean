@@ -27,38 +27,6 @@ universe u
 
 /-! ## (13.9) -/
 
-/-- Peterfalvi `(13.9)`. -/
-@[expose] public def theorem_13_9_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (G0 : Set G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS τ1 : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (lam : Section1.ClassFunction Smax)
-    (lamτ : Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ →
-      Section6.coherentExtension Sfam τS τ1 →
-        theorem_13_3_characterOutputFor Smax P C Sfam τ1 p q u μsum η →
-          theorem_13_9_hypothesis Smax H P C Q G0 Sfam τ1 lam lamτ p q u →
-            (∀ x : G, x ∈ G0 → lamτ x ≠ 0 ∨ (η 1 0) x ≠ 0) ∧
-              (Nat.card G0 : ℝ) ≤
-                Section7.supportEnergy G0 lamτ + Section7.supportEnergy G0 (η 1 0)
-
-
 
 private def theorem_13_9_EtaColumnModel
     {G : Type u}

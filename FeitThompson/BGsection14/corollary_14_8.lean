@@ -167,14 +167,6 @@ public theorem section14_mem_P_conjBy
   exact ⟨section14_maximal_conjBy (G := G) hMmax a,
     ⟨p, section14_mem_kappaPrimes_conjBy (G := G) (M := M) (p := p) a hp⟩⟩
 
-omit [IsMinCE G] in
-/-- The Section 14 Type-`P` family is closed under conjugating the maximal
-subgroup. -/
-public theorem section14_mFamilyP_conjBy
-    {M : Subgroup G}
-    (a : G) (hM : M ∈ section14MFamilyP G) :
-    M.conjBy a ∈ section14MFamilyP G :=
-  section14_mem_P_conjBy (G := G) a hM
 
 omit [IsMinCE G] in
 private theorem section14_mem_P2_conjBy
@@ -202,43 +194,5 @@ public theorem section14_mem_P2_of_conjugate
   rcases hHM with ⟨a, rfl⟩
   exact section14_mem_P2_conjBy (G := G) (M := M) a hM
 
-/-- Corollary 14.8: the `𝓟₁` family is one conjugacy class, and a nonempty
-`𝓟` family consists of exactly two conjugacy classes. -/
-public theorem corollary_14_8 :
-    ((section14MFamilyP1 G).Nonempty →
-      ∀ M H : Subgroup G, M ∈ section14MFamilyP1 G → H ∈ section14MFamilyP1 G →
-        section14ConjugateSubgroups H M) ∧
-    ((section14MFamilyP G).Nonempty →
-      ∃ M₁ M₂ : Subgroup G,
-        M₁ ∈ section14MFamilyP G ∧ M₂ ∈ section14MFamilyP G ∧
-          ¬ section14ConjugateSubgroups M₁ M₂ ∧
-          ∀ H : Subgroup G, H ∈ section14MFamilyP G →
-            section14ConjugateSubgroups H M₁ ∨
-              section14ConjugateSubgroups H M₂) := by
-  constructor
-  · intro hP1nonempty M H hM hH
-    have hsolvM : IsSolvable M :=
-      IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1.1.1)
-    obtain ⟨K, hK⟩ :=
-      section14_exists_hallSubgroupIn (G := G) hsolvM (section14KappaPrimes M)
-    have hPartnerP2 : section14Theorem14_7Partner M K ∈ section14MFamilyP2 G := by
-      rcases theorem_14_7_f (G := G) (M := M) (K := K) hM.1 hK with hMP2 | hPartnerP2
-      · exact False.elim (hMP2.1.2 hM.2)
-      · exact hPartnerP2.1
-    rcases theorem_14_7_g (G := G) (M := M) (K := K) hM.1 hK H hH.1 with hHM | hHPartner
-    · exact hHM
-    · have hHP2 : H ∈ section14MFamilyP2 G :=
-        section14_mem_P2_of_conjugate (G := G) hHPartner hPartnerP2
-      exact False.elim (hHP2.2 hH.2)
-  · intro hPnonempty
-    rcases hPnonempty with ⟨M, hM⟩
-    have hsolvM : IsSolvable M :=
-      IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1.1)
-    obtain ⟨K, hK⟩ :=
-      section14_exists_hallSubgroupIn (G := G) hsolvM (section14KappaPrimes M)
-    have h14 := theorem_14_7_data (G := G) (M := M) (K := K) hM hK
-    refine ⟨section14Theorem14_7Partner M K, M, h14.1, hM, h14.2.1, ?_⟩
-    intro H hH
-    simpa [or_comm] using theorem_14_7_g (G := G) (M := M) (K := K) hM hK H hH
 
 end Section14

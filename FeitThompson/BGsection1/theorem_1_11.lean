@@ -196,43 +196,6 @@ public theorem classTwo_pthPower_hom {G : Type*} [Group G] {p : ℕ} [Fact p.Pri
     _ = x ^ p * y ^ p := by
       rw [hk, pow_mul, hcomm_pow, one_pow, one_mul]
 
-/-- Core bridge needed in the proof of Theorem 1.11: the image of `Ω₁(G)` in `G/Φ(G)` is all of
-the quotient. -/
-public def OmegaFrattiniMapTopBridge (p : ℕ) (G : Type*) [Group G] [Finite G] [Fact p.Prime]
-    [Fact (IsPGroup p G)] : Prop := by
-  let _ := (inferInstance : Finite G)
-  let _ := (inferInstance : Fact p.Prime)
-  let _ := (inferInstance : Fact (IsPGroup p G))
-  exact (omega₁ (G := G) (p := p)).map (QuotientGroup.mk' (frattini G)) = ⊤
-
-/-- Reduction of Theorem 1.11 to the `Ω₁`-Frattini bridge. -/
-public theorem theorem_1_11_of_omegaFrattiniMapTopBridge
-    {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p G)] [MulDistribMulAction A G]
-    (hmapTop : OmegaFrattiniMapTopBridge (p := p) (G := G))
-    (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
-    (hΩ : ActsTriviallyOnSubgroup (A := A) (G := G) (omega₁ (G := G) (p := p))) :
-    ActsTrivially (A := A) (G := G) := by
-  let hΦinv : IsInvariant A G (frattini G) :=
-    isInvariant_of_characteristic (A := A) (G := G) (frattini G)
-  letI : MulDistribMulAction A (G ⧸ frattini G) :=
-    quotientMulDistribMulAction (A := A) (G := G) (frattini G) hΦinv
-  have hΩquot :
-      ActsTriviallyOnSubgroup (A := A) (G := G ⧸ frattini G)
-        ((omega₁ (G := G) (p := p)).map (QuotientGroup.mk' (frattini G))) := by
-    simpa using
-      actsTriviallyOnSubgroup_map_quotient_of_actsTriviallyOnSubgroup
-        (A := A) (G := G) (N := frattini G) (H := omega₁ (G := G) (p := p)) hΦinv hΩ
-  have hmapTop' :
-      ((omega₁ (G := G) (p := p)).map (QuotientGroup.mk' (frattini G))) =
-        (⊤ : Subgroup (G ⧸ frattini G)) := hmapTop
-  have hΩquot_top :
-      ActsTriviallyOnSubgroup (A := A) (G := G ⧸ frattini G) (⊤ : Subgroup (G ⧸ frattini G)) := by
-    simpa [hmapTop'] using hΩquot
-  have hquot : ActsTrivially (A := A) (G := G ⧸ frattini G) := by
-    intro a q
-    exact hΩquot_top a q (by simp)
-  exact theorem_1_8 (R := G) (A := A) (p := p) hcoprime (by simpa using hquot)
 
 lemma swap_mul_commutator_of_mem_center {G : Type*} [Group G] {x y : G}
     (hcomm : ⁅y, x⁆ ∈ Subgroup.center G) :

@@ -88,25 +88,6 @@ public theorem claim_3_norm_step
           beta * (a⁻¹ ^ 2 + theta (a⁻¹ ^ 2))) := by ring
     _ = 0 := by rw [CharTwo.add_self_eq_zero, CharTwo.add_self_eq_zero, add_zero]
 
-/-- The complete field-theoretic conclusion of Claim (3), once equation `(*)`
-has been obtained for every admissible value. -/
-public theorem claim_3_field_conclusion
-    {F : Type*} [Field F] [Finite F] [CharP F 2]
-    (theta : F ≃+* F) (hthetaOdd : Odd (orderOf theta))
-    (alpha beta A : F) (hbeta : beta ≠ 0)
-    (hstar : ∀ X : F, X ≠ 0 → X ≠ A →
-      alpha ^ 2 + beta ^ 2 + beta * (X + theta X) = 0)
-    (hadmissible : ∃ X : F, X ≠ 0 ∧ X ≠ A) :
-    theta = 1 ∧ alpha = beta := by
-  let c := (alpha ^ 2 + beta ^ 2) / beta
-  have hconstant : ∀ X : F, X ≠ 0 → X ≠ A → X + theta X = c := by
-    intro X hX0 hXA
-    apply (eq_div_iff hbeta).2
-    have hzero := CharTwo.add_eq_zero.mp (hstar X hX0 hXA)
-    simpa [c, mul_comm] using hzero.symm
-  have htheta := claim_3_a theta hthetaOdd A c hconstant
-  obtain ⟨X, hX0, hXA⟩ := hadmissible
-  exact ⟨htheta, claim_3_b theta alpha beta X htheta (hstar X hX0 hXA)⟩
 
 end PFchapter4section3
 end BenderSuzuki

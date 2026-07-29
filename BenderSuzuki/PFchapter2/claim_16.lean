@@ -127,18 +127,6 @@ private theorem chapter2_claim16_natCard_rightConjugate
     (Subgroup.equivMapOfInjective A (MulAut.conj g⁻¹).toMonoidHom
       (MulAut.conj g⁻¹).injective).symm.toEquiv
 
-private theorem chapter2_claim16_rightConjugate_eq_self_of_mem_normalizer
-    {G : Type*} [Group G] {A : Subgroup G} {g : G}
-    (hg : g ∈ Subgroup.normalizer (A : Set G)) :
-    rightConjugate A g = A := by
-  ext x
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    have hginv := (Subgroup.normalizer (A : Set G)).inv_mem hg
-    exact (Subgroup.mem_normalizer_iff.mp hginv y).1 hy
-  · intro hx
-    refine ⟨g * x * g⁻¹, (Subgroup.mem_normalizer_iff.mp hg x).1 hx, ?_⟩
-    simp [mul_assoc]
 
 private theorem chapter2_claim16_mem_normalizer_of_rightConjugate_eq_self
     {G : Type*} [Group G] {A : Subgroup G} {g : G}
@@ -285,12 +273,6 @@ private theorem chapter2_claim16_stronglyReal_rightConjugateElem
     _ = rightConjugateElem u g * rightConjugateElem v g := by
       simp [rightConjugateElem, mul_assoc]
 
-private theorem chapter2_claim16_stronglyReal_inv
-    {G : Type*} [Group G] {x : G} (hx : IsStronglyReal x) :
-    IsStronglyReal x⁻¹ := by
-  rcases hx with ⟨u, v, hu, hv, rfl⟩
-  refine ⟨v, u, hv, hu, ?_⟩
-  simp [hu.inv_eq_self, hv.inv_eq_self]
 
 private theorem chapter2_claim16_Z1_stronglyReal
     {G : Type*} [Group G] (Z1 : Subgroup G) (s t : G)
@@ -1333,7 +1315,6 @@ private theorem chapter2_claim16_normalizer_ZPSigma_eq
     rw [Subgroup.closure_le]
     simpa [Set.singleton_subset_iff] using hs_norm_A
   exact le_antisymm (by simpa [A] using hforward) (by simpa [A] using hreverse)
-
 
 
 /-- Peterfalvi, Part II, Chapter II, Claim (16). -/

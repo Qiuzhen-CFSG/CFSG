@@ -169,7 +169,6 @@ public theorem proposition_2_indexTwoCyclic_irreducible
     omega
 
 
-
 /-- The additive characteristic does not divide the cardinality of an
 index-two subgroup of the near-field unit group. This is the Maschke
 coprimality input. -/
@@ -200,90 +199,6 @@ public theorem rightNearField_addOrderOf_one_not_dvd_indexTwoSubgroup_card
   have hp_one : p ∣ 1 := (Nat.dvd_add_iff_right hp_twoA).mpr hpF
   exact hp.ne_one (Nat.dvd_one.mp hp_one)
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The cyclic index-two right-multiplication action is irreducible as a
-prime-field representation. Maschke supplies an invariant complement, and the
-printed cardinality argument rules out two nonzero complementary summands. -/
-public theorem proposition_2_indexTwoCyclic_representation_irreducible
-    {F : Type u} [RightNearField F] [Finite F]
-    (A : Subgroup Fˣ) (hA_cyclic : IsCyclic A) (hA_index : A.index = 2) :
-    let p := addOrderOf (1 : F)
-    letI : Fact (Nat.Prime p) := ⟨rightNearField_addOrderOf_one_prime⟩
-    letI : Module (ZMod p) F := rightNearFieldZModModule F
-    letI : IsMulCommutative A := hA_cyclic.isMulCommutative
-    Representation.IsIrreducible (rightNearFieldUnitsRepresentation A) := by
-  let p := addOrderOf (1 : F)
-  letI : Fact (Nat.Prime p) := ⟨rightNearField_addOrderOf_one_prime⟩
-  letI : Module (ZMod p) F := rightNearFieldZModModule F
-  letI : IsMulCommutative A := hA_cyclic.isMulCommutative
-  let rho : Representation (ZMod p) A F := rightNearFieldUnitsRepresentation A
-  have hnot : ¬ p ∣ Nat.card A :=
-    rightNearField_addOrderOf_one_not_dvd_indexTwoSubgroup_card A hA_index
-  have hring : ringChar (ZMod p) = p := ringChar.eq (ZMod p) p
-  have hchar :
-      ringChar (ZMod p) = 0 ∨
-        Nat.Prime (ringChar (ZMod p)) ∧
-          (ringChar (ZMod p)).Coprime (Nat.card A) := by
-    right
-    rw [hring]
-    exact ⟨Fact.out, (Fact.out : Nat.Prime p).coprime_iff_not_dvd.mpr hnot⟩
-  letI : Module (MonoidAlgebra (ZMod p) A) F :=
-    rho.instModuleMonoidAlgebraAsModule
-  have hsemi : IsSemisimpleModule (MonoidAlgebra (ZMod p) A) F :=
-    Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
-      rho hchar
-  change Representation.IsIrreducible rho
-  apply (Representation.irreducible_iff_isSimpleModule_asModule rho).mpr
-  change IsSimpleModule (MonoidAlgebra (ZMod p) A) F
-  rw [isSimpleModule_iff]
-  have hbot_ne_top :
-      (⊥ : Submodule (MonoidAlgebra (ZMod p) A) F) ≠ ⊤ := by
-    intro h
-    have hone : (1 : F) ∈ (⊥ : Submodule (MonoidAlgebra (ZMod p) A) F) := by
-      rw [h]
-      simp
-    have hzero : (1 : F) = 0 := (Submodule.mem_bot _).mp hone
-    exact one_ne_zero hzero
-  refine
-    { exists_pair_ne := ⟨⊥, ⊤, hbot_ne_top⟩
-      eq_bot_or_eq_top := ?_ }
-  intro S
-  by_cases hSbot : S = ⊥
-  · exact Or.inl hSbot
-  right
-  by_contra hStop
-  obtain ⟨T, hST⟩ := hsemi.exists_isCompl S
-  have hTbot : T ≠ ⊥ := by
-    intro hT
-    apply hStop
-    have hsup := hST.sup_eq_top
-    rw [hT, sup_bot_eq] at hsup
-    exact hsup
-  exfalso
-  apply proposition_2_indexTwoCyclic_irreducible A hA_index
-      S.toAddSubgroup T.toAddSubgroup
-  · intro x hx a
-    have hs := S.smul_mem (MonoidAlgebra.single a 1) hx
-    rw [Representation.single_smul, one_smul] at hs
-    change x * ((a : A) : Fˣ) ∈ S at hs
-    exact hs
-  · intro x hx a
-    have ht := T.smul_mem (MonoidAlgebra.single a 1) hx
-    rw [Representation.single_smul, one_smul] at ht
-    change x * ((a : A) : Fˣ) ∈ T at ht
-    exact ht
-  · intro h
-    apply hSbot
-    exact Submodule.toAddSubgroup_injective h
-  · intro h
-    apply hTbot
-    exact Submodule.toAddSubgroup_injective h
-  · rw [disjoint_iff]
-    have hinf : (S ⊓ T).toAddSubgroup = S.toAddSubgroup ⊓ T.toAddSubgroup := by
-      ext x; simp
-    simpa [hinf] using congrArg Submodule.toAddSubgroup hST.inf_eq_bot
-  · simpa [Submodule.sup_toAddSubgroup] using
-      congrArg Submodule.toAddSubgroup hST.sup_eq_top
 
 set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 500000 in

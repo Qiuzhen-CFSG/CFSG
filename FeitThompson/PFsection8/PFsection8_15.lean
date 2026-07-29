@@ -331,19 +331,6 @@ private theorem theorem_8_15_choice_subset_A0
   · exact hAsubA0
   · exact hA1subA.trans hAsubA0
 
-private theorem theorem_8_15_choice_subset_A
-    {G : Type u} [Group G] [Finite G]
-    {M MF Ms : Subgroup G} {A A0 A1 Achoice D tildeA tildeA0 tildeA1 : Set G}
-    {R : G → Subgroup G}
-    (hData : theorem_8_15_source_data M MF Ms A A0 A1 Achoice D tildeA tildeA0 tildeA1 R)
-    (hChoiceA : Achoice = A ∨ Achoice = A1) :
-    Achoice ⊆ A := by
-  rcases hData with ⟨_hNotation, h14, _hChoice⟩
-  rcases h14 with ⟨hA1subA, _hAsubA0, _hD, _hRbot, _hUnique, _hReq,
-    _htildeA, _htildeA0, _htildeA1⟩
-  rcases hChoiceA with rfl | rfl
-  · exact subset_rfl
-  · exact hA1subA
 
 private theorem theorem_8_15_trivial_semidirect_centralizer
     {G : Type u} [Group G] {M : Subgroup G} {x : G}
@@ -1497,26 +1484,6 @@ public theorem theorem_8_15_typeP_W2_subgroupOf_le_derived
       hP (by simpa [Subgroup.mem_subgroupOf] using hx)
   rw [← section12_ambientDerivedSubgroup_subgroupOf_eq]
   simpa [Subgroup.mem_subgroupOf] using hxD
-
-/-- A Type-P maximal subgroup supplies the book-facing PF `(4.2)` package,
-including the explicit containment `W₂ ≤ M'`. -/
-public theorem theorem_8_15_hypothesis_4_2_full_of_typeP
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 : Subgroup G}
-    (hG : IsMinCE G)
-    (hP : typePDefinitionData M MF U W1 W2) :
-    Section4.hypothesis_4_2_full_statement
-      (derivedSubgroup M)
-      (W1.subgroupOf M)
-      (W2.subgroupOf M)
-      ((W1 ⊔ W2).subgroupOf M) := by
-  exact
-    ⟨theorem_8_15_hypothesis_4_2_of_typeP
-        (G := G) (M := M) (MF := MF) (U := U) (W1 := W1) (W2 := W2)
-        hG hP,
-      theorem_8_15_typeP_W2_subgroupOf_le_derived
-        (G := G) (M := M) (MF := MF) (U := U) (W1 := W1) (W2 := W2)
-        hP⟩
 
 
 public theorem theorem_8_15_hypothesis_3_1_of_typeP

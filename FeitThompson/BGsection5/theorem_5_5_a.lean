@@ -1383,41 +1383,6 @@ private theorem theorem_5_5_a_commutatorChain_eventually_bot
       theorem_5_5_a_commutatorChain_le_lowerCentralSeries (R := R) (H := H) n
   exact le_bot_iff.mp hle
 
-private theorem theorem_5_5_a_commutatorChain_step_lt_of_ne_bot
-    {R : Type*} [Group R] {H K : Subgroup R}
-    (_hHchar : H.Characteristic)
-    (hKchar : K.Characteristic) (hK_le_H : K ≤ H) (hK_ne_bot : K ≠ ⊥)
-    (hHcomm : ⁅H, ⊤⁆ ≤ centerIn (G := R) H)
-    (hcent_card : Nat.card (subgroupCentralizerIn K (⁅K, ⊤⁆)) = 1) :
-    ⁅K, ⊤⁆ < K := by
-  letI : K.Characteristic := hKchar
-  letI : K.Normal := by infer_instance
-  have hstep_le : ⁅K, (⊤ : Subgroup R)⁆ ≤ K :=
-    Subgroup.commutator_le_left (H₁ := K) (H₂ := (⊤ : Subgroup R))
-  refine lt_of_le_of_ne hstep_le ?_
-  intro hstep_eq
-  have hK_le_cent : K ≤ Subgroup.centralizer ((⁅K, ⊤⁆ : Subgroup R) : Set R) := by
-    intro x hx
-    rw [Subgroup.mem_centralizer_iff]
-    intro y hy
-    have hy_centerIn_H : y ∈ centerIn (G := R) H := by
-      have hyHcomm : y ∈ ⁅H, (⊤ : Subgroup R)⁆ := by
-        exact (Subgroup.commutator_mono hK_le_H le_rfl) hy
-      exact hHcomm hyHcomm
-    exact (Subgroup.mem_centralizer_iff.mp hy_centerIn_H.2) x (hK_le_H hx) |>.symm
-  have hcent_eq_top : subgroupCentralizerIn K (⁅K, ⊤⁆) = K := by
-    apply le_antisymm inf_le_left
-    intro x hx
-    exact ⟨hx, hK_le_cent hx⟩
-  have hK_card_ne_one : Nat.card K ≠ 1 := by
-    intro hcard
-    exact hK_ne_bot ((Subgroup.card_eq_one (H := K)).1 hcard)
-  have hcent_card_eq : Nat.card (subgroupCentralizerIn K (⁅K, ⊤⁆)) = Nat.card K := by
-    rw [hcent_eq_top]
-  have hcent_card_ne_one : Nat.card (subgroupCentralizerIn K (⁅K, ⊤⁆)) ≠ 1 := by
-    intro hcard
-    exact hK_card_ne_one (hcent_card_eq.symm.trans hcard)
-  exact hcent_card_ne_one hcent_card
 
 private theorem stabilizesNormalSeries_of_prime_quotient_chain
     {p : ℕ} [Fact p.Prime]

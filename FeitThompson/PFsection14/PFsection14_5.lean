@@ -18,29 +18,6 @@ universe u v w
 
 /-! ## (14.5) -/
 
-/-- Peterfalvi `(14.5)`. -/
-@[expose] public def theorem_14_5_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      theorem_14_5_data L H W1 W2 Q
-
 
 public theorem section14_semidirectProduct_of_frobenius_complement
     {G : Type u} [Group G] [Finite G]
@@ -449,33 +426,5 @@ public theorem section14_theorem_14_5_source_bridge
     exact section14_theorem_14_5_data_of_conjugate_complement hfrobLH
       ⟨y, hyQ, hcomp⟩
 
-
-/-- Proof placeholder for `theorem_14_5_statement`. -/
-public theorem theorem_14_5
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        theorem_14_5_data L H W1 W2 Q := by
-  exact section14_theorem_14_5_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d
 
 end Section14

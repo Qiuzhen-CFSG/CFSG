@@ -20,48 +20,6 @@ universe u v w
 
 /-! ## (14.8) -/
 
-/-- The arithmetic core used in PF `(14.8)`. -/
-@[expose] public def theorem_14_8_arithmetic_statement
-    (p q u v : ℕ) : Prop :=
-  Nat.Prime p →
-    Nat.Prime q →
-      2 < q →
-        q < p →
-          u ≤ (p ^ q - 1) / (p - 1) →
-            v = (q ^ p - 1) / (q - 1) →
-    q ^ (p + 1) > p ^ (q + 1) ∧
-      ((v - 1 : ℕ) : ℝ) / (p : ℝ) >
-        ((u - 1 : ℕ) : ℝ) / (q : ℝ)
-
-/-- Peterfalvi `(14.8)`. -/
-@[expose] public def theorem_14_8_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L _ : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Finset (Section1.ClassFunction L))
-    (_ : G → Subgroup G)
-    (_ _ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Section1.ClassFunction L)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction L)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    Nat.Prime p →
-      Nat.Prime q →
-        2 < q →
-          u ≤ (p ^ q - 1) / (p - 1) →
-            v = (q ^ p - 1) / (q - 1) →
-              q ^ (p + 1) > p ^ (q + 1) ∧
-                ((v - 1 : ℕ) : ℝ) / (p : ℝ) >
-                  ((u - 1 : ℕ) : ℝ) / (q : ℝ)
-
 
 public theorem section14_log_five_gt_six_fifths :
     Real.log (5 : ℝ) > (6 : ℝ) / 5 := by
@@ -363,55 +321,5 @@ public theorem section14_v_le_pq_of_real_squeeze {p q u v k : ℕ}
     nlinarith [show 0 < p by exact hp]
   exact Nat.le_of_lt hv_lt
 
-
-/-- Proof placeholder for `theorem_14_8_arithmetic_statement`. -/
-public theorem theorem_14_8_arithmetic
-    (p q u v : ℕ)
-    : Nat.Prime p →
-      Nat.Prime q →
-        2 < q →
-          q < p →
-            u ≤ (p ^ q - 1) / (p - 1) →
-              v = (q ^ p - 1) / (q - 1) →
-      q ^ (p + 1) > p ^ (q + 1) ∧
-        ((v - 1 : ℕ) : ℝ) / (p : ℝ) >
-          ((u - 1 : ℕ) : ℝ) / (q : ℝ) := by
-  intro hp hq h2q hqp hu hv
-  have hpow : q ^ (p + 1) > p ^ (q + 1) :=
-    section14_pow_gt_pow_of_prime_lt hp hq h2q hqp
-  exact ⟨hpow, section14_ratio_ineq_of_bounds hp hq h2q hqp hu hv hpow⟩
-
-/-- Proof placeholder for `theorem_14_8_statement`. -/
-public theorem theorem_14_8
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L _ : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Finset (Section1.ClassFunction L))
-    (_ : G → Subgroup G)
-    (_ _ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Section1.ClassFunction L)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction L)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      Nat.Prime p →
-        Nat.Prime q →
-          2 < q →
-            u ≤ (p ^ q - 1) / (p - 1) →
-              v = (q ^ p - 1) / (q - 1) →
-                q ^ (p + 1) > p ^ (q + 1) ∧
-                  ((v - 1 : ℕ) : ℝ) / (p : ℝ) >
-                    ((u - 1 : ℕ) : ℝ) / (q : ℝ) := by
-  intro hctx hp hq h2q hu hv
-  exact theorem_14_8_arithmetic p q u v hp hq h2q hctx.2 hu hv
 
 end Section14

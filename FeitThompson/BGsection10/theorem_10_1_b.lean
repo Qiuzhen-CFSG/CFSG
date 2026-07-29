@@ -376,17 +376,6 @@ public theorem section10_conjBy_inv' (H : Subgroup G) (a : G) :
   rw [← section10_conjBy_mul H a a⁻¹]
   simpa using section10_conjBy_one H
 
-omit [Finite G] [IsMinCE G] in
-public theorem section10_top_conjBy (a : G) :
-    (⊤ : Subgroup G).conjBy a = ⊤ := by
-  ext x
-  constructor
-  · intro _hx
-    simp
-  · intro _hx
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    refine ⟨a⁻¹ * x * a, by simp, ?_⟩
-    simp [MulAut.conj_apply, mul_assoc]
 
 omit [Finite G] [IsMinCE G] in
 public theorem section10_le_conjBy_inv_of_conjBy_le
@@ -503,37 +492,6 @@ public theorem section10_double_coset_of_transitive
   refine ⟨⟨((c : G) * g⁻¹)⁻¹, M.inv_mem hcgM⟩, c, ?_⟩
   simp [mul_assoc]
 
-public theorem section10_normalizer_eq_sup_of_transitive
-    {M X : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G) (hpσ : p ∈ section10SigmaPrimes M)
-    (hXM : X ≤ M)
-    (htrans :
-      ConjugationActionTransitiveOn (Subgroup.centralizer (X : Set G))
-        (section10ConjugatesContaining M X)) :
-    Subgroup.normalizer (X : Set G) =
-      subgroupNormalizerIn M (X : Set G) ⊔ Subgroup.centralizer (X : Set G) := by
-  apply le_antisymm
-  · intro g hgN
-    have hXgM : X.conjBy g ≤ M := by
-      rw [section10_conjBy_eq_of_mem_normalizer hgN]
-      exact hXM
-    rcases section10_double_coset_of_transitive hM hpσ hXM htrans hXgM with ⟨m, c, hg⟩
-    have hcN : (c : G) ∈ Subgroup.normalizer (X : Set G) :=
-      centralizer_le_normalizer X c.property
-    have hmN : (m : G) ∈ Subgroup.normalizer (X : Set G) := by
-      have hm_eq : (m : G) = g * (c : G)⁻¹ := by
-        rw [hg]
-        simp [mul_assoc]
-      rw [hm_eq]
-      exact (Subgroup.normalizer (X : Set G)).mul_mem
-        hgN ((Subgroup.normalizer (X : Set G)).inv_mem hcN)
-    have hmLocal : (m : G) ∈ subgroupNormalizerIn M (X : Set G) :=
-      section10_mem_subgroupNormalizerIn.mpr ⟨hmN, m.property⟩
-    rw [hg]
-    exact Subgroup.mul_mem_sup hmLocal c.property
-  · rw [sup_le_iff]
-    exact ⟨section10_subgroupNormalizerIn_le_normalizer M (X : Set G),
-      centralizer_le_normalizer X⟩
 
 omit [IsMinCE G] in
 public theorem section10_pPrimeCore_normalizer_le_centralizer
@@ -1409,23 +1367,6 @@ public theorem section10_centralizer_conj_mem_of_mem_normalizer
     _ = u * (v * (u⁻¹ * x * u)) * u⁻¹ := by rw [← hcomm]
     _ = u * v * u⁻¹ * x := by simp [mul_assoc]
 
-omit [Finite G] [IsMinCE G] in
-public theorem section10_transitive_step_of_larger
-    {M X Y Q₁ Q₂ : Subgroup G}
-    (hXY : X ≤ Y)
-    (hQ₁X : Q₁ ∈ section10ConjugatesContaining M X)
-    (hQ₂X : Q₂ ∈ section10ConjugatesContaining M X)
-    (hYQ₁ : Y ≤ Q₁) (hYQ₂ : Y ≤ Q₂)
-    (htransY :
-      ConjugationActionTransitiveOn (Subgroup.centralizer (Y : Set G))
-        (section10ConjugatesContaining M Y)) :
-    ∃ c : Subgroup.centralizer (X : Set G), Q₂ = Q₁.conjBy (c : G) := by
-  rcases hQ₁X with ⟨g₁, hQ₁eq, _hXQ₁⟩
-  rcases hQ₂X with ⟨g₂, hQ₂eq, _hXQ₂⟩
-  have hQ₁Y : Q₁ ∈ section10ConjugatesContaining M Y := ⟨g₁, hQ₁eq, hYQ₁⟩
-  have hQ₂Y : Q₂ ∈ section10ConjugatesContaining M Y := ⟨g₂, hQ₂eq, hYQ₂⟩
-  rcases htransY Q₁ hQ₁Y Q₂ hQ₂Y with ⟨c, hc⟩
-  exact ⟨⟨c, section10_centralizer_le_of_le hXY c.property⟩, hc⟩
 
 omit [IsMinCE G] in
 public theorem section10_transitive_pair_of_sylow_left

@@ -689,32 +689,6 @@ private theorem section12_conjugate_sigma_subgroup_into_msigma_of_le
       simpa [section12Msigma_subgroupOf_eq (G := G) (M := M), ha] using
         Subgroup.map_mono hZsubL)
 
-private theorem section12_exists_conjBy_le_msigma_of_isPGroup_of_sigma
-    {M X : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hqσ : q ∈ section10SigmaPrimes M) (hXq : IsPGroup q.val X) :
-    ∃ c : G, X.conjBy c ≤ section10Msigma M := by
-  classical
-  obtain ⟨a, hX_le_Ma⟩ :=
-    section10_exists_conjBy_le_of_isPGroup_of_sigma
-      (G := G) (M := M) (Y := X) (p := q) hqσ hXq
-  let Xg : Subgroup G := X.conjBy a⁻¹
-  have hXg_le_M : Xg ≤ M := by
-    have hmap : X.conjBy a⁻¹ ≤ (M.conjBy a).conjBy a⁻¹ := Subgroup.map_mono hX_le_Ma
-    simpa [Xg, section11_conjBy_inv] using hmap
-  have hXgσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Xg := by
-    intro r hrXg
-    have hrX : r ∈ subgroupPrimeSet X := by
-      simpa [Xg, subgroupPrimeSet, section12_card_conjBy_local (G := G) X a⁻¹] using hrXg
-    have hr_singleton : r ∈ ({q} : Set Nat.Primes) :=
-      section8_isPiSubgroup_singleton_of_isPGroup (G := G) hXq r hrX
-    have hrq : r = q := by simpa using hr_singleton
-    simpa [hrq] using hqσ
-  rcases section12_conjugate_sigma_subgroup_into_msigma_of_le
-      (G := G) (M := M) (Z := Xg) hM hXg_le_M hXgσ with
-    ⟨m, hm⟩
-  refine ⟨(m : G) * a⁻¹, ?_⟩
-  simpa [Xg, section11_conjBy_conjBy, mul_assoc] using hm
 
 public theorem section12_corollary_12_16_exists_conjugating_element
     {M Y : Subgroup G}

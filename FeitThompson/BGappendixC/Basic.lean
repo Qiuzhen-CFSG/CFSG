@@ -28,20 +28,6 @@ noncomputable section
 
 universe u v
 
-/-- A nonzero polynomial over `ZMod p` that vanishes on every residue class has
-degree at least `p`. -/
-public theorem zmod_card_le_natDegree_of_eval_eq_zero
-    {p : ℕ} [Fact p.Prime] (f : Polynomial (ZMod p)) (hf : f ≠ 0)
-    (hroot : ∀ x : ZMod p, f.eval x = 0) :
-    p ≤ f.natDegree := by
-  by_contra hle
-  have hlt : f.natDegree < Fintype.card (ZMod p) := by
-    rw [ZMod.card]
-    exact Nat.lt_of_not_ge hle
-  have hfzero : f = 0 :=
-    Polynomial.eq_zero_of_natDegree_lt_card_of_eval_eq_zero' f Finset.univ
-      (by intro x hx; simpa using hroot x) hlt
-  exact hf hfzero
 
 /-- A nonzero polynomial over a field extension of `ZMod p` that vanishes on
 the embedded prime field has degree at least `p`. -/

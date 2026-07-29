@@ -446,26 +446,6 @@ public theorem
     linearLift := linearLift
     reduction_linear := hred }⟩
 
-/-- Higher-exponent canonical-index matrix-reduction as a checked wrapper around
-the additive-linear source core. -/
-public theorem
-    exists_standard_homocyclic_frattini_quotient_cover_canonical_matrix_reduction_gt_one
-    {G V : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
-    {e : ℕ} (he : 1 < e) :
-    Nonempty
-      (StandardHomocyclicFrattiniQuotientCoverCanonicalMatrixReductionData
-        (G := G) (V := V) (p := p) e (le_of_lt he)) := by
-  classical
-  rcases
-    exists_standard_homocyclic_frattini_quotient_cover_canonical_additive_linear_reduction_gt_one
-      (G := G) (V := V) (p := p) hcop hminv he with
-    ⟨L⟩
-  exact
-    ⟨L.toStandardHomocyclicFrattiniQuotientCoverCanonicalMatrixReductionData⟩
 
 /-- Higher-exponent canonical-index source core for the lifted standard-cover
 action at the reduction-compatible canonical linear interface.
@@ -516,75 +496,6 @@ public theorem
     ⟨L⟩
   exact ⟨L.toStandardHomocyclicFrattiniQuotientCoverCanonicalLinearData⟩
 
-/-- Higher-exponent source core for the lifted standard-cover action at the
-height-parameterized reduction-compatible matrix interface.
-
-This is now a checked wrapper around the canonical-index matrix source core:
-the coordinate index and mod-`p` quotient equivalence are fixed by the
-canonical coordinate equivalence, and the matrix lift is supplied by the
-checked coprime modular representation lift. -/
-public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_reduction_gt_one
-    {G V : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
-    {e : ℕ} (he : 1 < e) :
-    Nonempty
-      (StandardHomocyclicFrattiniQuotientCoverMatrixReductionCoreData
-        (G := G) (V := V) (p := p) e (le_of_lt he)) := by
-  classical
-  rcases
-    exists_standard_homocyclic_frattini_quotient_cover_canonical_matrix_reduction_gt_one
-      (G := G) (V := V) (p := p) hcop hminv he with
-    ⟨D⟩
-  exact
-    ⟨D.toStandardHomocyclicFrattiniQuotientCoverMatrixReductionCoreData⟩
-
-/-- Higher-exponent source core for the lifted standard-cover action at the
-reduction-compatible matrix interface.
-
-This is now a checked wrapper around the height-parameterized source core. -/
-public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_reduction_data_gt_one
-    {G V : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
-    {e : ℕ} (he : 1 < e) :
-    Nonempty
-      (StandardHomocyclicFrattiniQuotientCoverMatrixReductionData
-        (G := G) (V := V) (p := p) e) := by
-  classical
-  rcases exists_standard_homocyclic_frattini_quotient_cover_matrix_reduction_gt_one
-      (G := G) (V := V) (p := p) hcop hminv he with
-    ⟨D⟩
-  exact ⟨{
-    height_pos := le_of_lt he
-    core := D }⟩
-
-/-- Higher-exponent source core for the lifted standard-cover action at the
-matrix interface.
-
-This is now a checked wrapper around the reduction-compatible matrix source
-core: the mod-`p` action is transported through the source-chosen quotient map,
-and the direct quotient/action compatibility follows from the reduction
-identity. -/
-public theorem exists_standard_homocyclic_frattini_quotient_cover_matrix_gt_one
-    {G V : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
-    {e : ℕ} (he : 1 < e) :
-    Nonempty
-      (StandardHomocyclicFrattiniQuotientCoverMatrixData
-        (G := G) (V := V) (p := p) e) := by
-  classical
-  rcases exists_standard_homocyclic_frattini_quotient_cover_matrix_reduction_data_gt_one
-      (G := G) (V := V) (p := p) hcop hminv he with
-    ⟨D⟩
-  exact ⟨D.toStandardHomocyclicFrattiniQuotientCoverMatrixData⟩
 
 /-- Higher-exponent source core for the lifted linear action on the standard
 homocyclic cover coordinates.
@@ -718,29 +629,6 @@ public theorem exists_homocyclic_frattini_cover_linear_lift_prime_power
     ⟨L⟩
   exact ⟨L.toHomocyclicFrattiniCoverLinearLift⟩
 
-
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinates
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinates
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_coordinate_split_of_fixed_decomposition
-      (G := G) (V := V) (p := p) A L D with
-    ⟨C⟩
-  exact ⟨{
-    coordinateSplit := C
-    productCoordinateEquiv :=
-      LinearEquiv.sumPiEquivProdPi (ZMod (p ^ e)) C.leftIndex C.rightIndex
-        (fun _ => ZMod (p ^ e)) }⟩
 
 /-- Fixed-Frattini cardinality comparison in height one.
 
@@ -1344,52 +1232,6 @@ public theorem
     ⟨H⟩
   exact ⟨H.toProductCoordinateDecompositionData.toSubgroupMembershipData⟩
 
-/-- Adapted product coordinates projected to subgroup membership.
-
-This is now a checked wrapper around the axis-membership source core. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_decomposition_data
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateDecompositionData
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_product_coordinate_subgroup_membership_data
-      (G := G) (V := V) (p := p) A L D with
-    ⟨H⟩
-  exact ⟨H.toSubgroupCoordinateData.toProductCoordinateDecompositionData⟩
-
-/-- Explicit subgroup-coordinate package for one subgroup after the
-action-side decomposition has been chosen.
-
-This is now a checked wrapper around the source membership package: the two
-subtype-valued coordinate equivalences are recovered from axis injectivity,
-`D.isCompl`, and the ambient product-coordinate cardinal split. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_subgroup_coordinate_data
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateSubgroupCoordinateData
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_product_coordinate_subgroup_membership_data
-      (G := G) (V := V) (p := p) A L D with
-    ⟨H⟩
-  exact ⟨H.toSubgroupCoordinateData⟩
 
 /-- A named adapted product-coordinate package used by the checked rectangular
 wrappers below. -/
@@ -1407,120 +1249,6 @@ public noncomputable def homocyclicFrattiniCoverSubgroupProductCoordinateSubgrou
   Classical.choice
     (exists_homocyclic_frattini_cover_subgroup_product_coordinate_subgroup_membership_data
       (G := G) (V := V) (p := p) A L D)
-
-
-public noncomputable def homocyclicFrattiniCoverSubgroupProductCoordinatesChoice
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    HomocyclicFrattiniCoverSubgroupProductCoordinates
-      (G := G) (V := V) (p := p) A L D :=
-  (homocyclicFrattiniCoverSubgroupProductCoordinateSubgroupMembershipDataChoice
-    (G := G) (V := V) (p := p) A L D).productCoordinates
-
-
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_choice_right_in_fixed_subgroup
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateRightInFixedSubgroup
-        (G := G) (V := V) (p := p) A L D
-        (homocyclicFrattiniCoverSubgroupProductCoordinatesChoice
-          (G := G) (V := V) (p := p) A L D)) := by
-  classical
-  let H :=
-    homocyclicFrattiniCoverSubgroupProductCoordinateSubgroupMembershipDataChoice
-      (G := G) (V := V) (p := p) A L D
-  exact ⟨H.rightInFixedSubgroup⟩
-
-/-- Lower product-coordinate data whose right factor lands in the fixed subgroup
-for one subgroup after the action-side decomposition has been chosen.
-
-This is now a checked assembly from the product-coordinate source core and the
-separate fixed-subgroup membership source core. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_right_fixed_subgroup_data
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateRightFixedSubgroupData
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  let P :=
-    homocyclicFrattiniCoverSubgroupProductCoordinatesChoice
-      (G := G) (V := V) (p := p) A L D
-  rcases exists_homocyclic_frattini_cover_subgroup_product_coordinate_choice_right_in_fixed_subgroup
-      (G := G) (V := V) (p := p) A L D with
-    ⟨H⟩
-  exact ⟨{
-    productCoordinates := P
-    rightInFixedSubgroup := H }⟩
-
-/-- Lower product-coordinate right-fixed package for one subgroup after the
-action-side decomposition has been chosen.
-
-This is now a checked wrapper around the source-side fixed-subgroup membership
-statement. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_right_fixed_data
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateRightFixedData
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_product_coordinate_right_fixed_subgroup_data
-      (G := G) (V := V) (p := p) A L D with
-    ⟨H⟩
-  exact ⟨H.toRightFixedData⟩
-
-/-- Lower product-coordinate package with the lower-right identity for one
-subgroup after the action-side decomposition has been chosen.
-
-This is now a checked wrapper around the source-side right-fixed coordinate
-statement. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_product_coordinate_bottom_right_data
-    {G V : Type u} [Group G] [Group V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupProductCoordinateBottomRightData
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_product_coordinate_right_fixed_data
-      (G := G) (V := V) (p := p) A L D with
-    ⟨H⟩
-  exact ⟨H.toBottomRightData⟩
 
 
 public noncomputable def homocyclicFrattiniCoverSubgroupProductCoordinateBottomRightDataChoice
@@ -1698,29 +1426,6 @@ public theorem
     ⟨P⟩
   exact ⟨P.toChosenSplitRectangularLinearMaps⟩
 
-/-- Lower source-core rectangular inverse block matrices for one subgroup after
-the action-side decomposition has been chosen.
-
-This is now a checked wrapper around the linear-map source package: the
-matrices are obtained by `LinearMap.toMatrix'`. -/
-public theorem
-    exists_homocyclic_frattini_cover_subgroup_chosen_split_rectangular_block_inverse_matrices
-    {G V : Type u} [Group G] [Group V] [Finite V] [MulDistribMulAction G V] [Fintype G]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : Subgroup G)
-    [DecidablePred (fun g : G => g ∈ A)]
-    {e : ℕ}
-    (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e)
-    (D : HomocyclicFrattiniCoverSubgroupActionDecomposition
-      (G := G) (V := V) (p := p) A L) :
-    Nonempty
-      (HomocyclicFrattiniCoverSubgroupChosenSplitRectangularBlockInverseMatrices
-        (G := G) (V := V) (p := p) A L D) := by
-  classical
-  rcases exists_homocyclic_frattini_cover_subgroup_chosen_split_rectangular_linear_maps
-      (G := G) (V := V) (p := p) A L D with
-    ⟨M⟩
-  exact ⟨M.toChosenSplitRectangularBlockInverseMatrices⟩
 
 /-- Lower source-core rectangular block matrices for one subgroup after the
 action-side decomposition has been chosen.
@@ -2024,43 +1729,6 @@ public theorem exists_common_matrix_lift_block_data_prime_power
       (G := G) (V := V) (ι := ι) (p := p) hcop hminv A he with
     ⟨D⟩
   exact ⟨D.toCommonMatrixLiftBlockData A⟩
-
-
-public theorem exists_common_matrix_lift_and_block_data_prime_power
-    {G V ι : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (hcop : Nat.Coprime (Nat.card V) (Nat.card G))
-    (hminv : ∀ N : Subgroup V, N.Normal → IsInvariant G V N → N ≠ ⊥ → N = ⊤)
-    (A : ι → Subgroup G)
-    [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
-    {e : ℕ} (he : 0 < e) :
-    ∃ κ : Type u, ∃ hκ : Fintype κ,
-      letI : Fintype κ := hκ
-      ∃ M : G → Matrix κ κ (ZMod (p ^ e)),
-      ∃ l : ι → Type u, ∃ ridx : ι → Type u,
-      ∃ hl : ∀ i, Fintype (l i), ∃ hr : ∀ i, Fintype (ridx i),
-      ∃ hdl : ∀ i, DecidableEq (l i), ∃ hdr : ∀ i, DecidableEq (ridx i),
-        letI : ∀ i, Fintype (l i) := hl
-        letI : ∀ i, Fintype (ridx i) := hr
-        letI : ∀ i, DecidableEq (l i) := hdl
-        letI : ∀ i, DecidableEq (ridx i) := hdr
-        ∃ be : ∀ i, κ ≃ l i ⊕ ridx i,
-        ∃ P : ∀ i, Matrix (l i ⊕ ridx i) (l i ⊕ ridx i) (ZMod (p ^ e)),
-        ∃ Q : ∀ i, Matrix (l i ⊕ ridx i) (l i ⊕ ridx i) (ZMod (p ^ e)),
-          (∀ i, Fintype.card (ridx i) =
-            fixedSubspaceFinrank (G := G) (V := V) (p := p) (A i)) ∧
-          (∀ i, P i * Q i = 1) ∧
-          (∀ i, ∀ a : A i,
-            (Q i * Matrix.reindex (be i) (be i) (M (a : G)) * P i).toBlocks₂₂ = 1) ∧
-          (∀ i,
-            (∑ a : A i,
-              (Q i * Matrix.reindex (be i) (be i) (M (a : G)) * P i).toBlocks₁₁) = 0) := by
-  classical
-  rcases exists_common_matrix_lift_block_data_prime_power
-      (G := G) (V := V) (ι := ι) (p := p) hcop hminv A he with
-    ⟨D⟩
-  exact CommonMatrixLiftBlockData.exists_tuple (A := A) D
 
 
 public theorem exists_matrix_trace_model_prime_power_of_elementaryAbelian_minimal_pos

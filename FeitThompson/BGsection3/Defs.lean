@@ -12,7 +12,24 @@ public import FeitThompson.Representation.SolvableDimension
 public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
 public import FeitThompson.Representation.ExtraspecialFixedPoints
 public import FeitThompson.Representation.TwoDimensionalOddOrder
-public import FeitThompson.Representation.ElementaryAbelianAutomorphisms
+public import Mathlib.Algebra.CharP.LinearMaps
+public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+public import Mathlib.LinearAlgebra.Eigenspace.Zero
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.TensorProduct.Pi
+public import Mathlib.RepresentationTheory.Character
+public import Mathlib.RepresentationTheory.Coinduced
+public import Mathlib.RepresentationTheory.Semisimple
+public import Mathlib.RepresentationTheory.Submodule
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+public import Mathlib.RingTheory.SimpleModule.Isotypic
+public import Mathlib.RingTheory.ZMod.Torsion
+public import FeitThompson.BGsection1.CriticalSubgroupLemmas
+public import FeitThompson.Burnside.NormalComplement
+public import FeitThompson.Extraspecial
+public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import FeitThompson.Representation.ConjugateRep
+public import FeitThompson.BGsection2.EndFieldRep
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.CentralizerControl
@@ -98,23 +115,6 @@ public theorem IsFrobeniusGroupWithKernelComplement.complement_ne_bot {G : Type*
     R ≠ ⊥ :=
   hfrob.2.2.2.2
 
-public theorem IsFrobeniusGroupWithKernelComplement.kernel_ne_top {G : Type*} [Group G]
-    {K R : Subgroup G} (hfrob : IsFrobeniusGroupWithKernelComplement K R) :
-    K ≠ ⊤ := by
-  intro hK_top
-  apply hfrob.complement_ne_bot
-  rw [Subgroup.eq_bot_iff_forall]
-  intro r hrR
-  exact (Subgroup.disjoint_def.mp (hK_top ▸ hfrob.isComplement'.disjoint)) (by simp) hrR
-
-public theorem IsFrobeniusGroupWithKernelComplement.complement_ne_top {G : Type*} [Group G]
-    {K R : Subgroup G} (hfrob : IsFrobeniusGroupWithKernelComplement K R) :
-    R ≠ ⊤ := by
-  intro hR_top
-  apply hfrob.kernel_ne_bot
-  rw [Subgroup.eq_bot_iff_forall]
-  intro k hkK
-  exact (Subgroup.disjoint_def.mp (hR_top ▸ hfrob.isComplement'.disjoint)) hkK (by simp)
 
 /-- Transport a Frobenius kernel/complement decomposition across a group
 equivalence. -/

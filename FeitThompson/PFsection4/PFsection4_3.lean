@@ -285,43 +285,6 @@ private noncomputable def internalSemidirectRightProjection_pf43
         (internalSemidirectRightComponent_pf43 h (c * d)).2 hright_mem
         (by simpa [hprod] using hdec_cd)).2
 
-private theorem internalDirectProduct_mul_unique_pf43
-    {G : Type u} [Group G] {C H K : Subgroup G}
-    (h : Section2.IsInternalDirectProduct C H K)
-    {h₁ h₂ k₁ k₂ : G}
-    (hh₁ : h₁ ∈ H) (hh₂ : h₂ ∈ H)
-    (hk₁ : k₁ ∈ K) (hk₂ : k₂ ∈ K)
-    (hmul : h₁ * k₁ = h₂ * k₂) :
-    h₁ = h₂ ∧ k₁ = k₂ := by
-  have hleft_eq_right : h₂⁻¹ * h₁ = k₂ * k₁⁻¹ := by
-    calc
-      h₂⁻¹ * h₁ = h₂⁻¹ * (h₁ * k₁) * k₁⁻¹ := by
-        simp [mul_assoc]
-      _ = h₂⁻¹ * (h₂ * k₂) * k₁⁻¹ := by
-        rw [hmul]
-      _ = k₂ * k₁⁻¹ := by
-        simp
-  have hmemH : h₂⁻¹ * h₁ ∈ H :=
-    H.mul_mem (H.inv_mem hh₂) hh₁
-  have hmemK : h₂⁻¹ * h₁ ∈ K := by
-    rw [hleft_eq_right]
-    exact K.mul_mem hk₂ (K.inv_mem hk₁)
-  have hbot : h₂⁻¹ * h₁ ∈ (⊥ : Subgroup G) := by
-    have hinf : h₂⁻¹ * h₁ ∈ H ⊓ K :=
-      Subgroup.mem_inf.mpr ⟨hmemH, hmemK⟩
-    simpa [h.inf_eq_bot] using hinf
-  have hh_eq_one : h₂⁻¹ * h₁ = 1 := by
-    simpa using hbot
-  have hh : h₁ = h₂ := by
-    calc
-      h₁ = h₂ * (h₂⁻¹ * h₁) := by
-        simp
-      _ = h₂ := by
-        simp [hh_eq_one]
-  have hk : k₁ = k₂ := by
-    have hmul' := congrArg (fun z : G => h₂⁻¹ * z) hmul
-    simpa [hh, mul_assoc] using hmul'
-  exact ⟨hh, hk⟩
 
 private noncomputable def internalDirectProductMulEquiv_pf43
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
@@ -507,14 +470,6 @@ private theorem rightProjection_top_eq_self_of_mem_right_pf43
   simpa only [one_mul] using
     (internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := K.one_mem) (hk₀ := hx))
 
-private theorem rightProjection_top_eq_right_of_mul_pf43
-    {L : Type u} [Group L]
-    {K W1 : Subgroup L}
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) K W1)
-    {k x : L} (hk : k ∈ K) (hx : x ∈ W1) :
-    internalSemidirectRightProjection_pf43 hsemi ⟨k * x, by trivial⟩ = ⟨x, hx⟩ := by
-  change internalSemidirectRightComponent_pf43 hsemi ⟨k * x, by trivial⟩ = ⟨x, hx⟩
-  exact internalSemidirectRightComponent_of_mul_pf43 hsemi (hh₀ := hk) (hk₀ := hx)
 
 private theorem rightProjection_top_conj_eq_self_pf43
     {L : Type u} [Group L]
@@ -1244,117 +1199,6 @@ private theorem omegaRowDifference_linearIndependent_pf43
     simp [hcoord]
   exact hcoeff ▸ hinner
 
-private theorem basis_wMinusW2_pf43
-    {L : Type u} [Group L] [Finite L]
-    (W1 W2 W : Subgroup L)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (hW : Section2.IsInternalDirectProduct W W1 W2)
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω) :
-    Section3.IsBasisForCFOn W ((W : Set L) \ (W2 : Set L))
-      (fun p : {p : I × J // p.1 ≠ i0} => ω p.1.1 p.1.2 - ω i0 p.1.2) := by
-  classical
-  let A : Set L := (W : Set L) \ (W2 : Set L)
-  let Aw : Set W := fun x => (x : L) ∉ W2
-  let row :
-      {p : I × J // p.1 ≠ i0} → Section1.ClassFunction W :=
-    fun p => ω p.1.1 p.1.2 - ω i0 p.1.2
-  have h_support : ∀ p, Section2.CFOn W A (row p) := by
-    intro p
-    simpa [A, row] using omegaRowDifference_CFOn_wMinusW2_pf43
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
-      (i0 := i0) (j0 := j0) (ω := ω) hω p.1.1 p.1.2
-  have h_li : LinearIndependent ℂ row := by
-    simpa [row] using omegaRowDifference_linearIndependent_pf43
-      (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J)
-      (i0 := i0) (j0 := j0) (ω := ω) hω
-  have hcard_idx :
-      Fintype.card {p : I × J // p.1 ≠ i0} =
-        (Nat.card W1 - 1) * Nat.card W2 := by
-    have hI : Fintype.card {i : I // i ≠ i0} = Nat.card W1 - 1 := by
-      simp [hω.card_left]
-    calc
-      Fintype.card {p : I × J // p.1 ≠ i0} =
-          Fintype.card ({i : I // i ≠ i0} × J) := by
-            simpa using
-              (Fintype.card_congr (leftPairSubtypeEquiv_pf43 (X := I) (Y := J) i0))
-      _ = (Nat.card W1 - 1) * Nat.card W2 := by
-            rw [Fintype.card_prod]
-            simp [hI, hω.card_right]
-  have hcard_A :
-      Fintype.card {x : W // x ∈ Aw} =
-        (Nat.card W1 - 1) * Nat.card W2 := by
-    have hcard_A_nat :
-        Nat.card {x : W // x ∈ Aw} =
-          (Nat.card W1 - 1) * Nat.card W2 := by
-      change Nat.card {x : W // (x : L) ∉ W2} =
-          (Nat.card W1 - 1) * Nat.card W2
-      exact wMinusW2_card_pf43 (W1 := W1) (W2 := W2) (W := W) hW
-    calc
-      Fintype.card {x : W // x ∈ Aw} = Nat.card {x : W // x ∈ Aw} := by
-        rw [Nat.card_eq_fintype_card]
-      _ = (Nat.card W1 - 1) * Nat.card W2 := hcard_A_nat
-  have hfinrank_A :
-      Module.finrank ℂ (Section1.classFunctionsOn W Aw) =
-        Fintype.card {x : W // x ∈ Aw} := by
-    calc
-      Module.finrank ℂ (Section1.classFunctionsOn W Aw) =
-          Nat.card {x : W // x ∈ Aw} :=
-            classFunctionsOn_finrank_eq_card_pf43 (A := Aw)
-      _ = Fintype.card {x : W // x ∈ Aw} := by
-            rw [Nat.card_eq_fintype_card]
-  have hcard :
-      Fintype.card {p : I × J // p.1 ≠ i0} =
-        Module.finrank ℂ (Section1.classFunctionsOn W Aw) := by
-    calc
-      Fintype.card {p : I × J // p.1 ≠ i0} =
-          (Nat.card W1 - 1) * Nat.card W2 := hcard_idx
-      _ = Fintype.card {x : W // x ∈ Aw} := by
-          symm
-          exact hcard_A
-      _ = Module.finrank ℂ (Section1.classFunctionsOn W Aw) := by
-          symm
-          exact hfinrank_A
-  let e : {p : I × J // p.1 ≠ i0} → Section1.classFunctionsOn W Aw := fun p =>
-    ⟨row p, (Section1.mem_classFunctionsOn).2 <| by
-      rw [Section1.supportedOn_iff]
-      intro x hx
-      have hxW2 : (x : L) ∈ W2 := by
-        by_contra hxW2
-        apply hx
-        change (x : L) ∉ W2
-        exact hxW2
-      exact (h_support p).2 x (by simpa [A] using hxW2)⟩
-  have h_li_sub : LinearIndependent ℂ e := by
-    simpa [e, row] using
-      (LinearIndependent.of_comp
-        (Submodule.subtype (Section1.classFunctionsOn W Aw))
-        (v := e)
-        (hfv := h_li))
-  have hspan :
-      ⊤ ≤ Submodule.span ℂ (Set.range e) := by
-    rw [LinearIndependent.span_eq_top_of_card_eq_finrank' h_li_sub hcard]
-  let hbasis : Module.Basis
-      {p : I × J // p.1 ≠ i0} ℂ (Section1.classFunctionsOn W Aw) :=
-    Module.Basis.mk h_li_sub hspan
-  refine ⟨h_support, h_li, ?_⟩
-  intro ψ hψ
-  let x : Section1.classFunctionsOn W Aw := ⟨ψ, (Section1.mem_classFunctionsOn).2 <| by
-    rw [Section1.supportedOn_iff]
-    intro x hx
-    have hxW2 : (x : L) ∈ W2 := by
-      by_contra hxW2
-      apply hx
-      change (x : L) ∉ W2
-      exact hxW2
-    exact hψ.2 x (by simpa [A] using hxW2)⟩
-  refine ⟨hbasis.repr x, ?_⟩
-  have hx :
-      ((∑ p, hbasis.repr x p • (hbasis p : Section1.classFunctionsOn W Aw)) :
-          Section1.classFunctionsOn W Aw) = x := by
-    exact hbasis.sum_repr x
-  simpa [hbasis, e, row] using (congrArg Subtype.val hx).symm
 
 private theorem proposition_1_3_a_special_pf43
     {G : Type*} [Group G] [Finite G]
@@ -2367,32 +2211,6 @@ private theorem scalarProduct_cross_columns_zero_pf43
         ⟨_, hαγ, _, _, _, _⟩
       exact hαγ
 
-/-- Selected-table characters in distinct PF `(4.3)(b)` columns are orthogonal. -/
-public theorem theorem_4_3_b_cross_column_scalarProduct_zero
-    {L : Type u} [Group L] [Finite L]
-    (K W1 W2 W : Subgroup L)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction L)
-    (piChar : I → J → Section1.ClassFunction L)
-    (deltaSign : J → ℂ)
-    (h42 : hypothesis_4_2_statement K W1 W2 W)
-    (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hB : theorem_4_3_b_statement W1 W2 W I J i0 j0 ω σ piChar deltaSign hω)
-    {i i' : I} {j j' : J} (hj : j ≠ j') :
-    Section1.scalarProduct L (piChar i j) (piChar i' j') = 0 := by
-  rcases hB with ⟨_hσmap, hsign, hirr, hdistinct, hind, _hSigma⟩
-  have hdistinctCol : ∀ j i i', i ≠ i' → piChar i j ≠ piChar i' j := by
-    intro j i i' hi hEq
-    exact hdistinct (i, j) (i', j) (by
-      intro hpair
-      exact hi (congrArg Prod.fst hpair)) hEq
-  exact scalarProduct_cross_columns_zero_pf43
-    (K := K) (W1 := W1) (W2 := W2) (W := W)
-    (I := I) (J := J) (i0 := i0) (j0 := j0)
-    (ω := ω) (deltaSign := deltaSign) (piChar := piChar)
-    h42 hω hsign hirr hdistinctCol hind hj
 
 /-- In a PF `(4.3)(b)`-style table, the induced row-difference formula,
 irreducibility, and same-column row distinctness imply cross-column

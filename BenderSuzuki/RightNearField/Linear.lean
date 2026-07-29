@@ -243,31 +243,5 @@ public theorem rightNearFieldRightMulSubgroupRepresentation_apply
     change (0 : F) * ((a : A) : Fˣ) = 0
     exact zero_mul _
 
-/-- The corresponding prime-field representation. -/
-@[expose] public noncomputable def rightNearFieldUnitsRepresentation
-    {F : Type u} [RightNearField F] [Finite F]
-    [Module (ZMod (addOrderOf (1 : F))) F]
-    (A : Subgroup Fˣ) [IsMulCommutative A] :
-    Representation (ZMod (addOrderOf (1 : F))) A F := by
-  let L : (F →+ F) ≃+ (F →ₗ[ZMod (addOrderOf (1 : F))] F) :=
-    AddMonoidHom.toZModLinearMapEquiv _
-  exact
-    { toFun := fun a => L (rightNearFieldRightMulAddHom (a : Fˣ))
-      map_one' := by
-        ext x
-        change x * (1 : F) = x
-        simp
-      map_mul' := by
-        intro a b
-        ext x
-        change x * (((a * b : A) : Fˣ) : F) =
-          (x * ((b : A) : Fˣ)) * ((a : A) : Fˣ)
-        rw [Subgroup.coe_mul, Units.val_mul]
-        have habU : (a : Fˣ) * (b : Fˣ) = (b : Fˣ) * (a : Fˣ) :=
-          congrArg Subtype.val ((IsMulCommutative.is_comm (M := A)).comm a b)
-        have habF : ((a : Fˣ) : F) * (b : Fˣ) =
-            ((b : Fˣ) : F) * (a : Fˣ) :=
-          congrArg Units.val habU
-        rw [habF, mul_assoc] }
 end PFAppendixII
 end BenderSuzuki

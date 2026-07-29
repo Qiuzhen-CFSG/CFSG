@@ -573,16 +573,6 @@ public theorem twisted_norm_symm_injective
     simpa only [theta.apply_symm_apply, mul_comm] using hxy
   simpa only [theta.apply_symm_apply] using congrArg theta hpre
 
-/-- The inverse automorphism has the same fixed points. -/
-public theorem fixed_points_symm_of_fixed_points
-    {K : Type*} [Field K]
-    (theta : K ≃+* K)
-    (hfixed : ∀ x : K, theta x = x → x = 0 ∨ x = 1) :
-    ∀ x : K, theta.symm x = x → x = 0 ∨ x = 1 := by
-  intro x hx
-  apply hfixed x
-  have h := congrArg theta hx
-  simpa only [theta.apply_symm_apply] using h.symm
 
 set_option maxHeartbeats 800000 in
 /-- The aligned specialization of XI.11.10(6).  This packages the short

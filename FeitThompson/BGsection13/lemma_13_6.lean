@@ -373,20 +373,6 @@ private theorem section13_lemma_13_6_rankTwo_centralizer
   intro x hx
   exact ⟨(hXDerE hx).1, hX_cent_A hx⟩
 
-private theorem section13_lemma_13_6_E2_ne_bot_of_centralizes_derivedE
-    {M E E₁₂ E₁ E₂ E₃ X : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hXE₁ : X ≤ subgroupCentralizerIn (section10Msigma M) E₁)
-    (hXDerE : X ≤ subgroupCentralizerIn (section10Msigma M) (ambientDerivedSubgroup E))
-    (hXnotD : ¬ X ≤ ambientDerivedSubgroup (section10Msigma M)) :
-    E₂ ≠ ⊥ := by
-  intro hE₂bot
-  exact hXnotD
-    (section13_lemma_13_6_E1_core_of_E2_eq_bot
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (X := X)
-      hM hE hE₂bot hXE₁ hXDerE)
 
 public theorem section13_exists_sylow_centralized_derivedE_of_not_beta
     {M E E₁₂ E₁ E₂ E₃ : Subgroup G} {q : Nat.Primes}
@@ -441,39 +427,6 @@ public theorem section13_exists_sylow_centralized_derivedE_of_not_beta
     exact yh.property
   exact hHcentD hyH
 
-omit [Finite G] [IsMinCE G] in
-private theorem section13_exists_sylow_containing_pSubgroup
-    {K X : Subgroup G} {q : Nat.Primes}
-    (hXleK : X ≤ K) (hXq : IsPGroup q.val X) :
-    ∃ S : Sylow q.val K, X ≤ section10AmbientSylowSubgroup K S := by
-  classical
-  have hXsubq : IsPGroup q.val (X.subgroupOf K) :=
-    hXq.of_equiv
-      (Subgroup.subgroupOfEquivOfLe (H := X) (K := K) hXleK).symm
-  rcases IsPGroup.exists_le_sylow hXsubq with ⟨S, hXS⟩
-  refine ⟨S, ?_⟩
-  intro x hx
-  have hxXsub : (⟨x, hXleK hx⟩ : K) ∈ X.subgroupOf K := by
-    simpa [Subgroup.mem_subgroupOf] using hx
-  exact Subgroup.mem_map.mpr ⟨⟨x, hXleK hx⟩, hXS hxXsub, rfl⟩
-
-omit [IsMinCE G] in
-private theorem section13_isPGroup_of_isHallSubgroup_singleton
-    {R : Type*} [Group R] [Finite R] {P : Subgroup R} {p : Nat.Primes}
-    (hP : IsHallSubgroup ({p} : Set Nat.Primes) P) :
-    IsPGroup p.val P := by
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  rw [IsPGroup.iff_card]
-  have hcard_ne_zero : Nat.card P ≠ 0 := Nat.card_pos.ne'
-  refine ⟨(Nat.card P).primeFactorsList.length, ?_⟩
-  rw [← List.prod_replicate, ← List.eq_replicate_of_mem ?_,
-    Nat.prod_primeFactorsList hcard_ne_zero]
-  intro q hq
-  obtain ⟨hq_prime, hq_dvd⟩ := (Nat.mem_primeFactorsList hcard_ne_zero).mp hq
-  let q' : Nat.Primes := ⟨q, hq_prime⟩
-  have hq_mem : q' ∈ ({p} : Set Nat.Primes) :=
-    hP.p_in_pi_of_p_dvd_card q' hq_dvd
-  exact congrArg Subtype.val (Set.mem_singleton_iff.mp hq_mem)
 
 omit [IsMinCE G] in
 private theorem section13_isHallSubgroup_singleton_of_isPGroup_not_dvd_index
@@ -501,12 +454,6 @@ public theorem section13_card_conjBy (M : Subgroup G) (g : G) :
     (Subgroup.card_map_of_injective
       (K := M) (f := (MulAut.conj g).toMonoidHom) (MulAut.conj g).injective)
 
-omit [Finite G] [IsMinCE G] in
-private theorem section13_ambientDerivedSubgroup_le_self (K : Subgroup G) :
-    ambientDerivedSubgroup K ≤ K := by
-  intro x hx
-  rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-  exact y.property
 
 omit [Finite G] [IsMinCE G] in
 private theorem section13_le_normalizer_ambientDerivedSubgroup

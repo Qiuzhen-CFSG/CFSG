@@ -25,46 +25,6 @@ universe u
 
 /-! ## (13.19) -/
 
-/-- Peterfalvi `(13.19)`. -/
-@[expose] public def theorem_13_19_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (Lfam : Finset (Section1.ClassFunction L))
-    (R : G → Subgroup G)
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (τL τL1 : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φL : Section1.ClassFunction L)
-    (βL βS φ : Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d e : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ →
-      theorem_13_19_hypothesis L H Smax P W1 Lfam R τS τL τL1 φL φ
-        (μ 0 1) βL βS e →
-    Disjoint (Section2.dadeSupport (Section12.typeIASet L H) R)
-      (section16ConjugatesOfSetBySet (P : Set G) Set.univ ∪
-        section16ConjugatesOfSetBySet (W : Set G) Set.univ) ∧
-      (∀ ψ : Section1.ClassFunction L, ψ ∈ Lfam →
-        ∀ i j : ℕ, i < q → j < p →
-          Section1.scalarProduct G (τL1 ψ) (η i j) = 0) ∧
-        theorem_13_19_independenceData βL η p ∧
-        theorem_13_19_alternativeData H βL βS φ η p q u e
-
-
-
-
 
 section theorem_13_19_source
 
@@ -1011,54 +971,6 @@ private theorem theorem_13_19_tauL1_sub_conj_sigma_omega_count_zero_source
   simpa [Ψ] using hij
 
 
-private theorem theorem_13_19_tauL1_sub_conj_sigma_omega_nonzero_count_source
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ)
-    (h19 : theorem_13_19_hypothesis L H Smax P W1 Lfam R τS τL τL1 φL φ
-      (μ 0 1) βL βS e) :
-    ∀ ψ : Section1.ClassFunction L, ψ ∈ Lfam →
-      (((Finset.range q).product (Finset.range p)).filter
-        (fun ij : ℕ × ℕ =>
-          Section1.scalarProduct G
-            (τL1 (ψ - Section1.conjugateCharacter ψ)) (σ (ω ij.1 ij.2)) ≠ 0)).card = 0 := by
-  classical
-  intro ψ hψ
-  let coeffs : Finset (ℕ × ℕ) :=
-    ((Finset.range q).product (Finset.range p)).filter
-      (fun ij : ℕ × ℕ =>
-        Section1.scalarProduct G
-          (τL1 (ψ - Section1.conjugateCharacter ψ)) (σ (ω ij.1 ij.2)) ≠ 0)
-  have hfilter : coeffs = ∅ := by
-    change (((Finset.range q).product (Finset.range p)).filter
-      (fun ij : ℕ × ℕ =>
-        Section1.scalarProduct G
-          (τL1 (ψ - Section1.conjugateCharacter ψ)) (σ (ω ij.1 ij.2)) ≠ 0)) = ∅
-    rw [Finset.filter_eq_empty_iff]
-    rintro ⟨i, j⟩ hij hne
-    have hi : i < q := by
-      simpa using (Finset.mem_product.mp hij).1
-    have hj : j < p := by
-      simpa using (Finset.mem_product.mp hij).2
-    have hzero :
-        Section1.scalarProduct G
-          (τL1 (ψ - Section1.conjugateCharacter ψ)) (σ (ω i j)) = 0 :=
-      theorem_13_19_tauL1_sub_conj_sigma_omega_count_zero_source
-        (Smax := Smax) (Tmax := Tmax) (W := W) (W1 := W1) (W2 := W2)
-        (P := P) (Q := Q) (U := U) (V := V) (C := C) (D := D)
-        (L := L) (H := H) (Sfam := Sfam) (Tfam := Tfam) (Lfam := Lfam)
-        (R := R) (τS := τS) (τT := τT) (τL := τL) (τL1 := τL1)
-        (φL := φL) (βL := βL) (βS := βS) (φ := φ) (μ := μ)
-        (ω := ω) (η := η) (ν := ν) (μsum := μsum) (νsum := νsum)
-        (δ := δ) (δ' := δ') (σ := σ) (p := p) (q := q) (u := u)
-        (v := v) (c := c) (d := d) (e := e)
-        hsource hnotation h19 ψ hψ i j hi hj
-    exact hne hzero
-  change coeffs.card = 0
-  exact Finset.card_eq_zero.mpr hfilter
-
-
 private theorem theorem_13_19_tauL1_sub_conj_orthogonal_of_supportedOn_PWG
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
@@ -1258,37 +1170,6 @@ private theorem theorem_13_19_tauL1_sigma_omega_table_source
       (v := v) (c := c) (d := d) (e := e) _hsource _hnotation _h19
       ψ hψ i j hiq hjp
   exact hcoeff_ne hcoeff_zero
-
-
-private theorem theorem_13_19_otau1eta_orthogonality_source
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ)
-    (h19 : theorem_13_19_hypothesis L H Smax P W1 Lfam R τS τL τL1 φL φ
-      (μ 0 1) βL βS e) :
-    ∀ ψ : Section1.ClassFunction L, ψ ∈ Lfam →
-      ∀ θ : Section1.ClassFunction W,
-        Section1.IsIrreducibleCharacterOnGroup θ →
-          Section1.scalarProduct G (τL1 ψ) (σ θ) = 0 := by
-  intro ψ hψ θ hθ
-  rcases hnotation with
-    ⟨hωData, hσmap, hη, hδ, hδ', hμirr, hνirr,
-      hμzero_nonprincipal, hνzero_nonprincipal, hμind, hνind,
-      hμsum, hνsum, hμ00, hν00, hμdeg, hνdeg⟩
-  rcases hωData with ⟨h31, hqpos, hppos, ωFin, hωFin, hωNat⟩
-  rcases hωFin.all_irreducibles θ hθ with ⟨i, j, hθeq⟩
-  have hcore :
-      Section1.scalarProduct G (τL1 ψ) (σ (ω i.1 j.1)) = 0 :=
-    theorem_13_19_tauL1_sigma_omega_table_source
-      Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam Lfam R
-      τS τT τL τL1 φL βL βS φ ω η μ ν μsum νsum δ δ' σ
-      p q u v c d e hsource
-      ⟨⟨h31, hqpos, hppos, ωFin, hωFin, hωNat⟩, hσmap, hη, hδ, hδ',
-        hμirr, hνirr, hμzero_nonprincipal, hνzero_nonprincipal, hμind,
-        hνind, hμsum, hνsum, hμ00, hν00, hμdeg, hνdeg⟩
-      h19 ψ hψ i.1 j.1 i.2 j.2
-  simpa [hθeq, hωNat i.1 j.1 i.2 j.2] using hcore
 
 
 private theorem theorem_13_19_tauL1_sigma_omega_orthogonality_source

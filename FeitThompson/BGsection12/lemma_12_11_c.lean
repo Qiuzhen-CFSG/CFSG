@@ -40,58 +40,6 @@ public theorem section12_primeOrder_ne_top
   have hsolv : IsSolvable G := by infer_instance
   exact IsMinCE.not_solvable (G := G) hsolv
 
-omit [IsMinCE G] in
-private theorem section12_eq_conjBy_inv_of_conjBy_eq
-    {H K : Subgroup G} {g : G} (h : H.conjBy g = K) :
-    H = K.conjBy g⁻¹ := by
-  calc
-    H = (H.conjBy g).conjBy g⁻¹ := by
-      rw [section8_conjBy_conjBy]
-      simpa using (section8_conjBy_one H).symm
-    _ = K.conjBy g⁻¹ := by rw [h]
-
-omit [IsMinCE G] in
-private theorem section12_mem_conjugates_self
-    {M X : Subgroup G} (hXM : X ≤ M) :
-    M ∈ section10ConjugatesContaining M X := by
-  exact ⟨1, (section8_conjBy_one M).symm, hXM⟩
-
-omit [IsMinCE G] in
-private theorem section12_mem_conjugates_of_conjBy_eq
-    {M N X : Subgroup G} {g : G} (hconj : N.conjBy g = M) (hXN : X ≤ N) :
-    N ∈ section10ConjugatesContaining M X := by
-  exact ⟨g⁻¹, section12_eq_conjBy_inv_of_conjBy_eq hconj, hXN⟩
-
-omit [Finite G] [IsMinCE G] in
-private theorem section12_mem_conjugates_forward_of_conjBy_eq
-    {M N X : Subgroup G} {g : G} (hconj : M.conjBy g = N) (hXN : X ≤ N) :
-    N ∈ section10ConjugatesContaining M X := by
-  exact ⟨g, hconj.symm, hXN⟩
-
-omit [Finite G] [IsMinCE G] in
-private theorem section12_eq_of_conjugation_transitive_and_centralizer_le
-    {Ω : Set (Subgroup G)} {Q₁ Q₂ X : Subgroup G}
-    (htrans : ConjugationActionTransitiveOn (Subgroup.centralizer (X : Set G)) Ω)
-    (hQ₁ : Q₁ ∈ Ω) (hQ₂ : Q₂ ∈ Ω)
-    (hC_le_Q₁ : Subgroup.centralizer (X : Set G) ≤ Q₁) :
-    Q₂ = Q₁ := by
-  rcases htrans Q₁ hQ₁ Q₂ hQ₂ with ⟨c, hc⟩
-  have hcQ₁ : (c : G) ∈ Q₁ := hC_le_Q₁ c.property
-  have hfix : Q₁.conjBy (c : G) = Q₁ := by
-    ext x
-    constructor
-    · intro hx
-      rw [Subgroup.conjBy, Subgroup.mem_map] at hx
-      rcases hx with ⟨y, hy, rfl⟩
-      exact (Subgroup.mem_normalizer_iff.mp (Subgroup.le_normalizer hcQ₁) y).1 hy
-    · intro hx
-      rw [Subgroup.conjBy, Subgroup.mem_map]
-      have hc_inv_norm : (c : G)⁻¹ ∈ Subgroup.normalizer (Q₁ : Set G) :=
-        (Subgroup.normalizer (Q₁ : Set G)).inv_mem (Subgroup.le_normalizer hcQ₁)
-      refine ⟨(c : G)⁻¹ * x * (c : G), ?_, ?_⟩
-      · simpa using (Subgroup.mem_normalizer_iff.mp hc_inv_norm x).1 hx
-      · simp [mul_assoc]
-  exact hc.trans hfix
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_normalizer_le_normalizer_centralizer

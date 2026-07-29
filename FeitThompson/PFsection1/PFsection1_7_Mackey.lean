@@ -49,60 +49,18 @@ set_option maxHeartbeats 800000
     (phi : ClassFunction S) : ClassFunction (mackeyIntersection S K a) :=
   fun k => phi ⟨a * ((k : mackeyIntersection S K a) : K) * a⁻¹, k.2⟩
 
-public theorem mackeyConjugateRestriction_apply
-    {G : Type*} [Group G] (S K : Subgroup G) (a : G)
-    (phi : ClassFunction S) (k : mackeyIntersection S K a) :
-    mackeyConjugateRestriction S K a phi k =
-      phi ⟨a * ((k : K) : G) * a⁻¹, k.2⟩ :=
-  rfl
 
 public theorem mackeyIntersection_mem_iff
     {G : Type*} [Group G] (S K : Subgroup G) (a : G) (k : K) :
     k ∈ mackeyIntersection S K a ↔ a * (k : G) * a⁻¹ ∈ S :=
   Iff.rfl
 
-public theorem mackeyIntersection_self_one
-    {G : Type*} [Group G] (S : Subgroup G) :
-    mackeyIntersection S S 1 = ⊤ := by
-  ext s
-  simp [mackeyIntersection]
-
-public theorem mackeyConjugateRestriction_isClassFunction
-    {G : Type*} [Group G] (S K : Subgroup G) (a : G)
-    (phi : ClassFunction S) (hphi : IsClassFunction phi) :
-    IsClassFunction (mackeyConjugateRestriction S K a phi) := by
-  intro x k
-  let sx : S := ⟨a * ((x : mackeyIntersection S K a) : K) * a⁻¹, x.2⟩
-  let sk : S := ⟨a * ((k : mackeyIntersection S K a) : K) * a⁻¹, k.2⟩
-  have hconj :
-      (sx * sk * sx⁻¹ : S) =
-        ⟨a * (((x : mackeyIntersection S K a) : K) *
-              (((k : mackeyIntersection S K a) : K) *
-                (((x : mackeyIntersection S K a) : K)⁻¹ * a⁻¹))), by
-          change a * ((x : G) * ((k : G) * ((x : G)⁻¹ * a⁻¹))) ∈ S
-          have hx : a * (x : G) * a⁻¹ ∈ S := x.2
-          have hk : a * (k : G) * a⁻¹ ∈ S := k.2
-          have hxinv : a * ((x : G)⁻¹) * a⁻¹ ∈ S := by
-            simpa [mul_assoc] using S.inv_mem hx
-          have hprod := S.mul_mem (S.mul_mem hx hk) hxinv
-          simpa [mul_assoc] using hprod⟩ := by
-    ext
-    simp [sx, sk, mul_assoc]
-  have hclass := hphi sx sk
-  rw [hconj] at hclass
-  simpa [mackeyConjugateRestriction, sx, sk, mul_assoc] using hclass
 
 @[expose] public noncomputable def mackeySummand
     {G : Type*} [Group G] (S K : Subgroup G) [Finite K]
     (a : G) (phi : ClassFunction S) : ClassFunction K :=
   inducedCF (mackeyIntersection S K a) (mackeyConjugateRestriction S K a phi)
 
-public theorem mackeySummand_isClassFunction
-    {G : Type*} [Group G] (S K : Subgroup G) [Finite K]
-    (a : G) (phi : ClassFunction S) :
-    IsClassFunction (mackeySummand S K a phi) :=
-  inducedCF_isClassFunction (mackeyIntersection S K a)
-    (mackeyConjugateRestriction S K a phi)
 
 @[expose] public noncomputable def mackeySummandFormula
     {G : Type*} [Group G] (S K : Subgroup G) [Finite K]
@@ -612,23 +570,6 @@ public instance finite_doubleCoset_quotient_of_finite
   familySum (fun q : DoubleCoset.Quotient (S : Set G) K =>
     mackeySummand S K q.out phi)
 
-public theorem mackeyRestrictionSum_isClassFunction
-    {G : Type*} [Group G] [Finite G] (S K : Subgroup G) [Finite K]
-    (phi : ClassFunction S) :
-    IsClassFunction (mackeyRestrictionSum S K phi) := by
-  intro x k
-  simp [mackeyRestrictionSum, familySum]
-  refine Finset.sum_congr rfl ?_
-  intro q _hq
-  exact mackeySummand_isClassFunction S K q.out phi x k
-
-public theorem mackeyRestrictionSum_apply
-    {G : Type*} [Group G] [Finite G] (S K : Subgroup G) [Finite K]
-    (phi : ClassFunction S) (k : K) :
-    mackeyRestrictionSum S K phi k =
-      ∑ q : DoubleCoset.Quotient (S : Set G) K,
-        mackeySummand S K q.out phi k :=
-  rfl
 
 public theorem mackeyRestrictionSum_apply_formula
     {G : Type*} [Group G] [Finite G] (S K : Subgroup G) [Finite K]
@@ -897,14 +838,6 @@ public theorem finite_sum_fiberwise_univ
   simpa using
     (Finset.sum_fiberwise (s := (Finset.univ : Finset ι)) (g := g) (f := f)).symm
 
-public theorem finite_univ_sum_eq_fintype_sum
-    {ι M : Type*} [Finite ι] [AddCommMonoid M] (f : ι → M) :
-    (∑ i : ι, f i) =
-      ∑ i ∈ (@Finset.univ ι (Fintype.ofFinite ι)), f i := by
-  classical
-  have hinst : (inferInstanceAs (Fintype ι)) = Fintype.ofFinite ι :=
-    Subsingleton.elim _ _
-  rw [hinst]
 
 public theorem mackeyDoubleCosetParam_finite_sum_eq_card_mul_fiber_sum
     {G : Type*} [Group G] [Finite G] (S K : Subgroup G) [Finite S] [Finite K]

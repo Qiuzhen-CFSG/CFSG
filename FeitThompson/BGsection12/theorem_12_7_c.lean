@@ -267,21 +267,6 @@ public theorem section12_subgroupCentralizerIn_le_fitting_of_card_prime_pre
     section12_le_fittingSubgroupOf_of_normalIn_nilpotent
       (G := G) (H := M) (N := C) hC_le_M hC_norm_M hC_nil
 
-public theorem section12_CA_msigma_groupRank_le_one_of_tau2_pre
-    {M E E₁₂ E₁ E₂ E₃ A : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hp : p ∈ section12Tau2Primes M)
-    (hA : A ∈ section12RankTwoElementaryAbelianIn p E) :
-    groupRank (subgroupCentralizerIn A (section10Msigma M)) ≤ 1 := by
-  classical
-  have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M :=
-    section12_rankTwo_of_EData hE hA
-  rcases (by simpa [section12Tau2Primes] using hp) with ⟨hpσ, _hprank⟩
-  have hAσcompl : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ A :=
-    section12_rankTwo_isPiSubgroup_sigma_compl_of_not_sigma_pre hpσ hA_M
-  exact proposition_10_11_b (G := G) (M := M) (K := A)
-    hM (section12_rankTwo_le hA_M) hAσcompl
 
 public theorem section12_centralizer_le_M_of_msigma_fixed_primeOrder_tau2_pre
     {M E E₁₂ E₁ E₂ E₃ A X : Subgroup G} {p : Nat.Primes}
@@ -355,18 +340,6 @@ public theorem section12_mem_normalizer_of_conjBy_eq_pre
         _ = y := by group
     simpa [hxy] using hy
 
-omit [Finite G] [IsMinCE G] in
-public theorem section12_top_conjBy_pre (g : G) :
-    (⊤ : Subgroup G).conjBy g = ⊤ := by
-  ext x
-  constructor
-  · intro _hx
-    simp
-  · intro _hx
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    refine ⟨g⁻¹ * x * g, by simp, ?_⟩
-    simp [MulAut.conj_apply]
-    group
 
 omit [Finite G] [IsMinCE G] in
 public theorem section12_le_conjBy_inv_of_conjBy_le_pre

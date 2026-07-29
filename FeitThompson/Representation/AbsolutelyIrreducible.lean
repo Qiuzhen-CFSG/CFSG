@@ -82,48 +82,6 @@ public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_extendScalars
 
 variable {ρ} {σ}
 
-public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_of_equiv (e : ρ ≃ₗ σ) :
-    IsAbsolutelyIrreducible ρ → IsAbsolutelyIrreducible σ := fun h ↦ by
-  rw [isAbsolutelyIrreducible_iff] at ⊢ h
-  exact (RepEquiv.irreducible_euqiv <| extendScalars_equiv (AlgebraicClosure F) e).mp h
-
-public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_equiv (e : ρ ≃ₗ σ) :
-    IsAbsolutelyIrreducible ρ ↔ IsAbsolutelyIrreducible σ :=
-  ⟨fun h ↦ isAbsolutelyIrreducible_of_equiv e h,
-    fun h ↦ isAbsolutelyIrreducible_of_equiv e.symm h⟩
-
-set_option backward.isDefEq.respectTransparency false in
-public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_of_group_iso {H : Type*} [Monoid H] {ρ : Representation F G V} {σ : Representation F H V} (f : G ≃* H) (h : ∀ g : G, ∀ v : V, ρ g v = σ (f g) v) :
-    IsAbsolutelyIrreducible ρ → IsAbsolutelyIrreducible σ := fun h1 ↦ by
-  rw [isAbsolutelyIrreducible_iff] at ⊢ h1
-  apply RepEquiv.irreducible_of_group_iso (ρ := extendScalars (AlgebraicClosure F) ρ) (σ := extendScalars (AlgebraicClosure F) σ) f
-  intro g v
-  let motive := fun (v : AlgebraicClosure F ⊗[F] V) ↦ ((extendScalars (AlgebraicClosure F) ρ) g) v = ((extendScalars (AlgebraicClosure F) σ) (f g)) v
-  apply TensorProduct.induction_on (motive := motive)
-  · simp only [extendScalars_apply, map_zero, motive]
-  · intro x y
-    unfold motive
-    simp only [extendScalars_apply, LinearMap.baseChange_tmul]
-    rw [h]
-  · unfold motive
-    intro x y hx hy
-    simp only [extendScalars_apply, map_add] at hx hy ⊢
-    rw [hx, hy]
-  exact h1
-
-public alias IsAbsolutelyIrreducible.isAbsolutelyIrreducible_of_monoid_iso :=
-  IsAbsolutelyIrreducible.isAbsolutelyIrreducible_of_group_iso
-
-set_option backward.isDefEq.respectTransparency false in
-public theorem IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_group_iso {H : Type*} [Monoid H] {ρ : Representation F G V} {σ : Representation F H V} (f : G ≃* H) (h : ∀ g : G, ∀ v : V, ρ g v = σ (f g) v) :
-    IsAbsolutelyIrreducible ρ ↔ IsAbsolutelyIrreducible σ := by
-  have h' : ∀ g : H, ∀ v : V, σ g v = ρ (f.symm g) v := fun _ _ ↦ by
-    simp_all only [MulEquiv.apply_symm_apply]
-  refine ⟨isAbsolutelyIrreducible_of_group_iso f h,
-    isAbsolutelyIrreducible_of_group_iso f.symm h'⟩
-
-public alias IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_monoid_iso :=
-  IsAbsolutelyIrreducible.isAbsolutelyIrreducible_iff_group_iso
 
 end AbsolutelyIrreducibleRep
 

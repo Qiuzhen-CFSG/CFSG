@@ -75,27 +75,6 @@ public lemma isInvariant_map_subtype {G A : Type*} [Group G] [Group A]
         _ = g := inv_smul_smul a g
     simp only [Subgroup.subtype_apply, this]
 
-public lemma isInvariant_map_conj_of_mem_fixedPoint {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G) [IsInvariant A G H]
-    {g : G} (hg : g ∈ fixedPointSubgroup A G) :
-    IsInvariant A G (H.map (MulAut.conj g).toMonoidHom) := by
-  have hg_fixed : ∀ a : A, a • g = g := by
-    simpa [fixedPointSubgroup] using hg
-  have hforward : ∀ a : A, ∀ x : G,
-      x ∈ H.map (MulAut.conj g).toMonoidHom → a • x ∈ H.map (MulAut.conj g).toMonoidHom := by
-    intro a x hx
-    rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-    refine Subgroup.mem_map.mpr ?_
-    refine ⟨a • y, (IsInvariant.invariant (A := A) (G := G) (H := H) a y).1 hy, ?_⟩
-    change g * (a • y) * g⁻¹ = a • (g * y * g⁻¹)
-    simp [smul_mul', hg_fixed a, mul_assoc]
-  refine ⟨?_⟩
-  intro a x
-  constructor
-  · exact hforward a x
-  · intro hx
-    have : a⁻¹ • (a • x) ∈ H.map (MulAut.conj g).toMonoidHom := hforward a⁻¹ (a • x) hx
-    simpa [inv_smul_smul] using this
 
 public lemma isInvariant_sup {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] (H K : Subgroup G)
@@ -227,29 +206,6 @@ public lemma isInvariant_subgroupOf {G A : Type*} [Group G] [Group A]
       simpa using (IsInvariant.invariant (A := A) (G := G) (H := H) a (x : G)).2 hx'
     exact hx_inv
 
-public lemma isInvariant_centralizer_of_actsTriviallyOnSubgroup {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] (H : Subgroup G)
-    (hHtriv : ActsTriviallyOnSubgroup (A := A) (G := G) H) :
-    IsInvariant A G (Subgroup.centralizer (H : Set G)) := by
-  have hforward :
-      ∀ a : A, ∀ g : G,
-        g ∈ Subgroup.centralizer (H : Set G) → a • g ∈ Subgroup.centralizer (H : Set G) := by
-    intro a g hg
-    rw [Subgroup.mem_centralizer_iff] at hg ⊢
-    intro h hh
-    have hhfix_inv : a⁻¹ • h = h := hHtriv a⁻¹ h hh
-    have hhfix : a • h = h := hHtriv a h hh
-    have hcomm : (a⁻¹ • h) * g = g * (a⁻¹ • h) := hg (a⁻¹ • h) (by simpa [hhfix_inv] using hh)
-    have hcomm' : a • ((a⁻¹ • h) * g) = a • (g * (a⁻¹ • h)) := by
-      exact congrArg (fun x => a • x) hcomm
-    simpa [smul_mul', smul_smul, hhfix_inv, hhfix, mul_assoc] using hcomm'
-  refine ⟨?_⟩
-  intro a g
-  constructor
-  · exact hforward a g
-  · intro hg
-    have : a⁻¹ • (a • g) ∈ Subgroup.centralizer (H : Set G) := hforward a⁻¹ (a • g) hg
-    simpa [inv_smul_smul] using this
 
 /-- If `X` and `Y` are invariant and `Y` normalizes `X`, then `X ⊔ Y` is invariant. -/
 public theorem isInvariant_sup_of_le_normalizer

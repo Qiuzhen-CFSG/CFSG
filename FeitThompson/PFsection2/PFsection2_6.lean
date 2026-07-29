@@ -4,8 +4,7 @@ public import FeitThompson.PFsection2.PFsection2_5
 public import FeitThompson.PFsection2.PFsection2_1
 public import FeitThompson.PFsection2.PFsection2_7
 public import FeitThompson.PFsection2.PFsection2_10
-public import FeitThompson.PFsection2.PFsection2_8
-public import FeitThompson.PFsection2.PFsection2_9
+public import FeitThompson.PFsection2.Basic
 public import FeitThompson.PFsection2.PFsection2_11
 import Mathlib.Algebra.Group.Pointwise.Set.Basic
 
@@ -104,13 +103,6 @@ private theorem isVirtualCharacter_of_isCharacter
   simp [Representation.virtualCharacterOfRepresentations,
     standardizeRepresentation_character]
 
-private theorem inducedCF_isVirtualCharacter_of_isCharacter
-    {G : Type u} [Group G] [Finite G]
-    (S : Subgroup G) [Finite S] (ψ : Section1.ClassFunction S)
-    (hψ : Section1.IsCharacter ψ) :
-    Representation.IsVirtualCharacter (Section1.inducedCF S ψ) := by
-  exact isVirtualCharacter_of_isCharacter (Section1.inducedCF S ψ)
-    (Section1.isCharacter_inducedCF_of_isCharacter S ψ hψ)
 
 private theorem character_cast_nat
     {G : Type u} [Group G] {n m : ℕ} (h : n = m)
@@ -187,15 +179,6 @@ private theorem isVirtualCharacter_finset_sum
       ext g
       simp [hi]
 
-private theorem isVirtualCharacter_sum
-    {G : Type u} [Group G] {ι : Type*} [Fintype ι]
-    (χ : ι → G → ℂ) (hχ : ∀ i, Representation.IsVirtualCharacter (χ i)) :
-    Representation.IsVirtualCharacter (fun g => ∑ i, χ i g) := by
-  classical
-  simpa using
-    isVirtualCharacter_finset_sum (Finset.univ : Finset ι) χ (by
-      intro i _hi
-      exact hχ i)
 
 private theorem isVirtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
@@ -264,29 +247,6 @@ private theorem scalarProduct_isVirtualCharacter_eq_int
     _ = ((∑ i : Fin r, ∑ j : Fin s, m i * m' j * k i j : ℤ) : ℂ) := by
           simp [Int.cast_sum, Int.cast_mul, mul_assoc]
 
-private theorem subgroupRestriction_isCharacter
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G) {χ : Section1.ClassFunction G}
-    (hχ : Section1.IsCharacter χ) :
-    Section1.IsCharacter (Section1.subgroupRestriction L χ) := by
-  rcases hχ with ⟨V, hadd, hmod, hfd, ρ, rfl⟩
-  refine ⟨V, hadd, hmod, hfd, ρ.comp L.subtype, ?_⟩
-  funext l
-  rfl
-
-private theorem subgroupRestriction_isVirtualCharacter
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G) {χ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter (Section1.subgroupRestriction L χ) := by
-  classical
-  rcases hχ with ⟨r, m, n, ρ, rfl⟩
-  refine ⟨r, m, n, fun i => (ρ i).comp L.subtype, ?_⟩
-  ext l
-  unfold Section1.subgroupRestriction Representation.virtualCharacterOfRepresentations
-  refine Finset.sum_congr rfl ?_
-  intro i _hi
-  rfl
 
 private theorem isVirtualCharacter_comp_monoidHom
     {G K : Type u} [Group G] [Group K]
@@ -320,18 +280,6 @@ private theorem dadeTransform_add
   · simp [dadeTransform, hg]
   · simp [dadeTransform, hg]
 
-private theorem dadeTransform_zsmul
-    {G : Type u} [Group G]
-    {A : Set G} {L : Subgroup G} (H : G → Subgroup G)
-    (hAL : ∀ a ∈ A, a ∈ L)
-    (n : ℤ) (α : Section1.ClassFunction L) :
-    dadeTransform H hAL (n • α) =
-      n • dadeTransform H hAL α := by
-  classical
-  ext g
-  by_cases hg : ∃ a ∈ A, ∃ h ∈ H a, conjugateIn g (a * h)
-  · simp [dadeTransform, hg]
-  · simp [dadeTransform, hg]
 
 public theorem inducedCF_isVirtualCharacter_of_virtualCharacter
     {G : Type u} [Group G] [Finite G]
@@ -771,16 +719,6 @@ private theorem mem_transporterSet_iff
     x ∈ transporterSet g X ↔ x⁻¹ * g * x ∈ X := by
   simp [transporterSet, conjBy, mul_assoc]
 
-private theorem mem_rightTranslateSet_iff
-    {G : Type u} [Mul G] (S : Set G) (b y : G) :
-    y ∈ rightTranslateSet S b ↔ ∃ h ∈ S, y = h * b := by
-  rfl
-
-private theorem mem_rightTranslateSet_hInter_iff
-    {G : Type u} [Group G] (H : G → Subgroup G) (B : Set G) (b y : G) :
-    y ∈ rightTranslateSet (HInter H B : Set G) b ↔
-      ∃ h₀ ∈ HInter H B, y = h₀ * b := by
-  rfl
 
 private theorem MOfSet_mem_decompose
     {G : Type u} [Group G] [Finite G]
@@ -791,60 +729,6 @@ private theorem MOfSet_mem_decompose
   exact
     (MOfSet_isInternalSemidirectProduct A L H h hB hBA).mul_surjective m hm
 
-private theorem MOfSetProjectionToL_apply_of_decomposition
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A)
-    {m h₀ x : G} (hh₀ : h₀ ∈ HInter H B) (hx : x ∈ normalizerIn L B)
-    (hm : (m : G) = h₀ * x)
-    (hmM : m ∈ MOfSet H L B) :
-    MOfSetProjectionToL A L H h hB hBA ⟨m, hmM⟩ =
-      ⟨x, (Subgroup.mem_inf.mp hx).1⟩ := by
-  subst m
-  exact MOfSetProjectionToL_apply_mul A L H h hB hBA hh₀ hx
-
-private theorem MOfSetProjectionToL_apply_of_mem
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A)
-    (m : MOfSet H L B) :
-    ∃ h₀ ∈ HInter H B, ∃ x : normalizerIn L B,
-      (m : G) = h₀ * (x : G) ∧
-        MOfSetProjectionToL A L H h hB hBA m =
-          ⟨(x : G), (Subgroup.mem_inf.mp x.2).1⟩ := by
-  rcases MOfSet_mem_decompose A L H h hB hBA m.2 with
-    ⟨h₀, hh₀, x, hx, hm⟩
-  refine ⟨h₀, hh₀, ⟨x, hx⟩, hm, ?_⟩
-  simpa only using
-    MOfSetProjectionToL_apply_of_decomposition A L H h hB hBA hh₀ hx hm m.2
-
-private theorem alphaBSpec_apply_of_decomposition
-    {G : Type u} [Group G]
-    {L : Subgroup G} (H : G → Subgroup G)
-    (α : Section1.ClassFunction L) {B : Set G}
-    {αB : Section1.ClassFunction (MOfSet H L B)}
-    (hαB : alphaBSpec H α B αB)
-    {m h₀ x : G} (hh₀ : h₀ ∈ HInter H B) (hx : x ∈ normalizerIn L B)
-    (hm : (m : G) = h₀ * x)
-    (hmM : m ∈ MOfSet H L B) :
-    αB ⟨m, hmM⟩ = α ⟨x, (Subgroup.mem_inf.mp hx).1⟩ := by
-  subst m
-  exact hαB hh₀ hx
-
-private theorem alphaBSpec_apply_of_mem
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) {L : Subgroup G} (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A)
-    (α : Section1.ClassFunction L)
-    {αB : Section1.ClassFunction (MOfSet H L B)}
-    (hαB : alphaBSpec H α B αB) (m : MOfSet H L B) :
-    ∃ h₀ ∈ HInter H B, ∃ x : normalizerIn L B,
-      (m : G) = h₀ * (x : G) ∧
-        αB m = α ⟨(x : G), (Subgroup.mem_inf.mp x.2).1⟩ := by
-  rcases MOfSet_mem_decompose A L H h hB hBA m.2 with
-    ⟨h₀, hh₀, x, hx, hm⟩
-  refine ⟨h₀, hh₀, ⟨x, hx⟩, hm, ?_⟩
-  simpa using alphaBSpec_apply_of_decomposition H α hαB hh₀ hx hm m.2
 
 private theorem dadeInclusionExclusionSum_isVirtualCharacter
     {G : Type u} [Group G] [Finite G]
@@ -885,31 +769,6 @@ private theorem dadeInclusionExclusionSum_isVirtualCharacter
   rw [hneg]
   exact isVirtualCharacter_zsmul (-1) hsum
 
-private theorem hInter_union_singleton_eq_inf
-    {G : Type u} [Group G] (H : G → Subgroup G) (B : Set G) (a : G) :
-    HInter H (B ∪ Set.singleton a) = HInter H B ⊓ H a := by
-  ext x
-  constructor
-  · intro hx
-    refine Subgroup.mem_inf.mpr ⟨?_, ?_⟩
-    · change x ∈ ⨅ b : B, H (b : G)
-      rw [Subgroup.mem_iInf]
-      intro b
-      exact hInter_le_of_mem H (B := Set.union B (Set.singleton a))
-        (by exact Or.inl b.2) hx
-    · exact hInter_le_of_mem H (B := Set.union B (Set.singleton a))
-        (by exact Or.inr rfl) hx
-  · intro hx
-    rcases Subgroup.mem_inf.mp hx with ⟨hxB, hxa⟩
-    change x ∈ ⨅ b : Set.union B (Set.singleton a), H (b : G)
-    rw [Subgroup.mem_iInf]
-    intro b
-    rcases b.2 with hb | ha
-    · change x ∈ ⨅ b : B, H (b : G) at hxB
-      rw [Subgroup.mem_iInf] at hxB
-      exact hxB ⟨b, hb⟩
-    · have hb_eq : (b : G) = a := Set.mem_singleton_iff.mp ha
-      simpa [hb_eq] using hxa
 
 private theorem internalDirectProduct_mul_unique
     {G : Type u} [Group G] {C H K : Subgroup G}
@@ -1155,37 +1014,6 @@ private theorem hInter_mul_normalizer_mem_dadeSupport_of_right_mem_A
   subst b'
   exact ⟨b, hbA, k, hk, by simpa [hs_eq] using conjugateIn_symm_early hconj⟩
 
-private theorem internalDirectProduct_card_mul
-    {G : Type u} [Group G] [Finite G] {C H K : Subgroup G}
-    (h : IsInternalDirectProduct C H K) :
-    Nat.card C = Nat.card H * Nat.card K := by
-  classical
-  let f : H × K → C := fun p =>
-    ⟨(p.1 : G) * (p.2 : G),
-      C.mul_mem (h.left_le p.1.2) (h.right_le p.2.2)⟩
-  have hf_inj : Function.Injective f := by
-    rintro ⟨h₁, k₁⟩ ⟨h₂, k₂⟩ heq
-    apply Prod.ext
-    · apply Subtype.ext
-      exact (internalDirectProduct_mul_unique h h₁.2 h₂.2 k₁.2 k₂.2
-        (Subtype.ext_iff.mp heq)).1
-    · apply Subtype.ext
-      exact (internalDirectProduct_mul_unique h h₁.2 h₂.2 k₁.2 k₂.2
-        (Subtype.ext_iff.mp heq)).2
-  have hf_surj : Function.Surjective f := by
-    intro c
-    rcases h.mul_surjective (c : G) c.2 with ⟨h₀, hh₀, k₀, hk₀, hc⟩
-    refine ⟨(⟨h₀, hh₀⟩, ⟨k₀, hk₀⟩), ?_⟩
-    apply Subtype.ext
-    exact hc.symm
-  have hcard_equiv :
-      Nat.card (H × K) = Nat.card C :=
-    Nat.card_congr (Equiv.ofBijective f ⟨hf_inj, hf_surj⟩)
-  have hprod : Nat.card (H × K) = Nat.card H * Nat.card K := by
-    rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card,
-      Nat.card_eq_fintype_card]
-    exact Fintype.card_prod H K
-  rw [← hcard_equiv, hprod]
 
   private theorem centralizer_card_eq_mul
     {G : Type u} [Group G] [Finite G]
@@ -1596,63 +1424,6 @@ private theorem alphaBSpec_apply_eq_of_mem_support_piece
       exact hnot ⟨b, hbN, hab, ⟨h₀, hh₀, hdecomp⟩⟩
     · exact hαA ⟨b, (Subgroup.mem_inf.mp hbN).1⟩ hbA
 
-private theorem transporterSet_mem_MOfSet_of_index
-    {G : Type u} [Group G] {L : Subgroup G} {H : G → Subgroup G}
-    {B : Set G} {g x b : G}
-    (hbN : b ∈ normalizerIn L B)
-    (hx : x ∈ transporterSet g (rightTranslateSet (HInter H B : Set G) b)) :
-    x⁻¹ * g * x ∈ MOfSet H L B := by
-  rw [mem_transporterSet_iff] at hx
-  rcases hx with ⟨h₀, hh₀, hxeq⟩
-  rw [hxeq]
-  exact hInter_mul_normalizer_mem_MOfSet H L B hh₀ hbN
-
-private theorem transporterSet_rightTranslate_pairwiseDisjoint
-    {G : Type u} [Group G] [Finite G]
-    {A : Set G} {L : Subgroup G} {H : G → Subgroup G}
-    (h : Hypothesis2 A L H) {B : Set G}
-    (hB : B.Nonempty) (hBA : B ⊆ A) (g : G) :
-    (Set.univ : Set {b : G // b ∈ normalizerIn L B}).PairwiseDisjoint
-        (fun b : {b : G // b ∈ normalizerIn L B} =>
-          transporterSet g
-            (rightTranslateSet (HInter H B : Set G) (b : G))) := by
-  classical
-  intro b _hb c _hc hbc
-  dsimp [Function.onFun]
-  rw [Set.disjoint_left]
-  intro x hxb hxc
-  rw [mem_transporterSet_iff] at hxb hxc
-  rcases hxb with ⟨h₁, hh₁, hxb_eq⟩
-  rcases hxc with ⟨h₂, hh₂, hxc_eq⟩
-  have hbc_val : (b : G) = (c : G) := by
-    have hsemi := MOfSet_isInternalSemidirectProduct A L H h hB hBA
-    exact (internalSemidirectProduct_mul_unique hsemi hh₁ hh₂ b.2 c.2
-      (hxb_eq.symm.trans hxc_eq)).2
-  exact hbc (Subtype.ext hbc_val)
-
-private theorem alphaBSpec_apply_eq_on_transporter_index
-    {G : Type u} [Group G]
-    {L : Subgroup G} {H : G → Subgroup G}
-    {B : Set G} {α : Section1.ClassFunction L}
-    {αB : Section1.ClassFunction (MOfSet H L B)}
-    (hαclass : Section1.IsClassFunction α)
-    (hαB : alphaBSpec H α B αB)
-    {g x a b : G} (haL : a ∈ L)
-    (hbN : b ∈ normalizerIn L B)
-    (hab : conjugateInSubgroup L a b)
-    (hx : x ∈ transporterSet g (rightTranslateSet (HInter H B : Set G) b)) :
-    αB ⟨x⁻¹ * g * x, transporterSet_mem_MOfSet_of_index hbN hx⟩ =
-      α ⟨a, haL⟩ := by
-  rw [mem_transporterSet_iff] at hx
-  rcases hx with ⟨h₀, hh₀, hxeq⟩
-  have hval :
-      αB ⟨x⁻¹ * g * x, transporterSet_mem_MOfSet_of_index hbN
-          (by rw [mem_transporterSet_iff]; exact ⟨h₀, hh₀, hxeq⟩)⟩ =
-        α ⟨b, (Subgroup.mem_inf.mp hbN).1⟩ := by
-    convert hαB hh₀ hbN
-  rw [hval]
-  exact classFunction_eq_of_conjugateInSubgroup α hαclass
-    haL (Subgroup.mem_inf.mp hbN).1 hab
 
 private theorem inducedCF_alphaB_support_piece_filter_formula
     {G : Type u} [Group G] [Finite G]
@@ -2038,16 +1809,6 @@ public theorem dadeTransform_eq_zero_of_not_mem_support
     simpa [dadeSupport] using hg
   simp [dadeTransform, hnot]
 
-private theorem dadeTransform_isClassFunction_of_virtualCharacterOn
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L)
-    (α : Section1.ClassFunction L) :
-    virtualCharacterOn L A α →
-      Section1.IsClassFunction (dadeTransform H hAL α) := by
-  intro hα
-  exact dadeTransform_isClassFunction_of_CFOn A L H h hAL α
-    (CFOn_of_virtualCharacterOn L A α hα)
 
 public theorem scalarProduct_right_congr_on_left_support
     {G : Type u} [Finite G] {φ ψ χ : Section1.ClassFunction G}
@@ -2064,35 +1825,6 @@ public theorem scalarProduct_right_congr_on_left_support
   · rw [hψχ g hgA]
   · rw [hφ g hgA]
     simp
-
-private theorem sum_eq_sum_set_of_supported
-    {G : Type u} [Finite G] {M : Type*} [AddCommMonoid M]
-    (S : Set G) (f : G → M) (hzero : ∀ g : G, g ∉ S → f g = 0) :
-    ∑ g : G, f g = ∑ g : S, f g := by
-  classical
-  have hS : S.Finite := by
-    refine (Set.finite_univ : (Set.univ : Set G).Finite).subset ?_
-    intro g hg
-    trivial
-  have hsum_univ :
-      ∑ g : G, f g = ∑ g ∈ S.toFinset, f g := by
-    rw [← Finset.sum_subset (Finset.subset_univ S.toFinset)]
-    intro g _hg hgnot
-    exact hzero g (by
-      intro hgS
-      exact hgnot (by simpa using (hS.mem_toFinset).2 hgS))
-  calc
-    ∑ g : G, f g = ∑ g ∈ S.toFinset, f g := hsum_univ
-    _ = ∑ g : S, f g := by
-        simpa using
-          (Finset.sum_subtype (s := S.toFinset)
-            (p := fun g : G => g ∈ S)
-            (by
-              intro g
-              simp) f)
-    _ = _ := by
-      have : (Subtype.fintype (Membership.mem S)) = Fintype.ofFinite S := by exact of_decide_eq_true rfl
-      rw [this]
 
 
 private theorem scalarProduct_restrict_dadeTransform_eq_of_support
@@ -2163,17 +1895,6 @@ private theorem scalarProduct_dadeAveraging_eq_restrict_of_constant
         field_simp [hcard_ne]
       simpa [Section1.subgroupRestriction] using havg)
 
-private theorem conjugateImage_mul
-    {G : Type u} [Group G] (S : Set G) (x y : G) :
-    conjugateImage S (x * y) = conjugateImage (conjugateImage S y) x := by
-  ext g
-  constructor
-  · rintro ⟨s, hs, rfl⟩
-    refine ⟨conjBy y s, ?_, ?_⟩
-    · exact ⟨s, hs, rfl⟩
-    · simp [conjBy, mul_assoc]
-  · rintro ⟨t, ⟨s, hs, rfl⟩, rfl⟩
-    exact ⟨s, hs, by simp [conjBy, mul_assoc]⟩
 
 private theorem exists_representative_system_for_nonempty_subsets
     {G : Type u} [Group G] [Finite G] (A : Set G) (L : Subgroup G) :
@@ -2781,11 +2502,6 @@ private theorem normalizesSet_iff_conjugateImage_eq_self
         simpa [hEq] using this
       exact hmem
 
-private theorem conjugateImage_eq_of_mem_setNormalizer
-    {G : Type u} [Group G] {S : Set G} {x : G}
-    (hx : x ∈ setNormalizer S) :
-    conjugateImage S x = S :=
-  (normalizesSet_iff_conjugateImage_eq_self).1 hx
 
 private theorem conjAct_smul_set_eq_conjugateImage
     {G : Type u} [Group G] (S : Set G) (x : G) :
@@ -2869,31 +2585,6 @@ private theorem ncard_conjAct_orbit_mul_card_setNormalizer
   rw [hstab] at hcard'
   simpa [Nat.card_eq_fintype_card] using hcard'
 
-private theorem conjugateImage_mul_right_eq
-    {G : Type u} [Group G] {S : Set G} {x n : G}
-    (hn : n ∈ setNormalizer S) :
-    conjugateImage S (x * n) = conjugateImage S x := by
-  calc
-    conjugateImage S (x * n) = conjugateImage (conjugateImage S n) x := by
-      exact conjugateImage_mul S x n
-    _ = conjugateImage S x := by
-      rw [conjugateImage_eq_of_mem_setNormalizer hn]
-
-private theorem conjugateImage_ncard
-    {G : Type u} [Group G] (S : Set G) (x : G) :
-    (conjugateImage S x).ncard = S.ncard := by
-  classical
-  let e : G ≃ G := MulAut.conj x
-  calc
-    (conjugateImage S x).ncard = (e '' S).ncard := by
-      congr
-      ext g
-      constructor
-      · rintro ⟨s, hs, rfl⟩
-        exact ⟨s, hs, rfl⟩
-      · rintro ⟨s, hs, rfl⟩
-        exact ⟨s, hs, rfl⟩
-    _ = S.ncard := Set.ncard_image_of_injective _ e.injective
 
 private theorem conjugateImage_sum_eq
     {G : Type u} [Group G] [Finite G]
@@ -2926,24 +2617,6 @@ private theorem conjugateImage_sum_eq
   change χ (s : G) = χ (conjBy x (s : G))
   exact (hχ x (s : G)).symm
 
-private theorem cosetProduct_ncard
-    {G : Type u} [Group G] (a : G) (K : Subgroup G) :
-    (cosetProduct a K).ncard = Nat.card K := by
-  classical
-  let e : G ≃ G := Equiv.mulLeft a
-  calc
-    (cosetProduct a K).ncard = (e '' (K : Set G)).ncard := by
-      congr
-      ext z
-      constructor
-      · rintro ⟨s, hs, t, ht, rfl⟩
-        rw [Set.mem_singleton_iff] at hs
-        subst s
-        exact ⟨t, ht, rfl⟩
-      · rintro ⟨t, ht, rfl⟩
-        exact ⟨a, by simp, t, ht, rfl⟩
-    _ = (K : Set G).ncard := Set.ncard_image_of_injective _ e.injective
-    _ = Nat.card K := rfl
 
 private theorem sum_cosetProduct_eq_sum_subgroup
     {G : Type u} [Group G] [Finite G] {M : Type*} [AddCommMonoid M]
@@ -2985,16 +2658,6 @@ private theorem sum_toFinset_eq_subtype
   letI : Fintype S := Fintype.ofFinite S
   simp [Set.toFinset]
 
-private theorem conjugateSubgroup_coe_eq_conjugateImage
-    {G : Type u} [Group G] (x : G) (K : Subgroup G) :
-    ((conjugateSubgroup x K : Subgroup G) : Set G) =
-      conjugateImage (K : Set G) x := by
-  ext g
-  constructor
-  · rintro ⟨k, hk, rfl⟩
-    exact ⟨k, hk, rfl⟩
-  · rintro ⟨k, hk, rfl⟩
-    exact ⟨k, hk, rfl⟩
 
 private theorem conjugateImage_cosetProduct_eq_cosetProduct_conjugateSubgroup
     {G : Type u} [Group G] (a x : G) (K : Subgroup G) :
@@ -3312,23 +2975,6 @@ private theorem orbit_card_mul_card_centralizerIn
   simpa [Nat.card_eq_fintype_card, hstab] using
     hcard
 
-private def cosetProductLeftMulEquiv
-    {G : Type u} [Group G] (a : G) (K : Subgroup G) :
-    K ≃ cosetProduct a K where
-  toFun k := ⟨a * (k : G), by
-    exact ⟨a, by simp, k, k.2, rfl⟩⟩
-  invFun g := ⟨a⁻¹ * (g : G), by
-    rcases g.2 with ⟨s, hs, k, hk, hg⟩
-    rw [Set.mem_singleton_iff] at hs
-    subst s
-    rw [hg]
-    simpa [mul_assoc] using hk⟩
-  left_inv k := by
-    ext
-    simp
-  right_inv g := by
-    ext
-    simp
 
 private theorem sum_cosetProduct_star_eq_card_mul_star_dadeAveraging
     {G : Type u} [Group G] [Finite G] (L : Subgroup G) (H : G → Subgroup G)
@@ -3942,42 +3588,6 @@ private theorem dadeInductionFormulaTerm_lconj_left_eq
   unfold dadeInductionFormulaTerm
   rw [hsum, hαc]
 
-private theorem dadeInductionFormulaTerm_setConjugateBy_fixed_left_eq
-    {G : Type u} [Group G] [Finite G]
-    {A : Set G} {L : Subgroup G} {H : G → Subgroup G}
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L)
-    {α : Section1.ClassFunction L} (hα : CFOn L A α)
-    {g a : G} (ha : a ∈ A) {B : Set G} (hBA : B ⊆ A)
-    (x : L) :
-    dadeInductionFormulaTerm A L H α g a
-        (setConjugateBy (x : G) B) hAL ha =
-      dadeInductionFormulaTerm A L H α g a B hAL ha := by
-  classical
-  let c : G := conjBy ((x : G)⁻¹) a
-  have hcA : c ∈ A := by
-    exact (h.L_le_normalizer (L.inv_mem x.2) a).2 ha
-  have hxc : conjBy (x : G) c = a := by
-    simp [c, conjBy, mul_assoc]
-  have hcx : conjugateInSubgroup L c a := ⟨x, hxc⟩
-  have hleft :
-      dadeInductionFormulaTerm A L H α g (conjBy (x : G) c)
-          (setConjugateBy (x : G) B) hAL
-          (by simpa [hxc] using ha) =
-        dadeInductionFormulaTerm A L H α g c B hAL hcA := by
-    exact dadeInductionFormulaTerm_setConjugateBy_eq
-      (A := A) (L := L) (H := H) h hAL hα hcA hBA x
-  calc
-    dadeInductionFormulaTerm A L H α g a
-        (setConjugateBy (x : G) B) hAL ha =
-        dadeInductionFormulaTerm A L H α g (conjBy (x : G) c)
-          (setConjugateBy (x : G) B) hAL
-          (by simpa [hxc] using ha) := by
-          congr 1
-          exact hxc.symm
-    _ = dadeInductionFormulaTerm A L H α g c B hAL hcA := hleft
-    _ = dadeInductionFormulaTerm A L H α g a B hAL ha := by
-          exact dadeInductionFormulaTerm_lconj_left_eq hAL hα
-            ha hcA (conjugateInSubgroup_symm hcx) B
 
 private theorem dadeInductionFormulaTerm_lconj_set_eq
     {G : Type u} [Group G] [Finite G]
@@ -4004,61 +3614,6 @@ private theorem dadeInductionFormulaTerm_lconj_set_eq
           exact dadeInductionFormulaTerm_setConjugateBy_eq
             (A := A) (L := L) (H := H) h hAL hα ha hBA x
 
-public theorem inducedCF_alphaB_setConjugateBy_eq
-    {G : Type u} [Group G] [Finite G]
-    {A : Set G} {L : Subgroup G} [Finite L] {H : G → Subgroup G}
-    (h : Hypothesis2 A L H)
-    {α : Section1.ClassFunction L} (hα : CFOn L A α)
-    {B : Set G} (hB : B.Nonempty) (hBA : B ⊆ A) (x : L)
-    (αB : Section1.ClassFunction (MOfSet H L B))
-    (αBx : Section1.ClassFunction (MOfSet H L (setConjugateBy (x : G) B)))
-    (hαB : alphaBSpec H α B αB)
-    (hαBx : alphaBSpec H α (setConjugateBy (x : G) B) αBx) :
-    Section1.inducedCF (MOfSet H L (setConjugateBy (x : G) B)) αBx =
-      Section1.inducedCF (MOfSet H L B) αB := by
-  classical
-  let hAL : ∀ a ∈ A, a ∈ L := h.subset_L
-  have hBx : (setConjugateBy (x : G) B).Nonempty := by
-    rcases hB with ⟨b, hb⟩
-    exact ⟨conjBy (x : G) b, ⟨b, hb, rfl⟩⟩
-  have hBxA : setConjugateBy (x : G) B ⊆ A := by
-    intro c hc
-    rcases hc with ⟨b, hb, rfl⟩
-    exact (h.L_le_normalizer x.2 b).2 (hBA hb)
-  ext g
-  by_cases hg : g ∈ dadeSupport A H
-  · rcases hg with ⟨a, ha, k, hk, hconj⟩
-    have hgpiece : g ∈ conjugateSet (cosetProduct a (H a)) :=
-      dadeSupport_piece_mem_conjugateSet hk hconj
-    have hleft :
-        Section1.inducedCF (MOfSet H L (setConjugateBy (x : G) B)) αBx g =
-          dadeInductionFormulaTerm A L H α g a
-            (setConjugateBy (x : G) B) hAL ha := by
-      exact inducedCF_alphaB_support_piece_formula
-        (A := A) (L := L) (H := H) (hAL := hAL)
-        h hBx hBxA hα.1 hα.2 hαBx ha hgpiece
-    have hright :
-        Section1.inducedCF (MOfSet H L B) αB g =
-          dadeInductionFormulaTerm A L H α g a B hAL ha := by
-      exact inducedCF_alphaB_support_piece_formula
-        (A := A) (L := L) (H := H) (hAL := hAL)
-        h hB hBA hα.1 hα.2 hαB ha hgpiece
-    have hterm :
-        dadeInductionFormulaTerm A L H α g a
-            (setConjugateBy (x : G) B) hAL ha =
-          dadeInductionFormulaTerm A L H α g a B hAL ha :=
-      dadeInductionFormulaTerm_setConjugateBy_fixed_left_eq
-        (A := A) (L := L) (H := H) h hAL hα ha hBA x
-    exact hleft.trans (hterm.trans hright.symm)
-  · have hleft :
-        Section1.inducedCF (MOfSet H L (setConjugateBy (x : G) B)) αBx g = 0 :=
-      inducedCF_alphaB_eq_zero_of_not_mem_dadeSupport
-        (A := A) (L := L) (H := H) h hBx hBxA hα.2 hαBx hg
-    have hright :
-        Section1.inducedCF (MOfSet H L B) αB g = 0 :=
-      inducedCF_alphaB_eq_zero_of_not_mem_dadeSupport
-        (A := A) (L := L) (H := H) h hB hBA hα.2 hαB hg
-    exact hleft.trans hright.symm
 
 private theorem signedDadeInductionFormulaTerm_lconj_set_eq
     {G : Type u} [Group G] [Finite G]
@@ -4422,41 +3977,6 @@ private theorem lSubsetOrbitFinset_card_mul_card_normalizerIn
   rw [horbit, hstab] at hcard
   simpa [Nat.card_eq_fintype_card] using hcard
 
-private theorem sum_lSubsetOrbitFinset_signedDadeInductionFormulaTerm_eq_card_mul
-    {G : Type u} [Group G] [Finite G]
-    {A : Set G} {L : Subgroup G} {H : G → Subgroup G}
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L)
-    {α : Section1.ClassFunction L} (hα : CFOn L A α)
-    {g a : G} (ha : a ∈ A) {B : Set G} (hBA : B ⊆ A):
-    ∑ C ∈ lSubsetOrbitFinset L B,
-      ((-1 : ℂ) ^ Nat.card C) *
-        dadeInductionFormulaTerm A L H α g a C hAL ha =
-      (Nat.card (lSubsetOrbitFinset L B) : ℂ) *
-        ((-1 : ℂ) ^ Nat.card B) *
-          dadeInductionFormulaTerm A L H α g a B hAL ha := by
-  classical
-  have hconst :
-      ∀ C ∈ lSubsetOrbitFinset L B,
-        ((-1 : ℂ) ^ Nat.card C) *
-          dadeInductionFormulaTerm A L H α g a C hAL ha =
-        ((-1 : ℂ) ^ Nat.card B) *
-          dadeInductionFormulaTerm A L H α g a B hAL ha := by
-    intro C hC
-    have hBC' : LConjugateSubsets L B C := (mem_lSubsetOrbitFinset).1 hC
-    exact signedDadeInductionFormulaTerm_lconj_set_eq
-      (A := A) (L := L) (H := H) h hAL hα ha hBA hBC'
-  calc
-    ∑ C ∈ lSubsetOrbitFinset L B,
-      ((-1 : ℂ) ^ Nat.card C) *
-        dadeInductionFormulaTerm A L H α g a C hAL ha =
-        ∑ C ∈ lSubsetOrbitFinset L B,
-          ((-1 : ℂ) ^ Nat.card B) *
-            dadeInductionFormulaTerm A L H α g a B hAL ha := by
-          exact Finset.sum_congr rfl hconst
-    _ = (Nat.card (lSubsetOrbitFinset L B) : ℂ) *
-        ((-1 : ℂ) ^ Nat.card B) *
-          dadeInductionFormulaTerm A L H α g a B hAL ha := by
-          simp [Finset.sum_const, Nat.card_eq_fintype_card, mul_assoc]
 
 private theorem representative_sum_signedDadeInductionFormulaTerm_eq_weighted_all
     {G : Type u} [Group G] [Finite G]
@@ -4653,11 +4173,6 @@ private theorem singleton_nonempty {G : Type u} (a : G) :
     (Set.singleton a).Nonempty :=
   ⟨a, rfl⟩
 
-private theorem singleton_subset_of_mem {G : Type u} {A : Set G} {a : G}
-    (ha : a ∈ A) :
-    Set.singleton a ⊆ A := by
-  intro x hx
-  simpa [Set.mem_singleton_iff.mp hx] using ha
 
 private theorem self_mem_normalizerIn_of_union_singleton
     {G : Type u} [Group G] {L : Subgroup G} {B : Set G} {a : G}
@@ -4720,55 +4235,6 @@ private theorem sum_normalizerSubsets_pair_union_singleton
     self_mem_normalizerIn_singleton haL
   simpa [filtered, hsingle] using hsum
 
-private theorem normalizerIn_singleton_eq_centralizerIn
-    {G : Type u} [Group G] {L : Subgroup G} {a : G} :
-    normalizerIn L (Set.singleton a) = centralizerIn L a := by
-  ext x
-  constructor
-  · intro hx
-    refine Subgroup.mem_inf.mpr ⟨(Subgroup.mem_inf.mp hx).1, ?_⟩
-    have hnorm : normalizesSet (Set.singleton a) x := (Subgroup.mem_inf.mp hx).2
-    have hfix : conjBy x a = a := by
-      have hmem : conjBy x a ∈ (Set.singleton a : Set G) := (hnorm a).2 rfl
-      exact Set.mem_singleton_iff.mp hmem
-    exact mem_elementCentralizer_of_conjBy_eq_self' hfix
-  · intro hx
-    refine Subgroup.mem_inf.mpr ⟨(Subgroup.mem_inf.mp hx).1, ?_⟩
-    have hcent : (x : G) ∈ elementCentralizer a := (Subgroup.mem_inf.mp hx).2
-    intro y
-    constructor
-    · intro hy
-      have hcomm : a * (x : G) = (x : G) * a := mem_elementCentralizer_commute' hcent
-      have hfix_inv : conjBy (x : G)⁻¹ a = a := by
-        calc
-          conjBy (x : G)⁻¹ a = (x : G)⁻¹ * a * (x : G) := by simp [conjBy]
-          _ = (x : G)⁻¹ * (a * (x : G)) := by simp [mul_assoc]
-          _ = (x : G)⁻¹ * ((x : G) * a) := by rw [hcomm]
-          _ = a := by simp
-      have hy_eq : y = a := by
-        have hy' : conjBy (x : G) y = a := Set.mem_singleton_iff.mp hy
-        have := congrArg (fun z : G => conjBy (x : G)⁻¹ z) hy'
-        simpa [conjBy, mul_assoc, hcomm, hfix_inv] using this
-      exact Set.mem_singleton_iff.mpr hy_eq
-    · intro hy
-      have hy_eq : y = a := Set.mem_singleton_iff.mp hy
-      subst y
-      have hcomm : a * (x : G) = (x : G) * a := mem_elementCentralizer_commute' hcent
-      have hfix : conjBy (x : G) a = a := by
-        calc
-          conjBy (x : G) a = (x : G) * a * (x : G)⁻¹ := rfl
-          _ = a * (x : G) * (x : G)⁻¹ := by rw [← hcomm]
-          _ = a := by simp [mul_assoc]
-      simpa [hfix]
-
-private theorem normalizerIn_union_singleton_iff_of_not_mem
-    {G : Type u} [Group G] {L : Subgroup G} {B : Set G} {a : G}
-    (haB : a ∉ B) :
-    a ∈ normalizerIn L (B ∪ Set.singleton a) ↔ a ∈ normalizerIn L B := by
-  constructor
-  · exact self_mem_normalizerIn_of_union_singleton haB
-  · intro haN
-    exact normalizerIn_union_singleton_of_mem (by unfold normalizerIn at haN; rw [Subgroup.mem_inf] at haN; exact haN.1) haN
 
 private theorem transporterSet_subgroupCosetByElement_card_eq_index_mul
     {G : Type u} [Group G] [Finite G]
@@ -5132,33 +4598,6 @@ public theorem dadeTransform_eq_on_conjugateSet_cosetProduct
   exact dadeTransform_eq_of_isClassFunction A L H h hAL α hαclass ha hk
     (conjugateIn_symm hconj)
 
-private theorem dadeTransform_subgroupRestriction_eq_of_constant_on_support
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L)
-    (χ : Section1.ClassFunction G)
-    (hχclass : Section1.IsClassFunction χ)
-    (hχ : constantOnDadeCosets A H χ)
-    {g : G} (hg : g ∈ dadeSupport A H) :
-    dadeTransform H hAL (Section1.subgroupRestriction L χ) g = χ g := by
-  rcases hg with ⟨a, ha, h₀, hh₀, hconj⟩
-  have hresClass :
-      Section1.IsClassFunction (Section1.subgroupRestriction L χ) :=
-    Section1.subgroupRestriction_isClassFunction_of_isClassFunction L χ hχclass
-  have hleft :
-      dadeTransform H hAL (Section1.subgroupRestriction L χ) g =
-        χ a := by
-    simpa [Section1.subgroupRestriction] using
-      dadeTransform_eq_of_isClassFunction A L H h hAL
-        (Section1.subgroupRestriction L χ) hresClass ha hh₀ hconj
-  have hright : χ g = χ a := by
-    rcases hconj with ⟨x, hx⟩
-    have hclass : χ (conjBy x g) = χ g := by
-      simpa [conjBy] using hχclass x g
-    have hg_to_coset : χ g = χ (a * h₀) := by
-      exact hclass.symm.trans (congrArg χ hx)
-    exact hg_to_coset.trans (hχ ha hh₀)
-  exact hleft.trans hright.symm
 
 set_option maxHeartbeats 800000 in
 private theorem weighted_nonemptySubsets_dadeInductionFormulaTerm_support_cancel
@@ -6275,177 +5714,6 @@ private theorem proposition_2_7 {G : Type u} [Group G] [Finite G]
       exact theorem_2_6_inner_product_restrict_core A L H h hAL α χ hα hχclass hχ
   simpa [proposition_2_7_statement] using hstmt
 
-private theorem proposition_2_8 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) (H : G → Subgroup G) :
-    proposition_2_8_statement A L H := by
-  have hstmt :
-      Hypothesis2 A L H →
-        ∀ ⦃B : Set G⦄, B.Nonempty → B ⊆ A →
-          IsInternalSemidirectProduct
-            (MOfSet H L B) (HInter H B) (normalizerIn L B) := by
-    intro h B hB hBA
-    exact MOfSet_isInternalSemidirectProduct A L H h hB hBA
-  simpa [proposition_2_8_statement] using hstmt
-
-private theorem notation_2_9 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (α : Section1.ClassFunction L) :
-    notation_2_9_statement A L H h α := by
-  have hstmt :
-      CFOn L A α →
-        ∀ ⦃B : Set G⦄, B.Nonempty → B ⊆ A →
-          ∃ αB : Section1.ClassFunction (MOfSet H L B),
-            alphaBSpec H α B αB ∧
-              (Representation.IsVirtualCharacter α →
-                Representation.IsVirtualCharacter αB) := by
-    intro _hα B hB hBA
-    refine ⟨alphaBFromProjection A L H h hB hBA α, ?_⟩
-    constructor
-    · exact alphaBFromProjection_spec A L H h hB hBA α
-    · intro hα
-      exact alphaBFromProjection_isVirtualCharacter A L H h hB hBA α hα
-  simpa [notation_2_9_statement] using hstmt
-
-private theorem proposition_2_10_2 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) :
-    proposition_2_10_2_statement A L H h := by
-  have hstmt :
-      ∀ ⦃B : Set G⦄, B.Nonempty → B ⊆ A →
-        ∀ ⦃a : G⦄, a ∈ A →
-          centralizerIn (HInter H B) a = HInter H (B ∪ {a}) := by
-    intro B hB hBA a ha
-    exact centralizerIn_hInter_eq_hInter_union_singleton
-      (A := A) (L := L) (H := H) h hB hBA ha
-  simpa [proposition_2_10_2_statement] using hstmt
-
-private theorem proposition_2_10_1 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (α : Section1.ClassFunction L) :
-    proposition_2_10_1_statement A L H h α := by
-  have hstmt :
-      CFOn L A α →
-        ∀ ⦃B : Set G⦄, B.Nonempty → B ⊆ A →
-          ∀ x : L,
-            ∀ (αB : Section1.ClassFunction (MOfSet H L B))
-              (αBx : Section1.ClassFunction (MOfSet H L (setConjugateBy (x : G) B))),
-                alphaBSpec H α B αB →
-                  alphaBSpec H α (setConjugateBy (x : G) B) αBx →
-                    Section1.inducedCF (MOfSet H L (setConjugateBy (x : G) B)) αBx =
-                      Section1.inducedCF (MOfSet H L B) αB := by
-    intro hα B hB hBA x αB αBx hαB hαBx
-    exact inducedCF_alphaB_setConjugateBy_eq
-      (A := A) (L := L) (H := H) (B := B) (h := h) (hα := hα)
-      (hB := hB) (hBA := hBA) (x := x) (αB := αB) (αBx := αBx)
-      hαB hαBx
-  simpa [proposition_2_10_1_statement] using hstmt
-
-private theorem proposition_2_10_3 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L)
-    (α : Section1.ClassFunction L) :
-    proposition_2_10_3_statement A L H h hAL α := by
-  have hstmt :
-      CFOn L A α →
-        ∀ ⦃B : Set G⦄, B.Nonempty → B ⊆ A →
-          ∀ αB : Section1.ClassFunction (MOfSet H L B),
-            alphaBSpec H α B αB →
-              (∀ g : G, g ∉ dadeSupport A H →
-                Section1.inducedCF (MOfSet H L B) αB g = 0) ∧
-              (∀ ⦃g a : G⦄, (ha : a ∈ A) → g ∈ conjugateSet (cosetProduct a (H a)) →
-                Section1.inducedCF (MOfSet H L B) αB g =
-                  dadeInductionFormulaTerm A L H α g a B hAL ha) := by
-    intro hα B hB hBA αB hαB
-    constructor
-    · intro g hg
-      exact inducedCF_alphaB_eq_zero_of_not_mem_dadeSupport
-        (A := A) (L := L) (H := H) h hB hBA hα.2 hαB hg
-    · intro g a ha hgpiece
-      exact inducedCF_alphaB_support_piece_formula
-        (A := A) (L := L) (H := H) (hAL := hAL)
-        h hB hBA hα.1 hα.2 hαB ha hgpiece
-  simpa [proposition_2_10_3_statement] using hstmt
-
-private theorem proposition_2_10 {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G)
-    (h : Hypothesis2 A L H) (hAL : ∀ a ∈ A, a ∈ L) :
-    proposition_2_10_statement A L H h hAL := by
-  have hstmt :
-      ∀ (reps : Finset (Set G))
-        (α : Section1.ClassFunction L)
-        (αB : (B : Set G) → Section1.ClassFunction (MOfSet H L B)),
-          IsRepresentativeSystemForNonemptySubsets A L reps →
-            CFOn L A α →
-              (∀ B ∈ reps, alphaBSpec H α B (αB B)) →
-                dadeTransform H hAL α =
-                  dadeInclusionExclusionSum L H reps αB := by
-    intro reps α αB hreps hα hαBspec
-    classical
-    ext g
-    by_cases hg : g ∈ dadeSupport A H
-    · rcases hg with ⟨a, ha, h₀, hh₀, hconj⟩
-      have hgpiece : g ∈ conjugateSet (cosetProduct a (H a)) :=
-        dadeSupport_piece_mem_conjugateSet hh₀ hconj
-      have hleft :
-        dadeTransform H hAL α g =
-            α ⟨a, hAL a ha⟩ := by
-        exact dadeTransform_eq_on_conjugateSet_cosetProduct
-          A L H h hAL α hα.1 ha hgpiece
-      have hterm :
-          ∀ B ∈ reps,
-            Section1.inducedCF (MOfSet H L B) (αB B) g =
-              dadeInductionFormulaTerm A L H α g a B hAL ha := by
-        intro B hBmem
-        have hBprops : B.Nonempty ∧ B ⊆ A := hreps.1 B hBmem
-        exact inducedCF_alphaB_support_piece_formula
-          (A := A) (L := L) (H := H) (hAL := hAL)
-          h hBprops.1 hBprops.2 hα.1 hα.2
-          (hαBspec B hBmem) ha hgpiece
-      have hsum :
-          dadeInclusionExclusionSum L H reps αB g =
-            -(reps.sum fun B =>
-              ((-1 : ℂ) ^ Nat.card B) *
-                dadeInductionFormulaTerm A L H α g a B hAL ha) := by
-        unfold dadeInclusionExclusionSum
-        congr 1
-        refine Finset.sum_congr rfl ?_
-        intro B hBmem
-        rw [hterm B hBmem]
-      have hcancel :
-          (reps.sum fun B =>
-            ((-1 : ℂ) ^ Nat.card B) *
-              dadeInductionFormulaTerm A L H α g a B hAL ha) =
-            -(dadeTransform H hAL α g) := by
-        rw [hleft]
-        exact dadeInductionFormulaTerm_representative_sum_support_cancel
-          A L H h hAL hreps α hα ha hgpiece
-      calc
-        dadeTransform H hAL α g = dadeTransform H hAL α g := rfl
-        _ = dadeInclusionExclusionSum L H reps αB g := by
-          rw [hsum]
-          rw [hcancel]
-          ring
-    · have hleft : dadeTransform H hAL α g = 0 :=
-        dadeTransform_eq_zero_of_not_mem_support H hAL α hg
-      have hsum :
-          reps.sum (fun B =>
-            ((-1 : ℂ) ^ Nat.card B) *
-              Section1.inducedCF (MOfSet H L B) (αB B) g) = 0 := by
-        refine Finset.sum_eq_zero ?_
-        intro B hBmem
-        have hBprops : B.Nonempty ∧ B ⊆ A := hreps.1 B hBmem
-        have hterm :
-            Section1.inducedCF (MOfSet H L B) (αB B) g = 0 :=
-          inducedCF_alphaB_eq_zero_of_not_mem_dadeSupport
-            (A := A) (L := L) (H := H) h hBprops.1 hBprops.2
-            hα.2 (hαBspec B hBmem) hg
-        rw [hterm, mul_zero]
-      calc
-        dadeTransform H hAL α g = 0 := hleft
-        _ = dadeInclusionExclusionSum L H reps αB g := by
-          rw [dadeInclusionExclusionSum, hsum]
-          simp
-  simpa [proposition_2_10_statement] using hstmt
 
 private theorem proposition_2_11 {G : Type u} [Group G] [Finite G]
     (A A1 : Set G) (L : Subgroup G) [Finite L] (H : G → Subgroup G) :

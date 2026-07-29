@@ -30,11 +30,6 @@ public theorem corollary_1_19_a {G : Type*} [Group G] [Finite G] :
     (sylow_inf_commutator_eq_bot_or_le_commutator (G := G) p S hcyc)
 
 -- Corollary 1.19(b)
-public theorem corollary_1_19_b {G : Type*} [Group G] [Finite G] :
-    IsZGroup G → ∃ π : Set Nat.Primes, IsHallSubgroup π (derivedSubgroup G) := by
-  intro hZ
-  simpa [derivedSubgroup] using
-    (exists_isHallSubgroup_commutator_of_isZGroup (G := G) hZ)
 
 
 end

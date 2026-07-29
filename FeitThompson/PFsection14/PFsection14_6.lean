@@ -19,29 +19,6 @@ universe u v w
 
 /-! ## (14.6) -/
 
-/-- Peterfalvi `(14.6)`. -/
-@[expose] public def theorem_14_6_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      Section13.case_9_7_b_for_section13 Smax C p q u
-
 
 public theorem section14_no_prime_divisor_half_with_pm_congruence
     {p r : ℕ}
@@ -496,23 +473,6 @@ public theorem section14_frobeniusWithKernel_invariant_subgroup_fixedPointFree_a
     simpa [hcent_eq] using he_cent
   exact Subtype.ext (by simpa using he_bot)
 
-public theorem section14_omegaSubgroup_of_omegaOneCenter_package
-    {G : Type u} [Group G] [Finite G]
-    {W2 H R : Subgroup G} {y : G} {r : ℕ} {rp : Nat.Primes}
-    (hrp : rp.val = r)
-    (hRH : R ≤ H)
-    (hW2normR : W2.conjBy y ≤ Subgroup.normalizer (R : Set G))
-    (hcard :
-      Nat.card (section10OmegaOneCenter rp R) = rp.val ∨
-        Nat.card (section10OmegaOneCenter rp R) = rp.val ^ 2) :
-    ∃ Ω : Subgroup G,
-      Ω ≤ H ∧
-        W2.conjBy y ≤ Subgroup.normalizer (Ω : Set G) ∧
-          (Nat.card Ω = r ∨ Nat.card Ω = r ^ 2) := by
-  refine ⟨section10OmegaOneCenter rp R, ?_, ?_, ?_⟩
-  · exact (section10_omegaOneCenter_le R).trans hRH
-  · exact hW2normR.trans (section11_normalizer_le_normalizer_omegaOneCenter rp R)
-  · simpa [hrp] using hcard
 
 public theorem section14_U_card_eq_u_of_pf13_12_source
     {G : Type u} [Group G] [Finite G]
@@ -1031,21 +991,6 @@ public theorem section14_subgroup_le_sylow_image_of_le_pSubgroup_intermediate
   rw [Subgroup.mem_map]
   exact ⟨⟨z, hZA hz⟩, hzPA, rfl⟩
 
-public theorem section14_center_map_le_R0_of_le_U
-    {G : Type u} [Group G] [Finite G]
-    {U R0 R : Subgroup G} {r : ℕ}
-    (hR0R : R0 ≤ R)
-    (hRp : IsPGroup r R)
-    (hR0_sylow : ∃ R0U : Sylow r U, R0 = (R0U : Subgroup U).map U.subtype)
-    (hcenterU : (Subgroup.center R).map R.subtype ≤ U) :
-    (Subgroup.center R).map R.subtype ≤ R0 := by
-  refine section14_subgroup_le_sylow_image_of_le_pSubgroup_intermediate
-    (A := U) (P := R0) (R := R) (Z := (Subgroup.center R).map R.subtype)
-    hR0R hRp hR0_sylow hcenterU ?_
-  intro x hx
-  rw [Subgroup.mem_map] at hx
-  rcases hx with ⟨z, _hz, rfl⟩
-  exact z.property
 
 public theorem section14_center_map_le_centralizer_singleton_of_mem
     {G : Type u} [Group G]
@@ -1164,18 +1109,6 @@ public theorem section14_center_map_le_Smax_of_centralizer_source
   exact (section14_center_map_le_centralizer_singleton_of_mem
     (R := R) (x := x) (hR0R hxR0)).trans hxcentS
 
-public theorem section14_center_map_le_U_of_le_Smax_inf
-    {G : Type u} [Group G]
-    {Smax U H R : Subgroup G}
-    (hRH : R ≤ H)
-    (hcenterS : (Subgroup.center R).map R.subtype ≤ Smax)
-    (hSmaxH_U : Smax ⊓ H ≤ U) :
-    (Subgroup.center R).map R.subtype ≤ U := by
-  intro z hz
-  refine hSmaxH_U ⟨hcenterS hz, ?_⟩
-  rw [Subgroup.mem_map] at hz
-  rcases hz with ⟨r, _hr, rfl⟩
-  exact hRH r.property
 
 public theorem section14_mem_hatMsigma_of_centralizerIn_ne_bot
     {G : Type u} [Group G] [Finite G]
@@ -1195,35 +1128,6 @@ public theorem section14_mem_hatMsigma_of_centralizerIn_ne_bot
     intro y hy
     simpa [hbot] using hle hy)
 
-public theorem section14_mem_AZero_of_mem_hatMsigma_of_mem_U
-    {G : Type u} [Group G] [Finite G]
-    {Smax P U : Subgroup G} {x : G}
-    (hMF : section16MFSubgroup Smax P)
-    (hcomp : section12ComplementIn (ambientDerivedSubgroup Smax) P U)
-    (hxU : x ∈ U)
-    (hxHat : x ∈ section16HatMsigmaSet Smax)
-    (hxne : x ≠ 1) :
-    x ∈ section16AZeroSet Smax P := by
-  rcases hMF with ⟨⟨hPS, hPnormal, _hPnil, _hPHall⟩, _hmax⟩
-  have hSmax_norm_P : Smax ≤ Subgroup.normalizer (P : Set G) :=
-    (Subgroup.normal_subgroupOf_iff_le_normalizer (H := P) (K := Smax) hPS).1
-      hPnormal
-  rcases hcomp with ⟨_hPD, _hUD, _hD_eq, hdisj⟩
-  rw [section16AZeroSet]
-  refine ⟨hxHat, ?_, hxne⟩
-  intro hxConj
-  rcases hxConj with ⟨p, hpSharp, s, hsS, hx_eq⟩
-  rcases hpSharp with ⟨hpP, _hpne⟩
-  have hxP : x ∈ P := by
-    rw [hx_eq]
-    have hsNorm : s ∈ Subgroup.normalizer (P : Set G) := hSmax_norm_P hsS
-    change ∀ y : G, y ∈ P ↔ s * y * s⁻¹ ∈ P at hsNorm
-    exact (hsNorm p).1 hpP
-  rw [disjoint_iff] at hdisj
-  have hxinf : x ∈ P ⊓ U := ⟨hxP, hxU⟩
-  have hxbot : x ∈ (⊥ : Subgroup G) := by
-    simpa [hdisj] using hxinf
-  exact hxne (by simpa using hxbot)
 
 public theorem section14_exists_elementCentralizerIn_of_BG116
     {G : Type u} [Group G] [Finite G]
@@ -1714,59 +1618,6 @@ public theorem section14_caseA_hatMsigma_element_source_adapter
   exact ⟨x, hxR0, hxne,
     section14_mem_hatMsigma_of_centralizerIn_ne_bot hPσ hxSmax hcentP⟩
 
-public theorem section14_caseA_AZero_element_source_adapter
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D L H R0 R : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d r : ℕ}
-    {y : G} {rp : Nat.Primes}
-    (_hsource : Section13.hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_h10 : Section13.theorem_13_10_hypothesis Smax P C Sfam p q u)
-    (_hnotT : ¬ Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v)
-    (_hq3 : q = 3)
-    (_hqp : q < p)
-    (_hLHMf : section16MFSubgroup L H)
-    (_hUH : U ≤ H)
-    (_hcaseA : Section13.case_9_7_a_sourceDataForSection13 Smax P U W1 W2 C p q u)
-    (_hrp : rp.val = r)
-    (_hr_dvd : r ∣ (p - 1) / 2)
-    (_hu : u = (p - 1) ^ 2 / 4)
-    (_hyQ : y ∈ Q)
-    (_hsemi : Section2.IsInternalSemidirectProduct L H (W1 ⊔ W2.conjBy y))
-    (_hR0U : R0 ≤ U)
-    (_hR0p : IsPGroup r R0)
-    (_hR0_ne : R0 ≠ ⊥)
-    (_hR0_sylow : ∃ R0U : Sylow r U, R0 = (R0U : Subgroup U).map U.subtype)
-    (_hR0R : R0 ≤ R)
-    (_hRH : R ≤ H)
-    (_hRp : IsPGroup r R)
-    (_hR_sylow : ∃ RH : Sylow r H, R = (RH : Subgroup H).map H.subtype) :
-    ∃ x : G, x ∈ R0 ∧ x ≠ 1 ∧
-        x ∈ section16AZeroSet Smax P := by
-  rcases section14_caseA_hatMsigma_element_source_adapter
-      (Smax := Smax) (Tmax := Tmax) (W := W) (W1 := W1) (W2 := W2)
-      (P := P) (Q := Q) (U := U) (V := V) (C := C) (D := D)
-      (L := L) (H := H) (R0 := R0) (R := R) (Sfam := Sfam)
-      (Tfam := Tfam) (τS := τS) (τT := τT) (p := p) (q := q)
-      (u := u) (v := v) (c := c) (d := d) (r := r) (y := y) (rp := rp)
-      _hsource _h10 _hnotT _hq3 _hqp _hLHMf _hUH _hcaseA _hrp _hr_dvd _hu
-      _hyQ _hsemi _hR0U _hR0p _hR0_ne _hR0_sylow _hR0R _hRH _hRp
-      _hR_sylow with
-    ⟨x, hxR0, hxne, hxHat⟩
-  rcases _hsource with
-    ⟨_hcase, hSTypeP, _hTTypeP, _hp, _hq, _hC, _hD, _hc, _hd, _hUcard,
-      _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau, _hChoice, _hMin, _hFourSixS, _hFourSixT⟩
-  rcases hSTypeP with
-    ⟨hSmaxMF, _hW1cyc, _hW1ne, _hW1hall, _hW1comp, _hUleDer, _hUnil,
-      _hW1normU, hcompPU, _hPnoncyc, _hSecond, _hFitEq, _hFitLe, _hW2le,
-      _hW2cyc, _hW2ne, _hCentralizer, _hHatNorm⟩
-  exact ⟨x, hxR0, hxne,
-    section14_mem_AZero_of_mem_hatMsigma_of_mem_U hSmaxMF hcompPU
-      (_hR0U hxR0) hxHat hxne⟩
 
 public theorem section14_caseA_centralizer_source_adapter
     {G : Type u} [Group G] [Finite G]
@@ -2578,21 +2429,6 @@ public theorem section14_mixed_13_10_source_data_bridge
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
       p q u v c d hctx.1 hq3
 
-public theorem section14_theorem_14_6_case_b_of_not_theorem_13_10_hypothesis
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnot : ¬ Section13.theorem_13_10_hypothesis Smax P C Sfam p q u) :
-    Section13.case_9_7_b_for_section13 Smax C p q u :=
-  section14_case_9_7_b_for_section13_of_sourceData
-    (((Section13.theorem_13_3 Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d hctx.1).2 hnot).2.1)
 
 public theorem section14_theorem_14_6_source_data_of_not_theorem_13_10_hypothesis
     {G : Type u} [Group G] [Finite G]
@@ -2609,23 +2445,6 @@ public theorem section14_theorem_14_6_source_data_of_not_theorem_13_10_hypothesi
   (((Section13.theorem_13_3 Smax Tmax W W1 W2 P Q U V C D
     Sfam Tfam τS τT p q u v c d hctx.1).2 hnot).2.1)
 
-public theorem section14_theorem_14_6_case_b_of_swapped_theorem_13_10
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (h10T : Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v) :
-    Section13.case_9_7_b_for_section13 Smax C p q u := by
-  rcases (Section13.theorem_13_4 Tmax Smax W W2 W1 Q P V U D C
-      Tfam Sfam τT τS q p v u d c
-      (section14_hypothesis_13_1_sourceData_swap hctx.1) h10T).2 with
-    ⟨hsource, _hu⟩
-  exact section14_case_9_7_b_for_section13_of_sourceData hsource
 
 public theorem section14_theorem_14_6_source_data_of_swapped_theorem_13_10
     {G : Type u} [Group G] [Finite G]
@@ -2671,32 +2490,6 @@ public theorem section14_theorem_14_6_mixed_13_10_source_data_bridge
     Section13.case_9_7_b_sourceDataForSection13 Smax P U W1 W2 C p q u := by
   exact section14_mixed_13_10_source_data_bridge hctx h143 h10 hnotT
 
-public theorem section14_theorem_14_6_mixed_13_10_source_bridge
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {Lfam : Finset (Section1.ClassFunction L)}
-    {RL : G → Subgroup G}
-    {τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {φ : Section1.ClassFunction L}
-    {μ01 : Section1.ClassFunction Smax}
-    {ν10 : Section1.ClassFunction Tmax}
-    {βS : Section1.ClassFunction Smax}
-    {βT : Section1.ClassFunction Tmax}
-    {βL : Section1.ClassFunction L}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (h143 : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
-      Lfam RL τL τL₁ φ μ01 ν10 βS βT βL)
-    (h10 : Section13.theorem_13_10_hypothesis Smax P C Sfam p q u)
-    (hnotT : ¬ Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v) :
-    Section13.case_9_7_b_for_section13 Smax C p q u := by
-  exact section14_case_9_7_b_for_section13_of_sourceData
-    (section14_theorem_14_6_mixed_13_10_source_data_bridge hctx h143 h10 hnotT)
 
 public theorem section14_theorem_14_6_source_data_bridge
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -2753,34 +2546,5 @@ public theorem section14_theorem_14_6_source_bridge
       Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
       Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d hctx h143)
 
-
-/-- Proof placeholder for `theorem_14_6_statement`. -/
-public theorem theorem_14_6
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        Section13.case_9_7_b_for_section13 Smax C p q u := by
-  intro hctx h143
-  exact section14_theorem_14_6_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d hctx h143
 
 end Section14

@@ -202,28 +202,6 @@ public theorem section11_ambientSylow_isPGroup
   change IsPGroup q.val ((Q : Subgroup H).map H.subtype)
   exact IsPGroup.map (p := q.val) (H := (Q : Subgroup H)) Q.isPGroup' H.subtype
 
-omit [IsMinCE G] in
-public theorem section11_ambientSylow_mem_section7HFamily_top
-    {A H : Subgroup G} {q : Nat.Primes} (Q : Sylow q.val H)
-    (hAQ :
-      A ≤ Subgroup.normalizer
-        (section10AmbientSylowSubgroup H Q : Set G)) :
-    section10AmbientSylowSubgroup H Q ∈
-      section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) := by
-  refine ⟨le_top, ?_, hAQ⟩
-  exact section8_isPiSubgroup_singleton_of_isPGroup
-    (section11_ambientSylow_isPGroup H Q)
-
-omit [IsMinCE G] in
-public theorem section11_ambientSylow_exists_star_extension
-    {A H : Subgroup G} {q : Nat.Primes} (Q : Sylow q.val H)
-    (hAQ :
-      A ≤ Subgroup.normalizer
-        (section10AmbientSylowSubgroup H Q : Set G)) :
-    ∃ R ∈ section7HStarFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes),
-      section10AmbientSylowSubgroup H Q ≤ R :=
-  section8_exists_mem_section7HStarFamily_of_mem_family
-    (section11_ambientSylow_mem_section7HFamily_top Q hAQ)
 
 omit [IsMinCE G] in
 public theorem section11_ambientSylow_isSylow_of_hall
@@ -490,15 +468,6 @@ public theorem section11_conjBy_inv' (H : Subgroup G) (g : G) :
     (H.conjBy g⁻¹).conjBy g = H := by
   simpa using section11_conjBy_inv (G := G) H g⁻¹
 
-omit [Finite G] [IsMinCE G] in
-public theorem section11_top_conjBy (g : G) :
-    ((⊤ : Subgroup G).conjBy g) = ⊤ := by
-  ext x
-  constructor
-  · intro _; exact Subgroup.mem_top x
-  · intro _
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    exact ⟨g⁻¹ * x * g, Subgroup.mem_top _, by simp [mul_assoc]⟩
 
 omit [Finite G] [IsMinCE G] in
 public theorem section11_le_conjBy_inv_of_conjBy_le

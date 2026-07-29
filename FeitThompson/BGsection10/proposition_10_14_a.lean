@@ -259,13 +259,6 @@ private theorem section10_omega1_card_eq_card_quotient_frattini_of_commutative
     hmul_ker.symm.trans hmul_frattini
   exact Nat.eq_of_mul_eq_mul_left hΦpos hmul_eq
 
-private theorem section10_generatorRank_map_injective_eq
-    {H K : Type*} [Group H] [Finite H] [Group K] [Finite K]
-    (A : Subgroup H) (f : H →* K) (hf : Function.Injective f) :
-    generatorRank (A.map f) = generatorRank A := by
-  rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
-  let e : A ≃* A.map f := Subgroup.equivMapOfInjective (f := f) A hf
-  exact (Group.rank_congr e).symm
 
 private theorem section10_primeRank_le_of_equiv
     {R S : Type*} [Group R] [Finite R] [Group S] [Finite S]
@@ -505,102 +498,6 @@ public theorem section10_primeRank_le_groupRank_sylow
       exact section10_generatorRank_le_groupRank_of_subgroup
         (G := G) (q := p.val) p.property hAconj_le_S hAconj_p hAconj_comm
 
-private theorem section10_primeRank_le_ambientDerived_of_sigma
-    {M : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hpσ : p ∈ section10SigmaPrimes M) :
-    primeRank p.val M ≤ primeRank p.val (ambientDerivedSubgroup M) := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  let S : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
-  have hSleD : (S : Subgroup M) ≤ derivedSubgroup M :=
-    section10_sigma_sylow_le_derivedSubgroup hM hpσ S
-  let D : Subgroup M := derivedSubgroup M
-  let Dg : Subgroup G := ambientDerivedSubgroup M
-  let SD : Sylow p.val D := S.subtype hSleD
-  let eD : D ≃* Dg := by
-    change D ≃* D.map M.subtype
-    exact Subgroup.equivMapOfInjective (f := M.subtype) D M.subtype_injective
-  let X : Sylow p.val Dg := SD.mapSurjective (f := eD.toMonoidHom) eD.surjective
-  have hrankM_le_S : primeRank p.val M ≤ groupRank (S : Subgroup M) :=
-    section10_primeRank_le_groupRank_sylow (G := M) S
-  have hS_le_SD : groupRank (S : Subgroup M) ≤ groupRank (SD : Subgroup D) := by
-    let eS : (SD : Subgroup D) ≃* (S : Subgroup M) := by
-      change (S.subgroupOf D) ≃* (S : Subgroup M)
-      exact Subgroup.subgroupOfEquivOfLe
-        (H := (S : Subgroup M)) (K := D) hSleD
-    exact section10_groupRank_le_of_equiv (R := (SD : Subgroup D))
-      (S := (S : Subgroup M)) eS
-  have hSD_le_X : groupRank (SD : Subgroup D) ≤ groupRank (X : Subgroup Dg) := by
-    let eX : (SD : Subgroup D) ≃* (X : Subgroup Dg) :=
-      Subgroup.equivMapOfInjective
-        (f := eD.toMonoidHom) (SD : Subgroup D) eD.injective
-    exact section10_groupRank_le_of_equiv (R := (X : Subgroup Dg))
-      (S := (SD : Subgroup D)) eX.symm
-  have hX_le_prime : groupRank (X : Subgroup Dg) ≤ primeRank p.val Dg :=
-    (section10_groupRank_le_primeRank_of_isPGroup_local
-      (R := (X : Subgroup Dg)) (p := p.val) X.isPGroup').trans
-        (section8_primeRank_le_of_subgroup (G := Dg) (X : Subgroup Dg) p.val)
-  exact hrankM_le_S.trans (hS_le_SD.trans (hSD_le_X.trans hX_le_prime))
-
-/-- If `p ∈ σ(M)` has rank two and `q` is a different non-`β(M)` prime
-in `M'`, then the normalizer in `M` of a Sylow `q`-subgroup of `M'`
-has `p`-rank at least two. This is the Section 10 Frattini-normalizer
-rank bridge used in Lemma 13.1. -/
-public theorem section10_primeRank_normalizer_of_derived_sylow_ge_of_sigma_primeRank
-    {M : Subgroup G} {p q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hpσ : p ∈ section10SigmaPrimes M)
-    (hqD : q ∈ subgroupPrimeSet (ambientDerivedSubgroup M))
-    (hpβ : p ∉ section10BetaPrimes M)
-    (hqβ : q ∉ section10BetaPrimes M)
-    (hpq : p ≠ q)
-    (X : Sylow q.val (ambientDerivedSubgroup M))
-    (hprank : primeRank p.val M = 2) :
-    2 ≤ primeRank p.val
-      (subgroupNormalizerIn M
-        (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X : Set G)) := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  let Dg : Subgroup G := ambientDerivedSubgroup M
-  let XG : Subgroup G := section10AmbientSylowSubgroup Dg X
-  let U : Subgroup G := subgroupNormalizerIn M (XG : Set G)
-  have hDg_le_M : Dg ≤ M := section10_ambientDerivedSubgroup_le_base
-  have hqM : q ∈ subgroupPrimeSet M :=
-    section8_subgroupPrimeSet_mono hDg_le_M hqD
-  obtain ⟨P, hP_le_DU⟩ :=
-    corollary_10_9_a_3
-      (G := G) (M := M) (p := p) (q := q)
-      hM hpσ.1 hqM hpβ hqβ hpq X
-  have hD_rank : 2 ≤ primeRank p.val Dg := by
-    have htwoM : 2 ≤ primeRank p.val M := by omega
-    exact htwoM.trans
-      (section10_primeRank_le_ambientDerived_of_sigma (G := G) hM hpσ)
-  have hP_rank : 2 ≤ groupRank (P : Subgroup Dg) :=
-    hD_rank.trans (section10_primeRank_le_groupRank_sylow (G := Dg) P)
-  let PG : Subgroup G := section10AmbientSylowSubgroup Dg P
-  have hPG_le_U : PG ≤ U := by
-    exact hP_le_DU.trans section10_ambientDerivedSubgroup_le_base
-  have hPGp : IsPGroup p.val PG := by
-    change IsPGroup p.val ((P : Subgroup Dg).map Dg.subtype)
-    exact IsPGroup.map (p := p.val) (H := (P : Subgroup Dg))
-      P.isPGroup' Dg.subtype
-  have hP_le_PG : groupRank (P : Subgroup Dg) ≤ groupRank PG := by
-    let ePG : (P : Subgroup Dg) ≃* PG :=
-      Subgroup.equivMapOfInjective (f := Dg.subtype) (P : Subgroup Dg)
-        Dg.subtype_injective
-    exact section10_groupRank_le_of_equiv (R := PG) (S := (P : Subgroup Dg)) ePG.symm
-  have hPG_prime_le_U : primeRank p.val PG ≤ primeRank p.val U := by
-    let PGU : Subgroup U := PG.subgroupOf U
-    have hPG_le_PGU : primeRank p.val PG ≤ primeRank p.val PGU := by
-      let ePGU : PGU ≃* PG :=
-        Subgroup.subgroupOfEquivOfLe (H := PG) (K := U) hPG_le_U
-      exact section10_primeRank_le_of_equiv (R := PGU) (S := PG) p.val ePGU
-    exact hPG_le_PGU.trans (section8_primeRank_le_of_subgroup (G := U) PGU p.val)
-  have hPG_group_le_U : groupRank PG ≤ primeRank p.val U :=
-    (section10_groupRank_le_primeRank_of_isPGroup_local (R := PG) (p := p.val) hPGp).trans
-      hPG_prime_le_U
-  exact hP_rank.trans (hP_le_PG.trans hPG_group_le_U)
 
 private theorem section10_prime_not_dvd_index_of_sup_hall
     {H : Type*} [Group H] [Finite H] {π : Set Nat.Primes}

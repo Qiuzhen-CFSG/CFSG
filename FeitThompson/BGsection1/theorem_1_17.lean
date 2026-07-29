@@ -148,15 +148,6 @@ public lemma ker_transferFocal_inf_eq_focalSubgroup (P : Sylow p G) :
   exact congrArg (fun K : Subgroup (P : Subgroup G) => K.map (P : Subgroup G).subtype)
     (ker_restrict_transferFocal_eq_focalSubgroupOf P)
 
-omit [Finite (Sylow p G)] in
-/-- The focal subgroup theorem for a Sylow subgroup. -/
-public theorem commutator_inf_eq_focalSubgroup (P : Sylow p G) :
-    _root_.commutator G ⊓ (P : Subgroup G) = (P : Subgroup G).focalSubgroup := by
-  letI : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
-  apply le_antisymm
-  · apply le_trans ?_ (ker_transferFocal_inf_eq_focalSubgroup P).le
-    exact inf_le_inf_right _ (Abelianization.commutator_subset_ker ((P : Subgroup G).transferFocal))
-  · exact le_inf ((P : Subgroup G).focalSubgroup_le_commutator) ((P : Subgroup G).focalSubgroup_le)
 
 end Subgroup
 

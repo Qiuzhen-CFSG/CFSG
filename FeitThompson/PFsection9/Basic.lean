@@ -739,33 +739,6 @@ public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_le_sec9
   rcases hθnonker with ⟨x, hxMs, xM, xN, hxne⟩
   exact hxne (hker ⟨⟨x, xM⟩, xN⟩ hxMs)
 
-public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_MF_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF Y : Subgroup G)
-    (S : Finset (Section1.ClassFunction M)) :
-    kernelInducedFamily M (ambientDerivedSubgroup M) MF Y S →
-      S.Nonempty →
-        (∀ χ : Section1.ClassFunction M,
-          χ ∈ S → Section1.conjugateCharacter χ ∈ S) →
-          Section8.section8InducedNonkernelFamily M MF S := by
-  exact section8InducedNonkernelFamily_of_kernelInducedFamily_le_sec9
-    M MF MF Y S le_rfl
-
-public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_msChoice_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 Ms Y : Subgroup G)
-    (S : Finset (Section1.ClassFunction M)) :
-    hypothesis_9_2_statement M MF U W1 W2 (Nat.card W1) →
-      Section8.msChoice M MF Ms →
-        kernelInducedFamily M (ambientDerivedSubgroup M) MF Y S →
-          S.Nonempty →
-            (∀ χ : Section1.ClassFunction M,
-              χ ∈ S → Section1.conjugateCharacter χ ∈ S) →
-              Section8.section8InducedNonkernelFamily M Ms S := by
-  intro h92 hMs hS hne hclosed
-  exact section8InducedNonkernelFamily_of_kernelInducedFamily_le_sec9
-    M MF Ms Y S (mf_le_msChoice_of_hypothesis_9_2_sec9 M MF U W1 W2 Ms h92 hMs)
-    hS hne hclosed
 
 public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_le_nonempty_sec9
     {G : Type u} [Group G] [Finite G]
@@ -794,18 +767,6 @@ public theorem section8InducedNonkernelFamily_of_kernelInducedFamily_msChoice_no
     M MF Ms Y S (mf_le_msChoice_of_hypothesis_9_2_sec9 M MF U W1 W2 Ms h92 hMs)
     hS hne
 
-public theorem theorem_8_15_data_of_hypothesis_9_2_nonempty_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (S : Finset (Section1.ClassFunction M)) :
-    hypothesis_9_2_statement M MF U W1 W2 (Nat.card W1) →
-      S.Nonempty →
-        ∃ K U8 Ms : Subgroup G, ∃ A : Set G, ∃ R : G → Subgroup G,
-          Section8.theorem_8_15_data M MF K U8 Ms A R S := by
-  intro h92 hne
-  rcases msChoice_of_hypothesis_9_2_sec9 M MF U W1 W2 h92 with ⟨Ms, hMs⟩
-  refine ⟨⊥, U, Ms, section16ASet M U, fun _ => ⊥, ?_⟩
-  exact ⟨⟨hMs, Or.inl rfl, Or.inr rfl⟩, (by intro x hx; exact Or.inr rfl), hne⟩
 
 public theorem theorem_8_15_data_and_family_of_hypothesis_9_2_kernelInducedFamily_sec9
     {G : Type u} [Group G] [Finite G]
@@ -824,47 +785,6 @@ public theorem theorem_8_15_data_and_family_of_hypothesis_9_2_kernelInducedFamil
   · exact section8InducedNonkernelFamily_of_kernelInducedFamily_msChoice_nonempty_sec9
       M MF U W1 W2 Ms Y S h92 hMs hS hne
 
-public theorem typeIIDefinitionData_of_hypothesis_9_2_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      section16TypeII M MF →
-        Section8.typeIIDefinitionData M MF := by
-  intro h92 hII
-  have hPsource := h92.typePDefinitionData
-  have hIItoIV := h92.typeIIToIVSourceCondition
-  have hIIsource := h92.typeIISource
-  rcases hIIsource hII with ⟨hUcomm, hnotNorm, U1, U0, hF⟩
-  exact ⟨U, W1, W2, U1, U0, hPsource, hIItoIV, hUcomm, hnotNorm, hF⟩
-
-public theorem typeIIIDefinitionData_of_hypothesis_9_2_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      section16TypeIII M MF →
-        Section8.typeIIIDefinitionData M MF := by
-  intro h92 hIII
-  have hPsource := h92.typePDefinitionData
-  have hIItoIV := h92.typeIIToIVSourceCondition
-  have hIIIsource := h92.typeIIISource
-  rcases hIIIsource hIII with ⟨hUcomm, hnorm⟩
-  exact ⟨U, W1, W2, hPsource, hIItoIV, hUcomm, hnorm⟩
-
-public theorem typeIVDefinitionData_of_hypothesis_9_2_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      section16TypeIV M MF →
-        Section8.typeIVDefinitionData M MF := by
-  intro h92 hIV
-  have hPsource := h92.typePDefinitionData
-  have hIItoIV := h92.typeIIToIVSourceCondition
-  have hIVsource := h92.typeIVSource
-  rcases hIVsource hIV with ⟨hUnoncomm, hnorm⟩
-  exact ⟨U, W1, W2, hPsource, hIItoIV, hUnoncomm, hnorm⟩
 
 public theorem not_typeIII_or_typeIV_of_hypothesis_9_2_typeII_sec9
     {G : Type u} [Group G] [Finite G]
@@ -883,15 +803,6 @@ public theorem not_typeIII_or_typeIV_of_hypothesis_9_2_typeII_sec9
   · exact hnotNorm (hIIIsource hIII).2
   · exact hnotNorm (hIVsource hIV).2
 
-public theorem not_typeIV_of_hypothesis_9_2_typeIII_sec9
-    {G : Type u} [Group G] [Finite G]
-    (M MF U W1 W2 : Subgroup G)
-    (q : ℕ) :
-    hypothesis_9_2_statement M MF U W1 W2 q →
-      section16TypeIII M MF →
-        ¬ section16TypeIV M MF := by
-  intro h92 hIII hIV
-  exact (h92.typeIVSource hIV).1 (h92.typeIIISource hIII).1
 
 public theorem nat_card_W1_prime_of_hypothesis_9_2_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1530,13 +1441,6 @@ public theorem ambientDerived_subgroupOf_index_eq_q_of_hypothesis_9_2_sec9
     (γ : Section1.ClassFunction M) : Prop :=
   γ = Section7.principalInducedCharacter M (MF ⊔ U1)
 
-/-- A linear map `Tnew` extends `T` on a finite character family. -/
-@[expose] public def extendsOnFamily
-    {G : Type u} [Group G] [Finite G]
-    (M : Subgroup G)
-    (S : Finset (Section1.ClassFunction M))
-    (T Tnew : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ χ : Section1.ClassFunction M, χ ∈ S → Tnew χ = T χ
 
 /-- Reducibility data for a named finite subfamily. -/
 @[expose] public def reducibleCharacterSubfamilyData
@@ -1809,18 +1713,6 @@ public theorem case_9_7_a_hoReductionData_sec9
   rcases hpData with ⟨hp, hp_eq, hho, _h96⟩
   exact ⟨hp, hp_eq, hho⟩
 
-public theorem case_9_7_a_quotientChiefFactorData_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ} :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      ∃ hp : Nat.Primes,
-        hp.val = p ∧ quotientChiefFactorData_9_6 M MF H0 W1 hp := by
-  intro hcase
-  rcases hcase with
-    ⟨_h92, _hH0MF, _hC, _hpprime, _hqprime, hpData, _hrest⟩
-  rcases hpData with ⟨hp, hp_eq, _hho, h96⟩
-  exact ⟨hp, hp_eq, h96⟩
 
 public theorem case_9_7_a_MF_le_M_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1855,17 +1747,6 @@ public theorem case_9_7_a_H0_normal_MF_sec9
   rcases hpData with ⟨_hH0MF, _hMFM, _hH0normalM, hH0normalMF, _hrest⟩
   exact hH0normalMF
 
-public theorem case_9_7_a_H0_lt_MF_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ} :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      H0 < MF := by
-  intro hcase
-  rcases case_9_7_a_hoReductionData_sec9 hcase with ⟨_hp, _hpval, hpData⟩
-  rcases hpData with
-    ⟨_hH0MF, _hMFM, _hH0normalM, _hH0normalMF, hH0ltMF, _hrest⟩
-  exact hH0ltMF
 
 public theorem case_9_7_a_barU_injective_data_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1919,171 +1800,6 @@ public theorem case_9_7_a_quotient_cardinality_sec9
       _hadiv, _hinj⟩
   exact hcard
 
-public theorem case_9_7_a_H0_subgroupOf_M_le_ambientDerived_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ} :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      H0.subgroupOf M ≤ (ambientDerivedSubgroup M).subgroupOf M := by
-  intro hcase x hx
-  have hH0MF : H0 ≤ MF := case_9_7_a_H0_le_MF_sec9 hcase
-  have hMFD : MF ≤ ambientDerivedSubgroup M :=
-    MF_le_ambientDerived_of_hypothesis_9_2_sec9 M MF U W1 W2 q hcase.1
-  have hxH0 : (x : G) ∈ H0 := by
-    simpa [Subgroup.mem_subgroupOf] using hx
-  have hxD : (x : G) ∈ ambientDerivedSubgroup M := hMFD (hH0MF hxH0)
-  simpa [Subgroup.mem_subgroupOf] using hxD
-
-public theorem case_9_7_a_W1_map_mk_H0_card_eq_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      Nat.card ((W1.subgroupOf M).map (QuotientGroup.mk' (H0.subgroupOf M))) =
-        Nat.card W1 := by
-  intro hcase
-  have hNleD : H0.subgroupOf M ≤ (ambientDerivedSubgroup M).subgroupOf M :=
-    case_9_7_a_H0_subgroupOf_M_le_ambientDerived_sec9 hcase
-  have hcomp :
-      ((ambientDerivedSubgroup M).subgroupOf M).IsComplement' (W1.subgroupOf M) :=
-    ambientDerived_W1_isComplement'_subgroupOf_M_of_hypothesis_9_2_sec9
-      M MF U W1 W2 q hcase.1
-  have hW1M : W1 ≤ M :=
-    W1_le_M_of_hypothesis_9_2_sec9 M MF U W1 W2 q hcase.1
-  calc
-    Nat.card ((W1.subgroupOf M).map (QuotientGroup.mk' (H0.subgroupOf M)))
-        = Nat.card (W1.subgroupOf M) :=
-          natCard_map_mk'_eq_of_le_isComplement'
-            ((ambientDerivedSubgroup M).subgroupOf M) (W1.subgroupOf M)
-            (H0.subgroupOf M) hNleD hcomp
-    _ = Nat.card W1 := natCard_subgroupOf_eq W1 M hW1M
-
-public theorem case_9_7_a_W1_map_mk_H0_isCyclic_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-      IsCyclic ((W1.subgroupOf M).map qM) := by
-  intro hcase
-  let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-  change IsCyclic ((W1.subgroupOf M).map qM)
-  have hW1cyc : IsCyclic W1 := by
-    rcases hcase.1.typePDefinitionData with
-      ⟨_hMFsource, hW1cyc, _hW1ne, _hW1hall, _hrest⟩
-    exact hW1cyc
-  have hW1M : W1 ≤ M :=
-    W1_le_M_of_hypothesis_9_2_sec9 M MF U W1 W2 q hcase.1
-  have hW1sub_cyclic : IsCyclic (W1.subgroupOf M) :=
-    (Subgroup.subgroupOfEquivOfLe (H := W1) (K := M) hW1M).isCyclic.mpr hW1cyc
-  letI : IsCyclic (W1.subgroupOf M) := hW1sub_cyclic
-  exact isCyclic_of_surjective
-    (f := qM.subgroupMap (W1.subgroupOf M))
-    (MonoidHom.subgroupMap_surjective qM (W1.subgroupOf M))
-
-public theorem case_9_7_a_W1_map_mk_H0_card_ne_one_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-      Nat.card ((W1.subgroupOf M).map qM) ≠ 1 := by
-  intro hcase
-  let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-  change Nat.card ((W1.subgroupOf M).map qM) ≠ 1
-  have hcard :
-      Nat.card ((W1.subgroupOf M).map qM) = Nat.card W1 :=
-    case_9_7_a_W1_map_mk_H0_card_eq_sec9 hcase
-  have hW1card : Nat.card W1 = q := by
-    exact (case_9_7_a_hypothesis_9_2_sec9 hcase).q_eq
-  have hqne : q ≠ 1 := (case_9_7_a_q_prime_sec9 hcase).ne_one
-  rwa [hcard, hW1card]
-
-public theorem case_9_7_a_W1_map_mk_H0_isHall_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-      ∃ π : Set Nat.Primes,
-        IsHallSubgroup π ((W1.subgroupOf M).map qM) := by
-  intro hcase
-  let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-  change ∃ π : Set Nat.Primes, IsHallSubgroup π ((W1.subgroupOf M).map qM)
-  rcases hcase.1.typePDefinitionData with
-    ⟨_hMFsource, _hW1cyc, _hW1ne, hW1hall, _hcompMW1, _hrest⟩
-  rcases hW1hall with ⟨_hW1M, hHall⟩
-  exact ⟨subgroupPrimeSet W1,
-    isHallSubgroup_map_of_surjective_sec9 hHall qM
-      (QuotientGroup.mk'_surjective (H0.subgroupOf M))⟩
-
-public theorem case_9_7_a_W2_map_mk_H0_isCyclic_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-      IsCyclic ((W2.subgroupOf M).map qM) := by
-  intro hcase
-  let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-  change IsCyclic ((W2.subgroupOf M).map qM)
-  have hW2cyc : IsCyclic W2 := by
-    rcases hcase.1.typePDefinitionData with
-      ⟨_hMFsource, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD,
-        _hUnil, _hW1normU, _hcompDU, _hMFnotCyc, _hSecondLe, _hFittingEq,
-        _hFittingLeD, _hW2le, hW2cyc, _hW2ne, _hCent, _hHatW⟩
-    exact hW2cyc
-  have hW2M : W2 ≤ M :=
-    W2_le_M_of_hypothesis_9_2_sec9 M MF U W1 W2 q hcase.1
-  have hW2sub_cyclic : IsCyclic (W2.subgroupOf M) :=
-    (Subgroup.subgroupOfEquivOfLe (H := W2) (K := M) hW2M).isCyclic.mpr hW2cyc
-  letI : IsCyclic (W2.subgroupOf M) := hW2sub_cyclic
-  exact isCyclic_of_surjective
-    (f := qM.subgroupMap (W2.subgroupOf M))
-    (MonoidHom.subgroupMap_surjective qM (W2.subgroupOf M))
-
-public theorem case_9_7_a_quotient_M_mod_H0_semidirect_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q a : ℕ}
-    [hH0normalM : (H0.subgroupOf M).Normal] :
-    case_9_7_a_data M MF U W1 W2 H0 C p q a →
-      let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-      Section2.IsInternalSemidirectProduct
-        (⊤ : Subgroup (M ⧸ H0.subgroupOf M))
-        (((ambientDerivedSubgroup M).subgroupOf M).map qM)
-        ((W1.subgroupOf M).map qM) := by
-  intro hcase
-  let qM : M →* M ⧸ H0.subgroupOf M := QuotientGroup.mk' (H0.subgroupOf M)
-  change Section2.IsInternalSemidirectProduct
-    (⊤ : Subgroup (M ⧸ H0.subgroupOf M))
-    (((ambientDerivedSubgroup M).subgroupOf M).map qM)
-    ((W1.subgroupOf M).map qM)
-  have hNleD : H0.subgroupOf M ≤ (ambientDerivedSubgroup M).subgroupOf M :=
-    case_9_7_a_H0_subgroupOf_M_le_ambientDerived_sec9 hcase
-  have hcomp :
-      ((ambientDerivedSubgroup M).subgroupOf M).IsComplement' (W1.subgroupOf M) :=
-    ambientDerived_W1_isComplement'_subgroupOf_M_of_hypothesis_9_2_sec9
-      M MF U W1 W2 q hcase.1
-  have hcompQuot :
-      (((ambientDerivedSubgroup M).subgroupOf M).map qM).IsComplement'
-        ((W1.subgroupOf M).map qM) :=
-    isComplement'_map_mk'_of_le_isComplement'
-      ((ambientDerivedSubgroup M).subgroupOf M) (W1.subgroupOf M)
-      (H0.subgroupOf M) hNleD hcomp
-  have hDnormal : ((ambientDerivedSubgroup M).subgroupOf M).Normal := by
-    simpa using (section12_normalIn_ambientDerivedSubgroup (G := G) (E := M)).2
-  letI : ((ambientDerivedSubgroup M).subgroupOf M).Normal := hDnormal
-  have hDmapNormal :
-      (((ambientDerivedSubgroup M).subgroupOf M).map qM).Normal :=
-    hDnormal.map qM (QuotientGroup.mk'_surjective (H0.subgroupOf M))
-  letI : (((ambientDerivedSubgroup M).subgroupOf M).map qM).Normal := hDmapNormal
-  exact internalSemidirectProduct_top_of_normal_isComplement'_sec9 hcompQuot
 
 public theorem case_9_7_a_index_dvd_p_minus_one_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2395,18 +2111,6 @@ public theorem case_9_7_b_hoReductionData_sec9
   rcases hpData with ⟨hp, hp_eq, hho, _h96⟩
   exact ⟨hp, hp_eq, hho⟩
 
-public theorem case_9_7_b_quotientChiefFactorData_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q u : ℕ} :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      ∃ hp : Nat.Primes,
-        hp.val = p ∧ quotientChiefFactorData_9_6 M MF H0 W1 hp := by
-  intro hcase
-  rcases hcase with
-    ⟨_h92, _hH0MF, _hC, _hpprime, _hqprime, hpData, _hrest⟩
-  rcases hpData with ⟨hp, hp_eq, _hho, h96⟩
-  exact ⟨hp, hp_eq, h96⟩
 
 public theorem case_9_7_b_MF_le_M_sec9
     {G : Type u} [Group G] [Finite G]
@@ -2500,17 +2204,6 @@ public theorem case_9_7_b_barU_cardinality_sec9
     ⟨hCU, hnormal, _hcyclic, hcard⟩
   exact ⟨hCU, hnormal, hcard⟩
 
-public theorem case_9_7_b_irreducibleActionData_sec9
-    {G : Type u} [Group G] [Finite G]
-    {M MF U W1 W2 H0 C : Subgroup G}
-    {p q u : ℕ} :
-    case_9_7_b_data M MF U W1 W2 H0 C p q u →
-      quotientIrreducibleActionData MF H0 U := by
-  intro hcase
-  rcases hcase with
-    ⟨_h92, _hH0MF, _hC, _hpprime, _hqprime, _hpData, _hcard, _hcentBy,
-      _hcyclic, hirr, _hrest⟩
-  exact hirr
 
 public theorem case_9_7_b_fieldSemidirectModelData_sec9
     {G : Type u} [Group G] [Finite G]

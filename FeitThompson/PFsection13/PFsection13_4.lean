@@ -22,21 +22,6 @@ universe u
 
 /-! ## (13.4) -/
 
-/-- Peterfalvi `(13.4)`. -/
-@[expose] public def theorem_13_4_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-    hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    theorem_13_10_hypothesis Smax P C Sfam p q u →
-      D = ⊥ ∧ case_9_7_b_sourceDataForSection13 Tmax Q V W2 W1 D q p v ∧
-        v = (q ^ p - 1) / (q - 1)
-
 
 /- Extract a nonzero row/column from the signed alternative in PF `(13.3)(c)`.
 In the exceptional negative branch, the row indexed by `2` is the negative of

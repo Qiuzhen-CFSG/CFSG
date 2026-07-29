@@ -35,68 +35,6 @@ private theorem generatorRank_at_least_three_of_elementaryAbelian_card_p3_local
     exact (Nat.pow_dvd_pow_iff_le_right (Nat.Prime.one_lt (Fact.out : Nat.Prime p))).mp hcard_dvd
   simpa [generatorRank_eq_group_rank] using hle_rank
 
-private theorem generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3_local
-    {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
-    {G : Type*} [Group G] [Finite G] [IsMulCommutative G] [Fact (IsPGroup p G)]
-    {B : Subgroup G} [IsElementaryAbelian p B] (hBcard : Nat.card B = p ^ 3) :
-    3 ≤ generatorRank G := by
-  classical
-  letI : CommGroup G := IsMulCommutative.instCommGroup
-  by_contra hlt
-  have hle_two : generatorRank G ≤ 2 := by omega
-  have hmeta : IsMetacyclic G :=
-    isMetacyclic_of_generatorRank_le_two_of_commutative G hle_two
-  have hncyc : ¬ IsCyclic G := by
-    intro hcyc
-    letI : IsCyclic G := hcyc
-    haveI : IsCyclic B := isCyclic_of_injective B.subtype B.subtype_injective
-    have hB_rank : 3 ≤ generatorRank B :=
-      generatorRank_at_least_three_of_elementaryAbelian_card_p3_local (p := p) (A := B) hBcard
-    have hB_le_one : generatorRank B ≤ 1 := by
-      exact generatorRank_le_one_of_isCyclic (G := B) (by infer_instance)
-    exact (by decide : ¬ 3 ≤ (1 : ℕ)) (hB_rank.trans hB_le_one)
-  obtain ⟨hΩcard, _hΩelem⟩ := lemma_4_10 (R := G) (p := p) hpodd hmeta hncyc
-  have hB_le_Ω : B ≤ omega₁ (G := G) (p := p) := elementaryAbelian_le_omega₁
-  have hcard_le : p ^ 3 ≤ p ^ 2 := by
-    rw [← hBcard, ← hΩcard]
-    exact Subgroup.card_le_of_le hB_le_Ω
-  exact (Nat.pow_le_pow_iff_right (Nat.Prime.one_lt (Fact.out : Nat.Prime p))).mp hcard_le |>.not_gt (by decide : 2 < 3)
-
-private theorem selfCentralizing_closure_rank_three_of_elementary_order_p3
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    (hpodd : p ≠ 2) [Fact (IsPGroup p R)]
-    {B : Subgroup R} [B.Normal] [IsElementaryAbelian p B]
-    (hBcard : Nat.card B = p ^ 3) :
-    ∃ A : Subgroup R, A ∈ selfCentralizingAbelianSubgroupsAtLeast R 3 ∧ B ≤ A := by
-  classical
-  obtain ⟨A, hBA, hAnorm, hAcomm, hAmax⟩ :=
-    exists_maximal_normal_abelian_subgroup_containing (G := R) B
-      inferInstance (inferInstance : IsMulCommutative B)
-  have hAself_le : Subgroup.centralizer (A : Set R) ≤ A :=
-    maximal_normal_abelian_selfCentralizing_local (G := R) (p := p) (A := A) hAnorm hAcomm hAmax
-  have hAself : Subgroup.centralizer (A : Set R) = A := by
-    exact le_antisymm hAself_le ((Subgroup.le_centralizer_iff_isMulCommutative (K := A)).2 hAcomm)
-  let Bsub : Subgroup A := B.subgroupOf A
-  have hBsub_card : Nat.card Bsub = p ^ 3 := by
-    exact (natCard_subgroupOf_eq B A hBA).trans hBcard
-  have hBsub_elem : IsElementaryAbelian p Bsub := by
-    refine { exponent_dvd_p := ?_ }
-    exact Monoid.exponent_dvd_iff_forall_pow_eq_one.2 fun x => by
-      apply Subtype.ext
-      apply Subtype.ext
-      have hxB : ((x : A) : R) ∈ B := by
-        exact (Subgroup.mem_subgroupOf.mp x.property)
-      have hxpow : ((⟨((x : A) : R), hxB⟩ : B) ^ p) = 1 :=
-        Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-          (IsElementaryAbelian.exponent_dvd_p p B) ⟨((x : A) : R), hxB⟩
-      simpa using congrArg Subtype.val hxpow
-  have hAp : IsPGroup p A := (Fact.out : IsPGroup p R).to_subgroup A
-  have hArank : 3 ≤ generatorRank A := by
-    letI : IsElementaryAbelian p Bsub := hBsub_elem
-    letI : Fact (IsPGroup p A) := ⟨hAp⟩
-    exact generatorRank_at_least_of_elementaryAbelian_subgroup_card_p3_local
-      (p := p) hpodd (G := A) (B := Bsub) hBsub_card
-  exact ⟨A, ⟨⟨hAnorm, hAself⟩, hArank⟩, hBA⟩
 
 private theorem commutatorAction_eq_bot_of_actsTrivially_local
     {R A : Type*} [Group R] [Group A] [MulDistribMulAction A R]

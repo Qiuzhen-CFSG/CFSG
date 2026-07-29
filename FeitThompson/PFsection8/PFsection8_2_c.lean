@@ -21,15 +21,6 @@ universe u
       θ ≠ Section1.principalCharacter MF →
         inertiaIntersectionInComplement M MF U U1 θ
 
-/-- Peterfalvi Definition `(8.3)`. -/
-
-
-private theorem classFunctionOnSubgroupOf_eq_subgroupOfClassFunction
-    {G : Type u} [Group G] [Finite G]
-    (M MF : Subgroup G) (θ : Section1.ClassFunction MF) :
-    classFunctionOnSubgroupOf M MF θ =
-      Section1.subgroupOfClassFunction (T := M) θ := by
-  rfl
 
 private theorem section12ComplementIn_isComplement'_subgroupOf
     {G : Type u} [Group G] [Finite G]

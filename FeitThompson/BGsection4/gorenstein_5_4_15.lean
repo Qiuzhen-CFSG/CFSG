@@ -362,32 +362,6 @@ private theorem generatorRank_le_primeRank_of_isPGroup
   have hmem : generatorRank R ∈ T := ⟨⊤, htop_p, htop_comm, hgen_le_top⟩
   simpa [primeRank, T] using (le_csSup hTbdd hmem)
 
-private theorem generatorRank_le_two_of_isPGroup_of_primeRank_le_two
-    {R : Type*} [Group R] [Finite R] {p q : ℕ} [Fact p.Prime] [Fact q.Prime]
-    (hRp : IsPGroup p R) (hqR : IsPGroup q R) (hRcomm : IsMulCommutative R)
-    (hrank : primeRank p R ≤ 2) :
-    generatorRank R ≤ 2 := by
-  by_cases hpq : p = q
-  · have hqrank : primeRank q R ≤ 2 := by simpa [hpq.symm] using hrank
-    exact (generatorRank_le_primeRank_of_isPGroup (R := R) (p := q) hqR hRcomm).trans hqrank
-  · have hdisj : Disjoint (⊤ : Subgroup R) (⊤ : Subgroup R) :=
-      IsPGroup.disjoint_of_ne p q hpq (⊤ : Subgroup R) (⊤ : Subgroup R)
-        (by simpa using hRp.to_subgroup (⊤ : Subgroup R))
-        (by simpa using hqR.to_subgroup (⊤ : Subgroup R))
-    have htop_bot : (⊤ : Subgroup R) = ⊥ := by
-      simpa using (disjoint_iff.mp hdisj)
-    have hsub : Subsingleton R := by
-      exact subsingleton_iff.mpr fun x y => by
-        have hx_bot : x ∈ (⊥ : Subgroup R) := by
-          simpa [htop_bot] using (show x ∈ (⊤ : Subgroup R) by simp)
-        have hy_bot : y ∈ (⊥ : Subgroup R) := by
-          simpa [htop_bot] using (show y ∈ (⊤ : Subgroup R) by simp)
-        have hx : x = 1 := by simpa using hx_bot
-        have hy : y = 1 := by simpa using hy_bot
-        rw [hx, hy]
-    letI : Subsingleton R := hsub
-    have hcyc : IsCyclic R := inferInstance
-    exact (generatorRank_le_one_of_isCyclic (G := R) hcyc).trans (by decide)
 
 private theorem groupRank_le_primeRank_of_isPGroup
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -558,156 +532,6 @@ public theorem exists_normal_elementaryAbelian_subgroup_order_p_sq_of_two_lt_gro
     proposition_4_6 (R := R) (p := p) hpodd N hN_noncyclic
   exact ⟨A, hA_normal, hAcard, hAelem⟩
 
-private theorem exists_selfCentralizing_normal_abelian_subgroup_containing
-    {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p G)] {E : Subgroup G}
-    (hEnorm : E.Normal) (hEcomm : IsMulCommutative E) :
-    ∃ A : Subgroup G,
-      E ≤ A ∧
-        A ∈ selfCentralizingAbelianSubgroups G ∧
-        IsMulCommutative A := by
-  classical
-  obtain ⟨A, hEA, hAnorm, hAcomm, hAmax⟩ :=
-    exists_maximal_normal_abelian_subgroup_containing (G := G) E hEnorm hEcomm
-  have hcent_le : Subgroup.centralizer (A : Set G) ≤ A :=
-    maximal_normal_abelian_selfCentralizing_local
-      (G := G) (p := p) A hAnorm hAcomm hAmax
-  have hA_le_cent : A ≤ Subgroup.centralizer (A : Set G) :=
-    (Subgroup.le_centralizer_iff_isMulCommutative (K := A)).2 hAcomm
-  have hcent_eq : Subgroup.centralizer (A : Set G) = A :=
-    le_antisymm hcent_le hA_le_cent
-  exact ⟨A, hEA, ⟨hAnorm, hcent_eq⟩, hAcomm⟩
-
-private theorem exists_order_p_subgroup_in_centralizer_quotient_of_lt
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal)
-    (hEcomm : IsMulCommutative E)
-    (hlt : E < Subgroup.centralizer (E : Set R)) :
-    ∃ Kbar : Subgroup (R ⧸ E), Kbar.Normal ∧
-      Kbar ≤ (Subgroup.centralizer (E : Set R)).map (QuotientGroup.mk' E) ∧
-      Nat.card Kbar = p := by
-  classical
-  letI : E.Normal := hEnorm
-  let C : Subgroup R := Subgroup.centralizer (E : Set R)
-  have hC_normal : C.Normal := by
-    dsimp [C]
-    infer_instance
-  let Cbar : Subgroup (R ⧸ E) := C.map (QuotientGroup.mk' E)
-  have hCbar_normal : Cbar.Normal := by
-    dsimp [Cbar]
-    exact Subgroup.Normal.map (H := C) hC_normal (QuotientGroup.mk' E) (QuotientGroup.mk'_surjective E)
-  letI : Cbar.Normal := hCbar_normal
-  have hE_le_C : E ≤ C := by
-    exact (Subgroup.le_centralizer_iff_isMulCommutative (K := E)).2 hEcomm
-  let Esub : Subgroup C := E.subgroupOf C
-  have hEsub_normal : Esub.Normal := by
-    exact Subgroup.Normal.subgroupOf (G := R) (hH := hEnorm) C
-  letI : Esub.Normal := hEsub_normal
-  have hCbar_card : Nat.card Cbar = Nat.card (C ⧸ Esub) := by
-    simpa [Cbar, Esub, C] using natCard_map_mk'_eq (K := C) (N := E)
-  have hEsub_lt_top : Esub < ⊤ := by
-    refine lt_of_le_of_ne le_top ?_
-    intro htop
-    have hC_le_E : C ≤ E := by
-      intro x hx
-      have hxEsub : (⟨x, hx⟩ : C) ∈ Esub := by simp [htop]
-      simpa [Esub, Subgroup.mem_subgroupOf] using hxEsub
-    exact hlt.2 hC_le_E
-  have hEsub_ne_top : Esub ≠ ⊤ := hEsub_lt_top.ne
-  have hquot_nontriv : Nontrivial (C ⧸ Esub) :=
-    (QuotientGroup.nontrivial_iff (G := C) (N := Esub)).2 hEsub_ne_top
-  have hCbar_nontriv : Nontrivial Cbar := by
-    have hcard_gt : 1 < Nat.card (C ⧸ Esub) :=
-      Finite.one_lt_card_iff_nontrivial.mpr hquot_nontriv
-    have hcard_gt_bar : 1 < Nat.card Cbar := by simpa [hCbar_card] using hcard_gt
-    exact Finite.one_lt_card_iff_nontrivial.mp hcard_gt_bar
-  haveI : Fact (IsPGroup p (R ⧸ E)) := ⟨(Fact.out : IsPGroup p R).to_quotient E⟩
-  have hCbar_p : IsPGroup p Cbar := (Fact.out : IsPGroup p (R ⧸ E)).to_subgroup Cbar
-  obtain ⟨k, hk_pos, hCbar_card_pow⟩ :=
-    (IsPGroup.nontrivial_iff_card (p := p) (G := Cbar) hCbar_p).mp hCbar_nontriv
-  obtain ⟨Kbar, hKbar_norm, hKbar_le, hKbar_card⟩ :=
-    lemma_1_22 (G := R ⧸ E) p Cbar hCbar_normal k hCbar_card_pow 1
-      (Nat.succ_le_of_lt hk_pos)
-  exact ⟨Kbar, hKbar_norm, hKbar_le, by simpa [pow_one] using hKbar_card⟩
-
-private theorem lift_order_p_quotient_subgroup_to_normal_order_p3
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
-    {Kbar : Subgroup (R ⧸ E)} (hKbar_norm : Kbar.Normal) (hKbar_card : Nat.card Kbar = p) :
-    ∃ B : Subgroup R, E ≤ B ∧ B.Normal ∧ Nat.card B = p ^ 3 ∧
-      B.map (QuotientGroup.mk' E) = Kbar := by
-  classical
-  letI : E.Normal := hEnorm
-  let q : R →* R ⧸ E := QuotientGroup.mk' E
-  let B : Subgroup R := Kbar.comap q
-  have hE_le_B : E ≤ B := by
-    intro x hx
-    change q x ∈ Kbar
-    have hx1 : q x = 1 := (QuotientGroup.eq_one_iff (N := E) (x := x)).2 hx
-    simp [hx1]
-  have hB_normal : B.Normal := by
-    dsimp [B]
-    exact Subgroup.Normal.comap hKbar_norm q
-  have hB_map : B.map q = Kbar := by
-    dsimp [B, q]
-    exact Subgroup.map_comap_eq_self_of_surjective (f := QuotientGroup.mk' E)
-      (QuotientGroup.mk'_surjective E) Kbar
-  haveI : (E.subgroupOf B).Normal := by
-    exact Subgroup.Normal.subgroupOf (G := R) (hH := hEnorm) B
-  have hquot_card : Nat.card (B ⧸ E.subgroupOf B) = p := by
-    let e : (B ⧸ E.subgroupOf B) ≃* Kbar :=
-      (quotientSubgroupRangeEquiv B E).trans (MulEquiv.subgroupCongr hB_map)
-    calc
-      Nat.card (B ⧸ E.subgroupOf B) = Nat.card Kbar := Nat.card_congr e.toEquiv
-      _ = p := hKbar_card
-  have hB_card : Nat.card B = p ^ 3 := by
-    have hmul := Subgroup.card_eq_card_quotient_mul_card_subgroup (α := B) (s := E.subgroupOf B)
-    have hEsub_card : Nat.card (E.subgroupOf B) = p ^ 2 := by
-      exact (natCard_subgroupOf_eq E B hE_le_B).trans hEcard
-    calc
-      Nat.card B = Nat.card (B ⧸ E.subgroupOf B) * Nat.card (E.subgroupOf B) := by
-        simpa using hmul
-      _ = p * p ^ 2 := by rw [hquot_card, hEsub_card]
-      _ = p ^ 3 := by ring_nf
-  exact ⟨B, hE_le_B, hB_normal, hB_card, hB_map⟩
-
-private theorem exists_normal_order_p3_overgroup_of_centralizer_gt
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
-    (hEcomm : IsMulCommutative E)
-    (hlt : E < Subgroup.centralizer (E : Set R)) :
-    ∃ B : Subgroup R, E ≤ B ∧ B.Normal ∧ Nat.card B = p ^ 3 ∧
-      B ≤ Subgroup.centralizer (E : Set R) := by
-  classical
-  obtain ⟨Kbar, hKbar_norm, hKbar_le, hKbar_card⟩ :=
-    exists_order_p_subgroup_in_centralizer_quotient_of_lt
-      (R := R) (p := p) (E := E) hEnorm hEcomm hlt
-  obtain ⟨B, hE_le_B, hB_norm, hB_card, hB_map⟩ :=
-    lift_order_p_quotient_subgroup_to_normal_order_p3
-      (R := R) (p := p) (E := E) hEnorm hEcard hKbar_norm hKbar_card
-  have hB_le_cent : B ≤ Subgroup.centralizer (E : Set R) := by
-    intro b hb
-    have hq_mem : QuotientGroup.mk' E b ∈ Kbar := by
-      rw [← hB_map]
-      exact Subgroup.mem_map_of_mem (QuotientGroup.mk' E) hb
-    have hq_cent : QuotientGroup.mk' E b ∈ (Subgroup.centralizer (E : Set R)).map (QuotientGroup.mk' E) :=
-      hKbar_le hq_mem
-    rcases Subgroup.mem_map.mp hq_cent with ⟨c, hc, hc_eq⟩
-    have hbcE : b * c⁻¹ ∈ E := by
-      have hquot : QuotientGroup.mk' E (b * c⁻¹) = 1 := by
-        calc
-          QuotientGroup.mk' E (b * c⁻¹) = QuotientGroup.mk' E b * (QuotientGroup.mk' E c)⁻¹ := by simp
-          _ = 1 := by simp [hc_eq]
-      exact (QuotientGroup.eq_one_iff (N := E) (x := b * c⁻¹)).1 hquot
-    have hbc_cent : b * c⁻¹ ∈ Subgroup.centralizer (E : Set R) := by
-      exact ((Subgroup.le_centralizer_iff_isMulCommutative (K := E)).2 hEcomm) hbcE
-    have hb_eq : b = (b * c⁻¹) * c := by simp [mul_assoc]
-    rw [hb_eq]
-    exact (Subgroup.centralizer (E : Set R)).mul_mem hbc_cent hc
-  exact ⟨B, hE_le_B, hB_norm, hB_card, hB_le_cent⟩
 
 private theorem isMulCommutative_of_contains_normal_subgroup_le_centralizer_and_prime_quotient
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -839,73 +663,6 @@ private theorem exists_abelian_normal_prime_index_overgroup_between_of_lt
       (hB_le_L.trans hL_le_cent) hquot_card
   exact ⟨B, hE_le_B, hB_norm, hB_comm, hquot_card, hB_le_L⟩
 
-private theorem exists_abelian_normal_prime_index_overgroup_of_centralizer_gt
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcomm : IsMulCommutative E)
-    (hlt : E < Subgroup.centralizer (E : Set R)) :
-    ∃ B : Subgroup R, E ≤ B ∧ B.Normal ∧ IsMulCommutative B ∧
-      Nat.card (B ⧸ E.subgroupOf B) = p ∧
-      B ≤ Subgroup.centralizer (E : Set R) := by
-  classical
-  obtain ⟨Kbar, hKbar_norm, hKbar_le, hKbar_card⟩ :=
-    exists_order_p_subgroup_in_centralizer_quotient_of_lt
-      (R := R) (p := p) (E := E) hEnorm hEcomm hlt
-  obtain ⟨B, hE_le_B, hB_norm, hquot_card, hB_map⟩ :=
-    lift_order_p_quotient_subgroup_to_normal_prime_index_overgroup
-      (R := R) (p := p) (E := E) hEnorm hKbar_norm hKbar_card
-  have hB_le_cent : B ≤ Subgroup.centralizer (E : Set R) := by
-    intro b hb
-    have hq_mem : QuotientGroup.mk' E b ∈ Kbar := by
-      rw [← hB_map]
-      exact Subgroup.mem_map_of_mem (QuotientGroup.mk' E) hb
-    have hq_cent : QuotientGroup.mk' E b ∈ (Subgroup.centralizer (E : Set R)).map (QuotientGroup.mk' E) :=
-      hKbar_le hq_mem
-    rcases Subgroup.mem_map.mp hq_cent with ⟨c, hc, hc_eq⟩
-    have hbcE : b * c⁻¹ ∈ E := by
-      have hquot : QuotientGroup.mk' E (b * c⁻¹) = 1 := by
-        calc
-          QuotientGroup.mk' E (b * c⁻¹) = QuotientGroup.mk' E b * (QuotientGroup.mk' E c)⁻¹ := by simp
-          _ = 1 := by simp [hc_eq]
-      exact (QuotientGroup.eq_one_iff (N := E) (x := b * c⁻¹)).1 hquot
-    have hbc_cent : b * c⁻¹ ∈ Subgroup.centralizer (E : Set R) := by
-      exact ((Subgroup.le_centralizer_iff_isMulCommutative (K := E)).2 hEcomm) hbcE
-    have hb_eq : b = (b * c⁻¹) * c := by simp [mul_assoc]
-    rw [hb_eq]
-    exact (Subgroup.centralizer (E : Set R)).mul_mem hbc_cent hc
-  have hB_comm : IsMulCommutative B :=
-    isMulCommutative_of_contains_normal_subgroup_le_centralizer_and_prime_quotient
-      (R := R) (p := p) (E := E) (B := B) hEnorm hB_le_cent hquot_card
-  exact ⟨B, hE_le_B, hB_norm, hB_comm, hquot_card, hB_le_cent⟩
-
-private theorem exists_abelian_normal_order_p3_overgroup_of_centralizer_gt
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
-    (hEcomm : IsMulCommutative E)
-    (hlt : E < Subgroup.centralizer (E : Set R)) :
-    ∃ B : Subgroup R, E ≤ B ∧ B.Normal ∧ IsMulCommutative B ∧ Nat.card B = p ^ 3 := by
-  classical
-  obtain ⟨B, hE_le_B, hB_norm, hB_card, hB_le_cent⟩ :=
-    exists_normal_order_p3_overgroup_of_centralizer_gt
-      (R := R) (p := p) (E := E) hEnorm hEcard hEcomm hlt
-  haveI : (E.subgroupOf B).Normal := by
-    exact Subgroup.Normal.subgroupOf (G := R) (hH := hEnorm) B
-  have hquot_card : Nat.card (B ⧸ E.subgroupOf B) = p := by
-    have hmul := Subgroup.card_eq_card_quotient_mul_card_subgroup (α := B) (s := E.subgroupOf B)
-    have hEsub_card : Nat.card (E.subgroupOf B) = p ^ 2 := by
-      exact (natCard_subgroupOf_eq E B hE_le_B).trans hEcard
-    have hmul' : p ^ 3 = Nat.card (B ⧸ E.subgroupOf B) * p ^ 2 := by
-      simpa [hB_card, hEsub_card] using hmul
-    have hp2_pos : 0 < p ^ 2 := pow_pos (Fact.out : Nat.Prime p).pos 2
-    apply Nat.eq_of_mul_eq_mul_right hp2_pos
-    calc
-      Nat.card (B ⧸ E.subgroupOf B) * p ^ 2 = p ^ 3 := hmul'.symm
-      _ = p * p ^ 2 := by ring_nf
-  have hB_comm : IsMulCommutative B :=
-    isMulCommutative_of_contains_normal_subgroup_le_centralizer_and_prime_quotient
-      (R := R) (p := p) (E := E) (B := B) hEnorm hB_le_cent hquot_card
-  exact ⟨B, hE_le_B, hB_norm, hB_comm, hB_card⟩
 
 public theorem natCard_abelian_subgroup_le_p_sq_of_rank_le_two_and_exponent_dvd_p
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -929,15 +686,6 @@ public theorem natCard_abelian_subgroup_le_p_sq_of_rank_le_two_and_exponent_dvd_
   rw [hn]
   exact Nat.le_of_dvd (pow_pos ((Fact.out : Nat.Prime p).pos) 2) <| by
     simpa [hn] using hcard_dvd_sq
-
-private theorem natCard_abelian_subgroup_le_p_sq_of_rank_le_two_and_exponent_p
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    {A : Subgroup R} (hAq : IsPGroup p A) (hAcomm : IsMulCommutative A)
-    (hAle : generatorRank A ≤ 2) (hexp : Monoid.exponent A = p) :
-    Nat.card A ≤ p ^ 2 := by
-  exact natCard_abelian_subgroup_le_p_sq_of_rank_le_two_and_exponent_dvd_p
-    (R := R) (p := p) hAq hAcomm hAle (by simp [hexp])
-
 
 
 public theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq
@@ -1211,54 +959,6 @@ private theorem prime_lt_of_dvd_odd_prime_sq_sub_one
       have hq_two_le : 2 ≤ q := (Fact.out : Nat.Prime q).two_le
       omega
 
-private theorem natCard_le_p_cubed_of_normal_elementaryAbelian_order_p_sq_selfCentralizing
-    {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
-    (hEelem : IsElementaryAbelian p E) (hEself : Subgroup.centralizer (E : Set R) = E) :
-    Nat.card R ≤ p ^ 3 := by
-  classical
-  letI : E.Normal := hEnorm
-  letI : IsElementaryAbelian p E := hEelem
-  let φ : R →* MulAut E := MulAut.conjNormal (H := E)
-  have hker_eq_cent : φ.ker = Subgroup.centralizer (E : Set R) := by
-    ext x
-    rw [Subgroup.mem_centralizer_iff, MonoidHom.mem_ker]
-    constructor
-    · intro hx e he
-      have hx_apply : (φ x) ⟨e, he⟩ = ⟨e, he⟩ := by
-        simp [hx]
-      have hconj : x * e * x⁻¹ = e := by
-        simpa [φ] using congrArg Subtype.val hx_apply
-      have := congrArg (fun t : R => t * x) hconj
-      simpa [mul_assoc] using this.symm
-    · intro hx
-      ext e
-      have hcomm : (e : R) * x = x * e := hx e e.2
-      have hconj : x * (e : R) * x⁻¹ = e := by
-        calc
-          x * (e : R) * x⁻¹ = ((e : R) * x) * x⁻¹ := by rw [hcomm]
-          _ = e := by simp [mul_assoc]
-      simpa [φ, MulAut.conjNormal_apply, MulAut.conj_apply] using hconj
-  have hker_eq_E : φ.ker = E := by rw [hker_eq_cent, hEself]
-  have hφ_range_p : IsPGroup p φ.range := by
-    have hRtop : IsPGroup p (⊤ : Subgroup R) := by
-      simpa using (Fact.out : IsPGroup p R).to_subgroup (⊤ : Subgroup R)
-    rw [MonoidHom.range_eq_map]
-    exact IsPGroup.map (p := p) (H := (⊤ : Subgroup R)) hRtop φ
-  have hquot_card : Nat.card (R ⧸ E) = Nat.card φ.range := by
-    calc
-      Nat.card (R ⧸ E) = Nat.card (R ⧸ φ.ker) := by rw [hker_eq_E]
-      _ = Nat.card φ.range := Nat.card_congr (QuotientGroup.quotientKerEquivRange φ).toEquiv
-  have hφcard : Nat.card φ.range ≤ p :=
-    natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq
-      (A := E) (p := p) hφ_range_p (by exact le_of_eq hEcard)
-  calc
-    Nat.card R = Nat.card (R ⧸ E) * Nat.card E := by
-      simpa [Nat.mul_comm] using (Subgroup.card_eq_card_quotient_mul_card_subgroup (s := E))
-    _ = Nat.card φ.range * Nat.card E := by rw [hquot_card]
-    _ ≤ p * p ^ 2 := Nat.mul_le_mul hφcard (by exact le_of_eq hEcard)
-    _ = p ^ 3 := by
-      simp [pow_succ, Nat.mul_comm]
 
 set_option maxHeartbeats 800000 in
 private theorem elementaryAbelian_card_ge_pow_generatorRank_local
@@ -1276,25 +976,6 @@ private theorem elementaryAbelian_card_ge_pow_generatorRank_local
   rw [hcard]
   exact Nat.pow_le_pow_right (Nat.Prime.pos (Fact.out : Nat.Prime p)) hgr_le_finrank
 
-private theorem p_pow_generatorRank_le_natCard_of_isPGroup
-    {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p G)] :
-    p ^ generatorRank G ≤ Nat.card G := by
-  let Q : Type _ := G ⧸ frattini G
-  have hgen_le : generatorRank G ≤ generatorRank Q :=
-    generatorRank_le_generatorRank_quotient_frattini (p := p) G
-  have hpow_gen : p ^ generatorRank G ≤ p ^ generatorRank Q :=
-    Nat.pow_le_pow_right (Nat.Prime.pos (Fact.out : Nat.Prime p)) hgen_le
-  haveI : IsElementaryAbelian p Q :=
-    isElementaryAbelian_quotient_frattini (R := G) (p := p)
-  have hQbound : p ^ generatorRank Q ≤ Nat.card Q :=
-    elementaryAbelian_card_ge_pow_generatorRank_local (p := p) Q
-  have hquot_le : Nat.card Q ≤ Nat.card G := by
-    have hmul := Subgroup.card_eq_card_quotient_mul_card_subgroup (α := G) (s := frattini G)
-    calc
-      Nat.card Q ≤ Nat.card Q * Nat.card (frattini G) :=
-        Nat.le_mul_of_pos_right _ (Nat.card_pos (α := frattini G))
-      _ = Nat.card G := by simpa [Q] using hmul.symm
-  exact hpow_gen.trans (hQbound.trans hquot_le)
 
 private theorem omega₁_isElementaryAbelian_of_commutative_local
     {p : ℕ} [Fact p.Prime]
@@ -1590,27 +1271,6 @@ public theorem groupRank_le_generatorRank_of_commutative_pgroup
         generatorRank_le_of_equiv (G := R) (H := (⊤ : Subgroup R)) Subgroup.topEquiv.symm
       exact hmA.trans (hgen_A_le_top.trans hgen_top_le_R)
 
-private theorem isElementaryAbelian_of_le_local
-    {p : ℕ} [Fact p.Prime]
-    {G : Type*} [Group G] {H K : Subgroup G}
-    [IsElementaryAbelian p K] (hHK : H ≤ K) :
-    IsElementaryAbelian p H := by
-  refine
-    { toIsMulCommutative := by
-        exact
-          { is_comm := ⟨fun x y =>
-              Subtype.ext <|
-                setLike_mul_comm (s := K)
-                  (hHK x.2) (hHK y.2)⟩ }
-      exponent_dvd_p := ?_ }
-  refine Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_
-  intro x
-  apply Subtype.ext
-  let xK : K := ⟨(x : G), hHK x.2⟩
-  have hxpow : xK ^ p = 1 := by
-    exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
-      (IsElementaryAbelian.exponent_dvd_p p K) xK
-  simpa [xK] using congrArg Subtype.val hxpow
 
 public theorem isElementaryAbelian_zpowers_of_pow_eq_one_local
     {p : ℕ} [Fact p.Prime]
@@ -1851,84 +1511,6 @@ private theorem exists_elementaryAbelian_subgroup_order_p_cubed_of_two_lt_groupR
       _ = p ^ 3 := hKAcard
   exact ⟨X, hXcard, hXelem⟩
 
-private theorem false_of_two_lt_groupRank_and_normal_elementaryAbelian_order_p_sq_selfCentralizing
-    {R : Type*} [Group R] [Finite R] {p : Nat} [Fact p.Prime]
-    (_hpodd : p ≠ 2) (hRp : IsPGroup p R) (hrank : 2 < groupRank R)
-    {E : Subgroup R} (hEnorm : E.Normal) (hEcard : Nat.card E = p ^ 2)
-    (hEelem : IsElementaryAbelian p E) (hEself : Subgroup.centralizer (E : Set R) = E) :
-    False := by
-  classical
-  letI : Fact (IsPGroup p R) := ⟨hRp⟩
-  have hRcard_le : Nat.card R ≤ p ^ 3 :=
-    natCard_le_p_cubed_of_normal_elementaryAbelian_order_p_sq_selfCentralizing
-      (R := R) (p := p) hEnorm hEcard hEelem hEself
-  obtain ⟨B, hBcomm, hBrank⟩ :=
-    exists_abelian_subgroup_three_le_generatorRank_of_two_lt_groupRank (R := R) hrank
-  have hBp : IsPGroup p B := hRp.to_subgroup B
-  have hBcard_ge : p ^ 3 ≤ Nat.card B := by
-    letI : Fact (IsPGroup p B) := ⟨hBp⟩
-    calc
-      p ^ 3 ≤ p ^ generatorRank B :=
-        Nat.pow_le_pow_right (Nat.Prime.pos (Fact.out : Nat.Prime p)) hBrank
-      _ ≤ Nat.card B := p_pow_generatorRank_le_natCard_of_isPGroup (G := B) (p := p)
-  have hBcard_le_R : Nat.card B ≤ Nat.card R := Subgroup.card_le_card_group B
-  have hBcard_eq : Nat.card B = p ^ 3 :=
-    le_antisymm (hBcard_le_R.trans hRcard_le) hBcard_ge
-  have hBcard_eq_R : Nat.card B = Nat.card R := by
-    refine le_antisymm hBcard_le_R ?_
-    calc
-      Nat.card R ≤ p ^ 3 := hRcard_le
-      _ = Nat.card B := hBcard_eq.symm
-  have hBtop : B = ⊤ :=
-    (Subgroup.card_eq_iff_eq_top (H := B)).1 hBcard_eq_R
-  have htop_comm : IsMulCommutative (⊤ : Subgroup R) := by
-    refine ⟨⟨fun x y => ?_⟩⟩
-    have hxB : (x : R) ∈ B := by
-      rw [hBtop]
-      exact x.2
-    have hyB : (y : R) ∈ B := by
-      rw [hBtop]
-      exact y.2
-    apply Subtype.ext
-    change (x : R) * (y : R) = (y : R) * (x : R)
-    simpa using congrArg Subtype.val
-      ((IsMulCommutative.is_comm (M := B)).comm
-        (⟨(x : R), hxB⟩ : B) (⟨(y : R), hyB⟩ : B))
-  have hRcomm : IsMulCommutative R := by
-    letI : IsMulCommutative (⊤ : Subgroup R) := htop_comm
-    refine ⟨⟨fun x y => ?_⟩⟩
-    exact congrArg Subtype.val
-      ((IsMulCommutative.is_comm (M := (⊤ : Subgroup R))).comm
-        (⟨x, by simp⟩ : (⊤ : Subgroup R))
-        (⟨y, by simp⟩ : (⊤ : Subgroup R)))
-  letI : IsMulCommutative R := hRcomm
-  have hcent_top : Subgroup.centralizer (E : Set R) = ⊤ := by
-    apply eq_top_iff.2
-    intro x _hx
-    rw [Subgroup.mem_centralizer_iff]
-    intro y _hy
-    exact (IsMulCommutative.is_comm (M := R)).comm y x
-  have hEtop : E = ⊤ := by
-    calc
-      E = Subgroup.centralizer (E : Set R) := hEself.symm
-      _ = ⊤ := hcent_top
-  have hRcard_eq_p2 : Nat.card R = p ^ 2 := by
-    have htop_card : Nat.card (⊤ : Subgroup R) = Nat.card R :=
-      Nat.card_congr (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R).toEquiv
-    calc
-      Nat.card R = Nat.card (⊤ : Subgroup R) := htop_card.symm
-      _ = Nat.card E := by rw [hEtop]
-      _ = p ^ 2 := hEcard
-  have hRcard_eq_p3 : Nat.card R = p ^ 3 := by
-    calc
-      Nat.card R = Nat.card B := hBcard_eq_R.symm
-      _ = p ^ 3 := hBcard_eq
-  have hp2_ne_p3 : p ^ 2 ≠ p ^ 3 := by
-    intro h
-    have h23 : (2 : Nat) = 3 :=
-      (Nat.pow_right_injective (show 2 ≤ p from (Fact.out : Nat.Prime p).two_le)) h
-    omega
-  exact hp2_ne_p3 (hRcard_eq_p2.symm.trans hRcard_eq_p3)
 
 private theorem natCard_le_p_cubed_of_groupRank_le_two_and_exponent_p_local
     {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -2110,37 +1692,6 @@ private theorem mulAut_commute_of_trivial_on_subgroup_and_quotient
     _ = ψ ((y : G) * g) := by simp [map_mul, hψy, hψg]
     _ = (ψ * φ) g := by rw [← hφg]; rfl
 
-private theorem mulAut_subgroup_isMulCommutative_of_trivial_on_subgroup_and_quotient
-    {G : Type*} [Group G] {H : Subgroup G} {Γ : Subgroup (MulAut G)}
-    (hHcomm : IsMulCommutative H)
-    (hfixH : ∀ γ : Γ, ∀ h : H, (γ : MulAut G) (h : G) = h)
-    (hquot : ∀ γ : Γ, ∀ g : G, (γ : MulAut G) g * g⁻¹ ∈ H) :
-    IsMulCommutative Γ := by
-  refine ⟨⟨fun φ ψ => ?_⟩⟩
-  apply Subtype.ext
-  ext g
-  let y : H := ⟨(φ : MulAut G) g * g⁻¹, hquot φ g⟩
-  let z : H := ⟨(ψ : MulAut G) g * g⁻¹, hquot ψ g⟩
-  have hφg : (φ : MulAut G) g = (y : G) * g := by
-    simp [y, mul_assoc]
-  have hψg : (ψ : MulAut G) g = (z : G) * g := by
-    simp [z, mul_assoc]
-  have hφz : (φ : MulAut G) (z : G) = z := hfixH φ z
-  have hψy : (ψ : MulAut G) (y : G) = y := hfixH ψ y
-  have hyz : (y : G) * (z : G) = (z : G) * (y : G) := by
-    simpa using congrArg Subtype.val
-      ((IsMulCommutative.is_comm (M := H)).comm y z)
-  calc
-    ((φ * ψ : Γ) : MulAut G) g = (φ : MulAut G) ((ψ : MulAut G) g) := rfl
-    _ = (φ : MulAut G) ((z : G) * g) := by rw [hψg]
-    _ = (z : G) * ((y : G) * g) := by simp [map_mul, hφz, hφg]
-    _ = (y : G) * ((z : G) * g) := by
-      calc
-        (z : G) * ((y : G) * g) = ((z : G) * (y : G)) * g := by simp [mul_assoc]
-        _ = ((y : G) * (z : G)) * g := by rw [← hyz]
-        _ = (y : G) * ((z : G) * g) := by simp [mul_assoc]
-    _ = (ψ : MulAut G) ((y : G) * g) := by simp [map_mul, hψy, hψg]
-    _ = ((ψ * φ : Γ) : MulAut G) g := by rw [← hφg]; rfl
 
 private theorem conjNormal_ker_eq_centralizer_local
     {R : Type*} [Group R] {A : Subgroup R} [A.Normal] :
@@ -2513,27 +2064,6 @@ private theorem closure_omega_adjoin_eq_sup_zpowers
         Subgroup.subset_closure (Or.inr (Set.mem_singleton x))
       exact (Subgroup.zpowers_le).2 hxB₁_gen hyz
 
-private theorem closure_adjoin_eq_sup_zpowers
-    {R : Type*} [Group R] {A : Subgroup R} {x : R} :
-    Subgroup.closure ((A : Set R) ∪ {x}) = A ⊔ Subgroup.zpowers x := by
-  classical
-  apply le_antisymm
-  · refine (Subgroup.closure_le (K := A ⊔ Subgroup.zpowers x)).2 ?_
-    intro y hy
-    rcases hy with hyA | hyx
-    · exact (le_sup_left : A ≤ A ⊔ Subgroup.zpowers x) hyA
-    · have hy_eq : y = x := by simpa using hyx
-      rw [hy_eq]
-      exact (le_sup_right : Subgroup.zpowers x ≤ A ⊔ Subgroup.zpowers x)
-        (Subgroup.mem_zpowers x)
-  · rw [Subgroup.sup_eq_closure]
-    refine (Subgroup.closure_le (K := Subgroup.closure ((A : Set R) ∪ {x}))).2 ?_
-    intro y hy
-    rcases hy with hyA | hyz
-    · exact Subgroup.subset_closure (Or.inl hyA)
-    · have hxH : x ∈ Subgroup.closure ((A : Set R) ∪ {x}) :=
-        Subgroup.subset_closure (Or.inr (Set.mem_singleton x))
-      exact (Subgroup.zpowers_le).2 hxH hyz
 
 private theorem closure_adjoin_eq_sup_closure_omega_adjoin
     {R : Type*} [Group R] {p : ℕ} {A : Subgroup R} {x : R} :

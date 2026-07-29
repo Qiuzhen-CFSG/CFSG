@@ -11,49 +11,6 @@ import FeitThompson.GroupAction.CoprimeHall
 
 open scoped Pointwise
 
-theorem exists_nontrivial_scalar_fix_of_simple
-    {k A S : Type*} [Field k] [Finite k] [CommGroup A] [Finite A]
-    [AddCommGroup S] [Module (MonoidAlgebra k A) S]
-    [IsSimpleModule (MonoidAlgebra k A) S]
-    (hncyc : ¬ IsCyclic A) :
-    ∃ a : A, a ≠ 1 ∧ ∀ x : S, (MonoidAlgebra.of k A a) • x = x := by
-  classical
-  obtain ⟨I, _, ⟨e⟩⟩ :=
-    (isSimpleModule_iff_quot_maximal (R := MonoidAlgebra k A) (M := S)).mp inferInstance
-  letI : Field (MonoidAlgebra k A ⧸ I) := Ideal.Quotient.field I
-  let φ : A →* (MonoidAlgebra k A ⧸ I)ˣ :=
-    (Units.map (Ideal.Quotient.mk I)).comp (MonoidHom.toHomUnits (MonoidAlgebra.of k A))
-  letI : Finite ↥φ.range :=
-    Finite.of_surjective φ.rangeRestrict φ.rangeRestrict_surjective
-  have hrange_cyc : IsCyclic ↥φ.range := isCyclic_subgroup_units φ.range
-  have hnot_no_kernel : ¬ (∀ a : A, φ a = 1 → a = 1) := by
-    intro hker
-    have hφinj : Function.Injective φ := by
-      intro a b hab
-      have hk : φ (a * b⁻¹) = 1 := by
-        rw [map_mul, map_inv, hab]
-        simp
-      have hkone : a * b⁻¹ = 1 := hker (a * b⁻¹) hk
-      have hmul := congrArg (fun z : A => z * b) hkone
-      simpa [mul_assoc] using hmul
-    exact
-      hncyc (isCyclic_of_injective φ.rangeRestrict (fun _ _ h => hφinj (congrArg Subtype.val h)))
-  push Not at hnot_no_kernel
-  rcases hnot_no_kernel with ⟨a, hφa, ha_ne_one⟩
-  refine ⟨a, ha_ne_one, ?_⟩
-  intro x
-  apply e.injective
-  have hscalar : Ideal.Quotient.mk I ((MonoidAlgebra.of k A) a) = 1 := by
-    exact congrArg (fun u : (MonoidAlgebra k A ⧸ I)ˣ => (u : MonoidAlgebra k A ⧸ I)) hφa
-  have hscalar' : Ideal.Quotient.mk I (MonoidAlgebra.single a 1 : MonoidAlgebra k A) = 1 := by
-    simpa [MonoidAlgebra.of] using hscalar
-  calc
-    e (((MonoidAlgebra.of k A) a) • x) = ((MonoidAlgebra.of k A) a) • e x := by
-      exact e.map_smul ((MonoidAlgebra.of k A) a) x
-    _ = (Ideal.Quotient.mk I (MonoidAlgebra.single a 1 : MonoidAlgebra k A)) * e x := by
-      rfl
-    _ = e x := by
-      simp [hscalar']
 
 theorem exists_cyclic_quotient_fix_of_simple
     {k A S : Type*} [Field k] [Finite k] [CommGroup A] [Finite A]

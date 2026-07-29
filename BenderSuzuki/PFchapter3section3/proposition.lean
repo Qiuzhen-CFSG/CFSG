@@ -8,7 +8,9 @@ public import BenderSuzuki.PFchapter3section3.Basic
 public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.GroupTheory.OrderOfElement
 public import Mathlib.LinearAlgebra.Dimension.Finite
-import BenderSuzuki.PFAppendixIII.proposition_1
+import BenderSuzuki.PFAppendixIII.lemma_2
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 import BenderSuzuki.PFAppendixIII.lemma_1
 import BenderSuzuki.PFAppendixIII.theorem
 import FeitThompson.HallSubgroups.Conjugacy
@@ -125,31 +127,6 @@ private theorem typeB_card_is_two_power
   refine ⟨n * 3, ?_⟩
   simpa [pow_mul] using hSCard
 
-private theorem typeB_top_of_typeB
-    {G : Type*} [Group G] {S : Subgroup G}
-    (hB : IsSuzukiTwoTypeB S) :
-    IsSuzukiTwoTypeB (⊤ : Subgroup S) := by
-  rcases hB with
-    ⟨n, hn, theta, epsilon, tripleLift, cocycle, hepsilon,
-      hperiod, hnonzero, haddLeft, haddRight, hdiag, hmem, hone,
-      hsurj, hinj, hmul⟩
-  let tripleLiftS : BinaryGaloisField n → BinaryGaloisField n →
-      BinaryGaloisField n → S := fun c a b =>
-    ⟨tripleLift c a b, hmem c a b⟩
-  refine ⟨n, hn, theta, epsilon, tripleLiftS, cocycle, hepsilon,
-    hperiod, hnonzero, haddLeft, haddRight, hdiag, ?_, ?_, ?_, ?_, ?_⟩
-  · intro c a b
-    trivial
-  · apply Subtype.ext
-    exact hone
-  · intro x _
-    rcases hsurj (x : G) x.property with ⟨c, a, b, hx⟩
-    exact ⟨c, a, b, Subtype.ext hx⟩
-  · intro c a b d e f hEq
-    exact hinj c a b d e f (congrArg Subtype.val hEq)
-  · intro c a b d e f
-    apply Subtype.ext
-    exact hmul c a b d e f
 
 private theorem q0_card_eq_center_card
     {G : Type*} [Group G] [Finite G]

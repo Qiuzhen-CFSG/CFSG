@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.PFchapter4section3.corollary_1_b
-public import BenderSuzuki.PFchapter4section4.Basic
+public import BenderSuzuki.PFchapter4section2.Basic
 import BenderSuzuki.PFchapter4section2.claim_3
 import BenderSuzuki.PFchapter4section2.proposition
 import BenderSuzuki.PFchapter4section1.claim_H4_b

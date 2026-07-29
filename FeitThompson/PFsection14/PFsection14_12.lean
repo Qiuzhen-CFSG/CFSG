@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.PFsection14.PFsection14_11
+public import FeitThompson.PFsection14.PFsection14_11_4
 
 /-!
 # Peterfalvi, Section 14: theorem (14.12)
@@ -17,35 +17,6 @@ namespace Section14
 universe u v w
 
 /-! ## (14.12) -/
-
-/-- Peterfalvi `(14.12)`. -/
-@[expose] public def theorem_14_12_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d : ℕ) : Prop :=
-    hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-        (∃ g : G, L.conjBy g = M) →
-          theorem_14_2_a_data P U W2 p q ∧
-            theorem_14_2_b_data Q W1 W2 U q
 
 
 public theorem section14_characteristicSubgroupIn_of_le_cyclic
@@ -375,40 +346,5 @@ public theorem section14_theorem_14_12_source_bridge
     Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
     Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d hctx h143 hchar
 
-
-/-- Proof placeholder for `theorem_14_12_statement`. -/
-public theorem theorem_14_12
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          (∃ g : G, L.conjBy g = M) →
-            theorem_14_2_a_data P U W2 p q ∧
-              theorem_14_2_b_data Q W1 W2 U q := by
-  exact section14_theorem_14_12_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H M K Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
-    p q u v c d
 
 end Section14

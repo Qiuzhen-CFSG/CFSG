@@ -27,14 +27,6 @@ universe u v
 
 /-! ## (3.9) -/
 
-/--
-`ωk` is the value-wise `k`-th power of `ω`.  This is the book notation
-`ω^k` used in PF (3.9)(b).
--/
-@[expose] public def classFunctionValuePow
-    {G : Type u} [Group G]
-    (ω ωk : Section1.ClassFunction G) (k : ℕ) : Prop :=
-  ∀ g : G, ωk g = ω g ^ k
 
 /--
 `ωk` is the value-wise integer `k`-th power of `ω`.  This is the source-facing
@@ -151,36 +143,6 @@ the `|G|`-cyclotomic values.
     (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
   proposition_3_9_statement_b_complex_galois σ
 
-/--
-Auxiliary finite cyclotomic exponent model for PF (3.9)(b): the PF (1.9) CRT
-automorphism and its exponent carry `σ ω'` to `σ ωk`, and elements whose order
-is prime to `a` have the same value under both class functions.
--/
-@[expose] public def proposition_3_9_statement_b_argumentPow
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup G}
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ {ω' : Section1.ClassFunction W} {a : ℕ} {k : ℤ},
-    Section1.IsIrreducibleCharacterOnGroup ω' →
-      exactCharacterValueOrder ω' a →
-        IsCoprime k (a : ℤ) →
-          ∃ ωk : Section1.ClassFunction W,
-            Section1.IsIrreducibleCharacterOnGroup ωk ∧
-            classFunctionValueZPow ω' ωk k ∧
-              ∃ c b : ℕ,
-                valueOrderCardPart a c ∧
-                  ∃ hcard : Nat.card G = c * b,
-                    c.Coprime b ∧
-                      ∃ v : Gal((Section1.CyclotomicABField c b)/ℚ),
-                        ∃ e : ℕ,
-                          proposition_3_9_galoisCondition_int
-                            (G := G) (c := c) (b := b) (k := k) hcard v ∧
-                          e.Coprime (c * b) ∧
-                          (e : ℤ) ≡ k [ZMOD c] ∧
-                          (e : ℤ) ≡ (1 : ℤ) [ZMOD b] ∧
-                          classFunctionArgumentPow (σ ω') (σ ωk) e ∧
-                          ∀ g : G, (orderOf g).Coprime a →
-                            σ ωk g = σ ω' g
 
 /--
 Auxiliary PF (3.9)(b) CRT/exponent package.  This records the PF (1.9)
@@ -236,19 +198,6 @@ public theorem proposition_3_9_statement_b_of_structured
       exact hτroot z (by simpa [Nat.card_eq_fintype_card, hcardF] using hz)
   exact ⟨ωk, hωk, hpow, τ, hτ, hσ, hpoint⟩
 
-/-- The structured PF (3.9)(b) package also exposes the finite exponent data. -/
-public theorem proposition_3_9_statement_b_argumentPow_of_structured
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup G}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    (hstructured : proposition_3_9_statement_b_structured σ) :
-    proposition_3_9_statement_b_argumentPow σ := by
-  intro ω' a k hω' ha hk
-  rcases hstructured (ω' := ω') (a := a) (k := k) hω' ha hk with
-    ⟨ωk, hωk, hpow, c, b, hcpart, hcard, hcb, v, _τ, e,
-      hgal, _hτroot, hecop, hea, heb, _hσ, harg, hpoint⟩
-  exact ⟨ωk, hωk, hpow, c, b, hcpart, hcard, hcb, v, e,
-    hgal, hecop, hea, heb, harg, hpoint⟩
 
 /--
 Peterfalvi (3.9)(c), isolated as its Lean-side endpoint: if `ω'` is
@@ -265,19 +214,6 @@ coprime to `a`, then the value `σ ω' g` is an ordinary integer.
         ∀ g : G, (orderOf g).Coprime a →
           ∃ n : ℤ, σ ω' g = (n : ℂ)
 
-/--
-Auxiliary complex-Galois strengthening of Peterfalvi (3.9)(a): the Dade
-isometry commutes with every complex Galois automorphism on irreducible
-characters of `W`.
--/
-@[expose] public def proposition_3_9_statement_a_complex_galois
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup G}
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ {ω' : Section1.ClassFunction W} (τ : Gal(ℂ/ℚ)),
-    Section1.IsIrreducibleCharacterOnGroup ω' →
-      classFunctionGaloisConjugate τ (σ ω') =
-        σ (classFunctionGaloisConjugate τ ω')
 
 /--
 Peterfalvi (3.9)(a), second sentence, represented by a compatible cyclotomic
@@ -294,22 +230,6 @@ Galois conjugation on irreducible characters of `W`.
         classFunctionGaloisConjugate τ (σ ω') =
           σ (classFunctionGaloisConjugate τ ω')
 
-/--
-Peterfalvi (3.9)(a), second sentence, in the finite cyclotomic exponent model:
-for every automorphism of `ℚ_|G|`, represented by its exponent `e` prime to
-`|G|`, applying the automorphism before or after the Dade isometry gives the
-same class function.
--/
-@[expose] public def proposition_3_9_statement_a_finite_galois
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup G}
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ {ω' ωu : Section1.ClassFunction W} {e : ℕ},
-    Section1.IsIrreducibleCharacterOnGroup ω' →
-      Section1.IsIrreducibleCharacterOnGroup ωu →
-        e.Coprime (Nat.card G) →
-          classFunctionArgumentPow ω' ωu e →
-            classFunctionArgumentPow (σ ω') (σ ωu) e
 
 /--
 Peterfalvi (3.9).  The automorphisms of `ℚ_|G|` are represented by compatible
@@ -332,7 +252,6 @@ integer-value conclusion.
   proposition_3_9_statement_a_galois σ ∧
   proposition_3_9_statement_b σ ∧
   proposition_3_9_statement_c σ
-
 
 
 private noncomputable def uliftRepresentation_pf39
@@ -433,10 +352,6 @@ private theorem scalarProduct_signed_irreducible_ne_zero_iff_pf39
       rw [hEq, Section1.scalarProduct_smul_left, hself]
       exact mul_ne_zero hneq_zero one_ne_zero
 
-private theorem isSign_ne_zero_pf39
-    {ε : ℂ} (hε : Section1.IsSign ε) :
-    ε ≠ 0 := by
-  rcases hε with rfl | rfl <;> norm_num
 
 private theorem irreducible_representation_witness_pf39
     {G : Type u} [Group G] [Finite G]
@@ -484,23 +399,6 @@ private theorem exists_int_of_signed_irreducible_value_rat_pf39
   exact isaacs_lemma_3_2_core_pf39
     (isIntegral_value_of_signed_irreducible_pf39 hχ g) hrat
 
-private theorem signed_irreducible_value_eq_on_coprime_pow_pf39
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G}
-    (hχ : IsSignedIrreducibleCharacter χ)
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (g : G) (hg : (orderOf g).Coprime a) :
-    χ (g ^ e) = χ g := by
-  rcases signed_irreducible_representation_witness_pf39 hχ with
-    ⟨ε, hε, n, ρ, _hirr, hchar⟩
-  have hpow := (Section1.proposition_1_9_b_trace_power
-      (G := G) (V := Fin n → ℂ) (a := a) (b := b) (k := k) (e := e)
-      hcard hea heb ρ).2 g hg
-  rcases hε with rfl | rfl
-  · simpa [hchar, Section1.characterGaloisConjugateByExponent] using hpow
-  · simpa [hchar, Section1.characterGaloisConjugateByExponent] using
-      congrArg (fun z : ℂ => (-1 : ℂ) * z) hpow
 
 private theorem signed_irreducible_value_eq_on_coprime_zpow_pf39
     {G : Type u} [Group G] [Finite G]
@@ -520,16 +418,6 @@ private theorem signed_irreducible_value_eq_on_coprime_zpow_pf39
   · simpa [hchar, Section1.characterGaloisConjugateByExponent] using
       congrArg (fun z : ℂ => (-1 : ℂ) * z) hpow
 
-private theorem irreducible_value_eq_on_coprime_pow_pf39
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ)
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (g : G) (hg : (orderOf g).Coprime a) :
-    χ (g ^ e) = χ g := by
-  exact signed_irreducible_value_eq_on_coprime_pow_pf39
-    ⟨1, Or.inl rfl, χ, hχ, by simp⟩ hcard hea heb g hg
 
 private theorem coprime_of_valueOrderCardPart_pf39
     {a c n : ℕ} (hpart : valueOrderCardPart a c)
@@ -761,34 +649,6 @@ private theorem classFunctionValueZPow_of_argumentPow_congr_pf39
     _ = χ g ^ (e : ℤ) := by rw [zpow_natCast]
     _ = χ g ^ k := hzpow
 
-private theorem valuePow_eq_of_characterValueOrder_pf39
-    {G : Type u} [Group G]
-    {ω' ωk : Section1.ClassFunction G}
-    {a k e : ℕ}
-    (hord : characterValueOrder ω' a)
-    (hpow : classFunctionValuePow ω' ωk k)
-    (hea : e ≡ k [MOD a]) (g : G) :
-    ω' g ^ e = ωk g := by
-  rcases hord with ⟨_ha_pos, ha⟩
-  calc
-    ω' g ^ e = ω' g ^ k := pow_eq_pow_of_modEq hea (ha g)
-    _ = ωk g := by symm; exact hpow g
-
-private theorem crtExponent_coprime_natCard_pf39
-    {G : Type u} [Group G] [Finite G]
-    {a b k e : ℕ}
-    (hcard : Nat.card G = a * b)
-    (hk : k.Coprime a)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b]) :
-    e.Coprime (Nat.card G) := by
-  have hea' : e.Coprime a := by
-    rw [Nat.coprime_iff_gcd_eq_one, hea.gcd_eq]
-    exact hk.gcd_eq_one
-  have heb' : e.Coprime b := by
-    rw [Nat.coprime_iff_gcd_eq_one, heb.gcd_eq]
-    simp
-  rw [hcard, Nat.coprime_mul_iff_right]
-  exact ⟨hea', heb'⟩
 
 private theorem pow_surjective_of_coprime_natCard_pf39
     {G : Type u} [Group G] [Finite G] {e : ℕ}
@@ -876,54 +736,6 @@ private theorem irreducibleCharacterOnGroup_argumentPow_of_coprime_natCard_comm_
   rw [hchar]
   rfl
 
-private theorem mem_subgroup_iff_pow_mem_of_coprime_natCard_pf39
-    {G : Type u} [Group G] [Finite G] {H : Subgroup G} {x : G} {e : ℕ}
-    (he : e.Coprime (Nat.card G)) :
-    x ^ e ∈ H ↔ x ∈ H := by
-  constructor
-  · intro hxpow
-    have hcop_order : e.Coprime (orderOf x) :=
-      Nat.Coprime.of_dvd_right (orderOf_dvd_natCard x) he
-    rcases exists_pow_eq_self_of_coprime (x := x) (n := e) hcop_order with ⟨m, hm⟩
-    have hxmem : (x ^ e) ^ m ∈ H := H.pow_mem hxpow m
-    simpa [hm] using hxmem
-  · intro hx
-    exact H.pow_mem hx e
-
-private theorem mem_cyclicTISet_iff_pow_mem_of_coprime_natCard_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G} {x : G} {e : ℕ}
-    (he : e.Coprime (Nat.card G)) :
-    x ∈ cyclicTISet W1 W2 W ↔ x ^ e ∈ cyclicTISet W1 W2 W := by
-  rw [cyclicTISet_mem_iff, cyclicTISet_mem_iff]
-  constructor
-  · rintro ⟨hxW, hxW1, hxW2⟩
-    refine ⟨?_, ?_, ?_⟩
-    · exact W.pow_mem hxW e
-    · intro hxpowW1
-      exact hxW1 ((mem_subgroup_iff_pow_mem_of_coprime_natCard_pf39
-        (G := G) (H := W1) (x := x) (e := e) he).mp hxpowW1)
-    · intro hxpowW2
-      exact hxW2 ((mem_subgroup_iff_pow_mem_of_coprime_natCard_pf39
-        (G := G) (H := W2) (x := x) (e := e) he).mp hxpowW2)
-  · rintro ⟨hxpowW, hxpowW1, hxpowW2⟩
-    refine ⟨?_, ?_, ?_⟩
-    · exact (mem_subgroup_iff_pow_mem_of_coprime_natCard_pf39
-        (G := G) (H := W) (x := x) (e := e) he).mp hxpowW
-    · intro hxW1
-      exact hxpowW1 (W1.pow_mem hxW1 e)
-    · intro hxW2
-      exact hxpowW2 (W2.pow_mem hxW2 e)
-
-private theorem isClassFunction_argumentPow_pf39
-    {G : Type u} [Group G] [Finite G]
-    {φ : Section1.ClassFunction G}
-    (hφ : Section1.IsClassFunction φ) (e : ℕ) :
-    Section1.IsClassFunction (fun g : G => φ (g ^ e)) := by
-  intro x g
-  calc
-    φ ((x * g * x⁻¹) ^ e) = φ (x * g ^ e * x⁻¹) := by rw [conj_pow]
-    _ = φ (g ^ e) := by simpa [mul_assoc] using hφ x (g ^ e)
 
 private theorem scalarProduct_argumentPow_eq_of_coprime_natCard_pf39
     {G : Type u} [Group G] [Finite G]
@@ -1126,17 +938,6 @@ private theorem classFunctionArgumentPow_galoisConjugate_of_rootAction_pf39
   · simpa [classFunctionGaloisConjugate, hμeq] using hτμ
   · simpa [classFunctionGaloisConjugate, hμeq] using congrArg Neg.neg hτμ
 
-private theorem classFunctionArgumentPow_virtual_galoisConjugate_of_rootAction_pf39
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G} (τ : Gal(ℂ/ℚ))
-    (hχ : Representation.IsVirtualCharacter χ)
-    {N e : ℕ}
-    (hdiv : Nat.card G ∣ N)
-    (hτroot : ∀ z : ℂ, z ^ N = 1 → τ z = z ^ e) :
-    classFunctionArgumentPow χ (classFunctionGaloisConjugate τ χ) e := by
-  intro g
-  exact Section1.virtualCharacter_apply_galois_eq_argumentPow
-    (N := N) (e := e) (τ := τ) hτroot hχ hdiv g
 
 private theorem classFunctionGaloisConjugate_eq_of_argumentPow_rootAction_pf39
     {G : Type u} [Group G] [Finite G]
@@ -1159,33 +960,6 @@ private theorem classFunctionGaloisConjugate_eq_of_argumentPow_rootAction_pf39
       simpa [hχeq, Section1.characterGaloisConjugateByAutomorphism] using hτχ
     _ = χe g := (harg g).symm
 
-private theorem classFunctionGaloisConjugate_eq_of_argumentPow_cyclotomicAction_pf39
-    {G : Type u} [Group G] [Finite G]
-    {χ χe : Section1.ClassFunction G} (τ : Gal(ℂ/ℚ))
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ)
-    (_hτ : cyclotomicGaloisAction (Nat.card G) τ)
-    {e : ℕ} (harg : classFunctionArgumentPow χ χe e)
-    (heq : ∀ z : ℂ, z ^ Nat.card G = 1 → τ z = z ^ e) :
-    classFunctionGaloisConjugate τ χ = χe := by
-  exact classFunctionGaloisConjugate_eq_of_argumentPow_rootAction_pf39
-    (G := G) (χ := χ) (χe := χe) τ hχ (N := Nat.card G) (e := e)
-    (dvd_refl (Nat.card G)) heq harg
-
-private theorem isOrthonormalDoubleFamily_argumentPow_pf39
-    {G : Type u} [Group G] [Finite G]
-    {I J : Type*} [DecidableEq I] [DecidableEq J]
-    {χ : I → J → Section1.ClassFunction G} {e : ℕ}
-    (hχ : IsOrthonormalDoubleFamily χ)
-    (he : e.Coprime (Nat.card G)) :
-    IsOrthonormalDoubleFamily (fun i j g => χ i j (g ^ e)) := by
-  intro p q
-  calc
-    Section1.scalarProduct G
-        (fun g : G => χ p.1 p.2 (g ^ e))
-        (fun g : G => χ q.1 q.2 (g ^ e)) =
-      Section1.scalarProduct G (χ p.1 p.2) (χ q.1 q.2) :=
-        scalarProduct_argumentPow_eq_of_coprime_natCard_pf39 (G := G) (e := e) he
-    _ = if p = q then 1 else 0 := hχ p q
 
 private theorem scalarProduct_self_signed_irreducible_pf39
     {G : Type u} [Group G] [Finite G]
@@ -1256,116 +1030,6 @@ private theorem isVirtualCharacter_finset_sum_pf39
       ext g
       simp [hi]
 
-private theorem isVirtualCharacter_weightedFamilySum_of_irreducible_pf39
-    {G : Type u} [Group G] [Finite G]
-    {ι : Type*} [Fintype ι]
-    (a : ι → ℤ) (χ : ι → Section1.ClassFunction G)
-    (hχ : ∀ i, Section1.IsIrreducibleCharacterOnGroup (χ i)) :
-    Representation.IsVirtualCharacter
-      (Section1.weightedFamilySum (fun i => (a i : ℂ)) χ) := by
-  classical
-  have hterms :
-      ∀ i : ι,
-        Representation.IsVirtualCharacter ((a i : ℤ) • χ i) := by
-    intro i
-    exact isVirtualCharacter_zsmul_pf39 (a i)
-      (isVirtualCharacter_of_irreducibleCharacterOnGroup (hχ i))
-  have huniv :
-      (@Finset.univ ι (Fintype.ofFinite ι)) = (@Finset.univ ι ‹Fintype ι›) := by
-    ext i
-    simp
-  unfold Section1.weightedFamilySum
-  rw [huniv]
-  simpa using
-    isVirtualCharacter_finset_sum_pf39 (G := G) (s := Finset.univ)
-      (χ := fun i => (a i : ℤ) • χ i)
-      (by
-        intro i _hi
-        exact hterms i)
-
-private theorem isVirtualCharacter_of_int_scalarProduct_irreducibles_pf39
-    {G : Type u} [Group G] [Finite G]
-    {φ : Section1.ClassFunction G}
-    (hφclass : Section1.IsClassFunction φ)
-    (hcoeff_int :
-      ∀ ψ : Section1.ClassFunction G,
-        Section1.IsIrreducibleCharacterOnGroup ψ →
-          ∃ z : ℤ, Section1.scalarProduct G φ ψ = (z : ℂ)) :
-    Representation.IsVirtualCharacter φ := by
-  classical
-  rcases Representation.irreducible_characters_form_basis (G := G) with
-    ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
-  letI : Finite ι := Finite.of_fintype ι
-  letI : Fintype ι := Fintype.ofFinite ι
-  rcases hχ with ⟨hirr, hall, _hinj⟩
-  let ψ : ι → Section1.ClassFunction G := fun i => Section1.ofConjClassFunction (χ i)
-  have hψclass : ∀ i, Section1.IsClassFunction (ψ i) := by
-    intro i
-    exact Section1.ofConjClassFunction_isClassFunction (χ i)
-  have hψirr : ∀ i, Section1.IsIrreducibleCharacterOnGroup (ψ i) := by
-    intro i
-    exact ofConjClassFunction_isIrreducibleCharacterOnGroup (hirr i)
-  have horthψ :
-      ∀ i j,
-        Section1.scalarProduct G (ψ i) (ψ j) = if i = j then 1 else 0 := by
-    intro i j
-    have hto :
-        ∀ k, Section1.toConjClassFunction (ψ k) (hψclass k) = χ k := by
-      intro k
-      apply Section1.toConjClassFunction_eq_of_apply
-      intro g
-      rfl
-    calc
-      Section1.scalarProduct G (ψ i) (ψ j) =
-          Representation.classFunctionInner
-            (Section1.toConjClassFunction (ψ i) (hψclass i))
-            (Section1.toConjClassFunction (ψ j) (hψclass j)) :=
-        (Section1.classFunctionInner_toConjClassFunction
-          (ψ i) (ψ j) (hψclass i) (hψclass j)).symm
-      _ = Representation.classFunctionInner (χ i) (χ j) := by
-        rw [hto i, hto j]
-      _ = if i = j then 1 else 0 :=
-        Section1.representation_completeFamily_orthonormal
-          (chi := χ) ⟨hirr, hall, _hinj⟩ i j
-  let a : ι → ℤ := fun i => Classical.choose (hcoeff_int (ψ i) (hψirr i))
-  have ha : ∀ i, Section1.scalarProduct G φ (ψ i) = (a i : ℂ) := by
-    intro i
-    exact Classical.choose_spec (hcoeff_int (ψ i) (hψirr i))
-  let φsum : Section1.ClassFunction G :=
-    Section1.weightedFamilySum (fun i => (a i : ℂ)) ψ
-  have hφsumclass : Section1.IsClassFunction φsum := by
-    intro x g
-    unfold φsum Section1.weightedFamilySum
-    refine Finset.sum_congr rfl ?_
-    intro i _hi
-    simp [hψclass i x g]
-  have hEq : φsum = φ := by
-    apply Section1.classFunction_eq_of_inner_irreducible
-      (phi := φsum) (psi := φ) hφsumclass hφclass
-    intro ξ hξ
-    rcases hall ξ hξ with ⟨i, rfl⟩
-    calc
-      Representation.classFunctionInner
-          (Section1.toConjClassFunction φsum hφsumclass) (χ i) =
-        Section1.scalarProduct G φsum (ψ i) := by
-          rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
-          exact Section1.classFunctionInner_toConjClassFunction
-            φsum (ψ i) hφsumclass (hψclass i)
-      _ = (a i : ℂ) := by
-          exact Section1.scalarProduct_weightedFamilySum_left_orthonormal
-            (w := fun i => (a i : ℂ)) (chi := ψ) horthψ i
-      _ = Section1.scalarProduct G φ (ψ i) := (ha i).symm
-      _ = Representation.classFunctionInner
-          (Section1.toConjClassFunction φ hφclass) (χ i) := by
-          rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
-          exact (Section1.classFunctionInner_toConjClassFunction
-            φ (ψ i) hφclass (hψclass i)).symm
-  have hvirt_sum :
-      Representation.IsVirtualCharacter φsum :=
-    isVirtualCharacter_weightedFamilySum_of_irreducible_pf39
-      (G := G) a ψ hψirr
-  simpa [φsum, hEq] using hvirt_sum
 
 private theorem int_sq_sum_eq_zero_all_zero_pf39
     {ι : Type*} [DecidableEq ι] (s : Finset ι) (z : ι → ℤ)
@@ -2933,38 +2597,6 @@ public theorem sigma_eq_sigmaOfPF35_of_sigma_eq_omega_pf39
       rw [hweighted, map_sum]
       simp [hσeq, huniv_prod]
 
-/--
-If a linear map agrees with the PF `(3.5)` model map on every `ωᵢⱼ`, then it
-has the full PF `(3.2)` map package.
--/
-public theorem theorem_3_2_map_statement_of_sigma_eq_omega_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {χ : I → J → Section1.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hσeq : ∀ i j, σ (ω i j) = χ i j) :
-    theorem_3_2_map_statement W1 W2 W σ := by
-  have hσ_eq : σ = sigmaOfPF35 ω χ :=
-    sigma_eq_sigmaOfPF35_of_sigma_eq_omega_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω hσeq
-  rw [hσ_eq]
-  exact theorem_3_2_map_statement_sigmaOfPF35_pf39
-    (W1 := W1) (W2 := W2) (W := W)
-    (I := I) (J := J) (i0 := i0) (j0 := j0)
-    (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
 
 /-- A PF `(3.2)` map and a Section `(3.3)` table determine the explicit PF
 `(3.5)` data by taking `χᵢⱼ = σ(ωᵢⱼ)`. This is the data-construction step
@@ -3150,16 +2782,6 @@ private theorem cfNormSq_add_eq_add_of_orthogonal_pf39
     scalarProduct_add_right_pf39, hφψ, hψφ]
   norm_num
 
-private theorem cfNormSq_sub_eq_add_of_orthogonal_pf39
-    {G : Type*} [Group G] [Finite G]
-    {φ ψ : Section1.ClassFunction G}
-    (hφψ : Section1.scalarProduct G φ ψ = 0)
-    (hψφ : Section1.scalarProduct G ψ φ = 0) :
-    cfNormSq_pf39 (φ - ψ) = cfNormSq_pf39 φ + cfNormSq_pf39 ψ := by
-  unfold cfNormSq_pf39
-  rw [scalarProduct_sub_left_pf39, scalarProduct_sub_right_pf39,
-    scalarProduct_sub_right_pf39, hφψ, hψφ]
-  norm_num
 
 private theorem cfNormSq_smul_pf39
     {G : Type*} [Group G] [Finite G]
@@ -4158,18 +3780,6 @@ private theorem sigmaOfPF35_swap_pf39
   rw [this, Fintype.sum_prod_type]
 
 
-public theorem sigmaOfPF35_swap
-    {G : Type u} [Group G] [Finite G]
-    {W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J]
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (α : Section1.ClassFunction W) :
-    sigmaOfPF35 (fun j i => ω i j) (fun j i => χ i j) α =
-      sigmaOfPF35 ω χ α :=
-  sigmaOfPF35_swap_pf39 ω χ α
-
-
 public theorem sigmaOfPF35_swap_apply_table
     {G : Type u} [Group G] [Finite G]
     {W : Subgroup G}
@@ -4285,56 +3895,6 @@ public theorem proposition_3_9_a_uniqueness_of_pf35
     (I := I) (J := J) (i0 := i0) (j0 := j0)
     (ω := ω) (χ := χ) h hω horth hsigned h00 hInd hω' hX hXV
 
-
-public theorem theorem_3_2_map_apply_irreducible_eq
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (σ σ' : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (hσ : theorem_3_2_map_statement W1 W2 W σ)
-    (hσ' : theorem_3_2_map_statement W1 W2 W σ')
-    {ω' : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω') :
-    σ' ω' = σ ω' := by
-  classical
-  rcases pf35_data_of_theorem_3_2_map_statement hω σ hσ with
-    ⟨χ, horth, hsigned, h00, hInd, hσeq⟩
-  rcases hσ' with
-    ⟨hiso', hvirt', _hind', _hclass', _hprincipal', hagree', _hvanish'⟩
-  have hω'class : Section1.IsClassFunction ω' :=
-    isClassFunction_of_irreducibleCharacterOnGroup_pf39 hω'
-  have hσ'_signed : IsSignedIrreducibleCharacter (σ' ω') := by
-    have hvirtW : Representation.IsVirtualCharacter ω' :=
-      isVirtualCharacter_of_irreducibleCharacterOnGroup hω'
-    have hvirtG : Representation.IsVirtualCharacter (σ' ω') :=
-      hvirt' ω' hvirtW
-    have hself : Section1.scalarProduct G (σ' ω') (σ' ω') = 1 := by
-      calc
-        Section1.scalarProduct G (σ' ω') (σ' ω') =
-            Section1.scalarProduct W ω' ω' :=
-          hiso' ω' ω' hω'class hω'class
-        _ = 1 := Section1.scalarProduct_irreducibleCharacter_self hω'
-    exact signed_irreducible_of_virtual_norm_one_pf39 hvirtG hself
-  have hσ'_model : σ' ω' = sigmaOfPF35 ω χ ω' :=
-    proposition_3_9_a_uniqueness_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd hω' hσ'_signed
-      (by
-        intro x hx
-        exact hagree' ω' hω'class x hx)
-  have hσ_model : σ ω' = sigmaOfPF35 ω χ ω' := by
-    have hσ_eq : σ = sigmaOfPF35 ω χ :=
-      sigma_eq_sigmaOfPF35_of_sigma_eq_omega_pf39
-        (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω hσeq
-    rw [hσ_eq]
-  exact hσ'_model.trans hσ_model.symm
 
 /-- A PF `(3.2)` map commutes with complex conjugation on irreducible
 characters.  This is the complex-conjugation instance of PF `(3.9.a)`, proved
@@ -4504,71 +4064,6 @@ public theorem sigmaOfPF35_signed_irreducible_of_irreducible
   rcases hω.all_irreducibles ω' hω' with ⟨i, j, rfl⟩
   exact sigmaOfPF35_signed_image ω χ hω.orthonormal hsigned i j
 
-/--
-PF (3.9)(a), Galois-commutation packaging in the explicit PF (3.5) setting:
-once Galois conjugation is known to preserve irreducible characters on `W` and
-signed irreducible characters on `G`, the uniqueness clause identifies
-`(σ ω')^τ` with `σ(ω'^τ)`.
--/
-public theorem proposition_3_9_a_galois_of_galois_stability_pf35
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hWconj :
-      ∀ (τ : Gal(ℂ/ℚ)) {η : Section1.ClassFunction W},
-        Section1.IsIrreducibleCharacterOnGroup η →
-          Section1.IsIrreducibleCharacterOnGroup
-            (classFunctionGaloisConjugate τ η))
-    (hGconj :
-      ∀ (τ : Gal(ℂ/ℚ)) {X : Section1.ClassFunction G},
-        IsSignedIrreducibleCharacter X →
-          IsSignedIrreducibleCharacter
-            (classFunctionGaloisConjugate τ X)) :
-    proposition_3_9_statement_a_galois (sigmaOfPF35 ω χ) := by
-  intro ω' τ hω' _hτ
-  have hωτ :
-      Section1.IsIrreducibleCharacterOnGroup
-        (classFunctionGaloisConjugate τ ω') :=
-    hWconj τ hω'
-  have hσsigned : IsSignedIrreducibleCharacter (sigmaOfPF35 ω χ ω') :=
-    sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-  have hX :
-      IsSignedIrreducibleCharacter
-        (classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω')) :=
-    hGconj τ hσsigned
-  have hagree :
-      ∀ x : G, ∀ hx : x ∈ cyclicTISet W1 W2 W,
-        classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') x =
-          classFunctionGaloisConjugate τ ω'
-            ⟨x, cyclicTISet_subset W1 W2 W hx⟩ := by
-    intro x hx
-    unfold classFunctionGaloisConjugate
-    congr 1
-    exact
-      (sigmaOfPF35_agreesOnCyclicTISet_of_pf35
-        (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω horth hsigned h00 hInd)
-        ω' (isClassFunction_of_irreducibleCharacterOnGroup_pf39 hω') x hx
-  exact proposition_3_9_a_uniqueness_of_pf35
-    (W1 := W1) (W2 := W2) (W := W)
-    (I := I) (J := J) (i0 := i0) (j0 := j0)
-    (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-    hωτ hX hagree
 
 /--
 PF (3.9)(a), Galois-commutation clause in the explicit PF (3.5) setting.
@@ -4629,77 +4124,6 @@ public theorem proposition_3_9_a_galois_of_pf35
     (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
     hωτ hX hagree
 
-/--
-PF `(3.9)(a)`, finite-cyclotomic exponent form, from the current explicit
-PF `(3.5)` realization and the global root-action extension bridge used by
-the present proof route.
--/
-public theorem proposition_3_9_a_finite_galois_of_rootAction_pf35
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hroot :
-      ∀ {c b e : ℕ}, e.Coprime (c * b) →
-        ∃ τ : Gal(ℂ/ℚ), ∀ z : ℂ, z ^ (c * b) = 1 → τ z = z ^ e) :
-    proposition_3_9_statement_a_finite_galois (sigmaOfPF35 ω χ) := by
-  intro ω' ωu e hω' hωu he hargW
-  obtain ⟨τ, hτroot⟩ := hroot (c := Nat.card G) (b := 1) (e := e) (by
-    simpa using he)
-  have hτrootNat : ∀ z : ℂ, z ^ Nat.card G = 1 → τ z = z ^ e := by
-    intro z hz
-    exact hτroot z (by simpa using hz)
-  have hτ : cyclotomicGaloisAction (Nat.card G) τ := by
-    exact ⟨e, he, hτrootNat⟩
-  have hWconj : classFunctionGaloisConjugate τ ω' = ωu :=
-    classFunctionGaloisConjugate_eq_of_argumentPow_rootAction_pf39
-      (G := W) (χ := ω') (χe := ωu) τ hω'
-      (N := Nat.card G) (e := e)
-      (Subgroup.card_subgroup_dvd_card W) hτrootNat hargW
-  have hcomm :
-      classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') =
-        sigmaOfPF35 ω χ (classFunctionGaloisConjugate τ ω') :=
-    proposition_3_9_a_galois_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-      (ω' := ω') τ hω' hτ
-  have hσsigned : IsSignedIrreducibleCharacter (sigmaOfPF35 ω χ ω') :=
-    sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-  have hargConj :
-      classFunctionArgumentPow
-        (sigmaOfPF35 ω χ ω')
-        (classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω')) e :=
-    classFunctionArgumentPow_galoisConjugate_of_rootAction_pf39
-      (G := G) (χ := sigmaOfPF35 ω χ ω') τ hσsigned
-      (N := Nat.card G) (e := e) (dvd_refl (Nat.card G)) hτrootNat
-  have hσu :
-      sigmaOfPF35 ω χ ωu =
-        classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') := by
-    calc
-      sigmaOfPF35 ω χ ωu =
-          sigmaOfPF35 ω χ (classFunctionGaloisConjugate τ ω') := by
-            exact congrArg (fun η => sigmaOfPF35 ω χ η) hWconj.symm
-      _ = classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') := hcomm.symm
-  intro g
-  calc
-    sigmaOfPF35 ω χ ωu g =
-        classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') g := by
-          rw [hσu]
-    _ = sigmaOfPF35 ω χ ω' (g ^ e) := hargConj g
 
 /--
 PF (3.9)(b), Galois-identification bridge in the explicit PF (3.5) setting:
@@ -4805,139 +4229,6 @@ public theorem proposition_3_9_b_argument_pow_of_rootAction_pf35
           rw [hσ]
     _ = sigmaOfPF35 ω χ ω' (g ^ e) := hargConj g
 
-/--
-PF (3.9)(b), exponent-form coprime invariance for a `sigmaOfPF35` image:
-if the PF (1.9) exponent `e` is congruent to `k` on the `a`-part and to `1`
-on the complementary `b`-part, then the value of `sigmaOfPF35 ω χ ω'` is
-unchanged on elements whose order is coprime to `a`.
--/
-public theorem proposition_3_9_b_exponent_coprime_of_pf35
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (g : G) (hg : (orderOf g).Coprime a) :
-    sigmaOfPF35 ω χ ω' (g ^ e) = sigmaOfPF35 ω χ ω' g := by
-  exact signed_irreducible_value_eq_on_coprime_pow_pf39
-    (sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω')
-    hcard hea heb g hg
-
-/--
-PF (3.9)(b), CRT automorphism/exponent package in the repo's PF (1.9)
-model.  The returned automorphism is the cyclotomic-field automorphism from
-PF (1.9)(b), and the returned exponent gives the coprime-order invariance of
-the `sigmaOfPF35` image.
--/
-public theorem proposition_3_9_b_crt_exponent_of_pf35
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {a b k : ℕ} (hcard : Nat.card G = a * b)
-    (hab : a.Coprime b) (hk : k.Coprime a) :
-    ∃ v : Gal((Section1.CyclotomicABField a b)/ℚ), ∃ e : ℕ,
-      Section1.proposition_1_9_b_galoisCondition (G := G) hcard hk v ∧
-        e ≡ k [MOD a] ∧ e ≡ 1 [MOD b] ∧
-        ∀ g : G, (orderOf g).Coprime a →
-          sigmaOfPF35 ω χ ω' (g ^ e) = sigmaOfPF35 ω χ ω' g := by
-  classical
-  have hn : a * b ≠ 0 := Section1.nat_card_factor_ne_zero (G := G) hcard
-  haveI : NeZero a := ⟨left_ne_zero_of_mul hn⟩
-  obtain ⟨v, hv⟩ :=
-    Section1.proposition_1_9_b_galois_automorphism
-      (a := a) (b := b) (k := k) hn hab hk
-  let e : ℕ := Nat.chineseRemainder hab k 1
-  have hea : e ≡ k [MOD a] := (Nat.chineseRemainder hab k 1).property.1
-  have heb : e ≡ 1 [MOD b] := (Nat.chineseRemainder hab k 1).property.2
-  refine ⟨v, e, ?_, hea, heb, ?_⟩
-  · dsimp [Section1.proposition_1_9_b_galoisCondition]
-    exact hv
-  · intro g hg
-    exact proposition_3_9_b_exponent_coprime_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-      hcard hea heb g hg
-
-/--
-PF (3.9)(b), pointwise equality once the Galois/argument-power transport has
-been identified: if `sigmaOfPF35 ω χ ωk` is the `e`-power transform of
-`sigmaOfPF35 ω χ ω'`, then it agrees with `sigmaOfPF35 ω χ ω'` on elements
-whose order is coprime to `a`.
--/
-public theorem proposition_3_9_b_of_argument_pow_pf35
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' ωk : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (harg :
-      classFunctionArgumentPow
-        (sigmaOfPF35 ω χ ω') (sigmaOfPF35 ω χ ωk) e)
-    (g : G) (hg : (orderOf g).Coprime a) :
-    sigmaOfPF35 ω χ ωk g = sigmaOfPF35 ω χ ω' g := by
-  calc
-    sigmaOfPF35 ω χ ωk g = sigmaOfPF35 ω χ ω' (g ^ e) := harg g
-    _ = sigmaOfPF35 ω χ ω' g :=
-        proposition_3_9_b_exponent_coprime_of_pf35
-          (W1 := W1) (W2 := W2) (W := W)
-          (I := I) (J := J) (i0 := i0) (j0 := j0)
-          (ω := ω) (χ := χ) hω hsigned hω'
-          hcard hea heb g hg
-
-/--
-Auxiliary PF `(3.9)(b)` endpoint: once the argument-power transport has been
-identified, the two `sigmaOfPF35` images agree on elements whose order is
-coprime to the value-order parameter.  The full book-facing statement is
-`proposition_3_9_statement_b`.
--/
-public theorem proposition_3_9_b_pointwise_of_argument_pow_pf35
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' ωk : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (harg :
-      classFunctionArgumentPow
-        (sigmaOfPF35 ω χ ω') (sigmaOfPF35 ω χ ωk) e)
-    (g : G) (hg : (orderOf g).Coprime a) :
-    sigmaOfPF35 ω χ ωk g = sigmaOfPF35 ω χ ω' g := by
-  exact proposition_3_9_b_of_argument_pow_pf35
-    (W1 := W1) (W2 := W2) (W := W)
-    (I := I) (J := J) (i0 := i0) (j0 := j0)
-    (ω := ω) (χ := χ) hω hsigned hω'
-    hcard hea heb harg g hg
 
 /--
 PF `(3.9)(b)` pointwise equality in the integer-congruence form used by the
@@ -5048,46 +4339,6 @@ public theorem proposition_3_9_b_transport_fields_of_rootAction_pf35
     (ω := ω) (χ := χ) hω hsigned hω'
     hcpart hcard hea heb harg g hg
 
-/--
-If the `W`-side power transport `ωk(w) = ω'(w ^ e)` is known and `e` is
-coprime to `|G|`, then the corresponding `sigmaOfPF35` images agree on
-`V = W \ (W₁ ∪ W₂)` after applying the `e`-power map on `G`.
--/
-private theorem sigmaOfPF35_argumentPow_agreesOnCyclicTISet_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    {ω' ωk : Section1.ClassFunction W} {e : ℕ}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (he : e.Coprime (Nat.card G))
-    (hargW : classFunctionArgumentPow ω' ωk e) :
-    ∀ x : G, ∀ hx : x ∈ cyclicTISet W1 W2 W,
-      sigmaOfPF35 ω χ ω' (x ^ e) = ωk ⟨x, cyclicTISet_subset W1 W2 W hx⟩ := by
-  intro x hx
-  have hσV :=
-    sigmaOfPF35_agreesOnCyclicTISet_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-  have hxpow : x ^ e ∈ cyclicTISet W1 W2 W := by
-    exact (mem_cyclicTISet_iff_pow_mem_of_coprime_natCard_pf39
-      (G := G) (W1 := W1) (W2 := W2) (W := W) (x := x) (e := e) he).mp hx
-  calc
-    sigmaOfPF35 ω χ ω' (x ^ e) = ω' (⟨x ^ e, cyclicTISet_subset W1 W2 W hxpow⟩) := by
-      exact hσV ω' (isClassFunction_of_irreducibleCharacterOnGroup_pf39 hω') (x ^ e) hxpow
-    _ = ωk ⟨x, cyclicTISet_subset W1 W2 W hx⟩ := by
-      simpa using (hargW ⟨x, cyclicTISet_subset W1 W2 W hx⟩).symm
 
 private theorem exists_irreducible_argumentPow_on_cyclic_subgroup_pf39
     {G : Type u} [Group G] [Finite G]
@@ -5224,414 +4475,6 @@ public theorem proposition_3_9_b_of_rootAction_pf35
       (I := I) (J := J) (i0 := i0) (j0 := j0)
       (ω := ω) (χ := χ) h hω horth hsigned h00 hInd hroot)
 
-private theorem sigmaOfPF35_argumentPow_agreesOnCyclicTISet_of_exists_target_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    {ω' : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {e : ℕ} (he : e.Coprime (Nat.card G)) :
-    ∃ ωk : Section1.ClassFunction W,
-      Section1.IsIrreducibleCharacterOnGroup ωk ∧
-      classFunctionArgumentPow ω' ωk e ∧
-      (∀ x : G, ∀ _ : x ∈ cyclicTISet W1 W2 W,
-        sigmaOfPF35 ω χ ω' (x ^ e) =
-          sigmaOfPF35 ω χ ωk x) := by
-  rcases exists_irreducible_argumentPow_on_cyclic_subgroup_pf39
-      (G := G) (W1 := W1) (W2 := W2) (W := W) h hω' he with
-    ⟨ωk, hωk, hargW⟩
-  refine ⟨ωk, hωk, hargW, ?_⟩
-  intro x hx
-  have hargV :=
-    sigmaOfPF35_argumentPow_agreesOnCyclicTISet_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-      (ω' := ω') (ωk := ωk) (e := e) hω' he hargW x hx
-  have hσV :=
-    sigmaOfPF35_agreesOnCyclicTISet_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-  calc
-    sigmaOfPF35 ω χ ω' (x ^ e) = ωk ⟨x, cyclicTISet_subset W1 W2 W hx⟩ := hargV
-    _ = sigmaOfPF35 ω χ ωk x :=
-        (hσV ωk (isClassFunction_of_irreducibleCharacterOnGroup_pf39 hωk) x hx).symm
-
-/--
-Once the powered `sigmaOfPF35` image is known to remain signed irreducible,
-the uniqueness clause of PF (3.9)(a) identifies it with the `sigmaOfPF35`
-image of the powered `W`-character.
--/
-private theorem sigmaOfPF35_argumentPow_of_signed_irreducible_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    {ω' ωk : Section1.ClassFunction W} {e : ℕ}
-    (_hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (hωk : Section1.IsIrreducibleCharacterOnGroup ωk)
-    (he : e.Coprime (Nat.card G))
-    (hargW : classFunctionArgumentPow ω' ωk e)
-    (hsignedPow :
-      IsSignedIrreducibleCharacter (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))) :
-    classFunctionArgumentPow
-      (sigmaOfPF35 ω χ ω') (sigmaOfPF35 ω χ ωk) e := by
-  have hEq :
-      (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) =
-        sigmaOfPF35 ω χ ωk := by
-    exact proposition_3_9_a_uniqueness_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-      hωk hsignedPow
-      (sigmaOfPF35_argumentPow_agreesOnCyclicTISet_pf39
-        (W1 := W1) (W2 := W2) (W := W)
-        (I := I) (J := J) (i0 := i0) (j0 := j0)
-        (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-        (ω' := ω') (ωk := ωk) (e := e) _hω' he hargW)
-  intro g
-  simpa [hEq] using congrArg (fun f : Section1.ClassFunction G => f g) hEq.symm
-
-/-- The powered `sigmaOfPF35` image is a class function. -/
-private theorem sigmaOfPF35_argumentPow_isClassFunction_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W} (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (e : ℕ) :
-    Section1.IsClassFunction (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) := by
-  exact isClassFunction_argumentPow_pf39
-    (sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω' |>
-        isClassFunction_of_signed_irreducible_pf39)
-    e
-
-/--
-The powered `sigmaOfPF35` image has norm one whenever the exponent is coprime
-to `|G|`.
--/
-private theorem sigmaOfPF35_argumentPow_self_scalarProduct_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W} (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    {e : ℕ} (he : e.Coprime (Nat.card G)) :
-    Section1.scalarProduct G
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) = 1 := by
-  have hσsigned :
-      IsSignedIrreducibleCharacter (sigmaOfPF35 ω χ ω') :=
-    sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-  calc
-    Section1.scalarProduct G
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) =
-      Section1.scalarProduct G (sigmaOfPF35 ω χ ω') (sigmaOfPF35 ω χ ω') := by
-        exact scalarProduct_argumentPow_eq_of_coprime_natCard_pf39
-          (G := G) (φ := sigmaOfPF35 ω χ ω') (ψ := sigmaOfPF35 ω χ ω')
-          (e := e) he
-    _ = 1 := scalarProduct_self_signed_irreducible_pf39 hσsigned
-
-/--
-It remains enough to prove integer scalar products against all irreducibles to
-obtain the virtual-character bridge for powered `sigmaOfPF35` images.
--/
-private theorem sigmaOfPF35_argumentPow_virtual_of_integer_inner_products_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W} {e : ℕ}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (hcoeff_int :
-      ∀ ψ : Section1.ClassFunction G,
-        Section1.IsIrreducibleCharacterOnGroup ψ →
-          ∃ z : ℤ,
-            Section1.scalarProduct G
-              (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) ψ = (z : ℂ)) :
-    Representation.IsVirtualCharacter
-      (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) := by
-  exact isVirtualCharacter_of_int_scalarProduct_irreducibles_pf39
-    (sigmaOfPF35_argumentPow_isClassFunction_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω' e)
-    hcoeff_int
-
-/--
-If the powered `sigmaOfPF35` image is known to be a virtual character, then
-the coprime-power bijection preserves its norm, so the general norm-one
-criterion upgrades it to a signed irreducible character.  This is the final
-local wrapper needed for the `(3.9)(b)` bridge.
--/
-private theorem sigmaOfPF35_argumentPow_signed_irreducible_of_virtual_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W} {e : ℕ}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (he : e.Coprime (Nat.card G))
-    (hvirtPow :
-      Representation.IsVirtualCharacter
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))) :
-    IsSignedIrreducibleCharacter (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) := by
-  have hselfPow :
-      Section1.scalarProduct G
-          (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))
-          (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) = 1 :=
-    sigmaOfPF35_argumentPow_self_scalarProduct_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω' he
-  exact signed_irreducible_of_virtual_norm_one_pf39 hvirtPow hselfPow
-
-/--
-Under the explicit global root-action extension hypothesis, the powered
-`sigmaOfPF35` image is a virtual character: it is the compatible Galois
-conjugate of a signed irreducible `sigmaOfPF35` image.
--/
-private theorem sigmaOfPF35_argumentPow_virtual_of_rootAction_pf39
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (hroot :
-      ∀ {c b e : ℕ}, e.Coprime (c * b) →
-        ∃ τ : Gal(ℂ/ℚ), ∀ z : ℂ, z ^ (c * b) = 1 → τ z = z ^ e)
-    {ω' : Section1.ClassFunction W} {e : ℕ}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (he : e.Coprime (Nat.card G)) :
-    Representation.IsVirtualCharacter
-      (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) := by
-  obtain ⟨τ, hτroot⟩ := hroot (c := Nat.card G) (b := 1) (e := e) (by
-    simpa using he)
-  have hτrootNat : ∀ z : ℂ, z ^ Nat.card G = 1 → τ z = z ^ e := by
-    intro z hz
-    exact hτroot z (by simpa using hz)
-  have hτ : cyclotomicGaloisAction (Nat.card G) τ :=
-    ⟨e, he, hτrootNat⟩
-  have hσsigned : IsSignedIrreducibleCharacter (sigmaOfPF35 ω χ ω') :=
-    sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-  have hconjSigned :
-      IsSignedIrreducibleCharacter
-        (classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω')) :=
-    signedIrreducibleCharacter_galoisConjugate_of_cyclotomicAction_pf39
-      (G := G) (χ := sigmaOfPF35 ω χ ω') τ hσsigned hτ
-  have harg :
-      classFunctionArgumentPow
-        (sigmaOfPF35 ω χ ω')
-        (classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω')) e :=
-    classFunctionArgumentPow_galoisConjugate_of_rootAction_pf39
-      (G := G) (χ := sigmaOfPF35 ω χ ω') τ hσsigned
-      (N := Nat.card G) (e := e) (dvd_refl (Nat.card G)) hτrootNat
-  have hEq :
-      (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) =
-        classFunctionGaloisConjugate τ (sigmaOfPF35 ω χ ω') := by
-    ext g
-    exact (harg g).symm
-  rw [hEq]
-  exact isVirtualCharacter_of_signedIrreducible_pf35 hconjSigned
-
-/--
-PF `(3.9)(a)`, finite-cyclotomic exponent form, from the explicit PF `(3.5)`
-realization and the Adams-style virtual-character bridge for powered
-`sigmaOfPF35` images.  This avoids the auxiliary global `Gal(ℂ/ℚ)` root-action
-extension used by the older proof route.
--/
-public theorem proposition_3_9_a_finite_galois_of_argumentPow_virtual_pf35
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hvirtPow :
-      ∀ {ω' : Section1.ClassFunction W} {e : ℕ},
-        Section1.IsIrreducibleCharacterOnGroup ω' →
-          e.Coprime (Nat.card G) →
-            Representation.IsVirtualCharacter
-              (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))) :
-    proposition_3_9_statement_a_finite_galois (sigmaOfPF35 ω χ) := by
-  intro ω' ωu e hω' hωu he hargW
-  have hsignedPow :
-      IsSignedIrreducibleCharacter
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) :=
-    sigmaOfPF35_argumentPow_signed_irreducible_of_virtual_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω' he
-      (hvirtPow (ω' := ω') (e := e) hω' he)
-  exact sigmaOfPF35_argumentPow_of_signed_irreducible_pf39
-    (W1 := W1) (W2 := W2) (W := W)
-    (I := I) (J := J) (i0 := i0) (j0 := j0)
-    (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-    hω' hωu he hargW hsignedPow
-
-/--
-Auxiliary PF `(3.9)(b)` finite-cyclotomic argument-power package, using the
-Adams-style virtual-character bridge for powered `sigmaOfPF35` images instead
-of the auxiliary global `Gal(ℂ/ℚ)` root-action extension.
--/
-public theorem proposition_3_9_b_of_argumentPow_virtual_pf35
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hvirtPow :
-      ∀ {ω' : Section1.ClassFunction W} {e : ℕ},
-        Section1.IsIrreducibleCharacterOnGroup ω' →
-          e.Coprime (Nat.card G) →
-            Representation.IsVirtualCharacter
-              (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e))) :
-    proposition_3_9_statement_b_argumentPow (sigmaOfPF35 ω χ) := by
-  classical
-  intro ω' a k hω' ha hk
-  have ha0 : 0 < a := ha.1.1
-  have ha_dvd_card : a ∣ Nat.card G :=
-    exactCharacterValueOrder_dvd_natCard_of_pf39
-      (G := G) (W1 := W1) (W2 := W2) (W := W) h hω' ha
-  have hcard_ne : Nat.card G ≠ 0 := Nat.card_pos.ne'
-  obtain ⟨c, b, hcpart, hcard, hcop⟩ :=
-    exists_valueOrderCardPart_factorization_pf39 ha0 ha_dvd_card hcard_ne
-  have hkc_nat : k.natAbs.Coprime c :=
-    coprime_of_valueOrderCardPart_pf39 hcpart
-      (natAbs_coprime_of_int_isCoprime_pf39 hk)
-  have hkc : IsCoprime k (c : ℤ) :=
-    int_isCoprime_of_natAbs_coprime_pf39 hkc_nat
-  have hn : c * b ≠ 0 :=
-    Section1.nat_card_factor_ne_zero (G := G) hcard
-  haveI : NeZero c := ⟨left_ne_zero_of_mul hn⟩
-  obtain ⟨v, hv⟩ :=
-    Section1.proposition_1_9_b_galois_automorphism_int
-      (a := c) (b := b) (k := k) hn hcop hkc
-  obtain ⟨w, hwa, hwb⟩ :=
-    Section1.zmod_units_crt_exists_of_coprime hcop (ZMod.unitOfIsCoprime k hkc)
-  let e : ℕ := (w : ZMod (c * b)).val
-  have hea : (e : ℤ) ≡ k [ZMOD c] :=
-    Section1.zmod_units_crt_val_modEq_left_int hn hkc hwa
-  have heb : (e : ℤ) ≡ (1 : ℤ) [ZMOD b] :=
-    Section1.zmod_units_crt_val_modEq_right_one hn hwb
-  have hecop : e.Coprime (c * b) := by
-    simpa [e] using ZMod.val_coe_unit_coprime w
-  haveI : IsCyclic W := by
-    rcases h with ⟨_hW1, _hW2, _hIP, hcyc, _hodd, _hcard1, _hcard2, _hTI⟩
-    exact hcyc
-  letI : CommGroup W := IsCyclic.commGroup
-  have hcardF : Fintype.card G = c * b := by
-    simpa [Nat.card_eq_fintype_card] using hcard
-  have hecopG : e.Coprime (Nat.card G) := by
-    simpa [Nat.card_eq_fintype_card, hcardF] using hecop
-  obtain ⟨ωk, hωk, hargW⟩ :=
-    exists_irreducible_argumentPow_on_cyclic_subgroup_pf39
-      (G := G) (W1 := W1) (W2 := W2) (W := W) h hω' hecopG
-  have hvalue : classFunctionValueZPow ω' ωk k :=
-    classFunctionValueZPow_of_argumentPow_congr_pf39
-      (H := W) hω' ha hcpart hea hargW
-  have hgal :
-      proposition_3_9_galoisCondition_int
-        (G := G) (c := c) (b := b) (k := k) hcard v := by
-    exact ⟨hkc, by
-      dsimp [Section1.proposition_1_9_b_galoisCondition_int]
-      exact hv⟩
-  have hsignedPow :
-      IsSignedIrreducibleCharacter
-        (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)) :=
-    sigmaOfPF35_argumentPow_signed_irreducible_of_virtual_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω' hecopG
-      (hvirtPow (ω' := ω') (e := e) hω' hecopG)
-  have hargG :
-      classFunctionArgumentPow
-        (sigmaOfPF35 ω χ ω') (sigmaOfPF35 ω χ ωk) e :=
-    sigmaOfPF35_argumentPow_of_signed_irreducible_pf39
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-      hω' hωk hecopG hargW hsignedPow
-  have hpoint :
-      ∀ g : G, (orderOf g).Coprime a →
-        sigmaOfPF35 ω χ ωk g = sigmaOfPF35 ω χ ω' g := by
-    intro g hg
-    exact proposition_3_9_b_pointwise_of_argument_pow_int_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω'
-      (hcpart := hcpart) (hcard := hcard) (hea := hea) (heb := heb)
-      (harg := hargG) g hg
-  exact ⟨ωk, hωk, hvalue, c, b, hcpart, hcard, hcop, v, e,
-    hgal, hecop, hea, heb, hargG, hpoint⟩
 
 /--
 PF (3.9)(c), final algebraic-integer step: once the Galois argument has shown
@@ -5683,27 +4526,6 @@ public theorem proposition_3_9_c_integer_of_rational_value_pf35
     (I := I) (J := J) (i0 := i0) (j0 := j0)
     (ω := ω) (χ := χ) hω hsigned hω' hrat
 
-/-- PF (3.9)(c) integrality precursor: every value of a `sigmaOfPF35` image of
-an irreducible character of `W` is an algebraic integer. -/
-public theorem proposition_3_9_c_isIntegral_value_pf35
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    {i0 : I} {j0 : J}
-    {ω : I → J → Section1.ClassFunction W}
-    {χ : I → J → Section1.ClassFunction G}
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    {ω' : Section1.ClassFunction W}
-    (hω' : Section1.IsIrreducibleCharacterOnGroup ω')
-    (g : G) :
-    IsIntegral ℤ (sigmaOfPF35 ω χ ω' g) := by
-  exact isIntegral_value_of_signed_irreducible_pf39
-    (sigmaOfPF35_signed_irreducible_of_irreducible
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hω')
-    g
 
 /--
 PF `(3.9)(c)` cyclotomic-field precursor: every value of a `sigmaOfPF35`
@@ -6060,75 +4882,6 @@ public theorem proposition_3_9_c_of_rationality_pf35
     (ω := ω) (χ := χ) hω hsigned hω'
     (hrat hω' ha g hg)
 
-/--
-Auxiliary finite-exponent PF `(3.9)` package for the explicit PF `(3.5)`
-realization.  The virtual-character bridge supplies the finite-cyclotomic
-automorphism action used by the exponent model for `(a)` and `(b)`, while
-`hrat` supplies the rationality argument for `(c)`.  The source-facing full
-PF `(3.9)` statement uses the direct cyclotomic-Galois clauses instead.
--/
-public theorem proposition_3_9_of_argumentPow_virtual_and_rationality_pf35
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 W : Subgroup G)
-    (I J : Type*) [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
-    (i0 : I) (j0 : J)
-    (ω : I → J → Section1.ClassFunction W)
-    (χ : I → J → Section1.ClassFunction G)
-    (h : hypothesis_3_1_statement W1 W2 W)
-    (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (horth : IsOrthonormalDoubleFamily χ)
-    (hsigned : ∀ i j, IsSignedIrreducibleCharacter (χ i j))
-    (h00 : χ i0 j0 = Section1.principalCharacter G)
-    (hInd : ∀ i j, i ≠ i0 → j ≠ j0 →
-      Section1.inducedCF W (alphaIJ W i0 j0 ω i j) =
-        Section1.principalCharacter G - χ i j0 - χ i0 j + χ i j)
-    (hvirtPow :
-      ∀ {ω' : Section1.ClassFunction W} {e : ℕ},
-        Section1.IsIrreducibleCharacterOnGroup ω' →
-          e.Coprime (Nat.card G) →
-            Representation.IsVirtualCharacter
-              (fun g : G => sigmaOfPF35 ω χ ω' (g ^ e)))
-    (hrat :
-      ∀ {ω' : Section1.ClassFunction W} {a : ℕ},
-        Section1.IsIrreducibleCharacterOnGroup ω' →
-          exactCharacterValueOrder ω' a →
-            ∀ g : G, (orderOf g).Coprime a →
-              ∃ q : ℚ, sigmaOfPF35 ω χ ω' g = (q : ℂ)) :
-    ∀ _hσ : theorem_3_2_map_statement W1 W2 W (sigmaOfPF35 ω χ),
-      (∀ {ω' : Section1.ClassFunction W},
-        Section1.IsIrreducibleCharacterOnGroup ω' →
-          ∀ {X : Section1.ClassFunction G},
-            IsSignedIrreducibleCharacter X →
-              (∀ x : G, ∀ hx : x ∈ cyclicTISet W1 W2 W,
-                X x = ω' ⟨x, cyclicTISet_subset W1 W2 W hx⟩) →
-              X = sigmaOfPF35 ω χ ω') ∧
-        proposition_3_9_statement_a_finite_galois (sigmaOfPF35 ω χ) ∧
-        proposition_3_9_statement_b_argumentPow (sigmaOfPF35 ω χ) ∧
-        proposition_3_9_statement_c (sigmaOfPF35 ω χ) := by
-  intro _hσ
-  have hfiniteA :
-      proposition_3_9_statement_a_finite_galois (sigmaOfPF35 ω χ) :=
-    proposition_3_9_a_finite_galois_of_argumentPow_virtual_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd hvirtPow
-  have hfiniteB :
-      proposition_3_9_statement_b_argumentPow (sigmaOfPF35 ω χ) :=
-    proposition_3_9_b_of_argumentPow_virtual_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd hvirtPow
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact proposition_3_9_statement_a_uniqueness_of_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) h hω horth hsigned h00 hInd
-  · exact hfiniteA
-  · exact hfiniteB
-  · exact proposition_3_9_c_of_rationality_pf35
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := I) (J := J) (i0 := i0) (j0 := j0)
-      (ω := ω) (χ := χ) hω hsigned hrat
 
 /--
 Conditional full PF `(3.9)` assembly for the explicit PF `(3.5)` realization.

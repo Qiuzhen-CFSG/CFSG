@@ -290,40 +290,6 @@ public theorem zmod_units_crt_exists_of_coprime {a b : ℕ} (hab : a.Coprime b)
     rw [hmap]
     exact hsnd
 
-/--
-Symmetric CRT selector: choose a unit modulo `a * b` whose restriction to
-`ZMod a` is trivial and whose restriction to `ZMod b` is the prescribed unit.
--/
-public theorem zmod_units_crt_exists_of_coprime_right {a b : ℕ} (hab : a.Coprime b)
-    (ub : (ZMod b)ˣ) :
-    ∃ w : (ZMod (a * b))ˣ,
-      ZMod.unitsMap (Nat.dvd_mul_right a b) w = 1 ∧
-      ZMod.unitsMap (Nat.dvd_mul_left b a) w = ub := by
-  classical
-  let e : (ZMod (a * b))ˣ ≃* (ZMod a)ˣ × (ZMod b)ˣ :=
-    (Units.mapEquiv (ZMod.chineseRemainder hab).toMulEquiv).trans MulEquiv.prodUnits
-  let w : (ZMod (a * b))ˣ := e.symm (1, ub)
-  refine ⟨w, ?_, ?_⟩
-  · have he : e w = (1, ub) := by simp [w]
-    have hfst := congrArg Prod.fst he
-    have hmap : ZMod.unitsMap (Nat.dvd_mul_right a b) w =
-        (MulEquiv.prodUnits ((Units.mapEquiv (ZMod.chineseRemainder hab).toMulEquiv) w)).1 := by
-      ext
-      change (w : ZMod (a * b)).cast = ((ZMod.chineseRemainder hab (w : ZMod (a * b))).1)
-      rw [ZMod.chineseRemainder]
-      simp
-    rw [hmap]
-    exact hfst
-  · have he : e w = (1, ub) := by simp [w]
-    have hsnd := congrArg Prod.snd he
-    have hmap : ZMod.unitsMap (Nat.dvd_mul_left b a) w =
-        (MulEquiv.prodUnits ((Units.mapEquiv (ZMod.chineseRemainder hab).toMulEquiv) w)).2 := by
-      ext
-      change (w : ZMod (a * b)).cast = ((ZMod.chineseRemainder hab (w : ZMod (a * b))).2)
-      rw [ZMod.chineseRemainder]
-      simp
-    rw [hmap]
-    exact hsnd
 
 public theorem zmod_units_crt_val_modEq_left_int {a b : ℕ}
     (hn : a * b ≠ 0) {k : ℤ} (hk : IsCoprime k (a : ℤ))
@@ -429,89 +395,6 @@ public theorem proposition_1_9_a {a b : ℕ} (hn : a * b ≠ 0)
       _ = 1 := by rw [hvw, hwb]
       _ = IsCyclotomicExtension.Rat.galEquivZMod b Fb (1 : Gal(Fb/ℚ)) := by simp
 
-/--
-Symmetric form of Peterfalvi (1.9)(a): an automorphism of the right
-cyclotomic subfield extends to `ℚ_{ab}` while acting trivially on the left
-cyclotomic subfield.
--/
-public theorem proposition_1_9_a_right {a b : ℕ} (hn : a * b ≠ 0)
-    (hab : a.Coprime b) (u : Gal((cyclotomicRightSubfield a b hn)/ℚ)) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ),
-      AlgEquiv.restrictNormalHom (cyclotomicLeftSubfield a b hn) v = 1 ∧
-      AlgEquiv.restrictNormalHom (cyclotomicRightSubfield a b hn) v = u := by
-  classical
-  haveI : NeZero (a * b) := ⟨hn⟩
-  haveI : NeZero a := ⟨left_ne_zero_of_mul hn⟩
-  haveI : NeZero b := ⟨right_ne_zero_of_mul hn⟩
-  let K := CyclotomicABField a b
-  let Fa := cyclotomicLeftSubfield a b hn
-  let Fb := cyclotomicRightSubfield a b hn
-  haveI : IsCyclotomicExtension {a} ℚ Fa := cyclotomicLeftSubfield_isCyclotomicExtension hn
-  haveI : IsCyclotomicExtension {b} ℚ Fb := cyclotomicRightSubfield_isCyclotomicExtension hn
-  haveI : IsGalois ℚ Fa := IsCyclotomicExtension.isGalois {a} ℚ Fa
-  haveI : IsGalois ℚ Fb := IsCyclotomicExtension.isGalois {b} ℚ Fb
-  let ub : (ZMod b)ˣ := IsCyclotomicExtension.Rat.galEquivZMod b Fb u
-  obtain ⟨w, hwa, hwb⟩ := zmod_units_crt_exists_of_coprime_right hab ub
-  let v : Gal(K/ℚ) := (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K).symm w
-  have hvw : IsCyclotomicExtension.Rat.galEquivZMod (a * b) K v = w := by
-    dsimp [v]
-    exact MulEquiv.apply_symm_apply (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K) w
-  refine ⟨v, ?_, ?_⟩
-  · apply (IsCyclotomicExtension.Rat.galEquivZMod a Fa).injective
-    have hrest := IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply
-      (n := a * b) (m := a) (K := K) (F := Fa) (Nat.dvd_mul_right a b) v
-    have hrest' : IsCyclotomicExtension.Rat.galEquivZMod a Fa
-        ((AlgEquiv.restrictNormalHom Fa) v) =
-        ZMod.unitsMap (Nat.dvd_mul_right a b)
-          (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K v) := by
-      simpa [AlgEquiv.restrictNormalHom] using hrest
-    calc
-      IsCyclotomicExtension.Rat.galEquivZMod a Fa ((AlgEquiv.restrictNormalHom Fa) v)
-          = ZMod.unitsMap (Nat.dvd_mul_right a b)
-              (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K v) := hrest'
-      _ = 1 := by rw [hvw, hwa]
-      _ = IsCyclotomicExtension.Rat.galEquivZMod a Fa (1 : Gal(Fa/ℚ)) := by simp
-  · apply (IsCyclotomicExtension.Rat.galEquivZMod b Fb).injective
-    have hrest := IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply
-      (n := a * b) (m := b) (K := K) (F := Fb) (Nat.dvd_mul_left b a) v
-    have hrest' : IsCyclotomicExtension.Rat.galEquivZMod b Fb
-        ((AlgEquiv.restrictNormalHom Fb) v) =
-        ZMod.unitsMap (Nat.dvd_mul_left b a)
-          (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K v) := by
-      simpa [AlgEquiv.restrictNormalHom] using hrest
-    calc
-      IsCyclotomicExtension.Rat.galEquivZMod b Fb ((AlgEquiv.restrictNormalHom Fb) v)
-          = ZMod.unitsMap (Nat.dvd_mul_left b a)
-              (IsCyclotomicExtension.Rat.galEquivZMod (a * b) K v) := hrest'
-      _ = IsCyclotomicExtension.Rat.galEquivZMod b Fb u := by
-          rw [hvw, hwb]
-
-/--
-The Galois automorphism used in Peterfalvi (1.9)(b): for an integer `k`
-prime to `a`, choose an automorphism of `ℚ_{ab}` whose restriction to `ℚ_a`
-is the `k`-power automorphism and whose restriction to `ℚ_b` is trivial.
--/
-public theorem proposition_1_9_b_galois_automorphism {a b k : ℕ} [NeZero a]
-    (hn : a * b ≠ 0) (hab : a.Coprime b) (hk : k.Coprime a) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ),
-      IsCyclotomicExtension.Rat.galEquivZMod a (cyclotomicLeftSubfield a b hn)
-        ((AlgEquiv.restrictNormalHom (cyclotomicLeftSubfield a b hn)) v) =
-          ZMod.unitOfCoprime k hk ∧
-      AlgEquiv.restrictNormalHom (cyclotomicRightSubfield a b hn) v = 1 := by
-  classical
-  haveI : IsCyclotomicExtension {a} ℚ (cyclotomicLeftSubfield a b hn) :=
-    cyclotomicLeftSubfield_isCyclotomicExtension hn
-  haveI : IsGalois ℚ (cyclotomicLeftSubfield a b hn) :=
-    IsCyclotomicExtension.isGalois {a} ℚ (cyclotomicLeftSubfield a b hn)
-  let u : Gal((cyclotomicLeftSubfield a b hn)/ℚ) :=
-    (IsCyclotomicExtension.Rat.galEquivZMod a (cyclotomicLeftSubfield a b hn)).symm
-      (ZMod.unitOfCoprime k hk)
-  obtain ⟨v, hv_left, hv_right⟩ := proposition_1_9_a hn hab u
-  refine ⟨v, ?_, hv_right⟩
-  rw [hv_left]
-  exact MulEquiv.apply_symm_apply
-    (IsCyclotomicExtension.Rat.galEquivZMod a (cyclotomicLeftSubfield a b hn))
-    (ZMod.unitOfCoprime k hk)
 
 /--
 The automorphism existence in Peterfalvi (1.9)(b), with the book's integer
@@ -623,35 +506,6 @@ public theorem virtualCharacter_apply_galois_eq_argumentPow
       (N := N) (e := e) (τ := τ) hτroot (ρ i) hdivGN g
   simp [map_mul, hρg]
 
-/--
-Peterfalvi (1.9)(b), character-value exponent core.  If `e ≡ k (mod a)` and
-`e ≡ 1 (mod b)`, then the corresponding cyclotomic Galois conjugate satisfies
-the two displayed character formulas.
--/
-public theorem proposition_1_9_b_trace_power
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b k e : ℕ} (hcard : Nat.card G = a * b)
-    (hea : e ≡ k [MOD a]) (heb : e ≡ 1 [MOD b])
-    (ρ : Representation ℂ G V) :
-    (∀ g : G, orderOf g ∣ a →
-      characterGaloisConjugateByExponent ρ e g = ρ.character (g ^ k)) ∧
-    (∀ g : G, (orderOf g).Coprime a →
-      characterGaloisConjugateByExponent ρ e g = ρ.character g) := by
-  constructor
-  · intro g hg
-    exact Representation.representation_character_pow_eq_of_modEq_of_order_dvd ρ g hg hea
-  · intro g hg
-    have horder_card : orderOf g ∣ Nat.card G := orderOf_dvd_natCard g
-    have horder_ab : orderOf g ∣ a * b := by
-      simpa [hcard] using horder_card
-    have horder_b : orderOf g ∣ b := by
-      have horder_ba : orderOf g ∣ b * a := by
-        simpa [mul_comm] using horder_ab
-      exact hg.dvd_of_dvd_mul_right horder_ba
-    have hmod : e ≡ 1 [MOD orderOf g] := Nat.ModEq.of_dvd horder_b heb
-    have hchar := Representation.representation_character_pow_eq_of_modEq ρ g hmod
-    simpa [characterGaloisConjugateByExponent] using hchar
 
 /--
 Integer-exponent form of the character-value calculation in Peterfalvi
@@ -698,46 +552,6 @@ public theorem proposition_1_9_b_trace_zpow
         _ = g := by simp
     simp [characterGaloisConjugateByExponent, hpow]
 
-/--
-Actual Galois-action form of the character-value calculation in Peterfalvi
-(1.9)(b).  If a complex Galois automorphism acts on all `(ab)`-th roots as
-`z ↦ z ^ e`, then its action on every representation character is the
-argument-power operation used in the exponent model.
--/
-public theorem proposition_1_9_b_complex_galois_action
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b e : ℕ} {k : ℤ} (hcard : Nat.card G = a * b)
-    (hea : (e : ℤ) ≡ k [ZMOD a])
-    (heb : (e : ℤ) ≡ (1 : ℤ) [ZMOD b])
-    (τ : Gal(ℂ/ℚ))
-    (hτroot : ∀ z : ℂ, z ^ (a * b) = 1 → τ z = z ^ e)
-    (ρ : Representation ℂ G V) :
-    (∀ g : G, orderOf g ∣ a →
-      characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character (g ^ k)) ∧
-    (∀ g : G, (orderOf g).Coprime a →
-      characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character g) := by
-  have hdivGN : Nat.card G ∣ a * b := by rw [hcard]
-  have hτχ :
-      ∀ g : G, τ (ρ.character g) = ρ.character (g ^ e) :=
-    representation_character_apply_galois_eq_argumentPow
-      (N := a * b) (e := e) hτroot ρ hdivGN
-  rcases proposition_1_9_b_trace_zpow (G := G) (V := V)
-      (a := a) (b := b) (e := e) (k := k) hcard hea heb ρ with
-    ⟨hdiv, hcop⟩
-  constructor
-  · intro g hg
-    calc
-      characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character (g ^ e) := by
-        simpa [characterGaloisConjugateByAutomorphism] using hτχ g
-      _ = characterGaloisConjugateByExponent ρ e g := rfl
-      _ = ρ.character (g ^ k) := hdiv g hg
-  · intro g hg
-    calc
-      characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character (g ^ e) := by
-        simpa [characterGaloisConjugateByAutomorphism] using hτχ g
-      _ = characterGaloisConjugateByExponent ρ e g := rfl
-      _ = ρ.character g := hcop g hg
 
 /-- If a finite group has order `a * b`, then this product is nonzero. -/
 public theorem nat_card_factor_ne_zero
@@ -747,20 +561,6 @@ public theorem nat_card_factor_ne_zero
     simp [← hcard]
   exact hpos.ne'
 
-/--
-The Galois-side condition used in Peterfalvi (1.9)(b): the automorphism acts
-as the `k`-power automorphism on `ℚ_a` and trivially on `ℚ_b`.
--/
-@[expose] public def proposition_1_9_b_galoisCondition
-    {G : Type*} [Group G] [Finite G] {a b k : ℕ}
-    (hcard : Nat.card G = a * b) (hk : k.Coprime a)
-    (v : Gal((CyclotomicABField a b)/ℚ)) : Prop :=
-  let hn : a * b ≠ 0 := nat_card_factor_ne_zero (G := G) hcard
-  letI : NeZero a := ⟨left_ne_zero_of_mul hn⟩
-  IsCyclotomicExtension.Rat.galEquivZMod a (cyclotomicLeftSubfield a b hn)
-      ((AlgEquiv.restrictNormalHom (cyclotomicLeftSubfield a b hn)) v) =
-        ZMod.unitOfCoprime k hk ∧
-    AlgEquiv.restrictNormalHom (cyclotomicRightSubfield a b hn) v = 1
 
 @[expose] public def proposition_1_9_b_galoisCondition_int
     {G : Type*} [Group G] [Finite G] {a b : ℕ} {k : ℤ}
@@ -773,136 +573,5 @@ as the `k`-power automorphism on `ℚ_a` and trivially on `ℚ_b`.
         ZMod.unitOfIsCoprime k hk ∧
     AlgEquiv.restrictNormalHom (cyclotomicRightSubfield a b hn) v = 1
 
-/--
-Natural-exponent helper for Peterfalvi (1.9)(b), bundled with the CRT
-automorphism from part (a).  The book-facing statement is
-`proposition_1_9_b`, where `k : ℤ`.
--/
-public theorem proposition_1_9_b_nat
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b k : ℕ} (hcard : Nat.card G = a * b)
-    (hab : a.Coprime b) (hk : k.Coprime a)
-    (ρ : Representation ℂ G V) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ), ∃ e : ℕ,
-      proposition_1_9_b_galoisCondition (G := G) hcard hk v ∧
-      e ≡ k [MOD a] ∧ e ≡ 1 [MOD b] ∧
-      (∀ g : G, orderOf g ∣ a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character (g ^ k)) ∧
-      (∀ g : G, (orderOf g).Coprime a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character g) := by
-  classical
-  have hn : a * b ≠ 0 := by
-    have hpos : 0 < a * b := by
-      simp [← hcard]
-    exact hpos.ne'
-  haveI : NeZero a := ⟨left_ne_zero_of_mul hn⟩
-  obtain ⟨v, hv_left, hv_right⟩ :=
-    proposition_1_9_b_galois_automorphism (a := a) (b := b) (k := k) hn hab hk
-  let e : ℕ := Nat.chineseRemainder hab k 1
-  have hea : e ≡ k [MOD a] := (Nat.chineseRemainder hab k 1).property.1
-  have heb : e ≡ 1 [MOD b] := (Nat.chineseRemainder hab k 1).property.2
-  rcases proposition_1_9_b_trace_power (G := G) (V := V)
-      (a := a) (b := b) (k := k) (e := e) hcard hea heb ρ with
-    ⟨hdiv, hcop⟩
-  refine ⟨v, e, ?_, hea, heb, hdiv, hcop⟩
-  dsimp [proposition_1_9_b_galoisCondition]
-  exact ⟨hv_left, hv_right⟩
-
-/--
-Peterfalvi (1.9)(b), integer-exponent form.  This preserves the book's
-hypothesis `k ∈ ℤ` and `(k,a)=1`; the value action is still expressed through
-the exponent model `characterGaloisConjugateByExponent`.
--/
-public theorem proposition_1_9_b
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b : ℕ} {k : ℤ} (hcard : Nat.card G = a * b)
-    (hab : a.Coprime b) (hk : IsCoprime k (a : ℤ))
-    (ρ : Representation ℂ G V) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ), ∃ e : ℕ,
-      proposition_1_9_b_galoisCondition_int (G := G) hcard hk v ∧
-      (e : ℤ) ≡ k [ZMOD a] ∧
-      (e : ℤ) ≡ (1 : ℤ) [ZMOD b] ∧
-      (∀ g : G, orderOf g ∣ a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character (g ^ k)) ∧
-      (∀ g : G, (orderOf g).Coprime a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character g) := by
-  classical
-  have hn : a * b ≠ 0 := by
-    have hpos : 0 < a * b := by
-      simp [← hcard]
-    exact hpos.ne'
-  haveI : NeZero a := ⟨left_ne_zero_of_mul hn⟩
-  obtain ⟨v, hv_left, hv_right⟩ :=
-    proposition_1_9_b_galois_automorphism_int (a := a) (b := b) (k := k) hn hab hk
-  obtain ⟨w, hwa, hwb⟩ :=
-    zmod_units_crt_exists_of_coprime hab (ZMod.unitOfIsCoprime k hk)
-  let e : ℕ := (w : ZMod (a * b)).val
-  have hea : (e : ℤ) ≡ k [ZMOD a] :=
-    zmod_units_crt_val_modEq_left_int hn hk hwa
-  have heb : (e : ℤ) ≡ (1 : ℤ) [ZMOD b] :=
-    zmod_units_crt_val_modEq_right_one hn hwb
-  rcases proposition_1_9_b_trace_zpow (G := G) (V := V)
-      (a := a) (b := b) (e := e) (k := k) hcard hea heb ρ with
-    ⟨hdiv, hcop⟩
-  refine ⟨v, e, ?_, hea, heb, hdiv, hcop⟩
-  dsimp [proposition_1_9_b_galoisCondition_int]
-  exact ⟨hv_left, hv_right⟩
-
-/--
-Peterfalvi (1.9)(b) with the actual action of a complex Galois automorphism on
-character values made explicit.  The returned `v` is the cyclotomic-field
-automorphism from the CRT construction; the final clause records the character
-formulas for any complex automorphism whose action on `(ab)`-th roots is the
-same exponent action.
--/
-public theorem proposition_1_9_b_with_complex_galois_action
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b : ℕ} {k : ℤ} (hcard : Nat.card G = a * b)
-    (hab : a.Coprime b) (hk : IsCoprime k (a : ℤ))
-    (ρ : Representation ℂ G V) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ), ∃ e : ℕ,
-      proposition_1_9_b_galoisCondition_int (G := G) hcard hk v ∧
-      (e : ℤ) ≡ k [ZMOD a] ∧
-      (e : ℤ) ≡ (1 : ℤ) [ZMOD b] ∧
-      (∀ g : G, orderOf g ∣ a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character (g ^ k)) ∧
-      (∀ g : G, (orderOf g).Coprime a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character g) ∧
-      (∀ τ : Gal(ℂ/ℚ),
-        (∀ z : ℂ, z ^ (a * b) = 1 → τ z = z ^ e) →
-          (∀ g : G, orderOf g ∣ a →
-            characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character (g ^ k)) ∧
-          (∀ g : G, (orderOf g).Coprime a →
-            characterGaloisConjugateByAutomorphism τ ρ.character g = ρ.character g)) := by
-  rcases proposition_1_9_b hcard hab hk ρ with
-    ⟨v, e, hv, hea, heb, hdiv, hcop⟩
-  refine ⟨v, e, hv, hea, heb, hdiv, hcop, ?_⟩
-  intro τ hτroot
-  exact proposition_1_9_b_complex_galois_action hcard hea heb τ hτroot ρ
-
-/--
-Compatibility alias for the exponent-form integer statement of Peterfalvi
-(1.9)(b).  The theorem `proposition_1_9_b_with_complex_galois_action` also
-records the actual action of a compatible complex Galois automorphism on
-character values.
--/
-public theorem proposition_1_9_b_int
-    {G V : Type*} [Group G] [Finite G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {a b : ℕ} {k : ℤ} (hcard : Nat.card G = a * b)
-    (hab : a.Coprime b) (hk : IsCoprime k (a : ℤ))
-    (ρ : Representation ℂ G V) :
-    ∃ v : Gal((CyclotomicABField a b)/ℚ), ∃ e : ℕ,
-      proposition_1_9_b_galoisCondition_int (G := G) hcard hk v ∧
-      (e : ℤ) ≡ k [ZMOD a] ∧
-      (e : ℤ) ≡ (1 : ℤ) [ZMOD b] ∧
-      (∀ g : G, orderOf g ∣ a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character (g ^ k)) ∧
-      (∀ g : G, (orderOf g).Coprime a →
-        characterGaloisConjugateByExponent ρ e g = ρ.character g) :=
-  proposition_1_9_b hcard hab hk ρ
 
 end Section1

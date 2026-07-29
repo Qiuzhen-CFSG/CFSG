@@ -412,21 +412,6 @@ public theorem subgroupCentralizerIn_subgroupOf_eq {G : Type*} [Group G]
     apply Subtype.ext
     exact hxC (r : G) (by simpa [Subgroup.mem_subgroupOf] using hrR)
 
-public theorem le_normalizer_subgroupCentralizerIn
-    {G : Type*} [Group G] {A P S : Subgroup G}
-    (hS_norm_A : S ≤ Subgroup.normalizer (A : Set G))
-    (hS_cent_P : S ≤ Subgroup.centralizer (P : Set G)) :
-    S ≤ Subgroup.normalizer (subgroupCentralizerIn A P : Set G) := by
-  have hS_norm_cent :
-      S ≤ Subgroup.normalizer (Subgroup.centralizer (P : Set G) : Set G) :=
-    hS_cent_P.trans
-      (Subgroup.le_normalizer :
-        Subgroup.centralizer (P : Set G) ≤
-          Subgroup.normalizer (Subgroup.centralizer (P : Set G) : Set G))
-  simpa [subgroupCentralizerIn] using
-    Subgroup.le_normalizer_inf
-      (G := G) (A := S) (H := A) (K := Subgroup.centralizer (P : Set G))
-      hS_norm_A hS_norm_cent
 
 section ZGroupLemmas
 

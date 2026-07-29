@@ -18,66 +18,6 @@ universe u v w
 
 /-! ## (14.4) -/
 
-/-- Peterfalvi `(14.4)`. -/
-@[expose] public def theorem_14_4_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L _ : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Finset (Section1.ClassFunction L))
-    (_ : G → Subgroup G)
-    (_ _ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (_ : Section1.ClassFunction L)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction Smax)
-    (_ : Section1.ClassFunction Tmax)
-    (_ : Section1.ClassFunction L)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    Section13.case_9_7_b_for_section13 Tmax D q p v ∧
-        v = (q ^ p - 1) / (q - 1)
-
-
-public theorem section14_theorem_14_4_source_data_of_not_swapped_theorem_13_10
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotT : ¬ Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v) :
-    Section13.case_9_7_b_sourceDataForSection13 Tmax Q V W2 W1 D q p v ∧
-      v = (q ^ p - 1) / (q - 1) := by
-  rcases ((Section13.theorem_13_3 Tmax Smax W W2 W1 Q P V U D C
-      Tfam Sfam τT τS q p v u d c
-      (section14_hypothesis_13_1_sourceData_swap hctx.1)).2 hnotT) with
-    ⟨_hDbot, hcase, hv⟩
-  exact ⟨hcase, hv⟩
-
-public theorem section14_theorem_14_4_case_b_of_not_swapped_theorem_13_10
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotT : ¬ Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v) :
-    Section13.case_9_7_b_for_section13 Tmax D q p v ∧
-      v = (q ^ p - 1) / (q - 1) := by
-  rcases section14_theorem_14_4_source_data_of_not_swapped_theorem_13_10
-      hctx hnotT with
-    ⟨hcase, hv⟩
-  exact ⟨section14_case_9_7_b_for_section13_of_sourceData hcase, hv⟩
 
 public theorem section14_theorem_14_4_source_data_of_q_lt_p
     {G : Type u} [Group G] [Finite G]
@@ -139,32 +79,6 @@ public theorem section14_theorem_14_4_source_data_of_q_lt_p
     exact hq.ne_one
   exact ⟨hcase, h13_15.1 hq_mod_ne_one⟩
 
-public theorem section14_theorem_14_4_mixed_13_10_source_bridge
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {Lfam : Finset (Section1.ClassFunction L)}
-    {RL : G → Subgroup G}
-    {τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {φ : Section1.ClassFunction L}
-    {μ01 : Section1.ClassFunction Smax}
-    {ν10 : Section1.ClassFunction Tmax}
-    {βS : Section1.ClassFunction Smax}
-    {βT : Section1.ClassFunction Tmax}
-    {βL : Section1.ClassFunction L}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_h143 : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
-      Lfam RL τL τL₁ φ μ01 ν10 βS βT βL)
-    (_hnot : ¬ Section13.theorem_13_10_hypothesis Smax P C Sfam p q u)
-    (_h10T : Section13.theorem_13_10_hypothesis Tmax Q D Tfam q p v) :
-    Section13.case_9_7_b_sourceDataForSection13 Tmax Q V W2 W1 D q p v ∧
-      v = (q ^ p - 1) / (q - 1) := by
-  exact section14_theorem_14_4_source_data_of_q_lt_p hctx
 
 public theorem section14_theorem_14_4_source_data_bridge
     {G : Type u} [Group G] [Finite G]

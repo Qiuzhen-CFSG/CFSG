@@ -437,23 +437,6 @@ public theorem section12_primeRank_le_groupRank_of_normal_hall_pre
       section12_generatorRank_le_groupRank_of_subgroup_pre
         (G := R) (q := p.val) p.2 hB_le_H hBp hBcomm
 
-public theorem section12_primeRank_le_groupRank_of_normal_hall_ambient_pre
-    {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
-    {p : Nat.Primes} (hpσ : p ∈ section10SigmaPrimes M) :
-    primeRank p.val M ≤ groupRank (section10Msigma M) := by
-  classical
-  have hRankSub :
-      primeRank p.val M ≤ groupRank (section10MsigmaSubgroup M) :=
-    section12_primeRank_le_groupRank_of_normal_hall_pre
-      (R := M) (H := section10MsigmaSubgroup M)
-      (theorem_10_2_b (M := M) hM).2 hpσ
-  let e : section10MsigmaSubgroup M ≃* section10Msigma M :=
-    Subgroup.equivMapOfInjective (f := M.subtype)
-      (section10MsigmaSubgroup M) M.subtype_injective
-  have hRankSub_le :
-      groupRank (section10MsigmaSubgroup M) ≤ groupRank (section10Msigma M) :=
-    section12_groupRank_le_of_equiv e.symm
-  exact hRankSub.trans hRankSub_le
 
 public theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_pre
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)

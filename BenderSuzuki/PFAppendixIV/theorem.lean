@@ -1197,68 +1197,6 @@ private theorem
       rho K T hKker hcentral
   simpa [T, Z0, Subgroup.index_map_equiv, Subgroup.index_prod] using hbound
 
-private theorem irreducible_degree_sq_le_centerQuotient_index_appendixIV
-    {G : Type*} [Group G] [Finite G]
-    (d : FeitSibleyData G)
-    (hprod : Section2.IsInternalDirectProduct d.Q d.S d.Q1)
-    (Q3 : Subgroup d.H) [Q3.Normal] (_hQ3le : Q3 ≤ d.Q1)
-    (n : Nat) (rho : Representation ℂ d.Q (Fin n → ℂ))
-    (hirr : Representation.IsIrreducible rho)
-    (hrepker : subgroupInRepresentationKernel rho
-      ((Subgroup.map d.S.subtype (derivedSubgroup d.S) ⊔ Q3).subgroupOf d.Q)) :
-    n ^ 2 ≤
-      (Subgroup.comap (QuotientGroup.mk' (Q3.subgroupOf d.Q1))
-        (Subgroup.center (d.Q1 ⧸ Q3.subgroupOf d.Q1))).index := by
-  let N : Subgroup d.Q1 := Q3.subgroupOf d.Q1
-  letI : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
-  let e : d.S × d.Q1 ≃* d.Q :=
-    Section3.internalDirectProductMulEquiv hprod
-  have hker : ∀ x : (commutator d.S).prod N, rho (e x) = 1 := by
-    intro x
-    have hs : ((x.1.1 : d.S) : d.H) ∈
-        Subgroup.map d.S.subtype (derivedSubgroup d.S) := by
-      apply Subgroup.mem_map.mpr
-      exact ⟨x.1.1, x.property.1, rfl⟩
-    have hq : (x.1.2 : d.H) ∈ Q3 := x.property.2
-    have hinl :
-        ((e (MonoidHom.inl d.S d.Q1 x.1.1) : d.Q) : d.H) =
-          (x.1.1 : d.H) := by
-      simpa [e] using congrArg Subtype.val
-        (Section3.internalDirectProductMulEquiv_apply_inl hprod x.1.1)
-    have hinr :
-        ((e (MonoidHom.inr d.S d.Q1 x.1.2) : d.Q) : d.H) =
-          (x.1.2 : d.H) := by
-      simpa [e] using congrArg Subtype.val
-        (Section3.internalDirectProductMulEquiv_apply_inr hprod x.1.2)
-    have hxdecomp :
-        (x.1 : d.S × d.Q1) =
-          MonoidHom.inl d.S d.Q1 x.1.1 *
-            MonoidHom.inr d.S d.Q1 x.1.2 := by
-      ext <;> simp
-    have hemap :
-        e x = e (MonoidHom.inl d.S d.Q1 x.1.1 *
-          MonoidHom.inr d.S d.Q1 x.1.2) :=
-      congrArg e hxdecomp
-    have heq : ((e x : d.Q) : d.H) =
-        (x.1.1 : d.H) * (x.1.2 : d.H) := by
-      rw [hemap, map_mul]
-      exact congrArg₂ (fun a b : d.H => a * b) hinl hinr
-    apply hrepker ⟨e x, ?_⟩
-    change ((e x : d.Q) : d.H) ∈
-      Subgroup.map d.S.subtype (derivedSubgroup d.S) ⊔ Q3
-    rw [heq]
-    exact
-      (Subgroup.map d.S.subtype (derivedSubgroup d.S) ⊔ Q3).mul_mem
-        ((show Subgroup.map d.S.subtype (derivedSubgroup d.S) ≤
-            Subgroup.map d.S.subtype (derivedSubgroup d.S) ⊔ Q3
-          from le_sup_left) hs)
-        ((show Q3 ≤
-            Subgroup.map d.S.subtype (derivedSubgroup d.S) ⊔ Q3
-          from le_sup_right) hq)
-  letI : Representation.IsIrreducible rho := hirr
-  simpa [N, e, derivedSubgroup, derivedSeries_one] using
-    (irreducible_finrank_sq_le_index_prod_centerModulo_appendixIV
-      e N rho hker)
 private theorem subgroupInKernel'_mono_appendixIV
     {L : Type*} [Group L] {A B : Subgroup L}
     {chi : ClassFunction L} (hAB : A ≤ B)
@@ -8021,20 +7959,6 @@ private theorem step7_congr_mul_right
   convert hqgamma using 1
   ring
 
-private theorem step7_congr_add
-    {n : Nat} {alpha beta gamma delta : Complex}
-    (h1 : algebraicIntegerCongruentModNat n alpha beta)
-    (h2 : algebraicIntegerCongruentModNat n gamma delta) :
-    algebraicIntegerCongruentModNat n (alpha + gamma) (beta + delta) := by
-  rcases h1 with ⟨halpha, hbeta, hq1⟩
-  rcases h2 with ⟨hgamma, hdelta, hq2⟩
-  unfold algebraicIntegerCongruentModNat
-  refine ⟨halpha.add hgamma, hbeta.add hdelta, ?_⟩
-  have hq : IsIntegral Int
-      (((alpha - beta) / (n : Complex)) + ((gamma - delta) / (n : Complex))) :=
-    hq1.add hq2
-  convert hq using 1
-  ring
 
 private theorem step7_congr_sum
     {n : Nat} {ι : Type*} (s : Finset ι) (alpha beta : ι → Complex)

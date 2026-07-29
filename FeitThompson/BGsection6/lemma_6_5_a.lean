@@ -27,16 +27,6 @@ theorem lemma_6_5_mem_normalizer_of_conjBy_eq
     g ∈ Subgroup.normalizer (G := G) H := by
   simpa using mem_normalizer_of_conjBy_eq_local (H := H) hg
 
-theorem lemma_6_5_mem_normalizer_of_conjBy_le_self
-    {G : Type*} [Group G] [Finite G] {H : Subgroup G} {g : G}
-    (hg : H.conjBy g ≤ H) :
-    g ∈ Subgroup.normalizer (G := G) H := by
-  have hcard : Nat.card (H.conjBy g) = Nat.card H := by
-    simpa [Subgroup.conjBy] using
-      (Subgroup.card_map_of_injective (K := H) (f := (MulAut.conj g).toMonoidHom)
-        (hf := EquivLike.injective (MulAut.conj g)))
-  have hEq : H.conjBy g = H := Subgroup.eq_of_le_of_card_ge hg (by simp [hcard])
-  exact lemma_6_5_mem_normalizer_of_conjBy_eq hEq
 
 theorem lemma_6_5_conjBy_inv_mul_cancel
     {G : Type*} [Group G] (H : Subgroup G) {a b : G}

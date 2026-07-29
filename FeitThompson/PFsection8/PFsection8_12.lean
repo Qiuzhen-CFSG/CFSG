@@ -63,37 +63,6 @@ private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_mulEquiv
     exact hle.trans hQ.2
   exact ⟨hcomm, hrank⟩
 
-private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_quotient_complement
-    {G : Type u} [Group G] [Finite G]
-    {M H U : Subgroup G}
-    (hcomp : section12ComplementIn M H U)
-    (hquot : section16QuotientHasAbelianSylowRankAtMostTwo H M) :
-    section16HasAbelianSylowRankAtMostTwo U := by
-  classical
-  rcases hcomp with ⟨hHM, hUM, hsup, hdisj⟩
-  rcases hquot with ⟨_hHMq, hNorm, hRankQuot⟩
-  haveI : (H.subgroupOf M).Normal := hNorm
-  have hsup_local : U.subgroupOf M ⊔ H.subgroupOf M = ⊤ := by
-    calc
-      U.subgroupOf M ⊔ H.subgroupOf M = (U ⊔ H).subgroupOf M := by
-        symm
-        exact Subgroup.subgroupOf_sup (A := U) (A' := H) (B := M) hUM hHM
-      _ = ⊤ := by
-        rw [sup_comm, hsup]
-        simp
-  have hcomp' : (U.subgroupOf M).IsComplement' (H.subgroupOf M) := by
-    refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
-    · rw [Subgroup.disjoint_def]
-      intro x hxU hxH
-      apply Subtype.ext
-      exact hdisj.le_bot ⟨by simpa [Subgroup.mem_subgroupOf] using hxH,
-        by simpa [Subgroup.mem_subgroupOf] using hxU⟩
-    · simpa [hsup_local] using
-        (Subgroup.mul_normal (U.subgroupOf M) (H.subgroupOf M)).symm
-  let eQ : M ⧸ H.subgroupOf M ≃* U.subgroupOf M := hcomp'.QuotientMulEquiv
-  let eU : U.subgroupOf M ≃* U := Subgroup.subgroupOfEquivOfLe hUM
-  let e : U ≃* M ⧸ H.subgroupOf M := eU.symm.trans eQ.symm
-  exact theorem_8_12_hasAbelianSylowRankAtMostTwo_of_mulEquiv e hRankQuot
 
 private theorem theorem_8_12_hasAbelianSylowRankAtMostTwo_of_conjBy
     {G : Type u} [Group G] [Finite G]
@@ -137,28 +106,6 @@ private theorem theorem_8_12_typeII_data_of_source_branch
   rcases hBranch with ⟨W1, W2, U1, U0, hP, hCond, hComm, hNorm, hF⟩
   exact ⟨U, W1, W2, U1, U0, hP, hCond, hComm, hNorm, hF⟩
 
-private theorem theorem_8_12_typeI_rank_of_source
-    {G : Type u} [Group G] [Finite G]
-    {M MF U : Subgroup G}
-    (hType : section16TypeI M MF)
-    (hBranch :
-      ∃ U1 U0 : Subgroup G,
-        typeFData M MF U U1 U0 ∧
-          (section16TISubset (section16NonidentityElements (MF : Set G)) ∨
-            (IsMulCommutative MF ∧ groupRank MF = 2) ∨
-              ((∀ p : Nat.Primes, p ∈ subgroupPrimeSet MF →
-                Monoid.exponent U ∣ p.val - 1) ∧
-                ∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-                  IsCyclic (section10PPrimeCore p MF)))) :
-    section16HasAbelianSylowRankAtMostTwo U := by
-  rcases hBranch with ⟨U1, U0, hF, _hAlt⟩
-  rcases hF with
-    ⟨_hsolv, _hodd, _hMF, _hMFpos, _hMFlt, _hUne, hcomp, _hU1le,
-      _hU1comm, _hU1norm, _hCent, _hU0le, _hExp, _hFrob⟩
-  rcases hType with
-    ⟨_hpos, _hlt, _hAbelianControl, _hFrobComp, _hKappa, hQuotRank, _hAltType⟩
-  exact theorem_8_12_hasAbelianSylowRankAtMostTwo_of_quotient_complement
-    hcomp hQuotRank
 
 private theorem theorem_8_12_unique_maximal_of_theoremB_subgroups
     {G : Type u} [Group G] [Finite G]
@@ -504,15 +451,6 @@ private theorem theorem_8_12_bg_typeI_of_source
   · exact False.elim
       (hNot.2.2.2 (theorem_8_8_typeV_to_source_public (G := G) hM hMF hTypeV))
 
-public theorem theorem_8_12_bg_typeI_of_source_public
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF Ms : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hMs : msChoiceSource M MF Ms)
-    (hSrcI : typeIDefinitionData M MF) :
-    section16TypeI M MF :=
-  theorem_8_12_bg_typeI_of_source (G := G) hM hMF hMs hSrcI
 
 private theorem theorem_8_12_bg_typeII_of_source
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -677,25 +615,6 @@ private theorem theorem_8_12_typeII_canonical_conjugate_of_source
   exact ⟨K, Uc, d, hKU, theorem_16_B (G := G) hM hMF hKU,
     hMF_eq, hCompCanonical, hUconj⟩
 
-private theorem theorem_8_12_typeII_rank_of_source
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF U Ms : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hMs : msChoiceSource M MF Ms)
-    (hBranch :
-      ∃ W1 W2 U1 U0 : Subgroup G,
-        typePDefinitionData M MF U W1 W2 ∧
-          typeIIToIVSourceCondition M U W1 ∧
-          IsMulCommutative U ∧
-          ¬ Subgroup.normalizer (U : Set G) ≤ M ∧
-          typeFData (ambientDerivedSubgroup M) MF U U1 U0) :
-    section16HasAbelianSylowRankAtMostTwo U := by
-  rcases theorem_8_12_typeII_canonical_conjugate_of_source
-      (G := G) (M := M) (MF := MF) (U := U) (Ms := Ms)
-      hM hMF hMs hBranch with
-    ⟨K, Uc, d, _hKU, hB, _hMF_eq, _hCompCanonical, hUconj⟩
-  exact theorem_8_12_hasAbelianSylowRankAtMostTwo_of_conjBy hUconj hB.1
 
 public theorem theorem_8_12_typeII_groupRank_le_two_of_source
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -783,64 +702,6 @@ private theorem theorem_8_12_typeII_conclusion_of_source
       hM hMF_eq hdM hUconj hB.2.2.2.1
   · simpa [hSet] using hB.2.2.2.2
 
-public theorem theorem_8_12_centralizer_le_of_source_diff
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF U Ms : Subgroup G}
-    {A A0 A1 : Set G} {x : G}
-    (hSrc : theorem_8_12_source_data M MF U Ms A A0 A1)
-    (hx : x ∈ A \ A1) :
-    Subgroup.centralizer ({x} : Set G) ≤ M := by
-  classical
-  rcases hSrc with ⟨hNotation, hCases⟩
-  rcases hNotation with ⟨hM, hMF, hMs, _hA1, _hNotationCases⟩
-  rcases hCases with hTypeI | hTypeII
-  · rcases hTypeI with ⟨hBranch, hA, hA1'⟩
-    have hSrcI : typeIDefinitionData M MF :=
-      theorem_8_12_typeI_data_of_source_branch hBranch
-    have hType : section16TypeI M MF :=
-      theorem_8_12_bg_typeI_of_source (G := G) hM hMF hMs hSrcI
-    rcases hBranch with ⟨U1, U0, hF, _hAlt⟩
-    rcases hF with
-      ⟨_hsolv, _hodd, _hMFsrc, _hMFpos, _hMFlt, _hUne, hcomp, _hU1le,
-        _hU1comm, _hU1norm, _hCent, _hU0le, _hExp, _hFrob⟩
-    rcases section16_typeI_KUData_of_complement
-        (G := G) hM hMF hType hcomp with
-      ⟨hKU, hMF_eq⟩
-    have hSet :
-        A \ A1 = section16ASet M U \ (section10Msigma M : Set G) :=
-      theorem_8_12_source_diff_eq_ASet_diff_msigma_of_complement
-        (G := G) (M := M) (D := M) (MF := MF) (U := U)
-        (A := A) (A1 := A1) le_rfl hMF hMF_eq hcomp hA hA1'
-    exact section16_ASet_diff_msigma_centralizer_le_public
-      (G := G) (M := M) (K := (⊥ : Subgroup G)) (U := U)
-      hM hKU (by simpa [hSet] using hx)
-  · rcases hTypeII with ⟨hBranch, hA, hA1'⟩
-    rcases theorem_8_12_typeII_canonical_conjugate_of_source
-        (G := G) (M := M) (MF := MF) (U := U) (Ms := Ms)
-        hM hMF hMs hBranch with
-      ⟨K, Uc, _d, hKU, _hB, hMF_eq, hCompCanonical, _hUconj⟩
-    rcases hBranch with ⟨W1, W2, U1, U0, hP, _hCond, _hComm, _hNorm, _hF⟩
-    rcases hP with
-      ⟨_hMFsrc, _hW1cyc, _hW1ne, _hW1Hall, _hW1Comp, _hUleD, _hUnil,
-        _hW1norm, hCompU, _hMFnotCyc, _hSecondLe, _hFittingEq,
-        _hFittingLeD, _hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hHatW⟩
-    have hDleM : ambientDerivedSubgroup M ≤ M :=
-      section12_ambientDerivedSubgroup_le (G := G) (E := M)
-    have hSetSource :
-        A \ A1 = section16ASet M U \ (section10Msigma M : Set G) :=
-      theorem_8_12_source_diff_eq_ASet_diff_msigma_of_complement
-        (G := G) (M := M) (D := ambientDerivedSubgroup M) (MF := MF) (U := U)
-        (A := A) (A1 := A1) hDleM hMF hMF_eq hCompU hA hA1'
-    have hASetEq : section16ASet M U = section16ASet M Uc :=
-      theorem_8_12_ASet_eq_of_complements
-        (G := G) (M := M) (D := ambientDerivedSubgroup M) (MF := MF)
-        (U := U) (V := Uc) hDleM hMF hMF_eq hCompU hCompCanonical
-    have hSet :
-        A \ A1 = section16ASet M Uc \ (section10Msigma M : Set G) := by
-      simpa [hASetEq] using hSetSource
-    exact section16_ASet_diff_msigma_centralizer_le_public
-      (G := G) (M := M) (K := K) (U := Uc)
-      hM hKU (by simpa [hSet] using hx)
 
 public theorem theorem_8_12_unique_maximal_of_source_diff_coprime
     {G : Type u} [Group G] [Finite G] [IsMinCE G]

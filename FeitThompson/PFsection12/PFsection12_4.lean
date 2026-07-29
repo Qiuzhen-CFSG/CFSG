@@ -9,7 +9,7 @@ import FeitThompson.PFsection7.PFsection7_5
 import FeitThompson.PFsection7.PFsection7_7
 import FeitThompson.PFsection7.PFsection7_8_a
 import FeitThompson.PFsection7.PFsection7_8_b
-import FeitThompson.PFsection7.PFsection7_8_c
+import FeitThompson.PFsection7.PFsection7_6
 import FeitThompson.PFsection7.PFsection7_9
 import FeitThompson.PFsection8.PFsection8_16
 import FeitThompson.PFsection8.SourceTypePBridge
@@ -32,28 +32,6 @@ universe u v
 
 /-! ## (12.4) -/
 
-/-- Peterfalvi `(12.4)`. -/
-@[expose] public def theorem_12_4_statement
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (R1 : Section1.ClassFunction L → Finset (Section1.ClassFunction G))
-    (R : S → Finset (Section1.ClassFunction G))
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ : Section1.ClassFunction G)
-    (x : G) : Prop :=
-  theorem_12_4_dade_induction_lemma_source_inputs L H S Rade τ →
-    hypothesis_12_1_data L H S Rade τ →
-    constituentFamilyData L H S SX Rade τ →
-    (∀ χ : S, rFamilyData (χ : Section1.ClassFunction L) (SX χ) τ R1 (R χ)) →
-      hypothesis52WithRData S τ R →
-        Section1.IsClassFunction ψ →
-          orthogonalToAllR S R ψ →
-          x ∈ L →
-            x ∉ H →
-              constantOnRightCoset H ψ x
 
 /-! ## Proof placeholders -/
 

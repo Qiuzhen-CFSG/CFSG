@@ -1218,106 +1218,6 @@ private theorem section15_same_exponent_frobenius_of_regular_abelian
     section15_frobeniusJoinWithKernel_of_regular_subgroup
       (M := M) (R := V₀) hM (hV₀V.trans hVM) hdisj₀ hV₀_ne hreg₀⟩
 
-private theorem section15_same_exponent_frobenius_of_tau13_pi_abelian
-    {M E E₁₂ E₁ E₂ E₃ V : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hVE : V ≤ E)
-    (hVcomm : IsMulCommutative V)
-    (hVne : V ≠ ⊥)
-    (hVπ13 : IsPiSubgroup (G := G)
-      (section12Tau1Primes M ∪ section12Tau3Primes M) V)
-    (hcent :
-      ∀ e : G, e ∈ V → e ≠ 1 →
-        subgroupPrimeSet (Subgroup.zpowers e) ⊆
-          section12Tau1Primes M ∪ section12Tau3Primes M →
-            elementCentralizerIn (section10Msigma M) e = ⊥) :
-    ∃ V₀ : Subgroup G, V₀ ≤ V ∧ Monoid.exponent V₀ = Monoid.exponent V ∧
-      section12FrobeniusJoinWithKernel (section10Msigma M) V₀ := by
-  classical
-  have hVM : V ≤ M := hVE.trans hE.1.2.1
-  have hdisj : Disjoint (section10Msigma M) V := by
-    rw [Subgroup.disjoint_def]
-    intro x hxσ hxV
-    exact (Subgroup.disjoint_def.mp hE.1.2.2.2) hxσ (hVE hxV)
-  have hreg : ∀ v : G, v ∈ V → v ≠ 1 →
-      elementCentralizerIn (section10Msigma M) v = ⊥ := by
-    intro v hvV hvne
-    exact hcent v hvV hvne (by
-      intro q hq
-      exact hVπ13 q
-        (hq.trans (Subgroup.card_dvd_of_le (Subgroup.zpowers_le.2 hvV))))
-  exact section15_same_exponent_frobenius_of_regular_abelian
-    (M := M) (V := V) hM hVM hVcomm hVne hdisj hreg
-
-private theorem section15_exists_tau2_prime_dvd_of_not_tau13_pi
-    {M E E₁₂ E₁ E₂ E₃ V : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hVE : V ≤ E)
-    (hnotVπ13 : ¬ IsPiSubgroup (G := G)
-      (section12Tau1Primes M ∪ section12Tau3Primes M) V) :
-    ∃ p : Nat.Primes, p ∈ section12Tau2Primes M ∧ p.val ∣ Nat.card V := by
-  classical
-  by_contra hnone
-  apply hnotVπ13
-  intro p hpV
-  have hpE : p ∈ subgroupPrimeSet E := by
-    simpa [subgroupPrimeSet] using hpV.trans (Subgroup.card_dvd_of_le hVE)
-  have hpτ :
-      p ∈ section12Tau1Primes M ∪ section12Tau2Primes M ∪ section12Tau3Primes M :=
-    section12_prime_mem_tau_union_of_mem_E hM hE.1 hpE
-  rcases hpτ with hpτ12 | hpτ3
-  · rcases hpτ12 with hpτ1 | hpτ2
-    · exact Or.inl hpτ1
-    · exact False.elim (hnone ⟨p, hpτ2, hpV⟩)
-  · exact Or.inr hpτ3
-
-omit [IsMinCE G] in
-private theorem section15_exists_nontrivial_ambient_sylow_of_prime_dvd
-    {V : Subgroup G} {p : Nat.Primes}
-    (hVcomm : IsMulCommutative V)
-    (hpV : p.val ∣ Nat.card V) :
-    ∃ P : Sylow p.val V,
-      let PG : Subgroup G := section10AmbientSylowSubgroup V P
-      PG ≤ V ∧ PG ≠ ⊥ ∧ IsPGroup p.val PG ∧ IsMulCommutative PG ∧
-        section10NormalIn PG V := by
-  classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  let P : Sylow p.val V := default
-  let PG : Subgroup G := section10AmbientSylowSubgroup V P
-  have hPGV : PG ≤ V := by
-    intro x hx
-    have hxmap : x ∈ (P : Subgroup V).map V.subtype := by
-      simpa [PG, section10AmbientSylowSubgroup] using hx
-    rcases Subgroup.mem_map.mp hxmap with
-      ⟨y, _hyP, rfl⟩
-    exact y.property
-  have hPGne : PG ≠ ⊥ := by
-    have hP_ne : (P : Subgroup V) ≠ ⊥ :=
-      Sylow.ne_bot_of_dvd_card (G := V) (p := p.val) P hpV
-    intro hPGbot
-    have hcard_map : Nat.card PG = Nat.card (P : Subgroup V) := by
-      simpa [PG, section10AmbientSylowSubgroup] using
-        (Subgroup.card_map_of_injective
-          (K := (P : Subgroup V)) (f := V.subtype) V.subtype_injective)
-    have hP_card : Nat.card (P : Subgroup V) = 1 := by
-      rw [← hcard_map]
-      simp [hPGbot]
-    exact hP_ne ((Subgroup.card_eq_one (H := (P : Subgroup V))).1 hP_card)
-  have hPGp : IsPGroup p.val PG := by
-    change IsPGroup p.val ((P : Subgroup V).map V.subtype)
-    exact IsPGroup.map (p := p.val) (H := (P : Subgroup V)) P.isPGroup' V.subtype
-  have hPGcomm : IsMulCommutative PG := by
-    refine ⟨⟨fun x y => ?_⟩⟩
-    apply Subtype.ext
-    exact setLike_mul_comm (s := V)
-      (hPGV x.property) (hPGV y.property)
-  have hPGnorm : section10NormalIn PG V := by
-    refine ⟨hPGV, ?_⟩
-    letI : IsMulCommutative V := hVcomm
-    infer_instance
-  exact ⟨P, hPGV, hPGne, hPGp, hPGcomm, hPGnorm⟩
 
 omit [IsMinCE G] in
 private theorem section15_default_ambient_sylow_of_prime_dvd
@@ -1479,37 +1379,6 @@ private theorem section15_rankTwo_le_normal_hall_of_prime_dvd
   have hxVsub : xE ∈ V.subgroupOf E := hAsub_le_Vsub hxsub
   simpa [xE, Subgroup.mem_subgroupOf] using hxVsub
 
-private theorem section15_exists_regular_prime_order_in_V_of_tau2_dvd
-    {M E E₁₂ E₁ E₂ E₃ V : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hVnorm : section10NormalIn V E)
-    (hVHall : ∃ π : Set Nat.Primes, section12HallSubgroupIn π V E)
-    (hpτ2 : p ∈ section12Tau2Primes M)
-    (hpV : p.val ∣ Nat.card V) :
-    ∃ A A₁ : Subgroup G,
-      A ∈ section12RankTwoElementaryAbelianIn p E ∧ A ≤ V ∧
-        A₁ ∈ section10PrimeOrderSubgroupsIn p A ∧ A₁ ≤ V ∧
-          subgroupCentralizerIn (section10Msigma M) A₁ = ⊥ := by
-  classical
-  obtain ⟨A, hA_E⟩ :=
-    section12_exists_rankTwo_in_E_of_tau2
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) hM hE hpτ2
-  have hA_le_V : A ≤ V :=
-    section15_rankTwo_le_normal_hall_of_prime_dvd
-      (E := E) (V := V) (A := A) (p := p) hVnorm hVHall hpV hA_E
-  have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M := by
-    rcases (by simpa [section12RankTwoElementaryAbelianIn] using hA_E) with
-      ⟨hA_E_le, hAelem⟩
-    exact ⟨hA_E_le.trans hE.1.2.1, hAelem⟩
-  rcases theorem_12_5_f (G := G) (M := M) (A := A) (p := p) hM hpτ2 hA_M with
-    ⟨A₁, hA₁prime, hA₁cent⟩
-  have hA₁_le_A : A₁ ≤ A := by
-    rcases (by simpa [section10PrimeOrderSubgroupsIn] using hA₁prime) with
-      ⟨hA₁A, _hcard⟩
-    exact hA₁A
-  exact ⟨A, A₁, hA_E, hA_le_V, hA₁prime, hA₁_le_A.trans hA_le_V, hA₁cent⟩
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_zpowers_eq_elementCentralizerIn_early
@@ -1534,40 +1403,6 @@ private theorem section15_subgroupCentralizerIn_zpowers_eq_elementCentralizerIn_
       (Subgroup.mem_centralizer_singleton_iff.mp hx.2).symm
     simpa using (hcomm.zpow_left n).eq
 
-omit [IsMinCE G] in
-private theorem section15_regular_of_prime_order_centralizer_bot
-    {M A₁ V : Subgroup G} {p : Nat.Primes}
-    (hA₁prime : A₁ ∈ section10PrimeOrderSubgroupsIn p V)
-    (hA₁cent : subgroupCentralizerIn (section10Msigma M) A₁ = ⊥) :
-    ∀ a : G, a ∈ A₁ → a ≠ 1 →
-      elementCentralizerIn (section10Msigma M) a = ⊥ := by
-  classical
-  intro a haA₁ hane
-  have hzp_le_A₁ : Subgroup.zpowers a ≤ A₁ := Subgroup.zpowers_le.2 haA₁
-  have hzp_card : Nat.card (Subgroup.zpowers a) = p.val := by
-    rcases (by simpa [section10PrimeOrderSubgroupsIn] using hA₁prime) with
-      ⟨_hA₁V, hA₁card⟩
-    have horder_dvd : orderOf a ∣ Nat.card A₁ :=
-      Subgroup.orderOf_dvd_natCard A₁ haA₁
-    have horder_ne_one : orderOf a ≠ 1 := by
-      simpa [orderOf_eq_one_iff] using hane
-    have horder_eq : orderOf a = p.val := by
-      have horder_or := (Nat.dvd_prime p.2).mp (by simpa [hA₁card] using horder_dvd)
-      rcases horder_or with horder_one | horder_prime
-      · exact (horder_ne_one horder_one).elim
-      · exact horder_prime
-    simp [Nat.card_zpowers, horder_eq]
-  have hzp_prime : Subgroup.zpowers a ∈ section10PrimeOrderSubgroupsIn p V := by
-    rcases (by simpa [section10PrimeOrderSubgroupsIn] using hA₁prime) with
-      ⟨hA₁V, _hA₁card⟩
-    exact ⟨hzp_le_A₁.trans hA₁V, hzp_card⟩
-  have hzp_eq : Subgroup.zpowers a = A₁ := by
-    exact Subgroup.eq_of_le_of_card_ge hzp_le_A₁ (by
-      rcases (by simpa [section10PrimeOrderSubgroupsIn] using hA₁prime) with
-        ⟨_hA₁V, hA₁card⟩
-      simp [hzp_card, hA₁card])
-  rw [← hzp_eq] at hA₁cent
-  simpa [section15_subgroupCentralizerIn_zpowers_eq_elementCentralizerIn_early] using hA₁cent
 
 omit [IsMinCE G] in
 private noncomputable def section15_mulEquiv_iSup_of_pairwise_coprime_order
@@ -3016,38 +2851,6 @@ public theorem section15_secondDerived_eq_ambientDerived_msigma_of_msigma_eq_der
       ambientDerivedSubgroup (section10Msigma M) := by
   rw [section15SecondDerivedSubgroup, ← hσD]
 
-omit [Finite G] [IsMinCE G] in
-private theorem section15_subgroupCentralizerIn_normal_of_normal
-    {E A : Subgroup G} (hAnorm : section10NormalIn A E) :
-    section10NormalIn (subgroupCentralizerIn E A) E := by
-  classical
-  have hAE : A ≤ E := hAnorm.1
-  haveI : (A.subgroupOf E).Normal := hAnorm.2
-  have hC_le_E : subgroupCentralizerIn E A ≤ E := inf_le_left
-  refine ⟨hC_le_E, ?_⟩
-  have hCsub_eq :
-      (subgroupCentralizerIn E A).subgroupOf E =
-        Subgroup.centralizer ((A.subgroupOf E : Subgroup E) : Set E) := by
-    ext x
-    constructor
-    · intro hx
-      rw [Subgroup.mem_centralizer_iff]
-      intro a ha
-      apply Subtype.ext
-      have hxC : (x : G) ∈ Subgroup.centralizer (A : Set G) := hx.2
-      have haA : (a : G) ∈ A := by
-        simpa [Subgroup.mem_subgroupOf] using ha
-      exact Subgroup.mem_centralizer_iff.mp hxC (a : G) haA
-    · intro hx
-      refine ⟨x.property, ?_⟩
-      exact Subgroup.mem_centralizer_iff.mpr (fun a ha => by
-        let aE : E := ⟨a, hAE ha⟩
-        have haSub : aE ∈ A.subgroupOf E := by
-          simpa [aE, Subgroup.mem_subgroupOf] using ha
-        have hcomm := Subgroup.mem_centralizer_iff.mp hx aE haSub
-        exact congrArg Subtype.val hcomm)
-  rw [hCsub_eq]
-  exact Subgroup.normal_centralizer
 
 omit [Finite G] [IsMinCE G] in
 public theorem section15_le_normalizer_subgroupCentralizerIn
@@ -4091,76 +3894,6 @@ private theorem section15_generated_centralizers_of_nontrivial_K
   exact setLike_mul_comm
     (s := U) (hGU x.property) (hGU y.property)
 
-/-- The `K=1` branch of Lemma 15.1(e), supplied by Theorem 12.12(b) for the
-fixed Section 12 complement attached to the Section 15 choice of `U`. -/
-private theorem section15_frobenius_same_exponent_of_trivial_K
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section15KUData M K U)
-    (hK : K = ⊥)
-    (_hUne : U ≠ ⊥) :
-    ∃ U₀ : Subgroup G,
-      U₀ ≤ U ∧ Monoid.exponent U₀ = Monoid.exponent U ∧
-        section14FrobeniusWithKernel (U₀ ⊔ section10Msigma M) (section10Msigma M) := by
-  classical
-  have hUcomp : section12ComplementToMsigma M U :=
-    section15_trivial_K_U_complementToMsigma hKU hK
-  rcases section15_exists_EData_for_fixed_sigma_complement
-      (G := G) (M := M) (E := U) hM hUcomp with
-    ⟨E₁₂, E₁, E₂, E₃, hE⟩
-  rcases theorem_12_12_b
-      (G := G) (M := M) (E := U) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) hM hE
-      (section15_theorem12_12_hcent_of_U hM hKU) with
-    ⟨U₀, hU₀U, hexp, hFrob⟩
-  refine ⟨U₀, hU₀U, hexp, ?_⟩
-  refine ⟨le_sup_right, U₀.subgroupOf (U₀ ⊔ section10Msigma M), ?_⟩
-  rw [show U₀ ⊔ section10Msigma M = section10Msigma M ⊔ U₀ by
-    rw [sup_comm]]
-  exact hFrob
-
-/-- The nontrivial-`K` branch of Lemma 15.1(e): once Lemma 15.1(b) makes the
-fixed `U` abelian, the fixed-point-free same-exponent construction from the
-proof of Theorem 12.12 yields the required Frobenius subgroup. -/
-private theorem section15_frobenius_same_exponent_of_abelian_U
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section15KUData M K U)
-    (hUcomm : IsMulCommutative U)
-    (hUne : U ≠ ⊥) :
-    ∃ U₀ : Subgroup G,
-      U₀ ≤ U ∧ Monoid.exponent U₀ = Monoid.exponent U ∧
-        section14FrobeniusWithKernel (U₀ ⊔ section10Msigma M) (section10Msigma M) := by
-  classical
-  let E : Subgroup G := K ⊔ U
-  have hEcomp : section12ComplementToMsigma M E := by
-    change section12ComplementIn M (section10Msigma M) E
-    simpa [E] using hKU.2.2.1
-  rcases section15_exists_EData_for_fixed_sigma_complement
-      (G := G) (M := M) (E := E) hM hEcomp with
-    ⟨E₁₂, E₁, E₂, E₃, hE⟩
-  have hUnormE : section10NormalIn U E := by
-    simpa [E] using
-      section15_kappa_compl_context_U_normal_in_KU
-        (G := G) (M := M) (K := K) (U := U) hM hKU
-  have hUHallE : ∃ π : Set Nat.Primes, section12HallSubgroupIn π U E := by
-    let hHallU := section15_kappa_compl_context_U_hall hKU
-    refine ⟨(section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ, ?_⟩
-    simpa [E] using
-      section15_hallSubgroupIn_of_le_overgroup
-        (M := M) (E := K ⊔ U) (U := U)
-        (π := (section14KappaPrimes M ∪ section10SigmaPrimes M)ᶜ)
-        hHallU le_sup_right (sup_le hKU.1.1 hHallU.1)
-  rcases section15_theorem_12_12_b_abelian_normal_subgroup
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
-      (E₂ := E₂) (E₃ := E₃) (V := U) hM hE hUnormE hUHallE hUcomm hUne
-      (section15_theorem12_12_hcent_of_U hM hKU) with
-    ⟨U₀, hU₀U, hexp, hFrob⟩
-  refine ⟨U₀, hU₀U, hexp, ?_⟩
-  refine ⟨le_sup_right, U₀.subgroupOf (U₀ ⊔ section10Msigma M), ?_⟩
-  rw [show U₀ ⊔ section10Msigma M = section10Msigma M ⊔ U₀ by
-    rw [sup_comm]]
-  exact hFrob
 
 /-- Lemma 15.1(d): the subgroup generated by the centralizers `C_U(x)` for
 `x ∈ M_σ#` is abelian. -/
@@ -4173,19 +3906,5 @@ public theorem lemma_15_1_d
   · exact section15_generated_centralizers_of_trivial_K hM hKU hK
   · exact section15_generated_centralizers_of_nontrivial_K hM hKU hK
 
-/-- Lemma 15.1(e): if `U ≠ 1`, then `U` contains a subgroup of the same
-exponent whose product with `M_σ` is Frobenius with kernel `M_σ`. -/
-public theorem lemma_15_1_e
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section15KUData M K U)
-    (hUne : U ≠ ⊥) :
-    ∃ U₀ : Subgroup G,
-      U₀ ≤ U ∧ Monoid.exponent U₀ = Monoid.exponent U ∧
-        section14FrobeniusWithKernel (U₀ ⊔ section10Msigma M) (section10Msigma M) := by
-  by_cases hK : K = ⊥
-  · exact section15_frobenius_same_exponent_of_trivial_K hM hKU hK hUne
-  · exact section15_frobenius_same_exponent_of_abelian_U hM hKU
-      ((lemma_15_1_b hM hKU hK).2) hUne
 
 end Section15

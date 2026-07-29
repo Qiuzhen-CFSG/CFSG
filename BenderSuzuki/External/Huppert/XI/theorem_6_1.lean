@@ -31,84 +31,6 @@ universe u v
 
 open scoped commutatorElement
 
-set_option backward.isDefEq.respectTransparency false in
-/-- A nonidentity element of a Frobenius complement fixes only the principal
-irreducible character of the kernel.  This is the Brauer-permutation input
-used in XI.6.4--XI.6.5. -/
-private theorem huppert_XI_6_4_complement_fixes_only_principal_irreducible
-    {H : Type*} [Group H] [Finite H]
-    (F D : Subgroup H) [F.Normal]
-    (hFrob : IsFrobeniusGroupWithKernelComplement F D)
-    (d : D) (hd : d ≠ 1)
-    (chi : Representation.ClassFunction F)
-    (hchiIrr : Representation.IsIrreducibleCharacter chi)
-    (hchiFix :
-      Representation.classFunctionConjLinearEquiv F (d : H) chi = chi) :
-    chi =
-      Representation.characterClassFunction
-        (Representation.trivial ℂ F ℂ) := by
-  let psi : Representation.ClassFunction F :=
-    Representation.characterClassFunction
-      (Representation.trivial ℂ F ℂ)
-  have htrivIrr :
-      Representation.IsIrreducible
-        (Representation.trivial ℂ F ℂ) := by
-    rw [Representation.irreducible_iff_isSimpleModule_asModule,
-      isSimpleModule_iff]
-    exact is_simple_module_of_finrank_eq_one
-      (K := ℂ) (A := MonoidAlgebra ℂ F)
-      (V := (Representation.trivial ℂ F ℂ).asModule)
-      (CommSemiring.finrank_self ℂ)
-  have hpsiIrr : Representation.IsIrreducibleCharacter psi :=
-    Representation.isIrreducibleCharacter_characterClassFunction
-      (Representation.trivial ℂ F ℂ) htrivIrr
-  have hpsiFix :
-      Representation.classFunctionConjLinearEquiv F (d : H) psi = psi := by
-    rw [Representation.classFunctionConjLinearEquiv_characterClassFunction]
-    ext c
-    rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
-    rfl
-  change chi = psi
-  by_contra hne
-  obtain ⟨x, hxne, hxconj⟩ :=
-    Representation.exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
-      F (d : H) hchiIrr hpsiIrr hchiFix hpsiFix hne
-  rcases isConj_iff.mp hxconj with ⟨y, hy⟩
-  let h : H := (y : H) * (d : H)
-  have hhnotF : h ∉ F := by
-    intro hhF
-    have hdF : (d : H) ∈ F := by
-      have := F.mul_mem (F.inv_mem y.property) hhF
-      simpa [h, mul_assoc] using this
-    have hdBot : (d : H) ∈ (⊥ : Subgroup H) :=
-      hFrob.isComplement'.disjoint.le_bot ⟨hdF, d.property⟩
-    apply hd
-    apply Subtype.ext
-    simpa using hdBot
-  have hcentD :
-      ∀ r : D, r ≠ 1 → Section2.centralizerIn F (r : H) = ⊥ := by
-    intro r hr
-    simpa [Section2.centralizerIn, Section2.elementCentralizer,
-      elementCentralizerIn] using
-      ((lemma_3_1 F D hFrob.kernel_ne_bot hFrob.complement_ne_bot
-        hFrob.normal hFrob.isComplement').mp hFrob r hr)
-  have hcentH : Section2.centralizerIn F h = ⊥ :=
-    Section6.theorem_6_8_frobenius_complement_centralizerIn_eq_bot
-      (K := F) (R := D) hFrob.isComplement' hcentD hhnotF
-  have hhconj : h * (x : H) * h⁻¹ = (x : H) := by
-    simpa [h, Representation.normalSubgroupConjMulEquiv, mul_assoc] using
-      congrArg (fun z : F => (z : H)) hy
-  have hhcomm : h * (x : H) = (x : H) * h := by
-    have := congrArg (fun z : H => z * h) hhconj
-    simpa [mul_assoc] using this
-  have hxcent : (x : H) ∈ Section2.centralizerIn F h := by
-    refine ⟨x.property, ?_⟩
-    exact Subgroup.mem_centralizer_singleton_iff.mpr hhcomm.symm
-  have hxbot : (x : H) ∈ (⊥ : Subgroup H) := by
-    simpa [hcentH] using hxcent
-  apply hxne
-  apply Subtype.ext
-  simpa using hxbot
 
 /-- A nonidentity element of the point-stabilizer Frobenius kernel fixes
 exactly the base point. -/
@@ -537,31 +459,6 @@ private theorem huppert_XI_6_1_actor_card_dvd_group_card_sub_one
     rw [mul_comm]
     exact hcard⟩
 
-/-- Under a coprime action on a finite solvable group, trivial fixed points
-remain trivial after quotienting by the commutator subgroup. -/
-private theorem huppert_XI_6_1_fixedPointSubgroup_abelianization_eq_bot
-    {A Q : Type*} [Group A] [Finite A] [Group Q] [Finite Q]
-    [MulDistribMulAction A Q]
-    (hsolv : IsSolvable Q)
-    (hcop : Nat.Coprime (Nat.card A) (Nat.card Q))
-    (hfix : fixedPointSubgroup A Q = ⊥) :
-    let C := commutator Q
-    let hCinv : IsInvariant A Q C :=
-      isInvariant_of_characteristic (A := A) (G := Q) C
-    letI : MulDistribMulAction A (Q ⧸ C) :=
-      quotientMulDistribMulAction (A := A) (G := Q) C hCinv
-    fixedPointSubgroup A (Q ⧸ C) = ⊥ := by
-  dsimp only
-  let C := commutator Q
-  let hCinv : IsInvariant A Q C :=
-    isInvariant_of_characteristic (A := A) (G := Q) C
-  letI : MulDistribMulAction A (Q ⧸ C) :=
-    quotientMulDistribMulAction (A := A) (G := Q) C hCinv
-  haveI : C.Normal := by dsimp [C]; infer_instance
-  have hquot := fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
-    (G := Q) (A := A) hsolv hcop C hCinv
-  rw [hquot, hfix]
-  simp
 
 /-- A pointwise fixed-point-free coprime action on a finite solvable group is
 still pointwise fixed-point-free on its abelianization. -/
@@ -1002,58 +899,6 @@ private theorem huppert_XI_1_4_b_primePower_of_large_complement
     omega
   exact ⟨p, f, hp, hfpos, hFcard.trans (hPmap_card.trans hPpow)⟩
 
-/-- A Frobenius complement is self-normalizing in the Frobenius group. -/
-private theorem frobenius_complement_normalizer_eq
-    {H : Type*} [Group H] [Finite H]
-    (F D : Subgroup H)
-    (hFrob : IsFrobeniusGroupWithKernelComplement F D) :
-    Subgroup.normalizer (D : Set H) = D := by
-  apply le_antisymm
-  · intro x hx
-    obtain ⟨z, hz⟩ :=
-      Subgroup.ne_bot_iff_exists_ne_one.mp hFrob.complement_ne_bot
-    obtain ⟨fd, hfd, _hfd_unique⟩ := hFrob.isComplement'.existsUnique x
-    let f : F := fd.1
-    let d : D := fd.2
-    have hxd : x = (f : H) * (d : H) := hfd.symm
-    let z' : D := d * z * d⁻¹
-    have hz'ne : z' ≠ 1 := by
-      intro hz'one
-      apply hz
-      have := congrArg (fun y : D => d⁻¹ * y * d) hz'one
-      simpa [z', mul_assoc] using this
-    have hxconjD : x * (z : H) * x⁻¹ ∈ D :=
-      (Subgroup.mem_normalizer_iff.mp hx (z : H)).mp z.property
-    let y : D := ⟨x * (z : H) * x⁻¹, hxconjD⟩
-    let f' : F :=
-      ⟨f * ((z' : H) * (f : H)⁻¹ * (z' : H)⁻¹), by
-        exact F.mul_mem f.property
-          (hFrob.normal.conj_mem (f : H)⁻¹ (F.inv_mem f.property) (z' : H))⟩
-    have hdecomp :
-        (f' : H) * (z' : H) = (1 : F) * (y : H) := by
-      simp [f', y, hxd]
-      rw [show (z' : H) = (d : H) * (z : H) * (d : H)⁻¹ by rfl]
-      group
-    have hpair :
-        (f', z') = ((1 : F), y) :=
-      hFrob.isComplement'.1 hdecomp
-    have hf'one : f' = 1 := congrArg Prod.fst hpair
-    have hcomm : (f : H) * (z' : H) = (z' : H) * (f : H) := by
-      have hf'oneH := congrArg (fun q : F => (q : H)) hf'one
-      dsimp [f'] at hf'oneH
-      have := congrArg (fun q : H => q * (z' : H) * (f : H)) hf'oneH
-      simpa [mul_assoc] using this
-    have hfcent : (f : H) ∈ elementCentralizerIn F (z' : H) :=
-      ⟨f.property, Subgroup.mem_centralizer_singleton_iff.mpr hcomm⟩
-    have hcent : elementCentralizerIn F (z' : H) = ⊥ :=
-      (lemma_3_1 F D hFrob.kernel_ne_bot hFrob.complement_ne_bot
-        hFrob.normal hFrob.isComplement').mp hFrob z' hz'ne
-    have hfbot : (f : H) ∈ (⊥ : Subgroup H) := by
-      simpa [hcent] using hfcent
-    have hfone : f = 1 := Subtype.ext (by simpa using hfbot)
-    rw [hxd, hfone]
-    simp [one_mul]
-  · exact Subgroup.le_normalizer
 
 /-- Membership in the ambient image of a two-point stabilizer is exactly
 fixing both distinguished points. -/
@@ -3705,12 +3550,6 @@ private noncomputable def conjClassesProdEquiv
   (Quotient.congrRight (fun x y => isConj_prod_iff x y)).trans
     (Setoid.prodQuotientEquiv (IsConj.setoid A) (IsConj.setoid B)).symm
 
-private theorem conjClassesProdEquiv_mk
-    {A : Type u} {B : Type v} [Group A] [Group B]
-    (a : A) (b : B) :
-    conjClassesProdEquiv (ConjClasses.mk (a, b)) =
-      (ConjClasses.mk a, ConjClasses.mk b) := by
-  rfl
 
 private noncomputable def extProdClassFunction
     {A : Type u} {B : Type v} [Group A] [Group B]
@@ -4767,41 +4606,6 @@ private theorem huppert_XI_6_3_linear_component_le_complete_lower_sum
   exact (Nat.mul_le_mul_right
     (Nat.card (Abelianization (pPrimeCore p Q))) hlower).trans hfamily
 
-/-- The complete lower-degree square sum is the nonprincipal lower-degree
-square sum plus the unique principal contribution. -/
-private theorem huppert_XI_6_3_complete_lower_sum_eq_nonprincipal_add_one
-    {Q : Type u} [Group Q] [Finite Q]
-    (K : Finset (Section1.ClassFunction Q))
-    (hKcomplete : ∀ chi : Section1.ClassFunction Q,
-      Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K)
-    (degreeNat : Section1.ClassFunction Q → ℕ)
-    (hdegree : ∀ chi : K,
-      Section1.degree (chi : Section1.ClassFunction Q) =
-        (degreeNat chi : ℂ))
-    (z : ℕ) (hz : 1 < z) :
-    (∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-        degreeNat chi ^ 2) =
-      (∑ chi ∈
-          (K.filter (fun chi => degreeNat chi < z)).erase
-            (Section1.principalCharacter Q),
-        degreeNat chi ^ 2) + 1 := by
-  classical
-  let one : Section1.ClassFunction Q := Section1.principalCharacter Q
-  have honeIrr : Section1.IsIrreducibleCharacterOnGroup one :=
-    Section3.principalCharacter_isIrreducibleCharacterOnGroup
-  have honeK : one ∈ K := hKcomplete one honeIrr
-  have hdegreeOne : degreeNat one = 1 := by
-    have hcast : (degreeNat one : ℂ) = 1 := by
-      rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree]
-    exact_mod_cast hcast
-  have honeLower : one ∈ K.filter (fun chi => degreeNat chi < z) :=
-    Finset.mem_filter.mpr ⟨honeK, by simpa [hdegreeOne] using hz⟩
-  have hsplit :=
-    Finset.sum_erase_add
-      (K.filter (fun chi => degreeNat chi < z))
-      (fun chi => degreeNat chi ^ 2) honeLower
-  simpa [one, hdegreeOne] using hsplit.symm
 /-- Every linear character lies below any nonlinear degree, so the complete
 lower-degree square sum contains at least the abelianization cardinal. -/
 private theorem huppert_XI_6_3_abelianization_card_le_complete_lower_sum
@@ -4853,51 +4657,6 @@ private theorem huppert_XI_6_3_abelianization_card_le_complete_lower_sum
     (Nat.card (Abelianization Q)) z theta thetaDegree
     hthetaInj hthetaIrr hthetaDegree hthetaLt hbound
 
-/-- Removing the principal character changes the complete lower-degree square
-sum by exactly one, so the abelianization cardinal remains bounded by the
-nonprincipal sum plus one. -/
-private theorem huppert_XI_6_3_abelianization_card_le_nonprincipal_lower_sum_add_one
-    {Q : Type u} [Group Q] [Finite Q]
-    (K : Finset (Section1.ClassFunction Q))
-    (hKcomplete : ∀ chi : Section1.ClassFunction Q,
-      Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K)
-    (degreeNat : Section1.ClassFunction Q → ℕ)
-    (hdegree : ∀ chi : K,
-      Section1.degree (chi : Section1.ClassFunction Q) =
-        (degreeNat chi : ℂ))
-    (z : ℕ) (hz : 1 < z) :
-    Nat.card (Abelianization Q) ≤
-      (∑ chi ∈
-          (K.filter (fun chi => degreeNat chi < z)).erase
-            (Section1.principalCharacter Q),
-        degreeNat chi ^ 2) + 1 := by
-  classical
-  let one : Section1.ClassFunction Q := Section1.principalCharacter Q
-  have honeIrr : Section1.IsIrreducibleCharacterOnGroup one :=
-    Section3.principalCharacter_isIrreducibleCharacterOnGroup
-  have honeK : one ∈ K := hKcomplete one honeIrr
-  have hdegreeOne : degreeNat one = 1 := by
-    have hcast : (degreeNat one : ℂ) = 1 := by
-      rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree]
-    exact_mod_cast hcast
-  have honeLower : one ∈ K.filter (fun chi => degreeNat chi < z) :=
-    Finset.mem_filter.mpr ⟨honeK, by simpa [hdegreeOne] using hz⟩
-  have hsplit :=
-    Finset.sum_erase_add
-      (K.filter (fun chi => degreeNat chi < z))
-      (fun chi => degreeNat chi ^ 2) honeLower
-  calc
-    Nat.card (Abelianization Q) ≤
-        ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-          degreeNat chi ^ 2 :=
-      huppert_XI_6_3_abelianization_card_le_complete_lower_sum
-        K hKcomplete degreeNat hdegree z hz
-    _ = (∑ chi ∈
-          (K.filter (fun chi => degreeNat chi < z)).erase
-            (Section1.principalCharacter Q),
-          degreeNat chi ^ 2) + 1 := by
-      simpa [one, hdegreeOne] using hsplit.symm
 
 /-- XI.6.3(b), linear-character contribution in the small-sum branch.  The
 mixed-prime abelianization bound forces at least `2*d^2` nonprincipal degree
@@ -4924,107 +4683,7 @@ private theorem huppert_XI_6_3_mixed_prime_nonprincipal_linear_lower
       (Nat.card D + 1) * (2 * Nat.card D + 1) ≤ A + 1 :=
     hlower.trans hAb
   nlinarith
-private theorem huppert_XI_6_3_lifted_family_le_complete_lower_sum
-    {Q : Type u} [Group Q] [Finite Q]
-    {I : Type} [Fintype I]
-    (K : Finset (Section1.ClassFunction Q))
-    (hKcomplete : ∀ chi : Section1.ClassFunction Q,
-      Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K)
-    (degreeNat : Section1.ClassFunction Q → ℕ)
-    (hdegree : ∀ chi : K,
-      Section1.degree (chi : Section1.ClassFunction Q) =
-        (degreeNat chi : ℂ))
-    (z : ℕ)
-    (theta : I → Section1.ClassFunction Q)
-    (thetaDegree : I → ℕ)
-    (hthetaInj : Function.Injective theta)
-    (hthetaIrr : ∀ i,
-      Section1.IsIrreducibleCharacterOnGroup (theta i))
-    (hthetaDegree : ∀ i,
-      Section1.degree (theta i) = (thetaDegree i : ℂ))
-    (hthetaLt : ∀ i, thetaDegree i < z)
-    (hlower : z ^ 2 ≤ ∑ i, thetaDegree i ^ 2) :
-    z ^ 2 ≤
-      ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-        degreeNat chi ^ 2 := by
-  classical
-  let S : Finset (Section1.ClassFunction Q) :=
-    Finset.univ.image theta
-  have hdegreeNat : ∀ i, degreeNat (theta i) = thetaDegree i := by
-    intro i
-    have hmem : theta i ∈ K := hKcomplete (theta i) (hthetaIrr i)
-    have hcast : (degreeNat (theta i) : ℂ) = (thetaDegree i : ℂ) := by
-      rw [← hdegree ⟨theta i, hmem⟩]
-      exact hthetaDegree i
-    exact_mod_cast hcast
-  have hSsub :
-      S ⊆ K.filter (fun chi => degreeNat chi < z) := by
-    intro chi hchi
-    rcases Finset.mem_image.mp hchi with ⟨i, _hi, rfl⟩
-    exact Finset.mem_filter.mpr
-      ⟨hKcomplete (theta i) (hthetaIrr i),
-        by rw [hdegreeNat i]; exact hthetaLt i⟩
-  have hsumS :
-      (∑ chi ∈ S, degreeNat chi ^ 2) =
-        ∑ i, thetaDegree i ^ 2 := by
-    dsimp [S]
-    rw [Finset.sum_image]
-    · apply Finset.sum_congr rfl
-      intro i _hi
-      rw [hdegreeNat i]
-    · intro i _hi j _hj hij
-      exact hthetaInj hij
-  calc
-    z ^ 2 ≤ ∑ i, thetaDegree i ^ 2 := hlower
-    _ = ∑ chi ∈ S, degreeNat chi ^ 2 := hsumS.symm
-    _ ≤ ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-        degreeNat chi ^ 2 := Finset.sum_le_sum_of_subset hSsub
 
-private theorem huppert_XI_6_3_nonprincipal_lower_sum_add_one
-    {Q : Type u} [Group Q] [Finite Q]
-    (K : Finset (Section1.ClassFunction Q))
-    (hKcomplete : ∀ chi : Section1.ClassFunction Q,
-      Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K)
-    (degreeNat : Section1.ClassFunction Q → ℕ)
-    (hdegree : ∀ chi : K,
-      Section1.degree (chi : Section1.ClassFunction Q) =
-        (degreeNat chi : ℂ))
-    (z : ℕ) (hz : 1 < z)
-    (hlower : z ^ 2 ≤
-      ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-        degreeNat chi ^ 2) :
-    z ^ 2 ≤
-      (∑ chi ∈
-          (K.filter (fun chi => degreeNat chi < z)).erase
-            (Section1.principalCharacter Q),
-        degreeNat chi ^ 2) + 1 := by
-  classical
-  let one : Section1.ClassFunction Q := Section1.principalCharacter Q
-  have honeIrr :
-      Section1.IsIrreducibleCharacterOnGroup one :=
-    Section3.principalCharacter_isIrreducibleCharacterOnGroup
-  have honeK : one ∈ K := hKcomplete one honeIrr
-  have hdegreeOne : degreeNat one = 1 := by
-    have hcast : (degreeNat one : ℂ) = 1 := by
-      rw [← hdegree ⟨one, honeK⟩]
-      simp [one, Section1.degree]
-    exact_mod_cast hcast
-  have honeLower :
-      one ∈ K.filter (fun chi => degreeNat chi < z) :=
-    Finset.mem_filter.mpr ⟨honeK, by simpa [hdegreeOne] using hz⟩
-  have hsplit :=
-    Finset.sum_erase_add
-      (K.filter (fun chi => degreeNat chi < z))
-      (fun chi => degreeNat chi ^ 2) honeLower
-  calc
-    z ^ 2 ≤
-        ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
-          degreeNat chi ^ 2 := hlower
-    _ = (∑ chi ∈
-          (K.filter (fun chi => degreeNat chi < z)).erase
-            (Section1.principalCharacter Q),
-          degreeNat chi ^ 2) + 1 := by
-      simpa [one, hdegreeOne] using hsplit.symm
 
 /-- A nonlinear irreducible character of a finite nilpotent group admits an
 injectively indexed family of lower-degree irreducible characters whose
@@ -5306,79 +4965,6 @@ private theorem huppert_XI_6_3_two_nonlinear_lower_family
         (a * b) ^ 2 + ((a * b) ^ 2 + (a * b) ^ 2) := by ring
   rw [hthree]
   exact Nat.add_le_add hfirst (Nat.add_le_add hsecond hthird)
-/-- XI.6.3, first numerical input: for a nonlinear irreducible character of
-a nilpotent group, the nonprincipal lower-degree square sum dominates its
-degree square up to the omitted principal contribution. -/private theorem huppert_XI_6_3_nilpotent_nonprincipal_lower_sum
-    {Q : Type u} [Group Q] [Finite Q]
-    (hnil : Group.IsNilpotent Q)
-    (theta : Section1.ClassFunction Q)
-    (htheta : Section1.IsIrreducibleCharacterOnGroup theta)
-    (z : ℕ) (hz : 1 < z)
-    (hthetaDegree : Section1.degree theta = (z : ℂ)) :
-    ∃ K : Finset (Section1.ClassFunction Q),
-      ∃ degreeNat : Section1.ClassFunction Q → ℕ,
-        (∀ chi : K,
-          Section1.IsIrreducibleCharacterOnGroup
-            (chi : Section1.ClassFunction Q)) ∧
-        (∀ chi : Section1.ClassFunction Q,
-          Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K) ∧
-        (∀ chi : K,
-          Section1.degree (chi : Section1.ClassFunction Q) =
-            (degreeNat chi : ℂ)) ∧
-        z ^ 2 ≤
-          (∑ chi ∈
-              (K.filter (fun chi => degreeNat chi < z)).erase
-                (Section1.principalCharacter Q),
-            degreeNat chi ^ 2) + 1 := by
-  classical
-  obtain ⟨p, hp, hpDvdZ⟩ := Nat.exists_prime_and_dvd hz.ne'
-  obtain ⟨e, chi, psi, a, b, hchi, hpsi, _hfactor,
-      haPos, hbPos, hachi, hbpsi, _haDvd, hbDvd, hthetaDegreeAB⟩ :=
-    huppert_XI_6_3_nilpotent_character_factor p hp hnil theta htheta
-  have hab : a * b = z := by
-    have hcast : ((a * b : ℕ) : ℂ) = (z : ℂ) := by
-      rw [← hthetaDegreeAB, hthetaDegree]
-    exact_mod_cast hcast
-  have ha : 1 < a := by
-    apply huppert_XI_6_3_pcore_factor_degree_gt_one p a b hp haPos hbDvd
-    rw [hab]
-    exact hpDvdZ
-  obtain ⟨ι, hι, rho, rhoDegree, hrho, hvalue, hlower⟩ :=
-    huppert_XI_6_3_pcore_lower_degree_family
-      p a hp chi hchi hachi ha
-  letI : Fintype ι := hι
-  obtain ⟨I, hIFintype, lowerChar, lowerDegree, hlowerInj,
-      hlowerIrr, hlowerDegree, hlowerLt, hlowerSq⟩ :=
-    huppert_XI_6_3_lifted_lower_family
-      p a b hbPos e psi hpsi hbpsi rho rhoDegree hrho hvalue hlower
-  letI : Fintype I := hIFintype
-  obtain ⟨K, hKirr, hKcomplete⟩ :=
-    huppert_XI_6_complete_irreducible_finset (Q := Q)
-  let degreeNat : Section1.ClassFunction Q → ℕ := fun phi =>
-    if hphi : phi ∈ K then
-      Classical.choose
-        (huppert_XI_6_positive_degree_nat
-          (hKirr ⟨phi, hphi⟩))
-    else 0
-  have hdegree : ∀ phi : K,
-      Section1.degree (phi : Section1.ClassFunction Q) =
-        (degreeNat phi : ℂ) := by
-    intro phi
-    dsimp [degreeNat]
-    rw [dif_pos phi.property]
-    exact (Classical.choose_spec
-      (huppert_XI_6_positive_degree_nat (hKirr phi))).2.1
-  have hlowerK :
-      z ^ 2 ≤
-        ∑ phi ∈ K.filter (fun phi => degreeNat phi < z),
-          degreeNat phi ^ 2 := by
-    rw [← hab]
-    exact huppert_XI_6_3_lifted_family_le_complete_lower_sum
-      K hKcomplete degreeNat hdegree (a * b)
-      lowerChar lowerDegree hlowerInj hlowerIrr hlowerDegree hlowerLt hlowerSq
-  refine ⟨K, degreeNat, hKirr, hKcomplete, hdegree, ?_⟩
-  exact huppert_XI_6_3_nonprincipal_lower_sum_add_one
-    K hKcomplete degreeNat hdegree z hz hlowerK
 
 /-- The degree/norm contribution of one induced irreducible kernel character,
 expressed over its ambient conjugation orbit. -/
@@ -8529,29 +8115,6 @@ private theorem huppert_XI_6_6_two_derangement_classes_of_centralizer_fixedPoint
     n d u hn hd hupos ⟨k, hk⟩
       ⟨Nat.card C, by rw [← hCu, mul_comm]⟩ hcount
 
-private theorem huppert_XI_6_6_derangement_count_arithmetic
-    (z0 n d : ℕ) (hn : 1 < n) (hodd : Odd d)
-    (hpartition :
-      (n + 1) * n * d =
-        1 + z0 + (n ^ 2 - 1) + (n + 1) * n * ((d - 1) / 2)) :
-    2 * z0 + 2 * n ^ 2 = (n + 1) * n * (d + 1) := by
-  rcases hodd with ⟨k, hk⟩
-  have hhalf : (d - 1) / 2 = k := by
-    rw [hk]
-    omega
-  rw [hhalf] at hpartition
-  rw [hk] at hpartition ⊢
-  have hnSq : 1 ≤ n ^ 2 := Nat.one_le_pow 2 n (by omega)
-  have hpartition' :
-      (n + 1) * n * (2 * k + 1) =
-        z0 + n ^ 2 + (n + 1) * n * k := by
-    calc
-      (n + 1) * n * (2 * k + 1) =
-          1 + z0 + (n ^ 2 - 1) + (n + 1) * n * k := hpartition
-      _ = z0 + ((n ^ 2 - 1) + 1) + (n + 1) * n * k := by omega
-      _ = z0 + n ^ 2 + (n + 1) * n * k := by
-        rw [Nat.sub_add_cancel hnSq]
-  nlinarith
 
 /-- Burnside's lemma on points and ordered pairs gives the standard
 Zassenhaus derangement count without separately enumerating the one- and
@@ -8744,50 +8307,6 @@ private theorem zassenhaus_derangement_count
     Nat.sub_add_cancel hGpos
   nlinarith
 
-/-- Huppert--Blackburn XI.6.6, with the structural conclusions of XI.6.4
-and the standard fixed-point count made explicit. -/
-public theorem huppert_XI_6_6_two_derangement_classes
-    {G Omega : Type*} [Group G] [Finite G] [MulAction G Omega] [Finite Omega]
-    (hat_most_two_fixed_points :
-      ∀ x : G, x ≠ 1 → ∀ a b c : Omega,
-        a ≠ b → a ≠ c → b ≠ c →
-          ¬ (x • a = a ∧ x • b = b ∧ x • c = c))
-    (hpairOdd : ∀ a b : Omega, ∀ hab : a ≠ b,
-      Odd (Nat.card
-        (MulAction.stabilizer (MulAction.stabilizer G a)
-          (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a))))
-    (hswapInverts :
-      ∀ a b : Omega, ∀ hab : a ≠ b, ∀ s : G,
-        s • a = b → s • b = a →
-          ∀ x : MulAction.stabilizer (MulAction.stabilizer G a)
-            (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a),
-            s * (((x : MulAction.stabilizer G a) : G)) * s⁻¹ =
-              ((((x⁻¹ : MulAction.stabilizer
-                (MulAction.stabilizer G a)
-                (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)) :
-                  MulAction.stabilizer G a) : G)))
-    (n d : ℕ) (hn : 1 < n) (hd : 1 < d) (hodd : Odd d)
-    (hOmegaCard : Nat.card Omega = n + 1)
-    (hGcard : Nat.card G = (n + 1) * n * d)
-    (hfixedPointPartition :
-      let Der := {g : G // ∀ x : Omega, g • x ≠ x}
-      (n + 1) * n * d =
-        1 + Nat.card Der + (n ^ 2 - 1) +
-          (n + 1) * n * ((d - 1) / 2))
-    (hderNonempty : Nonempty {g : G // ∀ x : Omega, g • x ≠ x}) :
-    ∃ g h : G,
-      (∀ x : Omega, g • x ≠ x) ∧
-        (∀ x : Omega, h • x ≠ x) ∧ ¬ IsConj g h := by
-  let Der := {g : G // ∀ x : Omega, g • x ≠ x}
-  have hderCount :
-      2 * Nat.card Der + 2 * n ^ 2 = (n + 1) * n * (d + 1) :=
-    huppert_XI_6_6_derangement_count_arithmetic
-      (Nat.card Der) n d hn hodd hfixedPointPartition
-  apply huppert_XI_6_6_two_derangement_classes_of_centralizer_fixedPointFree
-    n d hn hd hodd hOmegaCard hGcard hderCount hderNonempty
-  intro g hg
-  exact huppert_XI_6_6_derangement_centralizer_fixedPointFree
-    hat_most_two_fixed_points hpairOdd hswapInverts g hg
 
 /-- XI.6.7, final arithmetic contradiction: a hypothetical remaining
 character of degree `n-1` would force `n-1` to divide `2*d`. -/
@@ -9047,7 +8566,6 @@ private lemma huppert_XI_5_3_mackeyIntersection_eq_twoPointStabilizer
       _ = a := htb
 
 
-
 private lemma huppert_XI_5_3_doubleCoset_eq_one_or_swap
     {G : Type u} {Omega : Type v}
     [Group G] [Finite G] [MulAction G Omega]
@@ -9076,8 +8594,6 @@ private lemma huppert_XI_5_3_doubleCoset_eq_one_or_swap
       (DoubleCoset.mem_doubleCoset.mp hdouble)).symm
 
 
-
-
 private lemma xi61_sum_eq_of_eq_one_or_swap
     {Q : Type*} [Fintype Q] [DecidableEq Q]
     (q0 qt : Q) (hne : q0 ≠ qt)
@@ -9090,8 +8606,6 @@ private lemma xi61_sum_eq_of_eq_one_or_swap
     exact hcases q
   rw [huniv]
   simp [hne]
-
-
 
 
 private lemma huppert_XI_5_3_subgroupRestriction_inducedCF_twoCoset
@@ -9157,8 +8671,6 @@ private lemma huppert_XI_5_3_subgroupRestriction_inducedCF_twoCoset
   rfl
 
 
-
-
 private lemma huppert_XI_5_3_scalarProduct_inducedCF_twoCoset
     {G : Type u} {Omega : Type v}
     [Group G] [Finite G] [MulAction G Omega]
@@ -9196,9 +8708,6 @@ private lemma huppert_XI_5_3_scalarProduct_inducedCF_twoCoset
   rw [Section1.scalarProduct_inducedCF_inducedCF_left H psi phi, hres,
     Section5.scalarProduct_add_right, hmackey,
     Section1.scalarProduct_mackeySummand_right H t psi phi hpsi]
-
-
-
 
 
 private lemma huppert_XI_5_3_mackeyCrossTerm_eq_conjugate
@@ -9296,7 +8805,6 @@ private lemma huppert_XI_5_3_mackeyCrossTerm_eq_conjugate
           (Section1.subgroupRestriction D phi)) := by rw [hresPsi, hconjPhi]
 
 
-
 public lemma huppert_XI_5_3_ambient_induced_pairing
     {G : Type u} {Omega : Type v}
     [Group G] [Finite G] [MulAction G Omega]
@@ -9333,8 +8841,6 @@ public lemma huppert_XI_5_3_ambient_induced_pairing
     psi phi hpsiClass hphiClass]
   rw [huppert_XI_5_3_mackeyCrossTerm_eq_conjugate a b hab t hta htb
     hswapInverts psi phi hphiChar]
-
-
 
 
 public lemma huppert_XI_5_3_characterInflationByHom_conjugate_eq_inv

@@ -19,18 +19,14 @@ import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.GroupAction.Lemmas
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.SubgroupConjAction
-import FeitThompson.ZGroup.Hall
+import Mathlib.GroupTheory.SpecificGroups.ZGroup
+import FeitThompson.HallSubgroups.Core
 import FeitThompson.ChiefFactors.BaerCore
 
 open scoped Pointwise
 
 universe v
 
-lemma pPrimeCore_characteristic_subgroup {G : Type*} [Group G] [Finite G] {p : ℕ}
-    [Fact p.Prime] (H : Subgroup G) : (pPrimeCore p (↥H)).Characteristic := by
-  rw [Subgroup.characteristic_iff_map_eq]
-  intro φ
-  simpa using (pPrimeCore_map_iso (G := ↥H) (G' := ↥H) (p := p) φ)
 
 public lemma pPrimeCore_map_le_centralizer_pCore_map {G : Type*} [Group G] [Finite G] {p : ℕ}
     [Fact p.Prime] (H : Subgroup G) :

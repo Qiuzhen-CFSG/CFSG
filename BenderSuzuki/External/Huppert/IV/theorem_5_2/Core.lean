@@ -241,33 +241,6 @@ public theorem hkt_huppert_iv52_centers_eq_of_double_normalization
     (hkt_huppert_iv52_other_center_le_center_of_double_normalization
       (Q := Q) (q := q) S T hcenter_le_T hT_le_normalizer_center)
 
-/-- Huppert IV.5.2, characteristic-center transport substep: move the fixed
-Sylow-center characteristic subgroup into the other Sylow subgroup while keeping
-normalization by the fixed Sylow visible. -/
-public theorem hkt_huppert_iv52_characteristic_center_transport_subgroup
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S T : Sylow q Q)
-    (hcenter_le_T :
-      centerIn (G := Q) (S : Subgroup Q) ≤ (T : Subgroup Q)) :
-    ∃ M : Subgroup Q,
-      IsPGroup q M ∧
-        M ≤ (S : Subgroup Q) ∧
-          (S : Subgroup Q) ≤ Subgroup.normalizer (M : Set Q) ∧
-            M ≤ (T : Subgroup Q) := by
-  classical
-  let M : Subgroup Q := centerIn (G := Q) (S : Subgroup Q)
-  have hM_p : IsPGroup q M :=
-    IsPGroup.to_le S.isPGroup'
-      (show M ≤ (S : Subgroup Q) from by
-        intro x hx
-        exact hx.1)
-  have hM_le_S : M ≤ (S : Subgroup Q) := by
-    intro x hx
-    exact hx.1
-  have hS_le_normalizer_M :
-      (S : Subgroup Q) ≤ Subgroup.normalizer (M : Set Q) := by
-    simpa [M] using hkt_huppert_iv52_sylow_le_normalizer_centerIn (Q := Q) (q := q) S
-  exact ⟨M, hM_p, hM_le_S, hS_le_normalizer_M, hcenter_le_T⟩
 
 /-- Huppert IV.5.2, normalizer-failure substep: the second Sylow cannot
 normalize `Z(S)`, otherwise the two Sylow centers agree, contradicting the

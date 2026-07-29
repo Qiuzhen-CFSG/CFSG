@@ -43,16 +43,9 @@ universe v
     (ρ : Representation ℂ G V) (A : Subgroup G) : Prop :=
   ∀ a : A, ρ (a : G) = 1
 
-def conjugateClassFunction {G : Type*} [Group G]
-    (x : G) (phi : ClassFunction G) : ClassFunction G :=
-  fun g => phi (x * g * x⁻¹)
 
 /-! ## Honest kernel-transport lemmas -/
 
-lemma subgroupInKernel'_iff
-    {G : Type*} [Group G] (phi : ClassFunction G) (A : Subgroup G) :
-    subgroupInKernel' phi A ↔ ∀ a : A, phi a = phi 1 := by
-  rfl
 
 public lemma subgroupInKernel'_of_eq
     {G : Type*} [Group G]
@@ -62,31 +55,6 @@ public lemma subgroupInKernel'_of_eq
   subst hEq
   exact hA
 
-lemma subgroupInKernel'_conjugate
-    {G : Type*} [Group G]
-    (phi : ClassFunction G) (A : Subgroup G) [hA : A.Normal]
-    (hker : subgroupInKernel' phi A) (x : G) :
-    subgroupInKernel' (conjugateClassFunction x phi) A := by
-  intro a
-  have hxax : x * (a : G) * x⁻¹ ∈ A := by
-    simpa using hA.conj_mem (a : G) a.2 x
-  have hmem := hker ⟨x * (a : G) * x⁻¹, hxax⟩
-  dsimp [conjugateClassFunction, degree]
-  simpa [degree] using hmem
-
-lemma subgroupInKernel'_conjugate_iff
-    {G : Type*} [Group G]
-    (phi : ClassFunction G) (A : Subgroup G) [hA : A.Normal] (x : G) :
-    subgroupInKernel' (conjugateClassFunction x phi) A ↔ subgroupInKernel' phi A := by
-  constructor
-  · intro h a
-    have hmem : x⁻¹ * (a : G) * x ∈ A := by
-      simpa using hA.conj_mem (a : G) a.2 x⁻¹
-    have hx := h ⟨x⁻¹ * (a : G) * x, hmem⟩
-    dsimp [conjugateClassFunction, degree] at hx ⊢
-    simpa [mul_assoc] using hx
-  · intro h
-    exact subgroupInKernel'_conjugate phi A h x
 
 lemma subgroupInKernel'_smul
     {G : Type*} [Group G] (z : ℂ) (phi : ClassFunction G) (A : Subgroup G)
@@ -692,15 +660,6 @@ lemma representation_character_eq_of_div_mem_kernel
     simp
   simp [Representation.character, hρ]
 
-lemma representation_character_mul_left_eq_of_mem_kernel
-    {G V : Type*} [Group G]
-    [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V) (A : Subgroup G)
-    (hker : subgroupInRepresentationKernel ρ A)
-    {a g : G} (ha : a ∈ A) :
-    ρ.character (a * g) = ρ.character g := by
-  exact representation_character_eq_of_div_mem_kernel ρ A hker (by
-    simpa [div_eq_mul_inv, mul_assoc] using ha)
 
 lemma inducedCF_eq_of_div_mem_kernel
     {G V : Type*} [Group G] [Finite G]
@@ -911,30 +870,6 @@ lemma proposition_1_6_part_a_forward
     subgroupInKernel'_of_eq hres.symm hscaled
   exact (subgroupInKernel'_subgroupRestriction_iff H A hAH chi).mp hresKer
 
-lemma proposition_1_6_part_a
-    {G ι : Type*} [Group G] [Finite ι]
-    (H A : Subgroup G) [Finite H] [A.Normal] (hAH : A ≤ H)
-    (theta : ClassFunction H) (conjs : ι → ClassFunction H)
-    (r : ℕ) (chi : ClassFunction G)
-    (hres : subgroupRestriction H chi = fun h => (r : ℂ) * ∑ i : ι, conjs i h)
-    (hconjKernel :
-      subgroupInKernel' theta (A.subgroupOf H) →
-        ∀ i : ι, subgroupInKernel' (conjs i) (A.subgroupOf H))
-    (hdetect :
-      subgroupInKernel' (fun h : H => (r : ℂ) * ∑ i : ι, conjs i h) (A.subgroupOf H) →
-        subgroupInKernel' theta (A.subgroupOf H)) :
-    subgroupInKernel' theta (A.subgroupOf H) ↔ subgroupInKernel' chi A := by
-  constructor
-  · intro htheta
-    exact proposition_1_6_part_a_forward H A hAH theta conjs r chi hres
-      hconjKernel htheta
-  · intro hchi
-    have hresKer : subgroupInKernel' (subgroupRestriction H chi) (A.subgroupOf H) :=
-      (subgroupInKernel'_subgroupRestriction_iff H A hAH chi).mpr hchi
-    have hscaled :
-        subgroupInKernel' (fun h : H => (r : ℂ) * ∑ i : ι, conjs i h) (A.subgroupOf H) :=
-      subgroupInKernel'_of_eq hres hresKer
-    exact hdetect hscaled
 
 lemma proposition_1_6_part_b
     {Q : Type*} [Group Q] (B : Subgroup Q)
@@ -945,20 +880,6 @@ lemma proposition_1_6_part_b
     chi = indQ := by
   exact eq_of_eqOn_subgroup_and_supportedOnSubgroup B chi indQ hEq hchi hindQ
 
-theorem proposition_1_6_a_with_detect
-    {G ι : Type*} [Group G] [Finite ι]
-    (H A : Subgroup G) [Finite H] [A.Normal] (hAH : A ≤ H)
-    (theta : ClassFunction H) (conjs : ι → ClassFunction H)
-    (r : ℕ) (chi : ClassFunction G)
-    (hres : subgroupRestriction H chi = fun h => (r : ℂ) * ∑ i : ι, conjs i h)
-    (hconjKernel :
-      subgroupInKernel' theta (A.subgroupOf H) →
-        ∀ i : ι, subgroupInKernel' (conjs i) (A.subgroupOf H))
-    (hdetect :
-      subgroupInKernel' (fun h : H => (r : ℂ) * ∑ i : ι, conjs i h) (A.subgroupOf H) →
-        subgroupInKernel' theta (A.subgroupOf H)) :
-    subgroupInKernel' theta (A.subgroupOf H) ↔ subgroupInKernel' chi A :=
-  proposition_1_6_part_a H A hAH theta conjs r chi hres hconjKernel hdetect
 
 theorem proposition_1_6_a_forward_canonical
     {G V : Type*} [Group G] [Finite G]

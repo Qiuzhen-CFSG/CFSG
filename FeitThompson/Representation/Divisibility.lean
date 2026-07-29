@@ -22,7 +22,6 @@ variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
 private abbrev IntegralGroupAlgebra (G : Type*) [Group G] := MonoidAlgebra ℤ G
 
-private abbrev ComplexGroupAlgebra (G : Type*) [Group G] := MonoidAlgebra ℂ G
 
 private noncomputable def classSet (c : ConjClasses G) : Finset G :=
   letI : DecidableEq (ConjClasses G) := Classical.decEq (ConjClasses G)
@@ -95,20 +94,6 @@ private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClass
       simpa [hyx] using (mem_classSet_iff (G := G)).1 hy
     simp [hyx]
 
-private lemma classSumComplex_single_comm (c : ConjClasses G) (h : G) :
-    (MonoidAlgebra.single h (1 : ℂ) : MonoidAlgebra ℂ G) *
-        classSumComplex (G := G) c =
-      classSumComplex (G := G) c *
-        MonoidAlgebra.single h (1 : ℂ) := by
-  classical
-  ext x
-  simp only [MonoidAlgebra.coeff_single_mul_apply, MonoidAlgebra.coeff_mul_single_apply,
-    classSumComplex_coeff, one_mul, mul_one]
-  have hconj :
-      ConjClasses.mk (h⁻¹ * x) = ConjClasses.mk (x * h⁻¹) := by
-    rw [ConjClasses.mk_eq_mk_iff_isConj, isConj_iff]
-    exact ⟨h, by group⟩
-  rw [hconj]
 
 private lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G) :
     a * classSumComplex (G := G) c =

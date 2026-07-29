@@ -71,59 +71,6 @@ theorem theorem_3_5_quotient_step {G : Type uG} [Group G] [Finite G] {F : Type u
     commutator_le_centralizerIn_of_map_le_centralizerIn_ofQuotient
       (N := N) (K := K) (R := K) (ρ := ρ) hfrob.normal hquot
 
-theorem theorem_3_5_simple_commutator_le_ker_of_fixedSubspace_eq_bot
-    {G : Type uG} [Group G] [Finite G] {F : Type uF} [Field F] {V : Type uV}
-    [AddCommGroup V] [Module F V]
-    (K R : Subgroup G) (ρ : Representation F G V)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R)
-    (hchar : ringChar F = 0 ∨
-      (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
-    {m : Submodule (MonoidAlgebra F G) ρ.asModule}
-    (hfixm : (Subrepresentation.ofSubmodule' m).toRepresentation.fixedSubspace R = ⊥) :
-    ⁅K, K⁆ ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
-  letI : K.Normal := hfrob.normal
-  have hKker : K ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker := by
-    by_contra hKnle
-    exact
-      (lemma_3_3 K R (Subrepresentation.ofSubmodule' m).toRepresentation hfrob
-        (hchar_of_card_dvd (G := G) (F := F) hchar (Subgroup.card_subgroup_dvd_card K))
-        hKnle) hfixm
-  have hKcent : K ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.centralizerIn K :=
-    (le_centralizerIn_iff_le_ker
-      (ρ := (Subrepresentation.ofSubmodule' m).toRepresentation) (H := K) (K := K) le_rfl).2 hKker
-  exact
-    (commutator_le_centralizerIn_iff_le_ker
-      (ρ := (Subrepresentation.ofSubmodule' m).toRepresentation) (R := K) (K := K)).mp <|
-      le_trans (Subgroup.commutator_le_right (H₁ := K) (H₂ := K)) hKcent
-
-theorem theorem_3_5_of_irreducible_case
-    {G : Type uG} [Group G] [Finite G] {F : Type uF} [Field F] {V : Type uV}
-    [AddCommGroup V] [Module F V]
-    (K R : Subgroup G) (ρ : Representation F G V)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R)
-    (hchar : ringChar F = 0 ∨
-      (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
-    (hirr :
-      ∀ m : Submodule (MonoidAlgebra F G) ρ.asModule,
-        IsSimpleModule (MonoidAlgebra F G) m →
-        (Subrepresentation.ofSubmodule' m).toRepresentation.fixedSubspace R ≠ ⊥ →
-        ⁅K, K⁆ ≤ (Subrepresentation.ofSubmodule' m).toRepresentation.ker) :
-    ⁅K, K⁆ ≤ ρ.centralizerIn K := by
-  letI : K.Normal := hfrob.normal
-  letI : Fintype G := Fintype.ofFinite G
-  letI : NeZero (Fintype.card G : F) := by
-    refine ⟨?_⟩
-    simpa [Nat.card_eq_fintype_card] using
-      card_ne_zero_of_char_condition (G := G) (F := F) hchar
-  have hcomm_ker : ⁅K, K⁆ ≤ ρ.ker :=
-    le_ker_of_forall_simple_submodule_le_ker (ρ := ρ) ⁅K, K⁆ <| by
-      intro m hm
-      by_cases hfixm : (Subrepresentation.ofSubmodule' m).toRepresentation.fixedSubspace R = ⊥
-      · exact
-          theorem_3_5_simple_commutator_le_ker_of_fixedSubspace_eq_bot K R ρ hfrob hchar hfixm
-      · exact hirr m hm hfixm
-  exact
-    (commutator_le_centralizerIn_iff_le_ker (ρ := ρ) (R := K) (K := K)).2 hcomm_ker
 
 set_option backward.isDefEq.respectTransparency false in
 theorem theorem_3_5_exists_irreducible_counterexample
@@ -711,57 +658,6 @@ theorem theorem_3_5_le_ker_of_normal_fixedSubspace_ne_bot
   have hv : v ∈ ρ.fixedSubspace H := by simp [htop_sub]
   exact hv ⟨h, hh⟩
 
-noncomputable def theorem_3_5_orbitSpanSubrepresentation
-    {G : Type*} [Group G] {F : Type*} [Field F] {V : Type*}
-    [AddCommGroup V] [Module F V] (ρ : Representation F G V) (v : V) :
-    Subrepresentation ρ where
-  toSubmodule := Submodule.span F (Set.range fun g : G => ρ g v)
-  apply_mem_toSubmodule := by
-    intro g w hw
-    let A : Set V := Set.range fun x : G => ρ x v
-    have hmap : Submodule.map (ρ g) (Submodule.span F A) ≤ Submodule.span F A := by
-      rw [Submodule.map_span]
-      refine Submodule.span_le.mpr ?_
-      rintro a ⟨x, hxA, rfl⟩
-      rcases hxA with ⟨y, rfl⟩
-      exact Submodule.subset_span ⟨g * y, by
-        simp⟩
-    have hwmap : ρ g w ∈ Submodule.map (ρ g) (Submodule.span F A) := ⟨w, hw, rfl⟩
-    exact hmap hwmap
-
-theorem theorem_3_5_irreducible_finiteDimensional_of_fixedSubspace_ne_bot
-    {G : Type*} [Group G] [Finite G] {F : Type*} [Field F] {V : Type*}
-    [AddCommGroup V] [Module F V] (ρ : Representation F G V)
-    [Representation.IsIrreducible ρ] {R : Subgroup G}
-    (hfix : ρ.fixedSubspace R ≠ ⊥) :
-    FiniteDimensional F V := by
-  classical
-  let Sfix : Submodule F V := ρ.fixedSubspace R
-  obtain ⟨v, -, hvne⟩ := Sfix.ne_bot_iff.mp hfix
-  let S : Subrepresentation ρ := theorem_3_5_orbitSpanSubrepresentation ρ v
-  have hvS : v ∈ S.toSubmodule := by
-    exact Submodule.subset_span ⟨1, by simp⟩
-  have hS_ne : S ≠ ⊥ := by
-    intro hS
-    have hv0 : v = 0 := by
-      have : v ∈ (⊥ : Subrepresentation ρ).toSubmodule := by simpa [hS] using hvS
-      change v ∈ (⊥ : Submodule F V) at this
-      simpa using this
-    exact hvne hv0
-  have hS_top : S = ⊤ := by
-    rcases (inferInstance : Representation.IsIrreducible ρ).eq_bot_or_eq_top S with hbot | htop
-    · exact False.elim (hS_ne hbot)
-    · exact htop
-  have hfinite : (Set.range fun g : G => ρ g v).Finite := Set.toFinite _
-  letI : FiniteDimensional F ↥(Submodule.span F (Set.range fun g : G => ρ g v)) :=
-    FiniteDimensional.span_of_finite (K := F) (hA := hfinite)
-  exact
-    (LinearEquiv.ofTop (Submodule.span F (Set.range fun g : G => ρ g v))
-      (by
-        have hS_top' := congrArg Subrepresentation.toSubmodule hS_top
-        change Submodule.span F (Set.range fun g : G => ρ g v) =
-          (⊤ : Submodule F V) at hS_top'
-        exact hS_top')).finiteDimensional
 
 noncomputable def theorem_3_5_coindMap
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]

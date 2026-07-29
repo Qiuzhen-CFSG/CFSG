@@ -95,15 +95,6 @@ This is the subgroup `⋂_{cf} C_G(cf)`, where `cf` runs over all chief factors 
 public def baer (G : Type*) [Group G] : Subgroup G :=
   ⨅ cf : ChiefFactor G, centralizerOfChiefFactor (G := G) ⊤ cf
 
-/-- The Baer intersection is a normal subgroup. -/
-theorem baer_normal {G : Type*} [Group G] :
-    (baer (G := G)).Normal := by
-  classical
-  -- Each `centralizerOfChiefFactor ⊤ cf` is normal, hence so is the `iInf`.
-  refine Subgroup.normal_iInf_normal (fun cf => ?_)
-  -- Reuse `centralizerOfChiefFactor_normal` with `H = ⊤`.
-  simpa [baer] using (centralizerOfChiefFactor_normal (G := G) (H := (⊤ : Subgroup G))
-    (hH := (inferInstance : (⊤ : Subgroup G).Normal)) cf)
 
 /-- The image of the Baer intersection under a quotient map is contained in the Baer intersection of the quotient group. -/
 theorem baer_map_mk'_le {G : Type*} [Group G] (N : Subgroup G) [N.Normal] :

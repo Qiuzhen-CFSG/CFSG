@@ -118,78 +118,6 @@ private theorem inducedCF_eq_of_irreducible_constituent_appendixIV
   exact (classFunction_eq_of_irreducible_scalarProduct_ne_zero_appendixIV
     hIndψ hχ hinnerInd).symm
 
-private theorem subgroupInKernel'_constituent_of_subgroupRestriction_kernel_appendixIV
-    {L : Type u} [Group L] [Finite L]
-    (K A : Subgroup L)
-    {χ : Section1.ClassFunction L} {θ : Section1.ClassFunction K}
-    (hχirr : Section1.IsIrreducibleCharacterOnGroup χ)
-    (hχker : Section1.subgroupInKernel' χ A)
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ)
-    (hinner :
-      Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0) :
-    Section1.subgroupInKernel' θ (A.subgroupOf K) := by
-  classical
-  rcases hχirr with ⟨nχ, ρχ, _hρχirr, hχeq⟩
-  rcases hθirr with ⟨nθ, ρθ, hρθirr, hθeq⟩
-  let ρχK : Representation ℂ K (Fin nχ → ℂ) := ρχ.comp K.subtype
-  have hres :
-      Section1.subgroupRestriction K χ = ρχK.character := by
-    ext k
-    simp [ρχK, Section1.subgroupRestriction, hχeq, Representation.character]
-  have hχkerChar : Section1.subgroupInKernel' ρχ.character A := by
-    simpa [hχeq] using hχker
-  have hχkerRep : Section1.subgroupInRepresentationKernel ρχ A :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      ρχ A).mp hχkerChar
-  have hχKkerRep :
-      Section1.subgroupInRepresentationKernel ρχK (A.subgroupOf K) := by
-    intro a
-    change ρχ ((a : K) : L) = 1
-    exact hχkerRep ⟨((a : K) : L), by
-      exact a.property⟩
-  have hinnerSwap :
-      Section1.scalarProduct K (Section1.subgroupRestriction K χ) θ ≠ 0 :=
-    (Section1.scalarProduct_ne_zero_swap θ
-      (Section1.subgroupRestriction K χ)).1 hinner
-  have hinnerRep :
-      Section1.scalarProduct K ρχK.character ρθ.character ≠ 0 := by
-    simpa [hθeq, hres] using hinnerSwap
-  have hfinrank_ne :
-      (Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) : ℂ) ≠ 0 := by
-    simpa [Section1.scalarProduct_representation_char_eq_finrank ρθ ρχK]
-      using hinnerRep
-  have hfinrank_nat_ne :
-      Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) ≠ 0 := by
-    intro hzero
-    apply hfinrank_ne
-    simp [hzero]
-  have hfinrank_pos :
-      0 < Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) :=
-    Nat.pos_of_ne_zero hfinrank_nat_ne
-  rw [Module.finrank_pos_iff_exists_ne_zero] at hfinrank_pos
-  rcases hfinrank_pos with ⟨f, hf⟩
-  have hθkerRep :
-      Section1.subgroupInRepresentationKernel ρθ (A.subgroupOf K) := by
-    letI : Representation.IsIrreducible ρθ := hρθirr
-    have hf_inj : Function.Injective f := by
-      rcases (Representation.IsIrreducible.injective_or_eq_zero
-          (ρ := ρθ) (σ := ρχK) f) with hinj | hzero
-      · exact hinj
-      · exact (hf hzero).elim
-    intro a
-    apply LinearMap.ext
-    intro v
-    apply hf_inj
-    calc
-      f (ρθ (a : K) v) = ρχK (a : K) (f v) := by
-        exact Representation.IntertwiningMap.isIntertwining ρθ ρχK f (a : K) v
-      _ = f v := by
-        rw [hχKkerRep a]
-        simp
-  have hθkerChar : Section1.subgroupInKernel' ρθ.character (A.subgroupOf K) :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      ρθ (A.subgroupOf K)).mpr hθkerRep
-  simpa [hθeq] using hθkerChar
 
 private theorem constituent_not_subgroupInKernel'_of_subgroupRestriction_not_kernel_appendixIV
     {L : Type u} [Group L] [Finite L]
@@ -965,19 +893,6 @@ public theorem lemma_2_a
             inducedCF d.Q phi = chi := by
   exact lemma_2_a_source_core d chars hchars
 
-private theorem lemma_2_b_QInG_ne_bot {G : Type u} [Group G] [Finite G]
-    (d : FeitSibleyData G) : d.QInG ≠ ⊥ := by
-  have hQ1_ne : d.Q1 ≠ ⊥ := by
-    intro hQ1
-    apply d.Q1_not_two_group
-    exact hQ1.symm ▸ (IsPGroup.of_bot (p := 2) (G := d.H))
-  have hQ_ne : d.Q ≠ ⊥ := by
-    intro hQ
-    apply hQ1_ne
-    apply le_bot_iff.mp
-    simpa [hQ] using d.Q1_le_Q
-  exact (Subgroup.map_eq_bot_iff_of_injective
-    (H := d.Q) (f := d.H.subtype) d.H.subtype_injective).not.mpr hQ_ne
 
 private theorem lemma_2_b_TI {G : Type u} [Group G] [Finite G]
     (d : FeitSibleyData G) :
@@ -1516,13 +1431,5 @@ public theorem lemma_2
 
 end PFAppendixIV
 end BenderSuzuki
-
-
-
-
-
-
-
-
 
 

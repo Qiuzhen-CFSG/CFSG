@@ -96,12 +96,6 @@ public theorem section11Data.primeRank
     primeRank p.val M = 2 :=
   h11.2.1
 
-omit [IsMinCE G] in
-public theorem section11Data.not_ideal
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) :
-    ¬ section10IdealPrime p G :=
-  h11.2.2.1
 
 omit [IsMinCE G] in
 public theorem section11Data.A0_le_A
@@ -138,19 +132,6 @@ public theorem section11Data.not_normalizer_ambient_sylow_le
     ¬ Subgroup.normalizer (section10AmbientSylowSubgroup M P : Set G) ≤ M :=
   h11.2.2.2.2.2.2.2.1
 
-omit [IsMinCE G] in
-public theorem section11Data.centralizer_A0_le_M
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) :
-    Subgroup.centralizer (A0 : Set G) ≤ M :=
-  h11.2.2.2.2.2.2.2.2.1
-
-omit [IsMinCE G] in
-public theorem section11Data.centralizer_A_le_A0
-    {M A0 A : Subgroup G} {p : Nat.Primes} {P : Sylow p.val M}
-    (h11 : section11Data M A0 A p P) :
-    Subgroup.centralizer (A : Set G) ≤ Subgroup.centralizer (A0 : Set G) :=
-  h11.2.2.2.2.2.2.2.2.2.1
 
 omit [IsMinCE G] in
 public theorem section11Data.centralizer_A_le_M

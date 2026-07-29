@@ -703,28 +703,6 @@ private theorem section16_typeI_final_alternative_of_caseF_bridges
     · exact ⟨p, hpMF,
         hPiStarSource p p hpCard hpSigmaBeta _hpNoncomm hpCyclicMF hpMF, hpCyclicMF⟩
 
-private theorem section16_typeI_alternative_of_caseF_bridges
-    {M MF K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hKU : section16KUData M K U)
-    (hFcase : section16CaseF K U) :
-    section16TISubset (MF : Set G) ∨
-      (IsMulCommutative MF ∧ groupRank MF = 2) ∨
-        section16TypeIConditionC M MF := by
-  classical
-  rcases hFcase with ⟨hKbot, hUne⟩
-  by_cases hTI : section16TISubset (MF : Set G)
-  · exact Or.inl hTI
-  · right
-    have hFcase' : section16CaseF K U := ⟨hKbot, hUne⟩
-    rcases section16_section15_alternatives_of_caseF_not_TI
-        (G := G) hM hMF hKU hFcase' hTI with
-      ⟨X, hXle, _hXne, _hBetaMF, hAlt, hPiStarSource⟩
-    have hF : M ∈ section14MFamilyF G :=
-      section16_MFamilyF_of_K_eq_bot (G := G) hM hKU hKbot
-    exact section16_typeI_final_alternative_of_caseF_bridges
-      (G := G) hF hXle hAlt hPiStarSource
 
 omit [IsMinCE G] in
 private theorem section16_typeI_final_alternative_of_caseF

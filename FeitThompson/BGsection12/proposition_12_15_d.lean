@@ -182,12 +182,6 @@ private theorem section12_local_sup_malpha_eq_top
       rw [sup_comm, hjoin]
       simp
 
-omit [Finite G] [IsMinCE G] in
-private theorem section12_local_inf_sup_malpha_eq_top
-    {M N : Subgroup G}
-    (hjoin : M ⊓ N ⊔ section10Malpha N = N) :
-    section10MalphaSubgroup N ⊔ (M ⊓ N).subgroupOf N = ⊤ :=
-  section12_local_sup_malpha_eq_top inf_le_right hjoin
 
 omit [IsMinCE G] in
 public theorem section12_prime_dvd_card_of_primeRank_pos

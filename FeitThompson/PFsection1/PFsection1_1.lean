@@ -73,8 +73,6 @@ def IsTISubset {G : Type*} [Group G] (A : Set G) : Prop :=
 def punctured {G : Type*} [One G] (A : Set G) : Set G :=
   A \ {1}
 
-def exponentCondition (G : Type*) [Group G] (n : ℕ) : Prop :=
-  n ≠ 1 → ∀ g : G, g ^ n = 1
 
 /-! ## Small group-theoretic nodes for Proposition (1.1) -/
 
@@ -162,92 +160,9 @@ public lemma eq_one_of_conj_eq_inv_of_odd_card {G : Type*} [Group G] [Finite G]
 
 /-! ## Linear-algebra core of Isaacs Theorem 6.32 -/
 
-theorem card_fixedPoints_eq_of_permMatrix_conj
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (σ τ : Equiv.Perm ι) (X : (Matrix ι ι ℂ)ˣ)
-    (hconj :
-      σ.permMatrix ℂ =
-        (X : Matrix ι ι ℂ) * τ.permMatrix ℂ * (↑X⁻¹ : Matrix ι ι ℂ)) :
-    (Function.fixedPoints σ).ncard = (Function.fixedPoints τ).ncard := by
-  have htrace :
-      Matrix.trace (σ.permMatrix ℂ) =
-        Matrix.trace (τ.permMatrix ℂ) := by
-    rw [hconj, Matrix.trace_units_conj]
-  have hcast :
-      ((Function.fixedPoints σ).ncard : ℂ) =
-        ((Function.fixedPoints τ).ncard : ℂ) := by
-    simpa [Matrix.trace_permutation] using htrace
-  exact_mod_cast hcast
 
 /-! ## Conjugacy-class side of Proposition (1.1) -/
 
-def invConjClass {G : Type*} [Group G] : ConjClasses G → ConjClasses G :=
-  Quotient.lift (fun g : G => ConjClasses.mk g⁻¹) (by
-    intro a b h
-    apply ConjClasses.mk_eq_mk_iff_isConj.2
-    rcases h with ⟨u, hu⟩
-    exact ⟨u, hu.inv_right⟩)
-
-def invConjClassEquiv {G : Type*} [Group G] : ConjClasses G ≃ ConjClasses G where
-  toFun := invConjClass
-  invFun := invConjClass
-  left_inv := by
-    intro c
-    refine Quotient.inductionOn c ?_
-    intro g
-    change invConjClass (ConjClasses.mk g⁻¹) = ConjClasses.mk g
-    change ConjClasses.mk ((g⁻¹)⁻¹) = ConjClasses.mk g
-    simp
-  right_inv := by
-    intro c
-    refine Quotient.inductionOn c ?_
-    intro g
-    change invConjClass (ConjClasses.mk g⁻¹) = ConjClasses.mk g
-    change ConjClasses.mk ((g⁻¹)⁻¹) = ConjClasses.mk g
-    simp
-
-theorem invConjClass_fixed_eq_one_of_odd_card
-    {G : Type*} [Group G] [Finite G]
-    (hodd : Odd (Nat.card G)) {c : ConjClasses G}
-    (hc : invConjClassEquiv c = c) :
-    c = ConjClasses.mk (1 : G) := by
-  rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
-  have hclass :
-      ConjClasses.mk g⁻¹ = ConjClasses.mk g := by
-    change invConjClass (ConjClasses.mk g) = ConjClasses.mk g at hc
-    change ConjClasses.mk g⁻¹ = ConjClasses.mk g at hc
-    exact hc
-  have hconj : IsConj g g⁻¹ := by
-    exact (ConjClasses.mk_eq_mk_iff_isConj.mp hclass).symm
-  rcases hconj with ⟨u, hu⟩
-  have hx : (u : G) * g * (u : G)⁻¹ = g⁻¹ := by
-    calc
-      (u : G) * g * (u : G)⁻¹ = (g⁻¹ * (u : G)) * (u : G)⁻¹ := by
-        rw [hu]
-      _ = g⁻¹ := by
-        simp [mul_assoc]
-  have hg : g = 1 := eq_one_of_conj_eq_inv_of_odd_card hodd hx
-  simp [hg]
-
-theorem invConjClass_fixed_ncard_of_odd_card
-    {G : Type*} [Group G] [Finite G] [DecidableEq (ConjClasses G)]
-    (hodd : Odd (Nat.card G)) :
-    (Function.fixedPoints (invConjClassEquiv : ConjClasses G ≃ ConjClasses G)).ncard = 1 := by
-  have hset :
-      Function.fixedPoints (invConjClassEquiv : ConjClasses G ≃ ConjClasses G) =
-        ({ConjClasses.mk (1 : G)} : Set (ConjClasses G)) := by
-    ext c
-    constructor
-    · intro hc
-      exact Set.mem_singleton_iff.mpr
-        (invConjClass_fixed_eq_one_of_odd_card hodd hc)
-    · intro hc
-      rcases Set.mem_singleton_iff.mp hc with rfl
-      change invConjClass (ConjClasses.mk (1 : G)) = ConjClasses.mk (1 : G)
-      change ConjClasses.mk ((1 : G)⁻¹) = ConjClasses.mk (1 : G)
-      simp
-  rw [hset]
-  simp
 
 /-! ## Proposition (1.1) -/
 
@@ -277,13 +192,6 @@ public lemma eigenvalue_pow_eq_one_of_pow_eq_one
   · exact (sub_eq_zero.mp hzero).symm
   · exact (hv.2 hzero).elim
 
-lemma charpoly_root_pow_eq_one_of_pow_eq_one
-    {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    {f : Module.End ℂ V} {μ : ℂ} {n : ℕ}
-    (hpow : f ^ n = 1) (hμ : f.charpoly.IsRoot μ) :
-    μ ^ n = 1 := by
-  exact eigenvalue_pow_eq_one_of_pow_eq_one hpow
-    ((Module.End.hasEigenvalue_iff_isRoot_charpoly f μ).2 hμ)
 
 lemma eigenvalue_ne_zero_of_pow_eq_one
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]

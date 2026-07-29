@@ -20,22 +20,6 @@ namespace External
 
 open MatrixGroups PFAppendixIII
 
-/-- Huppert-Blackburn XI.10.7(a), the `PGL(2,2^f)` structure equation. -/
-public theorem huppert_blackburn_XI_example_10_7_a (f : ℕ) :
-    let K := BinaryGaloisField f
-    let s : GL (Fin 2) K :=
-      Matrix.GeneralLinearGroup.mkOfDetNeZero !![0, 1; 1, 0] (by
-        simp [Matrix.det_fin_two])
-    let j : GL (Fin 2) K :=
-      Matrix.GeneralLinearGroup.mkOfDetNeZero !![1, 1; 0, 1] (by
-        simp [Matrix.det_fin_two])
-    s * j * s = j * s * j := by
-  dsimp
-  have hchar : (1 + 1 : BinaryGaloisField f) = 0 := by
-    rw [← Nat.cast_one, ← Nat.cast_add, CharP.cast_eq_zero]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, hchar]
 
 /-- Huppert-Blackburn XI.10.7(b), the `Sz(q)` structure equation. -/
 public theorem huppert_blackburn_XI_example_10_7_b (m : ℕ) (hm : 0 < m) :

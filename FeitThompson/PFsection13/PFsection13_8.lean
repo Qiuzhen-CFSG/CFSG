@@ -20,32 +20,6 @@ universe u
 
 /-! ## (13.8) -/
 
-/-- Peterfalvi `(13.8)`. -/
-@[expose] public def theorem_13_8_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H S' : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ →
-      H = P ⊔ C →
-        S' = P ⊔ U →
-          squareSumLowerBound (Section7.puncturedSubgroupSet H) (η 0 1)
-            ((Nat.card S' : ℝ) - (u : ℝ) ^ 2)
-
 
 private theorem theorem_13_8_scalarProduct_finset_sum_left
     {G : Type u} [Group G] [Finite G]
@@ -711,95 +685,9 @@ private theorem theorem_13_8_calS1_orthogonality_source
 
 /- Checked wrapper packaging the row choice, checked `calS1` witness, and the
 narrow source orthogonality package into the PF `(13.5)` core fields. -/
-private theorem theorem_13_8_theorem_13_5_hypothesis_core_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ)
-    (hH : H = P ⊔ C) :
-    ∃ (S1 : Finset (Section1.ClassFunction Smax))
-      (ζ0 ζ1 : Section1.ClassFunction Smax)
-      (a : ℂ),
-        H = P ⊔ C ∧
-          nonkernelInducedFamily Smax H P S1 ∧
-          ζ0 ∈ S1 ∧ ζ1 ∈ S1 ∧ ζ0 ≠ ζ1 ∧
-          a = Section1.scalarProduct G (τS (ζ1 - ζ0)) (η 0 1) ∧
-          ∀ ζ : Section1.ClassFunction Smax, ζ ∈ S1 → ζ ≠ ζ0 → ζ ≠ ζ1 →
-            Section1.scalarProduct G (τS (ζ - ζ0)) (η 0 1) = 0 := by
-  rcases theorem_13_8_eta01_row_index_source
-      Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation with
-    ⟨τ1, j1, a, hcoh, hchoice, _hasign⟩
-  have hchoice_data := hchoice
-  rcases hchoice with ⟨hj1_pos, hj1_lt, _hrowScalar⟩
-  rcases theorem_13_8_calS1_witness_of_row_index
-      Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d
-      hsource hnotation hH j1 hj1_pos hj1_lt with
-    ⟨S1, hH5, hS1, hζ0, hζ1, hζ_ne⟩
-  rcases theorem_13_8_calS1_orthogonality_source
-      Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam S1 τS τ1 τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d
-      hsource hnotation hH j1 a hcoh hchoice_data hS1 hζ0 hζ1 hζ_ne with
-    ⟨ha, horth⟩
-  exact ⟨S1, Section1.conjugateCharacter (μsum j1), μsum j1, a,
-    hH5, hS1, hζ0, hζ1, hζ_ne, ha, horth⟩
 
 /- Checked wrapper adding the virtual-character part of the PF `(13.5)`
 hypothesis for `χ = η 0 1`. -/
-private theorem theorem_13_8_theorem_13_5_hypothesis_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ)
-    (hH : H = P ⊔ C) :
-    ∃ (S1 : Finset (Section1.ClassFunction Smax))
-      (ζ0 ζ1 : Section1.ClassFunction Smax)
-      (a : ℂ),
-        theorem_13_5_hypothesis Smax H P C S1 τS ζ0 ζ1 (η 0 1) a := by
-  rcases theorem_13_8_theorem_13_5_hypothesis_core_source
-      Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation hH with
-    ⟨S1, ζ0, ζ1, a, hH5, hS1, hζ0, hζ1, hζ_ne, ha, horth⟩
-  have hηvirt : Representation.IsVirtualCharacter (η 0 1) :=
-    theorem_13_8_eta01_virtual_of_source
-      Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation
-  exact ⟨S1, ζ0, ζ1, a, hH5, hS1, hζ0, hζ1, hζ_ne, hηvirt, ha, horth⟩
 
 /- Checked restriction-data construction for the selected PF `(13.5)` row
 character. -/
@@ -841,44 +729,6 @@ private theorem theorem_13_8_restrictionData_of_source
   exact ⟨eta01H, hHS, fun x => rfl⟩
 
 /- Checked PF `(13.8)` input assembly for PF `(13.5)`. -/
-private theorem theorem_13_8_theorem_13_5_input_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hnotation : hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ)
-    (hH : H = P ⊔ C) :
-    ∃ (S1 : Finset (Section1.ClassFunction Smax))
-      (ζ0 ζ1 : Section1.ClassFunction Smax)
-      (eta01H : Section1.ClassFunction H)
-      (a : ℂ),
-        theorem_13_5_hypothesis Smax H P C S1 τS ζ0 ζ1 (η 0 1) a ∧
-          classFunctionRestrictionData H Smax ζ1 eta01H := by
-  rcases theorem_13_8_theorem_13_5_hypothesis_source
-      Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT
-      ω η μ ν μsum νsum δ δ' σ p q u v c d hsource hnotation hH with
-    ⟨S1, ζ0, ζ1, a, h5hyp⟩
-  rcases theorem_13_8_restrictionData_of_source
-      Smax Tmax W W1 W2 P Q U V C D H Sfam Tfam τS τT ζ1
-      p q u v c d hsource hH with
-    ⟨eta01H, hres⟩
-  exact ⟨S1, ζ0, ζ1, eta01H, a, h5hyp, hres⟩
 
 private theorem theorem_13_8_virtualCharacter_one_eq_int
     {G : Type u}

@@ -115,56 +115,6 @@ public theorem hkt_hasNormalPComplement_of_nilpotent
   simpa using htop_p.of_equiv
     (Subgroup.topEquiv : (⊤ : Subgroup (Q ⧸ pPrimeCore p Q)) ≃* (Q ⧸ pPrimeCore p Q))
 
-/-- In a finite nilpotent group, every Sylow subgroup has a normal
-complement. -/
-public theorem hkt_nilpotent_sylow_complement
-    {Q : Type u} [Group Q] [Finite Q] {p : ℕ} [Fact p.Prime]
-    (hQ_nil : Group.IsNilpotent Q) (P : Sylow p Q) :
-    ∃ N : Subgroup Q, ∃ _hNnormal : N.Normal,
-      Nat.Coprime p (Nat.card N) ∧ (P : Subgroup Q).IsComplement' N := by
-  rcases hkt_hasNormalPComplement_of_nilpotent (p := p) hQ_nil with
-    ⟨N, hNnormal, hNcop, hquotp⟩
-  letI : N.Normal := hNnormal
-  obtain ⟨n, hquotcard⟩ := hquotp.exists_card_eq
-  have hNindex : N.index = p ^ n := by
-    rw [N.index_eq_card]
-    exact hquotcard
-  have hcopIndex : (Nat.card N).Coprime N.index := by
-    rw [hNindex]
-    exact hNcop.symm.pow_right n
-  obtain ⟨S, hNS⟩ := Subgroup.exists_right_complement'_of_coprime hcopIndex
-  have hScard : Nat.card S = p ^ n := by
-    rw [← hNS.symm.index_eq_card, hNindex]
-  have hSp : IsPGroup p S := IsPGroup.of_card hScard
-  have hSindex : S.index = Nat.card N := hNS.index_eq_card
-  have hSnotdvd : ¬ p ∣ S.index := by
-    rw [hSindex]
-    exact (Fact.out : Nat.Prime p).coprime_iff_not_dvd.mp hNcop
-  let Psyl : Sylow p Q := hSp.toSylow hSnotdvd
-  have hPnormal : (P : Subgroup Q).Normal :=
-    Group.IsNilpotent.sylow_normal hQ_nil p P
-  letI : Unique (Sylow p Q) := Sylow.unique_of_normal P hPnormal
-  have hSP : S = (P : Subgroup Q) := by
-    exact congrArg (fun T : Sylow p Q => (T : Subgroup Q))
-      (Subsingleton.elim Psyl P)
-  exact ⟨N, hNnormal, hNcop, by simpa [hSP] using hNS.symm⟩
-
-/-- Two normal complementary subgroups give the corresponding direct-product
-decomposition of the ambient group. -/
-public noncomputable def normalComplementProdMulEquiv
-    {Q : Type u} [Group Q]
-    (P N : Subgroup Q) [P.Normal] [N.Normal]
-    (hPN : P.IsComplement' N) : P × N ≃* Q := by
-  let hcomm : ∀ p : P, ∀ n : N,
-      Commute (P.subtype p) (N.subtype n) := by
-    intro p n
-    exact Subgroup.commute_of_normal_of_disjoint
-      P N (by infer_instance) (by infer_instance) hPN.disjoint
-        p n p.property n.property
-  let f : P × N →* Q := P.subtype.noncommCoprod N.subtype hcomm
-  exact MulEquiv.ofBijective f (by
-    change Function.Bijective (fun x : P × N => (x.1 : Q) * (x.2 : Q))
-    exact hPN)
 
 /-- Repackage the definition of a normal `p`-complement using the canonical
 `p'`-core quotient. This direction is only definitional: the real work is to
@@ -420,33 +370,6 @@ public theorem hkt_thompsonSubgroup_map_quotient_subgroup_eq
       rw [hJ_map]
     _ = thompsonSubgroup (G := G ⧸ N) (P.map q) := by
       simpa using thompsonSubgroup_top_map_subtype (G := G ⧸ N) (P.map q)
-/-- The Thompson subgroup of an intrinsic subgroup maps to the Thompson subgroup
-of its ambient image. -/
-public theorem hkt_thompsonSubgroup_map_subtype_eq
-    {G : Type u} [Group G] [Finite G] (N : Subgroup G) (P : Subgroup N) :
-    (thompsonSubgroup (G := N) P).map N.subtype =
-      thompsonSubgroup (G := G) (P.map N.subtype) := by
-  classical
-  let e : P ≃* P.map N.subtype :=
-    Subgroup.equivMapOfInjective (f := N.subtype) P N.subtype_injective
-  have hcomp :
-      ((P.map N.subtype).subtype).comp e.toMonoidHom = N.subtype.comp P.subtype := by
-    ext x
-    rfl
-  calc
-    (thompsonSubgroup (G := N) P).map N.subtype =
-        ((thompsonSubgroup (G := P) (⊤ : Subgroup P)).map P.subtype).map N.subtype := by
-          rw [thompsonSubgroup_top_map_subtype]
-    _ = (thompsonSubgroup (G := P) (⊤ : Subgroup P)).map (N.subtype.comp P.subtype) := by
-          rw [Subgroup.map_map]
-    _ = ((thompsonSubgroup (G := P) (⊤ : Subgroup P)).map e.toMonoidHom).map
-          (P.map N.subtype).subtype := by
-          rw [Subgroup.map_map, hcomp]
-    _ = (thompsonSubgroup (G := P.map N.subtype) (⊤ : Subgroup (P.map N.subtype))).map
-          (P.map N.subtype).subtype := by
-          rw [thompsonSubgroup_top_map_mulEquiv]
-    _ = thompsonSubgroup (G := G) (P.map N.subtype) := by
-          rw [thompsonSubgroup_top_map_subtype]
 /-- The image in the ambient group of the normalizer of an intrinsic subgroup
 normalizes the ambient image of that subgroup. -/
 public theorem hkt_normalizer_map_subtype_le_normalizer_map
@@ -506,20 +429,6 @@ public theorem hkt_centralizer_map_subtype_le_centralizer_map
   rcases Subgroup.mem_map.mp hz with ⟨k, hk, rfl⟩
   exact congrArg Subtype.val (hn k hk)
 
-/-- If the ambient centralizer of the ambient image of an intrinsic subgroup has
-a normal `p`-complement, then the intrinsic centralizer has one too. -/
-public theorem hkt_hasNormalPComplement_centralizer_subgroupOf_of_ambient_image
-    {G : Type u} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (N : Subgroup G) (K : Subgroup N)
-    (hcomp : HasNormalPComplement p
-      (Subgroup.centralizer ((K.map N.subtype : Subgroup G) : Set G))) :
-    HasNormalPComplement p (Subgroup.centralizer (K : Set N)) := by
-  classical
-  exact hkt_hasNormalPComplement_of_map_subtype_le
-    (G := G) (p := p) (N := N)
-    (H := Subgroup.centralizer ((K.map N.subtype : Subgroup G) : Set G))
-    (L := Subgroup.centralizer (K : Set N))
-    (hkt_centralizer_map_subtype_le_centralizer_map (N := N) (K := K)) hcomp
 
 /-- If an ambient subgroup `T` is contained in the ambient image of an intrinsic
 subgroup `K`, a normal `p`-complement for `C_G(T)` pulls back to `C_N(K)`. -/
@@ -807,58 +716,6 @@ public theorem hkt_centerIn_sylow_map_quotient_pPrimeCore
             centerIn_top_map_subtype (G := Q ⧸ M) ((S : Subgroup Q).map π)
               (⊤ : Subgroup ((S : Subgroup Q).map π))
 
-/-- The Thompson subgroup maps to the Thompson subgroup of the image Sylow after
-quotienting by the canonical `p'`-core. -/
-public theorem hkt_thompsonSubgroup_sylow_map_quotient_pPrimeCore
-    {Q : Type u} [Group Q] [Finite Q] {p : ℕ} [Fact p.Prime]
-    (S : Sylow p Q) :
-    let M : Subgroup Q := pPrimeCore p Q
-    let π : Q →* Q ⧸ M := QuotientGroup.mk' M
-    let Sbar : Sylow p (Q ⧸ M) :=
-      S.mapSurjective (f := π) (QuotientGroup.mk'_surjective M)
-    (thompsonSubgroup (G := Q) (S : Subgroup Q)).map π =
-      thompsonSubgroup (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) := by
-  classical
-  intro M π Sbar
-  have hqinj : Function.Injective (π.comp (S : Subgroup Q).subtype) := by
-    simpa [π, M] using
-      quotient_pPrimeCore_subgroupMap_injective
-        (G := Q) (p := p) (H := (S : Subgroup Q)) S.isPGroup'
-  let f : S →* ((S : Subgroup Q).map π) :=
-    (π.comp (S : Subgroup Q).subtype).codRestrict ((S : Subgroup Q).map π) (by
-      intro x
-      exact Subgroup.mem_map_of_mem π x.2)
-  let e : S ≃* ((S : Subgroup Q).map π) := by
-    refine MulEquiv.ofBijective f ⟨?_, ?_⟩
-    · intro a b hab
-      exact hqinj <| by exact congrArg Subtype.val hab
-    · intro x
-      rcases Subgroup.mem_map.mp x.2 with ⟨y, hy, hxy⟩
-      refine ⟨⟨y, hy⟩, ?_⟩
-      apply Subtype.ext
-      exact hxy
-  have hcomp :
-      ((Subgroup.subtype ((S : Subgroup Q).map π)).comp e.toMonoidHom) =
-        π.comp (S : Subgroup Q).subtype := by
-    rfl
-  calc
-    (thompsonSubgroup (G := Q) (S : Subgroup Q)).map π =
-        ((thompsonSubgroup (G := S) (⊤ : Subgroup S)).map
-          (S : Subgroup Q).subtype).map π := by
-          rw [thompsonSubgroup_top_map_subtype]
-    _ = (thompsonSubgroup (G := S) (⊤ : Subgroup S)).map
-          (π.comp (S : Subgroup Q).subtype) := by
-          rw [Subgroup.map_map]
-    _ = ((thompsonSubgroup (G := S) (⊤ : Subgroup S)).map e.toMonoidHom).map
-          (Subgroup.subtype ((S : Subgroup Q).map π)) := by
-          rw [Subgroup.map_map, hcomp]
-    _ = (thompsonSubgroup (G := ((S : Subgroup Q).map π))
-          (⊤ : Subgroup ((S : Subgroup Q).map π))).map
-          (Subgroup.subtype ((S : Subgroup Q).map π)) := by
-          rw [thompsonSubgroup_top_map_mulEquiv]
-    _ = thompsonSubgroup (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) := by
-          simpa [Sbar, Sylow.coe_mapSurjective] using
-            thompsonSubgroup_top_map_subtype (G := Q ⧸ M) ((S : Subgroup Q).map π)
 
 /-- If the canonical `p'`-core has vanished, the canonical quotient criterion
 is just `Q` itself being a `p`-group. -/
@@ -918,42 +775,6 @@ public theorem hkt_centralizer_center_sylow_hasNormalPComplement_quotient_pPrime
     (Q := Q) (p := p)
     (H := Subgroup.centralizer (centerIn (G := Q) (S : Subgroup Q) : Set Q)) hcomp
 
-/-- The local normal-complement hypothesis for `N_Q(J(S))` descends to the
-canonical `p'`-core quotient. -/
-public theorem hkt_normalizer_thompsonSubgroup_hasNormalPComplement_quotient_pPrimeCore
-    {Q : Type u} [Group Q] [Finite Q] {p : ℕ} [Fact p.Prime]
-    (S : Sylow p Q)
-    (hcomp : HasNormalPComplement p
-      (↥(Subgroup.normalizer (thompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q)))) :
-    let M : Subgroup Q := pPrimeCore p Q
-    let π : Q →* Q ⧸ M := QuotientGroup.mk' M
-    let Sbar : Sylow p (Q ⧸ M) :=
-      S.mapSurjective (f := π) (QuotientGroup.mk'_surjective M)
-    HasNormalPComplement p
-      (↥(Subgroup.normalizer
-        (thompsonSubgroup (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)))) := by
-  classical
-  intro M π Sbar
-  haveI : Fact (IsPGroup p (↥(thompsonSubgroup (G := Q) (S : Subgroup Q)))) :=
-    ⟨IsPGroup.to_le S.isPGroup' (thompsonSubgroup_le (G := Q) (S : Subgroup Q))⟩
-  have hJ_map :
-      (thompsonSubgroup (G := Q) (S : Subgroup Q)).map π =
-        thompsonSubgroup (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) := by
-    simpa [M, π, Sbar] using
-      hkt_thompsonSubgroup_sylow_map_quotient_pPrimeCore (Q := Q) (p := p) S
-  have hnorm_eq :
-      Subgroup.normalizer
-          (thompsonSubgroup (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)) =
-        (Subgroup.normalizer (thompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q)).map π := by
-    simpa [π, M, hJ_map] using
-      (normalizer_map_quotient_eq_map_normalizer
-        (G := Q) (p := p) (T := thompsonSubgroup (G := Q) (S : Subgroup Q)) (M := M)
-        (inferInstance : M.Normal)
-        (by simpa [M] using (pPrimeCore_coprime_card (G := Q) (p := p))))
-  rw [hnorm_eq]
-  exact hkt_hasNormalPComplement_map_quotient_pPrimeCore
-    (Q := Q) (p := p)
-    (H := Subgroup.normalizer (thompsonSubgroup (G := Q) (S : Subgroup Q) : Set Q)) hcomp
 
 public theorem hkt_dvd_card_quotient_pPrimeCore_of_dvd_card
     {Q : Type u} [Group Q] [Finite Q] {p : ℕ} [Fact p.Prime]
@@ -1125,67 +946,6 @@ public theorem hkt_transferFocal_restrict_surjective
   rw [MonoidHom.restrict_apply, Subgroup.transferFocal_eq_pow]
   exact hz
 
-/-- If the Sylow focal subgroup is trivial, then the kernel of focal transfer is
-complementary to the Sylow subgroup. -/
-public theorem hkt_transferFocal_kernel_isComplement_of_focal_eq_bot
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q)
-    (hfocal : (S : Subgroup Q).focalSubgroup = ⊥) :
-    ((S : Subgroup Q).transferFocal).ker.IsComplement' (S : Subgroup Q) := by
-  classical
-  let H : Subgroup Q := S
-  let V : Q →* H ⧸ H.focalSubgroupOf := H.transferFocal
-  have hkerinf : V.ker ⊓ H = H.focalSubgroup := by
-    simpa [V, H] using Subgroup.ker_transferFocal_inf_eq_focalSubgroup (P := S)
-  have hdisj : Disjoint V.ker H := by
-    rw [disjoint_iff]
-    simp [hkerinf, H, hfocal]
-  have hsurj : Function.Surjective (V.restrict H) := by
-    simpa [V, H] using hkt_transferFocal_restrict_surjective (S := S)
-  have hmul : (↑V.ker * ↑H : Set Q) = Set.univ := by
-    ext g
-    constructor
-    · intro _
-      trivial
-    · intro _
-      obtain ⟨s, hs⟩ := hsurj (V g)
-      change ∃ a ∈ V.ker, ∃ b ∈ H, a * b = g
-      refine ⟨g * (s : Q)⁻¹, ?_, (s : Q), s.2, ?_⟩
-      · rw [MonoidHom.mem_ker]
-        have hs' : V (s : Q) = V g := by
-          simpa [MonoidHom.restrict_apply] using hs
-        calc
-          V (g * (s : Q)⁻¹) = V g * (V (s : Q))⁻¹ := by simp
-          _ = V g * (V g)⁻¹ := by rw [hs']
-          _ = 1 := by simp
-      · group
-  exact Subgroup.isComplement'_of_disjoint_and_mul_eq_univ hdisj hmul
 
-/-- Transfer-side endpoint for Thompson IV.6.2: once the Thompson fusion
-argument has killed the focal subgroup of a Sylow `q`-subgroup, focal transfer
-constructs the normal `q`-complement. -/
-public theorem hkt_hasNormalPComplement_of_focalSubgroup_eq_bot
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q)
-    (hfocal : (S : Subgroup Q).focalSubgroup = ⊥) :
-    HasNormalPComplement q Q := by
-  classical
-  let H : Subgroup Q := S
-  let V : Q →* H ⧸ H.focalSubgroupOf := H.transferFocal
-  let N : Subgroup Q := V.ker
-  have hcomp : N.IsComplement' H := by
-    simpa [N, V, H] using
-      hkt_transferFocal_kernel_isComplement_of_focal_eq_bot (S := S) hfocal
-  refine ⟨N, inferInstance, ?_, ?_⟩
-  · have hnot : ¬ q ∣ Nat.card N := by
-      intro hqN
-      have hqindex : q ∣ H.index := by
-        simpa [hcomp.index_eq_card] using hqN
-      exact S.not_dvd_index (by simpa [H] using hqindex)
-    exact (Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime q)).2 hnot
-  · have hcomp' : H.IsComplement' N := hcomp.symm
-    let e : Q ⧸ N ≃* H := hcomp'.QuotientMulEquiv
-    exact IsPGroup.of_injective (hG := by simpa [H] using S.isPGroup')
-      (ϕ := e.toMonoidHom) e.injective
 end External
 end BenderSuzuki

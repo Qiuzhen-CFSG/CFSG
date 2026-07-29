@@ -236,30 +236,6 @@ public def section14PF39CompatibilityData
             ∀ g : G, (orderOf g).Coprime a →
               ∃ r : ℚ, σ ω' g = (r : ℂ)
 
-public theorem section14_pf39_pf35_data_of_hypothesis
-    {G : Type u} [Group G] [Finite G]
-    {W1 W2 W : Subgroup G}
-    {p q : ℕ}
-    (hqpos : 0 < q) (hppos : 0 < p)
-    (ωFin : Fin q → Fin p → Section1.ClassFunction W)
-    (h31 : Section3.hypothesis_3_1_statement W1 W2 W)
-    (hω : Section3.notation_3_3_statement W1 W2 W (Fin q) (Fin p)
-      ⟨0, hqpos⟩ ⟨0, hppos⟩ ωFin) :
-    ∃ χ : Fin q → Fin p → Section1.ClassFunction G,
-      Section3.IsOrthonormalDoubleFamily χ ∧
-        (∀ i j, Section3.IsSignedIrreducibleCharacter (χ i j)) ∧
-          χ ⟨0, hqpos⟩ ⟨0, hppos⟩ = Section1.principalCharacter G ∧
-            ∀ i j, i ≠ ⟨0, hqpos⟩ → j ≠ ⟨0, hppos⟩ →
-              Section1.inducedCF W
-                  (Section3.alphaIJ W ⟨0, hqpos⟩ ⟨0, hppos⟩ ωFin i j) =
-                Section1.principalCharacter G - χ i ⟨0, hppos⟩ -
-                  χ ⟨0, hqpos⟩ j + χ i j := by
-  rcases Section3.proposition_3_5_signed
-      (W1 := W1) (W2 := W2) (W := W)
-      (I := Fin q) (J := Fin p) (i0 := ⟨0, hqpos⟩) (j0 := ⟨0, hppos⟩)
-      (ω := ωFin) h31 hω with
-    ⟨χ, horth, _hvirt, hsigned, h00, hInd⟩
-  exact ⟨χ, horth, hsigned, h00, hInd⟩
 
 public theorem section14_pf39_pf35_data_of_sigma
     {G : Type u} [Group G] [Finite G]
@@ -907,15 +883,6 @@ public theorem section14_not_mem_components_of_mem_G0
   rcases h with ⟨⟨⟨hnotTilde, hnotW⟩, hnotP⟩, hnotQ⟩
   exact ⟨hnotTilde, hnotW, hnotP, hnotQ⟩
 
-public theorem section14_eq_one_of_mem_of_not_mem_conjugatesOfPuncturedSubgroup
-    {G : Type u} [Group G]
-    {H : Subgroup G}
-    {g : G}
-    (hnot : g ∉ conjugatesOfPuncturedSubgroup H)
-    (hgH : g ∈ H) :
-    g = 1 := by
-  by_contra hg1
-  exact hnot ⟨g, hgH, hg1, 1, by simp⟩
 
 public theorem section14_eq_one_of_conj_mem_of_not_mem_conjugatesOfPuncturedSubgroup
     {G : Type u} [Group G]
@@ -1512,73 +1479,6 @@ public theorem section14_betaM_tau_eq_zero_of_not_mem_dadeSupport
   exact Section2.dadeTransform_eq_zero_of_not_mem_support
     R hAMG βM hnotSupport
 
-public theorem section14_dadeSupport_eq_of_dadeTransform_eq
-    {G : Type u} [Group G] [Finite G]
-    {A : Set G} {L : Subgroup G}
-    {R₁ R₂ : G → Subgroup G}
-    (hA1 : ∀ a : G, a ∈ A → a ∈ L)
-    (hA2 : ∀ a : G, a ∈ A → a ∈ L)
-    (hτ :
-      ∀ α : Section1.ClassFunction L,
-        Section2.dadeTransform R₁ hA1 α =
-          Section2.dadeTransform R₂ hA2 α) :
-    Section2.dadeSupport A R₁ = Section2.dadeSupport A R₂ := by
-  classical
-  ext g
-  constructor
-  · intro hg
-    by_contra hg2
-    rcases hg with ⟨a, ha, r, hr, hconj⟩
-    have hleft :
-        Section2.dadeTransform R₁ hA1 (Section1.principalCharacter L) g = 1 := by
-      have hex : ∃ a ∈ A, ∃ h ∈ R₁ a, Section2.conjugateIn g (a * h) :=
-        ⟨a, ha, r, hr, hconj⟩
-      simp [Section2.dadeTransform, Section1.principalCharacter, hex]
-    have hright :
-        Section2.dadeTransform R₂ hA2 (Section1.principalCharacter L) g = 0 :=
-      Section2.dadeTransform_eq_zero_of_not_mem_support
-        R₂ hA2 (Section1.principalCharacter L) hg2
-    have heq := congrFun (hτ (Section1.principalCharacter L)) g
-    rw [hleft, hright] at heq
-    norm_num at heq
-  · intro hg
-    by_contra hg1
-    rcases hg with ⟨a, ha, r, hr, hconj⟩
-    have hleft :
-        Section2.dadeTransform R₁ hA1 (Section1.principalCharacter L) g = 0 :=
-      Section2.dadeTransform_eq_zero_of_not_mem_support
-        R₁ hA1 (Section1.principalCharacter L) hg1
-    have hright :
-        Section2.dadeTransform R₂ hA2 (Section1.principalCharacter L) g = 1 := by
-      have hex : ∃ a ∈ A, ∃ h ∈ R₂ a, Section2.conjugateIn g (a * h) :=
-        ⟨a, ha, r, hr, hconj⟩
-      simp [Section2.dadeTransform, Section1.principalCharacter, hex]
-    have heq := congrFun (hτ (Section1.principalCharacter L)) g
-    rw [hleft, hright] at heq
-    norm_num at heq
-
-public theorem section14_section10_dadeSupport_nonmem_of_not_mem_tildeA
-    {G : Type u} [Group G] [Finite G]
-    {M K : Subgroup G}
-    {tildeAM : Set G}
-    (htilde : Section10.section10TildeAData M K tildeAM)
-    {g : G}
-    (hnotTilde : g ∉ tildeAM) :
-    ∃ Ms : Subgroup G,
-    ∃ A A0 A1 D tildeA0 tildeA1 : Set G,
-    ∃ R : G → Subgroup G,
-      Section8.notation_8_10_source_data M K Ms A A0 A1 ∧
-        Section8.notation_8_14_source_data M A A0 A1 D tildeAM tildeA0 tildeA1 R ∧
-          g ∉ Section2.dadeSupport A R := by
-  rcases htilde with
-    ⟨Ms, A, A0, A1, D, tildeA0, tildeA1, R, h810, h814⟩
-  refine ⟨Ms, A, A0, A1, D, tildeA0, tildeA1, R, h810, h814, ?_⟩
-  have hsupp :
-      Section2.dadeSupport A R = tildeAM :=
-    Section12.dadeSupport_eq_tildeA_of_notation_8_14_source_data
-      M A A0 A1 D tildeAM tildeA0 tildeA1 R h814
-  intro hg
-  exact hnotTilde (by simpa [hsupp] using hg)
 
 public theorem section14_typeI_notation_8_10_A_eq_typeIASet
     {G : Type u} [Group G] [Finite G]
@@ -2969,44 +2869,5 @@ public theorem section14_theorem_14_11_3_source_bridge
     M K V Mfam τM τM₁ ψ βM tildeAM p q u v c d e η βMτ ψτ
     hctx h143 h1410 htilde heta hKV rfl hψτ h112
 
-
-/-- Proof placeholder for `theorem_14_11_3_statement`. -/
-public theorem theorem_14_11_3
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (M K V : Subgroup G)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (tildeAM : Set G)
-    (ψτ : Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          Section10.section10TildeAData M K tildeAM →
-            K ≠ V →
-              ψτ = τM₁ ψ →
-                theorem_14_11_3_data (theorem_14_11_3_G0 tildeAM W P Q) ψτ := by
-  exact section14_theorem_14_11_3_source_bridge
-    Smax Tmax W W1 W2 P Q U C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL M K V Mfam τM τM₁ ψ βM
-    tildeAM ψτ p q u v c d
 
 end Section14

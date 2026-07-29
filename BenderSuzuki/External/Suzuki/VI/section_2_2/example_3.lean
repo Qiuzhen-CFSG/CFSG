@@ -9,7 +9,7 @@ public import BenderSuzuki.External.Suzuki.V.theorem_2_10
 public import BenderSuzuki.External.Suzuki.V.theorem_2_27
 public import BenderSuzuki.External.Suzuki.VI.formula_1_7
 public import BenderSuzuki.External.Suzuki.VI.theorem_1_8
-public import BenderSuzuki.External.Suzuki.VI.proposition_1_13
+public import FeitThompson.PFsection1.PFsection1_7_Core
 public import BenderSuzuki.External.Suzuki.VI.formula_1_15
 public import BenderSuzuki.External.Suzuki.VI.definition_2_7
 public import BenderSuzuki.External.Suzuki.VI.proposition_2_8
@@ -1539,28 +1539,6 @@ private lemma example3_corefree_nonsimple_target
       (fun a b ha hb hab =>
         example3_commuting_involutions_eq Q
           (example3_sylow_involution_unique Q hQ) ha hb hab)
-private lemma example3_complex_galois_is_power_on_roots
-    {n : ℕ} (hn : n ≠ 0) (tau : Gal(ℂ/ℚ)) :
-    ∃ e : ℕ, e.Coprime n ∧
-      ∀ z : ℂ, z ^ n = 1 → tau z = z ^ e := by
-  letI : NeZero n := ⟨hn⟩
-  let zeta : ℂ := Complex.exp (2 * Real.pi * Complex.I / (n : ℂ))
-  have hzeta : IsPrimitiveRoot zeta n := by
-    dsimp [zeta]
-    exact Complex.isPrimitiveRoot_exp n hn
-  have htauzeta : IsPrimitiveRoot (tau zeta) n :=
-    hzeta.map_of_injective tau.injective
-  rcases (hzeta.isPrimitiveRoot_iff).mp htauzeta with
-    ⟨e, _helt, he, htauzetaeq⟩
-  refine ⟨e, he, ?_⟩
-  intro z hz
-  rcases hzeta.eq_pow_of_pow_eq_one hz with ⟨i, _hi, hiz⟩
-  calc
-    tau z = tau (zeta ^ i) := by rw [hiz]
-    _ = (tau zeta) ^ i := map_pow tau zeta i
-    _ = (zeta ^ e) ^ i := by rw [← htauzetaeq]
-    _ = (zeta ^ i) ^ e := by rw [← pow_mul, ← pow_mul, Nat.mul_comm]
-    _ = z ^ e := by rw [hiz]
 
 private lemma example3_argumentPow_eq_of_integer_valued_virtual
     {G : Type*} [Group G] [Finite G]
@@ -2523,8 +2501,6 @@ private lemma example3_stage_l_gcd_normalize
       exact example3_eight_dvd_natCast_mul_of_four_dvd_of_even hfourg hOOE.2.2
 
 
-
-
 private lemma example3_stage_l_final
     (d f e : Fin 3 → ℤ)
     (he : ∀ i, e i = 1 ∨ e i = -1)
@@ -2623,9 +2599,6 @@ private lemma example3_stage_l_final
     (he (sigma 0)) (he (sigma 1)) (he (sigma 2))
     hdegreePermuted hsquarePermuted hw0 hw1 hw2
     (hmod (sigma 0) hdivEight)
-
-
-
 
 
 private lemma example3_clear_three_complex_fractions
@@ -2872,20 +2845,6 @@ private lemma example3_card_eight_center_two_conj_eq_inv
     exact mul_inv_eq_iff_eq_mul.mp (by simpa [y, bB] using hybP)
   · exact ⟨q, congrArg (fun z : B => (z : P)) hyb⟩
 
-private lemma example3_generalized_quaternion_eight_conj_eq_inv
-    {P : Type*} [Group P] [Finite P] {n : ℕ} (hn : 3 ≤ n)
-    (hP : Nonempty (P ≃* QuaternionGroup (2 ^ (n - 2))))
-    (hPcard : Nat.card P = 8)
-    (b : P) (hb : orderOf b = 4) :
-    ∃ q : P, q * b * q⁻¹ = b⁻¹ := by
-  let e := Classical.choice hP
-  obtain ⟨X, U, T, hXcyc, hUnormal, hUX, hTU, hUcard, hTcard,
-    hPcard', hcenter, hunique, hinv, hinvol⟩ :=
-    generalizedQuaternion_source_subgroups hn e
-  have hcenterCard : Nat.card (Subgroup.center P) = 2 := by
-    rw [hcenter, hTcard]
-  exact example3_card_eight_center_two_conj_eq_inv
-    hPcard hcenterCard b hb
 
 private lemma example3_order_eq_one_two_or_four_of_card_eight_center_two
     {P : Type*} [Group P] [Finite P]
@@ -2935,28 +2894,6 @@ private lemma example3_card_four_eq_zpowers_of_order_four
     (Subgroup.zpowers_le.mpr hxV) (by
       rw [Nat.card_zpowers, hx, hVcard])
 
-private lemma example3_order_four_eq_or_eq_inv_of_zpowers_eq
-    {Y : Type*} [Group Y] [Finite Y] {x y : Y}
-    (hx : orderOf x = 4) (hy : orderOf y = 4)
-    (hxy : Subgroup.zpowers x = Subgroup.zpowers y) :
-    y = x ∨ y = x⁻¹ := by
-  let V := Subgroup.zpowers x
-  let xV : V := ⟨x, Subgroup.mem_zpowers x⟩
-  let yV : V := ⟨y, by
-    change y ∈ Subgroup.zpowers x
-    rw [hxy]
-    exact Subgroup.mem_zpowers y⟩
-  have hVcard : Nat.card V = 4 := by
-    change Nat.card (Subgroup.zpowers x) = 4
-    rw [Nat.card_zpowers, hx]
-  have hxV : orderOf xV = 4 := by
-    simpa [xV, Subgroup.orderOf_mk] using hx
-  have hyV : orderOf yV = 4 := by
-    simpa [yV, Subgroup.orderOf_mk] using hy
-  rcases example3_cyclic_card_four_order_four_eq_or_eq_inv
-      hVcard hxV hyV with h | h
-  · exact Or.inl (congrArg (fun z : V => (z : Y)) h)
-  · exact Or.inr (congrArg (fun z : V => (z : Y)) h)
 
 private def example3_q8Axis : Fin 3 → Subgroup (QuaternionGroup 2)
   | 0 => Subgroup.zpowers (QuaternionGroup.a 1 : (QuaternionGroup 2))
@@ -2976,37 +2913,6 @@ private lemma example3_q8Axis_card (i : Fin 3) :
       (QuaternionGroup.xa 1 : QuaternionGroup 2)) = 4
     rw [Nat.card_zpowers, QuaternionGroup.orderOf_xa]
 
-private lemma example3_quaternion_eight_order_four_classification
-    (x : (QuaternionGroup 2)) (hx : orderOf x = 4) :
-    x = QuaternionGroup.a 1 ∨
-      x = QuaternionGroup.a 3 ∨
-      x = QuaternionGroup.xa 0 ∨
-      x = QuaternionGroup.xa 1 ∨
-      x = QuaternionGroup.xa 2 ∨
-      x = QuaternionGroup.xa 3 := by
-  have hv0 : ZMod.val (0 : ZMod 4) = 0 := by decide
-  have hv1 : ZMod.val (1 : ZMod 4) = 1 := by decide
-  have hv2 : ZMod.val (2 : ZMod 4) = 2 := by decide
-  have hv3 : ZMod.val (3 : ZMod 4) = 3 := by decide
-  cases x with
-  | a i =>
-      have hi := i.val_lt
-      have hi_eq : i = (i.val : ZMod 4) := (ZMod.natCast_zmod_val i).symm
-      interval_cases h : i.val <;> rw [hi_eq] at hx ⊢
-      all_goals norm_num [h, QuaternionGroup.orderOf_a, hv0, hv1, hv2, hv3] at hx
-      all_goals norm_num [h]
-  | xa i =>
-      have hi := i.val_lt
-      have hi_eq : i = (i.val : ZMod 4) := (ZMod.natCast_zmod_val i).symm
-      interval_cases h : i.val <;> rw [hi_eq] at hx ⊢
-      all_goals norm_num [h, QuaternionGroup.orderOf_xa, hv0, hv1, hv2, hv3] at hx
-      all_goals norm_num [h]
-
-private lemma example3_q8_a_three_eq_inv :
-    (QuaternionGroup.a 3 : (QuaternionGroup 2)) =
-      (QuaternionGroup.a 1 : (QuaternionGroup 2))⁻¹ := by
-  change QuaternionGroup.a 3 = QuaternionGroup.a (-1)
-  congr 1
 
 private lemma example3_q8_xa_two_eq_inv :
     (QuaternionGroup.xa 2 : (QuaternionGroup 2)) =
@@ -3334,83 +3240,6 @@ private lemma example3_card_four_axis_fixed_of_card_eight
   change (MulAut.conj q • V.val : Subgroup Q) = V.val
   exact Subgroup.Normal.conj_smul_eq_self q V.val
 
-private def example3_normalizer_card_axis_perm_hom
-    {G : Type*} [Group G] [Finite G] (Q : Subgroup G) :
-    Subgroup.normalizer (Q : Set G) →*
-      Equiv.Perm {V : Subgroup Q // Nat.card V = 4} :=
-  example3_subgroup_card_perm_hom.comp Q.normalizerMonoidHom
-
-private lemma example3_normalizer_axis_hom_fixed_by_subgroup
-    {G : Type*} [Group G] [Finite G]
-    (Q : Subgroup G) (hQcard : Nat.card Q = 8)
-    (q : Q) (V : {V : Subgroup Q // Nat.card V = 4}) :
-    example3_normalizer_card_axis_perm_hom Q
-      (⟨(q : G), Subgroup.le_normalizer q.property⟩ :
-        Subgroup.normalizer (Q : Set G)) V = V := by
-  let qN : Subgroup.normalizer (Q : Set G) :=
-    ⟨(q : G), Subgroup.le_normalizer q.property⟩
-  have hAut : Q.normalizerMonoidHom qN = MulAut.conj q := by
-    ext y
-    simp [qN, Q.normalizerMonoidHom_apply_apply_coe]
-  change example3_subgroup_card_perm (Q.normalizerMonoidHom qN) V = V
-  rw [hAut]
-  exact example3_card_four_axis_fixed_of_card_eight hQcard q V
-
-private lemma example3_normalizer_axis_perm_odd_power_eq_one
-    {G : Type*} [Group G] [Finite G]
-    (Q : Sylow 2 G) (hQcard : Nat.card Q = 8)
-    (n : Subgroup.normalizer ((Q : Subgroup G) : Set G)) :
-    ∃ m, Odd m ∧
-      (example3_normalizer_card_axis_perm_hom (Q : Subgroup G) n) ^ m = 1 := by
-  let N : Subgroup G := Subgroup.normalizer ((Q : Subgroup G) : Set G)
-  let QN : Sylow 2 N := Q.subtype Subgroup.le_normalizer
-  have hQNnormal : (QN : Subgroup N).Normal := by
-    change ((Q : Subgroup G).subgroupOf N).Normal
-    exact (Subgroup.normal_subgroupOf_iff_le_normalizer
-      Subgroup.le_normalizer).2 le_rfl
-  letI : (QN : Subgroup N).Normal := hQNnormal
-  let m := (QN : Subgroup N).index
-  have hmNotEven : ¬ Even m := by
-    rw [even_iff_two_dvd]
-    exact QN.not_dvd_index
-  have hmOdd : Odd m := Nat.not_even_iff_odd.mp hmNotEven
-  refine ⟨m, hmOdd, ?_⟩
-  have hnPowMem : n ^ m ∈ (QN : Subgroup N) :=
-    Subgroup.pow_index_mem (QN : Subgroup N) n
-  let q : Q := ⟨(((n ^ m : N) : G)), hnPowMem⟩
-  let qN : N := ⟨(q : G), Subgroup.le_normalizer q.property⟩
-  have hnPowEq : n ^ m = qN := by
-    apply Subtype.ext
-    rfl
-  rw [← map_pow]
-  apply Equiv.ext
-  intro V
-  change example3_normalizer_card_axis_perm_hom
-    (Q : Subgroup G) (n ^ m) V = V
-  rw [hnPowEq]
-  exact example3_normalizer_axis_hom_fixed_by_subgroup
-    (Q : Subgroup G) hQcard q V
-
-private lemma example3_hom_orbit_all_of_three_odd_power_moved
-    {N A : Type*} [Group N] [Finite A]
-    (phi : N →* Equiv.Perm A) (hcard : Nat.card A = 3)
-    (n : N) (a : A) (ha : phi n a ≠ a)
-    (m : ℕ) (hm : Odd m) (hpow : (phi n) ^ m = 1) :
-    ∀ b : A, ∃ k : N, phi k a = b := by
-  have hpOrder : orderOf (phi n) = 3 := by
-    rcases example3_perm_order_eq_one_or_three_of_odd_pow_eq_one
-        hcard (phi n) m hm hpow with hOne | hThree
-    · have hpOne : phi n = 1 := orderOf_eq_one_iff.mp hOne
-      exfalso
-      exact ha (by rw [hpOne]; rfl)
-    · exact hThree
-  intro b
-  rcases example3_perm_three_orbit_of_moved
-      hcard (phi n) hpOrder a ha b with rfl | rfl | rfl
-  · exact ⟨1, by simp⟩
-  · exact ⟨n, rfl⟩
-  · refine ⟨n ^ 2, ?_⟩
-    rw [map_pow]
 
 private lemma example3_normalizer_axis_perm_order
     {G : Type*} [Group G] [Finite G]

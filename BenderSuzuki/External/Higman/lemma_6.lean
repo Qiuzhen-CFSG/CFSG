@@ -444,14 +444,6 @@ private def lemma6_bracketRightFactorHom
   QuotientGroup.lift (lowerCentralFactorKernel H 1)
     (lemma6_bracketRightHom x) (lemma6_bracketRightHom_kernel x)
 
-private theorem lemma6_bracketRightFactorHom_mk
-    {H : Type u} [Group H]
-    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
-    lemma6_bracketRightFactorHom x
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 2)
-        (lemma6_nextBracketLift x c) :=
-  rfl
 
 private def lemma6_bracketLeftHom
     {H : Type u} [Group H] :
@@ -538,15 +530,6 @@ private def lemma6_bracketFactorHom
     (lemma6_bracketLeftHom (H := H))
     (lemma6_bracketLeftHom_kernel (H := H))
 
-private theorem lemma6_bracketFactorHom_mk_mk
-    {H : Type u} [Group H]
-    (x : higmanLowerCentralSeries H 0) (c : higmanLowerCentralSeries H 1) :
-    lemma6_bracketFactorHom
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 0) x)
-        (QuotientGroup.mk' (lowerCentralFactorKernel H 1) c) =
-      QuotientGroup.mk' (lowerCentralFactorKernel H 2)
-        (lemma6_nextBracketLift x c) :=
-  rfl
 
 private noncomputable def lemma6_bracketFactorAddHom
     {H : Type u} [Group H] :
@@ -1915,8 +1898,6 @@ private lemma lemma6_odd_finSupportedRepeatedExponentCollisions_card_le_one
     hpCandidate hqCandidate hp.2 hq.2
 
 
-
-
 private lemma lemma6_finPairSupported_of_sub_eq
     {n : ℕ} (a b x y : Fin n)
     (hab : a ≠ b) (hxy : x ≠ y) (hsub : b - a = y - x) :
@@ -1951,8 +1932,6 @@ private lemma lemma6_finPairSupported_symm
     {n r : ℕ} {x y : Fin n} (h : lemma6_finPairSupported r x y) :
     lemma6_finPairSupported r y x := by
   simpa only [lemma6_finPairSupported, lemma6_finPairGap, add_comm] using h
-
-
 
 
 private def lemma6_finCyclicAdd {n : ℕ} (hn : 0 < n) (k : ℕ) (i : Fin n) : Fin n :=
@@ -2018,7 +1997,6 @@ private lemma lemma6_fin_sub_eq_of_cyclicAdd_eq
     simpa only [← lemma6_finCyclicAdd_eq_add hn] using hy
   have h := congrArg₂ (fun p q : Fin n => p - q) hy'.symm hx'.symm
   simpa only [add_sub_add_right_eq_sub] using h
-
 
 
 public theorem lemma6_finPairSupported_of_scaled_pair_modEq
@@ -2149,7 +2127,6 @@ public theorem lemma6_finPairSupported_of_primitive_pair_eigenvalue_eq
     hlambda_order a b x y hab hxy p q
   · simpa only [pow_add] using hseed
   · simpa only [pow_add] using hpair
-
 
 
 public theorem lemma6_scalarExtendedBilinear_span
@@ -2451,37 +2428,6 @@ public theorem lemma6_nonzero_equivariant_bilinear_basis_value_spectrum₂
         simp [map_smul, smul_smul, mul_comm]
   · exact hij
 
-/-- Expand a bilinear map on two conjugate-coordinate sums. -/
-public theorem lemma6_bilinear_conjugateBasis_expansion
-    {K E F W : Type*} [Field K]
-    [AddCommGroup E] [Module K E]
-    [AddCommGroup F] [Module K F]
-    [AddCommGroup W] [Module K W]
-    (n : ℕ)
-    (B : E →ₗ[K] F →ₗ[K] W)
-    (coordinatesE : K → E) (coordinatesF : K → F)
-    (u : Fin n → E) (v : Fin n → F)
-    (hu : ∀ alpha : K,
-      coordinatesE alpha =
-        ∑ i : Fin n, alpha ^ (2 ^ (i : ℕ)) • u i)
-    (hv : ∀ beta : K,
-      coordinatesF beta =
-        ∑ j : Fin n, beta ^ (2 ^ (j : ℕ)) • v j) :
-    ∀ alpha beta : K,
-      B (coordinatesE alpha) (coordinatesF beta) =
-        ∑ i : Fin n, ∑ j : Fin n,
-          (alpha ^ (2 ^ (i : ℕ)) * beta ^ (2 ^ (j : ℕ))) •
-            B (u i) (v j) := by
-  intro alpha beta
-  rw [hu, hv]
-  simp only [map_sum, LinearMap.sum_apply, map_smul]
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro i _hi
-  rw [Finset.smul_sum]
-  apply Finset.sum_congr rfl
-  intro j _hj
-  simp [smul_smul, mul_comm]
 
 public theorem lemma6_coordinate_unit_order
     {R K V : Type*} [Field R] [Field K] [Finite K] [Algebra R K]
@@ -2794,18 +2740,6 @@ private theorem lemma6_eigenvalueBucket_eq_zero
   have hva_zero : va = 0 :=
     Submodule.disjoint_def.mp hdisj va hva hva_other
   simpa only [va] using hva_zero
-private lemma lemma6_finset_eq_singleton_of_mem_of_card_le_one
-    {α : Type*} [DecidableEq α] {s : Finset α} {a : α}
-    (ha : a ∈ s) (hcard : s.card ≤ 1) :
-    s = {a} := by
-  rw [Finset.card_le_one] at hcard
-  ext x
-  simp only [Finset.mem_singleton]
-  constructor
-  · intro hx
-    exact hcard x hx a ha
-  · rintro rfl
-    exact ha
 
 private lemma lemma6_finset_bucket_target_eq_zero
     {α W K : Type*} [DecidableEq α] [DecidableEq K]
@@ -2827,15 +2761,6 @@ private lemma lemma6_finset_bucket_target_eq_zero
     · exact fun hnot => (hnot ha_filter).elim
   rw [hsum] at hbucket
   exact hbucket
-
-private lemma lemma6_finset_sum_eq_zero_of_mem_of_card_le_one
-    {α W : Type*} [DecidableEq α] [AddCommMonoid W]
-    (s : Finset α) (v : α → W) (a : α)
-    (ha : a ∈ s) (hcard : s.card ≤ 1)
-    (hsum : ∑ i ∈ s, v i = 0) :
-    v a = 0 := by
-  rw [lemma6_finset_eq_singleton_of_mem_of_card_le_one ha hcard] at hsum
-  simpa using hsum
 
 
 private theorem lemma6_lowerCentralIteratedBracket_square_self

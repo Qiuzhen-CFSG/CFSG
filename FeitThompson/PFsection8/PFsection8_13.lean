@@ -79,59 +79,6 @@ private theorem theorem_8_13_mem_source_X_ne_one
   · exact hA_ne_one x hx
   · exact hA0_ne_one x hx
 
-private theorem theorem_8_13_source_D_subset_theoremII_D
-    {G : Type u} [Group G] [Finite G]
-    {M MF Ms : Subgroup G} {A A0 A1 X : Set G}
-    (hNotation : notation_8_10_source_data M MF Ms A A0 A1)
-    (hX : X = A ∨ X = A0) :
-    section8DSet M X ⊆ section16TheoremIIDSet M X := by
-  intro x hxD
-  exact ⟨hxD.1, theorem_8_13_mem_source_X_ne_one hNotation hX x hxD.1, hxD.2⟩
-
-private theorem theorem_8_13_mem_source_X_mem_M
-    {G : Type u} [Group G] [Finite G]
-    {M MF Ms : Subgroup G} {A A0 A1 X : Set G}
-    (hNotation : notation_8_10_source_data M MF Ms A A0 A1)
-    (hX : X = A ∨ X = A0) :
-    ∀ x : G, x ∈ X → x ∈ M := by
-  classical
-  rcases hNotation with ⟨_hM, _hMF, _hMs, _hA1, hCases⟩
-  have hA_mem : ∀ x : G, x ∈ A → x ∈ M := by
-    intro x hxA
-    rcases hCases with hTypeI | hTypeP
-    · rcases hTypeI with ⟨_hTypeI, hA, _hA0⟩
-      rw [hA, section8CentralizerUnion] at hxA
-      rcases hxA with ⟨_z, _hz, hxCent⟩
-      exact hxCent.1.1
-    · rcases hTypeP with ⟨_U, _W1, _W2, _hP, _hSourceType, hA, _hA0, _hLate⟩
-      rw [hA, section8CentralizerUnion] at hxA
-      rcases hxA with ⟨_z, _hz, hxCent⟩
-      exact section12_ambientDerivedSubgroup_le (G := G) (E := M) hxCent.1.1
-  have hA0_mem : ∀ x : G, x ∈ A0 → x ∈ M := by
-    intro x hxA0
-    rcases hCases with hTypeI | hTypeP
-    · rcases hTypeI with ⟨_hTypeI, _hA, hA0⟩
-      exact hA_mem x (by simpa [hA0] using hxA0)
-    · rcases hTypeP with ⟨_U, W1, W2, hP, _hSourceType, _hA, hA0, _hLate⟩
-      rw [hA0] at hxA0
-      rcases hxA0 with hxA | hxConj
-      · exact hA_mem x hxA
-      · rcases hxConj with ⟨w, hw, m, hmM, hx_eq⟩
-        rcases hP with
-          ⟨hMF, _hW1cyc, _hW1ne, hW1Hall, _hW1Comp, _hUleD, _hUnil,
-            _hW1norm, _hCompU, _hMFnotCyc, _hSecondLe, _hFittingEq,
-            _hFittingLeD, hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hHatW⟩
-        have hW2M : W2 ≤ M := by
-          intro y hy
-          exact hMF.1.1 (hW2le hy).1
-        have hwM : w ∈ M := by
-          exact sup_le hW1Hall.1 hW2M hw.1
-        rw [hx_eq]
-        exact M.mul_mem (M.mul_mem hmM hwM) (M.inv_mem hmM)
-  intro x hx
-  rcases hX with rfl | rfl
-  · exact hA_mem x hx
-  · exact hA0_mem x hx
 
 public theorem theorem_8_13_typeP_conjugates_hatW_centralizer_le
     {G : Type u} [Group G] [Finite G]
@@ -321,21 +268,6 @@ private theorem theorem_8_13_source_D_subset_A1_of_msigma
   rw [hA1, a1Set, hMs_eq]
   exact ⟨hxσ, hxne⟩
 
-private theorem theorem_8_13_source_D_subset_A1_of_theoremII
-    {G : Type u} [Group G] [Finite G] [IsMinCE G]
-    {M MF Ms K U : Subgroup G} {A A0 A1 X : Set G}
-    (hNotation : notation_8_10_source_data M MF Ms A A0 A1)
-    (hX : X = A ∨ X = A0)
-    (hKU : section16KUData M K U)
-    (hXChoice : section16AChoice M K U X) :
-    section8DSet M X ⊆ A1 := by
-  classical
-  have hNotation' := hNotation
-  rcases hNotation with ⟨hM, hMF, _hMs, _hA1, _hCases⟩
-  refine theorem_8_13_source_D_subset_A1_of_msigma hNotation' hX ?_
-  intro x hxD
-  exact theorem_16_II_mem_msigma_of_mem_D (G := G) hM hMF hKU hXChoice x
-    (theorem_8_13_source_D_subset_theoremII_D hNotation' hX hxD)
 
 public theorem theorem_8_13_source_centralizerUnion_subset_ASet_of_complement
     {G : Type u} [Group G] [Finite G]

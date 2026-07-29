@@ -19,21 +19,6 @@ universe u
 
 /-! ## (13.15) -/
 
-/-- Peterfalvi `(13.15)`. -/
-@[expose] public def theorem_13_15_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    case_9_7_b_sourceDataForSection13 Smax P U W1 W2 C p q u →
-    (p % q ≠ 1 → u = (p ^ q - 1) / (p - 1)) ∧
-      (p % q = 1 → u = (p ^ q - 1) / (q * (p - 1)))
-
 
 private theorem section13_15_primes_odd_ne
     {G : Type u} [Group G] [Finite G]

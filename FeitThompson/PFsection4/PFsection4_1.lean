@@ -159,10 +159,6 @@ private theorem scalarProduct_self_signed_irreducible_pf41
               simp
       _ = 1 := hself
 
-private theorem isSign_ne_zero_pf41
-    {ε : ℂ} (hε : Section1.IsSign ε) :
-    ε ≠ 0 := by
-  rcases hε with rfl | rfl <;> norm_num
 
 private theorem degree_ne_zero_of_signed_irreducible_pf41
     {X : Type u} [Group X] [Finite X]

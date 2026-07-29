@@ -31,18 +31,6 @@ universe u
 
 /-! ## (13.1) -/
 
-/-- Peterfalvi Hypothesis `(13.1)`. -/
-@[expose] public def hypothesis_13_1_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-    Sfam Tfam τS τT p q u v c d
-
 
 private noncomputable def section13_pointedFinEquiv
     (n : ℕ) (I : Type*) [Fintype I] [DecidableEq I]
@@ -350,14 +338,6 @@ private theorem section13_cyclicTISet_nonempty_of_internalDirectProduct_ne_bot
       simpa using hxBot'
     exact hxne (Subtype.ext hxEq1)
 
-private theorem hypothesis_13_1_hypothesis_5_2_b_of_dadeIsometryRelativeToAZero
-    {G : Type u} [Group G] [Finite G]
-    {M K : Subgroup G}
-    {F : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    (hDade : dadeIsometryRelativeToAZero M K F τ) :
-    Section5.hypothesis_5_2_b_statement F τ := by
-  exact hDade
 
 private theorem hypothesis_13_1_typeP_induced_family_source
     {G : Type u} [Group G] [Finite G]
@@ -1774,27 +1754,6 @@ private theorem hypothesis_13_1_typePFourSixBaseRowConjugateSigmaOmega_source
         hTypeP hNotation (col j) (col k) hjne hkne hχsel
     simpa [ωsel, hrow0] using hσsel
 
-private theorem hypothesis_13_1_typePFourSixBaseRowConjugate_source
-    {G : Type u} [Group G] [Finite G]
-    {W M K U Wleft Wright : Subgroup G}
-    (hTypeP : Section8.typePData M K U Wleft Wright)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (hω : hypothesis_13_1_omegaNotationData W Wleft Wright
-      (Nat.card Wright) (Nat.card Wleft) ω)
-    (τM : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (hFourSix : typePFourSixTauSourceData M K U Wleft Wright τM) :
-    ∃ (χ : ℕ → ℕ → Section1.ClassFunction M)
-      (_δ : ℕ → ℤ)
-      (Wsel : Subgroup M)
-      (_ωsel : ℕ → ℕ → Section1.ClassFunction Wsel)
-      (_σsel : Section1.ClassFunction Wsel →ₗ[ℂ] Section1.ClassFunction G),
-      ∀ j, 0 < j → j < Nat.card Wright →
-        ∃ k : ℕ, 0 < k ∧ k < Nat.card Wright ∧ k ≠ j ∧
-          χ 0 k = Section1.conjugateCharacter (χ 0 j) := by
-  rcases hypothesis_13_1_typePFourSixBaseRowConjugateSigmaOmega_source
-      hTypeP ω hω τM hFourSix with
-    ⟨χ, δ, Wsel, ωsel, σsel, _hSelected, hχconj, _hselSigmaOmega⟩
-  exact ⟨χ, δ, Wsel, ωsel, σsel, hχconj⟩
 
 private theorem hypothesis_13_1_typePFourSixDadeDifference_source
     {G : Type u} [Group G] [Finite G]
@@ -3737,60 +3696,6 @@ private theorem hypothesis_13_1_typePDefinitionData_of_case_typeP
     Section8.theorem_8_8_typeCommon_to_typePDefinitionData
       (G := G) hSmax hSTypeP.1 hKU hSTypeP.2
 
-private theorem hypothesis_13_1_MF_le_derived_of_typeP
-    {G : Type u} [Group G] [Finite G]
-    {Smax P U W1 W2 : Subgroup G}
-    (hTypeP : Section8.typePDefinitionData Smax P U W1 W2) :
-    P ≤ ambientDerivedSubgroup Smax := by
-  rcases hTypeP with
-    ⟨_hMF, _hW1cyc, _hW1ne, _hW1hall, _hComp, _hUleD, _hUnil,
-      _hW1normU, _hDerComp, _hPnotCyc, _hSecondLe, hFittingEq, hFittingLeD,
-      _hW2le, _hW2cyc, _hW2ne, _hCentralizer, _hNormHatW⟩
-  intro x hx
-  exact hFittingLeD (by
-    rw [← hFittingEq]
-    exact (le_sup_left : P ≤ P ⊔ subgroupCentralizerIn Smax P) hx)
-
-private theorem hypothesis_13_1_betaSupportSet_subset_typePFAZeroSet
-    {G : Type u} [Group G] [Finite G]
-    {Smax W W1 W2 P U : Subgroup G}
-    (hW : section12InternalDirectProduct W1 W2 W)
-    (hTypeP : Section8.typePDefinitionData Smax P U W1 W2) :
-    theorem_13_18_betaSupportSet Smax W W1 W2 P ⊆
-      typePFAZeroSet Smax W1 W2 P := by
-  classical
-  intro x hx
-  rcases hx with hxP | hxV
-  · left
-    refine ⟨x, hxP, ?_⟩
-    refine ⟨?_, hxP.2⟩
-    rw [elementCentralizerIn]
-    refine ⟨hypothesis_13_1_MF_le_derived_of_typeP hTypeP hxP.1, ?_⟩
-    simp [Subgroup.mem_centralizer_iff]
-  · right
-    rcases hxV with ⟨w, hw, s, hs, rfl⟩
-    refine ⟨w, ?_, s, hs, rfl⟩
-    rcases hw with ⟨hwW, hwNot⟩
-    change w ∈ (((W1 ⊔ W2 : Subgroup G) : Set G) \ ((W1 : Set G) ∪ (W2 : Set G)))
-    exact ⟨by simpa [← hW.2.2.1] using hwW, hwNot⟩
-
-private theorem hypothesis_13_1_supportedOn_typePFAZeroSet_of_betaSupportSet
-    {G : Type u} [Group G] [Finite G]
-    {Smax W W1 W2 P U : Subgroup G}
-    {βS : Section1.ClassFunction Smax}
-    (hW : section12InternalDirectProduct W1 W2 W)
-    (hTypeP : Section8.typePDefinitionData Smax P U W1 W2)
-    (hβsupp : Section1.supportedOn βS
-      (subgroupSetPreimage Smax (theorem_13_18_betaSupportSet Smax W W1 W2 P))) :
-    Section1.supportedOn βS
-      (subgroupSetPreimage Smax (typePFAZeroSet Smax W1 W2 P)) := by
-  rw [Section1.supportedOn_iff] at hβsupp ⊢
-  intro x hx
-  exact hβsupp x
-    (by
-      intro hxβ
-      exact hx (hypothesis_13_1_betaSupportSet_subset_typePFAZeroSet hW hTypeP
-        (by simpa [subgroupSetPreimage] using hxβ)))
 
 private theorem hypothesis_13_1_isClassFunction_of_irreducible
     {G : Type u} [Group G] [Finite G]
@@ -7224,23 +7129,6 @@ private theorem hypothesis_13_1_int_sign_eq_one_of_mod_dvd
     have hqle : q ≤ 2 := Nat.le_of_dvd (by norm_num) hmodNat
     omega
 
-private theorem hypothesis_13_1_W2_card_gt_two_of_case_b
-    {G : Type u} [Group G] [Finite G]
-    {W W1 W2 Smax Tmax P Q : Subgroup G}
-    (hmin : IsMinCE G)
-    (hcase : Section8.theorem_8_8_case_b_data W W1 W2 Smax Tmax P Q) :
-    2 < Nat.card W2 := by
-  classical
-  rcases hcase with
-    ⟨_hprod, _hcyc, _hW1ne, hW2ne, _hnorm, _hrest⟩
-  have hodd : Odd (Nat.card W2) :=
-    Odd.of_dvd_nat hmin.odd_order (Subgroup.card_subgroup_dvd_card W2)
-  have hcard_ne_one : Nat.card W2 ≠ 1 := by
-    intro hcard
-    exact hW2ne ((Subgroup.card_eq_one (H := W2)).mp hcard)
-  have hpos : 0 < Nat.card W2 := Nat.card_pos (α := W2)
-  rcases hodd with ⟨k, hk⟩
-  omega
 
 private theorem hypothesis_13_1_W1_card_gt_two_of_case_b
     {G : Type u} [Group G] [Finite G]
@@ -9641,84 +9529,6 @@ private theorem hypothesis_13_1_quotientBarUCardinality_of_typeP_card
     exact Nat.card_pos
   exact Nat.eq_of_mul_eq_mul_right hcpos hlag.symm
 
-private theorem hypothesis_13_1_betaNorm_inducedPrincipal_cardQuotient_s_side_source
-    {G : Type u} [Group G] [Finite G]
-    {W W1 W2 Smax Tmax P Q U V : Subgroup G}
-    (_hmin : IsMinCE G)
-    (_hcase : Section8.theorem_8_8_case_b_data W W1 W2 Smax Tmax P Q)
-    (_hSTypeP : Section8.typePData Smax P U W1 W2)
-    (_hTTypeP : Section8.typePData Tmax Q V W2 W1)
-    (_Sfam : Finset (Section1.ClassFunction Smax))
-    (_Tfam : Finset (Section1.ClassFunction Tmax))
-    (_τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (_τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (_hSnonker : nonkernelInducedFamily Smax (P ⊔ U) P _Sfam)
-    (_hTnonker : nonkernelInducedFamily Tmax (Q ⊔ V) Q _Tfam)
-    (_hDadeS : dadeIsometryRelativeToAZero Smax P _Sfam _τS)
-    (_hDadeT : dadeIsometryRelativeToAZero Tmax Q _Tfam _τT)
-    (_hFourSixS : typePFourSixTauSourceData Smax P U W1 W2 _τS)
-    (_hFourSixT : typePFourSixTauSourceData Tmax Q V W2 W1 _τT)
-    (hCentralizerBot : subgroupCentralizerIn U P = ⊥) :
-    ∀ C : Subgroup G,
-      C = subgroupCentralizerIn U P →
-        Section5.cfNormSq
-            (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
-              (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax))) =
-          (((Nat.card U / Nat.card C) - 1 : ℕ) : ℝ) /
-              (Nat.card W1 : ℝ) + 1 := by
-  /-
-  Checked wrapper around the S-side Type-P quotient-counting source boundary.
-  -/
-  intro C hC
-  have hSmax : Smax ∈ section9MaximalSubgroups G := by
-    rcases _hcase with
-      ⟨_hprod, _hWcyc, _hW1ne, _hW2ne, _hnorm, hSmax, _hTmax, _hSF, _hTF,
-        _hSnotI, _hTnotI, _hSeq, _hTeq, _hSdisj, _hTdisj, _hW2le, _hW1le,
-        _hST, _hcover, _hTypeII, _hSType, _hTType, _hCommon⟩
-    exact hSmax
-  have hTypePDef : Section8.typePDefinitionData Smax P U W1 W2 :=
-    hypothesis_13_1_typePDefinitionData_of_maximal_typeP _hmin hSmax _hSTypeP
-  have hFrobAlt :
-      U = ⊥ ∨ section12FrobeniusJoinWithKernel U W1 := by
-    by_cases hU : U = ⊥
-    · exact Or.inl hU
-    · exact Or.inr
-        (Section8.typePDefinitionData_frobeniusJoinWithKernel hTypePDef hU)
-  have hCbot : C = ⊥ := hC.trans hCentralizerBot
-  have hCU : C ≤ U := by
-    rw [hC]
-    exact inf_le_left
-  have hUnormP : U ≤ Subgroup.normalizer (P : Set G) :=
-    hypothesis_13_1_typeP_U_le_normalizer_MF (M := Smax) (MF := P)
-      (U := U) (W1 := W1) (W2 := W2) _hSTypeP
-  have hnormal : (C.subgroupOf U).Normal := by
-    rw [hC]
-    exact hypothesis_13_1_subgroupCentralizerIn_subgroupOf_normal_of_le_normalizer
-      hUnormP
-  let qcard : ℕ := Nat.card (U ⧸ C.subgroupOf U)
-  have hBarU : Section9.quotientBarUCardinality U C qcard := by
-    refine ⟨hCU, hnormal, ?_⟩
-    rfl
-  have hsrc :
-      Section5.cfNormSq
-          (Section1.inducedCF ((P ⊔ W1).subgroupOf Smax)
-            (Section1.principalCharacter ((P ⊔ W1).subgroupOf Smax))) =
-        ((qcard - 1 : ℕ) : ℝ) / (Nat.card W1 : ℝ) + 1 :=
-    hypothesis_13_1_betaNorm_inducedPrincipal_cardQuotient_core_source
-      _hSTypeP hFrobAlt C qcard hC hCbot hBarU
-  letI : (C.subgroupOf U).Normal := hnormal
-  have hcard_sub : Nat.card (C.subgroupOf U) = Nat.card C :=
-    natCard_subgroupOf_eq C U hCU
-  have hlag : Nat.card U =
-      Nat.card (U ⧸ C.subgroupOf U) * Nat.card (C.subgroupOf U) := by
-    exact Subgroup.card_eq_card_quotient_mul_card_subgroup (C.subgroupOf U)
-  have hquot : Nat.card U / Nat.card C = qcard := by
-    rw [hlag, hcard_sub]
-    exact Nat.mul_div_left qcard (Nat.card_pos (α := C))
-  have hquotF : Fintype.card U / Fintype.card C = qcard := by
-    simpa [Nat.card_eq_fintype_card] using hquot
-  exact
-    by simpa [hquotF] using hsrc
 
 private theorem hypothesis_13_1_betaNorm_inducedPrincipal_s_side_source
     {G : Type u} [Group G] [Finite G]

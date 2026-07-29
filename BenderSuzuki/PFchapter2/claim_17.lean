@@ -269,18 +269,6 @@ private theorem chapter2_claim17_disjoint_of_card_three_of_not_le
       trivial
     exact hxK.2
 
-private theorem chapter2_claim17_natCard_mul_le_natCard_sup_of_disjoint
-    {G : Type*} [Group G] [Finite G] (F H : Subgroup G)
-    (hdisjoint : Disjoint F H) :
-    Nat.card F * Nat.card H ≤ Nat.card (F ⊔ H : Subgroup G) := by
-  let toB : F × H → ↥(F ⊔ H) := fun z =>
-    ⟨(z.1 : G) * (z.2 : G), Subgroup.mul_mem_sup z.1.property z.2.property⟩
-  have htoB_injective : Function.Injective toB := by
-    intro x y hxy
-    apply Subgroup.mul_injective_of_disjoint hdisjoint
-    exact congrArg Subtype.val hxy
-  simpa [Nat.card_prod] using
-    Nat.card_le_card_of_injective toB htoB_injective
 
 private theorem chapter2_claim17_zpowers_stronglyReal_of_generator
     {G : Type*} [Group G] {x : G}
@@ -1152,7 +1140,6 @@ private theorem chapter2_claim17_commutator_card_le_three_of_center_index_le_nin
           Subgroup.card_le_of_le hcomm_le
         _ = orderOf ⁅x, y⁆ := Nat.card_zpowers ⁅x, y⁆
         _ ≤ 3 := Nat.le_of_dvd (by norm_num) (orderOf_dvd_of_pow_eq_one hc3)
-
 
 
 private theorem chapter2_claim17_internalSemidirect_mul_unique

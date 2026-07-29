@@ -983,16 +983,6 @@ public theorem lemma_14_5_b
         (lemma_14_5_a (x := x₂) (y := x₁) hx₂len hx₁len hxx))
         (x₂ * r₂) hgCoset
 
-omit [Finite G] [IsMinCE G] in
-private theorem section14_top_conjBy (g : G) :
-    ((⊤ : Subgroup G).conjBy g) = ⊤ := by
-  ext x
-  constructor
-  · intro _
-    exact Subgroup.mem_top x
-  · intro _
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    exact ⟨g⁻¹ * x * g, Subgroup.mem_top _, by simp [mul_assoc]⟩
 
 omit [Finite G] [IsMinCE G] in
 public theorem section14_maximal_conjBy

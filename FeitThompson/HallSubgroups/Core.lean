@@ -101,16 +101,6 @@ public lemma IsHallSubgroup.card_eq
     Nat.card H₁ = Nat.card H₂ :=
   Nat.dvd_antisymm (hH₁.card_dvd_card hH₂) (hH₂.card_dvd_card hH₁)
 
-public lemma IsHallSubgroup.index_eq
-    [Finite G] (hH₁ : IsHallSubgroup π H₁) (hH₂ : IsHallSubgroup π H₂) :
-    H₁.index = H₂.index := by
-  have hcard_eq : Nat.card H₁ = Nat.card H₂ := hH₁.card_eq hH₂
-  have hmul₁ : H₁.index * Nat.card H₁ = Nat.card G := Subgroup.index_mul_card (H := H₁)
-  have hmul₂ : H₂.index * Nat.card H₂ = Nat.card G := Subgroup.index_mul_card (H := H₂)
-  have hmul : H₁.index * Nat.card H₁ = H₂.index * Nat.card H₂ := by
-    exact hmul₁.trans hmul₂.symm
-  rw [hcard_eq] at hmul
-  exact Nat.mul_right_cancel (Nat.card_pos (α := H₂)) hmul
 
 public lemma IsHallSubgroup.eq_of_le
     [Finite G] (hH₁ : IsHallSubgroup π H₁) (hH₂ : IsHallSubgroup π H₂) (hH₁H₂ : H₁ ≤ H₂) :
@@ -165,13 +155,6 @@ public lemma IsHallSubgroup.le_of_le_normalizer
   have hHK_le_H : HK ≤ H := (Subgroup.relIndex_eq_one).1 hrel_eq_one
   exact le_trans le_sup_left hHK_le_H
 
-public lemma IsHallSubgroup.eq_of_le_normalizer
-    (hH : IsHallSubgroup π H) (hK : IsHallSubgroup π K)
-    (hK_norm : K ≤ Subgroup.normalizer H.carrier) (hH_norm : H ≤ Subgroup.normalizer K.carrier) :
-    H = K := by
-  apply le_antisymm
-  · exact hK.le_of_le_normalizer hH hH_norm
-  · exact hH.le_of_le_normalizer hK hK_norm
 
 public lemma IsHallSubgroup.le_of_normal
     (hH : IsHallSubgroup π H) (hK : IsHallSubgroup π K) [H.Normal] :

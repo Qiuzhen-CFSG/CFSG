@@ -109,11 +109,6 @@ public theorem section8CenterInFitting_subgroupOf_eq (M : Subgroup G) :
     intro y hy
     exact congrArg Subtype.val (Subgroup.mem_center_iff.mp hx ⟨y, hy⟩)
 
-/-- The center of `F(M)` is normal inside `F(M)`. -/
-public theorem section8CenterInFitting_normal_in_fitting (M : Subgroup G) :
-    ((section8CenterInFitting M).subgroupOf (section8FittingSubgroup M)).Normal := by
-  rw [section8CenterInFitting_subgroupOf_eq]
-  infer_instance
 
 /-- The ambient copy of `Z(F(M))` is commutative. -/
 public theorem section8CenterInFitting_isMulCommutative (M : Subgroup G) :
@@ -288,13 +283,6 @@ public theorem section8_isPiSubgroup_of_subgroupPrimeSet_subset
   intro q hqH
   exact hHπ hqH
 
-/-- `C_{F(M)}(A₀)` is a `π(F(M))`-subgroup. -/
-public theorem section8CentralizerInFitting_isPiSubgroup_fitting
-    [Finite G] (M : Subgroup G) (A₀ : Subgroup (section8FittingSubgroup M)) :
-    IsPiSubgroup (G := G) (subgroupPrimeSet (section8FittingSubgroup M))
-      (section8CentralizerInFitting M A₀) :=
-  section8_isPiSubgroup_of_subgroupPrimeSet_subset
-    (section8CentralizerInFitting_primeSet_subset_fitting M A₀)
 
 /-- Equation (8.1) reduced to the nilpotent-center prime-support equality:
 if `π(Z(F(M))) = π(F(M))`, then `π(C_{F(M)}(A₀)) = π(F(M))`. -/
@@ -481,22 +469,6 @@ public theorem section8_piCoreIn_compl_eq_bot_of_isPiSubgroup
   have hpH : p' ∈ π := hHπ p' (dvd_trans hpDvd hcard_dvd_H)
   exact hpCore hpH
 
-/-- Pulling the transported `C_{F(M)}(A₀)` back to `F(M)` recovers the internal
-centralizer of `A₀`. -/
-public theorem section8CentralizerInFitting_subgroupOf_eq
-    (M : Subgroup G) (A₀ : Subgroup (section8FittingSubgroup M)) :
-    (section8CentralizerInFitting M A₀).subgroupOf (section8FittingSubgroup M) =
-      Subgroup.centralizer (A₀ : Set (section8FittingSubgroup M)) := by
-  change
-    ((Subgroup.centralizer (A₀ : Set (section8FittingSubgroup M))).map
-      (section8FittingSubgroup M).subtype).comap
-        (section8FittingSubgroup M).subtype =
-      Subgroup.centralizer (A₀ : Set (section8FittingSubgroup M))
-  exact
-    Subgroup.comap_map_eq_self_of_injective
-      (H := Subgroup.centralizer (A₀ : Set (section8FittingSubgroup M)))
-      (f := (section8FittingSubgroup M).subtype)
-      (section8FittingSubgroup M).subtype_injective
 
 /-- The subgroup `C_{F(M)}(A₀)`, viewed in `G`, is contained in `M`. -/
 public theorem section8CentralizerInFitting_le_maximal
@@ -1563,13 +1535,6 @@ public theorem section8CentralizerInFitting_Hypothesis7_1_of_generated_eq
   ⟨section8CentralizerInFitting_ne_bot_of_rank hA₀ hA₀rank,
     section8CentralizerInFitting_ne_top hM A₀, hgen⟩
 
-/-- A subgroup transported from a Sylow subgroup of `M` is proper whenever it lies in `F(M)`. -/
-public theorem section8SylowSubgroupInAmbient_ne_top_of_le_fitting
-    {M : Subgroup G} (hM : M ∈ section8MaximalSubgroups G)
-    {p : ℕ} (P : Sylow p M) (A : Subgroup (P : Subgroup M))
-    (hA : section8SylowSubgroupInAmbient M P A ≤ section8FittingSubgroup M) :
-    section8SylowSubgroupInAmbient M P A ≠ ⊤ :=
-  section8_ne_top_of_le_maximal hM (hA.trans (section8FittingSubgroup_le M))
 
 /-- Build membership in `U` from an explicit unique maximal overgroup. -/
 public theorem section8UniqueSubgroups_of_forall_maximal
@@ -1602,42 +1567,6 @@ public theorem section8UniqueSubgroups_of_forall_le_normalizer_eq
     simpa [hnorm] using hNnorm N hN
   exact ((hN.1.le_iff_eq hM.1).mp hNM).symm
 
-/-- If `Y <= X < G` and `Y` lies in `U`, then `X` lies in `U`. -/
-public theorem section8_unique_of_le
-    [Finite G]
-    {Y X : Subgroup G} (hYX : Y ≤ X) (hXproper : X ≠ ⊤)
-    (hY : Y ∈ section8UniqueSubgroups G) :
-    X ∈ section8UniqueSubgroups G := by
-  classical
-  rcases hY with ⟨_hYproper, M, hMuniq⟩
-  rcases (eq_top_or_exists_le_coatom X) with hXtop | ⟨N, hNcoatom, hXN⟩
-  · exact False.elim (hXproper hXtop)
-  have hNmax : N ∈ section8MaximalSubgroups G := hNcoatom
-  have hNcontY : N ∈ section8MaximalSubgroupsContaining Y := ⟨hNmax, hYX.trans hXN⟩
-  have hN_eq_M : N = M := by
-    have hNsingle : N ∈ ({M} : Set (Subgroup G)) := by
-      simpa [hMuniq] using hNcontY
-    simpa using hNsingle
-  have hMcontY : M ∈ section8MaximalSubgroupsContaining Y := by
-    rw [hMuniq]
-    simp
-  have hXM : X ≤ M := by
-    simpa [hN_eq_M] using hXN
-  refine ⟨hXproper, M, ?_⟩
-  ext N'
-  constructor
-  · intro hN'
-    have hN'Y : N' ∈ section8MaximalSubgroupsContaining Y := ⟨hN'.1, hYX.trans hN'.2⟩
-    have hN'M : N' = M := by
-      have hN'single : N' ∈ ({M} : Set (Subgroup G)) := by
-        simpa [hMuniq] using hN'Y
-      simpa using hN'single
-    simp [hN'M]
-  · intro hN'
-    have hN'M : N' = M := by
-      simpa using hN'
-    subst N'
-    exact ⟨hMcontY.1, hXM⟩
 
 public theorem section8_primeRank_le_of_subgroup
     [Finite G] (S : Subgroup G) (q : ℕ) :
@@ -2288,25 +2217,6 @@ public theorem section8_sylow_subgroupOf_of_global_sylow_le
     exact hRsub_max hQp hRsubQ
   · exact Subgroup.map_subgroupOf_eq_of_le hP₀N
 
-/-- If a global Sylow subgroup is also contained in `N`, then `N` has a Sylow subgroup
-whose transported `Z(J(-))` agrees with the one computed in `M`. -/
-public theorem section8_exists_sylow_centerIn_thompsonSubgroup_eq_of_global_sylow_le
-    {p : ℕ} [Fact p.Prime] {M N : Subgroup G} (P : Sylow p M) (P₀ : Sylow p G)
-    (hP : section8SubgroupInAmbient (P : Subgroup M) = (P₀ : Subgroup G))
-    (hP₀N : (P₀ : Subgroup G) ≤ N) :
-    ∃ R : Sylow p N,
-      section8SubgroupInAmbient (centerIn (thompsonSubgroup R) : Subgroup N) =
-        section8SubgroupInAmbient (centerIn (thompsonSubgroup P) : Subgroup M) := by
-  rcases section8_sylow_subgroupOf_of_global_sylow_le P₀ hP₀N with ⟨R, hR⟩
-  refine ⟨R, ?_⟩
-  have hRP :
-      section8SubgroupInAmbient (R : Subgroup N) =
-        section8SubgroupInAmbient (P : Subgroup M) := by
-    calc
-      section8SubgroupInAmbient (R : Subgroup N) = (P₀ : Subgroup G) := by
-        simpa [section8SubgroupInAmbient] using hR
-      _ = section8SubgroupInAmbient (P : Subgroup M) := hP.symm
-  exact (section8_centerIn_thompsonSubgroup_eq_of_sylow_ambient_eq P R hRP.symm).symm
 
 /-- The branch (b) Sylow endpoint, isolated from the characteristic normalizer-transfer step. -/
 public theorem section8_part_b_sylow_endpoint
@@ -4047,132 +3957,6 @@ public theorem section8_piCoreIn_singleton_mem_section7HFamily_top_of_mem_family
   refine ⟨le_top, piCoreIn_isPiSubgroup (G := G) ({q} : Set Nat.Primes) Y, ?_⟩
   exact section8_le_normalizer_piCoreIn_of_le_normalizer hY.2.2
 
-/-- In the part-(a) setup, the full complement family
-`H_G(C_{F(M)}(A₀); π(C_{F(M)}(A₀))')` is trivial once Hypothesis 7.1 has been
-established. This packages the singleton-prime collapses into the form used later for
-maximal overgroups. -/
-public theorem section8_HFamily_centralizerInFitting_compl_eq_singleton_bot
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    {r : Nat.Primes} (hrF : r ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    {A₀ : Subgroup (section8FittingSubgroup M)}
-    (hA₀ : A₀ ∈ maximalElementaryAbelianSubgroups p (section8FittingSubgroup M))
-    (hA₀rank : 3 ≤ generatorRank A₀)
-    (hHyp : Hypothesis7_1 (section8CentralizerInFitting M A₀)) :
-    section7HFamily (⊤ : Subgroup G)
-      (section8CentralizerInFitting M A₀)
-      (subgroupPrimeSet (section8CentralizerInFitting M A₀))ᶜ =
-        ({⊥} : Set (Subgroup G)) := by
-  let A : Subgroup G := section8CentralizerInFitting M A₀
-  ext Y
-  constructor
-  · intro hY
-    have hAπeqF : subgroupPrimeSet A = subgroupPrimeSet (section8FittingSubgroup M) := by
-      simpa [A] using section8CentralizerInFitting_primeSet_eq_fitting M A₀
-    have hrA : r ∈ subgroupPrimeSet A := by
-      simpa [hAπeqF] using hrF
-    have hr_dvd_G : r.val ∣ Nat.card G :=
-      (hrA : r.val ∣ Nat.card A).trans (Subgroup.card_subgroup_dvd_card A)
-    have hY_ne_top : Y ≠ ⊤ := by
-      intro hYtop
-      have hrY : r.val ∣ Nat.card Y := by
-        simpa [hYtop] using hr_dvd_G
-      have hr_compl : r ∈ (subgroupPrimeSet A)ᶜ := hY.2.1 r hrY
-      exact hr_compl hrA
-    haveI : IsSolvable Y :=
-      IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hY_ne_top)
-    have hpCore_bot :
-        ∀ q : (Nat.card Y).primeFactors.attach, pCore q.1.1 Y = ⊥ := by
-      intro q0
-      let q : Nat.Primes := ⟨q0.1.1, Nat.prime_of_mem_primeFactors q0.1.2⟩
-      haveI : Fact q.val.Prime := ⟨q.2⟩
-      have hq_dvd_Y : q.val ∣ Nat.card Y := by
-        exact Nat.dvd_of_mem_primeFactors q0.1.2
-      have hq_mem_compl : q ∈ (subgroupPrimeSet A)ᶜ :=
-        hY.2.1 q hq_dvd_Y
-      have hpi_mem : piCoreIn ({q} : Set Nat.Primes) Y ∈
-          section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) := by
-        simpa [A] using
-          section8_piCoreIn_singleton_mem_section7HFamily_top_of_mem_family
-            (q := q) hY
-      have hfamily_eq :
-          section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) =
-            ({⊥} : Set (Subgroup G)) := by
-        simpa [A] using
-          section8_HFamily_centralizerInFitting_eq_singleton_bot
-            hM hrF hA₀ hA₀rank hHyp hq_mem_compl
-      have hpi_bot : piCoreIn ({q} : Set Nat.Primes) Y = ⊥ := by
-        have hmem_single : piCoreIn ({q} : Set Nat.Primes) Y ∈
-            ({⊥} : Set (Subgroup G)) := by
-          simpa [hfamily_eq] using hpi_mem
-        simpa using hmem_single
-      have hpCore_map_bot : (pCore q.val Y).map Y.subtype = ⊥ := by
-        simpa [section8_piCoreIn_singleton_eq_pCore_map q Y] using hpi_bot
-      have hpCore_map_bot' :
-          (pCore q.val Y).map Y.subtype = (⊥ : Subgroup Y).map Y.subtype := by
-        simpa using hpCore_map_bot
-      have hpCore_bot_q : pCore q.val Y = ⊥ :=
-        Subgroup.map_injective Y.subtype_injective hpCore_map_bot'
-      simpa [q] using hpCore_bot_q
-    have hsup_bot :
-        (⨆ q : (Nat.card Y).primeFactors.attach, pCore q.1.1 Y) = ⊥ := by
-      apply le_bot_iff.mp
-      refine iSup_le ?_
-      intro q
-      simp [hpCore_bot q]
-    have hfit_le_sup :
-        fittingSubgroup Y ≤
-          ⨆ q : (Nat.card Y).primeFactors.attach, pCore q.1.1 Y :=
-      normal_nilpotent_le_sup_pCore
-        (G := Y) (N := fittingSubgroup Y)
-        (inferInstance : (fittingSubgroup Y).Normal)
-        (by infer_instance)
-    have hfit_bot : fittingSubgroup Y = ⊥ :=
-      le_bot_iff.mp (by simpa [hsup_bot] using hfit_le_sup)
-    have hcardY : Nat.card Y = 1 :=
-      (fitting_eq_bot_iff_card_eq_one_of_solvable Y).mp hfit_bot
-    have hYbot : Y = ⊥ :=
-      (Subgroup.card_eq_one (H := Y)).1 hcardY
-    simp [hYbot]
-  · intro hY
-    have hYbot : Y = ⊥ := by simpa using hY
-    rw [hYbot]
-    exact section8_bot_mem_section7HFamily_top A
-      (subgroupPrimeSet (section8CentralizerInFitting M A₀))ᶜ
-
-/-- The `π(C_{F(M)}(A₀))'`-core of any maximal overgroup containing
-`C_{F(M)}(A₀)` is trivial, once Hypothesis 7.1 has been established. -/
-public theorem section8CentralizerInFitting_piCore_maximalOver_eq_bot
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    {r : Nat.Primes} (hrF : r ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    {A₀ : Subgroup (section8FittingSubgroup M)}
-    (hA₀ : A₀ ∈ maximalElementaryAbelianSubgroups p (section8FittingSubgroup M))
-    (hA₀rank : 3 ≤ generatorRank A₀)
-    (hHyp : Hypothesis7_1 (section8CentralizerInFitting M A₀))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8CentralizerInFitting M A₀)) :
-    piCoreIn (subgroupPrimeSet (section8CentralizerInFitting M A₀))ᶜ N = ⊥ := by
-  let A : Subgroup G := section8CentralizerInFitting M A₀
-  have hAN : A ≤ N := by
-    simpa [A] using hN.2
-  have hA_norm_N : A ≤ Subgroup.normalizer (N : Set G) :=
-    hAN.trans Subgroup.le_normalizer
-  have hpi_mem :
-      piCoreIn (subgroupPrimeSet A)ᶜ N ∈
-        section7HFamily (⊤ : Subgroup G) A (subgroupPrimeSet A)ᶜ := by
-    refine ⟨le_top, piCoreIn_isPiSubgroup (G := G) (subgroupPrimeSet A)ᶜ N, ?_⟩
-    exact section8_le_normalizer_piCoreIn_of_le_normalizer hA_norm_N
-  have hfamily_eq :
-      section7HFamily (⊤ : Subgroup G) A (subgroupPrimeSet A)ᶜ =
-        ({⊥} : Set (Subgroup G)) := by
-    simpa [A] using
-      section8_HFamily_centralizerInFitting_compl_eq_singleton_bot
-        hM hrF hA₀ hA₀rank hHyp
-  have hmem_single : piCoreIn (subgroupPrimeSet A)ᶜ N ∈
-      ({⊥} : Set (Subgroup G)) := by
-    simpa [hfamily_eq] using hpi_mem
-  simpa [A] using hmem_single
 
 /-- The first prime-support consequence of (8.6): in the part-(a) setup, the Fitting
 subgroup of any maximal overgroup of `C_{F(M)}(A₀)` has no primes outside
@@ -6592,31 +6376,6 @@ public theorem section8_sylowOf_maximalOver_sylowSubgroupInAmbient_is_sylow_glob
   simpa [hZJnorm] using
     section8_normalizer_centerIn_thompsonSubgroup_le_of_normalizer_sylow R
 
-/-- A maximal overgroup of a transported `SCN_3(P)` subgroup has a Sylow `p`-subgroup
-whose ambient image contains that transported subgroup. -/
-public theorem section8_exists_sylow_maximalOver_containing_sylowSubgroupInAmbient
-    [Finite G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A)) :
-    ∃ R : Sylow p N,
-      section8SylowSubgroupInAmbient M P A ≤ section8SubgroupInAmbient (R : Subgroup N) := by
-  let A_G : Subgroup G := section8SylowSubgroupInAmbient M P A
-  have hAN : A_G ≤ N := by
-    simpa [A_G] using hN.2
-  have hA_G_p : IsPGroup p A_G := by
-    simpa [A_G] using section8SylowSubgroupInAmbient_isPGroup M P A
-  have hA_N_p : IsPGroup p (A_G.subgroupOf N) :=
-    hA_G_p.of_equiv (Subgroup.subgroupOfEquivOfLe hAN).symm
-  rcases IsPGroup.exists_le_sylow hA_N_p with ⟨R, hA_le_R⟩
-  refine ⟨R, ?_⟩
-  intro x hxA
-  have hxN : x ∈ N := hAN hxA
-  let xN : N := ⟨x, hxN⟩
-  have hxA_N : xN ∈ A_G.subgroupOf N := by
-    change x ∈ A_G
-    exact hxA
-  exact Subgroup.mem_map_of_mem N.subtype (hA_le_R hxA_N)
 
 /-- If there is a counterexample maximal overgroup in branch (b), choose one maximizing
 the `p`-part of its intersection with `M`. -/
@@ -6673,29 +6432,6 @@ public theorem section8_exists_sylow_inf_maximalOver_containing_sylowSubgroupInA
     exact hxA
   exact Subgroup.mem_map_of_mem (N ⊓ M : Subgroup G).subtype (hA_le_R hxA_inf)
 
-/-- In branch (b), a maximal overgroup of the transported `SCN_3(P)` subgroup contains
-a global Sylow `p`-subgroup which contains that transported subgroup. -/
-public theorem section8_exists_global_sylow_le_maximalOver_containing_sylowSubgroupInAmbient
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    (hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    (hFp : IsPGroup p (section8FittingSubgroup M))
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    (hA : A ∈ scnSubgroups 3 (P : Subgroup M))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A)) :
-    ∃ R₀ : Sylow p G,
-      (R₀ : Subgroup G) ≤ N ∧ section8SylowSubgroupInAmbient M P A ≤ (R₀ : Subgroup G) := by
-  rcases section8_exists_sylow_maximalOver_containing_sylowSubgroupInAmbient P hN with
-    ⟨R, hA_le_R⟩
-  rcases section8_sylowOf_maximalOver_sylowSubgroupInAmbient_is_sylow_global
-      hM hpF hFp P hA hN R with
-    ⟨R₀, hR₀eq⟩
-  refine ⟨R₀, ?_, ?_⟩
-  · rw [hR₀eq]
-    exact section8SubgroupInAmbient_le (R : Subgroup N)
-  · rw [hR₀eq]
-    exact hA_le_R
 
 /-- If a maximal overgroup and `M` share the same ambient Sylow `p`-subgroup, then they
 are equal. -/
@@ -6879,29 +6615,6 @@ public theorem section8_eq_maximalOver_sylowSubgroupInAmbient_of_inf_sylow_norma
     section8_eq_maximalOver_sylowSubgroupInAmbient_of_inf_sylow_is_sylow
       hM hpF hFp P hA hN R R_N hR_N
 
-/-- Normalizer control for a Sylow subgroup of `N ∩ M` gives the normalizer-control
-hypothesis needed by the branch-(b) `SCN` endpoint. -/
-public theorem
-    section8_maximalOver_sylowSubgroupInAmbient_le_normalizer_fitting_of_inf_sylow_normalizer_le
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    (hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    (hFp : IsPGroup p (section8FittingSubgroup M))
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    (hA : A ∈ scnSubgroups 3 (P : Subgroup M))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A))
-    (R : Sylow p (N ⊓ M : Subgroup G))
-    (hnorm : Subgroup.normalizer
-        (section8SubgroupInAmbient (R : Subgroup (N ⊓ M : Subgroup G)) : Set G) ≤ M) :
-    N ≤ Subgroup.normalizer (section8FittingSubgroup M : Set G) := by
-  have hNM : N = M :=
-    section8_eq_maximalOver_sylowSubgroupInAmbient_of_inf_sylow_normalizer_le
-      hM hpF hFp P hA hN R hnorm
-  rw [hNM]
-  letI : ((section8FittingSubgroup M).subgroupOf M).Normal :=
-    section8FittingSubgroup_normal_in M
-  exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
 
 /-- If a Sylow subgroup of `N ∩ M` has the same order as a Sylow subgroup of `M`,
 then its ambient image is also the image of a Sylow subgroup of `M`. -/
@@ -7294,93 +7007,6 @@ public theorem section8_maximalOver_sylowSubgroupInAmbient_le_normalizer_fitting
     section8FittingSubgroup_normal_in M
   exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
 
-/-- A maximal overgroup containing the fixed global Sylow subgroup from `M` must be `M`. -/
-public theorem section8_eq_maximalOver_sylowSubgroupInAmbient_of_global_sylow_le
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    (hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    (hFp : IsPGroup p (section8FittingSubgroup M))
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    (hA : A ∈ scnSubgroups 3 (P : Subgroup M))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A))
-    (P₀ : Sylow p G)
-    (hP : section8SubgroupInAmbient (P : Subgroup M) = (P₀ : Subgroup G))
-    (hP₀N : (P₀ : Subgroup G) ≤ N) :
-    N = M := by
-  rcases section8_exists_sylow_centerIn_thompsonSubgroup_eq_of_global_sylow_le
-      P P₀ hP hP₀N with
-    ⟨R, hZR⟩
-  have hnormN_R :
-      Subgroup.normalizer
-          (section8SubgroupInAmbient (centerIn (thompsonSubgroup R) : Subgroup N) :
-            Set G) = N :=
-    section8_normalizer_centerIn_thompsonSubgroup_eq_of_maximalOver_sylowSubgroupInAmbient
-      hM hpF hFp P hA hN R
-  have hnormN_P :
-      Subgroup.normalizer
-          (section8SubgroupInAmbient (centerIn (thompsonSubgroup P) : Subgroup M) :
-            Set G) = N := by
-    rw [← hZR]
-    exact hnormN_R
-  have hnormM_P :
-      Subgroup.normalizer
-          (section8SubgroupInAmbient (centerIn (thompsonSubgroup P) : Subgroup M) :
-            Set G) = M :=
-    section8_normalizer_centerIn_thompsonSubgroup_eq_of_fitting_isPGroup hM hpF hFp P
-  exact hnormN_P.symm.trans hnormM_P
-
-/-- Normalizer control for maximal overgroups once the fixed global Sylow subgroup is known
-to lie in the overgroup. -/
-public theorem section8_maximalOver_sylowSubgroupInAmbient_le_normalizer_fitting_of_global_sylow_le
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    (hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    (hFp : IsPGroup p (section8FittingSubgroup M))
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    (hA : A ∈ scnSubgroups 3 (P : Subgroup M))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A))
-    (P₀ : Sylow p G)
-    (hP : section8SubgroupInAmbient (P : Subgroup M) = (P₀ : Subgroup G))
-    (hP₀N : (P₀ : Subgroup G) ≤ N) :
-    N ≤ Subgroup.normalizer (section8FittingSubgroup M : Set G) := by
-  have hNM : N = M :=
-    section8_eq_maximalOver_sylowSubgroupInAmbient_of_global_sylow_le
-      hM hpF hFp P hA hN P₀ hP hP₀N
-  rw [hNM]
-  letI : ((section8FittingSubgroup M).subgroupOf M).Normal :=
-    section8FittingSubgroup_normal_in M
-  exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
-
-/-- If a maximal overgroup of a transported `SCN_3(P)` subgroup is not `M`, then the
-global Sylow subgroup it contains is different from the fixed one coming from `M`. -/
-public theorem section8_exists_distinct_global_sylow_le_maximalOver_ne_sylowSubgroupInAmbient
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    (hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet (section8FittingSubgroup M))
-    (hFp : IsPGroup p (section8FittingSubgroup M))
-    (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
-    (hA : A ∈ scnSubgroups 3 (P : Subgroup M))
-    {N : Subgroup G}
-    (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A))
-    (P₀ : Sylow p G)
-    (hP : section8SubgroupInAmbient (P : Subgroup M) = (P₀ : Subgroup G))
-    (hNM : N ≠ M) :
-    ∃ R₀ : Sylow p G,
-      (R₀ : Subgroup G) ≤ N ∧
-        section8SylowSubgroupInAmbient M P A ≤ (R₀ : Subgroup G) ∧
-          (R₀ : Subgroup G) ≠ (P₀ : Subgroup G) := by
-  rcases section8_exists_global_sylow_le_maximalOver_containing_sylowSubgroupInAmbient
-      hM hpF hFp P hA hN with
-    ⟨R₀, hR₀N, hA_le_R₀⟩
-  refine ⟨R₀, hR₀N, hA_le_R₀, ?_⟩
-  intro hR₀P₀
-  have hP₀N : (P₀ : Subgroup G) ≤ N := by
-    simpa [← hR₀P₀] using hR₀N
-  exact hNM
-    (section8_eq_maximalOver_sylowSubgroupInAmbient_of_global_sylow_le
-      hM hpF hFp P hA hN P₀ hP hP₀N)
 
 /-- If \(p \in \pi(F(M))\), then \(N_G(F(M)) = M\). -/
 public theorem section8_normalizer_fittingSubgroup_eq
@@ -7500,27 +7126,6 @@ public theorem theorem_8_1_part_b_core
       exact section8_maximalOver_sylowSubgroupInAmbient_le_normalizer_fitting
         hM hpF hFp P hA hN)
 
-/-- Part (a) reduced to the missing rank-three uniqueness endpoint.
-
-The remaining non-circular Section 8 work is to prove the supplied `hUniqueRankThree`
-from the Section 8 argument in `docs/section8.tex`, rather than from Section 9. -/
-public theorem theorem_8_1_part_a_core_of_unique_rank_three
-    [Finite G] [IsMinCE G] {p : ℕ} [Fact p.Prime] {M : Subgroup G}
-    (hM : M ∈ section8MaximalSubgroups G)
-    {A₀ : Subgroup (section8FittingSubgroup M)}
-    (hA₀ : A₀ ∈ maximalElementaryAbelianSubgroups p (section8FittingSubgroup M))
-    (hA₀rank : 3 ≤ generatorRank A₀)
-    (hUniqueRankThree :
-      ∀ {K : Subgroup G}, K ≠ ⊤ → 3 ≤ groupRank K → K ∈ section8UniqueSubgroups G) :
-    section8CentralizerInFitting M A₀ ∈ section8UniqueSubgroups G := by
-  let C : Subgroup G := section8CentralizerInFitting M A₀
-  have hcenterRank : 3 ≤ groupRank (Subgroup.center C) := by
-    simpa [C] using section8CentralizerInFitting_center_rank_ge hA₀ hA₀rank
-  have hCrank : 3 ≤ groupRank C :=
-    hcenterRank.trans (section8_groupRank_le_of_subgroup (Subgroup.center C))
-  have hCproper : C ≠ ⊤ := by
-    simpa [C] using section8CentralizerInFitting_ne_top hM A₀
-  exact hUniqueRankThree hCproper hCrank
 
 /-- Branch (a) of Theorem 8.1. -/
 public theorem theorem_8_1_part_a_core

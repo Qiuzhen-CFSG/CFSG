@@ -63,34 +63,6 @@ hypothesis `hC` we have `fixedPointSubgroup A G = ⊤`, i.e. `∀ a g, a • g =
 **Status**: Pending
 **Integration**: Import and apply at line 45 in `/mnt/prover_workspace/main.lean`
 -/
-lemma actsTrivially_of_isMulCommutative_of_centralizer_le_fixedPointSubgroup {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (habel : ∀ x y : G, x * y = y * x) (_ : Nat.Coprime (Nat.card A) (Nat.card G))
-    (hC : Subgroup.centralizer (fixedPointSubgroup A G : Set G) ≤ fixedPointSubgroup A G) :
-    ActsTrivially (A := A) (G := G) := by
-  /-
-  Because `G` is abelian, `Subgroup.centralizer H = ⊤` for any `H ≤ G`. Therefore `hC` gives
-  `⊤ ≤ fixedPointSubgroup A G`, i.e. `fixedPointSubgroup A G = ⊤`. By definition of the fixed
-  point subgroup this means that every element of `G` is fixed by every `a : A`.
-  -/
-  have hcenter : Subgroup.center G = ⊤ := by
-    refine (Subgroup.eq_top_iff' (H := Subgroup.center G)).mpr ?_
-    intro x
-    rw [Subgroup.mem_center_iff]
-    intro y
-    exact habel y x
-  have hcentralizer : Subgroup.centralizer (fixedPointSubgroup A G : Set G) = ⊤ := by
-    rw [Subgroup.centralizer_eq_top_iff_subset]
-    intro x hx
-    rw [hcenter]
-    exact Subgroup.mem_top x
-  have hfixed : fixedPointSubgroup A G = ⊤ := by
-    apply le_antisymm le_top
-    simpa [hcentralizer] using hC
-  intro a g
-  have hg : g ∈ fixedPointSubgroup A G := by
-    simp [hfixed]
-  have hg' := (FixedPoints.mem_subgroup (a := g) (M := A)).mp hg
-  exact hg' a
 
 /-**
 **[Subgoal 2: Centre is characteristic]**
@@ -100,8 +72,6 @@ restricts to an action on `Z(G)`.
 **Status**: Pending
 **Integration**: Use to obtain an action on the centre and on the quotient `G/Z(G)`.
 -/
-lemma center_characteristic (G : Type*) [Group G] : Subgroup.Characteristic (Subgroup.center G) :=
-  Subgroup.centerCharacteristic
 
 /-**
 **[Subgoal 3: Centralizer condition for the centre]**

@@ -82,53 +82,6 @@ public theorem theorem_3_6_subgroup_step {G : Type uG} [Group G] [Finite G]
         hCZ_sub
   exact hasPLengthOne_commutator_subgroupOf_map (p := p) S N R le_sup_left le_sup_right hsub
 
-public theorem theorem_3_6_subambient_step {G : Type uG} [Group G] [Finite G]
-    (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (N : Subgroup G) (hN_le_H : N ≤ H) (hS_lt : N ⊔ R₀ < ⊤) (hN_normal : N.Normal)
-    (hR₀inv : ∀ r : R₀, ∀ x ∈ N, (r : G) * x * (r : G)⁻¹ ∈ N)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G))
-    (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
-    (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
-    (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀)) :
-    HasPLengthOne p ↥⁅N, R₀⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
-  let S : Subgroup G := N ⊔ R₀
-  have hcardS_dvd : Nat.card S ∣ Nat.card G := Subgroup.card_subgroup_dvd_card S
-  have hcardS_lt : Nat.card S < Nat.card G := by
-    simpa [S] using natCard_lt_of_subgroup_lt hS_lt
-  have hdisj : Disjoint N R₀ := (hHR.disjoint.mono_left hN_le_H).mono_right hR₀_le
-  have hR₀dvdR : Nat.card R₀ ∣ Nat.card R := by
-    rw [← natCard_subgroupOf_eq R₀ R hR₀_le]
-    exact Subgroup.card_subgroup_dvd_card (R₀.subgroupOf R)
-  have hcopHR₀ : Nat.Coprime (Nat.card H) (Nat.card R₀) := Nat.Coprime.of_dvd_right hR₀dvdR hcopHR
-  have hcop_sub :
-      Nat.Coprime (Nat.card (N.subgroupOf S)) (Nat.card (R₀.subgroupOf S)) :=
-    coprime_card_subgroupOf_sup_of_le N H R₀ hN_le_H hcopHR₀
-  have hR₀sub_le : R₀.subgroupOf S ≤ R₀.subgroupOf S := le_rfl
-  have hR₀sub_prime : Nat.Prime (Nat.card (R₀.subgroupOf S)) := by
-    rw [natCard_subgroupOf_eq R₀ S le_sup_right]
-    exact hR₀_prime
-  have hCZ_N :
-      IsZGroup ↥(subgroupCentralizerIn N R₀) :=
-    isZGroup_subgroupCentralizerIn_of_le H N R₀ hN_le_H
-  have hCZ_sub :
-      IsZGroup ↥(subgroupCentralizerIn (N.subgroupOf S) (R₀.subgroupOf S)) := by
-    letI : IsZGroup ↥(subgroupCentralizerIn N R₀) := hCZ_N
-    exact isZGroup_subgroupCentralizerIn_subgroupOf S N R₀ le_sup_right
-  have hsub :
-      HasPLengthOne p ↥⁅N.subgroupOf S, R₀.subgroupOf S⁆ := by
-    exact
-      hind (N.subgroupOf S) (R₀.subgroupOf S) (R₀.subgroupOf S) p hcardS_lt
-        (by infer_instance)
-        (odd_of_card_dvd hodd hcardS_dvd)
-        (normal_subgroupOf_sup_of_conj_mem N R₀ hR₀inv)
-        (isComplement'_subgroupOf_sup_of_disjoint N R₀ hdisj)
-        hcop_sub
-        hR₀sub_le
-        hR₀sub_prime
-        hp
-        hCZ_sub
-  exact hasPLengthOne_commutator_subgroupOf_map (p := p) S N R₀ le_sup_left le_sup_right hsub
 
 public theorem theorem_3_6_reduce_eq_commutator {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
@@ -1276,14 +1229,6 @@ private theorem isPGroup_normalizerSubtypeMap
   unfold normalizerSubtypeMap
   exact hP.map (normalizerOf K).subtype
 
-private theorem isInvariant_normalizerSubtypeMap_of_isInvariant
-    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (H : Subgroup G) [IsInvariant A G H] (K : Subgroup H)
-    [IsInvariant A H (normalizerOf K)] (P : Subgroup (normalizerOf K))
-    [IsInvariant A (normalizerOf K) P] :
-    IsInvariant A H (normalizerSubtypeMap K P) := by
-  simpa [normalizerSubtypeMap] using
-    isInvariant_map_subtype (A := A) (G := H) (normalizerOf K) P
 
 public theorem theorem_3_6_complement_card_coprime
     {G : Type*} [Group G] [Finite G]

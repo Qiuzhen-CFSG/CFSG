@@ -1048,23 +1048,6 @@ private theorem chapter2_claim15_pgroup_le_normal_sylow
   have hleKs : L ≤ (Ks : Subgroup G) := inf_eq_left.mp hInf.symm
   simpa [hKs] using hleKs
 
-private theorem chapter2_claim15_isMulCommutative_sup_of_le_centralizer
-    {G : Type*} [Group G] {A B : Subgroup G}
-    (hAcomm : IsMulCommutative A) (hBcomm : IsMulCommutative B)
-    (hB_le_CA : B ≤ Subgroup.centralizer (A : Set G)) :
-    IsMulCommutative (A ⊔ B : Subgroup G) := by
-  rw [Subgroup.sup_eq_closure]
-  letI : IsMulCommutative A := hAcomm
-  letI : IsMulCommutative B := hBcomm
-  exact Subgroup.isMulCommutative_closure (by
-    intro x hx y hy
-    rcases hx with hxA | hxB
-    · rcases hy with hyA | hyB
-      · exact setLike_mul_comm hxA hyA
-      · exact Subgroup.mem_centralizer_iff.mp (hB_le_CA hyB) x hxA
-    · rcases hy with hyA | hyB
-      · exact (Subgroup.mem_centralizer_iff.mp (hB_le_CA hxB) y hyA).symm
-      · exact setLike_mul_comm hxB hyB)
 
 private theorem chapter2_claim15_P_normalizes_L
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]

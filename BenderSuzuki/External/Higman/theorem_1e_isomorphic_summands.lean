@@ -263,18 +263,6 @@ private noncomputable def zmod2LinearEquivOfSubgroupMulEquiv
       left_inv := eAdd.left_inv
       right_inv := eAdd.right_inv }
 
-private noncomputable def LinearEquiv.restrictInvariant
-    {K E : Type*} [Semiring K] [AddCommMonoid E] [Module K E]
-    (T : E ≃ₗ[K] E) (U : Submodule K E)
-    (hU : ∀ x : E, x ∈ U ↔ T x ∈ U) : U ≃ₗ[K] U where
-  toFun u := ⟨T u, (hU u).mp u.property⟩
-  invFun u := ⟨T.symm u, (hU (T.symm u)).mpr (by
-    rw [T.apply_symm_apply]
-    exact u.property)⟩
-  map_add' x y := by apply Subtype.ext; exact map_add T (x : E) (y : E)
-  map_smul' c x := by apply Subtype.ext; exact map_smul T c (x : E)
-  left_inv x := by apply Subtype.ext; exact T.symm_apply_apply x
-  right_inv x := by apply Subtype.ext; exact T.apply_symm_apply x
 
 private noncomputable def LinearEquiv.restrictInvariantFinite
     {K E : Type*} [DivisionRing K] [AddCommGroup E] [Module K E]
@@ -299,15 +287,6 @@ private noncomputable def LinearEquiv.restrictInvariantFinite
     exact congrArg Subtype.val hxy
   exact ⟨hf, LinearMap.injective_iff_surjective.mp hf⟩
 
-private theorem coe_zmod2LinearEquivOfSubgroupMulEquiv
-    {G : Type*} [CommGroup G] [Module (ZMod 2) (Additive G)]
-    (U V : Subgroup G) (e : U ≃* V)
-    (u : zmod2SubmoduleOfSubgroup U) :
-    ((zmod2LinearEquivOfSubgroupMulEquiv U V e u :
-        zmod2SubmoduleOfSubgroup V) : Additive G) =
-      Additive.ofMul
-        (e ⟨u.1.toMul, by
-          exact u.property⟩ : G) := rfl
 
 /-- Explicit actor-equivariant isomorphic summands in the central quotient. -/
 @[expose] public def Theorem1IsomorphicSummands

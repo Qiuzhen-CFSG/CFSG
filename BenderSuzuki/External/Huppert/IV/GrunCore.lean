@@ -297,17 +297,5 @@ public theorem hkt_grun_second_hasNormalPComplement_of_center_normalizer
   exact hkt_grun_iv37_hasNormalPComplement_of_center_normalizer
     (Q := Q) (q := q) S hpnormal hcomp_ZN hcomp_residual
 
-/-- Huppert IV.3.7, Grün's second theorem in the normal-complement form used here. -/
-public theorem huppert_IV_3_7_hasNormalPComplement_of_center_normalizer
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S : Sylow q Q) (hpnormal : ∀ T : Sylow q Q, centerIn (G := Q) (S : Subgroup Q) ≤ (T : Subgroup Q) → centerIn (G := Q) (S : Subgroup Q) = centerIn (G := Q) (T : Subgroup Q))
-    (hcomp_ZN :
-      HasNormalPComplement q
-        (Subgroup.normalizer
-          ((centerIn (G := Q) (S : Subgroup Q) : Subgroup Q) : Set Q)))
-    (hcomp_residual : HasNormalPComplement q (hktAbelianPResidual q Q)) :
-    HasNormalPComplement q Q :=
-  hkt_grun_second_hasNormalPComplement_of_center_normalizer
-    (Q := Q) (q := q) S hpnormal hcomp_ZN hcomp_residual
 end External
 end BenderSuzuki

@@ -4,7 +4,7 @@ Authors: Tianjiao Nie
 
 module
 
-public import FeitThompson.BGsection1.theorem_1_20
+public import FeitThompson.BGsection1.corollary_1_19
 
 open scoped Pointwise
 
@@ -22,16 +22,6 @@ Let $G$ be a finite group.
 (e) If $H$ and $N$ are normal subgroups of $G$ such that $H \cap N = 1$ and $G/H$ and $G/N$ both have $p$-length one, then $G$ has $p$-length one.
 -/
 
-/-- Core bridge for Lemma 1.21(d). -/
-public def PLengthNormalComplementBridge (p : ℕ) (G : Type*) [Group G] [Finite G] [Fact p.Prime] : Prop := by
-  let _ := (inferInstance : Finite G)
-  let _ := (inferInstance : Fact p.Prime)
-  exact HasPLengthOne (p := p) G ↔ HasNormalPComplement p (↥(pElementsSubgroup p G))
-
-public theorem lemma_1_21_d_of_bridge {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime]
-    (hbridge : PLengthNormalComplementBridge p G) :
-    HasPLengthOne (p := p) G ↔ HasNormalPComplement p (↥(pElementsSubgroup p G)) := by
-  simpa [PLengthNormalComplementBridge] using hbridge
 
 /-- Core equivalence for Lemma 1.21(d). -/
 public theorem hasPLengthOne_iff_hasNormalPComplement_pElements
@@ -219,9 +209,6 @@ public theorem lemma_1_21_c {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.P
   simp [HasPLengthOne, Op_p'pp', hcoreTopOpG]
 
 -- Lemma 1.21(d)
-public theorem lemma_1_21_d {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime] :
-    HasPLengthOne (p := p) G ↔ HasNormalPComplement p (↥(pElementsSubgroup p G)) := by
-  simpa using (hasPLengthOne_iff_hasNormalPComplement_pElements (G := G) (p := p))
 
 /-- Direct products preserve `p`-length one. -/
 public theorem hasPLengthOne_prod {G G' : Type*} [Group G] [Finite G] [Group G'] [Finite G']

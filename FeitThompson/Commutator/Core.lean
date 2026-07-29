@@ -26,9 +26,6 @@ lemma conj_commutator_left {G : Type u} [Group G] (x a b : G) :
     x * ⁅a, b⁆ * x⁻¹ = ⁅x * a, b⁆ * ⁅b, x⁆ := by
   simp [commutatorElement_def, mul_assoc]
 
-lemma conj_commutator_right {G : Type u} [Group G] (x a b : G) :
-    x * ⁅a, b⁆ * x⁻¹ = ⁅x, a⁆ * ⁅a, x * b⁆ := by
-  simp [commutatorElement_def, mul_assoc]
 
 -- A small helper: once we control conjugation on a generating set, we control it on the closure.
 lemma conj_mem_closure {G : Type u} [Group G] {S : Set G} (x y : G) (hy : y ∈ Subgroup.closure S)

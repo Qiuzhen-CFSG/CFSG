@@ -38,16 +38,6 @@ private theorem scalarProduct_add_right_pf72
       Section1.scalarProduct G φ ψ + Section1.scalarProduct G φ η := by
   simp [Section1.scalarProduct, mul_add, Finset.sum_add_distrib]
 
-private theorem scalarProduct_sub_left_pf72
-    {G : Type*} [Group G] [Finite G]
-    (φ ψ η : Section1.ClassFunction G) :
-    Section1.scalarProduct G (φ - ψ) η =
-      Section1.scalarProduct G φ η - Section1.scalarProduct G ψ η := by
-  rw [sub_eq_add_neg, Section1.scalarProduct_add_left]
-  have hneg : Section1.scalarProduct G (-ψ) η = -Section1.scalarProduct G ψ η := by
-    simp [Section1.scalarProduct, Finset.sum_neg_distrib]
-  rw [hneg]
-  ring
 
 private theorem scalarProduct_sub_right_pf72
     {G : Type*} [Group G] [Finite G]

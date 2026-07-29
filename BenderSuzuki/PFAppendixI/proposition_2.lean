@@ -211,87 +211,6 @@ public theorem peterfalvi_appendixI_proposition_2_b_additive_a
   exact ((hdef (lambda + mu)).2 (a lambda + a mu) (by
     simpa [us] using hcoord)).symm
 
-/-- Appendix I, Proposition 2(b), source sentence for the action of a conjugate
-of a scalar generator coming from `T` on `u(mu s)`. -/
-public theorem peterfalvi_appendixI_proposition_2_b_conjugate_T
-    {G F : Type*} [Group G] [Field F] (Q0 : Subgroup G) (S : Set F) :
-    ∀ (q0_add : Q0 ≃* Multiplicative F) (u_add : Q0 ≃* Q0) (s : Q0)
-      (a : F → F),
-        (∀ lambda : F,
-          q0_add (u_add
-              (q0_add.symm
-                (Multiplicative.ofAdd (lambda * Multiplicative.toAdd (q0_add s))))) =
-              Multiplicative.ofAdd
-                (a lambda * Multiplicative.toAdd (q0_add (u_add s))) ∧
-            ∀ b : F,
-              q0_add (u_add
-                  (q0_add.symm
-                    (Multiplicative.ofAdd (lambda * Multiplicative.toAdd (q0_add s))))) =
-                  Multiplicative.ofAdd
-                    (b * Multiplicative.toAdd (q0_add (u_add s))) →
-                b = a lambda) →
-          (∀ lambda ∈ S, ∃ c : F, ∀ x : Q0,
-            u_add (q0_add.symm
-                (Multiplicative.ofAdd (lambda * Multiplicative.toAdd (q0_add x)))) =
-              q0_add.symm
-                (Multiplicative.ofAdd (c * Multiplicative.toAdd (q0_add (u_add x))))) →
-            ∀ lambda ∈ S, ∃ c : F, ∀ mu : F,
-              u_add (q0_add.symm
-                  (Multiplicative.ofAdd ((lambda * mu) * Multiplicative.toAdd (q0_add s)))) =
-                  q0_add.symm (Multiplicative.ofAdd
-                    (c * Multiplicative.toAdd (q0_add
-                      (u_add (q0_add.symm
-                        (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s)))))))) ∧
-                q0_add (u_add (q0_add.symm
-                  (Multiplicative.ofAdd ((lambda * mu) * Multiplicative.toAdd (q0_add s))))) =
-                  Multiplicative.ofAdd
-                    (c * (a mu * Multiplicative.toAdd (q0_add (u_add s)))) := by
-  intro q0_add u_add s a hdef hconjT lambda hlambda
-  rcases hconjT lambda hlambda with ⟨c, hc⟩
-  refine ⟨c, ?_⟩
-  intro mu
-  let us : F := Multiplicative.toAdd (q0_add (u_add s))
-  have hscalar_mul :
-      q0_add.symm
-          (Multiplicative.ofAdd ((lambda * mu) * Multiplicative.toAdd (q0_add s))) =
-        q0_add.symm (Multiplicative.ofAdd
-          (lambda * Multiplicative.toAdd (q0_add
-            (q0_add.symm
-              (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s))))))) := by
-    apply q0_add.injective
-    simp [mul_assoc]
-  have hact :
-      u_add (q0_add.symm
-          (Multiplicative.ofAdd ((lambda * mu) * Multiplicative.toAdd (q0_add s)))) =
-        q0_add.symm (Multiplicative.ofAdd
-          (c * Multiplicative.toAdd (q0_add
-            (u_add (q0_add.symm
-              (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s)))))))) := by
-    simpa [hscalar_mul] using
-      hc (q0_add.symm (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s))))
-  constructor
-  · exact hact
-  have hmu_toAdd :
-      Multiplicative.toAdd
-          (q0_add (u_add (q0_add.symm
-            (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s)))))) =
-        a mu * us := by
-    simpa [us] using congrArg Multiplicative.toAdd (hdef mu).1
-  calc
-    q0_add (u_add (q0_add.symm
-        (Multiplicative.ofAdd ((lambda * mu) * Multiplicative.toAdd (q0_add s))))) =
-        q0_add (q0_add.symm (Multiplicative.ofAdd
-          (c * Multiplicative.toAdd (q0_add
-            (u_add (q0_add.symm
-              (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s))))))))) := by
-          rw [hact]
-    _ = Multiplicative.ofAdd
-        (c * Multiplicative.toAdd
-            (q0_add (u_add (q0_add.symm
-              (Multiplicative.ofAdd (mu * Multiplicative.toAdd (q0_add s))))))) := by
-          simp
-    _ = Multiplicative.ofAdd (c * (a mu * us)) := by
-          rw [hmu_toAdd]
 
 /-- Appendix I, Proposition 2(b), source sentence proving multiplicativity of
 `a` when the first factor is one of the scalar generators coming from `T`. -/
@@ -942,9 +861,5 @@ public theorem peterfalvi_appendixI_proposition_2_b
         Q0 q0_add u_add s hs S hclosure hconjT)
 end PFAppendixI
 end BenderSuzuki
-
-
-
-
 
 

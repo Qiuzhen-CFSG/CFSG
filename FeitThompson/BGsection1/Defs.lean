@@ -58,7 +58,6 @@ public import FeitThompson.PGroup.Omega
 import FeitThompson.PGroup.NormalSubgroups
 public import FeitThompson.Representation.CompleteReducibility
 public import FeitThompson.Representation.Maschke
-import FeitThompson.ZGroup.Hall
 
 open scoped Pointwise
 

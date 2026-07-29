@@ -65,18 +65,6 @@ public theorem section12_nilpotent_le_centralizer_of_pSubgroup_pre
         x a hx (hA_le_P₀ ha)).eq.symm
   rw [hCent_top]
 
-omit [IsMinCE G] in
-public theorem section12_pSubgroup_isMulCommutative_of_abelian_sylow_pre
-    {R : Type*} [Group R] [Finite R] {p : Nat.Primes} {K : Subgroup R}
-    (hKp : IsPGroup p.val K) (hSylow_comm : ∀ P : Sylow p.val R, IsMulCommutative (P : Subgroup R)) :
-    IsMulCommutative (K : Subgroup R) := by
-  classical
-  obtain ⟨P, hK_le_P⟩ := IsPGroup.exists_le_sylow (G := R) (p := p.val) hKp
-  have hPcomm : IsMulCommutative (P : Subgroup R) := hSylow_comm P
-  refine ⟨⟨fun x y => ?_⟩⟩
-  exact Subtype.ext <|
-    setLike_mul_comm (s := (P : Subgroup R)) (hK_le_P x.property)
-      (hK_le_P y.property)
 
 omit [IsMinCE G] in
 public theorem section12_fitting_le_centralizer_of_normal_pSubgroup_abelian_sylow_pre
@@ -417,19 +405,6 @@ public theorem section12_lemma_12_8_c_core_pre
       hC_le_E
   exact ⟨hS_le_der, hDerNS_le_FE, hFE_le_CS, hCS_le_E⟩
 
-public theorem section12_isMulCommutative_of_mulEquiv_pre_pre
-    {A B : Type*} [Group A] [Group B] (e : A ≃* B)
-    (hB : IsMulCommutative B) :
-    IsMulCommutative A := by
-  classical
-  refine ⟨⟨fun x y => ?_⟩⟩
-  letI : IsMulCommutative B := hB
-  letI : CommGroup B := IsMulCommutative.instCommGroup
-  apply e.injective
-  calc
-    e (x * y) = e x * e y := e.map_mul x y
-    _ = e y * e x := mul_comm (e x) (e y)
-    _ = e (y * x) := (e.map_mul y x).symm
 
 public theorem section12_isMulCommutative_of_nilpotent_of_sylow_pre_pre
     {K : Type*} [Group K] [Finite K]

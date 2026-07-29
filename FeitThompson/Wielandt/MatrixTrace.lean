@@ -192,22 +192,6 @@ public theorem MatrixTraceModel.exists_matrix_trace_model
   letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
   exact ⟨D.matrixIndex, inferInstance, D.matrixLift, D.trace_sum⟩
 
-/-- A matrix trace model supplies the trace function used in the congruence
-step. -/
-public theorem MatrixTraceModel.exists_trace_sum_function
-    {G ι : Type u} [Group G] [Fintype G] [Fintype ι]
-    {A : ι → Subgroup G}
-    [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
-    {q : ℕ} {r : ι → ℕ}
-    (D : MatrixTraceModel (G := G) (ι := ι) A q r) :
-    ∃ F : G → ZMod q,
-      ∀ i : ι,
-        (∑ a : A i, F (a : G)) =
-          (r i * Nat.card (A i) : ZMod q) := by
-  classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
-  exact exists_trace_sum_function_of_matrix_trace_model
-    (A := A) (r := r) (q := q) D.matrixLift D.trace_sum
 
 /-- The common matrix lift before choosing subgroup block decompositions. -/
 public structure CommonMatrixLift (G : Type u) [Group G] (q : ℕ) : Type (u + 1) where
@@ -390,92 +374,4 @@ public theorem CommonMatrixLiftBlockData.exists_matrix_trace_model
   classical
   exact MatrixTraceModel.exists_matrix_trace_model (D.toMatrixTraceModel A)
 
-/-- Unpack a common lift/block-data package into the tuple-shaped endpoint used
-by the earlier matrix-trace infrastructure. -/
-public theorem CommonMatrixLiftBlockData.exists_tuple
-    {G V ι : Type u} [Group G] [Finite G] [Group V] [Finite V]
-    [MulDistribMulAction G V] [Fintype G] [Fintype ι] [Nontrivial V]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (A : ι → Subgroup G)
-    [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
-    {e : ℕ}
-    (D : CommonMatrixLiftBlockData (G := G) (V := V) (ι := ι) (p := p) A e) :
-    ∃ κ : Type u, ∃ hκ : Fintype κ,
-      letI : Fintype κ := hκ
-      ∃ M : G → Matrix κ κ (ZMod (p ^ e)),
-      ∃ l : ι → Type u, ∃ ridx : ι → Type u,
-      ∃ hl : ∀ i, Fintype (l i), ∃ hr : ∀ i, Fintype (ridx i),
-      ∃ hdl : ∀ i, DecidableEq (l i), ∃ hdr : ∀ i, DecidableEq (ridx i),
-        letI : ∀ i, Fintype (l i) := hl
-        letI : ∀ i, Fintype (ridx i) := hr
-        letI : ∀ i, DecidableEq (l i) := hdl
-        letI : ∀ i, DecidableEq (ridx i) := hdr
-        ∃ be : ∀ i, κ ≃ l i ⊕ ridx i,
-        ∃ P : ∀ i, Matrix (l i ⊕ ridx i) (l i ⊕ ridx i) (ZMod (p ^ e)),
-        ∃ Q : ∀ i, Matrix (l i ⊕ ridx i) (l i ⊕ ridx i) (ZMod (p ^ e)),
-          (∀ i, Fintype.card (ridx i) =
-            fixedSubspaceFinrank (G := G) (V := V) (p := p) (A i)) ∧
-          (∀ i, P i * Q i = 1) ∧
-          (∀ i, ∀ a : A i,
-            (Q i * Matrix.reindex (be i) (be i) (M (a : G)) * P i).toBlocks₂₂ = 1) ∧
-          (∀ i,
-            (∑ a : A i,
-              (Q i * Matrix.reindex (be i) (be i) (M (a : G)) * P i).toBlocks₁₁) = 0) := by
-  classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
-  refine ⟨D.matrixIndex, inferInstance, D.matrixLift,
-    (fun i => (D.blockData i).leftIndex),
-    (fun i => (D.blockData i).rightIndex),
-    (fun i => (D.blockData i).instFintypeLeftIndex),
-    (fun i => (D.blockData i).instFintypeRightIndex),
-    (fun i => (D.blockData i).instDecidableEqLeftIndex),
-    (fun i => (D.blockData i).instDecidableEqRightIndex),
-    (fun i => (D.blockData i).indexEquiv),
-    (fun i => (D.blockData i).P),
-    (fun i => (D.blockData i).Q), ?_, ?_, ?_, ?_⟩
-  · intro i
-    exact (D.blockData i).card_right
-  · intro i
-    exact (D.blockData i).inverse_blocks
-  · intro i a
-    exact (D.blockData i).bottom_right_identity a
-  · intro i
-    exact (D.blockData i).top_left_sum_zero
 
-
-public theorem exists_matrix_trace_model_of_common_lift_and_block_data
-    {G ι κ : Type u} [Group G] [Fintype G] [Fintype ι] [Fintype κ]
-    (A : ι → Subgroup G)
-    [∀ (g : G) (i : ι), Decidable (g ∈ A i)]
-    (q : ℕ) (M : G → Matrix κ κ (ZMod q))
-    (r : ι → ℕ)
-    (l : ι → Type u) (ridx : ι → Type u)
-    [∀ i, Fintype (l i)] [∀ i, Fintype (ridx i)]
-    [∀ i, DecidableEq (l i)] [∀ i, DecidableEq (ridx i)]
-    (e : ∀ i, κ ≃ l i ⊕ ridx i)
-    (P Q : ∀ i, Matrix (l i ⊕ ridx i) (l i ⊕ ridx i) (ZMod q))
-    (hcard : ∀ i, Fintype.card (ridx i) = r i)
-    (hPQ : ∀ i, P i * Q i = 1)
-    (h22 : ∀ i, ∀ a : A i,
-      (Q i * Matrix.reindex (e i) (e i) (M (a : G)) * P i).toBlocks₂₂ = 1)
-    (h11 : ∀ i,
-      (∑ a : A i,
-        (Q i * Matrix.reindex (e i) (e i) (M (a : G)) * P i).toBlocks₁₁) = 0) :
-    ∃ κ' : Type u, ∃ hκ : Fintype κ',
-      letI : Fintype κ' := hκ
-      ∃ M' : G → Matrix κ' κ' (ZMod q),
-        ∀ i : ι,
-          Matrix.trace (∑ a : A i, M' (a : G)) =
-            (r i * Nat.card (A i) : ZMod q) := by
-  classical
-  refine ⟨κ, inferInstance, M, ?_⟩
-  intro i
-  have htrace :=
-    trace_model_subgroup_sum_of_reindexed_block_data
-      (A := A i) (q := q) (M := M) (e := e i)
-      (P := P i) (Q := Q i) (hPQ := hPQ i) (h22 := h22 i) (h11 := h11 i)
-  calc
-    Matrix.trace (∑ a : A i, M (a : G)) =
-        (Fintype.card (ridx i) : ZMod q) * (Nat.card (A i) : ZMod q) := htrace
-    _ = (r i * Nat.card (A i) : ZMod q) := by
-      rw [hcard i]

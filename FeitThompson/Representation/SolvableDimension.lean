@@ -246,41 +246,6 @@ public theorem repMap_range_ne_bot_of_ne_zero
       congrArg Subrepresentation.toSubmodule hbot
     _ = (⊥ : Submodule F V₂) := rfl
 
-omit [H.Normal] in
-public theorem repMap_range_eq_top_of_ne_zero
-    {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
-    {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
-    {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
-    [IsIrreducible ρ₂] (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    f.range = ⊤ := by
-  rcases (inferInstance : IsIrreducible ρ₂).eq_bot_or_eq_top f.range with hbot | htop
-  · exact False.elim (repMap_range_ne_bot_of_ne_zero f hf hbot)
-  · exact htop
-
-public noncomputable def repEquivOfNeZero
-    {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
-    {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
-    {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
-    [IsIrreducible ρ₁] [IsIrreducible ρ₂]
-    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    ρ₁ ≃ₗ ρ₂ := by
-  have hfinj : Function.Injective f := by
-    rcases (Representation.IsIrreducible.injective_or_eq_zero
-      (ρ := ρ₁) (σ := ρ₂) (f := f)) with hfinj | hf0
-    · exact hfinj
-    · exact False.elim (hf hf0)
-  have hfsurj : Function.Surjective f := by
-    exact LinearMap.range_eq_top.mp (by
-      calc
-        f.toLinearMap.range = f.range.toSubmodule := rfl
-        _ = (⊤ : Subrepresentation ρ₂).toSubmodule :=
-          congrArg Subrepresentation.toSubmodule
-            (repMap_range_eq_top_of_ne_zero f hf)
-        _ = (⊤ : Submodule F V₂) := rfl)
-  refine RepEquiv.mk (LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩) ?_
-  intro h
-  ext v
-  simpa using (Representation.IntertwiningMap.isIntertwining (ρ := ρ₁) (σ := ρ₂) f h v)
 
 public noncomputable def repEquivOfNeZeroOfSimple
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
@@ -660,16 +625,6 @@ public theorem coindProj_mem_coset
   · have hzero : f.1 x = 0 := hf x hx
     simp [coindProj_apply, hx, hzero]
 
-public theorem coindProj_eq_zero_of_mem_ne {q q' : G ⧸ H}
-    (hqq' : q' ≠ q) (f : Representation.coindV H.subtype ρ)
-    (hf : f ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule) :
-    coindProj (ρ := ρ) q' f = 0 := by
-  ext x
-  by_cases hx : (x : G ⧸ H) = q'
-  · have hxq : (x : G ⧸ H) ≠ q := by simpa [hx] using hqq'
-    have hzero : f.1 x = 0 := hf x hxq
-    simp [coindProj_apply, hx, hzero]
-  · simp [coindProj_apply, hx]
 
 @[simp] theorem sum_coindProj_apply [Fintype (G ⧸ H)] (f : Representation.coindV H.subtype ρ) (x : G) :
     (∑ q : G ⧸ H, coindProj (ρ := ρ) q f).1 x = f.1 x := by
@@ -709,16 +664,6 @@ public theorem coind_apply_mem_coset_shift
   change ((y : G ⧸ H) * (x : G ⧸ H) = q) at hEq
   simpa [div_eq_mul_inv] using (eq_mul_inv_iff_mul_eq).2 hEq
 
-def coindSubrepInclusion (S : Subrepresentation (coindRep (ρ := ρ))) :
-    S.toRepresentation.comp H.subtype →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := by
-  refine RepMap.mk S.toSubmodule.subtype ?_
-  intro h
-  ext f
-  rfl
-
-public lemma coindCosetSubrep_condition (q : G ⧸ H) (f : Representation.coindV H.subtype ρ)
-    (hf : f ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule) (g : G) (hg : (g : G ⧸ H) ≠ q) : f.1 g = 0 :=
-  hf g hg
 
 set_option backward.isDefEq.respectTransparency false in
 public theorem coindCosetSubrep_irreducible [Finite G] [IsIrreducible ρ] (q : G ⧸ H) :
@@ -2064,110 +2009,3 @@ public theorem lemma_2_3
   exact h
 
 
-/-- For a normal subgroup, the fixed subspace of a representation is stable under
-the ambient group action. -/
-@[expose] public noncomputable def fixedSubrepresentationOfNormal
-    {F : Type*} [Field F] {G : Type*} [Group G] {V : Type*}
-    [AddCommGroup V] [Module F V] (ρ : Representation F G V)
-    (H : Subgroup G) [H.Normal] :
-    Subrepresentation ρ where
-  toSubmodule := Representation.invariants (ρ.comp H.subtype)
-  apply_mem_toSubmodule := by
-    intro g v hv
-    change ∀ h : H, ρ h (ρ g v) = ρ g v
-    intro h
-    have hh' : (g : G)⁻¹ * h * g ∈ H := by
-      simpa using Subgroup.Normal.conj_mem
-        (inferInstance : H.Normal) h h.2 ((g : G)⁻¹)
-    let h' : H := ⟨(g : G)⁻¹ * h * g, hh'⟩
-    have hvh' : ρ h' v = v := hv h'
-    calc
-      ρ h (ρ g v) = ((ρ h) * (ρ g)) v := rfl
-      _ = ρ ((h : G) * g) v := by rw [← ρ.map_mul]
-      _ = ρ (g * (h' : H)) v := by
-            congr 1
-            simp [h', mul_assoc]
-      _ = ((ρ g) * (ρ h')) v := by rw [ρ.map_mul]
-      _ = ρ g (ρ h' v) := rfl
-      _ = ρ g v := by rw [hvh']
-
-/-- A normal subgroup with a nonzero fixed vector acts trivially on an irreducible
-representation. -/
-public theorem le_ker_of_normal_invariants_ne_bot
-    {F : Type*} [Field F] {G : Type*} [Group G] {V : Type*}
-    [AddCommGroup V] [Module F V] (ρ : Representation F G V)
-    (H : Subgroup G) [H.Normal] [Representation.IsIrreducible ρ]
-    (hfix : Representation.invariants (ρ.comp H.subtype) ≠ ⊥) :
-    H ≤ ρ.ker := by
-  let S : Subrepresentation ρ := fixedSubrepresentationOfNormal ρ H
-  have hS_ne : S ≠ ⊥ := by
-    intro hS
-    exact hfix (by
-      calc
-        Representation.invariants (ρ.comp H.subtype) = S.toSubmodule := rfl
-        _ = (⊥ : Subrepresentation ρ).toSubmodule :=
-          congrArg Subrepresentation.toSubmodule hS
-        _ = (⊥ : Submodule F V) := rfl)
-  have hS_top : S = ⊤ := by
-    rcases (inferInstance : Representation.IsIrreducible ρ).eq_bot_or_eq_top S with
-      hbot | htop
-    · exact False.elim (hS_ne hbot)
-    · exact htop
-  have htop_sub : Representation.invariants (ρ.comp H.subtype) = ⊤ := by
-    calc
-      Representation.invariants (ρ.comp H.subtype) = S.toSubmodule := rfl
-      _ = (⊤ : Subrepresentation ρ).toSubmodule :=
-        congrArg Subrepresentation.toSubmodule hS_top
-      _ = (⊤ : Submodule F V) := rfl
-  intro h hh
-  rw [MonoidHom.mem_ker]
-  ext v
-  have hv : v ∈ Representation.invariants (ρ.comp H.subtype) := by simp [htop_sub]
-  exact hv ⟨h, hh⟩
-
-
-
-/-- A nonzero intertwiner from an irreducible representation to a representation
-with simple subrepresentation lattice is an equivalence, for an arbitrary group. -/
-public noncomputable def repEquivOfNeZeroOfSimpleGroup
-    {F K V₁ V₂ : Type*} [Field F] [Group K]
-    [AddCommGroup V₁] [Module F V₁]
-    [AddCommGroup V₂] [Module F V₂]
-    {ρ₁ : Representation F K V₁} {ρ₂ : Representation F K V₂}
-    [Representation.IsIrreducible ρ₁]
-    (hρ₂ : IsSimpleOrder (Subrepresentation ρ₂))
-    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    ρ₁ ≃ₗ ρ₂ := by
-  have hfinj : Function.Injective f := by
-    rcases (Representation.IsIrreducible.injective_or_eq_zero
-      (ρ := ρ₁) (σ := ρ₂) f) with hfinj | hf0
-    · exact hfinj
-    · exact False.elim (hf hf0)
-  have hrange_ne : f.range ≠ ⊥ := by
-    intro hbot
-    apply hf
-    apply Representation.RepMap.toLinearMap_injective
-    apply LinearMap.range_eq_bot.mp
-    calc
-      f.toLinearMap.range = f.range.toSubmodule := rfl
-      _ = (⊥ : Subrepresentation ρ₂).toSubmodule :=
-        congrArg Subrepresentation.toSubmodule hbot
-      _ = (⊥ : Submodule F V₂) := rfl
-  have hrange_top : f.range = ⊤ := by
-    rcases hρ₂.eq_bot_or_eq_top f.range with hbot | htop
-    · exact False.elim (hrange_ne hbot)
-    · exact htop
-  have hfsurj : Function.Surjective f := by
-    exact LinearMap.range_eq_top.mp
-      (by
-        calc
-          f.toLinearMap.range = f.range.toSubmodule := rfl
-          _ = (⊤ : Subrepresentation ρ₂).toSubmodule :=
-            congrArg Subrepresentation.toSubmodule hrange_top
-          _ = (⊤ : Submodule F V₂) := rfl)
-  refine Representation.RepEquiv.mk
-    (LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩) ?_
-  intro k
-  ext v
-  simpa using
-    (Representation.IntertwiningMap.isIntertwining (ρ := ρ₁) (σ := ρ₂) f k v)

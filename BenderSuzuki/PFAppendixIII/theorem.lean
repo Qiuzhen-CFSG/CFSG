@@ -9,7 +9,8 @@ public import BenderSuzuki.External.Higman.theorem_1b
 public import BenderSuzuki.External.Higman.theorem_1c
 public import BenderSuzuki.External.Higman.theorem_1d
 public import BenderSuzuki.External.Higman.theorem_1e_isomorphic_summands
-public import BenderSuzuki.External.Higman.theorem_1e_coordinates
+public import BenderSuzuki.External.Higman.lemma_12
+public import BenderSuzuki.External.Higman.theorem_1e_scalar_coordinates
 
 /-!
 # Peterfalvi Appendix III, Higman's theorem
@@ -112,98 +113,6 @@ public theorem higmanTheorem_order_center_cube_two_summands
   theorem1_order_center_cube_two_summands
     hP hKcyclic hKfaithful hKregular hcard
 
-/-- Appendix III, Higman theorem, part (e), forward actor-relative module
-criterion. -/
-public theorem higmanTheorem_isomorphic_summands_of_typeB_actor
-    {K P : Type u} [Group K] [Group P] [MulDistribMulAction K P]
-    (hP : IsSuzukiTwoGroup P)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
-    (hKregular : ActionRegularOn K P (involutions P))
-    (hBActor : ∃ (B : Subgroup P) (actor : K),
-      External.Higman.Lemma12TypeBActorBranchData K P actor B) :
-    External.Higman.Theorem1IsomorphicSummands K P :=
-  theorem1_isomorphic_summands_of_typeB_actor
-    hP hKcyclic hKfaithful hKregular hBActor
-
-/-- Appendix III, Higman theorem, part (e), reverse actor-relative module
-criterion. -/
-public theorem higmanTheorem_typeB_actor_of_isomorphic_summands
-    {K P : Type u} [Group K] [Group P] [MulDistribMulAction K P]
-    (hP : IsSuzukiTwoGroup P)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
-    (hKregular : ActionRegularOn K P (involutions P))
-    (hIso : External.Higman.Theorem1IsomorphicSummands K P) :
-    ∃ (B : Subgroup P) (actor : K),
-      External.Higman.Lemma12TypeBActorBranchData K P actor B :=
-  theorem1_typeB_actor_of_isomorphic_summands
-    hP hKcyclic hKfaithful hKregular hIso
-
-/-- Appendix III, Higman theorem, part (e), with the acting Type-B branch
-retained explicitly. -/
-public theorem higmanTheorem_typeB_actor_iff_isomorphic_summands
-    {K P : Type u} [Group K] [Group P] [MulDistribMulAction K P]
-    (hP : IsSuzukiTwoGroup P)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
-    (hKregular : ActionRegularOn K P (involutions P)) :
-    (∃ (B : Subgroup P) (actor : K),
-      External.Higman.Lemma12TypeBActorBranchData K P actor B) ↔
-      External.Higman.Theorem1IsomorphicSummands K P :=
-  theorem1_typeB_actor_iff_isomorphic_summands
-    hP hKcyclic hKfaithful hKregular
-
-/-- Appendix III, Higman theorem, part (e), action coordinates from the
-actor-relative Type-B branch. -/
-public theorem higmanTheorem_typeB_coordinates
-    {K P : Type u} [Group K] [Group P] [MulDistribMulAction K P]
-    (hP : IsSuzukiTwoGroup P)
-    (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
-    (hKregular : ActionRegularOn K P (involutions P))
-    (hBActor : ∃ (B : Subgroup P) (actor : K),
-      External.Higman.Lemma12TypeBActorBranchData K P actor B) :
-    ∃ (n : ℕ) (_ : n ≠ 0)
-        (theta : BinaryGaloisField n ≃+* BinaryGaloisField n)
-        (epsilon : BinaryGaloisField n)
-        (tripleLift :
-          BinaryGaloisField n → BinaryGaloisField n → BinaryGaloisField n → P)
-        (cocycle :
-          BinaryGaloisField n → BinaryGaloisField n →
-            BinaryGaloisField n → BinaryGaloisField n → BinaryGaloisField n)
-        (eK : K ≃* (BinaryGaloisField n)ˣ)
-        (eQ : (P ⧸ Subgroup.center P) ≃*
-          Multiplicative (BinaryGaloisField n × BinaryGaloisField n))
-        (eZ : Subgroup.center P ≃*
-          Multiplicative (BinaryGaloisField n)),
-      epsilon ≠ 0 ∧
-      (∃ r : ℕ, Odd r ∧ 0 < r ∧
-        ∀ x : BinaryGaloisField n, theta^[r] x = x) ∧
-      (∀ a b : BinaryGaloisField n, a ≠ 0 → b ≠ 0 →
-        a * theta a + epsilon * a * theta b + b * theta b ≠ 0) ∧
-      (∀ a b e f c d : BinaryGaloisField n,
-        cocycle (a + e) (b + f) c d = cocycle a b c d + cocycle e f c d) ∧
-      (∀ a b e f c d : BinaryGaloisField n,
-        cocycle a b (e + c) (f + d) = cocycle a b e f + cocycle a b c d) ∧
-      (∀ a b : BinaryGaloisField n,
-        cocycle a b a b = a * theta a + epsilon * a * theta b + b * theta b) ∧
-      (∀ c a b : BinaryGaloisField n, tripleLift c a b ∈ (⊤ : Subgroup P)) ∧
-      tripleLift 0 0 0 = 1 ∧
-      (∀ x : P, ∃ c a b : BinaryGaloisField n, x = tripleLift c a b) ∧
-      (∀ c a b d e f : BinaryGaloisField n,
-        tripleLift c a b = tripleLift d e f → c = d ∧ a = e ∧ b = f) ∧
-      (∀ c a b d e f : BinaryGaloisField n,
-        tripleLift c a b * tripleLift d e f =
-          tripleLift (c + d + cocycle a b e f) (a + e) (b + f)) ∧
-      (∀ k : K, ∀ p : P,
-        (eQ (QuotientGroup.mk' (Subgroup.center P) (k • p))).toAdd =
-          ((eK k : BinaryGaloisField n) *
-              (eQ (QuotientGroup.mk' (Subgroup.center P) p)).toAdd.1,
-            (eK k : BinaryGaloisField n) *
-              (eQ (QuotientGroup.mk' (Subgroup.center P) p)).toAdd.2)) ∧
-      ∀ k : K, ∀ z : BinaryGaloisField n,
-        k • ((eZ.symm (Multiplicative.ofAdd z) : Subgroup.center P) : P) =
-          ((eZ.symm (Multiplicative.ofAdd
-            ((eK k : BinaryGaloisField n) * theta (eK k : BinaryGaloisField n) * z)) :
-              Subgroup.center P) : P) :=
-  theorem1_typeB_coordinates hP hKcyclic hKfaithful hKregular hBActor
 
 /-- Appendix III, Higman theorem, part (e): scalar coordinates for the
 actual cyclic actor, derived from the explicit isomorphic-summand witness. -/

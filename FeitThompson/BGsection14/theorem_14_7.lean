@@ -988,10 +988,6 @@ private theorem section14_7_exists_single_overgroup_data
     Xi ∈ section12PrimeOrderSubgroups K ∧
       Mi ∈ section9MaximalSubgroupsContaining (Subgroup.normalizer (Xi : Set G))}
 
-omit [IsMinCE G] in
-private theorem section14_7_overgroupFamily_finite (K : Subgroup G) :
-    (section14_7_overgroupFamily K).Finite :=
-  Set.toFinite _
 
 noncomputable local instance (K : Subgroup G) :
     Fintype {Mi // Mi ∈ section14_7_overgroupFamily K} :=
@@ -1255,17 +1251,6 @@ private theorem section14_7_base_kstar_inf_bot_of_overgroupFamily
     simpa using hsingle
   exact hMi_not_conj ⟨1, by simpa [hMeqMi] using (section8_conjBy_one (G := G) M).symm⟩
 
-private theorem section14_7_self_not_mem_overgroupFamily
-    {M K : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) :
-    M ∉ section14_7_overgroupFamily K := by
-  rintro ⟨Xi, hXi, hMcont⟩
-  have hnotconj :
-      ¬ section14ConjugateSubgroups M M :=
-    (section14_7_not_conjugate_and_z_le
-      (G := G) (M := M) (K := K) (Xi := Xi) (Mi := M) hM hK hXi hMcont).1
-  exact hnotconj ⟨1, (section8_conjBy_one (G := G) M).symm⟩
 
 public theorem section14_7_primeOrder_le_k_or_kstar_of_z
     {M K X : Subgroup G}
@@ -3233,86 +3218,6 @@ private theorem section14_7_conjClosure_tilde_disjoint_of_distinct_overgroupFami
       (section14_7_not_conjugate_of_distinct_overgroupFamily
         (G := G) (M := M) (K := K) (Mi := Mi) (Mj := Mj) hM hK hMiFam' hMjFam' hij)
 
-private theorem section14_7_card_conjClosure_union_overgroupFamily
-    {M K : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) :
-    Nat.card
-        ((section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK) ∪
-          ⋃ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
-            section14ConjugacyClosure (section14Tilde i.1)) : Set G) =
-      Nat.card
-          (section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK)) +
-        ∑ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
-          Nat.card (section14ConjugacyClosure (section14Tilde i.1)) := by
-  classical
-  let I := {Mi // Mi ∈ section14_7_overgroupFamily K}
-  let U : Option I → Set G
-    | none =>
-        section14ConjugacyClosure
-          (section14_7_TSet (G := G) (M := M) (K := K) hM hK)
-    | some i => section14ConjugacyClosure (section14Tilde i.1)
-  have hUnion :
-      section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK) ∪
-          ⋃ i : I, section14ConjugacyClosure (section14Tilde i.1) =
-        ⋃ o : Option I, U o := by
-    ext x
-    constructor
-    · intro hx
-      rcases hx with hxT | hxFam
-      · exact Set.mem_iUnion.2 ⟨none, by simpa [U] using hxT⟩
-      · rcases Set.mem_iUnion.1 hxFam with ⟨i, hxi⟩
-        exact Set.mem_iUnion.2 ⟨some i, by simpa [U] using hxi⟩
-    · intro hx
-      rcases Set.mem_iUnion.1 hx with ⟨o, ho⟩
-      cases o with
-      | none => exact Or.inl (by simpa [U] using ho)
-      | some i => exact Or.inr <| Set.mem_iUnion.2 ⟨i, by simpa [U] using ho⟩
-  have hPairwise : Pairwise (Function.onFun Disjoint U) := by
-    intro o₁ o₂ hne
-    cases o₁ with
-    | none =>
-        cases o₂ with
-        | none => cases hne rfl
-        | some i =>
-            rcases i.2 with ⟨Xi, _hXi, hMi⟩
-            simpa [Function.onFun, U, Set.disjoint_iff_inter_eq_empty] using
-              section14_7_conjClosure_TSet_disjoint_conjClosure_tilde
-                (G := G) (M := M) (K := K) (H := i.1) hM hK hMi.1
-    | some i =>
-        cases o₂ with
-        | none =>
-            rcases i.2 with ⟨Xi, _hXi, hMi⟩
-            simpa [Function.onFun, U, Set.disjoint_iff_inter_eq_empty, Set.inter_comm] using
-              section14_7_conjClosure_TSet_disjoint_conjClosure_tilde
-                (G := G) (M := M) (K := K) (H := i.1) hM hK hMi.1
-        | some j =>
-            have hij : i.1 ≠ j.1 := by
-              intro hEq
-              apply hne
-              exact congrArg some (Subtype.ext hEq)
-            simpa [Function.onFun, U, Set.disjoint_iff_inter_eq_empty] using
-              section14_7_conjClosure_tilde_disjoint_of_distinct_overgroupFamily
-                (G := G) (M := M) (K := K) (Mi := i.1) (Mj := j.1) hM hK i.2 j.2 hij
-  have hFinite : ∀ o : Option I, (U o).Finite := by
-    intro o
-    exact Set.toFinite _
-  calc
-    Nat.card
-        ((section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK) ∪
-          ⋃ i : I, section14ConjugacyClosure (section14Tilde i.1)) : Set G) =
-        (⋃ o : Option I, U o).ncard := by
-          rw [hUnion, Nat.card_coe_set_eq]
-    _ = ∑ᶠ o : Option I, (U o).ncard := by
-          exact Set.ncard_iUnion_of_finite hFinite hPairwise
-    _ = ∑ o : Option I, Nat.card (U o) := by
-          rw [finsum_eq_sum_of_fintype]
-          simp [Nat.card_coe_set_eq]
-    _ =
-        Nat.card
-          (section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK)) +
-          ∑ i : I, Nat.card (section14ConjugacyClosure (section14Tilde i.1)) := by
-          rw [Fintype.sum_option]
 
 omit [Finite G] [IsMinCE G] in
 public theorem section14_one_not_mem_conjClosure_of_one_not_mem
@@ -3482,37 +3387,6 @@ private theorem section14_card_nonidentity :
   letI : Fintype G := Fintype.ofFinite G
   simpa [Nat.card_eq_fintype_card] using (Set.card_ne_eq (1 : G))
 
-private theorem section14_7_card_conjClosure_union_overgroupFamily_le_nonidentity
-    {M K : Subgroup G}
-    (hM : M ∈ section14MFamilyP G)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M) :
-    Nat.card
-        ((section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK) ∪
-          ⋃ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
-            section14ConjugacyClosure (section14Tilde i.1)) : Set G) ≤
-      Nat.card ({g : G | g ≠ 1} : Set G) := by
-  classical
-  let A : Set G :=
-    section14ConjugacyClosure (section14_7_TSet (G := G) (M := M) (K := K) hM hK) ∪
-      ⋃ i : {Mi // Mi ∈ section14_7_overgroupFamily K},
-        section14ConjugacyClosure (section14Tilde i.1)
-  let B : Set G := {g : G | g ≠ 1}
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
-  let f : A → B := fun a =>
-    ⟨a.1, section14_7_conjClosure_union_overgroupFamily_subset_nonidentity
-      (G := G) (M := M) (K := K) hM hK a.2⟩
-  have hf : Function.Injective f := by
-    intro a b h
-    cases a
-    cases b
-    cases h
-    rfl
-  have hcard : Nat.card A ≤ Nat.card B := by
-    rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-    exact Fintype.card_le_of_injective f hf
-  change Nat.card A ≤ Nat.card B
-  exact hcard
 
 private theorem section14_7_conjClosure_tilde_disjoint_self_overgroupFamily
     {M K Mi : Subgroup G}

@@ -216,23 +216,6 @@ public theorem section15_centralizer_singleton_le_centralizer_zpowers
     (Subgroup.mem_centralizer_singleton_iff.mp hx).symm
   simpa using (hcomm.zpow_left n).eq
 
-omit [Finite G] [IsMinCE G] in
-private theorem section15_subgroupCentralizerIn_zpowers_eq_elementCentralizerIn
-    {Q : Subgroup G} (a : G) :
-    subgroupCentralizerIn Q (Subgroup.zpowers a) = elementCentralizerIn Q a := by
-  ext x
-  constructor
-  · intro hx
-    refine ⟨hx.1, ?_⟩
-    exact Subgroup.mem_centralizer_singleton_iff.mpr <| by
-      have hxcent : x ∈ Subgroup.centralizer ((Subgroup.zpowers a) : Set G) := hx.2
-      have hcomm : a * x = x * a :=
-        Subgroup.mem_centralizer_iff.mp hxcent a (Subgroup.mem_zpowers a)
-      exact hcomm.symm
-  · intro hx
-    refine ⟨hx.1, ?_⟩
-    change x ∈ Subgroup.centralizer ((Subgroup.zpowers a : Subgroup G) : Set G)
-    exact section15_centralizer_singleton_le_centralizer_zpowers hx.2
 
 omit [IsMinCE G] in
 public theorem section15_exists_primeOrder_zpowers_in
@@ -2378,23 +2361,6 @@ private theorem section15_Q0_lt_Q
   exact (section15_MF_ne_msigma_not_nilpotent hM hMF hMFne) (by
     simpa [S] using hSnil)
 
-/-- Theorem 15.2 L005-S0040: `N_Q(Q₀)` properly contains `Q₀`. -/
-private theorem section15_Q0_lt_normalizerIn_Q
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    subgroupCentralizerIn Q D <
-      Q ⊓ Subgroup.normalizer (subgroupCentralizerIn Q D : Set G) := by
-  exact section15_lt_inf_normalizer_of_lt_of_nilpotent
-    (section15_Q0_lt_Q hM hMF hK hMFne hq hQ hQnormal hQMF hD)
-    (section15_sylowSubgroupIn_nilpotent hQ)
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_normalIn_inf_normalizer
@@ -2504,61 +2470,6 @@ private theorem section15_le_normalizer_map_subtype_of_normal
     exact Subgroup.mem_map.mpr
       ⟨nN⁻¹ * l * (nN⁻¹)⁻¹, hx', hcoerce⟩
 
-omit [Finite G] [IsMinCE G] in
-/-- In the normalizer quotient step, `Q₀` is normal in `N_M(Q₀)`. -/
-private theorem section15_Q0_normalIn_normalizerIn_M
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (_hM : M ∈ section9MaximalSubgroups G)
-    (_hMF : section15MFSubgroup M MF)
-    (_hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (_hMFne : MF ≠ section10Msigma M)
-    (_hq : q.val = Nat.card (section14KStar M K))
-    (_hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (_hQMF : Q ≤ MF)
-    (_hD : section15Theorem15_2ComplementData M K Q D) :
-    section10NormalIn (subgroupCentralizerIn Q D)
-      (M ⊓ Subgroup.normalizer (subgroupCentralizerIn Q D : Set G)) := by
-  have hQ₀Q : subgroupCentralizerIn Q D ≤ Q := inf_le_left
-  have hQ₀M : subgroupCentralizerIn Q D ≤ M := hQ₀Q.trans hQnormal.1
-  exact section15_normalIn_inf_normalizer hQ₀M
-
-/-- The normalizer quotient `N_M(Q₀)/Q₀` is nontrivial on its `Q`-part:
-`Q₀ < N_M(Q₀)`. -/
-private theorem section15_Q0_lt_normalizerIn_M
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    subgroupCentralizerIn Q D <
-      M ⊓ Subgroup.normalizer (subgroupCentralizerIn Q D : Set G) := by
-  refine (section15_Q0_lt_normalizerIn_Q
-    hM hMF hK hMFne hq hQ hQnormal hQMF hD).trans_le ?_
-  intro x hx
-  exact ⟨hQnormal.1 hx.1, hx.2⟩
-
-/-- The source's intermediate normalizer-quotient choice:
-inside `N_M(Q₀)/Q₀` there is a nontrivial minimal normal subgroup contained
-in the image of `N_Q(Q₀)`. -/
-private def section15NormalizerQuotientMinimalNormal
-    (M Q Q₀ : Subgroup G) : Prop :=
-  let N : Subgroup G := M ⊓ Subgroup.normalizer (Q₀ : Set G)
-  let QN : Subgroup G := Q ⊓ Subgroup.normalizer (Q₀ : Set G)
-  ∃ _hQ₀N : Q₀ ≤ N, ∃ _hQNN : QN ≤ N,
-    ∃ _hQ₀Norm : (Q₀.subgroupOf N).Normal,
-      ∃ _hQNNorm : (QN.subgroupOf N).Normal,
-        let QNbar : Subgroup (N ⧸ Q₀.subgroupOf N) :=
-          (QN.subgroupOf N).map (QuotientGroup.mk' (Q₀.subgroupOf N))
-        ∃ Qbar : Subgroup (N ⧸ Q₀.subgroupOf N),
-          Qbar.Normal ∧ Qbar ≤ QNbar ∧ Qbar ≠ ⊥ ∧
-            ∀ R : Subgroup (N ⧸ Q₀.subgroupOf N),
-              R.Normal → R ≤ Qbar → R ≠ ⊥ → R = Qbar
 
 /-- The same normalizer-quotient choice, pulled back to a subgroup `Q₁` of
 `N_M(Q₀)`.  This is the formal version of choosing `Q₁/Q₀`. -/
@@ -3572,66 +3483,6 @@ private theorem section15_le_of_nilpotent_sup_quotient
       (S := S) (A := A) (B := B) hAS hBS (by simpa [S] using hAnormS)
       (by simpa [S, Asub, Bsub, qS, Bbar] using hBbar_bot)
 
-/-- Theorem 15.2 L005-S0040: choose the minimal normal subgroup
-`Q₁/Q₀` in the source normalizer quotient `N_M(Q₀)/Q₀`, still inside
-`N_Q(Q₀)/Q₀`. -/
-private theorem section15_exists_minimal_normal_in_normalizer_quotient
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    section15NormalizerQuotientMinimalNormal M Q (subgroupCentralizerIn Q D) := by
-  classical
-  let Q₀ : Subgroup G := subgroupCentralizerIn Q D
-  let N : Subgroup G := M ⊓ Subgroup.normalizer (Q₀ : Set G)
-  let QN : Subgroup G := Q ⊓ Subgroup.normalizer (Q₀ : Set G)
-  have hQ₀Q : Q₀ ≤ Q := inf_le_left
-  have hQ₀M : Q₀ ≤ M := hQ₀Q.trans hQnormal.1
-  have hQ₀N : Q₀ ≤ N := by
-    intro x hx
-    exact ⟨hQ₀M hx, Subgroup.le_normalizer hx⟩
-  have hQNN : QN ≤ N := by
-    intro x hx
-    exact ⟨hQnormal.1 hx.1, hx.2⟩
-  have hQ₀NormData : section10NormalIn Q₀ N := by
-    simpa [Q₀, N] using
-      section15_Q0_normalIn_normalizerIn_M
-        hM hMF hK hMFne hq hQ hQnormal hQMF hD
-  have hQ₀Norm : (Q₀.subgroupOf N).Normal := hQ₀NormData.2
-  have hQNNormData : section10NormalIn QN N := by
-    simpa [Q₀, QN, N] using
-      section15_inf_normalizer_normalIn_inf_normalizer_of_normalIn
-        (M := M) (Q := Q) (C := Q₀) hQnormal
-  have hQNNorm : (QN.subgroupOf N).Normal := hQNNormData.2
-  haveI : (Q₀.subgroupOf N).Normal := hQ₀Norm
-  haveI : (QN.subgroupOf N).Normal := hQNNorm
-  let QNbar : Subgroup (N ⧸ Q₀.subgroupOf N) :=
-    (QN.subgroupOf N).map (QuotientGroup.mk' (Q₀.subgroupOf N))
-  have hQ₀_lt_QN : Q₀ < QN := by
-    simpa [Q₀, QN] using
-      section15_Q0_lt_normalizerIn_Q hM hMF hK hMFne hq hQ hQnormal hQMF hD
-  have hQNbar_ne : QNbar ≠ ⊥ := by
-    simpa [QNbar] using
-      section15_subgroupOf_map_mk'_ne_bot_of_lt
-        (N := N) (A := Q₀) (B := QN) hQNN hQ₀_lt_QN hQ₀Norm
-  have hQNbar_norm : QNbar.Normal := by
-    simpa [QNbar] using
-      Subgroup.Normal.map hQNNorm
-        (QuotientGroup.mk' (Q₀.subgroupOf N))
-        (QuotientGroup.mk'_surjective (N := Q₀.subgroupOf N))
-  rcases exists_minimal_normal_le (G := N ⧸ Q₀.subgroupOf N)
-      QNbar hQNbar_norm hQNbar_ne with
-    ⟨Qbar, hQbar_norm, hQbar_le, hQbar_ne, hQbar_min⟩
-  refine ⟨hQ₀N, hQNN, hQ₀Norm, hQNNorm, Qbar, hQbar_norm, hQbar_le,
-    hQbar_ne, ?_⟩
-  intro R hRnorm hRle hRne
-  exact hQbar_min R hRnorm hRle hRne
 
 /-- Theorem 15.2 L005-S0040, pulled-back form: choose `Q₁` with
 `Q₀ < Q₁ ≤ N_Q(Q₀)` and `Q₁/Q₀` minimal normal in `N_M(Q₀)/Q₀`. -/
@@ -3654,112 +3505,6 @@ private theorem section15_exists_Q1_lift_in_normalizer_quotient
       hQnormal (section15_sylowSubgroupIn_nilpotent hQ)
       (section15_Q0_lt_Q hM hMF hK hMFne hq hQ hQnormal hQMF hD)
 
-/-- Theorem 15.2 L005-S0040, ambient form of `Q₁`: after choosing
-`Q₁/Q₀`, the subgroup `Q₁` satisfies `Q₀ < Q₁ ≤ Q` and is `KD`-invariant. -/
-private theorem section15_exists_ambient_Q1_lift_in_normalizer_quotient
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    ∃ Q₁ : Subgroup G,
-      section15AmbientQ1Data M K Q D (subgroupCentralizerIn Q D) Q₁ := by
-  classical
-  let Q₀ : Subgroup G := subgroupCentralizerIn Q D
-  let N : Subgroup G := M ⊓ Subgroup.normalizer (Q₀ : Set G)
-  let QN : Subgroup G := Q ⊓ Subgroup.normalizer (Q₀ : Set G)
-  rcases section15_exists_Q1_lift_in_normalizer_quotient
-      hM hMF hK hMFne hq hQ hQnormal hQMF hD with
-    ⟨hQ₀N, _hQNN, _hQ₀Norm, Q₁N, hQ₀_lt_Q₁N, hQ₁N_le_QN, hQ₁N_norm,
-      _hQ₁bar_norm, _hQ₁bar_ne, _hQ₁bar_min⟩
-  let Q₁ : Subgroup G := Q₁N.map N.subtype
-  have hQ₀map : (Q₀.subgroupOf N).map N.subtype = Q₀ := by
-    ext x
-    constructor
-    · intro hx
-      rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-      simpa [Subgroup.mem_subgroupOf] using hy
-    · intro hx
-      exact Subgroup.mem_map.mpr ⟨⟨x, hQ₀N hx⟩, by
-        simpa [Subgroup.mem_subgroupOf] using hx, rfl⟩
-  have hQ₀_le_Q₁ : Q₀ ≤ Q₁ := by
-    intro x hx
-    rw [← hQ₀map] at hx
-    exact Subgroup.mem_map.mpr
-      (by
-        rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-        exact ⟨y, hQ₀_lt_Q₁N.le hy, rfl⟩)
-  have hQ₁_ne_Q₀ : Q₁ ≠ Q₀ := by
-    intro hEq
-    have hQ₁N_eq : Q₁N = Q₀.subgroupOf N := by
-      have hcomap_Q₁ :
-          (Q₁N.map N.subtype).comap N.subtype = Q₁N :=
-        Subgroup.comap_map_eq_self_of_injective
-          (H := Q₁N) (f := N.subtype) N.subtype_injective
-      have hcomap_Q₀ :
-          Q₀.comap N.subtype = Q₀.subgroupOf N := by
-        rfl
-      calc
-        Q₁N = (Q₁N.map N.subtype).comap N.subtype := hcomap_Q₁.symm
-        _ = Q₁.comap N.subtype := by rfl
-        _ = Q₀.comap N.subtype := by rw [hEq]
-        _ = Q₀.subgroupOf N := hcomap_Q₀
-    exact hQ₀_lt_Q₁N.ne hQ₁N_eq.symm
-  have hQ₀_lt_Q₁ : Q₀ < Q₁ :=
-    lt_of_le_of_ne hQ₀_le_Q₁ (Ne.symm hQ₁_ne_Q₀)
-  have hQ₁_le_Q : Q₁ ≤ Q := by
-    intro x hx
-    rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
-    have hyQN : (y : G) ∈ QN := by
-      simpa [QN, Subgroup.mem_subgroupOf] using hQ₁N_le_QN hy
-    exact hyQN.1
-  have hQ₁_le_N : Q₁ ≤ N := by
-    intro x hx
-    rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
-    exact y.property
-  have hQ₁_subgroupOf_eq : Q₁.subgroupOf N = Q₁N := by
-    ext x
-    constructor
-    · intro hx
-      have hxQ₁ : (x : G) ∈ Q₁ := by
-        simpa [Subgroup.mem_subgroupOf] using hx
-      rcases Subgroup.mem_map.mp hxQ₁ with ⟨y, hy, hyx⟩
-      have hy_eq : y = x := Subtype.ext hyx
-      simpa [hy_eq] using hy
-    · intro hx
-      have hxQ₁ : (x : G) ∈ Q₁ :=
-        Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
-      simpa [Subgroup.mem_subgroupOf] using hxQ₁
-  have hQ₁_norm_N : (Q₁.subgroupOf N).Normal := by
-    simpa [hQ₁_subgroupOf_eq] using hQ₁N_norm
-  have hDcomp : section12ComplementIn (section10Msigma M) Q D := hD.2.1
-  have hD_le_M : D ≤ M := hDcomp.2.1.trans section15_msigma_le
-  have hDkinv : K ≤ Subgroup.normalizer (D : Set G) :=
-    section15_complement_D_K_invariant
-      hM hMF hK hMFne hq hQ hQnormal hQMF hD
-  have hQ₀KD :
-      K ⊔ D ≤ Subgroup.normalizer (Q₀ : Set G) := by
-    simpa [Q₀] using
-      section15_Q0_KD_invariant_of_K_invariant_complement
-        hM hMF hK hMFne hq hQ hQnormal hQMF hD hDkinv
-  have hK_le_N : K ≤ N := by
-    intro x hx
-    exact ⟨hK.1 hx, hQ₀KD ((le_sup_left : K ≤ K ⊔ D) hx)⟩
-  have hD_le_N : D ≤ N := by
-    intro x hx
-    exact ⟨hD_le_M hx, hQ₀KD ((le_sup_right : D ≤ K ⊔ D) hx)⟩
-  have hN_norm_Q₁ : N ≤ Subgroup.normalizer (Q₁ : Set G) := by
-    simpa [Q₁] using
-      section15_le_normalizer_map_subtype_of_normal
-        (N := N) (L := Q₁N) hQ₁N_norm
-  have hKD_norm_Q₁ : K ⊔ D ≤ Subgroup.normalizer (Q₁ : Set G) :=
-    sup_le (hK_le_N.trans hN_norm_Q₁) (hD_le_N.trans hN_norm_Q₁)
-  exact ⟨Q₁, hQ₀_lt_Q₁, hQ₁_le_Q, hQ₁_le_N, hQ₁_norm_N, hKD_norm_Q₁⟩
 
 /-- The same ambient `Q₁` choice, retaining the normalizer-quotient
 minimality data needed for the final package. -/
@@ -4486,23 +4231,6 @@ private theorem section15_Q0_quotient_minimal_normal
       (M := M) (K := K) (Q := Q) (D := D) (Q₀ := Q₀) (Q₁ := Q₁)
       hM_norm_Q₀ hQ₁min_saved hQ₁_eq_Q
 
-/-- Theorem 15.2 L005, normality part. -/
-private theorem section15_Q0_normal_of_theorem15_2_context
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    section10NormalIn (subgroupCentralizerIn Q D) M := by
-  rcases section15_Q0_quotient_minimal_normal
-      hM hMF hK hMFne hq hQ hQnormal hQMF hD with
-    ⟨hQ₀M, _hQM, _hQ₀Q, hNorm, _hQbar_ne, _hQbar_norm, _hQbar_min⟩
-  exact ⟨hQ₀M, hNorm⟩
 
 /-- The L005 regular-action branch also proves that `K*` is not contained in
 `Q₀ = C_Q(D)`.  This is the exact source fact needed later to see that the
@@ -4695,15 +4423,6 @@ private theorem section15_KD_frobenius_with_kernel_D
     exact hyoneG
   simp [hyoneS]
 
-private theorem section15_subgroupCentralizerIn_eq_of_between
-    {G : Type*} [Group G] {A B R : Subgroup G}
-    (hA_le_B : A ≤ B) (hCB_le_A : subgroupCentralizerIn B R ≤ A) :
-    subgroupCentralizerIn A R = subgroupCentralizerIn B R := by
-  apply le_antisymm
-  · intro x hx
-    exact ⟨hA_le_B hx.1, hx.2⟩
-  · intro x hx
-    exact ⟨hCB_le_A hx, hx.2⟩
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupCentralizerIn_eq_kstar_of_between
@@ -5838,29 +5557,6 @@ private theorem section15_Qbar_elementary_card
       _ = q.val ^ p.val := by rw [← hp]
   exact ⟨hQbar_elem, hQbar_card⟩
 
-/-- Theorem 15.2(f), assembled from the L005 minimal-normal branch and the
-L006 elementary-cardinality branch. -/
-private theorem section15_quotient_minimal_elementary_of_theorem15_2_context
-    {M MF K Q D : Subgroup G} {p q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hp : p.val = Nat.card K)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    section15QuotientMinimalNormalElementary M Q (subgroupCentralizerIn Q D) p q := by
-  rcases section15_Q0_quotient_minimal_normal
-      hM hMF hK hMFne hq hQ hQnormal hQMF hD with
-    ⟨hQ₀M, hQM, hQ₀Q, hNorm, hQbar_ne, hQbar_norm, hQbar_min⟩
-  rcases section15_Qbar_elementary_card
-      hM hMF hK hMFne hp hq hQ hQnormal hQMF hD with
-    ⟨_hQ₀M, _hQM, _hQ₀Q, _hNorm, hQbar_elem, hQbar_card⟩
-  exact ⟨hQ₀M, hQM, hQ₀Q, hNorm, hQbar_ne, hQbar_norm, hQbar_min,
-    hQbar_elem, hQbar_card⟩
 
 omit [IsMinCE G] in
 public theorem section15_local_fitting_le_pCore_sup_pPrimeCore
@@ -5891,45 +5587,6 @@ public theorem section15_local_fitting_le_pCore_sup_pPrimeCore
       (le_sSup (show pCore q.1 H ∈ {K : Subgroup H | K.Normal ∧ Nat.Coprime p (Nat.card K)} from
         ⟨inferInstance, hcop⟩)).trans le_sup_right
 
-omit [Finite G] [IsMinCE G] in
-private theorem section15_fixedPointSubgroup_eq_top_of_quotient_trivial
-    {Q A : Type*} [Group Q] [Finite Q] [Group A] [Finite A]
-    [MulDistribMulAction A Q]
-    (hsolvQ : IsSolvable Q) (hcop : Nat.Coprime (Nat.card A) (Nat.card Q))
-    (N : Subgroup Q) [N.Normal] (hNinv : IsInvariant A Q N)
-    (hNfix : N ≤ fixedPointSubgroup A Q)
-    (hquot :
-      letI : MulDistribMulAction A (Q ⧸ N) :=
-        quotientMulDistribMulAction (A := A) (G := Q) N hNinv
-      fixedPointSubgroup A (Q ⧸ N) = ⊤) :
-    fixedPointSubgroup A Q = ⊤ := by
-  classical
-  letI : MulDistribMulAction A (Q ⧸ N) :=
-    quotientMulDistribMulAction (A := A) (G := Q) N hNinv
-  have hfixed_quot :
-      fixedPointSubgroup A (Q ⧸ N) =
-        (fixedPointSubgroup A Q).map (QuotientGroup.mk' N) := by
-    simpa using
-      proposition_1_5_d (G := Q) (A := A) hsolvQ hcop (π := ∅) N hNinv
-  apply le_antisymm le_top
-  intro x _hx
-  have hxquot :
-      QuotientGroup.mk' N x ∈ fixedPointSubgroup A (Q ⧸ N) := by
-    simp [hquot]
-  have hxmap :
-      QuotientGroup.mk' N x ∈
-        (fixedPointSubgroup A Q).map (QuotientGroup.mk' N) := by
-    simpa [hfixed_quot] using hxquot
-  rcases Subgroup.mem_map.mp hxmap with ⟨y, hyfix, hy_eq⟩
-  have hxyN : x * y⁻¹ ∈ N := by
-    have hdiv : x / y ∈ N :=
-      (QuotientGroup.eq_iff_div_mem (N := N)).1 hy_eq.symm
-    simpa [div_eq_mul_inv] using hdiv
-  have hxyfix : x * y⁻¹ ∈ fixedPointSubgroup A Q := hNfix hxyN
-  have hprod :
-      (x * y⁻¹) * y ∈ fixedPointSubgroup A Q :=
-    (fixedPointSubgroup A Q).mul_mem hxyfix hyfix
-  simpa [mul_assoc] using hprod
 
 omit [IsMinCE G] in
 private theorem section15_fitting_le_pCore_sup_pPrimeCore_map
@@ -8076,40 +7733,6 @@ public theorem theorem_15_2_d
   exact section15_theorem15_2_nilpotent_complement
     hM hMF hK hMFne hq hQ hQnormal hQMF
 
-/-- Theorem 15.2(e): for a complement `D` of `Q` in `M_σ`,
-`Q₀ = C_Q(D)` is normal in `M`. -/
-public theorem theorem_15_2_e
-    {M MF K Q D : Subgroup G} {q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    section10NormalIn (subgroupCentralizerIn Q D) M := by
-  exact section15_Q0_normal_of_theorem15_2_context
-    hM hMF hK hMFne hq hQ hQnormal hQMF hD
-
-/-- Theorem 15.2(f): with `Q₀ = C_Q(D)`, the quotient `Q/Q₀` is a
-minimal normal subgroup of `M/Q₀`, elementary abelian of order `q^p`. -/
-public theorem theorem_15_2_f
-    {M MF K Q D : Subgroup G} {p q : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section15MFSubgroup M MF)
-    (hK : section12HallSubgroupIn (section14KappaPrimes M) K M)
-    (hMFne : MF ≠ section10Msigma M)
-    (hp : p.val = Nat.card K)
-    (hq : q.val = Nat.card (section14KStar M K))
-    (hQ : section12SylowSubgroupIn q Q M)
-    (hQnormal : section10NormalIn Q M)
-    (hQMF : Q ≤ MF)
-    (hD : section15Theorem15_2ComplementData M K Q D) :
-    section15QuotientMinimalNormalElementary M Q (subgroupCentralizerIn Q D) p q := by
-  exact section15_quotient_minimal_elementary_of_theorem15_2_context
-    hM hMF hK hMFne hp hq hQ hQnormal hQMF hD
 
 /-- Theorem 15.2(g): the displayed chain
 `M'' = M_σ' ≤ F(M) = QC_M(Q) = C_M(Q̄) = C_{M_σ}(K* bar) < M_σ`,

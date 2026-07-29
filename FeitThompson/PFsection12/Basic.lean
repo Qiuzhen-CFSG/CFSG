@@ -812,46 +812,6 @@ public theorem scalarProduct_self_of_isIrreducibleCharacterOnGroup
   simpa [hχeq] using
     Section1.scalarProduct_representation_char_self (G := G) ρ hρirr
 
-/-- A character with scalar square norm one is irreducible in the local
-standardized-character predicate. -/
-public theorem isIrreducibleCharacterOnGroup_of_isCharacter_self
-    {G : Type u} [Group G] [Finite G]
-    {χ : Section1.ClassFunction G}
-    (hχchar : Section1.IsCharacter χ)
-    (hself : Section1.scalarProduct G χ χ = 1) :
-    Section1.IsIrreducibleCharacterOnGroup χ := by
-  classical
-  rcases hχchar with ⟨V, hAdd, hMod, hFD, ρ, hχeq⟩
-  letI : AddCommGroup V := hAdd
-  letI : Module ℂ V := hMod
-  letI : FiniteDimensional ℂ V := hFD
-  have hρclass : Section1.IsClassFunction ρ.character := by
-    intro x g
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
-  have hinnerTo :
-      Representation.classFunctionInner
-          (Section1.toConjClassFunction ρ.character hρclass)
-          (Section1.toConjClassFunction ρ.character hρclass) = 1 := by
-    rw [Section1.classFunctionInner_toConjClassFunction]
-    simpa [hχeq] using hself
-  have htoeq :
-      Section1.toConjClassFunction ρ.character hρclass =
-        Representation.characterClassFunction ρ := by
-    apply Section1.toConjClassFunction_eq_of_apply
-    intro g
-    rfl
-  have hinner :
-      Representation.classFunctionInner
-          (Representation.characterClassFunction ρ)
-          (Representation.characterClassFunction ρ) = 1 := by
-    simpa [htoeq] using hinnerTo
-  have hirr : Representation.IsIrreducible ρ :=
-    (Representation.irreducible_iff_character_norm_one (ρ := ρ)).2 hinner
-  refine ⟨Module.finrank ℂ V, Section1.standardizeRepresentation ρ, ?_, ?_⟩
-  · exact Section1.standardizeRepresentation_irreducible ρ hirr
-  · ext g
-    rw [Section1.standardizeRepresentation_character]
-    exact congrFun hχeq g
 
 /-- Distinct irreducible characters are orthogonal. -/
 public theorem scalarProduct_zero_of_distinct_isIrreducibleCharacterOnGroup
@@ -944,21 +904,6 @@ public theorem signed_irreducible_eq_sign_smul_of_scalarProduct_ne_zero
     · rcases hε with rfl | rfl <;> simp [Section1.IsSign]
     · simpa [smul_smul] using hχeq
 
-/-- Scalar products inside a signed orthonormal finite set are Kronecker
-delta values. -/
-public theorem scalarProduct_eq_ite_of_signedOrthonormalFinset
-    {G : Type u} [Group G] [Finite G]
-    {R : Finset (Section1.ClassFunction G)}
-    (hR : Section5.signedOrthonormalFinset R) :
-    ∀ a b : R, Section1.scalarProduct G
-      (a : Section1.ClassFunction G) b = if a = b then 1 else 0 := by
-  intro a b
-  by_cases hab : a = b
-  · subst b
-    simpa using scalarProduct_self_of_isSignedIrreducibleCharacter
-      (hR.1 _ a.property)
-  · simpa [hab] using hR.2 a.property b.property
-      (fun hEq => hab (Subtype.ext hEq))
 
 /-- A member of a signed orthonormal finite set has scalar product one with
 the sum of that set. -/
@@ -2193,24 +2138,6 @@ public theorem classFunction_irreducible_decomposition_all
       rfl
   exact hg'.trans hsum_eq
 
-/-- A singleton irreducible character is a valid constituent set. -/
-public theorem constituentSetData_singleton
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    (χ : Section1.ClassFunction L)
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    constituentSetData χ {χ} := by
-  classical
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact ⟨χ, by simp⟩
-  · intro φ hφ
-    have hφeq : φ = χ := Finset.mem_singleton.mp hφ
-    simpa [hφeq] using hχ
-  · simp
-  · exact ⟨Section1.degree χ, by
-      intro φ hφ
-      have hφeq : φ = χ := Finset.mem_singleton.mp hφ
-      simp [hφeq]⟩
 
 /-- Package a finite irreducible decomposition as the constituent-set data used in
 PF `(12.2)(a)`. -/
@@ -2644,25 +2571,6 @@ public theorem scalarProduct_eq_zero_of_supportedOn_disjoint
   rw [Section1.scalarProduct, hsum]
   simp
 
-/-- Dade transforms with disjoint supports are orthogonal. -/
-public theorem scalarProduct_eq_zero_of_dadeTransformDefinedOnFamily_disjoint
-    {G : Type u} [Group G] [Finite G]
-    {L1 L2 : Subgroup G} {A1 A2 : Set G} {R1 R2 : G → Subgroup G}
-    {τ1 : Section1.ClassFunction L1 →ₗ[ℂ] Section1.ClassFunction G}
-    {τ2 : Section1.ClassFunction L2 →ₗ[ℂ] Section1.ClassFunction G}
-    {S1 : Finset (Section1.ClassFunction L1)}
-    {S2 : Finset (Section1.ClassFunction L2)}
-    (hDade1 : dadeTransformDefinedOnFamily A1 R1 τ1 S1)
-    (hDade2 : dadeTransformDefinedOnFamily A2 R2 τ2 S2)
-    {α : Section1.ClassFunction L1} {β : Section1.ClassFunction L2}
-    (hα : Section5.integerSpanOn S1 Section5.puncturedSet α)
-    (hβ : Section5.integerSpanOn S2 Section5.puncturedSet β)
-    (hdisj : Disjoint (Section2.dadeSupport A1 R1) (Section2.dadeSupport A2 R2)) :
-    Section1.scalarProduct G (τ1 α) (τ2 β) = 0 := by
-  exact scalarProduct_eq_zero_of_supportedOn_disjoint
-    (supportedOn_of_dadeTransformDefinedOnFamily hDade1 hα)
-    (supportedOn_of_dadeTransformDefinedOnFamily hDade2 hβ)
-    hdisj
 
 /-- The difference `X - X̄` is in the punctured integral span of a
 conjugation-stable character family. -/
@@ -3113,50 +3021,6 @@ public theorem CFOn_typeIASet_of_integerSpanOn_punctured_of_generators
           (v i : ℂ) * (i : Section1.ClassFunction L) l)
           (by intro i _hi; exact hterm i)
 
-/-- Dade isometry relative to `A(L)` gives PF `(5.2.b)` for any finite family
-whose generators are virtual class functions supported on `A(L) ∪ {1}`. -/
-public theorem hypothesis_5_2_b_of_dadeIsometry_of_generators
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (R : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (S : Finset (Section1.ClassFunction L))
-    (hτ : dadeIsometryRelativeToTypeIASet L H R τ)
-    (hclass : ∀ φ : Section1.ClassFunction L, φ ∈ S →
-      Section1.IsClassFunction φ)
-    (hvirt : ∀ φ : Section1.ClassFunction L, φ ∈ S →
-      Representation.IsVirtualCharacter φ)
-    (hsupp : ∀ φ : Section1.ClassFunction L, φ ∈ S →
-      ∀ l : L, (l : G) ∉ typeIASet L H → (l : G) ≠ 1 → φ l = 0) :
-    Section5.hypothesis_5_2_b_statement S τ := by
-  rcases hτ with ⟨h22, hTransform⟩
-  rcases hTransform with ⟨hAL, hτeq⟩
-  have hCF : ∀ α : Section1.ClassFunction L,
-      Section5.integerSpanOn S Section5.puncturedSet α →
-        Section2.CFOn L (typeIASet L H) α :=
-    CFOn_typeIASet_of_integerSpanOn_punctured_of_generators
-      L H S hclass hsupp
-  constructor
-  · intro α β hα hβ
-    have hαCF := hCF α hα
-    have hβCF := hCF β hβ
-    rw [hτeq α hαCF, hτeq β hβCF]
-    exact (Section2.theorem_2_6 (typeIASet L H) L R h22 hAL).1
-      α β hαCF hβCF
-  · intro α hα
-    have hαCF := hCF α hα
-    constructor
-    · rw [hτeq α hαCF]
-      exact (Section2.theorem_2_6 (typeIASet L H) L R h22 hAL).2
-        α ⟨isVirtualCharacter_of_integerSpan S hvirt α hα.1, hαCF.2⟩
-    · rw [hτeq α hαCF]
-      rw [Section1.supportedOn_iff]
-      intro g hg
-      have hg1 : g = 1 := by
-        simpa [Section5.puncturedSet] using hg
-      subst hg1
-      exact Section2.dadeTransform_eq_zero_of_not_mem_support R hAL α
-        (one_not_mem_dadeSupport_of_hypothesis2 h22)
 
 /-- If the Dade transform is already defined on a finite family, it supplies
 PF `(5.2.b)` for that family once the generators are virtual characters. -/
@@ -3341,49 +3205,6 @@ public theorem eq_principalCharacter_of_isBookIrreducibleCharacter_subgroupInKer
   ext g
   simp [Section1.principalCharacter, hconst, hn]
 
-/-- A nonprincipal irreducible constituent whose restriction is a nonzero scalar
-multiple of a nonprincipal `θ` cannot have `H` in its character kernel. -/
-public theorem not_subgroupInKernel'_of_subgroupRestriction_eq_smul_nonprincipal
-    {G : Type u} [Group G] [Finite G]
-    (H L : Subgroup G) (hHL : H ≤ L)
-    (φ : Section1.ClassFunction L) (θ : Section1.ClassFunction H) (c : ℂ)
-    (hθ : Section1.IsBookIrreducibleCharacter θ)
-    (hθne : θ ≠ Section1.principalCharacter H)
-    (hc : c ≠ 0)
-    (hres : Section1.subgroupRestriction (H.subgroupOf L) φ =
-      c • Section1.subgroupOfClassFunction θ) :
-    ¬ Section1.subgroupInKernel' φ (H.subgroupOf L) := by
-  intro hker
-  have hθker : Section1.subgroupInKernel' θ ⊤ := by
-    intro h
-    let hs : H.subgroupOf L :=
-      ⟨⟨((h : H) : G), hHL (h : H).property⟩, by
-        rw [Subgroup.mem_subgroupOf]
-        exact (h : H).property⟩
-    have hres_h := congrFun hres hs
-    have hres_one := congrFun hres (1 : H.subgroupOf L)
-    have hmul : c * θ h = c * θ 1 := by
-      calc
-        c * θ h = φ hs := by
-          simpa [Section1.subgroupRestriction, Section1.subgroupOfClassFunction,
-            hs] using hres_h.symm
-        _ = Section1.degree φ := hker hs
-        _ = φ (1 : L) := rfl
-        _ = φ (1 : H.subgroupOf L) := by rfl
-        _ = c * θ 1 := by
-          change φ (1 : H.subgroupOf L) =
-            c * θ ⟨((1 : H.subgroupOf L) : L), (1 : H.subgroupOf L).2⟩ at hres_one
-          have hone :
-              (⟨((1 : H.subgroupOf L) : L), (1 : H.subgroupOf L).2⟩ : H) =
-                (1 : H) := by
-            apply Subtype.ext
-            rfl
-          rw [hone] at hres_one
-          exact hres_one
-    exact mul_left_cancel₀ hc hmul
-  exact hθne
-    (eq_principalCharacter_of_isBookIrreducibleCharacter_subgroupInKernel_top
-      θ hθ hθker)
 
 /-- If the restriction of a character is orthogonal to the principal character,
 then the subgroup is not contained in its character kernel, provided the degree
@@ -4449,35 +4270,6 @@ public theorem conjugateCharacter_tau_sub_conjugate_of_hypothesis12
     _ = -τ (χ - Section1.conjugateCharacter χ) := by
           rw [← hτeq]
 
-/-- If the original Section 12 family is already irreducible and the Dade
-transform is defined on its punctured integer span, the singleton constituent
-sets assemble the data required in PF `(12.2)(a)`. -/
-public theorem constituentFamilyData_of_singletons
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (R : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hirr : ∀ χ : Section1.ClassFunction L, χ ∈ S →
-      Section1.IsIrreducibleCharacterOnGroup χ)
-    (hDade : dadeTransformDefinedOnFamily (typeIASet L H) R τ S) :
-    ∃ SX : S → Finset (Section1.ClassFunction L),
-      constituentFamilyData L H S SX R τ := by
-  classical
-  let SX : S → Finset (Section1.ClassFunction L) :=
-    fun χ => {(χ : Section1.ClassFunction L)}
-  refine ⟨SX, constituentFamilyData_of_parts L H S SX R τ S ?_ ?_ hDade⟩
-  · intro χ
-    exact constituentSetData_singleton (χ : Section1.ClassFunction L)
-      (hirr χ χ.property)
-  · intro φ
-    constructor
-    · intro hφ
-      exact ⟨⟨φ, hφ⟩, by simp [SX]⟩
-    · rintro ⟨χ, hφχ⟩
-      have hφeq : φ = (χ : Section1.ClassFunction L) := by
-        simpa [SX] using hφχ
-      simp [hφeq]
 
 /-- PF Hypothesis `(5.2)` with a specified family `R(χ)`. -/
 @[expose] public def hypothesis52WithRData
@@ -4548,22 +4340,6 @@ public theorem rFamilyData_R1_subset
   intro α hα
   exact (hR.2.2 α).mpr ⟨φ, hφ, hα⟩
 
-/-- A subset-sum inside a per-constituent support `R₁(φ)` is a subset-sum
-inside the corresponding `R(χ)`. -/
-public theorem isSubsetSumOf_rFamilyData
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {χ φ : Section1.ClassFunction L}
-    {SX : Finset (Section1.ClassFunction L)}
-    {τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {R1 : Section1.ClassFunction L → Finset (Section1.ClassFunction G)}
-    {R : Finset (Section1.ClassFunction G)}
-    (hR : rFamilyData χ SX τ R1 R)
-    (hφ : φ ∈ SX)
-    {β : Section1.ClassFunction G}
-    (hsubset : Section5.isSubsetSumOf (R1 φ) β) :
-    Section5.isSubsetSumOf R β := by
-  exact isSubsetSumOf_mono (rFamilyData_R1_subset hR hφ) hsubset
 
 /-- Version of the `(12.4)` span-reduction helper where the coherent extension
 has produced subset-sums in the per-constituent supports `R₁(φᵢ)`.  The
@@ -4782,25 +4558,6 @@ selected signed support element `α ∈ R(χ)` comes from a constituent differen
       τ (φ - Section1.conjugateCharacter φ) =
         α - Section1.conjugateCharacter α
 
-/-- Lift per-constituent PF `(5.9)` relations to the union `R(χ)`. -/
-public theorem rFamilyDiffData_of_rFamilyData_piecewise
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {χ : Section1.ClassFunction L}
-    {SX : Finset (Section1.ClassFunction L)}
-    {τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {R1 : Section1.ClassFunction L → Finset (Section1.ClassFunction G)}
-    {R : Finset (Section1.ClassFunction G)}
-    (hR : rFamilyData χ SX τ R1 R)
-    (hpiece : ∀ φ : Section1.ClassFunction L, φ ∈ SX →
-      ∀ α : Section1.ClassFunction G, α ∈ R1 φ →
-        τ (φ - Section1.conjugateCharacter φ) =
-          α - Section1.conjugateCharacter α) :
-    rFamilyDiffData SX τ R := by
-  intro α hα
-  rcases hR with ⟨_hSX, _hR1, hmem⟩
-  rcases (hmem α).mp hα with ⟨φ, hφ, hαpiece⟩
-  exact ⟨φ, hφ, hpiece φ hφ α hαpiece⟩
 
 /-- A signed two-element `R(φ)` package supplies the PF `(5.9)` difference
 relation once its sum is anti-invariant under conjugation. -/
@@ -5234,34 +4991,6 @@ public theorem orthogonalFinsets_of_cross_rFamilyData_h52d_core
     D1 tildeA1 tildeA01 tildeA11 D2 tildeA2 tildeA02 tildeA12
     hsrc hhyp1 hhyp2 hdata1 hdata2 hdisj hR1 hR2signed hR2sum hχ2
 
-/-- Restrict a global signed-support choice on the constituent union to one
-constituent set. -/
-public theorem rFamilyData_of_global_decomposition
-    {G : Type u} [Group G] [Finite G]
-    {L : Subgroup G}
-    {χ : Section1.ClassFunction L}
-    {SX SXall : Finset (Section1.ClassFunction L)}
-    {τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    (hSX : constituentSetData χ SX)
-    (hsub : SX ⊆ SXall)
-    (Rall : SXall → Finset (Section1.ClassFunction G))
-    (hRall : ∀ X : SXall,
-      Section5.signedOrthonormalFinset (Rall X) ∧
-        (Rall X).card = 2 ∧
-        τ ((X : Section1.ClassFunction L) -
-            Section1.conjugateCharacter (X : Section1.ClassFunction L)) =
-          Finset.sum (Rall X) fun φ => φ) :
-    let R1 : Section1.ClassFunction L → Finset (Section1.ClassFunction G) :=
-      fun φ => if hφ : φ ∈ SXall then Rall ⟨φ, hφ⟩ else ∅
-    rFamilyData χ SX τ R1 (SX.biUnion R1) := by
-  classical
-  intro R1
-  refine ⟨hSX, ?_, ?_⟩
-  · intro φ hφ
-    have hφall : φ ∈ SXall := hsub hφ
-    simpa [R1, hφall] using hRall ⟨φ, hφall⟩
-  · intro α
-    simp [R1]
 
 /-- The union of per-constituent signed supports gives PF `(5.2.d)` for the
 original family. -/
@@ -5828,56 +5557,6 @@ public theorem scalarProduct_weightedFamilySum_kernel_subtype_not_mem
     (ψ : Section1.ClassFunction G) : Prop :=
   ∀ x : G, ∀ h : H, ψ (x * h) = ψ x
 
-/-- The zero class function is right-invariant under a subgroup. -/
-public theorem rightInvariantOnSubgroup_zero
-    {G : Type u} [Group G]
-    (H : Subgroup G) :
-    rightInvariantOnSubgroup H (0 : Section1.ClassFunction G) := by
-  intro x h
-  simp
-
-/-- Right-invariance under a subgroup is preserved by scalar multiplication. -/
-public theorem rightInvariantOnSubgroup_smul
-    {G : Type u} [Group G]
-    (H : Subgroup G)
-    (c : ℂ)
-    {ψ : Section1.ClassFunction G}
-    (hψ : rightInvariantOnSubgroup H ψ) :
-    rightInvariantOnSubgroup H (c • ψ) := by
-  intro x h
-  simp [hψ x h]
-
-/-- Right-invariance under a subgroup is preserved by addition. -/
-public theorem rightInvariantOnSubgroup_add
-    {G : Type u} [Group G]
-    (H : Subgroup G)
-    {ψ η : Section1.ClassFunction G}
-    (hψ : rightInvariantOnSubgroup H ψ)
-    (hη : rightInvariantOnSubgroup H η) :
-    rightInvariantOnSubgroup H (ψ + η) := by
-  intro x h
-  simp [hψ x h, hη x h]
-
-/-- Finite sums of right-invariant class functions are right-invariant. -/
-public theorem rightInvariantOnSubgroup_sum
-    {G : Type u} [Group G]
-    {ι : Type*}
-    (H : Subgroup G)
-    (s : Finset ι)
-    (ψ : ι → Section1.ClassFunction G)
-    (hψ : ∀ i : ι, i ∈ s → rightInvariantOnSubgroup H (ψ i)) :
-    rightInvariantOnSubgroup H (s.sum ψ) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-      simpa using rightInvariantOnSubgroup_zero H
-  | insert a s ha ih =>
-      have hψa : rightInvariantOnSubgroup H (ψ a) := hψ a (by simp [ha])
-      have hψs : ∀ i : ι, i ∈ s → rightInvariantOnSubgroup H (ψ i) := by
-        intro i hi
-        exact hψ i (by simp [hi])
-      simpa [Finset.sum_insert, ha] using
-        rightInvariantOnSubgroup_add H hψa (ih hψs)
 
 /-- An irreducible character whose kernel contains `H` is right-invariant under
 `H`. This is one of the irreducible-component endpoints needed in PF `(12.4)`. -/
@@ -6230,49 +5909,6 @@ public theorem theorem_12_4_source_data_of_coefficient_equality
   have hy := congrFun hsplit y
   simpa [ψL, β, γ, Section1.subgroupRestriction] using hy
 
-/-- The PF `(12.4)` source decomposition follows once the source proof's two
-transformed-difference calculations are available for any two constituents in
-the same `S(χ)`. -/
-public theorem theorem_12_4_source_data_of_transformed_difference
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (R1 : Section1.ClassFunction L → Finset (Section1.ClassFunction G))
-    (R : S → Finset (Section1.ClassFunction G))
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ : Section1.ClassFunction G)
-    (hHL : H ≤ L)
-    (hspan : hypothesis_12_1_data L H S Rade τ →
-      constituentFamilyData L H S SX Rade τ →
-      (∀ χ : S,
-        rFamilyData (χ : Section1.ClassFunction L) (SX χ) τ R1 (R χ)) →
-      hypothesis52WithRData S τ R →
-      ∀ χ : S,
-        ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-        ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-          Section5.integerSpan (R χ) (τ (φ₁ - φ₂)))
-    (hscalar : Section1.IsClassFunction ψ →
-      ∀ χ : S,
-        ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-        ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-          Section1.scalarProduct L (Section1.subgroupRestriction L ψ)
-              (φ₁ - φ₂) =
-            Section1.scalarProduct G ψ (τ (φ₁ - φ₂))) :
-    theorem_12_4_source_data L H S SX Rade R1 R τ ψ := by
-  intro hhyp hdata hRdata h52 hψ horth
-  have hcoeff_const : ∀ χ : S,
-      ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-      ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-        Section1.scalarProduct L (Section1.subgroupRestriction L ψ) φ₁ =
-          Section1.scalarProduct L (Section1.subgroupRestriction L ψ) φ₂ :=
-    coefficient_constancy_of_transformed_difference
-      (S := S) (SX := SX) (R := R) (τ := τ) (ψ := ψ)
-      horth (hspan hhyp hdata hRdata h52) (hscalar hψ)
-  exact (theorem_12_4_source_data_of_coefficient_equality
-    L H S SX Rade R1 R τ ψ hHL hcoeff_const)
-    hhyp hdata hRdata h52 hψ horth
 
 /-- Variant of `theorem_12_4_source_data_of_transformed_difference` where the
 scalar-product-transfer input is supplied by the source identification
@@ -6827,289 +6463,6 @@ public theorem isIntegralIsometryOnCharacterDifferencesFrom_reindex
   · intro i
     exact hTcoeff (e i)
 
-/-- Source-step package for PF `(1.4)` before choosing an arbitrary finite
-enumeration of the four-character set. -/
-@[expose] public def theorem_12_4_integral_isometry_family_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  hypothesis_12_1_data L H S Rade τ →
-    constituentFamilyData L H S SX Rade τ →
-    ∀ χ : S,
-      ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-      ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-        φ₁ ≠ φ₂ →
-        ∀ U : Finset (Section1.ClassFunction L),
-          φ₁ ∈ U →
-          Section1.conjugateCharacter φ₁ ∈ U →
-          φ₂ ∈ U →
-          Section1.conjugateCharacter φ₂ ∈ U →
-          Section5.hypothesis_5_2_setup_statement U →
-          Section5.hypothesis_5_2_a_statement U →
-          Section5.hypothesis_5_2_c_statement U →
-          (∀ Y Z : U,
-            Section1.degree (Y : Section1.ClassFunction L) =
-              Section1.degree (Z : Section1.ClassFunction L)) →
-          (∀ Y : U,
-            Section1.scalarProduct L
-              (Y : Section1.ClassFunction L)
-              (Y : Section1.ClassFunction L) = 1) →
-            ∀ X : U,
-              ∃ J : Type, ∃ _ : Fintype J, ∃ _ : DecidableEq J,
-                ∃ muBasis : J → Section1.ClassFunction G,
-                  Section1.IsIrreducibleCharacterBasis muBasis ∧
-                    ∃ d : J → Nat,
-                      IsIntegralIsometryOnCharacterDifferencesFrom
-                        muBasis d
-                        (fun Y : U => (Y : Section1.ClassFunction L))
-                        X τ
-
-/-- Source-step package for the PF `(1.4)` integral-isometry input used by
-the `(12.4)` coherent-choice route.  It exposes exactly the coefficient-basis
-data needed to apply `Section1.proposition_1_4_source` after reindexing the
-chosen four-character finite set. -/
-@[expose] public def theorem_12_4_integral_isometry_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  hypothesis_12_1_data L H S Rade τ →
-    constituentFamilyData L H S SX Rade τ →
-    ∀ χ : S,
-      ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-      ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-        φ₁ ≠ φ₂ →
-        ∀ U : Finset (Section1.ClassFunction L),
-          φ₁ ∈ U →
-          Section1.conjugateCharacter φ₁ ∈ U →
-          φ₂ ∈ U →
-          Section1.conjugateCharacter φ₂ ∈ U →
-          Section5.hypothesis_5_2_setup_statement U →
-          Section5.hypothesis_5_2_a_statement U →
-          Section5.hypothesis_5_2_c_statement U →
-          (∀ Y Z : U,
-            Section1.degree (Y : Section1.ClassFunction L) =
-              Section1.degree (Z : Section1.ClassFunction L)) →
-          (∀ Y : U,
-            Section1.scalarProduct L
-              (Y : Section1.ClassFunction L)
-              (Y : Section1.ClassFunction L) = 1) →
-            ∃ n : ℕ, ∃ _ : NeZero n, 2 ≤ n ∧
-              ∃ e : Fin n ≃ U,
-                ∃ J : Type, ∃ _ : Fintype J, ∃ _ : DecidableEq J,
-                  ∃ muBasis : J → Section1.ClassFunction G,
-                    Section1.IsIrreducibleCharacterBasis muBasis ∧
-                      ∃ d : J → Nat,
-                        Section1.IsIntegralIsometryOnCharacterDifferences
-                          muBasis d
-                          (fun i : Fin n =>
-                            (e i : Section1.ClassFunction L))
-                          τ
-
-/-- The set-indexed PF `(1.4)` source package supplies the older enumerated
-package by choosing an arbitrary enumeration of `U`; the two distinct
-constituents prove that the enumeration has length at least two. -/
-public theorem theorem_12_4_integral_isometry_source_data_of_family_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hfamily :
-      theorem_12_4_integral_isometry_family_source_data L H S SX Rade τ) :
-    theorem_12_4_integral_isometry_source_data L H S SX Rade τ := by
-  classical
-  intro hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U
-    hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself
-  let n : ℕ := Fintype.card U
-  have hpair_subset :
-      ({φ₁, φ₂} : Finset (Section1.ClassFunction L)) ⊆ U := by
-    intro φ hφ
-    simp only [Finset.mem_insert, Finset.mem_singleton] at hφ
-    rcases hφ with rfl | rfl
-    · exact hUφ₁
-    · exact hUφ₂
-  have hn : 2 ≤ n := by
-    have hcard_pair :
-        ({φ₁, φ₂} : Finset (Section1.ClassFunction L)).card = 2 := by
-      simp [hne]
-    have hle := Finset.card_le_card hpair_subset
-    simpa [n, hcard_pair, Fintype.card_coe] using hle
-  have hnz' : n ≠ 0 := by omega
-  let hnz : NeZero n := ⟨hnz'⟩
-  letI : NeZero n := hnz
-  let e : Fin n ≃ U := (Fintype.equivFin U).symm
-  rcases hfamily hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U
-      hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself
-      (e 0) with
-    ⟨J, instF, instD, muBasis, hmuBasis, d, hT⟩
-  letI : Fintype J := instF
-  letI : DecidableEq J := instD
-  refine ⟨n, hnz, hn, e, J, instF, instD, muBasis, hmuBasis, d, ?_⟩
-  exact isIntegralIsometryOnCharacterDifferencesFrom_reindex
-    e muBasis d (fun Y : U => (Y : Section1.ClassFunction L)) τ hT
-
-/-- Source-step package for the PF `(1.4)` signed-difference output used by
-the `(12.4)` coherent-choice route.  It is lower-level than
-`theorem_12_4_image_family_source_data`: the image-family virtual-character and
-Gram facts are proved from this signed-difference form. -/
-@[expose] public def theorem_12_4_signed_difference_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  hypothesis_12_1_data L H S Rade τ →
-    constituentFamilyData L H S SX Rade τ →
-    ∀ χ : S,
-      ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-      ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-        φ₁ ≠ φ₂ →
-        ∀ U : Finset (Section1.ClassFunction L),
-          φ₁ ∈ U →
-          Section1.conjugateCharacter φ₁ ∈ U →
-          φ₂ ∈ U →
-          Section1.conjugateCharacter φ₂ ∈ U →
-          Section5.hypothesis_5_2_setup_statement U →
-          Section5.hypothesis_5_2_a_statement U →
-          Section5.hypothesis_5_2_c_statement U →
-          (∀ Y Z : U,
-            Section1.degree (Y : Section1.ClassFunction L) =
-              Section1.degree (Z : Section1.ClassFunction L)) →
-          (∀ Y : U,
-            Section1.scalarProduct L
-              (Y : Section1.ClassFunction L)
-              (Y : Section1.ClassFunction L) = 1) →
-            ∃ X : U,
-              ∃ ε : ℂ, Section1.IsSign ε ∧
-                ∃ μ : U → Section1.ClassFunction G,
-                  Section1.IsIrreducibleCharacterBasis μ ∧
-                    ∀ Y : U,
-                      τ ((Y : Section1.ClassFunction L) -
-                          (X : Section1.ClassFunction L)) =
-                        ε • (μ Y - μ X)
-
-/-- The integral-isometry source package supplies the signed-difference package
-by applying PF `(1.4)` after finite reindexing of the four-character set. -/
-public theorem theorem_12_4_signed_difference_source_data_of_integral_isometry_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hiso : theorem_12_4_integral_isometry_source_data L H S SX Rade τ) :
-    theorem_12_4_signed_difference_source_data L H S SX Rade τ := by
-  classical
-  intro hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U
-    hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself
-  rcases hiso hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U
-      hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself with
-    ⟨n, hnz, hn, e, J, instF, instD, muBasis, hmuBasis, d, hT⟩
-  letI : NeZero n := hnz
-  letI : Fintype J := instF
-  letI : DecidableEq J := instD
-  have hirr : ∀ Y : U,
-      Section1.IsIrreducibleCharacterOnGroup
-        (Y : Section1.ClassFunction L) := by
-    intro Y
-    exact isIrreducibleCharacterOnGroup_of_isCharacter_self
-      (hsetup.2 Y) (hself Y)
-  have hchiBasis :
-      Section1.IsIrreducibleCharacterBasis
-        (fun i : Fin n => (e i : Section1.ClassFunction L)) :=
-    isIrreducibleCharacterBasis_of_finset_irreducible e hirr
-  have hchiDegree : ∀ i : Fin n,
-      Section1.degree (e i : Section1.ClassFunction L) =
-        Section1.degree (e 0 : Section1.ClassFunction L) := by
-    intro i
-    exact hdeg (e i) (e 0)
-  have hOrtho :
-      Section1.IsOrthonormalFamily
-        (fun i : Fin n => (e i : Section1.ClassFunction L)) :=
-    isOrthonormalFamily_of_finset_self_orthogonal e hself h52c
-  rcases theorem_12_4_signed_difference_output_of_proposition_1_4_source
-      (G := G) (H := L) (I := U) (J := J) hn e muBasis hmuBasis d
-      (fun Y : U => (Y : Section1.ClassFunction L))
-      hchiBasis hchiDegree hOrtho τ hT with
-    ⟨X, _hselfOut, ε, hε, μ, hμ, hτ⟩
-  exact ⟨X, ε, hε, μ, hμ, hτ⟩
-
-/-- Source-step package for the PF `(1.4)` image-family output used to build
-the coherent-choice part of PF `(12.4)`.  This is a lower-level interface than
-`theorem_12_4_coherent_choice_source_data`: once PF12 supplies the four-character
-source-family fields, it records the image family and Gram-matrix data consumed
-by the reusable Section 5 bridge. -/
-@[expose] public def theorem_12_4_image_family_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  hypothesis_12_1_data L H S Rade τ →
-    constituentFamilyData L H S SX Rade τ →
-    ∀ χ : S,
-      ∀ φ₁ : Section1.ClassFunction L, φ₁ ∈ SX χ →
-      ∀ φ₂ : Section1.ClassFunction L, φ₂ ∈ SX χ →
-        φ₁ ≠ φ₂ →
-        ∀ U : Finset (Section1.ClassFunction L),
-          φ₁ ∈ U →
-          Section1.conjugateCharacter φ₁ ∈ U →
-          φ₂ ∈ U →
-          Section1.conjugateCharacter φ₂ ∈ U →
-          Section5.hypothesis_5_2_setup_statement U →
-          Section5.hypothesis_5_2_a_statement U →
-          Section5.hypothesis_5_2_c_statement U →
-          (∀ Y Z : U,
-            Section1.degree (Y : Section1.ClassFunction L) =
-              Section1.degree (Z : Section1.ClassFunction L)) →
-          (∀ Y : U,
-            Section1.scalarProduct L
-              (Y : Section1.ClassFunction L)
-              (Y : Section1.ClassFunction L) = 1) →
-            ∃ X : U,
-            ∃ img : U → Section1.ClassFunction G,
-              (∀ Y : U, Representation.IsVirtualCharacter (img Y)) ∧
-                (∀ Y : U,
-                  τ ((X : Section1.ClassFunction L) -
-                      (Y : Section1.ClassFunction L)) =
-                    img X - img Y) ∧
-                  (∀ Y : U,
-                    Section1.scalarProduct G (img Y) (img Y) =
-                      Section1.scalarProduct L
-                        (Y : Section1.ClassFunction L)
-                        (Y : Section1.ClassFunction L)) ∧
-                    (∀ Y Z : U,
-                      (Y : Section1.ClassFunction L) ≠
-                        (Z : Section1.ClassFunction L) →
-                      Section1.scalarProduct G (img Y) (img Z) = 0)
-
-/-- A PF `(1.4)` signed-difference output supplies the image-family package used
-to build the coherent-choice part of PF `(12.4)`. -/
-public theorem theorem_12_4_image_family_source_data_of_signed_difference_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hsigned : theorem_12_4_signed_difference_source_data L H S SX Rade τ) :
-    theorem_12_4_image_family_source_data L H S SX Rade τ := by
-  intro hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar
-    hsetup h52a h52c hdeg hself
-  rcases hsigned hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne U
-      hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself with
-    ⟨X, ε, hε, μ, hμ, hτ⟩
-  exact ⟨X, theorem_12_4_image_family_facts_of_signed_difference_output
-    X hself ε hε μ hμ hτ⟩
 
 /-- Source-step package for the PF `(1.4)` coherent-choice part of
 PF `(12.4)`: for distinct constituents in the same `S(χ)`, the source proof
@@ -7135,70 +6488,6 @@ complex conjugates. -/
             Section1.conjugateCharacter φ₂ ∈ U ∧
             Section5.IsCoherentTriple Section5.puncturedSet U τ
 
-/-- The PF `(1.4)` image-family output supplies the coherent finite set used in
-the PF `(12.4)` span argument. -/
-public theorem theorem_12_4_coherent_choice_source_data_of_image_family_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (himg : theorem_12_4_image_family_source_data L H S SX Rade τ) :
-    theorem_12_4_coherent_choice_source_data L H S SX Rade τ := by
-  classical
-  intro hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne
-  rcases theorem_12_4_four_constituent_source_family_data
-      L H S SX Rade τ hhyp hdata χ hφ₁ hφ₂ with
-    ⟨U, hUφ₁, hUφ₁bar, hUφ₂, hUφ₂bar, hsetup, h52a, _h52b, h52c,
-      _hirr, hself, hdeg⟩
-  rcases himg hhyp hdata χ φ₁ hφ₁ φ₂ hφ₂ hne
-      U hUφ₁ hUφ₁bar hUφ₂ hUφ₂bar hsetup h52a h52c hdeg hself with
-    ⟨X, img, himg_virt, himg_split, himg_self, himg_cross⟩
-  rcases Section5.coherent_triple_of_image_family
-      U τ X img hsetup h52a h52c hdeg
-      himg_virt himg_split himg_self himg_cross with
-    ⟨Tnew, hIso, hVirt, hAgree⟩
-  have hU_virtual : Section5.sourceVirtualCharacters U := by
-    intro φ hφ
-    exact Section5.isVirtualCharacter_of_isCharacter (hsetup.2 ⟨φ, hφ⟩)
-  have hU_nonempty : Section5.integerSpanOnNonempty U Section5.puncturedSet :=
-    Section5.integerSpanOnNonempty_of_conjugate_pair
-      X.2 (h52a X).1 (h52a X).2 (hsetup.2 X)
-  exact ⟨U, hUφ₁, hUφ₁bar, hUφ₂, hUφ₂bar,
-    hU_virtual, hU_nonempty, Tnew, hIso, hVirt, hAgree⟩
-
-/-- Signed-difference source data from PF `(1.4)` supplies the coherent-choice
-package used in PF `(12.4)`. -/
-public theorem theorem_12_4_coherent_choice_source_data_of_signed_difference_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hsigned : theorem_12_4_signed_difference_source_data L H S SX Rade τ) :
-    theorem_12_4_coherent_choice_source_data L H S SX Rade τ :=
-  theorem_12_4_coherent_choice_source_data_of_image_family_source_data
-    L H S SX Rade τ
-    (theorem_12_4_image_family_source_data_of_signed_difference_source_data
-      L H S SX Rade τ hsigned)
-
-/-- The PF `(1.4)` integral-isometry source package supplies the coherent-choice
-package used in PF `(12.4)`. -/
-public theorem theorem_12_4_coherent_choice_source_data_of_integral_isometry_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (SX : S → Finset (Section1.ClassFunction L))
-    (Rade : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (hiso : theorem_12_4_integral_isometry_source_data L H S SX Rade τ) :
-    theorem_12_4_coherent_choice_source_data L H S SX Rade τ :=
-  theorem_12_4_coherent_choice_source_data_of_signed_difference_source_data
-    L H S SX Rade τ
-    (theorem_12_4_signed_difference_source_data_of_integral_isometry_source_data
-      L H S SX Rade τ hiso)
 
 /-- The existing Section 12 Dade-domain data supplies the PF `(1.4)` coherent
 choice for the concrete four-character family used in PF `(12.4)`. -/
@@ -7841,39 +7130,6 @@ public theorem constantOnRightCoset_of_theorem_12_4_source_data
     _ = β x + γ x := by rw [hβx]
     _ = ψ x := hψx.symm
 
-/-- Source-data package for PF `(12.6)`.
-
-The proof invokes Isaacs, Theorem 6.34 for irreducibility, then splits the
-Type-I Definition `(8.3)` alternatives and applies PF `(6.8)`, `(5.7)`, or
-the `(6.5.b)/(8.2.a)/(8.3.c)/(6.5.c)` route to get coherence.  The formal
-statement keeps those four source proof endpoints explicit. -/
-@[expose] public def theorem_12_6_source_data
-    {G : Type u} [Group G] [Finite G]
-    (L H : Subgroup G)
-    (S : Finset (Section1.ClassFunction L))
-    (R : G → Subgroup G)
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  (hypothesis_12_1_data L H S R τ →
-    Section7.frobeniusWithKernel L H →
-      ∀ χ : Section1.ClassFunction L, χ ∈ S →
-        Section1.IsIrreducibleCharacterOnGroup χ) ∧
-  (hypothesis_12_1_data L H S R τ →
-    Section7.frobeniusWithKernel L H →
-      section16TISubset (section16NonidentityElements (H : Set G)) →
-        Section6.coherentFamily S τ) ∧
-  (hypothesis_12_1_data L H S R τ →
-    Section7.frobeniusWithKernel L H →
-      IsMulCommutative H ∧ groupRank H = 2 →
-        Section6.coherentFamily S τ) ∧
-  ∀ U U1 U0 : Subgroup G,
-    hypothesis_12_1_data L H S R τ →
-      Section7.frobeniusWithKernel L H →
-        Section8.typeFData L H U U1 U0 →
-          ((∀ p : Nat.Primes, p ∈ subgroupPrimeSet H →
-            Monoid.exponent U ∣ p.val - 1) ∧
-            ∃ p : Nat.Primes, p ∈ subgroupPrimeSet H ∧
-              IsCyclic (section10PPrimeCore p H)) →
-            Section6.coherentFamily S τ
 
 /-- PF Hypothesis `(12.8)`. -/
 @[expose] public def quotientHasNoncyclicSylow
@@ -7930,22 +7186,6 @@ PF `(8.10)`: for this Type-I subgroup, `M_s = M_F`. -/
     Subgroup.normalizer ((Subgroup.zpowers x : Subgroup G) : Set G) ≤ M ∧
     ¬ elementCentralizerIn (⊤ : Subgroup G) x ≤ L
 
-/-- Source-data package for PF `(12.7)`.
-
-The source proof argues by contradiction: a Type-I maximal subgroup that is not
-Frobenius yields the minimal bad-prime setup of Hypothesis `(12.8)`, and the
-proof block ending in `(12.16)` contradicts that setup. -/
-@[expose] public def theorem_12_7_source_data
-    {G : Type u} [Group G] [Finite G]
-    (M MF : Subgroup G) : Prop :=
-  (M ∈ section9MaximalSubgroups G →
-    section16MFSubgroup M MF →
-      Section8.typeIDefinitionData M MF →
-        ¬ Section7.frobeniusWithKernel M MF →
-          ∃ K' P0 : Subgroup G, ∃ p : ℕ,
-            hypothesis_12_8_data M MF K' P0 p) ∧
-  ∀ K' P0 : Subgroup G, ∀ p : ℕ,
-    hypothesis_12_8_data M MF K' P0 p → False
 
 /-- The source proof of PF `(12.9)`, expressed as its endpoint construction
 for every instance of Hypothesis `(12.8)`. -/
@@ -8232,46 +7472,6 @@ integer values on `K - K'`. -/
     (∀ x y : G, x ∈ K → x ∉ K' → y ∈ K → y ∉ K' → ψ x = ψ y) ∧
     ∀ g : G, g ∈ K → g ∉ K' → ψ g ∈ Set.range (fun n : ℤ => (n : ℂ))
 
-/-- The contradiction package in the proof block PF `(12.16)`. -/
-@[expose] public def theorem_12_16_contradictionData
-    {G : Type u} [Group G] [Finite G]
-    (M K K' P0 L H Ls : Subgroup G)
-    (x : G) (p : ℕ) : Prop :=
-  hypothesis_12_8_data M K K' P0 p ∧
-    theorem_12_9_data M K K' P0 L H Ls x p ∧
-    Section7.frobeniusWithKernel L H
-
-/-- Source data used in the proof block PF `(12.16)`, beyond the bare
-Hypothesis `(12.8)`. The existential witnesses are the notation and support
-packages introduced in `(12.9)`--`(12.15)` and in PF `(8.17)`. -/
-@[expose] public def theorem_12_16_source_data
-    {G : Type u} [Group G] [Finite G]
-    (M K K' P0 : Subgroup G)
-    (p : ℕ) : Prop :=
-  (IsMinCE G ∧
-    ∃ L H Ls E : Subgroup G,
-    ∃ x : G,
-    ∃ e : ℕ,
-    ∃ S : Finset (Section1.ClassFunction L),
-    ∃ R : G → Subgroup G,
-    ∃ τ τ₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G,
-    ∃ χ : Section1.ClassFunction L,
-    ∃ RM : G → Subgroup G,
-    ∃ ψ : Section1.ClassFunction G,
-    ∃ ψρ : Section1.ClassFunction L,
-    ∃ ψρM : Section1.ClassFunction M,
-      theorem_12_16_contradictionData M K K' P0 L H Ls x p ∧
-        notation_12_13_data L H E e S R τ τ₁ χ ψ ψρ ∧
-        theorem_12_15_source_data M K RM ∧
-        dadeProjectionData (Section8.a1Set K) M RM ψ ψρM ∧
-        ∃ Ms : List (Subgroup G),
-        ∃ MF : Subgroup G → Subgroup G,
-        ∃ Msigma : Subgroup G → Subgroup G,
-        ∃ A A0 A1 D tildeA tildeA0 tildeA1 : Subgroup G → Set G,
-        ∃ Rall : Subgroup G → G → Subgroup G,
-          Section8.theorem_8_17_source_data Ms MF Msigma
-            A A0 A1 D tildeA tildeA0 tildeA1 Rall) ∧
-  (hypothesis_12_8_data M K K' P0 p → False)
 
 /-- Source-data package for the all-Type-I contradiction in PF `(12.17)`.
 
@@ -8287,37 +7487,5 @@ The source supposes every maximal subgroup is of Type I, applies Theorem
           Section8.typeIDefinitionData M MF) →
       False
 
-/-- Source-data endpoint package for PF `(12.17)`.
-
-This is the old endpoint shape: it packages the final case `(8.8)(b)` result.
-Public statements should prefer the source-facing branch data above plus
-`Section8.theorem_8_8_statement`. -/
-@[expose] public def theorem_12_17_source_data
-    (G : Type u) [Group G] [Finite G] : Prop :=
-  IsMinCE G →
-    ∃ W W1 W2 S T SF TF : Subgroup G,
-      Section8.theorem_8_8_source_case_b_data W W1 W2 S T SF TF
-
-/-- The final PF `(12.17)` contradiction after the indexed PF `(7.10)`
-hypothesis has been assembled.  The remaining route work is to construct this
-`(7.10)` hypothesis from the all-Type-I representative system. -/
-public theorem theorem_12_17_false_of_theorem_7_10_hypothesis
-    {G : Type u} [Group G] [Finite G]
-    {I : Type*} [Fintype I]
-    (L H : I → Subgroup G)
-    (h710 : Section7.theorem_7_10_hypothesis L H ({1} : Set G)) : False :=
-  (Section7.theorem_7_11 L H) h710.to_source h710.lowerBoundData
-
-/-- The PF `(12.17)` source branch split reconstructs the old endpoint package. -/
-public theorem theorem_12_17_source_data_of_all_typeI_contradiction_source_data
-    {G : Type u} [Group G] [Finite G]
-    (h88 : Section8.theorem_8_8_statement (G := G))
-    (hall :
-      theorem_12_17_all_typeI_contradiction_source_data G) :
-    theorem_12_17_source_data G := by
-  intro hG
-  rcases h88 hG with htypeI | hcaseB
-  · exact False.elim (hall hG htypeI)
-  · exact hcaseB
 
 end Section12

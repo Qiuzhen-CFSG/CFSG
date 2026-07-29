@@ -839,35 +839,6 @@ private theorem section15_corollary15_3_factor_cyclic_tau2
       (Nat.card_congr e.toEquiv).symm
     exact h151c.2.2 p (by simpa [hcard] using hp)
 
-/-- Corollary 15.3(a): if `H` is a nonidentity Hall subgroup of `M_σ`,
-then `C_M(H) = C_{M_σ}(H) X` with `X` a cyclic `τ₂(M)`-subgroup. -/
-public theorem corollary_15_3_a
-    {M H : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hHne : H ≠ ⊥)
-    (hHall : section15HallSubgroupOf H (section10Msigma M)) :
-    ∃ X : Subgroup G,
-      X ≤ M ∧ IsCyclic X ∧ IsPiSubgroup (G := G) (section12Tau2Primes M) X ∧
-        ((subgroupCentralizerIn M H : Subgroup G) : Set G) =
-          (subgroupCentralizerIn (section10Msigma M) H : Set G) * (X : Set G) := by
-  rcases section15_exists_KUData_for_maximal hM with ⟨K, U, hKU⟩
-  rcases section15_corollary15_3_centralizer_factor
-      hM hKU hHne hHall with
-    ⟨X, hXleC, _hXHallC, hXπ, hfactor⟩
-  by_cases hXbot : X = ⊥
-  · subst X
-    have hbotτ2 : IsPiSubgroup (G := G) (section12Tau2Primes M) (⊥ : Subgroup G) := by
-      intro p hp
-      exact False.elim (p.property.not_dvd_one (by simpa using hp))
-    exact ⟨⊥, bot_le, isCyclic_of_subsingleton (α := (⊥ : Subgroup G)), hbotτ2, hfactor⟩
-  · rcases section15_corollary15_3_nontrivial_factor_conjugate_to_U
-        hM hKU hHne hHall hXleC hXπ hXbot with
-      ⟨X₀, hX₀U, hX₀ne, hX₀cent, hconj⟩
-    have hcyc_tau2 : IsCyclic X ∧
-        IsPiSubgroup (G := G) (section12Tau2Primes M) X :=
-      section15_corollary15_3_factor_cyclic_tau2
-        hM hKU hHne hHall hX₀U hX₀ne hX₀cent hconj
-    exact ⟨X, hXleC.trans inf_le_left, hcyc_tau2.1, hcyc_tau2.2, hfactor⟩
 
 /-- Corollary 15.3(a), with the Hall complement information retained for the
 centralizer factor constructed in the proof. -/

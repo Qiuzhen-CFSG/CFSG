@@ -203,12 +203,6 @@ public theorem scalarProduct_evalCoeff_eq_of_gram_eq
     (χ : Section1.ClassFunction L) : Prop :=
   integerSpan S χ ∧ Section1.supportedOn χ A
 
-public theorem supportedOn_zero
-    {L : Type u} [Group L]
-    {A : Set L} :
-    Section1.supportedOn (0 : Section1.ClassFunction L) A := by
-  rw [Section1.supportedOn_iff]
-  simp
 
 public theorem supportedOn_add
     {L : Type u} [Group L]
@@ -264,23 +258,6 @@ public theorem supportedOn_puncturedSet_iff_degree_eq_zero
     rw [hg1]
     simpa [Section1.degree_apply] using hdeg
 
-public theorem integerSpanOn_zsmul
-    {L : Type u} [Group L]
-    {S : Finset (Section1.ClassFunction L)}
-    {A : Set L}
-    {φ : Section1.ClassFunction L} (z : ℤ) :
-    integerSpanOn S A φ → integerSpanOn S A ((z : ℂ) • φ) := by
-  rintro ⟨hφ_span, hφ_on⟩
-  exact ⟨integerSpan_zsmul z hφ_span, supportedOn_smul (z : ℂ) hφ_on⟩
-
-public theorem integerSpanOn_sub
-    {L : Type u} [Group L]
-    {S : Finset (Section1.ClassFunction L)}
-    {A : Set L}
-    {φ ψ : Section1.ClassFunction L} :
-    integerSpanOn S A φ → integerSpanOn S A ψ → integerSpanOn S A (φ - ψ) := by
-  rintro ⟨hφ_span, hφ_on⟩ ⟨hψ_span, hψ_on⟩
-  exact ⟨integerSpan_sub hφ_span hψ_span, supportedOn_sub hφ_on hψ_on⟩
 
 public theorem integerSpanOn_mono
     {L : Type u} [Group L]
@@ -551,13 +528,6 @@ public theorem cfNormSq_smul
     (φ : Section1.ClassFunction G) : Prop :=
   ∃ E : Finset (Section1.ClassFunction G), E ⊆ R ∧ φ = Finset.sum E fun ψ => ψ
 
-/-- A linear map between class functions preserves the class-function inner product. -/
-@[expose] public def isCFLinearIsometry
-    {L : Type u} [Group L] [Finite L]
-    {G : Type u} [Group G] [Finite G]
-    (T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
-  ∀ φ ψ : Section1.ClassFunction L,
-    Section1.scalarProduct G (T φ) (T ψ) = Section1.scalarProduct L φ ψ
 
 /-- `T` preserves the inner product on the lattice `Z[S]`. -/
 @[expose] public def isCFLinearIsometryOnSpan

@@ -4,7 +4,7 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.BGsection10.corollary_10_7_e
+public import FeitThompson.BGsection10.corollary_10_7_b
 public import FeitThompson.BGsection5.theorem_5_6_c
 public import FeitThompson.BGsection4.theorem_4_18_a
 import Mathlib.GroupTheory.Schreier
@@ -39,12 +39,6 @@ private theorem section10_beta_subset_sigma
   intro p hpβ
   exact section10_alpha_subset_sigma hM hpβ.1
 
-omit [IsMinCE G] in
-private theorem section10_mbetaSubgroup_le_malphaSubgroup
-    (M : Subgroup G) :
-    section10MbetaSubgroup M ≤ section10MalphaSubgroup M := by
-  simpa [section10MbetaSubgroup, section10MalphaSubgroup] using
-    section10_piCore_mono (H := M) (section10_beta_subset_alpha (G := G) M)
 
 public theorem section10_mbetaSubgroup_le_msigmaSubgroup
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :

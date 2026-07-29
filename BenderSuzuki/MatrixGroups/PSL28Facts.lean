@@ -40,7 +40,6 @@ universe u
 noncomputable section
 
 
-
 private theorem psl28_det_range_top (F : Type*) [Field F] :
     (Matrix.GeneralLinearGroup.det (n := Fin 2) (R := F)).range = ⊤ := by
   ext u
@@ -134,12 +133,6 @@ private theorem psl28_binary3_card :
   rw [psl28_sl2_binary3_card, hCcard, Nat.mul_one] at hmul
   exact hmul.symm
 
-private theorem psl28_transport_exponent_eq_three {m : ℕ}
-    (_hm0 : m ≠ 0) (hm : 8 = 2 ^ m) :
-    m = 3 := by
-  have hpow : 2 ^ m = 2 ^ 3 := by
-    norm_num [← hm]
-  exact (Nat.pow_right_injective (a := 2) (by norm_num)) hpow
 
 private theorem psl28_prime_dvd_504_ne_two {r : ℕ}
     (hr : Nat.Prime r) (hr_dvd : r ∣ 504) (hr_ne_two : r ≠ 2) :
@@ -413,76 +406,6 @@ private theorem psl28_binary3_orderSeven_centralizer_no_order_three
     rw [hyzComm.orderOf_mul_eq_mul_orderOf_of_coprime hcop, hy, hzOrder]
   exact psl28_binary3_no_orderOf_21 (y * z) hyzOrder
 
-/--
-Internal `PSL(2,8)` matrix fact: every odd strongly-real prime order occurring
-inside the generated subgroup is `3` or `7`.
--/
-public theorem psl28_strongReal_prime_divisor_three_or_seven
-    {G : Type u} [Group G] [Finite G]
-    (Q0 K : Subgroup G) (t : G)
-    (m : ℕ) (hm0 : m ≠ 0) (hm8 : 8 = 2 ^ m)
-    (e : psl2GeneratedSubgroup Q0 K t ≃* PSL2BinaryMatrixGroup m)
-    {y : G} (hy : y ∈ psl2GeneratedSubgroup Q0 K t)
-    (hyStrong : IsStronglyReal y) {r : ℕ} (hr : Nat.Prime r)
-    (hyOrder : orderOf y = r) (hr_ne_two : r ≠ 2) :
-    r = 3 ∨ r = 7 := by
-  classical
-  have _ := hyStrong
-  have hm3 : m = 3 := psl28_transport_exponent_eq_three hm0 hm8
-  subst m
-  have horder_sub : orderOf (⟨y, hy⟩ : psl2GeneratedSubgroup Q0 K t) = r := by
-    simpa using hyOrder
-  have horder_matrix : orderOf (e (⟨y, hy⟩ : psl2GeneratedSubgroup Q0 K t)) = r := by
-    simp [horder_sub]
-  have hdvd : r ∣ Nat.card (PSL2BinaryMatrixGroup 3) := by
-    rw [← horder_matrix]
-    exact orderOf_dvd_natCard (e (⟨y, hy⟩ : psl2GeneratedSubgroup Q0 K t))
-  exact psl28_prime_dvd_504_ne_two hr (by simpa [psl28_binary3_card] using hdvd) hr_ne_two
-
-/--
-Internal `PSL(2,8)` matrix fact used in the seven branch: an order-seven
-element has no order-three centralizer element inside the generated
-`PSL(2,8)` copy. Any ambient transport to `K ⊔ W` and the final
-strong-real contradiction are Chapter II local arguments, not external
-source data.
--/
-public theorem psl28_orderSeven_centralizer_no_order_three
-    {G : Type u} [Group G] [Finite G]
-    (Q0 K : Subgroup G) (t : G)
-    (m : ℕ) (hm0 : m ≠ 0) (hm8 : 8 = 2 ^ m)
-    (e : psl2GeneratedSubgroup Q0 K t ≃* PSL2BinaryMatrixGroup m)
-    {y : G} (hy : y ∈ psl2GeneratedSubgroup Q0 K t)
-    (hyOrder : orderOf y = 7) :
-    ¬ ∃ z : G,
-      z ∈ psl2GeneratedSubgroup Q0 K t ∧
-        z ∈ Subgroup.centralizer ({y} : Set G) ∧
-          orderOf z = 3 := by
-  classical
-  have hm3 : m = 3 := psl28_transport_exponent_eq_three hm0 hm8
-  subst m
-  let L : Subgroup G := psl2GeneratedSubgroup Q0 K t
-  let yL : L := ⟨y, hy⟩
-  have hyLOrder : orderOf yL = 7 := by
-    simpa [yL] using hyOrder
-  have hyMatrixOrder : orderOf (e yL) = 7 := by
-    simp [hyLOrder]
-  intro h
-  apply psl28_binary3_orderSeven_centralizer_no_order_three hyMatrixOrder
-  rcases h with ⟨z, hzLmem, hzcent, hzOrder⟩
-  let zL : L := ⟨z, hzLmem⟩
-  refine ⟨e zL, ?_, ?_⟩
-  · rw [Subgroup.mem_centralizer_singleton_iff]
-    have hzy : z * y = y * z := Subgroup.mem_centralizer_singleton_iff.mp hzcent
-    have hzyL : zL * yL = yL * zL := by
-      apply Subtype.ext
-      simpa [zL, yL] using hzy
-    calc
-      e zL * e yL = e (zL * yL) := (e.map_mul zL yL).symm
-      _ = e (yL * zL) := by rw [hzyL]
-      _ = e yL * e zL := e.map_mul yL zL
-  · have hzLOrder : orderOf zL = 3 := by
-      simpa [zL] using hzOrder
-    simp [hzLOrder]
 
 private theorem sl2_orderThree_no_eigenvector
     {F : Type*} [Field F] [Finite F] [CharP F 2]

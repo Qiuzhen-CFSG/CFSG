@@ -10,18 +10,6 @@ universe v
 universe w
 universe u
 
-@[expose] public def theorem_8_11_statement
-    {G : Type u} [Group G] [Finite G]
-    (M MF Ms : Subgroup G) : Prop :=
-  IsMinCE G →
-    M ∈ section9MaximalSubgroups G →
-    section16MFSubgroup M MF →
-    msChoiceSource M MF Ms →
-      (∀ p : Nat.Primes, ∀ P : Sylow p.val Ms,
-        section10AmbientSylowSubgroup Ms P ≠ ⊥ →
-          Subgroup.normalizer (section10AmbientSylowSubgroup Ms P : Set G) ≤ M) ∧
-      IsHallSubgroup (subgroupPrimeSet MF) MF ∧
-        IsHallSubgroup (subgroupPrimeSet Ms) Ms
 
 /-- Peterfalvi `(8.12)`. -/
 
@@ -362,15 +350,5 @@ public theorem theorem_8_11_msChoiceSource_eq_msigma
   exact theorem_8_11_msChoice_eq_msigma (G := G) hM hMF
     (theorem_8_11_msChoice_of_source (G := G) hM hMF hMs)
 
-public theorem theorem_8_11
-    {G : Type u} [Group G] [Finite G]
-    (M MF Ms : Subgroup G) :
-    theorem_8_11_statement M MF Ms := by
-  dsimp [theorem_8_11_statement]
-  intro hG hM hMF hMs
-  letI : IsMinCE G := hG
-  have hMsBG : msChoice M MF Ms := by
-    exact theorem_8_11_msChoice_of_source (G := G) hM hMF hMs
-  exact theorem_8_11_of_msChoice (G := G) hM hMF hMsBG
 
 end Section8

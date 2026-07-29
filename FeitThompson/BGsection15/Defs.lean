@@ -110,19 +110,6 @@ Proposition 14.2(a) package, which is only available when `κ(M)` is nonempty. -
   ∃ _hHM : H ≤ M, ∃ _hNorm : (H.subgroupOf M).Normal,
     Nat.card (M ⧸ H.subgroupOf M) ∣ n
 
-/-- `Q/Q₀` is a minimal normal subgroup of `M/Q₀`, elementary abelian of
-order `q^p`. -/
-@[expose] public def section15QuotientMinimalNormalElementary
-    (M Q Q₀ : Subgroup G) (p q : Nat.Primes) : Prop :=
-  ∃ _hQ₀M : Q₀ ≤ M, ∃ _hQM : Q ≤ M, ∃ _hQ₀Q : Q₀ ≤ Q,
-    ∃ _hNorm : (Q₀.subgroupOf M).Normal,
-      let Qbar : Subgroup (M ⧸ Q₀.subgroupOf M) :=
-        (Q.subgroupOf M).map (QuotientGroup.mk' (Q₀.subgroupOf M))
-      Qbar ≠ ⊥ ∧ Qbar.Normal ∧
-        (∀ N : Subgroup (M ⧸ Q₀.subgroupOf M),
-          N.Normal → N ≤ Qbar → N = ⊥ ∨ N = Qbar) ∧
-          IsElementaryAbelian q.val Qbar ∧
-            Nat.card Qbar = q.val ^ p.val
 
 /-- `C` is the pullback to `H` of the centralizer of the image of `A` in
 `H/N`, viewed as an ambient subgroup of `G`. -/

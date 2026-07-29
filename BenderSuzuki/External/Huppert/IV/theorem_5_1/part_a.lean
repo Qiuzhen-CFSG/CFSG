@@ -89,62 +89,6 @@ public theorem hkt_exists_pElement_notMem_of_prime_dvd_quotient
     apply hyne
     rw [← hxy, hxq]
 
-private theorem hkt_burnside_iv51_normalizerIn_T_map_eq_inf_local
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ}
-    (T : Sylow q Q) (M : Subgroup Q) (M_le_T : M ≤ (T : Subgroup Q)) :
-    (Subgroup.normalizer
-        ((M.subgroupOf (T : Subgroup Q)) : Set (T : Subgroup Q))).map
-      (T : Subgroup Q).subtype =
-        (T : Subgroup Q) ⊓ Subgroup.normalizer (M : Set Q) := by
-  classical
-  ext x
-  constructor
-  · intro hx
-    rcases Subgroup.mem_map.mp hx with ⟨n, hn, rfl⟩
-    constructor
-    · exact n.property
-    · change ((n : (T : Subgroup Q)) : Q) ∈ Subgroup.normalizer (M : Set Q)
-      rw [Subgroup.mem_normalizer_iff]
-      intro z
-      constructor
-      · intro hzM
-        have hzT : z ∈ (T : Subgroup Q) := M_le_T hzM
-        let zT : (T : Subgroup Q) := ⟨z, hzT⟩
-        have hzSub : zT ∈ M.subgroupOf (T : Subgroup Q) := by
-          simpa [zT, Subgroup.mem_subgroupOf] using hzM
-        have hconj := (Subgroup.mem_normalizer_iff.mp hn zT).1 hzSub
-        simpa [zT, Subgroup.mem_subgroupOf] using hconj
-      · intro hzM
-        have hconjT : (n : Q) * z * (n : Q)⁻¹ ∈ (T : Subgroup Q) := M_le_T hzM
-        let zT : (T : Subgroup Q) := ⟨z, by
-          have hback : (n : Q)⁻¹ * ((n : Q) * z * (n : Q)⁻¹) * (n : Q) ∈
-              (T : Subgroup Q) := by
-            exact (T : Subgroup Q).mul_mem
-              ((T : Subgroup Q).mul_mem ((T : Subgroup Q).inv_mem n.property) hconjT)
-              n.property
-          simpa [mul_assoc] using hback⟩
-        have hzSub : n * zT * n⁻¹ ∈ M.subgroupOf (T : Subgroup Q) := by
-          simpa [zT, Subgroup.mem_subgroupOf] using hzM
-        have hback := (Subgroup.mem_normalizer_iff.mp hn zT).2 hzSub
-        simpa [zT, Subgroup.mem_subgroupOf] using hback
-  · intro hx
-    rcases hx with ⟨hxT, hxN⟩
-    let xT : (T : Subgroup Q) := ⟨x, hxT⟩
-    refine ⟨xT, ?_, rfl⟩
-    change xT ∈ Subgroup.normalizer ((M.subgroupOf (T : Subgroup Q)) : Set (T : Subgroup Q))
-    rw [Subgroup.mem_normalizer_iff]
-    intro z
-    constructor
-    · intro hzSub
-      have hzM : (z : Q) ∈ M := by
-        simpa [Subgroup.mem_subgroupOf] using hzSub
-      have hconj := (Subgroup.mem_normalizer_iff.mp hxN (z : Q)).1 hzM
-      simpa [xT, Subgroup.mem_subgroupOf] using hconj
-    · intro hzSub
-      have hzM : (x : Q) * (z : Q) * (x : Q)⁻¹ ∈ M := by
-        simpa [xT, Subgroup.mem_subgroupOf] using hzSub
-      have hback := (Subgroup.mem_normalizer_iff.mp hxN (z : Q)).2 hzM
-      simpa [xT, Subgroup.mem_subgroupOf] using hback
 
 private theorem hkt_burnside_iv51_M_le_Dsub
     {Q : Type u} [Group Q] {q : ℕ}
@@ -463,27 +407,6 @@ public theorem hkt_huppert_iv53_witness_of_not_pNormal
   exact hkt_burnside_iv51_witness_of_fields
     (Q := Q) (q := q) S T M hM_p hM_le_S hS_le_normalizer_M hM_le_T hfail
 
-/-- Huppert IV.5.1(a), full Burnside witness form at the strength of the book
-statement. -/
-public theorem huppert_IV_5_1_a_prime_power_witness_of_fields
-    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
-    (S T : Sylow q Q) (M : Subgroup Q)
-    (M_p : IsPGroup q M)
-    (M_le_S : M ≤ (S : Subgroup Q))
-    (S_le_normalizer_M : (S : Subgroup Q) ≤ Subgroup.normalizer (M : Set Q))
-    (M_le_T : M ≤ (T : Subgroup Q))
-    (not_T_le_normalizer_M :
-      ¬ (T : Subgroup Q) ≤ Subgroup.normalizer (M : Set Q)) :
-    ∃ A : Subgroup Q,
-      IsPGroup q A ∧
-        ∃ r : ℕ,
-          r.Prime ∧ r ≠ q ∧
-            ∃ x : Q,
-              IsPElement (p := r) x ∧
-                x ∈ Subgroup.normalizer (A : Set Q) ∧
-                  x ∉ Subgroup.centralizer (A : Set Q) :=
-  hkt_burnside_iv51_witness_of_fields
-    (Q := Q) (q := q) S T M M_p M_le_S S_le_normalizer_M M_le_T not_T_le_normalizer_M
 
 end External
 end BenderSuzuki

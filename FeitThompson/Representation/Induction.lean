@@ -45,64 +45,6 @@ public instance finiteDimensional_ind
   exact FiniteDimensional.of_surjective (Representation.Coinvariants.mk τ)
     (Representation.Coinvariants.mk_surjective τ)
 
-public noncomputable def resCoindIntertwiningEquiv
-    {H K U X : Type*} [Group H] [Group K] [Finite K]
-    [AddCommGroup U] [Module ℂ U]
-    [AddCommGroup X] [Module ℂ X]
-    (φ : H →* K) (σ : Representation ℂ K X) (ρ : Representation ℂ H U) :
-    Representation.IntertwiningMap (σ.comp φ) ρ ≃ₗ[ℂ]
-      Representation.IntertwiningMap σ (Representation.coind φ ρ) where
-  toFun := fun f => by
-    refine
-      { toLinearMap :=
-          (LinearMap.pi fun k => f.toLinearMap ∘ₗ σ k).codRestrict _ ?_
-        isIntertwining' := ?_ }
-    · intro x
-      rw [Representation.mem_coindV]
-      intro h k
-      have hf := congr($(f.isIntertwining' h) ((σ k) x))
-      simpa [LinearMap.pi_apply, LinearMap.comp_apply, σ.map_mul] using hf
-    · intro k
-      ext x h
-      simp [LinearMap.comp_apply, σ.map_mul]
-  invFun := fun f => by
-    refine
-      { toLinearMap := LinearMap.proj 1 ∘ₗ (Representation.coindV φ ρ).subtype ∘ₗ f.toLinearMap
-        isIntertwining' := ?_ }
-    intro h
-    ext x
-    change ((f ((σ (φ h)) x)).1 1) = ρ h ((f x).1 1)
-    have hf0 := f.isIntertwining' (φ h)
-    have hf1 : (f.toLinearMap ∘ₗ σ (φ h)) x = ((Representation.coind φ ρ) (φ h) ∘ₗ f.toLinearMap) x :=
-      congrArg (fun T : X →ₗ[ℂ] Representation.coindV φ ρ => T x) hf0
-    have hf : ((f ((σ (φ h)) x)).1 1) = (((Representation.coind φ ρ) (φ h) (f x)).1 1) := by
-      simpa [LinearMap.comp_apply] using congrArg (fun y : Representation.coindV φ ρ => y.1 1) hf1
-    have hx : (f x).1 (φ h) = ρ h ((f x).1 1) := by
-      simpa using (f x).2 h 1
-    calc
-      ((f ((σ (φ h)) x)).1 1) = (((Representation.coind φ ρ) (φ h) (f x)).1 1) := hf
-      _ = (f x).1 (φ h) := by simp [Representation.coind]
-      _ = ρ h ((f x).1 1) := hx
-  map_add' := by
-    intro f g
-    ext x k
-    rfl
-  map_smul' := by
-    intro a f
-    ext x k
-    rfl
-  left_inv f := by
-    ext x
-    simp
-  right_inv f := by
-    ext x k
-    change ((f (σ k x)).1 1) = (f x).1 k
-    have hf0 := f.isIntertwining' k
-    have hf1 : (f.toLinearMap ∘ₗ σ k) x = ((Representation.coind φ ρ) k ∘ₗ f.toLinearMap) x :=
-      congrArg (fun T : X →ₗ[ℂ] Representation.coindV φ ρ => T x) hf0
-    have hf : ((f (σ k x)).1 1) = (((Representation.coind φ ρ) k (f x)).1 1) := by
-      simpa [LinearMap.comp_apply] using congrArg (fun y : Representation.coindV φ ρ => y.1 1) hf1
-    simpa [Representation.coind] using hf
 
 noncomputable def indToCoindAux
     (S : Subgroup G) (ρ : Representation ℂ S A) (g : G) :
@@ -906,55 +848,6 @@ public lemma representation_character_inv_eq_star_character
       simpa using trace_pow_pred_eq_star_trace_of_pow_eq_one (f := ρ g) (n := n) hn hpow
     _ = star (ρ.character g) := rfl
 
-
-/-- Frobenius reciprocity written as an equality of character inner products. -/
-public theorem frobenius_reciprocity_character
-    (S : Subgroup G) (ρ : Representation ℂ S V) (σ : Representation ℂ G W) :
-    (Nat.card G : ℂ)⁻¹ * ∑ g : G,
-        (Representation.ind S.subtype ρ).character g * star (σ.character g)
-      =
-    (Nat.card S : ℂ)⁻¹ * ∑ s : S,
-        ρ.character s * star (σ.character s) := by
-  have hcardG_ne : (Nat.card G : ℂ) ≠ 0 := by
-    exact_mod_cast (Nat.card_ne_zero.mpr ⟨inferInstance, inferInstance⟩ : Nat.card G ≠ 0)
-  have hcardS_ne : (Nat.card S : ℂ) ≠ 0 := by
-    exact_mod_cast (Nat.card_ne_zero.mpr ⟨inferInstance, inferInstance⟩ : Nat.card S ≠ 0)
-  letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcardG_ne
-  letI : Invertible (Nat.card S : ℂ) := invertibleOfNonzero hcardS_ne
-  have hindcoind :
-      (Representation.ind S.subtype ρ).character =
-        (Representation.coind S.subtype ρ).character :=
-    Representation.char_iso (indCoindEquiv S ρ)
-  rw [hindcoind]
-  rw [show (Nat.card G : ℂ)⁻¹ * ∑ g : G,
-      (Representation.coind S.subtype ρ).character g * star (σ.character g)
-      =
-      (Nat.card G : ℂ)⁻¹ * ∑ g : G,
-        (Representation.coind S.subtype ρ).character g * σ.character g⁻¹ by
-      congr 1
-      apply Finset.sum_congr rfl
-      intro g hg
-      rw [← representation_character_inv_eq_star_character σ g]]
-  rw [Representation.card_inv_mul_sum_char_mul_char_eq_finrank
-    (ρ := σ) (σ := Representation.coind S.subtype ρ)]
-  have hright :
-      (Nat.card S : ℂ)⁻¹ * ∑ s : S, ρ.character s * star (σ.character (s : G))
-      =
-      Module.finrank ℂ (Representation.IntertwiningMap (σ.comp S.subtype) ρ) := by
-    rw [show (Nat.card S : ℂ)⁻¹ * ∑ s : S, ρ.character s * star (σ.character (s : G))
-        =
-        (Nat.card S : ℂ)⁻¹ * ∑ s : S,
-          ρ.character s * Representation.character (σ.comp S.subtype) s⁻¹ by
-        congr 1
-        apply Finset.sum_congr rfl
-        intro s hs
-        rw [(representation_character_inv_eq_star_character σ (s : G)).symm]
-        rfl]
-    simpa using
-      (Representation.card_inv_mul_sum_char_mul_char_eq_finrank
-        (ρ := (σ.comp S.subtype)) (σ := ρ))
-  rw [hright]
-  exact_mod_cast (resCoindIntertwiningEquiv S.subtype σ ρ).finrank_eq.symm
 
 end
 

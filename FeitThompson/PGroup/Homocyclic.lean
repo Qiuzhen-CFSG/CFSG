@@ -34,21 +34,6 @@ public def standardHomocyclicCoverCoordinateEquiv (κ : Type u) (q : ℕ) :
     (κ → ZMod q) ≃+ Additive (StandardHomocyclicCover κ q) :=
   (AddEquiv.toAdditive_toMultiplicative (G := κ → ZMod q)).symm
 
-/-- The standard homocyclic coordinate equivalence is the additive form of the
-type-tag equivalence. -/
-public theorem standardHomocyclicCoverCoordinateEquiv_apply
-    (κ : Type u) (q : ℕ) (x : κ → ZMod q) :
-    standardHomocyclicCoverCoordinateEquiv κ q x =
-      Additive.ofMul (Multiplicative.ofAdd x) := by
-  rfl
-
-/-- The inverse standard coordinate equivalence removes the additive and
-multiplicative type tags. -/
-public theorem standardHomocyclicCoverCoordinateEquiv_symm_apply
-    (κ : Type u) (q : ℕ) (x : StandardHomocyclicCover κ q) :
-    (standardHomocyclicCoverCoordinateEquiv κ q).symm (Additive.ofMul x) =
-      Multiplicative.toAdd x := by
-  rfl
 
 /-- The standard homocyclic cover is commutative. -/
 public theorem standardHomocyclicCover_commutative (κ : Type u) (q : ℕ) :
@@ -224,22 +209,6 @@ public theorem standardHomocyclicCoverModPLinearActionOfEquiv_coordinate
   dsimp [standardHomocyclicCoverModPLinearActionOfEquiv]
   rfl
 
-/-- A quotient map from the standard mod-`p` cover to a `ZMod p`-module fixes
-the number of coordinates. -/
-public theorem standardHomocyclicCoverQuotientEquiv_card_index
-    {V κ : Type u} {p : ℕ} [Fact p.Prime]
-    [AddCommGroup V] [Module (ZMod p) V] [Fintype κ]
-    (quotientToV : StandardHomocyclicCover κ p ≃* Multiplicative V) :
-    Fintype.card κ = Module.finrank (ZMod p) V := by
-  classical
-  let eAdd : (κ → ZMod p) ≃+ V :=
-    (standardHomocyclicCoverCoordinateEquiv κ p).trans
-      (MulEquiv.toAdditive quotientToV)
-  let eLin : (κ → ZMod p) ≃ₗ[ZMod p] V :=
-    eAdd.toLinearEquiv (fun c x => by
-      simpa using (ZMod.map_smul eAdd.toAddMonoidHom c x))
-  rw [← eLin.finrank_eq]
-  exact (Module.finrank_fintype_fun_eq_card (ZMod p)).symm
 
 /-- A standard mod-`p` cover equivalent to a nontrivial group has at least one
 coordinate. -/
@@ -259,17 +228,6 @@ public theorem standardHomocyclicCoverQuotientEquiv_nonempty_index
     exact Subsingleton.elim v' w'⟩
   exact not_subsingleton V hVSubsingleton
 
-/-- A source-chosen quotient map from the standard mod-`p` cover to an
-elementary abelian group fixes the number of coordinates. -/
-public theorem standardHomocyclicCoverQuotientEquiv_card_matrixIndex
-    {V κ : Type u} [Group V] [Fintype κ]
-    {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
-    (quotientToV : StandardHomocyclicCover κ p ≃* V) :
-    Fintype.card κ = Module.finrank (ZMod p) (Additive V) := by
-  exact standardHomocyclicCoverQuotientEquiv_card_index
-    (p := p)
-    (quotientToV := quotientToV.trans
-      (MulEquiv.toMultiplicative_toAdditive (G := V)).symm)
 
 /-- A standard mod-`p` cover equivalent to a nontrivial group has at least one
 coordinate. -/

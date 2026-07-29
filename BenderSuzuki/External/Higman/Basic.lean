@@ -380,34 +380,6 @@ public theorem isPGroup_of_isSuzukiTwoGroup {P : Type u} [Group P]
   rcases card_eq_of_isSuzukiTwoGroup hP with ⟨n, hn⟩
   exact IsPGroup.of_card hn
 
-/-- Every element of a Higman Suzuki `2`-group has `2`-power order. -/
-public theorem exists_pow_two_eq_one_of_isSuzukiTwoGroup {P : Type u} [Group P]
-    (hP : IsSuzukiTwoGroup P) (x : P) : ∃ n : ℕ, x ^ (2 ^ n) = 1 := by
-  rcases card_eq_of_isSuzukiTwoGroup hP with ⟨n, hn⟩
-  exact ⟨n, by rw [← hn]; exact pow_card_eq_one'⟩
-
-/-- Any subgroup of a Higman Suzuki `2`-group has a positive `2`-power exponent
-bound inherited from the ambient group. -/
-public theorem subgroup_exponent_bound_of_isSuzukiTwoGroup {P : Type u} [Group P]
-    (hP : IsSuzukiTwoGroup P) (A : Subgroup P) :
-    ∃ exponent : ℕ, 0 < exponent ∧ ∀ x : A, x ^ (2 ^ exponent) = 1 := by
-  rcases card_eq_of_isSuzukiTwoGroup hP with ⟨n, hn⟩
-  haveI : Finite P := finite_of_isSuzukiTwoGroup hP
-  rcases hP.2.2.1 with ⟨x, y, _hx, _hy, hxy⟩
-  have hnontrivial : Nontrivial P := ⟨⟨x, y, hxy⟩⟩
-  have hcard_gt : 1 < Nat.card P := Finite.one_lt_card_iff_nontrivial.mpr hnontrivial
-  have hnpos : 0 < n := by
-    exact Nat.pos_of_ne_zero (by
-      intro hn0
-      have hcard_one : Nat.card P = 1 := by
-        simpa [hn0] using hn
-      exact (ne_of_gt hcard_gt) hcard_one)
-  refine ⟨n, hnpos, ?_⟩
-  intro x
-  apply Subtype.ext
-  change (x : P) ^ (2 ^ n) = (1 : P)
-  rw [← hn]
-  exact pow_card_eq_one'
 
 /-- Invariance under Higman's chosen automorphism group `X`. -/
 @[expose] public def IsXInvariantSubgroup

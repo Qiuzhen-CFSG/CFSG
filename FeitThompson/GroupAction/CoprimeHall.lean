@@ -57,45 +57,6 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
     fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
       (G := G) (A := A) hsolv hcoprime H hHinv
 
-public theorem commutatorAction_map_mk'_le_commutatorAction_quotient
-    {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H) :
-    letI : MulDistribMulAction A (G ⧸ H) :=
-      quotientMulDistribMulAction (A := A) (G := G) H hHinv
-    (commutatorAction (A := A) (G := G)).map (QuotientGroup.mk' H) ≤
-      commutatorAction (A := A) (G := G ⧸ H) := by
-  classical
-  letI : MulDistribMulAction A (G ⧸ H) :=
-    quotientMulDistribMulAction (A := A) (G := G) H hHinv
-  letI : MulAction.QuotientAction A H := quotientAction_of_isInvariant (A := A) H hHinv
-  -- Push the action commutator generators through the quotient map.
-  let S : Set G := {x : G | ∃ a : A, ∃ g : G, x = g⁻¹ * (a • g)}
-  let T : Set (G ⧸ H) := {x : G ⧸ H | ∃ a : A, ∃ g : G ⧸ H, x = g⁻¹ * (a • g)}
-  have hS : commutatorAction (A := A) (G := G) = Subgroup.closure S := by
-    simpa [S] using (commutatorAction_eq_closure (G := G) (A := A))
-  have hT : commutatorAction (A := A) (G := G ⧸ H) = Subgroup.closure T := by
-    simpa [T] using (commutatorAction_eq_closure (G := G ⧸ H) (A := A))
-  -- Rewrite both sides using the closure descriptions.
-  rw [hS, hT]
-  -- `map` of a closure is the closure of the image.
-  -- (`MonoidHom.map_closure` is stated with this equality.)
-  have hmap : (Subgroup.closure S).map (QuotientGroup.mk' H) = Subgroup.closure ((QuotientGroup.mk' H) '' S) := by
-    simpa using (MonoidHom.map_closure (f := QuotientGroup.mk' H) S)
-  rw [hmap]
-  refine (Subgroup.closure_le (K := Subgroup.closure T)).2 ?_
-  intro x hx
-  rcases hx with ⟨y, hyS, rfl⟩
-  rcases hyS with ⟨a, g, rfl⟩
-  -- The image of an action commutator is an action commutator in the quotient.
-  refine Subgroup.subset_closure ?_
-  refine ⟨a, (QuotientGroup.mk' H g), ?_⟩
-  calc
-    QuotientGroup.mk' H (g⁻¹ * (a • g)) =
-        (QuotientGroup.mk' H g)⁻¹ * QuotientGroup.mk' H (a • g) := by
-          simp
-    _ = (QuotientGroup.mk' H g)⁻¹ * (a • (QuotientGroup.mk' H g)) := by
-          -- `a` acts on the quotient by `a • (mk g) = mk (a • g)`.
-          simp
 
 public theorem commutatorAction_le_piCore_of_hall_complement_le_fixedPointSubgroup
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]

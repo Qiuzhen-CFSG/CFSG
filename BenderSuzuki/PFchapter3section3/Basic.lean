@@ -20,44 +20,6 @@ open PFchapter3section1
 # Basic interfaces for Peterfalvi, Part II, Chapter III, Section 3
 -/
 
-/-- The coherent scalar-action data fixed immediately before the Chapter III,
-Section 3 proposition.  It identifies the actual `K`-actions on `S / Z(S)`
-and `Z(S)` with the two scalar actions displayed in the source, and identifies
-the ambient subgroup `Q0` with `Z(S)`.
-
-This deliberately does not contain the quadratic extension, the action of
-`W`, the cocycle `phi`, or either semidirect-product equivalence constructed by
-the proposition. -/
-public def TypeBScalarActionData
-    (G : Type*) [Group G] (K Q0 S : Subgroup G) : Prop :=
-  ∃ (n : ℕ) (_hn : n ≠ 0)
-      (theta : BinaryGaloisField n ≃+* BinaryGaloisField n)
-      (rhoS : K →* MulAut S)
-      (rhoQ : K →* MulAut (S ⧸ Subgroup.center S))
-      (rhoZ : K →* MulAut (Subgroup.center S))
-      (eK : K ≃* (BinaryGaloisField n)ˣ)
-      (eQ : (S ⧸ Subgroup.center S) ≃*
-        Multiplicative (BinaryGaloisField n × BinaryGaloisField n))
-      (eZ : Subgroup.center S ≃* Multiplicative (BinaryGaloisField n))
-      (eQ0 : Q0 ≃* Subgroup.center S),
-    Odd (orderOf theta) ∧
-      (∀ k : K, ∀ x : S,
-        (((rhoS k x : S) : G)) =
-          (k : G) * (x : G) * (k : G)⁻¹) ∧
-      (∀ k : K, ∀ x : S,
-        rhoQ k (QuotientGroup.mk' (Subgroup.center S) x) =
-          QuotientGroup.mk' (Subgroup.center S) (rhoS k x)) ∧
-      (∀ k : K, ∀ z : Subgroup.center S,
-        ((rhoZ k z : Subgroup.center S) : S) = rhoS k (z : S)) ∧
-      (∀ z : Q0, (((eQ0 z : Subgroup.center S) : S) : G) = (z : G)) ∧
-      (∀ k : K, ∀ x : S ⧸ Subgroup.center S,
-        (eQ (rhoQ k x)).toAdd =
-          ((eK k : BinaryGaloisField n) * (eQ x).toAdd.1,
-            (eK k : BinaryGaloisField n) * (eQ x).toAdd.2)) ∧
-      ∀ k : K, ∀ z : Subgroup.center S,
-        (eZ (rhoZ k z)).toAdd =
-          (eK k : BinaryGaloisField n) * theta (eK k : BinaryGaloisField n) *
-            (eZ z).toAdd
 
 /-- The coherent coordinate and action model asserted by the Chapter III,
 Section 3 proposition.  Chapter IV consumes this already-proved model as its

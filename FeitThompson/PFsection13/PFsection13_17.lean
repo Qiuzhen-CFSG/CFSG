@@ -24,27 +24,6 @@ universe u
 
 /-! ## (13.17) -/
 
-/-- Peterfalvi `(13.17)`. -/
-@[expose] public def theorem_13_17_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    Section8.typeIIDefinitionData Smax P →
-      L ∈ section9MaximalSubgroups G →
-        Subgroup.normalizer (U : Set G) ≤ L →
-          section16MFSubgroup L H →
-            Section7.frobeniusWithKernel L H ∧
-              U ≤ H ∧
-              (section12ComplementIn L H W1 ∨
-                ∃ y : G, y ∈ Q ∧
-                  section12ComplementIn L H (W1 ⊔ W2.conjBy y))
-
 
 private theorem section13_theorem_13_17_typeI_of_not_conj_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -80,32 +59,6 @@ private theorem section13_theorem_13_17_typeI_of_not_conj_sourceContext
       le_antisymm (hMF.2 H' hMF'.1) (hMF'.2 H hMF.1)
     simpa [hH'] using hTypeI'
 
-private theorem section13_theorem_13_17_theorem_12_7_sourceData_of_sourceContext
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ)
-    (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (_hLmax : L ∈ section9MaximalSubgroups G)
-    (_hMF : section16MFSubgroup L H)
-    (_hTypeI : Section8.typeIDefinitionData L H) :
-    Section12.theorem_12_7_source_data L H := by
-  rcases hsource with
-    ⟨_hcase, _hptypeS, _hptypeT, _hp_card, _hq_card, _hC, _hD, _hc_card,
-      _hd_card, _hU_card, _hV_card, _hSfam, _hTfam, _hDadeS, _hDadeT,
-      _hnotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
-      _hChoice, hMin, _hFourSixS, _hFourSixT⟩
-  letI : IsMinCE G := hMin
-  constructor
-  · intro hLmax' hMF' hTypeI' hnotFrob
-    exact False.elim
-      (hnotFrob (Section12.theorem_12_7 L H hLmax' hMF' hTypeI'))
-  · intro K' P0 p h128
-    exact Section12.theorem_12_16 L H K' P0 p h128
 
 private theorem section13_theorem_13_17_frobenius_of_typeI
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -893,13 +846,6 @@ private theorem section13_complementIn_of_isComplement'_subgroupOf
       congrArg Subtype.val (by simpa using hxbot)
     simpa [xD] using hxbot_val
 
-private theorem section13_frobeniusWithKernel_exists_complementIn
-    {G : Type u} [Group G] {L H : Subgroup G}
-    (hfrob : Section7.frobeniusWithKernel L H) :
-    ∃ E : Subgroup G, section12ComplementIn L H E := by
-  rcases hfrob with ⟨hHL, _hHnormal, R, hcomp, _hHne, _hRne, _hfixedR⟩
-  exact ⟨section8SubgroupInAmbient R,
-    section13_complementIn_of_isComplement'_subgroupOf hHL R hcomp⟩
 
 private theorem section13_subgroupOf_ne_bot_of_ne_bot
     {G : Type u} [Group G] {H L : Subgroup G}
@@ -2104,33 +2050,6 @@ private theorem section13_theorem_13_17_W1_containing_complement_sourceData_of_s
       p q u v c d _hsource _hTypeII _hLmax _hNormUleL _hMF
       _hfrob hUleL _hW1leL)
 
-private theorem section13_pCore_le_sylow
-    {E : Type u} [Group E] [Finite E] {p : ℕ} [Fact p.Prime]
-    (S : Sylow p E) :
-    pCore p E ≤ (S : Subgroup E) := by
-  have hsup_p : IsPGroup p (((S : Subgroup E) ⊔ pCore p E : Subgroup E)) := by
-    exact IsPGroup.to_sup_of_normal_right (p := p) (H := (S : Subgroup E))
-      (K := pCore p E) S.isPGroup' (pCore_isPGroup (G := E) (p := p))
-  have hEq : (((S : Subgroup E) ⊔ pCore p E : Subgroup E)) = (S : Subgroup E) :=
-    S.is_maximal' hsup_p le_sup_left
-  exact sup_eq_left.mp hEq
-
-private theorem section13_pSubgroup_le_centralizer_pCore_of_cyclic_sylow
-    {E : Type u} [Group E] [Finite E] {p : ℕ} [Fact p.Prime]
-    {P : Subgroup E} (hPp : IsPGroup p P)
-    (hcycSylow : ∀ S : Sylow p E, IsCyclic (S : Subgroup E)) :
-    P ≤ Subgroup.centralizer (pCore p E : Set E) := by
-  classical
-  obtain ⟨S, hP_le_S⟩ := IsPGroup.exists_le_sylow (G := E) (p := p) hPp
-  have hcore_le_S : pCore p E ≤ (S : Subgroup E) :=
-    section13_pCore_le_sylow S
-  intro x hxP
-  rw [Subgroup.mem_centralizer_iff]
-  intro y hyCore
-  have hxS : x ∈ (S : Subgroup E) := hP_le_S hxP
-  have hyS : y ∈ (S : Subgroup E) := hcore_le_S hyCore
-  haveI : IsMulCommutative (S : Subgroup E) := inferInstance
-  exact setLike_mul_comm (s := (S : Subgroup E)) hyS hxS
 
 private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
     {E : Type u} [Group E] [Finite E] [IsSolvable E] {P : Subgroup E}
@@ -2811,97 +2730,6 @@ private theorem section13_E_quotient_Q_image_card_eq_p_of_QW2_classifierData
     exact False.elim (hEbar_ne_bot hEbar_bot)
   · exact hcard_p
 
-private theorem section13_E_quotient_Q_image_eq_top_of_QW2_classifierData
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 Q : Subgroup G) (p q : ℕ)
-    (hdata : theorem_13_17_QW2ClassifierSourceData W1 W2 Q p q)
-    (E : Subgroup G)
-    (hEleQW2 : E ≤ Q ⊔ W2)
-    (hEnotleQ : ¬ E ≤ Q) :
-    let K : Subgroup G := Q ⊔ W2
-    let QK : Subgroup K := Q.subgroupOf K
-    haveI : QK.Normal := by
-      simpa [K, QK] using
-        section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
-    (E.subgroupOf K).map (QuotientGroup.mk' QK) = ⊤ := by
-  classical
-  let K : Subgroup G := Q ⊔ W2
-  let QK : Subgroup K := Q.subgroupOf K
-  have hQnorm : QK.Normal := by
-    simpa [K, QK] using
-      section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
-  letI : QK.Normal := hQnorm
-  let π : K →* K ⧸ QK := QuotientGroup.mk' QK
-  let Ebar : Subgroup (K ⧸ QK) := (E.subgroupOf K).map π
-  have hEbar_card : Nat.card Ebar = p := by
-    simpa [K, QK, π, Ebar] using
-      section13_E_quotient_Q_image_card_eq_p_of_QW2_classifierData
-        W1 W2 Q p q hdata E hEleQW2 hEnotleQ
-  have hquotcard : Nat.card (K ⧸ QK) = p := by
-    simpa [K, QK] using
-      section13_Q_sup_W2_quotient_Q_card_eq_p_of_QW2_classifierData W1 W2 Q p q hdata
-  exact Subgroup.eq_top_of_card_eq (H := Ebar) (hEbar_card.trans hquotcard.symm)
-
-private theorem section13_W2_element_lift_E_mod_Q_of_QW2_classifierData
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 Q : Subgroup G) (p q : ℕ)
-    (hdata : theorem_13_17_QW2ClassifierSourceData W1 W2 Q p q)
-    (E : Subgroup G)
-    (hEleQW2 : E ≤ Q ⊔ W2)
-    (hEnotleQ : ¬ E ≤ Q)
-    (w : G)
-    (hw : w ∈ W2) :
-    ∃ e : G, e ∈ E ∧ ∃ x : G, x ∈ Q ∧ e = x * w := by
-  classical
-  let K : Subgroup G := Q ⊔ W2
-  let QK : Subgroup K := Q.subgroupOf K
-  have hQnorm : QK.Normal := by
-    simpa [K, QK] using
-      section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
-  letI : QK.Normal := hQnorm
-  let π : K →* K ⧸ QK := QuotientGroup.mk' QK
-  let Esub : Subgroup K := E.subgroupOf K
-  let Ebar : Subgroup (K ⧸ QK) := Esub.map π
-  have hEbar_top : Ebar = ⊤ := by
-    simpa [K, QK, π, Esub, Ebar] using
-      section13_E_quotient_Q_image_eq_top_of_QW2_classifierData
-        W1 W2 Q p q hdata E hEleQW2 hEnotleQ
-  have hwK : w ∈ K := (show W2 ≤ Q ⊔ W2 from le_sup_right) hw
-  let wK : K := ⟨w, hwK⟩
-  have hπw : π wK ∈ Ebar := by
-    rw [hEbar_top]
-    trivial
-  rcases hπw with ⟨eK, heEsub, hπe⟩
-  have hdivQK : eK / wK ∈ QK :=
-    (QuotientGroup.eq_iff_div_mem (N := QK) (x := eK) (y := wK)).1 hπe
-  have hxQ : ((eK : G) * w⁻¹) ∈ Q := by
-    simpa [QK, wK, div_eq_mul_inv, Subgroup.mem_subgroupOf] using hdivQK
-  have heE : (eK : G) ∈ E := by
-    simpa [Esub, Subgroup.mem_subgroupOf] using heEsub
-  refine ⟨(eK : G), heE, (eK : G) * w⁻¹, hxQ, ?_⟩
-  group
-
-private theorem section13_Q_sup_E_eq_Q_sup_W2_of_QW2_classifierData
-    {G : Type u} [Group G] [Finite G]
-    (W1 W2 Q : Subgroup G) (p q : ℕ)
-    (hdata : theorem_13_17_QW2ClassifierSourceData W1 W2 Q p q)
-    (E : Subgroup G)
-    (hEleQW2 : E ≤ Q ⊔ W2)
-    (hEnotleQ : ¬ E ≤ Q) :
-    Q ⊔ E = Q ⊔ W2 := by
-  refine le_antisymm ?_ ?_
-  · exact sup_le le_sup_left hEleQW2
-  · refine sup_le le_sup_left ?_
-    intro w hw
-    rcases section13_W2_element_lift_E_mod_Q_of_QW2_classifierData
-        W1 W2 Q p q hdata E hEleQW2 hEnotleQ w hw with
-      ⟨e, heE, x, hxQ, heq⟩
-    have hxinvQ : x⁻¹ ∈ Q := Q.inv_mem hxQ
-    have hprod : x⁻¹ * e ∈ Q ⊔ E := Subgroup.mul_mem_sup hxinvQ heE
-    have hw_eq : w = x⁻¹ * e := by
-      rw [heq]
-      group
-    simpa [hw_eq] using hprod
 
 private theorem section13_E_card_eq_W1_mul_p_of_QW2_classifierData
     {G : Type u} [Group G] [Finite G]

@@ -203,9 +203,6 @@ public theorem commutator_le_centralizerIn_of_map_le_centralizerIn_ofQuotient {G
   exact ⟨hzK, hzker⟩
 
 
-
-
-
 public theorem fixedSubspace_subgroupOf_eq {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (S R : Subgroup G) (hR_le : R ≤ S) :
@@ -234,10 +231,6 @@ public theorem centralizerIn_subgroupOf_map_eq {G : Type*} [Group G] {F : Type*}
     rw [Representation.centralizerIn] at hz
     refine ⟨⟨z, hH_le hz.1⟩, ⟨hz.1, ?_⟩, rfl⟩
     simpa [MonoidHom.mem_ker] using hz.2
-
-
-
-
 
 
 public theorem commutator_le_centralizerIn_of_subgroupOf_eq {G : Type*} [Group G]
@@ -290,51 +283,6 @@ public theorem commutator_le_centralizerIn_iff_le_ker {G : Type*} [Group G]
   exact
     le_centralizerIn_iff_le_ker (ρ := ρ)
       (H := ⁅R, K⁆) (K := K) (Subgroup.commutator_le_right (H₁ := R) (H₂ := K))
-
-
-
-
-
-
-
-
-
-
-
-
-public theorem false_of_fixedSubspace_eq_bot_of_quotient_frobenius
-    {G : Type*} [Group G] [Finite G] {F : Type*} [Field F] {V : Type*}
-    [AddCommGroup V] [Module F V] (K R N : Subgroup G) [N.Normal]
-    (ρ : Representation F G V) [Representation.IsTrivial (ρ.comp N.subtype)]
-    (hfrob :
-      IsFrobeniusGroupWithKernelComplement
-        (K.map (QuotientGroup.mk' N)) (R.map (QuotientGroup.mk' N)))
-    (hchar : ringChar F = 0 ∨
-      (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
-    (hfixR : ρ.fixedSubspace R = ⊥) (hK_nontrivial : ¬ K ≤ ρ.ker) :
-    False := by
-  let q : G →* G ⧸ N := QuotientGroup.mk' N
-  have hchar_quot :
-      ringChar F = 0 ∨
-        (Nat.Prime (ringChar F) ∧
-          Nat.Coprime (ringChar F) (Nat.card (K.map q))) := by
-    exact
-      hchar_of_card_dvd (G := G) (F := F) hchar <|
-        dvd_trans (natCard_map_mk'_dvd_card K N) (Subgroup.card_subgroup_dvd_card K)
-  have hfixR_quot :
-      (Representation.ofQuotient ρ N).fixedSubspace (R.map q) = ⊥ := by
-    rw [fixedSubspace_map_mk'_ofQuotient_eq (ρ := ρ) (N := N) (R := R)]
-    exact hfixR
-  have hK_nontrivial_quot :
-      ¬ K.map q ≤ (Representation.ofQuotient ρ N).ker :=
-    not_map_le_ker_of_not_le_ker_of_quotient (ρ := ρ) (N := N) (K := K) hK_nontrivial
-  exact
-    lemma_3_3 (K.map q) (R.map q) (Representation.ofQuotient ρ N) hfrob hchar_quot
-      hK_nontrivial_quot hfixR_quot
-
-
-
-
 
 
 set_option backward.isDefEq.respectTransparency false in

@@ -125,20 +125,6 @@ private theorem section9_t91_generated_le_of_centralizers_le
     section9_t91_family_member_le_of_centralizers_le
       hB.2 hBnoncyclic hcentralizers hK
 
-omit [IsMinCE G] in
-private theorem section9_exists_mem_PPrimeStarFamily_of_mem_family
-    {p : ℕ} [Fact p.Prime] {H A R : Subgroup G}
-    (hR : R ∈ section9PPrimeFamily H A p) :
-    ∃ Q : Subgroup G, Q ∈ section9PPrimeStarFamily H A p ∧ R ≤ Q := by
-  classical
-  let s : Set (Subgroup G) := {Q | R ≤ Q ∧ Q ∈ section9PPrimeFamily H A p}
-  have hsfin : s.Finite := Set.toFinite s
-  have hsne : s.Nonempty := ⟨R, le_rfl, hR⟩
-  obtain ⟨Q, hQmax⟩ := hsfin.exists_maximal hsne
-  refine ⟨Q, ?_, hQmax.1.1⟩
-  refine ⟨hQmax.1.2, ?_⟩
-  intro S hQS hSfam
-  exact le_antisymm (hQmax.2 ⟨hQmax.1.1.trans hQS, hSfam⟩ hQS) hQS
 
 omit [Finite G] [IsMinCE G] in
 private theorem section9_PPrimeFamily_of_le_normalizer
@@ -307,12 +293,6 @@ public theorem section9_normalizer_le_normalizer_map_subtype_of_characteristic
   exact ⟨(Subgroup.normalizerMonoidHom H gH) xH, hxImage, by
     simp [gH, mul_assoc, Subgroup.normalizerMonoidHom_apply_apply_coe]⟩
 
-omit [Finite G] [IsMinCE G] in
-private theorem section9_centerIn_characteristic
-    (H : Subgroup G) [H.Characteristic] :
-    (centerIn (G := G) H).Characteristic := by
-  rw [centerIn_eq_map_center_local]
-  exact characteristic_map_subtype_of_characteristic H (Subgroup.center H)
 
 omit [Finite G] [IsMinCE G] in
 private theorem section9_normalizer_le_normalizer_thompsonSubgroup
@@ -643,12 +623,6 @@ private theorem section9_sup_ne_bot_of_left_ne_bot
   apply hA
   exact le_bot_iff.mp (le_sup_left.trans (le_of_eq hsup))
 
-omit [Finite G] [IsMinCE G] in
-private theorem section9_sup_ne_bot_of_right_ne_bot
-    {A B : Subgroup G} (hB : B ≠ ⊥) :
-    A ⊔ B ≠ ⊥ := by
-  rw [sup_comm]
-  exact section9_sup_ne_bot_of_left_ne_bot hB
 
 omit [Finite G] [IsMinCE G] in
 private theorem section9_sup_isMulCommutative_of_le_centralizer

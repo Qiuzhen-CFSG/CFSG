@@ -145,122 +145,6 @@ private theorem section13_theorem_13_10_exists_regular_tau3_sylow
       (Q := section10AmbientSylowSubgroup E₃ S) (q := q) hQq hQcyc hPnormQ hcop hnotCent
   exact ⟨q, section10AmbientSylowSubgroup E₃ S, hqτ3, hQM, hQ_E3, hPnormQ, hCQ, hQbot, hQq⟩
 
-private theorem section13_theorem_13_10_lemma_12_18_data
-    {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E₁)
-    (hPnotCentE₃ : ¬ P ≤ Subgroup.centralizer (E₃ : Set G)) :
-    ∃ Q : Subgroup G,
-      Q ≤ E₃ ∧
-        subgroupCentralizerIn (section10Malpha M) P ≠ ⊥ ∧
-          subgroupCentralizerIn (section10Malpha M) (P ⊔ Q) = ⊥ := by
-  classical
-  rcases section13_theorem_13_10_exists_regular_tau3_sylow
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
-      hM hE hP hPnotCentE₃ with
-    ⟨q, Q, hqτ3, hQ_M, hQ_E₃, hPnormQ, hCQ, hQne, hQq⟩
-  have hpτ1 : p ∈ section12Tau1Primes M :=
-    section13_tau1_of_prime_order_le_E1
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) hE hP
-  rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
-    ⟨hP_E₁, hPcard⟩
-  have hE₁_le_E : E₁ ≤ E :=
-    (section12_E1_hall_in_E (G := G) hE.2.1 hE.2.2.1).1
-  have hP_M : P ∈ section10PrimeOrderSubgroupsIn p M := by
-    simpa [section10PrimeOrderSubgroupsIn] using
-      ⟨hP_E₁.trans (hE₁_le_E.trans hE.1.2.1), hPcard⟩
-  have hqP : q ∈ section10PPrimeSet p :=
-    section13_pPrimeSet_of_fixedpoint_free_sylow
-      (G := G) (P := P) (Q := Q) (H := M) (p := p) (q := q)
-      hP_M hQq hQne hPnormQ hCQ
-  have hQ_le_M : Q ≤ M := section13_sylowSubgroupIn_le (G := G) hQ_M
-  have hNproper : Subgroup.normalizer (Q : Set G) ≠ ⊤ :=
-    section13_normalizer_ne_top_of_ne_bot_le_maximal hM hQ_le_M hQne
-  rcases section9_exists_maximalSubgroupsContaining_of_ne_top
-      (G := G) hNproper with
-    ⟨Mstar, hMstar⟩
-  have hnotconj : section12NotConjugate Mstar M :=
-    lemma_12_2_b (G := G) (M := M) (Mstar := Mstar)
-      (X := Q) (p := q) hM hQq hQne hQ_le_M hMstar
-      (Or.inr (Or.inr hqτ3))
-  have hnotUnique :
-      section9MaximalSubgroupsContaining (Subgroup.normalizer (Q : Set G)) ≠ {M} :=
-    section13_notUnique_of_crossed_normalizer
-      (G := G) (M := M) (Mstar := Mstar) (Q := Q)
-      hMstar.1 hnotconj hMstar.2
-  have h18 :=
-    lemma_12_18_b (G := G) (M := M) (P := P) (Q := Q)
-      (p := p) (q := q) hM hpτ1 hP_M hqP hQ_le_M hQne hQq
-      hPnormQ hCQ hnotUnique hQ_M
-  exact ⟨Q, hQ_E₃, h18.2.2.2.1, h18.2.2.2.2⟩
-
-private theorem section13_theorem_13_10_malpha_centralizer_nontrivial
-    {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E₁)
-    (hPnotCentE₃ : ¬ P ≤ Subgroup.centralizer (E₃ : Set G)) :
-    subgroupCentralizerIn (section10Malpha M) P ≠ ⊥ := by
-  classical
-  rcases section13_theorem_13_10_lemma_12_18_data
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
-      hM hE hP hPnotCentE₃ with
-    ⟨_Q, _hQE₃, hCαP, _hCαPQ⟩
-  exact hCαP
-
-/-- Core source step for Theorem 13.10(a): under the same hypotheses,
-`E₁ ⊔ E₃` cannot act in a prime manner on `M_σ`. -/
-private theorem section13_theorem_13_10_join_not_prime
-    {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E₁)
-    (hPnotCentE₃ : ¬ P ≤ Subgroup.centralizer (E₃ : Set G)) :
-    ¬ section13ActsPrimeManner (E₁ ⊔ E₃) (section10Msigma M) := by
-  classical
-  intro hprime
-  rcases section13_theorem_13_10_lemma_12_18_data
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
-      hM hE hP hPnotCentE₃ with
-    ⟨Q, hQ_E₃, hCαP, hCαPQ⟩
-  rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
-    ⟨hP_E₁, hPcard⟩
-  have hP_join : P ∈ section12PrimeOrderSubgroups (E₁ ⊔ E₃) := by
-    simpa [section12PrimeOrderSubgroups] using
-      ⟨hP_E₁.trans le_sup_left, ⟨p, hPcard⟩⟩
-  have hCαP_le_CσP :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        subgroupCentralizerIn (section10Msigma M) P := by
-    intro x hx
-    exact ⟨section13_malpha_le_msigma (G := G) hM hx.1, hx.2⟩
-  have hCαP_le_Cσ_join :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        subgroupCentralizerIn (section10Msigma M) (E₁ ⊔ E₃) :=
-    hCαP_le_CσP.trans (hprime.2 P hP_join)
-  have hCαP_cent_join :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        Subgroup.centralizer ((E₁ ⊔ E₃ : Subgroup G) : Set G) := by
-    intro x hx
-    exact (hCαP_le_Cσ_join hx).2
-  have hQ_le_join : Q ≤ E₁ ⊔ E₃ := hQ_E₃.trans le_sup_right
-  have hCαP_cent_Q :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        Subgroup.centralizer (Q : Set G) := by
-    intro x hx
-    exact Subgroup.centralizer_le hQ_le_join (hCαP_cent_join hx)
-  have hCαP_le_CαPQ :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        subgroupCentralizerIn (section10Malpha M) (P ⊔ Q) :=
-    section13_subgroupCentralizerIn_sup_of_le_centralizer
-      (G := G) (A := section10Malpha M) (R := P) (Q := Q)
-      (C := subgroupCentralizerIn (section10Malpha M) P)
-      le_rfl hCαP_cent_Q
-  exact hCαP (le_bot_iff.mp (by simpa [hCαPQ] using hCαP_le_CαPQ))
 
 private theorem section13_theorem_13_10_initial_lemma_13_8_side
     {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
@@ -911,35 +795,6 @@ private theorem section13_theorem_13_10_b_absurd
       hM hMstar hnotconj hpτ1 hpτ1star hPinf hQinf hQstarInf
       hPnormQ hPnormQstar hCQ hCQstar hNQ hNQstar
 
-/-- Theorem 13.10(a): if some `P ∈ 𝓔_p^1(E₁)` does not centralize
-`E₃`, then `E₁` acts regularly on `E₃`. -/
-public theorem theorem_13_10_a
-    {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E₁)
-    (hPnotCentE₃ : ¬ P ≤ Subgroup.centralizer (E₃ : Set G)) :
-    section13ActsRegularlyOn E₁ E₃ := by
-  classical
-  by_contra hnotRegular
-  rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
-    ⟨hP_E₁, hPcard⟩
-  have hPne : P ≠ ⊥ := section13_ne_bot_of_prime_order (G := G) hPcard
-  have hE₁ne : E₁ ≠ ⊥ := by
-    intro hE₁bot
-    have hPbot : P = ⊥ := le_bot_iff.mp (by
-      intro x hx
-      simpa [hE₁bot] using hP_E₁ hx)
-    exact hPne hPbot
-  have hprime :
-      section13ActsPrimeManner (E₁ ⊔ E₃) (section10Msigma M) :=
-    lemma_13_7 (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hM hE hE₁ne hnotRegular
-  exact
-    (section13_theorem_13_10_join_not_prime
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
-      hM hE hP hPnotCentE₃) hprime
 
 /-- Theorem 13.10(b): if some `P ∈ 𝓔_p^1(E₁)` does not centralize
 `E₃`, then `E₃` acts regularly on `M_σ`. -/
@@ -958,28 +813,5 @@ public theorem theorem_13_10_b
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
       hM hE hP hPnotCentE₃ hnotRegular
 
-/-- Theorem 13.10(c): if some `P ∈ 𝓔_p^1(E₁)` does not centralize
-`E₃`, then `C_{M_σ}(P) ≠ 1`. -/
-public theorem theorem_13_10_c
-    {M E E₁₂ E₁ E₂ E₃ P : Subgroup G} {p : Nat.Primes}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hE : section12EData M E E₁₂ E₁ E₂ E₃)
-    (hP : P ∈ section10PrimeOrderSubgroupsIn p E₁)
-    (hPnotCentE₃ : ¬ P ≤ Subgroup.centralizer (E₃ : Set G)) :
-    subgroupCentralizerIn (section10Msigma M) P ≠ ⊥ := by
-  classical
-  have hCα :
-      subgroupCentralizerIn (section10Malpha M) P ≠ ⊥ :=
-    section13_theorem_13_10_malpha_centralizer_nontrivial
-      (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
-      (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (P := P) (p := p)
-      hM hE hP hPnotCentE₃
-  have hCα_le_Cσ :
-      subgroupCentralizerIn (section10Malpha M) P ≤
-        subgroupCentralizerIn (section10Msigma M) P := by
-    intro x hx
-    exact ⟨section13_malpha_le_msigma (G := G) hM hx.1, hx.2⟩
-  intro hCσ
-  exact hCα (le_bot_iff.mp (by simpa [hCσ] using hCα_le_Cσ))
 
 end Section13

@@ -19,31 +19,6 @@ universe u v w
 
 /-! ## (14.7) -/
 
-/-- Peterfalvi `(14.7)`. -/
-@[expose] public def theorem_14_7_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ) : Prop :=
-    hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      characteristicSubgroupIn U H →
-        theorem_14_2_a_data P U W2 p q ∧
-          theorem_14_2_b_data Q W1 W2 U q
-
 
 public theorem section14_theorem_14_7_conj_normalizes_U
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -569,36 +544,5 @@ public theorem section14_theorem_14_7_source_bridge
     section14_theorem_14_2_b_W2_le_normalizer_Q_of_sourceData hctx.1,
     hconjNorm⟩
 
-
-/-- Proof placeholder for `theorem_14_7_statement`. -/
-public theorem theorem_14_7
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (p q u v c d : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        characteristicSubgroupIn U H →
-          theorem_14_2_a_data P U W2 p q ∧
-            theorem_14_2_b_data Q W1 W2 U q := by
-  intro hctx h143 hchar
-  exact section14_theorem_14_7_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL p q u v c d hctx h143 hchar
 
 end Section14

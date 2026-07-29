@@ -21,31 +21,6 @@ universe u
 
 /-! ## (13.7) -/
 
-/-- Peterfalvi `(13.7)`. -/
-@[expose] public def theorem_13_7_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D H : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (ω : ℕ → ℕ → Section1.ClassFunction W)
-    (η : ℕ → ℕ → Section1.ClassFunction G)
-    (μ : ℕ → ℕ → Section1.ClassFunction Smax)
-    (ν : ℕ → ℕ → Section1.ClassFunction Tmax)
-    (μsum : ℕ → Section1.ClassFunction Smax)
-    (νsum : ℕ → Section1.ClassFunction Tmax)
-    (δ δ' : ℕ → ℤ)
-    (σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G)
-    (p q u v c d : ℕ) : Prop :=
-  hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_13_1_characterNotationDataFor Smax Tmax W W1 W2 p q
-      ω η μ ν μsum νsum δ δ' σ →
-      H = P ⊔ C →
-        squareSumLowerBound (Section7.puncturedSubgroupSet H) (η 1 0)
-          (Nat.card (Section7.puncturedSubgroupSet H) : ℝ)
-
 
 private theorem theorem_13_7_scalarProduct_finset_sum_left
     {G : Type u} [Group G] [Finite G]

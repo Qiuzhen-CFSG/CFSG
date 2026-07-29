@@ -531,17 +531,6 @@ private theorem section12_ambientDerivedSubgroup_eq_bot_of_isMulCommutative_loca
     subst x
     exact Subgroup.one_mem _
 
-omit [Finite G] [IsMinCE G] in
-private theorem section12_centralizes_of_le_omegaOneCenter_local
-    {P X : Subgroup G} {p : Nat.Primes}
-    (hXΩ : X ≤ section10OmegaOneCenter p P) :
-    P ≤ Subgroup.centralizer (X : Set G) := by
-  intro y hy
-  rw [Subgroup.mem_centralizer_iff]
-  intro x hx
-  have hxcent : x ∈ Subgroup.centralizer (P : Set G) :=
-    section12_omegaOneCenter_centralizes (G := G) (p := p) P (hXΩ hx)
-  exact (Subgroup.mem_centralizer_iff.mp hxcent y hy).symm
 
 omit [Finite G] [IsMinCE G] in
 private theorem section12_commutator_mul_mul_of_commute_local
@@ -579,88 +568,6 @@ private theorem section12_commutator_mul_mul_of_commute_local
     _ = q₁ * q₂ * q₁⁻¹ * q₂⁻¹ := by
             simp [mul_assoc]
 
-omit [IsMinCE G] in
-private theorem section12_ambientDerived_le_omegaOneCenter_of_specialShape_local
-    {P : Subgroup G} {p : Nat.Primes}
-    (hshape : section10SpecialRankTwoSylowShape (H := P) p) :
-    ambientDerivedSubgroup P ≤ section10OmegaOneCenter p P := by
-  classical
-  rcases hshape with
-    ⟨Q, Y, hQcard, hQnoncomm, hQexp, hYcyc, hcentral, hΩeq⟩
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  have hQp : IsPGroup p.val Q := IsPGroup.of_card (n := 3) hQcard
-  letI : Fact (IsPGroup p.val Q) := ⟨hQp⟩
-  have hQextra : IsExtraspecial p.val Q :=
-    isExtraspecial_of_noncommutative_card_p3_exponent_p
-      (K := Q) (p := p.val) hQcard hQexp hQnoncomm
-  letI : IsExtraspecial p.val Q := hQextra
-  have hder_center :
-      (derivedSubgroup Q).map Q.subtype =
-        (Subgroup.center Q).map Q.subtype :=
-    derivedSubgroup_map_subtype_eq_center_map_subtype_of_isExtraspecial
-      (R := P) (p := p.val) Q
-  have hOmega :
-      section10OmegaOneCenter p P =
-        ((Subgroup.center Q).map Q.subtype).map P.subtype :=
-    section10_omegaOneCenter_eq_center_map_of_centralProduct
-      (G := G) (P := P) (Q := Q) (Y := Y) (p := p)
-      hQcard hQnoncomm hQexp hYcyc hcentral hΩeq
-  have hder_le_center :
-      derivedSubgroup P ≤ (Subgroup.center Q).map Q.subtype := by
-    rcases hcentral with ⟨_hQnorm, _hYnorm, hcommQY, hsupQY⟩
-    have hQ_le_centY : Q ≤ Subgroup.centralizer (Y : Set P) :=
-      (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := Q) (H₂ := Y)).1
-        hcommQY
-    have hYQ_bot : ⁅Y, Q⁆ = ⊥ := by
-      simpa [Subgroup.commutator_comm] using hcommQY
-    have hY_le_centQ : Y ≤ Subgroup.centralizer (Q : Set P) :=
-      (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := Y) (H₂ := Q)).1
-        hYQ_bot
-    letI : IsCyclic Y := hYcyc
-    change ⁅(⊤ : Subgroup P), (⊤ : Subgroup P)⁆ ≤ (Subgroup.center Q).map Q.subtype
-    rw [Subgroup.commutator_le]
-    intro a _ha b _hb
-    have ha_sup : a ∈ Q ⊔ Y := by
-      rw [hsupQY]
-      exact Subgroup.mem_top a
-    have hb_sup : b ∈ Q ⊔ Y := by
-      rw [hsupQY]
-      exact Subgroup.mem_top b
-    rcases (Subgroup.mem_sup_of_normal_left (x := a) (s := Q) (t := Y)).1 ha_sup with
-      ⟨q₁, hq₁, y₁, hy₁, hq₁y₁⟩
-    rcases (Subgroup.mem_sup_of_normal_left (x := b) (s := Q) (t := Y)).1 hb_sup with
-      ⟨q₂, hq₂, y₂, hy₂, hq₂y₂⟩
-    have hq₁_y₂ : q₁ * y₂ = y₂ * q₁ :=
-      (Subgroup.mem_centralizer_iff.mp (hQ_le_centY hq₁) y₂ hy₂).symm
-    have hy₁_q₂ : y₁ * q₂ = q₂ * y₁ :=
-      (Subgroup.mem_centralizer_iff.mp (hY_le_centQ hy₁) q₂ hq₂).symm
-    have hy₁_y₂ : y₁ * y₂ = y₂ * y₁ := by
-      exact congrArg (fun z : Y => (z : P))
-        (mul_comm (⟨y₁, hy₁⟩ : Y) (⟨y₂, hy₂⟩ : Y))
-    have hcomm_eq : ⁅a, b⁆ = ⁅q₁, q₂⁆ := by
-      have hraw :=
-        section12_commutator_mul_mul_of_commute_local
-          (R := P) hq₁_y₂ hy₁_q₂ hy₁_y₂
-      simpa [← hq₁y₁, ← hq₂y₂] using hraw
-    have hqcomm_der :
-        ⁅q₁, q₂⁆ ∈ (derivedSubgroup Q).map Q.subtype := by
-      refine Subgroup.mem_map.mpr
-        ⟨⁅(⟨q₁, hq₁⟩ : Q), (⟨q₂, hq₂⟩ : Q)⁆, ?_, ?_⟩
-      · change ⁅(⟨q₁, hq₁⟩ : Q), (⟨q₂, hq₂⟩ : Q)⁆ ∈
-          ⁅(⊤ : Subgroup Q), (⊤ : Subgroup Q)⁆
-        exact Subgroup.commutator_mem_commutator (by simp) (by simp)
-      · simp [commutatorElement_def]
-    have hqcomm_center : ⁅q₁, q₂⁆ ∈ (Subgroup.center Q).map Q.subtype := by
-      rw [← hder_center]
-      exact hqcomm_der
-    simpa [hcomm_eq] using hqcomm_center
-  intro x hx
-  rcases Subgroup.mem_map.mp hx with ⟨d, hd, rfl⟩
-  have hd_center : d ∈ (Subgroup.center Q).map Q.subtype := hder_le_center hd
-  have hd_centerG :
-      ((d : P) : G) ∈ ((Subgroup.center Q).map Q.subtype).map P.subtype :=
-    Subgroup.mem_map_of_mem P.subtype hd_center
-  simpa [hOmega] using hd_centerG
 
 omit [IsMinCE G] in
 private theorem section12_derived_le_center_of_specialShape_type_local

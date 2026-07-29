@@ -240,15 +240,6 @@ public theorem proposition_2_4_a
   rw [DirectSum.isInternal_submodule_iff_iSupIndep_and_iSup_eq_top]
   exact ⟨h_indep, h_sup⟩
 
-public theorem proposition_2_4_b
-    {F : Type*} [Field F]
-    {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    {g : V ≃ₗ[F] V} {h : ℕ} (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (i : ℤ) :
-    End.eigenspace g.toLinearMap (ε ^ i) =
-    End.eigenspace g.toLinearMap (ε ^ (i + h)) := by
-  let _ := (inferInstance : FiniteDimensional F V)
-  rw [ zpow_add₀ <| hε.ne_zero <| Nat.ne_zero_of_lt hh, zpow_natCast, hε.pow_eq_one, mul_one]
 
 -- Now we copy the lemmas from eigenspace_decomposition_v12 and projections_from_isInternal
 public lemma LinearEquiv.toLinearMap_pow
@@ -416,8 +407,6 @@ section BlockEquality
 variable {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
   {g : V ≃ₗ[F] V} {h : ℕ} (hge2 : h ≥ 2) (ε : F) (hε : IsPrimitiveRoot ε h)
 
-lemma Int.modEq_emod' (a : ℤ) : a ≡ a % (h : ℤ) [ZMOD (h : ℤ)] := by
-  exact ModEq.symm (mod_modEq a ↑h)
 
 open IsPrimitiveRoot
 include hge2 hε

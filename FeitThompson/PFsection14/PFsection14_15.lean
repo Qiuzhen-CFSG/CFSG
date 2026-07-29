@@ -18,34 +18,6 @@ universe u v w
 
 /-! ## (14.15) -/
 
-/-- Peterfalvi `(14.15)`. -/
-@[expose] public def theorem_14_15_statement
-    {G : Type u} [Group G] [Finite G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d h : ℕ) : Prop :=
-  hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d →
-    hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-      hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-        hypothesis_14_13_statement L M H h →
-          u = (p ^ q - 1) / (p - 1)
-
 
 public theorem section14_theorem_14_15_final_numeric_contradiction
     {p q u h x : ℕ}
@@ -602,31 +574,6 @@ public theorem section14_exists_h_eq_u_mul_of_hypotheses
   rcases Subgroup.card_dvd_of_le hUH with ⟨x, hx⟩
   exact ⟨x, by rw [h1413.2, hx, hUcard_eq]⟩
 
-public theorem section14_two_lt_q_of_odd_W1
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hW1Odd : Odd (Nat.card W1)) :
-    2 < q := by
-  rcases section14_context_primes_of_sourceData hctx with ⟨_hpPrime, hqPrime⟩
-  rcases hctx.1 with
-    ⟨_hcase, _hSTypeP, _hTTypeP, _hp_card, hq_card, _hC, _hD, _hc, _hd,
-      _hUcard, _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau, _hBetaSupportNorm, _hChoice, _hMin, _hFourSixS, _hFourSixT⟩
-  have hqOdd : Odd q := by
-    rw [hq_card]
-    exact hW1Odd
-  have hq_ne_two : q ≠ 2 := by
-    intro hq2
-    rw [hq2] at hqOdd
-    rcases hqOdd with ⟨k, hk⟩
-    omega
-  exact lt_of_le_of_ne hqPrime.two_le (Ne.symm hq_ne_two)
 
 public theorem section14_odd_h_of_odd_L
     {G : Type u} [Group G] [Finite G]
@@ -655,26 +602,6 @@ public theorem section14_odd_h_of_odd_L
   rw [h1413.2]
   exact hHOdd
 
-public theorem section14_odd_W1_of_odd_W
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (hWOdd : Odd (Nat.card W)) :
-    Odd (Nat.card W1) := by
-  rcases hctx.1 with
-    ⟨hcase, _hSTypeP, _hTTypeP, _hp, _hq, _hC, _hD, _hc, _hd, _hUcard,
-      _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, _hNotation, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau, _hBetaSupportNorm, _hChoice, _hMin, _hFourSixS, _hFourSixT⟩
-  rcases hcase with
-    ⟨hprod, _hcyc, _hW1ne, _hW2ne, _hnorm, _hSmax, _hTmax, _hSMF,
-      _hTMF, _hSeq, _hTeq, _hSdisj, _hTdisj, _hST, _hTypeII, _hSType,
-      _hTType, _hCover⟩
-  exact Odd.of_dvd_nat hWOdd (Subgroup.card_dvd_of_le hprod.1)
 
 public theorem section14_odd_L_of_typeI
     {G : Type u} [Group G] [Finite G]
@@ -683,78 +610,6 @@ public theorem section14_odd_L_of_typeI
     Odd (Nat.card L) :=
   Section12.odd_card_of_typeIDefinitionData L H hTypeI
 
-public theorem section14_source_odd_W_and_typeI_L_bridge
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {Lfam : Finset (Section1.ClassFunction L)}
-    {RL : G → Subgroup G}
-    {τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {φ : Section1.ClassFunction L}
-    {μ01 : Section1.ClassFunction Smax}
-    {ν10 : Section1.ClassFunction Tmax}
-    {βS : Section1.ClassFunction Smax}
-    {βT : Section1.ClassFunction Tmax}
-    {βL : Section1.ClassFunction L}
-    {p q u v c d : ℕ}
-    (hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (h143 : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
-      Lfam RL τL τL₁ φ μ01 ν10 βS βT βL) :
-    Odd (Nat.card W) ∧ Section8.typeIDefinitionData L H := by
-  rcases hctx.1 with
-    ⟨_hcase, _hSTypeP, _hTTypeP, _hp, _hq, _hC, _hD, _hc, _hd, _hUcard,
-      _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT, hNotation, _hChoice, _hMin⟩
-  rcases hNotation with
-    ⟨_ω, _η, _μ, _ν, _μsum, _νsum, _δ, _δ', _σ, hNotationFor⟩
-  rcases hNotationFor with
-    ⟨hω, _hσ, _hη, _hδ, _hδ', _hμirr, _hνirr, _hμzero_nonprincipal, _hνzero_nonprincipal,
-      _hμind, _hνind,
-      _hμsum, _hνsum⟩
-  rcases hω with ⟨h31, _hqpos, _hppos, _ωFin, _hωNotation, _hωNat⟩
-  change Section3.isCyclicTIHypothesis W1 W2 W at h31
-  rcases h31 with
-    ⟨_hW1le, _hW2le, _hprod, _hcyc, hWOdd, _hW1card, _hW2card, _hTI⟩
-  rcases h143 with
-    ⟨_hLmax, _hNorm, _hMF, hTypeI, _hDade, _hLfam, _h52b, _hExt,
-      _hφmem, _hφirr, _hφdeg, _hβS, _hβT, _hβL, _hDadeNotation⟩
-  exact ⟨hWOdd, hTypeI⟩
-
-public theorem section14_theorem_13_19_hypothesis_of_hypothesis_14_3
-    {G : Type u} [Group G] [Finite G]
-    {Smax Tmax W W1 W2 P Q U V C D L H : Subgroup G}
-    {Sfam : Finset (Section1.ClassFunction Smax)}
-    {Tfam : Finset (Section1.ClassFunction Tmax)}
-    {τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G}
-    {τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
-    {Lfam : Finset (Section1.ClassFunction L)}
-    {RL : G → Subgroup G}
-    {τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G}
-    {φ : Section1.ClassFunction L}
-    {μ01 : Section1.ClassFunction Smax}
-    {ν10 : Section1.ClassFunction Tmax}
-    {βS : Section1.ClassFunction Smax}
-    {βT : Section1.ClassFunction Tmax}
-    {βL : Section1.ClassFunction L}
-    {p q u v c d : ℕ}
-    (_hctx : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-      Sfam Tfam τS τT p q u v c d)
-    (h143 : hypothesis_14_3_data Smax Tmax L H P Q U W1 W2
-      Lfam RL τL τL₁ φ μ01 ν10 βS βT βL) :
-    Section13.theorem_13_19_hypothesis L H Smax P W1 Lfam RL τS τL τL₁
-      φ (τL₁ φ) μ01 (τL βL) (τS βS) (H.relIndex L) := by
-  rcases h143 with
-    ⟨hLmax, _hNorm, hMF, hTypeI, hDade, hLfam, _h52b, hExt,
-      hφmem, _hφirr, hφdeg, hβS, _hβT, hβL, _hDadeNotation⟩
-  refine ⟨hLmax, hMF, hTypeI, rfl, hDade, hLfam, hExt, hφmem,
-    hφdeg, rfl, ?_, ?_⟩
-  · simpa [Section7.theorem_7_8_betaInput, Section7.principalInducedCharacter]
-      using congrArg τL hβL
-  · simpa [Section7.principalInducedCharacter]
-      using congrArg τS hβS
 
 public theorem section14_theorem_13_19_eta_outputs_of_hypothesis_14_3
     {G : Type u} [Group G] [Finite G]
@@ -1654,39 +1509,5 @@ public theorem section14_theorem_14_15_source_bridge
     Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
     p q u v c d h hctx h143 h1410 h1413 hneq
 
-
-/-- Proof placeholder for `theorem_14_15_statement`. -/
-public theorem theorem_14_15
-    {G : Type u}
-    [Group G]
-    [Finite G] [IsMinCE G]
-    (Smax Tmax W W1 W2 P Q U V C D L H M K : Subgroup G)
-    (Sfam : Finset (Section1.ClassFunction Smax))
-    (Tfam : Finset (Section1.ClassFunction Tmax))
-    (τS : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (τT : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G)
-    (Lfam : Finset (Section1.ClassFunction L))
-    (RL : G → Subgroup G)
-    (τL τL₁ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (φ : Section1.ClassFunction L)
-    (μ01 : Section1.ClassFunction Smax)
-    (ν10 : Section1.ClassFunction Tmax)
-    (βS : Section1.ClassFunction Smax)
-    (βT : Section1.ClassFunction Tmax)
-    (βL : Section1.ClassFunction L)
-    (Mfam : Finset (Section1.ClassFunction M))
-    (τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
-    (ψ βM : Section1.ClassFunction M)
-    (p q u v c d h : ℕ)
-    : hypothesis_14_context_data Smax Tmax W W1 W2 P Q U V C D
-        Sfam Tfam τS τT p q u v c d →
-      hypothesis_14_3_data Smax Tmax L H P Q U W1 W2 Lfam RL τL τL₁ φ μ01 ν10 βS βT βL →
-        hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM →
-          hypothesis_14_13_statement L M H h →
-            u = (p ^ q - 1) / (p - 1) := by
-  exact section14_theorem_14_15_source_bridge
-    Smax Tmax W W1 W2 P Q U V C D L H M K Sfam Tfam τS τT
-    Lfam RL τL τL₁ φ μ01 ν10 βS βT βL Mfam τM τM₁ ψ βM
-    p q u v c d h
 
 end Section14

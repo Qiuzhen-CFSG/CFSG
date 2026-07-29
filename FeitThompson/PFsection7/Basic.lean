@@ -66,12 +66,6 @@ universe u
     classical
     exact ∑ x : L, if (x : G) ∈ A then Complex.normSq (χ x) else 0
 
-/-- The normalized square sum on an ambient subset, with denominator `|L|`. -/
-@[expose] public noncomputable def normalizedSubgroupSupportEnergy
-    {G : Type u} [Group G] [Finite G]
-    (L : Subgroup G) (A : Set G)
-    (χ : Section1.ClassFunction L) : ℝ :=
-  (Nat.card L : ℝ)⁻¹ * subgroupSupportEnergy L A χ
 
 /-- The square sum of `χ` over a subset of `G`. -/
 @[expose] public noncomputable def supportEnergy
@@ -346,40 +340,6 @@ itself is still obtained by applying `theorem_7_7`. -/
           2 * (1 / (Nat.card H : ℝ)) * (a : ℝ) +
             (1 - (H.relIndex L : ℝ) / (Nat.card H : ℝ))) : ℂ)
 
-/-- Source data for the PF `(7.8)(c)` specialization of `(7.7)`.
-
-As in `(7.8)(b)`, this records the distinguished `(7.7)` enumeration/basis
-and the simplified right-hand sides of the `(7.7)` pointwise and norm
-expansions.  The actual projection identities are still obtained by applying
-`theorem_7_7`. -/
-@[expose] public def theorem_7_8_c_projectionData
-    {G : Type u} [Group G] [Finite G]
-    (A : Set G) (L H : Subgroup G)
-    (T : Finset (Section1.ClassFunction L))
-    (τ : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G)
-    (ζ : Section1.ClassFunction L)
-    (χ : Section1.ClassFunction G) : Prop :=
-  ∃ n : ℕ,
-  ∃ η : Fin (n + 1) → Section1.ClassFunction L,
-  ∃ d c : Fin n → ℂ,
-    inducedFamilyEnumeration T η d ∧
-      projectionBasisPackage A L H η d ∧
-      Section1.IsClassFunction χ ∧
-      projectionCoefficientPackage η d τ χ c ∧
-      (∀ x : L, (x : G) ∈ A →
-        (∑ i : Fin n,
-          (star (c i) / (Section5.cfNormSq (η (Fin.succ i)) : ℂ)) *
-            η (Fin.succ i) x) =
-          Section1.scalarProduct G (theorem_7_8_beta L H τ ζ) χ) ∧
-      (∑ i : Fin n, ∑ j : Fin n,
-        (star (c i) * c j) /
-          ((Section5.cfNormSq (η (Fin.succ i)) : ℂ) *
-            (Section5.cfNormSq (η (Fin.succ j)) : ℂ)) *
-          (Section1.scalarProduct L (η (Fin.succ i)) (η (Fin.succ j)) -
-            (η (Fin.succ i) 1 * η (Fin.succ j) 1) /
-              ((H.relIndex L : ℂ) * (Nat.card H : ℂ)))) =
-        ((A.ncard : ℂ) / (Nat.card L : ℂ)) *
-          (Section1.scalarProduct G (theorem_7_8_beta L H τ ζ) χ) ^ 2
 
 /-- Source parity data used in the final step of PF `(7.9)`.
 
@@ -482,20 +442,6 @@ public theorem theorem_7_9_hypothesis.to_source
       theorem_7_9_source_hypothesis A L H K S τ ν ζ β γ :=
   And.left
 
-public theorem theorem_7_9_hypothesis.parityData
-    {G : Type u} [Group G] [Finite G]
-    {A : Fin 2 → Set G}
-    {L : Fin 2 → Subgroup G}
-    {H : Fin 2 → Subgroup G}
-    {K : Fin 2 → G → Subgroup G}
-    {S : (i : Fin 2) → Finset (Section1.ClassFunction (L i))}
-    {τ ν : (i : Fin 2) →
-      Section1.ClassFunction (L i) →ₗ[ℂ] Section1.ClassFunction G}
-    {ζ : (i : Fin 2) → Section1.ClassFunction (L i)}
-    {β γ : Fin 2 → Section1.ClassFunction G} :
-    theorem_7_9_hypothesis A L H K S τ ν ζ β γ →
-      theorem_7_9_parityData β γ :=
-  And.right
 
 public instance instCoeOutTheorem_7_9_hypothesisSource
     {G : Type u} [Group G] [Finite G]
@@ -548,14 +494,6 @@ public theorem theorem_7_10_hypothesis.to_source
       theorem_7_10_source_hypothesis L H G0 :=
   And.left
 
-public theorem theorem_7_10_hypothesis.lowerBoundData
-    {G : Type u} [Group G] [Finite G]
-    {I : Type*} [Fintype I]
-    {L H : I → Subgroup G}
-    {G0 : Set G} :
-    theorem_7_10_hypothesis L H G0 →
-      theorem_7_10_lowerBoundData L H G0 :=
-  And.right
 
 public instance instCoeOutTheorem_7_10_hypothesisSource
     {G : Type u} [Group G] [Finite G]

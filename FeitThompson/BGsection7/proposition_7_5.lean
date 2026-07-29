@@ -186,39 +186,6 @@ private theorem inf_eq_bot_of_isPGroup_and_coprime_card
       exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hHKcop) hpdiv
   exact Subgroup.card_eq_one.mp hcard_one
 
-private theorem le_pPrimeCore_of_coprime_card_le_Op_p'p
-    {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    {L : Subgroup G} (hLcop : Nat.Coprime p (Nat.card L)) (hLle : L ≤ Op_p'p p G) :
-    L ≤ pPrimeCore p G := by
-  let M : Subgroup G := pPrimeCore p G
-  let q : G →* G ⧸ M := QuotientGroup.mk' M
-  have hmap_op : (Op_p'p p G).map q = pCore p (G ⧸ M) := by
-    dsimp [Op_p'p, q, M]
-    simpa using
-      (Subgroup.map_comap_eq_self_of_surjective
-        (f := QuotientGroup.mk' (pPrimeCore p G))
-        (h := QuotientGroup.mk'_surjective (pPrimeCore p G))
-        (H := pCore p (G ⧸ pPrimeCore p G)))
-  have hLmap_le : L.map q ≤ pCore p (G ⧸ M) := by
-    calc
-      L.map q ≤ (Op_p'p p G).map q := Subgroup.map_mono hLle
-      _ = pCore p (G ⧸ M) := hmap_op
-  have hLmap_sub_p : IsPGroup p ↥((L.map q).subgroupOf (pCore p (G ⧸ M))) :=
-    IsPGroup.to_subgroup (H := (L.map q).subgroupOf (pCore p (G ⧸ M)))
-      (pCore_isPGroup (G := G ⧸ M) (p := p))
-  have hLmap_p : IsPGroup p ↥(L.map q) := by
-    exact hLmap_sub_p.of_equiv
-      (Subgroup.subgroupOfEquivOfLe (H := L.map q) (K := pCore p (G ⧸ M)) hLmap_le)
-  have hLmap_cop : Nat.Coprime p (Nat.card (L.map q)) :=
-    Nat.Coprime.of_dvd_right (Subgroup.card_map_dvd (H := L) q) hLcop
-  have hLmap_one : Nat.card (L.map q) = 1 := by
-    rcases hLmap_p.card_eq_or_dvd with h1 | hpdiv
-    · exact h1
-    · exfalso
-      exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hLmap_cop) hpdiv
-  have hLmap_bot : L.map q = ⊥ := Subgroup.card_eq_one.mp hLmap_one
-  have hL_le_ker : L ≤ q.ker := (Subgroup.map_eq_bot_iff (H := L) (f := q)).1 hLmap_bot
-  simpa [q, M] using hL_le_ker
 
 private theorem subgroupCentralizerIn_le_of_selfCentralizing_subgroupOf
     {G : Type*} [Group G] {p : ℕ} [Fact p.Prime]

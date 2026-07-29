@@ -104,15 +104,6 @@ private theorem section16_ASet_diff_msigma_centralizer_le
     exact Subgroup.mem_centralizer_singleton_iff.mp hc
   exact (hcomm.zpow_right n).eq
 
-public theorem section16_ASet_diff_msigma_centralizer_le_public
-    {M K U : Subgroup G} {a : G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section16KUData M K U)
-    (ha : a ∈ section16ASet M U \ (section10Msigma M : Set G)) :
-    Subgroup.centralizer ({a} : Set G) ≤ M := by
-  exact section16_ASet_diff_msigma_centralizer_le
-    (G := G) (M := M) (K := K) (U := U) hM
-    (by simpa [section16KUData] using hKU) ha
 
 public theorem section16_ASet_diff_msigma_unique_centralizer_of_coprime_public
     {M K U : Subgroup G} {a : G}
@@ -131,15 +122,6 @@ public theorem section16_ASet_diff_msigma_unique_centralizer_of_coprime_public
   exact section16_centralizer_unique_of_conj_U_hat_element
     (G := G) (M := M) (K := K) (U := U) hM hKU15 hm huU huHat hune haConj
 
-public theorem section16_ASet_diff_msigma_le_normalizer_public
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section16KUData M K U) :
-    M ≤ Subgroup.normalizer
-      (section16ASet M U \ (section10Msigma M : Set G)) := by
-  exact section16_ASet_diff_msigma_le_normalizer_of_M
-    (G := G) (M := M) (K := K) (U := U) hM
-    (by simpa [section16KUData] using hKU)
 
 omit [Finite G] [IsMinCE G] in
 private theorem section16_AZeroSet_subset_ASet_of_K_eq_bot
@@ -982,22 +964,6 @@ private theorem section16_mem_theoremII_supportList
     simpa [hR] using hsome.symm
   · simp [hR] at hsome
 
-private theorem section16_exists_supportRepCandidate_of_mem_D
-    {M MF K U : Subgroup G} {X : Set G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hKU : section16KUData M K U)
-    (hX : section16AChoice M K U X)
-    {Ms : List (Subgroup G)}
-    (hMs : section16MaximalConjugacyRepresentatives (G := G) Ms)
-    {x : G} (hxD : x ∈ section16TheoremIIDSet M X) :
-    ∃ R : Subgroup G, R ∈ Ms ∧
-      section16_theoremII_supportRepCandidate (G := G) M X R := by
-  classical
-  rcases section16_theoremII_canonical_D_data (G := G) hM hMF hKU hX hxD with
-    ⟨NK, NU, hNcont, _hNF, _hKU, _hxA, _hType, _hComp, _hTypeII⟩
-  rcases hMs.2.2 (section14N x) hNcont.1 with ⟨R, hR, _huniq⟩
-  exact ⟨R, hR.1, x, hxD, hR.2⟩
 
 private theorem section16_mf_le_derived_of_maximal
     {M MF : Subgroup G}
@@ -1768,69 +1734,6 @@ private theorem section16_ASet_diff_msigma_subset_AZeroSet
     hKU.1.2.p_in_pi_of_p_dvd_card q hqKsubcard
   exact hqcompl (Or.inl hqκ)
 
-public theorem section16_ASet_diff_msigma_subset_AZeroSet_public
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section16KUData M K U) :
-    section16ASet M U \ (section10Msigma M : Set G) ⊆
-      section16AZeroSet M K := by
-  exact section16_ASet_diff_msigma_subset_AZeroSet
-    (G := G) (M := M) (K := K) (U := U) hM
-    (by simpa [section16KUData] using hKU)
-
-omit [Finite G] [IsMinCE G] in
-public theorem section16_msigma_nonidentity_mem_AZeroSet_public
-    {M K U : Subgroup G} {x : G}
-    (hKU : section16KUData M K U)
-    (hxσ : x ∈ section10Msigma M)
-    (hxne : x ≠ 1) :
-    x ∈ section16AZeroSet M K := by
-  classical
-  have hKU15 : section15KUData M K U :=
-    section16_kudata_to_section15 (G := G) hKU
-  refine ⟨⟨section16_msigma_le (G := G) M hxσ, ?_⟩, ?_, hxne⟩
-  · have hxCent : x ∈ elementCentralizerIn (section10Msigma M) x := by
-      refine ⟨hxσ, ?_⟩
-      change x ∈ Subgroup.centralizer ({x} : Set G)
-      rw [Subgroup.mem_centralizer_singleton_iff]
-    refine fun hbot => hxne ?_
-    have hxbot : x ∈ (⊥ : Subgroup G) := by
-      simpa [hbot] using hxCent
-    simpa using hxbot
-  · intro hconj
-    rcases hconj with ⟨k, hk, m, hmM, hx_eq⟩
-    have hcomp : section12ComplementIn M (section10Msigma M) (K ⊔ U) :=
-      hKU15.2.2.1
-    have hKUSigma : (K ⊔ U) ⊓ section10Msigma M = ⊥ := by
-      simpa [inf_comm] using hcomp.2.2.2.eq_bot
-    have hminvNormSigma :
-        m⁻¹ ∈ Subgroup.normalizer (section10Msigma M : Set G) :=
-      Subgroup.inv_mem _ (section12_le_normalizer_msigma (M := M) hmM)
-    have hkSigma : k ∈ section10Msigma M := by
-      have hback :
-          m⁻¹ * x * (m⁻¹)⁻¹ ∈ section10Msigma M :=
-        (Subgroup.mem_normalizer_iff.mp hminvNormSigma x).1 hxσ
-      simpa [hx_eq, mul_assoc] using hback
-    have hkKU : k ∈ K ⊔ U :=
-      (show K ≤ K ⊔ U from le_sup_left) hk.1
-    have hkInf : k ∈ (K ⊔ U) ⊓ section10Msigma M :=
-      ⟨hkKU, hkSigma⟩
-    have hkbot : k ∈ (⊥ : Subgroup G) := by
-      have hkInf' : k ∈ ((K ⊔ U) ⊓ section10Msigma M : Subgroup G) := hkInf
-      simpa [hKUSigma] using hkInf'
-    exact hk.2 (by simpa using hkbot)
-
-public theorem section16_ASet_subset_AZeroSet_public
-    {M K U : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hKU : section16KUData M K U) :
-    section16ASet M U ⊆ section16AZeroSet M K := by
-  intro x hxA
-  by_cases hxσ : x ∈ section10Msigma M
-  · exact section16_msigma_nonidentity_mem_AZeroSet_public
-      (G := G) (M := M) (K := K) (U := U) hKU hxσ hxA.2.2
-  · exact section16_ASet_diff_msigma_subset_AZeroSet_public
-      (G := G) (M := M) (K := K) (U := U) hM hKU ⟨hxA, hxσ⟩
 
 private theorem section16_AZero_diff_msigma_conj_mem_of_mem_M
     {M K : Subgroup G}

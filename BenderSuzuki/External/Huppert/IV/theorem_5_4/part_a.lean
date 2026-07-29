@@ -4,7 +4,8 @@ Authors: OpenAI
 
 module
 public import BenderSuzuki.External.Huppert.IV.GrunCore
-public import BenderSuzuki.External.Huppert.IV.theorem_5_3
+public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
+public import BenderSuzuki.External.Huppert.IV.theorem_5_1.part_a
 
 /-!
 # Huppert IV.5.4(a)

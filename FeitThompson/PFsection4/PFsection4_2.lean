@@ -44,11 +44,5 @@ order.
     Section2.IsInternalDirectProduct W W1 W2 ∧
     Odd (Nat.card W)
 
-/-- Book-facing `(4.2)` package, with the explicit source condition `W₂ ≤ K`. -/
-@[expose] public def hypothesis_4_2_full_statement
-    {L : Type u} [Group L] [Finite L]
-    (K W1 W2 W : Subgroup L) : Prop :=
-  hypothesis_4_2_statement K W1 W2 W ∧
-    W2 ≤ K
 
 end Section4

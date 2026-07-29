@@ -143,14 +143,6 @@ private theorem huppert613_list_prod_diagonal
       simp only [List.map_cons, List.prod_cons, ih]
       rw [Matrix.diagonal_mul_diagonal]
 
-private theorem huppert613_coe_list_prod_specialLinearGroup
-    {K : Type u} [Field K] {m : Type*} [Fintype m] [DecidableEq m]
-    (L : List (Matrix.SpecialLinearGroup m K)) :
-    ((L.prod : Matrix.SpecialLinearGroup m K) : Matrix m m K) =
-      (L.map fun A => (A : Matrix m m K)).prod := by
-  induction L with
-  | nil => simp
-  | cons A L ih => simp [ih, Matrix.SpecialLinearGroup.coe_mul]
 
 private theorem huppert613_coe_pairDiagonal_list_prod
     {K : Type u} [Field K] {m : Type*} [Fintype m] [DecidableEq m]

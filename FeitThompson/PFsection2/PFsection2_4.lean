@@ -69,57 +69,6 @@ private theorem natCard_subgroupOf {G : Type u} [Group G]
   simpa using
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe (H := H) (K := K) hHK).toEquiv
 
-private theorem internalDirectProduct_isComplement {G : Type u} [Group G]
-    {C H K : Subgroup G} (h : IsInternalDirectProduct C H K) :
-    (H.subgroupOf C).IsComplement' (K.subgroupOf C) := by
-  refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
-  · rw [Subgroup.disjoint_def]
-    intro x hxH hxK
-    apply Subtype.ext
-    have hxInf : (x : G) ∈ H ⊓ K := Subgroup.mem_inf.mpr ⟨hxH, hxK⟩
-    have hxBot : (x : G) ∈ (⊥ : Subgroup G) := by
-      simpa [h.inf_eq_bot] using hxInf
-    simpa using hxBot
-  · rw [Set.eq_univ_iff_forall]
-    intro x
-    rcases h.mul_surjective (x : G) x.2 with ⟨h0, hh0, k0, hk0, hx⟩
-    refine ⟨(⟨h0, h.left_le hh0⟩ : C), hh0,
-      (⟨k0, h.right_le hk0⟩ : C), hk0, ?_⟩
-    apply Subtype.ext
-    simpa using hx.symm
-
-private theorem internalDirectProduct_left_normal {G : Type u} [Group G]
-    {C H K : Subgroup G} (h : IsInternalDirectProduct C H K) :
-    (H.subgroupOf C).Normal := by
-  refine ⟨?_⟩
-  intro y hyH x
-  rcases h.mul_surjective (x : G) x.2 with ⟨h0, hh0, k0, hk0, hx⟩
-  have hcomm : k0 * (y : G) = (y : G) * k0 := by
-    exact (h.commute (y : G) hyH k0 hk0).symm
-  change ((x : G) * (y : G) * (x : G)⁻¹) ∈ H
-  rw [hx]
-  have hmid : k0 * (y : G) * k0⁻¹ = (y : G) := by
-    calc
-      k0 * (y : G) * k0⁻¹ = (y : G) * k0 * k0⁻¹ := by
-        rw [hcomm]
-      _ = (y : G) := by simp [mul_assoc]
-  have hcalc : h0 * k0 * (y : G) * (h0 * k0)⁻¹ = h0 * (y : G) * h0⁻¹ := by
-    calc
-      h0 * k0 * (y : G) * (h0 * k0)⁻¹ =
-          h0 * (k0 * (y : G) * k0⁻¹) * h0⁻¹ := by
-            simp [mul_assoc]
-      _ = h0 * (y : G) * h0⁻¹ := by rw [hmid]
-  rw [hcalc]
-  exact H.mul_mem (H.mul_mem hh0 hyH) (H.inv_mem hh0)
-
-private theorem internalDirectProduct_index_left_eq_card_right {G : Type u} [Group G]
-    {C H K : Subgroup G} (h : IsInternalDirectProduct C H K) :
-    (H.subgroupOf C).index = Nat.card K := by
-  have hcomp := internalDirectProduct_isComplement (C := C) (H := H) (K := K) h
-  calc
-    (H.subgroupOf C).index = Nat.card (K.subgroupOf C) := by
-      simpa using hcomp.symm.index_eq_card
-    _ = Nat.card K := natCard_subgroupOf h.right_le
 
 private theorem internalSemidirectProduct_index_left_eq_card_right
     {G : Type u} [Group G] {C H K : Subgroup G}
@@ -131,14 +80,6 @@ private theorem internalSemidirectProduct_index_left_eq_card_right
       simpa using hcomp.symm.index_eq_card
     _ = Nat.card K := natCard_subgroupOf h.right_le
 
-private theorem isHallSubgroup_compl_index_of_coprime {G : Type u} [Group G]
-    (H : Subgroup G) (hcop : Nat.Coprime (Nat.card H) H.index) :
-    IsHallSubgroup {p : Nat.Primes | ¬ p.val ∣ H.index} H := by
-  refine isHallSubgroup_of (G := G) {p : Nat.Primes | ¬ p.val ∣ H.index} H ?_ ?_
-  · intro p hp_dvd
-    exact (p.property.coprime_iff_not_dvd).1 (hcop.coprime_dvd_left hp_dvd)
-  · intro p hp_not hp_dvd
-    exact hp_not hp_dvd
 
 private theorem Nat.Coprime.mul_of_pairwise
     {a b c d : ℕ} (hac : Nat.Coprime a c) (had : Nat.Coprime a d)
@@ -147,11 +88,6 @@ private theorem Nat.Coprime.mul_of_pairwise
   Nat.Coprime.mul_left (Nat.Coprime.mul_right hac had)
     (Nat.Coprime.mul_right hbc hbd)
 
-private theorem Nat.Coprime.lcm_left_right {a b c : ℕ}
-    (hac : Nat.Coprime a c) (hbc : Nat.Coprime b c) :
-    Nat.Coprime (Nat.lcm a b) c := by
-  refine Nat.Coprime.of_dvd_left (Nat.lcm_dvd (dvd_mul_right _ _) (dvd_mul_left _ _)) ?_
-  simpa [mul_comm] using Nat.Coprime.mul_left hac hbc
 
 private theorem pow_natCard_subgroup_eq_one {G : Type u} [Group G]
     (K : Subgroup G) {x : G} (hx : x ∈ K) :
