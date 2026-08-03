@@ -370,4 +370,5 @@ public import BenderSuzuki.SE.Theorem4Induction
 public import BenderSuzuki.SE.Theorem4a
 public import BenderSuzuki.SE.Theorem6
 public import BenderSuzuki.SE.Theorem6Final
+public import BenderSuzuki.SanityCheck
 public import BenderSuzuki.Suzuki
