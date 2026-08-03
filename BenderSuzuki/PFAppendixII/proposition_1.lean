@@ -44,7 +44,7 @@ private theorem twoRankAtLeastTwo_of_subgroup
   apply Subtype.ext
   exact congrArg (fun z : E => ((z : P) : G)) (hEsq ⟨y, hy⟩)
 
-private theorem unique_order_two_subgroup_of_not_twoRank
+public theorem unique_order_two_subgroup_of_not_twoRank
     {G : Type u} [Group G] [Finite G] [Nontrivial G]
     (hGp : IsPGroup 2 G) (h2rank : ¬ TwoRankAtLeastTwo G) :
     ∃ U : Subgroup G, Nat.card U = 2 ∧
@@ -556,6 +556,51 @@ private lemma appendixII_factorization_of_quotient_involution_central
         (Subgroup.mem_zpowers u)).symm
   have hprod := Subgroup.mul_mem_sup hgcN hcCu
   simpa only [div_mul_cancel] using hprod
+
+/-- In a finite group of 2-rank one, the odd core together with the
+centralizer of any involution is the whole group. -/
+public theorem pPrimeCore_sup_centralizer_eq_top_of_not_twoRank
+    {G : Type u} [Group G] [Finite G]
+    (h2rank : ¬ TwoRankAtLeastTwo G)
+    {u : G} (hu : IsInvolution u) :
+    pPrimeCore 2 G ⊔ Subgroup.centralizer ({u} : Set G) = ⊤ := by
+  classical
+  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have hT : IsPGroup 2 (Subgroup.zpowers u) :=
+    appendixII_isPGroup_zpowers_of_involution hu
+  obtain ⟨P, hTP⟩ := hT.exists_le_sylow
+  have huP : u ∈ (P : Subgroup G) := hTP (Subgroup.mem_zpowers u)
+  have hPne : (P : Subgroup G) ≠ ⊥ := by
+    intro hPbot
+    apply hu.ne_one
+    exact Subgroup.mem_bot.mp (by simpa [hPbot] using huP)
+  letI : Nontrivial P :=
+    ⟨⟨⟨u, huP⟩, 1, by
+      intro h
+      exact hu.ne_one (congrArg Subtype.val h)⟩⟩
+  have hPrank : ¬ TwoRankAtLeastTwo P := by
+    intro hP
+    rcases hP with ⟨E, hEcard, hEsq⟩
+    let EG : Subgroup G := E.map (P : Subgroup G).subtype
+    have hEGcard : Nat.card EG = 4 := by
+      rw [Subgroup.card_map_of_injective (P : Subgroup G).subtype_injective]
+      exact hEcard
+    apply h2rank
+    refine ⟨EG, hEGcard, ?_⟩
+    rintro ⟨x, hx⟩
+    rcases hx with ⟨y, hy, rfl⟩
+    apply Subtype.ext
+    exact congrArg (fun z : E => ((z : P) : G)) (hEsq ⟨y, hy⟩)
+  obtain ⟨U, hUcard, hUunique⟩ :=
+    unique_order_two_subgroup_of_not_twoRank P.isPGroup' hPrank
+  have hclass :=
+    (External.huppert_III_8_2_pgroup_unique_order_prime_subgroup
+      Nat.prime_two P.isPGroup' ⟨U, hUcard, hUunique⟩).2 rfl
+  rcases hclass with hPcyc | hPquat
+  · exact proposition_1_factorization_of_cyclic_sylow_two P u hPcyc hu
+  · rcases hPquat with ⟨n, hn, hQ⟩
+    exact appendixII_factorization_of_quotient_involution_central u hu
+      (appendixII_quotient_involution_central P hn hQ u hu)
 
 private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvable_normal
     {G : Type u} {Ω : Type v} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]

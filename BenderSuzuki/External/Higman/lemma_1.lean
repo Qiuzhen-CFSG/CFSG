@@ -5,6 +5,7 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Higman.Basic
+public import BenderSuzuki.SE.Compat
 import Mathlib.GroupTheory.FiniteAbelian.Basic
 
 /-!
@@ -26,19 +27,31 @@ private theorem lemma1_finite_A
   letI : Finite P := finite_of_isSuzukiTwoGroup hP
   infer_instance
 
+private theorem lemma1_involutions_of_A_transitive
+    {X P : Type u} [Group X] [Group P] [MulDistribMulAction X P]
+    (hXtrans : ∀ x : P, x ∈ involutions P →
+      ∀ y : P, y ∈ involutions P → ∃ k : X, y = k • x)
+    {A : Subgroup P} {x y : A} (hx : IsInvolution x) (hy : IsInvolution y) :
+    ∃ k : X, (y : P) = k • (x : P) := by
+  apply hXtrans x
+  · exact ⟨fun h => hx.ne_one (Subtype.ext h), by
+      simpa using congrArg Subtype.val hx.sq_eq_one⟩
+  · exact ⟨fun h => hy.ne_one (Subtype.ext h), by
+      simpa using congrArg Subtype.val hy.sq_eq_one⟩
 
 private theorem lemma1_abelian_two_group_decomposition
-    {P : Type u} [Group P] (hP : IsSuzukiTwoGroup P)
+    {P : Type u} [Group P] [Finite P] (hP : IsPGroup 2 P)
     (A : Subgroup P) (hA_abelian : IsMulCommutative A) :
     ∃ (ι : Type) (_ : Fintype ι) (e : ι → ℕ),
       (∀ i, 0 < e i) ∧
         Nonempty (A ≃* ((i : ι) → Multiplicative (ZMod (2 ^ e i)))) := by
-  letI : Finite A := lemma1_finite_A hP A
+  letI : Finite A := inferInstance
   letI : IsMulCommutative A := hA_abelian
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   obtain ⟨ι, hι, n, hn, ⟨f⟩⟩ :=
     CommGroup.equiv_prod_multiplicative_zmod_of_finite A
   letI : Fintype ι := hι
-  obtain ⟨m, hm⟩ := (isPGroup_of_isSuzukiTwoGroup hP).to_subgroup A |>.exists_card_eq
+  obtain ⟨m, hm⟩ := hP.to_subgroup A |>.exists_card_eq
   have hcard : Nat.card A = ∏ i, n i := by
     rw [Nat.card_congr f.toEquiv, Nat.card_pi]
     apply Finset.prod_congr rfl
@@ -213,8 +226,9 @@ private theorem lemma1_equal_cyclic_orders
       exact le_antisymm (le_of_not_gt (hnotlt i0 i))
         (le_of_not_gt (hnotlt i i0))
 private theorem lemma1_homocyclic_decomposition
-    {X P : Type u} [Group X] [Group P] [MulDistribMulAction X P]
-    (hP : IsSuzukiTwoGroup P)
+    {X P : Type u} [Group X] [Group P] [Finite P]
+    [MulDistribMulAction X P]
+    (hP : IsPGroup 2 P)
     (hXtrans : ∀ x : P, x ∈ involutions P →
       ∀ y : P, y ∈ involutions P → ∃ k : X, y = k • x)
     {A : Subgroup P} (hA_abelian : IsMulCommutative A)
@@ -238,6 +252,23 @@ private theorem lemma1_homocyclic_decomposition
         Multiplicative (Fin r → ZMod (2 ^ e0)) :=
     (MulEquiv.piMultiplicative (fun _ : Fin r => ZMod (2 ^ e0))).symm
   exact ⟨e0, r, he0, ⟨f.trans (reindex.trans untag)⟩⟩
+/-- A finite abelian `2`-group on whose involutions a group acts transitively
+is homocyclic.  The Suzuki hypotheses are only needed by the later invariant-subgroup part. -/
+public theorem homocyclic_of_abelian_twoGroup_of_involutions_transitive
+    {X P : Type u} [Group X] [Group P] [Finite P]
+    [MulDistribMulAction X P]
+    (hP : IsPGroup 2 P) (hP_abelian : IsMulCommutative P)
+    (hXtrans : ∀ x : P, x ∈ involutions P →
+      ∀ y : P, y ∈ involutions P → ∃ k : X, y = k • x) :
+    ∃ e r : ℕ, 0 < e ∧
+      Nonempty (P ≃* Multiplicative (Fin r → ZMod (2 ^ e))) := by
+  letI : IsMulCommutative P := hP_abelian
+  letI : IsMulCommutative (⊤ : Subgroup P) := inferInstance
+  obtain ⟨e, r, he, ⟨f⟩⟩ :=
+    lemma1_homocyclic_decomposition hP hXtrans
+      (A := (⊤ : Subgroup P)) inferInstance (by intro x a; simp)
+  exact ⟨e, r, he, ⟨Subgroup.topEquiv.symm.trans f⟩⟩
+
 public theorem lemma1_involutions_mem_of_nontrivial_invariant
     {X P : Type u} [Group X] [Group P] [MulDistribMulAction X P]
     (hP : IsSuzukiTwoGroup P)
@@ -509,7 +540,7 @@ private theorem lemma1_coord_powKernel_card {e f : ℕ} (hf : f ≤ e) :
     _ = 2 ^ f := Nat.gcd_eq_right
       ((Nat.pow_dvd_pow_iff_le_right' (b := 0)).mpr hf)
 
-private theorem lemma1_powKernel_card_of_homocyclic
+public theorem lemma1_powKernel_card_of_homocyclic
     {G : Type u} [Group G] {e r f : ℕ} (hf : f ≤ e)
     (hG : G ≃* Multiplicative (Fin r → ZMod (2 ^ e))) :
     Nat.card {x : G // x ^ (2 ^ f) = 1} = (2 ^ f) ^ r := by
@@ -583,6 +614,7 @@ public theorem lemma1_power_closure_card
     Nat.card (Subgroup.closure
       {x : P | ∃ a : A, (a : P) ^ (2 ^ (e - f)) = x}) = (2 ^ f) ^ r := by
   letI : IsMulCommutative A := hA_abelian
+  letI : CommGroup A := IsMulCommutative.instCommGroup
   let power : A →* A := powMonoidHom (2 ^ (e - f))
   have hclosure : Subgroup.closure
       {x : P | ∃ a : A, (a : P) ^ (2 ^ (e - f)) = x} =
@@ -628,7 +660,8 @@ private theorem lemma1_invariant_subgroup_eq_power
       simpa using congrArg Subtype.val
         (mul_comm (⟨x, hBA x.property⟩ : A) (⟨y, hBA y.property⟩ : A))
     obtain ⟨f, q, hf, ⟨hB⟩⟩ :=
-      lemma1_homocyclic_decomposition hP hXtrans hB_abelian hB_X
+      lemma1_homocyclic_decomposition
+        (isPGroup_of_isSuzukiTwoGroup hP) hXtrans hB_abelian hB_X
     have hq : q = r :=
       lemma1_homocyclic_rank_eq hP hXtrans hBA hB_X hB_bot he hf hA hB
     subst q
@@ -670,12 +703,12 @@ public theorem lemma1_abelian_invariant_homocyclic
       ∀ B : Subgroup P, B ≤ A → IsXInvariantSubgroup X B →
         ∃ s : ℕ, s ≤ e ∧
           B = Subgroup.closure {x : P | ∃ a : A, (a : P) ^ (2 ^ s) = x} := by
+  letI : Finite P := finite_of_isSuzukiTwoGroup hP
   obtain ⟨e, r, he, ⟨hA⟩⟩ :=
-    lemma1_homocyclic_decomposition hP hXtrans hA_abelian hA_X
+    lemma1_homocyclic_decomposition
+      (isPGroup_of_isSuzukiTwoGroup hP) hXtrans hA_abelian hA_X
   refine ⟨e, r, ⟨hA⟩, ?_⟩
   exact lemma1_invariant_subgroup_eq_power hP hXtrans hA_abelian he hA
 end Higman
 end External
 end BenderSuzuki
-
-

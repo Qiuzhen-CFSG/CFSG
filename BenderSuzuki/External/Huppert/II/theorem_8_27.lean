@@ -1830,6 +1830,20 @@ public theorem huppert_II_8_4_nonsplit_torus_reflection_data
   exact ⟨S, w, hS_cyclic, hS_card, hwN, hwS, hwsq, hwinv,
     hcandidate_card, hnormalizer⟩
 
+/-- Huppert II.8.4(a,b), for the canonical nonsplit torus and its normalizer. -/
+public theorem huppert_II_8_4_nonsplit_torus_normalizer_card
+    {F : Type u} [Field F] [Finite F] {p f : ℕ} [Fact p.Prime]
+    (hFcard : Nat.card F = p ^ f) :
+    ∃ S : Subgroup (PSL2MatrixGroup F),
+      IsCyclic S ∧
+      Nat.card S =
+        (Nat.card F + 1) / Nat.gcd (Nat.card F - 1) 2 ∧
+      Nat.card (Subgroup.normalizer (S : Set (PSL2MatrixGroup F))) =
+        2 * Nat.card S := by
+  obtain ⟨S, hS_cyclic, hS_card, hS_normalizer, _, _, _⟩ :=
+    h84_nonsplit_torus_data hFcard
+  exact ⟨S, hS_cyclic, hS_card, hS_normalizer⟩
+
 private theorem hmem_eq_one_of_coprime_card
     {G : Type u} [Group G] [Finite G]
     (A B : Subgroup G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card B))

@@ -5018,7 +5018,7 @@ private theorem lemma12_forward_pair_gap_eq_of_supported
     rcases hsupported with hsupported | hsupported <;> omega
 
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 8000000 in
  /-- Higman Lemma 12: a Suzuki `2`-group of Omega-length three is type B, C, or
 D. -/
 public theorem lemma12_chain_typeBCD_with_isomorphic_criterion

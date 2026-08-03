@@ -87,7 +87,7 @@ private theorem suzukiOvoidPoint_injective
     simpa [Units.smul_def, hc_one] using hc1.symm
 
 /-- The point at infinity is not one of the normalized finite ovoid points. -/
-private theorem suzukiOvoidInfinity_not_mem_range
+public theorem suzukiOvoidInfinity_not_mem_range
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
       BinaryGaloisField (2 * m + 1)) :
@@ -310,7 +310,7 @@ private theorem suzukiOvoidNorm_inv
 
 /-- The Suzuki Weyl element sends the point at infinity to the zero finite
 point. -/
-private theorem suzukiWeyl_smul_infinity
+public theorem suzukiWeyl_smul_infinity
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
       BinaryGaloisField (2 * m + 1)) :
@@ -340,7 +340,7 @@ private theorem suzukiWeyl_smul_infinity
 
 /-- The Suzuki Weyl element sends the zero finite point to the point at
 infinity. -/
-private theorem suzukiWeyl_smul_zero
+public theorem suzukiWeyl_smul_zero
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
       BinaryGaloisField (2 * m + 1)) :
@@ -482,7 +482,7 @@ private theorem suzukiRoot_smul_finite
   ring
 
 /-- Every Suzuki torus element fixes the distinguished point at infinity. -/
-private theorem suzukiTorus_smul_infinity
+public theorem suzukiTorus_smul_infinity
     (m : ℕ)
     (u : (BinaryGaloisField (2 * m + 1))ˣ) :
     let K := BinaryGaloisField (2 * m + 1)
@@ -505,7 +505,7 @@ private theorem suzukiTorus_smul_infinity
 
 /-- A Suzuki torus element rescales the two normalized finite ovoid
 coordinates by `u` and `u * pi u`, respectively. -/
-private theorem suzukiTorus_smul_finite
+public theorem suzukiTorus_smul_finite
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
       BinaryGaloisField (2 * m + 1))
@@ -991,6 +991,145 @@ private theorem suzukiOvoid_two_transitive
   refine ⟨g₂⁻¹ * g₁, ?_, ?_⟩
   · rw [hcomp, hg₁a, hback_c]
   · rw [hcomp, hg₁b, hback_d]
+
+set_option maxHeartbeats 2000000 in
+/-- The Suzuki root closure acts regularly on the finite part of the ovoid.
+
+The finite-point coordinates make this explicit: a root element with
+coordinates `(a,b)` sends `p(x,y)` to
+`p (x+a) (y+b+pi a * (x+a))`. -/
+public theorem suzukiRootClosure_regular_on_ovoid_complement
+    (m : ℕ)
+    (pi : BinaryGaloisField (2 * m + 1) ≃+*
+      BinaryGaloisField (2 * m + 1))
+    (hpi : ∀ x, pi x = x ^ (2 ^ (m + 1)))
+    (a b : ℙ (BinaryGaloisField (2 * m + 1)) (Fin 4 →
+      BinaryGaloisField (2 * m + 1)))
+    (ha : a ∈ ({Projectivization.mk (BinaryGaloisField (2 * m + 1))
+      ![1, 0, 0, 0] (by simp)} ∪ Set.range (fun z :
+        BinaryGaloisField (2 * m + 1) × BinaryGaloisField (2 * m + 1) =>
+          Projectivization.mk (BinaryGaloisField (2 * m + 1))
+            ![z.1 * z.2 + pi z.1 * z.1 ^ 2 + pi z.2, z.2, z.1, 1]
+            (by simp)) ))
+    (hb : b ∈ ({Projectivization.mk (BinaryGaloisField (2 * m + 1))
+      ![1, 0, 0, 0] (by simp)} ∪ Set.range (fun z :
+        BinaryGaloisField (2 * m + 1) × BinaryGaloisField (2 * m + 1) =>
+          Projectivization.mk (BinaryGaloisField (2 * m + 1))
+            ![z.1 * z.2 + pi z.1 * z.1 ^ 2 + pi z.2, z.2, z.1, 1]
+            (by simp)) ))
+    (ha_ne : a ≠ Projectivization.mk (BinaryGaloisField (2 * m + 1))
+      ![1, 0, 0, 0] (by simp))
+    (hb_ne : b ≠ Projectivization.mk (BinaryGaloisField (2 * m + 1))
+      ![1, 0, 0, 0] (by simp)) :
+    ∃! r : Subgroup.closure
+        {A | ∃ x y : BinaryGaloisField (2 * m + 1),
+          A = SuzukiRootGL m x y},
+      (Matrix.GeneralLinearGroup.toLin
+        (r : GL (Fin 4) (BinaryGaloisField (2 * m + 1)))).toLinearEquiv • a = b := by
+  let K := BinaryGaloisField (2 * m + 1)
+  let pinf : ℙ K (Fin 4 → K) :=
+    Projectivization.mk K ![1, 0, 0, 0] (by simp)
+  let p : K → K → ℙ K (Fin 4 → K) := fun x y =>
+    Projectivization.mk K
+      ![x * y + pi x * x ^ 2 + pi y, y, x, 1] (by simp)
+  let F : Subgroup (GL (Fin 4) K) :=
+    Subgroup.closure {A | ∃ x y : K, A = SuzukiRootGL m x y}
+  change ∃! r : F,
+    (Matrix.GeneralLinearGroup.toLin (r : GL (Fin 4) K)).toLinearEquiv • a = b
+  have hpi_sq : ∀ x : K, pi (pi x) = x ^ 2 :=
+    binaryGaloisField_tits_formula_sq m pi hpi
+  rcases ha with ha_inf | ⟨z, hz⟩
+  · exfalso
+    apply ha_ne
+    simpa [pinf] using ha_inf
+  rcases hb with hb_inf | ⟨w, hw⟩
+  · exfalso
+    apply hb_ne
+    simpa [pinf] using hb_inf
+  subst a
+  subst b
+  let aa : K := w.1 + z.1
+  let bb : K := w.2 + z.2 + pi aa * w.1
+  let r : F := ⟨SuzukiRootGL m aa bb,
+    Subgroup.subset_closure ⟨aa, bb, rfl⟩⟩
+  refine ⟨r, ?_, ?_⟩
+  · change (Matrix.GeneralLinearGroup.toLin
+      (SuzukiRootGL m aa bb)).toLinearEquiv • p z.1 z.2 = p w.1 w.2
+    rw [suzukiRoot_smul_finite m pi hpi_sq hpi]
+    have hxa : z.1 + aa = w.1 := by
+      calc
+        z.1 + aa = z.1 + (w.1 + z.1) := rfl
+        _ = (z.1 + z.1) + w.1 := by ac_rfl
+        _ = w.1 := by rw [CharTwo.add_self_eq_zero, zero_add]
+    have hya : z.2 + bb + pi aa * (z.1 + aa) = w.2 := by
+      rw [hxa]
+      dsimp [bb]
+      calc
+        z.2 + (w.2 + z.2 + pi aa * w.1) + pi aa * w.1 =
+            w.2 + (z.2 + z.2) +
+              (pi aa * w.1 + pi aa * w.1) := by ac_rfl
+        _ = w.2 := by
+          rw [CharTwo.add_self_eq_zero, CharTwo.add_self_eq_zero]
+          simp
+    have hya' : z.2 + bb + pi aa * w.1 = w.2 := by
+      simpa [hxa] using hya
+    rw [hxa, hya']
+  · intro s hs
+    rcases (suzukiRootGL_mem_closure_iff m pi hpi_sq hpi
+      (s : GL (Fin 4) K)).mp s.property with ⟨c, d, hcd⟩
+    have hs' : p (z.1 + c) (z.2 + d + pi c * (z.1 + c)) =
+        p w.1 w.2 := by
+      change (Matrix.GeneralLinearGroup.toLin
+        (s : GL (Fin 4) K)).toLinearEquiv • p z.1 z.2 = p w.1 w.2 at hs
+      rw [hcd, suzukiRoot_smul_finite m pi hpi_sq hpi] at hs
+      exact hs
+    have hcoord : z.1 + c = w.1 ∧
+        z.2 + d + pi c * (z.1 + c) = w.2 := by
+      dsimp [p] at hs'
+      rw [Projectivization.mk_eq_mk_iff] at hs'
+      rcases hs' with ⟨u, hu⟩
+      have hu3 := congrFun hu (3 : Fin 4)
+      have hu_one : (u : K) = 1 := by
+        simpa [Units.smul_def] using hu3
+      constructor
+      · have hu2 := congrFun hu (2 : Fin 4)
+        simpa [Units.smul_def, hu_one] using hu2.symm
+      · have hu1 := congrFun hu (1 : Fin 4)
+        simpa [Units.smul_def, hu_one] using hu1.symm
+    have hc : c = aa := by
+      have h := hcoord.1
+      have hc0 : c = w.1 + z.1 := by
+        calc
+          c = (z.1 + c) + z.1 := by
+            symm
+            calc
+              (z.1 + c) + z.1 = c + (z.1 + z.1) := by ac_rfl
+              _ = c := by rw [CharTwo.add_self_eq_zero, add_zero]
+          _ = w.1 + z.1 := by rw [h]
+      exact hc0
+    have hd : d = bb := by
+      rw [hc] at hcoord
+      have hxa2 := hcoord.1
+      rw [hxa2] at hcoord
+      have h := hcoord.2
+      have hd0 : d = w.2 + z.2 + pi aa * w.1 := by
+        calc
+          d = (z.2 + d + pi aa * w.1) + z.2 + pi aa * w.1 := by
+            symm
+            calc
+              (z.2 + d + pi aa * w.1) + z.2 + pi aa * w.1 =
+                  d + (z.2 + z.2) +
+                    (pi aa * w.1 + pi aa * w.1) := by ac_rfl
+              _ = d := by
+                rw [CharTwo.add_self_eq_zero, CharTwo.add_self_eq_zero]
+                simp
+          _ = w.2 + z.2 + pi aa * w.1 := by rw [h]
+      exact hd0
+    apply Subtype.ext
+    calc
+      (s : GL (Fin 4) K) = SuzukiRootGL m c d := hcd
+      _ = SuzukiRootGL m aa bb := by rw [hc, hd]
+      _ = (r : GL (Fin 4) K) := rfl
 
 /-- Every root generator has determinant one. -/
 private theorem suzukiRootGL_det_one
@@ -2487,7 +2626,7 @@ private theorem suzukiMatrixGroup_stabilizer_infinity
     exact hB_fix (g : GL (Fin 4) K) hgB
 
 /-- An element fixing both standard ovoid points belongs to the split torus. -/
-private theorem suzukiMatrixGroup_mem_torus_of_fix_infinity_zero
+public theorem suzukiMatrixGroup_mem_torus_of_fix_infinity_zero
     (m : ℕ)
     (pi : BinaryGaloisField (2 * m + 1) ≃+*
       BinaryGaloisField (2 * m + 1))
@@ -2994,6 +3133,69 @@ private theorem suzukiOvoid_linear_stabilizer_recognition
     intro z
     rw [hAg]
     exact hgroup_pres g z
+
+/-- The preservation, faithfulness, two-transitivity, and cardinality parts of
+the natural Suzuki ovoid action do not require a positive parameter.  This
+separates the small `m = 0` action from the positive-parameter linear
+stabilizer recognition used in `huppert_blackburn_XI_3_3`. -/
+public theorem suzukiMatrixGroup_ovoid_action_data
+    (m : ℕ)
+    (pi : BinaryGaloisField (2 * m + 1) ≃+*
+      BinaryGaloisField (2 * m + 1))
+    (hpi : ∀ x, pi x = x ^ (2 ^ (m + 1))) :
+    let K := BinaryGaloisField (2 * m + 1)
+    let pinf : ℙ K (Fin 4 → K) :=
+      Projectivization.mk K ![1, 0, 0, 0] (by simp)
+    let p : K → K → ℙ K (Fin 4 → K) := fun x y =>
+      Projectivization.mk K
+        ![x * y + pi x * x ^ 2 + pi y, y, x, 1] (by simp)
+    let O : Set (ℙ K (Fin 4 → K)) :=
+      {pinf} ∪ Set.range fun z : K × K => p z.1 z.2
+    (∀ g : SuzukiMatrixGroup m, ∀ z, z ∈ O →
+      ((Matrix.GeneralLinearGroup.toLin
+        (g : GL (Fin 4) K)).toLinearEquiv • z) ∈ O) ∧
+    (∀ g : SuzukiMatrixGroup m,
+      (∀ z, z ∈ O →
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • z = z) → g = 1) ∧
+    (∀ a b c d, a ∈ O → b ∈ O → c ∈ O → d ∈ O →
+      a ≠ b → c ≠ d →
+      ∃ g : SuzukiMatrixGroup m,
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • a = c ∧
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • b = d) ∧
+    Nat.card {z // z ∈ O} = (2 ^ (2 * m + 1)) ^ 2 + 1 := by
+  let K := BinaryGaloisField (2 * m + 1)
+  let pinf : ℙ K (Fin 4 → K) :=
+    Projectivization.mk K ![1, 0, 0, 0] (by simp)
+  let p : K → K → ℙ K (Fin 4 → K) := fun x y =>
+    Projectivization.mk K
+      ![x * y + pi x * x ^ 2 + pi y, y, x, 1] (by simp)
+  let O : Set (ℙ K (Fin 4 → K)) :=
+    {pinf} ∪ Set.range fun z : K × K => p z.1 z.2
+  change
+    (∀ g : SuzukiMatrixGroup m, ∀ z, z ∈ O →
+      ((Matrix.GeneralLinearGroup.toLin
+        (g : GL (Fin 4) K)).toLinearEquiv • z) ∈ O) ∧
+    (∀ g : SuzukiMatrixGroup m,
+      (∀ z, z ∈ O →
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • z = z) → g = 1) ∧
+    (∀ a b c d, a ∈ O → b ∈ O → c ∈ O → d ∈ O →
+      a ≠ b → c ≠ d →
+      ∃ g : SuzukiMatrixGroup m,
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • a = c ∧
+        (Matrix.GeneralLinearGroup.toLin
+          (g : GL (Fin 4) K)).toLinearEquiv • b = d) ∧
+    Nat.card {z // z ∈ O} = (2 ^ (2 * m + 1)) ^ 2 + 1
+  have hpi_sq : ∀ x : K, pi (pi x) = x ^ 2 :=
+    binaryGaloisField_tits_formula_sq m pi hpi
+  exact ⟨suzukiMatrixGroup_smul_mem_ovoid m pi hpi_sq hpi,
+    suzukiMatrixGroup_faithful_on_ovoid m pi,
+    suzukiOvoid_two_transitive m pi hpi_sq hpi,
+    suzukiOvoid_card m pi⟩
 
 /-- Huppert-Blackburn XI.3.3: the natural Suzuki ovoid action. -/
 public theorem huppert_blackburn_XI_3_3
