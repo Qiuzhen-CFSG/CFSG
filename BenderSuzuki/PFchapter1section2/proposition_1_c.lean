@@ -153,6 +153,75 @@ private theorem proposition_1_c_involutions_center_of_Q_nilpotent_obligation
       (G := G) (Ω := Ω) (H := H) (D := D) (Q := Q) (t := t)
       hA1 hsQ x.property hsC dx.property hx_eq
 
+/-- Under Hypothesis (A1), nilpotence of `Q` forces every involution of `H`
+lying in `Q` to be central in `Q`. -/
+public theorem proposition_1_c_involutions_center_of_hypothesisA1
+    {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
+    (H D Q : Subgroup G) (t : G) (hA1 : HypothesisA1 G Ω H D Q t)
+    (hnil : Group.IsNilpotent Q) :
+    ∀ x : Q, (x : G) ∈ H → IsInvolution (x : G) →
+      x ∈ Subgroup.center Q := by
+  exact proposition_1_c_involutions_center_of_Q_nilpotent_obligation
+    H D Q t hA1 hnil
+
+public theorem proposition_1_c_exists_Q0_of_hypothesisA1
+    {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
+    (H D Q : Subgroup G) (t : G) (hA1 : HypothesisA1 G Ω H D Q t)
+    (hnil : Group.IsNilpotent Q) :
+    ∃ Q0 : Subgroup G,
+      Q0 ≤ Q ∧
+        (∀ x : G, x ∈ Q0 ↔ x = 1 ∨ (x ∈ H ∧ IsInvolution x)) ∧
+          IsMulCommutative Q0 ∧ ∀ x : Q0, x ^ 2 = 1 := by
+  let hcenter :=
+    proposition_1_c_involutions_center_of_hypothesisA1 H D Q t hA1 hnil
+  let Q0 : Subgroup G := {
+    carrier := {x : G | x = 1 ∨ (x ∈ H ∧ IsInvolution x)}
+    one_mem' := Or.inl rfl
+    mul_mem' := by
+      intro x y hx hy
+      rcases hx with rfl | ⟨hxH, hxI⟩
+      · simpa using hy
+      rcases hy with rfl | ⟨hyH, hyI⟩
+      · simpa using Or.inr ⟨hxH, hxI⟩
+      by_cases hxy : x * y = 1
+      · exact Or.inl hxy
+      · refine Or.inr ⟨H.mul_mem hxH hyH, ⟨hxy, ?_⟩⟩
+        have hxQ := involution_mem_Q_of_mem_H H D Q t hA1 x hxH hxI
+        have hyQ := involution_mem_Q_of_mem_H H D Q t hA1 y hyH hyI
+        have hxC : (⟨x, hxQ⟩ : Q) ∈ Subgroup.center Q :=
+          hcenter ⟨x, hxQ⟩ hxH hxI
+        have hcomm : x * y = y * x := by
+          exact (congrArg Subtype.val
+            (Subgroup.mem_center_iff.mp hxC ⟨y, hyQ⟩)).symm
+        calc
+          (x * y) ^ 2 = x * (y * x) * y := by simp [pow_two, mul_assoc]
+          _ = x * (x * y) * y := by rw [hcomm]
+          _ = (x * x) * (y * y) := by simp [mul_assoc]
+          _ = x ^ 2 * y ^ 2 := by rw [pow_two, pow_two]
+          _ = 1 := by rw [hxI.sq_eq_one, hyI.sq_eq_one, one_mul]
+    inv_mem' := by
+      intro x hx
+      rcases hx with rfl | ⟨hxH, hxI⟩
+      · exact Or.inl (inv_one)
+      · rw [hxI.inv_eq_self]
+        exact Or.inr ⟨hxH, hxI⟩
+  }
+  have hQ0_def : ∀ x : G, x ∈ Q0 ↔ x = 1 ∨ (x ∈ H ∧ IsInvolution x) :=
+    fun _ => Iff.rfl
+  have hQ0_le_Q : Q0 ≤ Q := by
+    intro x hx
+    rcases (hQ0_def x).mp hx with rfl | ⟨hxH, hxI⟩
+    · exact Q.one_mem
+    · exact involution_mem_Q_of_mem_H H D Q t hA1 x hxH hxI
+  have hsq : ∀ x : Q0, x ^ 2 = 1 := by
+    intro x
+    apply Subtype.ext
+    rcases (hQ0_def (x : G)).mp x.property with hx | ⟨_hxH, hxI⟩
+    · simp [hx]
+    · exact hxI.sq_eq_one
+  exact ⟨Q0, hQ0_le_Q, hQ0_def,
+    proposition_1_c_isMulCommutative_of_forall_sq_one hsq, hsq⟩
+
 public theorem proposition_1_c_involutions_center_of_hA
     {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (H D Q : Subgroup G) (t : G) (hA : HypothesisA G Ω H D Q t) :

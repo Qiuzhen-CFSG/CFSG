@@ -28,10 +28,11 @@ public theorem theorem1_order_center_cube_two_summands
     (hKcyclic : IsCyclic K) (hKfaithful : FaithfulSMul K P)
     (hKregular : ActionRegularOn K P (involutions P))
     (hcard : Nat.card P = Nat.card (Subgroup.center P) ^ 3) :
-    ∃ (_ : MulDistribMulAction K (P ⧸ Subgroup.center P))
+    ∃ (quotientAction : MulDistribMulAction K (P ⧸ Subgroup.center P))
         (U V : Subgroup (P ⧸ Subgroup.center P)),
       (∀ k : K, ∀ p : P,
-        k • QuotientGroup.mk' (Subgroup.center P) p =
+        @SMul.smul K (P ⧸ Subgroup.center P) quotientAction.toSMul k
+            (QuotientGroup.mk' (Subgroup.center P) p) =
           QuotientGroup.mk' (Subgroup.center P) (k • p)) ∧
       IsXInvariantSubgroup K U ∧ IsXInvariantSubgroup K V ∧
       Nat.card U = Nat.card (Subgroup.center P) ∧

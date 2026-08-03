@@ -24,6 +24,7 @@ open scoped commutatorElement
 
 universe u
 
+set_option maxHeartbeats 800000 in
 /-- Higman Lemma 8: if the commutator subgroup of a normal `X`-invariant cover
 lies below the abelian subgroup, then that abelian subgroup has exponent at most
 two. -/

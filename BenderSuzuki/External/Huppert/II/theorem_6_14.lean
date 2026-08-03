@@ -163,6 +163,50 @@ public theorem huppert614_card_psl_mul_center
     _ = Nat.card K * (Nat.card K ^ 2 - 1) :=
       huppert614_card_specialLinearGroup
 
+/-- Huppert II.6.14(1): `PSL(2,2)` is the symmetric group on three letters. -/
+public theorem huppert_II_6_14_a_psl2_card_two
+    {K : Type u} [Field K] [Finite K] (hKcard : Nat.card K = 2) :
+    Nonempty
+      (Matrix.ProjectiveSpecialLinearGroup (Fin 2) K ≃*
+        Equiv.Perm (Fin 3)) := by
+  classical
+  letI : Fintype K := Fintype.ofFinite K
+  haveI : CharP K 2 :=
+    charP_of_card_eq_prime (by
+      simpa [Nat.card_eq_fintype_card] using hKcard)
+  have hneg_one : (-1 : K) = 1 := by
+    apply (neg_eq_iff_add_eq_zero).2
+    have hone_add_one : (1 : K) + 1 = 0 := by
+      rw [show (1 : K) + 1 = 2 by norm_num]
+      exact CharP.cast_eq_zero K 2
+    exact hone_add_one
+  have hcenter := huppert614_card_center_of_neg_one_eq_one hneg_one
+  have hPSLcard := huppert614_card_psl_mul_center (K := K)
+  rw [hcenter, hKcard] at hPSLcard
+  norm_num at hPSLcard
+  let P := ℙ K (Fin 2 → K)
+  let PSL := Matrix.ProjectiveSpecialLinearGroup (Fin 2) K
+  have hPcard : Nat.card P = 3 := by
+    change Nat.card (ℙ K (Fin 2 → K)) = 3
+    rw [Projectivization.card_of_finrank_two K (Fin 2 → K) (by simp), hKcard]
+  obtain ⟨rho, hrho, _, _⟩ :=
+    huppert_II_6_11_projective_action (K := K) 2 (by omega)
+  let eP : P ≃ Fin 3 := Finite.equivFinOfCardEq hPcard
+  let actFin : PSL →* Equiv.Perm (Fin 3) :=
+    (Equiv.permCongrHom eP).toMonoidHom.comp rho
+  have hactFin_inj : Function.Injective actFin := by
+    intro x y hxy
+    apply hrho
+    apply (Equiv.permCongrHom eP).injective
+    simpa [actFin] using hxy
+  have hpermcard : Nat.card (Equiv.Perm (Fin 3)) = 6 := by
+    rw [Nat.card_perm, Nat.card_fin]
+    norm_num [Nat.factorial]
+  have hactFin_bij : Function.Bijective actFin :=
+    (Nat.bijective_iff_injective_and_card actFin).2
+      ⟨hactFin_inj, by simpa [PSL, hPSLcard] using hpermcard.symm⟩
+  exact ⟨MulEquiv.ofBijective actFin hactFin_bij⟩
+
 
 end External
 end BenderSuzuki

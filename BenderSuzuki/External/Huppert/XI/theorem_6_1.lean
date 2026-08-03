@@ -5,6 +5,8 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Huppert.XI.FrobeniusKernel
+public import FeitThompson.PFsection5.Basic
+public import FeitThompson.PFsection6.Basic
 public import FeitThompson.BGsection3.Remaining
 import BenderSuzuki.External.Huppert.II.theorem_1_12
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
@@ -11292,5 +11294,415 @@ public theorem huppert_XI_6_1_abelianKernel_complement_bound
   exact huppert_XI_6_1_abelianKernel_complement_bound_aux
     htwo_transitive hat_most_two_fixed_points hno_regular_normal
     a b hab F hFrob hFcomm
+
+/-!
+  A small, reusable interface to the XI.6.5 character package in the
+  abelian-kernel case.  The proof below is the initial (abelian) branch of
+  the XI.6.1 argument above, exposed so that later source leaves do not need
+  to depend on private implementation details.
+-/
+public theorem huppert_XI_6_5_abelian_frobenius_nonker_family
+    {X : Type u} [Group X] [Finite X]
+    (N : Subgroup X) (F D : Subgroup N)
+    (hFrob : IsFrobeniusGroupWithKernelComplement F D)
+    (hFcomm : IsMulCommutative F)
+    (hTI : Suzuki.VI.IsTISubsetRelative N
+      (F.map N.subtype : Set X)) :
+    ∃ Y : Finset (Section1.ClassFunction N),
+      (∀ chi : Y,
+        Section1.IsIrreducibleCharacterOnGroup
+          (chi : Section1.ClassFunction N)) ∧
+      (∀ chi : Y,
+        ¬ Section1.subgroupInKernel'
+          (chi : Section1.ClassFunction N) F) ∧
+      (∀ chi : Section1.ClassFunction N,
+        Section1.IsIrreducibleCharacterOnGroup chi →
+        ¬ Section1.subgroupInKernel' chi F →
+        chi ∈ Y) ∧
+      Section5.isCFLinearIsometryOnSpanOn Y Section5.puncturedSet
+        (Section1.inducedCFLinear N) ∧
+      (∀ phi : Section1.ClassFunction N,
+        Section5.integerSpanOn Y Section5.puncturedSet phi →
+          Representation.IsVirtualCharacter
+              (Section1.inducedCFLinear N phi) ∧
+            Section1.supportedOn (Section1.inducedCFLinear N phi)
+              Section5.puncturedSet) ∧
+      Section6.inducedKernelFamily F ⊥ Y ∧
+      (∀ chi : Y,
+        Section1.degree (chi : Section1.ClassFunction N) =
+          (Nat.card D : ℂ)) ∧
+      Y.card * Nat.card D = Nat.card F - 1 := by
+  classical
+  letI : F.Normal := hFrob.normal
+  obtain ⟨Y, hYirr, hYnonker, hYcomplete, hYisometry, hYvirtual⟩ :=
+    huppert_XI_6_5_complete_nonker_induction_isometry
+      N F D hFrob hTI
+  have hYbot : Section6.inducedKernelFamily F ⊥ Y :=
+    huppert_XI_6_5_complete_nonker_is_inducedKernelFamily
+      F D hFrob Y hYirr hYnonker hYcomplete
+  let Y0 := Section6.inducedKernelFamilyOf F ⁅F, F⁆ Y
+  obtain ⟨degreeNat, hY0sub, hdegree, hY0degree, _hdivDegree⟩ :=
+    huppert_XI_6_5_derived_base_degree_data F Y hYbot
+  have hY0eq : Y0 = Y := by
+    letI : IsMulCommutative F := hFcomm
+    letI : CommGroup F := IsMulCommutative.instCommGroup
+    have hcommRoot : _root_.commutator F = ⊥ := by
+      rw [commutator_eq_bot_iff_center_eq_top]
+      exact CommGroup.center_eq_top
+    have hcommAmbient : ⁅F, F⁆ = ⊥ := by
+      rw [← Subgroup.map_subtype_commutator, hcommRoot]
+      simp
+    simpa [Y0, hcommAmbient] using
+      (Section6.inducedKernelFamilyOf_eq_of_family hYbot hYbot)
+  have hFindex : F.relIndex (⊤ : Subgroup N) = Nat.card D := by
+    simpa [Subgroup.relIndex_top_right] using
+      hFrob.isComplement'.symm.index_eq_card
+  have hYdegreeD : ∀ chi : Y,
+      Section1.degree (chi : Section1.ClassFunction N) =
+        (Nat.card D : ℂ) := by
+    intro chi
+    rw [hdegree chi]
+    have hnat : degreeNat chi = Nat.card D := by
+      rw [← hFindex]
+      exact hY0degree ⟨chi, by
+        change (chi : Section1.ClassFunction N) ∈ Y0
+        rw [hY0eq]
+        exact chi.property⟩
+    rw [hnat]
+  have hYcharacter : ∀ theta : Section1.ClassFunction N,
+      theta ∈ Y ↔
+        Section1.IsIrreducibleCharacterOnGroup theta ∧
+          ¬ Section1.subgroupInKernel' theta F := by
+    intro theta
+    constructor
+    · intro htheta
+      exact ⟨hYirr ⟨theta, htheta⟩, hYnonker ⟨theta, htheta⟩⟩
+    · rintro ⟨hthetaIrr, hthetaNonker⟩
+      exact hYcomplete theta hthetaIrr hthetaNonker
+  have hsumEq :=
+    Section6.theorem_6_6_Xset_sum_degree_sq_add_quotient_card
+      hYcharacter (fun eta : Y => degreeNat eta) hdegree
+  let eQ : N ⧸ F ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
+  have hquotientCard : Nat.card (N ⧸ F) = Nat.card D :=
+    Nat.card_congr eQ.toEquiv
+  have hNcard : Nat.card N = Nat.card F * Nat.card D :=
+    hFrob.isComplement'.card_mul.symm
+  rw [hquotientCard, hNcard] at hsumEq
+  have hsumCard :
+      (∑ eta : Y, degreeNat eta ^ (2 : ℕ)) =
+        Y.card * Nat.card D ^ (2 : ℕ) := by
+    calc
+      (∑ eta : Y, degreeNat eta ^ (2 : ℕ)) =
+          ∑ _eta : Y, Nat.card D ^ (2 : ℕ) := by
+            apply Finset.sum_congr rfl
+            intro eta _heta
+            have hnat : degreeNat eta = Nat.card D := by
+              rw [← hFindex]
+              exact hY0degree ⟨eta, by
+                change (eta : Section1.ClassFunction N) ∈ Y0
+                rw [hY0eq]
+                exact eta.property⟩
+            rw [hnat]
+      _ = Y.card * Nat.card D ^ (2 : ℕ) := by simp
+  have hfactorEq :
+      (Y.card * Nat.card D + 1) * Nat.card D =
+        Nat.card F * Nat.card D := by
+    calc
+      (Y.card * Nat.card D + 1) * Nat.card D =
+          Y.card * Nat.card D ^ (2 : ℕ) + Nat.card D := by ring
+      _ = (∑ eta : Y, degreeNat eta ^ (2 : ℕ)) + Nat.card D := by
+        rw [hsumCard]
+      _ = Nat.card F * Nat.card D := hsumEq
+  have hcardFactor : Y.card * Nat.card D + 1 = Nat.card F :=
+    Nat.eq_of_mul_eq_mul_right Nat.card_pos hfactorEq
+  have hYcardEq : Y.card * Nat.card D = Nat.card F - 1 := by
+    omega
+  exact ⟨Y, hYirr, hYnonker, hYcomplete, hYisometry, hYvirtual,
+    hYbot, hYdegreeD, hYcardEq⟩
+section RegularRestriction
+
+open Section1
+
+/-- If a character restricts to the regular character of an abelian subgroup,
+then its irreducible decomposition is multiplicity-free and distinct ambient
+constituents have orthogonal restrictions.  This is the character-theoretic
+form of the first Burnside equation used in `[II1; 2.6]`. -/
+public theorem huppert_XI_regular_restriction_multiplicity_free
+    {G : Type u} [Group G] [Finite G]
+    (K : Subgroup G)
+    (hKcomm : IsMulCommutative K)
+    (pi : ClassFunction G)
+    (hpiChar : IsCharacter pi)
+    (hpiK : subgroupRestriction K pi = Section6.regularCharacter K) :
+    ∃ ι : Type, ∃ _ : Fintype ι, ∃ _ : DecidableEq ι,
+      ∃ psi : ι → ClassFunction G,
+        (∀ i, IsIrreducibleCharacterOnGroup (psi i)) ∧
+        Pairwise (fun i j => psi i ≠ psi j) ∧
+        pi = weightedFamilySum (fun _ : ι => (1 : ℂ)) psi ∧
+        (∀ i j, i ≠ j →
+          scalarProduct K (subgroupRestriction K (psi i))
+            (subgroupRestriction K (psi j)) = 0) ∧
+        ∀ theta : ClassFunction K,
+          IsIrreducibleCharacterOnGroup theta →
+          ∃ i, ∀ j,
+            scalarProduct K theta (subgroupRestriction K (psi j)) =
+              if j = i then 1 else 0 := by
+  classical
+  letI : IsMulCommutative K := hKcomm
+  letI : CommGroup K := IsMulCommutative.instCommGroup
+  have hpiNe : pi ≠ 0 := by
+    intro hzero
+    have hzeroK : subgroupRestriction K pi = 0 := by rw [hzero]; rfl
+    rw [hpiK] at hzeroK
+    have hone := congrFun hzeroK (1 : K)
+    have hcardPos : 0 < Nat.card K := Nat.card_pos
+    simp [Section6.regularCharacter] at hone
+    omega
+  obtain ⟨ι, hι, hdec, e, psi, _i0, hepos, hpsiBook, hpair, hdecomp⟩ :=
+    exists_positive_irreducible_decomposition_of_character pi hpiChar hpiNe
+  letI : Fintype ι := hι
+  letI : DecidableEq ι := hdec
+  have hpsiIrr : ∀ i, IsIrreducibleCharacterOnGroup (psi i) := by
+    intro i
+    exact isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
+      (psi i) (hpsiBook i)
+  have hpsiChar : ∀ i, IsCharacter (psi i) := fun i => (hpsiBook i).1
+  have hresChar : ∀ i, IsCharacter (subgroupRestriction K (psi i)) := by
+    intro i
+    rcases subgroupRestriction_eq_representation_character_of_isCharacter
+        K (psi i) (hpsiChar i) with
+      ⟨V, _hadd, _hmod, _hfd, rho, hrho⟩
+    exact ⟨V, inferInstance, inferInstance, inferInstance, rho, hrho⟩
+  have hresDecomp : subgroupRestriction K pi =
+      weightedFamilySum (fun i => (e i : ℂ))
+        (fun i => subgroupRestriction K (psi i)) := by
+    rw [hdecomp]
+    ext k
+    simp [subgroupRestriction, weightedFamilySum]
+  have hbudget : ∀ (theta : ClassFunction K),
+      IsIrreducibleCharacterOnGroup theta →
+      ∃ c : ι → ℕ,
+        (∀ i, scalarProduct K theta (subgroupRestriction K (psi i)) = (c i : ℂ)) ∧
+        ∑ i, e i * c i = 1 := by
+    intro theta htheta
+    have hthetaChar : IsCharacter theta :=
+      isCharacter_of_isIrreducibleCharacterOnGroup htheta
+    have hthetaDegree : degree theta = 1 :=
+      isIrreducibleCharacterOnGroup_degree_eq_one_of_commutative htheta
+    have hthetaOne : theta 1 = 1 := by simpa [degree_apply] using hthetaDegree
+    have hcExists : ∀ i, ∃ c : ℕ,
+        scalarProduct K theta (subgroupRestriction K (psi i)) = (c : ℂ) := by
+      intro i
+      exact scalarProduct_character_character_eq_nat theta
+        (subgroupRestriction K (psi i)) hthetaChar (hresChar i)
+    choose c hc using hcExists
+    refine ⟨c, hc, ?_⟩
+    have hsp : scalarProduct K theta (Section6.regularCharacter K) = 1 := by
+      letI : Fintype K := Fintype.ofFinite K
+      unfold scalarProduct Section6.regularCharacter
+      rw [Finset.sum_eq_single (1 : K)]
+      · simp only [if_true]
+        rw [hthetaOne]
+        have hstar : star ((Nat.card K : ℂ)) = (Nat.card K : ℂ) := by
+          simp
+        rw [hstar]
+        have hcard : (Fintype.card K : ℂ) ≠ 0 := by
+          exact_mod_cast (Fintype.card_ne_zero : Fintype.card K ≠ 0)
+        field_simp [hcard, Nat.card_eq_fintype_card]
+      · intro k _hk hkne
+        simp [hkne]
+      · intro hone
+        simp at hone
+    have hsumComplex :
+        (∑ i, (e i : ℂ) * (c i : ℂ)) = 1 := by
+      calc
+        (∑ i, (e i : ℂ) * (c i : ℂ)) =
+            scalarProduct K theta
+              (weightedFamilySum (fun i => (e i : ℂ))
+                (fun i => subgroupRestriction K (psi i))) := by
+          rw [scalarProduct_weightedFamilySum_right]
+          have hterm :
+              (fun i => star (e i : ℂ) *
+                scalarProduct K theta (subgroupRestriction K (psi i))) =
+                fun i => (e i : ℂ) * (c i : ℂ) := by
+            funext i
+            rw [hc i]
+            simp
+          rw [hterm]
+          apply Finset.sum_congr
+          · ext i
+            simp
+          · intro i _hi
+            rfl
+        _ = scalarProduct K theta (subgroupRestriction K pi) := by
+          rw [hresDecomp]
+        _ = scalarProduct K theta (Section6.regularCharacter K) := by
+          rw [hpiK]
+        _ = 1 := hsp
+    exact_mod_cast hsumComplex
+  have heOne : ∀ i, e i = 1 := by
+    intro i
+    have hresNe : subgroupRestriction K (psi i) ≠ 0 := by
+      intro hzero
+      have hone := congrFun hzero (1 : K)
+      have hdegNe : degree (psi i) ≠ 0 :=
+        degree_ne_zero_of_isBookIrreducibleCharacter (psi i) (hpsiBook i)
+      apply hdegNe
+      simpa [subgroupRestriction, degree_apply] using hone
+    obtain ⟨κ, hκ, hκdec, a, theta, k0, hapos, hthetaBook,
+        _hthetaPair, hresEq⟩ :=
+      exists_positive_irreducible_decomposition_of_character
+        (subgroupRestriction K (psi i)) (hresChar i) hresNe
+    letI : Fintype κ := hκ
+    letI : DecidableEq κ := hκdec
+    have hthetaOrth : ∀ r s : κ,
+        scalarProduct K (theta r) (theta s) = if r = s then 1 else 0 :=
+      scalarProduct_isBookIrreducible_family theta hthetaBook _hthetaPair
+    have hcoeff : scalarProduct K (theta k0)
+        (subgroupRestriction K (psi i)) = (a k0 : ℂ) := by
+      rw [hresEq]
+      rw [← scalarProduct_star_swap]
+      rw [scalarProduct_weightedFamilySum_left_orthonormal
+        (fun r => (a r : ℂ)) theta hthetaOrth k0]
+      simp
+    have hthetaIrr : IsIrreducibleCharacterOnGroup (theta k0) :=
+      isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
+        (theta k0) (hthetaBook k0)
+    obtain ⟨c, hc, hsum⟩ := hbudget (theta k0) hthetaIrr
+    have hci : c i = a k0 := by
+      exact_mod_cast (hc i).symm.trans hcoeff
+    have htermLe : e i * c i ≤ ∑ j, e j * c j := by
+      exact Finset.single_le_sum (fun j _hj => Nat.zero_le (e j * c j))
+        (Finset.mem_univ i)
+    rw [hsum, hci] at htermLe
+    have heiPos : 0 < e i := hepos i
+    have haPos : 0 < a k0 := hapos k0
+    have hprodPos : 0 < e i * a k0 := Nat.mul_pos heiPos haPos
+    have hprodEq : e i * a k0 = 1 := by omega
+    exact Nat.dvd_one.mp ⟨a k0, hprodEq.symm⟩
+  have hresPartition : ∀ theta : ClassFunction K,
+      IsIrreducibleCharacterOnGroup theta →
+      ∃ i, ∀ j,
+        scalarProduct K theta (subgroupRestriction K (psi j)) =
+          if j = i then 1 else 0 := by
+    intro theta htheta
+    obtain ⟨c, hc, hsum⟩ := hbudget theta htheta
+    have hsum' : ∑ j, c j = 1 := by
+      simpa [heOne] using hsum
+    have hex : ∃ i, c i ≠ 0 := by
+      by_contra h
+      push_neg at h
+      have hzero : ∑ j, c j = 0 := by simp [h]
+      omega
+    obtain ⟨i, hciNe⟩ := hex
+    have hci : c i = 1 := by
+      have hle : c i ≤ ∑ j, c j := by
+        exact Finset.single_le_sum (fun j _hj => Nat.zero_le (c j))
+          (Finset.mem_univ i)
+      rw [hsum'] at hle
+      omega
+    refine ⟨i, ?_⟩
+    intro j
+    rw [hc j]
+    by_cases hji : j = i
+    · subst j
+      simp [hci]
+    · have hrest : ∑ k ∈ (Finset.univ.erase i), c k = 0 := by
+        have hsplit := Finset.sum_erase_add (s := (Finset.univ : Finset ι))
+          (f := c) (Finset.mem_univ i)
+        change (∑ k ∈ (Finset.univ.erase i), c k) + c i = ∑ k, c k at hsplit
+        rw [hsum', hci] at hsplit
+        omega
+      have hjmem : j ∈ (Finset.univ : Finset ι).erase i := by
+        simp [hji]
+      have hle : c j ≤ ∑ k ∈ (Finset.univ.erase i), c k := by
+        exact Finset.single_le_sum (fun k _hk => Nat.zero_le (c k)) hjmem
+      rw [hrest] at hle
+      have hcj : c j = 0 := by omega
+      simp [hji, hcj]
+  have hresOrth : ∀ i j, i ≠ j →
+      scalarProduct K (subgroupRestriction K (psi i))
+        (subgroupRestriction K (psi j)) = 0 := by
+    intro i j hij
+    have hresNe : subgroupRestriction K (psi i) ≠ 0 := by
+      intro hzero
+      have hone := congrFun hzero (1 : K)
+      have hdegNe : degree (psi i) ≠ 0 :=
+        degree_ne_zero_of_isBookIrreducibleCharacter (psi i) (hpsiBook i)
+      apply hdegNe
+      simpa [subgroupRestriction, degree_apply] using hone
+    obtain ⟨κ, hκ, hκdec, a, theta, _k0, hapos, hthetaBook,
+        hthetaPair, hresEq⟩ :=
+      exists_positive_irreducible_decomposition_of_character
+        (subgroupRestriction K (psi i)) (hresChar i) hresNe
+    letI : Fintype κ := hκ
+    letI : DecidableEq κ := hκdec
+    have hthetaOrth : ∀ r s : κ,
+        scalarProduct K (theta r) (theta s) = if r = s then 1 else 0 :=
+      scalarProduct_isBookIrreducible_family theta hthetaBook hthetaPair
+    have hcoeffSelf : ∀ r : κ,
+        scalarProduct K (theta r) (subgroupRestriction K (psi i)) =
+          (a r : ℂ) := by
+      intro r
+      rw [hresEq]
+      rw [← scalarProduct_star_swap]
+      rw [scalarProduct_weightedFamilySum_left_orthonormal
+        (fun s => (a s : ℂ)) theta hthetaOrth r]
+      simp
+    have hcoeffOther : ∀ r : κ,
+        scalarProduct K (theta r) (subgroupRestriction K (psi j)) = 0 := by
+      intro r
+      have hthetaIrr : IsIrreducibleCharacterOnGroup (theta r) :=
+        isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
+          (theta r) (hthetaBook r)
+      obtain ⟨c, hc, hsum⟩ := hbudget (theta r) hthetaIrr
+      have hci : c i = a r := by
+        exact_mod_cast (hc i).symm.trans (hcoeffSelf r)
+      have haPos : 0 < a r := hapos r
+      have hciOne : e i * c i = 1 := by
+        rw [heOne i, hci]
+        have haLe : a r ≤ 1 := by
+          have htermLe : e i * c i ≤ ∑ l, e l * c l := by
+            exact Finset.single_le_sum
+              (fun l _hl => Nat.zero_le (e l * c l)) (Finset.mem_univ i)
+          rw [hsum, heOne i, hci] at htermLe
+          simpa using htermLe
+        have haOne : a r = 1 := by omega
+        simp [haOne]
+      have hrest : ∑ l ∈ (Finset.univ.erase i), e l * c l = 0 := by
+        have hsplit := Finset.sum_erase_add (s := (Finset.univ : Finset ι))
+          (f := fun l => e l * c l) (Finset.mem_univ i)
+        change (∑ l ∈ (Finset.univ.erase i), e l * c l) +
+          e i * c i = ∑ l, e l * c l at hsplit
+        rw [hsum, hciOne] at hsplit
+        omega
+      have hjmem : j ∈ (Finset.univ : Finset ι).erase i := by
+        simp [Ne.symm hij]
+      have htermjLe : e j * c j ≤
+          ∑ l ∈ (Finset.univ.erase i), e l * c l := by
+        exact Finset.single_le_sum
+          (fun l _hl => Nat.zero_le (e l * c l)) hjmem
+      rw [hrest] at htermjLe
+      have hcj : c j = 0 := by
+        have hejPos : 0 < e j := hepos j
+        have hprodZero : e j * c j = 0 := by omega
+        rcases mul_eq_zero.mp hprodZero with hejZero | hcjZero
+        · omega
+        · exact hcjZero
+      rw [hc j, hcj]
+      simp
+    rw [hresEq, scalarProduct_weightedFamilySum_left]
+    apply Finset.sum_eq_zero
+    intro r _hr
+    rw [hcoeffOther r]
+    simp
+  refine ⟨ι, hι, hdec, psi, hpsiIrr, hpair, ?_, hresOrth, hresPartition⟩
+  calc
+    pi = weightedFamilySum (fun i => (e i : ℂ)) psi := hdecomp
+    _ = weightedFamilySum (fun _ : ι => (1 : ℂ)) psi := by
+      ext g
+      simp [weightedFamilySum, heOne]
+
+end RegularRestriction
 end External
 end BenderSuzuki

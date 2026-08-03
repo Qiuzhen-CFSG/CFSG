@@ -25,6 +25,7 @@ open scoped IsMulCommutative
 
 universe u
 
+set_option maxHeartbeats 800000 in
 /-- Higman Lemma 7: if a normal `X`-invariant cover has Frattini subgroup below
 `A` and commutator subgroup properly below `A`, then the cover is abelian. -/
 public theorem lemma7_cover_commutator_case_abelian

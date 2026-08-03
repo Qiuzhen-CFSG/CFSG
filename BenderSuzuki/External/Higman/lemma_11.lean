@@ -219,6 +219,7 @@ cyclic actor on the central quotient and the center. -/
     ∀ z : BinaryGaloisField n,
       pairLift 0 z =
         ((eZ.symm (Multiplicative.ofAdd z) : Subgroup.center P) : P)
+set_option maxHeartbeats 800000 in
 /-- Higman Lemma 11: a Suzuki `2`-group of Omega-length two is type A. -/
 public theorem lemma11_length_two_typeA_actor_coordinates
     {X P : Type u} [Group X] [Group P] [MulDistribMulAction X P]
@@ -2021,6 +2022,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     exact hsquare_normal_form_typeA
   exact hspectral_typeA
 
+set_option maxHeartbeats 800000 in
 /-- Higman Lemma 11: a Suzuki `2`-group of Omega-length two is type A. -/
 public theorem lemma11_length_two_typeA
     {X P : Type u} [Group X] [Group P] [MulDistribMulAction X P]

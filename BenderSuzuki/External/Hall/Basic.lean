@@ -55,6 +55,43 @@ public theorem hallPResidual_normal
     · rw [← conj_inv]
       exact (hallPResidual p G).inv_mem hx'
 
+/-- Hall's `p`-residual is characteristic: automorphisms preserve element
+orders and hence preserve its canonical generating set. -/
+public instance hallPResidual_characteristic
+    (p : ℕ) (G : Type u) [Group G] : (hallPResidual p G).Characteristic := by
+  rw [Subgroup.characteristic_iff_map_le]
+  intro φ
+  intro x hx
+  rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
+  refine Subgroup.closure_induction (p := fun y _hy => φ y ∈ hallPResidual p G)
+    ?_ ?_ ?_ ?_ hy
+  · intro y hy
+    apply Subgroup.subset_closure
+    change Nat.Coprime p (orderOf (φ y))
+    simpa using hy
+  · simpa using (Subgroup.one_mem (hallPResidual p G))
+  · intro a b _ha _hb ha hb
+    simpa using (Subgroup.mul_mem (hallPResidual p G) ha hb)
+  · intro a _ha ha
+    simpa using (Subgroup.inv_mem (hallPResidual p G) ha)
+
+/-- Universal property of Hall's residual: every homomorphism into a
+`p`-group kills the `p'`-order generators. -/
+public theorem hallPResidual_le_ker_of_isPGroup
+    {p : ℕ} [Fact p.Prime] {G H : Type*} [Group G] [Group H]
+    (f : G →* H) (hH : IsPGroup p H) :
+    hallPResidual p G ≤ f.ker := by
+  rw [hallPResidual, Subgroup.closure_le]
+  intro x hx
+  change f x = 1
+  obtain ⟨k, hk⟩ := (IsPGroup.iff_orderOf.mp hH) (f x)
+  have hcop : Nat.Coprime (orderOf (f x)) (orderOf x) := by
+    rw [hk]
+    exact hx.pow_left k
+  have hone : orderOf (f x) = 1 :=
+    Nat.eq_one_of_dvd_coprimes hcop (dvd_refl _) (orderOf_map_dvd f x)
+  exact orderOf_eq_one_iff.mp hone
+
 
 /-- The intersection of a fixed Sylow subgroup with a normal subgroup,
 viewed in that normal subgroup. -/
@@ -510,5 +547,4 @@ public theorem weaklyClosedIn_normalizer_le_normalizer
   simpa using (Subgroup.normalizer (Q : Set G)).inv_mem hninvQ
 end External
 end BenderSuzuki
-
 
