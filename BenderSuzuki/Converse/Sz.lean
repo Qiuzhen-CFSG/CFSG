@@ -5,6 +5,7 @@ Converse to the Suzuki theorem: the Sz(2^(2m+1)) case.
 module
 
 public import BenderSuzuki.Converse.PSL2
+public import BenderSuzuki.Converse.Lift
 public import BenderSuzuki.PFchapter1section1.Basic
 public import BenderSuzuki.External.Huppert.XI.theorem_3_3
 public import Mathlib.FieldTheory.Finite.GaloisField
@@ -249,13 +250,6 @@ public theorem szKlein_sq (a b : SzK m) (g : szKlein m a b) :
   apply Subtype.ext
   rw [Subgroup.coe_pow, sq]
   exact szRoot0_sq m c
-
-/-- Orbit-stabilizer, in `Nat.card` form. -/
-public theorem card_stabilizer_mul_card_orbit {G X : Type*} [Group G] [MulAction G X]
-    [Finite G] (b : X) :
-    Nat.card (MulAction.stabilizer G b) * Nat.card (MulAction.orbit G b) = Nat.card G := by
-  rw [Nat.card_congr (MulAction.orbitEquivQuotientStabilizer G b)]
-  exact Subgroup.card_mul_index _
 
 public theorem szTwoRank : TwoRankAtLeastTwo (SzG m) := by
   have hcard : 4 ≤ Nat.card (SzK m) := by
