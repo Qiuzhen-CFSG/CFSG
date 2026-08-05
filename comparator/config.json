@@ -1,0 +1,12 @@
+{
+    "challenge_module": "Challenge",
+    "solution_module": "Solution",
+    "theorem_names": [
+        "BSConverse.hypothesisA_stronglyEmbedded",
+        "BSConverse.psl2_hypothesisA",
+        "BSConverse.suzuki_hypothesisA",
+        "BSConverse.psu3_hypothesisA"
+    ],
+    "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+    "enable_nanoda": false
+}

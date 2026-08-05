@@ -20,3 +20,31 @@ name = "FeitThompson"
 
 [[lean_lib]]
 name = "BenderSuzuki"
+
+[[lean_lib]]
+name = "Challenge"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "Solution"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "Defs"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "ZJDefs"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "ZJChallenge"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "ZJSolution"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "BenderSuzukiChallenge"
+srcDir = "comparator"
