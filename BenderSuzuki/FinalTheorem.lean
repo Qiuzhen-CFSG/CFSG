@@ -8,11 +8,11 @@ open Matrix
 open BenderSuzuki.MatrixGroups
 
 /-- An involution: a nonidentity element of order dividing two. -/
-def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
+@[expose] public def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
 
 /-- `M` is **strongly embedded** in `X`: proper, containing an involution, and meeting each
 of its other conjugates in a subgroup containing none. -/
-def IsStronglyEmbedded {X : Type*} [Group X] (M : Subgroup X) : Prop :=
+@[expose] public def IsStronglyEmbedded {X : Type*} [Group X] (M : Subgroup X) : Prop :=
   M ≠ ⊤ ∧ (∃ x ∈ M, IsInvolution x) ∧
     ∀ g ∉ M, ∀ x ∈ M ⊓ M.map (MulAut.conj g).toMonoidHom, ¬ IsInvolution x
 
@@ -57,7 +57,7 @@ public noncomputable def PSU3Model (n : ℕ) :
     GeneralLinearGroup.det A = 1}).map ProjGenLinGroup.mk
 
 /-- The conclusion of the classification: `G` is one of the three families. -/
-inductive IsSimpleBenderGroup (G : Type u) [Group G] : Prop
+public inductive IsSimpleBenderGroup (G : Type u) [Group G] : Prop
   | isPSL2 (n : ℕ) (_ : 2 ≤ n) (e : G ≃* PSL2Model n)
   | isSuzuki (n : ℕ) (_ : 1 ≤ n) (e : G ≃* SzModel n)
   | isPSU3 (n : ℕ) (_ : 2 ≤ n) (e : G ≃* PSU3Model n)
@@ -279,7 +279,7 @@ public theorem projectiveSpecialUnitary_equiv_psu3Model
       (MulEquiv.subgroupCongr hmodel)⟩
 
 /-- **The Bender-Suzuki theorem.** -/
-theorem bender_suzuki {X : Type u} [Group X] [Finite X] [IsSimpleGroup X] (M : Subgroup X)
+public theorem bender_suzuki {X : Type u} [Group X] [Finite X] [IsSimpleGroup X] (M : Subgroup X)
     (hM : IsStronglyEmbedded M) : IsSimpleBenderGroup X := by
   have hclassification : BenderSuzuki.IsSimpleBenderGroup X :=
     BenderSuzuki.theorem_SE_simple M
