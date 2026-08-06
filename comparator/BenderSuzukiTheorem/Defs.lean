@@ -1,17 +1,21 @@
 /-
-The Bender-Suzuki theorem: a finite simple group with a strongly embedded subgroup is
-`PSL(2, 2ⁿ)`, `Sz(2^(2n+1))` or `PSU(3, 2ⁿ)`.
+Definitions for the Bender-Suzuki challenge, stated over Mathlib alone: strong embedding,
+the three group models together with the generating set `Sz` is defined from, and the
+inductive naming the conclusion.  None contains a proof.
 
-Everything is stated over Mathlib.  Seven declarations precede the theorem: involutions,
-strong embedding, the three group models together with the generating set `Sz` is defined from,
-and the inductive naming the conclusion.  None of them contains a proof, so the file is
-its own audit surface.
+Each agrees word for word with `BenderSuzuki/FinalTheorem.lean`, so what the challenge
+asks is what this repository proves.
 -/
-import Mathlib
+import Mathlib.FieldTheory.Finite.GaloisField
+import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
+import Mathlib.GroupTheory.SpecificGroups.Alternating
 
 universe u
 
 open Matrix
+
+namespace BSTheorem
 
 /-- An involution: a nonidentity element of order dividing two. -/
 def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
@@ -66,7 +70,4 @@ inductive IsSimpleBenderGroup (G : Type u) [Group G] : Prop
   | isSuzuki (n : ℕ) (_ : 1 ≤ n) (e : G ≃* SzModel n)
   | isPSU3 (n : ℕ) (_ : 2 ≤ n) (e : G ≃* PSU3Model n)
 
-/-- **The Bender-Suzuki theorem.** -/
-theorem bender_suzuki {X : Type u} [Group X] [Finite X] [IsSimpleGroup X] (M : Subgroup X)
-    (hM : IsStronglyEmbedded M) : IsSimpleBenderGroup X := by
-  sorry
+end BSTheorem

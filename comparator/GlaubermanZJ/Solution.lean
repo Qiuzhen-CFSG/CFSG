@@ -7,7 +7,7 @@ transcribes the two repository definitions verbatim, so those two bridges are
 `Subgroup.center` with the repository's `centerIn`.
 -/
 
-import ZJDefs
+import GlaubermanZJ.Defs
 import FeitThompson.BGsection6.theorem_6_2
 
 namespace ZJ

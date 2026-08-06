@@ -15,6 +15,11 @@ checks the short side is entitled to the long one.
 No definition is introduced here, or anywhere in the converse lane: every statement
 below is phrased with the one predicate `bender_suzuki` itself takes as its hypothesis,
 so a reader has a single notion of strong embedding to check and not two.
+
+What the equivalence does not settle: that the three families are pairwise
+non-isomorphic, or that the models pick out the intended member of each family.  Bender's
+theorem itself is used as external knowledge in reading the left-to-right direction; it is
+`bender_suzuki`, proved in `BenderSuzuki.SE`, and this file adds only the converse.
 -/
 
 module

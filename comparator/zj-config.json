@@ -1,9 +1,0 @@
-{
-    "challenge_module": "ZJChallenge",
-    "solution_module": "ZJSolution",
-    "theorem_names": [
-        "ZJ.glauberman_zj"
-    ],
-    "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
-    "enable_nanoda": false
-}

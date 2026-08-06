@@ -8,6 +8,17 @@ defines it -- the same predicate `bender_suzuki` takes as its hypothesis, and th
 notion of strong embedding this development introduces.  The proof below naturally
 produces the parity form (`|H|` even, `|H ⊓ H^g|` odd); `isStronglyEmbedded_of_parity`
 converts it, by Cauchy's theorem at the prime two, and that form is never stated.
+
+Only one direction is proved: `HypothesisA → IsStronglyEmbedded`.  The reverse --
+recovering the Zassenhaus configuration from a strongly embedded subgroup alone -- is the
+hard content of Bender's 1971 paper and is not formalized here.  Neither is the statement
+that an arbitrary group satisfying the conclusion of the classification has a strongly
+embedded subgroup; what is proved is that the three families do, which is what the
+equivalence in `BenderSuzuki.Classification` needs.
+
+The three witnesses are assembled from the classical facts in `External/`.  Peterfalvi
+states Theorem A in one direction only, so this direction is not a transcription of a
+numbered result in any source.
 -/
 
 module

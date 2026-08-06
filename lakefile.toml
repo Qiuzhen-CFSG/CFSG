@@ -22,29 +22,16 @@ name = "FeitThompson"
 name = "BenderSuzuki"
 
 [[lean_lib]]
-name = "Challenge"
+name = "BenderSuzukiConverse"
 srcDir = "comparator"
+globs = ["BenderSuzukiConverse.+"]
 
 [[lean_lib]]
-name = "Solution"
+name = "BenderSuzukiTheorem"
 srcDir = "comparator"
+globs = ["BenderSuzukiTheorem.+"]
 
 [[lean_lib]]
-name = "Defs"
+name = "GlaubermanZJ"
 srcDir = "comparator"
-
-[[lean_lib]]
-name = "ZJDefs"
-srcDir = "comparator"
-
-[[lean_lib]]
-name = "ZJChallenge"
-srcDir = "comparator"
-
-[[lean_lib]]
-name = "ZJSolution"
-srcDir = "comparator"
-
-[[lean_lib]]
-name = "BenderSuzukiChallenge"
-srcDir = "comparator"
+globs = ["GlaubermanZJ.+"]

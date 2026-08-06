@@ -15,7 +15,7 @@ There are deliberately no entries in `definition_names`.  A definition hole woul
 solution define `IsStronglyEmbedded := fun _ => True` and discharge everything by
 `trivial`.
 -/
-import Defs
+import BenderSuzukiConverse.Defs
 
 namespace BSConverse
 

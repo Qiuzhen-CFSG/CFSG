@@ -4,7 +4,7 @@ four statements are the challenge's, proved.  Nobody needs to read this file.
 
 It does not import `Challenge`, so nothing here can influence what the challenge asks for.
 -/
-import Defs
+import BenderSuzukiConverse.Defs
 import BenderSuzuki.Converse.StronglyEmbedded
 
 namespace BSConverse
