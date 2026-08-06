@@ -1,5 +1,11 @@
 module  -- shake: keep-all --deprecated_module: ignore
 
+public import BenderSuzuki.Classification
+public import BenderSuzuki.Converse.Lift
+public import BenderSuzuki.Converse.PSL2
+public import BenderSuzuki.Converse.PSU3
+public import BenderSuzuki.Converse.StronglyEmbedded
+public import BenderSuzuki.Converse.Sz
 public import BenderSuzuki.External.Hall.Basic
 public import BenderSuzuki.External.Hall.corollary_14_4_2
 public import BenderSuzuki.External.Hall.lemma_14_4_2
