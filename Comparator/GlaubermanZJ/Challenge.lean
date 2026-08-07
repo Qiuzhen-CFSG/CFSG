@@ -12,7 +12,7 @@ The Coq formalization of the Odd Order theorem does not contain this theorem: it
 proves Puig's ZL theorem in its place, in `BGappendixAB.v`.
 -/
 
-import GlaubermanZJ.Defs
+import Comparator.GlaubermanZJ.Defs
 
 namespace ZJ
 

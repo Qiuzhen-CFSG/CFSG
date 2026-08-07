@@ -18,9 +18,3 @@ jobs:
           build: true
           test: false
           lint: false
-
-      # The comparator challenges state the repository's headline results over Mathlib
-      # alone, and each is discharged by a solution.  They are outside `defaultTargets`,
-      # so without this step nothing checks them.
-      - name: Build the comparator challenges and solutions
-        run: lake build BenderSuzukiConverse BenderSuzukiTheorem GlaubermanZJ
