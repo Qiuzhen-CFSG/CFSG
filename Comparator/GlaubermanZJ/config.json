@@ -1,8 +1,8 @@
 {
-    "challenge_module": "BenderSuzukiTheorem.Challenge",
-    "solution_module": "BenderSuzukiTheorem.Solution",
+    "challenge_module": "Comparator.GlaubermanZJ.Challenge",
+    "solution_module": "Comparator.GlaubermanZJ.Solution",
     "theorem_names": [
-        "BSTheorem.bender_suzuki"
+        "ZJ.glauberman_zj"
     ],
     "permitted_axioms": [
         "propext",

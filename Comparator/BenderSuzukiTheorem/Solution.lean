@@ -7,7 +7,7 @@ It does not import `Challenge`, so nothing here can influence what the challenge
 The challenge's definitions are the repository's, transcribed; the two agree definitionally,
 so the proof is the repository's theorem with its conclusion re-tagged.
 -/
-import BenderSuzukiTheorem.Defs
+import Comparator.BenderSuzukiTheorem.Defs
 import BenderSuzuki.FinalTheorem
 
 universe u

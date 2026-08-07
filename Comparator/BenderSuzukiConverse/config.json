@@ -1,6 +1,6 @@
 {
-    "challenge_module": "BenderSuzukiConverse.Challenge",
-    "solution_module": "BenderSuzukiConverse.Solution",
+    "challenge_module": "Comparator.BenderSuzukiConverse.Challenge",
+    "solution_module": "Comparator.BenderSuzukiConverse.Solution",
     "theorem_names": [
         "BSConverse.hypothesisA_stronglyEmbedded",
         "BSConverse.psl2_hypothesisA",
