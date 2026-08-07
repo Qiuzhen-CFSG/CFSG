@@ -1,6 +1,7 @@
 module
 
-public import GroupTheory.KGroup
+public import GroupTheory.Out
+public import Mathlib.Algebra.Group.ConjFinite
 public import Mathlib.GroupTheory.Perm.Cycle.Type
 public import Mathlib.GroupTheory.Perm.Support
 public import Mathlib.GroupTheory.SpecificGroups.Alternating
@@ -30,9 +31,14 @@ The classical proof, following Suzuki [Sul, pp. 299–301]:
 
 Both halves are proved here (`conjNormal_injective_alternatingGroup` and
 `aut_alternatingGroup_bijective_conj`); the corollary
-`isSolvable_Out_of_isAltGroup` — `Out(Aₙ)` is solvable for `n ≥ 5`, `n ≠ 6` — is
+`isSolvable_Out_of_isAltGroup` — `Out(Aₙ)` is solvable for `n ≥ 5` — is
 the alternating arm of the Schreier property (GLS vol. 3, Theorem 7.1.1(a)).
+For `n ≠ 6` it follows from Theorem 5.2.1 (`Out(Aₙ) ≅ {±1}`); the exceptional
+case `n = 6` is handled separately (`|Out(A₆)| ≤ 4`, see the section at the
+end of the file).
 -/
+
+universe u
 
 noncomputable section
 
@@ -1843,16 +1849,16 @@ public theorem conjNormal_injective_alternatingGroup (n : ℕ) (hn : 4 ≤ n) :
       rw [conjNormal_ker]
       exact centralizer_alternatingGroup_eq_bot n (by omega))
 
-/-- GLS vol. 3, Theorem 5.2.1: for `n ≥ 5`, `n ≠ 6`, the conjugation map
-`Sₙ → Aut(Aₙ)` is bijective.  (Surjectivity: Milestones 3–4 of
-`task-aut-alternating.md`.) -/
-public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6) :
-    Function.Bijective (MulAut.conjNormal (H := alternatingGroup (Fin n)) :
-      Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
-  refine ⟨conjNormal_injective_alternatingGroup n (by omega), ?_⟩
-  -- surjectivity (Milestones 3–4): the automorphism maps the class of 3-cycles to
-  -- itself, inducing a permutation σ of the points with φ((i j k)) = (σ(i) σ(j) σ(k))
-  intro φ
+/-- An automorphism of `Aₙ` preserving the class of 3-cycles is conjugation by a
+permutation of the point set (`n ≥ 5`).  This is the surjectivity half of Theorem
+5.2.1, isolated from the `n ≠ 6` class-size argument (`threeCycle_of_mulAut`); for
+`n = 6` the hypothesis is supplied by composing with the exceptional automorphism. -/
+private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
+    (φ : MulAut (alternatingGroup (Fin n)))
+    (hφ : ∀ c : alternatingGroup (Fin n), (c : Perm (Fin n)).IsThreeCycle →
+      ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle) :
+    ∃ σ : Perm (Fin n),
+      φ = MulAut.conjNormal (H := alternatingGroup (Fin n)) σ := by
   classical
   haveI : NeZero n := ⟨by omega⟩
   -- the images of the generators `(0 1 i)` under φ form a 3-cycle family
@@ -1861,7 +1867,7 @@ public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6
   have h3c : ∀ i, (h i).IsThreeCycle := by
     intro i
     simpa [h, gen] using
-      threeCycle_of_mulAut n hn hn6 φ (genPerm_isThreeCycle (by omega) i.2.1 i.2.2)
+      hφ (gen n (by omega) i.1 i.2.1 i.2.2) (genPerm_isThreeCycle (by omega) i.2.1 i.2.2)
   have hord : ∀ i j, i ≠ j → orderOf (h i * h j) = 2 := by
     intro i j hij
     have hne : i.1 ≠ j.1 := by
@@ -2001,25 +2007,44 @@ public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6
       gen_closure_alternatingGroup_eq_top hn
     rw [hcl] at hle
     exact le_antisymm le_top hle
-  -- φ = conjNormal σe, so the conjugation map is surjective
+  -- φ = conjNormal σe, so the conjugation map is surjective on the
+  -- class-preserving automorphisms
   refine ⟨σe, ?_⟩
   apply MulEquiv.ext
   intro x
   have hxE : x ∈ E := by
     rw [hEtop]
     trivial
-  exact hxE.symm
+  exact hxE
+
+/-- GLS vol. 3, Theorem 5.2.1: for `n ≥ 5`, `n ≠ 6`, the conjugation map
+`Sₙ → Aut(Aₙ)` is bijective.  (Surjectivity: Milestones 3–4 of
+`task-aut-alternating.md`.) -/
+public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6) :
+    Function.Bijective (MulAut.conjNormal (H := alternatingGroup (Fin n)) :
+      Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
+  refine ⟨conjNormal_injective_alternatingGroup n (by omega), ?_⟩
+  -- surjectivity (Milestones 3–4): the automorphism maps the class of 3-cycles to
+  -- itself (Milestone 3), hence is conjugation by a permutation (Milestone 4)
+  intro φ
+  have hφ : ∀ c : alternatingGroup (Fin n), (c : Perm (Fin n)).IsThreeCycle →
+      ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle := by
+    intro c hc
+    exact threeCycle_of_mulAut n hn hn6 φ hc
+  rcases aut_of_preserves_threeCycle n hn φ hφ with ⟨σ, hσ⟩
+  refine ⟨σ, ?_⟩
+  exact hσ.symm
 
 /-! ### The alternating arm of the Schreier property -/
 
-/-- GLS vol. 3, Theorem 7.1.1(a), alternating arm (`n ≥ 5`, `n ≠ 6`): the outer
+/-- GLS vol. 3, Theorem 7.1.1(a), alternating arm, `n ≠ 6`: the outer
 automorphism group `Out(Aₙ)` is solvable.  Theorem 5.2.1 identifies `Aut(Aₙ)`
 with `Sₙ` (conjugation), under which the inner automorphism group `Inn(Aₙ)`
 corresponds to `Aₙ`; hence `Out(Aₙ) ≅ Sₙ/Aₙ = sign.range ≅ {±1}`, which is
-abelian, hence solvable.  The case `n = 6` (`|Out(A₆)| = 4`) needs the second
-half of Theorem 5.2.1 — `Aut(A₆)` contains `S₆` with index two — and is not
-covered here. -/
-public theorem isSolvable_Out_of_isAltGroup (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6) :
+abelian, hence solvable.  (The exceptional case `n = 6` is handled by
+`isSolvable_Out_of_isAltGroup` below via `|Out(A₆)| ≤ 4`.) -/
+private theorem isSolvable_Out_of_isAltGroup_of_ne_six (n : ℕ) (hn : 5 ≤ n)
+    (hn6 : n ≠ 6) :
     IsSolvable (Out (alternatingGroup (Fin n))) := by
   classical
   let A : Type := alternatingGroup (Fin n)
@@ -2066,6 +2091,686 @@ public theorem isSolvable_Out_of_isAltGroup (n : ℕ) (hn : 5 ≤ n) (hn6 : n �
   exact solvable_of_surjective (f := e3.toMonoidHom)
     (by simpa using (Equiv.surjective e3.toEquiv))
 
-end AutAlternating
+/-! ### The exceptional case `n = 6` -/
 
-end GroupTheory
+/-- A **double 3-cycle**: a product of two disjoint 3-cycles, i.e. an element of
+cycle type `{3, 3}`. -/
+private def IsDoubleThreeCycle {α : Type*} [Fintype α] [DecidableEq α] (g : Perm α) : Prop :=
+  g.cycleType = ({3, 3} : Multiset ℕ)
+
+private abbrev A6 : Type := alternatingGroup (Fin 6)
+
+/-- The 3-cycle `(0 1 2)` of `A₆`. -/
+private def g6 : A6 :=
+  gen 6 (by norm_num) (2 : Fin 6) (by decide) (by decide)
+
+/-- The double 3-cycle `(0 1 2)(3 4 5)` of `A₆`. -/
+private def d6 : A6 :=
+  ⟨Equiv.swap (0 : Fin 6) 1 * Equiv.swap 1 (2 : Fin 6) *
+      Equiv.swap (3 : Fin 6) 4 * Equiv.swap 4 (5 : Fin 6), by
+    rw [Equiv.Perm.mem_alternatingGroup]
+    rw [map_mul, map_mul, map_mul,
+      Equiv.Perm.sign_swap (by decide : (0 : Fin 6) ≠ 1),
+      Equiv.Perm.sign_swap (by decide : (1 : Fin 6) ≠ 2),
+      Equiv.Perm.sign_swap (by decide : (3 : Fin 6) ≠ 4),
+      Equiv.Perm.sign_swap (by decide : (4 : Fin 6) ≠ 5)]
+    norm_num⟩
+
+/-- An element of order `3` of `S₆` is a 3-cycle or a double 3-cycle. -/
+private theorem cycleType_order_three_Fin6 (g : Perm (Fin 6)) (hg : orderOf g = 3) :
+    g.IsThreeCycle ∨ IsDoubleThreeCycle g := by
+  classical
+  obtain ⟨r, hr1, hct⟩ := cycleType_of_order_three g hg
+  have hsum : g.support.card = 3 * r := by
+    rw [← sum_cycleType, hct, Multiset.sum_replicate]
+    simp [mul_comm]
+  have hle : 3 * r ≤ 6 := by
+    calc
+      3 * r = g.support.card := hsum.symm
+      _ ≤ (Finset.univ : Finset (Fin 6)).card := Finset.card_le_univ _
+      _ = 6 := by simp
+  have hr : r = 1 ∨ r = 2 := by omega
+  rcases hr with rfl | rfl
+  · left
+    simpa [IsThreeCycle] using hct
+  · right
+    simpa [IsDoubleThreeCycle] using hct
+
+/-- An element of order `3` of `A₆` is a 3-cycle or a double 3-cycle. -/
+private theorem order_three_mem_T_or_D (x : A6) (hx : orderOf x = 3) :
+    (x : Perm (Fin 6)).IsThreeCycle ∨ IsDoubleThreeCycle (x : Perm (Fin 6)) := by
+  have hx' : orderOf (x : Perm (Fin 6)) = 3 := (Subgroup.orderOf_coe x).trans hx
+  exact cycleType_order_three_Fin6 (x : Perm (Fin 6)) hx'
+
+/-- The set of 3-cycles of `A₆`. -/
+private def T : Set A6 :=
+  {x | (x : Perm (Fin 6)).IsThreeCycle}
+
+/-- The set of double 3-cycles of `A₆`. -/
+private def D : Set A6 :=
+  {x | IsDoubleThreeCycle (x : Perm (Fin 6))}
+
+/-- A permutation not in `A₆` has sign `-1`. -/
+private theorem sign_eq_neg_one_of_not_mem_alternatingGroup {α : Type*} [Fintype α]
+    [DecidableEq α] {σ : Perm α} (hσ : σ ∉ alternatingGroup α) : Equiv.Perm.sign σ = -1 := by
+  have hne : Equiv.Perm.sign σ ≠ 1 := by
+    intro h
+    apply hσ
+    rw [Equiv.Perm.mem_alternatingGroup]
+    exact h
+  rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h
+  · exact (hne h).elim
+  · exact h
+
+/-- Conjugacy is transitive. -/
+private theorem isConj_trans {G : Type*} [Group G] {x y z : G} (hxy : IsConj x y)
+    (hyz : IsConj y z) : IsConj x z := by
+  rcases isConj_iff.mp hxy with ⟨a, ha⟩
+  rcases isConj_iff.mp hyz with ⟨b, hb⟩
+  refine isConj_iff.mpr ⟨b * a, ?_⟩
+  calc
+    b * a * x * (b * a)⁻¹ = b * (a * x * a⁻¹) * b⁻¹ := by
+      simp [mul_assoc, mul_inv_rev]
+    _ = b * y * b⁻¹ := by rw [ha]
+    _ = z := hb
+
+/-- Two conjugate elements have the same conjugacy class. -/
+private theorem class_eq_of_isConj {G : Type*} [Group G] {x y : G} (h : IsConj x y) :
+    {z : G | IsConj x z} = {z : G | IsConj y z} := by
+  ext z
+  constructor
+  · intro hxz
+    exact isConj_trans h.symm hxz
+  · intro hyz
+    exact isConj_trans h hyz
+
+/-- An automorphism maps conjugacy classes to conjugacy classes. -/
+private theorem class_image_mulAut {G : Type*} [Group G] (φ : MulAut G) (x : G) :
+    (φ '' {y : G | IsConj x y}) = {y : G | IsConj (φ x) y} := by
+  ext y
+  constructor
+  · rintro ⟨z, hz, rfl⟩
+    rcases isConj_iff.mp hz with ⟨c, hc⟩
+    refine isConj_iff.mpr ⟨φ c, ?_⟩
+    calc
+      φ c * φ x * (φ c)⁻¹ = φ (c * x * c⁻¹) := by
+        simp [map_mul, map_inv, mul_assoc]
+      _ = φ z := by rw [hc]
+  · intro hy
+    rcases isConj_iff.mp hy with ⟨c, hc⟩
+    refine ⟨φ.symm y, ?_, ?_⟩
+    · refine isConj_iff.mpr ⟨φ.symm c, ?_⟩
+      calc
+        φ.symm c * x * (φ.symm c)⁻¹ = φ.symm (c * φ x * c⁻¹) := by
+          simp [map_mul, map_inv, mul_assoc]
+        _ = φ.symm y := by rw [hc]
+    · exact MulEquiv.apply_symm_apply φ y
+
+/-- Every 3-cycle of `A₆` is conjugate to `(0 1 2)` within `A₆`. -/
+private theorem isConj_g6_of_isThreeCycle {x : A6} (hx : (x : Perm (Fin 6)).IsThreeCycle) :
+    IsConj g6 x := by
+  classical
+  -- same cycle type in `S₆`, so conjugate in `S₆`
+  have hct : (g6 : Perm (Fin 6)).cycleType = (x : Perm (Fin 6)).cycleType := by
+    have hg3 : (g6 : Perm (Fin 6)).cycleType = ({3} : Multiset ℕ) := by
+      simpa [IsThreeCycle] using (by
+        change (genPerm 6 (2 : Fin 6)).IsThreeCycle
+        exact genPerm_isThreeCycle (by norm_num : 2 ≤ 6) (by decide : (2 : Fin 6) ≠ 0)
+          (by decide : (2 : Fin 6) ≠ 1))
+    have hx3 : (x : Perm (Fin 6)).cycleType = ({3} : Multiset ℕ) := by
+      simpa [IsThreeCycle] using hx
+    exact hg3.trans hx3.symm
+  obtain ⟨σ₀, hσ₀⟩ :=
+    isConj_iff.mp (Equiv.Perm.isConj_iff_cycleType_eq.mpr hct)
+  -- if `σ₀` is odd, multiply by the odd transposition `swap 3 4` fixing `g₆` pointwise
+  by_cases hσ₀A : σ₀ ∈ alternatingGroup (Fin 6)
+  · exact isConj_iff.mpr ⟨⟨σ₀, hσ₀A⟩, by
+      apply Subtype.ext
+      exact hσ₀⟩
+  · have hsig₀ : Equiv.Perm.sign σ₀ = -1 :=
+      sign_eq_neg_one_of_not_mem_alternatingGroup hσ₀A
+    let σ : Perm (Fin 6) := σ₀ * Equiv.swap (3 : Fin 6) 4
+    have hσA : σ ∈ alternatingGroup (Fin 6) := by
+      rw [Equiv.Perm.mem_alternatingGroup]
+      rw [map_mul, hsig₀, Equiv.Perm.sign_swap (by decide : (3 : Fin 6) ≠ 4)]
+      norm_num
+    have hτ : Equiv.swap (3 : Fin 6) 4 * (g6 : Perm (Fin 6)) * Equiv.swap (3 : Fin 6) 4 =
+        (g6 : Perm (Fin 6)) := by
+      decide
+    have hσconj : σ * (g6 : Perm (Fin 6)) * σ⁻¹ = (x : Perm (Fin 6)) := by
+      calc
+        σ * (g6 : Perm (Fin 6)) * σ⁻¹ =
+            σ₀ * (Equiv.swap (3 : Fin 6) 4 * (g6 : Perm (Fin 6)) * Equiv.swap (3 : Fin 6) 4) * σ₀⁻¹ := by
+          simp [σ, mul_assoc]
+        _ = σ₀ * (g6 : Perm (Fin 6)) * σ₀⁻¹ := by rw [hτ]
+        _ = (x : Perm (Fin 6)) := hσ₀
+    exact isConj_iff.mpr ⟨⟨σ, hσA⟩, by
+      apply Subtype.ext
+      exact hσconj⟩
+
+/-- Every double 3-cycle of `A₆` is conjugate to `(0 1 2)(3 4 5)` within `A₆`. -/
+private theorem isConj_d6_of_doubleThreeCycle {x : A6}
+    (hx : IsDoubleThreeCycle (x : Perm (Fin 6))) : IsConj d6 x := by
+  classical
+  have hct : (d6 : Perm (Fin 6)).cycleType = (x : Perm (Fin 6)).cycleType := by
+    have hd3 : (d6 : Perm (Fin 6)).cycleType = ({3, 3} : Multiset ℕ) := by
+      decide
+    exact hd3.trans hx.symm
+  obtain ⟨σ₀, hσ₀⟩ :=
+    isConj_iff.mp (Equiv.Perm.isConj_iff_cycleType_eq.mpr hct)
+  -- if `σ₀` is odd, multiply by the odd element `(0 3)(1 4)(2 5)` centralizing `d₆`
+  let τ₀ : Perm (Fin 6) :=
+    Equiv.swap (0 : Fin 6) (3 : Fin 6) * Equiv.swap (1 : Fin 6) 4 * Equiv.swap (2 : Fin 6) (5 : Fin 6)
+  by_cases hσ₀A : σ₀ ∈ alternatingGroup (Fin 6)
+  · exact isConj_iff.mpr ⟨⟨σ₀, hσ₀A⟩, by
+      apply Subtype.ext
+      exact hσ₀⟩
+  · have hsig₀ : Equiv.Perm.sign σ₀ = -1 :=
+      sign_eq_neg_one_of_not_mem_alternatingGroup hσ₀A
+    let σ : Perm (Fin 6) := σ₀ * τ₀
+    have hτA : Equiv.Perm.sign τ₀ = -1 := by
+      rw [map_mul, map_mul, Equiv.Perm.sign_swap (by decide : (0 : Fin 6) ≠ 3),
+        Equiv.Perm.sign_swap (by decide : (1 : Fin 6) ≠ 4),
+        Equiv.Perm.sign_swap (by decide : (2 : Fin 6) ≠ 5)]
+      norm_num
+    have hσA : σ ∈ alternatingGroup (Fin 6) := by
+      rw [Equiv.Perm.mem_alternatingGroup]
+      rw [map_mul, hsig₀, hτA]
+      norm_num
+    have hτ : τ₀ * (d6 : Perm (Fin 6)) * τ₀ = (d6 : Perm (Fin 6)) := by
+      decide
+    have hτinv : τ₀⁻¹ = τ₀ := by
+      decide
+    have hσconj : σ * (d6 : Perm (Fin 6)) * σ⁻¹ = (x : Perm (Fin 6)) := by
+      calc
+        σ * (d6 : Perm (Fin 6)) * σ⁻¹ = σ₀ * (τ₀ * (d6 : Perm (Fin 6)) * τ₀) * σ₀⁻¹ := by
+          simp [σ, mul_assoc, hτinv]
+        _ = σ₀ * (d6 : Perm (Fin 6)) * σ₀⁻¹ := by rw [hτ]
+        _ = (x : Perm (Fin 6)) := hσ₀
+    exact isConj_iff.mpr ⟨⟨σ, hσA⟩, by
+      apply Subtype.ext
+      exact hσconj⟩
+
+/-- In `A₆` the class of `(0 1 2)` is exactly the set of 3-cycles. -/
+private theorem six_T_eq_class : T = {x : A6 | IsConj g6 x} := by
+  ext x
+  constructor
+  · intro hx
+    exact isConj_g6_of_isThreeCycle hx
+  · intro hx
+    rcases isConj_iff.mp hx with ⟨c, hc⟩
+    have hc' : (c : Perm (Fin 6)) * (g6 : Perm (Fin 6)) * (c : Perm (Fin 6))⁻¹ =
+        (x : Perm (Fin 6)) := by
+      simpa using congrArg (fun t : A6 => (t : Perm (Fin 6))) hc
+    change (x : Perm (Fin 6)).cycleType = ({3} : Multiset ℕ)
+    calc
+      (x : Perm (Fin 6)).cycleType =
+          (c * (g6 : Perm (Fin 6)) * (c : Perm (Fin 6))⁻¹).cycleType := by rw [← hc']
+      _ = (g6 : Perm (Fin 6)).cycleType := Equiv.Perm.cycleType_conj
+      _ = ({3} : Multiset ℕ) := by
+        simpa [IsThreeCycle] using (by
+          change (genPerm 6 (2 : Fin 6)).IsThreeCycle
+          exact genPerm_isThreeCycle (by norm_num : 2 ≤ 6) (by decide : (2 : Fin 6) ≠ 0)
+            (by decide : (2 : Fin 6) ≠ 1))
+
+/-- In `A₆` the class of `(0 1 2)(3 4 5)` is exactly the set of double 3-cycles. -/
+private theorem six_D_eq_class : D = {x : A6 | IsConj d6 x} := by
+  ext x
+  constructor
+  · intro hx
+    exact isConj_d6_of_doubleThreeCycle hx
+  · intro hx
+    rcases isConj_iff.mp hx with ⟨c, hc⟩
+    have hc' : (c : Perm (Fin 6)) * (d6 : Perm (Fin 6)) * (c : Perm (Fin 6))⁻¹ =
+        (x : Perm (Fin 6)) := by
+      simpa using congrArg (fun t : A6 => (t : Perm (Fin 6))) hc
+    change (x : Perm (Fin 6)).cycleType = ({3, 3} : Multiset ℕ)
+    calc
+      (x : Perm (Fin 6)).cycleType =
+          (c * (d6 : Perm (Fin 6)) * (c : Perm (Fin 6))⁻¹).cycleType := by rw [← hc']
+      _ = (d6 : Perm (Fin 6)).cycleType := Equiv.Perm.cycleType_conj
+      _ = ({3, 3} : Multiset ℕ) := by decide
+
+/-- `(0 1 2)` is a 3-cycle. -/
+private theorem g6_isThreeCycle : (g6 : Perm (Fin 6)).IsThreeCycle := by
+  change (genPerm 6 (2 : Fin 6)).IsThreeCycle
+  exact genPerm_isThreeCycle (by norm_num : 2 ≤ 6) (by decide : (2 : Fin 6) ≠ 0)
+    (by decide : (2 : Fin 6) ≠ 1)
+
+/-- Membership in the stabilizer of the class of 3-cycles is equivalent to
+preserving the set of 3-cycles. -/
+private theorem stab_mem_iff_image (φ : MulAut A6) :
+    (∀ c : A6, c ∈ T → φ c ∈ T) ↔ φ '' T = T := by
+  constructor
+  · intro hφ
+    calc
+      φ '' T = φ '' {x : A6 | IsConj g6 x} := by rw [six_T_eq_class]
+      _ = {x : A6 | IsConj (φ g6) x} := class_image_mulAut φ g6
+      _ = {x : A6 | IsConj g6 x} :=
+        (class_eq_of_isConj (isConj_g6_of_isThreeCycle (hφ g6 (by
+          change (g6 : Perm (Fin 6)).IsThreeCycle
+          exact g6_isThreeCycle)))).symm
+      _ = T := six_T_eq_class.symm
+  · intro h c hc
+    have : φ c ∈ φ '' T := ⟨c, hc, rfl⟩
+    rwa [h] at this
+
+/-- The order of the double 3-cycle `(0 1 2)(3 4 5)` is 3. -/
+private theorem d6_orderOf : orderOf (d6 : Perm (Fin 6)) = 3 := by
+  haveI : Fact (3 : ℕ).Prime := ⟨Nat.prime_three⟩
+  apply orderOf_eq_prime
+  · decide
+  · decide
+
+/-- The sets of 3-cycles and double 3-cycles of `A₆` are disjoint. -/
+private theorem T_disjoint_D : ∀ x : A6, x ∈ T → x ∈ D → False := by
+  intro x hxT hxD
+  have hxT' : (x : Perm (Fin 6)).cycleType = ({3} : Multiset ℕ) := by
+    change (x : Perm (Fin 6)).IsThreeCycle
+    exact hxT
+  have hxD' : (x : Perm (Fin 6)).cycleType = ({3, 3} : Multiset ℕ) := by
+    change IsDoubleThreeCycle (x : Perm (Fin 6))
+    exact hxD
+  exact (by decide : ({3} : Multiset ℕ) ≠ ({3, 3} : Multiset ℕ)) (hxT'.symm.trans hxD')
+
+/-- The stabilizer of the class of 3-cycles in `Aut(A₆)`: the automorphisms
+mapping 3-cycles to 3-cycles. -/
+private def threeCycleClassStab : Subgroup (MulAut A6) where
+  carrier :=
+    {φ | ∀ c : A6, (c : Perm (Fin 6)).IsThreeCycle →
+      ((φ c : A6) : Perm (Fin 6)).IsThreeCycle}
+  one_mem' := by
+    intro c hc
+    simpa using hc
+  mul_mem' := by
+    intro φ ψ hφ hψ c hc
+    simpa [MulAut.mul_def] using hφ (ψ c) (hψ c hc)
+  inv_mem' := by
+    intro φ hφ c hc
+    -- φ⁻¹ c has order 3, so it lies in T or D
+    have hc3 : orderOf ((φ⁻¹ : MulAut A6) c) = 3 := by
+      calc
+        orderOf ((φ⁻¹ : MulAut A6) c) = orderOf c := MulEquiv.orderOf_eq (φ⁻¹) c
+        _ = 3 := (Subgroup.orderOf_coe c).symm.trans hc.orderOf
+    rcases order_three_mem_T_or_D ((φ⁻¹ : MulAut A6) c) hc3 with hT | hD
+    · exact hT
+    · -- φ⁻¹ c ∈ D: c = φ (φ⁻¹ c) ∈ φ(D) = D, contradicting c ∈ T
+      exfalso
+      have hφT : φ '' T = T := (stab_mem_iff_image φ).mp hφ
+      have hc_eq : c = (φ : A6 → A6) ((φ⁻¹ : MulAut A6) c) := by
+        calc
+          c = (1 : MulAut A6) c := by simp
+          _ = (φ * φ⁻¹ : MulAut A6) c := by rw [← mul_inv_cancel φ]
+          _ = (φ : A6 → A6) ((φ⁻¹ : MulAut A6) c) := by simp
+      have hφD : φ '' D = D := by
+        calc
+          φ '' D = φ '' {x : A6 | IsConj d6 x} := by rw [six_D_eq_class]
+          _ = {x : A6 | IsConj (φ d6) x} := class_image_mulAut φ d6
+          _ = {x : A6 | IsConj d6 x} := by
+            -- φ d6 has order 3; it is a 3-cycle only on pain of φ(D) ∩ φ(T) = ∅
+            have hd3 : orderOf (φ d6) = 3 := by
+              calc
+                orderOf (φ d6) = orderOf d6 := MulEquiv.orderOf_eq φ d6
+                _ = 3 := (Subgroup.orderOf_coe d6).symm.trans d6_orderOf
+            rcases order_three_mem_T_or_D (φ d6) hd3 with hT' | hD'
+            · exfalso
+              have hφD' : φ '' D = T := by
+                calc
+                  φ '' D = {x : A6 | IsConj (φ d6) x} := by
+                    rw [six_D_eq_class]
+                    exact class_image_mulAut φ d6
+                  _ = {x : A6 | IsConj g6 x} :=
+                    (class_eq_of_isConj (isConj_g6_of_isThreeCycle hT')).symm
+                  _ = T := six_T_eq_class.symm
+              have hnonempty : ((φ '' D) ∩ (φ '' T)).Nonempty := by
+                rw [hφD', hφT]
+                refine ⟨g6, ?_⟩
+                rw [Set.mem_inter_iff]
+                constructor
+                · change (g6 : Perm (Fin 6)).IsThreeCycle
+                  exact g6_isThreeCycle
+                · change (g6 : Perm (Fin 6)).IsThreeCycle
+                  exact g6_isThreeCycle
+              have hempty : (φ '' D) ∩ (φ '' T) = ∅ := by
+                rw [Set.eq_empty_iff_forall_notMem]
+                intro z hz
+                rcases hz.1 with ⟨d, hd, rfl⟩
+                rcases hz.2 with ⟨t, ht, hφt⟩
+                have hdt : t = d := φ.injective hφt
+                exact T_disjoint_D d (hdt ▸ ht) hd
+              rw [hempty] at hnonempty
+              exact (Set.not_nonempty_empty hnonempty)
+            · exact class_eq_of_isConj ((isConj_d6_of_doubleThreeCycle hD').symm)
+          _ = D := six_D_eq_class.symm
+      have hcφD : c ∈ φ '' D := ⟨(φ⁻¹ : MulAut A6) c, hD, hc_eq.symm⟩
+      have hcD : c ∈ D := by
+        rwa [hφD] at hcφD
+      exact T_disjoint_D c hc hcD
+
+/-- Every inner automorphism of `A₆` preserves the class of 3-cycles. -/
+private theorem innerAutGroup_le_threeCycleClassStab :
+    innerAutGroup A6 ≤ threeCycleClassStab := by
+  intro φ hφ c hc
+  rcases (MonoidHom.mem_range).1 hφ with ⟨a, ha⟩
+  have hφc : ((φ c : A6) : Perm (Fin 6)) =
+      (a : Perm (Fin 6)) * (c : Perm (Fin 6)) * (a : Perm (Fin 6))⁻¹ := by
+    rw [← ha, MulAut.conj_apply]
+    rfl
+  rw [hφc]
+  change ((a : Perm (Fin 6)) * (c : Perm (Fin 6)) * (a : Perm (Fin 6))⁻¹).cycleType =
+    ({3} : Multiset ℕ)
+  rw [Equiv.Perm.cycleType_conj]
+  exact hc
+
+/-- Every conjugation by a permutation of the six points preserves the class of
+3-cycles. -/
+private theorem conjNormal_mem_threeCycleClassStab (σ : Perm (Fin 6)) :
+    MulAut.conjNormal (H := alternatingGroup (Fin 6)) σ ∈ threeCycleClassStab := by
+  intro c hc
+  have hφc : ((MulAut.conjNormal (H := alternatingGroup (Fin 6)) σ c : A6) : Perm (Fin 6)) =
+      σ * (c : Perm (Fin 6)) * σ⁻¹ := by
+    exact MulAut.conjNormal_apply σ c
+  rw [hφc]
+  change (σ * (c : Perm (Fin 6)) * σ⁻¹).cycleType = ({3} : Multiset ℕ)
+  rw [Equiv.Perm.cycleType_conj]
+  exact hc
+
+/-- An automorphism of `A₆` either stabilizes the class of 3-cycles or maps it
+onto the class of double 3-cycles. -/
+private theorem stab_or_double_image (φ : MulAut A6) :
+    φ ∈ threeCycleClassStab ∨ φ '' T = D := by
+  classical
+  by_cases hφ : φ ∈ threeCycleClassStab
+  · exact Or.inl hφ
+  · right
+    -- some 3-cycle is moved off `T`; being of order 3 it lands in `D`
+    have hnot : ¬ ∀ c : A6, c ∈ T → φ c ∈ T := hφ
+    push Not at hnot
+    rcases hnot with ⟨c, hc, hcφ⟩
+    have hc3 : orderOf (φ c) = 3 := by
+      calc
+        orderOf (φ c) = orderOf c := MulEquiv.orderOf_eq φ c
+        _ = 3 := (Subgroup.orderOf_coe c).symm.trans hc.orderOf
+    have hφcD : φ c ∈ D := by
+      rcases order_three_mem_T_or_D (φ c) hc3 with h | h
+      · exact (hcφ h).elim
+      · exact h
+    -- φ(T) = class(φ g₆) ∋ φ c, and D = class(d₆) ∋ φ c, so the classes agree
+    have hφT' : φ '' T = {x : A6 | IsConj (φ g6) x} := by
+      calc
+        φ '' T = φ '' {x : A6 | IsConj g6 x} := by rw [six_T_eq_class]
+        _ = {x : A6 | IsConj (φ g6) x} := class_image_mulAut φ g6
+    have hconj1 : IsConj (φ g6) (φ c) := by
+      have : φ c ∈ {x : A6 | IsConj (φ g6) x} := by
+        rw [← hφT']
+        exact ⟨c, hc, rfl⟩
+      exact this
+    have hconj2 : IsConj d6 (φ c) := by
+      have : φ c ∈ {x : A6 | IsConj d6 x} := by
+        rw [← six_D_eq_class]
+        exact hφcD
+      exact this
+    calc
+      φ '' T = {x : A6 | IsConj (φ g6) x} := hφT'
+      _ = {x : A6 | IsConj d6 x} := class_eq_of_isConj (isConj_trans hconj1 hconj2.symm)
+      _ = D := six_D_eq_class.symm
+
+/-- Any two automorphisms of `A₆` lie in the same coset of the stabilizer, or one
+of them stabilizes the class. -/
+private theorem stab_pairwise (φ ψ : MulAut A6) :
+    φ⁻¹ * ψ ∈ threeCycleClassStab ∨ φ ∈ threeCycleClassStab ∨ ψ ∈ threeCycleClassStab := by
+  classical
+  by_cases hφ : φ ∈ threeCycleClassStab
+  · exact Or.inr (Or.inl hφ)
+  by_cases hψ : ψ ∈ threeCycleClassStab
+  · exact Or.inr (Or.inr hψ)
+  left
+  have hφD : φ '' T = D := (stab_or_double_image φ).resolve_left hφ
+  have hψD : ψ '' T = D := (stab_or_double_image ψ).resolve_left hψ
+  have hmain : ((φ⁻¹ * ψ) : MulAut A6) '' T = T := by
+    calc
+      ((φ⁻¹ * ψ) : MulAut A6) '' T = (φ⁻¹ : MulAut A6) '' (ψ '' T) := by
+        ext x
+        constructor
+        · rintro ⟨t, ht, rfl⟩
+          exact ⟨ψ t, ⟨t, ht, rfl⟩, by simp⟩
+        · rintro ⟨y, ⟨t, ht, rfl⟩, rfl⟩
+          exact ⟨t, ht, by simp⟩
+      _ = (φ⁻¹ : MulAut A6) '' D := by rw [hψD]
+      _ = T := by
+        calc
+          (φ⁻¹ : MulAut A6) '' D = (φ⁻¹ : MulAut A6) '' (φ '' T) := by rw [hφD]
+          _ = T := by
+            -- (φ⁻¹ : MulAut A6) '' (φ '' T) = T
+            ext x
+            constructor
+            · rintro ⟨y, hy, hxy⟩
+              rcases hy with ⟨t, ht, rfl⟩
+              have : x = t := by
+                rw [← hxy]
+                simp
+              rwa [this]
+            · intro hx
+              exact ⟨φ x, ⟨x, hx, rfl⟩, by simp⟩
+  exact (stab_mem_iff_image ((φ⁻¹ * ψ) : MulAut A6)).mpr hmain
+
+/-- A type in which any two elements are equal or one of them is a fixed element
+has at most two elements. -/
+private theorem card_le_two_of_pairwise {α : Type*} [Fintype α] (z : α)
+    (h : ∀ a b : α, a = b ∨ a = z ∨ b = z) : Fintype.card α ≤ 2 := by
+  classical
+  by_cases hsub : ∀ a b : α, a = b
+  · have hz : ∀ c : α, c = z := fun c => hsub c z
+    have hsub' : (Finset.univ : Finset α) ⊆ ({z} : Finset α) := by
+      intro x hx
+      rw [hz x]
+      simp
+    calc
+      Fintype.card α = (Finset.univ : Finset α).card := rfl
+      _ ≤ ({z} : Finset α).card := Finset.card_le_card hsub'
+      _ = 1 := by simp
+      _ ≤ 2 := by norm_num
+  · push Not at hsub
+    rcases hsub with ⟨a, b, hab⟩
+    have hcover : ∀ c : α, c = a ∨ c = b := by
+      intro c
+      by_cases hca : c = a
+      · exact Or.inl hca
+      by_cases hcb : c = b
+      · exact Or.inr hcb
+      have h1 := h a c
+      have h2 := h b c
+      have h3 := h a b
+      have h3' : a = z ∨ b = z := by
+        rcases h3 with h3 | h3 | h3
+        · exact (hab h3).elim
+        · exact Or.inl h3
+        · exact Or.inr h3
+      have hcz : c = z := by
+        by_contra hcz
+        have h1' : a = z := by
+          rcases h1 with h1 | h1 | h1
+          · exact (hca h1.symm).elim
+          · exact h1
+          · exact (hcz h1).elim
+        have h2' : b = z := by
+          rcases h2 with h2 | h2 | h2
+          · exact (hcb h2.symm).elim
+          · exact h2
+          · exact (hcz h2).elim
+        exact hab (h1'.trans h2'.symm)
+      rcases h3' with h3' | h3'
+      · exact Or.inl (hcz.trans h3'.symm)
+      · exact Or.inr (hcz.trans h3'.symm)
+    have hsub' : (Finset.univ : Finset α) ⊆ ({a, b} : Finset α) := by
+      intro x hx
+      rcases hcover x with hxa | hxb
+      · rw [hxa]
+        simp
+      · rw [hxb]
+        simp
+    calc
+      Fintype.card α = (Finset.univ : Finset α).card := rfl
+      _ ≤ ({a, b} : Finset α).card := Finset.card_le_card hsub'
+      _ = 2 := by simp [hab]
+
+/-- The stabilizer of the class of 3-cycles has index at most 2 in `Aut(A₆)`. -/
+private theorem threeCycleClassStab_index_le_two : threeCycleClassStab.index ≤ 2 := by
+  classical
+  letI : Fintype (MulAut A6 ⧸ threeCycleClassStab) :=
+    Fintype.ofSurjective (Quotient.mk'' : MulAut A6 → MulAut A6 ⧸ threeCycleClassStab)
+      Quotient.mk''_surjective
+  have hpair : ∀ a b : MulAut A6 ⧸ threeCycleClassStab,
+      a = b ∨ a = Quotient.mk'' (1 : MulAut A6) ∨ b = Quotient.mk'' (1 : MulAut A6) := by
+    intro a b
+    refine Quotient.inductionOn₂ a b ?_
+    intro φ ψ
+    rcases stab_pairwise φ ψ with h | h | h
+    · left
+      exact Quotient.sound (QuotientGroup.leftRel_apply.mpr h)
+    · right; left
+      exact (Quotient.sound (QuotientGroup.leftRel_apply.mpr (by simpa using h))).symm
+    · right; right
+      exact (Quotient.sound (QuotientGroup.leftRel_apply.mpr (by simpa using h))).symm
+  have hcard : Fintype.card (MulAut A6 ⧸ threeCycleClassStab) ≤ 2 :=
+    card_le_two_of_pairwise (Quotient.mk'' (1 : MulAut A6)) hpair
+  calc
+    threeCycleClassStab.index = Nat.card (MulAut A6 ⧸ threeCycleClassStab) :=
+      Subgroup.index_eq_card threeCycleClassStab
+    _ = Fintype.card (MulAut A6 ⧸ threeCycleClassStab) := Nat.card_eq_fintype_card
+    _ ≤ 2 := hcard
+
+/-- The stabilizer of the class of 3-cycles in `Aut(A₆)` is the image of `S₆`
+under the conjugation map: every class-preserving automorphism is conjugation by
+a permutation of the six points. -/
+private theorem threeCycleClassStab_eq_range :
+    threeCycleClassStab =
+      (MulAut.conjNormal (H := alternatingGroup (Fin 6))).range := by
+  classical
+  apply le_antisymm
+  · intro φ hφ
+    rw [MonoidHom.mem_range]
+    rcases aut_of_preserves_threeCycle 6 (by norm_num) φ (by
+      intro c hc
+      exact hφ c hc) with ⟨σ, hσ⟩
+    exact ⟨σ, hσ.symm⟩
+  · intro φ hφ
+    rw [MonoidHom.mem_range] at hφ
+    rcases hφ with ⟨σ, rfl⟩
+    exact conjNormal_mem_threeCycleClassStab σ
+
+/-- The inner automorphism group of `A₆` is the image of `A₆` under the
+conjugation map. -/
+private theorem innerAutGroup_eq_map_conjNormal :
+    innerAutGroup A6 =
+      Subgroup.map (MulAut.conjNormal (H := alternatingGroup (Fin 6)))
+        (alternatingGroup (Fin 6) : Subgroup (Perm (Fin 6))) := by
+  apply le_antisymm
+  · intro x hx
+    unfold innerAutGroup at hx
+    rcases (MonoidHom.mem_range).1 hx with ⟨a, ha⟩
+    rw [Subgroup.mem_map]
+    refine ⟨(a : Perm (Fin 6)), a.2, ?_⟩
+    have hx' : x = MulAut.conjNormal (H := alternatingGroup (Fin 6))
+        (a : Perm (Fin 6)) := by
+      rw [← ha]
+      exact (conjNormal_eq_conj (K := alternatingGroup (Fin 6)) a).symm
+    rw [hx']
+  · intro x hx
+    rw [Subgroup.mem_map] at hx
+    rcases hx with ⟨g, hg, rfl⟩
+    unfold innerAutGroup
+    rw [MonoidHom.mem_range]
+    refine ⟨⟨g, hg⟩, ?_⟩
+    exact conjNormal_eq_conj (K := alternatingGroup (Fin 6)) ⟨g, hg⟩
+
+/-- The relative index `[Stab(T) : Inn(A₆)]` is 2: the stabilizer of the class
+of 3-cycles is the image of `S₆`, and `S₆/A₆` has order 2. -/
+private theorem innerAutGroup_relIndex_threeCycleClassStab :
+    (innerAutGroup A6).relIndex threeCycleClassStab = 2 := by
+  classical
+  let c : Perm (Fin 6) →* MulAut A6 :=
+    MulAut.conjNormal (H := alternatingGroup (Fin 6))
+  have hinj : Function.Injective c :=
+    conjNormal_injective_alternatingGroup 6 (by norm_num)
+  calc
+    (innerAutGroup A6).relIndex threeCycleClassStab
+        = (Subgroup.map c (alternatingGroup (Fin 6))).relIndex (Subgroup.map c ⊤) := by
+          rw [innerAutGroup_eq_map_conjNormal, threeCycleClassStab_eq_range,
+            MonoidHom.range_eq_map]
+    _ = (alternatingGroup (Fin 6)).relIndex ⊤ := by
+      exact Subgroup.relIndex_map_map_of_injective
+        (f := MulAut.conjNormal (H := alternatingGroup (Fin 6)))
+        (alternatingGroup (Fin 6)) ⊤ hinj
+    _ = (alternatingGroup (Fin 6)).index :=
+      Subgroup.relIndex_top_right (alternatingGroup (Fin 6))
+    _ = 2 := alternatingGroup.index_eq_two
+
+/-- The outer automorphism group of `A₆` has at most four elements.  The
+stabilizer `Stab(T)` of the class of 3-cycles has index at most 2 in
+`Aut(A₆)` (`stab_pairwise`), and `Inn(A₆)` has relative index 2 in it, so
+`|Out(A₆)| = [Aut(A₆) : Inn(A₆)] ≤ 2 · 2`. -/
+private theorem six_Out_card_le_four : Nat.card (Out A6) ≤ 4 := by
+  classical
+  have hidx : (innerAutGroup A6).index ≤ 4 := by
+    calc
+      (innerAutGroup A6).index
+          = (innerAutGroup A6).relIndex threeCycleClassStab *
+              threeCycleClassStab.index := by
+            rw [← Subgroup.relIndex_mul_index innerAutGroup_le_threeCycleClassStab]
+      _ ≤ 2 * 2 :=
+        Nat.mul_le_mul innerAutGroup_relIndex_threeCycleClassStab.le
+          threeCycleClassStab_index_le_two
+      _ = 4 := by norm_num
+  calc
+    Nat.card (Out A6) = (innerAutGroup A6).index := by
+      rw [Subgroup.index_eq_card]
+    _ ≤ 4 := hidx
+
+/-- The outer automorphism group of `A₆` is solvable: it has at most four
+elements, and every group of order at most four is solvable
+(`isSolvable_of_card_le_four`). -/
+private theorem isSolvable_Out_six : IsSolvable (Out A6) := by
+  classical
+  exact isSolvable_of_card_le_four six_Out_card_le_four
+
+/-- GLS vol. 3, Theorem 7.1.1(a), alternating arm (all `n ≥ 5`): the outer
+automorphism group `Out(Aₙ)` is solvable.  For `n ≠ 6` this is Theorem 5.2.1
+(`Out(Aₙ) ≅ {±1}`); for `n = 6` the class of 3-cycles is a conjugacy class of
+`A₆` of index at most 2 in `Aut(A₆)` under the action on classes, while
+`Inn(A₆)` has relative index 2 in its stabilizer, so `|Out(A₆)| ≤ 4` — small,
+hence solvable (`isSolvable_of_card_le_four`).  This is the "Alt" arm of the
+Schreier property, feeding `GroupTheory.KGroup.isSolvable_Out_of_isKnownSimpleGroup`. -/
+public theorem isSolvable_Out_of_isAltGroup (n : ℕ) (hn : 5 ≤ n) :
+    IsSolvable (Out (alternatingGroup (Fin n))) := by
+  classical
+  by_cases hn6 : n = 6
+  · subst n
+    simpa [A6] using isSolvable_Out_six
+  · exact isSolvable_Out_of_isAltGroup_of_ne_six n hn hn6
+
+/-- The alternating arm of the Schreier property (GLS vol. 3, Theorem 7.1.1(a))
+for any group isomorphic to an alternating group `Aₙ`, `n ≥ 5` (including the
+exceptional `n = 6`): `Out(K)` is solvable.  `Out` is functorial
+(`outCongr`), so the statement transfers from `isSolvable_Out_of_isAltGroup`
+along the isomorphism. -/
+public theorem isSolvable_Out_of_isAltGroupIso {K : Type u} [Group K] (n : ℕ) (hn : 5 ≤ n)
+    (e : K ≃* alternatingGroup (Fin n)) : IsSolvable (Out K) := by
+  classical
+  haveI : IsSolvable (Out (alternatingGroup (Fin n))) :=
+    isSolvable_Out_of_isAltGroup n hn
+  let eOut : Out K ≃* Out (alternatingGroup (Fin n)) := outCongr e
+  exact solvable_of_surjective (f := eOut.symm.toMonoidHom)
+    (by simpa using (Equiv.surjective eOut.symm.toEquiv))
+
+/-- The alternating arm of the Schreier property (GLS vol. 3, Theorem 7.1.1(a))
+for the class `Alt`: the outer automorphism group of an alternating group `Aₙ`,
+`n ≥ 5`, is solvable.  This is the `Alt` clause of
+`isSolvable_Out_of_isKnownSimpleGroup` (the full dispatch still needs the Qhev
+arm). -/
+public theorem isSolvable_Out_of_isAltGroupClass {K : Type u} [Group K]
+    (h : IsAltGroup K) : IsSolvable (Out K) := by
+  rcases h with ⟨n, hn, e⟩
+  exact isSolvable_Out_of_isAltGroupIso n hn e
+
+end AutAlternating
