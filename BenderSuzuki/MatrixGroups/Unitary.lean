@@ -39,7 +39,7 @@ public structure HermitianForm (n : ℕ) (F : Type w) [Field F] where
   fun i j => J.conj (A j i)
 
 /-- The exact unitary group preserving the Hermitian form `J`. -/
-public def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
+@[expose] public def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
     (J : HermitianForm n F) : Subgroup (GL (Fin n) F) := by
   let adjoint (A : Matrix (Fin n) (Fin n) F) := J.conjTranspose A
   have adjoint_mul (A B : Matrix (Fin n) (Fin n) F) :
@@ -126,7 +126,7 @@ construction downstream. -/
   Iff.rfl
 
 /-- The special unitary group: exact unitary isometries with determinant one. -/
-public def HermitianForm.specialSubgroup {n : ℕ} {F : Type w} [Field F]
+@[expose] public def HermitianForm.specialSubgroup {n : ℕ} {F : Type w} [Field F]
     (J : HermitianForm n F) : Subgroup (GL (Fin n) F) :=
   J.unitarySubgroup ⊓ Matrix.GeneralLinearGroup.det.ker
 

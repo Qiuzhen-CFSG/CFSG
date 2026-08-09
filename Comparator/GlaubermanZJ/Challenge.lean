@@ -11,12 +11,13 @@ is written as the image in `G` of the centre of `J(S)`.
 The Coq formalization of the Odd Order theorem does not contain this theorem: it
 proves Puig's ZL theorem in its place, in `BGappendixAB.v`.
 -/
+module
 
-import Comparator.GlaubermanZJ.Defs
+public import Comparator.GlaubermanZJ.Defs
 
 namespace ZJ
 
-theorem glauberman_zj {G : Type*} [Group G] [IsSolvable G] (hodd : Odd (Nat.card G))
+public theorem glauberman_zj {G : Type*} [Group G] [IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (S : Sylow p G) :
     ((Subgroup.center (thompsonSubgroup S.toSubgroup)).map
         (thompsonSubgroup S.toSubgroup).subtype ⊔ pPrimeCore p G).Normal :=
