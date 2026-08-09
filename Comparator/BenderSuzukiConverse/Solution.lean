@@ -4,7 +4,8 @@ four statements are the challenge's, proved.  Nobody needs to read this file.
 
 It does not import `Challenge`, so nothing here can influence what the challenge asks for.
 -/
-import Comparator.BenderSuzukiConverse.Defs
+module
+public import Comparator.BenderSuzukiConverse.Defs
 import BenderSuzuki.Converse.StronglyEmbedded
 
 namespace BSConverse
@@ -34,13 +35,13 @@ private theorem ofRepo {G Ω : Type*} [Group G] [Finite G] [MulAction G Ω] [Fin
     h.A1.D_eq, h.A1.Q_le_H, h.A1.D_le_H, h.A1.Q_normal_in_H, h.A1.Q_disjoint_D,
     h.A1.Q_sup_D, h.A1.Q_even, h.A1.D_odd⟩, h.A2, h.A3⟩
 
-theorem hypothesisA_stronglyEmbedded {G : Type u} {Ω : Type v}
+public theorem hypothesisA_stronglyEmbedded {G : Type u} {Ω : Type v}
     [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     {H D Q : Subgroup G} {t : G} (hA : HypothesisA G Ω H D Q t) :
     IsStronglyEmbedded H :=
   Converse.hypothesisA_stronglyEmbedded (toRepo hA)
 
-theorem psl2_hypothesisA (k : ℕ) (hk : 2 ≤ k) :
+public theorem psl2_hypothesisA (k : ℕ) (hk : 2 ≤ k) :
     ∃ (_ : Finite (PSL2Model k)) (Ω : Type) (_ : Finite Ω)
       (act : MulAction (PSL2Model k) Ω)
       (H D Q : Subgroup (PSL2Model k)) (t : PSL2Model k),
@@ -48,7 +49,7 @@ theorem psl2_hypothesisA (k : ℕ) (hk : 2 ≤ k) :
   ⟨inferInstance, P1 (PFAppendixIII.BinaryGaloisField k), inferInstance, inferInstance,
     _, _, _, _, ofRepo (Converse.hypothesisA_PSL2_binary k hk)⟩
 
-theorem suzuki_hypothesisA (m : ℕ) (hm : 0 < m) :
+public theorem suzuki_hypothesisA (m : ℕ) (hm : 0 < m) :
     ∃ (_ : Finite (SzModel m)) (Ω : Type) (_ : Finite Ω) (act : MulAction (SzModel m) Ω)
       (H D Q : Subgroup (SzModel m)) (t : SzModel m),
       @HypothesisA (SzModel m) Ω _ _ act _ H D Q t := by
@@ -59,7 +60,7 @@ theorem suzuki_hypothesisA (m : ℕ) (hm : 0 < m) :
   exact ⟨hfin, SzOmega m, inferInstance, actI, _, _, _, _,
     ofRepo (Converse.hypothesisA_Sz m)⟩
 
-theorem psu3_hypothesisA (k : ℕ) (hk : 2 ≤ k) :
+public theorem psu3_hypothesisA (k : ℕ) (hk : 2 ≤ k) :
     ∃ (E : Type) (_ : Field E) (_ : Finite E) (J : HermitianForm 3 E),
       J.form = !![0, 0, 1; 0, 1, 0; 1, 0, 0] ∧
       Nat.card E = (2 ^ k) ^ 2 ∧

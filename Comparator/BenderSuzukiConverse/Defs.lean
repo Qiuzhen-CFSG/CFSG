@@ -22,11 +22,12 @@ Proof terms inside definitions (`unitarySubgroup`, `SzRootGL`, ...) discharge ro
 closure obligations and carry no meaning; a subgroup is determined by its carrier.  The
 audit cost of a 60-line definition with a 4-line carrier is 4 lines.
 -/
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+module
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
 namespace BSConverse
 
@@ -35,7 +36,7 @@ universe u v w
 /-! ## 1. Strong embedding -/
 
 /-- An involution: a nonidentity element of order dividing two. -/
-def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
+@[expose] public def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
 
 /-- `M` is **strongly embedded** in `X`: proper, containing an involution, and meeting each
 of its other conjugates in a subgroup containing none.
@@ -46,7 +47,7 @@ other side gives the same notion.
 
 This is `IsStronglyEmbedded` as `BenderSuzuki/FinalTheorem.lean` states it, word for
 word. -/
-def IsStronglyEmbedded {X : Type*} [Group X] (M : Subgroup X) : Prop :=
+@[expose] public def IsStronglyEmbedded {X : Type*} [Group X] (M : Subgroup X) : Prop :=
   M ≠ ⊤ ∧ (∃ x ∈ M, IsInvolution x) ∧
     ∀ g ∉ M, ∀ x ∈ M ⊓ M.map (MulAut.conj g).toMonoidHom, ¬ IsInvolution x
 
@@ -54,18 +55,18 @@ def IsStronglyEmbedded {X : Type*} [Group X] (M : Subgroup X) : Prop :=
 
 /-- `H^g = g⁻¹ H g`, Peterfalvi's exponent convention -- the opposite side from
 `IsStronglyEmbedded` above, which is why the two are stated differently. -/
-def rightConjugate {G : Type*} [Group G] (H : Subgroup G) (g : G) : Subgroup G :=
+@[expose] public def rightConjugate {G : Type*} [Group G] (H : Subgroup G) (g : G) : Subgroup G :=
   H.map (MulAut.conj g⁻¹).toMonoidHom
 
 /-- The 2-rank of `G` is at least two: `G` has a Klein four subgroup. -/
-def TwoRankAtLeastTwo (G : Type*) [Group G] : Prop :=
+@[expose] public def TwoRankAtLeastTwo (G : Type*) [Group G] : Prop :=
   ∃ E : Subgroup G, Nat.card E = 4 ∧ ∀ x : E, (x : E) ^ 2 = 1
 
 /-- **Hypothesis (A1)**, Peterfalvi Part II.  `G` acts doubly transitively on `Ω`, `H` is a
 point stabiliser, `t` is an involution outside `H`, `D = H ∩ H^t`, and `H = Q ⋊ D` with
 `|Q|` even and `|D|` odd.  The semidirect product is spelled out as five separate fields
 rather than as `IsComplement'`. -/
-structure HypothesisA1 (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
+public structure HypothesisA1 (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (H D Q : Subgroup G) (t : G) : Prop where
   two_transitive : MulAction.IsMultiplyPretransitive G Ω 2
   point_stabilizer : ∃ point : Ω, H = MulAction.stabilizer G point
@@ -85,7 +86,7 @@ structure HypothesisA1 (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Fin
 (A3) is not decoration.  Without it, strong embedding does not pin down the group: the
 normaliser of a cyclic or generalised quaternion Sylow 2-subgroup is strongly embedded
 too.  Both halves are needed for the reading given at the top of this file. -/
-structure HypothesisA (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
+public structure HypothesisA (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (H D Q : Subgroup G) (t : G) : Prop where
   A1 : HypothesisA1 G Ω H D Q t
   A2 : FaithfulSMul G Ω
@@ -96,13 +97,13 @@ structure HypothesisA (G Ω : Type*) [Group G] [Finite G] [MulAction G Ω] [Fini
 Each is defined from Mathlib primitives alone. -/
 
 /-- The field of order `2ᵐ`. -/
-abbrev BinaryGaloisField (m : ℕ) : Type := GaloisField 2 m
+public abbrev BinaryGaloisField (m : ℕ) : Type := GaloisField 2 m
 
 /-- `PSL(2, 2ᵏ)`. -/
-abbrev PSL2Model (m : ℕ) := Matrix.ProjectiveSpecialLinearGroup (Fin 2) (BinaryGaloisField m)
+public abbrev PSL2Model (m : ℕ) := Matrix.ProjectiveSpecialLinearGroup (Fin 2) (BinaryGaloisField m)
 
 /-- A nondegenerate Hermitian form on `Fⁿ`, carrying its field involution. -/
-structure HermitianForm (n : ℕ) (F : Type w) [Field F] where
+public structure HermitianForm (n : ℕ) (F : Type w) [Field F] where
   conj : F ≃+* F
   conj_involutive : Function.Involutive conj
   form : Matrix (Fin n) (Fin n) F
@@ -110,20 +111,20 @@ structure HermitianForm (n : ℕ) (F : Type w) [Field F] where
   form_nondegenerate : form.det ≠ 0
 
 /-- Conjugate transpose with respect to the stored involution. -/
-def HermitianForm.conjTranspose {n : ℕ} {F : Type w} [Field F]
+@[expose] public def HermitianForm.conjTranspose {n : ℕ} {F : Type w} [Field F]
     (J : HermitianForm n F) (A : Matrix (Fin n) (Fin n) F) :
     Matrix (Fin n) (Fin n) F :=
   fun i j => J.conj (A j i)
 
 /-- The adjoint is antimultiplicative. -/
-theorem HermitianForm.adj_mul {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F)
+public theorem HermitianForm.adj_mul {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F)
     (A B : Matrix (Fin n) (Fin n) F) :
     J.conjTranspose (A * B) = J.conjTranspose B * J.conjTranspose A := by
   ext i j
   simp [HermitianForm.conjTranspose, Matrix.mul_apply, map_sum, map_mul, mul_comm]
 
 /-- The adjoint fixes the identity. -/
-theorem HermitianForm.adj_one {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :
+public theorem HermitianForm.adj_one {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :
     J.conjTranspose (1 : Matrix (Fin n) (Fin n) F) = 1 := by
   ext i j
   rcases eq_or_ne i j with rfl | h
@@ -131,7 +132,7 @@ theorem HermitianForm.adj_one {n : ℕ} {F : Type w} [Field F] (J : HermitianFor
   · simp [HermitianForm.conjTranspose, h, h.symm]
 
 /-- The adjoint of an inverse undoes the adjoint. -/
-theorem HermitianForm.adj_inv {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F)
+public theorem HermitianForm.adj_inv {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F)
     (A : GL (Fin n) F) :
     J.conjTranspose ((A⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) * J.conjTranspose A = 1 := by
   rw [← adj_mul]
@@ -139,7 +140,7 @@ theorem HermitianForm.adj_inv {n : ℕ} {F : Type w} [Field F] (J : HermitianFor
 
 /-- The isometry group of `J`.  The carrier is `{A | Aᴴ J A = J}`; the three fields below
 it are the routine proof that that set is a subgroup. -/
-def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
+@[expose] public def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
     (J : HermitianForm n F) : Subgroup (GL (Fin n) F) where
   carrier := {A | J.conjTranspose (A : Matrix (Fin n) (Fin n) F) * J.form * A = J.form}
   one_mem' := by simp [HermitianForm.adj_one]
@@ -162,16 +163,16 @@ def HermitianForm.unitarySubgroup {n : ℕ} {F : Type w} [Field F]
       _ = J.form := by rw [HermitianForm.adj_inv]; simp
 
 /-- Isometries of determinant one. -/
-def HermitianForm.specialSubgroup {n : ℕ} {F : Type w} [Field F]
+@[expose] public def HermitianForm.specialSubgroup {n : ℕ} {F : Type w} [Field F]
     (J : HermitianForm n F) : Subgroup (GL (Fin n) F) :=
   J.unitarySubgroup ⊓ Matrix.GeneralLinearGroup.det.ker
 
 /-- `PSU(J)`, the image of `SU(J)` in `PGL`. -/
-abbrev PSUModel {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :=
+public abbrev PSUModel {n : ℕ} {F : Type w} [Field F] (J : HermitianForm n F) :=
   J.specialSubgroup.map Matrix.ProjGenLinGroup.mk
 
 /-- The Suzuki root matrix over `GF(2^(2m+1))`; the Tits exponent is `2^(m+1)`. -/
-noncomputable def SzRootMatrix (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
+@[expose] public noncomputable def SzRootMatrix (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
     Matrix (Fin 4) (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   !![1, a, b, a ^ (2 + 2 ^ (m + 1)) + a * b + b ^ (2 ^ (m + 1));
      0, 1, a ^ (2 ^ (m + 1)), a ^ (1 + 2 ^ (m + 1)) + b;
@@ -179,7 +180,7 @@ noncomputable def SzRootMatrix (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
      0, 0, 0, 1]
 
 /-- The Suzuki torus matrix `diag(x^(1+2^m), x^(2^m), x^(-2^m), x^(-1-2^m))`. -/
-noncomputable def SzTorusMatrix (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ) :
+@[expose] public noncomputable def SzTorusMatrix (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ) :
     Matrix (Fin 4) (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   !![((x : BinaryGaloisField (2 * m + 1)) ^ (1 + 2 ^ m)), 0, 0, 0;
      0, ((x : BinaryGaloisField (2 * m + 1)) ^ (2 ^ m)), 0, 0;
@@ -187,7 +188,7 @@ noncomputable def SzTorusMatrix (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ
      0, 0, 0, ((x : BinaryGaloisField (2 * m + 1)) ^ (1 + 2 ^ m))⁻¹]
 
 /-- The Suzuki Weyl matrix: the antidiagonal permutation. -/
-noncomputable def SzWeylMatrix (m : ℕ) :
+@[expose] public noncomputable def SzWeylMatrix (m : ℕ) :
     Matrix (Fin 4) (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   !![0, 0, 0, 1;
      0, 0, 1, 0;
@@ -196,7 +197,7 @@ noncomputable def SzWeylMatrix (m : ℕ) :
 
 /-- The root matrix as an element of `GL(4, GF(2^(2m+1)))`; the proof is the determinant
 computation. -/
-noncomputable def SzRootGL (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
+@[expose] public noncomputable def SzRootGL (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
     GL (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   Matrix.GeneralLinearGroup.mkOfDetNeZero (SzRootMatrix m a b) (by
     classical
@@ -207,7 +208,7 @@ noncomputable def SzRootGL (m : ℕ) (a b : BinaryGaloisField (2 * m + 1)) :
     simp [SzRootMatrix, Fin.prod_univ_four])
 
 /-- The torus matrix as an element of `GL(4, GF(2^(2m+1)))`. -/
-noncomputable def SzTorusGL (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ) :
+@[expose] public noncomputable def SzTorusGL (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ) :
     GL (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   Matrix.GeneralLinearGroup.mkOfDetNeZero (SzTorusMatrix m x) (by
     classical
@@ -222,7 +223,7 @@ noncomputable def SzTorusGL (m : ℕ) (x : (BinaryGaloisField (2 * m + 1))ˣ) :
     simp [SzTorusMatrix, Fin.prod_univ_four, hx_sigma, hx_outer])
 
 /-- The Weyl matrix as an element of `GL(4, GF(2^(2m+1)))`; it is its own inverse. -/
-noncomputable def SzWeylGL (m : ℕ) : GL (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
+@[expose] public noncomputable def SzWeylGL (m : ℕ) : GL (Fin 4) (BinaryGaloisField (2 * m + 1)) :=
   { val := SzWeylMatrix m
     inv := SzWeylMatrix m
     val_inv := by
@@ -238,11 +239,11 @@ noncomputable def SzWeylGL (m : ℕ) : GL (Fin 4) (BinaryGaloisField (2 * m + 1)
 
 /-- The generators of `Sz(2^(2m+1))`: root elements, torus elements, and the Weyl
 element. -/
-def SzGeneratorSet (m : ℕ) : Set (GL (Fin 4) (BinaryGaloisField (2 * m + 1))) :=
+@[expose] public def SzGeneratorSet (m : ℕ) : Set (GL (Fin 4) (BinaryGaloisField (2 * m + 1))) :=
   {A | (∃ a b, A = SzRootGL m a b) ∨ (∃ x, A = SzTorusGL m x) ∨ A = SzWeylGL m}
 
 /-- `Sz(2^(2m+1))` in its concrete matrix model. -/
-noncomputable def SzModel (m : ℕ) : Subgroup (GL (Fin 4) (BinaryGaloisField (2 * m + 1))) :=
+@[expose] public noncomputable def SzModel (m : ℕ) : Subgroup (GL (Fin 4) (BinaryGaloisField (2 * m + 1))) :=
   Subgroup.closure (SzGeneratorSet m)
 
 end BSConverse

@@ -6,8 +6,9 @@ transcribes the two repository definitions verbatim, so those two bridges are
 `rfl`; the third identifies the centre of `J(S)` written with Mathlib's
 `Subgroup.center` with the repository's `centerIn`.
 -/
+module
 
-import Comparator.GlaubermanZJ.Defs
+public import Comparator.GlaubermanZJ.Defs
 import FeitThompson.BGsection6.theorem_6_2
 
 namespace ZJ
@@ -26,7 +27,7 @@ private theorem map_center_eq_centerIn {G : Type*} [Group G] (H : Subgroup G) :
     Subgroup.coe_mul]
   aesop
 
-theorem glauberman_zj {G : Type*} [Group G] [IsSolvable G] (hodd : Odd (Nat.card G))
+public theorem glauberman_zj {G : Type*} [Group G] [IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (S : Sylow p G) :
     ((Subgroup.center (thompsonSubgroup S.toSubgroup)).map
         (thompsonSubgroup S.toSubgroup).subtype ⊔ pPrimeCore p G).Normal := by
