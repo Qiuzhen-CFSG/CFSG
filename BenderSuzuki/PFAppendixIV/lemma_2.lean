@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import BenderSuzuki.External.Isaacs.VI.theorem_6_34
-public import BenderSuzuki.External.Isaacs.VI.theorem_6_5
+public import Theory.Representation.InducedIrreducible
+public import Theory.Representation.Clifford
 public import BenderSuzuki.External.Isaacs.VII.lemma_7_7
 public import BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import BenderSuzuki.PFchapter1section1.Basic
@@ -136,7 +136,7 @@ private theorem constituent_not_subgroupInKernel'_of_subgroupRestriction_not_ker
   let indρθ : Representation ℂ L (Representation.IndV K.subtype ρθ) :=
     Representation.ind K.subtype ρθ
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
-    Representation.finiteDimensional_ind K ρθ
+    Theory.Representation.finiteDimensional_ind K ρθ
   have hIndCharKer :
       Section1.subgroupInKernel' (Section1.inducedCF K ρθ.character) A :=
     (Section1.proposition_1_6_a K A hAK ρθ).mp
@@ -210,8 +210,8 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_appendixIV
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
   letI : Nontrivial φ.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Representation.RepMap φ.toRepresentation ρK := by
-    refine Representation.RepMap.mk φ.toSubmodule.subtype ?_
+  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
+    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
     ext v
     rfl
@@ -220,7 +220,7 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_appendixIV
     obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
     have hval : incl v = 0 := by
       simpa using
-        congrArg (fun f : Representation.RepMap φ.toRepresentation ρK => f v)
+        congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v)
           hzero
     have hsub : v = 0 := by
       apply Subtype.ext
@@ -433,16 +433,16 @@ private theorem FeitSibleyData.Q_conjugates_Q1_rep_equiv
     {G V : Type*} [Group G] [Finite G] [AddCommGroup V] [Module ℂ V]
     (d : FeitSibleyData G) [(d.Q1.subgroupOf d.Q).Normal]
     (rho : Representation ℂ (d.Q1.subgroupOf d.Q) V) (q : d.Q) :
-    Nonempty (rho ≃ₗ Representation.conjugateRep
+    Nonempty (rho ≃ₗ Theory.Representation.conjugateRep
       (G := d.Q) (H := d.Q1.subgroupOf d.Q) rho q) := by
   rcases d.exists_Q1_inner_conjugator q with ⟨q1, hq1⟩
   let q1Q : d.Q := ⟨(q1 : d.H), d.Q1_le_Q q1.property⟩
   let q1N : d.Q1.subgroupOf d.Q := ⟨q1Q, q1.property⟩
-  have hconj : Representation.conjugateRep
+  have hconj : Theory.Representation.conjugateRep
       (G := d.Q) (H := d.Q1.subgroupOf d.Q) rho q =
-      Representation.conjugateRep rho q1Q := by
+      Theory.Representation.conjugateRep rho q1Q := by
     ext x v
-    simp only [Representation.conjugateRep_apply]
+    simp only [Theory.Representation.conjugateRep_apply]
     congr 2
     apply Subtype.ext
     apply Subtype.ext
@@ -471,11 +471,11 @@ public theorem lemma_2_Q1_restriction_homogeneous
     rho.comp (d.Q1.subgroupOf d.Q).subtype
   letI : Nontrivial V :=
     Subrepresentation.irreducible_module_nontrivial rho
-  rcases External.Isaacs.VI.isaacs_theorem_6_5.{0, u, v, v} rho
+  rcases Theory.Representation.isaacs_theorem_6_5.{0, u, v, v} rho
       (d.Q1.subgroupOf d.Q) hrho W hW with
     ⟨m, g, hInternal, _hIrr, hConj, _hMultiplicity⟩
   let U : Fin m → Subrepresentation rhoN := fun i =>
-    Representation.conjugateSubrepresentation rho
+    Theory.Representation.conjugateSubrepresentation rho
       (d.Q1.subgroupOf d.Q) W (g i)
   change DirectSum.IsInternal (fun i => (U i).toSubmodule) at hInternal
   have hUequiv (i : Fin m) :
@@ -498,7 +498,7 @@ public theorem lemma_2_Q1_restriction_homogeneous
         intro i _hi
         change (U i).toRepresentation.character x =
           W.toRepresentation.character x
-        exact congrFun (Representation.char_iso (Representation.RepEquiv.toRepresentationEquiv (hUequiv i).some)) x
+        exact congrFun (Representation.char_iso (Theory.Representation.RepEquiv.toRepresentationEquiv (hUequiv i).some)) x
       _ = (m : ℂ) * W.toRepresentation.character x := by simp
   have hm : m ≠ 0 := by
     intro hm0
@@ -582,7 +582,7 @@ private theorem lemma_2_D_eq_one_of_mem_inertia
       ¬ Nonempty (sigma ≃ₗ Representation.trivial ℂ NK ℂ) := by
     rintro ⟨f⟩
     apply hWnonprincipal
-    refine ⟨Representation.RepEquiv.mk f.toLinearEquiv ?_⟩
+    refine ⟨Theory.Representation.RepEquiv.mk f.toLinearEquiv ?_⟩
     intro x
     ext w
     have htemp := f.isIntertwining (eQK x) w
@@ -603,7 +603,7 @@ private theorem lemma_2_D_eq_one_of_mem_inertia
   let eK : K := ⟨(e : d.H), show (e : d.H) ∈ d.Q1 ⊔ d.D from
     (show d.D ≤ d.Q1 ⊔ d.D from le_sup_right) e.property⟩
   have hsigmaChar : sigma.character =
-      (Representation.conjugateRep (G := K) (H := NK) sigma eK).character := by
+      (Theory.Representation.conjugateRep (G := K) (H := NK) sigma eK).character := by
     funext x
     let xQ : NQ := eQK.symm x
     let exK : NK := ⟨eK * (x : K) * eK⁻¹,
@@ -646,19 +646,19 @@ private theorem lemma_2_D_eq_one_of_mem_inertia
       W.toRepresentation.character exQ
     exact hWchar.symm
   letI : Representation.IsIrreducible
-      (Representation.conjugateRep (G := K) (H := NK) sigma eK) :=
+      (Theory.Representation.conjugateRep (G := K) (H := NK) sigma eK) :=
     conjugateRep_irreducible (G := K) (H := NK) (ρ := sigma) eK
   have hsigmaEquiv : Nonempty (sigma ≃ₗ
-      Representation.conjugateRep (G := K) (H := NK) sigma eK) := by
-    exact Representation.repEquiv_of_irreducible_char_eq
+      Theory.Representation.conjugateRep (G := K) (H := NK) sigma eK) := by
+    exact Theory.Character.repEquiv_of_irreducible_char_eq
       (F := ℂ) (G := NK) (ρ :=
-        Representation.conjugateRep (G := K) (H := NK) sigma eK)
+        Theory.Representation.conjugateRep (G := K) (H := NK) sigma eK)
       (σ := sigma) (by
         rw [show ringChar ℂ = 0 from ringChar.eq_zero, zero_dvd_iff]
         exact Nat.ne_of_gt Nat.card_pos) hsigmaChar.symm
   have hcentral := d.Q1D_centralizer hDne
   have hInertia :=
-    ((External.Isaacs.VI.isaacs_theorem_6_34.{u, v, v, v} NK hcentral).1
+    ((Theory.Representation.isaacs_theorem_6_34.{u, v, v, v} NK hcentral).1
       sigma hsigmaIrr hsigmaNonprincipal).1
   have heKN : eK ∈ NK := (hInertia eK).mp hsigmaEquiv
   have heQ1 : (e : d.H) ∈ d.Q1 := heKN
@@ -1042,26 +1042,26 @@ private theorem lemma_2_b_vanish_outside_Q
 private theorem lemma_2_b_virtualCharacter_zsmul
     {X : Type u} [Group X]
     (z : ℤ) {chi : ClassFunction X}
-    (hchi : Representation.IsVirtualCharacter chi) :
-    Representation.IsVirtualCharacter ((z : ℂ) • chi) := by
+    (hchi : Theory.Character.IsVirtualCharacter chi) :
+    Theory.Character.IsVirtualCharacter ((z : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => z * m i, k, rho, ?_⟩
   ext x
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem lemma_2_b_virtualCharacter_finset_sum
     {X : Type u} [Group X]
     {iota : Type*} (s : Finset iota) (Phi : iota → ClassFunction X)
-    (hPhi : ∀ i ∈ s, Representation.IsVirtualCharacter (Phi i)) :
-    Representation.IsVirtualCharacter (s.sum Phi) := by
+    (hPhi : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Phi i)) :
+    Theory.Character.IsVirtualCharacter (s.sum Phi) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i),
         (fun i => nomatch i), ?_⟩
       ext x
-      simp [Representation.virtualCharacterOfRepresentations]
+      simp [Theory.Character.virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
       have ha' := hPhi a (Finset.mem_insert_self a s)
       have hs' := ih (fun i hi => hPhi i (Finset.mem_insert_of_mem hi))
@@ -1074,7 +1074,7 @@ private theorem lemma_2_b_integerSpan_virtualCharacter
     (hchars : IsFeitSibleyExceptionalFamily d chars)
     {theta : ClassFunction d.H}
     (htheta : integerSpan chars theta) :
-    Representation.IsVirtualCharacter theta := by
+    Theory.Character.IsVirtualCharacter theta := by
   classical
   rcases htheta with ⟨v, rfl⟩
   rw [Section1.evalCoeff]
@@ -1125,7 +1125,7 @@ public theorem lemma_2_b
         (inducedCFLinear d.H) ∧
       ∀ theta : ClassFunction d.H,
         integerSpanOn chars puncturedSet theta →
-          Representation.IsVirtualCharacter (inducedCF d.H theta) ∧
+          Theory.Character.IsVirtualCharacter (inducedCF d.H theta) ∧
             supportedOn (inducedCF d.H theta) puncturedSet := by
   have hTI := lemma_2_b_TI d
   have hnorm := lemma_2_b_normalizer_eq_H d
@@ -1356,12 +1356,12 @@ private theorem lemma_2_c_Q1_constituent_nonselfconjugate
     apply hWnonprincipal
     have htrivialIrr : Representation.IsIrreducible
         (Representation.trivial ℂ NQ ℂ) :=
-      Representation.trivial_complex_irreducible
+      Theory.Character.trivial_complex_irreducible
     have htrivialChar :
         (Representation.trivial ℂ NQ ℂ).character = principalCharacter NQ := by
       ext x
       simp [Representation.character, principalCharacter]
-    exact Representation.repEquiv_of_irreducible_char_eq
+    exact Theory.Character.repEquiv_of_irreducible_char_eq
       (F := ℂ) (G := NQ)
       (ρ := Representation.trivial ℂ NQ ℂ) (σ := W.toRepresentation)
       (by
@@ -1421,7 +1421,7 @@ public theorem lemma_2
         (inducedCFLinear d.H) ∧
       ∀ theta : ClassFunction d.H,
         integerSpanOn chars puncturedSet theta →
-          Representation.IsVirtualCharacter (inducedCF d.H theta) ∧
+          Theory.Character.IsVirtualCharacter (inducedCF d.H theta) ∧
             supportedOn (inducedCF d.H theta) puncturedSet) ∧
     (Odd (Nat.card d.D) →
       ∀ chi : ClassFunction d.H, chi ∈ chars →

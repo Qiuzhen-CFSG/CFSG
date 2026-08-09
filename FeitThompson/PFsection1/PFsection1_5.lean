@@ -5,10 +5,10 @@ public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.GroupTheory.GroupAction.ConjAct
 public import Mathlib.GroupTheory.Index
 public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import FeitThompson.Representation.Induction
-public import FeitThompson.Representation.SimpleCriteria
-public import FeitThompson.Representation.Unbundled
-public import FeitThompson.Representation.CharacterValues
+public import Theory.Representation.Induction
+public import Theory.Character.SimpleCriteria
+public import Theory.Representation.Unbundled
+public import Theory.Character.CharacterValues
 /-!
 # Peterfalvi, Section 1, Proposition (1.5)
 
@@ -76,7 +76,7 @@ public theorem inducedCF_eq_representation_character_pf15
     inducedCF S rho.character = (Representation.ind S.subtype rho).character := by
   classical
   ext g
-  rw [Representation.induced_character_formula S rho g]
+  rw [Theory.Representation.induced_character_formula S rho g]
   rfl
 
 public theorem inducedCF_eq_representation_character
@@ -313,13 +313,13 @@ public theorem isIrreducibleCharacterOnGroup_classFunctionLinearEquivOfMulEquiv
 public theorem virtualCharacter_classFunctionLinearEquivOfMulEquiv
     {A : Type*} {B : Type*} [Group A] [Group B]
     (e : A ≃* B) {φ : ClassFunction A}
-    (hφ : Representation.IsVirtualCharacter φ) :
-    Representation.IsVirtualCharacter (classFunctionLinearEquivOfMulEquiv e φ) := by
+    (hφ : Theory.Character.IsVirtualCharacter φ) :
+    Theory.Character.IsVirtualCharacter (classFunctionLinearEquivOfMulEquiv e φ) := by
   rcases hφ with ⟨r, m, n, ρ, hφeq⟩
   refine ⟨r, m, n, fun i => (ρ i).comp e.symm.toMonoidHom, ?_⟩
   ext b
   simp [classFunctionLinearEquivOfMulEquiv, hφeq,
-    Representation.virtualCharacterOfRepresentations, Representation.character]
+    Theory.Character.virtualCharacterOfRepresentations, Representation.character]
 
 def subrepresentationOrderIso_compMulEquiv
     {H W : Type*} [Group H] [AddCommGroup W] [Module ℂ W]
@@ -2446,9 +2446,9 @@ public theorem proposition_1_5_b_irreducible_rep_orbit_relIndex_canonical
     simpa [hr] using
       proposition_1_5_b_rep_orbit_relIndex_canonical H thetaRep htheta_irreducible
   haveI : FiniteDimensional ℂ (Representation.IndV H.subtype thetaRep) :=
-    Representation.finiteDimensional_ind H thetaRep
+    Theory.Representation.finiteDimensional_ind H thetaRep
   have hIndIrr : Representation.IsIrreducible (Representation.ind H.subtype thetaRep) := by
-    exact (Representation.irreducible_iff_character_norm_one
+    exact (Theory.Character.irreducible_iff_character_norm_one
       (ρ := Representation.ind H.subtype thetaRep)).2
       (by
         change scalarProduct G (Representation.ind H.subtype thetaRep).character

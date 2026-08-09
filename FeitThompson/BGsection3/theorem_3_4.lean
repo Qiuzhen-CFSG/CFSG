@@ -1608,9 +1608,9 @@ theorem natCard_map_ker_eq_prime_of_central_exponent_prime_irreducible_local
     {q : ℕ} [Fact q.Prime] (hZpow : ∀ z : Z, (z : G) ^ q = 1) (hZ_nontrivial : ¬ Z ≤ ρ.ker) :
     Nat.card (Z.map (QuotientGroup.mk' ρ.ker)) = q := by
   let mkKer : G →* G ⧸ ρ.ker := QuotientGroup.mk' ρ.ker
-  let ρq : Representation F (G ⧸ ρ.ker) V := Representation.kerRepresentation ρ
+  let ρq : Representation F (G ⧸ ρ.ker) V := Theory.Representation.kerRepresentation ρ
   haveI : Representation.IsIrreducible ρq :=
-    (Representation.kerRepresentation_irreducible_iff ρ).2 hirr
+    (Theory.Representation.kerRepresentation_irreducible_iff ρ).2 hirr
   haveI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ hirr
   have hZmap_central : Z.map mkKer ≤ Subgroup.center (G ⧸ ρ.ker) := by
     intro z hz
@@ -1633,7 +1633,7 @@ theorem natCard_map_ker_eq_prime_of_central_exponent_prime_irreducible_local
     exact (QuotientGroup.eq_one_iff (N := ρ.ker) z).mp hzq_eq_one
   have hcenter_cyclic : IsCyclic (Subgroup.center (G ⧸ ρ.ker)) :=
     center_cyclic_of_representation_faithful_irreducible ρq
-      (Representation.kerRepresentation_faithful ρ)
+      (Theory.Representation.kerRepresentation_faithful ρ)
   letI : IsCyclic (Subgroup.center (G ⧸ ρ.ker)) := hcenter_cyclic
   have hZmap_cyclic : IsCyclic (Z.map mkKer) := Subgroup.isCyclic_of_le hZmap_central
   letI : IsCyclic (Z.map mkKer) := hZmap_cyclic
@@ -2191,7 +2191,7 @@ theorem theorem_3_4_extraspecial_faithful_center_fixedpoints_of_isExtraspecial_c
   let σ : Representation F (K ⋊[φ] R) V := ρ.comp e.toMonoidHom
   haveI : Representation.IsIrreducible σ := by
     exact
-      (Representation.RepEquiv.irreducible_iff_group_iso (ρ := σ) (σ := ρ) e
+      (Theory.Representation.RepEquiv.irreducible_iff_group_iso (ρ := σ) (σ := ρ) e
         (by intro g v; rfl)).2 hirr
   haveI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ hirr
   have hσfaithful : Function.Injective σ :=
@@ -2364,7 +2364,7 @@ theorem theorem_3_4_extraspecial_faithful_center_fixedpoints
     let Kq : Subgroup (G ⧸ ρ.ker) := K.map qG
     let Rq : Subgroup (G ⧸ ρ.ker) := R.map qG
     let Zq : Subgroup (G ⧸ ρ.ker) := ((Subgroup.center (↥K)).map K.subtype).map qG
-    let ρq : Representation F (G ⧸ ρ.ker) V := Representation.kerRepresentation ρ
+    let ρq : Representation F (G ⧸ ρ.ker) V := Theory.Representation.kerRepresentation ρ
     have hρq :
         Representation.IsIrreducible ρq ∧
           Function.Injective ρq ∧

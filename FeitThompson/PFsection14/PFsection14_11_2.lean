@@ -37,7 +37,7 @@ public theorem section14_scalarProduct_self_of_irreducibleCharacterOnGroup
     Section1.scalarProduct G χ χ = 1 := by
   rcases hχ with ⟨n, ρ, hirr, hchar⟩
   rw [hchar]
-  exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+  exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 public theorem section14_scalarProduct_irreducible_eq_zero_of_ne
     {G : Type u} [Group G] [Finite G]
@@ -196,7 +196,7 @@ public theorem section14_scalarProduct_signedIrreducible_eq_neg_one_or_zero_or_o
 public theorem section14_scalarProduct_sign_of_diff_scalar_eq_one
     {G : Type u} [Group G] [Finite G]
     {χ ψτ : Section1.ClassFunction G}
-    (hχVirt : Representation.IsVirtualCharacter χ)
+    (hχVirt : Theory.Character.IsVirtualCharacter χ)
     (hχSelf : Section1.scalarProduct G χ χ = 1)
     (hψτ : Section3.IsSignedIrreducibleCharacter ψτ)
     (hdiff :
@@ -264,7 +264,7 @@ public theorem section14_psiTau_signedIrreducible_of_hypothesis_14_10
   rcases hExt with ⟨hIso, hVirt, _hagrees⟩
   have hψspan : Section5.integerSpan Mfam ψ :=
     Section5.integerSpan_of_mem Mfam hψmem
-  have hvirt : Representation.IsVirtualCharacter (τM₁ ψ) :=
+  have hvirt : Theory.Character.IsVirtualCharacter (τM₁ ψ) :=
     hVirt ψ hψspan
   have hself : Section1.scalarProduct G (τM₁ ψ) (τM₁ ψ) = 1 := by
     calc
@@ -298,7 +298,7 @@ public theorem section14_phiTau_signedIrreducible_of_hypothesis_14_3
   rcases hExt with ⟨hIso, hVirt, _hagrees⟩
   have hφspan : Section5.integerSpan Lfam φ :=
     Section5.integerSpan_of_mem Lfam hφmem
-  have hvirt : Representation.IsVirtualCharacter (τL₁ φ) :=
+  have hvirt : Theory.Character.IsVirtualCharacter (τL₁ φ) :=
     hVirt φ hφspan
   have hself : Section1.scalarProduct G (τL₁ φ) (τL₁ φ) = 1 := by
     calc
@@ -817,7 +817,7 @@ public theorem section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10
     {τM τM₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
     {ψ βM : Section1.ClassFunction M}
     (h1410 : hypothesis_14_10_data M K V Mfam τM τM₁ ψ βM) :
-    Representation.IsVirtualCharacter (τM βM) := by
+    Theory.Character.IsVirtualCharacter (τM βM) := by
   classical
   rcases h1410 with
     ⟨_hMmax, _hModd, _hNormVleM, hMF, _hTypeI, hDadePkg, hPunct,
@@ -828,12 +828,12 @@ public theorem section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10
         (Section7.theorem_7_8_betaInput M K ψ) :=
     section14_betaInput_CFOn_typeIASet hMF hPunct hψmem hψdeg
   have hprincipalVirt :
-      Representation.IsVirtualCharacter (Section7.principalInducedCharacter M K) := by
+      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter M K) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (K.subgroupOf M) Section3.isVirtualCharacter_principalCharacter
   have hβinputVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section7.theorem_7_8_betaInput M K ψ) := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hψirr)
@@ -2017,7 +2017,7 @@ public theorem section14_int_weighted_sigma_double_sum_isVirtualCharacter
     (hσ : Section3.theorem_3_2_map_statement W1 W2 W σ)
     (hωirr : ∀ i j, Section1.IsIrreducibleCharacterOnGroup (ω i j))
     (coeff : Fin q → Fin p → ℤ) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (∑ i : Fin q, ∑ j : Fin p,
         ((coeff i j : ℂ) • σ (ω i j))) := by
   classical
@@ -2030,7 +2030,7 @@ public theorem section14_int_weighted_sigma_double_sum_isVirtualCharacter
     (G := G) (s := (Finset.univ : Finset (Fin p)))
     (Φ := fun j : Fin p => ((coeff i j : ℂ) • σ (ω i j))) ?_
   intro j _hj
-  have hbase : Representation.IsVirtualCharacter (σ (ω i j)) :=
+  have hbase : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
     hσ.2.1 (ω i j)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
         (hωirr i j))
@@ -2040,7 +2040,7 @@ public theorem section14_int_weighted_sigma_double_sum_isVirtualCharacter
 public theorem section14_scalarProduct_self_eq_of_virtual_cfNormSq_nat
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G} {n : ℕ}
-    (hχVirt : Representation.IsVirtualCharacter χ)
+    (hχVirt : Theory.Character.IsVirtualCharacter χ)
     (hχNorm : Section5.cfNormSq χ = (n : ℝ)) :
     Section1.scalarProduct G χ χ = (n : ℂ) := by
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hχVirt hχVirt with
@@ -2105,7 +2105,7 @@ public theorem section14_betaM_tau_self_scalar_of_hypothesis_14_10
       h76M hDadeAgreeM h78M
     rw [hnorm]
     norm_num
-  have hβVirt : Representation.IsVirtualCharacter (τM βM) := by
+  have hβVirt : Theory.Character.IsVirtualCharacter (τM βM) := by
     exact section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10
       (M := M) (K := K) (V := V) (Mfam := Mfam)
       (τM := τM) (τM₁ := τM₁) (ψ := ψ) (βM := βM)
@@ -3023,15 +3023,15 @@ public theorem section14_theorem_14_11_2_norm_one_remainder_norm_sign_source_bri
         σ ω i0 j0 hnotation hωNat_eq_ω h31 hω hσ coeff hcoeffEq
         hctx h143 h1410 hKV h111 heq
   have hSigmaVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (∑ i : Fin q, ∑ j : Fin p,
           ((coeff i j : ℂ) • σ (ω i j))) :=
     section14_int_weighted_sigma_double_sum_isVirtualCharacter
       (W1 := W1) (W2 := W2) (W := W) hσ
       (fun i j => hω.irreducible i j) coeff
-  have hβVirt : Representation.IsVirtualCharacter (τM βM) :=
+  have hβVirt : Theory.Character.IsVirtualCharacter (τM βM) :=
     section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10 h1410
-  have hχVirt : Representation.IsVirtualCharacter χ := by
+  have hχVirt : Theory.Character.IsVirtualCharacter χ := by
     dsimp [χ]
     exact Section3.isVirtualCharacter_sub hSigmaVirt hβVirt
   have hψSigned :
@@ -3095,7 +3095,7 @@ public theorem section14_theorem_14_11_2_norm_one_remainder_source_bridge
           theorem_14_11_1_data M K p q u v →
             e = K.relIndex M →
               ∃ χ : Section1.ClassFunction G,
-                Representation.IsVirtualCharacter χ ∧
+                Theory.Character.IsVirtualCharacter χ ∧
                   Section1.scalarProduct G χ χ = 1 ∧
                   τM βM =
                     (∑ i : Fin q, ∑ j : Fin p,
@@ -3120,14 +3120,14 @@ public theorem section14_theorem_14_11_2_norm_one_remainder_source_bridge
         M K V Mfam τM τM₁ ψ βM p q u v c d e
         σ ω i0 j0 hnotation hωNat_eq_ω h31 hω hσ coeff hcoeffEq
         hctx h143 h1410 hKV h111 heq
-  have hSigmaVirt : Representation.IsVirtualCharacter Sigma := by
+  have hSigmaVirt : Theory.Character.IsVirtualCharacter Sigma := by
     dsimp [Sigma]
     exact section14_int_weighted_sigma_double_sum_isVirtualCharacter
       (W1 := W1) (W2 := W2) (W := W) hσ
       (fun i j => hω.irreducible i j) coeff
-  have hβVirt : Representation.IsVirtualCharacter (τM βM) :=
+  have hβVirt : Theory.Character.IsVirtualCharacter (τM βM) :=
     section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10 h1410
-  have hχVirt : Representation.IsVirtualCharacter χ := by
+  have hχVirt : Theory.Character.IsVirtualCharacter χ := by
     dsimp [χ]
     exact Section3.isVirtualCharacter_sub hSigmaVirt hβVirt
   refine ⟨χ, hχVirt, hnormSign.1, ?_, hnormSign.2⟩
@@ -3190,7 +3190,7 @@ public theorem section14_theorem_14_11_2_raw_source_inputs_bridge
                       (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                     ((e - 1 : ℕ) : ℝ) ∧
                   ∃ χ : Section1.ClassFunction G,
-                    Representation.IsVirtualCharacter χ ∧
+                    Theory.Character.IsVirtualCharacter χ ∧
                       Section1.scalarProduct G χ χ = 1 ∧
                       τM βM =
                         (∑ i : Fin q, ∑ j : Fin p,
@@ -3271,7 +3271,7 @@ public theorem section14_theorem_14_11_2_raw_coefficients_source_bridge
                               (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                             ((e - 1 : ℕ) : ℝ) ∧
                           ∃ χ : Section1.ClassFunction G,
-                            Representation.IsVirtualCharacter χ ∧
+                            Theory.Character.IsVirtualCharacter χ ∧
                               Section1.scalarProduct G χ χ = 1 ∧
                               τM βM =
                                 (∑ i : Fin q, ∑ j : Fin p,
@@ -3280,10 +3280,10 @@ public theorem section14_theorem_14_11_2_raw_coefficients_source_bridge
                                 Section1.scalarProduct G χ
                                   (Section1.conjugateCharacter (τM₁ ψ)) = -1) := by
   intro hctx h143 h1410 hKV h111 heq
-  have hβVirt : Representation.IsVirtualCharacter (τM βM) :=
+  have hβVirt : Theory.Character.IsVirtualCharacter (τM βM) :=
     section14_betaM_tau_isVirtualCharacter_of_hypothesis_14_10 h1410
   have hσωVirt :
-      ∀ i j, Representation.IsVirtualCharacter (σ (ω i j)) := by
+      ∀ i j, Theory.Character.IsVirtualCharacter (σ (ω i j)) := by
     intro i j
     exact hσ.2.1 (ω i j)
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
@@ -3409,7 +3409,7 @@ public theorem section14_theorem_14_11_2_pf36_coefficients_source_bridge
                               (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                             (Fintype.card (Fin q × Fin p) : ℝ) ∧
                           ∃ χ : Section1.ClassFunction G,
-                            Representation.IsVirtualCharacter χ ∧
+                            Theory.Character.IsVirtualCharacter χ ∧
                               Section1.scalarProduct G χ χ = 1 ∧
                               τM βM =
                                 (∑ i : Fin q, ∑ j : Fin p,
@@ -3636,7 +3636,7 @@ public theorem section14_theorem_14_11_2_complex_coefficients_source_bridge
                               (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                             (Fintype.card (Fin q × Fin p) : ℝ) ∧
                           ∃ χ : Section1.ClassFunction G,
-                            Representation.IsVirtualCharacter χ ∧
+                            Theory.Character.IsVirtualCharacter χ ∧
                               Section1.scalarProduct G χ χ = 1 ∧
                               τM βM =
                                 (∑ i : Fin q, ∑ j : Fin p,
@@ -3738,7 +3738,7 @@ public theorem section14_theorem_14_11_2_coefficient_parity_source_bridge
                               (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                             (Fintype.card (Fin q × Fin p) : ℝ) ∧
                           ∃ χ : Section1.ClassFunction G,
-                            Representation.IsVirtualCharacter χ ∧
+                            Theory.Character.IsVirtualCharacter χ ∧
                               Section1.scalarProduct G χ χ = 1 ∧
                               τM βM =
                                 (∑ i : Fin q, ∑ j : Fin p,
@@ -3808,7 +3808,7 @@ public theorem section14_theorem_14_11_2_integer_coefficients_source_bridge
                             (fun ij => Complex.normSq (coeff ij.1 ij.2 : ℂ)) ≤
                           (Fintype.card (Fin q × Fin p) : ℝ) ∧
                         ∃ χ : Section1.ClassFunction G,
-                          Representation.IsVirtualCharacter χ ∧
+                          Theory.Character.IsVirtualCharacter χ ∧
                             Section1.scalarProduct G χ χ = 1 ∧
                             τM βM =
                               (∑ i : Fin q, ∑ j : Fin p,
@@ -3863,7 +3863,7 @@ public theorem section14_theorem_14_11_2_remainder_core_source_bridge
                   ∃ ε : Fin q → Fin p → ℤ,
                     (∀ i j, ε i j = 1 ∨ ε i j = -1) ∧
                       ∃ χ : Section1.ClassFunction G,
-                        Representation.IsVirtualCharacter χ ∧
+                        Theory.Character.IsVirtualCharacter χ ∧
                           Section1.scalarProduct G χ χ = 1 ∧
                           τM βM =
                             (∑ i : Fin q, ∑ j : Fin p,
@@ -3920,7 +3920,7 @@ public theorem section14_theorem_14_11_2_remainder_source_bridge
                       ∃ ε : Fin q → Fin p → ℤ,
                         (∀ i j, ε i j = 1 ∨ ε i j = -1) ∧
                           ∃ χ : Section1.ClassFunction G,
-                            Representation.IsVirtualCharacter χ ∧
+                            Theory.Character.IsVirtualCharacter χ ∧
                               Section1.scalarProduct G χ χ = 1 ∧
                               βMτ =
                                 (∑ i : Fin q, ∑ j : Fin p,

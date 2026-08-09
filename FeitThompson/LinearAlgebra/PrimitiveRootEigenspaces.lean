@@ -21,10 +21,11 @@ public import FeitThompson.BGsection1.CriticalSubgroupLemmas
 public import FeitThompson.Burnside.NormalComplement
 public import FeitThompson.Extraspecial
 public import FeitThompson.LinearAlgebra.BlockElementaryMap
-public import FeitThompson.Representation.ConjugateRep
+public import Theory.Representation.ConjugateRep
 public import FeitThompson.BGsection2.EndFieldRep
 
 open Representation
+open Theory.Representation
 open MonoidAlgebra
 open Module
 open Module.End

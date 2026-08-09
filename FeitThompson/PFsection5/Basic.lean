@@ -318,7 +318,7 @@ public theorem integerSpanOnNonempty_of_conjugate_pair
 @[expose] public def sourceVirtualCharacters
     {L : Type u} [Group L]
     (S : Finset (Section1.ClassFunction L)) : Prop :=
-  ∀ χ : Section1.ClassFunction L, χ ∈ S → Representation.IsVirtualCharacter χ
+  ∀ χ : Section1.ClassFunction L, χ ∈ S → Theory.Character.IsVirtualCharacter χ
 
 public theorem sourceVirtualCharacters_mono
     {L : Type u} [Group L]
@@ -331,14 +331,14 @@ public theorem sourceVirtualCharacters_mono
 public theorem isVirtualCharacter_of_isCharacter
     {L : Type u} [Group L] [Finite L] {χ : Section1.ClassFunction L}
     (hχ : Section1.IsCharacter χ) :
-    Representation.IsVirtualCharacter χ := by
+    Theory.Character.IsVirtualCharacter χ := by
   classical
   rcases hχ with ⟨V, _add, _module, _finiteDimensional, ρ, rfl⟩
   refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)),
     (fun _ : Fin 1 => Module.finrank ℂ V),
     (fun _ : Fin 1 => Section1.standardizeRepresentation ρ), ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations,
+  simp [Theory.Character.virtualCharacterOfRepresentations,
     Section1.standardizeRepresentation_character]
 
 /-- Pairwise orthogonality for the finite family `S`. -/
@@ -589,7 +589,7 @@ finite set.
     (S : Finset (Section1.ClassFunction L))
     (T : Section1.ClassFunction L →ₗ[ℂ] Section1.ClassFunction G) : Prop :=
   ∀ χ : Section1.ClassFunction L,
-    integerSpan S χ → Representation.IsVirtualCharacter (T χ)
+    integerSpan S χ → Theory.Character.IsVirtualCharacter (T χ)
 
 public theorem mapsIntegerSpanToVirtualCharacters_mono
     {L : Type u} [Group L]

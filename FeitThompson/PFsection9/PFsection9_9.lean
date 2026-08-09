@@ -1499,7 +1499,7 @@ private theorem constituent_not_subgroupInKernel'_of_subgroupRestriction_not_ker
   let indρθ : Representation ℂ L (Representation.IndV K.subtype ρθ) :=
     Representation.ind K.subtype ρθ
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
-    Representation.finiteDimensional_ind K ρθ
+    Theory.Representation.finiteDimensional_ind K ρθ
   have hIndCharKer :
       Section1.subgroupInKernel' (Section1.inducedCF K ρθ.character) A :=
     (Section1.proposition_1_6_a K A hAK ρθ).mp
@@ -1573,8 +1573,8 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_sec9
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
   letI : Nontrivial φ.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Representation.RepMap φ.toRepresentation ρK := by
-    refine Representation.RepMap.mk φ.toSubmodule.subtype ?_
+  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
+    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
     ext v
     rfl
@@ -1583,7 +1583,7 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_sec9
     obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
     have hval : incl v = 0 := by
       simpa using
-        congrArg (fun f : Representation.RepMap φ.toRepresentation ρK => f v)
+        congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v)
           hzero
     have hsub : v = 0 := by
       apply Subtype.ext

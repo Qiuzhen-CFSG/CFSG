@@ -1516,7 +1516,7 @@ private theorem section13_theorem_13_10_lambdaTotalNormPieceSourceData_of_source
   have htotal :
       Section7.supportEnergy Set.univ lamτ / (Nat.card G : ℝ) ≤ 1 := by
     rw [section13_supportEnergy_univ_div_card_eq_cfNormSq, hlamτ_cfNorm]
-  have hlamτ_virtual : Representation.IsVirtualCharacter lamτ := by
+  have hlamτ_virtual : Theory.Character.IsVirtualCharacter lamτ := by
     rw [hlamτ_eq]
     exact hcoh.2.1 lam (Section5.integerSpan_of_mem Sfam hlam_mem)
   have hlamτ_signed : Section3.IsSignedIrreducibleCharacter lamτ :=
@@ -1950,9 +1950,9 @@ private theorem section13_theorem_13_10_etaTotalNormPieceSourceData_of_sourceCon
   have hω_class : Section1.IsClassFunction (ω 1 0) := by
     rw [hωeq 1 0 h1q h0p]
     exact hωFin.is_class i1 j0
-  have hvirtW : Representation.IsVirtualCharacter (ω 1 0) :=
+  have hvirtW : Theory.Character.IsVirtualCharacter (ω 1 0) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hω_irred
-  have hvirtG : Representation.IsVirtualCharacter (σ (ω 1 0)) :=
+  have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω 1 0)) :=
     hσmap.2.1 (ω 1 0) hvirtW
   have hself : Section1.scalarProduct G (σ (ω 1 0)) (σ (ω 1 0)) = 1 := by
     calc

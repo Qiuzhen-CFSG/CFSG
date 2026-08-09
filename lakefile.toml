@@ -1,5 +1,10 @@
 name = "CFSG"
-defaultTargets = ["FeitThompson", "BenderSuzuki", "Comparator"]
+defaultTargets = [
+    "BenderSuzuki",
+    "FeitThompson",
+    "Comparator",
+    "Theory",
+]
 lintDriver = "batteries/runLinter"
 
 enableArtifactCache = true
@@ -23,3 +28,6 @@ name = "BenderSuzuki"
 
 [[lean_lib]]
 name = "Comparator"
+
+[[lean_lib]]
+name = "Theory"

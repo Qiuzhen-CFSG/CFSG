@@ -44,7 +44,7 @@ signed irreducible.
     (_hω : notation_3_3_statement W1 W2 W I J i0 j0 ω) : Prop :=
   ∃ χ : I → J → Section1.ClassFunction G,
     IsOrthonormalDoubleFamily χ ∧
-      (∀ i j, Representation.IsVirtualCharacter (χ i j)) ∧
+      (∀ i j, Theory.Character.IsVirtualCharacter (χ i j)) ∧
       (∀ i j, IsSignedIrreducibleCharacter (χ i j)) ∧
       χ i0 j0 = Section1.principalCharacter G ∧
       ∀ i j, i ≠ i0 → j ≠ j0 →
@@ -93,7 +93,7 @@ public theorem inducedCF_eq_dadeTransform_trivial
     hIndclass hDadeclass
   intro chi hchi
   calc
-    Representation.classFunctionInner
+    Theory.Character.classFunctionInner
         (Section1.toConjClassFunction (Section1.inducedCF L β) hIndclass) chi
         = Section1.scalarProduct G (Section1.inducedCF L β)
             (Section1.ofConjClassFunction chi) := by
@@ -113,7 +113,7 @@ public theorem inducedCF_eq_dadeTransform_trivial
             A L (fun _ : G => ⊥) h hAL β (Section1.ofConjClassFunction chi)
             hβ (Section1.ofConjClassFunction_isClassFunction chi)
             (constantOnDadeCosets_trivial A (Section1.ofConjClassFunction chi))
-    _ = Representation.classFunctionInner
+    _ = Theory.Character.classFunctionInner
         (Section1.toConjClassFunction
           (Section2.dadeTransform (fun _ : G => ⊥) hAL β) hDadeclass) chi := by
           symm
@@ -208,12 +208,12 @@ private theorem character_cast_nat
 
 public theorem isVirtualCharacter_principalCharacter
     {G : Type u} [Group G] [Finite G] :
-    Representation.IsVirtualCharacter (Section1.principalCharacter G) := by
+    Theory.Character.IsVirtualCharacter (Section1.principalCharacter G) := by
   classical
   refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)), (fun _ : Fin 1 => 1),
     (fun _ : Fin 1 => Representation.trivial ℂ G (Fin 1 → ℂ)), ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Section1.principalCharacter,
+  simp [Theory.Character.virtualCharacterOfRepresentations, Section1.principalCharacter,
     Representation.character]
 
 set_option backward.isDefEq.respectTransparency false in
@@ -234,7 +234,7 @@ public theorem principalCharacter_isIrreducibleCharacterOnGroup
 public theorem isVirtualCharacter_of_irreducibleCharacterOnGroup
     {G : Type u} [Group G] [Finite G] {χ : Section1.ClassFunction G}
     (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Representation.IsVirtualCharacter χ := by
+    Theory.Character.IsVirtualCharacter χ := by
   classical
   change ∃ n : ℕ, ∃ ρ : Representation ℂ G (Fin n → ℂ),
     Representation.IsIrreducible ρ ∧ χ = ρ.character at hχ
@@ -242,13 +242,13 @@ public theorem isVirtualCharacter_of_irreducibleCharacterOnGroup
   refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)), (fun _ : Fin 1 => n),
     (fun _ : Fin 1 => ρ), ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, hχeq]
+  simp [Theory.Character.virtualCharacterOfRepresentations, hχeq]
 
 public theorem isVirtualCharacter_add
     {G : Type u} [Group G] {χ ψ : G → ℂ}
-    (hχ : Representation.IsVirtualCharacter χ)
-    (hψ : Representation.IsVirtualCharacter ψ) :
-    Representation.IsVirtualCharacter (χ + ψ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hψ : Theory.Character.IsVirtualCharacter ψ) :
+    Theory.Character.IsVirtualCharacter (χ + ψ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   rcases hψ with ⟨s, m', n', σ, rfl⟩
@@ -271,31 +271,31 @@ public theorem isVirtualCharacter_add
           (σ j))
   refine ⟨r + s, mrs, nrs, ρrs, ?_⟩
   ext g
-  simp only [Pi.add_apply, Representation.virtualCharacterOfRepresentations,
+  simp only [Pi.add_apply, Theory.Character.virtualCharacterOfRepresentations,
     mrs, nrs, ρrs, Fin.sum_univ_add]
   simp [Fin.addCases_left, Fin.addCases_right, character_cast_nat]
 
 public theorem isVirtualCharacter_neg
     {G : Type u} [Group G] {χ : G → ℂ}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter (-χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter (-χ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   refine ⟨r, fun i => -m i, n, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations]
+  simp [Theory.Character.virtualCharacterOfRepresentations]
 
 public theorem isVirtualCharacter_sub
     {G : Type u} [Group G] {χ ψ : G → ℂ}
-    (hχ : Representation.IsVirtualCharacter χ)
-    (hψ : Representation.IsVirtualCharacter ψ) :
-    Representation.IsVirtualCharacter (χ - ψ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hψ : Theory.Character.IsVirtualCharacter ψ) :
+    Theory.Character.IsVirtualCharacter (χ - ψ) := by
   simpa [sub_eq_add_neg] using isVirtualCharacter_add hχ (isVirtualCharacter_neg hψ)
 
 public theorem isVirtualCharacter_of_signedIrreducible_pf35
     {G : Type u} [Group G] [Finite G] {χ : Section1.ClassFunction G}
     (hχ : IsSignedIrreducibleCharacter χ) :
-    Representation.IsVirtualCharacter χ := by
+    Theory.Character.IsVirtualCharacter χ := by
   rcases hχ with ⟨ε, hε, ψ, hψ, rfl⟩
   rcases hε with rfl | rfl
   · simpa using isVirtualCharacter_of_irreducibleCharacterOnGroup hψ
@@ -305,12 +305,12 @@ public theorem isVirtualCharacter_of_signedIrreducible_pf35
 public theorem isVirtualCharacter_isClassFunction
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ) :
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
     Section1.IsClassFunction χ := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
   intro x g
-  unfold Representation.virtualCharacterOfRepresentations
+  unfold Theory.Character.virtualCharacterOfRepresentations
   refine Finset.sum_congr rfl ?_
   intro i _hi
   have hchar :
@@ -321,8 +321,8 @@ public theorem isVirtualCharacter_isClassFunction
 public theorem scalarProduct_isVirtualCharacter_eq_int
     {G : Type u} [Group G] [Finite G]
     {χ ψ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ)
-    (hψ : Representation.IsVirtualCharacter ψ) :
+    (hχ : Theory.Character.IsVirtualCharacter χ)
+    (hψ : Theory.Character.IsVirtualCharacter ψ) :
     ∃ z : ℤ, Section1.scalarProduct G χ ψ = (z : ℂ) := by
   classical
   rcases hχ with ⟨r, m, n, ρ, rfl⟩
@@ -358,8 +358,8 @@ public theorem scalarProduct_isVirtualCharacter_eq_int
     ring
   calc
     Section1.scalarProduct G
-        (Representation.virtualCharacterOfRepresentations r m n ρ)
-        (Representation.virtualCharacterOfRepresentations s m' n' σ)
+        (Theory.Character.virtualCharacterOfRepresentations r m n ρ)
+        (Theory.Character.virtualCharacterOfRepresentations s m' n' σ)
         =
           Section1.scalarProduct G
             (fun g => ∑ i : Fin r, (m i : ℂ) * (ρ i).character g)
@@ -377,7 +377,7 @@ public theorem alphaIJ_isVirtualCharacter
     {ω : I → J → Section1.ClassFunction W}
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (i : I) (j : J) :
-    Representation.IsVirtualCharacter (alphaIJ W i0 j0 ω i j) := by
+    Theory.Character.IsVirtualCharacter (alphaIJ W i0 j0 ω i j) := by
   rw [alphaIJ]
   exact isVirtualCharacter_add
     (isVirtualCharacter_sub
@@ -410,7 +410,7 @@ public theorem inducedCF_alphaIJ_isVirtualCharacter
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (i : I) (j : J) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (Section1.inducedCF W (alphaIJ W i0 j0 ω i j)) := by
   classical
   change isCyclicTIHypothesis W1 W2 W at h
@@ -443,7 +443,7 @@ public theorem betaIJ_isVirtualCharacter
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (i : I) (j : J) :
-    Representation.IsVirtualCharacter (betaIJ W i0 j0 ω i j) := by
+    Theory.Character.IsVirtualCharacter (betaIJ W i0 j0 ω i j) := by
   rw [betaIJ]
   exact isVirtualCharacter_sub
     (inducedCF_alphaIJ_isVirtualCharacter
@@ -1072,14 +1072,14 @@ public theorem betaIJ_scalarProduct_betaIJ
 
 public theorem ofConjClassFunction_isIrreducibleCharacterOnGroup
     {G : Type u} [Group G] [Finite G]
-    {χ : Representation.ClassFunction G}
-    (hχ : Representation.IsIrreducibleCharacter χ) :
+    {χ : Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
     Section1.IsIrreducibleCharacterOnGroup (Section1.ofConjClassFunction χ) := by
   classical
   rcases hχ with ⟨hchar, hirrNorm⟩
   rcases hchar with ⟨n, ρ, hχeq⟩
   refine ⟨n, ρ, ?_, ?_⟩
-  · apply (Representation.irreducible_iff_character_norm_one (ρ := ρ)).2
+  · apply (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).2
     simpa [hχeq] using hirrNorm
   · rw [hχeq]
     exact Section1.ofConjClassFunction_characterClassFunction ρ
@@ -1126,8 +1126,8 @@ private theorem scalarProduct_evalCoeff_eq_coeffDot
 
 public theorem irreducibleBasis_scalarProduct_evalCoeff
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (v w : Section1.CoeffVector ι) :
     Section1.scalarProduct G
         (Section1.evalCoeff (fun i => Section1.ofConjClassFunction (χ i)) v)
@@ -1142,7 +1142,7 @@ public theorem irreducibleBasis_scalarProduct_evalCoeff
         Section1.scalarProduct G
             (Section1.ofConjClassFunction (χ i))
             (Section1.ofConjClassFunction (χ j)) =
-            Representation.classFunctionInner (χ i) (χ j) := by
+            Theory.Character.classFunctionInner (χ i) (χ j) := by
               symm
               simpa [Section1.toConjClassFunction_ofConjClassFunction] using
                 (Section1.classFunctionInner_toConjClassFunction
@@ -1156,7 +1156,7 @@ public theorem irreducibleBasis_scalarProduct_evalCoeff
 
 @[expose] public noncomputable def irreducibleBasisCoeff
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (φ : Section1.ClassFunction G)
     (hint : ∀ i : ι,
       ∃ z : ℤ, Section1.scalarProduct G φ (Section1.ofConjClassFunction (χ i)) = (z : ℂ)) :
@@ -1165,7 +1165,7 @@ public theorem irreducibleBasis_scalarProduct_evalCoeff
 
 public theorem irreducibleBasisCoeff_spec
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (φ : Section1.ClassFunction G)
     (hint : ∀ i : ι,
       ∃ z : ℤ, Section1.scalarProduct G φ (Section1.ofConjClassFunction (χ i)) = (z : ℂ))
@@ -1176,9 +1176,9 @@ public theorem irreducibleBasisCoeff_spec
 
 public theorem irreducibleBasis_evalCoeff_coeff
     {G ι : Type*} [Group G] [Finite G] [Fintype ι] [DecidableEq ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ i, b i = χ i)
     (φ : Section1.ClassFunction G) (hφ : Section1.IsClassFunction φ)
     (hint : ∀ i : ι,
@@ -1186,7 +1186,7 @@ public theorem irreducibleBasis_evalCoeff_coeff
     Section1.evalCoeff (fun i => Section1.ofConjClassFunction (χ i))
         (irreducibleBasisCoeff φ hint) = φ := by
   classical
-  let Φ : Representation.ClassFunction G := Section1.toConjClassFunction φ hφ
+  let Φ : Theory.Character.ConjClassFunction G := Section1.toConjClassFunction φ hφ
   have hrepr :
       ∀ i : ι, (irreducibleBasisCoeff φ hint i : ℂ) = b.repr Φ i := by
     intro i
@@ -1194,7 +1194,7 @@ public theorem irreducibleBasis_evalCoeff_coeff
       (irreducibleBasisCoeff φ hint i : ℂ) =
           Section1.scalarProduct G φ (Section1.ofConjClassFunction (χ i)) := by
             exact (irreducibleBasisCoeff_spec φ hint i).symm
-      _ = Representation.classFunctionInner Φ (χ i) := by
+      _ = Theory.Character.classFunctionInner Φ (χ i) := by
             symm
             exact Section1.representation_inner_toConjClassFunction_right φ hφ (χ i)
       _ = b.repr Φ i := by
@@ -1233,10 +1233,10 @@ public theorem irreducibleBasis_evalCoeff_coeff
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (i : I) (j : J) :
     Section1.CoeffVector ι :=
   irreducibleBasisCoeff (betaIJ W i0 j0 ω i j) (fun k =>
@@ -1252,11 +1252,11 @@ public theorem betaIJ_eq_evalCoeff
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (i : I) (j : J) :
     Section1.evalCoeff (fun k => Section1.ofConjClassFunction (χ k))
@@ -1292,11 +1292,11 @@ public theorem betaIJCoeff_dot
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) :
@@ -1354,11 +1354,11 @@ public theorem betaIJCoeff_self_dot
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0) :
     Section1.coeffDot
@@ -1381,11 +1381,11 @@ public theorem betaIJCoeff_dot_same_left
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -1409,11 +1409,11 @@ public theorem betaIJCoeff_dot_same_right
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -1437,11 +1437,11 @@ public theorem betaIJCoeff_dot_off
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q) :
@@ -1542,11 +1542,11 @@ public theorem betaIJCoeff_support_card_eq_three
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0) :
     (coeffSupport3
@@ -1569,11 +1569,11 @@ public theorem betaIJCoeff_mem_support_eq_sign
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {k : ι}
@@ -1604,10 +1604,10 @@ public theorem betaIJCoeff_eq_zero_of_principal_index
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {k0 : ι}
     (hk0 : Section1.ofConjClassFunction (χ k0) = Section1.principalCharacter G) :
@@ -1822,11 +1822,11 @@ private theorem betaIJCoeff_sub_eq_betaIJ_sub
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (i p : I) (j q : J) :
     Section1.evalCoeff (fun k => Section1.ofConjClassFunction (χ k))
@@ -1907,11 +1907,11 @@ public theorem betaIJCoeff_dot_eq_same_sub_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) :
@@ -2225,11 +2225,11 @@ private theorem betaIJCoeff_same_left_not_two_one_pattern
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0) :
     let v :=
@@ -2302,11 +2302,11 @@ private theorem betaIJCoeff_same_right_not_two_one_pattern
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0) :
     let v :=
@@ -2379,11 +2379,11 @@ public theorem betaIJCoeff_same_left_same_one_opposite_zero
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -2426,11 +2426,11 @@ public theorem betaIJCoeff_same_right_same_one_opposite_zero
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -2473,11 +2473,11 @@ public theorem betaIJCoeff_off_same_card_eq_opposite_card
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q) :
@@ -2518,10 +2518,10 @@ public theorem betaIJCoeff_off_same_card_eq_opposite_card
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (i : I) (j : J) (ε : ℤ) (k : ι) : Prop :=
   signedCoeffMem
     (betaIJCoeff (W1 := W1) (W2 := W2) (W := W)
@@ -2544,10 +2544,10 @@ public theorem betaSignedMem_isSignInt
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     {h : hypothesis_3_1_statement W1 W2 W}
     {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
+    {hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ}
     {i : I} {j : J} {ε : ℤ} {k : ι}
     (hmem : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -2562,10 +2562,10 @@ public theorem betaSignedMem_neg_sign_for_output
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     {h : hypothesis_3_1_statement W1 W2 W}
     {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
+    {hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ}
     {i : I} {j : J} {ε : ℤ} {k : ι}
     (hmem : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -2597,10 +2597,10 @@ public theorem betaSignedMem_sign_unique
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     {h : hypothesis_3_1_statement W1 W2 W}
     {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
+    {hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ}
     {i : I} {j : J} {ε δ : ℤ} {k : ι}
     (hε : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -2618,10 +2618,10 @@ public theorem betaSignedMem_neg_not_same
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     {h : hypothesis_3_1_statement W1 W2 W}
     {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
+    {hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ}
     {i : I} {j : J} {ε : ℤ} {k : ι}
     (hε : betaSignedMem (W1 := W1) (W2 := W2) (W := W)
       (I := I) (J := J) (ι := ι) (i0 := i0) (j0 := j0)
@@ -2720,10 +2720,10 @@ public theorem betaSignedMem_not_principal_index
     [DecidableEq I] [DecidableEq J]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε : ℤ} {k0 : ι}
     (hk0 : Section1.ofConjClassFunction (χ k0) = Section1.principalCharacter G) :
@@ -2746,11 +2746,11 @@ public theorem betaSignedMem_cases_of_three
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 ε3 ε : ℤ} {k1 k2 k3 k : ι}
@@ -2788,11 +2788,11 @@ public theorem betaSignedMem_not_fourth_of_three
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 ε3 ε : ℤ} {k1 k2 k3 k : ι}
@@ -2831,11 +2831,11 @@ public theorem betaSignedMem_exists_third_of_two
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 : ℤ} {k1 k2 : ι}
@@ -3038,11 +3038,11 @@ public theorem betaIJCoeff_same_left_exists_unique_signed_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -3082,11 +3082,11 @@ public theorem betaIJCoeff_same_left_no_signed_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -3117,11 +3117,11 @@ public theorem betaIJCoeff_same_right_exists_unique_signed_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -3161,11 +3161,11 @@ public theorem betaIJCoeff_same_right_no_signed_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -3196,11 +3196,11 @@ public theorem betaIJCoeff_off_exists_signed_opposite_of_signed_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q) :
@@ -3239,11 +3239,11 @@ public theorem betaIJCoeff_off_exists_signed_common_of_signed_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q) :
@@ -3282,11 +3282,11 @@ public theorem betaSignedMem_same_left_exists_unique_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -3319,11 +3319,11 @@ public theorem betaSignedMem_same_left_common_unique
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q)
@@ -3358,11 +3358,11 @@ public theorem betaSignedMem_same_left_no_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q) :
@@ -3388,11 +3388,11 @@ public theorem betaSignedMem_same_right_exists_unique_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -3425,11 +3425,11 @@ public theorem betaSignedMem_same_right_common_unique
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p)
@@ -3464,11 +3464,11 @@ public theorem betaSignedMem_same_right_no_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p) :
@@ -3494,11 +3494,11 @@ public theorem betaSignedMem_same_left_third_indices_ne_of_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q)
@@ -3542,11 +3542,11 @@ public theorem betaSignedMem_same_right_third_indices_ne_of_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j : J} (hi : i ≠ i0) (hp : p ≠ i0) (hj : j ≠ j0)
     (hip : i ≠ p)
@@ -3590,11 +3590,11 @@ public theorem betaSignedMem_off_common_forces_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
@@ -3627,11 +3627,11 @@ public theorem betaSignedMem_off_opposite_forces_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
@@ -3664,11 +3664,11 @@ public theorem betaSignedMem_off_common_forces_opposite_cases_right
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
@@ -3729,11 +3729,11 @@ public theorem betaSignedMem_off_common_forces_other_opposite_cases_right
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
@@ -3778,11 +3778,11 @@ public theorem betaSignedMem_off_opposite_forces_common_cases_right
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hp : p ≠ i0) (hq : q ≠ j0) (hip : i ≠ p) (hjq : j ≠ q)
@@ -3841,11 +3841,11 @@ public theorem betaSignedMem_off_opposite_same_left_forces_remaining_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i r : I} {j q : J} (hi : i ≠ i0) (hr : r ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0) (hir : i ≠ r) (hjq : j ≠ q)
@@ -3898,11 +3898,11 @@ public theorem betaSignedMem_pf3541_first_forces_second_opposite
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i r t : I} {j q : J}
     (hi : i ≠ i0) (_hr : r ≠ i0) (ht : t ≠ i0)
@@ -3963,11 +3963,11 @@ public theorem betaSignedMem_pf3541_neg_x4_impossible
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4055,11 +4055,11 @@ public theorem betaSignedMem_pf3541_first_gets_neg_x5
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4138,11 +4138,11 @@ public theorem betaSignedMem_pf3541_neg_x6_impossible
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (_hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4235,11 +4235,11 @@ public theorem betaSignedMem_pf3541_first_gets_neg_x7
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4318,11 +4318,11 @@ public theorem betaSignedMem_pf3541_first_assertion
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4410,11 +4410,11 @@ public theorem betaSignedMem_pf3541_second_assertion
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4500,11 +4500,11 @@ public theorem betaSignedMem_pf3541_third_assertion
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4591,11 +4591,11 @@ public theorem betaSignedMem_pf3542_neg_x1_impossible
     {r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4696,11 +4696,11 @@ public theorem betaSignedMem_pf3542_gets_neg_x3
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4771,11 +4771,11 @@ public theorem betaSignedMem_pf3542_assertion
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4854,11 +4854,11 @@ public theorem betaSignedMem_pf3543_gets_x2_of_no_x1
     {i t : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (ht : t ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4916,11 +4916,11 @@ public theorem betaSignedMem_pf3543_gets_neg_x4_or_neg_x6
     {i t : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (ht : t ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -4960,11 +4960,11 @@ public theorem betaSignedMem_pf3543_gets_x5_of_neg_x4
     {i r : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -5008,11 +5008,11 @@ public theorem betaSignedMem_pf3543_assertion_of_neg_x4
     {i r t : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -5077,11 +5077,11 @@ public theorem betaSignedMem_pf3543_no_x1_of_decompositions
     {i t : I} {j : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (ht : t ≠ i0) (hj : j ≠ j0) (hit : i ≠ t)
     {ε1 ε2 ε3 ε5 ε7 ε8 : ℤ}
@@ -5169,11 +5169,11 @@ public theorem betaSignedMem_pf3544_gets_x5_of_no_x1
     {i r : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hir : i ≠ r) (_hjq : j ≠ q)
@@ -5247,11 +5247,11 @@ public theorem betaSignedMem_pf3544_gets_x8_of_no_neg_x3
     {r t : I} {j : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hr : r ≠ i0) (ht : t ≠ i0) (hj : j ≠ j0) (hrt : r ≠ t)
     {ε2 ε3 ε5 ε8 : ℤ} {x2 x3 x5 x8 : ι}
@@ -5307,11 +5307,11 @@ public theorem betaSignedMem_pf3544_no_x2_of_x5
     {i r : I} {j : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (hj : j ≠ j0) (hir : i ≠ r)
     {ε2 ε5 : ℤ} {x2 x5 : ι}
@@ -5345,11 +5345,11 @@ public theorem betaSignedMem_pf3544_no_neg_x3_of_no_x1_no_x2
     {i r : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hir : i ≠ r) (hjq : j ≠ q)
@@ -5393,11 +5393,11 @@ public theorem betaSignedMem_pf3544_assertion
     {i r t : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -5505,11 +5505,11 @@ public theorem betaSignedMem_pf3545_caseI_impossible
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -5743,11 +5743,11 @@ public theorem betaSignedMem_pf3546_caseII_impossible_of_x1_neg_x4
     {i t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -5842,11 +5842,11 @@ public theorem betaSignedMem_same_right_other_index_ne
     {i r : I} {q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (hq : q ≠ j0) (hir : i ≠ r)
     {εc δ η : ℤ} {xc y z : ι}
@@ -5888,11 +5888,11 @@ public theorem betaSignedMem_pf354_initial_three_row_pattern
     {i r t : I} {q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hq : q ≠ j0)
     (hir : i ≠ r) (hit : i ≠ t) (hrt : r ≠ t)
@@ -6056,11 +6056,11 @@ public theorem betaSignedMem_same_right_disjoint_triples_impossible
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i r : I} {j : J} (hi : i ≠ i0) (hr : r ≠ i0) (hj : j ≠ j0)
     (hir : i ≠ r)
@@ -6145,11 +6145,11 @@ public theorem betaSignedMem_off_index_ne_of_disjoint_triples
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i p : I} {j q : J}
     (hi : i ≠ i0) (hj : j ≠ j0) (hp : p ≠ i0) (hq : q ≠ j0)
@@ -6239,11 +6239,11 @@ public theorem betaSignedMem_pf354_caseI_fourth_row_pattern_of_x1
     {i r t u : I} {q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hq : q ≠ j0)
@@ -6372,11 +6372,11 @@ public theorem betaSignedMem_pf3542_x8_ne_caseI_old_terms
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (_hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -6588,11 +6588,11 @@ public theorem betaSignedMem_pf354_caseI_no_x1_in_first_second_col
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -6711,11 +6711,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_t_second_x2
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -6963,11 +6963,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_t_second_x4
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7050,11 +7050,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_t_second_x6
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7138,11 +7138,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_fourth_row_x1
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7262,11 +7262,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_fourth_row_x2
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7334,11 +7334,11 @@ public theorem betaSignedMem_pf354_caseI_impossible_of_fourth_row_x4
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7407,11 +7407,11 @@ public theorem betaSignedMem_pf354_caseII_impossible_of_full_pattern
     {i r t u : I} {j q : J}
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hi : i ≠ i0) (hr : r ≠ i0) (ht : t ≠ i0) (hu : u ≠ i0)
     (hj : j ≠ j0) (hq : q ≠ j0)
@@ -7591,11 +7591,11 @@ public theorem betaSignedMem_pf355_off_pm_common_produces_new_pm_common
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i r : I} {j q : J} (hi : i ≠ i0) (hj : j ≠ j0)
     (hr : r ≠ i0) (hq : q ≠ j0) (hir : i ≠ r) (hjq : j ≠ q)
@@ -7650,11 +7650,11 @@ public theorem betaSignedMem_pf355_same_right_pm_common_indices_ne
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {a r t : I} {j q : J}
     (hr : r ≠ i0) (ht : t ≠ i0) (hj : j ≠ j0) (hrt : r ≠ t)
@@ -7724,11 +7724,11 @@ public theorem betaSignedMem_pf355_pm_common_not_in_base_of_three_rows
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {a r s t : I} {j q : J}
     (ha : a ≠ i0) (hr : r ≠ i0) (hs : s ≠ i0) (ht : t ≠ i0)
@@ -7803,11 +7803,11 @@ public theorem betaSignedMem_pf355_common_not_pm_in_other_col_of_three_rows
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {a r s t : I} {j q : J}
     (ha : a ≠ i0) (hr : r ≠ i0) (hs : s ≠ i0) (ht : t ≠ i0)
@@ -7852,11 +7852,11 @@ public theorem betaSignedMem_pf355_exists_row_common_distinct_of_orthogonal_cols
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {a : I} {j q : J} (ha : a ≠ i0) (hj : j ≠ j0) (hq : q ≠ j0)
     (hjq : j ≠ q)
@@ -7922,11 +7922,11 @@ public theorem betaSignedMem_pf355_two_col_decomposition_supports
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {a r s t : I} {j q : J}
     (ha : a ≠ i0) (hr : r ≠ i0) (hs : s ≠ i0) (ht : t ≠ i0)
@@ -8041,11 +8041,11 @@ public theorem betaIJ_eq_three_signed_of_betaSignedMem
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 ε3 : ℤ} {k1 k2 k3 : ι}
@@ -8097,8 +8097,8 @@ public theorem inducedCF_alphaIJ_eq_principal_add_of_betaIJ_eq
 
 public theorem signedIrreducible_smul_of_completeFamily
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     {ε : ℤ} (hε : Section1.IsSignInt ε) (k : ι) :
     IsSignedIrreducibleCharacter
       ((ε : ℂ) • Section1.ofConjClassFunction (χ k)) := by
@@ -8108,22 +8108,22 @@ public theorem signedIrreducible_smul_of_completeFamily
 
 public theorem exists_principal_index_of_completeFamily
     {G ι : Type*} [Group G] [Finite G] [Fintype ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ) :
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ) :
     ∃ k : ι, Section1.ofConjClassFunction (χ k) = Section1.principalCharacter G := by
   classical
-  let χ0 : Representation.ClassFunction G :=
+  let χ0 : Theory.Character.ConjClassFunction G :=
     Section1.toConjClassFunction (Section1.principalCharacter G)
       (by intro x g; simp [Section1.principalCharacter])
-  have hχ0_irred : Representation.IsIrreducibleCharacter χ0 := by
+  have hχ0_irred : Theory.Character.IsIrreducibleConjCharacter χ0 := by
     have hprincipal := principalCharacter_isIrreducibleCharacterOnGroup (G := G)
     rcases hprincipal with ⟨n, ρ, hρ, hρchar⟩
-    have hχ0_eq : χ0 = Representation.characterClassFunction ρ := by
+    have hχ0_eq : χ0 = Theory.Character.characterClassFunction ρ := by
       change
         Section1.toConjClassFunction (Section1.principalCharacter G) _ =
-          Representation.characterClassFunction ρ
+          Theory.Character.characterClassFunction ρ
       refine Section1.toConjClassFunction_eq_of_apply
-        (Section1.principalCharacter G) _ (Representation.characterClassFunction ρ) ?_
+        (Section1.principalCharacter G) _ (Theory.Character.characterClassFunction ρ) ?_
       intro g
       change ρ.character g = Section1.principalCharacter G g
       exact (congrFun hρchar g).symm
@@ -8131,7 +8131,7 @@ public theorem exists_principal_index_of_completeFamily
     · refine ⟨n, ρ, ?_⟩
       exact hχ0_eq
     · rw [hχ0_eq]
-      exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρ
+      exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρ
   rcases hχ.2.1 χ0 hχ0_irred with ⟨k, hk⟩
   refine ⟨k, ?_⟩
   change Section1.ofConjClassFunction (χ k) = Section1.ofConjClassFunction χ0
@@ -8145,11 +8145,11 @@ public theorem inducedCF_alphaIJ_eq_principal_add_three_signed_of_betaSignedMem
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 ε3 : ℤ} {k1 k2 k3 : ι}
@@ -8182,11 +8182,11 @@ public theorem inducedCF_alphaIJ_eq_principal_sub_sub_add_of_betaSignedMem
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {i : I} {j : J} (hi : i ≠ i0) (hj : j ≠ j0)
     {ε1 ε2 ε3 : ℤ} {k1 k2 k3 : ι}
@@ -8218,8 +8218,8 @@ public theorem inducedCF_alphaIJ_eq_principal_sub_sub_add_of_betaSignedMem
 public theorem orthonormalDoubleFamily_of_completeFamily_injective_indices
     {G ι I J : Type*} [Group G] [Finite G] [Fintype ι]
     [DecidableEq ι] [DecidableEq I] [DecidableEq J]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (κ : I → J → ι)
     (hκ : Function.Injective fun p : I × J => κ p.1 p.2) :
     IsOrthonormalDoubleFamily
@@ -8234,7 +8234,7 @@ public theorem orthonormalDoubleFamily_of_completeFamily_injective_indices
       Section1.scalarProduct G
           (Section1.ofConjClassFunction (χ (κ p.1 p.2)))
           (Section1.ofConjClassFunction (χ (κ q.1 q.2))) =
-          Representation.classFunctionInner (χ (κ p.1 p.2)) (χ (κ q.1 q.2)) := by
+          Theory.Character.classFunctionInner (χ (κ p.1 p.2)) (χ (κ q.1 q.2)) := by
             symm
             simpa [Section1.toConjClassFunction_ofConjClassFunction] using
               (Section1.classFunctionInner_toConjClassFunction
@@ -8263,8 +8263,8 @@ public theorem proposition_3_5_statement_of_signed_index_decomposition
     {ω : I → J → Section1.ClassFunction W}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (κ : I → J → ι) (ε : I → J → ℤ)
     (hκ : Function.Injective fun p : I × J => κ p.1 p.2)
     (hε : ∀ i j, Section1.IsSignInt (ε i j))
@@ -8319,9 +8319,9 @@ public theorem proposition_3_5_statement_of_betaSignedMem_decomposition
     {ω : I → J → Section1.ClassFunction W}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (κ : I → J → ι) (ε : I → J → ℤ)
     (hκ : Function.Injective fun p : I × J => κ p.1 p.2)
@@ -8670,11 +8670,11 @@ public theorem betaSignedMem_pf354_column_common_exists
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard : 5 ≤ Nat.card W1)
     {q : J} (hq : q ≠ j0) :
@@ -8891,11 +8891,11 @@ public theorem betaSignedMem_pf355_two_col_decomposition_supports_of_column_comm
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard : 5 ≤ Nat.card W1)
     {a : I} {j q : J}
@@ -9011,11 +9011,11 @@ public theorem betaSignedMem_pf355_row_common_all_cols_of_right_card_three_of_co
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3)
     {a : I} {j q : J}
@@ -9061,11 +9061,11 @@ public theorem betaSignedMem_pf355_right_card_three_global_supports
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3) :
     ∃ (εrow : I → ℤ) (κrow : I → ι)
@@ -9206,11 +9206,11 @@ public theorem betaSignedMem_pf355_right_card_three_global_supports_with_princip
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3) :
     ∃ (ε : I → J → ℤ) (κ : I → J → ι),
@@ -9496,11 +9496,11 @@ public theorem proposition_3_5_statement_of_right_card_three
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : Nat.card W2 = 3) :
     proposition_3_5_signed_statement W1 W2 W I J i0 j0 ω h hω := by
@@ -9622,10 +9622,10 @@ public theorem betaIJCoeff_swap_apply
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (i : I) (j : J) (k : ι) :
     betaIJCoeff
         (W1 := W2) (W2 := W1) (W := W) (I := J) (J := I) (ι := ι)
@@ -9676,10 +9676,10 @@ public theorem betaSignedMem_of_swap
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     {h : hypothesis_3_1_statement W1 W2 W}
     {hω : notation_3_3_statement W1 W2 W I J i0 j0 ω}
-    {hχ : Representation.IsCompleteIrreducibleCharacterFamily χ}
+    {hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ}
     {i : I} {j : J} {ε : ℤ} {k : ι}
     (hmem :
       betaSignedMem
@@ -9702,11 +9702,11 @@ public theorem betaSignedMem_pf354_row_common_exists
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard : 5 ≤ Nat.card W2)
     {a : I} (ha : a ≠ i0) :
@@ -9732,11 +9732,11 @@ public theorem betaSignedMem_pf355_row_col_indices_ne_of_commons
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1)
     {i : I} {j q : J}
@@ -9778,11 +9778,11 @@ public theorem betaSignedMem_global_supports_with_principal
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     {iA : I} (hiA : iA ≠ i0) {jA : J} (hjA : jA ≠ j0)
     (εrow : I → ℤ) (κrow : I → ι)
@@ -10058,11 +10058,11 @@ public theorem betaSignedMem_pf355_right_card_ge_five_global_supports_with_princ
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : 5 ≤ Nat.card W2) :
     ∃ (ε : I → J → ℤ) (κ : I → J → ι),
@@ -10219,11 +10219,11 @@ public theorem proposition_3_5_statement_of_right_card_ge_five
     [DecidableEq I] [DecidableEq J] [DecidableEq ι]
     {i0 : I} {j0 : J}
     {ω : I → J → Section1.ClassFunction W}
-    {χ : ι → Representation.ClassFunction G}
+    {χ : ι → Theory.Character.ConjClassFunction G}
     (h : hypothesis_3_1_statement W1 W2 W)
     (hω : notation_3_3_statement W1 W2 W I J i0 j0 ω)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
-    (b : Module.Basis ι ℂ (Representation.ClassFunction G))
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
+    (b : Module.Basis ι ℂ (Theory.Character.ConjClassFunction G))
     (hb : ∀ k, b k = χ k)
     (hcard_left : 5 ≤ Nat.card W1) (hcard_right : 5 ≤ Nat.card W2) :
     proposition_3_5_signed_statement W1 W2 W I J i0 j0 ω h hω := by
@@ -10860,7 +10860,7 @@ public theorem proposition_3_5_of_left_card_ge_five
     (hcard_left : 5 ≤ Nat.card W1) :
     proposition_3_5_signed_statement W1 W2 W I J i0 j0 ω h hω := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι

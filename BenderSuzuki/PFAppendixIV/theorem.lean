@@ -15,7 +15,7 @@ import FeitThompson.PFsection6.Basic
 import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_6
 import FeitThompson.HallSubgroups.Core
-import FeitThompson.Representation.DegreeBounds
+import Theory.Character.DegreeBounds
 
 attribute [local instance] commutatorElement
 open scoped IsMulCommutative
@@ -146,37 +146,37 @@ private theorem scalarProduct_evalCoeff_eq_of_gram_eq
 private theorem virtual_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {chi : ClassFunction G}
-    (hchi : Representation.IsVirtualCharacter chi) :
-    Representation.IsVirtualCharacter ((n : ℂ) • chi) := by
+    (hchi : Theory.Character.IsVirtualCharacter chi) :
+    Theory.Character.IsVirtualCharacter ((n : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
   calc
-    ((n : ℂ) • Representation.virtualCharacterOfRepresentations r m k rho) g
-        = (n : ℂ) * Representation.virtualCharacterOfRepresentations r m k rho g := by
+    ((n : ℂ) • Theory.Character.virtualCharacterOfRepresentations r m k rho) g
+        = (n : ℂ) * Theory.Character.virtualCharacterOfRepresentations r m k rho g := by
       simp
     _ = (n : ℂ) * (∑ i : Fin r, ((m i : ℤ) : ℂ) * ((rho i).character g)) := rfl
     _ = ∑ i : Fin r, (((n : ℤ) * (m i : ℤ) : ℤ) : ℂ) * ((rho i).character g) := by
       simp [Finset.mul_sum, mul_assoc]
-    _ = Representation.virtualCharacterOfRepresentations r (fun i : Fin r => n * m i) k rho g := by
-      simp [Representation.virtualCharacterOfRepresentations]
+    _ = Theory.Character.virtualCharacterOfRepresentations r (fun i : Fin r => n * m i) k rho g := by
+      simp [Theory.Character.virtualCharacterOfRepresentations]
 
 private theorem virtual_finset_sum
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Phi : ι → ClassFunction G)
-    (hPhi : ∀ i ∈ s, Representation.IsVirtualCharacter (Phi i)) :
-    Representation.IsVirtualCharacter (Finset.sum s Phi) := by
+    (hPhi : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Phi i)) :
+    Theory.Character.IsVirtualCharacter (Finset.sum s Phi) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i),
         (fun i => nomatch i), ?_⟩
       ext g
-      simp [Representation.virtualCharacterOfRepresentations]
+      simp [Theory.Character.virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
       have ha' := hPhi a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (Finset.sum s Phi) := by
+      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Phi) := by
         apply ih
         intro i hi
         exact hPhi i (Finset.mem_insert_of_mem hi)
@@ -186,9 +186,9 @@ private theorem virtual_evalCoeff
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (mu : ι → ClassFunction G)
-    (hmu : ∀ i, Representation.IsVirtualCharacter (mu i))
+    (hmu : ∀ i, Theory.Character.IsVirtualCharacter (mu i))
     (v : CoeffVector ι) :
-    Representation.IsVirtualCharacter (evalCoeff mu v) := by
+    Theory.Character.IsVirtualCharacter (evalCoeff mu v) := by
   classical
   rw [evalCoeff]
   apply virtual_finset_sum (Finset.univ : Finset ι)
@@ -952,7 +952,7 @@ private theorem exists_degree_obstruction_of_not_coherent_appendixIV
     (htarget :
       ∀ phi : ClassFunction H,
         integerSpanOn V puncturedSet phi →
-          Representation.IsVirtualCharacter (tau phi) ∧
+          Theory.Character.IsVirtualCharacter (tau phi) ∧
             supportedOn (tau phi) puncturedSet)
     (hdiv : ∀ psi : ClassFunction H, psi ∈ V →
       ∃ n : Nat, degree psi = (n : Complex) * degree chi0)
@@ -1018,7 +1018,7 @@ private theorem exists_degree_obstruction_of_not_coherent_appendixIV
             ∀ phi : ClassFunction H,
               integerSpanOn ((U ∪ W).cons psi hpsiCurrent)
                   puncturedSet phi →
-                Representation.IsVirtualCharacter (tau phi) ∧
+                Theory.Character.IsVirtualCharacter (tau phi) ∧
                   supportedOn (tau phi) puncturedSet := by
           intro phi hphi
           exact htarget phi (integerSpanOn_mono hconsSub hphi)
@@ -1079,7 +1079,7 @@ private theorem irreducible_finrank_sq_le_index_prod_centerModulo_appendixIV
     rcases k.property with ⟨x, hx, hxk⟩
     rw [← hxk]
     exact hker ⟨x, hx⟩
-  have hcentral : Representation.IsCentralModulo K T := by
+  have hcentral : Theory.Character.IsCentralModulo K T := by
     intro x hx y
     rcases hx with ⟨xz, hxz, hxeq⟩
     rw [← hxeq]
@@ -1099,7 +1099,7 @@ private theorem irreducible_finrank_sq_le_index_prod_centerModulo_appendixIV
       exact commutatorElement_eq_one_iff_mul_comm.mpr
         (Subgroup.mem_center_iff.mp hxz.2 yz.2).symm
   have hbound :=
-    Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+    Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
       rho K T hKker hcentral
   simpa [T, Z0, Subgroup.index_map_equiv, Subgroup.index_prod] using hbound
 private theorem irreducible_finrank_sq_le_centerModulo_index_mul_center_index_appendixIV
@@ -1122,7 +1122,7 @@ private theorem irreducible_finrank_sq_le_centerModulo_index_mul_center_index_ap
     rcases k.property with ⟨x, hx, hxk⟩
     rw [← hxk]
     exact hker ⟨x, hx⟩
-  have hcentral : Representation.IsCentralModulo K T := by
+  have hcentral : Theory.Character.IsCentralModulo K T := by
     intro x hx y
     rcases hx with ⟨xz, hxz, hxeq⟩
     rw [← hxeq]
@@ -1145,7 +1145,7 @@ private theorem irreducible_finrank_sq_le_centerModulo_index_mul_center_index_ap
       exact commutatorElement_eq_one_iff_mul_comm.mpr
         (Subgroup.mem_center_iff.mp hxz.2 yz.2).symm
   have hbound :=
-    Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+    Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
       rho K T hKker hcentral
   simpa [T, Z0, Subgroup.index_map_equiv, Subgroup.index_prod] using hbound
 
@@ -1170,7 +1170,7 @@ private theorem
     rcases k.property with ⟨x, hx, hxk⟩
     rw [← hxk]
     exact hker ⟨x, hx⟩
-  have hcentral : Representation.IsCentralModulo K T := by
+  have hcentral : Theory.Character.IsCentralModulo K T := by
     intro x hx y
     rcases hx with ⟨xz, hxz, hxeq⟩
     rw [← hxeq]
@@ -1193,7 +1193,7 @@ private theorem
       exact commutatorElement_eq_one_iff_mul_comm.mpr
         (Subgroup.mem_center_iff.mp (hZcentral hxz.2) yz.2).symm
   have hbound :=
-    Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+    Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
       rho K T hKker hcentral
   simpa [T, Z0, Subgroup.index_map_equiv, Subgroup.index_prod] using hbound
 
@@ -1799,7 +1799,7 @@ private def feitSibleyStep6Data
     degree (chi1 : ClassFunction d.H) =
       (a : Complex) * degree (eta1 : ClassFunction d.H) →
     ∃ (v : ClassFunction G) (lambda : Int),
-      Representation.IsVirtualCharacter v ∧
+      Theory.Character.IsVirtualCharacter v ∧
       Section1.inducedCF d.H
           ((chi1 : ClassFunction d.H) -
             (a : Complex) • (eta1 : ClassFunction d.H)) =
@@ -2898,7 +2898,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
   have htargetV :
       ∀ phi : ClassFunction d.H,
         integerSpanOn V puncturedSet phi →
-          Representation.IsVirtualCharacter
+          Theory.Character.IsVirtualCharacter
               (Section1.inducedCFLinear d.H phi) ∧
             supportedOn
               (Section1.inducedCFLinear d.H phi) puncturedSet := by
@@ -3398,7 +3398,7 @@ private theorem coherent_of_prime_power_degree_prefix_dvd_appendixIV
     (hiso : isCFLinearIsometryOnSpanOn X puncturedSet tau)
     (htarget : ∀ phi : ClassFunction L,
       integerSpanOn X puncturedSet phi →
-        Representation.IsVirtualCharacter (tau phi) ∧
+        Theory.Character.IsVirtualCharacter (tau phi) ∧
           supportedOn (tau phi) puncturedSet)
     (p m : Nat) (hp : p.Prime) (hpgt : 2 < p) (hm : 0 < m)
     (deg : X → Nat)
@@ -3465,7 +3465,7 @@ private theorem coherent_of_prime_power_degree_prefix_dvd_appendixIV
       (integerSpanOn_mono hS0X htheta)
   have hS0target : ∀ phi : ClassFunction L,
       integerSpanOn S0 puncturedSet phi →
-        Representation.IsVirtualCharacter (tau phi) ∧
+        Theory.Character.IsVirtualCharacter (tau phi) ∧
           supportedOn (tau phi) puncturedSet := by
     intro phi hphi
     exact htarget phi (integerSpanOn_mono hS0X hphi)
@@ -3749,7 +3749,7 @@ private theorem feitSibley_step3_degree_shape_core
   letI : Representation.IsIrreducible rhoQ1 := hirrQ1
   have hnDvd : n ∣ Fintype.card d.Q1 := by
     simpa [rhoQ1] using
-      Representation.irreducible_dimension_dvd_group_order rhoQ1
+      Theory.Character.irreducible_dimension_dvd_group_order rhoQ1
   letI : Fact p.Prime := ⟨hpprime⟩
   rcases hpQ1.exists_card_eq with ⟨mQ1, hQ1card⟩
   have hQ1cardF : Fintype.card d.Q1 = p ^ mQ1 := by
@@ -3765,7 +3765,7 @@ private theorem feitSibley_step3_degree_shape_core
   let RQ1 : Subgroup d.Q1 := R.subgroupOf d.Q1
   letI : RQ1.Normal := hRnormal.subgroupOf d.Q1
   have hcentral :
-      Representation.IsCentralModulo (⊥ : Subgroup d.Q1) RQ1 := by
+      Theory.Character.IsCentralModulo (⊥ : Subgroup d.Q1) RQ1 := by
     intro z hz q
     change ⁅z, q⁆ = 1
     have hzCenter : (z : d.Q1) ∈ Subgroup.center d.Q1 := by
@@ -3782,7 +3782,7 @@ private theorem feitSibley_step3_degree_shape_core
     simp [hb]
   have hnSqLe : n ^ 2 ≤ R.relIndex d.Q1 := by
     have hbound :=
-      Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+      Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
         rhoQ1 (⊥ : Subgroup d.Q1) RQ1 hbotker hcentral
     simpa [rhoQ1, RQ1, Subgroup.relIndex] using hbound
   have hquotP : IsPGroup p (d.Q1 ⧸ RQ1) := hpQ1.to_quotient RQ1
@@ -4238,7 +4238,7 @@ private theorem feitSibley_step3_base_family_coherence_core
       (integerSpanOn_mono hXsub hphi) (integerSpanOn_mono hXsub htheta)
   have htarget : ∀ phi : ClassFunction d.H,
       integerSpanOn X1 puncturedSet phi →
-        Representation.IsVirtualCharacter
+        Theory.Character.IsVirtualCharacter
             (Section1.inducedCFLinear d.H phi) ∧
           supportedOn (Section1.inducedCFLinear d.H phi) puncturedSet := by
     intro phi hphi
@@ -4644,7 +4644,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
   have htargetV :
       ∀ phi : ClassFunction d.H,
         integerSpanOn V puncturedSet phi →
-          Representation.IsVirtualCharacter
+          Theory.Character.IsVirtualCharacter
               (Section1.inducedCFLinear d.H phi) ∧
             supportedOn
               (Section1.inducedCFLinear d.H phi) puncturedSet := by
@@ -5911,13 +5911,13 @@ private theorem feitSibley_step6_union_coherence_of_normalized_core
         (ai : Complex) * degree (chi1 : ClassFunction d.H))
     (hTX : feitSibleyExtensionOn d X TX)
     (hEYvirt : ∀ eta : Y,
-      Representation.IsVirtualCharacter (EY eta))
+      Theory.Character.IsVirtualCharacter (EY eta))
     (hEYself : ∀ eta : Y, scalarProduct G (EY eta) (EY eta) = 1)
     (hEYoff : ∀ eta zeta : Y, eta ≠ zeta →
       scalarProduct G (EY eta) (EY zeta) = 0)
     (hcross : ∀ chi : X, ∀ eta : Y,
         scalarProduct G (TX (chi : ClassFunction d.H)) (EY eta) = 0)
-    (v : ClassFunction G) (hvvirt : Representation.IsVirtualCharacter v)
+    (v : ClassFunction G) (hvvirt : Theory.Character.IsVirtualCharacter v)
     (hvSelf : scalarProduct G v v = 1)
     (hvorth : ∀ eta : Y,
       scalarProduct G v (EY eta) = 0)
@@ -5983,7 +5983,7 @@ private theorem feitSibley_step6_union_coherence_of_normalized_core
           intro hval
           exact heq (Subtype.ext hval))
   have hTXvirt (chi : X) :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (TX (chi : ClassFunction d.H)) :=
     hTX.2.1 (chi : ClassFunction d.H)
       (integerSpan_of_mem X chi.property)
@@ -6142,7 +6142,7 @@ private theorem feitSibley_step6_union_coherence_of_normalized_core
       (ai chi1 : Complex) • u from rfl, hai1]
     simp [u]
   have himgXvirt (chi : X) :
-      Representation.IsVirtualCharacter (imgX chi) := by
+      Theory.Character.IsVirtualCharacter (imgX chi) := by
     apply Section3.isVirtualCharacter_add (hTXvirt chi)
     simpa using virtual_zsmul (ai chi : Int)
       (Section3.isVirtualCharacter_sub hvvirt (hTXvirt chi1))
@@ -6187,7 +6187,7 @@ private theorem feitSibley_step6_union_coherence_of_normalized_core
       exact (Finset.disjoint_left.mp hXY heta) eta.property
     simp [img, hetaX]
   have himgVirt (theta : U) :
-      Representation.IsVirtualCharacter (img theta) := by
+      Theory.Character.IsVirtualCharacter (img theta) := by
     by_cases htheta : (theta : ClassFunction d.H) ∈ X
     · simpa [img, htheta] using himgXvirt ⟨theta, htheta⟩
     · let eta : Y :=
@@ -6417,7 +6417,7 @@ private theorem feitSibley_step6_extend_union_coherence_core
       (integerSpanOn_mono hVsub hphi) (integerSpanOn_mono hVsub htheta)
   have htargetV : ∀ phi : ClassFunction d.H,
       integerSpanOn V puncturedSet phi →
-        Representation.IsVirtualCharacter
+        Theory.Character.IsVirtualCharacter
             (Section1.inducedCFLinear d.H phi) ∧
           supportedOn (Section1.inducedCFLinear d.H phi) puncturedSet := by
     intro phi hphi
@@ -6783,7 +6783,7 @@ private theorem feitSibley_step6_lambda_decomposition_core
         _ = 1 :=
           Section1.scalarProduct_irreducibleCharacter_self (hirrY eta)
   have hTYvirt (eta : Y) :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (TY (eta : ClassFunction d.H)) :=
     Section3.isVirtualCharacter_of_signedIrreducible_pf35 (hsignedY eta)
   let source : ClassFunction d.H :=
@@ -6804,7 +6804,7 @@ private theorem feitSibley_step6_lambda_decomposition_core
     ⟨hsourceSpan,
       (supportedOn_puncturedSet_iff_degree_eq_zero source).2 hsourceDegree⟩
   rcases lemma_2_b d chars hchars with ⟨hIndIso, hIndTarget⟩
-  have hwvirt : Representation.IsVirtualCharacter w := by
+  have hwvirt : Theory.Character.IsVirtualCharacter w := by
     exact (hIndTarget source hsourceOn).1
   have hTYgram (eta zeta : Y) :
       scalarProduct G (TY (eta : ClassFunction d.H))
@@ -6936,17 +6936,17 @@ private theorem feitSibley_step6_lambda_decomposition_core
       rw [hTYgram eta1 eta]
       simp [heta, heta']
   have hsumVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (∑ eta : Y, TY (eta : ClassFunction d.H)) := by
     apply virtual_finset_sum (Finset.univ : Finset Y)
       (fun eta => TY (eta : ClassFunction d.H))
     intro eta _heta
     exact hTYvirt eta
-  have hcomponentVirt : Representation.IsVirtualCharacter component := by
+  have hcomponentVirt : Theory.Character.IsVirtualCharacter component := by
     apply Section3.isVirtualCharacter_add
     · simpa using virtual_zsmul (-(a : Int)) (hTYvirt eta1)
     · simpa using virtual_zsmul lambda hsumVirt
-  have hvvirt : Representation.IsVirtualCharacter v :=
+  have hvvirt : Theory.Character.IsVirtualCharacter v :=
     Section3.isVirtualCharacter_sub hwvirt hcomponentVirt
   have hwDecomp : w = component + v := by
     simp [v]
@@ -7214,7 +7214,7 @@ private theorem feitSibley_step6_lambda_decomposition_core
           rw [hsumEta eta] at hstar
           simpa using hstar.symm
         have hEYvirt (eta : Y) :
-            Representation.IsVirtualCharacter (EY eta) := by
+            Theory.Character.IsVirtualCharacter (EY eta) := by
           exact Section3.isVirtualCharacter_sub (hTYvirt eta) hsumVirt
         have hEYgram (eta zeta : Y) :
             scalarProduct G (EY eta) (EY zeta) =
@@ -8057,7 +8057,7 @@ private theorem step7_value_isIntegral_of_irreducible
     IsIntegral Int (psi g) := by
   rcases hpsi with ⟨_n, rho, _hrho, hpsiEq⟩
   rw [hpsiEq]
-  exact Representation.representation_character_isIntegral (ρ := rho) g
+  exact Theory.Character.representation_character_isIntegral (ρ := rho) g
 
 private theorem step7_character_one_ne_zero_of_irreducible
     {G : Type u} [Group G] [Finite G]
@@ -8331,9 +8331,9 @@ private theorem step7_classSumScalar_eq_alpha
     (hpsiEq : psi = rho.character)
     (halpha : theorem_6_7_alphaData Z psi alpha)
     {s : ConjClasses G} (hs : conjugacyClassMeetsPuncturedSubgroup s Z) :
-    Representation.classSumScalar (ρ := rho) s = alpha := by
+    Theory.Character.classSumScalar (ρ := rho) s = alpha := by
   rcases halpha s hs with ⟨z, hzs, _hzZ, _hzne, halpha⟩
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := rho) s hzs
   rw [hpsiEq] at halpha
   exact hscalar.trans halpha.symm
@@ -8342,12 +8342,12 @@ private theorem step7_classSumScalar_one
     {G : Type u} {V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module Complex V] [FiniteDimensional Complex V]
     (rho : Representation Complex G V) [Representation.IsIrreducible rho] :
-    Representation.classSumScalar (ρ := rho) (ConjClasses.mk (1 : G)) = 1 := by
+    Theory.Character.classSumScalar (ρ := rho) (ConjClasses.mk (1 : G)) = 1 := by
   have hmem : (1 : G) ∈ (ConjClasses.mk (1 : G)).carrier :=
     (ConjClasses.mem_carrier_iff_mk_eq).2 rfl
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := rho) (ConjClasses.mk (1 : G)) hmem
-  haveI : Nontrivial V := Representation.irreducible_nontrivial (ρ := rho)
+  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
   have hdimPos : 0 < Module.finrank Complex V :=
     (Module.finrank_pos_iff (R := Complex) (M := V)).2 inferInstance
   have hcharNe : rho.character 1 ≠ 0 := by
@@ -8397,13 +8397,13 @@ private theorem step7_disjoint_classSumScalar_term_congr_zero
     (hs : conjugacyClassDisjointFromSubgroup s Z) :
     algebraicIntegerCongruentModNat (Nat.card Q)
       (psi 1 * ((a i j s : Complex) *
-        Representation.classSumScalar (ρ := rho) s)) 0 := by
+        Theory.Character.classSumScalar (ρ := rho) s)) 0 := by
   classical
   obtain ⟨x, hxmk⟩ := ConjClasses.exists_rep s
   have hxs : x ∈ s.carrier := (ConjClasses.mem_carrier_iff_mk_eq).2 hxmk
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := rho) s hxs
-  haveI : Nontrivial V := Representation.irreducible_nontrivial (ρ := rho)
+  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
   have hdimPos : 0 < Module.finrank Complex V :=
     (Module.finrank_pos_iff (R := Complex) (M := V)).2 inferInstance
   have hcharNe : rho.character 1 ≠ 0 := by
@@ -8412,7 +8412,7 @@ private theorem step7_disjoint_classSumScalar_term_congr_zero
     simpa [Representation.character] using hdimNe
   have hterm :
       psi 1 * ((a i j s : Complex) *
-          Representation.classSumScalar (ρ := rho) s) =
+          Theory.Character.classSumScalar (ρ := rho) s) =
         ((a i j s * Nat.card s.carrier : Nat) : Complex) * psi x := by
     rw [hpsiEq, hscalar]
     field_simp [hcharNe]
@@ -8454,20 +8454,20 @@ private theorem step7_class_sum_square_congr
     @Finset.univ (ConjClasses G) (Fintype.ofFinite (ConjClasses G))
   let c0 : ConjClasses G := ConjClasses.mk (1 : G)
   let f : ConjClasses G → Complex := fun s =>
-    psi 1 * ((a i j s : Complex) * Representation.classSumScalar (ρ := rho) s)
+    psi 1 * ((a i j s : Complex) * Theory.Character.classSumScalar (ρ := rho) s)
   let g : ConjClasses G → Complex := fun s =>
     (if s = c0 then psi 1 * (a i j c0 : Complex) else 0) +
       if conjugacyClassMeetsPuncturedSubgroup s Z then
         psi 1 * ((a i j s : Complex) * alpha)
       else 0
-  have hci : Representation.classSumScalar (ρ := rho) i = alpha :=
+  have hci : Theory.Character.classSumScalar (ρ := rho) i = alpha :=
     step7_classSumScalar_eq_alpha rho hpsiEq halpha hi
-  have hcj : Representation.classSumScalar (ρ := rho) j = alpha :=
+  have hcj : Theory.Character.classSumScalar (ρ := rho) j = alpha :=
     step7_classSumScalar_eq_alpha rho hpsiEq halpha hj
-  have hscalarMul := Representation.classSumScalar_mul_eq_sum_of_coefficients
+  have hscalarMul := Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
     (ρ := rho) a hdata i j
   have hscalarEq : alpha ^ 2 = C.sum fun s =>
-      (a i j s : Complex) * Representation.classSumScalar (ρ := rho) s := by
+      (a i j s : Complex) * Theory.Character.classSumScalar (ρ := rho) s := by
     dsimp [C]
     simpa [hci, hcj, pow_two] using hscalarMul
   have hleftEq : psi 1 * alpha ^ 2 = C.sum f := by
@@ -8480,7 +8480,7 @@ private theorem step7_class_sum_square_congr
     dsimp [f]
     exact hpsi1Int.mul
       ((step7_natCast_isIntegral (a i j s)).mul
-        (Representation.classSumScalar_isIntegral (ρ := rho) s))
+        (Theory.Character.classSumScalar_isIntegral (ρ := rho) s))
   have hpoint : ∀ s ∈ C, algebraicIntegerCongruentModNat (Nat.card Q)
       (f s) (g s) := by
     intro s _hsC
@@ -8491,7 +8491,7 @@ private theorem step7_class_sum_square_congr
       simpa [f, g, c0, hnotMeets, step7_classSumScalar_one rho,
         mul_assoc] using step7_congr_refl (n := Nat.card Q) (hfInt c0)
     · by_cases hsmeet : conjugacyClassMeetsPuncturedSubgroup s Z
-      · have hsalpha : Representation.classSumScalar (ρ := rho) s = alpha :=
+      · have hsalpha : Theory.Character.classSumScalar (ρ := rho) s = alpha :=
           step7_classSumScalar_eq_alpha rho hpsiEq halpha hsmeet
         simpa [f, g, c0, hsone, hsmeet, hsalpha, mul_assoc] using
           step7_congr_refl (n := Nat.card Q) (hfInt s)
@@ -8871,14 +8871,14 @@ private theorem feitSibley_step7_class_algebra_congruence_core
 private theorem step8_subgroupRestriction_isVirtualCharacter
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) {phi : ClassFunction G}
-    (hphi : Representation.IsVirtualCharacter phi) :
-    Representation.IsVirtualCharacter (subgroupRestriction H phi) := by
+    (hphi : Theory.Character.IsVirtualCharacter phi) :
+    Theory.Character.IsVirtualCharacter (subgroupRestriction H phi) := by
   classical
   rcases hphi with ⟨r, m, n, rho, hphiEq⟩
   refine ⟨r, m, n, fun i => (rho i).comp H.subtype, ?_⟩
   ext h
   rw [hphiEq]
-  simp [Representation.virtualCharacterOfRepresentations,
+  simp [Theory.Character.virtualCharacterOfRepresentations,
     subgroupRestriction, Representation.character]
 
 private theorem step8_source_scalarProduct_star_eq_self_of_virtual
@@ -8886,13 +8886,13 @@ private theorem step8_source_scalarProduct_star_eq_self_of_virtual
     {L : Subgroup G} {chi : ClassFunction L}
     (hchi : IsIrreducibleCharacterOnGroup chi)
     {psi : ClassFunction G}
-    (hpsi : Representation.IsVirtualCharacter psi) :
+    (hpsi : Theory.Character.IsVirtualCharacter psi) :
     star (scalarProduct L chi (subgroupRestriction L psi)) =
       scalarProduct L chi (subgroupRestriction L psi) := by
-  have hchiVirt : Representation.IsVirtualCharacter chi :=
+  have hchiVirt : Theory.Character.IsVirtualCharacter chi :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hchi
   have hresVirt :
-      Representation.IsVirtualCharacter (subgroupRestriction L psi) :=
+      Theory.Character.IsVirtualCharacter (subgroupRestriction L psi) :=
     step8_subgroupRestriction_isVirtualCharacter L hpsi
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hchiVirt hresVirt with
     ⟨n, hn⟩
@@ -9141,7 +9141,7 @@ private theorem step8_restriction_divisibility
       degree (chi : ClassFunction L) =
         (ai : Complex) * degree (chi1 : ClassFunction L))
     (v : ClassFunction G) (lambda : Int)
-    (_ : Representation.IsVirtualCharacter v)
+    (_ : Theory.Character.IsVirtualCharacter v)
     (hdecomp : inducedCF L
         ((chi1 : ClassFunction L) -
           (a : Complex) • (eta1 : ClassFunction L)) =
@@ -9161,7 +9161,7 @@ private theorem step8_restriction_divisibility
   classical
   let e : ClassFunction G := TY (eta1 : ClassFunction L)
   let res : ClassFunction L := subgroupRestriction L e
-  have heVirt : Representation.IsVirtualCharacter e := by
+  have heVirt : Theory.Character.IsVirtualCharacter e := by
     exact hTY.2.1 (eta1 : ClassFunction L)
       (integerSpan_of_mem Y eta1.property)
   have heSelf : scalarProduct G e e = 1 := by
@@ -9175,11 +9175,11 @@ private theorem step8_restriction_divisibility
     Section5.signed_irreducible_of_virtual_norm_one_pf59 heVirt heSelf
   have heClass : IsClassFunction e :=
     step8_isClassFunction_of_signed heSigned
-  have hresVirt : Representation.IsVirtualCharacter res :=
+  have hresVirt : Theory.Character.IsVirtualCharacter res :=
     step8_subgroupRestriction_isVirtualCharacter L heVirt
   have hresClass : IsClassFunction res :=
     step8_isClassFunction_subgroupRestriction L heClass
-  have hetaVirt : Representation.IsVirtualCharacter
+  have hetaVirt : Theory.Character.IsVirtualCharacter
       (eta1 : ClassFunction L) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hYirr eta1)
   obtain ⟨m, hm⟩ :=
@@ -9429,7 +9429,7 @@ private theorem step8_restriction_divisibility
   have hlambdaIntegral : IsIntegral Int
       (((lambda : Int) : Complex) / ((a : Int) : Complex)) := by
     simpa using hsumIntegral.sub hmuIntegral
-  exact Representation.integer_division_of_integral_quotient
+  exact Theory.Character.integer_division_of_integral_quotient
     (by exact_mod_cast haNe) hlambdaIntegral
 
 
@@ -9825,7 +9825,7 @@ public theorem feitSibley_theorem
         have htargetV :
             ∀ phi : ClassFunction d.H,
               integerSpanOn V puncturedSet phi →
-                Representation.IsVirtualCharacter
+                Theory.Character.IsVirtualCharacter
                     (Section1.inducedCFLinear d.H phi) ∧
                   supportedOn
                     (Section1.inducedCFLinear d.H phi) puncturedSet := by

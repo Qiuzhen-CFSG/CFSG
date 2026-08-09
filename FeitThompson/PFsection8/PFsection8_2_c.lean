@@ -76,7 +76,7 @@ private theorem isIrreducibleCharacterOnGroup_classFunctionOnSubgroupOf
   let e : (MF.subgroupOf M) ≃* MF := Subgroup.subgroupOfEquivOfLe hMFM
   let ρsub : Representation ℂ (MF.subgroupOf M) (Fin n → ℂ) := ρ.comp e.toMonoidHom
   refine ⟨n, ρsub, ?_, ?_⟩
-  · exact Representation.RepEquiv.irreducible_of_group_iso
+  · exact Theory.Representation.RepEquiv.irreducible_of_group_iso
       (ρ := ρ) (σ := ρsub) e.symm (by
         intro g v
         simp [ρsub, e]) hρirr

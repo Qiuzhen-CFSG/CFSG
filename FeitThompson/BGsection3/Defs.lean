@@ -7,11 +7,11 @@ public import Mathlib.RepresentationTheory.Invariants
 public import Mathlib.RepresentationTheory.Irreducible
 
 public import FeitThompson.BGsection1.lemma_1_22
-public import FeitThompson.Representation.CyclicQuotientExtension
-public import FeitThompson.Representation.SolvableDimension
+public import Theory.Representation.CyclicQuotientExtension
+public import Theory.Representation.SolvableDimension
 public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
-public import FeitThompson.Representation.ExtraspecialFixedPoints
-public import FeitThompson.Representation.TwoDimensionalOddOrder
+public import Theory.Representation.ExtraspecialFixedPoints
+public import Theory.Representation.TwoDimensionalOddOrder
 public import Mathlib.Algebra.CharP.LinearMaps
 public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 public import Mathlib.LinearAlgebra.Eigenspace.Zero
@@ -28,17 +28,17 @@ public import FeitThompson.BGsection1.CriticalSubgroupLemmas
 public import FeitThompson.Burnside.NormalComplement
 public import FeitThompson.Extraspecial
 public import FeitThompson.LinearAlgebra.BlockElementaryMap
-public import FeitThompson.Representation.ConjugateRep
+public import Theory.Representation.ConjugateRep
 public import FeitThompson.BGsection2.EndFieldRep
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.CentralizerControl
 public import FeitThompson.Fitting.Faithful
-public import FeitThompson.Representation.Maschke
-public import FeitThompson.Representation.CompleteReducibility
-public import FeitThompson.Representation.RepEquiv
-public import FeitThompson.Representation.kerRepresentation
-public import FeitThompson.Representation.SubrepresentationLattice
+public import Theory.Representation.Maschke
+public import Theory.Representation.CompleteReducibility
+public import Theory.Representation.RepEquiv
+public import Theory.Representation.kerRepresentation
+public import Theory.Representation.SubrepresentationLattice
 public import FeitThompson.SubgroupConjAction
 
 open scoped FixedPoints TensorProduct Pointwise

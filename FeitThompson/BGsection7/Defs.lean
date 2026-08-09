@@ -10,7 +10,7 @@ import FeitThompson.BGsection3.theorem_3_4
 import FeitThompson.HallSubgroups.Conjugacy
 import FeitThompson.SubgroupConj
 import FeitThompson.PCore.CentralizerControl
-import FeitThompson.Representation.SolvableDimension
+import Theory.Representation.SolvableDimension
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card

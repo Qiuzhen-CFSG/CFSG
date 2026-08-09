@@ -5,9 +5,10 @@ Authors: Yusen Tang
 module
 
 public import Mathlib.RingTheory.LittleWedderburn
-public import FeitThompson.Representation.AbsolutelyIrreducible
+public import Theory.Representation.AbsolutelyIrreducible
 
 open Representation
+open Theory.Representation
 open MonoidAlgebra
 open Module
 
@@ -121,12 +122,12 @@ variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 
 set_option backward.isDefEq.respectTransparency false in
 public instance endFieldRep_AddHomClass :
-    AddHomClass (endFieldRep ρ).End ρ.asModule ρ.asModule where
+    AddHomClass (Theory.Representation.End (endFieldRep ρ)) ρ.asModule ρ.asModule where
   map_add f x y := RepMap.map_add f x y
 
 set_option backward.isDefEq.respectTransparency false in
 public instance endFieldRep_mulActionHomClass :
-    MulActionHomClass (endFieldRep ρ).End F[G] ρ.asModule ρ.asModule where
+    MulActionHomClass (Theory.Representation.End (endFieldRep ρ)) F[G] ρ.asModule ρ.asModule where
   map_smulₛₗ f x m := by
     apply MonoidAlgebra.induction_linear (p := fun x ↦ f (x • m) = x • f m) x
     · rw [zero_smul, zero_smul, RepMap.map_zero]

@@ -783,7 +783,7 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointFree_of_isCompl_sub
     [IsElementaryAbelian q E]
     [MulDistribMulAction P E] [FaithfulSMul P E]
     (ρ : Representation (ZMod q) P (Additive E))
-    (hρ : ρ = Representation.ofElementaryAbelianAction
+    (hρ : ρ = Theory.Representation.ofElementaryAbelianAction
       (A := P) (G := E) (p := q))
     (W C : Subrepresentation ρ)
     (hW : W ≠ ⊥) (hC : C ≠ ⊥) (hcompl : IsCompl W C)
@@ -934,11 +934,11 @@ private theorem peterfalvi_appendixI_proposition_1_fixedPointSubgroup_centerLine
     [MulDistribMulAction P E] [FaithfulSMul P E]
     (z : P) (hz_ne : z ≠ 1) (hz_center : z ∈ Subgroup.center P)
     (hirr : Representation.IsIrreducible
-      (Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q))) :
+      (Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q))) :
     fixedPointSubgroup (Subgroup.zpowers z) E = ⊥ := by
   classical
   letI : CommGroup E := IsMulCommutative.instCommGroup
-  let ρ := Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
+  let ρ := Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
   letI : Representation.IsIrreducible ρ := by simpa [ρ] using hirr
   let Z : Subgroup P := Subgroup.zpowers z
   have hZ_le_center : Z ≤ Subgroup.center P :=
@@ -1002,7 +1002,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
   by_cases hE : Nontrivial E
   · letI : Nontrivial E := hE
     let ρ : Representation (ZMod q) P (Additive E) :=
-      Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
+      Theory.Representation.ofElementaryAbelianAction (A := P) (G := E) (p := q)
     obtain ⟨n, hcardP⟩ := hP.exists_card_eq
     have hp_not_dvd_q : ¬ p ∣ q := by
       intro hpq
@@ -1060,7 +1060,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
             Subgroup.zpowers_le.mpr hxe
           have hhfix : (h : P) • e = e :=
             MulAction.mem_stabilizer_iff.mp (hzp_le h.2)
-          simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using hhfix
+          simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using hhfix
         have hS_ne : S ≠ ⊥ := by
           intro hS
           have hfix_bot : ρ.fixedSubspace H = ⊥ := by
@@ -1091,7 +1091,7 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
         apply FaithfulSMul.eq_of_smul_eq_smul (α := E)
         intro a
         have ha := DFunLike.congr_fun hxrep (Additive.ofMul a)
-        simpa [ρ, Representation.ofElementaryAbelianAction_apply_ofMul] using ha
+        simpa [ρ, Theory.Representation.ofElementaryAbelianAction_apply_ofMul] using ha
       · have hnoncyclicEndpoint :
             ∀ x : P, x ≠ 1 → ∀ e : E, x • e = e → e = 1 := by
           obtain ⟨R, z, hRnormal, hRcard, hRelem, hzR, hz_ne, hz_center, _hzcard⟩ :=

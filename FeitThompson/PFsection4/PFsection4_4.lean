@@ -3,7 +3,7 @@ module
 public import FeitThompson.PFsection4.PFsection4_3
 public import FeitThompson.PFsection1.PFsection1_6
 import FeitThompson.PFsection1.PFsection1_7_Core
-import FeitThompson.Representation.kerRepresentation
+import Theory.Representation.kerRepresentation
 
 /-!
 # Peterfalvi, Section 4, item (4.4)
@@ -611,12 +611,12 @@ private theorem subgroupRestriction_isIrreducibleCharacterOnGroup_of_kernel_cont
     simpa using hcycKer.commGroup
   letI : Std.Commutative (α := L ⧸ MonoidHom.ker ρ) (· * ·) := ⟨mul_comm⟩
   letI : IsMulCommutative (L ⧸ MonoidHom.ker ρ) := ⟨inferInstance⟩
-  letI : Representation.IsIrreducible ρ.kerRepresentation :=
-    (Representation.kerRepresentation_irreducible_iff (ρ := ρ)).2 hρirr
+  letI : Representation.IsIrreducible (Theory.Representation.kerRepresentation ρ) :=
+    (Theory.Representation.kerRepresentation_irreducible_iff (ρ := ρ)).2 hρirr
   have hdim1 : n = 1 := by
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
-        (ρ := ρ.kerRepresentation))
+        (ρ := Theory.Representation.kerRepresentation ρ))
   subst hdim1
   let ρW : Representation ℂ W (Fin 1 → ℂ) := ρ.comp W.subtype
   have hρWirr : Representation.IsIrreducible ρW := by

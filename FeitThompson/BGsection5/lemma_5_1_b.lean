@@ -25,9 +25,9 @@ import FeitThompson.BGsection1.CriticalSubgroupLemmas
 import FeitThompson.Burnside.NormalComplement
 import FeitThompson.Extraspecial
 import FeitThompson.LinearAlgebra.BlockElementaryMap
-import FeitThompson.Representation.ConjugateRep
+import Theory.Representation.ConjugateRep
 import FeitThompson.BGsection2.EndFieldRep
-import FeitThompson.Representation.TwoDimensionalOddOrder
+import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
 
 /-! # Lemma 5.1(b) from BG Section 5 -/

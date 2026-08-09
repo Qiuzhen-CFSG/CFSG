@@ -1,6 +1,6 @@
 module
 public import FeitThompson.BGsection3.Defs
-import FeitThompson.Representation.ElementaryAbelianAction
+import Theory.Representation.ElementaryAbelianAction
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.gorenstein_5_4_15
 
@@ -71,7 +71,7 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
   · have hVcardp2 : Nat.card V = p ^ 2 := by simpa using hn
     letI : CommGroup V := IsMulCommutative.instCommGroup
     let ρ : Representation (ZMod p) B (Additive V) :=
-      Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
+      Theory.Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
     have hρinj : Function.Injective ρ := by
       intro a b hab
       apply FaithfulSMul.eq_of_smul_eq_smul (α := V)

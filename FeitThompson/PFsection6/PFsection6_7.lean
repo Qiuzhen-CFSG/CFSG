@@ -152,7 +152,7 @@ theorem theorem_6_7_character_one_ne_zero_of_irreducible
     ψ 1 ≠ 0 := by
   rcases hψ with ⟨n, ρ, hρ, hψeq⟩
   haveI : Representation.IsIrreducible ρ := hρ
-  haveI : Nontrivial (Fin n → ℂ) := Representation.irreducible_nontrivial (ρ := ρ)
+  haveI : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
   have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
     (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
   have hdim_ne : ((Module.finrank ℂ (Fin n → ℂ) : ℂ) ≠ 0) := by
@@ -192,9 +192,9 @@ theorem theorem_6_7_classSumScalar_eq_alpha
     (hψeq : ψ = ρ.character)
     (halpha : theorem_6_7_alphaData Z ψ α)
     {s : ConjClasses G} (hs : conjugacyClassMeetsPuncturedSubgroup s Z) :
-    Representation.classSumScalar (ρ := ρ) s = α := by
+    Theory.Character.classSumScalar (ρ := ρ) s = α := by
   rcases halpha s hs with ⟨z, hzs, _hzZ, _hzne, hα⟩
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := ρ) s hzs
   rw [hψeq] at hα
   exact hscalar.trans hα.symm
@@ -203,12 +203,12 @@ theorem theorem_6_7_classSumScalar_one
     {G : Type u} {V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ] :
-    Representation.classSumScalar (ρ := ρ) (ConjClasses.mk (1 : G)) = 1 := by
+    Theory.Character.classSumScalar (ρ := ρ) (ConjClasses.mk (1 : G)) = 1 := by
   have hmem : (1 : G) ∈ (ConjClasses.mk (1 : G)).carrier :=
     (ConjClasses.mem_carrier_iff_mk_eq).2 rfl
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := ρ) (ConjClasses.mk (1 : G)) hmem
-  haveI : Nontrivial V := Representation.irreducible_nontrivial (ρ := ρ)
+  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := ρ)
   have hdim_pos : 0 < Module.finrank ℂ V :=
     (Module.finrank_pos_iff (R := ℂ) (M := V)).2 inferInstance
   have hchar_ne : ρ.character 1 ≠ 0 := by
@@ -247,7 +247,7 @@ theorem theorem_6_7_value_isIntegral_of_irreducible
     IsIntegral ℤ (ψ g) := by
   rcases hψ with ⟨_n, ρ, _hρ, hψeq⟩
   rw [hψeq]
-  exact Representation.representation_character_isIntegral (ρ := ρ) g
+  exact Theory.Character.representation_character_isIntegral (ρ := ρ) g
 
 theorem theorem_6_7_restriction_sum_eq
     {G : Type u} [Group G] [Finite G]
@@ -348,7 +348,7 @@ theorem theorem_6_7_value_mem_int
     (z : Z) (hz : z ≠ 1) :
     ψ z ∈ Set.range (fun n : ℤ => (n : ℂ)) := by
   rcases theorem_6_7_value_rat_of_constant_on_nonidentity Z hψ hconst z hz with ⟨q, hq⟩
-  rcases Representation.isaacs_lemma_3_2_core
+  rcases Theory.Character.isaacs_lemma_3_2_core
       (theorem_6_7_value_isIntegral_of_irreducible hψ (z : G)) ⟨q, hq⟩ with
     ⟨n, hn⟩
   exact ⟨n, hn.symm⟩
@@ -495,7 +495,7 @@ public theorem theorem_6_7_int_difference_of_congruent_mod_nat
   have hnz : (n : ℤ) ≠ 0 := by exact_mod_cast hn
   have hq' : IsIntegral ℤ (((a - b : ℤ) : ℂ) / ((n : ℤ) : ℂ)) := by
     simpa using hq
-  rcases Representation.integer_division_of_integral_quotient
+  rcases Theory.Character.integer_division_of_integral_quotient
       (a := a - b) (b := (n : ℤ)) hnz hq' with
     ⟨k, hk⟩
   refine ⟨k, ?_⟩
@@ -909,12 +909,12 @@ theorem theorem_6_7_disjoint_classSumScalar_term_congr_zero
     (hj : conjugacyClassMeetsPuncturedSubgroup j Z)
     (hs : conjugacyClassDisjointFromSubgroup s Z) :
     algebraicIntegerCongruentModNat (Nat.card (P : Subgroup G))
-      (ψ 1 * ((a i j s : ℂ) * Representation.classSumScalar (ρ := ρ) s)) 0 := by
+      (ψ 1 * ((a i j s : ℂ) * Theory.Character.classSumScalar (ρ := ρ) s)) 0 := by
   classical
   obtain ⟨x, hxmk⟩ := ConjClasses.exists_rep s
   have hxs : x ∈ s.carrier := (ConjClasses.mem_carrier_iff_mk_eq).2 hxmk
-  have hscalar := Representation.classSumScalar_eq_card_mul_character_div (ρ := ρ) s hxs
-  haveI : Nontrivial V := Representation.irreducible_nontrivial (ρ := ρ)
+  have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div (ρ := ρ) s hxs
+  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := ρ)
   have hdim_pos : 0 < Module.finrank ℂ V :=
     (Module.finrank_pos_iff (R := ℂ) (M := V)).2 inferInstance
   have hchar_ne : ρ.character 1 ≠ 0 := by
@@ -922,7 +922,7 @@ theorem theorem_6_7_disjoint_classSumScalar_term_congr_zero
       exact_mod_cast Nat.ne_of_gt hdim_pos
     simpa [Representation.character] using hdim_ne
   have hterm :
-      ψ 1 * ((a i j s : ℂ) * Representation.classSumScalar (ρ := ρ) s) =
+      ψ 1 * ((a i j s : ℂ) * Theory.Character.classSumScalar (ρ := ρ) s) =
         ((a i j s * Nat.card s.carrier : ℕ) : ℂ) * ψ x := by
     rw [hψeq, hscalar]
     field_simp [hchar_ne]
@@ -1258,21 +1258,21 @@ theorem theorem_6_7_2
     @Finset.univ (ConjClasses G) (Fintype.ofFinite (ConjClasses G))
   let c0 : ConjClasses G := ConjClasses.mk (1 : G)
   let f : ConjClasses G → ℂ := fun s =>
-    ψ 1 * ((a i j s : ℂ) * Representation.classSumScalar (ρ := ρ) s)
+    ψ 1 * ((a i j s : ℂ) * Theory.Character.classSumScalar (ρ := ρ) s)
   let g : ConjClasses G → ℂ := fun s =>
     (if s = c0 then ψ 1 * (a i j c0 : ℂ) else 0) +
       if conjugacyClassMeetsPuncturedSubgroup s Z then
         ψ 1 * ((a i j s : ℂ) * α)
       else 0
-  have hci : Representation.classSumScalar (ρ := ρ) i = α :=
+  have hci : Theory.Character.classSumScalar (ρ := ρ) i = α :=
     theorem_6_7_classSumScalar_eq_alpha (ρ := ρ) hψeq halpha hi
-  have hcj : Representation.classSumScalar (ρ := ρ) j = α :=
+  have hcj : Theory.Character.classSumScalar (ρ := ρ) j = α :=
     theorem_6_7_classSumScalar_eq_alpha (ρ := ρ) hψeq halpha hj
-  have hscalar_mul := Representation.classSumScalar_mul_eq_sum_of_coefficients
+  have hscalar_mul := Theory.Character.classSumScalar_mul_eq_sum_of_coefficients
     (ρ := ρ) a hdata i j
   have hscalar_eq :
       α ^ 2 = C.sum fun s => (a i j s : ℂ) *
-        Representation.classSumScalar (ρ := ρ) s := by
+        Theory.Character.classSumScalar (ρ := ρ) s := by
     dsimp [C]
     simpa [hci, hcj, pow_two] using hscalar_mul
   have hleft_eq : ψ 1 * α ^ 2 = C.sum f := by
@@ -1285,7 +1285,7 @@ theorem theorem_6_7_2
     dsimp [f]
     exact hψ1_int.mul
       ((theorem_6_7_natCast_isIntegral (a i j s)).mul
-        (Representation.classSumScalar_isIntegral (ρ := ρ) s))
+        (Theory.Character.classSumScalar_isIntegral (ρ := ρ) s))
   have hpoint : ∀ s ∈ C, algebraicIntegerCongruentModNat (Nat.card (P : Subgroup G))
       (f s) (g s) := by
     intro s _hsC
@@ -1298,7 +1298,7 @@ theorem theorem_6_7_2
           theorem_6_7_algebraicIntegerCongruentModNat_refl
             (n := Nat.card (P : Subgroup G)) (hf_int c0)
     · by_cases hsmeet : conjugacyClassMeetsPuncturedSubgroup s Z
-      · have hsα : Representation.classSumScalar (ρ := ρ) s = α :=
+      · have hsα : Theory.Character.classSumScalar (ρ := ρ) s = α :=
           theorem_6_7_classSumScalar_eq_alpha (ρ := ρ) hψeq halpha hsmeet
         simpa [f, g, c0, hsone, hsmeet, hsα, mul_assoc] using
           theorem_6_7_algebraicIntegerCongruentModNat_refl

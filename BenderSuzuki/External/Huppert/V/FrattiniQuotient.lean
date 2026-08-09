@@ -1480,7 +1480,7 @@ public theorem huppertMQSemidirect_kernel_subgroupSum_eq_huppertMQ
         (SemidirectProduct.inl :
           Q ⧸ N →* SD)
     subgroupSum
-        (Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s))
+        (Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s))
         K (Additive.ofMul n) =
       Additive.ofMul (huppertMQ N n) := by
   classical
@@ -1503,7 +1503,7 @@ public theorem huppertMQSemidirect_kernel_subgroupSum_eq_huppertMQ
         Q ⧸ N →* SD)
   letI : Fintype K := Fintype.ofFinite K
   let ρ : Representation (ZMod s) SD (Additive N) :=
-    Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
+    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
   let e : Q ⧸ N ≃ K :=
     { toFun := fun x =>
         ⟨SemidirectProduct.inl (φ := zmodZPowersMulAutHom ψ hcard) x, ⟨x, rfl⟩⟩
@@ -1532,7 +1532,7 @@ public theorem huppertMQSemidirect_kernel_subgroupSum_eq_huppertMQ
       ρ (e x) (Additive.ofMul n) =
         Additive.ofMul (quotientConjNormal N x n) := by
     dsimp [ρ, e]
-    rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
     change
       Additive.ofMul
           ((huppertMQSemidirectMulAutHom φ N hNφ hperiod ψ hψ hcard)
@@ -1684,7 +1684,7 @@ public theorem zmodPeriod_sum_eq_zero_of_product_identity
     letI : MulDistribMulAction (Multiplicative (ZMod p)) G :=
       MulDistribMulAction.compHom G (zmodPeriodMulAutHom α hαp)
     ∑ z : Multiplicative (ZMod p),
-      (Representation.ofElementaryAbelianAction
+      (Theory.Representation.ofElementaryAbelianAction
         (A := Multiplicative (ZMod p)) (G := G) (p := s))
           z (Additive.ofMul g) = 0 := by
   classical
@@ -1693,7 +1693,7 @@ public theorem zmodPeriod_sum_eq_zero_of_product_identity
   letI : MulDistribMulAction (Multiplicative (ZMod p)) G :=
     MulDistribMulAction.compHom G (zmodPeriodMulAutHom α hαp)
   let ρ : Representation (ZMod s) (Multiplicative (ZMod p)) (Additive G) :=
-    Representation.ofElementaryAbelianAction
+    Theory.Representation.ofElementaryAbelianAction
       (A := Multiplicative (ZMod p)) (G := G) (p := s)
   let e : Fin p ≃ Multiplicative (ZMod p) :=
     (ZMod.finEquiv p).toEquiv.trans Multiplicative.ofAdd
@@ -1711,7 +1711,7 @@ public theorem zmodPeriod_sum_eq_zero_of_product_identity
     apply Finset.sum_congr rfl
     intro i _hi
     dsimp [ρ, e]
-    rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
     change
       Additive.ofMul
           ((zmodPeriodMulAutHom α hαp
@@ -1789,7 +1789,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
         (SemidirectProduct.inr :
           Multiplicative (ZMod p) →* SD)
     subgroupSum
-        (Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s))
+        (Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s))
         R (Additive.ofMul n) =
       0 := by
   classical
@@ -1812,7 +1812,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
         Multiplicative (ZMod p) →* SD)
   letI : Fintype R := Fintype.ofFinite R
   let ρ : Representation (ZMod s) SD (Additive N) :=
-    Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
+    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
   let e : Multiplicative (ZMod p) ≃ R :=
     { toFun := fun g =>
         ⟨SemidirectProduct.inr (φ := zmodZPowersMulAutHom ψ hcard) g, ⟨g, rfl⟩⟩
@@ -1850,7 +1850,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
       ρ (e g) (Additive.ofMul n) =
         Additive.ofMul ((zmodPeriodMulAutHom α hαp g) n) := by
     dsimp [ρ, e, α, hαp]
-    rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+    rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
     change
       Additive.ofMul
           ((huppertMQSemidirectMulAutHom φ N hNφ hperiod ψ hψ hcard)
@@ -1873,7 +1873,7 @@ public theorem huppertMQSemidirect_complement_subgroupSum_eq_zero
             have hzero :=
               zmodPeriod_sum_eq_zero_of_product_identity
                 hN_elem α hαp hprodN n
-            simp_rw [Representation.ofElementaryAbelianAction_apply_ofMul] at hzero
+            simp_rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul] at hzero
             have hsmul (g : Multiplicative (ZMod p)) :
                 g • n = (zmodPeriodMulAutHom α hαp g) n := by
               rfl
@@ -1921,7 +1921,7 @@ public theorem huppertMQ_eq_representation_norm
     letI : MulDistribMulAction (Q ⧸ N) N :=
       MulDistribMulAction.compHom N (quotientConjNormal N)
     Additive.ofMul (huppertMQ N n) =
-      (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+      (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
         (Additive.ofMul n) := by
   classical
   letI : CommGroup N := IsMulCommutative.instCommGroup
@@ -1931,7 +1931,7 @@ public theorem huppertMQ_eq_representation_norm
   unfold huppertMQ
   rw [Representation.norm]
   rw [LinearMap.sum_apply]
-  simp_rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+  simp_rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
   change
     (∑ i : Q ⧸ N, Additive.ofMul (((quotientConjNormal N) i) n)) =
       ∑ x : Q ⧸ N, Additive.ofMul (((quotientConjNormal N) x) n)

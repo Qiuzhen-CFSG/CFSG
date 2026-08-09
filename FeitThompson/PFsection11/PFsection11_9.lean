@@ -10128,7 +10128,7 @@ private theorem theorem_11_8_coherentExtension_image_signed
   intro hχS hχIrr hExt
   have hχSpan : Section5.integerSpan S1 χ :=
     Section5.integerSpan_of_mem S1 hχS
-  have hvirt : Representation.IsVirtualCharacter (τ₁ χ) :=
+  have hvirt : Theory.Character.IsVirtualCharacter (τ₁ χ) :=
     hExt.2.1 χ hχSpan
   have hself : Section1.scalarProduct G (τ₁ χ) (τ₁ χ) = 1 := by
     calc
@@ -11194,7 +11194,7 @@ private theorem theorem_11_8_6_all_reducible_extension_with_columns_of_hypothesi
       i0 j0 k omega sigmaM sigma mu (fun j => (deltaSign j : ℂ))
       hSigmaVirt hOmega h43b
   have hColumnVirt : ∀ t : T,
-      Representation.IsVirtualCharacter (targetColumn t) := by
+      Theory.Character.IsVirtualCharacter (targetColumn t) := by
     intro t
     have hvirt := hLands hk (Section1.basisVector t)
     simpa [targetColumn, hSign k hk,
@@ -11210,7 +11210,7 @@ private theorem theorem_11_8_6_all_reducible_extension_with_columns_of_hypothesi
     rw [hX, hY, hTau2Column, hTau2Column]
     exact hColumnGram (e.symm X) (e.symm Y)
   have hBasisVirt : ∀ X : S2,
-      Representation.IsVirtualCharacter (tau2 X) := by
+      Theory.Character.IsVirtualCharacter (tau2 X) := by
     intro X
     have hX : (X : Section1.ClassFunction M) = sourceColumn (e.symm X) := by
       simpa using he (e.symm X)
@@ -12250,7 +12250,7 @@ private theorem isCoherentExtension_of_basis_gram_virtual_agreement
     (∀ i j : S1,
       Section1.scalarProduct G (ν i) (ν j) =
         Section1.scalarProduct M i j) →
-      (∀ i : S1, Representation.IsVirtualCharacter (ν i)) →
+      (∀ i : S1, Theory.Character.IsVirtualCharacter (ν i)) →
         Section5.agreesOnIntegerSpanOn S1 Section5.puncturedSet τ ν →
           Section7.isCoherentExtension S1 τ ν := by
   intro hgram hvirt hagree
@@ -12327,7 +12327,7 @@ private theorem theorem_11_8_dualCoherentMap_isCoherentExtension
       rw [hnegsp, hτζη, hζηsp, hηζsp]
     · simp only [hi, hj, ν, hνη]
       rw [hnegsp, hτζζ, hζζ, hηη]
-  have hvirt : ∀ i : S1, Representation.IsVirtualCharacter (ν i) := by
+  have hvirt : ∀ i : S1, Theory.Character.IsVirtualCharacter (ν i) := by
     intro i
     rcases hpair i i.2 with hi | hi
     · rw [hi, hνζ]
@@ -12922,19 +12922,19 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
           (Section10.hypothesis_4_6_derived_of_hypothesis_10_1_supported_data
             h11.1 hNotation)
           hζIrr hζDerived hAlphaDegree hDeltaSignJ
-  have hζVirt : Representation.IsVirtualCharacter ζ :=
+  have hζVirt : Theory.Character.IsVirtualCharacter ζ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζIrr
-  have hmuVirt : ∀ k l, Representation.IsVirtualCharacter (μ k l) := by
+  have hmuVirt : ∀ k l, Theory.Character.IsVirtualCharacter (μ k l) := by
     intro k l
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (hmuIrr k l)
   have hNatSmulVirt : ∀ m : ℕ, ∀ χ : Section1.ClassFunction M,
-      Representation.IsVirtualCharacter χ →
-        Representation.IsVirtualCharacter ((m : ℂ) • χ) := by
+      Theory.Character.IsVirtualCharacter χ →
+        Theory.Character.IsVirtualCharacter ((m : ℂ) • χ) := by
     intro m χ hχ
     induction m with
     | zero =>
-        have hzero : Representation.IsVirtualCharacter
+        have hzero : Theory.Character.IsVirtualCharacter
             (0 : Section1.ClassFunction M) := by
           simpa using Section3.isVirtualCharacter_sub
             Section3.isVirtualCharacter_principalCharacter
@@ -12943,14 +12943,14 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
     | succ m ihm =>
         simpa [Nat.cast_succ, add_smul] using
           Section3.isVirtualCharacter_add ihm hχ
-  have hAlphaVirt : Representation.IsVirtualCharacter α := by
+  have hAlphaVirt : Theory.Character.IsVirtualCharacter α := by
     dsimp [α, Section10.alphaChar]
     rw [hδ]
     norm_num
     exact Section3.isVirtualCharacter_sub
       (Section3.isVirtualCharacter_sub (hmuVirt i j) (hmuVirt i j0))
       (hNatSmulVirt n ζ hζVirt)
-  have hPhiVirt : Representation.IsVirtualCharacter φ := by
+  have hPhiVirt : Theory.Character.IsVirtualCharacter φ := by
     exact hTauVirt α hAlphaVirt hAlphaSupport
   have hPhiClass : Section1.IsClassFunction φ :=
     Section3.isVirtualCharacter_isClassFunction hPhiVirt
@@ -13130,18 +13130,18 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
         hζImageSelf, hζξ]
       linear_combination -hpair
   have hCorrectedVirt :
-      Representation.IsVirtualCharacter (φ + (n : ℂ) • τ₁ ζ) := by
-    have hζImageVirt : Representation.IsVirtualCharacter (τ₁ ζ) :=
+      Theory.Character.IsVirtualCharacter (φ + (n : ℂ) • τ₁ ζ) := by
+    have hζImageVirt : Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
       hExt.2.1 ζ (Section5.integerSpan_of_mem SHC hζ)
     exact Section3.isVirtualCharacter_add hPhiVirt
       (by
         have hNatSmulVirtG : ∀ m : ℕ, ∀ χ : Section1.ClassFunction G,
-            Representation.IsVirtualCharacter χ →
-              Representation.IsVirtualCharacter ((m : ℂ) • χ) := by
+            Theory.Character.IsVirtualCharacter χ →
+              Theory.Character.IsVirtualCharacter ((m : ℂ) • χ) := by
           intro m χ hχ
           induction m with
           | zero =>
-              have hzero : Representation.IsVirtualCharacter
+              have hzero : Theory.Character.IsVirtualCharacter
                   (0 : Section1.ClassFunction G) := by
                 simpa using Section3.isVirtualCharacter_sub
                   Section3.isVirtualCharacter_principalCharacter
@@ -13195,7 +13195,7 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
     simp [Section1.evalCoeff, oneSHC]
     simpa using
       (Finset.sum_attach SHC fun ξ : Section1.ClassFunction M => ξ g).symm
-  have hYVirt : Representation.IsVirtualCharacter Y := by
+  have hYVirt : Theory.Character.IsVirtualCharacter Y := by
     have hSourceSpan : Section5.integerSpan SHC
         ((z : ℂ) • (Finset.sum SHC fun ξ => ξ) - (n : ℂ) • ζ) := by
       exact Section5.integerSpan_sub
@@ -13208,7 +13208,7 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
       dsimp [Y]
       rw [map_sub, map_smul, map_smul, map_sum, ← hImageSum]
     rwa [hmap] at himage
-  have hXVirt : Representation.IsVirtualCharacter X := by
+  have hXVirt : Theory.Character.IsVirtualCharacter X := by
     dsimp [X]
     exact Section3.isVirtualCharacter_sub hPhiVirt hYVirt
   have hYT : Section1.scalarProduct G Y T =
@@ -13341,7 +13341,7 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
       exact
         Section10.scalarProduct_sigma_omega_eq_pair_ite_of_section10FourSixNotationSupportedData
           hNotation r s k l
-    have heVirt : ∀ r k, Representation.IsVirtualCharacter (e r k) := by
+    have heVirt : ∀ r k, Theory.Character.IsVirtualCharacter (e r k) := by
       intro r k
       dsimp [e]
       exact hSigmaVirt (ω r k)
@@ -13357,7 +13357,7 @@ private theorem theorem_11_8_2_projectionData_of_hypothesis
         rcases y with ⟨s, l⟩
         exact heOrth r k s l
       have hvirtPair : ∀ x : I × J,
-          Representation.IsVirtualCharacter (ePair x) := by
+          Theory.Character.IsVirtualCharacter (ePair x) := by
         intro x
         exact heVirt x.1 x.2
       have hcount :=
@@ -13870,12 +13870,12 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
     Section10.baseColumn_degree_one_of_section10FourSixNotationSupportedData
       hNotation
   have hNatSmulVirtM : ∀ m : ℕ, ∀ chi : Section1.ClassFunction M,
-        Representation.IsVirtualCharacter chi →
-          Representation.IsVirtualCharacter ((m : ℂ) • chi) := by
+        Theory.Character.IsVirtualCharacter chi →
+          Theory.Character.IsVirtualCharacter ((m : ℂ) • chi) := by
     intro m chi hchi
     induction m with
     | zero =>
-        have hzero : Representation.IsVirtualCharacter
+        have hzero : Theory.Character.IsVirtualCharacter
             (0 : Section1.ClassFunction M) := by
           simpa using Section3.isVirtualCharacter_sub
             Section3.isVirtualCharacter_principalCharacter
@@ -13885,12 +13885,12 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
         simpa [Nat.cast_succ, add_smul] using
           Section3.isVirtualCharacter_add ihm hchi
   have hNatSmulVirtG : ∀ m : ℕ, ∀ chi : Section1.ClassFunction G,
-        Representation.IsVirtualCharacter chi →
-          Representation.IsVirtualCharacter ((m : ℂ) • chi) := by
+        Theory.Character.IsVirtualCharacter chi →
+          Theory.Character.IsVirtualCharacter ((m : ℂ) • chi) := by
     intro m chi hchi
     induction m with
     | zero =>
-        have hzero : Representation.IsVirtualCharacter
+        have hzero : Theory.Character.IsVirtualCharacter
             (0 : Section1.ClassFunction G) := by
           simpa using Section3.isVirtualCharacter_sub
             Section3.isVirtualCharacter_principalCharacter
@@ -13901,13 +13901,13 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
           Section3.isVirtualCharacter_add ihm hchi
   have hFinsetSumVirtM : ∀ s : Finset I,
       ∀ f : I → Section1.ClassFunction M,
-        (∀ x ∈ s, Representation.IsVirtualCharacter (f x)) →
-          Representation.IsVirtualCharacter (Finset.sum s f) := by
+        (∀ x ∈ s, Theory.Character.IsVirtualCharacter (f x)) →
+          Theory.Character.IsVirtualCharacter (Finset.sum s f) := by
     intro s
     induction s using Finset.induction_on with
     | empty =>
         intro f _hf
-        have hzero : Representation.IsVirtualCharacter
+        have hzero : Theory.Character.IsVirtualCharacter
             (0 : Section1.ClassFunction M) := by
           simpa using Section3.isVirtualCharacter_sub
             Section3.isVirtualCharacter_principalCharacter
@@ -13915,9 +13915,9 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
         simpa using hzero
     | @insert x s hxs ih =>
         intro f hf
-        have hx : Representation.IsVirtualCharacter (f x) :=
+        have hx : Theory.Character.IsVirtualCharacter (f x) :=
           hf x (Finset.mem_insert_self x s)
-        have hs : Representation.IsVirtualCharacter (Finset.sum s f) :=
+        have hs : Theory.Character.IsVirtualCharacter (Finset.sum s f) :=
           ih f (by
             intro y hy
             exact hf y (Finset.mem_insert_of_mem hy))
@@ -13925,13 +13925,13 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
           Section3.isVirtualCharacter_add hx hs
   have hFinsetSumVirtG : ∀ s : Finset I,
       ∀ f : I → Section1.ClassFunction G,
-        (∀ x ∈ s, Representation.IsVirtualCharacter (f x)) →
-          Representation.IsVirtualCharacter (Finset.sum s f) := by
+        (∀ x ∈ s, Theory.Character.IsVirtualCharacter (f x)) →
+          Theory.Character.IsVirtualCharacter (Finset.sum s f) := by
     intro s
     induction s using Finset.induction_on with
     | empty =>
         intro f _hf
-        have hzero : Representation.IsVirtualCharacter
+        have hzero : Theory.Character.IsVirtualCharacter
             (0 : Section1.ClassFunction G) := by
           simpa using Section3.isVirtualCharacter_sub
             Section3.isVirtualCharacter_principalCharacter
@@ -13939,9 +13939,9 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
         simpa using hzero
     | @insert x s hxs ih =>
         intro f hf
-        have hx : Representation.IsVirtualCharacter (f x) :=
+        have hx : Theory.Character.IsVirtualCharacter (f x) :=
           hf x (Finset.mem_insert_self x s)
-        have hs : Representation.IsVirtualCharacter (Finset.sum s f) :=
+        have hs : Theory.Character.IsVirtualCharacter (Finset.sum s f) :=
           ih f (by
             intro y hy
             exact hf y (Finset.mem_insert_of_mem hy))
@@ -13969,13 +13969,13 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
     | @insert x s hxs ih =>
         intro f psi
         simp [Finset.sum_insert hxs, Section5.scalarProduct_add_right, ih]
-  have hMuVirt : ∀ r k, Representation.IsVirtualCharacter (μ r k) := by
+  have hMuVirt : ∀ r k, Theory.Character.IsVirtualCharacter (μ r k) := by
     intro r k
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (hMuIrr r k)
-  have hζVirt : Representation.IsVirtualCharacter ζ :=
+  have hζVirt : Theory.Character.IsVirtualCharacter ζ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζIrr
-  have hAlphaVirt : Representation.IsVirtualCharacter α := by
+  have hAlphaVirt : Theory.Character.IsVirtualCharacter α := by
     dsimp [α, Section10.alphaChar]
     rw [hδ]
     norm_num
@@ -14014,11 +14014,11 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
             h11.1 hNotation)
           hζIrr hζDerived hAlphaDegree hDeltaSignJ
   have hMuColumnVirt :
-      Representation.IsVirtualCharacter (Section10.muColumn μ j0) := by
+      Theory.Character.IsVirtualCharacter (Section10.muColumn μ j0) := by
     simpa [Section10.muColumn] using
       (hFinsetSumVirtM (s := Finset.univ) (f := fun r : I => μ r j0)
         (by intro r _hr; exact hMuVirt r j0))
-  have hPsiVirt : Representation.IsVirtualCharacter
+  have hPsiVirt : Theory.Character.IsVirtualCharacter
       (Section10.muColumn μ j0 - ζ) :=
     Section3.isVirtualCharacter_sub hMuColumnVirt hζVirt
   have hPsiClass : Section1.IsClassFunction
@@ -14349,9 +14349,9 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
       Section1.scalarProduct_smul_left, hPhiPrincipal, hZPrincipal,
       hTauZetaPrincipal]
     ring
-  have hPhiVirt : Representation.IsVirtualCharacter φ :=
+  have hPhiVirt : Theory.Character.IsVirtualCharacter φ :=
     hTauVirt α hAlphaVirt hAlphaSupport
-  have hZVirt : Representation.IsVirtualCharacter Z := by
+  have hZVirt : Theory.Character.IsVirtualCharacter Z := by
     exact Section3.isVirtualCharacter_sub
       (hSigmaVirt (ω i j)
         (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
@@ -14359,16 +14359,16 @@ private theorem theorem_11_8_5_scalarData_of_hypothesis
       (hSigmaVirt (ω i j0)
         (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
           (hω.irreducible i j0)))
-  have hTauZetaVirt : Representation.IsVirtualCharacter (τ₁ ζ) :=
+  have hTauZetaVirt : Theory.Character.IsVirtualCharacter (τ₁ ζ) :=
     hExt.2.1 ζ (Section5.integerSpan_of_mem SHC hζ)
-  have hBetaVirt : Representation.IsVirtualCharacter beta := by
+  have hBetaVirt : Theory.Character.IsVirtualCharacter beta := by
     dsimp [beta]
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hPhiVirt hZVirt)
       (hNatSmulVirtG n (τ₁ ζ) hTauZetaVirt)
   have hBetaReal : beta = Section1.conjugateCharacter beta := by
     simpa [beta, φ, Z] using (hReality i j hj).symm
-  have hEtaVirt : Representation.IsVirtualCharacter eta0 := by
+  have hEtaVirt : Theory.Character.IsVirtualCharacter eta0 := by
     dsimp [eta0]
     exact hFinsetSumVirtG (s := Finset.univ)
       (f := fun r : I => σ (ω r j0)) (by
@@ -17408,12 +17408,12 @@ private theorem theorem_11_9_isVirtualCharacter_finset_sum
     {ι : Type*}
     (s : Finset ι)
     (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
-      have hzero : Representation.IsVirtualCharacter (0 : Section1.ClassFunction G) := by
+      have hzero : Theory.Character.IsVirtualCharacter (0 : Section1.ClassFunction G) := by
         simpa using
           Section3.isVirtualCharacter_sub
             (χ := Section1.principalCharacter G)
@@ -17422,9 +17422,9 @@ private theorem theorem_11_9_isVirtualCharacter_finset_sum
             Section3.isVirtualCharacter_principalCharacter
       simpa using hzero
   | @insert a s ha ih =>
-      have ha' : Representation.IsVirtualCharacter (Φ a) :=
+      have ha' : Theory.Character.IsVirtualCharacter (Φ a) :=
         hΦ a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
         exact ih (by
           intro i hi
           exact hΦ i (Finset.mem_insert_of_mem hi))
@@ -17436,13 +17436,13 @@ private theorem theorem_11_9_isVirtualCharacter_intCast_smul
     [Finite G]
     {χ : Section1.ClassFunction G}
     (z : ℤ)
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter ((z : ℂ) • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter ((z : ℂ) • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => z * m i, k, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem theorem_11_9_weightedFamilySum_virtual_of_int_coeff
     {G : Type u}
@@ -17453,8 +17453,8 @@ private theorem theorem_11_9_weightedFamilySum_virtual_of_int_coeff
     (w : ι → ℂ)
     (χ : ι → Section1.ClassFunction G)
     (hw : ∀ i, ∃ z : ℤ, w i = (z : ℂ))
-    (hχ : ∀ i, Representation.IsVirtualCharacter (χ i)) :
-    Representation.IsVirtualCharacter (Section1.weightedFamilySum w χ) := by
+    (hχ : ∀ i, Theory.Character.IsVirtualCharacter (χ i)) :
+    Theory.Character.IsVirtualCharacter (Section1.weightedFamilySum w χ) := by
   classical
   have hsum : Section1.weightedFamilySum w χ = ∑ i : ι, w i • χ i := by
     have huniv : @Finset.univ ι (Fintype.ofFinite ι) = (Finset.univ : Finset ι) := by
@@ -17493,7 +17493,7 @@ private theorem theorem_11_9_muColumn_virtual_of_section10FourSixNotationData
     (hNotation :
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ)
     (j : J) :
-    Representation.IsVirtualCharacter (Section10.muColumn μ j) := by
+    Theory.Character.IsVirtualCharacter (Section10.muColumn μ j) := by
   classical
   have hμirr : ∀ i j, Section1.IsIrreducibleCharacterOnGroup (μ i j) := by
     rcases Section10.supportedFourSixData_of_section10FourSixNotationSupportedData hNotation with
@@ -17506,7 +17506,7 @@ private theorem theorem_11_9_muColumn_virtual_of_section10FourSixNotationData
         _hTauIso, _hTauPunctured, _hTauVirt, _hPF39⟩
     exact h43b.2.2.1
   have hsum :
-      Representation.IsVirtualCharacter (∑ i : I, μ i j) := by
+      Theory.Character.IsVirtualCharacter (∑ i : I, μ i j) := by
     refine theorem_11_9_isVirtualCharacter_finset_sum
       (G := M) (s := (Finset.univ : Finset I)) (fun i => μ i j) ?_
     intro i _hi
@@ -17540,21 +17540,21 @@ private theorem theorem_11_9_tau_muColumn_sub_SHC_virtual_of_hypothesis
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ →
         section11Subfamily (H ⊔ C) S SHC →
           ζ ∈ SHC →
-            Representation.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) := by
+            Theory.Character.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) := by
   intro h11 hNotation hSHC hζ
   classical
   have hcolVirt :
-      Representation.IsVirtualCharacter (Section10.muColumn μ j0) :=
+      Theory.Character.IsVirtualCharacter (Section10.muColumn μ j0) :=
     theorem_11_9_muColumn_virtual_of_section10FourSixNotationData hNotation j0
   have hζIrr : Section1.IsIrreducibleCharacterOnGroup ζ :=
     theorem_11_9_SHC_irreducible_of_hypothesis
       M MF H U C H0 W1 W2 W A A0 S SHC i0 j0 μ δSign ω σ τ ζ p q
       h11 hNotation hSHC hζ
-  have hζVirt : Representation.IsVirtualCharacter ζ :=
+  have hζVirt : Theory.Character.IsVirtualCharacter ζ :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       hζIrr
   have hsourceVirt :
-      Representation.IsVirtualCharacter (Section10.muColumn μ j0 - ζ) :=
+      Theory.Character.IsVirtualCharacter (Section10.muColumn μ j0 - ζ) :=
     Section3.isVirtualCharacter_sub hcolVirt hζVirt
   have hζS : ζ ∈ S := ((hSHC.2 ζ).mp hζ).1
   have hζDegree : Section1.degree ζ = (Nat.card W1 : ℂ) :=
@@ -17600,7 +17600,7 @@ private theorem theorem_11_9_sigma_omega_virtual_of_section10FourSixNotationData
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ)
     (i : I)
     (j : J) :
-    Representation.IsVirtualCharacter (σ (ω i j)) := by
+    Theory.Character.IsVirtualCharacter (σ (ω i j)) := by
   rcases hNotation with
     ⟨_MF, _Ms, _Abook, _A0book, _A1book, _hSource,
       _hW, _hA0, _h46, hω, _hIso, hVirt, _hPrin, _hσAgreeCyc, _h45, _h48, _hTauA0,
@@ -17653,7 +17653,7 @@ private theorem theorem_11_9_cfNormSq_ge_one_of_ne_zero_virtual
     [Group G]
     [Finite G]
     {χ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ)
+    (hχ : Theory.Character.IsVirtualCharacter χ)
     (hne : χ ≠ 0) :
     1 ≤ Section5.cfNormSq χ := by
   classical
@@ -17701,7 +17701,7 @@ private theorem theorem_11_9_tau_projection_residual_virtual_of_hypothesis
       Section10.section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0 μ δSign ω σ τ →
         section11Subfamily (H ⊔ C) S SHC →
           ζ ∈ SHC →
-            Representation.IsVirtualCharacter
+            Theory.Character.IsVirtualCharacter
               (τ (Section10.muColumn μ j0 - ζ) -
                 Section1.weightedFamilySum
                   (fun x : I × J =>
@@ -17711,12 +17711,12 @@ private theorem theorem_11_9_tau_projection_residual_virtual_of_hypothesis
   intro h11 hNotation hSHC hζ
   classical
   have hψ :
-      Representation.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) :=
+      Theory.Character.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) :=
     theorem_11_9_tau_muColumn_sub_SHC_virtual_of_hypothesis
       M MF H U C H0 W1 W2 W A A0 S SHC i0 j0 μ δSign ω σ τ ζ p q
       h11 hNotation hSHC hζ
   have hproj :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section1.weightedFamilySum
           (fun x : I × J =>
             Section1.scalarProduct G
@@ -19171,8 +19171,8 @@ private theorem theorem_11_9_scalarProduct_galoisConjugate_eq_of_virtual
     (gamma : Gal(ℂ/ℚ))
     (hgamma : Section3.cyclotomicGaloisAction (Nat.card G) gamma)
     (alpha beta : Section1.ClassFunction G)
-    (halpha : Representation.IsVirtualCharacter alpha)
-    (hbeta : Representation.IsVirtualCharacter beta) :
+    (halpha : Theory.Character.IsVirtualCharacter alpha)
+    (hbeta : Theory.Character.IsVirtualCharacter beta) :
     Section1.scalarProduct G
         (Section3.classFunctionGaloisConjugate gamma alpha)
         (Section3.classFunctionGaloisConjugate gamma beta) =
@@ -19577,13 +19577,13 @@ private theorem theorem_11_9_tau_axis_fixed_column_coefficient_of_hypothesis
       M MF H U C H0 W1 W2 W A A0 S SHC i0 j0 mu deltaSign omega sigma tau
         zeta p q gamma hgamma h11 hNotation hSHC hzeta i j0
   have hPhiVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (tau (Section10.muColumn mu j0 - zeta)) :=
     theorem_11_9_tau_muColumn_sub_SHC_virtual_of_hypothesis
       M MF H U C H0 W1 W2 W A A0 S SHC i0 j0 mu deltaSign omega sigma tau
         zeta p q h11 hNotation hSHC hzeta
   have hEtaVirt :
-      Representation.IsVirtualCharacter (sigma (omega i1 j0)) :=
+      Theory.Character.IsVirtualCharacter (sigma (omega i1 j0)) :=
     theorem_11_9_sigma_omega_virtual_of_section10FourSixNotationData
       hNotation i1 j0
   have hGaloisPair :
@@ -20366,7 +20366,7 @@ private theorem theorem_11_9_tau_axis_galois_projection_swap_gap_source_data_for
             0 at hsource
     rcases hsource with ⟨hcolSwap, hrowSwap, hne⟩
     have hresVirt :
-        Representation.IsVirtualCharacter
+        Theory.Character.IsVirtualCharacter
           (ψ -
             Section1.weightedFamilySum
               (fun x : I × J => a x.1 x.2)
@@ -23725,11 +23725,11 @@ private theorem theorem_11_9_case_a_pf58_formula_source
     theorem_11_9_case_a_degree_muQu_eq_ratio_lambda_of_dvd
       M lam muJ q a u hdiv _hlamDegree hmuJDegree
   have hψVirt :
-      Representation.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) :=
+      Theory.Character.IsVirtualCharacter (τ (Section10.muColumn μ j0 - ζ)) :=
     theorem_11_9_tau_muColumn_sub_SHC_virtual_of_hypothesis
       M MF H U C H0 W1 W2 W A A0 S SHC i0 j0 μ δSign ω σ τ ζ p q
       _h11 _hNotation _hSHC _hζ
-  have hτ₂lamVirt : Representation.IsVirtualCharacter (τ₂ lam) :=
+  have hτ₂lamVirt : Theory.Character.IsVirtualCharacter (τ₂ lam) :=
     hExt.2.1 lam (Section5.integerSpan_of_mem SH0C hlamSH0C)
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hψVirt hτ₂lamVirt with
     ⟨z, hz⟩
@@ -24565,7 +24565,7 @@ private theorem theorem_11_exists_transformedIrreducibleFamily
     ∃ R : Finset (Section1.ClassFunction G),
       transformedIrreducibleFamily R σ := by
   classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := W) with
     ⟨ι, hι, χrep, hχrep, _hsum⟩
   letI : Fintype ι := hι
@@ -24579,10 +24579,10 @@ private theorem theorem_11_exists_transformedIrreducibleFamily
   have hχcomplete : ∀ θ : Section1.ClassFunction W,
       Section1.IsIrreducibleCharacterOnGroup θ → ∃ i, χ i = θ := by
     intro θ hθirr
-    let θrep : Representation.ClassFunction W :=
+    let θrep : Theory.Character.ConjClassFunction W :=
       Section1.toConjClassFunction θ
         (Section10.isClassFunction_of_irreducibleCharacterOnGroup_sec10 hθirr)
-    have hθrepirr : Representation.IsIrreducibleCharacter θrep :=
+    have hθrepirr : Theory.Character.IsIrreducibleConjCharacter θrep :=
       Section10.toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10 hθirr
     rcases hχrep.2.1 θrep hθrepirr with ⟨i, hi⟩
     refine ⟨i, ?_⟩

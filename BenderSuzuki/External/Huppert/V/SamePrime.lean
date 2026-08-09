@@ -80,7 +80,7 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
   letI : Fintype K := Fintype.ofFinite K
   letI : Fintype R := Fintype.ofFinite R
   let ρ : Representation (ZMod s) SD (Additive N) :=
-    Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
+    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
   have hfrob : IsFrobeniusGroupWithKernelComplement K R := by
     simpa [K, R, SD] using
       huppertMQSemidirect_isFrobenius (N := N) (ψ := ψ) hcard hregular
@@ -297,7 +297,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
       letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
       letI : MulDistribMulAction (Q ⧸ N) N :=
         MulDistribMulAction.compHom N (quotientConjNormal N)
-      (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+      (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
           (Additive.ofMul n) =
         (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by
   classical
@@ -315,7 +315,7 @@ public theorem huppertMQ_double_count_representation_norm_eval
         φ hprod hperiod N hNφ hN_elem hs_ne_r ψ hψ hrp
         hquot_action_distinct hquot_zpowers_cyclic n
   calc
-    (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+    (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
         (Additive.ofMul n)
         = Additive.ofMul (huppertMQ N n) := by
           exact (huppertMQ_eq_representation_norm N hN_elem n).symm
@@ -365,7 +365,7 @@ public theorem huppertMQ_double_count_eval
   calc
     Additive.ofMul (huppertMQ N n)
         =
-          (Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
+          (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
             (Additive.ofMul n) := by
           exact huppertMQ_eq_representation_norm N hN_elem n
     _ = (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by

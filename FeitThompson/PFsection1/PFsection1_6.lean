@@ -762,7 +762,7 @@ public theorem character_conjugateOrbitSumRepresentation
       LinearMap.trace ℂ (ι → V) T =
         ∑ i : ι, LinearMap.trace ℂ V (L i) := by
     have htrace_perm :=
-      Representation.trace_pi_map_perm (R := ℂ) (ι := ι) (κ := κ) b
+      Theory.Representation.trace_pi_map_perm (R := ℂ) (ι := ι) (κ := κ) b
         (fun i : ι => i) L T (by
           intro x i
           rfl)

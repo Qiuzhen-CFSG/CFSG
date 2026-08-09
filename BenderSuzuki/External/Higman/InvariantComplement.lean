@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.Maschke
-public import FeitThompson.Representation.ElementaryAbelianAction
+public import Theory.Representation.Maschke
+public import Theory.Representation.ElementaryAbelianAction
 public import Mathlib.RepresentationTheory.Submodule
 import Mathlib.Algebra.Field.ZMod
 import FeitThompson.GroupAction.Invariant
@@ -85,7 +85,7 @@ public theorem exists_isCompl_invariant_subgroup_of_odd_group
   let e : Subgroup G ≃o Submodule (ZMod 2) (Additive G) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := 2))
   let rho :=
-    Representation.ofElementaryAbelianAction (A := A) (G := G) (p := 2)
+    Theory.Representation.ofElementaryAbelianAction (A := A) (G := G) (p := 2)
   have hUmod : ∀ a : A, ∀ v ∈ e U, rho a v ∈ e U := by
     intro a v hv
     change Additive.toMul v ∈ U at hv

@@ -27,7 +27,7 @@ Wielandt's theorem. -/
   letI : MulDistribMulAction A V :=
     MulDistribMulAction.compHom V A.subtype
   Module.finrank (ZMod p)
-    ↥((Representation.ofElementaryAbelianAction
+    ↥((Theory.Representation.ofElementaryAbelianAction
         (A := A) (G := V) (p := p)).fixedSubspace
       (⊤ : Subgroup A))
 

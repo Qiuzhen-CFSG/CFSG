@@ -2735,11 +2735,11 @@ private theorem hypothesis_13_1_sigma_transport_eq_of_cyclicTI_agreement
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξClass
   have htransportVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (σsel (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtSel _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=

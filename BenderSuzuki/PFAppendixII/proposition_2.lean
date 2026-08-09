@@ -8,7 +8,7 @@ public import BenderSuzuki.PFAppendixII.proposition_1
 public import BenderSuzuki.RightNearField.Linear
 import BenderSuzuki.PFAppendixI.proposition_2
 public import FeitThompson.BGsection2.EndFieldRep
-public import FeitThompson.Representation.Maschke
+public import Theory.Representation.Maschke
 
 /-!
 # Peterfalvi Appendix II, Proposition 2
@@ -324,7 +324,7 @@ private theorem proposition_2_appendixI_field_coordinates
       have h_eq : rhoT t x' = (x : F) * (((a : A) : Fˣ) : F) := by
         calc
           rhoT t x' = Additive.ofMul (t • Additive.toMul x') := by
-            simpa using (Representation.ofElementaryAbelianAction_apply_ofMul
+            simpa using (Theory.Representation.ofElementaryAbelianAction_apply_ofMul
               (a := t) (x := Additive.toMul x'))
           _ = (x : F) * (((a : A) : Fˣ) : F) := by
             dsimp [t, x']
@@ -355,7 +355,7 @@ private theorem proposition_2_appendixI_field_coordinates
       have h_eq : rhoT t x' = (x : F) * (((a : A) : Fˣ) : F) := by
         calc
           rhoT t x' = Additive.ofMul (t • Additive.toMul x') := by
-            simpa using (Representation.ofElementaryAbelianAction_apply_ofMul
+            simpa using (Theory.Representation.ofElementaryAbelianAction_apply_ofMul
               (a := t) (x := Additive.toMul x'))
           _ = (x : F) * (((a : A) : Fˣ) : F) := by
             dsimp [t, x']

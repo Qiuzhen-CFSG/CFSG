@@ -11,13 +11,13 @@ public import FeitThompson.BGsection3.Remaining
 import BenderSuzuki.External.Huppert.II.theorem_1_12
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 import BenderSuzuki.External.Huppert.XI.SharpNearField
-import BenderSuzuki.External.Isaacs.VI.theorem_6_34
+import Theory.Representation.InducedIrreducible
 import BenderSuzuki.External.Isaacs.VII.theorem_7_14
 import BenderSuzuki.External.Isaacs.VII.theorem_7_15
 import FeitThompson.PFsection1.PFsection1_7_Mackey
 import FeitThompson.PFsection6.PFsection6_8
 import FeitThompson.PCore.Nilpotent
-import FeitThompson.Representation.BrauerPermutation
+import Theory.Character.BrauerPermutation
 
 /-!
 # Feit XI.6.1
@@ -225,29 +225,29 @@ private theorem huppert_XI_6_2_lower_degree_sq_sum_dvd
 
 private noncomputable def huppertXI61CharacterDegreeNat
     {Q : Type*} [Group Q] [Finite Q]
-    (chi : Representation.ClassFunction Q)
-    (hchi : Representation.IsCharacter chi) : ℕ :=
+    (chi : Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsConjCharacter chi) : ℕ :=
   Classical.choose hchi
 
 private theorem huppertXI61CharacterDegreeNat_spec
     {Q : Type*} [Group Q] [Finite Q]
-    (chi : Representation.ClassFunction Q)
-    (hchi : Representation.IsCharacter chi) :
+    (chi : Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsConjCharacter chi) :
     ∃ rho : Representation ℂ Q
         (Fin (huppertXI61CharacterDegreeNat chi hchi) → ℂ),
-      chi = Representation.characterClassFunction rho :=
+      chi = (Theory.Character.characterClassFunction rho) :=
   Classical.choose_spec hchi
 
 private theorem huppertXI61CharacterDegreeNat_value_one
     {Q : Type*} [Group Q] [Finite Q]
-    (chi : Representation.ClassFunction Q)
-    (hchi : Representation.IsCharacter chi) :
+    (chi : Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsConjCharacter chi) :
     chi (ConjClasses.mk (1 : Q)) =
       (huppertXI61CharacterDegreeNat chi hchi : ℂ) := by
   obtain ⟨rho, hrho⟩ := huppertXI61CharacterDegreeNat_spec chi hchi
   calc
     chi (ConjClasses.mk (1 : Q)) =
-        Representation.characterClassFunction rho (ConjClasses.mk (1 : Q)) :=
+        (Theory.Character.characterClassFunction rho) (ConjClasses.mk (1 : Q)) :=
       congrArg (fun psi => psi (ConjClasses.mk (1 : Q))) hrho
     _ = (huppertXI61CharacterDegreeNat chi hchi : ℂ) := by
       change rho.character (1 : Q) =
@@ -256,23 +256,23 @@ private theorem huppertXI61CharacterDegreeNat_value_one
 
 private theorem huppertXI61CharacterDegreeNat_dvd_card
     {Q : Type*} [Group Q] [Finite Q]
-    (chi : Representation.ClassFunction Q)
-    (hchi : Representation.IsIrreducibleCharacter chi) :
+    (chi : Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsIrreducibleConjCharacter chi) :
     huppertXI61CharacterDegreeNat chi hchi.1 ∣ Nat.card Q := by
   obtain ⟨rho, hrho⟩ :=
     huppertXI61CharacterDegreeNat_spec chi hchi.1
   have hrhoIrreducible : Representation.IsIrreducible rho := by
-    apply (Representation.irreducible_iff_character_norm_one rho).2
+    apply (Theory.Character.irreducible_iff_character_norm_one rho).2
     simpa [hrho] using hchi.2
   letI : Representation.IsIrreducible rho := hrhoIrreducible
-  simpa using Representation.irreducible_dimension_dvd_group_order rho
+  simpa using Theory.Character.irreducible_dimension_dvd_group_order rho
 
 /-- XI.6.2 in a complete-family form suited to the later Feit count. -/
 private theorem huppert_XI_6_2_character_degree_lower_sum_dvd_of_complete_family
     {Q ι : Type*} [Group Q] [Finite Q] [Fintype ι]
     {p n : ℕ} (hp : Nat.Prime p) (hQcard : Nat.card Q = p ^ n)
-    (chi : ι → Representation.ClassFunction Q)
-    (hchi : Representation.IsCompleteIrreducibleCharacterFamily chi)
+    (chi : ι → Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
     (hsum :
       ∑ i : ι, Complex.normSq (chi i (ConjClasses.mk (1 : Q))) =
         (Nat.card Q : ℝ)) (i0 : ι) :
@@ -329,12 +329,12 @@ irreducible-character degrees in a complete family. -/
 public theorem huppert_XI_6_2_character_degree_lower_sum_dvd
     {Q : Type*} [Group Q] [Finite Q]
     (p n : ℕ) (hp : Nat.Prime p) (hQcard : Nat.card Q = p ^ n)
-    (chi0 : Representation.ClassFunction Q)
-    (hchi0 : Representation.IsIrreducibleCharacter chi0) :
+    (chi0 : Theory.Character.ConjClassFunction Q)
+    (hchi0 : Theory.Character.IsIrreducibleConjCharacter chi0) :
     ∃ (ι : Type) (_ : Fintype ι)
-      (chi : ι → Representation.ClassFunction Q) (i0 : ι)
+      (chi : ι → Theory.Character.ConjClassFunction Q) (i0 : ι)
       (degreeNat : ι → ℕ),
-      Representation.IsCompleteIrreducibleCharacterFamily chi ∧
+      Theory.Character.IsCompleteIrreducibleCharacterFamily chi ∧
         chi i0 = chi0 ∧
         (∀ i, chi i (ConjClasses.mk (1 : Q)) = (degreeNat i : ℂ)) ∧
         degreeNat i0 ^ 2 ∣
@@ -342,7 +342,7 @@ public theorem huppert_XI_6_2_character_degree_lower_sum_dvd
             (fun i => degreeNat i < degreeNat i0), degreeNat i ^ 2 := by
   classical
   obtain ⟨ι, hι, chi, hchi, hsum⟩ :=
-    Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
   letI : Fintype ι := hι
   obtain ⟨i0, hi0⟩ := hchi.2.1 chi0 hchi0
@@ -357,8 +357,8 @@ public theorem huppert_XI_6_2_character_degree_lower_sum_dvd
 
 private theorem huppert_XI_6_2_degree_sq_le_lower_sum
     {Q ι : Type*} [Group Q] [Finite Q] [Fintype ι]
-    (chi : ι → Representation.ClassFunction Q)
-    (hchi : Representation.IsCompleteIrreducibleCharacterFamily chi)
+    (chi : ι → Theory.Character.ConjClassFunction Q)
+    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
     (degreeNat : ι → ℕ)
     (hvalue : ∀ i, chi i (ConjClasses.mk (1 : Q)) = (degreeNat i : ℂ))
     (i0 : ι) (hdegree : 1 < degreeNat i0)
@@ -373,18 +373,18 @@ private theorem huppert_XI_6_2_degree_sq_le_lower_sum
     Representation.trivial ℂ Q (Fin 1 → ℂ)
   have hrho0 : Representation.IsIrreducible rho0 := by
     let e : rho0 ≃ₗ Representation.trivial ℂ Q ℂ :=
-      Representation.RepEquiv.mk
+      Theory.Representation.RepEquiv.mk
         (LinearEquiv.funUnique (Fin 1) ℂ ℂ) (by
           intro g
           ext v
           simp [rho0])
-    exact (Representation.RepEquiv.irreducible_euqiv e).2
-      Representation.trivial_complex_irreducible
-  let chi0 : Representation.ClassFunction Q :=
-    Representation.characterClassFunction rho0
-  have hchi0 : Representation.IsIrreducibleCharacter chi0 := by
+    exact (Theory.Representation.RepEquiv.irreducible_euqiv e).2
+      Theory.Character.trivial_complex_irreducible
+  let chi0 : Theory.Character.ConjClassFunction Q :=
+    Theory.Character.characterClassFunction rho0
+  have hchi0 : Theory.Character.IsIrreducibleConjCharacter chi0 := by
     refine ⟨⟨1, rho0, rfl⟩, ?_⟩
-    exact (Representation.irreducible_iff_character_norm_one rho0).1 hrho0
+    exact (Theory.Character.irreducible_iff_character_norm_one rho0).1 hrho0
   obtain ⟨j0, hj0⟩ := hchi.2.1 chi0 hchi0
   have hdegreeJ0 : degreeNat j0 = 1 := by
     have h := hvalue j0
@@ -2339,7 +2339,7 @@ private theorem frobenius_irreducible_character_eq_induced_of_not_kernel
       Subgroup.centralizer ({(z : H)} : Set H) ≤ F :=
     fun z hz => frobenius_kernel_centralizer_le F D hFrob z hz
   obtain ⟨V, instAddV, instModuleV, instFiniteV, phi, hphi, e⟩ :=
-    (BenderSuzuki.External.Isaacs.VI.isaacs_theorem_6_34.{u, 0, 0, 0}
+    (Theory.Representation.isaacs_theorem_6_34.{u, 0, 0, 0}
       F hcentralizer).2 rho hrho hnotkerRho
   rcases e with ⟨e⟩
   refine ⟨phi.character,
@@ -2440,20 +2440,20 @@ private theorem frobenius_irreducible_character_eq_zero_of_not_mem_kernel
 private theorem huppert_XI_6_virtualCharacter_zsmul
     {Q : Type u} [Group Q]
     (n : ℤ) {chi : Section1.ClassFunction Q}
-    (hchi : Representation.IsVirtualCharacter chi) :
-    Representation.IsVirtualCharacter ((n : ℂ) • chi) := by
+    (hchi : Theory.Character.IsVirtualCharacter chi) :
+    Theory.Character.IsVirtualCharacter ((n : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations,
+  simp [Theory.Character.virtualCharacterOfRepresentations,
     Finset.mul_sum, mul_assoc]
 
 private theorem huppert_XI_6_virtualCharacter_finset_sum
     {Q : Type u} [Group Q] [Finite Q]
     {I : Type*} (s : Finset I) (Phi : I → Section1.ClassFunction Q)
-    (hPhi : ∀ i ∈ s, Representation.IsVirtualCharacter (Phi i)) :
-    Representation.IsVirtualCharacter (s.sum Phi) := by
+    (hPhi : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Phi i)) :
+    Theory.Character.IsVirtualCharacter (s.sum Phi) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -2464,7 +2464,7 @@ private theorem huppert_XI_6_virtualCharacter_finset_sum
           Section3.isVirtualCharacter_principalCharacter)
   | @insert a s ha ih =>
       have ha' := hPhi a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (s.sum Phi) := by
+      have hs' : Theory.Character.IsVirtualCharacter (s.sum Phi) := by
         apply ih
         intro i hi
         exact hPhi i (Finset.mem_insert_of_mem hi)
@@ -2473,9 +2473,9 @@ private theorem huppert_XI_6_virtualCharacter_finset_sum
 private theorem huppert_XI_6_virtualCharacter_evalCoeff
     {Q I : Type u} [Group Q] [Finite Q] [Fintype I] [DecidableEq I]
     (mu : I → Section1.ClassFunction Q)
-    (hmu : ∀ i, Representation.IsVirtualCharacter (mu i))
+    (hmu : ∀ i, Theory.Character.IsVirtualCharacter (mu i))
     (v : Section1.CoeffVector I) :
-    Representation.IsVirtualCharacter (Section1.evalCoeff mu v) := by
+    Theory.Character.IsVirtualCharacter (Section1.evalCoeff mu v) := by
   classical
   rw [Section1.evalCoeff]
   apply huppert_XI_6_virtualCharacter_finset_sum Finset.univ
@@ -2500,7 +2500,7 @@ private theorem frobenius_nonker_induction_isometry_data
         (Section1.inducedCFLinear H) ∧
       ∀ phi : Section1.ClassFunction H,
         Section5.integerSpanOn Y Section5.puncturedSet phi →
-          Representation.IsVirtualCharacter (Section1.inducedCFLinear H phi) ∧
+          Theory.Character.IsVirtualCharacter (Section1.inducedCFLinear H phi) ∧
             Section1.supportedOn (Section1.inducedCFLinear H phi)
               Section5.puncturedSet := by
   classical
@@ -2515,7 +2515,7 @@ private theorem frobenius_nonker_induction_isometry_data
       exact ⟨x, hx, rfl⟩
   have hspanVirtual {phi : Section1.ClassFunction H}
       (hphi : Section5.integerSpan Y phi) :
-      Representation.IsVirtualCharacter phi := by
+      Theory.Character.IsVirtualCharacter phi := by
     rcases hphi with ⟨v, rfl⟩
     apply huppert_XI_6_virtualCharacter_evalCoeff
     intro chi
@@ -2562,19 +2562,19 @@ private theorem frobenius_nonker_induction_isometry_data
 
 private theorem huppert_XI_6_ofConjClassFunction_irreducibleOnGroup
     {Q : Type u} [Group Q] [Finite Q]
-    {chi : Representation.ClassFunction Q}
-    (hchi : Representation.IsIrreducibleCharacter chi) :
+    {chi : Theory.Character.ConjClassFunction Q}
+    (hchi : Theory.Character.IsIrreducibleConjCharacter chi) :
     Section1.IsIrreducibleCharacterOnGroup
       (Section1.ofConjClassFunction chi) := by
   rcases hchi with ⟨hchar, hnorm⟩
   rcases hchar with ⟨n, rho, hchiEq⟩
   have hrhoNorm :
-      Representation.classFunctionInner
-          (Representation.characterClassFunction rho)
-          (Representation.characterClassFunction rho) = 1 := by
+      Theory.Character.classFunctionInner
+          ((Theory.Character.characterClassFunction rho))
+          ((Theory.Character.characterClassFunction rho)) = 1 := by
     simpa [hchiEq] using hnorm
   have hrhoIrr : Representation.IsIrreducible rho :=
-    (Representation.irreducible_iff_character_norm_one (ρ := rho)).2 hrhoNorm
+    (Theory.Character.irreducible_iff_character_norm_one (ρ := rho)).2 hrhoNorm
   refine ⟨n, rho, hrhoIrr, ?_⟩
   rw [hchiEq]
   exact Section1.ofConjClassFunction_characterClassFunction rho
@@ -2583,7 +2583,7 @@ private theorem huppert_XI_6_toConjClassFunction_irreducible
     {Q : Type u} [Group Q] [Finite Q]
     {chi : Section1.ClassFunction Q}
     (hchi : Section1.IsIrreducibleCharacterOnGroup chi) :
-    Representation.IsIrreducibleCharacter
+    Theory.Character.IsIrreducibleConjCharacter
       (Section1.toConjClassFunction chi
         (Section1.isCharacter_isClassFunction chi
           (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi))) := by
@@ -2591,14 +2591,14 @@ private theorem huppert_XI_6_toConjClassFunction_irreducible
     Section1.isCharacter_isClassFunction chi
       (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi)
   rcases hchi with ⟨n, rho, hrhoIrr, hchiEq⟩
-  have hchar_eq : Section1.toConjClassFunction chi hclass = rho.characterClassFunction := by
+  have hchar_eq : Section1.toConjClassFunction chi hclass = (Theory.Character.characterClassFunction rho) := by
     apply Section1.toConjClassFunction_eq_of_apply
     intro g
     rw [hchiEq]
     rfl
   refine ⟨⟨n, rho, hchar_eq⟩, ?_⟩
   · have hnorm :=
-      (Representation.irreducible_iff_character_norm_one (ρ := rho)).1 hrhoIrr
+      (Theory.Character.irreducible_iff_character_norm_one (ρ := rho)).1 hrhoIrr
     simpa [hchar_eq] using hnorm
 
 private theorem huppert_XI_6_positive_degree_nat
@@ -2627,7 +2627,7 @@ private theorem huppert_XI_6_complete_irreducible_finset
         chi ∈ K := by
   classical
   obtain ⟨I, hIFintype, phi, hphi, _hsum⟩ :=
-    Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
   letI : Fintype I := hIFintype
   let mu : I → Section1.ClassFunction Q := fun i =>
@@ -2642,9 +2642,9 @@ private theorem huppert_XI_6_complete_irreducible_finset
     let hclass : Section1.IsClassFunction chi :=
       Section1.isCharacter_isClassFunction chi
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi)
-    let Phi : Representation.ClassFunction Q :=
+    let Phi : Theory.Character.ConjClassFunction Q :=
       Section1.toConjClassFunction chi hclass
-    have hPhiIrr : Representation.IsIrreducibleCharacter Phi := by
+    have hPhiIrr : Theory.Character.IsIrreducibleConjCharacter Phi := by
       simpa [Phi, hclass] using
         (huppert_XI_6_toConjClassFunction_irreducible hchi)
     obtain ⟨i, hi⟩ := hphi.2.1 Phi hPhiIrr
@@ -2674,7 +2674,7 @@ private theorem huppert_XI_6_5_nonker_irreducible_finset
         chi ∈ Y := by
   classical
   obtain ⟨I, hIFintype, phi, hphi, _hsum⟩ :=
-    Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
   letI : Fintype I := hIFintype
   let mu : I → Section1.ClassFunction Q := fun i =>
@@ -2696,9 +2696,9 @@ private theorem huppert_XI_6_5_nonker_irreducible_finset
     let hclass : Section1.IsClassFunction chi :=
       Section1.isCharacter_isClassFunction chi
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi)
-    let Phi : Representation.ClassFunction Q :=
+    let Phi : Theory.Character.ConjClassFunction Q :=
       Section1.toConjClassFunction chi hclass
-    have hPhiIrr : Representation.IsIrreducibleCharacter Phi := by
+    have hPhiIrr : Theory.Character.IsIrreducibleConjCharacter Phi := by
       simpa [Phi, hclass] using
         (huppert_XI_6_toConjClassFunction_irreducible hchi)
     obtain ⟨i, hi⟩ := hphi.2.1 Phi hPhiIrr
@@ -2779,7 +2779,7 @@ private theorem huppert_XI_6_5_complete_nonker_is_inducedKernelFamily
         Subgroup.centralizer ({(z : H)} : Set H) ≤ F :=
       fun z hz => frobenius_kernel_centralizer_le F D hFrob z hz
     have hIndRepIrr :=
-      ((BenderSuzuki.External.Isaacs.VI.isaacs_theorem_6_34.{u, 0, 0, 0}
+      ((Theory.Representation.isaacs_theorem_6_34.{u, 0, 0, 0}
         F hcentralizer).1 rho hrhoIrr hrhoNonprincipal).2
     have hIndIrr : Section1.IsIrreducibleCharacterOnGroup
         (Section1.inducedCF F theta) := by
@@ -2824,7 +2824,7 @@ private theorem huppert_XI_6_5_complete_nonker_induction_isometry
         (Section1.inducedCFLinear H) ∧
       ∀ phi : Section1.ClassFunction H,
         Section5.integerSpanOn Y Section5.puncturedSet phi →
-          Representation.IsVirtualCharacter
+          Theory.Character.IsVirtualCharacter
               (Section1.inducedCFLinear H phi) ∧
             Section1.supportedOn (Section1.inducedCFLinear H phi)
               Section5.puncturedSet := by
@@ -3138,27 +3138,27 @@ private theorem prod_tprod_character_inner
     [AddCommGroup W₂] [Module ℂ W₂] [FiniteDimensional ℂ W₂]
     (rho₁ : Representation ℂ P V₁) (rho₂ : Representation ℂ P V₂)
     (sigma₁ : Representation ℂ Q W₁) (sigma₂ : Representation ℂ Q W₂) :
-    Representation.classFunctionInner
-        (Representation.characterClassFunction
+    Theory.Character.classFunctionInner
+        (Theory.Character.characterClassFunction
           (Representation.tprod
             (rho₁.comp (MonoidHom.fst P Q))
             (sigma₁.comp (MonoidHom.snd P Q))))
-        (Representation.characterClassFunction
+        (Theory.Character.characterClassFunction
           (Representation.tprod
             (rho₂.comp (MonoidHom.fst P Q))
             (sigma₂.comp (MonoidHom.snd P Q)))) =
-      Representation.classFunctionInner
-          (Representation.characterClassFunction rho₁)
-          (Representation.characterClassFunction rho₂) *
-        Representation.classFunctionInner
-          (Representation.characterClassFunction sigma₁)
-          (Representation.characterClassFunction sigma₂) := by
+      Theory.Character.classFunctionInner
+          (Theory.Character.characterClassFunction rho₁)
+          (Theory.Character.characterClassFunction rho₂) *
+        Theory.Character.classFunctionInner
+          (Theory.Character.characterClassFunction sigma₁)
+          (Theory.Character.characterClassFunction sigma₂) := by
   classical
-  rw [Representation.classFunctionInner,
-    Representation.classFunctionInner,
-    Representation.classFunctionInner]
-  simp [Representation.characterClassFunction,
-    Representation.classFunctionOfInvariant, ConjClasses.mk,
+  rw [Theory.Character.classFunctionInner,
+    Theory.Character.classFunctionInner,
+    Theory.Character.classFunctionInner]
+  simp [Theory.Character.characterClassFunction,
+    Theory.Character.conjClassFunctionOfInvariant, ConjClasses.mk,
     Representation.character]
   have hsumProd (f : P × Q → ℂ) :
       (∑ g ∈ @Finset.univ (P × Q) (Fintype.ofFinite (P × Q)), f g) =
@@ -3209,10 +3209,10 @@ private theorem prod_tprod_irreducible
       (Representation.tprod
         (rho.comp (MonoidHom.fst P Q))
         (sigma.comp (MonoidHom.snd P Q))) := by
-  apply (Representation.irreducible_iff_character_norm_one _).2
+  apply (Theory.Character.irreducible_iff_character_norm_one _).2
   rw [prod_tprod_character_inner,
-    (Representation.irreducible_iff_character_norm_one rho).1 hrho,
-    (Representation.irreducible_iff_character_norm_one sigma).1 hsigma]
+    (Theory.Character.irreducible_iff_character_norm_one rho).1 hrho,
+    (Theory.Character.irreducible_iff_character_norm_one sigma).1 hsigma]
   simp
 
 /-- A nilpotent finite group is the internal direct product of its p-core
@@ -3555,15 +3555,15 @@ private noncomputable def conjClassesProdEquiv
 
 private noncomputable def extProdClassFunction
     {A : Type u} {B : Type v} [Group A] [Group B]
-    (chi : Representation.ClassFunction A)
-    (psi : Representation.ClassFunction B) :
-    Representation.ClassFunction (A × B) := fun c =>
+    (chi : Theory.Character.ConjClassFunction A)
+    (psi : Theory.Character.ConjClassFunction B) :
+    Theory.Character.ConjClassFunction (A × B) := fun c =>
   chi (conjClassesProdEquiv c).1 * psi (conjClassesProdEquiv c).2
 
 private theorem extProdClassFunction_mk
     {A : Type u} {B : Type v} [Group A] [Group B]
-    (chi : Representation.ClassFunction A)
-    (psi : Representation.ClassFunction B)
+    (chi : Theory.Character.ConjClassFunction A)
+    (psi : Theory.Character.ConjClassFunction B)
     (a : A) (b : B) :
     extProdClassFunction chi psi (ConjClasses.mk (a, b)) =
       chi (ConjClasses.mk a) * psi (ConjClasses.mk b) := by
@@ -3599,9 +3599,9 @@ private theorem extProdClassFunction_characterClassFunction
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (rho : Representation ℂ A V) (sigma : Representation ℂ B W) :
     extProdClassFunction
-        (Representation.characterClassFunction rho)
-        (Representation.characterClassFunction sigma) =
-      Representation.characterClassFunction (extTprodRep rho sigma) := by
+        ((Theory.Character.characterClassFunction rho))
+        (Theory.Character.characterClassFunction sigma) =
+      Theory.Character.characterClassFunction (extTprodRep rho sigma) := by
   ext c
   rcases ConjClasses.exists_rep c with ⟨⟨a, b⟩, rfl⟩
   change rho.character a * sigma.character b =
@@ -3610,12 +3610,12 @@ private theorem extProdClassFunction_characterClassFunction
 
 private theorem extProdClassFunction_inner
     {A : Type u} {B : Type v} [Group A] [Finite A] [Group B] [Finite B]
-    (chi chi' : Representation.ClassFunction A)
-    (psi psi' : Representation.ClassFunction B) :
-    Representation.classFunctionInner
+    (chi chi' : Theory.Character.ConjClassFunction A)
+    (psi psi' : Theory.Character.ConjClassFunction B) :
+    Theory.Character.classFunctionInner
         (extProdClassFunction chi psi) (extProdClassFunction chi' psi') =
-      Representation.classFunctionInner chi chi' *
-        Representation.classFunctionInner psi psi' := by
+      Theory.Character.classFunctionInner chi chi' *
+        Theory.Character.classFunctionInner psi psi' := by
   letI : Fintype A := Fintype.ofFinite A
   letI : Fintype B := Fintype.ofFinite B
   have hgoal :
@@ -3644,23 +3644,23 @@ private theorem extProdClassFunction_inner
         @Finset.univ (A × B) (inferInstance : Fintype (A × B)) := by
     ext x
     simp
-  simp only [Representation.classFunctionInner]
+  simp only [Theory.Character.classFunctionInner]
   rw [huniv]
   exact hgoal
 
 private theorem completeFamily_card_eq_conjClasses
     {A I : Type*} [Group A] [Finite A] [Fintype I]
-    (chi : I → Representation.ClassFunction A)
-    (hchi : Representation.IsCompleteIrreducibleCharacterFamily chi) :
+    (chi : I → Theory.Character.ConjClassFunction A)
+    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi) :
     Fintype.card I = Nat.card (ConjClasses A) := by
   classical
   letI : Fintype A := Fintype.ofFinite A
-  rcases Representation.completeFamily_form_basis hchi with ⟨b, _hb⟩
+  rcases Theory.Character.completeFamily_form_basis hchi with ⟨b, _hb⟩
   calc
-    Fintype.card I = Module.finrank ℂ (Representation.ClassFunction A) :=
+    Fintype.card I = Module.finrank ℂ (Theory.Character.ConjClassFunction A) :=
       (Module.finrank_eq_card_basis b).symm
     _ = Fintype.card (ConjClasses A) := by
-      simp [Representation.ClassFunction]
+      simp [Theory.Character.ConjClassFunction]
     _ = Nat.card (ConjClasses A) := by rw [Nat.card_eq_fintype_card]
 
 /-- A duplicate-free finite set containing every irreducible character has
@@ -3675,12 +3675,12 @@ private theorem huppert_XI_6_complete_irreducible_finset_card_eq_conjClasses
       Section1.IsIrreducibleCharacterOnGroup chi → chi ∈ K) :
     K.card = Nat.card (ConjClasses Q) := by
   classical
-  let phi : K → Representation.ClassFunction Q := fun chi =>
+  let phi : K → Theory.Character.ConjClassFunction Q := fun chi =>
     Section1.toConjClassFunction (chi : Section1.ClassFunction Q)
       (Section1.isCharacter_isClassFunction (chi : Section1.ClassFunction Q)
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup (hKirr chi)))
   have hphiIrr : ∀ chi,
-      Representation.IsIrreducibleCharacter (phi chi) := by
+      Theory.Character.IsIrreducibleConjCharacter (phi chi) := by
     intro chi
     exact huppert_XI_6_toConjClassFunction_irreducible (hKirr chi)
   have hphiInj : Function.Injective phi := by
@@ -3689,8 +3689,8 @@ private theorem huppert_XI_6_complete_irreducible_finset_card_eq_conjClasses
     ext g
     have hval := congrFun hEq (ConjClasses.mk g)
     simpa [phi, Section1.toConjClassFunction_apply] using hval
-  have hphiComplete : ∀ theta : Representation.ClassFunction Q,
-      Representation.IsIrreducibleCharacter theta →
+  have hphiComplete : ∀ theta : Theory.Character.ConjClassFunction Q,
+      Theory.Character.IsIrreducibleConjCharacter theta →
         ∃ chi, phi chi = theta := by
     intro theta htheta
     let theta' : Section1.ClassFunction Q :=
@@ -3703,7 +3703,7 @@ private theorem huppert_XI_6_complete_irreducible_finset_card_eq_conjClasses
     simpa [phi, chi, theta'] using
       Section1.toConjClassFunction_ofConjClassFunction theta
   have hfamily :
-      Representation.IsCompleteIrreducibleCharacterFamily phi :=
+      Theory.Character.IsCompleteIrreducibleCharacterFamily phi :=
     ⟨hphiIrr, hphiComplete, hphiInj⟩
   simpa [Nat.card_eq_fintype_card] using
     completeFamily_card_eq_conjClasses phi hfamily
@@ -3725,12 +3725,12 @@ private theorem huppert_XI_6_complete_irreducible_finset_apply_eq_sum_scalarProd
       Section1.scalarProduct Q phi (chi : Section1.ClassFunction Q) *
         (chi : Section1.ClassFunction Q) g := by
   classical
-  let family : K → Representation.ClassFunction Q := fun chi =>
+  let family : K → Theory.Character.ConjClassFunction Q := fun chi =>
     Section1.toConjClassFunction (chi : Section1.ClassFunction Q)
       (Section1.isCharacter_isClassFunction (chi : Section1.ClassFunction Q)
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup (hKirr chi)))
   have hfamilyIrr : ∀ chi,
-      Representation.IsIrreducibleCharacter (family chi) := by
+      Theory.Character.IsIrreducibleConjCharacter (family chi) := by
     intro chi
     exact huppert_XI_6_toConjClassFunction_irreducible (hKirr chi)
   have hfamilyInj : Function.Injective family := by
@@ -3739,8 +3739,8 @@ private theorem huppert_XI_6_complete_irreducible_finset_apply_eq_sum_scalarProd
     ext x
     have hval := congrFun hEq (ConjClasses.mk x)
     simpa [family, Section1.toConjClassFunction_apply] using hval
-  have hfamilyComplete : ∀ theta : Representation.ClassFunction Q,
-      Representation.IsIrreducibleCharacter theta →
+  have hfamilyComplete : ∀ theta : Theory.Character.ConjClassFunction Q,
+      Theory.Character.IsIrreducibleConjCharacter theta →
         ∃ chi, family chi = theta := by
     intro theta htheta
     let theta' : Section1.ClassFunction Q :=
@@ -3753,9 +3753,9 @@ private theorem huppert_XI_6_complete_irreducible_finset_apply_eq_sum_scalarProd
     simpa [family, chi, theta'] using
       Section1.toConjClassFunction_ofConjClassFunction theta
   have hcomplete :
-      Representation.IsCompleteIrreducibleCharacterFamily family :=
+      Theory.Character.IsCompleteIrreducibleCharacterFamily family :=
     ⟨hfamilyIrr, hfamilyComplete, hfamilyInj⟩
-  have hexpand := Representation.completeFamily_apply_eq_sum_inner hcomplete
+  have hexpand := Theory.Character.completeFamily_apply_eq_sum_inner hcomplete
     (Section1.toConjClassFunction phi hphi) (ConjClasses.mk g)
   simpa [family, Section1.toConjClassFunction_apply,
     Section1.classFunctionInner_toConjClassFunction] using hexpand
@@ -3794,39 +3794,39 @@ private theorem huppert_XI_6_disjoint_irreducible_finsets_card_eq_conjClasses
 
 private theorem extProdClassFunction_irreducible
     {A : Type u} {B : Type v} [Group A] [Finite A] [Group B] [Finite B]
-    (chi : Representation.ClassFunction A)
-    (psi : Representation.ClassFunction B)
-    (hchi : Representation.IsIrreducibleCharacter chi)
-    (hpsi : Representation.IsIrreducibleCharacter psi) :
-    Representation.IsIrreducibleCharacter (extProdClassFunction chi psi) := by
+    (chi : Theory.Character.ConjClassFunction A)
+    (psi : Theory.Character.ConjClassFunction B)
+    (hchi : Theory.Character.IsIrreducibleConjCharacter chi)
+    (hpsi : Theory.Character.IsIrreducibleConjCharacter psi) :
+    Theory.Character.IsIrreducibleConjCharacter (extProdClassFunction chi psi) := by
   rcases Section1.representation_irreducibleCharacter_witness_irreducible
     chi hchi with ⟨n, rho, hchiEq, hrho⟩
   rcases Section1.representation_irreducibleCharacter_witness_irreducible
     psi hpsi with ⟨m, sigma, hpsiEq, hsigma⟩
   rw [hchiEq, hpsiEq, extProdClassFunction_characterClassFunction]
-  exact Representation.isIrreducibleCharacter_characterClassFunction
+  exact Theory.Character.isIrreducibleCharacter_characterClassFunction
     (extTprodRep rho sigma) (prod_tprod_irreducible rho sigma hrho hsigma)
 
 private theorem extProdClassFunction_completeFamily
     {A : Type u} {B : Type v} [Group A] [Finite A] [Group B] [Finite B]
     {I J : Type*} [Fintype I] [Fintype J]
-    (chi : I → Representation.ClassFunction A)
-    (psi : J → Representation.ClassFunction B)
-    (hchi : Representation.IsCompleteIrreducibleCharacterFamily chi)
-    (hpsi : Representation.IsCompleteIrreducibleCharacterFamily psi) :
-    Representation.IsCompleteIrreducibleCharacterFamily
+    (chi : I → Theory.Character.ConjClassFunction A)
+    (psi : J → Theory.Character.ConjClassFunction B)
+    (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi)
+    (hpsi : Theory.Character.IsCompleteIrreducibleCharacterFamily psi) :
+    Theory.Character.IsCompleteIrreducibleCharacterFamily
       (fun ij : I × J => extProdClassFunction (chi ij.1) (psi ij.2)) := by
   classical
-  let ext : I × J → Representation.ClassFunction (A × B) := fun ij =>
+  let ext : I × J → Theory.Character.ConjClassFunction (A × B) := fun ij =>
     extProdClassFunction (chi ij.1) (psi ij.2)
-  have hirr : ∀ ij, Representation.IsIrreducibleCharacter (ext ij) := by
+  have hirr : ∀ ij, Theory.Character.IsIrreducibleConjCharacter (ext ij) := by
     rintro ⟨i, j⟩
     exact extProdClassFunction_irreducible (chi i) (psi j)
       (hchi.1 i) (hpsi.1 j)
   have hinj : Function.Injective ext := by
     rintro ⟨i, j⟩ ⟨i', j'⟩ heq
     have hinner :
-        Representation.classFunctionInner (ext (i, j)) (ext (i', j')) = 1 := by
+        Theory.Character.classFunctionInner (ext (i, j)) (ext (i', j')) = 1 := by
       rw [heq]
       exact (hirr (i', j')).2
     rw [extProdClassFunction_inner,
@@ -3838,7 +3838,7 @@ private theorem extProdClassFunction_completeFamily
       · simp [hi, hj] at hinner
     · simp [hi] at hinner
   obtain ⟨K, hKFintype, theta, htheta, hKcard⟩ :=
-    Representation.card_irreducible_characters_eq_card_conjClasses
+    Theory.Character.card_irreducible_characters_eq_card_conjClasses
       (G := A × B)
   letI : Fintype K := hKFintype
   let f : I × J → K := fun ij =>
@@ -3873,19 +3873,19 @@ private theorem extProdClassFunction_completeFamily
 
 private theorem irreducibleCharacter_eq_extProdClassFunction
     {A : Type u} {B : Type v} [Group A] [Finite A] [Group B] [Finite B]
-    (phi : Representation.ClassFunction (A × B))
-    (hphi : Representation.IsIrreducibleCharacter phi) :
-    ∃ chi : Representation.ClassFunction A,
-      ∃ psi : Representation.ClassFunction B,
-        Representation.IsIrreducibleCharacter chi ∧
-          Representation.IsIrreducibleCharacter psi ∧
+    (phi : Theory.Character.ConjClassFunction (A × B))
+    (hphi : Theory.Character.IsIrreducibleConjCharacter phi) :
+    ∃ chi : Theory.Character.ConjClassFunction A,
+      ∃ psi : Theory.Character.ConjClassFunction B,
+        Theory.Character.IsIrreducibleConjCharacter chi ∧
+          Theory.Character.IsIrreducibleConjCharacter psi ∧
           phi = extProdClassFunction chi psi := by
   classical
   obtain ⟨I, hIFintype, chi, hchi, _hchiSum⟩ :=
-    Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := A)
   obtain ⟨J, hJFintype, psi, hpsi, _hpsiSum⟩ :=
-    Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+    Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := B)
   letI : Fintype I := hIFintype
   letI : Fintype J := hJFintype
@@ -3981,20 +3981,20 @@ private theorem huppert_XI_6_3_transport_extProd_eq_components
     simpa [Chi, Chi', Psi, Psi', extProdClassFunction_mk,
       extProdSection1ClassFunction, Section1.toConjClassFunction_apply]
       using hval
-  have hChiIrr : Representation.IsIrreducibleCharacter Chi := by
+  have hChiIrr : Theory.Character.IsIrreducibleConjCharacter Chi := by
     simpa [Chi, hchiClass] using
       huppert_XI_6_toConjClassFunction_irreducible hchi
-  have hChiIrr' : Representation.IsIrreducibleCharacter Chi' := by
+  have hChiIrr' : Theory.Character.IsIrreducibleConjCharacter Chi' := by
     simpa [Chi', hchiClass'] using
       huppert_XI_6_toConjClassFunction_irreducible hchi'
-  have hPsiIrr : Representation.IsIrreducibleCharacter Psi := by
+  have hPsiIrr : Theory.Character.IsIrreducibleConjCharacter Psi := by
     simpa [Psi, hpsiClass] using
       huppert_XI_6_toConjClassFunction_irreducible hpsi
-  have hPsiIrr' : Representation.IsIrreducibleCharacter Psi' := by
+  have hPsiIrr' : Theory.Character.IsIrreducibleConjCharacter Psi' := by
     simpa [Psi', hpsiClass'] using
       huppert_XI_6_toConjClassFunction_irreducible hpsi'
   have hinner :
-      Representation.classFunctionInner
+      Theory.Character.classFunctionInner
           (extProdClassFunction Chi Psi)
           (extProdClassFunction Chi' Psi') = 1 := by
     rw [hprodR]
@@ -4004,7 +4004,7 @@ private theorem huppert_XI_6_3_transport_extProd_eq_components
   have hchiEq : chi = chi' := by
     by_contra hne
     have hzero :
-        Representation.classFunctionInner Chi Chi' = 0 := by
+        Theory.Character.classFunctionInner Chi Chi' = 0 := by
       rw [Section1.classFunctionInner_toConjClassFunction]
       exact Section1.scalarProduct_irreducibleCharacter_eq_zero_of_ne
         hchi hchi' hne
@@ -4013,7 +4013,7 @@ private theorem huppert_XI_6_3_transport_extProd_eq_components
   have hpsiEq : psi = psi' := by
     by_contra hne
     have hzero :
-        Representation.classFunctionInner Psi Psi' = 0 := by
+        Theory.Character.classFunctionInner Psi Psi' = 0 := by
       rw [Section1.classFunctionInner_toConjClassFunction]
       exact Section1.scalarProduct_irreducibleCharacter_eq_zero_of_ne
         hpsi hpsi' hne
@@ -4046,9 +4046,9 @@ private theorem irreducibleCharacter_eq_transport_extProd_of_internalDirectProdu
   let hthetaClass : Section1.IsClassFunction thetaProd :=
     Section1.isCharacter_isClassFunction thetaProd
       (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hthetaProd)
-  let Phi : Representation.ClassFunction (A × B) :=
+  let Phi : Theory.Character.ConjClassFunction (A × B) :=
     Section1.toConjClassFunction thetaProd hthetaClass
-  have hPhi : Representation.IsIrreducibleCharacter Phi := by
+  have hPhi : Theory.Character.IsIrreducibleConjCharacter Phi := by
     simpa [Phi, hthetaClass] using
       (huppert_XI_6_toConjClassFunction_irreducible hthetaProd)
   obtain ⟨chiR, psiR, hchiR, hpsiR, hfactor⟩ :=
@@ -4144,9 +4144,9 @@ private theorem huppert_XI_6_3_pcore_lower_degree_family
     (hachi : Section1.degree chi = (a : ℂ))
     (ha : 1 < a) :
     ∃ (ι : Type) (_ : Fintype ι)
-      (rho : ι → Representation.ClassFunction (pCore p Q))
+      (rho : ι → Theory.Character.ConjClassFunction (pCore p Q))
       (degreeNat : ι → ℕ),
-      Representation.IsCompleteIrreducibleCharacterFamily rho ∧
+      Theory.Character.IsCompleteIrreducibleCharacterFamily rho ∧
         (∀ i, rho i (ConjClasses.mk (1 : pCore p Q)) =
           (degreeNat i : ℂ)) ∧
         a ^ 2 ≤
@@ -4159,9 +4159,9 @@ private theorem huppert_XI_6_3_pcore_lower_degree_family
   let hclass : Section1.IsClassFunction chi :=
     Section1.isCharacter_isClassFunction chi
       (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi)
-  let Phi : Representation.ClassFunction (pCore p Q) :=
+  let Phi : Theory.Character.ConjClassFunction (pCore p Q) :=
     Section1.toConjClassFunction chi hclass
-  have hPhi : Representation.IsIrreducibleCharacter Phi := by
+  have hPhi : Theory.Character.IsIrreducibleConjCharacter Phi := by
     simpa [Phi, hclass] using
       (huppert_XI_6_toConjClassFunction_irreducible hchi)
   obtain ⟨ι, hι, rho, i0, degreeNat, hrho, hi0, hvalue, hdvd⟩ :=
@@ -4187,7 +4187,7 @@ private noncomputable def huppert_XI_6_3_lift_pcore_character
     (p : ℕ)
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
     (psi : Section1.ClassFunction (pPrimeCore p Q))
-    (rho : Representation.ClassFunction (pCore p Q)) :
+    (rho : Theory.Character.ConjClassFunction (pCore p Q)) :
     Section1.ClassFunction Q :=
   Section1.classFunctionLinearEquivOfMulEquiv e
     (extProdSection1ClassFunction
@@ -4199,8 +4199,8 @@ private theorem huppert_XI_6_3_lift_pcore_character_irreducible
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
     (psi : Section1.ClassFunction (pPrimeCore p Q))
     (hpsi : Section1.IsIrreducibleCharacterOnGroup psi)
-    (rho : Representation.ClassFunction (pCore p Q))
-    (hrho : Representation.IsIrreducibleCharacter rho) :
+    (rho : Theory.Character.ConjClassFunction (pCore p Q))
+    (hrho : Theory.Character.IsIrreducibleConjCharacter rho) :
     Section1.IsIrreducibleCharacterOnGroup
       (huppert_XI_6_3_lift_pcore_character p e psi rho) := by
   apply Section1.isIrreducibleCharacterOnGroup_classFunctionLinearEquivOfMulEquiv
@@ -4214,7 +4214,7 @@ private theorem huppert_XI_6_3_lift_pcore_character_degree
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
     (psi : Section1.ClassFunction (pPrimeCore p Q))
     (hpsiDegree : Section1.degree psi = (b : ℂ))
-    (rho : Representation.ClassFunction (pCore p Q))
+    (rho : Theory.Character.ConjClassFunction (pCore p Q))
     (hrhoDegree : rho (ConjClasses.mk (1 : pCore p Q)) = (c : ℂ)) :
     Section1.degree (huppert_XI_6_3_lift_pcore_character p e psi rho) =
       ((c * b : ℕ) : ℂ) := by
@@ -4253,9 +4253,9 @@ private theorem huppert_XI_6_3_lift_pcore_character_injective
 private theorem huppert_XI_6_3_completeFamily_degree_pos
     {P : Type*} [Group P] [Finite P]
     {ι : Type*} [Fintype ι]
-    (rho : ι → Representation.ClassFunction P)
+    (rho : ι → Theory.Character.ConjClassFunction P)
     (degreeNat : ι → ℕ)
-    (hrho : Representation.IsCompleteIrreducibleCharacterFamily rho)
+    (hrho : Theory.Character.IsCompleteIrreducibleCharacterFamily rho)
     (hvalue : ∀ i, rho i (ConjClasses.mk (1 : P)) = (degreeNat i : ℂ)) :
     ∀ i, 0 < degreeNat i := by
   intro i
@@ -4282,7 +4282,7 @@ private theorem huppert_XI_6_3_lift_pcore_linear_character_injective
     {ι : Type*} [Fintype ι]
     (p : ℕ)
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
-    (rho : ι → Representation.ClassFunction (pCore p Q))
+    (rho : ι → Theory.Character.ConjClassFunction (pCore p Q))
     (degreeNat : ι → ℕ)
     (hrhoInj : Function.Injective rho)
     (hvalue : ∀ i, rho i (ConjClasses.mk (1 : pCore p Q)) =
@@ -4332,9 +4332,9 @@ private theorem huppert_XI_6_3_lifted_lower_family
     (psi : Section1.ClassFunction (pPrimeCore p Q))
     (hpsi : Section1.IsIrreducibleCharacterOnGroup psi)
     (hpsiDegree : Section1.degree psi = (b : ℂ))
-    (rho : ι → Representation.ClassFunction (pCore p Q))
+    (rho : ι → Theory.Character.ConjClassFunction (pCore p Q))
     (degreeNat : ι → ℕ)
-    (hrho : Representation.IsCompleteIrreducibleCharacterFamily rho)
+    (hrho : Theory.Character.IsCompleteIrreducibleCharacterFamily rho)
     (hvalue : ∀ i, rho i (ConjClasses.mk (1 : pCore p Q)) =
       (degreeNat i : ℂ))
     (hlower : a ^ 2 ≤
@@ -4406,9 +4406,9 @@ private theorem huppert_XI_6_3_linear_lifted_lower_family
     {ι : Type} [Fintype ι]
     (p a : ℕ)
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
-    (rho : ι → Representation.ClassFunction (pCore p Q))
+    (rho : ι → Theory.Character.ConjClassFunction (pCore p Q))
     (degreeNat : ι → ℕ)
-    (hrho : Representation.IsCompleteIrreducibleCharacterFamily rho)
+    (hrho : Theory.Character.IsCompleteIrreducibleCharacterFamily rho)
     (hvalue : ∀ i, rho i (ConjClasses.mk (1 : pCore p Q)) =
       (degreeNat i : ℂ)) :
     let lower : Finset ι :=
@@ -4568,9 +4568,9 @@ private theorem huppert_XI_6_3_linear_component_le_complete_lower_sum
     {ι : Type} [Fintype ι]
     (p a : ℕ)
     (e : (pCore p Q) × (pPrimeCore p Q) ≃* Q)
-    (rho : ι → Representation.ClassFunction (pCore p Q))
+    (rho : ι → Theory.Character.ConjClassFunction (pCore p Q))
     (rhoDegree : ι → ℕ)
-    (hrho : Representation.IsCompleteIrreducibleCharacterFamily rho)
+    (hrho : Theory.Character.IsCompleteIrreducibleCharacterFamily rho)
     (hvalue : ∀ i, rho i (ConjClasses.mk (1 : pCore p Q)) =
       (rhoDegree i : ℂ))
     (hlower : a ^ 2 ≤
@@ -5263,7 +5263,7 @@ private theorem huppert_XI_6_coherent_of_degree_growth
     (hisometry : isCFLinearIsometryOnSpanOn Y puncturedSet tau)
     (hdegreeZero : ∀ phi : ClassFunction N,
       integerSpanOn Y puncturedSet phi →
-        Representation.IsVirtualCharacter (tau phi) ∧
+        Theory.Character.IsVirtualCharacter (tau phi) ∧
           supportedOn (tau phi) puncturedSet)
     (hdegree : ∀ chi : Y, degree (chi : ClassFunction N) = (degreeNat chi : Complex))
     (hY0degree : ∀ chi : Y0, degreeNat chi = m)
@@ -5307,7 +5307,7 @@ private theorem huppert_XI_6_coherent_of_degree_growth
           ⟨integerSpan_mono hSsubY hpsi.1, hpsi.2⟩
       have hdegreeZeroS : ∀ phi : ClassFunction N,
           integerSpanOn S puncturedSet phi →
-            Representation.IsVirtualCharacter (tau phi) ∧
+            Theory.Character.IsVirtualCharacter (tau phi) ∧
               supportedOn (tau phi) puncturedSet := by
         intro phi hphi
         exact hdegreeZero phi ⟨integerSpan_mono hSsubY hphi.1, hphi.2⟩
@@ -11323,7 +11323,7 @@ public theorem huppert_XI_6_5_abelian_frobenius_nonker_family
         (Section1.inducedCFLinear N) ∧
       (∀ phi : Section1.ClassFunction N,
         Section5.integerSpanOn Y Section5.puncturedSet phi →
-          Representation.IsVirtualCharacter
+          Theory.Character.IsVirtualCharacter
               (Section1.inducedCFLinear N phi) ∧
             Section1.supportedOn (Section1.inducedCFLinear N phi)
               Section5.puncturedSet) ∧

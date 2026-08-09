@@ -5,7 +5,7 @@ import FeitThompson.PFsection5.PFsection5_6
 import FeitThompson.PFsection5.PFsection5_7
 import FeitThompson.PFsection1.PFsection1_6
 import FeitThompson.PFsection1.PFsection1_7_Core
-import FeitThompson.Representation.DegreeBounds
+import Theory.Character.DegreeBounds
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_5_c
@@ -227,7 +227,7 @@ theorem theorem_6_6_scalarProduct_self_irreducible
     Section1.scalarProduct L χ χ = 1 := by
   rcases hχ with ⟨_n, ρ, hρirr, hχchar⟩
   rw [hχchar]
-  exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+  exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
 theorem theorem_6_6_cfNormSq_irreducible
     {L : Type u} [Group L] [Finite L]
@@ -301,7 +301,7 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
   rcases hθirr with ⟨dθ, ρ, hρirr, hθeq⟩
   have hdθ_dvd : dθ ∣ Nat.card K := by
     letI : Representation.IsIrreducible ρ := hρirr
-    simpa using Representation.irreducible_dimension_dvd_group_order ρ
+    simpa using Theory.Character.irreducible_dimension_dvd_group_order ρ
   have hKcardF : Fintype.card K = p ^ m := by
     simpa [Nat.card_eq_fintype_card] using hKcard
   have hdθ_dvd_pow : dθ ∣ p ^ m := by
@@ -316,7 +316,7 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
 theorem theorem_6_6_centralModulo_bot_of_centerIn
     {L : Type u} [Group L] {K Z : Subgroup L}
     (hZcenter : Z ≤ centerIn K) :
-    Representation.IsCentralModulo (⊥ : Subgroup K) (Z.subgroupOf K) := by
+    Theory.Character.IsCentralModulo (⊥ : Subgroup K) (Z.subgroupOf K) := by
   intro d hd c
   change ⁅d, c⁆ = 1
   apply Subtype.ext
@@ -357,7 +357,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
   rcases hθirr with ⟨dθ, ρ, hρirr, hθeq⟩
   have hdθ_dvd : dθ ∣ Nat.card K := by
     letI : Representation.IsIrreducible ρ := hρirr
-    simpa using Representation.irreducible_dimension_dvd_group_order ρ
+    simpa using Theory.Character.irreducible_dimension_dvd_group_order ρ
   rcases hKp.exists_card_eq with ⟨mK, hKcard⟩
   have hKcardF : Fintype.card K = p ^ mK := by
     simpa [Nat.card_eq_fintype_card] using hKcard
@@ -373,7 +373,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
   have hdim_bound : dθ ^ (2 : ℕ) ≤ Z.relIndex K := by
     letI : Representation.IsIrreducible ρ := hρirr
     have hcentral :
-        Representation.IsCentralModulo (⊥ : Subgroup K) (Z.subgroupOf K) :=
+        Theory.Character.IsCentralModulo (⊥ : Subgroup K) (Z.subgroupOf K) :=
       theorem_6_6_centralModulo_bot_of_centerIn hZcenter
     have hBker : ∀ b : (⊥ : Subgroup K),
         ρ b = (1 : Module.End ℂ (Fin dθ → ℂ)) := by
@@ -384,7 +384,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
     change dθ ^ (2 : ℕ) ≤ (Z.subgroupOf K).index
     have hfinrank : Module.finrank ℂ (Fin dθ → ℂ) = dθ := by simp
     rw [← hfinrank]
-    exact Representation.irreducible_finrank_sq_le_index_of_centralModulo_kernel
+    exact Theory.Character.irreducible_finrank_sq_le_index_of_centralModulo_kernel
       (ρ := ρ) (⊥ : Subgroup K) (Z.subgroupOf K) hBker hcentral
   have hpale : p ^ (2 * a) ≤ Z.relIndex K := by
     calc
@@ -682,12 +682,12 @@ theorem theorem_6_6_sum_sdiff_subtype_add_sum_subtype
 public theorem theorem_6_6_complete_sum_degree_normSq
     {G : Type u} [Group G] [Finite G]
     {ι : Type v} [Fintype ι]
-    (χ : ι → Representation.ClassFunction G)
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ) :
+    (χ : ι → Theory.Character.ConjClassFunction G)
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ) :
     ∑ i : ι, Complex.normSq (χ i (ConjClasses.mk (1 : G))) =
       (Nat.card G : ℝ) := by
   classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := G) with
     ⟨κ, hκ, η, hη, hsumη⟩
   letI : Fintype κ := hκ
@@ -722,7 +722,7 @@ theorem theorem_6_6_toConjClassFunction_irreducible
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Representation.IsIrreducibleCharacter
+    Theory.Character.IsIrreducibleConjCharacter
       (Section1.toConjClassFunction χ
         (theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup hχ)) := by
   rcases hχ with ⟨n, ρ, hρirr, hχeq⟩
@@ -730,36 +730,36 @@ theorem theorem_6_6_toConjClassFunction_irreducible
     ⟨n, ρ, hρirr, hχeq⟩
   have htoeq :
       Section1.toConjClassFunction χ hχclass =
-        Representation.characterClassFunction ρ := by
+        Theory.Character.characterClassFunction ρ := by
     apply Section1.toConjClassFunction_eq_of_apply
     intro g
     rw [hχeq]
     rfl
   refine ⟨⟨n, ρ, htoeq⟩, ?_⟩
   rw [htoeq]
-  exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+  exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
 
 theorem theorem_6_6_ofConjClassFunction_irreducibleOnGroup
     {G : Type u} [Group G] [Finite G]
-    {Φ : Representation.ClassFunction G}
-    (hΦ : Representation.IsIrreducibleCharacter Φ) :
+    {Φ : Theory.Character.ConjClassFunction G}
+    (hΦ : Theory.Character.IsIrreducibleConjCharacter Φ) :
     Section1.IsIrreducibleCharacterOnGroup (Section1.ofConjClassFunction Φ) := by
   rcases hΦ with ⟨hchar, hnormΦ⟩
   rcases hchar with ⟨n, ρ, hΦeq⟩
-  have hnormρ : Representation.classFunctionInner
-      (Representation.characterClassFunction ρ)
-      (Representation.characterClassFunction ρ) = 1 := by
+  have hnormρ : Theory.Character.classFunctionInner
+      (Theory.Character.characterClassFunction ρ)
+      (Theory.Character.characterClassFunction ρ) = 1 := by
     simpa [hΦeq] using hnormΦ
   have hρirr : Representation.IsIrreducible ρ :=
-    (Representation.irreducible_iff_character_norm_one (ρ := ρ)).2 hnormρ
+    (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).2 hnormρ
   refine ⟨n, ρ, hρirr, ?_⟩
   rw [hΦeq]
   exact Section1.ofConjClassFunction_characterClassFunction ρ
 
 noncomputable def theorem_6_6_quotientInflationConj
     {L : Type u} [Group L] {Z : Subgroup L} [Z.Normal]
-    (Φ : Representation.ClassFunction (L ⧸ Z)) :
-    Representation.ClassFunction L :=
+    (Φ : Theory.Character.ConjClassFunction (L ⧸ Z)) :
+    Theory.Character.ConjClassFunction L :=
   Section1.toConjClassFunction
     (fun g : L => Φ (ConjClasses.mk (QuotientGroup.mk' Z g)))
     (by
@@ -774,7 +774,7 @@ noncomputable def theorem_6_6_quotientInflationConj
 
 theorem theorem_6_6_quotientInflationConj_kernel
     {L : Type u} [Group L] {Z : Subgroup L} [Z.Normal]
-    (Φ : Representation.ClassFunction (L ⧸ Z)) :
+    (Φ : Theory.Character.ConjClassFunction (L ⧸ Z)) :
     Section1.subgroupInKernel'
       (Section1.ofConjClassFunction
         (theorem_6_6_quotientInflationConj (Z := Z) Φ)) Z := by
@@ -794,25 +794,25 @@ theorem theorem_6_6_quotientInflationConj_kernel
 
 theorem theorem_6_6_quotientInflationConj_irreducible
     {L : Type u} [Group L] [Finite L] {Z : Subgroup L} [Z.Normal]
-    {Φ : Representation.ClassFunction (L ⧸ Z)}
-    (hΦ : Representation.IsIrreducibleCharacter Φ) :
-    Representation.IsIrreducibleCharacter
+    {Φ : Theory.Character.ConjClassFunction (L ⧸ Z)}
+    (hΦ : Theory.Character.IsIrreducibleConjCharacter Φ) :
+    Theory.Character.IsIrreducibleConjCharacter
       (theorem_6_6_quotientInflationConj (Z := Z) Φ) := by
   rcases hΦ with ⟨hchar, hnormΦ⟩
   rcases hchar with ⟨n, ρ, hΦeq⟩
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   let ρL : Representation ℂ L (Fin n → ℂ) := ρ.comp q
-  have hnormρ : Representation.classFunctionInner
-      (Representation.characterClassFunction ρ)
-      (Representation.characterClassFunction ρ) = 1 := by
+  have hnormρ : Theory.Character.classFunctionInner
+      (Theory.Character.characterClassFunction ρ)
+      (Theory.Character.characterClassFunction ρ) = 1 := by
     simpa [hΦeq] using hnormΦ
   have hρirr : Representation.IsIrreducible ρ :=
-    (Representation.irreducible_iff_character_norm_one (ρ := ρ)).2 hnormρ
+    (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).2 hnormρ
   have hρcompirr : Representation.IsIrreducible ρL := by
     exact representation_isIrreducible_comp_surjective ρ q
       (QuotientGroup.mk'_surjective Z) hρirr
   have hchar_eq : theorem_6_6_quotientInflationConj (Z := Z) Φ =
-      Representation.characterClassFunction ρL := by
+      Theory.Character.characterClassFunction ρL := by
     ext c
     rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
     change Φ (ConjClasses.mk (q g)) = ρL.character g
@@ -821,7 +821,7 @@ theorem theorem_6_6_quotientInflationConj_irreducible
   refine ⟨?_, ?_⟩
   · exact ⟨n, ρL, hchar_eq⟩
   · have hnorm :=
-      (Representation.irreducible_iff_character_norm_one (ρ := ρL)).1 hρcompirr
+      (Theory.Character.irreducible_iff_character_norm_one (ρ := ρL)).1 hρcompirr
     simpa [hchar_eq] using hnorm
 
 theorem theorem_6_6_completeFamily_with_nonkernel
@@ -831,30 +831,30 @@ theorem theorem_6_6_completeFamily_with_nonkernel
     (hXchar : ∀ χ : Section1.ClassFunction L, χ ∈ Xset ↔
       Section1.IsIrreducibleCharacterOnGroup χ ∧
         ¬ Section1.subgroupInKernel' χ Z) :
-    ∃ (κ : Type) (_ : Fintype κ) (η : κ → Representation.ClassFunction (L ⧸ Z)),
-      Representation.IsCompleteIrreducibleCharacterFamily η ∧
-        let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+    ∃ (κ : Type) (_ : Fintype κ) (η : κ → Theory.Character.ConjClassFunction (L ⧸ Z)),
+      Theory.Character.IsCompleteIrreducibleCharacterFamily η ∧
+        let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
           match s with
           | Sum.inl X =>
               Section1.toConjClassFunction (X : Section1.ClassFunction L)
                 (theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup
                   ((hXchar (X : Section1.ClassFunction L)).1 X.2).1)
           | Sum.inr k => theorem_6_6_quotientInflationConj (Z := Z) (η k)
-        Representation.IsCompleteIrreducibleCharacterFamily fam := by
+        Theory.Character.IsCompleteIrreducibleCharacterFamily fam := by
   classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := L ⧸ Z) with
     ⟨κ, hκ, η, hη, _hsumη⟩
   letI : Fintype κ := hκ
   refine ⟨κ, hκ, η, hη, ?_⟩
-  let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+  let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
         Section1.toConjClassFunction (X : Section1.ClassFunction L)
           (theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup
             ((hXchar (X : Section1.ClassFunction L)).1 X.2).1)
     | Sum.inr k => theorem_6_6_quotientInflationConj (Z := Z) (η k)
-  change Representation.IsCompleteIrreducibleCharacterFamily fam
+  change Theory.Character.IsCompleteIrreducibleCharacterFamily fam
   refine ⟨?_, ?_, ?_⟩
   · intro s
     cases s with
@@ -886,12 +886,12 @@ theorem theorem_6_6_completeFamily_with_nonkernel
         apply representation_isIrreducible_of_comp_surjective ρq q
           (QuotientGroup.mk'_surjective Z)
         simpa [hcomp_eq] using hρirr
-      have hρqChar : Representation.IsIrreducibleCharacter
-          (Representation.characterClassFunction ρq) := by
+      have hρqChar : Theory.Character.IsIrreducibleConjCharacter
+          (Theory.Character.characterClassFunction ρq) := by
         refine ⟨⟨n, ρq, rfl⟩, ?_⟩
         exact
-          (Representation.irreducible_iff_character_norm_one (ρ := ρq)).1 hρqirr
-      rcases hη.2.1 (Representation.characterClassFunction ρq) hρqChar with
+          (Theory.Character.irreducible_iff_character_norm_one (ρ := ρq)).1 hρqirr
+      rcases hη.2.1 (Theory.Character.characterClassFunction ρq) hρqChar with
         ⟨k, hk⟩
       refine ⟨Sum.inr k, ?_⟩
       dsimp [fam]
@@ -997,9 +997,9 @@ theorem theorem_6_6_scalarProduct_regularCharacter_left_of_value_one
 
 theorem theorem_6_6_classFunctionInner_regularCharacter_left
     {G : Type u} [Group G] [Finite G]
-    {Χ : Representation.ClassFunction G} {d : ℂ}
+    {Χ : Theory.Character.ConjClassFunction G} {d : ℂ}
     (hΧ : Χ (ConjClasses.mk (1 : G)) = d) :
-    Representation.classFunctionInner
+    Theory.Character.classFunctionInner
         (Section1.toConjClassFunction (regularCharacter G)
           (theorem_6_6_regularCharacter_isClassFunction (G := G))) Χ =
       star d := by
@@ -1011,24 +1011,24 @@ theorem theorem_6_6_classFunctionInner_regularCharacter_left
 public theorem theorem_6_6_completeFamily_weighted_sum_eq_regular
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {χ : ι → Representation.ClassFunction G}
-    (hχ : Representation.IsCompleteIrreducibleCharacterFamily χ)
+    {χ : ι → Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ)
     (deg : ι → ℂ)
     (hdeg : ∀ i, χ i (ConjClasses.mk (1 : G)) = deg i)
     (g : G) :
     regularCharacter G g =
       ∑ i : ι, star (deg i) * χ i (ConjClasses.mk g) := by
   classical
-  let Ρ : Representation.ClassFunction G :=
+  let Ρ : Theory.Character.ConjClassFunction G :=
     Section1.toConjClassFunction (regularCharacter G)
       (theorem_6_6_regularCharacter_isClassFunction (G := G))
-  have h := Representation.completeFamily_apply_eq_sum_inner hχ Ρ (ConjClasses.mk g)
+  have h := Theory.Character.completeFamily_apply_eq_sum_inner hχ Ρ (ConjClasses.mk g)
   change regularCharacter G g =
-      ∑ i : ι, Representation.classFunctionInner Ρ (χ i) *
+      ∑ i : ι, Theory.Character.classFunctionInner Ρ (χ i) *
         χ i (ConjClasses.mk g) at h
   calc
     regularCharacter G g =
-        ∑ i : ι, Representation.classFunctionInner Ρ (χ i) *
+        ∑ i : ι, Theory.Character.classFunctionInner Ρ (χ i) *
           χ i (ConjClasses.mk g) := h
     _ = ∑ i : ι, star (deg i) * χ i (ConjClasses.mk g) := by
       refine Finset.sum_congr rfl ?_
@@ -1052,7 +1052,7 @@ public theorem theorem_6_6_Xset_sum_degree_sq_add_quotient_card
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
   letI : Fintype κ := hκ
-  let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+  let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
         Section1.toConjClassFunction (X : Section1.ClassFunction L)
@@ -1120,7 +1120,7 @@ public theorem theorem_6_6_complete_nonkernel_degree_data
             (∑ X : Xset, degX X ^ (2 : ℕ)) + Nat.card (L ⧸ Z) =
               Nat.card L := by
   classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := L) with
     ⟨ι, hι, χ, hχ, _hsumχ⟩
   letI : Fintype ι := hι
@@ -1153,19 +1153,19 @@ public theorem theorem_6_6_complete_nonkernel_degree_data
         rw [hχ0eq]
         simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
       have hχ0rep :
-          Representation.IsIrreducibleCharacter
+          Theory.Character.IsIrreducibleConjCharacter
             (Section1.toConjClassFunction χ0 hχ0class) := by
         rcases hχ0.1 with ⟨n, ρ, hρirr, hχ0eq⟩
         have htoeq :
             Section1.toConjClassFunction χ0 hχ0class =
-              Representation.characterClassFunction ρ := by
+              Theory.Character.characterClassFunction ρ := by
           apply Section1.toConjClassFunction_eq_of_apply
           intro g
           rw [hχ0eq]
           rfl
         refine ⟨⟨n, ρ, htoeq⟩, ?_⟩
         rw [htoeq]
-        exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+        exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
       rcases hχ.2.1 (Section1.toConjClassFunction χ0 hχ0class) hχ0rep with
         ⟨i, hi⟩
       have hiχ : θ i = χ0 := by
@@ -1211,7 +1211,7 @@ public theorem theorem_6_6_Xset_weighted_degree_sum_eq_card_sub_quotient_at_one
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
   letI : Fintype κ := hκ
-  let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+  let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
         Section1.toConjClassFunction (X : Section1.ClassFunction L)
@@ -1317,7 +1317,7 @@ public theorem theorem_6_6_Xset_weighted_degree_sum_eq_neg_quotient_card_of_mem_
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
   letI : Fintype κ := hκ
-  let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+  let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
         Section1.toConjClassFunction (X : Section1.ClassFunction L)
@@ -1432,29 +1432,29 @@ public theorem theorem_6_6_orthogonal_Xset_complement_subgroupInKernel
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
   letI : Fintype κ := hκ
-  let fam : Sum Xset κ → Representation.ClassFunction L := fun s =>
+  let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
         Section1.toConjClassFunction (X : Section1.ClassFunction L)
           (theorem_6_6_isClassFunction_of_irreducibleCharacterOnGroup
             ((hXchar (X : Section1.ClassFunction L)).1 X.2).1)
     | Sum.inr k => theorem_6_6_quotientInflationConj (Z := Z) (η k)
-  let Φ : Representation.ClassFunction L :=
+  let Φ : Theory.Character.ConjClassFunction L :=
     Section1.toConjClassFunction φ hφclass
   intro z
   have hsum_eq :
       (∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (z : L))) =
         (∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (1 : L))) := by
     refine Finset.sum_congr rfl ?_
     intro s _hs
     cases s with
     | inl X =>
         have hinner :
-            Representation.classFunctionInner Φ (fam (Sum.inl X)) = 0 := by
+            Theory.Character.classFunctionInner Φ (fam (Sum.inl X)) = 0 := by
           dsimp [Φ, fam]
           rw [Section1.classFunctionInner_toConjClassFunction]
           exact horth X
@@ -1479,26 +1479,26 @@ public theorem theorem_6_6_orthogonal_Xset_complement_subgroupInKernel
   have hz :
       Φ (ConjClasses.mk (z : L)) =
         ∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (z : L)) := by
     simpa [fam] using
-      (Representation.completeFamily_apply_eq_sum_inner hfam Φ
+      (Theory.Character.completeFamily_apply_eq_sum_inner hfam Φ
         (ConjClasses.mk (z : L)))
   have h1 :
       Φ (ConjClasses.mk (1 : L)) =
         ∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (1 : L)) := by
     simpa [fam] using
-      (Representation.completeFamily_apply_eq_sum_inner hfam Φ
+      (Theory.Character.completeFamily_apply_eq_sum_inner hfam Φ
         (ConjClasses.mk (1 : L)))
   calc
     φ (z : L) = Φ (ConjClasses.mk (z : L)) := rfl
     _ = ∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (z : L)) := hz
     _ = ∑ s : Sum Xset κ,
-          Representation.classFunctionInner Φ (fam s) *
+          Theory.Character.classFunctionInner Φ (fam s) *
             fam s (ConjClasses.mk (1 : L)) := hsum_eq
     _ = Φ (ConjClasses.mk (1 : L)) := h1.symm
     _ = Section1.degree φ := by rfl
@@ -1838,7 +1838,7 @@ theorem theorem_6_6_exists_irreducible_not_subgroupInKernel
         ¬ Section1.subgroupInKernel' χ Z := by
   classical
   obtain ⟨z, hz_ne⟩ := Subgroup.ne_bot_iff_exists_ne_one.mp hZne
-  rcases Representation.second_orthogonality (G := L) with ⟨ι, hι, χ, hχ, horth⟩
+  rcases Theory.Character.second_orthogonality (G := L) with ⟨ι, hι, χ, hχ, horth⟩
   letI : Fintype ι := hι
   by_contra hnone
   push Not at hnone
@@ -2278,8 +2278,8 @@ theorem theorem_6_6_exists_irreducible_constituent_of_subgroupRestriction
   obtain ⟨φ, hφirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
   letI : Nontrivial φ.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Representation.RepMap φ.toRepresentation ρK := by
-    refine Representation.RepMap.mk φ.toSubmodule.subtype ?_
+  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
+    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
     ext v
     rfl
@@ -2287,7 +2287,7 @@ theorem theorem_6_6_exists_irreducible_constituent_of_subgroupRestriction
     intro hzero
     obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
     have hval : incl v = 0 := by
-      simpa using congrArg (fun f : Representation.RepMap φ.toRepresentation ρK => f v) hzero
+      simpa using congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v) hzero
     have hsub : v = 0 := by
       apply Subtype.ext
       simpa [incl] using hval
@@ -2338,7 +2338,7 @@ theorem theorem_6_6_constituent_not_subgroupInKernel
   let indρθ : Representation ℂ L (Representation.IndV K.subtype ρθ) :=
     Representation.ind K.subtype ρθ
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
-    Representation.finiteDimensional_ind K ρθ
+    Theory.Representation.finiteDimensional_ind K ρθ
   haveI : Z.Normal := hZnorm
   have hIndCharKer :
       Section1.subgroupInKernel' (Section1.inducedCF K ρθ.character) Z :=

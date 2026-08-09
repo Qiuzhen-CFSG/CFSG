@@ -5,7 +5,7 @@ Authors: OpenAI
 module
 
 public import BenderSuzuki.External.Isaacs.VII.problem_7_1
-import FeitThompson.Representation.CrossCharBrauer
+import Theory.Character.CrossCharBrauer
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 /-!
@@ -34,7 +34,7 @@ private noncomputable def isaacs_15_15_relative_actor_equiv
     (hpsiConj : forall h : H, forall n : N, psiConj h (h • n) = psi n)
     (h k : H) (e : psiConj h ≃ₗ psiConj k) :
     psi ≃ₗ psi.comp (MulDistribMulAction.toMonoidHom N (k⁻¹ * h)) := by
-  refine Representation.RepEquiv.mk e.toLinearEquiv ?_
+  refine Theory.Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro n
   ext v
   calc
@@ -56,12 +56,12 @@ private noncomputable def isaacs_15_15_actor_pow_equiv
   intro m
   induction m with
   | zero =>
-      refine Representation.RepEquiv.mk (LinearEquiv.refl E V) ?_
+      refine Theory.Representation.RepEquiv.mk (LinearEquiv.refl E V) ?_
       intro n
       ext v
       simp [MulDistribMulAction.toMonoidHom_apply]
   | succ m ih =>
-      refine Representation.RepEquiv.mk
+      refine Theory.Representation.RepEquiv.mk
         (e.toLinearEquiv.trans ih.toLinearEquiv) ?_
       intro n
       ext v
@@ -288,7 +288,7 @@ public theorem isaacs_lemma_15_15
       Nonempty (psi ≃ₗ psi.comp α.symm.toMonoidHom) := by
     rw [hαsymm]
     exact hstableb
-  rcases Representation.crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
+  rcases Theory.Character.crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
       hp hchar α hαpow psi hirr hnonprincipal hstable with
     ⟨x, hx, hxconj⟩
   exact isaacs_15_15_no_nontrivial_conj_of_fpf hfixed

@@ -4,7 +4,7 @@ public import FeitThompson.PFsection5.PFsection5_1
 public import FeitThompson.PFsection5.PFsection5_2
 public import FeitThompson.PFsection4.PFsection4_9
 public import FeitThompson.ChiefFactors.Core
-import FeitThompson.Representation.SolvableDimension
+import Theory.Representation.SolvableDimension
 
 /-!
 # Peterfalvi, Section 6: basic notation

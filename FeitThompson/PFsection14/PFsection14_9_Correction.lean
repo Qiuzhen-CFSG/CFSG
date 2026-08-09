@@ -226,11 +226,11 @@ public theorem section14_theorem_14_9_late_type_T1_fullData_transport_eq_of_cycl
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξ_class
   have htransportVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (d52.sigma (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtFull _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=
@@ -451,9 +451,9 @@ public theorem section14_principalInducedCharacter_sub_irreducible_isVirtualChar
     {G : Type u} [Group G] [Finite G]
     {L H : Subgroup G} {ζ : Section1.ClassFunction L}
     (hζ : Section1.IsIrreducibleCharacterOnGroup ζ) :
-    Representation.IsVirtualCharacter (Section7.principalInducedCharacter L H - ζ) := by
+    Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H - ζ) := by
   have hprincipalVirt :
-      Representation.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
+      Theory.Character.IsVirtualCharacter (Section7.principalInducedCharacter L H) := by
     unfold Section7.principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
@@ -476,7 +476,7 @@ public theorem section14_theorem_14_9_late_type_T1_tauT1_mem_isVirtualCharacter
     {τT τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
     (hcoh : Section6.coherentExtension T1T τT τT1)
     {ζ : Section1.ClassFunction Tmax} (hζ : ζ ∈ T1T) :
-    Representation.IsVirtualCharacter (τT1 ζ) :=
+    Theory.Character.IsVirtualCharacter (τT1 ζ) :=
   hcoh.2.1 ζ (Section5.integerSpan_of_mem T1T hζ)
 
 public theorem section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_betaT0
@@ -484,9 +484,9 @@ public theorem section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_b
     {Tmax : Subgroup G}
     {τT τT1 : Section1.ClassFunction Tmax →ₗ[ℂ] Section1.ClassFunction G}
     {βT0 ζ : Section1.ClassFunction Tmax}
-    (hβT0 : Representation.IsVirtualCharacter (τT βT0))
-    (hζ : Representation.IsVirtualCharacter (τT1 ζ)) :
-    Representation.IsVirtualCharacter
+    (hβT0 : Theory.Character.IsVirtualCharacter (τT βT0))
+    (hζ : Theory.Character.IsVirtualCharacter (τT1 ζ)) :
+    Theory.Character.IsVirtualCharacter
       (τT βT0 - Section1.principalCharacter G + τT1 ζ) := by
     exact Section3.isVirtualCharacter_add
       (Section3.isVirtualCharacter_sub hβT0
@@ -838,9 +838,9 @@ public theorem section14_theorem_14_9_late_type_T1_tauT_isVirtualCharacter_of_bo
     (hCalT1 : Section9.kernelInducedFamily Tmax (Q ⊔ V) (Q ⊔ V) Q T1T)
     {ζ : Section1.ClassFunction Tmax} (hζ : ζ ∈ T1T)
     (hβT0Virt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ)) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (τT (Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ)) := by
   classical
   rcases
@@ -2583,11 +2583,11 @@ a non-base local row; its local column need not be the base column. -/
         _hωloc, hIso, hVirt, _hPrin, _hσAgreeCyc, _h45, _h48,
         _hTauA0, _hFull⟩
     have hξloc_virt :
-        Representation.IsVirtualCharacter
+        Theory.Character.IsVirtualCharacter
           (Section6.theorem_6_8_transportClassFunction e ξ) :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hξloc_irr
     have himage_virt :
-        Representation.IsVirtualCharacter
+        Theory.Character.IsVirtualCharacter
           (σloc (Section6.theorem_6_8_transportClassFunction e ξ)) :=
       hVirt _ hξloc_virt
     have hselfW : Section1.scalarProduct W ξ ξ = 1 :=
@@ -3720,28 +3720,28 @@ public theorem section14_theorem_14_9_late_type_T1_delta_correction_source_bridg
   have hζIrr : Section1.IsIrreducibleCharacterOnGroup ζ := hIrr ζ hζ
   let βT0 : Section1.ClassFunction Tmax :=
     Section7.principalInducedCharacter Tmax (Q ⊔ V) - ζ
-  have hβT0Virt : Representation.IsVirtualCharacter βT0 := by
+  have hβT0Virt : Theory.Character.IsVirtualCharacter βT0 := by
     simpa [βT0] using
       section14_principalInducedCharacter_sub_irreducible_isVirtualCharacter
         (L := Tmax) (H := Q ⊔ V) (ζ := ζ) hζIrr
   let Δ : Section1.ClassFunction G :=
     τT βT0 - Section1.principalCharacter G + τT1 ζ
-  have hτT1ζVirt : Representation.IsVirtualCharacter (τT1 ζ) :=
+  have hτT1ζVirt : Theory.Character.IsVirtualCharacter (τT1 ζ) :=
     section14_theorem_14_9_late_type_T1_tauT1_mem_isVirtualCharacter hcoh hζ
   have hΔVirt_of_βT0 :
-      Representation.IsVirtualCharacter (τT βT0) →
-        Representation.IsVirtualCharacter Δ := by
+      Theory.Character.IsVirtualCharacter (τT βT0) →
+        Theory.Character.IsVirtualCharacter Δ := by
     intro hβT0Virt
     dsimp [Δ]
     exact section14_theorem_14_9_late_type_T1_delta_isVirtualCharacter_of_betaT0
       hβT0Virt hτT1ζVirt
-  have hτTβT0Virt_book : Representation.IsVirtualCharacter (τT βT0) := by
+  have hτTβT0Virt_book : Theory.Character.IsVirtualCharacter (τT βT0) := by
     simpa [βT0] using
       section14_theorem_14_9_late_type_T1_tauT_isVirtualCharacter_of_book_AZero
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT p q u v c d
         hctx hLateType hTtypeP hCalT1 hζ (by
           simpa [βT0] using hβT0Virt)
-  have hΔVirt : Representation.IsVirtualCharacter Δ :=
+  have hΔVirt : Theory.Character.IsVirtualCharacter Δ :=
     hΔVirt_of_βT0 hτTβT0Virt_book
   refine ⟨Δ, ?_⟩
   -- `betaT0 := nu_ 0 - zeta`;

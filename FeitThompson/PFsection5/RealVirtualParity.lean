@@ -21,15 +21,15 @@ public theorem real_virtual_principal_orthogonal_scalarProduct_even
     {G : Type u} [Group G] [Finite G]
     {Γ Δ : Section1.ClassFunction G}
     (hodd : Odd (Nat.card G))
-    (hΓvirt : Representation.IsVirtualCharacter Γ)
+    (hΓvirt : Theory.Character.IsVirtualCharacter Γ)
     (hΓreal : Γ = Section1.conjugateCharacter Γ)
     (hΓone : Section1.scalarProduct G Γ (Section1.principalCharacter G) = 0)
-    (hΔvirt : Representation.IsVirtualCharacter Δ)
+    (hΔvirt : Theory.Character.IsVirtualCharacter Δ)
     (hΔreal : Δ = Section1.conjugateCharacter Δ) :
     ∃ m : ℤ, Section1.scalarProduct G Γ Δ = ((2 * m : ℤ) : ℂ) := by
   classical
   have ofConjClassFunction_injective
-      {φ ψ : Representation.ClassFunction G}
+      {φ ψ : Theory.Character.ConjClassFunction G}
       (h : Section1.ofConjClassFunction φ = Section1.ofConjClassFunction ψ) :
       φ = ψ := by
     ext c
@@ -37,11 +37,11 @@ public theorem real_virtual_principal_orthogonal_scalarProduct_even
     exact congrFun h g
   have virtualCharacter_isClassFunction
       {φ : Section1.ClassFunction G}
-      (hφ : Representation.IsVirtualCharacter φ) :
+      (hφ : Theory.Character.IsVirtualCharacter φ) :
       Section1.IsClassFunction φ := by
     rcases hφ with ⟨r, m, n, ρ, rfl⟩
     intro x g
-    unfold Representation.virtualCharacterOfRepresentations
+    unfold Theory.Character.virtualCharacterOfRepresentations
     refine Finset.sum_congr rfl ?_
     intro i _hi
     have hchar :
@@ -54,7 +54,7 @@ public theorem real_virtual_principal_orthogonal_scalarProduct_even
     rw [Section1.isCharacter_isClassFunction ((ρ i).character) hchar x g]
   have scalarProduct_virtual_character_int
       {φ ψ : Section1.ClassFunction G}
-      (hφ : Representation.IsVirtualCharacter φ)
+      (hφ : Theory.Character.IsVirtualCharacter φ)
       (hψ : Section1.IsCharacter ψ) :
       ∃ z : ℤ, Section1.scalarProduct G φ ψ = (z : ℂ) := by
     rcases hφ with ⟨r, m, n, ρ, rfl⟩
@@ -116,7 +116,7 @@ public theorem real_virtual_principal_orthogonal_scalarProduct_even
               (congrArg star (scalarProduct_conjugate_left φ ψ)).symm
       _ = star (Section1.scalarProduct G φ ψ) := by rw [← hφreal]
       _ = Section1.scalarProduct G φ ψ := by rw [hz]; simp
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -141,10 +141,10 @@ public theorem real_virtual_principal_orthogonal_scalarProduct_even
       intro i
       rcases Section1.isIrreducibleCharacterOnGroup_conjugateCharacter
           (hμ_irred i) with ⟨n, ρ, hρirr, hρchar⟩
-      let ψ : Representation.ClassFunction G := Representation.characterClassFunction ρ
-      have hψirr : Representation.IsIrreducibleCharacter ψ := by
+      let ψ : Theory.Character.ConjClassFunction G := Theory.Character.characterClassFunction ρ
+      have hψirr : Theory.Character.IsIrreducibleConjCharacter ψ := by
         refine ⟨⟨n, ρ, rfl⟩, ?_⟩
-        exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+        exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
       rcases hχ.2.1 ψ hψirr with ⟨j, hj⟩
       refine ⟨j, ?_⟩
       calc

@@ -554,7 +554,7 @@ private theorem isVirtualCharacter_of_signedIrreducible_pf56
     {G : Type*} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section3.IsSignedIrreducibleCharacter χ) :
-    Representation.IsVirtualCharacter χ := by
+    Theory.Character.IsVirtualCharacter χ := by
   rcases hχ with ⟨ε, hε, μ, hμ, rfl⟩
   rcases hε with rfl | rfl
   · simpa using Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hμ
@@ -654,28 +654,28 @@ private theorem cfNormSq_weightedFamilySum_orthogonal_real_pf56
 private theorem isVirtualCharacter_zsmul_pf56
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {χ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter (n • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum_pf56
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i), (fun i => nomatch i), ?_⟩
       ext g
-      simp [Representation.virtualCharacterOfRepresentations]
+      simp [Theory.Character.virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
-      have ha' : Representation.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+      have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
         refine ih ?_
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi)
@@ -685,9 +685,9 @@ private theorem isVirtualCharacter_evalCoeff_pf56
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : ι → Section1.ClassFunction G)
-    (hμ : ∀ i, Representation.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Representation.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   refine isVirtualCharacter_finset_sum_pf56 (Finset.univ : Finset ι)
@@ -963,7 +963,7 @@ private theorem orthogonal_projection_decomposition_pf56
     {R : Finset (Section1.ClassFunction G)}
     (hR : signedOrthonormalFinset R)
     {η : Section1.ClassFunction G}
-    (hηvirt : Representation.IsVirtualCharacter η) :
+    (hηvirt : Theory.Character.IsVirtualCharacter η) :
     ∃ Xbig Y : Section1.ClassFunction G,
       integerSpan R Xbig ∧
       orthogonalToFinset R Y ∧
@@ -1068,8 +1068,8 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
     (hτ1_iso : isCFLinearIsometryOnSpan S1 τ1)
     (hτ1_virt : mapsIntegerSpanToVirtualCharacters S1 τ1)
     (hτ1_agree : agreesOnIntegerSpanOn S1 puncturedSet T τ1)
-    (hX_virt : Representation.IsVirtualCharacter X)
-    (hXbar_virt : Representation.IsVirtualCharacter Xbar)
+    (hX_virt : Theory.Character.IsVirtualCharacter X)
+    (hXbar_virt : Theory.Character.IsVirtualCharacter Xbar)
     (hOld_X_zero :
       ∀ Y0 : S1, Section1.scalarProduct G (τ1 (Y0 : Section1.ClassFunction L)) X = 0)
     (hX_old_zero :
@@ -1294,7 +1294,7 @@ private theorem theorem_5_6_3_extend_from_candidate_pf56
     rcases hη with ⟨v, hv⟩
     let μT : Snew → Section1.ClassFunction G :=
       fun Y => Tnew (Y : Section1.ClassFunction L)
-    have hμTvirt : ∀ Y : Snew, Representation.IsVirtualCharacter (μT Y) := by
+    have hμTvirt : ∀ Y : Snew, Theory.Character.IsVirtualCharacter (μT Y) := by
       intro Y
       by_cases hYold : (Y : Section1.ClassFunction L) ∈ S1
       · let Y0 : S1 := ⟨(Y : Section1.ClassFunction L), hYold⟩
@@ -1643,8 +1643,8 @@ private theorem theorem_5_6_3_extend_coherent_with_candidate_source
     (hdiffχ_on : Section1.supportedOn (χ - χbar) puncturedSet)
     (htransform : T (χ - ψ) = X - τ1 ψ) :
     ∃ Xbar : Section1.ClassFunction G,
-      Representation.IsVirtualCharacter X ∧
-        Representation.IsVirtualCharacter Xbar ∧
+      Theory.Character.IsVirtualCharacter X ∧
+        Theory.Character.IsVirtualCharacter Xbar ∧
           (∀ Y0 : S1,
             Section1.scalarProduct G (τ1 (Y0 : Section1.ClassFunction L)) X = 0) ∧
           (∀ Y0 : S1,
@@ -1674,11 +1674,11 @@ private theorem theorem_5_6_3_extend_coherent_with_candidate_source
   have hχbar_span_S : integerSpan S χbar := integerSpan_of_mem_pf56 S hχbarS
   have hdiffχ_memOn : integerSpanOn S puncturedSet (χ - χbar) :=
     ⟨integerSpan_sub_pf56 hχ_span_S hχbar_span_S, hdiffχ_on⟩
-  have hTdiffψ_virt : Representation.IsVirtualCharacter (T (χ - ψ)) :=
+  have hTdiffψ_virt : Theory.Character.IsVirtualCharacter (T (χ - ψ)) :=
     (h52b.2 (χ - ψ) hdiffψ_memOn).1
-  have hTdiffχ_virt : Representation.IsVirtualCharacter (T (χ - χbar)) :=
+  have hTdiffχ_virt : Theory.Character.IsVirtualCharacter (T (χ - χbar)) :=
     (h52b.2 (χ - χbar) hdiffχ_memOn).1
-  have hτ1ψ_virt : Representation.IsVirtualCharacter (τ1 ψ) :=
+  have hτ1ψ_virt : Theory.Character.IsVirtualCharacter (τ1 ψ) :=
     hτ1_virt ψ hψ_span
   have hτ1ψ_X : Section1.scalarProduct G (τ1 ψ) X = 0 :=
     scalarProduct_zero_swap_pf56 hX_orth_τ1ψ
@@ -1724,10 +1724,10 @@ private theorem theorem_5_6_3_extend_coherent_with_candidate_source
         simp [sub_eq_add_neg]
       _ = T (χ - ψ) + τ1 ψ := by
         rw [← htransform]
-  have hXvirt : Representation.IsVirtualCharacter X := by
+  have hXvirt : Theory.Character.IsVirtualCharacter X := by
     rw [hX_eq]
     exact Section3.isVirtualCharacter_add hTdiffψ_virt hτ1ψ_virt
-  have hXbarvirt : Representation.IsVirtualCharacter Xbar := by
+  have hXbarvirt : Theory.Character.IsVirtualCharacter Xbar := by
     dsimp [Xbar]
     exact Section3.isVirtualCharacter_sub hXvirt hTdiffχ_virt
   rcases theorem_5_6_3_extend_coherent_with_candidate_orthogonal_gram_source
@@ -2292,7 +2292,7 @@ public theorem theorem_5_6
   have hToldX1_subsetOld :
       isSubsetSumOf (R ⟨χ1, hS1subset X1.2⟩) (Told χ1) := hsubsetSum_old X1
   have hToldX1_orth : orthogonalToFinset (R X) (Told χ1) := hTold_orth_RX X1
-  have hToldX1_virt : Representation.IsVirtualCharacter (Told χ1) := hVirtOld χ1 hχ1_span_S1
+  have hToldX1_virt : Theory.Character.IsVirtualCharacter (Told χ1) := hVirtOld χ1 hχ1_span_S1
   have hχXχ1_zero :
       Section1.scalarProduct L χX χ1 = 0 := by
     exact h52c (χ := χX) (ψ := χ1) X.2 (hS1subset X1.2) (by
@@ -2340,7 +2340,7 @@ public theorem theorem_5_6
     exact (h52b.2 φ
       (integerSpanOn_of_generators_pf56 (S := S) (U := pairDiff) (A := puncturedSet)
         hpairDiff_gen hφ)).1
-  have hTdiffψ_virt : Representation.IsVirtualCharacter (T diffψ) :=
+  have hTdiffψ_virt : Theory.Character.IsVirtualCharacter (T diffψ) :=
     (h52b.2 diffψ hdiffψ_memOn).1
   rcases h52d X with ⟨hRX, hTdiffX⟩
   rcases orthogonal_projection_decomposition_pf56 (R := R X) hRX hTdiffψ_virt with
@@ -3247,14 +3247,14 @@ public theorem theorem_5_6
       _ = Section1.scalarProduct L χXbar χXbar := by
             rw [hsource_diffX_self, hXbig_self]
             ring
-  have hXbig_virt : Representation.IsVirtualCharacter Xbig := by
+  have hXbig_virt : Theory.Character.IsVirtualCharacter Xbig := by
     rw [hXbig_subset]
     refine isVirtualCharacter_finset_sum_pf56 E (fun φ => φ) ?_
     intro φ hφ
     exact isVirtualCharacter_of_signedIrreducible_pf56 (hRX.1 _ (hEsub hφ))
-  have hXbarimg_virt : Representation.IsVirtualCharacter Xbarimg := by
+  have hXbarimg_virt : Theory.Character.IsVirtualCharacter Xbarimg := by
     have hsum_virt :
-        Representation.IsVirtualCharacter (Finset.sum Ecomp (fun φ => φ)) := by
+        Theory.Character.IsVirtualCharacter (Finset.sum Ecomp (fun φ => φ)) := by
       refine isVirtualCharacter_finset_sum_pf56 Ecomp (fun φ => φ) ?_
       intro φ hφ
       exact isVirtualCharacter_of_signedIrreducible_pf56 (hRX.1 _ (hEcomp_subset hφ))
@@ -3381,7 +3381,7 @@ public theorem theorem_5_6
     intro χ hχ
     rcases hχ with ⟨v, hv⟩
     let μT : Snew → Section1.ClassFunction G := fun Y => Tnew (Y : Section1.ClassFunction L)
-    have hμTvirt : ∀ Y : Snew, Representation.IsVirtualCharacter (μT Y) := by
+    have hμTvirt : ∀ Y : Snew, Theory.Character.IsVirtualCharacter (μT Y) := by
       intro Y
       by_cases hYold : (Y : Section1.ClassFunction L) ∈ S1
       · let Y0 : S1 := ⟨(Y : Section1.ClassFunction L), hYold⟩

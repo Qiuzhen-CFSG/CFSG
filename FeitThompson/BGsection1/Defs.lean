@@ -56,8 +56,8 @@ public import FeitThompson.HallSubgroups.Existence
 public import FeitThompson.HallSubgroups.Conjugacy
 public import FeitThompson.PGroup.Omega
 import FeitThompson.PGroup.NormalSubgroups
-public import FeitThompson.Representation.CompleteReducibility
-public import FeitThompson.Representation.Maschke
+public import Theory.Representation.CompleteReducibility
+public import Theory.Representation.Maschke
 
 open scoped Pointwise
 

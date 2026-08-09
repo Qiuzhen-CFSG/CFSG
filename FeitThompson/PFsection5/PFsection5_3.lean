@@ -1,6 +1,6 @@
 module
 
-public import FeitThompson.Representation.RepEquiv
+public import Theory.Representation.RepEquiv
 public import FeitThompson.PFsection5.PFsection5_2
 public import FeitThompson.PFsection1.PFsection1_4
 public import FeitThompson.PFsection1.PFsection1_5
@@ -264,23 +264,23 @@ private theorem isBookIrreducibleCharacter_of_group_irreducible_pf53
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
     have htoeq :
         Section1.toConjClassFunction ρ.character hρclass =
-          Representation.characterClassFunction ρ := by
+          Theory.Character.characterClassFunction ρ := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
     calc
       Section1.scalarProduct X χ χ =
           Section1.scalarProduct X ρ.character ρ.character := by rw [hchar]
-      _ = Representation.classFunctionInner
+      _ = Theory.Character.classFunctionInner
           (Section1.toConjClassFunction ρ.character hρclass)
           (Section1.toConjClassFunction ρ.character hρclass) :=
         (Section1.classFunctionInner_toConjClassFunction
           ρ.character ρ.character hρclass hρclass).symm
-      _ = Representation.classFunctionInner
-          (Representation.characterClassFunction ρ)
-          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = Theory.Character.classFunctionInner
+          (Theory.Character.characterClassFunction ρ)
+          (Theory.Character.characterClassFunction ρ) := by rw [htoeq]
       _ = 1 :=
-        (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
+        (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hirr
 
 private noncomputable def standardizeRepresentation_pf53
     {G : Type u} {V : Type v} [Group G]
@@ -316,7 +316,7 @@ private theorem standardizeRepresentation_irreducible_pf53
     Representation.IsIrreducible (standardizeRepresentation_pf53 ρ) := by
   let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
   let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
-  let eRep : Representation.RepEquiv ρ (standardizeRepresentation_pf53 ρ) := by
+  let eRep : Theory.Representation.RepEquiv ρ (standardizeRepresentation_pf53 ρ) := by
     refine
       { toLinearEquiv := e
         isIntertwining' := ?_ }
@@ -325,7 +325,7 @@ private theorem standardizeRepresentation_irreducible_pf53
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
     simp [standardizeRepresentation_pf53, e, b, b.equivFun_apply]
-  exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
+  exact (Theory.Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private def dualCoannihilatorSubrepresentation_pf53
     {G V : Type*} [Group G] [AddCommGroup V] [Module ℂ V]
@@ -747,13 +747,13 @@ private theorem exists_sign_of_int_sq_sum_eq_one_pf53
 private theorem signed_irreducible_of_virtual_norm_one_pf53
     {G : Type u} [Group G] [Finite G]
     {φ : Section1.ClassFunction G}
-    (hvirt : Representation.IsVirtualCharacter φ)
+    (hvirt : Theory.Character.IsVirtualCharacter φ)
     (hself : Section1.scalarProduct G φ φ = 1) :
     Section3.IsSignedIrreducibleCharacter φ := by
   classical
   have hφclass : Section1.IsClassFunction φ :=
     Section3.isVirtualCharacter_isClassFunction hvirt
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   letI : Finite ι := Finite.of_fintype ι
@@ -799,7 +799,7 @@ private theorem signed_irreducible_of_virtual_norm_one_pf53
     intro ξ hξ
     rcases hall ξ hξ with ⟨i, rfl⟩
     calc
-      Representation.classFunctionInner
+      Theory.Character.classFunctionInner
           (Section1.toConjClassFunction φsum hφsumclass) (χ i) =
         Section1.scalarProduct G φsum (ψ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
@@ -809,7 +809,7 @@ private theorem signed_irreducible_of_virtual_norm_one_pf53
           exact Section1.scalarProduct_weightedFamilySum_left_orthonormal
             (w := fun i => (a i : ℂ)) (chi := ψ) horthψ i
       _ = Section1.scalarProduct G φ (ψ i) := (ha i).symm
-      _ = Representation.classFunctionInner
+      _ = Theory.Character.classFunctionInner
           (Section1.toConjClassFunction φ hφclass) (χ i) := by
           rw [← Section1.toConjClassFunction_ofConjClassFunction (χ i)]
           exact (Section1.classFunctionInner_toConjClassFunction
@@ -976,7 +976,7 @@ private noncomputable def pair_decomposition_of_irreducible_pf53
       (X : Section1.ClassFunction L)
   have hdiff_mem : integerSpanOn S puncturedSet diff :=
     difference_mem_integerSpanOn_of_irreducible_pf53 h52a hXirr
-  have hTvirt : Representation.IsVirtualCharacter (T diff) :=
+  have hTvirt : Theory.Character.IsVirtualCharacter (T diff) :=
     (h52b.2 diff hdiff_mem).1
   have hTsupport : Section1.supportedOn (T diff) puncturedSet :=
     (h52b.2 diff hdiff_mem).2
@@ -1019,13 +1019,13 @@ private noncomputable def pair_decomposition_of_irreducible_pf53
         (X : Section1.ClassFunction L)
         (X : Section1.ClassFunction L) = 1
       simpa [Section1.IsIrreducibleCharacter] using hXbook.2
-  let basisExist := Representation.irreducible_characters_form_basis (G := G)
+  let basisExist := Theory.Character.irreducible_characters_form_basis (G := G)
   let ι := Classical.choose basisExist
   let basisExist1 := Classical.choose_spec basisExist
   let instι : Fintype ι := Classical.choose basisExist1
   let basisExist2 := Classical.choose_spec basisExist1
   let χ := Classical.choose basisExist2
-  have hχ : Representation.IsCompleteIrreducibleCharacterFamily χ :=
+  have hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ :=
     (Classical.choose_spec basisExist2).1
   let basisExist3 := (Classical.choose_spec basisExist2).2
   let b := Classical.choose basisExist3
@@ -4134,19 +4134,19 @@ private theorem supportedOn_punctured_iff_supportedOn_of_supportedOn_withOne_pf5
 private theorem isVirtualCharacter_zsmul_pf53
     {H : Type u} [Group H] [Finite H]
     (n : ℤ) {χ : Section1.ClassFunction H}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter ((n : ℂ) • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter ((n : ℂ) • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_finset_sum_pf53
     {H : Type u} [Group H] [Finite H]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction H)
-    (hΦ : ∀ i ∈ s, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (s.sum Φ) := by
+    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (s.sum Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -4158,9 +4158,9 @@ private theorem isVirtualCharacter_finset_sum_pf53
           Section3.isVirtualCharacter_principalCharacter
           Section3.isVirtualCharacter_principalCharacter)
   | @insert a s ha ih =>
-      have ha' : Representation.IsVirtualCharacter (Φ a) :=
+      have ha' : Theory.Character.IsVirtualCharacter (Φ a) :=
         hΦ a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (s.sum Φ) := by
+      have hs' : Theory.Character.IsVirtualCharacter (s.sum Φ) := by
         exact ih (by
           intro i hi
           exact hΦ i (Finset.mem_insert_of_mem hi))
@@ -4170,9 +4170,9 @@ private theorem isVirtualCharacter_evalCoeff_pf53
     {H : Type u} [Group H] [Finite H]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : ι → Section1.ClassFunction H)
-    (hμ : ∀ i, Representation.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Representation.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   exact isVirtualCharacter_finset_sum_pf53 (Finset.univ : Finset ι)
@@ -4188,7 +4188,7 @@ private theorem integerSpan_virtual_of_induced_family_pf53
     (hInd : inducedFromNonkernelFamily_statement K H S)
     {χ : Section1.ClassFunction L}
     (hχ : integerSpan S χ) :
-    Representation.IsVirtualCharacter χ := by
+    Theory.Character.IsVirtualCharacter χ := by
   classical
   rcases hχ with ⟨v, rfl⟩
   refine isVirtualCharacter_evalCoeff_pf53
@@ -4365,9 +4365,9 @@ public theorem theorem_5_3_b_core_context_of_full_pf53
       _ = if p = q then 1 else 0 := hω.orthonormal p q
   have hChiSigned : ∀ i j, Section3.IsSignedIrreducibleCharacter (chi i j) := by
     intro i j
-    have hvirtW : Representation.IsVirtualCharacter (ω i j) :=
+    have hvirtW : Theory.Character.IsVirtualCharacter (ω i j) :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hω.irreducible i j)
-    have hvirtG : Representation.IsVirtualCharacter (σ (ω i j)) :=
+    have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
       hσvirt (ω i j) hvirtW
     have hself :
         Section1.scalarProduct G (σ (ω i j)) (σ (ω i j)) = 1 := by
@@ -4449,9 +4449,9 @@ public theorem theorem_5_3_b_core_context_of_supported_pf53
       _ = if p = q then 1 else 0 := hω.orthonormal p q
   have hChiSigned : ∀ i j, Section3.IsSignedIrreducibleCharacter (chi i j) := by
     intro i j
-    have hvirtW : Representation.IsVirtualCharacter (ω i j) :=
+    have hvirtW : Theory.Character.IsVirtualCharacter (ω i j) :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup (hω.irreducible i j)
-    have hvirtG : Representation.IsVirtualCharacter (σ (ω i j)) :=
+    have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
       hσvirt (ω i j) hvirtW
     have hself :
         Section1.scalarProduct G (σ (ω i j)) (σ (ω i j)) = 1 := by

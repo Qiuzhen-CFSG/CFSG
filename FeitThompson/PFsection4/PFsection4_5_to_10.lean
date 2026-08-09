@@ -3,7 +3,7 @@ module
 import FeitThompson.PFsection1.PFsection1_2
 import FeitThompson.PFsection1.PFsection1_5
 import FeitThompson.PFsection1.PFsection1_6
-import FeitThompson.Representation.RepEquiv
+import Theory.Representation.RepEquiv
 public import FeitThompson.PFsection4.PFsection4_9
 public import FeitThompson.PFsection4.PFsection4_7
 public import FeitThompson.PFsection4.PFsection4_10
@@ -796,7 +796,7 @@ private theorem standardizeRepresentation_irreducible_pf45
     Representation.IsIrreducible (standardizeRepresentation_pf45 ρ) := by
   let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
   let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
-  let eRep : Representation.RepEquiv ρ (standardizeRepresentation_pf45 ρ) := by
+  let eRep : Theory.Representation.RepEquiv ρ (standardizeRepresentation_pf45 ρ) := by
     refine
       { toLinearEquiv := e
         isIntertwining' := ?_ }
@@ -805,7 +805,7 @@ private theorem standardizeRepresentation_irreducible_pf45
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
     simp [standardizeRepresentation_pf45, e, b, b.equivFun_apply]
-  exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
+  exact (Theory.Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 private theorem isIrreducibleCharacterOnGroup_conjugateCharacter_pf45
     {G : Type u} [Group G] [Finite G]
@@ -1620,13 +1620,13 @@ private theorem irreducible_fixed_column_of_induced_eq_piColumn_pf45
             rw [hInd j]
       _ = 1 := hcolInner
   have hρKirr : Representation.IsIrreducible ρK := by
-    apply (Representation.irreducible_iff_character_norm_one (ρ := ρK)).2
+    apply (Theory.Character.irreducible_iff_character_norm_one (ρ := ρK)).2
     have hρKclass : Section1.IsClassFunction ρK.character := by
       intro x g
       simpa [mul_assoc] using Representation.char_conj (ρ := ρK) g x
     have htoeq :
         Section1.toConjClassFunction ρK.character hρKclass =
-          Representation.characterClassFunction ρK := by
+          Theory.Character.characterClassFunction ρK := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
@@ -2610,8 +2610,8 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_pf45
   letI : Nontrivial (Fin n → ℂ) := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨φ, hφirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
   letI : Nontrivial φ.toSubmodule := Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Representation.RepMap φ.toRepresentation ρK := by
-    refine Representation.RepMap.mk φ.toSubmodule.subtype ?_
+  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
+    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
     ext v
     rfl
@@ -2619,7 +2619,7 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_pf45
     intro hzero
     obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
     have hval : incl v = 0 := by
-      simpa using congrArg (fun f : Representation.RepMap φ.toRepresentation ρK => f v) hzero
+      simpa using congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v) hzero
     have hsub : v = 0 := by
       apply Subtype.ext
       simpa [incl] using hval
@@ -2830,7 +2830,7 @@ private theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_pf45
     {G : Type u} [Group G] [Finite G]
     {φ : ClassFunction G}
     (hφ : Section1.IsIrreducibleCharacterOnGroup φ) :
-    Representation.IsIrreducibleCharacter
+    Theory.Character.IsIrreducibleConjCharacter
       (Section1.toConjClassFunction φ
         (isClassFunction_of_irreducibleCharacterOnGroup_pf45 hφ)) := by
   classical
@@ -2841,38 +2841,38 @@ private theorem toConjClassFunction_isIrreducibleCharacter_of_onGroup_pf45
     rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
     rfl
   · have hnorm :=
-      (Representation.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
+      (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).1 hρirr
     have hρclass : Section1.IsClassFunction ρ.character := by
       intro x g
       simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
     have htoeq :
         Section1.toConjClassFunction ρ.character hρclass =
-          Representation.characterClassFunction ρ := by
+          Theory.Character.characterClassFunction ρ := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
     calc
       Section1.scalarProduct G ρ.character ρ.character =
-          Representation.classFunctionInner
+          Theory.Character.classFunctionInner
             (Section1.toConjClassFunction ρ.character hρclass)
             (Section1.toConjClassFunction ρ.character hρclass) :=
         (Section1.classFunctionInner_toConjClassFunction
           ρ.character ρ.character hρclass hρclass).symm
-      _ = Representation.classFunctionInner
-          (Representation.characterClassFunction ρ)
-          (Representation.characterClassFunction ρ) := by rw [htoeq]
+      _ = Theory.Character.classFunctionInner
+          (Theory.Character.characterClassFunction ρ)
+          (Theory.Character.characterClassFunction ρ) := by rw [htoeq]
       _ = 1 := hnorm
 
 private theorem ofConjClassFunction_isIrreducibleCharacterOnGroup_pf45
     {G : Type u} [Group G] [Finite G]
-    {χ : Representation.ClassFunction G}
-    (hχ : Representation.IsIrreducibleCharacter χ) :
+    {χ : Theory.Character.ConjClassFunction G}
+    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
     Section1.IsIrreducibleCharacterOnGroup
       (Section1.ofConjClassFunction χ) := by
   classical
   rcases hχ with ⟨⟨n, ρ, hχeq⟩, hnorm⟩
   refine ⟨n, ρ, ?_, ?_⟩
-  · exact (Representation.irreducible_iff_character_norm_one (ρ := ρ)).2
+  · exact (Theory.Character.irreducible_iff_character_norm_one (ρ := ρ)).2
       (by simpa [hχeq] using hnorm)
   · simpa [hχeq] using
       (Section1.ofConjClassFunction_characterClassFunction ρ)
@@ -2882,7 +2882,7 @@ private theorem irreducibleCharacterOnGroup_set_finite_pf45
     ({φ : ClassFunction G | Section1.IsIrreducibleCharacterOnGroup φ} :
       Set (ClassFunction G)).Finite := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   let χold : ι → ClassFunction G := fun i => Section1.ofConjClassFunction (χ i)
@@ -3108,9 +3108,9 @@ private theorem classFunctionConjLinearEquiv_toConjClassFunction_conjugateOnNorm
 private theorem classFunctionConjLinearEquiv_isIrreducibleCharacter_pf45
     {L : Type u} [Group L] [Finite L]
     (K : Subgroup L) [K.Normal] (g : L)
-    {χ : Representation.ClassFunction K}
-    (hχ : Representation.IsIrreducibleCharacter χ) :
-    Representation.IsIrreducibleCharacter
+    {χ : Theory.Character.ConjClassFunction K}
+    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
+    Theory.Character.IsIrreducibleConjCharacter
       (classFunctionConjLinearEquiv_pf45 K g χ) := by
   classical
   let X : ClassFunction K := Section1.ofConjClassFunction χ
@@ -3145,7 +3145,7 @@ private theorem classFunctionConjLinearEquiv_isIrreducibleCharacter_pf45
 private theorem classFunctionConjLinearEquiv_symm_apply_pf45
     {L : Type u} [Group L] [Finite L]
     (K : Subgroup L) [K.Normal] (g : L)
-    (χ : Representation.ClassFunction K) :
+    (χ : Theory.Character.ConjClassFunction K) :
     (classFunctionConjLinearEquiv_pf45 K g).symm χ =
       classFunctionConjLinearEquiv_pf45 K g⁻¹ χ := by
   ext c
@@ -3157,8 +3157,8 @@ private noncomputable def irreducibleConjClassFunctionPerm_pf45
     {L : Type u} [Group L] [Finite L]
     (K : Subgroup L) [K.Normal] (g : L) :
     Equiv.Perm
-      {χ : Representation.ClassFunction K //
-        Representation.IsIrreducibleCharacter χ} where
+      {χ : Theory.Character.ConjClassFunction K //
+        Theory.Character.IsIrreducibleConjCharacter χ} where
   toFun χ :=
     ⟨classFunctionConjLinearEquiv_pf45 K g χ.1,
       classFunctionConjLinearEquiv_isIrreducibleCharacter_pf45 K g χ.2⟩
@@ -3186,13 +3186,13 @@ private theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles_pf45
       ((Function.fixedPoints
           (irreducibleConjClassFunctionPerm_pf45 K g)).ncard : ℂ) := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := K) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := K) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   let f :
       ι →
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ} :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ} :=
     fun i => ⟨χ i, hχ.1 i⟩
   have hf_bij : Function.Bijective f := by
     constructor
@@ -3206,23 +3206,23 @@ private theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles_pf45
       exact hi
   let e :
       ι ≃
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ} :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ} :=
     Equiv.ofBijective f hf_bij
   letI : Fintype
-      {χ : Representation.ClassFunction K //
-        Representation.IsIrreducibleCharacter χ} :=
+      {χ : Theory.Character.ConjClassFunction K //
+        Theory.Character.IsIrreducibleConjCharacter χ} :=
     Fintype.ofEquiv ι e
   let bIrr :
       Module.Basis
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ}
-        ℂ (Representation.ClassFunction K) :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ}
+        ℂ (Theory.Character.ConjClassFunction K) :=
     b.reindex e
   have hbIrr :
       ∀ ψ :
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ},
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ},
         bIrr ψ = ψ.1 := by
     intro ψ
     dsimp [bIrr]
@@ -3367,13 +3367,13 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
           Section1.conjugateOnNormal K X g = X} =
       Nat.card (Function.fixedPoints (conjClassesConjPerm_pf45 K g)) := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := K) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := K) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   let f :
       ι →
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ} :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ} :=
     fun i => ⟨χ i, hχ.1 i⟩
   have hf_bij : Function.Bijective f := by
     constructor
@@ -3387,12 +3387,12 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
       exact hi
   let e :
       ι ≃
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ} :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ} :=
     Equiv.ofBijective f hf_bij
   letI : Fintype
-      {χ : Representation.ClassFunction K //
-        Representation.IsIrreducibleCharacter χ} :=
+      {χ : Theory.Character.ConjClassFunction K //
+        Theory.Character.IsIrreducibleConjCharacter χ} :=
     Fintype.ofEquiv ι e
   have htrace_irred :=
     trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles_pf45 K g⁻¹
@@ -3417,11 +3417,11 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
             Section1.conjugateOnNormal K X g = X}) : ℂ) =
         ((Nat.card (Function.fixedPoints (conjClassesConjPerm_pf45 K g))) : ℂ) := by
     letI : Finite
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ} :=
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ} :=
       Finite.of_fintype
-        {χ : Representation.ClassFunction K //
-          Representation.IsIrreducibleCharacter χ}
+        {χ : Theory.Character.ConjClassFunction K //
+          Theory.Character.IsIrreducibleConjCharacter χ}
     calc
       ((Nat.card {X : ClassFunction K |
           Section1.IsIrreducibleCharacterOnGroup X ∧
@@ -3993,10 +3993,10 @@ private theorem induced_irreducible_of_not_mem_range_pf45
       Section1.proposition_1_5_b_norm_one_rep_orbit_relIndex_canonical
         K ρ hρirr (by simp [hIeq])
   haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρ) :=
-    Representation.finiteDimensional_ind K ρ
+    Theory.Representation.finiteDimensional_ind K ρ
   have hIndIrr :
       Representation.IsIrreducible (Representation.ind K.subtype ρ) := by
-    apply (Representation.irreducible_iff_character_norm_one
+    apply (Theory.Character.irreducible_iff_character_norm_one
       (ρ := Representation.ind K.subtype ρ)).2
     have hIndClass : Section1.IsClassFunction (Representation.ind K.subtype ρ).character := by
       intro x g
@@ -4004,7 +4004,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
         Representation.char_conj (ρ := Representation.ind K.subtype ρ) g x
     have htoeq :
         Section1.toConjClassFunction (Representation.ind K.subtype ρ).character hIndClass =
-          Representation.characterClassFunction (Representation.ind K.subtype ρ) := by
+          Theory.Character.characterClassFunction (Representation.ind K.subtype ρ) := by
       apply Section1.toConjClassFunction_eq_of_apply
       intro g
       rfl
@@ -6022,7 +6022,7 @@ public theorem theorem_4_9_a
 
 private theorem isVirtualCharacter_zero_pf45
     {G : Type u} [Group G] [Finite G] :
-    Representation.IsVirtualCharacter (0 : ClassFunction G) := by
+    Theory.Character.IsVirtualCharacter (0 : ClassFunction G) := by
   simpa using
     (Section3.isVirtualCharacter_sub
       (G := G)
@@ -6035,16 +6035,16 @@ private theorem isVirtualCharacter_finset_sum_pf45
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι)
     (Φ : ι → ClassFunction G)
-    (hΦ : ∀ i ∈ s, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (s.sum Φ) := by
+    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (s.sum Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       simpa using (isVirtualCharacter_zero_pf45 (G := G))
   | @insert a s ha ih =>
-      have ha' : Representation.IsVirtualCharacter (Φ a) :=
+      have ha' : Theory.Character.IsVirtualCharacter (Φ a) :=
         hΦ a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (s.sum Φ) := by
+      have hs' : Theory.Character.IsVirtualCharacter (s.sum Φ) := by
         exact ih (by
           intro i hi
           exact hΦ i (Finset.mem_insert_of_mem hi))
@@ -6054,8 +6054,8 @@ private theorem isVirtualCharacter_fintype_sum_pf45
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι]
     (Φ : ι → ClassFunction G)
-    (hΦ : ∀ i, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (∑ i, Φ i) := by
+    (hΦ : ∀ i, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (∑ i, Φ i) := by
   classical
   exact isVirtualCharacter_finset_sum_pf45
     (G := G) (s := Finset.univ) Φ (by
@@ -6065,20 +6065,20 @@ private theorem isVirtualCharacter_fintype_sum_pf45
 private theorem isVirtualCharacter_intCast_smul_pf45
     {G : Type u} [Group G]
     (n : ℤ) {χ : ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter ((n : ℂ) • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter ((n : ℂ) • χ) := by
   classical
   rcases hχ with ⟨r, m, d, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, d, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isVirtualCharacter_sign_smul_pf45
     {G : Type u} [Group G]
     {ε : ℂ} {χ : ClassFunction G}
     (hε : Section1.IsSign ε)
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter (ε • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter (ε • χ) := by
   rcases hε with rfl | rfl
   · simpa using hχ
   · simpa using Section3.isVirtualCharacter_neg hχ
@@ -6092,11 +6092,11 @@ private theorem omegaColumnSigma_isVirtualCharacter_pf45
     {i0 : I} {j0 : J}
     (ω : I → J → ClassFunction W)
     (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
-    (hσvirt : ∀ α : ClassFunction W, Representation.IsVirtualCharacter α →
-      Representation.IsVirtualCharacter (σ α))
+    (hσvirt : ∀ α : ClassFunction W, Theory.Character.IsVirtualCharacter α →
+      Theory.Character.IsVirtualCharacter (σ α))
     (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (j : J) :
-    Representation.IsVirtualCharacter (omegaColumnSigma σ ω j) := by
+    Theory.Character.IsVirtualCharacter (omegaColumnSigma σ ω j) := by
   unfold omegaColumnSigma
   exact isVirtualCharacter_fintype_sum_pf45
     (fun i => σ (ω i j))
@@ -6111,8 +6111,8 @@ private theorem evalCoeff_isVirtualCharacter_pf45
     {J : Type*} [Fintype J]
     (mu : J → ClassFunction G)
     (v : Section1.CoeffVector J)
-    (hmu : ∀ j, Representation.IsVirtualCharacter (mu j)) :
-    Representation.IsVirtualCharacter (Section1.evalCoeff mu v) := by
+    (hmu : ∀ j, Theory.Character.IsVirtualCharacter (mu j)) :
+    Theory.Character.IsVirtualCharacter (Section1.evalCoeff mu v) := by
   unfold Section1.evalCoeff
   exact isVirtualCharacter_fintype_sum_pf45
     (fun j => ((v j : ℂ) • mu j))
@@ -6133,8 +6133,8 @@ public theorem theorem_4_9_b_lands_in_zIrr
     (σ : ClassFunction W →ₗ[ℂ] ClassFunction G)
     (piChar : I → J → ClassFunction L)
     (deltaSign : J → ℂ)
-    (hσvirt : ∀ α : ClassFunction W, Representation.IsVirtualCharacter α →
-      Representation.IsVirtualCharacter (σ α))
+    (hσvirt : ∀ α : ClassFunction W, Theory.Character.IsVirtualCharacter α →
+      Theory.Character.IsVirtualCharacter (σ α))
     (hω : Section3.notation_3_3_statement W1 W2 W I J i0 j0 ω)
     (h43b : Section4.theorem_4_3_b_statement
       W1 W2 W I J i0 j0 ω σL piChar deltaSign hω) :
