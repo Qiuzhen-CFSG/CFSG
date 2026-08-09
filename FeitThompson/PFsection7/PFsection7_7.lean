@@ -394,7 +394,7 @@ private theorem classFunction_eq_weighted_sum_irreducibles_pf77
         (∀ i : ι, Section1.IsIrreducibleCharacterOnGroup (ψ i)) ∧
           φ = Section1.weightedFamilySum a ψ := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   let a : ι → ℂ := fun i => b.repr (Section1.toConjClassFunction φ hφ) i

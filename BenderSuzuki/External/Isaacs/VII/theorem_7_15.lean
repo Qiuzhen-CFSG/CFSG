@@ -152,7 +152,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     (hisometry : isCFLinearIsometryOnSpanOn Y puncturedSet tau)
     (hdegreeZero :
       forall chi : ClassFunction N, integerSpanOn Y puncturedSet chi ->
-        Representation.IsVirtualCharacter (tau chi) /\
+        Theory.Character.IsVirtualCharacter (tau chi) /\
           supportedOn (tau chi) puncturedSet)
     (hdeg : forall X Z : Y,
       degree (X : ClassFunction N) = degree (Z : ClassFunction N))
@@ -198,13 +198,13 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     intro i
     exact hdeg (e i) (e 0)
 
-  let basisExist := Representation.irreducible_characters_form_basis (G := G)
+  let basisExist := Theory.Character.irreducible_characters_form_basis (G := G)
   let iota := Classical.choose basisExist
   let basisExist1 := Classical.choose_spec basisExist
   let instIota : Fintype iota := Classical.choose basisExist1
   let basisExist2 := Classical.choose_spec basisExist1
   let targetChi := Classical.choose basisExist2
-  have htargetChi : Representation.IsCompleteIrreducibleCharacterFamily targetChi :=
+  have htargetChi : Theory.Character.IsCompleteIrreducibleCharacterFamily targetChi :=
     (Classical.choose_spec basisExist2).1
   let basisExist3 := (Classical.choose_spec basisExist2).2
   let b := Classical.choose basisExist3
@@ -245,7 +245,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     rw [hchiDeg i]
     simp
   have hTauVirt : forall i : Fin n,
-      Representation.IsVirtualCharacter (tau (alpha i)) := by
+      Theory.Character.IsVirtualCharacter (tau (alpha i)) := by
     intro i
     exact (hdegreeZero (alpha i) (halphaSpan i)).1
   have hTauDeg : forall i : Fin n, degree (tau (alpha i)) = 0 := by
@@ -309,7 +309,7 @@ private theorem isaacs_7_15_equal_degree_extension_fields
     ⟨eps, heps, mu, hmu, hsplitMu⟩
   let X : Y := e 0
   let img : Y -> ClassFunction G := fun Z => eps • mu (e.symm Z)
-  have himgVirt : forall Z : Y, Representation.IsVirtualCharacter (img Z) := by
+  have himgVirt : forall Z : Y, Theory.Character.IsVirtualCharacter (img Z) := by
     intro Z
     exact Section3.isVirtualCharacter_of_signedIrreducible_pf35
       ⟨eps, heps, mu (e.symm Z), hmu.1 (e.symm Z), rfl⟩
@@ -407,7 +407,7 @@ public theorem isaacs_theorem_7_15
     (hisometry : isCFLinearIsometryOnSpanOn Y puncturedSet tau)
     (hdegreeZero :
       forall phi : ClassFunction N, integerSpanOn Y puncturedSet phi ->
-        Representation.IsVirtualCharacter (tau phi) /\
+        Theory.Character.IsVirtualCharacter (tau phi) /\
           supportedOn (tau phi) puncturedSet)
     (hequalDegree :
       forall chi psi : Y,

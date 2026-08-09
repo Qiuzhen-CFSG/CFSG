@@ -17,6 +17,7 @@ namespace PFAppendixI
 
 
 open Representation
+open Theory.Representation
 open scoped IsMulCommutative
 
 set_option backward.isDefEq.respectTransparency false in
@@ -69,7 +70,7 @@ public theorem peterfalvi_appendixI_proposition_2_a
             have haction :
                 rho tau x = AppendixITActionEnd (p := p) (E := E) T tau x := by
               rw [AppendixITActionEnd_apply]
-              exact Representation.ofElementaryAbelianAction_apply_ofMul
+              exact Theory.Representation.ofElementaryAbelianAction_apply_ofMul
                 (A := T) (G := E) (p := p) tau x
             rw [haction]
             exact W.smul_mem

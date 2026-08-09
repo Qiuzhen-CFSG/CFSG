@@ -24,7 +24,7 @@ public import FeitThompson.HallSubgroups.Conjugacy
 public import FeitThompson.HallSubgroups.Core
 import FeitThompson.SubgroupConj
 public import FeitThompson.PCore.Defs
-public import FeitThompson.Representation.TwoDimensionalOddOrder
+public import Theory.Representation.TwoDimensionalOddOrder
 public import FeitThompson.SubgroupConjAction
 public import Mathlib.Algebra.CharP.Lemmas
 public import Mathlib.FieldTheory.Minpoly.Field
@@ -1603,7 +1603,7 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
 private theorem square_zero_of_kerRepresentation
     {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) (g : G) (hSq : (ρ g - 1) ^ 2 = 0) :
-    ((Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
+    ((Theory.Representation.kerRepresentation ρ) (QuotientGroup.mk' ρ.ker g) - 1) ^ 2 = 0 := by
   change (ρ g - 1) ^ 2 = 0
   exact hSq
 
@@ -3321,9 +3321,9 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   haveI : FiniteDimensional F' V' := by
     dsimp [V']
     exact Module.Finite.base_change (R := F) (A := F') (M := V)
-  let ρ' : Representation F' H V' := Representation.extendScalars F' ρ
+  let ρ' : Representation F' H V' := Theory.Representation.extendScalars F' ρ
   have hρ'_faithful : Function.Injective ρ' := by
-    exact (Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
+    exact (Theory.Representation.extendScalars_faithful_iff F' ρ).mp hρ_faithful
 
   -- Gorenstein first passes to an algebraically closed coefficient field.
   have hx'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' x) := by
@@ -3417,9 +3417,9 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   letI := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
-  let σq := Representation.kerRepresentation σ
+  let σq := Theory.Representation.kerRepresentation σ
   have hσq_faithful : Function.Injective σq :=
-    Representation.kerRepresentation_faithful σ
+    Theory.Representation.kerRepresentation_faithful σ
   have hσq_irreducible : Representation.IsIrreducible σq := by
     infer_instance
 

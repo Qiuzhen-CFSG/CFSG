@@ -10,7 +10,7 @@ public import Mathlib.GroupTheory.SpecificGroups.Quaternion
 import FeitThompson.BGsection9.corollary_9_2
 import FeitThompson.Burnside.NormalComplement
 import FeitThompson.Frattini.Core
-import FeitThompson.Representation.TwoDimensionalOddOrder
+import Theory.Representation.TwoDimensionalOddOrder
 
 /-!
 # Abelian Sylow subgroups and the `SL(2,3)` obstruction

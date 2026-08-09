@@ -755,7 +755,7 @@ private lemma example3_stage_e_structure_constant_identity
     1 + ∑ i, epsilon i * chi i t ^ 2 / chi i 1 = 0 := by
   classical
   letI : Fintype G := Fintype.ofFinite G
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, _b, _hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -862,7 +862,7 @@ private lemma example3_stage_e_structure_constant_identity
     intro i j
     calc
       Section1.scalarProduct G (mu i) (mu j) =
-          Representation.classFunctionInner (xi i) (xi j) := by
+          Theory.Character.classFunctionInner (xi i) (xi j) := by
         symm
         simpa [mu, Section1.toConjClassFunction_ofConjClassFunction] using
           (Section1.classFunctionInner_toConjClassFunction
@@ -956,7 +956,7 @@ private lemma example3_low_norm_virtual_character_decomposition
     {G : Type u} [Group G] [Finite G]
     (zeta : Section1.ClassFunction G) (r : ℕ)
     (hr : r = 2 ∨ r = 3)
-    (hzetaVirtual : Representation.IsVirtualCharacter zeta)
+    (hzetaVirtual : Theory.Character.IsVirtualCharacter zeta)
     (hzetaPrincipal :
       Section1.scalarProduct G zeta (Section1.principalCharacter G) = 1)
     (hzetaNorm :
@@ -971,7 +971,7 @@ private lemma example3_low_norm_virtual_character_decomposition
         Section1.weightedFamilySum epsilon chi := by
   classical
   letI : Fintype (Fin r) := Fintype.ofFinite (Fin r)
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -981,7 +981,7 @@ private lemma example3_low_norm_virtual_character_decomposition
       Section1.IsIrreducibleCharacterOnGroup (mu i) := by
     intro i
     exact Section3.ofConjClassFunction_isIrreducibleCharacterOnGroup (hxi.1 i)
-  have hmuVirtual : ∀ i, Representation.IsVirtualCharacter (mu i) := by
+  have hmuVirtual : ∀ i, Theory.Character.IsVirtualCharacter (mu i) := by
     intro i
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (hmuIrreducible i)
@@ -1189,7 +1189,7 @@ private lemma example3_simple_kernel_contradiction
     letI : Representation.IsIrreducible rho := hirr
     have hpos : 0 < Module.finrank ℂ (Fin m → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
-        (Representation.irreducible_nontrivial (ρ := rho))
+        (Theory.Character.irreducible_nontrivial (ρ := rho))
     simpa using hpos
   rw [hchar, hrho] at hzero
   unfold Section1.scalarProduct at hzero
@@ -1212,7 +1212,7 @@ private lemma example3_simple_nonprincipal_degree_gt_one
     letI : Representation.IsIrreducible rho := hirr
     have hpos : 0 < Module.finrank ℂ (Fin m → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
-        (Representation.irreducible_nontrivial (ρ := rho))
+        (Theory.Character.irreducible_nontrivial (ρ := rho))
     simpa using hpos
   have hmne : m ≠ 1 := by
     intro hm
@@ -1543,7 +1543,7 @@ private lemma example3_corefree_nonsimple_target
 private lemma example3_argumentPow_eq_of_integer_valued_virtual
     {G : Type*} [Group G] [Finite G]
     {zeta : Section1.ClassFunction G}
-    (hzetaVirtual : Representation.IsVirtualCharacter zeta)
+    (hzetaVirtual : Theory.Character.IsVirtualCharacter zeta)
     (hzetaInt : ∀ g : G, ∃ n : ℤ, zeta g = (n : ℂ))
     {e : ℕ} (he : e.Coprime (Nat.card G)) :
     ∀ g : G, zeta (g ^ e) = zeta g := by
@@ -2689,7 +2689,7 @@ private lemma example3_inducedCF_eq_four_or_zero_of_ti_constant_four
     (H : Subgroup G) (eta : Section1.ClassFunction H)
     (K : Set G) (hTI : IsTISubsetRelative H K)
     (hKfour : ∀ k : G, k ∈ K → 4 ∣ orderOf k)
-    (hetaVirtual : Representation.IsVirtualCharacter eta)
+    (hetaVirtual : Theory.Character.IsVirtualCharacter eta)
     (hetaSupport : ∀ h : H, (h : G) ∉ K → eta h = 0)
     (hetaK : ∀ (k : G) (hk : k ∈ K),
       eta ⟨k, hTI.1 hk⟩ = 4) :
@@ -2735,7 +2735,7 @@ private lemma example3_induced_integer_of_ti_constant_four
     (H : Subgroup G) (eta : Section1.ClassFunction H)
     (K : Set G) (hTI : IsTISubsetRelative H K)
     (hKfour : ∀ k : G, k ∈ K → 4 ∣ orderOf k)
-    (hetaVirtual : Representation.IsVirtualCharacter eta)
+    (hetaVirtual : Theory.Character.IsVirtualCharacter eta)
     (hetaSupport : ∀ h : H, (h : G) ∉ K → eta h = 0)
     (hetaK : ∀ (k : G) (hk : k ∈ K),
       eta ⟨k, hTI.1 hk⟩ = 4) :
@@ -3758,8 +3758,8 @@ private lemma example3_irreducible_integer_valued_of_argumentPow_fixed
   have heta : IsPrimitiveRoot eta (Nat.card G * 1) := by
     simpa [eta] using Complex.isPrimitiveRoot_exp (Nat.card G * 1) hn
   have hetaG : IsPrimitiveRoot eta (Nat.card G) := by simpa using heta
-  have hmem : rho.character g ∈ Representation.cyclotomicOrder eta :=
-    Representation.representation_character_mem_cyclotomicOrder hetaG rho g
+  have hmem : rho.character g ∈ Theory.Character.cyclotomicOrder eta :=
+    Theory.Character.representation_character_mem_cyclotomicOrder hetaG rho g
   let K := Section1.CyclotomicABField (Nat.card G) 1
   let zeta : K := Section1.cyclotomicABRoot (Nat.card G) 1 hn
   have hzeta : IsPrimitiveRoot zeta (Nat.card G * 1) := by
@@ -3776,7 +3776,7 @@ private lemma example3_irreducible_integer_valued_of_argumentPow_fixed
   have hiota_zeta : iota zeta = eta := by
     change ((hzeta.embeddingsEquivPrimitiveRoots ℂ hirr) iota : ℂ) = eta
     simp [iota, etaRoot]
-  rcases Representation.mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hmem with
+  rcases Theory.Character.mem_cyclotomicOrder_iff_exists_intPolynomial_eval.mp hmem with
     ⟨P, hP⟩
   let x : K := Polynomial.eval₂ (Int.castRingHom K) zeta P
   have hvalue : rho.character g = iota x := by
@@ -3847,8 +3847,8 @@ private lemma example3_irreducible_integer_valued_of_argumentPow_fixed
   have hrat : ∃ q : ℚ, rho.character g = (q : ℂ) :=
     Section1.cyclotomicABField_complex_rat_of_fixed_gal
       iota x (rho.character g) hvalue hx_fixed
-  rcases Representation.isaacs_lemma_3_2_core
-      (Representation.representation_character_isIntegral rho g) hrat with ⟨z, hz⟩
+  rcases Theory.Character.isaacs_lemma_3_2_core
+      (Theory.Character.representation_character_isIntegral rho g) hrat with ⟨z, hz⟩
   exact ⟨z, (congrFun hchi_rho g).trans hz⟩
 
 private theorem example3_int_sum_even_of_fixedPointFree_involution
@@ -4106,7 +4106,7 @@ private lemma example3_stage_i_character_value
     (K : Set G) (eta : Section1.ClassFunction H)
     (zeta chi : Section1.ClassFunction G)
     (hzeta_def : zeta = Section1.inducedCF H eta)
-    (hzetaVirtual : Representation.IsVirtualCharacter zeta)
+    (hzetaVirtual : Theory.Character.IsVirtualCharacter zeta)
     (hzetaSmall : ∀ g : G,
       ((∃ y : G, y * g * y⁻¹ ∈ K) ∧ zeta g = 4) ∨
       ((¬ ∃ y : G, y * g * y⁻¹ ∈ K) ∧ zeta g = 0))
@@ -4147,13 +4147,13 @@ private lemma example3_stage_i_character_value
       (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hchi')
   let chiSq : Section1.ClassFunction G := chi * chi
   let rhoSq := Section1.standardizeRepresentation (rho.tprod rho)
-  have hchiSqVirtual : Representation.IsVirtualCharacter chiSq := by
+  have hchiSqVirtual : Theory.Character.IsVirtualCharacter chiSq := by
     refine ⟨1, (fun _ : Fin 1 => (1 : ℤ)),
       (fun _ : Fin 1 => Module.finrank ℂ
         (TensorProduct ℂ (Fin degree → ℂ) (Fin degree → ℂ))),
       (fun _ : Fin 1 => rhoSq), ?_⟩
     ext g
-    simp [chiSq, rhoSq, Representation.virtualCharacterOfRepresentations,
+    simp [chiSq, rhoSq, Theory.Character.virtualCharacterOfRepresentations,
       Section1.standardizeRepresentation_character, Representation.char_tensor,
       ← hchar]
   have hchiSqClass : Section1.IsClassFunction chiSq :=
@@ -4192,7 +4192,7 @@ private lemma example3_stage_i_character_value
     calc
       chi g⁻¹ = rho.character g⁻¹ := congrFun hchar g⁻¹
       _ = star (rho.character g) :=
-        Representation.representation_character_inv_eq_star_character rho g
+        Theory.Representation.representation_character_inv_eq_star_character rho g
       _ = star (chi g) := by rw [hchar]
       _ = chi g := by rw [ha g]; simp
   have hpairPow (u : N) :
@@ -4471,15 +4471,15 @@ private lemma suzuki_example3_stage_c_to_l_core
             Section1.weightedFamilySum epsilon chi ∧
         (4 < Nat.card X → r = 2) ∧
         (Nat.card X = 4 → r = 3) := by
-    have hlambdaVirtual : Representation.IsVirtualCharacter lambda :=
+    have hlambdaVirtual : Theory.Character.IsVirtualCharacter lambda :=
       Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
         hlambda_irreducible
-    have hetaVirtual : Representation.IsVirtualCharacter eta := by
+    have hetaVirtual : Theory.Character.IsVirtualCharacter eta := by
       rw [heta_def]
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter CH
         (Section3.isVirtualCharacter_sub
           Section3.isVirtualCharacter_principalCharacter hlambdaVirtual)
-    have hzetaVirtual : Representation.IsVirtualCharacter zeta := by
+    have hzetaVirtual : Theory.Character.IsVirtualCharacter zeta := by
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter H hetaVirtual
     have hprop := suzuki_ch6_proposition_2_9
       H K hKTI eta hetaVirtual hetaSupport
@@ -4697,7 +4697,7 @@ private lemma suzuki_example3_stage_c_to_l_core
       let degreeNat := Module.finrank ℂ (Fin m → ℂ)
       have hpos : 0 < degreeNat := by
         exact (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
-          (Representation.irreducible_nontrivial (ρ := rho))
+          (Theory.Character.irreducible_nontrivial (ρ := rho))
       refine ⟨degreeNat, hpos, ?_⟩
       rw [hd i, hchar]
       simp [degreeNat, Representation.character]
@@ -4863,14 +4863,14 @@ private lemma suzuki_example3_stage_c_to_l_core
         @Finset.univ (Fin 3) (Fin.fintype 3) by
           ext i
           simp] at hsum_d hsum_f hsum_f_sq
-    have hetaVirtual : Representation.IsVirtualCharacter eta := by
+    have hetaVirtual : Theory.Character.IsVirtualCharacter eta := by
       rw [heta_def]
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter CH
         (Section3.isVirtualCharacter_sub
           Section3.isVirtualCharacter_principalCharacter
           (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
             hlambda_irreducible))
-    have hzetaVirtual : Representation.IsVirtualCharacter zeta := by
+    have hzetaVirtual : Theory.Character.IsVirtualCharacter zeta := by
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter H hetaVirtual
     have hzetaInt : ∀ g : G, ∃ n : ℤ, zeta g = (n : ℂ) := by
       exact hzetaIntSmall hXfour
@@ -5270,7 +5270,7 @@ private lemma example3_stage_c_norm_core
     ⟨nLam, lambdaRep, hlambdaRep_irr, hlambdaRep_char⟩
   let oneRep : Representation ℂ CH ℂ := Representation.trivial ℂ CH ℂ
   have honeRep_irr : oneRep.IsIrreducible := by
-    exact Representation.trivial_complex_irreducible
+    exact Theory.Character.trivial_complex_irreducible
   have honeRep_char :
       oneRep.character = Section1.principalCharacter CH := by
     ext c
@@ -6542,7 +6542,7 @@ private theorem suzuki_example3_corefree_setup
       rfl
     rw [hkc]
     exact heta_c
-  have hetaVirtualSmall : Representation.IsVirtualCharacter eta := by
+  have hetaVirtualSmall : Theory.Character.IsVirtualCharacter eta := by
     rw [show eta = Section1.inducedCF CH
       (Section1.principalCharacter CH - lambda) by rfl]
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter CH

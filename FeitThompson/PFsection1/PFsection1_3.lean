@@ -3,7 +3,7 @@ module
 public import FeitThompson.PFsection1.PFsection1_1
 public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.LinearAlgebra.Basis.Defs
-public import FeitThompson.Representation.Unbundled
+public import Theory.Representation.Unbundled
 /-!
 # Peterfalvi, Section 1, Proposition (1.3)
 

@@ -44,7 +44,7 @@ public theorem lemma_1_a
     (htarget :
       ∀ phi : ClassFunction H,
         integerSpanOn (S₀.cons psi hpsi_not_mem) puncturedSet phi →
-          Representation.IsVirtualCharacter (tau phi) ∧
+          Theory.Character.IsVirtualCharacter (tau phi) ∧
             supportedOn (tau phi) puncturedSet)
     (hcoherent : IsCoherentTriple puncturedSet S₀ tau)
     (hdiv :
@@ -74,7 +74,7 @@ public theorem lemma_1_b
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Representation.IsVirtualCharacter (tau phi) ∧
+        Theory.Character.IsVirtualCharacter (tau phi) ∧
           supportedOn (tau phi) puncturedSet)
     (hequal :
       ∀ chi psi : S,
@@ -93,7 +93,7 @@ public theorem lemma_1
     (hisometry : isCFLinearIsometryOnSpanOn S puncturedSet tau)
     (htarget :
       ∀ phi : ClassFunction H, integerSpanOn S puncturedSet phi →
-        Representation.IsVirtualCharacter (tau phi) ∧
+        Theory.Character.IsVirtualCharacter (tau phi) ∧
           supportedOn (tau phi) puncturedSet)
     (hcase :
       (∃ (S₀ : Finset (ClassFunction H)) (psi chi₀ : ClassFunction H),

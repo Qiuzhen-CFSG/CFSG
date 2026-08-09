@@ -15,8 +15,8 @@ import BenderSuzuki.PFAppendixIII.lemma_1
 import BenderSuzuki.External.Higman.lemma_1
 import BenderSuzuki.External.Huppert.II.theorem_8_27
 import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.Representation.ElementaryAbelianAction
-import FeitThompson.Representation.TwoDimensionalOddOrder
+import Theory.Representation.ElementaryAbelianAction
+import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
 namespace BenderSuzuki
@@ -723,7 +723,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
     exact hEsq (u : E)
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := K)
   let rhoU :=
-    Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
+    Theory.Representation.ofElementaryAbelianAction (A := K) (G := U) (p := 2)
   let rhoEquiv : K →* (Additive U ≃ₗ[ZMod 2] Additive U) :=
     (LinearMap.GeneralLinearGroup.generalLinearEquiv
       (ZMod 2) (Additive U)).toMonoidHom.comp rhoU.asGroupHom
@@ -731,7 +731,7 @@ public theorem quotient_scalar_coordinates_of_isomorphic_summands
   have hrho_val (k : K) (v : Additive U) :
       rhoEquiv k v = Additive.ofMul (k • v.toMul) := by
     change rhoU k v = Additive.ofMul (k • v.toMul)
-    exact Representation.ofElementaryAbelianAction_apply k v
+    exact Theory.Representation.ofElementaryAbelianAction_apply k v
   have hT_val (v : Additive U) :
       T v = Additive.ofMul (g • v.toMul) := by
     exact hrho_val g v

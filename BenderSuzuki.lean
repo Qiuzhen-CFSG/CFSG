@@ -91,10 +91,6 @@ public import BenderSuzuki.External.Huppert.XI.theorem_3_6
 public import BenderSuzuki.External.Huppert.XI.theorem_6_1
 public import BenderSuzuki.External.Huppert.XI.theorem_6_8
 public import BenderSuzuki.External.Huppert.XI.theorem_9_1
-public import BenderSuzuki.External.Isaacs.I.definition_1_12
-public import BenderSuzuki.External.Isaacs.I.lemma_1_13
-public import BenderSuzuki.External.Isaacs.VI.theorem_6_34
-public import BenderSuzuki.External.Isaacs.VI.theorem_6_5
 public import BenderSuzuki.External.Isaacs.VII.lemma_7_7
 public import BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import BenderSuzuki.External.Isaacs.VII.theorem_7_14

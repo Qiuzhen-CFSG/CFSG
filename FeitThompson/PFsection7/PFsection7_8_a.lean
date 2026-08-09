@@ -570,7 +570,7 @@ private theorem theorem_7_8_nu_zeta_signed
     Section3.IsSignedIrreducibleCharacter (ν ζ) := by
   have h78orig := h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, hν, hζS, _hζ, _hdeg⟩
-  have hvirt : Representation.IsVirtualCharacter (ν ζ) :=
+  have hvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
     hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
   exact Section5.signed_irreducible_of_virtual_norm_one_pf59 hvirt
     (theorem_7_8_nu_zeta_norm h78orig)
@@ -979,18 +979,18 @@ public theorem theorem_7_8_beta_virtual
     (h76 : hypothesis_7_6_statement A L H K T)
     (hτ : agreesWithDadeTransform A L K τ)
     (h78 : theorem_7_8_hypothesis L H T S τ ν ζ) :
-    Representation.IsVirtualCharacter (theorem_7_8_beta L H τ ζ) := by
+    Theory.Character.IsVirtualCharacter (theorem_7_8_beta L H τ ζ) := by
   let βL : Section1.ClassFunction L := theorem_7_8_betaInput L H ζ
   have hCFOn : Section2.CFOn L A βL := theorem_7_8_betaInput_CFOn h76 h78
   rcases h76 with ⟨_hHL76, _hHnorm, h71, _hAeq, _hT⟩
   rcases hτ with ⟨hAL, hτ_eq⟩
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, _hν, _hζS, hζ, _hdegζ⟩
   have hprincipalVirt :
-      Representation.IsVirtualCharacter (principalInducedCharacter L H) := by
+      Theory.Character.IsVirtualCharacter (principalInducedCharacter L H) := by
     unfold principalInducedCharacter
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf L) Section3.isVirtualCharacter_principalCharacter
-  have hβLvirt : Representation.IsVirtualCharacter βL := by
+  have hβLvirt : Theory.Character.IsVirtualCharacter βL := by
     exact Section3.isVirtualCharacter_sub hprincipalVirt
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hζ)
   have hβLvirtOn : Section2.virtualCharacterOn L A βL := ⟨hβLvirt, hCFOn.2⟩
@@ -998,9 +998,9 @@ public theorem theorem_7_8_beta_virtual
     hτ_eq βL hCFOn
   have hDadeVirt :=
     (Section2.theorem_2_6 A L K h71 hAL).2 βL hβLvirtOn
-  change Representation.IsVirtualCharacter
+  change Theory.Character.IsVirtualCharacter
     (Section2.dadeTransform K hAL βL) at hDadeVirt
-  change Representation.IsVirtualCharacter (τ βL)
+  change Theory.Character.IsVirtualCharacter (τ βL)
   rw [hτβ]
   exact hDadeVirt
 
@@ -1153,7 +1153,7 @@ public theorem theorem_7_8_beta_zeta_coeff_int
         (a : ℂ) - 1 := by
   have hβvirt := theorem_7_8_beta_virtual h76 hτ h78
   rcases h78 with ⟨_hHL, _hST, _hpunctured, _hcoherent, hν, hζS, _hζ, _hdegζ⟩
-  have hνζvirt : Representation.IsVirtualCharacter (ν ζ) :=
+  have hνζvirt : Theory.Character.IsVirtualCharacter (ν ζ) :=
     hν.2.1 ζ (Section5.integerSpan_of_mem S hζS)
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hβvirt hνζvirt with
     ⟨z, hz⟩

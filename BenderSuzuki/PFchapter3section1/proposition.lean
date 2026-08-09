@@ -1181,7 +1181,7 @@ private theorem cubic_linear_contradiction
   letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
   letI : CommGroup E := IsMulCommutative.instCommGroup
   let rho :=
-    Representation.ofElementaryAbelianAction (A := SD) (G := E) (p := 2)
+    Theory.Representation.ofElementaryAbelianAction (A := SD) (G := E) (p := 2)
   have hKSDNotKer : ¬ KSD ≤ rho.ker := by
     intro hKSDker
     have hKSDcent : KSD ≤ rho.centralizerIn KSD := by
@@ -2767,7 +2767,7 @@ private theorem cubic_order_five_contradiction
         letI : Semiring (ZMod 2) := (ZMod.commRing 2).toSemiring
         letI : CommGroup E := IsMulCommutative.instCommGroup
         let ρ :=
-          Representation.ofElementaryAbelianAction (A := A) (G := E) (p := 2)
+          Theory.Representation.ofElementaryAbelianAction (A := A) (G := E) (p := 2)
         let instAdd : AddCommGroup ρ.asModule :=
           Representation.instAddCommGroupAsModule ρ
         letI : AddCommGroup ρ.asModule := instAdd

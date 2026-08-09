@@ -27,7 +27,7 @@ private theorem theorem_13_5_virtualCharacter_one_eq_int
     [Group K]
     [Finite K]
     {phi : Section1.ClassFunction K}
-    (hphi : Representation.IsVirtualCharacter phi) :
+    (hphi : Theory.Character.IsVirtualCharacter phi) :
     ∃ z : ℤ, phi 1 = (z : ℂ) := by
   classical
   rcases hphi with ⟨r, m, n, rho, hphi_eq⟩
@@ -36,7 +36,7 @@ private theorem theorem_13_5_virtualCharacter_one_eq_int
     intro i
     simp
   rw [hphi_eq]
-  unfold Representation.virtualCharacterOfRepresentations
+  unfold Theory.Character.virtualCharacterOfRepresentations
   simp_rw [hdegree]
   exact_mod_cast (rfl : (∑ i : Fin r, m i * (n i : ℤ)) =
     ∑ i : Fin r, m i * (n i : ℤ))
@@ -305,7 +305,7 @@ private theorem theorem_13_5_restriction_inducedCF_orthogonal_kernelConstituent
   rcases halpha with ⟨halpha_virtual, halpha_kernel⟩
   have halpha_class : Section1.IsClassFunction alpha :=
     Section1.isVirtualCharacter_isClassFunction halpha_virtual
-  rcases Representation.irreducible_characters_form_basis (G := H) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, chi, hchi, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -788,23 +788,23 @@ private theorem theorem_13_5_transportClassFunction_isCharacter
 private theorem theorem_13_5_isVirtualCharacter_int_smul
     {K : Type u} [Group K] [Finite K]
     (z : ℤ) {phi : Section1.ClassFunction K}
-    (hphi : Representation.IsVirtualCharacter phi) :
-    Representation.IsVirtualCharacter ((z : ℂ) • phi) := by
+    (hphi : Theory.Character.IsVirtualCharacter phi) :
+    Theory.Character.IsVirtualCharacter ((z : ℂ) • phi) := by
   classical
   rcases hphi with ⟨r, m, n, rho, rfl⟩
   refine ⟨r, fun i => z * m i, n, rho, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum,
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum,
     mul_assoc]
 
 private theorem theorem_13_5_isVirtualCharacter_fintype_int_sum
     {K : Type u} {I : Type v} [Group K] [Finite K] [Fintype I]
     (z : I → ℤ) (phi : I → Section1.ClassFunction K)
-    (hphi : ∀ i, Representation.IsVirtualCharacter (phi i)) :
-    Representation.IsVirtualCharacter (∑ i : I, (z i : ℂ) • phi i) := by
+    (hphi : ∀ i, Theory.Character.IsVirtualCharacter (phi i)) :
+    Theory.Character.IsVirtualCharacter (∑ i : I, (z i : ℂ) • phi i) := by
   classical
   have hsum : ∀ s : Finset I,
-      Representation.IsVirtualCharacter (∑ i ∈ s, (z i : ℂ) • phi i) := by
+      Theory.Character.IsVirtualCharacter (∑ i ∈ s, (z i : ℂ) • phi i) := by
     intro s
     induction s using Finset.induction_on with
     | empty =>
@@ -829,7 +829,7 @@ private theorem theorem_13_5_integer_sum_character_kernelConstituentData
     virtualCharacterKernelConstituentData H P
       (∑ i : I, (z i : ℂ) • beta i) := by
   classical
-  have hbetaVirt : ∀ i, Representation.IsVirtualCharacter (beta i) :=
+  have hbetaVirt : ∀ i, Theory.Character.IsVirtualCharacter (beta i) :=
     fun i => Section5.isVirtualCharacter_of_isCharacter (hbetaChar i)
   refine ⟨theorem_13_5_isVirtualCharacter_fintype_int_sum z beta hbetaVirt, ?_⟩
   intro theta hthetaIrr hscalar
@@ -1159,7 +1159,7 @@ private theorem theorem_13_5_expansion_source
     intro j
     exact (henum.1 (η j)).mpr ⟨j, rfl⟩
   have hηvirt : ∀ j : Fin (n + 1),
-      Representation.IsVirtualCharacter (η j) := by
+      Theory.Character.IsVirtualCharacter (η j) := by
     intro j
     rcases (hTnotation (η j)).mp (hηT j) with ⟨θ, hθirr, hηind⟩
     rw [hηind]
@@ -1168,12 +1168,12 @@ private theorem theorem_13_5_expansion_source
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hθirr)
   have hcoeffInt : ∀ i : Fin n, ∃ zi : ℤ, coeff i = (zi : ℂ) := by
     intro i
-    have hdiffVirt : Representation.IsVirtualCharacter
+    have hdiffVirt : Theory.Character.IsVirtualCharacter
         (η (Fin.succ i) - η 0) :=
       Section3.isVirtualCharacter_sub (hηvirt (Fin.succ i)) (hηvirt 0)
-    have hindVirt : Representation.IsVirtualCharacter
+    have hindVirt : Theory.Character.IsVirtualCharacter
         (τind (η (Fin.succ i) - η 0)) := by
-      change Representation.IsVirtualCharacter
+      change Theory.Character.IsVirtualCharacter
         (Section1.inducedCF Smax (η (Fin.succ i) - η 0))
       exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter Smax hdiffVirt
     exact Section3.scalarProduct_isVirtualCharacter_eq_int hindVirt hχvirt
@@ -1349,10 +1349,10 @@ private theorem theorem_13_5_squareSumFormula_source
     theorem_13_5_restriction_inducedCF_orthogonal_kernelConstituent
       H Smax P ζ1 ζ1H α theta hres hPH hHnormal hPnormal
       htheta_irreducible htheta_not_kernel hζ1_induced _hα
-  have htheta_virtual : Representation.IsVirtualCharacter theta :=
+  have htheta_virtual : Theory.Character.IsVirtualCharacter theta :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       htheta_irreducible
-  have hζ1virtual : Representation.IsVirtualCharacter ζ1 := by
+  have hζ1virtual : Theory.Character.IsVirtualCharacter ζ1 := by
     rw [hζ1_induced]
     exact Section2.inducedCF_isVirtualCharacter_of_virtualCharacter
       (H.subgroupOf Smax) htheta_virtual
@@ -1566,7 +1566,7 @@ public theorem theorem_13_5_virtualCharacterKernelConstituent_subgroupInKernel
   rcases hα with ⟨hvirt, hker⟩
   have hαclass : Section1.IsClassFunction α :=
     Section1.isVirtualCharacter_isClassFunction hvirt
-  rcases Representation.irreducible_characters_form_basis (G := H) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι

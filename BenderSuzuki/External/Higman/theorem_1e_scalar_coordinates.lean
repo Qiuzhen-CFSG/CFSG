@@ -8,7 +8,7 @@ public import BenderSuzuki.External.Higman.theorem_1a
 public import BenderSuzuki.External.Higman.theorem_1b
 public import BenderSuzuki.External.Higman.theorem_1e_isomorphic_summands
 public import BenderSuzuki.External.Higman.lemma_12
-import FeitThompson.Representation.ElementaryAbelianAction
+import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.GroupAction.CentralizerCondition
 import Mathlib.GroupTheory.Complement
 
@@ -59,7 +59,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
     exact hEsq
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := K)
   let rho :=
-    Representation.ofElementaryAbelianAction (A := K) (G := E) (p := 2)
+    Theory.Representation.ofElementaryAbelianAction (A := K) (G := E) (p := 2)
   let rhoEquiv : K →* (Additive E ≃ₗ[ZMod 2] Additive E) :=
     (LinearMap.GeneralLinearGroup.generalLinearEquiv
       (ZMod 2) (Additive E)).toMonoidHom.comp rho.asGroupHom
@@ -67,7 +67,7 @@ public theorem scalar_coordinates_of_fixed_point_free_cyclic_action
   have hrho_val (k : K) (v : Additive E) :
       rhoEquiv k v = Additive.ofMul (k • v.toMul) := by
     change rho k v = Additive.ofMul (k • v.toMul)
-    exact Representation.ofElementaryAbelianAction_apply k v
+    exact Theory.Representation.ofElementaryAbelianAction_apply k v
   have hT_val (v : Additive E) :
       T v = Additive.ofMul (g • v.toMul) := by
     exact hrho_val g v

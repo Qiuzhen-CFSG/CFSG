@@ -14,7 +14,7 @@ import BenderSuzuki.External.Huppert.I.theorem_18_3
 import BenderSuzuki.External.Isaacs.VII.theorem_7_15
 import BenderSuzuki.External.Huppert.XI.theorem_6_1
 import BenderSuzuki.External.Suzuki.VI.proposition_2_9
-import FeitThompson.Representation.BrauerPermutation
+import Theory.Character.BrauerPermutation
 
 /-!
 # GLS Part II, Chapter 1, Theorem 2.6
@@ -827,7 +827,7 @@ private theorem ii1Theorem26_permutationCharacter_apply
   change LinearMap.trace ℂ (MonoidAlgebra ℂ Q)
       (Representation.ofMulAction ℂ X Q g) = _
   rw [hmap]
-  rw [Representation.trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
+  rw [Theory.Character.trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
     (MonoidAlgebra.basis Q ℂ) sigma T hT]
   congr 1
 
@@ -1442,7 +1442,7 @@ private theorem ii1Theorem26_coherent_signed_family_common
     (hYbot : Section6.inducedKernelFamily F ⊥ Y)
     (hindPunct : ∀ phi : ClassFunction N,
       Section5.integerSpanOn Y Section5.puncturedSet phi →
-        Representation.IsVirtualCharacter (Section1.inducedCFLinear N phi) ∧
+        Theory.Character.IsVirtualCharacter (Section1.inducedCFLinear N phi) ∧
           Section1.supportedOn (Section1.inducedCFLinear N phi)
             Section5.puncturedSet)
     (hdegree : ∀ eta xi : Y,
@@ -1600,8 +1600,8 @@ private theorem ii1Theorem26_exists_irreducible_constituent_of_subgroupRestricti
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
   letI : Nontrivial φ.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Representation.RepMap φ.toRepresentation ρK := by
-    refine Representation.RepMap.mk φ.toSubmodule.subtype ?_
+  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
+    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
     ext v
     rfl
@@ -1610,7 +1610,7 @@ private theorem ii1Theorem26_exists_irreducible_constituent_of_subgroupRestricti
     obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
     have hval : incl v = 0 := by
       simpa using
-        congrArg (fun f : Representation.RepMap φ.toRepresentation ρK => f v) hzero
+        congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v) hzero
     have hsub : v = 0 := by
       apply Subtype.ext
       simpa [incl] using hval
@@ -1676,7 +1676,7 @@ private theorem ii1Theorem26_nonprincipal_constituent_mem_exceptional
     rw [hchar]
     exact isIrreducibleCharacterOnGroup_of_representation
       (Representation.trivial ℂ K ℂ)
-      Representation.trivial_complex_irreducible
+      Theory.Character.trivial_complex_irreducible
   have hprincipalZero : ∀ i, i ≠ i0 →
       scalarProduct K (principalCharacter K)
         (subgroupRestriction K (psi i)) = 0 := by
@@ -2180,7 +2180,7 @@ private theorem ii1Theorem26_irreducible_value_isIntegral
     IsIntegral ℤ (phi x) := by
   rcases hirr with ⟨n, rho, _hrho, hphi⟩
   rw [hphi]
-  exact Representation.representation_character_isIntegral rho x
+  exact Theory.Character.representation_character_isIntegral rho x
 
 
 private theorem ii1Theorem26_burnside_normalizer_eq_top
@@ -2275,7 +2275,7 @@ private theorem ii1Theorem26_burnside_normalizer_eq_top
           _ = (fixed : ℂ) - 1 := by linear_combination -hformula
       rw [hquot]
       norm_num
-    obtain ⟨z, hz⟩ := Representation.isaacs_lemma_3_2_core hint hrat
+    obtain ⟨z, hz⟩ := Theory.Character.isaacs_lemma_3_2_core hint hrat
     let fixed := Nat.card (MulAction.fixedBy Q x)
     have hformula := hpiFormula x hx
     rw [ii1Theorem26_permutationCharacter_apply, hz] at hformula

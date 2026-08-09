@@ -6,7 +6,7 @@ module
 
 public import BenderSuzuki.RightNearField.Linear
 public import BenderSuzuki.PFAppendixI.proposition_2
-public import FeitThompson.Representation.Maschke
+public import Theory.Representation.Maschke
 
 /-!
 # Semilinear coordinates for finite right near-fields

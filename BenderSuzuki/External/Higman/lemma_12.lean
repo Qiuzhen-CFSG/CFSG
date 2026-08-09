@@ -14,7 +14,7 @@ public import BenderSuzuki.PFAppendixIII.FrobeniusBilinear
 import BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
 import FeitThompson.GroupAction.Invariant
 import FeitThompson.Frattini.Core
-import FeitThompson.Representation.Maschke
+import Theory.Representation.Maschke
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RepresentationTheory.Submodule
 

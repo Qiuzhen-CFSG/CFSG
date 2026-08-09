@@ -978,7 +978,7 @@ private theorem theorem_13_3_allReducible_exists_positiveExtension
       Wsec i0 j0 k ωsec σS σsec μsel (fun j => (δSign j : ℂ))
       hSigmaVirt hOmega h43b
   have hColumnVirt : ∀ t : T,
-      Representation.IsVirtualCharacter (targetColumn t) := by
+      Theory.Character.IsVirtualCharacter (targetColumn t) := by
     intro t
     have hvirt := hLands hk (Section1.basisVector t)
     rw [hEvalCoeffBasisTarget] at hvirt
@@ -996,7 +996,7 @@ private theorem theorem_13_3_allReducible_exists_positiveExtension
     rw [hX, hY, hTau1Column, hTau1Column]
     exact hColumnGram (e.symm X) (e.symm Y)
   have hBasisVirt : ∀ X : Sfam,
-      Representation.IsVirtualCharacter (τ1 X) := by
+      Theory.Character.IsVirtualCharacter (τ1 X) := by
     intro X
     have hX : (X : Section1.ClassFunction Smax) =
         sourceColumn (e.symm X) := by

@@ -712,11 +712,11 @@ public theorem section13_typeP_coherent_subseq_transport_eq_of_cyclicTI_agreemen
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section6.theorem_6_8_transportClassFunction_isClass e hξ_class
   have htransportVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (Section6.theorem_6_8_transportClassFunction e ξ) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup htransportIrr
   have hImageVirt :
-      Representation.IsVirtualCharacter
+      Theory.Character.IsVirtualCharacter
         (d52.sigma (Section6.theorem_6_8_transportClassFunction e ξ)) :=
     hVirtFull _ htransportVirt
   have hselfW : Section1.scalarProduct W ξ ξ = 1 :=

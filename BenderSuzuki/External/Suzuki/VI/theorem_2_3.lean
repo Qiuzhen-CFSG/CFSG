@@ -50,13 +50,13 @@ private theorem frobeniusTI_relative
 private theorem isVirtualCharacter_zsmul_23
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {chi : ClassFunction G}
-    (hchi : Representation.IsVirtualCharacter chi) :
-    Representation.IsVirtualCharacter ((n : ℂ) • chi) := by
+    (hchi : Theory.Character.IsVirtualCharacter chi) :
+    Theory.Character.IsVirtualCharacter ((n : ℂ) • chi) := by
   classical
   rcases hchi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations,
+  simp [Theory.Character.virtualCharacterOfRepresentations,
     Finset.mul_sum, mul_assoc]
 
 @[expose] public def frobeniusExceptionalCharacter
@@ -84,7 +84,7 @@ private theorem frobeniusTheta_virtual
     {G : Type u} [Group G] [Finite G]
     (R : Subgroup G) (chi : ClassFunction R)
     (hchi : IsIrreducibleCharacterOnGroup chi) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (chi - degree chi • principalCharacter R) := by
   rcases hchi with ⟨n, rho, hirr, hchar⟩
   have hchi' : IsIrreducibleCharacterOnGroup chi :=
@@ -92,10 +92,10 @@ private theorem frobeniusTheta_virtual
   have hdegree : degree chi = (n : ℂ) := by
     rw [hchar, degree_representation_character]
     simp
-  have hprincipalR : Representation.IsVirtualCharacter
+  have hprincipalR : Theory.Character.IsVirtualCharacter
       (principalCharacter R) :=
     Section3.isVirtualCharacter_principalCharacter
-  have hscaledR : Representation.IsVirtualCharacter
+  have hscaledR : Theory.Character.IsVirtualCharacter
       (degree chi • principalCharacter R) := by
     rw [hdegree]
     simpa using isVirtualCharacter_zsmul_23 (n : ℤ) hprincipalR
@@ -106,16 +106,16 @@ private theorem frobeniusExceptionalCharacter_virtual
     {G : Type u} [Group G] [Finite G]
     (R : Subgroup G) (chi : ClassFunction R)
     (hchi : IsIrreducibleCharacterOnGroup chi) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (frobeniusExceptionalCharacter R chi) := by
   rcases hchi with ⟨n, rho, hirr, hchar⟩
   have hdegree : degree chi = (n : ℂ) := by
     rw [hchar, degree_representation_character]
     simp
-  have hprincipalG : Representation.IsVirtualCharacter
+  have hprincipalG : Theory.Character.IsVirtualCharacter
       (principalCharacter G) :=
     Section3.isVirtualCharacter_principalCharacter
-  have hscaledG : Representation.IsVirtualCharacter
+  have hscaledG : Theory.Character.IsVirtualCharacter
       (degree chi • principalCharacter G) := by
     rw [hdegree]
     simpa using isVirtualCharacter_zsmul_23 (n : ℤ) hprincipalG
@@ -132,7 +132,7 @@ private theorem frobeniusExceptionalCharacter_apply_subgroup
     frobeniusExceptionalCharacter R chi (r : G) = chi r := by
   let theta : ClassFunction R :=
     chi - degree chi • principalCharacter R
-  have hthetaVirtual : Representation.IsVirtualCharacter theta := by
+  have hthetaVirtual : Theory.Character.IsVirtualCharacter theta := by
     exact frobeniusTheta_virtual R chi hchi
   have hvalue := (suzuki_ch6_proposition_2_9 R (R : Set G) hrel theta
     hthetaVirtual (fun r hrnot => False.elim (hrnot r.property))).1
@@ -172,7 +172,7 @@ private theorem frobeniusExceptionalCharacter_irreducible
     let theta : ClassFunction R :=
       chi - degree chi • principalCharacter R
     let indTheta : ClassFunction G := inducedCF R theta
-    have hthetaVirtual : Representation.IsVirtualCharacter theta :=
+    have hthetaVirtual : Theory.Character.IsVirtualCharacter theta :=
       frobeniusTheta_virtual R chi hchi'
     have hthetaOne : theta 1 = 0 := by
       simp [theta, degree, principalCharacter]
@@ -307,7 +307,7 @@ private theorem exists_irreducibleCharacter_separates_ne_one_23
     ∃ chi : ClassFunction Q,
       IsIrreducibleCharacterOnGroup chi ∧ chi q ≠ chi 1 := by
   classical
-  rcases Representation.second_orthogonality (G := Q) with
+  rcases Theory.Character.second_orthogonality (G := Q) with
     ⟨ι, hι, chi, hchi, horth⟩
   letI : Fintype ι := hι
   by_contra hnone

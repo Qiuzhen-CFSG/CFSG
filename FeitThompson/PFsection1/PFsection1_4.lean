@@ -2,8 +2,8 @@ module
 
 public import FeitThompson.PFsection1.PFsection1_3
 public import Mathlib.Analysis.Complex.Basic
-public import FeitThompson.Representation.RepEquiv
-public import FeitThompson.Representation.Unbundled
+public import Theory.Representation.RepEquiv
+public import Theory.Representation.Unbundled
 /-!
 # Peterfalvi, Section 1, Proposition (1.4)
 
@@ -79,7 +79,7 @@ public theorem standardizeRepresentation_irreducible
     Representation.IsIrreducible (standardizeRepresentation ρ) := by
   let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
   let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
-  let eRep : Representation.RepEquiv ρ (standardizeRepresentation ρ) := by
+  let eRep : Theory.Representation.RepEquiv ρ (standardizeRepresentation ρ) := by
     refine
       { toLinearEquiv := e
         isIntertwining' := ?_ }
@@ -88,7 +88,7 @@ public theorem standardizeRepresentation_irreducible
     have h := congrArg (fun w => w i)
       (LinearMap.toMatrix_mulVec_repr (v₁ := b) (v₂ := b) (f := ρ g) v)
     simp [standardizeRepresentation, e, b, b.equivFun_apply]
-  exact (Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
+  exact (Theory.Representation.RepEquiv.irreducible_euqiv eRep).1 hρ
 
 public theorem isIrreducibleCharacterOnGroup_of_representation
     {G V : Type*} [Group G] [Finite G]

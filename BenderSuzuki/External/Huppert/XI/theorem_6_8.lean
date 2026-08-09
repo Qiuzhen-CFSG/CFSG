@@ -14,7 +14,7 @@ import BenderSuzuki.External.Huppert.XI.example_1_3
 import Mathlib.GroupTheory.DoubleCoset
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
 import Mathlib.Topology.Compactification.OnePoint.ProjectiveLine
-import FeitThompson.Representation.ElementaryAbelianAction
+import Theory.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Algebra.Subalgebra.Lattice
 import Mathlib.Algebra.Field.ULift
 import Mathlib.Algebra.Group.Units.Equiv
@@ -416,17 +416,17 @@ private theorem huppert_XI_6_8_irreducible_complement_action
     (hhalf : 2 * Nat.card D = Nat.card F - 1)
     (hfree : ∀ d : D, d ≠ 1 → ∀ x : F, d • x = x → x = 1) :
     let rho : Representation (ZMod p) D (Additive F) :=
-      Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
+      Theory.Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
     ∀ W : Submodule (ZMod p) (Additive F),
       (∀ d : D, ∀ x : Additive F, x ∈ W → rho d x ∈ W) →
         W = ⊥ ∨ W = ⊤ := by
   classical
   change ∀ W : Submodule (ZMod p) (Additive F),
     (∀ d : D, ∀ x : Additive F, x ∈ W →
-      Representation.ofElementaryAbelianAction
+      Theory.Representation.ofElementaryAbelianAction
         (A := D) (G := F) (p := p) d x ∈ W) → W = ⊥ ∨ W = ⊤
   let rho : Representation (ZMod p) D (Additive F) :=
-    Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
+    Theory.Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
   obtain ⟨f, hf, hFcard⟩ := hFcard
   have hpge : 3 ≤ p := by
     have hp2 := (Fact.out : p.Prime).two_le
@@ -556,7 +556,7 @@ private theorem huppert_XI_6_8_field_coordinates
     Subgroup.conjMulDistribMulActionOfLeNormalizer D F
       (Subgroup.le_normalizer_of_normal (H := F))
   let rho : Representation (ZMod p) D (Additive F) :=
-    Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
+    Theory.Representation.ofElementaryAbelianAction (A := D) (G := F) (p := p)
   have hfree : ∀ d : D, d ≠ 1 → ∀ x : F, d • x = x → x = 1 := by
     intro d hd x hfix
     have hconj : (d : H) * (x : H) * (d : H)⁻¹ = (x : H) := by
@@ -575,7 +575,7 @@ private theorem huppert_XI_6_8_field_coordinates
     exact Subtype.ext (by simpa using hxbot)
   have hrho : Function.Injective rho := by
     rw [← MonoidHom.ker_eq_bot_iff]
-    rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+    rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
     rw [eq_bot_iff]
     intro d hdFix
     by_contra hd
@@ -607,7 +607,7 @@ private theorem huppert_XI_6_8_field_coordinates
                 hFrob.normal.conj_mem (x : H) x.property (d : H)⟩ : F))
                 = eAdd (Additive.ofMul (d • x)) := by rw [h1]
             _ = eAdd (rho d (Additive.ofMul x)) := by
-              rw [Representation.ofElementaryAbelianAction_apply_ofMul]
+              rw [Theory.Representation.ofElementaryAbelianAction_apply_ofMul]
     _ = eAdd (Additive.ofMul x) * (scalar d : K) := htemp
 private theorem huppert_XI_6_8_quadraticChar_div_nonsquare
     {K : Type*} [Field K] [Fintype K] [DecidableEq K]

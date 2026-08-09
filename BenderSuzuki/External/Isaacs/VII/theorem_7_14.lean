@@ -49,19 +49,19 @@ private theorem isaacs_7_14_positive_degree_nat
 private theorem isaacs_7_14_isVirtualCharacter_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : Int) {phi : ClassFunction G}
-    (hphi : Representation.IsVirtualCharacter phi) :
-    Representation.IsVirtualCharacter ((n : Complex) • phi) := by
+    (hphi : Theory.Character.IsVirtualCharacter phi) :
+    Theory.Character.IsVirtualCharacter ((n : Complex) • phi) := by
   classical
   rcases hphi with ⟨r, m, k, rho, rfl⟩
   refine ⟨r, fun i => n * m i, k, rho, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 private theorem isaacs_7_14_isVirtualCharacter_finset_sum
     {G : Type u} [Group G] [Finite G]
     {I : Type*} (s : Finset I) (Phi : I -> ClassFunction G)
-    (hPhi : forall i, i ∈ s -> Representation.IsVirtualCharacter (Phi i)) :
-    Representation.IsVirtualCharacter (∑ i ∈ s, Phi i) := by
+    (hPhi : forall i, i ∈ s -> Theory.Character.IsVirtualCharacter (Phi i)) :
+    Theory.Character.IsVirtualCharacter (∑ i ∈ s, Phi i) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -80,7 +80,7 @@ private theorem isaacs_7_14_isVirtualCharacter_finset_sum
 private theorem isaacs_7_14_degree_ne_zero_of_virtual_norm_one
     {G : Type u} [Group G] [Finite G]
     {phi : ClassFunction G}
-    (hvirt : Representation.IsVirtualCharacter phi)
+    (hvirt : Theory.Character.IsVirtualCharacter phi)
     (hself : scalarProduct G phi phi = 1) :
     degree phi ≠ 0 := by
   rcases Section5.signed_irreducible_of_virtual_norm_one_pf59 hvirt hself with
@@ -259,7 +259,7 @@ private theorem isaacs_7_14_extension_fields
     (hdegreeZero :
       forall phi : ClassFunction N,
         integerSpanOn (insert chi Y0) puncturedSet phi ->
-          And (Representation.IsVirtualCharacter (tau phi))
+          And (Theory.Character.IsVirtualCharacter (tau phi))
             (supportedOn (tau phi) puncturedSet))
     (hcoherent : IsCoherentTriple puncturedSet Y0 tau)
     (hdiv :
@@ -343,7 +343,7 @@ private theorem isaacs_7_14_extension_fields
       simp [hsourceSelf]
     · simp [hxi, hsourceCross xi eta hxi]
   have hToldVirt : forall xi : Y0,
-      Representation.IsVirtualCharacter (Told (xi : ClassFunction N)) := by
+      Theory.Character.IsVirtualCharacter (Told (xi : ClassFunction N)) := by
     intro xi
     exact hToldVirt (xi : ClassFunction N) (integerSpan_of_mem Y0 xi.2)
 
@@ -362,7 +362,7 @@ private theorem isaacs_7_14_extension_fields
   have halphaOn : integerSpanOn S puncturedSet alpha := by
     exact ⟨halphaSpan,
       (supportedOn_puncturedSet_iff_degree_eq_zero alpha).2 halphaDegree⟩
-  have hTauAlphaVirt : Representation.IsVirtualCharacter (tau alpha) :=
+  have hTauAlphaVirt : Theory.Character.IsVirtualCharacter (tau alpha) :=
     (hdegreeZero alpha (by simpa [S] using halphaOn)).1
   have hTauAlphaDegree : degree (tau alpha) = 0 :=
     (supportedOn_puncturedSet_iff_degree_eq_zero _).1
@@ -395,7 +395,7 @@ private theorem isaacs_7_14_extension_fields
 
   let z : ClassFunction G :=
     tau alpha + ((d : Int) : Complex) • Told (psi : ClassFunction N)
-  have hzVirt : Representation.IsVirtualCharacter z := by
+  have hzVirt : Theory.Character.IsVirtualCharacter z := by
     exact Section3.isVirtualCharacter_add hTauAlphaVirt
       (by
         simpa [z] using isaacs_7_14_isVirtualCharacter_zsmul (d : Int)
@@ -411,14 +411,14 @@ private theorem isaacs_7_14_extension_fields
     exact Classical.choose_spec (hzCoeff xi)
   let P : ClassFunction G :=
     ∑ xi : Y0, (b xi : Complex) • Told (xi : ClassFunction N)
-  have hPVirt : Representation.IsVirtualCharacter P := by
+  have hPVirt : Theory.Character.IsVirtualCharacter P := by
     apply isaacs_7_14_isVirtualCharacter_finset_sum
       (Finset.univ : Finset Y0)
       (fun xi => (b xi : Complex) • Told (xi : ClassFunction N))
     intro xi _hxi
     simpa using isaacs_7_14_isVirtualCharacter_zsmul (b xi) (hToldVirt xi)
   let A : ClassFunction G := z - P
-  have hAVirt : Representation.IsVirtualCharacter A :=
+  have hAVirt : Theory.Character.IsVirtualCharacter A :=
     Section3.isVirtualCharacter_sub hzVirt hPVirt
 
   have hrel : forall xi : Y0,
@@ -734,7 +734,7 @@ private theorem isaacs_7_14_extension_fields
       (hsourceIrr X)).2]
     norm_num
   have himgVirt : forall X : S,
-      Representation.IsVirtualCharacter (img X) := by
+      Theory.Character.IsVirtualCharacter (img X) := by
     intro X
     by_cases hX : (X : ClassFunction N) = chi
     · simpa [img, hX] using hzVirt
@@ -888,7 +888,7 @@ public theorem isaacs_theorem_7_14
     (hdegreeZero :
       forall phi : ClassFunction N,
         integerSpanOn (insert chi Y0) puncturedSet phi ->
-          Representation.IsVirtualCharacter (tau phi) /\
+          Theory.Character.IsVirtualCharacter (tau phi) /\
             supportedOn (tau phi) puncturedSet)
     (hcoherent : IsCoherentTriple puncturedSet Y0 tau)
     (hdiv :

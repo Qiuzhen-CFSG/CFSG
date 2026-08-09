@@ -43,7 +43,7 @@ private theorem section13_exists_transformedIrreducibleFamily
     ∃ R : Finset (Section1.ClassFunction G),
       Section11.transformedIrreducibleFamily R σ := by
   classical
-  rcases Representation.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
+  rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := W) with
     ⟨ι, hι, χrep, hχrep, _hsum⟩
   letI : Fintype ι := hι
@@ -57,10 +57,10 @@ private theorem section13_exists_transformedIrreducibleFamily
   have hχcomplete : ∀ θ : Section1.ClassFunction W,
       Section1.IsIrreducibleCharacterOnGroup θ → ∃ i, χ i = θ := by
     intro θ hθirr
-    let θrep : Representation.ClassFunction W :=
+    let θrep : Theory.Character.ConjClassFunction W :=
       Section1.toConjClassFunction θ
         (Section10.isClassFunction_of_irreducibleCharacterOnGroup_sec10 hθirr)
-    have hθrepirr : Representation.IsIrreducibleCharacter θrep :=
+    have hθrepirr : Theory.Character.IsIrreducibleConjCharacter θrep :=
       Section10.toConjClassFunction_isIrreducibleCharacter_of_onGroup_sec10 hθirr
     rcases hχrep.2.1 θrep hθrepirr with ⟨i, hi⟩
     refine ⟨i, ?_⟩
@@ -5725,8 +5725,8 @@ public theorem section13_dadeTransform_eq_inducedCFLinear_of_section16TI
       Section1.inducedCFLinear M χ := by
   classical
   have hconst :
-      ∀ ψ : Representation.ClassFunction G,
-        Representation.IsIrreducibleCharacter ψ →
+      ∀ ψ : Theory.Character.ConjClassFunction G,
+        Theory.Character.IsIrreducibleConjCharacter ψ →
           ∀ ⦃a h0 : G⦄, a ∈ A → h0 ∈ R a →
             Section1.ofConjClassFunction ψ (a * h0) =
               Section1.ofConjClassFunction ψ a := by

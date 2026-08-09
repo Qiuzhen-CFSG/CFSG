@@ -19,7 +19,7 @@ public import BenderSuzuki.MatrixGroups.Suzuki
 public import BenderSuzuki.External.Higman.theorem_1a
 public import BenderSuzuki.External.Higman.theorem_1c
 import FeitThompson.BGsection3.lemma_3_2_a
-import FeitThompson.Representation.Orthogonality
+import Theory.Character.Orthogonality
 
 /-!
 # Suzuki XI.11.15

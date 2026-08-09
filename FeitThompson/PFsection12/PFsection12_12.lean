@@ -404,7 +404,7 @@ public theorem theorem_12_12_source_leaf
     have hxVcoe : (((xV : V) : T) : G) = x := by
       simpa [xV] using hxT
     let ρ :=
-      Representation.ofElementaryAbelianAction (A := E) (G := V) (p := p)
+      Theory.Representation.ofElementaryAbelianAction (A := E) (G := V) (p := p)
     letI : FiniteDimensional (ZMod p) (Additive V) := Module.Finite.of_finite
     have hρdim : Module.finrank (ZMod p) (Additive V) = 2 := by
       apply Nat.pow_right_injective hp.two_le
@@ -416,7 +416,7 @@ public theorem theorem_12_12_source_leaf
         _ = p ^ 2 := hVcardSq
     have hρinj : Function.Injective ρ := by
       apply (MonoidHom.ker_eq_bot_iff ρ).mp
-      rw [Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
+      rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
       rw [Subgroup.eq_bot_iff_forall]
       intro a haFix
       by_contra ha
@@ -517,7 +517,7 @@ public theorem theorem_12_12_source_leaf
         apply Additive.ofMul.injective
         calc
           Additive.ofMul (y • xV) = ρ y (Additive.ofMul xV) := by
-            apply (Representation.ofElementaryAbelianAction_apply_ofMul
+            apply (Theory.Representation.ofElementaryAbelianAction_apply_ofMul
               (A := E) (G := V) (p := p) y xV).symm
           _ = a • Additive.ofMul xV := ha (Additive.ofMul xV)
           _ = (a.val : ℕ) • Additive.ofMul xV := by

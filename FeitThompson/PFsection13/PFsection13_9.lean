@@ -1836,9 +1836,9 @@ private theorem theorem_13_9_eta_signedIrreducible_of_notation
   have hω_class : Section1.IsClassFunction (ω i j) := by
     rw [hωeq i j hi hj]
     exact hωFin.is_class iFin jFin
-  have hvirtW : Representation.IsVirtualCharacter (ω i j) :=
+  have hvirtW : Theory.Character.IsVirtualCharacter (ω i j) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hω_irred
-  have hvirtG : Representation.IsVirtualCharacter (σ (ω i j)) :=
+  have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω i j)) :=
     hσmap.2.1 (ω i j) hvirtW
   have hself : Section1.scalarProduct G (σ (ω i j)) (σ (ω i j)) = 1 := by
     calc
@@ -1863,9 +1863,9 @@ private theorem theorem_13_9_isIntegral_value_of_signedIrreducible
   rcases hχ with ⟨ε, hε, μ, hμ, rfl⟩
   rcases hμ with ⟨n, ρ, _hirr, hchar⟩
   rcases hε with rfl | rfl
-  · simpa [hchar] using Representation.representation_character_isIntegral (ρ := ρ) g
+  · simpa [hchar] using Theory.Character.representation_character_isIntegral (ρ := ρ) g
   · simpa [hchar] using
-      (Representation.representation_character_isIntegral (ρ := ρ) g).neg
+      (Theory.Character.representation_character_isIntegral (ρ := ρ) g).neg
 
 private theorem theorem_13_9_int_ne_neg_inv_nat_complex
     (q : ℕ) (h1q : 1 < q) :
@@ -1987,7 +1987,7 @@ private theorem theorem_13_9_nonvanishing_eta_column_eta11_neg_value_integral_so
     refine ⟨((q : ℚ)⁻¹), ?_⟩
     rw [hη]
     norm_num
-  exact Representation.isaacs_lemma_3_2_core hint hrat
+  exact Theory.Character.isaacs_lemma_3_2_core hint hrat
 
 
 private theorem theorem_13_9_nonvanishing_eta_column_eta11_value_integral_source
@@ -3534,9 +3534,9 @@ private theorem theorem_13_9_eta10_signedIrreducible_of_source
   have hω_class : Section1.IsClassFunction (ω 1 0) := by
     rw [hωeq 1 0 h1q h0p]
     exact hωFin.is_class i1 j0
-  have hvirtW : Representation.IsVirtualCharacter (ω 1 0) :=
+  have hvirtW : Theory.Character.IsVirtualCharacter (ω 1 0) :=
     Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hω_irred
-  have hvirtG : Representation.IsVirtualCharacter (σ (ω 1 0)) :=
+  have hvirtG : Theory.Character.IsVirtualCharacter (σ (ω 1 0)) :=
     hσmap.2.1 (ω 1 0) hvirtW
   have hself : Section1.scalarProduct G (σ (ω 1 0)) (σ (ω 1 0)) = 1 := by
     calc

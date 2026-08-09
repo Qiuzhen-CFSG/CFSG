@@ -118,7 +118,7 @@ public theorem exists_puncturedInducedFamily
     ∃ S : Finset (Section1.ClassFunction L),
       Section7.puncturedInducedFamily H S := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := H) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
   letI : Fintype ι := hι
   let ψ : ι → Section1.ClassFunction H :=
@@ -141,7 +141,7 @@ public theorem exists_puncturedInducedFamily
     have hθclass : Section1.IsClassFunction θ :=
       Section1.isCharacter_isClassFunction θ
         (Section1.isCharacter_of_isIrreducibleCharacterOnGroup hθirr)
-    have hθrepirr : Representation.IsIrreducibleCharacter
+    have hθrepirr : Theory.Character.IsIrreducibleConjCharacter
         (Section1.toConjClassFunction θ hθclass) := by
       rcases hθirr with ⟨n, ρ, hρ, rfl⟩
       refine ⟨?_, ?_⟩
@@ -567,7 +567,7 @@ public theorem isIrreducibleCharacterOnGroup_classFunctionOfSubgroupOf
   let e : (H.subgroupOf L) ≃* H := Subgroup.subgroupOfEquivOfLe hHL
   let ρH : Representation ℂ H (Fin n → ℂ) := ρ.comp e.symm.toMonoidHom
   refine ⟨n, ρH, ?_, ?_⟩
-  · exact Representation.RepEquiv.irreducible_of_group_iso
+  · exact Theory.Representation.RepEquiv.irreducible_of_group_iso
       (ρ := ρ) (σ := ρH) e
       (by intro h v; simp [ρH, e]) hρirr
   · ext h
@@ -990,7 +990,7 @@ public theorem scalarProduct_eq_zero_of_sub_conjugate_left_eq_zero
     {G : Type u} [Group G] [Finite G]
     {α ψ : Section1.ClassFunction G}
     (hα : Section3.IsSignedIrreducibleCharacter α)
-    (hψvirt : Representation.IsVirtualCharacter ψ)
+    (hψvirt : Theory.Character.IsVirtualCharacter ψ)
     (hψskew : Section1.conjugateCharacter ψ = -ψ)
     (hdiff : Section1.scalarProduct G
       (α - Section1.conjugateCharacter α) ψ = 0) :
@@ -1007,7 +1007,7 @@ public theorem scalarProduct_eq_zero_of_sub_conjugate_left_eq_zero
         (Section1.conjugateCharacter α) ψ = 0 := by
       simpa [a, Section5.scalarProduct_sub_left] using hdiff
     simpa [hbar, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hdiff'
-  have hαvirt : Representation.IsVirtualCharacter α :=
+  have hαvirt : Theory.Character.IsVirtualCharacter α :=
     Section3.isVirtualCharacter_of_signedIrreducible_pf35 hα
   rcases Section3.scalarProduct_isVirtualCharacter_eq_int hαvirt hψvirt with
     ⟨z, hz⟩
@@ -1457,7 +1457,7 @@ public theorem scalarProduct_restrict_inducedCF_principal_eq_zero
         · rw [Section1.IsIrreducibleCharacter]
           rw [Section1.conjugateOrbitConj_representationCharacter H ρ i]
           letI : Representation.IsIrreducible ρ := hρirr
-          exact (Representation.irreducible_iff_character_norm_one
+          exact (Theory.Character.irreducible_iff_character_norm_one
             (ρ := Section1.conjugateOrbitRepresentation H ρ i)).1
               (Section1.irreducible_conjugateRepresentation H ρ (Quotient.out i))
       exact Section1.scalarProduct_isBookIrreducible_ne
@@ -1497,8 +1497,8 @@ public theorem scalarProduct_restriction_principalCharacter_nat
 irreducible character after forgetting the conjugacy-class wrapper. -/
 public theorem isBookIrreducibleCharacter_of_representation_irreducible
     {G : Type u} [Group G] [Finite G]
-    (χ : Representation.ClassFunction G)
-    (hχ : Representation.IsIrreducibleCharacter χ) :
+    (χ : Theory.Character.ConjClassFunction G)
+    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
     Section1.IsBookIrreducibleCharacter (Section1.ofConjClassFunction χ) := by
   rcases hχ with ⟨hchar, hirr⟩
   constructor
@@ -1527,7 +1527,7 @@ public theorem character_irreducible_decomposition_all
   classical
   have hφclass : Section1.IsClassFunction φ :=
     Section1.isCharacter_isClassFunction φ hφchar
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -2038,7 +2038,7 @@ public theorem representation_isIrreducibleCharacter_toConjClassFunction
     {G : Type u} [Group G] [Finite G]
     {χ : Section1.ClassFunction G}
     (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    Representation.IsIrreducibleCharacter
+    Theory.Character.IsIrreducibleConjCharacter
       (Section1.toConjClassFunction χ
         (Section1.isCharacter_isClassFunction χ
           (isCharacter_of_isIrreducibleCharacterOnGroup hχ))) := by
@@ -2049,7 +2049,7 @@ public theorem representation_isIrreducibleCharacter_toConjClassFunction
   · rcases hχ with ⟨n, ρ, _hρirr, hχeq⟩
     refine ⟨n, ρ, ?_⟩
     exact Section1.toConjClassFunction_eq_of_apply χ hχclass
-      (Representation.characterClassFunction ρ) (by
+      (Theory.Character.characterClassFunction ρ) (by
         intro g
         rw [hχeq]
         rfl)
@@ -2072,7 +2072,7 @@ public theorem classFunction_irreducible_decomposition_all
           Section1.IsIrreducibleCharacterOnGroup χ → ∃ i : ι, ψ i = χ) ∧
         φ = Section1.weightedFamilySum c ψ := by
   classical
-  rcases Representation.irreducible_characters_form_basis (G := G) with
+  rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
   letI : Fintype ι := hι
   letI : DecidableEq ι := Classical.decEq ι
@@ -2099,7 +2099,7 @@ public theorem classFunction_irreducible_decomposition_all
     let hχ0class : Section1.IsClassFunction χ0 :=
       Section1.isCharacter_isClassFunction χ0
         (isCharacter_of_isIrreducibleCharacterOnGroup hχ0irr)
-    have hχ0rep : Representation.IsIrreducibleCharacter
+    have hχ0rep : Theory.Character.IsIrreducibleConjCharacter
         (Section1.toConjClassFunction χ0 hχ0class) :=
       representation_isIrreducibleCharacter_toConjClassFunction hχ0irr
     rcases hχ.2.1 (Section1.toConjClassFunction χ0 hχ0class) hχ0rep with
@@ -2625,29 +2625,29 @@ public theorem dadeTransformDefinedOnFamily_of_dadeIsometry
 public theorem isVirtualCharacter_zsmul
     {G : Type u} [Group G] [Finite G]
     (n : ℤ) {χ : Section1.ClassFunction G}
-    (hχ : Representation.IsVirtualCharacter χ) :
-    Representation.IsVirtualCharacter (n • χ) := by
+    (hχ : Theory.Character.IsVirtualCharacter χ) :
+    Theory.Character.IsVirtualCharacter (n • χ) := by
   classical
   rcases hχ with ⟨r, m, k, ρ, rfl⟩
   refine ⟨r, fun i => n * m i, k, ρ, ?_⟩
   ext g
-  simp [Representation.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
+  simp [Theory.Character.virtualCharacterOfRepresentations, Finset.mul_sum, mul_assoc]
 
 /-- Finite sums of virtual characters are virtual characters. -/
 public theorem isVirtualCharacter_finset_sum
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} (s : Finset ι) (Φ : ι → Section1.ClassFunction G)
-    (hΦ : ∀ i ∈ s, Representation.IsVirtualCharacter (Φ i)) :
-    Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+    (hΦ : ∀ i ∈ s, Theory.Character.IsVirtualCharacter (Φ i)) :
+    Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       refine ⟨0, (fun i => nomatch i), (fun i => nomatch i), (fun i => nomatch i), ?_⟩
       ext g
-      simp [Representation.virtualCharacterOfRepresentations]
+      simp [Theory.Character.virtualCharacterOfRepresentations]
   | @insert a s ha ih =>
-      have ha' : Representation.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
-      have hs' : Representation.IsVirtualCharacter (Finset.sum s Φ) := by
+      have ha' : Theory.Character.IsVirtualCharacter (Φ a) := hΦ a (Finset.mem_insert_self a s)
+      have hs' : Theory.Character.IsVirtualCharacter (Finset.sum s Φ) := by
         refine ih ?_
         intro i hi
         exact hΦ i (Finset.mem_insert_of_mem hi)
@@ -2659,9 +2659,9 @@ public theorem isVirtualCharacter_evalCoeff
     {G : Type u} [Group G] [Finite G]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (μ : ι → Section1.ClassFunction G)
-    (hμ : ∀ i, Representation.IsVirtualCharacter (μ i))
+    (hμ : ∀ i, Theory.Character.IsVirtualCharacter (μ i))
     (v : Section1.CoeffVector ι) :
-    Representation.IsVirtualCharacter (Section1.evalCoeff μ v) := by
+    Theory.Character.IsVirtualCharacter (Section1.evalCoeff μ v) := by
   classical
   rw [Section1.evalCoeff]
   refine isVirtualCharacter_finset_sum (Finset.univ : Finset ι)
@@ -2676,10 +2676,10 @@ public theorem isVirtualCharacter_of_integerSpan
     {G : Type u} [Group G] [Finite G]
     (S : Finset (Section1.ClassFunction G))
     (hS : ∀ χ : Section1.ClassFunction G, χ ∈ S →
-      Representation.IsVirtualCharacter χ)
+      Theory.Character.IsVirtualCharacter χ)
     (α : Section1.ClassFunction G)
     (hα : Section5.integerSpan S α) :
-    Representation.IsVirtualCharacter α := by
+    Theory.Character.IsVirtualCharacter α := by
   rcases hα with ⟨v, rfl⟩
   exact isVirtualCharacter_evalCoeff (fun X : S => (X : Section1.ClassFunction G))
     (fun X => hS X X.property) v
@@ -2943,7 +2943,7 @@ public theorem hypothesis_5_2_b_of_constituentUnion
       φ ∈ SXall ↔ ∃ χ : S, φ ∈ SX χ)
     (hDade : dadeTransformDefinedOnFamily (typeIASet L H) R τ SXall)
     (hvirt : ∀ χ : Section1.ClassFunction L, χ ∈ S →
-      Representation.IsVirtualCharacter χ) :
+      Theory.Character.IsVirtualCharacter χ) :
     Section5.hypothesis_5_2_b_statement S τ := by
   rcases hτ with ⟨h22, _hTransform⟩
   rcases hDade with ⟨hAL, hDade⟩
@@ -3033,7 +3033,7 @@ public theorem hypothesis_5_2_b_of_dadeTransformDefinedOnFamily
     (hτ : dadeIsometryRelativeToTypeIASet L H R τ)
     (hDade : dadeTransformDefinedOnFamily (typeIASet L H) R τ S)
     (hvirt : ∀ χ : Section1.ClassFunction L, χ ∈ S →
-      Representation.IsVirtualCharacter χ) :
+      Theory.Character.IsVirtualCharacter χ) :
     Section5.hypothesis_5_2_b_statement S τ := by
   rcases hτ with ⟨h22, _hTransform⟩
   rcases hDade with ⟨hAL, hDade⟩
@@ -3558,7 +3558,7 @@ public theorem sourceVirtualCharacters_of_puncturedInducedFamily
     (S : Finset (Section1.ClassFunction L))
     (hS : Section7.puncturedInducedFamily (H.subgroupOf L) S) :
     ∀ χ : Section1.ClassFunction L, χ ∈ S →
-      Representation.IsVirtualCharacter χ := by
+      Theory.Character.IsVirtualCharacter χ := by
   intro χ hχ
   rcases (hS χ).mp hχ with ⟨θ, hθirr, _hθne, rfl⟩
   exact Section5.isVirtualCharacter_of_isCharacter
@@ -3792,8 +3792,8 @@ public theorem constituentFamily_hypothesis_5_2_c_of_parts
 Section 1 class-function model. -/
 public theorem isIrreducibleCharacterOnGroup_of_representation_irreducibleCharacter
     {G : Type u} [Group G] [Finite G]
-    (χ : Representation.ClassFunction G)
-    (hχ : Representation.IsIrreducibleCharacter χ) :
+    (χ : Theory.Character.ConjClassFunction G)
+    (hχ : Theory.Character.IsIrreducibleConjCharacter χ) :
     Section1.IsIrreducibleCharacterOnGroup
       (Section1.ofConjClassFunction χ) := by
   rcases Section1.representation_irreducibleCharacter_witness_irreducible χ hχ with
@@ -3818,7 +3818,7 @@ public theorem exists_nonprincipal_irreducibleCharacterOnGroup_of_nontrivial
     exact hg (isConj_one_left.mp hconj)
   have hconj_card : 1 < Nat.card (ConjClasses G) :=
     (Finite.one_lt_card_iff_nontrivial).2 hconj_nontrivial
-  rcases Representation.card_irreducible_characters_eq_card_conjClasses (G := G) with
+  rcases Theory.Character.card_irreducible_characters_eq_card_conjClasses (G := G) with
     ⟨ι, hι, χ, hχ, hcard⟩
   letI : Fintype ι := hι
   have hι_card : 1 < Fintype.card ι := by
@@ -4156,7 +4156,7 @@ public theorem hypothesis_5_2_b_of_constituentFamilyData
     (hτ : dadeIsometryRelativeToTypeIASet L H R τ)
     (hdata : constituentFamilyData L H S SX R τ)
     (hvirt : ∀ χ : Section1.ClassFunction L, χ ∈ S →
-      Representation.IsVirtualCharacter χ) :
+      Theory.Character.IsVirtualCharacter χ) :
     Section5.hypothesis_5_2_b_statement S τ := by
   rcases hdata with ⟨hsets, SXall, hmem, hDade⟩
   exact hypothesis_5_2_b_of_constituentUnion
@@ -4192,7 +4192,7 @@ public theorem isVirtualCharacter_tau_sub_conjugate_of_hypothesis12
     (hdata : constituentFamilyData L H S SX R τ)
     {χ : Section1.ClassFunction L}
     (hχ : χ ∈ S) :
-    Representation.IsVirtualCharacter
+    Theory.Character.IsVirtualCharacter
       (τ (χ - Section1.conjugateCharacter χ)) := by
   have hsetup : Section5.hypothesis_5_2_setup_statement S :=
     hypothesis_5_2_setup_of_hypothesis12 L H S R τ hhyp
@@ -4876,7 +4876,7 @@ public theorem scalarProduct_rFamilyDiff_left_member_eq_zero_of_theorem_12_3_sou
     {R1 : Finset (Section1.ClassFunction G)}
     (hR1 : rFamilyData (χ1 : Section1.ClassFunction L1) (SX1 χ1) τ1 R1a R1)
     (hdiff1 : rFamilyDiffData (SX1 χ1) τ1 R1)
-    (hψvirt : Representation.IsVirtualCharacter
+    (hψvirt : Theory.Character.IsVirtualCharacter
       (τ2 (χ2 - Section1.conjugateCharacter χ2)))
     (hψskew : Section1.conjugateCharacter
       (τ2 (χ2 - Section1.conjugateCharacter χ2)) =
@@ -4931,7 +4931,7 @@ public theorem orthogonalFinsets_of_cross_rFamilyData_core
     Section5.orthogonalFinsets R1 R2 := by
   have hdiff1 : rFamilyDiffData (SX1 χ1) τ1 R1 :=
     rFamilyDiffData_of_hypothesis12_rFamilyData hhyp1 hdata1 hR1
-  have hψvirt : Representation.IsVirtualCharacter
+  have hψvirt : Theory.Character.IsVirtualCharacter
       (τ2 (χ2 - Section1.conjugateCharacter χ2)) :=
     isVirtualCharacter_tau_sub_conjugate_of_hypothesis12
       L2 H2 S2 SX2 Rade2 τ2 hhyp2 hdata2 hχ2
@@ -6044,7 +6044,7 @@ public theorem theorem_12_4_four_constituent_source_family_data
     rcases hhyp with ⟨_hmax, _hMF, _hTypeI, _hS, hτ⟩
     exact hτ
   have hvirtAll : ∀ φ : Section1.ClassFunction L, φ ∈ SXall →
-      Representation.IsVirtualCharacter φ := by
+      Theory.Character.IsVirtualCharacter φ := by
     intro φ hφ
     exact Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup
       (constituentFamily_irreducible_of_parts hsets hmem hφ)
@@ -6131,7 +6131,7 @@ public theorem theorem_12_4_image_family_facts_of_signed_difference_output
       τ ((Y : Section1.ClassFunction L) - (X : Section1.ClassFunction L)) =
         ε • (μ Y - μ X)) :
     ∃ img : U → Section1.ClassFunction G,
-      (∀ Y : U, Representation.IsVirtualCharacter (img Y)) ∧
+      (∀ Y : U, Theory.Character.IsVirtualCharacter (img Y)) ∧
         (∀ Y : U,
           τ ((X : Section1.ClassFunction L) -
               (Y : Section1.ClassFunction L)) =
@@ -6327,13 +6327,13 @@ public theorem isIntegralIsometryOnCharacterDifferencesFrom_of_hypothesis_5_2_b
             IsIntegralIsometryOnCharacterDifferencesFrom
               muBasis d (fun Y : U => (Y : Section1.ClassFunction L)) X τ := by
   classical
-  let basisExist := Representation.irreducible_characters_form_basis (G := G)
+  let basisExist := Theory.Character.irreducible_characters_form_basis (G := G)
   let ι := Classical.choose basisExist
   let basisExist1 := Classical.choose_spec basisExist
   let instι : Fintype ι := Classical.choose basisExist1
   let basisExist2 := Classical.choose_spec basisExist1
   let χ := Classical.choose basisExist2
-  have hχ : Representation.IsCompleteIrreducibleCharacterFamily χ :=
+  have hχ : Theory.Character.IsCompleteIrreducibleCharacterFamily χ :=
     (Classical.choose_spec basisExist2).1
   let basisExist3 := (Classical.choose_spec basisExist2).2
   let b := Classical.choose basisExist3
@@ -6377,7 +6377,7 @@ public theorem isIntegralIsometryOnCharacterDifferencesFrom_of_hypothesis_5_2_b
       Section1.degree (X : Section1.ClassFunction L) = 0
     rw [hdeg Y X]
     simp
-  have hTvirt : ∀ Y : U, Representation.IsVirtualCharacter (τ (α Y)) := by
+  have hTvirt : ∀ Y : U, Theory.Character.IsVirtualCharacter (τ (α Y)) := by
     intro Y
     exact (h52b.2 (α Y) (hspanOn Y)).1
   have hTdeg : ∀ Y : U, Section1.degree (τ (α Y)) = 0 := by
@@ -6683,14 +6683,14 @@ public theorem dadeTransform_eq_inducedCF_of_irreducible_dade_coset_constancy_on
     (h : Section2.Hypothesis2 A L R) (hAL : ∀ a : G, a ∈ A → a ∈ L)
     (α : Section1.ClassFunction L)
     (hα : Section2.CFOn L B α)
-    (hconst : ∀ χ : Representation.ClassFunction G,
-      Representation.IsIrreducibleCharacter χ →
+    (hconst : ∀ χ : Theory.Character.ConjClassFunction G,
+      Theory.Character.IsIrreducibleConjCharacter χ →
         ∀ ⦃a h0 : G⦄, a ∈ B → h0 ∈ R a →
           Section1.ofConjClassFunction χ (a * h0) =
             Section1.ofConjClassFunction χ a) :
     Section2.dadeTransform R hAL α = Section1.inducedCF L α := by
   classical
-  let χfun : Representation.ClassFunction G → Section1.ClassFunction G :=
+  let χfun : Theory.Character.ConjClassFunction G → Section1.ClassFunction G :=
     fun χ => Section1.ofConjClassFunction χ
   have hαA : Section2.CFOn L A α := CFOn_mono hBA hα
   have hDadeclass :
@@ -6745,7 +6745,7 @@ public theorem dadeTransform_eq_inducedCF_of_irreducible_dade_coset_constancy_on
           field_simp [hcard_ne]
         simpa [Section1.subgroupRestriction] using havg)
   calc
-    Representation.classFunctionInner
+    Theory.Character.classFunctionInner
         (Section1.toConjClassFunction
           (Section2.dadeTransform R hAL α) hDadeclass) chi
         = Section1.scalarProduct G (Section2.dadeTransform R hAL α)
@@ -6765,7 +6765,7 @@ public theorem dadeTransform_eq_inducedCF_of_irreducible_dade_coset_constancy_on
           symm
           exact Section1.scalarProduct_inducedCF_left L α (χfun chi)
             (Section1.ofConjClassFunction_isClassFunction chi)
-    _ = Representation.classFunctionInner
+    _ = Theory.Character.classFunctionInner
         (Section1.toConjClassFunction
           (Section1.inducedCF L α) hIndclass) chi := by
           symm
@@ -6812,8 +6812,8 @@ public theorem irreducible_dade_coset_constancy_on_typeIASetMinusHSharp
     (hnot : Section8.notation_8_14_source_data L
       (typeIASet L H) (typeIASet L H) (Section8.a1Set H)
       D tildeA tildeA0 tildeA1 Rade) :
-    ∀ χ : Representation.ClassFunction G,
-      Representation.IsIrreducibleCharacter χ →
+    ∀ χ : Theory.Character.ConjClassFunction G,
+      Theory.Character.IsIrreducibleConjCharacter χ →
         ∀ ⦃a h0 : G⦄, a ∈ typeIASetMinusHSharp L H →
           h0 ∈ Rade a →
             Section1.ofConjClassFunction χ (a * h0) =
@@ -6897,8 +6897,8 @@ public theorem theorem_12_4_dade_induction_lemma_source_data_of_source_inputs
     section16TISubset_typeIASetMinusHSharp_of_theorem_8_12
       L H S Rade τ hmin hMs hhyp
   have hconst :
-      ∀ χ : Representation.ClassFunction G,
-        Representation.IsIrreducibleCharacter χ →
+      ∀ χ : Theory.Character.ConjClassFunction G,
+        Theory.Character.IsIrreducibleConjCharacter χ →
           ∀ ⦃a h0 : G⦄, a ∈ typeIASetMinusHSharp L H →
             h0 ∈ Rade a →
               Section1.ofConjClassFunction χ (a * h0) =

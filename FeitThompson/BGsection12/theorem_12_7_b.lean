@@ -515,7 +515,7 @@ public theorem section12_exists_isCompl_isInvariant_of_elementaryAbelian_coprime
   letI : CommGroup V := IsMulCommutative.instCommGroup
   letI : AddCommGroup (Additive V) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive V) :=
-    Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
+    Theory.Representation.ofElementaryAbelianAction (A := A) (G := V) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
   letI : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=

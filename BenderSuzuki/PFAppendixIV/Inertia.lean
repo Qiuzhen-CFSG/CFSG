@@ -4,8 +4,8 @@ Authors: OpenAI
 
 module
 
-public import FeitThompson.Representation.RepEnd
-public import FeitThompson.Representation.ConjugateRep
+public import Theory.Representation.RepEnd
+public import Theory.Representation.ConjugateRep
 public import Mathlib.FieldTheory.Fixed
 
 /-!
@@ -24,11 +24,11 @@ public noncomputable def conjugateRep_equiv_one
     {H : Subgroup G} [H.Normal]
     {V : Type u} [AddCommGroup V] [Module F V]
     (rho : Representation F H V) :
-    rho ≃ₗ Representation.conjugateRep rho (1 : G) := by
-  refine Representation.RepEquiv.mk (LinearEquiv.refl F V) ?_
+    rho ≃ₗ Theory.Representation.conjugateRep rho (1 : G) := by
+  refine Theory.Representation.RepEquiv.mk (LinearEquiv.refl F V) ?_
   intro h
   ext x
-  simp [Representation.conjugateRep_apply]
+  simp [Theory.Representation.conjugateRep_apply]
 
 /-- Transport a conjugacy equivalence after conjugating both representations on the right. -/
 public noncomputable def conjugateRep_equiv_mul_left
@@ -36,18 +36,18 @@ public noncomputable def conjugateRep_equiv_mul_left
     {H : Subgroup G} [H.Normal]
     {V : Type u} [AddCommGroup V] [Module F V]
     (rho : Representation F H V) {a g : G}
-    (e : rho ≃ₗ Representation.conjugateRep rho a) :
-    Representation.conjugateRep rho g ≃ₗ
-      Representation.conjugateRep rho (a * g) := by
-  refine Representation.RepEquiv.mk e.toLinearEquiv ?_
+    (e : rho ≃ₗ Theory.Representation.conjugateRep rho a) :
+    Theory.Representation.conjugateRep rho g ≃ₗ
+      Theory.Representation.conjugateRep rho (a * g) := by
+  refine Theory.Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro h
   ext x
   change e (rho ⟨g * h * g⁻¹,
     Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ x) =
       rho ⟨(a * g) * h * (a * g)⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (a * g)⟩ (e x)
-  simpa only [Representation.conjugateRep_apply, mul_inv_rev, mul_assoc] using
-    Representation.RepEquiv.isIntertwining e
+  simpa only [Theory.Representation.conjugateRep_apply, mul_inv_rev, mul_assoc] using
+    Theory.Representation.RepEquiv.isIntertwining e
       ⟨g * h * g⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ x
 
@@ -57,19 +57,19 @@ public noncomputable def conjugateRep_diff_equiv
     {H : Subgroup G} [H.Normal]
     {V : Type u} [AddCommGroup V] [Module F V]
     (rho : Representation F H V) {g x : G}
-    (e : Representation.conjugateRep rho g ≃ₗ
-      Representation.conjugateRep rho x) :
-    rho ≃ₗ Representation.conjugateRep rho (x * g⁻¹) := by
-  refine Representation.RepEquiv.mk e.toLinearEquiv ?_
+    (e : Theory.Representation.conjugateRep rho g ≃ₗ
+      Theory.Representation.conjugateRep rho x) :
+    rho ≃ₗ Theory.Representation.conjugateRep rho (x * g⁻¹) := by
+  refine Theory.Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro h
   ext y
   let h' : H := ⟨g⁻¹ * h * g, by
     simpa using (inferInstance : H.Normal).conj_mem (h : G) h.2 g⁻¹⟩
-  change e (rho h y) = (rho.conjugateRep (x * g⁻¹)) h (e y)
-  simpa only [h', Representation.conjugateRep_apply, LinearMap.comp_apply,
+  change e (rho h y) = (Theory.Representation.conjugateRep rho (x * g⁻¹)) h (e y)
+  simpa only [h', Theory.Representation.conjugateRep_apply, LinearMap.comp_apply,
     mul_inv_rev, inv_inv, mul_inv_cancel, mul_inv_cancel_left, mul_inv_cancel_right,
     mul_one, mul_assoc] using
-    (Representation.RepEquiv.isIntertwining e h' y)
+    (Theory.Representation.RepEquiv.isIntertwining e h' y)
 
 /-- The subgroup stabilizing the isomorphism class of a representation of a normal subgroup. -/
 public noncomputable def representationInertiaSubgroup
@@ -77,7 +77,7 @@ public noncomputable def representationInertiaSubgroup
     (H : Subgroup G) [H.Normal]
     {V : Type u} [AddCommGroup V] [Module F V]
     (rho : Representation F H V) : Subgroup G where
-  carrier := {g | Nonempty (rho ≃ₗ Representation.conjugateRep rho g)}
+  carrier := {g | Nonempty (rho ≃ₗ Theory.Representation.conjugateRep rho g)}
   one_mem' := ⟨conjugateRep_equiv_one rho⟩
   mul_mem' := by
     intro a b ha hb
@@ -100,7 +100,7 @@ public noncomputable def representationInertiaSubgroup
     {V : Type u} [AddCommGroup V] [Module F V]
     (rho : Representation F H V) (g : G) :
     g ∈ representationInertiaSubgroup H rho ↔
-      Nonempty (rho ≃ₗ Representation.conjugateRep rho g) := Iff.rfl
+      Nonempty (rho ≃ₗ Theory.Representation.conjugateRep rho g) := Iff.rfl
 
 
 end PFAppendixIV
