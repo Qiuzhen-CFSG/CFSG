@@ -3087,40 +3087,6 @@ private theorem alphaChar_corrected_tau_cfNormSq_of_hypothesis_10_4_data
   change Section5.cfNormSq Y = 2
   nlinarith
 
-private theorem alphaChar_corrected_tau_isVirtualCharacter_of_hypothesis_10_4_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {I J : Type*}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h : hypothesis_10_4_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0 μ δSign ω σ d n δ)
-    {j : J}
-    (hj : j ≠ j0) :
-    Representation.IsVirtualCharacter
-      (τ (alphaChar μ ξ n δ j0 i0 j) + (n : ℂ) • τ₁ ξ) := by
-  exact Section3.isVirtualCharacter_add
-    (alphaChar_tau_isVirtualCharacter_of_hypothesis_10_4_data h hj)
-    (isVirtualCharacter_natCast_smul_sec10_base n
-      (tauOne_xi_isVirtualCharacter_of_hypothesis_10_4_data h))
-
 private theorem classFunction_eq_of_norm_eq_and_sub_orthogonal_pf105
     {G : Type u} [Group G] [Finite G]
     {Y Z : Section1.ClassFunction G}
@@ -3596,42 +3562,6 @@ private theorem coefficientNonzeroCount_sigma_omega_le_cfNormSq_pf109_supported
       χ horth hχvirt hYvirt
   simpa [Section3.coefficientNonzeroCount, χ] using hcount
 
-private theorem alphaChar_corrected_tau_sigma_omega_count_le_two_of_hypothesis_10_4_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {I J : Type*}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h : hypothesis_10_4_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0 μ δSign ω σ d n δ)
-    {j : J} (hj : j ≠ j0) :
-    Section3.coefficientNonzeroCount
-        (fun i k =>
-          Section1.scalarProduct G
-            (τ (alphaChar μ ξ n δ j0 i0 j) + (n : ℂ) • τ₁ ξ)
-            (σ (ω i k))) ≤ 2 := by
-  exact coefficientNonzeroCount_sigma_omega_le_two_of_virtual_norm_two_pf105
-    (section10FourSixNotation_of_hypothesis_10_4_data h)
-    (alphaChar_corrected_tau_isVirtualCharacter_of_hypothesis_10_4_data h hj)
-    (alphaChar_corrected_tau_cfNormSq_of_hypothesis_10_4_data h hj)
-
 public theorem coefficientNonzeroCount_le_four_of_two_cell_update_pf105
     {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
     (a b : I → J → ℂ) {i0 : I} {j1 j2 : J}
@@ -3948,7 +3878,13 @@ private theorem alphaChar_corrected_tau_residual_sigma_omega_count_le_four_of_hy
   have hnotation := section10FourSixNotation_of_hypothesis_10_4_data h
   have ha : Section3.coefficientNonzeroCount a ≤ 2 := by
     dsimp [a, Y]
-    exact alphaChar_corrected_tau_sigma_omega_count_le_two_of_hypothesis_10_4_data h hj
+    exact coefficientNonzeroCount_sigma_omega_le_two_of_virtual_norm_two_pf105
+      (section10FourSixNotation_of_hypothesis_10_4_data h)
+      (Section3.isVirtualCharacter_add
+        (alphaChar_tau_isVirtualCharacter_of_hypothesis_10_4_data h hj)
+        (isVirtualCharacter_natCast_smul_sec10_base _
+          (tauOne_xi_isVirtualCharacter_of_hypothesis_10_4_data h)))
+      (alphaChar_corrected_tau_cfNormSq_of_hypothesis_10_4_data h hj)
   have hzero : ∀ i k, b i k ≠ 0 →
       a i k ≠ 0 ∨ (i, k) = (i0, j) ∨ (i, k) = (i0, j0) := by
     intro i k hb
@@ -4536,8 +4472,13 @@ private theorem alphaChar_corrected_tau_residual_sigma_omega_orthogonal_of_hypot
     exact alphaChar_corrected_tau_cfNormSq_of_hypothesis_10_4_data h hj
   have ha_count : Section3.coefficientNonzeroCount a ≤ 2 := by
     dsimp [a, Y]
-    exact alphaChar_corrected_tau_sigma_omega_count_le_two_of_hypothesis_10_4_data
-      h hj
+    exact coefficientNonzeroCount_sigma_omega_le_two_of_virtual_norm_two_pf105
+      (section10FourSixNotation_of_hypothesis_10_4_data h)
+      (Section3.isVirtualCharacter_add
+        (alphaChar_tau_isVirtualCharacter_of_hypothesis_10_4_data h hj)
+        (isVirtualCharacter_natCast_smul_sec10_base _
+          (tauOne_xi_isVirtualCharacter_of_hypothesis_10_4_data h)))
+      (alphaChar_corrected_tau_cfNormSq_of_hypothesis_10_4_data h hj)
   have ha_norm : (∑ p : I × J, Complex.normSq (a p.1 p.2)) ≤ 2 := by
     dsimp [a]
     exact sigma_omega_coeff_normSq_sum_le_two_of_virtual_norm_two_pf105
@@ -5584,18 +5525,6 @@ private theorem theorem_10_7_frobenius_bridge_of_hypothesis_9_5_canonical
     Smax SF U W1 W2 H0 C Cprime T p.val (Nat.card W1) u S SH0Cprime
     h95full ⟨p, rfl, hpData⟩ rfl hBarU hSH0Cprime (hno u hBarU) hTypeII
 
-private theorem theorem_10_7_not_typeIII_or_typeIV_of_typeII
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup M MF)
-    (hTypeII : section16TypeII M MF) :
-    ¬ (section16TypeIII M MF ∨ section16TypeIV M MF) := by
-  exact Section8.section16_not_typeIII_or_typeIV_of_typeII hM hMF hTypeII
-
 private theorem theorem_10_7_hypothesis_9_2_pair_source_data
     {G : Type u}
     [Group G]
@@ -5613,7 +5542,7 @@ private theorem theorem_10_7_hypothesis_9_2_pair_source_data
     (_hF : Section8.typeFData (ambientDerivedSubgroup Smax) SF U U1 U0) :
     Section9.hypothesis_9_2_statement Smax SF U W1S W2S (Nat.card W1S) := by
   have hnotIIIIV : ¬ (section16TypeIII Smax SF ∨ section16TypeIV Smax SF) :=
-    theorem_10_7_not_typeIII_or_typeIV_of_typeII _hSmax _hSF _hTypeII
+    Section8.section16_not_typeIII_or_typeIV_of_typeII _hSmax _hSF _hTypeII
   exact
     { maximal := _hSmax
       mf := _hSF
@@ -5818,7 +5747,7 @@ private theorem theorem_10_7_msChoice_eq_mf_of_typeII
   rcases hMs with hEarly | hLate
   · exact hEarly.2
   · exfalso
-    exact theorem_10_7_not_typeIII_or_typeIV_of_typeII hSmax hSF hTypeII hLate.1
+    exact Section8.section16_not_typeIII_or_typeIV_of_typeII hSmax hSF hTypeII hLate.1
 
 private theorem theorem_10_7_section8_fullData_dade_typeII_source_data
     {G : Type u}
@@ -6890,19 +6819,6 @@ private theorem theorem_10_7_exists_notation_8_10_of_typeII_not_typeI_source_dat
     h92.maximal h92.mf hTypeII h92.typePDefinitionData
     h92.typeIIToIVSourceCondition hUcomm hUnorm hF
 
-private theorem theorem_10_7_not_typeI_of_hypothesis_9_2_typeII_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {Smax SF U W1S W2S : Subgroup G}
-    (_hTypeII : section16TypeII Smax SF)
-    (_h92 : Section9.hypothesis_9_2_statement Smax SF U W1S W2S (Nat.card W1S)) :
-    ¬ Section8.typeIDefinitionData Smax SF := by
-  exact Section8.not_typeIDefinitionData_of_typeP_source_data
-    _h92.typePDefinitionData
-
-
 private theorem theorem_10_7_section16MFSubgroup_subgroupOf_normal
     {G : Type u}
     [Group G]
@@ -7000,48 +6916,6 @@ private theorem theorem_10_7_typeP_not_section8FrobeniusGroupWithKernel
   intro hfrob
   exact theorem_10_7_typeP_not_frobeniusWithKernel hP
     (theorem_10_7_frobeniusWithKernel_of_section8_frobenius hP.1 hfrob)
-
-private theorem theorem_10_7_source_typeI_exclusion_of_hypothesis_9_2_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {Smax SF U W1S W2S : Subgroup G}
-    (_hTypeII : section16TypeII Smax SF)
-    (_h92 : Section9.hypothesis_9_2_statement Smax SF U W1S W2S (Nat.card W1S)) :
-    ¬ Section8.typeIDefinitionData Smax SF := by
-  exact theorem_10_7_not_typeI_of_hypothesis_9_2_typeII_source_data _hTypeII _h92
-
-private theorem theorem_10_7_source_typeI_exclusion_of_typeII_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {Smax SF : Subgroup G}
-    {U W1S W2S H0 C Cprime : Subgroup G}
-    (_hSmax : Smax ∈ section9MaximalSubgroups G)
-    (_hSF : section16MFSubgroup Smax SF)
-    (_hTypeII : section16TypeII Smax SF)
-    (T : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (S9 : Finset (Section1.ClassFunction Smax))
-    (_h95 : Section9.Hypothesis_9_5 Smax SF U W1S W2S H0 C Cprime T S9) :
-    ¬ Section8.typeIDefinitionData Smax SF := by
-  exact theorem_10_7_source_typeI_exclusion_of_hypothesis_9_2_source_data
-    _hTypeII _h95.hypothesis92
-
-private theorem theorem_10_7_typeIIDefinitionData_conj_back_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF LF : Subgroup G}
-    (g : G)
-    (hMF : section16MFSubgroup M MF)
-    (hLF : section16MFSubgroup (M.conjBy g) LF)
-    (hType : Section8.typeIIDefinitionData (M.conjBy g) LF) :
-    Section8.typeIIDefinitionData M MF := by
-  exact Section8.theorem_8_18_typeIIDefinitionData_conj_back
-    g hMF hLF hType
-
 
 private theorem theorem_10_7_kernelInducedSubfamily_mem_family
     {G : Type u}
@@ -7498,24 +7372,6 @@ private theorem theorem_10_7_omegaSystem_transport_swap_of_conjugating_equiv
     simp [Subgroup.conjBy, MulAut.conj_apply, mul_assoc]
   exact Section6.theorem_6_8_notation_3_3_transport e hcard1 hcard2 hmem1 hmem2
     (Section3.notation_3_3_statement_swap hω)
-
-
-private theorem theorem_10_7_typeP_partner_cyclicTI_selected_pair_sigma_agrees_selected_cyclicTI_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {Smax W1S W2S Ms : Subgroup G}
-    (d52 : Section8.section8Hypothesis52FullData Smax Ms W1S W2S
-      (Section8.section8CentralizerUnion (ambientDerivedSubgroup Smax) Ms)) :
-    ∀ α : Section1.ClassFunction d52.W,
-      Section1.IsClassFunction α →
-        ∀ x : Smax, ∀ hx : x ∈
-          Section3.cyclicTISet (W1S.subgroupOf Smax) (W2S.subgroupOf Smax) d52.W,
-            d52.sigma α (x : G) =
-              α ⟨x, Section3.cyclicTISet_subset
-                (W1S.subgroupOf Smax) (W2S.subgroupOf Smax) d52.W hx⟩ := by
-  exact Section8.section8Hypothesis52FullData_sigma_agrees_on_cyclicTI_source_data d52
 
 
 private theorem theorem_10_7_eq_conjBy_of_subgroupOf_map_conj
@@ -9453,42 +9309,6 @@ private theorem theorem_10_8_ambientRelativePF39_baseColumnBridge_supported
       (by simpa [Nat.card_eq_fintype_card, hcardW1F] using hcop) c hconj i hi
 
 
-private theorem theorem_10_8_baseColumnPF39_c_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    ∀ i : I, i ≠ i0 →
-      ∀ {a : ℕ},
-        Section3.exactCharacterValueOrder (ω i j0) a →
-          ∀ g : G, (orderOf g).Coprime a →
-            ∃ z : ℤ, σ (ω i j0) g = (z : ℂ) := by
-  exact (theorem_10_8_ambientRelativePF39_baseColumnBridge_supported h104a).1
-
-
 private theorem theorem_10_8_baseColumnIntegralValues_of_pf39_c
     {G : Type u}
     [Group G]
@@ -9522,41 +9342,6 @@ private theorem theorem_10_8_baseColumnIntegralValues_of_pf39_c
   rcases horder i hi with ⟨a, hadvd, ha⟩
   exact h39c i hi ha g (hcop.coprime_dvd_right hadvd)
 
-
-private theorem theorem_10_8_baseColumnIntegralValues_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    ∀ i : I, i ≠ i0 →
-      ∀ g : G, Nat.Coprime (orderOf g) (Nat.card W1) →
-        ∃ z : ℤ, σ (ω i j0) g = (z : ℂ) := by
-  exact theorem_10_8_baseColumnIntegralValues_of_pf39_c
-    (theorem_10_8_baseColumnExactValueOrder_supported_source h104a)
-    (theorem_10_8_baseColumnPF39_c_supported_source h104a)
 
 private theorem int_sum_even_of_fixedPointFree_involution
     {I : Type*} [DecidableEq I]
@@ -9773,42 +9558,6 @@ private theorem theorem_10_8_baseColumnConjugateIndex_of_hypothesis_10_4_a_suppo
       (by simpa [hci] using hc i)
 
 
-private theorem theorem_10_8_baseColumnConjugateSigmaEq_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    ∀ g : G, Nat.Coprime (orderOf g) (Nat.card W1) →
-      ∀ c : I → I,
-        (∀ i : I, Section1.conjugateCharacter (ω i j0) = ω (c i) j0) →
-          ∀ i : I, i ≠ i0 →
-            σ (ω (c i) j0) g = σ (ω i j0) g := by
-  exact (theorem_10_8_ambientRelativePF39_baseColumnBridge_supported h104a).2
-
-
 private theorem theorem_10_8_baseColumnConjugatePairing_supported_source
     {G : Type u}
     [Group G]
@@ -9848,42 +9597,7 @@ private theorem theorem_10_8_baseColumnConjugatePairing_supported_source
       h104a with
     ⟨c, hconj, hnonbase, hinv, hneq⟩
   refine ⟨c, hnonbase, hinv, hneq, ?_⟩
-  exact theorem_10_8_baseColumnConjugateSigmaEq_supported_source h104a g hcop c hconj
-
-private theorem theorem_10_8_baseColumnIntegerPairingEven_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (_h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    ∀ g : G, Nat.Coprime (orderOf g) (Nat.card W1) →
-      ∀ zVal : I → ℤ,
-        (∀ i : I, i ≠ i0 → σ (ω i j0) g = (zVal i : ℂ)) →
-          ∃ z : ℤ, (Finset.univ.erase i0 : Finset I).sum zVal = 2 * z := by
-  exact theorem_10_8_baseColumnIntegerPairingEven_of_conjugate_pairing
-    (theorem_10_8_baseColumnConjugatePairing_supported_source _h104a)
+  exact (theorem_10_8_ambientRelativePF39_baseColumnBridge_supported h104a).2 g hcop c hconj
 
 private theorem theorem_10_8_baseColumnNonprincipalEven_of_integral_pairing
     {G : Type u}
@@ -9943,42 +9657,6 @@ private theorem theorem_10_8_baseColumnNonprincipalEven_of_integral_pairing
           rw [hz]
 
 
-private theorem theorem_10_8_baseColumnNonprincipalEven_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    ∀ g : G, Nat.Coprime (orderOf g) (Nat.card W1) →
-      ∃ z : ℤ,
-        (Finset.univ.erase i0 : Finset I).sum (fun i => σ (ω i j0) g) =
-          ((2 * z : ℤ) : ℂ) := by
-  exact theorem_10_8_baseColumnNonprincipalEven_of_integral_pairing
-    (theorem_10_8_baseColumnIntegralValues_supported_source h104a)
-    (theorem_10_8_baseColumnIntegerPairingEven_supported_source h104a)
-
 private theorem theorem_10_8_baseColumnParity_of_nonprincipal_even
     {G : Type u}
     [Group G]
@@ -10017,76 +9695,6 @@ private theorem theorem_10_8_baseColumnParity_of_nonprincipal_even
   · exact ⟨z, by ring⟩
 
 
-private theorem theorem_10_8_baseColumnParity_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ) :
-    section10BaseColumnParityData W1 W i0 j0 ω σ := by
-  exact theorem_10_8_baseColumnParity_of_nonprincipal_even
-    (theorem_10_8_baseColumn_principal_of_hypothesis_10_4_a_supported_data h104a)
-    (theorem_10_8_baseColumnNonprincipalEven_supported_source h104a)
-
-
-private theorem theorem_10_8_hypothesis_10_4_supported_tail_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (_h104a :
-      hypothesis_10_4_a_supported_data M MF W1 W2 V W A A0 S τ ξ i0 j0
-        μ δSign ω σ d n δ)
-    (_hcoh : Section6.coherentFamily S τ) :
-    section10TildeAVanishingData M MF τ ξ j0 μ ∧
-      section10BaseColumnParityData W1 W i0 j0 ω σ := by
-  exact ⟨
-    theorem_10_8_tildeA_vanishing_supported_source _h104a,
-    theorem_10_8_baseColumnParity_supported_source _h104a⟩
-
-
 private theorem theorem_10_8_hypothesis_10_4_supported_of_coherence
     {G : Type u}
     [Group G]
@@ -10121,8 +9729,19 @@ private theorem theorem_10_8_hypothesis_10_4_supported_of_coherence
         μ δSign ω σ d n δ := by
   rcases exists_typeVCoherentSubfamilyData_of_coherentFamily (M := M) hcoh with
     ⟨τ₁, _hcoh', hExt⟩
-  rcases theorem_10_8_hypothesis_10_4_supported_tail_source h104a hcoh with
-    ⟨hvanish, hparity⟩
+  have htail :
+      section10TildeAVanishingData M MF τ ξ j0 μ ∧
+        section10BaseColumnParityData W1 W i0 j0 ω σ :=
+    ⟨theorem_10_8_tildeA_vanishing_supported_source h104a,
+      theorem_10_8_baseColumnParity_of_nonprincipal_even
+        (theorem_10_8_baseColumn_principal_of_hypothesis_10_4_a_supported_data h104a)
+        (theorem_10_8_baseColumnNonprincipalEven_of_integral_pairing
+          (theorem_10_8_baseColumnIntegralValues_of_pf39_c
+            (theorem_10_8_baseColumnExactValueOrder_supported_source h104a)
+            ((theorem_10_8_ambientRelativePF39_baseColumnBridge_supported h104a).1))
+          (theorem_10_8_baseColumnIntegerPairingEven_of_conjugate_pairing
+            (theorem_10_8_baseColumnConjugatePairing_supported_source h104a)))⟩
+  rcases htail with ⟨hvanish, hparity⟩
   have hOddM : Odd (Nat.card M) :=
     Odd.of_dvd_nat IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
   exact ⟨τ₁, h104a, hcoh, hExt, hOddM, hvanish, hparity⟩
@@ -12423,17 +12042,6 @@ private theorem theorem_10_8_typeP_not_conj_nonidentity_W1_of_prime_support
     Section8.theorem_8_13_typeP_W1_coprime_ambientDerived (G := G) hPFull
   exact hpPrime.ne_one (Nat.eq_one_of_dvd_coprimes hcop hpW1card hpD)
 
-private theorem theorem_10_8_section16Kstar_eq_W2_of_source_typeP
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF U W1 W2 : Subgroup G}
-    (hM : M ∈ section9MaximalSubgroups G)
-    (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    section16Kstar M W1 = W2 := by
-  exact theorem_10_7_section16Kstar_eq_W2_of_source_typeP hM hP
-
 private theorem theorem_10_8_typeP_prime_support_mem_AZeroSet
     {G : Type u}
     [Group G]
@@ -12541,7 +12149,7 @@ private theorem theorem_10_8_typeP_not_mem_join_prime_support_conjugates_hatW_so
     simpa [section16_conjugates_hatZ_eq_A0_diff_A
       (G := G) (M := Smax) (K := Wleft) (U := Uc) hMP hKU15] using hxDiff
   have hKstar : section16Kstar Smax Wleft = Wright :=
-    theorem_10_8_section16Kstar_eq_W2_of_source_typeP
+    theorem_10_7_section16Kstar_eq_W2_of_source_typeP
       (G := G) _hSmax _hTypeP
   simpa [section16HatZ, section16HatW, section16ZSubgroup, hKstar] using hxHatZ
 
@@ -18259,139 +17867,6 @@ private theorem theorem_10_8_counting_ratio_support_estimate_supported_source
     (g := Nat.card G)
     hgap hg1
 
-private theorem theorem_10_8_counting_ratio_bound_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104 :
-      hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0
-        μ δSign ω σ d n δ)
-    {Smax SF U : Subgroup G}
-    (hSmax : Smax ∈ section9MaximalSubgroups G)
-    (hSF : section16MFSubgroup Smax SF)
-    (hTypeII : section16TypeII Smax SF)
-    (hsemi : Section2.IsInternalSemidirectProduct (ambientDerivedSubgroup Smax) SF U)
-    (hfrob : section12FrobeniusJoinWithKernel SF U)
-    (hTypePAlign : Section8.typePDefinitionData Smax SF U W2 W1) :
-    ((Nat.card W1 : ℚ) / (Nat.card (ambientDerivedSubgroup M) : ℚ)) >
-      (1 / (Nat.card W2 : ℚ)) -
-        (1 / ((Nat.card W1 * Nat.card W2 : ℕ) : ℚ)) -
-          (1 / ((Nat.card W2 * Nat.card U : ℕ) : ℚ)) := by
-  exact theorem_10_8_counting_ratio_bound_of_support_estimate
-    (m := Nat.card (ambientDerivedSubgroup M))
-    (w1 := Nat.card W1)
-    (w2 := Nat.card W2)
-    (u := Nat.card U)
-    (sf := Nat.card SF)
-    (s := Nat.card Smax)
-    (Nat.card_pos (α := W1))
-    (Nat.card_pos (α := W2))
-    (Nat.card_pos (α := U))
-    (Nat.card_pos (α := SF))
-    (theorem_10_8_counting_selected_Smax_card_eq hsemi hTypePAlign)
-    (theorem_10_8_counting_ratio_support_estimate_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign)
-
-private theorem theorem_10_8_counting_UW2_frobenius_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (_h104 :
-      hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0
-        μ δSign ω σ d n δ)
-    {Smax SF U : Subgroup G}
-    (_hSmax : Smax ∈ section9MaximalSubgroups G)
-    (_hSF : section16MFSubgroup Smax SF)
-    (_hTypeII : section16TypeII Smax SF)
-    (_hsemi : Section2.IsInternalSemidirectProduct (ambientDerivedSubgroup Smax) SF U)
-    (_hfrob : section12FrobeniusJoinWithKernel SF U)
-    (hTypePAlign : Section8.typePDefinitionData Smax SF U W2 W1) :
-    section12FrobeniusJoinWithKernel U W2 := by
-  exact typePDefinitionData_frobeniusJoinWithKernel hTypePAlign
-    (frobeniusJoin_complement_ne_bot _hfrob)
-
-private theorem theorem_10_8_counting_complement_card_lower_bound_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104 :
-      hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0
-        μ δSign ω σ d n δ)
-    {Smax SF U : Subgroup G}
-    (hSmax : Smax ∈ section9MaximalSubgroups G)
-    (hSF : section16MFSubgroup Smax SF)
-    (hTypeII : section16TypeII Smax SF)
-    (hsemi : Section2.IsInternalSemidirectProduct (ambientDerivedSubgroup Smax) SF U)
-    (hfrob : section12FrobeniusJoinWithKernel SF U)
-    (hTypePAlign : Section8.typePDefinitionData Smax SF U W2 W1) :
-    2 * Nat.card W2 + 1 ≤ Nat.card U := by
-  exact frobeniusJoin_kernel_card_ge_two_mul_complement_add_one
-    (theorem_10_8_counting_UW2_frobenius_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign)
-
 private theorem theorem_10_8_counting_ratio_half_supported_source
     {G : Type u}
     [Group G]
@@ -18432,8 +17907,9 @@ private theorem theorem_10_8_counting_ratio_half_supported_source
         (Nat.card (ambientDerivedSubgroup M) : ℚ) := by
   have hUlower :
       2 * Nat.card W2 + 1 ≤ Nat.card U :=
-    theorem_10_8_counting_complement_card_lower_bound_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign
+    frobeniusJoin_kernel_card_ge_two_mul_complement_add_one
+      (typePDefinitionData_frobeniusJoinWithKernel hTypePAlign
+        (frobeniusJoin_complement_ne_bot hfrob))
   have hUseven : 7 ≤ Nat.card U := by
     have hW2three : 3 ≤ Nat.card W2 :=
       card_W2_ge_three_of_hypothesis_10_4_supported_data h104
@@ -18447,96 +17923,20 @@ private theorem theorem_10_8_counting_ratio_half_supported_source
     (card_W1_ge_three_of_hypothesis_10_4_supported_data h104)
     (Nat.card_pos (α := W2))
     hUseven
-    (theorem_10_8_counting_ratio_bound_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign)
-
-private theorem theorem_10_8_counting_strict_upper_estimate_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (_h104 :
-      hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0
-        μ δSign ω σ d n δ)
-    {Smax SF U : Subgroup G}
-    (_hSmax : Smax ∈ section9MaximalSubgroups G)
-    (_hSF : section16MFSubgroup Smax SF)
-    (_hTypeII : section16TypeII Smax SF)
-    (_hsemi : Section2.IsInternalSemidirectProduct (ambientDerivedSubgroup Smax) SF U)
-    (_hfrob : section12FrobeniusJoinWithKernel SF U)
-    (hTypePAlign : Section8.typePDefinitionData Smax SF U W2 W1) :
-    Nat.card (ambientDerivedSubgroup M) <
-      2 * Nat.card W1 * Nat.card W2 := by
-  exact theorem_10_8_counting_strict_upper_of_ratio_half
-    (m := Nat.card (ambientDerivedSubgroup M))
-    (w1 := Nat.card W1)
-    (w2 := Nat.card W2)
-    (Nat.card_pos (α := ambientDerivedSubgroup M))
-    (theorem_10_8_counting_ratio_half_supported_source
-      _h104 _hSmax _hSF _hTypeII _hsemi _hfrob hTypePAlign)
-
-private theorem theorem_10_8_counting_quotient_and_upper_estimates_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (h104 :
-      hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ i0 j0
-        μ δSign ω σ d n δ)
-    {Smax SF U : Subgroup G}
-    (hSmax : Smax ∈ section9MaximalSubgroups G)
-    (hSF : section16MFSubgroup Smax SF)
-    (hTypeII : section16TypeII Smax SF)
-    (hsemi : Section2.IsInternalSemidirectProduct (ambientDerivedSubgroup Smax) SF U)
-    (hfrob : section12FrobeniusJoinWithKernel SF U)
-    (hTypePAlign : Section8.typePDefinitionData Smax SF U W2 W1) :
-    2 * Nat.card W1 + 1 ≤
-        (section16SecondDerivedSubgroup M).relIndex (ambientDerivedSubgroup M) ∧
-      Nat.card (ambientDerivedSubgroup M) <
-        2 * Nat.card W1 * Nat.card W2 := by
-  exact ⟨theorem_10_8_counting_quotient_lower_bound_supported_source h104,
-    theorem_10_8_counting_strict_upper_estimate_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign⟩
+    (theorem_10_8_counting_ratio_bound_of_support_estimate
+      (m := Nat.card (ambientDerivedSubgroup M))
+      (w1 := Nat.card W1)
+      (w2 := Nat.card W2)
+      (u := Nat.card U)
+      (sf := Nat.card SF)
+      (s := Nat.card Smax)
+      (Nat.card_pos (α := W1))
+      (Nat.card_pos (α := W2))
+      (Nat.card_pos (α := U))
+      (Nat.card_pos (α := SF))
+      (theorem_10_8_counting_selected_Smax_card_eq hsemi hTypePAlign)
+      (theorem_10_8_counting_ratio_support_estimate_supported_source
+        h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign))
 
 private theorem theorem_10_8_counting_estimates_supported_source
     {G : Type u}
@@ -18578,9 +17978,20 @@ private theorem theorem_10_8_counting_estimates_supported_source
       Nat.card W2 ≤ Nat.card (section16SecondDerivedSubgroup M) ∧
         Nat.card (ambientDerivedSubgroup M) <
           2 * Nat.card W1 * Nat.card W2 := by
-  rcases theorem_10_8_counting_quotient_and_upper_estimates_supported_source
-      h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign with
-    ⟨hquot, hlt⟩
+  have hquotes :
+      2 * Nat.card W1 + 1 ≤
+          (section16SecondDerivedSubgroup M).relIndex (ambientDerivedSubgroup M) ∧
+        Nat.card (ambientDerivedSubgroup M) <
+          2 * Nat.card W1 * Nat.card W2 :=
+    ⟨theorem_10_8_counting_quotient_lower_bound_supported_source h104,
+      theorem_10_8_counting_strict_upper_of_ratio_half
+        (m := Nat.card (ambientDerivedSubgroup M))
+        (w1 := Nat.card W1)
+        (w2 := Nat.card W2)
+        (Nat.card_pos (α := ambientDerivedSubgroup M))
+        (theorem_10_8_counting_ratio_half_supported_source
+          h104 hSmax hSF hTypeII hsemi hfrob hTypePAlign)⟩
+  rcases hquotes with ⟨hquot, hlt⟩
   exact ⟨hquot, theorem_10_8_counting_secondDerived_card_lower_bound_supported h104,
     hlt⟩
 
@@ -19445,8 +18856,8 @@ private theorem theorem_10_7_support_orthogonality_supported_source_data
       hNotation10 hA1A hAA0 with
     ⟨RM, tildeAM, tildeA0M, tildeA1M, h14M⟩
   have hnotI : ¬ Section8.typeIDefinitionData Smax SF :=
-    theorem_10_7_source_typeI_exclusion_of_typeII_source_data
-      _hSmax _hSF _hTypeII T S9 _h95
+    Section8.not_typeIDefinitionData_of_typeP_source_data
+      _h95.hypothesis92.typePDefinitionData
   have hNotConj : ¬ section16ConjugateSubgroupsIn ⊤ M Smax := by
     intro hConj
     rcases hHyp10 with
@@ -19462,7 +18873,7 @@ private theorem theorem_10_7_support_orthogonality_supported_source_data
       Section8.theorem_8_8_typeII_to_source_public
         (G := G) _hSmax _hSF _hTypeII
     have hSrcII : Section8.typeIIDefinitionData M MF :=
-      theorem_10_7_typeIIDefinitionData_conj_back_source_data
+      Section8.theorem_8_18_typeIIDefinitionData_conj_back
         g hMF _hSF hSrcIIConj
     exact hNotTypeII hSrcII
   have hNoSupport : ∀ g : G,
@@ -19708,7 +19119,7 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_supported_source_data
       _hKstarPrimeIfBot⟩
   have hKstar_eq_W2 : Kstar = W2 := by
     dsimp [Kstar]
-    exact theorem_10_8_section16Kstar_eq_W2_of_source_typeP hM hP
+    exact theorem_10_7_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
     dsimp [Kstar]
     exact hKstarStar.symm
@@ -19811,60 +19222,6 @@ private theorem theorem_10_7_typeP_pair_witness_reverse_supported_source_data
   exact ⟨Wcase, Mstar, M, SF, MF, U, U1, U0, hcase, hTypeIIMstar,
     hTypePAlign, hTypeIIToIVAlign, hUcomm, hUnorm, hF, rfl⟩
 
-private theorem theorem_10_7_typeP_partner_cyclicTI_selected_pair_xdefW_first_supported_source_data
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {I J : Type u}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 Smax SF : Subgroup G}
-    {V : Set G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ τ₁ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ : Section1.ClassFunction M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {d n : ℕ}
-    {δ : ℤ}
-    (_h104 : hypothesis_10_4_supported_data M MF W1 W2 V W A A0 S τ τ₁ ξ
-      i0 j0 μ δSign ω σ d n δ)
-    (_hSmax : Smax ∈ section9MaximalSubgroups G)
-    (_hSF : section16MFSubgroup Smax SF)
-    (_hTypeII : section16TypeII Smax SF)
-    (U W1S W2S H0 C Cprime Ms : Subgroup G)
-    (T : Section1.ClassFunction Smax →ₗ[ℂ] Section1.ClassFunction G)
-    (S9 : Finset (Section1.ClassFunction Smax))
-    (d52 : Section8.section8Hypothesis52FullData Smax Ms W1S W2S
-      (Section8.section8CentralizerUnion (ambientDerivedSubgroup Smax) Ms))
-    (_h95 : Section9.Hypothesis_9_5 Smax SF U W1S W2S H0 C Cprime T S9)
-    (_hMs : Section8.msChoice Smax SF Ms)
-    (_hT_eq : T = d52.tau)
-    {Wcase Spair Tpair SFpair TFpair Upair U1pair U0pair : Subgroup G}
-    (_hcasePair :
-      Section8.theorem_8_8_source_case_b_data Wcase W1 W2 Tpair Spair TFpair SFpair)
-    (_hTypeIIPair : section16TypeII Spair SFpair)
-    (_hTypePPair : Section8.typePDefinitionData Spair SFpair Upair W2 W1)
-    (_hTypeIIToIVPair : Section8.typeIIToIVSourceCondition Spair Upair W2)
-    (_hUcommPair : IsMulCommutative Upair)
-    (_hUnormPair : ¬ Subgroup.normalizer (Upair : Set G) ≤ Spair)
-    (_hFPair : Section8.typeFData (ambientDerivedSubgroup Spair) SFpair Upair U1pair U0pair)
-    (gPair : G)
-    (_hSmax_eq_Spair : Smax = Spair.conjBy gPair)
-    (_hSF_eq : SF = SFpair.conjBy gPair)
-    (hW1S_eq : W1S = W2.conjBy gPair) :
-    W1S = W2.conjBy gPair := by
-  exact hW1S_eq
-
 private theorem theorem_10_7_typeP_partner_cyclicTI_selected_pair_xdefW_supported_source_data
     {G : Type u}
     [Group G]
@@ -19920,11 +19277,7 @@ private theorem theorem_10_7_typeP_partner_cyclicTI_selected_pair_xdefW_supporte
   classical
   have hW1S :
       W1S = W2.conjBy gPair :=
-    theorem_10_7_typeP_partner_cyclicTI_selected_pair_xdefW_first_supported_source_data
-      _h104 _hSmax _hSF _hTypeII U W1S W2S H0 C Cprime Ms T S9 d52
-      _h95 _hMs _hT_eq _hcasePair _hTypeIIPair _hTypePPair
-      _hTypeIIToIVPair _hUcommPair _hUnormPair _hFPair gPair
-      _hSmax_eq_Spair _hSF_eq hW1S_eq
+    hW1S_eq
   have hLF : section16MFSubgroup (Spair.conjBy gPair) SF := by
     simpa [_hSmax_eq_Spair] using _hSF
   have hPconj :
@@ -20172,12 +19525,12 @@ private theorem theorem_10_7_typeP_partner_cyclicTI_selected_row_alignment_suppo
       Section8.theorem_8_8_typeII_to_source_public
         (G := G) _hSmax _hSF _hTypeII
     have hSrcII : Section8.typeIIDefinitionData M MF :=
-      theorem_10_7_typeIIDefinitionData_conj_back_source_data
+      Section8.theorem_8_18_typeIIDefinitionData_conj_back
         g hMF _hSF hSrcIIConj
     exact hNotTypeII hSrcII
   have hnotI : ¬ Section8.typeIDefinitionData Smax SF :=
-    theorem_10_7_source_typeI_exclusion_of_typeII_source_data
-      _hSmax _hSF _hTypeII T S9 _h95
+    Section8.not_typeIDefinitionData_of_typeP_source_data
+      _h95.hypothesis92.typePDefinitionData
   rcases hCover Smax _hSmax with hTpair | hRest
   · rcases hTpair with ⟨g, hSmax_eq_Tpair⟩
     exfalso
@@ -20618,7 +19971,7 @@ private theorem theorem_10_7_typeP_partner_cyclicTI_selected_row_sigma_selected_
           (W1.subgroupOf M) (W2.subgroupOf M) W hz)
           (by simpa [Subgroup.mem_subgroupOf] using hW1)
   have hagree :=
-    theorem_10_7_typeP_partner_cyclicTI_selected_pair_sigma_agrees_selected_cyclicTI_source_data
+    Section8.section8Hypothesis52FullData_sigma_agrees_on_cyclicTI_source_data
       d52 (Section6.theorem_6_8_transportClassFunction e (ω i j)) hclass zS hzlocal
   have harg :
       e.symm
@@ -22158,7 +21511,7 @@ private theorem theorem_10_8_counting_selectedTypeP_pair_witness_reverse_support
       _hKstarPrimeIfBot⟩
   have hKstar_eq_W2 : Kstar = W2 := by
     dsimp [Kstar]
-    exact theorem_10_8_section16Kstar_eq_W2_of_source_typeP hM hP
+    exact theorem_10_7_section16Kstar_eq_W2_of_source_typeP hM hP
   have hKstarStar_eq_W1 : section16Kstar Mstar Kstar = W1 := by
     dsimp [Kstar]
     exact hKstarStar.symm
@@ -24806,36 +24159,6 @@ public theorem theorem_10_10_4_omegaColumnSigma_gram_supported
             simp [hjk]
 
 
-private theorem theorem_10_10_4_signed_omegaColumnSigma_virtual_supported
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {I J : Type*}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M W1 W2 : Subgroup G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    (hnotation :
-      section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0
-        μ δSign ω σ τ)
-    (δ : ℤ)
-    (j : J) :
-    Representation.IsVirtualCharacter
-      ((δ : ℂ) • Section4Scratch.omegaColumnSigma σ ω j) := by
-  exact isVirtualCharacter_intCast_smul_sec10 δ
-    (theorem_10_10_4_omegaColumnSigma_virtual_supported hnotation j)
-
-
 private theorem theorem_10_10_4_tauOne_sOne_signed_omegaColumnSigma_orthogonal_supported
     {G : Type u}
     [Group G]
@@ -24924,43 +24247,6 @@ private theorem theorem_10_10_4_signed_omegaColumnSigma_gram_supported
   by_cases hjk : j = k <;> simp [hjk]
 
 
-private theorem typeVReduction_kernelSubfamily_isFamily_supported
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF H H' W1 W2 : Subgroup G}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {p : ℕ}
-    (hred : typeVReductionData M MF H H' W1 W2 p)
-    (h10 :
-      hypothesis_10_1_supported_data M MF W1 W2
-        (section16HatW W1 W2) S τ) :
-    Section6.inducedKernelFamily (derivedSubgroup M) (H'.subgroupOf M)
-      (Section6.inducedKernelFamilyOf
-        (derivedSubgroup M) (H'.subgroupOf M) S) := by
-  exact Section6.inducedKernelFamilyOf_isFamily
-    (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
-    (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)
-
-private theorem typeVReduction_kernelSubfamily_subset_base_supported
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF H H' W1 W2 : Subgroup G}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {p : ℕ}
-    (hred : typeVReductionData M MF H H' W1 W2 p)
-    (h10 :
-      hypothesis_10_1_supported_data M MF W1 W2
-        (section16HatW W1 W2) S τ) :
-    Section6.inducedKernelFamilyOf
-      (derivedSubgroup M) (H'.subgroupOf M) S ⊆ S := by
-  exact Section6.inducedKernelFamily_subset_base
-    (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
-    (typeVReduction_kernelSubfamily_isFamily_supported hred h10)
-
 private theorem typeVReduction_kernelSubfamily_mem_iff_base_and_kernel_supported
     {G : Type u}
     [Group G]
@@ -24981,13 +24267,19 @@ private theorem typeVReduction_kernelSubfamily_mem_iff_base_and_kernel_supported
       Section6.inducedKernelFamily (derivedSubgroup M) (H'.subgroupOf M)
         (Section6.inducedKernelFamilyOf
           (derivedSubgroup M) (H'.subgroupOf M) S) :=
-    typeVReduction_kernelSubfamily_isFamily_supported hred h10
+    Section6.inducedKernelFamilyOf_isFamily
+      (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+      (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)
   have hSbot : Section6.inducedKernelFamily (derivedSubgroup M) ⊥ S :=
     inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10
   have hS₁sub :
       Section6.inducedKernelFamilyOf
         (derivedSubgroup M) (H'.subgroupOf M) S ⊆ S :=
-    typeVReduction_kernelSubfamily_subset_base_supported hred h10
+    Section6.inducedKernelFamily_subset_base
+      (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+      (Section6.inducedKernelFamilyOf_isFamily
+        (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+        (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred))
   haveI : (H'.subgroupOf M).Normal := typeVReduction_Hprime_subgroupOf_normal hred
   constructor
   · intro hχ
@@ -26404,7 +25696,7 @@ private theorem theorem_10_10_4_image_family_from_supported_notation_bridge
       have himg : img η = target jη := by
         simp [img, theorem_10_10_4_countImage, target, hη, jη]
       rw [himg]
-      exact theorem_10_10_4_signed_omegaColumnSigma_virtual_supported hnotation δ jη
+      exact isVirtualCharacter_intCast_smul_sec10 δ (theorem_10_10_4_omegaColumnSigma_virtual_supported hnotation jη)
   · intro η ξ
     by_cases hη : (η : Section1.ClassFunction M) ∈ S₁
     · by_cases hξ : (ξ : Section1.ClassFunction M) ∈ S₁
@@ -26546,7 +25838,9 @@ private theorem typeVReduction_kernelSubfamily_degree_eq_card_W1_supported
     exact le_rfl
   have hdeg :=
     Section6.inducedKernelFamily_degree_eq_relIndex_of_quotient_commutative
-      (typeVReduction_kernelSubfamily_isFamily_supported hred h10) hnormal hcomm hχ
+      (Section6.inducedKernelFamilyOf_isFamily
+        (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+        (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)) hnormal hcomm hχ
   rw [Subgroup.relIndex_top_right] at hdeg
   rw [derivedSubgroup_index_eq_card_W1_of_hypothesis_10_1_supported_data h10] at hdeg
   exact hdeg
@@ -26578,7 +25872,9 @@ private theorem typeVReduction_kernelSubfamily_source_degree_eq_one_supported
       Section6.inducedKernelFamily (derivedSubgroup M) (H'.subgroupOf M)
         (Section6.inducedKernelFamilyOf
           (derivedSubgroup M) (H'.subgroupOf M) S) :=
-    typeVReduction_kernelSubfamily_isFamily_supported hred h10
+    Section6.inducedKernelFamilyOf_isFamily
+      (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+      (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)
   rcases (hS₁.2 χ).mp hχ with ⟨θ, hθirr, hθker, hθne, hχeq⟩
   have hχdeg :
       Section1.degree (Section1.inducedCF (derivedSubgroup M) θ) =
@@ -26648,7 +25944,9 @@ private theorem typeVReduction_kernelSubfamily_mem_iff_exists_quotientCharacter_
         Section6.inducedKernelFamily (derivedSubgroup M) (H'.subgroupOf M)
           (Section6.inducedKernelFamilyOf
             (derivedSubgroup M) (H'.subgroupOf M) S) :=
-      typeVReduction_kernelSubfamily_isFamily_supported hred h10
+      Section6.inducedKernelFamilyOf_isFamily
+      (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+      (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)
     refine (hS₁.2 _).mpr ?_
     exact ⟨Section1.quotientCharacterInflation (H'.subgroupOf M)
         (derivedSubgroup M) ψ,
@@ -27390,7 +26688,9 @@ private theorem typeVReduction_complement_source_degree_ne_one_supported
       Section6.inducedKernelFamily (derivedSubgroup M) (H'.subgroupOf M)
         (Section6.inducedKernelFamilyOf
           (derivedSubgroup M) (H'.subgroupOf M) S) :=
-    typeVReduction_kernelSubfamily_isFamily_supported hred h10
+    Section6.inducedKernelFamilyOf_isFamily
+      (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+      (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)
   rcases h10 with
     ⟨_hM, _hType, hS, _hW1, _hW2, _hW12, _hDade, _h46, _hNotation10, _h52⟩
   rcases (hS χ).mp hχS with ⟨θ, hθirr, hθne, hχeq⟩
@@ -27517,8 +26817,11 @@ private theorem theorem_10_10_2_kernelSubfamily_complement_index_bridge_supporte
           exact hχeq
     · intro hχ
       rcases hχ with hχS₁ | hχcomp
-      · exact typeVReduction_kernelSubfamily_subset_base_supported
-          hred h10 hχS₁
+      · exact Section6.inducedKernelFamily_subset_base
+          (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+          (Section6.inducedKernelFamilyOf_isFamily
+            (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+            (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred)) hχS₁
       · rcases hχcomp with ⟨j, hj, hχeq⟩
         rw [hχeq]
         exact (hμ_mem_degree j hj).1
@@ -27776,8 +27079,12 @@ private theorem theorem_10_10_4_supported_notation_count_package_bridge
         exact Or.inr ⟨j, (Finset.mem_erase.mp hjmem).1, hχeq.symm⟩
     · intro hχ
       rcases hχ with hχS₁ | hχnonbase
-      · exact typeVReduction_kernelSubfamily_subset_base_supported
-          hred h10 (by simpa [S₁] using hχS₁)
+      · exact Section6.inducedKernelFamily_subset_base
+          (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+          (Section6.inducedKernelFamilyOf_isFamily
+            (inducedKernelFamily_bot_of_hypothesis_10_1_supported_data h10)
+            (typeVReduction_Hprime_subgroupOf_le_derivedSubgroup hred))
+          (by simpa [S₁] using hχS₁)
       · rcases hχnonbase with ⟨j, hj, rfl⟩
         exact (hμ j hj).1
   refine ⟨I, instI, decI, J, instJ, decJ, W, A, A0, i0, j0, μ, δSign, ω, σ,
@@ -30716,55 +30023,6 @@ private theorem theorem_10_9_tau_diff_sigma_omega_count_lt_two_card_left_support
       exact_mod_cast hlt_nat)
   exact_mod_cast hcount_lt_real
 
-private theorem theorem_10_9_tau_diff_sigma_omega_single_column_supported_of_base
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {I J : Type*}
-    [Fintype I]
-    [Fintype J]
-    [DecidableEq I]
-    [DecidableEq J]
-    {M MF W1 W2 : Subgroup G}
-    {W : Subgroup M}
-    {A A0 : Set M}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {i0 : I}
-    {j0 : J}
-    {μ : I → J → Section1.ClassFunction M}
-    {δSign : J → ℤ}
-    {ω : I → J → Section1.ClassFunction W}
-    {σ : Section1.ClassFunction W →ₗ[ℂ] Section1.ClassFunction G}
-    {ξ μ0 : Section1.ClassFunction M}
-    (h10 :
-      hypothesis_10_1_supported_data M MF W1 W2
-        (section16HatW W1 W2) S τ)
-    (hnotation :
-      section10FourSixNotationSupportedData M W1 W2 W A A0 i0 j0
-        μ δSign ω σ τ)
-    (hμ0 : μ0 = muColumn μ j0)
-    (hξS : ξ ∈ S)
-    (hξIrr : Section1.IsIrreducibleCharacterOnGroup ξ)
-    (hξDegree : Section1.degree ξ = (Nat.card W1 : ℂ))
-    (hW1ltW2 : Nat.card W1 < Nat.card W2)
-    (hbase :
-      Section1.scalarProduct G (τ (μ0 - ξ)) (σ (ω i0 j0)) = 1) :
-    ∀ i j,
-      Section1.scalarProduct G (τ (μ0 - ξ)) (σ (ω i j)) =
-        if j = j0 then 1 else 0 := by
-  exact theorem_10_9_tau_diff_sigma_omega_single_column_supported_of_bounds
-    h10 hnotation hW1ltW2
-    (theorem_10_9_tau_diff_isVirtualCharacter_supported
-      h10 hnotation hμ0 hξS hξIrr hξDegree)
-    (theorem_10_9_tau_diff_cfNormSq_supported
-      h10 hnotation hμ0 hξS hξIrr hξDegree)
-    (theorem_10_9_tau_diff_sigma_omega_count_lt_two_card_left_supported
-      h10 hnotation hμ0 hξS hξIrr hξDegree)
-    (theorem_10_9_tau_diff_sigma_omega_rectangle_relation_supported
-      h10 hnotation hμ0 hξS hξIrr hξDegree)
-    hbase
-
 private theorem theorem_10_9_omegaColumnSigma_cfNormSq_supported
     {G : Type u}
     [Group G]
@@ -31000,8 +30258,17 @@ private theorem theorem_10_9_candidate_orthogonal_supported_of_base
       (Section4Scratch.omegaColumnSigma σ ω j0 - τ (μ0 - ξ)) := by
   classical
   have hcoeff :=
-    theorem_10_9_tau_diff_sigma_omega_single_column_supported_of_base
-      h10 hnotation hμ0 hξS hξIrr hξDegree hW1ltW2 hbase
+    theorem_10_9_tau_diff_sigma_omega_single_column_supported_of_bounds
+      h10 hnotation hW1ltW2
+      (theorem_10_9_tau_diff_isVirtualCharacter_supported
+        h10 hnotation hμ0 hξS hξIrr hξDegree)
+      (theorem_10_9_tau_diff_cfNormSq_supported
+        h10 hnotation hμ0 hξS hξIrr hξDegree)
+      (theorem_10_9_tau_diff_sigma_omega_count_lt_two_card_left_supported
+        h10 hnotation hμ0 hξS hξIrr hξDegree)
+      (theorem_10_9_tau_diff_sigma_omega_rectangle_relation_supported
+        h10 hnotation hμ0 hξS hξIrr hξDegree)
+      hbase
   have hnotationData := hnotation
   rcases hnotationData with
     ⟨_MF, _Ms, _Abook, _A0book, _A1book, _hSource,
@@ -31749,29 +31016,6 @@ private theorem theorem_10_10_4_coherence_from_image_family_of_hypothesis52
   exact ⟨hsrc, hnonempty, Tnew, hIso, hVirt, hAgree⟩
 
 
-private theorem theorem_10_10_4_coherence_from_image_family_bridge_supported
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF W1 W2 : Subgroup G}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    (_h10 :
-      hypothesis_10_1_supported_data M MF W1 W2
-        (section16HatW W1 W2) S τ)
-    (himage : ∃ img : S → Section1.ClassFunction G,
-      (∀ η : S, Representation.IsVirtualCharacter (img η)) ∧
-        (∀ η ξ : S,
-          Section1.scalarProduct G (img η) (img ξ) =
-            Section1.scalarProduct M (η : Section1.ClassFunction M)
-              (ξ : Section1.ClassFunction M)) ∧
-        (∀ Tnew : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G,
-          (∀ η : S, Tnew (η : Section1.ClassFunction M) = img η) →
-            Section5.agreesOnIntegerSpanOn S Section5.puncturedSet τ Tnew)) :
-    Section6.coherentFamily S τ := by
-  exact theorem_10_10_4_coherence_from_image_family_of_hypothesis52
-    (hypothesis_5_2_of_hypothesis_10_1_supported_data _h10) himage
-
 private theorem theorem_10_10_4_supported_image_family_source
     {G : Type u}
     [Group G]
@@ -31808,23 +31052,6 @@ private theorem theorem_10_10_4_supported_image_family_source
     (p := p) (d := d) (n := n) (δ := δ)
     _hred _h10 hnotation hcount
 
-private theorem theorem_10_10_4_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF H H' W1 W2 : Subgroup G}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {p : ℕ}
-    (h10 :
-      hypothesis_10_1_supported_data M MF W1 W2
-        (section16HatW W1 W2) S τ)
-    (hred : typeVReductionData M MF H H' W1 W2 p) :
-    Section6.coherentFamily S τ := by
-  exact theorem_10_10_4_coherence_from_image_family_bridge_supported h10
-    (theorem_10_10_4_supported_image_family_source h10 hred)
-
-
 private theorem theorem_10_10_no_typeVReduction_of_hypothesis_10_1_supported
     {G : Type u}
     [Group G]
@@ -31840,7 +31067,9 @@ private theorem theorem_10_10_no_typeVReduction_of_hypothesis_10_1_supported
     (hred : typeVReductionData M MF H H' W1 W2 p) :
     False := by
   have hcoh : Section6.coherentFamily S τ :=
-    theorem_10_10_4_supported_source h10 hred
+    theorem_10_10_4_coherence_from_image_family_of_hypothesis52
+      (hypothesis_5_2_of_hypothesis_10_1_supported_data h10)
+      (theorem_10_10_4_supported_image_family_source h10 hred)
   exact theorem_10_8_supported M MF W1 W2 (section16HatW W1 W2) S τ h10 hcoh
 
 private theorem theorem_10_10_source_typeV_structural_hypothesis_10_1_fields
@@ -31874,17 +31103,6 @@ private theorem theorem_10_10_source_typeV_structural_hypothesis_10_1_fields
   have hW2leM : W2 ≤ M := hW2leMF.trans hMFleM
   exact ⟨hType, hW1leM, hW2leM, sup_le hW1leM hW2leM⟩
 
-private theorem theorem_10_10_section16MFSubgroup_unique
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {L LF LF' : Subgroup G}
-    (hLF : section16MFSubgroup L LF)
-    (hLF' : section16MFSubgroup L LF') :
-    LF = LF' := by
-  exact le_antisymm (hLF'.2 LF hLF.1) (hLF.2 LF' hLF'.1)
-
-
 private theorem theorem_10_10_typeP_bot_mf_eq_derived
     {G : Type u}
     [Group G]
@@ -31898,23 +31116,6 @@ private theorem theorem_10_10_typeP_bot_mf_eq_derived
       _hFittingLe, _hW2leMFSecond, _hW2cyc, _hW2ne, _hCentralizer,
       _hNormalizer⟩
   simpa using hCompD.2.2.1.symm
-
-private theorem theorem_10_10_typeVDefinitionData_of_typeP_bot_alt
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    {M MF W1 W2 : Subgroup G}
-    (hP : Section8.typePDefinitionData M MF ⊥ W1 W2)
-    (hAlt :
-      section16TISubset (section16NonidentityElements (MF : Set G)) ∨
-        (∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-          Nat.card W1 ∣ p.val - 1 ∧ IsCyclic (section10PPrimeCore p MF)) ∨
-          ∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-            Nat.card (section16PCoreIn p MF) = p.val ^ 3 ∧
-            Nat.card W1 ∣ p.val + 1 ∧
-            IsCyclic (section10PPrimeCore p MF)) :
-    Section8.typeVDefinitionData M MF := by
-  exact ⟨⊥, W1, W2, hP, rfl, hAlt⟩
 
 private theorem theorem_10_10_section8CentralizerUnion_derived_mf_eq
     {G : Type u}
@@ -32037,7 +31238,7 @@ private theorem theorem_10_10_exists_notation_8_10_source_data_of_typeV_exclusiv
   let A0 : Set G := A ∪ section16ConjugatesOfSetBySet
     (section16HatW W1 W2) (M : Set G)
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   have hMF : section16MFSubgroup M MF := hP.1
   have hMF_eq_D : MF = ambientDerivedSubgroup M :=
     theorem_10_10_typeP_bot_mf_eq_derived hP
@@ -32469,7 +31670,7 @@ private theorem theorem_10_10_transformAgreesWithInductionOn_of_typeV_ti_support
   rcases hDade with ⟨Ms, A, A0, A1, R, hNotation, hA0M, hτeq⟩
   let Aimg : Set G := Section6.subgroupImagePuncturedSet M (derivedSubgroup M)
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP (Or.inl hTI)
+    ⟨⊥, _, _, hP, rfl, Or.inl hTI⟩
   have hAeq :
       Aimg = section16NonidentityElements (ambientDerivedSubgroup M : Set G) := by
     exact theorem_10_10_subgroupImagePuncturedSet_derived_eq_ambientDerived M
@@ -32661,7 +31862,7 @@ private theorem theorem_10_10_exists_hypothesis_4_6_of_section10FourSixNotationS
   letI : Fintype J := instJ
   letI : DecidableEq J := decJ
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   have h46 :=
     hypothesis_4_6_derived_of_section10FourSixNotationSupportedData_of_late
       hP.1 (Or.inr (Or.inr hTypeV)) hNotation
@@ -32708,7 +31909,7 @@ private theorem theorem_10_10_hypothesis_5_2_of_section10FourSixNotationSupporte
   letI : Fintype J := instJ
   letI : DecidableEq J := decJ
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   rcases derivedSupportedFourSixData_of_section10FourSixNotationSupportedData_of_late
       hP.1 (Or.inr (Or.inr hTypeV)) hNotation with
     ⟨σM, xChar, H_A, _H_A0, hSupported46⟩
@@ -32815,7 +32016,7 @@ private theorem theorem_10_10_dadeIsometryRelativeToA0SupportedSourceData_of_sec
   rcases hSource with
     ⟨_hApre, _hA0sub, hNotationSrc, H_A0, hA0M, hτ⟩
   have hMFsrc_eq : MFsrc = MF :=
-    theorem_10_10_section16MFSubgroup_unique hNotationSrc.2.1 hP.1
+    section16MFSubgroup_unique hNotationSrc.2.1 hP.1
   exact ⟨Ms, Abook, A0book, A1book, H_A0,
     by simpa [hMFsrc_eq] using hNotationSrc, hA0M, hτ⟩
 
@@ -32893,7 +32094,7 @@ private theorem theorem_10_10_typeV_notation_typeP_witness
     Section8.notation_8_10_source_typeP_witness M MF Ms A A0 A1
       ⊥ W1 W2 := by
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   have hMs_eq : Ms = MF :=
     theorem_10_10_ms_eq_mf_of_typeV_notation hNotation hTypeV
   have hMF_eq_D : MF = ambientDerivedSubgroup M :=
@@ -33033,7 +32234,7 @@ private theorem theorem_10_10_typeV_notation_W2_prime
     (hNotation : Section8.notation_8_10_source_data M MF Ms A A0 A1) :
     Nat.Prime (Nat.card W2) := by
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   rcases hNotation with ⟨hM, _hMF, hMs, _hA1, _hCases⟩
   have hPair : section10TypeIIPairingData W2 :=
     section10TypeIIPairingData_of_source_typeP_msChoice_tail
@@ -33222,15 +32423,6 @@ private theorem theorem_10_10_section8SubgroupSetPreimage_typeP_A0_eq
         simpa [Section2.conjBy] using hval.symm
 
 
-private theorem theorem_10_10_section8CyclicA0Set_subset_a0Set
-    {G : Type u} [Group G] [Finite G]
-    {M W1 W2 : Subgroup G} {A : Set G} {W : Subgroup M}
-    (hW : W = (W1 ⊔ W2).subgroupOf M) :
-    Section8.section8CyclicA0Set M W1 W2 A ⊆
-      Section4Scratch.a0Set (W2.subgroupOf M) W
-        (Section8.section8SubgroupSetPreimage M A) := by
-  exact Section8.section8CyclicA0Set_subset_section4_a0Set hW
-
 private theorem theorem_10_10_subgroupImageSet_section8SubgroupSetPreimage_eq
     {G : Type u} [Group G]
     {M : Subgroup G} {A : Set G}
@@ -33278,11 +32470,11 @@ private theorem theorem_10_10_source_typeV_A0_subset_M
   have hW2M : W2 ≤ M := fun y hy => hMF.1.1 (hW2le hy).1
   have hWM : W1 ⊔ W2 ≤ M := sup_le hW1M hW2M
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt
+    ⟨⊥, _, _,
       ⟨hMF, _hW1cyc, _hW1ne, hW1hall, _hcompMW1, _hUleD, _hUnil,
         _hW1normU, _hcompDU, _hMFnotCyc, _hSecondLe, _hFittingEq,
-        _hFittingLeD, hW2le, _hW2cyc, _hW2ne, _hCent, _hHatW⟩
-      hAlt
+        _hFittingLeD, hW2le, _hW2cyc, _hW2ne, _hCent, _hHatW⟩,
+      rfl, hAlt⟩
   have hLateV := hLate (Or.inr (Or.inr hTypeV))
   intro x hx
   rw [hA0] at hx
@@ -33341,7 +32533,7 @@ private theorem theorem_10_10_source_typeV_A0_subset_section4_a0Set_image
           Section8.section8SubgroupSetPreimage M A0 := by
       simpa [Section8.section8SubgroupSetPreimage] using hx
     exact
-      theorem_10_10_section8CyclicA0Set_subset_a0Set
+      Section8.section8CyclicA0Set_subset_section4_a0Set
         (M := M) (W1 := W1) (W2 := W2) (A := A) (W := d52.W)
         d52.W_eq (by simpa [hpre] using hxpre)
   exact ⟨⟨x, hA0subM hx⟩, hlocal, rfl⟩
@@ -33373,7 +32565,7 @@ private theorem theorem_10_10_source_typeV_A0_le_setNormalizer
     M ≤ Section2.setNormalizer A0 := by
   classical
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   have hLateV := hLate (Or.inr (Or.inr hTypeV))
   let D : Subgroup G := ambientDerivedSubgroup M
   have hDleM : D ≤ M := by
@@ -33611,7 +32803,7 @@ private theorem theorem_10_10_fourSixNotationSupportedPackage_of_core
   letI : DecidableEq d52.I := d52.instDecidableEqI
   letI : DecidableEq d52.J := d52.instDecidableEqJ
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP hAlt
+    ⟨⊥, _, _, hP, rfl, hAlt⟩
   have hMs_eq : Ms = MF :=
     theorem_10_10_ms_eq_mf_of_typeV_notation hNotation hTypeV
   have hMF_eq_D : MF = ambientDerivedSubgroup M :=
@@ -33708,21 +32900,6 @@ private theorem theorem_10_10_source_typeV_hypothesis_10_1_supported_source
   exact theorem_10_10_hypothesis_10_1_supported_of_typeV_source_context
     _hM _hP _hAlt hS hDade h46 hNotation10 h52
 
-private theorem theorem_10_10_source_typeV_ti_hypothesis_10_1_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF W1 W2 : Subgroup G}
-    (_hM : M ∈ section9MaximalSubgroups G)
-    (_hP : Section8.typePDefinitionData M MF ⊥ W1 W2)
-    (_hTI : section16TISubset (section16NonidentityElements (MF : Set G))) :
-    ∃ S : Finset (Section1.ClassFunction M),
-      ∃ τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G,
-        hypothesis_10_1_supported_data M MF W1 W2 (section16HatW W1 W2) S τ := by
-  exact theorem_10_10_source_typeV_hypothesis_10_1_supported_source
-    _hM _hP (Or.inl _hTI)
-
 private theorem theorem_10_10_section8SubgroupSetPreimage_derived_nonidentity
     {G : Type u}
     [Group G]
@@ -33782,9 +32959,9 @@ private theorem theorem_10_10_caseC2FullData_of_typeV_ti_supported
   rcases hSource with ⟨hApre, _hA0sub, hNotationSrc, _hDadeSrc⟩
   rcases hFull with ⟨σM, xChar, H_A, _H_A0, hSupported46, _hGalois⟩
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt hP (Or.inl hTI)
+    ⟨⊥, _, _, hP, rfl, Or.inl hTI⟩
   have hMFsrc_eq : MFsrc = MF :=
-    theorem_10_10_section16MFSubgroup_unique hNotationSrc.2.1 hP.1
+    section16MFSubgroup_unique hNotationSrc.2.1 hP.1
   have hNotationOuter :
       Section8.notation_8_10_source_data M MF Ms Abook A0book A1book := by
     simpa [hMFsrc_eq] using hNotationSrc
@@ -33938,8 +33115,8 @@ private theorem theorem_10_10_source_typeV_ti_hypothesis_10_1_and_6_8_tail_sourc
             Section6.caseC2Hypothesis M (derivedSubgroup M)
               (W1.subgroupOf M) (W2.subgroupOf M)
               ((W1 ⊔ W2).subgroupOf M) τ) := by
-  rcases theorem_10_10_source_typeV_ti_hypothesis_10_1_supported_source
-      _hM _hP _hTI with
+  rcases theorem_10_10_source_typeV_hypothesis_10_1_supported_source
+      _hM _hP (Or.inl _hTI) with
     ⟨S, τ, h10⟩
   exact ⟨S, τ, h10,
     theorem_10_10_source_typeV_ti_pf6_8_branch_source_supported
@@ -34020,24 +33197,6 @@ private theorem theorem_10_10_source_typeV_ti_case_source_supported
   exact ⟨S, τ, h10,
     Section6.theorem_6_8 M (derivedSubgroup M) (W1.subgroupOf M)
       (W2.subgroupOf M) ((W1 ⊔ W2).subgroupOf M) S τ h68⟩
-
-private theorem theorem_10_10_source_typeV_cyclicCore_hypothesis_10_1_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF W1 W2 : Subgroup G}
-    (_hM : M ∈ section9MaximalSubgroups G)
-    (_hP : Section8.typePDefinitionData M MF ⊥ W1 W2)
-    (_hCyclicCore :
-      ∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-        Nat.card W1 ∣ p.val - 1 ∧ IsCyclic (section10PPrimeCore p MF)) :
-    ∃ S : Finset (Section1.ClassFunction M),
-      ∃ τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G,
-        hypothesis_10_1_supported_data M MF W1 W2
-          (section16HatW W1 W2) S τ := by
-  exact theorem_10_10_source_typeV_hypothesis_10_1_supported_source
-    _hM _hP (Or.inr (Or.inl _hCyclicCore))
 
 private theorem theorem_10_10_section15PCoreIn_eq_self_of_isPGroup
     {G : Type u}
@@ -34492,31 +33651,6 @@ private theorem theorem_10_10_source_typeV_cyclicCore_frobeniusQuotient_source_s
     _hP _hpMF _hCyclic _h10
 
 
-private theorem theorem_10_10_source_typeV_cyclicCore_section6_hypothesis_source_supported
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF W1 W2 : Subgroup G}
-    {S : Finset (Section1.ClassFunction M)}
-    {τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G}
-    {p : Nat.Primes}
-    (_hP : Section8.typePDefinitionData M MF ⊥ W1 W2)
-    (_hpMF : p ∈ subgroupPrimeSet MF)
-    (_hCyclic : IsCyclic (section10PPrimeCore p MF))
-    (_h10 :
-      hypothesis_10_1_supported_data M MF W1 W2 (section16HatW W1 W2) S τ) :
-    Section6.hypothesis_6_4_statement
-        (derivedSubgroup M)
-        (⊥ : Subgroup M)
-        ⁅derivedSubgroup M, derivedSubgroup M⁆
-        S τ := by
-  exact theorem_10_10_hypothesis_6_4_commutator_of_frobenius_supported
-    _hP _h10
-    (theorem_10_10_source_typeV_cyclicCore_frobeniusQuotient_source_supported
-      _hP _hpMF _hCyclic _h10)
-
-
 private theorem theorem_10_10_source_typeV_cyclicCore_section6_payload_source_supported
     {G : Type u}
     [Group G]
@@ -34546,8 +33680,10 @@ private theorem theorem_10_10_source_typeV_cyclicCore_section6_payload_source_su
         (⊥ : Subgroup M)
         ⁅derivedSubgroup M, derivedSubgroup M⁆
         S τ :=
-    theorem_10_10_source_typeV_cyclicCore_section6_hypothesis_source_supported
-      _hP _hpMF _hCyclic _h10
+    theorem_10_10_hypothesis_6_4_commutator_of_frobenius_supported
+      _hP _h10
+      (theorem_10_10_source_typeV_cyclicCore_frobeniusQuotient_source_supported
+        _hP _hpMF _hCyclic _h10)
   have hSbot : Section6.inducedKernelFamily (derivedSubgroup M) ⊥ S :=
     inducedKernelFamily_bot_of_hypothesis_10_1_supported_data _h10
   rcases
@@ -34627,32 +33763,12 @@ private theorem theorem_10_10_source_typeV_cyclicCore_case_source_supported
         hypothesis_10_1_supported_data M MF W1 W2
           (section16HatW W1 W2) S τ ∧
           Section6.coherentFamily S τ := by
-  rcases theorem_10_10_source_typeV_cyclicCore_hypothesis_10_1_supported_source
-      _hM _hP _hCyclicCore with
+  rcases theorem_10_10_source_typeV_hypothesis_10_1_supported_source
+      _hM _hP (Or.inr (Or.inl _hCyclicCore)) with
     ⟨S, τ, h10⟩
   exact ⟨S, τ, h10,
     theorem_10_10_source_typeV_cyclicCore_coherent_source_supported
       _hP _hCyclicCore h10⟩
-
-private theorem theorem_10_10_source_typeV_cubeCore_hypothesis_10_1_supported_source
-    {G : Type u}
-    [Group G]
-    [Finite G]
-    [IsMinCE G]
-    {M MF W1 W2 : Subgroup G}
-    (_hM : M ∈ section9MaximalSubgroups G)
-    (_hP : Section8.typePDefinitionData M MF ⊥ W1 W2)
-    (_hCubeCore :
-      ∃ p : Nat.Primes, p ∈ subgroupPrimeSet MF ∧
-        Nat.card (section16PCoreIn p MF) = p.val ^ 3 ∧
-        Nat.card W1 ∣ p.val + 1 ∧
-        IsCyclic (section10PPrimeCore p MF)) :
-    ∃ S : Finset (Section1.ClassFunction M),
-      ∃ τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G,
-        hypothesis_10_1_supported_data M MF W1 W2
-          (section16HatW W1 W2) S τ := by
-  exact theorem_10_10_source_typeV_hypothesis_10_1_supported_source
-    _hM _hP (Or.inr (Or.inr _hCubeCore))
 
 private theorem theorem_10_10_odd_prime_of_subgroupPrimeSet
     {G : Type u}
@@ -35398,8 +34514,7 @@ private theorem theorem_10_10_source_typeV_cubeCore_reduction_source_supported_o
     exact hM
   have hMF : section16MFSubgroup M MF := _hP.1
   have hTypeV : Section8.typeVDefinitionData M MF :=
-    theorem_10_10_typeVDefinitionData_of_typeP_bot_alt _hP
-      (Or.inr (Or.inr ⟨p, hpMF, hpCoreCard, hW1div, hCyclic⟩))
+    ⟨⊥, _, _, _hP, rfl, Or.inr (Or.inr ⟨p, hpMF, hpCoreCard, hW1div, hCyclic⟩)⟩
   have hT6 :
       ∀ A0 A1 : Subgroup G,
         section16PrimeOrderSubgroupOf A0 ⊥ →
@@ -35453,8 +34568,8 @@ private theorem theorem_10_10_source_typeV_cubeCore_case_source_supported
           (Section6.coherentFamily S τ ∨
             ∃ H H' : Subgroup G, ∃ p : ℕ,
               typeVReductionData M MF H H' W1 W2 p) := by
-  rcases theorem_10_10_source_typeV_cubeCore_hypothesis_10_1_supported_source
-      _hM _hP _hCubeCore with
+  rcases theorem_10_10_source_typeV_hypothesis_10_1_supported_source
+      _hM _hP (Or.inr (Or.inr _hCubeCore)) with
     ⟨S, τ, h10⟩
   by_cases hcoh : Section6.coherentFamily S τ
   · exact ⟨S, τ, h10, Or.inl hcoh⟩
