@@ -1,14 +1,3 @@
--- A modified version of Maschke.lean in mathlib, with universe adjustments.
---
--- The Maschke.lean file in mathlib proves Maschke's theorem under the condition {F: Type u}
--- and {G : Type u}, in which some of the variables is in the same universe.
--- However, this restriction can be simply removed by adding new universe variables.
-
-/-
-Copyright (c) 2020 Kim Morrison. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Kim Morrison
--/
 module
 
 public import Mathlib.Algebra.Group.TypeTags.Finite

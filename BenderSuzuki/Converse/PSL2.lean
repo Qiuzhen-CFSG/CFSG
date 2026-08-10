@@ -1,7 +1,3 @@
-/-
-Converse to the Suzuki theorem: the PSL₂(2ᵏ) case.
--/
-
 module
 
 public import BenderSuzuki.PFchapter1section1.Basic

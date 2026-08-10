@@ -1,27 +1,3 @@
-/-
-The Bender--Suzuki theorem as an equivalence.
-
-`bender_suzuki` classifies the finite simple groups possessing a strongly embedded
-subgroup.  This file supplies the converse -- each group on that list has one -- and
-packages the two directions as an `iff`.
-
-The packaging is for the sake of auditing.  The right-hand side names three matrix
-models, and checking that it says what the theorem says means reading those
-constructions.  The left-hand side is `IsStronglyEmbedded` exactly as
-`BenderSuzuki/FinalTheorem.lean` states it: Mathlib's subgroups, conjugation and
-lattice operations, together with the one-line `IsInvolution` beside it.  A reader who
-checks the short side is entitled to the long one.
-
-No definition is introduced here, or anywhere in the converse lane: every statement
-below is phrased with the one predicate `bender_suzuki` itself takes as its hypothesis,
-so a reader has a single notion of strong embedding to check and not two.
-
-What the equivalence does not settle: that the three families are pairwise
-non-isomorphic, or that the models pick out the intended member of each family.  Bender's
-theorem itself is used as external knowledge in reading the left-to-right direction; it is
-`bender_suzuki`, proved in `BenderSuzuki.SE`, and this file adds only the converse.
--/
-
 module
 
 public import BenderSuzuki.FinalTheorem

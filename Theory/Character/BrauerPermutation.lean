@@ -1,6 +1,3 @@
-/-
-Authors: OpenAI
--/
 module
 
 public import Theory.Character.Orthogonality

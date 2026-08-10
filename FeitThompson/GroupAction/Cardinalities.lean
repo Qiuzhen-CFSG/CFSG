@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie
--/
-
 module
 
 public import FeitThompson.BGsection3.Defs

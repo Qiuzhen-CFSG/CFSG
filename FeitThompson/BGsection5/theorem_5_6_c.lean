@@ -1,6 +1,3 @@
-/-
-Authors: OpenAI
--/
 module
 
 public import FeitThompson.BGsection5.theorem_5_6_a

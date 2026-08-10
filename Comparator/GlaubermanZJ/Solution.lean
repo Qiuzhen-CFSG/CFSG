@@ -1,11 +1,3 @@
-/-
-Solution to the Glauberman ZJ challenge.
-
-Imports `ZJDefs` (shared with `ZJChallenge`) and the repository. `ZJDefs`
-transcribes the two repository definitions verbatim, so those two bridges are
-`rfl`; the third identifies the centre of `J(S)` written with Mathlib's
-`Subgroup.center` with the repository's `centerIn`.
--/
 module
 
 public import Comparator.GlaubermanZJ.Defs

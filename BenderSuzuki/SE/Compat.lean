@@ -1,8 +1,3 @@
-/-
-Compatibility declarations for the v4.29 proof sources used by the
-strongly-embedded-subgroup development.
--/
-
 module
 
 public import Mathlib.Algebra.Group.Defs

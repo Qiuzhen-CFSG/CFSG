@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie
--/
-
 module
 
 public import Mathlib.GroupTheory.Commutator.Basic

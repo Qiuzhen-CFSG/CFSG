@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 public import FeitThompson.BGsection3.lemma_3_1
 public import FeitThompson.Wielandt.FixedPointProduct

@@ -1,9 +1,3 @@
-/-
-Orbit--stabilizer counting for a doubly transitive action, in the form the converse of
-the Suzuki classification needs: a one-point stabilizer has order `|Ω| - 1` times that
-of a two-point stabilizer.
--/
-
 module
 
 public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity

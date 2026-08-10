@@ -1,11 +1,3 @@
-/- 
-Authors: Tianjiao Nie
-
-Small helper: choose a minimal (by cardinality) nontrivial normal `A`-invariant subgroup.
-
-This is used in several blueprint-driven inductions where the action must descend to a quotient.
--/
-
 module
 
 public import FeitThompson.GroupAction.Invariant

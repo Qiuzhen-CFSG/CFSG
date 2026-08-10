@@ -1,12 +1,3 @@
-/-
-Comparator solution.  The definitions come from `Defs.lean`, shared with the challenge; the
-statement is the challenge's, proved.  Nobody needs to read this file.
-
-It does not import `Challenge`, so nothing here can influence what the challenge asks for.
-
-The challenge's definitions are the repository's, transcribed; the two agree definitionally,
-so the proof is the repository's theorem with its conclusion re-tagged.
--/
 module
 public import Comparator.BenderSuzukiTheorem.Defs
 import BenderSuzuki.FinalTheorem

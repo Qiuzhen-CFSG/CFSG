@@ -1,27 +1,3 @@
-/-
-The definitions the challenge is stated in.  Imports are Mathlib and nothing else: no
-declaration of this repository is in the trusted base, so nothing here can have been chosen
-to make the challenge easy.
-
-This file is imported by BOTH `Challenge.lean` and `Solution.lean`, deliberately.  The
-alternative -- a verbatim copy in each -- does not survive contact with instance
-resolution: `Disjoint`'s `⊥` and `GaloisField`'s `Fact (Nat.Prime 2)` elaborate to
-different instance paths depending on what else is imported, and comparator compares
-syntactically.  Sharing the module makes them the same constants rather than two copies
-that have to coincidentally agree.
-
-AUDIT THIS FILE.  Read `IsStronglyEmbedded` -- four lines, Mathlib vocabulary.  Read
-`HypothesisA` -- twelve fields plus two, each either Mathlib or one of the three one-line
-definitions above it.  Then the three groups.  `PSL2Model` is one line.  `PSUModel` is the
-isometry group of a Hermitian form, cut to determinant one and pushed into `PGL`.
-`SzModel` is awkward -- an explicit generator set of 4x4 matrices with a Tits exponent
-`2^(m+1)` -- and it does not matter that it is, because nothing in the challenge asks you
-to recognise it.
-
-Proof terms inside definitions (`unitarySubgroup`, `SzRootGL`, ...) discharge routine
-closure obligations and carry no meaning; a subgroup is determined by its carrier.  The
-audit cost of a 60-line definition with a 4-line carrier is 4 lines.
--/
 module
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
