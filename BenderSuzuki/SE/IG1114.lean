@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie, OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection3.Remaining

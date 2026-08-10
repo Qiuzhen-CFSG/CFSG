@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import BenderSuzuki.External.Suzuki.VI.formula_1_7

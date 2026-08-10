@@ -1,11 +1,3 @@
-/-
-Definitions for the Bender-Suzuki challenge, stated over Mathlib alone: strong embedding,
-the three group models together with the generating set `Sz` is defined from, and the
-inductive naming the conclusion.  None contains a proof.
-
-Each agrees word for word with `BenderSuzuki/FinalTheorem.lean`, so what the challenge
-asks is what this repository proves.
--/
 module
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup

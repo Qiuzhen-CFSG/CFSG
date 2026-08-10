@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection3.Defs

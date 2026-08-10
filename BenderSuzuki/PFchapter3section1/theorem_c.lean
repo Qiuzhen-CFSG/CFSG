@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 import BenderSuzuki.External.Huppert.V.theorem_8_15

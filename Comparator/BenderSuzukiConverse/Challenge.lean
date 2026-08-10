@@ -1,20 +1,3 @@
-/-
-Comparator challenge for the converse direction of the Bender-Suzuki theorem.
-
-The four statements below, together with `Defs.lean`, are everything a human must audit.
-The import closure is Mathlib plus `Defs.lean`; no declaration of this repository is in
-the trusted base.
-
-The claims are: each of three explicitly defined groups satisfies Hypothesis (A), and
-Hypothesis (A) forces the point stabiliser to be strongly embedded.  Composing 1 with each
-of 2-4 gives that each group has a strongly embedded subgroup.  If you believe Bender's
-classification of the groups with a strongly embedded subgroup, the three must be the
-known families -- whatever their definitions happen to look like.
-
-There are deliberately no entries in `definition_names`.  A definition hole would let a
-solution define `IsStronglyEmbedded := fun _ => True` and discharge everything by
-`trivial`.
--/
 module
 public import Comparator.BenderSuzukiConverse.Defs
 

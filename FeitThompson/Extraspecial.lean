@@ -1,6 +1,3 @@
-/-
-Authors: Yusen Tang
--/
 module
 
 public import FeitThompson.ElementaryAbelian

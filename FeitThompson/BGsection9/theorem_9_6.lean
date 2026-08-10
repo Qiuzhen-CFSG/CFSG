@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection9.lemma_9_5

@@ -1,9 +1,3 @@
-/-
-Comparator solution.  The definitions come from `Defs.lean`, shared with the challenge; the
-four statements are the challenge's, proved.  Nobody needs to read this file.
-
-It does not import `Challenge`, so nothing here can influence what the challenge asks for.
--/
 module
 public import Comparator.BenderSuzukiConverse.Defs
 import BenderSuzuki.Converse.StronglyEmbedded

@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection10.theorem_10_1_a

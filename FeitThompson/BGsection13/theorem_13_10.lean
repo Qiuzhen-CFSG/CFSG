@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection13.theorem_13_9

@@ -1,7 +1,3 @@
-/-
-Authors: Yusen Tang
--/
-
 module
 
 public import Mathlib.RepresentationTheory.Basic

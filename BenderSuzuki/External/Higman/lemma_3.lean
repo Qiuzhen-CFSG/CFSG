@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import BenderSuzuki.External.Higman.lemma_2

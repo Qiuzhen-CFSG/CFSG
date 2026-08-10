@@ -1,7 +1,3 @@
-/-
-Converse to the Suzuki theorem: the Sz(2^(2m+1)) case.
--/
-
 module
 
 public import BenderSuzuki.Converse.PSL2

@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import BenderSuzuki.External.Hall.lemma_14_4_2

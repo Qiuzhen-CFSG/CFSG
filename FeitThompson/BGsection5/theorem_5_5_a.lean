@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import FeitThompson.BGsection5.corollary_5_4

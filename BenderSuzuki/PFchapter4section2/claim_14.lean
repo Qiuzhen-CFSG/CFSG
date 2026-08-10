@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import BenderSuzuki.PFchapter4section2.claim_13

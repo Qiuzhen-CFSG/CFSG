@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 public import BenderSuzuki.External.Huppert.IV.theorem_5_1.NormalizerGrowth
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core

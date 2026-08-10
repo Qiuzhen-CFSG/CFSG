@@ -1,7 +1,3 @@
-/-
-Converse to the Suzuki theorem: the PSU₃(2ᵏ) case.
--/
-
 module
 
 public import BenderSuzuki.Converse.PSL2

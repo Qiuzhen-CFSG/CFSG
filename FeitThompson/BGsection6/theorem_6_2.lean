@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI, Yusen Tang
--/
-
 module
 
 public import FeitThompson.BGsection6.theorem_6_1

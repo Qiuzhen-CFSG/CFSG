@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie
--/
-
 module
 
 public import FeitThompson.BGsection1.corollary_1_12

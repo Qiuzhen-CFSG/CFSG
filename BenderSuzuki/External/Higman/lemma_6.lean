@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 import Mathlib.GroupTheory.FixedPointFree

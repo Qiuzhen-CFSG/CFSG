@@ -1,9 +1,5 @@
 module
 
-/-
-Authors: OpenAI
--/
-
 public import FeitThompson.BGsection1.lemma_1_22
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.PCore.CentralizerControl

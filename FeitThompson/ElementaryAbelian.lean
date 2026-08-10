@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie, Yusen Tang
--/
-
 module
 
 public import Mathlib.Algebra.Group.Defs

@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie
--/
-
 module
 
 public import FeitThompson.GroupAction.Defs

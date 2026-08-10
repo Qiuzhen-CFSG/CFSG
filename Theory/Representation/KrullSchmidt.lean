@@ -1,7 +1,3 @@
-/-
-Authors: OpenAI
--/
-
 module
 
 public import Mathlib.LinearAlgebra.FiniteDimensional.Basic

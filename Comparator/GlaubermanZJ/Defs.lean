@@ -1,19 +1,3 @@
-/-
-Definitions for the Glauberman ZJ challenge.
-
-This file imports only Mathlib. It is imported by both `ZJChallenge` and
-`ZJSolution`, so that the two statements are elaborated against the same
-constants and the same instances. Together with `ZJChallenge` it is the whole
-audit surface of the challenge: a reader who accepts the two definitions below
-and the statement in `ZJChallenge` need read nothing else.
-
-Neither notion is in Mathlib. Each transcribes a definition of the repository,
-`FeitThompson/Gorenstein/Chapter8_2.lean` and `FeitThompson/PCore/Defs.lean`
-respectively, in Mathlib vocabulary.
-
-The centre of `J(S)` is not named here: the statement of the challenge writes it
-as `(Subgroup.center J).map J.subtype`, using Mathlib's `Subgroup.center`.
--/
 module
 
 public import Mathlib.GroupTheory.Sylow

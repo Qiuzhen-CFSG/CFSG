@@ -1,7 +1,3 @@
-/-
-Authors: Tianjiao Nie, OpenAI
--/
-
 module
 
 public import BenderSuzuki.SE.FinalBridges

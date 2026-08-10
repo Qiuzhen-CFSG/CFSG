@@ -1,6 +1,3 @@
-/-
-Authors: OpenAI
--/
 module
 
 public import Mathlib.Algebra.GCDMonoid.FinsetLemmas
