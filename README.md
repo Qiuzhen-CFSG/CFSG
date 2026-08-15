@@ -17,3 +17,6 @@ If $X$ is a finite simple group containing a strongly embedded subgroup, then $X
 Each finished theorem is also stated in `Comparator/`, over Mathlib and nothing
 else, so that no declaration of this repository sits in the trusted base.
 
+## Publications
+
+- [FormaTheoria: Constructing Large-Scale Lean Theories from Mathematical Literature](https://arxiv.org/abs/2608.10894). Tianjiao Nie, Ao Zhang, Yusen Tang, Damiano Testa, Shing-Tung Yau, Peng Li, Yuan Zhou. arXiv:2608.10894.
