@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v4
@@ -18,3 +18,5 @@ jobs:
           build: true
           test: false
           lint: false
+          # on self-hosted runners, avoid uploading cache to github.
+          use-github-cache: false
