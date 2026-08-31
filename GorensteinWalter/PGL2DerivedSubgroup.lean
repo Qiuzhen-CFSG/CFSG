@@ -68,7 +68,7 @@ public theorem pgl2_commutator_eq_psl2_range_of_card_gt_three
     commutator (PGL2 K) =
       (Matrix.ProjectiveSpecialLinearGroup.toPGL
         (n := Fin 2) (R := K)).range := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let toPGL : PSL2 K →* PGL2 K :=
@@ -115,7 +115,7 @@ public theorem commutator_mulEquiv_psl2_of_mulEquiv_pgl2_card_gt_three
     (hK : IsOddPrimePower (Nat.card K)) (hcard : 3 < Nat.card K)
     (e : Q ≃* PGL2 K) :
     Nonempty (commutator Q ≃* PSL2 K) := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let toPGL : PSL2 K →* PGL2 K :=
@@ -149,10 +149,10 @@ public theorem exists_normal_psl2_core_of_normal_mulEquiv_pgl2_card_gt_three
     ∃ L : Subgroup R, L.Normal ∧ L ≤ N ∧ Nonempty (L ≃* PSL2 K) := by
   let C : Subgroup N := commutator N
   let L : Subgroup R := C.map N.subtype
-  letI : C.Characteristic := by
+  let : C.Characteristic := by
     dsimp [C]
     infer_instance
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hLnormal : L.Normal := by
     dsimp [L]
     exact ConjAct.normal_of_characteristic_of_normal
@@ -190,10 +190,10 @@ public theorem exists_normal_psl2_three_core_of_normal_mulEquiv_pgl2_three
       Nonempty (L ≃* PSL2 (ZMod 3)) := by
   let C : Subgroup N := commutator N
   let L : Subgroup R := C.map N.subtype
-  letI : C.Characteristic := by
+  let : C.Characteristic := by
     dsimp [C]
     infer_instance
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hLnormal : L.Normal := by
     dsimp [L]
     exact ConjAct.normal_of_characteristic_of_normal

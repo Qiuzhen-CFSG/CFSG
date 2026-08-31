@@ -42,8 +42,8 @@ universe u
 private lemma two_ne_zero_of_odd_card (K : Type u) [Field K] [Finite K]
     (hodd : Odd (Nat.card K)) : (2 : K) ≠ 0 := by
   intro h2
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fintype K := Fintype.ofFinite K
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hdvd_char : ringChar K ∣ 2 := (CharP.cast_eq_zero_iff K (ringChar K) 2).mp h2
   have hchar2 : ringChar K = 2 := by
     rcases hdvd_char with ⟨c, hc⟩
@@ -189,7 +189,7 @@ public theorem pgl2_concrete_nonsplit_torus_centralizer_data
             (n := Fin 2) (R := K)).range) ∧
       ¬ pgl2ConcreteNonsplitTorus K lam ≤ commutator (PGL2 K) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   rcases hK with ⟨p, n, hp, hpodd, hn, hKcard⟩
   have hodd : Odd (Nat.card K) := by
     rw [hKcard]
@@ -198,13 +198,13 @@ public theorem pgl2_concrete_nonsplit_torus_centralizer_data
     intro h
     subst h
     exact hlamNS IsSquare.zero
-  haveI : Fact (Irreducible (X ^ 2 - C lam : K[X])) := ⟨
+  have : Fact (Irreducible (X ^ 2 - C lam : K[X])) := ⟨
     (X_pow_sub_C_irreducible_iff_of_prime (K := K) Nat.prime_two).2 (by
       intro b hb
       exact hlamNS ⟨b, by simpa [pow_two] using hb.symm⟩)⟩
   let f : K[X] := X ^ 2 - C lam
   let E : Type u := AdjoinRoot f
-  letI : Field E := inferInstance
+  let : Field E := inferInstance
   let ρ : E := AdjoinRoot.root f
   have hρ2 : ρ ^ 2 = algebraMap K E lam := by
     change ρ ^ 2 = algebraMap K (AdjoinRoot f) lam
@@ -387,8 +387,8 @@ public theorem pgl2_concrete_nonsplit_torus_centralizer_data
           simp [mulGL, emb, hrepr0, hrepr1, emb_mul] <;> ring }
   let torus : Eˣ →* PGL2 K := Matrix.ProjGenLinGroup.mk.comp mulHom
   let U : Subgroup (PGL2 K) := torus.range
-  letI : Fintype E := Fintype.ofEquiv (Fin 2 → K) b2.equivFun.toEquiv.symm
-  letI : Finite E := inferInstance
+  let : Fintype E := Fintype.ofEquiv (Fin 2 → K) b2.equivFun.toEquiv.symm
+  let : Finite E := inferInstance
   have hUcyclic : IsCyclic U := by
     exact isCyclic_of_surjective torus.rangeRestrict
       torus.rangeRestrict_surjective
@@ -1018,7 +1018,7 @@ public theorem pgl2_concrete_nonsplit_torus_centralizer_data
     · exact bot_le
   have hcard_w : Nat.card (Subgroup.zpowers w) = 2 := by
     have horder : orderOf w = 2 := by
-      haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       exact (orderOf_eq_prime_iff (p := 2)).2 ⟨by simpa [pow_two] using hw_sq, hw_ne_one⟩
     calc
       Nat.card (Subgroup.zpowers w) = orderOf w := Nat.card_zpowers w

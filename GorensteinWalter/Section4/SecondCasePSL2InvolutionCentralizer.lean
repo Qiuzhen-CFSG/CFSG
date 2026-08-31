@@ -54,7 +54,7 @@ public theorem secondCase_psl2_hAcont
       (Subgroup.centralizer ({tau} : Set (PGammaL2 K)) ⊓
         pGammaL2PSLRange K) ≤ A := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨by decide⟩
+  let : Fact (Nat.Prime 2) := ⟨by decide⟩
   let f := ad.f
   let tM : w.M := ⟨c.t, d.E_component.1 d.t_mem_E⟩
   let tE : d.E := ⟨c.t, d.t_mem_E⟩

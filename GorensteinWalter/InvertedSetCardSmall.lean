@@ -480,7 +480,7 @@ public theorem inverted_card_three_no_commuting_fiber_pair
       ¬ Commute (i * y) (j * y) := by
   classical
   let I : Type u := {x : G // x ∈ invertedElements H y}
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   have hIcard : Fintype.card I = 3 := by
     rw [← Nat.card_eq_fintype_card]
     exact hcard

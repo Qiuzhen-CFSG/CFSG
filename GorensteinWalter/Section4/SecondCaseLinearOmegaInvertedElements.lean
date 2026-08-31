@@ -42,7 +42,7 @@ public theorem secondCase_linear_omega_invertedElements_le_fitting
       (I : Set G) = invertedElements c.U (od.s : G) ∧
       IsNormalIn I c.U ∧ I ≤ c.FU := by
   classical
-  letI : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
   let s : G := od.s
   let QG : Subgroup G := od.Q.map c.U.subtype
   have hsI : IsInvolution s := od.s_involution
@@ -151,9 +151,9 @@ public theorem secondCase_linear_omega_invertedElements_le_fitting
     have hQGleK0 : QG ≤ od.K0 := by
       intro q hq
       exact hInvK0 q (hQGleKF hq) (hinvQ q hq)
-    letI : IsCyclic od.K := od.K_cyclic
+    let : IsCyclic od.K := od.K_cyclic
     have hK0cyc : IsCyclic od.K0 := Subgroup.isCyclic_of_le hK0leK
-    letI : IsCyclic od.K0 := hK0cyc
+    let : IsCyclic od.K0 := hK0cyc
     have hQGcyc : IsCyclic QG := Subgroup.isCyclic_of_le hQGleK0
     let eQ : od.Q ≃* QG :=
       Subgroup.equivMapOfInjective od.Q c.U.subtype c.U.subtype_injective

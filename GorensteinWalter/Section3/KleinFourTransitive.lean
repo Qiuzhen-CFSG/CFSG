@@ -87,7 +87,7 @@ private theorem central_conj_in_normalizer_of_kleinFour
   · have hmle : c.m < 2 := Nat.lt_of_not_ge hm
     have hm1 : c.m = 1 :=
       le_antisymm (Nat.le_of_lt_succ hmle) c.one_le_m
-    letI : IsKleinFour (c.S : Subgroup G) := m1_sylow_isKleinFour c.S hm1 e
+    let : IsKleinFour (c.S : Subgroup G) := m1_sylow_isKleinFour c.S hm1 e
     have hSle : (c.S : Subgroup G) ≤ (c.S : Subgroup G) := by rfl
     have hVS : V = (c.S : Subgroup G) := by
       apply le_antisymm hVle

@@ -26,7 +26,7 @@ public theorem normalizer_eq_self_of_card_eq_three_of_mulEquiv_alternatingGroup_
     (he : Nonempty (G ≃* alternatingGroup (Fin 4))) :
     Subgroup.normalizer (T : Set G) = T := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let e : G ≃* alternatingGroup (Fin 4) := he.some
   have hGcard : Nat.card G = 12 := by
     calc
@@ -72,7 +72,7 @@ public theorem normalizer_eq_self_of_card_eq_three_of_mulEquiv_alternatingGroup_
       rw [hR6, hGcard] at hm
       omega
     have hRnormal : R.Normal := Subgroup.normal_of_index_eq_two hRindex
-    letI : R.Normal := hRnormal
+    let : R.Normal := hRnormal
     have hquotcard : Nat.card (G ⧸ R) = 2 := by
       rw [← R.index_eq_card, hRindex]
     have hquotcomm : IsMulCommutative (G ⧸ R) :=
@@ -91,7 +91,7 @@ public theorem normalizer_eq_self_of_card_eq_three_of_mulEquiv_alternatingGroup_
     have hTnormal : T.Normal := by
       apply Subgroup.normalizer_eq_top_iff.mp
       simpa [R] using hRtop
-    letI : T.Normal := hTnormal
+    let : T.Normal := hTnormal
     have hTindex : T.index = 4 := by
       have hm := T.index_mul_card
       rw [hTcard, hGcard] at hm

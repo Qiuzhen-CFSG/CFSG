@@ -34,8 +34,8 @@ public theorem secondCase_linear_P_not_conjugate_P0
     ¬ ∃ g : G, conjugateSubgroup post.od.P g = post.od.P0 := by
   classical
   rintro ⟨g, hgP⟩
-  letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
-  letI : IsCyclic post.od.K := post.od.K_cyclic
+  let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+  let : IsCyclic post.od.K := post.od.K_cyclic
   have hK0cyc : IsCyclic post.od.K0 := by
     rw [post.od.K0_eq]
     exact Subgroup.isCyclic_of_le inf_le_right

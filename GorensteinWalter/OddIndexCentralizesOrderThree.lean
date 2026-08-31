@@ -31,7 +31,7 @@ public theorem le_centralizer_of_card_three_normal_and_odd_centralizing_index
     Subgroup.inclusion hDnormF
   let rho : D →* MulAut F := F.normalizerMonoidHom.comp i
   have hFcyc : IsCyclic F := isCyclic_of_prime_card hFcard
-  letI : IsCyclic F := hFcyc
+  let : IsCyclic F := hFcyc
   have hAutcard : Nat.card (MulAut F) = 2 := by
     rw [IsCyclic.card_mulAut, hFcard, Nat.totient_prime Nat.prime_three]
   let VD : Subgroup D := V.subgroupOf D

@@ -37,7 +37,7 @@ public theorem secondCase_a7_omega_strict_relIndex_le_three
   let U : Subgroup G := c.U
   let ZQ : Subgroup QG := Subgroup.center QG
   let ZG : Subgroup G := ZQ.map QG.subtype
-  letI : MulAction U (Subgroup G) :=
+  let : MulAction U (Subgroup G) :=
     MulAction.compHom (Subgroup G) U.subtype
   have hAleQ : A ≤ QG := hAltQ.le
   have hFleA : od.F ≤ A := le_sup_right
@@ -188,8 +188,8 @@ public theorem secondCase_a7_omega_strict_relIndex_le_three
       exact hvalG
     rw [hxy']
   have htargetCard : Nat.card target = 24 := by
-    letI : Fintype QG := Fintype.ofFinite QG
-    letI : Fintype target := Fintype.ofFinite target
+    let : Fintype QG := Fintype.ofFinite QG
+    let : Fintype target := Fintype.ofFinite target
     have hQF : Fintype.card QG = 27 := by
       simpa [Nat.card_eq_fintype_card] using hQcard
     have hZF : Fintype.card ZQ = 3 := by
@@ -198,13 +198,13 @@ public theorem secondCase_a7_omega_strict_relIndex_le_three
     change Fintype.card QG - Fintype.card ZQ = 24
     rw [hQF, hZF]
   have hpairCard : Nat.card Pairs = Nat.card Orb * 6 := by
-    letI : Fintype Orb := Fintype.ofFinite Orb
+    let : Fintype Orb := Fintype.ofFinite Orb
     rw [Nat.card_sigma]
     have hfiber : ∀ T : Orb,
         Nat.card {x : T.1 // (x : G) ∉ ZG} = 6 := by
       intro T
-      letI : Fintype T.1 := Fintype.ofFinite T.1
-      letI : Fintype {x : T.1 // (x : G) ∉ ZG} := Fintype.ofFinite _
+      let : Fintype T.1 := Fintype.ofFinite T.1
+      let : Fintype {x : T.1 // (x : G) ∉ ZG} := Fintype.ofFinite _
       have hTF : Fintype.card T.1 = 9 := by
         simpa [Nat.card_eq_fintype_card] using hTcard T
       have hZTF : Fintype.card (ZG.subgroupOf T.1) = 3 := by
@@ -410,8 +410,8 @@ public theorem secondCase_a7_omega_strict_relIndex_le_three
       exact hvalG
     rw [hxy']
   have htargetAcard : Nat.card targetA = 6 := by
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype targetA := Fintype.ofFinite targetA
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype targetA := Fintype.ofFinite targetA
     have hAF : Fintype.card A = 9 := by
       simpa [Nat.card_eq_fintype_card] using hAcard
     have hZAF : Fintype.card (ZG.subgroupOf A) = 3 := by
@@ -422,12 +422,12 @@ public theorem secondCase_a7_omega_strict_relIndex_le_three
     change Fintype.card A - Fintype.card (ZG.subgroupOf A) = 6
     rw [hAF, hZAF]
   have hPairsFcard : Nat.card PairsF = 6 := by
-    letI : Fintype OrbF := Fintype.ofFinite OrbF
+    let : Fintype OrbF := Fintype.ofFinite OrbF
     rw [Nat.card_sigma]
     have hfiber : ∀ T : OrbF, Nat.card {x : T.1 // x ≠ 1} = 2 := by
       intro T
-      letI : Fintype T.1 := Fintype.ofFinite T.1
-      letI : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
+      let : Fintype T.1 := Fintype.ofFinite T.1
+      let : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
       have hTF : Fintype.card T.1 = 3 := by
         simpa [Nat.card_eq_fintype_card] using hTFcard T
       rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]

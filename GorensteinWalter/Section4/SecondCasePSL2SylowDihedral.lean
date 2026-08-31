@@ -77,7 +77,7 @@ private theorem psl2_component_sylow_not_cyclic
       Subgroup.equivMapOfInjective (SM : Subgroup w.M)
         w.M.subtype w.M.subtype_injective
     have hSMambcyc : IsCyclic SMamb := (MulEquiv.isCyclic eSM).mp hSMcyc
-    letI : IsCyclic SMamb := hSMambcyc
+    let : IsCyclic SMamb := hSMambcyc
     have hSEmapcyc : IsCyclic SEmap := Subgroup.isCyclic_of_le hSEmaple
     let eSE : (SE : Subgroup d.E) ≃* SEmap :=
       Subgroup.equivMapOfInjective (SE : Subgroup d.E)

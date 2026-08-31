@@ -43,7 +43,7 @@ public theorem fstar_pResidualOf_le_of_quotient_isPGroup
     (hN : (N.subgroupOf H).Normal)
     (hQ : IsPGroup p (H ⧸ N.subgroupOf H)) :
     pResidualOf H p ≤ N := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases (IsPGroup.iff_card.mp hQ) with ⟨n, hn⟩
   have hidx : ∃ n : ℕ, (N.subgroupOf H).index = p ^ n := ⟨n, by
     rw [← hn]
@@ -72,7 +72,7 @@ public instance fstar_pResidualOf_subgroupOf_normal
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) (p : ℕ) :
     ((pResidualOf H p).subgroupOf H).Normal := by
-  haveI : ((pResidualOf H p).subgroupOf H).Characteristic :=
+  have : ((pResidualOf H p).subgroupOf H).Characteristic :=
     fstar_pResidualOf_subgroupOf_characteristic H p
   infer_instance
 
@@ -82,8 +82,8 @@ public theorem fstar_isPGroup_quotient_pResidualOf
     (H : Subgroup G) (p : ℕ) (hp : p.Prime) :
     IsPGroup p (H ⧸ (pResidualOf H p).subgroupOf H) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  haveI : ((pResidualOf H p).subgroupOf H).Normal := fstar_pResidualOf_subgroupOf_normal H p
+  let : Fact p.Prime := ⟨hp⟩
+  have : ((pResidualOf H p).subgroupOf H).Normal := fstar_pResidualOf_subgroupOf_normal H p
   let family : Set (Subgroup H) :=
     {N : Subgroup H | N.Normal ∧ ∃ n : ℕ, N.index = p ^ n}
   let N : Subgroup H := sInf family
@@ -91,11 +91,11 @@ public theorem fstar_isPGroup_quotient_pResidualOf
     unfold pResidualOf
     exact Subgroup.comap_map_eq_self_of_injective H.subtype_injective N
   let ι : Type u := {M : Subgroup H // M ∈ family}
-  haveI : Finite ι := Finite.of_injective (fun M : ι => (M : Subgroup H)) (by
+  have : Finite ι := Finite.of_injective (fun M : ι => (M : Subgroup H)) (by
     intro M N h
     exact Subtype.ext h)
-  letI : Fintype ι := Fintype.ofFinite ι
-  haveI : ∀ M : ι, (M : Subgroup H).Normal := fun M => M.2.1
+  let : Fintype ι := Fintype.ofFinite ι
+  have : ∀ M : ι, (M : Subgroup H).Normal := fun M => M.2.1
   let n : ι → ℕ := fun M => Classical.choose M.2.2
   have hn : ∀ M : ι, (M : Subgroup H).index = p ^ n M := fun M =>
     Classical.choose_spec M.2.2
@@ -121,12 +121,12 @@ public theorem fstar_isPGroup_quotient_pResidualOf
     · intro hh
       rw [Subgroup.mem_sInf]
       intro M hM
-      haveI : M.Normal := hM.1
+      have : M.Normal := hM.1
       have hcomp : QuotientGroup.mk' M h = (1 : H ⧸ M) := congrFun hh ⟨M, hM⟩
       exact (QuotientGroup.eq_one_iff (N := M) h).1 hcomp
     · intro hh
       ext M
-      haveI : (M : Subgroup H).Normal := M.2.1
+      have : (M : Subgroup H).Normal := M.2.1
       rw [Subgroup.mem_sInf] at hh
       have hhM : h ∈ (M : Subgroup H) := hh (M : Subgroup H) M.2
       exact (QuotientGroup.eq_one_iff (N := (M : Subgroup H)) h).2
@@ -137,7 +137,7 @@ public theorem fstar_isPGroup_quotient_pResidualOf
     rw [Subgroup.mem_sInf] at hn ⊢
     intro M hM
     exact hM.1.conj_mem n (hn M hM) g
-  haveI : N.Normal := hNnormal
+  have : N.Normal := hNnormal
   let e : H ⧸ N ≃* f.range :=
     (QuotientGroup.quotientMulEquivOfEq (M := N) (N := f.ker) hfker.symm).trans
       (QuotientGroup.quotientKerEquivRange f)
@@ -205,7 +205,7 @@ public theorem fstar_pResidualOf_idempotent
         exact hxQ
     have hK'char : K'.Characteristic := hK'eq ▸
       fstar_characteristic_map_of_mulEquiv e.symm hQRchar
-    haveI : K'.Characteristic := hK'char
+    have : K'.Characteristic := hK'char
     have hK'norm : (K'.map RH.subtype).Normal :=
       ConjAct.normal_of_characteristic_of_normal (H := RH) (K := K')
     have hmap : K'.map RH.subtype = Q.subgroupOf H := by
@@ -219,7 +219,7 @@ public theorem fstar_pResidualOf_idempotent
     fstar_isPGroup_quotient_pResidualOf R p hp
   have hQquot : IsPGroup p (H ⧸ Q.subgroupOf H) := by
     classical
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases (IsPGroup.iff_card.mp hQHR) with ⟨a, ha⟩
     rcases (IsPGroup.iff_card.mp hQRp) with ⟨b, hb⟩
     have hQindex : (Q.subgroupOf H).index =
@@ -251,7 +251,7 @@ public theorem fstar_pResidualOf_idempotent
 /-- `O_p(A) ≤ F(A)`. -/
 public theorem fstar_qCoreOf_le_fittingSubgroupOf {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) (p : ℕ) (hp : p.Prime) : qCoreOf A p ≤ fittingSubgroupOf A := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hle : pCore p (↥A) ≤ fittingSubgroup (↥A) := pCore_le_fitting (G := ↥A) p
   exact Subgroup.map_mono (f := A.subtype) hle
 
@@ -267,8 +267,8 @@ public theorem fstar_fittingSubgroupOf_eq_iSup_qCoreOf {G : Type u} [Group G] [F
 public theorem fstar_qCoreOf_centralizer_of_ne {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hne : p ≠ q) :
     qCoreOf A q ≤ Subgroup.centralizer ((qCoreOf A p : Subgroup G) : Set G) := by
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   intro x hx
   rw [Subgroup.mem_centralizer_iff]
   intro y hy
@@ -297,7 +297,7 @@ public theorem fstar_qCoreOf_le_qCoreOf_fittingSubgroupOf
     {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) (q : ℕ) (hq : q.Prime) :
     qCoreOf A q ≤ qCoreOf (fittingSubgroupOf A) q := by
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let F : Subgroup G := fittingSubgroupOf A
   let Q : Subgroup G := qCoreOf A q
   have hQF : Q ≤ F := fstar_qCoreOf_le_fittingSubgroupOf A q hq
@@ -396,8 +396,8 @@ public theorem fstar_qCoreOf_fitting_ne_bot_of_mem_primesOfOrder
     (hpF : p ∈ primesOfOrder (fittingSubgroupOf A)) :
     qCoreOf (fittingSubgroupOf A) p ≠ ⊥ := by
   let F : Subgroup G := fittingSubgroupOf A
-  letI : Fact p.Prime := ⟨hp⟩
-  haveI : Group.IsNilpotent (↥F) := by
+  let : Fact p.Prime := ⟨hp⟩
+  have : Group.IsNilpotent (↥F) := by
     let e : fittingSubgroup (↥A) ≃* ↥F :=
       Subgroup.equivMapOfInjective (fittingSubgroup (↥A)) A.subtype A.subtype_injective
     exact Group.nilpotent_of_mulEquiv e
@@ -533,7 +533,7 @@ public theorem fstar_mem_pResidualOf_of_order_coprime
   rw [Subgroup.mem_sInf]
   intro N hN
   rcases hN with ⟨hNnormal, n, hn⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQ : IsPGroup p (H ⧸ N) := IsPGroup.of_card (n := n) (by
     rw [← hn]
     exact (Subgroup.index_eq_card N).symm)
@@ -571,10 +571,10 @@ private theorem fstar_isQuasisimple_mulEquiv
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H :=

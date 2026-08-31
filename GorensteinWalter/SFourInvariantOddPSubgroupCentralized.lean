@@ -32,7 +32,7 @@ public theorem sFour_invariant_oddP_subgroup_centralized
       a * s = s * a := by
     decide
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hGcard : Fintype.card (Equiv.Perm (Fin 4)) = 24 := by
     rw [Fintype.card_perm, Fintype.card_fin]
     norm_num [Nat.factorial]
@@ -77,7 +77,7 @@ public theorem sFour_invariant_oddP_subgroup_centralized
     have hPcard : Fintype.card P = 3 := by simpa [hnone] using hn
     have hPcardNat : Nat.card P = 3 := by
       rw [Nat.card_eq_fintype_card, hPcard]
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     obtain ⟨xP, hxPorder⟩ :=
       exists_prime_orderOf_dvd_card' (G := P) 3 (by rw [hPcardNat])
     let x : Equiv.Perm (Fin 4) := xP

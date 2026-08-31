@@ -35,7 +35,7 @@ public theorem secondCase_linear_kleinFour_centralizer_le_M
     (V : Subgroup G) (hVleE : V ≤ d.E) (hVK : IsKleinFour V) :
     Subgroup.centralizer (V : Set G) ≤ w.M := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSleM : (c.S : Subgroup G) ≤ w.M :=
     post.hSleE.trans d.E_component.1
   let VE : Subgroup d.E := V.subgroupOf d.E
@@ -94,7 +94,7 @@ public theorem secondCase_linear_kleinFour_centralizer_le_M
     center_mem_kleinFour_of_dihedral_mulEquiv c.one_le_m
       c.dihedralEquiv.some VS hVSK htCenter
   have htV' : c.t ∈ V' := Subgroup.mem_subgroupOf.mp htVS
-  letI : Fintype V' := Fintype.ofFinite V'
+  let : Fintype V' := Fintype.ofFinite V'
   have hthree : 3 ≤ ENat.card V' := by
     rw [ENat.card_eq_coe_fintype_card, ← Nat.card_eq_fintype_card,
       hV'K.card_four]

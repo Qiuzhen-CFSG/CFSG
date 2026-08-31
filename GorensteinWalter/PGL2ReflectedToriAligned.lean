@@ -49,7 +49,7 @@ public theorem pgl2_reflected_tori_aligned_of_outer_inner_pair
     ∃ T : PGL2LowReflectedToriData K P eP, ∃ a : PGL2 K,
       r0 = a * T.s * a⁻¹ ∧ t0 = a * T.t * a⁻¹ := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   obtain ⟨T⟩ := pgl2_low_reflected_tori_card_four K hK hcard P eP
@@ -90,7 +90,7 @@ public theorem pgl2_reflected_tori_aligned_of_outer_inner_pair
     · exact htwo
   have hHnoncyclic : ¬ IsCyclic H := by
     intro hcyc
-    letI : J.Normal := hJnormal
+    let : J.Normal := hJnormal
     let Q : Sylow 2 J :=
       BenderSuzuki.External.hallSylowSubgroupOfNormal P J
     let eHQ : H ≃* Q :=

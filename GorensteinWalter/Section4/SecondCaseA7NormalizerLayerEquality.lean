@@ -71,7 +71,7 @@ public theorem secondCase_a7_normalizer_layer_eq_component
   have hDN : IsDGroup N := properSubgroups_areDGroups hmin N hNtop
   let EN : Subgroup N := E.subgroupOf N
   let O : Subgroup N := pPrimeCore 2 N
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : N →* N ⧸ O := QuotientGroup.mk' O
@@ -84,7 +84,7 @@ public theorem secondCase_a7_normalizer_layer_eq_component
     central_quotient_of_mulEquiv eEN.symm hEcenterA7
   have hEperfect : Group.IsPerfect E := (Group.isPerfect_def).2 hEqE.2.1
   have hENperfect : Group.IsPerfect EN := by
-    letI : Group.IsPerfect E := hEperfect
+    let : Group.IsPerfect E := hEperfect
     exact Group.IsPerfect.ofSurjective
       (f := eEN.symm.toMonoidHom) eEN.symm.surjective
   have hENne : EN ≠ ⊥ := by
@@ -141,14 +141,14 @@ public theorem secondCase_a7_normalizer_layer_eq_component
       ⟨_hSylowN, hQtwo⟩ | ⟨_hSylowN, hA7q⟩ |
         ⟨_hSylowN, K, hK, Lq, hLqnormal, hLqindex, hlin⟩
   · exfalso
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hQsolvable : Group.IsSolvable (N ⧸ O) :=
       isSolvable_of_isPGroup hQtwo
     have hEbarSolvable : Group.IsSolvable Ebar := by
-      letI : Group.IsSolvable (N ⧸ O) := hQsolvable
+      let : Group.IsSolvable (N ⧸ O) := hQsolvable
       infer_instance
-    letI : Group.IsPerfect Ebar := hEbar_ne_perf.2
-    letI : Nontrivial Ebar :=
+    let : Group.IsPerfect Ebar := hEbar_ne_perf.2
+    let : Nontrivial Ebar :=
       (Subgroup.nontrivial_iff_ne_bot Ebar).2 hEbar_ne_perf.1
     exact Group.IsPerfect.not_isSolvable Ebar hEbarSolvable
   · have hcard_dvd : (2520 : ℕ) ∣ Nat.card Ebar :=
@@ -240,7 +240,7 @@ public theorem secondCase_a7_normalizer_layer_eq_component
         exact hIm.1 hmap.symm
       have hELperfect : Group.IsPerfect EL := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-        letI : Group.IsPerfect Ebar := hIm.2.1
+        let : Group.IsPerfect Ebar := hIm.2.1
         exact Group.IsPerfect.ofSurjective
           (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       let J : Subgroup (PSL2 K) := EL.map eL.toMonoidHom
@@ -265,13 +265,13 @@ public theorem secondCase_a7_normalizer_layer_eq_component
         exact hIm.1 hmap.symm
       have hELperfect : Group.IsPerfect EL := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-        letI : Group.IsPerfect Ebar := hIm.2.1
+        let : Group.IsPerfect Ebar := hIm.2.1
         exact Group.IsPerfect.ofSurjective
           (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       let J : Subgroup (PGL2 K) := EL.map eL.toMonoidHom
       have hJperfect : Group.IsPerfect J := by
         dsimp [J]
-        letI : Group.IsPerfect EL := hELperfect
+        let : Group.IsPerfect EL := hELperfect
         exact Group.IsPerfect.map eL.toMonoidHom
       have hJA7 : Nonempty
           (J ⧸ Subgroup.center J ≃* alternatingGroup (Fin 7)) := by
@@ -279,7 +279,7 @@ public theorem secondCase_a7_normalizer_layer_eq_component
         let eMap : EL ≃* J :=
           Subgroup.equivMapOfInjective EL eL.toMonoidHom eL.injective
         exact central_quotient_of_mulEquiv (eEL.symm.trans eMap) hAbar
-      letI : Finite (PGL2 K) :=
+      let : Finite (PGL2 K) :=
         Finite.of_surjective Matrix.ProjGenLinGroup.mk
           Matrix.ProjGenLinGroup.mk_surjective
       by_cases hK3 : Nat.card K = 3
@@ -308,7 +308,7 @@ public theorem secondCase_a7_normalizer_layer_eq_component
               _ ≤ p ^ n := Nat.pow_le_pow_right hp.pos hn)
         have hcard_gt : 3 < Nat.card K := by omega
         have hJleComm : J ≤ commutator (PGL2 K) := by
-          letI : Group.IsPerfect J := hJperfect
+          let : Group.IsPerfect J := hJperfect
           have hJJ : ⁅J, J⁆ = J := Subgroup.commutator_eq_self
           rw [← hJJ]
           exact Subgroup.commutator_mono le_top le_top

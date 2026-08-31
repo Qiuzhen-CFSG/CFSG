@@ -90,7 +90,7 @@ public theorem secondCase_linear_P0_centralizer_eq_torus
     exact hyT
   have hP0card : Nat.card post.od.P0 = post.od.p := post.od.P0_card
   have hpodd : Odd post.od.p := secondCase_linear_omega_p_odd c w d post.od
-  letI : Fact (Nat.Prime post.od.p) := ⟨post.od.hp_prime⟩
+  let : Fact (Nat.Prime post.od.p) := ⟨post.od.hp_prime⟩
   have hRcard : Nat.card ((post.od.P0.subgroupOf d.E).map q) = post.od.p := by
     calc
       Nat.card ((post.od.P0.subgroupOf d.E).map q) =

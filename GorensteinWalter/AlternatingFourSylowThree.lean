@@ -19,7 +19,7 @@ public theorem sylow_three_card_eq_four_of_mulEquiv_alternatingGroup_four
     (he : Nonempty (G ≃* alternatingGroup (Fin 4))) :
     Nat.card (Sylow 3 G) = 4 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let P : Sylow 3 G := Classical.choice Sylow.nonempty
   let e : G ≃* alternatingGroup (Fin 4) := he.some
   have hGcard : Nat.card G = 12 := by

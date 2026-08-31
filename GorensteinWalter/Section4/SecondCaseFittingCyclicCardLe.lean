@@ -68,7 +68,7 @@ public theorem secondCase_fitting_fixed_part_cyclic_and_card_le_of_conjugate_dis
     let e : K0Y ≃* K0 := Subgroup.subgroupOfEquivOfLe hK0leY
     exact (MulEquiv.isCyclic e).mpr hK0cyc
   have hQcyc : IsCyclic (Y ⧸ FY) := by
-    letI : IsCyclic K0Y := hK0Ycyc
+    let : IsCyclic K0Y := hK0Ycyc
     exact isCyclic_of_surjective (q.comp K0Y.subtype) hq_surj
   have hFg_leY : conjugateSubgroup F g ≤ Y := by
     intro x hx

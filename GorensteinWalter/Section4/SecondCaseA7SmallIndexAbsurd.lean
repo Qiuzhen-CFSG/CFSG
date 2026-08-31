@@ -33,7 +33,7 @@ public theorem secondCase_a7_small_index_absurd
   let M : Subgroup G := w.M
   let O : Subgroup M := pPrimeCore 2 M
   let Ω := G ⧸ M
-  letI : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype Ω := Fintype.ofFinite Ω
   have hMproper : M ≠ ⊤ := w.M_maximal.ne_top
   have hsimple : IsSimpleGroup G := minimalCounterexample_isSimple hmin
   have hcore : M.normalCore = ⊥ := by
@@ -44,7 +44,7 @@ public theorem secondCase_a7_small_index_absurd
       apply hMproper
       apply top_unique
       exact htop ▸ M.normalCore_le
-  letI : FaithfulSMul G Ω := faithfulSMul_iff.mpr (by
+  let : FaithfulSMul G Ω := faithfulSMul_iff.mpr (by
     intro g hg
     have hperm : MulAction.toPermHom G Ω g = 1 := by
       apply Equiv.ext
@@ -61,7 +61,7 @@ public theorem secondCase_a7_small_index_absurd
   have hΩ : Nat.card Ω = M.index := by
     exact (Subgroup.index_eq_card M).symm
   have hcardQ : Nat.card (M ⧸ O) = 2520 := by
-    letI : Fintype (M ⧸ O) := Fintype.ofFinite _
+    let : Fintype (M ⧸ O) := Fintype.ofFinite _
     have hAmbient := secondCase_a7_ambient_quotient_model hmin c w d hA7 hmodel
     have h : Nat.card (M ⧸ O) = Nat.card (alternatingGroup (Fin 7)) := by
       simpa [M, O] using Nat.card_congr hAmbient.some.toEquiv

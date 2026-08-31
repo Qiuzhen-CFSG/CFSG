@@ -199,7 +199,7 @@ private theorem primeCore_inf_B_eq_bot_local
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B) :
     qCoreOf od.d.bg.U od.p ⊓ od.d.bg.B = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   apply le_bot_iff.mp
   intro x hx
@@ -251,7 +251,7 @@ private theorem firstCase_P1_join_inter_B_eq_P2_local
         sylowCarrier (firstCase_P2_sylow c od hU Q)) ⊓ od.d.bg.B =
       sylowCarrier (firstCase_P2_sylow c od hU Q) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P2G : Subgroup G :=
     sylowCarrier (firstCase_P2_sylow c od hU Q)
@@ -262,7 +262,7 @@ private theorem firstCase_P1_join_inter_B_eq_P2_local
   have hP2normP : P2G ≤ Subgroup.normalizer (P : Set G) :=
     hP2leU.trans
       (le_normalizer_of_isNormalIn (qCoreOf_normal_in od.d.bg.U od.p))
-  letI : Subgroup.Normalizes P2G P := ⟨hP2normP⟩
+  let : Subgroup.Normalizes P2G P := ⟨hP2normP⟩
   have hPBbot : P ⊓ od.d.bg.B = ⊥ :=
     primeCore_inf_B_eq_bot_local c od hU
   apply le_antisymm
@@ -427,8 +427,8 @@ public theorem firstCase_cyclic_exists_B_normalized_nontrivial_le_B_inter_M
       od.d.bg.B ≤ Subgroup.normalizer (X : Set G) ∧
         X ≤ Subgroup.centralizer (qCoreOf od.d.bg.U od.p : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let C : Subgroup G := centralizerIn od.d.bg.U od.d.bg.t1
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P2G : Subgroup G :=
@@ -493,8 +493,8 @@ public theorem firstCase_cyclic_exists_B_normalized_nontrivial_le_B_inter_M
     Subgroup.normal_subgroupOf_of_le_normalizer (H := C) (N := P) hC_le_NP
   have hPg0norm : (Pg.subgroupOf C).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := C) (N := Pg) hC_le_NPg
-  haveI : (P.subgroupOf C).Normal := hP0norm
-  haveI : (Pg.subgroupOf C).Normal := hPg0norm
+  have : (P.subgroupOf C).Normal := hP0norm
+  have : (Pg.subgroupOf C).Normal := hPg0norm
   have hR0norm : (R.subgroupOf C).Normal := by
     have hsup_eq : (P ⊔ Pg).subgroupOf C =
         P.subgroupOf C ⊔ Pg.subgroupOf C :=
@@ -565,7 +565,7 @@ public theorem firstCase_cyclic_exists_B_normalized_nontrivial_le_B_inter_M
   have hP2normP : P2G ≤ Subgroup.normalizer (P : Set G) :=
     hP2leU.trans
       (le_normalizer_of_isNormalIn (qCoreOf_normal_in od.d.bg.U od.p))
-  letI : Subgroup.Normalizes P2G P := ⟨hP2normP⟩
+  let : Subgroup.Normalizes P2G P := ⟨hP2normP⟩
   have hprod : ((P ⊔ P2G : Subgroup G) : Set G) =
       (P : Set G) * (P2G : Set G) :=
     Subgroup.coe_mul_of_right_le_normalizer_left P P2G hP2normP

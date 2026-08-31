@@ -38,8 +38,8 @@ local instance fact_prime_two : Fact (Nat.Prime 2) := ⟨by decide⟩
 public theorem isQuasisimple_four_dvd_card {Q : Type u} [Group Q] [Finite Q]
     (hQ : IsQuasisimple Q) : 4 ∣ Nat.card Q := by
   classical
-  haveI : Nontrivial Q := hQ.1
-  haveI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+  have : Nontrivial Q := hQ.1
+  have : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
   have h2 : 2 ∣ Nat.card Q := by
     by_contra hnot
     have hodd : Odd (Nat.card Q) := by
@@ -94,7 +94,7 @@ public theorem isQuasisimple_four_dvd_card {Q : Type u} [Group Q] [Finite Q]
   let N : Subgroup Q :=
     (MonoidHom.transferSylow P
       (IsCyclic.normalizer_le_centralizer hminFac hPcyc)).ker
-  haveI : N.Normal := by dsimp [N]; infer_instance
+  have : N.Normal := by dsimp [N]; infer_instance
   have hNodd : Odd (Nat.card (↥N)) := by
     rcases h2 with ⟨m, hm⟩
     have hmodd : Odd m := by

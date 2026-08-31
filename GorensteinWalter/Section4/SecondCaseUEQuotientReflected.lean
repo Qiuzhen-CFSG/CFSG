@@ -126,7 +126,7 @@ public theorem secondCase_U_inter_E_quotient_cyclic_inverted
       _ = q tE * q x := map_mul q tE x
   have hUEbar_le_T : UEbar ≤ T :=
     hcontainT UEbar hUEbar_odd hUEbar_centralizer
-  letI : IsCyclic T := hTcyc
+  let : IsCyclic T := hTcyc
   have hUEbar_cyclic : IsCyclic UEbar :=
     Subgroup.isCyclic_of_le hUEbar_le_T
   have hUEbar_inverted : BenderGlauberman.IsInvertedBy (q s) UEbar := by

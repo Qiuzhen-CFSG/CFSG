@@ -426,7 +426,7 @@ public theorem secondCase_psl2_quotient_torus_card
   let hgcd : Nat.gcd (Nat.card K - 1) 2 = 2 :=
     gcd_sub_one_two_of_odd hqodd
   rcases hK with ⟨p, f, hp, hpOdd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hKcard : Nat.card K = p ^ f := hcard
   let hKfull : IsOddPrimePower (Nat.card K) := ⟨p, f, hp, hpOdd, hf, hcard⟩
   rcases Nat.even_or_odd ((Nat.card K - 1) / 2) with hsplit | hnonsplit
@@ -439,7 +439,7 @@ public theorem secondCase_psl2_quotient_torus_card
     have hUeven : 2 ∣ Nat.card U := by
       rw [hUcard']
       exact hsplit.two_dvd
-    letI : Fintype U := Fintype.ofFinite U
+    let : Fintype U := Fintype.ofFinite U
     obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := U) 2 hUeven
     let s0 : PSL2 K := sU
     have hs0U : s0 ∈ U := sU.2
@@ -630,7 +630,7 @@ public theorem secondCase_psl2_quotient_torus_card
     have hUeven : 2 ∣ Nat.card S0 := by
       rw [hScard']
       exact hSeven.two_dvd
-    letI : Fintype S0 := Fintype.ofFinite S0
+    let : Fintype S0 := Fintype.ofFinite S0
     obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := S0) 2 hUeven
     let s0 : PSL2 K := sU
     have hs0U : s0 ∈ S0 := sU.2

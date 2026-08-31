@@ -181,7 +181,7 @@ private lemma isPGroup_iff_primeFactors_subset_singleton {G : Type u} [Group G] 
   · intro hK r hr
     have hqprime : r.Prime := Nat.prime_of_mem_primeFactors hr
     have hrdvd : r ∣ Nat.card (↥K) := Nat.dvd_of_mem_primeFactors hr
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     rcases (IsPGroup.iff_card (p := p) (G := ↥K)).mp hK with ⟨n, hcard⟩
     have hrdvd' : r ∣ p ^ n := hcard ▸ hrdvd
     have hrp : r ∣ p := hqprime.dvd_of_dvd_pow hrdvd'
@@ -252,8 +252,8 @@ public theorem piCoreOf_primeDivisors {G : Type u} [Group G] [Finite G]
   have hqpf : q ∈ (Nat.card (↥(piCoreOf H π))).primeFactors := hq
   have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hqpf
   have hqdvd : q ∣ Nat.card (↥(piCoreOf H π)) := Nat.dvd_of_mem_primeFactors hqpf
-  letI : Fintype (↥(piCoreOf H π)) := Fintype.ofFinite _
-  haveI : Fact q.Prime := ⟨hqprime⟩
+  let : Fintype (↥(piCoreOf H π)) := Fintype.ofFinite _
+  have : Fact q.Prime := ⟨hqprime⟩
   have hqcard : q ∣ Fintype.card (↥(piCoreOf H π)) := by
     simpa [Nat.card_eq_fintype_card] using hqdvd
   rcases exists_prime_orderOf_dvd_card (G := ↥(piCoreOf H π)) q hqcard with ⟨g, hg⟩
@@ -273,7 +273,7 @@ public theorem piCoreOf_primeDivisors {G : Type u} [Group G] [Finite G]
   have hne := normalPiSubgroups_nonempty (G := ↥H) π
   rcases ((Subgroup.mem_sSup_of_directedOn hne hdir).mp hxpi) with ⟨K, hK, hxK⟩
   have hqdvdk : q ∣ Nat.card (↥K) := by
-    letI : Fintype (↥K) := Fintype.ofFinite _
+    let : Fintype (↥K) := Fintype.ofFinite _
     let xK : ↥K := ⟨x, hxK⟩
     have horder : orderOf xK = q := by
       calc
@@ -297,7 +297,7 @@ public theorem qCoreOf_le_piCoreOf {G : Type u} [Group G] [Finite G]
     intro r hr
     have hqprime : r.Prime := Nat.prime_of_mem_primeFactors hr
     have hrdvd : r ∣ Nat.card (↥(pCore q (↥H))) := Nat.dvd_of_mem_primeFactors hr
-    haveI : Fact q.Prime := ⟨hp⟩
+    have : Fact q.Prime := ⟨hp⟩
     rcases (IsPGroup.iff_card (p := q) (G := ↥(pCore q (↥H)))).mp
       (pCore_isPGroup (p := q) (G := ↥H)) with ⟨n, hcard⟩
     have hrdvd' : r ∣ q ^ n := hcard ▸ hrdvd
@@ -424,7 +424,7 @@ public theorem pResidualOf_eq_self_implies_coprimeGenerated_eq_top
     have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hq
     have hqindex : q ∣ L.index := Nat.dvd_of_mem_primeFactors hq
     by_contra hqp
-    letI : Fact q.Prime := ⟨hqprime⟩
+    let : Fact q.Prime := ⟨hqprime⟩
     let Q : Sylow q (↥K) := Classical.choice Sylow.nonempty
     have hQcard : Nat.Coprime p (Nat.card (↥(Q : Subgroup (↥K)))) := by
       obtain ⟨n, hn⟩ := (IsPGroup.iff_card (p := q) (G := Q)).mp Q.2
@@ -478,7 +478,7 @@ public theorem centralizes_of_pResidualOf_eq_self_of_coprime_subgroups
     apply sSup_le
     intro M hM
     rcases hM with ⟨Q, hQ, rfl⟩
-    letI : C.Normal := hCnormal
+    let : C.Normal := hCnormal
     apply Subgroup.normalClosure_le_normal
     intro q hq
     change (Subgroup.inclusion hKB q : Subgroup.normalizer (B : Set G)) ∈ N
@@ -558,7 +558,7 @@ public theorem bender1970_1_1_thompson
     (hPK : ⁅P, K⁆ = ⊥)
     (hCBK : ⁅B ⊓ Subgroup.centralizer (P : Set G), K⁆ = ⊥) :
     Centralizes K B := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hcop : ∀ Q : Subgroup (↥K), Nat.Coprime p (Nat.card (↥Q)) →
       Centralizes (Q.map K.subtype) B := by
     intro Q hQ

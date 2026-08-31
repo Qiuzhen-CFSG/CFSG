@@ -51,7 +51,7 @@ public theorem secondCase_psl2_normalizer_innerAction_of_linear_model
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let L : Subgroup G := componentLayerOf N
   let O : Subgroup N := pPrimeCore 2 N
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : N →* N ⧸ O := QuotientGroup.mk' O
   have hqsurj : Function.Surjective q := QuotientGroup.mk'_surjective O
   have hLleN : L ≤ N := (componentLayerOf_isNormalIn N).1
@@ -65,7 +65,7 @@ public theorem secondCase_psl2_normalizer_innerAction_of_linear_model
   have hLperf : Group.IsPerfect L := componentLayerOf_isPerfect N
   have hLNperf : Group.IsPerfect LN := by
     let eLN : LN ≃* L := Subgroup.subgroupOfEquivOfLe hLleN
-    letI : Group.IsPerfect L := hLperf
+    let : Group.IsPerfect L := hLperf
     exact Group.IsPerfect.ofSurjective
       (f := eLN.symm.toMonoidHom) eLN.symm.surjective
   have hLne : L ≠ ⊥ := by
@@ -127,7 +127,7 @@ public theorem secondCase_psl2_normalizer_innerAction_of_linear_model
     centralizer_eq_bot_of_normal_centerless_dihedral_of_pPrimeCore_eq_bot
       hQdihedral hQcore Lbar hLbarNormal hLbarCenter hLbarDihedral
   rcases hK' with ⟨ell, n, hell, hellodd, hn, hKcardEq⟩
-  letI : Fact ell.Prime := ⟨hell⟩
+  let : Fact ell.Prime := ⟨hell⟩
   let hKfull : IsOddPrimePower (Nat.card K') :=
     ⟨ell, n, hell, hellodd, hn, hKcardEq⟩
   let hsurj : Function.Surjective
@@ -189,12 +189,12 @@ public theorem secondCase_psl2_normalizer_innerAction_of_linear_model
     rw [Nat.card_congr (Subgroup.subgroupOfEquivOfLe inf_le_right).toEquiv]
     exact hPGodd
   have hPNnil : Group.IsNilpotent PN := by
-    letI : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
+    let : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
     have hPGnil : Group.IsNilpotent PG := by
-      haveI : Group.IsNilpotent (PG.subgroupOf c.FU) := inferInstance
+      have : Group.IsNilpotent (PG.subgroupOf c.FU) := inferInstance
       exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe inf_le_left)
-    haveI : Group.IsNilpotent PG := hPGnil
+    have : Group.IsNilpotent PG := hPGnil
     exact Group.nilpotent_of_mulEquiv
       (G := PG) (G' := PN)
       (Subgroup.subgroupOfEquivOfLe inf_le_right).symm

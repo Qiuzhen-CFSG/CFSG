@@ -18,7 +18,7 @@ private theorem exists_centralizing_involution_of_even_normalized
     (heven : Even (Nat.card D)) :
     ∃ s : G, IsInvolution s ∧ s ∈ D ∧ s * y = y * s := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hy2 : y * y = 1 := by simpa [pow_two] using hy.2
   obtain ⟨T, hTinv⟩ := exists_invariant_sylow_two_of_involutive_normalizer_t26 D hyN hy2
   have h2dvd : 2 ∣ Nat.card D := by
@@ -43,8 +43,8 @@ private theorem exists_centralizing_involution_of_even_normalized
       · norm_num at h
       · exact h
     omega
-  letI : Fintype T := Fintype.ofFinite T
-  letI : Nontrivial T :=
+  let : Fintype T := Fintype.ofFinite T
+  let : Nontrivial T :=
     (Subgroup.nontrivial_iff_ne_bot (T : Subgroup D)).mpr hTne
   obtain ⟨z, hzord, hzcent⟩ := BenderGlauberman.exists_central_involution T.isPGroup'
   let a : G := (z : D)
@@ -169,7 +169,7 @@ private theorem firstCase_klein_restrictionSix_core
       (Nat.card {x : G // x ∈ invertedElements (oddCoreOf D) y} ≠ 1 ∨
        Nat.card {x : G // x ∈ invertedElements (oddCoreOf D) (s * y)} ≠ 1) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hDcard : 2 ∣ Nat.card D := by
     have hOcard : Nat.card (oddCoreOf D) > 0 := Nat.card_pos
     have hmul := ((oddCoreOf D).subgroupOf D).card_mul_index

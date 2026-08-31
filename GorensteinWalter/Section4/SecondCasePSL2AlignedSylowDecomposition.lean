@@ -360,7 +360,7 @@ private theorem mem_E_of_inverted
   have hEsubNormal : Esub.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := w.M) (N := d.E)
       (le_normalizer_of_isNormalIn d.E_normal)
-  letI : Esub.Normal := hEsubNormal
+  let : Esub.Normal := hEsubNormal
   let p : w.M →* w.M ⧸ Esub := QuotientGroup.mk' Esub
   let yM : w.M := ⟨y, hyM⟩
   let sM : w.M := ⟨sG, hsM⟩
@@ -724,7 +724,7 @@ public theorem secondCase_psl2_alignedSylow_decomposition
       _ = q (⟨c.t, d.t_mem_E⟩ : d.E) * q x := map_mul q (⟨c.t, d.t_mem_E⟩ : d.E) x
   have hUEbar_le_T : UEbar ≤ T :=
     hcontainT UEbar hUEbar_odd hUEbar_centralizer
-  letI : IsCyclic T := hTcyc
+  let : IsCyclic T := hTcyc
   have hUEbar_cyclic : IsCyclic UEbar :=
     Subgroup.isCyclic_of_le hUEbar_le_T
   have hUEbar_inverted : BenderGlauberman.IsInvertedBy (q s) UEbar := by
@@ -768,7 +768,7 @@ public theorem secondCase_psl2_alignedSylow_decomposition
     exact w.M.mul_mem (w.M.mul_mem hsM hx.2) (w.M.inv_mem hsM)
   -- cyclic generator of the quotient image and a lift
   have hcycUEbar : IsCyclic UEbar := hUEbar_cyclic
-  letI : IsCyclic UEbar := hcycUEbar
+  let : IsCyclic UEbar := hcycUEbar
   obtain ⟨xbar, hxbar_gen⟩ := IsCyclic.exists_generator (α := UEbar)
   have hxbar_mem : (xbar : Q) ∈ UEbar := xbar.2
   rcases Subgroup.mem_map.mp hxbar_mem with ⟨xE, hxE, hxq⟩

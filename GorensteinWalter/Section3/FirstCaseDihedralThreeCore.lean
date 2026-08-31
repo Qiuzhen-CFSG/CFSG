@@ -36,7 +36,7 @@ public theorem pCore_two_dihedral_three_eq_bot :
     pCore 2 (DihedralGroup 3) = ⊥ := by
   classical
   let P : Subgroup (DihedralGroup 3) := pCore 2 (DihedralGroup 3)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hPnormal : P.Normal := by
     dsimp [P]
     infer_instance

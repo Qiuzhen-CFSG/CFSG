@@ -32,12 +32,12 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
     (hK : IsOddPrimePower (Nat.card K))
     (hmodel : Nonempty (L ≃* PSL2 K) ∨ Nonempty (L ≃* PGL2 K)) :
     IsSimpleGroup S := by
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : Q →* Q ⧸ L := QuotientGroup.mk' L
   let I : Subgroup (Q ⧸ L) := S.map pi
   have hIperf : Group.IsPerfect I := by
     dsimp [I]
-    letI : Group.IsPerfect S := hSperf
+    let : Group.IsPerfect S := hSperf
     exact Group.IsPerfect.map pi
   have hQodd : Odd (Nat.card (Q ⧸ L)) := by
     simpa only [Subgroup.index_eq_card] using hLindex
@@ -45,10 +45,10 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
     odd_order_theorem (Q ⧸ L) hQodd
   have hIbot : I = ⊥ := by
     by_contra hIne
-    letI : Group.IsSolvable (Q ⧸ L) := hQsolv
+    let : Group.IsSolvable (Q ⧸ L) := hQsolv
     have hIsolv : Group.IsSolvable I := inferInstance
-    letI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    letI : Group.IsPerfect I := hIperf
+    let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    let : Group.IsPerfect I := hIperf
     exact Group.IsPerfect.not_isSolvable I hIsolv
   have hSleL : S ≤ L := by
     have hker : S ≤ pi.ker := (Subgroup.map_eq_bot_iff S).mp hIbot
@@ -63,7 +63,7 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
     rw [hbot, Subgroup.map_bot] at hmap
     exact hmap.symm
   have hSLperf : Group.IsPerfect SL := by
-    letI : Group.IsPerfect S := hSperf
+    let : Group.IsPerfect S := hSperf
     exact Group.IsPerfect.ofSurjective
       (f := eSL.symm.toMonoidHom) eSL.symm.surjective
   have hSLnormal : SL.Normal := by
@@ -78,7 +78,7 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
       exact (Subgroup.map_eq_bot_iff_of_injective SL e.injective).not.mpr hSLne
     have hJperf : Group.IsPerfect J := by
       dsimp [J]
-      letI : Group.IsPerfect SL := hSLperf
+      let : Group.IsPerfect SL := hSLperf
       exact Group.IsPerfect.map e.toMonoidHom
     have hJsn : J.IsSubnormal := by
       dsimp [J]
@@ -95,7 +95,7 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
       Matrix.ProjectiveSpecialLinearGroup.rank_two_simple (by omega)
     exact (MulEquiv.isSimpleGroup_congr eSmodel).mpr hPSLsimple
   · rcases hPGL with ⟨e⟩
-    letI : Finite (PGL2 K) :=
+    let : Finite (PGL2 K) :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
     let J : Subgroup (PGL2 K) := SL.map e.toMonoidHom
@@ -104,7 +104,7 @@ public theorem perfect_normal_subgroup_isSimple_of_linear_model
       exact (Subgroup.map_eq_bot_iff_of_injective SL e.injective).not.mpr hSLne
     have hJperf : Group.IsPerfect J := by
       dsimp [J]
-      letI : Group.IsPerfect SL := hSLperf
+      let : Group.IsPerfect SL := hSLperf
       exact Group.IsPerfect.map e.toMonoidHom
     have hJsn : J.IsSubnormal := by
       dsimp [J]

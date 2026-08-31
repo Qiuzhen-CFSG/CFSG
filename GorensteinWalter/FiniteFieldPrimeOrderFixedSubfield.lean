@@ -35,14 +35,14 @@ public theorem finiteField_primeOrder_fixedSubfield_data
   have hcardpow : Nat.card K = Nat.card R ^ p := by
     simpa [hord] using hcardeq
   rcases hK with ⟨q, n, hq, hqodd, _hn, hKcard⟩
-  letI : Fact q.Prime := ⟨hq⟩
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fact q.Prime := ⟨hq⟩
+  let : Fintype K := Fintype.ofFinite K
   have hKcardF : Fintype.card K = q ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hKcard
-  letI : CharP K q := charP_of_card_eq_prime_pow hKcardF
-  letI : Fintype R := Fintype.ofFinite R
-  letI : CharP R q := Subfield.charP R q
+  let : CharP K q := charP_of_card_eq_prime_pow hKcardF
+  let : Fintype R := Fintype.ofFinite R
+  let : CharP R q := Subfield.charP R q
   have hRcard : ∃ m : ℕ+, Nat.Prime q ∧ Fintype.card R = q ^ (m : ℕ) :=
     FiniteField.card R q
   rcases hRcard with ⟨m, _hq', hRm⟩

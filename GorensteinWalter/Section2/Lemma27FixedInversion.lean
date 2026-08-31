@@ -111,8 +111,8 @@ public theorem exists_fixed_involution_centralizer_of_kleinFour_inverted
   intro y hy
   rw [Set.mem_singleton_iff.mp hy]
   have hscomm : s * t = t * s := by
-    letI : IsKleinFour (↥V) := hV
-    letI : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
+    let : IsKleinFour (↥V) := hV
+    let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
     let sv : ↥V := ⟨s, hsV⟩
     let tv : ↥V := ⟨t, htV⟩
     have h := congrArg Subtype.val

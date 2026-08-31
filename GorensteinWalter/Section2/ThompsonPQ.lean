@@ -69,7 +69,7 @@ private theorem commutatorAction₂_eq_bot_of_ambient_double_commutator_eq_bot
     (hdouble : ⁅⁅B, Q⁆, Q⁆ = ⊥) :
     letI : Subgroup.Normalizes Q B := ⟨hQB⟩
     commutatorAction₂ (A := ↥Q) (G := ↥B) = ⊥ := by
-  letI : Subgroup.Normalizes Q B := ⟨hQB⟩
+  let : Subgroup.Normalizes Q B := ⟨hQB⟩
   change Subgroup.closure
       {x : B | ∃ q : Q, ∃ b : B,
         b ∈ commutatorAction (A := ↥Q) (G := ↥B) ∧ x = b⁻¹ * (q • b)} = ⊥
@@ -150,11 +150,11 @@ public theorem thompson_p_times_q
         (le_inf hBQleB hBQcentP).trans hfixed
       have hdouble : ⁅⁅B, Q⁆, Q⁆ = ⊥ :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer).mpr hBQcentQ
-      letI : Subgroup.Normalizes Q B := ⟨hQB⟩
+      let : Subgroup.Normalizes Q B := ⟨hQB⟩
       have hactDouble : commutatorAction₂ (A := ↥Q) (G := ↥B) = ⊥ :=
         commutatorAction₂_eq_bot_of_ambient_double_commutator_eq_bot B Q hQB hdouble
       have hBnil : Group.IsNilpotent B := hBp.isNilpotent
-      letI : Group.IsNilpotent B := hBnil
+      let : Group.IsNilpotent B := hBnil
       have hBsolv : Group.IsSolvable B := inferInstance
       obtain ⟨m, hm⟩ := hBp.exists_card_eq
       have hQcopB : Nat.Coprime (Nat.card Q) (Nat.card B) := by

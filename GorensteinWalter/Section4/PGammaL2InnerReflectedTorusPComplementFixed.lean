@@ -63,16 +63,16 @@ public theorem pGammaL2_inner_reflected_torus_pComplement_fixed
       Nat.card U0 ∣
         (Nat.card (FixedPoints.subfield (Subgroup.zpowers sigma) K) + 1) / 2) := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
@@ -248,10 +248,10 @@ public theorem pGammaL2_inner_reflected_torus_pComplement_fixed
     exact hdvd
   · right
     refine ⟨hUcard.trans hTplus, ?_⟩
-    letI : Fintype R := Fintype.ofFinite R
+    let : Fintype R := Fintype.ofFinite R
     have hcharR : ringChar R ≠ 2 := by
       intro hchar
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       have hdvd : 2 ∣ Fintype.card R :=
         (prime_dvd_char_iff_dvd_card (R := R) (p := 2)).mp (by
           simp [hchar])

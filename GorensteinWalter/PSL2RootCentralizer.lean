@@ -19,7 +19,7 @@ public theorem no_involution_centralizes_psl2UpperUnipotent
     v * psl2QuotientMap K (sl2UpperUnipotent (1 : K)) * v⁻¹ ≠
       psl2QuotientMap K (sl2UpperUnipotent (1 : K)) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   intro hconj
   let uSL : Matrix.SpecialLinearGroup (Fin 2) K := sl2UpperUnipotent (1 : K)
   let uPSL : PSL2 K := psl2QuotientMap K uSL
@@ -182,7 +182,7 @@ public theorem no_kleinFour_centralizes_psl2UpperUnipotentSubgroup
       (psl2UpperUnipotentSubgroup K : Set (PSL2 K))) :
     False := by
   classical
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hVK.card_four]
     norm_num

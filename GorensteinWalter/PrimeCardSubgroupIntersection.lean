@@ -26,7 +26,7 @@ public theorem inf_eq_bot_of_not_le_of_prime_card
     H ⊓ P = ⊥ := by
   classical
   let I : Subgroup P := (H ⊓ P).subgroupOf P
-  letI : Fact (Nat.card P).Prime := ⟨hp⟩
+  let : Fact (Nat.card P).Prime := ⟨hp⟩
   rcases I.eq_bot_or_eq_top_of_prime_card with hbot | htop
   · apply le_antisymm
     · intro x hx

@@ -221,8 +221,8 @@ public theorem firstCase_klein_twelve_dvd_b4
                 rw [hswap]
           _ = (vu1.1 : G) * (vu1.2 : G) * ((vu2.1 : G) * (vu2.2 : G)) := by
                 group }
-  letI : MulAction (V × U) (G ⧸ c.Hhat) := MulAction.compHom (G ⧸ c.Hhat) φ
-  letI : MulAction (V × U) Ω :=
+  let : MulAction (V × U) (G ⧸ c.Hhat) := MulAction.compHom (G ⧸ c.Hhat) φ
+  let : MulAction (V × U) Ω :=
     { smul := fun vu ω => ⟨vu • ω.1, by
         have hb : (φ vu : G) ∈ c.Hhat := by
           change (vu.1 : G) * (vu.2 : G) ∈ c.Hhat
@@ -374,8 +374,8 @@ public theorem firstCase_klein_twelve_dvd_b4
       exact hv1
     · apply Subtype.ext
       exact hv2
-  letI : Fintype (V × U) := Fintype.ofFinite _
-  letI : Fintype Ω := Fintype.ofFinite _
+  let : Fintype (V × U) := Fintype.ofFinite _
+  let : Fintype Ω := Fintype.ofFinite _
   have hdvd : Nat.card (V × U) ∣ Nat.card Ω :=
     natCard_dvd_of_free_action (G := V × U) (X := Ω) hfree
   have hVUcard : Nat.card (V × U) = 12 := by

@@ -45,14 +45,14 @@ public theorem commutator_le_of_selfCommutator_fixedPointFree_involution_quotien
     exact sup_le hUnormK (Subgroup.zpowers_le.mpr htnormK)
   have hAnormD : A ≤ Subgroup.normalizer (D : Set G) := by
     exact sup_le hUnormD (Subgroup.zpowers_le.mpr htnormD)
-  letI : Subgroup.Normalizes A K := ⟨hAnormK⟩
+  let : Subgroup.Normalizes A K := ⟨hAnormK⟩
   let DK : Subgroup K := D.subgroupOf K
-  haveI : DK.Normal := by
+  have : DK.Normal := by
     simpa [DK] using hDnormalK
   have hDKinv : IsInvariant A K DK := by
     simpa [DK] using
       (isInvariant_subgroupOf_of_le_normalizer hAnormK hAnormD hDK)
-  letI : MulDistribMulAction A (K ⧸ DK) :=
+  let : MulDistribMulAction A (K ⧸ DK) :=
     quotientMulDistribMulAction (A := A) (G := K) DK hDKinv
   let tA : A := ⟨t, htA⟩
   let φ : MulAut (K ⧸ DK) :=
@@ -114,9 +114,9 @@ public theorem commutator_le_of_selfCommutator_fixedPointFree_involution_quotien
         symm
         change (U.subgroupOf A).map A.subtype = U
         exact Subgroup.map_subgroupOf_eq_of_le le_sup_left
-  letI : CommGroup (K ⧸ DK) :=
+  let : CommGroup (K ⧸ DK) :=
     hφfp.commGroupOfInvolutive hφinv
-  letI : MulDistribMulAction A (K ⧸ DK) :=
+  let : MulDistribMulAction A (K ⧸ DK) :=
     quotientMulDistribMulAction (A := A) (G := K) DK hDKinv
   have hinverts : ∀ q : K ⧸ DK, tA • q = q⁻¹ := by
     intro q

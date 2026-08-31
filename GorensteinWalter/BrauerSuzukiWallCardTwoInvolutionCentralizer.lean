@@ -25,8 +25,8 @@ public theorem
     (haH : a ∈ h.H) (haI : IsInvolution a) :
     Subgroup.centralizer ({a} : Set G) = h.H := by
   classical
-  letI : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
-  letI : IsMulCommutative h.H := IsKleinFour.isMulCommutative
+  let : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
+  let : IsMulCommutative h.H := IsKleinFour.isMulCommutative
   have hHleC : h.H ≤ Subgroup.centralizer ({a} : Set G) := by
     intro x hxH
     rw [Subgroup.mem_centralizer_singleton_iff]

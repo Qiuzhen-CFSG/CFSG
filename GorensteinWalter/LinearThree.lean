@@ -20,8 +20,8 @@ public theorem isDGroup_of_iso_PSL2_three
     (hcore : pPrimeCore 2 G = ⊥)
     (hSylow : HasDihedralSylowTwo G)
     (e : Nonempty (G ≃* PSL2 (ZMod 3))) : IsDGroup G := by
-  letI : Field (ZMod 3) := inferInstance
-  letI : Field (ULift.{u} (ZMod 3)) := ULift.field
+  let : Field (ZMod 3) := inferInstance
+  let : Field (ULift.{u} (ZMod 3)) := ULift.field
   refine IsDGroup.quotientHasLinearNormalSubgroup
     (hasCyclicOrDihedral_of_hasDihedral_linear hSylow) (ULift (ZMod 3)) ?_
     (⊤ : Subgroup (G ⧸ pPrimeCore 2 G)) inferInstance (by simp) ?_
@@ -39,8 +39,8 @@ public theorem isDGroup_of_iso_PGL2_three
     (hcore : pPrimeCore 2 G = ⊥)
     (hSylow : HasDihedralSylowTwo G)
     (e : Nonempty (G ≃* PGL2 (ZMod 3))) : IsDGroup G := by
-  letI : Field (ZMod 3) := inferInstance
-  letI : Field (ULift.{u} (ZMod 3)) := ULift.field
+  let : Field (ZMod 3) := inferInstance
+  let : Field (ULift.{u} (ZMod 3)) := ULift.field
   refine IsDGroup.quotientHasLinearNormalSubgroup
     (hasCyclicOrDihedral_of_hasDihedral_linear hSylow) (ULift (ZMod 3)) ?_
     (⊤ : Subgroup (G ⧸ pPrimeCore 2 G)) inferInstance (by simp) ?_

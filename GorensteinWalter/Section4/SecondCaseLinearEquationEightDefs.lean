@@ -171,9 +171,9 @@ public theorem prime_order_subgroup_fixed_by_normalizer_of_cyclic
         simpa [hPcard] using (Subgroup.orderOf_dvd_natCard P hx))⟩
   have hScard : Nat.card {x : G // x ∈ S} = p := by
     classical
-    letI : Fintype ↥C := Fintype.ofFinite _
-    letI : Fintype {x : G // x ∈ S} := Fintype.ofFinite _
-    letI : Fintype {a : ↥C // a ^ p = 1} := Fintype.ofFinite _
+    let : Fintype ↥C := Fintype.ofFinite _
+    let : Fintype {x : G // x ∈ S} := Fintype.ofFinite _
+    let : Fintype {a : ↥C // a ^ p = 1} := Fintype.ofFinite _
     apply le_antisymm
     · let e : {x : G // x ∈ S} ≃ {a : ↥C // a ^ p = 1} :=
         { toFun := fun x => ⟨⟨x.1, x.2.1⟩, by
@@ -346,7 +346,7 @@ public theorem order_p_subgroups_card_of_order_p_sq_exponent_p
       _ = p - 1 := by omega
   have hmain : Nat.card (Σ X : S, {x : A // f x = X}) = Nat.card S * (p - 1) := by
     classical
-    letI : Fintype S := Fintype.ofFinite _
+    let : Fintype S := Fintype.ofFinite _
     rw [Nat.card_sigma (α := S) (β := fun X => {x : A // f x = X})]
     calc
       (∑ X : S, Nat.card {x : A // f x = X}) = (∑ X : S, (p - 1)) := by
@@ -663,7 +663,7 @@ public theorem conjugate_orbit_le_p_add_one
         apply Subtype.ext
         exact Subtype.ext hx
   have hCcard : Nat.card C = (normalizerIn U A).relIndex U := by rfl
-  letI : Fintype C := Fintype.ofFinite C
+  let : Fintype C := Fintype.ofFinite C
   have hsum : Nat.card (Σ c : C, fiber c) = Nat.card C * (p ^ 2 - p) := by
     rw [Nat.card_sigma (α := C) (β := fiber)]
     calc
@@ -833,7 +833,7 @@ public theorem secondCase_linear_omega_QG_le_FU
     (d : SecondCaseComponentData w) (od : SecondCaseLinearOmegaData c w d) :
     od.Q.map c.U.subtype ≤ c.FU := by
   classical
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   let P0 : Subgroup (↥c.U) := pCore od.p (↥c.U)
   have hZ2le : od.Q ≤ (Subgroup.upperCentralSeries P0 2).map P0.subtype :=
     od.Q_le_upperCentralSeries_two
@@ -896,11 +896,11 @@ public theorem secondCase_linear_omega_NU_P_le_NU_A
     (d : SecondCaseComponentData w) (od : SecondCaseLinearOmegaData c w d) :
     normalizerIn c.U od.P ≤ normalizerIn c.U od.A := by
   classical
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   have hK0leK : od.K0 ≤ od.K := by
     rw [od.K0_eq]
     exact inf_le_right
-  letI : IsCyclic od.K := od.K_cyclic
+  let : IsCyclic od.K := od.K_cyclic
   have hK0cyc : IsCyclic od.K0 := Subgroup.isCyclic_of_le hK0leK
   have hUodd : Odd (Nat.card (↥c.U)) := by
     change Odd (Nat.card (↥(oddCoreOf c.H)))

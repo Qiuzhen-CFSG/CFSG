@@ -26,7 +26,7 @@ public theorem firstCase_klein_uniform_reflection_inverted
         ∀ s : G, c.IsReflection s → s ∉ twoCoreOf c.Hhat →
           IsInvertedSubgroup K c.U s := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨K, hKr, hKHall, hKne⟩ :=
     firstCase_klein_reflection_hall_nontrivial hmin c hfirst r hr hrV
   have h26 := theorem_2_6 hmin c

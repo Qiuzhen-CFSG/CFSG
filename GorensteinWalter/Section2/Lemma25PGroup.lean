@@ -22,7 +22,7 @@ private theorem lemma25_le_qCoreOf_of_isNormalIn_pGroup
     (A Q : Subgroup G) (p : ℕ) (_hp : p.Prime)
     (hQA : Q ≤ A) (hQ : IsNormalIn Q A) (hQp : IsPGroup p Q) :
     Q ≤ qCoreOf A p := by
-  letI : Fact p.Prime := ⟨_hp⟩
+  let : Fact p.Prime := ⟨_hp⟩
   have hQsub : Q.subgroupOf A ≤ pCore p (↑A) :=
     le_sSup ⟨Subgroup.normal_subgroupOf_of_le_normalizer (H := A) (N := Q)
       (le_normalizer_of_isNormalIn hQ),
@@ -73,7 +73,7 @@ private theorem lemma25_prime_odd_of_oddCore_ne_bot_of_fstar_isPGroup
       rw [hcard]
       exact pPrimeCore_coprime_card (p := 2) (G := ↑A)
     have hbot : oddCoreOf A = ⊥ := by
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       exact section8_eq_bot_of_isPGroup_of_coprime hO2 hcop
     exact (hoddCore hbot).elim
   · exact hpodd

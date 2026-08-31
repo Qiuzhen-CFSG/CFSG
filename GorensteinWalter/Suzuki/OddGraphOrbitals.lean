@@ -272,9 +272,9 @@ private theorem hhat_centralizer_card_four
     apply Subtype.ext
     exact x.2
   have hCsplit : Nat.card C = Nat.card A + Nat.card B := by
-    letI : Fintype C := Fintype.ofFinite C
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype B := Fintype.ofFinite B
+    let : Fintype C := Fintype.ofFinite C
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype B := Fintype.ofFinite B
     have hcomp := Fintype.card_subtype_compl
       (α := C) (p := fun x : C => (x : G) = 1)
     have hBcard : Nat.card B = Nat.card C - Nat.card A := by
@@ -309,9 +309,9 @@ private theorem hhat_centralizer_card_four
     simpa [TO, V] using firstCase_klein_Hhat_outside_commuting_fiber_card_two
       hmin c hfirst hklein hsH hsI hsV
   have hJsplit : Nat.card J = Nat.card JV + Nat.card JO := by
-    letI : Fintype J := Fintype.ofFinite J
-    letI : Fintype JV := Fintype.ofFinite JV
-    letI : Fintype JO := Fintype.ofFinite JO
+    let : Fintype J := Fintype.ofFinite J
+    let : Fintype JV := Fintype.ofFinite JV
+    let : Fintype JO := Fintype.ofFinite JO
     have hcomp := Fintype.card_subtype_compl
       (α := J) (p := fun x : J => (x : G) ∈ V)
     have hJOcard : Nat.card JO = Nat.card J - Nat.card JV := by
@@ -511,9 +511,9 @@ public theorem firstCaseCosetLayer_two_orbit_card
   have hstab_le : Nat.card (MulAction.stabilizer c.Hhat q) ≤ 4 := by
     have hle := Nat.card_le_card_of_injective f hf
     rwa [hCcard] at hle
-  letI : Fintype ↥c.Hhat := Fintype.ofFinite _
-  letI : Fintype (MulAction.orbit c.Hhat q) := Fintype.ofFinite _
-  letI : Fintype (MulAction.stabilizer c.Hhat q) := Fintype.ofFinite _
+  let : Fintype ↥c.Hhat := Fintype.ofFinite _
+  let : Fintype (MulAction.orbit c.Hhat q) := Fintype.ofFinite _
+  let : Fintype (MulAction.stabilizer c.Hhat q) := Fintype.ofFinite _
   have horbit := MulAction.card_orbit_mul_card_stabilizer_eq_card_group c.Hhat q
   have horbit' : Nat.card (MulAction.orbit c.Hhat q) *
       Nat.card (MulAction.stabilizer c.Hhat q) = Nat.card c.Hhat := by

@@ -85,8 +85,8 @@ public theorem subgroup_sup_isMulCommutative_of_commute_of_disjoint
     (hHabel : IsMulCommutative (↥H)) (hKabel : IsMulCommutative (↥K)) :
     IsMulCommutative (↥(H ⊔ K)) := by
   classical
-  haveI : IsMulCommutative (↥H) := hHabel
-  haveI : IsMulCommutative (↥K) := hKabel
+  have : IsMulCommutative (↥H) := hHabel
+  have : IsMulCommutative (↥K) := hKabel
   let e := subgroup_sup_equiv_prod_of_commute_of_disjoint H K hdisj hcomm
   rw [isMulCommutative_iff]
   intro a b
@@ -170,8 +170,8 @@ public theorem subgroup_sup_isMulCommutative_of_disjoint_of_normalIn
     (hHabel : IsMulCommutative (↥H)) (hKabel : IsMulCommutative (↥K)) :
     IsMulCommutative (↥(H ⊔ K)) := by
   classical
-  haveI : IsMulCommutative (↥H) := hHabel
-  haveI : IsMulCommutative (↥K) := hKabel
+  have : IsMulCommutative (↥H) := hHabel
+  have : IsMulCommutative (↥K) := hKabel
   let e := subgroup_sup_equiv_prod_of_disjoint_of_normalIn C H K
     hHnorm hKnorm hdisj
   rw [isMulCommutative_iff]
@@ -294,7 +294,7 @@ public theorem firstCase_join_conj_abelian_of_abelian_of_commute
     (hPabel : IsMulCommutative (↥P))
     (hcomm : ∀ p q, p ∈ P → q ∈ conjugateSubgroup P g → Commute p q) :
     IsMulCommutative (↥(P ⊔ conjugateSubgroup P g)) := by
-  haveI : IsMulCommutative (↥P) := hPabel
+  have : IsMulCommutative (↥P) := hPabel
   have hPgabel : IsMulCommutative (↥(conjugateSubgroup P g)) := by
     change IsMulCommutative (↥(P.map (MulAut.conj g).toMonoidHom))
     infer_instance
@@ -337,7 +337,7 @@ public theorem firstCase_join_conj_abelian_of_normalIn
     (hPgNorm : IsNormalIn (conjugateSubgroup P g) C)
     (hPabel : IsMulCommutative (↥P)) :
     IsMulCommutative (↥(P ⊔ conjugateSubgroup P g)) := by
-  haveI : IsMulCommutative (↥P) := hPabel
+  have : IsMulCommutative (↥P) := hPabel
   have hPgabel : IsMulCommutative (↥(conjugateSubgroup P g)) := by
     change IsMulCommutative (↥(P.map (MulAut.conj g).toMonoidHom))
     infer_instance

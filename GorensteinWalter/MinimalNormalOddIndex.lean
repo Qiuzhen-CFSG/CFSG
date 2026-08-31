@@ -34,7 +34,7 @@ private theorem sylowTwoResidual_characteristic
   rw [sylowTwoResidual, Subgroup.map_iSup]
   apply iSup_le
   intro P
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Pe : Sylow 2 Q :=
     Sylow.mapSurjective (f := e.toMonoidHom) e.surjective P
   change (Pe : Subgroup Q) ≤ ⨆ S : Sylow 2 Q, (S : Subgroup Q)
@@ -46,9 +46,9 @@ private theorem sylow_le_of_normal_odd_index
     (L : Subgroup Q) (hLnormal : L.Normal) (hLindex : Odd L.index)
     (P : Sylow 2 Q) :
     (P : Subgroup Q) ≤ L := by
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : Q →* Q ⧸ L := QuotientGroup.mk' L
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hmapP : IsPGroup 2 ((P : Subgroup Q).map pi) :=
     P.isPGroup'.map pi
   rcases IsPGroup.iff_card.mp hmapP with ⟨n, hn⟩
@@ -107,8 +107,8 @@ public theorem normal_odd_index_eq_top_of_minimalNormal_dihedral
     apply le_bot_iff.mp
     rw [← hRbot]
     exact le_iSup (fun S : Sylow 2 (↥H) => (S : Subgroup (↥H))) P
-  letI : H.Normal := hHnormal
-  letI : R.Characteristic := hRchar
+  let : H.Normal := hHnormal
+  let : R.Characteristic := hRchar
   have hRmap_normal : (R.map H.subtype).Normal :=
     ConjAct.normal_of_characteristic_of_normal
   have hRmap_ne : R.map H.subtype ≠ ⊥ := by

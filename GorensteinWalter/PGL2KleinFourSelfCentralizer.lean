@@ -28,12 +28,12 @@ public theorem pgl2_kleinFour_centralizer_eq_self
     (V : Subgroup (PGL2 K)) (hVK : IsKleinFour V) :
     Subgroup.centralizer (V : Set (PGL2 K)) = V := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let C : Subgroup (PGL2 K) := Subgroup.centralizer (V : Set (PGL2 K))
-  letI : IsKleinFour V := hVK
-  letI : IsMulCommutative V := IsKleinFour.isMulCommutative
+  let : IsKleinFour V := hVK
+  let : IsMulCommutative V := IsKleinFour.isMulCommutative
   have hVleC : V ≤ C := by
     intro v hv
     rw [Subgroup.mem_centralizer_iff]
@@ -47,8 +47,8 @@ public theorem pgl2_kleinFour_centralizer_eq_self
     have hrprime : r.Prime := Nat.prime_of_mem_primeFactors hr
     by_contra hrne
     have hrodd : Odd r := hrprime.odd_of_ne_two hrne
-    letI : Fintype C := Fintype.ofFinite C
-    letI : Fact r.Prime := ⟨hrprime⟩
+    let : Fintype C := Fintype.ofFinite C
+    let : Fact r.Prime := ⟨hrprime⟩
     have hrdiv : r ∣ Fintype.card C := by
       rw [← Nat.card_eq_fintype_card]
       exact Nat.dvd_of_mem_primeFactors hr

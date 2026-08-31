@@ -38,8 +38,8 @@ private theorem commutator_double_eq_self_of_coprime_solvable
     (hsolv : IsSolvable K) :
     ⁅⁅K, P⁆, P⁆ = ⁅K, P⁆ := by
   classical
-  letI : Subgroup.Normalizes P K := ⟨hPK⟩
-  letI : MulDistribMulAction P K :=
+  let : Subgroup.Normalizes P K := ⟨hPK⟩
+  let : MulDistribMulAction P K :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P K hPK
   let C : Subgroup K := commutatorAction (A := P) (G := K)
   have hCmap : C.map K.subtype = ⁅K, P⁆ :=
@@ -162,7 +162,7 @@ private theorem primeCore_le_or_disjoint_invertedHall
     (hHall : IsHallIn I c.FU) (p : ℕ) (hp : p.Prime) :
     qCoreOf c.U p ≤ I ∨ Disjoint I (qCoreOf c.U p) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPleFU : qCoreOf c.U p ≤ c.FU :=
     fstar_qCoreOf_le_fittingSubgroupOf c.U p hp
   by_cases hpI : p ∣ Nat.card I
@@ -173,7 +173,7 @@ private theorem primeCore_le_or_disjoint_invertedHall
     have hpMem : (⟨p, hp⟩ : Nat.Primes) ∈ subgroupPrimeSet I := by
       change p ∣ Nat.card I
       exact hpI
-    haveI : ((qCoreOf c.U p).subgroupOf c.FU).Normal := by
+    have : ((qCoreOf c.U p).subgroupOf c.FU).Normal := by
       rw [Subgroup.normal_subgroupOf_iff_le_normalizer hPleFU]
       exact (fittingSubgroupOf_le (G := G) c.U).trans
         (le_normalizer_of_isNormalIn (qCoreOf_normal_in c.U p))

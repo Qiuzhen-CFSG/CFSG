@@ -22,7 +22,7 @@ private theorem pPrimeCore_nonbot_of_card_six
     (hcard : Nat.card Q = 6) :
     pPrimeCore 2 Q ≠ ⊥ := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨x, hxorder⟩ := exists_prime_orderOf_dvd_card' (G := Q) 3 (by
     rw [hcard]
     norm_num)
@@ -57,7 +57,7 @@ private theorem pPrimeCore_nonbot_of_card_six
   have hSylowCard : Nat.card (Sylow 3 Q) = 1 := by
     have hpos : 0 < Nat.card (Sylow 3 Q) := Nat.card_pos
     omega
-  letI : Subsingleton (Sylow 3 Q) := by
+  let : Subsingleton (Sylow 3 Q) := by
     obtain ⟨z, hz⟩ := (Nat.card_eq_one_iff_exists.mp hSylowCard)
     exact ⟨fun a b => (hz a).trans (hz b).symm⟩
   have hPNormal : (P : Subgroup Q).Normal := Sylow.normal_of_subsingleton P
@@ -80,7 +80,7 @@ public theorem pPrimeCore_index_two_of_normal_odd_index_six
     (hindex : N.index = 6) :
     (pPrimeCore 2 H).index = 2 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let O : Subgroup H := pPrimeCore 2 H
   have hNleO : N ≤ O := by
     exact le_sSup ⟨hNnormal, hNodd⟩

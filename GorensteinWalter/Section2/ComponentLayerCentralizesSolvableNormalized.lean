@@ -61,8 +61,8 @@ public theorem componentLayerOf_centralizes_solvable_of_le_normalizer
     fstar_isSubnormal_subgroupOf_of_subnormal_subgroupOf_normal
       inf_le_left hSsubE hEleA (fstar_componentLayerOf_isNormalIn A)
   have hSsolv : Group.IsSolvable S := by
-    letI : Group.IsSolvable N := hNsolv
-    haveI : Group.IsSolvable (S.subgroupOf N) := inferInstance
+    let : Group.IsSolvable N := hNsolv
+    have : Group.IsSolvable (S.subgroupOf N) := inferInstance
     exact isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe inf_le_right)
   have hEleC : E ≤ Subgroup.centralizer (S : Set G) := by
     dsimp [E]
@@ -72,12 +72,12 @@ public theorem componentLayerOf_centralizes_solvable_of_le_normalizer
     rcases fstar_component_le_or_commutator_eq_bot_of_subnormal_subgroupOf
         (S := S) (E := K) (hSnormE.1.trans hEleA) hSsubA hK with hKS | hcomm
     · exfalso
-      letI : Group.IsSolvable S := hSsolv
-      haveI : Group.IsSolvable (K.subgroupOf S) := inferInstance
+      let : Group.IsSolvable S := hSsolv
+      have : Group.IsSolvable (K.subgroupOf S) := inferInstance
       have hKsolv : Group.IsSolvable K :=
         isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hKS)
-      letI : Nontrivial K := hK.2.2.1
-      letI : Group.IsPerfect K :=
+      let : Nontrivial K := hK.2.2.1
+      let : Group.IsPerfect K :=
         ⟨by simpa [derivedSubgroup] using hK.2.2.2.1⟩
       exact Group.IsPerfect.not_isSolvable K hKsolv
     · exact (Subgroup.commutator_eq_bot_iff_le_centralizer

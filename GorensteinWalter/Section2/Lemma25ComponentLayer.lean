@@ -44,7 +44,7 @@ public theorem componentLayerOf_conjugateSubgroup_le_of_minimalCounterexample_of
     (fstar_componentLayer_le_selfCentralizingSubnormal
       A S hSF hSsub hCS).trans hSB
   have hFBsolv : Group.IsSolvable (fittingSubgroupOf B) := by
-    letI : Group.IsNilpotent (fittingSubgroupOf B) :=
+    let : Group.IsNilpotent (fittingSubgroupOf B) :=
       fittingSubgroupOf_isNilpotent B
     infer_instance
   have hEAnormFB :

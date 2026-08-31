@@ -35,13 +35,13 @@ public theorem oddCentralCover_eq_bot_of_cyclic_sylow_at_center_primes
     by_contra hz1
     have hZcard_ne_one : Nat.card Z ≠ 1 := by
       intro hcard
-      letI : Subsingleton Z := (Nat.card_eq_one_iff_unique.mp hcard).1
+      let : Subsingleton Z := (Nat.card_eq_one_iff_unique.mp hcard).1
       have huniq : ∀ x y : Z, x = y := fun x y => Subsingleton.elim _ _
       apply hz1
       rw [Subgroup.mem_bot]
       exact congrArg Subtype.val (huniq ⟨z, hz⟩ 1)
     obtain ⟨r, hrprime, hrdiv⟩ := Nat.exists_prime_and_dvd hZcard_ne_one
-    letI : Fact r.Prime := ⟨hrprime⟩
+    let : Fact r.Prime := ⟨hrprime⟩
     have hrne2 : r ≠ 2 := by
       intro hr
       subst r
@@ -64,7 +64,7 @@ public theorem oddCentralCover_eq_bot_of_cyclic_sylow_at_center_primes
       Sylow.mapSurjective (QuotientGroup.mk'_surjective Z) S
     let Sbar : Subgroup (E ⧸ Z) := SbarSylow
     have hSbarCyclic : IsCyclic Sbar := hquot r hrdiv hrne2 SbarSylow
-    letI : IsCyclic Sbar := hSbarCyclic
+    let : IsCyclic Sbar := hSbarCyclic
     let qS : S →* Sbar :=
       ((q.comp (S : Subgroup E).subtype).codRestrict Sbar (by
         intro x
@@ -90,8 +90,8 @@ public theorem oddCentralCover_eq_bot_of_cyclic_sylow_at_center_primes
     have hcommS : ∀ a b : S, a * b = b * a := by
       intro a b
       exact commutative_of_cyclic_center_quotient qS hqSker a b
-    letI : IsMulCommutative S := ⟨⟨hcommS⟩⟩
-    letI : CommGroup S := IsMulCommutative.instCommGroup
+    let : IsMulCommutative S := ⟨⟨hcommS⟩⟩
+    let : CommGroup S := IsMulCommutative.instCommGroup
     let tr : E →* S := MonoidHom.transfer (MonoidHom.id S)
     have htrivial : ∀ x : E, tr x = 1 := by
       intro x

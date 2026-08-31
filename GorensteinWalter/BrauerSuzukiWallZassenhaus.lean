@@ -101,7 +101,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_card_and_commutative
     (h : BrauerSuzukiWallConclusion G)
     (A : ConjugateOrbit h.Q) :
     Nat.card (A : Subgroup G) = h.q ∧ IsMulCommutative (A : Subgroup G) := by
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   rcases MulAction.mem_orbit_iff.mp A.property with ⟨g, hg⟩
   change h.Q.map (MulAut.conj g).toMonoidHom = (A : Subgroup G) at hg
   have hA : (A : Subgroup G) = h.Q.conjBy g := by
@@ -109,7 +109,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_card_and_commutative
   rw [hA]
   constructor
   · rw [card_conjBy, h.Q_card]
-  · letI : IsMulCommutative h.Q := h.Q_isMulCommutative
+  · let : IsMulCommutative h.Q := h.Q_isMulCommutative
     exact Subgroup.map_isMulCommutative h.Q (MulAut.conj g).toMonoidHom
 
 private theorem BrauerSuzukiWallConclusion.disjoint_Q_of_orbit_ne
@@ -131,7 +131,7 @@ private theorem BrauerSuzukiWallConclusion.disjoint_Q_of_orbit_ne
     intro z hz
     simp only [Set.mem_singleton_iff] at hz
     subst z
-    letI : IsMulCommutative (A : Subgroup G) := hAcomm
+    let : IsMulCommutative (A : Subgroup G) := hAcomm
     exact congrArg Subtype.val
       (mul_comm' (⟨x, hxA⟩ : (A : Subgroup G))
         (⟨y, hyA⟩ : (A : Subgroup G)))
@@ -163,7 +163,7 @@ private theorem BrauerSuzukiWallConclusion.fixed_orbit_eq_Q
   let p : ℕ := (orderOf x).minFac
   have hp : Nat.Prime p := by
     simpa [p] using Nat.minFac_prime hxorder_ne
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hpZ : p ∣ Nat.card Z := by
     rw [show Nat.card Z = orderOf x by simp [Z, Nat.card_zpowers]]
     exact Nat.minFac_dvd (orderOf x)
@@ -185,7 +185,7 @@ private theorem BrauerSuzukiWallConclusion.fixed_orbit_eq_Q
   have hPleQ : P ≤ h.Q := Subgroup.zpowers_le.mpr hzQ
   have hPnormA : P ≤ Subgroup.normalizer ((A : Subgroup G) : Set G) :=
     Subgroup.zpowers_le.mpr hzNorm
-  letI : MulDistribMulAction P (A : Subgroup G) :=
+  let : MulDistribMulAction P (A : Subgroup G) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer
       (G := G) P (A : Subgroup G) hPnormA
   have hfixedOne :
@@ -320,7 +320,7 @@ private theorem BrauerSuzukiWallConclusion.stabilizer_conjugateBase
     letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
     MulAction.stabilizer G (conjugateBase h.Q) =
       Subgroup.normalizer (h.Q : Set G) := by
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   ext g
   rw [MulAction.mem_stabilizer_iff]
   constructor
@@ -337,7 +337,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_degree
     {G : Type u} [Group G] [Finite G]
     (h : BrauerSuzukiWallConclusion G) :
     Nat.card (ConjugateOrbit h.Q) = h.q + 1 := by
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
   have htrans : MulAction.IsPretransitive G Omega := by
@@ -350,7 +350,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_degree
     change (b * a⁻¹) • (A : Subgroup G) = (B : Subgroup G)
     rw [← ha, ← hb]
     simp [mul_smul]
-  letI : MulAction.IsPretransitive G Omega := htrans
+  let : MulAction.IsPretransitive G Omega := htrans
   have hstab : MulAction.stabilizer G base =
       Subgroup.normalizer (h.Q : Set G) := by
     ext g
@@ -386,10 +386,10 @@ private theorem BrauerSuzukiWallConclusion.orbit_two_transitive
     letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
     MulAction.IsMultiplyPretransitive G (ConjugateOrbit h.Q) 2 := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hQfix : ∀ q : h.Q, (q : G) • base = base := by
     intro q
     apply Subtype.ext
@@ -441,12 +441,12 @@ private theorem BrauerSuzukiWallConclusion.orbit_two_transitive
       change Nat.card {C : Omega // C ≠ base} = h.q
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
-          letI : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
+          let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
           simpa [Nat.card_eq_fintype_card] using
             (Fintype.card_subtype_compl (fun C : Omega => C = base))
         _ = h.q := by rw [h.orbit_degree]; omega
-    letI : Fintype h.Q := Fintype.ofFinite h.Q
-    letI : Fintype Away := Fintype.ofFinite Away
+    let : Fintype h.Q := Fintype.ofFinite h.Q
+    let : Fintype Away := Fintype.ofFinite Away
     have horbitMapBij : Function.Bijective orbitMap :=
       (Fintype.bijective_iff_injective_and_card orbitMap).2
         ⟨horbitMapInj, by
@@ -468,7 +468,7 @@ private theorem BrauerSuzukiWallConclusion.orbit_two_transitive
     change (b * a⁻¹) • (A : Subgroup G) = (B : Subgroup G)
     rw [← ha, ← hb]
     simp [mul_smul]
-  letI : MulAction.IsPretransitive G Omega := htrans
+  let : MulAction.IsPretransitive G Omega := htrans
   rw [MulAction.is_two_pretransitive_iff]
   intro a b c d hab hcd
   obtain ⟨r, hra⟩ := MulAction.exists_smul_eq G a base
@@ -509,10 +509,10 @@ private theorem BrauerSuzukiWallConclusion.existsUnique_Q_smul_eq_away
     letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
     ∃! q : h.Q, (q : G) • A = B := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   let Away := {C : Omega // C ≠ base}
   let orbitMap : h.Q → Away := fun q => ⟨(q : G) • A, by
     intro hqA
@@ -556,12 +556,12 @@ private theorem BrauerSuzukiWallConclusion.existsUnique_Q_smul_eq_away
     change Nat.card {C : Omega // C ≠ base} = h.q
     calc
       Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
-        letI : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
+        let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
         simpa [Nat.card_eq_fintype_card] using
           (Fintype.card_subtype_compl (fun C : Omega => C = base))
       _ = h.q := by rw [h.orbit_degree]; omega
-  letI : Fintype h.Q := Fintype.ofFinite h.Q
-  letI : Fintype Away := Fintype.ofFinite Away
+  let : Fintype h.Q := Fintype.ofFinite h.Q
+  let : Fintype Away := Fintype.ofFinite Away
   have horbitMapBij : Function.Bijective orbitMap :=
     (Fintype.bijective_iff_injective_and_card orbitMap).2
       ⟨horbitMapInj, by
@@ -584,10 +584,10 @@ private theorem BrauerSuzukiWallConclusion.orbit_faithful
     letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
     FaithfulSMul G (ConjugateOrbit h.Q) := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hOmegaLarge : 1 < Fintype.card Omega := by
     rw [← Nat.card_eq_fintype_card, h.orbit_degree]
     have hq := h.three_le_q
@@ -677,10 +677,10 @@ private theorem BrauerSuzukiWallConclusion.iso_alternatingGroup_four_of_q_eq_thr
     (h : BrauerSuzukiWallConclusion G) (hq : h.q = 3) :
     Nonempty (G ≃* alternatingGroup (Fin 4)) := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
-  letI : FaithfulSMul G Omega := h.orbit_faithful
+  let : Fintype Omega := Fintype.ofFinite Omega
+  let : FaithfulSMul G Omega := h.orbit_faithful
   let rho : G →* Equiv.Perm Omega := MulAction.toPermHom G Omega
   let K : Subgroup (Equiv.Perm Omega) := rho.range
   have hrho : Function.Injective rho := MulAction.toPerm_injective
@@ -731,7 +731,7 @@ private theorem BrauerSuzukiWallConclusion.pPrimeCore_eq_bot_of_q_eq_three
     exact (Nat.dvd_prime Nat.prime_three).mp hOdivThree
   rcases hOcard with hOone | hOthree
   · exact (Subgroup.eq_bot_iff_card O).2 hOone
-  · letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  · let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have hfactor : 3 ^ (Nat.card G).factorization 3 = 3 := by
       rw [hGcard]
       change 3 ^ padicValNat 3 12 = 3
@@ -743,7 +743,7 @@ private theorem BrauerSuzukiWallConclusion.pPrimeCore_eq_bot_of_q_eq_three
       rw [h.Q_card, hq, hfactor])
     let Osyl : Sylow 3 G := Sylow.ofCard O (by
       rw [hOthree, hfactor])
-    letI : Unique (Sylow 3 G) :=
+    let : Unique (Sylow 3 G) :=
       Sylow.unique_of_normal Osyl (show O.Normal from pPrimeCore_normal)
     have hQO : h.Q = O := by
       exact congrArg (fun P : Sylow 3 G => (P : Subgroup G))
@@ -751,7 +751,7 @@ private theorem BrauerSuzukiWallConclusion.pPrimeCore_eq_bot_of_q_eq_three
     have hQnormal : h.Q.Normal := by
       rw [hQO]
       exact pPrimeCore_normal
-    letI : h.Q.Normal := hQnormal
+    let : h.Q.Normal := hQnormal
     have hDbot : h.D = ⊥ := by
       apply (Subgroup.eq_bot_iff_card h.D).2
       rw [h.D_card, hq]
@@ -776,7 +776,7 @@ private theorem BrauerSuzukiWallConclusion.hasDihedralSylowTwo_of_q_eq_three
   intro S
   refine ⟨1, by omega, ?_⟩
   rw [alternatingGroup.two_sylow_eq_kleinFour_of_card_eq_four (by simp) S]
-  letI : IsKleinFour (alternatingGroup.kleinFour (Fin 4)) :=
+  let : IsKleinFour (alternatingGroup.kleinFour (Fin 4)) :=
     alternatingGroup.kleinFour_isKleinFour (by simp)
   simpa using
     (IsKleinFour.nonempty_mulEquiv
@@ -902,10 +902,10 @@ private theorem BrauerSuzukiWallConclusion.exists_reflection_two_point_stabilize
         MulAction.stabilizer G (conjugateBase h.Q) ⊓
             MulAction.stabilizer G (u • conjugateBase h.Q) = h.D := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hDne : h.D ≠ ⊥ := h.D_ne_bot_of_q_ne_three hq
   obtain ⟨u, _hNX, hND, hu, huD, huinv⟩ :=
     h.normalizer_subgroup_data h.D hDne le_rfl
@@ -966,19 +966,19 @@ private theorem BrauerSuzukiWallConclusion.exists_reflection_two_point_stabilize
     let S : Subgroup H := MulAction.stabilizer H betaAway
     have htwo : MulAction.IsMultiplyPretransitive G Omega 2 :=
       h.orbit_two_transitive
-    letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-    letI : MulAction.IsPretransitive G Omega :=
+    let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+    let : MulAction.IsPretransitive G Omega :=
       MulAction.isPretransitive_of_is_two_pretransitive
     have hAwayTrans : MulAction.IsPretransitive H Away := by
       rw [← MulAction.is_one_pretransitive_iff]
       exact (SubMulAction.ofStabilizer.isMultiplyPretransitive
         (G := G) (a := base) (n := 1)).mp htwo
-    letI : MulAction.IsPretransitive H Away := hAwayTrans
+    let : MulAction.IsPretransitive H Away := hAwayTrans
     have hAwayCard : Nat.card Away = h.q := by
       change Nat.card {C : Omega // C ≠ base} = h.q
       calc
         Nat.card {C : Omega // C ≠ base} = Nat.card Omega - 1 := by
-          letI : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
+          let : Fintype {C : Omega // C ≠ base} := Fintype.ofFinite _
           simpa [Nat.card_eq_fintype_card] using
             (Fintype.card_subtype_compl (fun C : Omega => C = base))
         _ = h.q := by rw [h.orbit_degree]; omega
@@ -1023,10 +1023,10 @@ private theorem BrauerSuzukiWallConclusion.at_most_two_fixed_points
         a ≠ b → a ≠ c → b ≠ c →
         ¬ (g • a = a ∧ g • b = b ∧ g • c = c) := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   obtain ⟨u, _hND, _hu, _huD, _huinv, hbaseNe, hDtwo⟩ :=
     h.exists_reflection_two_point_stabilizer hq
   let beta : Omega := u • base
@@ -1203,11 +1203,11 @@ private theorem BrauerSuzukiWallConclusion.regularNormal_two_structure
         ∃! r : R, (r : G) • a = b) :
     IsPGroup 2 R ∧ ∀ r : R, r ≠ 1 → orderOf r = 2 := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
-  letI : Fintype R := Fintype.ofFinite R
+  let : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype R := Fintype.ofFinite R
   have hfreeBase : ∀ r : R, (r : G) • base = base → r = 1 := by
     intro r hr
     obtain ⟨s, hs, hsuniq⟩ := hregular base base
@@ -1234,7 +1234,7 @@ private theorem BrauerSuzukiWallConclusion.regularNormal_two_structure
   have htwoDivR : 2 ∣ Nat.card R := by
     rw [hRcard]
     exact h.q_odd.add_one.two_dvd
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨t, htorder⟩ :=
     exists_prime_orderOf_dvd_card' (G := R) 2 htwoDivR
   have htne : t ≠ 1 := by
@@ -1303,12 +1303,12 @@ private theorem BrauerSuzukiWallConclusion.regularNormal_two_structure
     change Nat.card {r : R // r ≠ 1} = h.q
     calc
       Nat.card {r : R // r ≠ 1} = Nat.card R - 1 := by
-        letI : Fintype {r : R // r ≠ 1} := Fintype.ofFinite _
+        let : Fintype {r : R // r ≠ 1} := Fintype.ofFinite _
         simpa [Nat.card_eq_fintype_card] using
           (Fintype.card_subtype_compl (fun r : R => r = 1))
       _ = h.q := by rw [hRcard]; omega
-  letI : Fintype h.Q := Fintype.ofFinite h.Q
-  letI : Fintype Rstar := Fintype.ofFinite Rstar
+  let : Fintype h.Q := Fintype.ofFinite h.Q
+  let : Fintype Rstar := Fintype.ofFinite Rstar
   have hconjMapBij : Function.Bijective conjMap :=
     (Fintype.bijective_iff_injective_and_card conjMap).2
       ⟨hconjMapInj, by
@@ -1370,10 +1370,10 @@ private theorem BrauerSuzukiWallConclusion.no_regular_normal
       ∀ a b : ConjugateOrbit h.Q,
         ∃! r : R, (r : G) • a = b := by
   classical
-  letI : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
+  let : MulAction G (Subgroup G) := MulAction.compHom _ MulAut.conj
   let Omega := ConjugateOrbit h.Q
   let base : Omega := conjugateBase h.Q
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   rintro ⟨R, hRnormal, _hRne, hregular⟩
   obtain ⟨hRtwo, hRorderTwo⟩ :=
     h.regularNormal_two_structure R hRnormal hregular
@@ -1549,7 +1549,7 @@ private theorem BrauerSuzukiWallConclusion.no_regular_normal
       (r : G) * e * (r : G)⁻¹ = e⁻¹ := by
     intro e heD
     have hdeInv : d * e⁻¹ = e⁻¹ * d := by
-      letI : IsMulCommutative h.D := h.D_commutative
+      let : IsMulCommutative h.D := h.D_commutative
       exact congrArg Subtype.val
         (mul_comm' (⟨d, hdD⟩ : h.D)
           (⟨e⁻¹, h.D.inv_mem heD⟩ : h.D))
@@ -1662,11 +1662,11 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
     exact isDGroup_of_iso_PSL2_three
       (h.pPrimeCore_eq_bot_of_q_eq_three hq)
       (h.hasDihedralSylowTwo_of_q_eq_three hq) ePSL
-  · letI : MulAction G (Subgroup G) :=
+  · let : MulAction G (Subgroup G) :=
       MulAction.compHom _ MulAut.conj
     let Omega := ConjugateOrbit h.Q
-    letI : Fintype Omega := Fintype.ofFinite Omega
-    letI : FaithfulSMul G Omega := h.orbit_faithful
+    let : Fintype Omega := Fintype.ofFinite Omega
+    let : FaithfulSMul G Omega := h.orbit_faithful
     have hdegree : Fintype.card Omega = h.q + 1 := by
       rw [← Nat.card_eq_fintype_card]
       exact h.orbit_degree
@@ -1694,8 +1694,8 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
     rcases hcases with hPGL | hPSL | hsharp | hSuzuki
     · rcases hPGL with
         ⟨K, hKfield, hKfinite, hKcard, ⟨eG⟩⟩
-      letI : Field K := hKfield
-      letI : Finite K := hKfinite
+      let : Field K := hKfield
+      let : Finite K := hKfinite
       have hfactor : h.q ^ 2 - 1 = (h.q - 1) * (h.q + 1) := by
         simpa [mul_comm] using (Nat.sq_sub_sq h.q 1)
       have hcardFull : Nat.card G =
@@ -1716,8 +1716,8 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
       omega
     · rcases hPSL with
         ⟨_hpOdd, K, hKfield, hKfinite, hKcard, ⟨eG⟩⟩
-      letI : Field K := hKfield
-      letI : Finite K := hKfinite
+      let : Field K := hKfield
+      let : Finite K := hKfinite
       have hKprime : IsOddPrimePower (Nat.card K) :=
         ⟨p, f, hp, hpOdd, hf, hKcard.trans hqpow⟩
       have hSylowD : HasDihedralSylowTwo G :=
@@ -1733,8 +1733,8 @@ public theorem BrauerSuzukiWallConclusion.isDGroup
           hlarge, _hsmallTwo, _hsmallThree⟩
       have hsimplePSL : IsSimpleGroup (PSL2 K) :=
         (hlarge hKgt).1
-      letI : IsSimpleGroup (PSL2 K) := hsimplePSL
-      letI : IsSimpleGroup G := eG.isSimpleGroup
+      let : IsSimpleGroup (PSL2 K) := hsimplePSL
+      let : IsSimpleGroup G := eG.isSimpleGroup
       have hGeven : 2 ∣ Nat.card G := by
         rw [h.group_card_factorized]
         exact dvd_mul_of_dvd_left (h.q_odd.add_one.two_dvd) _

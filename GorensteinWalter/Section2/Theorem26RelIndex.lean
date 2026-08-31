@@ -33,19 +33,19 @@ public theorem S_relIndex_E_eq_two_t26
     (e : L ≃* PGL2 K) :
     d.E.relIndex (c.S : Subgroup G) = 2 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Finite (PGL2 K) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let O : Subgroup c.Hhat := pPrimeCore 2 c.Hhat
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : c.Hhat →* c.Hhat ⧸ O := QuotientGroup.mk' O
   let Ei : Subgroup c.Hhat := d.E.subgroupOf c.Hhat
   have hend26 : (d.E.subgroupOf c.Hhat).Normal :=
     (d.pgl2_component_ambient_endpoint K hK L hLnormal hLindex e).1
-  letI : Ei.Normal := by
+  let : Ei.Normal := by
     simpa [Ei] using hend26
   let Ebar : Subgroup (c.Hhat ⧸ O) := Ei.map q
   let hSle : (c.S : Subgroup G) ≤ c.Hhat :=
@@ -65,7 +65,7 @@ public theorem S_relIndex_E_eq_two_t26
     dsimp [J]
     rw [pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     exact pgl2_psl2Range_index_eq_two K hK
-  letI : J.Normal := by
+  let : J.Normal := by
     dsimp [J]
     infer_instance
   -- `q` is injective on `P` (the kernel `P ∩ O` is trivial).
@@ -241,7 +241,7 @@ public theorem S_relIndex_E_eq_two_t26
     have hA_norm_B : A ≤ Subgroup.normalizer (B : Set c.Hhat) :=
       (inf_le_left : A ≤ (P : Subgroup c.Hhat)).trans
         (le_normalizer_of_isNormalIn hBnormP)
-    letI : (B.subgroupOf A).Normal := by
+    let : (B.subgroupOf A).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := A) (N := B)
         hA_norm_B
     let ψ : A →* c.Hhat ⧸ Ei := (QuotientGroup.mk' Ei).comp A.subtype

@@ -46,7 +46,7 @@ public theorem firstCase_klein_no_centralizing_involution_of_inverted_card_three
       simpa [B] using
         firstCase_klein_inverted_subgroup_inf_VU_eq_bot
           hmin c hfirst hklein hy hyH hXle hXinv
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     obtain ⟨xX, hxXorder⟩ :=
       exists_prime_orderOf_dvd_card' (G := X) 3 (by rw [hXcard])
     let x : G := xX
@@ -67,7 +67,7 @@ public theorem firstCase_klein_no_centralizing_involution_of_inverted_card_three
     have hN0normal : N0.Normal := by
       dsimp [N0, H]
       infer_instance
-    letI : N0.Normal := hN0normal
+    let : N0.Normal := hN0normal
     let q : H →* (H ⧸ N0) := QuotientGroup.mk' N0
     have hmapN : N0.map H.subtype = B := by
       have hUeq : c.U = oddCoreOf c.Hhat := (theorem_2_6 hmin c).1

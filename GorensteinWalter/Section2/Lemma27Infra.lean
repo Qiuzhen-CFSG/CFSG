@@ -52,8 +52,8 @@ public theorem isSolvable_of_normal_solvable_quotient_solvable
     {G : Type u} [Group G] (N : Subgroup G) [N.Normal]
     (hN : Group.IsSolvable N) (hQ : Group.IsSolvable (G ⧸ N)) :
     Group.IsSolvable G := by
-  letI : Group.IsSolvable N := hN
-  letI : Group.IsSolvable (G ⧸ N) := hQ
+  let : Group.IsSolvable N := hN
+  let : Group.IsSolvable (G ⧸ N) := hQ
   refine Group.isSolvable_of_ker_le_range N.subtype (QuotientGroup.mk' N) ?_
   intro x hx
   rw [QuotientGroup.ker_mk'] at hx
@@ -72,7 +72,7 @@ public theorem fittingSubgroupOf_isNilpotent
     {G : Type u} [Group G] [Finite G] (H : Subgroup G) :
     Group.IsNilpotent (↥(fittingSubgroupOf H)) := by
   change Group.IsNilpotent (↥((fittingSubgroup (↥H)).map H.subtype))
-  haveI : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
+  have : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
   exact Group.nilpotent_of_mulEquiv
     (Subgroup.equivMapOfInjective (fittingSubgroup (↥H)) H.subtype H.subtype_injective)
 
@@ -87,7 +87,7 @@ private theorem pResidualOf_sylow_le_of_normal_index
     (K ⊓ (P : Subgroup G)).subgroupOf (P : Subgroup G)
   have hPleN : (P : Subgroup G) ≤
       Subgroup.normalizer ((K ⊓ (P : Subgroup G)) : Set G) := by
-    letI : (K : Subgroup G).Normal := hK
+    let : (K : Subgroup G).Normal := hK
     exact (le_inf (Subgroup.le_normalizer_of_normal (H := K))
       (Subgroup.le_normalizer (H := (P : Subgroup G)))).trans
       (Subgroup.inf_normalizer_le_normalizer_inf (H := K) (K := (P : Subgroup G)))
@@ -249,9 +249,9 @@ public theorem t_centralizes_fittingSubgroupOf_of_centralizerStructure
   · rcases hCase2 with ⟨hK4, hquot⟩
     let V : Subgroup (↥c.Hhat) := pCore 2 c.Hhat
     let O : Subgroup (↥c.Hhat) := pPrimeCore 2 c.Hhat
-    letI : IsKleinFour (↥V) := by simpa [V] using hK4
-    letI : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
-    letI : CommGroup (↥V) := IsMulCommutative.instCommGroup
+    let : IsKleinFour (↥V) := by simpa [V] using hK4
+    let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
+    let : CommGroup (↥V) := IsMulCommutative.instCommGroup
     have htV : c.t ∈ V.map c.Hhat.subtype := by
       have ht2 : c.t ∈ twoCoreOf c.Hhat := centralizerStructure_t_mem_twoCore c ⟨hU, hSinter, Or.inr ⟨hK4, hquot⟩⟩
       simpa [twoCoreOf, V] using ht2
@@ -348,7 +348,7 @@ public theorem unique_involution_of_cyclic_two_group {A : Type*} [Group A] [Fini
     (hcard : Nat.card A = 2 ^ m) :
     ∀ x y : A, x ≠ 1 → x ^ 2 = 1 → y ≠ 1 → y ^ 2 = 1 → x = y := by
   classical
-  letI : IsCyclic A := hcyc
+  let : IsCyclic A := hcyc
   rcases IsCyclic.exists_monoid_generator (α := A) with ⟨g, hg⟩
   have hord : orderOf g = 2 ^ m := by
     rw [← hcard]
@@ -585,7 +585,7 @@ public theorem subgroup_card_ge_four_contains_central_rotation
       have hprod' : 2 ^ m * R.index = 2 ^ m * 2 := by
         rw [hprod, mul_comm]
       exact Nat.eq_of_mul_eq_mul_left (by positivity : 0 < 2 ^ m) hprod'
-    letI : (R : Subgroup (DihedralGroup (2 ^ m))).Normal := hRnormal
+    let : (R : Subgroup (DihedralGroup (2 ^ m))).Normal := hRnormal
     let q : DihedralGroup (2 ^ m) →* (DihedralGroup (2 ^ m)) ⧸ R := QuotientGroup.mk' R
     have hker : q.ker = R := by
       ext x
@@ -896,7 +896,7 @@ public theorem four_dvd_inf_sylow_of_normal
     (h4 : 4 ∣ Nat.card N) :
     4 ∣ Nat.card (↥(N ⊓ (P : Subgroup G))) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let q : G →* G ⧸ N := QuotientGroup.mk' N
   let qP : P →* G ⧸ N := q.comp (P : Subgroup G).subtype
   let D : Subgroup G := N ⊓ (P : Subgroup G)
@@ -1475,8 +1475,8 @@ public theorem centralizes_of_normal_selfCentralizing_coprime
   have hKPP_bot : ⁅⁅K, P⁆, P⁆ = ⊥ := by
     apply le_bot_iff.mp
     exact (Subgroup.commutator_mono hKP_le_K1 le_rfl).trans (by simpa [hK1P_bot])
-  letI : P.Normalizes K := ⟨hPK⟩
-  letI : MulDistribMulAction (↥P) (↥K) :=
+  let : P.Normalizes K := ⟨hPK⟩
+  let : MulDistribMulAction (↥P) (↥K) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P K hPK
   let C : Subgroup (↥K) := commutatorAction (A := ↥P) (G := ↥K)
   have hCmap : C.map K.subtype = ⁅K, P⁆ := by
@@ -1746,7 +1746,7 @@ public theorem centralizes_of_subnormal_selfCentralizing_coprime
         have hcopN : Nat.Coprime (Nat.card P) (Nat.card N) :=
           Nat.Coprime.of_dvd_right (Subgroup.card_dvd_of_le hN_le_K') hcop'
         have hsolvN : Group.IsSolvable (↥N) := by
-          letI : Group.IsSolvable (↥K') := hsolv'
+          let : Group.IsSolvable (↥K') := hsolv'
           have hsub_solv : Group.IsSolvable (↥(N.subgroupOf K')) := inferInstance
           have hmapN : (N.subgroupOf K').map K'.subtype = N :=
             Subgroup.map_subgroupOf_eq_of_le hN_le_K'
@@ -1834,14 +1834,14 @@ public theorem exists_ne_one_fixedPoints_of_kleinFour_action
     ∃ s : G, s ∈ V ∧ s ≠ 1 ∧
       A ⊓ Subgroup.centralizer ({s} : Set G) ≠ ⊥ := by
   classical
-  letI : IsKleinFour (↥V) := hV
-  letI : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
-  letI : CommGroup (↥V) := IsMulCommutative.instCommGroup
+  let : IsKleinFour (↥V) := hV
+  let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
+  let : CommGroup (↥V) := IsMulCommutative.instCommGroup
   have hV2 : IsPGroup 2 (↥V) := IsPGroup.of_card (n := 2) (by
     simpa [IsKleinFour.card_four])
-  letI : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
-  letI : V.Normalizes A := ⟨hVA⟩
-  letI : MulDistribMulAction (↥V) (↥A) :=
+  let : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
+  let : V.Normalizes A := ⟨hVA⟩
+  let : MulDistribMulAction (↥V) (↥A) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer V A hVA
   by_contra hnone
   have hAll : ∀ a : ↥V, a ≠ 1 →
@@ -1939,7 +1939,7 @@ public theorem odd_order_subgroup_le_U_of_H_eq_SU
           _ = h⁻¹ * (p : G) * h := by rw [← hpeq]; rfl
       exact hu_eq ▸ hmem
   let U' : Subgroup (↥c.H) := c.U.subgroupOf c.H
-  letI : U'.Normal := hU_normal
+  let : U'.Normal := hU_normal
   let S' : Subgroup (↥c.H) := (c.S : Subgroup G).subgroupOf c.H
   let q : ↥c.H →* ↥c.H ⧸ U' := QuotientGroup.mk' U'
   have hSH : (c.S : Subgroup G) ≤ c.H := centralizerSetup_S_le_H c

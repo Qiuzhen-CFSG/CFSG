@@ -48,9 +48,9 @@ public theorem secondCase_fitting_inter_le_centralizer_fitting
   have hYleFU : Y ≤ fittingSubgroupOf c.U := inf_le_left
   have hYnil : Group.IsNilpotent Y := by
     let Y0 : Subgroup c.FU := Y.subgroupOf c.FU
-    haveI : Group.IsNilpotent c.FU := by
+    have : Group.IsNilpotent c.FU := by
       change Group.IsNilpotent ((fittingSubgroup c.U).map c.U.subtype)
-      haveI : Group.IsNilpotent (fittingSubgroup c.U) := by infer_instance
+      have : Group.IsNilpotent (fittingSubgroup c.U) := by infer_instance
       exact Group.nilpotent_of_mulEquiv
         (Subgroup.equivMapOfInjective
           (fittingSubgroup c.U) c.U.subtype c.U.subtype_injective)

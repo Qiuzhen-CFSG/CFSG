@@ -19,7 +19,7 @@ private lemma unique_involution_of_cyclic_two_group_local
     (hcard : Nat.card A = 2 ^ m) :
     ∀ x y : A, x ≠ 1 → x ^ 2 = 1 → y ≠ 1 → y ^ 2 = 1 → x = y := by
   classical
-  letI : IsCyclic A := hcyc
+  let : IsCyclic A := hcyc
   rcases IsCyclic.exists_monoid_generator (α := A) with ⟨g, hg⟩
   have hord : orderOf g = 2 ^ m := by
     rw [← hcard]

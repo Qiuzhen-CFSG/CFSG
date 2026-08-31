@@ -123,7 +123,7 @@ public theorem BrauerSuzukiWallHypotheses.pairCount_pairings
         (Nat.card h.K : ℂ) *
           Section1.scalarProduct h.H delta
             (Section1.principalCharacter h.H) := by
-    letI : Fintype h.H := Fintype.ofFinite h.H
+    let : Fintype h.H := Fintype.ofFinite h.H
     unfold Section1.scalarProduct
     calc
       (Nat.card h.H : ℂ)⁻¹ *

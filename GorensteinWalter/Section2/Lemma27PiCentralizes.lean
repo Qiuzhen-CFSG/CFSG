@@ -34,9 +34,9 @@ private theorem piCore_le_iSup_pCore_of_nilpotent
     piCore π G ≤ ⨆ p ∈ π, pCore p G := by
   classical
   let N : Subgroup G := piCore π G
-  haveI : N.Normal := piCore_normal_local π
-  haveI : Group.IsNilpotent (↥N) := by
-    letI : Group.IsNilpotent G := hG
+  have : N.Normal := piCore_normal_local π
+  have : Group.IsNilpotent (↥N) := by
+    let : Group.IsNilpotent G := hG
     exact Subgroup.isNilpotent N
   have hN_eq : N = ⨆ p ∈ (Nat.card (↥N)).primeFactors,
       ((default : Sylow p (↥N)).map N.subtype) := by
@@ -53,7 +53,7 @@ private theorem piCore_le_iSup_pCore_of_nilpotent
   refine iSup₂_le ?_
   intro p hp
   have hpπ : p ∈ π := hpi p hp
-  haveI : Fact (Nat.Prime p) := ⟨Nat.prime_of_mem_primeFactors hp⟩
+  have : Fact (Nat.Prime p) := ⟨Nat.prime_of_mem_primeFactors hp⟩
   refine le_iSup_of_le p (le_iSup_of_le hpπ ?_)
   exact sylow_map_le_pCore_local
     (G := G) (N := N) (inferInstance : N.Normal) inferInstance
@@ -234,7 +234,7 @@ public theorem twoCoreOf_centralizes_oddPart_fittingSubgroupOf_of_control
       norm_num at h2odd
     have hxodd : Odd (orderOf x) := by
       have hdvd : orderOf x ∣ Nat.card (↥A) := by
-        letI : Fintype (↥A) := Fintype.ofFinite _
+        let : Fintype (↥A) := Fintype.ofFinite _
         have h := orderOf_dvd_card (x := (⟨x, hx⟩ : A))
         simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h
       exact Odd.of_dvd_nat hAodd hdvd

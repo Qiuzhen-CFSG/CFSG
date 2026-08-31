@@ -28,9 +28,9 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
       Subgroup.normalizer (P : Set X)) :
     ⁅P, Subgroup.zpowers t⁆ ≤ pPrimeCore 2 X := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let O : Subgroup X := pPrimeCore 2 X
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : X →* (X ⧸ O) := QuotientGroup.mk' O
   let Pbar : Subgroup (X ⧸ O) := P.map q
   let tbar : X ⧸ O := q t
@@ -58,8 +58,8 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
   have hTtwo : IsPGroup 2 T := by
     refine IsPGroup.of_card (n := 1) ?_
     simp [hTcard]
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 T) := ⟨hTtwo⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 T) := ⟨hTtwo⟩
   have hOcop : Nat.Coprime 2 (Nat.card O) := by
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := X)
   have hTmap : T.map q = Tbar := by
@@ -123,7 +123,7 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
           Pbar hPbarp htbar hQinv
       rw [Subgroup.commutator_eq_bot_iff_le_centralizer]
       rwa [hcentTbar]
-    · letI : L.Normal := hLnormal
+    · let : L.Normal := hLnormal
       have htL : tbar ∈ L := by
         let qL : (X ⧸ O) →* ((X ⧸ O) ⧸ L) := QuotientGroup.mk' L
         have hq2 : (qL tbar) ^ 2 = 1 := by
@@ -195,13 +195,13 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
           ((Subgroup.mem_normalizer_iff.mp hcNormP) (x : X ⧸ O))
           ((Subgroup.mem_normalizer_iff.mp hcNormL) (x : X ⧸ O))
       rcases hKprime with ⟨r, f, hr, hrodd, hf, hKcard⟩
-      letI : Fact r.Prime := ⟨hr⟩
+      let : Fact r.Prime := ⟨hr⟩
       have hKodd : Odd (Nat.card K) := by
         rw [hKcard]
         exact hrodd.pow
       have hKprime' : IsOddPrimePower (Nat.card K) :=
         ⟨r, f, hr, hrodd, hf, hKcard⟩
-      letI : Finite (PGL2 K) :=
+      let : Finite (PGL2 K) :=
         Finite.of_surjective Matrix.ProjGenLinGroup.mk
           Matrix.ProjGenLinGroup.mk_surjective
       have hRLcent : RL ≤ Subgroup.centralizer ({tL} : Set L) := by
@@ -213,7 +213,7 @@ public theorem commutator_le_pPrimeCore_of_isDGroup
                 hKcard hrodd hpodd U hUp hs hUinv)
             RL hRLp htLinv hRLinv
         · by_cases hK3 : Nat.card K = 3
-          · letI : Fintype K := Fintype.ofFinite K
+          · let : Fintype K := Fintype.ofFinite K
             have hKFintype : Fintype.card K = 3 := by
               simpa [Nat.card_eq_fintype_card] using hK3
             let eK : ZMod 3 ≃+* K :=

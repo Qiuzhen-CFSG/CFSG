@@ -29,7 +29,7 @@ public theorem quotientTwoGroup_not_normalizerContainsCPrime
     (Z : Subgroup G) (hZ : IsKleinFour Z) :
     ¬ NormalizerContainsCPrime Z := by
   classical
-  letI : IsKleinFour Z := hZ
+  let : IsKleinFour Z := hZ
   let q : G →* G ⧸ pPrimeCore 2 G := QuotientGroup.mk' (pPrimeCore 2 G)
   have hZp : IsPGroup 2 Z := by
     apply IsPGroup.of_card (n := 2)
@@ -48,7 +48,7 @@ public theorem quotientTwoGroup_not_normalizerContainsCPrime
     intro a b hab
     exact hqZ (congrArg Subtype.val hab)
   let eZ : Z ≃* Zbar := MulEquiv.ofBijective qZ ⟨hqZinj, hqZsurj⟩
-  letI : IsKleinFour Zbar := {
+  let : IsKleinFour Zbar := {
     card_four := (Nat.card_congr eZ.toEquiv).symm.trans hZ.card_four
     exponent_two :=
       (Monoid.exponent_eq_of_mulEquiv eZ.symm).trans hZ.exponent_two
@@ -79,7 +79,7 @@ public theorem quotientTwoGroup_not_normalizerContainsCPrime
   let ι : C →* Subgroup.normalizer (Zbar : Set (G ⧸ pPrimeCore 2 G)) :=
     C.subtype.codRestrict _ (fun c => hCnorm c.property)
   let ρ : C →* MulAut Zbar := Zbar.normalizerMonoidHom.comp ι
-  letI : MulDistribMulAction C Zbar := MulDistribMulAction.compHom Zbar ρ
+  let : MulDistribMulAction C Zbar := MulDistribMulAction.compHom Zbar ρ
   let A : SubMulAction C Zbar := {
     carrier := {z | z ≠ 1}
     smul_mem' := by
@@ -91,8 +91,8 @@ public theorem quotientTwoGroup_not_normalizerContainsCPrime
       simpa using hcz
   }
   have hAcard : Nat.card A = 3 := by
-    letI : Fintype Zbar := Fintype.ofFinite Zbar
-    letI : Fintype A := Fintype.ofFinite A
+    let : Fintype Zbar := Fintype.ofFinite Zbar
+    let : Fintype A := Fintype.ofFinite A
     let eA : A ≃ {z : Zbar // z ≠ 1} := {
       toFun := fun a => ⟨a, a.property⟩
       invFun := fun a => ⟨a, a.property⟩

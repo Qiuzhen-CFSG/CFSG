@@ -107,7 +107,7 @@ public theorem odd_fixedPointFree_subgroup_card_three_of_kleinFour_quotient
     apply (Subgroup.normal_subgroupOf_iff hBleH).2
     intro b h hb hh
     exact hBnormal.2 h hh b hb
-  letI : B0.Normal := hB0normal
+  let : B0.Normal := hB0normal
   let q : H →* (H ⧸ B0) := QuotientGroup.mk' B0
   let i : F →* H :=
     { toFun := fun f => ⟨(f : G), hFleH f.2⟩

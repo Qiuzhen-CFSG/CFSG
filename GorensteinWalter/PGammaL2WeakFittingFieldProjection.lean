@@ -112,7 +112,7 @@ private theorem fittingSubgroupOf_isNilpotent_local
     {G : Type u} [Group G] [Finite G] (H : Subgroup G) :
     Group.IsNilpotent (↥(fittingSubgroupOf H)) := by
   change Group.IsNilpotent (↥((fittingSubgroup (↥H)).map H.subtype))
-  haveI : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
+  have : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
   exact Group.nilpotent_of_mulEquiv
     (Subgroup.equivMapOfInjective (fittingSubgroup (↥H)) H.subtype H.subtype_injective)
 
@@ -330,16 +330,16 @@ public theorem pGammaL2_weak_normal_nilpotent_odd_fieldProjection_trivial
       (Nat.card U = (Nat.card K + 1) / 2 ∧ Nat.card U0 ∣ (r + 1) / 2)) :
     N ≤ pGammaL2LinearKernel K A := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
@@ -358,9 +358,9 @@ public theorem pGammaL2_weak_normal_nilpotent_odd_fieldProjection_trivial
   -- `U ≤ F(A)`
   have hUleA : U ≤ A := hUnormA.1
   have hUleF : U ≤ F := by
-    haveI : (U.subgroupOf A).Normal := normal_subgroupOf_of_isNormalIn_local hUnormA
+    have : (U.subgroupOf A).Normal := normal_subgroupOf_of_isNormalIn_local hUnormA
     have hUnilp' : Group.IsNilpotent (U.subgroupOf A) := by
-      haveI : Group.IsNilpotent U := hUnilp
+      have : Group.IsNilpotent U := hUnilp
       exact Group.nilpotent_of_mulEquiv (G := U) (G' := U.subgroupOf A)
         (Subgroup.subgroupOfEquivOfLe hUleA).symm
     have hUleFit : U.subgroupOf A ≤ fittingSubgroup (↥A) := by
@@ -378,8 +378,8 @@ public theorem pGammaL2_weak_normal_nilpotent_odd_fieldProjection_trivial
   -- the `p`-Sylow commutes with `U0` inside the nilpotent `F(A)`
   let P' : Subgroup (↥F) := P.subgroupOf F
   let U0' : Subgroup (↥F) := U0.subgroupOf F
-  haveI : P'.Normal := normal_subgroupOf_of_isNormalIn_local hPnormF
-  haveI : U0'.Normal := normal_subgroupOf_of_isNormalIn_local hU0normF
+  have : P'.Normal := normal_subgroupOf_of_isNormalIn_local hPnormF
+  have : U0'.Normal := normal_subgroupOf_of_isNormalIn_local hU0normF
   have hP'p : IsPGroup p P' :=
     hPp.of_equiv (Subgroup.subgroupOfEquivOfLe hPleF).symm
   have hU0'cop : Nat.Coprime p (Nat.card U0') := by
@@ -409,7 +409,7 @@ public theorem pGammaL2_weak_normal_nilpotent_odd_fieldProjection_trivial
   have hU0fixed' := hU0fixed a₀ ha₀P ha₀σ ha₀pow hfix
   -- `|U0| = (|U|).divMaxPow p`
   have hU0card : Nat.card U0 = (Nat.card U).divMaxPow p := by
-    haveI : (U0.subgroupOf U).Normal := normal_subgroupOf_of_isNormalIn_local hU0normU
+    have : (U0.subgroupOf U).Normal := normal_subgroupOf_of_isNormalIn_local hU0normU
     have hU0'copU : Nat.Coprime p (Nat.card (U0.subgroupOf U)) := by
       have hcard : Nat.card (U0.subgroupOf U) = Nat.card U0 :=
         Nat.card_congr (Subgroup.subgroupOfEquivOfLe hU0leU).toEquiv

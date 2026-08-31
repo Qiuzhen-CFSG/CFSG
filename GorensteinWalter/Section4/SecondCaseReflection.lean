@@ -144,7 +144,7 @@ public theorem secondCase_reflection_psl2_torus
   rcases hK with ⟨p, f, hp, hpodd, hf, hcard⟩
   have hKfull : IsOddPrimePower (Nat.card K) :=
     ⟨p, f, hp, hpodd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hoddK : Odd (Nat.card K) := by
     rw [hcard]
     exact hpodd.pow
@@ -167,7 +167,7 @@ public theorem secondCase_reflection_psl2_torus
     have hUeven : 2 ∣ Nat.card U := by
       rw [hUcard']
       exact hsplit.two_dvd
-    letI : Fintype U := Fintype.ofFinite U
+    let : Fintype U := Fintype.ofFinite U
     obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := U) 2 hUeven
     let s0 : PSL2 K := sU
     have hs0U : s0 ∈ U := sU.2
@@ -292,7 +292,7 @@ public theorem secondCase_reflection_psl2_torus
     have hUeven : 2 ∣ Nat.card U := by
       rw [hUcard']
       exact hEvenPlus.two_dvd
-    letI : Fintype U := Fintype.ofFinite U
+    let : Fintype U := Fintype.ofFinite U
     obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := U) 2 hUeven
     let s0 : PSL2 K := sU
     have hs0U : s0 ∈ U := sU.2

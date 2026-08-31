@@ -36,7 +36,7 @@ public theorem secondCase_psl2_parameter_ge_two_of_aligned_not_le_component
     (hSnotE : ¬ (c.S : Subgroup G) ≤ d.E) :
     2 ≤ c.m := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   by_contra hm
   have hm_lt : c.m < 2 := Nat.lt_of_not_ge hm
   have hmge : 1 ≤ c.m := c.one_le_m

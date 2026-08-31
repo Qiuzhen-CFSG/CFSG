@@ -25,7 +25,7 @@ public theorem normal_pSubgroup_eq_bot_of_mulEquiv_alternatingGroup_four
     (P : Subgroup G) (hPnormal : P.Normal) (hPp : IsPGroup p P) :
     P = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   by_contra hPbot
   have hGcard : Nat.card G = 12 := by
     calc
@@ -75,7 +75,7 @@ public theorem normal_pSubgroup_eq_bot_of_mulEquiv_alternatingGroup_four
         exact pow_dvd_pow 3 hn_two
       have : 9 ∣ 12 := hnine_dvd.trans hPcard_dvd
       norm_num at this
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hPindex : ¬ 3 ∣ P.index := by
     have hmul := P.index_mul_card
     rw [hPcard_three, hGcard] at hmul
@@ -85,7 +85,7 @@ public theorem normal_pSubgroup_eq_bot_of_mulEquiv_alternatingGroup_four
   let S : Sylow 3 G := hPp.toSylow hPindex
   have hSnormal : (S : Subgroup G).Normal := by
     simpa [S, IsPGroup.toSylow_coe] using hPnormal
-  letI : Unique (Sylow 3 G) := Sylow.unique_of_normal S hSnormal
+  let : Unique (Sylow 3 G) := Sylow.unique_of_normal S hSnormal
   have hSylow_count_one : Nat.card (Sylow 3 G) = 1 := Nat.card_unique
   have hSylow_count_four : Nat.card (Sylow 3 G) = 4 :=
     sylow_three_card_eq_four_of_mulEquiv_alternatingGroup_four he

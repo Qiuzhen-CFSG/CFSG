@@ -154,7 +154,7 @@ public theorem secondCase_psl2_outer_involution_transport
   intro CE R
   have _hrE := hrE
   have _htr := htr
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let q : d.E →* d.E ⧸ Subgroup.center d.E :=
@@ -360,8 +360,8 @@ public theorem secondCase_psl2_outer_involution_transport
     apply Subtype.ext
     exact congrArg (fun z : d.E => (z : G))
       (Subgroup.mem_center_iff.mp hxCenterE (y : d.E))
-  letI : IsCyclic C1 := hC1cyc
-  letI : CommGroup RE := commGroupOfCyclicCenterQuotient ρ hρkerCenter
+  let : IsCyclic C1 := hC1cyc
+  let : CommGroup RE := commGroupOfCyclicCenterQuotient ρ hρkerCenter
   have hREcomm : ∀ x y : RE, x * y = y * x := fun x y => mul_comm x y
   have htt : c.t * c.t = 1 := by
     simpa [pow_two] using c.t_involution.2

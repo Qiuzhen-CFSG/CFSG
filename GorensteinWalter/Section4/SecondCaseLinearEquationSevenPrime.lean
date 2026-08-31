@@ -324,7 +324,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_FU_subset_K0
       rw [Subgroup.normal_subgroupOf_iff hFleY]
       intro f y hf hy
       exact hFnormalY.2 y hy f hf
-    letI : FY.Normal := hFYnormal
+    let : FY.Normal := hFYnormal
     let q : Y →* Y ⧸ FY := QuotientGroup.mk' FY
     let K0Y : Subgroup Y := K0.subgroupOf Y
     have hK0Ytop : K0Y ⊔ FY = ⊤ := by
@@ -369,7 +369,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_FU_subset_K0
     · exact hrn (hF.trans hFcarddvd)
     · exact hrn hK0
   -- the r-Sylow of F(U) and its image
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let R : Sylow r (↥c.FU) := Classical.choice Sylow.nonempty
   let RG : Subgroup G := (R : Subgroup (↥c.FU)).map c.FU.subtype
   have hRGleFU : RG ≤ c.FU := Subgroup.map_subtype_le (R : Subgroup (↥c.FU))
@@ -421,7 +421,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_FU_subset_K0
       rw [hordy] at hpdvdy
       exact hYr' y hy hpdvdy
     have hxy : xFU * yFU = yFU * xFU := by
-      letI : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
+      let : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
       exact commute_of_coprime_orderOf_of_nilpotent hcop
     exact (congrArg Subtype.val hxy).symm
   -- C_{F(U)}(Y) ≤ Y, hence R ≤ Y — contradiction
@@ -480,7 +480,7 @@ public theorem secondCase_equationSevenPrime_oddPrimeFactors_fittingSubgroupOf_M
       hmin c w d Kinv K0 F s hKinv_cyclic hK0leKinv hF_eq hjoin hFcentE hLayer
   by_contra hrnFU
   -- the r-Sylow of F(M), its image, and its normality in M
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let R : Sylow r (↥FM) := Classical.choice Sylow.nonempty
   let RG : Subgroup G := (R : Subgroup (↥FM)).map FM.subtype
   have hRGleFM : RG ≤ FM := Subgroup.map_subtype_le (R : Subgroup (↥FM))
@@ -557,8 +557,8 @@ public theorem secondCase_equationSevenPrime_oddPrimeFactors_fittingSubgroupOf_M
     rw [Subgroup.normal_subgroupOf_iff hYleC]
     intro y z hy hz
     exact hYnormalC.2 z hz y hy
-  letI : PC.Normal := hPCnormal
-  letI : YC.Normal := hYCnormal
+  let : PC.Normal := hPCnormal
+  let : YC.Normal := hYCnormal
   have hPCcard : Nat.card PC = Nat.card RG :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hRGleC).toEquiv
   have hYCcard : Nat.card YC = Nat.card Y :=
@@ -601,7 +601,7 @@ public theorem secondCase_equationSevenPrime_oddPrimeFactors_fittingSubgroupOf_M
           (le_rfl : c.FU ≤ fittingSubgroupOf c.U))))
     rwa [← hn, ← hRGcard] at hcop'
   have hRGcentFU : RG ≤ Subgroup.centralizer (c.FU : Set G) := by
-    letI : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
+    let : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
     exact centralizes_of_subnormal_selfCentralizing_coprime
       RG c.FU Y (hRGleU.trans (le_normalizer_of_isNormalIn
         (fittingSubgroupOf_isNormalIn c.U)))

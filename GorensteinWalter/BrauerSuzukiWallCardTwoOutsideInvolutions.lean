@@ -33,7 +33,7 @@ public theorem
     let N : Subgroup G := Subgroup.normalizer (h.H : Set G)
     Nat.card {v : G // IsInvolution v ∧ v ∉ N} = 12 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let N : Subgroup G := Subgroup.normalizer (h.H : Set G)
   change Nat.card {v : G // IsInvolution v ∧ v ∉ N} = 12
   let PG : Sylow 3 N → Subgroup G := fun P =>
@@ -188,7 +188,7 @@ public theorem
         hk hNne P
   have hSylow : Nat.card (Sylow 3 N) = 4 :=
     sylow_three_card_eq_four_of_mulEquiv_alternatingGroup_four hNiso
-  letI : Fintype (Sylow 3 N) := Fintype.ofFinite (Sylow 3 N)
+  let : Fintype (Sylow 3 N) := Fintype.ofFinite (Sylow 3 N)
   have hPairCard : Nat.card Pair = 12 := by
     calc
       Nat.card Pair = ∑ P : Sylow 3 N, Nat.card (InvNorm P) :=

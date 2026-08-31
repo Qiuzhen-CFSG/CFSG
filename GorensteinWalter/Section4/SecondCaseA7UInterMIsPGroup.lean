@@ -131,7 +131,7 @@ public theorem secondCase_a7_U_inter_M_isPGroup_three
     secondCase_a7_fitting_isPGroup_three hmin c w d hA7 hmodel
   have hFnil : Group.IsNilpotent c.FU :=
     fittingSubgroupOf_isNilpotent c.U
-  letI : Group.IsNilpotent c.FU := hFnil
+  let : Group.IsNilpotent c.FU := hFnil
   have hYleFU : Y ≤ c.FU := inf_le_left
   have hYsub : (Y.subgroupOf c.FU).IsSubnormal :=
     isSubnormal_of_nilpotent hFnil Y hYleFU
@@ -161,8 +161,8 @@ public theorem secondCase_a7_U_inter_M_isPGroup_three
     have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hq
     by_cases hq3 : q = 3
     · exact hq3
-    letI : Fact q.Prime := ⟨hqprime⟩
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact q.Prime := ⟨hqprime⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     let Q : Sylow q B := Classical.choice Sylow.nonempty
     let P : Subgroup G := (Q : Subgroup B).map B.subtype
     have hPp : IsPGroup q P := Q.isPGroup'.map B.subtype

@@ -48,8 +48,8 @@ public theorem cyclic_subgroup_containing_involution_le_reflected_torus
     simpa [pow_two] using hsI.2
   have hcyclic_unique :
       ∀ a b : X, a ≠ 1 → a ^ 2 = 1 → b ≠ 1 → b ^ 2 = 1 → a = b := by
-    letI : IsCyclic X := hXcyc
-    letI : Fintype X := Fintype.ofFinite X
+    let : IsCyclic X := hXcyc
+    let : Fintype X := Fintype.ofFinite X
     intro a b ha ha2 hb hb2
     by_contra hab
     let S : Finset X := {1, a, b}

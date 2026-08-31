@@ -54,7 +54,7 @@ public theorem secondCase_linear_minimalInvariant_root_count
   have hXgt : 1 < Nat.card X := by
     rw [hXcard]
     exact (Fact.out : Nat.Prime p).one_lt
-  letI : Nontrivial X := Finite.one_lt_card_iff_nontrivial.mp hXgt
+  let : Nontrivial X := Finite.one_lt_card_iff_nontrivial.mp hXgt
   obtain ⟨a, ha⟩ : ∃ a : X, a ≠ 1 := exists_ne 1
   let g : PSL2 K := π (iX a)
   have hg : g ≠ 1 := by
@@ -152,7 +152,7 @@ public theorem secondCase_linear_minimalInvariant_root_count
       simpa [T, Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def] using hmaple
     have hWBgt : 1 < Nat.card (WB W) :=
       (Subgroup.one_lt_card_iff_ne_bot (WB W)).2 (hWBne W)
-    letI : Nontrivial (WB W) := Finite.one_lt_card_iff_nontrivial.mp hWBgt
+    let : Nontrivial (WB W) := Finite.one_lt_card_iff_nontrivial.mp hWBgt
     obtain ⟨b, hb⟩ : ∃ b : WB W, b ≠ 1 := exists_ne 1
     have hbG : (b : PSL2 K) ≠ 1 := by
       intro hb1

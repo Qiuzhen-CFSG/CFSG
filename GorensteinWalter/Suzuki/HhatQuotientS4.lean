@@ -127,7 +127,7 @@ private theorem firstCase_hhat_quotient_U_s4_of_U3
       rw [hQcard]
       norm_num
     have h2pow : ∃ n : ℕ, Nat.card Q = 2 ^ n := by
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       exact (IsPGroup.iff_card.mp h2)
     rcases h2pow with ⟨n, hn⟩
     have h3dvd2 : 3 ∣ 2 ^ n := by
@@ -215,7 +215,7 @@ private theorem firstCase_hhat_quotient_U_s4_of_U3
             Nat.le_of_dvd (by norm_num : 0 < 3) hq3dvd
           have hge3 : 3 ≤ Nat.card K := odd_prime_power_ge_three (Nat.card K) hKpp
           omega
-        letI : Fintype K := Fintype.ofFinite K
+        let : Fintype K := Fintype.ofFinite K
         have hf : Fintype.card K = 3 := by
           rw [← Nat.card_eq_fintype_card]
           exact hq3

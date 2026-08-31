@@ -41,7 +41,7 @@ private theorem standardK4_card : Nat.card standardK4 = 4 := by
     _ = 4 := alternatingGroup.kleinFour_card_of_card_eq_four (by simp)
 
 private theorem standardK4_characteristic : standardK4.Characteristic := by
-  letI : (alternatingGroup.kleinFour (Fin 4)).Characteristic :=
+  let : (alternatingGroup.kleinFour (Fin 4)).Characteristic :=
     alternatingGroup.characteristic_kleinFour (by simp)
   dsimp [standardK4]
   infer_instance
@@ -51,7 +51,7 @@ hence commutes with exactly three involutions of `S₄`. -/
 private theorem s4_outside_standardK4_involution_commuting_card_three
     (p : S4) (hpI : IsInvolution p) (hpK : p ∉ standardK4) :
     Nat.card {q : S4 // IsInvolution q ∧ Commute p q} = 3 := by
-  letI : DecidablePred (fun q : S4 => IsInvolution q ∧ Commute p q) := by
+  let : DecidablePred (fun q : S4 => IsInvolution q ∧ Commute p q) := by
     intro q
     change Decidable ((q ≠ 1 ∧ q ^ 2 = 1) ∧ p * q = q * p)
     infer_instance
@@ -96,12 +96,12 @@ private theorem normal_selfCentralizing_card_four_subgroup_s4_eq_standardK4
     W = standardK4 := by
   classical
   let K : Subgroup S4 := standardK4
-  letI : (alternatingGroup.kleinFour (Fin 4)).Characteristic :=
+  let : (alternatingGroup.kleinFour (Fin 4)).Characteristic :=
     alternatingGroup.characteristic_kleinFour (by simp)
   have hKchar : K.Characteristic := by
     dsimp [K, standardK4]
     infer_instance
-  letI : K.Characteristic := hKchar
+  let : K.Characteristic := hKchar
   have hKnormal : K.Normal := inferInstance
   have hKcard : Nat.card K = 4 := by
     simpa [K] using standardK4_card
@@ -341,7 +341,7 @@ private theorem subgroup_s4_card_cases (L : Subgroup S4) :
 
 private theorem standardK4_quotient_card :
     Nat.card (S4 ⧸ standardK4) = 6 := by
-  letI : standardK4.Characteristic := standardK4_characteristic
+  let : standardK4.Characteristic := standardK4_characteristic
   have hmul := standardK4.card_eq_card_quotient_mul_card_subgroup
   rw [card_s4, standardK4_card] at hmul
   omega
@@ -355,7 +355,7 @@ private theorem subgroup_s4_exponent_two_or_exists_characteristic_controlled
         (Nat.card Y = 3 ∨
           (Y ≠ ⊥ ∧ Y.map L.subtype ≤ standardK4)) := by
   classical
-  letI : standardK4.Characteristic := standardK4_characteristic
+  let : standardK4.Characteristic := standardK4_characteristic
   have hKnormal : standardK4.Normal := inferInstance
   have hKp : IsPGroup 2 standardK4 := by
     apply IsPGroup.of_card (n := 2)
@@ -414,7 +414,7 @@ private theorem subgroup_s4_exponent_two_or_exists_characteristic_controlled
     rcases (hYmem y).mp hyY with rfl | rfl
     · exact standardK4.one_mem
     · exact hx2K
-  · letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  · let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     let P : Sylow 3 L := Classical.choice Sylow.nonempty
     have hPcard : Nat.card (P : Subgroup L) = 3 := by
       rw [Sylow.card_eq_multiplicity, hL6]
@@ -441,12 +441,12 @@ private theorem subgroup_s4_exponent_two_or_exists_characteristic_controlled
         change Nat.card (Sylow 3 L) % 3 = 1 % 3 at hmod
         rw [htwo] at hmod
         norm_num at hmod
-    letI : Subsingleton (Sylow 3 L) :=
+    let : Subsingleton (Sylow 3 L) :=
       (Nat.card_eq_one_iff_unique.mp hSylowCard).1
     have hPchar : (P : Subgroup L).Characteristic :=
       Sylow.characteristic_of_subsingleton P
     exact ⟨(P : Subgroup L), hPchar, Or.inl hPcard⟩
-  · letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  · let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hLp : IsPGroup 2 L := by
       apply IsPGroup.of_card (n := 3)
       rw [hL8]
@@ -461,7 +461,7 @@ private theorem subgroup_s4_exponent_two_or_exists_characteristic_controlled
     have hKleL : standardK4 ≤ L := by
       have hle := hKp.le_sylow_of_normal P
       simpa [hPcoe] using hle
-    haveI : Nontrivial L :=
+    have : Nontrivial L :=
       Finite.one_lt_card_iff_nontrivial.mp (by rw [hL8]; norm_num)
     let Z : Subgroup L := Subgroup.center L
     have hZchar : Z.Characteristic := by dsimp [Z]; infer_instance
@@ -547,7 +547,7 @@ private theorem exponent_two_subgroup_s4_card_le_two_of_disjoint_standardK4
     (hdisjoint : Disjoint L standardK4) :
     Nat.card L ≤ 2 := by
   classical
-  letI : standardK4.Characteristic := standardK4_characteristic
+  let : standardK4.Characteristic := standardK4_characteristic
   let q : S4 →* S4 ⧸ standardK4 := QuotientGroup.mk' standardK4
   let qL : L →* S4 ⧸ standardK4 := q.comp L.subtype
   have hqInj : Function.Injective qL := by
@@ -655,7 +655,7 @@ private theorem normalizer_nontrivial_subgroup_kleinFour_le
       intro v hv
       change v ∈ Subgroup.centralizer ({yG} : Set G)
       rw [Subgroup.mem_centralizer_singleton_iff]
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       have hcomm := (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         (⟨v, hv⟩ : V) (⟨yG, hYle y.property⟩ : V)
       exact congrArg Subtype.val hcomm
@@ -765,7 +765,7 @@ private theorem normalizer_order_three_subgroup_of_normalizer_le
     have hmul := YN.card_mul_index
     rw [hYNcard, hNcard'] at hmul
     omega
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
     simpa [hXNcard]
@@ -895,7 +895,7 @@ private theorem normalizer_mulEquiv_perm_four
   have hVNnormal : VN.Normal := by
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer hVleN).mpr
     exact le_rfl
-  letI : VN.Normal := hVNnormal
+  let : VN.Normal := hVNnormal
   have hVN : IsKleinFour VN := by
     let e : VN ≃* V := Subgroup.subgroupOfEquivOfLe hVleN
     exact
@@ -916,7 +916,7 @@ private theorem normalizer_mulEquiv_perm_four
     · intro x hx
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       have hcomm := (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         (⟨(y : G), hy⟩ : V) (⟨(x : G), hx⟩ : V)
       exact Subtype.ext (congrArg (fun z : V => (z : G)) hcomm)
@@ -927,7 +927,7 @@ private theorem normalizer_mulEquiv_perm_four
       _ = Nat.card N := XN.card_mul_index
       _ = 24 := hNcard'
       _ = 3 * 8 := by norm_num
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
     simpa [hXNcard]
@@ -961,7 +961,7 @@ private theorem normalizer_mulEquiv_perm_four
         norm_num [hcard] at hmod
     rcases hcases with hone | hfour
     · exfalso
-      letI : Subsingleton (Sylow 3 N) :=
+      let : Subsingleton (Sylow 3 N) :=
         (Nat.card_eq_one_iff_unique.mp hone).1
       have hXNnormal : XN.Normal := by
         simpa [P] using Sylow.normal_of_subsingleton P
@@ -1148,7 +1148,7 @@ private theorem normalizer_kleinFour_image_eq_standardK4_and_centralizer
     · intro x hx
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       have hcomm := (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         (⟨(y : G), hy⟩ : V) (⟨(x : G), hx⟩ : V)
       exact Subtype.ext (congrArg (fun z : V => (z : G)) hcomm)
@@ -1338,9 +1338,9 @@ private theorem outside_commuting_involutions_card_two
         simpa [N] using normalizer_commuting_involutions_card_three
           h hk V X hV hCentV hNcard hXle hXcard hsN hsI hsNotV
   have hOutside : Nat.card Outside = 2 := by
-    letI : Fintype Ambient := Fintype.ofFinite Ambient
-    letI : Fintype Inside := Fintype.ofFinite Inside
-    letI : Fintype Outside := Fintype.ofFinite Outside
+    let : Fintype Ambient := Fintype.ofFinite Ambient
+    let : Fintype Inside := Fintype.ofFinite Inside
+    let : Fintype Outside := Fintype.ofFinite Outside
     have hcomp := Fintype.card_subtype_compl
       (fun u : Ambient => (u : G) ∈ N)
     change Fintype.card Outside =
@@ -2094,7 +2094,7 @@ private theorem normalizer_involutions_card_nine
     e.toEquiv.subtypeEquiv (fun x => (hInvIff x).symm)
   have hPermInv :
       Nat.card {p : Equiv.Perm (Fin 4) // IsInvolution p} = 9 := by
-    letI : DecidablePred
+    let : DecidablePred
         (fun p : Equiv.Perm (Fin 4) => IsInvolution p) := by
       unfold IsInvolution
       infer_instance
@@ -2133,9 +2133,9 @@ private theorem normalizer_involutions_outside_kleinFour_card_six
       normalizer_involutions_card_nine
         h hk V X hV hCentV hNcard hXle hXcard
   have hVnonone : Nat.card {v : V // v ≠ 1} = 3 := by
-    letI : Fintype V := Fintype.ofFinite V
-    letI : Fintype {v : V // v = 1} := Fintype.ofFinite _
-    letI : Fintype {v : V // v ≠ 1} := Fintype.ofFinite _
+    let : Fintype V := Fintype.ofFinite V
+    let : Fintype {v : V // v = 1} := Fintype.ofFinite _
+    let : Fintype {v : V // v ≠ 1} := Fintype.ofFinite _
     have hcomp := Fintype.card_subtype_compl (fun v : V => v = 1)
     have hVcard : Fintype.card V = 4 := by
       simpa only [Nat.card_eq_fintype_card] using hV.card_four
@@ -2170,9 +2170,9 @@ private theorem normalizer_involutions_outside_kleinFour_card_six
       Nat.card InV = Nat.card {v : V // v ≠ 1} := Nat.card_congr inVEquiv
       _ = 3 := hVnonone
   have hOutV : Nat.card OutV = 6 := by
-    letI : Fintype NInv := Fintype.ofFinite NInv
-    letI : Fintype InV := Fintype.ofFinite InV
-    letI : Fintype OutV := Fintype.ofFinite OutV
+    let : Fintype NInv := Fintype.ofFinite NInv
+    let : Fintype InV := Fintype.ofFinite InV
+    let : Fintype OutV := Fintype.ofFinite OutV
     have hcomp := Fintype.card_subtype_compl
       (fun s : NInv => (s : G) ∈ V)
     change Fintype.card OutV = Fintype.card NInv - Fintype.card InV at hcomp
@@ -2222,7 +2222,7 @@ private theorem nonbase_offDiagonal_involution_coset_pairs_card_twelve
   let OffDiag := Sigma fun omega : Nonbase =>
     {p : involutionCosetFiber N omega.1 ×
         involutionCosetFiber N omega.1 // p.1 ≠ p.2}
-  letI : Fintype Internal := Fintype.ofFinite _
+  let : Fintype Internal := Fintype.ofFinite _
   have hInternal : Nat.card Internal = 6 := by
     simpa [Internal, N] using
       normalizer_involutions_outside_kleinFour_card_six
@@ -2289,7 +2289,7 @@ public theorem
       outside_commuting_involutions_card_two
         h hk V X hV hCentV hNcard hXle hXcard
           s.property.1 s.property.2.1 s.property.2.2
-  letI : Fintype Internal := Fintype.ofFinite Internal
+  let : Fintype Internal := Fintype.ofFinite Internal
   have hInternalF : Fintype.card Internal = 6 := by
     simpa only [Nat.card_eq_fintype_card] using hInternal
   have hIncidence : Nat.card (Sigma External) = 12 := by

@@ -25,7 +25,7 @@ public theorem sFour_centralizer_order_three_eq_zpowers
       (Subgroup.centralizer ({x} : Set (Equiv.Perm (Fin 4))))) := by
     apply Nat.not_even_iff_odd.mp
     intro hEven
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     obtain ⟨s, hsord⟩ := exists_prime_orderOf_dvd_card'
       (G := Subgroup.centralizer ({x} : Set (Equiv.Perm (Fin 4)))) 2
       (even_iff_two_dvd.mp hEven)

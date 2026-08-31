@@ -22,7 +22,7 @@ public theorem aSeven_order_three_subgroup_centralizer_card_eq_thirty_six
     intro hbot
     have : Nat.card A = 1 := by rw [hbot]; simp
     omega
-  letI : Nontrivial A := (Subgroup.nontrivial_iff_ne_bot A).mpr hAne
+  let : Nontrivial A := (Subgroup.nontrivial_iff_ne_bot A).mpr hAne
   obtain ⟨u, hu⟩ := exists_ne (1 : A)
   have huOrderA : orderOf u = 3 := by
     have hdiv : orderOf u ∣ 3 := by

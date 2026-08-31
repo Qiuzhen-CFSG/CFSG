@@ -35,7 +35,7 @@ public theorem secondCase_a7_exists_kleinFour_centralizing_U_inter_E
   classical
   let E : Subgroup G := d.E
   let Z : Subgroup E := Subgroup.center E
-  letI : Z.Normal := by dsimp [Z]; infer_instance
+  let : Z.Normal := by dsimp [Z]; infer_instance
   let q : E →* E ⧸ Z := QuotientGroup.mk' Z
   let UE : Subgroup E := (c.U ⊓ E).subgroupOf E
   let UEbar : Subgroup (E ⧸ Z) := UE.map q

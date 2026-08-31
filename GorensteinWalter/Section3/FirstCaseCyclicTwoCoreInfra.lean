@@ -41,8 +41,8 @@ public theorem firstCase_cyclic_K1_eq_invertedElements
     (d : FirstCaseBGData c) :
     ((firstCaseBGKData hmin c d).K1 : Set G) =
       invertedElements d.bg.U d.bg.t1 := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
   exact BenderGlauberman.K1_eq_invertedElements d.bg
 
 /-- The first-case `K₂` is exactly the set of elements of `U` inverted by
@@ -54,8 +54,8 @@ public theorem firstCase_cyclic_K2_eq_invertedElements
     (d : FirstCaseBGData c) :
     ((firstCaseBGKData hmin c d).K2 : Set G) =
       invertedElements d.bg.U d.bg.t2 := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
   exact BenderGlauberman.K2_eq_invertedElements d.bg
 
 /-- The first-case `K = K₁ ∩ K₂` is normal in `U`. -/
@@ -68,8 +68,8 @@ public theorem firstCase_cyclic_K_normal_in_U
       (@BenderGlauberman.Hyp11.K G _ _ d.bg
         (firstCaseBGKData hmin c d))
       d.bg.U := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
   exact BenderGlauberman.K_normal_in_U d.bg
 
 /-- The first-case `K₂` is abelian and normal in `U` (Fact 1.5(iii)). -/
@@ -80,8 +80,8 @@ public theorem firstCase_cyclic_K2_abelian_normal
     (d : FirstCaseBGData c) :
     IsMulCommutative ((firstCaseBGKData hmin c d).K2) ∧
       IsNormalIn ((firstCaseBGKData hmin c d).K2) d.bg.U := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
   have hUodd : Nat.Coprime 2 (Nat.card (↥d.bg.U)) := by
     rw [show d.bg.U = c.U by
       change oddCoreOf d.bg.H = oddCoreOf c.H
@@ -107,8 +107,8 @@ public theorem firstCase_cyclic_A_abelian
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     IsMulCommutative (↥(d.bg.B1 ⊓ d.bg.K2)) := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   have hK2 : IsMulCommutative (↥d.bg.K2) :=
     (BenderGlauberman.theoremC_K2_abelian_normal d.bg).1
   rw [isMulCommutative_iff] at hK2 ⊢
@@ -130,8 +130,8 @@ public theorem firstCase_cyclic_K_abelian
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     IsMulCommutative (↥(d.bg.K)) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   have hK2 : IsMulCommutative (↥d.bg.K2) :=
     (BenderGlauberman.theoremC_K2_abelian_normal d.bg).1
   rw [isMulCommutative_iff] at hK2 ⊢
@@ -151,8 +151,8 @@ public theorem firstCase_cyclic_B_normalizes_K
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     d.bg.B ≤ Subgroup.normalizer (d.bg.K : Set G) := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   have hKnorm := BenderGlauberman.K_normal_in_U d.bg
   intro b hbB
   rw [Subgroup.mem_normalizer_iff]
@@ -176,8 +176,8 @@ public theorem firstCase_cyclic_B_inter_K_eq_bot
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     d.bg.B ⊓ d.bg.K = ⊥ := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   apply le_bot_iff.mp
   intro x hx
   have hxB : x ∈ d.bg.B := (Subgroup.mem_inf.mp hx).1
@@ -234,7 +234,7 @@ private theorem firstCase_cyclic_mem_BK_product
     Subgroup.subgroupOf_sup hBK hKK
   have hxSup : xU ∈ B.subgroupOf U ⊔ K.subgroupOf U := by
     simpa [hEq] using hxSub
-  haveI : (K.subgroupOf U).Normal :=
+  have : (K.subgroupOf U).Normal :=
     (Subgroup.normal_subgroupOf_iff hKK).2
       (fun h k hh hk => hKnorm.2 k hk h hh)
   rcases (Subgroup.mem_sup_of_normal_right.mp hxSup) with
@@ -253,8 +253,8 @@ public theorem firstCase_cyclic_BK_product
     [hK : BenderGlauberman.Hyp11KData d.bg] {x : G}
     (hx : x ∈ d.bg.B ⊔ d.bg.K) :
     ∃ b : G, b ∈ d.bg.B ∧ ∃ k : G, k ∈ d.bg.K ∧ b * k = x := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   have hxU : x ∈ d.bg.U :=
     (sup_le (BenderGlauberman.theoremC_B_le_U d.bg)
       (BenderGlauberman.K_le_U d.bg)) hx
@@ -272,8 +272,8 @@ public theorem firstCase_cyclic_A_inter_BK_eq_bot
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     d.bg.B1 ⊓ d.bg.K2 ⊓ (d.bg.B ⊔ d.bg.K) = ⊥ := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   apply le_bot_iff.mp
   intro x hx
   have hxA : x ∈ d.bg.B1 ⊓ d.bg.K2 := (Subgroup.mem_inf.mp hx).1
@@ -386,8 +386,8 @@ public theorem firstCase_cyclic_K_card_coprime_H_index
         (firstCaseBGKData hmin c d)))
       d.bg.H.index := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := firstCaseBGKData hmin c d
   have hHhat : c.Hhat = c.H := cyclicCore_hhat_eq hmin c hcyclic
   have hS0centK : d.bg.S0 ≤ Subgroup.centralizer (d.bg.K : Set G) := by
     intro s hs k hk
@@ -442,8 +442,8 @@ private theorem firstCase_cyclic_U_eq_A_sup_BK_of_a7model
         (fittingSubgroup d.bg.U).subtype).map d.bg.U.subtype) :
     d.bg.U = (d.bg.B1 ⊓ d.bg.K2) ⊔ (d.bg.B ⊔ d.bg.K) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hfit : fittingSubgroupOf d.bg.U =
       qCoreOf d.bg.U 3 ⊔
         ((pPrimeCore 3 (fittingSubgroup d.bg.U)).map
@@ -466,7 +466,7 @@ private theorem firstCase_cyclic_A_comm_BK_of_a7model
       (d.bg.B : Set G)) :
     ⁅d.bg.B1 ⊓ d.bg.K2, d.bg.B ⊔ d.bg.K⁆ = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf d.bg.U 3
   let F3' : Subgroup G :=
     ((pPrimeCore 3 (fittingSubgroup d.bg.U)).map
@@ -506,8 +506,8 @@ private theorem firstCase_cyclic_BK_frobenius_of_a7model
     BenderGlauberman.IsFrobeniusGroupWithKernel
       (d.bg.B ⊔ d.bg.K) d.bg.K := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   let F3' : Subgroup G :=
     ((pPrimeCore 3 (fittingSubgroup d.bg.U)).map
       (fittingSubgroup d.bg.U).subtype).map d.bg.U.subtype
@@ -583,8 +583,8 @@ public theorem firstCase_cyclic_theoremC_inputs_of_a7model
           BenderGlauberman.IsFrobeniusGroupWithKernel
             (d.bg.B ⊔ d.bg.K) d.bg.K) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   exact ⟨
     firstCase_cyclic_U_eq_A_sup_BK_of_a7model hmin c d hU0 hAeq hKeq,
     firstCase_cyclic_A_comm_BK_of_a7model c d hAeq hKeq hPcentB,
@@ -599,8 +599,8 @@ public theorem firstCase_cyclic_A_inter_B_eq_bot
     (d : FirstCaseBGData c)
     [hK : BenderGlauberman.Hyp11KData d.bg] :
     d.bg.B1 ⊓ d.bg.K2 ⊓ d.bg.B = ⊥ := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData d.bg := hK
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData d.bg := hK
   apply le_bot_iff.mp
   intro x hx
   have hxA : x ∈ d.bg.B1 ⊓ d.bg.K2 := (Subgroup.mem_inf.mp hx).1
@@ -683,7 +683,7 @@ public theorem firstCase_cyclic_V2_le_componentLayer_of_od
       rw [hS, hU] at hcomm2
       exact hcomm2
     exact firstCase_U_eq_FU_sup_B od.d.bg hcommBG
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   obtain ⟨fd⟩ := exists_firstCaseFourData c od.d
   obtain ⟨Q⟩ := Sylow.nonempty (G := ↥od.d.bg.B)
   obtain ⟨M, hMmax, hMN, hSM, _hP0⟩ :=
@@ -960,7 +960,7 @@ public theorem firstCase_cyclic_componentLayer_ker_le_oddCore
   let Omap : Subgroup G := (pPrimeCore 2 (↥L)).map L.subtype
   let H : Subgroup G := Omap ⊓ E0
   let X : Subgroup (↥E0) := H.subgroupOf E0
-  haveI : X.Normal :=
+  have : X.Normal :=
     (Subgroup.normal_subgroupOf_iff (show H ≤ E0 from inf_le_right)).2
       (fun h k hh hk =>
         (Subgroup.mem_inf.mpr
@@ -1159,7 +1159,7 @@ private theorem firstCase_cyclic_componentLayer_image_a7_of_layer_a7
           have hback : m⁻¹ * (m * x * m⁻¹) * m ∈ E :=
             by simpa using hE_normalM.2 m⁻¹ hm' (m * x * m⁻¹) hx
           simpa [mul_assoc] using hback)
-  haveI : Ei.Normal := hEi_normal
+  have : Ei.Normal := hEi_normal
   have hOEi_le_O : (pPrimeCore 2 Ei).map Ei.subtype ≤ pPrimeCore 2 M :=
     pPrimeCore_map_subtype_le_pPrimeCore_of_normal (p := 2) Ei
   let OM : Subgroup G := (pPrimeCore 2 M).map M.subtype
@@ -1403,8 +1403,8 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
     have h32 : 3 ∣ 2 := Nat.prime_three.dvd_of_dvd_pow hthree
     norm_num at h32
   · exact hA7M
-  · letI : Field K := inferInstance
-    letI : Finite K := inferInstance
+  · let : Field K := inferInstance
+    let : Finite K := inferInstance
     obtain ⟨eE⟩ := firstCase_cyclic_componentLayer_image_a7_of_layer_a7 M hA7
     have hEbarne : Ebar ≠ ⊥ := by
       intro hbot
@@ -1416,12 +1416,12 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
         norm_num
       omega
     have hEbarperf : Group.IsPerfect Ebar := by
-      letI : Group.IsPerfect (alternatingGroup (Fin 7)) :=
+      let : Group.IsPerfect (alternatingGroup (Fin 7)) :=
         ⟨commutator_alternatingGroup_eq_top (by norm_num)⟩
       exact Group.IsPerfect.ofSurjective (f := eE.symm.toMonoidHom) eE.symm.surjective
     have hEbarL : Ebar ≤ L := by
-      letI : L.Normal := hLnormal
-      letI : (pPrimeCore 2 (↥M)).Normal :=
+      let : L.Normal := hLnormal
+      let : (pPrimeCore 2 (↥M)).Normal :=
         pPrimeCore_normal (p := 2) (G := ↥M)
       let pi : (M ⧸ pPrimeCore 2 M) →* (M ⧸ pPrimeCore 2 M) ⧸ L := QuotientGroup.mk' L
       let I : Subgroup ((M ⧸ pPrimeCore 2 M) ⧸ L) := Ebar.map pi
@@ -1432,10 +1432,10 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
       have hQsolv : Group.IsSolvable ((M ⧸ pPrimeCore 2 M) ⧸ L) := odd_order_theorem _ hQodd
       have hIbot : I = ⊥ := by
         by_contra hIne
-        letI : Group.IsSolvable ((M ⧸ pPrimeCore 2 M) ⧸ L) := hQsolv
+        let : Group.IsSolvable ((M ⧸ pPrimeCore 2 M) ⧸ L) := hQsolv
         have hIsolv : Group.IsSolvable I := inferInstance
-        letI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-        letI : Group.IsPerfect I := hIperf
+        let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+        let : Group.IsPerfect I := hIperf
         exact Group.IsPerfect.not_isSolvable I hIsolv
       have hker : Ebar ≤ pi.ker := (Subgroup.map_eq_bot_iff Ebar).mp hIbot
       simpa [pi, QuotientGroup.ker_mk'] using hker
@@ -1451,7 +1451,7 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
       let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
       exact Group.IsPerfect.ofSurjective (f := eEL.symm.toMonoidHom) eEL.symm.surjective
     have hEbar_normal : Ebar.Normal := by
-      letI : (pPrimeCore 2 (↥M)).Normal :=
+      let : (pPrimeCore 2 (↥M)).Normal :=
         pPrimeCore_normal (p := 2) (G := ↥M)
       have hEi_normal : Ei.Normal :=
         Subgroup.normal_subgroupOf_of_le_normalizer (H := M) (N := E)
@@ -1467,7 +1467,7 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
               have hback : m⁻¹ * (m * x * m⁻¹) * m ∈ E :=
                 by simpa using (componentLayerOf_isNormalIn M).2 m⁻¹ hm' (m * x * m⁻¹) hx
               simpa [mul_assoc] using hback)
-      haveI : Ei.Normal := hEi_normal
+      have : Ei.Normal := hEi_normal
       exact QuotientGroup.map_normal (G := M) (pPrimeCore 2 M) Ei
     have hELsn : EL.IsSubnormal := hEbar_normal.isSubnormal.subgroupOf
     rcases hLmodel with hPSL | hPGL
@@ -1501,7 +1501,7 @@ public theorem firstCase_cyclic_m_quotient_a7_of_layer_a7
         refine ⟨(e.symm.trans hL_Ebar).trans eE⟩
       exact False.elim (psl2_ne_a7 hK hPSLA7)
     · rcases hPGL with ⟨e⟩
-      letI : Finite (PGL2 K) :=
+      let : Finite (PGL2 K) :=
         Finite.of_surjective Matrix.ProjGenLinGroup.mk
           Matrix.ProjGenLinGroup.mk_surjective
       let J : Subgroup (PGL2 K) := EL.map e.toMonoidHom
@@ -1610,8 +1610,8 @@ private theorem firstCase_cyclic_layer_oddCore_meets_inverted_no
       (componentLayerOf M).subtype) :
     False := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let L : Subgroup G := componentLayerOf M
   let O : Subgroup (↥L) := pPrimeCore 2 (↥L)
   let Omap : Subgroup G := O.map L.subtype
@@ -1653,8 +1653,8 @@ public theorem firstCase_cyclic_layer_inverted_inf_oddCore_eq_bot
     X ⊓ ((pPrimeCore 2 (↥(componentLayerOf M))).map
       (componentLayerOf M).subtype) = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let L : Subgroup G := componentLayerOf M
   let O : Subgroup (↥L) := pPrimeCore 2 (↥L)
   let Omap : Subgroup G := O.map L.subtype
@@ -1696,7 +1696,7 @@ public theorem firstCase_cyclic_layer_inverted_quotient_ne_bot
   classical
   let L : Subgroup G := componentLayerOf M
   let O : Subgroup (↥L) := pPrimeCore 2 (↥L)
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : L →* L ⧸ O := QuotientGroup.mk' O
   let XL : Subgroup L := X.subgroupOf L
   let Xbar : Subgroup (L ⧸ O) := XL.map q
@@ -1745,8 +1745,8 @@ public theorem firstCase_cyclic_oriented_prime_eq_three_of_aSeven_layer
         alternatingGroup (Fin 7))) :
     od.p = 3 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let L : Subgroup G := componentLayerOf M
   let O : Subgroup (↥L) := pPrimeCore 2 (↥L)
   let q : L →* (L ⧸ O) := QuotientGroup.mk' O
@@ -1960,8 +1960,8 @@ public theorem firstCase_cyclic_B_not_perfect
     ⁅od.d.bg.B, od.d.bg.B⁆ ≠ od.d.bg.B := by
   have hBne := firstCase_cyclic_B_ne_bot hmin c od hfirst hHhat hU Q
   have hBodd := firstCase_cyclic_B_odd c od hU
-  letI : Group.IsSolvable od.d.bg.B := odd_order_theorem od.d.bg.B hBodd
-  letI : Nontrivial (↥od.d.bg.B) :=
+  let : Group.IsSolvable od.d.bg.B := odd_order_theorem od.d.bg.B hBodd
+  let : Nontrivial (↥od.d.bg.B) :=
     (Subgroup.nontrivial_iff_ne_bot od.d.bg.B).mpr hBne
   intro hperfect
   have hlt := Group.IsSolvable.commutator_lt_top_of_nontrivial (G := od.d.bg.B)
@@ -1982,7 +1982,7 @@ private theorem firstCase_cyclic_oddCore_le_B
     (hOcentS : O ≤ Subgroup.centralizer ((d.bg.S : Subgroup G) : Set G)) :
     O ≤ d.bg.B := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   exact oddCore_le_centralizer_U_of_H_eq_US
     d.bg.U d.bg.S d.bg.H d.bg.B O
     d.bg.H_eq_US (bg_U_normal_in_H d.bg) d.bg.S.isPGroup'
@@ -2008,8 +2008,8 @@ public theorem firstCase_cyclic_B_inter_M_le_oddCore_of_a7model
     (od.d.bg.B ⊓ M) ≤
       ((pPrimeCore 2 M).map M.subtype) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : (pPrimeCore 2 M).Normal := pPrimeCore_normal
+  let : Fintype G := Fintype.ofFinite G
+  let : (pPrimeCore 2 M).Normal := pPrimeCore_normal
   let O : Subgroup (↥M) := pPrimeCore 2 M
   let q : M →* (M ⧸ O) := QuotientGroup.mk' O
   let f : M →* alternatingGroup (Fin 7) := e.some.toMonoidHom.comp q
@@ -2107,8 +2107,8 @@ public theorem firstCase_cyclicTwoCore_impossible_of_a7model
         k ≠ 1 → b * k * b⁻¹ ≠ k) :
     False := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData od.d.bg :=
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData od.d.bg :=
     firstCaseBGKData hmin c od.d
   have hHhat : c.Hhat = c.H := cyclicCore_hhat_eq hmin c hcyclic
   let Q : Sylow od.p (↥od.d.bg.B) := Classical.choice Sylow.nonempty

@@ -228,14 +228,14 @@ public theorem gw_prop9_minimalNormal_dGroup_quotient_reduction
       rcases hLmodel with hLpsl | hLpgl
       · left
         rcases hLpsl with ⟨K, instK, finK, hK⟩
-        letI : Field K := instK
-        letI : Finite K := finK
+        let : Field K := instK
+        let : Finite K := finK
         refine ⟨K, instK, finK, ?_⟩
         exact ⟨hK.1, ⟨eL.symm.trans hK.2.some⟩⟩
       · right
         rcases hLpgl with ⟨K, instK, finK, hK⟩
-        letI : Field K := instK
-        letI : Finite K := finK
+        let : Field K := instK
+        let : Finite K := finK
         refine ⟨K, instK, finK, ?_⟩
         exact ⟨hK.1, ⟨eL.symm.trans hK.2.some⟩⟩
     exact ⟨L', hL'normal, hL'index, hLmodel'⟩
@@ -264,22 +264,22 @@ public theorem gw_prop9_minimalNormal_dGroup_iso_PSL2_or_A7
   rcases hLmodel with hLpsl | hLpgl
   · left
     rcases hLpsl with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     refine ⟨K, instK, finK, ?_⟩
     refine ⟨hK.1, ?_⟩
     exact ⟨Subgroup.topEquiv.symm.trans hK.2.some⟩
   · rcases hLpgl with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     let eH : (↥H) ≃* PGL2 K := Subgroup.topEquiv.symm.trans hK.2.some
     have hcomm : commutator (↥H) ≠ ⊥ ∧ commutator (↥H) ≠ ⊤ :=
       commutator_ne_bot_ne_top_of_mulEquiv_pgl2_odd K hK.1 eH
     let C : Subgroup (↥H) := commutator (↥H)
-    letI : C.Characteristic := by
+    let : C.Characteristic := by
       dsimp [C]
       infer_instance
-    letI : H.Normal := hHnormal
+    let : H.Normal := hHnormal
     have hCnormal : (C.map H.subtype).Normal :=
       ConjAct.normal_of_characteristic_of_normal
     have hCle : C.map H.subtype ≤ H := Subgroup.map_subtype_le C
@@ -318,7 +318,7 @@ public theorem gw_prop9_PGL2_odd_hasDihedralSylowTwo
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) (hH : IsIsoToPGL2Odd K H) :
     HasDihedralSylowTwo (↥H) := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   exact hasDihedralSylowTwo_of_mulEquiv hH.2.some
@@ -364,12 +364,12 @@ public theorem hasDihedralSylowTwo_of_minimalNormal_dGroupQuotient
   · have hLd : HasDihedralSylowTwo L := by
       rcases hLmodel with hPSL | hPGL
       · rcases hPSL with ⟨K, instK, finK, hK⟩
-        letI : Field K := instK
-        letI : Finite K := finK
+        let : Field K := instK
+        let : Finite K := finK
         exact gw_prop9_PSL2_odd_hasDihedralSylowTwo K L hK
       · rcases hPGL with ⟨K, instK, finK, hK⟩
-        letI : Field K := instK
-        letI : Finite K := finK
+        let : Field K := instK
+        let : Finite K := finK
         exact gw_prop9_PGL2_odd_hasDihedralSylowTwo K L hK
     have hQd : HasDihedralSylowTwo (H ⧸ pPrimeCore 2 H) :=
       hasDihedralSylowTwo_of_odd_index L hLindex hLd
@@ -397,8 +397,8 @@ public theorem center_eq_bot_of_minimalNormal_dGroupQuotient
   rcases gw_prop9_minimalNormal_dGroup_iso_PSL2_or_A7
       hmin H hHnormal hHne hHmin hHd hHD with hPSL | hA7
   · rcases hPSL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     exact gw_prop9_PSL2_odd_center_eq_bot K H hK
   · have hOH : pPrimeCore 2 (↥H) = ⊥ :=
       pPrimeCore_two_eq_bot_of_normal_subgroup_of_minimalCounterexample
@@ -438,7 +438,7 @@ public theorem gw_prop9_centralizer_of_normal_odd_order_eq_bot
     (hCodd : Nat.Coprime 2 (Nat.card (↥(Subgroup.centralizer (H : Set G))))) :
     Subgroup.centralizer (H : Set G) = ⊥ := by
   let C : Subgroup G := Subgroup.centralizer (H : Set G)
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hCnormal : C.Normal := by
     simpa [C] using (Subgroup.normal_centralizer (H := H))
   have hO : pPrimeCore 2 G = ⊥ :=
@@ -715,7 +715,7 @@ public theorem gw_prop9_aut_kleinFour_is_S3 {Z : Type u} [Group Z] [Finite Z]
   have hAutToPermSurj : Function.Surjective autToPerm := by
     intro q
     let p : Z → Prop := fun z => z ≠ (1 : Z)
-    letI : DecidablePred p := Classical.decPred p
+    let : DecidablePred p := Classical.decPred p
     let c : Type u := {z : Z // ¬p z}
     let e0 : {z : Z // p z} ⊕ c ≃ Z := Equiv.sumCompl p
     let e : Z ≃ Z := e0.symm.trans ((Equiv.sumCongr q (Equiv.refl c)).trans e0)
@@ -723,7 +723,7 @@ public theorem gw_prop9_aut_kleinFour_is_S3 {Z : Type u} [Group Z] [Finite Z]
       dsimp [e]
       rw [Equiv.sumCompl_symm_apply_of_neg (p := p) (a := (1 : Z)) (by simp [p])]
       rfl
-    letI : IsKleinFour Z := hZ
+    let : IsKleinFour Z := hZ
     let a : MulAut Z := hZ.mulEquiv e he1
     refine ⟨a, ?_⟩
     ext x
@@ -786,7 +786,7 @@ public theorem gw_prop9_minimalNormal_cyclic_card_two
     apply hHne
     exact Subgroup.eq_bot_of_card_eq H hcard
   obtain ⟨p, hpPrime, hpDiv⟩ := Nat.exists_prime_and_dvd hcard_ne_one
-  letI : CommGroup H := hHcyc.commGroup
+  let : CommGroup H := hHcyc.commGroup
   let K : Subgroup H := (powMonoidHom p : H →* H).ker
   have hKchar : K.Characteristic := by
     rw [Subgroup.characteristic_iff_map_le]
@@ -802,8 +802,8 @@ public theorem gw_prop9_minimalNormal_cyclic_card_two
     have hformula := IsCyclic.card_powMonoidHom_ker H p
     have hgcd : (Nat.card H).gcd p = p := Nat.gcd_eq_right hpDiv
     simpa [K, hgcd] using hformula
-  letI : H.Normal := hHnormal
-  letI : K.Characteristic := hKchar
+  let : H.Normal := hHnormal
+  let : K.Characteristic := hKchar
   have hKnormal : (K.map H.subtype).Normal :=
     ConjAct.normal_of_characteristic_of_normal
   have hKcases := hHmin (K.map H.subtype) hKnormal (Subgroup.map_subtype_le K)
@@ -938,7 +938,7 @@ public theorem gw_lemma_2_2
     norm_num
   have hTcentral : T ≤ Subgroup.center C := by
     exact (Subgroup.zpowers_le).mpr htCcentral
-  letI : T.Normal := ⟨by
+  let : T.Normal := ⟨by
     intro x hx g
     have hxcentral : x ∈ Subgroup.center C := hTcentral hx
     have hcomm : g * x = x * g :=
@@ -1136,15 +1136,15 @@ public theorem gw_lemma_3_3_vi_linear_normal_subgroup_centralizer_eq_bot
     Subgroup.centralizer (N : Set R) = ⊥ := by
   rcases hN with hPSL | hPGL
   · rcases hPSL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     exact centralizer_eq_bot_of_normal_centerless_dihedral_of_pPrimeCore_eq_bot
       hSylow hO N hNnormal
         (gw_prop9_PSL2_odd_center_eq_bot K N hK)
         (gw_prop9_PSL2_odd_hasDihedralSylowTwo K N hK)
   · rcases hPGL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     have hZ : Subgroup.center (↥N) = ⊥ :=
       center_eq_bot_of_mulEquiv hK.2.some (pgl2_center_eq_bot K)
     exact centralizer_eq_bot_of_normal_centerless_dihedral_of_pPrimeCore_eq_bot
@@ -1163,7 +1163,7 @@ public theorem gw_lemma_3_3_vi_linear_normal_subgroup_mulAut_embedding
   have hC : Subgroup.centralizer (N : Set R) = ⊥ :=
     gw_lemma_3_3_vi_linear_normal_subgroup_centralizer_eq_bot
       hSylow hO N hNnormal hN
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   rcases quotient_centralizer_mulAut_embedding N with ⟨φ, hφ⟩
   let qE : (R ⧸ Subgroup.centralizer (N : Set R)) ≃* R :=
     (QuotientGroup.quotientMulEquivOfEq (G := R) hC).trans
@@ -1197,7 +1197,7 @@ public theorem gw_lemma_3_3_vi_psl_normal_subgroup_card_eq_three_dGroup
     (hK : IsOddPrimePower (Nat.card K)) (hcard : Nat.card K = 3)
     (e : N ≃* PSL2 K) :
     IsDGroup R := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hcard
   let eK : ZMod 3 ≃+* K :=
@@ -1223,7 +1223,7 @@ public theorem gw_lemma_3_3_vi_pgl_normal_subgroup_card_eq_three_dGroup
     (hcard : Nat.card K = 3)
     (e : N ≃* PGL2 K) :
     IsDGroup R := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hcard
   let eK : ZMod 3 ≃+* K :=
@@ -1255,9 +1255,9 @@ public theorem gw_lemma_3_3_vi_normal_subgroup_iso_PSL2_or_PGL2_dGroup
         IsOddPrimePower (Nat.card K) → 3 < Nat.card K →
           (M ≃* PSL2 K) → IsDGroup R := by
     intro M hMnormal K instK finK hK hcard e
-    letI : M.Normal := hMnormal
+    let : M.Normal := hMnormal
     rcases hK with ⟨p, f, hp, hpOdd, hf, hKcard⟩
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     have hK : IsOddPrimePower (Nat.card K) :=
       ⟨p, f, hp, hpOdd, hf, hKcard⟩
     have hMmodel : IsIsoToPSL2OddExists (G := R) M :=
@@ -1278,7 +1278,7 @@ public theorem gw_lemma_3_3_vi_normal_subgroup_iso_PSL2_or_PGL2_dGroup
       MulEquiv.ofBijective f.rangeRestrict
         ⟨fun a b hab => hf (congrArg Subtype.val hab),
           f.rangeRestrict_surjective⟩
-    letI : Finite f.range := Finite.of_surjective eR eR.surjective
+    let : Finite f.range := Finite.of_surjective eR eR.surjective
     have hRange : HasDihedralSylowTwo f.range :=
       hasDihedralSylowTwo_of_mulEquiv eR.symm hSylow
     have hPSLRange : pGammaL2PSLRange K ≤ f.range := by
@@ -1295,8 +1295,8 @@ public theorem gw_lemma_3_3_vi_normal_subgroup_iso_PSL2_or_PGL2_dGroup
       hSylow hO M K hK hcard e hC hsurj hodd
   rcases hN with hPSL | hPGL
   · rcases hPSL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     by_cases hcard : Nat.card K = 3
     · exact gw_lemma_3_3_vi_psl_normal_subgroup_card_eq_three_dGroup
         hSylow hO N hNnormal K hK.1 hcard hK.2.some
@@ -1311,8 +1311,8 @@ public theorem gw_lemma_3_3_vi_normal_subgroup_iso_PSL2_or_PGL2_dGroup
       have hgt : 3 < Nat.card K := by omega
       exact large_psl_core N hNnormal K hK.1 hgt hK.2.some
   · rcases hPGL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     by_cases hcard : Nat.card K = 3
     · exact gw_lemma_3_3_vi_pgl_normal_subgroup_card_eq_three_dGroup
         hSylow hO N hNnormal K hcard hK.2.some
@@ -1345,8 +1345,8 @@ public theorem gw_prop9_dGroup_conclusion_from_minimalNormal
     IsDGroup G := by
   rcases hH with hPSL | hA7
   · rcases hPSL with ⟨K, instK, finK, hK⟩
-    letI : Field K := instK
-    letI : Finite K := finK
+    let : Field K := instK
+    let : Finite K := finK
     exact gw_lemma_3_3_vi_normal_subgroup_iso_PSL2_or_PGL2_dGroup
       hmin.1 (pPrimeCore_two_eq_bot_of_minimalCounterexample hmin)
       H hHnormal (Or.inl ⟨K, instK, finK, hK⟩)

@@ -63,7 +63,7 @@ public theorem secondCase_psl2_normalizer_fitting_action_two_quotient_impossible
   let E : Subgroup G := d.E
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let O : Subgroup N := pPrimeCore 2 N
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : N →* N ⧸ O := QuotientGroup.mk' O
   have hXcentE : X ≤ Subgroup.centralizer (E : Set G) := hXleF.trans hFcentE
   have hEcentX : E ≤ Subgroup.centralizer (X : Set G) := by
@@ -77,7 +77,7 @@ public theorem secondCase_psl2_normalizer_fitting_action_two_quotient_impossible
   have hEperf : Group.IsPerfect E := (Group.isPerfect_def).2 d.E_component.2.2.2.1
   have hEne : E ≠ ⊥ := (Subgroup.nontrivial_iff_ne_bot E).mp d.E_component.2.2.1
   have hE0perf : Group.IsPerfect E0 := by
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.ofSurjective
       (f := (Subgroup.subgroupOfEquivOfLe hEleN).symm.toMonoidHom)
       (Subgroup.subgroupOfEquivOfLe hEleN).symm.surjective
@@ -98,10 +98,10 @@ public theorem secondCase_psl2_normalizer_fitting_action_two_quotient_impossible
   have hEbarperf : Group.IsPerfect Ebar := by simpa [Ebar, q] using hEbarData.2.1
   have hQsolvable : Group.IsSolvable (N ⧸ O) := isSolvable_of_isPGroup hQ
   have hEbarSolvable : Group.IsSolvable Ebar := by
-    letI : Group.IsSolvable (N ⧸ O) := hQsolvable
+    let : Group.IsSolvable (N ⧸ O) := hQsolvable
     infer_instance
   by_contra hEbarne'
-  letI : Nontrivial Ebar := (Subgroup.nontrivial_iff_ne_bot Ebar).2 hEbarne
+  let : Nontrivial Ebar := (Subgroup.nontrivial_iff_ne_bot Ebar).2 hEbarne
   exact Group.IsPerfect.not_isSolvable Ebar hEbarSolvable
 
 /-- The Fact 1.10(ii) normalizer centralization for the PSL₂ branch: the

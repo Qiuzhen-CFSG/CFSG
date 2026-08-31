@@ -60,7 +60,7 @@ private theorem exists_noncentralizing_involution_normalizing_order_three
       _ = Nat.card N := XN.card_mul_index
       _ = 24 := by simpa [N] using hNcard
       _ = 3 * 8 := by norm_num
-  letI : Fact (Nat.Prime 3) := ⟨by norm_num⟩
+  let : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
     simpa [hXNcard]
@@ -85,7 +85,7 @@ private theorem exists_noncentralizing_involution_normalizing_order_three
       interval_cases i <;> norm_num at hcard ⊢ <;> omega
     rcases hcases with hone | hfour
     · exfalso
-      letI : Subsingleton (Sylow 3 N) :=
+      let : Subsingleton (Sylow 3 N) :=
         (Nat.card_eq_one_iff_unique.mp hone).1
       have hXNnormal : XN.Normal := by
         simpa [P] using Sylow.normal_of_subsingleton P
@@ -128,7 +128,7 @@ private theorem exists_noncentralizing_involution_normalizing_order_three
     rw [hRindex] at hmul
     have hNcard' : Nat.card N = 24 := by simpa [N] using hNcard
     omega
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨uR, huROrder⟩ :=
     exists_prime_orderOf_dvd_card' (G := R) 2 (by
       rw [hRcard]
@@ -196,7 +196,7 @@ private theorem exists_order_three_generator_inverted_by_involution
       Subgroup.zpowers x = X ∧
       u * x * u⁻¹ = x⁻¹ := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨by norm_num⟩
+  let : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   obtain ⟨xX, hxXOrder⟩ :=
     exists_prime_orderOf_dvd_card' (G := X) 3 (by
       rw [hXcard])

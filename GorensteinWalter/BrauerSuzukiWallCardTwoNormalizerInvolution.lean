@@ -54,7 +54,7 @@ public theorem
     exact (Subgroup.mem_normalizer_iff.mp hnN y).mp hyH
   have hPnormal : (P : Subgroup N).Normal := by
     simpa [P, IsPGroup.toSylow_coe] using hHNnormal
-  letI : Unique (Sylow 2 N) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow 2 N) := Sylow.unique_of_normal P hPnormal
   let xN : N := ⟨x, hxN⟩
   have hxNI : IsInvolution xN :=
     BenderSuzuki.IsInvolution.subtype hxI hxN

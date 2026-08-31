@@ -46,9 +46,9 @@ public theorem commutator_centralizes_fittingSubgroupOf_of_centralizes_inverts
   have hFnil : Group.IsNilpotent (↥F) := by
     dsimp [F]
     exact fittingSubgroupOf_isNilpotent M
-  haveI : Group.IsNilpotent (↥F) := hFnil
-  haveI : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
-  haveI : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
+  have : Group.IsNilpotent (↥F) := hFnil
+  have : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
+  have : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
   have hFtop : piCore π (↥F) ⊔ piCore πᶜ (↥F) = ⊤ :=
     piCore_sup_piCore_compl_eq_top_of_isNilpotent hFnil π
   have hA_norm_M : IsNormalIn A M := by

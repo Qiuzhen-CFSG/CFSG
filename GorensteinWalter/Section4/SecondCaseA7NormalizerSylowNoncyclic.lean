@@ -35,7 +35,7 @@ public theorem secondCase_a7_sylow_not_cyclic_of_component_le
     (N : Subgroup G) (hEN : d.E ≤ N) :
     ∀ P : Sylow 2 N, ¬ IsCyclic P := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨SM, hSMcard, hSME⟩ :=
     secondCase_a7_sylow_le_component hmin c w d hA7 hmodel
   let A : Subgroup G := (SM : Subgroup w.M).map w.M.subtype
@@ -131,7 +131,7 @@ public theorem secondCase_a7_sylow_not_cyclic_of_component_le
   have hQcyc : IsCyclic Q :=
     (MulEquiv.isCyclic (Sylow.equiv Q P)).mpr hPcyc
   have hANcyc : IsCyclic AN := by
-    letI : IsCyclic Q := hQcyc
+    let : IsCyclic Q := hQcyc
     exact Subgroup.isCyclic_of_le hANQ
   let eAN : AN ≃* A := Subgroup.subgroupOfEquivOfLe hAleN
   have hAcyc : IsCyclic A := isCyclic_of_surjective eAN eAN.surjective

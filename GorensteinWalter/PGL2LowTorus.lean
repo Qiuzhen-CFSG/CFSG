@@ -32,8 +32,8 @@ private lemma involution_unique_of_cyclic_odd_half {G : Type u} [Group G] [Finit
     (hUcard : Nat.card U = 2 * m) {a b : G}
     (haU : a ∈ U) (ha2 : a * a = 1) (ha1 : a ≠ 1)
     (hbU : b ∈ U) (hb2 : b * b = 1) (hb1 : b ≠ 1) : a = b := by
-  letI : IsCyclic U := hUcyc
-  letI : Fintype U := Fintype.ofFinite U
+  let : IsCyclic U := hUcyc
+  let : Fintype U := Fintype.ofFinite U
   have hUcard' : Fintype.card U = 2 * m := by
     simpa [Nat.card_eq_fintype_card] using hUcard
   have h2dvd : 2 ∣ Fintype.card U := by
@@ -90,12 +90,12 @@ public theorem pgl2_low_two_part_torus_reflection_data
       w ∉ U ∧ w * w = 1 ∧
       (∀ x : PGL2 K, x ∈ U → w * x * w⁻¹ = x⁻¹) ∧
       Subgroup.centralizer ({s} : Set (PGL2 K)) = U ⊔ Subgroup.zpowers w := by
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (PGL2 K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   rcases hK with ⟨p, f, hp, hpOdd, hf, hKcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hK' : IsOddPrimePower (Nat.card K) :=
     ⟨p, f, hp, hpOdd, hf, hKcard⟩
   have hqOdd : Odd (Nat.card K) := by

@@ -141,7 +141,7 @@ private theorem conjugate_family_card
     Nat.card (conjFamily G P) =
       (Subgroup.normalizer (P : Set G)).index := by
   classical
-  letI : MulAction G (Subgroup G) :=
+  let : MulAction G (Subgroup G) :=
     { smul := fun g H => H.map (MulAut.conj g).toMonoidHom
       one_smul := by
         intro H
@@ -206,7 +206,7 @@ public theorem secondCase_unique_order_p_subgroup_of_cyclic
     (hTcyc : IsCyclic T) (hTcard : Nat.card T = k) (hpk : p ∣ k) :
     ∃! H : Subgroup G, H ≤ T ∧ Nat.card H = p := by
   classical
-  letI : Fintype T := Fintype.ofFinite T
+  let : Fintype T := Fintype.ofFinite T
   have hpk' : p ∣ Fintype.card T := by
     rw [← Nat.card_eq_fintype_card, hTcard]
     exact hpk
@@ -237,13 +237,13 @@ public theorem secondCase_unique_order_p_subgroup_of_cyclic
     change (a : G) = (b : G)
     simpa [hH0sub] using congrArg (fun t : Alpha => (t.1 : G)) hab
   have hH0card' : Nat.card {z : H0 // (z : G) ≠ 1} = p - 1 := by
-    letI : Fintype H0 := Fintype.ofFinite H0
+    let : Fintype H0 := Fintype.ofFinite H0
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
     rw [← Nat.card_eq_fintype_card, hH0card]
     simp
   have hH0surj : Function.Surjective hH0sub := by
-    letI : Fintype {z : H0 // (z : G) ≠ 1} := Fintype.ofFinite _
-    letI : Fintype Alpha := Fintype.ofFinite Alpha
+    let : Fintype {z : H0 // (z : G) ≠ 1} := Fintype.ofFinite _
+    let : Fintype Alpha := Fintype.ofFinite Alpha
     have hcard : Fintype.card {z : H0 // (z : G) ≠ 1} =
         Fintype.card Alpha := by
       rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card,
@@ -287,13 +287,13 @@ public theorem secondCase_unique_order_p_subgroup_of_cyclic
         change (a : G) = (b : G)
         simpa [hHsub] using congrArg (fun t : Alpha => (t.1 : G)) hab
       have hHcard' : Nat.card {z : H // (z : G) ≠ 1} = p - 1 := by
-        letI : Fintype H := Fintype.ofFinite H
+        let : Fintype H := Fintype.ofFinite H
         rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
         rw [← Nat.card_eq_fintype_card, hHcard]
         simp
       have hHsurj : Function.Surjective hHsub := by
-        letI : Fintype {z : H // (z : G) ≠ 1} := Fintype.ofFinite _
-        letI : Fintype Alpha := Fintype.ofFinite Alpha
+        let : Fintype {z : H // (z : G) ≠ 1} := Fintype.ofFinite _
+        let : Fintype Alpha := Fintype.ofFinite Alpha
         have hcard : Fintype.card {z : H // (z : G) ≠ 1} =
             Fintype.card Alpha := by
           rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card,

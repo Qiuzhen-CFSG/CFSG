@@ -235,8 +235,8 @@ public theorem involution_fiber_partition_card
     Nat.card {x : G // IsInvolution x} =
       ∑ ω : Ω, Nat.card (involutionFiber π ω) := by
   classical
-  letI : Fintype {x : G // IsInvolution x} := Fintype.ofFinite _
-  haveI : ∀ ω : Ω, Finite (involutionFiber π ω) := fun ω => by
+  let : Fintype {x : G // IsInvolution x} := Fintype.ofFinite _
+  have : ∀ ω : Ω, Finite (involutionFiber π ω) := fun ω => by
     unfold involutionFiber
     infer_instance
   exact (Nat.card_congr (involution_fiber_partition_equiv π)).trans
@@ -249,7 +249,7 @@ private theorem fiber_partition_card
     (f : α → β) :
     Nat.card α = ∑ b : β, Nat.card {a : α // f a = b} := by
   classical
-  letI : Fintype α := Fintype.ofFinite _
+  let : Fintype α := Fintype.ofFinite _
   have e : α ≃ Σ b : β, {a : α // f a = b} :=
     { toFun := fun a => ⟨f a, ⟨a, rfl⟩⟩
       invFun := fun p => p.2.1
@@ -270,8 +270,8 @@ public theorem involution_J_n_card
     Nat.card (involutionJ_n π ω0 n) = n * involutionB_n π ω0 n := by
   classical
   let N : Type u := {ω : Ω // ω ≠ ω0 ∧ Nat.card (involutionFiber π ω) = n}
-  letI : Fintype N := Fintype.ofFinite _
-  haveI : Finite (involutionJ_n π ω0 n) := by
+  let : Fintype N := Fintype.ofFinite _
+  have : Finite (involutionJ_n π ω0 n) := by
     unfold involutionJ_n
     infer_instance
   let p : involutionJ_n π ω0 n → N :=
@@ -333,14 +333,14 @@ public theorem involution_index_eq_one_add_sum_b
   let J : Type u := {x : G // IsInvolution x}
   let K : ℕ := Nat.card J + 1
   let Nonbase : Type u := {ω : Ω // ω ≠ ω0}
-  letI : Fintype Nonbase := Fintype.ofFinite _
+  let : Fintype Nonbase := Fintype.ofFinite _
   have hsize_le (ω : Nonbase) :
       Nat.card (involutionFiber π (ω : Ω)) ≤ Nat.card J := by
     exact Nat.card_le_card_of_injective
       (fun x : involutionFiber π (ω : Ω) => (⟨x.1, x.2.1⟩ : J))
       (by intro x y h; apply Subtype.ext; simpa using congrArg Subtype.val h)
   have hΩ : Nat.card Ω = 1 + Nat.card Nonbase := by
-    haveI : DecidableEq Ω := Classical.decEq _
+    have : DecidableEq Ω := Classical.decEq _
     let e : Ω ≃ Option Nonbase :=
       { toFun := fun ω => if h : ω = ω0 then none else some ⟨ω, h⟩
         invFun := fun o => o.elim ω0 (fun ω => ω.1)
@@ -429,7 +429,7 @@ public theorem involution_J_card_eq_base_add_sum
   let J : Type u := {x : G // IsInvolution x}
   let K : ℕ := Nat.card J + 1
   let Nonbase : Type u := {ω : Ω // ω ≠ ω0}
-  letI : Fintype Nonbase := Fintype.ofFinite _
+  let : Fintype Nonbase := Fintype.ofFinite _
   have hsize_le (ω : Nonbase) :
       Nat.card (involutionFiber π (ω : Ω)) ≤ Nat.card J := by
     exact Nat.card_le_card_of_injective
@@ -562,7 +562,7 @@ public theorem cosetInvolution_J_n_card
     {G : Type u} [Group G] [Finite G] (A : Subgroup G) (n : ℕ) :
     Nat.card (cosetInvolution_J_n A n) = n * cosetInvolution_b A n := by
   classical
-  letI : Fintype (G ⧸ A) := Fintype.ofFinite _
+  let : Fintype (G ⧸ A) := Fintype.ofFinite _
   simpa [cosetInvolution_J_n, cosetInvolution_b] using
     (involution_J_n_card (π := cosetInvolution_proj A)
       (ω0 := cosetInvolution_base A) n)
@@ -575,7 +575,7 @@ public theorem cosetInvolution_index_eq_one_add_sum_b
       1 + ∑ n ∈ Finset.range (Nat.card {x : G // IsInvolution x} + 1),
         cosetInvolution_b A n := by
   classical
-  letI : Fintype (G ⧸ A) := Fintype.ofFinite _
+  let : Fintype (G ⧸ A) := Fintype.ofFinite _
   calc
     A.index = Nat.card (G ⧸ A) := (Subgroup.index_eq_card A).symm
     _ = 1 + ∑ n ∈ Finset.range (Nat.card {x : G // IsInvolution x} + 1),
@@ -593,7 +593,7 @@ public theorem cosetInvolution_J_card_eq_base_add_sum
         ∑ n ∈ Finset.range (Nat.card {x : G // IsInvolution x} + 1),
           n * cosetInvolution_b A n := by
   classical
-  letI : Fintype (G ⧸ A) := Fintype.ofFinite _
+  let : Fintype (G ⧸ A) := Fintype.ofFinite _
   have h := involution_J_card_eq_base_add_sum (π := cosetInvolution_proj A)
     (ω0 := cosetInvolution_base A)
   have hBase := Nat.card_congr (involution_coset_base_fiber_equiv A)

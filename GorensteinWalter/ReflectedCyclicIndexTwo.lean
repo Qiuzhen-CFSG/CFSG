@@ -37,8 +37,8 @@ public theorem exists_aligned_involutions_of_cyclic_reflection_index_two
       t ∈ H ∧ t ∉ U ∧ t * t = 1 ∧
       (∀ x : G, x ∈ U → t * x * t⁻¹ = x⁻¹) ∧
       (t = w ∨ t = w * s) := by
-  letI : IsCyclic U := hUcyclic
-  letI : CommGroup U := IsCyclic.commGroup
+  let : IsCyclic U := hUcyclic
+  let : CommGroup U := IsCyclic.commGroup
   obtain ⟨g, hg⟩ := IsCyclic.exists_monoid_generator (α := U)
   have hgorder : orderOf g = Nat.card U := by
     apply orderOf_eq_card_of_forall_mem_zpowers

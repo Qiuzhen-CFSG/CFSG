@@ -222,7 +222,7 @@ private theorem invariant_sylow_not_le_H
     (hXproper : centralizerIn (qCoreOf c.U p) s ≠ qCoreOf c.U p) :
     ¬ P ≤ c.H := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let X : Subgroup G := centralizerIn (qCoreOf c.U p) s
   intro hPleH
   rcases hPsyl with ⟨Q, hQeq⟩
@@ -275,7 +275,7 @@ private theorem invariant_sylow_not_le_H
     have hcoreP : IsPGroup p ((qCoreOf c.U p).subgroupOf c.U) :=
       (qCoreOf_isPGroup c.U p).of_equiv
         (Subgroup.subgroupOfEquivOfLe (qCoreOf_le c.U p)).symm
-    haveI : ((qCoreOf c.U p).subgroupOf c.U).Normal :=
+    have : ((qCoreOf c.U p).subgroupOf c.U).Normal :=
       Subgroup.normal_subgroupOf_of_le_normalizer (H := c.U)
         (N := qCoreOf c.U p)
         (le_normalizer_of_isNormalIn (qCoreOf_normal_in c.U p))
@@ -336,7 +336,7 @@ private theorem commutator_t_normalizer_fixed_core_ne_bot
     Subgroup.zpowers_le.mpr htP
   have hNleP : N ≤ P := inf_le_left
   have hsub : (N.subgroupOf P).IsSubnormal := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     have hPnil : Group.IsNilpotent (↥P) := IsPGroup.isNilpotent hPp
     exact isSubnormal_of_nilpotent hPnil N hNleP
   have hself : P ⊓ Subgroup.centralizer (N : Set G) ≤ N := by
@@ -348,7 +348,7 @@ private theorem commutator_t_normalizer_fixed_core_ne_bot
     exact Subgroup.mem_inf.mpr ⟨hxP,
       (Subgroup.centralizer_le_normalizer (X : Set G)) hxX⟩
   have hcop : Nat.Coprime (Nat.card Q) (Nat.card P) := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     have hQcard : Nat.card Q = 2 := by
       have htord : orderOf c.t = 2 :=
         orderOf_eq_prime c.t_involution.2 c.t_involution.1
@@ -357,7 +357,7 @@ private theorem commutator_t_normalizer_fixed_core_ne_bot
     rw [hQcard, hn]
     exact (hpodd.pow).coprime_two_left
   have hsolv : IsSolvable P := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     exact isSolvable_of_isPGroup hPp
   have hQnotCent : ¬ Q ≤ Subgroup.centralizer (P : Set G) := by
     intro hQcent
@@ -470,7 +470,7 @@ private theorem sup_inter_le_of_le_and_disjoint
     dsimp [W', U', H]
     rw [← Subgroup.subgroupOf_sup (le_sup_left : W ≤ W ⊔ U)
       (le_sup_right : U ≤ W ⊔ U), Subgroup.subgroupOf_self]
-  letI : U'.Normal := hU'norm
+  let : U'.Normal := hU'norm
   have hxSup : (⟨x, hx.1⟩ : ↥H) ∈ W' ⊔ U' := by
     rw [htop]
     trivial
@@ -623,7 +623,7 @@ private theorem odd_order_subgroup_le_of_le_sup_of_twoPGroup
     dsimp [W', U', H]
     rw [← Subgroup.subgroupOf_sup (le_sup_left : W ≤ W ⊔ U)
       (le_sup_right : U ≤ W ⊔ U), Subgroup.subgroupOf_self]
-  letI : U'.Normal := hU'norm
+  let : U'.Normal := hU'norm
   have hkSup : (⟨k, hK hk⟩ : ↥H) ∈ W' ⊔ U' := by
     rw [htop]
     trivial
@@ -696,7 +696,7 @@ private theorem normalizer_fixed_core_not_le_Hhat
     (hXproper : centralizerIn (qCoreOf c.U p) s ≠ qCoreOf c.U p) :
     ¬ Subgroup.normalizer (centralizerIn (qCoreOf c.U p) s : Set G) ≤ c.Hhat := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let X : Subgroup G := centralizerIn (qCoreOf c.U p) s
   obtain ⟨P, hPsyl, hXP, htP⟩ :=
     exists_invariant_sylow_containing_fixed_core hmin c hs hp hpodd
@@ -784,7 +784,7 @@ private theorem normalizer_fixed_core_not_le_Hhat
     let W : Subgroup G := twoCoreOf c.Hhat
     have hWK4 : IsKleinFour W :=
       twoCoreOf_isKleinFour_of_centralizerStructure c hK4pCore
-    letI : IsKleinFour W := hWK4
+    let : IsKleinFour W := hWK4
     have htW : c.t ∈ W := centralizerStructure_t_mem_twoCore c h26
     have hsS : s ∈ (c.S : Subgroup G) := hs.1
     have hsHhat : s ∈ c.Hhat :=
@@ -1437,7 +1437,7 @@ private theorem orderOf_half_quarter_rotation_dihedral_two_pow
     {m : ℕ} (hm : 2 ≤ m) :
     orderOf (DihedralGroup.r ((2 ^ (m - 2) : ℕ) : ZMod (2 ^ m)) :
       DihedralGroup (2 ^ m)) = 4 := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num)⟩
   let i : ZMod (2 ^ m) := ((2 ^ (m - 2) : ℕ) : ZMod (2 ^ m))
   let x : DihedralGroup (2 ^ m) :=
     DihedralGroup.r i
@@ -1629,7 +1629,7 @@ private theorem lemma27Hypothesis_of_maximal_containing_normalizer
       ((c.S : Subgroup G) ⊓ M) c.t s c.t_involution
       (centralizerSetup_reflection_isInvolution c hs) htsNe htsComm
       ⟨c.S0_le_S c.t_mem_S0, htM⟩ ⟨hs.1, hsM⟩
-  letI : IsKleinFour V := hVklein
+  let : IsKleinFour V := hVklein
   have hVp : IsPGroup 2 V :=
     IsPGroup.of_card (G := V) (n := 2) (by simpa [hVklein.card_four])
   have hnoncyclic : ∀ P : Sylow 2 (↥M), ¬ IsCyclic P := by
@@ -1646,7 +1646,7 @@ private theorem lemma27Hypothesis_of_maximal_containing_normalizer
     obtain ⟨Q, hVQ⟩ := IsPGroup.exists_le_sylow (G := ↥M) (p := 2) hV'p
     have hQcyc' : ¬ IsCyclic (↥(Q : Subgroup (↥M))) := by
       intro hQcyc
-      haveI : IsCyclic (↥(Q : Subgroup (↥M))) := hQcyc
+      have : IsCyclic (↥(Q : Subgroup (↥M))) := hQcyc
       have hV'cyc : IsCyclic (↥V') := Subgroup.isCyclic_of_le hVQ
       have hVcyc : IsCyclic (↥V) :=
         (MulEquiv.isCyclic (Subgroup.subgroupOfEquivOfLe hVleM)).mp hV'cyc
@@ -1777,7 +1777,7 @@ private theorem fixed_core_bot_or_top
     centralizerIn (qCoreOf c.U p) s = ⊥ ∨
       centralizerIn (qCoreOf c.U p) s = qCoreOf c.U p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let X : Subgroup G := centralizerIn (qCoreOf c.U p) s
   by_cases hbot : X = ⊥
   · exact Or.inl hbot
@@ -2500,7 +2500,7 @@ private theorem qCoreOf_ne_bot_of_prime_dvd_of_nilpotent
     {p : ℕ} (hp : p.Prime) (hpdvd : p ∣ Nat.card (↥X)) :
     qCoreOf X p ≠ ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let P : Sylow p (↥X) := default
   have hPne : (P : Subgroup (↥X)) ≠ ⊥ := Sylow.ne_bot_of_dvd_card P hpdvd
   have hPnorm : (P : Subgroup (↥X)).Normal := hXnil.sylow_normal p P
@@ -2539,7 +2539,7 @@ private theorem firstCase_normalizer_of_not_second
   have hpdvdU : p ∣ Nat.card (↥c.U) :=
     hpdvdFU.trans (Subgroup.card_dvd_of_le hFUleU)
   have hpodd : Odd p := (card_U_odd c).of_dvd_nat hpdvdU
-  letI : Group.IsNilpotent (↥c.FU) := hFnil
+  let : Group.IsNilpotent (↥c.FU) := hFnil
   let X' : Subgroup (↥c.FU) := X.subgroupOf c.FU
   have hXnil' : Group.IsNilpotent (↥X') := Subgroup.isNilpotent X'
   have hXnil : Group.IsNilpotent (↥X) :=

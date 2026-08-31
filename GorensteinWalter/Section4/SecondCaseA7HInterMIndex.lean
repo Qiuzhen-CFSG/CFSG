@@ -56,8 +56,8 @@ public theorem secondCase_a7_H_inter_M_relIndex_eq_three
     secondCase_a7_U_isPGroup_three hmin c w d hA7 hmodel
   have hTp : IsPGroup 2 T := SM.isPGroup'.map w.M.subtype
   have hSp : IsPGroup 2 (c.S : Subgroup G) := c.S.isPGroup'
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hUTdisj : Disjoint c.U T :=
     IsPGroup.disjoint_of_ne 3 2 (by omega) c.U T hUp hTp
   have hUSdisj : Disjoint c.U (c.S : Subgroup G) :=

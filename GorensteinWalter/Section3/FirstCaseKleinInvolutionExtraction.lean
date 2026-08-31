@@ -27,7 +27,7 @@ public theorem firstCase_klein_extract_inverting_involution
     ∃ s : A, IsInvolution s ∧ s ∉ V ∧
       φ s x = x⁻¹ := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hAfac : (Nat.card A).factorization 2 = 3 := by
     have hPcard := Sylow.card_eq_multiplicity S
     rw [hScard] at hPcard

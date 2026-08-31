@@ -27,7 +27,7 @@ public theorem aSeven_isThreeCycle_of_order_three_and_kleinFour_centralizer
     simpa [huOrder] using pow_orderOf_eq_one u
   have huPow : up ^ 3 = 1 := by
     simpa [up] using congrArg Subtype.val huPowA
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hct := Equiv.Perm.cycleType_of_pow_prime_eq_one huPow
   let n := up.cycleType.card
   have hctn : up.cycleType = Multiset.replicate n 3 := by

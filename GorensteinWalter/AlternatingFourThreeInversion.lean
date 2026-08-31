@@ -29,7 +29,7 @@ public theorem no_involution_inverts_three_subgroup_of_mulEquiv_alternatingGroup
     (htinv : ∀ x ∈ P, t * x * t⁻¹ = x⁻¹) :
     False := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let eG : G ≃* alternatingGroup (Fin 4) := e.some
   let P' : Subgroup (alternatingGroup (Fin 4)) := P.map eG.toMonoidHom
   have hP'p : IsPGroup p P' := IsPGroup.map hPp eG.toMonoidHom

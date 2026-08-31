@@ -48,7 +48,7 @@ public theorem
   classical
   let E : Subgroup G := d.E
   let Z : Subgroup E := Subgroup.center E
-  letI : Z.Normal := by
+  let : Z.Normal := by
     dsimp [Z]
     infer_instance
   let q : E →* E ⧸ Z := QuotientGroup.mk' Z

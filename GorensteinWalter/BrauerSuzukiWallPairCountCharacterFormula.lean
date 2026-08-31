@@ -40,11 +40,11 @@ public theorem BrauerSuzukiWallHypotheses.pairCount_character_formula
             ((Nat.card G : ℂ) / (Nat.card h.H : ℂ) ^ 2) *
               (chi h.t ^ 2 / chi 1) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, _b, _hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let mu : ι → Section1.ClassFunction G :=
     fun j => Section1.ofConjClassFunction (xi j)
   let Ct : ConjClasses G := ConjClasses.mk h.t

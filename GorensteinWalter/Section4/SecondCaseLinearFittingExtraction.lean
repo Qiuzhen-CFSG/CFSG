@@ -41,7 +41,7 @@ private theorem fittingSubgroupOf_isNilpotent_local
     {G : Type u} [Group G] [Finite G] (H : Subgroup G) :
     Group.IsNilpotent (↥(fittingSubgroupOf H)) := by
   change Group.IsNilpotent (↥((fittingSubgroup (↥H)).map H.subtype))
-  haveI : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
+  have : Group.IsNilpotent (fittingSubgroup (↥H)) := by infer_instance
   exact Group.nilpotent_of_mulEquiv
     (Subgroup.equivMapOfInjective (fittingSubgroup (↥H)) H.subtype H.subtype_injective)
 
@@ -73,7 +73,7 @@ private theorem exists_p_element_prime_order_image_of_nontrivial
     apply hn₀
     exact (orderOf_eq_one_iff).mp h
   obtain ⟨p, hp, hpdvd⟩ := Nat.exists_prime_and_dvd hord1
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpodd : Odd p := by
     have hdvdN : orderOf (f n₀) ∣ Nat.card N := by
       have h₁ : orderOf (f n₀) ∣ orderOf n₀ := orderOf_map_dvd f n₀
@@ -233,16 +233,16 @@ public theorem secondCase_fitting_fieldProjection_pElement
         ∃ a₀ : PGammaL2 K, a₀ ∈ P ∧ SemidirectProduct.rightHom a₀ = σ ∧
           ∃ k : ℕ, a₀ ^ p ^ k = 1 := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
@@ -252,7 +252,7 @@ public theorem secondCase_fitting_fieldProjection_pElement
   let F : Subgroup (PGammaL2 K) := fittingSubgroupOf A
   have hN'nil : Group.IsNilpotent (↥N') := by
     let e : N ≃* N' := Subgroup.equivMapOfInjective N A.subtype A.subtype_injective
-    haveI : Group.IsNilpotent N := hNnil
+    have : Group.IsNilpotent N := hNnil
     exact Group.nilpotent_of_mulEquiv (G := N) (G' := N') e
   have hN'odd : Odd (Nat.card N') := by
     have hcard : Nat.card N' = Nat.card N :=
@@ -266,7 +266,7 @@ public theorem secondCase_fitting_fieldProjection_pElement
     · simpa [f] using hn
   obtain ⟨p, hp, hpodd, a, hPa, hordf⟩ := exists_p_element_prime_order_image_of_nontrivial
     (N := ↥N') (C := K ≃+* K) hN'nil hN'odd f hker
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   let a₀ : PGammaL2 K := (a : PGammaL2 K)
   let σ : K ≃+* K := SemidirectProduct.rightHom a₀
   have hσord : orderOf σ = p := by

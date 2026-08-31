@@ -20,7 +20,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_alternatingGroup_four
       (A : Set (alternatingGroup (Fin 4)))) :
     False := by
   classical
-  letI : IsCyclic A := hAcyc
+  let : IsCyclic A := hAcyc
   obtain ⟨a, ha_gen⟩ := IsCyclic.exists_zpow_surjective (G := A)
   let a₀ : alternatingGroup (Fin 4) := (a : alternatingGroup (Fin 4))
   have ha_ne : a₀ ≠ 1 := by
@@ -49,7 +49,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_alternatingGroup_four
         exact hord_odd.not_two_dvd_nat (by rw [h])
     have ha1 : (a : A) = 1 := orderOf_eq_one_iff.mp hord1
     exact ha_ne (congrArg Subtype.val ha1)
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hVK.card_four]
     norm_num
@@ -78,7 +78,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_alternatingGroup_five
       (A : Set (alternatingGroup (Fin 5)))) :
     False := by
   classical
-  letI : IsCyclic A := hAcyc
+  let : IsCyclic A := hAcyc
   obtain ⟨a, ha_gen⟩ := IsCyclic.exists_zpow_surjective (G := A)
   let a₀ : alternatingGroup (Fin 5) := (a : alternatingGroup (Fin 5))
   have ha_ne : a₀ ≠ 1 := by
@@ -107,7 +107,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_alternatingGroup_five
         exact hord_odd.not_two_dvd_nat (by rw [h])
     have ha1 : (a : A) = 1 := orderOf_eq_one_iff.mp hord1
     exact ha_ne (congrArg Subtype.val ha1)
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hVK.card_four]
     norm_num

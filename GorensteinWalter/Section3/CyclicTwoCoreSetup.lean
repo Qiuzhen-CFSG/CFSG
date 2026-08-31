@@ -32,7 +32,7 @@ public theorem cyclicCore_hhat_eq
           exact Subgroup.mem_map.mpr ⟨x, x.property, rfl⟩)⟩
         map_one' := rfl
         map_mul' := fun _ _ => rfl }
-    letI : IsCyclic c.S0 := c.S0_cyclic
+    let : IsCyclic c.S0 := c.S0_cyclic
     have hpc : IsCyclic (pCore 2 c.Hhat) := by
       apply isCyclic_of_injective f
       intro x y hxy
@@ -43,7 +43,7 @@ public theorem cyclicCore_hhat_eq
       apply Subtype.ext
       apply Subtype.ext
       exact hxyG'
-    letI : IsKleinFour (pCore 2 c.Hhat) := hK4
+    let : IsKleinFour (pCore 2 c.Hhat) := hK4
     exact False.elim (IsKleinFour.not_isCyclic hpc)
 
 public theorem firstCase_commutator_S0_U_ne_bot

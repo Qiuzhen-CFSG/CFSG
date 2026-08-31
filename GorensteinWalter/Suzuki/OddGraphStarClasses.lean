@@ -42,7 +42,7 @@ public noncomputable instance
     {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) : Finite (CommutingGraphEdgeStarClass c) := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (UConjugates c)
   apply Finite.of_surjective (commutingGraphDartStarClass c)
   rintro ⟨S, d, hd⟩
   exact ⟨d, Subtype.ext hd⟩
@@ -64,7 +64,7 @@ private theorem outsideNeighbors_ncard_one
     (v : UConjugates c) (hv : v ∉ S) :
     (outsideNeighbors c S v).ncard = 1 := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (UConjugates c)
   let N : Set (UConjugates c) := {w | (commutingGraph c).Adj v w}
   let I : Set (UConjugates c) :=
     {w | w ∈ S ∧ (commutingGraph c).Adj v w}
@@ -108,7 +108,7 @@ private theorem outsideDarts_card_twenty
     (hcard : S.ncard = 15) :
     Nat.card (outsideDarts c S) = 20 := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (UConjugates c)
   let e : outsideDarts c S ≃
       Σ v : {v : UConjugates c // v ∉ S},
         {w : UConjugates c // w ∈ outsideNeighbors c S v.1} :=
@@ -203,7 +203,7 @@ private theorem commutingGraph_dart_card_oneForty
     (d : FirstCaseCountData c) :
     Nat.card (commutingGraph c).Dart = 140 := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (UConjugates c)
   have hV : Fintype.card (UConjugates c) = 35 := by
     rw [← Nat.card_eq_fintype_card]
     exact firstCase_UConjugates_card hmin c hfirst d
@@ -218,8 +218,8 @@ public theorem firstCase_edgeStarClass_card_seven
     (d : FirstCaseCountData c) :
     Nat.card (CommutingGraphEdgeStarClass c) = 7 := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
-  letI := Fintype.ofFinite (CommutingGraphEdgeStarClass c)
+  let := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (CommutingGraphEdgeStarClass c)
   let f := commutingGraphDartStarClass c
   have hdecomp :
       Nat.card (commutingGraph c).Dart =

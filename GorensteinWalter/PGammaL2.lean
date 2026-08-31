@@ -34,13 +34,13 @@ public theorem finiteField_ringAut_isCyclic_of_oddPrimePower
     (hK : IsOddPrimePower (Nat.card K)) :
     IsCyclic (K ≃+* K) := by
   rcases hK with ⟨p, n, hp, _hpOdd, _hn, hcard⟩
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hcardF : Fintype.card K = p ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hcard
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : CharP K p := charP_of_card_eq_prime_pow hcardF
-  letI : Algebra (ZMod p) K := ZMod.algebra K p
+  let : Fact p.Prime := ⟨hp⟩
+  let : CharP K p := charP_of_card_eq_prime_pow hcardF
+  let : Algebra (ZMod p) K := ZMod.algebra K p
   let e : (K ≃+* K) ≃* (K ≃ₐ[ZMod p] K) := {
     toFun := fun sigma =>
       AlgEquiv.ofRingEquiv (f := sigma) (by

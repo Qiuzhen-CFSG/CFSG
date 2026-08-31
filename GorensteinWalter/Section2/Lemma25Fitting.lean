@@ -23,7 +23,7 @@ private theorem lemma25_isPGroup_of_pResidualOf_eq_bot
     (H : Subgroup G) (p : ℕ) (hp : p.Prime)
     (hRes : pResidualOf H p = ⊥) :
     IsPGroup p H := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQ : IsPGroup p (H ⧸ (pResidualOf H p).subgroupOf H) :=
     fstar_isPGroup_quotient_pResidualOf H p hp
   have hResbot : (pResidualOf H p).subgroupOf H = ⊥ := by
@@ -136,7 +136,7 @@ private theorem lemma25_mem_primesOfOrder_of_qCoreOf_ne_bot
   let Q : Subgroup G := qCoreOf A p
   have hQleF : Q ≤ F := fstar_qCoreOf_le_fittingSubgroupOf A p hp
   have hQnt : Nontrivial (↥Q) := (Subgroup.nontrivial_iff_ne_bot Q).2 hQ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases exists_ne (1 : ↥Q) with ⟨xQ, hxne⟩
   let x : G := (xQ : ↥Q)
   rcases IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup A p) xQ with ⟨k, hk⟩
@@ -154,7 +154,7 @@ private theorem lemma25_mem_primesOfOrder_of_qCoreOf_ne_bot
     exact hpdvd
   have hxG : x ∈ F := hQleF xQ.2
   have hordF : orderOf x ∣ Nat.card (↥F) := by
-    haveI : Fintype (↥F) := Fintype.ofFinite _
+    have : Fintype (↥F) := Fintype.ofFinite _
     let xF : ↥F := ⟨x, hxG⟩
     have hord : orderOf xF = orderOf x :=
       (orderOf_injective F.subtype F.subtype_injective xF).symm

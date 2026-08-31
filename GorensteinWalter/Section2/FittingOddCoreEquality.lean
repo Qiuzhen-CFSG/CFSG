@@ -137,11 +137,11 @@ public theorem fittingSubgroupOf_oddCore_eq_oddPart_fittingSubgroupOf
     intro u hu a ha
     exact hAnormH.2 (u : G) (hUleH hu) a ha
   have hAnil : Group.IsNilpotent A := by
-    letI : Group.IsNilpotent (↥F) := hFnil
+    let : Group.IsNilpotent (↥F) := hFnil
     have hAsub : A ≤ F := hA_le_F
     have hA' : Group.IsNilpotent (A.subgroupOf F) :=
       Subgroup.isNilpotent (A.subgroupOf F)
-    letI : Group.IsNilpotent (A.subgroupOf F) := hA'
+    let : Group.IsNilpotent (A.subgroupOf F) := hA'
     exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hAsub)
   have hA_le_B : A ≤ B :=
     le_fittingSubgroupOf_of_isNormalIn_nilpotent (L := U) (N := A)

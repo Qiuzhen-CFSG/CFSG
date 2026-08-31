@@ -21,7 +21,7 @@ public theorem aSeven_no_involution_centralizes_prime_five_seven
     (hx : x ≠ 1) (hxp : x ^ p = 1)
     (ht : t ≠ 1) (ht2 : t ^ 2 = 1)
     (hcomm : t * x = x * t) : False := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let σ : Equiv.Perm (Fin 7) := x
   let τ : Equiv.Perm (Fin 7) := t
   have hσp : σ ^ p = 1 := by
@@ -147,7 +147,7 @@ public theorem aSeven_no_involution_centralizes_oddP_five_seven
     (hPcent : P ≤ Subgroup.centralizer ({t} : Set (alternatingGroup (Fin 7)))) :
     False := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hcard_ne1 : Nat.card (↥P) ≠ 1 := by
     intro h1
     apply hPne

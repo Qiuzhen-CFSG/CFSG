@@ -48,7 +48,7 @@ public theorem firstCase_klein_J3_inverted_subgroup
   have hI3 : Nat.card {x : G // x ∈ invertedElements c.Hhat y} = 3 := by
     rw [← firstCase_klein_coset_involution_card_eq c hy hyH, hcoset]
   let I : Type u := {x : G // x ∈ invertedElements c.Hhat y}
-  letI : Fintype I := Fintype.ofFinite _
+  let : Fintype I := Fintype.ofFinite _
   have hIcard : Fintype.card I = 3 := by
     rw [← Nat.card_eq_fintype_card]
     exact hI3

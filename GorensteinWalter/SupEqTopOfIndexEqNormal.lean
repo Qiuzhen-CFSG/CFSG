@@ -26,7 +26,7 @@ public theorem sup_eq_top_of_index_eq_relIndex_inf_of_normal
   let N0 : Subgroup S := N.subgroupOf S
   let K0 : Subgroup S := K.subgroupOf S
   have hN0normal : N0.Normal := by
-    letI : N.Normal := hN
+    let : N.Normal := hN
     apply Subgroup.normal_subgroupOf_of_le_normalizer
     rw [Subgroup.normalizer_eq_top]
     exact le_top

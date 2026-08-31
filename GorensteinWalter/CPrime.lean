@@ -40,7 +40,7 @@ public theorem cPrime_eq_normalizer_of_kleinFour_fixed_center
     (htcentral : t ∈ Subgroup.center G) :
     cPrime Z = (Subgroup.normalizer (Z : Set G) : Set G) := by
   classical
-  letI : IsKleinFour Z := hZ
+  let : IsKleinFour Z := hZ
   ext x
   constructor
   · intro hx

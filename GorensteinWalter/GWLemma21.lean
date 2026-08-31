@@ -37,7 +37,7 @@ public theorem normal_relIndex_sylow_eq_index_of_quotient_isPGroup
     (N : Subgroup G) (hN : N.Normal)
     (hquot : IsPGroup p (G ⧸ N)) :
     N.relIndex (S : Subgroup G) = N.index := by
-  letI : N.Normal := hN
+  let : N.Normal := hN
   let q : G →* G ⧸ N := QuotientGroup.mk' N
   let Sq : Sylow p (G ⧸ N) :=
     S.mapSurjective (f := q) (QuotientGroup.mk'_surjective N)
@@ -60,7 +60,7 @@ public theorem commutator_le_of_normal_index_two
     {G : Type u} [Group G] [Finite G]
     (N : Subgroup G) (hN : N.Normal) (hindex : N.index = 2) :
     commutator G ≤ N := by
-  letI : N.Normal := hN
+  let : N.Normal := hN
   rw [← Subgroup.Normal.quotient_commutative_iff_commutator_le]
   exact (isCyclic_of_prime_card (p := 2) (by
     rw [← N.index_eq_card, hindex])).isMulCommutative
@@ -71,7 +71,7 @@ public theorem commutator_le_of_normal_index_four
     {G : Type u} [Group G] [Finite G]
     (N : Subgroup G) (hN : N.Normal) (hindex : N.index = 4) :
     commutator G ≤ N := by
-  letI : N.Normal := hN
+  let : N.Normal := hN
   rw [← Subgroup.Normal.quotient_commutative_iff_commutator_le]
   apply IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2)
   rw [← N.index_eq_card, hindex]
@@ -89,7 +89,7 @@ public theorem normal_index_two_dvd_sylow_inf_commutator_relIndex
   have hle : (S : Subgroup G) ⊓ commutator G ≤ N :=
     fun _ hx => hcomm hx.2
   have hquot : IsPGroup 2 (G ⧸ N) := by
-    letI : N.Normal := hN
+    let : N.Normal := hN
     apply IsPGroup.of_card (n := 1)
     rw [← N.index_eq_card, hindex]
     norm_num
@@ -112,7 +112,7 @@ public theorem normal_index_four_dvd_sylow_inf_commutator_relIndex
   have hle : (S : Subgroup G) ⊓ commutator G ≤ N :=
     fun _ hx => hcomm hx.2
   have hquot : IsPGroup 2 (G ⧸ N) := by
-    letI : N.Normal := hN
+    let : N.Normal := hN
     apply IsPGroup.of_card (n := 2)
     rw [← N.index_eq_card, hindex]
     norm_num
@@ -244,7 +244,7 @@ public theorem dihedralIndexTwoSubgroup_eq_zero_or_one
 public theorem card_dihedralRotationSubgroup
     {m k : ℕ} (hk : k ≤ m) :
     Nat.card (↥(dihedralRotationSubgroup m k)) = 2 ^ (m - k) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   rw [dihedralRotationSubgroup_def, Nat.card_zpowers, DihedralGroup.orderOf_r]
   have hcast : (2 ^ k : ZMod (2 ^ m)) =
       ((2 ^ k : ℕ) : ZMod (2 ^ m)) := by norm_num
@@ -630,18 +630,18 @@ public theorem normalizer_commutator_le_sylow_commutator_sup_centralizer
   let C : Subgroup N :=
     (Subgroup.centralizer ((S : Subgroup G) : Set G)).subgroupOf N
   let K : Subgroup N := B ⊔ C
-  haveI : P.Normal := by
+  have : P.Normal := by
     simpa [P, N] using
       (inferInstance : ((S : Subgroup G).subgroupOf
         (Subgroup.normalizer ((S : Subgroup G) : Set G))).Normal)
-  haveI : B.Normal := by
+  have : B.Normal := by
     simpa [B] using
       (inferInstance : ((commutator P).map P.subtype).Normal)
-  haveI : C.Normal := by
+  have : C.Normal := by
     simpa [C, N] using
       (Subgroup.normal_subgroupOf_centralizer_normalizer
         (((S : Subgroup G) : Subgroup G) : Set G))
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K]
     infer_instance
   have hcomm : IsMulCommutative (N ⧸ K) := by
@@ -716,7 +716,7 @@ public theorem normalizer_derived_rotation_even
   let Bamb : Subgroup G :=
     ((dihedralRotationSubgroup m 1).comap e.toMonoidHom).map
       (S : Subgroup G).subtype
-  haveI : C.Normal := by
+  have : C.Normal := by
     simpa [C, N] using
       (Subgroup.normal_subgroupOf_centralizer_normalizer
         (((S : Subgroup G) : Subgroup G) : Set G))
@@ -865,7 +865,7 @@ public theorem dihedral_grun_subgroup_four_cases
       (S : Subgroup G)
     rw [← huppert_IV_3_4_first_grun (Q := G) (q := 2) S]
     exact inf_le_left
-  haveI : DS.Normal := by
+  have : DS.Normal := by
     simpa [DS, D] using
       (inferInstance :
         ((huppertIV34GrunKernelSubgroup (Q := G) (S : Subgroup G)).subgroupOf

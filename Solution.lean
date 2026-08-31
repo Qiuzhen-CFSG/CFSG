@@ -54,7 +54,7 @@ private theorem not_isPGroup_two_of_nonabelian_simple
     (hnonab : ∃ a b : G, a * b ≠ b * a) :
     ¬ IsPGroup 2 G := by
   intro hG
-  letI : Group.IsNilpotent G := hG.isNilpotent
+  let : Group.IsNilpotent G := hG.isNilpotent
   have hcomm : ∀ a b : G, a * b = b * a :=
     IsSimpleGroup.comm_iff_isSolvable.mpr inferInstance
   obtain ⟨a, b, hab⟩ := hnonab
@@ -65,7 +65,7 @@ private theorem psl2_card_three_not_simple
     [Field K] [Finite K]
     (hKcard : Nat.card K = 3)
     (e : G ≃* PSL2 K) : False := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hKcard
   let eK : ZMod 3 ≃+* K :=
@@ -73,7 +73,7 @@ private theorem psl2_card_three_not_simple
   let eA4 : G ≃* alternatingGroup (Fin 4) :=
     e.trans ((psl2RingEquiv eK).symm.trans
       psl2_three_equiv_alternatingGroup)
-  letI : IsSimpleGroup (alternatingGroup (Fin 4)) :=
+  let : IsSimpleGroup (alternatingGroup (Fin 4)) :=
     (MulEquiv.isSimpleGroup_congr eA4).mp inferInstance
   let V : Subgroup (alternatingGroup (Fin 4)) :=
     alternatingGroup.kleinFour (Fin 4)
@@ -162,7 +162,7 @@ public theorem gorenstein_walter (G : Type) [Group G] [Finite G] [IsSimpleGroup 
       · exact False.elim (hnotTwo
           (isPGroup_of_quotient_oddCore_of_oddCore_eq_bot hO hQ))
       · exact Or.inl ⟨eQG.symm.trans eA7.some⟩
-      · letI : IsSimpleGroup (G ⧸ pPrimeCore 2 G) := eQG.isSimpleGroup
+      · let : IsSimpleGroup (G ⧸ pPrimeCore 2 G) := eQG.isSimpleGroup
         rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal L hLnormal with hLbot | hLtop
         · have hoddQ : Odd (Nat.card (G ⧸ pPrimeCore 2 G)) := by
             simpa [hLbot] using hLindex
@@ -195,12 +195,12 @@ public theorem gorenstein_walter (G : Type) [Group G] [Finite G] [IsSimpleGroup 
               have hqodd : Odd (p ^ k) := hpodd.pow
               rcases hqodd with ⟨a, ha⟩
               omega
-            letI : Fact p.Prime := ⟨hp⟩
-            letI : Fintype K := Fintype.ofFinite K
+            let : Fact p.Prime := ⟨hp⟩
+            let : Fintype K := Fintype.ofFinite K
             have hKFcard : Fintype.card K = p ^ k := by
               simpa [Nat.card_eq_fintype_card] using hKcard
-            letI : CharP K p := charP_of_card_eq_prime_pow hKFcard
-            letI : Algebra (ZMod p) K := ZMod.algebra K p
+            let : CharP K p := charP_of_card_eq_prime_pow hKFcard
+            let : Algebra (ZMod p) K := ZMod.algebra K p
             let eK : K ≃+* GaloisField p k :=
               (GaloisField.algEquivGaloisField p k hKcard).toRingEquiv
             exact Or.inr ⟨p, k, inferInstance, hpodd, hqfive,

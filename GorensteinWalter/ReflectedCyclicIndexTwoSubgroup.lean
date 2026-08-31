@@ -33,8 +33,8 @@ public theorem exists_dihedral_subgroup_le_index_two_of_reflected_cyclic
       D = (U ⊓ H) ⊔ Subgroup.zpowers w ∧ D ≤ H ∧
         ((U ⊓ H).subgroupOf D).index = 2 ∧
         Nat.card D = Nat.card U ∧ Nonempty (D ≃* DihedralGroup m) := by
-  letI : IsCyclic U := hUcyclic
-  letI : H.Normal := Subgroup.normal_of_index_eq_two hHindex
+  let : IsCyclic U := hUcyclic
+  let : H.Normal := Subgroup.normal_of_index_eq_two hHindex
   let R : Subgroup G := U ⊓ H
   let RU : Subgroup U := H.subgroupOf U
   have hRUindex : RU.index = 2 := by

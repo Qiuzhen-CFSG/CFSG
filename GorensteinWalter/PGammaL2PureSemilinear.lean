@@ -317,12 +317,12 @@ private theorem two_ne_zero_of_isOddPrimePower_card
     {K : Type u} [Field K] [Finite K]
     (hK : IsOddPrimePower (Nat.card K)) : (2 : K) ≠ 0 := by
   rcases hK with ⟨p, n, hp, hpOdd, _hn, hKcard⟩
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fintype K := Fintype.ofFinite K
+  let : Fact p.Prime := ⟨hp⟩
   have hcardF : Fintype.card K = p ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hKcard
-  letI : CharP K p := charP_of_card_eq_prime_pow hcardF
+  let : CharP K p := charP_of_card_eq_prime_pow hcardF
   intro htwo
   have hp2 : p ∣ 2 := (CharP.cast_eq_zero_iff K p 2).mp htwo
   rcases (Nat.dvd_prime Nat.prime_two).mp hp2 with hp1 | hp2
@@ -337,13 +337,13 @@ private theorem isSquare_neg_one_of_involutive_ringEquiv
     IsSquare (-1 : K) := by
   classical
   rcases hK with ⟨p, n, hp, hpOdd, _hn, hKcard⟩
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fintype K := Fintype.ofFinite K
+  let : Fact p.Prime := ⟨hp⟩
   have hcardF : Fintype.card K = p ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hKcard
-  letI : CharP K p := charP_of_card_eq_prime_pow hcardF
-  letI : Algebra (ZMod p) K := ZMod.algebra K p
+  let : CharP K p := charP_of_card_eq_prime_pow hcardF
+  let : Algebra (ZMod p) K := ZMod.algebra K p
   have hsigma_apply (x : K) : sigma (sigma x) = x := by
     have h := DFunLike.congr_fun hsigma x
     simpa [pow_two] using h
@@ -587,13 +587,13 @@ private theorem exists_exact_gl_lift_of_projective_cocycle
       (X : Matrix (Fin 2) (Fin 2) K) 0 0) hscal
     simpa [Matrix.GeneralLinearGroup.coe_scalar, Matrix.scalar_apply] using h00
   rcases hK with ⟨p, n, hp, hpOdd, hn, hKcard⟩
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fintype K := Fintype.ofFinite K
+  let : Fact p.Prime := ⟨hp⟩
   have hcardF : Fintype.card K = p ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hKcard
-  letI : CharP K p := charP_of_card_eq_prime_pow hcardF
-  letI : Algebra (ZMod p) K := ZMod.algebra K p
+  let : CharP K p := charP_of_card_eq_prime_pow hcardF
+  let : Algebra (ZMod p) K := ZMod.algebra K p
   let sigmaA : K ≃ₐ[ZMod p] K :=
     AlgEquiv.ofRingEquiv (f := sigma) (by
       intro x
@@ -1078,22 +1078,22 @@ public theorem exists_involution_nontrivial_fieldProjection
     (heven : 2 ∣ Nat.card (pGammaL2FieldProjection K A).range) :
     ∃ t : A, orderOf t = 2 ∧ pGammaL2FieldProjection K A t ≠ 1 := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (PGL2 K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Finite (K ≃+* K) :=
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
         exact SemidirectProduct.ext
           (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
-  letI : Finite A := inferInstance
+  let : Finite A := inferInstance
   let B : Subgroup (K ≃+* K) := (pGammaL2FieldProjection K A).range
   let f : A →* B := (pGammaL2FieldProjection K A).rangeRestrict
   have hf : Function.Surjective f := by
@@ -1152,22 +1152,22 @@ public theorem pure_semilinear_psl_kernel_not_dihedral
     (heven : 2 ∣ Nat.card (pGammaL2FieldProjection K A).range) :
     False := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (PGL2 K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Finite (K ≃+* K) :=
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext y
       exact congrFun hef y)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun y : PGammaL2 K => (y.left, y.right)) (by
         intro y z hyz
         exact SemidirectProduct.ext
           (congrArg Prod.fst hyz) (congrArg Prod.snd hyz))
-  letI : Finite A := inferInstance
+  let : Finite A := inferInstance
   have hkernel : pGammaL2LinearKernel K A =
       (pGammaL2PSLRange K).subgroupOf A :=
     pGammaL2_even_field_projection_linearKernel_eq_psl

@@ -42,7 +42,7 @@ private theorem pgl2_no_kleinFour_of_conjugate_torus_centralizer
     (hts : IsConj t s) :
     False := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   obtain ⟨g, hg⟩ := isConj_iff.mp hts
@@ -71,8 +71,8 @@ private theorem pgl2_no_kleinFour_of_conjugate_torus_centralizer
     rw [Subgroup.mem_centralizer_singleton_iff]
     exact (Subgroup.mem_centralizer_iff.mp (hV0cent hsV0)) a ha
   have hV0leC : V0 ≤ Subgroup.centralizer ({s} : Set (PGL2 K)) := by
-    letI : IsKleinFour V0 := hV0K
-    letI : IsMulCommutative V0 := IsKleinFour.isMulCommutative
+    let : IsKleinFour V0 := hV0K
+    let : IsMulCommutative V0 := IsKleinFour.isMulCommutative
     intro v hv
     rw [Subgroup.mem_centralizer_singleton_iff]
     exact congrArg Subtype.val
@@ -99,7 +99,7 @@ public theorem pgl2_no_kleinFour_centralizes_odd_cyclic
     (hVcent : V ≤ Subgroup.centralizer (A : Set (PGL2 K))) :
     False := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hqge : 3 ≤ Nat.card K := by
@@ -117,7 +117,7 @@ public theorem pgl2_no_kleinFour_centralizes_odd_cyclic
         p = p ^ 1 := by simp
         _ ≤ p ^ n := Nat.pow_le_pow_right (by omega) hn)
   by_cases hq3 : Nat.card K = 3
-  · letI : Fintype K := Fintype.ofFinite K
+  · let : Fintype K := Fintype.ofFinite K
     have hFcard : Fintype.card K = 3 := by
       simpa [Nat.card_eq_fintype_card] using hq3
     let eK : ZMod 3 ≃+* K :=
@@ -141,7 +141,7 @@ public theorem pgl2_no_kleinFour_centralizes_odd_cyclic
       htinsq, htinInv, htinRel, hwlowU, hwlowsq, hwlowInv, hcentlow⟩ :=
       pgl2_low_two_part_torus_reflection_data K hK hcard
     by_cases hVJ : V ≤ J
-    · letI : Fintype V := Fintype.ofFinite V
+    · let : Fintype V := Fintype.ofFinite V
       have hlt : 1 < Fintype.card V := by
         rw [← Nat.card_eq_fintype_card, hVK.card_four]
         norm_num
@@ -233,7 +233,7 @@ public theorem pgl2_no_kleinFour_centralizes_odd_cyclic
         intro htone
         apply htJ
         simpa [htone] using J.one_mem
-      letI : IsKleinFour V := hVK
+      let : IsKleinFour V := hVK
       have htsq : t * t = 1 :=
         congrArg Subtype.val (IsKleinFour.mul_self (⟨t, htV⟩ : V))
       have htI : IsInvolution t :=

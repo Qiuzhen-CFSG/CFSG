@@ -41,7 +41,7 @@ public theorem normalizer_not_cyclic_of_perfect_of_prime_card
     let nN : Subgroup.normalizer (X : Set H) := ⟨n, hNSleNX hn⟩
     let sN : Subgroup.normalizer (X : Set H) :=
       ⟨s, hNSleNX (Subgroup.le_normalizer hs)⟩
-    letI : IsCyclic (Subgroup.normalizer (X : Set H)) := hNcyc
+    let : IsCyclic (Subgroup.normalizer (X : Set H)) := hNcyc
     have hcomm : nN * sN = sN * nN :=
       hNcyc.isMulCommutative.is_comm.comm nN sN
     exact (congrArg Subtype.val hcomm).symm

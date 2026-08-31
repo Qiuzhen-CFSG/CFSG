@@ -79,7 +79,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_centralizerIn_FU_inter
       (secondCase_equationSevenPrime_primeFactors_FU_subset_K0
         hmin c w d Kinv K0 F s hKinv_carrier hKinv_cyclic hK0_def hF_eq
           hjoin hFcentE hLayer hr (by simpa [CentralizerSetup.FU] using hrFU))
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let R : Sylow r (↥C) := Classical.choice Sylow.nonempty
   let RG : Subgroup G := (R : Subgroup (↥C)).map C.subtype
   have hRGleC : RG ≤ C := Subgroup.map_subtype_le (R : Subgroup (↥C))
@@ -122,7 +122,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_centralizerIn_FU_inter
     hRGleU.trans
       (le_normalizer_of_isNormalIn (fittingSubgroupOf_isNormalIn c.U))
   have hRGcentFU : RG ≤ Subgroup.centralizer (c.FU : Set G) := by
-    letI : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
+    let : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
     exact centralizes_of_subnormal_selfCentralizing_coprime
       RG c.FU Y hRGnormFU hYleFU hYsub hRGcentY hYself hcop
         (inferInstance : Group.IsSolvable c.FU)

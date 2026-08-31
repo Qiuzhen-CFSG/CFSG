@@ -33,7 +33,7 @@ public theorem firstCase_s4_normalizer_odd_involution
       ∃ x : Equiv.Perm (Fin 4), x ∈ T ∧ orderOf x = 3 ∧
         s * x * s⁻¹ = x⁻¹ := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨xX, hxord⟩ := exists_prime_orderOf_dvd_card' (G := T) 3 (by rw [hTcard])
   let x : Equiv.Perm (Fin 4) := xX
   have hxorder : orderOf x = 3 := by

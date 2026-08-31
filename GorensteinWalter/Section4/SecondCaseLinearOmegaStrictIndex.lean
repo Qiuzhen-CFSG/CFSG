@@ -64,7 +64,7 @@ private theorem secondCase_linear_omega_strict_index_bounds
     calc
       Nat.card QG = od.p ^ 2 * od.p := hmul.symm
       _ = od.p ^ 3 := by ring
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   have hQp : IsPGroup od.p QG := by
     intro x
     refine ⟨1, ?_⟩
@@ -81,7 +81,7 @@ private theorem secondCase_linear_omega_strict_index_bounds
       exact Subgroup.card_dvd_of_le hAZlt.le
     have hneOne : Nat.card ZG ≠ 1 := by
       intro h1
-      haveI : Nontrivial QG := by
+      have : Nontrivial QG := by
         apply Finite.one_lt_card_iff_nontrivial.mp
         rw [hQcard]
         exact one_lt_pow₀ od.hp_prime.one_lt (by norm_num)
@@ -321,8 +321,8 @@ private theorem secondCase_linear_omega_strict_index_bounds
       exact hvalG
     rw [hxy']
   have htargetCard : Nat.card targetA = od.p ^ 2 - od.p := by
-    letI : Fintype od.A := Fintype.ofFinite od.A
-    letI : Fintype targetA := Fintype.ofFinite targetA
+    let : Fintype od.A := Fintype.ofFinite od.A
+    let : Fintype targetA := Fintype.ofFinite targetA
     have hZF : Fintype.card (ZG.subgroupOf od.A) = od.p := by
       simpa [Nat.card_eq_fintype_card, hZGcard] using
         (Nat.card_congr (Subgroup.subgroupOfEquivOfLe hAZlt.le).toEquiv)
@@ -331,12 +331,12 @@ private theorem secondCase_linear_omega_strict_index_bounds
     rw [show Fintype.card od.A = od.p ^ 2 by
       simpa [Nat.card_eq_fintype_card] using od.A_card, hZF]
   have hPairsCard : Nat.card PairsP = od.p ^ 2 - od.p := by
-    letI : Fintype OrbP := Fintype.ofFinite OrbP
+    let : Fintype OrbP := Fintype.ofFinite OrbP
     rw [Nat.card_sigma]
     have hfiber : ∀ T : OrbP, Nat.card {x : T.1 // x ≠ 1} = od.p - 1 := by
       intro T
-      letI : Fintype T.1 := Fintype.ofFinite T.1
-      letI : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
+      let : Fintype T.1 := Fintype.ofFinite T.1
+      let : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
       rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
       simp [show Fintype.card T.1 = od.p by
         simpa [Nat.card_eq_fintype_card] using hTPcard T]

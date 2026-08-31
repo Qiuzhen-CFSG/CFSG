@@ -310,7 +310,7 @@ private lemma twoCoreOf_le_S_local {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) :
     twoCoreOf c.Hhat ≤ (c.S : Subgroup G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSleHhat : (c.S : Subgroup G) ≤ c.Hhat :=
     (centralizerSetup_S_le_H c).trans c.H_le_Hhat
   let S' : Sylow 2 (↥c.Hhat) := (c.S).subtype hSleHhat
@@ -370,13 +370,13 @@ private lemma involution_mem_S_of_normal_sylow_local {G : Type u} [Group G] [Fin
     {x : G} (hxH : x ∈ c.Hhat) (hxInv : IsInvolution x) :
     x ∈ (c.S : Subgroup G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let P : Sylow 2 (↥c.Hhat) := (c.S).subtype hSleHhat
   have hPnormal : (P : Subgroup (↥c.Hhat)).Normal := by
     dsimp [P]
     exact Subgroup.normal_subgroupOf_of_le_normalizer (H := c.Hhat) (N := c.S)
       (le_normalizer_of_isNormalIn hSnormal)
-  letI : Unique (Sylow 2 (↥c.Hhat)) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow 2 (↥c.Hhat)) := Sylow.unique_of_normal P hPnormal
   let xH : ↥c.Hhat := ⟨x, hxH⟩
   let X : Subgroup (↥c.Hhat) := Subgroup.zpowers xH
   have hxHord : orderOf xH = 2 := by
@@ -496,7 +496,7 @@ private theorem not_klein_branch_of_commutator_eq_bot {G : Type u} [Group G] [Fi
     have hKcyc : IsCyclic K := by
       let e : K ≃* c.S0 := (MulEquiv.subgroupCongr hEq).symm
       exact (MulEquiv.isCyclic e).mpr c.S0_cyclic
-    haveI : IsKleinFour (↥K) := hKamb
+    have : IsKleinFour (↥K) := hKamb
     exact IsKleinFour.not_isCyclic hKcyc
 
 private theorem hhat_eq_H_of_commutator_eq_bot {G : Type u} [Group G] [Finite G]
@@ -647,7 +647,7 @@ private theorem cyclic_sylow_centralizer_subgroup_local
   let PC : Sylow 2 C :=
     BenderSuzuki.External.hallSylowSubgroupOfNormal SN C
   have hPCcyc : IsCyclic PC := by
-    letI : IsCyclic (↥c.S0) := c.S0_cyclic
+    let : IsCyclic (↥c.S0) := c.S0_cyclic
     let f : (PC : Subgroup C) →* c.S0 :=
       { toFun := fun p => ⟨(p : G), by
           have hpPC : (p : C) ∈ (PC : Subgroup C) := p.2
@@ -685,7 +685,7 @@ private theorem cyclic_sylow_normalizer_quotient_local
   classical
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let C : Subgroup N := (Subgroup.centralizer (X : Set G)).subgroupOf N
-  letI : C.Normal :=
+  let : C.Normal :=
     Subgroup.normal_subgroupOf_centralizer_normalizer (X : Set G)
   let SN : Sylow 2 N := c.S.subtype hSleN
   let q : N →* N ⧸ C := QuotientGroup.mk' C
@@ -760,7 +760,7 @@ private theorem isSolvable_of_cyclic_sylow_two
           QuotientGroup.subsingleton_quotient_top
         simpa using (@Subsingleton.elim _ hsub x 1)
   rcases hcomp with ⟨K, hKnormal, hKcop, hQp⟩
-  letI : K.Normal := hKnormal
+  let : K.Normal := hKnormal
   have hKodd : Odd (Nat.card K) := Nat.coprime_two_left.mp hKcop
   have hKsolv : Group.IsSolvable K := odd_order_theorem K hKodd
   have hQsolv : Group.IsSolvable (G ⧸ K) := isSolvable_of_isPGroup hQp
@@ -774,7 +774,7 @@ private theorem normalizer_isSolvable_local
     Group.IsSolvable (Subgroup.normalizer (X : Set G)) := by
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let C : Subgroup N := (Subgroup.centralizer (X : Set G)).subgroupOf N
-  letI : C.Normal :=
+  let : C.Normal :=
     Subgroup.normal_subgroupOf_centralizer_normalizer (X : Set G)
   have hCsolv : Group.IsSolvable C :=
     isSolvable_of_cyclic_sylow_two
@@ -935,14 +935,14 @@ private theorem lemma_2_8_commutator_S0_ne_bot {G : Type u} [Group G] [Finite G]
     exists_component_of_componentLayerOf_ne_bot_local N hLayer
   have hNsolv : Group.IsSolvable (Subgroup.normalizer (X : Set G)) :=
     normalizer_isSolvable_local c hSleN hInf
-  letI : Group.IsSolvable N := by
+  let : Group.IsSolvable N := by
     change Group.IsSolvable (Subgroup.normalizer (X : Set G))
     exact hNsolv
-  letI : Group.IsSolvable (E.subgroupOf N) := inferInstance
+  let : Group.IsSolvable (E.subgroupOf N) := inferInstance
   have hEsolv : Group.IsSolvable E :=
     isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hE.1)
-  letI : Nontrivial E := hE.2.2.1
-  letI : Group.IsPerfect E :=
+  let : Nontrivial E := hE.2.2.1
+  let : Group.IsPerfect E :=
     ⟨by simpa [derivedSubgroup] using hE.2.2.2.1⟩
   exact Group.IsPerfect.not_isSolvable E hEsolv
 

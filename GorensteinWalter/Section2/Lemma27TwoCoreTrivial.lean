@@ -356,7 +356,7 @@ public theorem twoCoreOf_eq_bot_of_Lemma27Hypothesis
       card_twoCoreOf_eq_two_of_ne_bot_of_not_four_dvd M hPne hnot4
     obtain ⟨u, huP, hu_ne⟩ := exists_ne_one_mem_of_card_eq_two (twoCoreOf M) hPcard2
     have huInv : IsInvolution u := by
-      letI : Fintype (↥(twoCoreOf M)) := Fintype.ofFinite _
+      let : Fintype (↥(twoCoreOf M)) := Fintype.ofFinite _
       have hord_dvd : orderOf u ∣ Nat.card (↥(twoCoreOf M)) := by
         have h := orderOf_dvd_card (x := (⟨u, huP⟩ : twoCoreOf M))
         have h' : orderOf u ∣ Fintype.card (↥(twoCoreOf M)) := by
@@ -384,7 +384,7 @@ public theorem twoCoreOf_eq_bot_of_Lemma27Hypothesis
     · -- `O₂(Ĥ) ≤ S0` cyclic: every nontrivial subgroup contains the unique
       -- involution `t`, so `t ∈ O₂(M)`.
       have hcyc : IsCyclic (↥(twoCoreOf c.Hhat)) := by
-        letI : IsCyclic c.S0 := c.S0_cyclic
+        let : IsCyclic c.S0 := c.S0_cyclic
         exact Subgroup.isCyclic_of_le (H := twoCoreOf c.Hhat) (H' := c.S0) hfirst.1
       have hPp : IsPGroup 2 (twoCoreOf c.Hhat) := by
         have hq2 : qCoreOf c.Hhat 2 = twoCoreOf c.Hhat := by

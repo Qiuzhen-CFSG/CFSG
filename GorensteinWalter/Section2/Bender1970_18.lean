@@ -41,7 +41,7 @@ public theorem pResidualOf_le_of_quotient_isPGroup
     (hN : (N.subgroupOf H).Normal)
     (hQ : IsPGroup p (H ⧸ N.subgroupOf H)) :
     pResidualOf H p ≤ N := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases (IsPGroup.iff_card.mp hQ) with ⟨n, hn⟩
   have hidx : ∃ n : ℕ, (N.subgroupOf H).index = p ^ n := ⟨n, by
     rw [← hn]
@@ -60,7 +60,7 @@ public theorem mem_pResidualOf_of_order_coprime
   rw [Subgroup.mem_sInf]
   intro N hN
   rcases hN with ⟨hNnormal, n, hn⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQ : IsPGroup p (H ⧸ N) := IsPGroup.of_card (n := n) (by
     rw [← hn]
     exact (Subgroup.index_eq_card N).symm)
@@ -87,7 +87,7 @@ public theorem isPGroup_of_pResidualOf_isPGroup
   by_contra hqp
   have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hq
   have hqdvd : q ∣ Nat.card (↥H) := Nat.dvd_of_mem_primeFactors hq
-  letI : Fact q.Prime := ⟨hqprime⟩
+  let : Fact q.Prime := ⟨hqprime⟩
   obtain ⟨x, hxorder⟩ := exists_prime_orderOf_dvd_card' (G := ↥H) q hqdvd
   have hordG : orderOf (x : G) = q := by
     calc
@@ -102,7 +102,7 @@ public theorem isPGroup_of_pResidualOf_isPGroup
   have hxR : (x : G) ∈ pResidualOf H p :=
     mem_pResidualOf_of_order_coprime H p hp x.2 hcop
   let r : pResidualOf H p := ⟨x, hxR⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hRcop : (orderOf r).Coprime q := hR.orderOf_coprime hcopq r
   have hordR : orderOf r = q := by
     calc
@@ -135,7 +135,7 @@ public instance pResidualOf_subgroupOf_normal
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) (p : ℕ) :
     ((pResidualOf H p).subgroupOf H).Normal := by
-  haveI : ((pResidualOf H p).subgroupOf H).Characteristic :=
+  have : ((pResidualOf H p).subgroupOf H).Characteristic :=
     pResidualOf_subgroupOf_characteristic H p
   infer_instance
 
@@ -145,8 +145,8 @@ public theorem isPGroup_quotient_pResidualOf
     (H : Subgroup G) (p : ℕ) (hp : p.Prime) :
     IsPGroup p (H ⧸ (pResidualOf H p).subgroupOf H) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  haveI : ((pResidualOf H p).subgroupOf H).Normal := pResidualOf_subgroupOf_normal H p
+  let : Fact p.Prime := ⟨hp⟩
+  have : ((pResidualOf H p).subgroupOf H).Normal := pResidualOf_subgroupOf_normal H p
   let family : Set (Subgroup H) :=
     {N : Subgroup H | N.Normal ∧ ∃ n : ℕ, N.index = p ^ n}
   let N : Subgroup H := sInf family
@@ -154,12 +154,12 @@ public theorem isPGroup_quotient_pResidualOf
     unfold pResidualOf
     exact Subgroup.comap_map_eq_self_of_injective H.subtype_injective N
   let ι : Type u := {M : Subgroup H // M ∈ family}
-  haveI : Finite ι := Finite.of_injective (fun M : ι => (M : Subgroup H)) (by
+  have : Finite ι := Finite.of_injective (fun M : ι => (M : Subgroup H)) (by
     intro M N h
     exact Subtype.ext h)
-  letI : Fintype ι := Fintype.ofFinite ι
-  haveI : ∀ M : ι, (M : Subgroup H).Normal := fun M => M.2.1
-  haveI : N.Normal := by
+  let : Fintype ι := Fintype.ofFinite ι
+  have : ∀ M : ι, (M : Subgroup H).Normal := fun M => M.2.1
+  have : N.Normal := by
     change (sInf family).Normal
     rw [sInf_eq_iInf']
     exact Subgroup.normal_iInf_normal (fun M : ι => M.2.1)
@@ -185,12 +185,12 @@ public theorem isPGroup_quotient_pResidualOf
     · intro hh
       rw [Subgroup.mem_sInf]
       intro M hM
-      haveI : M.Normal := hM.1
+      have : M.Normal := hM.1
       have hcomp : QuotientGroup.mk' M h = (1 : H ⧸ M) := congrFun hh ⟨M, hM⟩
       exact (QuotientGroup.eq_one_iff (N := M) h).1 hcomp
     · intro hh
       ext M
-      haveI : (M : Subgroup H).Normal := M.2.1
+      have : (M : Subgroup H).Normal := M.2.1
       exact (QuotientGroup.eq_one_iff (N := (M : Subgroup H)) h).2
         ((Subgroup.mem_sInf.mp hh) (M : Subgroup H) M.2)
   let eN : H ⧸ N ≃* f.range :=
@@ -222,7 +222,7 @@ public theorem generalizedFittingSubgroupOf_le {G : Type u} [Group G]
 /-- `O_p(A) ≤ F(A)`. -/
 public theorem qCoreOf_le_fittingSubgroupOf {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) (p : ℕ) (hp : p.Prime) : qCoreOf A p ≤ fittingSubgroupOf A := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hle : pCore p (↥A) ≤ fittingSubgroup (↥A) :=
     pCore_le_fitting (G := ↥A) p
   exact Subgroup.map_mono (f := A.subtype) hle
@@ -231,8 +231,8 @@ public theorem qCoreOf_le_fittingSubgroupOf {G : Type u} [Group G] [Finite G]
 public theorem qCoreOf_centralizer_of_ne {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hne : p ≠ q) :
     qCoreOf A q ≤ Subgroup.centralizer ((qCoreOf A p : Subgroup G) : Set G) := by
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   intro x hx
   rw [Subgroup.mem_centralizer_iff]
   intro y hy
@@ -383,7 +383,7 @@ public theorem pResidualOf_generalizedFitting_centralizer_qCore
       have heZ : e.1 ∈ Z := hEcentral (Subgroup.mem_subgroupOf.mp he)
       have heK : (e : G) ∈ K := ⟨heH, heZ⟩
       simpa [π, QuotientGroup.ker_mk'] using (Subgroup.mem_subgroupOf).mpr heK
-    haveI : ((E.subgroupOf H).map π).Normal := by
+    have : ((E.subgroupOf H).map π).Normal := by
       rw [hEmap]
       infer_instance
     exact IsPGroup.to_sup_of_normal_right hFm hEm
@@ -426,7 +426,7 @@ public theorem le_fittingSubgroupOf_of_isNormalIn_nilpotent
     Subgroup.normal_subgroupOf_of_le_normalizer (H := L) (N := N)
       (le_normalizer_of_isNormalIn hN)
   have hN'nil : Group.IsNilpotent N' := by
-    haveI : Group.IsNilpotent N := hNil
+    have : Group.IsNilpotent N := hNil
     exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hNL).symm
   have hle : N' ≤ fittingSubgroup (↥L) :=
     le_sSup ⟨hN'normal, hN'nil⟩
@@ -480,10 +480,10 @@ private theorem isQuasisimple_mulEquiv
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H :=
@@ -631,8 +631,8 @@ public theorem center_componentLayer_top_le_fittingSubgroupOf
   have hEnormal : E.Normal :=
     (Subgroup.normalizer_eq_top_iff).mp
       (top_le_iff.mp (le_normalizer_of_isNormalIn hEtop))
-  haveI : E.Normal := hEnormal
-  haveI : ZE.Normal := by
+  have : E.Normal := hEnormal
+  have : ZE.Normal := by
     dsimp [ZE]
     infer_instance
   have hZEnormal : IsNormalIn ZE (⊤ : Subgroup G) := by
@@ -806,9 +806,9 @@ public theorem minimal_subnormal_isMulCommutative_or_quasisimple
   by_cases hcomm : IsMulCommutative (↥K)
   · exact Or.inl hcomm
   · right
-    haveI : Nontrivial (↥K) := (Subgroup.nontrivial_iff_ne_bot K).2 hKne
+    have : Nontrivial (↥K) := (Subgroup.nontrivial_iff_ne_bot K).2 hKne
     let K' : Subgroup (↥K) := commutator (↥K)
-    haveI : K'.Characteristic := by
+    have : K'.Characteristic := by
       dsimp [K']
       infer_instance
     have hK'norm : K'.Normal := inferInstance
@@ -936,10 +936,10 @@ public theorem isSolvable_sup_of_normal_solvable
     (A B : Subgroup H) (hA : A.Normal) (hB : B.Normal)
     [Group.IsSolvable (↥A)] [Group.IsSolvable (↥B)] : Group.IsSolvable (↥(A ⊔ B)) := by
   classical
-  letI : A.Normal := hA
-  letI : B.Normal := hB
+  let : A.Normal := hA
+  let : B.Normal := hB
   let J : Subgroup H := A ⊔ B
-  haveI : J.Normal := by
+  have : J.Normal := by
     dsimp [J]
     infer_instance
   have hBleJ : B ≤ J := le_sup_right
@@ -1124,7 +1124,7 @@ public theorem isSolvable_normalClosure_of_subnormal_abelian
       exact (inferInstance : Group.IsSolvable (↥(⊤ : Subgroup B)))
     · rcases (Subgroup.IsSubnormal.lt_normal hKsn) with htop | ⟨N, hNnorm, hKN, hNlt⟩
       · exact False.elim (hKtop htop)
-      · letI : N.Normal := hNnorm
+      · let : N.Normal := hNnorm
         have hNcardlt : Nat.card (↥N) < Nat.card B := by
           have hle : Nat.card (↥N) ≤ Nat.card B := Subgroup.card_le_card_group N
           have hne : Nat.card (↥N) ≠ Nat.card B := by
@@ -1142,7 +1142,7 @@ public theorem isSolvable_normalClosure_of_subnormal_abelian
         have hLsolv : Group.IsSolvable (↥L) :=
           ih (Nat.card (↥N)) hNcard' (↥N) rfl (K.subgroupOf N) hKsubN hKcommN
         let Q : Type u := ↥N ⧸ L
-        haveI : L.Normal := Subgroup.normalClosure_normal
+        have : L.Normal := Subgroup.normalClosure_normal
         let π : (↥N) →* Q := QuotientGroup.mk' L
         let S : B → Subgroup Q := fun g =>
           ((K.map (MulAut.conj g).toMonoidHom).subgroupOf N).map π
@@ -1180,7 +1180,7 @@ public theorem isSolvable_normalClosure_of_subnormal_abelian
           exact ih (Nat.card Q) hQcard' Q rfl (S g) (hS_sn g) (hS_comm g)
         let J : Subgroup Q := ⨆ g : B, Subgroup.normalClosure (S g : Set Q)
         have hJsolv : Group.IsSolvable (↥J) := by
-          letI : Fintype B := Fintype.ofFinite B
+          let : Fintype B := Fintype.ofFinite B
           dsimp [J]
           exact isSolvable_iSup_of_normal_solvable
             (fun g : B => Subgroup.normalClosure (S g : Set Q))
@@ -1200,7 +1200,7 @@ public theorem isSolvable_normalClosure_of_subnormal_abelian
         have hC'map_eq : C'.map π = ⨆ g : B, S g := by
           rw [hC'eq, Subgroup.map_iSup]
         have hC'norm : (C'.map π).Normal := by
-          haveI : C'.Normal := by
+          have : C'.Normal := by
             dsimp [C']
             infer_instance
           exact (inferInstance : C'.Normal).map π (QuotientGroup.mk'_surjective L)
@@ -1283,7 +1283,7 @@ public theorem isSolvable_normalClosure_of_subnormal_solvable
         Subgroup.normalClosure_eq_self (⊥ : Subgroup A)
       rw [hnc]
       infer_instance
-    · haveI : Nontrivial (↥H) := (Subgroup.nontrivial_iff_ne_bot H).2 hHbot
+    · have : Nontrivial (↥H) := (Subgroup.nontrivial_iff_ne_bot H).2 hHbot
       have hH'lt : commutator (↥H) < (⊤ : Subgroup (↥H)) :=
         Group.IsSolvable.commutator_lt_top_of_nontrivial (G := ↥H)
       let H' : Subgroup (↥H) := commutator (↥H)
@@ -1299,7 +1299,7 @@ public theorem isSolvable_normalClosure_of_subnormal_solvable
       have hH'char : H'.Characteristic := by
         dsimp [H']
         infer_instance
-      haveI : H'.Characteristic := hH'char
+      have : H'.Characteristic := hH'char
       have hH'sn : H'.IsSubnormal := (inferInstance : H'.Normal).isSubnormal
       have hH'snA : (H'.map H.subtype).IsSubnormal := by
         simpa using (Subgroup.IsSubnormal.trans' (H := H') (K := H) hH'sn hH)
@@ -1319,7 +1319,7 @@ public theorem isSolvable_normalClosure_of_subnormal_solvable
             H.subtype_injective)
         let : Group.IsSolvable (↥(H'.map H.subtype)) := hH'Asolv
         exact ih (Nat.card (H'.map H.subtype)) hcard'' A (H'.map H.subtype) rfl hH'snA
-      haveI : K.Normal := Subgroup.normalClosure_normal
+      have : K.Normal := Subgroup.normalClosure_normal
       let Q : Type u := A ⧸ K
       let π : A →* Q := QuotientGroup.mk' K
       -- image of H in Q is abelian
@@ -1429,7 +1429,7 @@ public theorem exists_component_of_minimalNormal_nonsolvable
     ∃ S : Subgroup G, S ≤ N ∧ IsComponentOf S (⊤ : Subgroup G) := by
   classical
   let M : Type u := ↥N
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
   rcases exists_minimal_subnormal (A := M) inferInstance with ⟨K, hKne, hKsn, hminK⟩
   rcases minimal_subnormal_isMulCommutative_or_quasisimple (A := M) hKne hKsn hminK with
     hcomm | hq
@@ -1499,10 +1499,10 @@ public theorem finite_group_eq_bot_of_fitting_bot_and_componentLayer_bot
       simpa using (Finite.one_lt_card_iff_nontrivial (α := G)).2 hnt)
   rcases exists_minimal_normal_le (⊤ : Subgroup G) inferInstance hTopne with
     ⟨N, hNnorm, hNle, hNne, hNmin⟩
-  haveI : N.Normal := hNnorm
+  have : N.Normal := hNnorm
   by_cases hNsolv : Group.IsSolvable (↥N)
   · -- solvable minimal normal subgroup lies in F(G)
-    haveI : IsMinimalNormal N := ⟨fun K hKnorm hKle => by
+    have : IsMinimalNormal N := ⟨fun K hKnorm hKle => by
       by_cases hKbot : K = ⊥
       · exact Or.inl hKbot
       · exact Or.inr (hNmin K hKnorm hKle hKbot)⟩
@@ -1536,13 +1536,13 @@ public theorem fittingSubgroup_quotient_eq_bot_of_central_kernel
   let π : (↥C) →* Q := QuotientGroup.mk' (K.subgroupOf C)
   have hO : ∀ p : ℕ, p.Prime → pCore p Q = ⊥ := by
     intro p hp
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     let Pbar : Subgroup Q := pCore p Q
     let P : Subgroup (↥C) := Pbar.comap π
     have hPnorm : P.Normal := by
       dsimp [P]
       infer_instance
-    haveI : P.Normal := hPnorm
+    have : P.Normal := hPnorm
     have hPnil : Group.IsNilpotent P := by
       let f : (↥P) →* (↥Pbar) :=
         { toFun := fun x => ⟨π (P.subtype x), by
@@ -1566,7 +1566,7 @@ public theorem fittingSubgroup_quotient_eq_bot_of_central_kernel
           (Subgroup.mem_centralizer_iff (g := (x : G)) (s := (C : Set G))).1
             (hKcentral hxKG) (y : ↥C) hyC
         simpa using hc
-      haveI : Group.IsNilpotent (↥Pbar) := (pCore_isPGroup (G := Q) (p := p)).isNilpotent
+      have : Group.IsNilpotent (↥Pbar) := (pCore_isPGroup (G := Q) (p := p)).isNilpotent
       exact isNilpotent_of_ker_le_center f hker
     let Pg : Subgroup G := P.map C.subtype
     have hPleC : Pg ≤ C := Subgroup.map_subtype_le (H := C) P
@@ -1579,7 +1579,7 @@ public theorem fittingSubgroup_quotient_eq_bot_of_central_kernel
           hPnorm.conj_mem p₀ hp₀ ⟨c, hc⟩, by simp⟩
       have hPnilG : Group.IsNilpotent Pg := by
         dsimp [Pg]
-        letI : Group.IsNilpotent (↥P) := hPnil
+        let : Group.IsNilpotent (↥P) := hPnil
         exact Group.nilpotent_of_mulEquiv (G := ↥P) (G' := ↥(P.map C.subtype))
           (Subgroup.equivMapOfInjective P C.subtype C.subtype_injective)
       exact le_fittingSubgroupOf_of_isNormalIn_nilpotent (L := C) (N := Pg)
@@ -1620,7 +1620,7 @@ private theorem monoidHom_eq_one_of_perfect_abelian
   intro x
   have hx : x ∈ ⁅(⊤ : Subgroup G), (⊤ : Subgroup G)⁆ := by
     have htop : Group.IsPerfect (↥(⊤ : Subgroup G)) := by
-      letI : Group.IsPerfect G := hG
+      let : Group.IsPerfect G := hG
       infer_instance
     have hcomm : ⁅(⊤ : Subgroup G), (⊤ : Subgroup G)⁆ = ⊤ :=
       (Subgroup.isPerfect_iff (H := (⊤ : Subgroup G))).mp htop
@@ -1665,7 +1665,7 @@ public theorem center_quotient_center_eq_map
     intro y
     apply Subtype.ext
     exact (Subgroup.mem_center_iff.mp (hDleZ (Subgroup.mem_subgroupOf.mp hx))) (y : A)
-  haveI : IsMulCommutative (↥(D.subgroupOf M)) := by
+  have : IsMulCommutative (↥(D.subgroupOf M)) := by
     apply (Subgroup.le_centralizer_iff_isMulCommutative (K := D.subgroupOf M)).1
     exact hDleZM.trans (Subgroup.center_le_centralizer ((D.subgroupOf M : Set (↥M))))
   let π : (↥M) →* (M ⧸ D.subgroupOf M) := QuotientGroup.mk' (D.subgroupOf M)
@@ -1850,7 +1850,7 @@ public theorem isComponentOf_of_central_quotient_component
           rw [hbot]
           exact Subgroup.map_bot (G := ↥C) (N := Q) π
     exact (Subgroup.nontrivial_iff_ne_bot S).mp hS.2.2.1 hSbot
-  haveI : Nontrivial (↥M) := (Subgroup.nontrivial_iff_ne_bot (G := ↥C) M).2 hMne
+  have : Nontrivial (↥M) := (Subgroup.nontrivial_iff_ne_bot (G := ↥C) M).2 hMne
   -- `M / Z(M)` is isomorphic to `S / Z(S)`
   let D : Subgroup (↥C) := K' ⊓ M
   have hDleM : D ≤ M := inf_le_right
@@ -1915,11 +1915,11 @@ public theorem isComponentOf_of_central_quotient_component
   have hZSm : ZM.map e₀.toMonoidHom = Subgroup.center S := by
     rw [hZM']
     exact hcenterEq ▸ (map_center_eq_center_of_mulEquiv e₀)
-  haveI : (D.subgroupOf M).Normal := hDnormal
-  haveI : ZM.Normal := by
+  have : (D.subgroupOf M).Normal := hDnormal
+  have : ZM.Normal := by
     dsimp [ZM]
     infer_instance
-  haveI : (Subgroup.center (↥M)).map (QuotientGroup.mk' (D.subgroupOf M)) |>.Normal := by
+  have : (Subgroup.center (↥M)).map (QuotientGroup.mk' (D.subgroupOf M)) |>.Normal := by
     infer_instance
   let e₁ : QM ⧸ ZM ≃* (↥M) ⧸ Subgroup.center (↥M) :=
     (QuotientGroup.quotientMulEquivOfEq (G := QM) (M := ZM)
@@ -1988,11 +1988,11 @@ public theorem fstar_self_centralizing
   have hXnorm : X.Normal := by
     have hXi : IsNormalIn X (⊤ : Subgroup G) := generalizedFittingSubgroupOf_isNormalIn (⊤ : Subgroup G)
     exact (Subgroup.normalizer_eq_top_iff).mp (top_le_iff.mp (le_normalizer_of_isNormalIn hXi))
-  haveI : X.Normal := hXnorm
-  haveI : C.Normal := by
+  have : X.Normal := hXnorm
+  have : C.Normal := by
     dsimp [C]
     infer_instance
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K]
     infer_instance
   have hKleC : K ≤ C := inf_le_left
@@ -2126,7 +2126,7 @@ public theorem pResidualOf_pResidualOf
     (H : Subgroup G) (p : ℕ) (hp : p.Prime) :
     pResidualOf (pResidualOf H p) p = pResidualOf H p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let K : Subgroup G := pResidualOf H p
   let R : Subgroup G := pResidualOf K p
   have hKleH : K ≤ H := pResidualOf_le H p
@@ -2144,7 +2144,7 @@ public theorem pResidualOf_pResidualOf
         exact H.mul_mem (H.mul_mem hx hy) (H.inv_mem hx)⟩
     rw [Subgroup.map_subgroupOf_eq_of_le hKleH] at h
     exact h
-  haveI : (K.subgroupOf H).Normal := by
+  have : (K.subgroupOf H).Normal := by
     rw [Subgroup.normal_subgroupOf_iff hKleH]
     intro x hx h hh
     exact hKisN.2 hx hh x h
@@ -2162,10 +2162,10 @@ public theorem pResidualOf_pResidualOf
   let R' : Subgroup (↥H) := R.subgroupOf H
   let K' : Subgroup (↥H) := K.subgroupOf H
   have hRleK' : R' ≤ K' := Subgroup.subgroupOf_mono H hRleK
-  haveI : R'.Normal := hRnormH
+  have : R'.Normal := hRnormH
   let π : (↥H) →* (↥H ⧸ R') := QuotientGroup.mk' R'
   let Kbar : Subgroup (↥H ⧸ R') := K'.map π
-  haveI : Kbar.Normal := (inferInstance : K'.Normal).map π (QuotientGroup.mk'_surjective R')
+  have : Kbar.Normal := (inferInstance : K'.Normal).map π (QuotientGroup.mk'_surjective R')
   have hKQ : IsPGroup p (K ⧸ (pResidualOf K p).subgroupOf K) :=
     isPGroup_quotient_pResidualOf K p hp
   have hKbar : IsPGroup p Kbar := by

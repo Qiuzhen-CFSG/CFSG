@@ -33,7 +33,7 @@ public theorem BrauerSuzukiWallHypotheses.hall_H
   by_contra hcop
   rcases Nat.Prime.not_coprime_iff_dvd.mp hcop with
     ⟨p, hp, hpH, hpIndex⟩
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   by_cases hp2 : p = 2
   · subst p
     let T : Subgroup G := Subgroup.zpowers h.t
@@ -45,8 +45,8 @@ public theorem BrauerSuzukiWallHypotheses.hall_H
     obtain ⟨Q, hTQ⟩ := IsPGroup.exists_le_sylow hTp
     have htQ : h.t ∈ (Q : Subgroup G) :=
       hTQ (Subgroup.mem_zpowers h.t)
-    letI : Fact (IsPGroup 2 Q) := ⟨Q.isPGroup'⟩
-    haveI : Nontrivial Q := by
+    let : Fact (IsPGroup 2 Q) := ⟨Q.isPGroup'⟩
+    have : Nontrivial Q := by
       refine ⟨⟨⟨h.t, htQ⟩, 1, ?_⟩⟩
       intro heq
       exact h.t_involution.1 (congrArg Subtype.val heq)
@@ -180,7 +180,7 @@ public theorem BrauerSuzukiWallHypotheses.hall_H
         intro hxOne
         apply hxI.1
         exact congrArg (fun z : P => ((z : h.H) : G)) hxOne
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       have hxPord : orderOf xP = 2 := by
         apply orderOf_eq_prime
         · apply Subtype.ext

@@ -112,7 +112,7 @@ public theorem firstCase_klein_intersection_quotient_d6
         (D.inv_mem hd)
     · exact hBnorm.2 d ((show D ≤ A from inf_le_left) hd) n
         ((show N ≤ B from inf_le_right) hn)
-  letI : (N.subgroupOf D).Normal := hNnorm
+  let : (N.subgroupOf D).Normal := hNnorm
   have hindex' : (B0.subgroupOf D0).index = 6 := by
     have hrel : (B0.subgroupOf D0).index = (N.subgroupOf D).index := by
       change (B.subgroupOf A).relIndex (D.subgroupOf A) = (N.subgroupOf D).index

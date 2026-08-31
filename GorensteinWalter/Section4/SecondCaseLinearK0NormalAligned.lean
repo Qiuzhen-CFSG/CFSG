@@ -140,7 +140,7 @@ private theorem aligned_H_inter_M_eq_U_inter_M_sup_SM
   let qH : c.H →* (c.H ⧸ c.U.subgroupOf c.H) :=
     QuotientGroup.mk' (c.U.subgroupOf c.H)
   let SH : Subgroup c.H := (c.S : Subgroup G).subgroupOf c.H
-  letI : (c.U.subgroupOf c.H).Normal := hU0normalH
+  let : (c.U.subgroupOf c.H).Normal := hU0normalH
   have hSHp : IsPGroup 2 SH := c.S.isPGroup'.comap_subtype
   have hSHsup : SH ⊔ c.U.subgroupOf c.H = ⊤ := by
     apply le_antisymm le_top
@@ -329,7 +329,7 @@ public theorem secondCase_linear_K0_normal_H_inter_M_of_aligned_commutator
       rw [Subgroup.normal_subgroupOf_iff hXleM0]
       intro x0 y0 hx0 hy0
       exact hXnormalM0.2 (y0 : G) hy0 (x0 : G) hx0
-    letI : X0.Normal := hX0normal
+    let : X0.Normal := hX0normal
     have hsup0 : X0 ⊔ SM0 = ⊤ := by
       calc
         X0 ⊔ SM0 = (X ⊔ SMG).subgroupOf M0 := by

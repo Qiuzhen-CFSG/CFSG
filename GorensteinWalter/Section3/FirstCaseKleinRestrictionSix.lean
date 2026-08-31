@@ -128,7 +128,7 @@ public theorem firstCase_klein_restrictionSix_index_bound
         (inf_le_right : D ≤ conjugateSubgroup A y) hconjD0⟩
     exact ⟨hconjD, hconjB⟩
   let Nsub : Subgroup (↥D) := N.subgroupOf D
-  letI : Nsub.Normal := by
+  let : Nsub.Normal := by
     dsimp [Nsub]
     exact Subgroup.normal_subgroupOf_of_le_normalizer hNnormD
   let q : D →* (D ⧸ Nsub) := QuotientGroup.mk' Nsub

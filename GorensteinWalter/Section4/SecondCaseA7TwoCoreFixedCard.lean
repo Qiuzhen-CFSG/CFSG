@@ -95,7 +95,7 @@ public theorem secondCase_a7_twoCore_fixed_card_eq_two
       intro z hz
       rw [Subgroup.mem_centralizer_iff]
       intro u hu
-      letI : IsCyclic Z := Subgroup.isCyclic_zpowers y
+      let : IsCyclic Z := Subgroup.isCyclic_zpowers y
       have hcomm := (inferInstance : IsMulCommutative Z).is_comm.comm
         (⟨z, hz⟩ : Z) (⟨u, hu⟩ : Z)
       exact (congrArg Subtype.val hcomm).symm

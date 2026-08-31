@@ -98,7 +98,7 @@ public theorem psl2_low_odd_cyclic_centralizer_eq_bot
       _ = Nat.card A * 2 := by rw [hZcard]
       _ = 2 * Nat.card A := Nat.mul_comm _ _
   rcases hK with ⟨p, f, hp, hpodd, hf, hKcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hqOdd : Odd (Nat.card K) := by
     rw [hKcard]
     exact hpodd.pow
@@ -130,7 +130,7 @@ public theorem psl2_low_odd_cyclic_centralizer_eq_bot
   obtain ⟨T, htT, hTfamily⟩ :=
     (hpartition' t ht.1).exists
   have hBleT : B ≤ T := by
-    letI : IsCyclic B := hBcyclic
+    let : IsCyclic B := hBcyclic
     rcases IsCyclic.exists_zpow_surjective (G := B) with ⟨b, hb⟩
     have hb_ne : (b : PSL2 K) ≠ 1 := by
       intro hb_one
@@ -213,7 +213,7 @@ public theorem no_kleinFour_centralizes_low_torus_cyclic
     (hVleC : V ≤ Subgroup.centralizer (A : Set (PSL2 K))) :
     False := by
   classical
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hVK.card_four]
     norm_num

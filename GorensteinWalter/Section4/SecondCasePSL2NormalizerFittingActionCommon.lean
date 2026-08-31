@@ -286,7 +286,7 @@ public theorem normal_nilpotent_odd_le_fitting_oddCore_ambient
     apply Subgroup.mem_subgroupOf.mpr
     exact hPconj (g : G) g.2 (n : G) (Subgroup.mem_subgroupOf.mp hn)
   have hP0nilp : Group.IsNilpotent P0 := by
-    letI : Group.IsNilpotent P := hPnilp
+    let : Group.IsNilpotent P := hPnilp
     exact Group.nilpotent_of_mulEquiv (G := P) (G' := P0)
       (Subgroup.subgroupOfEquivOfLe hPleA).symm
   have hP0leF : P0 ≤ fittingSubgroup A := le_sSup ⟨hP0normal, hP0nilp⟩
@@ -353,7 +353,7 @@ public theorem secondCase_psl2_normalizer_fitting_package
       exact odd_card_oddCoreOf c.H
     exact Odd.of_dvd_nat hUodd (Subgroup.card_dvd_of_le hPleU)
   have hPnilp : Group.IsNilpotent P := by
-    letI : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
+    let : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
     have hP0 : Group.IsNilpotent (P.subgroupOf c.FU) := by infer_instance
     exact Group.nilpotent_of_mulEquiv (G := P.subgroupOf c.FU) (G' := P)
       (Subgroup.subgroupOfEquivOfLe (show P ≤ c.FU from inf_le_left))

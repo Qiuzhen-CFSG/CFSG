@@ -21,7 +21,7 @@ public theorem normalPComplement_card_eq_divMaxPow
     (hNcop : Nat.Coprime p (Nat.card N))
     (hquotp : IsPGroup p (G ⧸ N)) :
     Nat.card N = (Nat.card G).divMaxPow p := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨a, ha⟩ := hquotp.exists_card_eq
   have hcard := Subgroup.card_eq_card_quotient_mul_card_subgroup N
   rw [ha] at hcard

@@ -48,7 +48,7 @@ public theorem odd_order_subgroup_le_of_le_sup_of_twoPGroup
     dsimp [W', U', H]
     rw [← Subgroup.subgroupOf_sup (le_sup_left : W ≤ W ⊔ U)
       (le_sup_right : U ≤ W ⊔ U), Subgroup.subgroupOf_self]
-  letI : U'.Normal := hU'norm
+  let : U'.Normal := hU'norm
   have hkSup : (⟨k, hK hk⟩ : H) ∈ W' ⊔ U' := by
     rw [htop]
     trivial

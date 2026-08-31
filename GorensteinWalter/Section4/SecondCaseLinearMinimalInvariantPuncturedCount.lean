@@ -41,8 +41,8 @@ public theorem secondCase_linear_minimalInvariant_punctured_card
       simpa [mul_assoc] using hback
   let actXW : MulDistribMulAction X W :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer X W hXnormW
-  letI : Subgroup.Normalizes X W := ⟨hXnormW⟩
-  letI : MulDistribMulAction X W := actXW
+  let : Subgroup.Normalizes X W := ⟨hXnormW⟩
+  let : MulDistribMulAction X W := actXW
   have hfixed : MulAction.fixedPoints X W = ({1} : Set W) := by
     ext w
     constructor
@@ -109,7 +109,7 @@ public theorem secondCase_linear_minimalInvariant_punctured_card
   have htwopdiv : 2 * p ∣ Nat.card W - 1 :=
     hcop.mul_dvd_of_dvd_of_dvd htwodiv hpdiv
   have hsharp : Nat.card {w : W // (w : G) ≠ 1} = Nat.card W - 1 := by
-    letI : Fintype W := Fintype.ofFinite W
+    let : Fintype W := Fintype.ofFinite W
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
     rw [← Nat.card_eq_fintype_card]
     simp

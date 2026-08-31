@@ -24,10 +24,10 @@ public theorem firstCase_U_eq_FU_sup_B
     (hcomm : ⁅(bg.S : Subgroup G), bg.U⁆ ≤ fittingSubgroupOf bg.U) :
     bg.U = fittingSubgroupOf bg.U ⊔ bg.B := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hSnormU : (bg.S : Subgroup G) ≤ Subgroup.normalizer (bg.U : Set G) :=
     BenderGlauberman.S4_S_le_normalizer_U bg
-  letI : Subgroup.Normalizes (bg.S : Subgroup G) bg.U := ⟨hSnormU⟩
+  let : Subgroup.Normalizes (bg.S : Subgroup G) bg.U := ⟨hSnormU⟩
   have hUodd : Nat.Coprime 2 (Nat.card bg.U) :=
     BenderGlauberman.U_coprime_two bg
   have hcop : Nat.Coprime (Nat.card (bg.S : Subgroup G)) (Nat.card bg.U) := by

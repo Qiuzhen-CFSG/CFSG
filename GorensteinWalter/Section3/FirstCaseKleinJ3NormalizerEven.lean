@@ -171,7 +171,7 @@ public theorem firstCase_klein_J3_normalizer_even
   let A : Subgroup H := Subgroup.zpowers a
   have h2A : 2 ∣ Nat.card A := by
     simpa [A, Nat.card_zpowers] using h2ordera
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨a2, ha2ord⟩ := exists_prime_orderOf_dvd_card' (G := A) 2 h2A
   let hH : H := a2
   have hhord : orderOf hH = 2 := by

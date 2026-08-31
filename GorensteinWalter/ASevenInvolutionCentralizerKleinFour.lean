@@ -25,7 +25,7 @@ public theorem
       V ≤ Subgroup.centralizer (U : Set A7) ∧
       V ≤ Subgroup.centralizer ({t} : Set A7) := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨g, hgt⟩ := aSeven_involutions_conjugate t a7t ht
     (by constructor <;> decide)
   let e : A7 ≃* A7 := MulAut.conj g

@@ -81,7 +81,7 @@ public theorem secondCase_a7_inverted_subgroup_not_normal_Hhat
     exact hx'.2
   have hUp : IsPGroup 3 c.U :=
     secondCase_a7_U_isPGroup_three hmin c w d hA7 hmodel
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hIp : IsPGroup 3 I := by
     have hsubp : IsPGroup 3 (I.subgroupOf c.U) :=
       hUp.to_subgroup (I.subgroupOf c.U)
@@ -358,7 +358,7 @@ public theorem secondCase_a7_inverted_subgroup_not_normal_Hhat
       hVcentU.trans (Subgroup.centralizer_le (SetLike.coe_mono inf_le_left))
     exact hVcentX.trans (Subgroup.centralizer_le_normalizer (X : Set G))
   have hVp : IsPGroup 2 V := by
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     apply IsPGroup.of_card (n := 2)
     simp
   have hUodd : Odd (Nat.card c.U) := by
@@ -433,7 +433,7 @@ public theorem secondCase_a7_inverted_subgroup_not_normal_Hhat
     have hsV : (od.s : G) ∈ V := by
       rw [hsu, hu1, mul_one]
       exact hv
-    letI : Nontrivial od.K := (Subgroup.nontrivial_iff_ne_bot od.K).mpr hKne
+    let : Nontrivial od.K := (Subgroup.nontrivial_iff_ne_bot od.K).mpr hKne
     obtain ⟨k, hkne⟩ := exists_ne (1 : od.K)
     have hkInv : (od.s : G) * (k : G) * (od.s : G)⁻¹ = (k : G)⁻¹ := by
       have hkI : (k : G) ∈ invertedElements (c.U ⊓ w.M) (od.s : G) := by
@@ -462,7 +462,7 @@ public theorem secondCase_a7_inverted_subgroup_not_normal_Hhat
   let N : Subgroup H := pCore 2 H
   let O : Subgroup H := pPrimeCore 2 H
   let K0 : Subgroup H := N ⊔ O
-  haveI : K0.Normal := by
+  have : K0.Normal := by
     dsimp [K0, N, O]
     infer_instance
   let q : H →* H ⧸ K0 := QuotientGroup.mk' K0

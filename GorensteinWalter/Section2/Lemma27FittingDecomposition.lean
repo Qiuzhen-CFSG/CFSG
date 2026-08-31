@@ -110,7 +110,7 @@ public theorem fittingSubgroup_le_sup_piCore_piCore_compl
 public theorem fittingSubgroup_eq_top_of_isNilpotent
     {G : Type u} [Group G] [Finite G] (hG : Group.IsNilpotent G) :
     fittingSubgroup G = ⊤ := by
-  haveI : Group.IsNilpotent G := hG
+  have : Group.IsNilpotent G := hG
   apply le_antisymm le_top
   intro x hx
   exact le_sSup (s := {N : Subgroup G | N.Normal ∧ Group.IsNilpotent N})
@@ -139,7 +139,7 @@ public theorem fittingSubgroupOf_le_sup_piCoreOf_compl
   have hFnil : Group.IsNilpotent (↥F) := by
     dsimp [F]
     exact fittingSubgroupOf_isNilpotent H
-  haveI : Group.IsNilpotent (↥F) := hFnil
+  have : Group.IsNilpotent (↥F) := hFnil
   have hFtop : fittingSubgroup (↥F) = ⊤ := by
     apply le_antisymm le_top
     intro x hx
@@ -238,8 +238,8 @@ public theorem piCoreOf_commutator_piCoreOf_compl_eq_bot
   let F : Subgroup G := fittingSubgroupOf H
   let A : Subgroup (↥F) := piCore π (↥F)
   let B : Subgroup (↥F) := piCore πᶜ (↥F)
-  haveI : A.Normal := by dsimp [A]; exact piCore_normal_local π
-  haveI : B.Normal := by dsimp [B]; exact piCore_normal_local πᶜ
+  have : A.Normal := by dsimp [A]; exact piCore_normal_local π
+  have : B.Normal := by dsimp [B]; exact piCore_normal_local πᶜ
   have hABle : ⁅A, B⁆ ≤ A ⊓ B := Subgroup.commutator_le_inf A B
   have hcardA : Nat.card (↥A) = Nat.card (↥(piCoreOf F π)) := by
     dsimp [A, piCoreOf]

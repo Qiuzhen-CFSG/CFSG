@@ -37,11 +37,11 @@ public theorem low_norm_virtual_character_decomposition
       zeta = Section1.principalCharacter G +
         Section1.weightedFamilySum epsilon chi := by
   classical
-  letI : Fintype (Fin r) := Fintype.ofFinite (Fin r)
+  let : Fintype (Fin r) := Fintype.ofFinite (Fin r)
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, b, hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let mu : ι → Section1.ClassFunction G :=
     fun i => Section1.ofConjClassFunction (xi i)
   have hmuIrreducible : ∀ i,

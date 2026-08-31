@@ -120,8 +120,8 @@ public theorem B_eq_centralizer_U
     (c : BenderGlauberman.Hyp11 G) :
     c.B = c.U ⊓ Subgroup.centralizer ((c.S : Subgroup G) : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Subgroup.Normalizes (c.S : Subgroup G) c.U :=
+  let : Fintype G := Fintype.ofFinite G
+  let : Subgroup.Normalizes (c.S : Subgroup G) c.U :=
     BenderGlauberman.S4_instNormalizesS
   apply le_antisymm
   · intro x hx

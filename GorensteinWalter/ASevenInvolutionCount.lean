@@ -124,9 +124,9 @@ private theorem card_conjClass_eq_centralizer_index (x : A7) :
     Nat.card (ConjClasses.mk x).carrier =
       (Subgroup.centralizer ({x} : Set A7)).index := by
   classical
-  letI : Fintype A7 := Fintype.ofFinite A7
-  letI : Fintype (ConjClasses.mk x).carrier := Fintype.ofFinite _
-  letI : Fintype (MulAction.stabilizer (ConjAct A7) x) := Fintype.ofFinite _
+  let : Fintype A7 := Fintype.ofFinite A7
+  let : Fintype (ConjClasses.mk x).carrier := Fintype.ofFinite _
+  let : Fintype (MulAction.stabilizer (ConjAct A7) x) := Fintype.ofFinite _
   have hst := MulAction.card_orbit_mul_card_stabilizer_eq_card_group
     (ConjAct A7) x
   have hst' : Fintype.card (ConjClasses.mk x).carrier *

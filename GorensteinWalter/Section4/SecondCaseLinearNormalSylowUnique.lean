@@ -52,7 +52,7 @@ public theorem secondCase_linear_eq_of_normal_sylow
     (Subgroup.normal_subgroupOf_iff_le_normalizer hX₁le).2 hDleN₁
   have hS₁normal : (S₁ : Subgroup D).Normal := by
     simpa [S₁] using hX₁normal
-  letI : Unique (Sylow p D) := Sylow.unique_of_normal S₁ hS₁normal
+  let : Unique (Sylow p D) := Sylow.unique_of_normal S₁ hS₁normal
   have hS : S₁ = S₂ := Subsingleton.elim _ _
   have hsub : X₁D = X₂D := by
     change (S₁ : Subgroup D) = (S₂ : Subgroup D)

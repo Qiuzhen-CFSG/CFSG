@@ -409,7 +409,7 @@ public theorem firstCase_edgeStar_unique
     (hA : A ∉ S) (hB : B ∉ S) :
     S = commutingGraphEdgeStar c A B := by
   classical
-  letI := Fintype.ofFinite (UConjugates c)
+  let := Fintype.ofFinite (UConjugates c)
   let SA : Set (UConjugates c) :=
     {X | X ∈ S ∧ (commutingGraph c).Adj A X}
   let SB : Set (UConjugates c) :=

@@ -156,7 +156,7 @@ private theorem pgl_action_trivial_eq_one :
 
 private lemma pgl_three_raw_injective :
     Function.Injective (MulAction.toPermHom PGL3 X3) := by
-  letI : FaithfulSMul PGL3 X3 := faithfulSMul_iff.2 pgl_action_trivial_eq_one
+  let : FaithfulSMul PGL3 X3 := faithfulSMul_iff.2 pgl_action_trivial_eq_one
   exact MulAction.toPerm_injective
 
 private noncomputable def pgl_three_raw : PGL3 →* Equiv.Perm X3 :=

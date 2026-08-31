@@ -116,14 +116,14 @@ public theorem pGammaL2_pureField_innerSplitTorus_fixedSubfield
     Subgroup.card_dvd_of_injective gSq hginjSq
   have hRodd : Odd (Nat.card R) := by
     rcases hK with ⟨q, n, hq, hqodd, hn, hKcard⟩
-    letI : Fintype K := Fintype.ofFinite K
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fintype K := Fintype.ofFinite K
+    let : Fact q.Prime := ⟨hq⟩
     have hcharK : CharP K q := charP_of_card_eq_prime_pow (by
       rw [← Nat.card_eq_fintype_card]
       exact hKcard)
-    letI : CharP K q := hcharK
-    letI : Fintype R := Fintype.ofFinite R
-    letI : CharP R q := Subfield.charP R q
+    let : CharP K q := hcharK
+    let : Fintype R := Fintype.ofFinite R
+    let : CharP R q := Subfield.charP R q
     rcases FiniteField.card R q with ⟨nR, _hq, hRcard⟩
     rw [Nat.card_eq_fintype_card, hRcard]
     exact hqodd.pow

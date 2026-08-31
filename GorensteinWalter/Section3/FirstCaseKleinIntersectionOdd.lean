@@ -42,7 +42,7 @@ public theorem firstCase_klein_intersection_odd_of_index_six
     refine ⟨?_, ?_⟩
     · exact D.mul_mem (D.mul_mem hd ((show N ≤ D from inf_le_left) hn)) (D.inv_mem hd)
     · exact hBnorm.2 d (hDle hd) n ((show N ≤ B from inf_le_right) hn)
-  letI : (N.subgroupOf D).Normal := hNnorm
+  let : (N.subgroupOf D).Normal := hNnorm
   have hindex' : (N.subgroupOf D).index = 6 := by
     simpa [D, N, B, V] using hindex
   obtain ⟨eD6⟩ := firstCase_klein_intersection_quotient_d6

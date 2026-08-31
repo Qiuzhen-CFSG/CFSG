@@ -28,10 +28,10 @@ public theorem componentLayerOf_conjugateSubgroup
     let eQ : Q ≃* Q.map e.toMonoidHom :=
       Subgroup.equivMapOfInjective Q e.toMonoidHom e.injective
     have hNontriv : Nontrivial (Q.map e.toMonoidHom) := by
-      letI : Nontrivial Q := hQ.1
+      let : Nontrivial Q := hQ.1
       exact eQ.toEquiv.injective.nontrivial
     have hPerf : Group.IsPerfect (Q.map e.toMonoidHom) := by
-      letI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+      let : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
       exact Group.IsPerfect.ofSurjective (f := eQ.toMonoidHom) eQ.surjective
     have hCenter : (Subgroup.center Q).map eQ.toMonoidHom =
         Subgroup.center (Q.map e.toMonoidHom) := by

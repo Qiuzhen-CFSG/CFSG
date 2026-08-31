@@ -169,7 +169,7 @@ public theorem eq_one_of_sq_eq_one_of_coprime_two
     {x : G} (h : x ^ 2 = 1) : x = 1 := by
   have hord2 : orderOf x ∣ 2 := (orderOf_dvd_iff_pow_eq_one (x := x) (n := 2)).2 h
   have hordn : orderOf x ∣ Nat.card G := by
-    letI : Fintype G := Fintype.ofFinite G
+    let : Fintype G := Fintype.ofFinite G
     simpa using (orderOf_dvd_card (G := G) (x := x))
   have hdvd_gcd : orderOf x ∣ (2 : ℕ).gcd (Nat.card G) := Nat.dvd_gcd hord2 hordn
   have hgcd : (2 : ℕ).gcd (Nat.card G) = 1 := hcop.gcd_eq_one

@@ -75,7 +75,7 @@ public theorem full_fixed_subgroups_of_normalizer_eq
           exact ⟨⟨hCleR x.2, hxM⟩, x.2.2⟩
         exact Subgroup.mem_subgroupOf.mpr hxP
       · exact Subgroup.le_normalizer
-    letI : Group.IsNilpotent C := hCp.isNilpotent
+    let : Group.IsNilpotent C := hCp.isNilpotent
     have hnc : NormalizerCondition C :=
       Group.normalizerCondition_of_isNilpotent (G := C)
     have hPCtop : PC = ⊤ :=

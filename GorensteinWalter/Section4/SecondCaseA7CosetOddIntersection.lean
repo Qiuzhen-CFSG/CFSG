@@ -39,7 +39,7 @@ public theorem secondCase_a7_coset_involutions_card_le_21_of_odd_intersection
   let M : Subgroup G := w.M
   let D : Subgroup G := M ⊓ conjugateSubgroup M y
   let O : Subgroup M := pPrimeCore 2 M
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : M →* M ⧸ O := QuotientGroup.mk' O

@@ -25,7 +25,7 @@ public theorem secondCase_a7_fitting_eq_U
     c.FU = c.U := by
   have hp : IsPGroup 3 c.U :=
     secondCase_a7_U_isPGroup_three hmin c w d hA7 hmodel
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hnil : Group.IsNilpotent c.U := hp.isNilpotent
   have htop : fittingSubgroup c.U = ⊤ :=
     fittingSubgroup_eq_top_of_isNilpotent hnil

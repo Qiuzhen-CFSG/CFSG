@@ -47,8 +47,8 @@ private theorem firstCase_cyclic_P0_inf_oddCore_eq_bot_of_a7
     (qCoreOf od.d.bg.U od.p ⊓ M) ⊓
       ((pPrimeCore 2 M).map M.subtype) = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P0 : Subgroup G := P ⊓ M
   let O : Subgroup G := (pPrimeCore 2 M).map M.subtype
@@ -93,8 +93,8 @@ private theorem firstCase_cyclic_P0_le_componentLayer_of_a7
     (hV2 : fd.V2 ≤ componentLayerOf M) :
     qCoreOf od.d.bg.U od.p ⊓ M ≤ componentLayerOf M := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P0 : Subgroup G := P ⊓ M
   let E : Subgroup G := componentLayerOf M
@@ -159,7 +159,7 @@ private theorem firstCase_cyclic_P0_commutator_oddCore_eq_bot_of_a7
     ⁅qCoreOf od.d.bg.U od.p ⊓ M,
       (pPrimeCore 2 M).map M.subtype⁆ = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P0 : Subgroup G := qCoreOf od.d.bg.U od.p ⊓ M
   let O : Subgroup G := (pPrimeCore 2 M).map M.subtype
   let E : Subgroup G := componentLayerOf M
@@ -212,15 +212,15 @@ public theorem firstCase_cyclic_U_inter_M_eq_P0_sup_B_inter_M_of_a7
       (qCoreOf od.d.bg.U od.p ⊓ M) ⊓ (od.d.bg.B ⊓ M) = ⊥ ∧
       ⁅qCoreOf od.d.bg.U od.p ⊓ M, od.d.bg.B ⊓ M⁆ = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P0 : Subgroup G := P ⊓ M
   let O0 : Subgroup M := pPrimeCore 2 M
   let O : Subgroup G := O0.map M.subtype
-  letI : O0.Normal := pPrimeCore_normal
+  let : O0.Normal := pPrimeCore_normal
   let Q : Type u := M ⧸ O0
-  letI : Group Q := QuotientGroup.Quotient.group O0
+  let : Group Q := QuotientGroup.Quotient.group O0
   let q : M →* Q := QuotientGroup.mk' O0
   let Y : Subgroup G := od.d.bg.U ⊓ M
   let Y0 : Subgroup M := Y.subgroupOf M

@@ -176,7 +176,7 @@ public theorem secondCase_equation11_aligned_A_conjugate_eq_A
       IsElementaryAbelian p B → Nat.card B = p ^ 2 → B = A) :
     conjugateSubgroup A g = A := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   -- `A ≤ F ⊔ K0`, hence `X ≤ F ⊔ K0`
   have hA_le_FK0 : A ≤ F ⊔ K0 := by
     rw [hA]
@@ -219,7 +219,7 @@ public theorem secondCase_equation11_aligned_A_conjugate_eq_A
   have hAg_card : Nat.card (conjugateSubgroup A g) = p ^ 2 := by
     rw [card_conjugate]
     exact A_card_eq_p_sq hA hPcard hP0card hP0leCGP hPinterP0
-  letI : IsElementaryAbelian p A := hA_elem
+  let : IsElementaryAbelian p A := hA_elem
   have hAg_elem : IsElementaryAbelian p (conjugateSubgroup A g) := by
     change IsElementaryAbelian p
       (A.map (MulAut.conj g).toMonoidHom)

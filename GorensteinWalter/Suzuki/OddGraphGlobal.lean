@@ -139,7 +139,7 @@ public theorem firstCase_commutingGraph_commonNeighbor_unique
     let YR : R := ⟨⟨Y0, by
       have h := (commutingGraph_adj_iff c _ _).mp hbaseY
       exact ⟨h.1.symm, h.2⟩⟩, hY0C0⟩
-    letI : Subsingleton R := (Nat.card_eq_one_iff_unique.mp hRcard).1
+    let : Subsingleton R := (Nat.card_eq_one_iff_unique.mp hRcard).1
     have hXY0 : X0 = Y0 := congrArg (fun Z : R => Z.1.1) (Subsingleton.elim XR YR)
     apply (MulAction.injective g⁻¹)
     exact hXY0

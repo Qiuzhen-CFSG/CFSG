@@ -156,7 +156,7 @@ public theorem psl2MulAutProjectiveLine_pgl2InnerAut
   have hQSylNormal : (QSyl : Subgroup B).Normal := by
     change (((Q : Subgroup (PSL2 K)).subgroupOf B)).Normal
     exact hQnormal
-  letI : Unique (Sylow p B) := Sylow.unique_of_normal QSyl hQSylNormal
+  let : Unique (Sylow p B) := Sylow.unique_of_normal QSyl hQSylNormal
   have hsub : PSyl = QSyl := Subsingleton.elim _ _
   have hP'eqQ : P' = Q := Sylow.subtype_injective hsub
   apply e.injective

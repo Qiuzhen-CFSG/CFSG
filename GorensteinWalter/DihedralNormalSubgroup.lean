@@ -26,7 +26,7 @@ namespace GorensteinWalter
 
 private lemma card_zpowers_r_two {m : ℕ} (hm : 1 ≤ m) :
     Nat.card (↥(Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))) = 2 ^ (m - 1) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   rw [Nat.card_zpowers, DihedralGroup.orderOf_r]
   have hval : (2 : ZMod (2 ^ m)).val = 2 % 2 ^ m := ZMod.val_natCast (2 ^ m) 2
   rw [hval]

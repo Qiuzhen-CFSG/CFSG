@@ -40,7 +40,7 @@ public theorem pgl2_reflected_tori_pair_alignment
         ∃ T : PGL2LowReflectedToriData K P eP, ∃ a : PGL2 K,
           r0 = a * T.s * a⁻¹ ∧ t0 = a * T.t * a⁻¹ := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hrtne : r0 ≠ t0 := by

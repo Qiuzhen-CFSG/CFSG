@@ -49,7 +49,7 @@ public theorem firstCase_cyclic_reflections_invert_qCore_of_ne_three
     (hqne : qCoreOf od.d.bg.U q ≠ ⊥) (hq3 : q ≠ 3) :
     qCoreOf od.d.bg.U q ≤ od.d.I1 ∧ qCoreOf od.d.bg.U q ≤ od.d.I2 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hHhat : c.Hhat = c.H := cyclicCore_hhat_eq hmin c hcyclic
   have hUeq : c.U = od.d.bg.U := firstCase_U_eq_bg_U c od.d
   have hr1 : c.IsReflection od.d.bg.t1 := by

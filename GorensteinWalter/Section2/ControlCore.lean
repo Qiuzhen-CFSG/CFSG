@@ -101,10 +101,10 @@ private theorem isQuasisimple_mulEquiv
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H :=
@@ -386,8 +386,8 @@ public theorem component_le_or_commutator_eq_bot
     · exact False.elim (hKtop hKtop')
     rcases Subgroup.IsSubnormal.lt_normal hU with hUtop' | ⟨M, hMnorm, hUM, hMlt⟩
     · exact False.elim (hUtop hUtop')
-    letI : N.Normal := hNnorm
-    letI : M.Normal := hMnorm
+    let : N.Normal := hNnorm
+    let : M.Normal := hMnorm
     -- F4: U₁ := ⁅U, K⁆ lies in N ∩ M; G₁ := N ⊓ N_G(U₁)
     let U₁ : Subgroup H := ⁅U, K⁆
     have hU₁N : U₁ ≤ N := by
@@ -534,7 +534,7 @@ public theorem isSubnormal_of_normalizerCondition {G : Type u} [Group G] [Finite
 /-- In a finite nilpotent group, every subgroup is subnormal. -/
 public theorem isSubnormal_of_isNilpotent {G : Type u} [Group G] [Finite G]
     (hG : Group.IsNilpotent G) (H : Subgroup G) : H.IsSubnormal := by
-  haveI : Group.IsNilpotent G := hG
+  have : Group.IsNilpotent G := hG
   exact isSubnormal_of_normalizerCondition (Group.normalizerCondition_of_isNilpotent) H
 
 /-- In a finite nilpotent ambient subgroup `F`, every ambient subgroup `T ≤ F`
@@ -542,7 +542,7 @@ is subnormal in `F`. -/
 public theorem isSubnormal_of_nilpotent {G : Type u} [Group G] [Finite G]
     {F : Subgroup G} (hF : Group.IsNilpotent F) (T : Subgroup G) (_hTF : T ≤ F) :
     (T.subgroupOf F).IsSubnormal := by
-  haveI : Group.IsNilpotent (↥F) := hF
+  have : Group.IsNilpotent (↥F) := hF
   exact isSubnormal_of_isNilpotent (G := (↥F)) (by infer_instance) (T.subgroupOf F)
 
 /-! ## Infra: joins with a centralizing subgroup preserve subnormality -/
@@ -708,8 +708,8 @@ public theorem isSubnormal_sup_of_centralizing {G : Type u} [Group G]
 solvable, and nilpotent groups are solvable). -/
 public theorem not_isNilpotent_of_isQuasisimple {G : Type u} [Group G] (E : Subgroup G)
     (hE : IsQuasisimple E) : ¬ Group.IsNilpotent E := by
-  haveI : Nontrivial E := hE.1
-  haveI : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.1
+  have : Nontrivial E := hE.1
+  have : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.1
   exact Group.IsPerfect.not_isNilpotent E
 
 /-! ## Infra: decomposing the join of a centralizing pair -/
@@ -882,7 +882,7 @@ private theorem controlCore_of_normalizerControlledBy_of_commutator
       _ = (F ⊓ N) ⊔ E := by rw [sup_comm]
   -- (F ⊓ N) subnormal in F: F is finite nilpotent
   have hFnil : Group.IsNilpotent F := by
-    haveI : Group.IsNilpotent (fittingSubgroup (↥A)) := by infer_instance
+    have : Group.IsNilpotent (fittingSubgroup (↥A)) := by infer_instance
     change Group.IsNilpotent ((fittingSubgroup (↥A)).map A.subtype)
     let e : fittingSubgroup (↥A) ≃* (fittingSubgroup (↥A)).map A.subtype :=
       Subgroup.equivMapOfInjective (f := A.subtype) (fittingSubgroup (↥A)) A.subtype_injective
@@ -989,7 +989,7 @@ public theorem componentLayerOf_eq_bot_of_isPGroup {G : Type u} [Group G] [Finit
     · exact (le_sSup (s := {E' : Subgroup G | IsComponentOf E' M}) (a := E) hE)
     · exact (le_sup_right : componentLayerOf M ≤ fittingSubgroupOf M ⊔ componentLayerOf M)
   have hEq : IsPGroup q E := IsPGroup.to_le hF hEF
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hEnil : Group.IsNilpotent E := hEq.isNilpotent
   exact False.elim (not_isNilpotent_of_isQuasisimple E hE.2.2 hEnil)
 
@@ -1019,7 +1019,7 @@ public theorem qCoreOf_eq_fittingSubgroupOf_of_isPGroup {G : Type u} [Group G] [
     (M : Subgroup G) {q : ℕ} (hq : q.Prime)
     (hF : IsPGroup q (generalizedFittingSubgroupOf M)) :
     qCoreOf M q = fittingSubgroupOf M := by
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   -- F(M) ≤ F*(M) is a q-group
   have hFfit : IsPGroup q (fittingSubgroupOf M) :=
     IsPGroup.to_le hF (le_sup_left : fittingSubgroupOf M ≤ generalizedFittingSubgroupOf M)

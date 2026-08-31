@@ -38,7 +38,7 @@ public theorem secondCase_a7_involutions_in_component
     intro he
     exact hnot2 (Even.two_dvd he)
   have hoddEi : Odd Ei.index := Nat.not_even_iff_odd.mp hnotEven
-  letI : Ei.Normal := by
+  let : Ei.Normal := by
     apply Subgroup.normal_subgroupOf_of_le_normalizer
     exact le_normalizer_of_isNormalIn d.E_normal
   have hquotOdd : Odd (Nat.card (M ⧸ Ei)) := by

@@ -43,7 +43,7 @@ public theorem fittingSubgroupOf_eq_self_of_card_three
   have hUodd' : Odd (Nat.card U) := Nat.coprime_two_left.mp hUodd
   have hsolv : IsSolvable U := odd_order_theorem U hUodd'
   have hFcyc : IsCyclic F := by
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     exact isCyclic_of_prime_card (by simpa [F] using hFcard)
   have hAutcard : Nat.card (MulAut F) = 2 := by
     rw [IsCyclic.card_mulAut F, hFcard, Nat.totient_prime Nat.prime_three]

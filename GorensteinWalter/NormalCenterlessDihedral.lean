@@ -182,7 +182,7 @@ public theorem centralizer_eq_bot_of_normal_centerless_dihedral_of_pPrimeCore_eq
     (hHd : HasDihedralSylowTwo (↥H)) :
     Subgroup.centralizer (H : Set G) = ⊥ := by
   let C : Subgroup G := Subgroup.centralizer (H : Set G)
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hCnormal : C.Normal := by
     simpa [C] using (Subgroup.normal_centralizer (H := H))
   have hCodd : Nat.Coprime 2 (Nat.card C) := by

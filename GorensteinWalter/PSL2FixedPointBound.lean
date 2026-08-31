@@ -31,7 +31,7 @@ public theorem psl2_fixedPoint_card_le_two
   have hthree : 3 ≤
       Nat.card {x : PSL2ProjectiveLine K // g • x = x} := by
     omega
-  letI : Fintype {x : PSL2ProjectiveLine K // g • x = x} :=
+  let : Fintype {x : PSL2ProjectiveLine K // g • x = x} :=
     Fintype.ofFinite _
   obtain ⟨f⟩ := Function.Embedding.nonempty_of_card_le
     (show Fintype.card (Fin 3) ≤

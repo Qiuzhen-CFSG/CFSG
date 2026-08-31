@@ -36,7 +36,7 @@ private theorem psl2_reflected_torus_card_of_reflected
       Subgroup.centralizer ({t} : Set (PSL2 K)) = T ⊔ Subgroup.zpowers s ∧
       Nat.card T = Nat.card U := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   obtain ⟨sU, hsUord⟩ :=
     exists_prime_orderOf_dvd_card' (G := U) 2 hUeven.two_dvd
   let s0 : PSL2 K := sU
@@ -213,7 +213,7 @@ public theorem psl2_reflected_torus_card
   have hgcd : Nat.gcd (Nat.card K - 1) 2 = 2 :=
     gcd_sub_one_two_of_odd hqodd
   rcases hK with ⟨p, f, hp, hpOdd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hKcard : Nat.card K = p ^ f := hcard
   let hKfull : IsOddPrimePower (Nat.card K) :=
     ⟨p, f, hp, hpOdd, hf, hcard⟩

@@ -103,11 +103,11 @@ public theorem centralizer_lift_of_odd_center
       have hback := hmap a⁻¹ hainvA (a * y * a⁻¹) hy
       change a⁻¹ * (a * y * a⁻¹) * (a⁻¹)⁻¹ ∈ Z at hback
       simpa [mul_assoc] using hback
-  letI : MulDistribMulAction A Z :=
+  let : MulDistribMulAction A Z :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
-  letI : MulDistribMulAction (↑A) (↑Z) :=
+  let : MulDistribMulAction (↑A) (↑Z) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
-  letI : CommGroup Z := by
+  let : CommGroup Z := by
     dsimp [Z]
     infer_instance
   have hAcard : Nat.card A = 2 := by
@@ -151,7 +151,7 @@ public theorem centralizer_lift_of_odd_center
       (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) cocycle := by
     intro a b
     apply Subtype.ext
-    letI : MulDistribMulAction (↑A) (↑Z) :=
+    let : MulDistribMulAction (↑A) (↑Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     change (x : G)⁻¹ * (a * b : G) * (x : G) * (a * b : G)⁻¹ =
       ((x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹) *
@@ -165,14 +165,14 @@ public theorem centralizer_lift_of_odd_center
   let sA : A := ⟨s, Subgroup.mem_zpowers s⟩
   let defect : G := (x : G)⁻¹ * s * (x : G) * s⁻¹
   have hcs : defect = ((sA • z : Z) : G)⁻¹ * (z : G) := by
-    letI : MulDistribMulAction (↑A) (↑Z) :=
+    let : MulDistribMulAction (↑A) (↑Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     have h := congrArg Subtype.val (hz sA)
     change (x : G)⁻¹ * s * (x : G) * s⁻¹ =
       ((sA • z : Z) : G)⁻¹ * (z : G) at h
     simpa [defect, cocycle, sA] using h
   have hzsmul : ((sA • z : Z) : G) = s * (z : G) * s⁻¹ := by
-    letI : MulDistribMulAction (↑A) (↑Z) :=
+    let : MulDistribMulAction (↑A) (↑Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     change s * (z : G) * s⁻¹ = s * (z : G) * s⁻¹
     rfl

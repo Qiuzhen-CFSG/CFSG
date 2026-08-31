@@ -83,7 +83,7 @@ public theorem firstCase_Hhat_card_eq_three_mul_H
     (hklein : IsKleinFour (pCore 2 c.Hhat)) :
     Nat.card c.Hhat = 3 * Nat.card c.H := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have h26 := theorem_2_6 hmin c
   have hUeq : c.U = oddCoreOf c.Hhat := h26.1
   have hHSU : (c.S : Subgroup G) ⊔ c.U = c.H :=
@@ -167,7 +167,7 @@ public theorem firstCase_H_card_eq_cardS_mul_U
     (c : CentralizerSetup G) :
     Nat.card c.H = Nat.card (c.S : Subgroup G) * Nat.card c.U := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hHSU : (c.S : Subgroup G) ⊔ c.U = c.H :=
     fact_2_preamble_H_eq_SU hmin c
   have hUnormH : IsNormalIn c.U c.H := by

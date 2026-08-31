@@ -397,8 +397,8 @@ public theorem firstCase_Pg_le_U
     (qCoreOf od.d.bg.U od.p).map (MulAut.conj g).toMonoidHom ≤
       od.d.bg.U := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   have hPp : IsPGroup od.p P := qCoreOf_isPGroup od.d.bg.U od.p
   have hPgC : P.map (MulAut.conj g).toMonoidHom ≤

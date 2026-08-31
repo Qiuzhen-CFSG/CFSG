@@ -25,12 +25,12 @@ public theorem isQuasisimple_of_perfect_of_ker_le_center_of_surjective_simple
     (hSsimple : IsSimpleGroup S)
     (hker : f.ker ≤ Subgroup.center N) :
     IsQuasisimple N := by
-  letI : Nontrivial N := hNne
-  letI : Group.IsPerfect N := hNperf
-  letI : IsSimpleGroup S := hSsimple
+  let : Nontrivial N := hNne
+  let : Group.IsPerfect N := hNperf
+  let : IsSimpleGroup S := hSsimple
   have hSperf : Group.IsPerfect S :=
     Group.IsPerfect.ofSurjective hf
-  letI : Group.IsPerfect S := hSperf
+  let : Group.IsPerfect S := hSperf
   have hScenter : Subgroup.center S = ⊥ := by
     rcases hSsimple.eq_bot_or_eq_top_of_normal
         (Subgroup.center S) inferInstance with hbot | htop

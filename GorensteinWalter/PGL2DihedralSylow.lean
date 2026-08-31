@@ -27,11 +27,11 @@ public theorem pgl2_odd_hasDihedralSylowTwo_model
     (K : Type u) [Field K] [Finite K]
     (hodd : IsOddPrimePower (Nat.card K)) :
     HasDihedralSylowTwo (PGL2 K) := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   rcases hodd with ⟨p, f, hp, hpOdd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPGLcard : Nat.card (PGL2 K) =
       Nat.card K * (Nat.card K ^ 2 - 1) :=
     pgl2_card_formula K

@@ -142,7 +142,7 @@ public theorem firstCase_klein_J3_centralizer_fixed_nontrivial
       have hsupK : c.U.subgroupOf K ⊔ X.subgroupOf K = ⊤ := by
         rw [← Subgroup.subgroupOf_sup hUK hXK]
         simp [K]
-      letI : (X.subgroupOf K).Normal :=
+      let : (X.subgroupOf K).Normal :=
         Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := c.U) (N := X) hUnormX
       have hzK : (⟨z, hz⟩ : K) ∈ c.U.subgroupOf K ⊔ X.subgroupOf K := by
         rw [hsupK]

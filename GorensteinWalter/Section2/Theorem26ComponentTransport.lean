@@ -179,11 +179,11 @@ private lemma centralizer_lift_of_odd_center
       have hback := hmap a⁻¹ hainvA (a * y * a⁻¹) hy
       change a⁻¹ * (a * y * a⁻¹) * (a⁻¹)⁻¹ ∈ Z at hback
       simpa [mul_assoc] using hback
-  letI : MulDistribMulAction A Z :=
+  let : MulDistribMulAction A Z :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
-  letI : MulDistribMulAction (↥A) (↥Z) :=
+  let : MulDistribMulAction (↥A) (↥Z) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
-  letI : CommGroup Z := by
+  let : CommGroup Z := by
     dsimp [Z]
     infer_instance
   have hAcard : Nat.card A = 2 := by
@@ -227,7 +227,7 @@ private lemma centralizer_lift_of_odd_center
       (Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ) c := by
     intro a b
     apply Subtype.ext
-    letI : MulDistribMulAction (↥A) (↥Z) :=
+    let : MulDistribMulAction (↥A) (↥Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     change (x : G)⁻¹ * (a * b : G) * (x : G) * (a * b : G)⁻¹ =
       ((x : G)⁻¹ * (a : G) * (x : G) * (a : G)⁻¹) *
@@ -240,13 +240,13 @@ private lemma centralizer_lift_of_odd_center
   let sA : A := ⟨s, Subgroup.mem_zpowers s⟩
   let a : G := (x : G)⁻¹ * s * (x : G) * s⁻¹
   have hcs : a = ((sA • z : Z) : G)⁻¹ * (z : G) := by
-    letI : MulDistribMulAction (↥A) (↥Z) :=
+    let : MulDistribMulAction (↥A) (↥Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     have h := congrArg Subtype.val (hz sA)
     change (x : G)⁻¹ * s * (x : G) * s⁻¹ = ((sA • z : Z) : G)⁻¹ * (z : G) at h
     simpa [a, c, sA] using h
   have hzsmul : ((sA • z : Z) : G) = s * (z : G) * s⁻¹ := by
-    letI : MulDistribMulAction (↥A) (↥Z) :=
+    let : MulDistribMulAction (↥A) (↥Z) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer A Z hAZ
     change s * (z : G) * s⁻¹ = s * (z : G) * s⁻¹
     rfl
@@ -581,7 +581,7 @@ private lemma pgl2_reflected_outer_commutator_card_std
   have hcomm : ⁅Subgroup.zpowers T.t, T.R ⊔ Subgroup.zpowers T.t⁆ = T.R :=
     commutator_zpowers_sup_eq_R P eP T
   have hRcyclic : IsCyclic T.R := by
-    haveI : IsCyclic T.U := T.U_cyclic
+    have : IsCyclic T.U := T.U_cyclic
     have hRU : T.R ≤ T.U := by
       rw [T.R_eq]
       exact inf_le_left
@@ -805,7 +805,7 @@ private lemma unique_involution_cyclic
     (hs : s ^ 2 = 1) (hsne : s ≠ 1) :
     ∀ x : U, x ^ 2 = 1 → x ≠ 1 → x = s := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   let A : Finset U := Finset.univ.filter (fun a => a ^ 2 = 1)
   have hle : A.card ≤ 2 := by
     simpa [A] using (IsCyclic.card_pow_eq_one_le (α := U) (n := 2) (by norm_num))
@@ -875,10 +875,10 @@ private lemma torus_involution_mem_commutator
     (hUJ : ¬ U ≤ commutator (PGL2 K)) :
     s ∈ commutator (PGL2 K) := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : IsCyclic U := hUcyc
+  let : IsCyclic U := hUcyc
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
   let UJ : Subgroup (PGL2 K) := U ⊓ J
   let UJU : Subgroup U := UJ.subgroupOf U
@@ -921,8 +921,8 @@ private lemma torus_involution_mem_commutator
   have h2dvd : 2 ∣ Nat.card UJ := by
     rw [hUJcard]
     exact even_iff_two_dvd.mp hmeven
-  letI : Fintype UJ := Fintype.ofFinite UJ
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fintype UJ := Fintype.ofFinite UJ
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨x, hxord⟩ := exists_prime_orderOf_dvd_card (G := UJ) (p := 2)
     (by simpa [Nat.card_eq_fintype_card] using h2dvd)
   let xG : PGL2 K := (x : UJ)
@@ -1006,7 +1006,7 @@ private lemma inner_involutions_conjugate_in_derived
     (hyJ : y ∈ commutator (PGL2 K)) (hyI : IsInvolution y) :
     ∃ g : PGL2 K, g ∈ commutator (PGL2 K) ∧ g * x * g⁻¹ = y := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
@@ -1154,7 +1154,7 @@ private lemma card_conjugates_eq_index_normalizer
     Nat.card (MulAction.orbit (ConjAct G) H) =
       (Subgroup.normalizer (H : Set G)).index := by
   classical
-  letI : Group (ConjAct G) := inferInstance
+  let : Group (ConjAct G) := inferInstance
   rw [Nat.card_coe_set_eq, ← MulAction.index_stabilizer (G := ConjAct G) (x := H)]
   let N : Subgroup G := Subgroup.normalizer (H : Set G)
   have hmap : MulAction.stabilizer (ConjAct G) H =
@@ -1195,7 +1195,7 @@ public theorem pgl2_inner_involution_centralizer_card
     dsimp [J]
     rw [pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     exact pgl2_psl2Range_index_eq_two K hK
-  letI : J.Normal := by
+  let : J.Normal := by
     dsimp [J]
     infer_instance
   rcases ht0 with ⟨a, hta⟩
@@ -1343,7 +1343,7 @@ private theorem pgl2_low_reflected_tori_data_swap
       T2.s = T.t * T.s ∧ T2.t = T.t ∧ T2.g = T.g ∧
       T2.R = T.Rstar ∧ T2.Rstar = T.R := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
@@ -1544,8 +1544,8 @@ private theorem pgl2_low_reflected_tori_data_swap
     · exfalso
       exact ht2U2 (by simpa [htab] using haU)
     · have ht2eq : t2 = (a : PGL2 K) * wk := htab
-      letI : IsCyclic U2 := hU2cyc
-      letI : CommGroup U2 := IsCyclic.commGroup
+      let : IsCyclic U2 := hU2cyc
+      let : CommGroup U2 := IsCyclic.commGroup
       have ha_comm : a * x = x * a := by
         have h := mul_comm (⟨a, haU⟩ : U2) (⟨x, hx⟩ : U2)
         simpa using congrArg Subtype.val h
@@ -1704,7 +1704,7 @@ private lemma pgl2_Rstar_commutator_le_Rstar
     ⁅Subgroup.zpowers T.t, C⁆ ≤ T.Rstar := by
   classical
   intro J C
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hqOdd : Odd (Nat.card K) := by
@@ -1715,7 +1715,7 @@ private lemma pgl2_Rstar_commutator_le_Rstar
     dsimp [J]
     rw [pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     exact pgl2_psl2Range_index_eq_two K hK
-  letI : J.Normal := by
+  let : J.Normal := by
     dsimp [J]
     infer_instance
   let n : ℕ := Nat.card T.U / 2
@@ -2120,7 +2120,7 @@ public theorem reflected_R_image_outer_torus_t26
   dsimp [O, q, Ei, Ebar] at hkerdata
   rcases hkerdata with ⟨hker, _⟩
   have hZEi_odd : Odd (Nat.card (Subgroup.center Ei)) := by
-    letI : O.Normal := by
+    let : O.Normal := by
       dsimp [O]
       infer_instance
     exact center_odd_of_quotient_restriction_ker_eq_center Ei O hOodd hker
@@ -2618,8 +2618,8 @@ public theorem reflected_R_image_outer_torus_t26
         Subgroup.equivMapOfInjective (Rbar.subgroupOf L)
           e.toMonoidHom e.injective
       exact (e1.trans e2).isCyclic.mpr hR0cyc
-    letI : IsCyclic Rbar := hRbar_cyclic
-    letI : CommGroup R := commGroupOfCyclicCenterQuotient ρ hρker
+    let : IsCyclic Rbar := hRbar_cyclic
+    let : CommGroup R := commGroupOfCyclicCenterQuotient ρ hρker
     have hRcomm : ∀ a b : G, a ∈ R → b ∈ R → a * b = b * a := by
       intro a b ha hb
       have h := (inferInstance : CommGroup R).mul_comm (⟨a, ha⟩ : R) (⟨b, hb⟩ : R)
@@ -2884,7 +2884,7 @@ private theorem reflected_R_conj_image_inner_torus_card_t26
     dsimp [C0]
     exact Subgroup.map_commutator (H₁ := Ss) (H₂ := CEHy) q
   have hcomm_le : ⁅Ss.map q, CEHy.map q⁆ ≤ L := by
-    letI : L.Normal := hLnormal
+    let : L.Normal := hLnormal
     apply Subgroup.commutator_le.mpr
     intro a ha b hb
     have haL : a ∈ L := hqSs ha
@@ -3035,7 +3035,7 @@ private theorem reflected_R_conj_image_inner_torus_card_t26
       (Nat.coprime_two_left.mpr hRodd).of_dvd_right hRy0dvdR
     exact Nat.coprime_two_left.mp hcop
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hJindex : J.index = 2 := by

@@ -51,8 +51,8 @@ public theorem secondCase_a7_base_involutions_card
   have hTp : IsPGroup 2 T := by
     apply IsPGroup.of_card (n := 1)
     simp [hTcard]
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 T) := ⟨hTp⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 T) := ⟨hTp⟩
   have hZodd : Odd (Nat.card Z) := d.center_odd
   have hZcop : Nat.Coprime 2 (Nat.card Z) := Nat.coprime_two_left.mpr hZodd
   have hTsingle : Subgroup.centralizer (T : Set E) =

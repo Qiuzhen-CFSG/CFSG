@@ -59,7 +59,7 @@ private lemma zpow_mul_rel {D : Type u} [Group D] {ρ σ : D}
 -- (I1) ρ^((i+j).val) = ρ^(i.val)·ρ^(j.val)
 private lemma pow_val_add_eq {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ} (hn : orderOf ρ = n)
     (i j : ZMod n) : ρ ^ ((i + j).val) = ρ ^ i.val * ρ ^ j.val := by
-  haveI : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
+  have : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
   have hcong : (i.val + j.val) % n ≡ i.val + j.val [MOD n] := Nat.mod_modEq (i.val + j.val) n
   have hx : ρ ^ n = 1 := by rw [← hn]; exact pow_orderOf_eq_one ρ
   calc
@@ -70,7 +70,7 @@ private lemma pow_val_add_eq {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ
 -- (I2) ρ^((j−i).val) = ρ^((j.val : ℤ) − (i.val : ℤ))
 private lemma pow_val_sub_zpow {D : Type u} [Group D] [Finite D] {ρ : D} {n : ℕ} (hn : orderOf ρ = n)
     (i j : ZMod n) : ρ ^ ((j - i).val) = ρ ^ ((j.val : ℤ) - (i.val : ℤ)) := by
-  haveI : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
+  have : NeZero n := ⟨by rw [← hn]; exact (orderOf_pos ρ).ne'⟩
   have hji : (i + (j - i) : ZMod n) = j := by simp [sub_eq_add_neg, add_assoc]
   have hval : j.val = (i.val + (j - i).val) % n := by
     calc
@@ -167,7 +167,7 @@ public theorem dihedral_of_generators_of_not_mem
     (hσ2 : σ ^ 2 = 1) (hrel : σ * ρ * σ⁻¹ = ρ⁻¹)
     (hσρ : σ ∉ Subgroup.zpowers ρ) :
     Nonempty (D ≃* DihedralGroup (orderOf ρ)) := by
-  letI : Fintype D := Fintype.ofFinite D
+  let : Fintype D := Fintype.ofFinite D
   let φ := dihedralMap (ρ := ρ) (σ := σ) (hn := rfl) hσ2 hrel
   have hord : orderOf σ = 2 := by
     exact orderOf_eq_two_of_pow_two hσ2 (by
@@ -255,7 +255,7 @@ public theorem dihedral_of_generators_of_not_mem
     intro x
     rcases hle (by trivial : x ∈ (⊤ : Subgroup D)) with ⟨y, hy⟩
     exact ⟨y, hy⟩
-  letI : NeZero (orderOf ρ) := ⟨(orderOf_pos ρ).ne'⟩
+  let : NeZero (orderOf ρ) := ⟨(orderOf_pos ρ).ne'⟩
   have hup : Nat.card D ≤ Nat.card (DihedralGroup (orderOf ρ)) :=
     Nat.card_le_card_of_surjective (fun x => φ x) hsurj
   have hcard2 : Nat.card D = 2 * orderOf ρ := by

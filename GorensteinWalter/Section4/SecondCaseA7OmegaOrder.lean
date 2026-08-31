@@ -193,8 +193,8 @@ public theorem secondCase_a7_omega_card_eq_twenty_seven_of_lt
         (pick S).2 hpickS_ne
     exact Subtype.ext hsubEq
   have htargetCard : Nat.card target = 8 := by
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype target := Fintype.ofFinite target
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype target := Fintype.ofFinite target
     have hAF : Fintype.card A = 9 := by
       simpa [Nat.card_eq_fintype_card] using hAcard
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
@@ -210,7 +210,7 @@ public theorem secondCase_a7_omega_card_eq_twenty_seven_of_lt
         (Subgroup.index_eq_card (MulAction.stabilizer QG FQ)).symm
       _ = AQ.index := by rw [hstab]
   have hindexLe : AQ.index ≤ 8 := by rw [← hOrbIndex]; exact hOrbLe
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨n, hn⟩ := hQGp.index AQ
   have hindexGt : 1 < AQ.index := by
     have hAQlt : AQ < ⊤ := by

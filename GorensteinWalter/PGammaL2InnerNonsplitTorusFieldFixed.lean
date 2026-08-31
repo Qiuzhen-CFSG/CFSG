@@ -82,7 +82,7 @@ public theorem pGammaL2_pureField_innerNonsplitTorus_fixedSubfield
   have hUnotJ : ¬ U ≤ J := by
     rw [← hUeq]
     simpa [J] using hUnotComm
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hdivKhalf : Nat.card A ∣ (Nat.card K + 1) / 2 := by

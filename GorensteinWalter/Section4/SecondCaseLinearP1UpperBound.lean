@@ -22,8 +22,8 @@ public theorem secondCase_linear_conjugateCount_le_p_add_one
     (hAelem : IsElementaryAbelian p A) :
     conjugateCount P A ≤ p + 1 := by
   classical
-  letI : IsElementaryAbelian p A := hAelem
-  letI : Nontrivial A := by
+  let : IsElementaryAbelian p A := hAelem
+  let : Nontrivial A := by
     apply Finite.one_lt_card_iff_nontrivial.mp
     rw [hAcard]
     exact one_lt_pow₀ (Fact.out : Nat.Prime p).one_lt (by norm_num)

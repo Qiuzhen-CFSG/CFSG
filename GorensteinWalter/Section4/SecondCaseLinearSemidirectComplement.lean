@@ -37,7 +37,7 @@ public theorem normal_complement_of_semidirect_cyclic_normalizer
       N ⊓ Subgroup.normalizer (X : Set H) = ⊥ ∧
       N ⊔ Subgroup.normalizer (X : Set H) = ⊤ := by
   classical
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hCleN : C ≤ Subgroup.normalizer (X : Set H) := by
     intro c hc
     rw [Subgroup.mem_normalizer_iff]
@@ -45,7 +45,7 @@ public theorem normal_complement_of_semidirect_cyclic_normalizer
     constructor
     · intro hx
       have hcomm : (c : H) * x = x * (c : H) := by
-        letI : IsMulCommutative (↥C) := hCcyc.isMulCommutative
+        let : IsMulCommutative (↥C) := hCcyc.isMulCommutative
         exact congrArg Subtype.val
           (show (⟨c, hc⟩ : C) * ⟨x, hXleC hx⟩ =
               ⟨x, hXleC hx⟩ * ⟨c, hc⟩ by
@@ -56,7 +56,7 @@ public theorem normal_complement_of_semidirect_cyclic_normalizer
       let y : H := c * x * c⁻¹
       have hyC : y ∈ C := hXleC hx
       have hcomm : (c : H) * y = y * (c : H) := by
-        letI : IsMulCommutative (↥C) := hCcyc.isMulCommutative
+        let : IsMulCommutative (↥C) := hCcyc.isMulCommutative
         exact congrArg Subtype.val
           (show (⟨c, hc⟩ : C) * ⟨y, hyC⟩ =
               ⟨y, hyC⟩ * ⟨c, hc⟩ by
@@ -106,8 +106,8 @@ public theorem MonoidHom.eq_one_of_perfect_of_cyclic
     {H C : Type u} [Group H] [Group C]
     (hH : Group.IsPerfect H) (hC : IsCyclic C) (f : H →* C) :
     ∀ x : H, f x = 1 := by
-  letI : Group.IsPerfect H := hH
-  letI : IsCyclic C := hC
+  let : Group.IsPerfect H := hH
+  let : IsCyclic C := hC
   intro x
   have hcomm : x ∈ commutator H := by
     rw [hH.commutator_eq_top]

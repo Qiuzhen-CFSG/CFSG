@@ -97,23 +97,23 @@ private theorem component_impossible_of_quotient_isTwoGroup
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := N)
   have hOodd : Odd (Nat.card O) := Nat.coprime_two_left.mp hOcop
   have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Group.IsNilpotent (N ⧸ O) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Group.IsNilpotent (N ⧸ O) :=
     IsPGroup.isNilpotent (by simpa [O] using hQ)
   have hQsolv : Group.IsSolvable (N ⧸ O) := inferInstance
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
-  letI : Group.IsSolvable O := hOsolv
-  letI : Group.IsSolvable (N ⧸ O) := hQsolv
+  let : Group.IsSolvable O := hOsolv
+  let : Group.IsSolvable (N ⧸ O) := hQsolv
   have hNsolv : Group.IsSolvable N :=
     isSolvable_of_normal_subgroup_and_quotient O
-  letI : Group.IsSolvable N := hNsolv
-  letI : Group.IsSolvable (E.subgroupOf N) := inferInstance
+  let : Group.IsSolvable N := hNsolv
+  let : Group.IsSolvable (E.subgroupOf N) := inferInstance
   have hEsolv : Group.IsSolvable E :=
     isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hE.1)
-  letI : Nontrivial E := hE.2.2.1
-  letI : Group.IsPerfect E :=
+  let : Nontrivial E := hE.2.2.1
+  let : Group.IsPerfect E :=
     ⟨by simpa [derivedSubgroup] using hE.2.2.2.1⟩
   exact Group.IsPerfect.not_isSolvable E hEsolv
 
@@ -351,7 +351,7 @@ public theorem secondCase_componentData
     exact (Subgroup.nontrivial_iff_ne_bot E).mp hE.2.2.1 hmap.symm
   have hEi_perf : Group.IsPerfect Ei := by
     let eEi : Ei ≃* E := Subgroup.subgroupOfEquivOfLe hE.1
-    letI : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.2.2.1
+    let : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.2.2.1
     exact Group.IsPerfect.ofSurjective (f := eEi.symm.toMonoidHom) eEi.symm.surjective
   have hEisn : Ei.IsSubnormal := hE.2.1
   have hEtopComp : IsComponentOf Ei (⊤ : Subgroup M) :=
@@ -359,7 +359,7 @@ public theorem secondCase_componentData
   have hEq : IsQuasisimple Ei :=
     isQuasisimple_mulEquiv_local (Subgroup.subgroupOfEquivOfLe hE.1).symm hE.2.2
   let O : Subgroup M := pPrimeCore 2 M
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   have hOodd : Odd (Nat.card O) := by
     have hcop : Nat.Coprime 2 (Nat.card O) := by
       simpa [O] using pPrimeCore_coprime_card (p := 2) (G := M)
@@ -385,15 +385,15 @@ public theorem secondCase_componentData
       have hEi_le_O : Ei ≤ O := by
         have hker : Ei ≤ q.ker := (Subgroup.map_eq_bot_iff (H := Ei) (f := q)).mp hbot
         simpa [q, QuotientGroup.ker_mk'] using hker
-      letI : Group.IsSolvable O := hOsolv
-      haveI : Group.IsSolvable Ei := by
-        haveI : Group.IsSolvable (Ei.subgroupOf O) := inferInstance
+      let : Group.IsSolvable O := hOsolv
+      have : Group.IsSolvable Ei := by
+        have : Group.IsSolvable (Ei.subgroupOf O) := inferInstance
         exact isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEi_le_O)
       have hE_solv : Group.IsSolvable E := by
         let eEi : Ei ≃* E := Subgroup.subgroupOfEquivOfLe hE.1
         exact isSolvable_of_mulEquiv eEi
-      haveI : Nontrivial E := hE.2.2.1
-      haveI : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.2.2.1
+      have : Nontrivial E := hE.2.2.1
+      have : Group.IsPerfect E := (Group.isPerfect_def).2 hE.2.2.2.1
       exact Group.IsPerfect.not_isSolvable E hE_solv
     have hEbar_perf : Group.IsPerfect Ebar := perfect_map_subgroup Ei q hEi_perf
     have hEbar_sn : Ebar.IsSubnormal :=
@@ -459,7 +459,7 @@ public theorem secondCase_componentData
         exact hEbar_ne hmap.symm
       have hEL_perf : Group.IsPerfect EL := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-        letI : Group.IsPerfect Ebar := hEbar_perf
+        let : Group.IsPerfect Ebar := hEbar_perf
         exact Group.IsPerfect.ofSurjective (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       have hEL_sn : EL.IsSubnormal := hEbar_sn.subgroupOf
       let J : Subgroup (PSL2 K) := EL.map eL.toMonoidHom
@@ -494,7 +494,7 @@ public theorem secondCase_componentData
         Ei hEq O hOodd (PSL2 K) (psl2_center_eq_bot K) eEbar
       have htqE : q tM ∈ Ebar := by
         rw [hEbar_L]
-        haveI : L.Normal := hLnormal
+        have : L.Normal := hLnormal
         exact involution_mem_normal_odd_index_local L hLindex htqM
       have htEi : tM ∈ Ei :=
         involution_mem_normal_subgroup_of_quotient_mem_map_odd_kernel
@@ -538,7 +538,7 @@ public theorem secondCase_componentData
       have hLE_perf : Group.IsPerfect LE := by
         let eLE : LE ≃* componentLayerOf M :=
           Subgroup.subgroupOfEquivOfLe (componentLayerOf_isNormalIn M).1
-        letI : Group.IsPerfect (componentLayerOf M) := componentLayerOf_isPerfect M
+        let : Group.IsPerfect (componentLayerOf M) := componentLayerOf_isPerfect M
         exact Group.IsPerfect.ofSurjective (f := eLE.symm.toMonoidHom) eLE.symm.surjective
       have hLE_ne : LE ≠ ⊥ := by
         intro hbot

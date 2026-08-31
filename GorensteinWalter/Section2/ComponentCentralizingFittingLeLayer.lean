@@ -46,10 +46,10 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
     rw [hbot, Subgroup.map_bot] at hmap
     exact hmap.symm
   have hKiperf : Group.IsPerfect Ki := by
-    letI : Group.IsPerfect K := (Group.isPerfect_def).2 hK.2.2.2.1
+    let : Group.IsPerfect K := (Group.isPerfect_def).2 hK.2.2.2.1
     exact Group.IsPerfect.ofSurjective
       (f := eKi.symm.toMonoidHom) eKi.symm.surjective
-  letI : Group.IsPerfect Ki := hKiperf
+  let : Group.IsPerfect Ki := hKiperf
   have hKcG : K ≤ Subgroup.centralizer (fittingSubgroupOf B : Set G) :=
     (Subgroup.commutator_eq_bot_iff_le_centralizer).mp hKF
   have hKiC : Ki ≤ Subgroup.centralizer (fittingSubgroup B : Set B) := by
@@ -64,7 +64,7 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
   let N : Subgroup B := Subgroup.normalClosure (Ki : Set B)
   have hKiN : Ki ≤ N := Subgroup.le_normalClosure
   have hNnormal : N.Normal := Subgroup.normalClosure_normal
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hNne : N ≠ ⊥ := by
     intro hbot
     apply hKine
@@ -79,12 +79,12 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
         rw [Subgroup.commutator_eq_self]
         exact hx
       exact Subgroup.commutator_mono hKiN hKiN hx'
-  letI : Group.IsPerfect N := hNperf
-  haveI : (fittingSubgroup B).Normal := fittingSubgroup_normal
+  let : Group.IsPerfect N := hNperf
+  have : (fittingSubgroup B).Normal := fittingSubgroup_normal
   have hNCF : N ≤ Subgroup.centralizer (fittingSubgroup B : Set B) := by
     exact Subgroup.normalClosure_le_normal hKiC
   let O : Subgroup B := pPrimeCore 2 B
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   have hOodd : Odd (Nat.card O) := by
@@ -133,21 +133,21 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
       have hker : N ≤ q.ker := (Subgroup.map_eq_bot_iff N).mp hbot
       simpa [q, QuotientGroup.ker_mk'] using hker
     let NO : Subgroup O := N.subgroupOf O
-    letI : Group.IsSolvable O := hOsolv
-    haveI : Group.IsSolvable NO := inferInstance
+    let : Group.IsSolvable O := hOsolv
+    have : Group.IsSolvable NO := inferInstance
     let eNO : NO ≃* N := Subgroup.subgroupOfEquivOfLe hNleO
     have hNsolv : Group.IsSolvable N :=
       Group.isSolvable_of_surjective (f := eNO.toMonoidHom) eNO.surjective
-    letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
+    let : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
     exact Group.IsPerfect.not_isSolvable N hNsolv
   have hSsimple : IsSimpleGroup S := by
     rcases hD with ⟨_hSylow, hQ⟩ | ⟨_hSylow, hA7⟩ |
         ⟨_hSylow, LField, hLField, L, hLnormal, hLindex, hLmodel⟩
     · have hSp : IsPGroup 2 S := hQ.to_subgroup S
-      letI : Group.IsNilpotent S := hSp.isNilpotent
+      let : Group.IsNilpotent S := hSp.isNilpotent
       have hSsolv : Group.IsSolvable S := inferInstance
-      letI : Nontrivial S := (Subgroup.nontrivial_iff_ne_bot S).2 hSne
-      letI : Group.IsPerfect S := hSperf
+      let : Nontrivial S := (Subgroup.nontrivial_iff_ne_bot S).2 hSne
+      let : Group.IsPerfect S := hSperf
       exact False.elim (Group.IsPerfect.not_isSolvable S hSsolv)
     · rcases hA7 with ⟨eA7⟩
       have hA7simple : IsSimpleGroup (alternatingGroup (Fin 7)) :=
@@ -205,10 +205,10 @@ public theorem component_le_componentLayerOf_of_isDGroup_of_centralizes_fitting
     · let eNm : N ≃* Nm :=
         Subgroup.equivMapOfInjective N B.subtype B.subtype_injective
       have hNontriv : Nontrivial Nm := by
-        letI : Nontrivial N := hNq.1
+        let : Nontrivial N := hNq.1
         exact eNm.toEquiv.injective.nontrivial
       have hPerf : Group.IsPerfect Nm := by
-        letI : Group.IsPerfect N := (Group.isPerfect_def).2 hNq.2.1
+        let : Group.IsPerfect N := (Group.isPerfect_def).2 hNq.2.1
         exact Group.IsPerfect.ofSurjective
           (f := eNm.toMonoidHom) eNm.surjective
       have hcenter : (Subgroup.center N).map eNm.toMonoidHom =

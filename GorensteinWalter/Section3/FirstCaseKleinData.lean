@@ -111,18 +111,18 @@ public theorem firstCase_klein_S_card
     (hklein : IsKleinFour (pCore 2 c.Hhat)) :
     Nat.card (↥(c.S : Subgroup G)) = 8 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let H : Subgroup G := c.Hhat
   let N : Subgroup H := pCore 2 H
   let O : Subgroup H := pPrimeCore 2 H
   let K : Subgroup H := N ⊔ O
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N, H]
     infer_instance
-  haveI : O.Normal := by
+  have : O.Normal := by
     dsimp [O, H]
     infer_instance
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K, N, O, H]
     infer_instance
   have hNcard : Nat.card N = 4 := hklein.card_four
@@ -138,7 +138,7 @@ public theorem firstCase_klein_S_card
       exact hOcop.pow_left n
     exact Subgroup.disjoint_of_coprime_natCard hcop
   have hOleN : O ≤ Subgroup.normalizer (N : Set H) := by
-    haveI : N.Normal := by infer_instance
+    have : N.Normal := by infer_instance
     simp [Subgroup.normalizer_eq_top]
   have hKcard : Nat.card (↥K) = Nat.card N * Nat.card O := by
     exact card_sup_eq_mul_of_disjoint_of_le_normalizer N O hOleN hNdisjO

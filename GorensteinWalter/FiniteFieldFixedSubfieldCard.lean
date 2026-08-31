@@ -22,11 +22,11 @@ public theorem nat_card_eq_fixedSubfield_card_pow_orderOf
     (K : Type u) [Field K] [Finite K] (sigma : K ≃+* K) :
     let R := FixedPoints.subfield (Subgroup.zpowers sigma) K
     Nat.card K = Nat.card R ^ orderOf sigma := by
-  letI : Finite (K ≃+* K) :=
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K))
       (fun _ _ h => RingEquiv.ext (congrFun h))
   let R := FixedPoints.subfield (Subgroup.zpowers sigma) K
-  letI : IsGaloisGroup (Subgroup.zpowers sigma) R K :=
+  let : IsGaloisGroup (Subgroup.zpowers sigma) R K :=
     IsGaloisGroup.fixedPoints (Subgroup.zpowers sigma) K
   have hfinrank : Module.finrank R K = orderOf sigma := by
     calc

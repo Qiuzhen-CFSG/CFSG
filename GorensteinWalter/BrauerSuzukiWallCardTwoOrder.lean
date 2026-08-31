@@ -33,7 +33,7 @@ public theorem
   let OutInv := {v : G // IsInvolution v ∧ v ∉ N}
   let PunctH := {x : h.H // x ≠ 1}
   have hHleN : h.H ≤ N := Subgroup.le_normalizer
-  letI : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
+  let : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
   have hHcard : Nat.card h.H = 4 :=
     (h.isKleinFour_H_of_card_K_eq_two hk).card_four
   let eIn : InN ≃ PunctH := by
@@ -69,8 +69,8 @@ public theorem
           rfl }
   have hPunctCard : Nat.card PunctH = 3 := by
     have hpunct : Nat.card PunctH = Nat.card h.H - 1 := by
-      letI : Fintype h.H := Fintype.ofFinite h.H
-      letI : Fintype PunctH := Fintype.ofFinite PunctH
+      let : Fintype h.H := Fintype.ofFinite h.H
+      let : Fintype PunctH := Fintype.ofFinite PunctH
       rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
       simp [PunctH]
     rw [hpunct, hHcard]
@@ -137,7 +137,7 @@ public theorem
             rw [hx', pow_two, pow_two]
             group
           _ = 1 := by rw [h.t_involution.2]; simp
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have horbit := MulAction.card_orbit_mul_card_stabilizer_eq_card_group
     (ConjAct G) h.t
   have horbit' :

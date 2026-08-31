@@ -20,7 +20,7 @@ public theorem pgl2_card_formula
     (K : Type*) [Field K] [Finite K] :
     Nat.card (PGL2 K) = Nat.card K * (Nat.card K ^ 2 - 1) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let GL2 := Matrix.GeneralLinearGroup (Fin 2) K
   let centerGL := Subgroup.center GL2
   have hscalarInj : Function.Injective

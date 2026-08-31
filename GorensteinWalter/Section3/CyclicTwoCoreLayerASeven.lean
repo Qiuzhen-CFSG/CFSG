@@ -118,7 +118,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
   obtain ⟨hU, fd, Q, M, X, hMmax, hMN, hSM, hV2, hXleE, hXne,
     hXcyc, hXp, hXleP, hXinv, hXcent, hDE⟩ :=
     firstCase_cyclic_layer_inverted_and_DGroup_of_od hmin c hfirst hcyclic od
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let E : Subgroup G := componentLayerOf M
   let R : Subgroup G := E ⊔ fd.V1
   have hEleM : E ≤ M := (componentLayerOf_isNormalIn M).1
@@ -135,7 +135,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
   have hV1leR : fd.V1 ≤ R := le_sup_right
   have hXleR : X ≤ R := hXleE.trans hEleR
   let O : Subgroup R := pPrimeCore 2 R
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : R →* R ⧸ O := QuotientGroup.mk' O
   let ER : Subgroup R := E.subgroupOf R
   let XR : Subgroup R := X.subgroupOf R
@@ -162,7 +162,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
       rcases Subgroup.mem_map.mp y.2 with ⟨x, hx, hxy⟩
       refine ⟨⟨x, hx⟩, ?_⟩
       exact Subtype.ext hxy
-    letI : IsCyclic XR := hXRcyc
+    let : IsCyclic XR := hXRcyc
     exact isCyclic_of_surjective fX hfX
   have hXRp : IsPGroup od.p XR :=
     hXp.of_equiv (Subgroup.subgroupOfEquivOfLe hXleR).symm
@@ -202,7 +202,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
   have hEperf : Group.IsPerfect E := componentLayerOf_isPerfect_for_layerASeven M
   let eER : ER ≃* E := Subgroup.subgroupOfEquivOfLe hEleR
   have hERperf : Group.IsPerfect ER := by
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.ofSurjective
       (f := eER.symm.toMonoidHom) eER.symm.surjective
   have hOsolv : IsSolvable O := odd_order_theorem O hOodd
@@ -291,7 +291,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
     apply hEbarData.1
     exact (Subgroup.map_eq_bot_iff_of_injective
       (H := Ebar) (f := eQ.toMonoidHom) eQ.injective).mp hbot
-  letI : IsSimpleGroup (alternatingGroup (Fin 7)) :=
+  let : IsSimpleGroup (alternatingGroup (Fin 7)) :=
     alternatingGroup.isSimpleGroup (by norm_num : 5 ≤ Nat.card (Fin 7))
   have hE7top : E7 = ⊤ :=
     (IsSimpleGroup.eq_bot_or_eq_top_of_normal E7 hE7normal).resolve_left hE7ne
@@ -327,7 +327,7 @@ public theorem firstCase_cyclic_layer_quotient_isASeven_of_od
       (Nat.coprime_two_left.mp (pPrimeCore_coprime_card (p := 2) (G := ↥E)))
       (Subgroup.card_map_dvd OE fE)
   have hOEbarBot : OEbar = ⊥ := by
-    letI : IsSimpleGroup (R ⧸ O) := eQ.isSimpleGroup
+    let : IsSimpleGroup (R ⧸ O) := eQ.isSimpleGroup
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal OEbar hOEbarNormal with hbot | htop
     · exact hbot
     · exfalso

@@ -50,7 +50,7 @@ public theorem component_normal_and_involutions_fused_of_pgl2_quotient_data
         ∃ g : H, g ∈ E ∧ g * z * g⁻¹ = t := by
   dsimp
   intro hEbarL hEbarne hEbarperf hmodel hker htbar
-  letI : O.Normal := hOnormal
+  let : O.Normal := hOnormal
   let q : H →* H ⧸ O := QuotientGroup.mk' O
   let Ebar : Subgroup (H ⧸ O) := E.map q
   have hEbarNormal : Ebar.Normal :=

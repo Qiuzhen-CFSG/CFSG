@@ -51,8 +51,8 @@ public theorem psl2_odd_inner_fixing_commuting_involutions_eq_one
   have ha_cent_V : a ∈ Subgroup.centralizer (V : Set (PSL2 K)) := by
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
-    letI : IsKleinFour V := hV
-    letI : Fintype V := Fintype.ofFinite V
+    let : IsKleinFour V := hV
+    let : Fintype V := Fintype.ofFinite V
     let tV : V := ⟨t, htV⟩
     let sV : V := ⟨s, hsV⟩
     let xV : V := ⟨x, hx⟩
@@ -99,7 +99,7 @@ public theorem psl2_odd_inner_fixing_commuting_involutions_eq_one
   have haorder_dvd : orderOf a ∣ n := (orderOf_dvd_iff_pow_eq_one).2 han
   have haodd : Odd (orderOf a) := Odd.of_dvd_nat hn haorder_dvd
   have ha2 : a ^ 2 = 1 := by
-    letI : IsKleinFour V := hV
+    let : IsKleinFour V := hV
     simpa [pow_two] using
       congrArg Subtype.val (IsKleinFour.mul_self (⟨a, haV⟩ : V))
   have haorder_dvd_two : orderOf a ∣ 2 := (orderOf_dvd_iff_pow_eq_one).2 ha2

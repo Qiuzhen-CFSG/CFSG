@@ -33,7 +33,7 @@ public theorem firstCase_exists_t2_order_four_swap
   intro NP Tg
   have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
   have hP9' : Nat.card (P : Subgroup G) = 3 ^ 2 := by simpa using hP9
-  haveI : IsMulCommutative (P : Subgroup G) :=
+  have : IsMulCommutative (P : Subgroup G) :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   have hcommP : ∀ x y : G, x ∈ (P : Subgroup G) → y ∈ (P : Subgroup G) →
       x * y = y * x := by
@@ -173,7 +173,7 @@ public theorem firstCase_exists_t2_order_four_swap
     rw [hTg2, orderOf_dvd_iff_pow_eq_one] at hd
     exact hd
   have hTg4sq : Nat.card Tg = 2 ^ 2 := by rw [hTg4]; norm_num
-  haveI : IsMulCommutative Tg :=
+  have : IsMulCommutative Tg :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) hTg4sq
   have hatcomm : a * t = t * a := congrArg Subtype.val
     (((IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) hTg4sq).is_comm).comm

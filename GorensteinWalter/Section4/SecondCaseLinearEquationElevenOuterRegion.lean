@@ -34,7 +34,7 @@ public theorem secondCase_linearEquation11_outer_region
     (p1 - 1) * Nat.card K * post.equation9.k' ≤
       Nat.card (secondCase_familyIn G post.od.P d.E) := by
   classical
-  letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+  let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
   have hpodd : Odd post.od.p := secondCase_linear_omega_p_odd c w d post.od
   have hK0leK : post.od.K0 ≤ post.od.K := by
     rw [post.od.K0_eq]
@@ -78,7 +78,7 @@ public theorem secondCase_linearEquation11_outer_region
       post.od.P0_card post.torus.T post.torus.T_cyclic rfl
       post.torus.T_normalizer_card hpart hpT hQcard
   let Tori : Type u := secondCase_toriOf G post.od.P0 d.E
-  letI : Fintype Tori := Fintype.ofFinite Tori
+  let : Fintype Tori := Fintype.ofFinite Tori
   let B : Type u := ULift.{u} (Fin (Nat.card K * post.equation9.k'))
   let τ : B → Tori := fun i =>
     (Fintype.equivFin Tori).symm (Fin.castLE (by
@@ -119,7 +119,7 @@ public theorem secondCase_linearEquation11_outer_region_torus_injection
         secondCase_toriOf G post.od.P0 d.E,
       Function.Injective τ := by
   classical
-  letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+  let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
   have hpodd : Odd post.od.p := secondCase_linear_omega_p_odd c w d post.od
   have hK0leK : post.od.K0 ≤ post.od.K := by
     rw [post.od.K0_eq]
@@ -149,7 +149,7 @@ public theorem secondCase_linearEquation11_outer_region_torus_injection
       post.od.P0_card post.torus.T post.torus.T_cyclic rfl
       post.torus.T_normalizer_card hpart hpT hQcard
   let Tori : Type u := secondCase_toriOf G post.od.P0 d.E
-  letI : Fintype Tori := Fintype.ofFinite Tori
+  let : Fintype Tori := Fintype.ofFinite Tori
   let τ : Fin (Nat.card K * post.equation9.k') → Tori := fun i =>
     (Fintype.equivFin Tori).symm (Fin.castLE (by
       simpa [Nat.card_eq_fintype_card, Tori] using hToriLower) i)

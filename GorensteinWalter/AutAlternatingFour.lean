@@ -163,8 +163,8 @@ private theorem a4x_a4y_generate :
       decide
     exact hperm (congrArg Subtype.val h)
   have hKleH : K ≤ H := by
-    letI : IsKleinFour K := alternatingGroup.kleinFour_isKleinFour (by simp)
-    letI : Fintype K := Fintype.ofFinite K
+    let : IsKleinFour K := alternatingGroup.kleinFour_isKleinFour (by simp)
+    let : Fintype K := Fintype.ofFinite K
     let ky : K := ⟨a4y, hyK⟩
     let ky' : K := ⟨y', hy'K⟩
     have hky : ky ≠ 1 := by
@@ -201,7 +201,7 @@ private theorem a4x_a4y_generate :
       exact H.one_mem
   have hx_not_K : a4x ∉ K := by
     intro hxK
-    letI : IsKleinFour K := alternatingGroup.kleinFour_isKleinFour (by simp)
+    let : IsKleinFour K := alternatingGroup.kleinFour_isKleinFour (by simp)
     have hsqK : (⟨a4x, hxK⟩ : K) * ⟨a4x, hxK⟩ = 1 :=
       IsKleinFour.mul_self (⟨a4x, hxK⟩ : K)
     have hsq : a4x * a4x = 1 := congrArg Subtype.val hsqK

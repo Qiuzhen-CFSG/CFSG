@@ -191,8 +191,8 @@ private theorem sup_comm_of_commute {G : Type u} [Group G]
     ∀ h : (P ⊔ P0 : Subgroup G), ∀ k : (P ⊔ P0 : Subgroup G),
       (h : G) * (k : G) = (k : G) * (h : G) := by
   classical
-  haveI : IsCyclic (↥P) := isCyclic_of_prime_card (p := p) hPcard
-  haveI : IsCyclic (↥P0) := isCyclic_of_prime_card (p := p) hP0card
+  have : IsCyclic (↥P) := isCyclic_of_prime_card (p := p) hPcard
+  have : IsCyclic (↥P0) := isCyclic_of_prime_card (p := p) hP0card
   intro h k
   rcases mem_mul_of_mem_sup_of_commute (H := P) (K := P0) hP0comm h.2 with ⟨p1, q1, hpq1⟩
   rcases mem_mul_of_mem_sup_of_commute (H := P) (K := P0) hP0comm k.2 with ⟨p2, q2, hpq2⟩
@@ -495,10 +495,10 @@ public theorem secondCase_linearEquation11_product_family_conjugate_card
     (hB : Nat.card B = q * k') :
     (p1 - 1) * q * k' ≤ Nat.card (secondCase_familyIn G P E) := by
   classical
-  haveI : Finite (secondCase_linesIn G P P0) := by
+  have : Finite (secondCase_linesIn G P P0) := by
     dsimp [secondCase_linesIn]
     infer_instance
-  haveI : Finite (secondCase_familyIn G P E) := by
+  have : Finite (secondCase_familyIn G P E) := by
     dsimp [secondCase_familyIn]
     infer_instance
   let fm : secondCase_linesIn G P P0 × B → secondCase_familyIn G P E :=
@@ -551,7 +551,7 @@ public theorem secondCase_linearEquation11_product_family_conjugate_card_of_tori
     (hTori : Nat.card (secondCase_toriOf G P0 E) = q * k') :
     (p1 - 1) * q * k' ≤ Nat.card (secondCase_familyIn G P E) := by
   classical
-  haveI : Finite (secondCase_toriOf G P0 E) := by
+  have : Finite (secondCase_toriOf G P0 E) := by
     dsimp [secondCase_toriOf]
     infer_instance
   exact secondCase_linearEquation11_product_family_conjugate_card

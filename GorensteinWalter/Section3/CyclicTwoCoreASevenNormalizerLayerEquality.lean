@@ -92,7 +92,7 @@ private theorem componentLayerOf_quasisimple_of_a7
   let E : Subgroup G := componentLayerOf M
   let O : Subgroup E := pPrimeCore 2 E
   let Z : Subgroup E := Subgroup.center E
-  haveI : O.Normal := by
+  have : O.Normal := by
     dsimp [O]
     infer_instance
   have hOleZ : O ≤ Z := componentLayerOf_oddCore_le_center M hMmax
@@ -102,7 +102,7 @@ private theorem componentLayerOf_quasisimple_of_a7
   let q : E →* E ⧸ O := QuotientGroup.mk' O
   let Zbar : Subgroup (E ⧸ O) := Z.map q
   have hZbar_normal : Zbar.Normal := hZnormal.map q (QuotientGroup.mk'_surjective O)
-  letI : IsSimpleGroup (E ⧸ O) :=
+  let : IsSimpleGroup (E ⧸ O) :=
     (MulEquiv.isSimpleGroup_congr hA7.some).mpr
       (alternatingGroup.isSimpleGroup (by norm_num : 5 ≤ Nat.card (Fin 7)))
   have hZbar_bot_or_top :=
@@ -242,8 +242,8 @@ private theorem a7_quasisimple_le_of_normal_intersection_involution
 private theorem isSolvable_of_le_of_isSolvable {G : Type u} [Group G]
     (A B : Subgroup G) (hAB : A ≤ B) (hB : Group.IsSolvable B) :
     Group.IsSolvable A := by
-  letI : Group.IsSolvable B := hB
-  letI : Group.IsSolvable (A.subgroupOf B) := inferInstance
+  let : Group.IsSolvable B := hB
+  let : Group.IsSolvable (A.subgroupOf B) := inferInstance
   exact isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hAB)
 
 /-- The two-core of `N` is normal in `N`. -/
@@ -372,7 +372,7 @@ public theorem a7_quotient_card_dvd {G : Type u} [Group G] [Finite G]
 /-- A cyclic group is solvable. -/
 private theorem isSolvable_of_isCyclic {G : Type u} [Group G] [Finite G]
     (h : IsCyclic G) : Group.IsSolvable G := by
-  letI : CommGroup G := IsCyclic.commGroup
+  let : CommGroup G := IsCyclic.commGroup
   infer_instance
 
 /-- The rotation subgroup of a finite dihedral group is normal. -/
@@ -404,10 +404,10 @@ private theorem isSolvable_of_dihedralGroup (z : ℕ) [NeZero z] :
   classical
   let R : Subgroup (DihedralGroup z) :=
     Subgroup.zpowers (DihedralGroup.r 1 : DihedralGroup z)
-  haveI : R.Normal := dihedralRotation_normal z
-  letI : Group.IsSolvable R := by
-    haveI : IsCyclic R := Subgroup.isCyclic_zpowers (DihedralGroup.r 1 : DihedralGroup z)
-    letI : CommGroup R := IsCyclic.commGroup
+  have : R.Normal := dihedralRotation_normal z
+  let : Group.IsSolvable R := by
+    have : IsCyclic R := Subgroup.isCyclic_zpowers (DihedralGroup.r 1 : DihedralGroup z)
+    let : CommGroup R := IsCyclic.commGroup
     infer_instance
   have hRcard : Nat.card R = z := by
     rw [Nat.card_zpowers, DihedralGroup.orderOf_r_one]
@@ -421,10 +421,10 @@ private theorem isSolvable_of_dihedralGroup (z : ℕ) [NeZero z] :
   have hQcard : Nat.card (DihedralGroup z ⧸ R) = 2 := by
     rw [← Subgroup.index_eq_card R]
     exact hindex
-  letI : Group.IsSolvable (DihedralGroup z ⧸ R) := by
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Group.IsSolvable (DihedralGroup z ⧸ R) := by
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hQcyc : IsCyclic (DihedralGroup z ⧸ R) := isCyclic_of_prime_card hQcard
-    letI : CommGroup (DihedralGroup z ⧸ R) := IsCyclic.commGroup
+    let : CommGroup (DihedralGroup z ⧸ R) := IsCyclic.commGroup
     infer_instance
   exact isSolvable_of_normal_solvable_quotient_solvable R inferInstance inferInstance
 
@@ -453,21 +453,21 @@ private theorem isSolvable_of_semidirect {G : Type u} [Group G] [Finite G]
       _ = q (n * c) := by rw [map_mul, hqn, one_mul]
       _ = q g := by rw [hgc]
       _ = y := hg
-  haveI : IsCyclic C := hC
+  have : IsCyclic C := hC
   have hQcyc : IsCyclic (G ⧸ N) := isCyclic_of_surjective f hf_surj
-  letI : Group.IsSolvable (G ⧸ N) := isSolvable_of_isCyclic hQcyc
+  let : Group.IsSolvable (G ⧸ N) := isSolvable_of_isCyclic hQcyc
   exact isSolvable_of_normal_solvable_quotient_solvable N hN inferInstance
 
 /-- A solvable group has no `A₇` quotient. -/
 public theorem a7_quotient_absurd_of_solvable {G : Type u} [Group G] [Finite G]
     (N : Subgroup G) [N.Normal] (hG : Group.IsSolvable G)
     (hA : Nonempty (G ⧸ N ≃* alternatingGroup (Fin 7))) : False := by
-  letI : Group.IsSolvable (G ⧸ N) := inferInstance
+  let : Group.IsSolvable (G ⧸ N) := inferInstance
   have hA7solv : Group.IsSolvable (alternatingGroup (Fin 7)) :=
     Group.isSolvable_of_surjective (f := hA.some.toMonoidHom) hA.some.surjective
-  letI : Group.IsPerfect (alternatingGroup (Fin 7)) :=
+  let : Group.IsPerfect (alternatingGroup (Fin 7)) :=
     ⟨commutator_alternatingGroup_eq_top (by norm_num)⟩
-  haveI : Nontrivial (alternatingGroup (Fin 7)) := inferInstance
+  have : Nontrivial (alternatingGroup (Fin 7)) := inferInstance
   exact Group.IsPerfect.not_isSolvable (alternatingGroup (Fin 7)) hA7solv
 
 /-- The image of the center under a group equivalence is the center. -/
@@ -568,14 +568,14 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
     False := by
   classical
   rcases hK with ⟨p, f, hp, hpodd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFcard : Nat.card K = p ^ f := hcard
   rcases Glauberman.Dickson.huppert_II_8_27_dickson_psl2_subgroup_classification
       (p := p) (f := f) hFcard H with
     hElementary | hCyclic | hDihedral | hA4 | hS4 | hA5 |
       hSemidirect | hPSL | hPGL
   · -- elementary abelian `p`-group: solvable, so no `A₇` quotient
-    letI : IsElementaryAbelian p H := hElementary
+    let : IsElementaryAbelian p H := hElementary
     have hHp : IsPGroup p H := IsElementaryAbelian.isPGroup p H
     exact a7_quotient_absurd_of_solvable (N := Subgroup.center H)
       (isSolvable_of_isPGroup hHp) hA
@@ -590,7 +590,7 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
       have hcard0 : Nat.card H = 0 := by
         simpa [hcardH, hz]
       exact Nat.card_pos.ne' hcard0
-    letI : NeZero z := ⟨hz_ne⟩
+    let : NeZero z := ⟨hz_ne⟩
     have hDsolv : Group.IsSolvable (DihedralGroup z) := isSolvable_of_dihedralGroup z
     have hHsolv : Group.IsSolvable H :=
       Group.isSolvable_of_surjective (f := hdiso.some.symm.toMonoidHom)
@@ -614,8 +614,8 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
   · -- semidirect `N ⋊ C`: solvable
     rcases hSemidirect with
       ⟨m, t, hmt, hmt2, N, C, hNnorm, hNp, hNcard, hCcyc, hCcard, hdisj, hsup⟩
-    letI : N.Normal := hNnorm
-    letI : IsElementaryAbelian p N := hNp
+    let : N.Normal := hNnorm
+    let : IsElementaryAbelian p N := hNp
     have hNp' : IsPGroup p N := IsElementaryAbelian.isPGroup p N
     have hNsolv : Group.IsSolvable N := isSolvable_of_isPGroup hNp'
     have hHsolv : Group.IsSolvable H :=
@@ -623,8 +623,8 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
     exact a7_quotient_absurd_of_solvable (N := Subgroup.center H) hHsolv hA
   · -- `PSL₂` over a subfield
     rcases hPSL with ⟨m, hm, hmdiv, hHpsl⟩
-    letI : Field (GaloisField p m) := inferInstance
-    letI : Finite (GaloisField p m) := inferInstance
+    let : Field (GaloisField p m) := inferInstance
+    let : Finite (GaloisField p m) := inferInstance
     have hGFcard : Nat.card (GaloisField p m) = p ^ m := by
       exact GaloisField.card p m hm
     have hGFodd : IsOddPrimePower (Nat.card (GaloisField p m)) :=
@@ -672,8 +672,8 @@ public theorem no_a7_quotient_subgroup_of_psl2_odd
       exact a7_quotient_absurd_of_card_lt (N := Subgroup.center H) (by omega) hA
   · -- `PGL₂` over a subfield
     rcases hPGL with ⟨m, hm, hmdiv, hHpgl⟩
-    letI : Field (GaloisField p m) := inferInstance
-    letI : Finite (GaloisField p m) := inferInstance
+    let : Field (GaloisField p m) := inferInstance
+    let : Finite (GaloisField p m) := inferInstance
     have hGFcard : Nat.card (GaloisField p m) = p ^ m := by
       exact GaloisField.card p m hm
     have hGFodd : IsOddPrimePower (Nat.card (GaloisField p m)) :=
@@ -896,9 +896,9 @@ private theorem firstCase_cyclic_componentLayer_le_componentLayer_of_normalizer
       a7_quasisimple_le_of_normal_intersection_involution
         E K N hE_qs hZodd hEleN hKnorm hinv
     have hKp : IsPGroup 2 K := twoCoreOf_isPGroup N
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hKsolv : Group.IsSolvable K := by
-      letI : Group.IsNilpotent (↥K) := hKp.isNilpotent
+      let : Group.IsNilpotent (↥K) := hKp.isNilpotent
       infer_instance
     have hEsolv : Group.IsSolvable E :=
       isSolvable_of_le_of_isSolvable E K hE_le_K hKsolv
@@ -936,19 +936,19 @@ private theorem perfect_image_ne_bot_of_solvable_kernel
   let Ebar : Subgroup (H ⧸ O) := E.map q
   have hEbarperf : Group.IsPerfect Ebar := by
     dsimp [Ebar]
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.map q
   have hEbarne : Ebar ≠ ⊥ := by
     intro hbot
     have hEleO : E ≤ O := by
       have hker : E ≤ q.ker := (Subgroup.map_eq_bot_iff E).mp hbot
       simpa [q, QuotientGroup.ker_mk'] using hker
-    letI : Group.IsSolvable O := hOsolv
-    letI : Group.IsSolvable (E.subgroupOf O) := inferInstance
+    let : Group.IsSolvable O := hOsolv
+    let : Group.IsSolvable (E.subgroupOf O) := inferInstance
     have hEsolv : Group.IsSolvable E :=
       isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEleO)
-    letI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
-    letI : Group.IsPerfect E := hEperf
+    let : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.not_isSolvable E hEsolv
   exact ⟨hEbarne, hEbarperf⟩
 
@@ -968,12 +968,12 @@ private theorem perfect_image_le_normal_odd_index
   let Ebar : Subgroup (H ⧸ O) := E.map q
   obtain ⟨hEbarne, hEbarperf⟩ :=
     perfect_image_ne_bot_of_solvable_kernel E hEperf hEne O hOsolv
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : (H ⧸ O) →* (H ⧸ O) ⧸ L := QuotientGroup.mk' L
   let I : Subgroup ((H ⧸ O) ⧸ L) := Ebar.map pi
   have hIperf : Group.IsPerfect I := by
     dsimp [I]
-    letI : Group.IsPerfect Ebar := hEbarperf
+    let : Group.IsPerfect Ebar := hEbarperf
     exact Group.IsPerfect.map pi
   have hQodd : Odd (Nat.card ((H ⧸ O) ⧸ L)) := by
     simpa only [Subgroup.index_eq_card] using hLindex
@@ -981,10 +981,10 @@ private theorem perfect_image_le_normal_odd_index
     odd_order_theorem ((H ⧸ O) ⧸ L) hQodd
   have hIbot : I = ⊥ := by
     by_contra hIne
-    letI : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
+    let : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
     have hIsolv : Group.IsSolvable I := inferInstance
-    letI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    letI : Group.IsPerfect I := hIperf
+    let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    let : Group.IsPerfect I := hIperf
     exact Group.IsPerfect.not_isSolvable I hIsolv
   have hEbarL : Ebar ≤ L := by
     have hker : Ebar ≤ pi.ker := (Subgroup.map_eq_bot_iff Ebar).mp hIbot
@@ -1044,19 +1044,19 @@ public theorem a7_central_quotient_of_image_of_central_kernel
       simpa [f] using congrArg f hcomm)
   have hEperf : Group.IsPerfect E := (Group.isPerfect_def).2 hEq.2.1
   have hEbarperf : Group.IsPerfect Ebar := by
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.ofSurjective hf
   have hEbarne : Ebar ≠ ⊥ := by
     intro hbot
     have hEleO : E ≤ O := by
       have hker : E ≤ q.ker := (Subgroup.map_eq_bot_iff E).mp hbot
       simpa [q, QuotientGroup.ker_mk'] using hker
-    letI : Group.IsSolvable O := hOsolv
-    letI : Group.IsSolvable (E.subgroupOf O) := inferInstance
+    let : Group.IsSolvable O := hOsolv
+    let : Group.IsSolvable (E.subgroupOf O) := inferInstance
     have hEsolv : Group.IsSolvable E :=
       isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEleO)
-    letI : Nontrivial E := hEq.1
-    letI : Group.IsPerfect E := hEperf
+    let : Nontrivial E := hEq.1
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.not_isSolvable E hEsolv
   let φ : E ⧸ Subgroup.center E →* Ebar ⧸ Subgroup.center Ebar :=
     QuotientGroup.map (Subgroup.center E) (Subgroup.center Ebar) f hcent_map
@@ -1066,7 +1066,7 @@ public theorem a7_central_quotient_of_image_of_central_kernel
       (Subgroup.center E) (Subgroup.center Ebar) f
       ((QuotientGroup.mk'_surjective (Subgroup.center Ebar)).comp hf)
       hcent_map
-  letI : IsSimpleGroup (E ⧸ Subgroup.center E) :=
+  let : IsSimpleGroup (E ⧸ Subgroup.center E) :=
     (MulEquiv.isSimpleGroup_congr hA.some).mpr
       (alternatingGroup.isSimpleGroup (by norm_num : 5 ≤ Nat.card (Fin 7)))
   have hφker_bot_or_top :=
@@ -1222,7 +1222,7 @@ public theorem firstCase_cyclic_componentLayer_normalizer_eq_of_a7
     central_quotient_of_mulEquiv eEN.symm hEcenterA7
   have hEperf : Group.IsPerfect E := (Group.isPerfect_def).2 hEqE.2.1
   have hENperf : Group.IsPerfect EN := by
-    letI : Group.IsPerfect E := hEperf
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.ofSurjective (f := eEN.symm.toMonoidHom) eEN.symm.surjective
   have hENne : EN ≠ ⊥ := by
     intro hbot
@@ -1267,19 +1267,19 @@ public theorem firstCase_cyclic_componentLayer_normalizer_eq_of_a7
       ⟨_hSylowN, hQtwo⟩ | ⟨_hSylowN, hA7q⟩ |
         ⟨_hSylowN, K, hK, Lq, hLqnormal, hLqindex, hlin⟩
   · exfalso
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hQsolv : Group.IsSolvable (N ⧸ O) := isSolvable_of_isPGroup hQtwo
     have hTopSolv : Group.IsSolvable (⊤ : Subgroup (N ⧸ O)) :=
       isSolvable_of_mulEquiv (Subgroup.topEquiv (G := N ⧸ O)).symm
     have hEbar_solv : Group.IsSolvable Ebar :=
       isSolvable_of_le_of_isSolvable Ebar (⊤ : Subgroup (N ⧸ O)) le_top hTopSolv
-    letI : Group.IsPerfect Ebar := hEbar_ne_perf.2
-    letI : Nontrivial Ebar := (Subgroup.nontrivial_iff_ne_bot Ebar).2 hEbar_ne_perf.1
+    let : Group.IsPerfect Ebar := hEbar_ne_perf.2
+    let : Nontrivial Ebar := (Subgroup.nontrivial_iff_ne_bot Ebar).2 hEbar_ne_perf.1
     exact Group.IsPerfect.not_isSolvable Ebar hEbar_solv
   · have hcard_dvd : (2520 : ℕ) ∣ Nat.card Ebar :=
       a7_quotient_card_dvd (Subgroup.center Ebar) hAbar
     have h2520_le : 2520 ≤ Nat.card Ebar := Nat.le_of_dvd (by norm_num) hcard_dvd
-    haveI : Finite (N ⧸ O) := inferInstance
+    have : Finite (N ⧸ O) := inferInstance
     have hEbar_card : Nat.card Ebar ≤ Nat.card (N ⧸ O) :=
       Subgroup.card_le_card_group (H := Ebar)
     have hNq_card : Nat.card (N ⧸ O) = 2520 := by
@@ -1359,12 +1359,12 @@ public theorem firstCase_cyclic_componentLayer_normalizer_eq_of_a7
         exact hIm.1 hmap.symm
       have hEL_perf : Group.IsPerfect EL := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-        letI : Group.IsPerfect Ebar := hIm.2.1
+        let : Group.IsPerfect Ebar := hIm.2.1
         exact Group.IsPerfect.ofSurjective (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       let J : Subgroup (PSL2 K) := EL.map eL.toMonoidHom
       have hJ_perf : Group.IsPerfect J := by
         dsimp [J]
-        letI : Group.IsPerfect EL := hEL_perf
+        let : Group.IsPerfect EL := hEL_perf
         exact Group.IsPerfect.map eL.toMonoidHom
       have hJ_A7 : Nonempty (J ⧸ Subgroup.center J ≃* alternatingGroup (Fin 7)) := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
@@ -1384,19 +1384,19 @@ public theorem firstCase_cyclic_componentLayer_normalizer_eq_of_a7
         exact hIm.1 hmap.symm
       have hEL_perf : Group.IsPerfect EL := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-        letI : Group.IsPerfect Ebar := hIm.2.1
+        let : Group.IsPerfect Ebar := hIm.2.1
         exact Group.IsPerfect.ofSurjective (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       let J : Subgroup (PGL2 K) := EL.map eL.toMonoidHom
       have hJ_perf : Group.IsPerfect J := by
         dsimp [J]
-        letI : Group.IsPerfect EL := hEL_perf
+        let : Group.IsPerfect EL := hEL_perf
         exact Group.IsPerfect.map eL.toMonoidHom
       have hJ_A7 : Nonempty (J ⧸ Subgroup.center J ≃* alternatingGroup (Fin 7)) := by
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
         let eMap : EL ≃* J :=
           Subgroup.equivMapOfInjective EL eL.toMonoidHom eL.injective
         exact central_quotient_of_mulEquiv (eEL.symm.trans eMap) hAbar
-      letI : Finite (PGL2 K) :=
+      let : Finite (PGL2 K) :=
         Finite.of_surjective Matrix.ProjGenLinGroup.mk Matrix.ProjGenLinGroup.mk_surjective
       by_cases hK3 : Nat.card K = 3
       · have hPGLcard : Nat.card (PGL2 K) = 3 * (3 ^ 2 - 1) := by
@@ -1423,7 +1423,7 @@ public theorem firstCase_cyclic_componentLayer_normalizer_eq_of_a7
               _ ≤ p ^ n := Nat.pow_le_pow_right hp.pos hn)
         have hcard_gt : 3 < Nat.card K := by omega
         have hJleComm : J ≤ commutator (PGL2 K) := by
-          letI : Group.IsPerfect J := hJ_perf
+          let : Group.IsPerfect J := hJ_perf
           have hJJ : ⁅J, J⁆ = J := Subgroup.commutator_eq_self
           rw [← hJJ]
           exact Subgroup.commutator_mono le_top le_top

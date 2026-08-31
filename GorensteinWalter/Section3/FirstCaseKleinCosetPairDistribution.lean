@@ -219,7 +219,7 @@ public theorem coset_pair_card_three_zero
   classical
   let eF : cosetFiber c y ≃ {x : G // x ∈ invertedElements c.Hhat y} :=
     cosetFiber_equiv_inverted c hy hyH
-  haveI : IsEmpty (cosetCommPair c y) := by
+  have : IsEmpty (cosetCommPair c y) := by
     refine ⟨fun p => ?_⟩
     let z1 : cosetFiber c y := p.1.1
     let z2 : cosetFiber c y := p.1.2
@@ -938,8 +938,8 @@ private theorem coset_pair_card_four_of_odd_fiber
         right_inv := by intro z; cases z; rfl }
     simpa using (Nat.card_congr e)
   have hLeaf : Nat.card Leaf = 3 := by
-    letI : Fintype (cosetFiber c y) := Fintype.ofFinite _
-    letI : Fintype Leaf := Fintype.ofFinite _
+    let : Fintype (cosetFiber c y) := Fintype.ofFinite _
+    let : Fintype Leaf := Fintype.ofFinite _
     have hcompl := Fintype.card_subtype_compl (α := cosetFiber c y)
       (p := fun z : cosetFiber c y => z = sF)
     have hnat : Nat.card Leaf = Nat.card (cosetFiber c y) -
@@ -1092,10 +1092,10 @@ public theorem firstCase_klein_coset_pair_card_eq
                 Nat.card {x : G // x ∈ invertedElements c.Hhat y} :=
                   Nat.card_congr (cosetFiber_equiv_inverted c hy hyH)
             _ = 0 := hc0
-        letI : Fintype (cosetFiber c y) := Fintype.ofFinite _
-        haveI : IsEmpty (cosetFiber c y) :=
+        let : Fintype (cosetFiber c y) := Fintype.ofFinite _
+        have : IsEmpty (cosetFiber c y) :=
           Fintype.card_eq_zero_iff.mp (by simpa [Nat.card_eq_fintype_card] using hcardFib)
-        haveI : IsEmpty (cosetCommPair c y) := by
+        have : IsEmpty (cosetCommPair c y) := by
           refine ⟨fun p => ?_⟩
           exact isEmptyElim p.1.1
         exact Nat.card_eq_zero.2 (Or.inl inferInstance)
@@ -1108,7 +1108,7 @@ public theorem firstCase_klein_coset_pair_card_eq
                 Nat.card {x : G // x ∈ invertedElements c.Hhat y} :=
                   Nat.card_congr (cosetFiber_equiv_inverted c hy hyH)
             _ = 1 := h1card
-        haveI : IsEmpty (cosetCommPair c y) := by
+        have : IsEmpty (cosetCommPair c y) := by
           refine ⟨fun p => ?_⟩
           obtain ⟨z0, hz0⟩ := (Nat.card_eq_one_iff_exists).mp h1cardFib
           have hz1 : p.1.1 = z0 := hz0 p.1.1

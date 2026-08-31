@@ -33,14 +33,14 @@ public theorem exists_kleinFour_centralizer_not_le_of_commutator_eq_self
     ∃ s : G, s ∈ V ∧ s ≠ 1 ∧ s ≠ t ∧
       ¬ (centralizerIn P s ≤ centralizerIn P t) := by
   classical
-  letI : IsKleinFour (↥V) := hV
-  letI : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
-  letI : CommGroup (↥V) := IsMulCommutative.instCommGroup
+  let : IsKleinFour (↥V) := hV
+  let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
+  let : CommGroup (↥V) := IsMulCommutative.instCommGroup
   have hV2 : IsPGroup 2 (↥V) := IsPGroup.of_card (n := 2) (by
     simp [IsKleinFour.card_four])
-  letI : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
-  letI : V.Normalizes P := ⟨hVP⟩
-  letI : MulDistribMulAction (↥V) (↥P) :=
+  let : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
+  let : V.Normalizes P := ⟨hVP⟩
+  let : MulDistribMulAction (↥V) (↥P) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer V P hVP
   by_contra hnone
   push Not at hnone

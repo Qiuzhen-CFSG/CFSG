@@ -95,7 +95,7 @@ public theorem secondCase_a7_A_sup_twoCore_fixed_card_eq_six
       have hxSup : xH ∈ AH ⊔ VH := by
         rw [← hsubEq]
         exact hx.1
-      letI : AH.Normal :=
+      let : AH.Normal :=
         (Subgroup.normal_subgroupOf_iff hAleH).2
           (fun a h haA hh => hAnormal.2 h hh a haA)
       rcases Subgroup.mem_sup_of_normal_left.mp hxSup with

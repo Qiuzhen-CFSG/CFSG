@@ -61,7 +61,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_A7_quotient
     ¬ 4 ∣ N.index := by
   classical
   let O : Subgroup A := pPrimeCore 2 A
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := A ⧸ O
   let q : A →* Q := QuotientGroup.mk' O
   have hOodd : Odd (Nat.card (↥O)) := by
@@ -76,7 +76,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_A7_quotient
     card_dvd_four_of_map_odd_kernel q N hOodd' h4
   have hA7simple : IsSimpleGroup (alternatingGroup (Fin 7)) :=
     alternatingGroup.isSimpleGroup (by norm_num)
-  letI : IsSimpleGroup Q := (MulEquiv.isSimpleGroup_congr hA7.some).mpr hA7simple
+  let : IsSimpleGroup Q := (MulEquiv.isSimpleGroup_congr hA7.some).mpr hA7simple
   have hNQN : (N.map q).Normal :=
     Subgroup.Normal.map hN q (QuotientGroup.mk'_surjective O)
   have hNQne : N.map q ≠ ⊥ := by
@@ -98,7 +98,7 @@ public theorem pCore_two_eq_bot_of_quotient_ASeven
     pCore 2 A = ⊥ := by
   classical
   let O : Subgroup A := pPrimeCore 2 A
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := A ⧸ O
   let q : A →* Q := QuotientGroup.mk' O
   let T : Subgroup A := pCore 2 A
@@ -108,7 +108,7 @@ public theorem pCore_two_eq_bot_of_quotient_ASeven
     Subgroup.Normal.map hTnorm q (QuotientGroup.mk'_surjective O)
   have hA7simple : IsSimpleGroup (alternatingGroup (Fin 7)) :=
     alternatingGroup.isSimpleGroup (by norm_num)
-  letI : IsSimpleGroup Q :=
+  let : IsSimpleGroup Q :=
     (MulEquiv.isSimpleGroup_congr hA7.some).mpr hA7simple
   have hTp : IsPGroup 2 T := pCore_isPGroup
   obtain ⟨n, hn⟩ := hTp.exists_card_eq
@@ -166,9 +166,9 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_iso_psl2_large
     {M : Subgroup L} (hM : M.Normal) (h4 : 4 ∣ Nat.card M) :
     ¬ 4 ∣ M.index := by
   classical
-  letI : IsSimpleGroup (PSL2 K) :=
+  let : IsSimpleGroup (PSL2 K) :=
     Matrix.ProjectiveSpecialLinearGroup.rank_two_simple (by omega)
-  letI : IsSimpleGroup L := (MulEquiv.isSimpleGroup_congr e).mpr inferInstance
+  let : IsSimpleGroup L := (MulEquiv.isSimpleGroup_congr e).mpr inferInstance
   have hMne : M ≠ ⊥ := by
     intro hbot
     rw [hbot] at h4
@@ -191,9 +191,9 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_iso_pgl2_large
   have hL0normal : L0.Normal := by dsimp [L0]; infer_instance
   have eL0 : Nonempty (L0 ≃* PSL2 K) :=
     commutator_mulEquiv_psl2_of_mulEquiv_pgl2_card_gt_three K hK hcard e
-  letI : IsSimpleGroup (PSL2 K) :=
+  let : IsSimpleGroup (PSL2 K) :=
     Matrix.ProjectiveSpecialLinearGroup.rank_two_simple (by omega)
-  letI : IsSimpleGroup L0 := (MulEquiv.isSimpleGroup_congr eL0.some).mpr inferInstance
+  let : IsSimpleGroup L0 := (MulEquiv.isSimpleGroup_congr eL0.some).mpr inferInstance
   have hL0idx : L0.index = 2 := by
     have hLcard : Nat.card L = Nat.card K * (Nat.card K ^ 2 - 1) := by
       calc
@@ -295,7 +295,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
   · exact index_not_dvd_four_of_normal_card_div_four_of_A7_quotient hA7 hN h4
   ·
     let O : Subgroup A := pPrimeCore 2 A
-    letI : O.Normal := by dsimp [O]; infer_instance
+    let : O.Normal := by dsimp [O]; infer_instance
     let q : A →* A ⧸ O := QuotientGroup.mk' O
     have hOodd : Odd (Nat.card (↥O)) := by
       exact Nat.coprime_two_left.mp (pPrimeCore_coprime_card (p := 2) (G := A))
@@ -358,7 +358,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
             (L := ↥L) K hKprime h3 eL hK0Lnormal h4K0L
         · have hKcard3 : Nat.card K = 3 := by
             omega
-          letI : Fintype K := Fintype.ofFinite K
+          let : Fintype K := Fintype.ofFinite K
           have hFcard : Fintype.card K = 3 := by
             simpa [Nat.card_eq_fintype_card] using hKcard3
           have eK : ZMod 3 ≃+* K :=
@@ -379,7 +379,7 @@ public theorem index_not_dvd_four_of_normal_card_div_four_of_isDGroup_not_twoQuo
             (L := ↥L) K hKprime h3 eL hK0Lnormal h4K0L
         · have hKcard3 : Nat.card K = 3 := by
             omega
-          letI : Fintype K := Fintype.ofFinite K
+          let : Fintype K := Fintype.ofFinite K
           have hFcard : Fintype.card K = 3 := by
             simpa [Nat.card_eq_fintype_card] using hKcard3
           have eK : ZMod 3 ≃+* K :=

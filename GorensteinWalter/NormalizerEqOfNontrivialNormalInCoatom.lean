@@ -20,7 +20,7 @@ public theorem normalizer_eq_of_nontrivial_normal_in_coatom
     (hKnormal : (K.subgroupOf A).Normal) :
     Subgroup.normalizer (K : Set G) = A := by
   have hAleN : A ≤ Subgroup.normalizer (K : Set G) := by
-    letI : (K.subgroupOf A).Normal := hKnormal
+    let : (K.subgroupOf A).Normal := hKnormal
     exact Subgroup.le_normalizer_of_normal_subgroupOf hKA
   have hNne : Subgroup.normalizer (K : Set G) ≠ ⊤ := by
     intro hNtop

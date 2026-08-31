@@ -26,7 +26,7 @@ public theorem secondCase_linear_P_centralizer_FU_eq_sup
     (d : SecondCaseComponentData w)
     (od : SecondCaseLinearOmegaData c w d) :
     (Subgroup.centralizer (od.P : Set G)) ⊓ c.FU = od.F ⊔ od.K0 := by
-  letI : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.hp_prime⟩
   have hPnorm : Subgroup.normalizer (od.P : Set G) = w.M :=
     secondCase_linear_P_normalizer_eq_M c w d od
   have hFleFU : od.F ≤ c.FU := by
@@ -44,8 +44,8 @@ public theorem secondCase_linear_P_centralizer_FU_eq_sup
     rw [Subgroup.mem_centralizer_iff]
     intro p hp
     have hpF : p ∈ od.F := od.P_le_F hp
-    letI : IsCyclic (↥od.F) := od.F_cyclic
-    letI : CommGroup (↥od.F) := IsCyclic.commGroup
+    let : IsCyclic (↥od.F) := od.F_cyclic
+    let : CommGroup (↥od.F) := IsCyclic.commGroup
     have hfP : (⟨f, hf⟩ : od.F) * ⟨p, hpF⟩ =
         ⟨p, hpF⟩ * ⟨f, hf⟩ := mul_comm _ _
     exact (congrArg Subtype.val hfP).symm

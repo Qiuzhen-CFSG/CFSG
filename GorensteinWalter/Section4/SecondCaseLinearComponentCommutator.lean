@@ -58,7 +58,7 @@ public theorem secondCase_linear_K_eq_componentSylow_commutator
       Subgroup.normal_subgroupOf_iff hKleX]
     intro k x hk hx
     exact hKnormalX.2 (x : G) hx (k : G) hk
-  letI : KX.Normal := hKXnormal
+  let : KX.Normal := hKXnormal
   have hsupX : KX ⊔ BX = ⊤ := by
     apply le_antisymm le_top
     intro x hx

@@ -26,7 +26,7 @@ public theorem secondCase_psl2_sylow_not_cyclic_of_component_le
     (N : Subgroup G) (hEN : d.E ≤ N) :
     ∀ P : Sylow 2 N, ¬ IsCyclic P := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨SM, _hSMcent, SE, hSEamb⟩ :=
     secondCase_centralizer_contains_sylow c w d
   let Q : Type u := d.E ⧸ Subgroup.center d.E
@@ -79,7 +79,7 @@ public theorem secondCase_psl2_sylow_not_cyclic_of_component_le
   have hPNcyc : IsCyclic PN :=
     (MulEquiv.isCyclic (Sylow.equiv PN P)).mpr hPcyc
   have hANcyc : IsCyclic AN := by
-    letI : IsCyclic PN := hPNcyc
+    let : IsCyclic PN := hPNcyc
     exact Subgroup.isCyclic_of_le hANPN
   let eAN : AN ≃* A := Subgroup.subgroupOfEquivOfLe hAleN
   have hAcyc : IsCyclic A := isCyclic_of_surjective eAN eAN.surjective

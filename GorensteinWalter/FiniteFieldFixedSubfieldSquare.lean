@@ -59,10 +59,10 @@ private theorem nonsquare_remains_nonsquare_fixedSubfield
   have hle2 : Module.finrank R (IntermediateField.adjoin R {x}) ≤ 2 := by
     rw [hfinrank_adjoin]
     exact hdeg
-  letI : Finite (K ≃+* K) :=
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K))
       (fun _ _ h => RingEquiv.ext (congrFun h))
-  letI : IsGaloisGroup (Subgroup.zpowers sigma) R K :=
+  let : IsGaloisGroup (Subgroup.zpowers sigma) R K :=
     IsGaloisGroup.fixedPoints (Subgroup.zpowers sigma) K
   have hfinrankK : Module.finrank R K = p := by
     calc

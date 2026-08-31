@@ -66,7 +66,7 @@ public theorem component_center_le_fittingSubgroupOf
         _ = (m * (e : G) * m⁻¹) * (y : G) := by group
     exact Subgroup.mem_map.mpr ⟨eM, heMcenter, rfl⟩
   have hZnil : Group.IsNilpotent Z := by
-    letI : CommGroup (Subgroup.center E) :=
+    let : CommGroup (Subgroup.center E) :=
       { (inferInstance : Group (Subgroup.center E)) with
         mul_comm := by
           intro a b

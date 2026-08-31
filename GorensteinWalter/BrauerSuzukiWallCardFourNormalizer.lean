@@ -349,7 +349,7 @@ public theorem
     · intro x hxV
       rw [Subgroup.mem_centralizer_iff]
       intro y hyV
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       have hcomm := (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         (⟨y, hyV⟩ : V) (⟨x, hxV⟩ : V)
       exact congrArg Subtype.val hcomm
@@ -399,13 +399,13 @@ public theorem
     · intro x hx
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       have hcomm := (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         (⟨(y : G), hy⟩ : V) (⟨(x : G), hx⟩ : V)
       have hcommG : (y : G) * (x : G) = (x : G) * (y : G) :=
         congrArg (fun z : V => (z : G)) hcomm
       exact Subtype.ext hcommG
-  letI : VN.Normal := hVNnormal
+  let : VN.Normal := hVNnormal
   obtain ⟨phi, hphi⟩ := quotient_centralizer_mulAut_embedding VN
   let eQ : (N ⧸ VN) ≃* (N ⧸ Subgroup.centralizer (VN : Set N)) :=
     QuotientGroup.quotientMulEquivOfEq hCentVN.symm
@@ -447,7 +447,7 @@ public theorem
   have hpsi : Function.Injective psi := hAutToPermInj.comp hphiV
   have hQdvd : Nat.card (N ⧸ VN) ∣ 6 := by
     have hdvd := Subgroup.card_dvd_of_injective psi hpsi
-    letI : Fintype Omega := Fintype.ofFinite Omega
+    let : Fintype Omega := Fintype.ofFinite Omega
     have hPermCard : Nat.card (Equiv.Perm Omega) = 6 := by
       rw [Nat.card_eq_fintype_card, Fintype.card_perm,
         ← Nat.card_eq_fintype_card, hOmegaCard]
@@ -480,7 +480,7 @@ public theorem
     · rfl
   have hNcard : Nat.card N = 24 := by
     rw [hNcardFactor, hQcard]
-  letI : Fact (Nat.Prime 3) := ⟨by norm_num⟩
+  let : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   obtain ⟨XN, hXNcard⟩ :=
     Sylow.exists_subgroup_card_pow_prime (G := N) 3 (n := 1) (by
       rw [hNcard]

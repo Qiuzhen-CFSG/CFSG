@@ -25,8 +25,8 @@ public theorem perfect_subgroup_le_twoResidualOf
   classical
   change K ≤ pResidualOf H 2
   let R : Subgroup G := pResidualOf H 2
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : (R.subgroupOf H).Normal := by
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : (R.subgroupOf H).Normal := by
     dsimp [R]
     exact fstar_pResidualOf_subgroupOf_normal H 2
   let K' : Subgroup H := K.subgroupOf H
@@ -42,12 +42,12 @@ public theorem perfect_subgroup_le_twoResidualOf
     exact hQp.to_subgroup I
   have hIperf : Group.IsPerfect I := by
     dsimp [I]
-    letI : Group.IsPerfect K' := hK'perf
+    let : Group.IsPerfect K' := hK'perf
     exact Group.IsPerfect.map q
   have hIbot : I = ⊥ := by
     by_contra hIne
-    haveI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    letI : Group.IsPerfect I := hIperf
+    have : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    let : Group.IsPerfect I := hIperf
     have hInil : Group.IsNilpotent I := hIp.isNilpotent
     exact (Group.IsPerfect.not_isNilpotent (G := I)) hInil
   intro x hx

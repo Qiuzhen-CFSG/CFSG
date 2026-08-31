@@ -73,7 +73,7 @@ public theorem secondCase_psl2_normalizer_fitting_action_of_a7_quotient
   classical
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let O : Subgroup N := pPrimeCore 2 N
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let q : N →* N ⧸ O := QuotientGroup.mk' O
   let L : Subgroup G := componentLayerOf N
   let eA7 : N ⧸ O ≃* alternatingGroup (Fin 7) := hA7.some
@@ -176,7 +176,7 @@ public theorem secondCase_psl2_normalizer_fitting_action_of_a7_quotient
   let Ei : Subgroup N := d.E.subgroupOf N
   let E7N : Subgroup (N ⧸ O) := Ei.map q
   let E7 : Subgroup (alternatingGroup (Fin 7)) := E7N.map eA7.toMonoidHom
-  haveI : Finite (N ⧸ O) :=
+  have : Finite (N ⧸ O) :=
     Finite.of_equiv (alternatingGroup (Fin 7)) hA7.some.toEquiv.symm
   let f : Ei →* E7N :=
     (q.comp Ei.subtype).codRestrict E7N (fun x =>

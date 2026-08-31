@@ -24,7 +24,7 @@ public lemma dihedral_cyclic_index_two_eq_rotation
     {m : ℕ} (hm : 2 ≤ m) (A : Subgroup (DihedralGroup (2 ^ m)))
     (hAcyc : IsCyclic A) (hAcard : Nat.card (↥A) = 2 ^ m) :
     A = Subgroup.zpowers (DihedralGroup.r 1) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num)⟩
   obtain ⟨a, ha⟩ := hAcyc.exists_generator
   rcases dihedralGroup_cases (a : DihedralGroup (2 ^ m)) with ⟨i, hi⟩ | ⟨i, hi⟩
   · have hAle : A ≤ Subgroup.zpowers (DihedralGroup.r 1) := by

@@ -93,10 +93,10 @@ public theorem BrauerSuzukiWallHypotheses.exists_linearCharacters_of_four_lt_car
       LambdaChar σ ⟨h.t, h.t_mem_K⟩ = -1 ∧
       ρ ^ 2 ≠ 1 ∧ σ ^ 2 ≠ 1 := by
   classical
-  letI : Fintype h.K := Fintype.ofFinite h.K
-  letI : IsMulCommutative h.K := h.K_commutative
-  letI : CommGroup h.K := IsMulCommutative.instCommGroup
-  letI : Fintype (h.K →* ℂˣ) := instFintypeMonoidHomUnits
+  let : Fintype h.K := Fintype.ofFinite h.K
+  let : IsMulCommutative h.K := h.K_commutative
+  let : CommGroup h.K := IsMulCommutative.instCommGroup
+  let : Fintype (h.K →* ℂˣ) := instFintypeMonoidHomUnits
   let tK : h.K := ⟨h.t, h.t_mem_K⟩
   let positive := Finset.univ.filter
     (fun χ : h.K →* ℂˣ => ((χ tK : ℂˣ) : ℂ) = 1)

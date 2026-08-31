@@ -32,7 +32,7 @@ public theorem secondCase_a7_U_inter_E_quotient_card_eq_three
   classical
   let E : Subgroup G := d.E
   let Z : Subgroup E := Subgroup.center E
-  letI : Z.Normal := by
+  let : Z.Normal := by
     dsimp [Z]
     infer_instance
   let q : E →* E ⧸ Z := QuotientGroup.mk' Z
@@ -52,8 +52,8 @@ public theorem secondCase_a7_U_inter_E_quotient_card_eq_three
   have hTp : IsPGroup 2 T := by
     apply IsPGroup.of_card (G := T) (n := 1)
     simp [hTcard]
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 T) := ⟨hTp⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 T) := ⟨hTp⟩
   have hZcop : Nat.Coprime 2 (Nat.card Z) :=
     Nat.coprime_two_left.mpr d.center_odd
   have hcentmap :

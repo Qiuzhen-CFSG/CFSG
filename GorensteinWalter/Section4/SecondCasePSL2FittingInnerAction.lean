@@ -33,16 +33,16 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
     (F : Subgroup G) (hFleFU : F ≤ c.FU) (hFleM : F ≤ w.M) :
     secondCase_psl2_fitting_innerAction d K ad F hFleM := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
@@ -105,7 +105,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
     refine ⟨z * y * z⁻¹, hYnormalC.2 z hzC y hyY, ?_⟩
     rw [map_mul, map_mul, map_inv, hzeq, hyeq]
     rfl
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hNcard : Nat.card N = Nat.card N0 :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hN0leA).toEquiv
   have hYMcard : Nat.card YM = Nat.card YG :=
@@ -124,7 +124,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
   have hNnil : Group.IsNilpotent N := by
     have hYMnil : Group.IsNilpotent YM := by
       let YFU : Subgroup c.FU := YG.subgroupOf c.FU
-      haveI : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
+      have : Group.IsNilpotent c.FU := fittingSubgroupOf_isNilpotent c.U
       have hYFUnil : Group.IsNilpotent YFU := Subgroup.isNilpotent YFU
       let eY : YFU ≃* YM := by
         let e1 : YFU ≃* YG := Subgroup.subgroupOfEquivOfLe inf_le_left
@@ -369,8 +369,8 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
     intro y
     simp [MulAut.congr_apply, MulAut.conj_apply]
   have hUnilp : Group.IsNilpotent U := by
-    letI : IsCyclic U := hUcyc
-    letI : CommGroup U := IsCyclic.commGroup
+    let : IsCyclic U := hUcyc
+    let : CommGroup U := IsCyclic.commGroup
     infer_instance
   have hNker : N ≤ pGammaL2LinearKernel K A := by
     by_contra hnle
@@ -384,7 +384,7 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
     obtain ⟨p, hp, hpodd, sigma, hsigord, P, hPleF, hPnormF, hPp,
       a0, ha0P, ha0sigma, ha0pow⟩ :=
       secondCase_fitting_fieldProjection_pElement A N hNodd hNnil hproj
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     let U0U : Subgroup U := pPrimeCore p U
     let U0 : Subgroup (PGammaL2 K) := U0U.map U.subtype
     have hU0leU : U0 ≤ U := Subgroup.map_subtype_le U0U
@@ -416,13 +416,13 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
         exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
     have hU0quot : IsPGroup p (↥U ⧸ U0.subgroupOf U) := by
       rw [hU0sub]
-      haveI : Group.IsNilpotent U := hUnilp
+      have : Group.IsNilpotent U := hUnilp
       have hQnil : Group.IsNilpotent (U ⧸ pPrimeCore p U) :=
         Group.nilpotent_of_surjective (QuotientGroup.mk' (pPrimeCore p U))
           (QuotientGroup.mk'_surjective (pPrimeCore p U))
       have htopnil : Group.IsNilpotent
           (⊤ : Subgroup (U ⧸ pPrimeCore p U)) := by
-        letI : Group.IsNilpotent (U ⧸ pPrimeCore p U) := hQnil
+        let : Group.IsNilpotent (U ⧸ pPrimeCore p U) := hQnil
         infer_instance
       have htopP : IsPGroup p (⊤ : Subgroup (U ⧸ pPrimeCore p U)) :=
         isPGroup_of_nilpotent_normal (⊤ : Subgroup (U ⧸ pPrimeCore p U))
@@ -616,10 +616,10 @@ public theorem secondCase_psl2_fitting_innerAction_of_actionData
         exact hdvd
       · right
         refine ⟨hUcard.trans hTplus, ?_⟩
-        letI : Fintype R := Fintype.ofFinite R
+        let : Fintype R := Fintype.ofFinite R
         have hcharR : ringChar R ≠ 2 := by
           intro hchar
-          letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+          let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
           have hdvd : 2 ∣ Fintype.card R :=
             (prime_dvd_char_iff_dvd_card (R := R) (p := 2)).mp (by
               simp [hchar])

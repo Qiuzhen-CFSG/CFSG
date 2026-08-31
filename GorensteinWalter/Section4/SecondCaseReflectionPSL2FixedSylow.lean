@@ -153,7 +153,7 @@ private theorem secondCase_fixedSylow_of_reflected_torus
         (∀ x : PSL2 K, x ∈ X → Odd (orderOf x)) →
           X ≤ Subgroup.centralizer ({t} : Set (PSL2 K)) → X ≤ T := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := U) 2 hUeven
   let s0 : PSL2 K := sU
   have hs0U : s0 ∈ U := sU.2
@@ -322,7 +322,7 @@ private theorem secondCase_fixedSylow_of_reflected_torus
         exact ne_of_gt
           (Nat.one_lt_pow (by omega : m ≠ 0) (by norm_num : 1 < 2)))
     exact hdcyc
-  letI : IsCyclic T := hTcyc
+  let : IsCyclic T := hTcyc
   have hPnotT : ¬ (P : Subgroup (PSL2 K)) ≤ T := by
     intro hPleT
     exact hPnotcyc (Subgroup.isCyclic_of_le hPleT)
@@ -367,7 +367,7 @@ private theorem secondCase_fixedSylow_of_reflected_torus
       T ⊔ Subgroup.zpowers s' := hNt.trans hjoin
   have hsinv' : ∀ x : PSL2 K, x ∈ T → s' * x * s'⁻¹ = x⁻¹ := by
     intro x hx
-    letI : CommGroup T := IsCyclic.commGroup
+    let : CommGroup T := IsCyclic.commGroup
     rcases hs'rep with ⟨u, huT, hus⟩
     rw [hus]
     have hsu : s * u * s = u⁻¹ := by
@@ -436,7 +436,7 @@ public theorem secondCase_reflection_psl2_torus_fixedSylow
   classical
   have hKfull : IsOddPrimePower (Nat.card K) := hK
   rcases hK with ⟨p, f, hp, hpodd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hoddK : Odd (Nat.card K) := by
     rw [hcard]
     exact hpodd.pow

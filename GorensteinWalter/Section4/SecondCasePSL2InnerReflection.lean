@@ -80,7 +80,7 @@ public theorem secondCase_psl2_odd_subgroup_centralizes_component_of_inner_refle
             (quotientCenterAutomorphism E α) = MulAut.conj a) :
     F ≤ Subgroup.centralizer (E : Set G) := by
   classical
-  letI : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
+  let : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
   let q : E →* E ⧸ Subgroup.center E :=
     QuotientGroup.mk' (Subgroup.center E)
   intro f hfF

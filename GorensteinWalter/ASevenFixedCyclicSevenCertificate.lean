@@ -15,7 +15,7 @@ public theorem a7_fixed_cyclic_seven_certificate :
   unfold fixedSpanPow
   intro x hx
   rcases hx with ⟨hxne, hxpow, i, hi⟩
-  letI : Fact (Nat.Prime 7) := ⟨Nat.prime_seven⟩
+  let : Fact (Nat.Prime 7) := ⟨Nat.prime_seven⟩
   have hxorder : orderOf x = 7 := orderOf_eq_prime hxpow hxne
   have ht2 : a7t ^ 2 = 1 := by decide
   have htwice : x = (x ^ (i : Nat)) ^ (i : Nat) := by

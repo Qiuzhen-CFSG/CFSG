@@ -87,7 +87,7 @@ private theorem mem_sup_product_of_normal_left
     Subgroup.subgroupOf_sup hAU hBU
   have hxSup : xU ∈ A.subgroupOf U ⊔ B.subgroupOf U := by
     simpa [hEq] using hxSub
-  haveI : (A.subgroupOf U).Normal :=
+  have : (A.subgroupOf U).Normal :=
     (Subgroup.normal_subgroupOf_iff hAU).2
       (fun a b ha hb => hAnorm.2 b hb a ha)
   rcases (Subgroup.mem_sup_of_normal_left.mp hxSup) with
@@ -106,7 +106,7 @@ private theorem index_le_two_of_normal_centralizer_card_three
     (hC : U ⊓ Subgroup.centralizer (P : Set G) = P) :
     (P.subgroupOf U).index ≤ 2 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let P' : Subgroup U := P.subgroupOf U
   let φ : U →* MulAut P' := MulAut.conjNormal (G := U) (H := P')
   let C : Subgroup U := φ.ker
@@ -159,7 +159,7 @@ private theorem index_le_two_of_normal_centralizer_card_three
         (Subgroup.subgroupOfEquivOfLe (H := P) (K := U) hPU).toEquiv).trans
         (by simpa using hPcard)
   have hcardAut : Nat.card (MulAut P') = 2 := by
-    haveI : IsCyclic P' := isCyclic_of_prime_card hP'card
+    have : IsCyclic P' := isCyclic_of_prime_card hP'card
     rw [IsCyclic.card_mulAut, hP'card]
     decide
   have hrange_le : Nat.card φ.range ≤ 2 := by
@@ -199,9 +199,9 @@ public theorem firstCase_cyclic_a7_theoremC_data_of_a7model
     (hp3 : od.p = 3) :
     firstCase_cyclic_a7_theoremC_data hmin c od := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
   let U : Subgroup G := od.d.bg.U
   let P : Subgroup G := qCoreOf U od.p
   let Q3 : Subgroup G :=
@@ -333,7 +333,7 @@ public theorem firstCase_cyclic_a7_theoremC_data_of_a7model
       exact Subgroup.mem_inf.mpr ⟨qCoreOf_le U od.p hx, hPcentP hx⟩
     have hCU_eq_P : U ⊓ Subgroup.centralizer (P : Set G) = P :=
       le_antisymm hCleP hPleCU
-    haveI : (P.subgroupOf U).Normal :=
+    have : (P.subgroupOf U).Normal :=
       (Subgroup.normal_subgroupOf_iff (qCoreOf_le U od.p)).2
         (fun h k hh hk => (qCoreOf_normal_in U od.p).2 k hk h hh)
     have hindex_le2 := index_le_two_of_normal_centralizer_card_three

@@ -476,7 +476,7 @@ public theorem firstCase_klein_restrictionSeven_core
   have h2dvd : 2 ∣ Nat.card Nhat := by
     change 2 ∣ Nat.card (Subgroup.normalizer (X : Set G) ⊓ c.Hhat : Subgroup G)
     exact even_iff_two_dvd.mp hN_even
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨sN, hsNorder⟩ := exists_prime_orderOf_dvd_card' (G := Nhat) 2 h2dvd
   let s : G := sN
   have hsord : orderOf s = 2 := by
@@ -501,7 +501,7 @@ public theorem firstCase_klein_restrictionSeven_core
     by_cases hsB : s ∈ B
     · exact False.elim (hVcentralizer_false
         (probe_B_involution_mem_V hmin c hklein hsB hsI) hsI hsCentX)
-    · letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    · let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
       obtain ⟨xX, hxXorder⟩ := exists_prime_orderOf_dvd_card' (G := X) 3 (by rw [hXcard])
       let x : G := xX
       have hxH : x ∈ c.Hhat := hXle xX.2

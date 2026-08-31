@@ -24,7 +24,7 @@ public theorem exists_cyclic_sylow_subgroup_le
     ∃ R : Subgroup G,
       R ≤ U ∧ IsCyclic R ∧
         Nat.card R = p ^ (Nat.card U).factorization p := by
-  letI : IsCyclic U := hU
+  let : IsCyclic U := hU
   let P : Sylow p U := Classical.choice Sylow.nonempty
   let R : Subgroup G := (P : Subgroup U).map U.subtype
   have hRU : R ≤ U := by

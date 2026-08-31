@@ -34,7 +34,7 @@ public theorem lemma24_pCoreCenter_data
       Subgroup.normalizer (W : Set G) = A ∧
         W ≤ M ∧ IsPGroup p W := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases hAM with ⟨X, hXne, hXfit, hNXM⟩
   have hEbot : componentLayerOf A = ⊥ :=
     componentLayerOf_eq_bot_of_isPGroup A hp hAp
@@ -65,7 +65,7 @@ public theorem lemma24_pCoreCenter_data
   have hWne : W ≠ ⊥ :=
     (section8SubgroupInAmbient_eq_bot_iff Wint).not.mpr hWintNe
   have hWintNormal : Wint.Normal := by
-    letI : (pCore p (↥A)).Normal := pCore_normal
+    let : (pCore p (↥A)).Normal := pCore_normal
     dsimp [Wint]
     unfold centerIn
     infer_instance

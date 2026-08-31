@@ -37,7 +37,7 @@ private theorem exists_involution_conjugator_in_product_centralizer_of_dihedral_
       y ∈ ((PC : Subgroup (Subgroup.centralizer ({t * s} : Set G))).map
         (Subgroup.centralizer ({t * s} : Set G)).subtype) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have htt : t * t = 1 := by simpa [pow_two] using ht.2
   have hss : s * s = 1 := by simpa [pow_two] using hs.2
   have htinv : t⁻¹ = t := inv_eq_of_mul_eq_one_right htt
@@ -485,7 +485,7 @@ public theorem exists_involution_conjugator_in_product_centralizer_of_dihedral_s
       y * t * y⁻¹ = s ∧
       y ∈ Subgroup.centralizer ({t * s} : Set G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let C : Subgroup G := Subgroup.centralizer ({t * s} : Set G)
   have htC : t ∈ C := by
     rw [Subgroup.mem_centralizer_singleton_iff]

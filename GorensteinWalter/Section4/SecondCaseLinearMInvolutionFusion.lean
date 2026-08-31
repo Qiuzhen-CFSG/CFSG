@@ -32,7 +32,7 @@ public theorem secondCase_linear_M_involutions_conjugate
     ∀ a b : G, a ∈ w.M → IsInvolution a → b ∈ w.M → IsInvolution b →
       ∃ n : G, n ∈ w.M ∧ n * a * n⁻¹ = b := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSleM : (c.S : Subgroup G) ≤ w.M :=
     post.hSleE.trans d.E_component.1
   let SM : Sylow 2 w.M := c.S.subtype hSleM

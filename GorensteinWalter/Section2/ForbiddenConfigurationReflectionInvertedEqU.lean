@@ -267,7 +267,7 @@ private lemma card_conjClass_eq_index_probe
     Nat.card (ConjClasses.mk x).carrier =
       (Subgroup.centralizer ({x} : Set G)).index := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hst := MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) x
   have hst' : Fintype.card (ConjClasses.mk x).carrier *
       Fintype.card (MulAction.stabilizer (ConjAct G) x) = Fintype.card G := by
@@ -338,7 +338,7 @@ public theorem invertedSubgroup_card_coprime_H_index
     invertedSubgroup_normal_in_H_probe c hS0cent hIinv hInorm hIleU
   by_contra hcop
   rcases Nat.Prime.not_coprime_iff_dvd.mp hcop with ⟨p, hp, hpI, hpH⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨x, hxord⟩ := exists_prime_orderOf_dvd_card' (G := I) p hpI
   have hxordG : orderOf (x : G) = p := by
     rw [Subgroup.orderOf_coe]
@@ -361,7 +361,7 @@ public theorem invertedSubgroup_card_coprime_H_index
   let Ω := ↑(MulAction.orbit (ConjAct G) c.t)
   let ρ : X →* ConjAct G :=
     ConjAct.toConjAct.toMonoidHom.comp X.subtype
-  letI : MulAction X Ω := MulAction.compHom Ω ρ
+  let : MulAction X Ω := MulAction.compHom Ω ρ
   let tΩ : Ω := ⟨c.t, MulAction.mem_orbit_self c.t⟩
   have htfix : tΩ ∈ MulAction.fixedPoints X Ω := by
     rw [MulAction.mem_fixedPoints]
@@ -431,7 +431,7 @@ public theorem forbiddenConfiguration_reflection_inverted_eq_U
     {s : G} (hs : c.IsReflection s) :
     invertedElements c.U s = (c.U : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hone := fact_2_preamble_involutions_conjugate_proved hmin
   have hHSU := fact_2_preamble_H_eq_SU_proved hmin c
   obtain ⟨a, ha⟩ :=
@@ -526,7 +526,7 @@ public theorem forbiddenConfiguration_reflection_inverted_eq_U
       rw [← hI2]
       exact hx
     exact hx'.2
-  letI : BenderGlauberman.Hyp11KData bg := {
+  let : BenderGlauberman.Hyp11KData bg := {
     K1 := I1
     K2 := I2
     K1_le_H := hI1leU.trans hUleH
@@ -670,8 +670,8 @@ public theorem forbiddenConfiguration_reflection_inverted_eq_U
     have hBodd : Odd (Nat.card bg.B) :=
       Nat.coprime_two_left.mp
         (hUodd.coprime_dvd_right (Subgroup.card_dvd_of_le hBleU))
-    letI : Group.IsSolvable bg.B := odd_order_theorem bg.B hBodd
-    letI : Nontrivial bg.B := (Subgroup.nontrivial_iff_ne_bot bg.B).mpr hBne
+    let : Group.IsSolvable bg.B := odd_order_theorem bg.B hBodd
+    let : Nontrivial bg.B := (Subgroup.nontrivial_iff_ne_bot bg.B).mpr hBne
     have hB' : ⁅bg.B, bg.B⁆ ≠ bg.B := by
       intro hperfect
       have hlt := Group.IsSolvable.commutator_lt_top_of_nontrivial (G := bg.B)

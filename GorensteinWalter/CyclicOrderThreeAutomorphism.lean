@@ -20,10 +20,10 @@ public theorem mulAut_eq_one_or_apply_eq_inv_of_card_eq_three
     {C : Type u} [Group C] [Finite C]
     (hcard : Nat.card C = 3) (alpha : MulAut C) :
     alpha = 1 ∨ ∀ x : C, alpha x = x⁻¹ := by
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : IsCyclic C := isCyclic_of_prime_card hcard
-  letI : IsMulCommutative C := IsCyclic.isMulCommutative
-  letI : CommGroup C := IsMulCommutative.instCommGroup
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : IsCyclic C := isCyclic_of_prime_card hcard
+  let : IsMulCommutative C := IsCyclic.isMulCommutative
+  let : CommGroup C := IsMulCommutative.instCommGroup
   let invAut : MulAut C :=
     { toFun := fun x => x⁻¹
       invFun := fun x => x⁻¹

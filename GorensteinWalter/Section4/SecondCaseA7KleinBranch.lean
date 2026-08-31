@@ -33,9 +33,9 @@ public theorem secondCase_a7_klein_branch
       secondCase_a7_exists_kleinFour_le_twoCore_Hhat
         hmin c w d hA7 hmodel
     have hVleS0 : V ≤ c.S0 := hVleCore.trans hcyclic.1
-    letI : IsCyclic c.S0 := c.S0_cyclic
+    let : IsCyclic c.S0 := c.S0_cyclic
     have hVcyclic : IsCyclic V := Subgroup.isCyclic_of_le hVleS0
-    letI : IsKleinFour V := hVK
+    let : IsKleinFour V := hVK
     exact False.elim (IsKleinFour.not_isCyclic hVcyclic)
   · exact hklein
 
