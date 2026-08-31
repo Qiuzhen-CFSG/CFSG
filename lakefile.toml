@@ -5,9 +5,8 @@ defaultTargets = [
 ]
 lintDriver = "batteries/runLinter"
 
-# NOTE(tianjiao): Disable cache due to comparator sandbox.
-# enableArtifactCache = true
-# restoreAllArtifacts = true
+enableArtifactCache = true
+restoreAllArtifacts = true
 
 [leanOptions]
 pp.unicode.fun = true
