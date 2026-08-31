@@ -106,7 +106,7 @@ public theorem thompson_bender_centralizer_pCore_quotient_le_pCore
   have hMnormal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hMnormal
+  let : M.Normal := hMnormal
   have hMcop : Nat.Coprime p (Nat.card M) := by
     simpa [M] using (pPrimeCore_coprime_card (G := G) (p := p))
   have hTG_p : IsPGroup p TG := by
@@ -228,7 +228,7 @@ public theorem thompson_bender_centralizer_pCore_quotient_le_pCore
     hconstrained (Q := TG) hTG_p hTG_sup
   have hcent_Tbar :
       Subgroup.centralizer (Tbar : Set (G ⧸ M)) ≤ pCore p (G ⧸ M) := by
-    letI : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
+    let : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
     have hcent_map :
         Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
           (Subgroup.centralizer (TG : Set G)).map q := by
@@ -297,7 +297,7 @@ public theorem thompson_bender_coprime_card_of_centralizer_order_p
   classical
   refine (Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).2 ?_
   intro hp_dvd_K
-  letI : Subgroup.Normalizes A K := ⟨hA_le_normalizer_K⟩
+  let : Subgroup.Normalizes A K := ⟨hA_le_normalizer_K⟩
   have hfixed_dvd :
       p ∣ Nat.card (fixedPointSubgroup (↥A) (↥K)) := by
     have hmod :
@@ -374,10 +374,10 @@ public theorem thompson_bender_quotient_centralizer_order_p
   have hMnormal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hMnormal
+  let : M.Normal := hMnormal
   have hMcop : Nat.Coprime p (Nat.card M) := by
     simpa [M] using (pPrimeCore_coprime_card (G := G) (p := p))
-  letI : Fact (IsPGroup p (↥A)) := ⟨hA_p⟩
+  let : Fact (IsPGroup p (↥A)) := ⟨hA_p⟩
   have hcent_eq :
       Subgroup.centralizer ((A.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
         C.map q := by
@@ -532,7 +532,7 @@ public theorem thompson_bender_quotient_K_inf_A_eq_bot
       Nat.Coprime (Nat.card (K.map q)) (Nat.card (A.map q)) := by
     rw [hAq_card]
     exact (Fact.out : Nat.Prime p).coprime_pow_of_not_dvd (m := n) hp_not_dvd_Kq
-  exact Subgroup.inf_eq_bot_of_coprime hcop
+  exact disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hcop)
 
 /--
 If an element lies in both `A` and `O_p(G)`, then it centralizes the `p'`
@@ -551,7 +551,8 @@ public theorem thompson_bender_mem_A_inf_pCore_centralizes_K
   have hcopKP : Nat.Coprime (Nat.card K) (Nat.card (pCore p G)) := by
     rw [hPcard]
     exact hK_coprime.symm.pow_right n
-  have hInf : K ⊓ pCore p G = ⊥ := Subgroup.inf_eq_bot_of_coprime hcopKP
+  have hInf : K ⊓ pCore p G = ⊥ :=
+    disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hcopKP)
   rw [Subgroup.mem_centralizer_iff]
   intro k hk
   have hx_norm : x ∈ Subgroup.normalizer (K : Set G) := hA_le_normalizer_K hxA
@@ -670,7 +671,7 @@ public theorem thompson_bender_normalizer_le_normalizer_map_subtype_of_character
     Subgroup.normalizer (H : Set G) ≤
       Subgroup.normalizer ((D.map H.subtype : Subgroup G) : Set G) := by
   classical
-  letI : D.Characteristic := hDchar
+  let : D.Characteristic := hDchar
   have hconj_mem :
       ∀ {g : G}, g ∈ Subgroup.normalizer (H : Set G) →
         ∀ {x : G}, x ∈ D.map H.subtype → g * x * g⁻¹ ∈ D.map H.subtype := by
@@ -724,7 +725,7 @@ public theorem thompson_bender_le_normalizer_pCore_characteristic_subgroup
     {G : Type u} [Group G] {p : ℕ} {D : Subgroup (pCore p G)}
     (hDchar : D.Characteristic) (L : Subgroup G) :
     L ≤ Subgroup.normalizer ((D.map (pCore p G).subtype : Subgroup G) : Set G) := by
-  letI : (D.map (pCore p G).subtype : Subgroup G).Normal :=
+  let : (D.map (pCore p G).subtype : Subgroup G).Normal :=
     thompson_bender_pCore_characteristic_subgroup_map_normal
       (G := G) (p := p) (D := D) hDchar
   exact Subgroup.le_normalizer_of_normal (H := D.map (pCore p G).subtype)
@@ -1505,7 +1506,7 @@ public theorem thompson_bender_pCore_subgroup_conjAction_isInvariant_of_le_norma
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : L →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hLleNormP)
-  letI : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
   change IsInvariant L P B
   refine ⟨?_⟩
   intro l x
@@ -1574,7 +1575,7 @@ public theorem thompson_bender_pCore_mem_centralizer_iff_mem_fixedPointSubgroup
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : L →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hLleNormP)
-  letI : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
   change (x : G) ∈ Subgroup.centralizer (L : Set G) ↔ x ∈ fixedPointSubgroup L P
   rw [thompson_bender_pCore_mem_centralizer_iff_fixed_by_conjAction
     (G := G) (p := p) (L := L) (x := x)]
@@ -1608,7 +1609,7 @@ public theorem thompson_bender_pCore_mem_inf_fixedPointSubgroup_iff
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : L →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hLleNormP)
-  letI : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
   change x ∈ B ⊓ fixedPointSubgroup L P ↔
       x ∈ B ∧ (x : G) ∈ Subgroup.centralizer (L : Set G)
   constructor
@@ -1643,7 +1644,7 @@ public theorem thompson_bender_pCore_exists_nontrivial_mem_centralizer_of_inf_fi
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : L →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hLleNormP)
-  letI : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction L P := MulDistribMulAction.compHom P φ
   change B ⊓ fixedPointSubgroup L P ≠ ⊥ at hNontr
   rcases Subgroup.ne_bot_iff_exists_ne_one.mp hNontr with ⟨u, hu_ne⟩
   have hu :
@@ -1675,8 +1676,7 @@ public theorem thompson_bender_exists_nontrivial_mem_fixedPointSubgroup_of_pgrou
     hA.exists_fixed_point_of_prime_dvd_card_of_fixed_point
       (α := P) hdiv hone
   refine ⟨x, ?_, ?_⟩
-  · change x ∈ fixedPointSubgroup A P
-    simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
+  · simpa [fixedPointSubgroup, FixedPoints.mem_subgroup] using
       MulAction.mem_fixedPoints.mp hxfix
   · intro hx
     exact hxne hx.symm
@@ -1692,7 +1692,7 @@ public theorem thompson_bender_inf_fixedPointSubgroup_ne_bot_of_pgroup_action
     (hB : IsPGroup p B) (hA : IsPGroup p A) (hBne : B ≠ ⊥) :
     B ⊓ fixedPointSubgroup A P ≠ ⊥ := by
   classical
-  letI : MulDistribMulAction A B := {
+  let : MulDistribMulAction A B := {
     smul a x :=
       ⟨a • (x : P),
         (IsInvariant.invariant (A := A) (G := P) (H := B) a (x : P)).1 x.2⟩
@@ -1712,7 +1712,7 @@ public theorem thompson_bender_inf_fixedPointSubgroup_ne_bot_of_pgroup_action
       ext
       change a • (1 : P) = (1 : P)
       simp }
-  haveI : Nontrivial B := (Subgroup.nontrivial_iff_ne_bot B).2 hBne
+  have : Nontrivial B := (Subgroup.nontrivial_iff_ne_bot B).2 hBne
   obtain ⟨x, hxfix, hxne⟩ :=
     thompson_bender_exists_nontrivial_mem_fixedPointSubgroup_of_pgroup_action
       (P := B) (A := A) (p := p) hB hA
@@ -1881,9 +1881,9 @@ public theorem thompson_bender_conjAction_displacementSubgroupAll_le_of_isInvari
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : K →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hKleNormP)
-  letI : MulDistribMulAction K P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction K P := MulDistribMulAction.compHom P φ
   change IsInvariant K P B at hInv
-  letI : IsInvariant K P B := hInv
+  let : IsInvariant K P B := hInv
   rw [TBSConjActionDisplacementSubgroupAll, Subgroup.closure_le]
   intro c hc
   rcases hc with ⟨k, x, hxB, rfl⟩
@@ -1920,9 +1920,9 @@ public theorem thompson_bender_conjAction_displacementSubgroupAll_le_commutatorA
     Subgroup.le_normalizer_of_normal (H := P)
   let φ : K →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hKleNormP)
-  letI : MulDistribMulAction K P := MulDistribMulAction.compHom P φ
+  let : MulDistribMulAction K P := MulDistribMulAction.compHom P φ
   change IsInvariant K P B at hInv
-  letI : IsInvariant K P B := hInv
+  let : IsInvariant K P B := hInv
   let C : Subgroup B := commutatorAction (A := K) (G := B)
   have hCnorm : C.Normal := by
     simpa [C] using (commutatorAction_normal (G := B) (A := K))
@@ -2033,9 +2033,9 @@ public theorem thompson_bender_conjAction_displacementSubgroupAll_A_mem
     Subgroup.le_normalizer_of_normal (H := P)
   let φK : K →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hKleNormP)
-  letI : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
+  let : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
   change IsInvariant A P B at hBInv
-  letI : IsInvariant A P B := hBInv
+  let : IsInvariant A P B := hBInv
   change φA a c ∈ TBSConjActionDisplacementSubgroupAll (G := G) p K B
   let S : Set P := {c : P | ∃ k : K, ∃ x : P, x ∈ B ∧ c = φK k x * x⁻¹}
   rw [TBSConjActionDisplacementSubgroupAll] at hc ⊢
@@ -2092,7 +2092,7 @@ public theorem thompson_bender_conjAction_displacementSubgroupAll_A_isInvariant
     Subgroup.le_normalizer_of_normal (H := P)
   let φA : A →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hAleNormP)
-  letI : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
+  let : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
   change IsInvariant A P (TBSConjActionDisplacementSubgroupAll (G := G) p K B)
   refine ⟨?_⟩
   intro a x
@@ -2139,7 +2139,7 @@ points meet the action commutator subgroup trivially.
 public theorem thompson_bender_fixedPointSubgroup_inf_commutatorAction_eq_bot_of_solvable_coprime_comm
     {P A : Type*} [Group P] [Finite P] [Group A] [Finite A]
     [MulDistribMulAction A P]
-    (hsolv : IsSolvable P) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card P))
+    (hsolv : Group.IsSolvable P) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card P))
     (hcomm : IsMulCommutative P) :
     fixedPointSubgroup A P ⊓ commutatorAction (A := A) (G := P) = ⊥ := by
   have hcompl :
@@ -2526,7 +2526,7 @@ public theorem isMulCommutative
     (hpow : ∀ x : G, x ^ p = 1) (hhalf : 2 * r = p + 1) :
     letI : Group (TBSBaer r G) := group hcomm
     IsMulCommutative (TBSBaer r G) := by
-  letI : Group (TBSBaer r G) := group hcomm
+  let : Group (TBSBaer r G) := group hcomm
   exact ⟨⟨fun x y => TBSBaer.mul_comm hcomm hpow hhalf x y⟩⟩
 
 public theorem isPGroup
@@ -2535,7 +2535,7 @@ public theorem isPGroup
     (hG : IsPGroup p G) :
     letI : Group (TBSBaer r G) := group hcomm
     IsPGroup p (TBSBaer r G) := by
-  letI : Group (TBSBaer r G) := group hcomm
+  let : Group (TBSBaer r G) := group hcomm
   obtain ⟨n, hcard⟩ := hG.exists_card_eq
   exact IsPGroup.of_card (p := p) (G := TBSBaer r G) (n := n) (by
     simpa [Nat.card_congr (equiv (G := G) (r := r))] using hcard)
@@ -2573,25 +2573,25 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
     Subgroup.le_normalizer_of_normal (H := P)
   let φA : A →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hAleNormP)
-  letI : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
+  let : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
   have hBInvA : IsInvariant A P B := by
     simpa [P, φA, hAleNormP] using
       thompson_bender_minimal_gamma_A_conjAction_isInvariant
         (G := G) (p := p) (A := A) (K := K) (B := B) hB
-  letI : IsInvariant A P B := hBInvA
-  letI : MulDistribMulAction A B :=
+  let : IsInvariant A P B := hBInvA
+  let : MulDistribMulAction A B :=
     thompson_bender_subgroupMulDistribMulActionOfIsInvariant (A := A) (P := P) B
   let hKleNormP : K ≤ Subgroup.normalizer (P : Set G) :=
     Subgroup.le_normalizer_of_normal (H := P)
   let φK : K →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hKleNormP)
-  letI : MulDistribMulAction K P := MulDistribMulAction.compHom P φK
+  let : MulDistribMulAction K P := MulDistribMulAction.compHom P φK
   have hBInvK : IsInvariant K P B := by
     simpa [P, φK, hKleNormP] using
       thompson_bender_minimal_gamma_K_conjAction_isInvariant
         (G := G) (p := p) (A := A) (K := K) (B := B) hB
-  letI : IsInvariant K P B := hBInvK
-  letI : MulDistribMulAction K B :=
+  let : IsInvariant K P B := hBInvK
+  let : MulDistribMulAction K B :=
     thompson_bender_subgroupMulDistribMulActionOfIsInvariant (A := K) (P := P) B
   have hcommB : _root_.commutator B ≤ Subgroup.center B :=
     subgroup_commutator_le_center_of_commutator_le_centerIn (G := P) B
@@ -2600,10 +2600,10 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
           thompson_bender_minimal_gamma_commutator_le_centerIn
             (G := G) (p := p) (A := A) (K := K) (B := B) hB)
   let M : Type u := TBSBaer r B
-  letI : Group M := TBSBaer.group (G := B) (r := r) hcommB
-  letI : Finite M := TBSBaer.finite (G := B) (r := r)
-  letI : MulDistribMulAction A M := TBSBaer.action (A := A) (G := B) (r := r) hcommB
-  letI : MulDistribMulAction K M := TBSBaer.action (A := K) (G := B) (r := r) hcommB
+  let : Group M := TBSBaer.group (G := B) (r := r) hcommB
+  let : Finite M := TBSBaer.finite (G := B) (r := r)
+  let : MulDistribMulAction A M := TBSBaer.action (A := A) (G := B) (r := r) hcommB
+  let : MulDistribMulAction K M := TBSBaer.action (A := K) (G := B) (r := r) hcommB
   have hpowB : ∀ x : B, x ^ p = 1 := by
     have hdiv : Monoid.exponent B ∣ p := by
       simp [thompson_bender_minimal_gamma_exponent_eq
@@ -2612,7 +2612,7 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
   have hMcomm : IsMulCommutative M := by
     simpa [M] using
       TBSBaer.isMulCommutative (G := B) (p := p) (r := r) hcommB hpowB hhalf
-  letI : IsMulCommutative M := hMcomm
+  let : IsMulCommutative M := hMcomm
   have hBp : IsPGroup p B := (pCore_isPGroup (G := G) (p := p)).to_subgroup B
   have hMp : IsPGroup p M := by
     simpa [M] using TBSBaer.isPGroup (G := B) (p := p) (r := r) hcommB hBp
@@ -2679,7 +2679,7 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
     · intro hy
       have hpre : a⁻¹ • (a • y) ∈ C := hforward a⁻¹ (a • y) hy
       simpa using hpre
-  letI : IsInvariant A M C := hCInvA
+  let : IsInvariant A M C := hCInvA
   have hInfNe : C ⊓ fixedPointSubgroup A M ≠ ⊥ :=
     thompson_bender_inf_fixedPointSubgroup_ne_bot_of_pgroup_action
       (P := M) (A := A) (p := p) (B := C) hCp hA_p hCne
@@ -2731,7 +2731,7 @@ public theorem thompson_bender_minimal_gamma_baer_contradiction
       simpa [M] using Nat.card_congr (TBSBaer.equiv (G := B) (r := r))
     rw [hcardM]
     exact hcopKB
-  have hsolvM : IsSolvable M := by infer_instance
+  have hsolvM : Group.IsSolvable M := by infer_instance
   have hbot : fixedPointSubgroup K M ⊓ C = ⊥ := by
     simpa [C] using
       thompson_bender_fixedPointSubgroup_inf_commutatorAction_eq_bot_of_solvable_coprime_comm
@@ -2763,7 +2763,7 @@ public theorem thompson_bender_minimal_gamma_all_displacement_inf_fixedPoint_ne_
     Subgroup.le_normalizer_of_normal (H := P)
   let φA : A →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hAleNormP)
-  letI : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
+  let : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
   change
     TBSConjActionDisplacementSubgroupAll (G := G) p K B ⊓
       fixedPointSubgroup A P ≠ ⊥
@@ -2778,7 +2778,7 @@ public theorem thompson_bender_minimal_gamma_all_displacement_inf_fixedPoint_ne_
       thompson_bender_conjAction_displacementSubgroupAll_A_isInvariant
         (G := G) (p := p) (A := A) (K := K) (B := B)
         hA_norm_K (by simpa [P, φA, hAleNormP] using hBInv)
-  letI : IsInvariant A P (TBSConjActionDisplacementSubgroupAll (G := G) p K B) := hAllInv
+  let : IsInvariant A P (TBSConjActionDisplacementSubgroupAll (G := G) p K B) := hAllInv
   obtain ⟨k, x, hxB, hxnonfix⟩ :=
     thompson_bender_gamma_exists_nonfixed_action
       (G := G) (p := p) (A := A) (K := K) (X := B) hB.1
@@ -2818,7 +2818,7 @@ public theorem thompson_bender_minimal_gamma_exists_nontrivial_all_displacement_
     Subgroup.le_normalizer_of_normal (H := P)
   let φA : A →* MulAut P :=
     (Subgroup.normalizerMonoidHom (H := P)).comp (Subgroup.inclusion hAleNormP)
-  letI : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
+  let : MulDistribMulAction A P := MulDistribMulAction.compHom P φA
   have hNontr :
       TBSConjActionDisplacementSubgroupAll (G := G) p K B ⊓
         fixedPointSubgroup A P ≠ ⊥ := by
@@ -2909,8 +2909,8 @@ public theorem thompson_bender_pCore_criticalSubgroup_witness
           (↥(fixingSubgroup (M := MulAut (pCore p G)) (α := pCore p G)
             (D : Set (pCore p G)))) := by
   let P : Subgroup G := pCore p G
-  letI : Fact (IsPGroup p P) := ⟨pCore_isPGroup (G := G) (p := p)⟩
-  letI : Nontrivial P := P.nontrivial_iff_ne_bot.mpr (by simpa [P] using hPne)
+  let : Fact (IsPGroup p P) := ⟨pCore_isPGroup (G := G) (p := p)⟩
+  let : Nontrivial P := P.nontrivial_iff_ne_bot.mpr (by simpa [P] using hPne)
   simpa [P] using theorem_1_13 (G := P) (p := p) hpodd
 
 /-- If `O_p(G)` is trivial, every subgroup centralizes it. -/

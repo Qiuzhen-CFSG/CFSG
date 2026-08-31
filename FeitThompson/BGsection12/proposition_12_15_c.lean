@@ -19,7 +19,7 @@ private theorem section12_sylow_inf_comm {M N : Subgroup G} {p : Nat.Primes}
       section10AmbientSylowSubgroup (N ⊓ M) R' =
         section10AmbientSylowSubgroup (M ⊓ N) R := by
   classical
-  haveI : Fact (Nat.Prime p.val) := ⟨p.property⟩
+  have : Fact (Nat.Prime p.val) := ⟨p.property⟩
   let e : (M ⊓ N : Subgroup G) ≃* (N ⊓ M : Subgroup G) :=
     MulEquiv.subgroupCongr (by rw [inf_comm])
   let Rsub : Subgroup (N ⊓ M : Subgroup G) :=
@@ -69,7 +69,7 @@ private theorem section12_exists_sylow_left_eq_inf_sylow_comm
       section10AmbientSylowSubgroup N P =
         section10AmbientSylowSubgroup (M ⊓ N) S := by
   classical
-  haveI : Fact (Nat.Prime p.val) := ⟨p.property⟩
+  have : Fact (Nat.Prime p.val) := ⟨p.property⟩
   rcases section12_sylow_inf_comm (M := M) (N := N) (p := p) S with ⟨S', hS'⟩
   have hnorm10' :
       Subgroup.normalizer

@@ -7,7 +7,7 @@ open scoped MatrixGroups Pointwise TensorProduct
 /-! # lemma_6_3_a_1 from BG Section 6 -/
 
 public theorem lemma_6_3_a_1
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {H : Subgroup G} [H.Normal] (hHall : ∃ π : Set Nat.Primes, IsHallSubgroup π H)
     {K : Subgroup G} (hCompl : IsCompl H K) (hld : H ≤ derivedSubgroup G) :
     H = ⁅H, K⁆ := by
@@ -60,7 +60,7 @@ public theorem lemma_6_3_a_1
       _ = ⊥ := hHH_map_bot
   have hHq_cent : Hq ≤ Subgroup.centralizer (Hq : Set (G ⧸ N)) := by
     exact (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hHq_comm_bot
-  letI : IsMulCommutative ↥Hq := by
+  let : IsMulCommutative ↥Hq := by
     refine ⟨⟨?_⟩⟩
     intro x y
     apply Subtype.ext
@@ -79,7 +79,7 @@ public theorem lemma_6_3_a_1
     exact sup_le hHq_le_normKq Subgroup.le_normalizer
   have hnormKq_eq_top : Subgroup.normalizer (Kq : Set (G ⧸ N)) = ⊤ := top_le_iff.mp htop_le_normKq
   have hKq_normal : Kq.Normal := (Subgroup.normalizer_eq_top_iff).mp hnormKq_eq_top
-  letI : Kq.Normal := hKq_normal
+  let : Kq.Normal := hKq_normal
   have hderivedQ_le_Kq : derivedSubgroup (G ⧸ N) ≤ Kq := by
     simpa [derivedSubgroup] using
       (Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top
@@ -99,7 +99,7 @@ public theorem lemma_6_3_a_1
       (Subgroup.map_eq_bot_iff (f := q) (H := H)).mp hHq_bot
   let C : Subgroup H := (⁅H, H⁆).subgroupOf H
   let Nsub : Subgroup H := (⁅H, K⁆).subgroupOf H
-  haveI : Nsub.Normal := by
+  have : Nsub.Normal := by
     dsimp [Nsub]
     infer_instance
   have hC_eq_comm : C = _root_.commutator H := by
@@ -151,9 +151,11 @@ public theorem lemma_6_3_a_1
       _ = ⊤ := hcommH_map_top
   have hNsub_top : Nsub = ⊤ := by
     by_contra hNsub_ne_top
-    haveI : Nontrivial (H ⧸ Nsub) := (QuotientGroup.nontrivial_iff (N := Nsub)).2 hNsub_ne_top
-    have hsolvQ : IsSolvable (H ⧸ Nsub) := solvable_quotient_of_solvable Nsub
-    haveI : Group.IsPerfect (H ⧸ Nsub) := (Group.isPerfect_def).2 hcommQ_top
+    have : Nontrivial (H ⧸ Nsub) := (QuotientGroup.nontrivial_iff (N := Nsub)).2 hNsub_ne_top
+    have hsolvQ : Group.IsSolvable (H ⧸ Nsub) := by
+      have hsolvH : Group.IsSolvable H := inferInstance
+      infer_instance
+    have : Group.IsPerfect (H ⧸ Nsub) := (Group.isPerfect_def).2 hcommQ_top
     exact Group.IsPerfect.not_isSolvable (H ⧸ Nsub) hsolvQ
   apply le_antisymm
   · intro x hx

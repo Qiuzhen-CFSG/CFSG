@@ -127,7 +127,8 @@ public theorem standardHomocyclicCoverReduction_surjective
     standardHomocyclicCoverAddReduction_surjective κ p e he (Multiplicative.toAdd y)
   refine ⟨Multiplicative.ofAdd x, ?_⟩
   apply Multiplicative.toAdd.injective
-  simpa [standardHomocyclicCoverReduction, AddMonoidHom.toMultiplicative] using hx
+  change standardHomocyclicCoverAddReduction κ p e he x = Multiplicative.toAdd y
+  exact hx
 
 /-- Transport a `G`-action across a chosen standard mod-`p` quotient
 equivalence. -/
@@ -170,26 +171,30 @@ public noncomputable def standardHomocyclicCoverModPLinearActionOfEquiv
     (quotientToV : StandardHomocyclicCover κ p ≃* V) :
     G →* (Module.End (ZMod p) (κ → ZMod p))ˣ := by
   classical
+  let eAdd : G → (κ → ZMod p) ≃+ (κ → ZMod p) := fun g =>
+    (standardHomocyclicCoverCoordinateEquiv κ p).trans
+      ((MulEquiv.toAdditive
+        (standardHomocyclicCoverModPActionOfEquiv
+          (G := G) (V := V) (p := p) quotientToV g)).trans
+        (standardHomocyclicCoverCoordinateEquiv κ p).symm)
+  let eLin : G → (κ → ZMod p) ≃ₗ[ZMod p] (κ → ZMod p) := fun g =>
+    (eAdd g).toLinearEquiv (fun c x => by
+      simpa using (ZMod.map_smul (eAdd g).toAddMonoidHom c x))
   let ψfun : G → LinearMap.GeneralLinearGroup (ZMod p) (κ → ZMod p) := fun g =>
-    let eAdd : (κ → ZMod p) ≃+ (κ → ZMod p) :=
-      (standardHomocyclicCoverCoordinateEquiv κ p).trans
-        ((MulEquiv.toAdditive
-          (standardHomocyclicCoverModPActionOfEquiv
-            (G := G) (V := V) (p := p) quotientToV g)).trans
-          (standardHomocyclicCoverCoordinateEquiv κ p).symm)
-    let eLin : (κ → ZMod p) ≃ₗ[ZMod p] (κ → ZMod p) :=
-      eAdd.toLinearEquiv (fun c x => by
-        simpa using (ZMod.map_smul eAdd.toAddMonoidHom c x))
-    LinearMap.GeneralLinearGroup.ofLinearEquiv eLin
+    LinearMap.GeneralLinearGroup.ofLinearEquiv (eLin g)
   exact {
     toFun := ψfun
     map_one' := by
       ext x i
-      simp [ψfun]
+      change (eLin 1 x) i = x i
+      dsimp [eLin, eAdd]
+      simp [standardHomocyclicCoverModPActionOfEquiv]
     map_mul' := by
       intro g h
       ext x i
-      simp [ψfun, map_mul] }
+      change (eLin (g * h) x) i = (eLin g (eLin h x)) i
+      dsimp [eLin, eAdd]
+      simp [standardHomocyclicCoverModPActionOfEquiv, map_mul] }
 
 /-- The transported mod-`p` linear action is the additive form of
 `standardHomocyclicCoverModPActionOfEquiv`. -/
@@ -218,9 +223,13 @@ public theorem standardHomocyclicCoverQuotientEquiv_nonempty_index
     Nonempty κ := by
   classical
   by_contra hκ
-  haveI : IsEmpty κ := not_nonempty_iff.mp hκ
+  have hE : IsEmpty κ := not_nonempty_iff.mp hκ
   have hcoverSubsingleton : Subsingleton (StandardHomocyclicCover κ p) := by
-    infer_instance
+    constructor
+    intro x y
+    apply Multiplicative.toAdd.injective
+    funext i
+    exact @isEmptyElim κ hE (fun i => Multiplicative.toAdd x i = Multiplicative.toAdd y i) i
   have hVSubsingleton : Subsingleton V := ⟨fun v w => by
     rcases quotientToV.surjective v with ⟨v', rfl⟩
     rcases quotientToV.surjective w with ⟨w', rfl⟩

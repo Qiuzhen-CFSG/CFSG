@@ -343,7 +343,7 @@ private theorem section15_initial_X_le_msigma_of_sigma
     have hcard : Nat.card Xloc = Nat.card X :=
       Nat.card_congr (Subgroup.subgroupOfEquivOfLe (H := X) (K := M) hXleM).toEquiv
     exact hXσ p (by simpa [Xloc, hcard] using hpXloc)
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   haveI : ((section10Msigma M).subgroupOf M).Normal := by
     simpa [section15_msigma_subgroupOf_eq] using (section15_msigma_normalIn (M := M)).2
@@ -420,7 +420,8 @@ private theorem section15_initial_prime_not_beta_of_MF
   obtain ⟨q0, hq0prime, hq0dvd⟩ := Nat.exists_prime_and_dvd hcard_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
   have hqX : q ∈ subgroupPrimeSet X := by
-    simpa [q, subgroupPrimeSet] using hq0dvd
+    change q0 ∣ Nat.card X
+    exact hq0dvd
   obtain ⟨z, hzX, hzne, hZprime⟩ :=
     section15_exists_primeOrder_zpowers_of_prime_dvd_card
       (G := G) (B := X) (q := q) hq0dvd
@@ -620,7 +621,8 @@ private theorem section15_initial_not_P2
   obtain ⟨p, hpprime, hpdvd⟩ := Nat.exists_prime_and_dvd hcard_ne_one
   let p' : Nat.Primes := ⟨p, hpprime⟩
   have hpX : p' ∈ subgroupPrimeSet X := by
-    simpa [p', subgroupPrimeSet] using hpdvd
+    change p ∣ Nat.card X
+    exact hpdvd
   have hpσ : p' ∈ section10SigmaPrimes M := hXσ p' hpX
   have hpβ : p' ∉ section10BetaPrimes M := by
     have hpβc : p' ∈ (section10BetaPrimes M)ᶜ := hXβc p' hpX
@@ -1120,7 +1122,8 @@ private theorem section15_theorem15_7_rank_MF_eq_two_of_abelian
   obtain ⟨q0, hq0prime, hq0dvd⟩ := Nat.exists_prime_and_dvd hcard_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
   have hqX : q ∈ subgroupPrimeSet X := by
-    simpa [q, subgroupPrimeSet] using hq0dvd
+    change q0 ∣ Nat.card X
+    exact hq0dvd
   obtain ⟨z, hzX, hzne, hZprime⟩ :=
     section15_exists_primeOrder_zpowers_of_prime_dvd_card
       (G := G) (B := X) (q := q) hq0dvd
@@ -2655,7 +2658,8 @@ private theorem section15_pCoreIn_le_pPrimeCore_of_ne
         ⟨inferInstance, hqcore_coprime⟩)
   have hcore_eq :
       section10PPrimeCore p H = (pPrimeCore p.val H).map H.subtype := by
-    simpa [section10PPrimeCore, section10PPrimeSet] using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [section10PPrimeCore, section10PPrimeSet, hp_eq] using
       section8_piCoreIn_singleton_compl_eq_pPrimeCore_map
         (G := G) (p := p.val) H
   have hmap_le :
@@ -2930,7 +2934,8 @@ private theorem section15_ambientDerived_le_pCoreIn_of_nilpotent_pPrimeCore_cycl
   let qH : H →* H ⧸ P := QuotientGroup.mk' P
   have hL_map_eq :
       L.map H.subtype = section10PPrimeCore p H := by
-    simpa [L, section10PPrimeCore, section10PPrimeSet] using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [L, section10PPrimeCore, section10PPrimeSet, hp_eq] using
       (section8_piCoreIn_singleton_compl_eq_pPrimeCore_map
         (G := G) (p := p.val) H).symm
   have hLcyc : IsCyclic L := by
@@ -3062,10 +3067,10 @@ private theorem section15_complementToMsigma_ne_bot
       le_bot_iff.mp (by simpa [hMbot] using hMsigma_le_M)
     exact (theorem_10_2_e (M := M) hM) hMsigma_bot
   haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
     simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using hder_top
   exact hcomm_lt.ne hcomm_top
@@ -4078,17 +4083,17 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card K)
   have hAodd : Odd (Nat.card A) := by
     exact odd_of_card_dvd hKodd (by simpa [A, ρ] using Subgroup.card_range_dvd ρ)
-  haveI : IsSolvable K := by
+  haveI : Group.IsSolvable K := by
     let KM : Subgroup M := K.subgroupOf M
-    have hsolvM : IsSolvable M :=
+    have hsolvM : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-    haveI : IsSolvable M := hsolvM
-    have hKM_solv : IsSolvable KM := subgroup_solvable_of_solvable (H := KM)
+    haveI : Group.IsSolvable M := hsolvM
+    have hKM_solv : Group.IsSolvable KM := by infer_instance
     let eK : KM ≃* K := Subgroup.subgroupOfEquivOfLe (H := K) (K := M) hK.1
-    exact solvable_of_surjective (f := eK.toMonoidHom) eK.surjective
-  haveI : IsSolvable A := by
-    change IsSolvable ρ.range
-    exact solvable_of_surjective (f := ρ.rangeRestrict) ρ.rangeRestrict_surjective
+    exact Group.isSolvable_of_surjective (f := eK.toMonoidHom) eK.surjective
+  haveI : Group.IsSolvable A := by
+    change Group.IsSolvable ρ.range
+    exact Group.isSolvable_of_surjective (f := ρ.rangeRestrict) ρ.rangeRestrict_surjective
   have hAcyc : IsCyclic A := by
     haveI : IsCyclic K := hKcyc
     exact isCyclic_of_surjective ρ.rangeRestrict ρ.rangeRestrict_surjective

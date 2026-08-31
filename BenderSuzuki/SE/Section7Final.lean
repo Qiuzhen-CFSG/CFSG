@@ -62,7 +62,7 @@ public structure Theorem4bSection7SecondStage
     Subgroup.normalizer (theorem4bSection7E M d.data.z beta : Set X)
   hWcomm : d.data.W ≤
     ⁅theorem4bSection7E M d.data.z beta, Subgroup.zpowers d.data.z⁆
-  hEsolv : IsSolvable (theorem4bSection7E M d.data.z beta)
+  hEsolv : Group.IsSolvable (theorem4bSection7E M d.data.z beta)
 
 /-- Proposition 7.2, expanded into the exact source `(7D)` prelude. -/
 public theorem IsStronglyEmbedded.theorem4b_section7_secondStage
@@ -109,7 +109,7 @@ public theorem IsStronglyEmbedded.theorem4b_section7_secondStage
         (le_refl (Subgroup.zpowers d.data.z))
     rw [d.data.hcomm] at hmono
     exact hmono
-  have hEsolv : IsSolvable (theorem4bSection7E M d.data.z beta) :=
+  have hEsolv : Group.IsSolvable (theorem4bSection7E M d.data.z beta) :=
     odd_order_theorem _ hEodd
   exact ⟨⟨beta, hbetaK, hbetaNe, htheta, hWleE, hEodd, hzNormE,
     hWcomm, hEsolv⟩⟩
@@ -121,7 +121,7 @@ private theorem theorem4b_section7_nontrivial_pCore_quotient_action
     {H A : Type*} [Group H] [Finite H] [Group A] [Finite A]
     [MulDistribMulAction A H]
     (p : ℕ) [Fact p.Prime]
-    (hsolv : IsSolvable H)
+    (hsolv : Group.IsSolvable H)
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card H))
     (hcomm : commutatorAction (A := A) (G := H) = ⊤)
     {W : Subgroup H} (hWp : IsPGroup p W) (hWne : W ≠ ⊥) :
@@ -134,7 +134,7 @@ private theorem theorem4b_section7_nontrivial_pCore_quotient_action
       isInvariant_of_characteristic _
     ¬ ActsTrivially (A := A) (G := pCore p (H ⧸ K)) := by
   dsimp only
-  letI : IsSolvable H := hsolv
+  letI : Group.IsSolvable H := hsolv
   let K : Subgroup H := pPrimeCore p H
   letI : IsInvariant A H K := isInvariant_of_characteristic K
   letI : MulDistribMulAction A (H ⧸ K) :=
@@ -143,8 +143,10 @@ private theorem theorem4b_section7_nontrivial_pCore_quotient_action
   letI : IsInvariant A (H ⧸ K) (pCore p (H ⧸ K)) :=
     isInvariant_of_characteristic _
   intro htrivP
-  have hsolvQ : IsSolvable (H ⧸ K) :=
-    solvable_quotient_of_solvable K
+  have hsolvQ : Group.IsSolvable (H ⧸ K) := by
+    letI : Group.IsSolvable H := hsolv
+    exact Group.isSolvable_of_surjective
+      (f := QuotientGroup.mk' K) (QuotientGroup.mk'_surjective K)
   have hcoreQ : pPrimeCore p (H ⧸ K) = ⊥ := by
     simpa [K] using
       (pPrimeCore_quotient_pPrimeCore_eq_bot (G := H) (p := p))
@@ -379,8 +381,8 @@ private theorem theorem4b_section7_nontrivial_pCore_quotient_action_of_secondSta
   have hcopAE : Nat.Coprime (Nat.card A) (Nat.card E) := by
     rw [hAcard]
     exact s.hEodd.coprime_two_left
-  letI : IsSolvable E := s.hEsolv
-  have hHsolv : IsSolvable H := subgroup_solvable_of_solvable H
+  letI : Group.IsSolvable E := s.hEsolv
+  have hHsolv : Group.IsSolvable H := by infer_instance
   have hcopAH : Nat.Coprime (Nat.card A) (Nat.card H) :=
     Nat.Coprime.of_dvd_right (by
       simpa using
@@ -716,8 +718,14 @@ private theorem theorem4b_section7_normalizerIn_card_eq_of_sylow
   obtain ⟨x, hx⟩ := MulAction.exists_smul_eq E P₀ Q₀
   have hQconj : Q = P.conjBy (x : X) := by
     rw [hQ, hP, ← hx]
-    simp only [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def,
-      Subgroup.conjBy, Subgroup.map_map]
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+    rw [Subgroup.conjBy]
+    change Subgroup.map E.subtype
+        (Subgroup.map (MulDistribMulAction.toMonoidHom E (MulAut.conj x))
+          (P₀ : Subgroup E)) =
+      Subgroup.map ((MulAut.conj (x : X)).toMonoidHom)
+        (Subgroup.map E.subtype (P₀ : Subgroup E))
+    rw [Subgroup.map_map, Subgroup.map_map]
     congr 1
   have hxD : (x : X) ∈ D := hED x.property
   have hDconj : D.conjBy (x : X) = D :=
@@ -1969,7 +1977,20 @@ private theorem theorem4b_section7_M1_core_quotient_isPGroup
     apply QuotientGroup.eq.mpr
     have hxy : ((x : A) : N0) ⁻¹ * (y : A) ∈ twoPrimeCore N0 := by
       apply QuotientGroup.eq.mp
-      simpa [phi] using hab
+      change QuotientGroup.mk' (twoPrimeCore N0) ((x : A) : N0) =
+        QuotientGroup.mk' (twoPrimeCore N0) ((y : A) : N0)
+      change QuotientGroup.map (theorem4bSection7O1 M Q) (twoPrimeCore N0)
+          A.subtype (by intro z hz; exact hz)
+          (QuotientGroup.mk' (theorem4bSection7O1 M Q) x) =
+        QuotientGroup.map (theorem4bSection7O1 M Q) (twoPrimeCore N0)
+          A.subtype (by intro z hz; exact hz)
+          (QuotientGroup.mk' (theorem4bSection7O1 M Q) y) at hab
+      have hab' := hab
+      change QuotientGroup.mk' (twoPrimeCore N0) (A.subtype x) =
+        QuotientGroup.mk' (twoPrimeCore N0) (A.subtype y) at hab'
+      change QuotientGroup.mk' (twoPrimeCore N0) (A.subtype x) =
+        QuotientGroup.mk' (twoPrimeCore N0) (A.subtype y)
+      exact hab'
     exact hxy
   let Cbar : Subgroup (A ⧸ theorem4bSection7O1 M Q) :=
     (involutionCore A).map qA
@@ -1987,8 +2008,12 @@ private theorem theorem4b_section7_M1_core_quotient_isPGroup
             apply Subtype.ext
             exact (congrArg (fun y : Amap => ((y : X)))
               (heC_coe ⟨c, hc⟩)).trans (heA_coe c)
-          simpa [fA, f, eC, phi, qA, cN0] using
-              congrArg (QuotientGroup.mk' (twoPrimeCore N0)) hcN0⟩
+          have hcN0' := congrArg (QuotientGroup.mk' (twoPrimeCore N0)) hcN0
+          dsimp [fA, f, eC, phi, qA]
+          rw [theorem4bProposition63CoreQuotientMap_apply]
+          change QuotientGroup.mk' (twoPrimeCore N0) (cN0 : N0) =
+            QuotientGroup.mk' (twoPrimeCore N0) (A.subtype c)
+          exact hcN0'⟩
         map_one' := by ext; rfl
         map_mul' := by
           intro x y
@@ -3849,7 +3874,7 @@ private theorem theorem4b_section7_M2Hat_hasAbelianSylow
 odd-order theorem, and its quotient is the `2`-group specified in `(7F)`. -/
 private theorem theorem4b_section7_M2_solvable
     {X : Type*} [Group X] [Finite X] (M Q : Subgroup X) :
-    IsSolvable (theorem4bSection7M2InX M Q) := by
+    Group.IsSolvable (theorem4bSection7M2InX M Q) := by
   classical
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let N0 : Subgroup X := theorem4bSection7NCore Q
@@ -3871,7 +3896,7 @@ private theorem theorem4b_section7_M2_solvable
       Odd.of_dvd_nat hcoreOdd (Subgroup.card_dvd_of_le hO1le)
     rw [Subgroup.card_map_of_injective A.subtype_injective] at hmapOdd
     exact hmapOdd
-  letI : IsSolvable O1 := odd_order_theorem O1 hO1odd
+  letI : Group.IsSolvable O1 := odd_order_theorem O1 hO1odd
   have hO1B0 : O1 ≤ B0 := by
     intro a ha
     change QuotientGroup.mk' O1 a ∈ U
@@ -3900,26 +3925,26 @@ private theorem theorem4b_section7_M2_solvable
     rw [Subgroup.normalizer_eq_top_iff.mpr
       (inferInstance : O1.Normal)]
     exact le_top
-  have hO1subSolv : IsSolvable (O1.subgroupOf B0) := by
+  have hO1subSolv : Group.IsSolvable (O1.subgroupOf B0) := by
     let eO : O1.subgroupOf B0 ≃* O1 :=
       Subgroup.subgroupOfEquivOfLe hO1B0
-    exact solvable_of_solvable_injective (f := eO.toMonoidHom) eO.injective
-  letI : IsSolvable (O1.subgroupOf B0) := hO1subSolv
-  letI : IsSolvable (B0 ⧸ O1.subgroupOf B0) := by
+    exact Group.isSolvable_of_isSolvable_injective (f := eO.toMonoidHom) eO.injective
+  letI : Group.IsSolvable (O1.subgroupOf B0) := hO1subSolv
+  letI : Group.IsSolvable (B0 ⧸ O1.subgroupOf B0) := by
     have hnil := hquot0.isNilpotent
     letI : Group.IsNilpotent (B0 ⧸ O1.subgroupOf B0) := hnil
     infer_instance
-  have hB0solv : IsSolvable B0 :=
+  have hB0solv : Group.IsSolvable B0 :=
     isSolvable_of_normal_subgroup_and_quotient (O1.subgroupOf B0)
-  letI : IsSolvable B0 := hB0solv
+  letI : Group.IsSolvable B0 := hB0solv
   let e1 : B0 ≃* B0.map A.subtype :=
     Subgroup.equivMapOfInjective B0 A.subtype A.subtype_injective
   let e2 : B0.map A.subtype ≃* B :=
     Subgroup.equivMapOfInjective (B0.map A.subtype) N0.subtype
       N0.subtype_injective
   let eB : B0 ≃* B := e1.trans e2
-  change IsSolvable B
-  exact solvable_of_solvable_injective (f := eB.symm.toMonoidHom)
+  change Group.IsSolvable B
+  exact Group.isSolvable_of_isSolvable_injective (f := eB.symm.toMonoidHom)
     eB.symm.injective
 
 /-- The normalized product `M̂₂ = M₂R` is solvable, since both `M₂` and the
@@ -3928,7 +3953,7 @@ private theorem theorem4b_section7_M2Hat_solvable
     {X : Type u} [Group X] [Finite X] {M : Subgroup X}
     {d : Theorem4bSixD M} {s : Theorem4bSection7SecondStage d}
     (q : Theorem4bSection7MaximalQData d s) :
-    IsSolvable (theorem4bSection7M2Hat q) := by
+    Group.IsSolvable (theorem4bSection7M2Hat q) := by
   classical
   letI : Fact d.data.p.Prime := ⟨d.data.hp⟩
   let Q : Subgroup X := q.chosen.Q
@@ -3954,12 +3979,12 @@ private theorem theorem4b_section7_M2Hat_solvable
   letI : BH.Normal := by
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer hBH).2
     exact hHnormB
-  have hBsolv : IsSolvable B := theorem4b_section7_M2_solvable M Q
-  letI : IsSolvable B := hBsolv
-  have hBHsolv : IsSolvable BH := by
+  have hBsolv : Group.IsSolvable B := theorem4b_section7_M2_solvable M Q
+  letI : Group.IsSolvable B := hBsolv
+  have hBHsolv : Group.IsSolvable BH := by
     let eB : BH ≃* B := Subgroup.subgroupOfEquivOfLe hBH
-    exact solvable_of_solvable_injective (f := eB.toMonoidHom) eB.injective
-  letI : IsSolvable BH := hBHsolv
+    exact Group.isSolvable_of_isSolvable_injective (f := eB.toMonoidHom) eB.injective
+  letI : Group.IsSolvable BH := hBHsolv
   have hRp : IsPGroup d.data.p R := by
     change IsPGroup d.data.p q.R
     exact theorem4bIsSylowSubgroupOf_isPGroup_final q.hRsylow
@@ -3973,11 +3998,11 @@ private theorem theorem4b_section7_M2Hat_solvable
           (theorem4bSection7M2InX M q.chosen.Q ⊔ q.R))
     exact theorem4b_section7_quotient_sup_isPGroup
       (theorem4bSection7M2InX M q.chosen.Q) q.R hRp
-  letI : IsSolvable (H ⧸ BH) := by
+  letI : Group.IsSolvable (H ⧸ BH) := by
     have hnil := hquotP.isNilpotent
     letI : Group.IsNilpotent (H ⧸ BH) := hnil
     infer_instance
-  change IsSolvable H
+  change Group.IsSolvable H
   exact isSolvable_of_normal_subgroup_and_quotient BH
 
 /-- `Omega₁` commutes with transport along a group equivalence. -/
@@ -4339,7 +4364,7 @@ public theorem IsStronglyEmbedded.theorem4b_section7_M2Hat_factorization_of_pSta
   obtain ⟨P, hRP⟩ :=
     hM.theorem4b_section7_R_isSylow_M2Hat
       hX d hrank hT2 hinduction s q
-  have hsolv : IsSolvable H := by
+  have hsolv : Group.IsSolvable H := by
     simpa [H] using theorem4b_section7_M2Hat_solvable q
   have hconstrained : PConstrainedGroup (G := H) d.data.p :=
     theorem4b_pConstrainedGroup_of_solvable hsolv d.data.p

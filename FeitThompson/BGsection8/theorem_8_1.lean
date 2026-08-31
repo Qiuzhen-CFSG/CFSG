@@ -156,7 +156,7 @@ public theorem section8_prime_mem_subgroupPrimeSet_of_nontrivial_pSubgroup
     [Finite G] {A : Subgroup G} {p : Nat.Primes} {B : Subgroup A}
     (hBp : IsPGroup p.val B) (hB_ne_bot : B ≠ ⊥) :
     p ∈ subgroupPrimeSet A := by
-  letI : Fact p.val.Prime := ⟨p.2⟩
+  let : Fact p.val.Prime := ⟨p.2⟩
   obtain ⟨n, hncard⟩ := hBp.exists_card_eq
   have hBcard_ne_one : Nat.card B ≠ 1 := by
     intro hcard
@@ -209,7 +209,7 @@ public theorem section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
     by_contra hq_ne
     exact section8_not_mem_subgroupPrimeSet_of_isPGroup_ne hHp hq_ne hqH
   · intro hq
-    have hqp : q = ⟨p, Fact.out⟩ := by simpa using hq
+    have hqp : q = ⟨p, Fact.out⟩ := Set.mem_singleton_iff.mp hq
     subst q
     rcases hHp.exists_card_eq with ⟨n, hn⟩
     have hn0 : n ≠ 0 := by
@@ -226,7 +226,7 @@ public theorem section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
 public theorem section8_generatorRank_le_natCard
     (H : Type*) [Group H] [Finite H] :
     generatorRank H ≤ Nat.card H := by
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   obtain ⟨S, hS_card, _hS_top⟩ := Group.rank_spec H
   calc
     generatorRank H = Group.rank H := generatorRank_eq_group_rank H
@@ -335,7 +335,7 @@ public theorem section8_center_sylow_map_le_center_of_nilpotent
     refine iSup_le ?_
     intro hr
     have hprime : Nat.Prime r := Nat.prime_of_mem_primeFactors hr
-    letI : Fact r.Prime := ⟨hprime⟩
+    let : Fact r.Prime := ⟨hprime⟩
     let R : Sylow r H := default
     change (R : Subgroup H) ≤ C
     intro y hyR
@@ -345,7 +345,7 @@ public theorem section8_center_sylow_map_le_center_of_nilpotent
     subst w
     by_cases hrq : r = q
     · subst r
-      haveI : Unique (Sylow q H) := Sylow.unique_of_normal Q hQnorm
+      have : Unique (Sylow q H) := Sylow.unique_of_normal Q hQnorm
       have hR_eq_Q : (R : Subgroup H) = (Q : Subgroup H) := by
         exact congrArg (fun P : Sylow q H => (P : Subgroup H)) (Subsingleton.elim R Q)
       have hyQ : y ∈ (Q : Subgroup H) := by simpa [hR_eq_Q] using hyR
@@ -375,12 +375,12 @@ public theorem section8_subgroupPrimeSet_center_eq_top_of_nilpotent
   apply Set.Subset.antisymm
   · exact section8_subgroupPrimeSet_mono (le_top : Subgroup.center H ≤ (⊤ : Subgroup H))
   · intro q hqtop
-    letI : Fact q.val.Prime := ⟨q.2⟩
+    let : Fact q.val.Prime := ⟨q.2⟩
     let Q : Sylow q.val H := default
     have hqH : q.val ∣ Nat.card H := by simpa [subgroupPrimeSet] using hqtop
     have hQ_ne_bot : (Q : Subgroup H) ≠ ⊥ := by
       exact Sylow.ne_bot_of_dvd_card Q hqH
-    haveI : Nontrivial Q :=
+    have : Nontrivial Q :=
       (Subgroup.nontrivial_iff_ne_bot (H := (Q : Subgroup H))).2 hQ_ne_bot
     have hZQ_nontrivial : Nontrivial (Subgroup.center Q) :=
       IsPGroup.center_nontrivial (p := q.val) (G := Q) Q.isPGroup'
@@ -421,7 +421,7 @@ public theorem section8CenterInFitting_primeSet_eq_fitting
     subgroupPrimeSet (section8CenterInFitting M) =
       subgroupPrimeSet (section8FittingSubgroup M) := by
   let F : Subgroup G := section8FittingSubgroup M
-  haveI : Group.IsNilpotent F := section8FittingSubgroup_isNilpotent M
+  have : Group.IsNilpotent F := section8FittingSubgroup_isNilpotent M
   have hZsub :
       subgroupPrimeSet ((section8CenterInFitting M).subgroupOf F) =
         subgroupPrimeSet (⊤ : Subgroup F) := by
@@ -485,7 +485,7 @@ public theorem section8SubgroupInAmbient_le_centralizerInFitting
   rw [Subgroup.mem_centralizer_iff]
   intro b hb
   apply Subtype.ext
-  letI : IsElementaryAbelian p A₀ := hA₀.1
+  let : IsElementaryAbelian p A₀ := hA₀.1
   exact
     congrArg Subtype.val
       (setLike_mul_comm (s := A₀) haA₀ hb).symm
@@ -524,20 +524,20 @@ public theorem section8CentralizerInFitting_center_rank_ge
       _ = (a : G) * (c : G) := by
         simpa using congrArg₂ (fun x y : G => x * y) ha_eq hc_eq
   have hA₀C_p : IsPGroup p A₀C := by
-    letI : IsElementaryAbelian p A₀ := hA₀.1
+    let : IsElementaryAbelian p A₀ := hA₀.1
     have hA₀p : IsPGroup p A₀ := IsElementaryAbelian.isPGroup p A₀
     have hA₀G_p : IsPGroup p A₀G :=
       IsPGroup.map hA₀p (section8FittingSubgroup M).subtype
     exact hA₀G_p.of_equiv (Subgroup.subgroupOfEquivOfLe hA₀G_le_C).symm
   have hA₀C_comm : IsMulCommutative A₀C := by
-    letI : IsElementaryAbelian p A₀ := hA₀.1
+    let : IsElementaryAbelian p A₀ := hA₀.1
     have hA₀G_comm : IsMulCommutative A₀G := by
-      letI : IsMulCommutative A₀ := by infer_instance
+      let : IsMulCommutative A₀ := by infer_instance
       change IsMulCommutative (A₀.map (section8FittingSubgroup M).subtype)
       exact
         Subgroup.map_isMulCommutative
           (f := (section8FittingSubgroup M).subtype) (H := A₀)
-    letI : IsMulCommutative A₀G := hA₀G_comm
+    let : IsMulCommutative A₀G := hA₀G_comm
     exact Subgroup.subgroupOf_isMulCommutative (H := A₀G) (K := C)
   have hgen_eq : generatorRank A₀C = generatorRank A₀ := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -624,7 +624,7 @@ public theorem section8_factorization_lt_normalizer_of_lt_top_in_pgroup
     Nat.factorization (Nat.card K) p <
       Nat.factorization (Nat.card (Subgroup.normalizer (K : Set S))) p := by
   have hnc : NormalizerCondition S := by
-    letI : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hS
+    let : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hS
     exact Group.normalizerCondition_of_isNilpotent (G := S)
   have hK_lt_norm : K < Subgroup.normalizer (K : Set S) := hnc K hKlt
   have hcard_lt :
@@ -665,7 +665,7 @@ public theorem section8FittingSubgroup_le_sylow
     exact hFp.of_equiv e.symm
   have hF₀norm : F₀.Normal := by
     simpa [F₀] using section8FittingSubgroup_normal_in (M := M)
-  letI : F₀.Normal := hF₀norm
+  let : F₀.Normal := hF₀norm
   have hsup_p : IsPGroup p (F₀ ⊔ (P : Subgroup M) : Subgroup M) :=
     IsPGroup.to_sup_of_normal_left hF₀p P.isPGroup'
   have hsup_eq : F₀ ⊔ (P : Subgroup M) = (P : Subgroup M) :=
@@ -687,7 +687,7 @@ public theorem section8_pPrimeCore_eq_bot_of_fitting_isPGroup
     (hM : M ∈ section8MaximalSubgroups G) {p : ℕ} [Fact p.Prime]
     (hFp : IsPGroup p (section8FittingSubgroup M)) :
     pPrimeCore p M = ⊥ := by
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   rw [pPrimeCore_eq_bot_iff]
   intro K hKnorm hKcop
@@ -703,12 +703,12 @@ public theorem section8_pPrimeCore_eq_bot_of_fitting_isPGroup
     exact hfitK_ne_bot
       (Subgroup.map_injective K.subtype_injective (by simpa [L] using hLbot))
   have hL_norm : L.Normal := by
-    letI : K.Normal := hKnorm
-    letI : (fittingSubgroup K).Characteristic := fittingSubgroup_characteristic
+    let : K.Normal := hKnorm
+    let : (fittingSubgroup K).Characteristic := fittingSubgroup_characteristic
     change ((fittingSubgroup K).map K.subtype).Normal
     infer_instance
   have hL_nil : Group.IsNilpotent L := by
-    haveI : Group.IsNilpotent (fittingSubgroup K) := by infer_instance
+    have : Group.IsNilpotent (fittingSubgroup K) := by infer_instance
     let e : fittingSubgroup K ≃* L :=
       Subgroup.equivMapOfInjective (f := K.subtype) (fittingSubgroup K) K.subtype_injective
     exact Group.nilpotent_of_mulEquiv (G := fittingSubgroup K) (G' := L) e
@@ -756,15 +756,15 @@ public theorem section8SylowSubgroupInAmbient_le_fitting_of_isPGroup
     (P : Sylow p M) {A : Subgroup (P : Subgroup M)}
     (hA : A ∈ scnSubgroups 3 (P : Subgroup M)) :
     section8SylowSubgroupInAmbient M P A ≤ section8FittingSubgroup M := by
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
   have hAcomm : IsMulCommutative A :=
     (scnSubgroup_normal_commutative
       (p := p) (R := (P : Subgroup M)) P.isPGroup' hA).2
-  letI : A.Normal := hA.1
-  letI : IsMulCommutative A := hAcomm
+  let : A.Normal := hA.1
+  let : IsMulCommutative A := hAcomm
   have hA_le_op : A.map (P : Subgroup M).subtype ≤ Op_p'p p M :=
     theorem_6_1 (G := M) (p := p) hModd P A
   have hop_eq : Op_p'p p M = fittingSubgroup M :=
@@ -1165,7 +1165,7 @@ public theorem section8_centerIn_thompsonSubgroup_subgroupOf_eq_top (S : Subgrou
 public theorem section8_centerIn_thompsonSubgroup_subgroupOf_characteristic (S : Subgroup G) :
     ((centerIn (thompsonSubgroup S)).subgroupOf S).Characteristic := by
   rw [section8_centerIn_thompsonSubgroup_subgroupOf_eq S]
-  letI : ((thompsonSubgroup S).subgroupOf S).Characteristic :=
+  let : ((thompsonSubgroup S).subgroupOf S).Characteristic :=
     section8_thompsonSubgroup_subgroupOf_characteristic S
   exact
     characteristic_map_subtype_of_characteristic
@@ -1244,7 +1244,7 @@ public theorem section8_centerIn_ne_bot_of_isPGroup
     [Finite G] {p : ℕ} [Fact p.Prime] {H : Subgroup G}
     (hHp : IsPGroup p H) (hH_ne_bot : H ≠ ⊥) :
     centerIn H ≠ ⊥ := by
-  letI : Nontrivial H := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
+  let : Nontrivial H := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
   have hcenter_nontrivial : Nontrivial (Subgroup.center H) :=
     IsPGroup.center_nontrivial (p := p) (G := H) hHp
   have hcenter_ne_bot : Subgroup.center H ≠ ⊥ :=
@@ -1302,7 +1302,7 @@ public theorem section8_centerIn_thompsonSubgroup_normal_of_fitting_isPGroup
     (hFp : IsPGroup p (section8FittingSubgroup M))
     (P : Sylow p M) :
     (centerIn (thompsonSubgroup P) : Subgroup M).Normal := by
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
@@ -1480,7 +1480,7 @@ public theorem section8_isSubnormalIn_of_nilpotent
 public theorem section8CentralizerInFitting_isSubnormalIn_fitting
     [Finite G] (M : Subgroup G) (A₀ : Subgroup (section8FittingSubgroup M)) :
     IsSubnormalIn (section8CentralizerInFitting M A₀) (section8FittingSubgroup M) := by
-  letI : Group.IsNilpotent (section8FittingSubgroup M) :=
+  let : Group.IsNilpotent (section8FittingSubgroup M) :=
     section8FittingSubgroup_isNilpotent M
   exact section8_isSubnormalIn_of_nilpotent (section8CentralizerInFitting_le M A₀)
 
@@ -1576,7 +1576,7 @@ public theorem section8_primeRank_le_of_subgroup
     let A' : Subgroup G := A.map S.subtype
     have hA'p : IsPGroup q A' := IsPGroup.map hAp S.subtype
     have hA'comm : IsMulCommutative A' := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [A'] using (Subgroup.map_isMulCommutative (f := S.subtype) (H := A))
     have hgen_eq : generatorRank A' = generatorRank A := by
       rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -1641,12 +1641,12 @@ public theorem section8_normalizer_eq_of_nontrivial_normal_in_maximal
     (hLnormM : (L.subgroupOf M).Normal) :
     Subgroup.normalizer (L : Set G) = M := by
   have hM_le_norm : M ≤ Subgroup.normalizer (L : Set G) := by
-    letI : (L.subgroupOf M).Normal := hLnormM
+    let : (L.subgroupOf M).Normal := hLnormM
     exact Subgroup.le_normalizer_of_normal_subgroupOf hLM
   have hnorm_ne_top : Subgroup.normalizer (L : Set G) ≠ ⊤ := by
     intro hnorm_top
     have hLnorm : L.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal L hLnorm with hLbot | hLtop
     · exact hL_ne_bot hLbot
     · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
@@ -1710,7 +1710,7 @@ public theorem section8CenterInFitting_normal_in_maximal
   have hFNorm : ((section8FittingSubgroup M).subgroupOf M).Normal :=
     section8FittingSubgroup_normal_in M
   have hM_le_normF : M ≤ Subgroup.normalizer (section8FittingSubgroup M : Set G) := by
-    letI : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
+    let : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
   have hnormF_le_normZ :
       Subgroup.normalizer (section8FittingSubgroup M : Set G) ≤
@@ -1864,7 +1864,7 @@ public theorem section8_pPrimeCore_centralizer_sylowSubgroupInAmbient_eq_bot_of_
       section8_centralizer_sylowSubgroupInAmbient_subgroupOf_map_eq hM hpF hFp P hA
   have hcoreM : pPrimeCore p M = ⊥ :=
     section8_pPrimeCore_eq_bot_of_fitting_isPGroup hM hFp
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hA_M_p : IsPGroup p A_M := by
     simpa [A_M] using IsPGroup.map (P.isPGroup'.to_subgroup A) (P : Subgroup M).subtype
@@ -1909,7 +1909,7 @@ public theorem section8_piCoreIn_singleton_compl_eq_pPrimeCore_map
       have hKπ :
           IsPiSubgroup (G := H) (({⟨p, Fact.out⟩} : Set Nat.Primes)ᶜ) K := by
         intro q hq
-        simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
+        simp only [Set.mem_compl_iff]
         intro hqeq
         subst q
         exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hKcop) hq
@@ -1973,7 +1973,7 @@ public theorem section8_scnSubgroups_three_map_equiv_of_isPGroup
   · have hAcomm : IsMulCommutative A :=
       (scnSubgroup_normal_commutative (p := p) hRp hA').2
     have hAmap_comm : IsMulCommutative Amap := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [Amap] using (Subgroup.map_isMulCommutative (f := e.toMonoidHom) (H := A))
     have hAmap_p : IsPGroup p Amap := by
       simpa [Amap] using IsPGroup.map (hRp.to_subgroup A) e.toMonoidHom
@@ -2109,9 +2109,9 @@ public theorem section8_normalizer_centerIn_thompsonSubgroup_le_of_normalizer_sy
   let e : (P : Subgroup M) ≃* P₀sub :=
     Subgroup.equivMapOfInjective (f := M.subtype) (P : Subgroup M) M.subtype_injective
   let Kimage : Subgroup P₀sub := Kp.map e.toMonoidHom
-  haveI : Kp.Characteristic :=
+  have : Kp.Characteristic :=
     section8_centerIn_thompsonSubgroup_subgroupOf_characteristic (P : Subgroup M)
-  haveI : Kimage.Characteristic := section8_characteristic_map_equiv Kp e
+  have : Kimage.Characteristic := section8_characteristic_map_equiv Kp e
   have hnorm :
       Subgroup.normalizer (P₀sub : Set G) ≤
         Subgroup.normalizer (Kimage.map P₀sub.subtype : Set G) :=
@@ -2136,10 +2136,10 @@ public theorem section8SubgroupInAmbient_sylow_of_normalizer_le
   intro Q hQp hP₀Q
   have hQ_le_P₀ : Q ≤ P₀sub := by
     let K : Subgroup Q := P₀sub.subgroupOf Q
-    haveI : Fact (IsPGroup p Q) := ⟨hQp⟩
+    have : Fact (IsPGroup p Q) := ⟨hQp⟩
     have hQnil : Group.IsNilpotent Q := IsPGroup.isNilpotent (p := p) (G := Q) hQp
     have hnc : NormalizerCondition Q := by
-      letI : Group.IsNilpotent Q := hQnil
+      let : Group.IsNilpotent Q := hQnil
       exact Group.normalizerCondition_of_isNilpotent (G := Q)
     have hnormK_le : Subgroup.normalizer (K : Set Q) ≤ K := by
       intro x hxnorm
@@ -2475,17 +2475,18 @@ public theorem section8_HStarFamily_fitting_subset_sylowSubgroupInAmbient_of_fit
     simpa [A_G] using
       section8_subgroupPrimeSet_sylowSubgroupInAmbient_eq_singleton hpodd P hA
   have hq_not_mem : q ∉ subgroupPrimeSet A_G := by
-    simpa [hAπ] using hq
+    rw [hAπ]
+    exact fun hmem => hq (Set.mem_singleton_iff.mp hmem)
   have hAp : IsPGroup p A_G := by
     simpa [A_G] using section8SylowSubgroupInAmbient_isPGroup M P A
   have hAcomm0 : IsMulCommutative A :=
     (scnSubgroup_normal_commutative
       (p := p) (R := (P : Subgroup M)) P.isPGroup' hA).2
   have hAMcomm : IsMulCommutative (A.map (P : Subgroup M).subtype) := by
-    letI : IsMulCommutative A := hAcomm0
+    let : IsMulCommutative A := hAcomm0
     exact Subgroup.map_isMulCommutative (f := (P : Subgroup M).subtype) (H := A)
   have hAcomm : IsMulCommutative A_G := by
-    letI : IsMulCommutative (A.map (P : Subgroup M).subtype) := hAMcomm
+    let : IsMulCommutative (A.map (P : Subgroup M).subtype) := hAMcomm
     change IsMulCommutative ((A.map (P : Subgroup M).subtype).map M.subtype)
     exact
       Subgroup.map_isMulCommutative
@@ -2497,7 +2498,7 @@ public theorem section8_HStarFamily_fitting_subset_sylowSubgroupInAmbient_of_fit
   have hAscn2 : A_G ∈ scnPrimeSubgroups 2 p G := by
     rcases hAscn3 with ⟨P₀, hA_le_P₀, hA₀⟩
     exact ⟨P₀, hA_le_P₀, ⟨hA₀.1, hA₀.2.1, (by decide : 2 ≤ 3).trans hA₀.2.2⟩⟩
-  letI : IsMulCommutative A_G := hAcomm
+  let : IsMulCommutative A_G := hAcomm
   have hHyp : Hypothesis7_1 A_G :=
     proposition_7_5 (G := G) (p := p) hp_dvd_G hAp (Or.inr hAscn2)
   have htrans : ConjugationActionTransitiveOn (section7K A_G)
@@ -2515,7 +2516,7 @@ public theorem section8_HStarFamily_fitting_subset_sylowSubgroupInAmbient_of_fit
         hFp P hA
   have hAnormF : (A_G.subgroupOf F).Normal :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hAF).mpr hFnormA
-  letI : (A_G.subgroupOf F).Normal := hAnormF
+  let : (A_G.subgroupOf F).Normal := hAnormF
   have hAsubnormal : IsSubnormalIn A_G F :=
     section8_isSubnormalIn_of_normal_subgroupOf hAF
   have hFπ : IsPiSubgroup (G := G) (subgroupPrimeSet A_G) F := by
@@ -2526,6 +2527,7 @@ public theorem section8_HStarFamily_fitting_subset_sylowSubgroupInAmbient_of_fit
         exact section8_not_mem_subgroupPrimeSet_of_isPGroup_ne hFp hrne hrF
       exact not_not.mp hr_not_ne
     simp [hAπ, hr_eq_p]
+    exact Set.mem_singleton_iff.mpr rfl
   have hres :=
     theorem_7_4 (G := G) (A := A_G) (P := F)
       hHyp hq_not_mem hF_ne_top hAsubnormal hFπ htrans
@@ -2536,7 +2538,7 @@ public lemma section8_isPGroup_of_isPiSubgroup_singleton
     [Finite G] {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) H) :
     IsPGroup q.val H := by
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   rw [IsPGroup.iff_card]
   have hcard_ne_zero : Nat.card H ≠ 0 := Nat.card_pos.ne'
   refine ⟨(Nat.card H).primeFactorsList.length, ?_⟩
@@ -2552,7 +2554,7 @@ public lemma section8_isPiSubgroup_singleton_of_isPGroup
     [Finite G] {H : Subgroup G} {q : Nat.Primes}
     (hH : IsPGroup q.val H) :
     IsPiSubgroup (G := G) ({q} : Set Nat.Primes) H := by
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   intro r hr
   obtain ⟨n, hncard⟩ := hH.exists_card_eq
   have hrdvdq : r.val ∣ q.val := r.2.dvd_of_dvd_pow (by simpa [hncard] using hr)
@@ -2566,7 +2568,7 @@ public theorem section8_coprime_card_of_isPGroup_of_isPiSubgroup_compl
     (hrπ : r ∈ π) (hR : IsPGroup r.val R)
     (hY : IsPiSubgroup (G := G) πᶜ Y) :
     Nat.Coprime (Nat.card R) (Nat.card Y) := by
-  letI : Fact r.val.Prime := ⟨r.2⟩
+  let : Fact r.val.Prime := ⟨r.2⟩
   refine Nat.coprime_of_dvd ?_
   intro l hlprime hlR hlY
   let l' : Nat.Primes := ⟨l, hlprime⟩
@@ -2607,7 +2609,7 @@ public theorem section8_exists_prime_ne_of_not_isPGroup
   have hsubset : subgroupPrimeSet H ⊆ ({⟨p, Fact.out⟩} : Set Nat.Primes) := by
     intro q hqH
     by_contra hqnot
-    exact hnone ⟨q, hqH, by simpa using hqnot⟩
+    exact hnone ⟨q, hqH, fun heq => hqnot (Set.mem_singleton_iff.mpr heq)⟩
   have hHπ : IsPiSubgroup (G := G) ({⟨p, Fact.out⟩} : Set Nat.Primes) H :=
     section8_isPiSubgroup_of_subgroupPrimeSet_subset hsubset
   exact hnot (section8_isPGroup_of_isPiSubgroup_singleton hHπ)
@@ -2636,7 +2638,7 @@ public theorem section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isM
     (hqH : q ∈ subgroupPrimeSet H) :
     piCoreIn ({q} : Set Nat.Primes) H ≠ ⊥ := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let Q : Sylow q.val H := default
   have hq_card_H : q.val ∣ Nat.card H := hqH
   have hQ_ne_bot : (Q : Subgroup H) ≠ ⊥ :=
@@ -2663,7 +2665,7 @@ public theorem section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isN
     (hqH : q ∈ subgroupPrimeSet H) :
     piCoreIn ({q} : Set Nat.Primes) H ≠ ⊥ := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let Q : Sylow q.val H := default
   have hq_card_H : q.val ∣ Nat.card H := hqH
   have hQ_ne_bot : (Q : Subgroup H) ≠ ⊥ :=
@@ -2688,7 +2690,7 @@ public theorem section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isN
 public theorem section8_piCoreIn_singleton_eq_pCore_map
     [Finite G] (q : Nat.Primes) (H : Subgroup G) :
     piCoreIn ({q} : Set Nat.Primes) H = (pCore q.val H).map H.subtype := by
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let Sπ : Set (Subgroup H) :=
     {K | K.Normal ∧ IsPiSubgroup (G := H) ({q} : Set Nat.Primes) K}
   let Sq : Set (Subgroup H) := {K | K.Normal ∧ IsPGroup q.val K}
@@ -2795,13 +2797,13 @@ public theorem section8_le_normalizer_piCoreIn_of_le_normalizer
 /-- Coprime-action generation in ambient subgroup notation: if `R` normalizes `Y` and
 has no fixed points on `Y`, then `Y <= [Y,R]`. -/
 public theorem section8_le_commutator_of_subgroupCentralizerIn_eq_bot
-    [Finite G] {Y R : Subgroup G} (hsolvY : IsSolvable Y)
+    [Finite G] {Y R : Subgroup G} (hsolvY : Group.IsSolvable Y)
     (hRYnorm : R ≤ Subgroup.normalizer (Y : Set G))
     (hcop : Nat.Coprime (Nat.card R) (Nat.card Y))
     (hfix : subgroupCentralizerIn Y R = ⊥) :
     Y ≤ ⁅Y, R⁆ := by
   classical
-  haveI : Subgroup.Normalizes R Y := ⟨hRYnorm⟩
+  have : Subgroup.Normalizes R Y := ⟨hRYnorm⟩
   have hfixed_eq :
       fixedPointSubgroup (↥R) (↥Y) = (subgroupCentralizerIn Y R).subgroupOf Y := by
     simpa using fixedPointSubgroup_subgroup_conj_eq_subgroupCentralizerIn Y R hRYnorm
@@ -2865,7 +2867,7 @@ public theorem section8_coprime_prime_card_of_isPGroup_ne
     [Finite G] {R : Subgroup G} {q r : Nat.Primes}
     (hqr : q ≠ r) (hR : IsPGroup r.val R) :
     Nat.Coprime q.val (Nat.card R) := by
-  letI : Fact r.val.Prime := ⟨r.2⟩
+  let : Fact r.val.Prime := ⟨r.2⟩
   have hr_cast : (⟨r.val, Fact.out⟩ : Nat.Primes) = r := Subtype.ext rfl
   have hnot : ¬ q.val ∣ Nat.card R := by
     intro hq
@@ -2933,7 +2935,7 @@ public theorem section8_normalizer_piCoreIn_singleton_centerInFitting_eq
     exact hqF
   have hZcomm : IsMulCommutative Z := by
     simpa [Z] using section8CenterInFitting_isMulCommutative M
-  letI : IsMulCommutative Z := hZcomm
+  let : IsMulCommutative Z := hZcomm
   have hL_ne_bot : L ≠ ⊥ := by
     simpa [L] using
       section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isMulCommutative
@@ -2942,7 +2944,7 @@ public theorem section8_normalizer_piCoreIn_singleton_centerInFitting_eq
     (piCoreIn_le (G := G) ({q} : Set Nat.Primes) Z).trans
       (section8CenterInFitting_le_maximal M)
   have hM_normZ : M ≤ Subgroup.normalizer (Z : Set G) := by
-    letI : (Z.subgroupOf M).Normal := by
+    let : (Z.subgroupOf M).Normal := by
       simpa [Z] using section8CenterInFitting_normal_in_maximal M
     exact
       Subgroup.le_normalizer_of_normal_subgroupOf
@@ -2980,7 +2982,7 @@ public theorem section8_piCoreIn_singleton_centerInFitting_le_singleton_compl_co
     piCoreIn ({r} : Set Nat.Primes) (section8CenterInFitting M) ≤
       piCoreIn ({q} : Set Nat.Primes)ᶜ X := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let Z : Subgroup G := section8CenterInFitting M
   let Rq : Subgroup G := piCoreIn ({q} : Set Nat.Primes) Z
   let Rr : Subgroup G := piCoreIn ({r} : Set Nat.Primes) Z
@@ -2997,13 +2999,13 @@ public theorem section8_piCoreIn_singleton_centerInFitting_le_singleton_compl_co
     simpa [Rq, Z] using section8_piCoreIn_singleton_centerInFitting_isPGroup M q
   have hRqX_p : IsPGroup q.val (Rq.subgroupOf X) :=
     hRq_p.of_equiv (Subgroup.subgroupOfEquivOfLe hRq_le_X).symm
-  have hsolvX : IsSolvable X :=
+  have hsolvX : Group.IsSolvable X :=
     IsMinCE.proper_subgroups_solvable X (lt_top_iff_ne_top.mpr hXproper)
   have hcoreC_le_coreX :
       (pPrimeCore q.val C).map C.subtype ≤ pPrimeCore q.val X := by
     simpa [C] using
       (proposition_1_15_b (G := X) hsolvX q.val (Rq.subgroupOf X) hRqX_p)
-  letI : IsMulCommutative Z := by
+  let : IsMulCommutative Z := by
     simpa [Z] using section8CenterInFitting_isMulCommutative M
   have hRrX_le_C : Rr.subgroupOf X ≤ C := by
     intro x hxRr
@@ -3169,14 +3171,14 @@ public theorem section8_prime_order_mem_centralizerInFitting_centralizer_eq_one
   have hMnormF : M ≤ Subgroup.normalizer (F : Set G) := by
     have hFNorm : (F.subgroupOf M).Normal := by
       simpa [F] using section8FittingSubgroup_normal_in M
-    letI : (F.subgroupOf M).Normal := hFNorm
+    let : (F.subgroupOf M).Normal := hFNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf (by simpa [F] using section8FittingSubgroup_le M)
   have hxNormF : x ∈ Subgroup.normalizer (F : Set G) := hMnormF hxM
   have hRnormF : R ≤ Subgroup.normalizer (F : Set G) := by
     intro y hy
     rcases Subgroup.mem_zpowers_iff.mp hy with ⟨n, rfl⟩
     exact (Subgroup.normalizer (F : Set G)).zpow_mem hxNormF n
-  haveI : Subgroup.Normalizes R F := ⟨hRnormF⟩
+  have : Subgroup.Normalizes R F := ⟨hRnormF⟩
   have hR_le_centA : R ≤ Subgroup.centralizer (A : Set G) := by
     intro y hy
     rcases Subgroup.mem_zpowers_iff.mp hy with ⟨n, rfl⟩
@@ -3233,7 +3235,7 @@ public theorem section8_prime_order_mem_centralizerInFitting_centralizer_eq_one
     have hmul := congrArg (fun t : G => t * x) hconj
     simpa [mul_assoc] using hmul.symm
   let xM : M := ⟨x, hxM⟩
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hxCentFitM : xM ∈ Subgroup.centralizer (fittingSubgroup M : Set M) := by
     rw [Subgroup.mem_centralizer_iff]
@@ -3269,7 +3271,7 @@ public theorem section8_centralizer_centralizerInFitting_isPiSubgroup
   intro r hrC
   by_contra hrA
   let C : Subgroup G := Subgroup.centralizer (section8CentralizerInFitting M A₀ : Set G)
-  letI : Fact r.val.Prime := ⟨r.2⟩
+  let : Fact r.val.Prime := ⟨r.2⟩
   rcases exists_prime_orderOf_dvd_card' (G := C) r.val (by simpa [C] using hrC) with
     ⟨x, hxord⟩
   have hxordG : orderOf (x : G) = r.val := by
@@ -3407,7 +3409,7 @@ public theorem section8_HFamily_centralizerInFitting_le_singleton_compl_core_of_
     have htop_le_X : (⊤ : Subgroup G) ≤ X := by
       simpa [hYtop] using hY.1
     exact hXproper (top_le_iff.mp htop_le_X)
-  have hsolvY : IsSolvable Y :=
+  have hsolvY : Group.IsSolvable Y :=
     IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hY_ne_top)
   have hπeq :
       subgroupPrimeSet A = subgroupPrimeSet (section8FittingSubgroup M) := by
@@ -3677,7 +3679,7 @@ public theorem section8_HStarFamily_fitting_le_normalizer_maximal_of_centralizer
   have hMnormF : M ≤ Subgroup.normalizer (section8FittingSubgroup M : Set G) := by
     have hFNorm : ((section8FittingSubgroup M).subgroupOf M).Normal :=
       section8FittingSubgroup_normal_in M
-    letI : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
+    let : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
   have hsubF :
       Subsingleton {R : Subgroup G //
@@ -3734,15 +3736,15 @@ public theorem section8_HStarFamily_fitting_eq_bot_of_centralizerInFitting
     exact hqF (by simpa [hAπF] using hq)
   have hQπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q :=
     hQ.1.2.1
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   have hQp : IsPGroup q.val Q :=
     section8_isPGroup_of_isPiSubgroup_singleton hQπ
   have hQ_ne_top : Q ≠ ⊤ := by
     intro hQ_top
     subst hQ_top
-    letI : Nontrivial ↥(⊤ : Subgroup G) :=
+    let : Nontrivial ↥(⊤ : Subgroup G) :=
       (Subgroup.nontrivial_iff_ne_bot (H := (⊤ : Subgroup G))).2 (by simpa using hQ_ne_bot)
-    letI : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
+    let : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
     have htop_q : IsPGroup q.val (⊤ : Subgroup G) :=
       section8_isPGroup_of_isPiSubgroup_singleton hQπ
     have hGq : IsPGroup q.val G := htop_q.of_equiv Subgroup.topEquiv
@@ -3757,7 +3759,7 @@ public theorem section8_HStarFamily_fitting_eq_bot_of_centralizerInFitting
   have hnorm_ne_top : Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
     intro hnorm_top
     have hQnorm : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal Q hQnorm with hQbot | hQtop
     · exact hQ_ne_bot hQbot
     · exact hQ_ne_top hQtop
@@ -3914,10 +3916,10 @@ public theorem section8_ne_top_of_isPiSubgroup_singleton_ne_bot
     Q ≠ ⊤ := by
   intro hQ_top
   subst hQ_top
-  letI : Fact q.val.Prime := ⟨q.2⟩
-  letI : Nontrivial ↥(⊤ : Subgroup G) :=
+  let : Fact q.val.Prime := ⟨q.2⟩
+  let : Nontrivial ↥(⊤ : Subgroup G) :=
     (Subgroup.nontrivial_iff_ne_bot (H := (⊤ : Subgroup G))).2 (by simpa using hQ_ne_bot)
-  letI : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
+  let : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
   have htop_q : IsPGroup q.val (⊤ : Subgroup G) :=
     section8_isPGroup_of_isPiSubgroup_singleton hQπ
   have hGq : IsPGroup q.val G := htop_q.of_equiv Subgroup.topEquiv
@@ -3978,7 +3980,7 @@ public theorem section8FittingSubgroup_primeSet_subset_centralizerInFitting_of_m
     have hπZN : subgroupPrimeSet ZN = subgroupPrimeSet (section8FittingSubgroup N) := by
       simpa [ZN] using section8CenterInFitting_primeSet_eq_fitting N
     simpa [hπZN] using hqFN
-  haveI : IsMulCommutative ZN := by
+  have : IsMulCommutative ZN := by
     simpa [ZN] using section8CenterInFitting_isMulCommutative N
   have hL_ne_bot : L ≠ ⊥ := by
     simpa [L] using
@@ -3989,7 +3991,7 @@ public theorem section8FittingSubgroup_primeSet_subset_centralizerInFitting_of_m
   have hNnormZN : N ≤ Subgroup.normalizer (ZN : Set G) := by
     have hZNNorm : (ZN.subgroupOf N).Normal := by
       simpa [ZN] using section8CenterInFitting_normal_in_maximal N
-    letI : (ZN.subgroupOf N).Normal := hZNNorm
+    let : (ZN.subgroupOf N).Normal := hZNNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [ZN] using section8CenterInFitting_le_maximal N)
   have hA_norm_ZN : A ≤ Subgroup.normalizer (ZN : Set G) :=
@@ -4035,12 +4037,11 @@ public theorem section8_piCoreIn_fitting_primeSet_compl_maximal_eq_bot
     have hY_eq : Y = (Y.subgroupOf N).map N.subtype := by
       simpa [Y] using (Subgroup.map_subgroupOf_eq_of_le hY_le_N).symm
     exact hY_ne_bot (by simpa [hYsub_bot] using hY_eq)
-  have hNsolv : IsSolvable N :=
+  have hNsolv : Group.IsSolvable N :=
     IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.mpr hN.1)
-  letI : IsSolvable N := hNsolv
-  have hYsub_solv : IsSolvable (Y.subgroupOf N) :=
-    subgroup_solvable_of_solvable (H := Y.subgroupOf N)
-  letI : IsSolvable (Y.subgroupOf N) := hYsub_solv
+  let : Group.IsSolvable N := hNsolv
+  have hYsub_solv : Group.IsSolvable (Y.subgroupOf N) := by infer_instance
+  let : Group.IsSolvable (Y.subgroupOf N) := hYsub_solv
   have hfitY_ne_bot : fittingSubgroup (Y.subgroupOf N) ≠ ⊥ := by
     intro hfitY
     have hcardY : Nat.card (Y.subgroupOf N) = 1 :=
@@ -4125,7 +4126,7 @@ public theorem section8FittingSubgroup_primeSet_eq_centralizerInFitting_of_maxim
           subgroupPrimeSet (section8FittingSubgroup M) :=
         section8CenterInFitting_primeSet_eq_fitting M
       simpa [hZπ] using hqF
-    haveI : IsMulCommutative (section8CenterInFitting M) :=
+    have : IsMulCommutative (section8CenterInFitting M) :=
       section8CenterInFitting_isMulCommutative M
     have hRq_ne_bot : Rq ≠ ⊥ := by
       simpa [Rq] using
@@ -4203,7 +4204,7 @@ public theorem section8_piCoreIn_singleton_fitting_maximalOver_le_centralizer_ce
   have hN_norm_FN : N ≤ Subgroup.normalizer (FN : Set G) := by
     have hFN_norm : (FN.subgroupOf N).Normal := by
       simpa [FN] using section8FittingSubgroup_normal_in N
-    letI : (FN.subgroupOf N).Normal := hFN_norm
+    let : (FN.subgroupOf N).Normal := hFN_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [FN] using section8FittingSubgroup_le N)
   have hN_norm_Dq : N ≤ Subgroup.normalizer (Dq : Set G) := by
@@ -4250,8 +4251,8 @@ public theorem section8_piCoreIn_singleton_fitting_maximalOver_le_centralizer_ce
   have hxN : xN ∈ Cq.subgroupOf N := by
     change x ∈ Cq
     exact hRr_le_Cq hxRr
-  letI : (Dq.subgroupOf N).Normal := hDq_norm_N
-  letI : (Cq.subgroupOf N).Normal := hCq_norm_N
+  let : (Dq.subgroupOf N).Normal := hDq_norm_N
+  let : (Cq.subgroupOf N).Normal := hCq_norm_N
   have hcomm_mem :
       ⁅dN, xN⁆ ∈ ⁅Dq.subgroupOf N, Cq.subgroupOf N⁆ :=
     Subgroup.commutator_mem_commutator hdN hxN
@@ -4328,7 +4329,7 @@ public theorem section8_piCoreIn_singleton_fitting_maximalOver_le_original
   have hN_norm_FN : N ≤ Subgroup.normalizer (FN : Set G) := by
     have hFN_norm : (FN.subgroupOf N).Normal := by
       simpa [FN] using section8FittingSubgroup_normal_in N
-    letI : (FN.subgroupOf N).Normal := hFN_norm
+    let : (FN.subgroupOf N).Normal := hFN_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [FN] using section8FittingSubgroup_le N)
   have hN_norm_Dq : N ≤ Subgroup.normalizer (Dq : Set G) := by
@@ -4376,8 +4377,8 @@ public theorem section8_piCoreIn_singleton_fitting_maximalOver_le_original
     have hxN : xN ∈ Cq.subgroupOf N := by
       change x ∈ Cq
       exact hRr_le_Cq hxRr
-    letI : (Dq.subgroupOf N).Normal := hDq_norm_N
-    letI : (Cq.subgroupOf N).Normal := hCq_norm_N
+    let : (Dq.subgroupOf N).Normal := hDq_norm_N
+    let : (Cq.subgroupOf N).Normal := hCq_norm_N
     have hcomm_mem :
         ⁅dN, xN⁆ ∈ ⁅Dq.subgroupOf N, Cq.subgroupOf N⁆ :=
       Subgroup.commutator_mem_commutator hdN hxN
@@ -4421,7 +4422,7 @@ public theorem section8FittingSubgroup_maximalOver_le_original
   let K : Subgroup FN := M.comap FN.subtype
   have hnilFN : Group.IsNilpotent FN := by
     simpa [FN] using section8FittingSubgroup_isNilpotent N
-  letI : Group.IsNilpotent FN := hnilFN
+  let : Group.IsNilpotent FN := hnilFN
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup FN) := by
     let e : FN ≃* (⊤ : Subgroup FN) :=
       (Subgroup.topEquiv : (⊤ : Subgroup FN) ≃* FN).symm
@@ -4436,7 +4437,7 @@ public theorem section8FittingSubgroup_maximalOver_le_original
     refine iSup_le ?_
     intro q0
     let q : Nat.Primes := ⟨q0.1.1, Nat.prime_of_mem_primeFactors q0.1.2⟩
-    haveI : Fact q.val.Prime := ⟨q.2⟩
+    have : Fact q.val.Prime := ⟨q.2⟩
     have hqFN : q ∈ subgroupPrimeSet FN := by
       exact Nat.dvd_of_mem_primeFactors q0.1.2
     intro x hx
@@ -4541,12 +4542,12 @@ public theorem section8_piCoreIn_singleton_compl_fitting_maximalOver_le_centrali
       piCoreIn_le (G := G) ({p₀} : Set Nat.Primes)ᶜ (section8FittingSubgroup N)
   have hnilFN : Group.IsNilpotent FN := by
     simpa [FN] using section8FittingSubgroup_isNilpotent N
-  letI : Group.IsNilpotent FN := hnilFN
+  let : Group.IsNilpotent FN := hnilFN
   have hnilY : Group.IsNilpotent Y := by
     have hYsub_nil : Group.IsNilpotent (Y.subgroupOf FN) := by infer_instance
     let e : Y.subgroupOf FN ≃* Y := Subgroup.subgroupOfEquivOfLe hY_le_FN
     exact Group.nilpotent_of_mulEquiv (G := Y.subgroupOf FN) (G' := Y) e
-  letI : Group.IsNilpotent Y := hnilY
+  let : Group.IsNilpotent Y := hnilY
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup Y) := by
     let e : Y ≃* (⊤ : Subgroup Y) :=
       (Subgroup.topEquiv : (⊤ : Subgroup Y) ≃* Y).symm
@@ -4570,7 +4571,7 @@ public theorem section8_piCoreIn_singleton_compl_fitting_maximalOver_le_centrali
     refine iSup_le ?_
     intro q0
     let q : Nat.Primes := ⟨q0.1.1, Nat.prime_of_mem_primeFactors q0.1.2⟩
-    haveI : Fact q.val.Prime := ⟨q.2⟩
+    have : Fact q.val.Prime := ⟨q.2⟩
     have hqY : q ∈ subgroupPrimeSet Y := by
       exact Nat.dvd_of_mem_primeFactors q0.1.2
     have hpq : p₀ ≠ q := by
@@ -4604,7 +4605,7 @@ public theorem section8_piCoreIn_singleton_compl_fitting_maximalOver_le_centrali
 finite solvable group, then it acts trivially on the whole group. -/
 public theorem section8_element_actsTrivially_of_centralizes_fitting_of_coprime
     {K R : Type*} [Group K] [Finite K] [Group R] [MulDistribMulAction R K]
-    (hsolv : IsSolvable K) (hcoprime : Nat.Coprime (Nat.card R) (Nat.card K))
+    (hsolv : Group.IsSolvable K) (hcoprime : Nat.Coprime (Nat.card R) (Nat.card K))
     (r : R) (hr_fitting : ∀ f : fittingSubgroup K, r • (f : K) = (f : K)) :
     ∀ k : K, r • k = k := by
   classical
@@ -4677,12 +4678,12 @@ public theorem section8_element_actsTrivially_of_centralizes_fitting_of_coprime
 /-- Subgroup form of the preceding coprime-action wrapper. -/
 public theorem section8_le_centralizer_of_le_centralizer_fitting_of_coprime
     {K₀ : Type*} [Group K₀] [Finite K₀] {K R : Subgroup K₀}
-    (hsolvK : IsSolvable K) (hRnormK : R ≤ Subgroup.normalizer (K : Set K₀))
+    (hsolvK : Group.IsSolvable K) (hRnormK : R ≤ Subgroup.normalizer (K : Set K₀))
     (hcop : Nat.Coprime (Nat.card R) (Nat.card K))
     (hRcentFit : R ≤ Subgroup.centralizer (fittingSubgroupOf (G := K₀) K : Set K₀)) :
     R ≤ Subgroup.centralizer (K : Set K₀) := by
   classical
-  haveI : Subgroup.Normalizes R K := ⟨hRnormK⟩
+  have : Subgroup.Normalizes R K := ⟨hRnormK⟩
   intro r hr
   rw [Subgroup.mem_centralizer_iff]
   intro k hk
@@ -4741,11 +4742,10 @@ public theorem section8_piCoreIn_singleton_compl_maximalOver_le_original
     simpa [Rp, p₀] using section8_piCoreIn_singleton_centerInFitting_isPGroup M p₀
   have hR_N_p : IsPGroup p R_N :=
     hRp_p.of_equiv (Subgroup.subgroupOfEquivOfLe hRp_le_N).symm
-  have hNsolv : IsSolvable N :=
+  have hNsolv : Group.IsSolvable N :=
     IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.mpr hN.1.1)
-  letI : IsSolvable N := hNsolv
-  have hOpNsolv : IsSolvable OpN :=
-    subgroup_solvable_of_solvable (H := OpN)
+  let : Group.IsSolvable N := hNsolv
+  have hOpNsolv : Group.IsSolvable OpN := by infer_instance
   have hcop_R_OpN : Nat.Coprime (Nat.card R_N) (Nat.card OpN) := by
     rcases hR_N_p.exists_card_eq with ⟨n, hn⟩
     rw [hn]
@@ -4876,11 +4876,11 @@ public theorem section8_piCoreIn_singleton_compl_fitting_le_centralizerInFitting
     rcases Subgroup.mem_map.mp ha with ⟨aF, haP, rfl⟩
     exact congrArg Subtype.val (Subgroup.mem_centralizer_iff.mp (hcentF hyP) aF haP)
   have hA₀p : IsPGroup p A₀ := by
-    letI : IsElementaryAbelian p A₀ := hA₀.1
+    let : IsElementaryAbelian p A₀ := hA₀.1
     exact IsElementaryAbelian.isPGroup p A₀
   rcases IsPGroup.exists_le_sylow (G := F) (p := p) hA₀p with ⟨P, hA₀_le_P⟩
   have hP_norm : (P : Subgroup F).Normal := by
-    haveI : Group.IsNilpotent F := by
+    have : Group.IsNilpotent F := by
       simpa [F] using section8FittingSubgroup_isNilpotent M
     exact Group.IsNilpotent.sylow_normal (G := F) (h := inferInstance) p P
   have hP_le_pCore : (P : Subgroup F) ≤ pCore p F :=
@@ -4972,7 +4972,7 @@ public theorem section8_piCoreIn_singleton_fitting_le_centralizer_of_le_singleto
   have hN_norm_FN : N ≤ Subgroup.normalizer (FN : Set G) := by
     have hFN_norm : (FN.subgroupOf N).Normal := by
       simpa [FN] using section8FittingSubgroup_normal_in N
-    letI : (FN.subgroupOf N).Normal := hFN_norm
+    let : (FN.subgroupOf N).Normal := hFN_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [FN] using section8FittingSubgroup_le N)
   have hN_norm_Dq : N ≤ Subgroup.normalizer (Dq : Set G) := by
@@ -5019,8 +5019,8 @@ public theorem section8_piCoreIn_singleton_fitting_le_centralizer_of_le_singleto
   have hyN : yN ∈ Cq.subgroupOf N := by
     change y ∈ Cq
     exact hY_le hyY
-  letI : (Dq.subgroupOf N).Normal := hDq_norm_N
-  letI : (Cq.subgroupOf N).Normal := hCq_norm_N
+  let : (Dq.subgroupOf N).Normal := hDq_norm_N
+  let : (Cq.subgroupOf N).Normal := hCq_norm_N
   have hcomm_mem :
       ⁅dN, yN⁆ ∈ ⁅Dq.subgroupOf N, Cq.subgroupOf N⁆ :=
     Subgroup.commutator_mem_commutator hdN hyN
@@ -5046,7 +5046,7 @@ public theorem section8_isPGroup_le_piCoreIn_singleton_of_le_nilpotent
     (hHq : IsPGroup q.val H) [Group.IsNilpotent K] :
     H ≤ piCoreIn ({q} : Set Nat.Primes) K := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let Hsub : Subgroup K := H.subgroupOf K
   have hHsubq : IsPGroup q.val Hsub :=
     hHq.of_equiv (Subgroup.subgroupOfEquivOfLe hHK).symm
@@ -5084,7 +5084,7 @@ public theorem section8_piCoreIn_singleton_fitting_inf_le_singleton_compl_core
     piCoreIn ({r} : Set Nat.Primes) (section8FittingSubgroup M) ⊓ X ≤
       piCoreIn ({q} : Set Nat.Primes)ᶜ X := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let F : Subgroup G := section8FittingSubgroup M
   let Z : Subgroup G := section8CenterInFitting M
   let Rq : Subgroup G := piCoreIn ({q} : Set Nat.Primes) Z
@@ -5099,7 +5099,7 @@ public theorem section8_piCoreIn_singleton_fitting_inf_le_singleton_compl_core
     simpa [Rq, Z] using section8_piCoreIn_singleton_centerInFitting_isPGroup M q
   have hRqX_p : IsPGroup q.val (Rq.subgroupOf X) :=
     hRq_p.of_equiv (Subgroup.subgroupOfEquivOfLe hRq_le_X).symm
-  have hsolvX : IsSolvable X :=
+  have hsolvX : Group.IsSolvable X :=
     IsMinCE.proper_subgroups_solvable X (lt_top_iff_ne_top.mpr hXproper)
   have hcoreC_le_coreX :
       (pPrimeCore q.val C).map C.subtype ≤ pPrimeCore q.val X := by
@@ -5146,7 +5146,7 @@ public theorem section8_piCoreIn_singleton_fitting_inf_le_singleton_compl_core
   have hM_norm_F : M ≤ Subgroup.normalizer (F : Set G) := by
     have hFNorm : (F.subgroupOf M).Normal := by
       simpa [F] using section8FittingSubgroup_normal_in M
-    letI : (F.subgroupOf M).Normal := hFNorm
+    let : (F.subgroupOf M).Normal := hFNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [F] using section8FittingSubgroup_le M)
   have hM_norm_Fr : M ≤ Subgroup.normalizer (Fr : Set G) := by
@@ -5243,12 +5243,12 @@ public theorem section8_piCoreIn_singleton_compl_fitting_le_singleton_compl_maxi
   have hY_le_N : Y ≤ N := hY_le_A.trans hN.2
   have hnilF : Group.IsNilpotent F := by
     simpa [F] using section8FittingSubgroup_isNilpotent M
-  letI : Group.IsNilpotent F := hnilF
+  let : Group.IsNilpotent F := hnilF
   have hnilY : Group.IsNilpotent Y := by
     have hYsub_nil : Group.IsNilpotent (Y.subgroupOf F) := by infer_instance
     let e : Y.subgroupOf F ≃* Y := Subgroup.subgroupOfEquivOfLe hY_le_F
     exact Group.nilpotent_of_mulEquiv (G := Y.subgroupOf F) (G' := Y) e
-  letI : Group.IsNilpotent Y := hnilY
+  let : Group.IsNilpotent Y := hnilY
   have htop_nil : Group.IsNilpotent (⊤ : Subgroup Y) := by
     let e : Y ≃* (⊤ : Subgroup Y) :=
       (Subgroup.topEquiv : (⊤ : Subgroup Y) ≃* Y).symm
@@ -5272,7 +5272,7 @@ public theorem section8_piCoreIn_singleton_compl_fitting_le_singleton_compl_maxi
     refine iSup_le ?_
     intro q0
     let q : Nat.Primes := ⟨q0.1.1, Nat.prime_of_mem_primeFactors q0.1.2⟩
-    haveI : Fact q.val.Prime := ⟨q.2⟩
+    have : Fact q.val.Prime := ⟨q.2⟩
     have hqY : q ∈ subgroupPrimeSet Y :=
       Nat.dvd_of_mem_primeFactors q0.1.2
     have hq_ne_p : q ≠ p₀ := by
@@ -5346,14 +5346,14 @@ public theorem section8_piCoreIn_singleton_compl_maximalOver_le_singleton_compl_
   have hnilFN : Group.IsNilpotent FN := by
     simpa [FN] using section8FittingSubgroup_isNilpotent N
   have hDp_ne_bot : Dp ≠ ⊥ := by
-    letI : Group.IsNilpotent FN := hnilFN
+    let : Group.IsNilpotent FN := hnilFN
     simpa [Dp, FN, p₀] using
       section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isNilpotent
         (H := FN) hpFN
   have hN_norm_FN : N ≤ Subgroup.normalizer (FN : Set G) := by
     have hFN_norm : (FN.subgroupOf N).Normal := by
       simpa [FN] using section8FittingSubgroup_normal_in N
-    letI : (FN.subgroupOf N).Normal := hFN_norm
+    let : (FN.subgroupOf N).Normal := hFN_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [FN] using section8FittingSubgroup_le N)
   have hN_norm_Dp : N ≤ Subgroup.normalizer (Dp : Set G) := by
@@ -5397,7 +5397,7 @@ public theorem section8_piCoreIn_singleton_compl_maximalOver_le_singleton_compl_
       section8_piCoreIn_singleton_compl_maximalOver_le_original
         hM hpF hA₀ hA₀rank hHyp hN
   have hOpN_le_C : OpN_G.subgroupOf M ≤ C := by
-    letI : (Dp.subgroupOf N).Normal := hDp_norm_N
+    let : (Dp.subgroupOf N).Normal := hDp_norm_N
     have hcentN :
         pPrimeCore p N ≤ Subgroup.centralizer (Dp.subgroupOf N : Set N) :=
       pPrimeCore_le_centralizer_of_normal_pgroup
@@ -5464,7 +5464,7 @@ public theorem section8_piCoreIn_singleton_compl_maximalOver_le_singleton_compl_
       (show (OpN_G.subgroupOf M).subgroupOf C ∈
           {L : Subgroup C | L.Normal ∧ Nat.Coprime p (Nat.card L)} from
         ⟨hOpNC_norm, hOpNC_cop⟩)
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hcoreC_le_coreM :
       (pPrimeCore p C).map C.subtype ≤ pPrimeCore p M := by
@@ -5530,14 +5530,14 @@ public theorem section8_piCoreIn_singleton_compl_original_le_maximalOver
   have hnilFN : Group.IsNilpotent FN := by
     simpa [FN] using section8FittingSubgroup_isNilpotent N
   have hDp_ne_bot : Dp ≠ ⊥ := by
-    letI : Group.IsNilpotent FN := hnilFN
+    let : Group.IsNilpotent FN := hnilFN
     simpa [Dp, FN, p₀] using
       section8_piCoreIn_singleton_ne_bot_of_mem_subgroupPrimeSet_of_isNilpotent
         (H := FN) hpFN
   have hN_norm_FN : N ≤ Subgroup.normalizer (FN : Set G) := by
     have hFN_norm : (FN.subgroupOf N).Normal := by
       simpa [FN] using section8FittingSubgroup_normal_in N
-    letI : (FN.subgroupOf N).Normal := hFN_norm
+    let : (FN.subgroupOf N).Normal := hFN_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf
       (by simpa [FN] using section8FittingSubgroup_le N)
   have hN_norm_Dp : N ≤ Subgroup.normalizer (Dp : Set G) := by
@@ -5590,11 +5590,10 @@ public theorem section8_piCoreIn_singleton_compl_original_le_maximalOver
           M hfMap
     have hcommG := Subgroup.mem_centralizer_iff.mp (hDp_cent_OpF hdG) (f : G) hfG
     exact Subtype.ext hcommG
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
-  letI : IsSolvable M := hMsolv
-  have hOpMsolv : IsSolvable (pPrimeCore p M) :=
-    subgroup_solvable_of_solvable (H := pPrimeCore p M)
+  let : Group.IsSolvable M := hMsolv
+  have hOpMsolv : Group.IsSolvable (pPrimeCore p M) := by infer_instance
   have hDpM_cent_OpM : DpM ≤ Subgroup.centralizer (pPrimeCore p M : Set M) :=
     section8_le_centralizer_of_le_centralizer_fitting_of_coprime
       hOpMsolv hDpM_norm_OpM hcop_DpM_OpM hDpM_cent_fitOpM
@@ -5683,7 +5682,7 @@ public theorem section8_piCoreIn_singleton_compl_original_le_singleton_compl_max
       simpa [hconj] using hzRp
     simpa [hnorm_Rp_eq_M] using hc_norm
   have hOpM_le_C : OpM_G.subgroupOf N ≤ C := by
-    letI : (Rp.subgroupOf M).Normal := hRp_norm_M
+    let : (Rp.subgroupOf M).Normal := hRp_norm_M
     have hcentM :
         pPrimeCore p M ≤ Subgroup.centralizer (Rp.subgroupOf M : Set M) :=
       pPrimeCore_le_centralizer_of_normal_pgroup
@@ -5750,7 +5749,7 @@ public theorem section8_piCoreIn_singleton_compl_original_le_singleton_compl_max
       (show (OpM_G.subgroupOf N).subgroupOf C ∈
           {L : Subgroup C | L.Normal ∧ Nat.Coprime p (Nat.card L)} from
         ⟨hOpMC_norm, hOpMC_cop⟩)
-  have hNsolv : IsSolvable N :=
+  have hNsolv : Group.IsSolvable N :=
     IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.mpr hN.1.1)
   have hcoreC_le_coreN :
       (pPrimeCore p C).map C.subtype ≤ pPrimeCore p N := by
@@ -5788,7 +5787,7 @@ public theorem section8_piCoreIn_singleton_compl_original_ne_bot_of_not_isPGroup
     have hZπ : subgroupPrimeSet Z = subgroupPrimeSet (section8FittingSubgroup M) := by
       simpa [Z] using section8CenterInFitting_primeSet_eq_fitting M
     simpa [hZπ] using hqF
-  haveI : IsMulCommutative Z := by
+  have : IsMulCommutative Z := by
     simpa [Z] using section8CenterInFitting_isMulCommutative M
   have hRq_ne_bot : Rq ≠ ⊥ := by
     simpa [Rq] using
@@ -5902,7 +5901,7 @@ public theorem section8CentralizerInFitting_maximal_overgroups_le_normalizer_fit
     section8CentralizerInFitting_maximal_overgroups_eq
       hM hpF hA₀ hA₀rank hnFp hN
   rw [hNM]
-  letI : ((section8FittingSubgroup M).subgroupOf M).Normal :=
+  let : ((section8FittingSubgroup M).subgroupOf M).Normal :=
     section8FittingSubgroup_normal_in M
   exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
 
@@ -5970,7 +5969,7 @@ public theorem section8_HStarFamily_fitting_le_normalizer_maximal_of_fitting_isP
   have hMnormF : M ≤ Subgroup.normalizer (section8FittingSubgroup M : Set G) := by
     have hFNorm : ((section8FittingSubgroup M).subgroupOf M).Normal :=
       section8FittingSubgroup_normal_in M
-    letI : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
+    let : ((section8FittingSubgroup M).subgroupOf M).Normal := hFNorm
     exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
   have hsubF :
       Subsingleton {R : Subgroup G //
@@ -6024,7 +6023,7 @@ public theorem section8_HStarFamily_fitting_eq_bot_of_fitting_isPGroup
   have hnorm_ne_top : Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
     intro hnorm_top
     have hQnorm : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal Q hQnorm with hQbot | hQtop
     · exact hQ_ne_bot hQbot
     · exact hQ_ne_top hQtop
@@ -6171,20 +6170,20 @@ public theorem section8_HFamily_sylowSubgroupInAmbient_pPrime_eq_singleton_bot_o
       have hpY : p ∣ Nat.card Y := by
         simpa [hYtop] using hp_dvd_G
       exact hp_not_dvd_Y hpY
-    haveI : IsSolvable Y :=
+    have : Group.IsSolvable Y :=
       IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hY_ne_top)
     have hpCore_bot :
         ∀ r : (Nat.card Y).primeFactors.attach, pCore r.1.1 Y = ⊥ := by
       intro r
       let q : Nat.Primes := ⟨r.1.1, Nat.prime_of_mem_primeFactors r.1.2⟩
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      have : Fact q.val.Prime := ⟨q.2⟩
       have hq_dvd_Y : q.val ∣ Nat.card Y := by
         exact Nat.dvd_of_mem_primeFactors r.1.2
       have hq_mem_compl : q ∈ (({⟨p, Fact.out⟩} : Set Nat.Primes)ᶜ) :=
         hY.2.1 q hq_dvd_Y
       have hq_ne_p : q ≠ ⟨p, Fact.out⟩ := by
         intro hqp
-        exact hq_mem_compl (by simp [hqp])
+        exact hq_mem_compl (Set.mem_singleton_iff.mpr hqp)
       have hpi_mem : piCoreIn ({q} : Set Nat.Primes) Y ∈
           section7HFamily (⊤ : Subgroup G) A_G ({q} : Set Nat.Primes) := by
         simpa [A_G] using
@@ -6311,7 +6310,7 @@ public theorem section8_centerIn_thompsonSubgroup_normal_of_maximalOver_sylowSub
     (hN : N ∈ section8MaximalSubgroupsContaining (section8SylowSubgroupInAmbient M P A))
     (R : Sylow p N) :
     (centerIn (thompsonSubgroup R) : Subgroup N).Normal := by
-  haveI : IsSolvable N :=
+  have : Group.IsSolvable N :=
     IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.mpr hN.1.1)
   have hNodd : Odd (Nat.card N) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card N)
@@ -6886,7 +6885,7 @@ public theorem section8_inf_sylow_normalizer_le_of_factorization_gt
   have hL_ne_top : L ≠ ⊤ := by
     intro hLtop
     have hRnorm : R_G.Normal := Subgroup.normalizer_eq_top_iff.mp hLtop
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal R_G hRnorm with hRbot | hRtop
     · exact hR_ne_bot (by simpa [R_G] using hRbot)
     · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
@@ -6999,7 +6998,7 @@ public theorem section8_maximalOver_sylowSubgroupInAmbient_le_normalizer_fitting
     section8_eq_maximalOver_sylowSubgroupInAmbient_of_fitting_isPGroup
       hM hpF hFp P hA hN
   rw [hNM]
-  letI : ((section8FittingSubgroup M).subgroupOf M).Normal :=
+  let : ((section8FittingSubgroup M).subgroupOf M).Normal :=
     section8FittingSubgroup_normal_in M
   exact Subgroup.le_normalizer_of_normal_subgroupOf (section8FittingSubgroup_le M)
 

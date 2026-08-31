@@ -57,7 +57,7 @@ public theorem huppert_I_18_2_a_complements_conjugate_of_solvable_normal
     {G : Type u} [Group G] [Finite G]
     (N H K : Subgroup G) [N.Normal]
     (hcoprime : Nat.Coprime (Nat.card N) (Nat.card (G ⧸ N)))
-    (hsolvable : IsSolvable N)
+    (hsolvable : Group.IsSolvable N)
     (hH : N.IsComplement' H) (hK : N.IsComplement' K) :
     ∃ n : N, K = H.map (MulAut.conj (n : G)).toMonoidHom := by
   classical
@@ -176,13 +176,13 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_pgroup_operator
 /-- The minimal-normal-subgroup induction in the solvable-quotient branch of I.18.2. -/
 public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
     {X : Type u} {A : Type v}
-    [Group X] [Finite X] [Group A] [Finite A] [IsSolvable A]
+    [Group X] [Finite X] [Group A] [Finite A] [Group.IsSolvable A]
     [MulDistribMulAction A X] (hcoprime : Nat.Coprime (Nat.card A) (Nat.card X))
     (c : A → X) (hc : ∀ a b : A, c (a * b) = c a * (a • c b)) :
     ∃ x : X, ∀ a : A, c a = x * (a • x)⁻¹ := by
   classical
   let P : ℕ → Prop := fun n =>
-    ∀ (A' : Type v) (X' : Type u) [Group A'] [Finite A'] [IsSolvable A']
+    ∀ (A' : Type v) (X' : Type u) [Group A'] [Finite A'] [Group.IsSolvable A']
       [Group X'] [Finite X'] [MulDistribMulAction A' X'],
       Nat.card A' = n →
       Nat.Coprime (Nat.card A') (Nat.card X') →
@@ -211,7 +211,7 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
           exact hA_one hcard_one
       letI : Nontrivial A' := hA_nontrivial
       obtain ⟨B, hBnormal, hBne, hBminimal⟩ :=
-        exists_minimal_normal (G := A') (inferInstance : IsSolvable A') hA_nontrivial
+        exists_minimal_normal (G := A') (inferInstance : Group.IsSolvable A') hA_nontrivial
       letI : B.Normal := hBnormal
       letI : IsMinimalNormal B := by
         refine ⟨?_⟩
@@ -219,8 +219,8 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
         by_cases hKbot : K = ⊥
         · exact Or.inl hKbot
         · exact Or.inr (hBminimal K hKnormal hKle hKbot)
-      have hBsolvable : IsSolvable B := subgroup_solvable_of_solvable (H := B)
-      letI : IsSolvable B := hBsolvable
+      have hBsolvable : Group.IsSolvable B := inferInstance
+      letI : Group.IsSolvable B := hBsolvable
       obtain ⟨r, hrprime, hBelementary⟩ :=
         minimalNormal_solvable_exists_isElementaryAbelian (G := A') B
       letI : Fact r.Prime := ⟨hrprime⟩
@@ -292,8 +292,8 @@ public theorem huppert_I_18_2_b_principal_cocycle_of_solvable_operator
         exact Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card F) hcop_Q_X
       have hquot_lt : Nat.card (A' ⧸ B) < n := by
         simpa [hcardA] using card_quotient_lt_of_ne_bot (G := A') B hBne
-      have hsolvable_quotient : IsSolvable (A' ⧸ B) := by infer_instance
-      letI : IsSolvable (A' ⧸ B) := hsolvable_quotient
+      have hsolvable_quotient : Group.IsSolvable (A' ⧸ B) := by infer_instance
+      letI : Group.IsSolvable (A' ⧸ B) := hsolvable_quotient
       letI : MulDistribMulAction (A' ⧸ B) F := by
         dsimp [F]
         infer_instance
@@ -347,15 +347,15 @@ public theorem huppert_I_18_2_b_complements_conjugate_of_solvable_quotient
     {G : Type u} [Group G] [Finite G]
     (N H K : Subgroup G) [N.Normal]
     (hcoprime : Nat.Coprime (Nat.card N) (Nat.card (G ⧸ N)))
-    (hsolvable : IsSolvable (G ⧸ N))
+    (hsolvable : Group.IsSolvable (G ⧸ N))
     (hH : N.IsComplement' H) (hK : N.IsComplement' K) :
     ∃ n : N, K = H.map (MulAut.conj (n : G)).toMonoidHom := by
   classical
-  have hHsolvable : IsSolvable H := by
-    letI : IsSolvable (G ⧸ N) := hsolvable
-    exact solvable_of_surjective
+  have hHsolvable : Group.IsSolvable H := by
+    letI : Group.IsSolvable (G ⧸ N) := hsolvable
+    exact Group.isSolvable_of_surjective
       (f := hH.symm.QuotientMulEquiv.toMonoidHom) hH.symm.QuotientMulEquiv.surjective
-  letI : IsSolvable H := hHsolvable
+  letI : Group.IsSolvable H := hHsolvable
   have hH_normalizes_N : H ≤ Subgroup.normalizer (N : Set G) :=
     Subgroup.le_normalizer_of_normal (H := N)
   letI : MulDistribMulAction H N :=
@@ -430,11 +430,11 @@ public theorem huppert_I_18_2_complements_conjugate_of_solvable_normal_or_quotie
     {G : Type u} [Group G] [Finite G]
     (N H K : Subgroup G) [N.Normal]
     (hcoprime : Nat.Coprime (Nat.card N) (Nat.card (G ⧸ N)))
-    (hsolvable : IsSolvable N ∨ IsSolvable (G ⧸ N))
+    (hsolvable : Group.IsSolvable N ∨ Group.IsSolvable (G ⧸ N))
     (hH : N.IsComplement' H) (hK : N.IsComplement' K) :
     ∃ g : G, K = H.map (MulAut.conj g).toMonoidHom := by
   have hsolvable_normal :
-      IsSolvable N →
+      Group.IsSolvable N →
         ∃ g : G, K = H.map (MulAut.conj g).toMonoidHom := by
     intro hsolvableN
     obtain ⟨n, hn⟩ :=
@@ -442,7 +442,7 @@ public theorem huppert_I_18_2_complements_conjugate_of_solvable_normal_or_quotie
         N H K hcoprime hsolvableN hH hK
     exact ⟨n, hn⟩
   have hsolvable_quotient :
-      IsSolvable (G ⧸ N) →
+      Group.IsSolvable (G ⧸ N) →
         ∃ g : G, K = H.map (MulAut.conj g).toMonoidHom := by
     intro hsolvableQ
     obtain ⟨n, hn⟩ :=
@@ -468,7 +468,7 @@ public theorem huppert_I_18_3_complements_conjugate
     have hQ_even : Even (Nat.card (G ⧸ N)) := Nat.not_odd_iff_even.mp hnot.2
     exact (Nat.not_coprime_of_dvd_of_dvd one_lt_two
       (even_iff_two_dvd.mp hN_even) (even_iff_two_dvd.mp hQ_even)) hcoprime
-  have hsolvable_side : IsSolvable N ∨ IsSolvable (G ⧸ N) := by
+  have hsolvable_side : Group.IsSolvable N ∨ Group.IsSolvable (G ⧸ N) := by
     exact hodd_side.imp (_root_.odd_order_theorem N) (_root_.odd_order_theorem (G ⧸ N))
   have h18_2 :=
     huppert_I_18_2_complements_conjugate_of_solvable_normal_or_quotient

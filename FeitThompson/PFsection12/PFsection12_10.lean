@@ -314,7 +314,8 @@ public theorem theorem_12_10_typeI_reduction_source_leaf
         ⟨q, hqprime, hqdiv⟩
       let qq : Nat.Primes := ⟨q, hqprime⟩
       have hqW2 : qq ∈ subgroupPrimeSet W2 := by
-        simpa [qq, subgroupPrimeSet] using hqdiv
+        change q ∣ Nat.card W2
+        exact hqdiv
       have hqF : qq ∈ subgroupPrimeSet F :=
         section8_subgroupPrimeSet_mono
           (fun z hz => hHleF ((hW2le hz).1)) hqW2
@@ -521,7 +522,8 @@ public theorem theorem_12_10_typeI_frobenius_source_leaf
   have hpH : pp ∈ subgroupPrimeSet H := by
     have hpCardH : p ∣ Nat.card H :=
       hpP0.trans (Subgroup.card_dvd_of_le hP0H)
-    simpa [pp, subgroupPrimeSet] using hpCardH
+    change p ∣ Nat.card H
+    exact hpCardH
   have hpOdd : Odd p := by
     exact Odd.of_dvd_nat IsMinCE.odd_order
       (hpP0.trans (Subgroup.card_subgroup_dvd_card P0))

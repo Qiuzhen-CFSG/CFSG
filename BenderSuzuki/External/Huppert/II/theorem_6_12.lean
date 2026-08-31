@@ -29,7 +29,7 @@ public theorem huppert_II_6_12
     (a : Omega) (K : Subgroup G)
     (hKle : K ≤ MulAction.stabilizer G a)
     (hKnormal : (K.subgroupOf (MulAction.stabilizer G a)).Normal)
-    (hKsolvable : IsSolvable K)
+    (hKsolvable : Group.IsSolvable K)
     (hKgenerates : Subgroup.normalClosure (K : Set G) = ⊤) :
     IsSimpleGroup G := by
   have hnormal_transitive :
@@ -96,9 +96,9 @@ public theorem huppert_II_6_12
         fK.range = K.map q := by
           simp [fK, MonoidHom.range_comp]
         _ = ⊤ := hKmapTop
-    letI : IsSolvable K := hKsolvable
-    have hQsolvable : IsSolvable Q := solvable_of_surjective hfK
-    letI : IsSolvable Q := hQsolvable
+    letI : Group.IsSolvable K := hKsolvable
+    have hQsolvable : Group.IsSolvable Q := Group.isSolvable_of_surjective hfK
+    letI : Group.IsSolvable Q := hQsolvable
     letI : Subsingleton Q := by
       rw [← not_nontrivial_iff_subsingleton]
       intro hQnontrivial

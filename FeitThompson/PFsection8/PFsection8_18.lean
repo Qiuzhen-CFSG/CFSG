@@ -1281,8 +1281,8 @@ public theorem theorem_8_18_typeFData_conj_back
     simpa [Subgroup.conjBy_inv] using hback
   refine ⟨?_, ?_, hMF, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · let eM : M ≃* M.conjBy g := (MulAut.conj g).subgroupMap M
-    haveI : IsSolvable (M.conjBy g) := hSolv
-    exact solvable_of_surjective (f := eM.symm.toMonoidHom) eM.symm.surjective
+    let : Group.IsSolvable (M.conjBy g) := hSolv
+    exact Group.isSolvable_of_surjective (f := eM.symm.toMonoidHom) eM.symm.surjective
   · have hcard : Nat.card (M.conjBy g) = Nat.card M :=
       section11_card_conjBy (G := G) M g
     simpa [hcard] using hOdd
@@ -1677,8 +1677,8 @@ public theorem theorem_8_18_typeIDefinitionData_conj_back
         hU1comm, hU1norm, hCent, hU0le, hExp, hFrob⟩
     refine ⟨?_, ?_, hMF, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     · let eM : M ≃* M.conjBy g := (MulAut.conj g).subgroupMap M
-      haveI : IsSolvable (M.conjBy g) := hSolv
-      exact solvable_of_surjective (f := eM.symm.toMonoidHom) eM.symm.surjective
+      let : Group.IsSolvable (M.conjBy g) := hSolv
+      exact Group.isSolvable_of_surjective (f := eM.symm.toMonoidHom) eM.symm.surjective
     · have hcard : Nat.card (M.conjBy g) = Nat.card M := by
         simpa [Subgroup.conjBy] using
           (Subgroup.card_map_of_injective
@@ -2236,7 +2236,8 @@ private theorem theorem_8_18_order_coprime_of_prime_disjoint
     rw [subgroupPrimeSet]
     exact hpOrder.trans (Subgroup.orderOf_dvd_natCard SS hxA1S.1)
   have hqT : q ∈ subgroupPrimeSet TT := by
-    simpa [subgroupPrimeSet, q] using hpTT
+    change p ∣ Nat.card TT
+    exact hpTT
   exact (Set.disjoint_left.mp hPrimeDisj hqS) hqT
 
 private theorem theorem_8_18_not_mem_A1_right_of_prime_disjoint

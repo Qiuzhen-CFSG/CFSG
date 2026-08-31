@@ -217,16 +217,24 @@ private lemma scalar_on_subgroup_of_centralModulo_kernel
     (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
       (ρ := ρ)).surjective φ
   refine ⟨a, ?_⟩
-  have hlin :
-      ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
-          Representation.IntertwiningMap ρ ρ) : Module.End ℂ V) =
-        (φ : Module.End ℂ V) := by
-    simpa using
-      congrArg (fun f : Representation.IntertwiningMap ρ ρ => (f : Module.End ℂ V)) ha
-  ext v
-  simpa [Representation.IntertwiningMap.algebraMap_apply, φ,
-    Representation.IntertwiningMap.smul_apply] using
-    congrArg (fun f : Module.End ℂ V => f v) hlin.symm
+  have hlin : ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
+      Representation.IntertwiningMap ρ ρ) : Module.End ℂ V) =
+      (φ : Module.End ℂ V) :=
+    congrArg (fun f : Representation.IntertwiningMap ρ ρ => (f : Module.End ℂ V)) ha
+  have halg : ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
+      Representation.IntertwiningMap ρ ρ) : Module.End ℂ V) =
+      ((a • (1 : Representation.IntertwiningMap ρ ρ)) : Representation.IntertwiningMap ρ ρ) :=
+    congrArg (fun f : Representation.IntertwiningMap ρ ρ => (f : Module.End ℂ V))
+      (Representation.IntertwiningMap.algebraMap_apply ρ a)
+  calc
+    (ρ d : Module.End ℂ V) = (φ : Module.End ℂ V) := rfl
+    _ = ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
+        Representation.IntertwiningMap ρ ρ) : Module.End ℂ V) := hlin.symm
+    _ = ((a • (1 : Representation.IntertwiningMap ρ ρ)) :
+        Representation.IntertwiningMap ρ ρ) := halg
+    _ = a • (1 : Module.End ℂ V) := by
+      ext v
+      simp [LinearMap.smul_apply]
 
 /-- Isaacs, Corollary 2.30 in the direct commutator form used by Peterfalvi
 (1.8): if `D/B` is central and `B` is in the kernel of an irreducible

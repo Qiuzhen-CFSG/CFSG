@@ -42,7 +42,7 @@ private theorem section10_lemma_6_5_ambient_normalizer_endpoint
     section10AmbientSylowSubgroup (ambientDerivedSubgroup M) P ≤
       ambientDerivedSubgroup (subgroupNormalizerIn M (X : Set G)) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let PG : Subgroup G := section10AmbientSylowSubgroup Dg P
   let U : Subgroup G := subgroupNormalizerIn M (X : Set G)
@@ -90,7 +90,7 @@ private theorem section10_lemma_6_5_ambient_normalizer_endpoint
     exact section8_coprime_card_of_isPGroup_of_isPiSubgroup_compl
       (G := M) (π := ({p} : Set Nat.Primes)) (r := p)
       (R := H) (Y := K) (by simp) hHp hKpi
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hHU_eq :
       H ⊓ D = H ⊓ ⁅UM, UM⁆ := by
@@ -181,7 +181,7 @@ private theorem section10_mbeta_sup_normalizer_of_frattini_join
         (subgroupNormalizerIn M (X : Set G)).subgroupOf M =
       ⊤ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let XM : Subgroup M := X.subgroupOf M
   let K : Subgroup M := section10MbetaSubgroup M
   let U : Subgroup G := subgroupNormalizerIn M (X : Set G)
@@ -214,8 +214,8 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
       section10AmbientSylowSubgroup (ambientDerivedSubgroup M) P ≤
         subgroupNormalizerIn M (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let D : Subgroup M := derivedSubgroup M
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let XM : Subgroup M := X.subgroupOf M
@@ -235,10 +235,10 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
   have hXsubDπ : IsPiSubgroup (G := D) (section10BetaPrimes M)ᶜ XsubD :=
     section10_isPiSubgroup_compl_of_isPGroup_not_mem
       (π := section10BetaPrimes M) hqβ hXsubDq
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  haveI : IsSolvable M := hMsolv
-  have hDsolv : IsSolvable D := subgroup_solvable_of_solvable (H := D)
+  have : Group.IsSolvable M := hMsolv
+  have hDsolv : Group.IsSolvable D := by infer_instance
   obtain ⟨L, hLD, hXML, hLHallD, hLnil⟩ :=
     section10_exists_nilpotent_hall_containing
       (H := M) (π := (section10BetaPrimes M)ᶜ) (K := D) (X := XM)
@@ -246,7 +246,7 @@ private theorem section10_exists_ambient_derived_sylow_le_normalizer_of_le_deriv
   let LsubD : Subgroup D := L.subgroupOf D
   have hLsubDnil : Group.IsNilpotent LsubD := by
     let e : L ≃* LsubD := (Subgroup.subgroupOfEquivOfLe hLD).symm
-    letI : Group.IsNilpotent L := hLnil
+    let : Group.IsNilpotent L := hLnil
     exact Group.nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
   have hXsubD_le_LsubD : XsubD ≤ LsubD := by
     intro x hx
@@ -317,7 +317,7 @@ private theorem section10_sylow_ambientDerived_to_local
       (XD : Subgroup (derivedSubgroup M)).map (derivedSubgroup M).subtype =
         (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X).subgroupOf M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let D : Subgroup M := derivedSubgroup M
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let e : D ≃* Dg := by
@@ -380,7 +380,7 @@ private theorem section10_malpha_subgroupOf_derived_eq_piCore
     intro r hr
     exact hKDHall.p_in_pi_of_p_dvd_card r hr
   have hKD_le_C : KD ≤ C := by
-    haveI : KD.Normal := by
+    have : KD.Normal := by
       simpa [KD, K, D] using (Subgroup.Normal.subgroupOf (inferInstance : K.Normal) D)
     simpa [C] using
       le_piCore_of_normal_isPiSubgroup (G := D) (section10AlphaPrimes M) KD hKDpi
@@ -429,7 +429,7 @@ private theorem section10_mbeta_subgroupOf_derived_eq_piCore
     intro r hr
     exact hKDHall.p_in_pi_of_p_dvd_card r hr
   have hKD_le_C : KD ≤ C := by
-    haveI : KD.Normal := by
+    have : KD.Normal := by
       simpa [KD, K, D] using (Subgroup.Normal.subgroupOf (inferInstance : K.Normal) D)
     simpa [C] using
       le_piCore_of_normal_isPiSubgroup (G := D) (section10BetaPrimes M) KD hKDpi
@@ -465,7 +465,7 @@ private theorem section10_mbeta_sup_local_derived_sylow_characteristic
     ((section10MbetaSubgroup M).subgroupOf (derivedSubgroup M) ⊔
         (X : Subgroup (derivedSubgroup M))).Characteristic := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let K : Subgroup M := section10MbetaSubgroup M
   let D : Subgroup M := derivedSubgroup M
   have hKleD : K ≤ D := by
@@ -476,8 +476,8 @@ private theorem section10_mbeta_sup_local_derived_sylow_characteristic
     rw [show KsubD = piCore (section10BetaPrimes M) D by
       simpa [KsubD, K, D] using section10_mbeta_subgroupOf_derived_eq_piCore (G := G) hM]
     exact piCore_characteristic (G := D) (section10BetaPrimes M)
-  letI : KsubD.Characteristic := hKsubD_char
-  haveI : KsubD.Normal := by
+  let : KsubD.Characteristic := hKsubD_char
+  have : KsubD.Normal := by
     simpa [KsubD, K, D] using (Subgroup.Normal.subgroupOf (inferInstance : K.Normal) D)
   have hquotNil : Group.IsNilpotent (D ⧸ KsubD) := by
     simpa [KsubD, K, D] using
@@ -487,7 +487,7 @@ private theorem section10_mbeta_sup_local_derived_sylow_characteristic
   let Xbar : Sylow q.val (D ⧸ KsubD) :=
     X.mapSurjective (f := π) (QuotientGroup.mk'_surjective KsubD)
   have hXbar_normal : (Xbar : Subgroup (D ⧸ KsubD)).Normal := by
-    letI : Group.IsNilpotent (D ⧸ KsubD) := hquotNil
+    let : Group.IsNilpotent (D ⧸ KsubD) := hquotNil
     exact Group.IsNilpotent.sylow_normal (p := q.val) inferInstance Xbar
   have hXbar_char : (Xbar : Subgroup (D ⧸ KsubD)).Characteristic :=
     Sylow.characteristic_of_normal Xbar hXbar_normal
@@ -522,9 +522,9 @@ private theorem section10_mbeta_sup_ambient_derived_sylow_normal
   have hLchar : L.Characteristic := by
     simpa [L, KsubD, K, D] using
       section10_mbeta_sup_local_derived_sylow_characteristic hM XD
-  haveI : D.Characteristic := by infer_instance
+  have : D.Characteristic := by infer_instance
   have hLmap_char : (L.map D.subtype).Characteristic := by
-    letI : L.Characteristic := hLchar
+    let : L.Characteristic := hLchar
     simpa using characteristic_map_subtype_of_characteristic (G := M) D L
   have hKsubD_map : KsubD.map D.subtype = K := by
     simpa [KsubD, K, D] using
@@ -541,7 +541,7 @@ private theorem section10_mbeta_sup_ambient_derived_sylow_normal
       _ = K ⊔ XM := by rw [hKsubD_map, hXDmap']
   have hJchar : (K ⊔ XM).Characteristic := by
     simpa [hLmap_eq] using hLmap_char
-  letI : (K ⊔ XM).Characteristic := hJchar
+  let : (K ⊔ XM).Characteristic := hJchar
   simpa [K, XM, XG] using (inferInstance : (K ⊔ XM).Normal)
 
 /-- The `M_alpha` analogue of the derived-Sylow normality step used in
@@ -558,7 +558,7 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
   let D : Subgroup M := derivedSubgroup M
   let XG : Subgroup G := section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X
   let XM : Subgroup M := XG.subgroupOf M
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hKleD : K ≤ D :=
     (theorem_10_2_c (G := G) hM).1.trans (theorem_10_2_c (G := G) hM).2
   let KsubD : Subgroup D := K.subgroupOf D
@@ -566,8 +566,8 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
     rw [show KsubD = piCore (section10AlphaPrimes M) D by
       simpa [KsubD, K, D] using section10_malpha_subgroupOf_derived_eq_piCore (G := G) hM]
     exact piCore_characteristic (G := D) (section10AlphaPrimes M)
-  letI : KsubD.Characteristic := hKsubD_char
-  haveI : KsubD.Normal := by
+  let : KsubD.Characteristic := hKsubD_char
+  have : KsubD.Normal := by
     simpa [KsubD, K, D] using (Subgroup.Normal.subgroupOf (inferInstance : K.Normal) D)
   have hquotNil : Group.IsNilpotent (D ⧸ KsubD) := by
     rcases (theorem_10_2_d (G := G) hM).2 with ⟨hKD, hKnormalD, hnil⟩
@@ -576,7 +576,7 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
   let Xbar : Sylow q.val (D ⧸ KsubD) :=
     XD.mapSurjective (f := π) (QuotientGroup.mk'_surjective KsubD)
   have hXbar_normal : (Xbar : Subgroup (D ⧸ KsubD)).Normal := by
-    letI : Group.IsNilpotent (D ⧸ KsubD) := hquotNil
+    let : Group.IsNilpotent (D ⧸ KsubD) := hquotNil
     exact Group.IsNilpotent.sylow_normal (p := q.val) inferInstance Xbar
   have hXbar_char : (Xbar : Subgroup (D ⧸ KsubD)).Characteristic :=
     Sylow.characteristic_of_normal Xbar hXbar_normal
@@ -591,9 +591,9 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
   let L : Subgroup D := KsubD ⊔ (XD : Subgroup D)
   have hLchar : L.Characteristic := by
     simpa [L, hcomap_eq] using hcomap_char
-  haveI : D.Characteristic := by infer_instance
+  have : D.Characteristic := by infer_instance
   have hLmap_char : (L.map D.subtype).Characteristic := by
-    letI : L.Characteristic := hLchar
+    let : L.Characteristic := hLchar
     simpa using characteristic_map_subtype_of_characteristic (G := M) D L
   have hKsubD_map : KsubD.map D.subtype = K := by
     simpa [KsubD, K, D] using
@@ -610,7 +610,7 @@ public theorem section10_malpha_sup_ambient_derived_sylow_normal
       _ = K ⊔ XM := by rw [hKsubD_map, hXDmap']
   have hJchar : (K ⊔ XM).Characteristic := by
     simpa [hLmap_eq] using hLmap_char
-  letI : (K ⊔ XM).Characteristic := hJchar
+  let : (K ⊔ XM).Characteristic := hJchar
   simpa [K, XM, XG] using (inferInstance : (K ⊔ XM).Normal)
 
 public theorem section10_mbeta_sup_ambient_normalizer_of_derived_sylow
@@ -621,7 +621,7 @@ public theorem section10_mbeta_sup_ambient_normalizer_of_derived_sylow
           (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X : Set G)).subgroupOf M =
       ⊤ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let D : Subgroup M := derivedSubgroup M
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let XG : Subgroup G := section10AmbientSylowSubgroup Dg X
@@ -669,7 +669,7 @@ public theorem section10_mbeta_sup_ambient_normalizer_of_derived_sylow
   have hJnormal : J.Normal := by
     simpa [J, XM, XG, Dg] using
       section10_mbeta_sup_ambient_derived_sylow_normal hM X
-  letI : J.Normal := hJnormal
+  let : J.Normal := hJnormal
   simpa [J, XG, Dg] using
     section10_mbeta_sup_normalizer_of_frattini_join
       (G := G) (M := M) (X := XG) (q := q) hXG_le_M
@@ -687,8 +687,8 @@ public theorem corollary_10_9_a_3
         ambientDerivedSubgroup
           (subgroupNormalizerIn M (section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X : Set G)) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Dg : Subgroup G := ambientDerivedSubgroup M
   let XG : Subgroup G := section10AmbientSylowSubgroup Dg X
   have hDg_le_M : Dg ≤ M := by

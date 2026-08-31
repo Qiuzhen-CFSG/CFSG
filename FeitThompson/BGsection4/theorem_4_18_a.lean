@@ -94,7 +94,7 @@ public theorem groupRank_pCore_quotient_pPrimeCore_le_two
   exact (groupRank_le_of_equiv (R := K) (S := R) eKR).trans hK_rank
 
 public theorem theorem_4_18_a {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
     (hrank : primeRank p G ≤ 2) :
     IsLargestPrimeDivisor p (Nat.card (G ⧸ pPrimeCore p G)) := by
   classical
@@ -102,10 +102,11 @@ public theorem theorem_4_18_a {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
   let Q := G ⧸ M
   let R : Subgroup Q := pCore p Q
   have hpodd : p ≠ 2 := Odd.ne_two_of_dvd_nat hodd hp_mem
-  haveI : M.Normal := by
+  have : M.Normal := by
     dsimp [M]
     infer_instance
-  have hsolvQ : IsSolvable Q := solvable_quotient_of_solvable M
+  have : Group.IsSolvable G := hsolv
+  have hsolvQ : Group.IsSolvable Q := by infer_instance
   have hQodd : Odd (Nat.card Q) :=
     hodd.of_dvd_nat (Subgroup.card_quotient_dvd_card (s := M))
   have hM_coprime : Nat.Coprime p (Nat.card M) := by
@@ -120,7 +121,7 @@ public theorem theorem_4_18_a {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
     simpa [Q, R, M] using groupRank_pCore_quotient_pPrimeCore_le_two
       (H := G) (p := p) hrank
   have hA3 : selfCentralizingAbelianSubgroupsAtLeast R 3 = ∅ := by
-    letI : Fact (IsPGroup p R) := ⟨hR_p⟩
+    let : Fact (IsPGroup p R) := ⟨hR_p⟩
     exact (lemma_4_7 (R := R) (p := p) hpodd hR_p).2 hR_rank
   have hcoreQ : pPrimeCore p Q = ⊥ := by
     simpa [Q, M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
@@ -150,7 +151,7 @@ public theorem theorem_4_18_a {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
   · intro q hqprime hq_dvd
     by_cases hq_eq_p : q = p
     · omega
-    · haveI : Fact q.Prime := ⟨hqprime⟩
+    · have : Fact q.Prime := ⟨hqprime⟩
       have hker_p : IsPGroup p φ.ker := hR_p.to_le hφker_le_R
       obtain ⟨n, hker_card⟩ := hker_p.exists_card_eq
       have hp_not_dvd_q : ¬ p ∣ q := by
@@ -169,7 +170,7 @@ public theorem theorem_4_18_a {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
         simpa [hφ_range_card] using hq_dvd_quot
       have hq_dvd_aut : q ∣ Nat.card (MulAut R) :=
         hq_dvd_A.trans (Subgroup.card_subgroup_dvd_card A)
-      letI : Fact (IsPGroup p R) := ⟨hR_p⟩
+      let : Fact (IsPGroup p R) := ⟨hR_p⟩
       have hq_lt_p : q < p :=
         (lemma_4_13 (R := R) (p := p) (q := q) hpodd hA3 hq_dvd_aut hq_eq_p).2
       exact le_of_lt hq_lt_p

@@ -23,7 +23,7 @@ $3 \nmid \left|\operatorname{Sz}\!\left(2^{2m+1}\right)\right|$.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open PFAppendixIII
 open scoped LinearAlgebra.Projectivization
 open scoped Pointwise
@@ -68,7 +68,7 @@ private theorem suzukiMatrixGroup_isPerfect
     have h_units_card : 1 < Nat.card Kˣ := by
       rw [Nat.card_units, hq_card]
       omega
-    letI : Nontrivial Kˣ := Finite.one_lt_card_iff_nontrivial.mp h_units_card
+    let _ : Nontrivial Kˣ := Finite.one_lt_card_iff_nontrivial.mp h_units_card
     exact exists_ne 1
   obtain ⟨s, hs⟩ := h_nontrivial_torus_parameter
   have hroot_image (a b : K) :
@@ -285,7 +285,7 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
     let B : Subgroup (GL (Fin 4) K) := F ⊔ H
     let U : Subgroup (SuzukiMatrixGroup m) :=
       B.comap (SuzukiMatrixGroup m).subtype
-    IsSolvable U := by
+    Group.IsSolvable U := by
   classical
   let K := BinaryGaloisField (2 * m + 1)
   let pi : K ≃+* K := iterateFrobeniusEquiv K 2 (m + 1)
@@ -301,18 +301,18 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
   let B : Subgroup (GL (Fin 4) K) := F ⊔ H
   let U : Subgroup (SuzukiMatrixGroup m) :=
     B.comap (SuzukiMatrixGroup m).subtype
-  change IsSolvable U
+  change Group.IsSolvable U
   rcases huppert_blackburn_XI_3_1 m hm pi hpi_sq with
     ⟨_, _, hF_pgroup, _, _, _, _, _, _, _, _, htorus_equiv, _, _, _⟩
   obtain ⟨e, _⟩ := htorus_equiv
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let _ : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hF_nilpotent : Group.IsNilpotent F := hF_pgroup.isNilpotent
-  have hF_solvable : IsSolvable F := by
-    letI : Group.IsNilpotent F := hF_nilpotent
+  have hF_solvable : Group.IsSolvable F := by
+    let _ : Group.IsNilpotent F := hF_nilpotent
     infer_instance
-  have hH_solvable : IsSolvable H := by
-    letI : IsSolvable Kˣ := inferInstance
-    exact solvable_of_solvable_injective
+  have hH_solvable : Group.IsSolvable H := by
+    let _ : Group.IsSolvable Kˣ := inferInstance
+    exact Group.isSolvable_of_isSolvable_injective
       (f := e.symm.toMonoidHom) e.symm.injective
   have hnormalizer : H ≤ Subgroup.normalizer F :=
     suzukiTorusClosure_le_normalizer_rootClosure m pi hpi_sq hpi
@@ -321,12 +321,12 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
   let FB : Subgroup B := F.subgroupOf B
   have hB_le_normalizer : B ≤ Subgroup.normalizer F :=
     sup_le Subgroup.le_normalizer hnormalizer
-  letI : FB.Normal :=
+  let _ : FB.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer hB_le_normalizer
-  have hFB_solvable : IsSolvable FB := by
+  have hFB_solvable : Group.IsSolvable FB := by
     let eFB : FB ≃* F := Subgroup.subgroupOfEquivOfLe hF_le_B
-    letI : IsSolvable F := hF_solvable
-    exact solvable_of_solvable_injective
+    let _ : Group.IsSolvable F := hF_solvable
+    exact Group.isSolvable_of_isSolvable_injective
       (f := eFB.toMonoidHom) eFB.injective
   let quotientFromH : H →* B ⧸ FB :=
     (QuotientGroup.mk' FB).comp (Subgroup.inclusion hH_le_B)
@@ -350,14 +350,14 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
     have hmk_fB : QuotientGroup.mk' FB fB = 1 :=
       (QuotientGroup.eq_one_iff _).2 hf_FB
     rw [hmk_fB, one_mul]
-  have hquotient_solvable : IsSolvable (B ⧸ FB) := by
-    letI : IsSolvable H := hH_solvable
-    exact solvable_of_surjective
+  have hquotient_solvable : Group.IsSolvable (B ⧸ FB) := by
+    let _ : Group.IsSolvable H := hH_solvable
+    exact Group.isSolvable_of_surjective
       (f := quotientFromH) hquotientFromH_surjective
-  have hB_solvable : IsSolvable B := by
-    letI : IsSolvable FB := hFB_solvable
-    letI : IsSolvable (B ⧸ FB) := hquotient_solvable
-    exact solvable_of_ker_le_range FB.subtype (QuotientGroup.mk' FB) (by
+  have hB_solvable : Group.IsSolvable B := by
+    let _ : Group.IsSolvable FB := hFB_solvable
+    let _ : Group.IsSolvable (B ⧸ FB) := hquotient_solvable
+    exact Group.isSolvable_of_ker_le_range FB.subtype (QuotientGroup.mk' FB) (by
       rw [QuotientGroup.ker_mk', Subgroup.range_subtype])
   have hF_le_S : F ≤ SuzukiMatrixSubgroup m := by
     change Subgroup.closure {A | ∃ a b : K, A = SuzukiRootGL m a b} ≤
@@ -373,8 +373,8 @@ private theorem suzukiMatrixGroup_pointStabilizer_isSolvable
     exact Subgroup.subset_closure (Or.inr (Or.inl hA))
   have hB_le_S : B ≤ SuzukiMatrixSubgroup m := sup_le hF_le_S hH_le_S
   let eU : U ≃* B := Subgroup.subgroupOfEquivOfLe hB_le_S
-  letI : IsSolvable B := hB_solvable
-  exact solvable_of_solvable_injective (f := eU.toMonoidHom) eU.injective
+  let _ : Group.IsSolvable B := hB_solvable
+  exact Group.isSolvable_of_isSolvable_injective (f := eU.toMonoidHom) eU.injective
 
 /-- The faithful two-transitive ovoid action and its solvable point stabilizer
 force the concrete perfect Suzuki group to be simple. -/
@@ -407,7 +407,7 @@ private theorem suzukiMatrixGroup_isSimple
       LinearMap.GeneralLinearGroup K (Fin 4 → K) :=
     Matrix.GeneralLinearGroup.toLin.toMonoidHom.comp
       (SuzukiMatrixGroup m).subtype
-  letI : MulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
+  let _ : MulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
     MulAction.compHom (ℙ K (Fin 4 → K)) rho
   let Omega : SubMulAction (SuzukiMatrixGroup m) (ℙ K (Fin 4 → K)) :=
     { carrier := O
@@ -415,7 +415,7 @@ private theorem suzukiMatrixGroup_isSimple
         intro g z hz
         exact h_action g z hz }
   let pinfO : Omega := ⟨pinf, Or.inl rfl⟩
-  letI : FaithfulSMul (SuzukiMatrixGroup m) Omega :=
+  let _ : FaithfulSMul (SuzukiMatrixGroup m) Omega :=
     faithfulSMul_iff.mpr (by
       intro g hg
       apply h_faithful g
@@ -436,11 +436,11 @@ private theorem suzukiMatrixGroup_isSimple
         a.property b.property c.property d.property hab' hcd' with
       ⟨g, hga, hgb⟩
     exact ⟨g, Subtype.ext hga, Subtype.ext hgb⟩
-  letI : MulAction.IsMultiplyPretransitive
+  let _ : MulAction.IsMultiplyPretransitive
       (SuzukiMatrixGroup m) Omega 2 := htwo
-  letI : MulAction.IsPreprimitive (SuzukiMatrixGroup m) Omega :=
+  let _ : MulAction.IsPreprimitive (SuzukiMatrixGroup m) Omega :=
     MulAction.isPreprimitive_of_is_two_pretransitive htwo
-  letI : MulAction.IsQuasiPreprimitive (SuzukiMatrixGroup m) Omega :=
+  let _ : MulAction.IsQuasiPreprimitive (SuzukiMatrixGroup m) Omega :=
     MulAction.IsPreprimitive.isQuasiPreprimitive
   have hroot_mem :
       SuzukiRootGL m (1 : K) 0 ∈ SuzukiMatrixSubgroup m :=
@@ -454,7 +454,7 @@ private theorem suzukiMatrixGroup_isSimple
       (fun A : GL (Fin 4) K =>
         (A : Matrix (Fin 4) (Fin 4) K) 0 1) hval
     simp [rootOne, SuzukiRootGL, SuzukiRootMatrix] at hentry
-  letI : Nontrivial (SuzukiMatrixGroup m) :=
+  let _ : Nontrivial (SuzukiMatrixGroup m) :=
     nontrivial_iff_exists_ne 1 |>.2 ⟨rootOne, hrootOne_ne⟩
   have hU_eq_stabilizer :
       U = MulAction.stabilizer (SuzukiMatrixGroup m) pinfO := by
@@ -464,14 +464,14 @@ private theorem suzukiMatrixGroup_isSimple
       (Matrix.GeneralLinearGroup.toLin
         (g : GL (Fin 4) K)).toLinearEquiv • pinf = pinf
     exact (h_stabilizer g).symm
-  have hU_solvable : IsSolvable U :=
+  have hU_solvable : Group.IsSolvable U :=
     suzukiMatrixGroup_pointStabilizer_isSolvable m hm
   refine { eq_bot_or_eq_top_of_normal := ?_ }
   intro N hN_normal
   by_cases hN_bot : N = ⊥
   · exact Or.inl hN_bot
   · refine Or.inr ?_
-    letI : N.Normal := hN_normal
+    let _ : N.Normal := hN_normal
     have hfixed_ne_univ : MulAction.fixedPoints N Omega ≠ Set.univ := by
       intro hfixed
       apply hN_bot
@@ -494,7 +494,7 @@ private theorem suzukiMatrixGroup_isSimple
       exact Subgroup.mem_bot.mpr hn_one
     have hN_transitive : MulAction.IsPretransitive N Omega :=
       MulAction.IsQuasiPreprimitive.isPretransitive_of_normal hfixed_ne_univ
-    letI : MulAction.IsPretransitive N Omega := hN_transitive
+    let _ : MulAction.IsPretransitive N Omega := hN_transitive
     let quotientFromU : U →* SuzukiMatrixGroup m ⧸ N :=
       (QuotientGroup.mk' N).comp U.subtype
     have hquotientFromU_surjective : Function.Surjective quotientFromU := by
@@ -522,16 +522,16 @@ private theorem suzukiMatrixGroup_isSimple
       rw [div_eq_mul_inv, mul_assoc, mul_inv_cancel, mul_one]
       exact N.inv_mem n.property
     have hquotient_solvable :
-        IsSolvable (SuzukiMatrixGroup m ⧸ N) := by
-      letI : IsSolvable U := hU_solvable
-      exact solvable_of_surjective
+        Group.IsSolvable (SuzukiMatrixGroup m ⧸ N) := by
+      let _ : Group.IsSolvable U := hU_solvable
+      exact Group.isSolvable_of_surjective
         (f := quotientFromU) hquotientFromU_surjective
     by_contra hN_top
-    letI : Nontrivial (SuzukiMatrixGroup m ⧸ N) :=
+    let _ : Nontrivial (SuzukiMatrixGroup m ⧸ N) :=
       QuotientGroup.nontrivial_iff.mpr hN_top
-    letI : Group.IsPerfect (SuzukiMatrixGroup m) :=
+    let _ : Group.IsPerfect (SuzukiMatrixGroup m) :=
       suzukiMatrixGroup_isPerfect m hm
-    letI : Group.IsPerfect (SuzukiMatrixGroup m ⧸ N) := inferInstance
+    let _ : Group.IsPerfect (SuzukiMatrixGroup m ⧸ N) := inferInstance
     exact Group.IsPerfect.not_isSolvable
       (SuzukiMatrixGroup m ⧸ N) hquotient_solvable
 

@@ -170,7 +170,10 @@ public theorem equation_10_forces_ringAut_one
   have htoAlg_injective : Function.Injective toAlg := by
     intro e₁ e₂ he
     ext x
-    simpa [toAlg] using DFunLike.congr_fun he x
+    have hx : (toAlg e₁) x = (toAlg e₂) x := DFunLike.congr_fun he x
+    rw [show (toAlg e₁) x = e₁ x by rfl,
+      show (toAlg e₂) x = e₂ x by rfl] at hx
+    exact congrArg Subtype.val hx
   have hAut_card_le :
       Nat.card (F ≃+* F) ≤ Module.finrank (ZMod 2) F := by
     calc
@@ -1085,7 +1088,7 @@ public theorem case_v_ne_w
       exact hy_fix
     letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     letI : Group.IsNilpotent Q := hQ_two.isNilpotent
-    have hQ_solvable : IsSolvable Q := by infer_instance
+    have hQ_solvable : Group.IsSolvable Q := by infer_instance
     have hp_dvd_D : p ∣ Nat.card D := by
       rw [← hP_card]
       exact Subgroup.card_dvd_of_le hP_le_D

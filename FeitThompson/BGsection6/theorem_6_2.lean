@@ -28,8 +28,8 @@ private theorem chief_conj_range_pCore_eq_bot_local
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal_local (G := G) cf
-  letI : Uq.Normal := hmin.1
-  letI : IsElementaryAbelian p (↥Uq) := by
+  let : Uq.Normal := hmin.1
+  let : IsElementaryAbelian p (↥Uq) := by
     simpa [π, Uq] using hUq_elem
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   let A : Subgroup (MulAut Uq) := φ.range
@@ -61,7 +61,7 @@ private theorem chief_conj_range_pCore_eq_bot_local
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by
       simpa [hbot] using hu_mem
     exact hu_ne_one (Subgroup.mem_bot.mp hu_bot)
-  haveI : P.Normal := by
+  have : P.Normal := by
     dsimp [P]
     infer_instance
   have hF_inv : IsInvariant A Uq F := by
@@ -127,8 +127,9 @@ private theorem chief_conj_range_pCore_eq_bot_local
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem odd_order_pstable_le_centralizerOfChiefFactor
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (ho : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (ho : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2)
     {Q A : Subgroup G} [Q.Normal]
     (hQp : IsPGroup p Q) (hAp : IsPGroup p A)
@@ -142,19 +143,19 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
   have hUsub_p : IsPGroup p Usub := hQp.to_subgroup Usub
   have hcfU_p : IsPGroup p cf.U := by
     exact hUsub_p.of_equiv (Subgroup.subgroupOfEquivOfLe (H := cf.U) (K := Q) hcfU_le_Q)
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hUq_min :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal_local (G := G) cf
-  letI : Uq.Normal := hUq_min.1
+  let : Uq.Normal := hUq_min.1
   have hUq_p : IsPGroup p Uq := by
     simpa [Uq, π] using hcfU_p.map π
   obtain ⟨q, hqprime, hUq_elem'⟩ :=
     chiefFactor_quotient_exists_isElementaryAbelian (G := G) inferInstance cf
-  letI : Fact q.Prime := ⟨hqprime⟩
+  let : Fact q.Prime := ⟨hqprime⟩
   have hq_dvd_card : q ∣ Nat.card Uq := by
     have hUq_nontrivial : Nontrivial Uq := (Subgroup.nontrivial_iff_ne_bot Uq).2 hUq_min.2.1
     have hUq_q : IsPGroup q Uq := IsElementaryAbelian.isPGroup q Uq
@@ -167,8 +168,8 @@ private theorem odd_order_pstable_le_centralizerOfChiefFactor
     exact Nat.prime_eq_prime_of_dvd_pow hqprime Fact.out (hn ▸ hq_dvd_card)
   have hUq_elem : IsElementaryAbelian p (↥Uq) := by
     simpa [hq_eq_p] using hUq_elem'
-  letI : IsElementaryAbelian p (↥Uq) := hUq_elem
-  letI : CommGroup Uq := IsMulCommutative.instCommGroup
+  let : IsElementaryAbelian p (↥Uq) := hUq_elem
+  let : CommGroup Uq := IsMulCommutative.instCommGroup
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   have hφ_pcore_bot : pCore p φ.range = ⊥ := by
     simpa [π, Uq, φ] using
@@ -330,7 +331,7 @@ private theorem quotient_pPrimeCore_subgroupMap_injective_local
 
 set_option maxHeartbeats 800000 in
 public theorem theorem_6_2
-    {G : Type*} [Group G] [IsSolvable G] (ho : Odd (Nat.card G))
+    {G : Type*} [Group G] [Group.IsSolvable G] (ho : Odd (Nat.card G))
     {p : ℕ} [inst : Fact p.Prime] (S : Sylow p G) :
     (centerIn (thompsonSubgroup S) ⊔ pPrimeCore p G).Normal := by
   classical
@@ -339,7 +340,7 @@ public theorem theorem_6_2
   have hM_normal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hM_normal
+  let : M.Normal := hM_normal
   let q : G →* G ⧸ M := QuotientGroup.mk' M
   let Pbar : Sylow p (G ⧸ M) :=
     S.mapSurjective (f := q) (QuotientGroup.mk'_surjective M)
@@ -384,8 +385,8 @@ public theorem theorem_6_2
       _ = thompsonCenter (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M)) := by
             simpa [Pbar] using
               thompsonCenter_top_map_subtype (G := G ⧸ M) ((S : Subgroup G).map q)
-  have hQ_solv : IsSolvable (G ⧸ M) := solvable_quotient_of_solvable M
-  letI : IsSolvable (G ⧸ M) := hQ_solv
+  have hQ_solv : Group.IsSolvable (G ⧸ M) := by infer_instance
+  let : Group.IsSolvable (G ⧸ M) := hQ_solv
   have hQ_odd : Odd (Nat.card (G ⧸ M)) := by
     dsimp [M]
     exact odd_of_card_dvd ho (Subgroup.card_quotient_dvd_card (s := pPrimeCore p G))
@@ -400,7 +401,7 @@ public theorem theorem_6_2
       simpa [ZbarP] using
         thompsonCenter_normal_subgroupOf_sylow (G := G ⧸ M) (p := p) Pbar
     have hZbar_comm : IsMulCommutative ZbarP := by
-      letI : IsMulCommutative
+      let : IsMulCommutative
           (thompsonCenter (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M))) :=
         thompsonCenter_isMulCommutative (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M))
       simpa [ZbarP] using
@@ -463,7 +464,7 @@ public theorem theorem_6_2
         intro Q A htopQ_normal hQp hAp hA_norm hcomm2
         rw [hQ_core, bot_sup_eq] at htopQ_normal
         have hQ_normal : Q.Normal := htopQ_normal
-        letI : Q.Normal := hQ_normal
+        let : Q.Normal := hQ_normal
         let N : Subgroup (G ⧸ M) := Subgroup.normalizer (Q : Set (G ⧸ M))
         let C : Subgroup (G ⧸ M) := Subgroup.centralizer (Q : Set (G ⧸ M))
         have hnormQ_top : N = ⊤ := by
@@ -472,8 +473,8 @@ public theorem theorem_6_2
         have hC_normal : C.Normal := by
           simpa [C] using
             (inferInstance : (Subgroup.centralizer (Q : Set (G ⧸ M))).Normal)
-        letI : C.Normal := hC_normal
-        letI : (C.subgroupOf N).Normal := Subgroup.Normal.subgroupOf hC_normal N
+        let : C.Normal := hC_normal
+        let : (C.subgroupOf N).Normal := Subgroup.Normal.subgroupOf hC_normal N
         obtain ⟨r, f, hf0, hfr, hf_norm, hf_chief⟩ :=
           exists_chief_series_from_to Q hQ_normal
         have hf_le_Q : ∀ i, i ≤ r → f i ≤ Q := by
@@ -504,11 +505,11 @@ public theorem theorem_6_2
           simpa [cf] using
             (centralizerOfChiefFactor_normal (G := G ⧸ M) (H := (⊤ : Subgroup (G ⧸ M)))
               (hH := (inferInstance : (⊤ : Subgroup (G ⧸ M)).Normal)) (cf i))
-        letI : H.Normal := hH_normal
+        let : H.Normal := hH_normal
         have hH_normQ : H ≤ N := by
           rw [hnormQ_top]
           exact le_top
-        letI : MulDistribMulAction H Q :=
+        let : MulDistribMulAction H Q :=
           Subgroup.conjMulDistribMulActionOfLeNormalizer H Q hH_normQ
         have hfix_eq_Csub :
             fixingSubgroupOf H Q (Set.univ : Set Q) = C.subgroupOf H := by
@@ -548,7 +549,8 @@ public theorem theorem_6_2
           have hq_eq' : q = ⟨p, Fact.out⟩ := by
             apply Subtype.ext
             simpa using hq_eq
-          simpa [πset] using hq_eq'
+          dsimp [πset]
+          exact Set.mem_singleton_iff.mpr hq_eq'
         let Gi : ℕ → Subgroup Q := fun i =>
           if hi : i ≤ r then (f i).subgroupOf Q else ⊥
         have hGi_zero : Gi 0 = ⊤ := by
@@ -580,7 +582,7 @@ public theorem theorem_6_2
           intro i
           by_cases hi : i ≤ r
           · have hH_norm_fi : H ≤ Subgroup.normalizer (f i : Set (G ⧸ M)) := by
-              letI : (f i).Normal := hf_norm i hi
+              let : (f i).Normal := hf_norm i hi
               simpa using
                 (Subgroup.le_normalizer_of_normal (H := f i) :
                   H ≤ Subgroup.normalizer (f i : Set (G ⧸ M)))
@@ -676,7 +678,7 @@ public theorem theorem_6_2
           exact ⟨Nat, Gi, Nat.succ, hseries⟩
         have hHquot_pi :
             IsPiGroup πset (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
-          exact lemma_1_9 (G := Q) (A := H) πset (subgroup_solvable_of_solvable Q) hQ_pi
+          exact lemma_1_9 (G := Q) (A := H) πset (inferInstance : Group.IsSolvable ↥Q) hQ_pi
             hstab hker_normal
         have hHquot_p :
             IsPGroup p (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
@@ -687,7 +689,7 @@ public theorem theorem_6_2
           let q' : Nat.Primes := ⟨q, hqprime⟩
           have hq_mem : q' ∈ πset := (IsPiGroup_iff πset _).1 hHquot_pi q' hqdvd
           have hq_eq' : q' = ⟨p, Fact.out⟩ := by
-            simpa [πset] using hq_mem
+            exact Set.mem_singleton_iff.mp (by simpa [πset] using hq_mem)
           simpa using congrArg Subtype.val hq_eq'
         let qCN : N →* N ⧸ C.subgroupOf N := QuotientGroup.mk' (C.subgroupOf N)
         let φH : H →* N := H.subtype.codRestrict N (by

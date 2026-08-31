@@ -1209,7 +1209,11 @@ public theorem psu_invertedTorus_with_centralizer_of_borel
     exact eT.isCyclic.mp (inferInstance : IsCyclic k0ˣ)
   have hT0card : Nat.card T0 = 2 ^ n - 1 := by
     have hk0card : Nat.card k0 = 2 ^ n := by
-      simpa [k0, FixedBy.subfield, RingAut.smul_def] using hfixedCard
+      have hset : (k0 : Set K) = {x : K | J.conj x = x} := by
+        ext x
+        rfl
+      have hc := Nat.card_congr (Equiv.setCongr hset)
+      simpa [k0] using hc.trans hfixedCard
     calc
       Nat.card T0 = Nat.card k0ˣ := Nat.card_congr eT.toEquiv.symm
       _ = Nat.card k0 - 1 := Nat.card_units k0

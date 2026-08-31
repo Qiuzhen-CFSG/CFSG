@@ -30,9 +30,9 @@ private theorem subgroupPrimeSet_eq_singleton_of_isPGroup_nonbot
       apply Subgroup.card_eq_one.mp
       simp [hn, hn0]
     rcases Nat.exists_eq_succ_of_ne_zero hn_ne_zero with ⟨m, rfl⟩
-    simp at hq
     subst q
     simp [subgroupPrimeSet, hn, Nat.pow_succ]
+    exact Nat.dvd_mul_left p (p ^ m)
 
 public theorem theorem_7_6
     {G : Type*} [Group G] [Finite G] [IsMinCE G]
@@ -59,12 +59,12 @@ public theorem theorem_7_6
     have hA0p : IsPGroup p A0 := P.isPGroup'.to_subgroup A0
     exact hA0p.of_equiv eA
   have hAcomm : IsMulCommutative A := by
-    letI : IsMulCommutative A0 := hA0comm
+    let : IsMulCommutative A0 := hA0comm
     refine { is_comm := ⟨fun a b => ?_⟩ }
     have hcomm0 : eA.symm a * eA.symm b = eA.symm b * eA.symm a := by
       exact hA0comm.is_comm.comm (eA.symm a) (eA.symm b)
     simpa using congrArg eA hcomm0
-  letI : IsMulCommutative A := hAcomm
+  let : IsMulCommutative A := hAcomm
   have hAscn2 : A ∈ scnPrimeSubgroups 2 p G := by
     refine ⟨P, hAP, ?_⟩
     exact ⟨hA0'.1, hA0'.2.1, le_trans (by decide : 2 ≤ 3) hA0groupRank⟩
@@ -103,7 +103,8 @@ public theorem theorem_7_6
       (q := p) Fact.out htop_center hAp_top hAcomm_top hAgen_top
   have hHyp : Hypothesis7_1 A := proposition_7_5 (G := G) (p := p) hpG hAp (Or.inr hAscn2)
   have hq_not_mem : q ∉ subgroupPrimeSet A := by
-    simpa [hAπ] using hq
+    rw [hAπ]
+    exact fun hmem => hq (Set.mem_singleton_iff.mp hmem)
   simpa [section7K, hAπ] using theorem_7_2 (G := G) (A := A) hHyp hq_not_mem hcenterRank
 
 end

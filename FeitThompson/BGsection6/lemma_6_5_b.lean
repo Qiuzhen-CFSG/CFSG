@@ -7,7 +7,7 @@ open scoped MatrixGroups Pointwise TensorProduct
 /-! # Lemma 6.5(b) from BG Section 6 -/
 
 public theorem lemma_6_5_b
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {K U H : Subgroup G} [K.Normal] (hKU : K ⊔ U = ⊤) (hHU : H ≤ U)
     (hcop : Nat.Coprime (Nat.card H) (Nat.card K)) :
     (Subgroup.normalizer (G := G) H : Set G) =
@@ -64,4 +64,3 @@ public theorem lemma_6_5_b
       exact (Subgroup.normalizer (G := G) (H : Set G)).mul_mem
         (lemma_6_5_centralizerIn_le_normalizer K H hcC) huN.1
     exact hnorm
-

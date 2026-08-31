@@ -253,7 +253,7 @@ private theorem isHallSubgroup_subgroupOf_sup_section7K
     simpa [KP, Ksub] using
       (Subgroup.normal_subgroupOf_of_le_normalizer
         (H := KP) (N := section7K A) hKP_le_normK)
-  letI : Ksub.Normal := hKsub_norm
+  let : Ksub.Normal := hKsub_norm
   have hcopKP : Nat.Coprime (Nat.card P) (Nat.card (section7K A)) := by
     refine Nat.coprime_of_dvd ?_
     intro p hpPrime hpP hpK
@@ -353,10 +353,10 @@ private theorem ne_top_of_isPiSubgroup_singleton_ne_bot
     Q ≠ ⊤ := by
   intro hQ_top
   subst hQ_top
-  letI : Fact q.val.Prime := ⟨q.2⟩
-  letI : Nontrivial ↥(⊤ : Subgroup G) :=
+  let : Fact q.val.Prime := ⟨q.2⟩
+  let : Nontrivial ↥(⊤ : Subgroup G) :=
     (Subgroup.nontrivial_iff_ne_bot (H := (⊤ : Subgroup G))).2 (by simpa using hQ_ne_bot)
-  letI : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
+  let : Nontrivial G := (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G).injective.nontrivial
   have htop_q : IsPGroup q.val (⊤ : Subgroup G) :=
     isPGroup_of_isPiSubgroup_singleton hQπ
   have hGq : IsPGroup q.val G := htop_q.of_equiv Subgroup.topEquiv
@@ -470,7 +470,7 @@ private theorem normalizer_ne_top_of_ne_bot_ne_top
     Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
   intro hNtop
   have hQnormal : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases hQnormal.eq_bot_or_eq_top with hQbot | hQtop
   · exact hQ_ne_bot hQbot
   · exact hQ_ne_top hQtop
@@ -479,7 +479,7 @@ private theorem normalizer_ne_top_of_ne_bot_ne_top
 private theorem quotient_card_prime_of_normal_no_intermediate
     {G : Type*} [Group G] [Finite G] {A P : Subgroup G}
     (hAP : A < P) [hAPnorm : (A.subgroupOf P).Normal]
-    (hsolvP : IsSolvable P)
+    (hsolvP : Group.IsSolvable P)
     (hno : ∀ B : Subgroup G, A < B → B < P → (B.subgroupOf P).Normal → False) :
     Nat.Prime (Nat.card (P ⧸ (A.subgroupOf P))) := by
   let A0 : Subgroup P := A.subgroupOf P
@@ -487,14 +487,14 @@ private theorem quotient_card_prime_of_normal_no_intermediate
     intro hA0top
     have hPleA : P ≤ A := (Subgroup.subgroupOf_eq_top).mp hA0top
     exact hAP.ne (le_antisymm hAP.le hPleA)
-  letI : A0.Normal := by
+  let : A0.Normal := by
     simpa [A0] using hAPnorm
   have hquot_nontrivial : Nontrivial (P ⧸ A0) := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsubs
     exact hA0_ne_top (QuotientGroup.subgroup_eq_top_of_subsingleton A0 hsubs)
-  letI : Nontrivial (P ⧸ A0) := hquot_nontrivial
-  letI : IsSolvable (P ⧸ A0) := solvable_of_surjective
+  let : Nontrivial (P ⧸ A0) := hquot_nontrivial
+  have : Group.IsSolvable (P ⧸ A0) := Group.isSolvable_of_surjective
     (f := QuotientGroup.mk' A0) (QuotientGroup.mk'_surjective A0)
   obtain ⟨N, hNnorm, hNindex_prime⟩ := exist_index_p_of_solvable (P ⧸ A0)
   by_cases hNbot : N = ⊥
@@ -580,13 +580,13 @@ private theorem exists_mem_section7HStarFamily_normalized_by_of_normal_no_interm
   · refine ⟨Q₀, hQ₀, ?_⟩
     simpa [hAPeq] using (section7HStarFamily.mem_family hQ₀).2.2
   · have hA_lt_P : A < P := lt_of_le_of_ne hAP hAPeq
-    letI : IsSolvable P := solvable_of_proper_subgroup hPproper
+    have : Group.IsSolvable P := solvable_of_proper_subgroup hPproper
     have hquot_prime :
         Nat.Prime (Nat.card (P ⧸ (A.subgroupOf P))) :=
       quotient_card_prime_of_normal_no_intermediate hA_lt_P (hsolvP := inferInstance) hno
     let r : Nat.Primes := ⟨Nat.card (P ⧸ (A.subgroupOf P)), hquot_prime⟩
-    letI : Fact r.val.Prime := ⟨r.2⟩
-    letI : MulAction (section7K A) Ωsub := {
+    let : Fact r.val.Prime := ⟨r.2⟩
+    let : MulAction (section7K A) Ωsub := {
       smul := fun k Q => ⟨Q.1.conjBy (k : G), by
         exact mem_section7HStarFamily_top_conjBy_of_mem_centralizer
           (section7K_le_centralizer A k.property) Q.2⟩
@@ -607,11 +607,11 @@ private theorem exists_mem_section7HStarFamily_normalized_by_of_normal_no_interm
         apply Subtype.ext
         exact hk.symm⟩
     have hcardΩ_dvd : Nat.card Ωsub ∣ Nat.card (section7K A) := by
-      letI : Fintype (section7K A) := Fintype.ofFinite (section7K A)
-      letI : Fintype Ωsub := Fintype.ofFinite Ωsub
-      letI : Fintype ↥(MulAction.orbit (section7K A) Q₀sub) :=
+      let : Fintype (section7K A) := Fintype.ofFinite (section7K A)
+      let : Fintype Ωsub := Fintype.ofFinite Ωsub
+      let : Fintype ↥(MulAction.orbit (section7K A) Q₀sub) :=
         Fintype.ofFinite ↥(MulAction.orbit (section7K A) Q₀sub)
-      letI : Fintype ↥(MulAction.stabilizer (section7K A) Q₀sub) :=
+      let : Fintype ↥(MulAction.stabilizer (section7K A) Q₀sub) :=
         Fintype.ofFinite ↥(MulAction.stabilizer (section7K A) Q₀sub)
       refine ⟨Fintype.card (MulAction.stabilizer (section7K A) Q₀sub), ?_⟩
       simpa [Nat.card_eq_fintype_card, hOrbit_univ] using
@@ -633,7 +633,7 @@ private theorem exists_mem_section7HStarFamily_normalized_by_of_normal_no_interm
       exact hr_not_dvd_K (dvd_trans hrΩ hcardΩ_dvd)
     have hPnormA : P ≤ Subgroup.normalizer (A : Set G) :=
       Subgroup.le_normalizer_of_normal_subgroupOf hAP
-    letI : MulAction P Ωsub := {
+    let : MulAction P Ωsub := {
       smul := fun p Q => ⟨Q.1.conjBy ((p : P) : G), by
         exact mem_section7HStarFamily_top_conjBy_of_mem_normalizer (hPnormA p.property) Q.2⟩
       one_smul := by
@@ -667,7 +667,7 @@ private theorem exists_mem_section7HStarFamily_normalized_by_of_normal_no_interm
       QuotientGroup.lift (A.subgroupOf P) (MulAction.toPermHom P Ωsub) <| by
         intro a ha
         exact hAker ha
-    letI : MulAction (P ⧸ (A.subgroupOf P)) Ωsub := MulAction.compHom Ωsub τbar
+    let : MulAction (P ⧸ (A.subgroupOf P)) Ωsub := MulAction.compHom Ωsub τbar
     have hquot_pgroup : IsPGroup r.val (P ⧸ (A.subgroupOf P)) := by
       exact IsPGroup.of_card (p := r.val) (G := P ⧸ (A.subgroupOf P)) (n := 1) (by simp [r])
     rcases hquot_pgroup.nonempty_fixed_point_of_prime_not_dvd_card Ωsub hr_not_dvd_Ω with
@@ -711,7 +711,7 @@ private theorem mem_section7HStarFamily_A_of_mem_section7HStarFamily_P_of_normal
     (hQ : Q ∈ section7HStarFamily (⊤ : Subgroup G) P ({q} : Set Nat.Primes)) :
     Q ∈ section7HStarFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) := by
   classical
-  letI : Fact q.val.Prime := ⟨q.2⟩
+  let : Fact q.val.Prime := ⟨q.2⟩
   let N : Subgroup G := Subgroup.normalizer (Q : Set G)
   let H : Subgroup G := piCoreIn (subgroupPrimeSet A)ᶜ N
   have hQfamP : Q ∈ section7HFamily (⊤ : Subgroup G) P ({q} : Set Nat.Primes) :=
@@ -763,8 +763,8 @@ private theorem mem_section7HStarFamily_A_of_mem_section7HStarFamily_P_of_normal
       intro hHtop
       apply hNproper
       exact top_unique (by simpa [H, hHtop] using (piCoreIn_le (G := G) (subgroupPrimeSet A)ᶜ N))
-    letI : IsSolvable H := solvable_of_proper_subgroup hHproper
-    haveI : Subgroup.Normalizes P H := ⟨hPnormH⟩
+    have : Group.IsSolvable H := solvable_of_proper_subgroup hHproper
+    have : Subgroup.Normalizes P H := ⟨hPnormH⟩
     have hQsub_pi : IsPiSubgroup (G := H) ({q} : Set Nat.Primes) (Q.subgroupOf H) :=
       hQfamP.2.1.subgroupOf hQ_le_H
     have hQsub_inv : IsInvariant (↥P) (↥H) (Q.subgroupOf H) := by
@@ -781,7 +781,7 @@ private theorem mem_section7HStarFamily_A_of_mem_section7HStarFamily_P_of_normal
       exact y.property
     have hQ₂_pi : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q₂ := by
       simpa [Q₂] using (hQ₂Hall.isPiSubgroup).map H.subtype
-    letI : IsInvariant (↥P) (↥H) Q₂sub := hQ₂inv
+    let : IsInvariant (↥P) (↥H) Q₂sub := hQ₂inv
     have hPnormQ₂ : P ≤ Subgroup.normalizer (Q₂ : Set G) := by
       refine subgroup_le_normalizer_of_conj_mem Q₂ P ?_
       intro p x hx
@@ -976,11 +976,11 @@ private theorem theorem_7_4_normal_case
         intro x hx
         have hxN : x ∈ N := by simp [hNtop]
         exact hN_le_normQ₂ hxN
-      letI : IsSolvable N := solvable_of_proper_subgroup hNproper
+      have : Group.IsSolvable N := solvable_of_proper_subgroup hNproper
       let Nsub : Subgroup KP := N.subgroupOf KP
       let eN : Nsub ≃* N := Subgroup.subgroupOfEquivOfLe (H := N) (K := KP) inf_le_left
-      have hsolvNsub : IsSolvable Nsub :=
-        solvable_of_surjective (f := eN.symm.toMonoidHom) eN.symm.surjective
+      have hsolvNsub : Group.IsSolvable Nsub :=
+        Group.isSolvable_of_surjective (f := eN.symm.toMonoidHom) eN.symm.surjective
       have hPHallKP : IsHallSubgroup (subgroupPrimeSet A) (P.subgroupOf KP) := by
         simpa [KP] using
           isHallSubgroup_subgroupOf_sup_section7K
@@ -1042,7 +1042,7 @@ private theorem theorem_7_4_normal_case
         simpa [P0] using hPHallKP.subgroupOf hPsubKP_le_Nsub
       have hPk0_hall : IsHallSubgroup (subgroupPrimeSet A) Pk0 := by
         simpa [Pk0] using hPkKP_hall.subgroupOf hPkKP_le_Nsub
-      letI : MulDistribMulAction Unit Nsub := {
+      let : MulDistribMulAction Unit Nsub := {
         smul := fun _ x => x
         one_smul := fun _ => rfl
         mul_smul := fun _ _ _ => rfl
@@ -1104,7 +1104,7 @@ private theorem theorem_7_4_normal_case
         simpa [KP] using
           (Subgroup.normal_subgroupOf_of_le_normalizer
             (H := KP) (N := section7K A) hKP_le_normK)
-      letI : ((section7K A).subgroupOf KP).Normal := hKsub_norm
+      let : ((section7K A).subgroupOf KP).Normal := hKsub_norm
       have hKsub_sup_top : (section7K A).subgroupOf KP ⊔ P.subgroupOf KP = ⊤ := by
         calc
           (section7K A).subgroupOf KP ⊔ P.subgroupOf KP =
@@ -1260,7 +1260,7 @@ private theorem theorem_7_4_normal_case
         exact hfactor_pi
     · have hNp_proper : Np ≠ ⊤ :=
         normalizer_ne_top_of_ne_bot_ne_top hPbot hPproper
-      letI : IsSolvable Np := solvable_of_proper_subgroup hNp_proper
+      have : Group.IsSolvable Np := solvable_of_proper_subgroup hNp_proper
       have hNp_le_normPiCore :
           Np ≤
             Subgroup.normalizer
@@ -1297,7 +1297,7 @@ private theorem theorem_7_4_normal_case
           Subgroup.normal_subgroupOf_of_le_normalizer
             (H := Np) (N := piCoreIn (subgroupPrimeSet A)ᶜ (Subgroup.centralizer (P : Set G)))
             hNp_le_normPiCore
-      letI : (CK.subgroupOf Np).Normal := hCKsub_norm
+      let : (CK.subgroupOf Np).Normal := hCKsub_norm
       have hL_le_Np : L ≤ Np := inf_le_left
       have hL_le_Nq : L ≤ Nq := inf_le_right
       have hKU_top : CK.subgroupOf Np ⊔ L.subgroupOf Np = ⊤ := by
@@ -1435,7 +1435,7 @@ public theorem theorem_7_4_core
         rcases hAsubnormal.normal_or_exists_intermediate with hnorm | ⟨B, hAB, hBP, _hAsubB, hBnorm⟩
         · exact hnorm
         · exact False.elim (hno B hAB hBP hBnorm)
-      letI : (A.subgroupOf P).Normal := hAPnorm
+      let : (A.subgroupOf P).Normal := hAPnorm
       exact theorem_7_4_normal_case hA hAsubnormal.le hq hPproper hPπ htrans hno
     · have hexB : ∃ B : Subgroup G, A < B ∧ B < P ∧ (B.subgroupOf P).Normal := by
         by_contra h
@@ -1477,7 +1477,7 @@ public theorem theorem_7_4_core
           ih (Nat.card B - Nat.card A) hmeasureAB hA hq hBproper hAsubB hBπ htrans rfl
         have hB : Hypothesis7_1 B :=
           hypothesis7_1_of_le_isPiSubgroup hA hAB.1 hBproper hBπ
-        letI : (B.subgroupOf P).Normal := hBnorm
+        let : (B.subgroupOf P).Normal := hBnorm
         have hBsubP : IsSubnormalIn B P := isSubnormalIn_of_normal_subgroupOf hBP.1
         have hPπB : IsPiSubgroup (G := G) (subgroupPrimeSet B) P := by
           simpa [hπeq] using hPπ
@@ -1531,13 +1531,13 @@ public theorem theorem_7_4_core
           by simpa [hπeq] using hBPres.2.2.2⟩
       rcases hAsubnormal.normal_or_exists_intermediate with hAPnorm | ⟨B, hAB, hBP, hAsubB, hBnorm⟩
       · obtain ⟨B, hAB, hBP, hBnorm⟩ := hexB
-        letI : (A.subgroupOf P).Normal := hAPnorm
+        let : (A.subgroupOf P).Normal := hAPnorm
         have hP_le_normA : P ≤ Subgroup.normalizer (A : Set G) :=
           Subgroup.le_normalizer_of_normal_subgroupOf hAsubnormal.le
         have hAnormB : (A.subgroupOf B).Normal := by
           exact Subgroup.normal_subgroupOf_of_le_normalizer
             (H := B) (N := A) (hBP.1.trans hP_le_normA)
-        letI : (A.subgroupOf B).Normal := hAnormB
+        let : (A.subgroupOf B).Normal := hAnormB
         have hAsubB : IsSubnormalIn A B := isSubnormalIn_of_normal_subgroupOf hAB.1
         exact hstep hAB hBP hAsubB hBnorm
       · exact hstep hAB hBP hAsubB hBnorm

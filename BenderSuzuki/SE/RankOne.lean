@@ -69,7 +69,7 @@ public theorem IsStronglyEmbedded.twoRankAtLeastTwo_of_not_solvable_of_involutio
     {G : Type u} [Group G] [Finite G]
     {M : Subgroup G} (hM : IsStronglyEmbedded M)
     (hcore : involutionCore G = ⊤)
-    (hnsolv : ¬ IsSolvable G) :
+    (hnsolv : ¬ Group.IsSolvable G) :
     TwoRankAtLeastTwo M := by
   by_contra hMrank
   obtain ⟨P, hPM⟩ := hM.containsSylowTwo
@@ -145,14 +145,14 @@ public theorem IsStronglyEmbedded.twoRankAtLeastTwo_of_not_solvable_of_involutio
   letI : IsCyclic Q :=
     (isCyclic_iff_exists_zpowers_eq_top (α := Q)).2 ⟨q u, hqtop⟩
   letI : IsMulCommutative Q := IsCyclic.isMulCommutative
-  have hQsolv : IsSolvable Q :=
-    isSolvable_of_comm (fun a b : Q => mul_comm a b)
+  have hQsolv : Group.IsSolvable Q :=
+    Group.isSolvable_of_comm (fun a b : Q => mul_comm a b)
   have hNodd : Odd (Nat.card N) := by
     exact Nat.coprime_two_left.mp (by
       simpa [N] using (pPrimeCore_coprime_card (G := G) (p := 2)))
-  have hNsolv : IsSolvable N := odd_order_theorem N hNodd
-  letI : IsSolvable N := hNsolv
-  letI : IsSolvable Q := hQsolv
+  have hNsolv : Group.IsSolvable N := odd_order_theorem N hNodd
+  letI : Group.IsSolvable N := hNsolv
+  letI : Group.IsSolvable Q := hQsolv
   exact hnsolv (isSolvable_of_normal_subgroup_and_quotient N)
 
 end BenderSuzuki

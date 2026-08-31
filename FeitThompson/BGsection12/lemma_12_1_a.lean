@@ -166,7 +166,7 @@ public theorem section12_primeRank_le_of_equiv {R S : Type*} [Group R] [Finite R
     have hA'q : IsPGroup q A' :=
       IsPGroup.map (p := q) (H := A) hAq e.symm.toMonoidHom
     have hA'comm : IsMulCommutative A' := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       infer_instance
     have hgen_le : generatorRank A ≤ generatorRank A' := by
       let eA : A ≃* A' :=
@@ -340,7 +340,7 @@ public theorem section12_solvable_of_complement
     {M E : Subgroup G}
     (hM : M ∈ section9MaximalSubgroups G)
     (hcomp : section12ComplementToMsigma M E) :
-    IsSolvable E := by
+    Group.IsSolvable E := by
   have hEM : E ≤ M := hcomp.2.1
   have hEproper : E ≠ ⊤ := by
     intro hEtop
@@ -532,7 +532,7 @@ public theorem section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : Nat.card A = p ^ 2) :
     2 ≤ generatorRank A := by
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -577,7 +577,7 @@ public theorem section12_isPiSubgroup_of_isPGroup_of_mem
     {P : Subgroup R} (hPp : IsPGroup p.val P) (hpπ : p ∈ π) :
     IsPiSubgroup (G := R) π P := by
   intro q hq
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases hPp.exists_card_eq with ⟨n, hn⟩
   have hq_dvd_p : q.val ∣ p.val := q.2.dvd_of_dvd_pow (by simpa [hn] using hq)
   have hqp : q = p := Subtype.ext ((Nat.prime_dvd_prime_iff_eq q.2 p.2).mp hq_dvd_p)
@@ -591,13 +591,13 @@ public theorem section12_piCore_isHallSubgroup_of_nilpotent
   refine isHallSubgroup_of (G := R) π (piCore π R) ?_ ?_
   · exact piCore_isPiSubgroup π
   · intro p hpπ hp_dvd_idx
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     let P : Sylow p.val R := Classical.choice (Sylow.nonempty (p := p.val) (G := R))
     have hPnorm : (P : Subgroup R).Normal :=
       Group.IsNilpotent.sylow_normal hnil p.val P
     have hPπ : IsPiSubgroup (G := R) π (P : Subgroup R) :=
       section12_isPiSubgroup_of_isPGroup_of_mem P.isPGroup' hpπ
-    haveI : (P : Subgroup R).Normal := hPnorm
+    have : (P : Subgroup R).Normal := hPnorm
     have hP_le_core : (P : Subgroup R) ≤ piCore π R :=
       le_piCore_of_normal_isPiSubgroup (G := R) π (P : Subgroup R) hPπ
     have hidx_dvd : (piCore π R).index ∣ (P : Subgroup R).index :=
@@ -703,12 +703,12 @@ public theorem section12_sylow_cyclic_of_primeRank_le_one
     (P : Sylow p.val E) :
     IsCyclic (P : Subgroup E) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   by_contra hPcyc
-  haveI : Fact (IsPGroup p.val (P : Subgroup E)) := ⟨P.isPGroup'⟩
+  have : Fact (IsPGroup p.val (P : Subgroup E)) := ⟨P.isPGroup'⟩
   obtain ⟨A, _hAnorm, hAcard, hAelem⟩ :=
     lemma_4_5_a (R := (P : Subgroup E)) (p := p.val) hpodd hPcyc
-  haveI : IsElementaryAbelian p.val A := hAelem
+  have : IsElementaryAbelian p.val A := hAelem
   let Amap : Subgroup E := A.map (P : Subgroup E).subtype
   have hAmap_p : IsPGroup p.val Amap :=
     IsPGroup.map (IsElementaryAbelian.isPGroup p.val A) (P : Subgroup E).subtype
@@ -738,7 +738,7 @@ public theorem section12_tau3_sylow_le_derived
     (P : Sylow p.val E) :
     (P : Subgroup E) ≤ derivedSubgroup E := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hcomp : section12ComplementToMsigma M E := hE.1
   have hpD : p ∈ subgroupPrimeSet (derivedSubgroup E) :=
     section12_tau3_prime_mem_derived hM hcomp hp
@@ -768,9 +768,9 @@ public theorem section12_tau3_sylow_le_derived
       section12_nilpotent_derivedSubgroup_of_ambient hnilE
     have hQ_normal_D : (Q : Subgroup D).Normal :=
       Group.IsNilpotent.sylow_normal hDnil p.val Q
-    haveI : (Q : Subgroup D).Characteristic :=
+    have : (Q : Subgroup D).Characteristic :=
       Sylow.characteristic_of_normal Q hQ_normal_D
-    haveI : Qmap.Normal := by
+    have : Qmap.Normal := by
       change ((Q : Subgroup D).map D.subtype).Normal
       infer_instance
     have hQmap_le_P : Qmap ≤ (P : Subgroup E) :=
@@ -820,7 +820,7 @@ public theorem section12_tau3_piCore_hall_in_E
   · intro q hqπ hq_dvd_idx
     have hnot_dvd_Didx : ¬ q.val ∣ D.index := by
       intro hqDidx
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      have : Fact q.val.Prime := ⟨q.2⟩
       let P : Sylow q.val E := Classical.choice (Sylow.nonempty (p := q.val) (G := E))
       have hP_le_D : (P : Subgroup E) ≤ D :=
         section12_tau3_sylow_le_derived (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
@@ -933,11 +933,11 @@ public theorem section12_primeRank_pos_of_mem_subgroupPrimeSet
     (hpR : p.val ∣ Nat.card R) :
     1 ≤ primeRank p.val R := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let P : Sylow p.val R := Classical.choice (Sylow.nonempty (p := p.val) (G := R))
   have hP_ne_bot : (P : Subgroup R) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := R) P hpR
-  haveI : Nontrivial (P : Subgroup R) :=
+  have : Nontrivial (P : Subgroup R) :=
     (Subgroup.nontrivial_iff_ne_bot (H := (P : Subgroup R))).2 hP_ne_bot
   let ZP : Subgroup (P : Subgroup R) := Subgroup.center (P : Subgroup R)
   have hZP_nontrivial : Nontrivial ZP :=
@@ -958,7 +958,7 @@ public theorem section12_primeRank_pos_of_mem_subgroupPrimeSet
       apply Subgroup.map_injective (P : Subgroup R).subtype_injective
       simpa [Z] using hZbot
     exact hZP_ne_bot hZP_bot
-  haveI : Nontrivial Z :=
+  have : Nontrivial Z :=
     (Subgroup.nontrivial_iff_ne_bot (H := Z)).2 hZ_ne_bot
   exact (section12_one_le_generatorRank_of_nontrivial (R := Z)).trans
     (section12_generatorRank_le_primeRank_of_subgroup (R := R) (q := p.val) hZp hZcomm)
@@ -1046,11 +1046,11 @@ private theorem section12_complement_ne_bot
     have hMsigma_bot : section10Msigma M = ⊥ := by
       exact le_bot_iff.mp (by simpa [hMbot] using hMsigma_le_M)
     exact (theorem_10_2_e (M := M) hM) hMsigma_bot
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
-  have hsolvM : IsSolvable M :=
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
     change derivedSeries M 1 = ⊤ at hder_top
     rw [derivedSeries_one] at hder_top
@@ -1063,12 +1063,12 @@ public theorem section12_ambientDerivedSubgroup_lt
     ambientDerivedSubgroup E < E := by
   classical
   have hE_ne_bot : E ≠ ⊥ := section12_complement_ne_bot hM hcomp
-  haveI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot (H := E)).2 hE_ne_bot
-  have hsolvE : IsSolvable E := section12_solvable_of_complement hM hcomp
+  have : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot (H := E)).2 hE_ne_bot
+  have hsolvE : Group.IsSolvable E := section12_solvable_of_complement hM hcomp
   have hDlt : derivedSubgroup E < (⊤ : Subgroup E) := by
     change derivedSeries E 1 < ⊤
     rw [derivedSeries_one]
-    exact IsSolvable.commutator_lt_top_of_nontrivial (G := E)
+    exact Group.IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
   intro hEq
   have hDtop : derivedSubgroup E = (⊤ : Subgroup E) := by
@@ -1155,7 +1155,7 @@ public theorem section12_prime_dvd_card_of_nontrivial_pSubgroup
     {p : Nat.Primes} {B : Subgroup G}
     (hBp : IsPGroup p.val B) (hBnontrivial : Nontrivial B) :
     p.val ∣ Nat.card B := by
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := B) (hG := hBp)).1
       hBnontrivial with
     ⟨n, hn_pos, hcard⟩
@@ -1188,16 +1188,16 @@ private theorem section12_prime_dvd_card_of_primeRank_pos
   have hAnontrivial : Nontrivial A := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
-    haveI : Subsingleton A := hsub
+    have : Subsingleton A := hsub
     have hgen0 : generatorRank A = 0 := by
       rw [generatorRank_eq_group_rank]
-      haveI : Group.FG A := Group.fg_of_finite
+      have : Group.FG A := Group.fg_of_finite
       apply le_antisymm ?_ (Nat.zero_le _)
       refine Group.rank_le (G := A) (S := ∅) ?_
       rw [Finset.coe_empty, Subgroup.closure_empty]
       exact (Subsingleton.elim (⊤ : Subgroup A) ⊥).symm
     omega
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hpA : p.val ∣ Nat.card A := by
     rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := A) (hG := hAp)).1
         hAnontrivial with
@@ -1274,7 +1274,7 @@ public theorem section12_isZGroup_of_prime_support_rank_le_one
   classical
   refine ⟨fun q hq Q => ?_⟩
   let p : Nat.Primes := ⟨q, hq⟩
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   by_cases hpK : p.val ∣ Nat.card K
   · have hpπ : p ∈ π := hπ p hpK
     have hpG : p.val ∣ Nat.card G := hpK.trans (Subgroup.card_subgroup_dvd_card K)
@@ -1287,7 +1287,7 @@ public theorem section12_isZGroup_of_prime_support_rank_le_one
     have hS_cyc : IsCyclic (S : Subgroup E) :=
       section12_sylow_cyclic_of_primeRank_le_one hpodd (hrank p hpπ) S
     have hQmap_cyc : IsCyclic Qmap := by
-      letI : IsCyclic (S : Subgroup E) := hS_cyc
+      let : IsCyclic (S : Subgroup E) := hS_cyc
       exact Subgroup.isCyclic_of_le hQmap_le_S
     have hf_inj : Function.Injective f := by
       intro x y hxy
@@ -1298,13 +1298,13 @@ public theorem section12_isZGroup_of_prime_support_rank_le_one
     exact e.isCyclic.2 hQmap_cyc
   · have hQbot : (Q : Subgroup K) = ⊥ := by
       by_contra hQne
-      haveI : Nontrivial (Q : Subgroup K) :=
+      have : Nontrivial (Q : Subgroup K) :=
         (Subgroup.nontrivial_iff_ne_bot (H := (Q : Subgroup K))).2 hQne
       have hpQ : p.val ∣ Nat.card (Q : Subgroup K) :=
         section12_prime_dvd_card_of_nontrivial_pSubgroup
           (p := p) (B := (Q : Subgroup K)) Q.isPGroup' inferInstance
       exact hpK (hpQ.trans (Subgroup.card_subgroup_dvd_card (Q : Subgroup K)))
-    haveI : Subsingleton (Q : Subgroup K) := by
+    have : Subsingleton (Q : Subgroup K) := by
       rw [hQbot]
       infer_instance
     exact isCyclic_of_subsingleton (α := (Q : Subgroup K))
@@ -1410,7 +1410,7 @@ public theorem lemma_12_1_a
     Group.IsNilpotent (ambientDerivedSubgroup E) := by
   classical
   have hcomp : section12ComplementToMsigma M E := hE.1
-  have hsolv : IsSolvable E := section12_solvable_of_complement hM hcomp
+  have hsolv : Group.IsSolvable E := section12_solvable_of_complement hM hcomp
   have hodd : Odd (Nat.card E) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card E)
   have hrank : groupRank E ≤ 2 := section12_groupRank_E_le_two hM hcomp

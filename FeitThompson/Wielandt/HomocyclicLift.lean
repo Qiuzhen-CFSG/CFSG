@@ -27,7 +27,7 @@ public structure HomocyclicCommonLinearLift
   [instDecidableEqMatrixIndex : DecidableEq matrixIndex]
   linearLift : G →* (Module.End (ZMod (p ^ e)) (matrixIndex → ZMod (p ^ e)))ˣ
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -48,7 +48,7 @@ public structure HomocyclicQuotientLinearLift
           Module.End (ZMod (p ^ e)) (matrixIndex → ZMod (p ^ e))) x) =
       Additive.ofMul (g • Additive.toMul (quotientMap x))
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -84,7 +84,7 @@ public structure HomocyclicCoverLinearLift
     quotientEquiv (QuotientGroup.mk' kernel (coverAction g w)) =
       g • quotientEquiv (QuotientGroup.mk' kernel w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- The quotient-cover part of the homocyclic Frattini construction.
@@ -110,15 +110,15 @@ public structure HomocyclicFrattiniQuotientCover
   coordinateEquiv : (matrixIndex → ZMod (p ^ e)) ≃+ Additive cover
   frattiniQuotientEquiv : cover ⧸ frattini cover ≃* V
   coverAction :
-    letI : Group cover := instGroupCover
+    let : Group cover := instGroupCover
     G →* MulAut cover
   quotientEquiv_action :
-    letI : Group cover := instGroupCover
+    let : Group cover := instGroupCover
     ∀ (g : G) (w : cover),
       frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
         g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- The cover-only part of the homocyclic Frattini construction.
@@ -144,15 +144,15 @@ public structure HomocyclicFrattiniCover
   coordinateEquiv : (matrixIndex → ZMod (p ^ e)) ≃+ Additive cover
   frattiniQuotientEquiv : cover ⧸ frattini cover ≃* V
   coverAction :
-    letI : Group cover := instGroupCover
+    let : Group cover := instGroupCover
     G →* MulAut cover
   quotientEquiv_action :
-    letI : Group cover := instGroupCover
+    let : Group cover := instGroupCover
     ∀ (g : G) (w : cover),
       frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
         g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Free `ZMod (p ^ e)` coordinates for a fixed homocyclic Frattini quotient
@@ -167,10 +167,10 @@ public structure HomocyclicFrattiniCoverCoordinateData
   [instFintypeMatrixIndex : Fintype matrixIndex]
   [instDecidableEqMatrixIndex : DecidableEq matrixIndex]
   coordinateEquiv :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     (matrixIndex → ZMod (p ^ e)) ≃+ Additive C.cover
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Assemble a quotient cover and coordinate data into the cover package used by
@@ -182,8 +182,8 @@ public noncomputable def HomocyclicFrattiniCoverCoordinateData.toHomocyclicFratt
     {C : HomocyclicFrattiniQuotientCover (G := G) (V := V) (p := p) e}
     (D : HomocyclicFrattiniCoverCoordinateData (G := G) (V := V) (p := p) C) :
     HomocyclicFrattiniCover (G := G) (V := V) (p := p) e := by
-  letI : Group C.cover := C.instGroupCover
-  letI : Finite C.cover := C.instFiniteCover
+  let : Group C.cover := C.instGroupCover
+  let : Finite C.cover := C.instFiniteCover
   exact {
     cover := C.cover
     instGroupCover := C.instGroupCover
@@ -232,7 +232,7 @@ public structure HomocyclicFrattiniCoverLinearLift
     frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) (coverAction g w)) =
       g • frattiniQuotientEquiv (QuotientGroup.mk' (frattini cover) w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- A lifted `G`-action on a fixed homocyclic Frattini cover, compatible with
@@ -244,10 +244,10 @@ public structure HomocyclicFrattiniCoverAction
     (C : HomocyclicFrattiniCover (G := G) (V := V) (p := p) e) :
     Type (u + 1) where
   coverAction :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     G →* MulAut C.cover
   quotientEquiv_action :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     ∀ (g : G) (w : C.cover),
       C.frattiniQuotientEquiv (QuotientGroup.mk' (frattini C.cover) (coverAction g w)) =
         g • C.frattiniQuotientEquiv (QuotientGroup.mk' (frattini C.cover) w)
@@ -263,7 +263,7 @@ public structure HomocyclicFrattiniCoverCoordinateLinearLift
   linearLift :
     G →* (Module.End (ZMod (p ^ e)) (C.matrixIndex → ZMod (p ^ e)))ˣ
   linearLift_coordinate :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     ∀ (g : G) (x : C.matrixIndex → ZMod (p ^ e)),
       C.coordinateEquiv
           (((linearLift g :
@@ -280,12 +280,12 @@ public structure HomocyclicFrattiniCoverActionLift
     (C : HomocyclicFrattiniCover (G := G) (V := V) (p := p) e) :
     Type (u + 1) where
   coverAction :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     G →* MulAut C.cover
   linearLift :
     G →* (Module.End (ZMod (p ^ e)) (C.matrixIndex → ZMod (p ^ e)))ˣ
   linearLift_coordinate :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     ∀ (g : G) (x : C.matrixIndex → ZMod (p ^ e)),
       C.coordinateEquiv
           (((linearLift g :
@@ -293,7 +293,7 @@ public structure HomocyclicFrattiniCoverActionLift
             Module.End (ZMod (p ^ e)) (C.matrixIndex → ZMod (p ^ e))) x) =
         Additive.ofMul (coverAction g (Additive.toMul (C.coordinateEquiv x)))
   quotientEquiv_action :
-    letI : Group C.cover := C.instGroupCover
+    let : Group C.cover := C.instGroupCover
     ∀ (g : G) (w : C.cover),
       C.frattiniQuotientEquiv (QuotientGroup.mk' (frattini C.cover) (coverAction g w)) =
         g • C.frattiniQuotientEquiv (QuotientGroup.mk' (frattini C.cover) w)
@@ -324,8 +324,8 @@ public noncomputable def
     {C : HomocyclicFrattiniCover (G := G) (V := V) (p := p) e}
     (L : HomocyclicFrattiniCoverActionLift (G := G) (V := V) (p := p) C) :
     HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e := by
-  letI : Group C.cover := C.instGroupCover
-  letI : Finite C.cover := C.instFiniteCover
+  let : Group C.cover := C.instGroupCover
+  let : Finite C.cover := C.instFiniteCover
   exact {
     cover := C.cover
     instGroupCover := C.instGroupCover
@@ -376,6 +376,7 @@ public theorem exists_homocyclic_frattini_cover_action_prime_power
     coverAction := C.coverAction
     quotientEquiv_action := C.quotientEquiv_action }⟩
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Express a fixed lifted cover action as a coordinate-linear action on the
 free `ZMod (p ^ e)` module. -/
 public theorem exists_homocyclic_frattini_cover_coordinate_linear_lift_prime_power
@@ -389,7 +390,7 @@ public theorem exists_homocyclic_frattini_cover_coordinate_linear_lift_prime_pow
       (HomocyclicFrattiniCoverCoordinateLinearLift
         (G := G) (V := V) (p := p) C T) := by
   classical
-  letI : Group C.cover := C.instGroupCover
+  let : Group C.cover := C.instGroupCover
   let ψfun :
       G → LinearMap.GeneralLinearGroup (ZMod (p ^ e)) (C.matrixIndex → ZMod (p ^ e)) := fun g =>
     let eAdd : (C.matrixIndex → ZMod (p ^ e)) ≃+ (C.matrixIndex → ZMod (p ^ e)) :=
@@ -443,8 +444,8 @@ retaining the explicit-cover package. -/
     {e : ℕ}
     (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) :
     HomocyclicCoverLinearLift (G := G) (V := V) (p := p) e := by
-  letI : Group L.cover := L.instGroupCover
-  letI : Finite L.cover := L.instFiniteCover
+  let : Group L.cover := L.instGroupCover
+  let : Finite L.cover := L.instFiniteCover
   exact {
     cover := L.cover
     instGroupCover := L.instGroupCover
@@ -476,8 +477,8 @@ obtained by passing through the homocyclic cover. -/
     {e : ℕ}
     (L : HomocyclicCoverLinearLift (G := G) (V := V) (p := p) e) :
     (L.matrixIndex → ZMod (p ^ e)) →+ Additive V := by
-  letI : Group L.cover := L.instGroupCover
-  letI : L.kernel.Normal := L.instNormalKernel
+  let : Group L.cover := L.instGroupCover
+  let : L.kernel.Normal := L.instNormalKernel
   refine {
     toFun := fun x =>
       Additive.ofMul
@@ -498,8 +499,8 @@ by the current source layer. -/
     {e : ℕ}
     (L : HomocyclicCoverLinearLift (G := G) (V := V) (p := p) e) :
     HomocyclicQuotientLinearLift (G := G) (V := V) (p := p) e := by
-  letI : Group L.cover := L.instGroupCover
-  letI : L.kernel.Normal := L.instNormalKernel
+  let : Group L.cover := L.instGroupCover
+  let : L.kernel.Normal := L.instNormalKernel
   refine {
     matrixIndex := L.matrixIndex
     instFintypeMatrixIndex := L.instFintypeMatrixIndex
@@ -557,8 +558,8 @@ trace/block packages. -/
     {e : ℕ}
     (L : HomocyclicCommonLinearLift (G := G) (V := V) (p := p) e) :
     CommonMatrixLift G (p ^ e) := by
-  letI : Fintype L.matrixIndex := L.instFintypeMatrixIndex
-  letI : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
+  let : Fintype L.matrixIndex := L.instFintypeMatrixIndex
+  let : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
   exact {
     matrixIndex := L.matrixIndex
     instFintypeMatrixIndex := L.instFintypeMatrixIndex
@@ -587,8 +588,8 @@ public theorem HomocyclicCommonLinearLift.matrixLift_one
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V]
     {e : ℕ}
     (L : HomocyclicCommonLinearLift (G := G) (V := V) (p := p) e) :
-    letI : Fintype L.matrixIndex := L.instFintypeMatrixIndex
-    letI : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
+    let : Fintype L.matrixIndex := L.instFintypeMatrixIndex
+    let : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
     LinearMap.toMatrix'
         ((L.linearLift 1 :
             (Module.End (ZMod (p ^ e)) (L.matrixIndex → ZMod (p ^ e)))ˣ) :
@@ -605,8 +606,8 @@ public theorem HomocyclicCommonLinearLift.matrixLift_mul
     {e : ℕ}
     (L : HomocyclicCommonLinearLift (G := G) (V := V) (p := p) e)
     (g h : G) :
-    letI : Fintype L.matrixIndex := L.instFintypeMatrixIndex
-    letI : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
+    let : Fintype L.matrixIndex := L.instFintypeMatrixIndex
+    let : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
     LinearMap.toMatrix'
         ((L.linearLift (g * h) :
             (Module.End (ZMod (p ^ e)) (L.matrixIndex → ZMod (p ^ e)))ˣ) :
@@ -680,7 +681,7 @@ public structure HomocyclicFrattiniCoverRectangularCommonLiftBlockData
     (L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e) :
     Type (u + 1) where
   blockData :
-    letI : Fintype L.toCommonMatrixLift.matrixIndex :=
+    let : Fintype L.toCommonMatrixLift.matrixIndex :=
       L.toCommonMatrixLift.instFintypeMatrixIndex
     RectangularReindexedBlockTraceData (G := G) (κ := L.toCommonMatrixLift.matrixIndex)
       A (p ^ e) L.toCommonMatrixLift.matrixLift
@@ -698,12 +699,12 @@ public theorem HomocyclicFrattiniCoverRectangularCommonLiftBlockData.trace_sum
     {L : HomocyclicFrattiniCoverLinearLift (G := G) (V := V) (p := p) e}
     (D : HomocyclicFrattiniCoverRectangularCommonLiftBlockData
       (G := G) (V := V) (p := p) A L) :
-    letI : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
+    let : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
     Matrix.trace (∑ a : A, L.toCommonMatrixLift.matrixLift (a : G)) =
       (fixedSubspaceFinrank (G := G) (V := V) (p := p) A *
         Nat.card A : ZMod (p ^ e)) := by
   classical
-  letI : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
+  let : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
   exact (D.blockData.toReindexedBlockTraceData).trace_sum
 
 /-- Rectangular block decompositions over a fixed Frattini-stated homocyclic
@@ -750,7 +751,7 @@ public def HomocyclicFrattiniCoverRectangularCommonLiftBlockFamilyProvider.block
     HomocyclicFrattiniCoverRectangularCommonLiftBlockFamily
       (G := G) (V := V) (ι := ι) (p := p) A L := by
   classical
-  letI : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
+  let : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
   refine { blockFamily := ?_ }
   refine { blockData := ?_ }
   intro i
@@ -769,12 +770,12 @@ public theorem HomocyclicFrattiniCoverRectangularCommonLiftBlockFamily.trace_sum
     (D : HomocyclicFrattiniCoverRectangularCommonLiftBlockFamily
       (G := G) (V := V) (ι := ι) (p := p) A L)
     (i : ι) :
-    letI : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
+    let : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
     Matrix.trace (∑ a : A i, L.toCommonMatrixLift.matrixLift (a : G)) =
       (fixedSubspaceFinrank (G := G) (V := V) (p := p) (A i) *
         Nat.card (A i) : ZMod (p ^ e)) := by
   classical
-  letI : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
+  let : Fintype L.toCommonMatrixLift.matrixIndex := L.toCommonMatrixLift.instFintypeMatrixIndex
   exact ((D.blockFamily.blockData i).toReindexedBlockTraceData).trace_sum
 
 /-- Forget the homocyclic origin of a block family over a fixed homocyclic lift,

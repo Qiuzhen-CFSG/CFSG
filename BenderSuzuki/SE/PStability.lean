@@ -39,7 +39,7 @@ public theorem HasAbelianSylow.subgroup
     HasAbelianSylow p H := by
   intro P
   obtain ⟨Q, hQP⟩ := Sylow.exists_comap_subtype_eq P
-  letI : IsMulCommutative (Q : Subgroup G) := hG Q
+  let : IsMulCommutative (Q : Subgroup G) := hG Q
   rw [← hQP]
   exact Subgroup.comap_injective_isMulCommutative
     (H := (Q : Subgroup G)) H.subtype_injective
@@ -55,7 +55,7 @@ public theorem HasAbelianSylow.mapSurjective
   obtain ⟨Q, hQP⟩ := Sylow.mapSurjective_surjective
     (f := f) hf p P
   rw [← hQP]
-  letI : IsMulCommutative (Q : Subgroup G) := hG Q
+  let : IsMulCommutative (Q : Subgroup G) := hG Q
   exact Subgroup.map_isMulCommutative (Q : Subgroup G) f
 
 /-- Abelian Sylow subgroups transport across a group isomorphism. -/
@@ -143,7 +143,7 @@ public theorem omega₁_pCore_quotient_isMulCommutative_of_stronglyEmbedded
   classical
   dsimp only
   let P : Subgroup (M ⧸ N) := pCore 2 (M ⧸ N)
-  haveI : P.Normal := by
+  have : P.Normal := by
     dsimp [P]
     infer_instance
   have hP2 : IsPGroup 2 P := by
@@ -151,7 +151,7 @@ public theorem omega₁_pCore_quotient_isMulCommutative_of_stronglyEmbedded
   have hinvolution_center :
       ∀ x : P, IsInvolution x → x ∈ Subgroup.center P := by
     intro x hx
-    letI : Nontrivial P := ⟨⟨x, 1, hx.ne_one⟩⟩
+    let : Nontrivial P := ⟨⟨x, 1, hx.ne_one⟩⟩
     have hcenter_nontrivial : Nontrivial (Subgroup.center P) :=
       hP2.center_nontrivial
     have hcenter2 : IsPGroup 2 (Subgroup.center P) :=
@@ -243,7 +243,7 @@ public theorem omega₁_pCore_quotient_isMulCommutative_of_stronglyEmbedded
     by_cases hxone : x = 1
     · simp [hxone]
     · exact hinvolution_center x ⟨hxone, hxsq⟩
-  letI : IsMulCommutative (omega₁ (G := P) (p := 2)) := by
+  let : IsMulCommutative (omega₁ (G := P) (p := 2)) := by
     refine ⟨⟨?_⟩⟩
     intro x y
     apply Subtype.ext
@@ -267,7 +267,7 @@ public theorem hasAbelianSylowTwo_of_odd_normal_quotient_isMulCommutative
     rw [hn]
     exact hNodd.coprime_two_left.pow_left n
   have hPinfN : (P : Subgroup G) ⊓ N = ⊥ :=
-    Subgroup.inf_eq_bot_of_coprime hPNcop
+    (Subgroup.disjoint_of_coprime_natCard hPNcop).eq_bot
   have hqP_inj : Function.Injective qP := by
     intro x y hxy
     apply Subtype.ext
@@ -280,7 +280,7 @@ public theorem hasAbelianSylowTwo_of_odd_normal_quotient_isMulCommutative
         ((P : Subgroup G) ⊓ N) := ⟨hdiffP, hdiffN⟩
     rw [hPinfN] at hdiffBot
     exact eq_of_inv_mul_eq_one (Subgroup.mem_bot.mp hdiffBot)
-  letI : IsMulCommutative (G ⧸ N) := hquot
+  let : IsMulCommutative (G ⧸ N) := hquot
   refine ⟨⟨?_⟩⟩
   intro x y
   apply hqP_inj
@@ -313,7 +313,7 @@ public theorem HasAbelianSylow.of_normal_odd_quotient
       simpa [hPbarBot] using hxbar
     exact (QuotientGroup.eq_one_iff (N := N) (x := x)).mp hxone
   let PN : Sylow 2 N := P.subtype hP_le_N
-  letI : IsMulCommutative (PN : Subgroup N) := hN PN
+  let : IsMulCommutative (PN : Subgroup N) := hN PN
   have hmap : (PN : Subgroup N).map N.subtype = (P : Subgroup G) := by
     dsimp [PN]
     rw [Subgroup.subgroupOf_map_subtype, inf_eq_left.mpr hP_le_N]
@@ -484,14 +484,14 @@ private theorem isCyclic_of_isPGroup_two_isMulCommutative_unique_order_two
     (hunique : ∀ x y : G, orderOf x = 2 → orderOf y = 2 → x = y) :
     IsCyclic G := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsMulCommutative G := hGcomm
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsMulCommutative G := hGcomm
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
   let Omega : Subgroup G := omega₁ (G := G) (p := 2)
   have hOmegaElem : IsElementaryAbelian 2 Omega := by
     simpa [Omega] using
       IsElementaryAbelian.omega₁_of_isMulCommutative (p := 2) (G := G)
-  haveI : IsElementaryAbelian 2 Omega := hOmegaElem
+  have : IsElementaryAbelian 2 Omega := hOmegaElem
   have hOmegaCard : Nat.card Omega ≤ 2 := by
     let f : Omega → Bool := fun x => decide (x = 1)
     have hf : Function.Injective f := by
@@ -532,7 +532,7 @@ private theorem isCyclic_of_isPGroup_two_isMulCommutative_unique_order_two
     simpa [hcardEq] using hOmegaCard
   have hquotElem : IsElementaryAbelian 2 (G ⧸ frattini G) :=
     isElementaryAbelian_quotient_frattini (R := G) (p := 2)
-  haveI : IsElementaryAbelian 2 (G ⧸ frattini G) := hquotElem
+  have : IsElementaryAbelian 2 (G ⧸ frattini G) := hquotElem
   have hquotRank : generatorRank (G ⧸ frattini G) ≤ 1 := by
     have hcardEq :
         Nat.card (G ⧸ frattini G) =
@@ -568,7 +568,7 @@ private theorem odd_card_two_dimensional_generated_pElements_isPGroup
     CharP.eq (R := F) (ringChar.charP F) (inferInstance : CharP F p)
   have hringPrime : Nat.Prime (ringChar F) := by
     simpa [hchar] using (Fact.out : Nat.Prime p)
-  letI : Fact (Nat.Prime (ringChar F)) := ⟨hringPrime⟩
+  let : Fact (Nat.Prime (ringChar F)) := ⟨hringPrime⟩
   obtain ⟨P, _hPcomm, hcomm⟩ :=
     theorem_2_6_b (F := F) (G := H) hodd hdim hrho
   have hPnormal : (P : Subgroup H).Normal := by
@@ -581,7 +581,7 @@ private theorem odd_card_two_dimensional_generated_pElements_isPGroup
     have hmul : ⁅g, n⁆ * n ∈ (P : Subgroup H) :=
       (P : Subgroup H).mul_mem hgn hn
     simpa [commutatorElement_def, mul_assoc] using hmul
-  letI : (P : Subgroup H).Normal := hPnormal
+  let : (P : Subgroup H).Normal := hPnormal
   have hmemP : ∀ z : H, IsPElement (p := p) z → z ∈ (P : Subgroup H) := by
     intro z hz
     let q : H →* H ⧸ (P : Subgroup H) := QuotientGroup.mk' (P : Subgroup H)
@@ -661,7 +661,7 @@ public theorem two_dimensional_generated_pElements_isPGroup_of_abelianSylowTwo
   · exact odd_card_two_dimensional_generated_pElements_isPGroup
       rho hrho hdim x y hgen hx hy hoddH
   · have hEven : Even (Nat.card H) := Nat.not_odd_iff_even.mp hoddH
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     let S : Sylow 2 H := default
     have hScomm : IsMulCommutative S := hSylow S
     have hSunique :
@@ -694,7 +694,7 @@ public theorem two_dimensional_generated_pElements_isPGroup_of_abelianSylowTwo
     obtain ⟨N, hNnormal, hNcop, hquotTwo⟩ :=
       exists_normal_coprime_subgroup_and_pgroup_quotient_of_sylow_le_center_normalizer
         2 S hScenter
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     have hNodd : Odd (Nat.card N) := hNcop.odd_of_left
     let q : H →* H ⧸ N := QuotientGroup.mk' N
     have hkill : ∀ z : H, IsPElement (p := p) z → q z = 1 := by
@@ -730,8 +730,8 @@ public theorem two_dimensional_generated_pElements_isPGroup_of_abelianSylowTwo
 private abbrev SL23Concrete := Matrix.SpecialLinearGroup (Fin 2) (ZMod 3)
 
 private instance : DecidableEq SL23Concrete := fun A B =>
-  decidable_of_iff (∀ i j, A i j = B i j)
-    (Matrix.SpecialLinearGroup.ext_iff A B).symm
+  decidable_of_iff (A.1 = B.1)
+    ⟨fun h => Subtype.ext h, fun h => congrArg Subtype.val h⟩
 
 private def sl23I : SL23Concrete :=
   ⟨!![(0 : ZMod 3), -1; 1, 0], by
@@ -771,7 +771,7 @@ private theorem quaternionGroupTwo_isPGroup :
 private theorem quaternionGroupTwo_not_isMulCommutative :
     ¬ IsMulCommutative (QuaternionGroup 2) := by
   intro h
-  letI : IsMulCommutative (QuaternionGroup 2) := h
+  let : IsMulCommutative (QuaternionGroup 2) := h
   have hcomm := (IsMulCommutative.is_comm
     (M := QuaternionGroup 2)).comm
       (QuaternionGroup.a 1 : QuaternionGroup 2)
@@ -793,7 +793,7 @@ private theorem SL23_not_hasAbelianSylowTwo :
     exact (quaternionGroupTwo_isPGroup.to_subgroup
       (⊤ : Subgroup (QuaternionGroup 2))).map quaternionToSL23
   obtain ⟨P, hRangePLe⟩ := hRangeP.exists_le_sylow
-  letI : IsMulCommutative (P : Subgroup SL23Concrete) := hSL P
+  let : IsMulCommutative (P : Subgroup SL23Concrete) := hSL P
   apply quaternionGroupTwo_not_isMulCommutative
   refine ⟨⟨?_⟩⟩
   intro x y
@@ -811,8 +811,8 @@ public theorem not_exists_SL23_section_of_hasAbelianSylowTwo
     ¬ ∃ (H : Subgroup G) (N : Subgroup H) (_hN : N.Normal),
       Nonempty ((H ⧸ N) ≃* Matrix.SpecialLinearGroup (Fin 2) (ZMod 3)) := by
   rintro ⟨H, N, hN, ⟨e⟩⟩
-  letI : N.Normal := hN
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : N.Normal := hN
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   apply SL23_not_hasAbelianSylowTwo
   exact (hG.subgroup H).mapSurjective
     (QuotientGroup.mk' N) (QuotientGroup.mk'_surjective N) |>.of_mulEquiv e

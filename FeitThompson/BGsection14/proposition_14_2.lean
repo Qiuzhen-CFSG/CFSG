@@ -3370,7 +3370,7 @@ public theorem proposition_14_2_d
     obtain ⟨p, X, hX⟩ :=
       section14_c_exists_primeOrderSubgroupIn_of_ne_bot
         (G := G) (A := K ⊓ K.conjBy g) hne
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    let _ : Fact p.val.Prime := ⟨p.2⟩
     have hXle : X ≤ K ⊓ K.conjBy g := hX.1
     have hXcard : Nat.card X = p.val := hX.2
     have hXleK : X ≤ K := hXle.trans inf_le_left
@@ -3713,7 +3713,7 @@ private theorem section14_e_exists_maximal_overgroup_kstar_ne
   have hNXne_top : Subgroup.normalizer (X : Set G) ≠ ⊤ := by
     intro hNtop
     have hXnormal : X.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let _ : IsSimpleGroup G := IsMinCE.simple
     rcases hXnormal.eq_bot_or_eq_top with hXbot | hXtop
     · exact hXne hXbot
     · exact hXne_top hXtop
@@ -3768,7 +3768,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
         IsPiSubgroup (G := G) (section10SigmaPrimes M) Z →
           ∃ g : M, Z.conjBy (g : G) ≤ section10Msigma M := by
     intro Z hZM hZσ
-    letI : MulDistribMulAction Unit M := {
+    let _ : MulDistribMulAction Unit M := {
       smul := fun _ x => x
       one_smul := fun _ => rfl
       mul_smul := fun _ _ _ => rfl
@@ -3784,7 +3784,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
       refine ⟨?_⟩
       intro _ x
       simp [Zsub]
-    have hMsolv : IsSolvable M :=
+    have hMsolv : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
     have hcop : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
     obtain ⟨L, hLHall, _hLInv, hZsubL⟩ :=
@@ -3818,7 +3818,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
       have hpY : p ∈ subgroupPrimeSet Y := by
         simpa [Yg, subgroupPrimeSet, section14_card_conjBy (G := G) Y g⁻¹] using hpYg
       exact hYσ p hpY
-    letI : MulDistribMulAction Unit M := {
+    let _ : MulDistribMulAction Unit M := {
       smul := fun _ x => x
       one_smul := fun _ => rfl
       mul_smul := fun _ _ _ => rfl
@@ -3830,8 +3830,9 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
   · have hHnot : section12NotConjugate H M := by
       intro g hHg
       exact hconj ⟨g⁻¹, by simpa [section11_conjBy_inv] using congrArg (fun K => K.conjBy g⁻¹) hHg⟩
-    have hYsolv : IsSolvable Y :=
+    have hYsolv : Group.IsSolvable Y :=
       IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hYne_top)
+    let _ : Group.IsSolvable Y := hYsolv
     let F : Subgroup Y := fittingSubgroup Y
     have hFne : F ≠ ⊥ := by
       intro hFbot
@@ -3844,7 +3845,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
       exact hFne hFbot
     obtain ⟨q0, hq0prime, hq0dvdF⟩ := Nat.exists_prime_and_dvd hFcard_ne_one
     let q : Nat.Primes := ⟨q0, hq0prime⟩
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    let _ : Fact q.val.Prime := ⟨q.property⟩
     let P : Sylow q.val F := Classical.choice (Sylow.nonempty (p := q.val) (G := F))
     have hPneF : (P : Subgroup F) ≠ ⊥ :=
       Sylow.ne_bot_of_dvd_card (G := F) P (by simpa [q] using hq0dvdF)
@@ -3853,7 +3854,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
         (Group.IsNilpotent.sylow_normal (inferInstance : Group.IsNilpotent F) q.val P)
     let PF : Subgroup Y := (P : Subgroup F).map F.subtype
     have hPFchar : PF.Characteristic := by
-      letI : ((P : Subgroup F)).Characteristic := hPcharF
+      let _ : ((P : Subgroup F)).Characteristic := hPcharF
       simpa [PF, F] using
         characteristic_map_subtype_of_characteristic (G := Y) F (P : Subgroup F)
     let X : Subgroup G := PF.map Y.subtype
@@ -3879,7 +3880,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
           Y.subtype
     have hNormY_le_NormX :
         Subgroup.normalizer (Y : Set G) ≤ Subgroup.normalizer (X : Set G) := by
-      letI : PF.Characteristic := hPFchar
+      let _ : PF.Characteristic := hPFchar
       simpa [X, PF] using
         section8_normalizer_map_subtype_le_of_characteristic
           (G := G) (H := Y) (K := PF)
@@ -3972,7 +3973,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
     · have hNXgne_top : Subgroup.normalizer (Xg : Set G) ≠ ⊤ := by
         intro hNtop
         have hXgnormal : Xg.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-        letI : IsSimpleGroup G := IsMinCE.simple
+        let _ : IsSimpleGroup G := IsMinCE.simple
         rcases hXgnormal.eq_bot_or_eq_top with hXgbot | hXgtop
         · exact hXgne hXgbot
         · have hYgne_top : Yg ≠ ⊤ := by
@@ -4035,7 +4036,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
         rw [Set.mem_compl_iff]
         rw [Set.disjoint_left] at hσdis
         exact fun hpσstar => hσdis hpσM hpσstar
-      letI : MulDistribMulAction Unit Mstar := {
+      let _ : MulDistribMulAction Unit Mstar := {
         smul := fun _ x => x
         one_smul := fun _ => rfl
         mul_smul := fun _ _ _ => rfl
@@ -4045,7 +4046,7 @@ public theorem section14_exists_conjugating_element_of_sigmaSubgroup
         refine ⟨?_⟩
         intro _ x
         simp [Ygsub]
-      have hsolvMstar : IsSolvable Mstar :=
+      have hsolvMstar : Group.IsSolvable Mstar :=
         IsMinCE.proper_subgroups_solvable Mstar (lt_top_iff_ne_top.mpr hMstar.1.1)
       have hcopMstar : Nat.Coprime (Nat.card Unit) (Nat.card Mstar) := by simp
       obtain ⟨L, hLHall, _hLInv, hYgsubL⟩ :=
@@ -4208,7 +4209,7 @@ public theorem proposition_14_2_g
       have hpProd : p.val ∣ Nat.card E * Nat.card (section10MsigmaSubgroup M) := by
         have hmul :
             Nat.card (E.subgroupOf M) * Nat.card (section10MsigmaSubgroup M) = Nat.card M := by
-          simpa [mul_comm] using hcomp.card_mul
+          simpa [mul_comm] using hcomp.card_mul_card
         have hpProd' :
             p.val ∣ Nat.card (E.subgroupOf M) * Nat.card (section10MsigmaSubgroup M) := by
           rw [hmul]
@@ -4292,7 +4293,7 @@ public theorem proposition_14_2_g
         have hpProd : p.val ∣ Nat.card E * Nat.card (section10MsigmaSubgroup M) := by
           have hmul :
               Nat.card (E.subgroupOf M) * Nat.card (section10MsigmaSubgroup M) = Nat.card M := by
-            simpa [mul_comm] using hcomp.card_mul
+            simpa [mul_comm] using hcomp.card_mul_card
           have hpProd' :
               p.val ∣ Nat.card (E.subgroupOf M) * Nat.card (section10MsigmaSubgroup M) := by
             rw [hmul]
@@ -4562,15 +4563,15 @@ public theorem proposition_14_2_g
       refine sup_le ?_ ?_
       · exact hprime.1
       · exact hUhall.1.trans (section12_le_normalizer_msigma (M := M))
-    letI : Subgroup.Normalizes S (section10Msigma M) := ⟨hS_norm_sigma⟩
+    let _ : Subgroup.Normalizes S (section10Msigma M) := ⟨hS_norm_sigma⟩
     have hfix_subgroupOf_eq {A : Subgroup G} (hA_le : A ≤ S) :
         letI : Subgroup.Normalizes A (section10Msigma M) := ⟨hA_le.trans hS_norm_sigma⟩
         letI : MulDistribMulAction ↥(A.subgroupOf S) ↥(section10Msigma M) :=
           MulDistribMulAction.compHom ↥(section10Msigma M) (A.subgroupOf S).subtype
         fixedPointSubgroup (↥(A.subgroupOf S)) (↥(section10Msigma M)) =
           fixedPointSubgroup (↥A) (↥(section10Msigma M)) := by
-      letI : Subgroup.Normalizes A (section10Msigma M) := ⟨hA_le.trans hS_norm_sigma⟩
-      letI : MulDistribMulAction ↥(A.subgroupOf S) ↥(section10Msigma M) :=
+      let _ : Subgroup.Normalizes A (section10Msigma M) := ⟨hA_le.trans hS_norm_sigma⟩
+      let _ : MulDistribMulAction ↥(A.subgroupOf S) ↥(section10Msigma M) :=
         MulDistribMulAction.compHom ↥(section10Msigma M) (A.subgroupOf S).subtype
       ext x
       rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
@@ -4719,7 +4720,7 @@ public theorem proposition_14_2_g
       have : Nat.card ((elementCentralizerIn U (x : G)).subgroupOf S) = 1 := by
         simp [hcentU]
       simpa [hcent_sub] using this
-    have hsolvS : IsSolvable S :=
+    have hsolvS : Group.IsSolvable S :=
       section14_solvable_of_le_maximal hM.1.1 (by
         have hEM : E ≤ M := hE.1.2.1
         have hSE : S = E := by simpa [S] using hEeq.symm
@@ -4756,7 +4757,7 @@ public theorem proposition_14_2_g
         fixedPointSubgroup (↥(U.subgroupOf S)) (↥(section10Msigma M)) = ⊥ := by
       have hUnormσ : U ≤ Subgroup.normalizer (section10Msigma M : Set G) :=
         hUhall.1.trans (section12_le_normalizer_msigma (M := M))
-      letI : Subgroup.Normalizes U (section10Msigma M) := ⟨hUnormσ⟩
+      let _ : Subgroup.Normalizes U (section10Msigma M) := ⟨hUnormσ⟩
       calc
         fixedPointSubgroup (↥(U.subgroupOf S)) (↥(section10Msigma M)) =
             fixedPointSubgroup (↥U) (↥(section10Msigma M)) :=
@@ -4778,9 +4779,9 @@ public theorem proposition_14_2_g
           fixedPointSubgroup (↥(Subgroup.zpowers (x : S))) (↥(section10Msigma M)) =
             fixedPointSubgroup (↥(K.subgroupOf S)) (↥(section10Msigma M)) := by
       intro x hxne
-      letI : MulDistribMulAction ↥(K.subgroupOf S) ↥(section10Msigma M) :=
+      let _ : MulDistribMulAction ↥(K.subgroupOf S) ↥(section10Msigma M) :=
         MulDistribMulAction.compHom ↥(section10Msigma M) (K.subgroupOf S).subtype
-      letI : MulDistribMulAction ↥(Subgroup.zpowers (x : S)) ↥(section10Msigma M) :=
+      let _ : MulDistribMulAction ↥(Subgroup.zpowers (x : S)) ↥(section10Msigma M) :=
         MulDistribMulAction.compHom ↥(section10Msigma M) (Subgroup.zpowers (x : S)).subtype
       have hxK : (x : G) ∈ K := x.2
       have hxneG : (x : G) ≠ 1 := by
@@ -4805,18 +4806,18 @@ public theorem proposition_14_2_g
         · exact hprime.2 _ hQsection
         · exact section14_b1_kstar_le_centralizer (G := G) (M := M) (K := K) (X := Subgroup.zpowers z) hQsection.1
       have hKnormσ : K ≤ Subgroup.normalizer (section10Msigma M : Set G) := hprime.1
-      letI : Subgroup.Normalizes K (section10Msigma M) := ⟨hKnormσ⟩
+      let _ : Subgroup.Normalizes K (section10Msigma M) := ⟨hKnormσ⟩
       have hzpow_le_Ksub : Subgroup.zpowers z ≤ K := Subgroup.zpowers_le.2 hzK
       have hzp_norm_sigma :
           Subgroup.zpowers (x : G) ≤ Subgroup.normalizer (section10Msigma M : Set G) :=
         (Subgroup.zpowers_le.2 hxK).trans hKnormσ
-      letI : Subgroup.Normalizes (Subgroup.zpowers (x : G)) (section10Msigma M) := ⟨hzp_norm_sigma⟩
+      let _ : Subgroup.Normalizes (Subgroup.zpowers (x : G)) (section10Msigma M) := ⟨hzp_norm_sigma⟩
       have hfix_zpowS_eq :
           letI : MulDistribMulAction ↥((Subgroup.zpowers (x : G)).subgroupOf S) ↥(section10Msigma M) :=
             MulDistribMulAction.compHom ↥(section10Msigma M) ((Subgroup.zpowers (x : G)).subgroupOf S).subtype
           fixedPointSubgroup (↥(Subgroup.zpowers (x : S))) (↥(section10Msigma M)) =
             fixedPointSubgroup (↥((Subgroup.zpowers (x : G)).subgroupOf S)) (↥(section10Msigma M)) := by
-        letI : MulDistribMulAction ↥((Subgroup.zpowers (x : G)).subgroupOf S) ↥(section10Msigma M) :=
+        let _ : MulDistribMulAction ↥((Subgroup.zpowers (x : G)).subgroupOf S) ↥(section10Msigma M) :=
           MulDistribMulAction.compHom ↥(section10Msigma M) ((Subgroup.zpowers (x : G)).subgroupOf S).subtype
         ext y
         rw [fixedPointSubgroup, FixedPoints.mem_subgroup]
@@ -4911,7 +4912,7 @@ public theorem proposition_14_2_g
               rw [fixedPointSubgroup_subgroup_conj_eq_subgroupCentralizerIn
                 (section10Msigma M) K hKnormσ]
         _ = fixedPointSubgroup (↥(K.subgroupOf S)) (section10Msigma M) := hfixK_eq.symm
-    letI : Nontrivial ↥(section10Msigma M) :=
+    let _ : Nontrivial ↥(section10Msigma M) :=
       (section10Msigma M).nontrivial_iff_ne_bot.mpr hTI.1
     have hmain :=
       theorem_3_10_a (G := S) (K := U.subgroupOf S) (R := K.subgroupOf S)

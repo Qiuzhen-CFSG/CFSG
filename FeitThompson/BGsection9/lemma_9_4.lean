@@ -21,7 +21,7 @@ public theorem section9_c94_generatorRank_at_least_three_of_elementaryAbelian_ca
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : p ^ 3 ≤ Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -44,19 +44,19 @@ private theorem section9_c94_exists_elementaryAbelian_three_le_generatorRank_of_
     section9_c93_exists_pSubgroup_three_le_generatorRank_of_three_le_primeRank
       (p := p) (R := R) hrank
   let Ωsub : Subgroup A := omega₁ (G := A) (p := p)
-  haveI : Fact (IsPGroup p A) := ⟨hAp⟩
+  have : Fact (IsPGroup p A) := ⟨hAp⟩
   have hΩelem : IsElementaryAbelian p Ωsub := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     simpa [Ωsub] using section9_c92_omega1_isElementaryAbelian_of_commutative (p := p) A
   have hΩcard :
       Nat.card Ωsub = Nat.card (A ⧸ frattini A) := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     simpa [Ωsub] using
       section9_c92_omega1_card_eq_card_quotient_frattini_of_commutative (p := p) A
   have hquot_rank : 3 ≤ generatorRank (A ⧸ frattini A) :=
     hAgen.trans (generatorRank_le_generatorRank_quotient_frattini (p := p) A)
   have hpow_le_quot : p ^ 3 ≤ Nat.card (A ⧸ frattini A) := by
-    letI : IsElementaryAbelian p (A ⧸ frattini A) :=
+    let : IsElementaryAbelian p (A ⧸ frattini A) :=
       isElementaryAbelian_quotient_frattini (R := A) (p := p)
     calc
       p ^ 3 ≤ p ^ generatorRank (A ⧸ frattini A) := by
@@ -68,7 +68,7 @@ private theorem section9_c94_exists_elementaryAbelian_three_le_generatorRank_of_
     rw [hΩcard]
     exact hpow_le_quot
   have hEgen : 3 ≤ generatorRank Ωsub := by
-    letI : IsElementaryAbelian p Ωsub := hΩelem
+    let : IsElementaryAbelian p Ωsub := hΩelem
     exact
       section9_c94_generatorRank_at_least_three_of_elementaryAbelian_card_ge_p_cubed
         (p := p) hpow_le_Ω
@@ -78,7 +78,7 @@ private theorem section9_c94_exists_elementaryAbelian_three_le_generatorRank_of_
     intro x y hxy
     exact Subtype.ext hxy
   have hEelem : IsElementaryAbelian p E := by
-    letI : IsElementaryAbelian p Ωsub := hΩelem
+    let : IsElementaryAbelian p Ωsub := hΩelem
     simpa [E, f] using section9_c92_isElementaryAbelian_map_of_injective (p := p) (A := Ωsub) f
   have hEgen' : 3 ≤ generatorRank E := by
     have hgen_eq : generatorRank E = generatorRank Ωsub := by
@@ -111,7 +111,7 @@ public theorem section9_c94_primeRank_at_least_three_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -131,7 +131,7 @@ private theorem section9_c94_groupRank_at_least_three_of_generatorRank_subgroup
     (hAK : A ≤ K) (hAp : IsPGroup q A) (hAcomm : IsMulCommutative A)
     (hAgen : 3 ≤ generatorRank A) :
     3 ≤ groupRank K := by
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   have hqrankK : 3 ≤ primeRank q K :=
     section9_c94_primeRank_at_least_three_of_generatorRank_subgroup
       (q := q) hAK hAp hAcomm hAgen
@@ -182,7 +182,7 @@ public theorem lemma_9_4
         (MulEquiv.subgroupCongr hFmap)
   let E₀ : Subgroup FG := E.map eF.toMonoidHom
   have hE₀elem : IsElementaryAbelian p E₀ := by
-    letI : IsElementaryAbelian p E := hEelem
+    let : IsElementaryAbelian p E := hEelem
     simpa [E₀] using
       section9_c92_isElementaryAbelian_map_of_injective (p := p) (A := E) eF.toMonoidHom
   have hE₀gen : 3 ≤ generatorRank E₀ := by
@@ -196,7 +196,7 @@ public theorem lemma_9_4
       (p := p) (R := FG) (E := E₀) hE₀elem
   have hA₀elem : IsElementaryAbelian p A₀ := hA₀max.1
   have hE₀card_ge : p ^ 3 ≤ Nat.card E₀ := by
-    letI : IsElementaryAbelian p E₀ := hE₀elem
+    let : IsElementaryAbelian p E₀ := hE₀elem
     calc
       p ^ 3 ≤ p ^ generatorRank E₀ := by
         exact Nat.pow_le_pow_right (Nat.Prime.pos (Fact.out : Nat.Prime p)) hE₀gen
@@ -205,23 +205,24 @@ public theorem lemma_9_4
   have hA₀card_ge : p ^ 3 ≤ Nat.card A₀ :=
     hE₀card_ge.trans (Subgroup.card_le_of_le hE₀_le_A₀)
   have hA₀rank : 3 ≤ generatorRank A₀ := by
-    letI : IsElementaryAbelian p A₀ := hA₀elem
+    let : IsElementaryAbelian p A₀ := hA₀elem
     exact
       section9_c94_generatorRank_at_least_three_of_elementaryAbelian_card_ge_p_cubed
         (p := p) hA₀card_ge
   have hE₀nontrivial : Nontrivial E₀ := by
     by_contra hnt
-    letI : Subsingleton E₀ := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton E₀ := not_nontrivial_iff_subsingleton.mp hnt
     have hcyc : IsCyclic E₀ := isCyclic_of_subsingleton (α := E₀)
     have hle : generatorRank E₀ ≤ 1 := generatorRank_le_one_of_isCyclic (G := E₀) hcyc
     omega
   have hpF : ⟨p, Fact.out⟩ ∈ subgroupPrimeSet FG := by
-    letI : IsElementaryAbelian p E₀ := hE₀elem
+    let : IsElementaryAbelian p E₀ := hE₀elem
     have hdiv : p ∣ Nat.card FG :=
       section9_c93_prime_dvd_card_of_nontrivial_pSubgroup
         (G := FG) (p := p) (B := E₀)
         (IsElementaryAbelian.isPGroup p E₀) hE₀nontrivial
-    simpa [FG, subgroupPrimeSet] using hdiv
+    dsimp [FG, subgroupPrimeSet]
+    exact hdiv
   have hM8 : M ∈ section8MaximalSubgroups G := section8_maximal_of_section9_maximal hM
   by_cases hFGp : IsPGroup p FG
   · have hF_p : IsPGroup p F := by
@@ -242,7 +243,7 @@ public theorem lemma_9_4
     have hXMp : IsPGroup p XM := by
       simpa [XM] using IsPGroup.map (p := p) (H := X) hXp F.subtype
     have hXMcomm : IsMulCommutative XM := by
-      letI : IsMulCommutative X := hXcomm
+      let : IsMulCommutative X := hXcomm
       simpa [XM] using (Subgroup.map_isMulCommutative (f := F.subtype) (H := X))
     have hXMgen : 3 ≤ generatorRank XM := by
       have hgen_eq : generatorRank XM = generatorRank X := by
@@ -256,7 +257,7 @@ public theorem lemma_9_4
         (A := XM) (K := (P : Subgroup M)) hXM_le_P hXMp hXMcomm hXMgen
     have hBnontrivial : Nontrivial B := by
       by_contra hnt
-      letI : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
+      let : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
       have hcyc : IsCyclic B := isCyclic_of_subsingleton (α := B)
       have hle : generatorRank B ≤ 1 := generatorRank_le_one_of_isCyclic (G := B) hcyc
       omega
@@ -289,10 +290,10 @@ public theorem lemma_9_4
       let SM : Subgroup M := S.map (P : Subgroup M).subtype
       have hSG_eq : SM.map M.subtype = SG := rfl
       have hSMcomm : IsMulCommutative SM := by
-        letI : IsMulCommutative S := hScomm
+        let : IsMulCommutative S := hScomm
         simpa [SM] using
           (Subgroup.map_isMulCommutative (f := (P : Subgroup M).subtype) (H := S))
-      letI : IsMulCommutative SM := hSMcomm
+      let : IsMulCommutative SM := hSMcomm
       rw [← hSG_eq]
       exact Subgroup.map_isMulCommutative (f := M.subtype) (H := SM)
     have hSGgen : 3 ≤ generatorRank SG := by
@@ -319,14 +320,14 @@ public theorem lemma_9_4
       section9_unique_of_section8_unique <| by
         simpa [C, FG] using h8.1 (by simpa [FG] using hFGp)
     have hA₀Gelem : IsElementaryAbelian p A₀G := by
-      letI : IsElementaryAbelian p A₀ := hA₀elem
+      let : IsElementaryAbelian p A₀ := hA₀elem
       simpa [A₀G] using
         section9_c92_isElementaryAbelian_map_of_injective (p := p) (A := A₀) FG.subtype
     have hA₀Gp : IsPGroup p A₀G := by
-      letI : IsElementaryAbelian p A₀G := hA₀Gelem
+      let : IsElementaryAbelian p A₀G := hA₀Gelem
       exact IsElementaryAbelian.isPGroup p A₀G
     have hA₀Gcomm : IsMulCommutative A₀G := by
-      letI : IsElementaryAbelian p A₀G := hA₀Gelem
+      let : IsElementaryAbelian p A₀G := hA₀Gelem
       infer_instance
     have hA₀Ggen : 3 ≤ generatorRank A₀G := by
       have hgen_eq : generatorRank A₀G = generatorRank A₀ := by

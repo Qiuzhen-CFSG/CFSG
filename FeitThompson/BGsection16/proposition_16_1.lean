@@ -1623,7 +1623,8 @@ private theorem section16_normalizer_le_of_p1_complement
   let p : Nat.Primes := ⟨p0, hp0prime⟩
   haveI : Fact p.val.Prime := ⟨p.property⟩
   have hpV : p ∈ subgroupPrimeSet V := by
-    simpa [p, subgroupPrimeSet] using hp0V
+    change p0 ∣ Nat.card V
+    exact hp0V
   have hpσ : p ∈ section10SigmaPrimes M := by
     have hp_dvd_sigma : p.val ∣ Nat.card (section10Msigma M) :=
       hp0V.trans (Subgroup.card_dvd_of_le hVσ)

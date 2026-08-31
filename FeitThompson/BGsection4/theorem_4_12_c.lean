@@ -23,7 +23,7 @@ private theorem omega₁_ne_bot_of_nontrivial_pGroup
         Finite.one_lt_card_iff_nontrivial.mpr inferInstance
       omega
     · exact hp_dvd
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hp_dvd_fintype : p ∣ Fintype.card G := by
     simpa [Nat.card_eq_fintype_card] using hp_dvd_card
   obtain ⟨x, hx_order⟩ := _root_.exists_prime_orderOf_dvd_card (G := G) p hp_dvd_fintype
@@ -109,8 +109,8 @@ public theorem theorem_4_12_c {R A : Type*} [Group R] [Finite R] [Group A] [Fini
   classical
   let T : Subgroup R := commutatorAction (A := A) (G := R)
   let C : Subgroup R := fixedPointSubgroup A R
-  have hRsolv : IsSolvable R := by
-    letI : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
+  have hRsolv : Group.IsSolvable R := by
+    let : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
     infer_instance
   have hcop' : Nat.Coprime (Nat.card A) (Nat.card R) := by
     obtain ⟨n, hn⟩ := (Fact.out : IsPGroup p R).exists_card_eq
@@ -180,10 +180,10 @@ public theorem theorem_4_12_c {R A : Type*} [Group R] [Finite R] [Group A] [Fini
       (K := omega₁ (G := C) (p := p)) (f := C.subtype) C.subtype_injective
   have hTp : IsPGroup p T := (Fact.out : IsPGroup p R).to_subgroup T
   have hCp : IsPGroup p C := (Fact.out : IsPGroup p R).to_subgroup C
-  letI : Fact (IsPGroup p T) := ⟨hTp⟩
-  letI : Fact (IsPGroup p C) := ⟨hCp⟩
-  letI : Nontrivial T := (Subgroup.nontrivial_iff_ne_bot T).2 hT_ne_bot
-  letI : Nontrivial C := (Subgroup.nontrivial_iff_ne_bot C).2 hC_ne_bot
+  let : Fact (IsPGroup p T) := ⟨hTp⟩
+  let : Fact (IsPGroup p C) := ⟨hCp⟩
+  let : Nontrivial T := (Subgroup.nontrivial_iff_ne_bot T).2 hT_ne_bot
+  let : Nontrivial C := (Subgroup.nontrivial_iff_ne_bot C).2 hC_ne_bot
   have hΩT_ge : p ≤ Nat.card ΩT := by
     rw [hΩT_card_map]
     exact prime_le_natCard_omega₁_of_nontrivial_pGroup (G := T) (p := p)
@@ -218,9 +218,9 @@ public theorem theorem_4_12_c {R A : Type*} [Group R] [Finite R] [Group A] [Fini
   have hCcyc : IsCyclic C :=
     isCyclic_of_natCard_omega₁_eq_prime (G := C) (p := p) hpodd hΩC_card_eq_p
   have hder_le_T : derivedSubgroup R ≤ T := by
-    letI : T.Normal := by
+    let : T.Normal := by
       simpa [T] using commutatorAction_normal (G := R) (A := A)
-    letI : IsCyclic C := hCcyc
+    let : IsCyclic C := hCcyc
     have hCcomm : IsMulCommutative C := inferInstance
     have hcomm_le : _root_.commutator R ≤ T :=
       Subgroup.Normal.commutator_le_of_self_sup_commutative_eq_top

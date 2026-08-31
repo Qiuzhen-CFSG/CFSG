@@ -101,7 +101,7 @@ private theorem section12_exists_hall_betaCompl_fixed_by_sylow_derivedE
   have hC_index_no_betaCompl :
       ∀ p : Nat.Primes, p ∈ (section10BetaPrimes M)ᶜ → ¬ p.val ∣ C.index := by
     intro p hpβ hpidx
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    let _ : Fact p.val.Prime := ⟨p.property⟩
     have hpS_dvd : p.val ∣ Nat.card S := by
       have hcardS : Nat.card S = Nat.card C * C.index := by
         rw [C.card_mul_index]
@@ -153,12 +153,12 @@ private theorem section12_exists_hall_betaCompl_fixed_by_sylow_derivedE
       rw [← htop]
       exact section12_Msigma_le (G := G) M
     exact hM.1 hMtop
-  have hSsolv : IsSolvable S :=
+  have hSsolv : Group.IsSolvable S :=
     IsMinCE.proper_subgroups_solvable S (lt_top_iff_ne_top.2 hSproper)
-  have hCsolv : IsSolvable C := by
-    letI : IsSolvable S := hSsolv
-    exact subgroup_solvable_of_solvable (H := C)
-  letI : MulDistribMulAction PUnit.{1} C := {
+  have hCsolv : Group.IsSolvable C := by
+    let : Group.IsSolvable S := hSsolv
+    infer_instance
+  let _ : MulDistribMulAction PUnit.{1} C := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -208,7 +208,7 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
       rw [← htop]
       exact section12_Msigma_le (G := G) M
     exact hM.1 hMtop
-  have hSsolv : IsSolvable S :=
+  have hSsolv : Group.IsSolvable S :=
     IsMinCE.proper_subgroups_solvable S (lt_top_iff_ne_top.2 hSproper)
   have hDπ : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ D := by
     simpa [D] using section12_ambientDerivedSubgroup_sigma_compl (G := G) hM hE.1
@@ -227,7 +227,7 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
           (((default : Sylow q D) : Subgroup D)) S := by
     intro q hq
     have hqprime : Nat.Prime q := Nat.prime_of_mem_primeFactors hq
-    haveI : Fact q.Prime := ⟨hqprime⟩
+    let _ : Fact q.Prime := ⟨hqprime⟩
     let q' : Nat.Primes := ⟨q, hqprime⟩
     let Q : Sylow q D := default
     have hqD : q'.val ∣ Nat.card D := by
@@ -252,7 +252,7 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
           (K := (Q : Subgroup D)) (f := D.subtype) D.subtype_injective)
     have hcop : Nat.Coprime (Nat.card (Q : Subgroup D)) (Nat.card S) := by
       simpa [hXcard] using hcopX
-    letI : IsInvariant D S H := hHinv
+    let _ : IsInvariant D S H := hHinv
     have hHinvQ : IsInvariant (Q : Subgroup D) S H := by
       refine ⟨?_⟩
       intro a y
@@ -281,7 +281,7 @@ private theorem section12_invariant_hall_fixed_by_ambientDerivedSubgroup
     refine iSup₂_le ?_
     intro q hq
     have hqprime : Nat.Prime q := Nat.prime_of_mem_primeFactors hq
-    haveI : Fact q.Prime := ⟨hqprime⟩
+    let _ : Fact q.Prime := ⟨hqprime⟩
     let Q : Sylow q D := default
     intro a ha
     change a ∈ fixingSubgroupOf D S (H : Set S)
@@ -310,7 +310,7 @@ private theorem section12_exists_invariant_hall_betaCompl_msigma
     simpa [D] using (section12_ambientDerivedSubgroup_le (E := E))
   have hD_norm_S : D ≤ Subgroup.normalizer (S : Set G) := by
     exact hD_le_E.trans (hE.1.2.1.trans (by simpa [S] using section12_le_normalizer_msigma (M := M)))
-  letI : Subgroup.Normalizes D S := ⟨hD_norm_S⟩
+  let _ : Subgroup.Normalizes D S := ⟨hD_norm_S⟩
   have hS_le_M : S ≤ M := by
     simpa [S] using section12_Msigma_le (G := G) M
   have hSproper : S ≠ ⊤ := by
@@ -318,7 +318,7 @@ private theorem section12_exists_invariant_hall_betaCompl_msigma
     have hMtop : M = ⊤ := by
       exact eq_top_iff.2 (by simpa [htop] using hS_le_M)
     exact hM.1 hMtop
-  have hSsolv : IsSolvable S :=
+  have hSsolv : Group.IsSolvable S :=
     IsMinCE.proper_subgroups_solvable S (lt_top_iff_ne_top.2 hSproper)
   have hDπ : IsPiSubgroup (G := G) (section10SigmaPrimes M)ᶜ D := by
     simpa [D] using section12_ambientDerivedSubgroup_sigma_compl (G := G) hM hE.1
@@ -354,7 +354,7 @@ public theorem lemma_12_19
   have hD_norm_S : D ≤ Subgroup.normalizer (S : Set G) := by
     exact hD_le_E.trans (hE.1.2.1.trans (by
       simpa [S] using section12_le_normalizer_msigma (M := M)))
-  letI : Subgroup.Normalizes D S := ⟨hD_norm_S⟩
+  let _ : Subgroup.Normalizes D S := ⟨hD_norm_S⟩
   obtain ⟨Hloc, hHlocHall, hHlocInv⟩ :=
     section12_exists_invariant_hall_betaCompl_msigma
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)

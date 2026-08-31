@@ -291,7 +291,8 @@ public theorem theorem_8_16_typeII_mf_punctured_tiWithNormalizer
       ⟨q, hqprime, hqdiv⟩
     let qP : Nat.Primes := ⟨q, hqprime⟩
     have hqW2 : qP ∈ subgroupPrimeSet W2 := by
-      simpa [qP, subgroupPrimeSet] using hqdiv
+      change q ∣ Nat.card W2
+      exact hqdiv
     have hqF : qP ∈ subgroupPrimeSet F :=
       section8_subgroupPrimeSet_mono (fun x hx => hMFleF ((hW2le hx).1)) hqW2
     have hM8 : M ∈ section8MaximalSubgroups G := by

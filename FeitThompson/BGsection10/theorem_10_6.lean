@@ -27,7 +27,7 @@ private theorem section10_hasPLengthOne_of_quotient_Op_coprime
     (hcop : Nat.Coprime p.val (Nat.card (H ⧸ Op_p'p p.val H))) :
     HasPLengthOne p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have htop_le_core :
       (⊤ : Subgroup (H ⧸ Op_p'p p.val H)) ≤
         pPrimeCore p.val (H ⧸ Op_p'p p.val H) := by
@@ -41,11 +41,11 @@ private theorem section10_hasPLengthOne_of_quotient_Op_coprime
 omit [IsMinCE G] in
 private theorem section10_hasPLengthOne_of_primeRank_le_two
     {H : Type*} [Group H] [Finite H] {p : Nat.Primes}
-    (hsolv : IsSolvable H) (hodd : Odd (Nat.card H))
+    (hsolv : Group.IsSolvable H) (hodd : Odd (Nat.card H))
     (hrank : primeRank p.val H ≤ 2) :
     HasPLengthOne p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   by_cases hp_mem : p.val ∣ Nat.card H
   · exact section10_hasPLengthOne_of_quotient_Op_coprime
       (p := p) ((theorem_4_18_e (G := H) (p := p.val) hsolv hodd hp_mem hrank).1)
@@ -67,7 +67,7 @@ private theorem section10_hasPLengthOne_of_le_hasPLengthOne
     (hMplen : HasPLengthOne p.val M) :
     HasPLengthOne p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Hsub : Subgroup M := H.subgroupOf M
   have hHsub : HasPLengthOne p.val Hsub :=
     lemma_1_21_a (G := M) p.val Hsub hMplen
@@ -124,7 +124,7 @@ private theorem section10_isZGroup_malphaSubgroup_centralizer_zpowers_of_ambient
     rw [section10_elementCentralizerIn_eq_subgroupCentralizerIn_zpowers
       (section10Malpha M) x] at hZ'
     simpa [R] using hZ'
-  letI : IsZGroup ↥(subgroupCentralizerIn (section10Malpha M) R) := hZamb
+  let : IsZGroup ↥(subgroupCentralizerIn (section10Malpha M) R) := hZamb
   have hZsub :
       IsZGroup ↥(subgroupCentralizerIn ((section10Malpha M).subgroupOf M)
         (R.subgroupOf M)) :=
@@ -154,14 +154,14 @@ private theorem section10_malpha_hasPLengthOne_of_high_primeRank
     (hαrank : 2 < primeRank p.val M) :
     HasPLengthOne p.val (section10MalphaSubgroup M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let A : Subgroup M := section10MalphaSubgroup M
-  haveI : A.Normal := by
+  have : A.Normal := by
     dsimp [A]
     infer_instance
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  letI : IsSolvable M := hMsolv
+  let : Group.IsSolvable M := hMsolv
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
   have hthree : 3 ≤ primeRank p.val M := by omega
@@ -205,12 +205,12 @@ private theorem section10_malpha_hasPLengthOne_of_high_primeRank
   have hcardM_gt_one : 1 < Nat.card M := by
     exact lt_of_le_of_ne (Nat.succ_le_of_lt (Nat.card_pos (α := M)))
       (Ne.symm hcardM_ne_one)
-  letI : Nontrivial M := (Finite.one_lt_card_iff_nontrivial (α := M)).1 hcardM_gt_one
+  let : Nontrivial M := (Finite.one_lt_card_iff_nontrivial (α := M)).1 hcardM_gt_one
   have hDlt : derivedSubgroup M < ⊤ := by
     simpa [derivedSubgroup] using
-      (IsSolvable.commutator_lt_top_of_nontrivial (G := M))
+      (Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M))
   have hDneTop : derivedSubgroup M ≠ ⊤ := hDlt.ne
-  letI : Nontrivial (M ⧸ derivedSubgroup M) :=
+  let : Nontrivial (M ⧸ derivedSubgroup M) :=
     (QuotientGroup.nontrivial_iff (G := M) (N := derivedSubgroup M)).2 hDneTop
   have hquot_gt_one : 1 < Nat.card (M ⧸ derivedSubgroup M) :=
     (Finite.one_lt_card_iff_nontrivial (α := M ⧸ derivedSubgroup M)).2 inferInstance
@@ -219,7 +219,7 @@ private theorem section10_malpha_hasPLengthOne_of_high_primeRank
   obtain ⟨q0, hq0prime, hq0dvd⟩ :=
     Nat.exists_prime_and_dvd hquot_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hq_dvd_Dquot : q.val ∣ Nat.card (M ⧸ derivedSubgroup M) := by
     simpa [q] using hq0dvd
   have hqM : q ∈ subgroupPrimeSet M := by
@@ -323,7 +323,7 @@ private theorem section10_hasPLengthOne_of_normal_pLengthOne_and_coprime_quotien
     (hquot : Nat.Coprime p.val (Nat.card (H ⧸ N))) :
     HasPLengthOne p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let P : Subgroup H := pElementsSubgroup p.val H
   let q : H →* H ⧸ N := QuotientGroup.mk' N
   have hP_le_N : P ≤ N := by
@@ -385,13 +385,13 @@ public theorem theorem_10_6
     {H : Subgroup G} {p : Nat.Primes} (hHproper : H ≠ ⊤) :
     HasPLengthOne p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   obtain ⟨M, hMcont⟩ :=
     section10_exists_maximalSubgroupsContaining_of_ne_top (G := G) hHproper
   have hM : M ∈ section9MaximalSubgroups G := hMcont.1
   have hHM : H ≤ M := hMcont.2
   refine section10_hasPLengthOne_of_le_hasPLengthOne (p := p) hHM ?_
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)

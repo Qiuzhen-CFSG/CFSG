@@ -32,7 +32,7 @@ private theorem coprime_card_quotient_pCore
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     (hcomm : IsMulCommutative (G ⧸ pCore p G)) :
     Nat.Coprime p (Nat.card (G ⧸ pCore p G)) := by
-  letI : IsMulCommutative (G ⧸ pCore p G) := hcomm
+  let : IsMulCommutative (G ⧸ pCore p G) := hcomm
   have hpcore_bot : pCore p (G ⧸ pCore p G) = ⊥ :=
     pCore_quotient_pCore_eq_bot (G := G) (p := p)
   by_contra hcop
@@ -106,9 +106,9 @@ public theorem zpowers_eq_top_of_prime_card_of_ne_one_local
 private theorem theorem_5_5_a_low_rank
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hpR : IsPGroup p R) (hrank : groupRank R ≤ 2)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A)) :
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A)) :
     IsMulCommutative (A ⧸ pCore p A) ∧ Nat.Coprime p (Nat.card (A ⧸ pCore p A)) := by
-  letI : Fact (IsPGroup p R) := ⟨hpR⟩
+  let : Fact (IsPGroup p R) := ⟨hpR⟩
   have hder_p : IsPGroup p (derivedSubgroup A) :=
     theorem_4_17 (R := R) (A := A) (p := p) hpodd (hsolvA := inferInstance) hrank hoddA
   exact theorem_5_5_a_of_derivedSubgroup_isPGroup (A := A) (p := p) hder_p
@@ -187,7 +187,7 @@ public theorem groupRank_at_least_three_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -217,7 +217,7 @@ private theorem generatorRank_le_groupRank_of_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -261,9 +261,9 @@ private theorem primeRank_le_primeRank_of_subgroup
         (Subgroup.subgroupOfEquivOfLe (H := A.map H.subtype) (K := K) hAmap_le_K).symm
     have hA'comm : IsMulCommutative A' := by
       have hAmap_comm : IsMulCommutative (A.map H.subtype) := by
-        letI : IsMulCommutative A := hAcomm
+        let : IsMulCommutative A := hAcomm
         simpa using (Subgroup.map_isMulCommutative (f := H.subtype) (H := A))
-      letI : IsMulCommutative (A.map H.subtype) := hAmap_comm
+      let : IsMulCommutative (A.map H.subtype) := hAmap_comm
       exact Subgroup.subgroupOf_isMulCommutative (H := A.map H.subtype) (K := K)
     have hgen_eq_map : generatorRank (A.map H.subtype) = generatorRank A := by
       rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -345,7 +345,7 @@ private theorem primeRank_le_groupRank_sylow
         (Subgroup.equivMapOfInjective (f := (MulAut.conj g).toMonoidHom) A
           (EquivLike.injective (MulAut.conj g)))
     have hAconj_comm : IsMulCommutative Aconj := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [Aconj] using
         (Subgroup.map_isMulCommutative (f := (MulAut.conj g).toMonoidHom) (H := A))
     have hgen_eq : generatorRank A = generatorRank Aconj := by
@@ -381,7 +381,7 @@ public theorem primeRank_fitting_le_groupRank_pCore
         (Subgroup.equivMapOfInjective (f := (fittingSubgroup G).subtype) A
           (fittingSubgroup G).subtype_injective)
     have hAmap_comm : IsMulCommutative Amap := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [Amap] using
         (Subgroup.map_isMulCommutative (f := (fittingSubgroup G).subtype) (H := A))
     have hgen_eq : generatorRank A = generatorRank Amap := by
@@ -470,8 +470,8 @@ private theorem actsTrivially_of_isPGroup_on_cyclic_prime_order_local
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
     ActsTrivially (A := A) (G := G) := by
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : IsCyclic G := hG_cyclic
+  let : Fact p.Prime := ⟨hp⟩
+  let : IsCyclic G := hG_cyclic
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   have hA_top : IsPGroup p (⊤ : Subgroup A) := by
     simpa using hA.to_subgroup (⊤ : Subgroup A)
@@ -512,7 +512,7 @@ private theorem derivedSubgroup_actsTrivially_on_cyclic_prime_order
   let _ := hG_card
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let eAut : MulAut G ≃* (ZMod (Nat.card G))ˣ := IsCyclic.mulAutMulEquiv (G := G)
-  letI : CommGroup (MulAut G) := MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
+  let : CommGroup (MulAut G) := MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
   intro a g
   have ha_comm : (a : A) ∈ _root_.commutator A := by
     change (a : A) ∈ derivedSubgroup A
@@ -530,7 +530,7 @@ private theorem pow_pred_actsTrivially_on_cyclic_prime_order
     (a : A) :
     ActsTrivially (A := Subgroup.zpowers (a ^ (p - 1))) (G := G) := by
   classical
-  letI : IsCyclic G := hG_cyclic
+  let : IsCyclic G := hG_cyclic
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   have hmulAut_card : Nat.card (MulAut G) = p - 1 := by
     rw [IsCyclic.card_mulAut, hG_card, Nat.totient_prime (Fact.out : Nat.Prime p)]
@@ -619,11 +619,11 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
       simp [smul_one]
     · let K : Subgroup G := Gi i
       let N : Subgroup K := (Gi (i + 1)).subgroupOf K
-      haveI : K.Normal := hnormal i
-      haveI : (Gi (i + 1)).Normal := hnormal (i + 1)
-      haveI : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
-      letI : IsInvariant A G K := hinv i
-      letI : MulDistribMulAction A K := inferInstance
+      have : K.Normal := hnormal i
+      have : (Gi (i + 1)).Normal := hnormal (i + 1)
+      have : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
+      let : IsInvariant A G K := hinv i
+      let : MulDistribMulAction A K := inferInstance
       have hNinv : IsInvariant A K N := by
         constructor
         intro c x
@@ -641,10 +641,10 @@ private theorem pow_pred_acts_trivially_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant c (x : G) |>.mpr hsmulG
           simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
-      letI : IsInvariant A K N := hNinv
-      letI : MulAction.QuotientAction A N :=
+      let : IsInvariant A K N := hNinv
+      let : MulAction.QuotientAction A N :=
         quotientAction_of_isInvariant (A := A) N hNinv
-      letI : MulDistribMulAction A (K ⧸ N) :=
+      let : MulDistribMulAction A (K ⧸ N) :=
         quotientMulDistribMulAction (A := A) (G := K) N hNinv
       have hQcard : Nat.card (K ⧸ N) = p := by
         simpa [K, N] using hquot_card i hGi_bot
@@ -726,7 +726,7 @@ private theorem ne_bot_of_exponent_eq_prime
     (hHexp : Monoid.exponent (↥H) = p) :
     H ≠ ⊥ := by
   intro hH_bot
-  haveI : Subsingleton ↥H := by
+  have : Subsingleton ↥H := by
     rw [hH_bot]
     infer_instance
   have hexp_one : Monoid.exponent (↥H) = 1 := Monoid.exp_eq_one_of_subsingleton
@@ -739,8 +739,8 @@ private theorem subgroupCentralizerIn_ne_bot_of_normal_exponent
     (hHexp : Monoid.exponent (↥H) = p) :
     subgroupCentralizerIn H R₀ ≠ ⊥ := by
   have hH_ne_bot : H ≠ ⊥ := ne_bot_of_exponent_eq_prime (p := p) H hHexp
-  letI : Fact (IsPGroup p R) := ⟨hpR⟩
-  letI : Nontrivial ↥H := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
+  let : Fact (IsPGroup p R) := ⟨hpR⟩
+  let : Nontrivial ↥H := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
   obtain ⟨x, hx_ne, hxZ⟩ :=
     exists_nontrivial_center_mem_normal (G := R) (p := p) (N := H)
   intro hCH_bot
@@ -756,8 +756,8 @@ private theorem normal_prime_order_subgroup_le_center_of_isPGroup
     {S : Subgroup R} [S.Normal] (hScard : Nat.card S = p) :
     S ≤ Subgroup.center R := by
   classical
-  letI : IsCyclic S := isCyclic_of_prime_card hScard
-  letI : Finite (ConjAct R) := Finite.of_equiv R ConjAct.toConjAct.toEquiv
+  let : IsCyclic S := isCyclic_of_prime_card hScard
+  let : Finite (ConjAct R) := Finite.of_equiv R ConjAct.toConjAct.toEquiv
   have hConjP : IsPGroup p (ConjAct R) := hpR.of_equiv ConjAct.toConjAct
   have htriv : ActsTrivially (A := ConjAct R) (G := S) :=
     actsTrivially_of_isPGroup_on_cyclic_prime_order_local
@@ -786,20 +786,20 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
     (hR₀rank : groupRank (Subgroup.centralizer (R₀ : Set R)) ≤ 2) :
     ¬ R₀ ≤ H := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   intro hR₀_le_H
   let ZH : Subgroup R := centerIn (G := R) H
   have hZH_eq : ZH = (Subgroup.center H).map H.subtype := by
     simpa [ZH] using centerIn_eq_map_center_local (G := R) H
   have hZH_norm : ZH.Normal := by
     rw [hZH_eq]
-    letI : (Subgroup.center H).Characteristic := Subgroup.centerCharacteristic
+    let : (Subgroup.center H).Characteristic := Subgroup.centerCharacteristic
     exact ConjAct.normal_of_characteristic_of_normal
   let U : Subgroup R := R₀ ⊔ ZH
   have hR₀_elem : IsElementaryAbelian p R₀ := by
-    letI : IsCyclic R₀ := isCyclic_of_prime_card hR₀card
+    let : IsCyclic R₀ := isCyclic_of_prime_card hR₀card
     exact isElementaryAbelian_of_prime_card_isCyclic (p := p) (G := R₀) hR₀card
-  letI : IsElementaryAbelian p R₀ := hR₀_elem
+  let : IsElementaryAbelian p R₀ := hR₀_elem
   have hZH_elem : IsElementaryAbelian p ZH := by
     refine
       { toIsMulCommutative := by
@@ -815,7 +815,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
     have hzH_pow : zH ^ p = 1 := by
       exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (by rw [hHexp]) zH
     simpa [zH] using congrArg Subtype.val hzH_pow
-  letI : IsElementaryAbelian p ZH := hZH_elem
+  let : IsElementaryAbelian p ZH := hZH_elem
   have hZH_le_centR₀ : ZH ≤ Subgroup.centralizer (R₀ : Set R) := by
     intro z hz
     rw [Subgroup.mem_centralizer_iff]
@@ -823,7 +823,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
     exact (Subgroup.mem_centralizer_iff.mp hz.2) _ (hR₀_le_H hr)
   have hU_elem : IsElementaryAbelian p U :=
     isElementaryAbelian_sup_of_le_centralizer' (p := p) (E := R₀) (C := ZH) hZH_le_centR₀
-  letI : IsElementaryAbelian p U := hU_elem
+  let : IsElementaryAbelian p U := hU_elem
   have hU_le_H : U ≤ H := sup_le hR₀_le_H inf_le_left
   have hU_le_centR₀ : U ≤ Subgroup.centralizer (R₀ : Set R) := by
     refine sup_le ?_ hZH_le_centR₀
@@ -853,10 +853,10 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
     have hp_ne_one : p ≠ 1 := (Fact.out : Nat.Prime p).ne_one
     exact hp_ne_one <| by simpa [hR₀_bot] using hR₀card.symm
   by_cases hUcyc : IsCyclic U
-  · letI : IsCyclic U := hUcyc
-    haveI : U.Normal := hU_norm
+  · let : IsCyclic U := hUcyc
+    have : U.Normal := hU_norm
     have hU_eq_R₀ : U = R₀ := by
-      letI : CommGroup U := IsCyclic.commGroup
+      let : CommGroup U := IsCyclic.commGroup
       let R₀U : Subgroup U := R₀.subgroupOf U
       have hR₀U_card : Nat.card R₀U = p := by
         rw [natCard_subgroupOf_eq R₀ U le_sup_left, hR₀card]
@@ -899,7 +899,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
       simpa [groupRank_top_subgroup_eq R] using htop
     exact (by decide : ¬ 3 ≤ (2 : ℕ)) (le_trans hR hRank_le_two)
   · have hU_ncyc : ¬ IsCyclic U := hUcyc
-    haveI : U.Normal := hU_norm
+    have : U.Normal := hU_norm
     have hU_rank_two : U ∈ elementaryAbelianSubgroupsOfRank p 2 R := by
       have hUp : IsPGroup p U := hnarrow.1.to_subgroup U
       rcases hUp.exists_card_eq with ⟨k, hk⟩
@@ -912,7 +912,7 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
       have hk_le_two : k ≤ 2 := by
         by_contra hk_not_le
         have hk_ge_three : 3 ≤ k := by omega
-        letI : Fact (IsPGroup p U) := ⟨hUp⟩
+        let : Fact (IsPGroup p U) := ⟨hUp⟩
         obtain ⟨B, _hBnorm, hB_le_top, hBcard⟩ :=
           lemma_1_22 (G := U) p (⊤ : Subgroup U) inferInstance k (by simp [hk]) 3 hk_ge_three
         let Bmap : Subgroup R := B.map U.subtype
@@ -928,19 +928,19 @@ private theorem theorem_5_5_a_high_rank_R₀_not_le_H
         have hU_top_elem : IsElementaryAbelian p (⊤ : Subgroup U) :=
           isElementaryAbelian_top (p := p) (G := U)
         have hBmap_elem : IsElementaryAbelian p Bmap := by
-          letI : IsElementaryAbelian p (⊤ : Subgroup U) := hU_top_elem
+          let : IsElementaryAbelian p (⊤ : Subgroup U) := hU_top_elem
           have hB_elem : IsElementaryAbelian p B := by
             exact isElementaryAbelian_of_le (p := p) hB_le_top
-          letI : IsElementaryAbelian p B := hB_elem
+          let : IsElementaryAbelian p B := hB_elem
           simpa [Bmap] using IsElementaryAbelian.map_subtype (p := p) (K := U) (H := B)
         let Bcent : Subgroup (Subgroup.centralizer (R₀ : Set R)) := Bmap.subgroupOf (Subgroup.centralizer (R₀ : Set R))
         have hBcent_card : Nat.card Bcent = p ^ 3 := by
           rw [natCard_subgroupOf_eq Bmap (Subgroup.centralizer (R₀ : Set R)) hBmap_le_cent,
             hBmap_card]
         have hBcent_elem : IsElementaryAbelian p Bcent := by
-          letI : IsElementaryAbelian p Bmap := hBmap_elem
+          let : IsElementaryAbelian p Bmap := hBmap_elem
           exact IsElementaryAbelian.subgroupOf (p := p) hBmap_le_cent
-        letI : IsElementaryAbelian p Bcent := hBcent_elem
+        let : IsElementaryAbelian p Bcent := hBcent_elem
         have hcent_rank_ge : 3 ≤ groupRank (Subgroup.centralizer (R₀ : Set R)) :=
           groupRank_at_least_three_of_elementaryAbelian_subgroup_card_p3'
             (p := p) (G := Subgroup.centralizer (R₀ : Set R)) (B := Bcent) hBcent_card
@@ -977,7 +977,7 @@ private theorem theorem_5_5_a_high_rank_fixed_centralizer_order_p_of_not_le
     (hR₀_not_le_H : ¬ R₀ ≤ H) :
     Nat.card (subgroupCentralizerIn H R₀) = p := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   let C : Subgroup R := Subgroup.centralizer (R₀ : Set R)
   let T : Subgroup R := subgroupCentralizerIn (CΩ₁Z₂ p R) R₀
   obtain ⟨hTcyc, _hR₀_der, hR₀T_bot, hcent⟩ :=
@@ -1011,7 +1011,7 @@ private theorem theorem_5_5_a_high_rank_fixed_centralizer_order_p_of_not_le
     · have hR₀sub_normal : (R₀.subgroupOf C).Normal := by
         rw [Subgroup.normal_subgroupOf_iff_le_normalizer hR₀_le_C]
         simpa [C] using (centralizer_le_normalizer (R := R₀))
-      letI : (R₀.subgroupOf C).Normal := hR₀sub_normal
+      let : (R₀.subgroupOf C).Normal := hR₀sub_normal
       have hsupC : R₀.subgroupOf C ⊔ T.subgroupOf C = ⊤ := by
         rw [← Subgroup.subgroupOf_sup (A := R₀) (A' := T) (B := C) hR₀_le_C hT_le_C]
         simp [C, T, hcent]
@@ -1027,7 +1027,7 @@ private theorem theorem_5_5_a_high_rank_fixed_centralizer_order_p_of_not_le
         rw [natCard_subgroupOf_eq R₀ C hR₀_le_C, hR₀card]
       rw [← Subgroup.index_eq_card, hcomp.index_eq_card, hcard_R₀sub]
   let E : Subgroup R := (omega₁ (G := C) (p := p)).map C.subtype
-  letI : Fact (IsPGroup p C) := ⟨hnarrow.1.to_subgroup C⟩
+  let : Fact (IsPGroup p C) := ⟨hnarrow.1.to_subgroup C⟩
   have hEcard : Nat.card E = p ^ 2 := by
     obtain ⟨hΩcard, _hΩelem⟩ := lemma_4_5_b (R := C) (p := p) hpodd hCncyc hindex
     calc
@@ -1112,7 +1112,7 @@ private theorem exponent_eq_prime_of_nontrivial_subgroup_of_exponent_prime
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (dvd_refl (Monoid.exponent (↥K))) x
       simpa [hKexp_one] using hxpow
     apply hK_ne_bot
-    haveI : Subsingleton K := ⟨fun x y => by simp [hK_one x, hK_one y]⟩
+    have : Subsingleton K := ⟨fun x y => by simp [hK_one x, hK_one y]⟩
     exact Subgroup.eq_bot_of_subsingleton (H := K)
   exact (Fact.out : Nat.Prime p).eq_one_or_self_of_dvd (Monoid.exponent (↥K)) hK_dvd |>.resolve_left hK_ne_one
 
@@ -1276,7 +1276,7 @@ private theorem theorem_5_5_a_commutator_quotient_card_le_centralizer
       apply Subtype.ext
       apply Subtype.ext
       simpa [φ] using hxcomm
-  haveI : Csub.Normal := by
+  have : Csub.Normal := by
     rw [← hφker]
     infer_instance
   have hquot_C_eq : Nat.card (KH ⧸ Csub) = Nat.card φ.range :=
@@ -1334,7 +1334,7 @@ private theorem theorem_5_5_a_commutatorChain_characteristic
       simpa [theorem_5_5_a_commutatorChain_zero] using hHchar
   | succ n ih =>
       rw [theorem_5_5_a_commutatorChain_succ]
-      letI : (theorem_5_5_a_commutatorChain H n).Characteristic := ih
+      let : (theorem_5_5_a_commutatorChain H n).Characteristic := ih
       infer_instance
 
 private theorem theorem_5_5_a_commutatorChain_descends
@@ -1344,7 +1344,7 @@ private theorem theorem_5_5_a_commutatorChain_descends
         theorem_5_5_a_commutatorChain H n := by
   intro n
   have hchar := theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-  letI : (theorem_5_5_a_commutatorChain H n).Characteristic := hchar
+  let : (theorem_5_5_a_commutatorChain H n).Characteristic := hchar
   rw [theorem_5_5_a_commutatorChain_succ]
   exact Subgroup.commutator_le_left
     (H₁ := theorem_5_5_a_commutatorChain H n) (H₂ := (⊤ : Subgroup R))
@@ -1402,7 +1402,7 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
     simpa [Nat.succ_eq_add_one] using hdesc i
   · exact hnormal
   · intro i
-    letI : IsInvariant A G (Gi i) := hinv i
+    let : IsInvariant A G (Gi i) := hinv i
     constructor
     intro a g
     exact IsInvariant.invariant (A := A) (G := G) (H := Gi i) (a : A) g
@@ -1419,11 +1419,11 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
       exact (Gi (i + 1)).one_mem
     · let K : Subgroup G := Gi i
       let N : Subgroup K := (Gi (i + 1)).subgroupOf K
-      haveI : K.Normal := hnormal i
-      haveI : (Gi (i + 1)).Normal := hnormal (i + 1)
-      haveI : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
-      letI : IsInvariant A G K := hinv i
-      letI : MulDistribMulAction A K := inferInstance
+      have : K.Normal := hnormal i
+      have : (Gi (i + 1)).Normal := hnormal (i + 1)
+      have : N.Normal := Subgroup.Normal.subgroupOf (hnormal (i + 1)) K
+      let : IsInvariant A G K := hinv i
+      let : MulDistribMulAction A K := inferInstance
       have hNinv : IsInvariant A K N := by
         constructor
         intro b x
@@ -1441,8 +1441,8 @@ private theorem stabilizesNormalSeries_of_prime_quotient_chain
           have hxG : (x : G) ∈ Gi (i + 1) :=
             (hinv (i + 1)).invariant b (x : G) |>.mpr hsmulG
           simpa [N, Subgroup.mem_subgroupOf, theorem_5_5_a_coe_smul_of_isInvariant] using hxG
-      letI : IsInvariant A K N := hNinv
-      letI : MulDistribMulAction A (K ⧸ N) :=
+      let : IsInvariant A K N := hNinv
+      let : MulDistribMulAction A (K ⧸ N) :=
         quotientMulDistribMulAction (A := A) (G := K) N hNinv
       have hQcard : Nat.card (K ⧸ N) = p := by
         simpa [K, N] using hquot_card i hGi_bot
@@ -1467,7 +1467,7 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R)
     (hR : 3 ≤ groupRank R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A))
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A))
     {H : Subgroup R}
     (hHchar : H.Characteristic)
     (hHcomm : ⁅H, ⊤⁆ ≤ centerIn (G := R) H)
@@ -1477,24 +1477,24 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
     IsPGroup p
       ((derivedSubgroup A) ⧸ fixingSubgroupOf (derivedSubgroup A) R (H : Set R)) := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   have hRnil : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
-  letI : Group.IsNilpotent R := hRnil
-  letI : IsSolvable R := inferInstance
-  letI : H.Characteristic := hHchar
-  letI : H.Normal := by infer_instance
-  letI : IsInvariant A R H :=
+  let : Group.IsNilpotent R := hRnil
+  have : Group.IsSolvable R := inferInstance
+  let : H.Characteristic := hHchar
+  let : H.Normal := by infer_instance
+  let : IsInvariant A R H :=
     isInvariant_of_characteristic (A := A) (G := R) H
-  letI : MulDistribMulAction A H := inferInstance
-  letI : IsInvariant (derivedSubgroup A) R H :=
+  let : MulDistribMulAction A H := inferInstance
+  let : IsInvariant (derivedSubgroup A) R H :=
     isInvariant_of_characteristic (A := derivedSubgroup A) (G := R) H
-  letI : MulDistribMulAction (derivedSubgroup A) H := inferInstance
+  let : MulDistribMulAction (derivedSubgroup A) H := inferInstance
   have hker_eq :
       fixingSubgroupOf (derivedSubgroup A) H (Set.univ : Set H) =
         fixingSubgroupOf (derivedSubgroup A) R (H : Set R) :=
     fixingSubgroupOf_subtype_univ_eq (B := derivedSubgroup A) (R := R) (H := H)
   let π : Set Nat.Primes := {⟨p, Fact.out⟩}
-  have hHsolv : IsSolvable ↥H := by infer_instance
+  have hHsolv : Group.IsSolvable ↥H := by infer_instance
   have hHpgroup : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
   have hHpi : IsPiGroup π H := by
     rw [IsPiGroup_iff π H]
@@ -1506,7 +1506,8 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
     have hq_eq' : q = ⟨p, Fact.out⟩ := by
       apply Subtype.ext
       simpa using hq_eq
-    simpa [π] using hq_eq'
+    dsimp [π]
+    exact Set.mem_singleton_iff.mpr hq_eq'
   have hker_normal' : (fixingSubgroupOf (derivedSubgroup A) H (Set.univ : Set H)).Normal := by
     rw [hker_eq]
     infer_instance
@@ -1544,8 +1545,8 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
           (GiR n).Characteristic := by
         simpa [GiR] using
           theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-      letI : (GiR n).Characteristic := hGi_char
-      letI : (GiR n).Normal := by infer_instance
+      let : (GiR n).Characteristic := hGi_char
+      let : (GiR n).Normal := by infer_instance
       exact
         theorem_5_5_a_high_rank_fixed_centralizer_order_p_of_characteristic
           (p := p) hpodd (R := R) hnarrow hR (H := H) (R₀ := R₀) (K := GiR n)
@@ -1572,7 +1573,7 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
           (GiR n).Characteristic := by
         simpa [GiR] using
           theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-      letI : (GiR n).Characteristic := hGi_char
+      let : (GiR n).Characteristic := hGi_char
       have hGi_norm : (GiR n).Normal := by infer_instance
       simpa [GiH] using Subgroup.Normal.subgroupOf hGi_norm H
     have hinv : ∀ n, IsInvariant A H (GiH n) := by
@@ -1581,7 +1582,7 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
           (GiR n).Characteristic := by
         simpa [GiR] using
           theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-      letI : (GiR n).Characteristic := hGi_char
+      let : (GiR n).Characteristic := hGi_char
       have hGi_inv_R : IsInvariant A R (GiR n) :=
         isInvariant_of_characteristic (A := A) (G := R) (GiR n)
       constructor
@@ -1606,7 +1607,7 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
       have hR₀_ne_bot : R₀ ≠ ⊥ := by
         intro hR₀_bot
         exact (Fact.out : Nat.Prime p).ne_one (by simpa [hR₀_bot] using hR₀card.symm)
-      letI : Nontrivial R₀ := R₀.nontrivial_iff_ne_bot.mpr hR₀_ne_bot
+      let : Nontrivial R₀ := R₀.nontrivial_iff_ne_bot.mpr hR₀_ne_bot
       obtain ⟨v, hv_ne_one⟩ := exists_ne (1 : R₀)
       have hvgen : Subgroup.zpowers v = ⊤ := by
         exact zpowers_eq_top_of_prime_card_of_ne_one_local
@@ -1614,9 +1615,9 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
       have hGi_char : (GiR n).Characteristic := by
         simpa [GiR] using
           theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-      letI : (GiR n).Characteristic := hGi_char
-      haveI : (GiR n).Normal := by infer_instance
-      haveI :
+      let : (GiR n).Characteristic := hGi_char
+      have : (GiR n).Normal := by infer_instance
+      have :
           (((⁅GiR n, (⊤ : Subgroup R)⁆).subgroupOf H).subgroupOf
             ((GiR n).subgroupOf H)).Normal := by
         have hNnorm :
@@ -1691,13 +1692,13 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
             change (x : R) ∈ GiR (n + d) ↔ (x : R) ∈ GiR n
             rw [hconstR d]
           exact hGiH_ne_bot (by simpa [hGiH_eq] using hm)
-      haveI : ((GiH (n + 1)).subgroupOf (GiH n)).Normal :=
+      have : ((GiH (n + 1)).subgroupOf (GiH n)).Normal :=
         Subgroup.Normal.subgroupOf (hnormal (n + 1)) (GiH n)
       have hQ_nontrivial :
           Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) :=
         (QuotientGroup.nontrivial_iff
           (G := GiH n) (N := (GiH (n + 1)).subgroupOf (GiH n))).2 hNsub_ne_top
-      letI : Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) := hQ_nontrivial
+      let : Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) := hQ_nontrivial
       have hQp : IsPGroup p ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) :=
         (hHpgroup.to_subgroup (GiH n)).to_quotient ((GiH (n + 1)).subgroupOf (GiH n))
       exact natCard_eq_prime_of_isPGroup_nontrivial_le_prime (p := p) hQp hquot_le_p
@@ -1718,7 +1719,7 @@ private theorem theorem_5_5_a_high_rank_series_from_H_core
     let q' : Nat.Primes := ⟨q, hqprime⟩
     have hq_mem : q' ∈ π := (IsPiGroup_iff π Q).1 hquot_pi q' hqdvd
     have hq_eq' : q' = ⟨p, Fact.out⟩ := by
-      simpa [π] using hq_mem
+      exact Set.mem_singleton_iff.mp (by simpa [π] using hq_mem)
     simpa using congrArg Subtype.val hq_eq'
   let Q' := ((derivedSubgroup A) ⧸ fixingSubgroupOf (derivedSubgroup A) R (H : Set R))
   refine (IsPGroup.iff_card (p := p) (G := Q')).2 ?_
@@ -1734,7 +1735,7 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R)
     (hR : 3 ≤ groupRank R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A))
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A))
     {H : Subgroup R}
     (hHchar : H.Characteristic)
     (hHcomm : ⁅H, ⊤⁆ ≤ centerIn (G := R) H)
@@ -1743,14 +1744,14 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     (a : A) (hcop : Nat.Coprime p (orderOf a)) :
     ∀ x : R, x ∈ H → ((a ^ (p - 1) : A) : MulAut R) x = x := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   have hRnil : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
-  letI : Group.IsNilpotent R := hRnil
-  letI : H.Characteristic := hHchar
-  letI : H.Normal := by infer_instance
-  letI : IsInvariant A R H :=
+  let : Group.IsNilpotent R := hRnil
+  let : H.Characteristic := hHchar
+  let : H.Normal := by infer_instance
+  let : IsInvariant A R H :=
     isInvariant_of_characteristic (A := A) (G := R) H
-  letI : MulDistribMulAction A H := inferInstance
+  let : MulDistribMulAction A H := inferInstance
   have hHpgroup : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
   let _ := hoddA
   let _ := hHnil
@@ -1781,8 +1782,8 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
         (GiR n).Characteristic := by
       simpa [GiR] using
         theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-    letI : (GiR n).Characteristic := hGi_char
-    letI : (GiR n).Normal := by infer_instance
+    let : (GiR n).Characteristic := hGi_char
+    let : (GiR n).Normal := by infer_instance
     exact
       theorem_5_5_a_high_rank_fixed_centralizer_order_p_of_characteristic
         (p := p) hpodd (R := R) hnarrow hR (H := H) (R₀ := R₀) (K := GiR n)
@@ -1809,7 +1810,7 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
         (GiR n).Characteristic := by
       simpa [GiR] using
         theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-    letI : (GiR n).Characteristic := hGi_char
+    let : (GiR n).Characteristic := hGi_char
     have hGi_norm : (GiR n).Normal := by infer_instance
     simpa [GiH] using Subgroup.Normal.subgroupOf hGi_norm H
   have hinv : ∀ n, IsInvariant A H (GiH n) := by
@@ -1818,7 +1819,7 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
         (GiR n).Characteristic := by
       simpa [GiR] using
         theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-    letI : (GiR n).Characteristic := hGi_char
+    let : (GiR n).Characteristic := hGi_char
     have hGi_inv_R : IsInvariant A R (GiR n) :=
       isInvariant_of_characteristic (A := A) (G := R) (GiR n)
     constructor
@@ -1843,7 +1844,7 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     have hR₀_ne_bot : R₀ ≠ ⊥ := by
       intro hR₀_bot
       exact (Fact.out : Nat.Prime p).ne_one (by simpa [hR₀_bot] using hR₀card.symm)
-    letI : Nontrivial R₀ := R₀.nontrivial_iff_ne_bot.mpr hR₀_ne_bot
+    let : Nontrivial R₀ := R₀.nontrivial_iff_ne_bot.mpr hR₀_ne_bot
     obtain ⟨v, hv_ne_one⟩ := exists_ne (1 : R₀)
     have hvgen : Subgroup.zpowers v = ⊤ := by
       exact zpowers_eq_top_of_prime_card_of_ne_one_local
@@ -1851,9 +1852,9 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
     have hGi_char : (GiR n).Characteristic := by
       simpa [GiR] using
         theorem_5_5_a_commutatorChain_characteristic (R := R) hHchar n
-    letI : (GiR n).Characteristic := hGi_char
-    haveI : (GiR n).Normal := by infer_instance
-    haveI :
+    let : (GiR n).Characteristic := hGi_char
+    have : (GiR n).Normal := by infer_instance
+    have :
         (((⁅GiR n, (⊤ : Subgroup R)⁆).subgroupOf H).subgroupOf
           ((GiR n).subgroupOf H)).Normal := by
       have hNnorm :
@@ -1929,13 +1930,13 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
           change (x : R) ∈ GiR (n + d) ↔ (x : R) ∈ GiR n
           rw [hconstR d]
         exact hGiH_ne_bot (by simpa [hGiH_eq] using hm)
-    haveI : ((GiH (n + 1)).subgroupOf (GiH n)).Normal :=
+    have : ((GiH (n + 1)).subgroupOf (GiH n)).Normal :=
       Subgroup.Normal.subgroupOf (hnormal (n + 1)) (GiH n)
     have hQ_nontrivial :
         Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) :=
       (QuotientGroup.nontrivial_iff
         (G := GiH n) (N := (GiH (n + 1)).subgroupOf (GiH n))).2 hNsub_ne_top
-    letI : Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) := hQ_nontrivial
+    let : Nontrivial ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) := hQ_nontrivial
     have hQp : IsPGroup p ((GiH n) ⧸ (GiH (n + 1)).subgroupOf (GiH n)) :=
       (hHpgroup.to_subgroup (GiH n)).to_quotient ((GiH (n + 1)).subgroupOf (GiH n))
     exact natCard_eq_prime_of_isPGroup_nontrivial_le_prime (p := p) hQp hquot_le_p
@@ -1950,21 +1951,21 @@ public theorem theorem_5_5_b_high_rank_pow_pred_fixes_H_core
 public theorem theorem_5_5_a_high_rank_series_bridge
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R) (hR : 3 ≤ groupRank R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A)) :
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A)) :
     IsPGroup p (derivedSubgroup A) := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   have hR_nontrivial : Nontrivial R := by
     refine not_subsingleton_iff_nontrivial.mp ?_
     intro hsub
-    letI : Subsingleton R := hsub
+    let : Subsingleton R := hsub
     have hcyc : IsCyclic R := inferInstance
     have hRank_le_one : groupRank R ≤ 1 := groupRank_le_one_of_isCyclic R
     exact (by decide : ¬ 3 ≤ (1 : ℕ)) (le_trans hR hRank_le_one)
-  letI : Nontrivial R := hR_nontrivial
+  let : Nontrivial R := hR_nontrivial
   obtain ⟨H, hHchar, hHcomm, hHnil, hHexp, hAfix_p⟩ :=
     theorem_1_13 (G := R) (p := p) hpodd
-  haveI : (fixingSubgroupOf (derivedSubgroup A) R (H : Set R)).Normal :=
+  have : (fixingSubgroupOf (derivedSubgroup A) R (H : Set R)).Normal :=
     fixingSubgroupOf_normal_of_characteristic
       (B := derivedSubgroup A) (R := R) hHchar
   have hfix_p : IsPGroup p
@@ -2012,7 +2013,7 @@ public theorem theorem_5_5_a_high_rank_series_bridge
 private theorem theorem_5_5_a_high_rank
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R) (hR : 3 ≤ groupRank R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A)) :
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A)) :
     IsMulCommutative (A ⧸ pCore p A) ∧ Nat.Coprime p (Nat.card (A ⧸ pCore p A)) := by
   have hder_p : IsPGroup p (derivedSubgroup A) :=
     theorem_5_5_a_high_rank_series_bridge
@@ -2022,7 +2023,7 @@ private theorem theorem_5_5_a_high_rank
 public theorem theorem_5_5_a
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A)) :
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A)) :
     IsMulCommutative (A ⧸ pCore p A) ∧ Nat.Coprime p (Nat.card (A ⧸ pCore p A)) := by
   classical
   have hpR : IsPGroup p R := hnarrow.1

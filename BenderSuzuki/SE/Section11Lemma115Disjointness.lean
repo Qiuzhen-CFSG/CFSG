@@ -26,11 +26,11 @@ universe u
 public theorem lemma115_pPrimeCore_eq_bot_of_solvable_fitting_isPGroup
     {G : Type u} [Group G] [Finite G]
     {p : ℕ} (hp : p.Prime)
-    (hsolv : IsSolvable G)
+    (hsolv : Group.IsSolvable G)
     (hFp : IsPGroup p (fittingSubgroup G)) :
     pPrimeCore p G = ⊥ := by
   letI : Fact p.Prime := ⟨hp⟩
-  letI : IsSolvable G := hsolv
+  letI : Group.IsSolvable G := hsolv
   rw [pPrimeCore_eq_bot_iff]
   intro K hKnorm hKcop
   by_contra hKne
@@ -144,7 +144,8 @@ public theorem lemma115_ambient_sylow_r_le_D
   have hHall : IsHallSubgroup (subgroupPrimeSet H) H := by
     simpa [H, E, D] using h102.derived_hall
   have hrPi : r ∈ subgroupPrimeSet H := by
-    simpa [r, subgroupPrimeSet] using hrH
+    change (r : ℕ) ∣ Nat.card H
+    exact hrH
   let S : Sylow h102.exponent.r H := Sylow.nonempty.some
   let P : Subgroup X := (S : Subgroup H).map H.subtype
   have hPp : IsPGroup h102.exponent.r P :=

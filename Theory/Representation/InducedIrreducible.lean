@@ -35,7 +35,7 @@ theorem isaacs_6_34_inertia
     forall g : G,
       Nonempty (phi ≃ₗ Theory.Representation.conjugateRep (G := G) (H := N) phi g) ↔
         g ∈ N := by
-  letI : Representation.IsIrreducible phi := hphi
+  let : Representation.IsIrreducible phi := hphi
   intro g
   constructor
   · intro hequiv
@@ -45,7 +45,7 @@ theorem isaacs_6_34_inertia
     let tau : Representation ℂ N ℂ := Representation.trivial ℂ N ℂ
     have htau : Representation.IsIrreducible tau :=
       Theory.Character.trivial_complex_irreducible
-    letI : Representation.IsIrreducible tau := htau
+    let : Representation.IsIrreducible tau := htau
     let e := Classical.choice hequiv
     have hchiIrr : Theory.Character.IsIrreducibleConjCharacter chi :=
       Theory.Character.isIrreducibleCharacter_characterClassFunction phi hphi
@@ -209,7 +209,7 @@ public theorem isaacs_theorem_6_34
                   Nonempty (chi ≃ₗ Representation.ind N.subtype phi)) := by
   constructor
   · intro V _ _ _ phi hphi hnonprincipal
-    letI : Representation.IsIrreducible phi := hphi
+    let : Representation.IsIrreducible phi := hphi
     have hinertia := isaacs_6_34_inertia N hcentralizer phi hphi hnonprincipal
     have hnconj :
         ∀ x : G, (x : G ⧸ N) ≠ 1 →
@@ -226,7 +226,7 @@ public theorem isaacs_theorem_6_34
       Theory.Representation.RepEquiv.mk eICm.toLinearEquiv eICm.isIntertwining'
     exact ⟨hinertia, (Theory.Representation.RepEquiv.irreducible_euqiv eIC).mpr hcoind⟩
   · intro W _ _ _ chi hchi hN
-    letI : Representation.IsIrreducible chi := hchi
+    let : Representation.IsIrreducible chi := hchi
     let chiN : Representation ℂ N W := chi.comp N.subtype
     have hcr : chiN.IsCompletelyReducible :=
       Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
@@ -244,8 +244,8 @@ public theorem isaacs_theorem_6_34
     let M : Subrepresentation chiN := Subrepresentation.ofSubmodule' m
     have hMirr : Representation.IsIrreducible M.toRepresentation :=
       irreducible_subrepresentation_of_simple_asModuleSubmodule chiN hmSimple
-    letI : Representation.IsIrreducible M.toRepresentation := hMirr
-    letI : FiniteDimensional ℂ M.toSubmodule :=
+    let : Representation.IsIrreducible M.toRepresentation := hMirr
+    let : FiniteDimensional ℂ M.toSubmodule :=
       FiniteDimensional.of_injective M.toSubmodule.subtype Subtype.val_injective
     have hMnonprincipal :
         ¬ Nonempty (M.toRepresentation ≃ₗ Representation.trivial ℂ N ℂ) := by

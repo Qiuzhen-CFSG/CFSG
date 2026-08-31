@@ -17,10 +17,10 @@ theorem exists_cyclic_quotient_fix_of_simple
   classical
   obtain ⟨I, _, ⟨e⟩⟩ :=
     (isSimpleModule_iff_quot_maximal (R := MonoidAlgebra k A) (M := S)).mp inferInstance
-  letI : Field (MonoidAlgebra k A ⧸ I) := Ideal.Quotient.field I
+  let _ : Field (MonoidAlgebra k A ⧸ I) := Ideal.Quotient.field I
   let φ : A →* (MonoidAlgebra k A ⧸ I)ˣ :=
     (Units.map (Ideal.Quotient.mk I)).comp (MonoidHom.toHomUnits (MonoidAlgebra.of k A))
-  letI : Finite ↥φ.range :=
+  let _ : Finite ↥φ.range :=
     Finite.of_surjective φ.rangeRestrict φ.rangeRestrict_surjective
   refine ⟨φ.ker, ?_, ?_⟩
   · have hrange_cyc : IsCyclic ↥φ.range := isCyclic_subgroup_units φ.range
@@ -45,10 +45,10 @@ theorem isSemisimpleModule_groupAlgebra_zmod
     [Module (MonoidAlgebra (ZMod q) A) V] :
     IsSemisimpleModule (MonoidAlgebra (ZMod q) A) V := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
+  let _ : Fintype A := Fintype.ofFinite A
   have hq' : Nat.Coprime (Fintype.card A) q := by
     simpa [Nat.card_eq_fintype_card] using hq
-  haveI : NeZero (Fintype.card A : ZMod q) := by
+  have _ : NeZero (Fintype.card A : ZMod q) := by
     constructor
     intro hzero
     have hdiv : q ∣ Fintype.card A := (ZMod.natCast_eq_zero_iff (Fintype.card A) q).1 hzero
@@ -78,9 +78,9 @@ theorem proposition_1_16_b_elementaryAbelian
       ext x
       apply Additive.toMul.injective
       simp [MulDistribMulAction.toMulAut, smul_smul] }
-  letI : AddCommMonoid ρ.asModule := Representation.instAddCommMonoidAsModule ρ
-  letI : Module (ZMod q) ρ.asModule := Representation.instModuleAsModule ρ
-  letI : Module (MonoidAlgebra (ZMod q) A) ρ.asModule :=
+  let _ : AddCommMonoid ρ.asModule := Representation.instAddCommMonoidAsModule ρ
+  let _ : Module (ZMod q) ρ.asModule := Representation.instModuleAsModule ρ
+  let _ : Module (MonoidAlgebra (ZMod q) A) ρ.asModule :=
     Representation.instModuleMonoidAlgebraAsModule ρ
   let η : Subgroup G ≃o Submodule (ZMod q) (Additive G) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := q))
@@ -144,7 +144,7 @@ theorem proposition_1_16_b_elementaryAbelian
       _ ≤ K := by
             refine sSup_le ?_
             intro S hS
-            letI : IsSimpleModule (MonoidAlgebra (ZMod q) A) S := hS
+            let _ : IsSimpleModule (MonoidAlgebra (ZMod q) A) S := hS
             obtain ⟨Y, hYcyc, hfix⟩ :=
               exists_cyclic_quotient_fix_of_simple (k := ZMod q) (A := A) (S := S)
             let Y1' : Y1 := ⟨Y, hYcyc⟩
@@ -199,14 +199,13 @@ theorem proposition_1_16_b_qgroup
     obtain ⟨n, hn⟩ := (Fact.out : IsPGroup q G).exists_card_eq
     rw [hn]
     exact hAq.pow_right n
-  have hsolv : IsSolvable G := by
-    letI : Group.IsNilpotent G := (Fact.out : IsPGroup q G).isNilpotent
-    infer_instance
+  have hsolv : Group.IsSolvable G := by
+    exact @IsNilpotent.to_isSolvable G inferInstance ((Fact.out : IsPGroup q G).isNilpotent)
   let hfrattini_inv : IsInvariant A G (frattini G) :=
     isInvariant_of_characteristic (A := A) (G := G) (frattini G)
-  letI : MulAction.QuotientAction A (frattini G) :=
+  let _ : MulAction.QuotientAction A (frattini G) :=
     quotientAction_of_isInvariant (A := A) (frattini G) hfrattini_inv
-  letI : MulDistribMulAction A (G ⧸ frattini G) :=
+  let _ : MulDistribMulAction A (G ⧸ frattini G) :=
     quotientMulDistribMulAction (A := A) (G := G) (frattini G) hfrattini_inv
   let Kbar : Subgroup (G ⧸ frattini G) :=
     ⨆ Y : Y1, fixedPointSubgroup (↥Y.1) (G ⧸ frattini G)
@@ -228,18 +227,18 @@ theorem proposition_1_16_b_qgroup
               intro z g
               change (g ∈ frattini G) ↔ (((z : Y.1) : A) • g ∈ frattini G)
               exact hfrattini_inv.invariant ((z : Y.1) : A) g
-            letI : MulAction.QuotientAction ↥Y.1 (frattini G) :=
+            let _ : MulAction.QuotientAction ↥Y.1 (frattini G) :=
               quotientAction_of_isInvariant (A := ↥Y.1) (frattini G) hsubinv
-            letI : MulDistribMulAction ↥Y.1 (G ⧸ frattini G) :=
+            let _ : MulDistribMulAction ↥Y.1 (G ⧸ frattini G) :=
               quotientMulDistribMulAction (A := ↥Y.1) (G := G) (frattini G) hsubinv
             simpa [Kbar] using
               (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
                 (G := G) (A := ↥Y.1) hsolv hsubcop (π := (∅ : Set Nat.Primes))
                 (frattini G) hsubinv).symm
-  haveI : IsElementaryAbelian q (G ⧸ frattini G) :=
+  have _ : IsElementaryAbelian q (G ⧸ frattini G) :=
     isElementaryAbelian_quotient_frattini (R := G) (p := q)
   have hKbar_top : Kbar = ⊤ := by
-    letI : CommGroup (G ⧸ frattini G) := IsMulCommutative.instCommGroup
+    let _ : CommGroup (G ⧸ frattini G) := IsMulCommutative.instCommGroup
     simpa [Kbar, Y1, iSup_subtype] using
       proposition_1_16_b_elementaryAbelian (G := G ⧸ frattini G) (A := A) (q := q) hAq
   have hKsup : K ⊔ frattini G = ⊤ := by
@@ -315,7 +314,7 @@ theorem eq_top_of_exists_sylow_le
   apply Nat.eq_of_factorization_eq Nat.card_pos.ne' Nat.card_pos.ne'
   intro p
   by_cases hp : p.Prime
-  · letI : Fact p.Prime := ⟨hp⟩
+  · let _ : Fact p.Prime := ⟨hp⟩
     by_cases hd : p ∈ (Nat.card G).primeFactors
     · obtain ⟨P, hPle⟩ := hSyl p hd
       refine le_antisymm
@@ -352,7 +351,7 @@ public theorem iSup_fixedPointSubgroup_cyclicQuot_eq_top_of_noncyclic_abelian_pG
     refine eq_top_of_exists_sylow_le H ?_
     intro q hq _hq
     obtain ⟨Q, hQinv⟩ := exists_invariant_sylow (G := G) (A := A) (p := p) (q := q) hG
-    letI : IsInvariant A G (Q : Subgroup G) := hQinv
+    let _ : IsInvariant A G (Q : Subgroup G) := hQinv
     have hq_dvd_G : q ∣ Nat.card G := (Nat.mem_primeFactors.mp hq).2.1
     have hp_not_dvd_q : ¬ p ∣ q := by
       intro hpq
@@ -361,7 +360,7 @@ public theorem iSup_fixedPointSubgroup_cyclicQuot_eq_top_of_noncyclic_abelian_pG
     have hAq : Nat.Coprime (Nat.card A) q := by
       rw [hn]
       exact ((Fact.out : p.Prime).coprime_pow_of_not_dvd (m := n) hp_not_dvd_q).symm
-    letI : Fact (IsPGroup q (Q : Subgroup G)) := ⟨Q.isPGroup'⟩
+    let _ : Fact (IsPGroup q (Q : Subgroup G)) := ⟨Q.isPGroup'⟩
     have hQtop :
         (⨆ (Y : Subgroup A) (_ : IsCyclic (A ⧸ Y)),
           fixedPointSubgroup (↥Y) (Q : Subgroup G)) = ⊤ := by
@@ -406,7 +405,7 @@ public theorem iSup_fixedPointSubgroup_zpowers_eq_top_of_noncyclic_abelian_pGrou
     have hY_ne_bot : Y ≠ ⊥ := by
       intro hY_bot
       subst hY_bot
-      haveI : IsCyclic (A ⧸ (⊥ : Subgroup A)) := hY
+      have _ : IsCyclic (A ⧸ (⊥ : Subgroup A)) := hY
       have hcycA : IsCyclic A :=
         isCyclic_of_surjective
           (QuotientGroup.quotientBot (G := A))

@@ -47,7 +47,7 @@ public theorem theorem_6_5_a_coherent_H1
     (hSH1 : inducedKernelFamily K H1 SH1) :
     coherentFamily SH1 T := by
   classical
-  haveI : K.Normal := h61.2.1
+  have : K.Normal := h61.2.1
   have hSbot : inducedKernelFamily K ⊥ S := hypothesis_6_1_inducedKernelFamily_bot h61
   have hsub : SH1 ⊆ S := inducedKernelFamily_subset_base hSbot hSH1
   have hH1ltK : H1 < K := frobeniusQuotientWithKernel_left_lt hfrob
@@ -107,7 +107,7 @@ public theorem natCard_actor_dvd_group_card_sub_one
     Nat.card A ∣ Nat.card G - 1 := by
   classical
   let α := {g : G // g ≠ 1}
-  letI : MulAction A α :=
+  let : MulAction A α :=
     { smul := fun a x => ⟨a • (x : G), by
         intro h
         apply x.2
@@ -138,8 +138,8 @@ public theorem natCard_actor_dvd_group_card_sub_one
     exact x.2 (hfree a ha_ne (x : G) hfix)
   have hcard_equiv := Nat.card_congr (MulAction.selfEquivOrbitsQuotientProd hstab)
   have hcardα : Nat.card α = Nat.card G - 1 := by
-    letI : Fintype G := Fintype.ofFinite G
-    letI : Fintype α := Fintype.ofFinite α
+    let : Fintype G := Fintype.ofFinite G
+    let : Fintype α := Fintype.ofFinite α
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     change Fintype.card {g : G // g ≠ 1} = Fintype.card G - 1
     simp
@@ -155,7 +155,7 @@ public theorem frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
     (hcent : ∀ r : R, r ≠ 1 → Section2.centralizerIn K (r : Q) = ⊥) :
     Nat.card R ∣ Nat.card N - 1 := by
   classical
-  haveI : Subgroup.Normalizes R N := inferInstance
+  have : Subgroup.Normalizes R N := inferInstance
   exact natCard_actor_dvd_group_card_sub_one
     (A := R) (G := N) (by
       intro r hr x hfix
@@ -176,7 +176,7 @@ public theorem theorem_6_5_a_map_card_eq_relIndex
     {H1 N : Subgroup L} (hH1norm : H1.Normal) :
     Nat.card (N.map (QuotientGroup.mk' H1)) = H1.relIndex N := by
   classical
-  letI : H1.Normal := hH1norm
+  let : H1.Normal := hH1norm
   rw [natCard_map_mk'_eq N H1]
   rw [← Subgroup.index_eq_card (H1.subgroupOf N)]
   rfl
@@ -188,7 +188,7 @@ public theorem theorem_6_5_a_complement_card_eq_relIndex_top
     (hcomp : (K.map (QuotientGroup.mk' H1)).IsComplement' R) :
     Nat.card R = K.relIndex (⊤ : Subgroup L) := by
   classical
-  letI : H1.Normal := hH1norm
+  let : H1.Normal := hH1norm
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   have hcardQ : Nat.card (L ⧸ H1) = H1.relIndex (⊤ : Subgroup L) := by
@@ -196,7 +196,7 @@ public theorem theorem_6_5_a_complement_card_eq_relIndex_top
     rw [← Subgroup.index_eq_card H1]
   have hcardKbar : Nat.card Kbar = H1.relIndex K := by
     simpa [Kbar, q] using theorem_6_5_a_map_card_eq_relIndex (N := K) hH1norm
-  have hmul_comp : Nat.card Kbar * Nat.card R = Nat.card (L ⧸ H1) := hcomp.card_mul
+  have hmul_comp : Nat.card Kbar * Nat.card R = Nat.card (L ⧸ H1) := hcomp.card_mul_card
   have hrel_mul : H1.relIndex K * K.relIndex (⊤ : Subgroup L) =
       H1.relIndex (⊤ : Subgroup L) :=
     Subgroup.relIndex_mul_relIndex H1 K ⊤ hH1K le_top
@@ -215,7 +215,7 @@ theorem theorem_6_5_a_quotient_card_eq_relIndex
     let Nbar : Subgroup (L ⧸ H1) := N.map q
     Nat.card (Kbar ⧸ Nbar.subgroupOf Kbar) = N.relIndex K := by
   classical
-  letI : H1.Normal := hH1norm
+  let : H1.Normal := hH1norm
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   let Nbar : Subgroup (L ⧸ H1) := N.map q
@@ -242,11 +242,11 @@ theorem theorem_6_5_a_quotient_card_eq_relIndex
 
 theorem theorem_6_5_a_isSolvable_map_mk
     {L : Type u} [Group L] [Finite L]
-    {H1 K : Subgroup L} (hH1norm : H1.Normal) (hsolvK : IsSolvable K) :
-    IsSolvable (K.map (QuotientGroup.mk' H1)) := by
+    {H1 K : Subgroup L} (hH1norm : H1.Normal) (hsolvK : Group.IsSolvable K) :
+    Group.IsSolvable (K.map (QuotientGroup.mk' H1)) := by
   classical
-  letI : H1.Normal := hH1norm
-  letI : IsSolvable K := hsolvK
+  let : H1.Normal := hH1norm
+  let : Group.IsSolvable K := hsolvK
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   let φ : K →* Kbar :=
@@ -262,7 +262,7 @@ theorem theorem_6_5_a_isSolvable_map_mk
     rintro ⟨x, hx⟩
     rcases hx with ⟨k, hkK, rfl⟩
     exact ⟨⟨k, hkK⟩, rfl⟩
-  exact solvable_of_surjective hφsurj
+  exact Group.isSolvable_of_surjective hφsurj
 
 public theorem odd_divisor_sub_one_lower_bound
     {d n : ℕ} (hdodd : Odd d) (hnodd : Odd n)
@@ -290,7 +290,7 @@ public theorem frobeniusQuotientWithKernel_intermediate_lower_bounds
     {L : Type u} [Group L] [Finite L]
     {K H1 N : Subgroup L}
     (hoddL : Odd (Nat.card L))
-    (hsolvK : IsSolvable K)
+    (hsolvK : Group.IsSolvable K)
     (hfrob : frobeniusQuotientWithKernel K H1)
     (hNnorm : N.Normal)
     (hH1N : H1 ≤ N) (hNK : N ≤ K)
@@ -300,16 +300,16 @@ public theorem frobeniusQuotientWithKernel_intermediate_lower_bounds
   classical
   rcases hfrob with
     ⟨hH1norm, hH1K, hKnorm, R, hcomp, hKbar_ne_bot, hR_ne_bot, hcent⟩
-  letI : H1.Normal := hH1norm
-  letI : K.Normal := hKnorm
-  letI : N.Normal := hNnorm
+  let : H1.Normal := hH1norm
+  let : K.Normal := hKnorm
+  let : N.Normal := hNnorm
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   let Nbar : Subgroup (L ⧸ H1) := N.map q
-  haveI : Kbar.Normal := by
+  have : Kbar.Normal := by
     dsimp [Kbar, q]
     infer_instance
-  haveI : Nbar.Normal := by
+  have : Nbar.Normal := by
     dsimp [Nbar, q]
     infer_instance
   have hNbarKbar : Nbar ≤ Kbar := Subgroup.map_mono hNK
@@ -332,7 +332,7 @@ public theorem frobeniusQuotientWithKernel_intermediate_lower_bounds
     intro r hr
     simpa [Kbar, q, Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hcent r hr
-  have hsolvKbar : IsSolvable Kbar := by
+  have hsolvKbar : Group.IsSolvable Kbar := by
     simpa [Kbar, q] using
       theorem_6_5_a_isSolvable_map_mk hH1norm hsolvK
   have hKbar_not_le_Nbar : ¬ Kbar ≤ Nbar := by
@@ -375,7 +375,7 @@ public theorem frobeniusQuotientWithKernel_intermediate_lower_bounds
     intro r hr
     simpa [Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hcentElem r hr
-  haveI : (Kbar.map qN).Normal := hfrobQuot.normal
+  have : (Kbar.map qN).Normal := hfrobQuot.normal
   have hdivB_card : Nat.card (R.map qN) ∣ Nat.card (Kbar.map qN) - 1 :=
     frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
       (K := Kbar.map qN) (R := R.map qN) (N := Kbar.map qN) le_rfl hcentQuot
@@ -434,8 +434,8 @@ theorem theorem_6_5_a_chiefFactor
   have hfrobHyp := hfrob
   rcases hfrob with
     ⟨hH1norm, hH1K, hKnorm, R, hcomp, hKbar_ne_bot, hR_ne_bot, hcent⟩
-  letI : H1.Normal := hH1norm
-  letI : K.Normal := hKnorm
+  let : H1.Normal := hH1norm
+  let : K.Normal := hKnorm
   change IsChiefFactor H1 K
   refine
     { normal_K := hH1norm
@@ -448,14 +448,14 @@ theorem theorem_6_5_a_chiefFactor
   by_cases hN_eq_K : N = K
   · exact Or.inr hN_eq_K
   exfalso
-  letI : N.Normal := hNnorm
+  let : N.Normal := hNnorm
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   let Nbar : Subgroup (L ⧸ H1) := N.map q
-  haveI : Kbar.Normal := by
+  have : Kbar.Normal := by
     dsimp [Kbar, q]
     infer_instance
-  haveI : Nbar.Normal := by
+  have : Nbar.Normal := by
     dsimp [Nbar, q]
     infer_instance
   have hNbarKbar : Nbar ≤ Kbar := Subgroup.map_mono hNK
@@ -478,7 +478,7 @@ theorem theorem_6_5_a_chiefFactor
     intro r hr
     simpa [Kbar, q, Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hcent r hr
-  have hsolvKbar : IsSolvable Kbar := by
+  have hsolvKbar : Group.IsSolvable Kbar := by
     simpa [Kbar, q] using
       theorem_6_5_a_isSolvable_map_mk hH1norm h61.2.2.1
   have hKbar_not_le_Nbar : ¬ Kbar ≤ Nbar := by
@@ -521,7 +521,7 @@ theorem theorem_6_5_a_chiefFactor
     intro r hr
     simpa [Section2.centralizerIn, Section2.elementCentralizer,
       elementCentralizerIn] using hcentElem r hr
-  haveI : (Kbar.map qN).Normal := hfrobQuot.normal
+  have : (Kbar.map qN).Normal := hfrobQuot.normal
   have hdivB_card : Nat.card (R.map qN) ∣ Nat.card (Kbar.map qN) - 1 :=
     frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
       (K := Kbar.map qN) (R := R.map qN) (N := Kbar.map qN) le_rfl hcentQuot

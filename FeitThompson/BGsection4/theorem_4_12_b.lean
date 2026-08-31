@@ -14,8 +14,8 @@ public theorem theorem_4_12_b {R A : Type*} [Group R] [Finite R] [Group A] [Fini
     (hmeta : IsMetacyclic R) :
     commutatorAction (A := A) (G := R) ⊔ fixedPointSubgroup A R = ⊤ ∧
       Disjoint (commutatorAction (A := A) (G := R)) (fixedPointSubgroup A R) := by
-  have hRsolv : IsSolvable R := by
-    letI : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
+  have hRsolv : Group.IsSolvable R := by
+    let : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
     infer_instance
   have hcop' : Nat.Coprime (Nat.card A) (Nat.card R) := by
     obtain ⟨n, hn⟩ := (Fact.out : IsPGroup p R).exists_card_eq
@@ -25,12 +25,12 @@ public theorem theorem_4_12_b {R A : Type*} [Group R] [Finite R] [Group A] [Fini
       fixedPointSubgroup A R ⊔ commutatorAction (A := A) (G := R) = ⊤ :=
     proposition_1_6_a (G := R) (A := A) hRsolv hcop'
   let H : Subgroup R := commutatorAction (A := A) (G := R)
-  letI : IsInvariant A R H := by
+  let : IsInvariant A R H := by
     simpa [H] using commutatorAction_isInvariant (G := R) (A := A)
-  letI : MulDistribMulAction A H := inferInstance
+  let : MulDistribMulAction A H := inferInstance
   have hHp : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
-  have hHsolv : IsSolvable H := by
-    letI : Group.IsNilpotent H := hHp.isNilpotent
+  have hHsolv : Group.IsSolvable H := by
+    let : Group.IsNilpotent H := hHp.isNilpotent
     infer_instance
   have hcopH : Nat.Coprime (Nat.card A) (Nat.card H) := by
     obtain ⟨n, hn⟩ := hHp.exists_card_eq

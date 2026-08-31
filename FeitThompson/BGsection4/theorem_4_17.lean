@@ -28,10 +28,10 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
   interval_cases n
   · have hVcard1 : Nat.card V = 1 := by simpa using hn
     have hVsub : Subsingleton V := (Nat.card_eq_one_iff_unique.mp hVcard1).1
-    letI : Subsingleton V := hVsub
+    let : Subsingleton V := hVsub
     have hBsub : Subsingleton B :=
       ⟨fun _ _ => FaithfulSMul.eq_of_smul_eq_smul (α := V) fun _ => Subsingleton.elim _ _⟩
-    letI : Subsingleton B := hBsub
+    let : Subsingleton B := hBsub
     have hD_bot : derivedSubgroup B = ⊥ := by
       apply eq_bot_iff.2
       intro x _hx
@@ -40,9 +40,9 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
     exact IsPGroup.of_card (p := p) (G := (⊥ : Subgroup B)) (n := 0) (by simp)
   · have hVcardp : Nat.card V = p := by simpa using hn
     have hVcyc : IsCyclic V := isCyclic_of_prime_card hVcardp
-    letI : IsCyclic V := hVcyc
+    let : IsCyclic V := hVcyc
     let eAut : MulAut V ≃* (ZMod (Nat.card V))ˣ := IsCyclic.mulAutMulEquiv (G := V)
-    letI : CommGroup (MulAut V) :=
+    let : CommGroup (MulAut V) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hBcomm : IsMulCommutative B := by
       refine ⟨⟨fun a b => ?_⟩⟩
@@ -69,7 +69,7 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
     rw [hD_bot]
     exact IsPGroup.of_card (p := p) (G := (⊥ : Subgroup B)) (n := 0) (by simp)
   · have hVcardp2 : Nat.card V = p ^ 2 := by simpa using hn
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     let ρ : Representation (ZMod p) B (Additive V) :=
       Theory.Representation.ofElementaryAbelianAction (A := B) (G := V) (p := p)
     have hρinj : Function.Injective ρ := by
@@ -108,44 +108,44 @@ private theorem derivedSubgroup_isPGroup_of_faithful_elementaryAbelian_card_le_p
 
 public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite A]
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) [Fact (IsPGroup p R)]
-    [MulDistribMulAction A R] [FaithfulSMul A R] (hsolvA : IsSolvable A)
+    [MulDistribMulAction A R] [FaithfulSMul A R] (hsolvA : Group.IsSolvable A)
     (hrank : groupRank R ≤ 2) (hAodd : Odd (Nat.card A)) :
     IsPGroup p (derivedSubgroup A) := by
   classical
   rcases hsolvA with ⟨_hsolvA⟩
   by_cases hRsub : Subsingleton R
-  · letI : Subsingleton R := hRsub
+  · let : Subsingleton R := hRsub
     have hAsub : Subsingleton A :=
       ⟨fun _ _ => FaithfulSMul.eq_of_smul_eq_smul (α := R) fun _ => Subsingleton.elim _ _⟩
-    letI : Subsingleton A := hAsub
+    let : Subsingleton A := hAsub
     have hD_bot : derivedSubgroup A = ⊥ := by
       apply eq_bot_iff.2
       intro x _hx
       exact Subsingleton.elim x 1
     rw [hD_bot]
     exact IsPGroup.of_card (p := p) (G := (⊥ : Subgroup A)) (n := 0) (by simp)
-  · letI : Nontrivial R := not_subsingleton_iff_nontrivial.mp hRsub
+  · let : Nontrivial R := not_subsingleton_iff_nontrivial.mp hRsub
     obtain ⟨H, hHchar, _hHcomm, _hHnil, hHexp, hHfix_p⟩ :=
       theorem_1_13 (G := R) (p := p) hpodd
-    letI : H.Characteristic := hHchar
-    letI : H.Normal := by infer_instance
+    let : H.Characteristic := hHchar
+    let : H.Normal := by infer_instance
     have hHp : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
-    letI : Fact (IsPGroup p H) := ⟨hHp⟩
+    let : Fact (IsPGroup p H) := ⟨hHp⟩
     have hHrank : groupRank H ≤ 2 :=
       (groupRank_le_of_subgroup (R := R) H).trans hrank
     have hVcard : Nat.card (H ⧸ frattini H) ≤ p ^ 2 :=
       natCard_frattini_quotient_le_p_sq_of_groupRank_le_two_and_exponent_p
         (R := H) (p := p) hHrank hHexp
-    letI : IsInvariant A R H := isInvariant_of_characteristic (A := A) (G := R) H
-    letI : MulDistribMulAction A H := inferInstance
+    let : IsInvariant A R H := isInvariant_of_characteristic (A := A) (G := R) H
+    let : MulDistribMulAction A H := inferInstance
     have hΦinv : IsInvariant A H (frattini H) :=
       isInvariant_of_characteristic (A := A) (G := H) (frattini H)
     let V : Type _ := H ⧸ frattini H
-    letI : MulDistribMulAction A V :=
+    let : MulDistribMulAction A V :=
       quotientMulDistribMulAction (A := A) (G := H) (frattini H) hΦinv
     have hVelem : IsElementaryAbelian p V := by
       simpa [V] using isElementaryAbelian_quotient_frattini (R := H) (p := p)
-    letI : IsElementaryAbelian p V := hVelem
+    let : IsElementaryAbelian p V := hVelem
     let φ : A →* MulAut V := MulDistribMulAction.toMulAut A V
     have hker_p : IsPGroup p φ.ker := by
       refine (IsPGroup.iff_card (p := p) (G := φ.ker)).2 ?_
@@ -153,7 +153,7 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
       apply Nat.eq_prime_pow_of_unique_prime_dvd (Nat.card_pos (α := φ.ker)).ne'
       intro q hqprime hq_dvd
       by_contra hq_ne_p
-      letI : Fact q.Prime := ⟨hqprime⟩
+      let : Fact q.Prime := ⟨hqprime⟩
       obtain ⟨a, ha_order⟩ := exists_prime_orderOf_dvd_card' (G := φ.ker) q hq_dvd
       have ha_order_A : orderOf (a : A) = q := by
         calc
@@ -167,8 +167,8 @@ public theorem theorem_4_17 {R A : Type*} [Group R] [Finite R] [Group A] [Finite
         rcases Subgroup.mem_zpowers_iff.mp hb with ⟨k, hk⟩
         rw [← hk]
         exact φ.ker.zpow_mem a.2 k
-      letI : MulDistribMulAction Aq H := inferInstance
-      letI : MulDistribMulAction Aq V := MulDistribMulAction.compHom V Aq.subtype
+      let : MulDistribMulAction Aq H := inferInstance
+      let : MulDistribMulAction Aq V := MulDistribMulAction.compHom V Aq.subtype
       have hquot_triv : ActsTrivially (A := Aq) (G := V) := by
         intro b v
         have hbker : (b : A) ∈ φ.ker := hAq_le_ker b.2

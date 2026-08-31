@@ -14,7 +14,7 @@ this reverses the conjugating product on the right-hand side.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups PFAppendixIII
+open _root_.BenderSuzuki.MatrixGroups PFAppendixIII
 
 
 /-- Huppert-Blackburn XI.10.7(b), the `Sz(q)` structure equation. -/

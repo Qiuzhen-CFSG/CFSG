@@ -69,7 +69,8 @@ public theorem lemma113_sylow_of_hall_and_support
   letI : IsHallSubgroup (subgroupPrimeSet H) H := hHall
   let q : Nat.Primes := ⟨r, hr⟩
   have hqmem : q ∈ subgroupPrimeSet H := by
-    simpa [q, subgroupPrimeSet] using hrcard
+    change (q : ℕ) ∣ Nat.card H
+    exact hrcard
   have hnot : ¬ r ∣ H.index := by
     intro hrdvd
     exact (IsHallSubgroup.p_in_pi_of_p_dvd_index q hrdvd) hqmem

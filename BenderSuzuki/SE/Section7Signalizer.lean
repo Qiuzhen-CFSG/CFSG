@@ -26,7 +26,7 @@ universe u
 constraint input needed when the Thompson--Bender signalizer lemma is applied
 inside the odd-order two-point stabilizer in Lemma 7.6. -/
 public theorem theorem4b_pConstrainedGroup_of_solvable
-    {G : Type u} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type u} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     (p : ℕ) [Fact p.Prime] :
     PConstrainedGroup (G := G) p := by
   classical
@@ -55,10 +55,11 @@ public theorem theorem4b_pConstrainedGroup_of_solvable
     rcases Subgroup.mem_map.mp hy with ⟨a, ha, rfl⟩
     exact congrArg q (hx a ha)
   have hqxcore : q x ∈ pCore p (G ⧸ M) := by
-    letI : IsSolvable G := hsolv
+    letI : Group.IsSolvable G := hsolv
     have hcoreQ : pPrimeCore p (G ⧸ M) = ⊥ := by
       simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
-    have hsolvQ : IsSolvable (G ⧸ M) := solvable_quotient_of_solvable M
+    have hsolvQ : Group.IsSolvable (G ⧸ M) :=
+      Group.isSolvable_of_surjective (QuotientGroup.mk'_surjective M)
     have hcent :=
       centralizer_pCore_le_pCore_of_pPrimeCore_eq_bot
         (G := G ⧸ M) hsolvQ (p := p) hcoreQ
@@ -235,7 +236,6 @@ public theorem theorem4b_lemma76_of_pgroup_centralizer_le_E
     rcases Subgroup.mem_map.mp hx with ⟨y, hyH, rfl⟩
     have hyEsub : y ∈ E.subgroupOf D := hHE (by simpa [H] using hyH)
     have hyE : ((y : D) : X) ∈ E := by
-      change (y : X) ∈ E
       exact hyEsub
     exact theorem4b_section7_theta_le_normalizer E hyE
   have hHnorm : H ≤ Subgroup.normalizer (K : Set D) := by
@@ -257,8 +257,9 @@ public theorem theorem4b_lemma76_of_pgroup_centralizer_le_E
   have hKACop : Nat.Coprime (Nat.card K) (Nat.card A) := by
     rw [hKCard, hACard]
     exact hThetaCop.symm.pow_right n
-  have hKinfA : K ⊓ A = ⊥ := Subgroup.inf_eq_bot_of_coprime hKACop
-  have hsolvD : IsSolvable D := odd_order_theorem D hDodd
+  have hKinfA : K ⊓ A = ⊥ :=
+    disjoint_iff.mp (Subgroup.disjoint_of_coprime_natCard hKACop)
+  have hsolvD : Group.IsSolvable D := odd_order_theorem D hDodd
   have hconstrained : PConstrainedGroup (G := D) p :=
     theorem4b_pConstrainedGroup_of_solvable hsolvD p
   have hKcore : K ≤ pPrimeCore p D :=

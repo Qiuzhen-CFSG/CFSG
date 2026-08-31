@@ -8,7 +8,7 @@ open scoped MatrixGroups Pointwise TensorProduct
 /-! # lemma_6_3_a_2 from BG Section 6 -/
 
 public theorem lemma_6_3_a_2
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {H : Subgroup G} [H.Normal] (hHall : ∃ π : Set Nat.Primes, IsHallSubgroup π H)
     {K : Subgroup G} (hCompl : IsCompl H K) (hld : H ≤ derivedSubgroup G) :
     subgroupCentralizerIn H K ≤ ⁅H, H⁆ := by
@@ -29,12 +29,12 @@ public theorem lemma_6_3_a_2
   have hcopHK : Nat.Coprime (Nat.card H) (Nat.card K) := by
     simpa [hHK'.symm.index_eq_card] using hHallπ.card_coprime_index
   let hKnormH : K ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
-  letI : MulDistribMulAction (↥K) (↥H) :=
+  let : MulDistribMulAction (↥K) (↥H) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) K H hKnormH
   let X : Subgroup G := ⁅H, H⁆
   have hX_le_H : X ≤ H := Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
   let Xsub : Subgroup H := X.subgroupOf H
-  haveI : Xsub.Normal := by
+  have : Xsub.Normal := by
     dsimp [Xsub, X]
     infer_instance
   have hXsub_eq_comm : Xsub = _root_.commutator H := by
@@ -66,10 +66,10 @@ public theorem lemma_6_3_a_2
             ((((a : K) • x : H) : G)) hxX (((a : K) : G)⁻¹)
       simpa [Xsub, Subgroup.mem_subgroupOf,
         Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hKnormH, mul_assoc] using hx'
-  letI : IsInvariant (↥K) (↥H) Xsub := hXsub_inv
-  letI : MulAction.QuotientAction (↥K) Xsub :=
+  let : IsInvariant (↥K) (↥H) Xsub := hXsub_inv
+  let : MulAction.QuotientAction (↥K) Xsub :=
     quotientAction_of_isInvariant (A := ↥K) (G := ↥H) Xsub hXsub_inv
-  letI : MulDistribMulAction (↥K) (↥H ⧸ Xsub) :=
+  let : MulDistribMulAction (↥K) (↥H ⧸ Xsub) :=
     quotientMulDistribMulAction (A := ↥K) (G := ↥H) Xsub hXsub_inv
   have hfixedH :
       fixedPointSubgroup (↥K) (↥H) = (subgroupCentralizerIn H K).subgroupOf H := by

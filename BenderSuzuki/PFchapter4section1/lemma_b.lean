@@ -33,8 +33,8 @@ private theorem generated_by_pointStabilizer_and_mover
   have hta_ne : t • a ≠ a := by
     intro hta
     exact ht_not_stabilizer ((MulAction.mem_stabilizer_iff).2 hta)
-  letI : MulAction.IsMultiplyPretransitive L X 2 := h2
-  haveI : MulAction.IsPretransitive L X :=
+  let : MulAction.IsMultiplyPretransitive L X 2 := h2
+  have : MulAction.IsPretransitive L X :=
     MulAction.isPretransitive_of_is_two_pretransitive
   have hstab_one :
       MulAction.IsMultiplyPretransitive

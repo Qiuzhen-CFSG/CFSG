@@ -164,12 +164,13 @@ public theorem exponent_map_mk'_eq_prime_of_exponent_eq_prime_of_ne_bot
     simpa [hexp] using (MonoidHom.exponent_dvd (f := qK) hqK_surj)
   have hne_one : Monoid.exponent (↥(K.map (QuotientGroup.mk' N))) ≠ 1 := by
     intro h_exp_one
-    haveI : Subsingleton ↥(K.map (QuotientGroup.mk' N)) :=
+    have hsubsingleton : Subsingleton ↥(K.map (QuotientGroup.mk' N)) :=
       (Monoid.exp_eq_one_iff (G := ↥(K.map (QuotientGroup.mk' N)))).mp h_exp_one
     have hKmap_bot : K.map (QuotientGroup.mk' N) = ⊥ := by
       rw [Subgroup.eq_bot_iff_forall]
       intro x hx
-      have hx_one_sub : (⟨x, hx⟩ : K.map (QuotientGroup.mk' N)) = 1 := Subsingleton.elim _ _
+      have hx_one_sub : (⟨x, hx⟩ : K.map (QuotientGroup.mk' N)) = 1 :=
+        @Subsingleton.elim _ hsubsingleton _ _
       have hx_one : x = 1 := congrArg Subtype.val hx_one_sub
       simp [hx_one]
     exact hKmap_ne_bot hKmap_bot
@@ -384,18 +385,21 @@ public theorem finiteDimensional_of_irreducible_finite_group
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (hirr : Representation.IsIrreducible ρ) :
     FiniteDimensional F V := by
-  letI : IsSimpleModule (MonoidAlgebra F G) ρ.asModule :=
+  let hSimple : IsSimpleModule (MonoidAlgebra F G) ρ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule ρ).mp hirr
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
-  letI : Nontrivial ρ.asModule :=
-    Function.Injective.nontrivial (f := ρ.asModuleEquiv.symm)
+  let hNontrivialV : Nontrivial V :=
+    Subrepresentation.irreducible_module_nontrivial (ρ := ρ) (inst := hirr)
+  let hNontrivialM : Nontrivial ρ.asModule :=
+    @Function.Injective.nontrivial _ _ hNontrivialV ρ.asModuleEquiv.symm
       (LinearEquiv.injective ρ.asModuleEquiv.symm)
-  letI : Module.Finite (MonoidAlgebra F G) ρ.asModule := by
+  let hFiniteAM : Module.Finite (MonoidAlgebra F G) ρ.asModule := by
     obtain ⟨v, hv⟩ := exists_ne (0 : ρ.asModule)
-    exact
-      Module.Finite.of_surjective
-        (LinearMap.toSpanSingleton (MonoidAlgebra F G) ρ.asModule v)
-        ((isSimpleModule_iff_toSpanSingleton_surjective.mp inferInstance).2 v hv)
-  letI : Module.Finite F ρ.asModule :=
-    Module.Finite.trans (R := F) (A := MonoidAlgebra F G) (M := ρ.asModule)
-  exact Module.Finite.equiv (ρ.asModuleEquiv : ρ.asModule ≃ₗ[F] V)
+    exact @Module.Finite.of_surjective
+      (MonoidAlgebra F G) (MonoidAlgebra F G) _ _ _ (MonoidAlgebra F G) ρ.asModule _ _ _ _ _
+      (LinearMap.toSpanSingleton (MonoidAlgebra F G) ρ.asModule v)
+      ((isSimpleModule_iff_toSpanSingleton_surjective.mp hSimple).2 v hv)
+  let hFiniteFM : Module.Finite F ρ.asModule :=
+    @Module.Finite.trans F (MonoidAlgebra F G) ρ.asModule
+      _ _ _ _ _ _ _ _ hFiniteAM
+  exact @Module.Finite.equiv F ρ.asModule V _ _ _ _ _ hFiniteFM
+    (ρ.asModuleEquiv : ρ.asModule ≃ₗ[F] V)

@@ -28,7 +28,10 @@ public theorem twoPrimeResidual_normal
     (twoPrimeResidual G).Normal := by
   apply Subgroup.Normal.of_conjugate_fixed
   intro g
-  rw [twoPrimeResidual, Subgroup.pointwise_smul_def, Subgroup.map_iSup]
+  rw [twoPrimeResidual, Subgroup.pointwise_smul_def]
+  change Subgroup.map (MulAut.conj g).toMonoidHom
+      (⨆ S : Sylow 2 G, (S : Subgroup G)) = ⨆ S : Sylow 2 G, (S : Subgroup G)
+  rw [Subgroup.map_iSup]
   apply le_antisymm
   · refine iSup_le ?_
     intro P

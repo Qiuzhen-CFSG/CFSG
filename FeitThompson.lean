@@ -488,6 +488,16 @@ public import FeitThompson.PFsection9.PFsection9_4
 public import FeitThompson.PFsection9.PFsection9_6
 public import FeitThompson.PFsection9.PFsection9_7
 public import FeitThompson.PFsection9.PFsection9_8
+public import FeitThompson.PFsection9.PFsection9_8.CaseA
+public import FeitThompson.PFsection9.PFsection9_8.Conjugation
+public import FeitThompson.PFsection9.PFsection9_8.Core
+public import FeitThompson.PFsection9.PFsection9_8.InitialCanonical
+public import FeitThompson.PFsection9.PFsection9_8.InitialCharacter
+public import FeitThompson.PFsection9.PFsection9_8.InitialData
+public import FeitThompson.PFsection9.PFsection9_8.Linear
+public import FeitThompson.PFsection9.PFsection9_8.Orbit
+public import FeitThompson.PFsection9.PFsection9_8.Reducible
+public import FeitThompson.PFsection9.PFsection9_8.XmuTransport
 public import FeitThompson.PFsection9.PFsection9_9
 public import FeitThompson.PGroup.Homocyclic
 public import FeitThompson.PGroup.HomocyclicFrattini

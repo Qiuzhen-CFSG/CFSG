@@ -74,7 +74,7 @@ public theorem section12_groupRank_at_least_two_of_generatorRank_subgroup_pre
   have hA'p : IsPGroup q A' :=
     hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -105,7 +105,7 @@ public theorem section12_generatorRank_le_groupRank_of_subgroup_pre
   have hA'p : IsPGroup q A' :=
     hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -132,9 +132,9 @@ public theorem section12_groupRank_at_least_two_of_rankTwo_pre
     {H A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p H) :
     2 ≤ groupRank A := by
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases section12_rankTwo_elementary hA with ⟨hcard, hElem⟩
-  haveI : IsElementaryAbelian p.val A := hElem
+  have : IsElementaryAbelian p.val A := hElem
   have hgen : 2 ≤ generatorRank A :=
     section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq
       (p := p.val) hcard
@@ -148,7 +148,7 @@ public theorem section12_generatorRank_at_least_three_of_elementaryAbelian_card_
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hgt : p ^ 2 < Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -198,10 +198,10 @@ public theorem section12_primeOrder_ne_top_pre
   intro htop
   have hGcard : Nat.card G = p.val := by
     simpa [htop] using hXcard
-  haveI : Fact p.val.Prime := ⟨p.2⟩
-  haveI : IsCyclic G := by
+  have : Fact p.val.Prime := ⟨p.2⟩
+  have : IsCyclic G := by
     exact isCyclic_of_prime_card (α := G) (p := p.val) hGcard
-  have hsolv : IsSolvable G := by infer_instance
+  have hsolv : Group.IsSolvable G := by infer_instance
   exact IsMinCE.not_solvable (G := G) hsolv
 
 public theorem section12_normalizer_ne_top_of_ne_bot_ne_top_pre
@@ -209,7 +209,7 @@ public theorem section12_normalizer_ne_top_of_ne_bot_ne_top_pre
     Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
   intro hNtop
   have hQnormal : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases hQnormal.eq_bot_or_eq_top with hQbot | hQtop
   · exact hQ_ne_bot hQbot
   · exact hQ_ne_top hQtop
@@ -323,8 +323,8 @@ public theorem section12_rank_centralizerIn_primeOrder_le_two_pre
   have hAelem : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G :=
     section12_rankTwo_elementary hA
   rcases hAelem with ⟨hAcard, hAelem'⟩
-  haveI : Fact p.val.Prime := ⟨p.2⟩
-  haveI : IsElementaryAbelian p.val A := hAelem'
+  have : Fact p.val.Prime := ⟨p.2⟩
+  have : IsElementaryAbelian p.val A := hAelem'
   have hA_le_C : A ≤ C := by
     intro a ha
     refine ⟨section12_rankTwo_le hA ha, ?_⟩
@@ -373,7 +373,7 @@ public theorem section12_exists_primeOrderSubgroupIn_rankTwo_pre
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
     ∃ X : Subgroup G, X ∈ section10PrimeOrderSubgroupsIn p A := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases section12_rankTwo_elementary hA with ⟨hAcard, _hAelem⟩
   have hp_dvd_A : p.val ∣ Nat.card A := by
     rw [hAcard]
@@ -421,7 +421,7 @@ public theorem section12_primeRank_le_groupRank_of_normal_hall_pre
     {p : Nat.Primes} (hpπ : p ∈ π) :
     primeRank p.val R ≤ groupRank H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
@@ -460,7 +460,7 @@ public theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_pre
       let eBσ : Bσ ≃* Bamb := Subgroup.subgroupOfEquivOfLe hBamb_le_sigma
       exact hBp.of_equiv (eBamb.trans eBσ.symm)
     have hBσ_comm : IsMulCommutative Bσ := by
-      letI : IsMulCommutative B := hBcomm
+      let : IsMulCommutative B := hBcomm
       let eBamb : B ≃* Bamb :=
         Subgroup.equivMapOfInjective (f := M.subtype) B M.subtype_injective
       let eBσ : Bσ ≃* Bamb := Subgroup.subgroupOfEquivOfLe hBamb_le_sigma
@@ -495,7 +495,7 @@ public theorem section12_primeRank_le_groupRank_sylow_pre
     {p : Nat.Primes} (S : Sylow p.val G) :
     primeRank p.val G ≤ groupRank (S : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
@@ -517,7 +517,7 @@ public theorem section12_primeRank_le_groupRank_sylow_pre
         (Subgroup.equivMapOfInjective (f := (MulAut.conj g).toMonoidHom) A
           (EquivLike.injective (MulAut.conj g)))
     have hAconj_comm : IsMulCommutative Aconj := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [Aconj] using
         (Subgroup.map_isMulCommutative (f := (MulAut.conj g).toMonoidHom) (H := A))
     have hgen_eq : generatorRank A = generatorRank Aconj := by
@@ -643,10 +643,10 @@ public theorem section12_omega1Z_isElementaryAbelian_pre
       (Subgroup.center R).subtype)
   let Ωc : Subgroup (Subgroup.center R) := omega₁ (G := Subgroup.center R) (p := p)
   have hΩcelem : IsElementaryAbelian p Ωc := by
-    letI : IsMulCommutative (Subgroup.center R) := inferInstance
+    let : IsMulCommutative (Subgroup.center R) := inferInstance
     simpa [Ωc] using section12_omega1_isElementaryAbelian_of_commutative
       (p := p) (Subgroup.center R)
-  letI : IsElementaryAbelian p Ωc := hΩcelem
+  let : IsElementaryAbelian p Ωc := hΩcelem
   exact section12_isElementaryAbelian_map
     (p := p) (A := Ωc) (Subgroup.center R).subtype
 
@@ -655,10 +655,10 @@ public theorem section12_omegaOneCenter_isElementaryAbelian_pre
     {p : Nat.Primes} (P : Subgroup G) :
     IsElementaryAbelian p.val (section10OmegaOneCenter p P) := by
   change IsElementaryAbelian p.val ((Ω₁Z p.val P).map P.subtype)
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hZelem : IsElementaryAbelian p.val (Ω₁Z p.val P) :=
     section12_omega1Z_isElementaryAbelian_pre (p := p.val) P
-  letI : IsElementaryAbelian p.val (Ω₁Z p.val P) := hZelem
+  let : IsElementaryAbelian p.val (Ω₁Z p.val P) := hZelem
   exact section12_isElementaryAbelian_map
     (p := p.val) (A := Ω₁Z p.val P) P.subtype
 
@@ -686,11 +686,11 @@ public theorem section12_omegaOneCenter_ne_bot_of_nontrivial_pgroup_pre
     {p : Nat.Primes} {P : Subgroup G} (hPp : IsPGroup p.val P) (hPne : P ≠ ⊥) :
     section10OmegaOneCenter p P ≠ ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hP_nontrivial : Nontrivial P := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
-    letI : Subsingleton P := hsub
+    let : Subsingleton P := hsub
     apply hPne
     ext x
     constructor
@@ -772,15 +772,15 @@ public theorem section12_omegaOneCenter_le_rankTwo_of_rank_centralizer_pre
     (hRankCMA : groupRank (subgroupCentralizerIn M A) ≤ 2) :
     section10OmegaOneCenter p P ≤ A := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let Z : Subgroup G := section10OmegaOneCenter p P
   have hAelem_pack : A ∈ elementaryAbelianSubgroupsOfRank p.val 2 G :=
     section12_rankTwo_elementary hA
   rcases hAelem_pack with ⟨hAcard, hAelem⟩
-  haveI : IsElementaryAbelian p.val A := hAelem
+  have : IsElementaryAbelian p.val A := hAelem
   have hZelem : IsElementaryAbelian p.val Z := by
     simpa [Z] using section12_omegaOneCenter_isElementaryAbelian_pre (p := p) P
-  letI : IsElementaryAbelian p.val Z := hZelem
+  let : IsElementaryAbelian p.val Z := hZelem
   have hZ_cent_A : Z ≤ Subgroup.centralizer (A : Set G) := by
     intro z hz
     rw [Subgroup.mem_centralizer_iff]
@@ -810,7 +810,7 @@ public theorem section12_omegaOneCenter_le_rankTwo_of_rank_centralizer_pre
   have hAZelem : IsElementaryAbelian p.val (A ⊔ Z : Subgroup G) :=
     section12_isElementaryAbelian_sup_of_le_centralizer_pre (p := p.val)
       (E := A) (C := Z) hZ_cent_A
-  letI : IsElementaryAbelian p.val (A ⊔ Z : Subgroup G) := hAZelem
+  let : IsElementaryAbelian p.val (A ⊔ Z : Subgroup G) := hAZelem
   have hAZgen : 3 ≤ generatorRank (A ⊔ Z : Subgroup G) :=
     section12_generatorRank_at_least_three_of_elementaryAbelian_card_gt_p_sq_pre
       (p := p.val) hcard_gt
@@ -842,7 +842,7 @@ public theorem section12_exists_msigma_sylow_with_rankTwo_omega_le_pre
   have hAsub_p : IsPGroup p.val (A.subgroupOf σ) := by
     have hAp : IsPGroup p.val A := by
       rcases section12_rankTwo_elementary hA with ⟨_hcard, hElem⟩
-      haveI : IsElementaryAbelian p.val A := hElem
+      have : IsElementaryAbelian p.val A := hElem
       exact IsElementaryAbelian.isPGroup p.val A
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe hAσ).symm
   obtain ⟨P, hA_le_P⟩ := IsPGroup.exists_le_sylow
@@ -874,9 +874,9 @@ public theorem section12_rankTwo_not_isCyclic_pre
     {M A : Subgroup G} {p : Nat.Primes}
     (hA : A ∈ section12RankTwoElementaryAbelianIn p M) :
     ¬ IsCyclic A := by
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases section12_rankTwo_elementary hA with ⟨hcard, hElem⟩
-  haveI : IsElementaryAbelian p.val A := hElem
+  have : IsElementaryAbelian p.val A := hElem
   exact section12_not_isCyclic_of_two_le_generatorRank
     (section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq
       (p := p.val) hcard)
@@ -886,9 +886,9 @@ public theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_rankTwo_pre
     {M A : Subgroup G} {p : Nat.Primes} (hA : A ∈ section12RankTwoElementaryAbelianIn p M)
     (a : A) (ha : a ≠ 1) :
     Subgroup.zpowers (a : G) ∈ section10PrimeOrderSubgroupsIn p A := by
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases section12_rankTwo_elementary hA with ⟨_hcard, hElem⟩
-  haveI : IsElementaryAbelian p.val A := hElem
+  have : IsElementaryAbelian p.val A := hElem
   have hapow : a ^ p.val = 1 :=
     Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
       (IsElementaryAbelian.exponent_dvd_p p.val A) a
@@ -943,13 +943,13 @@ public theorem section12_prop116_subgroup_le_centralizer_pre
             Mstar ≠ M ∧ A ≤ Subgroup.centralizer (K ⊓ Mstar : Set G)) :
     K ≤ Subgroup.centralizer (A : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-  haveI : IsElementaryAbelian p.val A := hAelem
-  haveI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
-  haveI : Subgroup.Normalizes A K := ⟨hAKnorm⟩
+  have : IsElementaryAbelian p.val A := hAelem
+  have : IsMulCommutative A := hAelem.toIsMulCommutative
+  let : CommGroup A := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
+  have : Subgroup.Normalizes A K := ⟨hAKnorm⟩
   have hKcop : Nat.Coprime p.val (Nat.card K) :=
     section12_rankTwo_coprime_card_of_pPrime_pre (G := G) hA hKp'
   have hAnoncyc : ¬ IsCyclic A := section12_rankTwo_not_isCyclic_pre hA
@@ -1134,7 +1134,7 @@ public theorem section12_msigma_nilpotent_of_malpha_eq_bot_pre
       simpa [section10Malpha] using hαbot
     exact Subgroup.map_injective M.subtype_injective (by simpa using hmap_bot)
   rcases (theorem_10_2_d (M := M) hM).2 with ⟨hαD, hαDnorm, hDquot_nil⟩
-  haveI : ((section10MalphaSubgroup M).subgroupOf (derivedSubgroup M)).Normal := by
+  have : ((section10MalphaSubgroup M).subgroupOf (derivedSubgroup M)).Normal := by
     simpa using hαDnorm
   have hαsubD_bot :
       (section10MalphaSubgroup M).subgroupOf (derivedSubgroup M) = ⊥ := by
@@ -1163,7 +1163,7 @@ public theorem section12_msigma_nilpotent_of_malpha_eq_bot_pre
     (theorem_10_2_c (M := M) hM).2
   have hσsub_nil :
       Group.IsNilpotent ((section10MsigmaSubgroup M).subgroupOf (derivedSubgroup M)) := by
-    haveI : Group.IsNilpotent (derivedSubgroup M) := hD_nil
+    have : Group.IsNilpotent (derivedSubgroup M) := hD_nil
     infer_instance
   let eσD : (section10MsigmaSubgroup M).subgroupOf (derivedSubgroup M) ≃*
       section10MsigmaSubgroup M :=
@@ -1188,7 +1188,7 @@ public theorem section12_not_alpha_in_prop_12_4_pre
         section9MaximalSubgroupsContaining (Subgroup.normalizer (X : Set G)) ≠ {M}) :
     p ∉ section10AlphaPrimes M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   by_contra hpα
   rcases (by simpa [section10AlphaPrimes] using hpα) with ⟨_hpM, hRankGt⟩
   obtain ⟨P, hA_le_P, hP_le_M, hZ_le_A⟩ :=
@@ -1324,7 +1324,7 @@ public theorem section12_prop_12_4_hard_branch_pre
         section9MaximalSubgroupsContaining (Subgroup.normalizer (X : Set G)) ≠ {M}) :
     Subgroup.centralizer (A : Set G) ≤ M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hpσ : p ∈ section10SigmaPrimes M :=
     section12_not_not_sigma_in_prop_12_4_pre hM hA hnotUnique
   have hpα : p ∉ section10AlphaPrimes M :=
@@ -1365,7 +1365,7 @@ public theorem section12_prop_12_4_hard_branch_pre
     simpa [section12Msigma_subgroupOf_eq] using
       section10MsigmaSubgroup_normal (M := M)
   have hM_le_normσ : M ≤ Subgroup.normalizer (section10Msigma M : Set G) := by
-    letI : ((section10Msigma M).subgroupOf M).Normal := hσsub_norm
+    let : ((section10Msigma M).subgroupOf M).Normal := hσsub_norm
     exact Subgroup.le_normalizer_of_normal_subgroupOf (by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩

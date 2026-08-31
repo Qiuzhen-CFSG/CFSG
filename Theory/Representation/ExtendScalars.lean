@@ -84,7 +84,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
   let j : S ≃ {s.baseChange F' | s ∈ S} :=by
     apply Equiv.ofBijective (fun s ↦ ⟨s.val.baseChange F', ⟨s.val, ⟨s.prop, rfl⟩⟩⟩) ⟨?_, ?_⟩
     · intro s₁ s₂ he
-      simp only [Set.coe_setOf, Set.mem_setOf_eq, Subtype.mk.injEq] at he
+      simp only [Subtype.mk.injEq] at he
       rw [← Subtype.val_inj, ← sub_left_inj (a := s₂.val), sub_self]
       rw [← sub_left_inj (a := baseChange F' s₂.val), sub_self, ← baseChange_sub] at he
       set s := s₁.val - s₂.val
@@ -125,7 +125,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
       split; rfl; rw [TensorProduct.tmul_zero]
     rw [this]
     use n, (algebraMap F F') ∘ f, j ∘ g
-    simp only [Function.comp_apply, Set.mem_setOf_eq, Set.coe_setOf, Equiv.ofBijective_apply,
+    simp only [Function.comp_apply, Equiv.ofBijective_apply,
       algebraMap_smul, j]
   · rw [eq_top_iff, ← Module.Basis.span_eq b2, Submodule.span_le]
     intro M ⟨i, hi⟩
@@ -136,7 +136,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
     obtain ⟨k, hk⟩ := Module.Projective.exists_dual_eq_one (K := F) (V := F') (x := 1) (one_ne_zero' F')
     let Tf : F' ⊗[F] V →ₗ[F] F' ⊗[F] V := LinearMap.rTensor V ((Algebra.linearMap F F').comp k)
     have hTf (i' : ι): Tf (b' i') = b' i' := by
-      simp_all only [Set.mem_setOf_eq, baseChange_apply, rTensor_tmul, coe_comp,
+      simp_all only [baseChange_apply, rTensor_tmul, coe_comp,
         Function.comp_apply, Algebra.linearMap_apply, map_one, ι, b2', b', Tf]
     have hTf' (f : F') (s : Module.End F V) (i' : ι) : Tf ((f • s.baseChange F') (b' i')) = 1 ⊗ₜ (k f • s (b i')) := by
       have : (f • s.baseChange F') (b' i') = f • (1 ⊗ₜ s (b i')) := by
@@ -150,7 +150,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
         simp only [map_smul, Algebra.linearMap_apply, map_one]
       rw [this, TensorProduct.smul_tmul]
     use n, k ∘ f, j.symm ∘ g
-    simp only [Function.comp_apply, Set.coe_setOf]
+    simp only [Function.comp_apply]
     apply Module.Basis.ext b
     intro i'
     have h : (∑ i, f i • (g i).val) (b' i') = (if i.2 = i' then b' i.1 else 0) := by
@@ -171,7 +171,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
         have : LinearMap.baseChange F' (j.symm (g x)).val = (g x).val := by
           set s := (j.symm (g x)).val
           have : j ⟨s, (j.symm (g x)).prop⟩ = g x := by
-            simp only [Set.coe_setOf, Set.mem_setOf_eq, Subtype.coe_eta,
+            simp only [Subtype.coe_eta,
               _root_.Equiv.apply_symm_apply, j, s]
           rw [← this]
           rfl
@@ -190,7 +190,7 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
         have : LinearMap.baseChange F' (j.symm (g x)).val = (g x).val := by
           set s := (j.symm (g x)).val
           have : j ⟨s, (j.symm (g x)).prop⟩ = g x := by
-            simp only [Set.coe_setOf, Set.mem_setOf_eq, Subtype.coe_eta,
+            simp only [Subtype.coe_eta,
               _root_.Equiv.apply_symm_apply, j, s]
           rw [← this]
           rfl
@@ -363,10 +363,10 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     Representation.invariants (Theory.Representation.extendScalars F' ρ) =
       (Representation.invariants ρ).baseChange F' := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Invertible (Fintype.card G : F) := by
+  let _ : Fintype G := Fintype.ofFinite G
+  let _ : Invertible (Fintype.card G : F) := by
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hF
-  letI : Invertible (Fintype.card G : F') := by
+  let _ : Invertible (Fintype.card G : F') := by
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hF'
   let S : Submodule F V := Representation.invariants ρ
   let S' : Submodule F' (F' ⊗[F] V) :=

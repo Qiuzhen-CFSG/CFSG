@@ -90,7 +90,7 @@ public theorem quotientSubgroupRangeEquiv_apply_mk
       ((QuotientGroup.quotientKerEquivRange φ).trans (MulEquiv.subgroupCongr hφrange)))
       (QuotientGroup.mk' (N.subgroupOf K) x) : G ⧸ N) =
     QuotientGroup.mk' N (x : G)
-  simp [QuotientGroup.quotientKerEquivRange, QuotientGroup.rangeKerLift, φ]
+  rfl
 
 end QuotientSubgroupRange
 
@@ -351,7 +351,7 @@ universe u v
 public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G]
-    (hsolv : IsSolvable G)
+    (hsolv : Group.IsSolvable G)
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     ∀ (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H),
       letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
@@ -360,7 +360,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
   let P : ℕ → Prop := fun n =>
     ∀ (G' : Type u) [Group G'] [Finite G'] [MulDistribMulAction A G'],
       Nat.card G' = n →
-        IsSolvable G' →
+        Group.IsSolvable G' →
           Nat.Coprime (Nat.card A) (Nat.card G') →
             ∀ (H' : Subgroup G') [H'.Normal] (hH' : IsInvariant A G' H'),
               letI : MulDistribMulAction A (G' ⧸ H') :=
@@ -380,10 +380,10 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
       simpa using
         (fixedPointSubgroup_quotient_eq_map_of_isMulCommutative (G := G') (A := A)
           (H := (⊥ : Subgroup G')) (hH := hH') hcop_bot)
-    · haveI : IsSolvable H' := by infer_instance
+    · haveI : Group.IsSolvable H' := by infer_instance
       haveI : Nontrivial H' := (Subgroup.nontrivial_iff_ne_bot H').2 hHbot
       let pds : ℕ → Prop := fun i => derivedSeries H' i = ⊥
-      have hpds : ∃ i, pds i := IsSolvable.solvable (G := H')
+      have hpds : ∃ i, pds i := Group.IsSolvable.solvable (G := H')
       let i : ℕ := Nat.find hpds
       have hi_spec : derivedSeries H' i = ⊥ := Nat.find_spec hpds
       have hi_ne_zero : i ≠ 0 := by
@@ -468,7 +468,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
       letI : Finite Q := by infer_instance
       letI : MulDistribMulAction A Q :=
         quotientMulDistribMulAction (A := A) (G := G') N hNinv
-      have hQ_solv : IsSolvable Q := by infer_instance
+      have hQ_solv : Group.IsSolvable Q := by infer_instance
       have hQ_coprime : Nat.Coprime (Nat.card A) (Nat.card Q) := by
         have hdvd : Nat.card Q ∣ Nat.card G' := Subgroup.card_quotient_dvd_card (s := N)
         exact Nat.Coprime.of_dvd_right hdvd hcop'

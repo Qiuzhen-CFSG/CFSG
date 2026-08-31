@@ -542,9 +542,8 @@ public theorem theorem_12_9_exists_maximal_msChoice_containing_p0
     Section8.theorem_8_11_msChoice_eq_msigma (G := G) hL hLF hLs
   let QL : Sylow pp.val L := Q.subtype hQleL
   have hQLmap : section10AmbientSylowSubgroup L QL = (Q : Subgroup G) := by
-    simpa [section10AmbientSylowSubgroup, QL, Sylow.subtype] using
-      (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (Q : Subgroup G))
-        (K := L) hQleL)
+    change Subgroup.map L.subtype ((Q : Subgroup G).subgroupOf L) = (Q : Subgroup G)
+    exact Subgroup.map_subgroupOf_eq_of_le hQleL
   have hpQ : pp ∈ subgroupPrimeSet (Q : Subgroup G) := by
     have hQnontrivial : Nontrivial (Q : Subgroup G) :=
       (Subgroup.nontrivial_iff_ne_bot (H := (Q : Subgroup G))).2 hQne
@@ -627,7 +626,7 @@ public theorem theorem_12_9_exists_centralizer_witness
     (hMF : section16MFSubgroup M K) (hP1M : P1 ≤ M)
     (hP1Elem : IsElementaryAbelian p P1) (hP1noncyc : ¬ IsCyclic P1)
     (hcop : Nat.Coprime p (Nat.card K))
-    (hKsolv : IsSolvable K) (hKne : K ≠ ⊥)
+    (hKsolv : Group.IsSolvable K) (hKne : K ≠ ⊥)
     (hK' : K' = ambientDerivedSubgroup K) :
     ∃ x : G, x ∈ P1 ∧ x ≠ 1 ∧ ¬ elementCentralizerIn K x ≤ K' := by
   classical
@@ -695,11 +694,11 @@ public theorem theorem_12_9_exists_centralizer_witness
         intro ha_ne
         exact hfixed_map_le a ha_ne
   have hDlt : ambientDerivedSubgroup K < K := by
-    haveI : IsSolvable K := hKsolv
+    let : Group.IsSolvable K := hKsolv
     haveI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
     have hcomm_lt : derivedSubgroup K < (⊤ : Subgroup K) := by
       simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
-        IsSolvable.commutator_lt_top_of_nontrivial (G := K)
+        Group.IsSolvable.commutator_lt_top_of_nontrivial (G := K)
     refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
     intro hEq
     have hDtop : derivedSubgroup K = (⊤ : Subgroup K) := by

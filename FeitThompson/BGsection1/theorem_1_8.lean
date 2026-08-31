@@ -19,15 +19,15 @@ public theorem theorem_1_8 {R A : Type*} [Group R] [Finite R] [Group A] [Finite 
     {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [MulDistribMulAction A R]
     (hcoprime : Nat.Coprime (Nat.card A) (Nat.card R))
     (hquot :
-      letI : MulDistribMulAction A (R ⧸ frattini R) :=
+      let : MulDistribMulAction A (R ⧸ frattini R) :=
         quotientMulDistribMulAction (A := A) (G := R) (frattini R)
           (isInvariant_of_characteristic (A := A) (G := R) (frattini R))
       ActsTrivially (A := A) (G := R ⧸ frattini R)) :
     ActsTrivially (A := A) (G := R) := by
   have hnilR : Group.IsNilpotent R :=
     IsPGroup.isNilpotent (p := p) (G := R) (h := (Fact.out : IsPGroup p R))
-  letI : Group.IsNilpotent R := hnilR
-  have hsolvR : IsSolvable R := by infer_instance
+  let : Group.IsNilpotent R := hnilR
+  have hsolvR : Group.IsSolvable R := by infer_instance
   have hsup :
       fixedPointSubgroup A R ⊔ commutatorAction (A := A) (G := R) = ⊤ :=
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprime

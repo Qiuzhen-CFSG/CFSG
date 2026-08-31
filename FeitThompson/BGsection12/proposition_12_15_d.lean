@@ -54,7 +54,7 @@ private theorem section12_global_sylow_of_inf_sylow_normalizer_le
     ∃ Sg : Sylow q.val G,
       (Sg : Subgroup G) = section10AmbientSylowSubgroup (M ⊓ Mstar) S := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hnormInf :
       Subgroup.normalizer
           (section8SubgroupInAmbient (S : Subgroup (M ⊓ Mstar : Subgroup G)) : Set G) ≤
@@ -205,16 +205,16 @@ public theorem section12_prime_dvd_card_of_primeRank_pos
   have hAnontrivial : Nontrivial A := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
-    haveI : Subsingleton A := hsub
+    have : Subsingleton A := hsub
     have hgen0 : generatorRank A = 0 := by
       rw [generatorRank_eq_group_rank]
-      haveI : Group.FG A := Group.fg_of_finite
+      have : Group.FG A := Group.fg_of_finite
       apply le_antisymm ?_ (Nat.zero_le _)
       refine Group.rank_le (G := A) (S := ∅) ?_
       rw [Finset.coe_empty, Subgroup.closure_empty]
       exact (Subsingleton.elim (⊤ : Subgroup A) ⊥).symm
     omega
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hpA : p.val ∣ Nat.card A := by
     rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := A) (hG := hAp)).1
         hAnontrivial with
@@ -229,7 +229,7 @@ private theorem section12_sylow_inf_derived_eq_bot_of_not_mem_derived
     (S : Sylow p.val H) (hpD : p ∉ subgroupPrimeSet (derivedSubgroup H)) :
     (S : Subgroup H) ⊓ derivedSubgroup H = ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   by_contra hne
   let C : Subgroup H := (S : Subgroup H) ⊓ derivedSubgroup H
   have hC_ne : C ≠ ⊥ := by
@@ -319,7 +319,7 @@ public theorem section12_sylow_map_subtype_of_sup_hall
     (hKU : K ⊔ U = ⊤) (S : Sylow p.val U) :
     ∃ T : Sylow p.val H, (T : Subgroup H) = (S : Subgroup U).map U.subtype := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let SG : Subgroup H := (S : Subgroup U).map U.subtype
   have hSGp : IsPGroup p.val SG := by
     simpa [SG] using
@@ -349,7 +349,7 @@ private theorem section12_tau1_transfer_of_malpha_products
     (hrαM : r ∉ section10AlphaPrimes M) :
     r ∈ section12Tau1Primes M := by
   classical
-  haveI : Fact r.val.Prime := ⟨r.property⟩
+  have : Fact r.val.Prime := ⟨r.property⟩
   rcases (by simpa [section12Tau1Primes] using hrτstar) with
     ⟨hrσstar, hrDstar, hrankStar⟩
   have hrαstar : r ∉ section10AlphaPrimes Mstar := by
@@ -472,7 +472,7 @@ private theorem section12_tau1_transfer_of_malpha_products
     section8_coprime_card_of_isPGroup_of_isPiSubgroup_compl
       (G := M) (π := ({r} : Set Nat.Primes)) (r := r)
       (by simp) SM.isPGroup' hKpiM
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hSM_infM_eq :
       (SM : Subgroup M) ⊓ derivedSubgroup M =

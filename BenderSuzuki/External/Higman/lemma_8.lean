@@ -21,6 +21,7 @@ open scoped commutatorElement
 universe u
 
 set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
 /-- Higman Lemma 8: if the commutator subgroup of a normal `X`-invariant cover
 lies below the abelian subgroup, then that abelian subgroup has exponent at most
 two. -/
@@ -39,10 +40,10 @@ public theorem lemma8_cover_commutator_case_exponent_two
     (_hcomm : (commutator C).map C.subtype = A) :
     ∀ x : A, x ^ 2 = 1 := by
   classical
-  letI : Finite P := finite_of_isSuzukiTwoGroup _hP
-  letI : Finite C := inferInstance
-  letI : FaithfulSMul X P := _hXfaithful
-  letI : Finite X := Finite.of_injective
+  let : Finite P := finite_of_isSuzukiTwoGroup _hP
+  let : Finite C := inferInstance
+  let : FaithfulSMul X P := _hXfaithful
+  let : Finite X := Finite.of_injective
     (MulDistribMulAction.toMulAut X P) (by
       intro x y hxy
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
@@ -53,8 +54,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
     (isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup C
   have hC_nonabelian : ¬ IsMulCommutative C := by
     intro hC_comm
-    letI : IsMulCommutative C := hC_comm
-    letI : CommGroup C := IsMulCommutative.instCommGroup
+    let : IsMulCommutative C := hC_comm
+    let : CommGroup C := IsMulCommutative.instCommGroup
     have hcomm_bot : commutator C = ⊥ := by
       rw [commutator_eq_bot_iff_center_eq_top]
       exact CommGroup.center_eq_top
@@ -66,9 +67,9 @@ public theorem lemma8_cover_commutator_case_exponent_two
       apply Subtype.ext
       simpa [hA_bot] using x.property
     simp [hx]
-  letI : Fact (IsPGroup 2 C) := ⟨hC_two⟩
-  letI : IsInvariant X P C := ⟨_hC_X⟩
-  letI : IsCyclic X := _hXcyclic
+  let : Fact (IsPGroup 2 C) := ⟨hC_two⟩
+  let : IsInvariant X P C := ⟨_hC_X⟩
+  let : IsCyclic X := _hXcyclic
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := X)
   let tau : MulAut C := MulDistribMulAction.toMulAut X C g
   obtain ⟨k, m, hm_odd, htau_order⟩ :=
@@ -88,7 +89,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
   have hfrattini : A = (frattini C).map C.subtype := by
     let Phi : Subgroup P := (frattini C).map C.subtype
     change A = Phi
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hA_le_Phi : A ≤ Phi := by
       intro a ha
       rw [← _hcomm] at ha
@@ -191,7 +192,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
         intro hKC
         have hC_ne_bot : C ≠ ⊥ :=
           ne_of_gt (lt_of_le_of_lt bot_le _hAC)
-        haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+        have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         have hnil : Group.IsNilpotent P :=
           IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
         obtain ⟨n, hn⟩ :=
@@ -694,7 +695,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
       intro h
       apply hxy
       exact congrArg (fun z : T => ((z.1 : A) : P)) h
-    letI : Fintype T := Fintype.ofFinite T
+    let : Fintype T := Fintype.ofFinite T
     have hthree : ({oneT, xT, yT} : Finset T).card = 3 := by
       have hone : oneT ∉ ({xT, yT} : Finset T) := by
         simp only [Finset.mem_insert, Finset.mem_singleton]
@@ -716,9 +717,9 @@ public theorem lemma8_cover_commutator_case_exponent_two
     by_contra hr'
     have hrle : r ≤ 1 := by omega
     interval_cases r <;> norm_num at hle
-  letI : IsInvariant X P A := ⟨_hA_X⟩
-  letI : IsMulCommutative A := _hA_abelian
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : IsInvariant X P A := ⟨_hA_X⟩
+  let : IsMulCommutative A := _hA_abelian
+  let : CommGroup A := IsMulCommutative.instCommGroup
   let Asq : Subgroup A := (powMonoidHom 2 : A →* A).range
   let AQ := A ⧸ Asq
   have hAQ_two : ∀ q : AQ, q ^ 2 = 1 := by
@@ -729,7 +730,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
     rw [QuotientGroup.eq_one_iff]
     exact MonoidHom.mem_range.mpr
       ⟨a, by simp [powMonoidHom]⟩
-  letI : Module (ZMod 2) (Additive AQ) :=
+  let : Module (ZMod 2) (Additive AQ) :=
     AddCommGroup.zmodModule <| by
       intro q
       apply Additive.toMul.injective
@@ -792,10 +793,10 @@ public theorem lemma8_cover_commutator_case_exponent_two
       refine ⟨x⁻¹ • b, ?_⟩
       have h := congrArg (fun z : A => x⁻¹ • z) hb
       simpa [Asq, powMonoidHom, smul_smul] using h
-  letI : IsInvariant X A Asq := hAsq_X
-  letI : MulAction.QuotientAction X Asq :=
+  let : IsInvariant X A Asq := hAsq_X
+  let : MulAction.QuotientAction X Asq :=
     quotientAction_of_isInvariant (A := X) (G := A) Asq hAsq_X
-  letI : MulDistribMulAction X AQ :=
+  let : MulDistribMulAction X AQ :=
     quotientMulDistribMulAction (A := X) (G := A) Asq (by infer_instance)
   let Ttau : Additive AQ ≃ₗ[ZMod 2] Additive AQ :=
     { (MulDistribMulAction.toMulAut X AQ g).toAdditive with
@@ -1026,8 +1027,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
       let H2 : Subgroup H1 :=
         (higmanLowerCentralSeries C 2).subgroupOf
           (higmanLowerCentralSeries C 1)
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-      letI : Fact (IsPGroup 2 H1) :=
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (IsPGroup 2 H1) :=
         ⟨hC_two.to_subgroup (higmanLowerCentralSeries C 1)⟩
       have hsquares_le_phi : squaresSubgroup H1 ≤ frattini H1 := by
         rw [squaresSubgroup, Subgroup.closure_le]
@@ -1232,7 +1233,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
       have hker : powerMap (x - y) = 0 := by
         rw [map_sub, hxy]
         simp
-      letI : Nontrivial (Additive (LowerCentralFactor C 1)) := inferInstance
+      let : Nontrivial (Additive (LowerCentralFactor C 1)) := inferInstance
       obtain ⟨w, hw⟩ :=
         exists_ne (0 : Additive (LowerCentralFactor C 1))
       obtain ⟨v, hv⟩ := hpower_surj w
@@ -1441,8 +1442,8 @@ public theorem lemma8_cover_commutator_case_exponent_two
         let H2 : Subgroup H1 :=
           (higmanLowerCentralSeries C 3).subgroupOf
             (higmanLowerCentralSeries C 2)
-        letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-        letI : Fact (IsPGroup 2 H1) :=
+        let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+        let : Fact (IsPGroup 2 H1) :=
           ⟨hC_two.to_subgroup (higmanLowerCentralSeries C 2)⟩
         have hsquares_le_phi : squaresSubgroup H1 ≤ frattini H1 := by
           rw [squaresSubgroup, Subgroup.closure_le]
@@ -1649,7 +1650,7 @@ public theorem lemma8_cover_commutator_case_exponent_two
         have hker : powerMap (x - y) = 0 := by
           rw [map_sub, hxy]
           simp
-        letI : Nontrivial (Additive (LowerCentralFactor C 2)) := inferInstance
+        let : Nontrivial (Additive (LowerCentralFactor C 2)) := inferInstance
         obtain ⟨w, hw⟩ :=
           exists_ne (0 : Additive (LowerCentralFactor C 2))
         obtain ⟨v, hv⟩ := hpower_surj w

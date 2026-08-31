@@ -35,11 +35,11 @@ public theorem exists_isCompl_invariant_of_odd_group
   let Upack : rho.invtSubmodule := ⟨U, hUinv⟩
   let instAdd : AddCommGroup rho.asModule :=
     Representation.instAddCommGroupAsModule rho
-  letI : AddCommGroup rho.asModule := instAdd
+  let _ : AddCommGroup rho.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod 2) A) rho.asModule :=
     Representation.instModuleMonoidAlgebraAsModule rho
-  letI : Module (MonoidAlgebra (ZMod 2) A) rho.asModule := instMod
-  haveI : NeZero (Fintype.card A : ZMod 2) := by
+  let _ : Module (MonoidAlgebra (ZMod 2) A) rho.asModule := instMod
+  have : NeZero (Fintype.card A : ZMod 2) := by
     constructor
     intro hzero
     have hdiv : 2 ∣ Fintype.card A :=
@@ -111,14 +111,14 @@ public theorem exists_isCompl_invariant_subgroup_within
       (∀ a : A, ∀ g : G, g ∈ W → a • g ∈ W) ∧
       V ⊓ W = ⊥ ∧ V ⊔ W = U := by
   classical
-  letI : IsInvariant A G U := ⟨by
+  let _ : IsInvariant A G U := ⟨by
     intro a g
     constructor
     · exact hU a g
     · intro hg
       have hback := hU a⁻¹ (a • g) hg
       simpa [smul_smul] using hback⟩
-  letI : IsInvariant A G V := ⟨by
+  let _ : IsInvariant A G V := ⟨by
     intro a g
     constructor
     · exact hV a g
@@ -126,10 +126,10 @@ public theorem exists_isCompl_invariant_subgroup_within
       have hback := hV a⁻¹ (a • g) hg
       simpa [smul_smul] using hback⟩
   let VU : Subgroup U := V.subgroupOf U
-  letI : IsInvariant A U VU := by
+  let _ : IsInvariant A U VU := by
     dsimp [VU]
     exact isInvariant_subgroupOf V U
-  letI : IsElementaryAbelian 2 U := by
+  let _ : IsElementaryAbelian 2 U := by
     refine
       { toIsMulCommutative := inferInstance
         exponent_dvd_p := Monoid.exponent_dvd_iff_forall_pow_eq_one.2 ?_ }
@@ -141,7 +141,7 @@ public theorem exists_isCompl_invariant_subgroup_within
     exists_isCompl_invariant_subgroup_of_odd_group hAodd VU (by
       intro a u hu
       exact (IsInvariant.invariant (A := A) (G := U) (H := VU) a u).1 hu)
-  letI : IsInvariant A U WU := ⟨by
+  let _ : IsInvariant A U WU := ⟨by
     intro a u
     constructor
     · exact hWU_forward a u

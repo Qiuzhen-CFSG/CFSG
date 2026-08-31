@@ -17,14 +17,14 @@ open scoped FixedPoints commutatorElement
 
 private theorem chiefFactor_quotient_isElementaryAbelian_of_isPFactor
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
+    (hsolv : Group.IsSolvable G) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
     letI : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     IsElementaryAbelian p Uq := by
   classical
-  haveI : IsSolvable G := hsolv
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : Group.IsSolvable G := hsolv
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin := chiefFactor_quotient_minimal (G := G) cf
@@ -32,27 +32,27 @@ private theorem chiefFactor_quotient_isElementaryAbelian_of_isPFactor
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using hmin
-  haveI : Uq.Normal := hUq_min.1
-  haveI : IsMinimalNormal Uq := {
+  have : Uq.Normal := hUq_min.1
+  have : IsMinimalNormal Uq := {
     minimal := by
       intro K _ hKU
       by_cases hK : K = ⊥
       · exact Or.inl hK
       · exact Or.inr (hUq_min.2.2 K inferInstance hKU hK)
   }
-  haveI : IsSolvable (G ⧸ cf.V) := by infer_instance
-  haveI : IsSolvable Uq := by infer_instance
+  have : Group.IsSolvable (G ⧸ cf.V) := by infer_instance
+  have : Group.IsSolvable Uq := by infer_instance
   have hUq_comm : IsMulCommutative Uq := minimalNormal_solvable_isMulCommutative Uq
   let e : cf.U ⧸ cf.V.subgroupOf cf.U ≃* Uq :=
     quotientSubgroupRangeEquiv cf.U cf.V
   have hUq_p : IsPGroup p Uq := hcf_p.of_equiv e
-  haveI : Fact (IsPGroup p Uq) := ⟨hUq_p⟩
-  haveI : Nontrivial Uq := (Subgroup.nontrivial_iff_ne_bot Uq).2 hUq_min.2.1
+  have : Fact (IsPGroup p Uq) := ⟨hUq_p⟩
+  have : Nontrivial Uq := (Subgroup.nontrivial_iff_ne_bot Uq).2 hUq_min.2.1
   let Ω : Subgroup Uq := omega₁ (G := Uq) (p := p)
   have hΩ_char : Ω.Characteristic := by
     simpa [Ω] using omega₁_characteristic (G := Uq) (p := p)
-  letI : Ω.Characteristic := hΩ_char
-  haveI : (Ω.map Uq.subtype).Normal := by
+  let : Ω.Characteristic := hΩ_char
+  have : (Ω.map Uq.subtype).Normal := by
     exact ConjAct.normal_of_characteristic_of_normal
   have hp_dvd_cardUq : p ∣ Nat.card Uq := by
     rcases hUq_p.card_eq_or_dvd with h1 | hdiv
@@ -106,8 +106,8 @@ private theorem chiefFactor_inf_sup_normal_coprime_le_lower_of_isPFactor
     (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
     cf.U ⊓ (cf.V ⊔ N) ≤ cf.V := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
-  haveI : cf.U.Normal := cf.isChief.normal_H
+  have : cf.V.Normal := cf.isChief.normal_K
+  have : cf.U.Normal := cf.isChief.normal_H
   let K : Subgroup G := cf.U ⊓ (cf.V ⊔ N)
   have hV_le_K : cf.V ≤ K := by
     exact le_inf cf.isChief.lt.le le_sup_left
@@ -119,7 +119,7 @@ private theorem chiefFactor_inf_sup_normal_coprime_le_lower_of_isPFactor
   · exact hK_eq_V.le
   · have hU_le_sup : cf.U ≤ cf.V ⊔ N := by
       simpa [K] using hK_eq_U
-    haveI : cf.V.Normal := cf.isChief.normal_K
+    have : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     let Nq : Subgroup (G ⧸ cf.V) := N.map π
@@ -165,8 +165,8 @@ private theorem prime_dvd_natCard_of_isPFactor_of_le
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) {H : Subgroup G} (hcfU : cf.U ≤ H) :
     p ∣ Nat.card H := by
-  haveI : cf.V.Normal := cf.isChief.normal_K
-  letI : (cf.V.subgroupOf cf.U).Normal :=
+  have : cf.V.Normal := cf.isChief.normal_K
+  let : (cf.V.subgroupOf cf.U).Normal :=
     Subgroup.Normal.subgroupOf (G := G) (hH := cf.isChief.normal_K) cf.U
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
@@ -190,13 +190,13 @@ private theorem prime_dvd_natCard_of_isPFactor_of_le
 
 private theorem chiefFactor_upper_le_Op_p'p_sup_lower_of_isPFactor
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
     (hrank : primeRank p GStar ≤ 2) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p)
     (hcfU : cf.U ≤ GStar) :
     cf.U ≤ ((Op_p'p p ↥GStar).map GStar.subtype) ⊔ cf.V := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
-  haveI : cf.U.Normal := cf.isChief.normal_H
+  have : cf.V.Normal := cf.isChief.normal_K
+  have : cf.U.Normal := cf.isChief.normal_H
   have hcfV : cf.V ≤ GStar := cf.isChief.lt.le.trans hcfU
   let N0 : Subgroup GStar := Op_p'p p ↥GStar
   let N : Subgroup G := N0.map GStar.subtype
@@ -204,16 +204,16 @@ private theorem chiefFactor_upper_le_Op_p'p_sup_lower_of_isPFactor
   have hN0_subgroupOf : N.subgroupOf GStar = N0 := by
     simpa [N] using
       (Subgroup.comap_map_eq_self_of_injective (H := N0) (f := GStar.subtype) GStar.subtype_injective)
-  haveI : N0.Characteristic := Op_p'p_characteristic_local (H := ↥GStar) (p := p)
-  haveI : N.Normal := by
+  have : N0.Characteristic := Op_p'p_characteristic_local (H := ↥GStar) (p := p)
+  have : N.Normal := by
     simpa [N] using (inferInstance : (N0.map GStar.subtype).Normal)
   let L : Subgroup G := cf.V ⊔ N
-  haveI : L.Normal := by
+  have : L.Normal := by
     change (cf.V ⊔ N).Normal
     infer_instance
   have hL_le_GStar : L ≤ GStar := sup_le hcfV hN_le_GStar
   let L0 : Subgroup GStar := L.subgroupOf GStar
-  haveI : L0.Normal := by
+  have : L0.Normal := by
     exact Subgroup.Normal.subgroupOf (G := G) (hH := inferInstance) GStar
   have hN0_le_L0 : N0 ≤ L0 := by
     intro x hx
@@ -222,7 +222,7 @@ private theorem chiefFactor_upper_le_Op_p'p_sup_lower_of_isPFactor
     exact (show N ≤ L from le_sup_right) hxN
   have hp_mem_GStar : p ∣ Nat.card GStar :=
     prime_dvd_natCard_of_isPFactor_of_le (cf := cf) hcf_p hcfU
-  have hsolvGStar : IsSolvable GStar := by infer_instance
+  have hsolvGStar : Group.IsSolvable GStar := by infer_instance
   have hoddGStar : Odd (Nat.card GStar) := hodd.of_dvd_nat (Subgroup.card_subgroup_dvd_card GStar)
   have hcop_quot_N0 : Nat.Coprime p (Nat.card (↥GStar ⧸ N0)) := by
     simpa [N0] using
@@ -314,10 +314,10 @@ private theorem derivedSubgroup_le_centralizerOfChiefFactor_of_chief_conj_image_
       pCore p ((MulAut.conjNormal (H := Uq)).comp π).range = ⊥) :
     derivedSubgroup G ≤ centralizerOfChiefFactor (G := G) (⊤ : Subgroup G) cf := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-  haveI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+  have : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
   let φ : G →* MulAut Uq := (MulAut.conjNormal (H := Uq)).comp π
   let A : Subgroup (MulAut Uq) := φ.range
   let φA : G →* A := φ.rangeRestrict
@@ -384,7 +384,7 @@ private theorem derivedSubgroup_le_centralizerOfChiefFactor_of_chief_conj_image_
 private theorem derived_image_isPGroup_of_mulAut_range_rank_le_two
     {G R : Type*} [Group G] [Finite G] [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2) [Fact (IsPGroup p R)]
-    (hsolvG : IsSolvable G) (hoddG : Odd (Nat.card G))
+    (hsolvG : Group.IsSolvable G) (hoddG : Odd (Nat.card G))
     (hR_rank : groupRank R ≤ 2) (φ : G →* MulAut R) :
     IsPGroup p ((derivedSubgroup G).map φ) := by
   classical
@@ -392,9 +392,9 @@ private theorem derived_image_isPGroup_of_mulAut_range_rank_le_two
   let φA : G →* A := φ.rangeRestrict
   have hAodd : Odd (Nat.card A) := by
     exact hoddG.of_dvd_nat (Subgroup.card_dvd_of_surjective φA φ.rangeRestrict_surjective)
-  have hsolvA : IsSolvable A := by
-    haveI : IsSolvable G := hsolvG
-    exact solvable_of_surjective (f := φA) φ.rangeRestrict_surjective
+  have hsolvA : Group.IsSolvable A := by
+    have : Group.IsSolvable G := hsolvG
+    exact Group.isSolvable_of_surjective (f := φA) φ.rangeRestrict_surjective
   have hAder_p : IsPGroup p (derivedSubgroup A) := by
     exact theorem_4_17 (R := R) (A := A) (p := p) hpodd hsolvA hR_rank hAodd
   have hmap_der : (derivedSubgroup G).map φA = derivedSubgroup A := by
@@ -437,11 +437,11 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_covered_coprime_quoti
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     IsPGroup p ((derivedSubgroup G).map (φ.comp π)) := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let qM : G →* G ⧸ M := QuotientGroup.mk' M
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-  haveI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+  have : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   have hM_inf_U_le_V : M ⊓ cf.U ≤ cf.V := by
     intro x hx
@@ -583,7 +583,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_covered_coprime_quoti
   exact hfurange_p
 
 private theorem chiefFactor_conj_range_pCore_eq_bot_local
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
     letI : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
@@ -592,15 +592,15 @@ private theorem chiefFactor_conj_range_pCore_eq_bot_local
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     pCore p φ.range = ⊥ := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-  letI : Uq.Normal := hmin.1
-  letI : IsElementaryAbelian p Uq :=
+  let : Uq.Normal := hmin.1
+  let : IsElementaryAbelian p Uq :=
     chiefFactor_quotient_isElementaryAbelian_of_isPFactor (G := G) (p := p) hsolv cf hcf_p
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   let A : Subgroup (MulAut Uq) := φ.range
@@ -632,7 +632,7 @@ private theorem chiefFactor_conj_range_pCore_eq_bot_local
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by
       simpa [hbot] using hu_mem
     exact hu_ne_one (Subgroup.mem_bot.mp hu_bot)
-  haveI : P.Normal := by
+  have : P.Normal := by
     dsimp [P]
     infer_instance
   have hF_inv : IsInvariant A Uq F := by
@@ -697,7 +697,7 @@ private theorem chiefFactor_conj_range_pCore_eq_bot_local
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
 
 private theorem chiefFactor_conj_composed_range_pCore_eq_bot_local
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
     letI : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
@@ -706,10 +706,10 @@ private theorem chiefFactor_conj_composed_range_pCore_eq_bot_local
     let φ : G →* MulAut Uq := (MulAut.conjNormal (H := Uq)).comp π
     pCore p φ.range = ⊥ := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
-  haveI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+  have : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
   let φ0 : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   let φ : G →* MulAut Uq := φ0.comp π
   have hrange : φ.range = φ0.range := by
@@ -764,7 +764,7 @@ private theorem mapped_Op_p'p_map_pPrimeCore_eq_pCore_local
 
 private theorem chiefFactor_upper_le_Op_p'p_map_comap_mk'_sup_lower
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
     (hrank : primeRank p GStar ≤ 2) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p)
     (hcfU : cf.U ≤ GStar) :
     let M : Subgroup G := (pPrimeCore p GStar).map GStar.subtype
@@ -782,14 +782,14 @@ private theorem chiefFactor_upper_le_Op_p'p_map_comap_mk'_sup_lower
   exact hupper.trans (sup_le_sup hN_le_comap le_rfl)
 
 public theorem corollary_4_19 {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (GStar : Subgroup G) [GStar.Normal]
     (hrank : primeRank p GStar ≤ 2) (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p)
     (hcfU : cf.U ≤ GStar) :
     derivedSubgroup G ≤ centralizerOfChiefFactor (G := G) (⊤ : Subgroup G) cf := by
   classical
   let M : Subgroup G := (pPrimeCore p GStar).map GStar.subtype
   let N : Subgroup G := (Op_p'p p GStar).map GStar.subtype
-  haveI : M.Normal := by
+  have : M.Normal := by
     dsimp [M]
     infer_instance
   have hMcop : Nat.Coprime p (Nat.card M) := by
@@ -808,14 +808,14 @@ public theorem corollary_4_19 {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
       let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
       letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
       IsPGroup p ((derivedSubgroup G).map ((MulAut.conjNormal (H := Uq)).comp π)) := by
-    haveI : cf.V.Normal := cf.isChief.normal_K
-    haveI : (Op_p'p p GStar).Characteristic := Op_p'p_characteristic_local (H := GStar) (p := p)
-    haveI : N.Normal := by
+    have : cf.V.Normal := cf.isChief.normal_K
+    have : (Op_p'p p GStar).Characteristic := Op_p'p_characteristic_local (H := GStar) (p := p)
+    have : N.Normal := by
       dsimp [N]
       infer_instance
     let qM : G →* G ⧸ M := QuotientGroup.mk' M
     let R : Subgroup (G ⧸ M) := N.map qM
-    haveI : R.Normal := by
+    have : R.Normal := by
       dsimp [R, qM]
       exact (inferInstance : N.Normal).map (QuotientGroup.mk' M) (QuotientGroup.mk'_surjective M)
     have hR_eq : R = (pCore p (GStar ⧸ pPrimeCore p GStar)).map
@@ -858,7 +858,7 @@ public theorem corollary_4_19 {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
         prime_dvd_natCard_of_isPFactor_of_le (G := G) (p := p) cf hcf_p hcfU
       have hp_mem_G : p ∣ Nat.card G := hp_mem_GStar.trans (Subgroup.card_subgroup_dvd_card GStar)
       have hpodd : p ≠ 2 := Odd.ne_two_of_dvd_nat hodd hp_mem_G
-      letI : Fact (IsPGroup p R) := ⟨hR_p⟩
+      let : Fact (IsPGroup p R) := ⟨hR_p⟩
       exact derived_image_isPGroup_of_mulAut_range_rank_le_two
         (G := G) (R := R) (p := p) hpodd hsolv hodd hR_rank
         ((MulAut.conjNormal (H := R)).comp qM)

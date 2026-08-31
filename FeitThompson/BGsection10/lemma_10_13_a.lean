@@ -22,8 +22,8 @@ section Section10
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 
-/- Lemma 10.13(a). -/
 omit [Finite G] [IsMinCE G] in
+/- Lemma 10.13(a). -/
 private theorem section10_omegaOneCenter_le_rankTwoMaximal
     {p : Nat.Primes} {A P : Subgroup G}
     (hA : A ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G)

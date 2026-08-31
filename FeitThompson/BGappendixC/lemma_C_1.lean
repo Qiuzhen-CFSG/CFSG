@@ -74,7 +74,7 @@ public theorem appendixCE_exists_ne_one_of_two_le_card
       by_contra hy
       exact h ⟨y, y.property, hy⟩
     exact hx1.trans hy1.symm
-  haveI : Finite (appendixCE p q) := inferInstance
+  have : Finite (appendixCE p q) := inferInstance
   have hle : Nat.card (appendixCE p q) ≤ 1 :=
     (Finite.card_le_one_iff_subsingleton (α := appendixCE p q)).2 hsubsingleton
   omega
@@ -309,7 +309,7 @@ public theorem appendixCLinearNorm_eq_one
           algebraMap (ZMod p) (appendixCField p q) x + 1) = 1 := by
   intro x
   have hNat := appendixCLinearNorm_natCast_eq_one (p := p) (q := q) hE ha
-  haveI : NeZero p := ⟨(Fact.out : Nat.Prime p).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : Nat.Prime p).ne_zero⟩
   have hxalg :
       algebraMap (ZMod p) (appendixCField p q) x =
         (x.val : appendixCField p q) := by
@@ -811,8 +811,8 @@ public theorem appendixC_character_group_natCard :
     Nat.card ((ZMod p)ˣ →* ℂˣ) = p - 1 := by
   classical
   have hexp : Monoid.ExponentExists (ZMod p)ˣ := Monoid.ExponentExists.of_finite
-  haveI : NeZero (Monoid.exponent (ZMod p)ˣ) := ⟨(Monoid.exponent_ne_zero.2 hexp)⟩
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent (ZMod p)ˣ) :=
+  have : NeZero (Monoid.exponent (ZMod p)ˣ) := ⟨(Monoid.exponent_ne_zero.2 hexp)⟩
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent (ZMod p)ˣ) :=
     appendixC_complex_hasEnoughRootsOfUnity (Monoid.exponent (ZMod p)ˣ)
   calc
     Nat.card ((ZMod p)ˣ →* ℂˣ) = Nat.card (ZMod p)ˣ :=
@@ -824,8 +824,8 @@ public theorem appendixC_character_group_natCard :
 public theorem appendixC_nontrivial_character_natCard :
     Nat.card {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1} = p - 2 := by
   classical
-  letI : Fintype ((ZMod p)ˣ →* ℂˣ) := Fintype.ofFinite _
-  letI : Fintype {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
+  let : Fintype ((ZMod p)ˣ →* ℂˣ) := Fintype.ofFinite _
+  let : Fintype {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card]
   have hcompl := Fintype.card_subtype_compl (fun χ : (ZMod p)ˣ →* ℂˣ => χ = 1)
   rw [hcompl]
@@ -867,8 +867,8 @@ public theorem appendixC_nontrivial_noninverse_character_natCard
       left_inv := by intro ψ; rfl
       right_inv := by intro ψ; rfl }
   rw [Nat.card_congr e]
-  letI : Fintype ((ZMod p)ˣ →* ℂˣ) := Fintype.ofFinite _
-  letI : Fintype {ψ : (ZMod p)ˣ →* ℂˣ // ψ ≠ 1 ∧ ψ ≠ χ⁻¹} :=
+  let : Fintype ((ZMod p)ˣ →* ℂˣ) := Fintype.ofFinite _
+  let : Fintype {ψ : (ZMod p)ˣ →* ℂˣ // ψ ≠ 1 ∧ ψ ≠ χ⁻¹} :=
     Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card]
   have hcardX : Fintype.card ((ZMod p)ˣ →* ℂˣ) = p - 1 := by
@@ -906,8 +906,8 @@ public theorem appendixC_nontrivial_noninverse_character_pair_natCard
       left_inv := by intro x; rfl
       right_inv := by intro y; rfl }
   rw [Nat.card_congr e]
-  letI : Fintype {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
-  haveI : ∀ χ : {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1},
+  let : Fintype {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1} := Fintype.ofFinite _
+  have : ∀ χ : {χ : (ZMod p)ˣ →* ℂˣ // χ ≠ 1},
       Fintype {ψ : (ZMod p)ˣ →* ℂˣ // ψ ≠ 1 ∧ χ.1 * ψ ≠ 1} :=
     fun _ => Fintype.ofFinite _
   rw [Nat.card_sigma]
@@ -3479,7 +3479,7 @@ public theorem appendixCEmbedding_image_top_mem_normalizer_of_inf_conjBy_eq_imag
     t ∈ Subgroup.normalizer
       (Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) : Set G) := by
   classical
-  haveI : Finite (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))) := by
+  have : Finite (Subgroup.map σ (⊤ : Subgroup (appendixCH p q))) := by
     have hfiniteSet :
         ((Subgroup.map σ (⊤ : Subgroup (appendixCH p q)) : Subgroup G) :
           Set G).Finite := by
@@ -3926,7 +3926,7 @@ public theorem appendixCEmbedding_fixedPointSubgroup_inf_commutatorAction_eq_bot
     fixedPointSubgroup P0img Q ⊓ commutatorAction (A := P0img) (G := Q) = ⊥ := by
   classical
   let P0img : Subgroup G := Subgroup.map σ (appendixCP0InH p q)
-  haveI : Finite P0img := by
+  have : Finite P0img := by
     have hfiniteSet : (P0img : Set G).Finite := by
       change (σ '' ((appendixCP0InH p q : Subgroup (appendixCH p q)) :
         Set (appendixCH p q))).Finite
@@ -3934,19 +3934,20 @@ public theorem appendixCEmbedding_fixedPointSubgroup_inf_commutatorAction_eq_bot
     exact hfiniteSet.to_subtype
   let φ : P0img →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-  letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+  let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
   have hP0card : Nat.card P0img = p :=
     appendixCEmbedding_CP0InH_natCard (p := p) (q := q) σ hσ
   have hcop' : Nat.Coprime (Nat.card P0img) (Nat.card Q) := by
     simpa [hP0card] using hcop
-  have hsolv : IsSolvable Q :=
-    isSolvable_of_comm (fun a b => mul_comm' a b)
+  have hsolv : Group.IsSolvable Q :=
+    Group.isSolvable_of_comm (fun a b => mul_comm' a b)
   have hcompl : IsCompl (fixedPointSubgroup P0img Q)
       (commutatorAction (A := P0img) (G := Q)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
       (G := Q) (A := P0img) hsolv hcop' inferInstance
   exact (disjoint_iff).1 hcompl.disjoint
 
+set_option backward.isDefEq.respectTransparency false in
 /-- If the fixed-point component of an element of `Q` is multiplied onto a
 commutator-action component, the right conjugate of embedded `P₀` is unchanged.
 This is the conjugation part of Appendix C source fact `(XI)`. -/
@@ -3967,7 +3968,7 @@ public theorem appendixCEmbedding_rightConjugate_eq_of_fixedPoint_mul
   let P0img : Subgroup G := Subgroup.map σ (appendixCP0InH p q)
   let φ : P0img →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-  letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+  let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
   change appendixCRightConjugate P0img ((f : G) * (c : G)) =
     appendixCRightConjugate P0img (c : G)
   change f ∈ fixedPointSubgroup P0img Q at hf
@@ -4025,7 +4026,7 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
   classical
   dsimp
   let P0img : Subgroup G := Subgroup.map σ (appendixCP0InH p q)
-  haveI : Finite P0img := by
+  have : Finite P0img := by
     have hfiniteSet : (P0img : Set G).Finite := by
       change (σ '' ((appendixCP0InH p q : Subgroup (appendixCH p q)) :
         Set (appendixCH p q))).Finite
@@ -4033,13 +4034,13 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
     exact hfiniteSet.to_subtype
   let φ : P0img →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-  letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+  let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
   have hP0card : Nat.card P0img = p :=
     appendixCEmbedding_CP0InH_natCard (p := p) (q := q) σ hσ
   have hcop' : Nat.Coprime (Nat.card P0img) (Nat.card Q) := by
     simpa [hP0card] using hcop
-  have hsolv : IsSolvable Q :=
-    isSolvable_of_comm (fun a b => mul_comm' a b)
+  have hsolv : Group.IsSolvable Q :=
+    Group.isSolvable_of_comm (fun a b => mul_comm' a b)
   have hcompl : IsCompl (fixedPointSubgroup P0img Q)
       (commutatorAction (A := P0img) (G := Q)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -4048,7 +4049,7 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
   have hySup :
       yQ ∈ fixedPointSubgroup P0img Q ⊔ commutatorAction (A := P0img) (G := Q) := by
     simp [hcompl.sup_eq_top]
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
+  let : CommGroup Q := IsMulCommutative.instCommGroup
   rw [Subgroup.mem_sup] at hySup
   rcases hySup with ⟨f, hf, c, hc, hfc⟩
   refine ⟨(c : G), c.property, hc, ?_⟩
@@ -4089,7 +4090,7 @@ public theorem appendixCEmbedding_exists_commutatorAction_y_with_normalizes
   let Uimg : Subgroup G := Subgroup.map σ (appendixCUInH p q)
   let φ : P0img →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-  letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+  let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
   rcases appendixCEmbedding_exists_commutatorAction_y_eq_rightConjugate
       (p := p) (q := q) σ hσ Q hcop hP0Q hy with
     ⟨y', hy', hycomm, hyconj⟩
@@ -4119,9 +4120,9 @@ public theorem appendixCConditionB_exists_commutatorAction_y
             appendixCNormalizes (appendixCRightConjugate P0img y) Uimg := by
   classical
   rcases hB with ⟨G, hG, σ, hσ, Q, hQfin, hQcomm, hcop, y, hy, hP0Q, hP1U⟩
-  letI : Group G := hG
-  letI : Finite Q := hQfin
-  letI : IsMulCommutative Q := hQcomm
+  let : Group G := hG
+  let : Finite Q := hQfin
+  let : IsMulCommutative Q := hQcomm
   rcases appendixCEmbedding_exists_commutatorAction_y_with_normalizes
       (p := p) (q := q) σ hσ Q hcop hP0Q hy hP1U with
     ⟨y', hy', hycomm, hP1U', _hyconj⟩
@@ -4405,10 +4406,10 @@ public theorem appendixCEmbedding_rightConjugate_mem_pow_prime_eq_one
           (K := P0img) (f := (MulAut.conj y⁻¹).toMonoidHom)
           (MulAut.conj y⁻¹).injective
       _ = p := hP0card
-  haveI : Finite P1 := Nat.finite_of_card_ne_zero (by
+  have : Finite P1 := Nat.finite_of_card_ne_zero (by
     rw [hP1card]
     exact (Fact.out : Nat.Prime p).pos.ne')
-  haveI : Fintype P1 := Fintype.ofFinite P1
+  have : Fintype P1 := Fintype.ofFinite P1
   let tg : P1 := ⟨t, by simpa [P1, P0img] using ht⟩
   have hcard : Fintype.card P1 = p := by
     rw [Fintype.card_eq_nat_card, hP1card]
@@ -4476,6 +4477,7 @@ public theorem appendixC_commutatorAction_eq_one_of_fixed_by_nontrivial_generato
     simpa [hfixedInf] using hxinf
   simpa using hxbot
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Condition-`(B)` embedded form of the fixed-point/commutator endpoint:
 an element of `[Q,P₀]` fixed by a nontrivial embedded `P₀` element is trivial.
 This packages the source use of `(X)` after the C10 modulo-`Q` calculation. -/
@@ -4505,7 +4507,7 @@ public theorem appendixCEmbedding_commutatorAction_eq_one_of_fixed_by_P0
   let P0img : Subgroup G := Subgroup.map σ (appendixCP0InH p q)
   let φ : P0img →* MulAut Q :=
     Q.normalizerMonoidHom.comp (Subgroup.inclusion hP0Q)
-  letI : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
+  let : MulDistribMulAction P0img Q := MulDistribMulAction.compHom Q φ
   let a0 : P0img := ⟨a, by simpa [P0img] using ha⟩
   let x0 : Q := ⟨x, hx⟩
   have ha0_ne : a0 ≠ 1 := by
@@ -4545,7 +4547,7 @@ public theorem appendixC_sup_natCard_eq_mul_of_inf_eq_bot_of_le_normalizer
   let R : Subgroup G := P0 ⊔ Q
   let Qs : Subgroup R := Q.subgroupOf R
   let P0s : Subgroup R := P0.subgroupOf R
-  haveI : Qs.Normal := by
+  have : Qs.Normal := by
     simpa [R, Qs] using
       (Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := P0) (N := Q) hP0Q)
   have hcomp : Qs.IsComplement' P0s := by
@@ -4573,7 +4575,7 @@ public theorem appendixC_sup_natCard_eq_mul_of_inf_eq_bot_of_le_normalizer
           hx_top with
         ⟨q, hqQ, p0, hp0P0, hmul⟩
       exact ⟨q, hqQ, p0, hp0P0, hmul⟩
-  have hmul := hcomp.card_mul
+  have hmul := hcomp.card_mul_card
   have hQcard : Nat.card Qs = Nat.card Q :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe (H := Q) (K := R)
       le_sup_right).toEquiv
@@ -4607,7 +4609,7 @@ public theorem appendixC_prime_order_subgroup_eq_of_le_sup_of_normalizes
     rw [hRcard]
     exact mul_ne_zero (Nat.card_pos (α := Q)).ne'
       (Fact.out : Nat.Prime p).pos.ne'
-  haveI : Finite R := Nat.finite_of_card_ne_zero hRcard_ne_zero
+  have : Finite R := Nat.finite_of_card_ne_zero hRcard_ne_zero
   have hSR : S ≤ R := by
     exact sup_le hP1R le_sup_right
   have hSdvdR : Nat.card S ∣ Nat.card R := Subgroup.card_dvd_of_le hSR
@@ -4615,8 +4617,8 @@ public theorem appendixC_prime_order_subgroup_eq_of_le_sup_of_normalizes
     intro hzero
     rw [hzero] at hSdvdR
     exact hRcard_ne_zero (by simpa using hSdvdR)
-  haveI : Finite S := Nat.finite_of_card_ne_zero hScard_ne_zero
-  haveI : Finite P0 := Nat.finite_of_card_ne_zero (by
+  have : Finite S := Nat.finite_of_card_ne_zero hScard_ne_zero
+  have : Finite P0 := Nat.finite_of_card_ne_zero (by
     rw [hP0card]
     exact (Fact.out : Nat.Prime p).pos.ne')
   have hP0p : IsPGroup p P0 := by

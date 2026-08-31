@@ -23,15 +23,14 @@ public class IsMinCE (G : Type*) [Group G] [Finite G] : Prop where
   odd_order : Odd (Nat.card G)
   -- We require simpleness here.
   simple : IsSimpleGroup G
-  not_solvable : ¬ IsSolvable G
-  proper_subgroups_solvable : ∀ (H : Subgroup G), H < ⊤ → IsSolvable H
+  not_solvable : ¬ Group.IsSolvable G
+  proper_subgroups_solvable : ∀ (H : Subgroup G), H < ⊤ → Group.IsSolvable H
 
 /-- `G` is not abelian. -/
 theorem not_comm_of_min_ce {G : Type*} [Group G] [Finite G]
     [IsMinCE G] : ¬ IsMulCommutative G := by
   intro hcomm
-  letI : IsMulCommutative G := hcomm
-  have hSol : IsSolvable G := by
+  have hSol : Group.IsSolvable G := by
     refine ⟨1, ?_⟩
     have h1 : commutatorSet G ⊆ {(1 : G)} := by
       intro x hx
@@ -46,14 +45,14 @@ theorem not_comm_of_min_ce {G : Type*} [Group G] [Finite G]
         _ ≤ Subgroup.closure {(1 : G)} := Subgroup.closure_mono h1
         _ = ⊥ := by simp only [Subgroup.closure_eq_bot_iff, subset_refl]
     exact le_antisymm hle (OrderBot.bot_le (commutator G))
-  have : ¬ IsSolvable G := IsMinCE.not_solvable
+  have : ¬ Group.IsSolvable G := IsMinCE.not_solvable
   exact this hSol
 
 /-- The center of `G` is trivial. -/
 public theorem center_eq_bot_of_min_ce {G : Type*} [Group G] [Finite G]
     [IsMinCE G] : Subgroup.center G = ⊥ := by
-  haveI : IsSimpleGroup G := IsMinCE.simple
-  rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (Subgroup.center G) Subgroup.instNormalCenter with hc | hc
+  rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (self := IsMinCE.simple)
+      (Subgroup.center G) Subgroup.instNormalCenter with hc | hc
   · exact hc
   · exfalso
     have hcomm : IsMulCommutative G := by
@@ -73,6 +72,7 @@ public theorem IsMinCE.pSubgroup_ne_top {G : Type*} [Group G] [Finite G] [IsMinC
     hPp.of_equiv (MulEquiv.subgroupCongr hPtop)
   have hGp : IsPGroup p G :=
     htop_p.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G)
-  haveI : Group.IsNilpotent G :=
+  have hnilpotent : Group.IsNilpotent G :=
     IsPGroup.isNilpotent (p := p) (G := G) (h := hGp)
-  exact IsMinCE.not_solvable (G := G) (inferInstance : IsSolvable G)
+  have hsolvable : Group.IsSolvable G := @IsNilpotent.to_isSolvable G _ hnilpotent
+  exact IsMinCE.not_solvable (G := G) hsolvable

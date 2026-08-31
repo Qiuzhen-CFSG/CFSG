@@ -194,7 +194,8 @@ private theorem generalLinearGroup_map_zmod_castHom_surjective
     zmod_prime_pow_isUnit_of_castHom_isUnit (p := p) (e := e) he hdetUnitRed
   refine ⟨Matrix.GeneralLinearGroup.mk'' Bmat hdetUnit, ?_⟩
   ext i j
-  simp [Matrix.GeneralLinearGroup.map_apply, Bmat, hB]
+  change red (Bmat i j) = A i j
+  exact hB i j
 
 /-- The additive group of matrices over `ZMod (p ^ e)` is a `p`-group. -/
 private theorem matrix_additive_multiplicative_isPGroup

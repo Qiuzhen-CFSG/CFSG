@@ -178,7 +178,7 @@ public theorem hkt_regularSemidirect_isFrobenius
           B →* A ⋊[MulDistribMulAction.toMulAut B A] B)) := by
   let φ : B →* MulAut A := MulDistribMulAction.toMulAut B A
   let SD := A ⋊[φ] B
-  letI : Finite SD := Finite.of_equiv (A × B) (SemidirectProduct.equivProd (φ := φ)).symm
+  let : Finite SD := Finite.of_equiv (A × B) (SemidirectProduct.equivProd (φ := φ)).symm
   let K : Subgroup SD := MonoidHom.range (SemidirectProduct.inl : A →* SD)
   let R : Subgroup SD := MonoidHom.range (SemidirectProduct.inr : B →* SD)
   change IsFrobeniusGroupWithKernelComplement K R
@@ -218,7 +218,7 @@ public theorem hkt_frobenius_kernel_sum_eq_card_smul_of_norm_and_conj_zero
       ρ.norm v = 0) :
     subgroupSum ρ K v = (Nat.card K : F) • v := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let _ : Fintype K := Fintype.ofFinite K
   let _ : Fintype R := Fintype.ofFinite R
   let _ : Fintype {g : G // g ∉ K} := Fintype.ofFinite {g : G // g ∉ K}
@@ -516,7 +516,7 @@ public theorem hkt_center_ne_top_of_not_nilpotent
     Subgroup.center Q ≠ ⊤ := by
   intro htop
   exact hnon_nil (by
-    letI : CommGroup Q := Group.commGroupOfCenterEqTop htop
+    let : CommGroup Q := Group.commGroupOfCenterEqTop htop
     infer_instance)
 
 /--
@@ -538,7 +538,7 @@ public theorem hkt_nontrivial_of_not_nilpotent
     {Q : Type u} [Group Q] (hnon_nil : ¬ Group.IsNilpotent Q) :
     Nontrivial Q := by
   by_contra hnt
-  haveI : Subsingleton Q := not_nontrivial_iff_subsingleton.mp hnt
+  have : Subsingleton Q := not_nontrivial_iff_subsingleton.mp hnt
   exact hnon_nil inferInstance
 
 /--
@@ -594,7 +594,7 @@ public theorem hkt_exists_minimal_invariant_normal
       M.Normal ∧ IsInvariant (Subgroup.zpowers φ) Q M ∧ M ≠ ⊥ ∧
         (∀ K : Subgroup Q, K.Normal → IsInvariant (Subgroup.zpowers φ) Q K →
           K ≠ ⊥ → K ≤ M → K = M) := by
-  letI : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
+  let : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
   exact exists_minimal_normal_isInvariant (G := Q) (A := Subgroup.zpowers φ)
 
 /--
@@ -610,7 +610,7 @@ public theorem hkt_exists_maximal_proper_invariant_normal
         (∀ K : Subgroup Q, K.Normal → IsInvariant (Subgroup.zpowers φ) Q K →
           N ≤ K → K ≠ ⊤ → K = N) := by
   classical
-  letI : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
+  let : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
   let A : Subgroup (MulAut Q) := Subgroup.zpowers φ
   let S : Set (Subgroup Q) :=
     {N | N.Normal ∧ IsInvariant A Q N ∧ N ≠ ⊤}
@@ -664,7 +664,7 @@ public theorem hkt_quotient_no_proper_nontrivial_invariant_normal
     have hKnormal : K.Normal := hLnormal.comap π
     have hLφbar : ∀ x : Q ⧸ N,
         x ∈ L ↔ invariantQuotientAut φ N hNφ x ∈ L := by
-      haveI : IsInvariant (Subgroup.zpowers (invariantQuotientAut φ N hNφ))
+      have : IsInvariant (Subgroup.zpowers (invariantQuotientAut φ N hNφ))
           (Q ⧸ N) L := hLinv
       exact hkt_zpowers_invariant_generator (invariantQuotientAut φ N hNφ) L
     have hKφ : ∀ q : Q, q ∈ K ↔ φ q ∈ K := by
@@ -710,17 +710,17 @@ public theorem hkt_commutator_ne_bot_of_not_nilpotent
   have hcenter_top : Subgroup.center Q = ⊤ :=
     (commutator_eq_bot_iff_center_eq_top (G := Q)).1 hcomm_bot
   exact hnon_nil (by
-    letI : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
+    let : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
     infer_instance)
 
 /-- In a solvable nonnilpotent group, the commutator subgroup is proper. -/
 public theorem hkt_commutator_ne_top_of_solvable_not_nilpotent
     {Q : Type u} [Group Q] (hnon_nil : ¬ Group.IsNilpotent Q)
-    (hsolv : IsSolvable Q) :
+    (hsolv : Group.IsSolvable Q) :
     commutator Q ≠ ⊤ := by
-  letI : IsSolvable Q := hsolv
-  letI : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
-  exact (IsSolvable.commutator_lt_top_of_nontrivial (G := Q)).ne
+  let : Group.IsSolvable Q := hsolv
+  let : Nontrivial Q := hkt_nontrivial_of_not_nilpotent hnon_nil
+  exact (Group.IsSolvable.commutator_lt_top_of_nontrivial (G := Q)).ne
 
 /--
 In the solvable branch, a minimal invariant normal subgroup is proper.  If it
@@ -729,7 +729,7 @@ subgroup invariant under the cyclic automorphism action.
 -/
 public theorem hkt_minimal_invariant_normal_ne_top_of_solvable_branch
     {Q : Type u} [Group Q] [Finite Q] (φ : MulAut Q)
-    (hnon_nil : ¬ Group.IsNilpotent Q) (hsolv : IsSolvable Q)
+    (hnon_nil : ¬ Group.IsNilpotent Q) (hsolv : Group.IsSolvable Q)
     (M : Subgroup Q) [M.Normal]
     (hMmin :
       ∀ K : Subgroup Q, K.Normal → IsInvariant (Subgroup.zpowers φ) Q K →
@@ -772,7 +772,7 @@ public theorem hkt_minimal_invariant_nilpotent_exists_isPGroup
     have : 1 < Nat.card M := (Subgroup.one_lt_card_iff_ne_bot (H := M)).2 hM_ne_bot
     exact ne_of_gt this
   obtain ⟨r, hr_prime, hr_dvd⟩ := Nat.exists_prime_and_dvd (n := Nat.card M) hcard_ne_one
-  letI : Fact r.Prime := ⟨hr_prime⟩
+  let : Fact r.Prime := ⟨hr_prime⟩
   let P : Sylow r M := default
   have hP_ne_bot : (P : Subgroup M) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := M) (p := r) P hr_dvd
@@ -782,15 +782,15 @@ public theorem hkt_minimal_invariant_nilpotent_exists_isPGroup
     Sylow.characteristic_of_normal (G := M) (p := r) P hP_normal_M
   let Pamb : Subgroup Q := (P : Subgroup M).map M.subtype
   have hPamb_normal : Pamb.Normal := by
-    haveI : (P : Subgroup M).Characteristic := hP_char
+    have : (P : Subgroup M).Characteristic := hP_char
     simpa [Pamb] using (inferInstance : Pamb.Normal)
   have hPamb_invariant : IsInvariant (Subgroup.zpowers φ) Q Pamb := by
-    haveI : IsInvariant (Subgroup.zpowers φ) Q M := hMinv
-    haveI : (P : Subgroup M).Characteristic := hP_char
+    have : IsInvariant (Subgroup.zpowers φ) Q M := hMinv
+    have : (P : Subgroup M).Characteristic := hP_char
     have hP_invariant_M : IsInvariant (Subgroup.zpowers φ) M (P : Subgroup M) := by
       simpa using
         isInvariant_of_characteristic (A := Subgroup.zpowers φ) (G := M) (P : Subgroup M)
-    haveI : IsInvariant (Subgroup.zpowers φ) M (P : Subgroup M) := hP_invariant_M
+    have : IsInvariant (Subgroup.zpowers φ) M (P : Subgroup M) := hP_invariant_M
     simpa [Pamb] using
       isInvariant_map_subtype (A := Subgroup.zpowers φ) (G := Q) M (P : Subgroup M)
   have hPamb_ne_bot : Pamb ≠ ⊥ := by
@@ -841,15 +841,15 @@ public theorem hkt_minimal_invariant_nilpotent_frattini_eq_bot
       ((Subgroup.map_eq_bot_iff_of_injective (H := Φ) (f := M.subtype)
         M.subtype_injective).1 (by simpa [Φamb] using hbot))
   have hΦamb_normal : Φamb.Normal := by
-    haveI : Φ.Characteristic := hΦ_char
+    have : Φ.Characteristic := hΦ_char
     simpa [Φamb] using
       (hkt_map_characteristic_of_normal_normal (Q := Q) M Φ)
   have hΦamb_invariant : IsInvariant (Subgroup.zpowers φ) Q Φamb := by
-    haveI : IsInvariant (Subgroup.zpowers φ) Q M := hMinv
+    have : IsInvariant (Subgroup.zpowers φ) Q M := hMinv
     have hΦ_invariant_M : IsInvariant (Subgroup.zpowers φ) M Φ := by
-      haveI : Φ.Characteristic := hΦ_char
+      have : Φ.Characteristic := hΦ_char
       simpa [Φ] using isInvariant_of_characteristic (A := Subgroup.zpowers φ) (G := M) Φ
-    haveI : IsInvariant (Subgroup.zpowers φ) M Φ := hΦ_invariant_M
+    have : IsInvariant (Subgroup.zpowers φ) M Φ := hΦ_invariant_M
     simpa [Φamb] using isInvariant_map_subtype (A := Subgroup.zpowers φ) (G := Q) M Φ
   have hΦamb_le_M : Φamb ≤ M := by
     simpa [Φamb] using Subgroup.map_subtype_le (H := M) (K := Φ)
@@ -863,7 +863,7 @@ public theorem hkt_minimal_invariant_nilpotent_frattini_eq_bot
     apply hinj
     simpa [Φamb, htop_map] using hΦamb_eq_M
   have hΦ_ne_top : frattini M ≠ ⊤ := by
-    haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hM_ne_bot
+    have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hM_ne_bot
     intro htop
     have hbot_top : (⊥ : Subgroup M) = ⊤ := by
       exact frattini_nongenerating (G := M) (K := ⊥) (by simp [htop])
@@ -886,8 +886,8 @@ public theorem hkt_minimal_invariant_nilpotent_exists_isElementaryAbelian
     ∃ r : ℕ, Nat.Prime r ∧ IsElementaryAbelian r M := by
   obtain ⟨r, hr_prime, hM_p⟩ :=
     hkt_minimal_invariant_nilpotent_exists_isPGroup φ M hMinv hM_ne_bot hMmin hM_nil
-  letI : Fact r.Prime := ⟨hr_prime⟩
-  letI : Fact (IsPGroup r M) := ⟨hM_p⟩
+  let : Fact r.Prime := ⟨hr_prime⟩
+  let : Fact (IsPGroup r M) := ⟨hM_p⟩
   have hΦ_bot : frattini M = ⊥ :=
     hkt_minimal_invariant_nilpotent_frattini_eq_bot φ M hMinv hM_ne_bot hMmin
   exact ⟨r, hr_prime, (frattini_eq_bot_iff_isElementaryAbelian (R := M) (p := r)).1 hΦ_bot⟩
@@ -898,7 +898,7 @@ public theorem hkt_isElementaryAbelian_of_top
     {G : Type u} [Group G] {r : ℕ}
     (h : IsElementaryAbelian r (⊤ : Subgroup G)) :
     IsElementaryAbelian r G := by
-  letI : IsElementaryAbelian r (⊤ : Subgroup G) := h
+  let : IsElementaryAbelian r (⊤ : Subgroup G) := h
   refine
     { toIsMulCommutative := ?_
       exponent_dvd_p := ?_ }

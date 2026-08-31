@@ -40,16 +40,16 @@ private theorem subgroupPrimeSet_eq_singleton_of_isPGroup_nonbot
       apply Subgroup.card_eq_one.mp
       simp [hn, hn0]
     rcases Nat.exists_eq_succ_of_ne_zero hn_ne_zero with ⟨m, rfl⟩
-    simp at hq
     subst q
     simp [subgroupPrimeSet, hn, Nat.pow_succ]
+    exact Nat.dvd_mul_left p (p ^ m)
 
 private theorem isPiSubgroup_singleton_compl_of_coprime_card
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     {H : Subgroup G} (hcop : Nat.Coprime p (Nat.card H)) :
     IsPiSubgroup (G := G) (({⟨p, Fact.out⟩} : Set Nat.Primes)ᶜ) H := by
   intro q hq
-  simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
+  simp only [Set.mem_compl_iff]
   intro hqeq
   subst q
   exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hcop) hq
@@ -106,13 +106,13 @@ private theorem maximalElementaryAbelianSubgroups_subgroupOf_of_set_eq
       toIsMulCommutative := inferInstance
       exponent_dvd_p := Monoid.exponent_dvd_iff_forall_pow_eq_one.2 hApow
     }
-    letI : IsElementaryAbelian p A := hAelem
+    let : IsElementaryAbelian p A := hAelem
     exact IsElementaryAbelian.subgroupOf (p := p) hAX
   refine ⟨hAsub_elem, ?_⟩
   intro B hAB hBelem
   let Bmap : Subgroup G := B.map X.subtype
   have hBmap_elem : IsElementaryAbelian p Bmap := by
-    letI : IsElementaryAbelian p B := hBelem
+    let : IsElementaryAbelian p B := hBelem
     simpa [Bmap] using IsElementaryAbelian.map_subtype (p := p) (K := X) (H := B)
   have hBmap_le_A : Bmap ≤ A := by
     intro b hb
@@ -125,7 +125,7 @@ private theorem maximalElementaryAbelianSubgroups_subgroupOf_of_set_eq
       exact congrArg Subtype.val
         (setLike_mul_comm (s := B) haB hb'B)
     have hb_pow : (b' : G) ^ p = 1 := by
-      letI : IsElementaryAbelian p Bmap := hBmap_elem
+      let : IsElementaryAbelian p Bmap := hBmap_elem
       simpa using congrArg (fun z : Bmap => ((z : Bmap) : G))
         (Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
           (IsElementaryAbelian.exponent_dvd_p p Bmap) ⟨(b' : G), hb⟩)
@@ -224,6 +224,7 @@ private theorem centralizer_zpowers_eq_centralizer_singleton
     have hcomm : Commute z x := hxz
     simpa using (hcomm.zpow_left n).eq
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq_local
     {A : Type*} [Group A] [Finite A] {p : ℕ} [Fact p.Prime]
     [IsElementaryAbelian p A] {P : Subgroup (MulAut A)} (hPp : IsPGroup p P)
@@ -231,10 +232,10 @@ private theorem natCard_pSubgroup_mulAut_le_p_of_elementaryAbelian_card_le_p_sq_
     Nat.card P ≤ p := by
   let hp_prime : Nat.Prime p := Fact.out
   let Q := Additive A
-  letI : AddCommGroup Q := Additive.addCommGroup
-  letI : Module (ZMod p) Q := inferInstance
-  letI : Finite Q := inferInstance
-  letI : FiniteDimensional (ZMod p) Q := Module.Finite.of_finite
+  let : AddCommGroup Q := Additive.addCommGroup
+  let : Module (ZMod p) Q := inferInstance
+  let : Finite Q := inferInstance
+  let : FiniteDimensional (ZMod p) Q := Module.Finite.of_finite
   have hp_one_lt : 1 < p := hp_prime.one_lt
   have hcardQ : Nat.card A = p ^ Module.finrank (ZMod p) Q := by
     calc
@@ -371,7 +372,7 @@ private theorem le_pPrimeCore_of_contains_sylow
     (hAnorm : (A.subgroupOf (P : Subgroup G)).Normal)
     (hCPA : subgroupCentralizerIn (P : Subgroup G) A ≤ A)
     {X : Subgroup G} (hPX : (P : Subgroup G) ≤ X)
-    [IsSolvable X] (hXodd : Odd (Nat.card X))
+    [Group.IsSolvable X] (hXodd : Odd (Nat.card X))
     {Y : Subgroup G} (hYX : Y ≤ X)
     (hYcop : Nat.Coprime p (Nat.card Y))
     (hAYnorm : A ≤ Subgroup.normalizer (Y : Set G)) :
@@ -403,11 +404,11 @@ private theorem le_pPrimeCore_of_contains_sylow
   have hAXPnorm : AXP.Normal := by
     dsimp [AXP]
     exact hAnorm.map ePX.symm.toMonoidHom ePX.symm.surjective
-  letI : AXP.Normal := hAXPnorm
+  let : AXP.Normal := hAXPnorm
   have hAXPcomm : IsMulCommutative AXP := by
     dsimp [AXP]
     simpa using (Subgroup.map_isMulCommutative (f := ePX.symm.toMonoidHom) (H := A0))
-  letI : IsMulCommutative AXP := hAXPcomm
+  let : IsMulCommutative AXP := hAXPcomm
   have hAX_le_PX : AX ≤ (PX : Subgroup X) := by
     intro a ha
     have haG : (a : G) ∈ A := by
@@ -430,7 +431,7 @@ private theorem le_pPrimeCore_of_contains_sylow
       rfl
     simpa [hea] using haOpX
   let M : Subgroup X := pPrimeCore p X
-  letI : M.Normal := by
+  let : M.Normal := by
     dsimp [M]
     infer_instance
   let q : X →* X ⧸ M := QuotientGroup.mk' M
@@ -552,7 +553,7 @@ private theorem le_pPrimeCore_of_contains_sylow
     have hxpAX : xp ∈ AX := by
       simpa [AX, Subgroup.mem_subgroupOf] using hxpA
     exact Subgroup.mem_map.mpr ⟨xp, hxpAX, rfl⟩
-  haveI : Subgroup.Normalizes Ybar (pCore p (X ⧸ M)) :=
+  have : Subgroup.Normalizes Ybar (pCore p (X ⧸ M)) :=
     ⟨Subgroup.le_normalizer_of_normal (H := pCore p (X ⧸ M))⟩
   have hfix_eq :
       fixedPointSubgroup (↥Ybar) (↥(pCore p (X ⧸ M))) =
@@ -614,7 +615,7 @@ private theorem le_pPrimeCore_of_contains_sylow
     exact (commutatorElement_eq_one_iff_mul_comm).2 <| by
       have := congrArg (fun t : X ⧸ M => t * y) hconj
       simpa [mul_assoc] using this.symm
-  have hsolvQ : IsSolvable (X ⧸ M) := solvable_quotient_of_solvable M
+  have hsolvQ : Group.IsSolvable (X ⧸ M) := by infer_instance
   have hcore_bot : pPrimeCore p (X ⧸ M) = ⊥ := by
     simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := X) (p := p))
   have hcent_pCore_le : Subgroup.centralizer (pCore p (X ⧸ M) : Set (X ⧸ M)) ≤ pCore p (X ⧸ M) := by
@@ -676,7 +677,7 @@ private theorem le_pPrimeCore_map_of_contains_sylow
     (hAP : A ≤ (P : Subgroup G))
     (hAnorm : (A.subgroupOf (P : Subgroup G)).Normal)
     (hCPA : subgroupCentralizerIn (P : Subgroup G) A ≤ A)
-    (hPX : (P : Subgroup G) ≤ X) [IsSolvable X] (hXodd : Odd (Nat.card X))
+    (hPX : (P : Subgroup G) ≤ X) [Group.IsSolvable X] (hXodd : Odd (Nat.card X))
     (hYX : Y ≤ X) (hYcop : Nat.Coprime p (Nat.card Y))
     (hAYnorm : A ≤ Subgroup.normalizer (Y : Set G)) :
     Y ≤ (pPrimeCore p ↥X).map X.subtype := by
@@ -702,8 +703,7 @@ private theorem le_pPrimeCore_map_of_centralizer_singleton_contains_sylow
   let X : Subgroup G := Subgroup.centralizer ({z} : Set G)
   have hX_ne_top : X ≠ ⊤ := by
     simpa [X] using centralizer_singleton_ne_top_of_ne_one (G := G) (z := z) hz_ne
-  have hXsolv : IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
-  letI : IsSolvable X := hXsolv
+  have : Group.IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
   have hXodd : Odd (Nat.card X) := by
     exact odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card X)
   simpa [X] using
@@ -911,7 +911,7 @@ private theorem subgroupOf_le_pPrimeCore_map_local
 
 private theorem transport_pPrimeCore_from_global_singleton_centralizer
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    {X Y : Subgroup G} [IsSolvable X]
+    {X Y : Subgroup G} [Group.IsSolvable X]
     {z : G} (hzX : z ∈ X) (hzpow : z ^ p = 1)
     (hYX : Y ≤ X)
     (hYglob :
@@ -931,7 +931,7 @@ private theorem transport_pPrimeCore_from_global_singleton_centralizer
   have hQ_le_H : Q ≤ H := by
     intro q hq
     exact ⟨hq.2, hQ0_le_Cz hq.1⟩
-  haveI : (Q0.subgroupOf Cz).Normal := by
+  have : (Q0.subgroupOf Cz).Normal := by
     simpa [Q0, pPrimeCore_map_subtype_subgroupOf_local (p := p) Cz] using
       (inferInstance : (pPrimeCore p ↥Cz).Normal)
   have hCz_le_normQ0 : Cz ≤ Subgroup.normalizer (Q0 : Set G) :=
@@ -943,7 +943,7 @@ private theorem transport_pPrimeCore_from_global_singleton_centralizer
         (show H ≤ Subgroup.normalizer (X : Set G) from inf_le_left.trans X.le_normalizer)).trans <| by
           simpa [Q, inf_comm, inf_left_comm, inf_assoc] using
             (Subgroup.inf_normalizer_le_normalizer_inf (H := Q0) (K := X))
-  haveI : (Q.subgroupOf H).Normal :=
+  have : (Q.subgroupOf H).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer hH_le_normQ
   have hQcop : Nat.Coprime p (Nat.card Q) := by
     exact Nat.Coprime.of_dvd_right (Subgroup.card_dvd_of_le inf_le_left) <| by
@@ -1027,8 +1027,7 @@ private theorem proposition_7_5_case_eq
     subgroupPrimeSet_eq_singleton_of_isPGroup_nonbot (p := p) hAp hA_ne_bot
   refine ⟨hA_ne_bot, hA_ne_top, ?_⟩
   intro X hAX hX_ne_top
-  have hXsolv : IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
-  letI : IsSolvable X := hXsolv
+  have : Group.IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
   have hXplen : HasPLengthOne (p := p) ↥X := hplen X hX_ne_top
   have hAmaxX :
       A.subgroupOf X ∈ maximalElementaryAbelianSubgroups p ↥X :=
@@ -1091,10 +1090,10 @@ private theorem proposition_7_5_case_scn
   have hG_nontrivial : Nontrivial G := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
-    letI : Subsingleton G := hsub
+    let : Subsingleton G := hsub
     have hp_one : p ∣ 1 := by simpa using hpG
     exact (Fact.out : Nat.Prime p).not_dvd_one hp_one
-  letI : Nontrivial G := hG_nontrivial
+  let : Nontrivial G := hG_nontrivial
   obtain ⟨P, hAP, hAscnP⟩ := hAscn
   let A0 : Subgroup P := A.subgroupOf (P : Subgroup G)
   have hA0' : A0 ∈ scnSubgroups 2 ↥(P : Subgroup G) := by
@@ -1102,11 +1101,11 @@ private theorem proposition_7_5_case_scn
   have hA0norm : A0.Normal := hA0'.1
   have hA0cent_eq : Subgroup.centralizer (A0 : Set P) = A0 := hA0'.2.1
   have hA0groupRank : 2 ≤ groupRank A0 := hA0'.2.2
-  letI : A0.Normal := hA0norm
-  letI : Fact (IsPGroup p P) := ⟨P.isPGroup'⟩
+  let : A0.Normal := hA0norm
+  let : Fact (IsPGroup p P) := ⟨P.isPGroup'⟩
   have hA0_noncyc : ¬ IsCyclic A0 := by
     intro hcyc
-    letI : IsCyclic A0 := hcyc
+    let : IsCyclic A0 := hcyc
     have hA0_le_one : groupRank A0 ≤ 1 := groupRank_le_one_of_isCyclic A0
     exact (by decide : ¬ 2 ≤ (1 : ℕ)) (le_trans hA0groupRank hA0_le_one)
   have hA_ne_bot : A ≠ ⊥ := by
@@ -1136,8 +1135,8 @@ private theorem proposition_7_5_case_scn
     subgroupCentralizerIn_le_of_selfCentralizing_subgroupOf (p := p) hAP hA0cent_eq
   obtain ⟨B0, hB0norm, hB0_le_A0, hB0_card, hB0_elem⟩ :=
     proposition_4_6 (R := ↥P) (p := p) hpodd (S := A0) hA0_noncyc
-  letI : B0.Normal := hB0norm
-  letI : IsElementaryAbelian p B0 := hB0_elem
+  let : B0.Normal := hB0norm
+  let : IsElementaryAbelian p B0 := hB0_elem
   have hB0_ne_bot : B0 ≠ ⊥ := by
     intro hB0bot
     have hp_dvd_card : p ∣ Nat.card B0 := by
@@ -1148,7 +1147,7 @@ private theorem proposition_7_5_case_scn
     exact (Fact.out : Nat.Prime p).not_dvd_one hp_dvd_one
   have hB0_noncyc : ¬ IsCyclic B0 :=
     not_isCyclic_of_isElementaryAbelian_card_eq_p_sq (p := p) hB0_card
-  letI : Nontrivial B0 := B0.nontrivial_iff_ne_bot.mpr hB0_ne_bot
+  let : Nontrivial B0 := B0.nontrivial_iff_ne_bot.mpr hB0_ne_bot
   obtain ⟨z0, hz0_ne, hz0_center⟩ :=
     exists_nontrivial_center_mem_normal (G := P) (p := p) (N := B0)
   let zP : P := z0
@@ -1187,15 +1186,14 @@ private theorem proposition_7_5_case_scn
             (K := B0) (f := (P : Subgroup G).subtype) (P : Subgroup G).subtype_injective
       _ = p ^ 2 := hB0_card
   have hB_elem : IsElementaryAbelian p B := by
-    letI : IsElementaryAbelian p B0 := hB0_elem
+    let : IsElementaryAbelian p B0 := hB0_elem
     simpa [B] using IsElementaryAbelian.map_subtype (p := p) (K := (P : Subgroup G)) (H := B0)
-  letI : IsElementaryAbelian p B := hB_elem
+  let : IsElementaryAbelian p B := hB_elem
   have hB_noncyc : ¬ IsCyclic B :=
     not_isCyclic_of_isElementaryAbelian_card_eq_p_sq (p := p) hB_card
   refine ⟨hA_ne_bot, hA_ne_top, ?_⟩
   intro X hAX hX_ne_top
-  have hXsolv : IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
-  letI : IsSolvable X := hXsolv
+  have : Group.IsSolvable X := solvable_of_proper_subgroup (G := G) hX_ne_top
   have hXodd : Odd (Nat.card X) := odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card X)
   apply le_antisymm
   · simpa [hAπ] using (show
@@ -1233,8 +1231,7 @@ private theorem proposition_7_5_case_scn
                 (P := P) (A := A) (Y := T) hAP hA0norm hCPA b hb_ne hP_le_Cb hTXb hTcop hATnorm
           · have hXb_ne_top : Xb ≠ ⊤ := by
               simpa [Xb] using centralizer_singleton_ne_top_of_ne_one (G := G) (z := b) hb_ne
-            have hXbsolv : IsSolvable Xb := solvable_of_proper_subgroup (G := G) hXb_ne_top
-            letI : IsSolvable Xb := hXbsolv
+            have : Group.IsSolvable Xb := solvable_of_proper_subgroup (G := G) hXb_ne_top
             have hXbodd : Odd (Nat.card Xb) := by
               exact odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card Xb)
             have hzXb : z ∈ Xb := by
@@ -1329,8 +1326,8 @@ private theorem proposition_7_5_case_scn
               intro hP2bot
               have hb_one : (⟨b, hbXb⟩ : Xb) = 1 := by simpa [hP2bot] using hbP2
               exact hb_ne (congrArg Subtype.val hb_one)
-            letI : Nontrivial P2 := P2.nontrivial_iff_ne_bot.mpr hP2_ne_bot
-            letI : P1P2.Normal :=
+            let : Nontrivial P2 := P2.nontrivial_iff_ne_bot.mpr hP2_ne_bot
+            let : P1P2.Normal :=
               normal_of_index_le_prime_of_isPGroup (H := P1P2) P2.isPGroup' hP1P2_idx_le_p
             have hzP1 : z ∈ P1 := ⟨zP.2, hzXb⟩
             have hzP1X : (⟨z, hzXb⟩ : Xb) ∈ P1.subgroupOf Xb := by
@@ -1362,15 +1359,15 @@ private theorem proposition_7_5_case_scn
               simpa [zP1P2, zP2] using hcommXb
             let ZP2 : Subgroup P2 := (Subgroup.center P1P2).map P1P2.subtype
             have hZP2_normal : ZP2.Normal := by
-              letI : (Subgroup.center P1P2).Characteristic := Subgroup.centerCharacteristic
+              let : (Subgroup.center P1P2).Characteristic := Subgroup.centerCharacteristic
               dsimp [ZP2]
               exact ConjAct.normal_of_characteristic_of_normal
             have hZP2_comm : IsMulCommutative ZP2 := by
               dsimp [ZP2]
               simpa using
                 (Subgroup.map_isMulCommutative (f := P1P2.subtype) (H := Subgroup.center P1P2))
-            letI : ZP2.Normal := hZP2_normal
-            letI : IsMulCommutative ZP2 := hZP2_comm
+            let : ZP2.Normal := hZP2_normal
+            let : IsMulCommutative ZP2 := hZP2_comm
             have hcenter_op :
                 ZP2.map P2.toSubgroup.subtype ≤ Op_p'p p Xb :=
               theorem_6_1 (G := Xb) (p := p) hXbodd P2 ZP2
@@ -1395,7 +1392,7 @@ private theorem proposition_7_5_case_scn
                   hzXb hzpow hTz_le_Xb hfix_global
             have hZnormT : Subgroup.zpowers z ≤ Subgroup.normalizer (T : Set G) := by
               exact (Subgroup.zpowers_le.mpr hzA).trans hATnorm
-            haveI : Subgroup.Normalizes (Subgroup.zpowers z) T := ⟨hZnormT⟩
+            have : Subgroup.Normalizes (Subgroup.zpowers z) T := ⟨hZnormT⟩
             have hfix_eq :
                 fixedPointSubgroup (↥(Subgroup.zpowers z)) (↥T) =
                   (elementCentralizerIn T z).subgroupOf T := by
@@ -1490,11 +1487,9 @@ private theorem proposition_7_5_case_scn
                 ⁅T, Subgroup.zpowers z⁆ =
                     (⁅T.subgroupOf Xb, Subgroup.zpowers (⟨z, hzXb⟩ : Xb)⁆).map Xb.subtype := hcomm_eq_map
                 _ ≤ (pPrimeCore p Xb).map Xb.subtype := Subgroup.map_mono hcomm_sub_core
-            have hTsolv_sub : IsSolvable (T.subgroupOf Xb) := subgroup_solvable_of_solvable (H := T.subgroupOf Xb)
-            have hTsolv : IsSolvable T := by
+            have hTsolv : Group.IsSolvable T := by
               let e : T.subgroupOf Xb ≃* T := Subgroup.subgroupOfEquivOfLe (H := T) (K := Xb) hTXb
-              letI : IsSolvable (T.subgroupOf Xb) := hTsolv_sub
-              exact solvable_of_surjective (f := e.toMonoidHom) e.surjective
+              exact Group.isSolvable_of_surjective (f := e.toMonoidHom) e.surjective
             have hzpow_cop : Nat.Coprime (Nat.card (Subgroup.zpowers z)) (Nat.card T) := by
               have hzpow_dvd : Nat.card (Subgroup.zpowers z) ∣ p := by
                 simpa [Nat.card_zpowers] using orderOf_dvd_of_pow_eq_one hzpow
@@ -1521,9 +1516,9 @@ private theorem proposition_7_5_case_scn
               _ ≤ (pPrimeCore p Xb).map Xb.subtype := by
                     exact sup_le hfix_le_Xb hcomm_le_Xb
         have hBnormY : B ≤ Subgroup.normalizer (Y : Set G) := hB_le_A.trans hAYnorm
-        letI : CommGroup B := IsMulCommutative.instCommGroup
-        haveI : Subgroup.Normalizes B Y := ⟨hBnormY⟩
-        letI : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
+        let : CommGroup B := IsMulCommutative.instCommGroup
+        have : Subgroup.Normalizes B Y := ⟨hBnormY⟩
+        let : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
         have hBfix_top :
             (⨆ (b : B) (_ : b ≠ 1), fixedPointSubgroup (↥(Subgroup.zpowers b)) ↥Y) = ⊤ := by
           simpa using proposition_1_16_a (G := ↥Y) (A := B) p hYcop hB_noncyc

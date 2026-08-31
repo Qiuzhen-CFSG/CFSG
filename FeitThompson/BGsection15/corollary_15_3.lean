@@ -320,7 +320,8 @@ private theorem section15_exists_sylow_overgroup_for_hall_subgroup
   have hTsubS_p : IsPGroup q.val TsubS :=
     hTp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := T) (K := S) hTleS).symm
   have hTprimeSet : subgroupPrimeSet T = ({q} : Set Nat.Primes) := by
-    simpa using
+    have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := Subtype.ext rfl
+    simpa [hq_eq] using
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := q.val) (H := T) hTp hTne)
   have hqT : q ∈ subgroupPrimeSet T := by
@@ -1616,7 +1617,9 @@ private theorem section15_conjugacy_from_Q_frattini
     change ((z : M) : G) ∈ Q ⊔ H
     exact Subgroup.mem_sup_right (by
       simpa [Hm, Subgroup.mem_subgroupOf] using hzH)
-  have hsolvN : IsSolvable N := subgroup_solvable_of_solvable (H := N)
+  have hsolvN : Group.IsSolvable N := by
+    let : Group.IsSolvable M := hsolvM
+    infer_instance
   have hFrattini :
       N ⊔ Subgroup.normalizer (Hm : Set M) = ⊤ :=
     section15_hall_frattini_sup_normalizer_eq_top

@@ -182,7 +182,10 @@ public theorem matrixOfBlockColumns_mul_matrixOfBlockRows
     matrixOfBlockColumns left right * matrixOfBlockRows top bottom =
       left * top + right * bottom := by
   ext i j
-  simp [matrixOfBlockColumns, matrixOfBlockRows, Matrix.mul_apply, Fintype.sum_sum_type]
+  rw [Matrix.mul_apply, Matrix.add_apply]
+  cases i <;> cases j <;>
+    simp [matrixOfBlockColumns, matrixOfBlockRows, Matrix.mul_apply,
+      Fintype.sum_sum_type, Sum.elim]
 
 /-- The upper-left block of a product by block rows and block columns. -/
 public theorem matrixOfBlockRows_mul_toBlocks₁₁
@@ -195,7 +198,9 @@ public theorem matrixOfBlockRows_mul_toBlocks₁₁
   ext i j
   change (((matrixOfBlockRows top bottom * M) * matrixOfBlockColumns left right)
       (Sum.inl i) (Sum.inl j)) = (((top * M) * left) i j)
-  simp [matrixOfBlockRows, matrixOfBlockColumns, Matrix.mul_apply]
+  rw [Matrix.mul_apply]
+  simp_rw [Matrix.mul_apply]
+  simp [matrixOfBlockRows, matrixOfBlockColumns, Sum.elim]
 
 /-- The lower-right block of a product by block rows and block columns. -/
 public theorem matrixOfBlockRows_mul_toBlocks₂₂
@@ -208,7 +213,9 @@ public theorem matrixOfBlockRows_mul_toBlocks₂₂
   ext i j
   change (((matrixOfBlockRows top bottom * M) * matrixOfBlockColumns left right)
       (Sum.inr i) (Sum.inr j)) = (((bottom * M) * right) i j)
-  simp [matrixOfBlockRows, matrixOfBlockColumns, Matrix.mul_apply]
+  rw [Matrix.mul_apply]
+  simp_rw [Matrix.mul_apply]
+  simp [matrixOfBlockRows, matrixOfBlockColumns, Sum.elim]
 
 /-- A block row built from matrices of two linear maps acts by applying the
 corresponding map to the full vector. -/
@@ -255,4 +262,3 @@ public theorem matrixOfBlockColumns_toMatrix_mulVec
       rfl
     _ = left xl + right xr := by
       simp [xl, xr]
-

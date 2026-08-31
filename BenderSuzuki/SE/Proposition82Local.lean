@@ -510,15 +510,18 @@ public theorem corollary713_nonsolvable_exists_normal_twoSubgroup_regular
   let e : H ≃* H0 := Subgroup.subgroupOfEquivOfLe inf_le_right
   let P0 : Sylow 2 H0 :=
     Sylow.mapSurjective (f := e.toMonoidHom) e.surjective P
+  have hP0map : (P0 : Subgroup H0) =
+      (P : Subgroup H).map e.toMonoidHom := by
+    dsimp [P0]
+    exact Sylow.coe_mapSurjective (f := e.toMonoidHom) e.surjective P
   have hP0normal : (P0 : Subgroup H0).Normal := by
-    rw [show (P0 : Subgroup H0) =
-        (P : Subgroup H).map e.toMonoidHom by
-      exact Sylow.coe_mapSurjective (f := e.toMonoidHom) e.surjective P]
+    rw [hP0map]
     exact hPNormal.map e.toMonoidHom e.surjective
   let SF0 : Subgroup F0 := (P : Subgroup H).map H.subtype
   let S : Subgroup X := (P0 : Subgroup H0).map H0.subtype
   have hS_eq : S = SF0.map F0.subtype := by
-    dsimp [S, SF0, P0]
+    dsimp [S, SF0]
+    rw [hP0map]
     rw [Subgroup.map_map, Subgroup.map_map]
     congr 1
   have hS2 : IsPGroup 2 S := by

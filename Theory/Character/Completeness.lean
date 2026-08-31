@@ -33,11 +33,11 @@ private theorem wedderburnDataExists (G : Type*) [Group G] [Finite G] :
         Nonempty (GroupAlgebra (G := G) ≃ₐ[ℂ]
           Π i, Matrix (Fin (d i)) (Fin (d i)) ℂ) := by
   classical
-  haveI : NeZero (Nat.card G : ℂ) := ⟨by
+  have : NeZero (Nat.card G : ℂ) := ⟨by
     exact_mod_cast (Nat.card_pos (α := G)).ne'⟩
-  haveI : IsSemisimpleRing (GroupAlgebra (G := G)) := by
+  have : IsSemisimpleRing (GroupAlgebra (G := G)) := by
     infer_instance
-  haveI : FiniteDimensional ℂ (GroupAlgebra (G := G)) := by
+  have : FiniteDimensional ℂ (GroupAlgebra (G := G)) := by
     exact (MonoidAlgebra.basis G ℂ).finiteDimensional_of_finite
   exact IsSemisimpleRing.exists_algEquiv_pi_matrix_of_isAlgClosed ℂ
     (GroupAlgebra (G := G))
@@ -95,7 +95,7 @@ private instance matrixBlockIsScalarTower (i : wedderburnIndex G) :
     IsScalarTower ℂ (GroupAlgebra (G := G))
       (Fin (wedderburnDim (G := G) i) → ℂ) := by
   classical
-  letI : Module
+  let : Module
       (Matrix (Fin (wedderburnDim (G := G) i))
         (Fin (wedderburnDim (G := G) i)) ℂ)
       (Fin (wedderburnDim (G := G) i) → ℂ) :=
@@ -117,8 +117,8 @@ private noncomputable def matrixBlockRepresentation (i : wedderburnIndex G) :
 private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
     Representation.IsIrreducible (matrixBlockRepresentation (G := G) i) := by
   classical
-  letI := matrixBlockModule (G := G) i
-  letI := matrixBlockIsScalarTower (G := G) i
+  let := matrixBlockModule (G := G) i
+  let := matrixBlockIsScalarTower (G := G) i
   change Representation.IsIrreducible
     (Representation.ofModule' (k := ℂ) (G := G)
       (Fin (wedderburnDim (G := G) i) → ℂ))
@@ -126,7 +126,7 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
   let B := Π j : wedderburnIndex G,
     Matrix (Fin (wedderburnDim (G := G) j))
       (Fin (wedderburnDim (G := G) j)) ℂ
-  letI : Module
+  let : Module
       (Matrix (Fin (wedderburnDim (G := G) i))
         (Fin (wedderburnDim (G := G) i)) ℂ)
       (Fin (wedderburnDim (G := G) i) → ℂ) :=
@@ -142,7 +142,7 @@ private lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
   refine
     { toNontrivial := ?_
       eq_bot_or_eq_top := ?_ }
-  · haveI : Nontrivial (Fin (wedderburnDim (G := G) i) → ℂ) := Pi.nontrivial
+  · have : Nontrivial (Fin (wedderburnDim (G := G) i) → ℂ) := Pi.nontrivial
     refine ⟨⟨(⊥ : Subrepresentation
       (Representation.ofModule' (k := ℂ) (G := G)
         (Fin (wedderburnDim (G := G) i) → ℂ))), ⊤, ?_⟩⟩
@@ -249,10 +249,10 @@ private lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
   classical
   have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := G)).ne'
-  letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
-  letI : Representation.IsIrreducible (matrixBlockRepresentation (G := G) i) :=
+  let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
+  let : Representation.IsIrreducible (matrixBlockRepresentation (G := G) i) :=
     matrixBlockRepresentation_irreducible (G := G) i
-  letI : Representation.IsIrreducible (matrixBlockRepresentation (G := G) j) :=
+  let : Representation.IsIrreducible (matrixBlockRepresentation (G := G) j) :=
     matrixBlockRepresentation_irreducible (G := G) j
   have horth :
       classFunctionInner (blockCharacter (G := G) i) (blockCharacter (G := G) j) =
@@ -301,10 +301,10 @@ private lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
           (0 : Matrix (Fin (wedderburnDim (G := G) j))
             (Fin (wedderburnDim (G := G) j)) ℂ) := by
         simp [e, blockAlgHom, hij]
-      letI := matrixBlockModule (G := G) i
-      letI := matrixBlockIsScalarTower (G := G) i
-      letI := matrixBlockModule (G := G) j
-      letI := matrixBlockIsScalarTower (G := G) j
+      let := matrixBlockModule (G := G) i
+      let := matrixBlockIsScalarTower (G := G) i
+      let := matrixBlockModule (G := G) j
+      let := matrixBlockIsScalarTower (G := G) j
       let φ := h.some.toLinearEquiv
       have hmap : ∀ v : Fin (wedderburnDim (G := G) j) → ℂ,
           φ (e • v) = e • φ v := by
@@ -337,7 +337,7 @@ private lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
           φ v = e • φ v := hright.symm
           _ = φ (e • v) := (hmap v).symm
           _ = 0 := by rw [hleft, map_zero]
-      haveI : Nontrivial (Fin (wedderburnDim (G := G) j) → ℂ) := Pi.nontrivial
+      have : Nontrivial (Fin (wedderburnDim (G := G) j) → ℂ) := Pi.nontrivial
       obtain ⟨v, hv⟩ := exists_ne (0 : Fin (wedderburnDim (G := G) j) → ℂ)
       have hφv : φ v = 0 := hzero v
       exact hv (h.some.toLinearEquiv.injective (by simpa using hφv))
@@ -598,10 +598,10 @@ public theorem classFunction_span_irreducible_characters
                 (matrixBlockRepresentation (G := G) i)) then 1 else 0
         have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
           exact_mod_cast (Nat.card_pos (α := G)).ne'
-        letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
-        letI : Representation.IsIrreducible
+        let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
+        let : Representation.IsIrreducible
             (matrixBlockRepresentation (G := G) i) := hblockirr
-        letI : Representation.IsIrreducible ρ := hρirr
+        let : Representation.IsIrreducible ρ := hρirr
         rw [← Representation.char_orthonormal
           (ρ := matrixBlockRepresentation (G := G) i) (σ := ρ)]
         congr 1

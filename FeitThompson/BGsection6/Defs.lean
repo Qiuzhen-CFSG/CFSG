@@ -123,12 +123,12 @@ public theorem thompsonSubgroup_top_map_subtype (S : Subgroup G) :
     exact (Subgroup.map_le_iff_le_comap).mp <| le_sSup <| by
       refine ⟨?_, ?_, ?_⟩
       · simpa using (Subgroup.map_subtype_le (H := S) (K := A))
-      · letI : IsMulCommutative A := hA.2.1
+      · let : IsMulCommutative A := hA.2.1
         exact Subgroup.map_isMulCommutative (H := A) S.subtype
       · intro B hB hBcomm
         let B' : Subgroup S := B.subgroupOf S
         have hAmax := hA.2.2 B' (by simp) (by
-          letI : IsMulCommutative B := hBcomm
+          let : IsMulCommutative B := hBcomm
           infer_instance)
         calc
           Nat.card B = Nat.card B' := by
@@ -143,7 +143,7 @@ public theorem thompsonSubgroup_top_map_subtype (S : Subgroup G) :
     have hAin :
         A.subgroupOf S ∈ thompsonAbelianSubgroups (G := S) (⊤ : Subgroup S) := by
       refine ⟨by simp, ?_, ?_⟩
-      · letI : IsMulCommutative A := hA.2.1
+      · let : IsMulCommutative A := hA.2.1
         infer_instance
       · intro B hB hBcomm
         have hAmax := hA.2.2 (B.map S.subtype) (by
@@ -227,11 +227,11 @@ public theorem thompsonSubgroup_top_map_mulEquiv {H : Type*} [Group H] [Finite H
     constructor
     · rintro ⟨B, hB, rfl⟩
       refine ⟨by simp, ?_, ?_⟩
-      · letI : IsMulCommutative B := hB.2.1
+      · let : IsMulCommutative B := hB.2.1
         exact Subgroup.map_isMulCommutative (H := B) e.toMonoidHom
       · intro C _ hCcomm
         have hBmax := hB.2.2 (C.map e.symm.toMonoidHom) (by simp) (by
-          letI : IsMulCommutative C := hCcomm
+          let : IsMulCommutative C := hCcomm
           exact Subgroup.map_isMulCommutative (H := C) e.symm.toMonoidHom)
         calc
           Nat.card C = Nat.card (C.map e.symm.toMonoidHom) := by
@@ -244,11 +244,11 @@ public theorem thompsonSubgroup_top_map_mulEquiv {H : Type*} [Group H] [Finite H
     · intro hA
       refine ⟨A.map e.symm.toMonoidHom, ?_, ?_⟩
       · refine ⟨by simp, ?_, ?_⟩
-        · letI : IsMulCommutative A := hA.2.1
+        · let : IsMulCommutative A := hA.2.1
           exact Subgroup.map_isMulCommutative (H := A) e.symm.toMonoidHom
         · intro C _ hCcomm
           have hAmax := hA.2.2 (C.map e.toMonoidHom) (by simp) (by
-            letI : IsMulCommutative C := hCcomm
+            let : IsMulCommutative C := hCcomm
             exact Subgroup.map_isMulCommutative (H := C) e.toMonoidHom)
           calc
             Nat.card C = Nat.card (C.map e.toMonoidHom) := by
@@ -363,12 +363,12 @@ public theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
   have hAimage :
       A.map P.toSubgroup.subtype ∈ thompsonAbelianSubgroups (G := G) (P : Subgroup G) := by
     refine ⟨by simpa using (Subgroup.map_subtype_le (H := (P : Subgroup G)) (K := A)), ?_, ?_⟩
-    · letI : IsMulCommutative A := hA.2.1
+    · let : IsMulCommutative A := hA.2.1
       exact Subgroup.map_isMulCommutative (H := A) P.toSubgroup.subtype
     · intro B hB hBcomm
       let B' : Subgroup P := B.subgroupOf (P : Subgroup G)
       have hAmax := hA.2.2 B' (by simp) (by
-        letI : IsMulCommutative B := hBcomm
+        let : IsMulCommutative B := hBcomm
         infer_instance)
       calc
         Nat.card B = Nat.card B' := by
@@ -396,7 +396,7 @@ public theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
   have hB_comm : IsMulCommutative B := by
     let hAcomm : IsMulCommutative A := hA.2.1
     let hZcomm : IsMulCommutative Z := by
-      letI : IsMulCommutative (thompsonCenter (G := G) (P : Subgroup G)) :=
+      let : IsMulCommutative (thompsonCenter (G := G) (P : Subgroup G)) :=
         thompsonCenter_isMulCommutative (G := G) (P : Subgroup G)
       infer_instance
     refine (Subgroup.le_centralizer_iff_isMulCommutative (K := B)).1 ?_
@@ -449,7 +449,7 @@ public theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
 public theorem thompsonAbelianSubgroups_nonempty [Finite G] (P : Subgroup G) :
     ∃ A : Subgroup G, A ∈ thompsonAbelianSubgroups (G := G) P := by
   classical
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
   let S : Set (Subgroup G) := {A : Subgroup G | A ≤ P ∧ IsMulCommutative A}
   have hS_nonempty : S.Nonempty := by
     refine ⟨⊥, ?_⟩
@@ -557,7 +557,7 @@ public theorem thompsonAbelianSubgroups_centralizer_eq [Finite G]
       · exact hx.1
     have hB_comm : IsMulCommutative B := by
       change IsMulCommutative (Subgroup.closure ((A : Set G) ∪ {x}))
-      letI : IsMulCommutative A := hA.2.1
+      let : IsMulCommutative A := hA.2.1
       apply Subgroup.isMulCommutative_closure
       intro y hy z hz
       rcases hy with hyA | rfl
@@ -597,7 +597,7 @@ public theorem replacementCommChain_le_normalizer
       exact le_top
   | n + 1 => by
       let D : Subgroup G := replacementCommChain B A n
-      letI : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal := commutator_normal_in_sup D A
+      let : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal := commutator_normal_in_sup D A
       have hsup_norm : D ⊔ A ≤ Subgroup.normalizer (((⁅D, A⁆ : Subgroup G) : Set G)) := by
         exact
           Subgroup.le_normalizer_of_normal_subgroupOf
@@ -852,9 +852,9 @@ public theorem thompsonAbelianSubgroups_normalizer_iff_commutator_eq_bot [Finite
       simpa [mul_assoc] using this
 
 public theorem commutator_lt_self_of_isSolvable_local (M : Subgroup G)
-    [IsSolvable (↥M)] [Nontrivial (↥M)] : ⁅M, M⁆ < M := by
+    [Group.IsSolvable (↥M)] [Nontrivial (↥M)] : ⁅M, M⁆ < M := by
   have hlt : commutator (↥M) < (⊤ : Subgroup (↥M)) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := ↥M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := ↥M)
   have hlt' :
       (commutator (↥M)).map M.subtype < (⊤ : Subgroup (↥M)).map M.subtype := by
     exact
@@ -952,7 +952,7 @@ public theorem coprime_card_of_isPiGroup_compl
 public theorem exists_invariant_sylow_of_pi_complement_action
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G] {π : Set Nat.Primes}
-    (hGπ : IsPiGroup π G) (hAπ' : IsPiGroup (πᶜ) A) (hGsolv : IsSolvable G)
+    (hGπ : IsPiGroup π G) (hAπ' : IsPiGroup (πᶜ) A) (hGsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (_hpπ : (⟨p, Fact.out⟩ : Nat.Primes) ∈ π) :
     ∃ P : Sylow p G, IsInvariant A G (P : Subgroup G) := by
   classical
@@ -968,7 +968,9 @@ public theorem exists_invariant_sylow_of_pi_complement_action
       isPGroup_of_isHallSubgroup_singleton (G := G) (P := H) (p := p) hHhall
   have hp_not_dvd_index : ¬ p ∣ H.index := by
     intro hp_dvd
-    exact (hHhall.p_in_pi_of_p_dvd_index ⟨p, Fact.out⟩ hp_dvd) (by simp [πp])
+    exact (hHhall.p_in_pi_of_p_dvd_index ⟨p, Fact.out⟩ hp_dvd) (by
+      dsimp [πp]
+      exact Set.mem_singleton_iff.mpr (Subtype.ext rfl))
   exact ⟨hHp.toSylow hp_not_dvd_index, by simpa using hHinv⟩
 
 /-- Gorenstein, Chapter 6, Theorem 2.2, prime-power operator case: a finite
@@ -1034,7 +1036,7 @@ public theorem chiefFactor_quotient_minimal_local
     Uq.Normal ∧ Uq ≠ ⊥ ∧
       (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hUq_ne_bot : Uq ≠ ⊥ := by
@@ -1044,7 +1046,7 @@ public theorem chiefFactor_quotient_minimal_local
       simpa [π, QuotientGroup.ker_mk'] using hle
     have : cf.U = cf.V := le_antisymm hle' cf.isChief.lt.le
     exact (ne_of_lt cf.isChief.lt) this.symm
-  haveI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
+  have : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
   refine ⟨inferInstance, hUq_ne_bot, ?_⟩
   intro K hKnorm hKUq hK_ne_bot
   have hKcomap_norm : (K.comap π).Normal := hKnorm.comap π
@@ -1081,7 +1083,7 @@ public theorem chiefFactor_quotient_minimal_local
 /-- Gorenstein, Chapter 6, Theorem 3.2, special case `O_{p'}(G)=1`: if `G` is finite
 solvable and has trivial `p'`-core, then `C_G(O_p(G)) ≤ O_p(G)`. -/
 public theorem centralizer_pCore_le_pCore_of_pPrimeCore_eq_bot
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (hcore : pPrimeCore p G = ⊥) :
     Subgroup.centralizer (pCore p G : Set G) ≤ pCore p G := by
   have hfit_eq : fittingSubgroup G = pCore p G := Fitting_eq_pcore G p hcore
@@ -1104,14 +1106,14 @@ private theorem mem_centralizer_of_quotient_frattini_local
         Subgroup.centralizer
           (((H.map (QuotientGroup.mk' Φ)) : Subgroup (G ⧸ Φ)) : Set (G ⧸ Φ))) :
     x ∈ Subgroup.centralizer (H : Set G) := by
-  letI : Fact (IsPGroup p ↥H) := ⟨hHp⟩
+  let : Fact (IsPGroup p ↥H) := ⟨hHp⟩
   let q : G →* (G ⧸ Φ) := QuotientGroup.mk' Φ
   let Hbar : Subgroup (G ⧸ Φ) := H.map q
   have hq_cent : q x ∈ Subgroup.centralizer (Hbar : Set (G ⧸ Φ)) := by
     simpa [q, Hbar] using hx_cent
   have hznorm : Subgroup.zpowers x ≤ Subgroup.normalizer H := by
     exact Subgroup.le_normalizer_of_normal (K := Subgroup.zpowers x) (H := H)
-  letI : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H) :=
+  let : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) (Subgroup.zpowers x) H hznorm
   have hfrattini_inv : IsInvariant (↥(Subgroup.zpowers x)) (↥H) (frattini H) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers x)) (G := ↥H) (frattini H)
@@ -1120,9 +1122,9 @@ private theorem mem_centralizer_of_quotient_frattini_local
         quotientMulDistribMulAction (A := ↥(Subgroup.zpowers x)) (G := ↥H) (frattini H)
           hfrattini_inv
       ActsTrivially (A := ↥(Subgroup.zpowers x)) (G := ↥H ⧸ frattini H) := by
-    letI : MulAction.QuotientAction (↥(Subgroup.zpowers x)) (frattini H) :=
+    let : MulAction.QuotientAction (↥(Subgroup.zpowers x)) (frattini H) :=
       quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers x)) (frattini H) hfrattini_inv
-    letI : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H ⧸ frattini H) :=
+    let : MulDistribMulAction (↥(Subgroup.zpowers x)) (↥H ⧸ frattini H) :=
       quotientMulDistribMulAction (A := ↥(Subgroup.zpowers x)) (G := ↥H) (frattini H)
         hfrattini_inv
     let xgen : Subgroup.zpowers x := ⟨x, Subgroup.mem_zpowers x⟩
@@ -1181,13 +1183,14 @@ private theorem mem_centralizer_of_quotient_frattini_local
   have := congrArg (fun t : G => t * x) hconj
   simpa [mul_assoc] using this.symm
 
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 /-- Gorenstein, Chapter 6, Theorem 3.4, core reduction form: if `G` is finite solvable and
 `O_{p'}(G)=1`, then after quotienting by `Φ(O_p(G))` the `p'`-core is still
 trivial.  This is the technical step excluding nontrivial `p'`-elements in the
 kernel of the action on the Frattini quotient. -/
 public theorem pPrimeCore_quotient_frattini_pCore_eq_bot
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (hcore : pPrimeCore p G = ⊥) :
     let H : Subgroup G := pCore p G
     let Φ : Subgroup G := (frattini H).map H.subtype
@@ -1196,16 +1199,16 @@ public theorem pPrimeCore_quotient_frattini_pCore_eq_bot
   let H : Subgroup G := pCore p G
   have hHp : IsPGroup p ↥H := by
     simpa [H] using pCore_isPGroup (G := G) (p := p)
-  letI : Fact (IsPGroup p ↥H) := ⟨hHp⟩
+  let : Fact (IsPGroup p ↥H) := ⟨hHp⟩
   have hH_char : H.Characteristic := by
     simpa [H] using pCore_characteristic (G := G) (p := p)
-  haveI : H.Characteristic := hH_char
-  haveI : H.Normal := by infer_instance
+  have : H.Characteristic := hH_char
+  have : H.Normal := by infer_instance
   let Φ : Subgroup G := (frattini H).map H.subtype
   have hΦ_char : Φ.Characteristic := by
     simpa [Φ] using characteristic_map_subtype_of_characteristic H (frattini H)
-  haveI : Φ.Characteristic := hΦ_char
-  haveI : Φ.Normal := by infer_instance
+  have : Φ.Characteristic := hΦ_char
+  have : Φ.Normal := by infer_instance
   have hΦ_p : IsPGroup p ↥Φ := by
     have hfrattini_p : IsPGroup p ↥(frattini H) := hHp.to_subgroup (frattini H)
     simpa [Φ] using IsPGroup.map (p := p) (H := frattini H) hfrattini_p H.subtype
@@ -1242,10 +1245,11 @@ public theorem pPrimeCore_quotient_frattini_pCore_eq_bot
     refine ⟨⟨g, ?_⟩, ?_⟩
     · simp [W, q, hg, a.property]
     · apply Subtype.ext
-      simpa [qW, q, hg]
+      change (QuotientGroup.mk' Φ) g = (a : G ⧸ Φ)
+      exact hg
   have hqW_ker : qW.ker = Φ.subgroupOf W := by
     ext w
-    simp [qW, q, Subgroup.mem_subgroupOf]
+    simp [qW, q, MonoidHom.mem_ker, QuotientGroup.eq_one_iff, Subgroup.mem_subgroupOf]
   have hquot_card : Nat.card (W ⧸ Φ.subgroupOf W) = Nat.card A := by
     let e : W ⧸ qW.ker ≃* A := QuotientGroup.quotientKerEquivOfSurjective qW hqW_surj
     have hcard : Nat.card (W ⧸ qW.ker) = Nat.card A := Nat.card_congr e.toEquiv
@@ -1326,7 +1330,7 @@ and `O_{p'}(G)=1`, then the kernel of the conjugation action of
 `G/Φ(O_p(G))` on `O_p(G)/Φ(O_p(G))` is exactly `O_p(G)/Φ(O_p(G))`.  Equivalently,
 `G/O_p(G)` acts faithfully on the Frattini quotient. -/
 public theorem centralizer_pCore_mod_frattini_eq_pCore_mod_frattini
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (hcore : pPrimeCore p G = ⊥) :
     let H : Subgroup G := pCore p G
     let Φ : Subgroup G := (frattini H).map H.subtype
@@ -1337,16 +1341,16 @@ public theorem centralizer_pCore_mod_frattini_eq_pCore_mod_frattini
   let H : Subgroup G := pCore p G
   have hHp : IsPGroup p ↥H := by
     simpa [H] using pCore_isPGroup (G := G) (p := p)
-  letI : Fact (IsPGroup p ↥H) := ⟨hHp⟩
+  let : Fact (IsPGroup p ↥H) := ⟨hHp⟩
   have hH_char : H.Characteristic := by
     simpa [H] using pCore_characteristic (G := G) (p := p)
-  haveI : H.Characteristic := hH_char
-  haveI : H.Normal := by infer_instance
+  have : H.Characteristic := hH_char
+  have : H.Normal := by infer_instance
   let Φ : Subgroup G := (frattini H).map H.subtype
   have hΦ_char : Φ.Characteristic := by
     simpa [Φ] using characteristic_map_subtype_of_characteristic H (frattini H)
-  haveI : Φ.Characteristic := hΦ_char
-  haveI : Φ.Normal := by infer_instance
+  have : Φ.Characteristic := hΦ_char
+  have : Φ.Normal := by infer_instance
   have hΦ_p : IsPGroup p ↥Φ := by
     have hfrattini_p : IsPGroup p ↥(frattini H) := hHp.to_subgroup (frattini H)
     simpa [Φ] using IsPGroup.map (p := p) (H := frattini H) hfrattini_p H.subtype
@@ -1363,12 +1367,14 @@ public theorem centralizer_pCore_mod_frattini_eq_pCore_mod_frattini
     have hcent_pcore :
         Subgroup.centralizer (pCore p (G ⧸ Φ) : Set (G ⧸ Φ)) ≤ pCore p (G ⧸ Φ) :=
       centralizer_pCore_le_pCore_of_pPrimeCore_eq_bot (G := G ⧸ Φ)
-        (solvable_quotient_of_solvable Φ) (p := p) hcoreQ
+        (by
+          have : Group.IsSolvable G := hsolv
+          infer_instance) (p := p) hcoreQ
     simpa [hH_map] using hcent_pcore
   have hH_comm : IsMulCommutative ↥(H.map q) := by
     have hElem : IsElementaryAbelian p (H ⧸ frattini H) :=
       isElementaryAbelian_quotient_frattini (R := H) (p := p)
-    letI : IsMulCommutative (H ⧸ frattini H) := hElem.toIsMulCommutative
+    let : IsMulCommutative (H ⧸ frattini H) := hElem.toIsMulCommutative
     refine ⟨⟨?_⟩⟩
     intro a b
     rcases a with ⟨a, ha⟩
@@ -1403,7 +1409,7 @@ public theorem elementaryAbelian_pCore_quotient_frattini
     {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime] :
     IsElementaryAbelian p ((pCore p G) ⧸ frattini (pCore p G)) := by
   have hHp : IsPGroup p (pCore p G) := pCore_isPGroup (G := G) (p := p)
-  letI : Fact (IsPGroup p (pCore p G)) := ⟨hHp⟩
+  let : Fact (IsPGroup p (pCore p G)) := ⟨hHp⟩
   exact isElementaryAbelian_quotient_frattini (R := pCore p G) (p := p)
 
 /-! ## Chapter 6, §5: strong `p`-solvability -/
@@ -1546,7 +1552,7 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
     {F V : Type*} [Field F] [AddCommGroup V] [Module F V]
     (T : Module.End F V) (hSq : (T - 1) ^ 2 = 0) (hne : T ≠ 1) :
     HasQuadraticMinimalPolynomial F V T := by
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hV
     push Not at hV
     exact hne (Subsingleton.elim _ _)
@@ -1720,8 +1726,8 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
     intro d hd_prime hd_dvd
     exact hcontra d hd_prime hd_dvd
   obtain ⟨q, hq_prime, hq_dvd_card, hq_ne_p⟩ := hexists_q_ne_p
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact q.Prime := ⟨hq_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact q.Prime := ⟨hq_prime⟩
   obtain ⟨a, ha_order⟩ := exists_prime_orderOf_dvd_card q (by
     simpa [Nat.card_eq_fintype_card] using hq_dvd_card)
   have ha_visible : ρ a ≠ 1 := by
@@ -1733,7 +1739,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
     simpa [ha_order, MonoidHom.map_pow] using congrArg ρ (pow_orderOf_eq_one a)
   have hq_ne_zero : (q : F) ≠ 0 := by
     exact CharP.cast_ne_zero_of_ne_of_prime (R := F) hq_prime (by simpa using hq_ne_p.symm)
-  letI : NeZero (q : F) := ⟨hq_ne_zero⟩
+  let : NeZero (q : F) := ⟨hq_ne_zero⟩
   have hρa_semisimple : Module.End.IsSemisimple (ρ a) := by
     have h_sep : (Polynomial.X ^ q - (1 : Polynomial F)).Separable := by
       rw [Polynomial.X_pow_sub_one_separable_iff]
@@ -1864,9 +1870,9 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
     exact hv_ne_zero (by simpa [vm] using congrArg ρ.asModuleEquiv hvm_zero)
   let M : Subrepresentation W.toRepresentation :=
     (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := W.toRepresentation)).symm Msub
-  letI : Module (MonoidAlgebra F G) W.toRepresentation.asModule :=
+  let : Module (MonoidAlgebra F G) W.toRepresentation.asModule :=
     Representation.instModuleMonoidAlgebraAsModule (ρ := W.toRepresentation)
-  letI : Module (MonoidAlgebra F G) W.toSubmodule :=
+  let : Module (MonoidAlgebra F G) W.toSubmodule :=
     Representation.instModuleMonoidAlgebraAsModule (ρ := W.toRepresentation)
   have hwv_not_mem_Msub : wv ∉ Msub := by
     intro hvmM
@@ -1886,7 +1892,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
         (R := MonoidAlgebra F G)
         (M := W.toRepresentation.asModule)
         (m := Msub)).2 hMsub_coatom
-    letI : Module (MonoidAlgebra F G) σ.asModule :=
+    let : Module (MonoidAlgebra F G) σ.asModule :=
       Representation.instModuleMonoidAlgebraAsModule (ρ := σ)
     let eσ : (W.toRepresentation.asModule ⧸ Msub) ≃ₗ[MonoidAlgebra F G] σ.asModule :=
       { toFun := fun x => x
@@ -1991,12 +1997,12 @@ private theorem not_isPGroup_of_faithful_irreducible_visible_quotient
   classical
   intro hG_p
   by_cases hG_nontrivial : Nontrivial G
-  · haveI : Nontrivial G := hG_nontrivial
-    haveI : Representation.IsIrreducible ρ := hρ_irreducible
-    haveI : IsPGroup p G := hG_p
-    haveI : Nontrivial V := by
+  · have : Nontrivial G := hG_nontrivial
+    have : Representation.IsIrreducible ρ := hρ_irreducible
+    have : IsPGroup p G := hG_p
+    have : Nontrivial V := by
       by_contra hV
-      letI : Subsingleton V := not_nontrivial_iff_subsingleton.mp hV
+      let : Subsingleton V := not_nontrivial_iff_subsingleton.mp hV
       exact hg_visible (by
         ext v
         exact Subsingleton.elim _ _)
@@ -2126,7 +2132,7 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
   have hw_not_D : w ∉ D := fun hwD => hw_not_B (hD_le_B hwD)
   let DA : Subgroup (A : Subgroup G) := D.subgroupOf (A : Subgroup G)
   have hDA_subnormal : Subgroup.IsSubnormal DA := by
-    haveI : Group.IsNilpotent A :=
+    have : Group.IsNilpotent A :=
       IsPGroup.isNilpotent (G := A) (p := p) A.isPGroup'
     exact isSubnormal_of_normalizerCondition
       (G := (A : Subgroup G)) (Group.normalizerCondition_of_isNilpotent) DA
@@ -2589,7 +2595,7 @@ private theorem gorenstein_3_8_2_conjugacy_class_le_pCore
         exact False.elim (hKcap_ne (by rw [hPQ]))
     · let H : Subgroup G := pCore p G
       let q : G →* G ⧸ H := QuotientGroup.mk' H
-      haveI : Finite (G ⧸ H) := inferInstance
+      have : Finite (G ⧸ H) := inferInstance
       have hH_ne_bot : H ≠ ⊥ := by
         simpa [H] using hcore
       have hcard_lt : Nat.card (G ⧸ H) < n := by
@@ -2686,13 +2692,13 @@ private theorem gorenstein_3_8_1_two_dimensional_odd_order_forces_pgroup
     have hmul : ⁅g, n⁆ * n ∈ (P : Subgroup H) :=
       (P : Subgroup H).mul_mem hcomm_gn hn
     simpa [commutatorElement_def, mul_assoc] using hmul
-  haveI : (P : Subgroup H).Normal := hP_normal
+  have : (P : Subgroup H).Normal := hP_normal
   have hring_prime : Nat.Prime (ringChar F) := by
     rw [hchar]
     rcases CharP.char_is_prime_or_zero (R := F) p with hp | hp0
     · exact hp
     · exact False.elim (Nat.not_odd_zero (by simp [hp0] at hpodd))
-  letI : Fact (Nat.Prime (ringChar F)) := ⟨hring_prime⟩
+  let : Fact (Nat.Prime (ringChar F)) := ⟨hring_prime⟩
   have hxP : x ∈ (P : Subgroup H) := by
     have hx_closure_p : IsPGroup (ringChar F) (Subgroup.closure ({x} : Set H)) := by
       intro z
@@ -2738,7 +2744,7 @@ private theorem gorenstein_3_8_1_two_dimensional_odd_order_forces_pgroup
         hx_closure_p with
       ⟨Q, hQle⟩
     have hQ_eq_P : Q = P := by
-      haveI : Unique (Sylow (ringChar F) H) := Sylow.unique_of_normal P hP_normal
+      have : Unique (Sylow (ringChar F) H) := Sylow.unique_of_normal P hP_normal
       exact Subsingleton.elim Q P
     have hxQ : x ∈ (Q : Subgroup H) :=
       hQle (Subgroup.subset_closure (by simp))
@@ -2788,7 +2794,7 @@ private theorem gorenstein_3_8_1_two_dimensional_odd_order_forces_pgroup
         hy_closure_p with
       ⟨Q, hQle⟩
     have hQ_eq_P : Q = P := by
-      haveI : Unique (Sylow (ringChar F) H) := Sylow.unique_of_normal P hP_normal
+      have : Unique (Sylow (ringChar F) H) := Sylow.unique_of_normal P hP_normal
       exact Subsingleton.elim Q P
     have hyQ : y ∈ (Q : Subgroup H) :=
       hQle (Subgroup.subset_closure (by simp))
@@ -2862,7 +2868,7 @@ private theorem gorenstein_3_8_1_even_quotient_of_faithful_irreducible
   -- invariant subspace; irreducibility makes it the whole module.
   have hdim : Module.finrank F V = 2 := by
     classical
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     let A : Module.End F V := ρ x - 1
     let B : Module.End F V := ρ y - 1
     have hA_sq : A ^ 2 = 0 := by
@@ -3016,7 +3022,7 @@ private theorem gorenstein_3_8_1_even_quotient_of_faithful_irreducible
           rcases a with ⟨v, hv⟩
           rcases hv with ⟨u, rfl⟩
           exact ⟨B (A u), rfl⟩))
-    haveI : Nontrivial (LinearMap.range A) := by
+    have : Nontrivial (LinearMap.range A) := by
       exact (Submodule.nontrivial_iff_ne_bot (p := LinearMap.range A)).2 hA_range_ne_bot
     rcases Module.End.exists_eigenvalue BA with ⟨c, hc⟩
     rcases hc.exists_hasEigenvector with ⟨a, haeig⟩
@@ -3314,7 +3320,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   classical
   let F' := AlgebraicClosure F
   let V' := F' ⊗[F] V
-  haveI : FiniteDimensional F' V' := by
+  have : FiniteDimensional F' V' := by
     dsimp [V']
     exact Module.Finite.base_change (R := F) (A := F') (M := V)
   let ρ' : Representation F' H V' := Theory.Representation.extendScalars F' ρ
@@ -3323,7 +3329,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
 
   -- Gorenstein first passes to an algebraically closed coefficient field.
   have hx'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' x) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hx_sq : (ρ x - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hx_p hx_quad
     have hx'_sq : (ρ' x - 1) ^ 2 = 0 := by
@@ -3361,7 +3367,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
       exact hnot_quad hx_quad
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (ρ' x) hx'_sq hx'_ne
   have hy'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' y) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hy_sq : (ρ y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hy_p hy_quad
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 := by
@@ -3401,7 +3407,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
 
   -- Next choose an irreducible composition factor on which the action is
   -- nontrivial.  This is Gorenstein's composition-factor step.
-  letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+  let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
   obtain ⟨W, M, g0, hM_irreducible, hg0_not_ker_M⟩ :=
     exists_visible_irreducible_subquotient_of_not_isPGroup
       (p := p) ρ' hρ'_faithful hnot_pgroup
@@ -3409,8 +3415,8 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule
   have hσ_irreducible : Representation.IsIrreducible σ := by
     simpa [σ] using hM_irreducible
-  haveI : Representation.IsIrreducible σ := hσ_irreducible
-  letI := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
+  have : Representation.IsIrreducible σ := hσ_irreducible
+  let := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
   let σq := Theory.Representation.kerRepresentation σ
@@ -3423,7 +3429,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
   let yq : H ⧸ σ.ker := QuotientGroup.mk' σ.ker y
   have hxq_p : IsPElement (p := p) xq := by
     -- `p`-elementhood passes to quotients.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     rcases hx_p with ⟨k, hk⟩
     have hdiv : orderOf xq ∣ p ^ k := by
       exact dvd_trans (orderOf_map_dvd (ψ := QuotientGroup.mk' σ.ker) x) (by simp [hk])
@@ -3431,7 +3437,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     exact ⟨m, hm⟩
   have hyq_p : IsPElement (p := p) yq := by
     -- `p`-elementhood passes to quotients.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     rcases hy_p with ⟨k, hk⟩
     have hdiv : orderOf yq ∣ p ^ k := by
       exact dvd_trans (orderOf_map_dvd (ψ := QuotientGroup.mk' σ.ker) y) (by simp [hk])
@@ -3467,7 +3473,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
     -- If this faithful irreducible quotient were a `p`-group, then Gorenstein's
     -- modular `p`-group argument would make its action trivial, contradicting
     -- the chosen composition factor where `g0` remains visible.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     let g0q : H ⧸ σ.ker := QuotientGroup.mk' σ.ker g0
     have hg0q_visible : σq g0q ≠ 1 := by
       change σ g0 ≠ 1
@@ -3482,7 +3488,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
       rw [← hq_gen]
       rw [hxq_eq_one]
       exact (Subgroup.closure_insert_one ({yq} : Set (H ⧸ σ.ker))).symm
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact hquot_not_pgroup
       (isPGroup_of_closure_singleton_eq_top_of_isPElement hclosure_singleton hyq_p)
   have hyq_ne_one : σq yq ≠ 1 := by
@@ -3498,13 +3504,13 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
         ext z
         simp [or_comm]
       simp [hset]
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact hquot_not_pgroup
       (isPGroup_of_closure_singleton_eq_top_of_isPElement hclosure_singleton hxq_p)
   have hxq_quad : HasQuadraticMinimalPolynomial F' _ (σq xq) := by
     -- Pass the square-zero operator `ρ' x - 1` to the chosen simple quotient,
     -- then through the faithful kernel quotient.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hx'_sq : (ρ' x - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ' hx_p hx'_quad
     have hxσ_sq : (σ x - 1) ^ 2 = 0 := by
@@ -3513,7 +3519,7 @@ private theorem gorenstein_3_8_1_even_quotient_after_composition_factor
       simpa [σq, xq] using square_zero_of_kerRepresentation σ x hxσ_sq
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (σq xq) hxσq_sq hxq_ne_one
   have hyq_quad : HasQuadraticMinimalPolynomial F' _ (σq yq) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ' hy_p hy'_quad
     have hyσ_sq : (σ y - 1) ^ 2 = 0 := by
@@ -3580,7 +3586,7 @@ private theorem gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
     -- (Alperin--Lyons/Baer--Suzuki form), applied to the conjugacy class of `x`.
     by_contra hpair
     push Not at hpair
-    letI : Fact p.Prime := by
+    let : Fact p.Prime := by
       refine ⟨?_⟩
       rcases CharP.char_is_prime_or_zero (R := F) p with hp | hp0
       · exact hp
@@ -3691,7 +3697,7 @@ private theorem gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
       -- Conjugate linear transformations have the same minimal polynomial,
       -- so the quadratic condition transfers from `x` to every conjugate.
       let e : V ≃ₗ[F] V :=
-        LinearEquiv.ofLinear (ρ g) (ρ g⁻¹)
+        LinearEquiv.ofLinearMap (ρ g) (ρ g⁻¹)
           (by
             ext v
             change ((ρ g) * (ρ g⁻¹)) v = v
@@ -3710,7 +3716,7 @@ private theorem gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
       exact (hasQuadraticMinimalPolynomial_conj e (ρ x)).2 hx_quad
     have hyH_quad : HasQuadraticMinimalPolynomial F V (ρH yH) := by
       simpa [ρH, yH] using hy_quad
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact gorenstein_3_8_1_even_quotient_after_composition_factor
       (p := p) ρH (by
         exact hρ_faithful.comp H.subtype_injective)
@@ -3734,7 +3740,7 @@ public theorem gorenstein_3_8_3_not_pStable_false
   rcases gorenstein_3_8_1_3_8_2_even_subquotient_of_not_pStable
       (G := G) (p := p) hpodd hpcore hnstable with
     ⟨H, N, hN, h_even⟩
-  haveI : N.Normal := hN
+  have : N.Normal := hN
   have hquot_dvd_H : Nat.card (H ⧸ N) ∣ Nat.card H := by
     exact Subgroup.card_quotient_dvd_card (s := N)
   have hH_dvd_G : Nat.card H ∣ Nat.card G :=
@@ -3768,7 +3774,7 @@ if a subgroup of a Sylow `p`-subgroup acts trivially on the Frattini quotient
 of the textbook proof after the `p`-stability/minimal-polynomial argument has
 shown that the action on the Frattini quotient is trivial. -/
 public theorem sylow_abelian_normal_le_pCore_of_trivial_frattini_action
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (hcore : pPrimeCore p G = ⊥)
     (P : Sylow p G) (A : Subgroup P) [A.Normal] [IsMulCommutative A]
     (hA_kernel :
@@ -3784,13 +3790,13 @@ public theorem sylow_abelian_normal_le_pCore_of_trivial_frattini_action
   let _ : IsMulCommutative A := inferInstance
   let H : Subgroup G := pCore p G
   have hH_char : H.Characteristic := pCore_characteristic (G := G) (p := p)
-  haveI : H.Characteristic := hH_char
-  haveI : H.Normal := by infer_instance
+  have : H.Characteristic := hH_char
+  have : H.Normal := by infer_instance
   let Φ : Subgroup G := (frattini H).map H.subtype
   have hΦ_char : Φ.Characteristic := by
     simpa [Φ] using characteristic_map_subtype_of_characteristic H (frattini H)
-  haveI : Φ.Characteristic := hΦ_char
-  haveI : Φ.Normal := by infer_instance
+  have : Φ.Characteristic := hΦ_char
+  have : Φ.Normal := by infer_instance
   let q : G →* (G ⧸ Φ) := QuotientGroup.mk' Φ
   have hcent_eq :
       Subgroup.centralizer ((H.map q : Subgroup (G ⧸ Φ)) : Set (G ⧸ Φ)) = H.map q := by
@@ -3815,7 +3821,7 @@ public theorem sylow_abelian_normal_le_pCore_of_trivial_frattini_action
   simpa [div_eq_mul_inv, mul_assoc] using hmul_H
 
 public theorem sylow_abelian_normal_le_op_pPrime_p_aux
-    {G : Type uG} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type uG} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {p : ℕ} [Fact p.Prime] (hcore : pPrimeCore p G = ⊥)
     (P : Sylow p G) (A : Subgroup P) [A.Normal] [IsMulCommutative A]
     (ho : Odd (Nat.card G)) (hp2 : p ≠ 2) :
@@ -3835,10 +3841,10 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
     let Gb := G ⧸ R
     have hV_elem : IsElementaryAbelian p V := by
       simpa [V, R] using elementaryAbelian_pCore_quotient_frattini (G := G) (p := p)
-    letI : IsElementaryAbelian p V := hV_elem
-    letI : CommGroup V := { mul_comm := fun x y => mul_comm x y }
-    letI : AddCommGroup (Additive V) := inferInstance
-    letI : Module (ZMod p) (Additive V) := inferInstance
+    let : IsElementaryAbelian p V := hV_elem
+    let : CommGroup V := { mul_comm := fun x y => mul_comm x y }
+    let : AddCommGroup (Additive V) := inferInstance
+    let : Module (ZMod p) (Additive V) := inferInstance
     -- Gorenstein 3.4 constructs the conjugation representation of
     -- `G / O_p(G)` on `O_p(G) / Φ(O_p(G))`.
     let ρ : Representation (ZMod p) Gb (Additive V) := by
@@ -3927,13 +3933,13 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
       -- Gorenstein 3.4 says that, modulo `Φ(O_p(G))`, the only elements of `G`
       -- centralizing `O_p(G)/Φ(O_p(G))` already lie in `O_p(G)`.
       classical
-      haveI : R.Normal := by
+      have : R.Normal := by
         dsimp [R]
         infer_instance
       let conjR : G → R → R :=
         fun g x => ⟨g * x * g⁻¹, by
           exact Subgroup.Normal.conj_mem (G := G) (H := R) (inferInstance : R.Normal) x x.2 g⟩
-      letI : MulDistribMulAction G R :=
+      let : MulDistribMulAction G R :=
         { toMulAction :=
             { smul := conjR
               one_smul := by
@@ -3958,9 +3964,9 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
             simp [conjR] }
       have hfrattini_inv : IsInvariant G R (frattini R) :=
         isInvariant_of_characteristic (A := G) (G := R) (frattini R)
-      letI : MulAction.QuotientAction G (frattini R) :=
+      let : MulAction.QuotientAction G (frattini R) :=
         quotientAction_of_isInvariant (A := G) (frattini R) hfrattini_inv
-      letI : MulDistribMulAction G (R ⧸ frattini R) :=
+      let : MulDistribMulAction G (R ⧸ frattini R) :=
         quotientMulDistribMulAction (A := G) (G := R) (frattini R) hfrattini_inv
       let qΦ : G →* (G ⧸ Φ) := QuotientGroup.mk' Φ
       have hΦ_le_R : Φ ≤ R := by
@@ -4020,10 +4026,11 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
           exact hker_elem z hz
         · exact bot_le
       exact (MonoidHom.ker_eq_bot_iff ρ).1 hker_bot
-    have hGb_solvable : IsSolvable Gb := by
+    have hGb_solvable : Group.IsSolvable Gb := by
       dsimp [Gb]
-      exact solvable_quotient_of_solvable R
-    letI : IsSolvable Gb := hGb_solvable
+      have : Group.IsSolvable G := hsolv
+      infer_instance
+    let : Group.IsSolvable Gb := hGb_solvable
     have hGb_odd : Odd (Nat.card Gb) := by
       dsimp [Gb]
       exact odd_of_card_dvd ho (Subgroup.card_quotient_dvd_card (s := R))
@@ -4046,13 +4053,13 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
         pStable_of_odd_order_3_8_3 (G := Gb) (p := p) h83 hpodd hGb_pcore hGb_odd
       exact hGb_pstable (ZMod p) (Additive V) ρ hρ_faithful
     classical
-    haveI : R.Normal := by
+    have : R.Normal := by
       dsimp [R]
       infer_instance
     let conjR : G → R → R :=
       fun g x => ⟨g * x * g⁻¹, by
         exact Subgroup.Normal.conj_mem (G := G) (H := R) (inferInstance : R.Normal) x x.2 g⟩
-    letI : MulDistribMulAction G R :=
+    let : MulDistribMulAction G R :=
       { toMulAction :=
           { smul := conjR
             one_smul := by
@@ -4077,9 +4084,9 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
           simp [conjR] }
     have hfrattini_inv : IsInvariant G R (frattini R) :=
       isInvariant_of_characteristic (A := G) (G := R) (frattini R)
-    letI : MulAction.QuotientAction G (frattini R) :=
+    let : MulAction.QuotientAction G (frattini R) :=
       quotientAction_of_isInvariant (A := G) (frattini R) hfrattini_inv
-    letI : MulDistribMulAction G (R ⧸ frattini R) :=
+    let : MulDistribMulAction G (R ⧸ frattini R) :=
       quotientMulDistribMulAction (A := G) (G := R) (frattini R) hfrattini_inv
     let qΦ : G →* (G ⧸ Φ) := QuotientGroup.mk' Φ
     let xG : G := ((a : P.toSubgroup) : G)
@@ -4213,7 +4220,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p_aux
     (G := G) hsolv (p := p) hcore P A hA_kernel
 
 public theorem sylow_abelian_normal_le_op_pPrime_p
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     (ho : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime]
     (P : Sylow p G) (A : Subgroup P) [A.Normal] [IsMulCommutative A] :
@@ -4241,7 +4248,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p
       simp [haG]
   · classical
     let M : Subgroup G := pPrimeCore p G
-    haveI : M.Normal := by
+    have : M.Normal := by
       dsimp [M]
       infer_instance
     let q : G →* G ⧸ M := QuotientGroup.mk' M
@@ -4252,7 +4259,7 @@ public theorem sylow_abelian_normal_le_op_pPrime_p
         change q ((x : P.toSubgroup) : G) ∈ (P.map q : Subgroup (G ⧸ M))
         exact Subgroup.mem_map_of_mem q x.property)
     let Abar : Subgroup Pbar := A.map qP
-    haveI : Abar.Normal := by
+    have : Abar.Normal := by
       dsimp [Abar]
       exact Subgroup.Normal.map (inferInstance : A.Normal) qP (by
         intro y
@@ -4260,11 +4267,12 @@ public theorem sylow_abelian_normal_le_op_pPrime_p
         change y ∈ (P.map q : Subgroup (G ⧸ M)) at hy
         rcases Subgroup.mem_map.mp hy with ⟨x, hx, rfl⟩
         exact ⟨⟨x, hx⟩, rfl⟩)
-    haveI : IsMulCommutative Abar :=
+    have : IsMulCommutative Abar :=
       Subgroup.map_isMulCommutative A qP
-    have hQ_solv : IsSolvable (G ⧸ M) := by
+    have hQ_solv : Group.IsSolvable (G ⧸ M) := by
       dsimp [M]
-      exact solvable_quotient_of_solvable (pPrimeCore p G)
+      have : Group.IsSolvable G := hsolv
+      infer_instance
     have hQ_odd : Odd (Nat.card (G ⧸ M)) := by
       dsimp [M]
       exact odd_of_card_dvd ho (Subgroup.card_quotient_dvd_card (s := pPrimeCore p G))

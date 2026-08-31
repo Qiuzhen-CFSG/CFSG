@@ -55,7 +55,7 @@ public theorem free_apply_freeBasis
     letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
     free K G alpha g (freeBasis K G alpha x) =
       freeBasis K G alpha (g • x) := by
-  letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
+  let : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
   rcases x with ⟨i, h⟩
   change Representation.free K G alpha g (freeBasis K G alpha (i, h)) =
     freeBasis K G alpha (i, g * h)
@@ -84,9 +84,9 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
         (forall g : G, forall i : iota, rho g (b i) = b (g • i)) ∧
           (forall i : iota, Nat.card (MulAction.orbit G i) = Nat.card G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype alpha := Fintype.ofFinite alpha
-  letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
+  let : Fintype G := Fintype.ofFinite G
+  let : Fintype alpha := Fintype.ofFinite alpha
+  let : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
   let q : (alpha × G) ≃ Fin (Fintype.card (alpha × G)) :=
     Fintype.equivFin (alpha × G)
   let smallAction : MulAction G (Fin (Fintype.card (alpha × G))) := {
@@ -98,7 +98,7 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
       change q ((g * h) • q.symm i) = q (g • q.symm (q (h • q.symm i)))
       simp [q.symm_apply_apply, mul_smul] }
   refine ⟨Fin (Fintype.card (alpha × G)), inferInstance, smallAction, ?_⟩
-  letI : MulAction G (Fin (Fintype.card (alpha × G))) := smallAction
+  let : MulAction G (Fin (Fintype.card (alpha × G))) := smallAction
   let b : Module.Basis (Fin (Fintype.card (alpha × G))) K V :=
     ((freeBasis K G alpha).reindex q).map e.toLinearEquiv.symm
   refine ⟨b, ?_, ?_⟩
@@ -112,11 +112,11 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
     rw [← free_apply_freeBasis]
     exact (e.symm.isIntertwining g (freeBasis K G alpha (q.symm i))).symm
   · intro i
-    letI : Finite (MulAction.orbit G i) := by
+    let : Finite (MulAction.orbit G i) := by
       simpa [Set.finite_coe_iff] using
         (Finite.finite_mulAction_orbit (M := G) i)
-    letI : Fintype (MulAction.orbit G i) := Fintype.ofFinite _
-    letI : Fintype (MulAction.stabilizer G i) := Fintype.ofFinite _
+    let : Fintype (MulAction.orbit G i) := Fintype.ofFinite _
+    let : Fintype (MulAction.stabilizer G i) := Fintype.ofFinite _
     have hstabilizer : MulAction.stabilizer G i = ⊥ := by
       ext g
       rw [MulAction.mem_stabilizer_iff, Subgroup.mem_bot]

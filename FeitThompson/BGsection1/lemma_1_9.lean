@@ -17,7 +17,7 @@ Then `A/C_A(G)` is a `π`-group.
 -/
 
 public theorem lemma_1_9 {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (π : Set Nat.Primes) (hsolv : IsSolvable G) (hpi : IsPiGroup π G)
+    (π : Set Nat.Primes) (hsolv : Group.IsSolvable G) (hpi : IsPiGroup π G)
     (hstab : ∃ (ι : Type*) (Gi : ι → Subgroup G) (next : ι → ι),
       StabilizesNormalSeries (G := G) (A := A) Gi next)
     (hker : (fixingSubgroupOf A G (Set.univ : Set G)).Normal) :

@@ -48,7 +48,7 @@ private theorem section13_le_centralizer_of_sylow_images
     intro hr
     have hrprime : Nat.Prime r := Nat.prime_of_mem_primeFactors hr
     let q : Nat.Primes := ⟨r, hrprime⟩
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    let _ : Fact q.val.Prime := ⟨q.property⟩
     let S : Sylow q.val X := default
     change (S : Subgroup X) ≤ C
     intro y hyS
@@ -56,7 +56,9 @@ private theorem section13_le_centralizer_of_sylow_images
     have hy_map : ((y : X) : G) ∈ ((S : Subgroup X).map X.subtype : Subgroup G) :=
       Subgroup.mem_map_of_mem X.subtype hyS
     exact hSylowCent q
-      (by simpa [q, subgroupPrimeSet] using Nat.dvd_of_mem_primeFactors hr) S hy_map
+      (by
+        change q.val ∣ Nat.card X
+        exact Nat.dvd_of_mem_primeFactors hr) S hy_map
   intro x hxX
   let xX : X := ⟨x, hxX⟩
   have hxC : xX ∈ C := htop_le_C (show xX ∈ (⊤ : Subgroup X) by simp)
@@ -74,7 +76,7 @@ private theorem section13_eq_top_of_exists_sylow_le
   apply Nat.eq_of_factorization_eq Nat.card_pos.ne' Nat.card_pos.ne'
   intro p
   by_cases hp : p.Prime
-  · letI : Fact p.Prime := ⟨hp⟩
+  · let _ : Fact p.Prime := ⟨hp⟩
     by_cases hd : p ∈ (Nat.card X).primeFactors
     · obtain ⟨P, hPle⟩ := hSyl p hd
       refine le_antisymm
@@ -113,9 +115,10 @@ public theorem section13_le_centralizer_of_exists_sylow_images
     apply section13_eq_top_of_exists_sylow_le C
     intro p hpX hpFact
     let q : Nat.Primes := ⟨p, hpFact.out⟩
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    let _ : Fact q.val.Prime := ⟨q.property⟩
     have hqX : q ∈ subgroupPrimeSet X := by
-      simpa [q, subgroupPrimeSet] using Nat.dvd_of_mem_primeFactors hpX
+      change q.val ∣ Nat.card X
+      exact Nat.dvd_of_mem_primeFactors hpX
     obtain ⟨S, hScent⟩ := hSylowCent q hqX
     refine ⟨S, ?_⟩
     change (S : Subgroup X) ≤ C
@@ -153,7 +156,7 @@ private theorem section13_generatorRank_le_groupRank_of_subgroup
   have hA'p : IsPGroup q A' :=
     hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let _ : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -179,7 +182,7 @@ private theorem section13_primeRank_le_groupRank_sylow
     {R : Type*} [Group R] [Finite R] {p : Nat.Primes} (S : Sylow p.val R) :
     primeRank p.val R ≤ groupRank (S : Subgroup R) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  let _ : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
@@ -201,7 +204,7 @@ private theorem section13_primeRank_le_groupRank_sylow
         (Subgroup.equivMapOfInjective (f := (MulAut.conj g).toMonoidHom) A
           (EquivLike.injective (MulAut.conj g)))
     have hAconj_comm : IsMulCommutative Aconj := by
-      letI : IsMulCommutative A := hAcomm
+      let _ : IsMulCommutative A := hAcomm
       simpa [Aconj] using
         (Subgroup.map_isMulCommutative (f := (MulAut.conj g).toMonoidHom) (H := A))
     have hgen_eq : generatorRank A = generatorRank Aconj := by
@@ -220,7 +223,7 @@ public theorem section13_normalizer_ne_top_of_ne_bot_le_maximal
     Subgroup.normalizer (X : Set G) ≠ ⊤ := by
   intro hnorm_top
   have hXnormal : X.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let _ : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal X hXnormal with hXbot | hXtop
   · exact hXne hXbot
   · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
@@ -255,7 +258,7 @@ public theorem section13_prime_mem_tau13_of_cyclic_sylow_E
     intro hpτ2
     have hrank_ge : 2 ≤ primeRank p.val E :=
       section12_primeRank_E_ge_two_of_tau2 hM hE.1 hpτ2
-    haveI : IsCyclic (P : Subgroup E) := hPcyc
+    let _ : IsCyclic (P : Subgroup E) := hPcyc
     have hrank_le : primeRank p.val E ≤ 1 :=
       (section13_primeRank_le_groupRank_sylow (R := E) P).trans
         (groupRank_le_one_of_isCyclic (P : Subgroup E))
@@ -292,10 +295,10 @@ public theorem section13_ambient_sylow_le_normalizer_of_le_cyclic
     {A X : Subgroup G} (hXA : X ≤ A) (hAcyc : IsCyclic A) :
     A ≤ Subgroup.normalizer (X : Set G) := by
   classical
-  haveI : IsCyclic A := hAcyc
+  let _ : IsCyclic A := hAcyc
   have hXchar : (X.subgroupOf A).Characteristic :=
     section12_subgroup_characteristic_of_cyclic (X.subgroupOf A)
-  haveI : (X.subgroupOf A).Characteristic := hXchar
+  let _ : (X.subgroupOf A).Characteristic := hXchar
   have hnormA_le_normXmap :
       Subgroup.normalizer (A : Set G) ≤
         Subgroup.normalizer ((X.subgroupOf A).map A.subtype : Set G) :=

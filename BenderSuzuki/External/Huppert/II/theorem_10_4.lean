@@ -17,7 +17,7 @@ Huppert II.10.12 and II.10.13.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped Matrix
 
 universe u
@@ -29,8 +29,12 @@ private theorem hermitian_fixedField_finrank_two
     (hfixed_card : Nat.card {x : K // J.conj x = x} = q) :
     Module.finrank (FixedBy.subfield K J.conj) K = 2 := by
   let k0 := FixedBy.subfield K J.conj
+  have hset : (k0 : Set K) = {x : K | J.conj x = x} := by
+    ext x
+    rfl
   have hk0card : Nat.card k0 = q := by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using hfixed_card
+    have hc := Nat.card_congr (Equiv.setCongr hset)
+    simpa [k0] using hc.trans hfixed_card
   have hq : 1 < q := by
     rw [← hk0card]
     exact Finite.one_lt_card
@@ -43,6 +47,17 @@ private theorem hermitian_fixedField_finrank_two
       _ = q ^ 2 := hKcard
   exact (pow_right_inj₀ (Nat.zero_lt_of_lt hq) (ne_of_gt hq)).mp hpows
 
+private theorem card_fixedBy_subfield
+    {K : Type u} [Field K] [Finite K] {n : ℕ}
+    (J : HermitianForm n K) :
+    Nat.card (FixedBy.subfield K J.conj) = Nat.card {x : K // J.conj x = x} := by
+  let k0 := FixedBy.subfield K J.conj
+  have hset : (k0 : Set K) = {x : K | J.conj x = x} := by
+    ext x
+    rfl
+  change Nat.card k0 = Nat.card {x : K // J.conj x = x}
+  exact Nat.card_congr (Equiv.setCongr hset)
+
 /-- The fixed field of a quadratic finite-field Hermitian involution has
 extension degree two. -/
 public theorem huppert_II_10_4_fixedField_finrank_two
@@ -51,7 +66,7 @@ public theorem huppert_II_10_4_fixedField_finrank_two
     (hKcard : Nat.card K = q ^ 2)
     (hfixed_card : Nat.card {x : K // J.conj x = x} = q) :
     Module.finrank (FixedBy.subfield K J.conj) K = 2 :=
-  hermitian_fixedField_finrank_two J q hKcard hfixed_card
+  by exact hermitian_fixedField_finrank_two J q hKcard hfixed_card
 
 /-- For a quadratic finite-field Hermitian involution, conjugation is the
 `q`-power Frobenius. This is the fixed-field bridge used in Huppert II.10.4. -/
@@ -64,7 +79,7 @@ public theorem huppert_II_10_4_conj_eq_frobenius
   classical
   let k0 := FixedBy.subfield K J.conj
   have hk0card : Nat.card k0 = q := by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using hfixed_card
+    rw [card_fixedBy_subfield J, hfixed_card]
   have hq : 1 < q := by
     rw [← hk0card]
     exact Finite.one_lt_card
@@ -88,10 +103,11 @@ public theorem huppert_II_10_4_conj_eq_frobenius
       Nat.card_congr e
     have hqq : q = q ^ 2 := hfixed_card.symm.trans (hcard.trans hKcard)
     nlinarith [hq]
-  letI : Fintype k0 := Fintype.ofFinite k0
-  let fr : K ≃ₐ[k0] K := FiniteField.frobeniusAlgEquivOfAlgebraic k0 K
+  let fk0 : Fintype k0 := Fintype.ofFinite k0
+  let fr : K ≃ₐ[k0] K :=
+    @FiniteField.frobeniusAlgEquivOfAlgebraic k0 _ fk0 K _ _ _
   obtain ⟨i, hi⟩ :=
-    (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow k0 K).surjective c
+    (@FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow k0 _ fk0 K _ _ _).surjective c
   have hi_bound : i.1 < 2 := by
     calc
       i.1 < Module.finrank k0 K := i.2
@@ -111,7 +127,7 @@ public theorem huppert_II_10_4_conj_eq_frobenius
   calc
     x ^ q = x ^ Nat.card k0 := by rw [hk0card]
     _ = fr x := by
-      simp [fr, Nat.card_eq_fintype_card]
+      simp [fr]
     _ = c x := by rw [hcfr]
     _ = J.conj x := rfl
 
@@ -127,15 +143,15 @@ public theorem huppert_II_10_4_norm_surjective
   classical
   let k0 := FixedBy.subfield K J.conj
   have hk0card : Nat.card k0 = q := by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using hfixed_card
+    rw [card_fixedBy_subfield J, hfixed_card]
   have hfinrank : Module.finrank k0 K = 2 :=
     hermitian_fixedField_finrank_two J q hKcard hfixed_card
   have hpow : ∀ x : K, x ^ q = J.conj x := fun x =>
     (huppert_II_10_4_conj_eq_frobenius J q hKcard hfixed_card x).symm
-  letI : Fintype k0 := Fintype.ofFinite k0
   intro a ha ha0
   let a0 : k0 := ⟨a, by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using ha⟩
+    change J.conj a = a
+    exact ha⟩
   have ha00 : a0 ≠ 0 := by
     intro hz
     apply ha0
@@ -150,7 +166,7 @@ public theorem huppert_II_10_4_norm_surjective
     rw [FiniteField.algebraMap_norm_eq_prod_pow]
     erw [hfinrank]
     simp [Finset.prod_range_succ]
-    rw [← Nat.card_eq_fintype_card, hk0card, hpow]
+    rw [hk0card, hpow]
   rw [← hnorm]
   simpa [au, a0, Subfield.algebraMap_ofSubfield] using hbval
 
@@ -165,15 +181,15 @@ public theorem huppert_II_10_4_trace_surjective
   classical
   let k0 := FixedBy.subfield K J.conj
   have hk0card : Nat.card k0 = q := by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using hfixed_card
+    rw [card_fixedBy_subfield J, hfixed_card]
   have hfinrank : Module.finrank k0 K = 2 :=
     hermitian_fixedField_finrank_two J q hKcard hfixed_card
   have hpow : ∀ x : K, x ^ q = J.conj x := fun x =>
     (huppert_II_10_4_conj_eq_frobenius J q hKcard hfixed_card x).symm
-  letI : Fintype k0 := Fintype.ofFinite k0
   intro c hc
   let c0 : k0 := ⟨c, by
-    simpa [k0, FixedBy.subfield, RingAut.smul_def] using hc⟩
+    change J.conj c = c
+    exact hc⟩
   obtain ⟨b, hb⟩ := Algebra.trace_surjective k0 K c0
   refine ⟨b, ?_⟩
   have htrace : algebraMap k0 K (Algebra.trace k0 K b) =
@@ -181,7 +197,7 @@ public theorem huppert_II_10_4_trace_surjective
     rw [FiniteField.algebraMap_trace_eq_sum_pow]
     erw [hfinrank]
     simp [Finset.sum_range_succ]
-    rw [← Nat.card_eq_fintype_card, hk0card, hpow]
+    rw [hk0card, hpow]
   rw [← htrace, hb]
   rfl
 

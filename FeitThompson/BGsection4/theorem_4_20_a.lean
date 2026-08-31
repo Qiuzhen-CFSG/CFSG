@@ -14,11 +14,11 @@ section Main
 open scoped FixedPoints
 
 private theorem chiefFactor_isPFactor_of_solvable
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G) (cf : ChiefFactor G) :
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G) (cf : ChiefFactor G) :
     ∃ p : ℕ, p.Prime ∧ cf.IsPFactor p := by
   classical
-  haveI : IsSolvable G := hsolv
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : Group.IsSolvable G := hsolv
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin := chiefFactor_quotient_minimal (G := G) cf
@@ -26,23 +26,23 @@ private theorem chiefFactor_isPFactor_of_solvable
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using hmin
-  haveI : Uq.Normal := hUq_min.1
-  haveI : IsMinimalNormal Uq := {
+  have : Uq.Normal := hUq_min.1
+  have : IsMinimalNormal Uq := {
     minimal := by
       intro K _ hKU
       by_cases hK : K = ⊥
       · exact Or.inl hK
       · exact Or.inr (hUq_min.2.2 K inferInstance hKU hK)
   }
-  haveI : IsSolvable (G ⧸ cf.V) := by infer_instance
-  haveI : IsSolvable Uq := by infer_instance
+  have : Group.IsSolvable (G ⧸ cf.V) := by infer_instance
+  have : Group.IsSolvable Uq := by infer_instance
   obtain ⟨p, hp, hUq_elem⟩ :=
     minimalNormal_solvable_exists_isElementaryAbelian (G := G ⧸ cf.V) (M := Uq)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hUq_p : IsPGroup p Uq := by
-    letI : IsElementaryAbelian p Uq := hUq_elem
+    let : IsElementaryAbelian p Uq := hUq_elem
     exact IsElementaryAbelian.isPGroup p Uq
-  letI : (cf.V.subgroupOf cf.U).Normal :=
+  let : (cf.V.subgroupOf cf.U).Normal :=
     Subgroup.Normal.subgroupOf (G := G) (hH := cf.isChief.normal_K) cf.U
   let e : cf.U ⧸ cf.V.subgroupOf cf.U ≃* Uq :=
     quotientSubgroupRangeEquiv cf.U cf.V
@@ -50,7 +50,7 @@ private theorem chiefFactor_isPFactor_of_solvable
 
 private theorem derivedSubgroup_isNilpotent_of_groupRank_le_two
     {G : Type*} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hrank : groupRank G ≤ 2) :
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hrank : groupRank G ≤ 2) :
     Group.IsNilpotent (derivedSubgroup G) := by
   classical
   let D : Subgroup G := derivedSubgroup G
@@ -60,7 +60,7 @@ private theorem derivedSubgroup_isNilpotent_of_groupRank_le_two
       refine le_iInf (fun cf => ?_)
       obtain ⟨p, hp, hcf_p⟩ :=
         chiefFactor_isPFactor_of_solvable (G := G) hsolv cf
-      letI : Fact p.Prime := ⟨hp⟩
+      let : Fact p.Prime := ⟨hp⟩
       have hprimeRank : primeRank p (⊤ : Subgroup G) ≤ 2 := by
         have hleG : primeRank p G ≤ 2 :=
           (primeRank_le_groupRank (R := G) hp).trans hrank
@@ -89,7 +89,7 @@ private theorem derivedSubgroup_isNilpotent_of_groupRank_le_two
     (G := fittingSubgroupOf (G := G) D) (G' := D) (MulEquiv.subgroupCongr hFit_eq_D)
 
 public theorem theorem_4_20_a {G : Type*} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2) :
     Group.IsNilpotent (derivedSubgroup G) := by
   classical
@@ -112,7 +112,7 @@ public theorem theorem_4_20_a {G : Type*} [Group G] [Finite G]
           exact hcf_le_fitD.trans (fittingSubgroupOf_le_fittingSubgroup (G := G) D inferInstance)
         obtain ⟨p, hp, hcf_p⟩ :=
           chiefFactor_isPFactor_of_solvable (G := G) hsolv cf
-        letI : Fact p.Prime := ⟨hp⟩
+        let : Fact p.Prime := ⟨hp⟩
         have hprimeRank : primeRank p F ≤ 2 := by
           exact (primeRank_le_groupRank (R := F) hp).trans hF
         have hD_le_top_cent :

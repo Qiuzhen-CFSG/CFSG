@@ -67,7 +67,7 @@ lemma inf_pCore_le_pCore_subgroup_map {G : Type*} [Group G] [Finite G] {p : ℕ}
     [Fact p.Prime] (H : Subgroup G) :
     pCore p G ⊓ H ≤ (pCore p (↥H)).map H.subtype := by
   let K : Subgroup H := (pCore p G).subgroupOf H
-  haveI : K.Normal := by
+  have : K.Normal := by
     simpa [K] using
       (Subgroup.Normal.subgroupOf (H := pCore p G) (K := H) (inferInstance : (pCore p G).Normal))
   have hKp_inf : IsPGroup p (↥(pCore p G ⊓ H)) :=
@@ -175,7 +175,7 @@ theorem sup_eq_top_of_fixed_quotient
   exact Subgroup.mul_mem_sup hcfix hz
 
 theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G) {p : ℕ} [Fact p.Prime]
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G) {p : ℕ} [Fact p.Prime]
     (hcore : pPrimeCore p G = ⊥) :
     ∀ R : Subgroup G,
       IsPGroup p (↥R) →
@@ -202,12 +202,12 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
     have hQleC : Q ≤ C := hQcentR
     have hC_le_C₀ : C ≤ C₀ := by
       exact Subgroup.centralizer_le (show (R₀ : Set G) ⊆ (R : Set G) from hR₀R)
-    haveI : (Q.subgroupOf C₀).Normal := by
+    have : (Q.subgroupOf C₀).Normal := by
       simpa [Q, C₀, pPrimeCore_map_subtype_subgroupOf (p := p) C₀] using
         (inferInstance : (pPrimeCore p (↥C₀)).Normal)
     have hC₀_le_normQ : C₀ ≤ Subgroup.normalizer (Q : Set G) :=
       Subgroup.le_normalizer_of_normal_subgroupOf (H := Q) (K := C₀) hQleC₀
-    haveI : (Q.subgroupOf C).Normal := by
+    have : (Q.subgroupOf C).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (hC_le_C₀.trans hC₀_le_normQ)
     have hQcop : Nat.Coprime p (Nat.card Q) := by
       have hcard :
@@ -281,7 +281,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
         hQleNormR.trans Subgroup.le_normalizer
       simpa [N] using
         (le_inf hQleNormP hQleNormNormR).trans Subgroup.inf_normalizer_le_normalizer_inf
-    haveI : Subgroup.Normalizes Q N := ⟨hQleNormN⟩
+    have : Subgroup.Normalizes Q N := ⟨hQleNormN⟩
     let KN : Subgroup G := N ⊓ C
     have hKN_le_R : KN ≤ R := by
       exact (inf_le_inf hNleP le_rfl).trans hPinC
@@ -289,7 +289,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       have hNleNormN' : N ≤ Subgroup.normalizer (N : Set G) := Subgroup.le_normalizer
       simpa [KN] using
         (le_inf hNleNormN' hNleNormC).trans Subgroup.inf_normalizer_le_normalizer_inf
-    haveI : (KN.subgroupOf N).Normal := by
+    have : (KN.subgroupOf N).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := N) (N := KN) hNleNormKN
     have hQleNormKN : Q ≤ Subgroup.normalizer (KN : Set G) := by
       have hQleNormC : Q ≤ Subgroup.normalizer (C : Set G) := hQleC.trans Subgroup.le_normalizer
@@ -315,10 +315,10 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
             exact Subgroup.mem_subgroupOf.mp hx)
         apply Subgroup.mem_subgroupOf.mpr
         simpa [mul_assoc] using hx'
-    letI : IsInvariant (↥Q) (↥N) (KN.subgroupOf N) := hKNinv
-    letI : MulAction.QuotientAction (↥Q) (KN.subgroupOf N) :=
+    let : IsInvariant (↥Q) (↥N) (KN.subgroupOf N) := hKNinv
+    let : MulAction.QuotientAction (↥Q) (KN.subgroupOf N) :=
       quotientAction_of_isInvariant (A := ↥Q) (G := ↥N) (KN.subgroupOf N) hKNinv
-    letI : MulDistribMulAction (↥Q) (↥N ⧸ KN.subgroupOf N) :=
+    let : MulDistribMulAction (↥Q) (↥N ⧸ KN.subgroupOf N) :=
       quotientMulDistribMulAction (A := ↥Q) (G := ↥N) (KN.subgroupOf N) hKNinv
     have hquotFix :
         ∀ n : N, ((n : N) : ↥N ⧸ KN.subgroupOf N) ∈ fixedPointSubgroup (↥Q) (↥N ⧸ KN.subgroupOf N) := by
@@ -339,7 +339,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       change ((((a : ↥Q) • n : N) / n : N) : G) ∈ KN
       simpa [div_eq_mul_inv, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe] using
         (show (((a : G) * (n : G) * (a : G)⁻¹) * (n : G)⁻¹) ∈ KN from ⟨hmemN, hmemC⟩)
-    have hNsolv : IsSolvable ↥N := by infer_instance
+    have hNsolv : Group.IsSolvable ↥N := by infer_instance
     obtain ⟨nN, hcardN⟩ := hNp.exists_card_eq
     have hpNotDvdQ : ¬ p ∣ Nat.card Q :=
       (Fact.out : Nat.Prime p).coprime_iff_not_dvd.mp hQcop
@@ -449,7 +449,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
       · exact hconjS q hq s
       · intro hs
         simpa [mul_assoc] using hconjS q⁻¹ (Q.inv_mem hq) (q * s * q⁻¹) hs
-    haveI : Subgroup.Normalizes Q S := ⟨hQleNormS⟩
+    have : Subgroup.Normalizes Q S := ⟨hQleNormS⟩
     have hcentRS :
         Subgroup.centralizer ((R.subgroupOf S : Subgroup S) : Set S) ≤ R.subgroupOf S := by
       intro x hx
@@ -576,7 +576,7 @@ theorem pPrimeCore_centralizer_pSubgroup_eq_bot_of_pPrimeCore_eq_bot
 -- Proposition 1.15(b)
 set_option backward.isDefEq.respectTransparency false in
 public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
-    {G : Type v} [Group G] [Finite G] (hsolv : IsSolvable G) (p : ℕ) [Fact p.Prime] :
+    {G : Type v} [Group G] [Finite G] (hsolv : Group.IsSolvable G) (p : ℕ) [Fact p.Prime] :
     ∀ R : Subgroup G,
       IsPGroup p (↥R) →
         let C : Subgroup G := Subgroup.centralizer (R : Set G)
@@ -587,7 +587,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
       ∀ n,
         ∀ (H : Type v) [Group H] [Finite H],
           Nat.card H = n →
-            IsSolvable H →
+            Group.IsSolvable H →
               ∀ (p : ℕ) [Fact p.Prime] (R : Subgroup H),
                 IsPGroup p (↥R) →
                   let C := Subgroup.centralizer (R : Set H)
@@ -643,7 +643,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
       have hK_le_op : K ≤ Op_p'p p H := by
         rw [hOp_eq]
         by_cases hRnorm : (R : Subgroup H).Normal
-        · letI : (R : Subgroup H).Normal := hRnorm
+        · let : (R : Subgroup H).Normal := hRnorm
           have hK_normal : K.Normal := by
             simpa [K, C] using
               (inferInstance :
@@ -673,7 +673,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
             simpa [N] using (Finite.card_subtype_lt (p := fun h : H => h ∈ N) hx)
           have hcardN_lt_n : Nat.card N < n := by
             simpa [hcard] using hcardN_lt
-          have hsolvN : IsSolvable N := by infer_instance
+          have hsolvN : Group.IsSolvable N := by infer_instance
           have hR_pN : IsPGroup p (↥(R.subgroupOf N)) := by
             have hR_le_N : R ≤ N := by
               simpa [N] using (Subgroup.le_normalizer (H := R))
@@ -730,7 +730,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
             have hcoreN_le_centN :
                 pPrimeCore p N ≤
                   Subgroup.centralizer ((R.subgroupOf N : Subgroup N) : Set N) := by
-              letI : (R.subgroupOf N).Normal := hRnormN
+              let : (R.subgroupOf N).Normal := hRnormN
               exact
                 pPrimeCore_le_centralizer_of_normal_pgroup
                   (G := N) (p := p) (R := R.subgroupOf N) hR_pN
@@ -924,7 +924,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
                     exact hC_le_N.trans hN_le_normK
                   have hcardNormK_lt_n : Nat.card (Subgroup.normalizer (K : Set H)) < n := by
                     simpa [hcard] using hcardNormK_lt
-                  have hsolvNormK : IsSolvable (Subgroup.normalizer (K : Set H)) := by infer_instance
+                  have hsolvNormK : Group.IsSolvable (Subgroup.normalizer (K : Set H)) := by infer_instance
                   have hR_pNormK : IsPGroup p (↥(R.subgroupOf (Subgroup.normalizer (K : Set H)))) := by
                     simpa using hRp.of_equiv
                       (Subgroup.subgroupOfEquivOfLe (H := R) (K := (Subgroup.normalizer (K : Set H))) hR_le_normK).symm
@@ -1092,8 +1092,8 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
                       simpa [hKsub_eq_coreN] using (pPrimeCore_characteristic (p := p) (G := N))
                     have hK_normal_of_hN_normal : N.Normal → K.Normal := by
                       intro hN_normal
-                      letI : N.Normal := hN_normal
-                      letI : (K.subgroupOf N).Characteristic := hKsub_char
+                      let : N.Normal := hN_normal
+                      let : (K.subgroupOf N).Characteristic := hKsub_char
                       have hmap_normal : ((K.subgroupOf N).map N.subtype).Normal := by infer_instance
                       have hmap_eq : (K.subgroupOf N).map N.subtype = K := by
                         calc
@@ -1148,7 +1148,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
                               Subgroup.centralizer (pCore p H : Set H) := by
                           have hcoreNormK_le_centP0 :
                               pPrimeCore p ((Subgroup.normalizer (K : Set H))) ≤ Subgroup.centralizer (P0 : Set ((Subgroup.normalizer (K : Set H)))) := by
-                            letI : P0.Normal := by
+                            let : P0.Normal := by
                               infer_instance
                             exact
                               pPrimeCore_le_centralizer_of_normal_pgroup
@@ -1210,7 +1210,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
                           simpa using (Finite.card_subtype_lt (p := fun h : H => h ∈ (Subgroup.normalizer (N : Set H))) hx)
                         have hcardNnorm_lt_n : Nat.card (Subgroup.normalizer (N : Set H)) < n := by
                           simpa [hcard] using hcardNnorm_lt
-                        have hsolvNnorm : IsSolvable (Subgroup.normalizer (N : Set H)) := by infer_instance
+                        have hsolvNnorm : Group.IsSolvable (Subgroup.normalizer (N : Set H)) := by infer_instance
                         have hR_le_N : R ≤ N := by
                           simpa [N] using (Subgroup.le_normalizer (H := R))
                         have hR_le_Nnorm : R ≤ (Subgroup.normalizer (N : Set H)) := hR_le_N.trans Subgroup.le_normalizer
@@ -1371,7 +1371,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
                       (Subgroup.subgroupOfEquivOfLe (H := pCore p H) (K := (Subgroup.normalizer (K : Set H))) hpCore_le_normK).symm
                   have hcoreNormK_le_centP0 :
                       pPrimeCore p ((Subgroup.normalizer (K : Set H))) ≤ Subgroup.centralizer (P0 : Set ((Subgroup.normalizer (K : Set H)))) := by
-                    letI : P0.Normal := by
+                    let : P0.Normal := by
                       infer_instance
                     exact
                       pPrimeCore_le_centralizer_of_normal_pgroup
@@ -1403,7 +1403,7 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
       let M : Subgroup H := pPrimeCore p H
       have hM_ne_bot : M ≠ ⊥ := hM
       let q : H →* H ⧸ M := QuotientGroup.mk' M
-      letI : M.Normal := by
+      let : M.Normal := by
         simpa [M] using (pPrimeCore_normal (p := p) (G := H))
       have hcard_quot_lt : Nat.card (H ⧸ M) < Nat.card H := by
         have hM_one_lt : 1 < Nat.card M :=
@@ -1413,13 +1413,13 @@ public theorem pPrimeCore_map_centralizer_le_pPrimeCore_of_solvable
         have hlt : Nat.card (H ⧸ M) * 1 < Nat.card (H ⧸ M) * Nat.card M :=
           Nat.mul_lt_mul_of_pos_left hM_one_lt (Nat.card_pos (α := H ⧸ M))
         simpa [hcard] using hlt
-      have hsolvQ : IsSolvable (H ⧸ M) := solvable_quotient_of_solvable M
+      have hsolvQ : Group.IsSolvable (H ⧸ M) := by infer_instance
       have hRq_p : IsPGroup p (↥(R.map q)) := IsPGroup.map (p := p) hRp q
       have hcard_quot_lt_n : Nat.card (H ⧸ M) < n := by
         simpa [hcard] using hcard_quot_lt
       have IH_Q := IH (Nat.card (H ⧸ M)) hcard_quot_lt_n (H ⧸ M) rfl hsolvQ p (R.map q) hRq_p
       have hCbar_eq : Subgroup.centralizer ((R.map q : Subgroup (H ⧸ M)) : Set (H ⧸ M)) = C.map q := by
-        letI : Fact (IsPGroup p (↥R)) := ⟨hRp⟩
+        let : Fact (IsPGroup p (↥R)) := ⟨hRp⟩
         have hM_normal : M.Normal := by infer_instance
         have hMcop : Nat.Coprime p (Nat.card M) := by
           simpa [M] using (pPrimeCore_coprime_card (G := H) (p := p))

@@ -28,7 +28,7 @@ private theorem not_twoRankAtLeastTwo_quotient_of_odd
     simp [hpi]
   let NM : Subgroup M := N.subgroupOf M
   let phi : M →* E :=
-    (pi.restrict M).codRestrict E (by
+    (pi.domRestrict M).codRestrict E (by
       intro m
       exact m.property)
   have hphi_surj : Function.Surjective phi := by
@@ -40,7 +40,8 @@ private theorem not_twoRankAtLeastTwo_quotient_of_odd
       exact e.property⟩
     refine ⟨m, ?_⟩
     apply Subtype.ext
-    simpa [phi, m, pi] using hg
+    change pi (m : G) = e
+    simpa [m, pi] using hg
   have hphi_ker : phi.ker = NM := by
     ext m
     constructor
@@ -49,7 +50,9 @@ private theorem not_twoRankAtLeastTwo_quotient_of_odd
       apply (QuotientGroup.eq_one_iff (N := N) (m : G)).1
       have hm' : phi m = 1 := by
         simpa [MonoidHom.mem_ker] using hm
-      exact congrArg Subtype.val hm'
+      have hm'' := congrArg Subtype.val hm'
+      change pi (m : G) = 1 at hm''
+      exact hm''
     · intro hm
       rw [MonoidHom.mem_ker]
       apply Subtype.ext
@@ -136,12 +139,14 @@ private theorem quotientMap_subgroup_equiv_of_disjoint
     Nonempty (Q ≃* Q.map (QuotientGroup.mk' N)) := by
   let pi : G →* G ⧸ N := QuotientGroup.mk' N
   let f : Q →* Q.map pi :=
-    (pi.restrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
+    (pi.domRestrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
   have hf_injective : Function.Injective f := by
     intro x y hxy
     apply Subtype.ext
     have hpi : pi (x : G) = pi (y : G) := by
-      simpa [f] using congrArg Subtype.val hxy
+      have hxy' := congrArg Subtype.val hxy
+      change pi (x : G) = pi (y : G) at hxy'
+      exact hxy'
     have hdivN : (x : G) / (y : G) ∈ N :=
       QuotientGroup.eq_iff_div_mem.mp hpi
     have hdivQ : (x : G) / (y : G) ∈ Q := Q.div_mem x.2 y.2
@@ -153,6 +158,7 @@ private theorem quotientMap_subgroup_equiv_of_disjoint
     rcases z.2 with ⟨g, hgQ, hg⟩
     refine ⟨⟨g, hgQ⟩, ?_⟩
     apply Subtype.ext
+    change pi g = (z : G ⧸ N)
     exact hg
   exact ⟨MulEquiv.ofBijective f ⟨hf_injective, hf_surjective⟩⟩
 

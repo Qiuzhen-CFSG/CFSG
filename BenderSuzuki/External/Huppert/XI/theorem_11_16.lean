@@ -34,7 +34,7 @@ a faithful subgroup of the symmetric group on its permuted symbols.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open PFAppendixIII
 
 universe u v w
@@ -793,14 +793,17 @@ private theorem sharpTriple_of_card_eq_descFactorial
   have horbit_inj : Function.Injective orbit := by
     intro g h hgh
     have hga : g • a = h • a := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
-      simpa [orbit, source] using h
+      have heq := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
+      change g • a = h • a at heq
+      exact heq
     have hgb : g • b = h • b := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
-      simpa [orbit, source] using h
+      have heq := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
+      change g • b = h • b at heq
+      exact heq
     have hgc : g • c = h • c := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
-      simpa [orbit, source] using h
+      have heq := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
+      change g • c = h • c at heq
+      exact heq
     have hfix_a : (h⁻¹ * g) • a = a := by
       rw [mul_smul, hga, inv_smul_smul]
     have hfix_b : (h⁻¹ * g) • b = b := by
@@ -826,12 +829,21 @@ private theorem sharpTriple_of_card_eq_descFactorial
   · have h0 := congrArg (fun e : Fin 3 ↪ Omega => e 0) hg
     have h1 := congrArg (fun e : Fin 3 ↪ Omega => e 1) hg
     have h2 := congrArg (fun e : Fin 3 ↪ Omega => e 2) hg
-    simpa [orbit, source, target] using And.intro h0 (And.intro h1 h2)
+    change g • a = a' at h0
+    change g • b = b' at h1
+    change g • c = c' at h2
+    exact And.intro h0 (And.intro h1 h2)
   · intro h hh
     apply horbit_inj
     rw [hg]
     ext i
-    fin_cases i <;> simp [orbit, source, target, hh]
+    fin_cases i
+    · change h • a = a'
+      exact hh.1
+    · change h • b = b'
+      exact hh.2.1
+    · change h • c = c'
+      exact hh.2.2
 
 private theorem finiteField_oddCharacteristic_psl_package
     {G : Type u} [Group G] {K : Type w} [Field K] [Finite K]

@@ -130,7 +130,7 @@ public theorem theorem_6_6_mem_SZ_subgroupInKernel
   classical
   rcases (hSZ.2 χ).mp hχSZ with ⟨θ, hθirr, hθker, _hθne, hχeq⟩
   rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hχker : Section1.subgroupInKernel' (Section1.inducedCF K ρ.character) Z :=
     (Section1.proposition_1_6_a K Z hZleK ρ).mp (by
       simpa [hθeq] using hθker)
@@ -150,7 +150,7 @@ theorem theorem_6_6_mem_diff_not_subgroupInKernel
   intro hχZ
   rcases (hS.2 χ).mp hχS with ⟨θ, hθirr, _hθbot, hθne, hχeq⟩
   rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hθkerZ : Section1.subgroupInKernel' θ (Z.subgroupOf K) := by
     rw [hθeq]
     apply (Section1.proposition_1_6_a K Z hZleK ρ).mpr
@@ -262,7 +262,7 @@ public theorem theorem_6_6_isPGroup_of_nonabelianPQuotient_bot
     IsPGroup p K := by
   rcases hpQ with
     ⟨_hbotK, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, _hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hbot_sub : (⊥ : Subgroup L).subgroupOf K = (⊥ : Subgroup K) := by
     ext x
     simp
@@ -287,7 +287,7 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
   classical
   rcases hpQ with
     ⟨_hbotK, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, _hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hKp : IsPGroup p K := by
     exact theorem_6_6_isPGroup_of_nonabelianPQuotient_bot
       (K := K)
@@ -300,7 +300,7 @@ public theorem theorem_6_6_degree_eq_relIndex_mul_prime_power
   rcases (hSbot.2 χ).mp hχS with ⟨θ, hθirr, _hθker, _hθne, hχeq⟩
   rcases hθirr with ⟨dθ, ρ, hρirr, hθeq⟩
   have hdθ_dvd : dθ ∣ Nat.card K := by
-    letI : Representation.IsIrreducible ρ := hρirr
+    let : Representation.IsIrreducible ρ := hρirr
     simpa using Theory.Character.irreducible_dimension_dvd_group_order ρ
   have hKcardF : Fintype.card K = p ^ m := by
     simpa [Nat.card_eq_fintype_card] using hKcard
@@ -344,7 +344,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
   classical
   rcases hpQ with
     ⟨_hbotK, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, _hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hKp : IsPGroup p K := by
     exact theorem_6_6_isPGroup_of_nonabelianPQuotient_bot
       (K := K)
@@ -356,7 +356,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
   rcases (hSbot.2 χ).mp hχS with ⟨θ, hθirr, _hθker, _hθne, hχeq⟩
   rcases hθirr with ⟨dθ, ρ, hρirr, hθeq⟩
   have hdθ_dvd : dθ ∣ Nat.card K := by
-    letI : Representation.IsIrreducible ρ := hρirr
+    let : Representation.IsIrreducible ρ := hρirr
     simpa using Theory.Character.irreducible_dimension_dvd_group_order ρ
   rcases hKp.exists_card_eq with ⟨mK, hKcard⟩
   have hKcardF : Fintype.card K = p ^ mK := by
@@ -371,7 +371,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
     rw [hθeq, Section1.degree_representation_character]
     simp [dχ, Subgroup.relIndex_top_right, Nat.cast_mul, hdθ]
   have hdim_bound : dθ ^ (2 : ℕ) ≤ Z.relIndex K := by
-    letI : Representation.IsIrreducible ρ := hρirr
+    let : Representation.IsIrreducible ρ := hρirr
     have hcentral :
         Theory.Character.IsCentralModulo (⊥ : Subgroup K) (Z.subgroupOf K) :=
       theorem_6_6_centralModulo_bot_of_centerIn hZcenter
@@ -393,7 +393,7 @@ theorem theorem_6_6_degree_eq_relIndex_mul_prime_power_sq_dvd_Zrel
         ring_nf
       _ = dθ ^ (2 : ℕ) := by rw [← hdθ]
       _ ≤ Z.relIndex K := hdim_bound
-  haveI : (Z.subgroupOf K).Normal := hZnorm.subgroupOf K
+  have : (Z.subgroupOf K).Normal := hZnorm.subgroupOf K
   have hQZp : IsPGroup p (K ⧸ Z.subgroupOf K) :=
     hKp.to_quotient (Z.subgroupOf K)
   rcases hQZp.exists_card_eq with ⟨mZ, hZcard⟩
@@ -424,26 +424,26 @@ public theorem theorem_6_6_relIndex_top_coprime_prime_of_nonabelianPQuotient
   rcases h64 with ⟨_h61, _hoddL, _hbotH1, _hbotK, _hnil, _hcomm, hfrob⟩
   rcases hpQ with
     ⟨_hbotKp, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, _hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hKp : IsPGroup p K := by
     exact theorem_6_6_isPGroup_of_nonabelianPQuotient_bot
       (K := K)
       ⟨_hbotKp, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, _hnoncomm⟩
   rcases hfrob with
     ⟨hH1norm, hH1K, _hKnormFrob, R, hcomp, hKbar_ne_bot, _hR_ne_bot, hcent⟩
-  haveI : H1.Normal := hH1norm
+  have : H1.Normal := hH1norm
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Kbar : Subgroup (L ⧸ H1) := K.map q
   have hcardR : Nat.card R = K.relIndex (⊤ : Subgroup L) :=
     theorem_6_5_a_complement_card_eq_relIndex_top hH1norm hH1K hcomp
   have hdiv_card : Nat.card R ∣ Nat.card Kbar - 1 := by
-    haveI : Kbar.Normal := by
+    have : Kbar.Normal := by
       dsimp [Kbar, q]
       infer_instance
     exact frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
       (K := Kbar) (R := R) (N := Kbar) le_rfl
       (by simpa [Kbar, q] using hcent)
-  haveI : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
+  have : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
   have hKquotP : IsPGroup p (K ⧸ H1.subgroupOf K) :=
     hKp.to_quotient (H1.subgroupOf K)
   rcases hKquotP.exists_card_eq with ⟨m, hcardQ⟩
@@ -495,7 +495,7 @@ theorem theorem_6_6_prime_gt_two_of_nonabelianPQuotient_odd
   classical
   rcases hpQ with
     ⟨_hbotK, _hbotnormK, _hbotnorm, _hKnorm, hpprime, hQp, hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   let Q := K ⧸ (⊥ : Subgroup L).subgroupOf K
   have hQ_nontrivial : Nontrivial Q := by
     by_contra hnot
@@ -690,7 +690,7 @@ public theorem theorem_6_6_complete_sum_degree_normSq
   rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := G) with
     ⟨κ, hκ, η, hη, hsumη⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   let f : ι → κ := fun i => Classical.choose (hη.2.1 (χ i) (hχ.1 i))
   have hf_spec : ∀ i, η (f i) = χ i := by
     intro i
@@ -845,7 +845,7 @@ theorem theorem_6_6_completeFamily_with_nonkernel
   rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := L ⧸ Z) with
     ⟨κ, hκ, η, hη, _hsumη⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   refine ⟨κ, hκ, η, hη, ?_⟩
   let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
@@ -982,7 +982,7 @@ theorem theorem_6_6_scalarProduct_regularCharacter_left_of_value_one
     (hχ : χ 1 = d) :
     Section1.scalarProduct G (regularCharacter G) χ = star d := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   unfold Section1.scalarProduct regularCharacter
   rw [Finset.sum_eq_single (1 : G)]
   · simp only [if_true]
@@ -995,6 +995,7 @@ theorem theorem_6_6_scalarProduct_regularCharacter_left_of_value_one
   · intro hone
     simp at hone
 
+set_option backward.isDefEq.respectTransparency false in
 theorem theorem_6_6_classFunctionInner_regularCharacter_left
     {G : Type u} [Group G] [Finite G]
     {Χ : Theory.Character.ConjClassFunction G} {d : ℂ}
@@ -1051,7 +1052,7 @@ public theorem theorem_6_6_Xset_sum_degree_sq_add_quotient_card
   rcases theorem_6_6_completeFamily_with_nonkernel
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
@@ -1123,8 +1124,8 @@ public theorem theorem_6_6_complete_nonkernel_degree_data
   rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := L) with
     ⟨ι, hι, χ, hχ, _hsumχ⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let θ : ι → Section1.ClassFunction L :=
     fun i => Section1.ofConjClassFunction (χ i)
   let Xset : Finset (Section1.ClassFunction L) :=
@@ -1210,7 +1211,7 @@ public theorem theorem_6_6_Xset_weighted_degree_sum_eq_card_sub_quotient_at_one
   rcases theorem_6_6_completeFamily_with_nonkernel
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
@@ -1316,7 +1317,7 @@ public theorem theorem_6_6_Xset_weighted_degree_sum_eq_neg_quotient_card_of_mem_
   rcases theorem_6_6_completeFamily_with_nonkernel
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
@@ -1431,7 +1432,7 @@ public theorem theorem_6_6_orthogonal_Xset_complement_subgroupInKernel
   rcases theorem_6_6_completeFamily_with_nonkernel
       (Z := Z) (Xset := Xset) hXchar with
     ⟨κ, hκ, η, hη, hfam⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   let fam : Sum Xset κ → Theory.Character.ConjClassFunction L := fun s =>
     match s with
     | Sum.inl X =>
@@ -1464,8 +1465,6 @@ public theorem theorem_6_6_orthogonal_Xset_complement_subgroupInKernel
             fam (Sum.inr k) (ConjClasses.mk (z : L)) =
               fam (Sum.inr k) (ConjClasses.mk (1 : L)) := by
           dsimp [fam, theorem_6_6_quotientInflationConj]
-          rw [Section1.toConjClassFunction_apply,
-            Section1.toConjClassFunction_apply]
           have hzq : QuotientGroup.mk' Z (z : L) =
               QuotientGroup.mk' Z (1 : L) := by
             have hzq1 : QuotientGroup.mk' Z (z : L) = 1 :=
@@ -1839,7 +1838,7 @@ theorem theorem_6_6_exists_irreducible_not_subgroupInKernel
   classical
   obtain ⟨z, hz_ne⟩ := Subgroup.ne_bot_iff_exists_ne_one.mp hZne
   rcases Theory.Character.second_orthogonality (G := L) with ⟨ι, hι, χ, hχ, horth⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   by_contra hnone
   push Not at hnone
   have hall : ∀ i : ι,
@@ -2144,7 +2143,7 @@ theorem theorem_6_6_ordered_degree_divisibility
             exact_mod_cast hcast
           rw [hdS1_eq, hYeq]
           exact dvd_mul_right (K.relIndex (⊤ : Subgroup L)) (p ^ b)
-        letI : Z.Normal := hZnorm
+        let : Z.Normal := hZnorm
         have hp_total :
             p ^ (2 * a) ∣ ∑ X' : Xset, degX X' ^ (2 : ℕ) := by
           have hZleK : Z ≤ K := theorem_6_6_centerIn_le hZcenter
@@ -2274,9 +2273,9 @@ theorem theorem_6_6_exists_irreducible_constituent_of_subgroupRestriction
         Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0 := by
   rcases hχ with ⟨n, ρ, hρirr, hρchar⟩
   let ρK : Representation ℂ K (Fin n → ℂ) := ρ.comp K.subtype
-  letI : Nontrivial (Fin n → ℂ) := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Nontrivial (Fin n → ℂ) := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨φ, hφirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
-  letI : Nontrivial φ.toSubmodule :=
+  let : Nontrivial φ.toSubmodule :=
     Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
   let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
     refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
@@ -2337,9 +2336,9 @@ theorem theorem_6_6_constituent_not_subgroupInKernel
   rcases hθirr with ⟨nθ, ρθ, _hρθirr, hθeq⟩
   let indρθ : Representation ℂ L (Representation.IndV K.subtype ρθ) :=
     Representation.ind K.subtype ρθ
-  haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
+  have : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
     Theory.Representation.finiteDimensional_ind K ρθ
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hIndCharKer :
       Section1.subgroupInKernel' (Section1.inducedCF K ρθ.character) Z :=
     (Section1.proposition_1_6_a K Z hZleK ρθ).mp
@@ -2375,7 +2374,7 @@ theorem theorem_6_6_constituent_not_subgroupInKernel
   rcases hfinrank_pos with ⟨f, hf⟩
   have hχRepKer : Section1.subgroupInRepresentationKernel ρχ Z :=
     by
-      letI : Representation.IsIrreducible ρχ := hρχirr
+      let : Representation.IsIrreducible ρχ := hρχirr
       have hf_inj : Function.Injective f := by
         rcases (Representation.IsIrreducible.injective_or_eq_zero
             (ρ := ρχ) (σ := indρθ) f) with hinj | hzero
@@ -2436,7 +2435,7 @@ theorem theorem_6_6_mem_S_of_irreducible_not_subgroupInKernel
     intro hIndKer
     apply hθnotker
     rcases hθirr with ⟨n, ρ, _hρirr, hθeq⟩
-    haveI : Z.Normal := hZnorm
+    have : Z.Normal := hZnorm
     have hρIndKer :
         Section1.subgroupInKernel' (Section1.inducedCF K ρ.character) Z := by
       simpa [hθeq] using hIndKer
@@ -2472,7 +2471,7 @@ public theorem theorem_6_6
   rcases h64 with ⟨h61, hoddL, hbotH1, hbotK, hnil, hcomm, hfrob⟩
   have h64' : hypothesis_6_4_statement K ⊥ H1 S T :=
     ⟨h61, hoddL, hbotH1, hbotK, hnil, hcomm, hfrob⟩
-  haveI : K.Normal := h61.2.1
+  have : K.Normal := h61.2.1
   have hSbot : inducedKernelFamily K ⊥ S :=
     hypothesis_6_1_inducedKernelFamily_bot h61
   have hZleK : Z ≤ K := theorem_6_6_centerIn_le hZcenter

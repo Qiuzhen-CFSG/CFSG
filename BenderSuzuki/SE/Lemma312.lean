@@ -978,7 +978,7 @@ private theorem lemma312_conjugates_eq_inv_of_fixedPoint_free_involution
 that the coset action has no nontrivial normal kernel inside `Y`. -/
 private theorem lemma312_unique_involution_of_maximal_faithful
     {H : Type u} [Group H] [Finite H]
-    (Y : Subgroup H) (hsolv : IsSolvable H)
+    (Y : Subgroup H) (hsolv : Group.IsSolvable H)
     (hY : IsStronglyEmbedded Y) (hmax : IsCoatom Y)
     {z : H} (hzY : z ∈ Y) (hz : IsInvolution z)
     (hfaith : ∀ N : Subgroup H, N.Normal → N ≤ Y → N ≠ ⊥ → False) :
@@ -995,8 +995,8 @@ private theorem lemma312_unique_involution_of_maximal_faithful
       · exact Or.inl hKne
       · exact Or.inr (hNmin K hKnormal hKN hKne)
   }
-  letI : IsSolvable H := hsolv
-  haveI : IsSolvable N := by infer_instance
+  letI : Group.IsSolvable H := hsolv
+  haveI : Group.IsSolvable N := by infer_instance
   have hNcomm : IsMulCommutative N :=
     minimalNormal_solvable_isMulCommutative N
   have hNnotle : ¬ N ≤ Y := by
@@ -1137,7 +1137,7 @@ private theorem lemma312_unique_involution_of_minimalNormal_le
     {H : Type u} [Group H] [Finite H]
     (Y N : Subgroup H) [N.Normal] [IsMinimalNormal N]
     (_hNne : N ≠ ⊥) (hNY : N ≤ Y)
-    (_hsolv : IsSolvable H) (hY : IsStronglyEmbedded Y)
+    (_hsolv : Group.IsSolvable H) (hY : IsStronglyEmbedded Y)
     {z : H} (hzY : z ∈ Y) (hz : IsInvolution z)
     (hfixed : Lemma312FixedPointCondition Y z)
     (ih :
@@ -1179,7 +1179,7 @@ private theorem lemma312_unique_involution_of_minimalNormal_le
 private theorem lemma312_unique_involution_core_aux :
     ∀ n : ℕ, ∀ {H : Type u} [Group H] [Finite H],
       Nat.card H = n →
-      ∀ (Y : Subgroup H), IsSolvable H → Even (Nat.card H) →
+      ∀ (Y : Subgroup H), Group.IsSolvable H → Even (Nat.card H) →
         IsStronglyEmbedded Y →
         ∀ {z : H}, z ∈ Y → IsInvolution z →
           Lemma312FixedPointCondition Y z →
@@ -1189,7 +1189,7 @@ private theorem lemma312_unique_involution_core_aux :
     (motive := fun n =>
       ∀ {H : Type u} [Group H] [Finite H],
         Nat.card H = n →
-        ∀ (Y : Subgroup H), IsSolvable H → Even (Nat.card H) →
+        ∀ (Y : Subgroup H), Group.IsSolvable H → Even (Nat.card H) →
           IsStronglyEmbedded Y →
           ∀ {z : H}, z ∈ Y → IsInvolution z →
             Lemma312FixedPointCondition Y z →
@@ -1215,8 +1215,8 @@ private theorem lemma312_unique_involution_core_aux :
             Y N hNne (hNK.trans hKY) hsolv hY hzY hz hfixed
           dsimp
           intro hYq hzq hzqY hfixedq
-          letI : IsSolvable H := hsolv
-          have hsolvQ : IsSolvable (H ⧸ N) := by infer_instance
+          letI : Group.IsSolvable H := hsolv
+          have hsolvQ : Group.IsSolvable (H ⧸ N) := by infer_instance
           have hEvenQ : Even (Nat.card (H ⧸ N)) := by
             have horder : orderOf (QuotientGroup.mk' N z) = 2 :=
               orderOf_eq_prime hzq.sq_eq_one hzq.ne_one
@@ -1256,8 +1256,8 @@ private theorem lemma312_unique_involution_core_aux :
         have hYKstrong : IsStronglyEmbedded YK :=
           hY.comap_of_injective K.subtype Subtype.val_injective hYKproper
             ⟨zK, hzY, hzKinv⟩
-        letI : IsSolvable H := hsolv
-        have hsolvK : IsSolvable K := by infer_instance
+        letI : Group.IsSolvable H := hsolv
+        have hsolvK : Group.IsSolvable K := by infer_instance
         have hfixedK : Lemma312FixedPointCondition YK zK :=
           lemma312_fixedPointCondition_comap Y K hzK hfixed
         have hEvenK : Even (Nat.card K) := by
@@ -1282,7 +1282,7 @@ private theorem lemma312_unique_involution_core_aux :
 hypothesis, the chosen involution is the only involution in `Y`. -/
 public theorem lemma312_unique_involution_core
     {H : Type u} [Group H] [Finite H]
-    (Y : Subgroup H) (hsolv : IsSolvable H)
+    (Y : Subgroup H) (hsolv : Group.IsSolvable H)
     (hEven : Even (Nat.card H)) (hY : IsStronglyEmbedded Y)
     {z : H} (hzY : z ∈ Y) (hz : IsInvolution z)
     (hfixed : Lemma312FixedPointCondition Y z) :
@@ -1293,7 +1293,7 @@ public theorem lemma312_unique_involution_core
 /-- Lemma 3.12 from `docs/cfsg-vol4.tex`. -/
 public theorem lemma_3_12
     {H : Type u} [Group H] [Finite H]
-    (Y : Subgroup H) (hsolv : IsSolvable H)
+    (Y : Subgroup H) (hsolv : Group.IsSolvable H)
     (hEven : Even (Nat.card H)) (hY : IsStronglyEmbedded Y)
     {z : H} (hzY : z ∈ Y) (hz : IsInvolution z)
     (hfixed : Lemma312FixedPointCondition Y z) :

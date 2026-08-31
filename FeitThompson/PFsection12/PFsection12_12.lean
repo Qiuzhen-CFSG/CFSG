@@ -656,6 +656,7 @@ public theorem theorem_12_12_source_leaf
             MonoidAlgebra.single y (1 : ZMod p) by rfl]
           change (MonoidAlgebra.single y (1 : ZMod p)) • m = _
           rw [Representation.single_smul]
+          apply ρ.asModuleEquiv.injective
           simp
         calc
           ρ y v = ρ.asModuleEquiv (repEnd y m) := by

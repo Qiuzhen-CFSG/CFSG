@@ -194,7 +194,8 @@ public theorem section16_normalizer_U_not_le_M
       ⟨r0, hr0prime, hr0dvd⟩
     let r : Nat.Primes := ⟨r0, hr0prime⟩
     have hrU : r ∈ subgroupPrimeSet U := by
-      simpa [r, subgroupPrimeSet] using hr0dvd
+      change r0 ∣ Nat.card U
+      exact hr0dvd
     let R : Sylow r.val U := Classical.choice (Sylow.nonempty (p := r.val) (G := U))
     let P : Subgroup G := section10AmbientSylowSubgroup U R
     have hP_le_U : P ≤ U := by
@@ -362,7 +363,11 @@ public theorem section16_mem_msigma_of_primeSupport_subset
     intro p hpprime hpx hpidx
     let p' : Nat.Primes := ⟨p, hpprime⟩
     have hpSupp : p' ∈ section14ElementPrimeSupport x := by
-      simpa [p', section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers] using hpx
+      change p' ∈ subgroupPrimeSet (Subgroup.zpowers x)
+      change p' ∈ {q : Nat.Primes | q.val ∣ Nat.card (Subgroup.zpowers x)}
+      change p ∣ Nat.card (Subgroup.zpowers x)
+      rw [Nat.card_zpowers]
+      exact hpx
     have hpσ : p' ∈ section10SigmaPrimes M := hxσ hpSupp
     exact (((theorem_10_2_b (G := G) hM).2).p_in_pi_of_p_dvd_index p' hpidx) hpσ
   have hxQ1 : orderOf (q ⟨x, hxM⟩) = 1 :=
@@ -940,7 +945,9 @@ public theorem section16_exists_prime_mem_elementPrimeSupport
     exact hxne (by simpa using hxbot)
   rcases Nat.exists_prime_and_dvd hcard_ne_one with ⟨p, hpprime, hpdiv⟩
   exact ⟨⟨p, hpprime⟩, by
-    simpa [section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers] using hpdiv⟩
+    change (⟨p, hpprime⟩ : Nat.Primes) ∈ subgroupPrimeSet (Subgroup.zpowers x)
+    change p ∣ Nat.card (Subgroup.zpowers x)
+    exact hpdiv⟩
 
 omit [Finite G] [IsMinCE G] in
 private theorem section16_kappa_subset_tau13 {M : Subgroup G} :
@@ -1164,7 +1171,11 @@ private theorem section16_mem_normal_complement_of_support_disjoint_hall
     intro p hpprime hpx hpK
     let p' : Nat.Primes := ⟨p, hpprime⟩
     have hpSupp : p' ∈ section14ElementPrimeSupport x := by
-      simpa [p', section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers] using hpx
+      change p' ∈ subgroupPrimeSet (Subgroup.zpowers x)
+      change p' ∈ {q : Nat.Primes | q.val ∣ Nat.card (Subgroup.zpowers x)}
+      change p ∣ Nat.card (Subgroup.zpowers x)
+      rw [Nat.card_zpowers]
+      exact hpx
     have hpπ : p' ∈ π := hKHall.2.p_in_pi_of_p_dvd_card p' (by simpa [p'] using hpK)
     exact hxπc hpSupp hpπ
   have hq_order_one : orderOf (q xM) = 1 :=
@@ -1285,7 +1296,8 @@ public theorem section16_exists_prime_order_zpower
   obtain ⟨z, hz_order⟩ :=
     exists_prime_orderOf_dvd_card' (G := Subgroup.zpowers x) q hqdiv
   refine ⟨r, z, ?_, z.property, ?_⟩
-  · simpa [r, subgroupPrimeSet] using hqdiv
+  · change q ∣ Nat.card (Subgroup.zpowers x)
+    exact hqdiv
   · simpa [r, Subgroup.orderOf_coe] using hz_order
 
 public theorem section16_MF_eq_msigma_of_typeF
@@ -1708,7 +1720,11 @@ private theorem section16_eq_one_of_mem_kstar_and_conj_k
   rcases Nat.exists_prime_and_dvd horder_ne_one with ⟨p, hpprime, hpdiv⟩
   let p' : Nat.Primes := ⟨p, hpprime⟩
   have hpSupp : p' ∈ section14ElementPrimeSupport y := by
-    simpa [p', section14ElementPrimeSupport, subgroupPrimeSet, Nat.card_zpowers] using hpdiv
+    change p' ∈ subgroupPrimeSet (Subgroup.zpowers y)
+    change p' ∈ {q : Nat.Primes | q.val ∣ Nat.card (Subgroup.zpowers y)}
+    change p ∣ Nat.card (Subgroup.zpowers y)
+    rw [Nat.card_zpowers]
+    exact hpdiv
   have hpSigma : p' ∈ section10SigmaPrimes M := hySigma hpSupp
   have hy_eq : y = g * x * g⁻¹ := by
     simpa [MulAut.conj_apply] using hxy.symm
@@ -2112,7 +2128,7 @@ public theorem theorem_16_C
   rcases Subgroup.ne_bot_iff_exists_ne_one.mp hKstar_ne with ⟨y, hyne⟩
   have hInterData :=
     h147d.2.2 (x : G) (y : G) x.property (by simpa using hxne)
-      (by simp [Kstar, section16Kstar, section14KStar])
+      (by exact y.property)
       (by simpa using hyne)
   have hCase :
       section16CaseP2 K U ∨ section16MaximalTypeP2 Mstar := by

@@ -125,7 +125,7 @@ private theorem section13_sigma_conjBy
     (hpσ : p ∈ section10SigmaPrimes M) (a : G) :
     p ∈ section10SigmaPrimes (M.conjBy a) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  let _ : Fact p.val.Prime := ⟨p.property⟩
   rcases hpσ with ⟨hpM, P, hN⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   let PGa : Subgroup G := PG.conjBy a
@@ -220,14 +220,14 @@ private theorem section13_exists_E_invariant_msigma_sylow
         IsInvariant (↥E) (↥(section10Msigma M))
           (S : Subgroup (section10Msigma M)) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   have hE_le_M : E ≤ M := hE.1.2.1
   have hE_norm_msigma :
       E ≤ Subgroup.normalizer (section10Msigma M : Set G) :=
     hE_le_M.trans section13_le_normalizer_msigma
   have hEσ : Subgroup.Normalizes E (section10Msigma M) := ⟨hE_norm_msigma⟩
   refine ⟨hEσ, ?_⟩
-  letI : Subgroup.Normalizes E (section10Msigma M) := hEσ
+  let _ : Subgroup.Normalizes E (section10Msigma M) := hEσ
   have hMsigmaπsub : IsPiSubgroup (G := G) (section10SigmaPrimes M) (section10Msigma M) := by
     intro r hr
     exact ((theorem_10_2_b (G := G) hM).1).p_in_pi_of_p_dvd_card r hr
@@ -253,7 +253,7 @@ private theorem section13_exists_E_invariant_msigma_sylow
       intro x _hx
       exact hMsigma_le_M (by simp [htop])
     exact hM.1 (top_le_iff.mp htop_le_M)
-  have hMsigma_solv : IsSolvable (section10Msigma M) :=
+  have hMsigma_solv : Group.IsSolvable (section10Msigma M) :=
     IsMinCE.proper_subgroups_solvable (section10Msigma M)
       (lt_top_iff_ne_top.2 hMsigma_ne_top)
   have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := by
@@ -277,7 +277,7 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
         IsInvariant (↥E) (↥(subgroupCentralizerIn (section10Msigma M) Q))
           (S : Subgroup (subgroupCentralizerIn (section10Msigma M) Q)) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   let C : Subgroup G := subgroupCentralizerIn (section10Msigma M) Q
   have hE_le_M : E ≤ M := hE.1.2.1
   have hE_norm_msigma :
@@ -293,7 +293,7 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
         (K := Subgroup.centralizer (Q : Set G)) hE_norm_msigma hE_norm_centQ
   have hEC : Subgroup.Normalizes E C := ⟨hE_norm_C⟩
   refine ⟨by simpa [C] using hEC, ?_⟩
-  letI : Subgroup.Normalizes E C := hEC
+  let _ : Subgroup.Normalizes E C := hEC
   have hC_le_msigma : C ≤ section10Msigma M := by
     dsimp [C, subgroupCentralizerIn]
     exact inf_le_left
@@ -323,7 +323,7 @@ public theorem section13_exists_E_invariant_msigma_centralizer_sylow
     have htop_le_M : (⊤ : Subgroup G) ≤ M := by
       simpa [htop] using hC_le_M
     exact hM.1 (top_le_iff.mp htop_le_M)
-  have hCsolv : IsSolvable C :=
+  have hCsolv : Group.IsSolvable C :=
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.2 hC_ne_top)
   have hqσ : q ∈ section10SigmaPrimes M :=
     section13_sigma_of_mem_centralizer_msigma (G := G) hM (P := Q) hqC
@@ -342,7 +342,7 @@ private theorem section13_hall_sylow_map_to_overgroup_sylow
     (P : Sylow p.val K) :
     ∃ PH : Sylow p.val H, (PH : Subgroup H) = (P : Subgroup K).map K.subtype := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  let _ : Fact p.val.Prime := ⟨p.property⟩
   let Psub : Subgroup H := (P : Subgroup K).map K.subtype
   have hPsubp : IsPGroup p.val Psub :=
     IsPGroup.map (p := p.val) (H := (P : Subgroup K)) P.isPGroup' K.subtype
@@ -367,7 +367,7 @@ public theorem section13_sylowSubgroupIn_of_subgroup_sylow_with_ambient_sylow_le
     ∃ SK : Sylow q.val K,
       (SK : Subgroup K) = (S : Subgroup C).map C.subtype := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   let Smap : Subgroup K := (S : Subgroup C).map C.subtype
   have hSmap_p : IsPGroup q.val Smap :=
     IsPGroup.map (p := q.val) (H := (S : Subgroup C)) S.isPGroup' C.subtype
@@ -429,9 +429,8 @@ public theorem section13_msigma_sylowSubgroupIn_maximal
   refine ⟨SM, ?_⟩
   calc
     section10AmbientSylowSubgroup M SM = (Sg : Subgroup G) := by
-      simpa [SM, section10AmbientSylowSubgroup, Sylow.subtype] using
-        (Subgroup.map_subgroupOf_eq_of_le
-          (G := G) (H := (Sg : Subgroup G)) (K := M) hQ_le_M)
+      change ((Sg : Subgroup G).subgroupOf M).map M.subtype = (Sg : Subgroup G)
+      exact Subgroup.map_subgroupOf_eq_of_le (H := (Sg : Subgroup G)) (K := M) hQ_le_M
     _ = section10AmbientSylowSubgroup (section10Msigma M) S := by
       simpa [section10AmbientSylowSubgroup] using hSg
 
@@ -459,8 +458,8 @@ public theorem section13_commutator_eq_left_of_fixedpoint_free_pgroup
     (hCQ : subgroupCentralizerIn Q P = ⊥) :
     ⁅Q, P⁆ = Q := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact p.val.Prime := ⟨p.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   have hq_ne_p : q ≠ p :=
     section13_ne_of_fixedpoint_free_p_sylow
       (G := G) (P := P) (Q := Q) (H := H) (p := p) (q := q)
@@ -480,7 +479,7 @@ public theorem section13_commutator_eq_left_of_fixedpoint_free_pgroup
   have hcop : Nat.Coprime (Nat.card P) (Nat.card Q) :=
     section13_coprime_card_of_isPiSubgroup_disjoint_primes
       (G := G) hPπ hQπ hdis_pq
-  letI : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
+  let _ : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
   have hfixed_eq :
       fixedPointSubgroup (↥P) (↥Q) = (subgroupCentralizerIn Q P).subgroupOf Q := by
     simpa using fixedPointSubgroup_subgroup_conj_eq_subgroupCentralizerIn Q P hPinvQ
@@ -489,8 +488,8 @@ public theorem section13_commutator_eq_left_of_fixedpoint_free_pgroup
     simpa using congrArg (fun S : Subgroup G => S.subgroupOf Q) hCQ
   have hQnil : Group.IsNilpotent Q :=
     IsPGroup.isNilpotent (p := q.val) (G := Q) hQq
-  letI : Group.IsNilpotent Q := hQnil
-  have hsolvQ : IsSolvable Q := inferInstance
+  let _ : Group.IsNilpotent Q := hQnil
+  have hsolvQ : Group.IsSolvable Q := inferInstance
   have hsup :
       fixedPointSubgroup (↥P) (↥Q) ⊔ commutatorAction (A := ↥P) (G := ↥Q) = ⊤ :=
     proposition_1_6_a (G := ↥Q) (A := ↥P) hsolvQ hcop
@@ -536,7 +535,7 @@ private theorem section13_theorem_13_9_exists_lemma_13_8_data
                     Subgroup.normalizer (Q : Set G) ≤ Msharp ∧
                       Subgroup.normalizer (Q : Set G) ≤ M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
     ⟨hP_E₁, hPcard⟩
   have hPne : P ≠ ⊥ := section13_ne_bot_of_prime_order (G := G) hPcard
@@ -552,7 +551,7 @@ private theorem section13_theorem_13_9_exists_lemma_13_8_data
   have hE_norm_msigma :
       E ≤ Subgroup.normalizer (section10Msigma M : Set G) :=
     hE_le_M.trans section13_le_normalizer_msigma
-  letI : Subgroup.Normalizes E (section10Msigma M) := hEσ
+  let _ : Subgroup.Normalizes E (section10Msigma M) := hEσ
   have hE_norm_Q : E ≤ Subgroup.normalizer (Q : Set G) := by
     simpa [Q, section10AmbientSylowSubgroup] using
       section13_le_normalizer_map_of_isInvariant
@@ -599,9 +598,8 @@ private theorem section13_theorem_13_9_exists_lemma_13_8_data
     refine ⟨Ssharp, ?_⟩
     calc
       section10AmbientSylowSubgroup Msharp Ssharp = (Sg : Subgroup G) := by
-        simpa [Ssharp, section10AmbientSylowSubgroup, Sylow.subtype] using
-          (Subgroup.map_subgroupOf_eq_of_le
-            (G := G) (H := (Sg : Subgroup G)) (K := Msharp) hSg_le_Msharp)
+        change ((Sg : Subgroup G).subgroupOf Msharp).map Msharp.subtype = (Sg : Subgroup G)
+        exact Subgroup.map_subgroupOf_eq_of_le (H := (Sg : Subgroup G)) (K := Msharp) hSg_le_Msharp
       _ = Q := hSgQ'
   have hNQsharp : Subgroup.normalizer (Q : Set G) ≤ Msharp :=
     section13_normalizer_sylowSubgroupIn_le_of_sigma (G := G) hMsharp hqMsharp hQ_Msharp
@@ -617,9 +615,9 @@ private theorem section13_theorem_13_9_exists_lemma_13_8_data
     refine ⟨Sinf, ?_⟩
     calc
       section10AmbientSylowSubgroup (M ⊓ Msharp) Sinf = (Sg : Subgroup G) := by
-        simpa [Sinf, section10AmbientSylowSubgroup, Sylow.subtype] using
-          (Subgroup.map_subgroupOf_eq_of_le
-            (G := G) (H := (Sg : Subgroup G)) (K := M ⊓ Msharp) hSg_le_inf)
+        change ((Sg : Subgroup G).subgroupOf (M ⊓ Msharp)).map (M ⊓ Msharp).subtype = (Sg : Subgroup G)
+        exact Subgroup.map_subgroupOf_eq_of_le
+          (H := (Sg : Subgroup G)) (K := M ⊓ Msharp) hSg_le_inf
       _ = Q := hSgQ'
   have hCQ : subgroupCentralizerIn Q P = ⊥ := by
     by_contra hCne

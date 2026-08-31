@@ -11,31 +11,31 @@ public import FeitThompson.BGsection4.corollary_4_19
 open scoped commutatorElement
 
 private theorem chiefFactor_exists_isPFactor
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (cf : ChiefFactor G) :
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (cf : ChiefFactor G) :
     ∃ q : ℕ, q.Prime ∧ cf.IsPFactor q := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-  haveI : Uq.Normal := hmin.1
-  haveI : IsMinimalNormal Uq := {
+  have : Uq.Normal := hmin.1
+  have : IsMinimalNormal Uq := {
     minimal := by
       intro K _ hKle
       by_cases hKbot : K = ⊥
       · exact Or.inl hKbot
       · exact Or.inr (hmin.2.2 K inferInstance hKle hKbot)
   }
-  haveI : IsSolvable (G ⧸ cf.V) := by infer_instance
-  haveI : IsSolvable Uq := by infer_instance
+  have : Group.IsSolvable (G ⧸ cf.V) := by infer_instance
+  have : Group.IsSolvable Uq := by infer_instance
   obtain ⟨q, hq, hUq_elem⟩ :=
     minimalNormal_solvable_exists_isElementaryAbelian
       (G := G ⧸ cf.V) (M := Uq)
   refine ⟨q, hq, ?_⟩
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hUq_p : IsPGroup q Uq := by
     let _ : IsElementaryAbelian q Uq := hUq_elem
     exact IsElementaryAbelian.isPGroup q Uq
@@ -45,7 +45,7 @@ private theorem chiefFactor_exists_isPFactor
   exact hUq_p.of_equiv (quotientSubgroupRangeEquiv cf.U cf.V).symm
 
 private theorem derived_conj_image_isPGroup_of_narrow_high_rank
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Subgroup G} [R.Normal]
     (hnarrow : IsNarrowPGroup p R) (hRrank : 3 ≤ groupRank R)
@@ -56,8 +56,8 @@ private theorem derived_conj_image_isPGroup_of_narrow_high_rank
   let A : Subgroup (MulAut R) := φ.range
   have hAodd : Odd (Nat.card A) := by
     exact odd_of_card_dvd hoddG (Subgroup.card_range_dvd φ)
-  have hsolvA : IsSolvable A := by
-    exact solvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
+  have hsolvA : Group.IsSolvable A := by
+    exact Group.isSolvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
   have hderA : IsPGroup p (derivedSubgroup A) :=
     theorem_5_5_a_high_rank_series_bridge
       (p := p) hpodd (R := R) hnarrow hRrank (A := A) hAodd
@@ -89,7 +89,7 @@ private theorem derived_conj_image_isPGroup_of_narrow_high_rank
   simpa [φ] using hmap_subtype_p
 
 private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p)
     (hcfU : cf.U ≤ fittingSubgroup G)
     (hderR_p : IsPGroup p ((derivedSubgroup G).map (MulAut.conjNormal (H := pCore p G)))) :
@@ -118,14 +118,14 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
   have hN_le_R : N ≤ R := by
     simpa [N, R] using
       sylow_map_le_pCore_local (G := G) (N := cf.U) cf.isChief.normal_H hUnil P
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-  haveI : Uq.Normal := hmin.1
+  have : Uq.Normal := hmin.1
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   have hUq_p : IsPGroup p Uq := by
     let _ : (cf.V.subgroupOf cf.U).Normal :=
@@ -152,7 +152,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
         dsimp [Ttop]
       rw [hTtop_eq]
       infer_instance
-    haveI : Unique (Sylow p Uq) := Sylow.unique_of_normal Ttop hTtop_normal
+    have : Unique (Sylow p Uq) := Sylow.unique_of_normal Ttop hTtop_normal
     have hSylow_eq : Tmap = Ttop := Subsingleton.elim _ _
     change (Tmap : Subgroup Uq) = ⊤
     simpa [Tmap, Ttop, IsPGroup.toSylow_coe] using
@@ -286,7 +286,7 @@ private theorem chiefFactor_derived_conj_image_isPGroup_of_pCore_action
   exact hfurange_p
 
 private theorem chiefFactor_conj_range_pCore_eq_bot
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (cf : ChiefFactor G) (hcf_p : cf.IsPFactor p) :
     letI : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
@@ -300,14 +300,14 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
       exact MulAut.conjNormal (H := Uq)
     pCore p φ.range = ⊥ := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-  haveI : Uq.Normal := hmin.1
+  have : Uq.Normal := hmin.1
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   let A : Subgroup (MulAut Uq) := φ.range
   have hUq_p : IsPGroup p Uq := by
@@ -341,7 +341,7 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by
       simpa [hbot] using hu_mem
     exact hu_ne_one (Subgroup.mem_bot.mp hu_bot)
-  haveI : P.Normal := by
+  have : P.Normal := by
     dsimp [P]
     infer_instance
   have hF_inv : IsInvariant A Uq F := by
@@ -407,8 +407,9 @@ private theorem chiefFactor_conj_range_pCore_eq_bot
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem theorem_5_7_chief_factor_centralized
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
     {E : Subgroup G} [IsElementaryAbelian p E] (hE_le : E ≤ fittingSubgroup G)
     (hcent_rank : groupRank (subgroupCentralizerIn (fittingSubgroup G) E) ≤ 2)
@@ -416,7 +417,7 @@ private theorem theorem_5_7_chief_factor_centralized
     derivedSubgroup G ≤ centralizerOfChiefFactor (G := G) (⊤ : Subgroup G) cf := by
   classical
   obtain ⟨q, hq, hcf_q⟩ := chiefFactor_exists_isPFactor (G := G) cf
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   let R : Subgroup G := pCore q G
   have hR_normal : R.Normal := by
     dsimp [R]
@@ -434,7 +435,7 @@ private theorem theorem_5_7_chief_factor_centralized
   · have hprank_fit : primeRank q (fittingSubgroup G) ≤ 2 := by
       exact (primeRank_fitting_le_groupRank_pCore (G := G) (q := q)).trans hR_rank_le
     exact corollary_4_19
-      (G := G) (p := q) (inferInstance : IsSolvable G) hodd (fittingSubgroup G) hprank_fit
+      (G := G) (p := q) (inferInstance : Group.IsSolvable G) hodd (fittingSubgroup G) hprank_fit
       cf hcf_q hcfU
   · have hE_le_pCore : E ≤ pCore p G :=
       elementaryAbelian_le_pCore_of_le_fitting (G := G) (p := p) hE_le
@@ -460,10 +461,10 @@ private theorem theorem_5_7_chief_factor_centralized
     let S : Subgroup R := E.subgroupOf R
     have hS_elem : IsElementaryAbelian p S :=
       IsElementaryAbelian.subgroupOf (p := p) hE_le_pCore
-    letI : IsElementaryAbelian p S := hS_elem
+    let : IsElementaryAbelian p S := hS_elem
     have hZ_elem : IsElementaryAbelian p Z := by
       simpa [Z] using omega1Z_isElementaryAbelian (p := p) (R := R)
-    letI : IsElementaryAbelian p Z := hZ_elem
+    let : IsElementaryAbelian p Z := hZ_elem
     have hS_not_le_Z : ¬ S ≤ Z := by
       intro hSZ
       have hR_le_centE : R ≤ subgroupCentralizerIn R E := by
@@ -486,7 +487,7 @@ private theorem theorem_5_7_chief_factor_centralized
         exact (Subgroup.le_centralizer_iff).mp <|
           (omega1Z_le_center p R).trans (Subgroup.center_le_centralizer (S : Set R))
       exact isElementaryAbelian_sup_of_le_centralizer' (p := p) (E := Z) (C := S) hS_le_centZ
-    letI : IsElementaryAbelian p (Z ⊔ S : Subgroup R) := hEZ_elem
+    let : IsElementaryAbelian p (Z ⊔ S : Subgroup R) := hEZ_elem
     let C : Subgroup R := (subgroupCentralizerIn R E).subgroupOf R
     have hZ_le_C : Z ≤ C := by
       intro z hzZ
@@ -511,11 +512,11 @@ private theorem theorem_5_7_chief_factor_centralized
       have hR_nontrivial : Nontrivial R := by
         refine not_subsingleton_iff_nontrivial.mp ?_
         intro hsub
-        letI : Subsingleton R := hsub
+        let : Subsingleton R := hsub
         have hcyc : IsCyclic R := inferInstance
         have hRank_le_one : groupRank R ≤ 1 := groupRank_le_one_of_isCyclic R
         exact (by decide : ¬ 3 ≤ (1 : ℕ)) (le_trans hR_rank hRank_le_one)
-      letI : Nontrivial R := hR_nontrivial
+      let : Nontrivial R := hR_nontrivial
       have hcenter_nontrivial : Nontrivial (Subgroup.center R) := hR_p.center_nontrivial
       have hcenter_p : IsPGroup p (Subgroup.center R) := hR_p.to_subgroup (Subgroup.center R)
       have hpdvd_center : p ∣ Nat.card (Subgroup.center R) := by
@@ -557,7 +558,7 @@ private theorem theorem_5_7_chief_factor_centralized
         intro hk1
         have hcard_p : Nat.card (Z ⊔ S : Subgroup R) = p := by
           simpa [hk1] using hk
-        haveI : Fact (Nat.card (Z ⊔ S : Subgroup R)).Prime := ⟨by
+        have : Fact (Nat.card (Z ⊔ S : Subgroup R)).Prime := ⟨by
           simpa [hcard_p] using (Fact.out : Nat.Prime p)⟩
         rcases Subgroup.eq_bot_or_eq_top_of_prime_card (Z.subgroupOf (Z ⊔ S)) with hbot | htop
         · exact hZsub_ne_bot hbot
@@ -567,7 +568,7 @@ private theorem theorem_5_7_chief_factor_centralized
         by_contra hnot
         have hk3 : 3 ≤ k := by omega
         let EZ : Subgroup R := Z ⊔ S
-        letI : Fact (IsPGroup p EZ) := ⟨hEZ_p⟩
+        let : Fact (IsPGroup p EZ) := ⟨hEZ_p⟩
         obtain ⟨D, _hDnorm, hD_le_top, hDcard⟩ :=
           lemma_1_22 (G := EZ) p (⊤ : Subgroup EZ) inferInstance k
             (by simpa [EZ] using hk) 3 hk3
@@ -589,13 +590,13 @@ private theorem theorem_5_7_chief_factor_centralized
           have hD_elem : IsElementaryAbelian p D := by
             have htop_elem : IsElementaryAbelian p (⊤ : Subgroup EZ) := by
               exact isElementaryAbelian_top (p := p) (G := EZ)
-            letI : IsElementaryAbelian p (⊤ : Subgroup EZ) := htop_elem
+            let : IsElementaryAbelian p (⊤ : Subgroup EZ) := htop_elem
             exact isElementaryAbelian_of_le (p := p) hD_le_top
-          letI : IsElementaryAbelian p D := hD_elem
+          let : IsElementaryAbelian p D := hD_elem
           simpa [DmapR] using
             IsElementaryAbelian.map_subtype (p := p) (K := EZ) (H := D)
         have hDsub_elem : IsElementaryAbelian p Dsub := by
-          letI : IsElementaryAbelian p DmapR := hDmapR_elem
+          let : IsElementaryAbelian p DmapR := hDmapR_elem
           exact IsElementaryAbelian.subgroupOf (p := p) hDmapR_le_C
         have hDmapRG_le_cent : DmapR.map R.subtype ≤ subgroupCentralizerIn R E := by
           intro x hx
@@ -617,12 +618,12 @@ private theorem theorem_5_7_chief_factor_centralized
             hDmapRG_le_cent]
           exact hDmapRG_card
         have hDcent_elem : IsElementaryAbelian p Dcent := by
-          letI : IsElementaryAbelian p DmapR := hDmapR_elem
-          letI : IsElementaryAbelian p (DmapR.map R.subtype) := by
+          let : IsElementaryAbelian p DmapR := hDmapR_elem
+          let : IsElementaryAbelian p (DmapR.map R.subtype) := by
             simpa [DmapR] using
               IsElementaryAbelian.map_subtype (p := p) (K := R) (H := DmapR)
           exact IsElementaryAbelian.subgroupOf (p := p) hDmapRG_le_cent
-        letI : IsElementaryAbelian p Dcent := hDcent_elem
+        let : IsElementaryAbelian p Dcent := hDcent_elem
         have hRcent_rank_ge : 3 ≤ groupRank (subgroupCentralizerIn R E) :=
           groupRank_at_least_three_of_elementaryAbelian_subgroup_card_p3'
             (p := p) (G := subgroupCentralizerIn R E) (B := Dcent) hDcent_card
@@ -634,7 +635,7 @@ private theorem theorem_5_7_chief_factor_centralized
     have hEZ_max : Z ⊔ S ∈ maximalElementaryAbelianSubgroups p R := by
       refine ⟨hEZ_elem, ?_⟩
       intro B hEZ_le_B hBelem
-      letI : IsElementaryAbelian p B := hBelem
+      let : IsElementaryAbelian p B := hBelem
       have hB_le_C : B ≤ C := by
         intro b hb
         refine ⟨b.2, ?_⟩
@@ -659,7 +660,7 @@ private theorem theorem_5_7_chief_factor_centralized
           have hk_gt_two : 2 < k :=
             (Nat.pow_lt_pow_iff_right (Nat.Prime.one_lt (Fact.out : Nat.Prime p))).1 hlt_card
           omega
-        letI : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
+        let : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
         obtain ⟨D, _hDnorm, hD_le_B, hDcard⟩ :=
           lemma_1_22 (G := B) p (⊤ : Subgroup B) inferInstance k
             (by simpa using hk) 3 hk3
@@ -681,13 +682,13 @@ private theorem theorem_5_7_chief_factor_centralized
           have hD_elem : IsElementaryAbelian p D := by
             have htop_elem : IsElementaryAbelian p (⊤ : Subgroup B) := by
               exact isElementaryAbelian_top (p := p) (G := B)
-            letI : IsElementaryAbelian p (⊤ : Subgroup B) := htop_elem
+            let : IsElementaryAbelian p (⊤ : Subgroup B) := htop_elem
             exact isElementaryAbelian_of_le (p := p) hD_le_B
-          letI : IsElementaryAbelian p D := hD_elem
+          let : IsElementaryAbelian p D := hD_elem
           simpa [DmapR] using
             IsElementaryAbelian.map_subtype (p := p) (K := B) (H := D)
         have hDsub_elem : IsElementaryAbelian p Dsub := by
-          letI : IsElementaryAbelian p DmapR := hDmapR_elem
+          let : IsElementaryAbelian p DmapR := hDmapR_elem
           exact IsElementaryAbelian.subgroupOf (p := p) hDmapR_le_C
         have hDmapRG_le_cent : DmapR.map R.subtype ≤ subgroupCentralizerIn R E := by
           intro x hx
@@ -709,12 +710,12 @@ private theorem theorem_5_7_chief_factor_centralized
             hDmapRG_le_cent]
           exact hDmapRG_card
         have hDcent_elem : IsElementaryAbelian p Dcent := by
-          letI : IsElementaryAbelian p DmapR := hDmapR_elem
-          letI : IsElementaryAbelian p (DmapR.map R.subtype) := by
+          let : IsElementaryAbelian p DmapR := hDmapR_elem
+          let : IsElementaryAbelian p (DmapR.map R.subtype) := by
             simpa [DmapR] using
               IsElementaryAbelian.map_subtype (p := p) (K := R) (H := DmapR)
           exact IsElementaryAbelian.subgroupOf (p := p) hDmapRG_le_cent
-        letI : IsElementaryAbelian p Dcent := hDcent_elem
+        let : IsElementaryAbelian p Dcent := hDcent_elem
         have hRcent_rank_ge : 3 ≤ groupRank (subgroupCentralizerIn R E) :=
           groupRank_at_least_three_of_elementaryAbelian_subgroup_card_p3'
             (p := p) (G := subgroupCentralizerIn R E) (B := Dcent) hDcent_card
@@ -727,14 +728,14 @@ private theorem theorem_5_7_chief_factor_centralized
       simpa [R] using
         derived_conj_image_isPGroup_of_narrow_high_rank
           (G := G) (p := p) hpodd (R := R) hnarrow hR_rank hodd
-    haveI : cf.V.Normal := cf.isChief.normal_K
+    have : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
     let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
     have hUq_min :
         Uq.Normal ∧ Uq ≠ ⊥ ∧
           (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
       simpa [π, Uq] using chiefFactor_quotient_minimal (G := G) cf
-    haveI : Uq.Normal := hUq_min.1
+    have : Uq.Normal := hUq_min.1
     let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
     let A : Subgroup (MulAut Uq) := φ.range
     let ψ : G →* A :=
@@ -805,7 +806,7 @@ private theorem theorem_5_7_chief_factor_centralized
         ⟨by simp, hcomm⟩
 
 private theorem derivedSubgroup_le_fitting_of_centralizes_restricted_chiefFactors
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     (hchief :
       ∀ cf : ChiefFactor G, cf.U ≤ fittingSubgroup G →
         derivedSubgroup G ≤ centralizerOfChiefFactor (G := G) (⊤ : Subgroup G) cf) :
@@ -825,7 +826,7 @@ private theorem derivedSubgroup_le_fitting_of_centralizes_restricted_chiefFactor
       (G := G) (H := derivedSubgroup G) hder_norm)
 
 public theorem theorem_5_7
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
     {E : Subgroup G} [IsElementaryAbelian p E] (hE_le : E ≤ fittingSubgroup G)
     (hcent_rank : groupRank (subgroupCentralizerIn (fittingSubgroup G) E) ≤ 2) :

@@ -26,7 +26,7 @@ The Suzuki-group recognition endpoint is isolated from XI.6.1 and XI.9.1.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open XI1115ThetaEquationExtraction
 open scoped Pointwise commutatorElement IsMulCommutative
 
@@ -1195,18 +1195,22 @@ private theorem xi1115_theta_relation_of_generator
       exact DFunLike.congr_fun hcomp z)
   let sigma : K ≃ₐ[ZMod 2] K :=
     FiniteField.frobeniusAlgEquivOfAlgebraic (ZMod 2) K
+  have hthetaAlg_apply (x : K) : thetaAlg x = theta x := by
+    rfl
   have hmaps :
       (thetaAlg ^ 2).toAlgHom = sigma.toAlgHom := by
     apply AlgHom.ext_of_adjoin_eq_top hgenerate
     intro x hx
     simp only [Set.mem_singleton_iff] at hx
     subst x
-    simpa [thetaAlg, sigma, pow_two,
-      FiniteField.coe_frobeniusAlgEquivOfAlgebraic] using haRelation
+    change thetaAlg (thetaAlg a) = a ^ 2
+    rw [hthetaAlg_apply, hthetaAlg_apply]
+    exact haRelation
   intro x
   have hx := DFunLike.congr_fun hmaps x
-  simpa [thetaAlg, sigma, pow_two,
-    FiniteField.coe_frobeniusAlgEquivOfAlgebraic] using hx
+  change thetaAlg (thetaAlg x) = x ^ 2 at hx
+  rw [hthetaAlg_apply, hthetaAlg_apply] at hx
+  exact hx
 
 
 set_option maxHeartbeats 800000 in
@@ -2556,7 +2560,7 @@ private theorem xi1115_action_parameters_core
   have hOmegaEq : Fintype.card Omega = Nat.card F + 1 := by
     rw [hFcard, ← hdegree]
   have hHcard : Nat.card H = Nat.card F * Nat.card D :=
-    hFrob.isComplement'.card_mul.symm
+    hFrob.isComplement'.card_mul_card.symm
   have hGcard : Nat.card G = Fintype.card Omega * Nat.card F * Nat.card D := by
     letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
     letI : MulAction.IsPretransitive G Omega :=
@@ -3727,7 +3731,7 @@ private theorem xi1115_odd_twoPointStabilizer_swap_inverts
       IsCompl (fixedPointSubgroup R Dsub)
         (commutatorAction (A := R) (G := Dsub)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
-      CommGroup.isSolvable hcop hDsubComm
+      (Group.isSolvable_of_comm hDsubComm.is_comm.comm) hcop hDsubComm
   have hfixedBot : fixedPointSubgroup R Dsub = ⊥ := by
     apply bot_unique
     have hle := hcompl.disjoint.le_bot
@@ -4000,7 +4004,7 @@ private theorem xi1115_frobenius_normal_subgroup_le_kernel_or_kernel_le
   · exact Or.inr hFN
   · left
     letI : N.Normal := hN
-    have hFsolv : IsSolvable F := by
+    have hFsolv : Group.IsSolvable F := by
       letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       letI : Group.IsNilpotent F := IsPGroup.isNilpotent hF2
       exact IsNilpotent.to_isSolvable
@@ -6234,14 +6238,17 @@ private theorem xi1115_sharpTriple_of_card_eq_descFactorial
   have horbitInjective : Function.Injective orbit := by
     intro g h hgh
     have hga : g • a = h • a := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
-      simpa [orbit, source] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
+      change g • a = h • a at hcoord
+      exact hcoord
     have hgb : g • b = h • b := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
-      simpa [orbit, source] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
+      change g • b = h • b at hcoord
+      exact hcoord
     have hgc : g • c = h • c := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
-      simpa [orbit, source] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
+      change g • c = h • c at hcoord
+      exact hcoord
     have hfixa : (h⁻¹ * g) • a = a := by
       rw [mul_smul, hga, inv_smul_smul]
     have hfixb : (h⁻¹ * g) • b = b := by
@@ -6267,23 +6274,35 @@ private theorem xi1115_sharpTriple_of_card_eq_descFactorial
   · have h0 := congrArg (fun e : Fin 3 ↪ Omega => e 0) hg
     have h1 := congrArg (fun e : Fin 3 ↪ Omega => e 1) hg
     have h2 := congrArg (fun e : Fin 3 ↪ Omega => e 2) hg
-    simpa [orbit, source, target] using And.intro h0 (And.intro h1 h2)
+    change g • a = a' at h0
+    change g • b = b' at h1
+    change g • c = c' at h2
+    exact ⟨h0, ⟨h1, h2⟩⟩
   · intro h hh
     have hg0 : g • a = a' := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 0) hg
-      simpa [orbit, source, target] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 0) hg
+      change g • a = a' at hcoord
+      exact hcoord
     have hg1 : g • b = b' := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 1) hg
-      simpa [orbit, source, target] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 1) hg
+      change g • b = b' at hcoord
+      exact hcoord
     have hg2 : g • c = c' := by
-      have h := congrArg (fun e : Fin 3 ↪ Omega => e 2) hg
-      simpa [orbit, source, target] using h
+      have hcoord := congrArg (fun e : Fin 3 ↪ Omega => e 2) hg
+      change g • c = c' at hcoord
+      exact hcoord
     apply horbitInjective
     ext i
     fin_cases i
-    · simpa [orbit, source] using hh.1.trans hg0.symm
-    · simpa [orbit, source] using hh.2.1.trans hg1.symm
-    · simpa [orbit, source] using hh.2.2.trans hg2.symm
+    · have hcoord := hh.1.trans hg0.symm
+      change h • a = g • a at hcoord
+      exact hcoord
+    · have hcoord := hh.2.1.trans hg1.symm
+      change h • b = g • b at hcoord
+      exact hcoord
+    · have hcoord := hh.2.2.trans hg2.symm
+      change h • c = g • c at hcoord
+      exact hcoord
 private theorem xi1115_rankOneOrbit_sharpTriple
     {G Omega : Type*} [Group G] [Finite G] [MulAction G Omega]
     [Fintype Omega]
@@ -10026,7 +10045,7 @@ private theorem xi1115_rankOneOrbit_charTwo_pgl
       Nat.card H =
           Nat.card (K0.subgroupOf H) *
             Nat.card (MulAction.stabilizer H bH) :=
-        hFrobH.isComplement'.card_mul.symm
+        hFrobH.isComplement'.card_mul_card.symm
       _ = 2 ^ f * (2 ^ f - 1) := by
         rw [hKHcard, hDHcard, hIcard, hRcard]
   have hstabEqH : MulAction.stabilizer M a = H :=

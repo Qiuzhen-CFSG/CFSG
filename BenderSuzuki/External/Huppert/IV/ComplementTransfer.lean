@@ -48,12 +48,12 @@ public theorem hkt_solvable_of_normal_nilpotent_and_quotient_nilpotent
     {Q : Type u} [Group Q] (N : Subgroup Q) [N.Normal]
     (hN_nil : Group.IsNilpotent N)
     (hquot_nil : Group.IsNilpotent (Q ⧸ N)) :
-    IsSolvable Q := by
-  haveI : Group.IsNilpotent N := hN_nil
-  haveI : IsSolvable N := IsNilpotent.to_isSolvable
-  haveI : Group.IsNilpotent (Q ⧸ N) := hquot_nil
-  haveI : IsSolvable (Q ⧸ N) := IsNilpotent.to_isSolvable
-  exact solvable_of_ker_le_range N.subtype (QuotientGroup.mk' N) (by
+    Group.IsSolvable Q := by
+  have : Group.IsNilpotent N := hN_nil
+  have : Group.IsSolvable N := IsNilpotent.to_isSolvable
+  have : Group.IsNilpotent (Q ⧸ N) := hquot_nil
+  have : Group.IsSolvable (Q ⧸ N) := IsNilpotent.to_isSolvable
+  exact Group.isSolvable_of_ker_le_range N.subtype (QuotientGroup.mk' N) (by
     rw [QuotientGroup.ker_mk', Subgroup.range_subtype])
 
 /-- A finite nilpotent group is `p`-nilpotent for every prime `p`. -/
@@ -69,7 +69,7 @@ public theorem hkt_hasNormalPComplement_of_nilpotent
   have htop_le :
       (⊤ : Subgroup (Q ⧸ pPrimeCore p Q)) ≤
         pCore p (Q ⧸ pPrimeCore p Q) ⊔ pPrimeCore p (Q ⧸ pPrimeCore p Q) := by
-    haveI : Group.IsNilpotent (Q ⧸ pPrimeCore p Q) := hquot_nil
+    have : Group.IsNilpotent (Q ⧸ pPrimeCore p Q) := hquot_nil
     have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup (Q ⧸ pPrimeCore p Q))) := by
       exact Group.nilpotent_of_mulEquiv
         (G := Q ⧸ pPrimeCore p Q) (G' := ↥(⊤ : Subgroup (Q ⧸ pPrimeCore p Q)))
@@ -88,7 +88,7 @@ public theorem hkt_hasNormalPComplement_of_nilpotent
     by_cases hqp : q.1 = p
     · simp [hqp]
     · have hqprime : Nat.Prime q.1 := Nat.prime_of_mem_primeFactors q.1.2
-      letI : Fact (Nat.Prime q.1) := ⟨hqprime⟩
+      let : Fact (Nat.Prime q.1) := ⟨hqprime⟩
       obtain ⟨n, hn⟩ :=
         (pCore_isPGroup (G := Q ⧸ pPrimeCore p Q) (p := q.1)).exists_card_eq
       have hcop : Nat.Coprime p (Nat.card (pCore q.1 (Q ⧸ pPrimeCore p Q))) := by
@@ -131,12 +131,12 @@ public theorem hkt_isPGroup_quotient_map_subtype_of_extension
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨k, _hk, rfl⟩
     exact k.property
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N]
     infer_instance
   let qN : G →* G ⧸ N := QuotientGroup.mk' N
   let Hbar : Subgroup (G ⧸ N) := H.map qN
-  haveI : Hbar.Normal := by
+  have : Hbar.Normal := by
     exact Subgroup.Normal.map (inferInstance : H.Normal) qN (QuotientGroup.mk'_surjective N)
   have hHbar_p : IsPGroup p Hbar := by
     let eHN : H ⧸ N.subgroupOf H ≃* H ⧸ K :=
@@ -165,7 +165,7 @@ public theorem hkt_hasNormalPComplement_of_normal_subgroup_and_pgroup_quotient
   classical
   let K : Subgroup H := pPrimeCore p H
   let N : Subgroup G := K.map H.subtype
-  haveI : K.Characteristic := pPrimeCore_characteristic (p := p) (G := H)
+  have : K.Characteristic := pPrimeCore_characteristic (p := p) (G := H)
   have hNnorm : N.Normal := by
     dsimp [N, K]
     infer_instance
@@ -276,7 +276,7 @@ public theorem hkt_centerIn_map_quotient_subgroup_eq
     K_G.map q = centerIn (G := G ⧸ N) (P.map q) := by
   classical
   intro q NP Zbar K K_G
-  letI : NP.Normal := by
+  let : NP.Normal := by
     simpa [NP] using (inferInstance : (N.subgroupOf P).Normal)
   let e : P ⧸ NP ≃* P.map q := quotientSubgroupRangeEquiv P N
   have htop_map : (⊤ : Subgroup (P.map q)).map (P.map q).subtype = P.map q := by
@@ -332,7 +332,7 @@ public theorem hkt_thompsonSubgroup_map_quotient_subgroup_eq
     K_G.map q = thompsonSubgroup (G := G ⧸ N) (P.map q) := by
   classical
   intro q NP Jbar K K_G
-  letI : NP.Normal := by
+  let : NP.Normal := by
     simpa [NP] using (inferInstance : (N.subgroupOf P).Normal)
   let e : P ⧸ NP ≃* P.map q := quotientSubgroupRangeEquiv P N
   calc
@@ -468,7 +468,7 @@ public theorem hkt_hasNormalPComplement_normalizer_map_quotient_of_le
   intro q
   have hN_le_norm : N ≤ Subgroup.normalizer (T : Set G) :=
     hN_le_T.trans (Subgroup.le_normalizer (H := T))
-  haveI : (N.subgroupOf (Subgroup.normalizer (T : Set G))).Normal := by
+  have : (N.subgroupOf (Subgroup.normalizer (T : Set G))).Normal := by
     have hnorm_top : Subgroup.normalizer (N : Set G) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr (inferInstance : N.Normal)
     exact
@@ -616,7 +616,7 @@ public theorem sylow_map_quotient_eq_top_of_quotient_isPGroup
       dsimp [Ttop]
     rw [hTtop_eq]
     infer_instance
-  haveI : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
+  have : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
   have hSylow_eq : Tmap = Ttop := Subsingleton.elim _ _
   change (Tmap : Subgroup Q) = ⊤
   simpa [Tmap, Ttop, IsPGroup.toSylow_coe, q, Q] using
@@ -750,7 +750,7 @@ public theorem hkt_centralizer_center_sylow_hasNormalPComplement_quotient_pPrime
         (centerIn (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)))) := by
   classical
   intro M π Sbar
-  haveI : Fact (IsPGroup p (↥(centerIn (G := Q) (S : Subgroup Q)))) :=
+  have : Fact (IsPGroup p (↥(centerIn (G := Q) (S : Subgroup Q)))) :=
     ⟨IsPGroup.to_le S.isPGroup' (show centerIn (G := Q) (S : Subgroup Q) ≤ (S : Subgroup Q) from inf_le_left)⟩
   have hcenter_map :
       (centerIn (G := Q) (S : Subgroup Q)).map π =
@@ -829,7 +829,7 @@ public theorem sylow_le_center_normalizer_of_quotient_pPrimeCore
       (Subgroup.mem_map_of_mem π hxS)
   have hπn_norm :
       π n ∈ Subgroup.normalizer ((Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)) := by
-    haveI : Fact (IsPGroup q (↥(S : Subgroup Q))) := ⟨S.isPGroup'⟩
+    have : Fact (IsPGroup q (↥(S : Subgroup Q))) := ⟨S.isPGroup'⟩
     have hnorm :
         Subgroup.normalizer ((Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)) =
           (Subgroup.normalizer (S : Subgroup Q)).map π := by
@@ -891,7 +891,7 @@ public theorem hkt_hasNormalPComplement_of_not_dvd_card
   classical
   refine ⟨⊤, inferInstance, ?_, ?_⟩
   · simpa using (Fact.out : Nat.Prime p).coprime_iff_not_dvd.mpr hnot
-  · haveI : Subsingleton (Q ⧸ (⊤ : Subgroup Q)) :=
+  · have : Subsingleton (Q ⧸ (⊤ : Subgroup Q)) :=
       QuotientGroup.subsingleton_quotient_top
     refine IsPGroup.of_card (p := p) (G := Q ⧸ (⊤ : Subgroup Q)) (n := 0) ?_
     simp
@@ -928,7 +928,7 @@ public theorem hkt_transferFocal_restrict_surjective
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
     (S : Sylow q Q) :
     Function.Surjective
-      (((S : Subgroup Q).transferFocal).restrict (S : Subgroup Q)) := by
+      (((S : Subgroup Q).transferFocal).domRestrict (S : Subgroup Q)) := by
   classical
   let H : Subgroup Q := S
   intro y
@@ -939,7 +939,7 @@ public theorem hkt_transferFocal_restrict_surjective
   obtain ⟨z, hz⟩ := (hquot_p.powEquiv' hindex).surjective y
   obtain ⟨s, rfl⟩ := QuotientGroup.mk'_surjective H.focalSubgroupOf z
   refine ⟨s, ?_⟩
-  rw [MonoidHom.restrict_apply, Subgroup.transferFocal_eq_pow]
+  rw [MonoidHom.domRestrict_apply, Subgroup.transferFocal_eq_pow]
   exact hz
 
 

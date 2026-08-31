@@ -1574,7 +1574,7 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
       rw [hm]
       exact hAodd.coprime_two_right.pow_right m
     letI : Group.IsNilpotent Q := hQp.isNilpotent
-    have hQsolvable : IsSolvable Q := by infer_instance
+    have hQsolvable : Group.IsSolvable Q := by infer_instance
     have hfixedEq :=
       fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
         (G := Q) (A := A) hQsolvable hcoprime (∅ : Set Nat.Primes)
@@ -2186,7 +2186,8 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     intro w z hwz
     apply Subgroup.eq_of_le_of_card_ge
     · intro y hy
-      rw [Subgroup.pointwise_smul_def, Subgroup.mem_map] at hy
+      change y ∈ w • line z at hy
+      rw [Subgroup.pointwise_smul_def] at hy
       rcases hy with ⟨x, hx, rfl⟩
       change (eQ (w • x)).toAdd ∈ z.submodule
       rw [hcoordW]

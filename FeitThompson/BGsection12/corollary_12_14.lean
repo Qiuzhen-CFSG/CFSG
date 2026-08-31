@@ -44,8 +44,8 @@ private theorem section12_pSubgroup_le_centralizer_of_primeOrder_normalizes
     (hUnormX : U ≤ Subgroup.normalizer (X : Set G)) :
     U ≤ Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Subgroup.Normalizes U X := ⟨hUnormX⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Subgroup.Normalizes U X := ⟨hUnormX⟩
   have hXcyc : IsCyclic X := isCyclic_of_prime_card hX.2
   have htriv : ActsTrivially (A := U) (G := X) :=
     actsTrivially_of_isPGroup_on_cyclic_prime_order p.property hUp hXcyc hX.2
@@ -103,7 +103,7 @@ private theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_local
       let eBσ : Bσ ≃* Bamb := Subgroup.subgroupOfEquivOfLe hBamb_le_sigma
       exact hBp.of_equiv (eBamb.trans eBσ.symm)
     have hBσ_comm : IsMulCommutative Bσ := by
-      letI : IsMulCommutative B := hBcomm
+      let : IsMulCommutative B := hBcomm
       let eBamb : B ≃* Bamb :=
         Subgroup.equivMapOfInjective (f := M.subtype) B M.subtype_injective
       let eBσ : Bσ ≃* Bamb := Subgroup.subgroupOfEquivOfLe hBamb_le_sigma
@@ -162,38 +162,7 @@ public theorem section12_ambientSylowSubgroup_smul_local
     (P : Sylow p.val M) (m : M) :
     section10AmbientSylowSubgroup M (m • P) =
       (section10AmbientSylowSubgroup M P).conjBy (m : G) := by
-  ext x
-  constructor
-  · intro hx
-    change x ∈ ((m • P : Sylow p.val M) : Subgroup M).map M.subtype at hx
-    rw [Subgroup.mem_map] at hx
-    rcases hx with ⟨y, hy, rfl⟩
-    rw [Sylow.coe_subgroup_smul] at hy
-    rw [Subgroup.pointwise_smul_def, Subgroup.mem_map] at hy
-    rcases hy with ⟨z, hz, hzy⟩
-    change (y : G) ∈ (((P : Subgroup M).map M.subtype).conjBy (m : G))
-    rw [Subgroup.conjBy, Subgroup.mem_map]
-    refine ⟨(z : G), ?_, ?_⟩
-    · exact Subgroup.mem_map_of_mem M.subtype hz
-    · simp [MulAut.conj_apply, ← hzy, mul_assoc]
-  · intro hx
-    change x ∈ (((P : Subgroup M).map M.subtype).conjBy (m : G)) at hx
-    rw [Subgroup.conjBy, Subgroup.mem_map] at hx
-    rcases hx with ⟨y, hy, hyx⟩
-    rw [Subgroup.mem_map] at hy
-    rcases hy with ⟨z, hz, hzy⟩
-    change x ∈ ((m • P : Sylow p.val M) : Subgroup M).map M.subtype
-    rw [Subgroup.mem_map]
-    refine ⟨(m * z * m⁻¹ : M), ?_, ?_⟩
-    · rw [Sylow.coe_subgroup_smul]
-      rw [Subgroup.pointwise_smul_def, Subgroup.mem_map]
-      refine ⟨z, hz, ?_⟩
-      ext
-      simp [MulAut.conj_apply, mul_assoc]
-    · change ((m : G) * (z : G) * (m : G)⁻¹) = x
-      rw [← hyx]
-      rw [← hzy]
-      simp [MulAut.conj_apply, mul_assoc]
+  exact section10AmbientSylowSubgroup_smul P m
 
 omit [IsMinCE G] in
 private theorem section12_conjBy_inv_local (H : Subgroup G) (g : G) :
@@ -312,7 +281,7 @@ private theorem section12_sylow_map_quotient_pPrimeCore_eq_top_of_hasNormalPComp
       dsimp [Ttop]
     rw [hTtop_eq]
     infer_instance
-  haveI : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
+  have : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
   have hSylow_eq : Tmap = Ttop := Subsingleton.elim _ _
   change (Tmap : Subgroup Q) = ⊤
   simpa [Tmap, Ttop, IsPGroup.toSylow_coe, q, N, Q] using
@@ -502,7 +471,7 @@ private theorem section12_ambientDerivedSubgroup_eq_bot_of_isMulCommutative_loca
     {P : Subgroup G} (hcomm : IsMulCommutative P) :
     ambientDerivedSubgroup P = ⊥ := by
   classical
-  haveI : IsMulCommutative P := hcomm
+  have : IsMulCommutative P := hcomm
   have htop_cent :
       (⊤ : Subgroup P) ≤ Subgroup.centralizer ((⊤ : Subgroup P) : Set P) := by
     intro x _hx
@@ -573,13 +542,13 @@ private theorem section12_derived_le_center_of_specialShape_type_local
   classical
   rcases hshape with
     ⟨Q, Y, hQcard, hQnoncomm, hQexp, hYcyc, hcentral, _hΩeq⟩
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hQp : IsPGroup p.val Q := IsPGroup.of_card (n := 3) hQcard
-  letI : Fact (IsPGroup p.val Q) := ⟨hQp⟩
+  let : Fact (IsPGroup p.val Q) := ⟨hQp⟩
   have hQextra : IsExtraspecial p.val Q :=
     isExtraspecial_of_noncommutative_card_p3_exponent_p
       (K := Q) (p := p.val) hQcard hQexp hQnoncomm
-  letI : IsExtraspecial p.val Q := hQextra
+  let : IsExtraspecial p.val Q := hQextra
   have hder_center :
       (derivedSubgroup Q).map Q.subtype =
         (Subgroup.center Q).map Q.subtype :=
@@ -595,7 +564,7 @@ private theorem section12_derived_le_center_of_specialShape_type_local
     have hY_le_centQ : Y ≤ Subgroup.centralizer (Q : Set R) :=
       (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := Y) (H₂ := Q)).1
         hYQ_bot
-    letI : IsCyclic Y := hYcyc
+    let : IsCyclic Y := hYcyc
     change ⁅(⊤ : Subgroup R), (⊤ : Subgroup R)⁆ ≤ (Subgroup.center Q).map Q.subtype
     rw [Subgroup.commutator_le]
     intro a _ha b _hb
@@ -709,7 +678,7 @@ private theorem section12_sylow_le_normal_hall_of_mem_local
     (P : Sylow p.val H) :
     (P : Subgroup H) ≤ S := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PS : Sylow p.val S := Classical.choice (Sylow.nonempty (p := p.val) (G := S))
   let Psub : Subgroup H := (PS : Subgroup S).map S.subtype
   have hPsub_p : IsPGroup p.val Psub := by
@@ -763,7 +732,7 @@ public theorem section12_exists_pSubgroup_gt_le_normalizer_of_lt_pgroup_local
       simpa [XS, Subgroup.mem_subgroupOf, xS] using hxXS
     exact hXS.ne (le_antisymm hX_le_S hS_le_X)
   have hnc : NormalizerCondition S := by
-    letI : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
+    let : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
     exact Group.normalizerCondition_of_isNilpotent (G := S)
   let NS : Subgroup S := Subgroup.normalizer (XS : Set S)
   have hXS_lt_NS : XS < NS := by
@@ -827,7 +796,7 @@ private theorem section12_sylow_ambient_not_lt_pSubgroup_le_local
     (hYM : Y ≤ M) (hYp : IsPGroup p.val Y) :
     False := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let YM : Subgroup M := Y.subgroupOf M
   have hYMp : IsPGroup p.val YM :=
     hYp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := Y) (K := M) hYM).symm
@@ -857,7 +826,7 @@ private theorem section12_sigma_ambient_sylow_eq_of_le_sylow_local
     (hPGS : section10AmbientSylowSubgroup M P ≤ (S : Subgroup G)) :
     (S : Subgroup G) = section10AmbientSylowSubgroup M P := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   by_contra hne
   have hPG_lt_S : PG < (S : Subgroup G) := by
@@ -911,7 +880,7 @@ private theorem section12_le_ambientDerived_sylow_of_le_ambientDerived_of_hasNor
     (hcomp : HasNormalPComplement p.val K) :
     X ≤ ambientDerivedSubgroup (section10AmbientSylowSubgroup K S) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup K S
   have hScomp : (S : Subgroup K).IsComplement' (pPrimeCore p.val K) :=
     section12_sylow_isComplement_pPrimeCore_of_hasNormalPComplement_local
@@ -976,7 +945,7 @@ private theorem section12_corollary_12_14_derived_chosen_core
           U ≤ Subgroup.centralizer (X : Set G) ∧
           U ≤ M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (section10Msigma M) P
   let C : Subgroup G := subgroupCentralizerIn Pamb X
   let Xsub : Subgroup Pamb := X.subgroupOf Pamb
@@ -1149,7 +1118,7 @@ private theorem section12_corollary_12_14_derived_chosen_core
       have hderSg_le_center :
           derivedSubgroup (Sg : Subgroup G) ≤ Subgroup.center (Sg : Subgroup G) := by
         rcases corollary_10_7_b (G := G) Sg hSg_rank_le_two with hScomm | hshape
-        · haveI : IsMulCommutative (Sg : Subgroup G) := hScomm
+        · have : IsMulCommutative (Sg : Subgroup G) := hScomm
           intro x _hx
           rw [Subgroup.mem_center_iff]
           intro y
@@ -1225,7 +1194,7 @@ private theorem section12_corollary_12_14_derived_core
       (G := G) (M := M) (X := X) (p := p) P₀
       hM hp hX hXleP₀ hXder hcomp with
     ⟨hP₀_unique, _hP₀_le_M, hU⟩
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   obtain ⟨m, hm⟩ := MulAction.exists_smul_eq (section10Msigma M) P₀ P
   have hPamb_conj :
       Pamb =

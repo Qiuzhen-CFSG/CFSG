@@ -27,7 +27,7 @@ private theorem section10_normalizer_ne_top_of_ne_bot_ne_top_for_10_10
     Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
   intro hnorm_top
   have hQnormal : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal Q hQnormal with hbot | htop
   · exact hQbot hbot
   · exact hQtop htop
@@ -36,7 +36,7 @@ omit [Group G] [Finite G] [IsMinCE G] in
 private theorem section10_derivedSubgroup_isPGroup_of_theorem_5_5_a
     {r : ℕ} [Fact r.Prime] (hrodd : r ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup r R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A)) :
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A)) :
     IsPGroup r (derivedSubgroup A) := by
   classical
   have hquot_comm : IsMulCommutative (A ⧸ pCore r A) :=
@@ -83,8 +83,8 @@ public theorem section10_le_centralizer_of_le_derived_normalizer_of_narrow
     (hQq : IsPGroup q.val Q) (hQnarrow : IsNarrowPGroup q.val Q) :
     P ≤ Subgroup.centralizer (Q : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   by_cases hQbot : Q = ⊥
   · intro x _hxP
     rw [Subgroup.mem_centralizer_iff_commutator_eq_one]
@@ -99,7 +99,7 @@ public theorem section10_le_centralizer_of_le_derived_normalizer_of_narrow
     have hNproper : N ≠ ⊤ :=
       section10_normalizer_ne_top_of_ne_bot_ne_top_for_10_10
         (G := G) hQbot hQtop
-    haveI : IsSolvable N :=
+    have : Group.IsSolvable N :=
       IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.2 hNproper)
     have hNodd : Odd (Nat.card N) :=
       odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card N)
@@ -111,7 +111,7 @@ public theorem section10_le_centralizer_of_le_derived_normalizer_of_narrow
       dvd_trans hq_dvd_Q (Subgroup.card_subgroup_dvd_card Q)
     have hqodd : q.val ≠ 2 := Odd.ne_two_of_dvd_nat IsMinCE.odd_order hq_dvd_G
     let QN : Subgroup N := Q.subgroupOf N
-    haveI : QN.Normal := by
+    have : QN.Normal := by
       exact
         (Subgroup.normal_subgroupOf_iff_le_normalizer
           (H := Q) (K := N) hQ_le_N).mpr (by simp [N])
@@ -123,8 +123,8 @@ public theorem section10_le_centralizer_of_le_derived_normalizer_of_narrow
     let A : Subgroup (MulAut QN) := φ.range
     have hAodd : Odd (Nat.card A) :=
       odd_of_card_dvd hNodd (Subgroup.card_range_dvd φ)
-    haveI : IsSolvable A :=
-      solvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
+    have : Group.IsSolvable A :=
+      Group.isSolvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
     have hderAq : IsPGroup q.val (derivedSubgroup A) :=
       section10_derivedSubgroup_isPGroup_of_theorem_5_5_a
         (r := q.val) hqodd (R := QN) hQNnarrow (A := A) hAodd
@@ -228,8 +228,8 @@ public theorem proposition_10_10_c
     ∃ P : Sylow p.val G, A ≤ (P : Subgroup G) ∧
       (P : Subgroup G) ≤ Subgroup.centralizer (Q : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   obtain ⟨P, hAP, hPder⟩ := proposition_10_10_b (G := G) hpq hA hQ hqC
   have hQπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q := hQ.1.2.1
   have hQq : IsPGroup q.val Q :=
@@ -239,7 +239,7 @@ public theorem proposition_10_10_c
   have hqodd : q.val ≠ 2 := Odd.ne_two_of_dvd_nat IsMinCE.odd_order hq_dvd_G
   have hQnarrow : IsNarrowPGroup q.val Q := by
     rcases hQshape with hQcyc | hQrank
-    · letI : IsCyclic Q := hQcyc
+    · let : IsCyclic Q := hQcyc
       refine ⟨hQq, Or.inl ?_⟩
       exact (groupRank_le_one_of_isCyclic Q).trans (by decide)
     · rcases hQrank with ⟨B, hB⟩

@@ -51,7 +51,8 @@ public theorem section14_quotient_bot_equiv_apply_eq_out
       (QuotientGroup.mk' N) (e x) = e.symm (e x) := by rw [hsymm]
       _ = x := e.left_inv x
   have hmk_out : (QuotientGroup.mk' N) (Quotient.out x) = x := by
-    simp [QuotientGroup.mk']
+    rw [QuotientGroup.coe_mk']
+    exact Quotient.out_eq' x
   have hmk_eq : (QuotientGroup.mk' N) (e x) =
       (QuotientGroup.mk' N) (Quotient.out x) := hmk_e.trans hmk_out.symm
   rw [QuotientGroup.mk'_eq_mk'] at hmk_eq
@@ -65,11 +66,12 @@ public theorem section14_quotient_bot_equiv_apply_eq_out
 public theorem section14_quotient_bot_equiv_mk'_apply
     {A : Type u} [Group A] {N : Subgroup A} [N.Normal]
     (hN : N = ⊥) (x : A ⧸ N) :
-    (QuotientGroup.mk' N)
+  (QuotientGroup.mk' N)
       (((QuotientGroup.quotientMulEquivOfEq hN).trans
         (QuotientGroup.quotientBot (G := A))) x) = x := by
   rw [section14_quotient_bot_equiv_apply_eq_out hN x]
-  simp [QuotientGroup.mk']
+  rw [QuotientGroup.coe_mk']
+  exact Quotient.out_eq' x
 
 public theorem section14_quotient_bot_equiv_mk'_apply_eq
     {A : Type u} [Group A] {N : Subgroup A} [N.Normal]

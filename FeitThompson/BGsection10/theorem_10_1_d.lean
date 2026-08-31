@@ -19,8 +19,8 @@ module imports the shared Section 10 notation from `FeitThompson.BGsection10.Def
 section Section10
 
 variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
-/- Theorem 10.1(d). -/
 omit [IsMinCE G] in
+/- Theorem 10.1(d). -/
 public theorem theorem_10_1_d
     {M : Subgroup G} {p : Nat.Primes}
     (_hM : M ∈ section9MaximalSubgroups G) (hpσ : p ∈ section10SigmaPrimes M)

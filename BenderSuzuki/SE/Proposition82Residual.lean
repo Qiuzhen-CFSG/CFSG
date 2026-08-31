@@ -36,7 +36,7 @@ public structure Proposition82ResidualData
 that `O^p(Y)` is proper, together with a Sylow `p`-subgroup `R` satisfying
 `Y = O^p(Y) R` in subgroup-join form. -/
 public theorem proposition82ResidualData_nonempty_of_odd
-    (Y : Type u) [Group Y] [Finite Y] [IsSolvable Y] [Nontrivial Y]
+    (Y : Type u) [Group Y] [Finite Y] [Group.IsSolvable Y] [Nontrivial Y]
     (hYodd : Odd (Nat.card Y)) :
     Nonempty (Proposition82ResidualData Y) := by
   classical
@@ -44,10 +44,10 @@ public theorem proposition82ResidualData_nonempty_of_odd
   let p : ℕ := H.index
   have hpPrime : p.Prime := by
     simpa [p] using hp
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hpOdd : Odd p :=
     Odd.of_dvd_nat hYodd (by simpa [p] using H.index_dvd_card)
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hquotientP : IsPGroup p (Y ⧸ H) := by
     apply IsPGroup.of_card (p := p) (G := Y ⧸ H) (n := 1)
     simpa only [pow_one, p] using H.index_eq_card.symm
@@ -64,7 +64,7 @@ public theorem proposition82ResidualData_nonempty_of_odd
     exact top_unique (by simpa [hResidualTop] using hResidualLe)
   let R : Sylow p Y := Classical.choice (Sylow.nonempty (p := p) (G := Y))
   let W : Subgroup Y := hktPResidual p Y
-  letI : W.Normal := by
+  let : W.Normal := by
     simpa [W] using hktPResidual_normal (Q := Y) (q := p)
   let q : Y →* Y ⧸ W := QuotientGroup.mk' W
   have hResidualQuotientP : IsPGroup p (Y ⧸ W) := by
@@ -107,12 +107,12 @@ public theorem sq_eq_one_mem_left_of_sup_isPGroup
     {u : G} (huF : u ∈ C ⊔ R) (huSq : u ^ 2 = 1) :
     u ∈ C := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let F : Subgroup G := C ⊔ R
   let CF : Subgroup F := C.subgroupOf F
   have hFNormC : F ≤ Subgroup.normalizer (C : Set G) := by
     exact sup_le Subgroup.le_normalizer hRnormC
-  letI : CF.Normal := by
+  let : CF.Normal := by
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer
       (show C ≤ F from le_sup_left)).2
     exact hFNormC

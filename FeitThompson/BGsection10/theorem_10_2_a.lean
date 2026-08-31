@@ -29,7 +29,7 @@ public theorem section10_alpha_sylow_normalizer_le_pre
     (P : Sylow q.val M) :
     Subgroup.normalizer ((section10AmbientSylowSubgroup M P : Subgroup G) : Set G) ≤ M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPG_le_M : PG ≤ M := by
     intro x hx
@@ -68,7 +68,7 @@ public theorem section10_alpha_subset_sigma
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :
     section10AlphaPrimes M ⊆ section10SigmaPrimes M := by
   intro p hpα
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let P : Sylow p.val M := default
   exact ⟨hpα.1, P, section10_alpha_sylow_normalizer_le_pre hM hpα P⟩
 
@@ -96,7 +96,7 @@ public theorem section10_malphaSubgroup_le_msigmaSubgroup
 
 public theorem section10_minCE_derivedSubgroup_eq_top :
     derivedSubgroup G = ⊤ := by
-  haveI : IsSimpleGroup G := IsMinCE.simple
+  have : IsSimpleGroup G := IsMinCE.simple
   have hnormal : (derivedSubgroup G).Normal :=
     derivedSeries_normal (G := G) 1
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (derivedSubgroup G) hnormal with hbot | htop
@@ -112,7 +112,7 @@ public theorem section10_minCE_derivedSubgroup_eq_top :
         exact Subgroup.mem_top b
       exact Subgroup.mem_center_iff.mp hb a
     exact False.elim <|
-      IsMinCE.not_solvable (G := G) (isSolvable_of_comm hcomm)
+      IsMinCE.not_solvable (G := G) (Group.isSolvable_of_comm hcomm)
   · exact htop
 
 public theorem section10_sigma_focal_generator_mem_ambientDerived
@@ -124,7 +124,7 @@ public theorem section10_sigma_focal_generator_mem_ambientDerived
     (hxy : IsConj x y) :
     x⁻¹ * y ∈ ambientDerivedSubgroup M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   by_cases hx1 : x = 1
   · have hy1 : y = 1 := by
       have hxy1 : IsConj 1 y := by simpa [hx1] using hxy
@@ -202,7 +202,7 @@ public theorem section10_sigma_ambient_sylow_le_ambientDerived
     (P : Sylow p.val M) :
     section10AmbientSylowSubgroup M P ≤ ambientDerivedSubgroup M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
     change IsPGroup p.val ((P : Subgroup M).map M.subtype)
@@ -256,7 +256,7 @@ public theorem section10_sigma_not_dvd_quotient_derived
     {p : Nat.Primes} (hpσ : p ∈ section10SigmaPrimes M) :
     ¬ p.val ∣ Nat.card (M ⧸ derivedSubgroup M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let P : Sylow p.val M := default
   have hP_le_der : (P : Subgroup M) ≤ derivedSubgroup M :=
     section10_sigma_sylow_le_derivedSubgroup hM hpσ P
@@ -319,7 +319,7 @@ public theorem section10_pCore_quotient_piCore_eq_bot
     (hpπ : p ∈ π) :
     pCore p.val (H ⧸ piCore π H) = ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let K : Subgroup H := piCore π H
   let Q := H ⧸ K
   let q : H →* Q := QuotientGroup.mk' K
@@ -402,9 +402,9 @@ public theorem section10_fitting_quotient_piCore_isPiSubgroup_compl
   by_contra hp_not_compl
   have hpπ : p ∈ π := by
     simpa using hp_not_compl
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let K : Subgroup H := piCore π H
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K]
     infer_instance
   let F : Subgroup (H ⧸ K) := fittingSubgroup (H ⧸ K)
@@ -442,9 +442,9 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
     (hpπ : p ∉ π) :
     primeRank p.val (H ⧸ piCore π H) ≤ primeRank p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let N₀ : Subgroup H := piCore π H
-  haveI : N₀.Normal := by
+  have : N₀.Normal := by
     dsimp [N₀]
     infer_instance
   let Q := H ⧸ N₀
@@ -470,7 +470,7 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
     let N : Subgroup L := N₀.subgroupOf L
     have hN_normal : N.Normal :=
       Subgroup.Normal.subgroupOf (inferInstance : N₀.Normal) L
-    letI : N.Normal := hN_normal
+    let : N.Normal := hN_normal
     have hLmap : L.map q = A := by
       ext y
       constructor
@@ -534,7 +534,7 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
     have hBp : IsPGroup p.val B :=
       IsPGroup.map (p := p.val) (H := C) hCp L.subtype
     have hCcomm : IsMulCommutative C := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       refine ⟨⟨fun x y => ?_⟩⟩
       apply eCA.injective
       calc
@@ -543,7 +543,7 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
           (IsMulCommutative.is_comm (M := A)).comm (eCA x) (eCA y)
         _ = eCA (y * x) := (map_mul eCA y x).symm
     have hBcomm : IsMulCommutative B := by
-      letI : IsMulCommutative C := hCcomm
+      let : IsMulCommutative C := hCcomm
       simpa [B] using Subgroup.map_isMulCommutative (f := L.subtype) (H := C)
     have hgen_le : generatorRank A ≤ generatorRank B := by
       let eAB : A ≃* B := eCA.symm.trans eCB
@@ -610,7 +610,7 @@ public theorem section10_prime_dvd_card_of_three_le_primeRank_pre
     omega
   have hAnontrivial : Nontrivial A := by
     by_contra hnt
-    letI : Subsingleton A := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton A := not_nontrivial_iff_subsingleton.mp hnt
     exact hAnoncyc (isCyclic_of_subsingleton (α := A))
   obtain ⟨n, hn_pos, hAcard⟩ :=
     (IsPGroup.nontrivial_iff_card (p := p) (G := A) (hG := hAp)).mp hAnontrivial
@@ -644,7 +644,7 @@ public theorem section10_fitting_quotient_malpha_groupRank_le_two
     · exact hn_le_two
     have hthree_n : 3 ≤ n := by omega
     let p : Nat.Primes := ⟨q, hqprime⟩
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     have hthree_rank_F : 3 ≤ primeRank p.val F := hthree_n.trans hnq
     have hp_dvd_F : p.val ∣ Nat.card F :=
       section10_prime_dvd_card_of_three_le_primeRank_pre
@@ -679,7 +679,7 @@ public theorem section10_card_derivedSubgroup_quotient_malpha_eq
   classical
   let K : Subgroup M := section10MalphaSubgroup M
   let D : Subgroup M := derivedSubgroup M
-  haveI hKnormalD : (K.subgroupOf D).Normal :=
+  have hKnormalD : (K.subgroupOf D).Normal :=
     (inferInstance : K.Normal).subgroupOf D
   let Q := M ⧸ K
   let q : M →* Q := QuotientGroup.mk' K
@@ -736,7 +736,7 @@ public theorem section10_card_derivedSubgroup_quotient_eq
       Nat.card (derivedSubgroup (H ⧸ K)) := by
   classical
   let D : Subgroup H := derivedSubgroup H
-  haveI hKnormalD : (K.subgroupOf D).Normal :=
+  have hKnormalD : (K.subgroupOf D).Normal :=
     (inferInstance : K.Normal).subgroupOf D
   let Q := H ⧸ K
   let q : H →* Q := QuotientGroup.mk' K
@@ -795,13 +795,13 @@ public theorem section10_derivedSubgroup_quotient_malpha_nilpotent
   have hKD : K ≤ D := by
     exact (section10_malphaSubgroup_le_msigmaSubgroup hM).trans
       (section10_msigmaSubgroup_le_derivedSubgroup hM)
-  haveI hKnormalD : (K.subgroupOf D).Normal :=
+  have hKnormalD : (K.subgroupOf D).Normal :=
     (inferInstance : K.Normal).subgroupOf D
   let Q := M ⧸ K
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hQsolv : IsSolvable Q := by
-    letI : IsSolvable M := hMsolv
+  have hQsolv : Group.IsSolvable Q := by
+    let : Group.IsSolvable M := hMsolv
     dsimp [Q]
     infer_instance
   have hModd : Odd (Nat.card M) :=
@@ -857,13 +857,13 @@ public theorem section10_derivedSubgroup_quotient_malpha_nilpotent
     rw [hφrange]
     exact hDerQ_nil
   have hquot_ker_nil : Group.IsNilpotent (D ⧸ φ.ker) := by
-    letI : Group.IsNilpotent φ.range := hφrange_nil
+    let : Group.IsNilpotent φ.range := hφrange_nil
     exact Group.nilpotent_of_mulEquiv
       (G := φ.range) (G' := D ⧸ φ.ker) (QuotientGroup.quotientKerEquivRange φ).symm
   have hquot_nil : Group.IsNilpotent (D ⧸ K.subgroupOf D) := by
     let e : D ⧸ K.subgroupOf D ≃* D ⧸ φ.ker :=
       QuotientGroup.quotientMulEquivOfEq hφker.symm
-    letI : Group.IsNilpotent (D ⧸ φ.ker) := hquot_ker_nil
+    let : Group.IsNilpotent (D ⧸ φ.ker) := hquot_ker_nil
     exact Group.nilpotent_of_mulEquiv (G := D ⧸ φ.ker) (G' := D ⧸ K.subgroupOf D) e.symm
   exact ⟨hKD, hKnormalD, by simpa [D, K] using hquot_nil⟩
 
@@ -877,10 +877,10 @@ public theorem section10_prime_not_dvd_derived_quotient_malpha_of_mem_alpha
   let π : Set Nat.Primes := section10AlphaPrimes M
   let K : Subgroup M := section10MalphaSubgroup M
   let Q := M ⧸ K
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hQsolv : IsSolvable Q := by
-    letI : IsSolvable M := hMsolv
+  have hQsolv : Group.IsSolvable Q := by
+    let : Group.IsSolvable M := hMsolv
     dsimp [Q]
     infer_instance
   have hModd : Odd (Nat.card M) :=
@@ -955,7 +955,7 @@ public theorem section10_prime_not_dvd_maximal_index_of_mem_alpha
     (hpα : p ∈ section10AlphaPrimes M) :
     ¬ p.val ∣ M.index := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro hp_dvd_index
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P

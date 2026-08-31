@@ -125,7 +125,8 @@ set_option backward.isDefEq.respectTransparency false in
 public instance endFieldRep_mulActionHomClass :
     MulActionHomClass (Theory.Representation.End (endFieldRep ρ)) F[G] ρ.asModule ρ.asModule where
   map_smulₛₗ f x m := by
-    apply MonoidAlgebra.induction_linear (p := fun x ↦ f (x • m) = x • f m) x
+    apply MonoidAlgebra.induction_linear
+      (motive := fun x ↦ f (x • m) = x • f m) x
     · rw [zero_smul, zero_smul, RepMap.map_zero]
     · intro _ _ a b
       rw [add_smul, map_add, a, b, add_smul]

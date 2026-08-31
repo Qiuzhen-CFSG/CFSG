@@ -38,7 +38,7 @@ private theorem lemma13_no_four_step_abelian_exponent_four
   classical
   rcases lemma1_abelian_invariant_homocyclic hP hXtrans hAcomm hAX with
     ⟨e, r, ⟨phi⟩, hpower⟩
-  letI : Nontrivial A :=
+  let : Nontrivial A :=
     (Subgroup.nontrivial_iff_ne_bot A).mpr
       (ne_of_gt (hCpos.trans (hCB.trans hBA)))
   have hr : 0 < r := by
@@ -224,11 +224,11 @@ private theorem lemma13_three_chain_data_of_ambient_chain
     change (⊥ : Subgroup H).map H.subtype = CH.map H.subtype at hmapEq
     exact hC_pos.ne (hmapBot.symm.trans (hmapEq.trans hmapC))
   have hPhiHNormal : PhiH.Normal := by
-    letI : Phi.Normal := hPhiNormal
+    let : Phi.Normal := hPhiNormal
     dsimp [PhiH]
     infer_instance
   have hCHNormal : CH.Normal := by
-    letI : C.Normal := hCNormal
+    let : C.Normal := hCNormal
     dsimp [CH]
     infer_instance
   have hPhiHX : IsXInvariantSubgroup X PhiH :=
@@ -240,7 +240,7 @@ private theorem lemma13_three_chain_data_of_ambient_chain
         PhiH ≤ L → L ≤ ⊤ → L = PhiH ∨ L = ⊤ := by
     intro L _hLnormal hLX hPhiL _hLtop
     let LM : Subgroup P := L.map H.subtype
-    letI : IsInvariant X H L := ⟨hLX⟩
+    let : IsInvariant X H L := ⟨hLX⟩
     have hLMX : IsXInvariantSubgroup X LM := by
       dsimp [LM]
       exact (isInvariant_map_subtype H L).invariant
@@ -266,7 +266,7 @@ private theorem lemma13_three_chain_data_of_ambient_chain
         CH ≤ L → L ≤ PhiH → L = CH ∨ L = PhiH := by
     intro L _hLnormal hLX hCL hLPhi
     let LM : Subgroup P := L.map H.subtype
-    letI : IsInvariant X H L := ⟨hLX⟩
+    let : IsInvariant X H L := ⟨hLX⟩
     have hLMX : IsXInvariantSubgroup X LM := by
       dsimp [LM]
       exact (isInvariant_map_subtype H L).invariant
@@ -290,7 +290,7 @@ private theorem lemma13_three_chain_data_of_ambient_chain
         ⊥ ≤ L → L ≤ CH → L = ⊥ ∨ L = CH := by
     intro L _hLnormal hLX _hbotL hLC
     let LM : Subgroup P := L.map H.subtype
-    letI : IsInvariant X H L := ⟨hLX⟩
+    let : IsInvariant X H L := ⟨hLX⟩
     have hLMX : IsXInvariantSubgroup X LM := by
       dsimp [LM]
       exact (isInvariant_map_subtype H L).invariant
@@ -364,7 +364,7 @@ private theorem lemma13_subgroup_action_data
         ∀ y : H, y ∈ involutions H → ∃ k : X, y = k • x) ∧
       (∀ p : ℕ, p.Prime → p ∣ Nat.card X →
         p ∣ Nat.card {x : H // x ∈ involutions H}) := by
-  letI : Finite P := finite_of_isSuzukiTwoGroup hP
+  let : Finite P := finite_of_isSuzukiTwoGroup hP
   have hH_regular : ActionRegularOn X H (involutions H) := by
     constructor
     · intro x hx k
@@ -571,7 +571,7 @@ private theorem lemma13_frattini_le_of_sup_and_squares
   have hquotient_comm : IsMulCommutative (Q ⧸ C) :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le
       (N := C)).mpr hcomm_le_C
-  letI : IsMulCommutative (Q ⧸ C) := hquotient_comm
+  let : IsMulCommutative (Q ⧸ C) := hquotient_comm
   have hsq : ∀ q : Q, q ^ 2 ∈ C := by
     intro q
     have hq_sup : q ∈ A ⊔ Y := by rw [hsup]; trivial
@@ -1308,6 +1308,7 @@ private theorem lemma13_factorZeroInclusionLinearMap_mk
         (QuotientGroup.mk' (lowerCentralFactorKernel Q 0)
           (lemma13_factorZeroInclusionMonoidHom H x)) := rfl
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem lemma13_factorZeroInclusionLinearMap_eq_zero_of_mem
     {Q : Type u} [Group Q]
     (H Phi C : Subgroup Q)
@@ -2238,7 +2239,7 @@ private theorem lemma13_typeC_jacobi_rank_one
         middleNorm.symm (cross (outerNorm a) w) =
           sigma a * middleNorm.symm (cross (outerNorm 1) w) := by
   let K := BinaryGaloisField n
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let frobAlg : K ≃ₐ[ZMod 2] K :=
     FiniteField.frobeniusAlgEquivOfAlgebraic (ZMod 2) K
   let frob : K ≃+* K := frobAlg.toRingEquiv
@@ -2650,9 +2651,9 @@ public theorem lemma13_no_length_greater_than_three
     classical
     intro Q _ _ hQ hXcyclic hXfaithful hXregular hXtrans
       hXprimeSupport hLen
-    letI : Finite Q := finite_of_isSuzukiTwoGroup hQ
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : Fact (IsPGroup 2 Q) := ⟨isPGroup_of_isSuzukiTwoGroup hQ⟩
+    let : Finite Q := finite_of_isSuzukiTwoGroup hQ
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (IsPGroup 2 Q) := ⟨isPGroup_of_isSuzukiTwoGroup hQ⟩
     rcases hLen with ⟨subgroups, htop, hbot, _hle, hsteps⟩
     let A : Subgroup Q := subgroups ⟨1, by decide⟩
     let B : Subgroup Q := subgroups ⟨2, by decide⟩
@@ -2734,7 +2735,7 @@ public theorem lemma13_no_length_greater_than_three
         apply hQ.2.1
         have hcenter_top : Subgroup.center Q = ⊤ :=
           (commutator_eq_bot_iff_center_eq_top Q).mp hcomm_bot
-        letI : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
+        let : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
         exact IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => mul_comm x y
       exact ⟨hPhiTop_eq, hPhiNormal, hPhiX, hPhiNe,
         lemma1_involutions_mem_of_nontrivial_invariant
@@ -2758,13 +2759,13 @@ public theorem lemma13_no_length_greater_than_three
     have hPhi_le_A : PhiTop ≤ A := by
       let D : Subgroup Q := A ⊔ PhiTop
       have hD_normal : D.Normal := by
-        letI : A.Normal := hupper.2.2.1
-        letI : PhiTop.Normal := hPhiNormal
+        let : A.Normal := hupper.2.2.1
+        let : PhiTop.Normal := hPhiNormal
         dsimp [D]
         infer_instance
       have hD_X : IsXInvariantSubgroup X D := by
-        letI : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
-        letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+        let : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
+        let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
         exact (isInvariant_sup A PhiTop).invariant
       rcases hupper.2.2.2.2.2 D hD_normal hD_X le_sup_left le_top with
         hD_A | hD_top
@@ -2808,7 +2809,7 @@ public theorem lemma13_no_length_greater_than_three
         Nat.card {x : Q // x ∈ involutions Q} =
             Nat.card {c : C // c ≠ 1} := Nat.card_congr involEquivC
         _ = Nat.card C - 1 := by
-          letI : Fintype C := Fintype.ofFinite C
+          let : Fintype C := Fintype.ofFinite C
           rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
           simp
         _ = 2 ^ nC - 1 := by rw [hC_card]
@@ -2825,8 +2826,8 @@ public theorem lemma13_no_length_greater_than_three
       rintro ⟨y, hy⟩
       rcases hXregular.2 x0 hx0 y hy with ⟨k, hk, _huniq⟩
       exact ⟨k, Subtype.ext hk.symm⟩
-    letI : Finite X := Finite.of_injective orbitC horbitC_injective
-    letI : Fintype X := Fintype.ofFinite X
+    let : Finite X := Finite.of_injective orbitC horbitC_injective
+    let : Fintype X := Fintype.ofFinite X
     have hX_card : Nat.card X =
         Nat.card {x : Q // x ∈ involutions Q} :=
       Nat.card_congr (Equiv.ofBijective orbitC
@@ -2838,23 +2839,23 @@ public theorem lemma13_no_length_greater_than_three
       rw [pow_succ]
       have he_pos : 0 < 2 ^ e := by positivity
       omega
-    letI : IsInvariant X Q (frattini Q) := ⟨by
+    let : IsInvariant X Q (frattini Q) := ⟨by
       have hPhiX' := hPhiX
       change ∀ x : X, ∀ a : Q, a ∈ PhiTop ↔ x • a ∈ PhiTop at hPhiX'
       simpa only [hPhiTop_eq] using hPhiX'⟩
-    letI : MulAction.QuotientAction X (frattini Q) :=
+    let : MulAction.QuotientAction X (frattini Q) :=
       quotientAction_of_isInvariant (A := X) (G := Q) (frattini Q)
         inferInstance
-    letI : MulDistribMulAction X (Q ⧸ frattini Q) :=
+    let : MulDistribMulAction X (Q ⧸ frattini Q) :=
       quotientMulDistribMulAction (A := X) (G := Q) (frattini Q)
         inferInstance
-    letI : IsElementaryAbelian 2 (Q ⧸ frattini Q) :=
+    let : IsElementaryAbelian 2 (Q ⧸ frattini Q) :=
       isElementaryAbelian_quotient_frattini (R := Q) (p := 2)
-    letI : CommGroup (Q ⧸ frattini Q) := IsMulCommutative.instCommGroup
+    let : CommGroup (Q ⧸ frattini Q) := IsMulCommutative.instCommGroup
     let AQ : Subgroup (Q ⧸ frattini Q) :=
       A.map (QuotientGroup.mk' (frattini Q))
-    letI : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
-    letI : IsInvariant X (Q ⧸ frattini Q) AQ := by
+    let : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
+    let : IsInvariant X (Q ⧸ frattini Q) AQ := by
       dsimp [AQ]
       exact isInvariant_map_quotient A
     obtain ⟨WQ, hAQWQ, hWQ_forward⟩ :=
@@ -2862,7 +2863,7 @@ public theorem lemma13_no_length_greater_than_three
         intro k q hq
         exact (IsInvariant.invariant (A := X) (G := Q ⧸ frattini Q)
           (H := AQ) k q).1 hq)
-    letI : IsInvariant X (Q ⧸ frattini Q) WQ := by
+    let : IsInvariant X (Q ⧸ frattini Q) WQ := by
       refine ⟨?_⟩
       intro k q
       constructor
@@ -2878,7 +2879,7 @@ public theorem lemma13_no_length_greater_than_three
       dsimp [Xlift, AQ]
       rw [QuotientGroup.comap_map_mk']
       exact sup_eq_right.mpr (by simpa [← hPhiTop_eq] using hPhi_le_A)
-    letI : WQ.Normal := by infer_instance
+    let : WQ.Normal := by infer_instance
     have hYlift_normal : Ylift.Normal := by
       dsimp [Ylift]
       infer_instance
@@ -2925,8 +2926,8 @@ public theorem lemma13_no_length_greater_than_three
               QuotientIrreducible WQ'' ∧ UQ ≠ ⊥ ∧ VQ ≠ ⊥ ∧ WQ'' ≠ ⊥ := by
         let BQ : Subgroup (Q ⧸ frattini Q) :=
           B.map (QuotientGroup.mk' (frattini Q))
-        letI : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
-        letI : IsInvariant X (Q ⧸ frattini Q) BQ := by
+        let : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
+        let : IsInvariant X (Q ⧸ frattini Q) BQ := by
           dsimp [BQ]
           exact isInvariant_map_quotient B
         have hBQ_le_AQ : BQ ≤ AQ := by
@@ -2977,7 +2978,7 @@ public theorem lemma13_no_length_greater_than_three
           have hDnormal : D.Normal := by
             dsimp [D]
             infer_instance
-          letI : IsInvariant X (Q ⧸ frattini Q) L := hLinv
+          let : IsInvariant X (Q ⧸ frattini Q) L := hLinv
           have hDX : IsXInvariantSubgroup X D := by
             dsimp [D]
             exact (isInvariant_comap_quotient L (by
@@ -3018,8 +3019,8 @@ public theorem lemma13_no_length_greater_than_three
           have hDnormal : D.Normal := by
             dsimp [D]
             infer_instance
-          letI : IsInvariant X (Q ⧸ frattini Q) L := hLinv
-          letI : IsInvariant X (Q ⧸ frattini Q) (BQ ⊔ L) :=
+          let : IsInvariant X (Q ⧸ frattini Q) L := hLinv
+          let : IsInvariant X (Q ⧸ frattini Q) (BQ ⊔ L) :=
             isInvariant_sup BQ L
           have hDX : IsXInvariantSubgroup X D := by
             dsimp [D]
@@ -3085,8 +3086,8 @@ public theorem lemma13_no_length_greater_than_three
           have hDnormal : D.Normal := by
             dsimp [D]
             infer_instance
-          letI : IsInvariant X (Q ⧸ frattini Q) L := hLinv
-          letI : IsInvariant X (Q ⧸ frattini Q) (AQ ⊔ L) :=
+          let : IsInvariant X (Q ⧸ frattini Q) L := hLinv
+          let : IsInvariant X (Q ⧸ frattini Q) (AQ ⊔ L) :=
             isInvariant_sup AQ L
           have hDX : IsXInvariantSubgroup X D := by
             dsimp [D]
@@ -3194,7 +3195,7 @@ public theorem lemma13_no_length_greater_than_three
           apply hQ.2.1
           have hcenter_top : Subgroup.center Q = ⊤ :=
             (commutator_eq_bot_iff_center_eq_top Q).mp hcomm_bot
-          letI : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
+          let : CommGroup Q := Group.commGroupOfCenterEqTop hcenter_top
           exact IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => mul_comm x y
         have hcomm_X : IsXInvariantSubgroup X (commutator Q) :=
           (isInvariant_of_characteristic (A := X) (G := Q)
@@ -3235,7 +3236,7 @@ public theorem lemma13_no_length_greater_than_three
                           rw [hL1_eq_C]
                     _ = (⊤ : Subgroup Q).lowerCentralSeries 2 := rfl
                     _ = C := hC
-            letI : Group.IsNilpotent Q :=
+            let : Group.IsNilpotent Q :=
               IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup hQ)
             let c := Group.nilpotencyClass Q
             have hc_pos : 0 < c := by
@@ -3316,7 +3317,7 @@ public theorem lemma13_no_length_greater_than_three
           have hxy_ne : xC ≠ yC := by
             intro h
             exact _hxy0 (congrArg Subtype.val h)
-          letI : Fintype C := Fintype.ofFinite C
+          let : Fintype C := Fintype.ofFinite C
           have hthree : ({oneC, xC, yC} : Finset C).card = 3 := by
             rw [Finset.card_insert_of_notMem (by simp [hx_ne, hy_ne])]
             rw [Finset.card_insert_of_notMem (by simp [hxy_ne])]
@@ -3359,8 +3360,8 @@ public theorem lemma13_no_length_greater_than_three
           refine ⟨Subgroup.topEquiv z, ?_⟩
           exact congrArg (QuotientGroup.mk' (lowerCentralFactorKernel Q 0))
             (Subgroup.topEquiv.symm_apply_apply z)
-        letI : FaithfulSMul X Q := hXfaithful
-        letI : IsCyclic X := hXcyclic
+        let : FaithfulSMul X Q := hXfaithful
+        let : IsCyclic X := hXcyclic
         obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := X)
         let tau : MulAut Q := MulDistribMulAction.toMulAut X Q g
         obtain ⟨bracket, _bracketK, squareMap, _hbracketK_tmul,
@@ -3548,16 +3549,16 @@ public theorem lemma13_no_length_greater_than_three
             have : 1 < 2 ^ nC := by
               exact one_lt_pow₀ (by omega) hnC
             exact this)
-        letI : Nontrivial (LowerCentralFactor Q 1) := hfactor1_nontrivial
+        let : Nontrivial (LowerCentralFactor Q 1) := hfactor1_nontrivial
         have hLayerCard :
             ∀ (U : Subgroup (Q ⧸ frattini Q)),
               IsInvariant X (Q ⧸ frattini Q) U →
               QuotientIrreducible U → U ≠ ⊥ →
               Nat.card U = 2 ^ nC := by
           intro U hUinv hUirr hU_ne
-          letI : IsInvariant X (Q ⧸ frattini Q) U := hUinv
-          letI : Nontrivial U := (Subgroup.nontrivial_iff_ne_bot U).mpr hU_ne
-          letI : IsElementaryAbelian 2 U := by
+          let : IsInvariant X (Q ⧸ frattini Q) U := hUinv
+          let : Nontrivial U := (Subgroup.nontrivial_iff_ne_bot U).mpr hU_ne
+          let : IsElementaryAbelian 2 U := by
             refine
               { toIsMulCommutative := inferInstance
                 exponent_dvd_p :=
@@ -3734,7 +3735,7 @@ public theorem lemma13_no_length_greater_than_three
             hUVA_isCompl.codisjoint.eq_top]
           rfl
         have hAQ_card : Nat.card AQ = 2 ^ (2 * nC) := by
-          have hcard := hUVA_complement.card_mul
+          have hcard := hUVA_complement.card_mul_card
           have hUQA_card : Nat.card UQA = Nat.card UQ :=
             Nat.card_congr
               (Subgroup.subgroupOfEquivOfLe (H := UQ) (K := AQ)
@@ -3762,7 +3763,7 @@ public theorem lemma13_no_length_greater_than_three
           rfl
         have hquotient_card :
             Nat.card (Q ⧸ frattini Q) = 2 ^ (3 * nC) := by
-          have hcard := hAQW_complement.card_mul
+          have hcard := hAQW_complement.card_mul_card
           rw [hAQ_card, hWQ_card] at hcard
           calc
             Nat.card (Q ⧸ frattini Q) = 2 ^ (2 * nC) * 2 ^ nC :=
@@ -3780,7 +3781,7 @@ public theorem lemma13_no_length_greater_than_three
             (V : Type u) [AddCommGroup V] [Module (ZMod 2) V] [Finite V]
             (d : ℕ) (hcard : Nat.card V = 2 ^ d) :
             Module.finrank (ZMod 2) V = d := by
-          letI : Module.Finite (ZMod 2) V := Module.Finite.of_finite
+          let : Module.Finite (ZMod 2) V := Module.Finite.of_finite
           have h := Module.natCard_eq_pow_finrank
             (K := ZMod 2) (V := V)
           have hpow : 2 ^ Module.finrank (ZMod 2) V = 2 ^ d := by
@@ -3821,11 +3822,11 @@ public theorem lemma13_no_length_greater_than_three
       let PhiSq : Subgroup Q :=
         (squaresSubgroup PhiTop).map PhiTop.subtype
       have hPhiSq_normal : PhiSq.Normal := by
-        letI : PhiTop.Normal := hPhiNormal
+        let : PhiTop.Normal := hPhiNormal
         dsimp [PhiSq]
         infer_instance
       have hPhiSq_X : IsXInvariantSubgroup X PhiSq := by
-        letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+        let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
         have hforward : ∀ k : X, ∀ p : Q, p ∈ PhiSq → k • p ∈ PhiSq := by
           intro k p hp
           rcases hp with ⟨z, hz, rfl⟩
@@ -3899,7 +3900,7 @@ public theorem lemma13_no_length_greater_than_three
         · exact Or.inl hL_bot
         right
         apply le_antisymm hLC
-        letI : Nontrivial L :=
+        let : Nontrivial L :=
           (Subgroup.nontrivial_iff_ne_bot L).mpr hL_bot
         obtain ⟨lL, hlL_one⟩ := exists_ne (1 : L)
         have hl_one : (lL : Q) ≠ 1 := by
@@ -3950,12 +3951,12 @@ public theorem lemma13_no_length_greater_than_three
           · exact Or.inl (hL_eq_B.trans hPhi_eq_B.symm)
           · exact Or.inr hL_eq_A
         · have hB_sup_Phi_normal : (B ⊔ PhiTop).Normal := by
-            letI : B.Normal := hmiddle.2.2.1
-            letI : PhiTop.Normal := hPhiNormal
+            let : B.Normal := hmiddle.2.2.1
+            let : PhiTop.Normal := hPhiNormal
             infer_instance
           have hB_sup_Phi_X : IsXInvariantSubgroup X (B ⊔ PhiTop) := by
-            letI : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
-            letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+            let : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
+            let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
             exact (isInvariant_sup B PhiTop).invariant
           have hB_sup_Phi_eq_A : B ⊔ PhiTop = A := by
             rcases hmiddle.2.2.2.2.2 (B ⊔ PhiTop)
@@ -3965,12 +3966,12 @@ public theorem lemma13_no_length_greater_than_three
                 (le_sup_right.trans (le_of_eq hsup_eq_B)))
             · exact hsup_eq_A
           have hB_inf_Phi_normal : (B ⊓ PhiTop).Normal := by
-            letI : B.Normal := hmiddle.2.2.1
-            letI : PhiTop.Normal := hPhiNormal
+            let : B.Normal := hmiddle.2.2.1
+            let : PhiTop.Normal := hPhiNormal
             infer_instance
           have hB_inf_Phi_X : IsXInvariantSubgroup X (B ⊓ PhiTop) := by
-            letI : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
-            letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+            let : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
+            let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
             exact (isInvariant_inf B PhiTop).invariant
           have hB_inf_Phi_eq_C : B ⊓ PhiTop = C := by
             rcases hlower.2.2.2.2.2 (B ⊓ PhiTop)
@@ -3987,12 +3988,12 @@ public theorem lemma13_no_length_greater_than_three
                 exact sup_le hB_le_Phi le_rfl
               exact False.elim (hA_ne_Phi hPhi_eq_A.symm)
           have hB_inf_L_normal : (B ⊓ L).Normal := by
-            letI : B.Normal := hmiddle.2.2.1
-            letI : L.Normal := hLnormal
+            let : B.Normal := hmiddle.2.2.1
+            let : L.Normal := hLnormal
             infer_instance
           have hB_inf_L_X : IsXInvariantSubgroup X (B ⊓ L) := by
-            letI : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
-            letI : IsInvariant X Q L := ⟨hLX⟩
+            let : IsInvariant X Q B := ⟨hmiddle.2.2.2.2.1⟩
+            let : IsInvariant X Q L := ⟨hLX⟩
             exact (isInvariant_inf B L).invariant
           rcases hlower.2.2.2.2.2 (B ⊓ L)
               hB_inf_L_normal hB_inf_L_X
@@ -4004,7 +4005,7 @@ public theorem lemma13_no_length_greater_than_three
               have hxSup : x ∈ B ⊔ PhiTop := by
                 rw [hB_sup_Phi_eq_A]
                 exact hLA hxL
-              letI : B.Normal := hmiddle.2.2.1
+              let : B.Normal := hmiddle.2.2.1
               rcases (Subgroup.mem_sup_of_normal_left
                   (s := B) (t := PhiTop)).mp hxSup with
                 ⟨b, hbB, p, hpPhi, hbp⟩
@@ -4055,12 +4056,12 @@ public theorem lemma13_no_length_greater_than_three
             Ylift ≤ L → L ≤ ⊤ → L = Ylift ∨ L = ⊤ := by
         intro L hLnormal hLX hYL _hLtop
         have hA_inf_L_normal : (A ⊓ L).Normal := by
-          letI : A.Normal := hupper.2.2.1
-          letI : L.Normal := hLnormal
+          let : A.Normal := hupper.2.2.1
+          let : L.Normal := hLnormal
           infer_instance
         have hA_inf_L_X : IsXInvariantSubgroup X (A ⊓ L) := by
-          letI : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
-          letI : IsInvariant X Q L := ⟨hLX⟩
+          let : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
+          let : IsInvariant X Q L := ⟨hLX⟩
           exact (isInvariant_inf A L).invariant
         rcases hPhi_cover_A (A ⊓ L) hA_inf_L_normal hA_inf_L_X
             (le_inf hPhi_le_A (hPhi_le_Ylift.trans hYL)) inf_le_left with
@@ -4071,7 +4072,7 @@ public theorem lemma13_no_length_greater_than_three
             have hxSup : x ∈ A ⊔ Ylift := by
               rw [hA_sup_Ylift]
               trivial
-            letI : A.Normal := hupper.2.2.1
+            let : A.Normal := hupper.2.2.1
             rcases (Subgroup.mem_sup_of_normal_left
                 (s := A) (t := Ylift)).mp hxSup with
               ⟨a, haA, y, hyY, hay⟩
@@ -4104,7 +4105,7 @@ public theorem lemma13_no_length_greater_than_three
             hM_A | hM_top
           · exact (ne_of_gt hAM) hM_A
           · apply hQ.2.1
-            letI : IsMulCommutative M := hMcomm
+            let : IsMulCommutative M := hMcomm
             refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
             let mx : M := ⟨x, by rw [hM_top]; trivial⟩
             let my : M := ⟨y, by rw [hM_top]; trivial⟩
@@ -4125,7 +4126,7 @@ public theorem lemma13_no_length_greater_than_three
             hM_Y | hM_top
           · exact (ne_of_gt hYM) hM_Y
           · apply hQ.2.1
-            letI : IsMulCommutative M := hMcomm
+            let : IsMulCommutative M := hMcomm
             refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
             let mx : M := ⟨x, by rw [hM_top]; trivial⟩
             let my : M := ⟨y, by rw [hM_top]; trivial⟩
@@ -4138,7 +4139,7 @@ public theorem lemma13_no_length_greater_than_three
           hYlift_X hYexp hPhi_lt_Ylift hC_lt_Phi hbottom.1
           hPhiX hbottom.2.2.2.1
       have hC_le_center : C ≤ Subgroup.center Q := by
-        letI : C.Normal := hbottom.2.1
+        let : C.Normal := hbottom.2.1
         let D : Subgroup Q := ⁅C, (⊤ : Subgroup Q)⁆
         have hD_le_C : D ≤ C := by
           simpa [D] using
@@ -4155,8 +4156,8 @@ public theorem lemma13_no_length_greater_than_three
           have hconj := hnormal.conj_mem dTop hd qTop
           exact hconj
         have hD_X : IsXInvariantSubgroup X D := by
-          letI : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
-          letI : IsInvariant X Q (⊤ : Subgroup Q) := ⟨by
+          let : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
+          let : IsInvariant X Q (⊤ : Subgroup Q) := ⟨by
             intro x q
             simp⟩
           exact (isInvariant_commutator C (⊤ : Subgroup Q)).invariant
@@ -4181,7 +4182,7 @@ public theorem lemma13_no_length_greater_than_three
             | succ i ih =>
                 rw [Subgroup.lowerCentralSeries_succ, hC_eq_comm]
                 exact Subgroup.commutator_mono ih le_rfl
-          letI : Group.IsNilpotent Q :=
+          let : Group.IsNilpotent Q :=
             IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup hQ)
           have hnil : Group.IsNilpotent Q := inferInstance
           obtain ⟨i, hi⟩ :=
@@ -4190,9 +4191,9 @@ public theorem lemma13_no_length_greater_than_three
             rw [← hi]
             exact hC_le_series i
           exact hbottom.1.ne (bot_unique hC_bot).symm
-      letI : IsMulCommutative PhiTop := hPhiData.1
-      letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
-      letI : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
+      let : IsMulCommutative PhiTop := hPhiData.1
+      let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+      let : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
       let squareToC : PhiTop →* C :=
         { toFun := fun x => ⟨(x : Q) ^ 2, by
             rw [← hPhiSq_eq_C]
@@ -4265,9 +4266,9 @@ public theorem lemma13_no_length_greater_than_three
           QuotientGroup.quotientMulEquivOfEq_mk hsquareToC_ker.symm p
         rw [hm]
         exact QuotientGroup.kerLift_mk squareToC p
-      letI : IsInvariant X PhiTop (C.subgroupOf PhiTop) :=
+      let : IsInvariant X PhiTop (C.subgroupOf PhiTop) :=
         isInvariant_subgroupOf C PhiTop
-      letI : MulAction.QuotientAction X (C.subgroupOf PhiTop) :=
+      let : MulAction.QuotientAction X (C.subgroupOf PhiTop) :=
         quotientAction_of_isInvariant (A := X) (G := PhiTop)
           (C.subgroupOf PhiTop) inferInstance
       have hsquareQuotientEquiv_equivariant
@@ -4288,7 +4289,7 @@ public theorem lemma13_no_length_greater_than_three
         intro L hPhiL
         let LQ : Subgroup (Q ⧸ frattini Q) :=
           L.map (QuotientGroup.mk' (frattini Q))
-        letI : LQ.Normal := by infer_instance
+        let : LQ.Normal := by infer_instance
         have hcomap :
             LQ.comap (QuotientGroup.mk' (frattini Q)) = L := by
           dsimp [LQ]
@@ -4304,12 +4305,12 @@ public theorem lemma13_no_length_greater_than_three
             PhiTop ≤ L → L ≤ Ylift → L = PhiTop ∨ L = Ylift := by
         intro L hLnormal hLX hPhiL hLY
         have hA_sup_L_normal : (A ⊔ L).Normal := by
-          letI : A.Normal := hupper.2.2.1
-          letI : L.Normal := hLnormal
+          let : A.Normal := hupper.2.2.1
+          let : L.Normal := hLnormal
           infer_instance
         have hA_sup_L_X : IsXInvariantSubgroup X (A ⊔ L) := by
-          letI : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
-          letI : IsInvariant X Q L := ⟨hLX⟩
+          let : IsInvariant X Q A := ⟨hupper.2.2.2.2.1⟩
+          let : IsInvariant X Q L := ⟨hLX⟩
           exact (isInvariant_sup A L).invariant
         rcases hupper.2.2.2.2.2 (A ⊔ L) hA_sup_L_normal hA_sup_L_X
             le_sup_left le_top with hsup_eq_A | hsup_eq_top
@@ -4324,7 +4325,7 @@ public theorem lemma13_no_length_greater_than_three
           have hySup : y ∈ A ⊔ L := by
             rw [hsup_eq_top]
             trivial
-          letI : A.Normal := hupper.2.2.1
+          let : A.Normal := hupper.2.2.1
           rcases (Subgroup.mem_sup_of_normal_left
               (s := A) (t := L)).mp hySup with
             ⟨a, haA, l, hlL, hal⟩
@@ -4341,9 +4342,9 @@ public theorem lemma13_no_length_greater_than_three
             exact ⟨haA, haY⟩
           rw [← hal]
           exact L.mul_mem (hPhiL haPhi) hlL
-      letI : IsInvariant X Q PhiTop := ⟨hPhiX⟩
-      letI : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
-      letI : IsInvariant X Q Ylift := ⟨hYlift_X⟩
+      let : IsInvariant X Q PhiTop := ⟨hPhiX⟩
+      let : IsInvariant X Q C := ⟨hbottom.2.2.2.1⟩
+      let : IsInvariant X Q Ylift := ⟨hYlift_X⟩
       have hAChain : Lemma13ThreeChainData (X := X)
           (PhiTop.subgroupOf A) (C.subgroupOf A) :=
         lemma13_three_chain_data_of_ambient_chain
@@ -4561,8 +4562,8 @@ public theorem lemma13_no_length_greater_than_three
         have hcommutator_eq_Phi : commutator Q = PhiTop := by
           rcases hC_cover_Phi (commutator Q) hcommutator_X
               hC_le_commutator hcommutator_le_Phi with hcomm_C | hcomm_Phi
-          · letI : A.Normal := hupper.2.2.1
-            letI : C.Normal := hbottom.2.1
+          · let : A.Normal := hupper.2.2.1
+            let : C.Normal := hbottom.2.1
             have hPhi_le_C : PhiTop ≤ C := by
               rw [hPhiTop_eq]
               exact lemma13_frattini_le_of_sup_and_squares A Ylift C
@@ -4584,7 +4585,7 @@ public theorem lemma13_no_length_greater_than_three
             _ = C := hcommYlift_eq_C
         have hPhi_comm_top_le_C : ⁅PhiTop, (⊤ : Subgroup Q)⁆ ≤ C := by
           rw [← hA_sup_Ylift]
-          letI : C.Normal := hbottom.2.1
+          let : C.Normal := hbottom.2.1
           exact lemma13_commutator_sup_right_le
             hPhi_comm_A_le_C hPhi_comm_Ylift_le_C
         have hL2_le_C : (⊤ : Subgroup Q).lowerCentralSeries 2 ≤ C := by
@@ -5229,7 +5230,7 @@ public theorem lemma13_no_length_greater_than_three
             have hker := (QuotientGroup.eq_one_iff _).mp hmk_one
             rw [hkernel1_eq_C] at hker
             exact hker
-          letI : C.Normal := hbottom.2.1
+          let : C.Normal := hbottom.2.1
           have hA_sup_comm_le_C : ⁅A, A ⊔ Ylift⁆ ≤ C :=
             lemma13_commutator_sup_right_le
               (by rw [hcommA_eq_C]) hcommAY_le_C
@@ -5526,7 +5527,7 @@ public theorem lemma13_no_length_greater_than_three
             · have hBtop' : B = (⊤ : Subgroup Q) := by
                 simpa [htop] using hBtop
               apply hQ.2.1
-              letI : IsMulCommutative B := hBcomm
+              let : IsMulCommutative B := hBcomm
               refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
               let bx : B := ⟨x, by rw [hBtop']; trivial⟩
               let by' : B := ⟨y, by rw [hBtop']; trivial⟩
@@ -5536,7 +5537,7 @@ public theorem lemma13_no_length_greater_than_three
               hQ hXcyclic hXfaithful hXtrans hH_normal hHcomm hH_X hHmax).1
           rcases lemma1_abelian_invariant_homocyclic
               hQ hXtrans hHcomm hH_X with ⟨e, r, ⟨phi⟩, hpower⟩
-          letI : Nontrivial H :=
+          let : Nontrivial H :=
             (Subgroup.nontrivial_iff_ne_bot H).mpr hH_ne_bot
           have hr : 0 < r := by
             apply Nat.pos_of_ne_zero
@@ -5632,8 +5633,8 @@ public theorem lemma13_no_length_greater_than_three
             apply (ne_of_gt hB4_lt)
             rw [hs3', hs4', hs]
           omega
-        letI : Finite Q := finite_of_isSuzukiTwoGroup hQ
-        letI : MulDistribMulAction X H :=
+        let : Finite Q := finite_of_isSuzukiTwoGroup hQ
+        let : MulDistribMulAction X H :=
           { smul := fun x a => ⟨x • (a : Q), (hH_X x (a : Q)).mp a.property⟩
             one_smul := fun a => Subtype.ext (one_smul X (a : Q))
             mul_smul := fun x y a => Subtype.ext (mul_smul x y (a : Q))
@@ -5846,12 +5847,12 @@ public theorem lemma13_no_length_greater_than_three
               apply Subgroup.mem_bot.mpr
               simpa [smul_smul] using h
           let α := {C : Subgroup H // C.Normal ∧ IsXInvariantSubgroup X C}
-          letI : BoundedOrder α := {
+          let : BoundedOrder α := {
             top := ⟨⊤, inferInstance, htop_X⟩
             le_top := fun C => show C.1 ≤ (⊤ : Subgroup H) from le_top
             bot := ⟨⊥, inferInstance, hbot_X⟩
             bot_le := fun C => show (⊥ : Subgroup H) ≤ C.1 from bot_le }
-          letI : Finite α := by
+          let : Finite α := by
             let f : α → Set H := fun C => (C.1 : Set H)
             have hf : Function.Injective f := by
               intro C D hCD

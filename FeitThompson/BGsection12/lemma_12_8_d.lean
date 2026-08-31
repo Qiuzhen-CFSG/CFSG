@@ -48,7 +48,7 @@ public theorem section12_pSubgroup_le_piCoreIn_of_mem_of_nilpotent_pre
     (hnilH : Group.IsNilpotent H) :
     A ≤ piCoreIn π H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let A₀ : Subgroup H := A.subgroupOf H
   have hA₀p : IsPGroup p.val A₀ :=
     hAp.of_equiv
@@ -155,7 +155,7 @@ public theorem lemma_12_8_d
     simpa [h6.2.1] using h6.1 hx
   have hAp : IsPGroup p.val A := by
     have hElem := (section12_rankTwo_elementary hA).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hSylow_comm_all : ∀ P : Sylow p.val G, IsMulCommutative (P : Subgroup G) :=
     section12_all_sylow_comm_of_one_pre (G := G) (p := p) (S := S) hScomm
@@ -286,10 +286,10 @@ public theorem lemma_12_8_d
         Subgroup.normalizer ((S : Subgroup G) : Set G) := by
     let SE2 : Sylow p.val E₂ := S.subtype hS_le_E2
     have hSE2_norm : (SE2 : Subgroup E₂).Normal := by
-      letI : IsMulCommutative E₂ := hE2comm
+      let : IsMulCommutative E₂ := hE2comm
       infer_instance
-    haveI : Fact p.val.Prime := ⟨p.2⟩
-    haveI : (SE2 : Subgroup E₂).Characteristic :=
+    have : Fact p.val.Prime := ⟨p.2⟩
+    have : (SE2 : Subgroup E₂).Characteristic :=
       Sylow.characteristic_of_normal SE2 hSE2_norm
     have hnorm :
         Subgroup.normalizer (E₂ : Set G) ≤
@@ -298,9 +298,9 @@ public theorem lemma_12_8_d
         (H := E₂) (K := (SE2 : Subgroup E₂))
     have hmap :
         ((SE2 : Subgroup E₂).map E₂.subtype : Subgroup G) = (S : Subgroup G) := by
-      simpa [SE2, Sylow.subtype] using
-        (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := E₂)
-          hS_le_E2)
+      change ((S : Subgroup G).subgroupOf E₂).map E₂.subtype = (S : Subgroup G)
+      exact Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := E₂)
+        hS_le_E2
     simpa [hmap] using hnorm
   have hE2HallE : section12HallSubgroupIn π₂ E₂ E := by
     simpa [π₂] using section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
@@ -341,7 +341,7 @@ public theorem lemma_12_8_d
     have hCoreSubπ : IsPiSubgroup (G := K) π₂ (CoreK.subgroupOf K) := by
       rw [hCoreSub_eq]
       exact piCore_isPiSubgroup π₂
-    haveI : (CoreK.subgroupOf K).Normal := by
+    have : (CoreK.subgroupOf K).Normal := by
       rw [hCoreSub_eq]
       infer_instance
     have hCore_le_E2 : CoreK ≤ E₂ := by
@@ -356,7 +356,7 @@ public theorem lemma_12_8_d
       have hxE2Sub : xK ∈ E₂.subgroupOf K := hCoreSub_le_E2Sub hxCoreSub
       simpa [xK, Subgroup.mem_subgroupOf] using hxE2Sub
     have hE2_le_Core : E₂ ≤ CoreK := by
-      haveI : (E₂.subgroupOf K).Normal := hE2normK
+      have : (E₂.subgroupOf K).Normal := hE2normK
       have hE2Subπ : IsPiSubgroup (G := K) π₂ (E₂.subgroupOf K) :=
         section12_isPiSubgroup_of_hall hE2HallK
       have hE2Sub_le_coreLocal : E₂.subgroupOf K ≤ piCore π₂ K :=
@@ -419,7 +419,7 @@ public theorem lemma_12_8_d
     have hCoreSubπ : IsPiSubgroup (G := F) π₂₃ (CoreF.subgroupOf F) := by
       rw [hCoreSub_eq]
       exact piCore_isPiSubgroup π₂₃
-    haveI : (CoreF.subgroupOf F).Normal := by
+    have : (CoreF.subgroupOf F).Normal := by
       rw [hCoreSub_eq]
       infer_instance
     have hCore_le_K : CoreF ≤ K := by
@@ -434,7 +434,7 @@ public theorem lemma_12_8_d
       have hxKSub : xF ∈ K.subgroupOf F := hCoreSub_le_KSub hxCoreSub
       simpa [xF, Subgroup.mem_subgroupOf] using hxKSub
     have hK_le_Core : K ≤ CoreF := by
-      haveI : (K.subgroupOf F).Normal := hKnormF
+      have : (K.subgroupOf F).Normal := hKnormF
       have hKSubπ : IsPiSubgroup (G := F) π₂₃ (K.subgroupOf F) :=
         section12_isPiSubgroup_of_hall hKHallF
       have hKSub_le_coreLocal : K.subgroupOf F ≤ piCore π₂₃ F :=

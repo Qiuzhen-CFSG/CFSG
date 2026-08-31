@@ -317,7 +317,7 @@ private theorem comap_fittingSubgroupOf_map_le_fittingSubgroupOf
 /-- Restricted converse direction in Proposition 1.2: a normal subgroup lies in its Fitting subgroup
 whenever it centralizes every chief factor whose upper term lies in that Fitting subgroup. -/
 public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactors_of_card :
-    ∀ n : ℕ, ∀ {G : Type u} [Group G] [Finite G] [IsSolvable G],
+    ∀ n : ℕ, ∀ {G : Type u} [Group G] [Finite G] [Group.IsSolvable G],
       ∀ (H : Subgroup G), H.Normal ->
         Nat.card H = n ->
           (∀ cf : ChiefFactor G, cf.U ≤ fittingSubgroupOf (G := G) H ->
@@ -326,7 +326,7 @@ public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactor
   intro n
   refine Nat.strongRecOn
     (motive := fun n =>
-      ∀ {G : Type u} [Group G] [Finite G] [IsSolvable G],
+      ∀ {G : Type u} [Group G] [Finite G] [Group.IsSolvable G],
         ∀ (H : Subgroup G), H.Normal ->
           Nat.card H = n ->
             (∀ cf : ChiefFactor G, cf.U ≤ fittingSubgroupOf (G := G) H ->
@@ -425,7 +425,7 @@ public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactor
     have hHbar_le_fitbar :
         Hbar ≤ fittingSubgroupOf (G := G ⧸ M) Hbar := by
       have h :
-          ∀ {K : Type u} [Group K] [Finite K] [IsSolvable K],
+          ∀ {K : Type u} [Group K] [Finite K] [Group.IsSolvable K],
             ∀ (L : Subgroup K), L.Normal ->
               Nat.card L = Nat.card Hbar ->
                 (∀ cf : ChiefFactor K, cf.U ≤ fittingSubgroupOf (G := K) L ->
@@ -443,7 +443,7 @@ public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactor
 
 /-- Restricted converse direction in Proposition 1.2. -/
 public theorem normal_le_fittingSubgroupOf_of_centralizes_restricted_chiefFactors
-    {G : Type u} [Group G] [Finite G] [IsSolvable G]
+    {G : Type u} [Group G] [Finite G] [Group.IsSolvable G]
     (H : Subgroup G) (hH : H.Normal)
     (hchief :
       ∀ cf : ChiefFactor G, cf.U ≤ fittingSubgroupOf (G := G) H →
@@ -467,7 +467,7 @@ Then
 \[ F(G') = \bigcap_{U/V \in D} C_{G'}(U/V) = \bigcap_{U/V \in D'} C_{G'}(U/V). \]
 -/
 set_option maxHeartbeats 4000000 in
-public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     (H : Subgroup G) (hH : H.Normal) :
     fittingSubgroupOf (G := G) H =
         sInf (centralizerOfChiefFactor (G := G) H '' (Set.univ : Set (ChiefFactor G))) ∧
@@ -479,7 +479,7 @@ public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolva
   have hF_le_H : F ≤ H := fittingSubgroupOf_le (G := G) H
   have hF_norm : F.Normal := fittingSubgroupOf_normal (G := G) H hH
   have hF_nil : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent (G := G) H
-  haveI : IsSolvable G := hsolv
+  letI : Group.IsSolvable G := hsolv
 
   -- FIRST EQUALITY
   have hF_le_all : F ≤ sInf (centralizerOfChiefFactor (G := G) H '' (Set.univ : Set (ChiefFactor G))) := by
@@ -560,7 +560,7 @@ public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolva
             by_cases hK_bot : K = ⊥
             · exact Or.inl hK_bot
             · exact Or.inr (hM_min K hK_norm hK_le hK_bot) }
-      haveI : IsSolvable (↥M) := by infer_instance
+      letI : Group.IsSolvable (↥M) := by infer_instance
       have hM_abelian : IsMulCommutative (↥M) := minimalNormal_solvable_isMulCommutative M
       have hM_nil : Group.IsNilpotent M := by
         haveI : IsMulCommutative (↥M) := hM_abelian
@@ -690,8 +690,8 @@ public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolva
         haveI : Uq.Normal := h_chief0.normal_H.map π (QuotientGroup.mk'_surjective (f 1))
         haveI : IsMinimalNormal Uq :=
           chiefFactor_quotient_isMinimalNormal (G := G) ⟨f 1, K, h_chief0⟩
-        haveI : IsSolvable (G ⧸ f 1) := by infer_instance
-        haveI : IsSolvable (↥Uq) := by infer_instance
+        letI : Group.IsSolvable (G ⧸ f 1) := by infer_instance
+        letI : Group.IsSolvable (↥Uq) := by infer_instance
         exact minimalNormal_solvable_isMulCommutative (G := G ⧸ f 1) Uq
       have h_comm1 : ⁅K, K⁆ ≤ f 1 := by
         have h_self_centralizing : Uq ≤ Subgroup.centralizer (Uq : Set (G ⧸ f 1)) :=
@@ -865,7 +865,7 @@ public theorem proposition_1_2 {G : Type*} [Group G] [Finite G] (hsolv : IsSolva
     simpa [F] using h_goal
 
 public theorem isNilpotent_of_le_centralizerOfChiefFactor
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     (H : Subgroup G) (hH : H.Normal)
     (hcent : ∀ cf : ChiefFactor G, H ≤ centralizerOfChiefFactor (G := G) H cf) :
     Group.IsNilpotent H := by

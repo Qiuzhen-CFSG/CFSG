@@ -29,11 +29,11 @@ public theorem section10_sylow_normalizer_ne_top_of_ne_bot
     {p : Nat.Primes} (P : Sylow p.val G) (hPne : (P : Subgroup G) ≠ ⊥) :
     Subgroup.normalizer (((P : Subgroup G) : Set G)) ≠ ⊤ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro hnorm_top
   have hPnormal : (P : Subgroup G).Normal :=
     Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal (P : Subgroup G) hPnormal with hPbot | hPtop
   · exact hPne hPbot
   · exact section10_global_pSubgroup_proper_of_min_ce (G := G)
@@ -128,7 +128,7 @@ public theorem section10_sylow_subgroupOf_normalizer_isHall
       ((P : Subgroup G).subgroupOf
         (Subgroup.normalizer (((P : Subgroup G) : Set G)))) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
   let Psub : Subgroup N := (P : Subgroup G).subgroupOf N
   have hP_le_N : (P : Subgroup G) ≤ N := by
@@ -155,7 +155,7 @@ private theorem section10_sylow_le_ambientDerived_normalizer
     (P : Subgroup G) ≤
       ambientDerivedSubgroup (Subgroup.normalizer (((P : Subgroup G) : Set G))) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
   have hNproper : N ≠ ⊤ := by
     simpa [N] using section10_sylow_normalizer_ne_top_of_ne_bot (G := G) P hPne
@@ -169,8 +169,8 @@ private theorem section10_sylow_le_ambientDerived_normalizer
   have hP_le_M : (P : Subgroup G) ≤ M := hP_le_N.trans hNM
   let PM : Sylow p.val M := P.subtype hP_le_M
   have hPMmap : (PM : Subgroup M).map M.subtype = (P : Subgroup G) := by
-    simpa [PM, Sylow.subtype] using
-      (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (P : Subgroup G)) (K := M) hP_le_M)
+    change ((P : Subgroup G).subgroupOf M).map M.subtype = (P : Subgroup G)
+    exact Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (P : Subgroup G)) (K := M) hP_le_M
   have hp_dvd_P : p.val ∣ Nat.card (P : Subgroup G) := by
     rcases P.isPGroup'.card_eq_or_dvd with hcard | hdiv
     · exact False.elim (hPne ((Subgroup.card_eq_one (H := (P : Subgroup G))).mp hcard))
@@ -180,7 +180,7 @@ private theorem section10_sylow_le_ambientDerived_normalizer
   have hpσ : p ∈ section10SigmaPrimes M := by
     refine ⟨hpM, PM, ?_⟩
     simpa [section10AmbientSylowSubgroup, hPMmap, N] using hNM
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hplM : HasPLengthOne p.val M :=
     theorem_10_6 (G := G) (H := M) (p := p) hM.1
@@ -225,7 +225,7 @@ private theorem section10_complement_commutator_eq_sylow
         ambientDerivedSubgroup (Subgroup.normalizer (((P : Subgroup G) : Set G)))) :
     ⁅(P : Subgroup G), V⁆ = (P : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G) : Set G))
   rcases hVcomp with ⟨hVleN, hcomp'⟩
   let Psub : Subgroup N := (P : Subgroup G).subgroupOf N
@@ -233,10 +233,10 @@ private theorem section10_complement_commutator_eq_sylow
   have hP_le_N : (P : Subgroup G) ≤ N := by
     simpa [N] using (Subgroup.le_normalizer : (P : Subgroup G) ≤
       Subgroup.normalizer (((P : Subgroup G) : Set G)))
-  haveI : Psub.Normal := by
+  have : Psub.Normal := by
     simpa [Psub, N] using
       (Subgroup.normal_in_normalizer (H := (P : Subgroup G)))
-  haveI : IsSolvable N :=
+  have : Group.IsSolvable N :=
     IsMinCE.proper_subgroups_solvable N (lt_top_iff_ne_top.2 (by simpa [N] using hNproper))
   have hHall : IsHallSubgroup ({p} : Set Nat.Primes) Psub := by
     simpa [Psub, N] using section10_sylow_subgroupOf_normalizer_isHall (G := G) P

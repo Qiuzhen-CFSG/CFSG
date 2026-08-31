@@ -53,7 +53,7 @@ public def comapMk' (N : Subgroup G) [N.Normal] (cf : ChiefFactor (G ⧸ N)) : C
               have hπn : π n = 1 := (QuotientGroup.eq_one_iff (N := N) n).2 hn
               simp [π, Subgroup.mem_comap, hπn]
             exact hVK this
-          haveI : (K.map π).Normal := hKnorm.map π hπ_surj
+          let _ : (K.map π).Normal := hKnorm.map π hπ_surj
           have hV_le_map : cf.V ≤ K.map π := by
             have : (cf.V.comap π).map π ≤ K.map π := Subgroup.map_mono hVK
             simpa [Subgroup.map_comap_eq_self_of_surjective (f := π) hπ_surj cf.V] using this
@@ -173,12 +173,12 @@ theorem baer_le_centralizer_of_minimalNormal (M : Subgroup G) (hM : M.Normal) (h
   exact (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := baer (G := G)) (H₂ := M)).1 hcomm'
 
 /-- In a finite solvable nontrivial group, there exists a nontrivial abelian normal subgroup. -/
-theorem exists_nontrivial_abelian_normal (hsolv : IsSolvable G) (hnt : Nontrivial G) :
+theorem exists_nontrivial_abelian_normal (hsolv : Group.IsSolvable G) (hnt : Nontrivial G) :
     ∃ (N : Subgroup G), N.Normal ∧ IsMulCommutative N ∧ N ≠ ⊥ := by
   classical
-  letI : IsSolvable G := hsolv
+  let _ : Group.IsSolvable G := hsolv
   let p : Nat → Prop := fun n => derivedSeries G n = ⊥
-  have hp : ∃ n, p n := (inferInstance : IsSolvable G).solvable
+  have hp : ∃ n, p n := (inferInstance : Group.IsSolvable G).solvable
   let i := Nat.find hp
   have hi : i ≠ 0 := by
     have : ¬ p 0 := by
@@ -193,7 +193,7 @@ theorem exists_nontrivial_abelian_normal (hsolv : IsSolvable G) (hnt : Nontrivia
 variable [Finite G]
 
 /-- In a finite solvable nontrivial group, there exists a minimal nontrivial normal subgroup. -/
-public theorem exists_minimal_normal (hsolv : IsSolvable G) (hnt : Nontrivial G) :
+public theorem exists_minimal_normal (hsolv : Group.IsSolvable G) (hnt : Nontrivial G) :
     ∃ M : Subgroup G,
       M.Normal ∧ M ≠ ⊥ ∧
         (∀ K : Subgroup G, K.Normal → K ≤ M → K ≠ ⊥ → K = M) := by
@@ -221,18 +221,18 @@ public theorem card_quotient_lt_of_ne_bot (N : Subgroup G) (hN_ne_bot : N ≠ �
 Proved by induction on the cardinality of `G`. -/
 public theorem baer_nilpotent_of_card :
     ∀ n : ℕ, ∀ {G : Type u} [Group G] [Finite G],
-      Nat.card G = n → IsSolvable G → Group.IsNilpotent (baer (G := G)) := by
+      Nat.card G = n → Group.IsSolvable G → Group.IsNilpotent (baer (G := G)) := by
   intro n
   refine Nat.strongRecOn
     (motive := fun n =>
-      ∀ {G : Type u} [Group G] [Finite G], Nat.card G = n → IsSolvable G →
+      ∀ {G : Type u} [Group G] [Finite G], Nat.card G = n → Group.IsSolvable G →
         Group.IsNilpotent (baer (G := G)))
     n (fun n ih => by
       intro G _instG _instF hcard hsolvG
       classical
       by_cases htriv : Nat.card G = 1
       · have hle : Nat.card G ≤ 1 := by simp [htriv]
-        haveI : Subsingleton G := (Finite.card_le_one_iff_subsingleton (α := G)).1 hle
+        have _ : Subsingleton G := (Finite.card_le_one_iff_subsingleton (α := G)).1 hle
         infer_instance
       · have hpos : Nat.card G ≠ 0 := (Nat.card_pos (α := G)).ne'
         have hone : 1 < Nat.card G :=
@@ -242,17 +242,17 @@ public theorem baer_nilpotent_of_card :
         have hquot_lt' : Nat.card (G ⧸ M) < Nat.card G :=
           card_quotient_lt_of_ne_bot (G := G) M hMne
         have hquot_lt : Nat.card (G ⧸ M) < n := by simpa [hcard] using hquot_lt'
-        haveI : IsSolvable G := hsolvG
-        have hsolvQ : IsSolvable (G ⧸ M) := by infer_instance
+        let _ : Group.IsSolvable G := hsolvG
+        have hsolvQ : Group.IsSolvable (G ⧸ M) := by infer_instance
         have hnilQ : Group.IsNilpotent (baer (G := G ⧸ M)) := by
           -- Keep the implicit `∀ {H}` binders explicit to avoid elaboration guessing.
           have h :
               ∀ {H : Type u} [Group H] [Finite H],
-                Nat.card H = Nat.card (G ⧸ M) → IsSolvable H → Group.IsNilpotent (baer (G := H)) :=
+                Nat.card H = Nat.card (G ⧸ M) → Group.IsSolvable H → Group.IsNilpotent (baer (G := H)) :=
             ih (Nat.card (G ⧸ M)) hquot_lt
           exact @h (G ⧸ M) _ _ rfl hsolvQ
         let π : G →* G ⧸ M := QuotientGroup.mk' M
-        haveI : M.Normal := hMnorm
+        have _ : M.Normal := hMnorm
         have hπ_mem : ∀ x : ↥(baer (G := G)), π x.1 ∈ baer (G := G ⧸ M) := by
           intro x
           have hxmap : π x.1 ∈ (baer (G := G)).map π := Subgroup.mem_map_of_mem π x.property
@@ -278,7 +278,7 @@ public theorem baer_nilpotent_of_card :
         exact Subgroup.isNilpotent_of_ker_le_center f hker)
 
 /-- The Baer intersection of a finite solvable group is nilpotent. -/
-public theorem baer_nilpotent (hsolv : IsSolvable G) :
+public theorem baer_nilpotent (hsolv : Group.IsSolvable G) :
     Group.IsNilpotent (baer (G := G)) :=
   baer_nilpotent_of_card (Nat.card G) (G := G) rfl hsolv
 
@@ -312,7 +312,7 @@ theorem isNilpotent_map_of_isNilpotent {H : Type*} [Group H] (f : G →* H) (N :
   classical
   let φ := subgroupToMap (G := G) f N
   have hsurj : Function.Surjective φ := subgroupToMap_surjective (G := G) f N
-  haveI : Group.IsNilpotent (↥N) := hN
+  let _ : Group.IsNilpotent (↥N) := hN
   exact Group.nilpotent_of_surjective (G := (↥N)) (G' := (↥(N.map f))) φ hsurj
 
 /-- For a chief factor `cf = (V ◁ U)`, the image `U/V` in the quotient `G/V` is a minimal nontrivial normal subgroup. -/
@@ -323,7 +323,7 @@ public theorem chiefFactor_quotient_minimal (cf : ChiefFactor G) :
     Uq.Normal ∧ Uq ≠ ⊥ ∧
       (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  let _ : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hUq_ne_bot : Uq ≠ ⊥ := by
@@ -334,7 +334,7 @@ public theorem chiefFactor_quotient_minimal (cf : ChiefFactor G) :
       simpa [π, QuotientGroup.ker_mk'] using hle
     have : cf.U = cf.V := le_antisymm hle' cf.isChief.lt.le
     exact (ne_of_lt cf.isChief.lt) this.symm
-  haveI : Uq.Normal := (cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V))
+  let _ : Uq.Normal := (cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V))
   refine ⟨inferInstance, hUq_ne_bot, ?_⟩
   intro K hKnorm hKUq hK_ne_bot
   -- Pull back `K` to `G` and apply maximality of the chief factor.
@@ -386,7 +386,7 @@ public theorem chiefFactor_quotient_isMinimalNormal (cf : ChiefFactor G) :
     letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     IsMinimalNormal Uq := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  let _ : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin := chiefFactor_quotient_minimal (G := G) cf
@@ -394,7 +394,7 @@ public theorem chiefFactor_quotient_isMinimalNormal (cf : ChiefFactor G) :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using hmin
-  haveI : Uq.Normal := hUq_min.1
+  let _ : Uq.Normal := hUq_min.1
   refine ⟨?_⟩
   intro K hKnorm hKUq
   by_cases hKbot : K = ⊥
@@ -404,7 +404,7 @@ public theorem chiefFactor_quotient_isMinimalNormal (cf : ChiefFactor G) :
 variable [Finite G]
 
 /-- In a finite solvable group, every chief factor quotient is elementary abelian. -/
-public theorem chiefFactor_quotient_exists_isElementaryAbelian (hsolv : IsSolvable G)
+public theorem chiefFactor_quotient_exists_isElementaryAbelian (hsolv : Group.IsSolvable G)
     (cf : ChiefFactor G) :
     letI : cf.V.Normal := cf.isChief.normal_K
     let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
@@ -412,7 +412,7 @@ public theorem chiefFactor_quotient_exists_isElementaryAbelian (hsolv : IsSolvab
     letI : Uq.Normal := cf.isChief.normal_H.map π (QuotientGroup.mk'_surjective cf.V)
     ∃ p : ℕ, p.Prime ∧ IsElementaryAbelian p (↥Uq) := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  let _ : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hmin := chiefFactor_quotient_minimal (G := G) cf
@@ -420,21 +420,21 @@ public theorem chiefFactor_quotient_exists_isElementaryAbelian (hsolv : IsSolvab
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using hmin
-  haveI : Uq.Normal := hUq_min.1
-  haveI : IsMinimalNormal Uq := by
+  let _ : Uq.Normal := hUq_min.1
+  have _ : IsMinimalNormal Uq := by
     simpa [π, Uq] using chiefFactor_quotient_isMinimalNormal (G := G) cf
-  haveI : IsSolvable (G ⧸ cf.V) := by
-    haveI : IsSolvable G := hsolv
+  let _ : Group.IsSolvable (G ⧸ cf.V) := by
+    let _ : Group.IsSolvable G := hsolv
     infer_instance
-  haveI : IsSolvable (↥Uq) := by infer_instance
+  let _ : Group.IsSolvable (↥Uq) := by infer_instance
   exact minimalNormal_solvable_exists_isElementaryAbelian (G := G ⧸ cf.V) Uq
 
 /-- Any normal nilpotent subgroup of a finite solvable group centralizes every chief factor. -/
-public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : IsSolvable G)
+public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : Group.IsSolvable G)
     (N : Subgroup G) (hN : N.Normal) (hN_nil : Group.IsNilpotent N) (cf : ChiefFactor G) :
     N ≤ centralizerOfChiefFactor (G := G) ⊤ cf := by
   classical
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  let _ : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   -- `Uq` is minimal normal in the quotient.
@@ -443,14 +443,14 @@ public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : IsSolva
       (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using hmin
   -- Work in the quotient group `G ⧸ cf.V`.
-  haveI : IsSolvable G := hsolv
-  haveI : IsSolvable (G ⧸ cf.V) := by infer_instance
-  haveI : IsSolvable (↥Uq) := by infer_instance
+  let _ : Group.IsSolvable G := hsolv
+  let _ : Group.IsSolvable (G ⧸ cf.V) := by infer_instance
+  let _ : Group.IsSolvable (↥Uq) := by infer_instance
   -- Apply Lemma 1.1 in the quotient to get centrality in the quotient Fitting subgroup.
   have hUq_centerIn :
       Uq ≤ centerIn (G := (G ⧸ cf.V)) (fittingSubgroup (G ⧸ cf.V)) := by
-    haveI : Uq.Normal := hUq_min.1
-    haveI : IsMinimalNormal Uq := {
+    let _ : Uq.Normal := hUq_min.1
+    let _ : IsMinimalNormal Uq := {
         minimal := fun (K) [hKn : K.Normal] hle => by
           have := hUq_min.2.2 K hKn hle
           grind }
@@ -468,8 +468,8 @@ public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : IsSolva
   have hcomm_Fq_Uq : ⁅Fq, Uq⁆ = ⊥ :=
     (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := Fq) (H₂ := Uq)).2 hFq_le_centralizer
   -- The image of `N` in the quotient lies in `Fq`.
-  haveI : N.Normal := hN
-  haveI : (N.map π).Normal := hN.map π (QuotientGroup.mk'_surjective cf.V)
+  let _ : N.Normal := hN
+  let _ : (N.map π).Normal := hN.map π (QuotientGroup.mk'_surjective cf.V)
   have hNmap_nil : Group.IsNilpotent (↥(N.map π)) :=
     isNilpotent_map_of_isNilpotent (G := G) (H := (G ⧸ cf.V)) π N hN_nil
   have hNmap_le_Fq : N.map π ≤ Fq := by

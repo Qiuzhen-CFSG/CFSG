@@ -85,7 +85,7 @@ private theorem claim5_classify_dickson_of_cyclic_index_two_center_index
   dsimp at hmodel
   rcases hmodel with
     ⟨hqFact, e, he1, hsquare, hnonsquare, hcenterCard⟩
-  letI : Fact q.Prime := hqFact
+  let : Fact q.Prime := hqFact
   have hFcard : Nat.card F = q ^ (2 * n) := by
     calc
       Nat.card F = Nat.card (GaloisField q (2 * n)) := Nat.card_congr e.toEquiv
@@ -209,7 +209,7 @@ private theorem claim5_huppert_units_classification
 private theorem quaternionGroup_two_not_commutative :
     ¬ IsMulCommutative (QuaternionGroup 2) := by
   intro h
-  letI : IsMulCommutative (QuaternionGroup 2) := h
+  let : IsMulCommutative (QuaternionGroup 2) := h
   have hcomm := (IsMulCommutative.is_comm (M := QuaternionGroup 2)).comm
       (QuaternionGroup.a 1 : QuaternionGroup 2)
       (QuaternionGroup.xa 0 : QuaternionGroup 2)
@@ -221,7 +221,7 @@ private theorem quaternionGroup_not_commutative_of_two_le
     (k : ℕ) (hk : 2 ≤ k) :
     ¬ IsMulCommutative (QuaternionGroup k) := by
   intro h
-  letI : IsMulCommutative (QuaternionGroup k) := h
+  let : IsMulCommutative (QuaternionGroup k) := h
   have hcomm := (IsMulCommutative.is_comm (M := QuaternionGroup k)).comm
       (QuaternionGroup.a 1 : QuaternionGroup k)
       (QuaternionGroup.xa 0 : QuaternionGroup k)
@@ -264,7 +264,7 @@ private theorem quaternion_sylow_exponent_four_data
         rw [Nat.card_eq_fintype_card, QuaternionGroup.card]
   have hPnoncomm : ¬ IsMulCommutative P := by
     intro hPcomm
-    letI : IsMulCommutative P := hPcomm
+    let : IsMulCommutative P := hPcomm
     apply quaternionGroup_two_not_commutative
     refine ⟨⟨fun x y => ?_⟩⟩
     rw [← e.symm.injective.eq_iff, map_mul, map_mul]
@@ -288,8 +288,8 @@ private theorem quaternion_sylow_exponent_four_data
     rw [hXcard, hPcard] at hmul
     omega
   have hcenterP : Nat.card (Subgroup.center P) = 2 := by
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    haveI : Nontrivial P :=
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    have : Nontrivial P :=
       Finite.one_lt_card_iff_nontrivial.mp (by rw [hPcard]; norm_num)
     have hcenter_ne_bot : Subgroup.center P ≠ ⊥ :=
       ne_of_gt hPp.bot_lt_center
@@ -319,7 +319,7 @@ private theorem quaternion_sylow_exponent_four_data
           Subgroup.card_eq_card_quotient_mul_card_subgroup (Subgroup.center P)
         rw [hPcard, hcenter] at hmul
         omega
-      letI : IsCyclic (P ⧸ Subgroup.center P) :=
+      let : IsCyclic (P ⧸ Subgroup.center P) :=
         isCyclic_of_prime_card hquotcard
       let hPcomm : CommGroup P :=
         commGroupOfCyclicCenterQuotient
@@ -338,11 +338,11 @@ private theorem odd_normal_complement_isCyclic
     (hNcop : Nat.Coprime 2 (Nat.card N))
     (hnil : Group.IsNilpotent A) :
     IsCyclic N := by
-  letI : Group.IsNilpotent A := hnil
+  let : Group.IsNilpotent A := hnil
   have hNZ : IsZGroup N := by
     constructor
     intro q hq R
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     by_cases hq2 : q = 2
     · subst q
       have hRcard : Nat.card R = 1 := by
@@ -351,7 +351,7 @@ private theorem odd_normal_complement_isCyclic
         · exfalso
           exact (Nat.prime_two.coprime_iff_not_dvd.mp hNcop)
             (hdvd.trans R.card_subgroup_dvd_card)
-      haveI : Subsingleton R := (Nat.card_eq_one_iff_unique.mp hRcard).1
+      have : Subsingleton R := (Nat.card_eq_one_iff_unique.mp hRcard).1
       exact isCyclic_of_subsingleton
     · let RA : Subgroup A := (R : Subgroup N).map N.subtype
       have hRAp : IsPGroup q RA :=
@@ -359,12 +359,12 @@ private theorem odd_normal_complement_isCyclic
       obtain ⟨Q, hRA_le_Q⟩ := hRAp.exists_le_sylow
       have hQcyclic : IsCyclic Q := hodd q hq2 Q
       have hRAcyclic : IsCyclic RA := Subgroup.isCyclic_of_le hRA_le_Q
-      letI : IsCyclic RA := hRAcyclic
+      let : IsCyclic RA := hRAcyclic
       let eR : R ≃* RA :=
         Subgroup.equivMapOfInjective (R : Subgroup N) N.subtype N.subtype_injective
       exact isCyclic_of_surjective eR.symm eR.symm.surjective
-  letI : IsZGroup N := hNZ
-  letI : Group.IsNilpotent N := Subgroup.isNilpotent N
+  let : IsZGroup N := hNZ
+  let : Group.IsNilpotent N := Subgroup.isNilpotent N
   infer_instance
 
 private theorem nilpotent_two_sylow_complement
@@ -372,10 +372,10 @@ private theorem nilpotent_two_sylow_complement
     (hnil : Group.IsNilpotent A) (P : Sylow 2 A) :
     ∃ N : Subgroup A, ∃ _hNnormal : N.Normal,
       Nat.Coprime 2 (Nat.card N) ∧ (P : Subgroup A).IsComplement' N := by
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rcases External.hkt_hasNormalPComplement_of_nilpotent (p := 2) hnil with
     ⟨N, hNnormal, hNcop, hquotp⟩
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   obtain ⟨n, hquotcard⟩ := hquotp.exists_card_eq
   have hNindex : N.index = 2 ^ n := by
     rw [N.index_eq_card]
@@ -395,7 +395,7 @@ private theorem nilpotent_two_sylow_complement
   let Hsyl : Sylow 2 A := hHp.toSylow hHnotdvd
   have hPnormal : (P : Subgroup A).Normal :=
     Group.IsNilpotent.sylow_normal hnil 2 P
-  letI : Unique (Sylow 2 A) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow 2 A) := Sylow.unique_of_normal P hPnormal
   have hHP : H = (P : Subgroup A) := by
     exact congrArg (fun S : Sylow 2 A => (S : Subgroup A))
       (Subsingleton.elim Hsyl P)
@@ -415,7 +415,7 @@ private theorem claim5_nilpotent_core
     (∃ C : Subgroup A, IsCyclic C ∧ C.index = 2) ∧
       Nat.card A = 4 * Nat.card (Subgroup.center A) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let P : Sylow 2 A := default
   have hPnormal : (P : Subgroup A).Normal :=
     Group.IsNilpotent.sylow_normal hnil 2 P
@@ -424,24 +424,24 @@ private theorem claim5_nilpotent_core
     have hAZ : IsZGroup A := by
       constructor
       intro q hq Q
-      letI : Fact q.Prime := ⟨hq⟩
+      let : Fact q.Prime := ⟨hq⟩
       by_cases hq2 : q = 2
       · subst q
-        letI : Unique (Sylow 2 A) := Sylow.unique_of_normal P hPnormal
+        let : Unique (Sylow 2 A) := Sylow.unique_of_normal P hPnormal
         have hQP : Q = P := Subsingleton.elim Q P
         subst Q
         exact hPcyclic
       · exact hodd q hq2 Q
-    letI : Group.IsNilpotent A := hnil
-    letI : IsZGroup A := hAZ
-    haveI : IsCyclic A := inferInstance
+    let : Group.IsNilpotent A := hnil
+    let : IsZGroup A := hAZ
+    have : IsCyclic A := inferInstance
     exact hnoncomm (inferInstance : IsMulCommutative A)
   rcases (htwo P).resolve_left hPnotcyclic with hPclass
   rcases quaternion_sylow_exponent_four_data hPclass (hexponent P hPnotcyclic) with
     ⟨X, hXcyclic, hXindex, hPcard, hcenterP⟩
   rcases nilpotent_two_sylow_complement hnil P with
     ⟨N, hNnormal, hNcop, hPN⟩
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hNcyclic : IsCyclic N :=
     odd_normal_complement_isCyclic hodd N hNcop hnil
   have hPnormal' : (P : Subgroup A).Normal := hPnormal
@@ -485,7 +485,7 @@ private theorem claim5_nilpotent_core
     rw [hXcard]
     exact hNcop.pow_left 2
   have hCcyclic : IsCyclic C := by
-    letI : IsCyclic (X × N) := hXNcyclic
+    let : IsCyclic (X × N) := hXNcyclic
     exact isCyclic_of_surjective fXN.rangeRestrict fXN.rangeRestrict_surjective
   have hCcard : Nat.card C = 4 * Nat.card N := by
     calc
@@ -501,7 +501,7 @@ private theorem claim5_nilpotent_core
         have hXcard : Nat.card X = 4 := by omega
         rw [hXcard]
   have hAcard : Nat.card A = 8 * Nat.card N := by
-    rw [← hPN.card_mul, hPcard]
+    rw [← hPN.card_mul_card, hPcard]
   have hCindex : C.index = 2 := by
     have hmul := C.card_mul_index
     rw [hCcard, hAcard] at hmul
@@ -511,7 +511,7 @@ private theorem claim5_nilpotent_core
     apply le_antisymm le_top
     intro n _hn
     rw [Subgroup.mem_center_iff]
-    letI : IsCyclic N := hNcyclic
+    let : IsCyclic N := hNcyclic
     exact fun g => mul_comm' g n
   have hcenterProd :
       Subgroup.center (P × N) =
@@ -556,11 +556,11 @@ private theorem claim5_noncyclic_sylow_two_exponent
     (R : Sylow 2 Fˣ) (hRnotcyclic : ¬ IsCyclic R) :
     ∀ x : R, x ^ 4 = 1 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rcases hS_sylow with ⟨P2, hS⟩
   have hP2normal : (P2 : Subgroup Q).Normal :=
     Group.IsNilpotent.sylow_normal hQnil 2 P2
-  letI : Unique (Sylow 2 Q) := Sylow.unique_of_normal P2 hP2normal
+  let : Unique (Sylow 2 Q) := Sylow.unique_of_normal P2 hP2normal
   let starToQ : nearFieldStar Q P →* Q :=
     Subgroup.inclusion (show nearFieldStar Q P ≤ Q from inf_le_left)
   let rToQ : R →* Q :=
@@ -587,7 +587,7 @@ private theorem claim5_noncyclic_sylow_two_exponent
     rcases (htwo R).resolve_left hRnotcyclic with ⟨k, hk, _hkP, ⟨e⟩⟩
     intro hRcomm
     apply quaternionGroup_not_commutative_of_two_le k hk
-    letI : IsMulCommutative R := hRcomm
+    let : IsMulCommutative R := hRcomm
     refine ⟨⟨fun a b => ?_⟩⟩
     apply e.symm.injective
     rw [map_mul, map_mul]
@@ -595,7 +595,7 @@ private theorem claim5_noncyclic_sylow_two_exponent
   have hSnotcomm : ¬ IsMulCommutative S := by
     intro hScomm
     apply hRnoncomm
-    letI : IsMulCommutative S := hScomm
+    let : IsMulCommutative S := hScomm
     refine ⟨⟨fun x y => ?_⟩⟩
     apply hrToQinj
     rw [map_mul, map_mul]
@@ -641,22 +641,22 @@ private theorem claim5_units_structure_core
   have hUnitsNoncomm : ¬ IsMulCommutative Fˣ := by
     intro hUnitsComm
     apply hnotcomm
-    letI : IsMulCommutative Fˣ := hUnitsComm
+    let : IsMulCommutative Fˣ := hUnitsComm
     refine ⟨⟨fun a b => ?_⟩⟩
     apply unitEquiv.injective
     rw [map_mul, map_mul]
     exact (IsMulCommutative.is_comm (M := Fˣ)).comm _ _
   have hClass := claim5_huppert_units_classification (F := F)
   have hUnitsNilpotent : Group.IsNilpotent Fˣ := by
-    letI : Group.IsNilpotent Q := hQnil
+    let : Group.IsNilpotent Q := hQnil
     let starInQ : Subgroup Q :=
       (nearFieldStar Q P).subgroupOf Q
     have hStarNilpotent : Group.IsNilpotent (nearFieldStar Q P) := by
-      letI : Group.IsNilpotent starInQ := Subgroup.isNilpotent starInQ
+      let : Group.IsNilpotent starInQ := Subgroup.isNilpotent starInQ
       exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe
           (show nearFieldStar Q P ≤ Q from inf_le_left))
-    letI : Group.IsNilpotent (nearFieldStar Q P) := hStarNilpotent
+    let : Group.IsNilpotent (nearFieldStar Q P) := hStarNilpotent
     exact Group.nilpotent_of_mulEquiv unitEquiv
   obtain ⟨⟨A, hAcyclic, hAindex⟩, hcenterCard⟩ :=
     claim5_nilpotent_core hUnitsNilpotent hClass.1 hClass.2 hUnitsNoncomm
@@ -732,7 +732,7 @@ public theorem claim_5
   classical
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let OmegaP : Type _ := {w : Ω // w ∈ fixedPointsOfSubgroup G Ω P}
-  letI : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
+  let : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
   let HP : Subgroup C := H.comap C.subtype
   let DP : Subgroup C := D.comap C.subtype
   let QP : Subgroup C := Q.comap C.subtype
@@ -742,10 +742,10 @@ public theorem claim_5
   rcases h2b with
     ⟨_hNcore, hnormal, _quotientAction, _hsmul, _hAbar,
       F, hF, hFfinite, hFnontrivial, unitEquiv, hPO, _hcharacteristic⟩
-  letI : core.Normal := hnormal
-  letI : PFAppendixII.RightNearField F := hF
-  letI : Finite F := hFfinite
-  letI : Nontrivial F := hFnontrivial
+  let : core.Normal := hnormal
+  let : PFAppendixII.RightNearField F := hF
+  let : Finite F := hFfinite
+  let : Nontrivial F := hFnontrivial
   have hQnil : Group.IsNilpotent Q :=
     PFchapter1section2.proposition_1_b H D Q K V W Q0 S Q1 t
       hch.section3.section2

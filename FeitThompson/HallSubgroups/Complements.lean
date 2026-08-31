@@ -97,7 +97,7 @@ lemma diff_id_smul
     diff (MonoidHom.id H) (a • S) (a • T) =
       a • diff (MonoidHom.id H) S T := by
   classical
-  letI := H.fintypeQuotientOfFiniteIndex
+  let _ := H.fintypeQuotientOfFiniteIndex
   -- Abbreviate the chosen representatives of cosets coming from the transversals.
   let α := S.2.leftQuotientEquiv
   let β := T.2.leftQuotientEquiv
@@ -233,11 +233,13 @@ variable [IsMulCommutative H] [Subgroup.FiniteIndex H]
         refine Quotient.inductionOn' q (fun T => ?_)
         change smulQD (1 : A) (Quotient.mk'' T) = Quotient.mk'' T
         simp [smulQD]
+        rfl
       mul_smul := by
         intro a b q
         refine Quotient.inductionOn' q (fun T => ?_)
         change smulQD (a * b) (Quotient.mk'' T) = smulQD a (smulQD b (Quotient.mk'' T))
-        simp [smulQD, mul_smul] }
+        simp [smulQD, mul_smul]
+        rfl }
 
 noncomputable local instance (priority := 100) instMulActionQuotientDiffA :
     MulAction A H.QuotientDiff :=
@@ -378,7 +380,7 @@ public theorem exists_invariant_complement'
     ∃ K : Subgroup G, IsComplement' H K ∧ IsInvariant A G K := by
   classical
   -- Make the relevant actions explicit to avoid instance ambiguity.
-  letI : MulAction.QuotientAction A H := quotientAction_of_isInvariant (A := A) H hH
+  let _ := quotientAction_of_isInvariant (A := A) H hH
   -- Work with a fixed basepoint in the Schur–Zassenhaus torsor `H.QuotientDiff`.
   let α : H.QuotientDiff := default
 

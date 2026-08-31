@@ -394,129 +394,6 @@ private theorem theorem_9_9_MF_normal_HC_sec9
     (show MF ≤ MF ⊔ C from le_sup_left)).2 hHC_le_norm_MF
 
 
-private theorem le_normalizer_sup_of_le_normalizer_sec9
-    {G : Type u} [Group G] (A B N : Subgroup G)
-    (hNA : N ≤ Subgroup.normalizer (A : Set G))
-    (hNB : N ≤ Subgroup.normalizer (B : Set G)) :
-    N ≤ Subgroup.normalizer ((A ⊔ B : Subgroup G) : Set G) := by
-  intro n hn
-  rw [Subgroup.mem_normalizer_iff]
-  intro x
-  constructor
-  · intro hx
-    have hsup_closure :
-        A ⊔ B = Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-      rw [Subgroup.closure_union, Subgroup.closure_eq, Subgroup.closure_eq]
-    have hxcl : x ∈ Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-      simpa [hsup_closure] using hx
-    refine Subgroup.closure_induction (k := ((A : Set G) ∪ (B : Set G)))
-      (p := fun y _hy => n * y * n⁻¹ ∈ (A ⊔ B : Subgroup G)) ?_ ?_ ?_ ?_
-      hxcl
-    · intro y hy
-      rcases hy with hyA | hyB
-      · exact (le_sup_left : A ≤ A ⊔ B)
-          ((Subgroup.mem_normalizer_iff.mp (hNA hn) y).mp hyA)
-      · exact (le_sup_right : B ≤ A ⊔ B)
-          ((Subgroup.mem_normalizer_iff.mp (hNB hn) y).mp hyB)
-    · simp
-    · intro y z _hy _hz hyP hzP
-      simpa [mul_assoc] using (A ⊔ B).mul_mem hyP hzP
-    · intro y _hy hyP
-      simpa [mul_assoc] using (A ⊔ B).inv_mem hyP
-  · intro hx
-    have hninv : n⁻¹ ∈ N := N.inv_mem hn
-    have hforward_inv :
-        ∀ y : G, y ∈ A ⊔ B → n⁻¹ * y * (n⁻¹)⁻¹ ∈ (A ⊔ B : Subgroup G) := by
-      intro y hy
-      have hsup_closure :
-          A ⊔ B = Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-        rw [Subgroup.closure_union, Subgroup.closure_eq, Subgroup.closure_eq]
-      have hycl : y ∈ Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-        simpa [hsup_closure] using hy
-      refine Subgroup.closure_induction (k := ((A : Set G) ∪ (B : Set G)))
-        (p := fun z _hz => n⁻¹ * z * (n⁻¹)⁻¹ ∈ (A ⊔ B : Subgroup G))
-        ?_ ?_ ?_ ?_ hycl
-      · intro z hz
-        rcases hz with hzA | hzB
-        · exact (le_sup_left : A ≤ A ⊔ B)
-            ((Subgroup.mem_normalizer_iff.mp (hNA hninv) z).mp hzA)
-        · exact (le_sup_right : B ≤ A ⊔ B)
-            ((Subgroup.mem_normalizer_iff.mp (hNB hninv) z).mp hzB)
-      · simp
-      · intro z w _hz _hw hzP hwP
-        simpa [mul_assoc] using (A ⊔ B).mul_mem hzP hwP
-      · intro z _hz hzP
-        simpa [mul_assoc] using (A ⊔ B).inv_mem hzP
-    have := hforward_inv (n * x * n⁻¹) hx
-    simpa [mul_assoc] using this
-
-private theorem conj_mem_sup_of_commutator_mem_left_sec9
-    {G : Type u} [Group G]
-    {A B : Subgroup G} {n b : G}
-    (hb : b ∈ B) (hcomm : ⁅b, n⁆ ∈ A) :
-    n * b * n⁻¹ ∈ A ⊔ B := by
-  have hcomm_inv : ⁅b, n⁆⁻¹ ∈ A := A.inv_mem hcomm
-  have heq : n * b * n⁻¹ = ⁅b, n⁆⁻¹ * b := by
-    simp [commutatorElement_def, mul_assoc]
-  rw [heq]
-  exact (A ⊔ B).mul_mem (Subgroup.mem_sup_left hcomm_inv) (Subgroup.mem_sup_right hb)
-
-private theorem le_normalizer_sup_of_le_normalizer_left_commutator_right_sec9
-    {G : Type u} [Group G]
-    (A B N : Subgroup G)
-    (hNA : N ≤ Subgroup.normalizer (A : Set G))
-    (hcomm : ∀ n : G, n ∈ N → ∀ b : G, b ∈ B → ⁅b, n⁆ ∈ A) :
-    N ≤ Subgroup.normalizer ((A ⊔ B : Subgroup G) : Set G) := by
-  intro n hn
-  rw [Subgroup.mem_normalizer_iff]
-  intro x
-  constructor
-  · intro hx
-    have hsup_closure :
-        A ⊔ B = Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-      rw [Subgroup.closure_union, Subgroup.closure_eq, Subgroup.closure_eq]
-    have hxcl : x ∈ Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-      simpa [hsup_closure] using hx
-    refine Subgroup.closure_induction (k := ((A : Set G) ∪ (B : Set G)))
-      (p := fun y _hy => n * y * n⁻¹ ∈ (A ⊔ B : Subgroup G)) ?_ ?_ ?_ ?_
-      hxcl
-    · intro y hy
-      rcases hy with hyA | hyB
-      · exact (le_sup_left : A ≤ A ⊔ B)
-          ((Subgroup.mem_normalizer_iff.mp (hNA hn) y).mp hyA)
-      · exact conj_mem_sup_of_commutator_mem_left_sec9 hyB (hcomm n hn y hyB)
-    · simp
-    · intro y z _hy _hz hyP hzP
-      simpa [mul_assoc] using (A ⊔ B).mul_mem hyP hzP
-    · intro y _hy hyP
-      simpa [mul_assoc] using (A ⊔ B).inv_mem hyP
-  · intro hx
-    have hninv : n⁻¹ ∈ N := N.inv_mem hn
-    have hforward_inv :
-        ∀ y : G, y ∈ A ⊔ B → n⁻¹ * y * (n⁻¹)⁻¹ ∈ (A ⊔ B : Subgroup G) := by
-      intro y hy
-      have hsup_closure :
-          A ⊔ B = Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-        rw [Subgroup.closure_union, Subgroup.closure_eq, Subgroup.closure_eq]
-      have hycl : y ∈ Subgroup.closure ((A : Set G) ∪ (B : Set G)) := by
-        simpa [hsup_closure] using hy
-      refine Subgroup.closure_induction (k := ((A : Set G) ∪ (B : Set G)))
-        (p := fun z _hz => n⁻¹ * z * (n⁻¹)⁻¹ ∈ (A ⊔ B : Subgroup G))
-        ?_ ?_ ?_ ?_ hycl
-      · intro z hz
-        rcases hz with hzA | hzB
-        · exact (le_sup_left : A ≤ A ⊔ B)
-            ((Subgroup.mem_normalizer_iff.mp (hNA hninv) z).mp hzA)
-        · exact conj_mem_sup_of_commutator_mem_left_sec9 hzB
-            (hcomm n⁻¹ hninv z hzB)
-      · simp
-      · intro z w _hz _hw hzP hwP
-        simpa [mul_assoc] using (A ⊔ B).mul_mem hzP hwP
-      · intro z _hz hzP
-        simpa [mul_assoc] using (A ⊔ B).inv_mem hzP
-    have := hforward_inv (n * x * n⁻¹) hx
-    simpa [mul_assoc] using this
-
 private theorem quotientCentralizerIn_le_normalizer_of_le_normalizers_pf99_sec9
     {G : Type u} [Group G]
     {M MF U H0 C N : Subgroup G}
@@ -565,107 +442,6 @@ private theorem quotientCentralizerIn_le_normalizer_of_le_normalizers_pf99_sec9
     have hninv : n⁻¹ ∈ N := N.inv_mem hn
     have hmem := hforward n⁻¹ hninv (n * x * n⁻¹) hx
     simpa [mul_assoc] using hmem
-
-private theorem normalizer_le_normalizer_commutator_self_sec9
-    {G : Type u} [Group G] (C U : Subgroup G)
-    (hU_norm_C : U ≤ Subgroup.normalizer (C : Set G)) :
-    U ≤ Subgroup.normalizer ((⁅C, C⁆ : Subgroup G) : Set G) := by
-  intro u hu
-  rw [Subgroup.mem_normalizer_iff]
-  intro x
-  constructor
-  · intro hx
-    rw [← Subgroup.map_subtype_commutator C] at hx ⊢
-    rcases Subgroup.mem_map.mp hx with ⟨y, hy, hyx⟩
-    let φ : C ≃* C :=
-      { toFun := fun c =>
-          ⟨u * (c : G) * u⁻¹,
-            ((Subgroup.mem_normalizer_iff.mp (hU_norm_C hu) (c : G)).mp c.property)⟩
-        invFun := fun c =>
-          ⟨u⁻¹ * (c : G) * (u⁻¹)⁻¹,
-            ((Subgroup.mem_normalizer_iff.mp
-              (hU_norm_C (U.inv_mem hu)) (c : G)).mp c.property)⟩
-        left_inv := by
-          intro c
-          apply Subtype.ext
-          simp [mul_assoc]
-        right_inv := by
-          intro c
-          apply Subtype.ext
-          simp [mul_assoc]
-        map_mul' := by
-          intro a b
-          apply Subtype.ext
-          simp [mul_assoc] }
-    refine ⟨φ y, ?_, ?_⟩
-    · have hycomap : y ∈ (commutator C).comap φ.toMonoidHom := by
-        exact (SetLike.ext_iff.mp
-          ((inferInstance : (commutator C).Characteristic).fixed φ) y).mpr hy
-      simpa [Subgroup.mem_comap] using hycomap
-    · simpa [φ, hyx]
-  · intro hx
-    rw [← Subgroup.map_subtype_commutator C] at hx ⊢
-    rcases Subgroup.mem_map.mp hx with ⟨y, hy, hyx⟩
-    let φ : C ≃* C :=
-      { toFun := fun c =>
-          ⟨u⁻¹ * (c : G) * (u⁻¹)⁻¹,
-            ((Subgroup.mem_normalizer_iff.mp
-              (hU_norm_C (U.inv_mem hu)) (c : G)).mp c.property)⟩
-        invFun := fun c =>
-          ⟨u * (c : G) * u⁻¹,
-            ((Subgroup.mem_normalizer_iff.mp (hU_norm_C hu) (c : G)).mp c.property)⟩
-        left_inv := by
-          intro c
-          apply Subtype.ext
-          simp [mul_assoc]
-        right_inv := by
-          intro c
-          apply Subtype.ext
-          simp [mul_assoc]
-        map_mul' := by
-          intro a b
-          apply Subtype.ext
-          simp [mul_assoc] }
-    refine ⟨φ y, ?_, ?_⟩
-    · have hycomap : y ∈ (commutator C).comap φ.toMonoidHom := by
-        exact (SetLike.ext_iff.mp
-          ((inferInstance : (commutator C).Characteristic).fixed φ) y).mpr hy
-      simpa [Subgroup.mem_comap] using hycomap
-    · calc
-        C.subtype (φ y) = u⁻¹ * C.subtype y * u := by simp [φ]
-        _ = u⁻¹ * (u * x * u⁻¹) * u := by rw [hyx]
-        _ = x := by group
-
-private theorem subgroupOf_subgroupOf_normal_of_le_normalizer_sec9
-    {G : Type u} [Group G] {M D H : Subgroup G}
-    (hHD : H ≤ D) (hDnormH : D ≤ Subgroup.normalizer (H : Set G)) :
-    ((H.subgroupOf M).subgroupOf (D.subgroupOf M)).Normal := by
-  have hHmDm : H.subgroupOf M ≤ D.subgroupOf M := by
-    intro x hx
-    rw [Subgroup.mem_subgroupOf] at hx ⊢
-    exact hHD hx
-  refine (Subgroup.normal_subgroupOf_iff_le_normalizer hHmDm).2 ?_
-  intro d hdD
-  rw [Subgroup.mem_normalizer_iff]
-  intro x
-  constructor
-  · intro hx
-    have hdG : ((d : M) : G) ∈ D := by
-      simpa [Subgroup.mem_subgroupOf] using hdD
-    have hxG : ((x : M) : G) ∈ H := by
-      simpa [Subgroup.mem_subgroupOf] using hx
-    have hconjG : ((d : M) : G) * ((x : M) : G) * ((d : M) : G)⁻¹ ∈ H :=
-      ((Subgroup.mem_normalizer_iff.mp (hDnormH hdG) ((x : M) : G)).mp hxG)
-    simpa [Subgroup.mem_subgroupOf] using hconjG
-  · intro hx
-    have hdG : ((d : M) : G) ∈ D := by
-      simpa [Subgroup.mem_subgroupOf] using hdD
-    have hconjG : ((d : M) : G) * ((x : M) : G) * ((d : M) : G)⁻¹ ∈ H := by
-      simpa [Subgroup.mem_subgroupOf] using hx
-    have hxG : ((x : M) : G) ∈ H :=
-      ((Subgroup.mem_normalizer_iff.mp (hDnormH hdG) ((x : M) : G)).mpr hconjG)
-    simpa [Subgroup.mem_subgroupOf] using hxG
-
 
 private theorem theorem_9_9_MF_normal_ambientDerived_subgroupOf_sec9
     {G : Type u} [Group G] [Finite G]
@@ -986,65 +762,6 @@ private theorem theorem_9_9_MF_U_internalSemidirect_ambientDerived_sec9
   exact internalSemidirectProduct_top_of_normal_isComplement'_sec9
     (isComplement'_of_disjoint_sup_eq_top_of_normal K W hdisj hsupTop)
 
-private theorem inertiaSubgroup_eq_of_semidirect_no_nontrivial_complement_fixed_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K W : Subgroup L) [K.Normal]
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) K W)
-    {X : Section1.ClassFunction K}
-    (hXclass : Section1.IsClassFunction X)
-    (hnoFix :
-      ∀ g : L, g ∈ W → g ≠ 1 →
-        Section1.conjugateOnNormal K X g ≠ X) :
-    Section1.inertiaSubgroup K X = K := by
-  have hKleI : K ≤ Section1.inertiaSubgroup K X := by
-    intro x hx
-    change Section1.conjugateOnNormal K X x = X
-    funext h
-    unfold Section1.conjugateOnNormal
-    change X ((⟨x, hx⟩ : K) * h * (⟨x, hx⟩ : K)⁻¹) = X h
-    exact hXclass ⟨x, hx⟩ h
-  apply le_antisymm
-  · intro g hgI
-    rcases hsemi.mul_surjective g (by trivial) with ⟨k, hkK, w, hwW, hkw⟩
-    have hkI : k ∈ Section1.inertiaSubgroup K X := hKleI hkK
-    have hwI : w ∈ Section1.inertiaSubgroup K X := by
-      have :
-          k⁻¹ * g ∈ Section1.inertiaSubgroup K X :=
-        (Section1.inertiaSubgroup K X).mul_mem
-          ((Section1.inertiaSubgroup K X).inv_mem hkI) hgI
-      simpa [hkw, mul_assoc] using this
-    have hw1 : w = 1 := by
-      by_contra hwne
-      have hfixw : Section1.conjugateOnNormal K X w = X := by
-        simpa [Section1.inertiaSubgroup] using hwI
-      exact hnoFix w hwW hwne hfixw
-    have hgk : g = k := by
-      calc
-        g = k * w := hkw
-        _ = k := by simp [hw1]
-    simpa [hgk] using hkK
-  · exact hKleI
-
-private theorem conjugateOnNormal_mul_left_of_mem_sec9
-    {G : Type u} [Group G] {H : Subgroup G} [H.Normal]
-    (θ : Section1.ClassFunction H)
-    (hθ : Section1.IsClassFunction θ)
-    {k w : G} (hk : k ∈ H) :
-    Section1.conjugateOnNormal H θ (k * w) =
-      Section1.conjugateOnNormal H θ w := by
-  ext h
-  let y : H := ⟨w * (h : G) * w⁻¹,
-    (inferInstance : H.Normal).conj_mem h h.property w⟩
-  let z : H := ⟨(k * w) * (h : G) * (k * w)⁻¹,
-    (inferInstance : H.Normal).conj_mem h h.property (k * w)⟩
-  have hz : z = ⟨k, hk⟩ * y * (⟨k, hk⟩ : H)⁻¹ := by
-    apply Subtype.ext
-    simp [z, y, mul_assoc]
-  have hclass := hθ ⟨k, hk⟩ y
-  change θ z = θ y
-  rw [hz]
-  exact hclass
-
 private theorem inertiaSubgroup_eq_of_semidirect_fixed_complement_mem_sec9
     {L : Type u} [Group L] [Finite L]
     (K B W : Subgroup L) [K.Normal]
@@ -1085,47 +802,6 @@ private theorem inertiaSubgroup_eq_of_semidirect_fixed_complement_mem_sec9
     exact K.mul_mem hbK hwK
   · exact hKleI
 
-private theorem inducedCF_isIrreducible_of_semidirect_no_nontrivial_complement_fixed_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K W : Subgroup L) [K.Normal]
-    (hsemi : Section2.IsInternalSemidirectProduct (⊤ : Subgroup L) K W)
-    {X : Section1.ClassFunction K}
-    (hXirr : Section1.IsIrreducibleCharacterOnGroup X)
-    (hnoFix :
-      ∀ g : L, g ∈ W → g ≠ 1 →
-        Section1.conjugateOnNormal K X g ≠ X) :
-    Section1.IsIrreducibleCharacterOnGroup (Section1.inducedCF K X) := by
-  rcases hXirr with ⟨n, ρ, hρirr, rfl⟩
-  have hXclass : Section1.IsClassFunction ρ.character := by
-    intro x g
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
-  have hIeq :
-      Section1.inertiaSubgroup K ρ.character = K :=
-    inertiaSubgroup_eq_of_semidirect_no_nontrivial_complement_fixed_sec9
-      K W hsemi hXclass hnoFix
-  exact
-    Section1.proposition_1_5_b_irreducible_rep_orbit_relIndex_canonical
-      K ρ hρirr (by simp [hIeq])
-
-private theorem inducedCF_isIrreducible_of_inertia_eq_self_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L) [K.Normal]
-    {X : Section1.ClassFunction K}
-    (hXirr : Section1.IsIrreducibleCharacterOnGroup X)
-    (hIeq : Section1.inertiaSubgroup K X = K) :
-    Section1.IsIrreducibleCharacterOnGroup (Section1.inducedCF K X) := by
-  rcases hXirr with ⟨n, ρ, hρirr, hXeq⟩
-  have hIeqρ :
-      Section1.inertiaSubgroup K ρ.character = K := by
-    simpa [hXeq] using hIeq
-  have hrel :
-      K.relIndex (Section1.inertiaSubgroup K ρ.character) = 1 := by
-    rw [hIeqρ]
-    simp [Subgroup.relIndex]
-  simpa [hXeq] using
-    Section1.proposition_1_5_b_irreducible_rep_orbit_relIndex_canonical
-      K ρ hρirr hrel
-
 private theorem subgroup_eq_top_of_le_of_prime_index_ne_sec9
     {L : Type u} [Group L] [Finite L]
     {H K : Subgroup L} {q : ℕ}
@@ -1163,22 +839,6 @@ private theorem inertiaSubgroup_eq_top_of_not_irreducible_induced_prime_index_se
   · exact False.elim
       (hIndRed (inducedCF_isIrreducible_of_inertia_eq_self_sec9 K hXirr hIeq))
   · exact subgroup_eq_top_of_le_of_prime_index_ne_sec9 hKleI hKindex hq hIeq
-
-private theorem classFunction_eq_of_irreducible_scalarProduct_ne_zero_sec9
-    {L : Type u} [Group L] [Finite L]
-    {φ ψ : Section1.ClassFunction L}
-    (hφ : Section1.IsIrreducibleCharacterOnGroup φ)
-    (hψ : Section1.IsIrreducibleCharacterOnGroup ψ)
-    (hinner : Section1.scalarProduct L φ ψ ≠ 0) :
-    φ = ψ := by
-  by_contra hne
-  rcases hφ with ⟨nφ, ρφ, hρφ, hφeq⟩
-  rcases hψ with ⟨nψ, ρψ, hρψ, hψeq⟩
-  have hzero :
-      Section1.scalarProduct L φ ψ = 0 :=
-    Section1.scalarProduct_irreducible_representationCharacter_eq_zero_of_ne
-      φ ψ ρφ ρψ hφeq hψeq hρφ hρψ hne
-  exact hinner hzero
 
 public theorem induced_eq_imp_conjugateOrbitConj_pf99_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1222,27 +882,6 @@ private theorem subgroupOfClassFunction_injective_pf99_sec9
   have hval := congrFun hθψ ((Subgroup.subgroupOfEquivOfLe hHT).symm h)
   simpa [Section1.subgroupOfClassFunction, Subgroup.subgroupOfEquivOfLe] using hval
 
-private theorem inducedCF_eq_of_irreducible_constituent_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L)
-    {χ : Section1.ClassFunction L} {ψ : Section1.ClassFunction K}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ)
-    (hIndψ : Section1.IsIrreducibleCharacterOnGroup (Section1.inducedCF K ψ))
-    (hinner :
-      Section1.scalarProduct K ψ (Section1.subgroupRestriction K χ) ≠ 0) :
-    χ = Section1.inducedCF K ψ := by
-  have hχclass : Section1.IsClassFunction χ := by
-    rcases hχ with ⟨_n, ρ, _hρirr, hχeq⟩
-    intro x g
-    rw [hχeq]
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g x
-  have hinnerInd :
-      Section1.scalarProduct L (Section1.inducedCF K ψ) χ ≠ 0 := by
-    rw [Section1.scalarProduct_inducedCF_left K ψ χ hχclass]
-    exact hinner
-  exact (classFunction_eq_of_irreducible_scalarProduct_ne_zero_sec9
-    hIndψ hχ hinnerInd).symm
-
 private theorem subgroupInKernel'_of_inducedCF_eq_sec9
     {L : Type u} [Group L] [Finite L]
     (K A : Subgroup L) [K.Normal] [A.Normal] (hAK : A ≤ K)
@@ -1259,97 +898,6 @@ private theorem subgroupInKernel'_of_inducedCF_eq_sec9
       Section1.subgroupInKernel' ρ.character (A.subgroupOf K) :=
     (Section1.proposition_1_6_a K A hAK ρ).2 hIndKer
   simpa [hψeq] using hρker
-
-private theorem subgroupInKernel'_inducedCF_of_subgroupInKernel'_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K A : Subgroup L) [K.Normal] [A.Normal] (hAK : A ≤ K)
-    {ψ : Section1.ClassFunction K}
-    (hψirr : Section1.IsIrreducibleCharacterOnGroup ψ)
-    (hψker : Section1.subgroupInKernel' ψ (A.subgroupOf K)) :
-    Section1.subgroupInKernel' (Section1.inducedCF K ψ) A := by
-  rcases hψirr with ⟨n, ρ, _hρirr, hψeq⟩
-  have hρker : Section1.subgroupInKernel' ρ.character (A.subgroupOf K) := by
-    simpa [hψeq] using hψker
-  have hindKer : Section1.subgroupInKernel' (Section1.inducedCF K ρ.character) A :=
-    (Section1.proposition_1_6_a K A hAK ρ).1 hρker
-  simpa [hψeq] using hindKer
-
-private theorem degree_eq_one_of_irreducible_subgroupInKernel_commutator_sec9
-    {G : Type u} [Group G] [Finite G]
-    {θ : Section1.ClassFunction G}
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ)
-    (hker : Section1.subgroupInKernel' θ (_root_.commutator G)) :
-    Section1.degree θ = (1 : ℂ) := by
-  classical
-  rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
-  have hθkerρ : Section1.subgroupInKernel' ρ.character (_root_.commutator G) := by
-    simpa [hθeq] using hker
-  have hkerRep : Section1.subgroupInRepresentationKernel ρ (_root_.commutator G) :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel ρ
-      (_root_.commutator G)).mp hθkerρ
-  let ρq : Representation ℂ (G ⧸ _root_.commutator G) (Fin n → ℂ) :=
-    Section1.quotientRepresentationOfKernelSubgroup ρ (_root_.commutator G) hkerRep
-  let q : G →* G ⧸ _root_.commutator G := QuotientGroup.mk' (_root_.commutator G)
-  have hcomp_eq : ρq.comp q = ρ := by
-    apply MonoidHom.ext
-    intro g
-    exact Section1.quotientRepresentationOfKernelSubgroup_mk ρ
-      (_root_.commutator G) hkerRep g
-  have hρqirr : Representation.IsIrreducible ρq := by
-    apply Section6.representation_isIrreducible_of_comp_surjective ρq q
-      (QuotientGroup.mk'_surjective (_root_.commutator G))
-    simpa [hcomp_eq] using hρirr
-  haveI : IsMulCommutative (G ⧸ _root_.commutator G) :=
-    Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
-      intro x hx
-      exact hx)
-  have hn : n = 1 := by
-    haveI : Representation.IsIrreducible ρq := hρqirr
-    simpa using
-      (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative (ρ := ρq))
-  rw [hθeq, Section1.degree_representation_character]
-  simp [hn]
-
-private noncomputable def pullbackClassFunctionOfSubgroupOfEquiv_sec9
-    {G : Type u} [Group G] {H T : Subgroup G} (hHT : H ≤ T)
-    (θ : Section1.ClassFunction (H.subgroupOf T)) :
-    Section1.ClassFunction H :=
-  fun h => θ ((Subgroup.subgroupOfEquivOfLe hHT).symm h)
-
-private theorem subgroupOfClassFunction_pullbackClassFunctionOfSubgroupOfEquiv_sec9
-    {G : Type u} [Group G] {H T : Subgroup G} (hHT : H ≤ T)
-    (θ : Section1.ClassFunction (H.subgroupOf T)) :
-    Section1.subgroupOfClassFunction
-        (T := T) (pullbackClassFunctionOfSubgroupOfEquiv_sec9 hHT θ) = θ := by
-  ext h
-  simp [pullbackClassFunctionOfSubgroupOfEquiv_sec9, Section1.subgroupOfClassFunction,
-    Subgroup.subgroupOfEquivOfLe]
-
-private theorem isIrreducible_pullbackClassFunctionOfSubgroupOfEquiv_sec9
-    {G : Type u} [Group G] {H T : Subgroup G} [Finite H] [Finite T]
-    (hHT : H ≤ T)
-    {θ : Section1.ClassFunction (H.subgroupOf T)}
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ) :
-    Section1.IsIrreducibleCharacterOnGroup
-      (pullbackClassFunctionOfSubgroupOfEquiv_sec9 hHT θ) := by
-  classical
-  rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
-  let e : H.subgroupOf T ≃* H := Subgroup.subgroupOfEquivOfLe hHT
-  let ρH : Representation ℂ H (Fin n → ℂ) := ρ.comp e.symm.toMonoidHom
-  refine ⟨n, ρH, ?_, ?_⟩
-  · exact Section6.representation_isIrreducible_comp_surjective
-      ρ e.symm.toMonoidHom e.symm.surjective hρirr
-  · ext h
-    simp [ρH, e, pullbackClassFunctionOfSubgroupOfEquiv_sec9, hθeq,
-      Representation.character, Subgroup.subgroupOfEquivOfLe]
-
-private theorem degree_pullbackClassFunctionOfSubgroupOfEquiv_sec9
-    {G : Type u} [Group G] {H T : Subgroup G} (hHT : H ≤ T)
-    (θ : Section1.ClassFunction (H.subgroupOf T)) :
-  Section1.degree (pullbackClassFunctionOfSubgroupOfEquiv_sec9 hHT θ) =
-      Section1.degree θ := by
-  change θ ((Subgroup.subgroupOfEquivOfLe hHT).symm 1) = θ 1
-  congr 1
 
 private theorem isIrreducible_subgroupOfClassFunction_pf99_sec9
     {G : Type u} [Group G] {H T : Subgroup G} [Finite H] [Finite T]
@@ -1408,239 +956,6 @@ private theorem subgroupInKernel'_of_subgroupOfClassFunction_pf99_sec9
   have ha := hθker aHT
   simpa [aT, aHT, Section1.subgroupOfClassFunction,
     Section1.degree_subgroupOfClassFunction] using ha
-
-private theorem subgroupInKernel'_constituent_of_subgroupRestriction_kernel_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K A : Subgroup L)
-    {χ : Section1.ClassFunction L} {θ : Section1.ClassFunction K}
-    (hχirr : Section1.IsIrreducibleCharacterOnGroup χ)
-    (hχker : Section1.subgroupInKernel' χ A)
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ)
-    (hinner :
-      Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0) :
-    Section1.subgroupInKernel' θ (A.subgroupOf K) := by
-  classical
-  rcases hχirr with ⟨nχ, ρχ, _hρχirr, hχeq⟩
-  rcases hθirr with ⟨nθ, ρθ, hρθirr, hθeq⟩
-  let ρχK : Representation ℂ K (Fin nχ → ℂ) := ρχ.comp K.subtype
-  have hres :
-      Section1.subgroupRestriction K χ = ρχK.character := by
-    ext k
-    simp [ρχK, Section1.subgroupRestriction, hχeq, Representation.character]
-  have hχkerChar : Section1.subgroupInKernel' ρχ.character A := by
-    simpa [hχeq] using hχker
-  have hχkerRep : Section1.subgroupInRepresentationKernel ρχ A :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      ρχ A).mp hχkerChar
-  have hχKkerRep :
-      Section1.subgroupInRepresentationKernel ρχK (A.subgroupOf K) := by
-    intro a
-    change ρχ ((a : K) : L) = 1
-    exact hχkerRep ⟨((a : K) : L), by
-      exact a.property⟩
-  have hinnerSwap :
-      Section1.scalarProduct K (Section1.subgroupRestriction K χ) θ ≠ 0 :=
-    (Section1.scalarProduct_ne_zero_swap θ
-      (Section1.subgroupRestriction K χ)).1 hinner
-  have hinnerRep :
-      Section1.scalarProduct K ρχK.character ρθ.character ≠ 0 := by
-    simpa [hθeq, hres] using hinnerSwap
-  have hfinrank_ne :
-      (Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) : ℂ) ≠ 0 := by
-    simpa [Section1.scalarProduct_representation_char_eq_finrank ρθ ρχK]
-      using hinnerRep
-  have hfinrank_nat_ne :
-      Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) ≠ 0 := by
-    intro hzero
-    apply hfinrank_ne
-    simp [hzero]
-  have hfinrank_pos :
-      0 < Module.finrank ℂ (Representation.IntertwiningMap ρθ ρχK) :=
-    Nat.pos_of_ne_zero hfinrank_nat_ne
-  rw [Module.finrank_pos_iff_exists_ne_zero] at hfinrank_pos
-  rcases hfinrank_pos with ⟨f, hf⟩
-  have hθkerRep :
-      Section1.subgroupInRepresentationKernel ρθ (A.subgroupOf K) := by
-    letI : Representation.IsIrreducible ρθ := hρθirr
-    have hf_inj : Function.Injective f := by
-      rcases (Representation.IsIrreducible.injective_or_eq_zero
-          (ρ := ρθ) (σ := ρχK) f) with hinj | hzero
-      · exact hinj
-      · exact (hf hzero).elim
-    intro a
-    apply LinearMap.ext
-    intro v
-    apply hf_inj
-    calc
-      f (ρθ (a : K) v) = ρχK (a : K) (f v) := by
-        exact Representation.IntertwiningMap.isIntertwining ρθ ρχK f (a : K) v
-      _ = f v := by
-        rw [hχKkerRep a]
-        simp
-  have hθkerChar : Section1.subgroupInKernel' ρθ.character (A.subgroupOf K) :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      ρθ (A.subgroupOf K)).mpr hθkerRep
-  simpa [hθeq] using hθkerChar
-
-private theorem constituent_not_subgroupInKernel'_of_subgroupRestriction_not_kernel_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K A : Subgroup L) [K.Normal] [A.Normal] (hAK : A ≤ K)
-    {χ : Section1.ClassFunction L} {θ : Section1.ClassFunction K}
-    (hχirr : Section1.IsIrreducibleCharacterOnGroup χ)
-    (hχnotker : ¬ Section1.subgroupInKernel' χ A)
-    (hθirr : Section1.IsIrreducibleCharacterOnGroup θ)
-    (hinner :
-      Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0) :
-    ¬ Section1.subgroupInKernel' θ (A.subgroupOf K) := by
-  classical
-  intro hθker
-  rcases hχirr with ⟨nχ, ρχ, hρχirr, hχeq⟩
-  rcases hθirr with ⟨nθ, ρθ, _hρθirr, hθeq⟩
-  let indρθ : Representation ℂ L (Representation.IndV K.subtype ρθ) :=
-    Representation.ind K.subtype ρθ
-  haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρθ) :=
-    Theory.Representation.finiteDimensional_ind K ρθ
-  have hIndCharKer :
-      Section1.subgroupInKernel' (Section1.inducedCF K ρθ.character) A :=
-    (Section1.proposition_1_6_a K A hAK ρθ).mp
-      (by simpa [hθeq] using hθker)
-  have hIndRepKer : Section1.subgroupInRepresentationKernel indρθ A :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      indρθ A).mp (by
-        simpa [indρθ, Section1.inducedCF_eq_representation_character K ρθ]
-          using hIndCharKer)
-  have hχclass : Section1.IsClassFunction χ := by
-    intro x g
-    rw [hχeq]
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρχ) g x
-  have hIndInner :
-      Section1.scalarProduct L (Section1.inducedCF K θ) χ ≠ 0 := by
-    rw [Section1.scalarProduct_inducedCF_left K θ χ hχclass]
-    exact hinner
-  have hIndInnerRep :
-      Section1.scalarProduct L indρθ.character ρχ.character ≠ 0 := by
-    simpa [indρθ, hχeq, hθeq,
-      Section1.inducedCF_eq_representation_character K ρθ] using hIndInner
-  have hfinrank_ne :
-      (Module.finrank ℂ (Representation.IntertwiningMap ρχ indρθ) : ℂ) ≠ 0 := by
-    simpa [Section1.scalarProduct_representation_char_eq_finrank ρχ indρθ]
-      using hIndInnerRep
-  have hfinrank_nat_ne :
-      Module.finrank ℂ (Representation.IntertwiningMap ρχ indρθ) ≠ 0 := by
-    intro hzero
-    apply hfinrank_ne
-    simp [hzero]
-  have hfinrank_pos :
-      0 < Module.finrank ℂ (Representation.IntertwiningMap ρχ indρθ) :=
-    Nat.pos_of_ne_zero hfinrank_nat_ne
-  rw [Module.finrank_pos_iff_exists_ne_zero] at hfinrank_pos
-  rcases hfinrank_pos with ⟨f, hf⟩
-  have hχRepKer : Section1.subgroupInRepresentationKernel ρχ A := by
-    letI : Representation.IsIrreducible ρχ := hρχirr
-    have hf_inj : Function.Injective f := by
-      rcases (Representation.IsIrreducible.injective_or_eq_zero
-          (ρ := ρχ) (σ := indρθ) f) with hinj | hzero
-      · exact hinj
-      · exact (hf hzero).elim
-    intro a
-    apply LinearMap.ext
-    intro v
-    apply hf_inj
-    calc
-      f (ρχ (a : L) v) = indρθ (a : L) (f v) := by
-        exact Representation.IntertwiningMap.isIntertwining ρχ indρθ f (a : L) v
-      _ = f v := by
-        rw [hIndRepKer a]
-        simp
-  have hχkerChar : Section1.subgroupInKernel' ρχ.character A :=
-    (Section1.subgroupInKernel'_character_iff_subgroupInRepresentationKernel
-      ρχ A).mpr hχRepKer
-  exact hχnotker (by simpa [hχeq] using hχkerChar)
-
-private theorem exists_irreducible_constituent_of_subgroupRestriction_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K : Subgroup L)
-    {χ : Section1.ClassFunction L}
-    (hχ : Section1.IsIrreducibleCharacterOnGroup χ) :
-    ∃ θ : Section1.ClassFunction K,
-      Section1.IsIrreducibleCharacterOnGroup θ ∧
-        Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0 := by
-  rcases hχ with ⟨n, ρ, hρirr, hρchar⟩
-  let ρK : Representation ℂ K (Fin n → ℂ) := ρ.comp K.subtype
-  letI : Nontrivial (Fin n → ℂ) :=
-    Subrepresentation.irreducible_module_nontrivial ρ
-  obtain ⟨φ, hφirr⟩ :=
-    Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
-  letI : Nontrivial φ.toSubmodule :=
-    Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
-  let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
-    refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
-    intro k
-    ext v
-    rfl
-  have hincl_ne : incl ≠ 0 := by
-    intro hzero
-    obtain ⟨v, hv⟩ := exists_ne (0 : φ.toSubmodule)
-    have hval : incl v = 0 := by
-      simpa using
-        congrArg (fun f : Theory.Representation.RepMap φ.toRepresentation ρK => f v)
-          hzero
-    have hsub : v = 0 := by
-      apply Subtype.ext
-      simpa [incl] using hval
-    exact hv hsub
-  have hinner_res :
-      Section1.scalarProduct K ρK.character φ.toRepresentation.character ≠ 0 := by
-    have hfinpos :
-        0 < Module.finrank ℂ
-          (Representation.IntertwiningMap φ.toRepresentation ρK) := by
-      rw [Module.finrank_pos_iff_exists_ne_zero]
-      exact ⟨incl, hincl_ne⟩
-    rw [Section1.scalarProduct_representation_char_eq_finrank]
-    exact_mod_cast (Nat.ne_of_gt hfinpos)
-  have hresChar :
-      Section1.subgroupRestriction K χ = ρK.character := by
-    ext k
-    simp [ρK, Section1.subgroupRestriction, hρchar, Representation.character]
-  refine ⟨φ.toRepresentation.character, ?_, ?_⟩
-  · refine ⟨Module.finrank ℂ φ.toSubmodule,
-      Section1.standardizeRepresentation φ.toRepresentation, ?_, ?_⟩
-    · exact Section1.standardizeRepresentation_irreducible φ.toRepresentation hφirr
-    · ext k
-      symm
-      exact Section1.standardizeRepresentation_character φ.toRepresentation k
-  · have hinner_res' :
-        Section1.scalarProduct K (Section1.subgroupRestriction K χ)
-          φ.toRepresentation.character ≠ 0 := by
-      simpa [hresChar] using hinner_res
-    exact
-      (Section1.scalarProduct_ne_zero_swap
-        φ.toRepresentation.character (Section1.subgroupRestriction K χ)).2
-        hinner_res'
-
-private theorem exists_restriction_constituent_kernelD_sec9
-    {L : Type u} [Group L] [Finite L]
-    (K A B : Subgroup L) [K.Normal] [B.Normal] (hBK : B ≤ K)
-    {χ : Section1.ClassFunction L}
-    (hχirr : Section1.IsIrreducibleCharacterOnGroup χ)
-    (hχnotB : ¬ Section1.subgroupInKernel' χ B)
-    (hχkerA : Section1.subgroupInKernel' χ A) :
-    ∃ θ : Section1.ClassFunction K,
-      Section1.IsIrreducibleCharacterOnGroup θ ∧
-        Section1.scalarProduct K θ (Section1.subgroupRestriction K χ) ≠ 0 ∧
-          ¬ Section1.subgroupInKernel' θ (B.subgroupOf K) ∧
-            Section1.subgroupInKernel' θ (A.subgroupOf K) := by
-  classical
-  rcases exists_irreducible_constituent_of_subgroupRestriction_sec9 K hχirr with
-    ⟨θ, hθirr, hinner⟩
-  have hθnotB :
-      ¬ Section1.subgroupInKernel' θ (B.subgroupOf K) :=
-    constituent_not_subgroupInKernel'_of_subgroupRestriction_not_kernel_sec9
-      K B hBK hχirr hχnotB hθirr hinner
-  have hθkerA : Section1.subgroupInKernel' θ (A.subgroupOf K) :=
-    subgroupInKernel'_constituent_of_subgroupRestriction_kernel_sec9
-      K A hχirr hχkerA hθirr hinner
-  exact ⟨θ, hθirr, hinner, hθnotB, hθkerA⟩
 
 private theorem theorem_9_9_exists_HC_restriction_constituent_sec9
     {G : Type u} [Group G] [Finite G]
@@ -1801,85 +1116,6 @@ private theorem theorem_9_9_H0Cprime_normal_ambientDerived_subgroupOf_sec9
     simpa [D, hD_eq] using hMFU_norm_H0Cprime
   exact subgroupOf_subgroupOf_normal_of_le_normalizer_sec9
     hH0Cprime_le_D hD_norm_H0Cprime
-
-private theorem monoidHom_mem_commutator_of_mem_sec9
-    {G H : Type u} [Group G] [Group H] (f : G →* H) {x : G}
-    (hx : x ∈ _root_.commutator G) :
-    f x ∈ _root_.commutator H := by
-  rw [commutator_eq_closure] at hx ⊢
-  refine Subgroup.closure_induction ?_ ?_ ?_ ?_ hx
-  · rintro y ⟨a, b, rfl⟩
-    exact Subgroup.subset_closure
-      ⟨f a, f b, by rw [map_commutatorElement]⟩
-  · rw [map_one]
-    exact (Subgroup.closure (commutatorSet H)).one_mem
-  · intro a b _ha_mem _hb_mem ha hb
-    simpa [map_mul] using (Subgroup.closure (commutatorSet H)).mul_mem ha hb
-  · intro a _ha_mem ha
-    simpa [map_inv] using (Subgroup.closure (commutatorSet H)).inv_mem ha
-
-private theorem commutator_le_subgroupOf_of_isComplement'_pairwise_sec9
-    {G : Type u} [Group G]
-    {K A B N : Subgroup G}
-    (_hAK : A ≤ K) (_hBK : B ≤ K) (_hNK : N ≤ K)
-    [hNnormalK : (N.subgroupOf K).Normal]
-    (hcomp : (A.subgroupOf K).IsComplement' (B.subgroupOf K))
-    (hAA : ⁅A, A⁆ ≤ N) (hAB : ⁅A, B⁆ ≤ N) (hBB : ⁅B, B⁆ ≤ N) :
-    _root_.commutator K ≤ N.subgroupOf K := by
-  rw [← Subgroup.Normal.quotient_commutative_iff_commutator_le]
-  let qK : K →* K ⧸ N.subgroupOf K := QuotientGroup.mk' (N.subgroupOf K)
-  have hcomm_AB : ∀ (u v : K), (u : G) ∈ A → (v : G) ∈ B →
-      qK u * qK v = qK v * qK u := by
-    intro u v huA hvB
-    rw [← commutatorElement_eq_one_iff_mul_comm]
-    rw [← map_commutatorElement]
-    exact (QuotientGroup.eq_one_iff (N := N.subgroupOf K) ⁅u, v⁆).mpr (by
-      rw [Subgroup.mem_subgroupOf]
-      exact hAB (Subgroup.commutator_mem_commutator huA hvB))
-  have hcomm_AA : ∀ (u v : K), (u : G) ∈ A → (v : G) ∈ A →
-      qK u * qK v = qK v * qK u := by
-    intro u v huA hvA
-    rw [← commutatorElement_eq_one_iff_mul_comm]
-    rw [← map_commutatorElement]
-    exact (QuotientGroup.eq_one_iff (N := N.subgroupOf K) ⁅u, v⁆).mpr (by
-      rw [Subgroup.mem_subgroupOf]
-      exact hAA (Subgroup.commutator_mem_commutator huA hvA))
-  have hcomm_BB : ∀ (u v : K), (u : G) ∈ B → (v : G) ∈ B →
-      qK u * qK v = qK v * qK u := by
-    intro u v huB hvB
-    rw [← commutatorElement_eq_one_iff_mul_comm]
-    rw [← map_commutatorElement]
-    exact (QuotientGroup.eq_one_iff (N := N.subgroupOf K) ⁅u, v⁆).mpr (by
-      rw [Subgroup.mem_subgroupOf]
-      exact hBB (Subgroup.commutator_mem_commutator huB hvB))
-  refine IsMulCommutative.mk <| Std.Commutative.mk ?_
-  intro x
-  obtain ⟨x0, rfl⟩ := QuotientGroup.mk'_surjective (N.subgroupOf K) x
-  intro y
-  obtain ⟨y0, rfl⟩ := QuotientGroup.mk'_surjective (N.subgroupOf K) y
-  rcases hcomp.2 x0 with ⟨⟨a, b⟩, hxab⟩
-  rcases hcomp.2 y0 with ⟨⟨c, d⟩, hycd⟩
-  have haA : (a : G) ∈ A := a.2
-  have hbB : (b : G) ∈ B := b.2
-  have hcA : (c : G) ∈ A := c.2
-  have hdB : (d : G) ∈ B := d.2
-  have hxq : qK x0 = qK a * qK b := by rw [← hxab]; simp [qK]
-  have hyq : qK y0 = qK c * qK d := by rw [← hycd]; simp [qK]
-  have hAC := hcomm_AA a c haA hcA
-  have hAD := hcomm_AB a d haA hdB
-  have hCB := hcomm_AB c b hcA hbB
-  have hBC : qK b * qK c = qK c * qK b := hCB.symm
-  have hBD := hcomm_BB b d hbB hdB
-  calc
-    qK x0 * qK y0 = (qK a * qK b) * (qK c * qK d) := by rw [hxq, hyq]
-    _ = qK a * (qK b * qK c) * qK d := by simp [mul_assoc]
-    _ = qK a * (qK c * qK b) * qK d := by rw [hBC]
-    _ = (qK a * qK c) * (qK b * qK d) := by simp [mul_assoc]
-    _ = (qK c * qK a) * (qK d * qK b) := by rw [hAC, hBD]
-    _ = qK c * (qK a * qK d) * qK b := by simp [mul_assoc]
-    _ = qK c * (qK d * qK a) * qK b := by rw [hAD]
-    _ = (qK c * qK d) * (qK a * qK b) := by simp [mul_assoc]
-    _ = qK y0 * qK x0 := by rw [hxq, hyq]
 
 private theorem theorem_9_9_HC_commutator_le_H0Cprime_subgroupOf_sec9
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -2170,16 +1406,11 @@ private theorem representation_scalar_of_commutator_kernel_sec9
     (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
       (ρ := ρ)).surjective f
   refine ⟨a, ?_⟩
-  have hlin :
-      ((algebraMap ℂ (Representation.IntertwiningMap ρ ρ) a :
-          Representation.IntertwiningMap ρ ρ) : Module.End ℂ V) =
-        (f : Module.End ℂ V) := by
-    simpa using congrArg
-      (fun F : Representation.IntertwiningMap ρ ρ => (F : Module.End ℂ V)) ha
   ext v
+  have hv :=
+    congrArg (fun F : Representation.IntertwiningMap ρ ρ => F v) ha.symm
   simpa [Representation.IntertwiningMap.algebraMap_apply, f,
-    Representation.IntertwiningMap.smul_apply] using
-    congrArg (fun F : Module.End ℂ V => F v) hlin.symm
+    Representation.IntertwiningMap.smul_apply] using hv
 
 private theorem exists_nonprincipal_quotient_linear_character_of_central_subgroup_sec9
     {L : Type u} [Group L] [Finite L]
@@ -3999,19 +3230,20 @@ private theorem theorem_9_9_nontrivial_C_exists_HC_character_source_bridge_sec9
         M MF U W1 W2 H0 C Cprime p q u hcase hCprimeEq] using hxInf
     exact (case_9_7_b_H0_lt_MF_sec9 hcase).not_ge hMF_le_H0
   have hCprime_lt_C : Cprime < C := by
-    have hMsolv : IsSolvable M :=
+    have hMsolv : Group.IsSolvable M :=
       section9_solvable_of_proper_subgroup
         (case_9_7_b_hypothesis_9_2_sec9 hcase).maximal.1
     have hC_le_M : C ≤ M :=
       (le_sup_right : C ≤ MF ⊔ C).trans
         (theorem_9_9_HC_le_M_sec9 M MF U W1 W2 H0 C p q u hcase)
-    have hCsub_solv : IsSolvable (C.subgroupOf M) := by
-      letI : IsSolvable M := hMsolv
+    have hCsub_solv : Group.IsSolvable (C.subgroupOf M) := by
+      let _ : Group.IsSolvable M := hMsolv
       infer_instance
-    have hCsolv : IsSolvable C := by
+    have hCsolv : Group.IsSolvable C := by
+      let _ : Group.IsSolvable (C.subgroupOf M) := hCsub_solv
       let e : C.subgroupOf M ≃* C := Subgroup.subgroupOfEquivOfLe hC_le_M
-      exact solvable_of_surjective (f := e.toMonoidHom) e.surjective
-    letI : IsSolvable C := hCsolv
+      exact Group.isSolvable_of_surjective (f := e.toMonoidHom) e.surjective
+    let _ : Group.IsSolvable C := hCsolv
     letI : Nontrivial C := (Subgroup.nontrivial_iff_ne_bot (H := C)).2 hCne
     have hlt : ⁅C, C⁆ < C := commutator_lt_self_of_isSolvable_local C
     simpa [hCprimeEq, Subgroup.map_subtype_commutator] using hlt
@@ -4033,23 +3265,23 @@ private theorem theorem_9_9_nontrivial_C_exists_HC_character_source_bridge_sec9
       simpa [theorem_9_9_C_inf_H0Cprime_eq_Cprime_sec9
         M MF U W1 W2 H0 C Cprime p q u hcase hCprimeEq] using hxInf
     exact hCprime_lt_C.not_ge hC_le_Cprime
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     section9_solvable_of_proper_subgroup
       (case_9_7_b_hypothesis_9_2_sec9 hcase).maximal.1
-  have hHCsolv : IsSolvable HCm := by
-    letI : IsSolvable M := hMsolv
+  have hHCsolv : Group.IsSolvable HCm := by
+    let _ : Group.IsSolvable M := hMsolv
     infer_instance
-  have hQsolv : IsSolvable (HCm ⧸ A) := by
-    letI : IsSolvable HCm := hHCsolv
+  have hQsolv : Group.IsSolvable (HCm ⧸ A) := by
+    let _ : Group.IsSolvable HCm := hHCsolv
     infer_instance
-  have hQMFsolv : IsSolvable QMF := by
-    letI : IsSolvable (HCm ⧸ A) := hQsolv
+  have hQMFsolv : Group.IsSolvable QMF := by
+    let _ : Group.IsSolvable (HCm ⧸ A) := hQsolv
     infer_instance
-  have hQH0Csolv : IsSolvable QH0C := by
-    letI : IsSolvable (HCm ⧸ A) := hQsolv
+  have hQH0Csolv : Group.IsSolvable QH0C := by
+    let _ : Group.IsSolvable (HCm ⧸ A) := hQsolv
     infer_instance
-  letI : IsSolvable QMF := hQMFsolv
-  letI : IsSolvable QH0C := hQH0Csolv
+  let _ : Group.IsSolvable QMF := hQMFsolv
+  let _ : Group.IsSolvable QH0C := hQH0Csolv
   letI : Nontrivial QMF := (Subgroup.nontrivial_iff_ne_bot (H := QMF)).2 hQMFne
   letI : Nontrivial QH0C :=
     (Subgroup.nontrivial_iff_ne_bot (H := QH0C)).2 hQH0Cne
@@ -4387,83 +3619,6 @@ private theorem isIrreducible_pullback_mulEquiv_sec9
       ρ e.toMonoidHom e.surjective hρirr
   · ext h
     simp [ρH, hθeq, Representation.character]
-
-private theorem inducedCF_conjugateOnNormal_sec9
-    {G : Type*} [Group G] [Finite G]
-    (H : Subgroup G) [Finite H] [hH : H.Normal]
-    (theta : Section1.ClassFunction H) (g : G) :
-    Section1.inducedCF H (Section1.conjugateOnNormal H theta g) =
-      Section1.inducedCF H theta := by
-  classical
-  letI : Fintype G := Fintype.ofFinite G
-  funext y
-  let f : G → ℂ := fun z =>
-    if hz : z * y * z⁻¹ ∈ H then
-      theta ⟨z * y * z⁻¹, hz⟩
-    else
-      0
-  unfold Section1.inducedCF Section1.inducedClassFunction
-  have hsum :
-      ∑ x : G,
-          (if hx : x * y * x⁻¹ ∈ H then
-            Section1.conjugateOnNormal H theta g ⟨x * y * x⁻¹, hx⟩
-          else
-            0) =
-        ∑ x : G, f (g * x) := by
-    refine Finset.sum_congr rfl ?_
-    intro x _hx
-    have hmem :
-        x * y * x⁻¹ ∈ H ↔ g * x * y * (x⁻¹ * g⁻¹) ∈ H := by
-      constructor
-      · intro hxy
-        have hgxy : g * (x * y * x⁻¹) * g⁻¹ ∈ H := hH.conj_mem _ hxy g
-        simpa [mul_assoc] using hgxy
-      · intro hgxy
-        have hgxy' : g⁻¹ * (g * x * y * (x⁻¹ * g⁻¹)) * (g⁻¹)⁻¹ ∈ H :=
-          hH.conj_mem _ hgxy g⁻¹
-        simpa [mul_assoc] using hgxy'
-    by_cases hxH : x * y * x⁻¹ ∈ H
-    · have hgxH : g * x * y * (x⁻¹ * g⁻¹) ∈ H := hmem.mp hxH
-      have hxH' : x * (y * x⁻¹) ∈ H := by
-        simpa [mul_assoc] using hxH
-      have hgxH' : g * (x * (y * (x⁻¹ * g⁻¹))) ∈ H := by
-        simpa [mul_assoc] using hgxH
-      rw [show f (g * x) =
-        if h : g * (x * (y * (x⁻¹ * g⁻¹))) ∈ H then
-          theta ⟨g * (x * (y * (x⁻¹ * g⁻¹))), h⟩
-        else 0 by simp [f, mul_assoc]]
-      simp [Section1.conjugateOnNormal, hxH', hgxH', mul_assoc]
-    · have hgxH : ¬ g * x * y * (x⁻¹ * g⁻¹) ∈ H := by
-        exact fun h => hxH (hmem.mpr h)
-      have hxH' : ¬ x * (y * x⁻¹) ∈ H := by
-        simpa [mul_assoc] using hxH
-      have hgxH' : ¬ g * (x * (y * (x⁻¹ * g⁻¹))) ∈ H := by
-        simpa [mul_assoc] using hgxH
-      rw [show f (g * x) =
-        if h : g * (x * (y * (x⁻¹ * g⁻¹))) ∈ H then
-          theta ⟨g * (x * (y * (x⁻¹ * g⁻¹))), h⟩
-        else 0 by simp [f, mul_assoc]]
-      simp [hxH', hgxH', mul_assoc]
-  calc
-    (Nat.card H : ℂ)⁻¹ *
-        ∑ x : G,
-          (if hx : x * y * x⁻¹ ∈ H then
-            Section1.conjugateOnNormal H theta g ⟨x * y * x⁻¹, hx⟩
-          else
-            0)
-        =
-      (Nat.card H : ℂ)⁻¹ * ∑ x : G, f (g * x) := by
-          rw [hsum]
-    _ = (Nat.card H : ℂ)⁻¹ * ∑ z : G, f z := by
-          congr 1
-          simpa using (Equiv.sum_comp (Equiv.mulLeft g) f)
-    _ = (Nat.card H : ℂ)⁻¹ *
-        ∑ z : G,
-          (if hz : z * y * z⁻¹ ∈ H then
-            theta ⟨z * y * z⁻¹, hz⟩
-          else
-            0) := by
-          rfl
 
 private noncomputable def theorem_9_9_C_bot_quotientLinearCharacter_HCCharacter_sec9
     {G : Type u} [Group G] [Finite G]

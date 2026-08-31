@@ -390,7 +390,9 @@ public theorem inducedCF_principal_quotientImageSubgroup_mk
     intro y _hy
     by_cases hyB : y * QuotientGroup.mk' A g * y⁻¹ ∈ quotientImageSubgroup H A
     · simp [F, B, qg]
+      rfl
     · simp [F, B, qg]
+      rfl
   have hcard : Nat.card H = Nat.card B * Nat.card A := by
     simpa [B] using quotientImageSubgroup_card H A hAH
   have hA_ne : (Nat.card A : ℂ) ≠ 0 := by

@@ -7,19 +7,19 @@ public import FeitThompson.BGsection5.theorem_5_5_a
 public theorem theorem_5_5_b
     {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
     {R : Type*} [Group R] [Finite R] (hnarrow : IsNarrowPGroup p R) (hR : 3 ≤ groupRank R)
-    {A : Subgroup (MulAut R)} [IsSolvable A] (hoddA : Odd (Nat.card A))
+    {A : Subgroup (MulAut R)} [Group.IsSolvable A] (hoddA : Odd (Nat.card A))
     (a : MulAut R) (ha : a ∈ A) (hcop : Nat.Coprime p (orderOf a)) :
     orderOf a ∣ p - 1 := by
   classical
-  letI : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
+  let : Fact (IsPGroup p R) := ⟨hnarrow.1⟩
   have hR_nontrivial : Nontrivial R := by
     refine not_subsingleton_iff_nontrivial.mp ?_
     intro hsub
-    letI : Subsingleton R := hsub
+    let : Subsingleton R := hsub
     have hcyc : IsCyclic R := inferInstance
     have hRank_le_one : groupRank R ≤ 1 := groupRank_le_one_of_isCyclic R
     exact (by decide : ¬ 3 ≤ (1 : ℕ)) (le_trans hR hRank_le_one)
-  letI : Nontrivial R := hR_nontrivial
+  let : Nontrivial R := hR_nontrivial
   obtain ⟨H, hHchar, hHcomm, hHnil, hHexp, hAfix_p⟩ :=
     theorem_1_13 (G := R) (p := p) hpodd
   let Afix : Subgroup (MulAut R) :=

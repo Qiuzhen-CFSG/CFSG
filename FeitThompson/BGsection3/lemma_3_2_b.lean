@@ -195,7 +195,7 @@ public theorem lemma_3_2_b_no_solv {G : Type*} [Group G] [Finite G]
       hcent_quot
 
 public theorem lemma_3_2_b {G : Type*} [Group G] [Finite G] (K R N : Subgroup G) [N.Normal]
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (_hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (_hsolvK : Group.IsSolvable K)
     (hKnle : ¬ K ≤ N) :
     IsFrobeniusGroupWithKernelComplement
       (K.map (QuotientGroup.mk' N)) (R.map (QuotientGroup.mk' N)) :=

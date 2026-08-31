@@ -22,6 +22,7 @@ open scoped IsMulCommutative
 universe u
 
 set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
 /-- Higman Lemma 7: if a normal `X`-invariant cover has Frattini subgroup below
 `A` and commutator subgroup properly below `A`, then the cover is abelian. -/
 public theorem lemma7_cover_commutator_case_abelian
@@ -41,10 +42,10 @@ public theorem lemma7_cover_commutator_case_abelian
       Subgroup.closure {x : P | ∃ a : A, (a : P) ^ 2 = x}) :
     IsMulCommutative C := by
   classical
-  letI : Finite P := finite_of_isSuzukiTwoGroup _hP
-  letI : Finite C := inferInstance
-  letI : FaithfulSMul X P := _hXfaithful
-  letI : Finite X := Finite.of_injective
+  let : Finite P := finite_of_isSuzukiTwoGroup _hP
+  let : Finite C := inferInstance
+  let : FaithfulSMul X P := _hXfaithful
+  let : Finite X := Finite.of_injective
     (MulDistribMulAction.toMulAut X P) (by
       intro x y hxy
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
@@ -53,9 +54,9 @@ public theorem lemma7_cover_commutator_case_abelian
   by_contra hC_nonabelian
   have hC_two : IsPGroup 2 C :=
     (isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup C
-  letI : Fact (IsPGroup 2 C) := ⟨hC_two⟩
-  letI : IsInvariant X P C := ⟨_hC_X⟩
-  letI : IsCyclic X := _hXcyclic
+  let : Fact (IsPGroup 2 C) := ⟨hC_two⟩
+  let : IsInvariant X P C := ⟨_hC_X⟩
+  let : IsCyclic X := _hXcyclic
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := X)
   let tau : MulAut C := MulDistribMulAction.toMulAut X C g
   obtain ⟨k, m, hm_odd, htau_order⟩ :=
@@ -87,7 +88,7 @@ public theorem lemma7_cover_commutator_case_abelian
         intro hKC
         have hC_ne_bot : C ≠ ⊥ :=
           ne_of_gt (lt_of_le_of_lt bot_le _hAC)
-        haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+        have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         have hnil : Group.IsNilpotent P :=
           IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
         obtain ⟨n, hn⟩ := Subgroup.nilpotent_iff_lowerCentralSeries.mp hnil
@@ -567,7 +568,7 @@ public theorem lemma7_cover_commutator_case_abelian
     apply Nat.pos_of_ne_zero
     intro he0
     subst e
-    letI : Subsingleton (ZMod (2 ^ 0)) :=
+    let : Subsingleton (ZMod (2 ^ 0)) :=
       ZMod.subsingleton_iff.mpr (by simp)
     apply hA_ne
     apply le_antisymm
@@ -580,8 +581,8 @@ public theorem lemma7_cover_commutator_case_abelian
         exact Subsingleton.elim _ _
       simpa [aA] using congrArg Subtype.val haA
     · exact bot_le
-  letI : IsInvariant X P A := ⟨_hA_X⟩
-  letI : IsMulCommutative A := _hA_abelian
+  let : IsInvariant X P A := ⟨_hA_X⟩
+  let : IsMulCommutative A := _hA_abelian
   let Asq : Subgroup A := (powMonoidHom 2 : A →* A).range
   let AQ := A ⧸ Asq
   have hAQ_two : ∀ q : AQ, q ^ 2 = 1 := by
@@ -591,7 +592,7 @@ public theorem lemma7_cover_commutator_case_abelian
     change ((a ^ 2 : A) : AQ) = 1
     rw [QuotientGroup.eq_one_iff]
     exact MonoidHom.mem_range.mpr ⟨a, by simp [powMonoidHom]⟩
-  letI : Module (ZMod 2) (Additive AQ) :=
+  let : Module (ZMod 2) (Additive AQ) :=
     AddCommGroup.zmodModule <| by
       intro q
       apply Additive.toMul.injective
@@ -676,7 +677,7 @@ public theorem lemma7_cover_commutator_case_abelian
       intro h
       apply hxy
       exact congrArg (fun z : T => ((z.1 : A) : P)) h
-    letI : Fintype T := Fintype.ofFinite T
+    let : Fintype T := Fintype.ofFinite T
     have hthree : ({oneT, xT, yT} : Finset T).card = 3 := by
       have hone : oneT ∉ ({xT, yT} : Finset T) := by
         simp only [Finset.mem_insert, Finset.mem_singleton]
@@ -708,10 +709,10 @@ public theorem lemma7_cover_commutator_case_abelian
       refine ⟨x⁻¹ • b, ?_⟩
       have h := congrArg (fun z : A => x⁻¹ • z) hb
       simpa [Asq, powMonoidHom, smul_smul] using h
-  letI : IsInvariant X A Asq := hAsq_X
-  letI : MulAction.QuotientAction X Asq :=
+  let : IsInvariant X A Asq := hAsq_X
+  let : MulAction.QuotientAction X Asq :=
     quotientAction_of_isInvariant (A := X) (G := A) Asq hAsq_X
-  letI : MulDistribMulAction X AQ :=
+  let : MulDistribMulAction X AQ :=
     quotientMulDistribMulAction (A := X) (G := A) Asq (by infer_instance)
   let Ttau : Additive AQ ≃ₗ[ZMod 2] Additive AQ :=
     { (MulDistribMulAction.toMulAut X AQ g).toAdditive with
@@ -919,8 +920,8 @@ public theorem lemma7_cover_commutator_case_abelian
     let H1 := higmanLowerCentralSeries C 1
     let H2 : Subgroup H1 :=
       (higmanLowerCentralSeries C 2).subgroupOf (higmanLowerCentralSeries C 1)
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : Fact (IsPGroup 2 H1) :=
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (IsPGroup 2 H1) :=
       ⟨hC_two.to_subgroup (higmanLowerCentralSeries C 1)⟩
     have hsquares_le_phi : squaresSubgroup H1 ≤ frattini H1 := by
       rw [squaresSubgroup, Subgroup.closure_le]
@@ -1127,7 +1128,7 @@ public theorem lemma7_cover_commutator_case_abelian
     have hker : powerMap (x - y) = 0 := by
       rw [map_sub, hxy]
       simp
-    letI : Nontrivial (Additive (LowerCentralFactor C 1)) := inferInstance
+    let : Nontrivial (Additive (LowerCentralFactor C 1)) := inferInstance
     obtain ⟨w, hw⟩ :=
       exists_ne (0 : Additive (LowerCentralFactor C 1))
     obtain ⟨v, hv⟩ := hpower_surj w
@@ -1180,7 +1181,7 @@ public theorem lemma7_cover_commutator_case_abelian
     let squareA (c : C) : A := ⟨(c : P) ^ 2, hsquare_mem_A c⟩
     have hmul_diff_Asq (x y : C) :
         squareA (x * y) / (squareA x * squareA y) ∈ Asq := by
-      letI : IsMulCommutative (C ⧸ commutator C) :=
+      let : IsMulCommutative (C ⧸ commutator C) :=
         (Subgroup.Normal.quotient_commutative_iff_commutator_le).2 le_rfl
       have hdiff_comm :
           (x * y) ^ 2 / (x ^ 2 * y ^ 2) ∈ commutator C := by
@@ -1355,7 +1356,7 @@ public theorem lemma7_cover_commutator_case_abelian
       have hAQ_card_gt : 1 < Nat.card AQ := by
         rw [hAQ_card]
         exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-      letI : Nontrivial AQ :=
+      let : Nontrivial AQ :=
         Finite.one_lt_card_iff_nontrivial.mp hAQ_card_gt
       obtain ⟨q, hq⟩ := exists_ne (1 : AQ)
       obtain ⟨a, rfl⟩ := QuotientGroup.mk'_surjective Asq q
@@ -1394,9 +1395,9 @@ public theorem lemma7_cover_commutator_case_abelian
       have hAQ_card_gt : 1 < Nat.card AQ := by
         rw [hAQ_card]
         exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-      letI : Nontrivial AQ :=
+      let : Nontrivial AQ :=
         Finite.one_lt_card_iff_nontrivial.mp hAQ_card_gt
-      letI : Nontrivial (Additive AQ) := inferInstance
+      let : Nontrivial (Additive AQ) := inferInstance
       obtain ⟨y, hy⟩ := exists_ne (0 : Additive AQ)
       obtain ⟨v, hv⟩ := hsquare_surj y
       apply hy

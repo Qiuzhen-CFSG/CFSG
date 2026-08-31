@@ -169,10 +169,10 @@ public structure Proposition82AmbientResidualData
 public theorem proposition82AmbientResidualData_of_subgroup
     {X : Type u} [Group X] [Finite X]
     {Y : Subgroup X}
-    (hYodd : Odd (Nat.card Y)) (hYsolv : IsSolvable Y)
+    (hYodd : Odd (Nat.card Y)) (hYsolv : Group.IsSolvable Y)
     (hYne : Y ≠ ⊥) :
     Nonempty (Proposition82AmbientResidualData Y) := by
-  letI : IsSolvable Y := hYsolv
+  letI : Group.IsSolvable Y := hYsolv
   letI : Nontrivial Y := (Subgroup.nontrivial_iff_ne_bot (H := Y)).2 hYne
   obtain ⟨d⟩ := proposition82ResidualData_nonempty_of_odd
     (Y := Y) hYodd
@@ -425,7 +425,7 @@ private theorem proposition82_base_step
   have hYne : Y ≠ ⊥ := hYbot
   have hYodd : Odd (Nat.card Y) :=
     proposition82_odd_card_of_three_fixed_of_le hM hYM hfixed
-  have hYsolv : IsSolvable Y := odd_order_theorem Y hYodd
+  have hYsolv : Group.IsSolvable Y := odd_order_theorem Y hYodd
   obtain ⟨d⟩ := proposition82AmbientResidualData_of_subgroup
     hYodd hYsolv hYne
   letI : Fact d.p.Prime := ⟨d.p_prime⟩

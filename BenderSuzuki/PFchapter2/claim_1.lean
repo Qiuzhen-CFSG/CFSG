@@ -735,7 +735,7 @@ private theorem claim_1_ringAut_card_le_finrank_zmod_two
   have hinj : Function.Injective toAlg := by
     intro e₁ e₂ h
     ext x
-    simpa [toAlg] using DFunLike.congr_fun h x
+    exact DFunLike.congr_fun h x
   calc
     Nat.card (F ≃+* F) ≤ Nat.card (F ≃ₐ[ZMod 2] F) :=
       Nat.card_le_card_of_injective toAlg hinj

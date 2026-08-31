@@ -23,7 +23,7 @@ private theorem section10_maximal_le_normalizer_sigma_sylow_of_msigma_nilpotent
     (P : Sylow p.val M) :
     M ≤ Subgroup.normalizer (section10AmbientSylowSubgroup M P : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hP_le_S :
       (P : Subgroup M) ≤ section10MsigmaSubgroup M := by
@@ -49,16 +49,17 @@ private theorem section10_maximal_le_normalizer_sigma_sylow_of_msigma_nilpotent
     calc
       (Pσ : Subgroup (section10Msigma M)).map (section10Msigma M).subtype =
           (T : Subgroup G) := by
-            simpa [Pσ, Sylow.subtype] using
-              (Subgroup.map_subgroupOf_eq_of_le
-                (G := G) (H := (T : Subgroup G)) (K := section10Msigma M) hT_le_Sg)
+            change ((T : Subgroup G).subgroupOf (section10Msigma M)).map
+              (section10Msigma M).subtype = (T : Subgroup G)
+            exact Subgroup.map_subgroupOf_eq_of_le
+              (G := G) (H := (T : Subgroup G)) (K := section10Msigma M) hT_le_Sg
       _ = PG := hT_eq_PG
-  letI : Group.IsNilpotent (section10Msigma M) := hMσnil
+  let : Group.IsNilpotent (section10Msigma M) := hMσnil
   have hPσnormal : (Pσ : Subgroup (section10Msigma M)).Normal :=
     Group.IsNilpotent.sylow_normal (p := p.val) inferInstance Pσ
   have hPσchar : (Pσ : Subgroup (section10Msigma M)).Characteristic :=
     Sylow.characteristic_of_normal Pσ hPσnormal
-  letI : (Pσ : Subgroup (section10Msigma M)).Characteristic := hPσchar
+  let : (Pσ : Subgroup (section10Msigma M)).Characteristic := hPσchar
   have hnormSg_le_normPG :
       Subgroup.normalizer (section10Msigma M : Set G) ≤ Subgroup.normalizer (PG : Set G) := by
     have hnorm :=
@@ -75,7 +76,7 @@ private theorem section10_sigma_primes_disjoint_of_nonconj_nilpotent
   classical
   rw [Set.disjoint_left]
   intro p hpσM hpσH
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hPGp : IsPGroup p.val PG := by
@@ -101,9 +102,10 @@ private theorem section10_sigma_primes_disjoint_of_nonconj_nilpotent
     calc
       section10AmbientSylowSubgroup (H.conjBy a) THa =
           (T : Subgroup G) := by
-            simpa [THa, section10AmbientSylowSubgroup, Sylow.subtype] using
-              (Subgroup.map_subgroupOf_eq_of_le
-                (G := G) (H := (T : Subgroup G)) (K := H.conjBy a) hT_le_Ha)
+            change ((T : Subgroup G).subgroupOf (H.conjBy a)).map
+              (H.conjBy a).subtype = (T : Subgroup G)
+            exact Subgroup.map_subgroupOf_eq_of_le
+              (G := G) (H := (T : Subgroup G)) (K := H.conjBy a) hT_le_Ha
       _ = PG := hT_eq_PG
   have hnormPG_le_Ha : Subgroup.normalizer (PG : Set G) ≤ H.conjBy a := by
     have hpσHa : p ∈ section10SigmaPrimes (H.conjBy a) :=

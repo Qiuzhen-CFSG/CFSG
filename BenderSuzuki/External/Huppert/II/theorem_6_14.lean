@@ -26,7 +26,7 @@ public theorem huppert614_card_specialLinearGroup
     Nat.card (Matrix.SpecialLinearGroup (Fin 2) K) =
       Nat.card K * (Nat.card K ^ 2 - 1) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hdet_range_top :
       (Matrix.GeneralLinearGroup.det (n := Fin 2) (R := K)).range = ⊤ := by
     ext u
@@ -109,7 +109,7 @@ public theorem huppert614_card_center_of_neg_one_eq_one
     {K : Type u} [Field K] [Finite K] (hneg : (-1 : K) = 1) :
     Nat.card (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) K)) = 1 := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let e :=
     Equiv.Set.image ((↑) : Kˣ → K) (rootsOfUnity 2 K : Set Kˣ)
       Units.val_injective
@@ -129,7 +129,7 @@ public theorem huppert614_card_center_of_neg_one_ne_one
     {K : Type u} [Field K] [Finite K] (hneg : (-1 : K) ≠ 1) :
     Nat.card (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) K)) = 2 := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let e :=
     Equiv.Set.image ((↑) : Kˣ → K) (rootsOfUnity 2 K : Set Kˣ)
       Units.val_injective
@@ -166,8 +166,8 @@ public theorem huppert_II_6_14_a_psl2_card_two
       (Matrix.ProjectiveSpecialLinearGroup (Fin 2) K ≃*
         Equiv.Perm (Fin 3)) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : CharP K 2 :=
+  let : Fintype K := Fintype.ofFinite K
+  have : CharP K 2 :=
     charP_of_card_eq_prime (by
       simpa [Nat.card_eq_fintype_card] using hKcard)
   have hneg_one : (-1 : K) = 1 := by

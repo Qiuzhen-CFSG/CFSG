@@ -37,7 +37,7 @@ private theorem section13_sylow_inf_comm
       section10AmbientSylowSubgroup (N ⊓ M) R' =
         section10AmbientSylowSubgroup (M ⊓ N) R := by
   classical
-  haveI : Fact (Nat.Prime p.val) := ⟨p.property⟩
+  let _ : Fact (Nat.Prime p.val) := ⟨p.property⟩
   let e : (M ⊓ N : Subgroup G) ≃* (N ⊓ M : Subgroup G) :=
     MulEquiv.subgroupCongr (by rw [inf_comm])
   let Rsub : Subgroup (N ⊓ M : Subgroup G) :=
@@ -95,7 +95,7 @@ private theorem section13_sylowSubgroupIn_of_inf_normalizer_le_right
     (hNQ : Subgroup.normalizer (Q : Set G) ≤ Mstar) :
     section12SylowSubgroupIn q Q M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases hQ with ⟨S, hS⟩
   have hnorm :
       Subgroup.normalizer
@@ -122,7 +122,7 @@ public theorem section13_sylowSubgroupIn_of_overgroup_sylow_with_pgroups_le
     (hL_p_le_C : ∀ Y : Subgroup G, Y ≤ L → IsPGroup q.val Y → Y ≤ C) :
     section12SylowSubgroupIn q Q L := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases hQ with ⟨S, hS⟩
   let Rsub : Subgroup L := Q.subgroupOf L
   have hQp : IsPGroup q.val Q := by
@@ -242,14 +242,14 @@ public theorem section13_ne_of_fixedpoint_free_p_sylow
     q ≠ p := by
   intro hqp
   subst q
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  let _ : Fact p.val.Prime := ⟨p.property⟩
   have hPp : IsPGroup p.val P :=
     section13_primeOrderSubgroupsIn_isPGroup (G := G) hP
   have hQ_dvd : p.val ∣ Nat.card Q := by
     rcases hQq.card_eq_or_dvd with hcard | hdiv
     · exact False.elim (hQne ((Subgroup.card_eq_one (H := Q)).1 hcard))
     · exact hdiv
-  letI : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
+  let _ : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
   have hone_fixed : (1 : Q) ∈ MulAction.fixedPoints P Q := by
     simp [MulAction.mem_fixedPoints]
   rcases hPp.exists_fixed_point_of_prime_dvd_card_of_fixed_point
@@ -293,7 +293,7 @@ public theorem section13_E3_sylow_as_E_sylow
     ∃ T : Sylow q.val E,
       section10AmbientSylowSubgroup E T = section10AmbientSylowSubgroup E₃ S := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases hE₃Hall with ⟨hE₃E, hHallE₃⟩
   let f : E₃ →* E := E₃.subtype.codRestrict E (fun x => hE₃E x.property)
   let K : Subgroup E := (S : Subgroup E₃).map f
@@ -348,7 +348,7 @@ public theorem section13_E_sylowSubgroupIn_M_of_sigma_compl
     (hqσc : q ∉ section10SigmaPrimes M) (T : Sylow q.val E) :
     section12SylowSubgroupIn q (section10AmbientSylowSubgroup E T) M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   have hEM : E ≤ M := hcomp.2.1
   have hHallE : IsHallSubgroup (section10SigmaPrimes M)ᶜ (E.subgroupOf M) :=
     section12_msigma_complement_isHall_sigma_compl hM hcomp
@@ -409,8 +409,8 @@ public theorem section13_subgroupCentralizerIn_eq_bot_of_cyclic_pgroup_noncentra
     (hnotCent : ¬ P ≤ Subgroup.centralizer (Q : Set G)) :
     subgroupCentralizerIn Q P = ⊥ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
-  letI : IsCyclic Q := hQcyc
+  let _ : Fact q.val.Prime := ⟨q.property⟩
+  let _ : IsCyclic Q := hQcyc
   rcases IsPGroup.commutator_eq_bot_or_commutator_eq_self
       (p := q.val) (P := Q) (K := P) hQq hPnormQ hcop with
     hcomm_bot | hcomm_self
@@ -421,9 +421,9 @@ public theorem section13_subgroupCentralizerIn_eq_bot_of_cyclic_pgroup_noncentra
   have hcomm_QP : ⁅Q, P⁆ = Q := by
     simpa [Subgroup.commutator_comm] using hcomm_self
   have hQcomm : IsMulCommutative Q := by
-    letI : CommGroup Q := hQcyc.commGroup
+    let _ : CommGroup Q := hQcyc.commGroup
     infer_instance
-  letI : Subgroup.Normalizes P Q := ⟨hPnormQ⟩
+  let _ : Subgroup.Normalizes P Q := ⟨hPnormQ⟩
   let Cfix : Subgroup Q := fixedPointSubgroup (↥P) (↥Q)
   let Ccomm : Subgroup Q := commutatorAction (A := ↥P) (G := ↥Q)
   have hfixed_eq :
@@ -442,8 +442,8 @@ public theorem section13_subgroupCentralizerIn_eq_bot_of_cyclic_pgroup_noncentra
     rcases Subgroup.mem_map.mp hxMap with ⟨y, hyC, hyx⟩
     have hy_eq : y = x := Subtype.ext hyx
     simpa [hy_eq] using hyC
-  have hsolvQ : IsSolvable Q := by
-    letI : IsMulCommutative Q := hQcomm
+  have hsolvQ : Group.IsSolvable Q := by
+    let _ : IsMulCommutative Q := hQcomm
     infer_instance
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
@@ -475,7 +475,7 @@ private theorem section13_le_ambientDerived_of_fixedpoint_free_sylow
     (hCQ : subgroupCentralizerIn Q P = ⊥) :
     Q ≤ ambientDerivedSubgroup M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   have hq_ne_p : q ≠ p :=
     section13_ne_of_fixedpoint_free_p_sylow
       (G := G) (P := P) (Q := Q) (H := H) (p := p) (q := q)
@@ -495,7 +495,7 @@ private theorem section13_le_ambientDerived_of_fixedpoint_free_sylow
   have hcop : Nat.Coprime (Nat.card P) (Nat.card Q) :=
     section13_coprime_card_of_isPiSubgroup_disjoint_primes
       (G := G) hPπ hQπ hdis_pq
-  letI : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
+  let _ : Subgroup.Normalizes P Q := ⟨hPinvQ⟩
   have hfixed_eq :
       fixedPointSubgroup (↥P) (↥Q) = (subgroupCentralizerIn Q P).subgroupOf Q := by
     simpa using fixedPointSubgroup_subgroup_conj_eq_subgroupCentralizerIn Q P hPinvQ
@@ -504,8 +504,8 @@ private theorem section13_le_ambientDerived_of_fixedpoint_free_sylow
     simpa using congrArg (fun S : Subgroup G => S.subgroupOf Q) hCQ
   have hQnil : Group.IsNilpotent Q :=
     IsPGroup.isNilpotent (p := q.val) (G := Q) hQq
-  letI : Group.IsNilpotent Q := hQnil
-  have hsolvQ : IsSolvable Q := inferInstance
+  let _ : Group.IsNilpotent Q := hQnil
+  have hsolvQ : Group.IsSolvable Q := inferInstance
   have hsup :
       fixedPointSubgroup (↥P) (↥Q) ⊔ commutatorAction (A := ↥P) (G := ↥Q) = ⊤ :=
     proposition_1_6_a (G := ↥Q) (A := ↥P) hsolvQ hcop
@@ -539,7 +539,7 @@ private theorem section13_ambientDerived_sylow_of_sylowSubgroupIn
     ∃ X : Sylow q.val (ambientDerivedSubgroup M),
       section10AmbientSylowSubgroup (ambientDerivedSubgroup M) X = Q := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases hQ_M with ⟨SM, hSM⟩
   let D : Subgroup M := derivedSubgroup M
   let Dg : Subgroup G := ambientDerivedSubgroup M
@@ -657,7 +657,7 @@ private theorem section13_malpha_sup_subgroupNormalizerIn_of_derived_sylow
     (hQ_D : Q ≤ ambientDerivedSubgroup M) :
     section10Malpha M ⊔ subgroupNormalizerIn M (Q : Set G) = M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   rcases hQ_M with ⟨SQ, hSQmap⟩
   let K : Subgroup M := section10MalphaSubgroup M
   let Qsub : Subgroup M := Q.subgroupOf M
@@ -711,7 +711,7 @@ private theorem section13_malpha_sup_subgroupNormalizerIn_of_derived_sylow
       section10_malpha_sup_ambient_derived_sylow_normal
         (G := G) (M := M) hM X
     simpa [J, K, Qsub, hXmap] using hnormal
-  letI : J.Normal := hJnormal
+  let _ : J.Normal := hJnormal
   have hFr :
       Subgroup.normalizer ((Qsub : Subgroup M) : Set M) ⊔ J = ⊤ := by
     have h := Sylow.normalizer_sup_eq_top (G := M) (N := J) SJ
@@ -982,9 +982,9 @@ private theorem section13_lemma_13_8_exists_hall_in_centralizer_containing_piSub
       IsHallSubgroup π H ∧ K.subgroupOf (Subgroup.centralizer (P : Set G)) ≤ H := by
   classical
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
-  have hsolvC : IsSolvable C :=
+  have hsolvC : Group.IsSolvable C :=
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.2 (by simpa [C] using hCproper))
-  letI : MulDistribMulAction PUnit.{1} C := {
+  let _ : MulDistribMulAction PUnit.{1} C := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -1009,7 +1009,7 @@ private theorem section13_exists_prime_order_subgroup_le_of_prime_dvd
     (hrA : r ∈ subgroupPrimeSet A) :
     ∃ R : Subgroup G, R ≤ A ∧ Nat.card R = r.val := by
   classical
-  haveI : Fact r.val.Prime := ⟨r.property⟩
+  let _ : Fact r.val.Prime := ⟨r.property⟩
   obtain ⟨a, ha_order⟩ := exists_prime_orderOf_dvd_card' (G := A) r.val hrA
   let R : Subgroup G := Subgroup.zpowers ((a : A) : G)
   have hR_le_A : R ≤ A := by
@@ -1262,7 +1262,7 @@ private theorem section13_pCore_ne_bot_of_dvd_fitting_for_hall
     (hq : q.val ∣ Nat.card (fittingSubgroup R)) :
     pCore q.val R ≠ ⊥ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   let F : Subgroup R := fittingSubgroup R
   have hFcore_ne : pCore q.val F ≠ ⊥ :=
     section13_pCore_ne_bot_of_dvd_card_nilpotent_for_hall
@@ -1276,8 +1276,8 @@ private theorem section13_pCore_ne_bot_of_dvd_fitting_for_hall
         F.subtype_injective).1 (by simpa [X] using hXbot)
     exact hFcore_ne hcore_bot
   have hX_normal : X.Normal := by
-    haveI : F.Normal := by infer_instance
-    haveI : (pCore q.val F).Characteristic :=
+    let _ : F.Normal := by infer_instance
+    let _ : (pCore q.val F).Characteristic :=
       pCore_characteristic (G := F) (p := q.val)
     simpa [X] using (inferInstance : ((pCore q.val F).map F.subtype).Normal)
   have hX_p : IsPGroup q.val X := by
@@ -1294,7 +1294,7 @@ private theorem section13_pCore_prime_dvd_card_of_ne_bot_for_hall
     (hcore : pCore q.val R ≠ ⊥) :
     q.val ∣ Nat.card R := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   have hcore_nontrivial : Nontrivial (pCore q.val R) :=
     (Subgroup.nontrivial_iff_ne_bot (pCore q.val R)).2 hcore
   rcases (IsPGroup.nontrivial_iff_card
@@ -1312,7 +1312,7 @@ private theorem section13_pCore_ne_bot_of_mulEquiv_for_hall
     {q : Nat.Primes} (e : A ≃* B) (hcore : pCore q.val A ≠ ⊥) :
     pCore q.val B ≠ ⊥ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   let X : Subgroup B := (pCore q.val A).map e.toMonoidHom
   have hXne : X ≠ ⊥ := by
     intro hXbot
@@ -1344,7 +1344,7 @@ private theorem section13_lemma_13_8_hall_beta_pcore_ne_bot_transfer
     pCore s.val (H₂.map (Subgroup.centralizer (P : Set G)).subtype) ≠ ⊥ := by
   classical
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
-  have hsolvC : IsSolvable C :=
+  have hsolvC : Group.IsSolvable C :=
     IsMinCE.proper_subgroups_solvable C (lt_top_iff_ne_top.2 (by simpa [C] using hCproper))
   rcases exists_conj_eq_of_isHallSubgroup_of_solvable
       (G := C) hsolvC hHall₁ hHall₂ with
@@ -1408,9 +1408,9 @@ private theorem section13_lemma_13_8_hall_beta_fitting_union_side_choice
       intro x _hx
       exact hHamb_le_C (by simp [htop] : x ∈ Hamb)
     exact hCproper hCtop
-  have hsolvHamb : IsSolvable Hamb :=
+  have hsolvHamb : Group.IsSolvable Hamb :=
     IsMinCE.proper_subgroups_solvable Hamb (lt_top_iff_ne_top.2 hHamb_proper)
-  letI : IsSolvable Hamb := hsolvHamb
+  let _ : Group.IsSolvable Hamb := hsolvHamb
   have hF_ne : fittingSubgroup Hamb ≠ ⊥ := by
     intro hFbot
     have hcard : Nat.card Hamb = 1 :=
@@ -1732,17 +1732,17 @@ private theorem section13_fixedPointSubgroup_quotient_eq_map_of_solvable_kernel_
     {L A : Type*} [Group L] [Finite L] [Group A] [Finite A]
     [MulDistribMulAction A L]
     (K : Subgroup L) [K.Normal] (hKinv : IsInvariant A L K)
-    (hKsolv : IsSolvable K)
+    (hKsolv : Group.IsSolvable K)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card K)) :
     letI : MulDistribMulAction A (L ⧸ K) :=
       quotientMulDistribMulAction (A := A) (G := L) K hKinv
     fixedPointSubgroup A (L ⧸ K) =
       (fixedPointSubgroup A L).map (QuotientGroup.mk' K) := by
   classical
-  letI : IsInvariant A L K := hKinv
-  letI : MulAction.QuotientAction A K :=
+  let _ : IsInvariant A L K := hKinv
+  let _ : MulAction.QuotientAction A K :=
     quotientAction_of_isInvariant (A := A) (G := L) K hKinv
-  letI : MulDistribMulAction A (L ⧸ K) :=
+  let _ : MulDistribMulAction A (L ⧸ K) :=
     quotientMulDistribMulAction (A := A) (G := L) K hKinv
   refine le_antisymm ?_ ?_
   · intro q
@@ -1839,9 +1839,9 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
         section13_le_normalizer_inf (G := G) (A := P)
           (H := section10Malpha M) (K := subgroupNormalizerIn M (Q : Set G))
           hP_norm_malpha hP_norm_U
-    haveI : Subgroup.Normalizes P U := ⟨hP_norm_U⟩
+    let _ : Subgroup.Normalizes P U := ⟨hP_norm_U⟩
     let KUsub : Subgroup U := K.subgroupOf U
-    haveI : KUsub.Normal := by
+    let _ : KUsub.Normal := by
       dsimp [KUsub]
       exact Subgroup.normal_subgroupOf_of_le_normalizer (N := K) hU_norm_K
     have hKUinv : IsInvariant (↥P) (↥U) KUsub := by
@@ -1856,9 +1856,9 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
         intro x hx
         exact hU_le_M (by simp [hUtop])
       exact hM.1 (top_le_iff.mp htop_le_M)
-    haveI : IsSolvable U :=
+    let _ : Group.IsSolvable U :=
       IsMinCE.proper_subgroups_solvable U (lt_top_iff_ne_top.2 hUne)
-    have hKUsolv : IsSolvable KUsub := by infer_instance
+    have hKUsolv : Group.IsSolvable KUsub := by infer_instance
     have hKπ : IsPiSubgroup (G := G) (section10AlphaPrimes M) K := by
       intro s hs
       exact ((theorem_10_2_a (G := G) hM).1).p_in_pi_of_p_dvd_card s
@@ -1883,10 +1883,10 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
       simpa [hmap] using hcard_map.symm
     have hcop : Nat.Coprime (Nat.card P) (Nat.card KUsub) := by
       simpa [hKUsub_card] using hcopKU
-    letI : IsInvariant (↥P) (↥U) KUsub := hKUinv
-    letI : MulAction.QuotientAction (↥P) KUsub :=
+    let _ : IsInvariant (↥P) (↥U) KUsub := hKUinv
+    let _ : MulAction.QuotientAction (↥P) KUsub :=
       quotientAction_of_isInvariant (A := ↥P) (G := ↥U) KUsub hKUinv
-    letI : MulDistribMulAction (↥P) (↥U ⧸ KUsub) :=
+    let _ : MulDistribMulAction (↥P) (↥U ⧸ KUsub) :=
       quotientMulDistribMulAction (A := ↥P) (G := ↥U) KUsub hKUinv
     have hfixed_eq :
         fixedPointSubgroup (↥P) (↥U ⧸ KUsub) =
@@ -1925,9 +1925,9 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
       · intro hx
         have hx' := hforward g⁻¹ (P.inv_mem hg) (g * x * g⁻¹) (by simpa [S] using hx)
         simpa [S, mul_assoc] using hx'
-    haveI : Subgroup.Normalizes P S := ⟨hP_norm_S⟩
+    let _ : Subgroup.Normalizes P S := ⟨hP_norm_S⟩
     let KsubS : Subgroup S := K.subgroupOf S
-    haveI : KsubS.Normal := by
+    let _ : KsubS.Normal := by
       dsimp [KsubS, S]
       exact Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := U) (N := K) hU_norm_K
     have hKsubS_inv : IsInvariant (↥P) (↥S) KsubS := by
@@ -1935,10 +1935,10 @@ private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_
         section13_isInvariant_subgroupOf_of_le_normalizer
           (G := G) (A := P) (H := S) (K := K)
           hP_norm_S hP_norm_K le_sup_right
-    letI : IsInvariant (↥P) (↥S) KsubS := hKsubS_inv
-    letI : MulAction.QuotientAction (↥P) KsubS :=
+    let _ : IsInvariant (↥P) (↥S) KsubS := hKsubS_inv
+    let _ : MulAction.QuotientAction (↥P) KsubS :=
       quotientAction_of_isInvariant (A := ↥P) (G := ↥S) KsubS hKsubS_inv
-    letI : MulDistribMulAction (↥P) (↥S ⧸ KsubS) :=
+    let _ : MulDistribMulAction (↥P) (↥S ⧸ KsubS) :=
       quotientMulDistribMulAction (A := ↥P) (G := ↥S) KsubS hKsubS_inv
     let e : ↥U ⧸ KUsub ≃* ↥S ⧸ KsubS := by
       simpa [KUsub, KU, KsubS, S] using
@@ -2334,15 +2334,15 @@ private theorem section13_lemma_13_8_commutator_malpha_inf_le_mstar_malpha
     (hq_notα : q ∉ section10AlphaPrimes M) :
     ⁅section10Malpha M ⊓ Mstar, Q⁆ ≤ section10Malpha Mstar := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  let _ : Fact q.val.Prime := ⟨q.property⟩
   let K : Subgroup G := section10Malpha M ⊓ Mstar
   let C : Subgroup G := ⁅K, Q⁆
   let α : Subgroup Mstar := section10MalphaSubgroup Mstar
   let D : Subgroup Mstar := derivedSubgroup Mstar
   rcases (theorem_10_2_d (G := G) hMstar).2 with ⟨hαD, hαDnorm, hDquot_nil⟩
-  haveI : (α.subgroupOf D).Normal := by
+  let _ : (α.subgroupOf D).Normal := by
     simpa [α, D] using hαDnorm
-  haveI : α.Normal := by
+  let _ : α.Normal := by
     dsimp [α]
     infer_instance
   let qMstar : Mstar →* Mstar ⧸ α := QuotientGroup.mk' α
@@ -2351,7 +2351,7 @@ private theorem section13_lemma_13_8_commutator_malpha_inf_le_mstar_malpha
     dsimp [Dbar]
     exact Subgroup.Normal.map (H := D) inferInstance qMstar
       (QuotientGroup.mk'_surjective α)
-  haveI : Dbar.Normal := hDbar_norm
+  let _ : Dbar.Normal := hDbar_norm
   have hDbar_nil : Group.IsNilpotent Dbar := by
     let e : D ⧸ α.subgroupOf D ≃* Dbar := quotientSubgroupRangeEquiv D α
     exact Group.nilpotent_of_mulEquiv (G := D ⧸ α.subgroupOf D) (G' := Dbar) e
@@ -2385,9 +2385,9 @@ private theorem section13_lemma_13_8_commutator_malpha_inf_le_mstar_malpha
   have hPbarSub_char : PbarSub.Characteristic := by
     dsimp [PbarSub]
     exact pCore_characteristic (G := Dbar) (p := q.val)
-  haveI : PbarSub.Characteristic := hPbarSub_char
+  let _ : PbarSub.Characteristic := hPbarSub_char
   have hQbarD_le_pcore : QbarD ≤ PbarSub := by
-    haveI : Group.IsNilpotent Dbar := hDbar_nil
+    let _ : Group.IsNilpotent Dbar := hDbar_nil
     simpa [PbarSub] using
       section13_pSubgroup_le_pCore_of_nilpotent
         (R := Dbar) (p := q.val) (B := QbarD) hQbarD_p

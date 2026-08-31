@@ -752,7 +752,8 @@ public theorem proposition102_exponent_R_sylow_V_of_hall_D
       change e.r ∣ Nat.card ((derivedSubgroup E).map E.subtype)
       exact e.r_dvd_derived_card
     have hrmem : rPrime ∈ subgroupPrimeSet H := by
-      simpa [rPrime, subgroupPrimeSet] using hrH
+      change (rPrime : ℕ) ∣ Nat.card H
+      exact hrH
     have hrnot := hHallD.p_in_pi_of_p_dvd_index rPrime
       (by simpa [HD, H] using hrdvdIndex)
     exact hrnot hrmem

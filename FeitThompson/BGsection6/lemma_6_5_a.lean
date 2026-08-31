@@ -86,7 +86,7 @@ public theorem lemma_6_5_derived_le_sup_commutator
   exact (K ⊔ ⁅U, U⁆).mul_mem (Subgroup.mem_sup_left hk₀K) (Subgroup.mem_sup_right hcUU)
 
 public theorem lemma_6_5_c_core
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {K U H : Subgroup G} [K.Normal] (hKU : K ⊔ U = ⊤) (hHU : H ≤ U)
     (hcop : Nat.Coprime (Nat.card H) (Nat.card K))
     (g : G) (hconj : H.conjBy g ≤ U) :
@@ -191,7 +191,7 @@ public theorem lemma_6_5_c_core
         exact hx.1
       · intro hx
         exact ⟨hx, x.2.2⟩
-    haveI : Nsub.Normal := by
+    have : Nsub.Normal := by
       have hKsubNormal : (K.subgroupOf L).Normal := by
         simpa using
           (Subgroup.Normal.subgroupOf (H := K) (K := L) (inferInstance : K.Normal))
@@ -292,7 +292,7 @@ public theorem lemma_6_5_c_core
         have hp_dvd_K : p.val ∣ Nat.card K :=
           dvd_trans hp_dvd_N (Subgroup.card_dvd_of_le (show N ≤ K from inf_le_left))
         exact (Nat.not_coprime_of_dvd_of_dvd p.2.one_lt hp_in hp_dvd_K) hcop
-    have hL_solv : IsSolvable L := by infer_instance
+    have hL_solv : Group.IsSolvable L := by infer_instance
     obtain ⟨w0, hw0⟩ :=
       exists_conj_eq_of_isHallSubgroup_of_solvable (G := L) hL_solv hhall_H hhall_Hk
     have hw0_sup : w0 ∈ Nsub ⊔ Hsub := by
@@ -372,7 +372,7 @@ public theorem lemma_6_5_c_core
 /-! # Lemma 6.5(a) from BG Section 6 -/
 
 public theorem lemma_6_5_a
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {K U H : Subgroup G} [K.Normal] (hKU : K ⊔ U = ⊤) (hHU : H ≤ U)
     (hcop : Nat.Coprime (Nat.card H) (Nat.card K)) :
     (H ⊓ derivedSubgroup G = H ⊓ ⁅U, U⁆) := by

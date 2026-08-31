@@ -35,7 +35,7 @@ nontrivial primary subgroup of the solvable subgroup `E`. -/
 @[expose] public def II1Lemma45NormalComplement
     {X : Type u} [Group X] [Finite X] : Prop :=
   ∀ (W E : Subgroup X) (hEW : E ≤ W),
-    IsSolvable E →
+    Group.IsSolvable E →
     (∀ q : Nat.Primes, q ∈ subgroupPrimeSet E →
       ∀ U : Subgroup X, U ≤ E → U ≠ ⊥ → IsPGroup q.val U →
         (normalizerIn W U : Set X) =
@@ -296,16 +296,16 @@ public theorem ii1Lemma45NormalComplement
             E = EW.map W.subtype :=
               (Subgroup.map_subgroupOf_eq_of_le hEW).symm
             _ = ⊥ := by rw [hbot, Subgroup.map_bot]
-        have hEWsolv : IsSolvable EW := by
+        have hEWsolv : Group.IsSolvable EW := by
           let eEW : EW ≃* E := Subgroup.subgroupOfEquivOfLe hEW
-          letI : IsSolvable E := hEsolv
-          exact solvable_of_solvable_injective
+          letI : Group.IsSolvable E := hEsolv
+          exact Group.isSolvable_of_isSolvable_injective
             (f := eEW.toMonoidHom) eEW.injective
-        letI : IsSolvable EW := hEWsolv
+        letI : Group.IsSolvable EW := hEWsolv
         letI : Nontrivial EW :=
           (Subgroup.nontrivial_iff_ne_bot EW).2 hEWne
         have hcommLt : derivedSubgroup EW < ⊤ :=
-          IsSolvable.commutator_lt_top_of_nontrivial (G := EW)
+          Group.IsSolvable.commutator_lt_top_of_nontrivial (G := EW)
         have hAbOneLt : 1 < Nat.card (EW ⧸ derivedSubgroup EW) := by
           have hindex : 1 < (derivedSubgroup EW).index :=
             Subgroup.one_lt_index_of_ne_top hcommLt.ne
@@ -371,9 +371,9 @@ public theorem ii1Lemma45NormalComplement
         have hE₀card : Nat.card E₀ < n := by
           rw [← hcard]
           exact natCard_lt_of_subgroup_lt hE₀lt
-        have hE₀solv : IsSolvable E₀ := by
-          letI : IsSolvable E := hEsolv
-          exact solvable_of_solvable_injective
+        have hE₀solv : Group.IsSolvable E₀ := by
+          letI : Group.IsSolvable E := hEsolv
+          exact Group.isSolvable_of_isSolvable_injective
             (f := Subgroup.inclusion hE₀E)
             (Subgroup.inclusion_injective hE₀E)
         have h4C₀ : ∀ q : Nat.Primes, q ∈ subgroupPrimeSet E₀ →
@@ -895,7 +895,7 @@ public theorem lemma104_C_le_N_and_solvable
     let C := d.choice.initial.A1 ⊓
       Subgroup.centralizer (d.choice.P : Set X)
     let N := normalizerIn M d.choice.P
-    C ≤ N ∧ IsSolvable C := by
+    C ≤ N ∧ Group.IsSolvable C := by
   let C := d.choice.initial.A1 ⊓
     Subgroup.centralizer (d.choice.P : Set X)
   let N := normalizerIn M d.choice.P
@@ -938,7 +938,7 @@ public theorem lemma104_apply_II1Lemma45
     Subgroup.centralizer (d.choice.P : Set X)
   let N := normalizerIn M d.choice.P
   have hCS := lemma104_C_le_N_and_solvable d hDM hDodd
-  change C ≤ N ∧ IsSolvable C at hCS
+  change C ≤ N ∧ Group.IsSolvable C at hCS
   change ∀ q : Nat.Primes, q ∈ subgroupPrimeSet C →
       ∀ U : Subgroup X, U ≤ C → U ≠ ⊥ →
         IsPGroup q.val U →
@@ -1232,7 +1232,7 @@ public theorem lemma104_10E
   have htwoNotC : two ∉ subgroupPrimeSet C := by
     intro htwo
     exact hCodd.not_two_dvd_nat
-      (by simpa [two, subgroupPrimeSet] using htwo)
+      (by change 2 ∣ Nat.card C at htwo; exact htwo)
   let p' : Nat.Primes := ⟨d.choice.p, d.choice.p_prime⟩
   have hpNotC : p' ∉ subgroupPrimeSet C := by
     intro hpC
@@ -1402,7 +1402,8 @@ public theorem Lemma101Conclusion.not_sylow_M_of_C_ne_bot_of_hall
   obtain ⟨q, hqprime, hqC⟩ := Nat.exists_prime_and_dvd hCcard
   let q' : Nat.Primes := ⟨q, hqprime⟩
   have hqmem : q' ∈ subgroupPrimeSet C := by
-    simpa [subgroupPrimeSet, q'] using hqC
+    change q ∣ Nat.card C
+    exact hqC
   letI : Fact q.Prime := ⟨hqprime⟩
   let CN : Subgroup N := C.subgroupOf N
   let PC : Sylow q CN :=

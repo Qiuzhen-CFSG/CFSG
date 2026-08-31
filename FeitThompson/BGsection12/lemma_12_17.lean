@@ -21,13 +21,13 @@ private theorem section12_lemma_12_17_coprime_action
   classical
   let Hloc : Subgroup M := section10MsigmaSubgroup M
   let Kloc : Subgroup M := E.subgroupOf M
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
-  letI : IsSolvable M := hMsolv
+  let : Group.IsSolvable M := hMsolv
   have hHnorm : Hloc.Normal := by
     dsimp [Hloc]
     infer_instance
-  letI : Hloc.Normal := hHnorm
+  let : Hloc.Normal := hHnorm
   have hHall : IsHallSubgroup (section10SigmaPrimes M) Hloc := by
     simpa [Hloc] using (theorem_10_2_b (G := G) hM).2
   have hcomp' : Kloc.IsComplement' Hloc := by
@@ -107,7 +107,7 @@ private theorem section12_lemma_12_17_not_centralizer_le
     (hXne : X ≠ ⊥) (hXp : IsPGroup p.val X) :
     ¬ Subgroup.centralizer (X : Set G) ≤ M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hXσ : X ≤ section10Msigma M := hXI.trans inf_le_left
   have hXM : X ≤ M := hXσ.trans (section12_Msigma_le (G := G) M)
   have hXMg : X ≤ M.conjBy g := hXI.trans inf_le_right
@@ -145,7 +145,7 @@ private theorem section12_lemma_12_17_prime_order_exclusions
     p ∉ section10BetaPrimes M ∧
       ¬ X ≤ ambientDerivedSubgroup (section10Msigma M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hX) with
     ⟨hXI, hXcard⟩
   have hXne : X ≠ ⊥ := by
@@ -216,7 +216,7 @@ private theorem section12_lemma_12_17_primeRank_le_one
   have hAne : A ≠ ⊥ := section12_rankTwo_ne_bot hA
   have hAp : IsPGroup p.val A := by
     rcases section12_rankTwo_elementary hA with ⟨_hcard, hElem⟩
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hAnoncyc : ¬ IsCyclic A :=
     section12_rankTwo_noncyclic (G := G) (H := section10Msigma M ⊓ M.conjBy g) hA
@@ -328,7 +328,7 @@ private theorem section12_lemma_12_17_inf_cyclic
   have hIZ : IsZGroup I := by
     refine ⟨fun q hq Q => ?_⟩
     let p : Nat.Primes := ⟨q, hq⟩
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     by_cases hdiv : p.val ∣ Nat.card I
     · have hpodd : p.val ≠ 2 :=
         Odd.ne_two_of_dvd_nat IsMinCE.odd_order
@@ -341,19 +341,19 @@ private theorem section12_lemma_12_17_inf_cyclic
         (G := G) (E := I) (p := p) hpodd hrank Q
     · have hQbot : (Q : Subgroup I) = ⊥ := by
         by_contra hQne
-        haveI : Nontrivial (Q : Subgroup I) :=
+        have : Nontrivial (Q : Subgroup I) :=
           (Subgroup.nontrivial_iff_ne_bot (H := (Q : Subgroup I))).2 hQne
         have hpQ : p.val ∣ Nat.card (Q : Subgroup I) :=
           section12_prime_dvd_card_of_nontrivial_pSubgroup
             (p := p) (B := (Q : Subgroup I)) Q.isPGroup' inferInstance
         exact hdiv (hpQ.trans (Subgroup.card_subgroup_dvd_card (Q : Subgroup I)))
-      haveI : Subsingleton (Q : Subgroup I) := by
+      have : Subsingleton (Q : Subgroup I) := by
         rw [hQbot]
         infer_instance
       exact isCyclic_of_subsingleton (α := (Q : Subgroup I))
-  letI : IsZGroup I := hIZ
-  letI : IsMulCommutative I := hIcomm
-  letI : CommGroup I := IsMulCommutative.instCommGroup
+  let : IsZGroup I := hIZ
+  let : IsMulCommutative I := hIcomm
+  let : CommGroup I := IsMulCommutative.instCommGroup
   exact inferInstance
 
 /-- Lemma 12.17. -/

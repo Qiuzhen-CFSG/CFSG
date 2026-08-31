@@ -89,7 +89,7 @@ private theorem section10_generatorRank_le_primeRank_of_isPGroup_local
   have htop_p : IsPGroup p (⊤ : Subgroup R) := by
     simpa using hRp.to_subgroup (⊤ : Subgroup R)
   have htop_comm : IsMulCommutative (⊤ : Subgroup R) := by
-    letI : IsMulCommutative R := hRcomm
+    let : IsMulCommutative R := hRcomm
     infer_instance
   have hgen_le_top : generatorRank R ≤ generatorRank (⊤ : Subgroup R) := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -111,7 +111,7 @@ public theorem section10_groupRank_le_primeRank_of_isPGroup_local
   by_cases hU : U.Nonempty
   · have hsSup_mem : sSup U ∈ U := Nat.sSup_mem hU hUbdd
     rcases hsSup_mem with ⟨q, hq, hsSup_le⟩
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     have hqrank_le : primeRank q R ≤ primeRank p R := by
       by_cases hT :
           {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
@@ -165,7 +165,7 @@ public theorem section10_sylow_narrow_of_not_mem_alpha
     (P : Sylow p.val M) :
     IsNarrowPGroup p.val (P : Subgroup M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hprankM_le : primeRank p.val M ≤ 2 := by
     by_contra hnot
     have hthree : 3 ≤ primeRank p.val M := by omega
@@ -268,7 +268,7 @@ private theorem section10_sylow_narrow_of_mem_alpha_not_mem_beta
     (P : Sylow p.val M) :
     IsNarrowPGroup p.val (P : Subgroup M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hnotIdeal : ¬ section10IdealPrime p G := by
     intro hpIdeal
     exact hpβ ⟨hpα, hpIdeal⟩
@@ -330,10 +330,10 @@ public theorem section10_normalPComplements_of_not_mem_beta
       HasNormalPComplement p.val (section10MsigmaSubgroup M) ∧
       IsLargestPrimeDivisor p.val (Nat.card (M ⧸ pPrimeCore p.val M)) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  have hMsolv : IsSolvable M :=
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  haveI : IsSolvable M := hMsolv
+  have : Group.IsSolvable M := hMsolv
   have hModd : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
   have hp_dvd_M : p.val ∣ Nat.card M := by
@@ -364,13 +364,13 @@ private theorem section10_exists_hall_betaSubgroup
     {M : Subgroup G} (hM : M ∈ section9MaximalSubgroups G) :
     ∃ B : Subgroup M, IsHallSubgroup (section10BetaPrimes M) B := by
   classical
-  letI : MulDistribMulAction PUnit.{1} M := {
+  let : MulDistribMulAction PUnit.{1} M := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
     smul_mul := by intro a x y; rfl
     smul_one := by intro a; rfl }
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcop : Nat.Coprime (Nat.card PUnit.{1}) (Nat.card M) := by simp
   obtain ⟨B, hBHall, _hBinv⟩ :=
@@ -456,7 +456,7 @@ private theorem section10_betaHallSubgroup_subgroupOf_derived_le_pPrimeCore
     {B : Subgroup M} (hBHall : IsHallSubgroup (section10BetaPrimes M) B) :
     B.subgroupOf (derivedSubgroup M) ≤ pPrimeCore p.val (derivedSubgroup M) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hBD : B ≤ derivedSubgroup M :=
     section10_betaHallSubgroup_le_derivedSubgroup hM hBHall
   have hcompD : HasNormalPComplement p.val (derivedSubgroup M) :=
@@ -520,7 +520,7 @@ private theorem section10_betaCoreIntersection_isPiSubgroup
       (iInf_le (fun p : I => pPrimeCore p.val D) iq)
   have hq_core : q.val ∣ Nat.card (pPrimeCore q.val D) :=
     hqC.trans (Subgroup.card_dvd_of_le hC_le_core)
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   exact ((q.property.coprime_iff_not_dvd).1
     (pPrimeCore_coprime_card (G := D) (p := q.val))) hq_core
 
@@ -555,13 +555,13 @@ private theorem section10_betaHallSubgroup_le_mbetaSubgroup
     by
       intro p hp_dvd
       exact hCπ p (hp_dvd.trans (Subgroup.card_map_dvd (H := C) D.subtype))
-  haveI : D.Normal := by
+  have : D.Normal := by
     dsimp [D]
     infer_instance
-  letI : C.Characteristic := hCchar
+  let : C.Characteristic := hCchar
   have hCmap_normal : (C.map D.subtype).Normal := by
     infer_instance
-  letI : (C.map D.subtype).Normal := hCmap_normal
+  let : (C.map D.subtype).Normal := hCmap_normal
   have hCmap_le_K : C.map D.subtype ≤ section10MbetaSubgroup M := by
     simpa [section10MbetaSubgroup] using
       le_piCore_of_normal_isPiSubgroup (G := M) (section10BetaPrimes M)

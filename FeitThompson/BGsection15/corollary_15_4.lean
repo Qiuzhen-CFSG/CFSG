@@ -92,7 +92,7 @@ private theorem section15_normalizer_ne_top_of_nontrivial_pSubgroup
       htop_p.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G)
     haveI : Group.IsNilpotent G := IsPGroup.isNilpotent (p := p.val) (G := G)
       (h := hGp)
-    exact IsMinCE.not_solvable (G := G) (inferInstance : IsSolvable G)
+    exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
 
 /-- Corollary 15.4 setup: for a chosen nonidentity Sylow subgroup `S` of
 `H`, choose `M ∈ 𝓜(N_G(S))`; the Section 10 sigma-normalizer step gives
@@ -113,7 +113,8 @@ private theorem section15_corollary15_4_exists_maximal_for_sylow
   rcases hHall with ⟨_hHtop, hHHall⟩
   rcases hSHall with ⟨_hSleH', hSHallH⟩
   have hSprimeSet : subgroupPrimeSet S = ({p} : Set Nat.Primes) := by
-    simpa using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [hp_eq] using
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := p.val) (H := S) hSp hSne)
   have hpS : p ∈ subgroupPrimeSet S := by
@@ -251,7 +252,8 @@ private theorem section15_hall_pSubgroup_subgroupOf_normal_of_nilpotent
   rcases hSHall with ⟨_hSleH', hHallS⟩
   let Ssub : Subgroup H := S.subgroupOf H
   have hSprimeSet : subgroupPrimeSet S = ({p} : Set Nat.Primes) := by
-    simpa using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [hp_eq] using
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := p.val) (H := S) hSp hSne)
   have hpS : p ∈ subgroupPrimeSet S := by
@@ -287,7 +289,8 @@ private theorem section15_corollary15_4_exists_sylow_M_for_hall_subgroup
     exact hTp.of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := T) (K := M) hTleM).symm
   have hTprimeSet : subgroupPrimeSet T = ({q} : Set Nat.Primes) := by
-    simpa using
+    have hq_eq : (⟨q.val, Fact.out⟩ : Nat.Primes) = q := Subtype.ext rfl
+    simpa [hq_eq] using
       (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
         (G := G) (p := q.val) (H := T) hTp hTne)
   have hqT : q ∈ subgroupPrimeSet T := by
@@ -578,7 +581,8 @@ private theorem section15_corollary15_4_centralizing_sylow_le_msigma
     rcases hSHall with ⟨_hSleH', hSHallH⟩
     have hpS : p ∈ subgroupPrimeSet S := by
       have hSprimeSet : subgroupPrimeSet S = ({p} : Set Nat.Primes) := by
-        simpa using
+        have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+        simpa [hp_eq] using
           (section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
             (G := G) (p := p.val) (H := S) hSp hSne)
       simp [hSprimeSet]

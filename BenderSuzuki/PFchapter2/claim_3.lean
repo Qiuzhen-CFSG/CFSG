@@ -237,11 +237,11 @@ private theorem claim3_fixedPointSubgroup_exists_injective_to_quotient_QP
     let QP : Subgroup C := Q.comap C.subtype
     ∃ f : fixedPointSubgroup PL N →* QP.map (QuotientGroup.mk' core),
       Function.Injective f := by
-  letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-  letI : IsInvariant L R M := hMinv
-  letI : IsInvariant L M N := hNinv
+  let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+  let : IsInvariant L R M := hMinv
+  let : IsInvariant L M N := hNinv
   let PL : Subgroup L := P.subgroupOf L
-  letI : MulDistribMulAction PL N :=
+  let : MulDistribMulAction PL N :=
     MulDistribMulAction.compHom N PL.subtype
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let QP : Subgroup C := Q.comap C.subtype
@@ -335,16 +335,16 @@ private theorem claim3_fixedPointSubgroup_card_eq_prime_of_propositionOneConclus
     letI : MulDistribMulAction PL N :=
       MulDistribMulAction.compHom N PL.subtype
     Nat.card (fixedPointSubgroup PL N) = r := by
-  letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-  letI : IsInvariant L R M := hMinv
-  letI : IsInvariant L M N := hNinv
+  let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+  let : IsInvariant L R M := hMinv
+  let : IsInvariant L M N := hNinv
   let PL : Subgroup L := P.subgroupOf L
-  letI : MulDistribMulAction PL N :=
+  let : MulDistribMulAction PL N :=
     MulDistribMulAction.compHom N PL.subtype
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let QP : Subgroup C := Q.comap C.subtype
   let E : Subgroup N := fixedPointSubgroup PL N
-  letI : IsElementaryAbelian r N := hNelem
+  let : IsElementaryAbelian r N := hNelem
   have hEelem : IsElementaryAbelian r E := by
     refine
       { toIsMulCommutative := by infer_instance
@@ -354,8 +354,8 @@ private theorem claim3_fixedPointSubgroup_card_eq_prime_of_propositionOneConclus
     apply Subtype.ext
     exact Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
       (IsElementaryAbelian.exponent_dvd_p r N) (e : N)
-  letI : IsElementaryAbelian r E := hEelem
-  letI : Nontrivial E := hfixed_nontrivial
+  let : IsElementaryAbelian r E := hEelem
+  let : Nontrivial E := hfixed_nontrivial
   obtain ⟨j, hj⟩ :=
     claim3_fixedPointSubgroup_exists_injective_to_quotient_QP
       D Q Q1 P L hP_le_L hQ1_le_Q hQD haction R hRinv M hMinv N hNinv
@@ -382,8 +382,8 @@ private theorem clifford_prime_finrank_restriction
           Module.finrank F W.toSubmodule = 1) ∨
       Representation.IsIrreducible (rho.comp K.subtype) := by
   let rhoK : Representation F K V := rho.comp K.subtype
-  letI : Representation.IsIrreducible rho := hrho
-  letI : Nontrivial V :=
+  let : Representation.IsIrreducible rho := hrho
+  let : Nontrivial V :=
     Subrepresentation.irreducible_module_nontrivial rho
   obtain ⟨W, hWirr⟩ :=
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional rhoK
@@ -616,7 +616,7 @@ private theorem claim3_actor_card_dvd_prime_sub_one_of_oneDim_subrepresentation
     (hfree : ∀ k : K, k ≠ 1 → ∀ v : V, rho k v = v → v = 0) :
     Nat.card K ∣ r - 1 := by
   let rhoW := W.toRepresentation
-  letI : MulDistribMulAction K (Multiplicative W.toSubmodule) := {
+  let : MulDistribMulAction K (Multiplicative W.toSubmodule) := {
     smul k x := Multiplicative.ofAdd (rhoW k (Multiplicative.toAdd x))
     one_smul x := by
       change Multiplicative.ofAdd
@@ -679,7 +679,7 @@ private theorem finiteField_ringAut_eq_frobenius_pow
     (σ : F ≃+* F) :
     ∃ i : ℕ, i < p ∧ ∀ x : F, σ x = x ^ (r ^ i) := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   let σAlg : F ≃ₐ[ZMod r] F :=
     AlgEquiv.ofRingEquiv (f := σ) (by
       intro x
@@ -747,7 +747,7 @@ private theorem finiteField_finrank_eq_of_natCard_eq_prime_pow
     (hcard : Nat.card F = r ^ p) :
     Module.finrank (ZMod r) F = p := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   apply Nat.pow_right_injective (Fact.out : r.Prime).two_le
   calc
     r ^ Module.finrank (ZMod r) F = Nat.card F :=
@@ -763,14 +763,14 @@ private theorem exists_actor_with_prime_frobenius
     (hcardP : Nat.card P = p) (hcardF : Nat.card F = r ^ p) :
     ∃ a : P, ∀ x : F, σ a x = x ^ r := by
   classical
-  letI : Fintype P := Fintype.ofFinite P
-  letI : Fintype F := Fintype.ofFinite F
-  letI : Finite (F ≃+* F) :=
+  let : Fintype P := Fintype.ofFinite P
+  let : Fintype F := Fintype.ofFinite F
+  let : Finite (F ≃+* F) :=
     Finite.of_injective (fun e : F ≃+* F => (e : F → F)) (by
       intro e f h
       ext x
       exact congrFun h x)
-  letI : Fintype (F ≃+* F) := Fintype.ofFinite (F ≃+* F)
+  let : Fintype (F ≃+* F) := Fintype.ofFinite (F ≃+* F)
   have hfinrank : Module.finrank (ZMod r) F = p :=
     finiteField_finrank_eq_of_natCard_eq_prime_pow hcardF
   have hcardAut : Nat.card (F ≃+* F) = p :=
@@ -922,7 +922,7 @@ private theorem claim3_q1_subgroupOf_characteristic
     apply Subgroup.normal_subgroupOf_of_le_normalizer
     rw [← hsup]
     exact sup_le hS_norm Subgroup.le_normalizer
-  letI : Q1Q.Normal := hnormal
+  let : Q1Q.Normal := hnormal
   have hdisjQ : Disjoint SQ Q1Q := by
     rw [Subgroup.disjoint_def]
     intro x hxS hxQ1
@@ -1006,8 +1006,8 @@ private theorem claim3_frobenius_sup_of_prime_complement
   let L : Subgroup G := K ⊔ P
   let KL : Subgroup L := K.subgroupOf L
   let PL : Subgroup L := P.subgroupOf L
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : IsCyclic P := isCyclic_of_prime_card hPcard
+  have : Fact p.Prime := ⟨hp⟩
+  have : IsCyclic P := isCyclic_of_prime_card hPcard
   have hPcent : P ≤ Subgroup.centralizer (P : Set G) := by
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
@@ -1033,7 +1033,7 @@ private theorem claim3_frobenius_sup_of_prime_complement
   have hsupL : KL ⊔ PL = ⊤ := by
     rw [← Subgroup.subgroupOf_sup le_sup_left le_sup_right]
     exact Subgroup.subgroupOf_self L
-  letI : KL.Normal := by
+  let : KL.Normal := by
     simpa [KL, L] using hKnormal
   have hmul : (KL : Set L) * (PL : Set L) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
@@ -1128,7 +1128,7 @@ private theorem claim3_setup
       hch.section3.section2.S_sylow_in_Q hch.section3.section2.Q1_odd_order
       hch.section3.section2.S_disjoint_Q1 hch.section3.section2.S_commutes_Q1
       hch.section3.section2.Q_decomp
-  letI : (Q1.subgroupOf Q).Characteristic := hQ1char
+  let : (Q1.subgroupOf Q).Characteristic := hQ1char
   have hVleD : V ≤ D :=
     proposition_3_V_le_D H D Q K V W Q0 S Q1 t hch.section3.section2
   have hKPleD : K ⊔ P ≤ D :=
@@ -1192,9 +1192,9 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
     letI : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
     Representation.IsIrreducible
       (Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)) := by
-  letI : IsInvariant L M N := hNinv
-  letI : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
-  letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
+  let : IsInvariant L M N := hNinv
+  let : IsElementaryAbelian r N := claim3_isElementaryAbelian_subgroup N
+  let : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
   let rho := Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
   change IsSimpleOrder (Subrepresentation rho)
   refine
@@ -1233,7 +1233,7 @@ private theorem claim3_minimal_invariant_subgroup_representation_irreducible
       subst x
       simp
   · right
-    letI : IsInvariant L N T0 := hT0inv
+    let : IsInvariant L N T0 := hT0inv
     let T : Subgroup M := T0.map N.subtype
     have hTnormal : T.Normal := Subgroup.normal_of_isMulCommutative T
     have hTinv : IsInvariant L M T := by
@@ -1281,9 +1281,9 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
           IsElementaryAbelian r M ∧ IsElementaryAbelian r N ∧ N ≠ ⊥ ∧
             ∀ T : Subgroup M, T.Normal → IsInvariant L M T →
               T ≠ ⊥ → T ≤ N → T = N := by
-  letI : MulDistribMulAction L Q1 :=
+  let : MulDistribMulAction L Q1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer L Q1 hLnorm
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let R : Sylow r Q1 := default
   have hRne : (R : Subgroup Q1) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := Q1) (p := r) R hrdiv
@@ -1291,28 +1291,28 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
     exact Group.IsNilpotent.sylow_normal hnil r R
   have hRchar : (R : Subgroup Q1).Characteristic :=
     Sylow.characteristic_of_normal R hRnormal
-  letI : (R : Subgroup Q1).Characteristic := hRchar
+  let : (R : Subgroup Q1).Characteristic := hRchar
   have hRinv : IsInvariant L Q1 (R : Subgroup Q1) :=
     isInvariant_of_characteristic (R : Subgroup Q1)
-  letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-  haveI : Nontrivial R := (Subgroup.nontrivial_iff_ne_bot (R : Subgroup Q1)).2 hRne
+  let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+  have : Nontrivial R := (Subgroup.nontrivial_iff_ne_bot (R : Subgroup Q1)).2 hRne
   obtain ⟨M, hMnormal, hMinv, hMne, hMmin⟩ :=
     exists_minimal_normal_isInvariant (G := R) (A := L)
-  letI : M.Normal := hMnormal
-  letI : IsInvariant L R M := hMinv
-  have hRsolv : IsSolvable R := by
-    letI : Group.IsNilpotent R := R.isPGroup'.isNilpotent
+  let : M.Normal := hMnormal
+  let : IsInvariant L R M := hMinv
+  have hRsolv : Group.IsSolvable R := by
+    let : Group.IsNilpotent R := R.isPGroup'.isNilpotent
     infer_instance
-  have hMsolv : IsSolvable M := by
-    letI : IsSolvable R := hRsolv
+  have hMsolv : Group.IsSolvable M := by
+    let : Group.IsSolvable R := hRsolv
     infer_instance
-  letI : IsSolvable M := hMsolv
+  let : Group.IsSolvable M := hMsolv
   obtain ⟨q, hq, hMelemQ⟩ :=
     minimalInvariantNormal_solvable_exists_isElementaryAbelian
       (G := R) (A := L) M hMne hMmin
   have hqr : q = r := by
-    haveI : Fact q.Prime := ⟨hq⟩
-    letI : IsElementaryAbelian q M := hMelemQ
+    have : Fact q.Prime := ⟨hq⟩
+    let : IsElementaryAbelian q M := hMelemQ
     have hMr : IsPGroup r M := R.isPGroup'.to_subgroup M
     have hMq : IsPGroup q M := IsElementaryAbelian.isPGroup q M
     obtain ⟨a, ha⟩ := hMr.exists_card_eq
@@ -1330,8 +1330,8 @@ private theorem claim3_exists_minimal_invariant_elementaryAbelian
       simpa [hb] using hrM
     exact ((Nat.dvd_prime hq).mp hrq).resolve_left hr.ne_one |>.symm
   subst q
-  letI : IsElementaryAbelian r M := hMelemQ
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
+  let : IsElementaryAbelian r M := hMelemQ
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
   obtain ⟨N, hNnormal, hNinv, hNne, hNmin⟩ :=
     exists_minimal_normal_isInvariant (G := M) (A := L)
   have hNelem : IsElementaryAbelian r N := by
@@ -1366,10 +1366,10 @@ private theorem claim3_K_acts_fixedPointFree
     letI : MulDistribMulAction (K.subgroupOf L) N :=
       MulDistribMulAction.compHom N (K.subgroupOf L).subtype
     ∀ a : K.subgroupOf L, a ≠ 1 → ∀ x : N, a • x = x → x = 1 := by
-  letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-  letI : IsInvariant L R M := hMinv
-  letI : IsInvariant L M N := hNinv
-  letI : MulDistribMulAction (K.subgroupOf L) N :=
+  let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+  let : IsInvariant L R M := hMinv
+  let : IsInvariant L M N := hNinv
+  let : MulDistribMulAction (K.subgroupOf L) N :=
     MulDistribMulAction.compHom N (K.subgroupOf L).subtype
   intro a hane x hfix
   let aL : L := a
@@ -1411,8 +1411,8 @@ private theorem claim3_ringChar_not_dvd_actor_card_of_fixedPointFree
     (hNne : Nontrivial N)
     (hfree : ∀ a : A, a ≠ 1 → ∀ x : N, a • x = x → x = 1) :
     ¬ ringChar (ZMod r) ∣ Nat.card A := by
-  letI : Fact r.Prime := ⟨hr⟩
-  letI : Nontrivial N := hNne
+  let : Fact r.Prime := ⟨hr⟩
+  let : Nontrivial N := hNne
   have hAdvd : Nat.card A ∣ Nat.card N - 1 :=
     Section6.natCard_actor_dvd_group_card_sub_one hfree
   have hNp : IsPGroup r N := IsElementaryAbelian.isPGroup r N
@@ -1459,13 +1459,13 @@ private theorem claim3_fixedPointSubgroup_nontrivial_of_dimension_formula
     letI : MulDistribMulAction P N :=
       MulDistribMulAction.compHom N P.subtype
     Nontrivial (fixedPointSubgroup P N) := by
-  letI : MulDistribMulAction P N :=
+  let : MulDistribMulAction P N :=
     MulDistribMulAction.compHom N P.subtype
-  letI : Nontrivial N := hNne
+  let : Nontrivial N := hNne
   let rho := Theory.Representation.ofElementaryAbelianAction
     (A := L) (G := N) (p := r)
   by_contra hnon
-  haveI : Subsingleton (fixedPointSubgroup P N) :=
+  have : Subsingleton (fixedPointSubgroup P N) :=
     not_nontrivial_iff_subsingleton.mp hnon
   have hfix : fixedPointSubgroup P N = ⊥ := by
     rw [Subgroup.eq_bot_iff_forall]
@@ -1496,7 +1496,7 @@ private theorem claim3_fixedSubspace_finrank_eq_one_of_fixedPointSubgroup_card_e
       (A := L) (G := N) (p := r)
     Module.finrank (ZMod r) (rho.fixedSubspace P) = 1 := by
   classical
-  letI : MulDistribMulAction P N :=
+  let : MulDistribMulAction P N :=
     MulDistribMulAction.compHom N P.subtype
   let rho := Theory.Representation.ofElementaryAbelianAction
     (A := L) (G := N) (p := r)
@@ -1536,7 +1536,7 @@ private theorem claim3_isaacs_dimension_formula
     Module.finrank (ZMod r) (Additive N) =
       Nat.card P * Module.finrank (ZMod r) (rho.fixedSubspace P) := by
   let rho := Theory.Representation.ofElementaryAbelianAction (A := L) (G := N) (p := r)
-  letI : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
+  let : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
   have hfixedK : rho.fixedSubspace K = ⊥ :=
     theorem_3_7_fixedSubspace_eq_bot_of_fixedPointSubgroup_eq_bot K hKfix
   have hdim :=
@@ -1625,7 +1625,7 @@ private theorem claim3_card_eq_mul_of_characteristic_decomposition
     Nat.card Q = Nat.card S * Nat.card Q1 := by
   let SQ : Subgroup Q := S.subgroupOf Q
   let Q1Q : Subgroup Q := Q1.subgroupOf Q
-  letI : Q1Q.Normal := by infer_instance
+  let : Q1Q.Normal := by infer_instance
   have hdisjQ : Disjoint Q1Q SQ := by
     rw [Subgroup.disjoint_def]
     intro x hxQ1 hxS
@@ -1636,7 +1636,7 @@ private theorem claim3_card_eq_mul_of_characteristic_decomposition
     exact Subgroup.subgroupOf_self Q
   have hcomp : Q1Q.IsComplement' SQ :=
     isComplement'_of_disjoint_sup_eq_top_of_normal Q1Q SQ hdisjQ hsupQ
-  have hcard := hcomp.card_mul
+  have hcard := hcomp.card_mul_card
   simpa [Q1Q, SQ, natCard_subgroupOf_eq Q1 Q hQ1le,
     natCard_subgroupOf_eq S Q hSle, Nat.mul_comm] using hcard.symm
 
@@ -1647,7 +1647,7 @@ private theorem claim3_card_KP_eq_of_frobenius
       (K.subgroupOf (K ⊔ P : Subgroup G))
       (P.subgroupOf (K ⊔ P : Subgroup G))) :
     Nat.card (K ⊔ P : Subgroup G) = Nat.card K * Nat.card P := by
-  have hcard := hfrob.isComplement'.card_mul
+  have hcard := hfrob.isComplement'.card_mul_card
   simpa [natCard_subgroupOf_eq K (K ⊔ P) le_sup_left,
     natCard_subgroupOf_eq P (K ⊔ P) le_sup_right] using hcard.symm
 
@@ -1729,7 +1729,7 @@ private theorem claim3_irreducible_semilinear_core
         Units.map (sigma2 a).toMonoidWithZeroHom (scalar2 k)) :
     (∃ i : Nat, i ≤ p - 1 ∧ r ≡ 2 ^ i [MOD 2 ^ p - 1]) ∧ r ≠ p := by
   let T : Subgroup K := ⊤
-  letI : Representation.IsIrreducible
+  let : Representation.IsIrreducible
       (AppendixIRepresentationOfT (p := r) (E := N) T) := by
     let rhoK : Representation (ZMod r) K (Additive N) :=
       Theory.Representation.ofElementaryAbelianAction (A := K) (G := N) (p := r)
@@ -1757,16 +1757,16 @@ private theorem claim3_irreducible_semilinear_core
     rw [htopRep]
     exact htopIrr
   let rhoT := AppendixIRepresentationOfT (p := r) (E := N) T
-  letI : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
-  letI : Field (AppendixIEndT (p := r) (E := N) T) := endField_field rhoT
-  letI : Finite (AppendixIEndT (p := r) (E := N) T) := endField_finite rhoT
-  letI : Module (AppendixIEndT (p := r) (E := N) T) (Additive N) :=
+  let : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
+  let : Field (AppendixIEndT (p := r) (E := N) T) := endField_field rhoT
+  let : Finite (AppendixIEndT (p := r) (E := N) T) := endField_finite rhoT
+  let : Module (AppendixIEndT (p := r) (E := N) T) (Additive N) :=
     endFieldModule rhoT
   let Fr := AppendixIFpT (p := r) (E := N) T
-  letI : Field Fr := (Finite.isField_of_domain Fr).toField
-  letI : Module Fr (Additive N) :=
+  let : Field Fr := (Finite.isField_of_domain Fr).toField
+  let : Module Fr (Additive N) :=
     Module.compHom (Additive N) Fr.val.toRingHom
-  letI : CharP Fr r := charP_of_injective_algebraMap' (ZMod r) r
+  let : CharP Fr r := charP_of_injective_algebraMap' (ZMod r) r
   have hscalarPackage := claim3_appendixI_scalar_adapter_KP
     K P act hact_coe hNdim
   obtain ⟨scalarR, hFrCard, hscalarR,
@@ -1786,7 +1786,7 @@ private theorem claim3_irreducible_semilinear_core
             (A := L) (G := N) (p := r)) (a : L) x)
     exact hscalar_conj a k x
   have hNcard : Nat.card (Additive N) = r ^ p := by
-    letI : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
+    let : FiniteDimensional (ZMod r) (Additive N) := Module.Finite.of_finite
     have hcard := Module.natCard_eq_pow_finrank
       (K := ZMod r) (V := Additive N)
     simpa [hNdim] using hcard
@@ -1850,8 +1850,8 @@ private theorem claim3_chapterI_field_model
       _q0_add, k_units, vmodW_aut, modelIso, hmodelCard,
       _hrhoMul, _hrhoAut_inl, hrhoAut_inr, _hrhoD, _hmodel_q,
       hmodel_k, hmodel_v, _hk_right, _hv_right⟩
-  letI : (W.subgroupOf V).Normal := hWV
-  letI : (W.subgroupOf D).Normal := hWD
+  let : (W.subgroupOf V).Normal := hWV
+  let : (W.subgroupOf D).Normal := hWD
   let F2 : Type := GaloisField 2 n
   let scalar2 : K0 →* F2ˣ :=
     k_units.toMonoidHom.comp kToK
@@ -1925,21 +1925,21 @@ private theorem chapter2_claim3_irreducible_branch
   let Psub : Subgroup L := P.subgroupOf L
   have hfrob' : IsFrobeniusGroupWithKernelComplement Ksub Psub := by
     simpa [Ksub, Psub, L] using hfrob
-  letI : Ksub.Normal := hfrob'.normal
-  letI : Nontrivial Ksub :=
+  let : Ksub.Normal := hfrob'.normal
+  let : Nontrivial Ksub :=
     (Subgroup.nontrivial_iff_ne_bot Ksub).2 hfrob'.kernel_ne_bot
   let eK : Ksub ≃* K :=
     Subgroup.subgroupOfEquivOfLe (show K ≤ L from le_sup_left)
   let eP : Psub ≃* P :=
     Subgroup.subgroupOfEquivOfLe (show P ≤ L from le_sup_right)
-  letI : IsCyclic Ksub :=
+  let : IsCyclic Ksub :=
     eK.isCyclic.mpr
       (proposition_2 H D Q K V W Q0 S Q1 t hsec).1
-  letI : MulDistribMulAction Ksub N :=
+  let : MulDistribMulAction Ksub N :=
     MulDistribMulAction.compHom N Ksub.subtype
   have hKfree' : ∀ a : Ksub, a ≠ 1 → ∀ x : N, a • x = x → x = 1 := by
     simpa [Ksub, L] using hKfree
-  letI : FaithfulSMul Ksub N :=
+  let : FaithfulSMul Ksub N :=
     { eq_of_smul_eq_smul := by
         intro a b hab
         apply mul_inv_eq_one.mp
@@ -1953,7 +1953,7 @@ private theorem chapter2_claim3_irreducible_branch
           _ = x := smul_inv_smul b x }
   have hPnormK : Psub ≤ Subgroup.normalizer (Ksub : Set L) :=
     Subgroup.le_normalizer_of_normal (H := Ksub)
-  letI : MulDistribMulAction Psub Ksub :=
+  let : MulDistribMulAction Psub Ksub :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer Psub Ksub hPnormK
   let act : Psub →* MulAut Ksub :=
     MulDistribMulAction.toMulAut Psub Ksub
@@ -2045,37 +2045,37 @@ private theorem chapter2_claim3_prime_divisors_Q1
     ∀ r : ℕ, Nat.Prime r → r ∣ Nat.card Q1 →
       (∃ i : ℕ, i ≤ p - 1 ∧ r ≡ 2 ^ i [MOD 2 ^ p - 1]) ∧ r ≠ p := by
   intro r hr hrdiv
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let L : Subgroup G := K ⊔ P
   have hsetup := claim3_setup H D Q K V W Q0 S Q1 P t s p hch
-  letI : MulDistribMulAction L Q1 :=
+  let : MulDistribMulAction L Q1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer L Q1 hsetup.2.1
   have hnilQ : Group.IsNilpotent Q :=
     PFchapter1section2.proposition_1_b
       H D Q K V W Q0 S Q1 t hch.section3.section2
-  letI : Group.IsNilpotent Q := hnilQ
+  let : Group.IsNilpotent Q := hnilQ
   have hnilQ1 : Group.IsNilpotent Q1 := by
     let Q1Q : Subgroup Q := Q1.subgroupOf Q
-    letI : Group.IsNilpotent Q1Q := Subgroup.isNilpotent Q1Q
+    let : Group.IsNilpotent Q1Q := Subgroup.isNilpotent Q1Q
     exact Group.nilpotent_of_mulEquiv
       (Subgroup.subgroupOfEquivOfLe hch.section3.section2.Q1_le_Q)
   obtain ⟨R, hRinv, M, hMinv, N, hNinv, hMelem, hNelem, hNne, hNmin⟩ :=
     claim3_exists_minimal_invariant_elementaryAbelian
       L Q1 hsetup.2.1 hr hrdiv hnilQ1
-  letI : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
-  letI : IsInvariant L R M := hMinv
-  letI : IsInvariant L M N := hNinv
-  letI : IsElementaryAbelian r M := hMelem
-  letI : IsElementaryAbelian r N := hNelem
-  letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
+  let : IsInvariant L Q1 (R : Subgroup Q1) := hRinv
+  let : IsInvariant L R M := hMinv
+  let : IsInvariant L M N := hNinv
+  let : IsElementaryAbelian r M := hMelem
+  let : IsElementaryAbelian r N := hNelem
+  let : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hNne
   let Ksub : Subgroup L := K.subgroupOf L
   let Psub : Subgroup L := P.subgroupOf L
-  letI : Ksub.Normal := hsetup.2.2.normal
-  letI : Nontrivial Ksub :=
+  let : Ksub.Normal := hsetup.2.2.normal
+  let : Nontrivial Ksub :=
     (Subgroup.nontrivial_iff_ne_bot Ksub).2 hsetup.2.2.kernel_ne_bot
-  letI : MulDistribMulAction Ksub N :=
+  let : MulDistribMulAction Ksub N :=
     MulDistribMulAction.compHom N Ksub.subtype
-  letI : MulDistribMulAction Psub N :=
+  let : MulDistribMulAction Psub N :=
     MulDistribMulAction.compHom N Psub.subtype
   have haction (l : L) (q : Q1) :
       ((l • q : Q1) : G) = (l : G) * (q : G) * (l : G)⁻¹ :=
@@ -2115,7 +2115,7 @@ private theorem chapter2_claim3_prime_divisors_Q1
     omega
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let OmegaP : Type _ := {w : Ω // w ∈ fixedPointsOfSubgroup G Ω P}
-  letI : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
+  let : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
   let HP : Subgroup C := H.comap C.subtype
   let DP : Subgroup C := D.comap C.subtype
   let QP : Subgroup C := Q.comap C.subtype
@@ -2125,10 +2125,10 @@ private theorem chapter2_claim3_prime_divisors_Q1
   rcases h2b with
     ⟨hNcore, hnormal, quotientAction, hsmul, hAbar,
       F, hF, hFfinite, hFnontrivial, _unitEquiv, hPO, _hcharacteristic⟩
-  letI : RightNearField F := hF
-  letI : Finite F := hFfinite
-  letI : Nontrivial F := hFnontrivial
-  letI : core.Normal := hnormal
+  let : RightNearField F := hF
+  let : Finite F := hFfinite
+  let : Nontrivial F := hFnontrivial
+  let : core.Normal := hnormal
   have hcore_le_DP : core ≤ DP := by
     change pointStabilizerCore C OmegaP ≤ DP
     rw [← hNcore]
@@ -2228,7 +2228,7 @@ private theorem chapter2_claim3_coprime_Q_K_sup_P
     _root_.BenderSuzuki.PFchapter2.HypothesisB2 G p)) :
     Nat.Coprime (Nat.card Q) (Nat.card ((K ⊔ P : Subgroup G))) := by
   have hsetup := claim3_setup H D Q K V W Q0 S Q1 P t s p hch
-  letI : (Q1.subgroupOf Q).Characteristic := hsetup.1
+  let : (Q1.subgroupOf Q).Characteristic := hsetup.1
   have hQcard : Nat.card Q = Nat.card S * Nat.card Q1 :=
     claim3_card_eq_mul_of_characteristic_decomposition Q S Q1
       hch.section3.section2.S_le_Q hch.section3.section2.Q1_le_Q

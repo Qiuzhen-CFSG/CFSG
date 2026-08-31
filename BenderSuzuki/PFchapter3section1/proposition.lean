@@ -755,7 +755,7 @@ private theorem cubic_linear_contradiction
   have hKcomm : IsMulCommutative K := hKcyclic.isMulCommutative
   let Cfix : Subgroup K := fixedPointSubgroup P K
   let Ccomm : Subgroup K := commutatorAction (A := P) (G := K)
-  have hKsolvable : IsSolvable K := by
+  have hKsolvable : Group.IsSolvable K := by
     letI : IsMulCommutative K := hKcomm
     infer_instance
   have hcompl : IsCompl Cfix Ccomm := by
@@ -881,7 +881,7 @@ private theorem cubic_linear_contradiction
       exact hAodd.coprime_two_right.pow_right m
     letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     letI : Group.IsNilpotent S := hSpgroup.isNilpotent
-    have hSsolvable : IsSolvable S := by infer_instance
+    have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
       fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
         (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
@@ -1053,7 +1053,7 @@ private theorem cubic_linear_contradiction
     rw [hPcard, hm]
     exact hpOdd.coprime_two_right.pow_right m
   letI : Group.IsNilpotent S := hSpgroup.isNilpotent
-  have hSsolvable : IsSolvable S := by infer_instance
+  have hSsolvable : Group.IsSolvable S := by infer_instance
   have hfixedEq :=
     fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
       (G := S) (A := P) hSsolvable hPScoprime (∅ : Set Nat.Primes)
@@ -1646,7 +1646,9 @@ private theorem semilinear_map_isInvariant
       x ∈ T.map ((@MulDistribMulAction.toMonoidEnd P E _ _ pAction) c) →
         k • x ∈ T.map ((@MulDistribMulAction.toMonoidEnd P E _ _ pAction) c) := by
     intro k x hx
-    rw [Subgroup.mem_map] at hx ⊢
+    change x ∈ c • T at hx
+    change k • x ∈ c • T
+    rw [Subgroup.pointwise_smul_def] at hx ⊢
     rcases hx with ⟨y, hyT, rfl⟩
     refine ⟨conj c k • y, (hT (conj c k) y).mp hyT, ?_⟩
     exact (hsem c k y).symm
@@ -2323,7 +2325,7 @@ private theorem cubic_order_five_contradiction
       exact hAodd.coprime_two_right.pow_right m
     letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     letI : Group.IsNilpotent S := hSpgroup.isNilpotent
-    have hSsolvable : IsSolvable S := by infer_instance
+    have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
       fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
         (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
@@ -4392,7 +4394,7 @@ public theorem proposition
         exact IsPGroup.of_card (by simpa using hm)
       letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       letI : Group.IsNilpotent S := hSpgroup.isNilpotent
-      have hSsolvable : IsSolvable S := by infer_instance
+      have hSsolvable : Group.IsSolvable S := by infer_instance
       have hpDvdD : p ∣ Nat.card D := by
         rw [← hPcard]
         exact Subgroup.card_dvd_of_le (hPV'.trans hVleD)
@@ -4558,7 +4560,7 @@ public theorem proposition
         exact IsPGroup.of_card (by simpa using hm)
       letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       letI : Group.IsNilpotent S := hSpgroup.isNilpotent
-      have hSsolvable : IsSolvable S := by infer_instance
+      have hSsolvable : Group.IsSolvable S := by infer_instance
       have hpDvdD : p ∣ Nat.card D := by
         rw [← hPcard]
         exact Subgroup.card_dvd_of_le (hPV.trans hVleD)

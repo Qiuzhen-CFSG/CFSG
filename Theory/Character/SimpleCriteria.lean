@@ -31,16 +31,16 @@ public theorem irreducible_iff_end_dimension_one
     Representation.IsIrreducible ρ ↔
       Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 := by
   classical
-  haveI : NeZero (Nat.card G : ℂ) := ⟨by
+  have : NeZero (Nat.card G : ℂ) := ⟨by
     exact_mod_cast (Nat.card_pos (α := G)).ne'⟩
   constructor
   · intro hρ
-    letI : Representation.IsIrreducible ρ := hρ
+    let : Representation.IsIrreducible ρ := hρ
     exact Representation.IsIrreducible.finrank_intertwiningMap_self (ρ := ρ)
   · intro hend
     have hpos : 0 < Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) := by
       omega
-    haveI : Nontrivial (Representation.IntertwiningMap ρ ρ) :=
+    have : Nontrivial (Representation.IntertwiningMap ρ ρ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Representation.IntertwiningMap ρ ρ)).mp hpos
     have hV_nontrivial : Nontrivial V := by
       by_contra hV
@@ -49,8 +49,8 @@ public theorem irreducible_iff_end_dimension_one
         ext v
         exact hsub.elim _ _
       exact one_ne_zero hzero
-    haveI : Nontrivial V := hV_nontrivial
-    letI : Nontrivial ρ.asModule := hV_nontrivial
+    have : Nontrivial V := hV_nontrivial
+    let : Nontrivial ρ.asModule := hV_nontrivial
     rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
     change IsSimpleOrder (Submodule (MonoidAlgebra ℂ G) ρ.asModule)
     refine
@@ -146,7 +146,7 @@ public theorem irreducible_iff_character_norm_one
   classical
   have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := G)).ne'
-  letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
+  let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
   have hinner :
       classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) =
         (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g) := by
@@ -219,11 +219,11 @@ public theorem equiv_of_irreducible_char_eq
     (hc : ¬ ringChar F ∣ Nat.card G)
     (hchar : ρ.character = σ.character) :
     Nonempty (Equiv σ ρ) := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hcard_ne_zero : (Nat.card G : F) ≠ 0 := by
     intro hzero
     exact hc ((ringChar.spec F (Nat.card G)).1 hzero)
-  letI : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne_zero
+  let : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne_zero
   by_cases hE : Nonempty (Equiv σ ρ)
   · exact hE
   · have horth := Representation.char_orthonormal (ρ := ρ) (σ := σ)

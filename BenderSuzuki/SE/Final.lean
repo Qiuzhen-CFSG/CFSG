@@ -290,13 +290,13 @@ public theorem IsStronglyEmbedded.isBorelSubgroup_of_normal_complement
     simpa [D] using hM.normal_complement_even htM hQ
   have hQMnormal : (Q.subgroupOf M).Normal := by
     simpa using hQ.normal_in_M
-  have hQMsolv : IsSolvable (Q.subgroupOf M) := by
+  have hQMsolv : Group.IsSolvable (Q.subgroupOf M) := by
     let eQ : Q.subgroupOf M ≃* Q :=
       Subgroup.subgroupOfEquivOfLe hQ.le_M
     letI : Group.IsNilpotent Q := hQnil
-    exact solvable_of_surjective eQ.symm.surjective
+    exact Group.isSolvable_of_surjective eQ.symm.toEquiv.surjective
       (f := eQ.symm.toMonoidHom)
-  have hDMsolv : IsSolvable (D.subgroupOf M) := by
+  have hDMsolv : Group.IsSolvable (D.subgroupOf M) := by
     have hcard : Nat.card (D.subgroupOf M) = Nat.card D :=
       Nat.card_congr
         (Subgroup.subgroupOfEquivOfLe (H := D) (K := M)
@@ -326,12 +326,12 @@ public theorem IsStronglyEmbedded.isBorelSubgroup_of_normal_complement
   have hcomp : QM.IsComplement' DM :=
     isComplement'_of_disjoint_sup_eq_top_of_normal QM DM
       hdisjointM hsupM
-  have hMsolv : IsSolvable M := by
+  have hMsolv : Group.IsSolvable M := by
     let eQuot : M ⧸ QM ≃* DM := hcomp.symm.QuotientMulEquiv
-    letI : IsSolvable QM := by simpa [QM] using hQMsolv
-    letI : IsSolvable DM := by simpa [DM] using hDMsolv
-    letI : IsSolvable (M ⧸ QM) :=
-      solvable_of_surjective eQuot.symm.surjective
+    letI : Group.IsSolvable QM := by simpa [QM] using hQMsolv
+    letI : Group.IsSolvable DM := by simpa [DM] using hDMsolv
+    letI : Group.IsSolvable (M ⧸ QM) :=
+      Group.isSolvable_of_surjective eQuot.symm.toEquiv.surjective
         (f := eQuot.symm.toMonoidHom)
     exact isSolvable_of_normal_subgroup_and_quotient QM
   have hQnormalizer : M ≤ Subgroup.normalizer (Q : Set G) :=

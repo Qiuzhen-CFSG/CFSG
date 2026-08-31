@@ -1532,13 +1532,13 @@ public theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_of_isInvariant_sec9
     quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hCinv
   letI : MulAction.QuotientAction W1 (C.subgroupOf U) :=
     quotientAction_of_isInvariant (A := W1) (C.subgroupOf U) hCinv
-  have hUsolv : IsSolvable U := by
+  have hUsolv : Group.IsSolvable U := by
     rcases h92.typePDefinitionData with
       ⟨_hMFsource, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD,
         hUnil, _hW1normU, _hcompDU, _hMFnotcyc, _hsecond, _hfitEq,
         _hfitLeD, _hW2le, _hW2cyc, _hW2ne, _hcentW1, _hnormX⟩
-    haveI : Group.IsNilpotent U := hUnil
-    infer_instance
+    letI : Group.IsNilpotent U := hUnil
+    exact IsNilpotent.to_isSolvable
   have hcop : Nat.Coprime (Nat.card W1) (Nat.card U) :=
     theorem_9_7_W1_card_coprime_U_card_of_hypothesis_9_2_sec9 h92
   have hfixU_bot : fixedPointSubgroup W1 U = ⊥ :=
@@ -11512,12 +11512,20 @@ private theorem
   intro w h
   rcases hWactionAdd w h with ⟨hconjMF, hφH, _hright, hunit⟩
   refine ⟨hconjMF, ?_, ?_⟩
-  · simpa [φW, theorem_9_7_ringAut_of_addEquiv_on_unit_span_sec9] using hφH
+  · change
+      φH (QuotientGroup.mk' (H0.subgroupOf MF)
+        ⟨(w : G)⁻¹ * (h : MF) * (w : G), hconjMF h⟩) =
+        Multiplicative.ofAdd
+          ((φWadd w) (Multiplicative.toAdd
+            (φH (QuotientGroup.mk' (H0.subgroupOf MF) h))))
+    exact hφH
   · intro x
     apply Units.ext
     change (φW w) ((((φU x : Ustar) : Fˣ) : F)) =
       (((φU ((w⁻¹ : W1) • x) : Ustar) : Fˣ) : F)
-    simpa [φW, theorem_9_7_ringAut_of_addEquiv_on_unit_span_sec9] using hunit x
+    change (φWadd w) ((((φU x : Ustar) : Fˣ) : F)) =
+      (((φU ((w⁻¹ : W1) • x) : Ustar) : Fˣ) : F)
+    exact hunit x
 
 private theorem
     theorem_9_7_schur_field_model_compatibility_noninjective_raw_from_elementary_irreducible_hom_source_bridge_sec9

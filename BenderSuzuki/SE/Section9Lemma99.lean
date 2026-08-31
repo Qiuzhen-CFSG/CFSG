@@ -282,10 +282,10 @@ public theorem lemma99_exists_prime_dvd_abelianization
     {E : Type*} [Group E] [Finite E] [Nontrivial E]
     (hEodd : Odd (Nat.card E)) :
     ∃ p : ℕ, Nat.Prime p ∧ p ∣ Nat.card (E ⧸ derivedSubgroup E) := by
-  have hsolv : IsSolvable E := odd_order_theorem E hEodd
+  have hsolv : Group.IsSolvable E := odd_order_theorem E hEodd
   have hder_lt : derivedSubgroup E < ⊤ := by
     change commutator E < ⊤
-    exact hsolv.commutator_lt_top_of_nontrivial E
+    exact Group.IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   have hqne : Nat.card (E ⧸ derivedSubgroup E) ≠ 1 := by
     intro hq
     have hcard := Subgroup.card_eq_card_quotient_mul_card_subgroup
@@ -436,7 +436,7 @@ public theorem lemma99_order_p_fitting_centralizer_chain
       P ≤ Subgroup.centralizer
         ((pPrimeCore p (fittingSubgroup R)).map
           (fittingSubgroup R).subtype : Set R))
-    (hsolv : IsSolvable R) :
+    (hsolv : Group.IsSolvable R) :
     P ≤ Subgroup.centralizer (fittingSubgroup R : Set R) ∧
       P ≤ fittingSubgroup R ∧
       P.subgroupOf (fittingSubgroup R) ≤
@@ -499,7 +499,7 @@ private theorem lemma99_ambient_order_p_fitting_centralizer_chain
       P ≤ Subgroup.centralizer
         ((((pPrimeCore p (fittingSubgroup R)).map
           (fittingSubgroup R).subtype).map R.subtype : Subgroup X) : Set X))
-    (hsolv : IsSolvable R) :
+    (hsolv : Group.IsSolvable R) :
     P ≤ Subgroup.centralizer
         (((fittingSubgroup R).map R.subtype : Subgroup X) : Set X) ∧
       P ≤ (fittingSubgroup R).map R.subtype ∧
@@ -909,7 +909,7 @@ public theorem lemma99_first_nineF_fitting_center
   have hRleD : R ≤ D := hRleE.trans hED
   have hRodd : Odd (Nat.card R) :=
     hDodd.of_dvd_nat (Subgroup.card_dvd_of_le hRleD)
-  have hRsolv : IsSolvable R := odd_order_theorem R hRodd
+  have hRsolv : Group.IsSolvable R := odd_order_theorem R hRodd
   have hcyclic : ∀ Q : Sylow p R, IsCyclic (Q : Subgroup R) :=
     lemma99_all_sylow_cyclic_of_ambient_sylow E R hRleE S hScyclic
   simpa [R, F, A] using
@@ -946,7 +946,7 @@ private theorem lemma99_conjNormal_ker_eq_centralizer
 
 private theorem lemma99_fitting_quotient_commutative
     {R : Type*} [Group R] [Finite R]
-    (hsolv : IsSolvable R)
+    (hsolv : Group.IsSolvable R)
     (hFcyclic : IsCyclic (fittingSubgroup R)) :
     IsMulCommutative (R ⧸ fittingSubgroup R) := by
   letI : IsCyclic (fittingSubgroup R) := hFcyclic
@@ -977,7 +977,7 @@ private theorem lemma99_fitting_quotient_commutative
 
 private theorem lemma99_commutator_le_fitting_of_cyclic
     {R : Type*} [Group R] [Finite R]
-    (hsolv : IsSolvable R)
+    (hsolv : Group.IsSolvable R)
     (hFcyclic : IsCyclic (fittingSubgroup R)) :
     derivedSubgroup R ≤ fittingSubgroup R := by
   letI : (fittingSubgroup R).Normal := inferInstance
@@ -1112,7 +1112,7 @@ public theorem lemma99_second_nineF
       (Subgroup.mem_sup_left hk) (Subgroup.mem_sup_right hr)
   have hRodd : Odd (Nat.card R) :=
     hDodd.of_dvd_nat (Subgroup.card_dvd_of_le (hRE.trans hED))
-  have hRsolv : IsSolvable R := odd_order_theorem R hRodd
+  have hRsolv : Group.IsSolvable R := odd_order_theorem R hRodd
   have hFitCyclic : IsCyclic (fittingSubgroup R) := by
     let e : fittingSubgroup R ≃* F :=
       Subgroup.equivMapOfInjective
@@ -1776,8 +1776,8 @@ public theorem lemma99_fitting_cyclic_of_first_nineF
   have hRodd : Odd (Nat.card R) :=
     hDodd.of_dvd_nat (Subgroup.card_dvd_of_le
       (hRleE.trans hED))
-  have hRsolv : IsSolvable R := odd_order_theorem R hRodd
-  letI : IsSolvable R := hRsolv
+  have hRsolv : Group.IsSolvable R := odd_order_theorem R hRodd
+  letI : Group.IsSolvable R := hRsolv
   have hFne : F ≠ ⊥ := by
     intro hFbot
     have hfitbot : fittingSubgroup R = ⊥ := by

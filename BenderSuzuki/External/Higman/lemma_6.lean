@@ -903,7 +903,7 @@ private theorem lemma6_action_order_sync_of_brackets
     have hU_card_gt : 1 < Nat.card U := by
       rw [hU_card]
       exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-    letI : Nontrivial U := Finite.one_lt_card_iff_nontrivial.mp hU_card_gt
+    let : Nontrivial U := Finite.one_lt_card_iff_nontrivial.mp hU_card_gt
     exact (top_ne_bot htop_eq_bot).elim
 
 private theorem lemma6_lowerCentralFactorKernel_zero_le
@@ -927,7 +927,7 @@ private theorem lemma6_odd_aut_eq_one
     (htheta_odd : Odd (orderOf theta))
     (hfactor : lowerCentralFactorLinearAut theta 0 = 1) :
     theta = 1 := by
-  letI : Fact (IsPGroup 2 H) := ⟨hH_two⟩
+  let : Fact (IsPGroup 2 H) := ⟨hH_two⟩
   have hPhi : frattini H = higmanLowerCentralSeries H 1 := by
     rw [frattini_eq_closure_commutator_union_powers (R := H) (p := 2)]
     apply le_antisymm
@@ -954,10 +954,10 @@ private theorem lemma6_odd_aut_eq_one
     exact hAodd.coprime_two_right.pow_right r
   have hPhiInv : IsInvariant A H (frattini H) :=
     isInvariant_of_characteristic (A := A) (G := H) (frattini H)
-  letI : MulAction.QuotientAction A (frattini H) :=
+  let : MulAction.QuotientAction A (frattini H) :=
     quotientAction_of_isInvariant
       (A := A) (G := H) (frattini H) hPhiInv
-  letI : MulDistribMulAction A (H ⧸ frattini H) :=
+  let : MulDistribMulAction A (H ⧸ frattini H) :=
     quotientMulDistribMulAction
       (A := A) (G := H) (frattini H) hPhiInv
   let thetaGen : A := ⟨theta, Subgroup.mem_zpowers theta⟩
@@ -998,8 +998,8 @@ private theorem lemma6_odd_aut_eq_one
     exact smul_eq_self_of_mem_zpowers ha_mem (hthetaFix q)
   have hnil : Group.IsNilpotent H :=
     IsPGroup.isNilpotent (p := 2) (G := H) hH_two
-  letI : Group.IsNilpotent H := hnil
-  have hsolv : IsSolvable H := by infer_instance
+  let : Group.IsNilpotent H := hnil
+  have hsolv : Group.IsSolvable H := by infer_instance
   have hsup :
       fixedPointSubgroup A H ⊔
           commutatorAction (A := A) (G := H) = ⊤ :=
@@ -1261,7 +1261,7 @@ private theorem lemma6_lowerCentralQuotient_order_three
   have hL3_card_gt : 1 < Nat.card (LowerCentralFactor H 2) := by
     rw [hL3_card]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial (LowerCentralFactor H 2) :=
+  let : Nontrivial (LowerCentralFactor H 2) :=
     Finite.one_lt_card_iff_nontrivial.mp hL3_card_gt
   obtain ⟨z, hz⟩ := exists_ne (1 : LowerCentralFactor H 2)
   obtain ⟨x, hx⟩ :=
@@ -1312,7 +1312,7 @@ private theorem lemma6_lowerCentralQuotient_class_contradiction
   have hL3_card_gt : 1 < Nat.card (LowerCentralFactor H 2) := by
     rw [hL3_card]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial (LowerCentralFactor H 2) :=
+  let : Nontrivial (LowerCentralFactor H 2) :=
     Finite.one_lt_card_iff_nontrivial.mp hL3_card_gt
   obtain ⟨z, hz⟩ := exists_ne (1 : LowerCentralFactor H 2)
   obtain ⟨x, hx⟩ :=
@@ -1984,7 +1984,7 @@ private lemma lemma6_fin_sub_eq_of_cyclicAdd_eq
     (hx : lemma6_finCyclicAdd hn t x = lemma6_finCyclicAdd hn s a)
     (hy : lemma6_finCyclicAdd hn t y = lemma6_finCyclicAdd hn s b) :
     b - a = y - x := by
-  letI : NeZero n := ⟨hn.ne'⟩
+  let : NeZero n := ⟨hn.ne'⟩
   have hx' : x + lemma6_finCyclicAdd hn t ⟨0, hn⟩ =
       a + lemma6_finCyclicAdd hn s ⟨0, hn⟩ := by
     simpa only [← lemma6_finCyclicAdd_eq_add hn] using hx
@@ -2971,7 +2971,7 @@ private theorem lemma6_odd_basis_triples_vanish_core
       1 < Nat.card (Additive (LowerCentralFactor H 1)) := by
     rw [hL2_add_card]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial (Additive (LowerCentralFactor H 1)) :=
+  let : Nontrivial (Additive (LowerCentralFactor H 1)) :=
     Finite.one_lt_card_iff_nontrivial.mp hL2_card_gt
   have hL2_irreducible := lemma6_irreducible_of_transitive
     (lowerCentralFactorLinearAut xi 1) hL2_transitive
@@ -3766,7 +3766,7 @@ private theorem lemma6_odd_triple_bracket_core
     (Nat.card_congr
       (Additive.toMul : Additive (LowerCentralFactor H 1) ≃
         LowerCentralFactor H 1)).trans hL2_card
-  letI : Nontrivial (Additive (LowerCentralFactor H 1)) := by
+  let : Nontrivial (Additive (LowerCentralFactor H 1)) := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hsub
     have hcard_one : Nat.card (Additive (LowerCentralFactor H 1)) = 1 :=
@@ -3776,7 +3776,7 @@ private theorem lemma6_odd_triple_bracket_core
       have : 2 ^ 1 ≤ 2 ^ n := Nat.pow_le_pow_right (by omega) (by omega)
       omega
     omega
-  letI : Nontrivial (Additive (LowerCentralFactor H 2)) :=
+  let : Nontrivial (Additive (LowerCentralFactor H 2)) :=
     e.toEquiv.nontrivial
   have hspan_zero :
       Submodule.span (ZMod 2)

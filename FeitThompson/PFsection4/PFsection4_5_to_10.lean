@@ -171,7 +171,7 @@ private theorem natCard_quotient_K_eq_natCard_W1_pf45
     (hKnorm : K.Normal)
     (h42 : Section4.hypothesis_4_2_statement K W1 W2 W) :
     Nat.card (L ⧸ K) = Nat.card W1 := by
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   rcases h42 with ⟨hsemi, _hHall, _hcyc1, _hcard1, _hcyc2, _hcard2,
       _hcent, _hW1, _hW2, _hW, _hodd⟩
   let q : W1 →* (L ⧸ K) := (QuotientGroup.mk' K).comp W1.subtype
@@ -217,7 +217,7 @@ private theorem isCyclic_quotient_K_of_hypothesis_4_2_pf45
     (hKnorm : K.Normal)
     (h42 : Section4.hypothesis_4_2_statement K W1 W2 W) :
     IsCyclic (L ⧸ K) := by
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   rcases h42 with ⟨hsemi, _hHall, hcyc1, _hcard1, _hcyc2, _hcard2,
       _hcent, _hW1, _hW2, _hW, _hodd⟩
   let q : W1 →* (L ⧸ K) := (QuotientGroup.mk' K).comp W1.subtype
@@ -234,7 +234,7 @@ private theorem isCyclic_quotient_K_of_hypothesis_4_2_pf45
       QuotientGroup.mk' K w = 1 * QuotientGroup.mk' K w := by simp
       _ = QuotientGroup.mk' K k * QuotientGroup.mk' K w := by rw [hk_one]
       _ = QuotientGroup.mk' K (k * w) := by simp
-  letI : IsCyclic W1 := hcyc1
+  let : IsCyclic W1 := hcyc1
   exact isCyclic_of_surjective q hq_surj
 
 private theorem mem_W2_of_mem_K_and_mem_W_of_hypothesis_4_2_pf45
@@ -396,7 +396,7 @@ private theorem exists_conjugateSet_subgroupCosetByElement_W2_of_not_mem_K_pf45
   rcases h42 with ⟨hsemi, _hHall, _hcyc1, _hcard1, _hcyc2, _hcard2,
       hcent, _hW1, _hW2, _hW, _hodd⟩
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42'
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   have hcopW1K := natCard_W1_coprime_natCard_K_of_hypothesis_4_2_pf45 h42'
   rcases hsemi.mul_surjective x (by trivial) with ⟨k, hkK, w, hwW1, rfl⟩
   have hw1 : w ≠ 1 := by
@@ -705,7 +705,7 @@ private theorem representation_dual_irreducible_of_pf45
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) (hρ : Representation.IsIrreducible ρ) :
     Representation.IsIrreducible ρ.dual := by
-  letI : Representation.IsIrreducible ρ := hρ
+  let : Representation.IsIrreducible ρ := hρ
   refine
     { exists_pair_ne := ?_
       eq_bot_or_eq_top := ?_ }
@@ -919,7 +919,7 @@ private theorem subgroupInRepresentationKernel_of_subgroupInKernel_pf45
     (ρ : Representation ℂ G V) (A : Subgroup G)
     (hA : Section1.subgroupInKernel ρ A) :
     Section1.subgroupInRepresentationKernel ρ A := by
-  letI : Representation.IsTrivial (ρ.comp A.subtype) :=
+  let : Representation.IsTrivial (ρ.comp A.subtype) :=
     (Section1.subgroupInKernel_iff ρ A).mp hA
   intro a
   change (ρ.comp A.subtype) a = LinearMap.id
@@ -1065,7 +1065,7 @@ private theorem conjugateOrbitRepresentation_irreducible_pf45
     (ρ : Representation ℂ H V) (hρ : Representation.IsIrreducible ρ) :
     ∀ i : Section1.conjugateOrbitIndex H ρ.character,
       Representation.IsIrreducible (Section1.conjugateOrbitRepresentation H ρ i) := by
-  letI : Representation.IsIrreducible ρ := hρ
+  let : Representation.IsIrreducible ρ := hρ
   intro i
   exact Section1.irreducible_conjugateRepresentation H ρ (Quotient.out i)
 
@@ -1158,12 +1158,12 @@ private theorem exists_baseRow_equiv_of_hypothesis_4_2_pf45
     simpa [Q] using
       isCyclic_quotient_K_of_hypothesis_4_2_pf45
         (K := K) (W1 := W1) (W2 := W2) (W := W) inferInstance h42
-  letI : CommGroup Q := by
+  let : CommGroup Q := by
     simpa [Q] using hQcyc.commGroup
   have hExpNeZero : NeZero (Monoid.exponent Q) :=
     Monoid.neZero_exponent_of_finite (G := Q)
   have hRoots : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
-    letI : NeZero (Monoid.exponent Q) := hExpNeZero
+    let : NeZero (Monoid.exponent Q) := hExpNeZero
     exact Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   let inflated : (Q →* ℂˣ) → ClassFunction L :=
     fun chi => Section1.characterInflationByHom (QuotientGroup.mk' K) chi
@@ -1193,12 +1193,12 @@ private theorem exists_baseRow_equiv_of_hypothesis_4_2_pf45
         inflated chi = piChar (f chi) j0 := hf_spec chi
         _ = piChar (f eta) j0 := by rw [hfeq]
         _ = inflated eta := (hf_spec eta).symm
-  letI : Finite (Q →* ℂˣ) := Finite.of_injective f hf_inj
-  letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
+  let : Finite (Q →* ℂˣ) := Finite.of_injective f hf_inj
+  let : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
   have hcard_quot : Nat.card ((L ⧸ K) →* ℂˣ) = Nat.card (L ⧸ K) := by
-    letI : CommGroup (L ⧸ K) := by
+    let : CommGroup (L ⧸ K) := by
       simpa using hQcyc.commGroup
-    letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent (L ⧸ K)) := hRoots
+    let : HasEnoughRootsOfUnity ℂ (Monoid.exponent (L ⧸ K)) := hRoots
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity (L ⧸ K) ℂ
   have hcard_chars_nat : Nat.card (Q →* ℂˣ) = Nat.card I := by
     calc
@@ -1360,10 +1360,10 @@ private theorem induced_restriction_eq_regular_inflated_sum_pf45
         (fun chi : (L ⧸ K) →* ℂˣ =>
           Section1.characterInflationByHom (QuotientGroup.mk' K) chi * psi) := by
   classical
-  letI : CommGroup (L ⧸ K) :=
+  let : CommGroup (L ⧸ K) :=
     { (inferInstance : Group (L ⧸ K)) with
       mul_comm := fun x y => hquot_comm.comm x y }
-  letI : DecidablePred (fun t : L => t ∈ K) := Classical.decPred _
+  let : DecidablePred (fun t : L => t ∈ K) := Classical.decPred _
   have hcardK_ne : (Nat.card K : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := K)).ne'
   have hindex_card : (Subgroup.index K : ℂ) * Nat.card K = Nat.card L := by
@@ -2072,8 +2072,8 @@ private theorem supportedOn_irreducible_of_not_subgroupInKernel_pf45
   have h46' := h46
   rcases h46 with ⟨h42, hHnorm, _hW2H, _hHK, _hcentA, _hAinK⟩
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
-  letI : (H.subgroupOf K).Normal := Section1.subgroupOf_normal_of_normal H K
+  let : K.Normal := hKnorm
+  let : (H.subgroupOf K).Normal := Section1.subgroupOf_normal_of_normal H K
   rcases hX with ⟨n, rho, hRhoIrr, rfl⟩
   have hkerRep :
       ¬ Section1.subgroupInRepresentationKernel rho (H.subgroupOf K) := by
@@ -2095,7 +2095,7 @@ private theorem supportedOn_irreducible_of_not_subgroupInKernel_pf45
   have hx1 : x ≠ 1 := by
     intro hx1
     exact hx (Or.inr hx1)
-  letI : Representation.IsIrreducible rho := hRhoIrr
+  let : Representation.IsIrreducible rho := hRhoIrr
   exact Section1.proposition_1_2 rho hkerPrime
     (centralizer_intersection_eq_bot_of_not_mem_A_pf45 K W1 W2 W H A h46' hxA hx1)
 
@@ -2111,9 +2111,9 @@ private theorem supportedOn_induced_irreducible_of_not_subgroupInKernel_pf45
   have h46' := h46
   rcases h46 with ⟨h42, hHnorm, _hW2H, hHK, _hcentA, _hAinK⟩
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
-  letI : H.Normal := hHnorm
-  letI : (H.subgroupOf K).Normal := Section1.subgroupOf_normal_of_normal H K
+  let : K.Normal := hKnorm
+  let : H.Normal := hHnorm
+  let : (H.subgroupOf K).Normal := Section1.subgroupOf_normal_of_normal H K
   rcases hX with ⟨n, rho, hRhoIrr, rfl⟩
   have hSuppX :
       Section1.supportedOn rho.character (withOne (subgroupPullbackSet K A)) :=
@@ -2525,7 +2525,7 @@ public theorem theorem_4_5_a
     ∃ xChar : J → ClassFunction K, theorem_4_5_a_statement K piChar xChar := by
   classical
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   obtain ⟨e, he⟩ :=
     exists_baseRow_equiv_of_hypothesis_4_2_pf45
       (K := K) (W1 := W1) (W2 := W2) (W := W)
@@ -2537,15 +2537,15 @@ public theorem theorem_4_5_a
     simpa [Q] using
       isCyclic_quotient_K_of_hypothesis_4_2_pf45
         (K := K) (W1 := W1) (W2 := W2) (W := W) hKnorm h42
-  letI : DecidableEq Q := Classical.decEq Q
-  letI : CommGroup Q := by
+  let : DecidableEq Q := Classical.decEq Q
+  let : CommGroup Q := by
     simpa [Q] using hQcyc.commGroup
-  letI : Finite (Q →* ℂˣ) := Finite.of_equiv I e.symm
-  letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
+  let : Finite (Q →* ℂˣ) := Finite.of_equiv I e.symm
+  let : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
   have hExpNeZero : NeZero (Monoid.exponent Q) :=
     Monoid.neZero_exponent_of_finite (G := Q)
-  letI : NeZero (Monoid.exponent Q) := hExpNeZero
-  letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
+  let : NeZero (Monoid.exponent Q) := hExpNeZero
+  let : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   have hB' := hB
   rcases hB with ⟨_hσmap, _hsign, hirr, _hdistinct, _hind, _hSigma⟩
@@ -2564,7 +2564,7 @@ public theorem theorem_4_5_a
         piColumn piChar j := by
     intro j
     have hquot_comm : Std.Commutative (fun x y : Q => x * y) := by
-      letI : CommGroup Q := IsCyclic.commGroup
+      let : CommGroup Q := IsCyclic.commGroup
       infer_instance
     have hclass : Section1.IsClassFunction (piChar i0 j) :=
       isClassFunction_of_irreducibleCharacterOnGroup_pf45 (hirr i0 j)
@@ -2607,9 +2607,9 @@ private theorem exists_irreducible_constituent_of_subgroupRestriction_pf45
         Section1.scalarProduct K X (Section1.subgroupRestriction K ψ) ≠ 0 := by
   rcases hψ with ⟨n, ρ, hρirr, hρchar⟩
   let ρK : Representation ℂ K (Fin n → ℂ) := ρ.comp K.subtype
-  letI : Nontrivial (Fin n → ℂ) := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Nontrivial (Fin n → ℂ) := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨φ, hφirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρK
-  letI : Nontrivial φ.toSubmodule := Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
+  let : Nontrivial φ.toSubmodule := Subrepresentation.irreducible_module_nontrivial φ.toRepresentation
   let incl : Theory.Representation.RepMap φ.toRepresentation ρK := by
     refine Theory.Representation.RepMap.mk φ.toSubmodule.subtype ?_
     intro k
@@ -2884,7 +2884,7 @@ private theorem irreducibleCharacterOnGroup_set_finite_pf45
   classical
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let χold : ι → ClassFunction G := fun i => Section1.ofConjClassFunction (χ i)
   refine (Set.finite_range χold).subset ?_
   intro φ hφ
@@ -2909,7 +2909,7 @@ private theorem isIrreducibleCharacterOnGroup_conjugateOnNormal_pf45
       (Section1.conjugateOnNormal K X g) := by
   rcases hX with ⟨n, ρ, hρirr, rfl⟩
   refine ⟨n, Section1.conjugateRepresentation K ρ g, ?_, ?_⟩
-  · letI : Representation.IsIrreducible ρ := hρirr
+  · let : Representation.IsIrreducible ρ := hρirr
     exact Section1.irreducible_conjugateRepresentation K ρ g
   · exact (Section1.representationCharacter_conjugateRepresentation K ρ g).symm
 
@@ -3188,7 +3188,7 @@ private theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles_pf45
   classical
   rcases Theory.Character.irreducible_characters_form_basis (G := K) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let f :
       ι →
         {χ : Theory.Character.ConjClassFunction K //
@@ -3209,7 +3209,7 @@ private theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles_pf45
         {χ : Theory.Character.ConjClassFunction K //
           Theory.Character.IsIrreducibleConjCharacter χ} :=
     Equiv.ofBijective f hf_bij
-  letI : Fintype
+  let : Fintype
       {χ : Theory.Character.ConjClassFunction K //
         Theory.Character.IsIrreducibleConjCharacter χ} :=
     Fintype.ofEquiv ι e
@@ -3369,7 +3369,7 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
   classical
   rcases Theory.Character.irreducible_characters_form_basis (G := K) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let f :
       ι →
         {χ : Theory.Character.ConjClassFunction K //
@@ -3390,7 +3390,7 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
         {χ : Theory.Character.ConjClassFunction K //
           Theory.Character.IsIrreducibleConjCharacter χ} :=
     Equiv.ofBijective f hf_bij
-  letI : Fintype
+  let : Fintype
       {χ : Theory.Character.ConjClassFunction K //
         Theory.Character.IsIrreducibleConjCharacter χ} :=
     Fintype.ofEquiv ι e
@@ -3416,7 +3416,7 @@ private theorem fixed_irreducible_natCard_eq_fixed_conjClasses_pf45
           Section1.IsIrreducibleCharacterOnGroup X ∧
             Section1.conjugateOnNormal K X g = X}) : ℂ) =
         ((Nat.card (Function.fixedPoints (conjClassesConjPerm_pf45 K g))) : ℂ) := by
-    letI : Finite
+    let : Finite
         {χ : Theory.Character.ConjClassFunction K //
           Theory.Character.IsIrreducibleConjCharacter χ} :=
       Finite.of_fintype
@@ -3659,7 +3659,7 @@ public theorem fixed_irreducible_subsingleton_of_card_le_one_pf45
     (irreducibleCharacterOnGroup_set_finite_pf45 (G := K)).subset (by
       intro X hX
       exact hX.1)
-  letI : Finite {X : ClassFunction K |
+  let : Finite {X : ClassFunction K |
       Section1.IsIrreducibleCharacterOnGroup X ∧
         Section1.conjugateOnNormal K X g = X} := hfinite
   exact (Finite.card_le_one_iff_subsingleton
@@ -3970,7 +3970,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
     (hXnot : X ∉ Set.range xChar) :
     Section1.IsIrreducibleCharacterOnGroup (Section1.inducedCF K X) := by
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   rcases hX with ⟨n, ρ, hρirr, rfl⟩
   have hXclass : Section1.IsClassFunction ρ.character :=
     isClassFunction_of_irreducibleCharacterOnGroup_pf45 ⟨n, ρ, hρirr, rfl⟩
@@ -3992,7 +3992,7 @@ private theorem induced_irreducible_of_not_mem_range_pf45
     exact
       Section1.proposition_1_5_b_norm_one_rep_orbit_relIndex_canonical
         K ρ hρirr (by simp [hIeq])
-  haveI : FiniteDimensional ℂ (Representation.IndV K.subtype ρ) :=
+  have : FiniteDimensional ℂ (Representation.IndV K.subtype ρ) :=
     Theory.Representation.finiteDimensional_ind K ρ
   have hIndIrr :
       Representation.IsIrreducible (Representation.ind K.subtype ρ) := by
@@ -4044,7 +4044,7 @@ public theorem theorem_4_5_b
     (h45a : theorem_4_5_a_statement K piChar xChar) :
 theorem_4_5_b_statement K piChar xChar := by
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   have h45a' := h45a
   have hB' := hB
   rcases h45a with ⟨hres, hirrX, hindX⟩
@@ -4996,10 +4996,10 @@ private theorem baseRow_omega_power_of_prime_pf45
   classical
   rcases h31 with ⟨_hW1le, hW2le, hIP, _hcycW, _hodd, _hcard1, _hcard2, _hTI⟩
   have hcycW2 : IsCyclic W2 := Subgroup.isCyclic_of_le hW2le
-  letI : CommGroup W2 := IsCyclic.commGroup
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent W2) :=
+  let : CommGroup W2 := IsCyclic.commGroup
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent W2) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent W2)
-  letI : Fintype (W2 →* ℂˣ) := by
+  let : Fintype (W2 →* ℂˣ) := by
     let e := (CommGroup.monoidHom_mulEquiv_of_hasEnoughRootsOfUnity W2 ℂ).some
     exact Fintype.ofEquiv W2 e.toEquiv.symm
   have hcardLin : Nat.card (W2 →* ℂˣ) = Nat.card W2 :=
@@ -5020,7 +5020,7 @@ private theorem baseRow_omega_power_of_prime_pf45
     exact baseRow_rightCharacter_ne_one_pf45 hIP hω hk baseLin hbaseLin
   have htarget_ne : rightTarget ≠ 1 := by
     exact baseRow_rightCharacter_ne_one_pf45 hIP hω hj targetLin htargetLin
-  haveI : Fact (Nat.card W2).Prime := ⟨hW2prime⟩
+  have : Fact (Nat.card W2).Prime := ⟨hW2prime⟩
   have hrightBase_gen : ∀ χ : W2 →* ℂˣ, χ ∈ Subgroup.zpowers rightBase := by
     intro χ
     exact mem_zpowers_of_prime_card (G := W2 →* ℂˣ)
@@ -5848,7 +5848,7 @@ private theorem theorem_4_9_a_core_pf45
   have h31 : Section3.hypothesis_3_1_statement W1 W2 W :=
     hypothesis_3_1_of_hypothesis_4_6_pf45 h46
   have hKnorm : K.Normal := normal_K_of_hypothesis_4_2_pf45 h42
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   have hconj :
       ∀ j, j ∈ equalDegreeColumnSet piChar j0 k →
         ∃ j', j' ∈ equalDegreeColumnSet piChar j0 k ∧
@@ -5931,7 +5931,7 @@ private theorem theorem_4_9_a_core_pf45
   have hkmem : k ∈ equalDegreeColumnSet piChar j0 k := by
     exact ⟨hk0, rfl⟩
   rcases hconj k hkmem with ⟨j', hj'mem, _hbarCol, hneqCol⟩
-  letI : DecidableEq (equalDegreeColumnIndex piChar j0 k) := Classical.decEq _
+  let : DecidableEq (equalDegreeColumnIndex piChar j0 k) := Classical.decEq _
   let tk : equalDegreeColumnIndex piChar j0 k := ⟨k, hkmem⟩
   let tj' : equalDegreeColumnIndex piChar j0 k := ⟨j', hj'mem⟩
   refine ⟨hconj, ?_⟩
@@ -5946,7 +5946,13 @@ private theorem theorem_4_9_a_core_pf45
     have htkneq : tk ≠ tj' := by
       intro hEq
       exact hknej' (congrArg Subtype.val hEq)
-    simp [Section1.signedBasisDifference, Section1.basisVector, tk, tj', htkneq] at hval
+    have htk : Section1.basisVector tk tk = (1 : Int) := by
+      simp [Section1.basisVector]
+    have htj : Section1.basisVector tj' tk = (0 : Int) := by
+      simp [Section1.basisVector, htkneq]
+    have hzero : (0 : Int) = 1 := by
+      simpa [Section1.signedBasisDifference, htk, htj] using hval.symm
+    exact (by norm_num : (0 : Int) ≠ 1) hzero
   · have hkSupp : Section1.supportedOn (piColumn piChar k) (withOne A) :=
       (theorem_4_7_nonbase_column_data_pf45
         K W1 W2 W H A i0 j0 ω σ piChar xChar deltaSign

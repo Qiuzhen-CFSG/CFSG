@@ -200,17 +200,19 @@ private theorem theorem_9_4_typeII_core_sec9
       hchiefM.normal_H.map π (QuotientGroup.mk'_surjective C)
   haveI : IsMinimalNormal Uq := by
     simpa [Uq, π, cf] using chiefFactor_quotient_isMinimalNormal (G := M) cf
-  have hsolvMFsub : IsSolvable (MF.subgroupOf M) := by
-    have hsolvMF : IsSolvable MF := by
-      haveI : Group.IsNilpotent MF := hMFnil
-      infer_instance
+  have hsolvMFsub : Group.IsSolvable (MF.subgroupOf M) := by
+    have hsolvMF : Group.IsSolvable MF := by
+      letI : Group.IsNilpotent MF := hMFnil
+      exact IsNilpotent.to_isSolvable
     let eMF : MF.subgroupOf M ≃* MF :=
       Subgroup.subgroupOfEquivOfLe (H := MF) (K := M) hMFleM
-    exact solvable_of_surjective (f := eMF.symm.toMonoidHom) eMF.symm.surjective
-  haveI : IsSolvable Uq := by
-    haveI : IsSolvable (MF.subgroupOf M) := hsolvMFsub
+    letI : Group.IsSolvable MF := hsolvMF
+    exact Group.isSolvable_of_surjective
+      (f := eMF.symm.toMonoidHom) eMF.symm.surjective
+  haveI : Group.IsSolvable Uq := by
+    letI : Group.IsSolvable (MF.subgroupOf M) := hsolvMFsub
     simpa [Uq, π] using
-      solvable_of_surjective
+      Group.isSolvable_of_surjective
         (f := π.subgroupMap (MF.subgroupOf M))
         (MonoidHom.subgroupMap_surjective π (MF.subgroupOf M))
   rcases minimalNormal_solvable_exists_isElementaryAbelian (G := M ⧸ C) Uq with

@@ -136,7 +136,7 @@ private theorem chapter2_claim10_fixed_field_classification_of_local_control
     chapter2_claim10_sigmaAlgHom ell rho
   have hrhoAlg : Function.Injective rhoAlg :=
     chapter2_claim10_sigmaAlgHom_injective ell rho hrho
-  letI : IsCyclic A := isCyclic_of_injective rhoAlg hrhoAlg
+  let : IsCyclic A := isCyclic_of_injective rhoAlg hrhoAlg
   have hAutCard :
       Nat.card (F ≃ₐ[ZMod ell] F) = Module.finrank (ZMod ell) F :=
     IsGalois.card_aut_eq_finrank (ZMod ell) F
@@ -227,14 +227,14 @@ private theorem chapter2_claim10_fixed_field_classification_of_local_control
   have hA_one_lt : 1 < Nat.card A := by
     have hpos : 0 < Nat.card A := Nat.card_pos
     omega
-  letI : Nontrivial A := Finite.one_lt_card_iff_nontrivial.mp hA_one_lt
+  let : Nontrivial A := Finite.one_lt_card_iff_nontrivial.mp hA_one_lt
   have hsimple : IsSimpleGroup A := by
     refine { eq_bot_or_eq_top_of_normal := ?_ }
     intro H _hHnormal
     by_cases hHbot : H = ⊥
     · exact Or.inl hHbot
     · right
-      letI : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHbot
+      let : Nontrivial H := (Subgroup.nontrivial_iff_ne_bot H).2 hHbot
       obtain ⟨a, ha⟩ := exists_ne (1 : H)
       have haA : (a : A) ≠ 1 := by
         intro hone
@@ -250,7 +250,7 @@ private theorem chapter2_claim10_fixed_field_classification_of_local_control
         rw [hzp]
         exact Subgroup.mem_top x
       exact (Subgroup.zpowers_le.mpr a.property) hxzp
-  letI : IsMulCommutative A :=
+  let : IsMulCommutative A :=
     IsCyclic.isMulCommutative
   have hAprime : Nat.Prime (Nat.card A) :=
     (Group.is_simple_iff_prime_card (α := A)).mp hsimple
@@ -268,12 +268,12 @@ private theorem chapter2_claim10_nearField_commutative_of_unitEquiv
     (hstar : IsMulCommutative (nearFieldStar Q P)) :
     IsMulCommutative F := by
   have hUnits : IsMulCommutative Fˣ := by
-    letI : IsMulCommutative (nearFieldStar Q P) := hstar
+    let : IsMulCommutative (nearFieldStar Q P) := hstar
     refine ⟨⟨fun x y => ?_⟩⟩
     apply unitEquiv.symm.injective
     rw [map_mul, map_mul]
     exact (IsMulCommutative.is_comm (M := nearFieldStar Q P)).comm _ _
-  letI : IsMulCommutative Fˣ := hUnits
+  let : IsMulCommutative Fˣ := hUnits
   refine ⟨⟨fun x y => ?_⟩⟩
   by_cases hx : x = 0
   · simp [hx]
@@ -331,7 +331,7 @@ private theorem chapter2_claim10_characteristic_three_or_five
     have hpos :
         0 < Nat.card ↥(W ⊓ Subgroup.centralizer (P : Set G)) := Nat.card_pos
     omega
-  letI : Nontrivial ↥(W ⊓ Subgroup.centralizer (P : Set G)) :=
+  let : Nontrivial ↥(W ⊓ Subgroup.centralizer (P : Set G)) :=
     Finite.one_lt_card_iff_nontrivial.mp hWC_one_lt
   obtain ⟨w, hw⟩ :=
     exists_ne (1 : ↥(W ⊓ Subgroup.centralizer (P : Set G)))
@@ -589,12 +589,14 @@ private theorem chapter2_claim10_quotientMap_subgroup_equiv_of_disjoint
       ∀ q : Q, (e q : G ⧸ N) = QuotientGroup.mk' N q := by
   let pi : G →* G ⧸ N := QuotientGroup.mk' N
   let f : Q →* Q.map pi :=
-    (pi.restrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
+    (pi.domRestrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
   have hf_injective : Function.Injective f := by
     intro x y hxy
     apply Subtype.ext
     have hpi : pi (x : G) = pi (y : G) := by
-      simpa [f] using congrArg Subtype.val hxy
+      have hxy' := congrArg Subtype.val hxy
+      change pi (x : G) = pi (y : G) at hxy'
+      exact hxy'
     have hdivN : (x : G) / (y : G) ∈ N :=
       QuotientGroup.eq_iff_div_mem.mp hpi
     have hdivQ : (x : G) / (y : G) ∈ Q := Q.div_mem x.2 y.2
@@ -606,10 +608,12 @@ private theorem chapter2_claim10_quotientMap_subgroup_equiv_of_disjoint
     rcases z.2 with ⟨g, hgQ, hg⟩
     refine ⟨⟨g, hgQ⟩, ?_⟩
     apply Subtype.ext
+    change pi g = (z : G ⧸ N)
     exact hg
   let e : Q ≃* Q.map pi := MulEquiv.ofBijective f ⟨hf_injective, hf_surjective⟩
   refine ⟨e, ?_⟩
   intro q
+  change pi (q : G) = (QuotientGroup.mk' N) (q : G)
   rfl
 
 /-- Checked Proposition-One unit-coordinate equivalence, retaining the exact
@@ -757,7 +761,10 @@ private theorem chapter2_claim10_fixed_units_embedding_actor_centralizer
   intro x y hxy
   apply htoStarE
   apply Subtype.ext
-  simpa [f, C] using congrArg Subtype.val hxy
+  have hxy' := congrArg Subtype.val hxy
+  change ((nearFieldStar Q P).subtype (toStarE x) : G) =
+      ((nearFieldStar Q P).subtype (toStarE y) : G) at hxy'
+  exact hxy'
 
 /-- Checked cardinal consequence of the fixed-unit coordinate embedding. -/
 private theorem chapter2_claim10_fixed_units_card_dvd_actor_centralizer
@@ -884,7 +891,7 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
   classical
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let OmegaP : Type v := {w : Ω // w ∈ fixedPointsOfSubgroup G Ω P}
-  letI : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
+  let : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
   let HP : Subgroup C := H.comap C.subtype
   let DP : Subgroup C := D.comap C.subtype
   let QP : Subgroup C := Q.comap C.subtype
@@ -897,17 +904,17 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
     claim_7 H D Q K V W Q0 S Q1 P N t s p hch hind rfl
   dsimp only at h7
   rcases h7 with ⟨hnormal7, hNP, eSigma⟩
-  letI : core.Normal := hnormal7
+  let : core.Normal := hnormal7
   obtain ⟨eSigma, heSigma⟩ := eSigma
   have h2b := claim_2_b H D Q K V W Q0 S Q1 P t s p hch
   dsimp only at h2b
   rcases h2b with
     ⟨hNcore, _hnormal2b, _quotientAction, _hsmul, hAbar,
       F, hF, hFfinite, hFnontrivial, _unitEquiv, hPO, hcharacteristic⟩
-  letI : core.Normal := hnormal7
-  letI : PFAppendixII.RightNearField F := hF
-  letI : Finite F := hFfinite
-  letI : Nontrivial F := hFnontrivial
+  let : core.Normal := hnormal7
+  let : PFAppendixII.RightNearField F := hF
+  let : Finite F := hFfinite
+  let : Nontrivial F := hFnontrivial
   let SigmaBar : Subgroup (C ⧸ core) :=
     DP.map (QuotientGroup.mk' core)
   let eSigmaBar : SigmaBar ≃* ↥(W ⊓ Subgroup.centralizer (P : Set G)) := by
@@ -996,7 +1003,7 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
       Nat.card (nearFieldStar Q P) + 1 = Nat.card Fˣ + 1 := by
         rw [Nat.card_congr unitEquivCoord.toEquiv]
       _ = Nat.card F := (Nat.card_eq_card_units_add_one F).symm
-  letI : IsMulCommutative F := hFcomm
+  let : IsMulCommutative F := hFcomm
   let fieldF : Field F :=
     Field.ofMinimalAxioms F add_assoc zero_add neg_add_cancel mul_assoc
       (IsMulCommutative.is_comm (M := F)).comm one_mul
@@ -1011,9 +1018,9 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
             rw [(IsMulCommutative.is_comm (M := F)).comm b a,
               (IsMulCommutative.is_comm (M := F)).comm c a])
       ⟨0, 1, zero_ne_one⟩
-  letI : Field F := fieldF
-  letI : AddCommGroup F := fieldF.toAddCommGroup
-  letI : AddCommMonoid F := fieldF.toAddCommGroup.toAddCommMonoid
+  let : Field F := fieldF
+  let : AddCommGroup F := fieldF.toAddCommGroup
+  let : AddCommMonoid F := fieldF.toAddCommGroup.toAddCommMonoid
   let fieldMonoid : Monoid F :=
     fieldF.toSemifield.toDivisionSemiring.toMonoidWithZero.toMonoid
   let nearMonoid : Monoid F :=
@@ -1046,17 +1053,17 @@ public theorem chapter2_fixed_field_orders_of_Q1_ne_bot
   have hellPrime : Nat.Prime ell := by
     rw [← hcharEll]
     exact PFAppendixII.rightNearField_addOrderOf_one_prime
-  letI : Fact (Nat.Prime ell) := ⟨hellPrime⟩
+  let : Fact (Nat.Prime ell) := ⟨hellPrime⟩
   let zmodField : Field (ZMod ell) := inferInstance
-  letI : Semiring (ZMod ell) :=
+  let : Semiring (ZMod ell) :=
     zmodField.toSemifield.toDivisionSemiring.toSemiring
-  letI : CharP F ell := by
+  let : CharP F ell := by
     rw [← hcharEll]
     exact CharP.addOrderOf_one F
-  letI : Module (ZMod ell) F :=
+  let : Module (ZMod ell) F :=
     { (ZMod.castHom dvd_rfl F : ZMod ell →+* _).toModule with }
-  letI : Algebra (ZMod ell) F := ZMod.algebraOfModule ell F
-  letI : Module (ZMod ell) F := Algebra.toModule
+  let : Algebra (ZMod ell) F := ZMod.algebraOfModule ell F
+  let : Module (ZMod ell) F := Algebra.toModule
   let sigmaRingEquiv (d : SigmaBar) : F ≃+* F :=
     { toFun := sigmaAct d⁻¹
       invFun := sigmaAct d
@@ -1271,7 +1278,7 @@ private theorem chapter2_claim10_Q_card_eq_S_mul_Q1
     apply Subgroup.normal_subgroupOf_of_le_normalizer
     rw [← hsup]
     exact sup_le hS_norm Subgroup.le_normalizer
-  letI : Q1Q.Normal := hQ1normal
+  let : Q1Q.Normal := hQ1normal
   have hdisjQ : Disjoint Q1Q SQ := by
     rw [Subgroup.disjoint_def]
     intro x hxQ1 hxS
@@ -1282,7 +1289,7 @@ private theorem chapter2_claim10_Q_card_eq_S_mul_Q1
     exact Subgroup.subgroupOf_self Q
   have hcomp : Q1Q.IsComplement' SQ :=
     isComplement'_of_disjoint_sup_eq_top_of_normal Q1Q SQ hdisjQ hsupQ
-  have hcard := hcomp.card_mul
+  have hcard := hcomp.card_mul_card
   simpa [Q1Q, SQ, natCard_subgroupOf_eq Q1 Q hQ1_le,
     natCard_subgroupOf_eq S Q hS_le, Nat.mul_comm] using hcard.symm
 
@@ -1503,8 +1510,8 @@ private theorem chapter2_claim10_G_card
   have hA1 := hch.section3.section2.hA.A1
   have hOmega : Nat.card Ω = Nat.card Q + 1 :=
     hypothesisA1_card_space_eq_card_Q_add_one_of_hypothesis H D Q t hA1
-  haveI : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
-  haveI : MulAction.IsPretransitive G Ω :=
+  have : MulAction.IsMultiplyPretransitive G Ω 2 := hA1.two_transitive
+  have : MulAction.IsPretransitive G Ω :=
     MulAction.isPretransitive_of_is_two_pretransitive
   obtain ⟨alpha, hH⟩ := hA1.point_stabilizer
   have hHindex : H.index = Nat.card Ω := by
@@ -1512,7 +1519,7 @@ private theorem chapter2_claim10_G_card
     exact MulAction.index_stabilizer_of_transitive (G := G) (x := alpha)
   let QH : Subgroup H := Q.subgroupOf H
   let DH : Subgroup H := D.subgroupOf H
-  haveI : QH.Normal := by
+  have : QH.Normal := by
     simpa [QH] using hA1.Q_normal_in_H
   have hdisjH : Disjoint QH DH := by
     rw [Subgroup.disjoint_def]
@@ -1529,7 +1536,7 @@ private theorem chapter2_claim10_G_card
   have hcompH : QH.IsComplement' DH :=
     isComplement'_of_disjoint_sup_eq_top_of_normal QH DH hdisjH hsupH
   have hHcard : Nat.card H = Nat.card Q * Nat.card D := by
-    have hcard := hcompH.card_mul
+    have hcard := hcompH.card_mul_card
     rw [natCard_subgroupOf_eq Q H hA1.Q_le_H,
       natCard_subgroupOf_eq D H hA1.D_le_H] at hcard
     exact hcard.symm
@@ -1568,7 +1575,7 @@ private theorem chapter2_claim10_G_card
     ⟨hWleV, hPleV, hWnorm, hdisjWP, hsupWP⟩
   let WV : Subgroup V := W.subgroupOf V
   let PV : Subgroup V := P.subgroupOf V
-  haveI : WV.Normal := ⟨by
+  have : WV.Normal := ⟨by
     intro w hw v
     have hwG : (w : G) ∈ W := by
       simpa [WV, Subgroup.mem_subgroupOf] using hw
@@ -1590,7 +1597,7 @@ private theorem chapter2_claim10_G_card
   have hcompV : WV.IsComplement' PV :=
     isComplement'_of_disjoint_sup_eq_top_of_normal WV PV hdisjV hsupV
   have hVcard : Nat.card V = Nat.card W * p := by
-    have hcard := hcompV.card_mul
+    have hcard := hcompV.card_mul_card
     rw [natCard_subgroupOf_eq W V hWleV,
       natCard_subgroupOf_eq P V hPleV, hch.B1.P_card] at hcard
     exact hcard.symm
@@ -1671,8 +1678,8 @@ private theorem chapter2_claim10_card_structure
         have hxinvP : x⁻¹ ∈ P := P.inv_mem hxP
         have hxinv := hWnorm x⁻¹ (x * w * x⁻¹) (hPleV hxinvP) hxwx
         simpa [mul_assoc] using hxinv
-    letI : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
-    letI : Subgroup.Normalizes P W := ⟨hPnormW⟩
+    let : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
+    let : Subgroup.Normalizes P W := ⟨hPnormW⟩
     have hPgroup : IsPGroup p P := by
       apply IsPGroup.of_card (n := 1)
       rw [pow_one]
@@ -1736,7 +1743,7 @@ private theorem chapter2_claim10_p_part
       ∃ k u : ℕ, 3 ^ 4 * Nat.card W = 3 ^ k ∧
         Nat.card G = (3 ^ 4 * Nat.card W) * u ∧ ¬ 3 ∣ u) := by
   classical
-  letI : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
+  let : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
   rcases
       chapter2_claim10_card_structure
         H D Q K V W Q0 S Q1 P Sigma t s p hch hSigma with
@@ -1832,7 +1839,7 @@ private theorem claim_10_addOrderOf_one_eq_three_of_dickson_model
   rw [PFAppendixII.IsDicksonIndexTwoModel] at hmodel
   rcases hmodel with
     ⟨_hprime, _hne_two, _hn_pos, hfact, e, he1, _hmul, _hfrob, _hcenter⟩
-  letI : Fact (Nat.Prime 3) := hfact
+  let : Fact (Nat.Prime 3) := hfact
   apply addOrderOf_eq_prime
   · apply e.injective
     have hchar : (3 : GaloisField 3 (2 * 1)) = 0 :=
@@ -1896,7 +1903,7 @@ public theorem claim_10
           hStarComm_order hpSigma
     let C : Subgroup G := Subgroup.centralizer (P : Set G)
     let OmegaP : Type v := {w : Ω // w ∈ fixedPointsOfSubgroup G Ω P}
-    letI : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
+    let : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
     let DP : Subgroup C := D.comap C.subtype
     let core : Subgroup C := pointStabilizerCore C OmegaP
     let N : Subgroup G :=
@@ -1907,7 +1914,7 @@ public theorem claim_10
       claim_7 H D Q K V W Q0 S Q1 P N t s p hch hind rfl
     dsimp only at h7
     rcases h7 with ⟨hnormal7, _hNP, eSigma⟩
-    letI : core.Normal := hnormal7
+    let : core.Normal := hnormal7
     rcases eSigma with ⟨eSigma, _heSigma⟩
     have hSigmaBarCard :
         Nat.card (DP.map (QuotientGroup.mk' core)) = Nat.card Sigma := by
@@ -1947,9 +1954,9 @@ public theorem claim_10
     rcases h2b with
       ⟨_hNcore, _hnormal2b, _quotientAction, _hsmul, _hAbar,
         F, hF, hFfinite, hFnontrivial, unitEquiv, _hPO, hcharacteristic⟩
-    letI : PFAppendixII.RightNearField F := hF
-    letI : Finite F := hFfinite
-    letI : Nontrivial F := hFnontrivial
+    let : PFAppendixII.RightNearField F := hF
+    let : Finite F := hFfinite
+    let : Nontrivial F := hFnontrivial
     have hQnil : Group.IsNilpotent Q :=
       _root_.BenderSuzuki.PFchapter1section2.proposition_1_b
         H D Q K V W Q0 S Q1 t hch.section3.section2
@@ -1975,7 +1982,7 @@ public theorem claim_10
       rcases hSclass with hScomm | hSsuzuki
       · exfalso
         apply hStarNoncomm
-        letI : IsMulCommutative S := hScomm
+        let : IsMulCommutative S := hScomm
         refine ⟨⟨fun a b => ?_⟩⟩
         apply Subtype.ext
         let aS : S := ⟨(a : G), by rw [hS_eq_Q]; exact a.property.1⟩

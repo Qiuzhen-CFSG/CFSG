@@ -102,7 +102,7 @@ public theorem section10_groupRank_at_least_two_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -130,9 +130,9 @@ public theorem section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton
     (hA : A ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G) :
     subgroupPrimeSet A = ({p} : Set Nat.Primes) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hAp : IsPGroup p.val A := by
-    letI : IsElementaryAbelian p.val A := hA.1.2
+    let : IsElementaryAbelian p.val A := hA.1.2
     exact IsElementaryAbelian.isPGroup p.val A
   have hAne : A ≠ ⊥ := by
     intro hbot
@@ -144,18 +144,19 @@ public theorem section10_rankTwoMaximal_subgroupPrimeSet_eq_singleton
         simp [pow_two]
       exact p.property.not_dvd_one hp_dvd_one
     exact hp2_ne_one (hA.1.1.symm.trans hcard_one)
-  simpa using
-    section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
-      (G := G) (p := p.val) hAp hAne
+  have h := section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
+    (G := G) (p := p.val) hAp hAne
+  rw [h]
+  congr 1
 
 public theorem section10_rankTwoMaximal_hypothesis7_1
     {p : Nat.Primes} {A : Subgroup G}
     (hA : A ∈ section10RankTwoMaximalElementaryAbelianSubgroups p G) :
     Hypothesis7_1 A := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  letI : IsElementaryAbelian p.val A := hA.1.2
-  letI : IsMulCommutative A := hA.1.2.toIsMulCommutative
+  have : Fact p.val.Prime := ⟨p.property⟩
+  let : IsElementaryAbelian p.val A := hA.1.2
+  let : IsMulCommutative A := hA.1.2.toIsMulCommutative
   have hAp : IsPGroup p.val A := IsElementaryAbelian.isPGroup p.val A
   have hpG : p.val ∣ Nat.card G := by
     have hpA : p.val ∣ Nat.card A := by
@@ -180,7 +181,7 @@ public theorem section10_rankTwoMaximal_hypothesis7_1
       let C : Subgroup G := Subgroup.zpowers x
       have hCelem : IsElementaryAbelian p.val C :=
         section10_isElementaryAbelian_zpowers_of_pow_eq_one (G := G) (p := p.val) hxpow
-      letI : IsElementaryAbelian p.val C := hCelem
+      let : IsElementaryAbelian p.val C := hCelem
       have hCA : C ≤ Subgroup.centralizer (A : Set G) := by
         intro y hy
         rcases Subgroup.mem_zpowers_iff.mp hy with ⟨n, rfl⟩
@@ -264,4 +265,3 @@ public theorem section10_section7K_le_centralizer (A : Subgroup G) :
     section7K A ≤ Subgroup.centralizer (A : Set G) := by
   intro x hx
   exact piCoreIn_le _ _ (by simpa [section7K] using hx)
-

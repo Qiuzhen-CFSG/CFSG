@@ -70,7 +70,7 @@ private theorem quotient_Op_p'p_card_dvd_normalizer_card
         (Op_p'p p G).subgroupOf (Subgroup.normalizer (S : Subgroup G))) := by
   let N : Subgroup G := Subgroup.normalizer (S : Subgroup G)
   let L : Subgroup G := Op_p'p p G
-  letI : L.Normal := by
+  let : L.Normal := by
     dsimp [L]
     infer_instance
   have htop : N ⊔ L = ⊤ :=
@@ -103,7 +103,7 @@ private theorem quotient_Op_p'p_card_dvd_normalizer_card
   rw [hcard_eq]
 
 private theorem quotient_Op_p'p_card_dvd_automorphism_image_card
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] {p : ℕ} [Fact p.Prime]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] {p : ℕ} [Fact p.Prime]
     {S : Sylow p G} (hplen : HasPLengthOne (p := p) G) :
     Nat.card (G ⧸ Op_p'p p G) ∣
       Nat.card ((Subgroup.normalizerMonoidHom (H := (S : Subgroup G))).range) := by
@@ -119,7 +119,7 @@ private theorem quotient_Op_p'p_card_dvd_automorphism_image_card
     let T : Sylow p L := S.subtype hS_le_L
     have hcentralizer :=
       centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable (G := G)
-        (inferInstance : IsSolvable G) p T
+        (inferInstance : Group.IsSolvable G) p T
     have hTG_eq : T.1.map L.subtype = (S : Subgroup G) := by
       simp [T, L, Sylow.coe_subtype, Subgroup.subgroupOf_map_subtype, inf_of_le_left hS_le_L]
     simpa [hTG_eq, L] using hcentralizer
@@ -212,7 +212,7 @@ private theorem prime_dvd_quotient_Op_p'p_of_ne
   simpa [L, hquot_card_eq] using hq_dvd_quot_lbar
 
 public theorem theorem_5_6_a_high_rank_largest_prime
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
     {S : Sylow p G} (hSnarrow : IsNarrowPGroup p S)
     (hSrank : 3 ≤ groupRank (S : Subgroup G)) (hplen : HasPLengthOne (p := p) G) :
@@ -228,10 +228,10 @@ public theorem theorem_5_6_a_high_rank_largest_prime
   have hAodd : Odd (Nat.card A) := by
     exact odd_of_card_dvd hnormalizer_odd
       (Subgroup.card_range_dvd (Subgroup.normalizerMonoidHom (H := (S : Subgroup G))))
-  haveI : IsSolvable A := by
+  have : Group.IsSolvable A := by
     let φ := Subgroup.normalizerMonoidHom (H := (S : Subgroup G))
-    change IsSolvable φ.range
-    exact solvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
+    change Group.IsSolvable φ.range
+    exact Group.isSolvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
   have hM_coprime : Nat.Coprime p (Nat.card M) := by
     simpa [M] using (pPrimeCore_coprime_card (G := G) (p := p))
   have hcard_eq :
@@ -245,7 +245,7 @@ public theorem theorem_5_6_a_high_rank_largest_prime
   · intro q hqprime hq_dvd
     by_cases hq_eq_p : q = p
     · simp [hq_eq_p]
-    · haveI : Fact q.Prime := ⟨hqprime⟩
+    · have : Fact q.Prime := ⟨hqprime⟩
       have hq_dvd_quot_Op : q ∣ Nat.card (G ⧸ Op_p'p p G) :=
         prime_dvd_quotient_Op_p'p_of_ne
           (G := G) (p := p) (q := q) hq_eq_p hq_dvd
@@ -269,4 +269,3 @@ public theorem theorem_5_6_a_high_rank_largest_prime
       have hq_le_pred : q ≤ p - 1 :=
         Nat.le_of_dvd (Nat.sub_pos_of_lt (Fact.out : Nat.Prime p).one_lt) hq_dvd_pred
       omega
-

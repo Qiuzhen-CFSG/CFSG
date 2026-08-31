@@ -67,7 +67,12 @@ public theorem lemma_11_3
     have hSM : (S : Subgroup X) ≤ M := by simpa [hS] using hHM
     let T : Sylow e.r M := S.subtype hSM
     refine ⟨T, ?_⟩
-    simpa [T, Sylow.subtype, hS]
+    change H = (S.comapOfInjective M.subtype _ _ : Subgroup M).map M.subtype
+    rw [← hS]
+    change (S : Subgroup X) = Subgroup.map M.subtype (S.comap M.subtype)
+    exact (Subgroup.map_comap_eq_self (H := (S : Subgroup X)) (f := M.subtype) (by
+      intro x hx
+      exact ⟨⟨x, hSM hx⟩, rfl⟩)).symm
   have hCnormal :
       ((involutionCoreIn M).subgroupOf M).Normal := by
     rw [involutionCoreIn, subgroupOf_map_subtype_eq]

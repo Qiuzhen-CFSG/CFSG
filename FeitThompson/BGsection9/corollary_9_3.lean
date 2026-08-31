@@ -50,7 +50,7 @@ public theorem section9_c93_groupRank_at_least_two_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -79,7 +79,7 @@ private theorem section9_c93_groupRank_at_least_two_of_noncyclic_pgroup
     2 ≤ groupRank R := by
   classical
   obtain ⟨E, _hEnorm, hEcard, hEelem⟩ := lemma_4_5_a (R := R) (p := p) hpodd hncyc
-  letI : IsElementaryAbelian p E := hEelem
+  let : IsElementaryAbelian p E := hEelem
   have hEgen : 2 ≤ generatorRank E :=
     section9_c92_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq (p := p) hEcard
   have hprank : 2 ≤ primeRank p R := by
@@ -118,7 +118,7 @@ private theorem section9_c93_prime_odd_of_noncyclic_pSubgroup
     p ≠ 2 := by
   have hBnontrivial : Nontrivial B := by
     by_contra hnt
-    letI : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
     exact hBnoncyclic (isCyclic_of_subsingleton (α := B))
   exact Odd.ne_two_of_dvd_nat IsMinCE.odd_order
     (section9_c93_prime_dvd_card_of_nontrivial_pSubgroup (G := G) hBp hBnontrivial)
@@ -188,7 +188,7 @@ private theorem section9_c93_conjNormal_ker_image_groupRank_at_least_two
     exact
       section9_c93_conjNormal_ker_not_isCyclic
         (p := p) (D := D) (A := A) hDcard hAp hAgen hker_cyc
-  letI : Fact (IsPGroup p (φ.ker.map ψ)) := ⟨hKp⟩
+  let : Fact (IsPGroup p (φ.ker.map ψ)) := ⟨hKp⟩
   exact
     section9_c93_groupRank_at_least_two_of_noncyclic_pgroup
       (p := p) (φ.ker.map ψ) hpodd hKnoncyc
@@ -391,7 +391,7 @@ public theorem corollary_9_3
     exact IsPGroup.map hC₀p (Subgroup.centralizer (B : Set G)).subtype
   have hCcomm : IsMulCommutative C := by
     dsimp [C]
-    letI : IsMulCommutative C₀ := hC₀comm
+    let : IsMulCommutative C₀ := hC₀comm
     simpa using
       (Subgroup.map_isMulCommutative
         (f := (Subgroup.centralizer (B : Set G)).subtype) (H := C₀))
@@ -430,7 +430,7 @@ public theorem corollary_9_3
   have hAₚp : IsPGroup p Aₚ := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := Psub) hAP).symm
   have hAₚcomm : IsMulCommutative Aₚ := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := Psub)
   have hAₚgen_eq : generatorRank Aₚ = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -441,14 +441,16 @@ public theorem corollary_9_3
     dsimp [Cc]
     exact IsPGroup.map hCp (MulAut.conj g).toMonoidHom
   have hCccomm : IsMulCommutative Cc := by
-    letI : IsMulCommutative C := hCcomm
+    let : IsMulCommutative C := hCcomm
     refine ⟨⟨fun (x y : Cc) => ?_⟩⟩
     apply Subtype.ext
     change (x : G) * (y : G) = (y : G) * (x : G)
     have hx : (x : G) ∈ C.map (MulAut.conj g).toMonoidHom := by
-      simp [Cc, Subgroup.conjBy]
+      change (x : G) ∈ Cc
+      exact x.2
     have hy : (y : G) ∈ C.map (MulAut.conj g).toMonoidHom := by
-      simp [Cc, Subgroup.conjBy]
+      change (y : G) ∈ Cc
+      exact y.2
     obtain ⟨x₀, hx₀, hx_eq⟩ := Subgroup.mem_map.mp hx
     obtain ⟨y₀, hy₀, hy_eq⟩ := Subgroup.mem_map.mp hy
     change (MulAut.conj g) x₀ = (x : G) at hx_eq
@@ -468,17 +470,17 @@ public theorem corollary_9_3
   have hCₚp : IsPGroup p Cₚ := by
     exact hCcp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := Cc) (K := Psub) hCc_le_P).symm
   have hCₚcomm : IsMulCommutative Cₚ := by
-    letI : IsMulCommutative Cc := hCccomm
+    let : IsMulCommutative Cc := hCccomm
     exact Subgroup.subgroupOf_isMulCommutative (H := Cc) (K := Psub)
   have hCₚgen_eq : generatorRank Cₚ = generatorRank Cc := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := Cc) (K := Psub) hCc_le_P)
   have hCₚgen : 3 ≤ generatorRank Cₚ := by
     simpa [hCₚgen_eq] using hCcgen
-  haveI : Fact (IsPGroup p Psub) := ⟨P.isPGroup'⟩
+  have : Fact (IsPGroup p Psub) := ⟨P.isPGroup'⟩
   have hPnoncyc : ¬ IsCyclic Psub := by
     intro hPcyc
-    letI : IsCyclic Psub := hPcyc
+    let : IsCyclic Psub := hPcyc
     have hAₚcyc : IsCyclic Aₚ := inferInstance
     have hAcyc : IsCyclic A :=
       (Subgroup.subgroupOfEquivOfLe (H := A) (K := Psub) hAP).isCyclic.1 hAₚcyc
@@ -486,8 +488,8 @@ public theorem corollary_9_3
     omega
   obtain ⟨D, hDnorm, hDcard, hDelem⟩ :=
     lemma_4_5_a (R := Psub) (p := p) hpodd hPnoncyc
-  letI : D.Normal := hDnorm
-  letI : IsElementaryAbelian p D := hDelem
+  let : D.Normal := hDnorm
+  let : IsElementaryAbelian p D := hDelem
   let DG : Subgroup G := D.map Psub.subtype
   have hDGrank : 2 ≤ groupRank DG := by
     simpa [DG] using
@@ -552,7 +554,7 @@ public theorem corollary_9_3
   have hCcunique : Cc ∈ section9UniqueSubgroups G :=
     corollary_9_2 (L := KC) (K := Cc) hKCunique hCc_le_cent_KC hCcrank
   have hBcrank : 2 ≤ groupRank Bc := by
-    letI : Fact (IsPGroup p Bc) := ⟨hBcp⟩
+    let : Fact (IsPGroup p Bc) := ⟨hBcp⟩
     exact section9_c93_groupRank_at_least_two_of_noncyclic_pgroup
       (p := p) Bc hpodd hBcnoncyclic
   have hBc_le_cent_Cc : Bc ≤ Subgroup.centralizer (Cc : Set G) :=

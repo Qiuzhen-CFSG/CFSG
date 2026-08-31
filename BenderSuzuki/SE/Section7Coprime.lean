@@ -492,7 +492,7 @@ private theorem lemma75_generated_map_quotient_eq
     [MulDistribMulAction H V]
     (J : Subgroup H) (z : H) (N : Subgroup V)
     [N.Normal] (hNinv : IsInvariant H V N)
-    (hsolv : IsSolvable V)
+    (hsolv : Group.IsSolvable V)
     (hcopJ : Nat.Coprime (Nat.card J) (Nat.card V))
     (hcopZ : Nat.Coprime (Nat.card (Subgroup.zpowers z)) (Nat.card V)) :
     letI : IsInvariant H V N := hNinv
@@ -586,7 +586,7 @@ private theorem lemma75_generation_of_solvable_coprime
     (hJnormal : J.Normal)
     (hgen : J ⊔ Subgroup.zpowers z = ⊤)
     (hcomm : ⁅Subgroup.zpowers z, J⁆ = J)
-    (hsolv : IsSolvable V)
+    (hsolv : Group.IsSolvable V)
     (hcop : Nat.Coprime (Nat.card H) (Nat.card V)) :
     fixedPointSubgroup J V ⊔ lemma75JOrbit J z = ⊤ := by
   classical
@@ -594,7 +594,7 @@ private theorem lemma75_generation_of_solvable_coprime
     ∀ (V' : Type u) [Group V'] [Finite V']
       [MulDistribMulAction H V'],
       Nat.card V' = n →
-      IsSolvable V' →
+      Group.IsSolvable V' →
       Nat.Coprime (Nat.card H) (Nat.card V') →
       fixedPointSubgroup J V' ⊔
         lemma75JOrbit (H := H) (V := V') J z = ⊤
@@ -634,11 +634,11 @@ private theorem lemma75_generation_of_solvable_coprime
       have hQlt : Nat.card (V' ⧸ N) < n := by
         have hlt := natCard_quotient_lt_natCard_of_ne_bot N hNne_bot
         simpa [hn] using hlt
-      have hsolvN : IsSolvable N := by
-        letI : IsSolvable V' := hsolv'
+      have hsolvN : Group.IsSolvable N := by
+        let : Group.IsSolvable V' := hsolv'
         infer_instance
-      have hsolvQ : IsSolvable (V' ⧸ N) := by
-        letI : IsSolvable V' := hsolv'
+      have hsolvQ : Group.IsSolvable (V' ⧸ N) := by
+        let : Group.IsSolvable V' := hsolv'
         infer_instance
       have hcopN : Nat.Coprime (Nat.card H) (Nat.card N) :=
         Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card N) hcop'
@@ -782,7 +782,7 @@ public theorem lemma75_II146_specialized
       (lemma75_actor_internal_gen (W := W) (z := z))
   have hcommA : ⁅Subgroup.zpowers zA, J⁆ = J := by
     simpa [A, J, zA] using lemma75_actor_internal_commutator hcomm
-  have hsolvT : IsSolvable T := odd_order_theorem T hTodd
+  have hsolvT : Group.IsSolvable T := odd_order_theorem T hTodd
   have hcopAT : Nat.Coprime (Nat.card A) (Nat.card T) := by
     simpa [A] using hcop
   have hinternal : fixedPointSubgroup J T ⊔

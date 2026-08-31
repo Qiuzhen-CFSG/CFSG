@@ -57,16 +57,16 @@ open scoped IsMulCommutative
 `A`, then `K` is contained in an `A`-invariant Hall `π`-subgroup of `G`. -/
 public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ K : Subgroup G, IsPiSubgroup (G := G) π K → IsInvariant A G K →
       ∃ H : Subgroup G, IsHallSubgroup π H ∧ IsInvariant A G H ∧ K ≤ H := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
+  let _ : Fintype A := Fintype.ofFinite A
   -- Strong induction on |G|
   let P : ℕ → Prop := fun n =>
     ∀ (G' : Type u) [Group G'] [Finite G'] [MulDistribMulAction A G'],
-      Nat.card G' = n → IsSolvable G' → Nat.Coprime (Nat.card A) (Nat.card G') →
+      Nat.card G' = n → Group.IsSolvable G' → Nat.Coprime (Nat.card A) (Nat.card G') →
         ∀ (π' : Set Nat.Primes) (K' : Subgroup G'),
           IsPiSubgroup π' K' → IsInvariant A G' K' →
             ∃ H' : Subgroup G', IsHallSubgroup π' H' ∧ IsInvariant A G' H' ∧ K' ≤ H'
@@ -75,9 +75,9 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
     refine Nat.strong_induction_on n ?_
     intro n ih G' _ _ _ hcard hsolv' hcop' π' K' hK'π hK'inv
     classical
-    letI : Group G' := ‹Group G'›
-    letI : Finite G' := ‹Finite G'›
-    letI : MulDistribMulAction A G' := ‹MulDistribMulAction A G'›
+    let _ : Group G' := ‹Group G'›
+    let _ : Finite G' := ‹Finite G'›
+    let _ : MulDistribMulAction A G' := ‹MulDistribMulAction A G'›
     -- If K' is already a Hall π'-subgroup, we are done.
     by_cases hK'hall : IsHallSubgroup π' K'
     · exact ⟨K', hK'hall, hK'inv, le_rfl⟩
@@ -115,9 +115,9 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       have hi_lt : i - 1 < i := Nat.sub_one_lt hi_ne_zero
       have : ¬ pds (i - 1) := Nat.find_min hpds hi_lt
       exact fun hN_bot => this (by simp only [pds, N, hN_bot])
-    haveI : N.Normal := derivedSeries_normal (G := G') (i - 1)
-    haveI : N.Characteristic := derivedSeries_characteristic (G := G') (i - 1)
-    haveI : IsInvariant A G' N := isInvariant_of_characteristic (A := A) (G := G') N
+    have _ : N.Normal := derivedSeries_normal (G := G') (i - 1)
+    have _ : N.Characteristic := derivedSeries_characteristic (G := G') (i - 1)
+    have _ : IsInvariant A G' N := isInvariant_of_characteristic (A := A) (G := G') N
     -- `N` is abelian since its commutator is `derivedSeries G' i = ⊥`.
     have hcomm_bot : ⁅N, N⁆ = ⊥ := by
       have hi1 : i - 1 + 1 = i := Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hi_ne_zero)
@@ -127,7 +127,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
           _ = ⁅derivedSeries G' (i - 1), derivedSeries G' (i - 1)⁆ := by simp only [derivedSeries_succ]
           _ = ⁅N, N⁆ := by simp only [N]
       simpa [hderived] using hi_spec
-    haveI : IsMulCommutative (↥N) := by
+    have _ : IsMulCommutative (↥N) := by
       have hN_le_centralizer : N ≤ Subgroup.centralizer (N : Set G') :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := N) (H₂ := N)).1 hcomm_bot
       exact (Subgroup.le_centralizer_iff_isMulCommutative (K := N)).1 hN_le_centralizer
@@ -136,30 +136,30 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       have : 1 < Nat.card (↥N) := (Subgroup.one_lt_card_iff_ne_bot (H := N)).2 hN_ne_bot
       exact ne_of_gt this
     obtain ⟨p, hp_prime, hp_dvd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (↥N)) hN_card_ne_one
-    haveI : Fact p.Prime := ⟨hp_prime⟩
+    have _ : Fact p.Prime := ⟨hp_prime⟩
     -- Let `P₀` be a Sylow `p`-subgroup of `N`, and view it as a normal characteristic subgroup of `N`.
     let P₀ : Sylow p N := Classical.choice (Sylow.nonempty (p := p) (G := N))
     have hP₀_ne_bot : (P₀ : Subgroup N) ≠ ⊥ := Sylow.ne_bot_of_dvd_card (G := N) P₀ (by
       simpa using hp_dvd)
     have hP₀_normal : (P₀ : Subgroup N).Normal := by
       simpa using (Subgroup.normal_of_isMulCommutative (H := (P₀ : Subgroup N)))
-    haveI : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
-    haveI : Subsingleton (Sylow p N) := by infer_instance
-    haveI : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
+    have _ : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
+    have _ : Subsingleton (Sylow p N) := by infer_instance
+    have _ : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
     -- Map `P₀` into `G'`.
     let Psub : Subgroup G' := (P₀ : Subgroup N).map N.subtype
-    haveI : Psub.Normal := by infer_instance
-    haveI : IsInvariant A N (P₀ : Subgroup N) :=
+    have _ : Psub.Normal := by infer_instance
+    have _ : IsInvariant A N (P₀ : Subgroup N) :=
       isInvariant_of_characteristic (A := A) (G := N) (P₀ : Subgroup N)
-    haveI : IsInvariant A G' Psub := isInvariant_map_subtype (A := A) (G := G') N (P₀ : Subgroup N)
+    have _ : IsInvariant A G' Psub := isInvariant_map_subtype (A := A) (G := G') N (P₀ : Subgroup N)
     -- Put the descended action on the quotient `G' ⧸ Psub`.
     let Q := G' ⧸ Psub
-    letI : Group Q := by infer_instance
-    letI : Finite Q := by infer_instance
-    letI : MulDistribMulAction A Q :=
+    let _ : Group Q := by infer_instance
+    let _ : Finite Q := by infer_instance
+    let _ : MulDistribMulAction A Q :=
       quotientMulDistribMulAction (A := A) (G := G') Psub (inferInstance : IsInvariant A G' Psub)
-    letI : IsSolvable G' := hsolv'
-    have hQ_solv : IsSolvable Q := by infer_instance
+    let _ : Group.IsSolvable G' := hsolv'
+    have hQ_solv : Group.IsSolvable Q := by infer_instance
     have hQ_coprime : Nat.Coprime (Nat.card A) (Nat.card Q) := by
       have hdvd : Nat.card Q ∣ Nat.card G' := Subgroup.card_quotient_dvd_card (s := Psub)
       exact Nat.Coprime.of_dvd_right hdvd hcop'
@@ -185,7 +185,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
     have hf : Function.Surjective f := by
       simpa only [f, Q] using QuotientGroup.mk'_surjective Psub
     have hker : f.ker = Psub := QuotientGroup.ker_mk' Psub
-    haveI : MulAction.QuotientAction A Psub :=
+    have _ : MulAction.QuotientAction A Psub :=
       quotientAction_of_isInvariant (A := A) (G := G') Psub inferInstance
     let K'_image : Subgroup Q := K'.map f
     have hK'_image_pi : IsPiSubgroup π' K'_image := by
@@ -205,17 +205,17 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have : f (a⁻¹ • g) = a⁻¹ • f g := by
           exact MulAction.Quotient.smul_mk (H := Psub) (a⁻¹) g
         simp [this, hq]
-    haveI : IsInvariant A Q K'_image := hK'_image_inv
+    have _ : IsInvariant A Q K'_image := hK'_image_inv
     -- Apply the induction hypothesis to the quotient with K'_image.
     obtain ⟨Hbar, hHbar_hall, hHbar_inv, hK'_image_le⟩ :=
       (ih (Nat.card Q) hQ_lt) Q rfl hQ_solv hQ_coprime π' K'_image hK'_image_pi hK'_image_inv
-    haveI := hHbar_inv
+    have _ := hHbar_inv
     -- Pull back `Hbar` to a subgroup of `G'`.
     let K0 : Subgroup G' := Hbar.comap f
     have hK0_hall_index : K0.index = Hbar.index := by
       simpa [K0] using (Subgroup.index_comap_of_surjective (H := Hbar) (f := f) hf)
 
-    haveI : IsInvariant A G' K0 :=
+    have _ : IsInvariant A G' K0 :=
       ⟨by
         intro a g
         simp [K0, Subgroup.mem_comap]
@@ -236,9 +236,9 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       -- If `p ∈ π'`, the preimage `K0` is already a Hall `π'`-subgroup.
       refine ⟨K0, ?_, inferInstance, hK'_le_K0⟩
       classical
-      letI : Fintype G' := Fintype.ofFinite G'
-      haveI : Finite K0 := by infer_instance
-      haveI : Subgroup.FiniteIndex K0 := by infer_instance
+      let _ : Fintype G' := Fintype.ofFinite G'
+      have _ : Finite K0 := by infer_instance
+      have _ : Subgroup.FiniteIndex K0 := by infer_instance
       refine isHallSubgroup_of (G := G') (π := π') (H := K0) (hcard := ?_) (hindex := ?_)
       ·
         intro q hq_dvd
@@ -276,9 +276,9 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       -- If `p ∉ π'`, apply the invariant complement lemma inside `K0` to remove the `p`-part.
       classical
       let Pk : Subgroup K0 := Psub.subgroupOf K0
-      haveI : Pk.Normal := by simpa [Pk] using (Subgroup.Normal.subgroupOf (H := Psub) (K := K0) inferInstance)
-      haveI : IsMulCommutative (↥Pk) := by infer_instance
-      haveI : IsInvariant A K0 Pk := by
+      have _ : Pk.Normal := by simpa [Pk] using (Subgroup.Normal.subgroupOf (H := Psub) (K := K0) inferInstance)
+      have _ : IsMulCommutative (↥Pk) := by infer_instance
+      have _ : IsInvariant A K0 Pk := by
         refine ⟨?_⟩
         intro a x
         change (x.1 ∈ Psub) ↔ (a • x.1 ∈ Psub)
@@ -342,7 +342,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
           simpa [p'] using hq_eq
         rw [this] at hq_mem
         exact hq_mem
-      haveI : IsInvariant A K0 Kk := by
+      have _ : IsInvariant A K0 Kk := by
         refine ⟨?_⟩
         intro a x
         change (x.1 ∈ K') ↔ (a • x.1 ∈ K')
@@ -353,10 +353,10 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       have hB_coprime_Pk : Nat.Coprime (Nat.card B) (Nat.card Pk) := by
         rw [hB_card]
         exact Nat.Coprime.mul_left hKk_coprime_Pk hA_coprime_Pk
-      letI : Fintype Kk := Fintype.ofFinite Kk
-      letI : Fintype B := Fintype.ofEquiv (Kk × A)
+      let _ : Fintype Kk := Fintype.ofFinite Kk
+      let _ : Fintype B := Fintype.ofEquiv (Kk × A)
         (SemidirectProduct.equivProd (N := Kk) (G := A) (φ := MulDistribMulAction.toMulAut A Kk)).symm
-      haveI : Finite B := by infer_instance
+      have _ : Finite B := by infer_instance
       let conjHomKk : Kk →* MulAut K0 :=
         (MulAut.conj (G := K0)).comp Kk.subtype
       have hsemi :
@@ -370,7 +370,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       let semiToMulAut : B →* MulAut K0 :=
         SemidirectProduct.lift (fn := conjHomKk)
           (fg := MulDistribMulAction.toMulAut A K0) hsemi
-      letI : MulDistribMulAction B K0 :=
+      let _ : MulDistribMulAction B K0 :=
         MulDistribMulAction.compHom K0 semiToMulAut
       have hB_inv_Pk : IsInvariant B K0 Pk := by
         refine ⟨?_⟩
@@ -417,7 +417,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         · intro hx
           exact (h_inr b.right x).2
             ((h_inl b.left ((SemidirectProduct.inr b.right : B) • x)).2 hx)
-      letI : IsInvariant B K0 Pk := hB_inv_Pk
+      let _ : IsInvariant B K0 Pk := hB_inv_Pk
       obtain ⟨L, hcomp, hLinvar⟩ :=
         Subgroup.quotientDiff.exists_invariant_complement' (G := K0) (A := B) (H := Pk)
           (hH := inferInstance) hPk_coprime_index hB_coprime_Pk
@@ -461,7 +461,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have hLs_normal : Ls.Normal := by
           exact (Subgroup.normal_subgroupOf_iff_le_normalizer (H := L) (K := Kk ⊔ L) le_sup_right).2
             hsup_le_normalizer
-        letI : Ls.Normal := hLs_normal
+        let _ : Ls.Normal := hLs_normal
         have hIso : Ks ⧸ Ls.subgroupOf Ks ≃* (Ks ⊔ Ls : Subgroup ↥(Kk ⊔ L)) ⧸ Ls.subgroupOf (Ks ⊔ Ls) :=
           QuotientGroup.quotientInfEquivProdNormalQuotient Ks Ls
         have hidx_dvd_cardKk : (L.subgroupOf (Kk ⊔ L)).index ∣ Nat.card Kk := by
@@ -503,10 +503,10 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have hLsub_top : L.subgroupOf (Kk ⊔ L) = ⊤ := (Subgroup.index_eq_one).1 hidx_eq_one
         have hsup_le_L : Kk ⊔ L ≤ L := (Subgroup.subgroupOf_eq_top).1 hLsub_top
         exact le_trans le_sup_left hsup_le_L
-      haveI : IsInvariant A K0 L := hLinvarA
+      have _ : IsInvariant A K0 L := hLinvarA
       -- Map the complement back into `G'`.
       let L' : Subgroup G' := L.map K0.subtype
-      haveI : IsInvariant A G' L' := isInvariant_map_subtype (A := A) (G := G') K0 L
+      have _ : IsInvariant A G' L' := isInvariant_map_subtype (A := A) (G := G') K0 L
       -- Show that K' ≤ L'
       have hK'_le_L' : K' ≤ L' := by
         intro g hg
@@ -517,8 +517,8 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
         have hgL : (⟨g, hgK0⟩ : K0) ∈ L := hKk_le_L hgKk
         exact ⟨⟨g, hgK0⟩, hgL, rfl⟩
       refine ⟨L', ?_, inferInstance, hK'_le_L'⟩
-      haveI : Finite L' := by infer_instance
-      haveI : Subgroup.FiniteIndex L' := by infer_instance
+      have _ : Finite L' := by infer_instance
+      have _ : Subgroup.FiniteIndex L' := by infer_instance
       refine isHallSubgroup_of (G := G') (π := π') (H := L') (hcard := ?_) (hindex := ?_)
       ·
         intro q hq_dvd
@@ -565,7 +565,7 @@ public theorem exists_isHallSubgroup_isInvariant_of_isPiSubgroup
 -- Proposition 1.5(a)
 public theorem exists_isHallSubgroup_isInvariant
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∃ H : Subgroup G, IsHallSubgroup π H ∧ IsInvariant A G H := by
   have hbot_pi : IsPiSubgroup (G := G) π (⊥ : Subgroup G) := by

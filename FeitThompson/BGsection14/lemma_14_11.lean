@@ -148,9 +148,9 @@ private theorem section14_commutator_centralizerIn_eq_bot_of_coprime
   have hcomm_map : Ccomm.map K.subtype = ⁅K, P⁆ := by
     simpa [Ccomm] using
       commutatorAction_subgroup_conj_map_eq_commutator K P hPnormK
-  have hsolvK : IsSolvable K := by
-    letI : IsMulCommutative K := hKcomm
-    letI : CommGroup K := IsMulCommutative.instCommGroup
+  have hsolvK : Group.IsSolvable K := by
+    let : IsMulCommutative K := hKcomm
+    let : CommGroup K := IsMulCommutative.instCommGroup
     infer_instance
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
@@ -1007,7 +1007,7 @@ public theorem lemma_14_11
       htop_p.of_equiv (Subgroup.topEquiv : (⊤ : Subgroup G) ≃* G)
     haveI : Group.IsNilpotent G :=
       IsPGroup.isNilpotent (p := p.val) (G := G) (h := hGp)
-    exact IsMinCE.not_solvable (G := G) (inferInstance : IsSolvable G)
+    exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
   have hNA_ne_top : Subgroup.normalizer (A : Set G) ≠ ⊤ := by
     intro hNtop
     have hAnormG : A.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
@@ -1063,7 +1063,7 @@ public theorem lemma_14_11
     have hMstarP : Mstar ∈ section14MFamilyP G := ⟨hMstar_max, ⟨q, hqκ⟩⟩
     have hMstar_not_P2 : Mstar ∉ section14MFamilyP2 G := by
       intro hP2
-      have hsolvMstar : IsSolvable Mstar :=
+      have hsolvMstar : Group.IsSolvable Mstar :=
         section14_solvable_of_le_maximal (G := G) hMstar_max le_rfl
       obtain ⟨Kstar, hKstar⟩ :=
         section14_exists_hallSubgroupIn
