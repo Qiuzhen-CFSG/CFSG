@@ -63,11 +63,11 @@ private theorem section13_theorem_13_17_typeI_of_not_conj_sourceContext
 private theorem section13_theorem_13_17_frobenius_of_typeI
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
     {L H : Subgroup G}
-    (hLmax : L ∈ section9MaximalSubgroups G)
-    (hMF : section16MFSubgroup L H)
-    (hTypeI : Section8.typeIDefinitionData L H) :
+    (_hLmax : L ∈ section9MaximalSubgroups G)
+    (_hMF : section16MFSubgroup L H)
+    (_hTypeI : Section8.typeIDefinitionData L H) :
     Section7.frobeniusWithKernel L H := by
-  exact Section12.theorem_12_7 L H hLmax hMF hTypeI
+  exact Section12.theorem_12_7 L H _hLmax _hMF _hTypeI
 
 private theorem section13_theorem_13_17_frobenius_of_not_conj_sourceContext
     {G : Type u} [Group G] [Finite G] [IsMinCE G]
@@ -237,7 +237,7 @@ private theorem section13_exists_conj_normalizes_of_hall_subgroupOf
     (_hS : S = L.conjBy a)
     (hUleS : U ≤ S)
     (hUaleS : U.conjBy a ≤ S)
-    (hsolvS : IsSolvable S)
+    (hsolvS : Group.IsSolvable S)
     (hHallUa : IsHallSubgroup π ((U.conjBy a).subgroupOf S))
     (hHallU : IsHallSubgroup π (U.subgroupOf S)) :
     ∃ x : G, x ∈ S ∧ U.conjBy (x * a) = U := by
@@ -314,13 +314,13 @@ private theorem section13_theorem_13_17_Smax_solvable_of_sourceContext
     (p q u v c d : ℕ)
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d) :
-    IsSolvable Smax := by
+    Group.IsSolvable Smax := by
   rcases hsource with
     ⟨hcase, _hptypeS, _hptypeT, _hp, _hq, _hC, _hD, _hc, _hd,
       _hUcard, _hVcard, _hSfam, _hTfam, _hDadeS, _hDadeT,
       _hnotationData, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
       _hChoice, hMin, _hFourSixS, _hFourSixT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases hcase with
     ⟨_hWprod, _hWcyc, _hW1ne, _hW2ne, _hWhat,
       hSmaxMax, _hTmaxMax, _hSMF, _hTMF, _hSeq, _hTeq,
@@ -404,7 +404,7 @@ private theorem section13_theorem_13_17_hall_conj_witness_of_L_conj_Smax_sourceC
     rw [hS]
     rcases Subgroup.mem_map.mp hy with ⟨z, hzU, hz_eq⟩
     exact Subgroup.mem_map.mpr ⟨z, hUleL hzU, hz_eq⟩
-  have hsolvS : IsSolvable Smax :=
+  have hsolvS : Group.IsSolvable Smax :=
     section13_theorem_13_17_Smax_solvable_of_sourceContext
       Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
       p q u v c d hsource
@@ -440,7 +440,7 @@ private theorem section13_theorem_13_17_U_le_H_from_centralizer_inf
     (hUleL : U ≤ L)
     (hcent : subgroupCentralizerIn L (U ⊓ H) ≤ H) :
     U ≤ H := by
-  letI : IsMulCommutative U := hUcomm
+  let : IsMulCommutative U := hUcomm
   intro u hu
   apply hcent
   refine ⟨hUleL hu, ?_⟩
@@ -535,7 +535,8 @@ private theorem section13_subgroupCentralizerIn_eq_bot_of_fixedPointFree_disjoin
       subst y
       exact hxCentA
     have hxBot : x ∈ (⊥ : Subgroup G) := by
-      simpa [hcent_a] using hxCent
+      rw [← hcent_a]
+      exact hxCent
     simpa using hxBot
   · exact bot_le
 
@@ -605,7 +606,8 @@ private theorem section13_UinfH_ne_bot_from_frobenius_action
   have h9 := Section9.theorem_9_1 (U ⊔ W1) U W1 H hact
   have hcardH : Nat.card H = 1 := by
     have h := h9.2.2 hCU
-    simpa [hCW1] using h
+    rw [hCW1] at h
+    simpa [Subgroup.card_bot] using h
   exact hHne ((Subgroup.eq_bot_iff_card (H := H)).2 hcardH)
 
 private theorem section13_inf_eq_bot_of_card_right_coprime
@@ -634,8 +636,9 @@ private theorem section13_coprime_card_of_mf_subgroup_disjoint
   let Hloc : Subgroup L := H.subgroupOf L
   let Kloc : Subgroup L := K.subgroupOf L
   have hHleL : H ≤ L := Section12.section16MFSubgroup_le hMF
-  letI : Hloc.Normal := by
-    simpa [Hloc] using Section12.section16MFSubgroup_subgroupOf_normal hMF
+  let : Hloc.Normal := by
+    change (H.subgroupOf L).Normal
+    exact Section12.section16MFSubgroup_subgroupOf_normal hMF
   have hHall : IsHallSubgroup (subgroupPrimeSet H) Hloc := by
     simpa [Hloc] using Section12.section16MFSubgroup_subgroupOf_isHall hMF
   have hcopIndex : Nat.Coprime (Nat.card H) Hloc.index := by
@@ -775,7 +778,7 @@ public theorem section13_frobeniusWithKernel_centralizerIn_eq_bot_of_not_mem
   intro x hxL hxnotH
   rcases hfrob with ⟨hHL, hHnormal, R, hcomp, _hHne, _hRne, hfixedR⟩
   let Hloc : Subgroup L := H.subgroupOf L
-  letI : Hloc.Normal := by simpa [Hloc] using hHnormal
+  let : Hloc.Normal := by simpa [Hloc] using hHnormal
   let xL : L := ⟨x, hxL⟩
   have hxnotHloc : xL ∉ Hloc := by
     intro hxHloc
@@ -889,14 +892,14 @@ private theorem section13_frobeniusWithKernel_complementIn_isFrobenius
     (hcompE : section12ComplementIn L H E)
     (hEne : E ≠ ⊥) :
     IsFrobeniusGroupWithKernelComplement (H.subgroupOf L) (E.subgroupOf L) := by
-  rcases hfrob with ⟨hHL, hHnormal, _R, _hcompR, hHne, _hRne, _hfixedR⟩
+  rcases hfrob with ⟨_hHL, hHnormal, _R, _hcompR, hHne, _hRne, _hfixedR⟩
   let Hloc : Subgroup L := H.subgroupOf L
   let Eloc : Subgroup L := E.subgroupOf L
   have hHlocne : Hloc ≠ ⊥ := by simpa [Hloc] using hHne
   have hElocne : Eloc ≠ ⊥ :=
     section13_subgroupOf_ne_bot_of_ne_bot hcompE.2.1 hEne
-  letI : Hloc.Normal := by simpa [Hloc] using hHnormal
-  have hHnorm : section10NormalIn H L := ⟨hHL, hHnormal⟩
+  let : Hloc.Normal := by simpa [Hloc] using hHnormal
+  have hHnorm : section10NormalIn H L := ⟨_hHL, hHnormal⟩
   have hcompLoc : Hloc.IsComplement' Eloc := by
     simpa [Hloc, Eloc] using
       (section13_complementIn_of_normal_isComplement' hcompE hHnorm).symm
@@ -914,16 +917,16 @@ private theorem section13_frobeniusWithKernel_complementIn_isFrobenius
       apply Subtype.ext
       simpa using heBot
     exact he_ne he_eq_one
-  exact section13_centralizerIn_subgroupOf_eq_bot_of_ambient hHL
+  exact section13_centralizerIn_subgroupOf_eq_bot_of_ambient _hHL
     (section13_frobeniusWithKernel_centralizerIn_eq_bot_of_not_mem
-      ⟨hHL, hHnormal, _R, _hcompR, hHne, _hRne, _hfixedR⟩
+      ⟨_hHL, hHnormal, _R, _hcompR, hHne, _hRne, _hfixedR⟩
       ((e : L) : G) (e : L).property he_not_H)
 
 private theorem section13_containing_complement_of_solvable_mf
     {G : Type u} [Group G] [Finite G]
     {L H K : Subgroup G}
     (hMF : section16MFSubgroup L H)
-    (hsolvL : IsSolvable L)
+    (hsolvL : Group.IsSolvable L)
     (hKleL : K ≤ L)
     (hKinfH : K ⊓ H = ⊥) :
     ∃ E : Subgroup G, section12ComplementIn L H E ∧ K ≤ E := by
@@ -1440,7 +1443,7 @@ private theorem section13_theorem_13_17_W1_le_H_of_L_conj_Tmax_sourceContext
   let Hloc : Subgroup L := H.subgroupOf L
   let W1loc : Subgroup L := W1.subgroupOf L
   have hHleL : H ≤ L := Section12.section16MFSubgroup_le _hMF
-  letI : Hloc.Normal := by
+  let : Hloc.Normal := by
     simpa [Hloc] using Section12.section16MFSubgroup_subgroupOf_normal _hMF
   have hHall : IsHallSubgroup (subgroupPrimeSet H) Hloc := by
     simpa [Hloc] using Section12.section16MFSubgroup_subgroupOf_isHall _hMF
@@ -1463,7 +1466,7 @@ private theorem section13_theorem_13_17_W1_le_H_of_L_conj_Tmax_sourceContext
     exact dvd_pow_self q (Nat.ne_of_gt hp_pos)
   have hW1loc_card : Nat.card W1loc = q := by
     simpa [W1loc, hq_card] using natCard_subgroupOf_eq W1 L hW1leL
-  haveI : Fact (Nat.Prime q) := ⟨hqprime⟩
+  have : Fact (Nat.Prime q) := ⟨hqprime⟩
   have hW1locP : IsPGroup q W1loc := by
     rw [IsPGroup.iff_card]
     exact ⟨1, by simpa [← Nat.card_eq_fintype_card] using hW1loc_card⟩
@@ -1611,7 +1614,7 @@ private theorem section13_theorem_13_17_q_not_mem_H_primeSet_of_sourceContext
       _hd_card, _hU_card, _hV_card, _hSfam, _hTfam, _hDadeS, _hDadeT,
       _hnotationData, _hDadeDiff, _hZeroDegree, _hConjIndex, _hConjBetaTau,
       hChoice, hMin, _hFourSixS, _hFourSixT⟩
-  letI : IsMinCE G := hMin
+  let : IsMinCE G := hMin
   rcases hcaseB with
     ⟨_hWprod, _hWcyc, _hW1ne, _hW2ne, _hWhat,
       _hSmaxMax, hTmaxMax, _hSMF, hTMF, _hSeq, _hTeq,
@@ -1776,7 +1779,7 @@ private theorem section13_theorem_13_17_H_coprime_UW1_of_UinfH_bot_sourceContext
     ⟨_hSMF, _hType, _hTypeIf, _hUcomm, hfrobUW1, _hPelem, _hPcard,
       _huBound, _hcoh, _hTI, _hTau⟩
   have hcardUW1 : Nat.card (U ⊔ W1 : Subgroup G) = Nat.card U * Nat.card W1 := by
-    have hmul := hfrobUW1.isComplement'.card_mul
+    have hmul := hfrobUW1.isComplement'.card_mul_card
     have hcardUsub :
         Nat.card (U.subgroupOf (U ⊔ W1 : Subgroup G)) = Nat.card U :=
       natCard_subgroupOf_eq U (U ⊔ W1) le_sup_left
@@ -1833,11 +1836,13 @@ private theorem section13_theorem_13_17_UW1_frobeniusActionData_of_UinfH_bot_sou
     have hxU' :
         (⟨x, (le_sup_left : U ≤ U ⊔ W1) hxU⟩ : (U ⊔ W1 : Subgroup G)) ∈
           U.subgroupOf (U ⊔ W1) := by
-      simpa [Subgroup.mem_subgroupOf] using hxU
+      change x ∈ U
+      exact hxU
     have hxW1' :
         (⟨x, (le_sup_right : W1 ≤ U ⊔ W1) hxW1⟩ : (U ⊔ W1 : Subgroup G)) ∈
           W1.subgroupOf (U ⊔ W1) := by
-      simpa [Subgroup.mem_subgroupOf] using hxW1
+      change x ∈ W1
+      exact hxW1
     have hxBotLocal :
         (⟨x, (le_sup_left : U ≤ U ⊔ W1) hxU⟩ : (U ⊔ W1 : Subgroup G)) = 1 := by
       exact (Subgroup.disjoint_def.mp hfrobUW1.isComplement'.disjoint) hxU' hxW1'
@@ -1847,9 +1852,9 @@ private theorem section13_theorem_13_17_UW1_frobeniusActionData_of_UinfH_bot_sou
     have hL_le_normH : L ≤ Subgroup.normalizer (H : Set G) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer hHL).1 hHnormal
     exact (sup_le _hUleL _hW1leL).trans hL_le_normH
-  have hsolvH : IsSolvable H := by
+  have hsolvH : Group.IsSolvable H := by
     rcases _hMF.1 with ⟨_hHL, _hHnormal, hHnil, _hHall⟩
-    letI : Group.IsNilpotent H := hHnil
+    let : Group.IsNilpotent H := hHnil
     exact inferInstance
   exact ⟨hcomp, hfrobUW1, hnormalizesH, hsolvH,
     section13_theorem_13_17_H_coprime_UW1_of_UinfH_bot_sourceContext
@@ -1997,7 +2002,7 @@ private theorem section13_theorem_13_17_L_solvable_of_sourceContext
     (_hfrob : Section7.frobeniusWithKernel L H)
     (_hUleH : U ≤ H)
     (_hW1leL : W1 ≤ L) :
-    IsSolvable L := by
+    Group.IsSolvable L := by
   have hnotS :
       ∀ g : G, L ≠ Smax.conjBy g :=
     section13_theorem_13_17_L_not_conj_Smax_of_sourceContext
@@ -2052,14 +2057,14 @@ private theorem section13_theorem_13_17_W1_containing_complement_sourceData_of_s
 
 
 private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
-    {E : Type u} [Group E] [Finite E] [IsSolvable E] {P : Subgroup E}
+    {E : Type u} [Group E] [Finite E] [Group.IsSolvable E] {P : Subgroup E}
     (hPprime : Nat.Prime (Nat.card P))
     (hPcentF : P ≤ Subgroup.centralizer (fittingSubgroup E : Set E))
     (hpcore_cyc : IsCyclic (pCore (Nat.card P) E)) :
     P.Normal := by
   classical
   let p := Nat.card P
-  letI : Fact (Nat.Prime p) := ⟨hPprime⟩
+  let : Fact (Nat.Prime p) := ⟨hPprime⟩
   have hP_le_F : P ≤ fittingSubgroup E := by
     exact hPcentF.trans
       (centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable (G := E) inferInstance)
@@ -2074,7 +2079,7 @@ private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
       (S : Subgroup (fittingSubgroup E)).map (fittingSubgroup E).subtype ≤ pCore p E := by
     have hS_normal_sub : (S : Subgroup (fittingSubgroup E)).Normal :=
       Group.IsNilpotent.sylow_normal (p := p) inferInstance S
-    haveI : (S : Subgroup (fittingSubgroup E)).Characteristic :=
+    have : (S : Subgroup (fittingSubgroup E)).Characteristic :=
       Sylow.characteristic_of_normal S hS_normal_sub
     have hS_normal_ambient :
         ((S : Subgroup (fittingSubgroup E)).map (fittingSubgroup E).subtype).Normal := by
@@ -2094,7 +2099,7 @@ private theorem section13_prime_order_subgroup_normal_of_centralizes_fitting
     exact hSmap_le_pCore
       (Subgroup.mem_map.mpr ⟨⟨x, hP_le_F hx⟩, hxS, rfl⟩)
   let Psub : Subgroup (pCore p E) := P.subgroupOf (pCore p E)
-  haveI : IsCyclic (pCore p E) := hpcore_cyc
+  have : IsCyclic (pCore p E) := hpcore_cyc
   have hPsub_char : Psub.Characteristic :=
     section12_subgroup_characteristic_of_cyclic Psub
   have hPsub_normal_map : (Psub.map (pCore p E).subtype).Normal := by
@@ -2114,7 +2119,7 @@ private theorem section13_huppert_prime_order_subgroup_le_centralizer_fitting_of
     (_hWprime : Nat.Prime (Nat.card W)) :
     W.subgroupOf E ≤ Subgroup.centralizer (fittingSubgroup E : Set E) := by
   classical
-  letI : (H.subgroupOf L).Normal := _hfrobE.normal
+  let : (H.subgroupOf L).Normal := _hfrobE.normal
   letI : MulDistribMulAction (E.subgroupOf L) (H.subgroupOf L) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := L)
       (E.subgroupOf L) (H.subgroupOf L)
@@ -2149,16 +2154,11 @@ private theorem section13_huppert_prime_order_subgroup_le_centralizer_fitting_of
     have hxBot : x ∈ (⊥ : Subgroup (H.subgroupOf L)) := by
       simpa [hregularSub (e a) haSub] using hxSub
     simpa using hxBot
-  haveI : Nontrivial (H.subgroupOf L) :=
+  have : Nontrivial (H.subgroupOf L) :=
     (Subgroup.nontrivial_iff_ne_bot (H.subgroupOf L)).2 _hfrobE.kernel_ne_bot
   have hWsubPrime : Nat.Prime (Nat.card (W.subgroupOf E)) := by
-    rw [Nat.card_eq_fintype_card]
-    have hcard : Fintype.card (W.subgroupOf E) = Fintype.card W := by
-      simpa using
-        Fintype.card_congr
-          (Subgroup.subgroupOfEquivOfLe (H := W) (K := E) _hWleE).toEquiv
-    rw [hcard]
-    simpa [Nat.card_eq_fintype_card] using _hWprime
+    rw [natCard_subgroupOf_eq W E _hWleE]
+    exact _hWprime
   exact
     prime_order_subgroup_le_centralizer_fitting_of_odd_regular_action
       (H := H.subgroupOf L) (R := E) _hoddE hregularE hWsubPrime
@@ -2176,26 +2176,22 @@ private theorem section13_huppert_prime_order_subgroup_normal_of_odd_frobenius_c
   let P : Subgroup E := W.subgroupOf E
   change P.Normal
   have hPprime : Nat.Prime (Nat.card P) := by
-    rw [Nat.card_eq_fintype_card]
-    have hPcard : Fintype.card P = Fintype.card W := by
-      simpa [P] using
-        Fintype.card_congr
-          (Subgroup.subgroupOfEquivOfLe (H := W) (K := E) _hWleE).toEquiv
-    rw [hPcard]
-    simpa [Nat.card_eq_fintype_card] using _hWprime
+    rw [show Nat.card P = Nat.card W from
+      natCard_subgroupOf_eq W E _hWleE]
+    exact _hWprime
   have hEsub_odd : Odd (Nat.card (E.subgroupOf L)) := by
     rw [natCard_subgroupOf_eq E L _hEleL]
     exact _hoddE
   have hZsub : IsZGroup (E.subgroupOf L) :=
     isZGroup_of_frobenius_complement_of_odd (K := H.subgroupOf L)
       (R := E.subgroupOf L) _hfrobE hEsub_odd
-  letI : IsZGroup (E.subgroupOf L) := hZsub
+  let : IsZGroup (E.subgroupOf L) := hZsub
   let e : E.subgroupOf L ≃* E :=
     Subgroup.subgroupOfEquivOfLe (H := E) (K := L) _hEleL
   have hZE : IsZGroup E :=
     IsZGroup.of_injective (f := e.symm.toMonoidHom) e.symm.injective
-  letI : IsZGroup E := hZE
-  letI : Fact (Nat.Prime (Nat.card P)) := ⟨hPprime⟩
+  let : IsZGroup E := hZE
+  let : Fact (Nat.Prime (Nat.card P)) := ⟨hPprime⟩
   have hpcore_cyc : IsCyclic (pCore (Nat.card P) E) :=
     IsPGroup.isCyclic_of_isZGroup (G := E) (P := pCore (Nat.card P) E)
       (pCore_isPGroup (G := E) (p := Nat.card P))
@@ -2347,8 +2343,8 @@ private theorem section13_sylow_isCyclic_of_odd_frobenius_complement
     Subgroup.subgroupOfEquivOfLe (H := E) (K := L) hcompE.2.1
   have hZE : IsZGroup E :=
     IsZGroup.of_injective (f := e.symm.toMonoidHom) e.symm.injective
-  letI : IsZGroup E := hZE
-  letI : Fact r.val.Prime := ⟨r.2⟩
+  let : IsZGroup E := hZE
+  let : Fact r.val.Prime := ⟨r.2⟩
   exact IsPGroup.isCyclic_of_isZGroup (G := E) (P := (R : Subgroup E))
     R.isPGroup'
 
@@ -2497,12 +2493,12 @@ private theorem section13_inf_Q_isCyclic_of_cyclic_sylow_elementary
     (hSylowCyclic : ∀ r : Nat.Primes, ∀ R : Sylow r.val E, IsCyclic R) :
     IsCyclic (E ⊓ Q : Subgroup G) := by
   classical
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let N : Subgroup G := E ⊓ Q
   have hNleE : N ≤ E := inf_le_left
   have hNleQ : N ≤ Q := inf_le_right
   have hQp : IsPGroup q Q := by
-    letI : IsElementaryAbelian q Q := hQelem
+    let : IsElementaryAbelian q Q := hQelem
     exact IsElementaryAbelian.isPGroup q Q
   have hNQp : IsPGroup q (N.subgroupOf Q) :=
     hQp.to_subgroup (N.subgroupOf Q)
@@ -2514,7 +2510,7 @@ private theorem section13_inf_Q_isCyclic_of_cyclic_sylow_elementary
   obtain ⟨R, hNleR⟩ := IsPGroup.exists_le_sylow (G := E) hNsubEp
   have hRcyc : IsCyclic (R : Subgroup E) := hSylowCyclic ⟨q, hq⟩ R
   have hNsubEcyc : IsCyclic (N.subgroupOf E) := by
-    letI : IsCyclic (R : Subgroup E) := hRcyc
+    let : IsCyclic (R : Subgroup E) := hRcyc
     exact Subgroup.isCyclic_of_le hNleR
   exact
     (Subgroup.subgroupOfEquivOfLe (H := N) (K := E) hNleE).isCyclic.1
@@ -2563,8 +2559,8 @@ private theorem section13_coprime_p_card_Q_of_QW2_classifierData
   rcases hdata with
     ⟨hp, hq, hpne, _hW1card, _hW2card, hQelem, _hW1leQ, _hW2cyc,
       _hQW2leNormQ⟩
-  letI : IsElementaryAbelian q Q := hQelem
-  letI : Fact q.Prime := ⟨hq⟩
+  let : IsElementaryAbelian q Q := hQelem
+  let : Fact q.Prime := ⟨hq⟩
   have hQp : IsPGroup q Q := IsElementaryAbelian.isPGroup q Q
   rcases hQp.exists_card_eq with ⟨n, hcard⟩
   rw [hcard]
@@ -2644,7 +2640,7 @@ private theorem section13_quotient_image_ne_bot_of_not_le
     (hEnotleN : ¬ E ≤ N) :
     (E.subgroupOf K).map (QuotientGroup.mk' (N.subgroupOf K)) ≠ ⊥ := by
   classical
-  letI : (N.subgroupOf K).Normal := hNnorm
+  let : (N.subgroupOf K).Normal := hNnorm
   intro hmap
   apply hEnotleN
   intro x hxE
@@ -2695,7 +2691,7 @@ private theorem section13_E_quotient_Q_image_card_eq_p_of_QW2_classifierData
     (hEnotleQ : ¬ E ≤ Q) :
     let K : Subgroup G := Q ⊔ W2
     let QK : Subgroup K := Q.subgroupOf K
-    haveI : QK.Normal := by
+    have : QK.Normal := by
       simpa [K, QK] using
         section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
     Nat.card ((E.subgroupOf K).map (QuotientGroup.mk' QK)) = p := by
@@ -2706,7 +2702,7 @@ private theorem section13_E_quotient_Q_image_card_eq_p_of_QW2_classifierData
   have hQnorm : QK.Normal := by
     simpa [K, QK] using
       section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
-  letI : QK.Normal := hQnorm
+  let : QK.Normal := hQnorm
   let π : K →* K ⧸ QK := QuotientGroup.mk' QK
   let Ebar : Subgroup (K ⧸ QK) := Esub.map π
   have hEbar_ne_bot : Ebar ≠ ⊥ := by
@@ -2746,7 +2742,7 @@ private theorem section13_E_card_eq_W1_mul_p_of_QW2_classifierData
   have hQnorm : QK.Normal := by
     simpa [K, QK] using
       section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q hdata
-  letI : QK.Normal := hQnorm
+  let : QK.Normal := hQnorm
   let π : K →* K ⧸ QK := QuotientGroup.mk' QK
   let Esub : Subgroup K := E.subgroupOf K
   let ι : E →* K := Subgroup.inclusion hEleQW2
@@ -2814,7 +2810,7 @@ private theorem section13_exists_order_p_subgroup_sup_eq_E_of_QW2_classifierData
   rcases hdata with
     ⟨hp, hq, hpne, hW1card, _hW2card, _hQelem, _hW1leQ, _hW2cyc,
       _hQW2leNormQ⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hEcard :
       Nat.card E = Nat.card W1 * p :=
     section13_E_card_eq_W1_mul_p_of_QW2_classifierData
@@ -2863,7 +2859,8 @@ private theorem section13_exists_order_p_subgroup_sup_eq_E_of_QW2_classifierData
       rcases hx with ⟨y, hy, hyx⟩
       have hyxG : (y : G) = (x : G) := hyx
       have hyxE : y = x := Subtype.ext hyxG
-      simpa [hyxE] using hy
+      rw [← hyxE]
+      exact hy
     · intro hx
       change (x : G) ∈ P
       exact ⟨x, hx, rfl⟩
@@ -2901,9 +2898,9 @@ private theorem section13_order_p_subgroup_conj_W2_of_QW2_classifierData
       section13_Q_normal_in_Q_sup_W2_of_QW2_classifierData W1 W2 Q p q
         ⟨hp, hq, hpne, _hW1card, hW2card, hQelem, _hW1leQ, _hW2cyc,
           _hQW2leNormQ⟩
-  letI : QK.Normal := hQnorm
-  letI : IsMulCommutative Q := IsElementaryAbelian.toIsMulCommutative q
-  letI : IsMulCommutative ↥QK := by
+  let : QK.Normal := hQnorm
+  let : IsMulCommutative Q := IsElementaryAbelian.toIsMulCommutative q
+  let : IsMulCommutative ↥QK := by
     refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b => ?_
     have haQ : ((a : K) : G) ∈ Q := by
       exact a.2
@@ -2957,7 +2954,7 @@ private theorem section13_order_p_subgroup_conj_W2_of_QW2_classifierData
     calc
       Nat.card QK * Nat.card PK = Nat.card QK * p := by rw [hPKcard]
       _ = Nat.card QK * Nat.card W2K := by rw [hW2Kcard]
-      _ = Nat.card K := hcompW2.card_mul
+      _ = Nat.card K := hcompW2.card_mul_card
   have hcompP : QK.IsComplement' PK :=
     Subgroup.isComplement'_of_card_mul_and_disjoint hcard_mul hdisj
   have hQKindex : QK.index = p := by
@@ -2990,7 +2987,8 @@ private theorem section13_order_p_subgroup_conj_W2_of_QW2_classifierData
   have hPconj : P = W2.conjBy y := by
     have hmap' :
         P = (W2K.map (MulAut.conj (yK : K)).toMonoidHom).map K.subtype := by
-      simpa [hPKmap] using hmap
+      rw [hPKmap] at hmap
+      exact hmap
     rw [hW2map] at hmap'
     exact hmap'
   exact ⟨y, hyQ, hPconj⟩

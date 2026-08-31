@@ -178,7 +178,7 @@ public theorem corollary64_zj_normalizer
   let H : Subgroup X := O ⊔ R
   have hOpH : pPrimeCore p.val H = ⊥ := by simpa [H] using hOp
   letI : Fact p.val.Prime := ⟨p.2⟩
-  letI : IsSolvable H := odd_order_theorem H (by simpa [H] using hHodd)
+  let : Group.IsSolvable H := odd_order_theorem H (by simpa [H] using hHodd)
   obtain ⟨S, hSR⟩ := hRsylow
   have hZJH :
       (centerIn (thompsonSubgroup (S : Subgroup H)) ⊔
@@ -384,8 +384,14 @@ public theorem corollary64_exists_conjugate_involution_normalizing_sylow
   obtain ⟨x, hx⟩ := MulAction.exists_smul_eq D R₀ Q₀
   have hQconj : Q = R.conjBy (x : X) := by
     rw [hQeq, hReq, ← hx]
-    simp only [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def,
-      Subgroup.conjBy, Subgroup.map_map]
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+    rw [Subgroup.conjBy]
+    change Subgroup.map D.subtype
+        (Subgroup.map (MulDistribMulAction.toMonoidHom D (MulAut.conj x))
+          (R₀ : Subgroup D)) =
+      Subgroup.map ((MulAut.conj (x : X)).toMonoidHom)
+        (Subgroup.map D.subtype (R₀ : Subgroup D))
+    rw [Subgroup.map_map, Subgroup.map_map]
     congr 1
   have hconjNorm :=
     section11_conjBy_le_normalizer_conjBy_of_le_normalizer

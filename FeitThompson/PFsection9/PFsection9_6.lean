@@ -1040,9 +1040,9 @@ private theorem solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
         (by
           change U ≤ U ⊔ W1
           exact le_sup_left)).symm
-  have hUsolv : IsSolvable Usub := by
-    haveI : Group.IsNilpotent Usub := hUnil_sub
-    infer_instance
+  have hUsolv : Group.IsSolvable Usub := by
+    letI : Group.IsNilpotent Usub := hUnil_sub
+    exact IsNilpotent.to_isSolvable
   have hnormal : Usub.Normal := by
     simpa [section12FrobeniusJoinWithKernel, S, Usub, W1sub] using
       (IsFrobeniusGroupWithKernelComplement.normal hfrob)
@@ -1054,17 +1054,19 @@ private theorem solvable_of_nilpotent_frobenius_kernel_cyclic_complement_sec9
       (by
         change W1 ≤ U ⊔ W1
         exact le_sup_right)).isCyclic.mpr hW1cyc
-  have hquot_solv : IsSolvable (S ⧸ Usub) := by
+  have hquot_solv : Group.IsSolvable (S ⧸ Usub) := by
     haveI : Usub.Normal := hnormal
     haveI : IsCyclic W1sub := hW1sub_cyc
     haveI : CommGroup W1sub := IsCyclic.commGroup
-    haveI : IsSolvable W1sub := inferInstance
-    exact solvable_of_solvable_injective
+    haveI : Group.IsSolvable W1sub := by infer_instance
+    exact Group.isSolvable_of_isSolvable_injective
       (f := hcompl.symm.QuotientMulEquiv.toMonoidHom)
       hcompl.symm.QuotientMulEquiv.injective
   haveI : Usub.Normal := hnormal
+  letI : Group.IsSolvable Usub := hUsolv
+  letI : Group.IsSolvable (S ⧸ Usub) := hquot_solv
   exact
-    solvable_of_ker_le_range
+    Group.isSolvable_of_ker_le_range
       Usub.subtype
       (QuotientGroup.mk' Usub)
       (by

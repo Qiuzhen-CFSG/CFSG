@@ -383,10 +383,10 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
     intro n
     exact Nat.strong_induction_on (p := P) n <| fun n ih {H} _ _ _ _ hcard hHcop hΩH => by
       by_cases htriv : Subsingleton H
-      · letI : Subsingleton H := htriv
+      · let : Subsingleton H := htriv
         intro a x
         exact Subsingleton.elim _ _
-      · letI : Nontrivial H := not_subsingleton_iff_nontrivial.mp htriv
+      · let : Nontrivial H := not_subsingleton_iff_nontrivial.mp htriv
         let C : Subgroup H := fixedPointSubgroup A H
         let D : Subgroup H := Subgroup.centralizer (C : Set H)
         have hΩH' : ∀ a : A, ∀ x : H, x ∈ omega₁ (G := H) (p := p) → a • x = x := by
@@ -412,7 +412,7 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
           · exact hDsmul
           · intro hx
             simpa [smul_smul] using (hDsmul (a := a⁻¹) (x := a • x) hx)
-        letI : IsInvariant A H D := hDinv
+        let : IsInvariant A H D := hDinv
         by_cases hDtop : D = ⊤
         · have hC_le_center : C ≤ Subgroup.center H := by
             intro c hc
@@ -425,16 +425,16 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
           let Φ : Subgroup H := frattini H
           have hΦinv : IsInvariant A H Φ :=
             isInvariant_of_characteristic (A := A) (G := H) Φ
-          letI : IsInvariant A H Φ := hΦinv
+          let : IsInvariant A H Φ := hΦinv
           by_cases hΦtop : Φ = ⊤
           · exact theorem_1_8 (R := H) (A := A) (p := p) hHcop <| by
               let hΦinv' : IsInvariant A H (frattini H) :=
                 isInvariant_of_characteristic (A := A) (G := H) (frattini H)
-              letI : MulAction.QuotientAction A (frattini H) :=
+              let : MulAction.QuotientAction A (frattini H) :=
                 quotientAction_of_isInvariant (A := A) (frattini H) hΦinv'
-              letI : MulDistribMulAction A (H ⧸ frattini H) :=
+              let : MulDistribMulAction A (H ⧸ frattini H) :=
                 quotientMulDistribMulAction (A := A) (G := H) (frattini H) hΦinv'
-              haveI : Subsingleton (H ⧸ frattini H) := by
+              have : Subsingleton (H ⧸ frattini H) := by
                 simp [Φ, hΦtop]
               simpa [ActsTrivially] using fun a x => Subsingleton.elim (a • x) x
           · have hΦ_card_lt : Nat.card Φ < Nat.card H := by
@@ -450,7 +450,7 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
             have hΩΦ :
                 ActsTriviallyOnSubgroup (A := A) (G := Φ) (omega₁ (G := Φ) (p := p)) :=
               actsTriviallyOnSubgroup_omega₁_subgroup (A := A) (G := H) (p := p) Φ hΩH
-            haveI : Fact (IsPGroup p Φ) := ⟨(Fact.out : IsPGroup p H).to_subgroup Φ⟩
+            have : Fact (IsPGroup p Φ) := ⟨(Fact.out : IsPGroup p H).to_subgroup Φ⟩
             have htrivΦ : ActsTrivially (A := A) (G := Φ) :=
               ih (Nat.card Φ) hΦ_card_lt' (H := Φ) rfl hΦcop hΩΦ
             have hΦ_le_C : Φ ≤ C := by
@@ -514,8 +514,8 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
               have hgfix : ∀ b : A, b • g = g := by
                 simpa [C, FixedPoints.mem_subgroup] using hgC
               simp [hgfix a]
-            letI : Group.IsNilpotent H := (Fact.out : IsPGroup p H).isNilpotent
-            have hsolv : IsSolvable H := by infer_instance
+            let : Group.IsNilpotent H := (Fact.out : IsPGroup p H).isNilpotent
+            have hsolv : Group.IsSolvable H := by infer_instance
             exact proposition_1_6_c (G := H) (A := A) hsolv hHcop hcomm2
         · have hD_card_lt : Nat.card D < Nat.card H := by
             have hle : Nat.card D ≤ Nat.card H := Subgroup.card_le_card_group (H := D)
@@ -530,7 +530,7 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
           have hΩD :
               ActsTriviallyOnSubgroup (A := A) (G := D) (omega₁ (G := D) (p := p)) :=
             actsTriviallyOnSubgroup_omega₁_subgroup (A := A) (G := H) (p := p) D hΩH
-          haveI : Fact (IsPGroup p D) := ⟨(Fact.out : IsPGroup p H).to_subgroup D⟩
+          have : Fact (IsPGroup p D) := ⟨(Fact.out : IsPGroup p H).to_subgroup D⟩
           have htrivD : ActsTrivially (A := A) (G := D) :=
             ih (Nat.card D) hD_card_lt' (H := D) rfl hDcop hΩD
           have hD_le_C : D ≤ C := by
@@ -539,7 +539,7 @@ theorem theorem_1_11_direct {G : Type uG} {A : Type uA} [Group G] [Finite G] [Gr
             rw [FixedPoints.mem_subgroup]
             intro a
             exact congrArg Subtype.val (htrivD a ⟨x, hx⟩)
-          letI : Group.IsNilpotent H := (Fact.out : IsPGroup p H).isNilpotent
+          let : Group.IsNilpotent H := (Fact.out : IsPGroup p H).isNilpotent
           exact proposition_1_10 (G := H) (A := A) inferInstance hHcop (by simpa [C, D] using hD_le_C)
   exact hP (Nat.card G) (H := G) rfl hcoprime hΩ
 

@@ -79,9 +79,9 @@ private theorem crossCharWedderburnDataExists
   have hcard : (Nat.card G : F) ≠ 0 := by
     intro hz
     exact hchar ((ringChar.spec F (Nat.card G)).1 hz)
-  letI : NeZero (Nat.card G : F) := ⟨hcard⟩
-  letI : IsSemisimpleRing (CrossCharGroupAlgebra F G) := by infer_instance
-  letI : FiniteDimensional F (CrossCharGroupAlgebra F G) :=
+  let : NeZero (Nat.card G : F) := ⟨hcard⟩
+  let : IsSemisimpleRing (CrossCharGroupAlgebra F G) := by infer_instance
+  let : FiniteDimensional F (CrossCharGroupAlgebra F G) :=
     (MonoidAlgebra.basis G F).finiteDimensional_of_finite
   exact IsSemisimpleRing.exists_algEquiv_pi_matrix_of_isAlgClosed F
     (CrossCharGroupAlgebra F G)
@@ -168,7 +168,7 @@ private instance crossCharMatrixBlockIsScalarTower
     IsScalarTower F (CrossCharGroupAlgebra F G)
       (Fin (crossCharWedderburnDim i) → F) := by
   classical
-  letI : Module
+  let : Module
       (Matrix (Fin (crossCharWedderburnDim i))
         (Fin (crossCharWedderburnDim i)) F)
       (Fin (crossCharWedderburnDim i) → F) :=
@@ -196,8 +196,8 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
     (i : CrossCharWedderburnIndex F G hchar) :
     Representation.IsIrreducible (crossCharMatrixBlockRepresentation i) := by
   classical
-  letI := crossCharMatrixBlockModule i
-  letI := crossCharMatrixBlockIsScalarTower i
+  let := crossCharMatrixBlockModule i
+  let := crossCharMatrixBlockIsScalarTower i
   change Representation.IsIrreducible
     (Representation.ofModule' (k := F) (G := G)
       (Fin (crossCharWedderburnDim i) → F))
@@ -205,7 +205,7 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
   let B := ∀ j : CrossCharWedderburnIndex F G hchar,
     Matrix (Fin (crossCharWedderburnDim j))
       (Fin (crossCharWedderburnDim j)) F
-  letI : Module
+  let : Module
       (Matrix (Fin (crossCharWedderburnDim i))
         (Fin (crossCharWedderburnDim i)) F)
       (Fin (crossCharWedderburnDim i) → F) :=
@@ -221,7 +221,7 @@ private lemma crossCharMatrixBlockRepresentation_irreducible
   refine
     { toNontrivial := ?_
       eq_bot_or_eq_top := ?_ }
-  · haveI : Nontrivial (Fin (crossCharWedderburnDim i) → F) := Pi.nontrivial
+  · have : Nontrivial (Fin (crossCharWedderburnDim i) → F) := Pi.nontrivial
     refine ⟨⟨(⊥ : Subrepresentation
       (Representation.ofModule' (k := F) (G := G)
         (Fin (crossCharWedderburnDim i) → F))), ⊤, ?_⟩⟩
@@ -328,10 +328,10 @@ private lemma crossCharBlockCharacters_orthonormal
   have hcard_ne : (Nat.card G : F) ≠ 0 := by
     intro hz
     exact hchar ((ringChar.spec F (Nat.card G)).1 hz)
-  letI : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne
-  letI : Representation.IsIrreducible (crossCharMatrixBlockRepresentation i) :=
+  let : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne
+  let : Representation.IsIrreducible (crossCharMatrixBlockRepresentation i) :=
     crossCharMatrixBlockRepresentation_irreducible i
-  letI : Representation.IsIrreducible (crossCharMatrixBlockRepresentation j) :=
+  let : Representation.IsIrreducible (crossCharMatrixBlockRepresentation j) :=
     crossCharMatrixBlockRepresentation_irreducible j
   unfold crossCharBlockCharacter
   rw [crossCharClassFunctionPairing_character]
@@ -362,10 +362,10 @@ private lemma crossCharBlockCharacters_orthonormal
           (0 : Matrix (Fin (crossCharWedderburnDim j))
             (Fin (crossCharWedderburnDim j)) F) := by
         simp [e, crossCharBlockAlgHom, hij]
-      letI := crossCharMatrixBlockModule i
-      letI := crossCharMatrixBlockIsScalarTower i
-      letI := crossCharMatrixBlockModule j
-      letI := crossCharMatrixBlockIsScalarTower j
+      let := crossCharMatrixBlockModule i
+      let := crossCharMatrixBlockIsScalarTower i
+      let := crossCharMatrixBlockModule j
+      let := crossCharMatrixBlockIsScalarTower j
       let φ := h.some.toLinearEquiv
       have hmap : ∀ v : Fin (crossCharWedderburnDim j) → F,
           φ (e • v) = e • φ v := by
@@ -400,7 +400,7 @@ private lemma crossCharBlockCharacters_orthonormal
           φ v = e • φ v := hright.symm
           _ = φ (e • v) := (hmap v).symm
           _ = 0 := by rw [hleft, map_zero]
-      haveI : Nontrivial (Fin (crossCharWedderburnDim j) → F) := Pi.nontrivial
+      have : Nontrivial (Fin (crossCharWedderburnDim j) → F) := Pi.nontrivial
       obtain ⟨v, hv⟩ := exists_ne
         (0 : Fin (crossCharWedderburnDim j) → F)
       have hφv : φ v = 0 := hzero v
@@ -695,11 +695,11 @@ private theorem crossChar_irreducibleCharacters_complete
       Nonempty (ρ ≃ₗ crossCharMatrixBlockRepresentation (hchar := hchar) i) := by
   classical
   let b := crossCharChosenBlockBasis hchar
-  letI : Representation.IsIrreducible ρ := hρ
+  let : Representation.IsIrreducible ρ := hρ
   have hcard_ne : (Nat.card G : F) ≠ 0 := by
     intro hz
     exact hchar ((ringChar.spec F (Nat.card G)).1 hz)
-  letI : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne
+  let : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne
   by_contra hnone
   push Not at hnone
   let χ : CrossCharClassFunction F G :=
@@ -723,13 +723,13 @@ private theorem crossChar_irreducibleCharacters_complete
     simpa [χ, crossCharClassFunctionPairing_character, hnonempty] using horth
   have hall (i : CrossCharWedderburnIndex F G hchar) :
       crossCharClassFunctionPairing (crossCharBlockCharacter i) χ = 0 := by
-    letI : Representation.IsIrreducible
+    let : Representation.IsIrreducible
         (crossCharMatrixBlockRepresentation i) :=
       crossCharMatrixBlockRepresentation_irreducible i
     have hnoEquiv : ¬ Nonempty (Representation.Equiv
         ρ (crossCharMatrixBlockRepresentation i)) := by
       intro he
-      letI : IsEmpty (ρ ≃ₗ crossCharMatrixBlockRepresentation i) := hnone i
+      let : IsEmpty (ρ ≃ₗ crossCharMatrixBlockRepresentation i) := hnone i
       exact isEmptyElim (RepEquiv.ofRepresentationEquiv he.some)
     have horth := Representation.char_orthonormal
       (ρ := crossCharMatrixBlockRepresentation i) (σ := ρ)

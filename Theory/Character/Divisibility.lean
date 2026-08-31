@@ -155,7 +155,7 @@ private lemma centralElementIntertwiner_eq_scalar
   have hfin :
       Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 :=
     (irreducible_iff_end_dimension_one (ρ := ρ)).1 inferInstance
-  haveI : Nontrivial V := irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   have hone_ne_zero : (1 : Representation.IntertwiningMap ρ ρ) ≠ 0 := by
     intro h
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
@@ -246,7 +246,7 @@ private lemma classSum_scalar_isIntegral
     classSumComplex_isIntegral (G := G) c
   have hend : IsIntegral ℤ (ρ.asAlgebraHom (classSumComplex (G := G) c)) := by
     exact IsIntegral.map (ρ.asAlgebraHom) hzint
-  haveI : Nontrivial V := irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   exact isIntegral_scalar_of_isIntegral_smul_one (V := V) a (by simpa [ha] using hend)
 
 private lemma classSum_scalar_mul_finrank
@@ -385,7 +385,7 @@ public theorem classSumScalar_eq_card_mul_character_div
     classSumScalar (ρ := ρ) c =
       (Nat.card c.carrier : ℂ) * ρ.character x / ρ.character 1 := by
   classical
-  haveI : Nontrivial V := irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   have hdim_pos : 0 < Module.finrank ℂ V :=
     (Module.finrank_pos_iff (R := ℂ) (M := V)).2 inferInstance
   have hdim_ne : (Module.finrank ℂ V : ℂ) ≠ 0 := by
@@ -569,7 +569,7 @@ public theorem classSumScalar_mul_eq_sum_of_coefficients
           (fun s => (a i j s : ℂ) * classSumScalar (ρ := ρ) s)) •
             (1 : Module.End ℂ V) := by
             rw [Finset.sum_smul]
-  haveI : Nontrivial V := irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   have hvend := congrArg (fun f : Module.End ℂ V => f v) hend
   exact (smul_left_injective ℂ hv) (by simpa [C] using hvend)
@@ -579,7 +579,7 @@ public theorem irreducible_dimension_dvd_group_order
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ] :
     Module.finrank ℂ V ∣ Nat.card G := by
   classical
-  haveI : Nontrivial V := irreducible_nontrivial (ρ := ρ)
+  have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   let d : ℕ := Module.finrank ℂ V
   let dℂ : ℂ := (d : ℂ)
   let z : ℂ :=

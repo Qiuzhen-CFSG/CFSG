@@ -180,19 +180,19 @@ theorem finiteDimensional_of_irreducible_finite_group
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (hirr : Representation.IsIrreducible ρ) :
     FiniteDimensional F V := by
-  letI : IsSimpleModule (MonoidAlgebra F G) ρ.asModule :=
+  let : IsSimpleModule (MonoidAlgebra F G) ρ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule ρ).mp hirr
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
-  letI : Nontrivial ρ.asModule :=
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Nontrivial ρ.asModule :=
     Function.Injective.nontrivial (f := ρ.asModuleEquiv.symm)
       (LinearEquiv.injective ρ.asModuleEquiv.symm)
-  letI : Module.Finite (MonoidAlgebra F G) ρ.asModule := by
+  let : Module.Finite (MonoidAlgebra F G) ρ.asModule := by
     obtain ⟨v, hv⟩ := exists_ne (0 : ρ.asModule)
     exact
       Module.Finite.of_surjective
         (LinearMap.toSpanSingleton (MonoidAlgebra F G) ρ.asModule v)
         ((isSimpleModule_iff_toSpanSingleton_surjective.mp inferInstance).2 v hv)
-  letI : Module.Finite F ρ.asModule :=
+  let : Module.Finite F ρ.asModule :=
     Module.Finite.trans (R := F) (A := MonoidAlgebra F G) (M := ρ.asModule)
   exact Module.Finite.equiv (ρ.asModuleEquiv : ρ.asModule ≃ₗ[F] V)
 
@@ -212,7 +212,7 @@ theorem exists_simple_submodule_nontrivial_of_not_le_ker_of_fixedSubspace_eq_bot
 public theorem commutator_le_center_of_isExtraspecial_local
     {q : ℕ} [Fact q.Prime] {K : Type*} [Group K] [Finite K] [IsExtraspecial q K] :
     commutator K ≤ Subgroup.center K := by
-  letI : IsMulCommutative (K ⧸ Subgroup.center K) :=
+  let : IsMulCommutative (K ⧸ Subgroup.center K) :=
     (IsExtraspecial.quotient_elementary_abelian q K).toIsMulCommutative
   exact
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := Subgroup.center K)).mp
@@ -289,6 +289,7 @@ theorem ker_eq_bot_of_center_not_le_ker_of_isExtraspecial
         (hcenter := IsExtraspecial.center_order_p q K) (N := ρ.ker) hker
   exact hcenter_nontrivial hcenter_le_ker
 
+set_option backward.isDefEq.respectTransparency false in
 theorem center_apply_eq_smul_id_of_irreducible
     {F : Type*} [Field F] [IsAlgClosed F]
     {G : Type*} [Group G]
@@ -443,11 +444,11 @@ theorem equiv_of_irreducible_char_eq
     (hc : ¬ ringChar F ∣ Nat.card G)
     (hchar : ρ.character = σ.character) :
     Nonempty (Equiv σ ρ) := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hcard_ne_zero : (Nat.card G : F) ≠ 0 := by
     intro hzero
     exact hc ((ringChar.spec F (Nat.card G)).1 hzero)
-  letI : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne_zero
+  let : Invertible (Nat.card G : F) := invertibleOfNonzero hcard_ne_zero
   by_cases hE : Nonempty (Equiv σ ρ)
   · exact hE
   · have horth := Representation.char_orthonormal (ρ := ρ) (σ := σ)
@@ -553,7 +554,7 @@ theorem fixedVectors_eq_zero_extendScalars
     (hfix : {v : V | ∀ g : G, ρ g v = v} = {0}) :
     {w : F' ⊗[F] V | ∀ g : G, (extendScalars F' ρ) g w = w} = {0} := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let f : V →ₗ[F] (G → V) := fixedDiffMap ρ
   have hf_inj : Function.Injective f := by
     apply LinearMap.ker_eq_bot.mp
@@ -591,7 +592,7 @@ theorem exists_primitiveRoot_of_isAlgClosed_not_dvd
   have hcast_ne_zero : (h : F) ≠ 0 := by
     intro hz
     exact hchar ((ringChar.spec F h).1 hz)
-  letI : NeZero (h : F) := ⟨hcast_ne_zero⟩
+  let : NeZero (h : F) := ⟨hcast_ne_zero⟩
   exact HasEnoughRootsOfUnity.exists_primitiveRoot F h
 
 theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
@@ -604,13 +605,13 @@ theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
     (hc : ¬ ringChar F ∣ Nat.card K) :
     Module.finrank F V = q ^ n := by
   classical
-  letI : Theory.Representation.IsAbsolutelyIrreducible ρ :=
+  let : Theory.Representation.IsAbsolutelyIrreducible ρ :=
     (Theory.Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).surjective
-  letI : Fact (IsPGroup q K) := ⟨IsExtraspecial.isPGroup q K⟩
-  letI : Group.IsNilpotent K := (Fact.out : IsPGroup q K).isNilpotent
-  letI : IsSolvable K := IsNilpotent.to_isSolvable
+  let : Fact (IsPGroup q K) := ⟨IsExtraspecial.isPGroup q K⟩
+  let : Group.IsNilpotent K := (Fact.out : IsPGroup q K).isNilpotent
+  let : Group.IsSolvable K := IsNilpotent.to_isSolvable
   have hdim_dvd_card : Module.finrank F V ∣ Nat.card K := lemma_2_3 ρ
   have hdim_cast_ne_zero : ((Module.finrank F V : ℕ) : F) ≠ 0 := by
     intro hzero
@@ -738,7 +739,7 @@ theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
     exact sub_eq_zero.mp hsub
   let e : (Q →₀ F) ≃ₗ[F] Module.End F V := LinearEquiv.ofBijective l ⟨hl_inj, hl_surj⟩
   have hfinrank_finsupp : Module.finrank F (Q →₀ F) = Nat.card Q := by
-    letI : Fintype Q := Fintype.ofFinite Q
+    let : Fintype Q := Fintype.ofFinite Q
     calc
       Module.finrank F (Q →₀ F) = Module.finrank F (Q → F) := by
         exact LinearEquiv.finrank_eq (Finsupp.linearEquivFunOnFinite F F Q)
@@ -799,7 +800,7 @@ theorem theorem_2_5_exists_faithful_irreducible
       (ρ : Representation F P V), IsIrreducible ρ ∧ Function.Injective ρ := by
   classical
   have hpprime : p.Prime := Fact.out
-  letI : Fintype P := Fintype.ofFinite P
+  let : Fintype P := Fintype.ofFinite P
   let τ : Representation F P (MonoidAlgebra F P) := Representation.ofMulAction F P P
   have hτfaithful : Function.Injective τ := by
     intro x y hxy
@@ -818,7 +819,7 @@ theorem theorem_2_5_exists_faithful_irreducible
   have hcard_cast_ne_zero : (Fintype.card P : F) ≠ 0 := by
     intro hz
     exact hc ((ringChar.spec F (Nat.card P)).1 (by simpa [Nat.card_eq_fintype_card] using hz))
-  letI : NeZero (Fintype.card P : F) := ⟨hcard_cast_ne_zero⟩
+  let : NeZero (Fintype.card P : F) := ⟨hcard_cast_ne_zero⟩
   have hcenter_ne_bot : Subgroup.center P ≠ ⊥ := by
     intro hcenter_bot
     have hcenter_card : Nat.card (Subgroup.center P) = 1 :=
@@ -833,7 +834,7 @@ theorem theorem_2_5_exists_faithful_irreducible
       · exact hle.trans (by simp [hτker])
       · exact bot_le
     exact hcenter_ne_bot this
-  letI : FiniteDimensional F (MonoidAlgebra F P) := by infer_instance
+  let : FiniteDimensional F (MonoidAlgebra F P) := by infer_instance
   obtain ⟨m, hmSimple, hcenter_not_le_ker_m⟩ :=
     exists_simple_submodule_nontrivial_of_not_le_ker
       (ρ := τ) (H := Subgroup.center P) hcenter_not_le_ker
@@ -843,11 +844,11 @@ theorem theorem_2_5_exists_faithful_irreducible
     map_add' := fun _ _ => rfl
     map_smul' := fun _ _ => rfl
   }
-  letI : FiniteDimensional F M.toSubmodule :=
+  let : FiniteDimensional F M.toSubmodule :=
     FiniteDimensional.of_injective incl (fun v w h => Subtype.ext h)
   let ρ : Representation F P M.toSubmodule := M.toRepresentation
   have hρirr : IsIrreducible ρ := irreducible_of_ofSubmodule'_simple τ hmSimple
-  letI : IsIrreducible ρ := hρirr
+  let : IsIrreducible ρ := hρirr
   have hρker : ρ.ker = ⊥ :=
     ker_eq_bot_of_center_not_le_ker_of_isExtraspecial
       (q := p) (ρ := ρ) hcenter_not_le_ker_m
@@ -922,13 +923,13 @@ theorem theorem_2_5_exists_extension
     refine (RepEquiv.irreducible_iff_group_iso (ρ := ρK) (σ := ρ) eK.symm ?_).2 inferInstance
     intro k v
     rfl
-  letI : IsIrreducible ρK := hρKirr
+  let : IsIrreducible ρK := hρKirr
   have hρKfaithful : Function.Injective ρK := by
     intro a b hab
     apply eK.symm.injective
     exact hρfaithful (by simpa [ρK] using hab)
-  letI : Finite G := Finite.of_equiv (P × H) (SemidirectProduct.equivProd (φ := φ)).symm
-  letI : K.Normal := by
+  let : Finite G := Finite.of_equiv (P × H) (SemidirectProduct.equivProd (φ := φ)).symm
+  let : K.Normal := by
     simpa [G, K] using theorem_2_5_rangeInl_normal (P := P) (H := H) (φ := φ)
   have hcycK : IsCyclic (G ⧸ K) := by
     let eQ : G ⧸ K ≃* H := by
@@ -1062,6 +1063,7 @@ theorem theorem_2_5_hE_intertwining_eq_eigenspace
     have hX' := LinearMap.congr_fun hX (τ x v)
     simpa [Representation.linHom_apply, mul_assoc] using hX'
 
+set_option backward.isDefEq.respectTransparency false in
 noncomputable def theorem_2_5_hE_phiQ
     {P : Type*} [Group P]
     {H : Type*} [Group H]
@@ -1231,7 +1233,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
   have hcenter_ne_one : Nat.card (Subgroup.center P) ≠ 1 := by
     rw [IsExtraspecial.center_order_p p P]
     exact hpprime.ne_one
-  haveI : Nontrivial (Subgroup.center P) := by
+  have : Nontrivial (Subgroup.center P) := by
     refine (nontrivial_iff_exists_ne (1 : Subgroup.center P)).2 ?_
     by_contra hnone
     push Not at hnone
@@ -1255,7 +1257,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
       ρ z v = f v := rfl
       _ = (algebraMap F (ρ.IntertwiningMap ρ) a) v := hv.symm
       _ = a • v := by
-        simp [Representation.IntertwiningMap.algebraMap_apply]
+        rfl
   have hz_dvd : orderOf (z : P) ∣ p := by
     simpa [IsExtraspecial.center_order_p p P] using
       (Subgroup.orderOf_dvd_natCard (Subgroup.center P) z.2)
@@ -1270,7 +1272,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
     simpa using congrArg ρ hzpow
   have hpow' : (a • (1 : Module.End F V)) ^ p = (1 : Module.End F V) := by
     simpa [hρz] using hpow_map
-  haveI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  have : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨v, hv_ne⟩ := exists_ne (0 : V)
   have hv_eq : (a ^ p) • v = v := by
     have hpow'' := congrArg (fun T : Module.End F V => T v) hpow'
@@ -1281,7 +1283,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
         (a ^ p - 1) • v = (a ^ p) • v - v := by simp [sub_smul]
         _ = 0 := by simp [hv_eq]
     exact sub_eq_zero.mp ((smul_eq_zero.mp hsmul0).resolve_right hv_ne)
-  letI : Fact (Nat.Prime (ringChar F)) := ⟨hprime_char⟩
+  let : Fact (Nat.Prime (ringChar F)) := ⟨hprime_char⟩
   have hsubpow : (a - 1) ^ ringChar F = a ^ ringChar F - 1 := by
     simpa using (sub_pow_char a 1 (p := ringChar F))
   have ha_eq_one : a = 1 := by
@@ -1295,6 +1297,7 @@ theorem theorem_2_5_hE_char_not_dvd_card
   have hz_eq_one : (z : P) = 1 := hρfaithful hρz_one
   exact hz_ne (Subtype.ext hz_eq_one)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem theorem_2_5_hE_char_not_dvd_h
     {h : ℕ} {H : Type*} [Group H] [Finite H]
     (hH : Nat.card H = h)
@@ -1323,7 +1326,7 @@ theorem theorem_2_5_hE_char_not_dvd_h
     have hchar_ge_two : 2 ≤ ringChar F := hprime_char.two_le
     rw [hk]
     nlinarith
-  letI : Fact (Nat.Prime (ringChar F)) := ⟨hprime_char⟩
+  let : Fact (Nat.Prime (ringChar F)) := ⟨hprime_char⟩
   have hkpow : ε ^ k = 1 := by
     have hsubpow : (ε ^ k - 1) ^ ringChar F = (ε ^ k) ^ ringChar F - 1 := by
       simpa using (sub_pow_char (ε ^ k) 1 (p := ringChar F))
@@ -1371,10 +1374,10 @@ theorem theorem_2_5_hE
     intro hh0
     rw [hh0, Nat.coprime_zero_left] at hh
     exact hpprime.ne_one hh
-  letI : Fact (IsPGroup p P) := ⟨IsExtraspecial.isPGroup p P⟩
-  letI : Group.IsNilpotent P := (Fact.out : IsPGroup p P).isNilpotent
-  letI : IsSolvable P := IsNilpotent.to_isSolvable
-  letI : Theory.Representation.IsAbsolutelyIrreducible ρ :=
+  let : Fact (IsPGroup p P) := ⟨IsExtraspecial.isPGroup p P⟩
+  let : Group.IsNilpotent P := (Fact.out : IsPGroup p P).isNilpotent
+  let : Group.IsSolvable P := IsNilpotent.to_isSolvable
+  let : Theory.Representation.IsAbsolutelyIrreducible ρ :=
     (Theory.Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).surjective
@@ -1386,10 +1389,10 @@ theorem theorem_2_5_hE
   let τ : Representation F H V := σ.comp SemidirectProduct.inr
   let T : Representation F H (Module.End F V) := Representation.linHom τ τ
   let Q := P ⧸ Subgroup.center P
-  letI : Group Q := by
+  let : Group Q := by
     dsimp [Q]
     infer_instance
-  letI : Finite Q := by
+  let : Finite Q := by
     dsimp [Q]
     infer_instance
   let repQ : Q → P := fun q => if q = 1 then 1 else Quotient.out q
@@ -1519,8 +1522,10 @@ theorem theorem_2_5_hE
     have hsub : c - d = 0 := hl_ker (c - d) hzero
     exact sub_eq_zero.mp hsub
   let e : (Q →₀ F) ≃ₗ[F] Module.End F V := LinearEquiv.ofBijective l ⟨hl_inj, hl_surj⟩
+  have e_apply (c : Q →₀ F) :
+      e c = Finsupp.linearCombination F (fun q => ρ (repQ q)) c := rfl
   intro m hm
-  haveI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  have : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   have hh_pos : 0 < h := Nat.pos_of_ne_zero hh_ne_zero
   have hh_ne_one : h ≠ 1 := by
     intro hh1
@@ -1561,7 +1566,7 @@ theorem theorem_2_5_hE
       ∃ c : F, c ≠ 0 ∧ (e.symm.conj (T y)) (Finsupp.single q (1 : F)) =
         c • Finsupp.single ((φQ y) q) 1 := by
     have hbq : e (Finsupp.single q (1 : F)) = b q := by
-      simp [e, l, b]
+      simp [e_apply, b]
     have hσq :
         σ (SemidirectProduct.inl (repQ q)) = (ρ (repQ q) : Module.End F V) := by
       simpa using congrArg (fun r : Representation F P V => r (repQ q)) hσ
@@ -1604,7 +1609,6 @@ theorem theorem_2_5_hE
         by_cases hq : q = 1
         · subst q
           simp [repQ, fy]
-          rfl
         · have hrepQ' : repQ q = Quotient.out q := by
             simp [repQ, hq]
           calc
@@ -1655,7 +1659,7 @@ theorem theorem_2_5_hE
         _ = ρ (φ y (repQ q)) := hT
         _ = c • b ((φQ y) q) := hρ
         _ = e (c • Finsupp.single ((φQ y) q) 1) := by
-              simp [e, l, b]
+              simp [e_apply, b]
     have hc_ne_zero : c ≠ 0 := by
       intro hc0
       have hρ_ne_zero : (ρ (φ y (repQ q)) : Module.End F V) ≠ 0 := by
@@ -1684,12 +1688,12 @@ theorem theorem_2_5_hE
       e (S (Finsupp.single (1 : Q) (1 : F))) = T x (e (Finsupp.single (1 : Q) (1 : F))) := by
             simp [S, LinearEquiv.conj_apply]
       _ = T x (1 : Module.End F V) := by
-            simp [e, l, b, repQ]
+            simp [e_apply, repQ]
       _ = 1 := by
             ext v
             simp [T, τ, Representation.linHom_apply]
       _ = e (Finsupp.single (1 : Q) (1 : F)) := by
-            simp [e, l, b, repQ]
+            simp [e_apply, repQ]
   let c : Q → F := fun q =>
     if hq : q = 1 then 1 else Classical.choose (hS_single x q)
   have hc_ne_zero (q : Q) : c q ≠ 0 := by
@@ -1718,12 +1722,19 @@ theorem theorem_2_5_hE
     rw [map_smul, hS_basis]
     by_cases hrq : r = q
     · subst r
-      simp [ev, mul_comm]
-    · simp [ev, hrq, a.injective.eq_iff]
+      simp
+      change Finsupp.single (a q) (z * c q) (a q) =
+        c q * Finsupp.single q z q
+      simp [Finsupp.single_eq_same, mul_comm]
+    · simp
+      change Finsupp.single (a r) (z * c r) (a q) =
+        c q * Finsupp.single r z q
+      simp [hrq, a.injective.eq_iff]
   have hS_apply (f : Q →₀ F) (q : Q) :
       (S f) ((a) q) = c q * f q := by
     have h := congrArg (fun L : (Q →₀ F) →ₗ[F] F => L f) (hS_ev q)
-    simpa [ev, LinearMap.comp_apply] using h
+    change (S f) (a q) = c q * f q
+    exact h
   have hS_pow : S ^ h = 1 := by
     have hpow_conj :
         (e.symm.conj (T x)) ^ h = e.symm.conj ((T x) ^ h) := by
@@ -1798,9 +1809,9 @@ theorem theorem_2_5_hE
     exact le_antisymm (Nat.le_of_dvd hh_pos hdiv) hle
   have hcard_orbit_r (ω : Ω') :
       Nat.card (MulAction.orbit (Subgroup.zpowers a) (r ω)) = h := by
-    letI : Finite (MulAction.orbit (Subgroup.zpowers a) (r ω)) :=
+    let : Finite (MulAction.orbit (Subgroup.zpowers a) (r ω)) :=
       Finite.of_injective Subtype.val Subtype.val_injective
-    letI : Fintype (MulAction.orbit (Subgroup.zpowers a) (r ω)) := Fintype.ofFinite _
+    let : Fintype (MulAction.orbit (Subgroup.zpowers a) (r ω)) := Fintype.ofFinite _
     calc
       Nat.card (MulAction.orbit (Subgroup.zpowers a) (r ω))
           = Fintype.card (MulAction.orbit (Subgroup.zpowers a) (r ω)) := by simp
@@ -1811,9 +1822,9 @@ theorem theorem_2_5_hE
       _ = h := hperiod_r ω
   have hcard_orbit_one :
       Nat.card (MulAction.orbit (Subgroup.zpowers a) (1 : Q)) = 1 := by
-    letI : Finite (MulAction.orbit (Subgroup.zpowers a) (1 : Q)) :=
+    let : Finite (MulAction.orbit (Subgroup.zpowers a) (1 : Q)) :=
       Finite.of_injective Subtype.val Subtype.val_injective
-    letI : Fintype (MulAction.orbit (Subgroup.zpowers a) (1 : Q)) := Fintype.ofFinite _
+    let : Fintype (MulAction.orbit (Subgroup.zpowers a) (1 : Q)) := Fintype.ofFinite _
     have hperiod_one : Function.minimalPeriod ((a) • ·) (1 : Q) = 1 := by
       rw [Function.minimalPeriod_eq_one_iff_isFixedPt]
       simp [Function.IsFixedPt, a]
@@ -1825,13 +1836,13 @@ theorem theorem_2_5_hE
               symm
               exact MulAction.minimalPeriod_eq_card a (1 : Q)
       _ = 1 := hperiod_one
-  letI : NeZero h := NeZero.of_pos hh_pos
-  letI : Fintype Q := Fintype.ofFinite Q
-  letI : Fintype Ω := Fintype.ofFinite Ω
-  letI : Fintype Ω' := Subtype.fintype (fun ω : Ω => ω ≠ ω1)
-  letI (ω : Ω) : Finite (MulAction.orbit GQ (Quotient.out ω)) :=
+  let : NeZero h := NeZero.of_pos hh_pos
+  let : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype Ω' := Subtype.fintype (fun ω : Ω => ω ≠ ω1)
+  let (ω : Ω) : Finite (MulAction.orbit GQ (Quotient.out ω)) :=
     Finite.of_injective Subtype.val Subtype.val_injective
-  letI (ω : Ω) : Fintype (MulAction.orbit GQ (Quotient.out ω)) := Fintype.ofFinite _
+  let (ω : Ω) : Fintype (MulAction.orbit GQ (Quotient.out ω)) := Fintype.ofFinite _
   have hcardQ_orbits : Nat.card Q = h * Nat.card Ω' + 1 := by
     let π : Q → Ω := fun q => Quotient.mk'' q
     let SigmaQ : Type _ := Σ ω : Ω, { q : Q // π q = ω }
@@ -1879,7 +1890,7 @@ theorem theorem_2_5_hE
             rw [Nat.card_eq_fintype_card, Nat.mul_comm, Nat.add_comm]
       _ = h * Nat.card Ω' + 1 := by rfl
   let gS : (Q →₀ F) ≃ₗ[F] (Q →₀ F) :=
-    LinearEquiv.ofLinear S (S ^ (h - 1))
+    LinearEquiv.ofLinearMap S (S ^ (h - 1))
       (by
         apply LinearMap.ext
         intro v
@@ -2269,9 +2280,9 @@ theorem theorem_2_5_hE
     simpa using hfin
   have hqsum_nat_A :
       Module.finrank F (Q →₀ F) = ∑ i : Fin h, Module.finrank F (A i) := by
-    letI : ∀ i : Fin h, Module.Free F (A i) := fun i =>
+    let : ∀ i : Fin h, Module.Free F (A i) := fun i =>
       Module.Free.of_divisionRing (K := F) (V := A i)
-    letI : ∀ i : Fin h, Module.Finite F (A i) := fun i =>
+    let : ∀ i : Fin h, Module.Finite F (A i) := fun i =>
       Module.Finite.of_basis (Module.finBasis F (A i))
     let eA : (⨁ i : Fin h, A i) ≃ₗ[F] (Q →₀ F) :=
       LinearEquiv.ofBijective
@@ -2477,7 +2488,7 @@ public theorem theorem_2_5_a {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
   have hcardP_ne_zero : Nat.card P ≠ 0 := by
     rw [hp]
     exact pow_ne_zero _ hpprime.ne_zero
-  haveI : Finite P := Nat.finite_of_card_ne_zero hcardP_ne_zero
+  have : Finite P := Nat.finite_of_card_ne_zero hcardP_ne_zero
   have hh_ne_zero : h ≠ 0 := by
     intro hh0
     rw [hh0, Nat.coprime_zero_left] at hh
@@ -2485,21 +2496,21 @@ public theorem theorem_2_5_a {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
   have hcardH_ne_zero : Nat.card H ≠ 0 := by
     rw [hH]
     exact hh_ne_zero
-  haveI : Finite H := Nat.finite_of_card_ne_zero hcardH_ne_zero
+  have : Finite H := Nat.finite_of_card_ne_zero hcardH_ne_zero
   by_cases hh1 : h = 1
   · left
     simp [hh1]
   · let F := AlgebraicClosure ℚ
-    letI : Fact (IsPGroup p P) := ⟨IsExtraspecial.isPGroup p P⟩
-    letI : Group.IsNilpotent P := (Fact.out : IsPGroup p P).isNilpotent
-    letI : IsSolvable P := IsNilpotent.to_isSolvable
+    let : Fact (IsPGroup p P) := ⟨IsExtraspecial.isPGroup p P⟩
+    let : Group.IsNilpotent P := (Fact.out : IsPGroup p P).isNilpotent
+    let : Group.IsSolvable P := IsNilpotent.to_isSolvable
     have hcharP : ¬ ringChar F ∣ Nat.card P := by
       simp [F, hcardP_ne_zero]
     have hcharH : ¬ ringChar F ∣ h := by
       simp [F, hh_ne_zero]
     obtain ⟨V, _, _, _, ρ, hρirr, hρfaithful⟩ :=
       theorem_2_5_exists_faithful_irreducible (p := p) (P := P) (F := F) hcharP
-    letI : IsIrreducible ρ := hρirr
+    let : IsIrreducible ρ := hρirr
     obtain ⟨σ, hσ⟩ :=
       theorem_2_5_exists_extension
         (P := P) (hH := hH) (hh := hh) (φ := φ) hcentralizer (F := F) ρ hρfaithful hcharP
@@ -2572,7 +2583,7 @@ theorem theorem_2_5_b_core
   have hcardP_ne_zero : Nat.card P ≠ 0 := by
     rw [hp]
     exact pow_ne_zero _ hpprime.ne_zero
-  haveI : Finite P := Nat.finite_of_card_ne_zero hcardP_ne_zero
+  have : Finite P := Nat.finite_of_card_ne_zero hcardP_ne_zero
   have hh_ne_zero : h ≠ 0 := by
     intro hh0
     rw [hh0, Nat.coprime_zero_left] at hh
@@ -2580,17 +2591,17 @@ theorem theorem_2_5_b_core
   have hcardH_ne_zero : Nat.card H ≠ 0 := by
     rw [hH]
     exact hh_ne_zero
-  haveI : Finite H := Nat.finite_of_card_ne_zero hcardH_ne_zero
+  have : Finite H := Nat.finite_of_card_ne_zero hcardH_ne_zero
   let G := SemidirectProduct P H φ
   let eG : G ≃ P × H := by
     dsimp [G]
     exact SemidirectProduct.equivProd (φ := φ)
-  letI : Finite G := Finite.of_equiv (P × H) eG.symm
+  let : Finite G := Finite.of_equiv (P × H) eG.symm
   let R : Subgroup G := (SemidirectProduct.inr : H →* G).range
   let C : Subgroup G := (Subgroup.center P).map (SemidirectProduct.inl : P →* G)
-  letI : Finite R := Subtype.finite
+  let : Finite R := Subtype.finite
   by_contra hfix
-  haveI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  have : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   have hh_ne_one : h ≠ 1 := by
     intro hh1
     have hsub : Subsingleton H := (Nat.card_eq_one_iff_unique.mp (hH.trans hh1)).1
@@ -2711,8 +2722,8 @@ theorem theorem_2_5_b_core
   let M := Subrepresentation.ofSubmodule' m
   let τ := M.toRepresentation
   have hτirr : IsIrreducible τ := irreducible_of_ofSubmodule'_simple (ρ := ρ') hmSimple
-  letI : IsIrreducible τ := hτirr
-  letI : FiniteDimensional F' ↥M.toSubmodule :=
+  let : IsIrreducible τ := hτirr
+  let : FiniteDimensional F' ↥M.toSubmodule :=
     finiteDimensional_of_irreducible_finite_group (ρ := τ) hτirr
   let τP : Representation F' P ↥M.toSubmodule := τ.comp SemidirectProduct.inl
   have hτPirr : IsIrreducible τP := by
@@ -2745,8 +2756,8 @@ theorem theorem_2_5_b_core
       simpa [NP] using
         (irreducible_of_ofSubmodule'_simple (ρ := τP) hmPSimple :
           IsIrreducible (Subrepresentation.ofSubmodule' mP).toRepresentation)
-    letI : IsIrreducible NP.toRepresentation := hNPirr
-    letI : FiniteDimensional F' ↥NP.toSubmodule :=
+    let : IsIrreducible NP.toRepresentation := hNPirr
+    let : FiniteDimensional F' ↥NP.toSubmodule :=
       finiteDimensional_of_irreducible_finite_group (ρ := NP.toRepresentation) hNPirr
     have hNPker : NP.toRepresentation.ker = ⊥ :=
       ker_eq_bot_of_center_not_le_ker_of_isExtraspecial
@@ -2757,7 +2768,7 @@ theorem theorem_2_5_b_core
       theorem_2_5_exists_extension
         (P := P) (hH := hH) (hh := hh) (φ := φ) hcentralizer
         (F := F') NP.toRepresentation hNPfaithful hcharPAlg
-    haveI : K.Normal := by
+    have : K.Normal := by
       simpa [G, K] using theorem_2_5_rangeInl_normal (P := P) (H := H) (φ := φ)
     have hcycK : IsCyclic (G ⧸ K) := by
       let eQ : G ⧸ K ≃* H := by
@@ -2823,7 +2834,7 @@ theorem theorem_2_5_b_core
       (RepEquiv.irreducible_iff_group_iso (ρ := τP) (σ := τK) eK (by
         intro q v
         rfl)).2 hτKirr
-  letI : IsIrreducible τP := hτPirr
+  let : IsIrreducible τP := hτPirr
   have hτP_center_not_le_ker : ¬ Subgroup.center P ≤ τP.ker := by
     intro hle
     apply hmCker
@@ -2869,7 +2880,7 @@ theorem theorem_2_5_b_core
     by_contra hn_pos
     have hn0 : n = 0 := Nat.eq_zero_of_not_pos hn_pos
     subst hn0
-    letI : Nontrivial (P ⧸ Subgroup.center P) := IsExtraspecial.quotient_nontrivial p P
+    let : Nontrivial (P ⧸ Subgroup.center P) := IsExtraspecial.quotient_nontrivial p P
     have hcardQ_ne_one : Nat.card (P ⧸ Subgroup.center P) ≠ 1 := by
       intro hcard1
       have hsub : Subsingleton (P ⧸ Subgroup.center P) := (Nat.card_eq_one_iff_unique.mp hcard1).1
@@ -2930,7 +2941,7 @@ theorem theorem_2_5_b_core
         Module.End.eigenspace g.toLinearMap (ε ^ (0 : ℤ))
     have hE0pos : 0 < Module.finrank F' E0 := by
       simpa [E0] using hpos
-    haveI : Nontrivial E0 := (Module.finrank_pos_iff (R := F') (M := E0)).mp hE0pos
+    have : Nontrivial E0 := (Module.finrank_pos_iff (R := F') (M := E0)).mp hE0pos
     obtain ⟨v, hv_ne⟩ := exists_ne (0 : E0)
     let gR : R := ⟨SemidirectProduct.inr x, ⟨x, rfl⟩⟩
     have hgR : ∀ r : R, r ∈ Subgroup.zpowers gR := by

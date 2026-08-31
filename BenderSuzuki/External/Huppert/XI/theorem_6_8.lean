@@ -92,8 +92,8 @@ private theorem huppert_XI_6_8_scalar_coordinates
         ∃ scalar : D →* Kˣ, Function.Injective scalar ∧
           ∀ d x, eAdd (rho d x) = eAdd x * (scalar d : K) := by
   classical
-  letI : IsMulCommutative D := hDcomm
-  letI : CommGroup D := IsMulCommutative.instCommGroup
+  let : IsMulCommutative D := hDcomm
+  let : CommGroup D := IsMulCommutative.instCommGroup
   let V := Additive F
   let A : Subalgebra (ZMod p) (Module.End (ZMod p) V) :=
     Algebra.adjoin (ZMod p) (Set.range rho)
@@ -101,9 +101,9 @@ private theorem huppert_XI_6_8_scalar_coordinates
     rintro _ ⟨d, rfl⟩ _ ⟨e, rfl⟩
     rw [← map_mul, ← map_mul]
     exact congrArg rho (mul_comm d e)
-  haveI : IsMulCommutative A := Algebra.isMulCommutative_adjoin (ZMod p) hgenComm
-  letI : CommRing A := inferInstance
-  letI : Module A V := inferInstance
+  have : IsMulCommutative A := Algebra.isMulCommutative_adjoin (ZMod p) hgenComm
+  let : CommRing A := inferInstance
+  let : Module A V := inferInstance
   let scalarA : D →* A := {
     toFun := fun d => ⟨rho d, Algebra.subset_adjoin ⟨d, rfl⟩⟩
     map_one' := by
@@ -144,7 +144,7 @@ private theorem huppert_XI_6_8_scalar_coordinates
         have : y ∈ Wk := by rw [hWk]; trivial
         exact this
       exact (LinearMap.mem_range.mp hy)
-  letI : IsSimpleModule A V := hsimple
+  let : IsSimpleModule A V := hsimple
   have hAnontrivial : Nontrivial A := by
     refine ⟨⟨0, 1, ?_⟩⟩
     intro h
@@ -182,18 +182,18 @@ private theorem huppert_XI_6_8_scalar_coordinates
       simp
     have hbx : b • x = 0 := hfainj hzeroAct
     exact hbx
-  letI : NoZeroDivisors A := hnoZero
-  letI : IsDomain A :=
+  let : NoZeroDivisors A := hnoZero
+  let : IsDomain A :=
     (isDomain_iff_noZeroDivisors_and_nontrivial A).2 ⟨hnoZero, hAnontrivial⟩
-  letI : Finite (Module.End (ZMod p) V) :=
+  let : Finite (Module.End (ZMod p) V) :=
     Finite.of_injective
       (fun f : Module.End (ZMod p) V => (f : V → V)) LinearMap.coe_injective
   let hAfinite : Finite A := Finite.of_injective Subtype.val Subtype.val_injective
-  letI : Finite A := hAfinite
+  let : Finite A := hAfinite
   let hAfield : IsField A := Finite.isField_of_domain A
-  letI : Field A := hAfield.toField
+  let : Field A := hAfield.toField
   have hVnontrivial : Nontrivial V := Additive.instNontrivial
-  letI : Nontrivial V := hVnontrivial
+  let : Nontrivial V := hVnontrivial
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   let eval : A →ₗ[A] V := LinearMap.toSpanSingleton A V v
   have hevalSurj : Function.Surjective eval :=
@@ -224,8 +224,8 @@ private theorem huppert_XI_6_8_scalar_coordinates
     apply hscalarAinj
     exact congrArg Units.val hde
   let K0 := GaloisField p f
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype K0 := Fintype.ofFinite K0
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype K0 := Fintype.ofFinite K0
   have hcardA : Fintype.card A = Fintype.card K0 := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     calc
@@ -252,7 +252,7 @@ private theorem xi68_actor_card_dvd_group_card_sub_one
     Nat.card A ∣ Nat.card V - 1 := by
   classical
   let V0 := {v : V // v ≠ 1}
-  letI : MulAction A V0 :=
+  let : MulAction A V0 :=
     { smul := fun a v => ⟨a • (v : V), by
         intro h
         apply v.2
@@ -282,8 +282,8 @@ private theorem xi68_actor_card_dvd_group_card_sub_one
     exact v.2 (hfree a hane (v : V) (congrArg Subtype.val hav))
   have hcard := Nat.card_congr (MulAction.selfEquivOrbitsQuotientProd hstab)
   have hcardV0 : Nat.card V0 = Nat.card V - 1 := by
-    letI : Fintype V := Fintype.ofFinite V
-    letI : Fintype V0 := Fintype.ofFinite V0
+    let : Fintype V := Fintype.ofFinite V
+    let : Fintype V0 := Fintype.ofFinite V0
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     change Fintype.card {v : V // v ≠ 1} = Fintype.card V - 1
     simp
@@ -304,19 +304,19 @@ private theorem huppert_XI_6_8_elementary_kernel
     (hFcard : Nat.card F = p ^ f) :
     IsElementaryAbelian p F := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : F.Normal := hFrob.normal
-  letI : IsMulCommutative F := hFcomm
+  let : Fact p.Prime := ⟨hp⟩
+  let : F.Normal := hFrob.normal
+  let : IsMulCommutative F := hFcomm
   let Ω : Subgroup F := omega₁ (G := F) (p := p)
   have hΩchar : Ω.Characteristic := by
     simpa [Ω] using omega₁_characteristic (G := F) (p := p)
-  letI : Ω.Characteristic := hΩchar
+  let : Ω.Characteristic := hΩchar
   let Ωmap : Subgroup H := Ω.map F.subtype
   have hΩmapNormal : Ωmap.Normal := by
     simpa [Ωmap] using
       (ConjAct.normal_of_characteristic_of_normal (H := F) (K := Ω))
-  letI : Ωmap.Normal := hΩmapNormal
-  letI : MulDistribMulAction D Ωmap :=
+  let : Ωmap.Normal := hΩmapNormal
+  let : MulDistribMulAction D Ωmap :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer D Ωmap
       (Subgroup.le_normalizer_of_normal (H := Ωmap))
   have hfree : ∀ d : D, d ≠ 1 → ∀ x : Ωmap, d • x = x → x = 1 := by
@@ -445,8 +445,8 @@ private theorem huppert_XI_6_8_irreducible_complement_action
   · exact Or.inl hWbot
   right
   by_contra hWtop
-  letI : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hWbot
-  letI : MulDistribMulAction D (Multiplicative W) := {
+  let : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hWbot
+  let : MulDistribMulAction D (Multiplicative W) := {
     smul := fun d x => Multiplicative.ofAdd
       ⟨rho d x.toAdd.1, hW d x.toAdd.1 x.toAdd.2⟩
     one_smul := by
@@ -496,7 +496,7 @@ private theorem huppert_XI_6_8_irreducible_complement_action
     have hcardEq : Nat.card (Multiplicative W) = Nat.card W :=
       Nat.card_congr (Multiplicative.toAdd)
     simpa [hcardEq] using hdiv
-  letI : FiniteDimensional (ZMod p) (Additive F) := Module.Finite.of_finite
+  let : FiniteDimensional (ZMod p) (Additive F) := Module.Finite.of_finite
   have hfinlt : Module.finrank (ZMod p) W <
       Module.finrank (ZMod p) (Additive F) := Submodule.finrank_lt hWtop
   have hcardW : Nat.card W = p ^ Module.finrank (ZMod p) W := by
@@ -539,16 +539,16 @@ private theorem huppert_XI_6_8_field_coordinates
                 hFrob.normal.conj_mem (x : H) x.property (d : H)⟩ : F)) =
               eAdd (Additive.ofMul x) * (scalar d : K) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : IsMulCommutative F := hFcomm
-  letI : Nontrivial F :=
+  let : Fact p.Prime := ⟨hp⟩
+  let : IsMulCommutative F := hFcomm
+  let : Nontrivial F :=
     (Subgroup.nontrivial_iff_ne_bot F).2 hFrob.kernel_ne_bot
   have hElem : IsElementaryAbelian p F :=
     huppert_XI_6_8_elementary_kernel F D hFrob hFcomm
       (by omega) p f hp hf hFcard
-  letI : IsElementaryAbelian p F := hElem
-  letI : F.Normal := hFrob.normal
-  letI : MulDistribMulAction D F :=
+  let : IsElementaryAbelian p F := hElem
+  let : F.Normal := hFrob.normal
+  let : MulDistribMulAction D F :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer D F
       (Subgroup.le_normalizer_of_normal (H := F))
   let rho : Representation (ZMod p) D (Additive F) :=
@@ -838,6 +838,7 @@ private theorem xi68_pgl2_onePointPermHom_injective
   rw [map_mul, map_inv, hperm]
   simp
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem huppert_XI_6_8_odd_pslRange_of_tau
     {G : Type u} {K : Type w}
     [Group G] [Field K] [Finite K] [DecidableEq K]
@@ -1080,7 +1081,7 @@ private theorem huppert_XI_6_8_odd_swap_coordinates
           | none => some 0
           | some x => if x = 0 then none else some ((c : K) / x) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let H := MulAction.stabilizer G a
   let D := MulAction.stabilizer H
     (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)
@@ -1475,8 +1476,8 @@ private theorem huppert_XI_6_8_even_complement_commutative
   change IsFrobeniusGroupWithKernelComplement F D at hFrob
   change Even (Nat.card D) at heven
   change 2 * Nat.card D = Nat.card F - 1 at hhalf
-  letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := IsMulCommutative.instCommGroup
+  let : IsMulCommutative F := hFcomm
+  let : CommGroup F := IsMulCommutative.instCommGroup
   let eAdd : Additive F ≃+ Additive F := AddEquiv.refl (Additive F)
   obtain ⟨ePoint, hPointA, hPointB, hPointF⟩ :=
     huppert_blackburn_XI_pointStabilizer_exists_projectivePointEquiv
@@ -1631,7 +1632,7 @@ private theorem huppert_XI_6_8_even_complement_commutative
       _ = tG * s := by rw [hconj]
   have htConjInv (x : F) :
       (t : H) * (x : H) * (t : H)⁻¹ = (x⁻¹ : F) := by
-    letI : F.Normal := hFrob.normal
+    let : F.Normal := hFrob.normal
     let phi : MulAut F := MulAut.conjNormal (H := F) (t : H)
     have hphi_sq : phi ^ 2 = 1 := by
       change (MulAut.conjNormal (H := F) (t : H)) ^ 2 = 1
@@ -1825,9 +1826,9 @@ private theorem huppert_XI_6_8_even_complement_commutative
             rw [hTauK, hTauK, hell]
           exact Option.some.inj (tau.injective htau)
         exact (congrArg Additive.toMul hkxy).symm
-  letI : Fintype F := Fintype.ofFinite F
-  letI : Fintype D := Fintype.ofFinite D
-  letI : Fintype F0 := Fintype.ofFinite F0
+  let : Fintype F := Fintype.ofFinite F
+  let : Fintype D := Fintype.ofFinite D
+  let : Fintype F0 := Fintype.ofFinite F0
   have hFiberCard : ∀ q ∈ (Finset.univ : Finset F0).image d,
       ({x ∈ (Finset.univ : Finset F0) | d x = q}).card ≤ 2 := by
     intro q hq
@@ -2056,7 +2057,7 @@ private theorem huppert_XI_6_8_even_swap_coordinates
           | none => some 0
           | some x => if x = 0 then none else some (-x⁻¹) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let H := MulAction.stabilizer G a
   let D := MulAction.stabilizer H
     (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)
@@ -2696,6 +2697,7 @@ private theorem huppert_XI_6_8_even_swap_coordinates
         rw [Units.val_inv_eq_inv_val]
         change (-1 : K) * x⁻¹ = -x⁻¹
         ring
+set_option backward.isDefEq.respectTransparency false in
 private theorem huppert_XI_6_8_sharpTriple_of_card_eq_descFactorial
     {G : Type u} {Omega : Type v}
     [Group G] [Finite G] [MulAction G Omega] [Fintype Omega]
@@ -2902,7 +2904,7 @@ public theorem huppert_XI_6_8_abelianKernel_psl
         htwo_transitive hat_most_two_fixed_points a b hab F hFrob
           hFcomm heven hhalf
     have hFnil : Group.IsNilpotent F := by
-      haveI : IsMulCommutative F := hFcomm
+      have : IsMulCommutative F := hFcomm
       refine ⟨1, ?_⟩
       have hcenter : Subgroup.center F = ⊤ :=
         Subgroup.center_eq_top_iff.mpr hFcomm
@@ -2914,10 +2916,10 @@ public theorem huppert_XI_6_8_abelianKernel_psl
     obtain ⟨K, fieldInst, finiteInst, eAdd, scalar, hscalar, haction⟩ :=
       huppert_XI_6_8_field_coordinates F D hFrob hFcomm hDcomm
         hhalf p f hp hf hFcard
-    letI : Field K := fieldInst
-    letI : Finite K := finiteInst
-    letI : DecidableEq K := Classical.decEq K
-    letI : Fintype K := Fintype.ofFinite K
+    let : Field K := fieldInst
+    let : Finite K := finiteInst
+    let : DecidableEq K := Classical.decEq K
+    let : Fintype K := Fintype.ofFinite K
     have hKcard : Nat.card K = Nat.card F := by
       calc
         Nat.card K = Nat.card (Additive F) :=
@@ -3244,7 +3246,7 @@ public theorem huppert_XI_6_8_abelianKernel_psl
               apply Subtype.ext
               apply Subtype.ext
               exact congrArg (fun z : D => (z : H)) hxy)
-    letI : IsMulCommutative F := hFcomm
+    let : IsMulCommutative F := hFcomm
     have hFNcomm : IsMulCommutative FN := by
       simpa only [FN] using
         (inferInstance : IsMulCommutative
@@ -3281,7 +3283,7 @@ public theorem huppert_XI_6_8_abelianKernel_psl
     let H := MulAction.stabilizer G a
     change IsFrobeniusGroupWithKernelComplement F D at hFrob
     have hFnil : Group.IsNilpotent F := by
-      haveI : IsMulCommutative F := hFcomm
+      have : IsMulCommutative F := hFcomm
       refine ⟨1, ?_⟩
       have hcenter : Subgroup.center F = ⊤ :=
         Subgroup.center_eq_top_iff.mpr hFcomm
@@ -3298,10 +3300,10 @@ public theorem huppert_XI_6_8_abelianKernel_psl
     obtain ⟨K, fieldInst, finiteInst, eAdd, scalar, hscalar, haction⟩ :=
       huppert_XI_6_8_field_coordinates F D hFrob hFcomm hDcomm
         hhalf p f hp hf hFcard
-    letI : Field K := fieldInst
-    letI : Finite K := finiteInst
-    letI : DecidableEq K := Classical.decEq K
-    letI : Fintype K := Fintype.ofFinite K
+    let : Field K := fieldInst
+    let : Finite K := finiteInst
+    let : DecidableEq K := Classical.decEq K
+    let : Fintype K := Fintype.ofFinite K
     have hKcard : Nat.card K = Nat.card F := by
       calc
         Nat.card K = Nat.card (Additive F) :=

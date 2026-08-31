@@ -67,7 +67,7 @@ public theorem hkt_normalizer_quotient_centralizer_isPGroup_of_hasNormalPComplem
     simpa [N] using (Subgroup.le_normalizer (H := U))
   let UN : Subgroup N := U.subgroupOf N
   let C : Subgroup N := (Subgroup.centralizer (U : Set Q)).subgroupOf N
-  letI : C.Normal := by
+  let : C.Normal := by
     simpa [C, N] using
       (inferInstance :
         ((Subgroup.centralizer (U : Set Q)).subgroupOf
@@ -89,10 +89,10 @@ public theorem hkt_normalizer_quotient_centralizer_isPGroup_of_hasNormalPComplem
     exact (Subgroup.disjoint_of_coprime_natCard hcop).eq_bot
   have hcomm_bot : ⁅UN, K⁆ = ⊥ := by
     have hleft : ⁅UN, K⁆ ≤ UN := by
-      letI : UN.Normal := hUNnorm
+      let : UN.Normal := hUNnorm
       exact Subgroup.commutator_le_left (H₁ := UN) (H₂ := K)
     have hright : ⁅UN, K⁆ ≤ K := by
-      letI : K.Normal := hKnorm
+      let : K.Normal := hKnorm
       exact Subgroup.commutator_le_right (H₁ := UN) (H₂ := K)
     apply eq_bot_iff.mpr
     intro x hx
@@ -294,7 +294,7 @@ public theorem hkt_thompson_quotient_comap_card_gt
       rw [hHtop, Subgroup.card_top]
     rw [hcardH] at hH_lt
     exact (lt_irrefl (Nat.card G)) hH_lt
-  haveI : Nontrivial (G ⧸ H) := hquot_nontrivial
+  have : Nontrivial (G ⧸ H) := hquot_nontrivial
   have hJ_ne_bot : Jbar ≠ ⊥ := by
     simpa [Jbar] using
       (section8_thompsonSubgroup_ne_bot_of_ne_bot
@@ -322,7 +322,7 @@ public theorem hkt_center_quotient_comap_card_gt
     rw [hcardH] at hH_lt
     exact (lt_irrefl (Nat.card G)) hH_lt
   have hquotp : IsPGroup p (G ⧸ H) := hGp.to_quotient H
-  haveI : Nontrivial (G ⧸ H) := hquot_nontrivial
+  have : Nontrivial (G ⧸ H) := hquot_nontrivial
   have hZ_nontrivial : Nontrivial Zbar := by
     simpa [Zbar] using IsPGroup.center_nontrivial (p := p) hquotp
   have hZcard : 1 < Nat.card Zbar :=
@@ -1839,14 +1839,14 @@ private theorem huppert_III_7_6b_isCyclic_of_isMulCommutative_unique_order_two
     (A : Subgroup G) (hAcomm : IsMulCommutative A) :
     IsCyclic A := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsMulCommutative A := hAcomm
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsMulCommutative A := hAcomm
   have hAp : IsPGroup 2 A := hGp.to_subgroup A
-  haveI : Fact (IsPGroup 2 A) := ⟨hAp⟩
+  have : Fact (IsPGroup 2 A) := ⟨hAp⟩
   let Ω : Subgroup A := omega₁ (G := A) (p := 2)
   have hΩelem : IsElementaryAbelian 2 Ω := by
     simpa [Ω] using IsElementaryAbelian.omega₁_of_isMulCommutative (p := 2) (G := A)
-  haveI : IsElementaryAbelian 2 Ω := hΩelem
+  have : IsElementaryAbelian 2 Ω := hΩelem
   have hΩ_card_le_two : Nat.card Ω ≤ 2 := by
     classical
     let f : Ω → Bool := fun x => decide (x = 1)
@@ -1892,7 +1892,7 @@ private theorem huppert_III_7_6b_isCyclic_of_isMulCommutative_unique_order_two
     simpa [hΩ_card_eq_quot] using hΩ_card_le_two
   have hquot_elem : IsElementaryAbelian 2 (A ⧸ frattini A) := by
     exact isElementaryAbelian_quotient_frattini (R := A) (p := 2)
-  haveI : IsElementaryAbelian 2 (A ⧸ frattini A) := hquot_elem
+  have : IsElementaryAbelian 2 (A ⧸ frattini A) := hquot_elem
   have hquot_rank_le_one : generatorRank (A ⧸ frattini A) ≤ 1 := by
     have hquot_card_eq : Nat.card (A ⧸ frattini A) = 2 ^ generatorRank (A ⧸ frattini A) := by
       simpa using elementaryAbelian_card_eq_pow_generatorRank (p := 2) (A ⧸ frattini A)
@@ -1918,15 +1918,15 @@ private theorem huppert_III_7_5b_abelian_branch
     (hN_noncyclic : ¬ IsCyclic N) :
     ∃ K : Subgroup G, K.Normal ∧ K ≤ N ∧ Nat.card K = 2 ^ 2 ∧ IsElementaryAbelian 2 K := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
   have hNp : IsPGroup 2 N := hGp.to_subgroup N
-  haveI : Fact (IsPGroup 2 N) := ⟨hNp⟩
-  letI : IsMulCommutative N := hNcomm
+  have : Fact (IsPGroup 2 N) := ⟨hNp⟩
+  let : IsMulCommutative N := hNcomm
   let ΩN : Subgroup N := omega₁ (G := N) (p := 2)
   have hΩN_elem : IsElementaryAbelian 2 ΩN := by
     simpa [ΩN] using IsElementaryAbelian.omega₁_of_isMulCommutative (p := 2) (G := N)
-  haveI : IsElementaryAbelian 2 ΩN := hΩN_elem
+  have : IsElementaryAbelian 2 ΩN := hΩN_elem
   have hN_rank_ge_two : 2 ≤ generatorRank N := by
     by_contra hlt
     have hle : generatorRank N ≤ 1 := by omega
@@ -1939,7 +1939,7 @@ private theorem huppert_III_7_5b_abelian_branch
   have hΩN_card_ge : 2 ^ 2 ≤ Nat.card ΩN := by
     have hquot_elem : IsElementaryAbelian 2 (N ⧸ frattini N) :=
       isElementaryAbelian_quotient_frattini (R := N) (p := 2)
-    letI : IsElementaryAbelian 2 (N ⧸ frattini N) := hquot_elem
+    let : IsElementaryAbelian 2 (N ⧸ frattini N) := hquot_elem
     have hpow_le : 2 ^ 2 ≤ 2 ^ generatorRank (N ⧸ frattini N) :=
       Nat.pow_le_pow_right (by decide : 0 < 2) hquot_rank_ge_two
     have hcard_ge : 2 ^ generatorRank (N ⧸ frattini N) ≤ Nat.card (N ⧸ frattini N) :=
@@ -1947,8 +1947,8 @@ private theorem huppert_III_7_5b_abelian_branch
     simpa [hΩN_card_eq] using hpow_le.trans hcard_ge
   let Ω : Subgroup G := ΩN.map N.subtype
   have hΩ_normal : Ω.Normal := by
-    letI : N.Normal := hNnorm
-    letI : ΩN.Characteristic := by
+    let : N.Normal := hNnorm
+    let : ΩN.Characteristic := by
       simpa [ΩN] using (omega₁_characteristic (G := N) (p := 2))
     simpa [Ω] using (inferInstance : (ΩN.map N.subtype).Normal)
   have hΩ_le_N : Ω ≤ N := by
@@ -1995,13 +1995,13 @@ private theorem huppert_III_7_5b_cyclic_quotient_branch
     (hNbar_cyclic : IsCyclic (N.map (QuotientGroup.mk' Z))) :
     ∃ K : Subgroup G, K.Normal ∧ K ≤ N ∧ Nat.card K = 2 ^ 2 ∧ IsElementaryAbelian 2 K := by
   classical
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   let q : G →* G ⧸ Z := QuotientGroup.mk' Z
   let Nbar : Subgroup (G ⧸ Z) := N.map q
   let qN : N →* Nbar := q.subgroupMap N
   have hqN_surj : Function.Surjective qN := MonoidHom.subgroupMap_surjective q N
   have hqN_range_cyclic : IsCyclic qN.range := by
-    letI : IsCyclic Nbar := by simpa [Nbar, q] using hNbar_cyclic
+    let : IsCyclic Nbar := by simpa [Nbar, q] using hNbar_cyclic
     exact Subgroup.isCyclic_of_le le_top
   have hquot_ker_cyclic : IsCyclic (N ⧸ qN.ker) :=
     (MulEquiv.isCyclic (QuotientGroup.quotientKerEquivRange qN)).2 hqN_range_cyclic
@@ -2025,7 +2025,7 @@ private theorem huppert_III_7_5b_cyclic_quotient_branch
     intro n
     exact ⟨(QuotientGroup.mk' qN.ker n), rfl⟩
   have hcenter_quot_cyclic : IsCyclic (N ⧸ Subgroup.center N) := by
-    letI : IsCyclic (N ⧸ qN.ker) := hquot_ker_cyclic
+    let : IsCyclic (N ⧸ qN.ker) := hquot_ker_cyclic
     exact isCyclic_of_surjective π hπ_surj
   have hNcomm : IsMulCommutative N := lemma_4_1 (G := N) hcenter_quot_cyclic
   exact huppert_III_7_5b_abelian_branch (G := G) hGp N hNnorm hNcomm hN_noncyclic
@@ -2070,7 +2070,7 @@ private theorem huppert_III_7_5b_frattini_le_of_index_dvd_two
   · have htop : H = ⊤ := (Subgroup.index_eq_one).1 hidx_one
     intro x hx
     simp [htop]
-  · haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  · have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hcov :=
       huppert_III_7_5b_covby_top_of_index_eq_prime (p := 2) (G := G) hGp hidx_two
     exact frattini_le_coatom (by simpa [covBy_top_iff] using hcov.1)
@@ -2084,8 +2084,8 @@ private theorem huppert_III_7_5b_noncomm_order_eight_branch
     (hMcard : Nat.card M = 2 ^ 3) (hMnoncomm : ¬ IsMulCommutative M) :
     ∃ K : Subgroup G, K.Normal ∧ K ≤ N ∧ Nat.card K = 2 ^ 2 ∧ IsElementaryAbelian 2 K := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
   obtain ⟨L, hL_normal, hL_le_M, hL_card⟩ :=
     exists_normal_subgroup_card_pow_of_normal (G := G) (p := 2)
       (N := M) hMnorm hMcard 2 (by norm_num : 2 ≤ 3)
@@ -2102,8 +2102,8 @@ private theorem huppert_III_7_5b_noncomm_order_eight_branch
         { toIsMulCommutative := hL_comm
           exponent_dvd_p := by simp [hL_exp] }
       exact hL_elem hL_elem'
-    letI : L.Normal := hL_normal
-    letI : IsCyclic L := hL_cyclic
+    let : L.Normal := hL_normal
+    let : IsCyclic L := hL_cyclic
     let φ : G →* MulAut L := MulAut.conjNormal (H := L)
     have hAutL_card : Nat.card (MulAut L) = 2 := by
       rw [IsCyclic.card_mulAut, hL_card,
@@ -2138,7 +2138,7 @@ private theorem huppert_III_7_5b_noncomm_order_eight_branch
                 simp [mul_assoc]
           _ = ((l : M) : G) * (m : G) := by rw [hconj]
       simpa using hcommG
-    haveI : LM.Normal := by
+    have : LM.Normal := by
       simpa [LM] using (inferInstance : (L.subgroupOf M).Normal)
     have hLM_card_eq : Nat.card LM = Nat.card L := by
       simpa [LM] using Nat.card_congr (Subgroup.subgroupOfEquivOfLe hL_le_M).toEquiv
@@ -2160,7 +2160,7 @@ private theorem huppert_III_7_5b_noncomm_order_eight_branch
       intro m
       exact ⟨QuotientGroup.mk' LM m, rfl⟩
     have hcenter_quot_cyclic : IsCyclic (M ⧸ Subgroup.center M) := by
-      letI : IsCyclic (M ⧸ LM) := hM_quot_LM_cyclic
+      let : IsCyclic (M ⧸ LM) := hM_quot_LM_cyclic
       exact isCyclic_of_surjective π hπ_surj
     have hM_comm : IsMulCommutative M := lemma_4_1 (G := M) hcenter_quot_cyclic
     exact False.elim (hMnoncomm hM_comm)
@@ -2173,24 +2173,24 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
     (hN_noncyclic : ¬ IsCyclic N) :
     ∃ K : Subgroup G, K.Normal ∧ K ≤ N ∧ Nat.card K = 2 ^ 2 ∧ IsElementaryAbelian 2 K := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let rec aux {S : Type u} [Group S] [Finite S] [Fact (IsPGroup 2 S)]
       (N : Subgroup S) (hNnorm : N.Normal) (hN_le_phi : N ≤ frattini S)
       (hN_noncyclic : ¬ IsCyclic N) :
       ∃ K : Subgroup S, K.Normal ∧ K ≤ N ∧ Nat.card K = 2 ^ 2 ∧ IsElementaryAbelian 2 K := by
     have hSp : IsPGroup 2 S := Fact.out
-    letI : N.Normal := hNnorm
+    let : N.Normal := hNnorm
     have hN_nontrivial : Nontrivial N := Nontrivial.of_not_isCyclic hN_noncyclic
     have hN_ne_bot : N ≠ ⊥ := (Subgroup.nontrivial_iff_ne_bot N).1 hN_nontrivial
     obtain ⟨Z, hZ_normal, hZ_le_N, hZ_card, hZ_le_center⟩ :=
       exists_central_normal_subgroup_card_eq_prime_of_nontrivial_normal
         (G := S) (p := 2) N hN_ne_bot
-    letI : Z.Normal := hZ_normal
+    let : Z.Normal := hZ_normal
     let q : S →* S ⧸ Z := QuotientGroup.mk' Z
     let Nbar : Subgroup (S ⧸ Z) := N.map q
     have hNbar_normal : Nbar.Normal := by
       simpa [Nbar, q] using (QuotientGroup.map_normal Z N)
-    letI : Nbar.Normal := hNbar_normal
+    let : Nbar.Normal := hNbar_normal
     have hNbar_le_phi : Nbar ≤ frattini (S ⧸ Z) := by
       intro y hy
       rcases Subgroup.mem_map.mp hy with ⟨n, hnN, rfl⟩
@@ -2214,14 +2214,14 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
         rw [mul_one] at hlt
         exact hlt
       have hQp : IsPGroup 2 (S ⧸ Z) := hSp.to_quotient Z
-      letI : Fact (IsPGroup 2 (S ⧸ Z)) := ⟨hQp⟩
+      let : Fact (IsPGroup 2 (S ⧸ Z)) := ⟨hQp⟩
       obtain ⟨Kbar, hKbar_normal, hKbar_le_Nbar, hKbar_card, hKbar_elem⟩ :=
         aux (S := S ⧸ Z) Nbar hNbar_normal hNbar_le_phi hNbar_cyclic
-      letI : Kbar.Normal := hKbar_normal
+      let : Kbar.Normal := hKbar_normal
       let M : Subgroup S := Kbar.comap q
       have hM_normal : M.Normal := by
         simpa [M, q] using (inferInstance : (Kbar.comap (QuotientGroup.mk' Z)).Normal)
-      letI : M.Normal := hM_normal
+      let : M.Normal := hM_normal
       have hker_le_N : q.ker ≤ N := by
         simpa [q, QuotientGroup.ker_mk'] using hZ_le_N
       have hNbar_comap_eq : Nbar.comap q = N := by
@@ -2249,7 +2249,7 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
       have hM_noncyclic : ¬ IsCyclic M := by
         intro hMcyclic
         have hMmap_cyclic : IsCyclic (M.map q) := by
-          letI : IsCyclic M := hMcyclic
+          let : IsCyclic M := hMcyclic
           exact isCyclic_of_surjective (q.subgroupMap M) (MonoidHom.subgroupMap_surjective q M)
         have hMmap_eq : M.map q = Kbar := by
           simpa [M] using
@@ -2258,7 +2258,7 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
         have hKbar_cyclic : IsCyclic Kbar := by
           rw [← hMmap_eq]
           exact hMmap_cyclic
-        haveI : IsElementaryAbelian 2 Kbar := hKbar_elem
+        have : IsElementaryAbelian 2 Kbar := hKbar_elem
         exact (IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq (p := 2) (A := Kbar) hKbar_card)
           hKbar_cyclic
       by_cases hMcomm : IsMulCommutative M
@@ -2271,7 +2271,7 @@ private theorem huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_n
   termination_by Nat.card S
   decreasing_by
     exact hQ_lt
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
   exact aux (S := G) N hNnorm hN_le_phi hN_noncyclic
 
 /-- Huppert III.7.5(b), in the only form needed for III.7.6(b). -/
@@ -2292,12 +2292,12 @@ private theorem huppert_III_7_6b_frattini_isCyclic_of_unique_order_two
     (hunique_order_two : ∀ x y : G, orderOf x = 2 → orderOf y = 2 → x = y) :
     IsCyclic (frattini G) := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   by_contra hPhi_noncyclic
   obtain ⟨K, _hK_normal, _hK_le_phi, hKcard, hKelem⟩ :=
     huppert_III_7_5b_exists_normal_elementaryAbelian_order_four_of_noncyclic_frattini
       (G := G) hGp hPhi_noncyclic
-  haveI : IsElementaryAbelian 2 K := hKelem
+  have : IsElementaryAbelian 2 K := hKelem
   have hK_cyclic : IsCyclic K :=
     huppert_III_7_6b_isCyclic_of_isMulCommutative_unique_order_two
       (G := G) hGp hunique_order_two K hKelem.toIsMulCommutative
@@ -2315,9 +2315,9 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
     (hAmax : ∀ B : Subgroup G, B.Normal → IsMulCommutative B → A ≤ B → B = A) :
     A.index = 2 := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
-  letI : A.Normal := hAnorm
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  let : A.Normal := hAnorm
   have hA_cyclic : IsCyclic A :=
     huppert_III_7_6b_isCyclic_of_isMulCommutative_unique_order_two
       (G := G) hGp hunique_order_two A hAcomm
@@ -2342,7 +2342,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       have hgpow : g ^ 2 ∈ A :=
         hPhi_le_A (pth_power_mem_frattini_of_isPGroup (R := G) (p := 2) g)
       exact (QuotientGroup.eq_one_iff (N := A) (x := g ^ 2)).2 (by simpa using hgpow)
-  letI : IsElementaryAbelian 2 (G ⧸ A) := hquot_elem
+  let : IsElementaryAbelian 2 (G ⧸ A) := hquot_elem
   by_cases hquot_cyclic : IsCyclic (G ⧸ A)
   · have hquot_not_subsingleton : ¬ Subsingleton (G ⧸ A) := by
       intro hsub
@@ -2412,7 +2412,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       intro hnA0
       exact hA_card_ne_one (by simpa [hnA0] using hA_card_pow)
     let k : ℕ := 2 ^ (nA - 1)
-    haveI : NeZero k := ⟨pow_ne_zero _ (by norm_num : (2 : ℕ) ≠ 0)⟩
+    have : NeZero k := ⟨pow_ne_zero _ (by norm_num : (2 : ℕ) ≠ 0)⟩
     have hA_card_two_mul : Nat.card A = 2 * k := by
       have hnA : nA = (nA - 1) + 1 := by omega
       calc
@@ -2434,12 +2434,12 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       let Bbar : Subgroup (G ⧸ A) := Subgroup.zpowers q
       let B : Subgroup G := Bbar.comap π
       have hBbar_normal : Bbar.Normal := by
-        letI : IsMulCommutative (G ⧸ A) := hquot_elem.toIsMulCommutative
+        let : IsMulCommutative (G ⧸ A) := hquot_elem.toIsMulCommutative
         infer_instance
       have hB_normal : B.Normal := by
         dsimp [B]
         exact hBbar_normal.comap π
-      letI : B.Normal := hB_normal
+      let : B.Normal := hB_normal
       have hA_le_B : A ≤ B := by
         intro g hgA
         change π g ∈ Bbar
@@ -2449,7 +2449,7 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       have hA_B_normal : A_B.Normal := by
         dsimp [A_B]
         exact Subgroup.Normal.subgroupOf hAnorm B
-      letI : A_B.Normal := hA_B_normal
+      let : A_B.Normal := hA_B_normal
       let aB : B := ⟨a, hA_le_B (by rw [← ha_zpowers]; exact Subgroup.mem_zpowers a)⟩
       have hA_B_eq : Subgroup.zpowers aB = A_B := by
         ext x
@@ -2509,8 +2509,8 @@ private theorem huppert_III_7_6b_index_eq_two_of_maximal_normal_abelian
       have hB_not_cyclic : ¬ IsCyclic B := by
         intro hBcyclic
         have hBcomm : IsMulCommutative B := by
-          letI : IsCyclic B := hBcyclic
-          letI : CommGroup B := hBcyclic.commGroup
+          let : IsCyclic B := hBcyclic
+          let : CommGroup B := hBcyclic.commGroup
           infer_instance
         have hB_eq_A : B = A := hAmax B hB_normal hBcomm hA_le_B
         have hA_B_top : A_B = ⊤ := by
@@ -2615,12 +2615,12 @@ public theorem huppert_III_7_6b_cyclic_normal_index_two_of_unique_order_two
     ∃ A : Subgroup G, ∃ a : G,
       A.Normal ∧ Subgroup.zpowers a = A ∧ A.index = 2 := by
   classical
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Fact (IsPGroup 2 G) := ⟨hGp⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (IsPGroup 2 G) := ⟨hGp⟩
   have hPhi_cyclic : IsCyclic (frattini G) :=
     huppert_III_7_6b_frattini_isCyclic_of_unique_order_two
       (G := G) hGp hunique_order_two
-  letI : CommGroup (frattini G) := hPhi_cyclic.commGroup
+  let : CommGroup (frattini G) := hPhi_cyclic.commGroup
   have hPhi_comm : IsMulCommutative (frattini G) := inferInstance
   have hPhi_norm : (frattini G).Normal := by infer_instance
   obtain ⟨A, hPhi_le_A, hAnorm, hAcomm, hAmax⟩ :=
@@ -2668,12 +2668,12 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
   constructor
   · intro hp2
     by_contra hG_not_cyclic
-    haveI : Fact p.Prime := ⟨hp⟩
-    haveI : Fact (IsPGroup p G) := ⟨hGp⟩
+    have : Fact p.Prime := ⟨hp⟩
+    have : Fact (IsPGroup p G) := ⟨hGp⟩
     rcases lemma_4_5_a (R := G) (p := p) hp2 hG_not_cyclic with
       ⟨S, hS_normal, hS_card, hS_elem⟩
-    letI : S.Normal := hS_normal
-    letI : IsElementaryAbelian p S := hS_elem
+    let : S.Normal := hS_normal
+    let : IsElementaryAbelian p S := hS_elem
     have hp_pos : 0 < p := hp.pos
     have hp_one_lt : 1 < p := hp.one_lt
     have hp_le_p2 : p ^ 1 ≤ p ^ 2 := by
@@ -2786,7 +2786,8 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
           exact Subgroup.mem_zpowers x
         rcases Subgroup.mem_zpowers_iff.mp hx_mem_y with ⟨m, hm⟩
         have hy_sq : y ^ (2 : ℤ) = 1 := by
-          norm_num [← orderOf_dvd_iff_zpow_eq_one, hy]
+          exact (orderOf_dvd_iff_zpow_eq_one (x := y) (i := (2 : ℤ))).1
+            (by rw [hy]; exact dvd_rfl)
         rcases Int.even_or_odd m with ⟨k, hk⟩ | ⟨k, hk⟩
         · have hx_one : x = 1 := by
             calc
@@ -2856,13 +2857,13 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
         intro hn1
         have hG_card_two : Nat.card G = 2 := by
           simpa [hn1] using hG_card
-        haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+        have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         exact hG_cyclic (isCyclic_of_prime_card (α := G) hG_card_two)
       have hn_ne_two : n ≠ 2 := by
         intro hn2
         have hG_card_four : Nat.card G = 2 ^ 2 := by
           simpa [hn2] using hG_card
-        letI : CommGroup G := IsPGroup.commGroupOfCardEqPrimeSq (G := G) (p := 2) hG_card_four
+        let : CommGroup G := IsPGroup.commGroupOfCardEqPrimeSq (G := G) (p := 2) hG_card_four
         have hU_ne_top : U ≠ ⊤ := by
           intro hU_top
           have hG_card_two : Nat.card G = 2 := by
@@ -2877,7 +2878,7 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
           have hmul' : 2 * U.index = 4 := by
             simpa [hU_card] using hmul.trans hG_card_four
           omega
-        haveI : U.Normal := Subgroup.normal_of_index_eq_two hU_index_two
+        have : U.Normal := Subgroup.normal_of_index_eq_two hU_index_two
         have hquot_card_two : Nat.card (G ⧸ U) = 2 := by
           have hmul : Nat.card G = Nat.card (G ⧸ U) * Nat.card U :=
             Subgroup.card_eq_card_quotient_mul_card_subgroup U
@@ -2885,7 +2886,7 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
             rw [hG_card_four] at hmul
             simpa [hU_card] using hmul.symm
           omega
-        haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+        have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
         obtain ⟨gbar, hgbar⟩ := (isCyclic_of_prime_card (α := G ⧸ U) hquot_card_two)
         rcases QuotientGroup.mk'_surjective U gbar with ⟨g, rfl⟩
         have hg_not_mem : g ∉ U := by
@@ -2960,7 +2961,7 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
       rcases huppert_III_7_6b_cyclic_normal_index_two_of_unique_order_two
           (G := G) hGp hG_cyclic hinvolution_eq_of_order_two with
         ⟨A, a, hA_normal, hA_eq, hA_index⟩
-      letI : A.Normal := hA_normal
+      let : A.Normal := hA_normal
       rcases (Subgroup.index_eq_two_iff_exists_notMem_and (H := A)).mp hA_index with
         ⟨b, hb_not_mem, _⟩
       have hA_card : Nat.card A = 2 * 2 ^ (n - 2) := by
@@ -2978,7 +2979,7 @@ public theorem huppert_III_8_2_pgroup_unique_order_prime_subgroup
           orderOf a = Nat.card (Subgroup.zpowers a) := (Nat.card_zpowers a).symm
           _ = Nat.card A := by rw [hA_eq]
           _ = 2 * 2 ^ (n - 2) := hA_card
-      haveI : NeZero (2 ^ (n - 2)) := ⟨pow_ne_zero _ (by norm_num : (2 : ℕ) ≠ 0)⟩
+      have : NeZero (2 ^ (n - 2)) := ⟨pow_ne_zero _ (by norm_num : (2 : ℕ) ≠ 0)⟩
       have hG_card_quaternion : Nat.card G = 4 * 2 ^ (n - 2) := by
         rw [hG_card]
         have hn : n = (n - 2) + 2 := by omega

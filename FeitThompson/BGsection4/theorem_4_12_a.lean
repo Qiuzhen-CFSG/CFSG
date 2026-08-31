@@ -22,7 +22,7 @@ private theorem derivedSubgroup_isCyclic_of_isMetacyclic
     IsCyclic (derivedSubgroup R) := by
   classical
   obtain ⟨S, hSnorm, hScyc, hquotcyc⟩ := hmeta
-  letI : S.Normal := hSnorm
+  let : S.Normal := hSnorm
   have hquotcomm : IsMulCommutative (R ⧸ S) := hquotcyc.isMulCommutative
   have hder_le_S : derivedSubgroup R ≤ S := by
     simpa [derivedSubgroup, derivedSeries_one, commutator] using
@@ -105,7 +105,7 @@ private theorem action_commutator_generator_le_centralizer_of_cyclic_invariant
     (a : A) (g : G) :
     g⁻¹ * (a • g) ∈ Subgroup.centralizer (S : Set G) := by
   classical
-  letI : IsCyclic S := hScyc
+  let : IsCyclic S := hScyc
   rw [Subgroup.mem_centralizer_iff]
   intro s hs
   let cg : MulAut S := conjugationMulAutOfNormal S g
@@ -115,7 +115,7 @@ private theorem action_commutator_generator_le_centralizer_of_cyclic_invariant
     ext x
     simp [ca, aa, cg, conjugationMulAutOfNormal, actionMulAutOfInvariant, mul_assoc, smul_mul',
       smul_inv_smul]
-  letI : IsMulCommutative (MulAut S) := mulAut_isMulCommutative_of_isCyclic
+  let : IsMulCommutative (MulAut S) := mulAut_isMulCommutative_of_isCyclic
   have hcomm_aut : aa * cg = cg * aa := IsMulCommutative.is_comm.comm aa cg
   have hca_eq : ca = cg := by
     rw [hca]
@@ -171,13 +171,13 @@ private theorem isMetacyclic_subgroup_of_isMetacyclic
         right_inv := by intro y; ext; rfl
         map_mul' := by intro x y; ext; rfl }
     exact e.isCyclic.2 (Subgroup.isCyclic_of_le (H := L) (H' := ⊤) (by simp))
-  letI : N.Normal := hNnorm
+  let : N.Normal := hNnorm
   have hKnorm : K.Normal := by
     exact Subgroup.Normal.subgroupOf (G := G) (H := N) (K := H) hNnorm
-  letI : K.Normal := hKnorm
+  let : K.Normal := hKnorm
   let e : (H ⧸ K) ≃* H.map (QuotientGroup.mk' N) := quotientSubgroupRangeEquiv H N
   have hHmap_cyc : IsCyclic (H.map (QuotientGroup.mk' N)) := by
-    letI : IsCyclic (G ⧸ N) := hQcyc
+    let : IsCyclic (G ⧸ N) := hQcyc
     exact Subgroup.isCyclic_of_le (H := H.map (QuotientGroup.mk' N)) (H' := ⊤) (by simp)
   have hquot_cyc : IsCyclic (H ⧸ K) := e.isCyclic.2 hHmap_cyc
   exact ⟨K, hKnorm, hKcyc, hquot_cyc⟩
@@ -195,15 +195,15 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     (hcop : Nat.Coprime p (Nat.card A)) (B : Subgroup G) [IsInvariant A G B] :
     ∃ C : Subgroup G, IsCompl B C ∧ IsInvariant A G C := by
   classical
-  letI : CommGroup G := IsMulCommutative.instCommGroup
-  letI : AddCommGroup (Additive G) := Additive.addCommGroup
+  let : CommGroup G := IsMulCommutative.instCommGroup
+  let : AddCommGroup (Additive G) := Additive.addCommGroup
   let ρ : Representation (ZMod p) A (Additive G) :=
     Theory.Representation.ofElementaryAbelianAction (A := A) (G := G) (p := p)
   let instAdd : AddCommGroup ρ.asModule := Representation.instAddCommGroupAsModule ρ
-  letI : AddCommGroup ρ.asModule := instAdd
+  let : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod p) A) ρ.asModule :=
     Representation.instModuleMonoidAlgebraAsModule ρ
-  letI : Module (MonoidAlgebra (ZMod p) A) ρ.asModule := instMod
+  let : Module (MonoidAlgebra (ZMod p) A) ρ.asModule := instMod
   let η : Subgroup G ≃o Submodule (ZMod p) (Additive G) :=
     Subgroup.toAddSubgroup.trans (AddSubgroup.toZModSubmodule (n := p))
   have hBinv : η B ∈ ρ.invtSubmodule := by
@@ -215,8 +215,8 @@ public theorem exists_isCompl_isInvariant_of_elementaryAbelian_coprime
     simpa [ρ, η] using
       (IsInvariant.invariant (A := A) (G := G) (H := B) a (Additive.toMul x)).1 hxB
   let Bpack : ρ.invtSubmodule := ⟨η B, hBinv⟩
-  haveI : Fintype A := Fintype.ofFinite A
-  haveI : NeZero (Fintype.card A : ZMod p) := by
+  have : Fintype A := Fintype.ofFinite A
+  have : NeZero (Fintype.card A : ZMod p) := by
     constructor
     intro hzero
     have hdiv : p ∣ Fintype.card A :=
@@ -322,7 +322,7 @@ private theorem omega₁_ne_bot_of_nontrivial_pGroup_early
         Finite.one_lt_card_iff_nontrivial.mpr inferInstance
       omega
     · exact hp_dvd
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hp_dvd_fintype : p ∣ Fintype.card G := by
     simpa [Nat.card_eq_fintype_card] using hp_dvd_card
   obtain ⟨x, hx_order⟩ := _root_.exists_prime_orderOf_dvd_card (G := G) p hp_dvd_fintype
@@ -441,8 +441,8 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         exists_maximal_cyclic_invariant_subgroup_containing_derived
           (R := R) (A := A) hdercyc
       have hS_normal : S.Normal := normal_of_derivedSubgroup_le S hD_le_S
-      letI : S.Normal := hS_normal
-      letI : IsInvariant A R S := hS_inv
+      let : S.Normal := hS_normal
+      let : IsInvariant A R S := hS_inv
       have hS_center : S ≤ Subgroup.center R := by
         exact le_center_of_commutatorAction_eq_top_of_cyclic_invariant
           (A := A) (S := S) hS_cyc (by simpa [H] using hHtop)
@@ -453,7 +453,7 @@ public theorem theorem_4_12_a_aux (n : ℕ)
               Finite.card_le_one_iff_subsingleton.2 inferInstance
             exact hcard_le_one.trans (by
               exact Nat.succ_le_iff.mp (pow_pos (Nat.Prime.pos Fact.out) 2))
-          · haveI : Nontrivial R := not_subsingleton_iff_nontrivial.mp hRsub
+          · have : Nontrivial R := not_subsingleton_iff_nontrivial.mp hRsub
             have hΩ_card : Nat.card (omega₁ (G := R) (p := p)) = p :=
               natCard_omega₁_cyclic_quotient_eq_prime (G := R) (p := p) hRcyc
             rw [hΩ_card]
@@ -488,18 +488,18 @@ public theorem theorem_4_12_a_aux (n : ℕ)
             simp
           exact @isCyclic_of_subsingleton (R ⧸ (⊤ : Subgroup R)) _ hsub
         let qS : R →* R ⧸ S := QuotientGroup.mk' S
-        letI : MulDistribMulAction A (R ⧸ S) :=
+        let : MulDistribMulAction A (R ⧸ S) :=
           quotientMulDistribMulAction (A := A) (G := R) S hS_inv
-        letI : Fact (IsPGroup p (R ⧸ S)) := ⟨(Fact.out : IsPGroup p R).to_quotient S⟩
+        let : Fact (IsPGroup p (R ⧸ S)) := ⟨(Fact.out : IsPGroup p R).to_quotient S⟩
         have hQ_comm : IsMulCommutative (R ⧸ S) :=
           quotient_isMulCommutative_of_derived_le (G := R) (S := S) hD_le_S
-        letI : IsMulCommutative (R ⧸ S) := hQ_comm
+        let : IsMulCommutative (R ⧸ S) := hQ_comm
         let ΩQ : Subgroup (R ⧸ S) := omega₁ (G := R ⧸ S) (p := p)
-        letI : ΩQ.Characteristic := by
+        let : ΩQ.Characteristic := by
           simpa [ΩQ] using omega₁_characteristic (G := R ⧸ S) (p := p)
-        letI : IsInvariant A (R ⧸ S) ΩQ :=
+        let : IsInvariant A (R ⧸ S) ΩQ :=
           isInvariant_of_characteristic (A := A) (G := R ⧸ S) ΩQ
-        letI : MulDistribMulAction A ΩQ := inferInstance
+        let : MulDistribMulAction A ΩQ := inferInstance
         have hΩQ_pow : ∀ x : ΩQ, x ^ p = 1 := by
           intro x
           apply Subtype.ext
@@ -518,22 +518,22 @@ public theorem theorem_4_12_a_aux (n : ℕ)
           rw [Monoid.exponent_dvd_iff_forall_pow_eq_one]
           exact hΩQ_pow
         let ΩR : Subgroup R := omega₁ (G := R) (p := p)
-        letI : ΩR.Characteristic := by
+        let : ΩR.Characteristic := by
           simpa [ΩR] using omega₁_characteristic (G := R) (p := p)
-        letI : IsInvariant A R ΩR :=
+        let : IsInvariant A R ΩR :=
           isInvariant_of_characteristic (A := A) (G := R) ΩR
         let B0 : Subgroup (R ⧸ S) := (ΩR ⊔ S).map qS
         have hB0_le_ΩQ : B0 ≤ ΩQ := by
           simpa [B0, ΩR, ΩQ, qS] using
             omega₁_sup_map_quotient_le_omega₁_quotient (G := R) (p := p) S
         let B : Subgroup ΩQ := B0.subgroupOf ΩQ
-        haveI : IsInvariant A R (ΩR ⊔ S) := isInvariant_sup ΩR S
-        haveI : IsInvariant A (R ⧸ S) B0 := by
+        have : IsInvariant A R (ΩR ⊔ S) := isInvariant_sup ΩR S
+        have : IsInvariant A (R ⧸ S) B0 := by
           simpa [B0, qS] using
             isInvariant_map_quotient (A := A) (G := R) (N := S) (H := ΩR ⊔ S)
-        haveI : IsInvariant A ΩQ B := by
+        have : IsInvariant A ΩQ B := by
           simpa [B, B0, ΩQ] using isInvariant_subgroupOf B0 ΩQ
-        haveI : IsElementaryAbelian p ΩQ := hΩQ_elem
+        have : IsElementaryAbelian p ΩQ := hΩQ_elem
         obtain ⟨C, hBC, hCinv⟩ :=
           exists_isCompl_isInvariant_of_elementaryAbelian_coprime
             (G := ΩQ) (A := A) (p := p) hcop B
@@ -561,10 +561,10 @@ public theorem theorem_4_12_a_aux (n : ℕ)
             change qS s ∈ Cbar
             have hs1 : qS s = 1 := (QuotientGroup.eq_one_iff (N := S) (x := s)).2 hs
             simp [Cbar, hs1]
-          haveI : IsInvariant A ΩQ C := hCinv
-          haveI : IsInvariant A (R ⧸ S) Cbar := by
+          have : IsInvariant A ΩQ C := hCinv
+          have : IsInvariant A (R ⧸ S) Cbar := by
             simpa [Cbar, ΩQ] using isInvariant_map_subtype (A := A) (G := R ⧸ S) ΩQ C
-          haveI : IsInvariant A R X := by
+          have : IsInvariant A R X := by
             refine isInvariant_comap_quotient (A := A) (G := R) (N := S) Cbar ?_
             intro a g
             simp [MulAction.Quotient.smul_mk]
@@ -608,14 +608,14 @@ public theorem theorem_4_12_a_aux (n : ℕ)
               · intro x _ hx
                 exact S.inv_mem hx
             by_contra hX_not_cyc
-            letI : Fact (IsPGroup p X) := ⟨(Fact.out : IsPGroup p R).to_subgroup X⟩
+            let : Fact (IsPGroup p X) := ⟨(Fact.out : IsPGroup p R).to_subgroup X⟩
             obtain ⟨E, _hE_normal, hEcard, hEelem⟩ :=
               lemma_4_5_a (R := X) (p := p) hpodd hX_not_cyc
-            letI : IsElementaryAbelian p E := hEelem
+            let : IsElementaryAbelian p E := hEelem
             have hE_le_ΩX : E ≤ ΩX := by
               simpa [ΩX] using (elementaryAbelian_le_omega₁ (p := p) (G := X) (E := E))
             have hE_le_SX : E ≤ S.subgroupOf X := hE_le_ΩX.trans hΩX_le_S
-            letI : IsCyclic (S.subgroupOf X) :=
+            let : IsCyclic (S.subgroupOf X) :=
               (Subgroup.subgroupOfEquivOfLe (G := R) (H := S) (K := X) hS_le_X).isCyclic.2 hS_cyc
             have hE_cyc : IsCyclic E := Subgroup.isCyclic_of_le hE_le_SX
             have hexp_dvd : Monoid.exponent E ∣ p :=
@@ -738,10 +738,10 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         have hQ_nontriv : Nontrivial (R ⧸ S) := by
           rw [← not_subsingleton_iff_nontrivial]
           intro hsub
-          letI : Subsingleton (R ⧸ S) := hsub
+          let : Subsingleton (R ⧸ S) := hsub
           exact hQ_card_ne_one (Nat.card_eq_one_iff_unique.2 ⟨hsub, ⟨1⟩⟩)
         have hΩQ_ge : p ≤ Nat.card ΩQ := by
-          letI : Nontrivial (R ⧸ S) := hQ_nontriv
+          let : Nontrivial (R ⧸ S) := hQ_nontriv
           simpa [ΩQ] using prime_le_natCard_omega₁_of_nontrivial_pGroup_early (G := R ⧸ S) (p := p)
         have hΩQ_card : Nat.card (omega₁ (G := R ⧸ S) (p := p)) = p := by
           simpa [ΩQ] using le_antisymm hΩQ_card_le_p hΩQ_ge
@@ -758,19 +758,19 @@ public theorem theorem_4_12_a_aux (n : ℕ)
         exact isCyclic_of_surjective phi hphi_surj
       have hRcomm : IsMulCommutative R := lemma_4_1 (G := R) hcenter_quot_cyc
       exact isMulCommutative_of_subgroup_eq_top (H := H) hHtop hRcomm
-    · letI : IsInvariant A R H := by
+    · let : IsInvariant A R H := by
         simpa [H] using commutatorAction_isInvariant (G := R) (A := A)
-      letI : MulDistribMulAction A H := inferInstance
+      let : MulDistribMulAction A H := inferInstance
       have hHp : IsPGroup p H := (Fact.out : IsPGroup p R).to_subgroup H
-      letI : Fact (IsPGroup p H) := ⟨hHp⟩
+      let : Fact (IsPGroup p H) := ⟨hHp⟩
       have hHmeta : IsMetacyclic H := isMetacyclic_subgroup_of_isMetacyclic hmeta H
       have hHlt : Nat.card H < n := by
         rw [← hcard]
         exact natCard_subgroup_lt_of_ne_top H hHtop
       have hcommH : IsMulCommutative (commutatorAction (A := A) (G := H)) :=
         ih (Nat.card H) hHlt rfl hpodd hcop hHmeta
-      have hRsolv : IsSolvable R := by
-        letI : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
+      have hRsolv : Group.IsSolvable R := by
+        let : Group.IsNilpotent R := (Fact.out : IsPGroup p R).isNilpotent
         infer_instance
       have hcop' : Nat.Coprime (Nat.card A) (Nat.card R) := by
         obtain ⟨m, hm⟩ := (Fact.out : IsPGroup p R).exists_card_eq

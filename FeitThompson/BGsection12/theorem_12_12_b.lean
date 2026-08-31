@@ -24,7 +24,7 @@ private theorem section12_exponent_eq_lcm_of_complement_normal_coprime
   rcases hKL with ⟨hKH, hLH, _hHsup, _hdisj⟩
   have hcomp' : (L.subgroupOf H).IsComplement' (K.subgroupOf H) :=
     section12_complementIn_of_normal_isComplement' hKL' hKnorm
-  haveI : (K.subgroupOf H).Normal := hKnorm.2
+  have : (K.subgroupOf H).Normal := hKnorm.2
   have hKsub_exp : Monoid.exponent (K.subgroupOf H) = Monoid.exponent K := by
     simpa using Monoid.exponent_eq_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hKH)
   have hLsub_exp : Monoid.exponent (L.subgroupOf H) = Monoid.exponent L := by
@@ -81,8 +81,8 @@ private theorem section12_exponent_eq_lcm_of_complement_commutative
     Monoid.exponent H = Nat.lcm (Monoid.exponent K) (Monoid.exponent L) := by
   classical
   rcases hKL with ⟨hKH, hLH, hHsup, _hdisj⟩
-  letI : IsMulCommutative H := hHcomm
-  letI : CommGroup H := IsMulCommutative.instCommGroup
+  let : IsMulCommutative H := hHcomm
+  let : CommGroup H := IsMulCommutative.instCommGroup
   have hKsub_exp : Monoid.exponent (K.subgroupOf H) = Monoid.exponent K := by
     simpa using Monoid.exponent_eq_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hKH)
   have hLsub_exp : Monoid.exponent (L.subgroupOf H) = Monoid.exponent L := by
@@ -113,7 +113,7 @@ private theorem section12_exponent_eq_lcm_of_complement_commutative
   have hExp_dvd_lcm : Monoid.exponent H ∣ n := by
     refine Monoid.exponent_dvd_of_forall_pow_eq_one ?_
     intro g
-    haveI : (L.subgroupOf H).Normal := by infer_instance
+    have : (L.subgroupOf H).Normal := by infer_instance
     have hg_sup : g ∈ K.subgroupOf H ⊔ L.subgroupOf H := by
       simp [hKL_top]
     rcases (Subgroup.mem_sup_of_normal_right
@@ -153,7 +153,7 @@ private theorem section12_exponent_eq_of_CA_msigma_complement_in_E2
     Monoid.exponent P₀ = Monoid.exponent E₂ := by
   classical
   let C : Subgroup G := subgroupCentralizerIn A (section10Msigma M)
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hE₂p : IsPGroup p.val E₂ :=
     section12_E2_isPGroup_of_tau2_singleton
       (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
@@ -183,7 +183,7 @@ private theorem section12_exponent_eq_of_CA_msigma_complement_in_E2
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hCE₂).2 (hE₂E.trans hE_norm_C)
   have hcompP₀' : (P₀.subgroupOf E₂).IsComplement' (C.subgroupOf E₂) :=
     section12_complementIn_of_normal_isComplement' hcompP₀ hCnormE₂
-  haveI : (C.subgroupOf E₂).Normal := hCnormE₂.2
+  have : (C.subgroupOf E₂).Normal := hCnormE₂.2
   have hquot_exp_P₀ : Monoid.exponent P₀ = Monoid.exponent (E₂ ⧸ C.subgroupOf E₂) := by
     calc
       Monoid.exponent P₀ = Monoid.exponent (P₀.subgroupOf E₂) := by
@@ -247,7 +247,7 @@ private theorem section12_exponent_eq_of_CA_msigma_complement_in_E2
       hE₂p.to_subgroup (Z.subgroupOf E₂)
     exact hZsub_p.of_equiv (Subgroup.subgroupOfEquivOfLe hZE₂)
   have hp_dvd_exp_Z : p.val ∣ Monoid.exponent Z := by
-    haveI : Nontrivial Z := (Subgroup.nontrivial_iff_ne_bot (H := Z)).2 hZne
+    have : Nontrivial Z := (Subgroup.nontrivial_iff_ne_bot (H := Z)).2 hZne
     rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := Z) (hG := hZp)).mp
       inferInstance with ⟨n, hn, hcardZ⟩
     have hp_dvd_cardZ : p.val ∣ Nat.card Z := by
@@ -271,7 +271,7 @@ private theorem section12_exponent_eq_of_CA_msigma_complement_in_E2
       simpa [C, hE₂eqZ] using g.property
     have hgsup : g ∈ C.subgroupOf E₂ ⊔ Z.subgroupOf E₂ := by
       rwa [Subgroup.subgroupOf_sup (A := C) (A' := Z) (B := E₂) hCE₂ hZE₂] at hgsup0
-    haveI : (C.subgroupOf E₂).Normal := hCnormE₂.2
+    have : (C.subgroupOf E₂).Normal := hCnormE₂.2
     rcases (Subgroup.mem_sup_of_normal_left
         (s := C.subgroupOf E₂) (t := Z.subgroupOf E₂) (x := g)).1 hgsup with
       ⟨c, hc, z, hz, hcz⟩
@@ -321,7 +321,7 @@ public theorem section12_exists_primeOrder_zpowers_of_prime_dvd_card
     ∃ z : G, z ∈ B ∧ z ≠ 1 ∧
       Subgroup.zpowers z ∈ section10PrimeOrderSubgroupsIn q B := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   obtain ⟨z₀, hz₀_order⟩ := exists_prime_orderOf_dvd_card' (G := B) q.val hqB
   let z : G := z₀
   have hzB : z ∈ B := z₀.property
@@ -442,7 +442,7 @@ private theorem section12_tau1_primeSupport_of_centralizer_of_complement
           have hZsub_p : IsPGroup q.val ((Subgroup.zpowers z).subgroupOf E) :=
             hZp.of_equiv
               (Subgroup.subgroupOfEquivOfLe (H := Subgroup.zpowers z) (K := E) hZE).symm
-          haveI : (E₃.subgroupOf E).Normal := hE3norm.2
+          have : (E₃.subgroupOf E).Normal := hE3norm.2
           exact section12_pSubgroup_le_normal_hall_of_prime_mem hHallE3 hqτ3 hZsub_p
         have hzsub : (⟨z, hzE⟩ : E) ∈ (Subgroup.zpowers z).subgroupOf E := by
           simp [Subgroup.mem_subgroupOf]
@@ -490,11 +490,12 @@ private theorem section12_complementToMsigma_ne_bot
     have hMsigma_bot : section10Msigma M = ⊥ := by
       exact le_bot_iff.mp (by simpa [hMbot] using hMsigma_le_M)
     exact (theorem_10_2_e (M := M) hM) hMsigma_bot
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
-  have hsolvM : IsSolvable M :=
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
+  have : Group.IsSolvable M := hsolvM
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
     simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using hder_top
   exact hcomm_lt.ne hcomm_top
@@ -769,7 +770,7 @@ private theorem section12_zpowers_mem_primeOrderSubgroupsIn_of_pow_eq_one
     {B : Subgroup G} {p : Nat.Primes} {x : G}
     (hxB : x ∈ B) (hxpow : x ^ p.val = 1) (hxne : x ≠ 1) :
     Subgroup.zpowers x ∈ section10PrimeOrderSubgroupsIn p B := by
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hcard : Nat.card (Subgroup.zpowers x) = p.val := by
     rw [Nat.card_zpowers, orderOf_eq_prime hxpow hxne]
   exact ⟨Subgroup.zpowers_le.2 hxB, hcard⟩
@@ -825,7 +826,7 @@ private theorem section12_tau2_sylow_le_E2_of_abelian
     simpa [hqp] using hp
   have hSsubπ : IsPiSubgroup (G := E) (section12Tau2Primes M) ((S : Subgroup G).subgroupOf E) :=
     section12_isPiSubgroup_subgroupOf hSπ hSleE
-  haveI : (E₂.subgroupOf E).Normal := hE2norm.2
+  have : (E₂.subgroupOf E).Normal := hE2norm.2
   have hSsub_le_E2sub :
       (S : Subgroup G).subgroupOf E ≤ E₂.subgroupOf E :=
     section12_piSubgroup_le_normal_hall
@@ -870,10 +871,10 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
       · exact bot_le
     have hAbot : A = ⊥ := hOmegaS.symm.trans hOmegaBot
     exact hAne hAbot
-  haveI : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hSne
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hSne
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hSp : IsPGroup p.val Ssub := S.isPGroup'
-  letI : CommGroup Ssub := IsMulCommutative.instCommGroup
+  let : CommGroup Ssub := IsMulCommutative.instCommGroup
   rcases (IsPGroup.nontrivial_iff_card (p := p.val) (G := Ssub) (hG := hSp)).mp inferInstance with
     ⟨n, hn_pos, hcardS⟩
   have hexp_dvd_card : Monoid.exponent Ssub ∣ p.val ^ n := by
@@ -882,7 +883,7 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
   have hExpS_ne_one : Monoid.exponent Ssub ≠ 1 := by
     intro hExp1
     have hsub : Subsingleton Ssub := (Monoid.exp_eq_one_iff).1 hExp1
-    letI : Subsingleton Ssub := hsub
+    let : Subsingleton Ssub := hsub
     have hcard1 : Nat.card Ssub = 1 := by simp
     exact hSne ((Subgroup.eq_bot_iff_card (H := Ssub)).2
       hcard1)
@@ -1085,7 +1086,7 @@ private theorem section12_exists_tau2_cyclic_factor_of_abelian_sylow_of_theorem_
           hM hE hp hA I hIprime hCIne
       have hNormS_le_NI :
           Subgroup.normalizer (Ssub : Set G) ≤ Subgroup.normalizer (I : Set G) := by
-        haveI : Isub.Characteristic :=
+        have : Isub.Characteristic :=
           section12_powMonoidHom_range_characteristic (H := Ssub) d
         simpa [I, Ssub] using
           (section8_normalizer_map_subtype_le_of_characteristic
@@ -1214,17 +1215,17 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
     ⟨hE12E, hHallE12⟩
   have hE1data : section12HallSubgroupIn (section12Tau1Primes M) E₁ E₁₂ :=
     ⟨hE1E12, hHallE1⟩
-  have hE_solv : IsSolvable E := by
+  have hE_solv : Group.IsSolvable E := by
     have hEproper : E ≠ ⊤ := by
       intro hEtop
       have htop_le_M : (⊤ : Subgroup G) ≤ M := by
         simpa [hEtop] using hcomp.2.1
       exact hM.1 (top_le_iff.mp htop_le_M)
     exact IsMinCE.proper_subgroups_solvable E (lt_top_iff_ne_top.2 hEproper)
-  haveI : IsSolvable E := hE_solv
-  have hE12_solv : IsSolvable E₁₂ :=
-    solvable_of_solvable_injective (Subgroup.inclusion_injective hE12E)
-  haveI : IsSolvable E₁₂ := hE12_solv
+  have : Group.IsSolvable E := hE_solv
+  have hE12_solv : Group.IsSolvable E₁₂ :=
+    Group.isSolvable_of_isSolvable_injective (Subgroup.inclusion_injective hE12E)
+  have : Group.IsSolvable E₁₂ := hE12_solv
   let π12 : Set Nat.Primes := section12Tau1Primes M ∪ section12Tau2Primes M
   let π1 : Set Nat.Primes := section12Tau1Primes M
   have hQcard : Nat.card Q = q.val := hQ.2
@@ -1237,7 +1238,7 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
     have hr_eq_q : r = q := Subtype.ext hr_eq_q_val
     subst hr_eq_q
     exact Set.mem_union_left (section12Tau2Primes M) hq
-  letI : MulDistribMulAction PUnit.{1} E := {
+  let : MulDistribMulAction PUnit.{1} E := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -1287,7 +1288,7 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
     have hr_eq_q : r = q := Subtype.ext hr_eq_q_val
     subst hr_eq_q
     exact hq
-  letI : MulDistribMulAction PUnit.{1} E₁₂ := {
+  let : MulDistribMulAction PUnit.{1} E₁₂ := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -1421,7 +1422,7 @@ private theorem section12_commutator_eq_bot_of_tau1_primeOrder_trivial_centraliz
     (corollary_12_6_a (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p)
       hM ⟨hcomp, hE12data, hE1data, hE2data, hE3data⟩ hp hA).1
-  haveI : (A.subgroupOf E).Normal := hAnorm.2
+  have : (A.subgroupOf E).Normal := hAnorm.2
   have hAg_eq_A : A.map (MulAut.conj g).toMonoidHom = A := by
     ext x
     constructor
@@ -1518,9 +1519,9 @@ private theorem section12_quotientPrime_of_sylow_not_le_normal
     (hQe_not_le : ¬ section10AmbientSylowSubgroup E Qe ≤ K) :
     q ∈ section12QuotientPrimeSet K E := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Ksub : Subgroup E := K.subgroupOf E
-  haveI : Ksub.Normal := by simpa [Ksub] using hKnorm.2
+  have : Ksub.Normal := by simpa [Ksub] using hKnorm.2
   by_contra hqQuot
   have hq_not_dvd : ¬ q.val ∣ Ksub.index := by
     intro hqdiv
@@ -1598,7 +1599,7 @@ private theorem section12_quotientMulDistribMulActionOfTrivial_smul_mk'
     {N : Subgroup A} [N.Normal]
     (hNfix : N ≤ actionCentralizerIn (A := A) (G := M) (⊤ : Subgroup A))
     (a : A) (m : M) :
-    letI :
+    let :
         MulDistribMulAction (A ⧸ N) M :=
       section12_quotientMulDistribMulActionOfTrivial (A := A) (M := M) hNfix
     (QuotientGroup.mk' N a : A ⧸ N) • m = a • m := by
@@ -1626,11 +1627,11 @@ public theorem section12_fixedPointSubgroup_map_mk'_eq_of_trivial
     {A M : Type*} [Group A] [Finite A] [Group M] [MulDistribMulAction A M]
     {N B : Subgroup A} [N.Normal]
     (hNfix : N ≤ actionCentralizerIn (A := A) (G := M) (⊤ : Subgroup A)) :
-    letI :
+    let :
         MulDistribMulAction (A ⧸ N) M :=
       section12_quotientMulDistribMulActionOfTrivial (A := A) (M := M) hNfix
     fixedPointSubgroup (↥(B.map (QuotientGroup.mk' N))) M = fixedPointSubgroup (↥B) M := by
-  letI :
+  let :
       MulDistribMulAction (A ⧸ N) M :=
     section12_quotientMulDistribMulActionOfTrivial (A := A) (M := M) hNfix
   ext m
@@ -1670,7 +1671,7 @@ private noncomputable def section12_mulEquiv_iSup_of_pairwise_coprime_order
     (hcoprime : Pairwise fun i j => Nat.Coprime (Nat.card (H i)) (Nat.card (H j))) :
     (∀ i, H i) ≃* ↥(⨆ i, H i) := by
   classical
-  letI : ∀ i, Fintype ↥(H i) := fun i => Fintype.ofFinite ↥(H i)
+  let : ∀ i, Fintype ↥(H i) := fun i => Fintype.ofFinite ↥(H i)
   have hcoprime' : Pairwise fun i j => Nat.Coprime (Fintype.card (H i)) (Fintype.card (H j)) := by
     intro i j hij
     simpa [Nat.card_eq_fintype_card] using hcoprime hij
@@ -1705,7 +1706,7 @@ private theorem section12_exponent_eq_iSup_of_pairwise_coprime_order
     (hcoprime : Pairwise fun i j => Nat.Coprime (Nat.card (H i)) (Nat.card (H j))) :
     Monoid.exponent ↥(⨆ i, H i) = Finset.lcm Finset.univ (fun i => Monoid.exponent (H i)) := by
   classical
-  letI : ∀ i, Fintype (H i) := fun i => Fintype.ofFinite (H i)
+  let : ∀ i, Fintype (H i) := fun i => Fintype.ofFinite (H i)
   let e := section12_mulEquiv_iSup_of_pairwise_coprime_order (G := G) H hcomm hcoprime
   calc
     Monoid.exponent ↥(⨆ i, H i) = Monoid.exponent (∀ i, H i) := by
@@ -1720,8 +1721,8 @@ private theorem section12_isCyclic_pi_of_pairwise_coprime_cyclic
     (hcoprime : Pairwise fun i j => Nat.Coprime (Nat.card (H i)) (Nat.card (H j))) :
     IsCyclic (∀ i, H i) := by
   classical
-  letI : ∀ i, Fintype (H i) := fun i => Fintype.ofFinite (H i)
-  letI : ∀ i, CommGroup (H i) := fun i => IsMulCommutative.instCommGroup
+  let : ∀ i, Fintype (H i) := fun i => Fintype.ofFinite (H i)
+  let : ∀ i, CommGroup (H i) := fun i => IsMulCommutative.instCommGroup
   have hexp_coprime :
       Set.Pairwise (↑(Finset.univ : Finset ι)) (Nat.Coprime.onFun fun i => Monoid.exponent (H i)) := by
     intro i hi j hj hij
@@ -1793,7 +1794,7 @@ private lemma unique_subgroup_of_prime_order_in_cyclic
       have hcard1 : Nat.card L = 1 := by
         simp [hbot]
       rw [hL] at hcard1; exact hp_prime.ne_one hcard1
-    haveI : Nontrivial L := (Subgroup.nontrivial_iff_ne_bot L).mpr hL_ne_bot
+    have : Nontrivial L := (Subgroup.nontrivial_iff_ne_bot L).mpr hL_ne_bot
     obtain ⟨h, hh⟩ := IsCyclic.exists_monoid_generator (α := L)
     have hh_order_L : orderOf (h : L) = p := by
       have h_eq : orderOf (h : L) = Nat.card L :=
@@ -1838,12 +1839,12 @@ private theorem section12_all_sylow_comm_of_one
     (hScomm : IsMulCommutative (S : Subgroup G)) :
     ∀ P : Sylow p.val G, IsMulCommutative (P : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   intro P
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S P
   have hconj_comm :
       IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
-    letI : IsMulCommutative (S : Subgroup G) := hScomm
+    let : IsMulCommutative (S : Subgroup G) := hScomm
     rw [Sylow.coe_subgroup_smul]
     exact Subgroup.map_isMulCommutative
       (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
@@ -1882,7 +1883,7 @@ private theorem section12_E2_global_hall_of_abelian_sylow
     (hAS : A ≤ (S : Subgroup G)) (hScomm : IsMulCommutative (S : Subgroup G)) :
     IsHallSubgroup (section12Tau2Primes M) E₂ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hE2HallIn :
       section12HallSubgroupIn (section12Tau2Primes M) E₂ E :=
     section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
@@ -1904,10 +1905,10 @@ private theorem section12_E2_global_hall_of_abelian_sylow
         section12_exists_rankTwo_in_E_of_tau2
           (G := G) (M := M) (E := E) (E₁₂ := E₁₂) (E₁ := E₁)
           (E₂ := E₂) (E₃ := E₃) hM hE hqτ2
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      have : Fact q.val.Prime := ⟨q.2⟩
       have hBq : IsPGroup q.val B := by
         have hElem := (section12_rankTwo_elementary hB).2
-        haveI : IsElementaryAbelian q.val B := hElem
+        have : IsElementaryAbelian q.val B := hElem
         exact IsElementaryAbelian.isPGroup q.val B
       obtain ⟨Q, hB_le_Q⟩ :=
         IsPGroup.exists_le_sylow (G := G) (p := q.val) hBq
@@ -1956,7 +1957,7 @@ private theorem section12_elementCentralizerIn_E_le_E2_of_abelian
       section12HallSubgroupIn (section12Tau2Primes M) E₂ E :=
     section12_E2_hall_in_E hE.2.1 hE.2.2.2.1
   rcases hE2HallIn with ⟨hE2E, hHallE2E⟩
-  haveI : (E₂.subgroupOf E).Normal := hE2norm.2
+  have : (E₂.subgroupOf E).Normal := hE2norm.2
   intro x hxσ hxne y hy
   let Y : Subgroup G := Subgroup.zpowers y
   have hYle : Y ≤ elementCentralizerIn E x := Subgroup.zpowers_le.2 hy
@@ -1973,7 +1974,7 @@ private theorem section12_elementCentralizerIn_E_le_E2_of_abelian
     rcases hqτ with hq12 | hq3
     · rcases hq12 with hq1 | hq2
       · exfalso
-        haveI : Fact q.val.Prime := ⟨q.2⟩
+        have : Fact q.val.Prime := ⟨q.2⟩
         obtain ⟨z0, hz0_order⟩ :=
           exists_prime_orderOf_dvd_card' (G := Y) q.val hqY
         let z : G := z0
@@ -2012,7 +2013,7 @@ private theorem section12_elementCentralizerIn_E_le_E2_of_abelian
         exact hxne (by simpa using hxbot)
       · exact hq2
     · exfalso
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      have : Fact q.val.Prime := ⟨q.2⟩
       obtain ⟨z0, hz0_order⟩ :=
         exists_prime_orderOf_dvd_card' (G := Y) q.val hqY
       let z : G := z0
@@ -2086,7 +2087,7 @@ private theorem
   let CES : Subgroup G := subgroupCentralizerIn E Ssub
   let QE : ∀ {q : Nat.Primes}, Sylow q.val E → Subgroup G :=
     fun {_q} Qe => section10AmbientSylowSubgroup E Qe
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have h8a :=
     lemma_12_8_a (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
       (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) (A := A) (p := p) (S := S)
@@ -2117,7 +2118,7 @@ private theorem
   obtain ⟨q, hqQuotCES⟩ :=
     section12_exists_quotientPrime_of_normal_proper
       (G := G) (H := E) (K := CES) hCESnorm hCESne
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   let Qe : Sylow q.val E := Classical.choice (Sylow.nonempty (p := q.val) (G := E))
   have hQE_le_E : QE Qe ≤ E := by
     intro x hx
@@ -2161,9 +2162,9 @@ private theorem
   have hQE_not_le_CEA : ¬ QE Qe ≤ CEA := by
     intro hQE_le_CEA
     have hQE_le_NS : QE Qe ≤ Subgroup.normalizer (Ssub : Set G) := hQE_le_E.trans hE_le_NS
-    letI : Subgroup.Normalizes (QE Qe) Ssub := ⟨hQE_le_NS⟩
-    letI : IsMulCommutative Ssub := hScomm
-    letI : CommGroup Ssub := IsMulCommutative.instCommGroup
+    let : Subgroup.Normalizes (QE Qe) Ssub := ⟨hQE_le_NS⟩
+    let : IsMulCommutative Ssub := hScomm
+    let : CommGroup Ssub := IsMulCommutative.instCommGroup
     have hfix_eq :
         fixedPointSubgroup (↥(QE Qe)) (↥Ssub) =
           (subgroupCentralizerIn Ssub (QE Qe)).subgroupOf Ssub := by
@@ -2173,7 +2174,7 @@ private theorem
         ∀ s : Ssub, Nat.Prime (orderOf s) → s ∈ fixedPointSubgroup (↥(QE Qe)) (↥Ssub) := by
       intro s hsprime
       rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-      haveI : IsElementaryAbelian p.val A := hAelem
+      have : IsElementaryAbelian p.val A := hAelem
       have hs_ne : (s : Ssub) ≠ 1 := by
         intro hs1
         exact hsprime.ne_one (by simp [hs1])
@@ -2206,7 +2207,7 @@ private theorem
         intro x hx
         have hxCentA : x ∈ Subgroup.centralizer (A : Set G) := (hQE_le_CEA hx).2
         exact (Subgroup.mem_centralizer_iff.mp hxCentA (s : G) hsA).symm⟩
-    have hsolvS : IsSolvable Ssub := by infer_instance
+    have hsolvS : Group.IsSolvable Ssub := by infer_instance
     have htrivS : ActsTrivially (A := QE Qe) (G := Ssub) :=
       proposition_1_6_e (G := Ssub) (A := QE Qe) hsolvS hcopQE_S hScomm hfix
     have hQE_le_CES' : QE Qe ≤ CES := by
@@ -2284,7 +2285,7 @@ private theorem
       q ∈ subgroupPrimeSet (subgroupCentralizerIn E A) := by
   classical
   let QE : Subgroup G := section10AmbientSylowSubgroup E Qe
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   have hQE_le_E : QE ≤ E := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -2471,7 +2472,7 @@ private theorem
           simp
         · exact bot_le
       exact hA_ne_bot (hOmegaS.symm.trans hOmegaBot)
-    haveI : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hS_ne_bot
+    have : Nontrivial Ssub := (Subgroup.nontrivial_iff_ne_bot (H := Ssub)).2 hS_ne_bot
     let QE : Subgroup G := section10AmbientSylowSubgroup E Qe
     have hOmegaData :=
       section12_tau1_omegaOne_centralizer_data_of_noncentral_sylow_centralizer
@@ -2585,7 +2586,7 @@ private theorem
             _ = g * ((g⁻¹ * s * g) * x) * g⁻¹ := by rw [hcomm]
             _ = s * (g * x * g⁻¹) := by group
         simpa [mul_assoc] using hconj_comm.symm
-    letI : Subgroup.Normalizes QG Ssub := ⟨hQG_le_N⟩
+    let : Subgroup.Normalizes QG Ssub := ⟨hQG_le_N⟩
     have hQ0_fix_all : (Q0.subgroupOf QG) ≤
         actionCentralizerIn (A := ↥QG) (G := ↥Ssub) (⊤ : Subgroup QG) := by
       intro x hx
@@ -2610,11 +2611,11 @@ private theorem
       have h1eq2 : (1 : ℕ) = 2 := hq_rank'.symm.trans hp.2
       omega
     let qQG : QG →* QG ⧸ (Q0.subgroupOf QG) := QuotientGroup.mk' (Q0.subgroupOf QG)
-    letI : MulDistribMulAction (QG ⧸ (Q0.subgroupOf QG)) Ssub :=
+    let : MulDistribMulAction (QG ⧸ (Q0.subgroupOf QG)) Ssub :=
       section12_quotientMulDistribMulActionOfTrivial
         (A := ↥QG) (M := ↥Ssub) hQ0_fix_all
-    haveI : Fact q.val.Prime := ⟨q.2⟩
-    haveI : Fact p.val.Prime := ⟨p.2⟩
+    have : Fact q.val.Prime := ⟨q.2⟩
+    have : Fact p.val.Prime := ⟨p.2⟩
     have hq_dvd_E : q.val ∣ Nat.card E := by
       rcases hqQuotCEA with ⟨hCEAE, hq_dvd_idx⟩
       exact hq_dvd_idx.trans ((subgroupCentralizerIn E A).subgroupOf E).index_dvd_card
@@ -2679,7 +2680,7 @@ private theorem
             simpa [QEsubQG] using
               (Subgroup.map_subgroupOf_eq_of_le
                 (G := G) (H := QE) (K := QG) hQE_le_QG)
-      haveI : Q0sub.Normal := by
+      have : Q0sub.Normal := by
         simpa [Q0sub] using hQ0sub_normal
       have hpow_mem_QEsub :
           ∀ x : QG, x ^ q.val = 1 → x ∈ QEsubQG :=
@@ -2751,8 +2752,9 @@ private theorem
         simpa [Ssub] using hSsub_le_Mstar)
       let PMstar : Sylow p.val Mstar := Pstar.subtype hPstar_norm.1
       have hPMstar_normal : (PMstar : Subgroup Mstar).Normal := by
-        simpa [PMstar, Sylow.subtype] using hPstar_norm.2
-      haveI : Unique (Sylow p.val Mstar) :=
+        change ((Pstar : Subgroup G).subgroupOf Mstar).Normal
+        exact hPstar_norm.2
+      have : Unique (Sylow p.val Mstar) :=
         Sylow.unique_of_normal PMstar hPMstar_normal
       have hSMstar_eq_PMstar : SMstar = PMstar := Subsingleton.elim SMstar PMstar
       have hSMstar_eq_S : section10AmbientSylowSubgroup Mstar SMstar = Ssub := by
@@ -2805,7 +2807,7 @@ private theorem
       have hX_le_normS : X ≤ Subgroup.normalizer (Ssub : Set G) := by
         simpa [N] using hX_le_N
       let C0 : Subgroup G := subgroupCentralizerIn Ssub X
-      letI : Subgroup.Normalizes X Ssub := ⟨hX_le_normS⟩
+      let : Subgroup.Normalizes X Ssub := ⟨hX_le_normS⟩
       have hfixed_X_eq_C0 :
           fixedPointSubgroup (↥X) ↥Ssub = C0.subgroupOf Ssub := by
         simpa [C0, X, XQ] using
@@ -2912,9 +2914,9 @@ private theorem
         simpa [Ssub] using S.isPGroup'
       have hcop_X_S : Nat.Coprime (Nat.card X) (Nat.card Ssub) :=
         IsPGroup.coprime_card_of_ne q.val p.val hq_ne_p X Ssub hX_p hS_p
-      letI : IsMulCommutative Ssub := hScomm
-      letI : CommGroup Ssub := IsMulCommutative.instCommGroup
-      have hsolvS : IsSolvable Ssub := by infer_instance
+      let : IsMulCommutative Ssub := hScomm
+      let : CommGroup Ssub := IsMulCommutative.instCommGroup
+      have hsolvS : Group.IsSolvable Ssub := by infer_instance
       have hcompl_action :
           IsCompl (fixedPointSubgroup (↥X) (↥Ssub))
             (commutatorAction (A := ↥X) (G := ↥Ssub)) :=
@@ -3112,7 +3114,7 @@ private theorem
         have hnormZ_le_normOmega :
             Subgroup.normalizer (Z : Set G) ≤
               Subgroup.normalizer (section12OmegaOneSubgroup p Z : Set G) := by
-          haveI : (omega₁ (G := Z) (p := p.val)).Characteristic :=
+          have : (omega₁ (G := Z) (p := p.val)).Characteristic :=
             omega₁_characteristic (G := Z) (p := p.val)
           simpa [section12OmegaOneSubgroup] using
             (section8_normalizer_map_subtype_le_of_characteristic
@@ -3211,7 +3213,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
         (E₁ := E₁) (E₂ := E₂) (E₃ := E₃) hM hE hqτ2
     have hBq : IsPGroup q.val B := by
       have hElem := (section12_rankTwo_elementary hB).2
-      haveI : IsElementaryAbelian q.val B := hElem
+      have : IsElementaryAbelian q.val B := hElem
       exact IsElementaryAbelian.isPGroup q.val B
     obtain ⟨Q, hB_le_Q⟩ :=
       IsPGroup.exists_le_sylow (G := G) (p := q.val) hBq
@@ -3240,8 +3242,8 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
         Monoid.exponent Z =
           Monoid.exponent
             ((((default : Sylow q.val E₂) : Subgroup E₂).map E₂.subtype) : Subgroup G) := by
-      letI : IsMulCommutative E₂ := hE2comm
-      haveI : Fact q.val.Prime := ⟨q.2⟩
+      let : IsMulCommutative E₂ := hE2comm
+      have : Fact q.val.Prime := ⟨q.2⟩
       let QE2 : Sylow q.val E₂ := Q.subtype hQ_le_E2
       have hQexpE2 :
           Monoid.exponent (Q : Subgroup G) =
@@ -3253,7 +3255,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
           (Subgroup.subgroupOfEquivOfLe
             (H := (Q : Subgroup G)) (K := E₂) hQ_le_E2)
       have hQE2_norm : ((QE2 : Subgroup E₂) : Subgroup E₂).Normal := by infer_instance
-      letI : Unique (Sylow q.val E₂) := Sylow.unique_of_normal QE2 hQE2_norm
+      let : Unique (Sylow q.val E₂) := Sylow.unique_of_normal QE2 hQE2_norm
       have hQE2_eq_def : QE2 = default := by
         simpa using (Unique.default_eq QE2).symm
       have hDefexp :
@@ -3329,8 +3331,8 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
   have hZfac_coprime :
       Pairwise fun i j => Nat.Coprime (Nat.card (Zfac i)) (Nat.card (Zfac j)) := by
     intro i j hij
-    haveI : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
-    haveI : Fact (qOf j).val.Prime := ⟨(qOf j).2⟩
+    have : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
+    have : Fact (qOf j).val.Prime := ⟨(qOf j).2⟩
     have hq_ne : (qOf i).val ≠ (qOf j).val := by
       intro hq
       apply hij
@@ -3339,15 +3341,15 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
       (qOf i).val (qOf j).val hq_ne (Zfac i) (Zfac j) (hZfac_p i) (hZfac_p j)
   have hQfac_p : ∀ i : ι, IsPGroup (qOf i).val (Qfac i) := by
     intro i
-    haveI : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
+    have : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
     simpa [Qfac] using
       IsPGroup.map (show IsPGroup (qOf i).val ((default : Sylow (qOf i).val E₂) : Subgroup E₂) from
         (default : Sylow (qOf i).val E₂).isPGroup') E₂.subtype
   have hQfac_coprime :
       Pairwise fun i j => Nat.Coprime (Nat.card (Qfac i)) (Nat.card (Qfac j)) := by
     intro i j hij
-    haveI : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
-    haveI : Fact (qOf j).val.Prime := ⟨(qOf j).2⟩
+    have : Fact (qOf i).val.Prime := ⟨(qOf i).2⟩
+    have : Fact (qOf j).val.Prime := ⟨(qOf j).2⟩
     have hq_ne : (qOf i).val ≠ (qOf j).val := by
       intro hq
       apply hij
@@ -3418,7 +3420,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
     exact hR_ne ((Subgroup.card_eq_one (H := R)).mp hcard)
   obtain ⟨q0, hq0prime, hq0div⟩ := Nat.exists_prime_and_dvd hR_card_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   obtain ⟨z, hzR, hzne, hXprimeR⟩ :=
     section12_exists_primeOrder_zpowers_of_prime_dvd_card
       (G := G) (B := R) (q := q) hq0div
@@ -3477,7 +3479,7 @@ private theorem section12_exists_tau2_regular_full_exponent_subgroup_of_abelian
     rcases Subgroup.mem_map.mp ha with ⟨y, hy, rfl⟩
     exact le_iSup Zfac i y.property
   have hX_le_P₀ : X ≤ P₀ := hX_le_R.trans hR_le_P₀
-  letI : IsCyclic P₀ := hP₀cyc
+  let : IsCyclic P₀ := hP₀cyc
   have hXsub_eq_OmegaSub :
       X.subgroupOf P₀ =
         (section12OmegaOneSubgroup q (Zfac i)).subgroupOf P₀ := by
@@ -3569,7 +3571,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
   have hP₀ne : P₀ ≠ ⊥ := by
     intro hP₀bot
     have hExpP₀ : Monoid.exponent P₀ = 1 := by
-      haveI : Subsingleton P₀ := by
+      have : Subsingleton P₀ := by
         rw [hP₀bot]
         infer_instance
       exact Monoid.exp_eq_one_of_subsingleton
@@ -3692,7 +3694,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
     have hrE12 : r ∈ E₁₂ := hE2E12 hrE₂
     have hD_norm_E3 : D ≤ Subgroup.normalizer (E₃ : Set G) :=
       hDE.trans hE_norm_E₃
-    haveI : (E₃.subgroupOf E₀).Normal := by
+    have : (E₃.subgroupOf E₀).Normal := by
       simpa [E₀] using
         (Subgroup.normal_subgroupOf_sup_of_le_normalizer
           (H := D) (N := E₃) hD_norm_E3)
@@ -3733,7 +3735,7 @@ private theorem section12_pack_frobenius_from_abelian_tau2_factor
       rw [← hdz_eq_r, hz_one, mul_one]
     have hdE2 : d ∈ E₂ := by
       simpa [hr_eq_d] using hrE₂
-    haveI : (P₀.subgroupOf D).Normal := by
+    have : (P₀.subgroupOf D).Normal := by
       simpa [D] using
         (Subgroup.normal_subgroupOf_sup_of_le_normalizer
           (H := E₁) (N := P₀) hE₁normP₀)
@@ -3889,7 +3891,7 @@ public theorem theorem_12_12_b
             (Subgroup.normal_subgroupOf_iff_le_normalizer hE3norm.1).1 hE3norm.2
           have hD_norm_E3 : D ≤ Subgroup.normalizer (E₃ : Set G) :=
             hDE.trans hE_norm_E3
-          haveI : (E₃.subgroupOf E₀).Normal := by
+          have : (E₃.subgroupOf E₀).Normal := by
             simpa [E₀] using
               (Subgroup.normal_subgroupOf_sup_of_le_normalizer
                 (H := D) (N := E₃) hD_norm_E3)
@@ -3934,7 +3936,7 @@ public theorem theorem_12_12_b
             rw [← hdz_eq_x, hz_one, mul_one]
           have hdE2 : d ∈ E₂ := by
             simpa [hx_eq_d] using hxE2
-          haveI : (P₀.subgroupOf D).Normal := by
+          have : (P₀.subgroupOf D).Normal := by
             simpa [D] using
               (Subgroup.normal_subgroupOf_sup_of_le_normalizer
                 (H := E₁) (N := P₀) hE₁normP₀)
@@ -3989,7 +3991,7 @@ public theorem theorem_12_12_b
       have hP₀ne : P₀ ≠ ⊥ := by
         intro hP₀bot
         have hExpP₀ : Monoid.exponent P₀ = 1 := by
-          haveI : Subsingleton P₀ := by
+          have : Subsingleton P₀ := by
             rw [hP₀bot]
             infer_instance
           exact Monoid.exp_eq_one_of_subsingleton
@@ -4135,7 +4137,7 @@ public theorem theorem_12_12_b
           hM hE.1 hE₀E hE₀ne hcentE₀
     · have hAp : IsPGroup p.val A := by
         have hAelem := (section12_rankTwo_elementary hA).2
-        letI : IsElementaryAbelian p.val A := hAelem
+        let : IsElementaryAbelian p.val A := hAelem
         exact IsElementaryAbelian.isPGroup p.val A
       obtain ⟨S, hAS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
       have hScomm : IsMulCommutative (S : Subgroup G) := by

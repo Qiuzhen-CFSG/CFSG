@@ -129,7 +129,8 @@ public theorem theorem_12_11_source_leaf
       rw [← hP0eq]
       exact section11_ambientSylow_le M PM
     have hP0p : IsPGroup p P0 := by
-      rw [← hP0eq, section10AmbientSylowSubgroup]
+      rw [← hP0eq]
+      dsimp [section10AmbientSylowSubgroup]
       exact IsPGroup.map (p := p) (H := (PM : Subgroup M)) PM.isPGroup' M.subtype
     let ML : Subgroup L := (M ⊓ L).subgroupOf L
     have hMLpi : IsPiSubgroup (G := L) (subgroupPrimeSet H) ML := by

@@ -20,7 +20,7 @@ lemma actsTriviallyOn_subgroup_of_smul_div_mem_and_coprime {G A : Type _} [Group
     (htriv_factor : ∀ a : A, ∀ g : G, g ∈ K → (a • g) * g⁻¹ ∈ H)
     (htriv_H : ∀ a : A, ∀ g : G, g ∈ H → a • g = g) :
     ∀ a : A, ∀ g : G, g ∈ K → a • g = g := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have hp_fact : Fact (Nat.Prime p) := ⟨hp⟩
   intro a g hgK
   -- define x = (a • g) * g⁻¹, which lies in H
   set x := (a • g) * g⁻¹ with hx_def
@@ -119,7 +119,7 @@ Then $A/C_A(G)$ is a $\pi$-group.
 
 -- TODO(tianjiao): how to handle the normal assumption
 public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (π : Set Nat.Primes) (hsolv : IsSolvable G) (hpi : IsPiGroup (π := π) G)
+    (π : Set Nat.Primes) (hsolv : Group.IsSolvable G) (hpi : IsPiGroup (π := π) G)
     (hstab : ∃ (ι : Type*) (Gi : ι → Subgroup G) (next : ι → ι),
       StabilizesNormalSeries (G := G) (A := A) Gi next)
     (hker : (fixingSubgroupOf A G (Set.univ : Set G)).Normal) :
@@ -131,7 +131,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
     intro a ha g
     exact (mem_fixingSubgroup_iff (M := A) (s := Set.univ)).mp ha g (Set.mem_univ g)
   let Q := A ⧸ K
-  haveI : Finite Q := by infer_instance
+  have hQ_finite : Finite Q := by infer_instance
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut (G := A) (M := G)
   have hφ_ker : φ.ker = K := by
     ext a
@@ -151,14 +151,14 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
         exact h g
       exact ha'
   have hφ_lift : K ≤ φ.ker := by rw [hφ_ker]
-  letI : K.Normal := hK_normal
-  haveI : φ.ker.Normal := MonoidHom.normal_ker φ
+  let hK_normal_inst : K.Normal := hK_normal
+  have hφker_normal : φ.ker.Normal := MonoidHom.normal_ker φ
   let ψ' : A ⧸ φ.ker →* MulAut G := QuotientGroup.kerLift φ
   have ψ'_inj : Function.Injective ψ' := QuotientGroup.kerLift_injective φ
   let e : Q ≃* A ⧸ φ.ker := (QuotientGroup.quotientMulEquivOfEq hφ_ker).symm
   let ψ : Q →* MulAut G := ψ'.comp e.toMonoidHom
   have ψ_inj : Function.Injective ψ := ψ'_inj.comp e.injective
-  letI instMD : MulDistribMulAction Q G := MulDistribMulAction.compHom G ψ
+  let instMD : MulDistribMulAction Q G := MulDistribMulAction.compHom G ψ
   have smul_def : ∀ a : Q, ∀ g : G, a • g = (ψ a) • g := by
     intro a g
     exact MulAction.compHom_smul_def ψ a g
@@ -183,7 +183,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
             have H : e (a : Q) = QuotientGroup.mk a := by
               simp [e, QuotientGroup.quotientMulEquivOfEq, Subgroup.quotientEquivOfEq]
             simp [H]
-          _ = (φ a) g := by simp [ψ', QuotientGroup.kerLift]
+          _ = (φ a) g := by simp only [ψ', QuotientGroup.kerLift_mk]
       _ = a • g := rfl
   have hinvQ : ∀ i, IsInvariant Q G (Gi i) := by
     intro i
@@ -211,7 +211,7 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
       have hp_prime : Nat.Prime p.val := p.2
       have h_coprime_G : Nat.Coprime p.val (Nat.card G) :=
         (hp_prime.coprime_iff_not_dvd).mpr h_coprime_G'
-      haveI : Fact (Nat.Prime p.val) := ⟨hp_prime⟩
+      have hp_prime_fact : Fact (Nat.Prime p.val) := ⟨hp_prime⟩
       rcases Sylow.nonempty (p := p.val) (G := Q) with ⟨P⟩
       have hP_pgroup : IsPGroup p.val P := P.isPGroup'
       let P' : Subgroup Q := P
@@ -238,8 +238,8 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
               _ ≤ Gi (Nat.iterate next k top) := hdesc (Nat.iterate next k top)
           have h_normal_H : (Gi (Nat.iterate next (k + 1) top)).Normal := hnormal _
           have h_normal_K : (Gi (Nat.iterate next k top)).Normal := hnormal _
-          haveI : IsInvariant P' G (Gi (Nat.iterate next (k + 1) top)) := hinvP _
-          haveI : IsInvariant P' G (Gi (Nat.iterate next k top)) := hinvP _
+          have h_inv_next : IsInvariant P' G (Gi (Nat.iterate next (k + 1) top)) := hinvP _
+          have h_inv_current : IsInvariant P' G (Gi (Nat.iterate next k top)) := hinvP _
           have h_factor : ∀ a : P', ∀ g : G, g ∈ Gi (Nat.iterate next k top) → (a • g) * g⁻¹ ∈ Gi (Nat.iterate next (k + 1) top) := by
             intro a' g' hg'
             have h := hfactorQ (Nat.iterate next k top) a' g' hg'
@@ -264,10 +264,9 @@ public theorem isPiGroup_quotient_fixingSubgroup_of_stabilizesNormalSeries {G A 
         have ha : (a : Q) = 1 := faithful a (h_triv_all a)
         have hb : (b : Q) = 1 := faithful b (h_triv_all b)
         rw [ha, hb]⟩
-      haveI : Subsingleton P' := h_subsingleton
+      have hP_subsingleton : Subsingleton P' := h_subsingleton
       have hP_trivial : P' = ⊥ := Subgroup.eq_bot_of_subsingleton (H := P')
       have h_card : p.val ∣ Nat.card P' := by
-        haveI : Fact (Nat.Prime p.val) := ⟨hp_prime⟩
         exact P.dvd_card_of_dvd_card h
       have h_card' : Nat.card P' = 1 := by
         calc

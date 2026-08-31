@@ -187,7 +187,7 @@ theorem theorem_6_8_not_le_commutator_of_nontrivial_nilpotent
       simpa using hx_sub
     exact congrArg Subtype.val hx_eq
   have hcomm_lt : commutator H < (⊤ : Subgroup H) := by
-    haveI : Group.IsNilpotent H := hnil
+    have : Group.IsNilpotent H := hnil
     simpa [show commutator H =
         ⁅(⊤ : Subgroup H), (⊤ : Subgroup H)⁆ from rfl] using
       (nilpotent_commutator_lt_self_of_normal (⊤ : Subgroup H) htop_ne)
@@ -203,7 +203,7 @@ public theorem theorem_6_8_commutatorQuotient_bot_commutator
     (H : Subgroup L)
     (hHnorm : H.Normal) :
     commutatorQuotientHypothesis (⊥ : Subgroup L) ⁅H, H⁆ H := by
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hcomm_le_H : ⁅H, H⁆ ≤ H := Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
   refine ⟨bot_le, hcomm_le_H, bot_le, ?_, inferInstance, ?_, hHnorm, ?_⟩
   · infer_instance
@@ -233,7 +233,7 @@ theorem theorem_6_8_familyData_of_Z
       (inducedKernelFamilyOf H Z S)
       (S \ inducedKernelFamilyOf H Z S)
       (inducedKernelFamilyOf H ⁅H, H⁆ S) := by
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hcomm_le_H : ⁅H, H⁆ ≤ H := Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
   exact ⟨hZH,
     inducedKernelFamilyOf_isFamily hSbot hZH,
@@ -440,7 +440,7 @@ theorem theorem_6_8_case_split_of_caseC2
       have hprimeW2 : Nat.Prime (Nat.card W2) := by
         rw [hcard]
         exact hp
-      haveI : Fact (Nat.Prime (Nat.card W2)) := ⟨hprimeW2⟩
+      have : Fact (Nat.Prime (Nat.card W2)) := ⟨hprimeW2⟩
       have hItop : I = ⊤ := by
         rcases Subgroup.eq_bot_or_eq_top_of_prime_card I with hbot | htop
         · exact (hI_ne hbot).elim
@@ -464,10 +464,10 @@ theorem theorem_6_8_caseA_Z_inf_W_eq_bot
   classical
   rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, _hSbot, _hT, _hbranch⟩
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -528,8 +528,8 @@ theorem theorem_6_8_hypothesis_6_1_of_hypothesis_5_2
     hypothesis_6_1_statement H S T := by
   rcases h68 with ⟨hsemi, _hodd, _hHne, hnil, _hTI, hSbot, _hT, _hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  have hHsolv : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hHsolv : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   exact ⟨h52, hHnorm, hHsolv, hSbot⟩
 
@@ -542,8 +542,8 @@ theorem theorem_6_8_hypothesis_5_2_setup_of_hypothesis
     (h68 : theorem_6_8_hypothesis L H W1 W2 W S T) :
     Section5.hypothesis_5_2_setup_statement S := by
   rcases h68 with ⟨hsemi, _hodd, hHne, hnil, _hTI, hSbot, _hT, _hcase⟩
-  have hHsolv : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hHsolv : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   have hbotNorm : (⊥ : Subgroup L).Normal := inferInstance
   have hbotlt : (⊥ : Subgroup L) < H := by
@@ -696,7 +696,7 @@ theorem theorem_6_8_hypothesis_5_2_a_of_hypothesis
     Section5.hypothesis_5_2_a_statement S := by
   rcases h68 with ⟨hsemi, hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   intro X
   constructor
   · exact inducedKernelFamily_conjugate_mem hSbot X.2
@@ -763,7 +763,7 @@ theorem theorem_6_8_hypothesis_5_2_b_of_hypothesis
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   let A : Set G := subgroupImagePuncturedSet L H
   have hTI_A : Section2.IsTISubsetWithNormalizer A L := by
     simpa [A] using hTI
@@ -900,10 +900,10 @@ theorem theorem_6_8_hypothesis_5_2_of_caseC2
     (hcase : caseC2Hypothesis L H W1 W2 W T) :
     Section5.hypothesis_5_2_statement S T := by
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hsetup : Section5.hypothesis_5_2_setup_statement S :=
     theorem_6_8_hypothesis_5_2_setup_of_hypothesis h68
   have hCtx :=
@@ -955,10 +955,10 @@ public theorem theorem_6_8_caseC2_nonirreducible_mem_piColumn
         χ = Section4Scratch.piColumn d.piChar j := by
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm⟩
   refine ⟨d, ?_⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       hω, h43b, _h43c, _h43d, h45a, h45b, _hτcyclic,
@@ -987,10 +987,10 @@ theorem theorem_6_8_caseC2_nonbase_piColumn_mem_S
     ∀ j : d.J, j ≠ d.j0 →
       Section4Scratch.piColumn d.piChar j ∈ S := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   intro j hj
   rcases h68 with ⟨_hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩
   rcases d.fullHypothesis with
@@ -1035,10 +1035,10 @@ theorem theorem_6_8_caseC2_nonbase_piColumn_not_irreducible
       ¬ Section1.IsIrreducibleCharacterOnGroup
         (Section4Scratch.piColumn d.piChar j) := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   intro j
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
@@ -1058,10 +1058,10 @@ theorem theorem_6_8_caseC2_xChar_injective
     letI : DecidableEq d.J := d.instDecidableEqJ
     Function.Injective d.xChar := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       hω, h43b, _h43c, _h43d, h45a, _h45b, _hτcyclic,
@@ -1082,10 +1082,10 @@ theorem theorem_6_8_caseC2_piColumn_injective
     letI : DecidableEq d.J := d.instDecidableEqJ
     Function.Injective (fun j : d.J => Section4Scratch.piColumn d.piChar j) := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, h45a, _h45b, _hτcyclic,
@@ -1146,10 +1146,10 @@ theorem theorem_6_8_caseC2_nonirreducible_mem_piColumn_of_fullData
     ∃ j : d.J, j ≠ d.j0 ∧
       χ = Section4Scratch.piColumn d.piChar j := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨_h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       hω, h43b, _h43c, _h43d, h45a, h45b, _hτcyclic,
@@ -1179,10 +1179,10 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_S_eq
       ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
         Nat.card W2 - 1 := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   let redS : Finset (Section1.ClassFunction L) :=
     S.filter fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ
   let nonbaseJ : Finset d.J := Finset.univ.erase d.j0
@@ -1354,10 +1354,10 @@ theorem theorem_6_8_caseC2_nonbase_piColumn_mem_SZ_of_reducible_card_eq
     ∀ j : d.J, j ≠ d.j0 →
       Section4Scratch.piColumn d.piChar j ∈ SZ := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   intro j hj
   rcases h68 with ⟨_hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩
   rcases hfamily with ⟨_hZH, hSZ, _hXeq, _hY⟩
@@ -1389,10 +1389,10 @@ theorem theorem_6_8_caseC2_nonirreducible_mem_SZ_piColumn
     ∃ j : d.J, j ≠ d.j0 ∧
       χ = Section4Scratch.piColumn d.piChar j := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases hfamily with ⟨_hZH, hSZ, _hXeq, _hY⟩
   have hInd : Section5.inducedFromNonkernelFamily_statement H H SZ := by
     intro X hX
@@ -1430,10 +1430,10 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_le
       ¬ Section1.IsIrreducibleCharacterOnGroup χ).card ≤
         Nat.card W2 - 1 := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   let redSZ : Finset (Section1.ClassFunction L) :=
     SZ.filter fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ
   let nonbaseJ : Finset d.J := Finset.univ.erase d.j0
@@ -1524,10 +1524,10 @@ theorem theorem_6_8_caseC2_reducible_subfamily_card_SZ_eq_of_lower_bound
       ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
         Nat.card W2 - 1 := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hupper :
       (SZ.filter fun χ =>
         ¬ Section1.IsIrreducibleCharacterOnGroup χ).card ≤
@@ -1578,10 +1578,10 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
   classical
   rcases h68 with ⟨hsemi, _hodd, hHne, hnil, _hTI, _hSbot, _hT, _hcase⟩
   rcases hcase with ⟨⟨d⟩, _hprime, hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -1592,11 +1592,11 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
     ⟨_hsemi42, _hHall, _hcyc1, hW1card_ne, _hcyc2, _hW2card_ne,
       hcentW1, _hW1W, _hW2W, _hW, _hWodd⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   let H1 : Subgroup L := ⁅H,H⁆
   have hH1_le_H : H1 ≤ H :=
     Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
-  haveI : H1.Normal := by
+  have : H1.Normal := by
     dsimp [H1]
     infer_instance
   have hH_not_le_H1 : ¬ H ≤ H1 := by
@@ -1612,7 +1612,7 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
         simpa using hx_sub
       exact congrArg Subtype.val hx_eq
     have hcomm_lt : commutator H < (⊤ : Subgroup H) := by
-      haveI : Group.IsNilpotent H := hnil
+      have : Group.IsNilpotent H := hnil
       simpa [show commutator H =
           ⁅(⊤ : Subgroup H), (⊤ : Subgroup H)⁆ from rfl] using
         (nilpotent_commutator_lt_self_of_normal (⊤ : Subgroup H) htop_ne)
@@ -1626,8 +1626,8 @@ theorem theorem_6_8_frobeniusQuotient_commutator_of_caseC2
     theorem_6_8_isComplement_of_semidirect_top hsemi
   have hcopHW1 : Nat.Coprime (Nat.card H) (Nat.card W1) :=
     theorem_6_8_card_coprime_kernel_complement_of_hypothesis_4_2 h42copy
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   have hcompQuot :
@@ -1748,14 +1748,14 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_complement
   let H1 : Subgroup L := ⁅H,H⁆
   have hH1_le_H : H1 ≤ H :=
     Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
-  haveI : H1.Normal := by
+  have : H1.Normal := by
     dsimp [H1]
     infer_instance
   have hH_not_le_H1 : ¬ H ≤ H1 := by
     simpa [H1] using theorem_6_8_not_le_commutator_of_nontrivial_nilpotent
       hHne hnil
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   have hfrobQuot :
@@ -1795,7 +1795,7 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_frobenius
       hHtopNorm.conj_mem (⟨n, trivial⟩ : (⊤ : Subgroup L)) hn_top
         (⟨g, trivial⟩ : (⊤ : Subgroup L))
     exact hconj_top
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   let R : Subgroup L := Rtop.map (⊤ : Subgroup L).subtype
   have hcomp : H.IsComplement' R := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
@@ -1880,7 +1880,7 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_frobenius
   let H1 : Subgroup L := ⁅H,H⁆
   have hH1_le_H : H1 ≤ H :=
     Subgroup.commutator_le_left (H₁ := H) (H₂ := H)
-  haveI : H1.Normal := by
+  have : H1.Normal := by
     dsimp [H1]
     infer_instance
   have hH_not_le_H1 : ¬ H ≤ H1 := by
@@ -1896,7 +1896,7 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_frobenius
         simpa using hx_sub
       exact congrArg Subtype.val hx_eq
     have hcomm_lt : commutator H < (⊤ : Subgroup H) := by
-      haveI : Group.IsNilpotent H := hnil
+      have : Group.IsNilpotent H := hnil
       simpa [show commutator H =
           ⁅(⊤ : Subgroup H), (⊤ : Subgroup H)⁆ from rfl] using
         (nilpotent_commutator_lt_self_of_normal (⊤ : Subgroup H) htop_ne)
@@ -1906,8 +1906,8 @@ public theorem theorem_6_8_frobeniusQuotient_commutator_of_frobenius
       intro x _hx
       exact hle x.property
     exact hcomm_lt.ne hcomm_eq_top
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   have hfrobQuot :
@@ -2164,8 +2164,8 @@ theorem theorem_6_8_frobenius_card_dvd_Z_sub_one
   classical
   rcases theorem_6_8_frobeniusWithKernel_top_complement_data hfrob with
     ⟨hHnorm, R, hcompR, _hRne, hcentElem⟩
-  haveI : H.Normal := hHnorm
-  haveI : Z.Normal := hZnorm
+  have : H.Normal := hHnorm
+  have : Z.Normal := hZnorm
   have hcent :
       ∀ r : R, r ≠ 1 → Section2.centralizerIn H (r : L) = ⊥ := by
     intro r hr
@@ -2234,7 +2234,7 @@ public theorem theorem_6_8_inducedKernelFamily_irreducible_of_frobenius
   classical
   rcases theorem_6_8_frobeniusWithKernel_top_complement_data hfrob with
     ⟨hHnorm, R, hcomp, _hRne, hcent⟩
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   refine theorem_6_8_inducedKernelFamily_irreducible_of_frobenius_complement
     hSbot hcomp ?_
   intro r hr
@@ -2388,10 +2388,10 @@ theorem theorem_6_8_caseC2_X_irreducible_of_nonbase_piColumn_mem_SZ
   rcases theorem_6_8_caseC2_nonirreducible_mem_piColumn
       h68 hcase hχS hχnotirr with
     ⟨d, hχpi⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases hχpi with ⟨j, hj, hχeq⟩
   have hχSZ : χ ∈ SZ := by
     rw [hχeq]
@@ -2500,7 +2500,7 @@ theorem theorem_6_8_constantOnSubgroupImageNonidentity_of_prime_card_zpow_nontri
       ψ ((((z ^ n : Z) : L) : G)) = ψ ((z : L) : G)) :
     constantOnSubgroupImageNonidentity L Z ψ := by
   intro z1 z2 hz1 hz2
-  haveI : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
+  have : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
   have hz2pow : z2 ∈ Subgroup.zpowers z1 := by
     exact mem_zpowers_of_prime_card (G := Z) (p := Nat.card Z) rfl hz1
   rcases Subgroup.mem_zpowers_iff.mp hz2pow with ⟨n, hn⟩
@@ -2515,7 +2515,7 @@ theorem theorem_6_8_constantCentralizerOrderOnNonidentity_of_prime_card
     (hprime : Nat.Prime (Nat.card Z)) :
     constantCentralizerOrderOnNonidentity Z L0 := by
   intro z1 z2 hz1 hz2
-  haveI : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
+  have : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
   have hz2pow : z2 ∈ Subgroup.zpowers z1 := by
     exact mem_zpowers_of_prime_card (G := Z) (p := Nat.card Z) rfl hz1
   have hz1pow : z1 ∈ Subgroup.zpowers z2 := by
@@ -2565,7 +2565,7 @@ theorem theorem_6_8_sylow_of_nonabelianPQuotient_bot
     ∃ P : Sylow p L, (P : Subgroup L) = H := by
   rcases hpQ with
     ⟨hbotH, hbotnormH, hbotnorm, hHnorm, hpprime, hQp, hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hpQ' : nonabelianPQuotient (⊥ : Subgroup L) H p :=
     ⟨hbotH, hbotnormH, hbotnorm, hHnorm, hpprime, hQp, hnoncomm⟩
   have hHp : IsPGroup p H :=
@@ -2996,7 +2996,7 @@ theorem theorem_6_8_isCoprime_int_orderOf_of_prime_card_zpow_ne_one
     {n : ℤ} (hzn : z ^ n ≠ 1) :
     IsCoprime n (orderOf z : ℤ) := by
   classical
-  haveI : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
+  have : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
   have horder : orderOf z = Nat.card Z := by
     exact orderOf_eq_card_of_forall_mem_zpowers
       (fun x : Z => mem_zpowers_of_prime_card (G := Z) (p := Nat.card Z) rfl hz)
@@ -3252,7 +3252,7 @@ theorem theorem_6_8_caseB_Y_dade_agreement_subgroupImage
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, hT, hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hχpunct : Section5.integerSpanOn Y Section5.puncturedSet χ :=
     (theorem_6_8_Y_punctured_span_iff_subgroupImage hSbot hfamily χ).mpr hχA
   have hYsubS : Y ⊆ S :=
@@ -3535,7 +3535,7 @@ theorem theorem_6_8_commutator_ne_bot_of_nonabelianPQuotient_bot
   intro hcommbot
   have hcenter : Subgroup.center H = ⊤ := by
     rwa [commutator_eq_bot_iff_center_eq_top] at hcommbot
-  letI : CommGroup H := Group.commGroupOfCenterEqTop hcenter
+  let : CommGroup H := Group.commGroupOfCenterEqTop hcenter
   apply hnoncomm
   refine ⟨Std.Commutative.mk ?_⟩
   intro a b
@@ -3557,11 +3557,11 @@ theorem theorem_6_8_caseA_Z_ne_bot
     Z ≠ ⊥ := by
   rcases hA with ⟨_hcenterW2, hZeq⟩
   subst Z
-  haveI : Group.IsNilpotent H := hnil
+  have : Group.IsNilpotent H := hnil
   have hcomm_ne : commutator H ≠ ⊥ :=
     theorem_6_8_commutator_ne_bot_of_nonabelianPQuotient_bot hpQ
   let N : Subgroup H := commutator H
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N]
     infer_instance
   have hInf_ne : N ⊓ Subgroup.center H ≠ ⊥ :=
@@ -3598,8 +3598,8 @@ theorem theorem_6_8_caseA_Z_center_normal
   subst Z
   constructor
   · exact inf_le_left
-  · haveI : (centerIn H).Normal := theorem_6_8_centerIn_normal_of_normal
-    haveI : ⁅H,H⁆.Normal := Subgroup.commutator_normal H H
+  · have : (centerIn H).Normal := theorem_6_8_centerIn_normal_of_normal
+    have : ⁅H,H⁆.Normal := Subgroup.commutator_normal H H
     exact Subgroup.normal_inf_normal (centerIn H) ⁅H,H⁆
 
 theorem theorem_6_8_caseB_Z_center_normal_ne_bot
@@ -3618,10 +3618,10 @@ theorem theorem_6_8_caseB_Z_center_normal_ne_bot
   refine ⟨hW2ne, hW2center, ?_⟩
   rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, _hSbot, _hT, _hcase⟩
   rcases hcaseC2 with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -3730,6 +3730,7 @@ theorem theorem_6_8_not_subgroupInKernel_of_restriction_eq_nonprincipal
     exact (mul_right_inj' hec).mp (by simpa [mul_comm] using hmul)
   simp [Section1.principalCharacter, hphi]
 
+set_option backward.isDefEq.respectTransparency false in
 theorem theorem_6_8_center_restriction_smul_of_irreducible
     {L : Type u} [Group L] [Finite L]
     {H Z : Subgroup L}
@@ -3743,8 +3744,8 @@ theorem theorem_6_8_center_restriction_smul_of_irreducible
   classical
   have hZH : Z ≤ H := fun z hz => (hZcent hz).1
   rcases hθ with ⟨n, ρ, hρirr, hθeq⟩
-  haveI : Representation.IsIrreducible ρ := hρirr
-  haveI : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
+  have : Representation.IsIrreducible ρ := hρirr
+  have : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
   have hdim_ne : ((Module.finrank ℂ (Fin n → ℂ) : ℂ) ≠ 0) := by
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
@@ -4184,11 +4185,11 @@ theorem theorem_6_8_induced_constituent_mem_X_of_nonzero_central_decomposition
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   rcases hfamily with ⟨hZH, hSZ, hXeq, _hY⟩
   rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68' hcase hB with
     ⟨_hZne, hZcent, hZnorm⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hdegree : Section1.degree (ψ i) = (e i : ℂ) :=
     theorem_6_8_degree_eq_coeff_of_nonzero_central_decomposition
       hZcent e ψ hφ hψirr hdecomp horth i hei
@@ -4298,7 +4299,7 @@ theorem theorem_6_8_theorem_6_7_base_hypothesis_ambient_card_of_caseB
   refine ⟨Pamb, ?_, ?_⟩
   · rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68' hcase hB with
       ⟨hZne, hZcent, hZnorm⟩
-    haveI : Z.Normal := hZnorm
+    have : Z.Normal := hZnorm
     have hZprimeMap : Nat.Prime (Nat.card (Z.map L.subtype)) := by
       have hcard : Nat.card (Z.map L.subtype) = Nat.card Z := by
         exact Subgroup.card_map_of_injective (K := Z) (f := L.subtype)
@@ -4359,10 +4360,10 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
   rcases h68 with ⟨hsemi, _hodd, hHne, hnil, _hTI, _hSbot, _hT, _hcase⟩
   rcases hB with ⟨_hW2ne, _hW2center, hW2comm, hZeq⟩
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -4373,8 +4374,8 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
     ⟨_hsemi42, _hHall, _hcyc1, hW1card_ne, _hcyc2, _hW2card_ne,
       hcentW1, _hW1W, _hW2W, _hW, _hWodd⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  haveI : Z.Normal := hZnorm
+  have : H.Normal := hHnorm
+  have : Z.Normal := hZnorm
   have hZ_le_H : Z ≤ H := by
     intro z hz
     exact (hZcenter hz).1
@@ -4389,8 +4390,8 @@ theorem theorem_6_8_frobeniusQuotient_Z_of_caseB
     theorem_6_8_isComplement_of_semidirect_top hsemi
   have hcopHW1 : Nat.Coprime (Nat.card H) (Nat.card W1) :=
     theorem_6_8_card_coprime_kernel_complement_of_hypothesis_4_2 h42copy
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   have hcompQuot :
@@ -4512,10 +4513,10 @@ theorem theorem_6_8_caseA_quotient_centralizerIn_eq_W2_map
   classical
   rcases h68 with ⟨hsemi, _hodd, _hHne, hnil, _hTI, _hSbot, _hT, _hbranch⟩
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -4526,8 +4527,8 @@ theorem theorem_6_8_caseA_quotient_centralizerIn_eq_W2_map
     ⟨_hsemi42, _hHall, _hcyc1, _hW1card_ne, _hcyc2, _hW2card_ne,
       hcentW1, _hW1W, _hW2W, _hW, _hWodd⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  haveI : Z.Normal := hZnorm
+  have : H.Normal := hHnorm
+  have : Z.Normal := hZnorm
   have hZ_le_H : Z ≤ H := by
     rcases hA with ⟨_hcenterW2, hZeq⟩
     rw [hZeq]
@@ -4536,8 +4537,8 @@ theorem theorem_6_8_caseA_quotient_centralizerIn_eq_W2_map
     theorem_6_8_isComplement_of_semidirect_top hsemi
   have hcopHW1 : Nat.Coprime (Nat.card H) (Nat.card W1) :=
     theorem_6_8_card_coprime_kernel_complement_of_hypothesis_4_2 h42copy
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   change ∀ r : W1.map q, r ≠ 1 →
@@ -4666,10 +4667,10 @@ theorem theorem_6_8_caseA_quotient_hypothesis_4_2
   rcases hcase with ⟨⟨d⟩, hprime, hW2comm'⟩
   have hcase' : caseC2Hypothesis L H W1 W2 W T :=
     ⟨⟨d⟩, hprime, hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -4679,8 +4680,8 @@ theorem theorem_6_8_caseA_quotient_hypothesis_4_2
     ⟨_hsemi42, hHall, hcyc1, hW1card_ne, hcyc2, hW2card_ne,
       _hcentW1, hW1W, hW2W, hWprod, hWodd⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  haveI : Z.Normal := hZnorm
+  have : H.Normal := hHnorm
+  have : Z.Normal := hZnorm
   have hZ_le_H : Z ≤ H := by
     rcases hA with ⟨_hcenterW2, hZeq⟩
     rw [hZeq]
@@ -4692,7 +4693,7 @@ theorem theorem_6_8_caseA_quotient_hypothesis_4_2
     theorem_6_8_isComplement_of_semidirect_top hsemi
   have hcompQuot : (H.map q).IsComplement' (W1.map q) :=
     isComplement'_map_mk'_of_le_isComplement' H W1 Z hZ_le_H hcomp
-  haveI : (H.map q).Normal :=
+  have : (H.map q).Normal :=
     hHnorm.map q (QuotientGroup.mk'_surjective Z)
   have hsemiQuot :
       Section2.IsInternalSemidirectProduct
@@ -5016,6 +5017,7 @@ theorem theorem_6_8_subgroupMap_mk'_mem_map_iff_of_inf_eq_bot
   · intro hxA
     exact ⟨(x : L), hxA, rfl⟩
 
+set_option backward.isDefEq.respectTransparency false in
 theorem theorem_6_8_caseA_quotient_notation_3_3
     {G : Type u} [Group G] [Finite G]
     {L : Subgroup G}
@@ -5041,10 +5043,10 @@ theorem theorem_6_8_caseA_quotient_notation_3_3
             MonoidHom.subgroupMap_surjective (QuotientGroup.mk' Z) W⟩)
         (d.omega i j)) := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
@@ -5292,14 +5294,14 @@ public theorem theorem_6_8_inducedKernelFamily_irreducible_of_frobeniusQuotient
   classical
   rcases hfrob with
     ⟨hH1norm, hH1H, hHnorm, R, hcomp, _hHbar_ne, _hRne, hcent⟩
-  haveI : H1.Normal := hH1norm
-  haveI : H.Normal := hHnorm
+  have : H1.Normal := hH1norm
+  have : H.Normal := hHnorm
   intro η hηY
   rcases (hY.2 η).mp hηY with ⟨θ, hθirr, hθker, hθne, hηeq⟩
   rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
   let q : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Hbar : Subgroup (L ⧸ H1) := H.map q
-  haveI : Hbar.Normal := QuotientGroup.map_normal H1 H
+  have : Hbar.Normal := QuotientGroup.map_normal H1 H
   have hθkerρ : Section1.subgroupInKernel' ρ.character (H1.subgroupOf H) := by
     simpa [hθeq] using hθker
   have hkerRep : Section1.subgroupInRepresentationKernel ρ (H1.subgroupOf H) :=
@@ -5683,7 +5685,7 @@ public theorem theorem_6_8_reducible_subfamily_card_SZ_lower_of_quotient_pf45
         ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
   classical
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
-  letI : Fintype {j : J // j ∈ Finset.univ.erase j0} :=
+  let : Fintype {j : J // j ∈ Finset.univ.erase j0} :=
     Finset.Subtype.fintype (Finset.univ.erase j0)
   let θbar : {j : J // j ∈ Finset.univ.erase j0} →
       Section1.ClassFunction (H.map q) :=
@@ -5763,10 +5765,10 @@ public theorem theorem_6_8_caseA_reducible_subfamily_card_SZ_lower_of_quotient_p
     (Finset.univ.erase d.j0).card ≤
       (SZ.filter fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   let eW : W ≃* W.map q :=
     MulEquiv.ofBijective (q.subgroupMap W)
@@ -5809,10 +5811,10 @@ public theorem theorem_6_8_caseA_reducible_subfamily_card_SZ_nat_lower_of_quotie
     Nat.card W2 - 1 ≤
       (SZ.filter fun χ => ¬ Section1.IsIrreducibleCharacterOnGroup χ).card := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hlower :=
     theorem_6_8_caseA_reducible_subfamily_card_SZ_lower_of_quotient_pf45
       h68 hcase hA hSZ d
@@ -5845,16 +5847,16 @@ public theorem theorem_6_8_caseA_reducible_subfamily_card_SZ_eq_of_quotient_pf45
       ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
         Nat.card W2 - 1 := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hHnorm : H.Normal := by
     rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, _hSbot, _hT, _hbranch⟩
     exact theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hZnorm : Z.Normal := (theorem_6_8_caseA_Z_center_normal hA).2
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hSZ : inducedKernelFamily H Z SZ := by
     rcases hfamily with ⟨_hZH, hSZ, _hXeq, _hY⟩
     exact hSZ
@@ -5883,7 +5885,7 @@ theorem theorem_6_8_Z_center_normal_ne_bot_of_caseData
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, _hodd, _hHne, hnil, _hTI, _hSbot, _hT, _hbranch⟩
   rcases hcase with hA | hB
-  · haveI : H.Normal := hHnorm
+  · have : H.Normal := hHnorm
     have hZne : Z ≠ ⊥ := theorem_6_8_caseA_Z_ne_bot hnil hpQ hA
     have hZdata := theorem_6_8_caseA_Z_center_normal hA
     exact ⟨hZne, hZdata.1, hZdata.2⟩
@@ -5975,10 +5977,10 @@ theorem theorem_6_8_caseA_X_data_of_caseC2_SZ_count
       (Or.inl hA) with
     ⟨hZne, hZcenter, hZnorm⟩
   rcases hcase with ⟨⟨d⟩, hprime, hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hScount :
       (S.filter fun χ =>
         ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
@@ -6025,10 +6027,10 @@ theorem theorem_6_8_caseA_X_data_of_quotient_pf45
           ¬ Section1.subgroupInKernel' χ Z) ∧
       coherentFamily X T := by
   classical
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   have hSZcount :
       (SZ.filter fun χ =>
         ¬ Section1.IsIrreducibleCharacterOnGroup χ).card =
@@ -6089,7 +6091,7 @@ theorem theorem_6_8_Y_argumentPow_closed_of_familyData
   classical
   rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, _hSbot, _hT, _hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   rcases hfamily with ⟨_hZH, _hSZ, _hXeq, hY⟩
   have hH_dvd_G : Nat.card H ∣ Nat.card G :=
     dvd_trans (Subgroup.card_subgroup_dvd_card H) (Subgroup.card_subgroup_dvd_card L)
@@ -6162,7 +6164,7 @@ theorem theorem_6_8_Y_card_gt_one_of_familyData
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T := h68
   rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   rcases theorem_6_8_exists_Y_degree_relIndex h68' hfamily with
     ⟨η, hηY, _hηdeg⟩
   have hY : inducedKernelFamily H ⁅H,H⁆ Y := hfamily.2.2.2
@@ -6204,7 +6206,7 @@ theorem theorem_6_8_caseB_zpow_invariance_of_pf59_Hsharp_step
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T := h68
   rcases h68 with ⟨hsemi, _hodd, _hHne, _hnil, _hTI, hSbot, _hT, _hcase⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   let A : Set G := subgroupImagePuncturedSet L H
   have h22 : Section2.Hypothesis2 A L (fun _ : G => ⊥) := by
     simpa [A] using theorem_6_8_hypothesis2_subgroupImagePuncturedSet h68'
@@ -6309,7 +6311,7 @@ theorem theorem_6_8_scalarProduct_regularCharacter_right
     (φ : Section1.ClassFunction G) :
     Section1.scalarProduct G φ (regularCharacter G) = φ 1 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   unfold Section1.scalarProduct regularCharacter
   rw [Finset.sum_eq_single (1 : G)]
   · simp only [if_true]
@@ -6586,12 +6588,12 @@ theorem theorem_6_8_degree_one_of_prime_card_irreducible
     φ 1 = 1 := by
   classical
   rcases hφ with ⟨n, ρ, hρirr, hφeq⟩
-  haveI : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
+  have : Fact (Nat.Prime (Nat.card Z)) := ⟨hprime⟩
   have hcyc : IsCyclic Z := isCyclic_of_prime_card (α := Z) (p := Nat.card Z) rfl
-  letI : CommGroup Z := hcyc.commGroup
-  letI : Std.Commutative (α := Z) (· * ·) := ⟨mul_comm⟩
-  letI : IsMulCommutative Z := ⟨inferInstance⟩
-  letI : Representation.IsIrreducible ρ := hρirr
+  let : CommGroup Z := hcyc.commGroup
+  let : Std.Commutative (α := Z) (· * ·) := ⟨mul_comm⟩
+  let : IsMulCommutative Z := ⟨inferInstance⟩
+  let : Representation.IsIrreducible ρ := hρirr
   have hfin : Module.finrank ℂ (Fin n → ℂ) = 1 :=
     Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative (ρ := ρ)
   rw [hφeq]
@@ -6907,7 +6909,7 @@ public theorem theorem_6_8_frobeniusWithKernel_centralizerIn_eq_bot_of_not_mem
   intro x hxL hxnotH
   rcases hfrob with ⟨hHL, hHnormal, R, hcomp, _hHne, _hRne, hfixedR⟩
   let Hloc : Subgroup L0 := H.subgroupOf L0
-  haveI : Hloc.Normal := by simpa [Hloc] using hHnormal
+  have : Hloc.Normal := by simpa [Hloc] using hHnormal
   let xL : L0 := ⟨x, hxL⟩
   have hxnotHloc : xL ∉ Hloc := by
     intro hxHloc
@@ -7069,10 +7071,10 @@ theorem theorem_6_8_caseA_W1_centralizerIn_Z_eq_bot_of_caseC2
     ∀ r : W1, r ≠ 1 → Section2.centralizerIn Z (r : L) = ⊥ := by
   classical
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -7128,7 +7130,7 @@ theorem theorem_6_8_caseA_constantCentralizerOrderOnNonidentity_local
     constantCentralizerOrderOnNonidentity Z (⊤ : Subgroup L) := by
   rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hZcenter : Z ≤ centerIn H := (theorem_6_8_caseA_Z_center_normal hA).1
   have hfixed : ∀ r : W1, r ≠ 1 → Section2.centralizerIn Z (r : L) = ⊥ :=
     theorem_6_8_caseA_W1_centralizerIn_Z_eq_bot_of_branch
@@ -7199,10 +7201,10 @@ theorem theorem_6_8_theorem_6_7_base_hypothesis_ambient_card_of_caseA
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hZne : Z ≠ ⊥ := theorem_6_8_caseA_Z_ne_bot hnil ⟨p, hpQ⟩ hA
   have hZdata := theorem_6_8_caseA_Z_center_normal hA
-  haveI : Z.Normal := hZdata.2
+  have : Z.Normal := hZdata.2
   rcases theorem_6_8_sylow_of_nonabelianPQuotient_bot h68' hpQ with
     ⟨PL, hPL⟩
   have hnormHmap :
@@ -7441,7 +7443,7 @@ theorem theorem_6_8_regular_add_coefficient_multiple_of_caseB_familyData
   rcases hpQ with ⟨p, hpQp⟩
   rcases hpQp with
     ⟨hbotH, hbotnormH, hbotnorm, hHnorm, hpprime, hQp, hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hpQp' : nonabelianPQuotient (⊥ : Subgroup L) H p :=
     ⟨hbotH, hbotnormH, hbotnorm, hHnorm, hpprime, hQp, hnoncomm⟩
   rcases theorem_6_8_theorem_6_7_base_hypothesis_ambient_card_of_caseB
@@ -7833,7 +7835,7 @@ theorem theorem_6_8_mem_Y_degree_eq_cardW1
     Section1.degree η = (Nat.card W1 : ℂ) := by
   rcases hfamily with ⟨_hZH, _hSZ, _hXeq, hY⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hH1norm : ⁅H,H⁆.Normal := Subgroup.commutator_normal H H
   have hcommHyp : commutatorQuotientHypothesis (⊥ : Subgroup L) ⁅H,H⁆ H :=
     theorem_6_8_commutatorQuotient_bot_commutator H hHnorm
@@ -8028,7 +8030,7 @@ theorem theorem_6_8_induced_constituent_pf54_projection_data
                 Xbig) := by
   classical
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   let χsub : {χ : Section1.ClassFunction L // χ ∈ X ∪ Y} :=
     ⟨Section1.inducedCF H (ψ i), Finset.mem_union.mpr (Or.inl hIndX)⟩
   have hηU : η₁ ∈ X ∪ Y := Finset.mem_union.mpr (Or.inr hη₁Y)
@@ -8452,7 +8454,7 @@ theorem theorem_6_8_induced_constituent_pf54_projection_scalar_data
             -Section1.scalarProduct G Yrem (τ₁ η) := by
   classical
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   rcases theorem_6_8_induced_constituent_pf54_projection_data
       hSbot hsemi hfamily hZcomm R hsetup h52a h52b h52c h52d h52e
       e ψ i hdegree hIndX hη₁Y with
@@ -8500,7 +8502,7 @@ theorem theorem_6_8_integerSpan_weightedFamilySum_nat_of_nonzero
     (hφ : ∀ i, e i ≠ 0 → Section5.integerSpan S (φ i)) :
     Section5.integerSpan S
       (Section1.weightedFamilySum (fun i => (e i : ℂ)) φ) := by
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   have hsum :=
     theorem_6_8_integerSpan_sum_zsmul_of_nonzero
       (S := S) (s := Finset.univ) (z := fun i => (e i : ℤ)) (φ := φ)
@@ -8530,7 +8532,7 @@ theorem theorem_6_8_induced_shift_eq_weighted_alpha_of_decomposition
       Section1.weightedFamilySum (fun i => (e i : ℂ))
         (fun i => Section1.inducedCF H (ψ i) - (e i : ℂ) • η₁) := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   have hdecompL :
       Section1.inducedCF Z φ =
         Section1.weightedFamilySum (fun i => (e i : ℂ))
@@ -8557,7 +8559,7 @@ theorem theorem_6_8_linearMap_weightedFamilySum
     T (Section1.weightedFamilySum w φ) =
       Section1.weightedFamilySum w (fun i => T (φ i)) := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   have hsum :
       Section1.weightedFamilySum w φ = ∑ i : ι, w i • φ i := by
     ext l
@@ -8597,7 +8599,7 @@ theorem theorem_6_8_sum_sq_coeff_eq_relIndex_of_subgroup_decomposition_nonzero
     (letI : Fintype ι := Fintype.ofFinite ι;
       (∑ i : ι, (e i : ℂ) * (e i : ℂ)) = (Z.relIndex H : ℂ)) := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   have hpoint := congrFun hdecomp (1 : H)
   have hleft :
       Section1.inducedCF (Z.subgroupOf H) (Section1.subgroupOfClassFunction φ) (1 : H) =
@@ -8660,9 +8662,9 @@ theorem theorem_6_8_central_subgroup_induction_decomposition
       (Section1.subgroupOfClassFunction (T := H) φ)
   rcases Theory.Character.irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
-  letI : Finite ι := Finite.of_fintype ι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : Finite ι := Finite.of_fintype ι
+  let : DecidableEq ι := Classical.decEq ι
   rcases hχ with ⟨hirr, hall, hinj⟩
   let ψ : ι → Section1.ClassFunction H := fun i => Section1.ofConjClassFunction (χ i)
   have hχcomplete :
@@ -8836,9 +8838,9 @@ theorem theorem_6_8_induced_span_of_principal_scalar_zero
       (Section1.subgroupOfClassFunction (T := H) φ)
   rcases Theory.Character.irreducible_characters_form_basis (G := H) with
     ⟨ι, hι, χ, hχ, _b, _hb⟩
-  letI : Fintype ι := hι
-  letI : Finite ι := Finite.of_fintype ι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : Finite ι := Finite.of_fintype ι
+  let : DecidableEq ι := Classical.decEq ι
   rcases hχ with ⟨hirr, hall, hinj⟩
   let ψ : ι → Section1.ClassFunction H := fun i => Section1.ofConjClassFunction (χ i)
   have hχcomplete :
@@ -9274,7 +9276,7 @@ theorem theorem_6_8_scalarProduct_inducedCF_nonprincipal_Y_eq_zero_of_caseB_fami
       (Section3.isVirtualCharacter_of_irreducibleCharacterOnGroup hηirr)
   rw [Section1.inducedClassFunction_frobenius_general Z φ η hηclass]
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top h68.1
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hker : Section1.subgroupInKernel' η Z :=
     theorem_6_8_caseB_mem_Y_subgroupInKernel_Z hB hfamily hηY
   have hres :
@@ -9527,10 +9529,10 @@ theorem theorem_6_8_caseB_conj_mem_Z_eq_self
   rcases hB with ⟨_hW2ne, hW2center, _hW2comm, hZeq⟩
   subst Z
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -9575,7 +9577,7 @@ theorem theorem_6_8_cfNormSq_inducedCF_eq_relIndex_top_caseB_familyData
       (Z.relIndex (⊤ : Subgroup L) : ℝ) := by
   rcases theorem_6_8_caseB_Z_center_normal_ne_bot h68 hcase hB with
     ⟨_hZne, _hZcenter, hZnorm⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hInertia : Section1.inertiaSubgroup Z φ = (⊤ : Subgroup L) := by
     apply le_antisymm le_top
     intro g _hg
@@ -9604,7 +9606,7 @@ theorem theorem_6_8_caseB_cardW1_lt_ZrelIndex
   classical
   rcases theorem_6_8_frobeniusQuotient_Z_of_caseB h68 hcase hB with
     ⟨hZnorm, hZH, _hHnorm, R, hcomp, hHbar_ne, _hRne, hcent⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   let q : L →* L ⧸ Z := QuotientGroup.mk' Z
   let Hbar : Subgroup (L ⧸ Z) := H.map q
   have hdivR : Nat.card R ∣ Nat.card Hbar - 1 := by
@@ -12787,7 +12789,7 @@ theorem theorem_6_8_caseB_commonY_self_eq_one
     (hτ₁ : coherentExtension Y T τ₁)
     (hcommon : theorem_6_8_2_2_commonY L H Z Y T τ₁ η₁ Ycf) :
     Section1.scalarProduct G Ycf Ycf = 1 := by
-  haveI : H.Normal := theorem_6_8_left_normal_of_semidirect_top h68.1
+  have : H.Normal := theorem_6_8_left_normal_of_semidirect_top h68.1
   have hself :
       Section1.scalarProduct G Ycf Ycf =
         Section1.scalarProduct L η₁ η₁ :=
@@ -13013,12 +13015,12 @@ theorem theorem_6_8_selected_shift_scalar_eq_of_projection_int_coefficients
           (T (Section1.inducedCF H (ψ i0) - (e i0 : ℂ) • η₁)) (τ₁ η) =
         -(e i0 : ℂ) * Section1.scalarProduct G Ycf (τ₁ η) := by
   classical
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   rcases h68 with ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have hZcomm : Z ≤ ⁅H,H⁆ := by
     rcases hB with ⟨_hW2ne, _hW2center, hW2comm, hZeq⟩
     rw [hZeq]
@@ -13313,9 +13315,9 @@ theorem theorem_6_8_shift_scalarProduct_caseB_projection_familyData
       hZcent hθ hφ hφone hres with
     ⟨ι, hι, hdec, e, ψ, i0, hψirr, horth, hdegree, hdecomp, hi0, hsq,
       hsel⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hdec
-  letI : Finite ι := Finite.of_fintype ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := hdec
+  let : Finite ι := Finite.of_fintype ι
   have hei0 : e i0 ≠ 0 := by
     intro hzero
     have hθdeg0 : Section1.degree θ = 0 := by
@@ -14321,7 +14323,7 @@ theorem theorem_6_8_caseB_union_coherent_of_commonY_data
       (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
       η₁ Ycf hshift
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   exact theorem_6_8_coherentFamily_of_hypothesis_5_2_and_image_family
     (U := X ∪ Y) (T := T) (img := img) h52union
     (theorem_6_8_caseB_unionImage_virtual
@@ -15261,7 +15263,7 @@ theorem theorem_6_8_caseA_union_coherent_of_signed_shift_data
       (W1 := W1) (X := X) (Y := Y) (T := T) (τ₁ := τ₁)
       η₁ Ycf hshift
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   exact theorem_6_8_coherentFamily_of_hypothesis_5_2_and_image_family
     (U := X ∪ Y) (T := T) (img := img) h52union
     (theorem_6_8_caseA_signed_unionImage_virtual
@@ -15303,7 +15305,7 @@ theorem theorem_6_8_caseA_union_coherent_of_base_shift_data
                   X₁ - (Section1.degree χ₀ / (Nat.card W1 : ℂ)) • (-τ₁ η₂)) :
     coherentFamily (X ∪ Y) T := by
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have horthτ₂ : ∀ χ : Section1.ClassFunction L, χ ∈ X →
       orthogonalToTransformedFinset Y τ₁ (τ₂ χ) := by
     intro χ hχX
@@ -15660,7 +15662,7 @@ theorem theorem_6_8_irreducible_degree_sq_le_relIndex_of_kernel
     ∃ d : ℕ,
       Section1.degree θ = (d : ℂ) ∧ d ^ (2 : ℕ) ≤ Z.relIndex H := by
   classical
-  letI : (Z.subgroupOf H).Normal := hZnorm.subgroupOf H
+  let : (Z.subgroupOf H).Normal := hZnorm.subgroupOf H
   rcases hθirr with ⟨d, ρ, hρirr, hθeq⟩
   refine ⟨d, ?_, ?_⟩
   · rw [hθeq, Section1.degree_representation_character]
@@ -15682,7 +15684,7 @@ theorem theorem_6_8_irreducible_degree_sq_le_relIndex_of_kernel
       apply representation_isIrreducible_of_comp_surjective ρq q
         (QuotientGroup.mk'_surjective (Z.subgroupOf H))
       simpa [hcomp_eq] using hρirr
-    haveI : Representation.IsIrreducible ρq := hρqirr
+    have : Representation.IsIrreducible ρq := hρqirr
     have hscalar :
         ∀ z : (⊥ : Subgroup (H ⧸ Z.subgroupOf H)),
           ∃ a : ℂ, ρq z = a • (1 : Module.End ℂ (Fin d → ℂ)) := by
@@ -15820,7 +15822,7 @@ theorem theorem_6_8_pf56_numeric_obstruction_of_mem_S_not_union
     exact hψnotS1 hψS1
   have hdvd : H.relIndex (⊤ : Subgroup L) ∣ dψ := by
     exact ⟨d, hdψ⟩
-  letI : Fintype L := Fintype.ofFinite L
+  let : Fintype L := Fintype.ofFinite L
   let ψS : S := ⟨ψ, hψS⟩
   have hnotPair' : ¬ coherentFamily
       (S1 ∪ ({(ψS : Section1.ClassFunction L),
@@ -17023,10 +17025,10 @@ theorem theorem_6_8_caseA_c2_card_dvd_Z_sub_one
     Nat.card W1 ∣ Nat.card Z - 1 := by
   classical
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -17039,7 +17041,7 @@ theorem theorem_6_8_caseA_c2_card_dvd_Z_sub_one
   have hZcenter : Z ≤ centerIn H := by
     rw [hZeq]
     exact inf_le_left
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hcentZ :
       ∀ r : W1, r ≠ 1 → Section2.centralizerIn Z (r : L) = ⊥ := by
     intro r hr
@@ -17116,10 +17118,10 @@ theorem theorem_6_8_caseB_Z_sub_one_lower_bound
   rcases hB with ⟨hW2ne, _hW2center, _hW2comm, hZeq⟩
   subst Z
   rcases hcase with ⟨⟨d⟩, _hprime, _hW2comm'⟩
-  letI : Fintype d.I := d.instFintypeI
-  letI : Fintype d.J := d.instFintypeJ
-  letI : DecidableEq d.I := d.instDecidableEqI
-  letI : DecidableEq d.J := d.instDecidableEqJ
+  let : Fintype d.I := d.instFintypeI
+  let : Fintype d.J := d.instFintypeJ
+  let : DecidableEq d.I := d.instDecidableEqI
+  let : DecidableEq d.J := d.instDecidableEqJ
   rcases d.fullHypothesis with
     ⟨h46, _hW2K, _h31img, _hσiso, _hσvirt, _hσclass, _hσone, _h22A,
       _hω, _h43b, _h43c, _h43d, _h45a, _h45b, _hτcyclic,
@@ -17159,9 +17161,9 @@ theorem theorem_6_8_caseB_relIndex_sq_lower_bound
     theorem_6_8_frobeniusQuotient_Z_of_caseB h68 hcase hB
   rcases h68 with ⟨hsemi, hodd, hHne, hnil, _hTI, _hSbot, _hT, _hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
-  have hsolvH : IsSolvable H := by
-    haveI : Group.IsNilpotent H := hnil
+  have : H.Normal := hHnorm
+  have hsolvH : Group.IsSolvable H := by
+    have : Group.IsNilpotent H := hnil
     infer_instance
   have hZcomm : Z ≤ ⁅H,H⁆ :=
     theorem_6_8_Z_le_commutator_of_caseData
@@ -17256,8 +17258,8 @@ theorem theorem_6_8_complete_nonkernel_degree_data
   rcases Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := K) with
     ⟨ι, hι, χ, hχ, _hsumχ⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let θ : ι → Section1.ClassFunction K :=
     fun i => Section1.ofConjClassFunction (χ i)
   let X : Finset (Section1.ClassFunction K) :=
@@ -17340,9 +17342,9 @@ theorem theorem_6_8_nonkernel_source_lower_bound
         (((dS1 η : ℝ) ^ (2 : ℕ)) /
           Section5.cfNormSq (η : Section1.ClassFunction L)) := by
   classical
-  haveI : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
+  have : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
   have hZH : Z ≤ H := hfamily.1
-  haveI : (Z.subgroupOf H).Normal :=
+  have : (Z.subgroupOf H).Normal :=
     Subgroup.Normal.subgroupOf (H := Z) (K := H)
       (inferInstance : Z.Normal)
   rcases theorem_6_8_complete_nonkernel_degree_data
@@ -17590,7 +17592,7 @@ theorem theorem_6_8_endpoint_small_bound_of_obstruction_nonkernel
     (((Z.relIndex H) * (Nat.card Z - 1) ^ (2 : ℕ) : ℕ) : ℝ) <
       ((4 * (Nat.card W1) ^ (2 : ℕ) : ℕ) : ℝ) := by
   classical
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hXS1 : X ⊆ S1 := by
     intro χ hχX
     exact hunionS1 (Finset.mem_union.mpr (Or.inl hχX))
@@ -17780,7 +17782,7 @@ theorem theorem_6_8_caseA_union_coherent_of_caseData
   rcases hpQ with ⟨p, hpQp⟩
   rcases hpQp with
     ⟨hbotH, hbotnormH, hbotnorm, hHnormQ, hpprime, hQp, hnoncomm⟩
-  haveI : Fact p.Prime := ⟨hpprime⟩
+  have : Fact p.Prime := ⟨hpprime⟩
   have hpQp' : nonabelianPQuotient (⊥ : Subgroup L) H p :=
     ⟨hbotH, hbotnormH, hbotnorm, hHnormQ, hpprime, hQp, hnoncomm⟩
   have hpQ' : ∃ p : ℕ, nonabelianPQuotient (⊥ : Subgroup L) H p :=
@@ -17788,7 +17790,7 @@ theorem theorem_6_8_caseA_union_coherent_of_caseData
   rcases theorem_6_8_Z_center_normal_ne_bot_of_caseData h68' hpQ'
       (Or.inl hA) with
     ⟨hZne, _hZcenter, hZnorm⟩
-  haveI : Z.Normal := hZnorm
+  have : Z.Normal := hZnorm
   have hZcomm : Z ≤ ⁅H,H⁆ :=
     theorem_6_8_Z_le_commutator_of_caseData
       (G := G) (L := L) (H := H) (W1 := W1) (W2 := W2)
@@ -17868,7 +17870,7 @@ theorem theorem_6_8_3
   have h68' : theorem_6_8_hypothesis L H W1 W2 W S T :=
     ⟨hsemi, hodd, hHne, hnil, hTI, hSbot, hT, hbranch⟩
   have hHnorm : H.Normal := theorem_6_8_left_normal_of_semidirect_top hsemi
-  haveI : H.Normal := hHnorm
+  have : H.Normal := hHnorm
   have h52 : Section5.hypothesis_5_2_statement S T :=
     theorem_6_8_hypothesis_5_2_of_branch h68'
 

@@ -252,7 +252,6 @@ private theorem heringPartialSum_four
       (if mask.val.testBit 2 then y 2 else 0) +
       (if mask.val.testBit 3 then y 3 else 0) := by
   simp [heringPartialSum, Fin.sum_univ_four]
-  rfl
 
 private def heringPreviousBasis
     {V : Type*} {m : ℕ} (basis : Fin m → V)

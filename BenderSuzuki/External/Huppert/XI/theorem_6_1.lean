@@ -52,8 +52,8 @@ private theorem huppert_XI_6_4_frobeniusKernel_uniqueFixedPoint
     have hzcSub :
         (z : MulAction.stabilizer G a) • cSub = cSub := by
       exact Subtype.ext hzc
-    letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-    letI : MulAction.IsPretransitive G Omega :=
+    let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+    let : MulAction.IsPretransitive G Omega :=
       MulAction.isPretransitive_of_is_two_pretransitive
     have hstab_multi :
         MulAction.IsMultiplyPretransitive
@@ -260,7 +260,7 @@ private theorem huppertXI61CharacterDegreeNat_dvd_card
   have hrhoIrreducible : Representation.IsIrreducible rho := by
     apply (Theory.Character.irreducible_iff_character_norm_one rho).2
     simpa [hrho] using hchi.2
-  letI : Representation.IsIrreducible rho := hrhoIrreducible
+  let : Representation.IsIrreducible rho := hrhoIrreducible
   simpa using Theory.Character.irreducible_dimension_dvd_group_order rho
 
 /-- XI.6.2 in a complete-family form suited to the later Feit count. -/
@@ -340,7 +340,7 @@ public theorem huppert_XI_6_2_character_degree_lower_sum_dvd
   obtain ⟨ι, hι, chi, hchi, hsum⟩ :=
     Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   obtain ⟨i0, hi0⟩ := hchi.2.1 chi0 hchi0
   let degreeNat : ι → ℕ := fun i =>
     huppertXI61CharacterDegreeNat (chi i) (hchi.1 i).1
@@ -417,7 +417,7 @@ private theorem huppert_XI_6_1_actor_card_dvd_group_card_sub_one
     Nat.card A ∣ Nat.card V - 1 := by
   classical
   let V0 := {v : V // v ≠ 1}
-  letI : MulAction A V0 :=
+  let : MulAction A V0 :=
     { smul := fun a v => ⟨a • (v : V), by
         intro h
         apply v.2
@@ -447,8 +447,8 @@ private theorem huppert_XI_6_1_actor_card_dvd_group_card_sub_one
     exact v.2 (hfree a hane (v : V) (congrArg Subtype.val hav))
   have hcard := Nat.card_congr (MulAction.selfEquivOrbitsQuotientProd hstab)
   have hcardV0 : Nat.card V0 = Nat.card V - 1 := by
-    letI : Fintype V := Fintype.ofFinite V
-    letI : Fintype V0 := Fintype.ofFinite V0
+    let : Fintype V := Fintype.ofFinite V
+    let : Fintype V0 := Fintype.ofFinite V0
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     change Fintype.card {v : V // v ≠ 1} = Fintype.card V - 1
     simp
@@ -463,7 +463,7 @@ still pointwise fixed-point-free on its abelianization. -/
 private theorem huppert_XI_6_1_abelianization_fixedPointFree
     {A Q : Type*} [Group A] [Finite A] [Group Q] [Finite Q]
     [MulDistribMulAction A Q]
-    (hsolv : IsSolvable Q)
+    (hsolv : Group.IsSolvable Q)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card Q))
     (hfree : ∀ a : A, a ≠ 1 → ∀ q : Q, a • q = q → q = 1) :
     let C := commutator Q
@@ -476,9 +476,9 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
   let C := commutator Q
   let hCinv : IsInvariant A Q C :=
     isInvariant_of_characteristic (A := A) (G := Q) C
-  letI : MulDistribMulAction A (Q ⧸ C) :=
+  let : MulDistribMulAction A (Q ⧸ C) :=
     quotientMulDistribMulAction (A := A) (G := Q) C hCinv
-  haveI : C.Normal := by dsimp [C]; infer_instance
+  have : C.Normal := by dsimp [C]; infer_instance
   intro a ha x hx
   let S := Subgroup.zpowers a
   have hScardDvd : Nat.card S ∣ Nat.card A :=
@@ -510,10 +510,11 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
 /-- The abelianization of a nontrivial finite solvable group is nontrivial. -/
 private theorem huppert_XI_6_3_abelianization_one_lt_card
     {Q : Type*} [Group Q] [Finite Q] [Nontrivial Q]
-    (hsolv : IsSolvable Q) :
+    (hsolv : Group.IsSolvable Q) :
     1 < Nat.card (Q ⧸ commutator Q) := by
+  let : Group.IsSolvable Q := hsolv
   have hcommLt : commutator Q < ⊤ :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := Q)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := Q)
   have hindex : 1 < (commutator Q).index :=
     Subgroup.one_lt_index_of_ne_top hcommLt.ne
   simpa [Subgroup.index_eq_card] using hindex
@@ -557,12 +558,12 @@ private theorem huppert_XI_6_3_characteristic_factor_abelianization_data
     {D Q : Type*} [Group D] [Finite D] [Group Q] [Finite Q]
     [MulDistribMulAction D Q]
     (P : Subgroup Q) [P.Characteristic] [Nontrivial P]
-    (hsolv : IsSolvable P)
+    (hsolv : Group.IsSolvable P)
     (hcop : Nat.Coprime (Nat.card D) (Nat.card Q))
     (hfree : ∀ d : D, d ≠ 1 → ∀ q : Q, d • q = q → q = 1) :
     Nat.card D ∣ Nat.card (Abelianization P) - 1 ∧
       1 < Nat.card (Abelianization P) := by
-  letI : IsInvariant D Q P := isInvariant_of_characteristic P
+  let : IsInvariant D Q P := isInvariant_of_characteristic P
   have hcopP : Nat.Coprime (Nat.card D) (Nat.card P) :=
     Nat.Coprime.of_dvd_right
       (Subgroup.card_subgroup_dvd_card P) hcop
@@ -573,7 +574,7 @@ private theorem huppert_XI_6_3_characteristic_factor_abelianization_data
   let C := commutator P
   let hCinv : IsInvariant D P C :=
     isInvariant_of_characteristic (A := D) (G := P) C
-  letI : MulDistribMulAction D (P ⧸ C) :=
+  let : MulDistribMulAction D (P ⧸ C) :=
     quotientMulDistribMulAction (A := D) (G := P) C hCinv
   have hfreeAb :
       ∀ d : D, d ≠ 1 → ∀ x : P ⧸ C, d • x = x → x = 1 := by
@@ -623,8 +624,8 @@ private theorem huppert_XI_6_3_abelianizationLinearCharacter_injective
 private theorem huppert_XI_6_3_abelianizationLinearCharacter_card
     {Q : Type*} [Group Q] [Finite Q] :
     Nat.card (Abelianization Q →* ℂˣ) = Nat.card (Abelianization Q) := by
-  letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent (Abelianization Q)) := by
-    haveI : NeZero (Monoid.exponent (Abelianization Q)) := by infer_instance
+  let : HasEnoughRootsOfUnity ℂ (Monoid.exponent (Abelianization Q)) := by
+    have : NeZero (Monoid.exponent (Abelianization Q)) := by infer_instance
     exact Section1.complex_hasEnoughRootsOfUnity
       (Monoid.exponent (Abelianization Q))
   exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity (Abelianization Q) ℂ
@@ -641,6 +642,7 @@ private noncomputable def huppert_XI_6_3_productLinearCharacter
       (chi.comp Abelianization.of)
       (psi.comp Abelianization.of)).comp e.symm.toMonoidHom)
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem huppert_XI_6_3_productLinearCharacter_injective
     {A B Q : Type*} [Group A] [Group B] [Group Q]
     (e : A × B ≃* Q) :
@@ -690,9 +692,9 @@ private theorem huppert_XI_6_3_product_abelianization_card_le
   let CharA := Abelianization A →* ℂˣ
   let CharB := Abelianization B →* ℂˣ
   let CharQ := Abelianization Q →* ℂˣ
-  letI : Fintype CharA := Fintype.ofFinite _
-  letI : Fintype CharB := Fintype.ofFinite _
-  letI : Fintype CharQ := Fintype.ofFinite _
+  let : Fintype CharA := Fintype.ofFinite _
+  let : Fintype CharB := Fintype.ofFinite _
+  let : Fintype CharQ := Fintype.ofFinite _
   have hcard := Fintype.card_le_of_injective
     (fun x : CharA × CharB =>
       huppert_XI_6_3_productLinearCharacter e x.1 x.2)
@@ -754,10 +756,10 @@ private theorem huppert_XI_6_1_action_parameters_core
   have hOmegaEq : Fintype.card Omega = Nat.card F + 1 := by
     rw [hFcard, ← hdegree]
   have hHcard : Nat.card H = Nat.card F * Nat.card D :=
-    hFrob.isComplement'.card_mul.symm
+    hFrob.isComplement'.card_mul_card.symm
   have hGcard : Nat.card G = Fintype.card Omega * Nat.card F * Nat.card D := by
-    letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-    letI : MulAction.IsPretransitive G Omega :=
+    let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+    let : MulAction.IsPretransitive G Omega :=
       MulAction.isPretransitive_of_is_two_pretransitive
     have hindex : H.index = Fintype.card Omega := by
       calc
@@ -771,8 +773,8 @@ private theorem huppert_XI_6_1_action_parameters_core
         rw [hHcard]
         ac_rfl
   have hdiv : Nat.card D ∣ Nat.card F - 1 := by
-    letI : F.Normal := hFrob.normal
-    letI : MulDistribMulAction D F :=
+    let : F.Normal := hFrob.normal
+    let : MulDistribMulAction D F :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer D F
         (Subgroup.le_normalizer_of_normal (H := F))
     apply huppert_XI_6_1_actor_card_dvd_group_card_sub_one
@@ -804,14 +806,14 @@ private theorem huppert_XI_1_4_b_primePower_of_large_complement
     (hlarge : Nat.card F - 1 ≤ 2 * Nat.card D) :
     ∃ p f : ℕ, Nat.Prime p ∧ 0 < f ∧ Nat.card F = p ^ f := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   have hFnontrivial : Nontrivial F :=
     (Subgroup.nontrivial_iff_ne_bot F).2 hFrob.kernel_ne_bot
-  letI : Nontrivial F := hFnontrivial
+  let : Nontrivial F := hFnontrivial
   have hFcard_ne_one : Nat.card F ≠ 1 :=
     ne_of_gt (Finite.one_lt_card_iff_nontrivial.mpr hFnontrivial)
   obtain ⟨p, hp, hp_dvd⟩ := Nat.exists_prime_and_dvd hFcard_ne_one
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   obtain ⟨z, hzorder⟩ := exists_prime_orderOf_dvd_card' p hp_dvd
   have hzne : z ≠ 1 := by
     intro hz
@@ -830,15 +832,15 @@ private theorem huppert_XI_1_4_b_primePower_of_large_complement
   have hzmemP : z ∈ (P : Subgroup F) := hzP (Subgroup.mem_zpowers z)
   have hPnormal : (P : Subgroup F).Normal :=
     Group.IsNilpotent.sylow_normal hFnil p P
-  letI : (P : Subgroup F).Characteristic :=
+  let : (P : Subgroup F).Characteristic :=
     Sylow.characteristic_of_normal P hPnormal
   let Pmap : Subgroup H := (P : Subgroup F).map F.subtype
   have hPmapNormal : Pmap.Normal := by
     simpa [Pmap] using
       (ConjAct.normal_of_characteristic_of_normal
         (H := F) (K := (P : Subgroup F)))
-  letI : Pmap.Normal := hPmapNormal
-  letI : MulDistribMulAction D Pmap :=
+  let : Pmap.Normal := hPmapNormal
+  let : MulDistribMulAction D Pmap :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer D Pmap
       (Subgroup.le_normalizer_of_normal (H := Pmap))
   have hfree :
@@ -1162,7 +1164,9 @@ private theorem zassenhaus_twoPointStabilizer_normalizer_index_two
         (x : G) • a = b ∧ (x : G) • b = a := by
       exact zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
         hat_most_two_fixed_points a b hab F hFrob (x : G)
-        (by simp [T]) (by exact hxD)
+        (by
+          change (x : G) ∈ T
+          exact x.2) (by exact hxD)
     left
     change ((x * sT : T) : G) ∈ Dg
     apply (twoPointStabilizer_map_mem_iff a b hab ((x * sT : T) : G)).mpr
@@ -1203,7 +1207,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_exists_swap_involution
     simpa [H, D, Dg, T, Dsub] using
       zassenhaus_twoPointStabilizer_normalizer_index_two
         htwo hat_most_two_fixed_points a b hab F hFrob
-  letI : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
+  let : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
   have hDgcard : Nat.card Dg = Nat.card D := by
     simpa [Dg] using
       (Subgroup.card_map_of_injective
@@ -1221,7 +1225,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_exists_swap_involution
     hC.index_eq_card.symm.trans hindex
   have hCnontrivial : Nontrivial C :=
     Finite.one_lt_card_iff_nontrivial.mp (by omega)
-  letI : Nontrivial C := hCnontrivial
+  let : Nontrivial C := hCnontrivial
   obtain ⟨c, hcne⟩ := exists_ne (1 : C)
   have hcnotD : (c : T) ∉ Dsub := by
     intro hcD
@@ -1239,7 +1243,8 @@ public theorem zassenhaus_odd_twoPointStabilizer_exists_swap_involution
         (((c : C) : T) : G) • b = a := by
     apply zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
       hat_most_two_fixed_points a b hab F hFrob
-    · simp [T]
+    · change (((c : C) : T) : G) ∈ T
+      exact ((c : C) : T).2
     · intro hcDg
       apply hcnotD
       exact hcDg
@@ -1436,7 +1441,7 @@ private theorem zassenhaus_odd_twoPointNormalizer_isZGroup
     simpa [H, D, Dg, T, Dsub] using
       zassenhaus_twoPointStabilizer_normalizer_index_two
         htwo hat_most_two_fixed_points a b hab F hFrob
-  letI : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
+  let : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
   have hDgcard : Nat.card Dg = Nat.card D := by
     simpa [Dg] using
       (Subgroup.card_map_of_injective
@@ -1446,7 +1451,7 @@ private theorem zassenhaus_odd_twoPointNormalizer_isZGroup
       Nat.card Dsub = Nat.card Dg :=
         natCard_subgroupOf_eq Dg T Subgroup.le_normalizer
       _ = Nat.card D := hDgcard
-  letI : IsZGroup D :=
+  let : IsZGroup D :=
     isZGroup_of_frobenius_complement_of_odd F D (by simpa [D] using hFrob)
       (by simpa [H, D, MulAction.stabilizer] using hodd)
   let eDg : D ≃* Dg :=
@@ -1454,13 +1459,13 @@ private theorem zassenhaus_odd_twoPointNormalizer_isZGroup
   let eDsub : Dsub ≃* Dg :=
     Subgroup.subgroupOfEquivOfLe Subgroup.le_normalizer
   let eD : Dsub ≃* D := eDsub.trans eDg.symm
-  letI : IsZGroup Dsub :=
+  let : IsZGroup Dsub :=
     IsZGroup.of_injective (f := eD.toMonoidHom) eD.injective
   have hquotCard : Nat.card (T ⧸ Dsub) = 2 := by
     rw [← Dsub.index_eq_card]
     exact hindex
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsCyclic (T ⧸ Dsub) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsCyclic (T ⧸ Dsub) :=
     isCyclic_of_card_dvd_prime (by rw [hquotCard])
   have hcop : (Nat.card Dsub).Coprime (Nat.card (T ⧸ Dsub)) := by
     rw [hDsubcard, hquotCard]
@@ -1508,7 +1513,7 @@ private theorem zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
     simpa [H, D, Dg, T, Dsub] using
       zassenhaus_twoPointStabilizer_normalizer_index_two
         htwo hat_most_two_fixed_points a b hab F hFrob
-  letI : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
+  let : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
   have hDgcard : Nat.card Dg = Nat.card D := by
     simpa [Dg] using
       (Subgroup.card_map_of_injective
@@ -1522,7 +1527,7 @@ private theorem zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
     calc
       Nat.card T = Nat.card Dsub * Dsub.index := Dsub.card_mul_index.symm
       _ = 2 * Nat.card D := by rw [hDsubcard, hindex]; omega
-  letI : IsZGroup T := by
+  let : IsZGroup T := by
     simpa [H, D, Dg, T] using
       zassenhaus_odd_twoPointNormalizer_isZGroup
         htwo hat_most_two_fixed_points a b hab F hFrob hodd
@@ -1531,17 +1536,17 @@ private theorem zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
   have hquotCard : Nat.card (T ⧸ Dsub) = 2 := by
     rw [← Dsub.index_eq_card]
     exact hindex
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : IsCyclic (T ⧸ Dsub) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : IsCyclic (T ⧸ Dsub) :=
     isCyclic_of_card_dvd_prime (by rw [hquotCard])
-  letI : CommGroup (T ⧸ Dsub) := IsCyclic.commGroup
+  let : CommGroup (T ⧸ Dsub) := IsCyclic.commGroup
   have hcommLe : commutator T ≤ Dsub := by
     simpa using
       (Abelianization.commutator_subset_ker (QuotientGroup.mk' Dsub))
   have hnoOddPrime :
       ∀ q : ℕ, q.Prime → q ≠ 2 → ¬ q ∣ (commutator T).index := by
     intro q hq hqne hqindex
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     have hqT : q ∣ Nat.card T :=
       hqindex.trans (commutator T).index_dvd_card
     have hqcommNot : ¬ q ∣ Nat.card (commutator T) := by
@@ -1866,7 +1871,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     simpa [H, D, Dg, T, Dsub] using
       zassenhaus_twoPointStabilizer_normalizer_index_two
         htwo hat_most_two_fixed_points a b hab F hFrob
-  letI : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
+  let : Dsub.Normal := Subgroup.normal_of_index_eq_two hindex
   obtain ⟨hDcyclic, hcommEq⟩ :=
     zassenhaus_odd_twoPointStabilizer_cyclic_and_commutator_eq
       htwo hat_most_two_fixed_points hsimple a b hab F hFrob hodd
@@ -1875,10 +1880,10 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
   let eDsub : Dsub ≃* Dg :=
     Subgroup.subgroupOfEquivOfLe Subgroup.le_normalizer
   let eDDsub : D ≃* Dsub := eDg.trans eDsub.symm
-  letI : IsCyclic D := hDcyclic
-  letI : IsCyclic Dsub :=
+  let : IsCyclic D := hDcyclic
+  let : IsCyclic Dsub :=
     isCyclic_of_surjective eDDsub eDDsub.surjective
-  letI : CommGroup Dsub := IsCyclic.commGroup
+  let : CommGroup Dsub := IsCyclic.commGroup
   have hDsubComm : IsMulCommutative Dsub := inferInstance
   have hDsubcard : Nat.card Dsub = Nat.card D :=
     Nat.card_congr eDDsub.symm.toEquiv
@@ -1903,10 +1908,10 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     apply Subtype.ext
     exact hcSq
   let R : Subgroup T := Subgroup.zpowers cT
-  letI : IsCyclic R := inferInstance
-  letI : CommGroup R := IsCyclic.commGroup
+  let : IsCyclic R := inferInstance
+  let : CommGroup R := IsCyclic.commGroup
   have hRcomm : IsMulCommutative R := inferInstance
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hcTorder : orderOf cT = 2 := orderOf_eq_prime hcTSq hcTne
   have hRcard : Nat.card R = 2 := by
     simp [R, hcTorder]
@@ -1922,7 +1927,9 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
           exact hxD hxDg
         exact zassenhaus_twoPointStabilizer_normalizer_notMem_swaps
           hat_most_two_fixed_points a b hab F hFrob ((x : T) : G)
-          (by simp [T]) hxnotDg
+          (by
+            change ((x : T) : G) ∈ T
+            exact x.2) hxnotDg
       have hxcDg : (((x * cT : T) : G)) ∈ Dg := by
         apply (twoPointStabilizer_map_mem_iff a b hab ((x * cT : T) : G)).mpr
         constructor
@@ -1942,7 +1949,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
   have hRnormD : R ≤ Subgroup.normalizer (Dsub : Set T) := by
     simp [Dsub.normalizer_eq_top]
   let N : Subgroup T := ⁅Dsub, R⁆
-  haveI : N.Normal := by
+  have : N.Normal := by
     have hNnormal := commutator_normal_in_sup Dsub R
     have hsupLe : Dsub ⊔ R ≤ Subgroup.normalizer (N : Set T) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer
@@ -1996,7 +2003,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
   have hquotComm : IsMulCommutative (T ⧸ N) := by
     have h := isMulCommutative_sup_of_le_centralizer hAcomm hBcomm hBcentralA
     rw [hABtop] at h
-    letI : IsMulCommutative (⊤ : Subgroup (T ⧸ N)) := h
+    let : IsMulCommutative (⊤ : Subgroup (T ⧸ N)) := h
     refine ⟨⟨fun x y => ?_⟩⟩
     have hxy :
         (⟨x, trivial⟩ : (⊤ : Subgroup (T ⧸ N))) * ⟨y, trivial⟩ =
@@ -2011,8 +2018,8 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
     exact Subgroup.commutator_mono le_top le_top
   have hNeqD : N = Dsub :=
     (le_antisymm hNleComm hcommLeN).trans hcommEq
-  letI : Subgroup.Normalizes R Dsub := ⟨hRnormD⟩
-  letI : MulDistribMulAction R Dsub :=
+  let : Subgroup.Normalizes R Dsub := ⟨hRnormD⟩
+  let : MulDistribMulAction R Dsub :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer R Dsub hRnormD
   have hactionMap :
       (commutatorAction (A := R) (G := Dsub)).map Dsub.subtype = N := by
@@ -2033,7 +2040,7 @@ public theorem zassenhaus_odd_twoPointStabilizer_swap_inverts
       IsCompl (fixedPointSubgroup R Dsub)
         (commutatorAction (A := R) (G := Dsub)) :=
     isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
-      CommGroup.isSolvable hcop hDsubComm
+      (Group.isSolvable_of_comm hDsubComm.is_comm.comm) hcop hDsubComm
   have hfixedBot : fixedPointSubgroup R Dsub = ⊥ := by
     apply bot_unique
     have hle := hcompl.disjoint.le_bot
@@ -2134,7 +2141,7 @@ private theorem frobenius_normal_subgroup_le_kernel_or_kernel_le
   · exact Or.inl hNF
   right
   obtain ⟨n, hnN, hnnotF⟩ := SetLike.not_le_iff_exists.mp hNF
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   have hcentD :
       ∀ r : D, r ≠ 1 → Section2.centralizerIn F (r : H) = ⊥ := by
     intro r hr
@@ -2197,7 +2204,7 @@ private theorem frobenius_not_mem_kernel_conjugate_mem_complement
     ∃ a : F, ∃ r : D,
       (a : H)⁻¹ * x * (a : H) = (r : H) := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   have hxSup : x ∈ F ⊔ D := by
     simp [hFrob.isComplement'.sup_eq_top]
   rcases (Subgroup.mem_sup_of_normal_left (s := F) (t := D) (x := x)).1 hxSup with
@@ -2321,7 +2328,7 @@ private theorem frobenius_irreducible_character_eq_induced_of_not_kernel
     ∃ theta : Section1.ClassFunction F,
       Section1.IsIrreducibleCharacterOnGroup theta ∧
         chi = Section1.inducedCF F theta := by
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   rcases hchi with ⟨n, rho, hrho, hchiEq⟩
   have hnotkerRho : ¬ F ≤ rho.ker := by
     intro hle
@@ -2352,7 +2359,7 @@ private theorem huppert_XI_6_not_subgroupInKernel_top_of_ne_principal
     (hthetaNe : theta ≠ Section1.principalCharacter H) :
     ¬ Section1.subgroupInKernel' theta (⊤ : Subgroup H) := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   intro hker
   have horth :=
     Section1.scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne
@@ -2426,7 +2433,7 @@ private theorem frobenius_irreducible_character_eq_zero_of_not_mem_kernel
     (hchi : Section1.IsIrreducibleCharacterOnGroup chi)
     (hnotker : ¬ Section1.subgroupInKernel' chi F)
     {x : H} (hx : x ∉ F) : chi x = 0 := by
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   obtain ⟨theta, _htheta, hchiInd⟩ :=
     frobenius_irreducible_character_eq_induced_of_not_kernel
       F D hFrob chi hchi hnotker
@@ -2500,7 +2507,7 @@ private theorem frobenius_nonker_induction_isometry_data
             Section1.supportedOn (Section1.inducedCFLinear H phi)
               Section5.puncturedSet := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   have hmem_map_iff (x : H) :
       (x : G) ∈ F.map H.subtype ↔ x ∈ F := by
     constructor
@@ -2625,7 +2632,7 @@ private theorem huppert_XI_6_complete_irreducible_finset
   obtain ⟨I, hIFintype, phi, hphi, _hsum⟩ :=
     Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
-  letI : Fintype I := hIFintype
+  let : Fintype I := hIFintype
   let mu : I → Section1.ClassFunction Q := fun i =>
     Section1.ofConjClassFunction (phi i)
   let K : Finset (Section1.ClassFunction Q) := Finset.univ.image mu
@@ -2672,7 +2679,7 @@ private theorem huppert_XI_6_5_nonker_irreducible_finset
   obtain ⟨I, hIFintype, phi, hphi, _hsum⟩ :=
     Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := Q)
-  letI : Fintype I := hIFintype
+  let : Fintype I := hIFintype
   let mu : I → Section1.ClassFunction Q := fun i =>
     Section1.ofConjClassFunction (phi i)
   let good : Finset I :=
@@ -2727,7 +2734,7 @@ private theorem huppert_XI_6_5_complete_nonker_is_inducedKernelFamily
       chi ∈ Y) :
     Section6.inducedKernelFamily F ⊥ Y := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   refine ⟨bot_le, ?_⟩
   intro chi
   constructor
@@ -2909,8 +2916,8 @@ private theorem huppert_XI_6_5_derived_base_card_two
     let Y0 := Section6.inducedKernelFamilyOf F ⁅F, F⁆ Y
     2 ≤ Y0.card := by
   classical
-  letI : F.Normal := hFrob.normal
-  letI : Group.IsNilpotent F := hFnil
+  let : F.Normal := hFrob.normal
+  let : Group.IsNilpotent F := hFnil
   have hcommEq : ⁅F, F⁆.subgroupOf F = _root_.commutator F := by
     ext x
     constructor
@@ -2944,8 +2951,8 @@ private theorem huppert_XI_6_5_derived_base_card_two
         ⟨p, n, hp, Nat.pos_of_ne_zero hn0, hn.symm⟩
   obtain ⟨q, hq, hq_dvd, hq_ne_p⟩ :=
     hkt_exists_prime_dvd_ne_of_not_prime_power Nat.card_pos.ne' hnotPow
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   have hpCore_le_qPrimeCore : pCore p F ≤ pPrimeCore q F := by
     obtain ⟨n, hcard⟩ :=
       (pCore_isPGroup (G := F) (p := p)).exists_card_eq
@@ -2968,11 +2975,11 @@ private theorem huppert_XI_6_5_derived_base_card_two
       simpa [htop] using hq_dvd
     exact (hq.coprime_iff_not_dvd.mp
       (pPrimeCore_coprime_card (G := F) (p := q))) hq_dvd_core
-  letI : IsSolvable F := IsNilpotent.to_isSolvable
-  haveI : Nontrivial (F ⧸ pPrimeCore p F) := by
+  let : Group.IsSolvable F := IsNilpotent.to_isSolvable
+  have : Nontrivial (F ⧸ pPrimeCore p F) := by
     rw [QuotientGroup.nontrivial_iff]
     exact hpPrimeCore_ne_top
-  haveI : Nontrivial (F ⧸ pPrimeCore q F) := by
+  have : Nontrivial (F ⧸ pPrimeCore q F) := by
     rw [QuotientGroup.nontrivial_iff]
     exact hqPrimeCore_ne_top
   obtain ⟨psiP, hpsiP⟩ :=
@@ -3218,7 +3225,7 @@ private theorem nilpotent_internalDirectProduct_pCore_pPrimeCore
     (p : ℕ) (hp : Nat.Prime p) (hnil : Group.IsNilpotent Q) :
     Section2.IsInternalDirectProduct (⊤ : Subgroup Q)
       (pCore p Q) (pPrimeCore p Q) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hsup : pCore p Q ⊔ pPrimeCore p Q = (⊤ : Subgroup Q) :=
     top_unique (nilpotent_top_le_pCore_sup_pPrimeCore hnil)
   have hcop : Nat.Coprime (Nat.card (pCore p Q))
@@ -3255,7 +3262,7 @@ private theorem huppert_XI_6_3_pCore_ne_bot_of_nilpotent_dvd_card
     (hpdvd : p ∣ Nat.card Q) :
     pCore p Q ≠ ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let S : Sylow p Q := Classical.choice inferInstance
   have hSnormal : (S : Subgroup Q).Normal :=
     Group.IsNilpotent.sylow_normal hnil p S
@@ -3307,9 +3314,9 @@ private theorem huppert_XI_6_3_two_prime_components_abelianization_product_le
     Nat.card (Abelianization (pCore p Q)) *
         Nat.card (Abelianization (pCore q (pPrimeCore p Q))) ≤
       Nat.card (Abelianization Q) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let R := pPrimeCore p Q
-  letI : Group.IsNilpotent Q := hnil
+  let : Group.IsNilpotent Q := hnil
   have hnilR : Group.IsNilpotent R := by infer_instance
   have hsecond :
       Nat.card (Abelianization (pCore q R)) ≤
@@ -3331,7 +3338,7 @@ private theorem huppert_XI_6_3_prime_dvd_pPrimeCore_card
     (p q : ℕ) (hp : Nat.Prime p) (hq : Nat.Prime q) (hpq : p ≠ q)
     (hnil : Group.IsNilpotent Q) (hqdvd : q ∣ Nat.card Q) :
     q ∣ Nat.card (pPrimeCore p Q) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hprod :=
     nilpotent_internalDirectProduct_pCore_pPrimeCore p hp hnil
   let e : (pCore p Q) × (pPrimeCore p Q) ≃* Q :=
@@ -3362,14 +3369,14 @@ private theorem huppert_XI_6_3_prime_component_abelianization_lower
     Nat.card D + 1 ≤ Nat.card (Abelianization (pCore p Q)) ∧
       (p ≠ 2 →
         2 * Nat.card D + 1 ≤ Nat.card (Abelianization (pCore p Q))) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPne : pCore p Q ≠ ⊥ :=
     huppert_XI_6_3_pCore_ne_bot_of_nilpotent_dvd_card
       p hp hnil hpdvd
-  letI : Nontrivial (pCore p Q) :=
+  let : Nontrivial (pCore p Q) :=
     (Subgroup.nontrivial_iff_ne_bot (pCore p Q)).2 hPne
-  have hPsolv : IsSolvable (pCore p Q) := by
-    letI : Group.IsNilpotent (pCore p Q) := pCore_isNilpotent
+  have hPsolv : Group.IsSolvable (pCore p Q) := by
+    let : Group.IsNilpotent (pCore p Q) := pCore_isNilpotent
     exact IsNilpotent.to_isSolvable
   obtain ⟨hdiv, hcard⟩ :=
     huppert_XI_6_3_characteristic_factor_abelianization_data
@@ -3412,10 +3419,10 @@ private theorem huppert_XI_6_3_two_prime_components_abelianization_lower
   have hpLower :=
     huppert_XI_6_3_prime_component_abelianization_lower
       (D := D) (Q := Q) p hp hnil hpdvd hcop hfree hoddD
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let R := pPrimeCore p Q
-  letI : IsInvariant D Q R := isInvariant_of_characteristic R
-  letI : Group.IsNilpotent Q := hnil
+  let : IsInvariant D Q R := isInvariant_of_characteristic R
+  let : Group.IsNilpotent Q := hnil
   have hnilR : Group.IsNilpotent R := by infer_instance
   have hqdvdR : q ∣ Nat.card R := by
     simpa [R] using
@@ -3451,10 +3458,10 @@ private theorem huppert_XI_6_3_pPrimeCore_abelianization_lower
       (q ≠ 2 →
         2 * Nat.card D + 1 ≤
           Nat.card (Abelianization (pPrimeCore p Q))) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let R := pPrimeCore p Q
-  letI : IsInvariant D Q R := isInvariant_of_characteristic R
-  letI : Group.IsNilpotent Q := hnil
+  let : IsInvariant D Q R := isInvariant_of_characteristic R
+  let : Group.IsNilpotent Q := hnil
   have hnilR : Group.IsNilpotent R := by infer_instance
   have hqdvdR : q ∣ Nat.card R := by
     simpa [R] using
@@ -3612,8 +3619,8 @@ private theorem extProdClassFunction_inner
         (extProdClassFunction chi psi) (extProdClassFunction chi' psi') =
       Theory.Character.classFunctionInner chi chi' *
         Theory.Character.classFunctionInner psi psi' := by
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype B := Fintype.ofFinite B
   have hgoal :
       (Nat.card (A × B) : ℂ)⁻¹ *
           ∑ x : A × B,
@@ -3650,7 +3657,7 @@ private theorem completeFamily_card_eq_conjClasses
     (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi) :
     Fintype.card I = Nat.card (ConjClasses A) := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
+  let : Fintype A := Fintype.ofFinite A
   rcases Theory.Character.completeFamily_form_basis hchi with ⟨b, _hb⟩
   calc
     Fintype.card I = Module.finrank ℂ (Theory.Character.ConjClassFunction A) :=
@@ -3836,7 +3843,7 @@ private theorem extProdClassFunction_completeFamily
   obtain ⟨K, hKFintype, theta, htheta, hKcard⟩ :=
     Theory.Character.card_irreducible_characters_eq_card_conjClasses
       (G := A × B)
-  letI : Fintype K := hKFintype
+  let : Fintype K := hKFintype
   let f : I × J → K := fun ij =>
     Classical.choose (htheta.2.1 (ext ij) (hirr ij))
   have hf : ∀ ij, theta (f ij) = ext ij := fun ij =>
@@ -3883,8 +3890,8 @@ private theorem irreducibleCharacter_eq_extProdClassFunction
   obtain ⟨J, hJFintype, psi, hpsi, _hpsiSum⟩ :=
     Theory.Character.exists_completeIrreducibleCharacterFamily_sum_degree_normSq
       (G := B)
-  letI : Fintype I := hIFintype
-  letI : Fintype J := hJFintype
+  let : Fintype I := hIFintype
+  let : Fintype J := hJFintype
   have hprod := extProdClassFunction_completeFamily chi psi hchi hpsi
   obtain ⟨ij, hij⟩ := hprod.2.1 phi hphi
   exact ⟨chi ij.1, psi ij.2, hchi.1 ij.1, hpsi.1 ij.2, hij.symm⟩
@@ -4092,7 +4099,7 @@ private theorem huppert_XI_6_3_nilpotent_character_factor
               a ∣ Nat.card (pCore p Q) ∧
               b ∣ Nat.card (pPrimeCore p Q) ∧
               Section1.degree theta = ((a * b : ℕ) : ℂ) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hprod :=
     nilpotent_internalDirectProduct_pCore_pPrimeCore p hp hnil
   let e : (pCore p Q) × (pPrimeCore p Q) ≃* Q :=
@@ -4124,7 +4131,7 @@ private theorem huppert_XI_6_3_pcore_factor_degree_gt_one
     (hbDvd : b ∣ Nat.card (pPrimeCore p Q))
     (hpDvd : p ∣ a * b) :
     1 < a := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hcop : Nat.Coprime p b :=
     Nat.Coprime.of_dvd_right hbDvd
       (pPrimeCore_coprime_card (G := Q) (p := p))
@@ -4149,7 +4156,7 @@ private theorem huppert_XI_6_3_pcore_lower_degree_family
           ∑ i ∈ Finset.univ.filter (fun i => degreeNat i < a),
             degreeNat i ^ 2 := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨n, hcard⟩ :=
     (pCore_isPGroup (G := Q) (p := p)).exists_card_eq
   let hclass : Section1.IsClassFunction chi :=
@@ -4163,7 +4170,7 @@ private theorem huppert_XI_6_3_pcore_lower_degree_family
   obtain ⟨ι, hι, rho, i0, degreeNat, hrho, hi0, hvalue, hdvd⟩ :=
     huppert_XI_6_2_character_degree_lower_sum_dvd
       p n hp hcard Phi hPhi
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   have hi0Degree : degreeNat i0 = a := by
     have h := hvalue i0
     rw [hi0] at h
@@ -4425,7 +4432,7 @@ private theorem huppert_XI_6_3_linear_lifted_lower_family
     Finset.univ.filter (fun i => degreeNat i < a)
   let L := {i : ι // i ∈ lower}
   let Char := Abelianization (pPrimeCore p Q) →* ℂˣ
-  letI : Fintype Char := Fintype.ofFinite _
+  let : Fintype Char := Fintype.ofFinite _
   let charEquiv : Char ≃ Fin (Fintype.card Char) := Fintype.equivFin Char
   let I := L × Fin (Fintype.card Char)
   let theta : I → Section1.ClassFunction Q := fun i =>
@@ -4587,7 +4594,7 @@ private theorem huppert_XI_6_3_linear_component_le_complete_lower_sum
       hthetaIrr, hthetaDegree, hthetaLt, hthetaBound⟩ :=
     huppert_XI_6_3_linear_lifted_lower_family
       p a e rho rhoDegree hrho hvalue
-  letI : Fintype I := hIFintype
+  let : Fintype I := hIFintype
   have hfamily :
       (∑ i ∈ Finset.univ.filter (fun i => rhoDegree i < a),
           rhoDegree i ^ 2) *
@@ -4620,7 +4627,7 @@ private theorem huppert_XI_6_3_abelianization_card_le_complete_lower_sum
       ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
         degreeNat chi ^ 2 := by
   let Char := Abelianization Q →* ℂˣ
-  letI : Fintype Char := Fintype.ofFinite _
+  let : Fintype Char := Fintype.ofFinite _
   let charEquiv : Char ≃ Fin (Fintype.card Char) := Fintype.equivFin Char
   let I := Fin (Fintype.card Char)
   let theta : I → Section1.ClassFunction Q := fun i =>
@@ -4717,7 +4724,7 @@ private theorem huppert_XI_6_3_nilpotent_lower_family
   obtain ⟨ι, hι, rho, rhoDegree, hrho, hvalue, hlower⟩ :=
     huppert_XI_6_3_pcore_lower_degree_family
       p a hp chi hchi hachi ha
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   obtain ⟨I, hIFintype, lowerChar, lowerDegree, hlowerInj,
       hlowerIrr, hlowerDegree, hlowerLt, hlowerSq⟩ :=
     huppert_XI_6_3_lifted_lower_family
@@ -5384,8 +5391,8 @@ private theorem huppert_XI_6_coherent_of_degree_growth
         N S chi (by simp [S]) psiS tau hirreducibleS
         (hirreducible ⟨chi, hchiY⟩)
         (by
-          letI : Fintype N := Fintype.ofFinite N
-          letI : DecidableEq (ClassFunction N) := Fintype.decidablePiFintype
+          let : Fintype N := Fintype.ofFinite N
+          let : DecidableEq (ClassFunction N) := Fintype.decidablePiFintype
           intro phi xi hphi hxi
           apply hisometry phi xi
           · refine ⟨integerSpan_mono ?_ hphi.1, hphi.2⟩
@@ -5399,8 +5406,8 @@ private theorem huppert_XI_6_coherent_of_degree_growth
             · exact hchiY
             · exact hSsubY hz)
         (by
-          letI : Fintype N := Fintype.ofFinite N
-          letI : DecidableEq (ClassFunction N) := Fintype.decidablePiFintype
+          let : Fintype N := Fintype.ofFinite N
+          let : DecidableEq (ClassFunction N) := Fintype.decidablePiFintype
           intro phi hphi
           apply hdegreeZero phi
           refine ⟨integerSpan_mono ?_ hphi.1, hphi.2⟩
@@ -5427,7 +5434,7 @@ private theorem frobenius_kernel_mem_iff_eq_one_or_fixedPointFree
     (hFrob : IsFrobeniusGroupWithKernelComplement F
       (MulAction.stabilizer H a)) (x : H) :
     x ∈ F ↔ x = 1 ∨ ∀ y : X, x • y ≠ y := by
-  letI : MulAction.IsPretransitive H X := htrans
+  let : MulAction.IsPretransitive H X := htrans
   constructor
   · intro hx
     by_cases hxone : x = 1
@@ -5537,10 +5544,10 @@ public theorem zassenhaus_normal_stabilizer_contains_frobeniusKernel
     (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)
   let Na : Subgroup H := N.comap H.subtype
   change F ≤ Na
-  letI : N.Normal := hNnormal
-  letI : MulAction.IsPreprimitive G X :=
+  let : N.Normal := hNnormal
+  let : MulAction.IsPreprimitive G X :=
     MulAction.isPreprimitive_of_is_two_pretransitive htwo
-  letI : MulAction.IsQuasiPreprimitive G X :=
+  let : MulAction.IsQuasiPreprimitive G X :=
     MulAction.IsPreprimitive.isQuasiPreprimitive
   have hfixed_ne_univ : MulAction.fixedPoints N X ≠ Set.univ := by
     intro hfixed
@@ -5687,10 +5694,10 @@ public theorem zassenhaus_nontrivial_normal_is_two_pretransitive
     (N : Subgroup G) (hNnormal : N.Normal) (hNne : N ≠ ⊥) :
     MulAction.IsMultiplyPretransitive N X 2 := by
   let H := MulAction.stabilizer G a
-  letI : N.Normal := hNnormal
-  letI : MulAction.IsPreprimitive G X :=
+  let : N.Normal := hNnormal
+  let : MulAction.IsPreprimitive G X :=
     MulAction.isPreprimitive_of_is_two_pretransitive htwo
-  letI : MulAction.IsQuasiPreprimitive G X :=
+  let : MulAction.IsQuasiPreprimitive G X :=
     MulAction.IsPreprimitive.isQuasiPreprimitive
   have hfixed_ne_univ : MulAction.fixedPoints N X ≠ Set.univ := by
     intro hfixed
@@ -5856,7 +5863,7 @@ private theorem zassenhaus_regular_normal_elementaryAbelian
       ∀ x y : X, ∃! m : M, (m : N) • x = y) :
     ∃ p : ℕ, Nat.Prime p ∧ IsElementaryAbelian p M := by
   classical
-  letI : M.Normal := hMnormal
+  let : M.Normal := hMnormal
   have hmove (m : M) (hm : m ≠ 1) : (m : N) • a ≠ a := by
     intro hma
     obtain ⟨m0, hm0, huniq⟩ := hMregular a a
@@ -5885,11 +5892,11 @@ private theorem zassenhaus_regular_normal_elementaryAbelian
     have hxm0 : xconj = m0 := huniq xconj hxconj_act
     have hym0 : y = m0 := huniq y rfl
     exact ⟨d, congrArg Subtype.val (hxm0.trans hym0.symm)⟩
-  letI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
+  let : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hMne
   have hMcard_ne_one : Nat.card M ≠ 1 :=
     ne_of_gt (Finite.one_lt_card_iff_nontrivial.mpr inferInstance)
   obtain ⟨p, hp, hp_dvd⟩ := Nat.exists_prime_and_dvd hMcard_ne_one
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   obtain ⟨z, hzorder⟩ := exists_prime_orderOf_dvd_card' p hp_dvd
   have hzne : z ≠ 1 := by
     intro hz
@@ -5914,7 +5921,7 @@ private theorem zassenhaus_regular_normal_elementaryAbelian
     · exact ⟨0, by simp [hx]⟩
     · exact ⟨1, by simp [hprime_order x hx]⟩)
   have hMcomm : IsMulCommutative M := by
-    letI : Nontrivial (Subgroup.center M) := hMp.center_nontrivial
+    let : Nontrivial (Subgroup.center M) := hMp.center_nontrivial
     obtain ⟨zc, hzc⟩ := exists_ne (1 : Subgroup.center M)
     let zM : M := zc
     have hzM_ne : zM ≠ 1 := by
@@ -5976,15 +5983,15 @@ private theorem zassenhaus_regular_normal_unique
       ∀ x y : X, ∃! r : R, (r : N) • x = y) :
     M = R := by
   classical
-  letI : M.Normal := hMnormal
-  letI : R.Normal := hRnormal
-  letI : MulAction.IsPreprimitive N X :=
+  let : M.Normal := hMnormal
+  let : R.Normal := hRnormal
+  let : MulAction.IsPreprimitive N X :=
     MulAction.isPreprimitive_of_is_two_pretransitive htwo
-  letI : MulAction.IsQuasiPreprimitive N X :=
+  let : MulAction.IsQuasiPreprimitive N X :=
     MulAction.IsPreprimitive.isQuasiPreprimitive
   have normal_transitive (K : Subgroup N) (hKnormal : K.Normal)
       (hKne : K ≠ ⊥) : MulAction.IsPretransitive K X := by
-    letI : K.Normal := hKnormal
+    let : K.Normal := hKnormal
     apply MulAction.IsQuasiPreprimitive.isPretransitive_of_normal
     intro hfixed
     apply hKne
@@ -6041,7 +6048,7 @@ private theorem zassenhaus_regular_normal_unique
     obtain ⟨p, hp, hMelem⟩ :=
       zassenhaus_regular_normal_elementaryAbelian
         htwo a M hMnormal hMne hMregular
-    letI : IsMulCommutative M := hMelem.toIsMulCommutative
+    let : IsMulCommutative M := hMelem.toIsMulCommutative
     have hRleM : R ≤ M := by
       intro r hr
       obtain ⟨m, hmact, _hmunique⟩ := hMregular a (r • a)
@@ -6095,9 +6102,9 @@ public theorem zassenhaus_normal_subgroup_no_regular_normal
     ¬ ∃ M : Subgroup N, M.Normal ∧ M ≠ ⊥ ∧
       ∀ x y : X, ∃! m : M, (m : N) • x = y := by
   classical
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   rintro ⟨M, hMnormal, hMne, hMregular⟩
-  letI : M.Normal := hMnormal
+  let : M.Normal := hMnormal
   have hMconj_eq (g : G) :
       M.map (MulAut.conjNormal (H := N) g) = M := by
     let phi : MulAut N := MulAut.conjNormal (H := N) g
@@ -6222,7 +6229,7 @@ private theorem frobenius_kernel_commutative_of_even_complement_card
     exact pow_orderOf_eq_one t
   have htsqH : (t : H) ^ 2 = 1 := by
     simpa using congrArg Subtype.val htsq
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   let phi : MulAut F := MulAut.conjNormal (H := F) (t : H)
   have hphi_sq : phi ^ 2 = 1 := by
     change (MulAut.conjNormal (H := F) (t : H)) ^ 2 = 1
@@ -6262,7 +6269,7 @@ public theorem frobenius_complement_involutions_eq
     (hFrob : IsFrobeniusGroupWithKernelComplement F D)
     (t u : D) (htorder : orderOf t = 2) (huorder : orderOf u = 2) :
     t = u := by
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   have hconjInv : ∀ r : D, orderOf r = 2 → ∀ x : F,
       (r : H) * (x : H) * (r : H)⁻¹ = (x⁻¹ : F) := by
     intro r hrorder x
@@ -6474,7 +6481,7 @@ public theorem zassenhaus_swap_kernel_bruhat_decomposition
   let b' : SubMulAction.ofStabilizer G a := ⟨b, hab.symm⟩
   let D := MulAction.stabilizer H b'
   change IsFrobeniusGroupWithKernelComplement F D at hFrob
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   let g : G := s * (((f : H) : G)) * s
   have hgnotH : g ∉ H := by
     intro hgH
@@ -6595,8 +6602,8 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
   change Nat.card F - 1 ≤ 2 * Nat.card D
   have hFcomm : IsMulCommutative F :=
     frobenius_kernel_commutative_of_even_complement_card F D hFrob heven
-  letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := IsMulCommutative.instCommGroup
+  let : IsMulCommutative F := hFcomm
+  let : CommGroup F := IsMulCommutative.instCommGroup
   let eAdd : Additive F ≃+ Additive F := AddEquiv.refl (Additive F)
   obtain ⟨ePoint, hPointA, hPointB, hPointF⟩ :=
     huppert_blackburn_XI_pointStabilizer_exists_projectivePointEquiv
@@ -6745,7 +6752,7 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
       _ = tG * s := by rw [hconj]
   have htConjInv (x : F) :
       (t : H) * (x : H) * (t : H)⁻¹ = (x⁻¹ : F) := by
-    letI : F.Normal := hFrob.normal
+    let : F.Normal := hFrob.normal
     let phi : MulAut F := MulAut.conjNormal (H := F) (t : H)
     have hphi_sq : phi ^ 2 = 1 := by
       change (MulAut.conjNormal (H := F) (t : H)) ^ 2 = 1
@@ -6951,9 +6958,9 @@ private theorem zassenhaus_even_twoPointStabilizer_card_bound
             rw [hTauK, hTauK, hell]
           exact Option.some.inj (tau.injective htau)
         exact (congrArg Additive.toMul hkxy).symm
-  letI : Fintype F := Fintype.ofFinite F
-  letI : Fintype D := Fintype.ofFinite D
-  letI : Fintype F0 := Fintype.ofFinite F0
+  let : Fintype F := Fintype.ofFinite F
+  let : Fintype D := Fintype.ofFinite D
+  let : Fintype F0 := Fintype.ofFinite F0
   have hFiberCard : ∀ q ∈ (Finset.univ : Finset F0).image d,
       ({x ∈ (Finset.univ : Finset F0) | d x = q}).card ≤ 2 := by
     intro q hq
@@ -7125,10 +7132,10 @@ public theorem huppert_XI_6_1_action_parameters
   have hOmegaEq : Fintype.card Omega = Nat.card F + 1 := by
     rw [hFcard, ← hdegree]
   have hHcard : Nat.card H = Nat.card F * Nat.card D := by
-    exact hFrob.isComplement'.card_mul.symm
+    exact hFrob.isComplement'.card_mul_card.symm
   have hGcard : Nat.card G = Fintype.card Omega * Nat.card F * Nat.card D := by
-    letI : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
-    letI : MulAction.IsPretransitive G Omega :=
+    let : MulAction.IsMultiplyPretransitive G Omega 2 := htwo
+    let : MulAction.IsPretransitive G Omega :=
       MulAction.isPretransitive_of_is_two_pretransitive
     have hindex : H.index = Fintype.card Omega := by
       calc
@@ -7142,8 +7149,8 @@ public theorem huppert_XI_6_1_action_parameters
         rw [hHcard]
         ac_rfl
   have hdiv : Nat.card D ∣ Nat.card F - 1 := by
-    letI : F.Normal := hFrob.normal
-    letI : MulDistribMulAction D F :=
+    let : F.Normal := hFrob.normal
+    let : MulDistribMulAction D F :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer D F
         (Subgroup.le_normalizer_of_normal (H := F))
     apply huppert_XI_6_1_actor_card_dvd_group_card_sub_one
@@ -7331,7 +7338,7 @@ private theorem huppert_XI_6_3_nilpotent_degree_growth
       hlower0Irr, hlower0Degree, hlower0Lt, hlower0Sq⟩ :=
     huppert_XI_6_3_nilpotent_lower_family
       hnil theta htheta z hz hthetaDegree
-  letI : Fintype I0 := hI0Fintype
+  let : Fintype I0 := hI0Fintype
   have hlowerComplete :
       z ^ 2 ≤ ∑ chi ∈ K.filter (fun chi => degreeNat chi < z),
         degreeNat chi ^ 2 :=
@@ -7388,7 +7395,7 @@ private theorem huppert_XI_6_3_nilpotent_degree_growth
     obtain ⟨ι, hι, rho, rhoDegree, hrho, hvalue, hlowerA⟩ :=
       huppert_XI_6_3_pcore_lower_degree_family
         p a hp chi hchi hachi ha
-    letI : Fintype ι := hι
+    let : Fintype ι := hι
     by_cases hbOne : b = 1
     · have haEqZ : a = z := by
         simpa [hbOne] using hab
@@ -7457,15 +7464,15 @@ private theorem huppert_XI_6_3_nilpotent_degree_growth
             A (Nat.card D) z S L hzThree (by exact le_rfl) hL hAprod
         exact hnotGrowth hgt
     · have hb : 1 < b := by omega
-      letI : Fact p.Prime := ⟨hp⟩
+      let : Fact p.Prime := ⟨hp⟩
       let R := pPrimeCore p Q
-      letI : Group.IsNilpotent Q := hnil
+      let : Group.IsNilpotent Q := hnil
       have hnilR : Group.IsNilpotent R := by infer_instance
       obtain ⟨J, hJFintype, lowerB, degreeB, hlowerBInj,
           hlowerBIrr, hlowerBDegree, hlowerBLt, hlowerBSq⟩ :=
         huppert_XI_6_3_nilpotent_lower_family
           hnilR psi hpsi b hb hbpsi
-      letI : Fintype J := hJFintype
+      let : Fintype J := hJFintype
       let lowerASet : Finset ι :=
         Finset.univ.filter (fun i => rhoDegree i < a)
       let IA := {i : ι // i ∈ lowerASet}
@@ -7512,7 +7519,7 @@ private theorem huppert_XI_6_3_nilpotent_degree_growth
           hlowerALt hlowerASq
           lowerB degreeB hlowerBInj hlowerBIrr hlowerBDegree
           hlowerBLt hlowerBSq
-      letI : Fintype T := hTFintype
+      let : Fintype T := hTFintype
       have hlowerLtZ : ∀ t, lowerDegree t < z := by
         intro t
         simpa [hab] using hlowerLt t
@@ -7584,7 +7591,7 @@ private theorem huppert_XI_6_6_class_card_mul_centralizer_card
     Nat.card (ConjClasses.mk g).carrier *
         Nat.card (Subgroup.centralizer ({g} : Set G)) = Nat.card G := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hst :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) g
   have hst' : Fintype.card (ConjClasses.mk g).carrier *
@@ -7631,10 +7638,10 @@ private theorem huppert_XI_6_5_frobenius_degree_growth
         ∑ xi ∈ Y.filter (fun xi => degreeNat xi < degreeNat chi),
           degreeNat xi ^ 2 := by
   classical
-  letI : F.Normal := hFrob.normal
-  letI : Nontrivial F :=
+  let : F.Normal := hFrob.normal
+  let : Nontrivial F :=
     (Subgroup.nontrivial_iff_ne_bot F).2 hFrob.kernel_ne_bot
-  letI : MulDistribMulAction D F :=
+  let : MulDistribMulAction D F :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer D F
       (Subgroup.le_normalizer_of_normal (H := F))
   have hregular : ActsRegularly D F :=
@@ -8132,7 +8139,7 @@ private theorem zassenhaus_derangement_count
     let Der := {g : G // ∀ x : Omega, g • x ≠ x}
     2 * Nat.card Der + 2 * n ^ 2 = (n + 1) * n * (d + 1) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let fix : G → ℕ := fun g => Fintype.card (MulAction.fixedBy Omega g)
   have hfixOne : fix 1 = n + 1 := by
     simp [fix, hOmegaCard]
@@ -8147,8 +8154,8 @@ private theorem zassenhaus_derangement_count
       (fun h => hyz (Subtype.ext h))
       ⟨x.property, y.property, z.property⟩
   let Q1 := Quotient (MulAction.orbitRel G Omega)
-  letI : Fintype Q1 := Fintype.ofFinite Q1
-  letI : MulAction.IsPretransitive G Omega :=
+  let : Fintype Q1 := Fintype.ofFinite Q1
+  let : MulAction.IsPretransitive G Omega :=
     MulAction.isPretransitive_of_is_two_pretransitive
   have hQ1card : Fintype.card Q1 = 1 := by
     apply Fintype.card_eq_one_iff.mpr
@@ -8164,7 +8171,7 @@ private theorem zassenhaus_derangement_count
       MulAction.sum_card_fixedBy_eq_card_orbits_mul_card_group G Omega
     simpa [fix, Q1, hQ1card, Nat.card_eq_fintype_card] using hburnside
   let Q2 := Quotient (MulAction.orbitRel G (Omega × Omega))
-  letI : Fintype Q2 := Fintype.ofFinite Q2
+  let : Fintype Q2 := Fintype.ofFinite Q2
   have hQ2card : Fintype.card Q2 = 2 := by
     have hcardNat : Nat.card Q2 = 2 := by
       rw [Nat.card_eq_two_iff]
@@ -8221,7 +8228,7 @@ private theorem zassenhaus_derangement_count
       fix g = 0 ↔ ∀ x : Omega, g • x ≠ x := by
     constructor
     · intro hzero x hfix
-      haveI : IsEmpty (MulAction.fixedBy Omega g) :=
+      have : IsEmpty (MulAction.fixedBy Omega g) :=
         Fintype.card_eq_zero_iff.mp (by simpa [fix] using hzero)
       exact isEmptyElim (⟨x, hfix⟩ : MulAction.fixedBy Omega g)
     · intro hfree
@@ -8368,7 +8375,7 @@ public theorem huppert_XI_5_3_degree_one_of_quotient_commutative
       rhoq q (QuotientGroup.mk'_surjective F)
     simpa [hcomp] using hrhoIrr
   have hn : n = 1 := by
-    letI : Representation.IsIrreducible rhoq := hrhoqIrr
+    let : Representation.IsIrreducible rhoq := hrhoqIrr
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
         (ρ := rhoq))
@@ -8397,14 +8404,14 @@ public theorem huppert_XI_5_3_kernel_quotient_linear_family
         Section1.subgroupInKernel' theta F →
         theta ∈ Z := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   let Q := H ⧸ F
   let q : H →* Q := QuotientGroup.mk' F
   let e : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := e.isCyclic.mpr hcyclic
-  letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := IsCyclic.isMulCommutative
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
+  let : IsCyclic Q := hQcyclic
+  let : IsMulCommutative Q := IsCyclic.isMulCommutative
+  let : CommGroup Q := IsMulCommutative.instCommGroup
   let inflate : (Q →* ℂˣ) → Section1.ClassFunction H :=
     fun chi => Section1.characterInflationByHom q chi
   have hinflate : Function.Injective inflate := by
@@ -8419,7 +8426,7 @@ public theorem huppert_XI_5_3_kernel_quotient_linear_family
       _ = (inflate psi h : ℂ) := by rw [hEq]
       _ = (psi (q h) : ℂ) := rfl
       _ = (psi x : ℂ) := by rw [hh]
-  letI : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
+  let : Fintype (Q →* ℂˣ) := Fintype.ofFinite (Q →* ℂˣ)
   let Z : Finset (Section1.ClassFunction H) :=
     Finset.univ.image inflate
   have hZirr : ∀ theta : Z,
@@ -8444,8 +8451,8 @@ public theorem huppert_XI_5_3_kernel_quotient_linear_family
     simp [inflate, q, Section1.characterInflationByHom, hq,
       Section1.degree]
   have hZcard : Z.card = Nat.card D := by
-    letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
-      haveI : NeZero (Monoid.exponent Q) := by infer_instance
+    let : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
+      have : NeZero (Monoid.exponent Q) := by infer_instance
       exact Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
     have hdual :
         Nat.card (Q →* ℂˣ) = Nat.card Q :=
@@ -8624,7 +8631,7 @@ private lemma huppert_XI_5_3_subgroupRestriction_inducedCF_twoCoset
     DoubleCoset.mk H H 1
   let qt : DoubleCoset.Quotient (H : Set G) H :=
     DoubleCoset.mk H H t
-  letI : Fintype (DoubleCoset.Quotient (H : Set G) H) :=
+  let : Fintype (DoubleCoset.Quotient (H : Set G) H) :=
     Fintype.ofFinite _
   have htNotH : t ∉ H := by
     intro htH
@@ -9020,14 +9027,14 @@ public theorem huppert_XI_5_3_nonprincipal_induced_family
   let A0 := {chi : A // chi ≠ 1}
   let e : Q ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
   have hQcyclic : IsCyclic Q := e.isCyclic.mpr hcyclic
-  letI : IsCyclic Q := hQcyclic
-  letI : IsMulCommutative Q := IsCyclic.isMulCommutative
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype A0 := Fintype.ofFinite A0
+  let : IsCyclic Q := hQcyclic
+  let : IsMulCommutative Q := IsCyclic.isMulCommutative
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype A0 := Fintype.ofFinite A0
   have hdual : Nat.card A = Nat.card Q := by
-    letI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
-      haveI : NeZero (Monoid.exponent Q) := by infer_instance
+    let : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
+      have : NeZero (Monoid.exponent Q) := by infer_instance
       exact Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
     exact CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity Q ℂ
   have hAcard : Nat.card A = Nat.card D :=
@@ -9176,7 +9183,7 @@ private theorem huppert_XI_6_7_nontrivial_kernel_conjClasses_card
         ∃ x : H, x ∈ F ∧ x ≠ 1 ∧ C = ConjClasses.mk x} +
       Nat.card D = Nat.card (ConjClasses H) := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   let kerPred : ConjClasses H → Prop := fun C =>
     ∃ x : H, x ∈ F ∧ x ≠ 1 ∧ C = ConjClasses.mk x
   let KerClass := {C : ConjClasses H // kerPred C}
@@ -9184,8 +9191,8 @@ private theorem huppert_XI_6_7_nontrivial_kernel_conjClasses_card
   let q : H →* H ⧸ F := QuotientGroup.mk' F
   let qD : D →* H ⧸ F := q.comp D.subtype
   let e : H ⧸ F ≃* D := hFrob.isComplement'.symm.QuotientMulEquiv
-  letI : IsMulCommutative D := IsCyclic.isMulCommutative
-  letI : CommGroup D := IsMulCommutative.instCommGroup
+  let : IsMulCommutative D := IsCyclic.isMulCommutative
+  let : CommGroup D := IsMulCommutative.instCommGroup
   have hquotComm (x y : H ⧸ F) : x * y = y * x := by
     apply e.injective
     simpa only [map_mul] using (mul_comm (e x) (e y))
@@ -9254,7 +9261,7 @@ private theorem huppert_XI_6_7_nontrivial_kernel_conjClasses_card
     Equiv.ofBijective otherClass ⟨hotherInjective, hotherSurjective⟩
   have hotherCard : Nat.card OtherClass = Nat.card D :=
     (Nat.card_congr otherEquiv).symm
-  letI : Fintype (ConjClasses H) := Fintype.ofFinite (ConjClasses H)
+  let : Fintype (ConjClasses H) := Fintype.ofFinite (ConjClasses H)
   have hsub : Nat.card OtherClass =
       Nat.card (ConjClasses H) - Nat.card KerClass := by
     simpa only [Nat.card_eq_fintype_card] using
@@ -9409,7 +9416,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
     (⟨b, hab.symm⟩ : SubMulAction.ofStabilizer G a)
   have hsmallD : 2 * Nat.card D < Nat.card F - 1 := by
     simpa [D, H] using hsmall
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   obtain ⟨_hOmegaCard, _hHcard, hGcard, hDdiv⟩ :=
     huppert_XI_6_1_action_parameters htwo_transitive a b hab F hFrob
   have hDgt : 1 < Nat.card D :=
@@ -9430,8 +9437,8 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
     huppert_XI_6_5_derived_base_degree_data F Y hYbot
   have hY0eq_of_comm : IsMulCommutative F → Y0 = Y := by
     intro hFcomm
-    letI : IsMulCommutative F := hFcomm
-    letI : CommGroup F := IsMulCommutative.instCommGroup
+    let : IsMulCommutative F := hFcomm
+    let : CommGroup F := IsMulCommutative.instCommGroup
     have hcommRoot : _root_.commutator F = ⊥ := by
       rw [commutator_eq_bot_iff_center_eq_top]
       exact CommGroup.center_eq_top
@@ -9736,8 +9743,8 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
     obtain ⟨g, h, hgfree, hhfree, hgh⟩ := hder
     let KerClass := {C : ConjClasses H //
       ∃ x : H, x ∈ F ∧ x ≠ 1 ∧ C = ConjClasses.mk x}
-    letI : Fintype KerClass := Fintype.ofFinite KerClass
-    letI : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
+    let : Fintype KerClass := Fintype.ofFinite KerClass
+    let : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
     have hKerCount :
         Nat.card KerClass + Nat.card D = Nat.card (ConjClasses H) := by
       simpa [KerClass, H, MulAction.mem_stabilizer_iff] using
@@ -9821,14 +9828,14 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
             apply hkerRep_ne K
             exact congrArg Subtype.val hOne)
           z.1).mp z.2
-    letI : Fintype D := Fintype.ofFinite D
+    let : Fintype D := Fintype.ofFinite D
     let D0 := {d : D // d ≠ 1}
-    letI : Fintype D0 := Fintype.ofFinite D0
+    let : Fintype D0 := Fintype.ofFinite D0
     let twoMap : D0 → ConjClasses G := fun d =>
       ConjClasses.mk ((((d : D) : H) : G))
     have hDcyclic : IsCyclic D := by simpa [D, H] using hcyclic
-    letI : IsMulCommutative D := IsCyclic.isMulCommutative
-    letI : CommGroup D := IsMulCommutative.instCommGroup
+    let : IsMulCommutative D := IsCyclic.isMulCommutative
+    let : CommGroup D := IsMulCommutative.instCommGroup
     have htwoMapEq : ∀ d e : D0, twoMap d = twoMap e →
         (e : D) = (d : D) ∨ (e : D) = (d : D)⁻¹ := by
       intro d e hde
@@ -9943,7 +9950,7 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
           Finset.card_le_mul_card_image _ 2 htwoFiberCard
         _ = 2 * Two.card := rfl
     have hD0card : Fintype.card D0 = Nat.card D - 1 := by
-      letI : Fintype {d : D // d = 1} := Fintype.ofFinite _
+      let : Fintype {d : D // d = 1} := Fintype.ofFinite _
       calc
         Fintype.card D0 =
             Fintype.card D - Fintype.card {d : D // d = 1} := by
@@ -10162,10 +10169,10 @@ private theorem huppert_XI_6_1_simple_odd_character_divisibility
         hFrob.isComplement'.symm.QuotientMulEquiv
       have hQcyclic : IsCyclic (H ⧸ F) :=
         eQ.isCyclic.mpr (by simpa [D, H] using hcyclic)
-      letI : IsCyclic (H ⧸ F) := hQcyclic
-      letI : IsMulCommutative (H ⧸ F) :=
+      let : IsCyclic (H ⧸ F) := hQcyclic
+      let : IsMulCommutative (H ⧸ F) :=
         IsCyclic.isMulCommutative
-      letI : CommGroup (H ⧸ F) :=
+      let : CommGroup (H ⧸ F) :=
         IsMulCommutative.instCommGroup
       have hFindex :
           F.relIndex (⊤ : Subgroup H) = Nat.card D := by
@@ -10805,8 +10812,8 @@ private theorem huppert_XI_6_1_simple_abelian_small_contradiction
     exact zassenhaus_odd_twoPointStabilizer_swap_inverts
       htwo_transitive hat_most_two_fixed_points hsimple
       a b hab F hFrob hodd s hsa hsb
-  letI : IsMulCommutative F := hFcomm
-  letI : CommGroup F := IsMulCommutative.instCommGroup
+  let : IsMulCommutative F := hFcomm
+  let : CommGroup F := IsMulCommutative.instCommGroup
   have hFnil : Group.IsNilpotent F := inferInstance
   have hdegreeDvd : Nat.card F - 1 ∣ Nat.card G :=
     huppert_XI_6_1_simple_odd_character_divisibility
@@ -11079,12 +11086,12 @@ public theorem huppert_XI_6_1_centralPrime_eq_noncommutativeSylowPrime
     huppert_XI_6_1_frobeniusKernel_card_primePower
       htwo_transitive hat_most_two_fixed_points hno_regular_normal
       a b hab F hFrob hFnil
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
-  haveI : Nontrivial P := by
+  let : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Nontrivial P := by
     rw [← not_subsingleton_iff_nontrivial]
     intro hPsub
     apply hPnoncomm
-    letI : Subsingleton P := hPsub
+    let : Subsingleton P := hPsub
     exact ⟨⟨fun x y => Subsingleton.elim (x * y) (y * x)⟩⟩
   obtain ⟨k, hk, hPcard⟩ :=
     P.isPGroup'.nontrivial_iff_card.mp (inferInstance : Nontrivial P)
@@ -11239,7 +11246,7 @@ private theorem huppert_XI_6_1_abelianKernel_complement_bound_aux
               apply Subtype.ext
               apply Subtype.ext
               exact congrArg (fun z : D => (z : H)) hxy)
-    letI : IsMulCommutative F := hFcomm
+    let : IsMulCommutative F := hFcomm
     have hFNcomm : IsMulCommutative FN := by
       simpa only [FN] using
         (inferInstance : IsMulCommutative
@@ -11329,7 +11336,7 @@ public theorem huppert_XI_6_5_abelian_frobenius_nonker_family
           (Nat.card D : ℂ)) ∧
       Y.card * Nat.card D = Nat.card F - 1 := by
   classical
-  letI : F.Normal := hFrob.normal
+  let : F.Normal := hFrob.normal
   obtain ⟨Y, hYirr, hYnonker, hYcomplete, hYisometry, hYvirtual⟩ :=
     huppert_XI_6_5_complete_nonker_induction_isometry
       N F D hFrob hTI
@@ -11340,8 +11347,8 @@ public theorem huppert_XI_6_5_abelian_frobenius_nonker_family
   obtain ⟨degreeNat, hY0sub, hdegree, hY0degree, _hdivDegree⟩ :=
     huppert_XI_6_5_derived_base_degree_data F Y hYbot
   have hY0eq : Y0 = Y := by
-    letI : IsMulCommutative F := hFcomm
-    letI : CommGroup F := IsMulCommutative.instCommGroup
+    let : IsMulCommutative F := hFcomm
+    let : CommGroup F := IsMulCommutative.instCommGroup
     have hcommRoot : _root_.commutator F = ⊥ := by
       rw [commutator_eq_bot_iff_center_eq_top]
       exact CommGroup.center_eq_top
@@ -11382,7 +11389,7 @@ public theorem huppert_XI_6_5_abelian_frobenius_nonker_family
   have hquotientCard : Nat.card (N ⧸ F) = Nat.card D :=
     Nat.card_congr eQ.toEquiv
   have hNcard : Nat.card N = Nat.card F * Nat.card D :=
-    hFrob.isComplement'.card_mul.symm
+    hFrob.isComplement'.card_mul_card.symm
   rw [hquotientCard, hNcard] at hsumEq
   have hsumCard :
       (∑ eta : Y, degreeNat eta ^ (2 : ℕ)) =
@@ -11444,8 +11451,8 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
             scalarProduct K theta (subgroupRestriction K (psi j)) =
               if j = i then 1 else 0 := by
   classical
-  letI : IsMulCommutative K := hKcomm
-  letI : CommGroup K := IsMulCommutative.instCommGroup
+  let : IsMulCommutative K := hKcomm
+  let : CommGroup K := IsMulCommutative.instCommGroup
   have hpiNe : pi ≠ 0 := by
     intro hzero
     have hzeroK : subgroupRestriction K pi = 0 := by rw [hzero]; rfl
@@ -11456,8 +11463,8 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
     omega
   obtain ⟨ι, hι, hdec, e, psi, _i0, hepos, hpsiBook, hpair, hdecomp⟩ :=
     exists_positive_irreducible_decomposition_of_character pi hpiChar hpiNe
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := hdec
+  let : Fintype ι := hι
+  let : DecidableEq ι := hdec
   have hpsiIrr : ∀ i, IsIrreducibleCharacterOnGroup (psi i) := by
     intro i
     exact isIrreducibleCharacterOnGroup_of_isBookIrreducibleCharacter
@@ -11494,7 +11501,7 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
     choose c hc using hcExists
     refine ⟨c, hc, ?_⟩
     have hsp : scalarProduct K theta (Section6.regularCharacter K) = 1 := by
-      letI : Fintype K := Fintype.ofFinite K
+      let : Fintype K := Fintype.ofFinite K
       unfold scalarProduct Section6.regularCharacter
       rw [Finset.sum_eq_single (1 : K)]
       · simp only [if_true]
@@ -11549,8 +11556,8 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
         _hthetaPair, hresEq⟩ :=
       exists_positive_irreducible_decomposition_of_character
         (subgroupRestriction K (psi i)) (hresChar i) hresNe
-    letI : Fintype κ := hκ
-    letI : DecidableEq κ := hκdec
+    let : Fintype κ := hκ
+    let : DecidableEq κ := hκdec
     have hthetaOrth : ∀ r s : κ,
         scalarProduct K (theta r) (theta s) = if r = s then 1 else 0 :=
       scalarProduct_isBookIrreducible_family theta hthetaBook _hthetaPair
@@ -11587,7 +11594,7 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
       simpa [heOne] using hsum
     have hex : ∃ i, c i ≠ 0 := by
       by_contra h
-      push_neg at h
+      push Not at h
       have hzero : ∑ j, c j = 0 := by simp [h]
       omega
     obtain ⟨i, hciNe⟩ := hex
@@ -11631,8 +11638,8 @@ public theorem huppert_XI_regular_restriction_multiplicity_free
         hthetaPair, hresEq⟩ :=
       exists_positive_irreducible_decomposition_of_character
         (subgroupRestriction K (psi i)) (hresChar i) hresNe
-    letI : Fintype κ := hκ
-    letI : DecidableEq κ := hκdec
+    let : Fintype κ := hκ
+    let : DecidableEq κ := hκdec
     have hthetaOrth : ∀ r s : κ,
         scalarProduct K (theta r) (theta s) = if r = s then 1 else 0 :=
       scalarProduct_isBookIrreducible_family theta hthetaBook hthetaPair

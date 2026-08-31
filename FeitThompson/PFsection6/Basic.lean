@@ -214,26 +214,26 @@ public theorem subgroupInKernel'_quotientCharacterInflation
   rw [Section1.quotientCharacterInflation_degree]
 
 public theorem exists_nontrivial_linear_character_of_solvable
-    (G : Type u) [Group G] [Finite G] [IsSolvable G] [Nontrivial G] :
+    (G : Type u) [Group G] [Finite G] [Group.IsSolvable G] [Nontrivial G] :
     ∃ χ : G →* ℂˣ, χ ≠ 1 := by
   classical
   rcases exist_index_p_of_solvable G with ⟨H, hHnorm, hprime⟩
-  letI : H.Normal := hHnorm
+  let : H.Normal := hHnorm
   let Q := G ⧸ H
   have hcardQ : Nat.card Q = H.index := by
     simpa [Q] using (Subgroup.index_eq_card H).symm
-  haveI : Fact (Nat.Prime H.index) := ⟨hprime⟩
-  haveI : IsCyclic Q := isCyclic_of_prime_card (α := Q) (p := H.index) hcardQ
-  letI : CommGroup Q := IsCyclic.commGroup
+  have : Fact (Nat.Prime H.index) := ⟨hprime⟩
+  have : IsCyclic Q := isCyclic_of_prime_card (α := Q) (p := H.index) hcardQ
+  let : CommGroup Q := IsCyclic.commGroup
   have hQ_nontrivial : Nontrivial Q := by
     have hQcard_gt : 1 < Nat.card Q := by
       rw [hcardQ]
       exact hprime.one_lt
     exact (Finite.one_lt_card_iff_nontrivial (α := Q)).mp hQcard_gt
-  letI : Nontrivial Q := hQ_nontrivial
+  let : Nontrivial Q := hQ_nontrivial
   obtain ⟨q, hq⟩ := exists_ne (1 : Q)
-  haveI : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
-    haveI : NeZero (Monoid.exponent Q) := by infer_instance
+  have : HasEnoughRootsOfUnity ℂ (Monoid.exponent Q) := by
+    have : NeZero (Monoid.exponent Q) := by infer_instance
     exact Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent Q)
   rcases CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity Q ℂ hq with
     ⟨η, hη⟩
@@ -248,20 +248,20 @@ public theorem exists_nontrivial_linear_character_of_solvable
 public theorem inducedKernelFamily_exists_degree_relIndex_of_lt
     {L : Type u} [Group L] [Finite L]
     {K A : Subgroup L} {SA : Finset (Section1.ClassFunction L)}
-    (hKsolv : IsSolvable K) (hAnorm : A.Normal) (hAK : A < K)
+    (hKsolv : Group.IsSolvable K) (hAnorm : A.Normal) (hAK : A < K)
     (hSA : inducedKernelFamily K A SA) :
     ∃ χ : Section1.ClassFunction L,
       χ ∈ SA ∧ Section1.degree χ = (K.relIndex (⊤ : Subgroup L) : ℂ) := by
   classical
-  letI : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
-  letI : IsSolvable K := hKsolv
+  let : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
+  let : Group.IsSolvable K := hKsolv
   have hquot_nontrivial : Nontrivial (K ⧸ A.subgroupOf K) := by
     rw [QuotientGroup.nontrivial_iff]
     intro htop
     have hKleA : K ≤ A := by
       simpa [Subgroup.subgroupOf_eq_top] using htop
     exact hAK.not_ge hKleA
-  letI : Nontrivial (K ⧸ A.subgroupOf K) := hquot_nontrivial
+  let : Nontrivial (K ⧸ A.subgroupOf K) := hquot_nontrivial
   rcases exists_nontrivial_linear_character_of_solvable (K ⧸ A.subgroupOf K) with
     ⟨χ, hχne⟩
   let θ : Section1.ClassFunction K := Section1.quotientCharacterInflation A K χ
@@ -279,7 +279,7 @@ public theorem inducedKernelFamily_exists_degree_relIndex_of_lt
 public theorem inducedKernelFamily_nonempty_of_solvable_proper
     {L : Type u} [Group L] [Finite L]
     {K A : Subgroup L} {SA : Finset (Section1.ClassFunction L)}
-    (hKsolv : IsSolvable K) (hAnorm : A.Normal) (hAK : A < K)
+    (hKsolv : Group.IsSolvable K) (hAnorm : A.Normal) (hAK : A < K)
     (hSA : inducedKernelFamily K A SA) :
     ∃ χ : Section1.ClassFunction L, χ ∈ SA := by
   rcases inducedKernelFamily_exists_degree_relIndex_of_lt hKsolv hAnorm hAK hSA with
@@ -318,7 +318,7 @@ public theorem representation_isIrreducible_comp_surjective
     (ρ : Representation k H V) (φ : G →* H) (hφ : Function.Surjective φ)
     (hρ : Representation.IsIrreducible ρ) :
     Representation.IsIrreducible (ρ.comp φ) := by
-  haveI : Representation.IsIrreducible ρ := hρ
+  have : Representation.IsIrreducible ρ := hρ
   exact OrderIso.isSimpleOrder
     (representationSubrepresentationCompOrderIso ρ φ hφ)
 
@@ -328,7 +328,7 @@ public theorem representation_isIrreducible_of_comp_surjective
     (ρ : Representation k H V) (φ : G →* H) (hφ : Function.Surjective φ)
     (hρ : Representation.IsIrreducible (ρ.comp φ)) :
     Representation.IsIrreducible ρ := by
-  haveI : Representation.IsIrreducible (ρ.comp φ) := hρ
+  have : Representation.IsIrreducible (ρ.comp φ) := hρ
   exact OrderIso.isSimpleOrder
     (representationSubrepresentationCompOrderIso ρ φ hφ).symm
 
@@ -341,7 +341,7 @@ public theorem inducedKernelFamily_degree_eq_relIndex_of_quotient_commutative
     {χ : Section1.ClassFunction L} (hχ : χ ∈ SA) :
     Section1.degree χ = (K.relIndex (⊤ : Subgroup L) : ℂ) := by
   classical
-  haveI : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
+  have : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
   rcases (hSA.2 χ).mp hχ with ⟨θ, hθirr, hθker, _hθne, hχeq⟩
   rcases hθirr with ⟨n, ρ, hρirr, hθeq⟩
   let q : K →* K ⧸ A.subgroupOf K := QuotientGroup.mk' (A.subgroupOf K)
@@ -361,9 +361,9 @@ public theorem inducedKernelFamily_degree_eq_relIndex_of_quotient_commutative
     apply representation_isIrreducible_of_comp_surjective ρq q
       (QuotientGroup.mk'_surjective (A.subgroupOf K))
     simpa [hcomp_eq] using hρirr
-  haveI : IsMulCommutative (K ⧸ A.subgroupOf K) := hcomm
+  have : IsMulCommutative (K ⧸ A.subgroupOf K) := hcomm
   have hn : n = 1 := by
-    haveI : Representation.IsIrreducible ρq := hρqirr
+    have : Representation.IsIrreducible ρq := hρqirr
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative (ρ := ρq))
   rw [hχeq, Section1.degree_inducedClassFunction K θ]
@@ -752,11 +752,11 @@ public theorem nilpotentQuotient_of_le_right
   rcases hnil with ⟨_hMH, hMnormH, _hMnorm, _hHnorm, hnilHM⟩
   let Msub : Subgroup H := M.subgroupOf H
   let Bsub : Subgroup H := B.subgroupOf H
-  haveI : Msub.Normal := hMnormH
-  haveI : Bsub.Normal := hBnorm.subgroupOf H
+  have : Msub.Normal := hMnormH
+  have : Bsub.Normal := hBnorm.subgroupOf H
   let q : H →* H ⧸ Msub := QuotientGroup.mk' Msub
   let Bbar : Subgroup (H ⧸ Msub) := Bsub.map q
-  haveI : Bbar.Normal := QuotientGroup.map_normal Msub Bsub
+  have : Bbar.Normal := QuotientGroup.map_normal Msub Bsub
   have hMsubBsub : Msub ≤ Bsub := by
     intro x hx
     exact hMB hx
@@ -786,8 +786,8 @@ public theorem commutatorQuotientHypothesis_quotient_commutative
   classical
   rcases hcomm with
     ⟨_hMK, _hH1K, hMH1, hMnormK, _hMnorm, _hH1norm', _hKnorm, hcommEq⟩
-  haveI : (M.subgroupOf K).Normal := hMnormK
-  haveI : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
+  have : (M.subgroupOf K).Normal := hMnormK
+  have : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
   apply Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr
   intro x hx
   let q : K →* K ⧸ M.subgroupOf K := QuotientGroup.mk' (M.subgroupOf K)
@@ -839,7 +839,7 @@ The complement is left unnamed, as in the source statement.
     {L : Type u} [Group L]
     (K H1 : Subgroup L) : Prop :=
   ∃ hH1 : H1.Normal,
-    letI : H1.Normal := hH1
+    let : H1.Normal := hH1
     H1 ≤ K ∧ K.Normal ∧
       ∃ R : Subgroup (L ⧸ H1),
         (K.map (QuotientGroup.mk' H1)).IsComplement' R ∧
@@ -854,7 +854,7 @@ public theorem frobeniusQuotientWithKernel_left_lt
     (hfrob : frobeniusQuotientWithKernel K H1) :
     H1 < K := by
   rcases hfrob with ⟨hH1norm, hH1K, _hKnorm, _R, _hcomp, hKbar_ne_bot, _hRne, _hcent⟩
-  haveI : H1.Normal := hH1norm
+  have : H1.Normal := hH1norm
   refine lt_of_le_of_ne hH1K ?_
   intro hKH1
   apply hKbar_ne_bot
@@ -1032,10 +1032,10 @@ public structure caseC2FullData
   H_A : G → Subgroup G
   H_A0 : G → Subgroup G
   fullHypothesis :
-    letI : Fintype I := instFintypeI
-    letI : Fintype J := instFintypeJ
-    letI : DecidableEq I := instDecidableEqI
-    letI : DecidableEq J := instDecidableEqJ
+    let : Fintype I := instFintypeI
+    let : Fintype J := instFintypeJ
+    let : DecidableEq I := instDecidableEqI
+    let : DecidableEq J := instDecidableEqJ
     Section4Scratch.hypothesis_4_6_supported_statement L H W1 W2 W H
       ({h : L | h ∈ H ∧ h ≠ 1})
       i0 j0 omega sigmaL sigma piChar xChar deltaSign T H_A

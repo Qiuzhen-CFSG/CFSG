@@ -24,7 +24,7 @@ no local action or recognition package is introduced.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped LinearAlgebra.Projectivization
 open scoped commutatorElement
 
@@ -707,14 +707,17 @@ public theorem huppert_blackburn_XI_example_1_3_a
     have horbit_inj : Function.Injective orbit := by
       intro g h hgh
       have hga : rho g a = rho h a := by
-        have h := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
-        simpa [orbit, source] using h
+        have h_eq := congrArg (fun e : Fin 3 ↪ Omega => e 0) hgh
+        change rho g a = rho h a at h_eq
+        exact h_eq
       have hgb : rho g b = rho h b := by
-        have h := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
-        simpa [orbit, source] using h
+        have h_eq := congrArg (fun e : Fin 3 ↪ Omega => e 1) hgh
+        change rho g b = rho h b at h_eq
+        exact h_eq
       have hgc : rho g c = rho h c := by
-        have h := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
-        simpa [orbit, source] using h
+        have h_eq := congrArg (fun e : Fin 3 ↪ Omega => e 2) hgh
+        change rho g c = rho h c at h_eq
+        exact h_eq
       have hfix_a : rho (h⁻¹ * g) a = a := by
         rw [map_mul, map_inv]
         change (rho h)⁻¹ (rho g a) = a
@@ -767,12 +770,21 @@ public theorem huppert_blackburn_XI_example_1_3_a
     · have h0 := congrArg (fun e : Fin 3 ↪ Omega => e 0) hg
       have h1 := congrArg (fun e : Fin 3 ↪ Omega => e 1) hg
       have h2 := congrArg (fun e : Fin 3 ↪ Omega => e 2) hg
-      simpa [orbit, source, target] using And.intro h0 (And.intro h1 h2)
+      change rho g a = a' at h0
+      change rho g b = b' at h1
+      change rho g c = c' at h2
+      exact And.intro h0 (And.intro h1 h2)
     · intro h hh
       apply horbit_inj
       rw [hg]
       ext i
-      fin_cases i <;> simp [orbit, source, target, hh]
+      fin_cases i
+      · change rho h a = a'
+        exact hh.1
+      · change rho h b = b'
+        exact hh.2.1
+      · change rho h c = c'
+        exact hh.2.2
   have hlarge_field :
       3 < Nat.card K →
         IsSimpleGroup PSL2 ∧

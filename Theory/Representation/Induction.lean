@@ -35,14 +35,14 @@ public instance finiteDimensional_coindV
     [AddCommGroup U] [Module ℂ U] [FiniteDimensional ℂ U]
     (φ : H →* K) (ρ : Representation ℂ H U) :
     FiniteDimensional ℂ (Representation.coindV φ ρ) := by
-  letI : FiniteDimensional ℂ (K → U) := inferInstance
+  let _ : FiniteDimensional ℂ (K → U) := inferInstance
   infer_instance
 
 public instance finiteDimensional_ind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     FiniteDimensional ℂ (Representation.IndV S.subtype ρ) := by
-  letI : FiniteDimensional ℂ (G →₀ ℂ) := inferInstance
-  letI : FiniteDimensional ℂ (TensorProduct ℂ (G →₀ ℂ) A) := inferInstance
+  let _ : FiniteDimensional ℂ (G →₀ ℂ) := inferInstance
+  let _ : FiniteDimensional ℂ (TensorProduct ℂ (G →₀ ℂ) A) := inferInstance
   let τ := Representation.tprod ((leftRegular ℂ G).comp S.subtype) ρ
   exact FiniteDimensional.of_surjective (Representation.Coinvariants.mk τ)
     (Representation.Coinvariants.mk_surjective τ)
@@ -152,13 +152,16 @@ omit [Finite G] [FiniteDimensional ℂ A] in
     indToCoindAux S ρ (g₁ * g₂⁻¹) a g₃ = indToCoindAux S ρ g₁ a (g₃ * g₂) := by
   simpa using (indToCoindAux_snd_mul_inv S ρ g₁ g₃ g₂⁻¹ a).symm
 
+set_option backward.isDefEq.respectTransparency.types false in
 noncomputable abbrev indToCoind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     Representation.IndV S.subtype ρ →ₗ[ℂ] Representation.coindV S.subtype ρ :=
   Representation.Coinvariants.lift _ (TensorProduct.lift <|
     (linearCombination _ fun g =>
       LinearMap.codRestrict _ (indToCoindAux S ρ g) fun _ _ _ => by simp) ∘ₗ
-      (MonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) fun _ => by ext; simp
+      (MonoidAlgebra.coeffLinearEquiv ℂ).toLinearMap) fun _ => by
+        ext x
+        simp [LinearMap.codRestrict_apply]
 
 omit [Finite G] [FiniteDimensional ℂ A] in
 @[simp] lemma indToCoind_mk
@@ -166,14 +169,15 @@ omit [Finite G] [FiniteDimensional ℂ A] in
     ((indToCoind S ρ) (Representation.IndV.mk S.subtype ρ g a)).1 h =
       indToCoindAux S ρ g a h := by
   simp [indToCoind, Representation.IndV.mk, LinearMap.comp_apply]
+  rfl
 
 @[simps] noncomputable def coindToInd
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     Representation.coindV S.subtype ρ →ₗ[ℂ] Representation.IndV S.subtype ρ where
   toFun f := by
     classical
-    letI : S.FiniteIndex := inferInstance
-    letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+    let _ : S.FiniteIndex := inferInstance
+    let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
     exact
       ∑ g : Quotient (QuotientGroup.rightRel S), Quotient.liftOn g
         (fun g => Representation.IndV.mk S.subtype ρ g (f.1 g))
@@ -184,14 +188,14 @@ omit [Finite G] [FiniteDimensional ℂ A] in
               simp_all
   map_add' _ _ := by
     classical
-    letI : S.FiniteIndex := inferInstance
-    letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+    let _ : S.FiniteIndex := inferInstance
+    let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
     simpa [← Finset.sum_add_distrib, TensorProduct.tmul_add] using
       Finset.sum_congr rfl fun z _ => Quotient.inductionOn z fun _ => by simp
   map_smul' _ _ := by
     classical
-    letI : S.FiniteIndex := inferInstance
-    letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+    let _ : S.FiniteIndex := inferInstance
+    let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
     simpa [Finset.smul_sum] using
       Finset.sum_congr rfl fun z _ => Quotient.inductionOn z fun _ => by simp
 
@@ -202,8 +206,8 @@ lemma coindToInd_of_support_subset_orbit
     (hx : f.1.support ⊆ MulAction.orbit S g) :
     coindToInd S ρ f = Representation.IndV.mk S.subtype ρ g (f.1 g) := by
   classical
-  letI : S.FiniteIndex := inferInstance
-  letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+  let _ : S.FiniteIndex := inferInstance
+  let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
   rw [coindToInd_apply, Finset.sum_eq_single ⟦g⟧]
   · simp
   · intro b _ hb
@@ -221,17 +225,20 @@ lemma coindToInd_indToCoind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     indToCoind S ρ ∘ₗ coindToInd S ρ = LinearMap.id := by
   classical
-  letI : S.FiniteIndex := inferInstance
-  letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+  let _ : S.FiniteIndex := inferInstance
+  let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
   ext g a
   rw [LinearMap.comp_apply, coindToInd_apply, LinearMap.id_apply]
   simp only [map_sum, AddSubmonoidClass.coe_finsetSum, Finset.sum_apply]
   rw [Finset.sum_eq_single ⟦a⟧]
-  · simp
+  · simp [indToCoind, Representation.IndV.mk, LinearMap.comp_apply]
+    simp [LinearMap.codRestrict]
   · intro b _ hb
     induction b using Quotient.inductionOn with
     | h b =>
-        simpa using indToCoindAux_of_not_rel S ρ b a (g.1 b) (mt Quotient.sound hb.symm)
+        simp [indToCoind, Representation.IndV.mk, LinearMap.comp_apply]
+        simpa [LinearMap.codRestrict] using
+          indToCoindAux_of_not_rel S ρ b a (g.1 b) (mt Quotient.sound hb.symm)
   · simp
 
 omit [FiniteDimensional ℂ A] in
@@ -239,16 +246,18 @@ lemma indToCoind_coindToInd
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     coindToInd S ρ ∘ₗ indToCoind S ρ = LinearMap.id := by
   classical
-  letI : S.FiniteIndex := inferInstance
-  letI := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
+  let _ : S.FiniteIndex := inferInstance
+  let _ := Subgroup.fintypeQuotientOfFiniteIndex (H := S)
   ext g a
   simp only [LinearMap.comp_apply, AlgebraTensorModule.curry_apply,
     TensorProduct.curry_apply, LinearMap.coe_restrictScalars, LinearMap.id_apply]
   rw [coindToInd_of_support_subset_orbit S ρ g]
-  · simp
+  · simp [indToCoind, Representation.IndV.mk, LinearMap.comp_apply]
+    simp [LinearMap.codRestrict]
   · intro x hx
     contrapose! hx
-    simpa using indToCoindAux_of_not_rel S ρ g x a hx
+    simp [indToCoind, LinearMap.comp_apply]
+    simpa [LinearMap.codRestrict] using indToCoindAux_of_not_rel S ρ g x a hx
 
 public noncomputable def indCoindEquiv
     (S : Subgroup G) (ρ : Representation ℂ S A) :
@@ -265,6 +274,8 @@ public noncomputable def indCoindEquiv
     intro h
     ext a x
     simp [LinearMap.comp_apply, Representation.coind]
+    change indToCoindAux S ρ (h * g⁻¹) a x = indToCoindAux S ρ h a (x * g)
+    exact indToCoindAux_fst_mul_inv S ρ h g x a
   refine f.ofBijective ?_
   constructor
   · intro x y hxy
@@ -699,8 +710,8 @@ lemma complex_star_eigenvalue_eq_pow_pred_of_pow_eq_one
     {f : Module.End ℂ V} {μ : ℂ} {n : ℕ}
     (hn : n ≠ 0) (hpow : f ^ n = 1) (hμ : f.HasEigenvalue μ) :
     star μ = μ ^ (n - 1) := by
-  haveI : NeZero n := ⟨hn⟩
-  rw [complex_star_eigenvalue_eq_inv_of_pow_eq_one (n := n) hpow hμ]
+  have hn0 : NeZero n := ⟨hn⟩
+  rw [@complex_star_eigenvalue_eq_inv_of_pow_eq_one _ _ _ _ _ _ _ hn0 hpow hμ]
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨m, rfl⟩
   apply inv_eq_of_mul_eq_one_right
   simpa [pow_succ', mul_comm, mul_left_comm, mul_assoc] using

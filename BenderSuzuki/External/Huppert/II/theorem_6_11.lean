@@ -130,7 +130,7 @@ private def huppert611_pairIndex {n : ℕ} (hn : 2 ≤ n) (i : Fin 2) : Fin n :=
   classical
   unfold Module.Basis.sumExtend
   dsimp only
-  rw [Module.Basis.reindex_apply, Equiv.symm_symm]
+  rw [Module.Basis.reindex_apply]
   let s := Set.range v
   let e : Fin 2 ≃ s := Equiv.ofInjective v hv.injective
   let b := hv.linearIndepOn_id.extend (Set.subset_univ s)
@@ -303,8 +303,11 @@ public theorem huppert_II_6_11_projective_action
     simpa [M, LinearEquiv.coe_det] using h
   let S : SL := ⟨M, hMdet⟩
   have hSlin : Matrix.SpecialLinearGroup.toLin' S = gLin := by
-    apply LinearEquiv.toLinearMap_injective
-    simp [S, M, Matrix.SpecialLinearGroup.toLin'_to_linearMap]
+    apply (LinearEquiv.toLinearMap_injective.eq_iff).mp
+    change Matrix.toLin' (LinearMap.toMatrix'
+      (gLin : (Fin n → K) →ₗ[K] (Fin n → K))) =
+      (gLin : (Fin n → K) →ₗ[K] (Fin n → K))
+    exact Matrix.toLin'_toMatrix' _
   let q : PSL := QuotientGroup.mk' (Subgroup.center SL) S
   refine ⟨q, ?_, ?_⟩
   · change S • a = c

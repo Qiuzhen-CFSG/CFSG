@@ -12,7 +12,7 @@ universe uG uF uV
 public abbrev Theorem36IndHyp {G : Type uG} [Group G] [Finite G] (_H : Subgroup G) : Prop :=
   ∀ {G' : Type uG} [Group G'] [Finite G'] (H' R' R₀' : Subgroup G') (p : ℕ),
     Nat.card G' < Nat.card G →
-    IsSolvable G' →
+    Group.IsSolvable G' →
     Odd (Nat.card G') →
     H'.Normal →
     H'.IsComplement' R' →
@@ -27,12 +27,12 @@ public theorem theorem_3_6_subgroup_step {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
     (N : Subgroup G) (hN_lt : N < H) (hN_normal : N.Normal)
     (hRinv : ∀ r : R, ∀ x ∈ N, (r : G) * x * (r : G)⁻¹ ∈ N)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀)) :
     HasPLengthOne p ↥⁅N, R⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let S : Subgroup G := N ⊔ R
   have hcardS_dvd : Nat.card S ∣ Nat.card G := Subgroup.card_subgroup_dvd_card S
   have hdisj : Disjoint N R := hHR.disjoint.mono_left hN_lt.1
@@ -42,9 +42,9 @@ public theorem theorem_3_6_subgroup_step {G : Type uG} [Group G] [Finite G]
       isComplement'_subgroupOf_sup_of_disjoint N R hdisj
     have hcardS_eq : Nat.card N * Nat.card R = Nat.card S := by
       simpa [natCard_subgroupOf_eq N S le_sup_left, natCard_subgroupOf_eq R S le_sup_right] using
-        hcompS.card_mul
+        hcompS.card_mul_card
     have hcardG_eq : Nat.card H * Nat.card R = Nat.card G := by
-      simpa using hHR.card_mul
+      simpa using hHR.card_mul_card
     have hlt_mul : Nat.card N * Nat.card R < Nat.card H * Nat.card R := by
       exact Nat.mul_lt_mul_of_pos_right hcardN_lt (Nat.card_pos (α := R))
     calc
@@ -65,7 +65,7 @@ public theorem theorem_3_6_subgroup_step {G : Type uG} [Group G] [Finite G]
     isZGroup_subgroupCentralizerIn_of_le H N R₀ hN_lt.1
   have hCZ_sub :
       IsZGroup ↥(subgroupCentralizerIn (N.subgroupOf S) (R₀.subgroupOf S)) := by
-    letI : IsZGroup ↥(subgroupCentralizerIn N R₀) := hCZ_N
+    let : IsZGroup ↥(subgroupCentralizerIn N R₀) := hCZ_N
     exact isZGroup_subgroupCentralizerIn_subgroupOf S N R₀ (hR₀_le.trans le_sup_right)
   have hsub :
       HasPLengthOne p ↥⁅N.subgroupOf S, R.subgroupOf S⁆ := by
@@ -85,13 +85,13 @@ public theorem theorem_3_6_subgroup_step {G : Type uG} [Group G] [Finite G]
 
 public theorem theorem_3_6_reduce_eq_commutator {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_lt : ⁅H, R⁆ < H) :
     HasPLengthOne p ↥⁅H, R⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let N : Subgroup G := ⁅H, R⁆
   have hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let C : Subgroup H := commutatorAction (A := ↥R) (G := ↥H)
@@ -116,10 +116,10 @@ public theorem theorem_3_6_reduce_eq_commutator {G : Type uG} [Group G] [Finite 
       rw [hCmap] at hxmap
       exact hxmap
   have hH_norm_comm : H ≤ Subgroup.normalizer (N : Set G) := by
-    letI : (N.subgroupOf H).Normal := by
+    let : (N.subgroupOf H).Normal := by
       rwa [hcommsub_eq]
     exact Subgroup.le_normalizer_of_normal_subgroupOf hN_le_H
-  letI : IsInvariant (↥R) (↥H) C := commutatorAction_isInvariant (G := ↥H) (A := ↥R)
+  let : IsInvariant (↥R) (↥H) C := commutatorAction_isInvariant (G := ↥H) (A := ↥R)
   have hRinv : ∀ r : R, ∀ x ∈ N, (r : G) * x * (r : G)⁻¹ ∈ N := by
     intro r x hx
     have hxCmap : x ∈ C.map H.subtype := by simpa [hCmap] using hx
@@ -162,7 +162,8 @@ public theorem theorem_3_6_reduce_eq_commutator {G : Type uG} [Group G] [Finite 
           Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hRnormH, mul_assoc] using this
   have hcomm₂_eq :
       commutatorAction₂ (A := ↥R) (G := ↥H) = C := by
-    simpa [C] using proposition_1_6_b (G := ↥H) (A := ↥R) (by infer_instance) hcopHR.symm
+    simpa [C] using proposition_1_6_b (G := ↥H) (A := ↥R)
+      (by have : Group.IsSolvable G := hsolvG; infer_instance) hcopHR.symm
   have hdouble_le : ⁅N, R⁆ ≤ N := by
     rw [Subgroup.commutator_def]
     refine (Subgroup.closure_le (K := N)).2 ?_
@@ -195,13 +196,13 @@ public theorem theorem_3_6_quotient_step {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
     (X : Subgroup G) [X.Normal] (hX_le_H : X ≤ H) (hX_ne_bot : X ≠ ⊥)
     (hXinv : ∀ r : R, ∀ x ∈ X, (r : G) * x * (r : G)⁻¹ ∈ X)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) :
     HasPLengthOne p (↥H ⧸ X.subgroupOf H) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let q : G →* G ⧸ X := QuotientGroup.mk' X
   have hcard_lt : Nat.card (G ⧸ X) < Nat.card G :=
     natCard_quotient_lt_natCard_of_ne_bot X hX_ne_bot
@@ -266,7 +267,7 @@ public theorem theorem_3_6_quotient_step {G : Type uG} [Group G] [Finite G]
       rintro ⟨x, hx⟩
       rcases hx with ⟨y, hy, rfl⟩
       exact ⟨⟨y, hy⟩, rfl⟩
-    letI : IsZGroup ↥(subgroupCentralizerIn H R₀) := hCZ
+    let : IsZGroup ↥(subgroupCentralizerIn H R₀) := hCZ
     have hZmap : IsZGroup ↥((subgroupCentralizerIn H R₀).map q) :=
       IsZGroup.of_surjective (f := f) hf
     rw [hEq]
@@ -294,13 +295,13 @@ public theorem theorem_3_6_quotient_step {G : Type uG} [Group G] [Finite G]
 public theorem theorem_3_6_characteristic_quotient_step {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
     (XH : Subgroup H) (hXH_char : XH.Characteristic) (hXH_ne_bot : XH ≠ ⊥)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) :
     HasPLengthOne p (↥H ⧸ XH) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let X : Subgroup G := XH.map H.subtype
   have hX_card :
       Nat.card X = Nat.card XH := by
@@ -311,15 +312,15 @@ public theorem theorem_3_6_characteristic_quotient_step {G : Type uG} [Group G] 
   have hRnormH : R ≤ Subgroup.normalizer H :=
     Subgroup.le_normalizer_of_normal (H := H)
   have hXinv : ∀ r : R, ∀ x ∈ X, (r : G) * x * (r : G)⁻¹ ∈ X := by
-    letI : XH.Characteristic := hXH_char
-    haveI : IsInvariant (↥R) (↥H) XH := isInvariant_of_characteristic (A := ↥R) (G := ↥H) XH
+    let : XH.Characteristic := hXH_char
+    have : IsInvariant (↥R) (↥H) XH := isInvariant_of_characteristic (A := ↥R) (G := ↥H) XH
     intro r x hx
     rcases hx with ⟨xH, hxH, rfl⟩
     refine ⟨r • xH, (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := XH) r xH).1 hxH, ?_⟩
     simp [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe]
   have hX_normal : X.Normal := by
-    letI : XH.Characteristic := hXH_char
-    letI : H.Normal := hH_normal
+    let : XH.Characteristic := hXH_char
+    let : H.Normal := hH_normal
     simpa [X] using (inferInstance : X.Normal)
   have hX_ne_bot : X ≠ ⊥ := by
     intro hX_bot
@@ -327,7 +328,7 @@ public theorem theorem_3_6_characteristic_quotient_step {G : Type uG} [Group G] 
     apply (Subgroup.card_eq_one (H := XH)).1
     rw [← hX_card]
     simp [hX_bot]
-  letI : X.Normal := hX_normal
+  let : X.Normal := hX_normal
   have hquot :
       HasPLengthOne p (↥H ⧸ X.subgroupOf H) :=
     theorem_3_6_quotient_step H R R₀ p hind X hX_le_H hX_ne_bot hXinv
@@ -351,13 +352,13 @@ public theorem theorem_3_6_characteristic_quotient_step {G : Type uG} [Group G] 
 
 public theorem theorem_3_6_pPrimeCore_eq_bot {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     pPrimeCore p ↥H = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let XH : Subgroup H := pPrimeCore p ↥H
   by_contra hXH_ne_bot
   have hXquot :
@@ -374,13 +375,13 @@ public theorem theorem_3_6_pPrimeCore_eq_bot {G : Type uG} [Group G] [Finite G]
 
 public theorem theorem_3_6_fitting_eq_pcore {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     fittingSubgroup H = pCore p H := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   exact
     Fitting_eq_pcore H p
       (theorem_3_6_pPrimeCore_eq_bot H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -401,7 +402,7 @@ public theorem theorem_3_6_mem_centralizer_of_quotient_frattini
         Subgroup.centralizer
           (((V.map (QuotientGroup.mk' Φ)) : Subgroup (H ⧸ Φ)) : Set (H ⧸ Φ))) :
     x ∈ Subgroup.centralizer (V : Set H) := by
-  letI : Fact (IsPGroup p ↥V) := ⟨hVp⟩
+  let : Fact (IsPGroup p ↥V) := ⟨hVp⟩
   let q : H →* (H ⧸ Φ) := QuotientGroup.mk' Φ
   let Vbar : Subgroup (H ⧸ Φ) := V.map q
   have hq_cent : q x ∈ Subgroup.centralizer (Vbar : Set (H ⧸ Φ)) := by
@@ -467,10 +468,11 @@ public theorem theorem_3_6_mem_centralizer_of_quotient_frattini
   have := congrArg (fun t : H => t * x) hconj
   simpa [mul_assoc] using this.symm
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem theorem_3_6_pPrimeCore_quotient_frattini_fitting_eq_bot
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -478,7 +480,7 @@ public theorem theorem_3_6_pPrimeCore_quotient_frattini_fitting_eq_bot
     let V : Subgroup H := fittingSubgroup H
     let Φ : Subgroup H := (frattini V).map V.subtype
     pPrimeCore p (↥H ⧸ Φ) = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_eq : V = pCore p H := by
     simpa [V] using
@@ -487,18 +489,18 @@ public theorem theorem_3_6_pPrimeCore_quotient_frattini_fitting_eq_bot
   have hVp : IsPGroup p ↥V := by
     rw [hV_eq]
     exact pCore_isPGroup (G := ↥H) (p := p)
-  letI : Fact (IsPGroup p ↥V) := ⟨hVp⟩
-  haveI : V.Characteristic := by
+  let : Fact (IsPGroup p ↥V) := ⟨hVp⟩
+  have : V.Characteristic := by
     dsimp [V]
     infer_instance
-  haveI : V.Normal := by
+  have : V.Normal := by
     dsimp [V]
     infer_instance
   let Φ : Subgroup H := (frattini V).map V.subtype
   have hΦ_char : Φ.Characteristic := by
     simpa [Φ] using characteristic_map_subtype_of_characteristic V (frattini V)
-  haveI : Φ.Characteristic := hΦ_char
-  haveI : Φ.Normal := by infer_instance
+  have : Φ.Characteristic := hΦ_char
+  have : Φ.Normal := by infer_instance
   have hΦ_le_V : Φ ≤ V := by
     simpa [Φ] using (Subgroup.map_subtype_le (frattini V))
   have hΦ_p : IsPGroup p ↥Φ := by
@@ -511,7 +513,7 @@ public theorem theorem_3_6_pPrimeCore_quotient_frattini_fitting_eq_bot
   let A : Subgroup (↥H ⧸ Φ) := pPrimeCore p (↥H ⧸ Φ)
   have hA_cop : Nat.Coprime p (Nat.card A) := by
     simpa [A] using pPrimeCore_coprime_card (G := (↥H ⧸ Φ)) (p := p)
-  have hsolvH : IsSolvable ↥H := by infer_instance
+  have hsolvH : Group.IsSolvable ↥H := by infer_instance
   have hcentV : Subgroup.centralizer (V : Set H) ≤ V := by
     simpa [V] using
       centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable (G := ↥H) hsolvH
@@ -619,13 +621,13 @@ public theorem theorem_3_6_pPrimeCore_quotient_frattini_fitting_eq_bot
 public theorem theorem_3_6_frattini_fitting_eq_bot
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     frattini (fittingSubgroup H) = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_eq : V = pCore p H := by
     simpa [V] using
@@ -634,17 +636,17 @@ public theorem theorem_3_6_frattini_fitting_eq_bot
   have hVp : IsPGroup p ↥V := by
     rw [hV_eq]
     exact pCore_isPGroup (G := ↥H) (p := p)
-  haveI : V.Characteristic := by
+  have : V.Characteristic := by
     dsimp [V]
     infer_instance
-  haveI : V.Normal := by
+  have : V.Normal := by
     dsimp [V]
     infer_instance
   let Φ : Subgroup H := (frattini V).map V.subtype
   have hΦ_char : Φ.Characteristic := by
     simpa [Φ] using characteristic_map_subtype_of_characteristic V (frattini V)
-  haveI : Φ.Characteristic := hΦ_char
-  haveI : Φ.Normal := by infer_instance
+  have : Φ.Characteristic := hΦ_char
+  have : Φ.Normal := by infer_instance
   have hΦ_p : IsPGroup p ↥Φ := by
     have hfrattini_p : IsPGroup p ↥(frattini V) := hVp.to_subgroup (frattini V)
     simpa [Φ] using IsPGroup.map (p := p) (H := frattini V) hfrattini_p V.subtype
@@ -669,13 +671,13 @@ public theorem theorem_3_6_frattini_fitting_eq_bot
 public theorem theorem_3_6_fitting_elementaryAbelian
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     IsElementaryAbelian p ↥(fittingSubgroup H) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_eq : V = pCore p H := by
     simpa [V] using
@@ -684,7 +686,7 @@ public theorem theorem_3_6_fitting_elementaryAbelian
   have hVp : IsPGroup p ↥V := by
     rw [hV_eq]
     exact pCore_isPGroup (G := ↥H) (p := p)
-  letI : Fact (IsPGroup p ↥V) := ⟨hVp⟩
+  let : Fact (IsPGroup p ↥V) := ⟨hVp⟩
   have hfrattini_bot : frattini V = ⊥ := by
     simpa [V] using
       theorem_3_6_frattini_fitting_eq_bot H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -694,7 +696,7 @@ public theorem theorem_3_6_fitting_elementaryAbelian
 public theorem theorem_3_6_centralizer_fitting_eq_fitting
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -705,10 +707,10 @@ public theorem theorem_3_6_centralizer_fitting_eq_fitting
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
+  let : IsElementaryAbelian p ↥V := hV_elem
   have hV_le_cent : V ≤ Subgroup.centralizer (V : Set H) := by
     exact (Subgroup.le_centralizer_iff_isMulCommutative (K := V)).2 inferInstance
-  have hsolvH : IsSolvable ↥H := by infer_instance
+  have hsolvH : Group.IsSolvable ↥H := by infer_instance
   have hcent_le_V : Subgroup.centralizer (V : Set H) ≤ V := by
     simpa [V] using
       centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable (G := ↥H) hsolvH
@@ -720,13 +722,13 @@ public theorem theorem_3_6_two_minimal_normals_force_pLengthOne
     [M.Normal] [N.Normal] [IsMinimalNormal M] [IsMinimalNormal N]
     (hM_le_H : M ≤ H) (hN_le_H : N ≤ H) (hM_ne_bot : M ≠ ⊥) (hN_ne_bot : N ≠ ⊥)
     (hMN_ne : M ≠ N)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) :
     HasPLengthOne p ↥H := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hMN_bot : M ⊓ N = ⊥ := by
     by_contra hMN_ne_bot
     have hinf_eq_M : M ⊓ N = M :=
@@ -769,7 +771,7 @@ public theorem theorem_3_6_unique_minimal_normal_in_H
     (H R R₀ M N : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
     [M.Normal] [N.Normal] [IsMinimalNormal M] [IsMinimalNormal N]
     (hM_le_H : M ≤ H) (hN_le_H : N ≤ H) (hM_ne_bot : M ≠ ⊥) (hN_ne_bot : N ≠ ⊥)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -784,14 +786,14 @@ public theorem theorem_3_6_unique_minimal_normal_in_H
 public theorem theorem_3_6_fitting_quotient_coprime_card
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     let V : Subgroup H := fittingSubgroup H
     Nat.Coprime p (Nat.card (fittingSubgroup (↥H ⧸ V))) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_eq : V = pCore p H := by
     simpa [V] using
@@ -800,7 +802,7 @@ public theorem theorem_3_6_fitting_quotient_coprime_card
   have hVp : IsPGroup p ↥V := by
     rw [hV_eq]
     exact pCore_isPGroup (G := ↥H) (p := p)
-  haveI : V.Normal := by
+  have : V.Normal := by
     dsimp [V]
     infer_instance
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
@@ -827,7 +829,7 @@ public theorem theorem_3_6_fitting_quotient_coprime_card
     have hP_map_normal : ((P : Subgroup ↥Q).map Q.subtype).Normal := by
       have hP_normal : (P : Subgroup ↥Q).Normal :=
         Group.IsNilpotent.sylow_normal hQ_nil p P
-      haveI : (P : Subgroup ↥Q).Characteristic :=
+      have : (P : Subgroup ↥Q).Characteristic :=
         Sylow.characteristic_of_normal P hP_normal
       infer_instance
     have hP_map_p : IsPGroup p ((P : Subgroup ↥Q).map Q.subtype) := P.isPGroup'.map Q.subtype
@@ -844,7 +846,7 @@ public theorem theorem_3_6_fitting_quotient_coprime_card
 public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -858,10 +860,10 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
       Disjoint V K ∧
       IsInvariant (↥R) (↥H) K ∧
       IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let V : Subgroup H := fittingSubgroup H
-  letI : V.Normal := by
+  let : V.Normal := by
     dsimp [V]
     infer_instance
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
@@ -876,26 +878,26 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hV_inv : IsInvariant (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  let : IsInvariant (↥R) (↥H) V := hV_inv
   have hFbar_char : Fbar.Characteristic := by
     dsimp [Fbar]
     infer_instance
   have hU_char : U.Characteristic := by
     dsimp [U, q]
     exact Subgroup.Characteristic.comap_quotient_mk (H := V) (K := Fbar) hFbar_char
-  letI : U.Characteristic := hU_char
+  let : U.Characteristic := hU_char
   have hU_inv : IsInvariant (↥R) (↥H) U :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) U
-  letI : IsInvariant (↥R) (↥H) U := hU_inv
+  let : IsInvariant (↥R) (↥H) U := hU_inv
 
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
+  let : IsElementaryAbelian p ↥V := hV_elem
   have hVp : IsPGroup p ↥V := IsElementaryAbelian.isPGroup p ↥V
   have hVsub_inv : IsInvariant (↥R) (↥U) (V.subgroupOf U) := by
     refine ⟨?_⟩
@@ -904,10 +906,10 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     have hx := IsInvariant.invariant (A := ↥R) (G := ↥H) (H := V) a (x : H)
     change ((x : H) ∈ V) ↔ ((((a • x : U) : U) : H) ∈ V) at hx
     exact hx
-  letI : IsInvariant (↥R) (↥U) (V.subgroupOf U) := hVsub_inv
+  let : IsInvariant (↥R) (↥U) (V.subgroupOf U) := hVsub_inv
   have hVsub_norm : (V.subgroupOf U).Normal :=
     Subgroup.Normal.subgroupOf (G := ↥H) (hH := inferInstance) U
-  letI : (V.subgroupOf U).Normal := hVsub_norm
+  let : (V.subgroupOf U).Normal := hVsub_norm
   have hcopRVsub : Nat.Coprime (Nat.card R) (Nat.card (V.subgroupOf U)) := by
     have hV_dvd_H : Nat.card V ∣ Nat.card H :=
       Subgroup.card_subgroup_dvd_card (s := V) (α := H)
@@ -943,7 +945,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
   obtain ⟨K0, hK0_comp, hK0_inv⟩ :=
     Subgroup.quotientDiff.exists_invariant_complement' (G := U) (A := ↥R) (H := V.subgroupOf U)
       (hH := inferInstance) hVsub_coprime_index hcopRVsub
-  letI : IsInvariant (↥R) (↥U) K0 := hK0_inv
+  let : IsInvariant (↥R) (↥U) K0 := hK0_inv
   let K : Subgroup H := K0.map U.subtype
   have hK_le_U : K ≤ U := by
     simpa [K] using (Subgroup.map_subtype_le K0)
@@ -970,7 +972,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     simpa [K, hVsub_map] using hmap_disj
   have hK_inv : IsInvariant (↥R) (↥H) K := by
     simpa [K] using isInvariant_map_subtype (A := ↥R) (G := ↥H) U K0
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   have hNK_inv : IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
     simpa using isInvariant_normalizer_of_isInvariant (A := ↥R) (G := ↥H) K
   exact ⟨K, hK_le_U, hVK_sup, hVK_disj, hK_inv, hNK_inv⟩
@@ -1072,7 +1074,7 @@ theorem normalizer_sup_eq_top_of_isComplement'_of_coprime
   have hcardmul_KxU : Nat.card Vsub * Nat.card KxU = Nat.card U := by
     calc
       Nat.card Vsub * Nat.card KxU = Nat.card Vsub * Nat.card Ksub := by rw [hcard_KxU]
-      _ = Nat.card U := hVsub_comp.card_mul
+      _ = Nat.card U := hVsub_comp.card_mul_card
   have hKxU_comp : Vsub.IsComplement' KxU :=
     Subgroup.isComplement'_of_coprime hcardmul_KxU hcop_KxU
   obtain ⟨n, hn⟩ :=
@@ -1103,7 +1105,7 @@ theorem normalizer_sup_eq_top_of_isComplement'_of_coprime
 public theorem theorem_3_6_normalizer_sup_top
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1118,7 +1120,7 @@ public theorem theorem_3_6_normalizer_sup_top
       IsInvariant (↥R) (↥H) K ∧
       IsInvariant (↥R) (↥H) (Subgroup.normalizer K) ∧
       V ⊔ Subgroup.normalizer K = ⊤ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let V : Subgroup H := fittingSubgroup H
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
@@ -1130,16 +1132,16 @@ public theorem theorem_3_6_normalizer_sup_top
   have hV_norm : V.Normal := by
     dsimp [V]
     infer_instance
-  letI : V.Normal := hV_norm
+  let : V.Normal := hV_norm
   have hU_norm : U.Normal := by
     dsimp [U, q, Fbar]
     infer_instance
-  letI : U.Normal := hU_norm
+  let : U.Normal := hU_norm
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
+  let : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
   have hVp : IsPGroup p ↥V := IsElementaryAbelian.isPGroup p ↥V
   obtain ⟨n, hV_card⟩ := hVp.exists_card_eq
   have hU_map : U.map q = Fbar := by
@@ -1195,10 +1197,11 @@ private theorem isPGroup_of_isHallSubgroup_singleton
   have hq_mem : q' ∈ ({⟨p, Fact.out⟩} : Set Nat.Primes) := hP.p_in_pi_of_p_dvd_card q' hq_dvd
   simpa [q'] using congrArg Subtype.val hq_mem
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem exists_invariant_pSubgroup_of_isInvariant
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
     {H : Subgroup G} [IsInvariant A G H] {p : ℕ} [Fact p.Prime]
-    (hsolvH : IsSolvable ↥H) (hcopAH : Nat.Coprime (Nat.card A) (Nat.card H)) :
+    (hsolvH : Group.IsSolvable ↥H) (hcopAH : Nat.Coprime (Nat.card A) (Nat.card H)) :
     ∃ P : Subgroup H, IsPGroup p P ∧ ¬ p ∣ P.index ∧ IsInvariant A H P := by
   let π : Set Nat.Primes := {⟨p, Fact.out⟩}
 
@@ -1208,7 +1211,9 @@ private theorem exists_invariant_pSubgroup_of_isInvariant
     simpa [π] using isPGroup_of_isHallSubgroup_singleton (G := H) (P := Psub) (p := p) hPsub_hall
   have hp_not_dvd_index : ¬ p ∣ Psub.index := by
     intro hp_dvd
-    exact (hPsub_hall.p_in_pi_of_p_dvd_index ⟨p, Fact.out⟩ hp_dvd) (by simp [π])
+    exact (hPsub_hall.p_in_pi_of_p_dvd_index ⟨p, Fact.out⟩ hp_dvd) (by
+      dsimp [π]
+      exact Set.mem_singleton_iff.mpr (Subtype.ext rfl))
   exact ⟨Psub, hPsub_p, hp_not_dvd_index, hPsub_inv⟩
 
 @[expose]
@@ -1233,7 +1238,7 @@ private theorem isPGroup_normalizerSubtypeMap
 public theorem theorem_3_6_complement_card_coprime
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1245,7 +1250,7 @@ public theorem theorem_3_6_complement_card_coprime
         (fittingSubgroup (↥H ⧸ fittingSubgroup H)).comap
           (QuotientGroup.mk' (fittingSubgroup H))) :
     Nat.Coprime p (Nat.card K) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
   let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
@@ -1259,7 +1264,7 @@ public theorem theorem_3_6_complement_card_coprime
   have hV_norm : V.Normal := by
     dsimp [V]
     infer_instance
-  letI : V.Normal := hV_norm
+  let : V.Normal := hV_norm
   have hU_map : U.map q = Fbar := by
     ext x
     constructor
@@ -1302,7 +1307,7 @@ public theorem theorem_3_6_complement_map_fitting
     K.map (QuotientGroup.mk' (fittingSubgroup H)) =
       fittingSubgroup (↥H ⧸ fittingSubgroup H) := by
   have hV_norm : (fittingSubgroup H).Normal := by infer_instance
-  letI : (fittingSubgroup H).Normal := hV_norm
+  let : (fittingSubgroup H).Normal := hV_norm
   let q : ↥H →* (↥H ⧸ fittingSubgroup H) := QuotientGroup.mk' (fittingSubgroup H)
   let Fbar : Subgroup (↥H ⧸ fittingSubgroup H) := fittingSubgroup (↥H ⧸ fittingSubgroup H)
   let U : Subgroup H := Fbar.comap q
@@ -1329,7 +1334,7 @@ public theorem theorem_3_6_complement_map_fitting
 public theorem theorem_3_6_hasPLengthOne_of_normalizer_pSubgroup_commutator_eq_bot
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1342,7 +1347,7 @@ public theorem theorem_3_6_hasPLengthOne_of_normalizer_pSubgroup_commutator_eq_b
     (hP_p : IsPGroup p P) (hP_not_dvd : ¬ p ∣ P.index)
     (hPK_bot : ⁅normalizerSubtypeMap K P, K⁆ = ⊥) :
     HasPLengthOne p ↥H := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_eq : V = pCore p H := by
     simpa [V] using
@@ -1354,7 +1359,7 @@ public theorem theorem_3_6_hasPLengthOne_of_normalizer_pSubgroup_commutator_eq_b
   have hV_norm : V.Normal := by
     dsimp [V]
     infer_instance
-  letI : V.Normal := hV_norm
+  let : V.Normal := hV_norm
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
   let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
   let NK : Subgroup H := normalizerOf K
@@ -1413,7 +1418,7 @@ public theorem theorem_3_6_hasPLengthOne_of_normalizer_pSubgroup_commutator_eq_b
     have hy_cent : (y : H) ∈ Subgroup.centralizer (K : Set H) := hPsub_centK hy
     have hcomm_yk : k * (y : H) = y * k := (Subgroup.mem_centralizer_iff.mp hy_cent) k hk
     simpa [q, map_mul] using congrArg q hcomm_yk
-  have hsolvQ : IsSolvable (↥H ⧸ V) := by infer_instance
+  have hsolvQ : Group.IsSolvable (↥H ⧸ V) := by infer_instance
   have hcentFbar_le : Subgroup.centralizer (Fbar : Set (↥H ⧸ V)) ≤ Fbar := by
     simpa [Fbar] using
       centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable (G := ↥H ⧸ V) hsolvQ
@@ -1468,7 +1473,7 @@ public theorem theorem_3_6_hasPLengthOne_of_normalizer_pSubgroup_commutator_eq_b
 public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial_commutator
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1485,7 +1490,7 @@ public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial
       ¬ p ∣ P.index ∧
       IsInvariant (↥R) (↥(normalizerOf K)) P ∧
       ⁅normalizerSubtypeMap K P, K⁆ ≠ ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let NK : Subgroup H := normalizerOf K
   have hK_map_fitting :
       K.map (QuotientGroup.mk' (fittingSubgroup H)) = fittingSubgroup (↥H ⧸ fittingSubgroup H) :=
@@ -1494,8 +1499,8 @@ public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial
     simpa [NK] using (Subgroup.card_dvd_of_le (show NK ≤ (⊤ : Subgroup H) by simp))
   have hcopR_NK : Nat.Coprime (Nat.card R) (Nat.card NK) := by
     exact Nat.Coprime.of_dvd_right hNK_card_dvd_H hcopHR.symm
-  have hsolvNK : IsSolvable ↥NK := by infer_instance
-  letI : IsInvariant (↥R) (↥H) NK := by
+  have hsolvNK : Group.IsSolvable ↥NK := by infer_instance
+  let : IsInvariant (↥R) (↥H) NK := by
     simpa [NK] using hNK_inv
   obtain ⟨P, hP_p, hP_not_dvd, hP_inv⟩ :=
     exists_invariant_pSubgroup_of_isInvariant
@@ -1511,7 +1516,7 @@ public theorem theorem_3_6_exists_normalizer_invariant_pSubgroup_with_nontrivial
 public theorem theorem_3_6_exists_normalizer_pSubgroup_with_nontrivial_commutator
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1556,7 +1561,7 @@ private theorem normal_map_subtype_of_normal_and_isInvariant
       change ((x : H) : G) ∈ N
       exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
   have hH_norm_N : H ≤ Subgroup.normalizer (N : Set G) := by
-    letI : (N.subgroupOf H).Normal := by
+    let : (N.subgroupOf H).Normal := by
       rwa [hNsub_eq]
     exact Subgroup.le_normalizer_of_normal_subgroupOf hN_le_H
   have hRinv :
@@ -1596,7 +1601,7 @@ noncomputable instance {G : Type uG} [Group G] {H : Subgroup G} {K : Subgroup H}
 public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1610,7 +1615,7 @@ public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
     let V : Subgroup H := fittingSubgroup H
     Disjoint (subgroupCentralizerIn V K) ⁅V, K⁆ ∧
       subgroupCentralizerIn V K ⊔ ⁅V, K⁆ = V := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
   let Fbar : Subgroup (↥H ⧸ V) := fittingSubgroup (↥H ⧸ V)
@@ -1626,7 +1631,7 @@ public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
   have hV_norm : V.Normal := by
     dsimp [V]
     infer_instance
-  letI : V.Normal := hV_norm
+  let : V.Normal := hV_norm
   have hVp : IsPGroup p ↥V := by
     have hV_eq_pcore : V = pCore p H := by
       simpa [V] using
@@ -1674,7 +1679,7 @@ public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
+  let : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
   have hKnormV : K ≤ Subgroup.normalizer V := Subgroup.le_normalizer_of_normal (H := V)
 
   have hfix_eq :
@@ -1693,7 +1698,8 @@ public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
     simpa [Subgroup.map_subgroupOf_eq_of_le hW_le_V] using hcomm_eq_map
   have hcompl :
       IsCompl (fixedPointSubgroup (↥K) (↥V)) (commutatorAction (A := ↥K) (G := ↥V)) := by
-    exact proposition_1_6_d (G := ↥V) (A := ↥K) (by infer_instance) hcop_VK.symm inferInstance
+    exact proposition_1_6_d (G := ↥V) (A := ↥K)
+      (by have : Group.IsSolvable G := hsolvG; infer_instance) hcop_VK.symm inferInstance
   have hcompl_sub :
       IsCompl ((subgroupCentralizerIn V K).subgroupOf V) ((⁅V, K⁆).subgroupOf V) := by
     simpa [hfix_eq, hcomm_eq] using hcompl
@@ -1733,7 +1739,7 @@ public theorem theorem_3_6_fitting_centralizer_commutator_decomposition
 public theorem theorem_3_6_fitting_centralizer_proper
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1850,7 +1856,7 @@ private theorem commutator_normalizer_le
 public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -1866,7 +1872,7 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
     fittingSubgroup H ⊔ normalizerOf K = ⊤ →
     ⁅fittingSubgroup H, K⁆ = fittingSubgroup H ∧
       subgroupCentralizerIn (fittingSubgroup H) K = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro hK_inv hNK_inv hVNK_sup
   let V : Subgroup H := fittingSubgroup H
   obtain ⟨hCW_disj, hCW_sup⟩ :=
@@ -1879,25 +1885,25 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hV_inv : IsInvariant (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  let : IsInvariant (↥R) (↥H) V := hV_inv
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
-  letI : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
+  let : IsElementaryAbelian p ↥V := hV_elem
+  let : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
   let C : Subgroup H := subgroupCentralizerIn V K
   let W : Subgroup H := ⁅V, K⁆
   have hC_le_V : C ≤ V := inf_le_left
   have hW_le_V : W ≤ V := Subgroup.commutator_le_left (H₁ := V) (H₂ := K)
   have hV_le_norm_C : V ≤ Subgroup.normalizer (C : Set H) := by
-    letI : (C.subgroupOf V).Normal := by infer_instance
+    let : (C.subgroupOf V).Normal := by infer_instance
     exact Subgroup.le_normalizer_of_normal_subgroupOf hC_le_V
   have hV_le_norm_W : V ≤ Subgroup.normalizer (W : Set H) := by
-    letI : (W.subgroupOf V).Normal := by infer_instance
+    let : (W.subgroupOf V).Normal := by infer_instance
     exact Subgroup.le_normalizer_of_normal_subgroupOf hW_le_V
   have hNK_le_norm_C : normalizerOf K ≤ Subgroup.normalizer (C : Set H) := by
     simpa [C, normalizerOf] using
@@ -1920,19 +1926,19 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
       exact sup_le hV_le_norm_W hNK_le_norm_W
     exact Subgroup.normalizer_eq_top_iff.mp hnorm_top
   have hC_inv : IsInvariant (↥R) (↥H) C := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+    let : IsInvariant (↥R) (↥H) K := hK_inv
     simpa [C] using isInvariant_subgroupCentralizerIn_of_isInvariant (A := ↥R) V K
   have hW_inv : IsInvariant (↥R) (↥H) W := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+    let : IsInvariant (↥R) (↥H) K := hK_inv
     simpa [W] using isInvariant_commutator (A := ↥R) V K
   let Cmap : Subgroup G := C.map H.subtype
   let Wmap : Subgroup G := W.map H.subtype
   have hCmap_normal : Cmap.Normal := by
-    letI : C.Normal := hC_normal_H
+    let : C.Normal := hC_normal_H
     simpa [Cmap, C] using
       normal_map_subtype_of_normal_and_isInvariant (G := G) (H := H) (R := R) hHR C hC_inv
   have hWmap_normal : Wmap.Normal := by
-    letI : W.Normal := hW_normal_H
+    let : W.Normal := hW_normal_H
     simpa [Wmap, W] using
       normal_map_subtype_of_normal_and_isInvariant (G := G) (H := H) (R := R) hHR W hW_inv
   have hCmap_disj_Wmap : Disjoint Cmap Wmap := by
@@ -1955,14 +1961,14 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
       exists_minimal_normal_le (G := G) Cmap hCmap_normal hCmap_ne_bot
     obtain ⟨N, _, hN_le_Wmap, hN_ne_bot, hNmin⟩ :=
       exists_minimal_normal_le (G := G) Wmap hWmap_normal hWmap_ne_bot
-    letI : IsMinimalNormal M := {
+    let : IsMinimalNormal M := {
       minimal := by
         intro L hLnorm hLM
         by_cases hL_bot : L = ⊥
         · exact Or.inl hL_bot
         · exact Or.inr (hMmin L hLnorm hLM hL_bot)
     }
-    letI : IsMinimalNormal N := {
+    let : IsMinimalNormal N := {
       minimal := by
         intro L hLnorm hLN
         by_cases hL_bot : L = ⊥
@@ -2000,7 +2006,7 @@ public theorem theorem_3_6_fitting_commutator_eq_fitting_and_centralizer_eq_bot
 public theorem theorem_3_6_K_fixedPointSubgroup_on_fitting_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -2017,7 +2023,7 @@ public theorem theorem_3_6_K_fixedPointSubgroup_on_fitting_eq_bot
     IsInvariant (↥R) (↥H) (normalizerOf K) →
     V ⊔ normalizerOf K = ⊤ →
     fixedPointSubgroup (↥K) (↥V) = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hK_inv hNK_inv hVNK_sup
@@ -2035,7 +2041,7 @@ public theorem theorem_3_6_K_fixedPointSubgroup_on_fitting_eq_bot
 public theorem theorem_3_6_normalizer_complement_structure
     {G : Type uG} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -2056,7 +2062,7 @@ public theorem theorem_3_6_normalizer_complement_structure
       V ⊓ normalizerOf K = ⊥ ∧
       (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) ∧
       subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let V : Subgroup H := fittingSubgroup H
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
@@ -2097,24 +2103,24 @@ public theorem theorem_3_6_normalizer_complement_structure
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hV_inv : IsInvariant (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_inv
+  let : IsInvariant (↥R) (↥H) V := hV_inv
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
-  letI : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
+  let : IsElementaryAbelian p ↥V := hV_elem
+  let : IsMulCommutative ↥V := hV_elem.toIsMulCommutative
   let C : Subgroup H := subgroupCentralizerIn V K
   let W : Subgroup H := ⁅V, K⁆
   have hC_le_V : C ≤ V := inf_le_left
   have hW_le_V : W ≤ V := Subgroup.commutator_le_left (H₁ := V) (H₂ := K)
   have hV_le_norm_C : V ≤ Subgroup.normalizer (C : Set H) := by
-    letI : (C.subgroupOf V).Normal := by infer_instance
+    let : (C.subgroupOf V).Normal := by infer_instance
     exact Subgroup.le_normalizer_of_normal_subgroupOf hC_le_V
   have hV_le_norm_W : V ≤ Subgroup.normalizer (W : Set H) := by
-    letI : (W.subgroupOf V).Normal := by infer_instance
+    let : (W.subgroupOf V).Normal := by infer_instance
     exact Subgroup.le_normalizer_of_normal_subgroupOf hW_le_V
   have hNK_le_norm_C : NK ≤ Subgroup.normalizer (C : Set H) := by
     simpa [C, NK, normalizerOf] using
@@ -2137,19 +2143,19 @@ public theorem theorem_3_6_normalizer_complement_structure
       exact sup_le hV_le_norm_W hNK_le_norm_W
     exact Subgroup.normalizer_eq_top_iff.mp hnorm_top
   have hC_inv : IsInvariant (↥R) (↥H) C := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+    let : IsInvariant (↥R) (↥H) K := hK_inv
     simpa [C] using isInvariant_subgroupCentralizerIn_of_isInvariant (A := ↥R) V K
   have hW_inv : IsInvariant (↥R) (↥H) W := by
-    letI : IsInvariant (↥R) (↥H) K := hK_inv
+    let : IsInvariant (↥R) (↥H) K := hK_inv
     simpa [W] using isInvariant_commutator (A := ↥R) V K
   let Cmap : Subgroup G := C.map H.subtype
   let Wmap : Subgroup G := W.map H.subtype
   have hCmap_normal : Cmap.Normal := by
-    letI : C.Normal := hC_normal_H
+    let : C.Normal := hC_normal_H
     simpa [Cmap, C] using
       normal_map_subtype_of_normal_and_isInvariant (G := G) (H := H) (R := R) hHR C hC_inv
   have hWmap_normal : Wmap.Normal := by
-    letI : W.Normal := hW_normal_H
+    let : W.Normal := hW_normal_H
     simpa [Wmap, W] using
       normal_map_subtype_of_normal_and_isInvariant (G := G) (H := H) (R := R) hHR W hW_inv
   have hCmap_disj_Wmap : Disjoint Cmap Wmap := by
@@ -2172,14 +2178,14 @@ public theorem theorem_3_6_normalizer_complement_structure
       exists_minimal_normal_le (G := G) Cmap hCmap_normal hCmap_ne_bot
     obtain ⟨N, hNnorm, hN_le_Wmap, hN_ne_bot, hNmin⟩ :=
       exists_minimal_normal_le (G := G) Wmap hWmap_normal hWmap_ne_bot
-    letI : IsMinimalNormal M := {
+    let : IsMinimalNormal M := {
       minimal := by
         intro L hLnorm hLM
         by_cases hL_bot : L = ⊥
         · exact Or.inl hL_bot
         · exact Or.inr (hMmin L hLnorm hLM hL_bot)
     }
-    letI : IsMinimalNormal N := {
+    let : IsMinimalNormal N := {
       minimal := by
         intro L hLnorm hLN
         by_cases hL_bot : L = ⊥
@@ -2329,7 +2335,7 @@ public theorem theorem_3_6_normalizer_complement_structure
   have hCH_eq : (CH.subgroupOf NK) = subgroupCentralizerIn (⊤ : Subgroup NK) (K.subgroupOf NK) := by
     symm
     simpa [CH] using subgroupCentralizerIn_subgroupOf_eq NK (⊤ : Subgroup H) K hK_le_NK
-  have hsolvNK : IsSolvable ↥NK := by infer_instance
+  have hsolvNK : Group.IsSolvable ↥NK := by infer_instance
   have hcent_fit_le :
       subgroupCentralizerIn (⊤ : Subgroup NK) (fittingSubgroup NK) ≤ fittingSubgroup NK := by
     simpa [subgroupCentralizerIn] using
@@ -2347,7 +2353,7 @@ public theorem theorem_3_6_normalizer_complement_structure
 
 public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     {G : Type*} [Group G] [Finite G]
-    (H R R₀ : Subgroup G) (hsolvG : IsSolvable G)
+    (H R R₀ : Subgroup G) (hsolvG : Group.IsSolvable G)
     [hH_normal : H.Normal] (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -2375,12 +2381,12 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
       ⟨(a : G), hR₀_le a.2⟩ x
     change (x ∈ NK) ↔ (a • x ∈ NK) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) NK := hNK_inv₀
+  let : IsInvariant (↥R₀) (↥H) NK := hNK_inv₀
   have hK_le_NK : K ≤ NK := Subgroup.le_normalizer
   have hR₀_ne_bot : R₀ ≠ ⊥ := by
     intro hR₀_bot
     exact hR₀_prime.ne_one <| by simp [hR₀_bot]
-  haveI : Nontrivial R₀ := (Subgroup.nontrivial_iff_ne_bot R₀).2 hR₀_ne_bot
+  have : Nontrivial R₀ := (Subgroup.nontrivial_iff_ne_bot R₀).2 hR₀_ne_bot
   have hR₀_coprime_H : Nat.Coprime (Nat.card R₀) (Nat.card H) := by
     have hR₀_dvd_R : Nat.card R₀ ∣ Nat.card R := by
       rw [← natCard_subgroupOf_eq R₀ R hR₀_le]
@@ -2418,7 +2424,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
       have hxfix : a⁻¹ • (a • x) = a • x := hK_triv_NK a⁻¹ (a • x) hx
       have hxa : x = a • x := by simpa [smul_smul] using hxfix
       exact hxa ▸ hx
-  letI : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := hKsub_inv₀
+  let : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := hKsub_inv₀
   have hK_triv_pointwise : ∀ a : R₀, ∀ x : K.subgroupOf NK, a • x = x := by
     intro a x
     apply Subtype.ext
@@ -2434,8 +2440,8 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
       exact hx (ha x)
     have hfaith_NK : FaithfulSMul R₀ NK :=
       (faithfulSMul_iff (G := ↥R₀) (α := ↥NK)).2 hfaith_crit
-    letI : FaithfulSMul R₀ NK := hfaith_NK
-    have hsolvNK : IsSolvable ↥NK := by infer_instance
+    let : FaithfulSMul R₀ NK := hfaith_NK
+    have hsolvNK : Group.IsSolvable ↥NK := by infer_instance
     have hfaith_fit : FaithfulSMul R₀ (fittingSubgroup NK) :=
       faithful_on_fitting_of_coprime (G := ↥NK) (A := ↥R₀) hsolvNK hNK_coprime_R₀
     obtain ⟨a, ha_ne⟩ := exists_ne (1 : R₀)
@@ -2489,17 +2495,17 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     intro x y hxy
     apply Subtype.ext
     simpa [f] using congrArg Subtype.val hxy
-  letI : IsZGroup ↥NK := IsZGroup.of_injective (f := f) hf
+  let : IsZGroup ↥NK := IsZGroup.of_injective (f := f) hf
   have hKsub_nil : Group.IsNilpotent ↥(K.subgroupOf NK) := by
     rw [hKsub_fit]
     infer_instance
-  letI : Group.IsNilpotent ↥(K.subgroupOf NK) := hKsub_nil
+  let : Group.IsNilpotent ↥(K.subgroupOf NK) := hKsub_nil
   have hKsub_cyclic : IsCyclic ↥(K.subgroupOf NK) := by infer_instance
   have hK_cyclic : IsCyclic K := by
     let e : K.subgroupOf NK ≃* K :=
       Subgroup.subgroupOfEquivOfLe (G := ↥H) (H := K) (K := NK) hK_le_NK
     exact isCyclic_of_surjective (f := e.toMonoidHom) e.surjective
-  letI : IsCyclic K := hK_cyclic
+  let : IsCyclic K := hK_cyclic
   have hK_le_CH : K ≤ subgroupCentralizerIn (⊤ : Subgroup H) K := by
     have hK_le_cent : K ≤ Subgroup.centralizer (K : Set H) :=
       (Subgroup.le_centralizer_iff_isMulCommutative (K := K)).2 inferInstance
@@ -2507,10 +2513,11 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     exact ⟨by simp, hK_le_cent hx⟩
   exact ⟨hNK_le_centR₀, hK_cyclic, le_antisymm hCH_le_K hK_le_CH⟩
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem theorem_3_6_r0_commutator_nontrivial
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -2545,12 +2552,12 @@ public theorem theorem_3_6_r0_commutator_nontrivial
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
-  letI : IsInvariant (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : V.Normal := by
+  let : V.Characteristic := hV_char
+  let : IsInvariant (↥R) (↥H) V := isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
+  let : V.Normal := by
     dsimp [V]
     infer_instance
-  letI : MulDistribMulAction (↥R) (↥H ⧸ V) :=
+  let : MulDistribMulAction (↥R) (↥H ⧸ V) :=
     quotientMulDistribMulAction (A := ↥R) (G := ↥H) V inferInstance
   have hcommH_map :
       (commutatorAction (A := ↥R) (G := ↥H)).map H.subtype = H := by
@@ -2593,7 +2600,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
       exact Subgroup.map_top_of_surjective q (QuotientGroup.mk'_surjective V)
     rw [← hmap_top]
     exact hcommHq_le
-  letI : IsInvariant (↥R) (↥H) NK := hNK_inv
+  let : IsInvariant (↥R) (↥H) NK := hNK_inv
   -- letI : MulDistribMulAction (↥R) (↥NK) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) NK
   have hNK_map_top : NK.map q = ⊤ := by
     apply top_unique
@@ -2674,14 +2681,14 @@ public theorem theorem_3_6_r0_commutator_nontrivial
       _ = (⊤ : Subgroup NK).map φ := by
         symm
         exact Subgroup.map_top_of_surjective φ hφ_surj
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   -- letI : MulDistribMulAction (↥R) (↥K) := instMulDistribMulAction_subtype (A := ↥R) (G := ↥H) K
   let ρ : R →* MulAut K := MulDistribMulAction.toMulAut (G := ↥R) (M := ↥K)
   let ψ : NK →* MulAut K := by
     change Subgroup.normalizer (K : Set H) →* MulAut K
     exact Subgroup.normalizerMonoidHom (H := K)
   let eAut : MulAut K ≃* (ZMod (Nat.card K))ˣ := IsCyclic.mulAutMulEquiv (G := K)
-  letI : CommGroup (MulAut K) := MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
+  let : CommGroup (MulAut K) := MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
   have hψker :
       ψ.ker = (subgroupCentralizerIn (⊤ : Subgroup H) K).subgroupOf NK := by
     ext x
@@ -2757,7 +2764,7 @@ public theorem theorem_3_6_r0_commutator_nontrivial
 public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -2793,12 +2800,12 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hVg_normal : Vg.Normal := by
     dsimp [Vg, V]
     exact ConjAct.normal_of_characteristic_of_normal
   have hKR₀normVg : KR₀ ≤ Subgroup.normalizer Vg := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes KR₀ Vg := ⟨hKR₀normVg⟩
+  have : Subgroup.Normalizes KR₀ Vg := ⟨hKR₀normVg⟩
   let ρ : KR₀ →* MulAut Vg := MulDistribMulAction.toMulAut (G := ↥KR₀) (M := ↥Vg)
   let C : Subgroup KR₀ := actionCentralizerIn (A := ↥KR₀) (G := ↥Vg) (⊤ : Subgroup KR₀)
   have hCker : C = ρ.ker := by
@@ -2891,7 +2898,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
     apply Subtype.ext
     exact (Subgroup.disjoint_def.mp hVgKg_disj) hxVg hxKgG
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-  haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+  have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
   have hK_inv₀ : IsInvariant (↥R₀) (↥H) K := by
     refine ⟨?_⟩
     intro a x
@@ -2899,7 +2906,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
       ⟨a, hR₀_le a.2⟩ x
     change (x ∈ K) ↔ (a • x ∈ K) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) K := hK_inv₀
+  let : IsInvariant (↥R₀) (↥H) K := hK_inv₀
   have hR₀_le_normKg : R₀ ≤ Subgroup.normalizer (Kg : Set G) := by
     intro a ha
     rw [Subgroup.mem_normalizer_iff]
@@ -2985,7 +2992,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
         Nat.card R₀sub * R₀sub.index = Nat.card KR₀ := by
           rw [Nat.mul_comm]
           exact Subgroup.index_mul_card (H := R₀sub)
-        _ = Nat.card R₀sub * Nat.card Kgsub := hR₀sub_compl.card_mul.symm
+        _ = Nat.card R₀sub * Nat.card Kgsub := hR₀sub_compl.card_mul_card.symm
     exact Nat.mul_left_cancel (Nat.card_pos (α := R₀sub)) hmul
   let q' : Nat.Primes := ⟨Nat.card R₀, hR₀_prime⟩
   let π : Set Nat.Primes := {q'}
@@ -3033,7 +3040,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
         (Subgroup.subgroupOfEquivOfLe (H := R₀) (K := KR₀) le_sup_right)).toEquiv
   have hquot_prime : Nat.Prime (Nat.card (↥KR₀ ⧸ Kgsub)) := by
     simpa [hquot_card_eq] using hR₀_prime
-  letI : Fact (Nat.Prime (Nat.card (↥KR₀ ⧸ Kgsub))) := ⟨hquot_prime⟩
+  let : Fact (Nat.Prime (Nat.card (↥KR₀ ⧸ Kgsub))) := ⟨hquot_prime⟩
   have hCmap_bot_or_top : C.map πq = ⊥ ∨ C.map πq = ⊤ :=
     Subgroup.eq_bot_or_eq_top_of_prime_card (C.map πq)
   cases hCmap_bot_or_top with
@@ -3081,7 +3088,7 @@ public theorem theorem_3_6_centralizer_KR₀_on_fitting_eq_bot
           subst hq_eq
           exact (hR₀sub_hall.p_in_pi_of_p_dvd_index q' (hC_index_eq ▸ hq_dvd)) (by simp [π])
       have hCR₀_eq : R₀sub = C := by
-        letI : C.Normal := hC_normal
+        let : C.Normal := hC_normal
         exact IsHallSubgroup.eq_of_normal (hH := hC_hall) (hK := hR₀sub_hall)
       have hR₀sub_normal : R₀sub.Normal := by
         rw [hCR₀_eq]
@@ -3123,7 +3130,7 @@ public theorem theorem_3_6_commutator_bot_of_local_sub_comm
 public theorem theorem_3_6_false_of_local_sub_comm
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -3158,7 +3165,7 @@ public theorem theorem_3_6_false_of_local_sub_comm
 public theorem theorem_3_6_false_of_comm_sub
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -3194,7 +3201,7 @@ public theorem theorem_3_6_false_of_comm_sub
 public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -3213,7 +3220,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     let Vg : Subgroup G := (fittingSubgroup H).map H.subtype
     Nat.card (subgroupCentralizerIn Vg R₀) = p := by
   set_option maxHeartbeats 800000 in
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   intro hK_inv hNK_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
   let V : Subgroup H := fittingSubgroup H
@@ -3228,19 +3235,19 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hVg_normal : Vg.Normal := by
     dsimp [Vg, V]
     exact ConjAct.normal_of_characteristic_of_normal
   have hKR₀normVg : KR₀ ≤ Subgroup.normalizer Vg := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes KR₀ Vg := ⟨hKR₀normVg⟩
+  have : Subgroup.Normalizes KR₀ Vg := ⟨hKR₀normVg⟩
   have hR₀normVg : R₀ ≤ Subgroup.normalizer Vg := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes R₀ Vg := ⟨hR₀normVg⟩
+  have : Subgroup.Normalizes R₀ Vg := ⟨hR₀normVg⟩
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
+  let : IsElementaryAbelian p ↥V := hV_elem
   have hVg_elem : IsElementaryAbelian p ↥Vg := by
     refine
       { toIsMulCommutative := by infer_instance
@@ -3261,8 +3268,8 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     calc
       ((x : Vg) : G) ^ p = (((yV : V) : H) : G) ^ p := by simp [hx_eq]
       _ = 1 := hy_pow_G
-  letI : IsElementaryAbelian p ↥Vg := hVg_elem
-  letI : CommGroup Vg := IsMulCommutative.instCommGroup
+  let : IsElementaryAbelian p ↥Vg := hVg_elem
+  let : CommGroup Vg := IsMulCommutative.instCommGroup
   let ψ : KR₀ →* MulAut Vg := MulDistribMulAction.toMulAut (G := ↥KR₀) (M := ↥Vg)
   let ρ : Representation (ZMod p) KR₀ (Additive Vg) := {
     toFun := fun a =>
@@ -3360,7 +3367,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     rw [hR₀sub_card_eq]
     exact hcop_p_R₀
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-  haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+  have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
   have hK_inv₀ : IsInvariant (↥R₀) (↥H) K := by
     refine ⟨?_⟩
     intro a x
@@ -3368,7 +3375,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
       ⟨a, hR₀_le a.2⟩ x
     change (x ∈ K) ↔ (a • x ∈ K) at hx
     exact hx
-  letI : IsInvariant (↥R₀) (↥H) K := hK_inv₀
+  let : IsInvariant (↥R₀) (↥H) K := hK_inv₀
   have hR₀_le_normKg : R₀ ≤ Subgroup.normalizer (Kg : Set G) := by
     intro a ha
     rw [Subgroup.mem_normalizer_iff]
@@ -3439,13 +3446,13 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
       hcopHR
   have hR₀sub_compl_symm : Kgsub.IsComplement' R₀sub := hR₀sub_compl.symm
   have hoddKR₀ : Odd (Nat.card KR₀) := odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card KR₀)
-  have hsolvKR₀ : IsSolvable ↥KR₀ := by infer_instance
+  have hsolvKR₀ : Group.IsSolvable ↥KR₀ := by infer_instance
   have hoddKR₀' : Odd (Nat.card ↥KR₀) := by simpa using hoddKR₀
   have hR₀sub_prime : Nat.Prime (Nat.card R₀sub) := by
     rw [hR₀sub_card_eq]
     exact hR₀_prime
   have hKR₀_coprime_p : Nat.Coprime p (Nat.card KR₀) := by
-    rw [← hR₀sub_compl.card_mul]
+    rw [← hR₀sub_compl.card_mul_card]
     exact Nat.Coprime.mul_right hcop_p_R₀sub hcop_p_Kgsub
   have hcharKR₀ : ringChar (ZMod p) = 0 ∨
       (Nat.Prime (ringChar (ZMod p)) ∧ Nat.Coprime (ringChar (ZMod p)) (Nat.card KR₀)) := by
@@ -3582,7 +3589,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     intro x y hxy
     apply Subtype.ext
     simpa [f] using congrArg Subtype.val hxy
-  letI : IsZGroup ↥Cfix := IsZGroup.of_injective (f := f) hf
+  let : IsZGroup ↥Cfix := IsZGroup.of_injective (f := f) hf
   have hVg_le_cent : Vg ≤ Subgroup.centralizer (Vg : Set G) :=
     (Subgroup.le_centralizer_iff_isMulCommutative (K := Vg)).2 inferInstance
   have hCfix_comm : IsMulCommutative ↥Cfix := by
@@ -3591,9 +3598,9 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     exact hVg_le_cent hx.1 y hy.1
-  letI : IsMulCommutative ↥Cfix := hCfix_comm
-  letI : CommGroup Cfix := IsMulCommutative.instCommGroup
-  letI : Group.IsNilpotent ↥Cfix := by infer_instance
+  let : IsMulCommutative ↥Cfix := hCfix_comm
+  let : CommGroup Cfix := IsMulCommutative.instCommGroup
+  let : Group.IsNilpotent ↥Cfix := by infer_instance
   have hCfix_cyclic : IsCyclic ↥Cfix := by infer_instance
   have hCfix_card_ne_one : Nat.card Cfix ≠ 1 := by
     intro hcard
@@ -3619,7 +3626,7 @@ public theorem theorem_3_6_fixed_points_of_R₀_on_fitting
 public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -3637,7 +3644,7 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
     (K.subgroupOf (normalizerOf K)) = fittingSubgroup (normalizerOf K) →
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     subgroupCentralizerIn ((normalizerSubtypeMap K P).map H.subtype) R₀ = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   intro hK_inv hNK_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
   let V : Subgroup H := fittingSubgroup H
@@ -3651,7 +3658,7 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hVg_normal : Vg.Normal := by
     dsimp [Vg, V]
     exact ConjAct.normal_of_characteristic_of_normal
@@ -3684,7 +3691,7 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
     exact hCP_le_centR₀.trans (centralizer_le_normalizer (R := R₀))
   have hCP_le_normCfix : CP ≤ Subgroup.normalizer (Cfix : Set G) := by
     exact subgroupCentralizerIn_normalizer_le (V := Vg) (K := R₀) (N := CP) hCP_le_normR₀
-  haveI : Subgroup.Normalizes CP Cfix := ⟨hCP_le_normCfix⟩
+  have : Subgroup.Normalizes CP Cfix := ⟨hCP_le_normCfix⟩
   have hCP_triv : ActsTrivially (A := ↥CP) (G := ↥Cfix) := by
     exact
       actsTrivially_of_isPGroup_on_cyclic_prime_order hp hCP_p hCfix_cyclic hCfix_card
@@ -3732,8 +3739,8 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
     intro x y hxy
     apply Subtype.ext
     simpa [f] using congrArg Subtype.val hxy
-  letI : IsZGroup ↥M := IsZGroup.of_injective (f := f) hf
-  letI : Group.IsNilpotent ↥M := hM_p.isNilpotent
+  let : IsZGroup ↥M := IsZGroup.of_injective (f := f) hf
+  let : Group.IsNilpotent ↥M := hM_p.isNilpotent
   have hM_cyclic : IsCyclic ↥M := by infer_instance
   have hCfixsub_normal : (Cfix.subgroupOf M).Normal := by
     have hM_le_normCfix : M ≤ Subgroup.normalizer (Cfix : Set G) := sup_le hCP_le_normCfix
@@ -3805,7 +3812,7 @@ public theorem theorem_3_6_centralizer_of_R₀_on_P_eq_bot
 public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -3825,7 +3832,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
     subgroupCentralizerIn (⊤ : Subgroup H) K ≤ K →
     let Psubg : Subgroup G := (normalizerSubtypeMap K P).map H.subtype
     Psubg = ⁅Psubg, R₀⁆ ∧ Psubg ≤ ⁅Psubg, R⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hK_inv hNK_inv hP_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
@@ -3833,7 +3840,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
   let Psub : Subgroup H := normalizerSubtypeMap K P
   let Psubg : Subgroup G := Psub.map H.subtype
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-  haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+  have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
   have hPsub_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
@@ -3877,7 +3884,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
       have hxPsub : xH ∈ Psub :=
         (IsInvariant.invariant (A := ↥R₀) (G := ↥H) (H := Psub) ⟨a, ha⟩ xH).2 hxPsub_smul
       exact Subgroup.mem_map_of_mem H.subtype hxPsub
-  haveI : Subgroup.Normalizes R₀ Psubg := ⟨hR₀normPsubg⟩
+  have : Subgroup.Normalizes R₀ Psubg := ⟨hR₀normPsubg⟩
   have hR₀_dvd_R : Nat.card R₀ ∣ Nat.card R := by
     rw [← natCard_subgroupOf_eq R₀ R hR₀_le]
     exact Subgroup.card_subgroup_dvd_card (R₀.subgroupOf R)
@@ -3893,7 +3900,7 @@ public theorem theorem_3_6_pSubgroup_eq_commutator_with_R₀
   have hfix_bot : fixedPointSubgroup (↥R₀) (↥Psubg) = ⊥ := by
     rw [hfixed_eq]
     simpa using congrArg (fun S : Subgroup G => S.subgroupOf Psubg) hCP_bot
-  have hsolvPsubg : IsSolvable ↥Psubg := by infer_instance
+  have hsolvPsubg : Group.IsSolvable ↥Psubg := by infer_instance
   have hsup :
       fixedPointSubgroup (↥R₀) (↥Psubg) ⊔ commutatorAction (A := ↥R₀) (G := ↥Psubg) = ⊤ := by
     exact proposition_1_6_a (G := ↥Psubg) (A := ↥R₀) hsolvPsubg hR₀_coprime_Psubg
@@ -3967,14 +3974,14 @@ public theorem pSubgroup_le_pCore_of_hasPLengthOne_of_pPrimeCore_eq_bot
 public theorem theorem_3_6_pPrimeCore_eq_bot_of_fitting_le
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H)
     (S : Subgroup H) (hV_le_S : fittingSubgroup H ≤ S) :
     pPrimeCore p ↥S = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let V : Subgroup H := fittingSubgroup H
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
@@ -4046,7 +4053,7 @@ public theorem theorem_3_6_pPrimeCore_eq_bot_of_fitting_le
 public theorem theorem_3_6_local_subambient_step
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -4058,7 +4065,7 @@ public theorem theorem_3_6_local_subambient_step
     let Ng : Subgroup G := N.map H.subtype
     Ng ⊔ R₀ < ⊤ →
     HasPLengthOne p ↥⁅Ng, R₀⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hP_inv hX_inv hPsub_normX hS_lt
@@ -4069,7 +4076,7 @@ public theorem theorem_3_6_local_subambient_step
   let Ng : Subgroup G := N.map H.subtype
   let S : Subgroup G := Ng ⊔ R₀
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-  haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+  have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
   have hP_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
@@ -4087,18 +4094,18 @@ public theorem theorem_3_6_local_subambient_step
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hV_inv₀ : IsInvariant (↥R₀) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
   have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-    letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
+    let : IsInvariant (↥R₀) (↥H) X := hX_inv₀
+    let : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
     simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
   have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
     Subgroup.le_normalizer_of_normal (H := V)
   have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-    letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+    let : IsInvariant (↥R₀) (↥H) V := hV_inv₀
+    let : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
     simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
   have hNg_le_H : Ng ≤ H := by
     intro x hx
@@ -4135,10 +4142,10 @@ public theorem theorem_3_6_local_subambient_step
   have hCZ_Ng : IsZGroup ↥(subgroupCentralizerIn Ng R₀) :=
     isZGroup_subgroupCentralizerIn_of_le H Ng R₀ hNg_le_H
   have hCZ_sub : IsZGroup ↥(subgroupCentralizerIn (Ng.subgroupOf S) (R₀.subgroupOf S)) := by
-    letI : IsZGroup ↥(subgroupCentralizerIn Ng R₀) := hCZ_Ng
+    let : IsZGroup ↥(subgroupCentralizerIn Ng R₀) := hCZ_Ng
     exact isZGroup_subgroupCentralizerIn_subgroupOf S Ng R₀ le_sup_right
   have hsub : HasPLengthOne p ↥⁅Ng.subgroupOf S, R₀.subgroupOf S⁆ := by
-    letI : (Ng.subgroupOf S).Normal := hNgsub_normal
+    let : (Ng.subgroupOf S).Normal := hNgsub_normal
     have hcomp_sub :
         (Ng.subgroupOf S).IsComplement' (R₀.subgroupOf S) := by
       refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ
@@ -4182,7 +4189,7 @@ public theorem theorem_3_6_local_subambient_step
 public theorem theorem_3_6_commutator_bot_of_proper_subambient
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -4208,7 +4215,7 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
       let Ng : Subgroup G := N.map H.subtype
       Ng ⊔ R₀ < ⊤ →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hK_inv hNK_inv hP_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K X hX_le_K hX_inv
@@ -4248,7 +4255,7 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
       pPrimeCore_map_iso (G := ↥N) (G' := ↥Ng) (p := p) eNg
     simpa [hN_core_bot] using hmap.symm
   let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-  haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+  have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
   have hP_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
     refine ⟨?_⟩
     intro a x
@@ -4266,19 +4273,19 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hV_inv₀ : IsInvariant (↥R₀) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
   let Y : Subgroup H := X ⊔ Psub
   have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-    letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
+    let : IsInvariant (↥R₀) (↥H) X := hX_inv₀
+    let : IsInvariant (↥R₀) (↥H) Psub := hP_inv₀
     simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
   have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
     Subgroup.le_normalizer_of_normal (H := V)
   have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-    letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-    letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+    let : IsInvariant (↥R₀) (↥H) V := hV_inv₀
+    let : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
     simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
   have hR₀invNg : ∀ r : R₀, ∀ x ∈ Ng, (r : G) * x * (r : G)⁻¹ ∈ Ng := by
     intro r x hx
@@ -4295,7 +4302,7 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
     have hconj : (b : G) * a⁻¹ * (b : G)⁻¹ ∈ Ng :=
       ((Subgroup.mem_normalizer_iff.mp hbNorm) a⁻¹).1 (Ng.inv_mem ha)
     simpa [commutatorElement_def, mul_assoc] using Ng.mul_mem ha hconj
-  haveI : Subgroup.Normalizes R₀ Ng := ⟨hR₀_le_normNg⟩
+  have : Subgroup.Normalizes R₀ Ng := ⟨hR₀_le_normNg⟩
   have hQ_eq :
       (commutatorAction (A := ↥R₀) (G := ↥Ng)).map Ng.subtype = ⁅Ng, R₀⁆ := by
     simpa using commutatorAction_subgroup_conj_map_eq_commutator Ng R₀ hR₀_le_normNg
@@ -4362,12 +4369,12 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
     dsimp [OQg, OQ]
     exact (pCore_isPGroup (G := ↥Qsub) (p := p)).map Qsub.subtype
   have hOQg_normal : OQg.Normal := by
-    letI : (pCore p ↥Qsub).Characteristic := pCore_characteristic (p := p)
+    let : (pCore p ↥Qsub).Characteristic := pCore_characteristic (p := p)
     dsimp [OQg, OQ]
     infer_instance
   let Xgsub : Subgroup Ng := Xg.subgroupOf Ng
   have hXgsub_le_normOQg : Xgsub ≤ Subgroup.normalizer (OQg : Set Ng) := by
-    letI : OQg.Normal := hOQg_normal
+    let : OQg.Normal := hOQg_normal
     simpa using (Subgroup.le_normalizer_of_normal (K := Xgsub) (H := OQg))
   have hPsubgsub_le_OQg : Psubgsub ≤ OQg := by
     intro x hx
@@ -4429,7 +4436,7 @@ public theorem theorem_3_6_commutator_bot_of_proper_subambient
 public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -4456,7 +4463,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
         normalizerSubtypeMap K P ≤ Subgroup.normalizer (X : Set H) →
         X < K →
         ⁅X, normalizerSubtypeMap K P⁆ = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   let V : Subgroup H := fittingSubgroup H
   let q : ↥H →* (↥H ⧸ V) := QuotientGroup.mk' V
@@ -4471,14 +4478,14 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       hNK_inv hVNK_sup
   let Psub : Subgroup H := normalizerSubtypeMap K P
   have hPsub_inv : IsInvariant (↥R) (↥H) Psub := by
-    letI : IsInvariant (↥R) (↥H) (normalizerOf K) := hNK_inv
-    letI : IsInvariant (↥R) (↥(normalizerOf K)) P := hP_inv
+    let : IsInvariant (↥R) (↥H) (normalizerOf K) := hNK_inv
+    let : IsInvariant (↥R) (↥(normalizerOf K)) P := hP_inv
     simpa [Psub, normalizerSubtypeMap] using
       isInvariant_map_subtype (A := ↥R) (G := ↥H) (normalizerOf K) P
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have htop_map_H : (⊤ : Subgroup H).map H.subtype = H := by
     ext x
     constructor
@@ -4509,7 +4516,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       exact y.2
     let hR₀normH : R₀ ≤ Subgroup.normalizer H := hR₀_le.trans hRnormH
-    haveI : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
+    have : Subgroup.Normalizes R₀ H := ⟨hR₀normH⟩
     have hPsub_inv₀ : IsInvariant (↥R₀) (↥H) Psub := by
       refine ⟨?_⟩
       intro a x
@@ -4528,14 +4535,14 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
       isInvariant_of_characteristic (A := ↥R₀) (G := ↥H) V
     let Y : Subgroup H := X ⊔ Psub
     have hY_inv₀ : IsInvariant (↥R₀) (↥H) Y := by
-      letI : IsInvariant (↥R₀) (↥H) X := hX_inv₀
-      letI : IsInvariant (↥R₀) (↥H) Psub := hPsub_inv₀
+      let : IsInvariant (↥R₀) (↥H) X := hX_inv₀
+      let : IsInvariant (↥R₀) (↥H) Psub := hPsub_inv₀
       simpa [Y] using isInvariant_sup_of_le_normalizer X Psub hPsub_normX
     have hY_le_normV : Y ≤ Subgroup.normalizer (V : Set H) :=
       Subgroup.le_normalizer_of_normal (H := V)
     have hN_inv₀ : IsInvariant (↥R₀) (↥H) N := by
-      letI : IsInvariant (↥R₀) (↥H) V := hV_inv₀
-      letI : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
+      let : IsInvariant (↥R₀) (↥H) V := hV_inv₀
+      let : IsInvariant (↥R₀) (↥H) Y := hY_inv₀
       simpa [N, Y, sup_assoc] using isInvariant_sup_of_le_normalizer V Y hY_le_normV
     have hR₀invNg : ∀ r : R₀, ∀ x ∈ Ng, (r : G) * x * (r : G)⁻¹ ∈ Ng := by
       intro r x hx
@@ -4550,7 +4557,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
     have hNgsub_normal : (Ng.subgroupOf S).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := S) (N := Ng) hS_le_normNg
     have hH_le_Ng : H ≤ Ng := by
-      letI : (Ng.subgroupOf S).Normal := hNgsub_normal
+      let : (Ng.subgroupOf S).Normal := hNgsub_normal
       intro h hh
       have hs : h ∈ S := by
         change h ∈ Ng ⊔ R₀
@@ -4699,7 +4706,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
     let kM : M := ⟨k, hkM⟩
     have hXsub_normal : (X.subgroupOf M).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := M) (N := X) hM_le_normX
-    letI : (X.subgroupOf M).Normal := hXsub_normal
+    let : (X.subgroupOf M).Normal := hXsub_normal
     have hkM_sup : kM ∈ X.subgroupOf M ⊔ Psub.subgroupOf M := by
       have hsub_sup : X.subgroupOf M ⊔ Psub.subgroupOf M = ⊤ := by
         calc
@@ -4754,7 +4761,7 @@ public theorem theorem_3_6_H_eq_VKP_R_eq_R₀
 public theorem theorem_3_6_K_eq_commutator_with_P
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -4776,7 +4783,7 @@ public theorem theorem_3_6_K_eq_commutator_with_P
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     K = ⁅K, normalizerSubtypeMap K P⁆ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hP_p hPK_ne_bot hproper
@@ -4802,7 +4809,7 @@ public theorem theorem_3_6_K_eq_commutator_with_P
     have hKsub_normal : Ksub.Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := NK) (N := K)
         (by simp [NK, normalizerOf])
-    letI : Ksub.Normal := hKsub_normal
+    let : Ksub.Normal := hKsub_normal
     have hPsubsub_normXsub : Psubsub ≤ Subgroup.normalizer (Xsub : Set NK) := by
       exact commutator_normalizer_le (V := Ksub) (K := Psubsub) (N := Psubsub)
         (show Psubsub ≤ Subgroup.normalizer (Psubsub : Set NK) from Subgroup.le_normalizer)
@@ -4825,8 +4832,8 @@ public theorem theorem_3_6_K_eq_commutator_with_P
       refine lt_of_le_of_ne hX_le_K ?_
       simpa [X, eq_comm] using hX_ne
     have hX_inv : IsInvariant (↥R) (↥H) X := by
-      letI : IsInvariant (↥R) (↥H) K := hK_inv
-      letI : IsInvariant (↥R) (↥H) Psub := hPsub_inv
+      let : IsInvariant (↥R) (↥H) K := hK_inv
+      let : IsInvariant (↥R) (↥H) Psub := hPsub_inv
       simpa [X] using isInvariant_commutator (A := ↥R) K Psub
     have hPsub_conjX :
         ∀ a : Psub, ∀ x ∈ X, (a : H) * x * (a : H)⁻¹ ∈ X := by
@@ -4845,7 +4852,7 @@ public theorem theorem_3_6_K_eq_commutator_with_P
       subgroup_le_normalizer_of_conj_mem X Psub hPsub_conjX
     have hcommXX_bot : ⁅X, Psub⁆ = ⊥ :=
       hproper X hX_le_K hX_inv hPsub_normX hX_lt
-    haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+    have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
     let C : Subgroup K := commutatorAction (A := ↥Psub) (G := ↥K)
     have hCmap : C.map K.subtype = X := by
       simpa [C, X] using commutatorAction_subgroup_conj_map_eq_commutator K Psub hPsub_normK
@@ -4877,7 +4884,7 @@ public theorem theorem_3_6_K_eq_commutator_with_P
       obtain ⟨n, hcardPsub⟩ := hPsub_p.exists_card_eq
       rw [hcardPsub]
       exact hcop_p_K.pow_left n
-    have hsolvK : IsSolvable ↥K := by infer_instance
+    have hsolvK : Group.IsSolvable ↥K := by infer_instance
     have hcomm_eq' :
         commutatorAction₂ (A := ↥Psub) (G := ↥K) = commutatorAction (A := ↥Psub) (G := ↥K) :=
       proposition_1_6_b (G := ↥K) (A := ↥Psub) hsolvK hcopPsubK
@@ -4894,7 +4901,7 @@ public theorem theorem_3_6_K_eq_commutator_with_P
 public theorem theorem_3_6_K_is_q_group
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -4917,7 +4924,7 @@ public theorem theorem_3_6_K_is_q_group
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     ∃ qK : ℕ, Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧ IsPGroup qK K := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
@@ -4927,8 +4934,8 @@ public theorem theorem_3_6_K_is_q_group
     simpa [Psub, NK, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [NK, normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  let : IsInvariant (↥R) (↥H) K := hK_inv
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_disj hVK_sup
@@ -4948,8 +4955,8 @@ public theorem theorem_3_6_K_is_q_group
     intro hPsub_bot
     exact hPK_ne_bot (by
       simp [Psub, hPsub_bot])
-  letI : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
-  letI : Nontrivial ↥Psub := Psub.nontrivial_iff_ne_bot.mpr hPsub_ne_bot
+  let : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
+  let : Nontrivial ↥Psub := Psub.nontrivial_iff_ne_bot.mpr hPsub_ne_bot
   have hfaith : FaithfulSMul (↥Psub) (↥K) := by
     refine (faithfulSMul_iff (G := ↥Psub) (α := ↥K)).2 ?_
     intro a ha
@@ -4997,11 +5004,11 @@ public theorem theorem_3_6_K_is_q_group
       apply (Subgroup.map_injective (f := K.subtype) K.subtype_injective)
       simpa [Lmap, htop_map] using hEq
     have hLmap_lt : Lmap < K := lt_of_le_of_ne hLmap_le_K hLmap_ne_K
-    letI : L.Characteristic := hL_char
-    letI : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
+    let : L.Characteristic := hL_char
+    let : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
     have hLmap_invR : IsInvariant (↥R) (↥H) Lmap := by
       simpa [Lmap] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K L
-    letI : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
+    let : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
     have hPsub_normLmap : Psub ≤ Subgroup.normalizer (Lmap : Set H) := by
       refine subgroup_le_normalizer_of_conj_mem Lmap Psub ?_
       intro a x hx
@@ -5009,7 +5016,7 @@ public theorem theorem_3_6_K_is_q_group
       have hy' : a • y ∈ L := (IsInvariant.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
       simpa [Lmap, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hPsub_normK] using
         (Subgroup.mem_map_of_mem K.subtype hy')
-    haveI : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
+    have : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
     have hcommLmap_bot : ⁅Lmap, Psub⁆ = ⊥ :=
       hproper Lmap hLmap_le_K hLmap_invR hPsub_normLmap hLmap_lt
     have htrivLmap : ActsTrivially (A := ↥Psub) (G := ↥Lmap) := by
@@ -5023,11 +5030,11 @@ public theorem theorem_3_6_K_is_q_group
     apply Subtype.ext
     simpa [Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hPsub_normK, hPsub_normLmap] using
       congrArg Subtype.val hfix
-  letI : FaithfulSMul (↥Psub) (↥K) := hfaith
+  let : FaithfulSMul (↥Psub) (↥K) := hfaith
   obtain ⟨qK, hqK_prime, hqK_pgroup⟩ :=
     exists_prime_isPGroup_of_nilpotent_of_proper_characteristic_fixed
       (K := ↥K) (A := ↥Psub) hnilK hproper_fix
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
   obtain ⟨nK, hnK_pos, hcardKq⟩ :=
     (IsPGroup.nontrivial_iff_card (p := qK) (G := ↥K) (hG := hqK_pgroup)).mp inferInstance
   have hqK_dvd_K : qK ∣ Nat.card K := by
@@ -5051,7 +5058,7 @@ public theorem theorem_3_6_K_is_q_group
 public theorem theorem_3_6_K_class_two_exponent_q
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5075,7 +5082,7 @@ public theorem theorem_3_6_K_class_two_exponent_q
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     ∃ qK : ℕ, Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧ IsPGroup qK K ∧
       commutator (↥K) ≤ Subgroup.center (↥K) ∧ Monoid.exponent (↥K) = qK := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
@@ -5085,8 +5092,8 @@ public theorem theorem_3_6_K_class_two_exponent_q
     simpa [Psub, NK, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [NK, normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  let : IsInvariant (↥R) (↥H) K := hK_inv
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_disj hVK_sup
@@ -5102,12 +5109,12 @@ public theorem theorem_3_6_K_class_two_exponent_q
   have hK_ne_bot : K ≠ ⊥ := by
     intro hK_bot
     exact hPK_ne_bot (by simp [hK_bot])
-  letI : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
+  let : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
   have hPsub_ne_bot : Psub ≠ ⊥ := by
     intro hPsub_bot
     exact hPK_ne_bot (by
       simp [Psub, hPsub_bot])
-  letI : Nontrivial ↥Psub := Psub.nontrivial_iff_ne_bot.mpr hPsub_ne_bot
+  let : Nontrivial ↥Psub := Psub.nontrivial_iff_ne_bot.mpr hPsub_ne_bot
   have hfaith : FaithfulSMul (↥Psub) (↥K) := by
     refine (faithfulSMul_iff (G := ↥Psub) (α := ↥K)).2 ?_
     intro a ha
@@ -5128,7 +5135,7 @@ public theorem theorem_3_6_K_class_two_exponent_q
       simpa [hKinfPsub_bot] using this
     apply Subtype.ext
     simpa using ha_bot
-  letI : FaithfulSMul (↥Psub) (↥K) := hfaith
+  let : FaithfulSMul (↥Psub) (↥K) := hfaith
   have htop_map : (⊤ : Subgroup K).map K.subtype = K := by
     ext x
     constructor
@@ -5148,11 +5155,11 @@ public theorem theorem_3_6_K_class_two_exponent_q
       apply (Subgroup.map_injective (f := K.subtype) K.subtype_injective)
       simpa [Lmap, htop_map] using hEq
     have hLmap_lt : Lmap < K := lt_of_le_of_ne hLmap_le_K hLmap_ne_K
-    letI : L.Characteristic := hL_char
-    letI : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
+    let : L.Characteristic := hL_char
+    let : IsInvariant (↥R) (↥K) L := isInvariant_of_characteristic (A := ↥R) (G := ↥K) L
     have hLmap_invR : IsInvariant (↥R) (↥H) Lmap := by
       simpa [Lmap] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K L
-    letI : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
+    let : IsInvariant (↥Psub) (↥K) L := isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) L
     have hPsub_normLmap : Psub ≤ Subgroup.normalizer (Lmap : Set H) := by
       refine subgroup_le_normalizer_of_conj_mem Lmap Psub ?_
       intro a x hx
@@ -5160,7 +5167,7 @@ public theorem theorem_3_6_K_class_two_exponent_q
       have hy' : a • y ∈ L := (IsInvariant.invariant (A := ↥Psub) (G := ↥K) (H := L) a y).1 hy
       simpa [Lmap, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hPsub_normK] using
         (Subgroup.mem_map_of_mem K.subtype hy')
-    haveI : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
+    have : Subgroup.Normalizes Psub Lmap := ⟨hPsub_normLmap⟩
     have hcommLmap_bot : ⁅Lmap, Psub⁆ = ⊥ :=
       hproper Lmap hLmap_le_K hLmap_invR hPsub_normLmap hLmap_lt
     have htrivLmap : ActsTrivially (A := ↥Psub) (G := ↥Lmap) := by
@@ -5178,8 +5185,8 @@ public theorem theorem_3_6_K_class_two_exponent_q
     theorem_3_6_K_is_q_group H R R₀ p hind hsolvG hodd hHR hcopHR hR₀_le
       hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit
       hCH_le_K hP_p hPK_ne_bot hproper
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   have hcopPsubK : Nat.Coprime (Nat.card Psub) (Nat.card K) := by
     obtain ⟨n, hcardPsub⟩ := hPsub_p.exists_card_eq
     rw [hcardPsub]
@@ -5201,7 +5208,7 @@ public theorem theorem_3_6_K_class_two_exponent_q
 public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5231,7 +5238,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     let _ : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
     fixedPointSubgroup (↥Psub) (↥K ⧸ commutator (↥K)) = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hP_p hPK_ne_bot hproper
@@ -5240,7 +5247,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_disj hVK_sup
@@ -5257,9 +5264,9 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
       hP_p hPK_ne_bot hproper
   let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_inv
-  letI : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
   have htop_map : (⊤ : Subgroup K).map K.subtype = K := by
     ext x
@@ -5316,7 +5323,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
   have hcopPsubQ : Nat.Coprime (Nat.card Psub) (Nat.card (↥K ⧸ commutator (↥K))) := by
     exact Nat.Coprime.of_dvd_right
       (Subgroup.card_quotient_dvd_card (s := commutator (↥K))) hcopPsubK
-  have hsolvQ : IsSolvable (↥K ⧸ commutator (↥K)) := by infer_instance
+  have hsolvQ : Group.IsSolvable (↥K ⧸ commutator (↥K)) := by infer_instance
   have hcompl :
       IsCompl (fixedPointSubgroup (↥Psub) (↥K ⧸ commutator (↥K)))
         (commutatorAction (A := ↥Psub) (G := ↥K ⧸ commutator (↥K))) :=
@@ -5326,7 +5333,7 @@ public theorem theorem_3_6_K_quotient_commutator_fixed_eq_bot
 public theorem theorem_3_6_K_frattini_eq_commutator
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5349,7 +5356,7 @@ public theorem theorem_3_6_K_frattini_eq_commutator
       X < K →
       ⁅X, normalizerSubtypeMap K P⁆ = ⊥) →
     frattini (↥K) = commutator (↥K) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
@@ -5357,8 +5364,8 @@ public theorem theorem_3_6_K_frattini_eq_commutator
     theorem_3_6_K_class_two_exponent_q H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
       hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   have hfrattini :
       frattini (↥K) =
         Subgroup.closure ((derivedSubgroup (↥K) : Set ↥K) ∪ Set.range (fun x : ↥K => x ^ qK)) :=
@@ -5390,7 +5397,7 @@ set_option maxHeartbeats 1000000 in
 public theorem theorem_3_6_K_quotient_commutator_p_faithful
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5421,7 +5428,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     let _ : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
     FaithfulSMul (↥Psub) (↥K ⧸ commutator (↥K)) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
@@ -5430,7 +5437,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hcop_p_K : Nat.Coprime p (Nat.card K) :=
     theorem_3_6_complement_card_coprime H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_disj hVK_sup
@@ -5447,17 +5454,17 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     theorem_3_6_K_class_two_exponent_q H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
       hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   have hPhi_eq : frattini (↥K) = commutator (↥K) :=
     theorem_3_6_K_frattini_eq_commutator H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
       hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
   let hKcomm_inv : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_inv
-  letI : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_inv
   refine (faithfulSMul_iff (G := ↥Psub) (α := ↥K ⧸ commutator (↥K))).2 ?_
   intro a ha
@@ -5465,10 +5472,10 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     exact Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card (Subgroup.zpowers a)) hcopPsubK
   let hcomm_inv_zpow : IsInvariant (↥(Subgroup.zpowers a)) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers a)) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers a)) (commutator (↥K))
       hcomm_inv_zpow
-  letI : MulDistribMulAction (↥(Subgroup.zpowers a)) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥(Subgroup.zpowers a)) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥(Subgroup.zpowers a)) (G := ↥K)
       (commutator (↥K)) hcomm_inv_zpow
   have hquot_comm :
@@ -5477,10 +5484,10 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
     exact smul_eq_self_of_mem_zpowers (y := a) b.2 (ha x)
   let hPhi_inv_zpow : IsInvariant (↥(Subgroup.zpowers a)) (↥K) (frattini (↥K)) :=
     isInvariant_of_characteristic (A := ↥(Subgroup.zpowers a)) (G := ↥K) (frattini (↥K))
-  letI : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (frattini (↥K)) :=
+  let : MulAction.QuotientAction (↥(Subgroup.zpowers a)) (frattini (↥K)) :=
     quotientAction_of_isInvariant (A := ↥(Subgroup.zpowers a)) (frattini (↥K))
       hPhi_inv_zpow
-  letI : MulDistribMulAction (↥(Subgroup.zpowers a)) (↥K ⧸ frattini (↥K)) :=
+  let : MulDistribMulAction (↥(Subgroup.zpowers a)) (↥K ⧸ frattini (↥K)) :=
     quotientMulDistribMulAction (A := ↥(Subgroup.zpowers a)) (G := ↥K) (frattini (↥K))
       hPhi_inv_zpow
   have hquot :
@@ -5520,7 +5527,7 @@ public theorem theorem_3_6_K_quotient_commutator_p_faithful
 public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5552,7 +5559,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     let _ : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_invR
     fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)) ≠ ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
@@ -5567,33 +5574,33 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
   let Sg : Subgroup G := Psubg ⊔ R
   let Ksub : Subgroup Sg := Psubg.subgroupOf Sg
   let Rsub : Subgroup Sg := R.subgroupOf Sg
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  letI : IsInvariant (↥R) (↥H) Psub := by
+  let : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) Psub := by
     simpa [Psub] using hPsub_inv
   let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
-  letI : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_invR
   obtain ⟨qK, hqK_prime, hqK_ne_p, hqK_ne_R₀, hqK_pgroup, hcomm_center, hexpK⟩ :=
     theorem_3_6_K_class_two_exponent_q H R R₀ p hind hsolvG hodd hHR hcopHR
       hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv hKsub_fit
       hCH_le_K hP_p hPK_ne_bot hproper
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   let hKcomm_invP : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_invP
-  letI : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_invP
-  letI : FaithfulSMul (↥Psub) (↥K ⧸ commutator (↥K)) :=
+  let : FaithfulSMul (↥Psub) (↥K ⧸ commutator (↥K)) :=
     theorem_3_6_K_quotient_commutator_p_faithful H R R₀ p hind hsolvG hodd hHR
       hcopHR hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hPsub_inv
       hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
-  letI : IsElementaryAbelian qK (↥K ⧸ commutator (↥K)) := by
+  let : IsElementaryAbelian qK (↥K ⧸ commutator (↥K)) := by
     refine
       { toIsMulCommutative := by
           exact
@@ -5601,7 +5608,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
               (N := commutator (↥K))).mpr le_rfl
         exponent_dvd_p := by
           exact (Group.exponent_quotient_dvd (H := commutator (↥K))).trans (by simp [hexpK]) }
-  letI : CommGroup (↥K ⧸ commutator (↥K)) := IsMulCommutative.instCommGroup
+  let : CommGroup (↥K ⧸ commutator (↥K)) := IsMulCommutative.instCommGroup
   have hPsubg_le_H : Psubg ≤ H := by
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
@@ -5675,7 +5682,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     sup_le hPsubg_le_normKg hR_le_normKg
   have hSg_le_normH : Sg ≤ Subgroup.normalizer H := by
     exact sup_le (hPsubg_le_H.trans (Subgroup.le_normalizer_of_normal (H := H))) hRnormH
-  haveI : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
+  have : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
   have hPsubgsub_normal : (Psubg.subgroupOf Sg).Normal := by
     have hSg_le_normPsubg : Sg ≤ Subgroup.normalizer (Psubg : Set G) := by
       have hR_le_normPsubg : R ≤ Subgroup.normalizer (Psubg : Set G) := by
@@ -5740,12 +5747,12 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
       have h :=
         hforward a⁻¹ (a • x) hx
       simpa [smul_smul] using h
-  letI : IsInvariant (↥Sg) (↥H) K := hK_invS
+  let : IsInvariant (↥Sg) (↥H) K := hK_invS
   let hKcomm_invS : IsInvariant (↥Sg) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥Sg) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥Sg) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥Sg) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥Sg) (commutator (↥K)) hKcomm_invS
-  letI : MulDistribMulAction (↥Sg) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥Sg) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥Sg) (G := ↥K) (commutator (↥K)) hKcomm_invS
   let i : Sg →* MulAut (↥K ⧸ commutator (↥K)) :=
     MulDistribMulAction.toMulAut (G := ↥Sg) (M := ↥K ⧸ commutator (↥K))
@@ -5826,7 +5833,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
   have hcopPsubgR : Nat.Coprime (Nat.card Psubg) (Nat.card R) := by
     exact Nat.Coprime.of_dvd (Subgroup.card_dvd_of_le hPsubg_le_H) dvd_rfl hcopHR
   have hoddSg : Odd (Nat.card Sg) := odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card Sg)
-  have hsolvSg : IsSolvable ↥Sg := by infer_instance
+  have hsolvSg : Group.IsSolvable ↥Sg := by infer_instance
   have hR_prime : Nat.Prime (Nat.card R) := by simpa [hR_eq] using hR₀_prime
   have hcop_q_Psubg : Nat.Coprime qK (Nat.card Psubg) := by
     obtain ⟨n, hcardPsubg⟩ := hPsubg_p.exists_card_eq
@@ -5844,7 +5851,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
     right
     rw [ZMod.ringChar_zmod_n]
     refine ⟨hqK_prime, ?_⟩
-    rw [← hKsub_compl.card_mul, hKsub_card_eq, hRsub_card_eq]
+    rw [← hKsub_compl.card_mul_card, hKsub_card_eq, hRsub_card_eq]
     exact Nat.Coprime.mul_right hcop_q_Psubg hcop_q_R
   have hcomm_sub' :
       ⁅Rsub, Ksub⁆ ≤ ρ.centralizerIn Ksub :=
@@ -5944,7 +5951,7 @@ public theorem theorem_3_6_K_quotient_commutator_r_fixed_ne_bot
 public theorem theorem_3_6_K_fixed_not_le_commutator
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -5972,17 +5979,17 @@ public theorem theorem_3_6_K_fixed_not_le_commutator
     R = R₀ →
     let _ : IsInvariant (↥R) (↥H) K := hK_inv
     ¬ fixedPointSubgroup (↥R) (↥K) ≤ commutator (↥K) := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
-  letI : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_invR
   have hfix_ne_bot :
       fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)) ≠ ⊥ :=
@@ -5991,7 +5998,7 @@ public theorem theorem_3_6_K_fixed_not_le_commutator
       hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper hR_eq
   have hcopRK : Nat.Coprime (Nat.card R) (Nat.card K) := by
     exact Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card K) hcopHR.symm
-  have hsolvK : IsSolvable ↥K := by infer_instance
+  have hsolvK : Group.IsSolvable ↥K := by infer_instance
   have hfixed_quot :
       fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)) =
         (fixedPointSubgroup (↥R) (↥K)).map (QuotientGroup.mk' (commutator (↥K))) := by
@@ -6011,7 +6018,7 @@ public theorem theorem_3_6_K_fixed_not_le_commutator
 public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -6042,12 +6049,12 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
       Nat.Prime qK ∧
         Nat.card (fixedPointSubgroup (↥R) (↥K)) = qK ∧
         fixedPointSubgroup (↥R) (↥K) ⊓ commutator (↥K) = ⊥ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   obtain ⟨qK, hqK_prime, _, _, hqK_pgroup, _, hexpK⟩ :=
     theorem_3_6_K_class_two_exponent_q H R R₀ p hind hsolvG hodd hHR hcopHR
@@ -6086,11 +6093,11 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
     intro x y hxy
     apply Subtype.ext
     simpa [f] using congrArg Subtype.val hxy
-  letI : IsZGroup ↥Cfix := IsZGroup.of_injective (f := f) hf
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
+  let : IsZGroup ↥Cfix := IsZGroup.of_injective (f := f) hf
+  have : Fact qK.Prime := ⟨hqK_prime⟩
   have hCfix_q : IsPGroup qK Cfix := by
     exact hqK_pgroup.of_injective (Cfix.subtype) Cfix.subtype_injective
-  letI : Group.IsNilpotent ↥Cfix := hCfix_q.isNilpotent
+  let : Group.IsNilpotent ↥Cfix := hCfix_q.isNilpotent
   have hCfix_cyclic : IsCyclic ↥Cfix := by infer_instance
   have hCfix_card_ne_one : Nat.card Cfix ≠ 1 := by
     intro hcard
@@ -6147,7 +6154,7 @@ public theorem theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot
 public theorem theorem_3_6_K_commutatorAction_proper
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -6176,19 +6183,19 @@ public theorem theorem_3_6_K_commutatorAction_proper
     let _ : IsInvariant (↥R) (↥H) K := hK_inv
     fixedPointSubgroup (↥R) (↥K) ⊓ commutatorAction (A := ↥R) (G := ↥K) = ⊥ ∧
       commutatorAction (A := ↥R) (G := ↥K) ≠ ⊤ := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
     hP_p hPK_ne_bot hproper hR_eq
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   let Kcomm : Subgroup K := commutatorAction (A := ↥R) (G := ↥K)
   let hKcomm_invR : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
-  letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
+  let : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
     quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_invR
-  letI : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
+  let : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
     quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_invR
   obtain ⟨qK, hqK_prime, hCfix_card, hCfix_inf_bot⟩ :=
     theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot H R R₀ p hind hsolvG hodd
@@ -6210,11 +6217,11 @@ public theorem theorem_3_6_K_commutatorAction_proper
   have hcopRQ :
       Nat.Coprime (Nat.card R) (Nat.card (↥K ⧸ commutator (↥K))) := by
     exact Nat.Coprime.of_dvd_right (Subgroup.card_quotient_dvd_card (s := commutator (↥K))) hcopRK
-  have hsolvQ : IsSolvable (↥K ⧸ commutator (↥K)) := by infer_instance
+  have hsolvQ : Group.IsSolvable (↥K ⧸ commutator (↥K)) := by infer_instance
   let qcomm : ↥K →* (↥K ⧸ commutator (↥K)) := QuotientGroup.mk' (commutator (↥K))
   have hfixQ_eq' :
       fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)) = Cfix.map qcomm := by
-    have hsolvK : IsSolvable ↥K := by infer_instance
+    have hsolvK : Group.IsSolvable ↥K := by infer_instance
     simpa [Cfix, qcomm] using
       proposition_1_5_d (G := ↥K) (A := ↥R) hsolvK hcopRK (π := ∅)
         (commutator (↥K)) hKcomm_invR
@@ -6225,7 +6232,8 @@ public theorem theorem_3_6_K_commutatorAction_proper
   have hcomplQ :
       IsCompl (fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)))
         (commutatorAction (A := ↥R) (G := ↥K ⧸ commutator (↥K))) :=
-    proposition_1_6_d (G := ↥K ⧸ commutator (↥K)) (A := ↥R) (by infer_instance) hcopRQ hQcomm
+    proposition_1_6_d (G := ↥K ⧸ commutator (↥K)) (A := ↥R)
+      (by have : Group.IsSolvable G := hsolvG; infer_instance) hcopRQ hQcomm
   have hfixQ_inf_bot :
       fixedPointSubgroup (↥R) (↥K ⧸ commutator (↥K)) ⊓
         commutatorAction (A := ↥R) (G := ↥K ⧸ commutator (↥K)) = ⊥ :=
@@ -6294,7 +6302,7 @@ public theorem theorem_3_6_K_commutatorAction_proper
 public theorem theorem_3_6_K_commutatorAction_abelian
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -6323,7 +6331,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     let _ : IsInvariant (↥R) (↥H) K := hK_inv
     IsMulCommutative ↥(commutatorAction (A := ↥R) (G := ↥K)) := by
   set_option maxHeartbeats 800000 in
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
@@ -6340,7 +6348,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
   let S : Subgroup KR := Kcommsub ⊔ RsubKR
   let Ksub : Subgroup S := Kcommsub.subgroupOf S
   let Rsub : Subgroup S := RsubKR.subgroupOf S
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   have hf : Function.Injective f := by
     intro x y hxy
     apply K.subtype_injective
@@ -6358,7 +6366,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
   have hV_char : V.Characteristic := by
     dsimp [V]
     infer_instance
-  letI : V.Characteristic := hV_char
+  let : V.Characteristic := hV_char
   have hVg_normal : Vg.Normal := by
     dsimp [Vg, V]
     exact ConjAct.normal_of_characteristic_of_normal
@@ -6387,7 +6395,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
         _ = a⁻¹ * ((a * x * a⁻¹) * a) := by
           exact congrArg (fun z : G => a⁻¹ * z) hyx'
         _ = x := by simp [mul_assoc]
-  haveI : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
+  have : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
   have hKcomm_invR : IsInvariant (↥R) (↥K) Kcomm :=
     commutatorAction_isInvariant (G := ↥K) (A := ↥R)
   have hRnormKcommg : R ≤ Subgroup.normalizer (Kcommg : Set G) := by
@@ -6638,7 +6646,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
         exact Subgroup.subgroupOf_sup (A := Kg) (A' := R) (B := KR) le_sup_left le_sup_right
       _ = ⊤ := by simp [KR]
   have hRsubKR_compl : RsubKR.IsComplement' Kgsub := by
-    letI : Kgsub.Normal := hKgsub_normal
+    let : Kgsub.Normal := hKgsub_normal
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ hKgsubRsubKR_disj.symm ?_
     ext x
     constructor
@@ -6656,7 +6664,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     simpa using Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe (H := Kg) (K := KR) le_sup_left).toEquiv
   have hcop_p_KR : Nat.Coprime p (Nat.card KR) := by
-    rw [← hRsubKR_compl.card_mul, hRsubKR_card_eq, hKgsub_card_eq]
+    rw [← hRsubKR_compl.card_mul_card, hRsubKR_card_eq, hKgsub_card_eq]
     exact Nat.Coprime.mul_right hcop_p_R hcop_p_Kg
   have hcharKR :
       ringChar (ZMod p) = 0 ∨
@@ -6669,12 +6677,12 @@ public theorem theorem_3_6_K_commutatorAction_abelian
         (Nat.Prime (ringChar (ZMod p)) ∧ Nat.Coprime (ringChar (ZMod p)) (Nat.card S)) :=
     hchar_of_card_dvd (G := KR) (F := ZMod p) hcharKR (Subgroup.card_subgroup_dvd_card S)
   have hKRnormVg : KR ≤ Subgroup.normalizer Vg := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes KR Vg := ⟨hKRnormVg⟩
+  have : Subgroup.Normalizes KR Vg := ⟨hKRnormVg⟩
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
+  let : IsElementaryAbelian p ↥V := hV_elem
   have hVg_elem : IsElementaryAbelian p ↥Vg := by
     refine
       { toIsMulCommutative := by infer_instance
@@ -6695,8 +6703,8 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     calc
       ((x : Vg) : G) ^ p = (((yV : V) : H) : G) ^ p := by simp [hx_eq]
       _ = 1 := hy_pow_G
-  letI : IsElementaryAbelian p ↥Vg := hVg_elem
-  letI : CommGroup Vg := IsMulCommutative.instCommGroup
+  let : IsElementaryAbelian p ↥Vg := hVg_elem
+  let : CommGroup Vg := IsMulCommutative.instCommGroup
   let ψ : KR →* MulAut Vg := MulDistribMulAction.toMulAut (G := ↥KR) (M := ↥Vg)
   let ρKR : Representation (ZMod p) KR (Additive Vg) := {
     toFun := fun a =>
@@ -6778,7 +6786,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     intro x hx
     exact hx.1
   have hRnormVg : R ≤ Subgroup.normalizer Vg := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes R Vg := ⟨hRnormVg⟩
+  have : Subgroup.Normalizes R Vg := ⟨hRnormVg⟩
   let Ffix : Subgroup Vg := fixedPointSubgroup (↥R) (↥Vg)
   let eFix : ρKR.fixedSubspace RsubKR ≃ Additive Ffix := by
     refine
@@ -6841,7 +6849,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
       _ = p := hFfix_card
   have hfixKR :
       Module.rank (ZMod p) ↥(ρKR.fixedSubspace RsubKR) = 1 := by
-    letI : FiniteDimensional (ZMod p) ↥(ρKR.fixedSubspace RsubKR) := Module.Finite.of_finite
+    let : FiniteDimensional (ZMod p) ↥(ρKR.fixedSubspace RsubKR) := Module.Finite.of_finite
     have hcard_pow :
         Nat.card ↥(ρKR.fixedSubspace RsubKR) =
           p ^ Module.finrank (ZMod p) ↥(ρKR.fixedSubspace RsubKR) := by
@@ -6864,11 +6872,11 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     rw [natCard_subgroupOf_eq RsubKR S le_sup_right, natCard_subgroupOf_eq R KR le_sup_right]
     exact hR_prime
   have hRsub_cyclic : IsCyclic Rsub := by
-    letI : Fact (Nat.Prime (Nat.card R)) := ⟨hR_prime⟩
+    let : Fact (Nat.Prime (Nat.card R)) := ⟨hR_prime⟩
     have hcardRsub : Nat.card Rsub = Nat.card R := by
       rw [natCard_subgroupOf_eq RsubKR S le_sup_right, natCard_subgroupOf_eq R KR le_sup_right]
     exact isCyclic_of_prime_card (α := Rsub) hcardRsub
-  have hsolvKsub : IsSolvable Ksub := by infer_instance
+  have hsolvKsub : Group.IsSolvable Ksub := by infer_instance
   have hcomm_le :
       ⁅Ksub, Ksub⁆ ≤ ρ.centralizerIn Ksub :=
     theorem_3_5 Ksub Rsub ρ hfrob hsolvKsub hRsub_cyclic hRsub_prime hcharS hfixR
@@ -6881,7 +6889,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     exact
       (Subgroup.le_centralizer_iff_isMulCommutative (K := Ksub)).mp <|
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := Ksub) (H₂ := Ksub)).mp hcomm_eq_bot
-  letI : IsMulCommutative ↥Ksub := hKsub_comm
+  let : IsMulCommutative ↥Ksub := hKsub_comm
   let eKsub : Ksub ≃* Kcommsub :=
     Subgroup.subgroupOfEquivOfLe (H := Kcommsub) (K := S) le_sup_left
   have hKcommsub_comm : IsMulCommutative ↥Kcommsub := by
@@ -6889,7 +6897,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     intro a b
     apply eKsub.symm.injective
     exact ((IsMulCommutative.is_comm (M := Ksub)).comm (eKsub.symm a) (eKsub.symm b))
-  letI : IsMulCommutative ↥Kcommsub := hKcommsub_comm
+  let : IsMulCommutative ↥Kcommsub := hKcommsub_comm
   let eKcommg : Kcommsub ≃* Kcommg :=
     Subgroup.subgroupOfEquivOfLe (H := Kcommg) (K := KR) hKcommg_le_KR
   have hKcommg_comm : IsMulCommutative ↥Kcommg := by
@@ -6897,7 +6905,7 @@ public theorem theorem_3_6_K_commutatorAction_abelian
     intro a b
     apply eKcommg.symm.injective
     exact ((IsMulCommutative.is_comm (M := Kcommsub)).comm (eKcommg.symm a) (eKcommg.symm b))
-  letI : IsMulCommutative ↥Kcommg := hKcommg_comm
+  let : IsMulCommutative ↥Kcommg := hKcommg_comm
   let eKcomm : Kcomm ≃* Kcommg := Subgroup.equivMapOfInjective (f := f) Kcomm hf
   refine ⟨⟨?_⟩⟩
   intro a b
@@ -6905,11 +6913,11 @@ public theorem theorem_3_6_K_commutatorAction_abelian
   exact ((IsMulCommutative.is_comm (M := Kcommg)).comm (eKcomm a) (eKcomm b))
 
 set_option maxHeartbeats 1000000
-
+set_option backward.isDefEq.respectTransparency false in
 public theorem theorem_3_6_K_elementaryAbelian
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -6939,7 +6947,7 @@ public theorem theorem_3_6_K_elementaryAbelian
     ∃ qK : ℕ,
       Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧ IsElementaryAbelian qK ↥K := by
   set_option maxHeartbeats 800000 in
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
@@ -6949,7 +6957,7 @@ public theorem theorem_3_6_K_elementaryAbelian
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
+  let : IsInvariant (↥R) (↥H) K := hK_inv
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   let Kcomm : Subgroup K := commutatorAction (A := ↥R) (G := ↥K)
   obtain ⟨qK, hqK_prime, hqK_ne_p, hqK_ne_R₀, hqK_pgroup, hcomm_center, hexpK⟩ :=
@@ -6959,8 +6967,8 @@ public theorem theorem_3_6_K_elementaryAbelian
   have hK_ne_bot : K ≠ ⊥ := by
     intro hK_bot
     exact hPK_ne_bot (by simp [hK_bot])
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   obtain ⟨qK', hqK'_prime, hqK_fix_card', hfix_inf_comm_bot⟩ :=
     theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot H R R₀ p hind hsolvG hodd
       hHR hcopHR hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj
@@ -6996,7 +7004,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper hR_eq
   have hcopRK : Nat.Coprime (Nat.card R) (Nat.card K) := by
     exact Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card K) hcopHR.symm
-  have hsolvK : IsSolvable ↥K := by infer_instance
+  have hsolvK : Group.IsSolvable ↥K := by infer_instance
   have hsupCK : Cfix ⊔ Kcomm = ⊤ :=
     proposition_1_6_a (G := ↥K) (A := ↥R) hsolvK hcopRK
   have hcomplCK : Cfix.IsComplement' Kcomm := by
@@ -7043,17 +7051,17 @@ public theorem theorem_3_6_K_elementaryAbelian
         commutatorAction_isInvariant (G := ↥K) (A := ↥R)
       simpa [X] using isInvariant_map_subtype (A := ↥R) (G := ↥H) K Kcomm
     have hcommXP_bot : ⁅X, Psub⁆ = ⊥ := hproper X hX_le_K hX_inv hnorm hX_lt_K
-    haveI : Subgroup.Normalizes Psub X := ⟨hnorm⟩
+    have : Subgroup.Normalizes Psub X := ⟨hnorm⟩
     have htrivX : ActsTrivially (A := ↥Psub) (G := ↥X) := by
       exact actsTrivially_subgroup_conj_of_commutator_eq_bot X Psub hnorm
         (by simpa [Subgroup.commutator_comm] using hcommXP_bot)
     let qcomm : ↥K →* (↥K ⧸ commutator (↥K)) := QuotientGroup.mk' (commutator (↥K))
-    haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+    have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
     let hKcomm_invP : IsInvariant (↥Psub) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥Psub) (G := ↥K) (commutator (↥K))
-    letI : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
+    let : MulAction.QuotientAction (↥Psub) (commutator (↥K)) :=
       quotientAction_of_isInvariant (A := ↥Psub) (commutator (↥K)) hKcomm_invP
-    letI : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
+    let : MulDistribMulAction (↥Psub) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥Psub) (G := ↥K) (commutator (↥K)) hKcomm_invP
     have hfixQ_bot :
         fixedPointSubgroup (↥Psub) (↥K ⧸ commutator (↥K)) = ⊥ :=
@@ -7086,9 +7094,9 @@ public theorem theorem_3_6_K_elementaryAbelian
         hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper
     let hKcomm_inv : IsInvariant (↥R) (↥K) (commutator (↥K)) :=
       isInvariant_of_characteristic (A := ↥R) (G := ↥K) (commutator (↥K))
-    letI : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
+    let : MulAction.QuotientAction (↥R) (commutator (↥K)) :=
       quotientAction_of_isInvariant (A := ↥R) (commutator (↥K)) hKcomm_inv
-    letI : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
+    let : MulDistribMulAction (↥R) (↥K ⧸ commutator (↥K)) :=
       quotientMulDistribMulAction (A := ↥R) (G := ↥K) (commutator (↥K)) hKcomm_inv
     have hquot_triv_comm : ActsTrivially (A := ↥R) (G := ↥K ⧸ commutator (↥K)) := by
       intro a x
@@ -7111,9 +7119,9 @@ public theorem theorem_3_6_K_elementaryAbelian
       simpa using hfix
     let hPhi_inv : IsInvariant (↥R) (↥K) (frattini (↥K)) :=
       isInvariant_of_characteristic (A := ↥R) (G := ↥K) (frattini (↥K))
-    letI : MulAction.QuotientAction (↥R) (frattini (↥K)) :=
+    let : MulAction.QuotientAction (↥R) (frattini (↥K)) :=
       quotientAction_of_isInvariant (A := ↥R) (frattini (↥K)) hPhi_inv
-    letI : MulDistribMulAction (↥R) (↥K ⧸ frattini (↥K)) :=
+    let : MulDistribMulAction (↥R) (↥K ⧸ frattini (↥K)) :=
       quotientMulDistribMulAction (A := ↥R) (G := ↥K) (frattini (↥K)) hPhi_inv
     have hquot_triv : ActsTrivially (A := ↥R) (G := ↥K ⧸ frattini (↥K)) := by
       intro a x
@@ -7139,7 +7147,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
       exact Subgroup.mem_map_of_mem H.subtype <|
         (IsInvariant.invariant (A := ↥R) (G := ↥H) (H := K) a y).1 hy
-    haveI : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
+    have : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
     have htrivKg : ActsTrivially (A := ↥R) (G := ↥Kg) := by
       intro a x
       rcases Subgroup.mem_map.mp x.2 with ⟨y, hy, hyx⟩
@@ -7165,7 +7173,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       (theorem_3_6_r0_commutator_nontrivial H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad K hVK_sup hK_inv hNK_inv hVNK_sup hVinfNK_bot
         hKsub_fit hCH_le_K) (by simpa [Kg, Subgroup.commutator_comm, hR_eq] using hKR_bot)
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   let σP : Psub →* MulAut (↥K) := MulDistribMulAction.toMulAut (G := ↥Psub) (M := ↥K)
   have hKcomm_exists_conj_ne :
       ∃ a : Psub, Kcomm.map (σP a).toMonoidHom ≠ Kcomm := by
@@ -7199,7 +7207,7 @@ public theorem theorem_3_6_K_elementaryAbelian
   have hKcommx_index : Kcommx.index = qK := by
     rw [Subgroup.index_eq_card]
     have hcardK : Nat.card K = qK * Nat.card Kcomm := by
-      rw [← hcomplCK.card_mul, hqK_fix_card, mul_comm]
+      rw [← hcomplCK.card_mul_card, hqK_fix_card, mul_comm]
     have hcardK' : Nat.card K = Nat.card (K ⧸ Kcommx) * Nat.card Kcommx := by
       simpa [Subgroup.index_eq_card] using (Subgroup.card_eq_card_quotient_mul_card_subgroup Kcommx)
     apply Nat.eq_of_mul_eq_mul_right (Nat.card_pos (α := Kcommx))
@@ -7325,7 +7333,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       have hQ_card : Nat.card (↥K ⧸ Z) = qK := by
         simpa [hm_index, hm_one] using (Subgroup.index_eq_card (H := Z)).symm
       have hQ_cyclic : IsCyclic (↥K ⧸ Z) := isCyclic_of_prime_card (α := ↥K ⧸ Z) hQ_card
-      letI : IsCyclic (↥K ⧸ Z) := hQ_cyclic
+      let : IsCyclic (↥K ⧸ Z) := hQ_cyclic
       have hkerZ : (QuotientGroup.mk' Z).ker ≤ Subgroup.center ↥K := by
         simp [Z, QuotientGroup.ker_mk']
       have hcommQ : IsMulCommutative ↥K := by
@@ -7414,7 +7422,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       exact sup_le Psubg.le_normalizer hR_le_normPsubg
     have hSg_le_normH : Sg ≤ Subgroup.normalizer H := by
       exact sup_le (hPsubg_le_H.trans (Subgroup.le_normalizer_of_normal (H := H))) hRnormH
-    haveI : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
+    have : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
     have hPsubgsub_normal : (Psubg.subgroupOf Sg).Normal := by
       simpa [Sg] using
         (Subgroup.normal_subgroupOf_of_le_normalizer (H := Sg) (N := Psubg) hSg_le_normPsubg)
@@ -7470,7 +7478,7 @@ public theorem theorem_3_6_K_elementaryAbelian
       simpa [Rsub] using Nat.card_congr
         (Subgroup.subgroupOfEquivOfLe (H := R) (K := Sg) le_sup_right).toEquiv
     have hSg_card : Nat.card Sg = Nat.card Psubg * Nat.card R := by
-      rw [← hPsubgsub_compl.card_mul, hPsubgsub_card_eq, hRsub_card_eq]
+      rw [← hPsubgsub_compl.card_mul_card, hPsubgsub_card_eq, hRsub_card_eq]
     have hcop_q_Sg : Nat.Coprime qK (Nat.card Sg) := by
       rw [hSg_card]
       exact Nat.Coprime.mul_right hcop_q_Psubg hcop_q_R
@@ -7495,21 +7503,21 @@ public theorem theorem_3_6_K_elementaryAbelian
       · intro hx
         have h := hforward a⁻¹ (a • x) hx
         simpa [smul_smul] using h
-    letI : IsInvariant (↥Sg) (↥H) K := hK_invS
+    let : IsInvariant (↥Sg) (↥H) K := hK_invS
     let hZ_invS : IsInvariant (↥Sg) (↥K) Z :=
       isInvariant_of_characteristic (A := ↥Sg) (G := ↥K) Z
-    letI : MulAction.QuotientAction (↥Sg) Z :=
+    let : MulAction.QuotientAction (↥Sg) Z :=
       quotientAction_of_isInvariant (A := ↥Sg) Z hZ_invS
-    letI : MulDistribMulAction (↥Sg) (↥K ⧸ Z) :=
+    let : MulDistribMulAction (↥Sg) (↥K ⧸ Z) :=
       quotientMulDistribMulAction (A := ↥Sg) (G := ↥K) Z hZ_invS
     have hQ_nontriv : Nontrivial (↥K ⧸ Z) := by
       rw [← Finite.one_lt_card_iff_nontrivial, hQ_card]
       exact Nat.one_lt_pow (by decide) hqK_prime.one_lt
-    letI : Nontrivial (↥K ⧸ Z) := hQ_nontriv
+    let : Nontrivial (↥K ⧸ Z) := hQ_nontriv
     have hQ_elem : IsElementaryAbelian qK (↥K ⧸ Z) :=
       isElementaryAbelian_quotient_center_of_commutator_le_center_of_exponent_eq hcomm_center hexpK
-    letI : IsElementaryAbelian qK (↥K ⧸ Z) := hQ_elem
-    letI : CommGroup (↥K ⧸ Z) := IsMulCommutative.instCommGroup
+    let : IsElementaryAbelian qK (↥K ⧸ Z) := hQ_elem
+    let : CommGroup (↥K ⧸ Z) := IsMulCommutative.instCommGroup
     let ι : Sg →* MulAut (↥K ⧸ Z) := MulDistribMulAction.toMulAut (G := ↥Sg) (M := ↥K ⧸ Z)
     let I : Subgroup (MulAut (↥K ⧸ Z)) := ι.range
     let ρI : Representation (ZMod qK) I (Additive (↥K ⧸ Z)) := {
@@ -7542,7 +7550,7 @@ public theorem theorem_3_6_K_elementaryAbelian
     have hcop_q_I : Nat.Coprime qK (Nat.card I) := Nat.Coprime.of_dvd_right hI_card_dvd_Sg hcop_q_Sg
     have hchar_not_dvd_I : ¬ ringChar (ZMod qK) ∣ Nat.card I := by
       simpa [ZMod.ringChar_zmod_n] using (Nat.Prime.coprime_iff_not_dvd hqK_prime).1 hcop_q_I
-    letI : FiniteDimensional (ZMod qK) (Additive (↥K ⧸ Z)) := Module.Finite.of_finite
+    let : FiniteDimensional (ZMod qK) (Additive (↥K ⧸ Z)) := Module.Finite.of_finite
     have hfinQ : Module.finrank (ZMod qK) (Additive (↥K ⧸ Z)) = 2 := by
       have hcard_pow :
           Nat.card (Additive (↥K ⧸ Z)) =
@@ -7681,10 +7689,11 @@ public theorem theorem_3_6_K_elementaryAbelian
       have hxZ : x ∈ Z := by simp [hZ_top]
       exact (Subgroup.mem_center_iff.mp hxZ y).symm).elim
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem theorem_3_6_K_card_gt_q_sq
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
@@ -7715,7 +7724,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       Nat.Prime qK ∧ qK ≠ p ∧ qK ≠ Nat.card R₀ ∧
         IsElementaryAbelian qK ↥K ∧ qK ^ 2 < Nat.card K := by
   set_option maxHeartbeats 800000 in
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   dsimp
   intro hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup hVinfNK_bot hKsub_fit hCH_le_K
@@ -7725,19 +7734,19 @@ public theorem theorem_3_6_K_card_gt_q_sq
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  let : IsInvariant (↥R) (↥H) K := hK_inv
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   have hK_ne_bot : K ≠ ⊥ := by
     intro hK_bot
     exact hPK_ne_bot (by simp [hK_bot])
-  letI : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
+  let : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
   obtain ⟨qK, hqK_prime, hqK_ne_p, hqK_ne_R₀, hK_elem⟩ :=
     theorem_3_6_K_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR hR₀_le
       hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup
       hVinfNK_bot hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper hR_eq
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
+  have : Fact qK.Prime := ⟨hqK_prime⟩
   have hqK_pgroup : IsPGroup qK ↥K := IsElementaryAbelian.isPGroup qK ↥K
-  haveI : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
+  have : Fact (IsPGroup qK ↥K) := ⟨hqK_pgroup⟩
   let Cfix : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   obtain ⟨qK', hqK'_prime, hqK_fix_card', _hfix_inf_comm_bot⟩ :=
     theorem_3_6_K_fixed_card_eq_q_and_inf_commutator_eq_bot H R R₀ p hind hsolvG hodd
@@ -7802,7 +7811,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       intro a x
       have hxfix : x ∈ Cfix := by simp [Cfix, hCfix_top]
       exact hxfix a
-    haveI : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
+    have : Subgroup.Normalizes R Kg := ⟨hRnormKg⟩
     have htrivKg : ActsTrivially (A := ↥R) (G := ↥Kg) := by
       intro a x
       rcases Subgroup.mem_map.mp x.2 with ⟨y, hy, hyx⟩
@@ -7879,7 +7888,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       exact sup_le Psubg.le_normalizer hR_le_normPsubg
     have hSg_le_normH : Sg ≤ Subgroup.normalizer H := by
       exact sup_le (hPsubg_le_H.trans (Subgroup.le_normalizer_of_normal (H := H))) hRnormH
-    haveI : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
+    have : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
     have hPsubgsub_normal : (Psubg.subgroupOf Sg).Normal := by
       simpa [Sg] using
         (Subgroup.normal_subgroupOf_of_le_normalizer (H := Sg) (N := Psubg) hSg_le_normPsubg)
@@ -7935,7 +7944,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
       simpa [Rsub] using Nat.card_congr
         (Subgroup.subgroupOfEquivOfLe (H := R) (K := Sg) le_sup_right).toEquiv
     have hSg_card : Nat.card Sg = Nat.card Psubg * Nat.card R := by
-      rw [← hPsubgsub_compl.card_mul, hPsubgsub_card_eq, hRsub_card_eq]
+      rw [← hPsubgsub_compl.card_mul_card, hPsubgsub_card_eq, hRsub_card_eq]
     have hcop_q_Sg : Nat.Coprime qK (Nat.card Sg) := by
       rw [hSg_card]
       exact Nat.Coprime.mul_right hcop_q_Psubg hcop_q_R
@@ -7960,8 +7969,8 @@ public theorem theorem_3_6_K_card_gt_q_sq
       · intro hx
         have h := hforward a⁻¹ (a • x) hx
         simpa [smul_smul] using h
-    letI : IsInvariant (↥Sg) (↥H) K := hK_invS
-    letI : CommGroup K := IsMulCommutative.instCommGroup
+    let : IsInvariant (↥Sg) (↥H) K := hK_invS
+    let : CommGroup K := IsMulCommutative.instCommGroup
     let ι : Sg →* MulAut (↥K) := MulDistribMulAction.toMulAut (G := ↥Sg) (M := ↥K)
     let I : Subgroup (MulAut (↥K)) := ι.range
     let ρI : Representation (ZMod qK) I (Additive (↥K)) := {
@@ -7994,7 +8003,7 @@ public theorem theorem_3_6_K_card_gt_q_sq
     have hcop_q_I : Nat.Coprime qK (Nat.card I) := Nat.Coprime.of_dvd_right hI_card_dvd_Sg hcop_q_Sg
     have hchar_not_dvd_I : ¬ ringChar (ZMod qK) ∣ Nat.card I := by
       simpa [ZMod.ringChar_zmod_n] using (Nat.Prime.coprime_iff_not_dvd hqK_prime).1 hcop_q_I
-    letI : FiniteDimensional (ZMod qK) (Additive (↥K)) := Module.Finite.of_finite
+    let : FiniteDimensional (ZMod qK) (Additive (↥K)) := Module.Finite.of_finite
     have hfinK : Module.finrank (ZMod qK) (Additive (↥K)) = 2 := by
       have hcard_pow :
           Nat.card (Additive (↥K)) =
@@ -8107,8 +8116,8 @@ public theorem theorem_3_6_cyclic_quotient_card_eq_prime
     exponent_dvd_p := (Group.exponent_quotient_dvd (H := Y)).trans
       (IsElementaryAbelian.exponent_dvd_p q K)
   }
-  letI : IsElementaryAbelian q (K ⧸ Y) := hQ_elem
-  letI : Nontrivial (K ⧸ Y) := (QuotientGroup.nontrivial_iff (G := K) (N := Y)).2 hY_ne_top
+  let : IsElementaryAbelian q (K ⧸ Y) := hQ_elem
+  let : Nontrivial (K ⧸ Y) := (QuotientGroup.nontrivial_iff (G := K) (N := Y)).2 hY_ne_top
   obtain ⟨x, hxorder⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := K ⧸ Y)
   have hxpow : x ^ q = 1 := by
     exact
@@ -8174,8 +8183,8 @@ public theorem theorem_3_6_hyperplane_fixed_iSup_top
     [IsElementaryAbelian q K] [IsElementaryAbelian p V] [MulDistribMulAction K V]
     (hq_ne_p : q ≠ p) (hncyc : ¬ IsCyclic K) :
     (⨆ (Y : Subgroup K) (_ : IsCyclic (K ⧸ Y)), fixedPointSubgroup (↥Y) V) = ⊤ := by
-  letI : CommGroup K := IsMulCommutative.instCommGroup
-  letI : Fact (IsPGroup q K) := ⟨IsElementaryAbelian.isPGroup q K⟩
+  let : CommGroup K := IsMulCommutative.instCommGroup
+  let : Fact (IsPGroup q K) := ⟨IsElementaryAbelian.isPGroup q K⟩
   let hVp : IsPGroup p V := IsElementaryAbelian.isPGroup p V
   obtain ⟨n, hcardV⟩ := hVp.exists_card_eq
   have hcop_q_p : Nat.Coprime q p := by
@@ -8197,7 +8206,7 @@ public theorem theorem_3_6_hyperplane_fixed_disjoint
     (hZ_fix_ne_bot : fixedPointSubgroup (↥Z) V ≠ ⊥)
     (hYZ_ne : Y ≠ Z) :
     Disjoint (fixedPointSubgroup (↥Y) V) (fixedPointSubgroup (↥Z) V) := by
-  letI : CommGroup K := IsMulCommutative.instCommGroup
+  let : CommGroup K := IsMulCommutative.instCommGroup
   have hY_ne_top : Y ≠ ⊤ := by
     intro hY_top
     apply hY_fix_ne_bot
@@ -8412,7 +8421,7 @@ private theorem theorem_3_6_normal_map_subtype_of_normal_and_isInvariant
       change ((x : H) : G) ∈ N
       exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
   have hH_norm_N : H ≤ Subgroup.normalizer (N : Set G) := by
-    letI : (N.subgroupOf H).Normal := by
+    let : (N.subgroupOf H).Normal := by
       rwa [hNsub_eq]
     exact Subgroup.le_normalizer_of_normal_subgroupOf hN_le_H
   have hRinv :
@@ -8450,14 +8459,14 @@ set_option maxHeartbeats 2000000
 private theorem theorem_3_6_final_contradiction
     {G : Type*} [Group G] [Finite G]
     (H R R₀ : Subgroup G) (p : ℕ) (hind : Theorem36IndHyp H)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀))
     (hcomm_eq : ⁅H, R⁆ = H) (hbad : ¬ HasPLengthOne p ↥H) :
     False := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hRnormH : R ≤ Subgroup.normalizer H := Subgroup.le_normalizer_of_normal (H := H)
   obtain ⟨K, P, hVK_sup, hVK_disj, hK_inv, hNK_inv, hPsub_inv, hVNK_sup, hVinfNK_bot,
     hKsub_fit, hCH_le_K, hP_p, hPK_ne_bot, hVKP_top, hR_eq, hproper⟩ :=
@@ -8469,8 +8478,8 @@ private theorem theorem_3_6_final_contradiction
     simpa [Psub, normalizerSubtypeMap] using (Subgroup.map_subtype_le P)
   have hPsub_normK : Psub ≤ Subgroup.normalizer (K : Set H) := by
     simpa [normalizerOf] using hPsub_le_NK
-  letI : IsInvariant (↥R) (↥H) K := hK_inv
-  haveI : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
+  let : IsInvariant (↥R) (↥H) K := hK_inv
+  have : Subgroup.Normalizes Psub K := ⟨hPsub_normK⟩
   let actP_K : MulDistribMulAction (↥Psub) (↥K) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := H) Psub K hPsub_normK
   have hP_smul_K_coe (a : Psub) (k : K) :
@@ -8483,20 +8492,20 @@ private theorem theorem_3_6_final_contradiction
     theorem_3_6_K_card_gt_q_sq H R R₀ p hind hsolvG hodd hHR hcopHR hR₀_le
       hR₀_prime hp hCZ hcomm_eq hbad K P hVK_sup hVK_disj hK_inv hNK_inv hPsub_inv hVNK_sup
       hVinfNK_bot hKsub_fit hCH_le_K hP_p hPK_ne_bot hproper hR_eq
-  haveI : Fact qK.Prime := ⟨hqK_prime⟩
-  letI : IsElementaryAbelian qK ↥K := hK_elem
-  letI : CommGroup K := IsMulCommutative.instCommGroup
+  have : Fact qK.Prime := ⟨hqK_prime⟩
+  let : IsElementaryAbelian qK ↥K := hK_elem
+  let : CommGroup K := IsMulCommutative.instCommGroup
   have hK_ne_bot : K ≠ ⊥ := by
     intro hK_bot
     exact hPK_ne_bot (by simp [hK_bot])
-  letI : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
+  let : Nontrivial ↥K := K.nontrivial_iff_ne_bot.mpr hK_ne_bot
   have hV_elem : IsElementaryAbelian p ↥V := by
     simpa [V] using
       theorem_3_6_fitting_elementaryAbelian H R R₀ p hind hsolvG hodd hHR hcopHR
         hR₀_le hR₀_prime hp hCZ hcomm_eq hbad
-  letI : IsElementaryAbelian p ↥V := hV_elem
+  let : IsElementaryAbelian p ↥V := hV_elem
   let hKnormV : K ≤ Subgroup.normalizer V := Subgroup.le_normalizer_of_normal (H := V)
-  haveI : Subgroup.Normalizes K V := ⟨hKnormV⟩
+  have : Subgroup.Normalizes K V := ⟨hKnormV⟩
   let actK_V : MulDistribMulAction (↥K) (↥V) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := H) K V hKnormV
   have hK_smul_V_coe (a : K) (x : V) :
@@ -8507,7 +8516,7 @@ private theorem theorem_3_6_final_contradiction
         (G := H) K V hKnormV a x
   let hV_invR : IsInvariant (↥R) (↥H) V :=
     isInvariant_of_characteristic (A := ↥R) (G := ↥H) V
-  letI : IsInvariant (↥R) (↥H) V := hV_invR
+  let : IsInvariant (↥R) (↥H) V := hV_invR
   have hfixK_V_bot :
       fixedPointSubgroup (↥K) (↥V) = ⊥ := by
     simpa [V] using
@@ -8590,7 +8599,7 @@ private theorem theorem_3_6_final_contradiction
               exact hY_notin ⟨hY_index, hfix⟩
           simp [hY_fix_bot]
       · exact bot_le
-    letI : Nontrivial ↥V := V.nontrivial_iff_ne_bot.mpr hV_ne_bot
+    let : Nontrivial ↥V := V.nontrivial_iff_ne_bot.mpr hV_ne_bot
     have htop_ne_bot : (⊤ : Subgroup V) ≠ (⊥ : Subgroup V) := top_ne_bot
     have hall_bot' := hall_bot
     simp [hfix_cover] at hall_bot'
@@ -8622,7 +8631,7 @@ private theorem theorem_3_6_final_contradiction
           exact congrArg (fun k : K => k • x) (IsMulCommutative.is_comm.comm (y : K) a)
         _ = a • ((y : K) • x) := by simp [mul_smul]
         _ = a • x := by rw [hyx]
-    letI : Y.1.Normal := by
+    let : Y.1.Normal := by
       infer_instance
     refine ⟨?_⟩
     intro a x
@@ -8650,7 +8659,7 @@ private theorem theorem_3_6_final_contradiction
         (hF_ne_bot Y) (hF_ne_bot Z) (by
           intro hEq
           exact hYZ (Subtype.ext hEq))
-  letI : Fintype Ωsub := Fintype.ofFinite Ωsub
+  let : Fintype Ωsub := Fintype.ofFinite Ωsub
   have hF_iSup_eq :
       iSup F =
         (⨆ (Y : Subgroup K) (_ : IsCyclic (↥K ⧸ Y)), fixedPointSubgroup (↥Y) (↥V)) := by
@@ -8754,7 +8763,7 @@ private theorem theorem_3_6_final_contradiction
   have hSg_le_normKg : Sg ≤ Subgroup.normalizer (Kg : Set G) := sup_le hPsubg_le_normKg hRnormKg
   have hSg_le_normH : Sg ≤ Subgroup.normalizer H := by
     exact sup_le (hPsubg_le_H.trans (Subgroup.le_normalizer_of_normal (H := H))) hRnormH
-  haveI : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
+  have : Subgroup.Normalizes Sg H := ⟨hSg_le_normH⟩
   let actS_H : MulDistribMulAction (↥Sg) (↥H) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) Sg H hSg_le_normH
   have hS_smul_H_coe (a : Sg) (x : H) :
@@ -8783,11 +8792,11 @@ private theorem theorem_3_6_final_contradiction
     · intro hx
       have h := hforward a⁻¹ (a • x) hx
       simpa [smul_smul] using h
-  letI : IsInvariant (↥Sg) (↥H) K := hK_invS
+  let : IsInvariant (↥Sg) (↥H) K := hK_invS
   let hV_invS : IsInvariant (↥Sg) (↥H) V :=
     isInvariant_of_characteristic (A := ↥Sg) (G := ↥H) V
-  letI : IsInvariant (↥Sg) (↥H) V := hV_invS
-  letI : CommGroup ↥V := IsMulCommutative.instCommGroup
+  let : IsInvariant (↥Sg) (↥H) V := hV_invS
+  let : CommGroup ↥V := IsMulCommutative.instCommGroup
   have hsub_le_normalizer (X Y : Subgroup V) : Y ≤ Subgroup.normalizer (X : Set V) := by
     intro y hy
     rw [Subgroup.mem_normalizer_iff]
@@ -8814,8 +8823,8 @@ private theorem theorem_3_6_final_contradiction
           simpa using hxone
     | insert i s hi ih =>
         intro Y
-        letI : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
-        letI : IsInvariant Y.1 (↥V) (s.sup F) := ih Y
+        let : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
+        let : IsInvariant Y.1 (↥V) (s.sup F) := ih Y
         have hs_le_norm : s.sup F ≤ Subgroup.normalizer (F i : Set V) :=
           hsub_le_normalizer (X := F i) (Y := s.sup F)
         have hsup_inv :
@@ -8868,14 +8877,14 @@ private theorem theorem_3_6_final_contradiction
           have hYs : Y ∉ s := by
             intro hYs
             exact hYins (Finset.mem_insert_of_mem hYs)
-          letI : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
-          letI : IsInvariant Y.1 (↥V) (s.sup F) := hF_sup_inv s Y
+          let : IsInvariant Y.1 (↥V) (F i) := hF_restrict_inv Y i
+          let : IsInvariant Y.1 (↥V) (s.sup F) := hF_sup_inv s Y
           have hFi_fix_bot : fixedPointSubgroup Y.1 (↥(F i)) = ⊥ := by
             have hdisj_iY : Disjoint (F i) (F Y) := hF_pairwise hYi.symm
             simpa [F] using
               theorem_3_6_fixedPointSubgroup_subgroup_eq_bot_of_disjoint
                 (A := Y.1) (M := ↥V) (U := F i) hdisj_iY
-          letI : IsInvariant Y.1 (↥V) (F i ⊔ s.sup F) := by
+          let : IsInvariant Y.1 (↥V) (F i ⊔ s.sup F) := by
             exact
               isInvariant_sup_of_le_normalizer (A := Y.1) (G := ↥V) (X := F i)
                 (Y := s.sup F) (hsub_le_normalizer (X := F i) (Y := s.sup F))
@@ -8955,7 +8964,7 @@ private theorem theorem_3_6_final_contradiction
         simpa using congrArg (fun t : K => t • ((ρV a) x)) hyb.symm
       _ = (ρV a) (y • x) := hρ_transport a y x
       _ = (ρV a) x := by rw [hyfix]
-  letI : MulAction (↥Sg) Ωsub := {
+  let : MulAction (↥Sg) Ωsub := {
     smul := fun a Y => by
       refine ⟨Y.1.map (ρK a : ↥K →* ↥K), ?_⟩
       have hindex : (Y.1.map (ρK a : ↥K →* ↥K)).index = qK := by
@@ -9177,11 +9186,11 @@ private theorem theorem_3_6_final_contradiction
   have hWH_le_V (Y : Ωsub) : WH Y ≤ V := by
     simpa [WH] using (Subgroup.map_subtype_le (WV Y))
   have hWH_invR (Y : Ωsub) : IsInvariant (↥R) (↥H) (WH Y) := by
-    letI : IsInvariant (↥R) (↥V) (WV Y) := hWV_invR Y
+    let : IsInvariant (↥R) (↥V) (WV Y) := hWV_invR Y
     simpa [WH] using isInvariant_map_subtype (A := ↥R) (G := ↥H) V (WV Y)
   have hWH_normal (Y : Ωsub) : (WH Y).Normal := by
     have hV_norm_WH : V ≤ Subgroup.normalizer (WH Y : Set H) := by
-      letI : ((WH Y).subgroupOf V).Normal := by
+      let : ((WH Y).subgroupOf V).Normal := by
         infer_instance
       exact Subgroup.le_normalizer_of_normal_subgroupOf (hWH_le_V Y)
     have hK_norm_WH : K ≤ Subgroup.normalizer (WH Y : Set H) := by
@@ -9212,7 +9221,7 @@ private theorem theorem_3_6_final_contradiction
       exact sup_le (sup_le hV_norm_WH hK_norm_WH) hP_norm_WH
     exact Subgroup.normalizer_eq_top_iff.mp (top_unique hH_norm_WH)
   have hWg_normal (Y : Ωsub) : (Wg Y).Normal := by
-    letI : (WH Y).Normal := hWH_normal Y
+    let : (WH Y).Normal := hWH_normal Y
     exact theorem_3_6_normal_map_subtype_of_normal_and_isInvariant hHR (WH Y) (hWH_invR Y)
   have hS_transitive : ∀ Y Z : Ωsub, Z ∈ MulAction.orbit (↥Sg) Y := by
     intro Y Z
@@ -9236,14 +9245,14 @@ private theorem theorem_3_6_final_contradiction
       exists_minimal_normal_le (G := G) (Wg Y) (hWg_normal Y) hWgY_ne_bot
     obtain ⟨N, _, hN_le_WgZ, hN_ne_bot, hNmin⟩ :=
       exists_minimal_normal_le (G := G) (Wg Z) (hWg_normal Z) hWgZ_ne_bot
-    letI : IsMinimalNormal M := {
+    let : IsMinimalNormal M := {
       minimal := by
         intro L hLnorm hLM
         by_cases hL_bot : L = ⊥
         · exact Or.inl hL_bot
         · exact Or.inr (hMmin L hLnorm hLM hL_bot)
     }
-    letI : IsMinimalNormal N := {
+    let : IsMinimalNormal N := {
       minimal := by
         intro L hLnorm hLN
         by_cases hL_bot : L = ⊥
@@ -9282,7 +9291,7 @@ private theorem theorem_3_6_final_contradiction
     apply H.subtype_injective
     simpa [toVg] using congrArg Subtype.val hxy
   have hRnormVg : R ≤ Subgroup.normalizer (Vg : Set G) := Subgroup.le_normalizer_of_normal (H := Vg)
-  haveI : Subgroup.Normalizes R Vg := ⟨hRnormVg⟩
+  have : Subgroup.Normalizes R Vg := ⟨hRnormVg⟩
   have htoVg_smul (a : R) (x : V) : toVg (a • x) = a • toVg x := by
     apply Subtype.ext
     change (((a : R) • (x : H) : H) : G) = (a : G) * ((x : H) : G) * (a : G)⁻¹
@@ -9326,8 +9335,8 @@ private theorem theorem_3_6_final_contradiction
       _ = p := hCVR_card
   let ιR : R →* Sg := Subgroup.inclusion (show R ≤ Sg by exact le_sup_right)
   let ιPsubg : Psubg →* Sg := Subgroup.inclusion (show Psubg ≤ Sg by exact le_sup_left)
-  letI : MulAction (↥R) Ωsub := MulAction.compHom Ωsub ιR
-  letI : MulAction (↥Psubg) Ωsub := MulAction.compHom Ωsub ιPsubg
+  let : MulAction (↥R) Ωsub := MulAction.compHom Ωsub ιR
+  let : MulAction (↥Psubg) Ωsub := MulAction.compHom Ωsub ιPsubg
   let WR : Ωsub → Subgroup V :=
     fun Y => ⨆ Z : Ωsub, ⨆ (_ : Z ∈ MulAction.orbit (↥R) Y), F Z
   let WRg : Ωsub → Subgroup Vg := fun Y => (WR Y).map toVg
@@ -9370,7 +9379,7 @@ private theorem theorem_3_6_final_contradiction
     let KR : Subgroup G := Kg ⊔ R
     have hKRnormVg : KR ≤ Subgroup.normalizer (Vg : Set G) :=
       Subgroup.le_normalizer_of_normal (H := Vg)
-    haveI : Subgroup.Normalizes KR Vg := ⟨hKRnormVg⟩
+    have : Subgroup.Normalizes KR Vg := ⟨hKRnormVg⟩
     have hcentKR :
         actionCentralizerIn (A := ↥KR) (G := ↥Vg) (⊤ : Subgroup KR) = ⊥ := by
       subst hR_eq
@@ -9492,8 +9501,8 @@ private theorem theorem_3_6_final_contradiction
     exact hΩ_not_subsingleton hsub
   have hR_prime : Nat.Prime (Nat.card R) := by
     simpa [hR_eq] using hR₀_prime
-  letI : Fact (Nat.card R).Prime := ⟨hR_prime⟩
-  letI : Fintype ↥R := Fintype.ofFinite ↥R
+  let : Fact (Nat.card R).Prime := ⟨hR_prime⟩
+  let : Fintype ↥R := Fintype.ofFinite ↥R
   have hR_pgroup : IsPGroup (Nat.card R) ↥R := by
     simpa using (IsPGroup.of_card (p := Nat.card R) (G := ↥R) (n := 1) (by simp))
   have hstab_bot_of_nonfix {Y : Ωsub} (hY_nonfix : ∃ a : R, a • Y ≠ Y) :
@@ -9538,7 +9547,7 @@ private theorem theorem_3_6_final_contradiction
     have hbot : b⁻¹ * a ∈ (⊥ : Subgroup R) := by simpa [hstabY_bot] using hstab
     have hone : b⁻¹ * a = 1 := by simpa using hbot
     simpa using (inv_mul_eq_iff_eq_mul.mp hone)
-  letI : CommGroup V := inferInstance
+  let : CommGroup V := inferInstance
   have hcard_F_eq_p_and_fix_le_WRg_of_stab_bot {Y : Ωsub}
       (hstabY_bot : MulAction.stabilizer (↥R) Y = ⊥) :
       Nat.card (F Y) = p ∧ fixedPointSubgroup (↥R) (↥Vg) ≤ WRg Y := by
@@ -9624,7 +9633,7 @@ private theorem theorem_3_6_final_contradiction
     have hcardFY_ne_one : Nat.card (F Y) ≠ 1 := by
       intro hcard_one
       exact hF_ne_bot Y ((Subgroup.card_eq_one (H := F Y)).1 hcard_one)
-    haveI : Nontrivial ↥(F Y) := (F Y).nontrivial_iff_ne_bot.mpr (hF_ne_bot Y)
+    have : Nontrivial ↥(F Y) := (F Y).nontrivial_iff_ne_bot.mpr (hF_ne_bot Y)
     obtain ⟨x, hx_ne_one⟩ := exists_ne (1 : F Y)
     have hxpowV : ((x : F Y) : V) ^ p = 1 := by
       exact
@@ -9719,7 +9728,7 @@ private theorem theorem_3_6_final_contradiction
     exact (le_antisymm hle₂ hle₁).trans hcardFY0
   have hF_cyclic_prime (Y : Ωsub) : IsCyclic ↥(F Y) := by
     exact isCyclic_of_prime_card (α := ↥(F Y)) (hcardF_all Y)
-  letI : CommGroup K := IsMulCommutative.instCommGroup
+  let : CommGroup K := IsMulCommutative.instCommGroup
   let CfixK : Subgroup K := fixedPointSubgroup (↥R) (↥K)
   let Kcomm : Subgroup K := commutatorAction (A := ↥R) (G := ↥K)
   have hcopRK : Nat.Coprime (Nat.card R) (Nat.card K) := by
@@ -9742,7 +9751,8 @@ private theorem theorem_3_6_final_contradiction
   have hCfixK_card : Nat.card CfixK = qK := by
     exact hCfixK_card'.trans hqFix_eq_qK
   have hcomplK : IsCompl CfixK Kcomm :=
-    proposition_1_6_d (G := ↥K) (A := ↥R) (by infer_instance) hcopRK (by infer_instance)
+    proposition_1_6_d (G := ↥K) (A := ↥R)
+      (by have : Group.IsSolvable G := hsolvG; infer_instance) hcopRK (by infer_instance)
   have hsup_CfixK_Kcomm : CfixK ⊔ Kcomm = ⊤ := hcomplK.sup_eq_top
   have hdisj_CfixK_Kcomm : Disjoint CfixK Kcomm := hcomplK.disjoint
   have hmul_univ_CfixK_Kcomm : (↑CfixK : Set K) * (↑Kcomm : Set K) = Set.univ := by
@@ -9772,8 +9782,8 @@ private theorem theorem_3_6_final_contradiction
       · intro hx
         have hx' : a⁻¹ • (a • x) ∈ F Y := hforward a⁻¹ hx
         simpa [inv_smul_smul] using hx'
-    letI : IsInvariant (↥R) (↥V) (F Y) := hFY_invR
-    letI : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
+    let : IsInvariant (↥R) (↥V) (F Y) := hFY_invR
+    let : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
     let CY : Subgroup K := actionCentralizerIn (A := ↥K) (G := ↥(F Y)) (⊤ : Subgroup K)
     have hY_le_CY : Y.1 ≤ CY := by
       intro y hy
@@ -9826,7 +9836,7 @@ private theorem theorem_3_6_final_contradiction
     let ρ : R →* MulAut ↥(F Y) := MulDistribMulAction.toMulAut (G := ↥R) (M := ↥(F Y))
     let ψ : K →* MulAut ↥(F Y) := MulDistribMulAction.toMulAut (G := ↥K) (M := ↥(F Y))
     let eAut : MulAut ↥(F Y) ≃* (ZMod (Nat.card (F Y)))ˣ := IsCyclic.mulAutMulEquiv (G := ↥(F Y))
-    letI : CommGroup (MulAut ↥(F Y)) :=
+    let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
       simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
@@ -9984,7 +9994,7 @@ private theorem theorem_3_6_final_contradiction
     have hY_fixPsubg : ∀ a : Psubg, a • Y = Y :=
       (MulAction.mem_fixedPoints (M := ↥Psubg) (α := Ωsub)).1 hY_fixPsubg_mem
     have hPsubnormV : Psub ≤ Subgroup.normalizer V := Subgroup.le_normalizer_of_normal (H := V)
-    haveI : Subgroup.Normalizes Psub V := ⟨hPsubnormV⟩
+    have : Subgroup.Normalizes Psub V := ⟨hPsubnormV⟩
     let actP_V : MulDistribMulAction (↥Psub) (↥V) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer (G := H) Psub V hPsubnormV
     have hP_smul_V_coe (a : Psub) (x : V) :
@@ -10027,8 +10037,8 @@ private theorem theorem_3_6_final_contradiction
       · intro hx
         have hx' : a⁻¹ • (a • x) ∈ F Y := hforward a⁻¹ hx
         simpa [inv_smul_smul] using hx'
-    letI : IsInvariant (↥Psub) (↥V) (F Y) := hFY_invP
-    letI : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
+    let : IsInvariant (↥Psub) (↥V) (F Y) := hFY_invP
+    let : IsInvariant (↥K) (↥V) (F Y) := hF_Kinv Y
     let CY : Subgroup K := actionCentralizerIn (A := ↥K) (G := ↥(F Y)) (⊤ : Subgroup K)
     have hY_le_CY : Y.1 ≤ CY := by
       intro y hy
@@ -10080,7 +10090,7 @@ private theorem theorem_3_6_final_contradiction
     let ρ : Psub →* MulAut ↥(F Y) := MulDistribMulAction.toMulAut (G := ↥Psub) (M := ↥(F Y))
     let ψ : K →* MulAut ↥(F Y) := MulDistribMulAction.toMulAut (G := ↥K) (M := ↥(F Y))
     let eAut : MulAut ↥(F Y) ≃* (ZMod (Nat.card (F Y)))ˣ := IsCyclic.mulAutMulEquiv (G := ↥(F Y))
-    letI : CommGroup (MulAut ↥(F Y)) :=
+    let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
       simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
@@ -10156,7 +10166,7 @@ private theorem theorem_3_6_final_contradiction
       rw [hcardOmega_eq]
       exact hR_odd.add_one
     have hoddSg : Odd (Nat.card Sg) := odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card Sg)
-    letI : MulAction.IsPretransitive (↥Sg) Ωsub := ⟨hS_transitive⟩
+    let : MulAction.IsPretransitive (↥Sg) Ωsub := ⟨hS_transitive⟩
     have hcardOmega_dvd : Nat.card Ωsub ∣ Nat.card Sg := by
       rw [← MulAction.index_stabilizer_of_transitive (G := ↥Sg) (x := Y0)]
       exact Subgroup.index_dvd_card (H := MulAction.stabilizer (↥Sg) Y0)
@@ -10164,7 +10174,7 @@ private theorem theorem_3_6_final_contradiction
     exact (Nat.not_odd_iff_even.mpr hcardOmega_even) hcardOmega_odd
 
 public theorem theorem_3_6 {G : Type uG} [Group G] [Finite G] (H R R₀ : Subgroup G) (p : ℕ)
-    (hsolvG : IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
+    (hsolvG : Group.IsSolvable G) (hodd : Odd (Nat.card G)) [hH_normal : H.Normal]
     (hHR : H.IsComplement' R) (hcopHR : Nat.Coprime (Nat.card H) (Nat.card R))
     (hR₀_le : R₀ ≤ R) (hR₀_prime : Nat.Prime (Nat.card R₀))
     (hp : Nat.Prime p) (hCZ : IsZGroup ↥(subgroupCentralizerIn H R₀)) :
@@ -10172,7 +10182,7 @@ public theorem theorem_3_6 {G : Type uG} [Group G] [Finite G] (H R R₀ : Subgro
   let P : ℕ → Prop := fun n =>
     ∀ (G' : Type uG) [Group G'] [Finite G'] (H' R' R₀' : Subgroup G') (p' : ℕ),
       Nat.card G' = n →
-      IsSolvable G' →
+      Group.IsSolvable G' →
       Odd (Nat.card G') →
       H'.Normal →
       H'.IsComplement' R' →
@@ -10187,7 +10197,7 @@ public theorem theorem_3_6 {G : Type uG} [Group G] [Finite G] (H R R₀ : Subgro
     refine Nat.strong_induction_on n ?_
     intro n ih G' _ _ H' R' R₀' p' hcard hsolvG' hodd' hH'_normal hH'R' hcopH'R'
       hR₀'_le hR₀'_prime hp' hCZ'
-    letI : H'.Normal := hH'_normal
+    let : H'.Normal := hH'_normal
     have hind : Theorem36IndHyp H' := by
       intro G'' _ _ H'' R'' R₀'' p'' hlt hsolvG'' hodd'' hH''_normal hH''R'' hcopH''R''
         hR₀''_le hR₀''_prime hp'' hCZ''
@@ -10215,7 +10225,7 @@ public theorem theorem_3_6 {G : Type uG} [Group G] [Finite G] (H R R₀ : Subgro
       · have hgood : HasPLengthOne p' ↥H' := by
           classical
           exact not_not.mp hbad
-        letI : Fact p'.Prime := ⟨hp'⟩
+        let : Fact p'.Prime := ⟨hp'⟩
         let ecomm : ↥H' ≃* ↥⁅H', R'⁆ := MulEquiv.subgroupCongr hcomm_eq.symm
         exact hasPLengthOne_of_equiv (p := p') ecomm hgood
   exact hP (Nat.card G) G H R R₀ p rfl hsolvG hodd hH_normal hHR hcopHR hR₀_le hR₀_prime hp

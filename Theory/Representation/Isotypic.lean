@@ -51,7 +51,8 @@ private theorem simple_submodule_le_selected
     intro x
     calc
       x = DirectSum.coeLinearMap W (e.symm x) := by
-        simp [e]
+        change x = e (e.symm x)
+        exact (e.apply_symm_apply x).symm
       _ = ∑ i : ι, ((e.symm x i : W i) : V) := by
         change DFinsupp.sumAddHom (fun i => (W i).subtype.toAddMonoidHom) (e.symm x) = _
         rw [DFinsupp.sumAddHom_apply]
@@ -66,7 +67,7 @@ private theorem simple_submodule_le_selected
   by_cases hi : Nonempty ((W i) ≃ₗ[A] M)
   · exact (le_iSup (fun j : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W j.1)
       ⟨i, hi⟩) (e.symm x i).2
-  · haveI : IsSimpleModule A (W i) := hW_irreducible i
+  · have : IsSimpleModule A (W i) := hW_irreducible i
     let coord : S →ₗ[A] W i :=
       (DirectSum.component A ι (fun i => W i) i) ∘ₗ e.symm.toLinearMap ∘ₗ S.subtype
     have hcoord_zero : coord = 0 := by
@@ -90,12 +91,12 @@ private theorem homogeneousComponent_eq_selected_sum
     (hW_irreducible : forall i : ι, IsSimpleModule A (W i)) :
     homogeneousComponent A V M =
       iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) := by
-  haveI : IsSimpleModule A M := hM
+  have : IsSimpleModule A M := hM
   apply le_antisymm
   · rw [homogeneousComponent]
     refine sSup_le ?_
     intro S hS
-    haveI : IsSimpleModule A S := IsSimpleModule.congr hS.some
+    have : IsSimpleModule A S := IsSimpleModule.congr hS.some
     exact simple_submodule_le_selected W hW_internal hW_irreducible S hS
   · refine iSup_le ?_
     intro i
@@ -146,7 +147,7 @@ private theorem selected_length_eq_card
     _ = ∑ _i : J, (1 : ENat) := by
       apply Finset.sum_congr rfl
       intro i _hi
-      haveI : IsSimpleModule A (Wsel i) := hWsel_simple i
+      have : IsSimpleModule A (Wsel i) := hWsel_simple i
       simp
     _ = (Nat.card J : ENat) := by
       simp [J, Nat.card_eq_fintype_card]
@@ -188,7 +189,7 @@ public theorem isaacs_lemma_1_13
       rw [← hWlen, hWeq]
     have hUcard : (Nat.card JU : ENat) = Module.length A (homogeneousComponent A V M) := by
       rw [← hUlen, hUeq]
-    apply ENat.coe_inj.mp
+    apply ENat.natCast_inj.mp
     change (Nat.card JW : ENat) = (Nat.card JU : ENat)
     exact hWcard.trans hUcard.symm
 

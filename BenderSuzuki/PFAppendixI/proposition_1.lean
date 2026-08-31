@@ -1512,7 +1512,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
     (hDodd : Odd (Nat.card D))
     (hFcyclic : IsCyclic (fittingSubgroup D)) :
     IsMulCommutative (D ⧸ fittingSubgroup D) := by
-  letI : IsSolvable D := odd_order_theorem D hDodd
+  letI : Group.IsSolvable D := odd_order_theorem D hDodd
   letI : IsCyclic (fittingSubgroup D) := hFcyclic
   haveI : IsMulCommutative (fittingSubgroup D) :=
     IsCyclic.isMulCommutative
@@ -1520,7 +1520,7 @@ private theorem peterfalvi_appendixI_proposition_1_fitting_quotient_commutative
       Subgroup.centralizer (fittingSubgroup D : Set D) = fittingSubgroup D := by
     apply le_antisymm
     · exact centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
-        (G := D) (inferInstance : IsSolvable D)
+        (G := D) (inferInstance : Group.IsSolvable D)
     · exact Subgroup.le_centralizer_iff_isMulCommutative.mpr inferInstance
   let phi : D →* MulAut (fittingSubgroup D) :=
     MulAut.conjNormal (H := fittingSubgroup D)
@@ -1568,7 +1568,6 @@ public theorem peterfalvi_appendixI_proposition_1
 
 end PFAppendixI
 end BenderSuzuki
-
 
 
 

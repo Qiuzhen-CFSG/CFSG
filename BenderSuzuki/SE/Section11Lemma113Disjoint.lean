@@ -144,7 +144,8 @@ public theorem lemma113_invariant_sylow_two_forces_core_card
   have hfC : Function.Injective fC := by
     intro a b hab
     have habX : ((a : M) : X) = ((b : M) : X) := by
-      simpa [fC, fX, C] using congrArg Subtype.val hab
+      change fX a = fX b
+      exact congrArg (fun z : C => (z : X)) hab
     exact Subtype.ext (Subtype.ext habX)
   have hrankC : TwoRankAtLeastTwo C :=
     hrank.map_of_injective fC hfC

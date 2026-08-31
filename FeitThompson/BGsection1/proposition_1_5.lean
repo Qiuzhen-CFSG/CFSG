@@ -8,7 +8,7 @@ public section
 
 -- Proposition 1.5(b)
 theorem proposition_1_5_b {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ K : Subgroup G, IsPiSubgroup (G := G) π K → IsInvariant A G K →
       ∃ H : Subgroup G, IsHallSubgroup π H ∧ IsInvariant A G H ∧ K ≤ H := by
@@ -18,7 +18,7 @@ theorem proposition_1_5_b {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
 
 -- Proposition 1.5(c)
 theorem proposition_1_5_c {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ H₁ H₂ : Subgroup G,
       IsHallSubgroup π H₁ →
@@ -33,7 +33,7 @@ theorem proposition_1_5_c {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
 
 -- Proposition 1.5(d)
 theorem proposition_1_5_d {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
       letI : MulDistribMulAction A (G ⧸ H) :=
@@ -47,7 +47,7 @@ theorem proposition_1_5_d {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
 
 -- Proposition 1.5(e)
 theorem proposition_1_5_e {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ Hπ' : Subgroup G,
       IsHallSubgroup {p | p ∉ π} Hπ' →

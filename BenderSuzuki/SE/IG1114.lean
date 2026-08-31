@@ -68,7 +68,7 @@ public theorem ig1114_i_actsTrivially_of_fixedPointSubgroup_eq_bot
     have hBcopT : Nat.Coprime (Nat.card B) (Nat.card T) :=
       Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card B) hcopST
     letI : Group.IsNilpotent T := hT.isNilpotent
-    have hsolvT : IsSolvable T := by infer_instance
+    have hsolvT : Group.IsSolvable T := by infer_instance
     let hPhiInvB : IsInvariant (↥B) T Phi :=
       isInvariant_of_characteristic (A := ↥B) (G := T) Phi
     have hfixBq : fixedPointSubgroup (↥B) (T ⧸ Phi) = ⊥ := by
@@ -94,7 +94,7 @@ public theorem ig1114_i_actsTrivially_of_fixedPointSubgroup_eq_bot
       right
       rw [ZMod.ringChar_zmod_n]
       exact ⟨Fact.out, hpCopS⟩
-    have hsolvS : IsSolvable S := odd_order_theorem S hoddS
+    have hsolvS : Group.IsSolvable S := odd_order_theorem S hoddS
     have hfixRho : rho.fixedSubspace B = ⊥ := by
       exact
         theorem_3_7_fixedSubspace_eq_bot_of_fixedPointSubgroup_eq_bot B hfixBq

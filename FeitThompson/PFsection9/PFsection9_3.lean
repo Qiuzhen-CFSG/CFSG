@@ -160,7 +160,7 @@ public theorem theorem_9_3_action_normalizes_and_solvable_sec9
     (M MF U W1 W2 : Subgroup G)
     (q : ℕ) :
   hypothesis_9_2_statement M MF U W1 W2 q →
-      (U ⊔ W1 ≤ Subgroup.normalizer (MF : Set G)) ∧ IsSolvable MF := by
+      (U ⊔ W1 ≤ Subgroup.normalizer (MF : Set G)) ∧ Group.IsSolvable MF := by
   intro h92
   have hMF := h92.mf
   rcases hMF.1 with ⟨hMFleM, hMFnormalM, hMFnil, _hMFhall⟩

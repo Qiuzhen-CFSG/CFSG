@@ -56,9 +56,9 @@ private theorem hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one
     {F V : Type*} [Field F] [AddCommGroup V] [Module F V]
     (T : Module.End F V) (hSq : (T - 1) ^ 2 = 0) (hne : T ≠ 1) :
     HasQuadraticMinimalPolynomial F V T := by
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hV
-    push_neg at hV
+    push Not at hV
     exact hne (Subsingleton.elim _ _)
   let Q : Polynomial F := (Polynomial.X - Polynomial.C (1 : F)) ^ 2
   have hroot : Polynomial.aeval T Q = 0 := by
@@ -213,7 +213,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       ¬ ∀ g : G, ∃ k : ℕ, orderOf g = p ^ k := by
     intro h
     exact hnot_pgroup ((IsPGroup.iff_orderOf (p := p) (G := G)).2 h)
-  push_neg at hnot_orderOf
+  push Not at hnot_orderOf
   rcases hnot_orderOf with ⟨g, hg_not_p_power⟩
   have hg_visible : ρ g ≠ 1 := by
     intro hgρ
@@ -233,15 +233,15 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
   have hexists_q_ne_p :
       ∃ q : ℕ, q.Prime ∧ q ∣ Nat.card G ∧ q ≠ p := by
     by_contra hcontra
-    push_neg at hcontra
+    push Not at hcontra
     apply hcard_not_pow
     refine ⟨(Nat.card G).primeFactorsList.length, ?_⟩
     apply Nat.eq_prime_pow_of_unique_prime_dvd (Nat.card_pos.ne')
     intro d hd_prime hd_dvd
     exact hcontra d hd_prime hd_dvd
   obtain ⟨q, hq_prime, hq_dvd_card, hq_ne_p⟩ := hexists_q_ne_p
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact q.Prime := ⟨hq_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact q.Prime := ⟨hq_prime⟩
   obtain ⟨a, ha_order⟩ := exists_prime_orderOf_dvd_card q (by
     simpa [Nat.card_eq_fintype_card] using hq_dvd_card)
   have ha_visible : ρ a ≠ 1 := by
@@ -253,7 +253,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
     simpa [ha_order, MonoidHom.map_pow] using congrArg ρ (pow_orderOf_eq_one a)
   have hq_ne_zero : (q : F) ≠ 0 := by
     exact CharP.cast_ne_zero_of_ne_of_prime (R := F) hq_prime (by simpa using hq_ne_p.symm)
-  letI : NeZero (q : F) := ⟨hq_ne_zero⟩
+  let : NeZero (q : F) := ⟨hq_ne_zero⟩
   have hρa_semisimple : Module.End.IsSemisimple (ρ a) := by
     have h_sep : (Polynomial.X ^ q - (1 : Polynomial F)).Separable := by
       rw [Polynomial.X_pow_sub_one_separable_iff]
@@ -266,7 +266,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
       (Module.End.isSemisimple_sub_algebraMap_iff (f := ρ a) (μ := (1 : F))).2 hρa_semisimple
   have h_has_eigen_ne_one : ∃ μ : F, Module.End.HasEigenvalue (ρ a) μ ∧ μ ≠ 1 := by
     by_contra hcontra
-    push_neg at hcontra
+    push Not at hcontra
     have hsub_zero : ρ a - 1 = 0 := by
       rw [Module.End.IsSemisimple.eq_zero_iff_forall_eigenvalue (f := ρ a - 1) h_sub_semisimple]
       intro μ hμ
@@ -384,9 +384,9 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
     exact hv_ne_zero (by simpa [vm] using congrArg ρ.asModuleEquiv hvm_zero)
   let M : Subrepresentation W.toRepresentation :=
     (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := W.toRepresentation)).symm Msub
-  letI : Module (MonoidAlgebra F G) W.toRepresentation.asModule :=
+  let : Module (MonoidAlgebra F G) W.toRepresentation.asModule :=
     Representation.instModuleMonoidAlgebraAsModule (ρ := W.toRepresentation)
-  letI : Module (MonoidAlgebra F G) W.toSubmodule :=
+  let : Module (MonoidAlgebra F G) W.toSubmodule :=
     Representation.instModuleMonoidAlgebraAsModule (ρ := W.toRepresentation)
   have hwv_not_mem_Msub : wv ∉ Msub := by
     intro hvmM
@@ -406,7 +406,7 @@ private theorem exists_visible_irreducible_subquotient_of_not_isPGroup
         (R := MonoidAlgebra F G)
         (M := W.toRepresentation.asModule)
         (m := Msub)).2 hMsub_coatom
-    letI : Module (MonoidAlgebra F G) σ.asModule :=
+    let : Module (MonoidAlgebra F G) σ.asModule :=
       Representation.instModuleMonoidAlgebraAsModule (ρ := σ)
     let eσ : (W.toRepresentation.asModule ⧸ Msub) ≃ₗ[MonoidAlgebra F G] σ.asModule :=
       { toFun := fun x => x
@@ -511,12 +511,12 @@ private theorem not_isPGroup_of_faithful_irreducible_visible_quotient
   classical
   intro hG_p
   by_cases hG_nontrivial : Nontrivial G
-  · haveI : Nontrivial G := hG_nontrivial
-    haveI : Representation.IsIrreducible ρ := hρ_irreducible
-    haveI : IsPGroup p G := hG_p
-    haveI : Nontrivial V := by
+  · have : Nontrivial G := hG_nontrivial
+    have : Representation.IsIrreducible ρ := hρ_irreducible
+    have : IsPGroup p G := hG_p
+    have : Nontrivial V := by
       by_contra hV
-      letI : Subsingleton V := not_nontrivial_iff_subsingleton.mp hV
+      let : Subsingleton V := not_nontrivial_iff_subsingleton.mp hV
       exact hg_visible (by
         ext v
         exact Subsingleton.elim _ _)
@@ -688,10 +688,10 @@ private theorem exists_conjClass_mem_normalizer_closure_inter
   have hw_not_D : w ∉ D := fun hwD => hw_not_B (hD_le_B hwD)
   let DA : Subgroup (A : Subgroup G) := D.subgroupOf (A : Subgroup G)
   have hDA_subnormal : Subgroup.IsSubnormal DA := by
-    haveI : Group.IsNilpotent A :=
+    have : Group.IsNilpotent A :=
       IsPGroup.isNilpotent (G := A) (p := p) A.isPGroup'
     exact isSubnormal_of_normalizerCondition
-      (G := (A : Subgroup G)) (normalizerCondition_of_isNilpotent) DA
+      (G := (A : Subgroup G)) (Group.normalizerCondition_of_isNilpotent) DA
   rcases Subgroup.IsSubnormal.exists_chain hDA_subnormal with
     ⟨m, f, hmono, hnormal, hf0, hfm⟩
   let Bad : ℕ → Prop := fun i =>
@@ -1151,7 +1151,7 @@ public theorem gorenstein_3_8_2_conjugacy_class_le_pCore
         exact False.elim (hKcap_ne (by rw [hPQ]))
     · let H : Subgroup G := pCore p G
       let q : G →* G ⧸ H := QuotientGroup.mk' H
-      haveI : Finite (G ⧸ H) := inferInstance
+      have : Finite (G ⧸ H) := inferInstance
       have hH_ne_bot : H ≠ ⊥ := by
         simpa [H] using hcore
       have hcard_lt : Nat.card (G ⧸ H) < n := by
@@ -1240,7 +1240,7 @@ private theorem gorenstein_3_8_1_false_of_faithful_irreducible
   -- invariant subspace; irreducibility makes it the whole module.
   have hdim : Module.finrank F V = 2 := by
     classical
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     let A : Module.End F V := ρ x - 1
     let B : Module.End F V := ρ y - 1
     have hA_sq : A ^ 2 = 0 := by
@@ -1394,7 +1394,7 @@ private theorem gorenstein_3_8_1_false_of_faithful_irreducible
           rcases a with ⟨v, hv⟩
           rcases hv with ⟨u, rfl⟩
           exact ⟨B (A u), rfl⟩))
-    haveI : Nontrivial (LinearMap.range A) := by
+    have : Nontrivial (LinearMap.range A) := by
       exact (Submodule.nontrivial_iff_ne_bot (p := LinearMap.range A)).2 hA_range_ne_bot
     rcases Module.End.exists_eigenvalue BA with ⟨c, hc⟩
     rcases hc.exists_hasEigenvector with ⟨a, haeig⟩
@@ -1660,7 +1660,7 @@ private theorem gorenstein_3_8_1_false_of_faithful_irreducible
       have hcard_le := hlin_ind.fintype_card_le_finrank
       simpa using hcard_le
     omega
-  letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+  let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
   exact hnot_pgroup <|
     two_dimensional_generated_pElements_isPGroup_of_abelianSylowTwo
       (p := p) ρ hρ_faithful hdim x y hgen hpodd hx_p hy_p hSylow
@@ -1694,7 +1694,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
   classical
   let F' := AlgebraicClosure F
   let V' := F' ⊗[F] V
-  haveI : FiniteDimensional F' V' := by
+  have : FiniteDimensional F' V' := by
     dsimp [V']
     exact Module.Finite.base_change (R := F) (A := F') (M := V)
   let ρ' : Representation F' H V' := Theory.Representation.extendScalars F' ρ
@@ -1703,7 +1703,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
 
   -- Gorenstein first passes to an algebraically closed coefficient field.
   have hx'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' x) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hx_sq : (ρ x - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hx_p hx_quad
     have hx'_sq : (ρ' x - 1) ^ 2 = 0 := by
@@ -1741,7 +1741,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
       exact hnot_quad hx_quad
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (ρ' x) hx'_sq hx'_ne
   have hy'_quad : HasQuadraticMinimalPolynomial F' V' (ρ' y) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hy_sq : (ρ y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ hy_p hy_quad
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 := by
@@ -1781,7 +1781,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
 
   -- Next choose an irreducible composition factor on which the action is
   -- nontrivial.  This is Gorenstein's composition-factor step.
-  letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+  let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
   obtain ⟨W, M, g0, hM_irreducible, hg0_not_ker_M⟩ :=
     exists_visible_irreducible_subquotient_of_not_isPGroup
       (p := p) ρ' hρ'_faithful hnot_pgroup
@@ -1789,8 +1789,8 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
     W.toRepresentation M.toSubmodule M.apply_mem_toSubmodule
   have hσ_irreducible : Representation.IsIrreducible σ := by
     simpa [σ] using hM_irreducible
-  haveI : Representation.IsIrreducible σ := hσ_irreducible
-  letI := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
+  have : Representation.IsIrreducible σ := hσ_irreducible
+  let := finiteDimensional_of_irreducible_finite_group (ρ := σ) hσ_irreducible
 
   -- The composition factor is then made faithful by quotienting by its kernel.
   let σq := Theory.Representation.kerRepresentation σ
@@ -1803,7 +1803,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
   let yq : H ⧸ σ.ker := QuotientGroup.mk' σ.ker y
   have hxq_p : IsPElement (p := p) xq := by
     -- `p`-elementhood passes to quotients.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     rcases hx_p with ⟨k, hk⟩
     have hdiv : orderOf xq ∣ p ^ k := by
       exact dvd_trans (orderOf_map_dvd (ψ := QuotientGroup.mk' σ.ker) x) (by simp [hk])
@@ -1811,7 +1811,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
     exact ⟨m, hm⟩
   have hyq_p : IsPElement (p := p) yq := by
     -- `p`-elementhood passes to quotients.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     rcases hy_p with ⟨k, hk⟩
     have hdiv : orderOf yq ∣ p ^ k := by
       exact dvd_trans (orderOf_map_dvd (ψ := QuotientGroup.mk' σ.ker) y) (by simp [hk])
@@ -1847,7 +1847,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
     -- If this faithful irreducible quotient were a `p`-group, then Gorenstein's
     -- modular `p`-group argument would make its action trivial, contradicting
     -- the chosen composition factor where `g0` remains visible.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     let g0q : H ⧸ σ.ker := QuotientGroup.mk' σ.ker g0
     have hg0q_visible : σq g0q ≠ 1 := by
       change σ g0 ≠ 1
@@ -1862,7 +1862,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
       rw [← hq_gen]
       rw [hxq_eq_one]
       exact (Subgroup.closure_insert_one ({yq} : Set (H ⧸ σ.ker))).symm
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact hquot_not_pgroup
       (isPGroup_of_closure_singleton_eq_top_of_isPElement hclosure_singleton hyq_p)
   have hyq_ne_one : σq yq ≠ 1 := by
@@ -1878,13 +1878,13 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
         ext z
         simp [or_comm]
       simp [hset]
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact hquot_not_pgroup
       (isPGroup_of_closure_singleton_eq_top_of_isPElement hclosure_singleton hxq_p)
   have hxq_quad : HasQuadraticMinimalPolynomial F' _ (σq xq) := by
     -- Pass the square-zero operator `ρ' x - 1` to the chosen simple quotient,
     -- then through the faithful kernel quotient.
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hx'_sq : (ρ' x - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ' hx_p hx'_quad
     have hxσ_sq : (σ x - 1) ^ 2 = 0 := by
@@ -1893,7 +1893,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
       simpa [σq, xq] using square_zero_of_kerRepresentation σ x hxσ_sq
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (σq xq) hxσq_sq hxq_ne_one
   have hyq_quad : HasQuadraticMinimalPolynomial F' _ (σq yq) := by
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     have hy'_sq : (ρ' y - 1) ^ 2 = 0 :=
       square_zero_of_quadratic_pElement_representation (p := p) ρ' hy_p hy'_quad
     have hyσ_sq : (σ y - 1) ^ 2 = 0 := by
@@ -1902,7 +1902,7 @@ private theorem gorenstein_3_8_1_false_after_composition_factor
       simpa [σq, yq] using square_zero_of_kerRepresentation σ y hyσ_sq
     exact hasQuadraticMinimalPolynomial_of_square_zero_of_ne_one (σq yq) hyσq_sq hyq_ne_one
 
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSylowq : HasAbelianSylow 2 (H ⧸ σ.ker) :=
     hSylow.mapSurjective (QuotientGroup.mk' σ.ker)
       (QuotientGroup.mk'_surjective σ.ker)
@@ -1928,7 +1928,7 @@ private theorem gorenstein_3_8_1_3_8_2_false_of_not_pStable
   -- characteristic `p` and a `p`-element acting with quadratic minimal
   -- polynomial.
   unfold PStableGroup PStableRepresentation at hnstable
-  push_neg at hnstable
+  push Not at hnstable
   rcases hnstable with
     ⟨F, V, _hF, _hchar, _hVadd, _hVmodule, _hVfiniteDimensional, ρ,
       hρ_faithful, hρ_not_stable⟩
@@ -1943,8 +1943,8 @@ private theorem gorenstein_3_8_1_3_8_2_false_of_not_pStable
     -- Source: Daniel Gorenstein, *Finite Groups*, Chapter 3, Theorem 8.2
     -- (Alperin--Lyons/Baer--Suzuki form), applied to the conjugacy class of `x`.
     by_contra hpair
-    push_neg at hpair
-    letI : Fact p.Prime := by
+    push Not at hpair
+    let : Fact p.Prime := by
       refine ⟨?_⟩
       rcases CharP.char_is_prime_or_zero (R := F) p with hp | hp0
       · exact hp
@@ -2054,7 +2054,7 @@ private theorem gorenstein_3_8_1_3_8_2_false_of_not_pStable
       -- Conjugate linear transformations have the same minimal polynomial,
       -- so the quadratic condition transfers from `x` to every conjugate.
       let e : V ≃ₗ[F] V :=
-        LinearEquiv.ofLinear (ρ g) (ρ g⁻¹)
+        LinearEquiv.ofLinearMap (ρ g) (ρ g⁻¹)
           (by
             ext v
             change ((ρ g) * (ρ g⁻¹)) v = v
@@ -2073,7 +2073,7 @@ private theorem gorenstein_3_8_1_3_8_2_false_of_not_pStable
       exact (hasQuadraticMinimalPolynomial_conj e (ρ x)).2 hx_quad
     have hyH_quad : HasQuadraticMinimalPolynomial F V (ρH yH) := by
       simpa [ρH, yH] using hy_quad
-    letI : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
+    let : Fact p.Prime := fact_prime_of_charP_odd (F := F) hpodd
     exact gorenstein_3_8_1_false_after_composition_factor
       (p := p) ρH (by
         exact hρ_faithful.comp H.subtype_injective)
@@ -2113,8 +2113,8 @@ private theorem chief_conj_range_pCore_eq_bot_local
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal_local (G := G) cf
-  letI : Uq.Normal := hmin.1
-  letI : IsElementaryAbelian p (↥Uq) := by
+  let : Uq.Normal := hmin.1
+  let : IsElementaryAbelian p (↥Uq) := by
     simpa [π, Uq] using hUq_elem
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   let A : Subgroup (MulAut Uq) := φ.range
@@ -2146,7 +2146,7 @@ private theorem chief_conj_range_pCore_eq_bot_local
     have hu_bot : u ∈ (⊥ : Subgroup Uq) := by
       simpa [hbot] using hu_mem
     exact hu_ne_one (Subgroup.mem_bot.mp hu_bot)
-  haveI : P.Normal := by
+  have : P.Normal := by
     dsimp [P]
     infer_instance
   have hF_inv : IsInvariant A Uq F := by
@@ -2210,8 +2210,9 @@ private theorem chief_conj_range_pCore_eq_bot_local
   change P = ⊥
   exact (Subgroup.card_eq_one (H := P)).1 hcard_one
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     (hSylow : HasAbelianSylow 2 G)
     {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2)
     {Q A : Subgroup G} [Q.Normal]
@@ -2226,19 +2227,19 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
   have hUsub_p : IsPGroup p Usub := hQp.to_subgroup Usub
   have hcfU_p : IsPGroup p cf.U := by
     exact hUsub_p.of_equiv (Subgroup.subgroupOfEquivOfLe (H := cf.U) (K := Q) hcfU_le_Q)
-  haveI : cf.V.Normal := cf.isChief.normal_K
+  have : cf.V.Normal := cf.isChief.normal_K
   let π : G →* G ⧸ cf.V := QuotientGroup.mk' cf.V
   let Uq : Subgroup (G ⧸ cf.V) := cf.U.map π
   have hUq_min :
       Uq.Normal ∧ Uq ≠ ⊥ ∧
         (∀ K : Subgroup (G ⧸ cf.V), K.Normal → K ≤ Uq → K ≠ ⊥ → K = Uq) := by
     simpa [π, Uq] using chiefFactor_quotient_minimal_local (G := G) cf
-  letI : Uq.Normal := hUq_min.1
+  let : Uq.Normal := hUq_min.1
   have hUq_p : IsPGroup p Uq := by
     simpa [Uq, π] using hcfU_p.map π
   obtain ⟨q, hqprime, hUq_elem'⟩ :=
     chiefFactor_quotient_exists_isElementaryAbelian (G := G) inferInstance cf
-  letI : Fact q.Prime := ⟨hqprime⟩
+  let : Fact q.Prime := ⟨hqprime⟩
   have hq_dvd_card : q ∣ Nat.card Uq := by
     have hUq_nontrivial : Nontrivial Uq := (Subgroup.nontrivial_iff_ne_bot Uq).2 hUq_min.2.1
     have hUq_q : IsPGroup q Uq := IsElementaryAbelian.isPGroup q Uq
@@ -2251,12 +2252,12 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
     exact Nat.prime_eq_prime_of_dvd_pow hqprime Fact.out (hn ▸ hq_dvd_card)
   have hUq_elem : IsElementaryAbelian p (↥Uq) := by
     simpa [hq_eq_p] using hUq_elem'
-  letI : IsElementaryAbelian p (↥Uq) := hUq_elem
+  let : IsElementaryAbelian p (↥Uq) := hUq_elem
   let φ : (G ⧸ cf.V) →* MulAut Uq := MulAut.conjNormal (H := Uq)
   have hφ_pcore_bot : pCore p φ.range = ⊥ := by
     simpa [π, Uq, φ] using
       chief_conj_range_pCore_eq_bot_local (G := G) (cf := cf) (p := p) hUq_elem
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hquotSylow : HasAbelianSylow 2 (G ⧸ cf.V) :=
     hSylow.mapSurjective π (QuotientGroup.mk'_surjective cf.V)
   have hφSylow : HasAbelianSylow 2 φ.range :=
@@ -2307,7 +2308,7 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
               simp [d, div_eq_mul_inv]
         _ =
             (π (a : G)) * π y * (π (a : G))⁻¹ * (π y)⁻¹ := by
-              simp [z, ψ, uy, φ, π, MulAut.conjNormal_apply, mul_assoc]
+              simp [z, ψ, uy, φ, π, mul_assoc]
         _ = π ⁅(a : G), y⁆ := by
               simp [π, commutatorElement_def, mul_assoc]
     have hcomm_mem' : ⁅y, (a : G)⁆ ∈ ⁅Q, A⁆ :=
@@ -2335,7 +2336,7 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
       calc
         ((z • d0 : Uq) : G ⧸ cf.V) =
             π ((a : G) * ⁅(a : G), y⁆ * (a : G)⁻¹) := by
-              simp [z, ψ, φ, π, d0, MulAut.conjNormal_apply,
+              simp [z, ψ, φ, π, d0,
                 commutatorElement_def, mul_assoc]
         _ = π ⁅(a : G), y⁆ := by
               simpa [π] using congrArg π hfix_d
@@ -2373,7 +2374,7 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
 
 
 private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     (hSylow : HasAbelianSylow 2 G)
     {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2)
     (hcore : pPrimeCore p G = ⊥) :
@@ -2381,7 +2382,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
   intro Q A htopQ_normal hQp hAp hA_norm hcomm2
   rw [hcore, bot_sup_eq] at htopQ_normal
   have hQ_normal : Q.Normal := htopQ_normal
-  letI : Q.Normal := hQ_normal
+  let : Q.Normal := hQ_normal
   let N : Subgroup (G) := Subgroup.normalizer (Q : Set (G))
   let C : Subgroup (G) := Subgroup.centralizer (Q : Set (G))
   have hnormQ_top : N = ⊤ := by
@@ -2390,8 +2391,8 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
   have hC_normal : C.Normal := by
     simpa [C] using
       (inferInstance : (Subgroup.centralizer (Q : Set (G))).Normal)
-  letI : C.Normal := hC_normal
-  letI : (C.subgroupOf N).Normal := Subgroup.Normal.subgroupOf hC_normal N
+  let : C.Normal := hC_normal
+  let : (C.subgroupOf N).Normal := Subgroup.Normal.subgroupOf hC_normal N
   obtain ⟨r, f, hf0, hfr, hf_norm, hf_chief⟩ :=
     exists_chief_series_from_to Q hQ_normal
   have hf_le_Q : ∀ i, i ≤ r → f i ≤ Q := by
@@ -2422,11 +2423,11 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
     simpa [cf] using
       (centralizerOfChiefFactor_normal (G := G) (H := (⊤ : Subgroup (G)))
         (hH := (inferInstance : (⊤ : Subgroup (G)).Normal)) (cf i))
-  letI : H.Normal := hH_normal
+  let : H.Normal := hH_normal
   have hH_normQ : H ≤ N := by
     rw [hnormQ_top]
     exact le_top
-  letI : MulDistribMulAction H Q :=
+  let : MulDistribMulAction H Q :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer H Q hH_normQ
   have hfix_eq_Csub :
       fixingSubgroupOf H Q (Set.univ : Set Q) = C.subgroupOf H := by
@@ -2466,7 +2467,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
     have hq_eq' : q = ⟨p, Fact.out⟩ := by
       apply Subtype.ext
       simpa using hq_eq
-    simpa [πset] using hq_eq'
+    exact Set.mem_singleton_iff.mpr hq_eq'
   let Gi : ℕ → Subgroup Q := fun i =>
     if hi : i ≤ r then (f i).subgroupOf Q else ⊥
   have hGi_zero : Gi 0 = ⊤ := by
@@ -2498,7 +2499,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
     intro i
     by_cases hi : i ≤ r
     · have hH_norm_fi : H ≤ Subgroup.normalizer (f i : Set (G)) := by
-        letI : (f i).Normal := hf_norm i hi
+        let : (f i).Normal := hf_norm i hi
         simpa using
           (Subgroup.le_normalizer_of_normal (H := f i) :
             H ≤ Subgroup.normalizer (f i : Set (G)))
@@ -2594,7 +2595,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
     exact ⟨Nat, Gi, Nat.succ, hseries⟩
   have hHquot_pi :
       IsPiGroup πset (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
-    exact lemma_1_9 (G := Q) (A := H) πset (subgroup_solvable_of_solvable Q) hQ_pi
+    exact lemma_1_9 (G := Q) (A := H) πset (by infer_instance) hQ_pi
       hstab hker_normal
   have hHquot_p :
       IsPGroup p (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
@@ -2605,7 +2606,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
     let q' : Nat.Primes := ⟨q, hqprime⟩
     have hq_mem : q' ∈ πset := (IsPiGroup_iff πset _).1 hHquot_pi q' hqdvd
     have hq_eq' : q' = ⟨p, Fact.out⟩ := by
-      simpa [πset] using hq_mem
+      exact Set.mem_singleton_iff.mp hq_mem
     simpa using congrArg Subtype.val hq_eq'
   let qCN : N →* N ⧸ C.subgroupOf N := QuotientGroup.mk' (C.subgroupOf N)
   let φH : H →* N := H.subtype.codRestrict N (by
@@ -2667,7 +2668,7 @@ private theorem pStableGroup'_of_pPrimeCore_eq_bot_abelianSylowTwo
 
 
 private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     (hSylow : HasAbelianSylow 2 G)
     {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2)
     {Q A C : Subgroup G} [Q.Normal] [C.Normal]
@@ -2681,7 +2682,7 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
   have hC_normal : C.Normal := by
     simpa [C] using
       (inferInstance : (Subgroup.centralizer (Q : Set G)).Normal)
-  letI : C.Normal := hC_normal
+  let : C.Normal := hC_normal
   have hQA_cent : ⁅Q, A⁆ ≤ Subgroup.centralizer (A : Set G) :=
     (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hcomm2
   have hQ_normal : Q.Normal := inferInstance
@@ -2715,10 +2716,10 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
     simpa [cf] using
       (centralizerOfChiefFactor_normal (G := G) (H := (⊤ : Subgroup (G)))
         (hH := (inferInstance : (⊤ : Subgroup (G)).Normal)) (cf i))
-  letI : H.Normal := hH_normal
+  let : H.Normal := hH_normal
   have hH_normQ : H ≤ Subgroup.normalizer (Q : Set G) :=
     Subgroup.le_normalizer_of_normal
-  letI : MulDistribMulAction H Q :=
+  let : MulDistribMulAction H Q :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer H Q hH_normQ
   have hfix_eq_Csub :
       fixingSubgroupOf H Q (Set.univ : Set Q) = C.subgroupOf H := by
@@ -2758,7 +2759,7 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
     have hq_eq' : q = ⟨p, Fact.out⟩ := by
       apply Subtype.ext
       simpa using hq_eq
-    simpa [πset] using hq_eq'
+    exact Set.mem_singleton_iff.mpr hq_eq'
   let Gi : ℕ → Subgroup Q := fun i =>
     if hi : i ≤ r then (f i).subgroupOf Q else ⊥
   have hGi_zero : Gi 0 = ⊤ := by
@@ -2790,7 +2791,7 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
     intro i
     by_cases hi : i ≤ r
     · have hH_norm_fi : H ≤ Subgroup.normalizer (f i : Set (G)) := by
-        letI : (f i).Normal := hf_norm i hi
+        let : (f i).Normal := hf_norm i hi
         simpa using
           (Subgroup.le_normalizer_of_normal (H := f i) :
             H ≤ Subgroup.normalizer (f i : Set (G)))
@@ -2886,7 +2887,7 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
     exact ⟨Nat, Gi, Nat.succ, hseries⟩
   have hHquot_pi :
       IsPiGroup πset (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
-    exact lemma_1_9 (G := Q) (A := H) πset (subgroup_solvable_of_solvable Q) hQ_pi
+    exact lemma_1_9 (G := Q) (A := H) πset (by infer_instance) hQ_pi
       hstab hker_normal
   have hHquot_p :
       IsPGroup p (H ⧸ fixingSubgroupOf H Q (Set.univ : Set Q)) := by
@@ -2897,7 +2898,7 @@ private theorem pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
     let q' : Nat.Primes := ⟨q, hqprime⟩
     have hq_mem : q' ∈ πset := (IsPiGroup_iff πset _).1 hHquot_pi q' hqdvd
     have hq_eq' : q' = ⟨p, Fact.out⟩ := by
-      simpa [πset] using hq_mem
+      exact Set.mem_singleton_iff.mp hq_mem
     simpa using congrArg Subtype.val hq_eq'
 
   let qC : G →* G ⧸ C := QuotientGroup.mk' C
@@ -2934,11 +2935,11 @@ for every odd prime `p`, in the operational form used by Glauberman's ZJ
 theorem. -/
 public theorem pStableGroup'_of_solvable_abelianSylowTwo
     {G : Type*} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hSylow : HasAbelianSylow 2 G)
+    (hsolv : Group.IsSolvable G) (hSylow : HasAbelianSylow 2 G)
     {p : ℕ} [Fact p.Prime] (hpodd : Odd p) :
     PStableGroup' (G := G) p := by
   classical
-  letI : IsSolvable G := hsolv
+  let : Group.IsSolvable G := hsolv
   have hp2 : p ≠ 2 := by
     intro hp
     subst p
@@ -2953,8 +2954,8 @@ public theorem pStableGroup'_of_solvable_abelianSylowTwo
   have hQNnormal : QN.Normal := by
     dsimp [QN]
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer hQleN).2
-    simpa [N]
-  letI : QN.Normal := hQNnormal
+    simp [N]
+  let : QN.Normal := hQNnormal
   have hQNp : IsPGroup p QN :=
     hQp.of_equiv (Subgroup.subgroupOfEquivOfLe hQleN).symm
   have hANp : IsPGroup p AN :=
@@ -2968,7 +2969,7 @@ public theorem pStableGroup'_of_solvable_abelianSylowTwo
     (Subgroup.map_eq_bot_iff_of_injective
       (H := ⁅⁅QN, AN⁆, AN⁆) (f := N.subtype)
       N.subtype_injective).1 hcommMap
-  letI : IsSolvable N := subgroup_solvable_of_solvable N
+  let : Group.IsSolvable N := by infer_instance
   have hcentralizer :
       Subgroup.centralizer (QN : Set N) = C.subgroupOf N := by
     simpa [QN, N, C] using
@@ -2976,7 +2977,7 @@ public theorem pStableGroup'_of_solvable_abelianSylowTwo
   have hCnormal : (C.subgroupOf N).Normal := by
     rw [← hcentralizer]
     infer_instance
-  letI : (C.subgroupOf N).Normal := hCnormal
+  let : (C.subgroupOf N).Normal := hCnormal
   have hresult :=
     pStable_normal_pSubgroup_quotient_of_abelianSylowTwo
       (G := N) (hSylow.subgroup N) (p := p) hp2

@@ -32,10 +32,10 @@ public theorem corollary_12_9_c
   have hAQ_card : Nat.card (↥⁅A, Q⁆) = p.val := by rcases hAQ_prime with ⟨_, h⟩; exact h
   have hAQ_le_A : ⁅A, Q⁆ ≤ A := by rcases hAQ_prime with ⟨h, _⟩; exact h
   rcases hAQ_norm_M with ⟨hAQ_M, hAQ_norm⟩
-  haveI : Fact p.val.Prime := ⟨p.2⟩; haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩; have : Fact q.val.Prime := ⟨q.2⟩
   have hAE : A ≤ E := section12_rankTwo_le hA
   rcases section12_rankTwo_elementary hA with ⟨hAcard, hAelem⟩
-  haveI : IsElementaryAbelian p.val A := hAelem
+  have : IsElementaryAbelian p.val A := hAelem
   have hAcomm : IsMulCommutative A := inferInstance
   have hAnormE : section10NormalIn A E := (corollary_12_6_a hM hE hp hA).1
   rcases hAnormE with ⟨hAE', hAnorm⟩
@@ -216,7 +216,7 @@ public theorem corollary_12_9_c
     have h_abel_all : ∀ (P : Sylow p.val G), IsMulCommutative (P : Subgroup G) := by
       intro P; by_contra hPnonab; apply h_nonab; exact ⟨P, hPnonab⟩
     have hAp : IsPGroup p.val A := by
-      haveI : IsElementaryAbelian p.val A := hAelem
+      have : IsElementaryAbelian p.val A := hAelem
       exact IsElementaryAbelian.isPGroup p.val A
     obtain ⟨S, hAS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
     have hScomm : IsMulCommutative (S : Subgroup G) := h_abel_all S
@@ -230,17 +230,17 @@ public theorem corollary_12_9_c
     have hE1data : section12HallSubgroupIn (section12Tau1Primes M) E₁ E₁₂ :=
       ⟨hE1E12, hHallE1⟩
     -- E is solvable (proper subgroup of minimal counterexample)
-    have hE_solv : IsSolvable E := by
+    have hE_solv : Group.IsSolvable E := by
       have hEproper : E ≠ ⊤ := by
         intro hEtop
         have htop_le_M : (⊤ : Subgroup G) ≤ M := by
           simpa [hEtop] using hcomp.2.1
         exact hM.1 (top_le_iff.mp htop_le_M)
       exact IsMinCE.proper_subgroups_solvable E (lt_top_iff_ne_top.2 hEproper)
-    haveI : IsSolvable E := hE_solv
-    have hE12_solv : IsSolvable E₁₂ :=
-      solvable_of_solvable_injective (Subgroup.inclusion_injective hE12E)
-    haveI : IsSolvable E₁₂ := hE12_solv
+    have : Group.IsSolvable E := hE_solv
+    have hE12_solv : Group.IsSolvable E₁₂ :=
+      Group.isSolvable_of_isSolvable_injective (Subgroup.inclusion_injective hE12E)
+    have : Group.IsSolvable E₁₂ := hE12_solv
     -- π₁₂ = τ₁ ∪ τ₂, π₁ = τ₁
     let π12 : Set Nat.Primes := section12Tau1Primes M ∪ section12Tau2Primes M
     let π1 : Set Nat.Primes := section12Tau1Primes M
@@ -254,7 +254,7 @@ public theorem corollary_12_9_c
       subst hr_eq_q
       exact Set.mem_union_left (section12Tau2Primes M) hq
     -- Trivial PUnit action for Hall theory
-    letI : MulDistribMulAction PUnit.{1} E := {
+    let : MulDistribMulAction PUnit.{1} E := {
       smul := fun _ x => x
       one_smul := by intro x; rfl
       mul_smul := by intro a b x; rfl
@@ -307,7 +307,7 @@ public theorem corollary_12_9_c
       have hr_eq_q : r = q := Subtype.ext hr_eq_q_val
       subst hr_eq_q
       exact hq
-    letI : MulDistribMulAction PUnit.{1} E₁₂ := {
+    let : MulDistribMulAction PUnit.{1} E₁₂ := {
       smul := fun _ x => x
       one_smul := by intro x; rfl
       mul_smul := by intro a b x; rfl
@@ -442,7 +442,7 @@ public theorem corollary_12_9_c
       exact h_comm_a.symm
     -- Relate [A, Q^g] to [A, Q]
     -- First, A^g = A since A ⊲ E and g ∈ E
-    haveI : (A.subgroupOf E).Normal := hAnorm
+    have : (A.subgroupOf E).Normal := hAnorm
     have hAg_eq_A : A.map (MulAut.conj g).toMonoidHom = A := by
       ext x; constructor
       · intro hx

@@ -554,9 +554,12 @@ public theorem theorem_12_6_hypothesis_6_4_of_exponent_case
   have hnilQuot :
       Section6.nilpotentQuotient (⊥ : Subgroup L) (H.subgroupOf L) :=
     Section6.theorem_6_8_nilpotentQuotient_bot (H.subgroupOf L) _hHnorm hnilLocal
+  have hsolvLocal : Group.IsSolvable (H.subgroupOf L) := by
+    letI : Group.IsNilpotent (H.subgroupOf L) := hnilLocal
+    exact IsNilpotent.to_isSolvable
   have h61 :
       Section6.hypothesis_6_1_statement (H.subgroupOf L) S τ :=
-    ⟨h52, _hHnorm, inferInstance, hSbot⟩
+    ⟨h52, _hHnorm, hsolvLocal, hSbot⟩
   have h64 :
       Section6.hypothesis_6_4_statement
         (H.subgroupOf L) (⊥ : Subgroup L)
@@ -790,11 +793,12 @@ public theorem theorem_12_6_coherent_of_exponent_case
     have hH_ne_bot : H ≠ ⊥ := ne_of_gt hHne
     have hπH : subgroupPrimeSet H = ({pp} : Set Nat.Primes) := by
       haveI : Fact p.Prime := ⟨hpprime⟩
-      simpa [pp] using
+      have hp_eq : (⟨p, Fact.out⟩ : Nat.Primes) = pp := Subtype.ext rfl
+      simpa [pp, hp_eq] using
         section8_subgroupPrimeSet_eq_singleton_of_isPGroup_ne_bot
           (G := G) (p := p) (H := H) hHpH hH_ne_bot
     rw [hπH]
-    simp [pp]
+    exact Set.mem_singleton_iff.mpr (Subtype.ext rfl)
   have hExpU_dvd_pred : Monoid.exponent U ∣ p - 1 := by
     simpa [pp] using hexp.1 pp hp_mem_H
   have hcompLocal : (H.subgroupOf L).IsComplement' (U.subgroupOf L) :=

@@ -469,7 +469,7 @@ public theorem II1Hering31AbelianExtensionData.exists_square_root_of_mem_V
   have hvPow : vQ ^ (2 ^ (e - 1)) = 1 := by
     rw [show 2 ^ (e - 1) = 2 * 2 ^ (e - 2) by
       calc
-        2 ^ (e - 1) = 2 ^ ((e - 2) + 1) := by congr 1 <;> omega
+        2 ^ (e - 1) = 2 ^ ((e - 2) + 1) := by congr 1; omega
         _ = 2 * 2 ^ (e - 2) := by simp [pow_succ, Nat.mul_comm]]
     rw [pow_mul, hvQ2, one_pow]
   obtain ⟨q, hq⟩ :=
@@ -1291,7 +1291,9 @@ private theorem ii1Hering31CyclicZModHom_apply
     _ = ii1Hering31CyclicZModHom n c hc
           ((Multiplicative.ofAdd (1 : ZMod n)) ^ z.val) := by
             congr 2
-            rw [← ofAdd_nsmul]
+            apply Multiplicative.ext
+            change ((z.val : ℕ) : ZMod n) = z.val • (1 : ZMod n)
+            rw [← ZMod.natCast_zmod_val z]
             simp
     _ = (ii1Hering31CyclicZModHom n c hc
           (Multiplicative.ofAdd (1 : ZMod n))) ^ z.val := by rw [map_pow]
@@ -1354,7 +1356,9 @@ private theorem ii1Hering31_pow_zmod_natCast_val
       rw [ii1Hering31CyclicZModHom_apply]
     _ = f ((Multiplicative.ofAdd (1 : ZMod n)) ^ a) := by
       congr 2
-      rw [← ofAdd_nsmul]
+      apply Multiplicative.ext
+      change ((a : ℕ) : ZMod n) = a • (1 : ZMod n)
+      rw [← ZMod.natCast_zmod_val ((a : ℕ) : ZMod n)]
       simp
     _ = f (Multiplicative.ofAdd (1 : ZMod n)) ^ a := by rw [map_pow]
     _ = c ^ a := by rw [hone]
@@ -2373,8 +2377,7 @@ private theorem ii1Hering31LayerFixedSubgroup_map
   · intro q hq
     refine ⟨delta.symm q, ?_, delta.apply_symm_apply q⟩
     constructor
-    · change (delta.symm q) ^ 2 ^ m = 1
-      apply delta.injective
+    · apply delta.injective
       rw [map_pow, delta.apply_symm_apply, hq.1]
       simp
     · apply delta.injective
@@ -3150,7 +3153,6 @@ private theorem ii1Hering31_peterfalvi_step8
   have ht2 : tau c2 = c2⁻¹ * d0 := by
     simp [d0]
   have ht3 : tau c3 = c3⁻¹ * d0 ^ k := by
-    change tau c3 = c3⁻¹ * d0 ^ k
     rw [hkNorm]
     simp [ii1Hering31AbelianNorm]
   have hdTau : tau d0 = d0 := by

@@ -296,7 +296,7 @@ theorem exists_nontrivial_mem_center_of_normal_p_subgroup {G : Type*} [Group G] 
     ∃ x : G, x ∈ N ∧ x ∈ Subgroup.center G ∧ x ≠ 1 ∧ x ^ p = 1 := by
   classical
   obtain ⟨M, hMnorm, hMN, hM_ne_bot, hMmin⟩ := exists_minimal_normal_le (G := G) N inferInstance hN_ne_bot
-  letI : IsMinimalNormal M := {
+  let : IsMinimalNormal M := {
     minimal := by
       intro K hKnorm hKM
       by_cases hK_bot : K = ⊥
@@ -304,9 +304,9 @@ theorem exists_nontrivial_mem_center_of_normal_p_subgroup {G : Type*} [Group G] 
       · exact Or.inr (hMmin K hKnorm hKM hK_bot)
   }
   have hGp : IsPGroup p G := Fact.out
-  haveI : Group.IsNilpotent G := hGp.isNilpotent
-  haveI : IsSolvable G := by infer_instance
-  haveI : IsSolvable M := by infer_instance
+  have : Group.IsNilpotent G := hGp.isNilpotent
+  have : Group.IsSolvable G := by infer_instance
+  have : Group.IsSolvable M := by infer_instance
   have hM_centerIn :
       M ≤ centerIn (G := G) (fittingSubgroup G) :=
     minimalNormal_solvable_le_centerIn_fittingSubgroup (G := G) M
@@ -319,9 +319,9 @@ theorem exists_nontrivial_mem_center_of_normal_p_subgroup {G : Type*} [Group G] 
     intro g
     exact (Subgroup.mem_centralizer_iff.mp (hM_center' hm)) g (by trivial)
   obtain ⟨q, hqprime, hMelem⟩ := minimalNormal_solvable_exists_isElementaryAbelian (M := M)
-  letI : IsElementaryAbelian q (↥M) := hMelem
-  letI : Fact (Nat.Prime q) := ⟨hqprime⟩
-  haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hM_ne_bot
+  let : IsElementaryAbelian q (↥M) := hMelem
+  let : Fact (Nat.Prime q) := ⟨hqprime⟩
+  have : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot M).2 hM_ne_bot
   obtain ⟨x, hx_ne⟩ := exists_ne (1 : M)
   have hpowq : x ^ q = 1 :=
     (Monoid.exponent_dvd_iff_forall_pow_eq_one.mp (IsElementaryAbelian.exponent_dvd_p q (↥M))) x
@@ -361,12 +361,12 @@ theorem theorem_1_13_critical_candidate_selfCentralizing {G : Type*} [Group G] [
       theorem_1_13_critical_candidate_contains_centerIn (K := K) (p := p) hKcomm
     exact hK_le_centerIn.trans inf_le_right
   have hDchar : D.Characteristic := by
-    letI : C.Characteristic := by
+    let : C.Characteristic := by
       dsimp [C]
       exact theorem_1_13_critical_candidate_characteristic (K := K) (p := p) hKchar
     dsimp [D]
     infer_instance
-  letI : D.Characteristic := hDchar
+  let : D.Characteristic := hDchar
   by_contra hD_not_le_C
   let q : G →* G ⧸ K := QuotientGroup.mk' K
   let N : Subgroup (G ⧸ K) := D.map q
@@ -383,8 +383,8 @@ theorem theorem_1_13_critical_candidate_selfCentralizing {G : Type*} [Group G] [
   have hNnorm : N.Normal := by
     dsimp [N]
     infer_instance
-  letI : N.Normal := hNnorm
-  letI : Fact (IsPGroup p (G ⧸ K)) := ⟨(Fact.out : IsPGroup p G).to_quotient K⟩
+  let : N.Normal := hNnorm
+  let : Fact (IsPGroup p (G ⧸ K)) := ⟨(Fact.out : IsPGroup p G).to_quotient K⟩
   obtain ⟨xbar, hxbarN, hxbarcent, hxbar_ne, hxbarpow⟩ :=
     exists_nontrivial_mem_center_of_normal_p_subgroup (G := G ⧸ K) (p := p) N hN_ne_bot
   rcases hxbarN with ⟨x, hxD, rfl⟩
@@ -590,8 +590,8 @@ public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p :
     have hzbot : z ∈ (⊥ : Subgroup G) := by simpa [hC_bot] using hzC
     exact hz_ne (by simpa using hzbot)
   have hCp : IsPGroup p (↥C) := (Fact.out : IsPGroup p G).to_subgroup C
-  letI : Fact (IsPGroup p (↥C)) := ⟨hCp⟩
-  letI : Nontrivial (↥C) := C.nontrivial_iff_ne_bot.mpr hC_ne_bot
+  let : Fact (IsPGroup p (↥C)) := ⟨hCp⟩
+  let : Nontrivial (↥C) := C.nontrivial_iff_ne_bot.mpr hC_ne_bot
   obtain ⟨n, hnpos, hcardC⟩ :=
     (IsPGroup.nontrivial_iff_card (p := p) (G := ↥C) (hG := hCp)).mp inferInstance
   have hp_dvd_cardC : p ∣ Nat.card (↥C) := by
@@ -609,7 +609,7 @@ public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p :
     intro hH_bot
     exact hOmega_ne_bot (le_bot_iff.mp (by simpa [hH_bot] using hOmega_le_H))
   have hHexponent : Monoid.exponent (↥H) = p := by
-    letI : Nontrivial (↥H) := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
+    let : Nontrivial (↥H) := H.nontrivial_iff_ne_bot.mpr hH_ne_bot
     refine (Monoid.exponent_eq_prime_iff (G := ↥H) (p := p) Fact.out).2 ?_
     intro x hx
     have hxpow : x ^ p = 1 := by
@@ -627,7 +627,7 @@ public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p :
     rw [← List.prod_replicate, ← List.eq_replicate_of_mem, Nat.prod_primeFactorsList hApos]
     intro q hq
     obtain ⟨hqprime, hqdvd⟩ := (Nat.mem_primeFactorsList hApos).mp hq
-    haveI : Fact q.Prime := ⟨hqprime⟩
+    have : Fact q.Prime := ⟨hqprime⟩
     obtain ⟨a, haord⟩ := exists_prime_orderOf_dvd_card' (G := ↥Afix) q hqdvd
     by_cases hqp : q = p
     · exact hqp
@@ -644,7 +644,7 @@ public theorem theorem_1_13 {G : Type*} [Group G] [Finite G] [Nontrivial G] {p :
         simpa [hBcard] using hqcop
       have hBinv : IsInvariant B G C :=
         isInvariant_of_characteristic (A := B) (G := G) C
-      letI : IsInvariant B G C := hBinv
+      let : IsInvariant B G C := hBinv
       have hΩB : ActsTriviallyOnSubgroup (A := B) (G := ↥C) (omega₁ (G := ↥C) (p := p)) := by
         intro b x hx
         apply Subtype.ext

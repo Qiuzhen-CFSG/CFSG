@@ -17,7 +17,7 @@ private theorem section12_nonabelian_pSubgroup_not_isCyclic
     (_hPp : IsPGroup p.val P) (hPnonab : ¬ IsMulCommutative P) :
     ¬ IsCyclic P := by
   intro hPcyc
-  letI : IsCyclic P := hPcyc
+  let : IsCyclic P := hPcyc
   exact hPnonab inferInstance
 
 private theorem section12_not_singleton_normalizer_of_subgroupNormalizerIn_le
@@ -57,15 +57,15 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
     (hZX : Z ≠ X) :
     Z ⊔ X ∈ section12RankTwoElementaryAbelianIn p M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  letI : IsElementaryAbelian p.val Z := hZelem
-  letI : IsElementaryAbelian p.val X := hXelem
+  have : Fact p.val.Prime := ⟨p.property⟩
+  let : IsElementaryAbelian p.val Z := hZelem
+  let : IsElementaryAbelian p.val X := hXelem
   have hdisj : Disjoint Z X := by
     rw [Subgroup.disjoint_def]
     intro z hzZ hzX
     by_contra hz_ne
     have hZsubX_top : Z.subgroupOf X = ⊤ := by
-      haveI : Fact (Nat.card X).Prime := ⟨by simpa [hXcard] using p.property⟩
+      have : Fact (Nat.card X).Prime := ⟨by simpa [hXcard] using p.property⟩
       have hsub_ne_bot : Z.subgroupOf X ≠ ⊥ := by
         intro hbot
         have hzsub : (⟨z, hzX⟩ : X) ∈ Z.subgroupOf X := hzZ
@@ -87,11 +87,11 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
   have hsupElem : IsElementaryAbelian p.val (Z ⊔ X : Subgroup G) :=
     IsElementaryAbelian.sup_of_le_centralizer
       (G := G) (p := p.val) (E := Z) (C := X) hXcentZ
-  letI : IsElementaryAbelian p.val (Z ⊔ X : Subgroup G) := hsupElem
+  let : IsElementaryAbelian p.val (Z ⊔ X : Subgroup G) := hsupElem
   have hcommSup : IsMulCommutative (Z ⊔ X : Subgroup G) := inferInstance
   have hZ_norm : (Z.subgroupOf (Z ⊔ X : Subgroup G)).Normal := by
-    letI : IsMulCommutative (Z ⊔ X : Subgroup G) := hcommSup
-    letI : CommGroup (Z ⊔ X : Subgroup G) := IsMulCommutative.instCommGroup
+    let : IsMulCommutative (Z ⊔ X : Subgroup G) := hcommSup
+    let : CommGroup (Z ⊔ X : Subgroup G) := IsMulCommutative.instCommGroup
     infer_instance
   have hcomp :
       (Z.subgroupOf (Z ⊔ X : Subgroup G)).IsComplement'
@@ -105,7 +105,7 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
       intro z
       let ZD : Subgroup (Z ⊔ X : Subgroup G) := Z.subgroupOf (Z ⊔ X : Subgroup G)
       let XD : Subgroup (Z ⊔ X : Subgroup G) := X.subgroupOf (Z ⊔ X : Subgroup G)
-      haveI : ZD.Normal := by simpa [ZD] using hZ_norm
+      have : ZD.Normal := by simpa [ZD] using hZ_norm
       have hsup_top : ZD ⊔ XD = ⊤ := by
         simpa [ZD, XD] using
           (Subgroup.subgroupOf_sup (A := Z) (A' := X) (B := Z ⊔ X)
@@ -116,7 +116,7 @@ private theorem section12_rankTwo_sup_of_distinct_primeOrder_commuting
         ⟨z0, hz0, x0, hx0, hz0x0⟩
       exact ⟨z0, hz0, x0, hx0, hz0x0⟩
   have hsup_card : Nat.card (Z ⊔ X : Subgroup G) = p.val ^ 2 := by
-    have hmul := hcomp.card_mul
+    have hmul := hcomp.card_mul_card
     rw [section12_card_subgroupOf_eq (H := Z) (K := Z ⊔ X) le_sup_left,
       section12_card_subgroupOf_eq (H := X) (K := Z ⊔ X) le_sup_right,
       hZcard, hXcard] at hmul
@@ -142,7 +142,7 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
       (Ω₁Z p.val Y).map Y.subtype = (Subgroup.center Q).map Q.subtype) :
     subgroupCentralizerIn (section10Malpha M) (section10OmegaOneCenter p S) ≤ Mstar := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Z : Subgroup G := section10OmegaOneCenter p S
   have hZeq :
       Z = ((Subgroup.center Q).map Q.subtype).map S.subtype := by
@@ -152,11 +152,11 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
         hQcard hQnoncomm hQexp hYcyc hcentral hΩeq
   let K : Subgroup G := subgroupCentralizerIn (section10Malpha M) Z
   have hQp : IsPGroup p.val Q := IsPGroup.of_card (n := 3) hQcard
-  letI : Fact (IsPGroup p.val Q) := ⟨hQp⟩
+  let : Fact (IsPGroup p.val Q) := ⟨hQp⟩
   have hQextra : IsExtraspecial p.val Q :=
     isExtraspecial_of_noncommutative_card_p3_exponent_p
       (K := Q) (p := p.val) hQcard hQexp hQnoncomm
-  letI : IsExtraspecial p.val Q := hQextra
+  let : IsExtraspecial p.val Q := hQextra
   let ZQ : Subgroup Q := Subgroup.center Q
   have hZQ_normal : ZQ.Normal := by
     dsimp [ZQ]
@@ -231,8 +231,8 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
         intro a b
         apply Subtype.ext
         rfl }
-  haveI : Subgroup.Normalizes (Subgroup.normalizer (K : Set G)) K := ⟨le_rfl⟩
-  letI : MulDistribMulAction Q K := MulDistribMulAction.compHom K qNorm
+  have : Subgroup.Normalizes (Subgroup.normalizer (K : Set G)) K := ⟨le_rfl⟩
+  let : MulDistribMulAction Q K := MulDistribMulAction.compHom K qNorm
   have hZQ_fix_all : ZQ ≤ actionCentralizerIn (A := Q) (G := K) (⊤ : Subgroup Q) := by
     intro z hz
     rw [actionCentralizerIn]
@@ -253,15 +253,15 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
         (((z : Q) : S) : G) * (k : G) * (((z : Q) : S) : G)⁻¹ =
             (k : G) * (((z : Q) : S) : G) * (((z : Q) : S) : G)⁻¹ := by rw [hcomm]
         _ = (k : G) := by simp [mul_assoc]
-  letI : MulDistribMulAction (Q ⧸ ZQ) K :=
+  let : MulDistribMulAction (Q ⧸ ZQ) K :=
     section12_quotientMulDistribMulActionOfTrivial
       (A := Q) (M := K) (N := ZQ) hZQ_fix_all
-  haveI : IsElementaryAbelian p.val (Q ⧸ ZQ) := by
+  have : IsElementaryAbelian p.val (Q ⧸ ZQ) := by
     simpa [ZQ] using IsExtraspecial.quotient_elementary_abelian p.val Q
-  haveI : IsMulCommutative (Q ⧸ ZQ) :=
+  have : IsMulCommutative (Q ⧸ ZQ) :=
     (inferInstance : IsElementaryAbelian p.val (Q ⧸ ZQ)).toIsMulCommutative
-  letI : CommGroup (Q ⧸ ZQ) := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup p.val (Q ⧸ ZQ)) :=
+  let : CommGroup (Q ⧸ ZQ) := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup p.val (Q ⧸ ZQ)) :=
     ⟨IsElementaryAbelian.isPGroup p.val (Q ⧸ ZQ)⟩
   have hquot_card : Nat.card (Q ⧸ ZQ) = p.val ^ 2 := by
     have hmul :
@@ -320,7 +320,7 @@ private theorem section12_malpha_centralizer_omegaOneCenter_le_mstar_of_shape
       have hqpow : q ^ p.val = 1 :=
         Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
           (show Monoid.exponent Q ∣ p.val by rw [hQexp]) q
-      haveI : IsElementaryAbelian p.val XQ :=
+      have : IsElementaryAbelian p.val XQ :=
         IsElementaryAbelian.zpowers_of_pow_eq_one (G := Q) (p := p.val) hqpow
       simpa [X, XQ] using
         IsElementaryAbelian.map (p := p.val)
@@ -462,7 +462,7 @@ private theorem section12_subgroupNormalizerIn_le_of_malpha_centralizer_le
     (hCα_le_Mstar : subgroupCentralizerIn (section10Malpha M) Z ≤ Mstar) :
     subgroupNormalizerIn M (Z : Set G) ≤ Mstar := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let K : Subgroup M := section10MalphaSubgroup M
   let U : Subgroup M := (Mstar ⊓ M).subgroupOf M
   let H : Subgroup M := Z.subgroupOf M
@@ -506,8 +506,9 @@ private theorem section12_subgroupNormalizerIn_le_of_malpha_centralizer_le
       _ = M := hjoin
       _ = (⊤ : Subgroup M).map M.subtype := by
             simpa [MonoidHom.range_eq_map] using (Subgroup.range_subtype (H := M)).symm
-  haveI : K.Normal := section10MalphaSubgroup_normal (M := M)
-  haveI : IsSolvable M := IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
+  have : K.Normal := section10MalphaSubgroup_normal (M := M)
+  have : Group.IsSolvable M :=
+    IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hdecomp :
       (Subgroup.normalizer (G := M) (H : Set M) : Set M) =
         (subgroupCentralizerIn K H) * (subgroupNormalizerIn U H) :=
@@ -569,7 +570,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
     (hAmax : A ∈ maximalElementaryAbelianSubgroups p.val G) :
     P ∈ section9UniqueSubgroups G := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hPnoncyc : ¬ IsCyclic P :=
     section12_nonabelian_pSubgroup_not_isCyclic (G := G) hPp hPnonab
   have hPproper : P ≠ ⊤ := IsMinCE.pSubgroup_ne_top (G := G) (p := p.val) hPp
@@ -652,7 +653,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
       exact hPnoncyc (Subgroup.isCyclic_of_le (H := P) (H' := Pamb) hP_le_Pamb)
     have hPamb_nonab : ¬ IsMulCommutative Pamb := by
       intro hcomm
-      letI : IsMulCommutative Pamb := hcomm
+      let : IsMulCommutative Pamb := hcomm
       apply hPnonab
       refine ⟨⟨fun x y => ?_⟩⟩
       have hxPamb : (x : G) ∈ Pamb := hP_le_Pamb x.property
@@ -719,7 +720,7 @@ private theorem section12_nonabelian_pSubgroup_unique_of_rankTwo_maximal
     have hSg_nonab : ¬ IsMulCommutative (Sg : Subgroup G) := by
       intro hcomm
       apply hPamb_nonab
-      letI : IsMulCommutative (Sg : Subgroup G) := hcomm
+      let : IsMulCommutative (Sg : Subgroup G) := hcomm
       refine ⟨⟨fun x y => ?_⟩⟩
       have hxSg : (x : G) ∈ (Sg : Subgroup G) := by
         exact hPamb_eq_Sg.le x.property
@@ -1004,7 +1005,7 @@ public theorem theorem_12_13
   · have hAunique : A ∈ section9UniqueSubgroups G :=
       theorem_9_6_in_particular (G := G)
         ⟨p.val, p.2, hArankTwo, hAmax⟩
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     exact section9_unique_of_le hA_le_P
       (IsMinCE.pSubgroup_ne_top (G := G) (p := p.val) hPp) hAunique
 

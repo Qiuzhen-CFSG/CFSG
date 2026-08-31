@@ -64,16 +64,16 @@ public theorem section12_exists_primeOrder_centralizer_ne_bot_of_tau2_pre
     ∃ A₀ : Subgroup G, A₀ ∈ section10PrimeOrderSubgroupsIn p A ∧
       subgroupCentralizerIn (section10Msigma M) A₀ ≠ ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M :=
     section12_rankTwo_of_EData hE hA
   rcases (by simpa [section12Tau2Primes] using hp) with ⟨hpσ, _hprank⟩
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-  letI : IsElementaryAbelian p.val A := hAelem
-  letI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
-  haveI : Subgroup.Normalizes A (section10Msigma M) := by
+  let : IsElementaryAbelian p.val A := hAelem
+  let : IsMulCommutative A := hAelem.toIsMulCommutative
+  let : CommGroup A := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
+  have : Subgroup.Normalizes A (section10Msigma M) := by
     refine ⟨?_⟩
     exact (section12_rankTwo_le hA_M).trans section12_le_normalizer_msigma
   have hσ_p' : IsPiSubgroup (G := G) (section10PPrimeSet p) (section10Msigma M) :=
@@ -82,7 +82,7 @@ public theorem section12_exists_primeOrder_centralizer_ne_bot_of_tau2_pre
     section12_rankTwo_coprime_card_of_pPrime_pre hA_M hσ_p'
   have hσ_ne_bot : section10Msigma M ≠ ⊥ :=
     theorem_10_2_e (G := G) hM
-  haveI : Nontrivial (section10Msigma M) :=
+  have : Nontrivial (section10Msigma M) :=
     (Subgroup.nontrivial_iff_ne_bot (section10Msigma M)).2 hσ_ne_bot
   have hsup :
       (⨆ (a : A) (_ : a ≠ 1),
@@ -120,7 +120,7 @@ public theorem section12_le_fittingSubgroupOf_of_normalIn_nilpotent
     (hN_norm : (N.subgroupOf H).Normal) (hN_nil : Group.IsNilpotent N) :
     N ≤ fittingSubgroupOf (G := G) H := by
   classical
-  haveI : Group.IsNilpotent (N.subgroupOf H) := by
+  have : Group.IsNilpotent (N.subgroupOf H) := by
     let e := (Subgroup.subgroupOfEquivOfLe (G := G) (H := N) (K := H) hHN).symm
     have : Group.IsNilpotent N := hN_nil
     exact Group.nilpotent_of_mulEquiv (G := N) (G' := N.subgroupOf H) e
@@ -168,7 +168,7 @@ public theorem section12_subgroupCentralizerIn_le_fitting_of_card_prime_pre
     (hCcard : Nat.card (subgroupCentralizerIn A (section10Msigma M)) = p.val) :
     subgroupCentralizerIn A (section10Msigma M) ≤ section8FittingSubgroup M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   let C : Subgroup G := subgroupCentralizerIn A (section10Msigma M)
   have hC_le_M : C ≤ M := by
     intro x hx
@@ -382,7 +382,7 @@ public theorem section12_normalizer_le_self_of_maximal_pre
   have hNproper : Subgroup.normalizer (M : Set G) ≠ ⊤ := by
     intro hNtop
     have hMnormal : M.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-    letI : IsSimpleGroup G := IsMinCE.simple
+    let : IsSimpleGroup G := IsMinCE.simple
     rcases hMnormal.eq_bot_or_eq_top with hMbot | hMtop
     · have hσne : section10Msigma M ≠ ⊥ := theorem_10_2_e (G := G) hM
       have hσleM : section10Msigma M ≤ M := by
@@ -406,10 +406,10 @@ public theorem section12_exists_nonabelian_sylow_containing_rankTwo_pre
     ∃ S : Sylow p.val G, A ≤ (S : Subgroup G) ∧
       ¬ IsMulCommutative (S : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hAp : IsPGroup p.val A := by
     rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-    haveI : IsElementaryAbelian p.val A := hAelem
+    have : IsElementaryAbelian p.val A := hAelem
     exact IsElementaryAbelian.isPGroup p.val A
   obtain ⟨S, hAS⟩ := IsPGroup.exists_le_sylow (G := G) (p := p.val) hAp
   refine ⟨S, hAS, ?_⟩
@@ -418,7 +418,7 @@ public theorem section12_exists_nonabelian_sylow_containing_rankTwo_pre
   obtain ⟨g, hg⟩ := MulAction.exists_smul_eq G S Sbad
   have hSbad_comm : IsMulCommutative (Sbad : Subgroup G) := by
     have hconj_comm : IsMulCommutative ((g • S : Sylow p.val G) : Subgroup G) := by
-      letI : IsMulCommutative (S : Subgroup G) := hScomm
+      let : IsMulCommutative (S : Subgroup G) := hScomm
       rw [Sylow.coe_subgroup_smul]
       exact Subgroup.map_isMulCommutative
         (f := (MulAut.conj g).toMonoidHom) (H := (S : Subgroup G))
@@ -435,7 +435,7 @@ public theorem section12_global_sylow_not_le_M_of_nonabelian_pre
     {S : Sylow p.val G} (hSnonab : ¬ IsMulCommutative (S : Subgroup G)) :
     ¬ (S : Subgroup G) ≤ M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   intro hSleM
   have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M :=
     section12_rankTwo_of_EData hE hA
@@ -508,7 +508,7 @@ public theorem section12_conjBy_eq_self_of_le_abelian_pre
     (hHcomm : IsMulCommutative H) (hXH : X ≤ H) (hgH : g ∈ H) :
     X.conjBy g = X := by
   classical
-  letI : IsMulCommutative H := hHcomm
+  let : IsMulCommutative H := hHcomm
   ext x
   constructor
   · intro hx
@@ -602,7 +602,7 @@ public theorem section12_not_centralizer_le_M_of_ne_fixed_primeOrder_tau2_pre
     have hkS : (k : G) ∈ (S : Subgroup G) := by
       have hk' :
           (k : G) ∈ Subgroup.normalizer (A : Set G) ⊓ (S : Subgroup G) := by
-        simp [subgroupNormalizerIn]
+        exact k.property
       exact hk'.2
     have hk_not_M : (k : G) ∉ M := by
       intro hkM
@@ -669,18 +669,18 @@ public theorem section12_CA_msigma_eq_fixed_primeOrder_of_tau2_pre
     subgroupCentralizerIn A (section10Msigma M) = A₀ := by
   classical
   let K : Subgroup G := section10Msigma M
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   have hA_M : A ∈ section12RankTwoElementaryAbelianIn p M :=
     section12_rankTwo_of_EData hE hA
   rcases (by simpa [section12Tau2Primes] using hp) with ⟨hpσ, _hprank⟩
   rcases section12_rankTwo_elementary hA with ⟨_hAcard, hAelem⟩
-  letI : IsElementaryAbelian p.val A := hAelem
-  letI : IsMulCommutative A := hAelem.toIsMulCommutative
-  letI : CommGroup A := IsMulCommutative.instCommGroup
-  haveI : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
+  let : IsElementaryAbelian p.val A := hAelem
+  let : IsMulCommutative A := hAelem.toIsMulCommutative
+  let : CommGroup A := IsMulCommutative.instCommGroup
+  have : Fact (IsPGroup p.val A) := ⟨IsElementaryAbelian.isPGroup p.val A⟩
   have hAKnorm : A ≤ Subgroup.normalizer (K : Set G) := by
     exact (section12_rankTwo_le hA_M).trans (by simpa [K] using section12_le_normalizer_msigma)
-  haveI : Subgroup.Normalizes A K := ⟨hAKnorm⟩
+  have : Subgroup.Normalizes A K := ⟨hAKnorm⟩
   have hKp' : IsPiSubgroup (G := G) (section10PPrimeSet p) K := by
     simpa [K] using section12_isPiSubgroup_pPrime_of_le_msigma_pre hM hpσ le_rfl
   have hcop : Nat.Coprime p.val (Nat.card K) := by

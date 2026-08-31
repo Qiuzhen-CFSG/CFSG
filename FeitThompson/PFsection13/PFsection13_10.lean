@@ -1070,7 +1070,9 @@ private theorem section13_theorem_13_10_fitting_punctured_normalizer_eq_of_sourc
     ⟨r, hrprime, hrdiv⟩
   let rP : Nat.Primes := ⟨r, hrprime⟩
   have hrW2 : rP ∈ subgroupPrimeSet W2 := by
-    simpa [rP, subgroupPrimeSet] using hrdiv
+    rw [subgroupPrimeSet]
+    change r ∣ Nat.card W2
+    exact hrdiv
   have hrF : rP ∈ subgroupPrimeSet (section8FittingSubgroup Smax) :=
     section8_subgroupPrimeSet_mono hW2leF hrW2
   have hSmax8 : Smax ∈ section8MaximalSubgroups G := by

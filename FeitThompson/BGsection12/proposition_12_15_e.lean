@@ -36,7 +36,7 @@ private theorem section12_prop1215e_complement
     (hqτstar : q ∈ section12Tau2Primes Mstar) :
     section12ComplementIn Mstar (section10Msigma Mstar) (M ⊓ Mstar) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
     change IsPGroup q.val
@@ -80,12 +80,12 @@ private theorem section12_prop1215e_complement
     section12_rankTwo_mono hA_Pamb hPamb_le_Mstar
   have hAq : IsPGroup q.val A := by
     have hAelem := (section12_rankTwo_elementary hA_Pamb).2
-    haveI : IsElementaryAbelian q.val A := hAelem
+    have : IsElementaryAbelian q.val A := hAelem
     exact IsElementaryAbelian.isPGroup q.val A
   have hAnoncyc : ¬ IsCyclic A := by
     intro hcyc
     rcases section12_rankTwo_elementary hA_Pamb with ⟨hAcard, hAelem⟩
-    haveI : IsElementaryAbelian q.val A := hAelem
+    have : IsElementaryAbelian q.val A := hAelem
     have hgen : 2 ≤ generatorRank A :=
       section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq
         (p := q.val) hAcard
@@ -210,7 +210,7 @@ private theorem section12_ambient_sylow_ne_bot_of_mem_subgroupPrimeSet
     (P : Sylow p.val M) :
     section10AmbientSylowSubgroup M P ≠ ⊥ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hP_ne : (P : Subgroup M) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := M) P hpM
   intro hbot
@@ -280,8 +280,8 @@ private theorem section12_prop1215e_beta_subset
   intro p hp
   rcases hp with ⟨hpM, hpσstar⟩
   by_contra hpβstar
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
     change IsPGroup q.val
@@ -325,7 +325,7 @@ private theorem section12_prop1215e_beta_subset
     section12_rankTwo_mono hA_Pamb hPamb_le_Mstar
   have hAq : IsPGroup q.val A := by
     have hAelem := (section12_rankTwo_elementary hA_Pamb).2
-    haveI : IsElementaryAbelian q.val A := hAelem
+    have : IsElementaryAbelian q.val A := hAelem
     exact IsElementaryAbelian.isPGroup q.val A
   have hAπstar : IsPiSubgroup (G := G) (section10SigmaPrimes Mstar)ᶜ A := by
     intro r hrA

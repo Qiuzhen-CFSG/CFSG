@@ -73,13 +73,12 @@ public theorem pSubgroup_le_centralizer_pCore_of_cyclic_sylow_fitting
   intro y hyCore
   have hxS : x ∈ (S : Subgroup G) := hP_le_S hxP
   have hyS : y ∈ (S : Subgroup G) := hcore_le_S hyCore
-  haveI : IsMulCommutative (S : Subgroup G) := by
-    haveI : IsCyclic (S : Subgroup G) := hcycSylow S
-    exact IsCyclic.isMulCommutative
-  exact setLike_mul_comm (s := (S : Subgroup G)) hyS hxS
+  have hcomm : IsMulCommutative (S : Subgroup G) :=
+    @IsCyclic.isMulCommutative (S : Subgroup G) inferInstance (hcycSylow S)
+  exact @setLike_mul_comm (Subgroup G) G _ _ _ _ hcomm y x hyS hxS
 
 public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
-    {G : Type u} [Group G] [Finite G] (hsolv : IsSolvable G) :
+    {G : Type u} [Group G] [Finite G] (hsolv : Group.IsSolvable G) :
     Subgroup.centralizer (fittingSubgroup G : Set G) ≤ fittingSubgroup G := by
   classical
   -- Strong induction on the cardinality.
@@ -87,7 +86,7 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
     fun n =>
       ∀ (H : Type u) [Group H] [Finite H],
         Nat.card H = n →
-          IsSolvable H →
+          Group.IsSolvable H →
             Subgroup.centralizer (fittingSubgroup H : Set H) ≤ fittingSubgroup H
 
   have hP : ∀ n, P n := by
@@ -95,14 +94,14 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
     refine Nat.strong_induction_on n ?_
     intro n ih H _instHGroup _instHFinite hcard hsolvH
     classical
-    haveI : IsSolvable H := hsolvH
+    let _ : Group.IsSolvable H := hsolvH
 
     let F : Subgroup H := fittingSubgroup H
     let C : Subgroup H := Subgroup.centralizer (F : Set H)
 
-    haveI : F.Normal := by
+    have _ : F.Normal := by
       simpa [F] using (inferInstance : (fittingSubgroup H).Normal)
-    haveI : C.Normal := by
+    have _ : C.Normal := by
       simpa [C, F] using
         (inferInstance : (Subgroup.centralizer (fittingSubgroup H) : Subgroup H).Normal)
 
@@ -125,7 +124,7 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
 
       have hN_le_F : N ≤ F := by
         -- `N` is normal nilpotent in `H`, hence `N ≤ F`.
-        haveI : N.Normal := (inferInstance : Nbar.Normal).comap π
+        have _ : N.Normal := (inferInstance : Nbar.Normal).comap π
         have hN_nil : Group.IsNilpotent (↥N) := by
           -- `N` is a central extension of the nilpotent group `Nbar`.
           let f : N →* Nbar :=
@@ -134,7 +133,10 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
             intro x hx
             have hxπ : π x.1 = 1 := by
               have : f x = 1 := by simpa [MonoidHom.mem_ker] using hx
-              simpa [f] using congrArg Subtype.val this
+              calc
+                π x.1 = (f x : H ⧸ F) := by rfl
+                _ = ((1 : Nbar) : H ⧸ F) := congrArg Subtype.val this
+                _ = 1 := rfl
             have hxF : x.1 ∈ F := (QuotientGroup.eq_one_iff (N := F) x.1).1 hxπ
             have hxCenterH : x.1 ∈ Subgroup.center H := hF_le_center hxF
             refine Subgroup.mem_center_iff.2 ?_
@@ -164,7 +166,7 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
           _ = ⊥ := by simp [π]
 
       have hcardQ : Nat.card (H ⧸ F) = 1 := by
-        haveI : IsSolvable (H ⧸ F) := by infer_instance
+        let _ : Group.IsSolvable (H ⧸ F) := by infer_instance
         have hfit_bot : fittingSubgroup (H ⧸ F) = ⊥ := by simpa [Nbar] using hNbar_bot
         exact (fitting_eq_bot_iff_card_eq_one_of_solvable (G := (H ⧸ F))).1 hfit_bot
 
@@ -228,8 +230,8 @@ public theorem centralizer_fittingSubgroup_le_fittingSubgroup_of_solvable
           simpa [hcentC_top] using hIH_C
         exact (top_le_iff).1 this
 
-      haveI : Group.IsNilpotent (↥C) := by
-        haveI : Group.IsNilpotent (fittingSubgroup (↥C)) := by infer_instance
+      have _ : Group.IsNilpotent (↥C) := by
+        have _ : Group.IsNilpotent (fittingSubgroup (↥C)) := by infer_instance
         let e : (fittingSubgroup (↥C)) ≃* (↥C) :=
           (MulEquiv.subgroupCongr hfitC_top).trans (Subgroup.topEquiv : (⊤ : Subgroup (↥C)) ≃* (↥C))
         exact Group.nilpotent_of_mulEquiv (G := fittingSubgroup (↥C)) (G' := (↥C)) e

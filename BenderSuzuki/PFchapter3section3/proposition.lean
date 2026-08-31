@@ -1121,11 +1121,12 @@ private theorem align_odd_actions_on_binary_central_extension
   let kernelIso : Multiplicative KernelParam ≃* U :=
     (MonoidHom.ofInjective hencodeHom_injective).trans
       (MulEquiv.subgroupCongr rfl)
-  have hUsolvable : IsSolvable U := by
-    haveI : IsSolvable (Multiplicative KernelParam) := by
+  have hUsolvable : Group.IsSolvable U := by
+    have : Group.IsSolvable (Multiplicative KernelParam) := by
       -- Multiplicative KernelParam is an abelian group (it's a ZMod 2-vector space)
       infer_instance
-    refine solvable_of_surjective (f := kernelIso.toMonoidHom) ?_
+    let : Group.IsSolvable (Multiplicative KernelParam) := this
+    refine Group.isSolvable_of_surjective (f := kernelIso.toMonoidHom) ?_
     -- kernelIso is an isomorphism, so it's surjective
     intro x
     refine ⟨kernelIso.symm x, ?_⟩

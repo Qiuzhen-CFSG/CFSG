@@ -92,7 +92,7 @@ private theorem sylow_map_quotient_pPrimeCore_eq_top_of_hasNormalPComplement
       dsimp [Ttop]
     rw [hTtop_eq]
     infer_instance
-  haveI : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
+  have : Unique (Sylow p Q) := Sylow.unique_of_normal Ttop hTtop_normal
   have hSylow_eq : Tmap = Ttop := Subsingleton.elim _ _
   change (Tmap : Subgroup Q) = ⊤
   simpa [Tmap, Ttop, IsPGroup.toSylow_coe, q, M, Q] using
@@ -248,7 +248,7 @@ private theorem quotient_map_subtype_factor_equiv
       refine ⟨⟨l, hLM hlL⟩, ?_, ?_⟩
       · simpa [Subgroup.mem_subgroupOf] using hlL
       · rfl
-  haveI : (Lmap.subgroupOf Mmap).Normal := by
+  have : (Lmap.subgroupOf Mmap).Normal := by
     rw [← hmap_eq]
     exact Subgroup.Normal.map hN eM.toMonoidHom eM.surjective
   refine ⟨by simpa [Lmap, Mmap], ⟨?_⟩⟩
@@ -357,13 +357,13 @@ private theorem minFac_natCard_isSmallestPrimeDivisor
 
 private theorem hasNormalPComplement_minFac_of_groupRank_le_two
     {G : Type*} [Group G] [Finite G] [Nontrivial G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hG : groupRank G ≤ 2) :
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hG : groupRank G ≤ 2) :
     HasNormalPComplement (Nat.minFac (Nat.card G)) G := by
   classical
   let p := Nat.minFac (Nat.card G)
   have hp_small : IsSmallestPrimeDivisor p (Nat.card G) :=
     minFac_natCard_isSmallestPrimeDivisor G
-  haveI : Fact p.Prime := ⟨hp_small.1⟩
+  have : Fact p.Prime := ⟨hp_small.1⟩
   have hp_mem : p ∣ Nat.card G := hp_small.2.1
   have hprank : primeRank p G ≤ 2 :=
     (primeRank_le_groupRank (R := G) hp_small.1).trans hG
@@ -378,9 +378,9 @@ private theorem isPGroup_quotient_pPrimeCore_of_commutative
   let Qbar := Q ⧸ M
   have hcore_bot : pPrimeCore p Qbar = ⊥ := by
     simpa [Qbar, M] using pPrimeCore_quotient_pPrimeCore_eq_bot (G := Q) (p := p)
-  haveI : IsMulCommutative Q := hcomm
-  letI : CommGroup Q := IsMulCommutative.instCommGroup
-  haveI : CommGroup Qbar := by infer_instance
+  have : IsMulCommutative Q := hcomm
+  let : CommGroup Q := IsMulCommutative.instCommGroup
+  have : CommGroup Qbar := by infer_instance
   have hnil : Group.IsNilpotent (⊤ : Subgroup Qbar) := by infer_instance
   have htop : IsPGroup p (⊤ : Subgroup Qbar) :=
     isPGroup_of_nilpotent_normal (G := Qbar) (p := p) (⊤ : Subgroup Qbar)
@@ -435,8 +435,8 @@ private theorem primeRank_le_of_pSubgroups_map_le
     let eAB : A ≃* B := eMap.trans eSub.symm
     have hBq : IsPGroup q B := hAq.of_equiv eAB
     have hBcomm : IsMulCommutative B := by
-      letI : IsMulCommutative A := hAcomm
-      haveI : IsMulCommutative A' := by infer_instance
+      let : IsMulCommutative A := hAcomm
+      have : IsMulCommutative A' := by infer_instance
       refine ⟨⟨fun x y => ?_⟩⟩
       apply eSub.injective
       simpa only [map_mul] using
@@ -563,12 +563,12 @@ private theorem isPGroup_quotient_map_subtype_of_extension
     intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨k, _hk, rfl⟩
     exact k.property
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N]
     infer_instance
   let qN : G →* G ⧸ N := QuotientGroup.mk' N
   let Hbar : Subgroup (G ⧸ N) := H.map qN
-  haveI : Hbar.Normal := by
+  have : Hbar.Normal := by
     exact Subgroup.Normal.map (inferInstance : H.Normal) qN (QuotientGroup.mk'_surjective N)
   have hHbar_p : IsPGroup p Hbar := by
     let eHN : H ⧸ N.subgroupOf H ≃* H ⧸ K :=
@@ -596,7 +596,7 @@ private theorem hasNormalPComplement_of_characteristic_subgroup_and_pgroup_quoti
   classical
   let K : Subgroup H := pPrimeCore p H
   let N : Subgroup G := K.map H.subtype
-  haveI : K.Characteristic := pPrimeCore_characteristic (p := p) (G := H)
+  have : K.Characteristic := pPrimeCore_characteristic (p := p) (G := H)
   have hNnorm : N.Normal := by
     dsimp [N, K]
     infer_instance
@@ -615,21 +615,21 @@ private theorem hasNormalPComplement_of_characteristic_subgroup_and_pgroup_quoti
 
 private theorem hasNormalPComplement_minFac_of_fitting_rank_le_two
     {G : Type*} [Group G] [Finite G] [Nontrivial G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hF : groupRank (fittingSubgroup G) ≤ 2) :
     HasNormalPComplement (Nat.minFac (Nat.card G)) G := by
   classical
   let p := Nat.minFac (Nat.card G)
   have hp_small : IsSmallestPrimeDivisor p (Nat.card G) :=
     minFac_natCard_isSmallestPrimeDivisor G
-  haveI : Fact p.Prime := ⟨hp_small.1⟩
+  have : Fact p.Prime := ⟨hp_small.1⟩
   let F : Subgroup G := fittingSubgroup G
   let q : G →* G ⧸ F := QuotientGroup.mk' F
   let H : Subgroup G := (pPrimeCore p (G ⧸ F)).comap q
   have hHchar : H.Characteristic := by
     simpa [H, q, F] using theorem_4_20_intermediate_characteristic (G := G) (p := p)
-  haveI : H.Normal := by
-    letI : H.Characteristic := hHchar
+  have : H.Normal := by
+    let : H.Characteristic := hHchar
     infer_instance
   have hder_nil : Group.IsNilpotent (derivedSubgroup G) :=
     theorem_4_20_a (G := G) hsolv hodd (Or.inr hF)
@@ -641,8 +641,8 @@ private theorem hasNormalPComplement_minFac_of_fitting_rank_le_two
     simpa [H, q, F] using
       theorem_4_20_intermediate_quotient_isPGroup (G := G) (p := p) hQcomm
   by_cases hpH : p ∣ Nat.card H
-  · haveI : IsSolvable G := hsolv
-    have hHsolv : IsSolvable H := by infer_instance
+  · have : Group.IsSolvable G := hsolv
+    have hHsolv : Group.IsSolvable H := by infer_instance
     have hHodd : Odd (Nat.card H) :=
       hodd.of_dvd_nat (Subgroup.card_subgroup_dvd_card H)
     have hHrank : primeRank p H ≤ 2 := by
@@ -662,7 +662,7 @@ private theorem hasNormalPComplement_minFac_of_fitting_rank_le_two
 
 public theorem hasNormalPComplement_minFac_of_rank_hyp
     {G : Type*} [Group G] [Finite G] [Nontrivial G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2) :
     HasNormalPComplement (Nat.minFac (Nat.card G)) G := by
   rcases hrank with hG | hF
@@ -738,7 +738,7 @@ private theorem isHallSubgroup_map_subtype_of_isHallSubgroup_of_subset
 
 public theorem theorem_4_20_c_characteristic_hall_ge_gt
     {G : Type u} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2)
     {p : Nat.Primes} (hpG : p.val ∣ Nat.card G) :
     ∃ L K : Subgroup G,
@@ -748,7 +748,7 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
   classical
   let P : ℕ → Prop := fun m =>
     ∀ (H : Type u) [Group H] [Finite H], Nat.card H = m →
-      IsSolvable H → Odd (Nat.card H) →
+      Group.IsSolvable H → Odd (Nat.card H) →
       (groupRank H ≤ 2 ∨ groupRank (fittingSubgroup H) ≤ 2) →
       ∀ {p : Nat.Primes}, p.val ∣ Nat.card H →
         ∃ L K : Subgroup H,
@@ -759,15 +759,15 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
     intro m ih H _ _ hcard hHsolv hHodd hHrank p hpH
     have hHnot_subsingleton : ¬ Subsingleton H := by
       intro hsub
-      letI : Subsingleton H := hsub
+      let : Subsingleton H := hsub
       have hcard_one : Nat.card H = 1 :=
         Nat.card_eq_one_iff_unique.mpr ⟨hsub, ⟨1⟩⟩
       exact p.property.not_dvd_one (by simpa [hcard_one] using hpH)
-    haveI : Nontrivial H := not_subsingleton_iff_nontrivial.mp hHnot_subsingleton
+    have : Nontrivial H := not_subsingleton_iff_nontrivial.mp hHnot_subsingleton
     let r := Nat.minFac (Nat.card H)
     have hr_small : IsSmallestPrimeDivisor r (Nat.card H) :=
       minFac_natCard_isSmallestPrimeDivisor H
-    haveI : Fact r.Prime := ⟨hr_small.1⟩
+    have : Fact r.Prime := ⟨hr_small.1⟩
     have hcomp : HasNormalPComplement r H := by
       simpa [r] using hasNormalPComplement_minFac_of_rank_hyp
         (G := H) hHsolv hHodd hHrank
@@ -784,8 +784,8 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
       let K₀ : Subgroup H := pPrimeCore r H
       have hK₀_char : K₀.Characteristic := by
         simpa [K₀] using pPrimeCore_characteristic (p := r) (G := H)
-      haveI : K₀.Characteristic := hK₀_char
-      haveI : K₀.Normal := by infer_instance
+      have : K₀.Characteristic := hK₀_char
+      have : K₀.Normal := by infer_instance
       have hquot_r : IsPGroup r (H ⧸ K₀) := by
         simpa [K₀] using
           isPGroup_quotient_pPrimeCore_of_hasNormalPComplement (p := r) (H := H) hcomp
@@ -818,8 +818,8 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
         exact lt_of_le_of_ne hle hne
       have hK₀lt : Nat.card K₀ < m := by
         simpa [hcard] using hK₀ltH
-      have hK₀solv : IsSolvable K₀ := by
-        letI : IsSolvable H := hHsolv
+      have hK₀solv : Group.IsSolvable K₀ := by
+        let : Group.IsSolvable H := hHsolv
         infer_instance
       have hK₀odd : Odd (Nat.card K₀) :=
         hHodd.of_dvd_nat (Subgroup.card_subgroup_dvd_card K₀)
@@ -847,10 +847,10 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
         isHallSubgroup_map_subtype_of_isHallSubgroup_of_subset
           (G := H) hK₀hall hK₁hall hgt_subset
       have hLchar : L.Characteristic := by
-        letI : L₀.Characteristic := hL₀char
+        let : L₀.Characteristic := hL₀char
         simpa [L] using characteristic_map_subtype_of_characteristic (G := H) K₀ L₀
       have hKchar : K.Characteristic := by
-        letI : K₁.Characteristic := hK₁char
+        let : K₁.Characteristic := hK₁char
         simpa [K] using characteristic_map_subtype_of_characteristic (G := H) K₀ K₁
       refine ⟨L, K, hLchar, hKchar, hLhall, hKhall, ?_⟩
       exact Subgroup.map_mono hK₁leL₀
@@ -859,38 +859,38 @@ public theorem theorem_4_20_c_characteristic_hall_ge_gt
 
 public theorem theorem_4_20_c_with_prime_divisors
     {G : Type u} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2) :
     HasOrderedCharacteristicSylowSeriesWithPrimeDivisors G := by
   classical
   let P : ℕ → Prop := fun m =>
     ∀ (H : Type u) [Group H] [Finite H], Nat.card H = m →
-      IsSolvable H → Odd (Nat.card H) →
+      Group.IsSolvable H → Odd (Nat.card H) →
       (groupRank H ≤ 2 ∨ groupRank (fittingSubgroup H) ≤ 2) →
       HasOrderedCharacteristicSylowSeriesWithPrimeDivisors H
   have hP : ∀ m, (∀ k < m, P k) → P m := by
     intro m ih H _ _ hcard hHsolv hHodd hHrank
     by_cases hHsub : Subsingleton H
-    · letI : Subsingleton H := hHsub
+    · let : Subsingleton H := hHsub
       exact hasOrderedCharacteristicSylowSeriesWithPrimeDivisors_of_subsingleton (G := H)
-    · haveI : Nontrivial H := not_subsingleton_iff_nontrivial.mp hHsub
+    · have : Nontrivial H := not_subsingleton_iff_nontrivial.mp hHsub
       let p := Nat.minFac (Nat.card H)
       have hp_small : IsSmallestPrimeDivisor p (Nat.card H) :=
         minFac_natCard_isSmallestPrimeDivisor H
-      haveI : Fact p.Prime := ⟨hp_small.1⟩
+      have : Fact p.Prime := ⟨hp_small.1⟩
       have hcomp : HasNormalPComplement p H := by
         simpa [p] using hasNormalPComplement_minFac_of_rank_hyp
           (G := H) hHsolv hHodd hHrank
       let K : Subgroup H := pPrimeCore p H
       have hKchar : K.Characteristic := by
         simpa [K] using pPrimeCore_characteristic (p := p) (G := H)
-      letI : K.Characteristic := hKchar
-      haveI : K.Normal := by infer_instance
+      let : K.Characteristic := hKchar
+      have : K.Normal := by infer_instance
       have hquotp : IsPGroup p (H ⧸ K) := by
         simpa [K] using
           isPGroup_quotient_pPrimeCore_of_hasNormalPComplement (p := p) (H := H) hcomp
       by_cases hKsub : Subsingleton K
-      · letI : Subsingleton K := hKsub
+      · let : Subsingleton K := hKsub
         have hK_bot : K = ⊥ := by
           apply eq_bot_iff.2
           intro x hx
@@ -901,7 +901,7 @@ public theorem theorem_4_20_c_with_prime_divisors
             exact hquotp.of_equiv (QuotientGroup.quotientMulEquivOfEq hK_bot)
           exact hquot_bot.of_equiv QuotientGroup.quotientBot
         exact hasOrderedCharacteristicSylowSeriesWithPrimeDivisors_of_isPGroup (G := H) hHp
-      · haveI : Nontrivial K := not_subsingleton_iff_nontrivial.mp hKsub
+      · have : Nontrivial K := not_subsingleton_iff_nontrivial.mp hKsub
         have hp_not_dvd_K : ¬ p ∣ Nat.card K :=
           (hp_small.1.coprime_iff_not_dvd).1
             (by simpa [K] using pPrimeCore_coprime_card (G := H) (p := p))
@@ -920,8 +920,8 @@ public theorem theorem_4_20_c_with_prime_divisors
           exact lt_of_le_of_ne hle hne
         have hKlt : Nat.card K < m := by
           simpa [hcard] using hKltH
-        have hKsolv : IsSolvable K := by
-          letI : IsSolvable H := hHsolv
+        have hKsolv : Group.IsSolvable K := by
+          let : Group.IsSolvable H := hHsolv
           infer_instance
         have hKodd : Odd (Nat.card K) :=
           hHodd.of_dvd_nat (Subgroup.card_subgroup_dvd_card K)
@@ -956,7 +956,7 @@ public theorem theorem_4_20_c_with_prime_divisors
               infer_instance
           | succ j =>
               change ((seriesK j).map K.subtype).Characteristic
-              letI : (seriesK j).Characteristic := hcharK j
+              let : (seriesK j).Characteristic := hcharK j
               exact characteristic_map_subtype_of_characteristic (G := H) K (seriesK j)
         · intro i j hij
           cases i using Fin.cases with
@@ -1000,9 +1000,9 @@ public theorem theorem_4_20_c_with_prime_divisors
                   exact hnormKtop
                 refine ⟨(by simpa [primes] using (inferInstance : Fact p.Prime)), S,
                   hsource_norm, ⟨?_⟩⟩
-                · letI : ((series (1 : Fin ((n + 1) + 1))).subgroupOf
+                · let : ((series (1 : Fin ((n + 1) + 1))).subgroupOf
                     (⊤ : Subgroup H)).Normal := hsource_norm
-                  letI : (K.subgroupOf (⊤ : Subgroup H)).Normal := hnormKtop
+                  let : (K.subgroupOf (⊤ : Subgroup H)).Normal := hnormKtop
                   let eAdjust :
                       ((⊤ : Subgroup H) ⧸
                           (series (1 : Fin ((n + 1) + 1))).subgroupOf
@@ -1024,8 +1024,8 @@ public theorem theorem_4_20_c_with_prime_divisors
               · change (seriesK j.succ).map K.subtype ≤ (seriesK j.castSucc).map K.subtype
                 exact Subgroup.map_mono hleK
               · rcases hfactorK with ⟨hqFact, Pj, hnormK, ⟨eKquot⟩⟩
-                letI : Fact (primesK j).Prime := hqFact
-                letI : ((seriesK j.succ).subgroupOf (seriesK j.castSucc)).Normal := hnormK
+                let : Fact (primesK j).Prime := hqFact
+                let : ((seriesK j.succ).subgroupOf (seriesK j.castSucc)).Normal := hnormK
                 obtain ⟨hnormG, ⟨eGquot⟩⟩ :=
                   quotient_map_subtype_factor_equiv (K := K)
                     (L := seriesK j.succ) (M := seriesK j.castSucc) hleK
@@ -1052,7 +1052,7 @@ public theorem theorem_4_20_c_with_prime_divisors
   exact hmain G rfl hsolv hodd hrank
 
 public theorem theorem_4_20_c {G : Type*} [Group G] [Finite G] [Nontrivial G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2) :
     HasOrderedCharacteristicSylowSeries G := by
   rcases theorem_4_20_c_with_prime_divisors (G := G) hsolv hodd hrank with
@@ -1062,14 +1062,14 @@ public theorem theorem_4_20_c {G : Type*} [Group G] [Finite G] [Nontrivial G]
 
 public theorem theorem_4_20_largest_prime_normal_sylow
     {G : Type u} [Group G] [Finite G]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G))
     (hrank : groupRank G ≤ 2 ∨ groupRank (fittingSubgroup G) ≤ 2)
     {p : ℕ} [Fact p.Prime] (hp_largest : IsLargestPrimeDivisor p (Nat.card G)) :
     ∃ S : Sylow p G, (S : Subgroup G).Normal := by
   classical
   let P : ℕ → Prop := fun m =>
     ∀ (H : Type u) [Group H] [Finite H], Nat.card H = m →
-      IsSolvable H → Odd (Nat.card H) →
+      Group.IsSolvable H → Odd (Nat.card H) →
       (groupRank H ≤ 2 ∨ groupRank (fittingSubgroup H) ≤ 2) →
       ∀ {p : ℕ} [Fact p.Prime], IsLargestPrimeDivisor p (Nat.card H) →
         ∃ S : Sylow p H, (S : Subgroup H).Normal
@@ -1081,24 +1081,24 @@ public theorem theorem_4_20_largest_prime_normal_sylow
     have hHcard_gt : 1 < Nat.card H := by
       have hpos : 0 < Nat.card H := Nat.card_pos
       omega
-    haveI : Nontrivial H := Finite.one_lt_card_iff_nontrivial.mp hHcard_gt
+    have : Nontrivial H := Finite.one_lt_card_iff_nontrivial.mp hHcard_gt
     let r := Nat.minFac (Nat.card H)
     have hr_small : IsSmallestPrimeDivisor r (Nat.card H) :=
       minFac_natCard_isSmallestPrimeDivisor H
-    haveI : Fact r.Prime := ⟨hr_small.1⟩
+    have : Fact r.Prime := ⟨hr_small.1⟩
     have hcomp : HasNormalPComplement r H := by
       simpa [r] using hasNormalPComplement_minFac_of_rank_hyp
         (G := H) hHsolv hHodd hHrank
     let K : Subgroup H := pPrimeCore r H
     have hKchar : K.Characteristic := by
       simpa [K] using pPrimeCore_characteristic (p := r) (G := H)
-    letI : K.Characteristic := hKchar
-    haveI : K.Normal := by infer_instance
+    let : K.Characteristic := hKchar
+    have : K.Normal := by infer_instance
     have hquotr : IsPGroup r (H ⧸ K) := by
       simpa [K] using
         isPGroup_quotient_pPrimeCore_of_hasNormalPComplement (p := r) (H := H) hcomp
     by_cases hKsub : Subsingleton K
-    · letI : Subsingleton K := hKsub
+    · let : Subsingleton K := hKsub
       have hK_bot : K = ⊥ := by
         apply eq_bot_iff.2
         intro x hx
@@ -1122,7 +1122,7 @@ public theorem theorem_4_20_largest_prime_normal_sylow
         simp [S, IsPGroup.toSylow_coe]
       rw [hS_top]
       infer_instance
-    · haveI : Nontrivial K := not_subsingleton_iff_nontrivial.mp hKsub
+    · have : Nontrivial K := not_subsingleton_iff_nontrivial.mp hKsub
       have hKcard_ne_one : Nat.card K ≠ 1 := by
         exact Nat.ne_of_gt (Finite.one_lt_card (α := K))
       have hp_ne_r : p ≠ r := by
@@ -1175,8 +1175,8 @@ public theorem theorem_4_20_largest_prime_normal_sylow
         exact lt_of_le_of_ne hle hne
       have hKlt : Nat.card K < m := by
         simpa [hcard] using hKltH
-      have hKsolv : IsSolvable K := by
-        letI : IsSolvable H := hHsolv
+      have hKsolv : Group.IsSolvable K := by
+        let : Group.IsSolvable H := hHsolv
         infer_instance
       have hKodd : Odd (Nat.card K) :=
         hHodd.of_dvd_nat (Subgroup.card_subgroup_dvd_card K)
@@ -1191,11 +1191,11 @@ public theorem theorem_4_20_largest_prime_normal_sylow
       rw [hS_eq]
       have hPchar : (P : Subgroup K).Characteristic :=
         Sylow.characteristic_of_normal P hPnorm
-      letI : (P : Subgroup K).Characteristic := hPchar
+      let : (P : Subgroup K).Characteristic := hPchar
       have hPmap_char :
           ((P : Subgroup K).map K.subtype : Subgroup H).Characteristic :=
         characteristic_map_subtype_of_characteristic (G := H) K (P : Subgroup K)
-      letI : ((P : Subgroup K).map K.subtype : Subgroup H).Characteristic := hPmap_char
+      let : ((P : Subgroup K).map K.subtype : Subgroup H).Characteristic := hPmap_char
       infer_instance
   have hmain : P (Nat.card G) := Nat.strong_induction_on (Nat.card G) hP
   exact hmain G rfl hsolv hodd hrank hp_largest

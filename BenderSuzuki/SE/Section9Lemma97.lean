@@ -222,12 +222,12 @@ public theorem lemma97_ne_centralizer_sup
     simpa [D] using hM.inf_rightConjugate_card_odd htM
   have hEodd : Odd (Nat.card E) :=
     hDodd.of_dvd_nat (Subgroup.card_dvd_of_le inf_le_right)
-  have hEsolv : IsSolvable E := odd_order_theorem E hEodd
-  letI : IsSolvable E := hEsolv
+  have hEsolv : Group.IsSolvable E := odd_order_theorem E hEodd
+  letI : Group.IsSolvable E := hEsolv
   haveI : Nontrivial E :=
     (Subgroup.nontrivial_iff_ne_bot E).2 (by simpa [E] using hEne)
   have hcommLt : derivedSubgroup E < ⊤ :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := E)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   have hAbOneLt : 1 < Nat.card (E ⧸ derivedSubgroup E) := by
     have hindex : 1 < (derivedSubgroup E).index :=
       Subgroup.one_lt_index_of_ne_top hcommLt.ne

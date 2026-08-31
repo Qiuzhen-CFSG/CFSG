@@ -20,7 +20,7 @@ points and the Suzuki ovoid are written inline, without a wrapper definition.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open PFAppendixIII
 open scoped LinearAlgebra.Projectivization
 open scoped Pointwise
@@ -38,7 +38,7 @@ public theorem binaryGaloisField_tits_formula_sq
     simpa [K, BinaryGaloisField] using
       GaloisField.card 2 (2 * m + 1) (by omega)
   intro x
-  letI : Fintype K := Fintype.ofFinite K
+  let fintype : Fintype K := Fintype.ofFinite K
   calc
     pi (pi x) = (pi x) ^ (2 ^ (m + 1)) := hpi (pi x)
     _ = (x ^ (2 ^ (m + 1))) ^ (2 ^ (m + 1)) := by rw [hpi]
@@ -49,8 +49,9 @@ public theorem binaryGaloisField_tits_formula_sq
     _ = (x ^ (2 ^ (2 * m + 1))) ^ 2 := by rw [pow_succ, pow_mul]
     _ = x ^ 2 := by
       have hx_card : x ^ Nat.card K = x := by
-        rw [← Fintype.card_eq_nat_card]
-        exact FiniteField.pow_card x
+        have hpow : x ^ (@Fintype.card K fintype) = x :=
+          @FiniteField.pow_card K (inferInstance : GroupWithZero K) fintype x
+        simpa only [@Fintype.card_eq_nat_card K fintype] using hpow
       rw [← hK_card, hx_card]
 
 /-- The normalized finite-point parametrization of the Suzuki ovoid is injective. -/
@@ -1136,7 +1137,7 @@ private theorem suzukiRootGL_det_one
     intro i j hij
     fin_cases i <;> fin_cases j <;> simp [SuzukiRootMatrix] at hij ⊢
   change Matrix.det (SuzukiRootMatrix m a b) = 1
-  rw [Matrix.det_of_upperTriangular htri]
+  rw [Matrix.det_of_isUpperTriangular htri]
   simp [SuzukiRootMatrix, Fin.prod_univ_four]
 
 /-- Every torus generator has determinant one. -/
@@ -1148,7 +1149,7 @@ private theorem suzukiTorusGL_det_one
     intro i j hij
     fin_cases i <;> fin_cases j <;> simp [SuzukiTorusMatrix] at hij ⊢
   change Matrix.det (SuzukiTorusMatrix m u) = 1
-  rw [Matrix.det_of_upperTriangular htri]
+  rw [Matrix.det_of_isUpperTriangular htri]
   simp [SuzukiTorusMatrix, Fin.prod_univ_four, u.ne_zero]
 
 /-- The Weyl generator has determinant one in characteristic two. -/
@@ -1360,9 +1361,9 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
   let K := BinaryGaloisField (2 * m + 1)
   let tExp := 2 ^ (m + 1)
   let q := 2 ^ (2 * m + 1)
-  letI : Fintype K := Fintype.ofFinite K
-  have hK_card : Fintype.card K = q := by
-    rw [Fintype.card_eq_nat_card]
+  let fintype : Fintype K := Fintype.ofFinite K
+  have hK_card : @Fintype.card K fintype = q := by
+    rw [@Fintype.card_eq_nat_card K fintype]
     simpa [K, q, BinaryGaloisField] using
       GaloisField.card 2 (2 * m + 1) (by omega)
   have htExp_four : 4 ≤ tExp := by
@@ -1418,8 +1419,9 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
           (pi t * t ^ 2) (tExp + 2)
     · exact (Polynomial.natDegree_C_mul_X_pow_le (pi w) tExp).trans (by omega)
   have hpy : pyLeft = pyRight := by
-    apply Polynomial.eq_of_natDegree_lt_card_of_eval_eq
-      pyLeft pyRight Function.injective_id hpy_eval
+    apply @Polynomial.eq_of_natDegree_lt_card_of_eval_eq K
+      (inferInstance : CommRing K) (inferInstance : IsDomain K)
+      pyLeft pyRight K fintype (fun x : K => x) Function.injective_id hpy_eval
     rw [hK_card]
     exact (max_le hpyLeft_deg hpyRight_deg).trans_lt htExp_lt_q
   have ht_coeff : pi t * t ^ 2 = 0 := by
@@ -1464,7 +1466,8 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
       Polynomial.eval_pow, Polynomial.eval_X, mul_zero, add_zero, map_mul,
       hpi_formula, mul_pow, pow_add, pow_one] at h ⊢
     dsimp only [tExp]
-    ring_nf at h ⊢
+    have hexp : 2 ^ (m + 1) = 2 ^ m * 2 := by rw [pow_succ]
+    rw [hexp] at ⊢
     convert h using 1 <;> ring
   have hpxLeft_deg : pxLeft.natDegree ≤ tExp + 2 := by
     dsimp only [pxLeft]
@@ -1481,8 +1484,9 @@ private theorem suzukiOvoid_linear_coordinate_coefficients
           (pi u * u ^ 2) (tExp + 2)
     · exact (Polynomial.natDegree_C_mul_X_pow_le (pi v) tExp).trans (by omega)
   have hpx : pxLeft = pxRight := by
-    apply Polynomial.eq_of_natDegree_lt_card_of_eval_eq
-      pxLeft pxRight Function.injective_id hpx_eval
+    apply @Polynomial.eq_of_natDegree_lt_card_of_eval_eq K
+      (inferInstance : CommRing K) (inferInstance : IsDomain K)
+      pxLeft pxRight K fintype (fun x : K => x) Function.injective_id hpx_eval
     rw [hK_card]
     exact (max_le hpxLeft_deg hpxRight_deg).trans_lt htExp_lt_q
   refine ⟨ht, hc1, halpha_w, ?_⟩
@@ -2984,17 +2988,16 @@ private theorem suzukiMatrixGroup_card
         a.property b.property c.property d.property hab' hcd' with
       ⟨g, hga, hgb⟩
     exact ⟨g, Subtype.ext hga, Subtype.ext hgb⟩
-  letI : MulAction.IsMultiplyPretransitive
-      (SuzukiMatrixGroup m) Omega 2 := htwo
-  letI : MulAction.IsPretransitive (SuzukiMatrixGroup m) Omega :=
-    MulAction.isPretransitive_of_is_two_pretransitive
   have hOmega_card : Nat.card Omega = q ^ 2 + 1 := by
     change Nat.card {z // z ∈ O} = q ^ 2 + 1
     simpa [O, q] using suzukiOvoid_card m pi
   have hU_index : U.index = q ^ 2 + 1 := by
+    have hpre : MulAction.IsPretransitive (SuzukiMatrixGroup m) Omega :=
+      @MulAction.isPretransitive_of_is_two_pretransitive
+        (SuzukiMatrixGroup m) Omega _ _ htwo
     rw [hU_eq_stabilizer]
-    exact (MulAction.index_stabilizer_of_transitive
-      (SuzukiMatrixGroup m) pinfO).trans hOmega_card
+    exact (@MulAction.index_stabilizer_of_transitive
+      (SuzukiMatrixGroup m) Omega _ _ pinfO hpre).trans hOmega_card
   change Nat.card (SuzukiMatrixGroup m) = (q ^ 2 + 1) * q ^ 2 * (q - 1)
   calc
     Nat.card (SuzukiMatrixGroup m) = Nat.card U * U.index :=

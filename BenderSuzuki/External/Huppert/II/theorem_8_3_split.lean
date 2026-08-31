@@ -12,7 +12,7 @@ Bender--Suzuki argument.
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped Pointwise
 
 universe u
@@ -101,8 +101,8 @@ public theorem huppert_II_8_3_split_torus_reflection_data
         Subgroup.normalizer (R : Set (PSL2MatrixGroup F)) =
           U ⊔ Subgroup.zpowers w := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
-  haveI : CharP F p :=
+  let _ : Fintype F := Fintype.ofFinite F
+  have : CharP F p :=
     charP_of_card_eq_prime_pow (by simpa using hFcard)
   have hf_ne_zero : f ≠ 0 :=
     huppert_II_8_27_field_exponent_ne_zero hFcard
@@ -172,8 +172,12 @@ public theorem huppert_II_8_3_split_torus_reflection_data
         intro a b
         apply Subtype.ext
         ext i j
-        fin_cases i <;> fin_cases j <;>
-          simp [Matrix.mul_apply, mul_comm] }
+        fin_cases i <;> fin_cases j
+        all_goals
+          change _ = ((!![(a : F), 0; 0, (a⁻¹ : F)] :
+            Matrix (Fin 2) (Fin 2) F) *
+            !![(b : F), 0; 0, (b⁻¹ : F)]) _ _
+          simp [mul_comm] }
   let splitTorus : Fˣ →* PSL2MatrixGroup F :=
     (QuotientGroup.mk'
       (Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) F))).comp splitTorusSL
@@ -191,7 +195,8 @@ public theorem huppert_II_8_3_split_torus_reflection_data
       have ha_inv_val := congrFun (congrFun hscalar (1 : Fin 2)) (1 : Fin 2)
       have ha_inv : a = a⁻¹ := by
         apply Units.ext
-        simpa [splitTorusSL] using ha_inv_val
+        change (a : F) = (a⁻¹ : F) at ha_inv_val
+        simpa only [Units.val_inv_eq_inv_val] using ha_inv_val
       simpa [pow_two] using (eq_inv_iff_mul_eq_one.mp ha_inv)
     · intro ha
       apply (QuotientGroup.eq_one_iff (splitTorusSL a)).mpr
@@ -235,12 +240,12 @@ public theorem huppert_II_8_3_split_torus_reflection_data
     · exact hsplit_range_mul
   have hsplit_range_cyclic : IsCyclic splitTorus.range := by
     have hUnitsCyclic : IsCyclic Fˣ := by
-      letI : IsCyclic (⊤ : Subgroup Fˣ) := isCyclic_subgroup_units ⊤
+      let _ : IsCyclic (⊤ : Subgroup Fˣ) := isCyclic_subgroup_units ⊤
       exact isCyclic_of_surjective
         ((⊤ : Subgroup Fˣ).subtype) (by
           intro a
           exact ⟨⟨a, Subgroup.mem_top a⟩, rfl⟩)
-    letI : IsCyclic Fˣ := hUnitsCyclic
+    let _ : IsCyclic Fˣ := hUnitsCyclic
     exact isCyclic_of_surjective splitTorus.rangeRestrict
       splitTorus.rangeRestrict_surjective
   let qSL : Matrix.SpecialLinearGroup (Fin 2) F →* PSL2MatrixGroup F :=
@@ -259,16 +264,33 @@ public theorem huppert_II_8_3_split_torus_reflection_data
   have hsplitWeylSL_conj (a : Fˣ) :
       splitWeylSL * splitTorusSL a * splitWeylSL⁻¹ =
         splitTorusSL a⁻¹ := by
-    rw [hsplitWeylSL_inv]
+    let invW : Matrix.SpecialLinearGroup (Fin 2) F :=
+      ⟨!![0, 1; -1, 0], by simp [Matrix.det_fin_two]⟩
+    have hinv : splitWeylSL⁻¹ = invW := by
+      simpa [invW] using hsplitWeylSL_inv
+    rw [hinv]
     apply Subtype.ext
     change ((splitWeylSL : Matrix (Fin 2) (Fin 2) F) *
         (splitTorusSL a : Matrix (Fin 2) (Fin 2) F) *
-          ((⟨!![0, 1; -1, 0], by simp [Matrix.det_fin_two]⟩ :
-            Matrix.SpecialLinearGroup (Fin 2) F) : Matrix (Fin 2) (Fin 2) F)) =
+          (invW : Matrix (Fin 2) (Fin 2) F)) =
       (splitTorusSL a⁻¹ : Matrix (Fin 2) (Fin 2) F)
+    have hW : (splitWeylSL : Matrix (Fin 2) (Fin 2) F) = !![0, -1; 1, 0] := by
+      rfl
+    have hD : (splitTorusSL a : Matrix (Fin 2) (Fin 2) F) =
+        !![(a : F), 0; 0, (a⁻¹ : F)] := by
+      rfl
+    have hI : (invW : Matrix (Fin 2) (Fin 2) F) = !![0, 1; -1, 0] := by
+      rfl
+    have hDinv : (splitTorusSL a⁻¹ : Matrix (Fin 2) (Fin 2) F) =
+        !![((a⁻¹ : Fˣ) : F), 0; 0, (((a⁻¹ : Fˣ) : F)⁻¹)] := by
+      change !![((a⁻¹ : Fˣ) : F), 0; 0,
+        (((a⁻¹ : Fˣ) : F)⁻¹)] = _
+      rfl
+    rw [hW, hD, hI, hDinv]
+    rw [Matrix.mul_fin_two, Matrix.mul_fin_two]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [splitWeylSL, splitTorusSL, Matrix.mul_apply]
+      simp [Units.val_inv_eq_inv_val]
   have hsplitWeylSL_sq_center :
       splitWeylSL * splitWeylSL ∈
         Subgroup.center (Matrix.SpecialLinearGroup (Fin 2) F) := by
@@ -353,7 +375,13 @@ public theorem huppert_II_8_3_split_torus_reflection_data
     rw [← hscalar] at hmat
     have h01 := congrFun (congrFun hmat (0 : Fin 2)) (1 : Fin 2)
     have hneg_one_zero : (-1 : F) = 0 := by
-      simpa [splitTorusSL, splitWeylSL, Matrix.mul_apply] using h01.symm
+      have h01' := h01.symm
+      simp [splitWeylSL, Matrix.mul_apply] at h01'
+      have hentry : (splitTorusSL a : Matrix (Fin 2) (Fin 2) F) 0 1 = 0 := by
+        change (!![(a : F), 0; 0, (a⁻¹ : F)] : Matrix (Fin 2) (Fin 2) F) 0 1 = 0
+        rfl
+      rw [hentry, zero_mul] at h01'
+      exact h01'
     exact one_ne_zero (neg_eq_zero.mp hneg_one_zero)
   have hsplitWeyl_mem_normalizer :
       splitWeyl ∈
@@ -399,7 +427,7 @@ public theorem huppert_II_8_3_split_torus_reflection_data
       · exact hord
     have hdisjoint : Disjoint T Z := by
       let R : Subgroup Z := T.comap Z.subtype
-      letI : Fact (Nat.card Z).Prime := ⟨by
+      let _ : Fact (Nat.card Z).Prime := ⟨by
         rw [show Nat.card Z = 2 by exact hw_zpowers_card]
         exact Nat.prime_two⟩
       rcases R.eq_bot_or_eq_top_of_prime_card with hR | hR
@@ -421,7 +449,7 @@ public theorem huppert_II_8_3_split_torus_reflection_data
       exact Subgroup.zpowers_le.2 hw_normalizer
     let TD : Subgroup D := T.subgroupOf D
     let ZD : Subgroup D := Z.subgroupOf D
-    letI : TD.Normal := by
+    let _ : TD.Normal := by
       change (T.subgroupOf D).Normal
       exact Subgroup.normal_subgroupOf_of_le_normalizer hD_le_normalizer
     have hTDZD : Disjoint TD ZD := by
@@ -458,7 +486,7 @@ public theorem huppert_II_8_3_split_torus_reflection_data
     refine ⟨hw_zpowers_card, hdisjoint, ?_⟩
     calc
       Nat.card (T ⊔ Z : Subgroup (PSL2MatrixGroup F)) = Nat.card D := rfl
-      _ = Nat.card ZD * Nat.card TD := hcomp.card_mul.symm
+      _ = Nat.card ZD * Nat.card TD := hcomp.card_mul_card.symm
       _ = 2 * Nat.card T := by
         rw [hZDcard, hTDcard, hw_zpowers_card]
   let splitWeylZ : Subgroup (PSL2MatrixGroup F) := Subgroup.zpowers splitWeyl
@@ -544,9 +572,11 @@ public theorem huppert_II_8_3_split_torus_reflection_data
         eq_inv_of_mul_eq_one_right hdet
       have hAeq : A = splitTorusSL u := by
         apply Subtype.ext
+        change (A : Matrix (Fin 2) (Fin 2) F) =
+          !![(u : F), 0; 0, (u⁻¹ : F)]
         ext i j
         fin_cases i <;> fin_cases j <;>
-          simp [splitTorusSL, u, h01, h10, hA11]
+          simp [u, h01, h10, hA11]
       rw [hAeq]
       exact (show splitTorus.range ≤
         splitTorus.range ⊔ splitWeylZ from le_sup_left)
@@ -567,24 +597,26 @@ public theorem huppert_II_8_3_split_torus_reflection_data
         calc
           A 0 1 = -(-A 0 1) := by simp
           _ = -(A 1 0)⁻¹ := congrArg Neg.neg hneg
+      have huval : (u : F) = A 1 0 := by
+        simp [u]
       have hAeq : A = splitWeylSL * splitTorusSL u := by
         apply Subtype.ext
-        ext i j
-        fin_cases i <;> fin_cases j <;>
-          simp [splitWeylSL, splitTorusSL, u, Matrix.mul_apply,
-            h00, h11, hA01]
+        change (A : Matrix (Fin 2) (Fin 2) F) =
+          (!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) F) *
+            !![(u : F), 0; 0, (u⁻¹ : F)]
+        rw [Matrix.mul_fin_two]
+        rw [Matrix.eta_fin_two A.1]
+        simp [h00, hA01, huval, h11]
       have hw :
           splitWeyl ∈
             splitTorus.range ⊔ splitWeylZ :=
-        (show splitWeylZ ≤
-          splitTorus.range ⊔ splitWeylZ from le_sup_right)
-            (Subgroup.mem_zpowers splitWeyl)
+        Subgroup.mem_sup_right (S := splitTorus.range) (T := splitWeylZ)
+          (by exact Subgroup.mem_zpowers splitWeyl)
       have hu :
           splitTorus u ∈
             splitTorus.range ⊔ splitWeylZ :=
-        (show splitTorus.range ≤
-          splitTorus.range ⊔ splitWeylZ from le_sup_left)
-            ⟨u, rfl⟩
+        Subgroup.mem_sup_left (S := splitTorus.range) (T := splitWeylZ)
+          ⟨u, rfl⟩
       rw [hAeq]
       change qSL (splitWeylSL * splitTorusSL u) ∈
         splitTorus.range ⊔ splitWeylZ

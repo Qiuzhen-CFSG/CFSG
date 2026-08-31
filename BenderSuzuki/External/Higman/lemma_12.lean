@@ -336,7 +336,7 @@ private theorem lemma12_exists_isCompl_invariant_of_odd_linearEquiv
     (hU : ∀ v ∈ U, T v ∈ U) :
     ∃ W, IsCompl U W ∧ ∀ v ∈ W, T v ∈ W := by
   classical
-  letI : Finite (V ≃ₗ[ZMod 2] V) :=
+  let : Finite (V ≃ₗ[ZMod 2] V) :=
     Finite.of_injective
       (fun e : V ≃ₗ[ZMod 2] V => (e : V → V))
       (fun _ _ h => LinearEquiv.ext (fun v => congrFun h v))
@@ -369,15 +369,15 @@ private theorem lemma12_exists_isCompl_invariant_of_odd_linearEquiv
   let Upack : ρ.invtSubmodule := ⟨U, hUinv⟩
   let instAdd : AddCommGroup ρ.asModule :=
     Representation.instAddCommGroupAsModule ρ
-  letI : AddCommGroup ρ.asModule := instAdd
+  let : AddCommGroup ρ.asModule := instAdd
   let instMod : Module (MonoidAlgebra (ZMod 2) C) ρ.asModule :=
     Representation.instModuleMonoidAlgebraAsModule ρ
-  letI : Module (MonoidAlgebra (ZMod 2) C) ρ.asModule := instMod
-  letI : Fintype C := Fintype.ofFinite C
+  let : Module (MonoidAlgebra (ZMod 2) C) ρ.asModule := instMod
+  let : Fintype C := Fintype.ofFinite C
   have hCcard : Fintype.card C = orderOf T := by
     rw [← Nat.card_eq_fintype_card]
     exact Nat.card_zpowers T
-  haveI : NeZero (Fintype.card C : ZMod 2) := by
+  have : NeZero (Fintype.card C : ZMod 2) := by
     constructor
     intro hzero
     have hdiv : 2 ∣ Fintype.card C :=
@@ -417,14 +417,14 @@ private theorem lemma12_irreducible_pow_two_of_irreducible
     ∀ W : Submodule (ZMod 2) V,
       (∀ v ∈ W, (T ^ (2 ^ k)) v ∈ W) → W = ⊥ ∨ W = ⊤ := by
   classical
-  letI : Finite (V ≃ₗ[ZMod 2] V) :=
+  let : Finite (V ≃ₗ[ZMod 2] V) :=
     Finite.of_injective
       (fun e : V ≃ₗ[ZMod 2] V => (e : V → V))
       (fun _ _ h => LinearEquiv.ext (fun v => congrFun h v))
   have hT_odd : Odd (orderOf T) := by
     rw [← Nat.not_even_iff_odd]
     intro hEven
-    letI : Fintype (V ≃ₗ[ZMod 2] V) := Fintype.ofFinite _
+    let : Fintype (V ≃ₗ[ZMod 2] V) := Fintype.ofFinite _
     obtain ⟨d, hd⟩ := hEven
     have hord : orderOf T = 2 * d := by
       change orderOf T = d + d at hd
@@ -4807,7 +4807,9 @@ private theorem lemma12_eigenvalue_frobenius_conjugate_of_equivariant_linearEqui
             rw [mul_add]
           map_smul' := by
             intro c b
-            fin_cases c <;> simp }
+            rw [Algebra.smul_def, Algebra.smul_def]
+            simp [RingHom.id_apply]
+            ring }
       map_add' := by
         intro a b
         apply LinearMap.ext
@@ -4817,7 +4819,8 @@ private theorem lemma12_eigenvalue_frobenius_conjugate_of_equivariant_linearEqui
         intro c a
         apply LinearMap.ext
         intro b
-        fin_cases c <;> simp }
+        rw [map_smul]
+        simp [LinearMap.smul_apply, RingHom.id_apply] }
   have hB_equivariant (a b : BinaryGaloisField n) :
       B (lambda * a) (1 * b) = mu * B a b := by
     change f (lambda * a) * (1 * b) = mu * (f a * b)
@@ -5054,23 +5057,23 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       Lemma12IsomorphicSummandCriterionData X P B ∧
       (IsMulCommutative A → Lemma12ChainActorData g A B) := by
   classical
-  letI : Finite P := finite_of_isSuzukiTwoGroup _hP
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 P) := ⟨isPGroup_of_isSuzukiTwoGroup _hP⟩
-  letI : Group.IsNilpotent P :=
+  let : Finite P := finite_of_isSuzukiTwoGroup _hP
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 P) := ⟨isPGroup_of_isSuzukiTwoGroup _hP⟩
+  let : Group.IsNilpotent P :=
     IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
   have hB_abelian : IsMulCommutative B := by
-    letI : B.Normal := hlower.2.1
+    let : B.Normal := hlower.2.1
     let D : Subgroup P := (commutator B).map B.subtype
     have hB_ne : B ≠ ⊥ := ne_of_gt hlower.1
     have hD_lt : D < B := by
       rw [show D = ⁅B, B⁆ by exact B.map_subtype_commutator]
-      exact IsSolvable.commutator_lt_of_ne_bot hB_ne
+      exact Group.IsSolvable.commutator_lt_of_ne_bot hB_ne
     have hD_normal : D.Normal := by
       dsimp [D]
       infer_instance
     have hD_X : IsXInvariantSubgroup X D := by
-      letI : IsInvariant X P B := ⟨hlower.2.2.2.1⟩
+      let : IsInvariant X P B := ⟨hlower.2.2.2.1⟩
       have hforward : ∀ x : X, ∀ p : P, p ∈ D → x • p ∈ D := by
         intro x p hp
         rcases hp with ⟨b, hb, rfl⟩
@@ -5099,8 +5102,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       simpa using hmem
     exact commutatorElement_eq_one_iff_mul_comm.mp hcomm_one
   have hB_exponent_two : ∀ x : B, x ^ 2 = 1 := by
-    letI : B.Normal := hlower.2.1
-    letI : Fact (IsPGroup 2 B) :=
+    let : B.Normal := hlower.2.1
+    let : Fact (IsPGroup 2 B) :=
       ⟨(isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup B⟩
     let S : Subgroup B := squaresSubgroup B
     have hS_le_frattini : S ≤ frattini B := by
@@ -5133,7 +5136,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       dsimp [D, S]
       infer_instance
     have hD_X : IsXInvariantSubgroup X D := by
-      letI : IsInvariant X P B := ⟨hlower.2.2.2.1⟩
+      let : IsInvariant X P B := ⟨hlower.2.2.2.1⟩
       have hforward : ∀ x : X, ∀ p : P, p ∈ D → x • p ∈ D := by
         intro x p hp
         rcases hp with ⟨b, hb, rfl⟩
@@ -5200,7 +5203,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
           B ≤ M ∧
           ∀ C : Subgroup P, C.Normal → IsMulCommutative C →
             IsXInvariantSubgroup X C → M < C → False := by
-    letI : Fintype (Subgroup P) := Fintype.ofFinite _
+    let : Fintype (Subgroup P) := Fintype.ofFinite _
     let S : Finset (Subgroup P) :=
       Finset.univ.filter fun M =>
         M.Normal ∧ IsMulCommutative M ∧
@@ -5252,13 +5255,13 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
   have hPhi_le_A : Phi ≤ A := by
     let C : Subgroup P := A ⊔ Phi
     have hC_normal : C.Normal := by
-      letI : A.Normal := hmiddle.2.1
-      letI : Phi.Normal := hPhi_normal
+      let : A.Normal := hmiddle.2.1
+      let : Phi.Normal := hPhi_normal
       dsimp [C]
       infer_instance
     have hC_X : IsXInvariantSubgroup X C := by
-      letI : IsInvariant X P A := ⟨hmiddle.2.2.2.1⟩
-      letI : IsInvariant X P Phi := ⟨hPhi_X⟩
+      let : IsInvariant X P A := ⟨hmiddle.2.2.2.1⟩
+      let : IsInvariant X P Phi := ⟨hPhi_X⟩
       exact (isInvariant_sup A Phi).invariant
     rcases hupper.2.2.2.2.2 C hC_normal hC_X le_sup_left le_top with
       hC_A | hC_top
@@ -5280,7 +5283,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     apply _hP.2.1
     have hcenter_top : Subgroup.center P = ⊤ :=
       (commutator_eq_bot_iff_center_eq_top P).mp (by simpa [D] using hD_bot)
-    letI : CommGroup P := Group.commGroupOfCenterEqTop hcenter_top
+    let : CommGroup P := Group.commGroupOfCenterEqTop hcenter_top
     exact IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => mul_comm x y
   have hB_le_D : B ≤ D := by
     have hall := lemma1_involutions_mem_of_nontrivial_invariant
@@ -5301,8 +5304,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     rcases hmiddle.2.2.2.2.2 Phi hPhi_normal hPhi_X
         hB_le_Phi hPhi_le_A with hPhi_B | hPhi_A
     · exact hPhi_B
-    · letI : A.Normal := hmiddle.2.1
-      letI : Fact (IsPGroup 2 A) :=
+    · let : A.Normal := hmiddle.2.1
+      let : Fact (IsPGroup 2 A) :=
         ⟨(isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup A⟩
       have hA_abelian : IsMulCommutative A := by
         rw [← hPhi_A]
@@ -5329,8 +5332,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
           have hPhiA_eq_squares :
               PhiA = Subgroup.closure
                 {x : P | ∃ a : A, (a : P) ^ 2 = x} := by
-            letI : IsMulCommutative A := hA_abelian
-            letI : CommGroup A := IsMulCommutative.instCommGroup
+            let : IsMulCommutative A := hA_abelian
+            let : CommGroup A := IsMulCommutative.instCommGroup
             let Asq : Subgroup A := (powMonoidHom 2 : A →* A).range
             have hPhi_internal : frattini A = Asq := by
               have hcomm : commutator A = ⊥ := by
@@ -5378,7 +5381,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
             refine ⟨ap, hap, ?_⟩
             simp [ap, MulAut.conjNormal_apply]
           have hPhiA_X : IsXInvariantSubgroup X PhiA := by
-            letI : IsInvariant X P A := ⟨hmiddle.2.2.2.1⟩
+            let : IsInvariant X P A := ⟨hmiddle.2.2.2.1⟩
             have hforward : ∀ x : X, ∀ p : P,
                 p ∈ PhiA → x • p ∈ PhiA := by
               intro x p hp
@@ -5610,7 +5613,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     have hxy_ne : xB ≠ yB := by
       intro h
       exact hxy (congrArg Subtype.val h)
-    letI : Fintype B := Fintype.ofFinite B
+    let : Fintype B := Fintype.ofFinite B
     have hthree : ({oneB, xB, yB} : Finset B).card = 3 := by
       rw [Finset.card_insert_of_notMem (by simp [hx_ne, hy_ne])]
       rw [Finset.card_insert_of_notMem (by simp [hxy_ne])]
@@ -5623,14 +5626,14 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
     have hnle : n ≤ 1 := by omega
     rw [hcard] at hle
     interval_cases n <;> norm_num at hle
-  letI : FaithfulSMul X P := _hXfaithful
-  letI : Finite X := Finite.of_injective
+  let : FaithfulSMul X P := _hXfaithful
+  let : Finite X := Finite.of_injective
     (MulDistribMulAction.toMulAut X P) (by
       intro x y hxy
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
       intro p
       exact congrArg (fun f : MulAut P => f p) hxy)
-  letI : IsCyclic X := _hXcyclic
+  let : IsCyclic X := _hXcyclic
   let tau : MulAut P := MulDistribMulAction.toMulAut X P g
   obtain ⟨k, m, hm_odd, htau_order⟩ :=
     Nat.exists_eq_two_pow_mul_odd (orderOf_pos tau).ne'
@@ -6054,7 +6057,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       (by
         intro u hu
         exact hU_tau u hu)
-  letI : Finite (Additive (LowerCentralFactor P 0) ⧸ U) :=
+  let : Finite (Additive (LowerCentralFactor P 0) ⧸ U) :=
     Finite.of_surjective U.mkQ U.mkQ_surjective
   have htauQMap_surjective : Function.Surjective tauQMap := by
     intro z
@@ -6252,8 +6255,8 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
         (Submodule.quotientEquivOfIsCompl_apply_mk_right
           (p := U) (q := V) hUV w)
     exact congrArg Subtype.val hxiV_eq
-  letI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU_ne_bot
-  letI : Nontrivial V := Submodule.nontrivial_iff_ne_bot.mpr hV_ne_bot
+  let : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU_ne_bot
+  let : Nontrivial V := Submodule.nontrivial_iff_ne_bot.mpr hV_ne_bot
   have hfactor1_add_card :
       Nat.card (Additive (LowerCentralFactor P 1)) = 2 ^ n := by
     exact (Nat.card_congr Additive.toMul).trans hfactor1_card_n
@@ -6261,7 +6264,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       1 < Nat.card (Additive (LowerCentralFactor P 1)) := by
     rw [hfactor1_add_card]
     exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-  letI : Nontrivial (Additive (LowerCentralFactor P 1)) :=
+  let : Nontrivial (Additive (LowerCentralFactor P 1)) :=
     Finite.one_lt_card_iff_nontrivial.mp hfactor1_card_gt
   have hS_irreducible :=
     lemma6_irreducible_of_transitive S (by simpa [S] using hxi_transitive)
@@ -6565,11 +6568,11 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
       Nat.card {x : P // x ∈ involutions P} =
           Nat.card {b : B // b ≠ 1} := Nat.card_congr involEquiv
       _ = Nat.card B - 1 := by
-        letI : Fintype B := Fintype.ofFinite B
+        let : Fintype B := Fintype.ofFinite B
         rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
         simp
       _ = 2 ^ n - 1 := by rw [hB_card]
-  letI : Fintype X := Fintype.ofFinite X
+  let : Fintype X := Fintype.ofFinite X
   have hxi_order_dvd_cardX : orderOf xi ∣ Nat.card X := by
     rw [hxi_actor]
     have hactor_card : orderOf (g ^ (2 ^ k)) ∣ Fintype.card X :=
@@ -6930,7 +6933,7 @@ public theorem lemma12_chain_typeBCD_with_isomorphic_criterion
   have hbracketVK_self :=
     lemma6_scalarExtendBilinear_self
       (K := BinaryGaloisField n) bracketV hbracketV_self
-  letI : Nontrivial
+  let : Nontrivial
       (TensorProduct (ZMod 2) (BinaryGaloisField n)
         (Additive (LowerCentralFactor P 1))) := by
     let i0 : Fin n := ⟨0, by omega⟩

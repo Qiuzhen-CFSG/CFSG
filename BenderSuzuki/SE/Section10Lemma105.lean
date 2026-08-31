@@ -132,7 +132,7 @@ public theorem lemma105_invariant_sylow_p
     (hpC : (⟨p, hp⟩ : Nat.Primes) ∉ subgroupPrimeSet C)
     (hRC : R ≤ C)
     (hcop : Nat.Coprime (Nat.card R) (Nat.card K))
-    (hRsolv : IsSolvable R)
+    (hRsolv : Group.IsSolvable R)
     (hPp : IsPGroup p P)
     (hPK : P ≤ K)
     (hNPnorm : N ≤ Subgroup.normalizer (P : Set X)) :
@@ -159,10 +159,10 @@ public theorem lemma105_invariant_sylow_p
     rw [← hcomp.sup_eq]
     exact le_sup_right)
   let Rloc : Subgroup N := R.subgroupOf N
-  have hRlocsolv : IsSolvable Rloc := by
+  have hRlocsolv : Group.IsSolvable Rloc := by
     let eR : Rloc ≃* R := Subgroup.subgroupOfEquivOfLe hRN
-    letI : IsSolvable R := hRsolv
-    exact solvable_of_surjective (f := eR.symm.toMonoidHom) eR.symm.surjective
+    letI : Group.IsSolvable R := hRsolv
+    exact Group.isSolvable_of_surjective (f := eR.symm.toMonoidHom) eR.symm.surjective
   have hRnormK : Rloc ≤ Subgroup.normalizer (Kloc : Set N) := by
     have htop : Subgroup.normalizer (Kloc : Set N) = ⊤ :=
       Subgroup.normalizer_eq_top_iff.mpr hKnormal
@@ -170,6 +170,7 @@ public theorem lemma105_invariant_sylow_p
   letI : Subgroup.Normalizes Rloc Kloc := ⟨hRnormK⟩
   letI : MulDistribMulAction Rloc Kloc :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer Rloc Kloc hRnormK
+  letI : Group.IsSolvable Rloc := hRlocsolv
   have hcopLoc : Nat.Coprime (Nat.card Rloc) (Nat.card Kloc) := by
     have hRcard : Nat.card Rloc = Nat.card R :=
       natCard_subgroupOf_eq R N hRN
@@ -1152,7 +1153,7 @@ public theorem lemma105_faithful_quotient_of_fixed_zpowers
     {R : Type u} {G : Type v}
     [Group R] [Finite R] [Group G] [Finite G]
     [MulDistribMulAction R G]
-    (hGsolv : IsSolvable G)
+    (hGsolv : Group.IsSolvable G)
     (hcop : Nat.Coprime (Nat.card R) (Nat.card G))
     (H : Subgroup G) [H.Normal]
     (hHinv : IsInvariant R G H)
@@ -1265,7 +1266,7 @@ public theorem lemma105_faithful_action_on_P1_quotient
     (hPP1 : P ≤ P1)
     (hP1Pnorm : P1 ≤ Subgroup.normalizer (P : Set X))
     (hRPnorm : R ≤ Subgroup.normalizer (P : Set X))
-    (hP1solv : IsSolvable P1)
+    (hP1solv : Group.IsSolvable P1)
     (hcop : Nat.Coprime (Nat.card R) (Nat.card P1))
     (hPsubne : P.subgroupOf P1 ≠ ⊤)
     (hfixed : ∀ U : Subgroup X, U ≤ R → U ≠ ⊥ →
@@ -1429,7 +1430,8 @@ public theorem lemma_10_5
   let q' : Nat.Primes := ⟨q, hq⟩
   have hqC : q' ∈ subgroupPrimeSet C := by
     have hqdvd : q ∣ Nat.card C := (Nat.mem_primeFactors.mp hqPrimeFactors).2.1
-    simpa [q', subgroupPrimeSet] using hqdvd
+    change (q' : ℕ) ∣ Nat.card C
+    exact hqdvd
   let Rq : Sylow q C := Classical.choice (Sylow.nonempty (p := q) (G := C))
   let R : Subgroup X := (Rq : Subgroup C).map C.subtype
   have hRq : IsPGroup q R := by
@@ -1437,8 +1439,8 @@ public theorem lemma_10_5
   have hRC : R ≤ C := Subgroup.map_subtype_le (Rq : Subgroup C)
   have hqnep : q ≠ p := by
     simpa [q', p, C] using d.prime_ne_selected_of_mem_C hqC
-  have hRsolv : IsSolvable R := by
-    letI : Group.IsNilpotent R := hRq.isNilpotent
+  have hRsolv : Group.IsSolvable R := by
+    let : Group.IsNilpotent R := hRq.isNilpotent
     infer_instance
   obtain ⟨K, hcomp⟩ := d104.normal_complement
   have hKle : K ≤ N := by simpa [N] using hcomp.le_M
@@ -1540,7 +1542,7 @@ public theorem lemma_10_5
     hRC.trans (by
       intro x hx
       exact centralizer_le_normalizer P (by simpa [C, P, lemma104C] using hx.2))
-  have hP1solv : IsSolvable P1 := by
+  have hP1solv : Group.IsSolvable P1 := by
     letI : Group.IsNilpotent P1 := hP1p.isNilpotent
     infer_instance
   letI : Subgroup.Normalizes R P1 := ⟨by simpa [R, P1, N, C] using hRP1⟩

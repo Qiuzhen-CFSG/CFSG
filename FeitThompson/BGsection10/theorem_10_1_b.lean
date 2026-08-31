@@ -162,6 +162,7 @@ public theorem section10_mem_normalizer_conjBy_of_mem
     _ = H.conjBy m := by rw [hn_eq]
 
 omit [Finite G] [IsMinCE G] in
+set_option backward.isDefEq.respectTransparency false in
 public theorem section10AmbientSylowSubgroup_smul
     {M : Subgroup G} {p : Nat.Primes}
     (X : Sylow p.val M) (m : M) :
@@ -222,7 +223,7 @@ public theorem section10_sigma_sylow_normalizer_le
     (hpσ : p ∈ section10SigmaPrimes M) (X : Sylow p.val M) :
     Subgroup.normalizer (section10AmbientSylowSubgroup M X : Set G) ≤ M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hpσ with ⟨_hpM, P₀, hN₀⟩
   obtain ⟨m, hm⟩ := MulAction.exists_smul_eq M X P₀
   let XG : Subgroup G := section10AmbientSylowSubgroup M X
@@ -312,7 +313,7 @@ public theorem section10_sylow_conjugate_mem_of_normalizer_le
     {g : G} (hXgM : (section10AmbientSylowSubgroup M X).conjBy g ≤ M) :
     g ∈ M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let XG : Subgroup G := section10AmbientSylowSubgroup M X
   let XgSub : Subgroup M := (XG.conjBy g).subgroupOf M
   have hXg_card : Nat.card XgSub = p.val ^ (Nat.card M).factorization p.val := by
@@ -356,7 +357,7 @@ public theorem section10_maximal_normalizer_eq_self_of_sigma
   · have hnorm_proper : Subgroup.normalizer (M : Set G) ≠ ⊤ := by
       intro hnorm_top
       have hMnormal : M.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-      letI : IsSimpleGroup G := IsMinCE.simple
+      let : IsSimpleGroup G := IsMinCE.simple
       rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal M hMnormal with hMbot | hMtop
       · have hpM : p.val ∣ Nat.card M := hpσ.1
         have hp_one : p.val ∣ 1 := by
@@ -399,7 +400,7 @@ public theorem section10_sigma_conjBy
     (hpσ : p ∈ section10SigmaPrimes M) (a : G) :
     p ∈ section10SigmaPrimes (M.conjBy a) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hpσ with ⟨hpM, P, hN⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   let PGa : Subgroup G := PG.conjBy a
@@ -496,12 +497,12 @@ public theorem section10_pPrimeCore_normalizer_le_centralizer
         (Subgroup.normalizer (X : Set G)).subtype ≤
       Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let L : Subgroup G := Subgroup.normalizer (X : Set G)
   have hX_le_L : X ≤ L := by
     simpa [L] using (Subgroup.le_normalizer (H := X))
   let XL : Subgroup L := X.subgroupOf L
-  haveI : XL.Normal := by
+  have : XL.Normal := by
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer
           (H := X) (K := L) hX_le_L).mpr (by simp [L])
@@ -557,7 +558,7 @@ public theorem section10_normalizer_ne_top_of_ne_bot_le_maximal'
     Subgroup.normalizer (X : Set G) ≠ ⊤ := by
   intro hnorm_top
   have hXnormal : X.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal X hXnormal with hXbot | hXtop
   · exact hXne hXbot
   · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
@@ -609,12 +610,12 @@ public theorem section10_sylow_le_of_quotient_coprime
 omit [IsMinCE G] in
 public theorem section10_normalizer_sup_Op_p'p_eq_top_of_rank_le_two
     {H : Type*} [Group H] [Finite H] {p : Nat.Primes}
-    (hsolv : IsSolvable H) (hodd : Odd (Nat.card H))
+    (hsolv : Group.IsSolvable H) (hodd : Odd (Nat.card H))
     (hp_mem : p.val ∣ Nat.card H) (hrank : primeRank p.val H ≤ 2)
     (P : Sylow p.val H) :
     Subgroup.normalizer ((P : Subgroup H) : Set H) ⊔ Op_p'p p.val H = ⊤ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hcop : Nat.Coprime p.val (Nat.card (H ⧸ Op_p'p p.val H)) :=
     (theorem_4_18_e (G := H) (p := p.val) hsolv hodd hp_mem hrank).1
   have hP_le_Op : (P : Subgroup H) ≤ Op_p'p p.val H :=
@@ -718,13 +719,13 @@ public theorem section10_Op_p'p_le_sylow_sup_pPrimeCore
     (P : Sylow p.val H) (hP_le_Op : (P : Subgroup H) ≤ Op_p'p p.val H) :
     Op_p'p p.val H ≤ (P : Subgroup H) ⊔ pPrimeCore p.val H := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let L : Subgroup H := Op_p'p p.val H
   let M : Subgroup H := pPrimeCore p.val H
   have hM_le_L : M ≤ L := by
     simpa [M, L] using section10_pPrimeCore_le_Op_p'p (H := H) p.val
   let N : Subgroup L := M.subgroupOf L
-  haveI : N.Normal := (inferInstance : M.Normal).subgroupOf L
+  have : N.Normal := (inferInstance : M.Normal).subgroupOf L
   let PL : Sylow p.val L := P.subtype (by simpa [L] using hP_le_Op)
   have hquotL : IsPGroup p.val (L ⧸ N) := by
     simpa [L, M, N] using section10_Op_p'p_quotient_pPrimeCore_isPGroup (H := H) p.val
@@ -748,12 +749,12 @@ public theorem section10_Op_p'p_le_sylow_sup_pPrimeCore
 omit [IsMinCE G] in
 public theorem section10_normalizer_sup_pPrimeCore_eq_top_of_rank_le_two
     {H : Type*} [Group H] [Finite H] {p : Nat.Primes}
-    (hsolv : IsSolvable H) (hodd : Odd (Nat.card H))
+    (hsolv : Group.IsSolvable H) (hodd : Odd (Nat.card H))
     (hp_mem : p.val ∣ Nat.card H) (hrank : primeRank p.val H ≤ 2)
     (P : Sylow p.val H) :
     Subgroup.normalizer ((P : Subgroup H) : Set H) ⊔ pPrimeCore p.val H = ⊤ := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hcop : Nat.Coprime p.val (Nat.card (H ⧸ Op_p'p p.val H)) :=
     (theorem_4_18_e (G := H) (p := p.val) hsolv hodd hp_mem hrank).1
   have hP_le_Op : (P : Subgroup H) ≤ Op_p'p p.val H :=
@@ -778,7 +779,7 @@ public theorem section10_normalizer_sup_pPrimeCore_eq_top_of_rank_le_two
 omit [IsMinCE G] in
 public theorem section10_normalizer_pPrimeCore_factor_of_rank_le_two
     {H : Type*} [Group H] [Finite H] {p : Nat.Primes}
-    (hsolv : IsSolvable H) (hodd : Odd (Nat.card H))
+    (hsolv : Group.IsSolvable H) (hodd : Odd (Nat.card H))
     (hp_mem : p.val ∣ Nat.card H) (hrank : primeRank p.val H ≤ 2)
     (P : Sylow p.val H) (t : H) :
     ∃ u : Subgroup.normalizer ((P : Subgroup H) : Set H),
@@ -800,7 +801,7 @@ public theorem section10_normalizer_pPrimeCore_factor_of_rank_le_two
 omit [IsMinCE G] in
 public theorem section10_rank_le_two_factor_in_ambient_normalizer_centralizer
     {X : Subgroup G} {p : Nat.Primes} (hXp : IsPGroup p.val X)
-    (hsolv : IsSolvable (Subgroup.normalizer (X : Set G)))
+    (hsolv : Group.IsSolvable (Subgroup.normalizer (X : Set G)))
     (hodd : Odd (Nat.card (Subgroup.normalizer (X : Set G))))
     (hp_mem : p.val ∣ Nat.card (Subgroup.normalizer (X : Set G)))
     (hrank : primeRank p.val (Subgroup.normalizer (X : Set G)) ≤ 2)
@@ -810,7 +811,7 @@ public theorem section10_rank_le_two_factor_in_ambient_normalizer_centralizer
         ((section10AmbientSylowSubgroup (Subgroup.normalizer (X : Set G)) P) : Set G),
       ∃ v : Subgroup.centralizer (X : Set G), (t : G) = (u : G) * (v : G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let L : Subgroup G := Subgroup.normalizer (X : Set G)
   let PG : Subgroup G := section10AmbientSylowSubgroup L P
   rcases section10_normalizer_pPrimeCore_factor_of_rank_le_two
@@ -885,7 +886,7 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_pgroup
       simpa [XS, Subgroup.mem_subgroupOf, xS] using hxXS
     exact hXS.ne (le_antisymm hX_le_S hS_le_X)
   have hnc : NormalizerCondition S := by
-    letI : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
+    let : Group.IsNilpotent S := IsPGroup.isNilpotent (p := p) (G := S) hSp
     exact Group.normalizerCondition_of_isNilpotent (G := S)
   let NS : Subgroup S := Subgroup.normalizer (XS : Set S)
   have hXS_lt_NS : XS < NS := by
@@ -949,7 +950,7 @@ public theorem section10_sylow_ambient_not_lt_pSubgroup_le
     (hYM : Y ≤ M) (hYp : IsPGroup p.val Y) :
     False := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let YM : Subgroup M := Y.subgroupOf M
   have hYMp : IsPGroup p.val YM :=
     hYp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := Y) (K := M) hYM).symm
@@ -978,7 +979,7 @@ public theorem section10_sigma_ambient_sylow_eq_of_le_sylow
     (hPGS : section10AmbientSylowSubgroup M P ≤ (S : Subgroup G)) :
     (S : Subgroup G) = section10AmbientSylowSubgroup M P := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   by_contra hne
   have hPG_lt_S : PG < (S : Subgroup G) := by
@@ -1000,7 +1001,7 @@ public theorem section10_exists_conjBy_le_of_isPGroup_of_sigma
     (hpσ : p ∈ section10SigmaPrimes M) (hYp : IsPGroup p.val Y) :
     ∃ a : G, Y ≤ M.conjBy a := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   have hpσ_saved : p ∈ section10SigmaPrimes M := hpσ
   rcases hpσ with ⟨_hpM, P₀, _hN₀⟩
   let PG₀ : Subgroup G := section10AmbientSylowSubgroup M P₀
@@ -1050,7 +1051,7 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_sylow
     ∃ Y : Subgroup G,
       X < Y ∧ Y ≤ M ∧ Y ≤ Subgroup.normalizer (X : Set G) ∧ IsPGroup p.val Y := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
   have hX_le_PG : X ≤ PG := by
     simpa [PG] using hXPG.le
@@ -1076,7 +1077,7 @@ public theorem section10_exists_pSubgroup_gt_le_normalizer_of_lt_sylow
       simpa [XP, Subgroup.mem_subgroupOf, xPG] using hxXP
     exact hXPG.ne (le_antisymm hX_le_PG hPG_le_X)
   have hnc : NormalizerCondition PG := by
-    letI : Group.IsNilpotent PG := IsPGroup.isNilpotent (p := p.val) (G := PG) hPGp
+    let : Group.IsNilpotent PG := IsPGroup.isNilpotent (p := p.val) (G := PG) hPGp
     exact Group.normalizerCondition_of_isNilpotent (G := PG)
   let NPG : Subgroup PG := Subgroup.normalizer (XP : Set PG)
   have hXP_lt_NPG : XP < NPG := by
@@ -1149,7 +1150,7 @@ public theorem section10_card_measure_lt_of_lt
 public theorem section10_generatorRank_le_natCard_pre
     (H : Type*) [Group H] [Finite H] :
     generatorRank H ≤ Nat.card H := by
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   obtain ⟨S, hS_card, _hS_top⟩ := Group.rank_spec H
   calc
     generatorRank H = Group.rank H := generatorRank_eq_group_rank H
@@ -1188,7 +1189,7 @@ public theorem section10_primeRank_le_of_equiv_pre
     have hA'q : IsPGroup q A' :=
       IsPGroup.map (p := q) (H := A) hAq e.symm.toMonoidHom
     have hA'comm : IsMulCommutative A' := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       infer_instance
     have hgen_le : generatorRank A ≤ generatorRank A' := by
       let eA : A ≃* A' :=
@@ -1256,7 +1257,7 @@ public theorem section10_generatorRank_le_groupRank_of_subgroup_pre
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -1283,7 +1284,7 @@ public theorem section10_primeRank_le_groupRank_sylow_pre
     {p : Nat.Primes} (S : Sylow p.val G) :
     primeRank p.val G ≤ groupRank (S : Subgroup G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rw [primeRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
@@ -1305,7 +1306,7 @@ public theorem section10_primeRank_le_groupRank_sylow_pre
         (Subgroup.equivMapOfInjective (f := (MulAut.conj g).toMonoidHom) A
           (EquivLike.injective (MulAut.conj g)))
     have hAconj_comm : IsMulCommutative Aconj := by
-      letI : IsMulCommutative A := hAcomm
+      let : IsMulCommutative A := hAcomm
       simpa [Aconj] using
         (Subgroup.map_isMulCommutative (f := (MulAut.conj g).toMonoidHom) (H := A))
     have hgen_eq : generatorRank A = generatorRank Aconj := by
@@ -1374,7 +1375,7 @@ public theorem section10_transitive_pair_of_sylow_left
     (hP₁X : section10AmbientSylowSubgroup Q₁ P₁ = X) :
     ∃ c : Subgroup.centralizer (X : Set G), Q₂ = Q₁.conjBy (c : G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hQ₁X with ⟨a, rfl, hXQ₁⟩
   rcases hQ₂X with ⟨b, hQ₂eq, hXQ₂⟩
   let g : G := a * b⁻¹
@@ -1437,7 +1438,7 @@ public theorem section10_exists_larger_in_conjugate_of_not_sylow
     ∃ Y : Subgroup G,
       X < Y ∧ Y ≤ Q ∧ Y ≤ Subgroup.normalizer (X : Set G) ∧ IsPGroup p.val Y := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let XQ : Subgroup Q := X.subgroupOf Q
   have hXQp : IsPGroup p.val XQ :=
     hXp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := X) (K := Q) hXQ).symm
@@ -1542,7 +1543,7 @@ public theorem section10_conjugatesContaining_conjBy_iff
 public theorem section10_normalizer_solvable_of_ne_bot_le_maximal
     {M X : Subgroup G} (hM : M ∈ section9MaximalSubgroups G)
     (hXM : X ≤ M) (hXne : X ≠ ⊥) :
-    IsSolvable (Subgroup.normalizer (X : Set G)) := by
+    Group.IsSolvable (Subgroup.normalizer (X : Set G)) := by
   have hproper :
       Subgroup.normalizer (X : Set G) ≠ ⊤ :=
     section10_normalizer_ne_top_of_ne_bot_le_maximal' hM hXM hXne
@@ -1573,7 +1574,7 @@ public theorem theorem_10_1_b
           (section10ConjugatesContaining M X))
     X ?_ M p hM hpσ hXne hXp hXM
   intro X ih M p hM hpσ hXne hXp hXM
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro Q₁ hQ₁X Q₂ hQ₂X
   rcases hQ₁X with ⟨a₁, hQ₁eq, hXQ₁⟩
   rcases hQ₂X with ⟨a₂, hQ₂eq, hXQ₂⟩
@@ -1723,7 +1724,7 @@ public theorem theorem_10_1_b
           rw [hXcard, pow_succ']
           exact dvd_mul_right p.val (p.val ^ m)
         exact hp_dvd_X.trans (Subgroup.card_dvd_of_le (show X ≤ L from Subgroup.le_normalizer))
-      have hsolvL : IsSolvable L :=
+      have hsolvL : Group.IsSolvable L :=
         section10_normalizer_solvable_of_ne_bot_le_maximal hM₀ hXM₀ hXne
       have hoddL : Odd (Nat.card L) := by
         simpa [L] using section10_normalizer_odd_of_minCE (G := G) X

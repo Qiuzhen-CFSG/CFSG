@@ -55,19 +55,19 @@ open scoped IsMulCommutative
 
 public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     {π : Set Nat.Primes} {H₁ H₂ : Subgroup G}
     (hHall₁ : IsHallSubgroup π H₁) (hHall₂ : IsHallSubgroup π H₂)
     (hInv₁ : IsInvariant A G H₁) (hInv₂ : IsInvariant A G H₂) :
     H₂ ⊓ Subgroup.normalizer H₁ ≤ H₁ := by
   let N : Subgroup G := Subgroup.normalizer H₁
   let K : Subgroup N := H₂.subgroupOf N
-  letI : IsInvariant A G H₁ := hInv₁
+  let _ : IsInvariant A G H₁ := hInv₁
   have hN_inv : IsInvariant A G N := by
     simpa [N] using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
-  letI : IsInvariant A G N := hN_inv
-  letI : IsSolvable G := hsolv
-  have hsolvN : IsSolvable N := subgroup_solvable_of_solvable (H := N)
+  let _ : IsInvariant A G N := hN_inv
+  let _ : Group.IsSolvable G := hsolv
+  have hsolvN : Group.IsSolvable N := by infer_instance
   have hcoprimeN : Nat.Coprime (Nat.card A) (Nat.card N) := by
     exact Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card (s := N) (α := G)) hcoprime
   have hPiH₂ : IsPiSubgroup (G := G) π H₂ := by
@@ -363,7 +363,7 @@ lemma exists_normalizer_factor_of_conj_eq_of_isInvariant
 public theorem exists_principal_cocycle_of_solvable_coprime
     {A : Type v} [Group A] [Finite A] :
     ∀ {N : Type u} [Group N] [Finite N] [MulDistribMulAction A N],
-      IsSolvable N →
+      Group.IsSolvable N →
       Nat.Coprime (Nat.card A) (Nat.card N) →
       ∀ c : A → N, (∀ a b : A, c (a * b) = c a * (a • c b)) →
         ∃ x : N, ∀ a : A, c a = x * (a • x)⁻¹ := by
@@ -371,7 +371,7 @@ public theorem exists_principal_cocycle_of_solvable_coprime
   let P : ℕ → Prop := fun n =>
     ∀ (N' : Type u) [Group N'] [Finite N'] [MulDistribMulAction A N'],
       Nat.card N' = n →
-      IsSolvable N' →
+      Group.IsSolvable N' →
       Nat.Coprime (Nat.card A) (Nat.card N') →
       ∀ c : A → N', (∀ a b : A, c (a * b) = c a * (a • c b)) →
         ∃ x : N', ∀ a : A, c a = x * (a • x)⁻¹
@@ -380,7 +380,7 @@ public theorem exists_principal_cocycle_of_solvable_coprime
     refine Nat.strong_induction_on n ?_
     intro n ih N' _ _ _ hcard hsolv' hcop' c hc
     by_cases hcomm : IsMulCommutative N'
-    · letI : IsMulCommutative N' := hcomm
+    · let _ : IsMulCommutative N' := hcomm
       obtain ⟨x, hx⟩ :=
         exists_coboundary_of_cocycle_of_coprime_card
           (A := A) (N := N') c hc hcop'
@@ -397,22 +397,23 @@ public theorem exists_principal_cocycle_of_solvable_coprime
           simp [hx, hy]
         have hcomm' : IsMulCommutative N' := ⟨hcommStd⟩
         exact hcomm hcomm'
-      haveI : Nontrivial N' := not_subsingleton_iff_nontrivial.mp hnot_subsingleton
+      have _ : Nontrivial N' := not_subsingleton_iff_nontrivial.mp hnot_subsingleton
+      let _ : Group.IsSolvable N' := hsolv'
       let D : Subgroup N' := commutator N'
       have hDlt_top : D < ⊤ := by
-        simpa [D] using (IsSolvable.commutator_lt_top_of_nontrivial (G := N'))
-      letI : D.Normal := by
+        simpa [D] using (Group.IsSolvable.commutator_lt_top_of_nontrivial (G := N'))
+      let _ : D.Normal := by
         simpa [D] using (inferInstance : (commutator N').Normal)
-      letI : D.Characteristic := by
+      let _ : D.Characteristic := by
         simpa [D] using (inferInstance : (commutator N').Characteristic)
-      letI : IsInvariant A N' D :=
+      let _ : IsInvariant A N' D :=
         isInvariant_of_characteristic (A := A) (G := N') D
-      letI : MulAction.QuotientAction A D :=
+      let _ : MulAction.QuotientAction A D :=
         quotientAction_of_isInvariant (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
-      letI : Finite (N' ⧸ D) := by infer_instance
-      letI : MulDistribMulAction A (N' ⧸ D) :=
+      let _ : Finite (N' ⧸ D) := by infer_instance
+      let _ : MulDistribMulAction A (N' ⧸ D) :=
         quotientMulDistribMulAction (A := A) (G := N') D (inferInstance : IsInvariant A N' D)
-      letI : IsMulCommutative (N' ⧸ D) := by
+      let _ : IsMulCommutative (N' ⧸ D) := by
         exact
           (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := D)).2
             (le_rfl : commutator N' ≤ commutator N')
@@ -474,8 +475,7 @@ public theorem exists_principal_cocycle_of_solvable_coprime
             _ = Nat.card N' := by simpa using (Subgroup.index_mul_card (H := D))
             _ = n := hcard
         simpa [hEq] using hlt
-      have hsolvD : IsSolvable D := by
-        exact subgroup_solvable_of_solvable (H := D)
+      have hsolvD : Group.IsSolvable D := by infer_instance
       obtain ⟨y, hy⟩ :=
         (ih (Nat.card D) hDlt) D rfl hsolvD hcopD cD hcD
       refine ⟨x0 * (y : N'), ?_⟩
@@ -496,7 +496,7 @@ public theorem exists_principal_cocycle_of_solvable_coprime
 
 open scoped Pointwise in
 public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
-    {G : Type u} [Group G] [Finite G] (hsolv : IsSolvable G)
+    {G : Type u} [Group G] [Finite G] (hsolv : Group.IsSolvable G)
     {π : Set Nat.Primes} {H₁ H₂ : Subgroup G}
     (hHall₁ : IsHallSubgroup π H₁) (hHall₂ : IsHallSubgroup π H₂) :
     ∃ g : G, H₂ = H₁.map (MulAut.conj g).toMonoidHom := by
@@ -504,7 +504,7 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
   let P : ℕ → Prop := fun n =>
     ∀ (G' : Type u) [Group G'] [Finite G'],
       Nat.card G' = n →
-      IsSolvable G' →
+      Group.IsSolvable G' →
       ∀ (π' : Set Nat.Primes) (K₁ K₂ : Subgroup G'),
         IsHallSubgroup π' K₁ →
         IsHallSubgroup π' K₂ →
@@ -553,8 +553,8 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       have hi_lt : i - 1 < i := Nat.sub_one_lt hi_ne_zero
       have : ¬ pds (i - 1) := Nat.find_min hpds hi_lt
       exact fun hN_bot => this (by simp only [pds, N, hN_bot])
-    haveI : N.Normal := derivedSeries_normal (G := G') (i - 1)
-    haveI : N.Characteristic := derivedSeries_characteristic (G := G') (i - 1)
+    have _ : N.Normal := derivedSeries_normal (G := G') (i - 1)
+    have _ : N.Characteristic := derivedSeries_characteristic (G := G') (i - 1)
     have hcomm_bot : ⁅N, N⁆ = ⊥ := by
       have hi1 : i - 1 + 1 = i := Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hi_ne_zero)
       have hderived : derivedSeries G' i = ⁅N, N⁆ := by
@@ -564,7 +564,7 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
                 simp only [derivedSeries_succ]
           _ = ⁅N, N⁆ := by simp only [N]
       simpa [hderived] using hi_spec
-    haveI : IsMulCommutative (↥N) := by
+    have _ : IsMulCommutative (↥N) := by
       have hN_le_centralizer : N ≤ Subgroup.centralizer (N : Set G') :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := N) (H₂ := N)).1 hcomm_bot
       exact (Subgroup.le_centralizer_iff_isMulCommutative (K := N)).1 hN_le_centralizer
@@ -572,24 +572,24 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       have : 1 < Nat.card (↥N) := (Subgroup.one_lt_card_iff_ne_bot (H := N)).2 hN_ne_bot
       exact ne_of_gt this
     obtain ⟨p, hp_prime, hp_dvd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (↥N)) hN_card_ne_one
-    haveI : Fact p.Prime := ⟨hp_prime⟩
+    have _ : Fact p.Prime := ⟨hp_prime⟩
     let P₀ : Sylow p N := Classical.choice (Sylow.nonempty (p := p) (G := N))
     have hP₀_ne_bot : (P₀ : Subgroup N) ≠ ⊥ :=
       Sylow.ne_bot_of_dvd_card (G := N) P₀ (by simpa using hp_dvd)
     have hP₀_normal : (P₀ : Subgroup N).Normal := by
       simpa using (Subgroup.normal_of_isMulCommutative (H := (P₀ : Subgroup N)))
-    haveI : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
-    haveI : Subsingleton (Sylow p N) := by infer_instance
-    haveI : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
+    have _ : Unique (Sylow p N) := Sylow.unique_of_normal (G := N) (p := p) P₀ hP₀_normal
+    have _ : Subsingleton (Sylow p N) := by infer_instance
+    have _ : (P₀ : Subgroup N).Characteristic := Sylow.characteristic_of_subsingleton (G := N) P₀
     let Psub : Subgroup G' := (P₀ : Subgroup N).map N.subtype
     have hP₀_p : IsPGroup p (P₀ : Subgroup N) := P₀.isPGroup'
     have hPsub_p : IsPGroup p Psub := by
       simpa [Psub] using (IsPGroup.map (p := p) (H := (P₀ : Subgroup N)) hP₀_p N.subtype)
-    haveI : Psub.Normal := by infer_instance
+    have _ : Psub.Normal := by infer_instance
     let Q := G' ⧸ Psub
-    letI : Group Q := by infer_instance
-    letI : Finite Q := by infer_instance
-    have hQ_solv : IsSolvable Q := by infer_instance
+    let _ : Group Q := by infer_instance
+    let _ : Finite Q := by infer_instance
+    have hQ_solv : Group.IsSolvable Q := by infer_instance
     have hQ_lt : Nat.card Q < n := by
       have hmul := (Subgroup.card_eq_card_quotient_mul_card_subgroup (α := G') (s := Psub))
       have hPsub_ne_bot : Psub ≠ ⊥ := by
@@ -670,10 +670,10 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
       let Pk : Subgroup K0 := Psub.subgroupOf K0
       let K₂k : Subgroup K0 := K₂.subgroupOf K0
       let K₁gk : Subgroup K0 := K₁g.subgroupOf K0
-      haveI : Pk.Normal := by
+      have _ : Pk.Normal := by
         simpa [Pk] using
           (Subgroup.Normal.subgroupOf (H := Psub) (K := K0) (inferInstance : Psub.Normal))
-      haveI : IsMulCommutative (↥Pk) := by infer_instance
+      have _ : IsMulCommutative (↥Pk) := by infer_instance
       have hK0_eq_sup_K₂ : K0 = K₂ ⊔ Psub := by
         calc
           K0 = (K₂.map f).comap f := rfl
@@ -779,13 +779,13 @@ public theorem exists_conj_eq_of_isHallSubgroup_of_solvable
 
 public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
-    [MulDistribMulAction A G] (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    [MulDistribMulAction A G] (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) {H₁ H₂ : Subgroup G}
     (hHall₁ : IsHallSubgroup π H₁) (hHall₂ : IsHallSubgroup π H₂)
     (hInv₁ : IsInvariant A G H₁) (hInv₂ : IsInvariant A G H₂) :
     ∃ g : G, g ∈ fixedPointSubgroup A G ∧ H₂ = H₁.map (MulAut.conj g) := by
   by_cases hH₁norm : H₁.Normal
-  · letI : H₁.Normal := hH₁norm
+  · let _ : H₁.Normal := hH₁norm
     have hEq : H₂ = H₁ := hHall₁.eq_of_normal hHall₂
     refine ⟨1, ?_, ?_⟩
     · simp [fixedPointSubgroup]
@@ -794,7 +794,7 @@ public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
           ext x
           simp)
   · by_cases hH₂norm : H₂.Normal
-    · letI : H₂.Normal := hH₂norm
+    · let _ : H₂.Normal := hH₂norm
       have hEq : H₁ = H₂ := hHall₂.eq_of_normal hHall₁
       have : H₁.Normal := by simpa [hEq] using (inferInstance : H₂.Normal)
       exact (hH₁norm this).elim
@@ -843,14 +843,15 @@ public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
           obtain ⟨φ, hsmul_g, hcocycle⟩ :=
             exists_normalizer_factor_of_conj_eq_of_isInvariant
               (H₁ := H₁) (H₂ := H₂) hInv₁ hInv₂ hconj
-          have hsolvN : IsSolvable (Subgroup.normalizer (H₁ : Set G)) := subgroup_solvable_of_solvable _
+          let _ : Group.IsSolvable G := hsolv
+          have hsolvN : Group.IsSolvable (Subgroup.normalizer (H₁ : Set G)) := by infer_instance
           have hcopN : Nat.Coprime (Nat.card A) (Nat.card (Subgroup.normalizer (H₁ : Set G))) := by
             exact Nat.Coprime.of_dvd_right
               (Subgroup.card_subgroup_dvd_card (s := Subgroup.normalizer H₁) (α := G)) hcoprime
-          letI : IsInvariant A G H₁ := hInv₁
+          let _ : IsInvariant A G H₁ := hInv₁
           have hInvN : IsInvariant A G (Subgroup.normalizer H₁) := by
             simpa using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
-          letI : IsInvariant A G (Subgroup.normalizer (H₁ : Set G)) := hInvN
+          let _ : IsInvariant A G (Subgroup.normalizer (H₁ : Set G)) := hInvN
           have hcocycle' :
               ∀ a b : A, φ (a * b) = φ a * (a • φ b) := by
             intro a b

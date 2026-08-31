@@ -1,5 +1,6 @@
 module  -- shake: keep-all --deprecated_module: ignore
 
+public import Theory.AutAlternating
 public import Theory.Character
 public import Theory.Character.BrauerPermutation
 public import Theory.Character.BrauerSuzuki
@@ -15,6 +16,21 @@ public import Theory.Character.Induction
 public import Theory.Character.Integrality
 public import Theory.Character.Orthogonality
 public import Theory.Character.SimpleCriteria
+public import Theory.Comparator.Defs
+public import Theory.ElementaryAbelian.Basic
+public import Theory.ElementaryAbelian.Join
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.Frattini.PGroup
+public import Theory.GroupAction.Defs
+public import Theory.GroupAction.FixedPointTransport
+public import Theory.GroupAction.FreeOrbitQuotient
+public import Theory.GroupAction.Invariant
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupAction.MinimalNormal
+public import Theory.GroupAction.Quotient
+public import Theory.PGL2.Defs
+public import Theory.PGroup
+public import Theory.PSL2.Defs
 public import Theory.Representation
 public import Theory.Representation.AbsolutelyIrreducible
 public import Theory.Representation.Clifford

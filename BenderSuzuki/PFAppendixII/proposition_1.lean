@@ -498,6 +498,18 @@ private lemma appendixII_quotient_involution_central
   rw [← hzu]
   exact z.2
 
+/-- An involution is central modulo the `2'`-core when a Sylow `2`-subgroup is
+generalized quaternion. This is the quotient-centrality consequence of
+Peterfalvi's Appendix II argument. -/
+public theorem appendixII_quotient_involution_central_public
+    {G : Type u} [Group G] [Finite G]
+    (P : Sylow 2 G) {n : ℕ} (hn : 3 ≤ n)
+    (hP : Nonempty (P ≃* QuaternionGroup (2 ^ (n - 2))))
+    (u : G) (huI : IsInvolution u) :
+    QuotientGroup.mk' (pPrimeCore 2 G) u ∈
+      Subgroup.center (G ⧸ pPrimeCore 2 G) := by
+  exact appendixII_quotient_involution_central P hn hP u huI
+
 private lemma appendixII_factorization_of_quotient_involution_central
     {G : Type u} [Group G] [Finite G] (u : G) (huI : IsInvolution u)
     (hcentral :
@@ -602,7 +614,7 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvabl
     {G : Type u} {Ω : Type v} [Group G] [Finite G] [MulAction G Ω] [Finite Ω]
     (H D Q : Subgroup G) (t : G) (hA1 : HypothesisA1 G Ω H D Q t)
     [FaithfulSMul G Ω] (N : Subgroup G) (hNnormal : N.Normal)
-    (hN_ne_bot : N ≠ ⊥) (hNsolv : IsSolvable N) :
+    (hN_ne_bot : N ≠ ⊥) (hNsolv : Group.IsSolvable N) :
     ∃ (F : Subgroup G) (p : ℕ), F.Normal ∧ p.Prime ∧
       IsElementaryAbelian p F ∧ F ≠ ⊥ ∧ MulAction.IsPretransitive F Ω ∧
       (∀ ω : Ω, MulAction.stabilizer F ω = ⊥) ∧ Disjoint F H ∧ F ⊔ H = ⊤ := by
@@ -619,12 +631,12 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_solvabl
   }
   let FN : Subgroup N := F.subgroupOf N
   let eFN : FN ≃* F := Subgroup.subgroupOfEquivOfLe hF_le_N
-  letI : IsSolvable N := hNsolv
-  have hFNsolv : IsSolvable FN := subgroup_solvable_of_solvable FN
-  letI : IsSolvable FN := hFNsolv
-  have hFsolv : IsSolvable F :=
-    solvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
-  letI : IsSolvable F := hFsolv
+  letI : Group.IsSolvable N := hNsolv
+  have hFNsolv : Group.IsSolvable FN := inferInstance
+  letI : Group.IsSolvable FN := hFNsolv
+  have hFsolv : Group.IsSolvable F :=
+    Group.isSolvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
+  letI : Group.IsSolvable F := hFsolv
   obtain ⟨p, hp, hFelem⟩ := minimalNormal_solvable_exists_isElementaryAbelian F
   letI : IsElementaryAbelian p F := hFelem
   letI : MulAction.IsPreprimitive G Ω :=
@@ -741,7 +753,7 @@ private theorem proposition_1_exists_regular_elementaryAbelian_normal_of_factori
     exact hA1.t_not_mem_H (by simp [hHtop])
   have hNodd : Odd (Nat.card N) := by
     exact Nat.coprime_two_left.mp (by simpa [N] using pPrimeCore_coprime_card (p := 2) (G := G))
-  have hNsolv : IsSolvable N := odd_order_theorem N hNodd
+  have hNsolv : Group.IsSolvable N := odd_order_theorem N hNodd
   exact proposition_1_exists_regular_elementaryAbelian_normal_of_solvable_normal
     H D Q t hA1 N hNnormal hN_ne_bot hNsolv
 
@@ -914,7 +926,9 @@ public theorem proposition_1
     calc
       (0 : Ω) = addCoord.symm (0 : Additive F) := rfl
       _ = orbitEquiv (1 : F) := by simp [addCoord, orbitEquiv]
-      _ = base := by simp [orbitEquiv]
+      _ = base := by
+        change (1 : F) • base = base
+        simp
   let withZeroEquiv : WithZero Q ≃ Ω :=
     (Equiv.optionCongr qEquiv).trans (Equiv.optionSubtypeNe base)
   let mulCoord : Ω ≃ WithZero Q := withZeroEquiv.symm

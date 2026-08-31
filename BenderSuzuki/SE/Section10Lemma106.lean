@@ -157,7 +157,7 @@ This is the checked coprime-action content of source `(10F)`. -/
 public theorem lemma106_hall_complement_action
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G]
-    (hsolv : IsSolvable G)
+    (hsolv : Group.IsSolvable G)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card G))
     (pi : Set Nat.Primes) (C : Subgroup G)
     (hHallC : IsHallSubgroup pi C)
@@ -169,7 +169,7 @@ public theorem lemma106_hall_complement_action
       S.Normal ∧
       commutatorAction (A := A) (G := G) = S := by
   classical
-  letI : IsSolvable G := hsolv
+  letI : Group.IsSolvable G := hsolv
   obtain ⟨S, hHallS, hSinv⟩ :=
     exists_isHallSubgroup_isInvariant (G := G) (A := A) hsolv hcop
       {p | p ∉ pi}
@@ -226,10 +226,11 @@ public theorem lemma106_hall_complement_action
       _ = (⊥ : Subgroup S).map S.subtype := by simp
   have hcopS : Nat.Coprime (Nat.card A) (Nat.card S) :=
     Nat.Coprime.of_dvd_right (Subgroup.card_subgroup_dvd_card S) hcop
+  letI : IsInvariant A G S := hSinv
   have hsupS :
       fixedPointSubgroup A S ⊔ commutatorAction (A := A) (G := S) = ⊤ :=
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprime
-      (subgroup_solvable_of_solvable S) hcopS
+      (by infer_instance : Group.IsSolvable S) hcopS
   have hcommS : commutatorAction (A := A) (G := S) = ⊤ := by
     rw [hCfixS] at hsupS
     simpa using hsupS
@@ -404,7 +405,7 @@ public theorem lemma106_eq_commutator_of_coprime_fixedPointFree
     {X : Type*} [Group X] [Finite X]
     (R P : Subgroup X)
     (hPnormR : P ≤ Subgroup.normalizer (R : Set X))
-    (hsolvR : IsSolvable R)
+    (hsolvR : Group.IsSolvable R)
     (hcop : Nat.Coprime (Nat.card P) (Nat.card R))
     (hcentral : subgroupCentralizerIn R P = ⊥) :
     R = ⁅R, P⁆ := by

@@ -173,7 +173,7 @@ public def trans : ρ ≃ₗ ϕ :=
 /-! `symm` as an equivalence on equivalences. -/
 
 /-- Taking inverses defines an equivalence between `ρ ≃ₗ σ` and `σ ≃ₗ ρ`. -/
-@[expose, simps!]
+@[expose]
 public def symmEquiv : (ρ ≃ₗ σ) ≃ (σ ≃ₗ ρ) where
   toFun := .symm
   invFun := .symm
@@ -373,4 +373,3 @@ public noncomputable def toRepresentationEquiv
     (e : ρ ≃ₗ σ) : Representation.Equiv ρ σ :=
   Representation.Equiv.mk e.toLinearEquiv e.isIntertwining'
 end RepEquiv
-

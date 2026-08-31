@@ -215,6 +215,7 @@ cyclic actor on the central quotient and the center. -/
     ∀ z : BinaryGaloisField n,
       pairLift 0 z =
         ((eZ.symm (Multiplicative.ofAdd z) : Subgroup.center P) : P)
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 /-- Higman Lemma 11: a Suzuki `2`-group of Omega-length two is type A. -/
 public theorem lemma11_length_two_typeA_actor_coordinates
@@ -230,10 +231,10 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     intro x hx y hy
     rcases _hXregular.2 x hx y hy with ⟨k, hk, _hunique⟩
     exact ⟨k, hk⟩
-  letI : Finite P := finite_of_isSuzukiTwoGroup _hP
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 P) := ⟨isPGroup_of_isSuzukiTwoGroup _hP⟩
-  letI : Group.IsNilpotent P :=
+  let : Finite P := finite_of_isSuzukiTwoGroup _hP
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 P) := ⟨isPGroup_of_isSuzukiTwoGroup _hP⟩
+  let : Group.IsNilpotent P :=
     IsPGroup.isNilpotent (isPGroup_of_isSuzukiTwoGroup _hP)
   rcases _hLen with ⟨subgroups, htop, hbot, _hle, hsteps⟩
   let A : Subgroup P := subgroups ⟨1, by decide⟩
@@ -254,17 +255,17 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     have h := hsteps (1 : Fin 2)
     simpa [A, hs2] using h
   have hA_abelian : IsMulCommutative A := by
-    letI : A.Normal := hlower.2.1
+    let : A.Normal := hlower.2.1
     let D : Subgroup P := (commutator A).map A.subtype
     have hA_ne : A ≠ ⊥ := ne_of_gt hlower.1
     have hD_lt : D < A := by
       rw [show D = ⁅A, A⁆ by exact A.map_subtype_commutator]
-      exact IsSolvable.commutator_lt_of_ne_bot hA_ne
+      exact Group.IsSolvable.commutator_lt_of_ne_bot hA_ne
     have hD_normal : D.Normal := by
       dsimp [D]
       infer_instance
     have hD_X : IsXInvariantSubgroup X D := by
-      letI : IsInvariant X P A := ⟨hlower.2.2.2.1⟩
+      let : IsInvariant X P A := ⟨hlower.2.2.2.1⟩
       have hforward : ∀ x : X, ∀ p : P, p ∈ D → x • p ∈ D := by
         intro x p hp
         rcases hp with ⟨a, ha, rfl⟩
@@ -299,7 +300,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     rcases hupper.2.2.2.2.2 B hB_normal hB_X hAB.le le_top with hBA | hBtop
     · exact hAB.ne hBA.symm
     · apply _hP.2.1
-      letI : IsMulCommutative B := hB_abelian
+      let : IsMulCommutative B := hB_abelian
       refine IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => ?_
       let bx : B := ⟨x, by rw [hBtop]; trivial⟩
       let by' : B := ⟨y, by rw [hBtop]; trivial⟩
@@ -323,7 +324,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       dsimp [D]
       infer_instance
     have hD_X : IsXInvariantSubgroup X D := by
-      letI : IsInvariant X P (⊤ : Subgroup P) := ⟨hupper.2.2.2.1⟩
+      let : IsInvariant X P (⊤ : Subgroup P) := ⟨hupper.2.2.2.1⟩
       have hforward : ∀ x : X, ∀ p : P, p ∈ D → x • p ∈ D := by
         intro x p hp
         rcases hp with ⟨a, ha, rfl⟩
@@ -339,7 +340,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         have hpinv := hforward x⁻¹ (x • p) hp
         simpa [smul_smul] using hpinv
     have hD_le_A : D ≤ A := by
-      haveI : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
+      have : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
         ⟨(isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup ⊤⟩
       rintro _ ⟨d, hd, rfl⟩
       apply hlemma9_data.2
@@ -353,7 +354,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         simpa only [D] using hcommutator_map_top
       have hcenter_top : Subgroup.center P = ⊤ :=
         (commutator_eq_bot_iff_center_eq_top P).mp hcomm_bot
-      letI : CommGroup P := Group.commGroupOfCenterEqTop hcenter_top
+      let : CommGroup P := Group.commGroupOfCenterEqTop hcenter_top
       exact IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => mul_comm x y
     rcases hlower.2.2.2.2.2 D hD_normal hD_X bot_le hD_le_A with hbot | hA
     · exact False.elim (hD_ne hbot)
@@ -371,7 +372,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
   have hfrattini_eq_A :
       (frattini (⊤ : Subgroup P)).map (⊤ : Subgroup P).subtype = A := by
     apply le_antisymm hlemma9_data.2
-    haveI : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
+    have : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
       ⟨(isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup ⊤⟩
     intro a ha
     rw [← hcommutator_eq_A] at ha
@@ -452,7 +453,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
     · exact hcenterA.symm
     · exfalso
       apply _hP.2.1
-      letI : CommGroup P := Group.commGroupOfCenterEqTop hcenterTop
+      let : CommGroup P := Group.commGroupOfCenterEqTop hcenterTop
       exact IsMulCommutative.mk <| Std.Commutative.mk <| fun x y => mul_comm x y
   have hinvolutions_center :
       involutions P = {z : P | z ∈ Subgroup.center P ∧ z ≠ 1} := by
@@ -489,16 +490,16 @@ public theorem lemma11_length_two_typeA_actor_coordinates
           ∀ y : Additive (LowerCentralFactor P 1), y ≠ 0 →
             ∃ k : ℕ, (lowerCentralFactorLinearAut xi 1 ^ k) x = y) ∧
         squaresSubgroup P ≤ higmanLowerCentralSeries P 1 := by
-    letI : FaithfulSMul X P := _hXfaithful
+    let : FaithfulSMul X P := _hXfaithful
     have htoMulAut_injective :
         Function.Injective (MulDistribMulAction.toMulAut X P) := by
       intro x y hxy
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
       intro p
       exact congrArg (fun f : MulAut P => f p) hxy
-    letI : Finite X := Finite.of_injective
+    let : Finite X := Finite.of_injective
       (MulDistribMulAction.toMulAut X P) htoMulAut_injective
-    letI : IsCyclic X := _hXcyclic
+    let : IsCyclic X := _hXcyclic
     obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := X)
     let tau : MulAut P := MulDistribMulAction.toMulAut X P g
     obtain ⟨k, m, hm_odd, htau_order⟩ :=
@@ -547,7 +548,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       apply hlemma9_data.2
       let yt : (⊤ : Subgroup P) := ⟨y, trivial⟩
       refine ⟨yt ^ 2, ?_, rfl⟩
-      letI : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
+      let : Fact (IsPGroup 2 (⊤ : Subgroup P)) :=
         ⟨(isPGroup_of_isSuzukiTwoGroup _hP).to_subgroup ⊤⟩
       rw [frattini_eq_closure_commutator_union_powers
         (R := (⊤ : Subgroup P)) (p := 2)]
@@ -624,7 +625,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       have hxyA : xA ≠ yA := by
         intro h
         exact hxy (congrArg Subtype.val h)
-      letI : Fintype A := Fintype.ofFinite A
+      let : Fintype A := Fintype.ofFinite A
       have hthree : ({oneA, xA, yA} : Finset A).card = 3 := by
         rw [Finset.card_insert_of_notMem (by simp [hxA.symm, hyA.symm])]
         rw [Finset.card_insert_of_notMem (by simp [hxyA])]
@@ -1106,7 +1107,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         Nat.card {x : P // x ∈ involutions P} =
             Nat.card {a : A // a ≠ 1} := Nat.card_congr involEquiv
         _ = Nat.card A - 1 := by
-          letI : Fintype A := Fintype.ofFinite A
+          let : Fintype A := Fintype.ofFinite A
           rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
           simp
         _ = 2 ^ n - 1 := by rw [hA_card]
@@ -1147,14 +1148,14 @@ public theorem lemma11_length_two_typeA_actor_coordinates
       hkernel0_map_A, hxi_irreducible,
       hxi_transitive, hsquares_le⟩
   have hspectral_typeA : IsSuzukiTwoTypeAWithActor X P := by
-    letI : FaithfulSMul X P := _hXfaithful
+    let : FaithfulSMul X P := _hXfaithful
     have htoMulAut_injective :
         Function.Injective (MulDistribMulAction.toMulAut X P) := by
       intro x y hxy
       apply FaithfulSMul.eq_of_smul_eq_smul (α := P)
       intro p
       exact congrArg (fun f : MulAut P => f p) hxy
-    letI : Finite X := Finite.of_injective
+    let : Finite X := Finite.of_injective
       (MulDistribMulAction.toMulAut X P) htoMulAut_injective
     rcases hfactor_action_data with
       ⟨actor, xi, n, hactor_generator, hxi_actor, hactor_order,
@@ -1203,7 +1204,7 @@ public theorem lemma11_length_two_typeA_actor_coordinates
         1 < Nat.card (Additive (LowerCentralFactor P 1)) := by
       rw [hL2_add_card]
       exact one_lt_pow₀ (by norm_num : 1 < (2 : ℕ)) (by omega)
-    letI : Nontrivial (Additive (LowerCentralFactor P 1)) :=
+    let : Nontrivial (Additive (LowerCentralFactor P 1)) :=
       Finite.one_lt_card_iff_nontrivial.mp hL2_card_gt
     have hS_irreducible :=
       lemma6_irreducible_of_transitive S

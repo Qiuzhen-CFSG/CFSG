@@ -82,7 +82,7 @@ public theorem lemma_3_2_a_no_solv {G : Type*} [Group G] [Finite G]
   exact hKnle hK_le_N
 
 public theorem lemma_3_2_a {G : Type*} [Group G] [Finite G] (K R N : Subgroup G) [N.Normal]
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (_hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (_hsolvK : Group.IsSolvable K)
     (hKnle : ¬ K ≤ N) :
     N ≤ K :=
   lemma_3_2_a_no_solv K R N hfrob hKnle

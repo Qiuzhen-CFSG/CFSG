@@ -1975,7 +1975,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
     refine ⟨hfamily, ?_, IsMinCE.odd_order, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     · intro i
       fin_cases i
-      · simpa [Aidx, Lidx, Kidx, τidx] using hAgreeM
+      · change Section7.agreesWithDadeTransform (Section8.a1Set K) M RM τM
+        exact hAgreeM
       · change Section7.agreesWithDadeTransform (Section8.a1Set H) L RL τL
         exact hAgreeL
     · intro i
@@ -1998,7 +1999,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
           section16NonidentityElements]
     · intro i
       fin_cases i
-      · simpa [Sidx, Hidx, Lidx] using hPunctM
+      · change Section7.puncturedInducedFamily (K.subgroupOf M) Mfam
+        exact hPunctM
       · change Section7.puncturedInducedFamily (H.subgroupOf L) Lfam
         exact hPunctL
     · intro i
@@ -2019,7 +2021,8 @@ public theorem section14_theorem_14_14_pf79_nonzero_source_bridge
       · simpa [Sidx, ζidx, Hidx, Lidx] using ⟨hφmem, hφirr, hφdeg⟩
     · intro i
       fin_cases i
-      · simpa [βidx, τidx, ζidx, Lidx, Hidx] using hβMτ
+      · change τM βM = Section7.theorem_7_8_beta M K τM ψ
+        exact hβMτ
       · change τL βL = Section7.theorem_7_8_beta L H τL φ
         exact hβLτ
     · intro i

@@ -141,7 +141,7 @@ theorem replacementCommChain_le_normalizer
       exact le_top
   | n + 1 => by
       let D : Subgroup G := replacementCommChain B A n
-      letI : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal := commutator_normal_in_sup D A
+      let : ((⁅D, A⁆).subgroupOf (D ⊔ A)).Normal := commutator_normal_in_sup D A
       have hsup_norm : D ⊔ A ≤ Subgroup.normalizer (((⁅D, A⁆ : Subgroup G) : Set G)) := by
         exact
           Subgroup.le_normalizer_of_normal_subgroupOf
@@ -386,12 +386,12 @@ lemma thompsonSubgroup_top_map_subtype (P : Subgroup G) :
     exact (Subgroup.map_le_iff_le_comap).mp <| le_sSup <| by
       refine ⟨?_, ?_, ?_⟩
       · simpa using (Subgroup.map_subtype_le (H := P) (K := A))
-      · letI : IsMulCommutative A := hA.2.1
+      · let : IsMulCommutative A := hA.2.1
         exact Subgroup.map_isMulCommutative (H := A) P.subtype
       · intro B hB hBcomm
         let B' : Subgroup P := B.subgroupOf P
         have hAmax := hA.2.2 B' (by simp) (by
-          letI : IsMulCommutative B := hBcomm
+          let : IsMulCommutative B := hBcomm
           infer_instance)
         calc
           Nat.card B = Nat.card B' := by
@@ -406,7 +406,7 @@ lemma thompsonSubgroup_top_map_subtype (P : Subgroup G) :
     have hAin :
         A.subgroupOf P ∈ thompsonAbelianSubgroups (G := P) (⊤ : Subgroup P) := by
       refine ⟨by simp, ?_, ?_⟩
-      · letI : IsMulCommutative A := hA.2.1
+      · let : IsMulCommutative A := hA.2.1
         infer_instance
       · intro B hB hBcomm
         have hAmax := hA.2.2 (B.map P.subtype) (by
@@ -489,11 +489,11 @@ lemma thompsonSubgroup_top_map_mulEquiv {H : Type*} [Group H] [Finite H] (e : G 
     constructor
     · rintro ⟨B, hB, rfl⟩
       refine ⟨by simp, ?_, ?_⟩
-      · letI : IsMulCommutative B := hB.2.1
+      · let : IsMulCommutative B := hB.2.1
         exact Subgroup.map_isMulCommutative (H := B) e.toMonoidHom
       · intro C _ hCcomm
         have hBmax := hB.2.2 (C.map e.symm.toMonoidHom) (by simp) (by
-          letI : IsMulCommutative C := hCcomm
+          let : IsMulCommutative C := hCcomm
           exact Subgroup.map_isMulCommutative (H := C) e.symm.toMonoidHom)
         calc
           Nat.card C = Nat.card (C.map e.symm.toMonoidHom) := by
@@ -506,11 +506,11 @@ lemma thompsonSubgroup_top_map_mulEquiv {H : Type*} [Group H] [Finite H] (e : G 
     · intro hA
       refine ⟨A.map e.symm.toMonoidHom, ?_, ?_⟩
       · refine ⟨by simp, ?_, ?_⟩
-        · letI : IsMulCommutative A := hA.2.1
+        · let : IsMulCommutative A := hA.2.1
           exact Subgroup.map_isMulCommutative (H := A) e.symm.toMonoidHom
         · intro C _ hCcomm
           have hAmax := hA.2.2 (C.map e.toMonoidHom) (by simp) (by
-            letI : IsMulCommutative C := hCcomm
+            let : IsMulCommutative C := hCcomm
             exact Subgroup.map_isMulCommutative (H := C) e.toMonoidHom)
           calc
             Nat.card C = Nat.card (C.map e.toMonoidHom) := by
@@ -646,7 +646,7 @@ theorem thompsonCenter_normal_subgroupOf_sylow
         refine ⟨?_, ?_, ?_⟩
         · change A.map (MulDistribMulAction.toMonoidHom G (MulAut.conj g)) ≤ S
           exact Subgroup.conj_smul_le_of_le hA.1 ⟨g, hg⟩
-        · letI : IsMulCommutative A := hA.2.1
+        · let : IsMulCommutative A := hA.2.1
           exact Subgroup.map_isMulCommutative (H := A) e.toMonoidHom
         · intro C hC hCcomm
           have hCpre_le : C.map e.symm.toMonoidHom ≤ S := by
@@ -670,7 +670,7 @@ theorem thompsonCenter_normal_subgroupOf_sylow
           · intro x hx
             rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
             simpa [e] using S.mul_mem (S.mul_mem (S.inv_mem hg) (hB.1 hy)) hg
-          · letI : IsMulCommutative B := hB.2.1
+          · let : IsMulCommutative B := hB.2.1
             exact Subgroup.map_isMulCommutative (H := B) e.symm.toMonoidHom
           · intro C hC hCcomm
             have hCpre_le : C.map e.toMonoidHom ≤ S := by
@@ -740,7 +740,7 @@ lemma normalizer_le_normalizer_thompsonCenter (S : Subgroup G) :
         · intro x hx
           rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
           exact (Subgroup.mem_normalizer_iff.mp hg _).1 (hB.1 hy)
-        · letI : IsMulCommutative B := hB.2.1
+        · let : IsMulCommutative B := hB.2.1
           exact Subgroup.map_isMulCommutative (H := B) e.toMonoidHom
         · intro C hC hCcomm
           have hCpre_le : C.map e.symm.toMonoidHom ≤ S := by
@@ -750,7 +750,7 @@ lemma normalizer_le_normalizer_thompsonCenter (S : Subgroup G) :
               (Subgroup.normalizer (S : Set G)).inv_mem hg
             simpa [e] using (Subgroup.mem_normalizer_iff.mp hginv _).1 (hC hy)
           have hCpre_comm : IsMulCommutative (C.map e.symm.toMonoidHom) := by
-            letI : IsMulCommutative C := hCcomm
+            let : IsMulCommutative C := hCcomm
             exact Subgroup.map_isMulCommutative (H := C) e.symm.toMonoidHom
           have hBmax := hB.2.2 (C.map e.symm.toMonoidHom) hCpre_le hCpre_comm
           calc
@@ -769,7 +769,7 @@ lemma normalizer_le_normalizer_thompsonCenter (S : Subgroup G) :
             have hginv : g⁻¹ ∈ Subgroup.normalizer (S : Set G) :=
               (Subgroup.normalizer (S : Set G)).inv_mem hg
             simpa [e] using (Subgroup.mem_normalizer_iff.mp hginv _).1 (hA.1 hy)
-          · letI : IsMulCommutative A := hA.2.1
+          · let : IsMulCommutative A := hA.2.1
             exact Subgroup.map_isMulCommutative (H := A) e.symm.toMonoidHom
           · intro C hC hCcomm
             have hCpre_le : C.map e.toMonoidHom ≤ S := by
@@ -777,7 +777,7 @@ lemma normalizer_le_normalizer_thompsonCenter (S : Subgroup G) :
               rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
               exact (Subgroup.mem_normalizer_iff.mp hg _).1 (hC hy)
             have hCpre_comm : IsMulCommutative (C.map e.toMonoidHom) := by
-              letI : IsMulCommutative C := hCcomm
+              let : IsMulCommutative C := hCcomm
               exact Subgroup.map_isMulCommutative (H := C) e.toMonoidHom
             have hAmax := hA.2.2 (C.map e.toMonoidHom) hCpre_le hCpre_comm
             calc
@@ -844,12 +844,12 @@ theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
   have hAimage :
       A.map P.toSubgroup.subtype ∈ thompsonAbelianSubgroups (G := G) (P : Subgroup G) := by
     refine ⟨by simpa using (Subgroup.map_subtype_le (H := (P : Subgroup G)) (K := A)), ?_, ?_⟩
-    · letI : IsMulCommutative A := hA.2.1
+    · let : IsMulCommutative A := hA.2.1
       exact Subgroup.map_isMulCommutative (H := A) P.toSubgroup.subtype
     · intro B hB hBcomm
       let B' : Subgroup P := B.subgroupOf (P : Subgroup G)
       have hAmax := hA.2.2 B' (by simp) (by
-        letI : IsMulCommutative B := hBcomm
+        let : IsMulCommutative B := hBcomm
         infer_instance)
       calc
         Nat.card B = Nat.card B' := by
@@ -877,7 +877,7 @@ theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
   have hB_comm : IsMulCommutative B := by
     let hAcomm : IsMulCommutative A := hA.2.1
     let hZcomm : IsMulCommutative Z := by
-      letI : IsMulCommutative (thompsonCenter (G := G) (P : Subgroup G)) :=
+      let : IsMulCommutative (thompsonCenter (G := G) (P : Subgroup G)) :=
         thompsonCenter_isMulCommutative (G := G) (P : Subgroup G)
       infer_instance
     refine (Subgroup.le_centralizer_iff_isMulCommutative (K := B)).1 ?_
@@ -930,7 +930,7 @@ theorem thompsonCenter_le_map_of_mem_thompsonAbelianSubgroups
 theorem thompsonAbelianSubgroups_nonempty (P : Subgroup G) :
     ∃ A : Subgroup G, A ∈ thompsonAbelianSubgroups (G := G) P := by
   classical
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
   let S : Set (Subgroup G) := {A : Subgroup G | A ≤ P ∧ IsMulCommutative A}
   have hS_nonempty : S.Nonempty := by
     refine ⟨⊥, ?_⟩
@@ -1042,7 +1042,7 @@ theorem thompsonAbelianSubgroups_centralizer_eq
       · exact hx.2
     have hB_comm : IsMulCommutative B := by
       change IsMulCommutative (Subgroup.closure ((A : Set G) ∪ {x}))
-      letI : IsMulCommutative A := hA.2.1
+      let : IsMulCommutative A := hA.2.1
       exact Subgroup.isMulCommutative_closure (k := ((A : Set G) ∪ {x})) <| by
         intro y hy z hz
         rcases hy with hyA | rfl
@@ -1164,9 +1164,9 @@ theorem thompsonAbelianSubgroups_normalizer_iff_commutator_eq_bot
 
 omit [Finite G] in
 theorem commutator_lt_self_of_isSolvable_local (M : Subgroup G)
-    [IsSolvable (↥M)] [Nontrivial (↥M)] : ⁅M, M⁆ < M := by
+    [Group.IsSolvable (↥M)] [Nontrivial (↥M)] : ⁅M, M⁆ < M := by
   have hlt : commutator (↥M) < (⊤ : Subgroup (↥M)) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := ↥M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := ↥M)
   have hlt' :
       (commutator (↥M)).map M.subtype < (⊤ : Subgroup (↥M)).map M.subtype := by
     exact
@@ -1210,7 +1210,7 @@ theorem thompsonReplacement_base
           (Subgroup.commutator_mem_commutator hxP (hA.1 hu))
     exact sup_le hM_le_P (fun y hy => hA.1 hy.2)
   · rw [Subgroup.sup_eq_closure]
-    letI : IsMulCommutative A := hA.2.1
+    let : IsMulCommutative A := hA.2.1
     exact Subgroup.isMulCommutative_closure
       (k := (((M : Subgroup G) : Set G) ∪ ((C : Subgroup G) : Set G))) <| by
         intro y hy z hz
@@ -1269,7 +1269,7 @@ theorem thompsonReplacement_base
       have hquot_le :
           Nat.card (A ⧸ C0.subgroupOf A) ≤ Nat.card (M0 ⧸ D0.subgroupOf M0) := by
         classical
-        letI : IsMulCommutative A := hA.2.1
+        let : IsMulCommutative A := hA.2.1
         have hcomm_swap {a c : G} (ha : a ∈ A) (hc : c ∈ A)
             (haxc : ⁅⁅x, a⁆, c⁆ = 1) :
             ⁅⁅x, c⁆, a⁆ = 1 := by
@@ -1514,7 +1514,7 @@ theorem thompsonReplacement_base
           change (C0.subgroupOf (M0 ⊔ C0)).Normal
           exact
             (Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := M0) (N := C0) hM0_le_normC0)
-        letI : K.Normal := hK_normal
+        let : K.Normal := hK_normal
         have hcardH :
             Nat.card H = Nat.card (H ⧸ K) * Nat.card K := by
           simpa [H, K] using (Subgroup.card_eq_card_quotient_mul_card_subgroup (s := K))
@@ -1703,7 +1703,7 @@ theorem pConstrained_quotient_pPrimeCore
     hconstrained (Q := TG) hTG_p hTG_sup
   have hcent_Tbar :
       Subgroup.centralizer (Tbar : Set (G ⧸ M)) ≤ pCore p (G ⧸ M) := by
-    letI : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
+    let : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
     have hcent_map :
         Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
           (Subgroup.centralizer (TG : Set G)).map q := by
@@ -1734,6 +1734,7 @@ theorem pConstrained_quotient_pPrimeCore
   exact hcent_pcore.trans <| by
     rw [← hOp_eq_pCore_quot]
 
+set_option backward.isDefEq.respectTransparency false in
 theorem pStable_quotient_pPrimeCore
     (hstable : PStableGroup' (G := G) p) :
     PStableGroup' (G := G ⧸ pPrimeCore p G) p := by
@@ -1743,11 +1744,11 @@ theorem pStable_quotient_pPrimeCore
   have hM_normal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hM_normal
+  let : M.Normal := hM_normal
   intro Q A hMQ_normal hQp hAp hA_norm hcomm2
   let N : Subgroup (G ⧸ M) := Subgroup.normalizer (Q : Set (G ⧸ M))
   let C : Subgroup (G ⧸ M) := Subgroup.centralizer (Q : Set (G ⧸ M))
-  letI : (C.subgroupOf N).Normal := by
+  let : (C.subgroupOf N).Normal := by
     have hCN : C ≤ N := by
       simpa [C, N] using (centralizer_le_normalizer (G := G ⧸ M) Q)
     exact
@@ -1781,7 +1782,8 @@ theorem pStable_quotient_pPrimeCore
       rw [hy]
       exact x.2
     · apply Subtype.ext
-      simpa [qQ, hy]
+      change q y = (x : G ⧸ M)
+      exact hy
   have hqA_surj : Function.Surjective qA := by
     intro x
     rcases QuotientGroup.mk'_surjective M x.1 with ⟨y, hy⟩
@@ -1790,7 +1792,8 @@ theorem pStable_quotient_pPrimeCore
       rw [hy]
       exact x.2
     · apply Subtype.ext
-      simpa [qA, hy]
+      change q y = (x : G ⧸ M)
+      exact hy
   obtain ⟨SQ⟩ := Sylow.nonempty (p := p) (G := Qbar)
   obtain ⟨SA⟩ := Sylow.nonempty (p := p) (G := Abar)
   let Q0 : Subgroup G := (SQ : Subgroup Qbar).map Qbar.subtype
@@ -1980,7 +1983,7 @@ theorem pStable_quotient_pPrimeCore
     simpa using congrArg Subtype.val hx_sub_eq
   let N1 : Subgroup G := Subgroup.normalizer (Q1 : Set G)
   let C1 : Subgroup G := Subgroup.centralizer (Q1 : Set G)
-  letI : (C1.subgroupOf N1).Normal := by
+  let : (C1.subgroupOf N1).Normal := by
     have hC1N1 : C1 ≤ N1 := by
       simpa [C1, N1] using (centralizer_le_normalizer (G := G) Q1)
     exact
@@ -1997,7 +2000,7 @@ theorem pStable_quotient_pPrimeCore
   have hMcop : Nat.Coprime p (Nat.card M) := by
     simpa [M] using (pPrimeCore_coprime_card (G := G) (p := p))
   have hNmap : N1.map q = N := by
-    letI : Fact (IsPGroup p (↑Q1)) := ⟨hQ1p⟩
+    let : Fact (IsPGroup p (↑Q1)) := ⟨hQ1p⟩
     have himage :
         ((fun a : G => q a) '' (Q1 : Set G)) = ((Q1.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) := by
       ext x
@@ -2018,7 +2021,7 @@ theorem pStable_quotient_pPrimeCore
       exact htmp
     simpa [N, hQ1_map_q] using htmp'.symm
   have hCmap : C1.map q = C := by
-    letI : Fact (IsPGroup p (↑Q1)) := ⟨hQ1p⟩
+    let : Fact (IsPGroup p (↑Q1)) := ⟨hQ1p⟩
     have himage :
         ((fun a : G => q a) '' (Q1 : Set G)) = ((Q1.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) := by
       ext x
@@ -2122,7 +2125,7 @@ theorem theorem_8_1_3
   have hM_normal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hM_normal
+  let : M.Normal := hM_normal
   let L : Subgroup G := Op_p'p p G
   let A0 : Subgroup G := A.map P.toSubgroup.subtype
   let Q : Subgroup G := (P : Subgroup G) ⊓ L
@@ -2148,7 +2151,7 @@ theorem theorem_8_1_3
     let R : Subgroup (G ⧸ M) := pCore p (G ⧸ M)
     have hRp : IsPGroup p R := by
       simpa [R] using (pCore_isPGroup (G := G ⧸ M) (p := p))
-    haveI : R.Normal := by
+    have : R.Normal := by
       dsimp [R]
       infer_instance
     obtain ⟨Q', hRQ'⟩ := IsPGroup.exists_le_sylow (G := G ⧸ M) (p := p) hRp
@@ -2223,7 +2226,7 @@ theorem theorem_8_1_3
       (show (L.subgroupOf (P : Subgroup G)).Normal from
         (inferInstance : L.Normal).subgroupOf (P : Subgroup G))
   have hP_le_normalizer_Q : (P : Subgroup G) ≤ Subgroup.normalizer (Q : Set G) := by
-    letI := hQnormP
+    let := hQnormP
     exact
       Subgroup.le_normalizer_of_normal_subgroupOf
         (H := Q) (K := (P : Subgroup G)) inf_le_left
@@ -2240,7 +2243,7 @@ theorem theorem_8_1_3
     rw [hA0_sub_eq]
     infer_instance
   have hP_le_normalizer_A0 : (P : Subgroup G) ≤ Subgroup.normalizer (A0 : Set G) := by
-    letI := hA0sub_norm
+    let := hA0sub_norm
     exact
       Subgroup.le_normalizer_of_normal_subgroupOf
         (H := A0) (K := (P : Subgroup G)) hA0_le_P
@@ -2281,11 +2284,11 @@ theorem theorem_8_1_3
   have hC_le_L : C ≤ L := hconstrained Q hQp hM_sup_Q_eq_L
   have hCN : C ≤ N := by
     simpa [N, C] using (centralizer_le_normalizer (G := G) Q)
-  letI : (C.subgroupOf N).Normal := by
+  let : (C.subgroupOf N).Normal := by
     refine (Subgroup.normal_subgroupOf_iff_le_normalizer (H := C) (K := N) hCN).2 ?_
     simpa [N, C] using normalizer_le_normalizer_centralizer (G := G) Q
   have hNmap_top : N.map q = ⊤ := by
-    haveI : Fact (IsPGroup p Q) := Fact.mk hQp
+    have : Fact (IsPGroup p Q) := Fact.mk hQp
     calc
       N.map q = Subgroup.normalizer (Q.map q : Set (G ⧸ M)) := by
         symm
@@ -2464,6 +2467,7 @@ theorem exists_sylow_subgroup_map_eq_inf
     exact Subgroup.mem_map_of_mem L.subtype hxS
   refine ⟨Sfix, le_antisymm hS0_le_inf hInf_le_S0⟩
 
+set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
 theorem theorem_8_2_10
     (hpodd : p ≠ 2)
@@ -2492,7 +2496,7 @@ theorem theorem_8_2_10
           -- Gorenstein 2.10, first paragraph:
           -- by minimality of `B`, the normal closure of `Z ∩ B` must be all of `B`.
           have hB1_le_B : B1 ≤ B := by
-            letI : B.Normal := hBnormal
+            let : B.Normal := hBnormal
             simpa [B0, B1] using
               (Subgroup.normalClosure_le_normal (N := B) (by
                 intro x hx
@@ -2521,7 +2525,7 @@ theorem theorem_8_2_10
             exact ⟨hB0_le_B1 hx, hx.2⟩
           have hB1_le_Z : B1 ≤ Z := by
             have hB1_le_inf : B1 ≤ B1 ⊓ Z := by
-              letI : (B1 ⊓ Z).Normal := hB1_inf_normal
+              let : (B1 ⊓ Z).Normal := hB1_inf_normal
               simpa [B1] using
                 (Subgroup.normalClosure_le_normal (N := B1 ⊓ Z) hB0_le_B1_inf)
             exact fun x hx => (hB1_le_inf hx).2
@@ -2558,12 +2562,12 @@ theorem theorem_8_2_10
         have hBcomm_inf_normal : (Bcomm ⊓ Z).Normal := by
           by_cases hBcomm_bot : Bcomm = ⊥
           · simp [hBcomm_bot]
-          · haveI : Nontrivial Bcomm :=
+          · have : Nontrivial Bcomm :=
               (Subgroup.nontrivial_iff_ne_bot (H := Bcomm)).2 hBcomm_bot
-            haveI : Nontrivial B :=
+            have : Nontrivial B :=
               (Subgroup.nontrivial_iff_ne_bot (H := B)).2 hBne
-            haveI : Group.IsNilpotent B := hBp.isNilpotent
-            haveI : IsSolvable B := IsNilpotent.to_isSolvable
+            have : Group.IsNilpotent B := hBp.isNilpotent
+            have : Group.IsSolvable B := IsNilpotent.to_isSolvable
             have hBcomm_lt_B : Bcomm < B := by
               dsimp [Bcomm]
               simpa using (commutator_lt_self_of_isSolvable_local (G := G) B)
@@ -2621,7 +2625,7 @@ theorem theorem_8_2_10
         have hB_le_CN : B ≤ CN := by
           rw [← hB1_eq_B]
           dsimp [B1]
-          letI : CN.Normal := hCN_normal
+          let : CN.Normal := hCN_normal
           exact Subgroup.normalClosure_le_normal (N := CN) hB0_le_CN
         have hBbarN_cent : BbarN ≤ Subgroup.centralizer (BbarN : Set (G ⧸ N)) := by
           intro x hx
@@ -2641,7 +2645,7 @@ theorem theorem_8_2_10
           intro x hx
           exact (hBcomm_le_N hx).2
         have hB_le_cent_Bcomm : B ≤ Subgroup.centralizer (Bcomm : Set G) := by
-          letI : IsMulCommutative Z := thompsonCenter_isMulCommutative (G := G) (P : Subgroup G)
+          let : IsMulCommutative Z := thompsonCenter_isMulCommutative (G := G) (P : Subgroup G)
           let C : Subgroup G := Subgroup.centralizer (Bcomm : Set G)
           have hC_normal : C.Normal := by
             apply (Subgroup.normalizer_eq_top_iff).mp
@@ -2662,7 +2666,7 @@ theorem theorem_8_2_10
                 (s := Z) (hBcomm_le_Z hc) hz.2
           rw [← hB1_eq_B]
           dsimp [B1]
-          letI : C.Normal := hC_normal
+          let : C.Normal := hC_normal
           exact Subgroup.normalClosure_le_normal (N := C) hB0_le_C
         have hBcomm_le_cent_B : Bcomm ≤ Subgroup.centralizer (B : Set G) := by
           exact
@@ -2721,7 +2725,7 @@ theorem theorem_8_2_10
             ¬ thompsonSubgroup (G := G) (P : Subgroup G) ≤ L := by
           -- Gorenstein 2.10, third paragraph:
           -- if `J(P) ≤ P ∩ L`, then `G = L N_G(J(P ∩ L))` forces `Z ∩ B ◁ G`.
-          letI : L.Normal := by
+          let : L.Normal := by
             dsimp [L]
             infer_instance
           intro hJ_le_L
@@ -2840,7 +2844,7 @@ theorem theorem_8_2_10
                   (A.subgroupOf (P : Subgroup G)) ∈
                     thompsonAbelianSubgroups (G := P) (⊤ : Subgroup P) := by
                 refine ⟨by simp, ?_, ?_⟩
-                · letI : IsMulCommutative A := hA.2.1
+                · let : IsMulCommutative A := hA.2.1
                   infer_instance
                 · intro C hC hCcomm
                   have hAmax := hA.2.2 (C.map P.toSubgroup.subtype) (by
@@ -2886,8 +2890,8 @@ theorem theorem_8_2_10
                 let qH : H →* H ⧸ Nsub := QuotientGroup.mk' Nsub
                 let Dbar : ℕ → Subgroup (H ⧸ Nsub) :=
                   fun i => (replacementCommChainSub B A i).map qH
-                letI : Bsub.Normal := hBnormal.subgroupOf H
-                letI : Nsub.Normal := by
+                let : Bsub.Normal := hBnormal.subgroupOf H
+                let : Nsub.Normal := by
                   change ((⁅B, B⁆).subgroupOf H).Normal
                   exact (Subgroup.commutator_normal B B).subgroupOf H
                 have hBcomm_le_cent_A : Bcomm ≤ Subgroup.centralizer (A : Set G) := by
@@ -2948,11 +2952,11 @@ theorem theorem_8_2_10
                     (Subgroup.le_centralizer_iff_isMulCommutative (K := Bsub.map qH)).1 <|
                       (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hBbar_comm_eq
                 have hAsub_comm : IsMulCommutative Asub := by
-                  letI : IsMulCommutative A := hA.2.1
+                  let : IsMulCommutative A := hA.2.1
                   simpa [Asub] using
                     (Subgroup.subgroupOf_isMulCommutative (H := A) (K := H))
                 have hAbar_comm : IsMulCommutative (Asub.map qH) := by
-                  letI : IsMulCommutative Asub := hAsub_comm
+                  let : IsMulCommutative Asub := hAsub_comm
                   exact Subgroup.map_isMulCommutative (H := Asub) qH
                 have hBbar_sup_Abar_top :
                     Bsub.map qH ⊔ Asub.map qH = ⊤ := by
@@ -2994,7 +2998,7 @@ theorem theorem_8_2_10
                     simp [hBbar_sup_Abar_top]
                   have hz' : z ∈ Bsub.map qH ⊔ Asub.map qH := by
                     simp [hBbar_sup_Abar_top]
-                  letI : (Bsub.map qH).Normal := by
+                  let : (Bsub.map qH).Normal := by
                     exact
                       Subgroup.Normal.map
                         (H := Bsub) (inferInstance : Bsub.Normal) qH
@@ -3088,7 +3092,7 @@ theorem theorem_8_2_10
                       have hxD : x ∈ Dbar (i + 1) := ih hx
                       have hy' : y ∈ Bsub.map qH ⊔ Asub.map qH := by
                         simp [hBbar_sup_Abar_top]
-                      letI : (Bsub.map qH).Normal := by
+                      let : (Bsub.map qH).Normal := by
                         exact
                           Subgroup.Normal.map
                             (H := Bsub) (inferInstance : Bsub.Normal) qH
@@ -3984,7 +3988,7 @@ theorem theorem_8_2_10
                 (Subgroup.inf_normalizer_le_normalizer_inf (H := B) (K := Z)
                   ⟨hA_le_norm_B ha, hA_le_norm_Z ha⟩)
             have hpCore_quot_bot' : pCore p (G ⧸ L) = ⊥ := by
-              letI : L.Normal := by
+              let : L.Normal := by
                 dsimp [L]
                 infer_instance
               let K : Subgroup G := Subgroup.comap qL (pCore p (G ⧸ L))
@@ -3995,7 +3999,7 @@ theorem theorem_8_2_10
                 let R : Subgroup (G ⧸ L) := pCore p (G ⧸ L)
                 have hRp : IsPGroup p R := by
                   simpa [R] using (pCore_isPGroup (G := G ⧸ L) (p := p))
-                haveI : R.Normal := by
+                have : R.Normal := by
                   dsimp [R]
                   infer_instance
                 obtain ⟨Q', hRQ'⟩ := IsPGroup.exists_le_sylow (G := G ⧸ L) (p := p) hRp
@@ -4067,7 +4071,7 @@ theorem theorem_8_2_10
                 rw [hK_eq]
                 exact sup_le hL_le_norm_B0 hPcapK_le_norm_B0
               have hK_le_L : K ≤ L := by
-                letI : K.Normal := hK_normal
+                let : K.Normal := hK_normal
                 simpa [L] using
                   (Subgroup.normal_le_normalCore
                     (H := Subgroup.normalizer (B0 : Set G)) (N := K)).2 hK_le_norm_B0
@@ -4095,7 +4099,7 @@ theorem theorem_8_2_10
                 exact Subgroup.centralizer_le (show (B0 : Set G) ⊆ (B : Set G) from fun _ hx => hx.1)
               have hC_le_norm_B0 : C ≤ Subgroup.normalizer (B0 : Set G) := by
                 exact hC_le_cent_B0.trans (centralizer_le_normalizer (R := B0))
-              letI : C.Normal := by
+              let : C.Normal := by
                 dsimp [C]
                 exact Subgroup.normal_centralizer (H := B)
               simpa [L] using
@@ -4122,7 +4126,7 @@ theorem theorem_8_2_10
               exact ⟨Subtype.mk n hn, hqy⟩
             have hCN : C ≤ N := by
               simpa [N, C] using (centralizer_le_normalizer (G := G) B)
-            letI : (C.subgroupOf N).Normal := by
+            let : (C.subgroupOf N).Normal := by
               exact
                 (Subgroup.normal_subgroupOf_iff_le_normalizer
                   (H := C) (K := N) hCN).2
@@ -4185,7 +4189,7 @@ theorem theorem_8_2_10
               (A.subgroupOf (P : Subgroup G)) ∈
                 thompsonAbelianSubgroups (G := P) (⊤ : Subgroup P) := by
             refine ⟨by simp, ?_, ?_⟩
-            · letI : IsMulCommutative A := hA.2.1
+            · let : IsMulCommutative A := hA.2.1
               infer_instance
             · intro C hC hCcomm
               have hAmax := hA.2.2 (C.map P.toSubgroup.subtype) (by
@@ -4211,7 +4215,7 @@ theorem theorem_8_2_10
           have hB0_le_X : B0 ≤ X := by
             intro x hx
             exact hZ_le_X hx.2
-          letI : L.Normal := by
+          let : L.Normal := by
             dsimp [L]
             infer_instance
           have hFr : Subgroup.normalizer (R : Set G) ⊔ L = ⊤ := by
@@ -4243,7 +4247,7 @@ theorem theorem_8_2_10
             dsimp [B1]
             rw [Subgroup.normalClosure, Subgroup.closure_le]
             exact hconj_B0_le_X
-          letI : IsMulCommutative X := thompsonCenter_isMulCommutative (G := G) R
+          let : IsMulCommutative X := thompsonCenter_isMulCommutative (G := G) R
           refine (Subgroup.le_centralizer_iff_isMulCommutative (K := B)).1 ?_
           intro x hx
           rw [Subgroup.mem_centralizer_iff]
@@ -4251,7 +4255,7 @@ theorem theorem_8_2_10
           simpa using
             (setLike_mul_comm (s := X) (hB_le_X hy) (hB_le_X hx))
         have hpCore_quot_bot : pCore p (G ⧸ L) = ⊥ := by
-          letI : L.Normal := by
+          let : L.Normal := by
             dsimp [L]
             infer_instance
           let K : Subgroup G := Subgroup.comap qL (pCore p (G ⧸ L))
@@ -4262,7 +4266,7 @@ theorem theorem_8_2_10
             let R : Subgroup (G ⧸ L) := pCore p (G ⧸ L)
             have hRp : IsPGroup p R := by
               simpa [R] using (pCore_isPGroup (G := G ⧸ L) (p := p))
-            haveI : R.Normal := by
+            have : R.Normal := by
               dsimp [R]
               infer_instance
             obtain ⟨Q', hRQ'⟩ := IsPGroup.exists_le_sylow (G := G ⧸ L) (p := p) hRp
@@ -4336,7 +4340,7 @@ theorem theorem_8_2_10
             rw [hK_eq]
             exact sup_le hL_le_norm_B0 hPcapK_le_norm_B0
           have hK_le_L : K ≤ L := by
-            letI : K.Normal := hK_normal
+            let : K.Normal := hK_normal
             simpa [L] using
               (Subgroup.normal_le_normalCore
                 (H := Subgroup.normalizer (B0 : Set G)) (N := K)).2 hK_le_norm_B0
@@ -4354,7 +4358,7 @@ theorem theorem_8_2_10
             ¬ thompsonSubgroup (G := G) (P : Subgroup G) ≤ L := by
           -- Gorenstein 2.10, third paragraph:
           -- if `J(P) ≤ P ∩ L`, then `G = L N_G(J(P ∩ L))` forces `Z ∩ B ◁ G`.
-          letI : L.Normal := by
+          let : L.Normal := by
             dsimp [L]
             infer_instance
           intro hJ_le_L
@@ -4439,7 +4443,7 @@ theorem theorem_8_2_10
               exact Subgroup.centralizer_le (show (B0 : Set G) ⊆ (B : Set G) from fun _ hx => hx.1)
             have hC_le_norm_B0 : C ≤ Subgroup.normalizer (B0 : Set G) := by
               exact hC_le_cent_B0.trans (centralizer_le_normalizer (R := B0))
-            letI : C.Normal := by
+            let : C.Normal := by
               dsimp [C]
               exact Subgroup.normal_centralizer (H := B)
             simpa [L] using
@@ -4464,7 +4468,7 @@ theorem theorem_8_2_10
             exact ⟨Subtype.mk n hn, hqy⟩
           have hCN : C ≤ N := by
             simpa [N, C] using (centralizer_le_normalizer (G := G) B)
-          letI : (C.subgroupOf N).Normal := by
+          let : (C.subgroupOf N).Normal := by
             exact
               (Subgroup.normal_subgroupOf_iff_le_normalizer
                 (H := C) (K := N) hCN).2
@@ -4602,12 +4606,12 @@ theorem theorem_8_2_10
           have hHsub_p : IsPGroup p Hsub := P.isPGroup'.to_subgroup Hsub
           have hHp : IsPGroup p H := by
             exact hHsub_p.of_equiv (Subgroup.subgroupOfEquivOfLe hH_le_P)
-          letI : Fact (IsPGroup p (H ⧸ Nsub)) := ⟨hHp.to_quotient Nsub⟩
+          let : Fact (IsPGroup p (H ⧸ Nsub)) := ⟨hHp.to_quotient Nsub⟩
           have hx_exists :
               ∃ x ∈ B, x ∉ Subgroup.normalizer (A1 : Set G) ∧
                 ∀ u ∈ A1, ⁅x, u⁆ ∈ N := by
-            letI : Bbar.Normal := hBbar_normal
-            haveI : Nontrivial Bbar := (Subgroup.nontrivial_iff_ne_bot (H := Bbar)).2 hBbar_ne_bot
+            let : Bbar.Normal := hBbar_normal
+            have : Nontrivial Bbar := (Subgroup.nontrivial_iff_ne_bot (H := Bbar)).2 hBbar_ne_bot
             obtain ⟨xbar, hxbar_ne_one, hxbar_center⟩ :=
               exists_nontrivial_center_mem_normal (N := Bbar) (p := p)
             obtain ⟨x0, hx0Bsub, hx0eq⟩ := Subgroup.mem_map.mp xbar.2
@@ -4782,7 +4786,7 @@ theorem theorem_8_2_10
                 (A.subgroupOf (P : Subgroup G)) ∈
                   thompsonAbelianSubgroups (G := P) (⊤ : Subgroup P) := by
               refine ⟨by simp, ?_, ?_⟩
-              · letI : IsMulCommutative A := hA.2.1
+              · let : IsMulCommutative A := hA.2.1
                 infer_instance
               · intro C hC hCcomm
                 have hAmax := hA.2.2 (C.map P.toSubgroup.subtype) (by
@@ -4810,7 +4814,7 @@ theorem theorem_8_2_10
             have hB0_le_X : B0 ≤ X := by
               intro x hx
               exact hZ_le_X hx.2
-            letI : L.Normal := by
+            let : L.Normal := by
               dsimp [L]
               infer_instance
             have hFr : Subgroup.normalizer (R : Set G) ⊔ L = ⊤ := by
@@ -4897,7 +4901,7 @@ public theorem G_theorem_8_2_11
   have hM_normal : M.Normal := by
     dsimp [M]
     infer_instance
-  letI : M.Normal := hM_normal
+  let : M.Normal := hM_normal
   have hquot_core_bot : pPrimeCore p (G ⧸ M) = ⊥ := by
     simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
   have hOp_eq_pCore_quot : Op_p'p p (G ⧸ M) = pCore p (G ⧸ M) := by
@@ -4916,7 +4920,7 @@ public theorem G_theorem_8_2_11
       simpa [ZbarP] using
         (thompsonCenter_normal_subgroupOf_sylow (G := G ⧸ M) (p := p) Pbar)
     have hZbar_comm : IsMulCommutative ZbarP := by
-      letI : IsMulCommutative (thompsonCenter (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M))) :=
+      let : IsMulCommutative (thompsonCenter (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M))) :=
         thompsonCenter_isMulCommutative (G := G ⧸ M) (Pbar : Subgroup (G ⧸ M))
       simpa [ZbarP] using
         (inferInstance :
@@ -5031,7 +5035,7 @@ public theorem G_theorem_8_2_11
         _ = M ⊔ (Z ⊔ M) := by
           simp [q]
         _ = Z ⊔ M := by simp [sup_comm]
-    letI : Zbar.Normal := by
+    let : Zbar.Normal := by
       simpa [Zbar, inf_eq_right.mpr hcenter_le_pCore_quot] using hreduced_case
     have hcomap_normal : (Subgroup.comap q Zbar).Normal := inferInstance
     simpa [Z, Zbar, M] using hcomap_eq ▸ hcomap_normal

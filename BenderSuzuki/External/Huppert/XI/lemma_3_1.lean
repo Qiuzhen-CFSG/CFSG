@@ -14,7 +14,7 @@ written in the transposed upper-triangular convention used by
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open PFAppendixIII
 open scoped commutatorElement
 
@@ -78,7 +78,7 @@ private theorem binaryGaloisField_tits_automorphism_apply
     exact iterateFrobeniusEquiv_def K 2 (m + 1) x
   have hsigma_sq : ∀ x : K, sigma (sigma x) = x ^ 2 := by
     intro x
-    letI : Fintype K := Fintype.ofFinite K
+    let _ : Fintype K := Fintype.ofFinite K
     calc
       sigma (sigma x) = (sigma x) ^ (2 ^ (m + 1)) :=
         hsigma_formula (sigma x)
@@ -446,7 +446,7 @@ private theorem binaryGaloisField_tits_iterate
     rw [← pow_mul, ← pow_mul]
     congr 1
     exact Nat.mul_comm _ _
-  letI : Fintype K := Fintype.ofFinite K
+  let _ : Fintype K := Fintype.ofFinite K
   have hK_fintype_card : Fintype.card K = 2 ^ (2 * m + 1) := by
     rw [← Nat.card_eq_fintype_card]
     exact hK_card
@@ -463,7 +463,7 @@ private theorem binaryGaloisField_tits_nontrivial
     ∃ x : BinaryGaloisField (2 * m + 1), pi x ≠ x := by
   classical
   let K := BinaryGaloisField (2 * m + 1)
-  letI : Fintype K := Fintype.ofFinite K
+  let _ : Fintype K := Fintype.ofFinite K
   have hK_card : Fintype.card K = 2 ^ (2 * m + 1) := by
     rw [Fintype.card_eq_nat_card]
     simpa [K, BinaryGaloisField] using
@@ -729,7 +729,7 @@ private theorem suzukiRootClosure_nilpotencyClass
   have hnil : Group.IsNilpotent F :=
     (Subgroup.nilpotent_iff_lowerCentralSeries (G := F)).mpr
       ⟨2, hlower_two⟩
-  letI : Group.IsNilpotent F := hnil
+  let _ : Group.IsNilpotent F := hnil
   have hclass_le : Group.nilpotencyClass F ≤ 2 :=
     (Subgroup.lowerCentralSeries_eq_bot_iff_nilpotencyClass_le (G := F)).mp hlower_two
   have hclass_not_le_one : ¬ Group.nilpotencyClass F ≤ 1 := by
@@ -790,7 +790,7 @@ private theorem binaryGaloisField_tits_norm_surjective
     simpa [pow_two] using hsquare
   have hinj : Function.Injective N :=
     N.ker_eq_bot_iff.mp hker
-  letI : Fintype Kˣ := Fintype.ofFinite Kˣ
+  let _ : Fintype Kˣ := Fintype.ofFinite Kˣ
   have hsurj : Function.Surjective N :=
     Finite.injective_iff_surjective.mp hinj
   intro y

@@ -7,7 +7,7 @@ open scoped MatrixGroups Pointwise TensorProduct
 /-! # Lemma 6.6(a) from BG Section 6 -/
 
 public theorem lemma_6_6_a
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (hpl : HasPLengthOne (p := p) G) {S : Sylow p G} :
     (S ≤ Op_p'p p G) ∧ (pPrimeCore p G ⊔ S = Op_p'p p G) ∧
       (pPrimeCore p G ⊔ Subgroup.normalizer (S : Subgroup G) = ⊤) := by
@@ -103,4 +103,3 @@ public theorem lemma_6_6_a
     · rw [← hM_sup_S_eq_L]
       exact sup_le le_sup_left (le_sup_of_le_right Subgroup.le_normalizer)
   exact ⟨hS_le_L, hM_sup_S_eq_L, hM_sup_norm_eq_top⟩
-

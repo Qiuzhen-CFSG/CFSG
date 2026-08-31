@@ -2911,7 +2911,8 @@ private theorem ii1Hering31_mulAut_card_eq_168
   let eAddLin : Multiplicative (AddAut Q) ≃* (Q ≃ₗ[ZMod 2] Q) :=
     { toFun := fun a =>
         (a : AddAut Q).toLinearEquiv (fun c x => by
-          simpa using (ZMod.map_smul (a : AddAut Q).toAddMonoidHom c x))
+          change (a : AddAut Q) (c • x) = c • (a : AddAut Q) x
+          exact ZMod.map_smul (a : AddAut Q).toAddMonoidHom c x)
       invFun := fun a => Multiplicative.ofAdd a.toAddEquiv
       left_inv := by
         intro a
@@ -2969,7 +2970,8 @@ private theorem ii1Hering31_mulAut_equiv_GL3
   let eAddLin : Multiplicative (AddAut Q) ≃* (Q ≃ₗ[ZMod 2] Q) :=
     { toFun := fun a =>
         (a : AddAut Q).toLinearEquiv (fun c x => by
-          simpa using (ZMod.map_smul (a : AddAut Q).toAddMonoidHom c x))
+          change (a : AddAut Q) (c • x) = c • (a : AddAut Q) x
+          exact ZMod.map_smul (a : AddAut Q).toAddMonoidHom c x)
       invFun := fun a => Multiplicative.ofAdd a.toAddEquiv
       left_inv := by
         intro a

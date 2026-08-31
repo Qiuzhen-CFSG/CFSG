@@ -62,7 +62,7 @@ public theorem exists_regular_elementaryAbelian_normal_of_solvable_normal
     [FaithfulSMul G Omega]
     (htwo : MulAction.IsMultiplyPretransitive G Omega 2)
     (N : Subgroup G) (hNnormal : N.Normal)
-    (hN_ne_bot : N ≠ ⊥) (hNsolv : IsSolvable N) :
+    (hN_ne_bot : N ≠ ⊥) (hNsolv : Group.IsSolvable N) :
     ∃ (F : Subgroup G) (p : ℕ), F.Normal ∧ p.Prime ∧
       IsElementaryAbelian p F ∧ F ≠ ⊥ ∧
       MulAction.IsPretransitive F Omega ∧
@@ -80,12 +80,12 @@ public theorem exists_regular_elementaryAbelian_normal_of_solvable_normal
   }
   let FN : Subgroup N := F.subgroupOf N
   let eFN : FN ≃* F := Subgroup.subgroupOfEquivOfLe hF_le_N
-  letI : IsSolvable N := hNsolv
-  have hFNsolv : IsSolvable FN := subgroup_solvable_of_solvable FN
-  letI : IsSolvable FN := hFNsolv
-  have hFsolv : IsSolvable F :=
-    solvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
-  letI : IsSolvable F := hFsolv
+  letI : Group.IsSolvable N := hNsolv
+  have hFNsolv : Group.IsSolvable FN := inferInstance
+  letI : Group.IsSolvable FN := hFNsolv
+  have hFsolv : Group.IsSolvable F :=
+    Group.isSolvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
+  letI : Group.IsSolvable F := hFsolv
   obtain ⟨p, hp, hFelem⟩ :=
     minimalNormal_solvable_exists_isElementaryAbelian F
   letI : IsElementaryAbelian p F := hFelem

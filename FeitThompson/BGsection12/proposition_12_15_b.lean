@@ -27,7 +27,7 @@ private theorem section12_inf_sylow_eq_sylow_of_normalizer_le
     section10AmbientSylowSubgroup (M ⊓ Mstar) S =
       section10AmbientSylowSubgroup M T := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   let TG : Subgroup G := section10AmbientSylowSubgroup M T
   let K : Subgroup TG := Pamb.subgroupOf TG
@@ -91,7 +91,7 @@ private theorem section12_inf_sylow_eq_sylow_of_normalizer_le
     exact hNamb_le_Pamb hyNamb
   have hNloc_eq : Nloc = K := le_antisymm hNloc_le_K Subgroup.le_normalizer
   have hnc : NormalizerCondition TG := by
-    letI : Group.IsNilpotent TG := IsPGroup.isNilpotent (p := q.val) (G := TG) hTGp
+    let : Group.IsNilpotent TG := IsPGroup.isNilpotent (p := q.val) (G := TG) hTGp
     exact Group.normalizerCondition_of_isNilpotent (G := TG)
   have hKtop : K = ⊤ :=
     normalizerCondition_iff_only_full_group_self_normalizing.mp hnc K (by
@@ -132,7 +132,7 @@ public theorem proposition_12_15_b
     (hXS : X ≤ section10AmbientSylowSubgroup (M ⊓ Mstar) S) :
     Subgroup.normalizer ((section10AmbientSylowSubgroup (M ⊓ Mstar) S : Subgroup G) : Set G) ≤ M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let Pamb : Subgroup G := section10AmbientSylowSubgroup (M ⊓ Mstar) S
   have hPamb_p : IsPGroup q.val Pamb := by
     change IsPGroup q.val
@@ -143,7 +143,7 @@ public theorem proposition_12_15_b
     rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
     exact y.2.1
   by_cases hPcyc : IsCyclic Pamb
-  · haveI : IsCyclic Pamb := hPcyc
+  · have : IsCyclic Pamb := hPcyc
     have hXchar : (X.subgroupOf Pamb).Characteristic :=
       section12_subgroup_characteristic_of_cyclic (X.subgroupOf Pamb)
     have hnormP_le_normX :

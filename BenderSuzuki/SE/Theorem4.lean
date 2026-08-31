@@ -3113,8 +3113,10 @@ public theorem IsStronglyEmbedded.theorem4bProposition63_exists_sylow_normalized
   let dD : D := ⟨d, hdD⟩
   let O : Subgroup D := twoPrimeCore D
   let φ : MulAut O := MulAut.conjNormal (H := O) dD⁻¹
+  have hφsurj : Function.Surjective (φ : O →* O) := by
+    exact φ.surjective
   let P₀' : Sylow q O :=
-    P₀.mapSurjective (f := φ.toMonoidHom) φ.surjective
+    P₀.mapSurjective (f := (φ : O →* O)) hφsurj
   let P : Subgroup X :=
     (((P₀ : Subgroup O).map O.subtype).map D.subtype)
   let P' : Subgroup X :=
@@ -3122,13 +3124,17 @@ public theorem IsStronglyEmbedded.theorem4bProposition63_exists_sylow_normalized
   let R' : Subgroup X := R.conjBy d⁻¹
   have hPconj : P' = P.conjBy d⁻¹ := by
     have hhom :
-        (D.subtype.comp O.subtype).comp φ.toMonoidHom =
+        (D.subtype.comp O.subtype).comp (φ : O →* O) =
           ((MulAut.conj d⁻¹).toMonoidHom.comp D.subtype).comp
             O.subtype := by
       ext a
       simp [φ, dD]
-    simpa only [P', P, P₀', Sylow.coe_mapSurjective,
-      Subgroup.conjBy, Subgroup.map_map, MonoidHom.comp_assoc] using
+    change
+      (((P₀' : Subgroup O).map O.subtype).map D.subtype) =
+        ((((P₀ : Subgroup O).map O.subtype).map D.subtype).conjBy d⁻¹)
+    dsimp [P₀', Sylow.mapSurjective]
+    rw [Subgroup.map_map, Subgroup.map_map]
+    simpa only [Subgroup.conjBy, Subgroup.map_map, MonoidHom.comp_assoc] using
       congrArg (fun f : O →* X => (P₀ : Subgroup O).map f) hhom
   have hPR' : P' ≤ R' := by
     rw [hPconj]

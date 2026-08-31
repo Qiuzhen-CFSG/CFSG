@@ -71,7 +71,7 @@ public theorem claim_11_sylow_of_subgroupOf_sylow_of_normalizer_le
           let xQ : Q := ⟨x, hxQ⟩
           have hxPQ : xQ ∈ PQ := htop (by simp)
           simpa [PQ, Subgroup.mem_subgroupOf, xQ] using hxPQ
-        haveI : Group.IsNilpotent Q :=
+        have : Group.IsNilpotent Q :=
           IsPGroup.isNilpotent (p := p) (G := Q) hQ
         have hnc : NormalizerCondition Q :=
           Group.normalizerCondition_of_isNilpotent (G := Q)
@@ -263,7 +263,7 @@ private theorem claim_11_mem_R_decompose_TP
     claim_11_P_le_normalizer_T_of_central T P hTcentral
   have hsupNormT : T ⊔ P ≤ Subgroup.normalizer (T : Set G) :=
     sup_le Subgroup.le_normalizer hPnormT
-  letI : (T.subgroupOf (T ⊔ P : Subgroup G)).Normal :=
+  let : (T.subgroupOf (T ⊔ P : Subgroup G)).Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer
       (H := T ⊔ P) (N := T) hsupNormT
   let xTP : ↥(T ⊔ P : Subgroup G) := ⟨x, by simpa [hR] using hxR⟩
@@ -297,7 +297,7 @@ private theorem claim_11_prime_card_subgroup_eq_closure_of_mem_ne_one
     (hp : Nat.Prime p) (hAcard : Nat.card A = p)
     {x : G} (hxA : x ∈ A) (hxne : x ≠ 1) :
     A = Subgroup.closure ({x} : Set G) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hAcard' : Nat.card A = p := by
     simpa [Nat.card, Nat.card_coe_set_eq] using hAcard
   apply le_antisymm
@@ -388,7 +388,7 @@ private theorem claim_11_order_p_subgroup_graph_generator_exists
   have huP_ne : uP ≠ 1 := by
     intro h
     exact hune (congrArg Subtype.val h)
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   have hy_zpow : yP ∈ Subgroup.zpowers uP :=
     mem_zpowers_of_prime_card (G := P) hPcard' huP_ne
   rcases Subgroup.mem_zpowers_iff.mp hy_zpow with ⟨n, hn⟩
@@ -855,7 +855,7 @@ private theorem claim_11_coprime_involution_decomposition
   have hA_norm_R : A ≤ Subgroup.normalizer (R : Set G) := by
     rw [Subgroup.zpowers_le]
     exact hs_norm_R
-  letI : Subgroup.Normalizes A R := ⟨hA_norm_R⟩
+  let : Subgroup.Normalizes A R := ⟨hA_norm_R⟩
   let Cfix : Subgroup R := fixedPointSubgroup (↥A) (↥R)
   let Ccomm : Subgroup R := commutatorAction (A := ↥A) (G := ↥R)
   let T : Subgroup G := ⁅R, A⁆
@@ -874,9 +874,9 @@ private theorem claim_11_coprime_involution_decomposition
   have hcop : Nat.Coprime (Nat.card A) (Nat.card R) := by
     rw [Nat.card_zpowers, hs_order]
     exact hRodd.coprime_two_left
-  have hsolvR : IsSolvable R := by
-    letI : IsMulCommutative R := hRcomm
-    exact isSolvable_of_comm (fun x y => mul_comm' x y)
+  have hsolvR : Group.IsSolvable R := by
+    let : IsMulCommutative R := hRcomm
+    exact Group.isSolvable_of_comm (fun x y => mul_comm' x y)
   have hcompl : IsCompl Cfix Ccomm := by
     simpa [Cfix, Ccomm] using
       (isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
@@ -907,8 +907,8 @@ private theorem claim_11_coprime_involution_decomposition
     apply Subtype.ext
     change s * s = 1
     simpa only [pow_two] using hsI.sq_eq_one
-  letI : IsMulCommutative R := hRcomm
-  haveI : IsInvariant A R Ccomm := commutatorAction_isInvariant
+  let : IsMulCommutative R := hRcomm
+  have : IsInvariant A R Ccomm := commutatorAction_isInvariant
   let y : R := xR * (sA • xR)
   have hyComm : y ∈ Ccomm := by
     exact Ccomm.mul_mem hxComm ((IsInvariant.invariant sA xR).mp hxComm)
@@ -955,12 +955,14 @@ private theorem claim_11_quotientMap_subgroup_equiv_of_disjoint
       ∀ q : Q, (e q : X ⧸ N) = QuotientGroup.mk' N q := by
   let pi : X →* X ⧸ N := QuotientGroup.mk' N
   let f : Q →* Q.map pi :=
-    (pi.restrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
+    (pi.domRestrict Q).codRestrict (Q.map pi) (fun q => ⟨q, q.2, rfl⟩)
   have hf_injective : Function.Injective f := by
     intro x y hxy
     apply Subtype.ext
     have hpi : pi (x : X) = pi (y : X) := by
-      simpa [f] using congrArg Subtype.val hxy
+      have hxy' := congrArg Subtype.val hxy
+      change pi (x : X) = pi (y : X) at hxy'
+      exact hxy'
     have hdivN : (x : X) / (y : X) ∈ N :=
       QuotientGroup.eq_iff_div_mem.mp hpi
     have hdivQ : (x : X) / (y : X) ∈ Q := Q.div_mem x.2 y.2
@@ -972,10 +974,12 @@ private theorem claim_11_quotientMap_subgroup_equiv_of_disjoint
     rcases z.2 with ⟨g, hgQ, hg⟩
     refine ⟨⟨g, hgQ⟩, ?_⟩
     apply Subtype.ext
+    change pi g = (z : X ⧸ N)
     exact hg
   let e : Q ≃* Q.map pi := MulEquiv.ofBijective f ⟨hf_injective, hf_surjective⟩
   refine ⟨e, ?_⟩
   intro q
+  change pi (q : X) = (QuotientGroup.mk' N) (q : X)
   rfl
 
 /-- Checked Proposition-One unit-coordinate equivalence, retaining the exact
@@ -1186,7 +1190,10 @@ private theorem claim_11_additive_equiv_of_decomposition
     have hq :
         qT (addEquiv (Multiplicative.ofAdd a)) =
           eF (Multiplicative.ofAdd a) := by
-      simp [addEquiv, eT]
+      change qT ((MulEquiv.ofBijective qT ⟨hqT_injective, hqT_surjective⟩).symm
+          (eF (Multiplicative.ofAdd a))) = eF (Multiplicative.ofAdd a)
+      exact MulEquiv.ofBijective_apply_symm_apply qT
+        ⟨hqT_injective, hqT_surjective⟩
     exact congrArg Subtype.val hq
   have hcompatible_additive_coordinates :
       ∃ addEquiv : Multiplicative F ≃* T,
@@ -1309,7 +1316,7 @@ public theorem claim_11
   classical
   let C : Subgroup G := Subgroup.centralizer (P : Set G)
   let OmegaP : Type v := {w : Ω // w ∈ fixedPointsOfSubgroup G Ω P}
-  letI : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
+  let : MulAction C OmegaP := fixedPointCentralizerAction G Ω P
   let HP : Subgroup C := H.comap C.subtype
   let DP : Subgroup C := D.comap C.subtype
   let QP : Subgroup C := Q.comap C.subtype
@@ -1324,14 +1331,14 @@ public theorem claim_11
   rcases h2b with
     ⟨hNcore, hnormal, quotientAction, hsmul, hAbar,
       F, hFnear, hFfinite, hFnontrivial, unitEquivNear, hPO, hchar⟩
-  letI : core.Normal := by
+  let : core.Normal := by
     simpa [core, OmegaP, C] using hnormal
   have hNcoreLocal : N.subgroupOf C = core := by
     simpa [N, C, OmegaP, HP, DP, QP, core] using hNcore
-  letI : PFAppendixII.RightNearField F := hFnear
-  letI : Finite F := hFfinite
-  letI : Nontrivial F := hFnontrivial
-  letI : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
+  let : PFAppendixII.RightNearField F := hFnear
+  let : Finite F := hFfinite
+  let : Nontrivial F := hFnontrivial
+  let : Fact (Nat.Prime p) := ⟨hch.B1.p_prime⟩
   have hQcard :
       Nat.card Q = Nat.card (nearFieldStar Q P) ^ p := by
     simpa [nearFieldStar] using
@@ -1794,7 +1801,7 @@ public theorem claim_11
       rw [Subgroup.zpowers_eq_closure, Subgroup.centralizer_closure,
         Subgroup.mem_centralizer_singleton_iff]
       exact (Subgroup.mem_centralizer_iff.mp hsC) x hxP
-  letI : core.Normal := by
+  let : core.Normal := by
     simpa [core, C, OmegaP] using hnormal
   let Hbar : Subgroup (C ⧸ core) := HP.map pi
   let Qbar : Subgroup (C ⧸ core) := QP.map pi
@@ -1817,7 +1824,7 @@ public theorem claim_11
     let xH : Hbar := ⟨x, hxH⟩
     let QH : Subgroup Hbar := Qbar.subgroupOf Hbar
     let DH : Subgroup Hbar := Dbar.subgroupOf Hbar
-    letI : QH.Normal := hQbar_normal_in_Hbar
+    let : QH.Normal := hQbar_normal_in_Hbar
     have hQHDH : QH ⊔ DH = ⊤ := by
       rw [← Subgroup.subgroupOf_sup hQbar_le_Hbar hDbar_le_Hbar,
         hQbar_sup_Dbar]
@@ -2216,7 +2223,7 @@ public theorem claim_11
         Nat.card F = addOrderOf (1 : F) ^ m := hFcard
         _ = p ^ m := by rw [hcharP]
     have hmpos : 0 < m := by
-      letI : Fintype F := Fintype.ofFinite F
+      let : Fintype F := Fintype.ofFinite F
       have hFgt : 1 < Nat.card F := by
         simpa [Nat.card_eq_fintype_card] using Fintype.one_lt_card (α := F)
       by_contra hm
@@ -3064,7 +3071,7 @@ public theorem claim_11
         _ = 3 ^ 4 := by rw [hm2]; norm_num
     have hXnoncomm : ¬ IsMulCommutative (R ⊔ Sigma : Subgroup G) := by
       intro hXcomm
-      letI : IsMulCommutative (R ⊔ Sigma : Subgroup G) := hXcomm
+      let : IsMulCommutative (R ⊔ Sigma : Subgroup G) := hXcomm
       have hSigma_one : ∀ w : Sigma, w = 1 := by
         intro w
         let dBar : DP.map (QuotientGroup.mk' core) := eSigma.symm w
@@ -3237,7 +3244,7 @@ public theorem claim_11
       rw [hUnitsCard]
       intro hd
       have hmpos : 0 < m := by
-        letI : Fintype F := Fintype.ofFinite F
+        let : Fintype F := Fintype.ofFinite F
         have hFgt : 1 < Nat.card F := by
           simpa [Nat.card_eq_fintype_card] using Fintype.one_lt_card (α := F)
         have hFcardPow : Nat.card F = p ^ m := by

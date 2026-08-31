@@ -112,8 +112,8 @@ public theorem theorem_16_E_2
           Subgroup.normalizer ((P : Subgroup G) : Set G)).trans hMcont.2
       let PM : Sylow q.val M := P.subtype hP_le_M
       have hPMmap : section10AmbientSylowSubgroup M PM = (P : Subgroup G) := by
-        simpa [section10AmbientSylowSubgroup, PM, Sylow.subtype] using
-          (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (P : Subgroup G)) (K := M) hP_le_M)
+        change Subgroup.map M.subtype ((P : Subgroup G).subgroupOf M) = (P : Subgroup G)
+        exact Subgroup.map_subgroupOf_eq_of_le hP_le_M
       have hqP : q ∈ subgroupPrimeSet (P : Subgroup G) := by
         rcases (IsPGroup.nontrivial_iff_card (p := q.val) (G := P) (hG := P.isPGroup')).mp
             hPnontrivial with ⟨n, hnpos, hcard⟩

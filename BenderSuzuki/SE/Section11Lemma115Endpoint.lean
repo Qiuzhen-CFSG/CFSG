@@ -729,8 +729,8 @@ public theorem lemma115_centralizer_torus_inversion_cyclic
             apply Subtype.ext
             apply Subtype.ext
             have hxy' := congrArg (fun z : Rmap => (z : F0)) hxy
-            simpa [fR, f0, iTF] using
-              congrArg (fun z : F0 => (z : X)) hxy') }
+            change f0 x = f0 y at hxy'
+            exact congrArg (fun z : F0 => (z : X)) hxy') }
   infer_instance
 
 /-- The centralizer torus embeds into the anti-fixed subgroup `B`.  Its

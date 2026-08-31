@@ -191,7 +191,7 @@ public theorem normalizer_map_quotient_eq_map_normalizer
     let q : G →* G ⧸ M := QuotientGroup.mk' M
     Subgroup.normalizer (T.map q) = (Subgroup.normalizer T).map q := by
   intro q
-  letI : M.Normal := hM
+  let _ : M.Normal := hM
   have hqsurj : Function.Surjective q := QuotientGroup.mk'_surjective M
   apply (Subgroup.comap_injective hqsurj)
   rw [Subgroup.comap_normalizer_eq_of_surjective (H := T.map q) hqsurj]
@@ -287,7 +287,7 @@ public theorem normalizer_map_quotient_eq_map_normalizer
     simpa [KN] using
       (Subgroup.normal_subgroupOf_iff_le_normalizer (H := K) (K := (Subgroup.normalizer (K : Set G)))
         (h := Subgroup.le_normalizer)).2 (le_rfl : (Subgroup.normalizer (K : Set G)) ≤ (Subgroup.normalizer (K : Set G)))
-  letI : KN.Normal := hKN_normal
+  let _ : KN.Normal := hKN_normal
   let eKN : K ≃* KN :=
     (Subgroup.subgroupOfEquivOfLe (H := K) (K := (Subgroup.normalizer (K : Set G))) Subgroup.le_normalizer).symm
   let PN : Sylow p KN := (Pk.mapSurjective (f := eKN.toMonoidHom) eKN.surjective)
@@ -364,7 +364,7 @@ public theorem centralizer_map_quotient_eq_map_centralizer
     Subgroup.centralizer ((T.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
       (Subgroup.centralizer (T : Set G)).map q := by
   intro q
-  letI : M.Normal := hM
+  let _ : M.Normal := hM
   have hnormq : Subgroup.normalizer (T.map q) = (Subgroup.normalizer T).map q := by
     simpa [q] using (normalizer_map_quotient_eq_map_normalizer (G := G) (p := p) T M hM hcop)
   have hinf_bot : M ⊓ T = ⊥ := by
@@ -440,7 +440,7 @@ Let $p$ be a prime.
 
 -- Proposition 1.15(a)
 public theorem centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable
-    {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G) (p : ℕ) [Fact p.Prime] :
+    {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G) (p : ℕ) [Fact p.Prime] :
     ∀ T : Sylow p (↥(Op_p'p p G)),
       Subgroup.centralizer ((T.1.map (Op_p'p p G).subtype : Subgroup G) : Set G) ≤ Op_p'p p G := by
   intro T
@@ -547,8 +547,8 @@ public theorem centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable
     exact hEq.trans htop_map
   have hcoreQ : pPrimeCore p (G ⧸ M) = ⊥ := by
     simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
-  letI : IsSolvable G := hsolv
-  have hsolvQ : IsSolvable (G ⧸ M) := solvable_quotient_of_solvable M
+  let _ : Group.IsSolvable G := hsolv
+  have hsolvQ : Group.IsSolvable (G ⧸ M) := by infer_instance
   have hfit_eq : fittingSubgroup (G ⧸ M) = pCore p (G ⧸ M) := Fitting_eq_pcore (G ⧸ M) p hcoreQ
   have hcent_fit :
       Subgroup.centralizer (fittingSubgroup (G ⧸ M) : Set (G ⧸ M)) ≤ fittingSubgroup (G ⧸ M) :=
@@ -558,7 +558,7 @@ public theorem centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable
     simpa [hfit_eq] using hcent_fit
   have hcent_tbar : Subgroup.centralizer (Tbar : Set (G ⧸ M)) ≤ pCore p (G ⧸ M) := by
     simpa [hTbar_eq_pcore] using hcent_pcore
-  letI : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
+  let _ : Fact (IsPGroup p (↥TG)) := ⟨hTG_p⟩
   have hcent_map :
       Subgroup.centralizer ((TG.map q : Subgroup (G ⧸ M)) : Set (G ⧸ M)) =
         (Subgroup.centralizer (TG : Set G)).map q := by

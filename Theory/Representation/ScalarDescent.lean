@@ -164,7 +164,7 @@ public theorem mem_ker_finiteIntertwiningConstraint_iff
     (f : V →ₗ[F] W) :
     f ∈ (finiteIntertwiningConstraint rho sigma).ker ↔
       ∀ g : G, f.comp (rho g) = (sigma g).comp f := by
-  letI : Module.Free F (intertwiningConstraintSpan rho sigma) :=
+  let : Module.Free F (intertwiningConstraintSpan rho sigma) :=
     Module.Free.of_divisionRing F (intertwiningConstraintSpan rho sigma)
   rw [LinearMap.mem_ker]
   constructor
@@ -285,7 +285,7 @@ public theorem mem_ker_baseChangedFiniteIntertwiningConstraint_iff
     f ∈ (baseChangedFiniteIntertwiningConstraint (E := E) rho sigma).ker ↔
       ∀ g : G, f.comp ((extendScalars E rho) g) =
         ((extendScalars E sigma) g).comp f := by
-  letI : Module.Free F (intertwiningConstraintSpan rho sigma) :=
+  let : Module.Free F (intertwiningConstraintSpan rho sigma) :=
     Module.Free.of_divisionRing F (intertwiningConstraintSpan rho sigma)
   rw [LinearMap.mem_ker]
   constructor
@@ -480,7 +480,7 @@ public noncomputable def intertwinerDeterminantPolynomial
     (bV : Module.Basis ι F V) (bW : Module.Basis ι F W)
     (b : Module.Basis κ F (rho →ₗ sigma)) : MvPolynomial κ F :=
   Matrix.det fun i j => ∑ k,
-    MvPolynomial.C (LinearMap.toMatrix bV bW (b k).toLinearMap i j) *
+    MvPolynomial.C ((LinearMap.toMatrix bV bW) (b k).toLinearMap i j) *
       MvPolynomial.X k
 
 omit [FiniteDimensional F V] [FiniteDimensional F W] [DecidableEq κ] in
@@ -495,10 +495,20 @@ public theorem aeval_intertwinerDeterminantPolynomial
     MvPolynomial.aeval x (intertwinerDeterminantPolynomial rho sigma bV bW b) =
       Matrix.det (LinearMap.toMatrix (bV.baseChange S) (bW.baseChange S)
         (∑ k, x k • LinearMap.baseChange S (b k).toLinearMap)) := by
-  rw [intertwinerDeterminantPolynomial, AlgHom.map_det]
-  congr 1
-  ext i j
-  simp [LinearMap.toMatrix_apply, Algebra.smul_def, mul_comm]
+  unfold intertwinerDeterminantPolynomial
+  calc
+    _ = Matrix.det ((MvPolynomial.aeval x).mapMatrix
+        (fun i j => ∑ k,
+          MvPolynomial.C ((LinearMap.toMatrix bV bW) (b k).toLinearMap i j) *
+            MvPolynomial.X k)) := (MvPolynomial.aeval x).map_det _
+    _ = Matrix.det (LinearMap.toMatrix (bV.baseChange S) (bW.baseChange S)
+        (∑ k, x k • LinearMap.baseChange S (b k).toLinearMap)) := by
+      congr 1
+      ext i j
+      change (MvPolynomial.aeval x)
+          (∑ k, MvPolynomial.C ((LinearMap.toMatrix bV bW) (b k).toLinearMap i j) *
+            MvPolynomial.X k) = _
+      simp [LinearMap.toMatrix_apply, Algebra.smul_def, mul_comm]
 
 
 omit [Fintype κ] [DecidableEq κ] in
@@ -612,13 +622,13 @@ public theorem repEquiv_of_finite_extension
     (hS : Nonempty (extendScalars S rho ≃ₗ extendScalars S sigma)) :
     Nonempty (rho ≃ₗ sigma) := by
   classical
-  letI : Module (MonoidAlgebra F G) V :=
+  let : Module (MonoidAlgebra F G) V :=
     Representation.instModuleMonoidAlgebraAsModule rho
-  letI : Module (MonoidAlgebra F G) W :=
+  let : Module (MonoidAlgebra F G) W :=
     Representation.instModuleMonoidAlgebraAsModule sigma
-  letI : IsScalarTower F (MonoidAlgebra F G) V :=
+  let : IsScalarTower F (MonoidAlgebra F G) V :=
     Representation.instIsScalarTowerMonoidAlgebraAsModule (ρ := rho)
-  letI : IsScalarTower F (MonoidAlgebra F G) W :=
+  let : IsScalarTower F (MonoidAlgebra F G) W :=
     Representation.instIsScalarTowerMonoidAlgebraAsModule (ρ := sigma)
   let n := Module.finrank F S
   let qV : S ⊗[F] V ≃ₗ[F] (Fin n → V) :=
@@ -693,7 +703,7 @@ public theorem repEquiv_of_intertwinerDeterminantPolynomial_ne_zero
   let S := IntermediateField.adjoin F (Set.range x)
   let y : κ → S := fun k =>
     ⟨x k, IntermediateField.subset_adjoin F (Set.range x) ⟨k, rfl⟩⟩
-  letI : FiniteDimensional F S :=
+  let : FiniteDimensional F S :=
     IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isIntegral (K := F)).1 z
   have hy : MvPolynomial.aeval y
@@ -732,12 +742,12 @@ public theorem repEquiv_of_extendScalars
     Module.finBasis F V
   let bW : Module.Basis (Fin (Module.finrank F V)) F W :=
     (Module.finBasis F W).reindex (finCongr hdim.symm)
-  letI : Module F (rho →ₗ sigma) := Theory.Representation.RepMap.instModule rho sigma
-  letI : Module.Finite F (rho →ₗ sigma) :=
+  let : Module F (rho →ₗ sigma) := Theory.Representation.RepMap.instModule rho sigma
+  let : Module.Finite F (rho →ₗ sigma) :=
     Module.Finite.of_injective
       (IntertwiningMap.toLinearMapl (ρ := rho) (σ := sigma))
       (IntertwiningMap.toLinearMap_injective rho sigma)
-  letI : Module.Free F (rho →ₗ sigma) :=
+  let : Module.Free F (rho →ₗ sigma) :=
     @Module.Free.of_divisionRing F (rho →ₗ sigma) _ _
       (Theory.Representation.RepMap.instModule rho sigma)
   let b : Module.Basis (Fin (Module.finrank F (rho →ₗ sigma))) F

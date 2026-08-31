@@ -924,9 +924,9 @@ public theorem huppert_II_10_13
         change ((n : G)⁻¹ * g) / g ∈ N
         rw [div_eq_mul_inv, mul_assoc, mul_inv_cancel, mul_one]
         exact N.inv_mem n.property
-      have hquotient_solvable : IsSolvable (G ⧸ N) := by
-        letI : IsSolvable U := hU_solvable
-        exact solvable_of_surjective
+      have hquotient_solvable : Group.IsSolvable (G ⧸ N) := by
+        letI : Group.IsSolvable U := hU_solvable
+        exact Group.isSolvable_of_surjective
           (f := quotientFromU) hquotientFromU_surjective
       by_contra hN_top
       letI : Nontrivial (G ⧸ N) :=

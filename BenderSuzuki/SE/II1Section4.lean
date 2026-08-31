@@ -466,7 +466,7 @@ public theorem ii1Lemma42PrimeTransfer
   have hcop : Nat.Coprime (Nat.card A) (Nat.card D) := by
     rw [hAcard]
     exact hDodd.coprime_two_left
-  have hsolvD : IsSolvable D := odd_order_theorem D hDodd
+  have hsolvD : Group.IsSolvable D := odd_order_theorem D hDodd
   let pi : Set Nat.Primes := ({rp} : Set Nat.Primes)ᶜ
   have hRhallCompl : IsHallSubgroup {q | q ∉ pi}
       (R : Subgroup D) := by
@@ -770,10 +770,10 @@ public theorem ii1Lemma43cNormalComplement
     }
     have hVodd : Odd (Nat.card V) :=
       hDodd.of_dvd_nat (Subgroup.card_dvd_of_le hVleD)
-    have hVsolv : IsSolvable V := odd_order_theorem V hVodd
-    letI : IsSolvable V := hVsolv
-    have hNsolv : IsSolvable N := subgroup_solvable_of_solvable N
-    letI : IsSolvable N := hNsolv
+    have hVsolv : Group.IsSolvable V := odd_order_theorem V hVodd
+    letI : Group.IsSolvable V := hVsolv
+    have hNsolv : Group.IsSolvable N := inferInstance
+    letI : Group.IsSolvable N := hNsolv
     obtain ⟨q, hq, hNelem⟩ :=
       minimalNormal_solvable_exists_isElementaryAbelian N
     letI : Fact q.Prime := ⟨hq⟩

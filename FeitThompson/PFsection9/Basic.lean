@@ -908,14 +908,14 @@ public theorem internalSemidirectProduct_top_of_normal_isComplement'_sec9
 public theorem solvable_of_normal_and_quotient_sec9
     {L : Type u} [Group L]
     (N : Subgroup L) [N.Normal] :
-    IsSolvable N →
-      IsSolvable (L ⧸ N) →
-        IsSolvable L := by
+    Group.IsSolvable N →
+      Group.IsSolvable (L ⧸ N) →
+        Group.IsSolvable L := by
   intro hN hQ
-  letI : IsSolvable N := hN
-  letI : IsSolvable (L ⧸ N) := hQ
+  let : Group.IsSolvable N := hN
+  let : Group.IsSolvable (L ⧸ N) := hQ
   exact
-    solvable_of_ker_le_range
+    Group.isSolvable_of_ker_le_range
       N.subtype
       (QuotientGroup.mk' N)
       (by
@@ -969,20 +969,20 @@ public theorem typePDefinitionData_ambientDerived_solvable_sec9
     letI : (MF.subgroupOf D).Normal := hMFnormD
     exact isComplement'_of_disjoint_sup_eq_top_of_normal
       (MF.subgroupOf D) (U.subgroupOf D) hMFUdisjSub hMFUsupTop
-  have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
+  have hMFsub_solv : Group.IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
       haveI : Group.IsNilpotent MF := hMFnil
       exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcompDU.1)).symm
     haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
-  have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
+  have hquot_solv : Group.IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
       haveI : Group.IsNilpotent U := hUnil
       exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcompDU.2.1).symm
     haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
-    haveI : IsSolvable (U.subgroupOf D) := by infer_instance
-    exact solvable_of_solvable_injective
+    let : Group.IsSolvable (U.subgroupOf D) := by infer_instance
+    exact Group.isSolvable_of_isSolvable_injective
       (f := hcompMFU.symm.QuotientMulEquiv.toMonoidHom)
       hcompMFU.symm.QuotientMulEquiv.injective
   letI : (MF.subgroupOf D).Normal := hMFnormD

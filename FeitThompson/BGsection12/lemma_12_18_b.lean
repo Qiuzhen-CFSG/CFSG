@@ -29,8 +29,8 @@ public theorem lemma_12_18_b
         subgroupCentralizerIn (section10Malpha M) P ≠ ⊥ ∧
           subgroupCentralizerIn (section10Malpha M) (P ⊔ Q) = ⊥ := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases (by simpa [section10PrimeOrderSubgroupsIn] using hP) with
     ⟨hP_M, _hPcard⟩
   rcases hQSylow with ⟨SQ, hSQmap⟩
@@ -74,7 +74,7 @@ public theorem lemma_12_18_b
         rcases hQq.card_eq_or_dvd with hcard | hdiv
         · exact False.elim (hQne ((Subgroup.card_eq_one (H := Q)).1 hcard))
         · exact hdiv
-      letI : Subgroup.Normalizes P Q := ⟨hPinv⟩
+      let : Subgroup.Normalizes P Q := ⟨hPinv⟩
       have hone_fixed : (1 : Q) ∈ MulAction.fixedPoints P Q := by
         simp [MulAction.mem_fixedPoints]
       rcases hPp.exists_fixed_point_of_prime_dvd_card_of_fixed_point
@@ -111,7 +111,7 @@ public theorem lemma_12_18_b
     have hcop : Nat.Coprime (Nat.card P) (Nat.card Q) :=
       section12_coprime_card_of_isPiSubgroup_disjoint_primes_current
         (G := G) hPπ hQπ hdis_pq
-    letI : Subgroup.Normalizes P Q := ⟨hPinv⟩
+    let : Subgroup.Normalizes P Q := ⟨hPinv⟩
     have hfixed_eq :
         fixedPointSubgroup (↥P) (↥Q) =
           (subgroupCentralizerIn Q P).subgroupOf Q := by
@@ -121,8 +121,8 @@ public theorem lemma_12_18_b
       simpa using congrArg (fun S : Subgroup G => S.subgroupOf Q) hCQ
     have hQnil : Group.IsNilpotent Q :=
       IsPGroup.isNilpotent (p := q.val) (G := Q) hQq
-    letI : Group.IsNilpotent Q := hQnil
-    have hsolvQ : IsSolvable Q := inferInstance
+    let : Group.IsNilpotent Q := hQnil
+    have hsolvQ : Group.IsSolvable Q := inferInstance
     have hsup :
         fixedPointSubgroup (↥P) (↥Q) ⊔
             commutatorAction (A := ↥P) (G := ↥Q) = ⊤ :=
@@ -225,7 +225,7 @@ public theorem lemma_12_18_b
     let D : Subgroup M := derivedSubgroup M
     rcases (theorem_10_2_d (G := G) hM).2 with ⟨hKD, hKnormalD, hquot_nil⟩
     let KsubD : Subgroup D := K.subgroupOf D
-    haveI : KsubD.Normal := by
+    have : KsubD.Normal := by
       simpa [KsubD, K, D] using hKnormalD
     have hKsubD_bot : KsubD = ⊥ := by
       ext x
@@ -248,7 +248,7 @@ public theorem lemma_12_18_b
         (QuotientGroup.quotientMulEquivOfEq hKsubD_bot).trans QuotientGroup.quotientBot
       have hquot_nil' : Group.IsNilpotent (D ⧸ KsubD) := by
         simpa [D, K, KsubD] using hquot_nil
-      letI : Group.IsNilpotent (D ⧸ KsubD) := hquot_nil'
+      let : Group.IsNilpotent (D ⧸ KsubD) := hquot_nil'
       exact Group.nilpotent_of_mulEquiv (G := D ⧸ KsubD) (G' := D) e
     have hSQleD : (SQ : Subgroup M) ≤ D := by
       intro x hx
@@ -270,21 +270,21 @@ public theorem lemma_12_18_b
               exact Subgroup.subgroupOf_map_subtype (SQ : Subgroup M) D
         _ = (SQ : Subgroup M) := inf_eq_left.mpr hSQleD
     have hSDnormal : (SD : Subgroup D).Normal := by
-      letI : Group.IsNilpotent D := hDnil
+      let : Group.IsNilpotent D := hDnil
       exact Group.IsNilpotent.sylow_normal (p := q.val) inferInstance SD
     have hSDchar : (SD : Subgroup D).Characteristic :=
       Sylow.characteristic_of_normal SD hSDnormal
     have hSQchar : (SQ : Subgroup M).Characteristic := by
-      haveI : D.Characteristic := by infer_instance
+      have : D.Characteristic := by infer_instance
       have hmap_char : ((SD : Subgroup D).map D.subtype).Characteristic := by
-        letI : (SD : Subgroup D).Characteristic := hSDchar
+        let : (SD : Subgroup D).Characteristic := hSDchar
         simpa [D] using
           characteristic_map_subtype_of_characteristic (G := M) D (SD : Subgroup D)
       simpa [hSDmap] using hmap_char
     have hQsub_char : (Q.subgroupOf M).Characteristic := by
       simpa [hQsub_eq_SQ] using hSQchar
     have hQsub_normal : (Q.subgroupOf M).Normal := by
-      letI : (Q.subgroupOf M).Characteristic := hQsub_char
+      let : (Q.subgroupOf M).Characteristic := hQsub_char
       infer_instance
     have hM_le_norm : M ≤ Subgroup.normalizer (Q : Set G) :=
       (Subgroup.normal_subgroupOf_iff_le_normalizer

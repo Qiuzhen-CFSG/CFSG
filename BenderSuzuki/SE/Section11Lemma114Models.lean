@@ -757,7 +757,7 @@ private theorem lemma114_suzuki_nonsplit_oddSylow_isCyclic
 
 /-! ## Odd Sylow cyclicity in the PSL model -/
 
-private theorem lemma114_odd_subgroup_le_of_quotient_isPGroup_two
+public theorem lemma114_odd_subgroup_le_of_quotient_isPGroup_two
     {G : Type*} [Group G] [Finite G] {T O B : Subgroup G}
     [(O.subgroupOf B).Normal]
     (hTB : T ≤ B)
@@ -790,7 +790,7 @@ private theorem lemma114_odd_subgroup_le_of_quotient_isPGroup_two
   have htone : qB tB = 1 := by simpa [hTbarBot] using htbar
   exact (QuotientGroup.eq_one_iff (N := OB) (x := tB)).1 htone
 
-private theorem lemma114_odd_subgroup_le_of_normalizer_card_two
+public theorem lemma114_odd_subgroup_le_of_normalizer_card_two
     {G : Type*} [Group G] [Finite G]
     {R T : Subgroup G}
     (hRleN : R ≤ Subgroup.normalizer (T : Set G))
@@ -819,7 +819,7 @@ private theorem lemma114_odd_subgroup_le_of_normalizer_card_two
   exact lemma114_odd_subgroup_le_of_quotient_isPGroup_two
     (T := R) (O := T) (B := N) hRleN hTodd hquot2
 
-private theorem lemma114_mem_eq_one_of_coprime_card
+public theorem lemma114_mem_eq_one_of_coprime_card
     {G : Type*} [Group G] [Finite G]
     (A B : Subgroup G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card B))
     {x : G} (hxA : x ∈ A) (hxB : x ∈ B) :
@@ -1157,19 +1157,19 @@ public theorem lemma114_suzuki_oddSylow_isCyclic_of_equiv
 
 /-! ## Odd Sylow cyclicity in the PSL model -/
 
-private theorem lemma114_q_coprime_split_order (q : ℕ) (hq : 1 ≤ q) :
+public theorem lemma114_q_coprime_split_order (q : ℕ) (hq : 1 ≤ q) :
     Nat.Coprime q ((q - 1) / Nat.gcd (q - 1) 2) := by
   apply ((Nat.coprime_self_sub_right hq).mpr (Nat.coprime_one_right q)).coprime_dvd_right
   exact Nat.div_dvd_of_dvd (Nat.gcd_dvd_left (q - 1) 2)
 
-private theorem lemma114_q_coprime_nonsplit_order (q : ℕ) (hq : 1 ≤ q) :
+public theorem lemma114_q_coprime_nonsplit_order (q : ℕ) (hq : 1 ≤ q) :
     Nat.Coprime q ((q + 1) / Nat.gcd (q - 1) 2) := by
   apply ((Nat.coprime_self_add_right).mpr (Nat.coprime_one_right q)).coprime_dvd_right
   apply Nat.div_dvd_of_dvd
   convert Nat.dvd_add (Nat.gcd_dvd_left (q - 1) 2)
     (Nat.gcd_dvd_right (q - 1) 2) using 1 <;> omega
 
-private theorem lemma114_split_nonsplit_order_coprime (q : ℕ) (hq : 2 ≤ q) :
+public theorem lemma114_split_nonsplit_order_coprime (q : ℕ) (hq : 2 ≤ q) :
     Nat.Coprime
       ((q - 1) / Nat.gcd (q - 1) 2)
       ((q + 1) / Nat.gcd (q - 1) 2) := by
@@ -1203,7 +1203,7 @@ private theorem lemma114_split_nonsplit_order_coprime (q : ℕ) (hq : 2 ≤ q) :
       Nat.mul_div_cancel_left (k + 1) (by omega)]
     exact (Nat.coprime_self_add_right).mpr (Nat.coprime_one_right k)
 
-private theorem lemma114_cyclic_le_unique_partition_family
+public theorem lemma114_cyclic_le_unique_partition_family
     {G : Type*} [Group G]
     (Family : Subgroup G → Prop)
     (hpartition : ∀ x : G, x ≠ 1 →
@@ -2560,16 +2560,16 @@ private theorem lemma114_borel_index_eq_sylow_card_add_one
   classical
   have hBne : B ≠ ⊤ := by
     intro hBtop
-    letI : IsSolvable B := hBorel.1
+    letI : Group.IsSolvable B := hBorel.1
     have hsurj : Function.Surjective B.subtype := by
       intro g
       refine ⟨⟨g, ?_⟩, rfl⟩
       rw [hBtop]
       exact Subgroup.mem_top g
-    letI : IsSolvable G :=
-      solvable_of_surjective (f := B.subtype) hsurj
+    letI : Group.IsSolvable G :=
+      Group.isSolvable_of_surjective (f := B.subtype) hsurj
     letI : IsSimpleGroup G := hmodel.isSimple
-    exact (IsSolvable.commutator_lt_top_of_nontrivial G).ne hperfect
+    exact (Group.IsSolvable.commutator_lt_top_of_nontrivial G).ne hperfect
   obtain ⟨Q, _hQnormal, hQregular⟩ :=
     simpleBender_borel_normalSylow_regular hBorel hmodel
   let QG : Subgroup G := (Q : Subgroup B).map B.subtype

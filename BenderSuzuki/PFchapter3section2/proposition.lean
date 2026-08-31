@@ -1514,10 +1514,16 @@ public theorem proposition
               intro x y
               rw [mul_inv_rev]
               ring
+            have hinvCancel : ∀ x : F, x ≠ 0 → x⁻¹ * x = 1 := by
+              intro x hx
+              exact inv_mul_cancel₀ (G₀ := F) hx
+            have hmulInvCancel : ∀ x : F, x ≠ 0 → x * x⁻¹ = 1 := by
+              intro x hx
+              exact mul_inv_cancel₀ (G₀ := F) hx
             have hinvOneAdd : ∀ k : F, k ≠ 0 →
                 k⁻¹ * (1 + k) = k⁻¹ + 1 := by
               intro k hk
-              rw [mul_add, mul_one, inv_mul_cancel₀ hk]
+              rw [mul_add, mul_one, hinvCancel k hk]
             have hscaledAdd : ∀ k ell : F, k ≠ 0 →
                 ell⁻¹ * (k⁻¹ + 1) = (ell * k)⁻¹ * (1 + k) := by
               intro k ell hk
@@ -1533,7 +1539,7 @@ public theorem proposition
                     (b⁻¹ * b) * ell⁻¹ * (k⁻¹ * (1 + k)) := by
                   ring
                 _ = ell⁻¹ * (k⁻¹ * (1 + k)) := by
-                  rw [inv_mul_cancel₀ hb]
+                  rw [hinvCancel b hb]
                   simp
                 _ = ell⁻¹ * (k⁻¹ + 1) := by rw [hinvOneAdd k hk]
             have hbaseProduct : ∀ k ell : F, k ≠ 0 → ell ≠ 0 →
@@ -1541,15 +1547,14 @@ public theorem proposition
                   k⁻¹ + ell := by
               intro k ell hk hell
               have hkInvSq : k * k⁻¹ ^ 2 = k⁻¹ := by
-                rw [pow_two, ← mul_assoc, mul_inv_cancel₀ hk, one_mul]
+                rw [pow_two, ← mul_assoc, hmulInvCancel k hk, one_mul]
               calc
                 (ell * k) * (ell⁻¹ * k⁻¹ ^ 2 + k⁻¹) =
                     (ell * ell⁻¹) * (k * k⁻¹ ^ 2) +
                       ell * (k * k⁻¹) := by
                   ring
                 _ = k⁻¹ + ell := by
-                  rw [mul_inv_cancel₀ hell, hkInvSq,
-                    mul_inv_cancel₀ hk]
+                  rw [hmulInvCancel ell hell, hkInvSq, hmulInvCancel k hk]
                   simp
             have hcancelScaledProduct :
                 ∀ a k ell : F, a ≠ 0 → k ≠ 0 → ell ≠ 0 →
@@ -1564,7 +1569,7 @@ public theorem proposition
                       ((ell * k) * (ell⁻¹ * k⁻¹ ^ 2 + k⁻¹)) := by
                   ring
                 _ = (ell * k) * (ell⁻¹ * k⁻¹ ^ 2 + k⁻¹) := by
-                  rw [mul_inv_cancel₀ hb]
+                  rw [hmulInvCancel b hb]
                   simp
                 _ = k⁻¹ + ell := hbaseProduct k ell hk hell
             let x₁ := ell₁⁻¹ * (k₁⁻¹ + 1)
@@ -1608,7 +1613,7 @@ public theorem proposition
                           (ell⁻¹ * ell) + 1 := by
                     ring
                   _ = common := by
-                    rw [inv_mul_cancel₀ hell]
+                    rw [hinvCancel ell hell]
                     have htwo : (1 : F) + 1 = 0 :=
                       CharTwo.add_self_eq_zero 1
                     dsimp [common]
@@ -1719,7 +1724,10 @@ public theorem proposition
                   simp
             have halphaZ : alpha zS = 0 := by
               change alpha zS / alpha rS = 0 at hbetaZ
-              rcases (div_eq_zero_iff.mp hbetaZ) with hzero | hzero
+              have hdiv : alpha zS = 0 ∨ alpha rS = 0 :=
+                (div_eq_zero_iff (G₀ := F) : alpha zS / alpha rS = 0 ↔
+                  alpha zS = 0 ∨ alpha rS = 0).mp hbetaZ
+              rcases hdiv with hzero | hzero
               · exact hzero
               · exact False.elim (halphaRNe hzero)
             have heQOne :

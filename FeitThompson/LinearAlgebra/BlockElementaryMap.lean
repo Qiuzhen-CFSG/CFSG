@@ -15,7 +15,7 @@ public def blockElementaryMap
     ∀ v ∈ A j, X v = 0)}
     add_mem' := by
       intro X Y ⟨hX1, hX2⟩ ⟨hY1, hY2⟩
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       refine ⟨fun v hv ↦ ?_, fun j hj v hv ↦ ?_⟩
       · rw [LinearMap.add_apply]
         exact Submodule.add_mem (A t) (hX1 v hv) (hY1 v hv)
@@ -127,9 +127,7 @@ lemma sum_projection_id : ∑ i : ι, projection A h i = LinearMap.id := by
     _ = coeLinearMap A ((LinearEquiv.ofBijective (coeLinearMap A) h).symm x) := by
       rw [coeLinearMap_apply]
     _ = x := by
-      let e := LinearEquiv.ofBijective (coeLinearMap A) h
-      have := e.self_comp_symm
-      simp
+      exact LinearEquiv.apply_symm_apply (LinearEquiv.ofBijective (coeLinearMap A) h) x
 
 end Projections
 
@@ -335,7 +333,7 @@ public noncomputable def blockElementaryMap_iso
       toFun := fun x ↦ ⟨X.1 x.1, by
         have hX := X.2
         simp only [blockElementaryMap, ne_eq, Submodule.mem_mk, AddSubmonoid.mem_mk,
-          AddSubsemigroup.mem_mk, Set.mem_setOf_eq] at hX
+          AddSubsemigroup.mem_mk, Set.mem_ofPred_eq] at hX
         exact hX.1 x.1 x.2⟩
       map_add' := by simp
       map_smul' := by simp

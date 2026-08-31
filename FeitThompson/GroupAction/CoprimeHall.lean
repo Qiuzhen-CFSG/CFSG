@@ -26,7 +26,7 @@ public lemma le_piCore_of_normal_isPiSubgroup {G : Type*} [Group G]
 
 public theorem exists_mem_fixedPointSubgroup_eq_map_conj_of_isHallSubgroup_of_isInvariant
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ H₁ H₂ : Subgroup G,
       IsHallSubgroup π H₁ →
@@ -41,7 +41,7 @@ public theorem exists_mem_fixedPointSubgroup_eq_map_conj_of_isHallSubgroup_of_is
 
 public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
       letI : MulDistribMulAction A (G ⧸ H) :=
@@ -56,7 +56,7 @@ public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
 
 public theorem commutatorAction_le_piCore_of_hall_complement_le_fixedPointSubgroup
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
     (π : Set Nat.Primes) :
     ∀ Hπ' : Subgroup G,
       IsHallSubgroup {p | p ∉ π} Hπ' →
@@ -122,7 +122,7 @@ public theorem commutatorAction_le_piCore_of_hall_complement_le_fixedPointSubgro
 
 public theorem fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     fixedPointSubgroup A G ⊔ commutatorAction (A := A) (G := G) = ⊤ := by
   simpa using
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_fixedPointQuotientImage
@@ -133,7 +133,7 @@ public theorem fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprim
 
 public theorem commutatorAction₂_eq_commutatorAction_of_solvable_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     commutatorAction₂ (A := A) (G := G) = commutatorAction (A := A) (G := G) := by
   let _ := (inferInstance : Finite G)
   let _ := (inferInstance : Finite A)
@@ -142,7 +142,7 @@ public theorem commutatorAction₂_eq_commutatorAction_of_solvable_coprime
 
 public theorem actsTrivially_of_commutatorAction₂_eq_bot_of_solvable_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     commutatorAction₂ (A := A) (G := G) = ⊥ → ActsTrivially (A := A) (G := G) := by
   intro hcomm₂_bot
   exact
@@ -152,7 +152,7 @@ public theorem actsTrivially_of_commutatorAction₂_eq_bot_of_solvable_coprime
 
 public theorem isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_of_isMulCommutative
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     IsMulCommutative G → IsCompl (fixedPointSubgroup A G) (commutatorAction (A := A) (G := G)) := by
   intro hcomm
   have hsup :
@@ -164,7 +164,7 @@ public theorem isCompl_fixedPointSubgroup_commutatorAction_of_solvable_coprime_o
 
 public theorem actsTrivially_of_isMulCommutative_and_prime_order_mem_fixedPointSubgroup
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
+    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G)) :
     IsMulCommutative G →
       (∀ g : G, Nat.Prime (orderOf g) → g ∈ fixedPointSubgroup A G) → ActsTrivially (A := A) (G := G) := by
   intro hcomm hfix

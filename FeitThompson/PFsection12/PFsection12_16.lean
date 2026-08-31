@@ -702,7 +702,7 @@ private theorem theorem_12_16_prime_dvd_frobenius_kernel_quotient_card_sub_one
     {p : ℕ}
     (hp : Nat.Prime p)
     (hfrob : IsFrobeniusGroupWithKernelComplement K R)
-    (hsolvK : IsSolvable K)
+    (hsolvK : Group.IsSolvable K)
     (hNK : N ≤ K) (hKnN : ¬ K ≤ N)
     (hpR : p ∣ Nat.card R) :
     p ∣ Nat.card (K ⧸ N.subgroupOf K) - 1 := by
@@ -853,7 +853,7 @@ private theorem theorem_12_16_prime_dvd_quotient_card_sub_one
   have hNleKsub : N ≤ Ksub := by
     intro z hz
     exact hK'K hz
-  have hKsolv : IsSolvable K := by
+  have hKsolv : Group.IsSolvable K := by
     letI : Group.IsNilpotent K := hKMF.1.2.2.1
     exact IsNilpotent.to_isSolvable
   have hKne : K ≠ ⊥ := ne_of_gt hKpos
@@ -866,11 +866,11 @@ private theorem theorem_12_16_prime_dvd_quotient_card_sub_one
       have hyN := hle hyKsub
       simpa [yS, N] using (Subgroup.mem_subgroupOf.mp hyN)
     have hDlt : ambientDerivedSubgroup K < K := by
-      letI : IsSolvable K := hKsolv
+      let _ : Group.IsSolvable K := hKsolv
       letI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
       have hcommLt : derivedSubgroup K < (⊤ : Subgroup K) := by
         simpa [derivedSubgroup, derivedSeries_one, commutator] using
-          IsSolvable.commutator_lt_top_of_nontrivial (G := K)
+          Group.IsSolvable.commutator_lt_top_of_nontrivial (G := K)
       refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
       intro hEq
       have hDtop : derivedSubgroup K = (⊤ : Subgroup K) := by
@@ -886,9 +886,9 @@ private theorem theorem_12_16_prime_dvd_quotient_card_sub_one
       simpa [Rsub] using natCard_subgroupOf_eq U0 S hU0leS
     rw [hcardRsub]
     exact hpCardU0
-  have hKsubsolv : IsSolvable Ksub := by
-    letI : IsSolvable K := hKsolv
-    exact solvable_of_solvable_injective
+  have hKsubsolv : Group.IsSolvable Ksub := by
+    let _ : Group.IsSolvable K := hKsolv
+    exact Group.isSolvable_of_isSolvable_injective
       (f := (Subgroup.subgroupOfEquivOfLe hKleS).toMonoidHom)
       (Subgroup.subgroupOfEquivOfLe hKleS).injective
   have hlocal :=
@@ -990,10 +990,10 @@ private theorem theorem_12_16_exists_notation_12_13_data
   have hHL : H ≤ L := section16MFSubgroup_le hHMF
   rcases hHMF.1 with ⟨_hHL', _hHnormal, hHnil, _hHall⟩
   letI : Group.IsNilpotent H := hHnil
-  haveI : IsSolvable H := IsNilpotent.to_isSolvable
+  have _ : Group.IsSolvable H := IsNilpotent.to_isSolvable
   let hEquiv : H.subgroupOf L ≃* H := Subgroup.subgroupOfEquivOfLe hHL
-  have hHsubSolv : IsSolvable (H.subgroupOf L) :=
-    solvable_of_solvable_injective (f := hEquiv.toMonoidHom) hEquiv.injective
+  have hHsubSolv : Group.IsSolvable (H.subgroupOf L) :=
+    Group.isSolvable_of_isSolvable_injective (f := hEquiv.toMonoidHom) hEquiv.injective
   have hHsubNe : H.subgroupOf L ≠ ⊥ := by
     intro hbot
     apply hHne.ne'
@@ -1456,7 +1456,7 @@ private theorem theorem_12_16_contradiction_of_projection_packages
       hlowerM hlowerL hupper
   have hpDvdQuot : p ∣ Nat.card (K ⧸ K'.subgroupOf K) - 1 :=
     theorem_12_16_prime_dvd_quotient_card_sub_one h128copy h129copy
-  have hKsolv : IsSolvable K := by
+  have hKsolv : Group.IsSolvable K := by
     letI : Group.IsNilpotent K := hKMF.1.2.2.1
     exact IsNilpotent.to_isSolvable
   have hKne : K ≠ ⊥ := by
@@ -1464,11 +1464,11 @@ private theorem theorem_12_16_contradiction_of_projection_packages
     exact ne_of_gt hF.2.2.2.1
   have hK'lt : K' < K := by
     rw [hK']
-    haveI : IsSolvable K := hKsolv
+    have _ : Group.IsSolvable K := hKsolv
     haveI : Nontrivial K := (Subgroup.nontrivial_iff_ne_bot (H := K)).2 hKne
     have hcommLt : derivedSubgroup K < (⊤ : Subgroup K) := by
       simpa [derivedSubgroup, derivedSeries_one, commutator] using
-        IsSolvable.commutator_lt_top_of_nontrivial (G := K)
+        Group.IsSolvable.commutator_lt_top_of_nontrivial (G := K)
     refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
     intro hEq
     have hDtop : derivedSubgroup K = (⊤ : Subgroup K) := by

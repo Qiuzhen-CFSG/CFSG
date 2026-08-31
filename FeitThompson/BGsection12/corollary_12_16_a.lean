@@ -104,7 +104,7 @@ public theorem section12_exists_rankTwo_in_subgroup_of_two_le_primeRank
     (hrank : 2 ≤ primeRank p.val N) :
     ∃ A : Subgroup G, A ∈ section12RankTwoElementaryAbelianIn p N := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   obtain ⟨B, hBp, _hBcomm, hBgen⟩ :=
     section12_exists_pSubgroup_two_le_generatorRank_of_two_le_primeRank
       (R := N) (p := p.val) hrank
@@ -134,10 +134,10 @@ public theorem section12_rankTwo_noncyclic
     (hA : A ∈ section12RankTwoElementaryAbelianIn p H) :
     ¬ IsCyclic A := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro hcyc
   rcases section12_rankTwo_elementary hA with ⟨hcard, hElem⟩
-  haveI : IsElementaryAbelian p.val A := hElem
+  have : IsElementaryAbelian p.val A := hElem
   have hgen : 2 ≤ generatorRank A :=
     section12_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq
       (p := p.val) hcard
@@ -155,11 +155,11 @@ private theorem section12_exists_rankTwo_in_product_factor_of_rankTwo
     (hA : A ∈ section12RankTwoElementaryAbelianIn p H) :
     ∃ B : Subgroup G, B ∈ section12RankTwoElementaryAbelianIn p U := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let AH : Subgroup H := A.subgroupOf H
   have hAHp : IsPGroup p.val AH := by
     rcases section12_rankTwo_elementary hA with ⟨_hcard, hElem⟩
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact (IsElementaryAbelian.isPGroup p.val A).of_equiv
       (Subgroup.subgroupOfEquivOfLe (H := A) (K := H) (section12_rankTwo_le hA)).symm
   obtain ⟨T, hAH_le_T⟩ := IsPGroup.exists_le_sylow (G := H) (p := p.val) hAHp
@@ -237,7 +237,7 @@ private theorem section12_conjugate_pi_subgroup_into_product_factor
     have hpZ : p ∈ subgroupPrimeSet Z := by
       simpa [Zsub, subgroupPrimeSet, section12_card_subgroupOf_eq hZH] using hpZsub
     exact hZπ p hpZ
-  letI : MulDistribMulAction Unit H := {
+  let : MulDistribMulAction Unit H := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -247,20 +247,21 @@ private theorem section12_conjugate_pi_subgroup_into_product_factor
     refine ⟨?_⟩
     intro _ x
     simp [Zsub]
-  have hHsolv : IsSolvable H :=
+  have hHsolv : Group.IsSolvable H :=
     IsMinCE.proper_subgroups_solvable H (lt_top_iff_ne_top.mpr hH.1)
+  let : Group.IsSolvable H := hHsolv
   have hcopH : Nat.Coprime (Nat.card Unit) (Nat.card H) := by simp
   obtain ⟨L, hLHall, _hLInv, hZsubL⟩ :=
     exists_isHallSubgroup_isInvariant_of_isPiSubgroup
       (G := H) (A := Unit) hHsolv hcopH π Zsub hZsubπ hZsub_inv
   let Usub : Subgroup H := U.subgroupOf H
-  letI : MulDistribMulAction Unit Usub := {
+  let : MulDistribMulAction Unit Usub := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hUsub_solv : IsSolvable Usub := inferInstance
+  have hUsub_solv : Group.IsSolvable Usub := by infer_instance
   have hcopU : Nat.Coprime (Nat.card Unit) (Nat.card Usub) := by simp
   obtain ⟨LU, hLUHall, _hLUInv⟩ :=
     exists_isHallSubgroup_isInvariant
@@ -369,7 +370,7 @@ public theorem section12_exists_characteristic_pSubgroup_of_nontrivial
       X ≤ Y ∧ X ≠ ⊥ ∧ IsPGroup q.val X ∧
         Subgroup.normalizer (Y : Set G) ≤ Subgroup.normalizer (X : Set G) := by
   classical
-  have hYsolv : IsSolvable Y :=
+  let : Group.IsSolvable Y :=
     IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hYne_top)
   let F : Subgroup Y := fittingSubgroup Y
   have hFne : F ≠ ⊥ := by
@@ -383,7 +384,7 @@ public theorem section12_exists_characteristic_pSubgroup_of_nontrivial
     exact hFne hFbot
   obtain ⟨q0, hq0prime, hq0dvdF⟩ := Nat.exists_prime_and_dvd hFcard_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let P : Sylow q.val F := Classical.choice (Sylow.nonempty (p := q.val) (G := F))
   have hPneF : (P : Subgroup F) ≠ ⊥ :=
     Sylow.ne_bot_of_dvd_card (G := F) P (by simpa [q] using hq0dvdF)
@@ -392,7 +393,7 @@ public theorem section12_exists_characteristic_pSubgroup_of_nontrivial
       (Group.IsNilpotent.sylow_normal (inferInstance : Group.IsNilpotent F) q.val P)
   let PF : Subgroup Y := (P : Subgroup F).map F.subtype
   have hPFchar : PF.Characteristic := by
-    letI : ((P : Subgroup F)).Characteristic := hPcharF
+    let : ((P : Subgroup F)).Characteristic := hPcharF
     simpa [PF, F] using
       characteristic_map_subtype_of_characteristic (G := Y) F (P : Subgroup F)
   let X : Subgroup G := PF.map Y.subtype
@@ -418,7 +419,7 @@ public theorem section12_exists_characteristic_pSubgroup_of_nontrivial
         Y.subtype
   have hNormY_le_NormX :
       Subgroup.normalizer (Y : Set G) ≤ Subgroup.normalizer (X : Set G) := by
-    letI : PF.Characteristic := hPFchar
+    let : PF.Characteristic := hPFchar
     simpa [X, PF] using
       section8_normalizer_map_subtype_le_of_characteristic
         (G := G) (H := Y) (K := PF)
@@ -496,7 +497,7 @@ private theorem section12_corollary_12_16_rank_bound_of_le_msigma
   rcases section12_exists_characteristic_pSubgroup_of_nontrivial
       (G := G) (Y := Y) hYne hYne_top with
     ⟨q, X, hXleY, hXne, hXq, hNormY_le_NormX⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hXσ : X ≤ section10Msigma M := hXleY.trans hYleσ
   have hX_le_M : X ≤ M := hXσ.trans (section12_Msigma_le M)
   have hXH : X ≤ H := hXleY.trans hH.2
@@ -530,7 +531,7 @@ private theorem section12_corollary_12_16_rank_bound_of_le_msigma
   · have hNXne_top : Subgroup.normalizer (X : Set G) ≠ ⊤ := by
       intro hNtop
       have hXnormal : X.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-      letI : IsSimpleGroup G := IsMinCE.simple
+      let : IsSimpleGroup G := IsMinCE.simple
       rcases hXnormal.eq_bot_or_eq_top with hXbot | hXtop
       · exact hXne hXbot
       · have hYtop : Y = ⊤ := by
@@ -574,7 +575,7 @@ private theorem section12_corollary_12_16_rank_bound_of_le_msigma
           (G := G) (M := M) (Mstar := Mstar) (X := X) (q := q) (S := S)
           hM hqσ hX_le_M hXne hXq hMstar hMstar_ne_M hX_leS hqσstar with
         ⟨hjoin, _hτ1, _hβα, _hβne⟩
-      haveI : ((section10Mbeta Mstar).subgroupOf Mstar).Normal := by
+      have : ((section10Mbeta Mstar).subgroupOf Mstar).Normal := by
         rw [section12Mbeta_subgroupOf_eq]
         infer_instance
       have hβHall :
@@ -610,7 +611,7 @@ private theorem section12_corollary_12_16_rank_bound_of_le_msigma
           (G := G) (M := M) (Mstar := Mstar) (X := X) (q := q) (S := S)
           hM hqσ hX_le_M hXne hXq hMstar hMstar_ne_M hX_leS hqσstar with
         ⟨_hqτ2star, hbeta_subset, hcomp⟩
-      haveI : ((section10Msigma Mstar).subgroupOf Mstar).Normal := by
+      have : ((section10Msigma Mstar).subgroupOf Mstar).Normal := by
         rw [section12Msigma_subgroupOf_eq]
         infer_instance
       have hσHall :
@@ -652,7 +653,7 @@ private theorem section12_conjugate_sigma_subgroup_into_msigma_of_le
     (hZσ : IsPiSubgroup (G := G) (section10SigmaPrimes M) Z) :
     ∃ g : M, Z.conjBy (g : G) ≤ section10Msigma M := by
   classical
-  letI : MulDistribMulAction Unit M := {
+  let : MulDistribMulAction Unit M := {
     smul := fun _ x => x
     one_smul := fun _ => rfl
     mul_smul := fun _ _ _ => rfl
@@ -668,7 +669,7 @@ private theorem section12_conjugate_sigma_subgroup_into_msigma_of_le
     refine ⟨?_⟩
     intro _ x
     simp [Zsub]
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.mpr hM.1)
   have hcop : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
   obtain ⟨L, hLHall, _hLInv, hZsubL⟩ :=
@@ -724,7 +725,7 @@ public theorem section12_corollary_12_16_exists_conjugating_element
     rcases section12_exists_characteristic_pSubgroup_of_nontrivial
         (G := G) (Y := Y) hYne hYne_top with
       ⟨q, X, hXleY, hXne, hXq, hNormY_le_NormX⟩
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     have hqY : q ∈ subgroupPrimeSet Y := by
       have hXnontrivial : Nontrivial X := (Subgroup.nontrivial_iff_ne_bot X).2 hXne
       exact
@@ -816,7 +817,7 @@ public theorem section12_corollary_12_16_exists_conjugating_element
     · have hNXgne_top : Subgroup.normalizer (Xg : Set G) ≠ ⊤ := by
         intro hNtop
         have hXgnormal : Xg.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-        letI : IsSimpleGroup G := IsMinCE.simple
+        let : IsSimpleGroup G := IsMinCE.simple
         rcases hXgnormal.eq_bot_or_eq_top with hXgbot | hXgtop
         · exact hXgne hXgbot
         · have hYgne_top : Yg ≠ ⊤ := by
@@ -865,7 +866,7 @@ public theorem section12_corollary_12_16_exists_conjugating_element
             (G := G) (M := M) (Mstar := Mstar) (X := Xg) (q := q) (S := S)
             hM hqσ hXg_le_M hXgne hXgq hMstar hMstar_ne_M hXg_leS hqσstar with
             ⟨hjoin, _hτ, _hβα, _hβne⟩
-          haveI : ((section10Mbeta Mstar).subgroupOf Mstar).Normal := by
+          have : ((section10Mbeta Mstar).subgroupOf Mstar).Normal := by
             rw [section12Mbeta_subgroupOf_eq]
             infer_instance
           have hβHall :
@@ -896,7 +897,7 @@ public theorem section12_corollary_12_16_exists_conjugating_element
             (G := G) (M := M) (Mstar := Mstar) (X := Xg) (q := q) (S := S)
             hM hqσ hXg_le_M hXgne hXgq hMstar hMstar_ne_M hXg_leS hqσstar with
             ⟨_hqτ2, hbeta_subset, hcomp⟩
-          haveI : ((section10Msigma Mstar).subgroupOf Mstar).Normal := by
+          have : ((section10Msigma Mstar).subgroupOf Mstar).Normal := by
             rw [section12Msigma_subgroupOf_eq]
             infer_instance
           have hσHall :

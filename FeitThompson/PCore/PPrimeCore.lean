@@ -23,11 +23,11 @@ lemma directedOn_normal_pPrimeSubgroups :
   rcases hA with ⟨hA_normal, hA_coprime⟩
   rcases hB with ⟨hB_normal, hB_coprime⟩
   refine ⟨A ⊔ B, ⟨?_, ?_⟩, le_sup_left, le_sup_right⟩
-  · haveI : A.Normal := hA_normal
-    haveI : B.Normal := hB_normal
+  · have : A.Normal := hA_normal
+    have : B.Normal := hB_normal
     exact Subgroup.sup_normal A B
   · -- Show `Nat.Coprime p (Nat.card (A ⊔ B))` using the cardinality formula for `A ⊔ B = A * B`.
-    haveI : B.Normal := hB_normal
+    have : B.Normal := hB_normal
     have hmul : (↑(A ⊔ B) : Set G) = (A : Set G) * (B : Set G) := by
       simpa using (Subgroup.mul_normal A B)
     have hcard_sup_set :
@@ -155,14 +155,14 @@ public theorem pPrimeCore_coprime_card : Nat.Coprime p (Nat.card (pPrimeCore p G
   have hp : Nat.Prime p := Fact.out
   refine (hp.coprime_iff_not_dvd).2 ?_
   intro hpdvd
-  haveI : Fintype (pPrimeCore p G) := Fintype.ofFinite (pPrimeCore p G)
+  have : Fintype (pPrimeCore p G) := Fintype.ofFinite (pPrimeCore p G)
   have hpdvd' : p ∣ Fintype.card (pPrimeCore p G) := by
     simpa [Nat.card_eq_fintype_card] using hpdvd
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card (G := pPrimeCore p G) p hpdvd'
   have hxmem : (x : G) ∈ pPrimeCore p G := x.property
   have hxmem' :
       (x : G) ∈ sSup {K : Subgroup G | K.Normal ∧ Nat.Coprime p (Nat.card K)} := by
-    simp [pPrimeCore]
+    exact hxmem
   have hdir := directedOn_normal_pPrimeSubgroups (G := G) (p := p)
   have hne := normalPPrimeSubgroups_nonempty (G := G) (p := p)
   rcases ((Subgroup.mem_sSup_of_directedOn hne hdir).mp hxmem') with ⟨K, hK, hxK⟩
@@ -192,7 +192,7 @@ public theorem isPGroup_of_nilpotent_normal (N : Subgroup G) (hN_normal : N.Norm
   by_contra h_not
   rw [IsPGroup.iff_card] at h_not
   have h_card_ne_zero : Nat.card (↥N) ≠ 0 := by
-    haveI : Finite N := inferInstance
+    have : Finite N := inferInstance
     have hpos : 0 < Nat.card (↥N) := by
       rw [Finite.card_pos_iff (α := ↥N)]
       exact ⟨⟨1, N.one_mem⟩⟩
@@ -202,19 +202,19 @@ public theorem isPGroup_of_nilpotent_normal (N : Subgroup G) (hN_normal : N.Norm
   have hp_prime : Nat.Prime p := Fact.out
   rcases exists_prime_dvd_ne_of_not_prime_power h_card_ne_zero h_not' with
     ⟨q, hq_prime, hq_dvd, hq_ne⟩
-  haveI : Fact q.Prime := ⟨hq_prime⟩
+  have : Fact q.Prime := ⟨hq_prime⟩
   let Q : Sylow q N := Classical.choice Sylow.nonempty
   have hQ_ne_bot : (Q : Subgroup N) ≠ ⊥ := by
     apply Sylow.ne_bot_of_dvd_card Q hq_dvd
-  haveI : Group.IsNilpotent (↥N) := hN_nilpotent
+  have : Group.IsNilpotent (↥N) := hN_nilpotent
   have h_normcond : NormalizerCondition N := Group.normalizerCondition_of_isNilpotent
   have hQ_normal : (Q : Subgroup N).Normal :=
     Sylow.normal_of_normalizerCondition h_normcond Q
   have hQ_char : (Q : Subgroup N).Characteristic :=
     Sylow.characteristic_of_normal Q hQ_normal
-  haveI : N.Normal := hN_normal
-  haveI : (Q : Subgroup N).Characteristic := hQ_char
-  haveI : ((Q : Subgroup N).map N.subtype).Normal := inferInstance
+  have : N.Normal := hN_normal
+  have : (Q : Subgroup N).Characteristic := hQ_char
+  have : ((Q : Subgroup N).map N.subtype).Normal := inferInstance
   have hQ_pgroup : IsPGroup q (Q : Subgroup N) := Q.isPGroup'
   have hQ_map_pgroup : IsPGroup q ((Q : Subgroup N).map N.subtype) :=
     IsPGroup.map hQ_pgroup N.subtype

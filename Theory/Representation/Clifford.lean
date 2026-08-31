@@ -87,7 +87,7 @@ private theorem iSup_conjugateSubrepresentations_eq_top
     apply Subrepresentation.toSubmodule_injective
     change T.toSubmodule = (⊥ : Subrepresentation rho).toSubmodule
     exact congrArg Subrepresentation.toSubmodule hbot
-  haveI : Representation.IsIrreducible rho := hrho
+  have : Representation.IsIrreducible rho := hrho
   have hTtop : T = ⊤ :=
     (IsSimpleOrder.eq_bot_or_eq_top T).resolve_left hTne
   apply Subrepresentation.toSubmodule_injective
@@ -130,6 +130,7 @@ private noncomputable def isaacs_6_5_ofSubmodule'_repEquiv
       simp only [SetLike.val_smul, Representation.single_smul, one_smul]
       rfl
     _ = rho g (rho.asModuleEquiv ↑(e v)) := by rfl
+set_option backward.isDefEq.respectTransparency false in
 private theorem isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
@@ -245,11 +246,11 @@ public theorem isaacs_theorem_6_5
         Nat.card {i : Fin n // Nonempty
           ((Theory.Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ sigma)} := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let rhoH : Representation F H V := rho.comp H.subtype
-  letI : Module (MonoidAlgebra F H) V :=
+  let : Module (MonoidAlgebra F H) V :=
     Representation.instModuleMonoidAlgebraAsModule rhoH
-  letI : Ring (MonoidAlgebra F H) := MonoidAlgebra.ring
+  let : Ring (MonoidAlgebra F H) := MonoidAlgebra.ring
   let U : G → Subrepresentation rhoH :=
     fun x => Theory.Representation.conjugateSubrepresentation rho H W x
   have hWatom : IsAtom W :=

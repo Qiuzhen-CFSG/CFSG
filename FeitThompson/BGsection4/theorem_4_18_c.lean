@@ -14,13 +14,13 @@ section Main
 open scoped FixedPoints
 
 public theorem theorem_4_18_c {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
-    (hsolv : IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
+    (hsolv : Group.IsSolvable G) (hodd : Odd (Nat.card G)) (hp_mem : p ∣ Nat.card G)
     (hrank : primeRank p G ≤ 2) :
     HasNormalPComplement p (derivedSubgroup G) := by
   classical
   let D : Subgroup G := derivedSubgroup G
   let M : Subgroup G := pPrimeCore p G
-  letI : M.Normal := by
+  let : M.Normal := by
     dsimp [M]
     infer_instance
   let Q := G ⧸ M
@@ -32,10 +32,11 @@ public theorem theorem_4_18_c {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
     have hp_odd : Odd p := hodd.of_dvd_nat hp_mem
     rw [hp_two] at hp_odd
     norm_num [Nat.odd_iff] at hp_odd
-  haveI : M.Normal := by
+  have : M.Normal := by
     dsimp [M]
     infer_instance
-  have hsolvQ : IsSolvable Q := solvable_quotient_of_solvable M
+  have : Group.IsSolvable G := hsolv
+  have hsolvQ : Group.IsSolvable Q := by infer_instance
   have hQodd : Odd (Nat.card Q) := hodd.of_dvd_nat (Subgroup.card_quotient_dvd_card (s := M))
   have hcoreQ : pPrimeCore p Q = ⊥ := by
     simpa [Q, M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
@@ -141,11 +142,11 @@ public theorem theorem_4_18_c {G : Type*} [Group G] [Finite G] {p : ℕ} [Fact p
   let φA : Q →* A := φ.rangeRestrict
   have hAodd : Odd (Nat.card A) := by
     exact hQodd.of_dvd_nat (Subgroup.card_dvd_of_surjective φA φ.rangeRestrict_surjective)
-  have hsolvA : IsSolvable A := by
-    letI : IsSolvable Q := hsolvQ
-    exact solvable_of_surjective (f := φA) φ.rangeRestrict_surjective
+  have hsolvA : Group.IsSolvable A := by
+    have : Group.IsSolvable Q := hsolvQ
+    exact Group.isSolvable_of_surjective (f := φA) φ.rangeRestrict_surjective
   have hAder_p : IsPGroup p (derivedSubgroup A) := by
-    letI : Fact (IsPGroup p R) := ⟨hR_p⟩
+    let : Fact (IsPGroup p R) := ⟨hR_p⟩
     exact theorem_4_17 (R := R) (A := A) (p := p) hpodd hsolvA hR_rank hAodd
   have hmap_der : DQ.map φA = derivedSubgroup A := by
     simpa [DQ, derivedSubgroup, derivedSeries_one] using

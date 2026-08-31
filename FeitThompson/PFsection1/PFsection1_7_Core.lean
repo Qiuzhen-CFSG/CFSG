@@ -793,9 +793,11 @@ public theorem exists_principal_index_of_completeFamily
     (hchi : Theory.Character.IsCompleteIrreducibleCharacterFamily chi) :
     ∃ k : ι, ofConjClassFunction (chi k) = principalCharacter G := by
   classical
+  have hprincipal : IsClassFunction (principalCharacter G) := by
+    intro x g
+    simp [principalCharacter]
   let chi0 : Theory.Character.ConjClassFunction G :=
-    toConjClassFunction (principalCharacter G)
-      (by intro x g; simp [principalCharacter])
+    toConjClassFunction (principalCharacter G) hprincipal
   have hchi0_irred : Theory.Character.IsIrreducibleConjCharacter chi0 := by
     let rho : Representation ℂ G (Fin 1 → ℂ) :=
       Representation.trivial ℂ G (Fin 1 → ℂ)
@@ -808,7 +810,8 @@ public theorem exists_principal_index_of_completeFamily
     refine ⟨?_, ?_⟩
     · refine ⟨1, rho, hchi0_eq⟩
     · dsimp [chi0]
-      rw [classFunctionInner_toConjClassFunction]
+      rw [classFunctionInner_toConjClassFunction
+        (principalCharacter G) (principalCharacter G) hprincipal hprincipal]
       simp [scalarProduct, principalCharacter]
   rcases hchi.2.1 chi0 hchi0_irred with ⟨k, hk⟩
   refine ⟨k, ?_⟩

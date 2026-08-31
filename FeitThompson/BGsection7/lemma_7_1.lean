@@ -35,13 +35,13 @@ private lemma lemma_7_1_local [IsMinCE G]
     simpa [M] using piCoreIn_le (G := G) (subgroupPrimeSet A)ᶜ H
   have hA_le_normH : A ≤ Subgroup.normalizer (H : Set G) :=
     hAH.trans Subgroup.le_normalizer
-  haveI : Subgroup.Normalizes A H := ⟨hA_le_normH⟩
+  have : Subgroup.Normalizes A H := ⟨hA_le_normH⟩
   have hMsub_eq : M.subgroupOf H = piCore (subgroupPrimeSet A)ᶜ ↥H := by
     simpa [M] using piCore_map_subtype_subgroupOf (G := G) (subgroupPrimeSet A)ᶜ H
   have hMsub_char : (M.subgroupOf H).Characteristic := by
     rw [hMsub_eq]
     exact piCore_characteristic (G := ↥H) (subgroupPrimeSet A)ᶜ
-  letI : IsInvariant (↥A) (↥H) (M.subgroupOf H) :=
+  let : IsInvariant (↥A) (↥H) (M.subgroupOf H) :=
     isInvariant_of_characteristic (A := ↥A) (G := ↥H) (M.subgroupOf H)
   have hA_le_normM : A ≤ Subgroup.normalizer (M : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem M A ?_
@@ -55,7 +55,7 @@ private lemma lemma_7_1_local [IsMinCE G]
       Subgroup.mem_subgroupOf.mp hxInv
     change (a : G) * x * (a : G)⁻¹ ∈ M
     simpa [xH, Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe, hA_le_normH] using hxInv'
-  haveI : Subgroup.Normalizes A M := ⟨hA_le_normM⟩
+  have : Subgroup.Normalizes A M := ⟨hA_le_normM⟩
   have hQ₁fam : Q₁ ∈ section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) :=
     section7HStarFamily.mem_family hQ₁
   have hQ₂fam : Q₂ ∈ section7HFamily (⊤ : Subgroup G) A ({q} : Set Nat.Primes) :=
@@ -90,11 +90,11 @@ private lemma lemma_7_1_local [IsMinCE G]
     simpa [K₂] using
       (isInvariant_subgroupOf_of_le_normalizer
         (A := A) (H := M) (K := H ⊓ Q₂) hA_le_normM hA_le_normHQ₂ hHQ₂_core)
-  letI : IsSolvable H := solvable_of_proper_subgroup hHproper
-  have hsolvMsub : IsSolvable (M.subgroupOf H) := inferInstance
+  let : Group.IsSolvable H := solvable_of_proper_subgroup hHproper
+  have hsolvMsub : Group.IsSolvable (M.subgroupOf H) := inferInstance
   let eM : M.subgroupOf H ≃* M := Subgroup.subgroupOfEquivOfLe hM_le_H
-  have hsolvM : IsSolvable M :=
-    solvable_of_surjective (f := eM.toMonoidHom) eM.surjective
+  have hsolvM : Group.IsSolvable M :=
+    Group.isSolvable_of_surjective (f := eM.toMonoidHom) eM.surjective
   have hcopM : Nat.Coprime (Nat.card A) (Nat.card M) := by
     simpa [M] using coprime_card_of_piCoreIn_compl (G := G) A H
   obtain ⟨R₁sub, hR₁Hall, hR₁inv, hK₁_le_R₁⟩ :=
@@ -149,8 +149,8 @@ private lemma lemma_7_1_local [IsMinCE G]
     simpa [R₁] using (hR₁Hall.isPiSubgroup).map M.subtype
   have hR₂_pi : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) R₂ := by
     simpa [R₂] using (hR₂Hall.isPiSubgroup).map M.subtype
-  letI : IsInvariant (↥A) (↥M) R₁sub := hR₁inv
-  letI : IsInvariant (↥A) (↥M) R₂sub := hR₂inv
+  let : IsInvariant (↥A) (↥M) R₁sub := hR₁inv
+  let : IsInvariant (↥A) (↥M) R₂sub := hR₂inv
   have hA_le_normR₁ : A ≤ Subgroup.normalizer (R₁ : Set G) := by
     refine subgroup_le_normalizer_of_conj_mem R₁ A ?_
     intro a x hx
@@ -336,7 +336,7 @@ public theorem lemma_7_1
         have hNproper : N ≠ ⊤ := by
           intro hNtop
           have hQnormal : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-          letI : IsSimpleGroup G := IsMinCE.simple
+          let : IsSimpleGroup G := IsMinCE.simple
           rcases hQnormal.eq_bot_or_eq_top with hQeq_bot | hQeq_top
           · exact hQbot hQeq_bot
           · exact hQtop hQeq_top

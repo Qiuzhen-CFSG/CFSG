@@ -44,7 +44,7 @@ public theorem section10_fitting_quotient_msigma_groupRank_le_two
     · exact hn_le_two
     have hthree_n : 3 ≤ n := by omega
     let p : Nat.Primes := ⟨q, hqprime⟩
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     have hthree_rank_F : 3 ≤ primeRank p.val F := hthree_n.trans hnq
     have hp_dvd_F : p.val ∣ Nat.card F :=
       section10_prime_dvd_card_of_three_le_primeRank_pre
@@ -82,10 +82,10 @@ public theorem section10_prime_not_dvd_derived_quotient_msigma_of_mem_sigma
   let π : Set Nat.Primes := section10SigmaPrimes M
   let K : Subgroup M := section10MsigmaSubgroup M
   let Q := M ⧸ K
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hQsolv : IsSolvable Q := by
-    letI : IsSolvable M := hMsolv
+  have hQsolv : Group.IsSolvable Q := by
+    let : Group.IsSolvable M := hMsolv
     dsimp [Q]
     infer_instance
   have hModd : Odd (Nat.card M) :=
@@ -159,7 +159,7 @@ public theorem section10_prime_not_dvd_maximal_index_of_mem_sigma
     (hpσ : p ∈ section10SigmaPrimes M) :
     ¬ p.val ∣ M.index := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   intro hp_dvd_index
   let P : Sylow p.val M := Classical.choice (Sylow.nonempty (p := p.val) (G := M))
   let PG : Subgroup G := section10AmbientSylowSubgroup M P

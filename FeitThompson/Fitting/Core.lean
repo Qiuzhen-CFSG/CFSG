@@ -125,7 +125,7 @@ public theorem fitting_eq_top_of_nilpotent (G : Type*) [Group G] [Group.IsNilpot
     fittingSubgroup G = ⊤ :=
   le_antisymm le_top (le_sSup ⟨inferInstance, inferInstance⟩)
 
-lemma exists_nontrivial_abelian_normal (G : Type*) [Group G] [Finite G] [hs : IsSolvable G]
+lemma exists_nontrivial_abelian_normal (G : Type*) [Group G] [Finite G] [hs : Group.IsSolvable G]
     (h : Nontrivial G) : ∃ (H : Subgroup G), H.Normal ∧ IsMulCommutative H ∧ H ≠ ⊥ := by
   classical
   let p : Nat -> Prop := fun n => derivedSeries G n = ⊥
@@ -142,7 +142,7 @@ lemma exists_nontrivial_abelian_normal (G : Type*) [Group G] [Finite G] [hs : Is
   rw [← derivedSeries_succ, Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hi)]
   exact Nat.find_spec h
 
-public theorem fitting_eq_bot_iff_card_eq_one_of_solvable (G : Type*) [Group G] [Finite G] [IsSolvable G] :
+public theorem fitting_eq_bot_iff_card_eq_one_of_solvable (G : Type*) [Group G] [Finite G] [Group.IsSolvable G] :
     fittingSubgroup G = ⊥ ↔ Nat.card G = 1 := by
   constructor
   · intro hF
@@ -153,8 +153,10 @@ public theorem fitting_eq_bot_iff_card_eq_one_of_solvable (G : Type*) [Group G] 
       omega
     obtain ⟨H, hH_normal, hH_abelian, hH_ne_bot⟩ := exists_nontrivial_abelian_normal G hnt
     have hH_le : H ≤ fittingSubgroup G := by
-      haveI : IsMulCommutative H := hH_abelian
-      exact le_sSup ⟨hH_normal, (inferInstance : Group.IsNilpotent (↥H))⟩
+      let commH : CommGroup H :=
+        { (inferInstance : Group H) with
+          mul_comm := fun a b => (isMulCommutative_iff.mp hH_abelian) a b }
+      exact le_sSup ⟨hH_normal, @CommGroup.isNilpotent H commH⟩
     exact hH_ne_bot (le_bot_iff.mp (hH_le.trans (le_of_eq hF)))
   · intro hcard
     rw [← Subgroup.card_le_one_iff_eq_bot, ← hcard]

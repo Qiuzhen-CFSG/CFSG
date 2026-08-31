@@ -37,9 +37,10 @@ private theorem section9_isPiSubgroup_singleton_compl_of_coprime_card
     (hH : Nat.Coprime p (Nat.card H)) :
     IsPiSubgroup (G := G) (({⟨p, Fact.out⟩} : Set Nat.Primes)ᶜ) H := by
   intro q hq
-  rw [Set.mem_compl_iff, Set.mem_singleton_iff]
+  rw [Set.mem_compl_iff]
   intro hqp
-  have hqval : q.val = p := congrArg (fun r : Nat.Primes => r.val) hqp
+  have hqval : q.val = p :=
+    congrArg (fun r : Nat.Primes => r.val) (Set.mem_singleton_iff.mp hqp)
   exact ((Nat.Prime.coprime_iff_not_dvd (Fact.out : Nat.Prime p)).1 hH) (by
     simpa [hqval] using hq)
 
@@ -57,10 +58,10 @@ private theorem section9_t91_family_member_le_of_centralizers_le
     simpa [section9PPrimeSet] using hKπ
   have hKcop : Nat.Coprime p (Nat.card K) :=
     section9_coprime_card_of_isPiSubgroup_singleton_compl hKπ_singleton
-  letI : IsElementaryAbelian p B := hBelem
-  letI : CommGroup B := IsMulCommutative.instCommGroup
-  haveI : Subgroup.Normalizes B K := ⟨hBnormK⟩
-  letI : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
+  let : IsElementaryAbelian p B := hBelem
+  let : CommGroup B := IsMulCommutative.instCommGroup
+  have : Subgroup.Normalizes B K := ⟨hBnormK⟩
+  let : Fact (IsPGroup p B) := ⟨IsElementaryAbelian.isPGroup p B⟩
   have hBfix_top :
       (⨆ (b : B) (_ : b ≠ 1), fixedPointSubgroup (↥(Subgroup.zpowers b)) ↥K) = ⊤ := by
     simpa using proposition_1_16_a (G := ↥K) (A := B) p hKcop hBnoncyclic
@@ -244,7 +245,7 @@ public theorem section9_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
   have hnorm_proper : Subgroup.normalizer (NG : Set G) ≠ ⊤ := by
     intro htop
     have hNG_normal : NG.Normal := Subgroup.normalizer_eq_top_iff.mp htop
-    haveI : IsSimpleGroup G := IsMinCE.simple
+    have : IsSimpleGroup G := IsMinCE.simple
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal NG hNG_normal with hbot | htopNG
     · apply hNne
       ext n
@@ -313,7 +314,7 @@ private theorem section9_normalizer_le_normalizer_thompsonSubgroup
       rcases Subgroup.mem_map.mp hy with ⟨a, ha, rfl⟩
       exact (Subgroup.mem_normalizer_iff.mp g.property a).1 (hA.1 ha)
     have hAmap_comm : IsMulCommutative (A.map cg.toMonoidHom) := by
-      letI : IsMulCommutative A := hA.2.1
+      let : IsMulCommutative A := hA.2.1
       simpa [cg] using (Subgroup.map_isMulCommutative (f := cg.toMonoidHom) (H := A))
     have hAmap_max :
         ∀ B : Subgroup G, B ≤ S → IsMulCommutative B →
@@ -327,7 +328,7 @@ private theorem section9_normalizer_le_normalizer_thompsonSubgroup
           exact (Subgroup.inv_mem_iff (H := Subgroup.normalizer (S : Set G))).2 g.property
         exact (Subgroup.mem_normalizer_iff.mp hgInv b).1 (hBS hb)
       have hBmap_comm : IsMulCommutative (B.map cgInv.toMonoidHom) := by
-        letI : IsMulCommutative B := hBcomm
+        let : IsMulCommutative B := hBcomm
         simpa [cgInv] using
           (Subgroup.map_isMulCommutative (f := cgInv.toMonoidHom) (H := B))
       have hcard_le : Nat.card (B.map cgInv.toMonoidHom) ≤ Nat.card A :=
@@ -496,7 +497,7 @@ private theorem section9_thompsonSubgroup_map_injective
       refine ⟨⟨fun x y => ?_⟩⟩
       have hxB : f (x : G) ∈ B := x.2.1
       have hyB : f (y : G) ∈ B := y.2.1
-      letI : IsMulCommutative B := hB.2.1
+      let : IsMulCommutative B := hB.2.1
       have hcomm := setLike_mul_comm (s := B) hxB hyB
       apply Subtype.ext
       exact hf (by simpa using hcomm)
@@ -516,7 +517,7 @@ private theorem section9_thompsonSubgroup_map_injective
       intro C hCS hCcomm
       have hCmap_le_Smap : C.map f ≤ S.map f := Subgroup.map_mono hCS
       have hCmap_comm : IsMulCommutative (C.map f) := by
-        letI : IsMulCommutative C := hCcomm
+        let : IsMulCommutative C := hCcomm
         simpa using (Subgroup.map_isMulCommutative (f := f) (H := C))
       have hcard_le : Nat.card (C.map f) ≤ Nat.card B :=
         hB.2.2 (C.map f) hCmap_le_Smap hCmap_comm
@@ -542,7 +543,7 @@ private theorem section9_thompsonSubgroup_map_injective
     rcases A with ⟨A, hA⟩
     have hAmap_mem : A.map f ∈ thompsonAbelianSubgroups (S.map f) := by
       refine ⟨Subgroup.map_mono hA.1, ?_, ?_⟩
-      · letI : IsMulCommutative A := hA.2.1
+      · let : IsMulCommutative A := hA.2.1
         simpa using (Subgroup.map_isMulCommutative (f := f) (H := A))
       · intro B hB_le_Smap hBcomm
         let C : Subgroup G := B.comap f ⊓ S
@@ -551,7 +552,7 @@ private theorem section9_thompsonSubgroup_map_injective
           refine ⟨⟨fun x y => ?_⟩⟩
           have hxB : f (x : G) ∈ B := x.2.1
           have hyB : f (y : G) ∈ B := y.2.1
-          letI : IsMulCommutative B := hBcomm
+          let : IsMulCommutative B := hBcomm
           have hcomm := setLike_mul_comm (s := B) hxB hyB
           apply Subtype.ext
           exact hf (by simpa using hcomm)
@@ -700,7 +701,7 @@ private theorem section9_centerIn_ne_bot_of_isPGroup_ne_bot
     (hSp : IsPGroup p S) (hSne : S ≠ ⊥) :
     centerIn (G := G) S ≠ ⊥ := by
   classical
-  haveI : Nontrivial S := (Subgroup.nontrivial_iff_ne_bot S).2 hSne
+  have : Nontrivial S := (Subgroup.nontrivial_iff_ne_bot S).2 hSne
   have hcenter_ne_bot : Subgroup.center S ≠ ⊥ :=
     (ne_of_gt (IsPGroup.bot_lt_center (p := p) (G := S) hSp))
   intro hcenterIn_bot
@@ -794,7 +795,7 @@ public theorem section9_fitting_le_pCore_sup_pPrimeCore
   · subst hqp
     exact le_sup_left
   · have hqprime : Nat.Prime q.1 := Nat.prime_of_mem_primeFactors q.1.2
-    letI : Fact (Nat.Prime q.1) := ⟨hqprime⟩
+    let : Fact (Nat.Prime q.1) := ⟨hqprime⟩
     obtain ⟨n, hn⟩ := (pCore_isPGroup (G := G) (p := q.1)).exists_card_eq
     have hcop : Nat.Coprime p (Nat.card (pCore q.1 G)) := by
       rw [hn]
@@ -808,13 +809,13 @@ public theorem section9_fitting_le_pCore_sup_pPrimeCore
 
 omit [IsMinCE G] in
 private theorem section9_pPrime_subgroup_le_pPrimeCore_of_sylow_normalizes
-    {p : ℕ} [Fact p.Prime] (hsolv : IsSolvable G) (P : Sylow p G)
+    {p : ℕ} [Fact p.Prime] (hsolv : Group.IsSolvable G) (P : Sylow p G)
     {K : Subgroup G} (hKcop : Nat.Coprime p (Nat.card K))
     (hPnorm : (P : Subgroup G) ≤ Subgroup.normalizer (K : Set G)) :
     K ≤ pPrimeCore p G := by
   classical
   let M : Subgroup G := pPrimeCore p G
-  haveI : M.Normal := by
+  have : M.Normal := by
     dsimp [M]
     infer_instance
   let q : G →* G ⧸ M := QuotientGroup.mk' M
@@ -861,7 +862,7 @@ private theorem section9_pPrime_subgroup_le_pPrimeCore_of_sylow_normalizes
       rw [← hpCore_inf_Kbar]
       exact ⟨hcomm_pCore, hcomm_Kbar⟩
     exact (commutatorElement_eq_one_iff_mul_comm).1 (by simpa using hcomm_bot)
-  have hsolvQ : IsSolvable (G ⧸ M) := solvable_quotient_of_solvable M
+  have hsolvQ : Group.IsSolvable (G ⧸ M) := by infer_instance
   have hcore_bot : pPrimeCore p (G ⧸ M) = ⊥ := by
     simpa [M] using (pPrimeCore_quotient_pPrimeCore_eq_bot (G := G) (p := p))
   have hcent_pCore_le :
@@ -919,7 +920,7 @@ private theorem section9_pPrime_subgroup_le_pPrimeCore_of_sylow_normalizes
 
 omit [IsMinCE G] in
 private theorem section9_generatedPPrimeFamily_le_pPrimeCore_map_of_sylow
-    {p : ℕ} [Fact p.Prime] {M A : Subgroup G} (hMsolv : IsSolvable M)
+    {p : ℕ} [Fact p.Prime] {M A : Subgroup G} (hMsolv : Group.IsSolvable M)
     (P : Sylow p M) (hAeq : A = (P : Subgroup M).map M.subtype)
     (hgen_le_M : section9GeneratedPPrimeFamily (⊤ : Subgroup G) A p ≤ M) :
     section9GeneratedPPrimeFamily (⊤ : Subgroup G) A p ≤
@@ -981,7 +982,7 @@ omit [Finite G] [IsMinCE G] in
 private theorem section9_t91_generatorRank_le_natCard
     (R : Type*) [Group R] [Finite R] :
     generatorRank R ≤ Nat.card R := by
-  letI : Fintype R := Fintype.ofFinite R
+  let : Fintype R := Fintype.ofFinite R
   obtain ⟨S, hS_card, _hS_top⟩ := Group.rank_spec R
   calc
     generatorRank R = Group.rank R := generatorRank_eq_group_rank R
@@ -1048,8 +1049,8 @@ private theorem section9_t91_elementaryAbelian_card_ge_pow_generatorRank
     {p : ℕ} [Fact p.Prime]
     (R : Type*) [Group R] [Finite R] [IsElementaryAbelian p R] :
     p ^ generatorRank R ≤ Nat.card R := by
-  letI : CommGroup R := IsMulCommutative.instCommGroup
-  letI : AddCommGroup (Additive R) := Additive.addCommGroup
+  let : CommGroup R := IsMulCommutative.instCommGroup
+  let : AddCommGroup (Additive R) := Additive.addCommGroup
   have hcard : Nat.card R = p ^ Module.finrank (ZMod p) (Additive R) := by
     calc
       Nat.card R = Nat.card (Additive R) := (Nat.card_congr Additive.toMul).symm
@@ -1065,7 +1066,7 @@ private theorem section9_t91_omega1_isElementaryAbelian_of_commutative
     {p : ℕ} [Fact p.Prime]
     (R : Type*) [Group R] [IsMulCommutative R] :
     IsElementaryAbelian p (omega₁ (G := R) (p := p)) := by
-  letI : CommGroup R := IsMulCommutative.instCommGroup
+  let : CommGroup R := IsMulCommutative.instCommGroup
   refine
     { toIsMulCommutative := by infer_instance
       exponent_dvd_p := ?_ }
@@ -1091,7 +1092,7 @@ private theorem section9_t91_omega1_card_eq_card_quotient_frattini_of_commutativ
     (R : Type*) [Group R] [Finite R] [IsMulCommutative R] [Fact (IsPGroup p R)] :
     Nat.card (omega₁ (G := R) (p := p)) = Nat.card (R ⧸ frattini R) := by
   classical
-  letI : CommGroup R := IsMulCommutative.instCommGroup
+  let : CommGroup R := IsMulCommutative.instCommGroup
   let φ : R →* R := powMonoidHom p
   have hφker : φ.ker = omega₁ (G := R) (p := p) := by
     ext x
@@ -1209,7 +1210,7 @@ private theorem section9_t91_generatorRank_at_least_three_of_elementaryAbelian_c
     {p : ℕ} [Fact p.Prime] {A : Type*} [Group A] [Finite A]
     [IsElementaryAbelian p A] (hA : p ^ 3 ≤ Nat.card A) :
     3 ≤ generatorRank A := by
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : CommGroup A := IsMulCommutative.instCommGroup
   have hcard_dvd : Nat.card A ∣ p ^ Group.rank A := by
     simpa using card_dvd_exponent_pow_rank' (G := A) (n := p) (fun a =>
       Monoid.exponent_dvd_iff_forall_pow_eq_one.mp
@@ -1230,23 +1231,23 @@ private theorem section9_t91_exists_elementaryAbelian_three_le_generatorRank_of_
   classical
   obtain ⟨p, A, hAp, hAcomm, hAgen⟩ :=
     section9_t91_exists_pSubgroup_three_le_generatorRank_of_three_le_groupRank (R := R) hrank
-  letI : Fact p.val.Prime := ⟨p.property⟩
+  let : Fact p.val.Prime := ⟨p.property⟩
   let Ωsub : Subgroup A := omega₁ (G := A) (p := p.val)
-  haveI : Fact (IsPGroup p.val A) := ⟨hAp⟩
+  have : Fact (IsPGroup p.val A) := ⟨hAp⟩
   have hΩelem : IsElementaryAbelian p.val Ωsub := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     simpa [Ωsub] using
       section9_t91_omega1_isElementaryAbelian_of_commutative (p := p.val) A
   have hΩcard :
       Nat.card Ωsub = Nat.card (A ⧸ frattini A) := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     simpa [Ωsub] using
       section9_t91_omega1_card_eq_card_quotient_frattini_of_commutative
         (p := p.val) A
   have hquot_rank : 3 ≤ generatorRank (A ⧸ frattini A) :=
     hAgen.trans (generatorRank_le_generatorRank_quotient_frattini (p := p.val) A)
   have hpow_le_quot : p.val ^ 3 ≤ Nat.card (A ⧸ frattini A) := by
-    letI : IsElementaryAbelian p.val (A ⧸ frattini A) :=
+    let : IsElementaryAbelian p.val (A ⧸ frattini A) :=
       isElementaryAbelian_quotient_frattini (R := A) (p := p.val)
     calc
       p.val ^ 3 ≤ p.val ^ generatorRank (A ⧸ frattini A) := by
@@ -1258,7 +1259,7 @@ private theorem section9_t91_exists_elementaryAbelian_three_le_generatorRank_of_
     rw [hΩcard]
     exact hpow_le_quot
   have hΩgen : 3 ≤ generatorRank Ωsub := by
-    letI : IsElementaryAbelian p.val Ωsub := hΩelem
+    let : IsElementaryAbelian p.val Ωsub := hΩelem
     exact
       section9_t91_generatorRank_at_least_three_of_elementaryAbelian_card_ge_p_cubed
         (p := p.val) hpow_le_Ω
@@ -1268,7 +1269,7 @@ private theorem section9_t91_exists_elementaryAbelian_three_le_generatorRank_of_
     intro x y hxy
     exact Subtype.ext hxy
   have hEelem : IsElementaryAbelian p.val E := by
-    letI : IsElementaryAbelian p.val Ωsub := hΩelem
+    let : IsElementaryAbelian p.val Ωsub := hΩelem
     simpa [E, f] using section9_t91_isElementaryAbelian_map (p := p.val) (A := Ωsub) f
   have hEgen : 3 ≤ generatorRank E := by
     have hgen_eq : generatorRank E = generatorRank Ωsub := by
@@ -1302,7 +1303,7 @@ private theorem section9_t91_primeRank_at_least_three_of_generatorRank_subgroup
   have hA'p : IsPGroup q A' := by
     exact hAp.of_equiv (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK).symm
   have hA'comm : IsMulCommutative A' := by
-    letI : IsMulCommutative A := hAcomm
+    let : IsMulCommutative A := hAcomm
     exact Subgroup.subgroupOf_isMulCommutative (H := A) (K := K)
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
@@ -1322,7 +1323,7 @@ private theorem section9_t91_groupRank_at_least_three_of_generatorRank_subgroup
     (hAK : A ≤ K) (hAp : IsPGroup q A) (hAcomm : IsMulCommutative A)
     (hAgen : 3 ≤ generatorRank A) :
     3 ≤ groupRank K := by
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   have hqrankK : 3 ≤ primeRank q K :=
     section9_t91_primeRank_at_least_three_of_generatorRank_subgroup
       (q := q) hAK hAp hAcomm hAgen
@@ -1361,12 +1362,12 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
   obtain ⟨q, E, hEelem, hEgen⟩ :=
     section9_t91_exists_elementaryAbelian_three_le_generatorRank_of_three_le_groupRank
       (R := F) (by simpa [F] using hFrank)
-  letI : Fact q.val.Prime := ⟨q.property⟩
+  let : Fact q.val.Prime := ⟨q.property⟩
   let eF : F ≃* FG :=
     Subgroup.equivMapOfInjective (f := H.subtype) F H.subtype_injective
   let E₀ : Subgroup FG := E.map eF.toMonoidHom
   have hE₀elem : IsElementaryAbelian q.val E₀ := by
-    letI : IsElementaryAbelian q.val E := hEelem
+    let : IsElementaryAbelian q.val E := hEelem
     simpa [E₀] using
       section9_t91_isElementaryAbelian_map (p := q.val) (A := E) eF.toMonoidHom
   have hE₀gen : 3 ≤ generatorRank E₀ := by
@@ -1380,7 +1381,7 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
       (p := q.val) (R := FG) (E := E₀) hE₀elem
   have hA₀elem : IsElementaryAbelian q.val A₀ := hA₀max.1
   have hE₀card_ge : q.val ^ 3 ≤ Nat.card E₀ := by
-    letI : IsElementaryAbelian q.val E₀ := hE₀elem
+    let : IsElementaryAbelian q.val E₀ := hE₀elem
     calc
       q.val ^ 3 ≤ q.val ^ generatorRank E₀ := by
         exact Nat.pow_le_pow_right (Nat.Prime.pos (Fact.out : Nat.Prime q.val)) hE₀gen
@@ -1389,18 +1390,18 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
   have hA₀card_ge : q.val ^ 3 ≤ Nat.card A₀ :=
     hE₀card_ge.trans (Subgroup.card_le_of_le hE₀_le_A₀)
   have hA₀rank : 3 ≤ generatorRank A₀ := by
-    letI : IsElementaryAbelian q.val A₀ := hA₀elem
+    let : IsElementaryAbelian q.val A₀ := hA₀elem
     exact
       section9_t91_generatorRank_at_least_three_of_elementaryAbelian_card_ge_p_cubed
         (p := q.val) hA₀card_ge
   have hE₀nontrivial : Nontrivial E₀ := by
     by_contra hnt
-    letI : Subsingleton E₀ := not_nontrivial_iff_subsingleton.mp hnt
+    let : Subsingleton E₀ := not_nontrivial_iff_subsingleton.mp hnt
     have hcyc : IsCyclic E₀ := isCyclic_of_subsingleton (α := E₀)
     have hle : generatorRank E₀ ≤ 1 := generatorRank_le_one_of_isCyclic (G := E₀) hcyc
     omega
   have hqF : q ∈ subgroupPrimeSet FG := by
-    letI : IsElementaryAbelian q.val E₀ := hE₀elem
+    let : IsElementaryAbelian q.val E₀ := hE₀elem
     have hdiv : q.val ∣ Nat.card FG :=
       section9_t91_prime_dvd_card_of_nontrivial_pSubgroup
         (G := FG) (p := q.val) (B := E₀)
@@ -1413,7 +1414,9 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
     obtain ⟨P, hF_le_P⟩ := IsPGroup.exists_le_sylow (G := H) (p := q.val) hF_p
     have h8 :=
       theorem_8_1 (G := G) (p := q.val) (M := H) hH8
-        (by simpa [FG] using hqF) (A₀ := A₀) hA₀max hA₀rank P
+        (by
+          change (⟨q.val, Fact.out⟩ : Nat.Primes) ∈ subgroupPrimeSet FG
+          exact hqF) (A₀ := A₀) hA₀max hA₀rank P
     rcases h8.2 (by simpa [FG] using hFGp) with ⟨_hPglobal, hscn_unique⟩
     let EH : Subgroup H := E.map F.subtype
     have hEH_le_P : EH ≤ (P : Subgroup H) := by
@@ -1421,11 +1424,11 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
       exact hF_le_P y.2
     have hEHp : IsPGroup q.val EH := by
-      letI : IsElementaryAbelian q.val E := hEelem
+      let : IsElementaryAbelian q.val E := hEelem
       simpa [EH] using IsPGroup.map (p := q.val) (H := E)
         (IsElementaryAbelian.isPGroup q.val E) F.subtype
     have hEHcomm : IsMulCommutative EH := by
-      letI : IsElementaryAbelian q.val E := hEelem
+      let : IsElementaryAbelian q.val E := hEelem
       simpa [EH] using (Subgroup.map_isMulCommutative (f := F.subtype) (H := E))
     have hEHgen : 3 ≤ generatorRank EH := by
       have hgen_eq : generatorRank EH = generatorRank E := by
@@ -1455,7 +1458,9 @@ private theorem section9_t91_fitting_groupRank_le_two_of_no_unique
   · let P : Sylow q.val H := default
     have h8 :=
       theorem_8_1 (G := G) (p := q.val) (M := H) hH8
-        (by simpa [FG] using hqF) (A₀ := A₀) hA₀max hA₀rank P
+        (by
+          change (⟨q.val, Fact.out⟩ : Nat.Primes) ∈ subgroupPrimeSet FG
+          exact hqF) (A₀ := A₀) hA₀max hA₀rank P
     let C : Subgroup G := section8CentralizerInFitting H A₀
     have hCunique : C ∈ section9UniqueSubgroups G :=
       section9_unique_of_section8_unique <| by
@@ -1485,8 +1490,8 @@ public theorem theorem_9_1
     section9_exists_maximal_pSylowCard_inf_overgroup_ne_of_not_unique
       (p := p) (H := B) (M := M) hM hB.1 hBnot
   have hHproper : H ≠ ⊤ := hHmaxB.1.1
-  have hHsolv : IsSolvable H := section9_solvable_of_proper_subgroup hHproper
-  have hMsolv : IsSolvable M := section9_solvable_of_proper_subgroup hM.1
+  have hHsolv : Group.IsSolvable H := section9_solvable_of_proper_subgroup hHproper
+  have hMsolv : Group.IsSolvable M := section9_solvable_of_proper_subgroup hM.1
   have hOpH_le_M : (pPrimeCore p H).map H.subtype ≤ M :=
     section9_pPrimeCore_map_le_of_generated_le hHmaxB.2 hgen_le_M
   have hOpH_le_H : (pPrimeCore p H).map H.subtype ≤ H :=
@@ -1502,7 +1507,7 @@ public theorem theorem_9_1
   have hB_le_I : B ≤ I := le_inf hHmaxB.2 hB.1
   let B_I : Subgroup I := B.subgroupOf I
   have hBIp : IsPGroup p B_I := by
-    letI : IsElementaryAbelian p B := hB.2
+    let : IsElementaryAbelian p B := hB.2
     have hBp : IsPGroup p B := IsElementaryAbelian.isPGroup p B
     let e : B_I ≃* B := Subgroup.subgroupOfEquivOfLe (H := B) (K := I) hB_le_I
     exact hBp.of_equiv e.symm
@@ -1542,7 +1547,7 @@ public theorem theorem_9_1
     exact y.2
   have hB_ne_bot : B ≠ ⊥ := by
     intro hBbot
-    haveI : Subsingleton B := by
+    have : Subsingleton B := by
       rw [hBbot]
       infer_instance
     exact hBnoncyclic (isCyclic_of_subsingleton (α := B))
@@ -1592,7 +1597,7 @@ public theorem theorem_9_1
       T_M ≠ ⊥ →
         Subgroup.normalizer (((T_M : Subgroup M).map M.subtype : Subgroup G) : Set G) = M := by
     intro hT_ne_bot
-    haveI : T_M.Normal := by
+    have : T_M.Normal := by
       simpa [T_M] using hThompson_normal_M
     exact
       section9_normalizer_map_subtype_eq_of_maximal_of_normal_ne_bot
@@ -1774,7 +1779,7 @@ public theorem theorem_9_1
     hDerived_le_fitting.trans hFitting_le_NH
   have hNH_normal : N_H.Normal :=
     section9_t91_normal_of_derivedSubgroup_le N_H hDerived_le_NH
-  letI : N_H.Normal := hNH_normal
+  let : N_H.Normal := hNH_normal
   have hR_H_ambient_eq_R : section8SubgroupInAmbient (R_H : Subgroup H) = R := by
     simpa [section8SubgroupInAmbient, R, I] using hR_H_eq_R
   have hR_H_map_eq_R : (R_H : Subgroup H).map H.subtype = R := by

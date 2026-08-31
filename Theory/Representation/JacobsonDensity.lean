@@ -166,13 +166,13 @@ public theorem jacobson_density_surjective
       carrier := {f | ∀ u ∈ U, f • (u : V) = 0}
       add_mem' := by
         intro f₁ f₂ hf₁ hf₂
-        simp only [Set.mem_setOf_eq] at ⊢ hf₁ hf₂
+        simp only [Set.mem_ofPred_eq] at ⊢ hf₁ hf₂
         intro w hw
         rw [add_smul, hf₁ w hw, hf₂ w hw, zero_add]
-      zero_mem' := by simp only [Set.mem_setOf_eq, zero_smul, implies_true]
+      zero_mem' := by simp only [Set.mem_ofPred_eq, zero_smul, implies_true]
       smul_mem' := by
         intro f₁ f₂ hf
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at ⊢ hf
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at ⊢ hf
         intro w hw
         rw[mul_smul, hf w hw, smul_zero]
     }
@@ -180,7 +180,7 @@ public theorem jacobson_density_surjective
     let j := W.subtype ∘ b
     have hj : {(b j : V) | j ≠ i} = j '' ιi := by
       ext x
-      simp_all only [ne_eq, Subtype.exists, Set.mem_setOf_eq, Submodule.coe_subtype,
+      simp_all only [ne_eq, Subtype.exists, Set.mem_ofPred_eq, Submodule.coe_subtype,
         Function.comp_apply, Set.mem_image, Set.mem_sdiff, Set.mem_univ, Set.mem_singleton_iff,
         true_and, p, ι, i, j, ιi]
     have : LinearIndependent F j := by
@@ -219,20 +219,20 @@ public theorem jacobson_density_surjective
         carrier := {f • (b i)| f ∈ N}
         add_mem' := by
           intro v₁ v₂ hv₁ hv₂
-          simp only [Set.mem_setOf_eq] at ⊢ hv₁ hv₂
+          simp only [Set.mem_ofPred_eq] at ⊢ hv₁ hv₂
           obtain ⟨f₁, hf₁1, hf₁2⟩ := hv₁
           obtain ⟨f₂, hf₂1, hf₂2⟩ := hv₂
           exact ⟨f₁ + f₂, ⟨(Submodule.add_mem_iff_left N hf₂1).mpr hf₁1, by rw [add_smul, hf₁2, hf₂2]⟩⟩
         zero_mem' := ⟨0, by simp only [zero_mem, zero_smul, and_self]⟩
         smul_mem' := by
           intro f' v' hv'
-          simp only [Set.mem_setOf_eq] at ⊢ hv'
+          simp only [Set.mem_ofPred_eq] at ⊢ hv'
           obtain ⟨f, hf1, hf2⟩ := hv'
           exact ⟨f' * f, Ideal.mul_mem_left N f' hf1, by rw [mul_smul, hf2]⟩
       }
       have : Nv ≠ ⊥ := by
         refine (Submodule.ne_bot_iff Nv).mpr ?_
-        simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq,
+        simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq,
           ne_eq, exists_exists_and_eq_and, Nv]
         exact hm (n - 1) (Nat.sub_one_lt h) U hU (b i) hi
       have : Nv = ⊤ := (inst.eq_bot_or_eq_top Nv).resolve_left this
@@ -285,7 +285,7 @@ public theorem jacobson_density_surjective
             have : {b j | j : ι} = {b j | j ≠ i} ∪ {b i} := by
               apply le_antisymm
               · intro x hx
-                simp only [Subtype.exists, Set.mem_setOf_eq, ne_eq, Set.union_singleton,
+                simp only [Subtype.exists, Set.mem_ofPred_eq, ne_eq, Set.union_singleton,
                   Set.mem_insert_iff] at ⊢ hx
                 obtain ⟨a, ha1, ha2, ha3⟩ := hx
                 rw [or_iff_not_imp_left]
@@ -365,14 +365,14 @@ public theorem jacobson_density_surjective
       carrier := {(z * x) • u | z : A}
       add_mem' := by
         intro v₁ v₂ hv₁ hv₂
-        rw [Set.mem_setOf_eq] at hv₁ hv₂ ⊢
+        rw [Set.mem_ofPred_eq] at hv₁ hv₂ ⊢
         obtain ⟨z₁, hz₁⟩ := hv₁
         obtain ⟨z₂, hz₂⟩ := hv₂
         exact ⟨z₁ + z₂, by rw [add_mul, add_smul, hz₁, hz₂]⟩
       zero_mem' := ⟨0, by rw [zero_mul, zero_smul]⟩
       smul_mem' := by
         intro a v hv
-        rw [Set.mem_setOf_eq] at hv ⊢
+        rw [Set.mem_ofPred_eq] at hv ⊢
         obtain ⟨z, hz⟩ := hv
         use a * z
         rw [mul_assoc, mul_smul, hz]
@@ -397,7 +397,7 @@ public theorem jacobson_density_surjective
       ext x
       simp_all only [ne_eq, Module.Basis.self_mem_span_image, Set.mem_sdiff, Set.mem_univ,
         Set.mem_singleton_iff, not_true_eq_false, and_false, not_false_eq_true, implies_true,
-        Subtype.exists, Set.mem_setOf_eq, Set.mem_image, true_and, p, ι]
+        Subtype.exists, Set.mem_ofPred_eq, Set.mem_image, true_and, p, ι]
     unfold W
     rw [he]
     exact this i
@@ -418,7 +418,7 @@ public theorem jacobson_density_surjective
     · rw [h, Finsupp.single_eq_same, (hy j).2]
     · have : b i ∈ W j := by
         apply Submodule.subset_span
-        simp only [ne_eq, Subtype.exists, Set.mem_setOf_eq]
+        simp only [ne_eq, Subtype.exists, Set.mem_ofPred_eq]
         exact ⟨i.1, i.2, by simp only [Subtype.coe_eta, h, not_false_eq_true, and_self]⟩
       rw [(hy j).1 (b i) this]
       exact (Finsupp.single_eq_of_ne h.symm).symm
@@ -558,7 +558,7 @@ public theorem adjoin_univ_iff_surjective
           LinearMap.smul_apply, RingHom.id_apply]
     }
     let p : F[G] → Prop := fun x => π' x ∈ Algebra.adjoin F (Set.range ⇑ρ)
-    apply MonoidAlgebra.induction_linear (p := p) x
+    apply MonoidAlgebra.induction_linear (motive := p) x
     · simp only [map_zero, zero_mem, p, π']
     · intro x y hx hy
       simp only [map_add, hx, hy, add_mem, p]

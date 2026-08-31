@@ -289,17 +289,17 @@ private theorem isZGroup_of_odd_subgroup_of_frobenius_complement
     (hR0le : R0 ≤ R) (hR0odd : Odd (Nat.card R0)) :
     IsZGroup R0 := by
   classical
-  letI : K.Normal := hfrob.normal
-  letI : MulDistribMulAction R K :=
+  let : K.Normal := hfrob.normal
+  let : MulDistribMulAction R K :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) R K
       (Subgroup.le_normalizer_of_normal (H := K))
   have hregularR : ActsRegularly R K := hfrob.regular_conj_action
   let R0R : Subgroup R := R0.subgroupOf R
-  letI : MulDistribMulAction R0R K :=
+  let : MulDistribMulAction R0R K :=
     MulDistribMulAction.compHom K R0R.subtype
   have hregularR0R : ActsRegularly R0R K :=
     hregularR.subgroup R0R
-  haveI : Nontrivial K :=
+  have : Nontrivial K :=
     (Subgroup.nontrivial_iff_ne_bot K).2 hfrob.kernel_ne_bot
   have hR0Rodd : Odd (Nat.card R0R) := by
     change Odd (Nat.card (R0.subgroupOf R))
@@ -312,7 +312,7 @@ private theorem isZGroup_of_odd_subgroup_of_frobenius_complement
       (H := K) (R := R0R) (P := (P : Subgroup R0R))
         hp hR0Rodd hregularR0R P.isPGroup'
   let e : R0R ≃* R0 := Subgroup.subgroupOfEquivOfLe hR0le
-  letI : IsZGroup R0R := hZR0R
+  let : IsZGroup R0R := hZR0R
   exact IsZGroup.of_injective (f := e.symm.toMonoidHom) e.symm.injective
 
 private theorem FeitSibleyData.isZGroup_Q1_of_D_eq_bot
@@ -372,14 +372,14 @@ private theorem FeitSibleyData.isZGroup_Q1_of_D_eq_bot
       hfrob hQ1InG_le hQ1InGodd
   let e : d.Q1 ≃* Q1InG :=
     Subgroup.equivMapOfInjective d.Q1 d.H.subtype d.H.subtype_injective
-  letI : IsZGroup Q1InG := hZQ1InG
+  let : IsZGroup Q1InG := hZQ1InG
   exact IsZGroup.of_injective (f := e.toMonoidHom) e.injective
 
 private theorem FeitSibleyData.isNilpotent_Q1_of_D_ne_bot
     {G : Type u} [Group G] [Finite G]
     (d : FeitSibleyData G) (hD : d.D ≠ ⊥) :
     Group.IsNilpotent d.Q1 := by
-  letI : d.Q1.Normal := d.Q1_normal
+  let : d.Q1.Normal := d.Q1_normal
   apply
     External.huppert_V_8_14_thompson_fixedPointFree_conjugation_nilpotent_subgroup
       d.Q1 d.D
@@ -402,7 +402,7 @@ private theorem FeitSibleyData.internalDirectProduct_Q
     {G : Type u} [Group G] [Finite G]
     (d : FeitSibleyData G) :
     Section2.IsInternalDirectProduct d.Q d.S d.Q1 := by
-  letI : d.Q1.Normal := d.Q1_normal
+  let : d.Q1.Normal := d.Q1_normal
   refine
     { left_le := d.S_le_Q
       right_le := d.Q1_le_Q
@@ -422,7 +422,7 @@ private theorem FeitSibleyData.S_normal
     {G : Type u} [Group G] [Finite G]
     (d : FeitSibleyData G) :
     d.S.Normal := by
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   let S0 : Subgroup d.Q := d.S.subgroupOf d.Q
   have hdir := d.internalDirectProduct_Q
   have hS0normal : S0.Normal := by
@@ -441,7 +441,7 @@ private theorem FeitSibleyData.S_normal
         s * (k * (n : d.H) * k⁻¹) * s⁻¹ by group]
     rw [hconjK]
     exact d.S.mul_mem (d.S.mul_mem hs hn) (d.S.inv_mem hs)
-  letI : S0.Normal := hS0normal
+  let : S0.Normal := hS0normal
   let hsemi : Section2.IsInternalSemidirectProduct d.Q d.S d.Q1 :=
     { left_le := hdir.left_le
       right_le := hdir.right_le
@@ -475,7 +475,7 @@ private theorem FeitSibleyData.S_normal
     rw [Subgroup.characteristic_iff_map_eq]
     intro e
     exact hHall.eq_of_normal (hHall.map_mulAut e)
-  letI : S0.Characteristic := hchar
+  let : S0.Characteristic := hchar
   have hmapNormal : (S0.map d.Q.subtype).Normal := inferInstance
   have hmap : S0.map d.Q.subtype = d.S := by
     ext x
@@ -589,18 +589,18 @@ private theorem FeitSibleyData.exists_exceptional_mem_derived_kernel
     (d : FeitSibleyData G)
     (chars : Finset (ClassFunction d.H))
     (hchars : IsFeitSibleyExceptionalFamily d chars)
-    (hsolv : IsSolvable d.Q1)
+    (hsolv : Group.IsSolvable d.Q1)
     (hprod : Section2.IsInternalDirectProduct d.Q d.S d.Q1) :
     ∃ chi : ClassFunction d.H,
       chi ∈ chars ∧
         subgroupInKernel' chi
           (Subgroup.map (d.Q.subtype : d.Q →* d.H) (derivedSubgroup d.Q)) := by
-  letI : IsSolvable d.Q1 := hsolv
+  let : Group.IsSolvable d.Q1 := hsolv
   have hQ1ne : d.Q1 ≠ ⊥ := by
     intro hQ1
     apply d.Q1_not_two_group
     exact hQ1.symm ▸ IsPGroup.of_bot (p := 2) (G := d.H)
-  letI : Nontrivial d.Q1 :=
+  let : Nontrivial d.Q1 :=
     (Subgroup.nontrivial_iff_ne_bot d.Q1).2 hQ1ne
   rcases Section6.exists_nontrivial_linear_character_of_solvable d.Q1 with
     ⟨eta, heta⟩
@@ -615,12 +615,12 @@ private theorem FeitSibleyData.exists_exceptional_mem_derived_kernel
     exact heta
       ((Section3.linearCharacterProductOverInternalDirectProduct_leftKernel_iff
         hprod 1 eta).mp hker)
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   let A : Subgroup d.H :=
     Subgroup.map (d.Q.subtype : d.Q →* d.H) (derivedSubgroup d.Q)
   have hAleQ : A ≤ d.Q := by
     simpa [A] using Subgroup.map_subtype_le (derivedSubgroup d.Q)
-  haveI : A.Normal := by
+  have : A.Normal := by
     dsimp [A]
     infer_instance
   have hAsub : A.subgroupOf d.Q = derivedSubgroup d.Q := by
@@ -681,12 +681,12 @@ private theorem degree_eq_one_of_irreducible_subgroupInKernel_derived_appendixIV
     apply Section6.representation_isIrreducible_of_comp_surjective rhoQ q
       (QuotientGroup.mk'_surjective (derivedSubgroup G))
     simpa [← hcomp] using hrhoIrr
-  haveI : IsMulCommutative (G ⧸ derivedSubgroup G) :=
+  have : IsMulCommutative (G ⧸ derivedSubgroup G) :=
     Subgroup.Normal.quotient_commutative_iff_commutator_le.mpr (by
       intro x hx
       exact hx)
   have hn : n = 1 := by
-    haveI : Representation.IsIrreducible rhoQ := hrhoQIrr
+    have : Representation.IsIrreducible rhoQ := hrhoQIrr
     simpa using
       (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
         (ρ := rhoQ))
@@ -883,14 +883,14 @@ private theorem FeitSibleyData.degree_eq_relIndex_of_exceptional_derived_kernel
       (d.Q.relIndex (⊤ : Subgroup d.H) : Complex) := by
   rcases (lemma_2_a d chars hchars eta).mp hetaChars with
     ⟨phi, hphiIrr, _hphiNotKernel, hind⟩
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   let A : Subgroup d.H :=
     Subgroup.map (d.Q.subtype : d.Q →* d.H)
       (derivedSubgroup d.Q)
   have hAle : A ≤ d.Q := by
     simpa [A] using
       Subgroup.map_subtype_le (derivedSubgroup d.Q)
-  haveI : A.Normal := by
+  have : A.Normal := by
     dsimp [A]
     infer_instance
   have hAsub :
@@ -1243,7 +1243,7 @@ private theorem exceptional_kernel_degree_sq_sum_appendixIV
         (Nat.card (L ⧸ (R ⊔ Z)) : Real) =
       (Nat.card (L ⧸ R) : Real) := by
   classical
-  letI : (R ⊔ Z).Normal := inferInstance
+  let : (R ⊔ Z).Normal := inferInstance
   obtain ⟨A, hA, degA, hdegA, hsumA⟩ :=
     Section6.theorem_6_6_complete_nonkernel_degree_data (L := L) (Z := R ⊔ Z)
   obtain ⟨B, hB, degB, hdegB, hsumB⟩ :=
@@ -1327,7 +1327,7 @@ private theorem exceptional_kernel_degree_sq_sum_appendixIV
 private theorem actsRegularly_quotient_of_solvable_coprime_appendixIV
     {A M : Type*} [Group A] [Finite A] [Group M] [Finite M]
     [MulDistribMulAction A M]
-    (hsolv : IsSolvable M)
+    (hsolv : Group.IsSolvable M)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card M))
     (N : Subgroup M) [N.Normal] (hNinv : IsInvariant A M N)
     (hregular : ActsRegularly A M) :
@@ -1344,7 +1344,7 @@ private theorem actsRegularly_quotient_of_solvable_coprime_appendixIV
     simpa [hsmul] using h
   have hfixedA' : fixedPointSubgroup A' M = ⊥ := by
     simpa using hregular a ha
-  letI : MulDistribMulAction A' (M ⧸ N) :=
+  let : MulDistribMulAction A' (M ⧸ N) :=
     quotientMulDistribMulAction (A := A') (G := M) N hNinvA'
   have hfixed :=
     fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
@@ -1358,7 +1358,7 @@ private theorem natCard_add_one_le_of_actsRegularly_appendixIV
     [MulDistribMulAction A M]
     (hregular : ActsRegularly A M) (hM : Nontrivial M) :
     Nat.card A + 1 ≤ Nat.card M := by
-  letI : Nontrivial M := hM
+  let : Nontrivial M := hM
   obtain ⟨x, hx⟩ := exists_ne (1 : M)
   let f : Option A → M
     | none => 1
@@ -1441,7 +1441,7 @@ private theorem centerModulo_preimage_normal_appendixIV
       (Subgroup.comap (QuotientGroup.mk' K) Z1).map Q1.subtype
     Z.Normal := by
   let K : Subgroup Q1 := Q3.subgroupOf Q1
-  letI : K.Normal := (inferInstance : Q3.Normal).subgroupOf Q1
+  let : K.Normal := (inferInstance : Q3.Normal).subgroupOf Q1
   let Z1 : Subgroup (Q1 ⧸ K) := Subgroup.center (Q1 ⧸ K)
   let Z : Subgroup H :=
     (Subgroup.comap (QuotientGroup.mk' K) Z1).map Q1.subtype
@@ -1492,16 +1492,16 @@ private theorem chiefFactor_le_centerModulo_preimage_appendixIV
       (Subgroup.comap (QuotientGroup.mk' K) Z1).map Q1.subtype
     Q2 ≤ Z := by
   let K : Subgroup Q1 := Q3.subgroupOf Q1
-  letI : K.Normal := (inferInstance : Q3.Normal).subgroupOf Q1
+  let : K.Normal := (inferInstance : Q3.Normal).subgroupOf Q1
   let Z1 : Subgroup (Q1 ⧸ K) := Subgroup.center (Q1 ⧸ K)
   let Z : Subgroup H :=
     (Subgroup.comap (QuotientGroup.mk' K) Z1).map Q1.subtype
-  letI : Z.Normal := centerModulo_preimage_normal_appendixIV Q1 Q3
+  let : Z.Normal := centerModulo_preimage_normal_appendixIV Q1 Q3
   let Q2sub : Subgroup Q1 := Q2.subgroupOf Q1
-  letI : Q2sub.Normal := (inferInstance : Q2.Normal).subgroupOf Q1
+  let : Q2sub.Normal := (inferInstance : Q2.Normal).subgroupOf Q1
   let Q2bar : Subgroup (Q1 ⧸ K) :=
     Q2sub.map (QuotientGroup.mk' K)
-  letI : Q2bar.Normal := by
+  let : Q2bar.Normal := by
     dsimp [Q2bar]
     infer_instance
   obtain ⟨a, haQ2, haQ3⟩ := SetLike.exists_of_lt hchief.lt
@@ -1661,7 +1661,7 @@ private theorem
         (d.Q.relIndex (⊤ : Subgroup d.H) : Complex)) :
     subgroupInKernel' chi (feitSibleyQderivedH d) := by
   classical
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   rcases (lemma_2_a d chars hchars chi).mp hchiChars with
     ⟨phi, hphiIrr, _hphiNotKernel, hind⟩
   rcases hphiIrr with ⟨n, rho, hrhoIrr, hphiEq⟩
@@ -1706,7 +1706,7 @@ private theorem
   have hQderivedLe : feitSibleyQderivedH d ≤ d.Q := by
     simpa [feitSibleyQderivedH] using
       Subgroup.map_subtype_le (derivedSubgroup d.Q)
-  haveI : (feitSibleyQderivedH d).Normal := by
+  have : (feitSibleyQderivedH d).Normal := by
     dsimp [feitSibleyQderivedH]
     infer_instance
   have hQderivedSub :
@@ -1732,9 +1732,9 @@ private theorem
 private noncomputable def feitSibleyCenterModuloPreimage
     {G : Type u} [Group G] [Finite G] (d : FeitSibleyData G)
     (Q3 : Subgroup d.H) [Q3.Normal] : Subgroup d.Q1 := by
-  letI : d.Q1.Normal := d.Q1_normal
+  let : d.Q1.Normal := d.Q1_normal
   let N : Subgroup d.Q1 := Q3.subgroupOf d.Q1
-  letI : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
+  let : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
   exact
     Subgroup.comap (QuotientGroup.mk' N)
       (Subgroup.center (d.Q1 ⧸ N))
@@ -1827,10 +1827,10 @@ private theorem isPGroup_of_nilpotent_center_isPGroup_appendixIV
   by_contra hnot
   obtain ⟨q, hq, hqne, hqdiv⟩ :=
     External.hkt_exists_qprime_divisor_card_of_not_isPGroup p G hnot
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   let P : Sylow q G := default
   have hPne : (P : Subgroup G) ≠ ⊥ := P.ne_bot_of_dvd_card hqdiv
-  letI : (P : Subgroup G).Normal :=
+  let : (P : Subgroup G).Normal :=
     Group.IsNilpotent.sylow_normal
       (inferInstance : Group.IsNilpotent G) q P
   have hinter : (P : Subgroup G) ⊓ Subgroup.center G ≠ ⊥ :=
@@ -1848,9 +1848,9 @@ private theorem feitSibley_step1_strict_center_core
     (hQ2derived : Q2 ≤ feitSibleyQ1derivedH d) :
     Q2 < feitSibleyCenterModuloPreimageH d Q3 ∧
       feitSibleyCenterModuloPreimageH d Q3 < d.Q1 := by
-  letI : d.Q1.Normal := d.Q1_normal
+  let : d.Q1.Normal := d.Q1_normal
   let N : Subgroup d.Q1 := Q3.subgroupOf d.Q1
-  letI : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
+  let : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
   let Z0 : Subgroup d.Q1 := feitSibleyCenterModuloPreimage d Q3
   let Z3 : Subgroup d.H := feitSibleyCenterModuloPreimageH d Q3
   have hQ2leQ1 : Q2 ≤ d.Q1 := by
@@ -1883,10 +1883,20 @@ private theorem feitSibley_step1_strict_center_core
       apply QuotientGroup.eq.mpr
       have hxyQ3 : (x : d.H)⁻¹ * (y : d.H) ∈ Q3 := by
         apply QuotientGroup.eq.mp
-        simpa [f] using hab
+        calc
+          (QuotientGroup.mk' Q3) (x : d.H) = f (QuotientGroup.mk' N x) := by
+            symm
+            exact QuotientGroup.map_mk' N Q3 d.Q1.subtype (by
+              intro z hz
+              exact hz) x
+          _ = f (QuotientGroup.mk' N y) := hab
+          _ = (QuotientGroup.mk' Q3) (y : d.H) := by
+            exact QuotientGroup.map_mk' N Q3 d.Q1.subtype (by
+              intro z hz
+              exact hz) y
       exact hxyQ3
     let Uq : Subgroup (d.H ⧸ Q3) := Q2.map piH
-    letI : Uq.Normal := by
+    let : Uq.Normal := by
       dsimp [Uq, piH]
       exact (inferInstance : Q2.Normal).map (QuotientGroup.mk' Q3)
         (QuotientGroup.mk'_surjective Q3)
@@ -1904,7 +1914,10 @@ private theorem feitSibley_step1_strict_center_core
           rw [hQ2Z3]
           exact hxZ3
         refine Subgroup.mem_map.mpr ⟨(x : d.H), hxQ2, ?_⟩
-        simp [f, piH]
+        change f (QuotientGroup.mk' N x) = (QuotientGroup.mk' Q3) (x : d.H)
+        exact QuotientGroup.map_mk' N Q3 d.Q1.subtype (by
+          intro z hz
+          exact hz) x
       · intro y hy
         rcases Subgroup.mem_map.mp hy with ⟨x, hxQ2, rfl⟩
         let x1 : d.Q1 := ⟨x, hQ2leQ1 hxQ2⟩
@@ -1919,15 +1932,18 @@ private theorem feitSibley_step1_strict_center_core
           simpa [Z0, N, feitSibleyCenterModuloPreimage] using hx1Z0
         refine Subgroup.mem_map.mpr
           ⟨QuotientGroup.mk' N x1, hx1center, ?_⟩
-        simp [f, piH, x1]
+        change f (QuotientGroup.mk' N x1) = (QuotientGroup.mk' Q3) (x : d.H)
+        exact QuotientGroup.map_mk' N Q3 d.Q1.subtype (by
+          intro z hz
+          exact hz) x1
     let eCenter0 :
         Subgroup.center (d.Q1 ⧸ N) ≃*
           (Subgroup.center (d.Q1 ⧸ N)).map f :=
       Subgroup.equivMapOfInjective (Subgroup.center (d.Q1 ⧸ N)) f hf_inj
     let eCenter : Subgroup.center (d.Q1 ⧸ N) ≃* Uq :=
       eCenter0.trans (MulEquiv.subgroupCongr hcenterMap)
-    have hUqSolv : IsSolvable Uq :=
-      isSolvable_of_comm (fun a b => by
+    have hUqSolv : Group.IsSolvable Uq :=
+      Group.isSolvable_of_comm (fun a b => by
         have hcenter_comm : ∀ (x y : Subgroup.center (d.Q1 ⧸ N)), x * y = y * x := by
           intro x y
           ext
@@ -1936,21 +1952,21 @@ private theorem feitSibley_step1_strict_center_core
           hcenter_comm (eCenter.symm a) (eCenter.symm b)
         apply eCenter.symm.injective
         simpa only [map_mul] using h_comm)
-    letI : IsSolvable Uq := hUqSolv
+    let : Group.IsSolvable Uq := hUqSolv
     let cf : ChiefFactor d.H := { V := Q3, U := Q2, isChief := hchief }
-    letI : IsMinimalNormal Uq := by
+    let : IsMinimalNormal Uq := by
       simpa [cf, Uq, piH] using
         chiefFactor_quotient_isMinimalNormal (G := d.H) cf
     obtain ⟨p, hpprime, hUqElem⟩ :=
       minimalNormal_solvable_exists_isElementaryAbelian
         (G := d.H ⧸ Q3) Uq
-    letI : Fact p.Prime := ⟨hpprime⟩
+    let : Fact p.Prime := ⟨hpprime⟩
     have hUqp : IsPGroup p Uq := by
-      letI : IsElementaryAbelian p Uq := hUqElem
+      let : IsElementaryAbelian p Uq := hUqElem
       exact IsElementaryAbelian.isPGroup p Uq
     have hcenterP : IsPGroup p (Subgroup.center (d.Q1 ⧸ N)) :=
       hUqp.of_equiv eCenter.symm
-    letI : Group.IsNilpotent (d.Q1 ⧸ N) := by infer_instance
+    let : Group.IsNilpotent (d.Q1 ⧸ N) := by infer_instance
     have hquotP : IsPGroup p (d.Q1 ⧸ N) :=
       isPGroup_of_nilpotent_center_isPGroup_appendixIV hcenterP
     have hNleDerived : N ≤ derivedSubgroup d.Q1 := by
@@ -1963,7 +1979,7 @@ private theorem feitSibley_step1_strict_center_core
         exact hyx
       simpa [hyx'] using hyderived
     let C : Subgroup d.Q1 := commutator d.Q1
-    letI : C.Normal := by dsimp [C]; infer_instance
+    let : C.Normal := by dsimp [C]; infer_instance
     let qAb : d.Q1 ⧸ N →* d.Q1 ⧸ C :=
       QuotientGroup.map N C (MonoidHom.id d.Q1) (by
         simpa [C] using hNleDerived)
@@ -2040,13 +2056,13 @@ private theorem feitSibley_step1_regular_index_contradiction_core
           ((feitSibleyCenterModuloPreimage d Q3).index : Real)) :
     False := by
   classical
-  letI : d.Q1.Normal := d.Q1_normal
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q1.Normal := d.Q1_normal
+  let : d.Q.Normal := d.Q_normal
   let K3 : Subgroup d.Q1 := Q3.subgroupOf d.Q1
-  letI : K3.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
+  let : K3.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
   let Z0 : Subgroup d.Q1 := feitSibleyCenterModuloPreimage d Q3
   let Z3 : Subgroup d.H := Z0.map d.Q1.subtype
-  letI : Z3.Normal := by
+  let : Z3.Normal := by
     simpa [Z3, Z0, K3, feitSibleyCenterModuloPreimage] using
       (centerModulo_preimage_normal_appendixIV d.Q1 Q3)
   have hQ2lt' : Q2 < Z3 := by
@@ -2056,10 +2072,10 @@ private theorem feitSibley_step1_regular_index_contradiction_core
   have hQ2leZ3 : Q2 ≤ Z3 := hQ2lt'.le
   have hZ3leQ1 : Z3 ≤ d.Q1 := hZlt'.le
   have hQ2leQ1 : Q2 ≤ d.Q1 := hQ2leZ3.trans hZ3leQ1
-  letI : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
-  letI : IsSolvable d.Q1 := IsNilpotent.to_isSolvable
+  let : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
+  let : Group.IsSolvable d.Q1 := IsNilpotent.to_isSolvable
 
-  letI : MulDistribMulAction d.D Z3 :=
+  let : MulDistribMulAction d.D Z3 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := d.H) d.D Z3
       (Subgroup.le_normalizer_of_normal (H := Z3))
   have hregularZ3 : ActsRegularly d.D Z3 := by
@@ -2081,8 +2097,8 @@ private theorem feitSibley_step1_regular_index_contradiction_core
       apply Subtype.ext
       simpa [zQ1] using congrArg Subtype.val hz1
     · exact bot_le
-  have hsolvZ3 : IsSolvable Z3 :=
-    solvable_of_solvable_injective
+  have hsolvZ3 : Group.IsSolvable Z3 :=
+    Group.isSolvable_of_isSolvable_injective
       (f := Subgroup.inclusion hZ3leQ1)
       (Subgroup.inclusion_injective hZ3leQ1)
   have hcopZ3 : Nat.Coprime (Nat.card d.D) (Nat.card Z3) := by
@@ -2090,7 +2106,7 @@ private theorem feitSibley_step1_regular_index_contradiction_core
       (Subgroup.card_dvd_of_le (hZ3leQ1.trans d.Q1_le_Q))
     exact d.card_Q_coprime_card_D.symm
   let N2 : Subgroup Z3 := Q2.subgroupOf Z3
-  letI : N2.Normal := (inferInstance : Q2.Normal).subgroupOf Z3
+  let : N2.Normal := (inferInstance : Q2.Normal).subgroupOf Z3
   have hN2inv : IsInvariant d.D Z3 N2 := by
     refine ⟨?_⟩
     intro a z
@@ -2110,9 +2126,9 @@ private theorem feitSibley_step1_regular_index_contradiction_core
           ((a : d.H) * (z : d.H) * (a : d.H)⁻¹) hz' (a : d.H)⁻¹
       change (z : d.H) ∈ Q2
       simpa [mul_assoc] using this
-  letI : MulAction.QuotientAction d.D N2 :=
+  let : MulAction.QuotientAction d.D N2 :=
     quotientAction_of_isInvariant (A := d.D) (G := Z3) N2 hN2inv
-  letI : MulDistribMulAction d.D (Z3 ⧸ N2) :=
+  let : MulDistribMulAction d.D (Z3 ⧸ N2) :=
     quotientMulDistribMulAction (A := d.D) (G := Z3) N2 hN2inv
   have hregularN2 : ActsRegularly d.D (Z3 ⧸ N2) :=
     actsRegularly_quotient_of_solvable_coprime_appendixIV
@@ -2127,7 +2143,7 @@ private theorem feitSibley_step1_regular_index_contradiction_core
       (natCard_add_one_le_of_actsRegularly_appendixIV
         hregularN2 hnontrivN2)
 
-  letI : MulDistribMulAction d.D d.Q1 :=
+  let : MulDistribMulAction d.D d.Q1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := d.H) d.D d.Q1
       (Subgroup.le_normalizer_of_normal (H := d.Q1))
   have hregularQ1 : ActsRegularly d.D d.Q1 := by
@@ -2152,7 +2168,7 @@ private theorem feitSibley_step1_regular_index_contradiction_core
       (Subgroup.card_dvd_of_le d.Q1_le_Q)
     exact d.card_Q_coprime_card_D.symm
   let NZ : Subgroup d.Q1 := Z3.subgroupOf d.Q1
-  letI : NZ.Normal := (inferInstance : Z3.Normal).subgroupOf d.Q1
+  let : NZ.Normal := (inferInstance : Z3.Normal).subgroupOf d.Q1
   have hNZinv : IsInvariant d.D d.Q1 NZ := by
     refine ⟨?_⟩
     intro a q
@@ -2172,13 +2188,13 @@ private theorem feitSibley_step1_regular_index_contradiction_core
           ((a : d.H) * (q : d.H) * (a : d.H)⁻¹) hq' (a : d.H)⁻¹
       change (q : d.H) ∈ Z3
       simpa [mul_assoc] using this
-  letI : MulAction.QuotientAction d.D NZ :=
+  let : MulAction.QuotientAction d.D NZ :=
     quotientAction_of_isInvariant (A := d.D) (G := d.Q1) NZ hNZinv
-  letI : MulDistribMulAction d.D (d.Q1 ⧸ NZ) :=
+  let : MulDistribMulAction d.D (d.Q1 ⧸ NZ) :=
     quotientMulDistribMulAction (A := d.D) (G := d.Q1) NZ hNZinv
   have hregularNZ : ActsRegularly d.D (d.Q1 ⧸ NZ) :=
     actsRegularly_quotient_of_solvable_coprime_appendixIV
-      (inferInstance : IsSolvable d.Q1) hcopQ1 NZ hNZinv hregularQ1
+      (inferInstance : Group.IsSolvable d.Q1) hcopQ1 NZ hNZinv hregularQ1
   have hnontrivNZ : Nontrivial (d.Q1 ⧸ NZ) := by
     rw [QuotientGroup.nontrivial_iff]
     intro htop
@@ -2348,7 +2364,7 @@ private theorem actor_dvd_group_card_sub_one_appendixIV
     Nat.card A ∣ Nat.card E - 1 := by
   classical
   let alpha := {e : E // e ≠ 1}
-  letI : MulAction A alpha :=
+  let : MulAction A alpha :=
     { smul := fun a e => ⟨a • (e : E), by
         intro h
         apply e.2
@@ -2379,8 +2395,8 @@ private theorem actor_dvd_group_card_sub_one_appendixIV
     exact e.2 (hfree a ha_ne (e : E) hfix)
   have hcard_equiv := Nat.card_congr (MulAction.selfEquivOrbitsQuotientProd hstab)
   have hcard_alpha : Nat.card alpha = Nat.card E - 1 := by
-    letI : Fintype E := Fintype.ofFinite E
-    letI : Fintype alpha := Fintype.ofFinite alpha
+    let : Fintype E := Fintype.ofFinite E
+    let : Fintype alpha := Fintype.ofFinite alpha
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     change Fintype.card {e : E // e ≠ 1} = Fintype.card E - 1
     simp
@@ -2425,13 +2441,13 @@ private theorem feitSibley_step2_center_card_lower_bound_nilpotent_core
     (hDodd : Odd (Nat.card d.D)) :
     2 * Nat.card d.D + 1 ≤ Nat.card (Subgroup.center d.Q1) := by
   classical
-  letI : d.Q1.Normal := d.Q1_normal
-  letI : MulDistribMulAction d.D d.Q1 :=
+  let : d.Q1.Normal := d.Q1_normal
+  let : MulDistribMulAction d.D d.Q1 :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := d.H) d.D d.Q1
       (Subgroup.le_normalizer_of_normal (H := d.Q1))
-  letI : IsInvariant d.D d.Q1 (Subgroup.center d.Q1) := by
+  let : IsInvariant d.D d.Q1 (Subgroup.center d.Q1) := by
     infer_instance
-  letI : MulDistribMulAction d.D (Subgroup.center d.Q1) :=
+  let : MulDistribMulAction d.D (Subgroup.center d.Q1) :=
     instMulDistribMulAction_subtype (G := d.Q1) (A := d.D)
   have hfreeCenter :
       ∀ a : d.D, a ≠ 1 →
@@ -2462,14 +2478,14 @@ private theorem feitSibley_step2_center_card_lower_bound_nilpotent_core
     apply d.Q1_not_two_group
     rw [hQ1]
     exact IsPGroup.of_bot (p := 2) (G := d.H)
-  letI : Nontrivial d.Q1 :=
+  let : Nontrivial d.Q1 :=
     (Subgroup.nontrivial_iff_ne_bot d.Q1).2 hQ1ne
   have hcenterne : Subgroup.center d.Q1 ≠ ⊥ := by
     have hinter :=
       Section6.nilpotent_normal_inf_center_ne_bot
         (⊤ : Subgroup d.Q1) (top_ne_bot : (⊤ : Subgroup d.Q1) ≠ ⊥)
     simpa using hinter
-  haveI : Nontrivial (Subgroup.center d.Q1) :=
+  have : Nontrivial (Subgroup.center d.Q1) :=
     (Subgroup.nontrivial_iff_ne_bot (Subgroup.center d.Q1)).2 hcenterne
   have hcenterCard : 1 < Nat.card (Subgroup.center d.Q1) :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -2479,14 +2495,14 @@ private theorem feitSibley_step2_center_card_lower_bound_core
     {G : Type u} [Group G] [Finite G] (d : FeitSibleyData G)
     (hD : d.D ≠ ⊥) (hDodd : Odd (Nat.card d.D)) :
     2 * Nat.card d.D + 1 ≤ Nat.card (Subgroup.center d.Q1) := by
-  letI : Group.IsNilpotent d.Q1 :=
+  let : Group.IsNilpotent d.Q1 :=
     d.isNilpotent_Q1_of_D_ne_bot hD
   exact feitSibley_step2_center_card_lower_bound_nilpotent_core d hDodd
 
 private theorem feitSibley_Q_relIndex_top_eq_card_D_appendixIV
     {G : Type u} [Group G] [Finite G] (d : FeitSibleyData G) :
     d.Q.relIndex (⊤ : Subgroup d.H) = Nat.card d.D := by
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   let hsemi : Section2.IsInternalSemidirectProduct
       (⊤ : Subgroup d.H) d.Q d.D := by
     refine
@@ -2516,8 +2532,8 @@ private theorem feitSibley_step2_quotient_card_factor_core
       Nat.card (d.H ⧸ (R1 ⊔ d.Q1)) =
         Nat.card d.D * R1.relIndex d.S := by
   classical
-  letI : d.Q1.Normal := d.Q1_normal
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q1.Normal := d.Q1_normal
+  let : d.Q.Normal := d.Q_normal
   let hsemiSQ : Section2.IsInternalSemidirectProduct d.Q d.S d.Q1 := by
     refine
       { left_le := d.S_le_Q
@@ -2580,7 +2596,7 @@ private theorem feitSibley_step2_quotient_card_factor_core
       _ = Nat.card d.D * R1.relIndex d.S * Nat.card d.Q1 := by
         ac_rfl
   let U : Subgroup d.H := R1 ⊔ d.Q1
-  letI : U.Normal := by
+  let : U.Normal := by
     dsimp [U]
     infer_instance
   have hUleQ : U ≤ d.Q :=
@@ -2748,13 +2764,13 @@ private theorem feitSibley_coherent_of_D_eq_bot_core
     (hD : d.D = ⊥) :
     feitSibleyCoherent d chars := by
   classical
-  letI : IsZGroup d.Q1 := d.isZGroup_Q1_of_D_eq_bot hD
-  have hsolvQ1 : IsSolvable d.Q1 := by infer_instance
+  let : IsZGroup d.Q1 := d.isZGroup_Q1_of_D_eq_bot hD
+  have hsolvQ1 : Group.IsSolvable d.Q1 := by infer_instance
   obtain ⟨chi, hchiChars, _hchiKernel⟩ :=
     d.exists_exceptional_mem_derived_kernel
       chars hchars hsolvQ1 d.internalDirectProduct_Q
   have hbarChars : conjugateCharacter chi ∈ chars := by
-    letI : d.Q.Normal := d.Q_normal
+    let : d.Q.Normal := d.Q_normal
     rcases (lemma_2_a d chars hchars chi).mp hchiChars with
       ⟨phi, hphiIrr, hphiNotKernel, hind⟩
     apply (lemma_2_a d chars hchars (conjugateCharacter chi)).mpr
@@ -2833,11 +2849,11 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
       ¬ feitSibleyCoherent d (feitSibleySker d chars R2)) :
     False := by
   classical
-  letI : d.S.Normal := d.S_normal
-  letI : d.Q1.Normal := d.Q1_normal
-  letI : Group.IsNilpotent d.S := d.S_nilpotent
-  letI : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
-  letI : IsSolvable d.Q1 := IsNilpotent.to_isSolvable
+  let : d.S.Normal := d.S_normal
+  let : d.Q1.Normal := d.Q1_normal
+  let : Group.IsNilpotent d.S := d.S_nilpotent
+  let : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
+  let : Group.IsSolvable d.Q1 := IsNilpotent.to_isSolvable
   have hSderivedLeS : feitSibleySderivedH d ≤ d.S := by
     simpa [feitSibleySderivedH] using
       Subgroup.map_subtype_le (derivedSubgroup d.S)
@@ -2863,7 +2879,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     exact hchiKernel ⟨x, hchief.lt.le x.property⟩
   obtain ⟨chi0, hchi0Chars, hchi0KernelQderived⟩ :=
     d.exists_exceptional_mem_derived_kernel
-      chars hchars (inferInstance : IsSolvable d.Q1)
+      chars hchars (inferInstance : Group.IsSolvable d.Q1)
         d.internalDirectProduct_Q
   have hchi0U : chi0 ∈ U := by
     refine Finset.mem_filter.mpr ⟨hchi0Chars, ?_⟩
@@ -2939,7 +2955,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     ⟨phi, hphiIrr, _hphiNotKernel, hind⟩
   rcases hphiIrr with ⟨n, rho, hrhoIrr, hphiEq⟩
   have hR2leQ : R2 ≤ d.Q := hR2leS.trans d.S_le_Q
-  letI : d.Q.Normal := d.Q_normal
+  let : d.Q.Normal := d.Q_normal
   have hindKerPhi : subgroupInKernel' (inducedCF d.Q phi) R2 := by
     rw [hind]
     exact hpsiKernel
@@ -2953,7 +2969,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     (subgroupInKernel'_character_iff_subgroupInRepresentationKernel
       rho _).mp hrhoKerCF
   let N : Subgroup d.S := R2.subgroupOf d.S
-  letI : N.Normal := (inferInstance : R2.Normal).subgroupOf d.S
+  let : N.Normal := (inferInstance : R2.Normal).subgroupOf d.S
   let e : d.S × d.Q1 ≃* d.Q :=
     Section3.internalDirectProductMulEquiv d.internalDirectProduct_Q
   have hker : ∀ x : N.prod (⊥ : Subgroup d.Q1), rho (e x) = 1 := by
@@ -2988,7 +3004,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     change ((e x : d.Q) : d.H) ∈ R2
     rw [heq]
     exact x.property.1
-  letI : Representation.IsIrreducible rho := hrhoIrr
+  let : Representation.IsIrreducible rho := hrhoIrr
   have hnSq :
       n ^ 2 ≤
         (Subgroup.comap (QuotientGroup.mk' N)
@@ -3085,7 +3101,7 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     intro hS
     apply hR1ne
     exact le_bot_iff.mp (by simpa [hS] using hR1leS)
-  letI : Nontrivial d.S :=
+  let : Nontrivial d.S :=
     (Subgroup.nontrivial_iff_ne_bot d.S).2 hSne
   have hR1SleDerived : R1S ≤ derivedSubgroup d.S := by
     intro x hx
@@ -3097,8 +3113,8 @@ private theorem feitSibley_step2_chief_factor_contradiction_core
     simpa [hyx'] using hy
   have hderivedLt : derivedSubgroup d.S < ⊤ := by
     change commutator d.S < ⊤
-    letI : IsSolvable d.S := IsNilpotent.to_isSolvable
-    exact IsSolvable.commutator_lt_top_of_nontrivial (G := d.S)
+    let : Group.IsSolvable d.S := IsNilpotent.to_isSolvable
+    exact Group.IsSolvable.commutator_lt_top_of_nontrivial (G := d.S)
   have hR1Slt : R1S < ⊤ := hR1SleDerived.trans_lt hderivedLt
   have hsTwo : 2 ≤ R1S.index := by
     have hone := Subgroup.one_lt_index_of_ne_top hR1Slt.ne
@@ -3124,7 +3140,7 @@ private theorem feitSibley_step2_chief_descent_of_D_ne_bot_core
         (feitSibleySker d chars (feitSibleySderivedH d))) :
     feitSibleyCoherent d chars := by
   classical
-  letI : d.S.Normal := d.S_normal
+  let : d.S.Normal := d.S_normal
   let P : Subgroup d.H → Prop := fun R =>
     R ≤ feitSibleySderivedH d ∧ R.Normal ∧
       feitSibleyCoherent d (feitSibleySker d chars R)
@@ -3145,10 +3161,10 @@ private theorem feitSibley_step2_chief_descent_of_D_ne_bot_core
       rfl
     rw [hSkerBot] at hcoherentR1
     exact hcoherentR1
-  · letI : R1.Normal := hR1normal
+  · let : R1.Normal := hR1normal
     obtain ⟨R2, hchief⟩ :=
       exists_chiefFactor_below_appendixIV R1 hR1bot
-    letI : R2.Normal := hchief.normal_K
+    let : R2.Normal := hchief.normal_K
     have hR2le : R2 ≤ feitSibleySderivedH d :=
       hchief.lt.le.trans hR1le
     have hnotcoherentR2 :
@@ -3190,7 +3206,7 @@ private theorem scalar_of_commutator_left_kernel_appendixIV
       (rho (MonoidHom.inl A C a) : Module.End ℂ V) =
         c • (1 : Module.End ℂ V) := by
   classical
-  letI : Representation.IsIrreducible rho := hrho
+  let : Representation.IsIrreducible rho := hrho
   have hcommute : ∀ x : A × C,
       rho (MonoidHom.inl A C a) * rho x =
         rho x * rho (MonoidHom.inl A C a) := by
@@ -3257,13 +3273,33 @@ private theorem scalar_of_commutator_left_kernel_appendixIV
       ((algebraMap ℂ (Representation.IntertwiningMap rho rho) c :
           Representation.IntertwiningMap rho rho) : Module.End ℂ V) =
         (f : Module.End ℂ V) := by
-    simpa using congrArg
-      (fun F : Representation.IntertwiningMap rho rho =>
-        (F : Module.End ℂ V)) hc
+    calc
+      ((algebraMap ℂ (Representation.IntertwiningMap rho rho) c :
+          Representation.IntertwiningMap rho rho) : Module.End ℂ V) =
+          ((c • (1 : Representation.IntertwiningMap rho rho)) :
+            Module.End ℂ V) := by
+        exact congrArg (fun F : Representation.IntertwiningMap rho rho =>
+          (F : Module.End ℂ V))
+          (Representation.IntertwiningMap.algebraMap_apply rho c)
+      _ = (f : Module.End ℂ V) := by
+        exact congrArg (fun F : Representation.IntertwiningMap rho rho =>
+          (F : Module.End ℂ V)) hc
   ext v
-  simpa [f, Representation.IntertwiningMap.algebraMap_apply,
-    Representation.IntertwiningMap.smul_apply] using
-    congrArg (fun F : Module.End ℂ V => F v) hlin.symm
+  have hEval := congrArg (fun F : Module.End ℂ V => F v) hlin.symm
+  calc
+    rho (MonoidHom.inl A C a) v = (f : Module.End ℂ V) v := by rfl
+    _ = ((algebraMap ℂ (Representation.IntertwiningMap rho rho) c :
+        Representation.IntertwiningMap rho rho) : Module.End ℂ V) v := hEval
+    _ = c • v := by
+      calc
+        ((algebraMap ℂ (Representation.IntertwiningMap rho rho) c :
+            Representation.IntertwiningMap rho rho) : Module.End ℂ V) v =
+            ((c • (1 : Representation.IntertwiningMap rho rho)) :
+              Module.End ℂ V) v := by
+          exact congrArg (fun F : Representation.IntertwiningMap rho rho =>
+            (F : Module.End ℂ V) v)
+            (Representation.IntertwiningMap.algebraMap_apply rho c)
+        _ = c • v := by simp
 
 private theorem irreducible_restrict_right_of_commutator_left_kernel_appendixIV
     {A C V : Type*} [Group A] [Group C]
@@ -3303,7 +3339,7 @@ private theorem irreducible_restrict_right_of_commutator_left_kernel_appendixIV
       intro W U
       rfl
   }
-  letI : Representation.IsIrreducible rho := hrho
+  let : Representation.IsIrreducible rho := hrho
   exact OrderIso.isSimpleOrder e
 
 private theorem irreducible_restrict_right_of_left_centralModulo_kernel_appendixIV
@@ -3679,8 +3715,8 @@ private theorem feitSibley_step3_degree_shape_core
         n = Nat.card d.D * p ^ k ∧
           p ^ (2 * k) ∣ R.relIndex d.Q1 := by
   classical
-  letI : d.Q.Normal := d.Q_normal
-  letI : d.S.Normal := d.S_normal
+  let : d.Q.Normal := d.Q_normal
+  let : d.S.Normal := d.S_normal
   rcases (lemma_2_a d chars hchars chi).mp hchiChars with
     ⟨phi, hphiIrr, _hphiNotKernel, hind⟩
   rcases hphiIrr with ⟨n, rho, hrhoIrr, hphiEq⟩
@@ -3698,7 +3734,7 @@ private theorem feitSibley_step3_degree_shape_core
     exact (show feitSibleySderivedH d ≤ d.S from by
       simpa [feitSibleySderivedH] using
         Subgroup.map_subtype_le (derivedSubgroup d.S)).trans d.S_le_Q
-  haveI : (feitSibleySderivedH d).Normal := by
+  have : (feitSibleySderivedH d).Normal := by
     dsimp [feitSibleySderivedH]
     infer_instance
   have hindKernelPhi :
@@ -3732,7 +3768,7 @@ private theorem feitSibley_step3_degree_shape_core
             d.internalDirectProduct_Q x)
       rw [hinl]
       exact Subgroup.mem_map.mpr ⟨x, x.property, rfl⟩⟩
-  letI : Representation.IsIrreducible rho := hrhoIrr
+  let : Representation.IsIrreducible rho := hrhoIrr
   have hirrQ1 :
       Representation.IsIrreducible
         (rho.comp (e.toMonoidHom.comp (MonoidHom.inr d.S d.Q1))) :=
@@ -3742,11 +3778,11 @@ private theorem feitSibley_step3_degree_shape_core
         exact Subgroup.commutator_mem_commutator (by simp) (by simp))
   let rhoQ1 : Representation Complex d.Q1 (Fin n → Complex) :=
     rho.comp (e.toMonoidHom.comp (MonoidHom.inr d.S d.Q1))
-  letI : Representation.IsIrreducible rhoQ1 := hirrQ1
+  let : Representation.IsIrreducible rhoQ1 := hirrQ1
   have hnDvd : n ∣ Fintype.card d.Q1 := by
     simpa [rhoQ1] using
       Theory.Character.irreducible_dimension_dvd_group_order rhoQ1
-  letI : Fact p.Prime := ⟨hpprime⟩
+  let : Fact p.Prime := ⟨hpprime⟩
   rcases hpQ1.exists_card_eq with ⟨mQ1, hQ1card⟩
   have hQ1cardF : Fintype.card d.Q1 = p ^ mQ1 := by
     simpa [Nat.card_eq_fintype_card] using hQ1card
@@ -3759,7 +3795,7 @@ private theorem feitSibley_step3_degree_shape_core
       simpa [feitSibleyCenterQ1H] using
         Subgroup.map_subtype_le (Subgroup.center d.Q1))
   let RQ1 : Subgroup d.Q1 := R.subgroupOf d.Q1
-  letI : RQ1.Normal := hRnormal.subgroupOf d.Q1
+  let : RQ1.Normal := hRnormal.subgroupOf d.Q1
   have hcentral :
       Theory.Character.IsCentralModulo (⊥ : Subgroup d.Q1) RQ1 := by
     intro z hz q
@@ -3835,9 +3871,9 @@ private theorem feitSibley_step3_prefix_sq_dvd_core
           (Finset.univ.filter (fun psi => deg psi < deg chi))
           (fun psi => deg psi ^ 2) := by
   classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : R.Normal := hRnormal
-  letI : d.S.Normal := d.S_normal
+  let : Fact p.Prime := ⟨hpprime⟩
+  let : R.Normal := hRnormal
+  let : d.S.Normal := d.S_normal
   have hRleQ1 : R ≤ d.Q1 :=
     hRle.trans (by
       simpa [feitSibleyCenterQ1H] using
@@ -3845,7 +3881,7 @@ private theorem feitSibley_step3_prefix_sq_dvd_core
   have hSderivedLeS : feitSibleySderivedH d ≤ d.S := by
     simpa [feitSibleySderivedH] using
       Subgroup.map_subtype_le (derivedSubgroup d.S)
-  haveI : (feitSibleySderivedH d).Normal := by
+  have : (feitSibleySderivedH d).Normal := by
     dsimp [feitSibleySderivedH]
     infer_instance
   have hXchar : ∀ chi : ClassFunction d.H, chi ∈ X1 ↔
@@ -4136,9 +4172,9 @@ private theorem feitSibley_step3_base_family_coherence_core
           subgroupInKernel' chi (feitSibleySderivedH d)) :
     feitSibleyCoherent d X1 := by
   classical
-  letI : R.Normal := hRnormal
-  letI : d.S.Normal := d.S_normal
-  haveI : (feitSibleySderivedH d).Normal := by
+  let : R.Normal := hRnormal
+  let : d.S.Normal := d.S_normal
+  have : (feitSibleySderivedH d).Normal := by
     dsimp [feitSibleySderivedH]
     infer_instance
   have hRleQ1 : R ≤ d.Q1 :=
@@ -4270,10 +4306,10 @@ private theorem feitSibley_step3_exists_base_companion_core
     ∃ chi : ClassFunction d.H, chi ∈ Xbase ∧
       ∃ n : Nat, degree psi = (n : Complex) * degree chi := by
   classical
-  letI : d.Q.Normal := d.Q_normal
-  letI : d.S.Normal := d.S_normal
-  letI : R.Normal := hRnormal
-  letI : (d.Q1.subgroupOf d.Q).Normal := d.Q1_normal_in_Q
+  let : d.Q.Normal := d.Q_normal
+  let : d.S.Normal := d.S_normal
+  let : R.Normal := hRnormal
+  let : (d.Q1.subgroupOf d.Q).Normal := d.Q1_normal_in_Q
   have hRleQ1 : R ≤ d.Q1 :=
     hRle.trans (by
       simpa [feitSibleyCenterQ1H] using
@@ -4297,11 +4333,11 @@ private theorem feitSibley_step3_exists_base_companion_core
   let NQ : Subgroup d.Q := d.Q1.subgroupOf d.Q
   let rhoN : Representation Complex NQ (Fin n → Complex) :=
     rho.comp NQ.subtype
-  letI : Nontrivial (Fin n → Complex) :=
+  let : Nontrivial (Fin n → Complex) :=
     Subrepresentation.irreducible_module_nontrivial rho
   obtain ⟨W, hWirr⟩ :=
     Subrepresentation.irreducible_subrepresentation_of_finite_dimensional rhoN
-  letI : FiniteDimensional Complex W.toSubmodule :=
+  let : FiniteDimensional Complex W.toSubmodule :=
     FiniteDimensional.of_injective W.toSubmodule.subtype Subtype.val_injective
   rcases BenderSuzuki.PFAppendixIV.lemma_2_Q1_restriction_homogeneous
       d rho hrhoIrr W hWirr with
@@ -4415,7 +4451,7 @@ private theorem feitSibley_step3_exists_base_companion_core
       Subgroup.map_subtype_le (derivedSubgroup d.S)
   have hSderivedLeQ : feitSibleySderivedH d ≤ d.Q :=
     hSderivedLeS.trans d.S_le_Q
-  haveI : (feitSibleySderivedH d).Normal := by
+  have : (feitSibleySderivedH d).Normal := by
     dsimp [feitSibleySderivedH]
     infer_instance
   have hphiCompKernelS :
@@ -4550,13 +4586,13 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     False := by
   classical
   have hD_ne_bot : d.D ≠ ⊥ := hD
-  letI : d.S.Normal := d.S_normal
-  letI : d.Q1.Normal := d.Q1_normal
-  letI : d.Q.Normal := d.Q_normal
-  letI : R.Normal := hRnormal
-  letI : Group.IsNilpotent d.S := d.S_nilpotent
-  letI : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD_ne_bot
-  letI : IsSolvable d.Q1 := IsNilpotent.to_isSolvable
+  let : d.S.Normal := d.S_normal
+  let : d.Q1.Normal := d.Q1_normal
+  let : d.Q.Normal := d.Q_normal
+  let : R.Normal := hRnormal
+  let : Group.IsNilpotent d.S := d.S_nilpotent
+  let : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD_ne_bot
+  let : Group.IsSolvable d.Q1 := IsNilpotent.to_isSolvable
   have hSderivedLeS : feitSibleySderivedH d ≤ d.S := by
     simpa [feitSibleySderivedH] using
       Subgroup.map_subtype_le (derivedSubgroup d.S)
@@ -4567,7 +4603,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
       simpa [feitSibleyCenterQ1H] using
         Subgroup.map_subtype_le (Subgroup.center d.Q1))
   let RQ1 : Subgroup d.Q1 := R.subgroupOf d.Q1
-  letI : RQ1.Normal := hRnormal.subgroupOf d.Q1
+  let : RQ1.Normal := hRnormal.subgroupOf d.Q1
   have hRQ1central : RQ1 ≤ Subgroup.center d.Q1 := by
     intro r hr
     have hrAmbient : ((r : d.Q1) : d.H) ∈ feitSibleyCenterQ1H d :=
@@ -4610,7 +4646,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
   rcases feitSibley_step3_base_degree_data_core
       d chars hchars p hpprime hpQ1 R hRne hRnormal hRle hXbaseMem with
     ⟨deg, hdeg, hpower, _hprefix⟩
-  letI : Nonempty Xbase := hXbaseNe.to_subtype
+  let : Nonempty Xbase := hXbaseNe.to_subtype
   have hUniv : (Finset.univ : Finset Xbase).Nonempty :=
     Finset.univ_nonempty
   obtain ⟨chi0, _hchi0Univ, hchi0min⟩ :=
@@ -4728,7 +4764,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     (subgroupInKernel'_character_iff_subgroupInRepresentationKernel
       rho _).mp hrhoKerCF
   let N : Subgroup d.S := R2.subgroupOf d.S
-  letI : N.Normal := (inferInstance : R2.Normal).subgroupOf d.S
+  let : N.Normal := (inferInstance : R2.Normal).subgroupOf d.S
   let e : d.S × d.Q1 ≃* d.Q :=
     Section3.internalDirectProductMulEquiv d.internalDirectProduct_Q
   have hker : ∀ x : N.prod (⊥ : Subgroup d.Q1), rho (e x) = 1 := by
@@ -4763,7 +4799,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     change ((e x : d.Q) : d.H) ∈ R2
     rw [heq]
     exact x.property.1
-  letI : Representation.IsIrreducible rho := hrhoIrr
+  let : Representation.IsIrreducible rho := hrhoIrr
   have hnSq :
       n ^ 2 ≤
         (Subgroup.comap (QuotientGroup.mk' N)
@@ -4962,7 +4998,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     intro hS
     apply hR1ne
     exact le_bot_iff.mp (by simpa [hS] using hR1leS)
-  letI : Nontrivial d.S :=
+  let : Nontrivial d.S :=
     (Subgroup.nontrivial_iff_ne_bot d.S).2 hSne
   have hR1SleDerived : R1S ≤ derivedSubgroup d.S := by
     intro x hx
@@ -4974,14 +5010,14 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     simpa [hyx'] using hy
   have hderivedLt : derivedSubgroup d.S < ⊤ := by
     change commutator d.S < ⊤
-    letI : IsSolvable d.S := IsNilpotent.to_isSolvable
-    exact IsSolvable.commutator_lt_top_of_nontrivial (G := d.S)
+    let : Group.IsSolvable d.S := IsNilpotent.to_isSolvable
+    exact Group.IsSolvable.commutator_lt_top_of_nontrivial (G := d.S)
   have hR1Slt : R1S < ⊤ :=
     hR1SleDerived.trans_lt hderivedLt
   have hsTwo : 2 ≤ R1S.index := by
     have hone := Subgroup.one_lt_index_of_ne_top hR1Slt.ne
     omega
-  letI : MulDistribMulAction d.D R :=
+  let : MulDistribMulAction d.D R :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer (G := d.H) d.D R
       (Subgroup.le_normalizer_of_normal (H := R))
   have hfreeR :
@@ -5017,7 +5053,7 @@ private theorem feitSibley_step3_chief_factor_contradiction_core
     exact hdvd
   have hRodd : Odd (Nat.card R) :=
     odd_of_card_dvd d.Q1_odd hRcardDvd
-  letI : Nontrivial R :=
+  let : Nontrivial R :=
     (Subgroup.nontrivial_iff_ne_bot R).2 hRne
   have hRcard : 1 < Nat.card R :=
     Finite.one_lt_card_iff_nontrivial.mpr inferInstance
@@ -5048,7 +5084,7 @@ private theorem feitSibley_step3_chief_descent_of_D_ne_bot_core
     (hbase : feitSibleyCoherent d Xbase) :
     feitSibleyCoherent d (feitSibleySnonker d chars R) := by
   classical
-  letI : d.S.Normal := d.S_normal
+  let : d.S.Normal := d.S_normal
   let X := feitSibleySnonker d chars R
   let P : Subgroup d.H → Prop := fun R0 =>
     R0 ≤ feitSibleySderivedH d ∧ R0.Normal ∧
@@ -5084,10 +5120,10 @@ private theorem feitSibley_step3_chief_descent_of_D_ne_bot_core
       exact Finset.inter_eq_left.mpr hXsub
     rw [hXinter] at hcoherentR1
     simpa [X] using hcoherentR1
-  · letI : R1.Normal := hR1normal
+  · let : R1.Normal := hR1normal
     obtain ⟨R2, hchief⟩ :=
       exists_chiefFactor_below_appendixIV R1 hR1bot
-    letI : R2.Normal := hchief.normal_K
+    let : R2.Normal := hchief.normal_K
     have hR2le : R2 ≤ feitSibleySderivedH d :=
       hchief.lt.le.trans hR1le
     have hnotcoherentR2 :
@@ -5123,7 +5159,7 @@ private theorem feitSibley_step3_coherent_of_D_eq_bot_core
     (hRle : R ≤ feitSibleyCenterQ1H d) :
     feitSibleyCoherent d (feitSibleySnonker d chars R) := by
   classical
-  letI : R.Normal := hRnormal
+  let : R.Normal := hRnormal
   have hRleQ1 : R ≤ d.Q1 :=
     hRle.trans (by
       simpa [feitSibleyCenterQ1H] using
@@ -5225,9 +5261,9 @@ private theorem feitSibley_step4_Z_properties
       (feitSibleyZ d).Normal ∧
       feitSibleyZ d ≤ feitSibleyCenterQ1H d := by
   rcases hp with ⟨p, hpprime, hpQ1⟩
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : Fact (IsPGroup p d.Q1) := ⟨hpQ1⟩
-  letI : d.Q1.Normal := d.Q1_normal
+  let : Fact p.Prime := ⟨hpprime⟩
+  let : Fact (IsPGroup p d.Q1) := ⟨hpQ1⟩
+  let : d.Q1.Normal := d.Q1_normal
   have hderivedNe : derivedSubgroup d.Q1 ≠ ⊥ := by
     intro hderived
     apply hab
@@ -5238,7 +5274,7 @@ private theorem feitSibley_step4_Z_properties
       rw [hcenter]
       trivial
     exact (Subgroup.mem_center_iff.mp hx y).symm
-  letI : Nontrivial (derivedSubgroup d.Q1) :=
+  let : Nontrivial (derivedSubgroup d.Q1) :=
     (Subgroup.nontrivial_iff_ne_bot (derivedSubgroup d.Q1)).2 hderivedNe
   obtain ⟨x, hxne, hxcenter⟩ :=
     exists_nontrivial_center_mem_normal
@@ -5325,8 +5361,8 @@ private theorem feitSibley_step4_degree_data
           (ai : Complex) * degree (chi1 : ClassFunction d.H) := by
   classical
   rcases hp with ⟨p, hpprime, hpQ1⟩
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : d.Q1.Normal := d.Q1_normal
+  let : Fact p.Prime := ⟨hpprime⟩
+  let : d.Q1.Normal := d.Q1_normal
   have hZnormal : (feitSibleyZ d).Normal := by
     dsimp [feitSibleyZ, feitSibleyQ1derivedH, feitSibleyCenterQ1H]
     infer_instance
@@ -5369,7 +5405,7 @@ private theorem feitSibley_step4_degree_data
       d chars hchars p hpprime hpQ1 (feitSibleyZ d)
         hZne hZnormal hZleCenter hXbaseMem with
     ⟨deg, hdeg, hpower, _hprefix⟩
-  letI : Nonempty Xbase := hXbaseNe.to_subtype
+  let : Nonempty Xbase := hXbaseNe.to_subtype
   obtain ⟨chi0, _hchi0Univ, hchi0min⟩ :=
     Finset.exists_min_image (Finset.univ : Finset Xbase) deg
       Finset.univ_nonempty
@@ -5491,7 +5527,7 @@ private theorem feitSibley_step5_cross_orthogonality_core
     simpa [hcc] using hdouble
   have hbarChars (theta : ClassFunction d.H) (htheta : theta ∈ chars) :
       conjugateCharacter theta ∈ chars := by
-    letI : d.Q.Normal := d.Q_normal
+    let : d.Q.Normal := d.Q_normal
     rcases (lemma_2_a d chars hchars theta).mp htheta with
       ⟨phi, hphiIrr, hphiNotKernel, hind⟩
     apply (lemma_2_a d chars hchars (conjugateCharacter theta)).mpr
@@ -6358,10 +6394,10 @@ private theorem feitSibley_step6_extend_union_coherence_core
   let V := feitSibleySker d chars (feitSibleySderivedH d)
   let X1 := X ∩ V
   let U1 := X1 ∪ Y
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : (feitSibleyZ d).Normal := hZnormal
-  letI : d.S.Normal := d.S_normal
-  haveI : (feitSibleySderivedH d).Normal := by
+  let : Fact p.Prime := ⟨hpprime⟩
+  let : (feitSibleyZ d).Normal := hZnormal
+  let : d.S.Normal := d.S_normal
+  have : (feitSibleySderivedH d).Normal := by
     dsimp [feitSibleySderivedH]
     infer_instance
   have hQderived :
@@ -7382,7 +7418,7 @@ private theorem FeitSibleyData.QInG_card_coprime_index_appendixIV
     exact hcard.symm
   refine Nat.coprime_of_dvd ?_
   intro p hpprime hpQcard hpQindex
-  letI : Fact p.Prime := ⟨hpprime⟩
+  let : Fact p.Prime := ⟨hpprime⟩
   have hpQcard' : p ∣ Nat.card d.Q := by
     rw [← hQcard]
     exact hpQcard
@@ -7486,8 +7522,8 @@ private theorem FeitSibleyData.pElement_mem_Q_appendixIV
     (x : d.H) (hxOrder : ∃ k : Nat, orderOf x = p ^ k) :
     (x : d.H) ∈ d.Q := by
   classical
-  letI : Fact p.Prime := ⟨hpprime⟩
-  letI : d.Q.Normal := d.Q_normal
+  let : Fact p.Prime := ⟨hpprime⟩
+  let : d.Q.Normal := d.Q_normal
   let P : Subgroup d.H := Subgroup.zpowers x
   have hP : IsPGroup p P := by
     rw [IsPGroup.iff_orderOf]
@@ -7564,7 +7600,7 @@ private theorem FeitSibleyData.mem_map_Z_of_mem_H_mem_class_meets_map_Z_appendix
       c (Z.map d.H.subtype)) :
     u ∈ Z.map d.H.subtype := by
   classical
-  letI : Fact p.Prime := ⟨hpprime⟩
+  let : Fact p.Prime := ⟨hpprime⟩
   rcases hc with ⟨z, hzc, hzZG, hzne⟩
   rcases Subgroup.mem_map.mp hzZG with ⟨zH, hzZ, hzval⟩
   let uH : d.H := ⟨u, huH⟩
@@ -8237,7 +8273,7 @@ private theorem step7_off_Z_coefficient_congr_zero
   classical
   let Omega := {uv : G × G // uv.1 ∈ i.carrier ∧ uv.2 ∈ j.carrier ∧
     uv.1 * uv.2 ∈ s.carrier}
-  letI : MulAction Q Omega :=
+  let : MulAction Q Omega :=
     { smul := fun q w =>
         ⟨((q : G) * w.1.1 * (q : G)⁻¹,
           (q : G) * w.1.2 * (q : G)⁻¹), by
@@ -8310,7 +8346,7 @@ private theorem step7_card_conjClass_one
     Nat.card (ConjClasses.mk (1 : G)).carrier = 1 := by
   classical
   let c : ConjClasses G := ConjClasses.mk (1 : G)
-  haveI : Unique c.carrier :=
+  have : Unique c.carrier :=
     { default := ⟨1, (ConjClasses.mem_carrier_iff_mk_eq).2 rfl⟩
       uniq := by
         intro x
@@ -8343,7 +8379,7 @@ private theorem step7_classSumScalar_one
     (ConjClasses.mem_carrier_iff_mk_eq).2 rfl
   have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := rho) (ConjClasses.mk (1 : G)) hmem
-  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
+  have : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
   have hdimPos : 0 < Module.finrank Complex V :=
     (Module.finrank_pos_iff (R := Complex) (M := V)).2 inferInstance
   have hcharNe : rho.character 1 ≠ 0 := by
@@ -8399,7 +8435,7 @@ private theorem step7_disjoint_classSumScalar_term_congr_zero
   have hxs : x ∈ s.carrier := (ConjClasses.mem_carrier_iff_mk_eq).2 hxmk
   have hscalar := Theory.Character.classSumScalar_eq_card_mul_character_div
     (ρ := rho) s hxs
-  haveI : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
+  have : Nontrivial V := Theory.Character.irreducible_nontrivial (ρ := rho)
   have hdimPos : 0 < Module.finrank Complex V :=
     (Module.finrank_pos_iff (R := Complex) (M := V)).2 inferInstance
   have hcharNe : rho.character 1 ≠ 0 := by
@@ -8445,7 +8481,7 @@ private theorem step7_class_sum_square_congr
         (theorem_6_7_aij Z a i j : Complex) * alpha)) := by
   classical
   rcases hpsi with ⟨n, rho, hrho, hpsiEq⟩
-  haveI : Representation.IsIrreducible rho := hrho
+  have : Representation.IsIrreducible rho := hrho
   let C : Finset (ConjClasses G) :=
     @Finset.univ (ConjClasses G) (Fintype.ofFinite (ConjClasses G))
   let c0 : ConjClasses G := ConjClasses.mk (1 : G)
@@ -8766,7 +8802,7 @@ private theorem feitSibley_step7_class_algebra_congruence_core
     (hstep4 : feitSibleyStep4Data d chars) :
     feitSibleyStep7Data d := by
   classical
-  letI : Fact p.Prime := ⟨hpprime⟩
+  let : Fact p.Prime := ⟨hpprime⟩
   rcases hstep4 with
     ⟨hZne, hZnormal, hZleCenter, _hXY, _hcoherentX, _hcoherentY,
       _hXne, _hYne, _hYdegree, _hdegreeData⟩
@@ -9384,7 +9420,7 @@ private theorem step8_restriction_divisibility
     have hzero : Nat.card L = 0 := by rw [hHcard, hq, Nat.mul_zero]
     exact Nat.card_pos.ne' hzero
   have hqC : (qcard : Complex) ≠ 0 := by exact_mod_cast hqcard
-  letI : Nontrivial Z := (Subgroup.nontrivial_iff_ne_bot Z).2 hZne
+  let : Nontrivial Z := (Subgroup.nontrivial_iff_ne_bot Z).2 hZne
   obtain ⟨z, hz⟩ := exists_ne (1 : Z)
   have hzL : (z : L) ≠ 1 := by
     intro hzOne
@@ -9446,7 +9482,7 @@ private theorem feitSibley_step8_restriction_divisibility_core
   rcases hstep4 with
     ⟨hZne, hZnormal, hZleCenter, _hXY, hcoherentX, hcoherentY,
       _hXne, hYne, hYdegree, chi1, a, ha, hchi1Degree, hdivX⟩
-  letI : Z.Normal := hZnormal
+  let : Z.Normal := hZnormal
   have hZleQ1 : Z ≤ d.Q1 :=
     hZleCenter.trans (by
       simpa [Z, feitSibleyCenterQ1H] using
@@ -9534,11 +9570,11 @@ public theorem feitSibley_theorem
   let Y := feitSibleyY d chars
 
   have hYcard : 2 ≤ Y.card := by
-    have hsolvQ1 : IsSolvable d.Q1 := by
+    have hsolvQ1 : Group.IsSolvable d.Q1 := by
       by_cases hD : d.D = ⊥
-      · letI : IsZGroup d.Q1 := d.isZGroup_Q1_of_D_eq_bot hD
+      · let : IsZGroup d.Q1 := d.isZGroup_Q1_of_D_eq_bot hD
         infer_instance
-      · letI : Group.IsNilpotent d.Q1 :=
+      · let : Group.IsNilpotent d.Q1 :=
           d.isNilpotent_Q1_of_D_ne_bot hD
         exact IsNilpotent.to_isSolvable
     obtain ⟨chi, hchiChars, hchiKernel⟩ :=
@@ -9547,7 +9583,7 @@ public theorem feitSibley_theorem
     have hchiY : chi ∈ Y := by
       exact Finset.mem_filter.mpr ⟨hchiChars, hchiKernel⟩
     have hbarChars : conjugateCharacter chi ∈ chars := by
-      letI : d.Q.Normal := d.Q_normal
+      let : d.Q.Normal := d.Q_normal
       rcases (lemma_2_a d chars hchars chi).mp hchiChars with
         ⟨phi, hphiIrr, hphiNotKernel, hind⟩
       apply (lemma_2_a d chars hchars (conjugateCharacter chi)).mpr
@@ -9616,11 +9652,11 @@ public theorem feitSibley_theorem
             (lemma_2_a d chars hchars
               (eta : ClassFunction d.H)).mp hetaChars with
           ⟨phi, hphiIrr, _hphiNotKernel, hind⟩
-        letI : d.Q.Normal := d.Q_normal
+        let : d.Q.Normal := d.Q_normal
         have hQderivedLe : QderivedH ≤ d.Q := by
           simpa [QderivedH, feitSibleyQderivedH] using
             Subgroup.map_subtype_le (derivedSubgroup d.Q)
-        haveI : QderivedH.Normal := by
+        have : QderivedH.Normal := by
           dsimp [QderivedH]
           infer_instance
         have hQderivedSub :
@@ -9665,7 +9701,7 @@ public theorem feitSibley_theorem
     obtain ⟨chi, hchiY⟩ := Finset.card_pos.mp hYpos
     have hchiChars : chi ∈ chars := (Finset.mem_filter.mp hchiY).1
     have hbarChars : conjugateCharacter chi ∈ chars := by
-      letI : d.Q.Normal := d.Q_normal
+      let : d.Q.Normal := d.Q_normal
       rcases (lemma_2_a d chars hchars chi).mp hchiChars with
         ⟨phi, hphiIrr, hphiNotKernel, hind⟩
       apply (lemma_2_a d chars hchars (conjugateCharacter chi)).mpr
@@ -9733,11 +9769,11 @@ public theorem feitSibley_theorem
       (¬ (∃ p : Nat, Nat.Prime p ∧ IsPGroup p d.Q1)) →
         coherent (Sker SderivedH) := by
     intro hD hp
-    letI : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
-    letI : d.S.Normal := d.S_normal
+    let : Group.IsNilpotent d.Q1 := d.isNilpotent_Q1_of_D_ne_bot hD
+    let : d.S.Normal := d.S_normal
     by_cases hab : ∀ x y : d.Q1, x * y = y * x
     · exact hbase_abelian hab
-    · letI : d.Q1.Normal := d.Q1_normal
+    · let : d.Q1.Normal := d.Q1_normal
       have hQderived :
           QderivedH = SderivedH ⊔ Q1derivedH := by
         simpa [QderivedH, SderivedH, Q1derivedH, feitSibleyQderivedH, feitSibleySderivedH, feitSibleyQ1derivedH] using
@@ -9756,10 +9792,10 @@ public theorem feitSibley_theorem
       by_cases hQ2bot : Q2 = ⊥
       · subst Q2
         simpa using hcohQ2
-      · letI : Q2.Normal := hQ2normal
+      · let : Q2.Normal := hQ2normal
         obtain ⟨Q3, hchief⟩ :=
           exists_chiefFactor_below_appendixIV Q2 hQ2bot
-        letI : Q3.Normal := hchief.normal_K
+        let : Q3.Normal := hchief.normal_K
         have hQ3le : Q3 ≤ Q1derivedH :=
           hchief.lt.le.trans hQ2le
         have hnotcohQ3 :
@@ -9783,7 +9819,7 @@ public theorem feitSibley_theorem
           refine Finset.mem_filter.mpr ⟨hchiChars, ?_⟩
           intro x
           exact hchiKernel ⟨x, hsup_le x.property⟩
-        have hsolvQ1 : IsSolvable d.Q1 :=
+        have hsolvQ1 : Group.IsSolvable d.Q1 :=
           IsNilpotent.to_isSolvable
         obtain ⟨chi0, hchi0Chars, hchi0KernelQderived⟩ :=
           d.exists_exceptional_mem_derived_kernel
@@ -9848,7 +9884,7 @@ public theorem feitSibley_theorem
             (by simpa [U] using hcohQ2)
             (by simpa [V] using hnotcohQ3)
         let R : Subgroup d.H := SderivedH ⊔ Q2
-        haveI : R.Normal := by
+        have : R.Normal := by
           dsimp [R, SderivedH]
           infer_instance
         have hUchar :
@@ -9879,11 +9915,11 @@ public theorem feitSibley_theorem
               sup_le_sup le_rfl hQ3le
             _ = QderivedH := hQderived.symm
             _ ≤ d.Q := hQderivedLe
-        haveI : SderivedH.Normal := by
+        have : SderivedH.Normal := by
           dsimp [SderivedH]
           infer_instance
-        haveI : (SderivedH ⊔ Q3).Normal := inferInstance
-        letI : d.Q.Normal := d.Q_normal
+        have : (SderivedH ⊔ Q3).Normal := inferInstance
+        let : d.Q.Normal := d.Q_normal
         have hindKerPhi :
             subgroupInKernel' (inducedCF d.Q phi)
               (SderivedH ⊔ Q3) := by
@@ -9904,7 +9940,7 @@ public theorem feitSibley_theorem
           (subgroupInKernel'_character_iff_subgroupInRepresentationKernel
             rho _).mp hrhoKerCF
         let N : Subgroup d.Q1 := Q3.subgroupOf d.Q1
-        letI : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
+        let : N.Normal := (inferInstance : Q3.Normal).subgroupOf d.Q1
         let e : d.S × d.Q1 ≃* d.Q :=
           Section3.internalDirectProductMulEquiv d.internalDirectProduct_Q
         have hker :
@@ -9947,7 +9983,7 @@ public theorem feitSibley_theorem
           exact (SderivedH ⊔ Q3).mul_mem
             ((show SderivedH ≤ SderivedH ⊔ Q3 from le_sup_left) hs)
             ((show Q3 ≤ SderivedH ⊔ Q3 from le_sup_right) hq)
-        letI : Representation.IsIrreducible rho := hrhoIrr
+        let : Representation.IsIrreducible rho := hrhoIrr
         have hnSq :
             n ^ 2 ≤
               (Subgroup.comap (QuotientGroup.mk' N)
@@ -10063,7 +10099,7 @@ public theorem feitSibley_theorem
                   (Z0.index : Real) :=
               mul_le_mul_of_nonneg_left hnSqReal (sq_nonneg _)
         let Z3 : Subgroup d.H := Z0.map d.Q1.subtype
-        letI : Z3.Normal := by
+        let : Z3.Normal := by
           simpa [Z3, Z0, N] using
             (centerModulo_preimage_normal_appendixIV d.Q1 Q3)
         have hQ2leZ3 : Q2 ≤ Z3 := by

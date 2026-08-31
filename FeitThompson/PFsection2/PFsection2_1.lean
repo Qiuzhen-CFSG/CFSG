@@ -272,7 +272,7 @@ public theorem proposition_2_1 {G : Type u} [Group G] [Finite G]
         (fun x _ => Set.toFinite (conjugateCosetPiece H g x)) hpair]
       rw [finsum_mem_eq_finite_toFinset_sum _ (Set.toFinite (reps : Set G))]
       rw [show ((↑reps : Set G).toFinite).toFinset = reps by
-        simp]
+        exact Finset.finite_toSet_toFinset reps]
       exact Finset.sum_const_nat (s := reps)
         (f := fun x => (conjugateCosetPiece H g x).ncard)
         (m := Nat.card (centralizerIn H g)) (by

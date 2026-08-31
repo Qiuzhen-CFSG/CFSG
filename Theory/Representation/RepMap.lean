@@ -14,7 +14,10 @@ namespace Theory.Representation
 open _root_.Representation
 
 /-- Bundled intertwining maps between two representations. -/
-public alias RepMap := IntertwiningMap
+public abbrev RepMap {F G V W : Type*} [Semiring F] [Monoid G] [AddCommMonoid V]
+    [AddCommMonoid W] [Module F V] [Module F W]
+    (ρ : Representation F G V) (σ : Representation F G W) : Type _ :=
+  IntertwiningMap ρ σ
 /-- Notation for bundled intertwining maps between representations. -/
 notation:25 ρ " →ₗ " σ:0 => RepMap ρ σ
 

@@ -31,7 +31,7 @@ Dickson's subgroup classification for subgroups of PSL(2,p^f).
 namespace BenderSuzuki
 namespace External
 
-open MatrixGroups
+open _root_.BenderSuzuki.MatrixGroups
 open scoped Pointwise
 open scoped LinearAlgebra.Projectivization
 
@@ -56,8 +56,8 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
     (Q : Sylow p (PSL2MatrixGroup F)) :
     Nonempty (Multiplicative F ≃* Q) := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
-  haveI : CharP F p :=
+  let _ : Fintype F := Fintype.ofFinite F
+  have : CharP F p :=
     charP_of_card_eq_prime_pow (by simpa using hFcard)
   have hf_ne_zero : f ≠ 0 :=
     huppert_II_8_27_field_exponent_ne_zero hFcard
@@ -241,6 +241,9 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
         intro a b
         apply Subtype.ext
         ext i j
+        change (!![1, a + b; 0, 1] : Matrix (Fin 2) (Fin 2) F) i j =
+          ((!![1, a; 0, 1] : Matrix (Fin 2) (Fin 2) F) *
+            (!![1, b; 0, 1] : Matrix (Fin 2) (Fin 2) F)) i j
         fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, add_comm]
     }
   let unipotent : AddChar F (PSL2MatrixGroup F) :=
@@ -259,8 +262,12 @@ public theorem huppert_II_8_2_a_sylow_equiv_additive
     have hscalar :=
       Matrix.SpecialLinearGroup.scalar_eq_self_of_mem_center hcenter (0 : Fin 2)
     have hab0 := congrFun (congrFun hscalar (0 : Fin 2)) (1 : Fin 2)
+    have hentry :
+        (↑(unipotentSL (a - b)) : Matrix (Fin 2) (Fin 2) F) 0 1 = a - b := by
+      change (!![1, a - b; 0, 1] : Matrix (Fin 2) (Fin 2) F) 0 1 = a - b
+      rfl
     apply sub_eq_zero.mp
-    simpa [unipotentSL] using hab0.symm
+    simpa [Matrix.scalar_apply, hentry] using hab0.symm
   let U : Subgroup (PSL2MatrixGroup F) := unipotent.toMonoidHom.range
   have hUcard : Nat.card U = Nat.card F := by
     let e : Multiplicative F ≃ U :=
@@ -423,8 +430,8 @@ private theorem h84_nonsplit_torus_data
             (Matrix.SpecialLinearGroup (Fin 2) F))) A ∈
             S.map (MulAut.conj g).toMonoidHom := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
-  haveI : CharP F p :=
+  let _ : Fintype F := Fintype.ofFinite F
+  have : CharP F p :=
     charP_of_card_eq_prime_pow (by simpa using hFcard)
   have hf_ne_zero : f ≠ 0 :=
     huppert_II_8_27_field_exponent_ne_zero hFcard
@@ -508,7 +515,7 @@ private theorem h84_nonsplit_torus_data
       · exact hord
     have hdisjoint : Disjoint T Z := by
       let R : Subgroup Z := T.comap Z.subtype
-      letI : Fact (Nat.card Z).Prime := ⟨by
+      let _ : Fact (Nat.card Z).Prime := ⟨by
         rw [show Nat.card Z = 2 by exact hw_zpowers_card]
         exact Nat.prime_two⟩
       rcases R.eq_bot_or_eq_top_of_prime_card with hR | hR
@@ -530,7 +537,7 @@ private theorem h84_nonsplit_torus_data
       exact Subgroup.zpowers_le.2 hw_normalizer
     let TD : Subgroup D := T.subgroupOf D
     let ZD : Subgroup D := Z.subgroupOf D
-    letI : TD.Normal := by
+    let _ : TD.Normal := by
       change (T.subgroupOf D).Normal
       exact Subgroup.normal_subgroupOf_of_le_normalizer hD_le_normalizer
     have hTDZD : Disjoint TD ZD := by
@@ -567,11 +574,11 @@ private theorem h84_nonsplit_torus_data
     refine ⟨hw_zpowers_card, hdisjoint, ?_⟩
     calc
       Nat.card (T ⊔ Z : Subgroup (PSL2MatrixGroup F)) = Nat.card D := rfl
-      _ = Nat.card ZD * Nat.card TD := hcomp.card_mul.symm
+      _ = Nat.card ZD * Nat.card TD := hcomp.card_mul_card.symm
       _ = 2 * Nat.card T := by
         rw [hZDcard, hTDcard, hw_zpowers_card]
   let E := FiniteField.Extension F p 2
-  letI : Fintype E := Fintype.ofFinite E
+  let _ : Fintype E := Fintype.ofFinite E
   let normUnits : Eˣ →* Fˣ := Units.map (Algebra.norm F)
   let K : Subgroup Eˣ := normUnits.ker
   have hnormUnits_surjective : Function.Surjective normUnits := by
@@ -649,7 +656,9 @@ private theorem h84_nonsplit_torus_data
       map_mul' := by
         intro x y
         apply Subtype.ext
-        simp }
+        change (Algebra.leftMulMatrix b) ((x.1 : E) * (y.1 : E)) =
+          (Algebra.leftMulMatrix b) (x.1 : E) * (Algebra.leftMulMatrix b) (y.1 : E)
+        exact (Algebra.leftMulMatrix b).map_mul _ _ }
   have hnonsplitSL_injective : Function.Injective nonsplitSL := by
     intro x y hxy
     apply Subtype.ext
@@ -787,7 +796,7 @@ private theorem h84_nonsplit_torus_data
       exact Nat.ne_of_gt Nat.card_pos
     · exact hnonsplit_range_mul
   have hnonsplitTorus_cyclic : IsCyclic nonsplitTorus.range := by
-    letI : IsCyclic K := hK_cyclic
+    let _ : IsCyclic K := hK_cyclic
     exact isCyclic_of_surjective nonsplitTorus.rangeRestrict
       nonsplitTorus.rangeRestrict_surjective
   let sigma : E ≃ₐ[F] E :=
@@ -811,7 +820,7 @@ private theorem h84_nonsplit_torus_data
         FiniteField.Extension.exists_frob_pow_eq
           (k := F) (p := p) (n := 2) g
       rw [← hpow, hsigma, one_pow]
-    letI : Subsingleton (E ≃ₐ[F] E) :=
+    let _ : Subsingleton (E ≃ₐ[F] E) :=
       ⟨fun a d => (hall a).trans (hall d).symm⟩
     have hone : Nat.card (E ≃ₐ[F] E) = 1 := Nat.card_unique
     have htwo : Nat.card (E ≃ₐ[F] E) = 2 :=
@@ -1359,14 +1368,14 @@ private theorem h84_nonsplit_torus_data
             2 ≤ (Nat.card F + 1) / Nat.gcd (Nat.card F - 1) 2 :=
           (Nat.le_div_iff_mul_le hdpos).2 hmul
         omega
-    letI : IsCyclic nonsplitTorus.range := hnonsplitTorus_cyclic
+    let _ : IsCyclic nonsplitTorus.range := hnonsplitTorus_cyclic
     obtain ⟨t, ht⟩ := IsCyclic.exists_generator (α := nonsplitTorus.range)
     have ht_ne : t ≠ 1 := by
       intro ht_one
       have hall_one : ∀ u : nonsplitTorus.range, u = 1 := by
         intro u
         simpa [ht_one] using ht u
-      haveI : Subsingleton nonsplitTorus.range :=
+      have : Subsingleton nonsplitTorus.range :=
         ⟨fun u v => (hall_one u).trans (hall_one v).symm⟩
       have hcard_one : Nat.card nonsplitTorus.range = 1 := Nat.card_unique
       omega
@@ -1595,9 +1604,9 @@ private theorem h84_nonsplit_torus_data
       apply ((Matrix.charpoly_monic M).irreducible_iff_roots_eq_zero_of_degree_le_three
         (by rw [hχdeg]) (by rw [hχdeg]; norm_num)).mpr
       exact hχroots
-    haveI : Fact (Irreducible χ) := ⟨hχirreducible⟩
-    letI : Algebra F (AdjoinRoot χ) := AdjoinRoot.instAlgebra χ
-    letI : Module F (AdjoinRoot χ) := Algebra.toModule
+    have : Fact (Irreducible χ) := ⟨hχirreducible⟩
+    let _ : Algebra F (AdjoinRoot χ) := AdjoinRoot.instAlgebra χ
+    let _ : Module F (AdjoinRoot χ) := Algebra.toModule
     have hfinrankL : Module.finrank F (AdjoinRoot χ) = 2 := by
       calc
         Module.finrank F (AdjoinRoot χ) =
@@ -2051,8 +2060,8 @@ public theorem huppert_II_8_5_a_psl2_cover
             (∃ g, T = U.map (MulAut.conj g).toMonoidHom) ∨
             (∃ g, T = S.map (MulAut.conj g).toMonoidHom)) := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
-  haveI : CharP F p :=
+  let _ : Fintype F := Fintype.ofFinite F
+  have : CharP F p :=
     charP_of_card_eq_prime_pow (by simpa using hFcard)
   let qSL : Matrix.SpecialLinearGroup (Fin 2) F →* PSL2MatrixGroup F :=
     QuotientGroup.mk'
@@ -2379,12 +2388,12 @@ public theorem huppert_II_8_5_a_psl2_cover
       · exact hsplit_range_mul
     have hsplit_range_cyclic : IsCyclic splitTorus.range := by
       have hUnitsCyclic : IsCyclic Fˣ := by
-        letI : IsCyclic (⊤ : Subgroup Fˣ) := isCyclic_subgroup_units ⊤
+        let _ : IsCyclic (⊤ : Subgroup Fˣ) := isCyclic_subgroup_units ⊤
         exact isCyclic_of_surjective
           ((⊤ : Subgroup Fˣ).subtype) (by
             intro a
             exact ⟨⟨a, Subgroup.mem_top a⟩, rfl⟩)
-      letI : IsCyclic Fˣ := hUnitsCyclic
+      let _ : IsCyclic Fˣ := hUnitsCyclic
       exact isCyclic_of_surjective splitTorus.rangeRestrict
         splitTorus.rangeRestrict_surjective
     exact ⟨hsplit_range_cyclic, hsplit_range_card⟩

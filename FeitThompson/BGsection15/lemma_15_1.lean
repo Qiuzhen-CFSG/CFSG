@@ -101,10 +101,10 @@ private theorem section15_primeSet_diff_sigma_nonempty
       simpa [hMbot] using y.property
     exact (theorem_10_2_e (G := G) hM) hMsigma_bot
   haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   have hcomm_top : commutator M = (⊤ : Subgroup M) := by
     change derivedSeries M 1 = ⊤ at hDtop
     rw [derivedSeries_one] at hDtop
@@ -692,7 +692,8 @@ public theorem section15_pPrimeCore_le
   haveI : Fact p.val.Prime := ⟨p.property⟩
   have hcore_eq :
       section10PPrimeCore p H = (pPrimeCore p.val H).map H.subtype := by
-    simpa [section10PPrimeCore, section10PPrimeSet] using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [section10PPrimeCore, section10PPrimeSet, hp_eq] using
       section8_piCoreIn_singleton_compl_eq_pPrimeCore_map
         (G := G) (p := p.val) H
   intro x hx
@@ -709,7 +710,8 @@ public theorem section15_pPrimeCore_le_centralizer_pCoreIn
   haveI : Fact p.val.Prime := ⟨p.property⟩
   have hcore_eq :
       section10PPrimeCore p H = (pPrimeCore p.val H).map H.subtype := by
-    simpa [section10PPrimeCore, section10PPrimeSet] using
+    have hp_eq : (⟨p.val, Fact.out⟩ : Nat.Primes) = p := Subtype.ext rfl
+    simpa [section10PPrimeCore, section10PPrimeSet, hp_eq] using
       section8_piCoreIn_singleton_compl_eq_pPrimeCore_map
         (G := G) (p := p.val) H
   have hcentH :
@@ -1734,7 +1736,7 @@ private theorem section15_primeOrder_ne_top
   haveI : Fact p.val.Prime := ⟨p.2⟩
   haveI : IsCyclic G := by
     exact isCyclic_of_prime_card (α := G) (p := p.val) hGcard
-  have hsolv : IsSolvable G := by infer_instance
+  have hsolv : Group.IsSolvable G := by infer_instance
   exact IsMinCE.not_solvable (G := G) hsolv
 
 omit [Finite G] [IsMinCE G] in
@@ -3189,7 +3191,8 @@ private theorem section15_not_kappa_support_of_nontrivial_mem_U
   rcases Nat.exists_prime_and_dvd hcard_ne_one with ⟨p, hpprime, hpdvd⟩
   let q : Nat.Primes := ⟨p, hpprime⟩
   have hq_support : q ∈ section14ElementPrimeSupport y := by
-    simpa [q, section14ElementPrimeSupport, subgroupPrimeSet] using hpdvd
+    change p ∣ Nat.card (Subgroup.zpowers y)
+    exact hpdvd
   exact hyσ' hq_support (Or.inl (hyκ hq_support))
 
 private theorem section15_tau_branch_of_nontrivial_mem_U_centralizing_msigma
@@ -3842,7 +3845,8 @@ public theorem section15_theorem12_12_hcent_of_U
   rcases Nat.exists_prime_and_dvd hcard_ne_one with ⟨p, hpprime, hpdvd⟩
   let q : Nat.Primes := ⟨p, hpprime⟩
   have hq_support : q ∈ subgroupPrimeSet (Subgroup.zpowers e) := by
-    simpa [q, subgroupPrimeSet] using hpdvd
+    change p ∣ Nat.card (Subgroup.zpowers e)
+    exact hpdvd
   exact (section15_tau2_disjoint_tau1_tau3
     (M := M) (q := q) (hXπ q (by simpa [q] using hpdvd)))
     (hsupport hq_support)

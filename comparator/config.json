@@ -1,0 +1,15 @@
+{
+    "challenge_module": "Challenge",
+    "solution_module": "Solution",
+    "theorem_names": [
+        "CFSG.odd_order_theorem",
+        "CFSG.bender_suzuki",
+        "CFSG.gorenstein_walter"
+    ],
+    "permitted_axioms": [
+        "propext",
+        "Quot.sound",
+        "Classical.choice"
+    ],
+    "enable_nanoda": true
+}

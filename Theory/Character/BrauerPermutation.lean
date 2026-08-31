@@ -141,7 +141,7 @@ public theorem classFunctionInner_classFunctionConjLinearEquiv
         (classFunctionConjLinearEquiv N g psi) =
       classFunctionInner phi psi := by
   classical
-  letI : Fintype N := Fintype.ofFinite N
+  let : Fintype N := Fintype.ofFinite N
   unfold classFunctionInner
   congr 1
   have happ (x : N) :
@@ -274,7 +274,7 @@ public theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
   classical
   rcases irreducible_characters_form_basis (G := N) with
     ⟨ι, hι, chi, hchi, b, hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let f :
       ι → {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} :=
     fun i => ⟨chi i, hchi.1 i⟩
@@ -290,7 +290,7 @@ public theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
       exact hi
   let e : ι ≃ {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} :=
     Equiv.ofBijective f hf_bij
-  letI : Fintype {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} :=
+  let : Fintype {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} :=
     Fintype.ofEquiv ι e
   let bIrr :
       Module.Basis
@@ -350,7 +350,7 @@ public theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
   classical
   rcases irreducible_characters_form_basis (G := N) with
     ⟨ι, hι, theta, htheta, _basis, _hbasis⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   let f : ι → {eta : ConjClassFunction N // IsIrreducibleConjCharacter eta} :=
     fun i => ⟨theta i, htheta.1 i⟩
   have hf : Function.Bijective f := by
@@ -365,7 +365,7 @@ public theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
       exact hi
   let e : ι ≃ {eta : ConjClassFunction N // IsIrreducibleConjCharacter eta} :=
     _root_.Equiv.ofBijective f hf
-  letI : Fintype {eta : ConjClassFunction N // IsIrreducibleConjCharacter eta} :=
+  let : Fintype {eta : ConjClassFunction N // IsIrreducibleConjCharacter eta} :=
     Fintype.ofEquiv ι e
   let a : {eta : ConjClassFunction N // IsIrreducibleConjCharacter eta} :=
     ⟨chi, hchiIrr⟩

@@ -54,7 +54,7 @@ private theorem coprime_card_quotient_Op_p'p_of_hasPLengthOne
   simpa [hcore_top] using hcopK
 
 public theorem theorem_5_6_e_high_rank
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
     {S : Sylow p G} (hSnarrow : IsNarrowPGroup p S)
     (hSrank : 3 ≤ groupRank (S : Subgroup G)) (hplen : HasPLengthOne (p := p) G) :
@@ -69,8 +69,8 @@ public theorem theorem_5_6_e_high_rank
     exact odd_of_card_dvd hodd (Subgroup.card_subgroup_dvd_card N)
   have hAodd : Odd (Nat.card A) := by
     exact odd_of_card_dvd hN_odd (Subgroup.card_range_dvd φ)
-  have hsolvA : IsSolvable A := by
-    exact solvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
+  have hsolvA : Group.IsSolvable A := by
+    exact Group.isSolvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
   let _ : L.Normal := by
     dsimp [L]
     infer_instance
@@ -98,7 +98,7 @@ public theorem theorem_5_6_e_high_rank
       (sylow_le_Op_p'p_of_hasPLengthOne (G := G) (p := p) hplen S)
     have hcentralizer :=
       centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable (G := G)
-        (inferInstance : IsSolvable G) p T
+        (inferInstance : Group.IsSolvable G) p T
     have hTG_eq : T.1.map L.subtype = (S : Subgroup G) := by
       simp [T, L, Sylow.coe_subtype, Subgroup.subgroupOf_map_subtype,
         inf_of_le_left (sylow_le_Op_p'p_of_hasPLengthOne (G := G) (p := p) hplen S)]
@@ -180,7 +180,7 @@ public theorem theorem_5_6_e_high_rank
 /-! # Theorem 5.6(c) from BG Section 5 -/
 
 public theorem theorem_5_6_c
-    {G : Type*} [Group G] [Finite G] [IsSolvable G] (hodd : Odd (Nat.card G))
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G] (hodd : Odd (Nat.card G))
     {p : ℕ} [Fact p.Prime] (hp_dvd : p ∣ Nat.card G)
     {S : Sylow p G} (hSnarrow : IsNarrowPGroup p S)
     (hplen : 3 ≤ groupRank (S : Subgroup G) → HasPLengthOne p G) :
@@ -189,7 +189,7 @@ public theorem theorem_5_6_c
   by_cases hSrank_le : groupRank (S : Subgroup G) ≤ 2
   · have hprank : primeRank p G ≤ 2 :=
       primeRank_le_two_of_sylow_groupRank_le_two (G := G) (p := p) (S := S) hSrank_le
-    exact theorem_4_18_c (G := G) (p := p) (inferInstance : IsSolvable G) hodd hp_dvd hprank
+    exact theorem_4_18_c (G := G) (p := p) (inferInstance : Group.IsSolvable G) hodd hp_dvd hprank
   · have hSrank : 3 ≤ groupRank (S : Subgroup G) := by omega
     have hplenG : HasPLengthOne (p := p) G := hplen hSrank
     have hcommQ : IsMulCommutative (G ⧸ Op_p'p p G) := by

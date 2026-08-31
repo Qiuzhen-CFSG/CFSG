@@ -15,7 +15,7 @@ This file contains the concrete Suzuki matrix generators over
 namespace BenderSuzuki
 namespace MatrixGroups
 
-open scoped MatrixGroups
+open scoped _root_.MatrixGroups
 open PFAppendixIII
 
 universe w
@@ -63,7 +63,7 @@ Negative powers are written as inverses in the field.
     have htri : (SuzukiRootMatrix m a b).BlockTriangular id := by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp [SuzukiRootMatrix] at hij ⊢
-    rw [Matrix.det_of_upperTriangular htri]
+    rw [Matrix.det_of_isUpperTriangular htri]
     simp [SuzukiRootMatrix, Fin.prod_univ_four])
 
 /-- The standard Suzuki torus element in `GL(4,GF(2^(2m+1)))`. -/
@@ -75,7 +75,7 @@ Negative powers are written as inverses in the field.
     have htri : (SuzukiTorusMatrix m x).BlockTriangular id := by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp [SuzukiTorusMatrix] at hij ⊢
-    rw [Matrix.det_of_upperTriangular htri]
+    rw [Matrix.det_of_isUpperTriangular htri]
     have hx_sigma :
         (x : BinaryGaloisField (2 * m + 1)) ^ (2 ^ m) ≠ 0 :=
       pow_ne_zero _ x.ne_zero

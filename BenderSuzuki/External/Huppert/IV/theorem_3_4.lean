@@ -122,7 +122,7 @@ private theorem huppert_IV_3_4_sylow_commutator_le_grunKernelSubgroup
     (huppert_IV_3_4_commutatorElement_mem_grunKernelSubgroup
       (Q := Q) P a.property b.property)
 
-private instance huppert_IV_3_4_grunKernelSubgroup_subgroupOf_normal
+public instance huppert_IV_3_4_grunKernelSubgroup_subgroupOf_normal
     {Q : Type u} [Group Q] (P : Subgroup Q) :
     ((huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P).Normal := by
   classical
@@ -143,7 +143,7 @@ private instance huppert_IV_3_4_grunKernelSubgroup_subgroupOf_normal
     group
   simpa [heq] using hmul
 
-private instance huppert_IV_3_4_grunKernelSubgroup_quotient_commutative
+public instance huppert_IV_3_4_grunKernelSubgroup_quotient_commutative
     {Q : Type u} [Group Q] (P : Subgroup Q) :
     IsMulCommutative
       (P ⧸ (huppertIV34GrunKernelSubgroup (Q := Q) P).subgroupOf P) := by
@@ -1137,6 +1137,82 @@ private theorem huppert_IV_3_4_sylow_inf_commutator_le_grunKernelSubgroup
   have hxker : x ∈ V.ker ⊓ (S : Subgroup Q) := ⟨hxV, hx.1⟩
   simpa [D, hker] using hxker
 
+/-- The transfer homomorphism to the quotient of a Sylow subgroup by the
+Grün kernel.  This is the maximal abelian `q`-factor map constructed in the
+proof of the first theorem of Grün. -/
+@[expose] public noncomputable def huppertIV34GrunTransfer
+    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
+    (S : Sylow q Q) :
+    Q →* (S : Subgroup Q) ⧸
+      (huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)).subgroupOf
+        (S : Subgroup Q) :=
+  MonoidHom.transfer (G := Q) (H := (S : Subgroup Q))
+    (QuotientGroup.mk'
+      ((huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)).subgroupOf
+        (S : Subgroup Q)))
+
+/-- The kernel of the Grün transfer meets the chosen Sylow subgroup exactly
+in the Grün kernel. -/
+public theorem huppertIV34GrunTransfer_ker_inf_sylow
+    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
+    (S : Sylow q Q) :
+    (huppertIV34GrunTransfer (Q := Q) S).ker ⊓ (S : Subgroup Q) =
+      huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q) := by
+  simpa [huppertIV34GrunTransfer] using
+    huppert_IV_3_4_transfer_to_grun_quotient_kernel_inf_sylow
+      (Q := Q) (q := q) S
+
+/-- The Grün transfer is onto the quotient of the Sylow subgroup by the Grün
+kernel. -/
+public theorem huppertIV34GrunTransfer_surjective
+    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
+    (S : Sylow q Q) :
+    Function.Surjective (huppertIV34GrunTransfer (Q := Q) S) := by
+  let D : Subgroup Q :=
+    huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)
+  let V := huppertIV34GrunTransfer (Q := Q) S
+  let VS : (S : Subgroup Q) →*
+      (S : Subgroup Q) ⧸ D.subgroupOf (S : Subgroup Q) :=
+    V.comp (S : Subgroup Q).subtype
+  have hker : VS.ker = D.subgroupOf (S : Subgroup Q) := by
+    ext x
+    change V (x : Q) = 1 ↔ (x : Q) ∈ D
+    have hinter := huppertIV34GrunTransfer_ker_inf_sylow (Q := Q) S
+    constructor
+    · intro hx
+      have hx' : (x : Q) ∈ V.ker ⊓ (S : Subgroup Q) := ⟨hx, x.property⟩
+      simpa [D, V] using hinter ▸ hx'
+    · intro hx
+      have hx' : (x : Q) ∈ V.ker ⊓ (S : Subgroup Q) := by
+        rw [hinter]
+        simpa [D] using hx
+      exact hx'.1
+  have hcard : Nat.card VS.range =
+      Nat.card ((S : Subgroup Q) ⧸ D.subgroupOf (S : Subgroup Q)) := by
+    rw [← Subgroup.index_ker, hker, Subgroup.index_eq_card]
+  have hrange : VS.range = ⊤ := VS.range.eq_top_of_card_eq hcard
+  have hVS : Function.Surjective VS := MonoidHom.range_eq_top.mp hrange
+  intro y
+  obtain ⟨s, hs⟩ := hVS y
+  exact ⟨s, hs⟩
+
+/-- The index of the Grün transfer kernel is the relative index of the Grün
+kernel in the chosen Sylow subgroup. -/
+public theorem huppertIV34GrunTransfer_ker_index
+    {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
+    (S : Sylow q Q) :
+    (huppertIV34GrunTransfer (Q := Q) S).ker.index =
+      (huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)).relIndex
+        (S : Subgroup Q) := by
+  let D : Subgroup Q :=
+    huppertIV34GrunKernelSubgroup (Q := Q) (S : Subgroup Q)
+  let V := huppertIV34GrunTransfer (Q := Q) S
+  have hsurj : Function.Surjective V := by
+    simpa [V] using huppertIV34GrunTransfer_surjective S
+  rw [Subgroup.index_ker, MonoidHom.range_eq_top.mpr hsurj,
+    Subgroup.card_top, ← Subgroup.index_eq_card]
+  rfl
+
 /-- Huppert IV.3.4, first theorem of Grun. -/
 public theorem huppert_IV_3_4_first_grun
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
@@ -1153,5 +1229,3 @@ public theorem huppert_IV_3_4_first_grun
 
 end External
 end BenderSuzuki
-
-

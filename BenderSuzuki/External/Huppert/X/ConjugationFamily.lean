@@ -92,7 +92,7 @@ private theorem rightConjugate_le_iff
   constructor
   · intro h x hx
     refine Subgroup.mem_map.mpr ⟨g⁻¹ * x * g, h ?_, by simp [mul_assoc]⟩
-    exact Subgroup.mem_map.mpr ⟨x, hx, by simp [MulAut.conj_apply]⟩
+    exact Subgroup.mem_map.mpr ⟨x, hx, by simp⟩
   · intro h x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
     rcases Subgroup.mem_map.mp (h hy) with ⟨z, hz, hzy⟩
@@ -238,12 +238,12 @@ private theorem HuppertExtremal.exists_sylow_normalizer
   have hNPp : IsPGroup p NP := IsPGroup.to_le P.isPGroup' inf_le_left
   have hNPNp : IsPGroup p NPN :=
     hNPp.of_equiv (Subgroup.subgroupOfEquivOfLe
-      (by simpa [NP, N] using (inf_le_right : NP ≤ N))).symm
+      (by simp [NP, N])).symm
   have hNPNcard : Nat.card NPN = p ^ (Nat.card N).factorization p := by
     calc
       Nat.card NPN = Nat.card NP := by
-        simpa [NPN] using natCard_subgroupOf_eq NP N (by
-          simpa [NP, N] using (inf_le_right : NP ≤ N))
+        dsimp [NPN]
+        rw [natCard_subgroupOf_eq NP N (by simp [NP, N])]
       _ = p ^ (Nat.card NP).factorization p :=
         section8_card_eq_prime_pow_factorization_of_isPGroup hNPp
       _ = p ^ (Nat.card N).factorization p := by
@@ -253,7 +253,7 @@ private theorem HuppertExtremal.exists_sylow_normalizer
   refine ⟨Q, ?_⟩
   change NPN.map N.subtype = NP
   exact Subgroup.map_subgroupOf_eq_of_le (by
-    simpa [NP, N] using (inf_le_right : NP ≤ N))
+    simp [NP, N])
 
 /-- The Sylow subgroup of `U C_G(U)` cut out by the fixed Sylow subgroup
 `P`.  This is the Sylow-intersection step in Huppert X.4.7. -/
@@ -275,7 +275,7 @@ private theorem HuppertExtremal.exists_sylow_sup_centralizer
   have hNKnorm : N ≤ Subgroup.normalizer (K : Set G) := by
     simpa [K, C, N] using normalizer_le_normalizer_sup_centralizer U
   let KN : Subgroup N := K.subgroupOf N
-  letI : KN.Normal := by
+  let : KN.Normal := by
     simpa [KN] using Subgroup.normal_subgroupOf_of_le_normalizer hNKnorm
   obtain ⟨PN, hPN⟩ := hU.exists_sylow_normalizer
   let Q : Sylow p KN := hallSylowSubgroupOfNormal PN KN
@@ -324,9 +324,10 @@ private theorem HuppertExtremal.exists_sylow_sup_centralizer
   rw [Subgroup.map_inf_eq KN (PN : Subgroup N) N.subtype
     N.subtype_injective]
   rw [Subgroup.map_subgroupOf_eq_of_le hKN, hPN]
-  simp only [inf_assoc, inf_left_comm, inf_comm]
+  simp only [inf_left_comm]
   rw [inf_eq_left.mpr hKN]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A normalizer element of an extremal subgroup can be corrected by an
 ambient centralizer element so that it normalizes `U C_P(U)`.  This is the
 local Sylow-conjugacy calculation in Huppert X.4.7. -/
@@ -433,9 +434,9 @@ private theorem exists_larger_normalizer_pSubgroup
     let xR : R := ⟨x, hxR⟩
     have hxPR : xR ∈ PR := by rw [htop]; trivial
     exact hxPR
-  letI : Group.IsNilpotent R := hRp.isNilpotent
+  let : Group.IsNilpotent R := hRp.isNilpotent
   have hPRnorm : PR < Subgroup.normalizer (PR : Set R) :=
-    normalizerCondition_of_isNilpotent PR hPRtop
+    Group.normalizerCondition_of_isNilpotent PR hPRtop
   let NR : Subgroup R := Subgroup.normalizer (PR : Set R)
   let R₁ : Subgroup G := NR.map R.subtype
   have hPR₁ : P ≤ R₁ := by
@@ -464,15 +465,15 @@ private theorem exists_larger_normalizer_pSubgroup
 
 public theorem HuppertAdjacent.symmetric
     {G : Type u} [Group G] {P A : Subgroup G} :
-    Symmetric (HuppertAdjacent P A) := by
+    ∀ a b : G, HuppertAdjacent P A a b → HuppertAdjacent P A b a := by
   intro a b h
   exact ⟨h.2.1, h.1, by simpa [inf_comm] using h.2.2⟩
 
 public theorem HuppertRelated.symmetric
     {G : Type u} [Group G] {P A : Subgroup G} :
-    Symmetric (HuppertRelated P A) := by
-  letI : Std.Symm (HuppertAdjacent P A) := ⟨HuppertAdjacent.symmetric⟩
-  letI : Std.Symm (HuppertRelated P A) := Relation.ReflTransGen.stdSymm
+    ∀ a b : G, HuppertRelated P A a b → HuppertRelated P A b a := by
+  let : Std.Symm (HuppertAdjacent P A) := ⟨HuppertAdjacent.symmetric⟩
+  let : Std.Symm (HuppertRelated P A) := Relation.ReflTransGen.stdSymm
   exact fun a b h ↦ Std.Symm.symm a b h
 
 private theorem HuppertAdjacent.mul_left_of_mem_normalizer
@@ -583,7 +584,7 @@ private theorem exists_extremal_representative
   have hVPp : IsPGroup p VP := IsPGroup.to_le P.isPGroup' inf_le_left
   let VPN : Subgroup N := VP.subgroupOf N
   have hVPNp : IsPGroup p VPN :=
-    hVPp.of_equiv (Subgroup.subgroupOfEquivOfLe (by simpa [VP, N] using inf_le_right)).symm
+    hVPp.of_equiv (Subgroup.subgroupOfEquivOfLe (by simp [VP, N])).symm
   obtain ⟨R0, hVPNR0⟩ := hVPNp.exists_le_sylow
   obtain ⟨cN, hcN⟩ := MulAction.exists_smul_eq N R0 S
   let c : G := cN
@@ -770,7 +771,7 @@ public theorem HuppertCentricConjugationDecomposition.trans
 private theorem HuppertConjugationDecomposition.centric_of_larger
     {G : Type u} [Group G] [Finite G] {p : ℕ} [Fact p.Prime]
     {P : Sylow p G} {A : Subgroup G} {g : G}
-    (hAP : A ≤ (P : Subgroup G))
+    (_hAP : A ≤ (P : Subgroup G))
     (hdec : HuppertConjugationDecomposition (P : Subgroup G)
       (HuppertExtremal P) A g)
     (hlarger : ∀ B : Subgroup G, Nat.card A < Nat.card B →
@@ -946,7 +947,7 @@ public theorem HuppertExtremal.conjugation_decomposition
         (P := (P : Subgroup G)) (family := HuppertExtremal P)
         (A := (P : Subgroup G)))
       (huppertExtremal_sylow P) le_rfl
-      (by simpa [rightConjugate_one]) hgnorm
+      (by simp [rightConjugate_one]) hgnorm
     simpa using htail
   · have hAlt : A < (P : Subgroup G) := lt_of_le_of_ne hAP hAeq
     have hlarger : ∀ B : Subgroup G, Nat.card A < Nat.card B →
@@ -965,7 +966,7 @@ public theorem HuppertExtremal.conjugation_decomposition
     let U : Subgroup G := rightConjugate A b
     have hcd : HuppertRelated (P : Subgroup G) A 1 d := by
       have hcb : HuppertRelated (P : Subgroup G) A c b :=
-        HuppertRelated.symmetric hbc
+        HuppertRelated.symmetric b c hbc
       have hcinv : c⁻¹ ∈ Subgroup.normalizer (A : Set G) :=
         (Subgroup.normalizer (A : Set G)).inv_mem hc
       simpa [d] using hcb.mul_left_of_mem_normalizer hcinv
@@ -1007,7 +1008,7 @@ public theorem HuppertExtremal.conjugation_decomposition
         (HuppertExtremal P) A b := by
       simpa [hdfEq] using hdf
     have hbg : HuppertRelated (P : Subgroup G) A b g :=
-      HuppertRelated.symmetric hgb
+      HuppertRelated.symmetric g b hgb
     have hlast := HuppertRelated.decomposition_of_larger hbg hlarger
     have hfinal := HuppertConjugationDecomposition.trans hbdec hlast
     simpa [mul_assoc] using hfinal

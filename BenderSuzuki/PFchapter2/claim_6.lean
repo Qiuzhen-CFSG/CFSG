@@ -540,7 +540,11 @@ private theorem claim6_field_sigma_bot
   have htoAlgInjective : Function.Injective toAlg := by
     intro e₁ e₂ h
     ext x
-    simpa [toAlg] using DFunLike.congr_fun h x
+    have hRing : e₁ = e₂ := by
+      apply RingEquiv.ext
+      intro y
+      exact DFunLike.congr_fun (congrArg (fun f : F ≃ₐ[ZMod ell] F => f.toRingEquiv) h) y
+    exact congrArg (fun e : F ≃+* F => e x) hRing
   have hRingAutCardLe :
       Nat.card (F ≃+* F) ≤ Module.finrank (ZMod ell) F := by
     calc

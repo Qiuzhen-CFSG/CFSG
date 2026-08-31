@@ -127,20 +127,20 @@ variable {p : ℕ} [Fact p.Prime] [Finite G] [Finite (Sylow p G)]
 omit [Finite (Sylow p G)] in
 /-- The kernel of the restricted focal transfer is the focal subgroup. -/
 public lemma ker_restrict_transferFocal_eq_focalSubgroupOf (P : Sylow p G) :
-    (((P : Subgroup G).transferFocal).restrict (P : Subgroup G)).ker =
+    (((P : Subgroup G).transferFocal).domRestrict (P : Subgroup G)).ker =
       (P : Subgroup G).focalSubgroupOf := by
-  letI : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
+  let : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
   ext g
   have hQ : IsPGroup p ((P : Subgroup G) ⧸ (P : Subgroup G).focalSubgroupOf) :=
     P.2.to_quotient ((P : Subgroup G).focalSubgroupOf)
-  rw [MonoidHom.mem_ker, MonoidHom.restrict_apply, transferFocal_eq_pow]
+  rw [MonoidHom.mem_ker, MonoidHom.domRestrict_apply, transferFocal_eq_pow]
   simpa using (hQ.powEquiv' P.not_dvd_index).apply_eq_iff_eq (x := g) (y := 1)
 
 omit [Finite (Sylow p G)] in
 public lemma ker_transferFocal_inf_eq_focalSubgroup (P : Sylow p G) :
     ((P : Subgroup G).transferFocal).ker ⊓ (P : Subgroup G) = (P : Subgroup G).focalSubgroup := by
-  letI : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
-  rw [← subgroupOf_map_subtype, ← MonoidHom.ker_restrict, ← map_focalSubgroupOf]
+  let : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
+  rw [← subgroupOf_map_subtype, ← MonoidHom.ker_domRestrict, ← map_focalSubgroupOf]
   exact congrArg (fun K : Subgroup (P : Subgroup G) => K.map (P : Subgroup G).subtype)
     (ker_restrict_transferFocal_eq_focalSubgroupOf P)
 
@@ -148,7 +148,7 @@ omit [Finite (Sylow p G)] in
 /-- The focal subgroup theorem for a Sylow subgroup. -/
 public theorem commutator_inf_eq_focalSubgroup (P : Sylow p G) :
     _root_.commutator G ⊓ (P : Subgroup G) = (P : Subgroup G).focalSubgroup := by
-  letI : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
+  let : (P : Subgroup G).FiniteIndex := Subgroup.finiteIndex_of_finite
   apply le_antisymm
   · apply le_trans ?_ (ker_transferFocal_inf_eq_focalSubgroup P).le
     exact inf_le_inf_right _ (Abelianization.commutator_subset_ker ((P : Subgroup G).transferFocal))

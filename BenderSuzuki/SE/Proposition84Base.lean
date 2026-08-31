@@ -127,30 +127,36 @@ public theorem IsStronglyEmbedded.three_le_fixedPoints_of_le_lemma83V
     fin_cases i <;> fin_cases j
     · rfl
     · exfalso
-      exact halphaBeta (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p0, p1] using hij))
+      apply halphaBeta
+      change (p0 : conjugateCosetSpace M) = (p1 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij
     · exfalso
-      exact hgammaAlpha (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p0, p2] using hij.symm))
+      apply hgammaAlpha
+      change (p2 : conjugateCosetSpace M) = (p0 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij.symm
     · exfalso
-      exact halphaBeta (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p0, p1] using hij.symm))
+      apply halphaBeta
+      change (p0 : conjugateCosetSpace M) = (p1 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij.symm
     · rfl
     · exfalso
-      exact hgammaBeta (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p1, p2] using hij.symm))
+      apply hgammaBeta
+      change (p2 : conjugateCosetSpace M) = (p1 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij.symm
     · exfalso
-      exact hgammaAlpha (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p0, p2] using hij))
+      apply hgammaAlpha
+      change (p2 : conjugateCosetSpace M) = (p0 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij
     · exfalso
-      exact hgammaBeta (congrArg
-        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M))
-        (by simpa [f, p1, p2] using hij))
+      apply hgammaBeta
+      change (p2 : conjugateCosetSpace M) = (p1 : conjugateCosetSpace M)
+      exact congrArg
+        (fun z : theorem4bFixedPoints M Y => (z : conjugateCosetSpace M)) hij
     · rfl
   simpa using Nat.card_le_card_of_injective f hf
 
@@ -476,17 +482,21 @@ public theorem proposition84_base_normalSylow_regular_of_borel
     sylow_lift_of_central_odd_core K H hKH hKodd hKcentral
       Pbar hPbarNormal
   let e : H ≃* H0 := Subgroup.subgroupOfEquivOfLe inf_le_left
+  have he_surj : Function.Surjective (e : H →* H0) := by
+    exact e.surjective
   let P0 : Sylow 2 H0 :=
-    Sylow.mapSurjective (f := e.toMonoidHom) e.surjective P
+    Sylow.mapSurjective (f := (e : H →* H0)) he_surj P
+  have hP0map : (P0 : Subgroup H0) =
+      (P : Subgroup H).map (e : H →* H0) := by
+    dsimp [P0]
   have hP0normal : (P0 : Subgroup H0).Normal := by
-    rw [show (P0 : Subgroup H0) =
-        (P : Subgroup H).map e.toMonoidHom by
-      exact Sylow.coe_mapSurjective (f := e.toMonoidHom) e.surjective P]
-    exact hPNormal.map e.toMonoidHom e.surjective
+    rw [hP0map]
+    exact hPNormal.map (e : H →* H0) he_surj
   let SF : Subgroup F := (P : Subgroup H).map H.subtype
   let S : Subgroup X := (P0 : Subgroup H0).map H0.subtype
   have hS_eq : S = SF.map F.subtype := by
-    dsimp [S, SF, P0]
+    dsimp [S, SF]
+    rw [hP0map]
     rw [Subgroup.map_map, Subgroup.map_map]
     congr 1
   have hker : q.ker ≤ H := by

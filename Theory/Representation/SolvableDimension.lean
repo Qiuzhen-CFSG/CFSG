@@ -55,8 +55,8 @@ lemma quotient_simple_of_coatom
   let e : Subgroup (G ⧸ N) ≃o Set.Ici N := QuotientGroup.comapMk'OrderIso N
   have hsimple : IsSimpleOrder (Set.Ici N) :=
     (Set.isSimpleOrder_Ici_iff_isCoatom (a := N)).2 hN
-  letI : IsSimpleOrder (Set.Ici N) := hsimple
-  letI : IsSimpleOrder (Subgroup (G ⧸ N)) := e.isSimpleOrder
+  let : IsSimpleOrder (Set.Ici N) := hsimple
+  let : IsSimpleOrder (Subgroup (G ⧸ N)) := e.isSimpleOrder
   refine {
     toNontrivial := ?_
     eq_bot_or_eq_top_of_normal := ?_
@@ -67,19 +67,19 @@ lemma quotient_simple_of_coatom
     simpa using (show H = ⊥ ∨ H = ⊤ from eq_bot_or_eq_top H)
 
 public lemma exist_index_p_of_solvable
-    (G : Type*) [Group G] [Finite G] [IsSolvable G] [Nontrivial G] :
+    (G : Type*) [Group G] [Finite G] [Group.IsSolvable G] [Nontrivial G] :
     ∃ H : Subgroup G, H.Normal ∧ H.index.Prime := by
   let N : Subgroup G := commutator G
-  have hNlt : N < ⊤ := IsSolvable.commutator_lt_top_of_nontrivial (G := G)
+  have hNlt : N < ⊤ := Group.IsSolvable.commutator_lt_top_of_nontrivial (G := G)
   let A := G ⧸ N
   have hA_nontrivial : Nontrivial A := by
     rw [QuotientGroup.nontrivial_iff]
     exact ne_of_lt hNlt
-  letI : Nontrivial A := hA_nontrivial
+  let : Nontrivial A := hA_nontrivial
   have hcommA : IsMulCommutative A :=
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := N)).2 le_rfl
-  letI : IsMulCommutative A := hcommA
-  letI : CommGroup A := IsMulCommutative.instCommGroup
+  let : IsMulCommutative A := hcommA
+  let : CommGroup A := IsMulCommutative.instCommGroup
   obtain hbot | ⟨M, hM, _⟩ := eq_top_or_exists_le_coatom (⊥ : Subgroup A)
   · exact (bot_ne_top hbot).elim
   refine ⟨Subgroup.comap (QuotientGroup.mk' N) M, ?_, ?_⟩
@@ -150,7 +150,7 @@ public noncomputable def all_conjugates_of_prime_quotient
     {a : G} (ha : (a : G ⧸ H) ≠ 1) (e : ρ ≃ₗ conjugateRep ρ a) :
     ∀ x : G, ρ ≃ₗ conjugateRep ρ x := by
   intro x
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hxpow : (x : G ⧸ H) ∈ Submonoid.powers (a : G ⧸ H) :=
     mem_powers_of_prime_card hcard ha
   rw [Submonoid.mem_powers_iff] at hxpow
@@ -244,6 +244,7 @@ public theorem repMap_range_ne_bot_of_ne_zero
     _ = (⊥ : Submodule F V₂) := rfl
 
 
+set_option backward.isDefEq.respectTransparency false in
 public noncomputable def repEquivOfNeZeroOfSimple
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
@@ -474,6 +475,7 @@ public theorem coindBaseFunctionAt_mem_coset (g : G) (v : V) :
   apply hx
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
+set_option backward.isDefEq.respectTransparency false in
 public noncomputable def coindCosetEquiv (g : G) :
     (coindCosetSubrep (ρ := ρ) (g : G ⧸ H)).toRepresentation ≃ₗ conjugateRep ρ g := by
   let S := coindCosetSubrep (ρ := ρ) (g : G ⧸ H)
@@ -525,6 +527,7 @@ public noncomputable def coindCosetEquiv (g : G) :
       (Representation.IntertwiningMap.isIntertwining
         (ρ := S.toRepresentation) (σ := conjugateRep ρ g) ev h f)
 
+set_option backward.isDefEq.respectTransparency false in
 @[expose] public noncomputable def coindProj (q : G ⧸ H) :
     ((coindRep (ρ := ρ)).comp H.subtype) →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := by
   classical
@@ -553,11 +556,10 @@ public noncomputable def coindCosetEquiv (g : G) :
         have hh : ((h : G) : G ⧸ H) = 1 := (QuotientGroup.eq_one_iff (h : G)).2 h.prop
         change ((h : G ⧸ H) * (x : G ⧸ H)) = q at hhx
         rwa [hh, one_mul] at hhx
+      have hhx' : ((h : G) * x : G) ≠ q := by simpa using hhx
       simp [proj, hx]
       intro hEq
-      exact False.elim <| hhx <| by
-        change ((h : G ⧸ H) * (x : G ⧸ H)) = q
-        exact hEq
+      exact False.elim (hhx' hEq)
   refine RepMap.mk (LinearMap.restrict proj ?_) ?_
   · intro f hf
     exact hproj f hf
@@ -577,6 +579,7 @@ public noncomputable def coindCosetEquiv (g : G) :
         rwa [hh, mul_one] at hhx
       simp [LinearMap.restrict_apply, proj, hx]
 
+set_option backward.isDefEq.respectTransparency false in
 @[simp] public theorem coindProj_apply
     (q : G ⧸ H) (f : Representation.coindV H.subtype ρ) (x : G) :
     (coindProj (ρ := ρ) q f).1 x = if (x : G ⧸ H) = q then f.1 x else 0 := by
@@ -588,6 +591,7 @@ public theorem coindProj_mem_coset
   intro x hx
   simp [coindProj_apply, hx]
 
+set_option backward.isDefEq.respectTransparency false in
 @[expose] public noncomputable def coindProjToCoset (q : G ⧸ H) :
     ((coindRep (ρ := ρ)).comp H.subtype) →ₗ (coindCosetSubrep (ρ := ρ) q).toRepresentation := by
   refine RepMap.mk ?_ ?_
@@ -673,7 +677,7 @@ public theorem coindCosetSubrep_irreducible [Finite G] [IsIrreducible ρ] (q : G
   have hIrr :
       IsSimpleOrder
         (Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation)) := by
-    letI : IsIrreducible (conjugateRep (ρ := ρ) g) := conjugateRep_irreducible (ρ := ρ) g
+    let : IsIrreducible (conjugateRep (ρ := ρ) g) := conjugateRep_irreducible (ρ := ρ) g
     let o :
         Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation) ≃o
           Subrepresentation (conjugateRep (ρ := ρ) g) :=
@@ -694,8 +698,8 @@ public theorem coindRep_irreducible_of_notall
     (hnall : ¬ ∀ x : G, Nonempty (ρ ≃ₗ conjugateRep ρ x)) :
     IsSimpleOrder (Subrepresentation (coindRep (ρ := ρ))) := by
   classical
-  letI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   let v0 : V := Classical.choose (exists_ne (0 : V))
   have hv0_ne : v0 ≠ 0 := Classical.choose_spec (exists_ne (0 : V))
   let f0 := coindBaseFunctionAt (ρ := ρ) (1 : G) v0
@@ -704,7 +708,7 @@ public theorem coindRep_irreducible_of_notall
     apply hv0_ne
     have h0 := congrArg (coindEval (ρ := ρ) (1 : G)) hf0
     simpa [f0] using h0
-  letI : Nontrivial (Representation.coindV H.subtype ρ) := ⟨f0, 0, hf0_ne⟩
+  let : Nontrivial (Representation.coindV H.subtype ρ) := ⟨f0, 0, hf0_ne⟩
   refine { toNontrivial := inferInstance, eq_bot_or_eq_top := ?_ }
   intro S
   by_cases hS : S = ⊥
@@ -721,19 +725,19 @@ public theorem coindRep_irreducible_of_notall
         exact S.apply_mem_toSubmodule h.1 hf
     }
     obtain ⟨fS, hfS, hfS_ne⟩ := SH.toSubmodule.ne_bot_iff.mp hSsub_ne
-    letI : Nontrivial SH.toSubmodule := ⟨⟨fS, hfS⟩, 0, by simpa using hfS_ne⟩
+    let : Nontrivial SH.toSubmodule := ⟨⟨fS, hfS⟩, 0, by simpa using hfS_ne⟩
     let iS : SH.toRepresentation →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := subrepInclusion SH
     obtain ⟨N, hNirr⟩ :=
       @Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
         F ↥H ↥SH.toSubmodule inferInstance inferInstance inferInstance inferInstance inferInstance
         SH.toRepresentation inferInstance
-    letI : Representation.IsIrreducible N.toRepresentation := hNirr
+    let : Representation.IsIrreducible N.toRepresentation := hNirr
     let iNS : N.toRepresentation →ₗ SH.toRepresentation := subrepInclusion N
     let iN : N.toRepresentation →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := iS.comp iNS
     have hiN_injective : Function.Injective iN := by
       intro a b hab
       simpa [iN, iS, iNS, subrepInclusion] using hab
-    letI : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
+    let : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
     let n0 : N.toSubmodule := Classical.choose (exists_ne (0 : N.toSubmodule))
     have hn0_ne : n0 ≠ 0 := Classical.choose_spec (exists_ne (0 : N.toSubmodule))
     have hiNn0_ne : iN n0 ≠ 0 := by
@@ -761,15 +765,15 @@ public theorem coindRep_irreducible_of_notall
       by_contra hPq'_ne
       let x : G := Classical.choose (QuotientGroup.mk_surjective q')
       have hx : (x : G ⧸ H) = q' := Classical.choose_spec (QuotientGroup.mk_surjective q')
-      haveI :
+      have :
           IsSimpleOrder
             (Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) (g : G ⧸ H)
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) := by
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) := by
         simpa [q] using
           (coindCosetSubrep_irreducible (ρ := ρ) (g : G ⧸ H) :
             IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation)))
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q').toRepresentation)) :=
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q').toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) q'
       let eNq :
           N.toRepresentation ≃ₗ
@@ -848,7 +852,7 @@ public theorem coindRep_irreducible_of_notall
     have hw0_q : iN n0 ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule := hmem_q n0
     have hw0_SH : iN n0 ∈ SH.toSubmodule := by
       exact (iNS n0).2
-    haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) :=
+    have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) :=
       coindCosetSubrep_irreducible (ρ := ρ) q
     have hCq_le : (coindCosetSubrep (ρ := ρ) q).toSubmodule ≤ SH.toSubmodule := by
       exact subrep_le_of_nonzero_mem
@@ -866,7 +870,7 @@ public theorem coindRep_irreducible_of_notall
         intro h0
         apply hiNn0_ne
         exact (Representation.apply_bijective (coindRep (ρ := ρ)) y).1 h0
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) r).toRepresentation)) :=
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) r).toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) r
       exact subrep_le_of_nonzero_mem
         (ρ' := ((coindRep (ρ := ρ)).comp H.subtype))
@@ -893,8 +897,8 @@ public theorem coindRep_irreducible_of_noNontrivialConj
         ¬ Nonempty (ρ ≃ₗ Theory.Representation.conjugateRep ρ x)) :
     IsSimpleOrder (Subrepresentation (coindRep (ρ := ρ))) := by
   classical
-  letI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   let v0 : V := Classical.choose (exists_ne (0 : V))
   have hv0_ne : v0 ≠ 0 := Classical.choose_spec (exists_ne (0 : V))
   let f0 := coindBaseFunctionAt (ρ := ρ) (1 : G) v0
@@ -903,7 +907,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
     apply hv0_ne
     have h0 := congrArg (coindEval (ρ := ρ) (1 : G)) hf0
     simpa [f0] using h0
-  letI : Nontrivial (Representation.coindV H.subtype ρ) := ⟨f0, 0, hf0_ne⟩
+  let : Nontrivial (Representation.coindV H.subtype ρ) := ⟨f0, 0, hf0_ne⟩
   refine { toNontrivial := inferInstance, eq_bot_or_eq_top := ?_ }
   intro S
   by_cases hS : S = ⊥
@@ -920,19 +924,19 @@ public theorem coindRep_irreducible_of_noNontrivialConj
         exact S.apply_mem_toSubmodule h.1 hf
     }
     obtain ⟨fS, hfS, hfS_ne⟩ := SH.toSubmodule.ne_bot_iff.mp hSsub_ne
-    letI : Nontrivial SH.toSubmodule := ⟨⟨fS, hfS⟩, 0, by simpa using hfS_ne⟩
+    let : Nontrivial SH.toSubmodule := ⟨⟨fS, hfS⟩, 0, by simpa using hfS_ne⟩
     let iS : SH.toRepresentation →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := subrepInclusion SH
     obtain ⟨N, hNirr⟩ :=
       @Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
         F ↥H ↥SH.toSubmodule inferInstance inferInstance inferInstance inferInstance inferInstance
         SH.toRepresentation inferInstance
-    letI : Representation.IsIrreducible N.toRepresentation := hNirr
+    let : Representation.IsIrreducible N.toRepresentation := hNirr
     let iNS : N.toRepresentation →ₗ SH.toRepresentation := subrepInclusion N
     let iN : N.toRepresentation →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := iS.comp iNS
     have hiN_injective : Function.Injective iN := by
       intro a b hab
       simpa [iN, iS, iNS, subrepInclusion] using hab
-    letI : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
+    let : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
     let n0 : N.toSubmodule := Classical.choose (exists_ne (0 : N.toSubmodule))
     have hn0_ne : n0 ≠ 0 := Classical.choose_spec (exists_ne (0 : N.toSubmodule))
     have hiNn0_ne : iN n0 ≠ 0 := by
@@ -960,15 +964,15 @@ public theorem coindRep_irreducible_of_noNontrivialConj
       by_contra hPq'_ne
       let x : G := Classical.choose (QuotientGroup.mk_surjective q')
       have hx : (x : G ⧸ H) = q' := Classical.choose_spec (QuotientGroup.mk_surjective q')
-      haveI :
+      have :
           IsSimpleOrder
             (Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) (g : G ⧸ H)
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) := by
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) := by
         simpa [q] using
           (coindCosetSubrep_irreducible (ρ := ρ) (g : G ⧸ H) :
             IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) ((g : G ⧸ H))).toRepresentation)))
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q').toRepresentation)) :=
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q').toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) q'
       let eNq :
           N.toRepresentation ≃ₗ
@@ -1047,7 +1051,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
     have hw0_SH : iN n0 ∈ SH.toSubmodule := by
       change (((iS (iNS n0)) : Representation.coindV H.subtype ρ)) ∈ SH.toSubmodule
       exact (iNS n0).2
-    haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) :=
+    have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) :=
       coindCosetSubrep_irreducible (ρ := ρ) q
     have hCq_le : (coindCosetSubrep (ρ := ρ) q).toSubmodule ≤ SH.toSubmodule := by
       exact subrep_le_of_nonzero_mem
@@ -1065,7 +1069,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
         intro h0
         apply hiNn0_ne
         exact (Representation.apply_bijective (coindRep (ρ := ρ)) y).1 h0
-      haveI : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) r).toRepresentation)) :=
+      have : IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) r).toRepresentation)) :=
         coindCosetSubrep_irreducible (ρ := ρ) r
       exact subrep_le_of_nonzero_mem
         (ρ' := ((coindRep (ρ := ρ)).comp H.subtype))
@@ -1080,6 +1084,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
     exact le_antisymm le_top htop_le
 
 
+set_option backward.isDefEq.respectTransparency false in
 private noncomputable def coindMapFromRepMapAux
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] {W : Type*}
@@ -1129,7 +1134,7 @@ private noncomputable def coindMapFromRepMapAuxOfSubrepAux
   let σH : Representation F H V := σ.comp H.subtype
   have hσHcr : σH.IsCompletelyReducible := by
     exact Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime (ρ := σH) hchar
-  letI : ComplementedLattice (Subrepresentation σH) := by
+  let : ComplementedLattice (Subrepresentation σH) := by
     exact
       (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule
         (ρ := σH)).2 hσHcr
@@ -1281,6 +1286,7 @@ public theorem irreducible_subrepresentation_of_simple_asModuleSubmodule {G : Ty
     ((Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)).symm.isAtom_iff
       (a := m)).2 <| (isSimpleModule_iff_isAtom).1 hm
 
+set_option backward.isDefEq.respectTransparency false in
 /-- An irreducible representation is equivalent to the coinduction of a simple constituent
 of its semisimple restriction when that constituent has no equivalent nontrivial conjugate. -/
 public noncomputable def coindEquivOfSubrep_noNontrivialConj
@@ -1294,10 +1300,10 @@ public noncomputable def coindEquivOfSubrep_noNontrivialConj
     (hnconj : ∀ x : G, (x : G ⧸ H) ≠ 1 →
       ¬ Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
     ρ ≃ₗ coindRep M.toRepresentation := by
-  letI : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
+  let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
   let f : ρ →ₗ coindRep M.toRepresentation := coindMapFromRepMapAuxOfSubrepAux ρ hchar M
-  letI : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
+  let : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
   have hf_ne : f ≠ 0 := by
     obtain ⟨m0, hm0_ne⟩ := exists_ne (0 : M.toSubmodule)
     intro hf0
@@ -1311,7 +1317,7 @@ public noncomputable def coindEquivOfSubrep_noNontrivialConj
   have hsimple_coind :
       IsSimpleOrder (Subrepresentation (coindRep (ρ := M.toRepresentation))) :=
     coindRep_irreducible_of_noNontrivialConj (ρ := M.toRepresentation) hnconj
-  letI : Representation.IsIrreducible (coindRep (ρ := M.toRepresentation)) := hsimple_coind
+  let : Representation.IsIrreducible (coindRep (ρ := M.toRepresentation)) := hsimple_coind
   have hfinj : Function.Injective f := by
     rcases (Representation.IsIrreducible.injective_or_eq_zero
       (ρ := ρ) (σ := coindRep (ρ := M.toRepresentation)) (f := f)) with hfinj | hf0
@@ -1460,7 +1466,7 @@ end
 set_option backward.isDefEq.respectTransparency false in
 lemma lemma_2_3_algClosed
     {F : Type*} [Field F] [IsAlgClosed F]
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     (ρ : Representation F G V) [inst : IsAbsolutelyIrreducible ρ] :
     Module.finrank F V ∣ Nat.card G := by
@@ -1470,15 +1476,15 @@ lemma lemma_2_3_algClosed
   induction n using Nat.strong_induction_on with
   | h n ih =>
     intro G _ _ _ W _ _ _ ρ hσabs hcard
-    letI : IsAbsolutelyIrreducible ρ := hσabs
-    letI : IsIrreducible ρ :=
+    let : IsAbsolutelyIrreducible ρ := hσabs
+    let : IsIrreducible ρ :=
     IsAbsolutelyIrreducible.irreducible_of_isAbsolutelyIrreducible ρ
     by_cases! hn : n ≤ 1
     · have hk1 : Nat.card G = 1 := by
         have hkpos : 0 < Nat.card G := Nat.card_pos
         omega
-      letI : Subsingleton G := (Nat.card_eq_one_iff_unique.mp hk1).1
-      letI : IsMulCommutative G := {
+      let : Subsingleton G := (Nat.card_eq_one_iff_unique.mp hk1).1
+      let : IsMulCommutative G := {
         is_comm := {
           comm a b := by
             have ha : a = 1 := by exact Subsingleton.eq_one a
@@ -1495,17 +1501,17 @@ lemma lemma_2_3_algClosed
     · let : Nontrivial G := by
         exact Finite.one_lt_card_iff_nontrivial.mp <| Nat.lt_of_lt_of_eq hn (id (Eq.symm hcard))
       obtain ⟨H, hH1, hH2⟩ := exist_index_p_of_solvable G
-      letI : H.Normal := hH1
-      letI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
+      let : H.Normal := hH1
+      let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
       let ρH : Representation F H W := ρ.comp H.subtype
-      letI : Nontrivial W := Subrepresentation.irreducible_module_nontrivial ρ
+      let : Nontrivial W := Subrepresentation.irreducible_module_nontrivial ρ
       obtain ⟨N, hNirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρH
       let σ : Representation F H N.toSubmodule := N.toRepresentation
-      letI : IsIrreducible σ := hNirr
+      let : IsIrreducible σ := hNirr
       have hσsurj : Function.Surjective (algebraMap F (End σ)) := by
         exact surjective_of_jacobson_density_surjective_rep σ
           (jacobson_density_surjective_isAlgClosed_rep σ)
-      letI : IsAbsolutelyIrreducible σ := (isAbsolutelyIrreducible_iff_surjective σ).2 hσsurj
+      let : IsAbsolutelyIrreducible σ := (isAbsolutelyIrreducible_iff_surjective σ).2 hσsurj
       have hHlt : Nat.card H < n := by
         have hmul : Nat.card H * H.index = n := by
           calc
@@ -1521,7 +1527,7 @@ lemma lemma_2_3_algClosed
         exact ih (Nat.card H) hHlt (ρ := σ) rfl
       have hcardQ : Nat.card (G ⧸ H) = H.index := by
         rw [H.index_eq_card]
-      letI : Fact (Nat.Prime H.index) := ⟨hH2⟩
+      let : Fact (Nat.Prime H.index) := ⟨hH2⟩
       have hcyc : IsCyclic (G ⧸ H) := isCyclic_of_prime_card (α := G ⧸ H) hcardQ
       have hQ_nontrivial : Nontrivial (G ⧸ H) := by
         have hQcard : Fintype.card (G ⧸ H) = H.index := by
@@ -1529,7 +1535,7 @@ lemma lemma_2_3_algClosed
         exact
           Finite.one_lt_card_iff_nontrivial.mp <|
             by simpa [hQcard] using hH2.one_lt
-      letI : Nontrivial (G ⧸ H) := hQ_nontrivial
+      let : Nontrivial (G ⧸ H) := hQ_nontrivial
       let q0 : G ⧸ H := Classical.choose (exists_ne (1 : G ⧸ H))
       have hq0_ne : q0 ≠ 1 := Classical.choose_spec (exists_ne (1 : G ⧸ H))
       let x : G := quotientSection (G := G) (H := H) q0
@@ -1618,7 +1624,7 @@ lemma lemma_2_3_algClosed
                   (ρ := conjugateRep σ g⁻¹) (σ := (A q).toRepresentation) (f := f) h v)
         have hA_irr (q : G ⧸ H) : IsIrreducible (A q).toRepresentation := by
           let g : G := quotientSection (G := G) (H := H) q
-          letI : IsIrreducible (conjugateRep σ g⁻¹) :=
+          let : IsIrreducible (conjugateRep σ g⁻¹) :=
             conjugateRep_irreducible (G := G) (H := H) (ρ := σ) g⁻¹
           exact (RepEquiv.irreducible_euqiv (eA q).symm).2 inferInstance
         have hA_dim (q : G ⧸ H) :
@@ -1635,8 +1641,8 @@ lemma lemma_2_3_algClosed
             let gr : G := quotientSection (G := G) (H := H) r
             have hgq : (gq : G ⧸ H) = q := quotientSection_spec (G := G) (H := H) q
             have hgr : (gr : G ⧸ H) = r := quotientSection_spec (G := G) (H := H) r
-            haveI : IsIrreducible (A q).toRepresentation := hA_irr q
-            haveI : IsIrreducible (A r).toRepresentation := hA_irr r
+            have : IsIrreducible (A q).toRepresentation := hA_irr q
+            have : IsIrreducible (A r).toRepresentation := hA_irr r
             have hq_le_r : A q ≤ A r := by
               exact
                 subrep_le_of_nonzero_mem
@@ -1722,7 +1728,7 @@ lemma lemma_2_3_algClosed
             exact hTmap y hwmap
         }
         let g1 : G := quotientSection (G := G) (H := H) (1 : G ⧸ H)
-        letI : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial σ
+        let : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial σ
         let n0 : N.toSubmodule := Classical.choose (exists_ne (0 : N.toSubmodule))
         have hn0_ne : n0 ≠ 0 := Classical.choose_spec (exists_ne (0 : N.toSubmodule))
         have hw1_mem : ρ g1 n0 ∈ Tsub := by
@@ -1766,7 +1772,7 @@ lemma lemma_2_3_algClosed
             rcases Submodule.mem_inf.mp hw with ⟨hwq, hws⟩
             by_cases hw0 : w = 0
             · simp [hw0]
-            · letI : Module F[H] (Representation.asModule ρH) :=
+            · let : Module F[H] (Representation.asModule ρH) :=
                 ρH.instModuleMonoidAlgebraAsModule
               let U : Subrepresentation ρH := ⨆ r ∈ s, A r
               let Umod : Submodule F[H] (Representation.asModule ρH) :=
@@ -1830,10 +1836,10 @@ lemma lemma_2_3_algClosed
                   ((Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρH)).isAtom_iff
                     (a := A q)).2 <|
                     (Subrepresentation.irreducible_iff_isAtom (φ := A q)).1 (hA_irr q)
-              letI : IsSimpleModule F[H]
+              let : IsSimpleModule F[H]
                   (((A q).asSubmodule :
                     Submodule F[H] (Representation.asModule ρH))) := hsimpleq
-              letI : ∀ m : sSet, IsSimpleModule F[H] m := hsimpleSet
+              let : ∀ m : sSet, IsSimpleModule F[H] m := hsimpleSet
               obtain ⟨S, hS, ⟨eS⟩⟩ :=
                 Submodule.linearEquiv_of_le_sSup
                   (R := F[H]) (M := Representation.asModule ρH)
@@ -1994,7 +2000,7 @@ lemma lemma_2_3_algClosed
 set_option backward.isDefEq.respectTransparency false in
 public theorem lemma_2_3
     {F : Type*} [Field F]
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     (ρ : Representation F G V) [inst : IsAbsolutelyIrreducible ρ] :
     Module.finrank F V ∣ Nat.card G := by
@@ -2004,5 +2010,3 @@ public theorem lemma_2_3
   have h := lemma_2_3_algClosed ρ'
   rw [Module.finrank_baseChange] at h
   exact h
-
-

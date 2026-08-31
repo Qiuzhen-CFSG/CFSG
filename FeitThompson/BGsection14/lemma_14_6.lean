@@ -368,8 +368,8 @@ public theorem section14_exists_sigma_support_witness
     exact IsPGroup.of_card (n := 1) (by simp [hXcard])
   have hzpowg_ne_top : Subgroup.zpowers g ≠ ⊤ := by
     intro htop
-    haveI : IsCyclic G := (isCyclic_iff_exists_zpowers_eq_top (α := G)).2 ⟨g, htop⟩
-    exact IsMinCE.not_solvable (G := G) (inferInstance : IsSolvable G)
+    let _ : IsCyclic G := (isCyclic_iff_exists_zpowers_eq_top (α := G)).2 ⟨g, htop⟩
+    exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
   have hXne_top : X ≠ ⊤ := by
     intro hXtop
     have htop_le_zpowg : (⊤ : Subgroup G) ≤ Subgroup.zpowers g := by
@@ -459,8 +459,8 @@ private theorem section14_exists_block_factor
   classical
   rcases hB with ⟨hBblock, ⟨q, hqSupp, hqB⟩⟩
   let H : Subgroup G := Subgroup.zpowers g
-  have hsolvH : IsSolvable H := by
-    letI : IsCyclic H := inferInstance
+  have hsolvH : Group.IsSolvable H := by
+    let _ : IsCyclic H := inferInstance
     infer_instance
   obtain ⟨K, hK⟩ := section14_exists_hallSubgroupIn (G := G) hsolvH B
   obtain ⟨L, hL⟩ := section14_exists_hallSubgroupIn (G := G) hsolvH Bᶜ
@@ -532,8 +532,8 @@ public theorem section14_exists_msigma_factor_of_ne_one
   have hYne : Y ≠ ⊥ := (Subgroup.zpowers_ne_bot).2 hxne
   have hYne_top : Y ≠ ⊤ := by
     intro hYtop
-    haveI : IsCyclic G := (isCyclic_iff_exists_zpowers_eq_top (α := G)).2 ⟨x, hYtop⟩
-    exact IsMinCE.not_solvable (G := G) (inferInstance : IsSolvable G)
+    let _ : IsCyclic G := (isCyclic_iff_exists_zpowers_eq_top (α := G)).2 ⟨x, hYtop⟩
+    exact IsMinCE.not_solvable (G := G) (inferInstance : Group.IsSolvable G)
   obtain ⟨a, hYa⟩ :=
     section14_exists_conjugating_element_of_sigmaSubgroup
       (G := G) (M := M0) (Y := Y) hM0 hYσ hYne hYne_top

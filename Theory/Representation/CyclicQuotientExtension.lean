@@ -147,12 +147,13 @@ def proposition_2_2_subrepInclusion (phi : Subrepresentation (proposition_2_2_si
   ext v
   rfl
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The explicit equivalence constructed in Proposition 2.2(a). -/
 public noncomputable def proposition_2_2_a_apply
     (phi : Subrepresentation (iota.comp H.subtype)) (f : rho ≃ₗ phi.toRepresentation) :
     iota.comp H.subtype ≃ₗ rho := by
   classical
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial rho
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial rho
   let u0 : Theory.Representation.RepMap rho (proposition_2_2_sigma H iota) :=
     (proposition_2_2_subrepInclusion H iota phi).comp f.toRepMap
   have hu0_ne : u0 ≠ 0 := by
@@ -170,7 +171,7 @@ public noncomputable def proposition_2_2_a_apply
     apply hu0_ne
     have := congrArg e hu0'
     simpa [u0'] using this
-  letI : Nontrivial L := ⟨⟨0, u0', hu0'_ne.symm⟩⟩
+  let : Nontrivial L := ⟨⟨0, u0', hu0'_ne.symm⟩⟩
   let q : G ⧸ H := Classical.choose (IsCyclic.exists_generator (α := G ⧸ H))
   have hq : ∀ y : G ⧸ H, y ∈ Subgroup.zpowers q :=
     Classical.choose_spec (IsCyclic.exists_generator (α := G ⧸ H))
@@ -368,6 +369,7 @@ theorem p22b_repMapRangeEqTopOfNeZero
   · exact False.elim (p22b_repMapRangeNeBotOfNeZero f hf hbot)
   · exact htop
 
+set_option backward.isDefEq.respectTransparency false in
 noncomputable def p22b_repEquivOfNeZero
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
@@ -538,6 +540,7 @@ theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v 
   apply hx
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
+set_option backward.isDefEq.respectTransparency false in
 noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
     (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toRepresentation ≃ₗ conjugateRep ρ g := by
   let S := p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)
@@ -724,6 +727,7 @@ noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V
     ext q
     simp
 
+set_option backward.isDefEq.respectTransparency false in
 noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H) :
     ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ
       ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) := by
@@ -753,11 +757,10 @@ noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H) :
         have hh : ((h : G) : G ⧸ H) = 1 := (QuotientGroup.eq_one_iff (h : G)).2 h.prop
         change ((h : G ⧸ H) * (x : G ⧸ H)) = q at hhx
         rwa [hh, one_mul] at hhx
+      have hhx' : ((h : G) * x : G) ≠ q := by simpa using hhx
       simp [proj, hx]
       intro hEq
-      exact False.elim <| hhx <| by
-        change ((h : G ⧸ H) * (x : G ⧸ H)) = q
-        exact hEq
+      exact False.elim (hhx' hEq)
   refine RepMap.mk (LinearMap.restrict proj ?_) ?_
   · intro f hf
     exact hproj f hf
@@ -777,6 +780,7 @@ noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H) :
         rwa [hh, mul_one] at hhx
       simp [p22b_funRep_apply, LinearMap.restrict_apply, proj, hx]
 
+set_option backward.isDefEq.respectTransparency false in
 @[simp] theorem p22b_funProj_apply (ρ : Representation F H V) [DecidableEq (G ⧸ H)] (q : G ⧸ H)
     (f : p22b_funSpace (G := G) (H := H) ρ) (x : G) :
     (p22b_funProj (G := G) (H := H) ρ q f) x = if (x : G ⧸ H) = q then f x else 0 := by
@@ -866,7 +870,7 @@ theorem p22b_funCosetSubrep_irreducible
         ((p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toSubmodule)
         inferInstance inferInstance inferInstance inferInstance
         ((p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toRepresentation) := by
-    letI : Representation.IsIrreducible (ρ := conjugateRep (ρ := ρ) g) :=
+    let : Representation.IsIrreducible (ρ := conjugateRep (ρ := ρ) g) :=
       p22b_conjugateRep_irreducible (G := G) (H := H) ρ g
     exact (RepEquiv.irreducible_euqiv e).2 inferInstance
   rw [← hg]
@@ -885,12 +889,12 @@ public theorem proposition_2_2_b
     ∃ (σ : Representation F G V), σ.comp H.subtype = ρ := by
   let _ := (inferInstance : FiniteDimensional F W)
   classical
-  letI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
+  let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
   let M := p22b_funSpace (G := G) (H := H) ρ
   let σM : Representation F G M := p22b_funRep (G := G) (H := H) ρ
-  letI : FiniteDimensional F M :=
+  let : FiniteDimensional F M :=
     (p22b_funPiEquiv (G := G) (H := H) ρ).symm.finiteDimensional
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨v0, hv0_ne⟩ := exists_ne (0 : V)
   let f0 : M := p22b_funBaseFunctionAt (G := G) (H := H) ρ (1 : G) v0
   have hf0_ne : f0 ≠ 0 := by
@@ -898,16 +902,16 @@ public theorem proposition_2_2_b
     apply hv0_ne
     have h0 := congrArg (p22b_funEval (G := G) (H := H) ρ (1 : G)) hf0
     simpa [f0] using h0
-  letI : Nontrivial M := ⟨f0, 0, hf0_ne⟩
+  let : Nontrivial M := ⟨f0, 0, hf0_ne⟩
   obtain ⟨L, hLirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional σM
-  letI := hLirr
+  let := hLirr
   let σLH : Representation F H L.toSubmodule := L.toRepresentation.comp H.subtype
-  letI : Nontrivial L.toSubmodule := Subrepresentation.irreducible_module_nontrivial L.toRepresentation
+  let : Nontrivial L.toSubmodule := Subrepresentation.irreducible_module_nontrivial L.toRepresentation
   obtain ⟨N, hNirr⟩ :=
     @Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
       F H L.toSubmodule inferInstance inferInstance inferInstance inferInstance inferInstance
       σLH inferInstance
-  letI := hNirr
+  let := hNirr
   let iL : σLH →ₗ (σM.comp H.subtype) := by
     refine RepMap.mk L.toSubmodule.subtype ?_
     intro h
@@ -918,7 +922,7 @@ public theorem proposition_2_2_b
   have hiN0_inj : Function.Injective iN0 := by
     intro a b hab
     simpa [iN0, iL, iN, p22b_subrepInclusion] using hab
-  letI : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
+  let : Nontrivial N.toSubmodule := Subrepresentation.irreducible_module_nontrivial N.toRepresentation
   obtain ⟨n0, hn0_ne⟩ := exists_ne (0 : N.toSubmodule)
   have hiN0n0_ne : iN0 n0 ≠ 0 := by
     intro h0
@@ -939,7 +943,7 @@ public theorem proposition_2_2_b
     apply hx_ne
     have h0 := congrArg (fun f => (((f n0).1 : p22b_funSpace (G := G) (H := H) ρ) x)) hP0
     simpa [Pq, q, p22b_funProjToCoset, p22b_funProj_apply] using h0
-  letI :
+  let :
       @Representation.IsIrreducible H F
         ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule)
         inferInstance inferInstance inferInstance inferInstance

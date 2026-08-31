@@ -37,7 +37,7 @@ public theorem not_twoRankAtLeastTwo_quotient_of_odd
     simp [hpi]
   let NM : Subgroup M := N.subgroupOf M
   let phi : M →* E :=
-    (pi.restrict M).codRestrict E (by
+    (pi.domRestrict M).codRestrict E (by
       intro m
       exact m.property)
   have hphi_surj : Function.Surjective phi := by
@@ -49,7 +49,8 @@ public theorem not_twoRankAtLeastTwo_quotient_of_odd
       exact e.property⟩
     refine ⟨m, ?_⟩
     apply Subtype.ext
-    simpa [phi, m, pi] using hg
+    change (pi g : G ⧸ N) = (e : G ⧸ N)
+    exact hg
   have hphi_ker : phi.ker = NM := by
     ext m
     constructor

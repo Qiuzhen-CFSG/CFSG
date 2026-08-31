@@ -25,7 +25,7 @@ universe u
 
 /-- The Feit-Thompson odd order theorem, as a proposition. -/
 @[expose] public def oddOrderTheorem : Prop :=
-  ∀ (G : Type u) [Group G] [Finite G], Odd (Nat.card G) → IsSolvable G
+  ∀ (G : Type u) [Group G] [Finite G], Odd (Nat.card G) → Group.IsSolvable G
 
 /-- The standard minimal-counterexample reduction for the odd order theorem. -/
 @[expose] public def minimalCounterexampleReduction : Prop :=
@@ -38,8 +38,8 @@ solvable. This is the extension step used in the minimal-counterexample
 reduction. -/
 public theorem isSolvable_of_normal_subgroup_and_quotient
     {G : Type u} [Group G] (N : Subgroup G) [N.Normal]
-    [IsSolvable N] [IsSolvable (G ⧸ N)] : IsSolvable G := by
-  refine solvable_of_ker_le_range N.subtype (QuotientGroup.mk' N) ?_
+    [Group.IsSolvable N] [Group.IsSolvable (G ⧸ N)] : Group.IsSolvable G := by
+  refine Group.isSolvable_of_ker_le_range N.subtype (QuotientGroup.mk' N) ?_
   rw [QuotientGroup.ker_mk']
   simpa [MonoidHom.range_eq_map] using (N.range_subtype : N.subtype.range = N).symm.le
 
@@ -1906,7 +1906,7 @@ public theorem minimalCounterexampleReduction_theorem :
   intro hnotTheorem
   let Bad : ℕ → Prop := fun n =>
     ∃ (G : Type u), ∃ (_ : Group G), ∃ (_ : Finite G),
-      Nat.card G = n ∧ Odd (Nat.card G) ∧ ¬ IsSolvable G
+      Nat.card G = n ∧ Odd (Nat.card G) ∧ ¬ Group.IsSolvable G
   have hBadExists : ∃ n, Bad n := by
     dsimp [oddOrderTheorem] at hnotTheorem
     push Not at hnotTheorem
@@ -1917,7 +1917,7 @@ public theorem minimalCounterexampleReduction_theorem :
   letI : Group G := hG
   letI : Finite G := hfin
   have hminimal : ∀ {H : Type u} [Group H] [Finite H],
-      Nat.card H < Nat.card G → Odd (Nat.card H) → IsSolvable H := by
+      Nat.card H < Nat.card G → Odd (Nat.card H) → Group.IsSolvable H := by
     intro H hHgroup hHfin hlt hoddH
     by_contra hnotH
     have hBadH : Bad (Nat.card H) := ⟨H, hHgroup, hHfin, rfl, hoddH, hnotH⟩
@@ -1925,7 +1925,7 @@ public theorem minimalCounterexampleReduction_theorem :
     have hlt' : Nat.card H < n := by
       simpa [n, hcardG] using hlt
     exact (Nat.not_lt_of_ge hn_le_H) hlt'
-  have hproper_solvable : ∀ (H : Subgroup G), H < ⊤ → IsSolvable H := by
+  have hproper_solvable : ∀ (H : Subgroup G), H < ⊤ → Group.IsSolvable H := by
     intro H hHlt
     have hcard_lt : Nat.card H < Nat.card G := by
       simpa using natCard_lt_of_subgroup_lt hHlt
@@ -1934,7 +1934,7 @@ public theorem minimalCounterexampleReduction_theorem :
   have hnontrivial : Nontrivial G := by
     by_contra hnt
     haveI : Subsingleton G := not_nontrivial_iff_subsingleton.mp hnt
-    exact hnotSolvG (inferInstance : IsSolvable G)
+    exact hnotSolvG (inferInstance : Group.IsSolvable G)
   have hsimple : IsSimpleGroup G := by
     letI : Nontrivial G := hnontrivial
     refine ⟨?_⟩
@@ -1945,10 +1945,10 @@ public theorem minimalCounterexampleReduction_theorem :
       · exact Or.inr hNtop
       · exfalso
         letI : N.Normal := hNnormal
-        have hNsolv : IsSolvable N := by
+        have hNsolv : Group.IsSolvable N := by
           have hNlt : N < ⊤ := lt_top_iff_ne_top.2 hNtop
           exact hproper_solvable N hNlt
-        have hQsolv : IsSolvable (G ⧸ N) := by
+        have hQsolv : Group.IsSolvable (G ⧸ N) := by
           have hQlt : Nat.card (G ⧸ N) < Nat.card G :=
             natCard_quotient_lt_of_ne_bot N hNbot
           have hQodd : Odd (Nat.card (G ⧸ N)) :=
@@ -2077,7 +2077,7 @@ public theorem odd_order_theorem_of_pfSection14FinalDataBridge
       pfSection14FinalData_of_isMinCE_of_bridge (hbridge (G := G)) hmin)
 
 /-- The Feit-Thompson odd order theorem. -/
-public theorem odd_order_theorem : ∀ (G : Type u) [Group G] [Finite G], Odd (Nat.card G) → IsSolvable G :=
+public theorem odd_order_theorem : ∀ (G : Type u) [Group G] [Finite G], Odd (Nat.card G) → Group.IsSolvable G :=
   odd_order_theorem_of_pfSection14FinalDataBridge
     (fun {G} [Group G] [Finite G] =>
       pfSection14FinalDataBridge_theorem (G := G))

@@ -1653,7 +1653,7 @@ public theorem degree_ne_zero_of_isIrreducibleCharacterOnGroup
   have hfin : Module.finrank ℂ (Fin n → ℂ) = 0 := by
     exact_mod_cast hfinC
   have hsub : Subsingleton (Fin n → ℂ) := Module.finrank_zero_iff.mp hfin
-  letI : Representation.IsIrreducible ρ := hρ
+  let : Representation.IsIrreducible ρ := hρ
   have hntriv : Nontrivial (Fin n → ℂ) := by
     by_contra hV
     have hsub' : Subsingleton (Fin n → ℂ) := not_nontrivial_iff_subsingleton.mp hV
@@ -1667,7 +1667,7 @@ public theorem degree_ne_zero_of_isIrreducibleCharacterOnGroup
   by_cases hn : n = 0
   · subst n
     exact (not_subsingleton (Fin 0 → ℂ)) hsub
-  · haveI : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero hn)
+  · have : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero hn)
     let a : Fin n := Classical.choice inferInstance
     have hzero_one : (0 : Fin n → ℂ) = 1 := hsub.elim _ _
     have hcontr : (0 : Fin n → ℂ) a = (1 : Fin n → ℂ) a :=
@@ -10350,6 +10350,7 @@ public theorem internalDirectProductMulEquiv_symm_right_eq_one_of_mem_left
     ((e.symm w).1).2 hw1 ((e.symm w).2).2 (1 : W2).2 (by
       simp [hmulG])).2
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem internalDirectProductMulEquiv_apply_inl
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
     (h : Section2.IsInternalDirectProduct W W1 W2) (w : W1) :
@@ -10358,6 +10359,7 @@ public theorem internalDirectProductMulEquiv_apply_inl
   ext
   simp [internalDirectProductMulEquiv]
 
+set_option backward.isDefEq.respectTransparency false in
 public theorem internalDirectProductMulEquiv_apply_inr
     {G : Type u} [Group G] {W1 W2 W : Subgroup G}
     (h : Section2.IsInternalDirectProduct W W1 W2) (w : W2) :
@@ -10621,10 +10623,10 @@ public theorem exists_notation_3_3_of_hypothesis_3_1
     ∃ I : Type u, ∃ J : Type u,
       ∃ instFintypeI : Fintype I, ∃ instFintypeJ : Fintype J,
         ∃ instDecidableEqI : DecidableEq I, ∃ instDecidableEqJ : DecidableEq J,
-          letI : Fintype I := instFintypeI
-          letI : Fintype J := instFintypeJ
-          letI : DecidableEq I := instDecidableEqI
-          letI : DecidableEq J := instDecidableEqJ
+          let : Fintype I := instFintypeI
+          let : Fintype J := instFintypeJ
+          let : DecidableEq I := instDecidableEqI
+          let : DecidableEq J := instDecidableEqJ
           ∃ i0 : I, ∃ j0 : J,
             ∃ ω : I → J → Section1.ClassFunction W,
               notation_3_3_statement W1 W2 W I J i0 j0 ω := by
@@ -10633,12 +10635,12 @@ public theorem exists_notation_3_3_of_hypothesis_3_1
   rcases h with ⟨hW1, hW2, hIP, hcycW, _hodd, _hcard1, _hcard2, _hTI⟩
   have hcycW1 : IsCyclic W1 := Subgroup.isCyclic_of_le hW1
   have hcycW2 : IsCyclic W2 := Subgroup.isCyclic_of_le hW2
-  letI : CommGroup W := IsCyclic.commGroup
-  letI : CommGroup W1 := IsCyclic.commGroup
-  letI : CommGroup W2 := IsCyclic.commGroup
-  haveI hrootsW1 : HasEnoughRootsOfUnity ℂ (Monoid.exponent W1) :=
+  let : CommGroup W := IsCyclic.commGroup
+  let : CommGroup W1 := IsCyclic.commGroup
+  let : CommGroup W2 := IsCyclic.commGroup
+  have hrootsW1 : HasEnoughRootsOfUnity ℂ (Monoid.exponent W1) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent W1)
-  haveI hrootsW2 : HasEnoughRootsOfUnity ℂ (Monoid.exponent W2) :=
+  have hrootsW2 : HasEnoughRootsOfUnity ℂ (Monoid.exponent W2) :=
     Section1.complex_hasEnoughRootsOfUnity (Monoid.exponent W2)
   let I : Type u := W1 →* ℂˣ
   let J : Type u := W2 →* ℂˣ
@@ -10654,10 +10656,10 @@ public theorem exists_notation_3_3_of_hypothesis_3_1
     linearCharacterProductOverInternalDirectProduct hIP χ η
   refine ⟨I, J, instFintypeI, instFintypeJ, instDecidableEqI, instDecidableEqJ,
     1, 1, ω, ?_⟩
-  letI : Fintype I := instFintypeI
-  letI : Fintype J := instFintypeJ
-  letI : DecidableEq I := instDecidableEqI
-  letI : DecidableEq J := instDecidableEqJ
+  let : Fintype I := instFintypeI
+  let : Fintype J := instFintypeJ
+  let : DecidableEq I := instDecidableEqI
+  let : DecidableEq J := instDecidableEqJ
   change OmegaSystem W1 W2 W I J (1 : I) (1 : J) ω
   refine
     { card_left := ?_
@@ -10825,7 +10827,7 @@ public theorem natCard_left_right_coprime_of_hypothesis_3_1
     exact Subtype.ext hw.symm
   let e : W1 × W2 ≃* W := MulEquiv.ofBijective f ⟨hf_inj, hf_surj⟩
   have hprod : IsCyclic (W1 × W2) := e.isCyclic.mpr hcyc
-  letI : IsCyclic (W1 × W2) := hprod
+  let : IsCyclic (W1 × W2) := hprod
   simpa [Nat.card_eq_fintype_card] using coprime_card_of_isCyclic_prod W1 W2
 
 public theorem natCard_right_ge_five_of_left_card_three
@@ -10862,8 +10864,8 @@ public theorem proposition_3_5_of_left_card_ge_five
   classical
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   by_cases hcard_right_three : Nat.card W2 = 3
   · exact proposition_3_5_statement_of_right_card_three
       (W1 := W1) (W2 := W2) (W := W) (I := I) (J := J) (ι := ι)

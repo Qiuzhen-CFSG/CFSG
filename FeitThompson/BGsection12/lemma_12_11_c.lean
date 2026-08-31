@@ -17,7 +17,7 @@ public theorem section12_normalizer_ne_top_of_ne_bot_ne_top
     Subgroup.normalizer (Q : Set G) ≠ ⊤ := by
   intro hNtop
   have hQnormal : Q.Normal := Subgroup.normalizer_eq_top_iff.mp hNtop
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases hQnormal.eq_bot_or_eq_top with hQbot | hQtop
   · exact hQ_ne_bot hQbot
   · exact hQ_ne_top hQtop
@@ -30,10 +30,10 @@ public theorem section12_primeOrder_ne_top
   intro htop
   have hGcard : Nat.card G = p.val := by
     simpa [htop] using hXcard
-  haveI : Fact p.val.Prime := ⟨p.2⟩
-  haveI : IsCyclic G := by
+  have : Fact p.val.Prime := ⟨p.2⟩
+  have : IsCyclic G := by
     exact isCyclic_of_prime_card (α := G) (p := p.val) hGcard
-  have hsolv : IsSolvable G := by infer_instance
+  have hsolv : Group.IsSolvable G := by infer_instance
   exact IsMinCE.not_solvable (G := G) hsolv
 
 
@@ -128,7 +128,7 @@ public theorem lemma_12_11_c
     have hqrankC_le_M : primeRank q.val C ≤ primeRank q.val M :=
       hqrankC_le_Csub.trans hqrankCsub_le_M
     simpa [hqτ1M.2.2] using hqrankC_le_M.trans (le_of_eq hqτ1M.2.2)
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   have hqG_dvd : q.val ∣ Nat.card G :=
     hqC.trans ((Subgroup.card_dvd_of_le hC_le_M).trans (Subgroup.card_subgroup_dvd_card M))
   have hq_odd : q.val ≠ 2 := Odd.ne_two_of_dvd_nat IsMinCE.odd_order hqG_dvd
@@ -166,7 +166,7 @@ public theorem lemma_12_11_c
     let eR : (R : Subgroup C) ≃* RG :=
       Subgroup.equivMapOfInjective (f := C.subtype) (R : Subgroup C) C.subtype_injective
     exact eR.isCyclic.mp hR_cyc
-  haveI : IsCyclic RG := hRG_cyc
+  have : IsCyclic RG := hRG_cyc
   have hQ0_char : (Q0.subgroupOf RG).Characteristic :=
     section12_subgroup_characteristic_of_cyclic (Q0.subgroupOf RG)
   have hNormRG_le_NormQ0 :
@@ -204,7 +204,7 @@ public theorem lemma_12_11_c
     let eCH : CH ≃* C := Subgroup.subgroupOfEquivOfLe hC_le_H
     let RH : Sylow q.val CH :=
       Sylow.mapSurjective (f := eCH.symm.toMonoidHom) eCH.symm.surjective R
-    haveI : CH.Normal := by
+    have : CH.Normal := by
       have hH_norm_C :
           H ≤ Subgroup.normalizer (C : Set G) := by
             rw [hC_eq_CGA]
@@ -291,7 +291,7 @@ public theorem lemma_12_11_c
     · exact hqτ2two
   have hAp : IsPGroup p.val A := by
     have hElem := (section12_rankTwo_elementary hA_M).2
-    haveI : IsElementaryAbelian p.val A := hElem
+    have : IsElementaryAbelian p.val A := hElem
     exact IsElementaryAbelian.isPGroup p.val A
   have hp_data_two :=
     (lemma_12_11_a (G := G) (M := M) (E := E) (E₁₂ := E₁₂)
@@ -356,7 +356,7 @@ public theorem lemma_12_11_c
     exact theorem_12_5_a (G := G) (M := Mstar) (A := Bq) (p := q)
       hMstar.1 hqτ2star hBq_Mstar
   refine ⟨hqτ2star, ?_, ?_⟩
-  · haveI : Fact p.val.Prime := ⟨p.2⟩
+  · have : Fact p.val.Prime := ⟨p.2⟩
     have hσ_le_Mstar : section10Msigma Mstar ≤ Mstar := by
       intro x hx
       rcases Subgroup.mem_map.mp hx with ⟨y, _hy, rfl⟩
@@ -369,7 +369,7 @@ public theorem lemma_12_11_c
       Group.nilpotent_of_mulEquiv (G := section10Msigma Mstar) (G' := Sσ) eσ.symm
     let Pσ : Sylow p.val Sσ := Classical.choice (Sylow.nonempty (p := p.val) (G := Sσ))
     have hPσ_norm : (Pσ : Subgroup Sσ).Normal := by
-      letI : Group.IsNilpotent Sσ := hnilSσ
+      let : Group.IsNilpotent Sσ := hnilSσ
       exact Group.IsNilpotent.sylow_normal hnilSσ p.val Pσ
     have hHallσ : IsHallSubgroup (section10SigmaPrimes Mstar) Sσ := by
       simpa [Sσ, section12Msigma_subgroupOf_eq] using
@@ -603,7 +603,7 @@ public theorem lemma_12_11_c
           intro x hx
           change ((x : Mstar) : G) ∈ QE
           exact hQ0_le_QE (by simpa [Q0loc, Subgroup.mem_subgroupOf] using hx)
-        haveI : Q0loc.Normal := by
+        have : Q0loc.Normal := by
           simpa [Q0loc] using hQ0_normMstar.2
         intro hWbot
         have hQE_le_Q0 : QE ≤ Q0 := by
@@ -650,7 +650,7 @@ public theorem lemma_12_11_c
         refine ⟨k, ?_⟩
         apply Subtype.ext
         simpa using congrArg Subtype.val hk
-      haveI : Nontrivial W := (Subgroup.nontrivial_iff_ne_bot W).2 hW_ne_bot
+      have : Nontrivial W := (Subgroup.nontrivial_iff_ne_bot W).2 hW_ne_bot
       have hqW_dvd : q.val ∣ Nat.card W :=
         section12_prime_dvd_card_of_nontrivial_pSubgroup
           (G := G) (p := q) (B := W) hWp inferInstance

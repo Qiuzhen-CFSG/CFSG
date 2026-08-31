@@ -232,7 +232,7 @@ private theorem claim_4_KP_action_conj
         intro x y
         ext
         rfl }
-  letI : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
+  let : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
   change ∀ a : ↥(K ⊔ P), ∀ q : Q,
     ((a • q : Q) : G) = (a : G) * (q : G) * (a : G)⁻¹
   intro a q
@@ -286,7 +286,7 @@ private theorem claim_4_KP_action_by_automorphisms
         intro x y
         ext
         rfl }
-  letI : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
+  let : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
   constructor
   · intro a x y
     apply Subtype.ext
@@ -330,7 +330,7 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
   classical
   let Ksrc : Subgroup ↥(K ⊔ P) := K.subgroupOf (K ⊔ P)
   let Psrc : Subgroup ↥(K ⊔ P) := P.subgroupOf (K ⊔ P)
-  haveI : Fact p.Prime := ⟨hch.B1.p_prime⟩
+  have : Fact p.Prime := ⟨hch.B1.p_prime⟩
   have hV_le_D : V ≤ D :=
     PFchapter1section2.proposition_3_V_le_D
       H D Q K V W Q0 S Q1 t hch.section3.section2
@@ -349,7 +349,7 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
         (show K ≤ K ⊔ P from le_sup_left)).2 hKnormalizer
   have hP_le_centralizer : P ≤ Subgroup.centralizer (P : Set G) := by
     have hPcyclic : IsCyclic P := isCyclic_of_prime_card hch.B1.P_card
-    letI : CommGroup P := hPcyclic.commGroup
+    let : CommGroup P := hPcyclic.commGroup
     intro x hxP
     rw [Subgroup.mem_centralizer_iff]
     intro y hyP
@@ -375,7 +375,7 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
       (A := K) (A' := P) (B := K ⊔ P) le_sup_left le_sup_right]
     simp
   have hcomp : Ksrc.IsComplement' Psrc := by
-    letI : Ksrc.Normal := hKsrc_normal
+    let : Ksrc.Normal := hKsrc_normal
     exact isComplement'_of_disjoint_sup_eq_top_of_normal Ksrc Psrc hdisj hsup
   have hKsrc_ne : Ksrc ≠ ⊥ := by
     obtain ⟨k, hkK, hk_ne⟩ :=
@@ -440,7 +440,7 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
       letI : MulDistribMulAction (↥Ksrc) Q :=
         MulDistribMulAction.compHom Q Ksrc.subtype
       fixedPointSubgroup (↥Ksrc) Q = ⊥ := by
-    letI : MulDistribMulAction (↥Ksrc) Q :=
+    let : MulDistribMulAction (↥Ksrc) Q :=
       MulDistribMulAction.compHom Q Ksrc.subtype
     rw [Subgroup.eq_bot_iff_forall]
     intro q hqfix
@@ -474,17 +474,17 @@ private theorem chapter2_claim4_wielandt_fixed_point_formula_source
     have heven := hch.section3.section2.hA.A1.Q_even
     rw [hcard] at heven
     exact Nat.not_even_one heven
-  letI : Nontrivial Q := (Subgroup.nontrivial_iff_ne_bot Q).2 hQ_ne
-  letI : Group.IsNilpotent Q :=
+  let : Nontrivial Q := (Subgroup.nontrivial_iff_ne_bot Q).2 hQ_ne
+  let : Group.IsNilpotent Q :=
     PFchapter1section2.proposition_1_b
       H D Q K V W Q0 S Q1 t hch.section3.section2
   have hcop : Nat.Coprime (Nat.card Q) (Nat.card ↥(K ⊔ P)) :=
     (claim_3 H D Q K V W Q0 S Q1 P t s p hch).2
-  letI : Fintype Ksrc := Fintype.ofFinite Ksrc
+  let : Fintype Ksrc := Fintype.ofFinite Ksrc
   have hprod :=
     Wielandt.fixedPointSubgroup_product_card_eq_of_coeff_sum_eq
       (G := ↥(K ⊔ P)) (V := Q)
-      hcop (show IsSolvable Q from inferInstance)
+      hcop (show Group.IsSolvable Q from inferInstance)
       (Wielandt.frobeniusProductSubgroup Ksrc Psrc)
       (Wielandt.frobeniusProductLeftCoeff Ksrc)
       (Wielandt.frobeniusProductRightCoeff Ksrc)
@@ -534,13 +534,13 @@ private theorem claim_4_fixed_point_formula_obligation
         intro x y
         ext
         rfl }
-  letI : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
+  let : MulAction ↥(K ⊔ P) Q := MulAction.compHom Q toNormalizer
   have hauto :
       (∀ a : ↥(K ⊔ P), ∀ x y : Q,
           a • (x * y) = (a • x) * (a • y)) ∧
         ∀ a : ↥(K ⊔ P), a • (1 : Q) = 1 :=
     claim_4_KP_action_by_automorphisms H D Q K V W Q0 S Q1 P t s p hch
-  letI : MulDistribMulAction ↥(K ⊔ P) Q :=
+  let : MulDistribMulAction ↥(K ⊔ P) Q :=
     { (inferInstance : MulAction ↥(K ⊔ P) Q) with
       smul_mul := hauto.1
       smul_one := hauto.2 }
@@ -549,7 +549,7 @@ private theorem claim_4_fixed_point_formula_obligation
         ((a • q : Q) : G) = (a : G) * (q : G) * (a : G)⁻¹ :=
     claim_4_KP_action_conj H D Q K V W Q0 S Q1 P t s p hch
   let Psrc : Subgroup ↥(K ⊔ P) := P.subgroupOf (K ⊔ P)
-  letI : MulDistribMulAction (↥Psrc) Q := MulDistribMulAction.compHom Q Psrc.subtype
+  let : MulDistribMulAction (↥Psrc) Q := MulDistribMulAction.compHom Q Psrc.subtype
   have hfixed_external :
       Nat.card Q = Nat.card (fixedPointSubgroup (↥Psrc) Q) ^ p := by
     simpa [Psrc] using

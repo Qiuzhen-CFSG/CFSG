@@ -85,10 +85,8 @@ public theorem section15_prime_mem_sigma_of_nilpotentNormalHallIn
   have hPS_map_normal : ((PS : Subgroup S).map S.subtype).Normal := by
     infer_instance
   have hPS_map_eq : (PS : Subgroup S).map S.subtype = (P : Subgroup M) := by
-    simpa [PS, S, Sylow.subtype] using
-      (Subgroup.map_subgroupOf_eq_of_le
-        (G := M) (H := (P : Subgroup M)) (K := S)
-        (by simpa [S] using hP_le_Hsub))
+    change Subgroup.map S.subtype ((P : Subgroup M).subgroupOf S) = (P : Subgroup M)
+    exact Subgroup.map_subgroupOf_eq_of_le (by simpa [S] using hP_le_Hsub)
   have hP_normal_M : (P : Subgroup M).Normal := by
     simpa [hPS_map_eq] using hPS_map_normal
   let PG : Subgroup G := section10AmbientSylowSubgroup M P
@@ -291,7 +289,7 @@ public theorem section15_exists_kappa_hallSubgroupIn
     mul_smul := fun _ _ _ => rfl
     smul_mul := fun _ _ _ => rfl
     smul_one := fun _ => rfl }
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hcopM : Nat.Coprime (Nat.card Unit) (Nat.card M) := by simp
   rcases exists_isHallSubgroup_isInvariant
@@ -317,7 +315,7 @@ public theorem section15_exists_kappa_hallSubgroupIn_le_sigma_complement
     have htop_le_N : (⊤ : Subgroup G) ≤ N := by
       simpa [hDtop] using hDN
     exact hN.1 (top_le_iff.mp htop_le_N)
-  have hsolvD : IsSolvable D :=
+  have hsolvD : Group.IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDproper)
   letI : MulDistribMulAction Unit D := {
     smul := fun _ x => x
@@ -404,10 +402,11 @@ private theorem section15_ambientDerived_lt_maximal
       exact le_bot_iff.mp (by simpa [hMbot] using hMsigma_le_M)
     exact (theorem_10_2_e (M := M) hM) hMsigma_bot
   haveI : Nontrivial M := (Subgroup.nontrivial_iff_ne_bot (H := M)).2 hM_ne_bot
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
+  let : Group.IsSolvable M := hsolvM
   have hcomm_lt : commutator M < (⊤ : Subgroup M) :=
-    IsSolvable.commutator_lt_top_of_nontrivial (G := M)
+    Group.IsSolvable.commutator_lt_top_of_nontrivial (G := M)
   refine lt_of_le_of_ne section15_ambientDerived_le ?_
   intro hEq
   have hDtop : derivedSubgroup M = (⊤ : Subgroup M) := by
@@ -567,7 +566,7 @@ private theorem section15_msigma_commutator_eq_of_prime_action
         exact Subgroup.subgroupOf_eq_top.2 le_rfl
   have hCompl : IsCompl Hloc Kloc :=
     IsCompl.of_eq hdisj.eq_bot hsup_local
-  haveI : IsSolvable M :=
+  have : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hld : Hloc ≤ derivedSubgroup M := by
     simpa [Hloc] using (theorem_10_2_c (G := G) hM).2
@@ -755,7 +754,7 @@ private theorem section15_commutator_le_fitting_msigma_of_kstar_disjoint_fitting
         exact Subgroup.subgroupOf_eq_top.2 le_rfl
   have hcop_local : Nat.Coprime (Nat.card Kloc) (Nat.card Hloc) :=
     section15_coprime_card_of_hall_disjoint_primes hHallK hHallH hπdisj.symm
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hoddM : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
@@ -1334,17 +1333,17 @@ private theorem section15_msigma_quotient_pCore_nilpotent_of_kstar_le
       exact Nat.card_congr
         (Subgroup.subgroupOfEquivOfLe (H := Rbar) (K := T) le_sup_right).toEquiv
     simpa [hcard] using hRbar_prime
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvS : IsSolvable S := by
-    letI : IsSolvable M := hsolvM
-    exact subgroup_solvable_of_solvable (H := S)
-  have hsolvQ : IsSolvable (M ⧸ Qloc) := by
-    letI : IsSolvable M := hsolvM
-    exact solvable_quotient_of_solvable Qloc
-  have hsolvT : IsSolvable T := by
-    letI : IsSolvable (M ⧸ Qloc) := hsolvQ
-    exact subgroup_solvable_of_solvable (H := T)
+  have hsolvS : Group.IsSolvable S := by
+    letI : Group.IsSolvable M := hsolvM
+    infer_instance
+  have hsolvQ : Group.IsSolvable (M ⧸ Qloc) := by
+    letI : Group.IsSolvable M := hsolvM
+    infer_instance
+  have hsolvT : Group.IsSolvable T := by
+    letI : Group.IsSolvable (M ⧸ Qloc) := hsolvQ
+    infer_instance
   have hoddM : Odd (Nat.card M) :=
     odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
   have hoddQ : Odd (Nat.card (M ⧸ Qloc)) :=
@@ -1834,16 +1833,16 @@ private theorem section15_exists_complement_to_normal_sylow_in_msigma
   have hK_norm_S : K ≤ Subgroup.normalizer (S : Set G) :=
     hK.1.trans hM_norm_S
   haveI : Subgroup.Normalizes K S := ⟨hK_norm_S⟩
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvS : IsSolvable S := by
+  have hsolvS : Group.IsSolvable S := by
     let Sloc : Subgroup M := S.subgroupOf M
-    have hSloc_solv : IsSolvable Sloc := by
-      letI : IsSolvable M := hsolvM
-      exact subgroup_solvable_of_solvable (H := Sloc)
+    have hSloc_solv : Group.IsSolvable Sloc := by
+      letI : Group.IsSolvable M := hsolvM
+      infer_instance
     let eS : Sloc ≃* S :=
       Subgroup.subgroupOfEquivOfLe (H := S) (K := M) hSleM
-    exact solvable_of_surjective (f := eS.toMonoidHom) eS.surjective
+    exact Group.isSolvable_of_surjective (f := eS.toMonoidHom) eS.surjective
   have hK_S_coprime : Nat.Coprime (Nat.card K) (Nat.card S) := by
     have hP1 : M ∈ section14MFamilyP1 G :=
       (section15_MF_ne_msigma_implies_P1 hM hMF hK hMFne).1
@@ -3425,20 +3424,20 @@ private theorem section15_le_of_nilpotent_sup_quotient
     intro r x hxA
     exact (Subgroup.mem_normalizer_iff.mp (hDsub_norm_Asub r.property) x).1 hxA
   have hBM : B ≤ M := hB_le_Q.trans hQnormal.1
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvB : IsSolvable B := by
+  have hsolvB : Group.IsSolvable B := by
     let BlocM : Subgroup M := B.subgroupOf M
-    have hBlocM_solv : IsSolvable BlocM := by
-      letI : IsSolvable M := hsolvM
-      exact subgroup_solvable_of_solvable (H := BlocM)
+    have hBlocM_solv : Group.IsSolvable BlocM := by
+      letI : Group.IsSolvable M := hsolvM
+      infer_instance
     let eB : BlocM ≃* B :=
       Subgroup.subgroupOfEquivOfLe (H := B) (K := M) hBM
-    exact solvable_of_surjective (f := eB.toMonoidHom) eB.surjective
-  have hsolvBsub : IsSolvable Bsub := by
+    exact Group.isSolvable_of_surjective (f := eB.toMonoidHom) eB.surjective
+  have hsolvBsub : Group.IsSolvable Bsub := by
     let eB : Bsub ≃* B :=
       Subgroup.subgroupOfEquivOfLe (H := B) (K := S) hBS
-    exact solvable_of_surjective (f := eB.symm.toMonoidHom) eB.symm.surjective
+    exact Group.isSolvable_of_surjective (f := eB.symm.toMonoidHom) eB.symm.surjective
   have hcopBD : Nat.Coprime (Nat.card Bsub) (Nat.card Dsub) :=
     section15_coprime_card_of_disjoint_piSubgroups
       (G := S) hπdisj hBsubπ hDsubπ
@@ -3799,27 +3798,27 @@ private theorem section15_le_of_kstar_position
         exact Nat.card_congr
           (Subgroup.subgroupOfEquivOfLe (H := Rbar) (K := T) le_sup_right).toEquiv
       simpa [hcard] using hRbar_prime
-    have hsolvM : IsSolvable M :=
+    have hsolvM : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
     have hH_le_M : H ≤ M := by
       simpa [H] using sup_le hS_le_M hR_le_M
-    have hsolvH : IsSolvable H := by
+    have hsolvH : Group.IsSolvable H := by
       let Hloc : Subgroup M := H.subgroupOf M
-      have hHloc_solv : IsSolvable Hloc := by
-        letI : IsSolvable M := hsolvM
-        exact subgroup_solvable_of_solvable (H := Hloc)
+      have hHloc_solv : Group.IsSolvable Hloc := by
+        letI : Group.IsSolvable M := hsolvM
+        infer_instance
       let eH : Hloc ≃* H :=
         Subgroup.subgroupOfEquivOfLe (H := H) (K := M) hH_le_M
-      exact solvable_of_surjective (f := eH.toMonoidHom) eH.surjective
-    have hsolvSsub : IsSolvable Ssub := by
-      letI : IsSolvable H := hsolvH
-      exact subgroup_solvable_of_solvable (H := Ssub)
-    have hsolvQ : IsSolvable (H ⧸ AsubH) := by
-      letI : IsSolvable H := hsolvH
-      exact solvable_quotient_of_solvable AsubH
-    have hsolvT : IsSolvable T := by
-      letI : IsSolvable (H ⧸ AsubH) := hsolvQ
-      exact subgroup_solvable_of_solvable (H := T)
+      exact Group.isSolvable_of_surjective (f := eH.toMonoidHom) eH.surjective
+    have hsolvSsub : Group.IsSolvable Ssub := by
+      letI : Group.IsSolvable H := hsolvH
+      infer_instance
+    have hsolvQ : Group.IsSolvable (H ⧸ AsubH) := by
+      letI : Group.IsSolvable H := hsolvH
+      infer_instance
+    have hsolvT : Group.IsSolvable T := by
+      letI : Group.IsSolvable (H ⧸ AsubH) := hsolvQ
+      infer_instance
     have hoddM : Odd (Nat.card M) :=
       odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)
     have hoddH : Odd (Nat.card H) :=
@@ -4062,7 +4061,12 @@ private theorem section15_quotient_minimal_normal_of_Q1_eq_Q
       rcases Subgroup.mem_map.mp hy with ⟨x, hxQ, rfl⟩
       refine Subgroup.mem_map.mpr ⟨eNM x, ?_, ?_⟩
       · simpa [eNM, Subgroup.mem_subgroupOf] using hxQ
-      · simp [eQ]
+      · change
+          (QuotientGroup.mk' (Q₀.subgroupOf M)) (eNM x) =
+            (QuotientGroup.congr (Q₀.subgroupOf N) (Q₀.subgroupOf M)
+              eNM hQ₀_map) (QuotientGroup.mk' (Q₀.subgroupOf N) x)
+        exact (QuotientGroup.congr_mk' (Q₀.subgroupOf N) (Q₀.subgroupOf M)
+          eNM hQ₀_map x).symm
     · intro hz
       rcases Subgroup.mem_map.mp hz with ⟨x, hxQ, rfl⟩
       let xN : N := ⟨x, hQN (by
@@ -4074,7 +4078,13 @@ private theorem section15_quotient_minimal_normal_of_Q1_eq_Q
       · have hxNM : eNM xN = x := by
           ext
           simp [eNM, xN]
-        simp [eQ, hxNM]
+        change
+          (QuotientGroup.congr (Q₀.subgroupOf N) (Q₀.subgroupOf M)
+            eNM hQ₀_map) (QuotientGroup.mk' (Q₀.subgroupOf N) xN) =
+            (QuotientGroup.mk' (Q₀.subgroupOf M)) x
+        simpa only [hxNM] using
+          (QuotientGroup.congr_mk' (Q₀.subgroupOf N) (Q₀.subgroupOf M)
+            eNM hQ₀_map xN)
   refine ⟨hQ₀M, hQM, hQ₀Q, hQ₀NormM, ?_, ?_, ?_⟩
   · change (Q.subgroupOf M).map
         (QuotientGroup.mk' (Q₀.subgroupOf M)) ≠ ⊥
@@ -4516,10 +4526,10 @@ private theorem section15_subgroupOf_le_normalizer_of_normalIn
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_subgroupOf_solvable_of_solvable
-    {M Q : Subgroup G} (hsolvM : IsSolvable M) :
-    IsSolvable (Q.subgroupOf M) := by
-  letI : IsSolvable M := hsolvM
-  exact subgroup_solvable_of_solvable (H := Q.subgroupOf M)
+    {M Q : Subgroup G} (hsolvM : Group.IsSolvable M) :
+    Group.IsSolvable (Q.subgroupOf M) := by
+  letI : Group.IsSolvable M := hsolvM
+  infer_instance
 
 omit [Finite G] [IsMinCE G] in
 private theorem section15_zpowers_subgroupOf_eq
@@ -4653,16 +4663,16 @@ private theorem section15_p_card_prime_of_theorem15_2_context
     simpa [Dsub, Ksub, S] using
       section15_KD_frobenius_with_kernel_D
         hM hMF hK hMFne hq hQ hQnormal hD
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvS : IsSolvable S := by
+  have hsolvS : Group.IsSolvable S := by
     let Sloc : Subgroup M := S.subgroupOf M
-    have hSloc_solv : IsSolvable Sloc := by
-      letI : IsSolvable M := hsolvM
-      exact subgroup_solvable_of_solvable (H := Sloc)
+    have hSloc_solv : Group.IsSolvable Sloc := by
+      letI : Group.IsSolvable M := hsolvM
+      infer_instance
     let eS : Sloc ≃* S :=
       Subgroup.subgroupOfEquivOfLe (H := S) (K := M) hS_le_M
-    exact solvable_of_surjective (f := eS.toMonoidHom) eS.surjective
+    exact Group.isSolvable_of_surjective (f := eS.toMonoidHom) eS.surjective
   have hQbar_p : IsPGroup q.val Qbar := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
     rcases hQ with ⟨P, hP⟩
@@ -4720,7 +4730,7 @@ private theorem section15_p_card_prime_of_theorem15_2_context
         (R := S) (S := Qbar) hπdisj hStopπ hQbartopπ
   let Qloc : Subgroup M := Q.subgroupOf M
   let Kloc : Subgroup M := K.subgroupOf M
-  have hsolvQloc' : IsSolvable Qloc := by
+  have hsolvQloc' : Group.IsSolvable Qloc := by
     simpa [Qloc] using
       section15_subgroupOf_solvable_of_solvable (G := G) (M := M) (Q := Q) hsolvM
   have hcop_QKloc : Nat.Coprime (Nat.card Qloc) (Nat.card Kloc) := by
@@ -5091,16 +5101,16 @@ private theorem section15_Qbar_elementary_card
     simpa [Dsub, Ksub, S] using
       section15_KD_frobenius_with_kernel_D
         hM hMF hK hMFne hq hQ hQnormal hD
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvS : IsSolvable S := by
+  have hsolvS : Group.IsSolvable S := by
     let Sloc : Subgroup M := S.subgroupOf M
-    have hSloc_solv : IsSolvable Sloc := by
-      letI : IsSolvable M := hsolvM
-      exact subgroup_solvable_of_solvable (H := Sloc)
+    have hSloc_solv : Group.IsSolvable Sloc := by
+      letI : Group.IsSolvable M := hsolvM
+      infer_instance
     let eS : Sloc ≃* S :=
       Subgroup.subgroupOfEquivOfLe (H := S) (K := M) hS_le_M
-    exact solvable_of_surjective (f := eS.toMonoidHom) eS.surjective
+    exact Group.isSolvable_of_surjective (f := eS.toMonoidHom) eS.surjective
   have hQbar_p : IsPGroup q.val Qbar := by
     haveI : Fact q.val.Prime := ⟨q.property⟩
     rcases hQ with ⟨P, hP⟩
@@ -5122,7 +5132,7 @@ private theorem section15_Qbar_elementary_card
         intro N hNnorm hNle
         exact hQbar_min' N hNnorm hNle
     }
-    haveI : IsSolvable Qbar := by
+    haveI : Group.IsSolvable Qbar := by
       haveI : Fact q.val.Prime := ⟨q.property⟩
       haveI : Group.IsNilpotent Qbar :=
         IsPGroup.isNilpotent (p := q.val) (G := Qbar) hQbar_p
@@ -5177,7 +5187,7 @@ private theorem section15_Qbar_elementary_card
         (R := S) (S := Qbar) hπdisj hStopπ hQbartopπ
   let Qloc : Subgroup M := Q.subgroupOf M
   let Kloc : Subgroup M := K.subgroupOf M
-  have hsolvQloc' : IsSolvable Qloc := by
+  have hsolvQloc' : Group.IsSolvable Qloc := by
     simpa [Qloc] using
       section15_subgroupOf_solvable_of_solvable (G := G) (M := M) (Q := Q) hsolvM
   have hcop_QKloc : Nat.Coprime (Nat.card Qloc) (Nat.card Kloc) := by
@@ -5726,7 +5736,7 @@ private theorem section15_Qbar_D_centralizer_eq_bot_of_theorem15_2_context
     simpa [Qloc] using hQnormal.2
   have hDloc_norm_Qloc : Dloc ≤ Subgroup.normalizer (Qloc : Set M) :=
     le_top.trans (Subgroup.le_normalizer_of_normal (H := Qloc))
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hsolvQloc' :=
     section15_subgroupOf_solvable_of_solvable (G := G) (M := M) (Q := Q) hsolvM
@@ -6153,14 +6163,14 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
         simpa [Dsub, Ksub, S] using
           section15_KD_frobenius_with_kernel_D
             hM hMF hK hMFne hq hQ hQnormal hD
-      have hDsub_solv : IsSolvable Dsub := by
-        have hDsolv : IsSolvable D := by
+      have hDsub_solv : Group.IsSolvable Dsub := by
+        have hDsolv : Group.IsSolvable D := by
           letI : Group.IsNilpotent D := hD.2.2.1
           infer_instance
         let e : Dsub ≃* D :=
           Subgroup.subgroupOfEquivOfLe
             (H := D) (K := S) (by simp [S])
-        exact solvable_of_surjective (f := e.symm.toMonoidHom) e.symm.surjective
+        exact Group.isSolvable_of_surjective (f := e.symm.toMonoidHom) e.symm.surjective
       let Qloc : Subgroup M := Q.subgroupOf M
       let Dloc : Subgroup M := D.subgroupOf M
       let Dbar : Subgroup (M ⧸ Q0M) := Dloc.map qM
@@ -6393,10 +6403,10 @@ private theorem section15_quotient_centralizer_le_fitting_of_theorem15_2_context
       simpa [hDcomp.2.2.1] using hxQD
     have hDcomp : section12ComplementIn (section10Msigma M) Q D := hD.2.1
     have hD_le_M : D ≤ M := hDcomp.2.1.trans section15_msigma_le
-    have hsolvM : IsSolvable M :=
+    have hsolvM : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
     let Qloc : Subgroup M := Q.subgroupOf M
-    have hsolvQloc : IsSolvable Qloc := by
+    have hsolvQloc : Group.IsSolvable Qloc := by
       simpa [Qloc] using
         section15_subgroupOf_solvable_of_solvable (G := G) (M := M) (Q := Q) hsolvM
     have hQπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes) Q :=
@@ -6878,16 +6888,16 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
     simpa [Dsub, Ksub, S] using
       section15_KD_frobenius_with_kernel_D
         hM hMF hK hMFne hq hQ hQnormal hD
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  have hsolvS : IsSolvable S := by
+  have hsolvS : Group.IsSolvable S := by
     let Sloc : Subgroup M := S.subgroupOf M
-    have hSloc_solv : IsSolvable Sloc := by
-      letI : IsSolvable M := hsolvM
-      exact subgroup_solvable_of_solvable (H := Sloc)
+    have hSloc_solv : Group.IsSolvable Sloc := by
+      letI : Group.IsSolvable M := hsolvM
+      infer_instance
     let eS : Sloc ≃* S :=
       Subgroup.subgroupOfEquivOfLe (H := S) (K := M) hS_le_M
-    exact solvable_of_surjective (f := eS.toMonoidHom) eS.surjective
+    exact Group.isSolvable_of_surjective (f := eS.toMonoidHom) eS.surjective
   have hcop : Nat.Coprime (Nat.card S) (Nat.card Qbar) := by
     have hDπ : IsPiSubgroup (G := G) ({q} : Set Nat.Primes)ᶜ D :=
       section15_complement_D_isPiSubgroup_q_compl hQ hQnormal hDcomp

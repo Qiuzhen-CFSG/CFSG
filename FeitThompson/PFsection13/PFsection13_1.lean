@@ -8201,8 +8201,7 @@ private theorem section13_quotient_sum_lift_real
       calc
         (∑ _x : {x : G // QuotientGroup.mk' A x = q}, F q) =
             (Fintype.card {x : G // QuotientGroup.mk' A x = q} : ℝ) * F q := by
-          rw [Finset.sum_const, nsmul_eq_mul]
-          simp
+          rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
         _ = (Nat.card {x : G // QuotientGroup.mk' A x = q} : ℝ) * F q := by
           rw [Nat.card_eq_fintype_card]
         _ = (Nat.card A : ℝ) * F q := by

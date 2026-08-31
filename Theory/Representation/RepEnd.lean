@@ -69,9 +69,13 @@ public theorem ofNat_apply (n : ℕ) [n.AtLeastTwo] (m : V) :
 
 public instance instRing : Ring (End ρ) where
   intCast z := z • (1 : End ρ)
-  intCast_ofNat n := by simp only [natCast_zsmul, nsmul_eq_mul, mul_one]
-  intCast_negSucc n := by simp only [negSucc_zsmul, nsmul_eq_mul, Nat.cast_add,
-    Nat.cast_one, mul_one, neg_add_rev]
+  intCast_ofNat n := by
+    simp only [natCast_zsmul, nsmul_eq_mul]
+    exact mul_one _
+  intCast_negSucc n := by
+    simp only [negSucc_zsmul, nsmul_eq_mul, Nat.cast_add, Nat.cast_one]
+    apply congrArg Neg.neg
+    exact mul_one _
 
 @[simp]
 public theorem intCast_apply (z : ℤ) (m : V) : (z : End ρ) m = z • m :=
@@ -88,7 +92,9 @@ public theorem id_pow (n : ℕ) : (id : End ρ) ^ n = .id :=
 
 variable {f' : End ρ}
 
-public theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = .comp (f' ^ n) f' := by rw [pow_succ, mul_eq_comp]
+public theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = .comp (f' ^ n) f' := by
+  rw [pow_succ]
+  rfl
 
 
 /-- Scalar multiplication by `α` as an endomorphism of `ρ`. -/
@@ -134,7 +140,7 @@ public instance : Algebra F (End ρ) := {
     map_one' := by simp only [smulLeft_eq, one_smul]; rfl
     map_mul' f₁ f₂ := by
       ext x
-      simp [smulLeft_eq, RepMap.smul_apply, mul_apply, RepMap.map_smul, mul_smul]
+      simp [smulLeft_eq, RepMap.smul_apply, mul_smul]
       rw [smul_smul, smul_smul, mul_comm]
     map_zero' := by simp only [smulLeft_eq, zero_smul]
     map_add' f₁ f₂ := by
@@ -143,12 +149,11 @@ public instance : Algebra F (End ρ) := {
   }
   commutes' f g := by
     ext x
-    simp [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, mul_apply,
-      RepMap.smul_apply, RepMap.map_smul]
+    simp [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
+      RepMap.smul_apply]
   smul_def' f g := by
     ext x
-    simp [RepMap.smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-      mul_apply]
+    simp [RepMap.smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
 }
 
 public theorem algebraMap_apply (f : F) : (algebraMap F (End ρ)) f = f • id (ρ := ρ) :=

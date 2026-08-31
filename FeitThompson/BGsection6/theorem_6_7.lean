@@ -8,7 +8,7 @@ open scoped MatrixGroups Pointwise TensorProduct commutatorElement
 /-! # Theorem 6.7 from BG Section 6 -/
 
 private theorem theorem_6_7_reduced
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (hodd : p ≠ 2) (hpl : HasPLengthOne (p := p) G)
     (hKbot : pPrimeCore p G = ⊥)
     {E : Subgroup G} (hEmax : E ∈ maximalElementaryAbelianSubgroups p G)
@@ -31,7 +31,7 @@ private theorem theorem_6_7_reduced
     have hS_normal : (S : Subgroup G).Normal := by
       rw [hS_eq_pCore]
       exact pCore_normal (G := G) (p := p)
-    letI : (S : Subgroup G).Normal := hS_normal
+    let : (S : Subgroup G).Normal := hS_normal
     exact Subgroup.le_normalizer_of_normal
   have hL_centE : L ≤ Subgroup.centralizer (E : Set G) := by
     intro x hxL
@@ -60,12 +60,12 @@ private theorem theorem_6_7_reduced
       simpa [hSL_bot] using hcomm_mem
     simpa using hcomm_bot
   have hL_centS : L ≤ Subgroup.centralizer (S : Set G) := by
-    letI : Fact (IsPGroup p ↥(S : Subgroup G)) := ⟨S.isPGroup'⟩
-    letI : MulDistribMulAction ↥L ↥(S : Subgroup G) :=
+    let : Fact (IsPGroup p ↥(S : Subgroup G)) := ⟨S.isPGroup'⟩
+    let : MulDistribMulAction ↥L ↥(S : Subgroup G) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer (G := G) L (S : Subgroup G) hL_normS
     let Esub : Subgroup ↥(S : Subgroup G) := E.subgroupOf (S : Subgroup G)
     have hEsub_elem : IsElementaryAbelian p ↥Esub := by
-      letI : IsMulCommutative ↥E := hEelem.toIsMulCommutative
+      let : IsMulCommutative ↥E := hEelem.toIsMulCommutative
       refine
         { toIsMulCommutative := by infer_instance
           exponent_dvd_p := ?_ }
@@ -106,11 +106,11 @@ private theorem theorem_6_7_reduced
         have hB_comm :
             ∀ x ∈ ((E : Set G) ∪ ({(g : G)} : Set G)),
               ∀ y ∈ ((E : Set G) ∪ ({(g : G)} : Set G)), x * y = y * x := by
-          letI : IsMulCommutative ↥E := hEelem.toIsMulCommutative
+          let : IsMulCommutative ↥E := hEelem.toIsMulCommutative
           intro x hx y hy
           rcases hx with hxE | hxg
           · rcases hy with hyE | hyg
-            · letI : IsMulCommutative ↥E := hEelem.toIsMulCommutative
+            · let : IsMulCommutative ↥E := hEelem.toIsMulCommutative
               simpa using congrArg Subtype.val
                 ((IsMulCommutative.is_comm (M := E)).comm ⟨x, hxE⟩ ⟨y, hyE⟩)
             · rcases Set.mem_singleton_iff.mp hyg with rfl
@@ -120,8 +120,8 @@ private theorem theorem_6_7_reduced
             · exact (Subgroup.mem_centralizer_iff.mp hg_centE y hyE).symm
             · rcases Set.mem_singleton_iff.mp hyg with rfl
               simp
-        letI : IsMulCommutative B := Subgroup.isMulCommutative_closure hB_comm
-        letI : CommGroup B := IsMulCommutative.instCommGroup
+        let : IsMulCommutative B := Subgroup.isMulCommutative_closure hB_comm
+        let : CommGroup B := IsMulCommutative.instCommGroup
         have hB_elem : IsElementaryAbelian p ↥B := by
           refine
             { toIsMulCommutative := by
@@ -207,14 +207,14 @@ private theorem theorem_6_7_reduced
   simpa [K, hKbot] using hL_bot.le
 
 public theorem theorem_6_7
-    {G : Type*} [Group G] [Finite G] [IsSolvable G]
+    {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {p : ℕ} [Fact p.Prime] (hodd : p ≠ 2) (hpl : HasPLengthOne (p := p) G)
     {E : Subgroup G} (hEmax : E ∈ maximalElementaryAbelianSubgroups p G)
     {L : Subgroup G} (hLp' : Nat.Coprime p (Nat.card L)) (hnorm : E ≤ Subgroup.normalizer L) :
     L ≤ pPrimeCore p G := by
   classical
   let K : Subgroup G := pPrimeCore p G
-  letI : K.Normal := by
+  let : K.Normal := by
     simpa [K] using (pPrimeCore_normal (G := G) (p := p))
   have hEelem : IsElementaryAbelian p E := hEmax.1
   have hEp : IsPGroup p E := IsElementaryAbelian.isPGroup p E
@@ -308,7 +308,7 @@ public theorem theorem_6_7
           simpa [hKbar_bot] using htmp
         have hSbar_normal : ((Sbar : Subgroup (G ⧸ K))).Normal := by
           exact (Subgroup.normalizer_eq_top_iff.mp hSbar_norm_top)
-        letI : Unique (Sylow p (G ⧸ K)) := Sylow.unique_of_normal Sbar hSbar_normal
+        let : Unique (Sylow p (G ⧸ K)) := Sylow.unique_of_normal Sbar hSbar_normal
         have hBbar_le_Sbar {Bbar : Subgroup (G ⧸ K)} (hBbar_p : IsPGroup p Bbar) :
             Bbar ≤ (Sbar : Subgroup (G ⧸ K)) := by
           obtain ⟨T, hle⟩ := IsPGroup.exists_le_sylow (G := G ⧸ K) (p := p) hBbar_p

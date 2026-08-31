@@ -7403,7 +7403,9 @@ private theorem product_subgroup_nonidentity_fiber_card_sec9
             apply hxne
             exact congrArg Subtype.val h
           · simp
-        · ext <;> simp [e, hxw]
+        · apply Prod.ext
+          · rfl
+          · exact hxw.symm
       · intro hx
         rw [Finset.mem_map] at hx
         rcases hx with ⟨h, hh, h_eq⟩
@@ -10113,50 +10115,6 @@ private theorem quotient_conj_inv_mem_of_conj_mem_finite_sec9
       _ = g * (h : G) * g⁻¹ := by rw [hkval]
   simp [← hk_eq, k.property]
 
-private theorem quotientSubgroupConjugateByElement_symm_sec9
-  {G : Type u} [Group G] [Finite G]
-  {MF H0 : Subgroup G}
-  [hnormal : (H0.subgroupOf MF).Normal]
-  {Q R : Subgroup (MF ⧸ H0.subgroupOf MF)} {g : G}
-  (hQR : quotientSubgroupConjugateByElement MF H0 Q R g) :
-  quotientSubgroupConjugateByElement MF H0 R Q g⁻¹ := by
-  classical
-  rcases hQR with ⟨hconjMF, action, haction, hR⟩
-  have hconjInvMF : ∀ h : MF, g * (h : G) * g⁻¹ ∈ MF :=
-    quotient_conj_inv_mem_of_conj_mem_finite_sec9 hconjMF
-  refine ⟨?_, action.symm, ?_, ?_⟩
-  · intro h
-    simpa only [inv_inv] using hconjInvMF h
-  · intro h
-    apply action.injective
-    simp only [MulEquiv.apply_symm_apply]
-    symm
-    calc
-      action (QuotientGroup.mk' (H0.subgroupOf MF)
-          ⟨(g⁻¹)⁻¹ * (h : G) * g⁻¹, by
-            simpa only [inv_inv] using hconjInvMF h⟩) =
-          QuotientGroup.mk' (H0.subgroupOf MF)
-            ⟨g⁻¹ * ((g⁻¹)⁻¹ * (h : G) * g⁻¹) * g,
-              hconjMF ⟨(g⁻¹)⁻¹ * (h : G) * g⁻¹, by
-                simpa only [inv_inv] using hconjInvMF h⟩⟩ :=
-        haction _
-      _ = QuotientGroup.mk' (H0.subgroupOf MF) h := by
-        apply congrArg (QuotientGroup.mk' (H0.subgroupOf MF))
-        apply Subtype.ext
-        group
-  · ext x
-    constructor
-    · intro hxQ
-      refine ⟨action x, ?_, by simp⟩
-      rw [hR]
-      exact ⟨x, hxQ, rfl⟩
-    · rintro ⟨y, hyR, hyx⟩
-      rw [hR] at hyR
-      rcases hyR with ⟨z, hzQ, rfl⟩
-      have hzx : z = x := by
-        simpa using congrArg action hyx
-      simpa [← hzx] using hzQ
-
 private theorem quotientSubgroupConjugateByElement_one_eq_sec9
   {G : Type u} [Group G] [Finite G]
   {MF H0 : Subgroup G}
@@ -10177,33 +10135,6 @@ private theorem quotientSubgroupConjugateByElement_one_eq_sec9
     exact ⟨x, hx, by simp⟩
   · rintro ⟨y, hy, hyx⟩
     simpa using hyx ▸ hy
-
-private theorem quotientSubgroupConjugateByElement_target_eq_of_same_element_sec9
-  {G : Type u} [Group G] [Finite G]
-  {MF H0 : Subgroup G}
-  [hnormal : (H0.subgroupOf MF).Normal]
-  {Q R S : Subgroup (MF ⧸ H0.subgroupOf MF)} {g : G}
-  (hQR : quotientSubgroupConjugateByElement MF H0 Q R g)
-  (hQS : quotientSubgroupConjugateByElement MF H0 Q S g) :
-  R = S := by
-  rcases hQR with ⟨hconjMF_R, actionR, hactionR, hR⟩
-  rcases hQS with ⟨hconjMF_S, actionS, hactionS, hS⟩
-  have haction : actionR = actionS := by
-    ext x
-    rcases QuotientGroup.mk'_surjective (H0.subgroupOf MF) x with ⟨m, rfl⟩
-    calc
-      actionR (QuotientGroup.mk' (H0.subgroupOf MF) m) =
-          QuotientGroup.mk' (H0.subgroupOf MF)
-            ⟨g⁻¹ * (m : G) * g, hconjMF_R m⟩ := hactionR m
-      _ = QuotientGroup.mk' (H0.subgroupOf MF)
-            ⟨g⁻¹ * (m : G) * g, hconjMF_S m⟩ := by
-          congr 1
-      _ = actionS (QuotientGroup.mk' (H0.subgroupOf MF) m) :=
-          (hactionS m).symm
-  calc
-    R = Q.map actionR.toMonoidHom := hR
-    _ = Q.map actionS.toMonoidHom := by rw [haction]
-    _ = S := hS.symm
 
 private theorem quotientSubgroupCentralizedByElement_of_conjugate_source_sec9
   {G : Type u} [Group G] [Finite G]
@@ -11247,45 +11178,6 @@ private theorem subgroup_smul_mem_of_generator_smul_mem_finite_sec9
     exact Subgroup.mem_top b
   have hbN : b ∈ N := (Subgroup.zpowers_le_of_mem haN) hb_zpowers
   exact hbN x hx
-
-private theorem subgroup_ne_bot_of_prime_card_sec9
-  {G : Type u} [Group G] [Finite G]
-  {p : ℕ} (hp : Nat.Prime p)
-  (Q : Subgroup G) (hQcard : Nat.card Q = p) :
-  Q ≠ ⊥ := by
-  intro hQbot
-  have hcard : Nat.card Q = 1 := by
-    rw [hQbot]
-    exact Subgroup.card_bot
-  exact hp.ne_one (hQcard.symm.trans hcard)
-
-private theorem iSupIndep_subgroups_injective_of_prime_card_sec9
-  {G : Type u} [Group G] [Finite G]
-  {ι : Type v} [DecidableEq ι]
-  {p : ℕ} (hp : Nat.Prime p)
-  (H : ι → Subgroup G)
-  (hHcard : ∀ i, Nat.card (H i) = p)
-  (hHindep : iSupIndep H) :
-  Function.Injective H := by
-  intro i j hij
-  by_contra hne
-  have hji : j ≠ i := by
-    intro hji
-    exact hne hji.symm
-  have hleRest : H j ≤ (⨆ k, ⨆ _ : k ≠ i, H k) := by
-    exact le_iSup_of_le j (le_iSup_of_le hji le_rfl)
-  have hmeet : H i ⊓ H j = ⊥ := by
-    have hdisj := (iSupIndep_def.mp hHindep i)
-    apply le_bot_iff.mp
-    calc
-      H i ⊓ H j ≤ H i ⊓ (⨆ k, ⨆ _ : k ≠ i, H k) :=
-        inf_le_inf_left _ hleRest
-      _ = ⊥ := disjoint_iff.mp hdisj
-  have hHi_bot : H i = ⊥ := by
-    calc
-      H i = H i ⊓ H j := by rw [hij, inf_idem]
-      _ = ⊥ := hmeet
-  exact subgroup_ne_bot_of_prime_card_sec9 hp (H i) (hHcard i) hHi_bot
 
 public theorem quotientCentralizerIn_mem_of_iSup_quotientSubgroupCentralizedByElement_sec9
   {G : Type u} [Group G] [Finite G] {ι : Type v}

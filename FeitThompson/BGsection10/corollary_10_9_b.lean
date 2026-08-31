@@ -52,7 +52,7 @@ public theorem corollary_10_9_b
       section10AlphaPrimes M = section10BetaPrimes M := by
   classical
   rcases hS with ⟨q, S, hNleHM⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let SG : Subgroup G := (S : Subgroup G)
   let U : Subgroup G := subgroupNormalizerIn M (SG : Set G)
   have hS_le_N : SG ≤ Subgroup.normalizer (SG : Set G) := by
@@ -76,8 +76,8 @@ public theorem corollary_10_9_b
     exact hM.1 (top_le_iff.mp htop_le_M)
   let SM : Sylow q.val M := S.subtype hS_le_M
   have hSMmap : (SM : Subgroup M).map M.subtype = SG := by
-    simpa [SM, SG, Sylow.subtype] using
-      (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := M) hS_le_M)
+    change ((S : Subgroup G).subgroupOf M).map M.subtype = (S : Subgroup G)
+    exact Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := M) hS_le_M
   have hq_dvd_S : q.val ∣ Nat.card SG := by
     rcases S.isPGroup'.card_eq_or_dvd with hcard | hdiv
     · exact False.elim (hSne ((Subgroup.card_eq_one (H := SG)).mp (by simpa [SG] using hcard)))
@@ -100,8 +100,8 @@ public theorem corollary_10_9_b
     exact ⟨xM, hSM_le_D hxSM, rfl⟩
   let XD : Sylow q.val Dg := S.subtype hS_le_Dg
   have hXDmap : section10AmbientSylowSubgroup Dg XD = SG := by
-    simpa [XD, SG, Dg, Sylow.subtype, section10AmbientSylowSubgroup] using
-      (Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := Dg) hS_le_Dg)
+    change ((S : Subgroup G).subgroupOf Dg).map Dg.subtype = (S : Subgroup G)
+    exact Subgroup.map_subgroupOf_eq_of_le (G := G) (H := (S : Subgroup G)) (K := Dg) hS_le_Dg
   have hKUlocal :
       section10MbetaSubgroup M ⊔ (U.subgroupOf M) = ⊤ := by
     simpa [U, SG, Dg, hXDmap] using

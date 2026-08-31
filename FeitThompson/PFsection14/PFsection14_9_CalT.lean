@@ -974,7 +974,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_nonempty_of_context
   rcases hT13 with
     ⟨_hTmaxMF, _htypeT, _htypeII_of_pq, _hVcomm, hfrobVW2, _hQelem,
       _hQcard, _hv, _hTfamCoh, _hTI, _hTauT, _hnormT⟩
-  have hDsolv : IsSolvable (ambientDerivedSubgroup Tmax) :=
+  have hDsolv : Group.IsSolvable (ambientDerivedSubgroup Tmax) :=
     Section9.typePDefinitionData_ambientDerived_solvable_sec9 hTtypeP0
   rcases hTtypeP with
     ⟨_hQMF, _hW2cyc, _hW2ne, _hW2Hall, _hTcomp, hVleDer,
@@ -983,12 +983,13 @@ public theorem section14_theorem_14_9_late_type_T1_calt_nonempty_of_context
   have hDerEq : ambientDerivedSubgroup Tmax = Q ⊔ V := hDerComp.2.2.1
   have hDleT : ambientDerivedSubgroup Tmax ≤ Tmax :=
     section12_ambientDerivedSubgroup_le
-  have hKsolv : IsSolvable ((Q ⊔ V).subgroupOf Tmax) := by
-    have hDsolvSub : IsSolvable ((ambientDerivedSubgroup Tmax).subgroupOf Tmax) := by
+  have hKsolv : Group.IsSolvable ((Q ⊔ V).subgroupOf Tmax) := by
+    have hDsolvSub : Group.IsSolvable ((ambientDerivedSubgroup Tmax).subgroupOf Tmax) := by
       let e := Subgroup.subgroupOfEquivOfLe
         (H := ambientDerivedSubgroup Tmax) (K := Tmax) hDleT
-      letI : IsSolvable (ambientDerivedSubgroup Tmax) := hDsolv
-      exact solvable_of_solvable_injective (f := e.toMonoidHom) e.injective
+      let _ : Group.IsSolvable (ambientDerivedSubgroup Tmax) := hDsolv
+      exact Group.isSolvable_of_isSolvable_injective
+        (f := e.toMonoidHom) e.injective
     rw [hDerEq] at hDsolvSub
     exact hDsolvSub
   have hVleT : V ≤ Tmax :=
@@ -2140,7 +2141,7 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_bridge
   rcases hT13 with
     ⟨_hTmaxMF, _htypeT, _htypeII_of_pq, _hVcomm, hfrobVW2, _hQelem,
       _hQcard, _hv, _hTfamCoh, _hTI, _hTauT, _hnormT⟩
-  have hDsolv : IsSolvable (ambientDerivedSubgroup Tmax) :=
+  have hDsolv : Group.IsSolvable (ambientDerivedSubgroup Tmax) :=
     Section9.typePDefinitionData_ambientDerived_solvable_sec9 hTtypeP0
   rcases hTtypeP with
     ⟨hQMF, _hW2cyc, _hW2ne, _hW2Hall, _hTcomp, hVleDer,
@@ -2151,12 +2152,13 @@ public theorem section14_theorem_14_9_late_type_T1_calt_core_source_bridge
     Section12.section16MFSubgroup_subgroupOf_normal hQMF
   have hDleT : ambientDerivedSubgroup Tmax ≤ Tmax :=
     section12_ambientDerivedSubgroup_le
-  have hKsolv : IsSolvable ((Q ⊔ V).subgroupOf Tmax) := by
-    have hDsolvSub : IsSolvable ((ambientDerivedSubgroup Tmax).subgroupOf Tmax) := by
+  have hKsolv : Group.IsSolvable ((Q ⊔ V).subgroupOf Tmax) := by
+    have hDsolvSub : Group.IsSolvable ((ambientDerivedSubgroup Tmax).subgroupOf Tmax) := by
       let e := Subgroup.subgroupOfEquivOfLe
         (H := ambientDerivedSubgroup Tmax) (K := Tmax) hDleT
-      letI : IsSolvable (ambientDerivedSubgroup Tmax) := hDsolv
-      exact solvable_of_solvable_injective (f := e.toMonoidHom) e.injective
+      let _ : Group.IsSolvable (ambientDerivedSubgroup Tmax) := hDsolv
+      exact Group.isSolvable_of_isSolvable_injective
+        (f := e.toMonoidHom) e.injective
     rw [hDerEq] at hDsolvSub
     exact hDsolvSub
   have hVleT : V ≤ Tmax :=

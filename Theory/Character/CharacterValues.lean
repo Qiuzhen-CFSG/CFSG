@@ -44,7 +44,7 @@ public lemma finite_order_end_trace_mem_cyclotomicOrder
   have horder : orderOf (μ : ℂ) ∣ M :=
     Nat.dvd_trans (orderOf_dvd_of_pow_eq_one hμN) hNM
   have hμM : (μ : ℂ) ^ M = 1 := (orderOf_dvd_iff_pow_eq_one).mp horder
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   obtain ⟨i, _hi_lt, hi⟩ := hη.eq_pow_of_pow_eq_one hμM
   have hμ_mem : (μ : ℂ) ∈ A := by
     rw [← hi]
@@ -187,7 +187,7 @@ public lemma trace_mul_eq_sum_eigen_mul_trace_restrict
           ((f * T).restrict (hmapfT μ)) =
             ((μ : ℂ) • (T.restrict (hmapT μ)) : Module.End ℂ (Nsub μ)) := by
         ext v
-        simp only [LinearMap.restrict_apply, LinearMap.smul_apply]
+        simp only [LinearMap.smul_apply]
         have hTv : T v ∈ f.eigenspace (μ : ℂ) := hmapT μ v.2
         exact (Module.End.mem_eigenspace_iff).1 hTv
       rw [hrestrict]
@@ -212,7 +212,7 @@ public lemma finite_order_commuting_trace_mul_mem_cyclotomicOrder
   rw [trace_mul_eq_sum_eigen_mul_trace_restrict (f := f) (T := T) hp hf hcomm]
   refine A.sum_mem fun μ _ => ?_
   have hμp : (μ : ℂ) ^ p = 1 := eigenvalue_pow_eq_one_of_pow_eq_one hf μ.property
-  haveI : NeZero p := ⟨hp⟩
+  have : NeZero p := ⟨hp⟩
   obtain ⟨i, _hi_lt, hi⟩ := hξ.eq_pow_of_pow_eq_one hμp
   have hμ_mem : (μ : ℂ) ∈ A := by
     rw [← hi]
@@ -273,7 +273,7 @@ public theorem finite_order_commuting_trace_mul_congruent
   let zterm : f.Eigenvalues → A := fun μ =>
     ⟨(μ : ℂ) * t μ, by
       have hμp : (μ : ℂ) ^ p = 1 := eigenvalue_pow_eq_one_of_pow_eq_one hf μ.property
-      haveI : NeZero p := ⟨hp⟩
+      have : NeZero p := ⟨hp⟩
       obtain ⟨i, _hi_lt, hi⟩ := hξ.eq_pow_of_pow_eq_one hμp
       have hμ_mem : (μ : ℂ) ∈ A := by
         rw [← hi]
@@ -301,7 +301,7 @@ public theorem finite_order_commuting_trace_mul_congruent
   rw [hdiff]
   refine Ideal.sum_mem _ fun μ _ => ?_
   have hμp : (μ : ℂ) ^ p = 1 := eigenvalue_pow_eq_one_of_pow_eq_one hf μ.property
-  haveI : NeZero p := ⟨hp⟩
+  have : NeZero p := ⟨hp⟩
   obtain ⟨i, _hi_lt, hi⟩ := hξ.eq_pow_of_pow_eq_one hμp
   have hbase := pow_mul_congruent_right_mod_one_sub
     (η := η) (ξ := ξ) (y := t μ) hξη (ht_mem μ) i

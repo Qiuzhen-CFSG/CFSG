@@ -41,9 +41,9 @@ public theorem irreducibleCharacters_orthogonal {φ ψ : ClassFunction G}
     characterProduct G φ ψ = 0 := by
   rcases hφ with ⟨n, ρ, hρ, rfl⟩
   rcases hψ with ⟨m, σ, hσ, rfl⟩
-  haveI : ρ.IsIrreducible := hρ
-  haveI : σ.IsIrreducible := hσ
-  haveI : Invertible (Nat.card G : ℂ) := by
+  have : ρ.IsIrreducible := hρ
+  have : σ.IsIrreducible := hσ
+  have : Invertible (Nat.card G : ℂ) := by
     exact IsUnit.invertible (IsUnit.mk0 _ (Nat.cast_ne_zero.mpr (Nat.card_pos.ne')))
   have hneq : ¬ Nonempty (σ.Equiv ρ) := by
     intro hE
@@ -56,8 +56,8 @@ public theorem irreducibleCharacters_orthogonal {φ ψ : ClassFunction G}
 public theorem irreducibleCharacter_self {φ : ClassFunction G} (hφ : IsIrreducibleCharacter φ) :
     characterProduct G φ φ = 1 := by
   rcases hφ with ⟨n, ρ, hρ, rfl⟩
-  haveI : ρ.IsIrreducible := hρ
-  haveI : Invertible (Nat.card G : ℂ) := by
+  have : ρ.IsIrreducible := hρ
+  have : Invertible (Nat.card G : ℂ) := by
     exact IsUnit.invertible (IsUnit.mk0 _ (Nat.cast_ne_zero.mpr (Nat.card_pos.ne')))
   unfold characterProduct
   rw [Representation.char_orthonormal (ρ := ρ) (σ := ρ)]
@@ -137,9 +137,9 @@ private lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq 
           if Nonempty (Representation.Equiv ρⱼ ρᵢ) then 1 else 0 := by
       have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
         exact_mod_cast (Nat.card_pos (α := G)).ne'
-      letI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
-      letI : Representation.IsIrreducible ρᵢ := hρᵢirr
-      letI : Representation.IsIrreducible ρⱼ := hρⱼirr
+      let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
+      let : Representation.IsIrreducible ρᵢ := hρᵢirr
+      let : Representation.IsIrreducible ρⱼ := hρⱼirr
       rw [classFunctionInner_characterClassFunction]
       simpa using (Representation.char_orthonormal (ρ := ρᵢ) (σ := ρⱼ))
     rw [hρᵢ, hρⱼ, horth]
@@ -152,7 +152,7 @@ private lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq 
       exact (congrFun (Representation.char_iso e) g).symm
     have hnone : ¬ Nonempty (Representation.Equiv ρⱼ ρᵢ) := by
       intro h
-      letI : IsEmpty (Representation.Equiv ρⱼ ρᵢ) := hno
+      let : IsEmpty (Representation.Equiv ρⱼ ρᵢ) := hno
       exact isEmptyElim h.some
     simp [hij, hnone]
 
@@ -309,7 +309,7 @@ public theorem irreducible_characters_form_basis
   classical
   rcases classFunction_span_irreducible_characters (G := G) with
     ⟨ι, hι, χ, hχ, hspan⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   refine ⟨ι, hι, χ, hχ, ?_⟩
   refine ⟨Module.Basis.mk (completeFamily_linearIndependent hχ) ?_, ?_⟩
   · rw [hspan]
@@ -324,7 +324,7 @@ public theorem completeFamily_span_eq_top
   classical
   rcases classFunction_span_irreducible_characters (G := G) with
     ⟨κ, hκ, ψ, hψ, hspanψ⟩
-  letI : Fintype κ := hκ
+  let : Fintype κ := hκ
   apply le_antisymm le_top
   rw [← hspanψ]
   apply Submodule.span_mono
@@ -402,7 +402,7 @@ public theorem card_irreducible_characters_eq_card_conjClasses
   classical
   rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   refine ⟨ι, hι, χ, hχ, ?_⟩
   have hfinrank_basis :
       Module.finrank ℂ (ConjClassFunction G) = Fintype.card ι := by
@@ -428,7 +428,7 @@ public theorem second_orthogonality
   classical
   rcases irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, χ, hχ, b, hb⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   refine ⟨ι, hι, χ, hχ, ?_⟩
   intro g h
   constructor
@@ -467,7 +467,7 @@ public theorem exists_completeIrreducibleCharacterFamily_sum_degree_normSq
           (Nat.card G : ℝ) := by
   classical
   rcases second_orthogonality (G := G) with ⟨ι, hι, χ, hχ, horth⟩
-  letI : Fintype ι := hι
+  let : Fintype ι := hι
   refine ⟨ι, hι, χ, hχ, ?_⟩
   have hcomplex :
       ∑ i : ι, χ i (ConjClasses.mk (1 : G)) *

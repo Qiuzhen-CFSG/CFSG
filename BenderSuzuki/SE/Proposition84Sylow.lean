@@ -92,16 +92,17 @@ public theorem exists_sylow_map_eq_inf_of_normal_sylow_map
   let e : K ≃* H := Subgroup.subgroupOfEquivOfLe hHG
   let Q : Sylow p H :=
     Sylow.mapSurjective (f := e.toMonoidHom) e.surjective R
+  have hQmap : (Q : Subgroup H) =
+      (R : Subgroup K).map e.toMonoidHom := by
+    exact Sylow.coe_mapSurjective (f := e.toMonoidHom) e.surjective R
   have hQnormal : (Q : Subgroup H).Normal := by
-    rw [show (Q : Subgroup H) =
-        (R : Subgroup K).map e.toMonoidHom by
-      exact Sylow.coe_mapSurjective (f := e.toMonoidHom) e.surjective R]
+    rw [hQmap]
     exact hRnormal.map e.toMonoidHom e.surjective
   refine ⟨Q, ?_, hQnormal⟩
   calc
     (Q : Subgroup H).map H.subtype =
         ((R : Subgroup K).map e.toMonoidHom).map H.subtype := by
-          rw [Sylow.coe_mapSurjective]
+          exact congrArg (fun L : Subgroup H => L.map H.subtype) hQmap
     _ = (R : Subgroup K).map (H.subtype.comp e.toMonoidHom) := by
           rw [Subgroup.map_map]
     _ = (R : Subgroup K).map (G.subtype.comp K.subtype) := by

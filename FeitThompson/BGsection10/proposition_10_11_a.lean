@@ -53,13 +53,13 @@ private theorem section10_exists_hall_compl_sigma_containing
       K.subgroupOf M ≤ E := by
   classical
   let Ksub : Subgroup M := K.subgroupOf M
-  letI : MulDistribMulAction PUnit.{1} M := {
+  let : MulDistribMulAction PUnit.{1} M := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
     smul_mul := by intro a x y; rfl
     smul_one := by intro a; rfl }
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   have hKsubσ : IsPiSubgroup (G := M) (section10SigmaPrimes M)ᶜ Ksub := by
     intro p hp
@@ -90,7 +90,7 @@ public theorem section10_hall_compl_sigma_groupRank_le_two
     · exact hn_le_two
     have hthree_n : 3 ≤ n := by omega
     let p : Nat.Primes := ⟨q, hqprime⟩
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     have hthree_rank_E : 3 ≤ primeRank p.val E := hthree_n.trans hnq
     have hp_dvd_E : p.val ∣ Nat.card E :=
       section10_prime_dvd_card_of_three_le_primeRank_pre
@@ -119,7 +119,7 @@ private theorem section10_hall_compl_sylow_map_to_maximal_sylow
     {p : Nat.Primes} (hpσ : p ∉ section10SigmaPrimes M) (P : Sylow p.val E) :
     ∃ PM : Sylow p.val M, (PM : Subgroup M) = (P : Subgroup E).map E.subtype := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Psub : Subgroup M := (P : Subgroup E).map E.subtype
   have hPsubp : IsPGroup p.val Psub :=
     IsPGroup.map (p := p.val) (H := (P : Subgroup E)) P.isPGroup' E.subtype
@@ -165,7 +165,7 @@ private theorem section10_map_subtype_le_normalizer_map_of_le_normalizer
     {H : Subgroup G} {K L : Subgroup H}
     (hL_normK : L ≤ Subgroup.normalizer (K : Set H)) :
     L.map H.subtype ≤ Subgroup.normalizer ((K.map H.subtype : Subgroup G) : Set G) := by
-  letI : Subgroup.Normalizes L K := ⟨hL_normK⟩
+  let : Subgroup.Normalizes L K := ⟨hL_normK⟩
   intro a ha
   rw [Subgroup.mem_normalizer_iff]
   intro x
@@ -208,7 +208,7 @@ private theorem section10_hall_compl_normal_sylow_le_ambient_normalizer
   classical
   let PsubM : Subgroup M := (P : Subgroup E).map E.subtype
   have hE_le_norm : E ≤ Subgroup.normalizer (PsubM : Set M) := by
-    letI : (P : Subgroup E).Normal := hPnormal
+    let : (P : Subgroup E).Normal := hPnormal
     simpa [PsubM] using
       section10_map_subtype_le_normalizer_of_normal E (P : Subgroup E)
   simpa [PsubM] using
@@ -235,18 +235,18 @@ public theorem proposition_10_11_a
         _ = (⊥ : Subgroup M).map M.subtype := by rw [hKsub_bot]
         _ = ⊥ := by simp
     simpa [hKbot] using section10_bot_not_unique (G := G) hM
-  · haveI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEbot
+  · have : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEbot
     obtain ⟨p, hpLargest⟩ := section10_exists_largest_prime_divisor_of_nontrivial E
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     have hp_dvd_E : p.val ∣ Nat.card E := hpLargest.2.1
     have hpσ : p ∉ section10SigmaPrimes M := by
       have hp_compl : p ∈ (section10SigmaPrimes M)ᶜ :=
         hEHall.p_in_pi_of_p_dvd_card p hp_dvd_E
       simpa using hp_compl
-    have hMsolv : IsSolvable M :=
+    have hMsolv : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-    have hEsolv : IsSolvable E := by
-      letI : IsSolvable M := hMsolv
+    have hEsolv : Group.IsSolvable E := by
+      let : Group.IsSolvable M := hMsolv
       infer_instance
     have hModd : Odd (Nat.card M) :=
       odd_of_card_dvd IsMinCE.odd_order (Subgroup.card_subgroup_dvd_card M)

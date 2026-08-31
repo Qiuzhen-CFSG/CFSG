@@ -151,7 +151,7 @@ public theorem center_cyclic_of_representation_faithful_irreducible
       exact this
   }
   let k := Subring.closure (Set.range f)
-  letI : IsMulCommutative k := by
+  let : IsMulCommutative k := by
     apply Subring.isMulCommutative_closure
     intro x hx y hy
     rcases hx with ⟨cx, hcx⟩
@@ -199,7 +199,7 @@ lemma pGroup_fix_nonzero_vector
     [Nontrivial V]
     (ρ : Representation F G V) :
     ∃ v : V, v ≠ 0 ∧ ∀ g : G, ρ g • v = v := by
-  let p := ringChar F -- TODO : Rephrase in the form  'fixedPointSubgroup'.
+  let p := ringChar F -- TODO : Rephrase in the form  'FixedPoints.subgroup'.
   let hc := ringChar_prime hc
   let pr : ℕ → Prop := fun n ↦ (H : Subgroup G) → (hcard : Nat.card H = p ^ n) → ∃ v : V, v ≠ 0 ∧ ∀ g ∈ H, ρ g • v = v
   have (n : ℕ) : pr n := by
@@ -226,11 +226,11 @@ lemma pGroup_fix_nonzero_vector
         toSubmodule := {
           carrier := {w | ∀ g ∈ Subgroup.map H.subtype M, ρ g • w = w}
           add_mem' := by
-            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_setOf_eq, map_add, implies_true]
+            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_ofPred_eq, map_add, implies_true]
           zero_mem' := by
-            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_setOf_eq, map_zero, implies_true]
+            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_ofPred_eq, map_zero, implies_true]
           smul_mem' := by
-            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_setOf_eq, map_smul, implies_true]
+            simp_all only [Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, Module.End.smul_def, forall_exists_index, Set.mem_ofPred_eq, map_smul, implies_true]
         }
         apply_mem_toSubmodule := by
           intro g v hv g' hg'
@@ -242,14 +242,14 @@ lemma pGroup_fix_nonzero_vector
             let g'' : H := ⟨g', by
               simp_all only [ne_eq, Module.End.smul_def, covBy_top_iff, Subgroup.mem_map, Subgroup.subtype_apply,
                 Subtype.exists, exists_and_right, exists_eq_right, forall_exists_index, Submodule.mem_mk,
-                AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq, pr, p]
+                AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, pr, p]
               obtain ⟨val, property⟩ := g
               obtain ⟨w_1, h⟩ := hg'
               simp_all only⟩
             suffices g⁻¹ * g'' * g ∈ M by
               simp_all only [ne_eq, Module.End.smul_def, covBy_top_iff, Subgroup.mem_map, Subgroup.subtype_apply,
                 Subtype.exists, exists_and_right, exists_eq_right, forall_exists_index, Submodule.mem_mk,
-                AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq, InvMemClass.coe_inv, pr, p, g'']
+                AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, InvMemClass.coe_inv, pr, p, g'']
               obtain ⟨val, property⟩ := g
               obtain ⟨val_1, property_1⟩ := g''
               obtain ⟨w_1, h⟩ := hg'
@@ -265,7 +265,7 @@ lemma pGroup_fix_nonzero_vector
                     simp_all only [Subgroup.subtype_apply]
                 · simp_all only
             exact Subgroup.Normal.conj_mem' hM2 g'' (by
-              simp_all only [ne_eq, Module.End.smul_def, covBy_top_iff, Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, forall_exists_index, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq, pr, p, g'']
+              simp_all only [ne_eq, Module.End.smul_def, covBy_top_iff, Subgroup.mem_map, Subgroup.subtype_apply, Subtype.exists, exists_and_right, exists_eq_right, forall_exists_index, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq, pr, p, g'']
               obtain ⟨val, property⟩ := g
               obtain ⟨val_1, property_1⟩ := g''
               obtain ⟨w_1, h⟩ := hg'
@@ -590,8 +590,8 @@ lemma exists_central_element_orderOf_eq_prime_of_nontrivial_pgroup_subgroup
     {G : Type*} [Group G] [Finite G] {q : ℕ} [Fact q.Prime]
     (Q : Subgroup G) (hQp : IsPGroup q Q) (hQne : Q ≠ ⊥) :
     ∃ x : G, x ∈ Q ∧ orderOf x = q ∧ (∀ h ∈ Q, x * h = h * x) ∧ x ^ q = 1 ∧ x ≠ 1 := by
-  haveI : Nontrivial Q := (Subgroup.nontrivial_iff_ne_bot Q).2 hQne
-  haveI : Nontrivial (Subgroup.center Q) := IsPGroup.center_nontrivial hQp
+  have : Nontrivial Q := (Subgroup.nontrivial_iff_ne_bot Q).2 hQne
+  have : Nontrivial (Subgroup.center Q) := IsPGroup.center_nontrivial hQp
   have hcenter_p : IsPGroup q (Subgroup.center Q) := hQp.to_subgroup _
   have hcenter_ne_bot : (Subgroup.center Q : Subgroup Q) ≠ ⊥ := by
     exact (Subgroup.nontrivial_iff_ne_bot (Subgroup.center Q)).1 inferInstance
@@ -680,12 +680,12 @@ public theorem theorem_2_6_b
       carrier := { g | LinearMap.det (ρ' g) = 1}
       mul_mem' := by
         intro g h hg hh
-        simp only [Set.mem_setOf_eq] at hg hh ⊢
+        simp only [Set.mem_ofPred_eq] at hg hh ⊢
         rw [map_mul, Module.End.mul_eq_comp, LinearMap.det_comp, hg, hh, one_mul]
-      one_mem' := by simp only [Set.mem_setOf_eq, map_one]
+      one_mem' := by simp only [Set.mem_ofPred_eq, map_one]
       inv_mem' := by
         intro g hg
-        simp only [Set.mem_setOf_eq] at hg ⊢
+        simp only [Set.mem_ofPred_eq] at hg ⊢
         have : LinearMap.det (ρ' g) * LinearMap.det (ρ' g⁻¹) = 1 := by
           rw [← LinearMap.det_comp, ← Module.End.mul_eq_comp, ← map_mul, mul_inv_cancel, map_one, Module.End.one_eq_id, LinearMap.det_id]
         rw [← this, hg, one_mul]
@@ -693,8 +693,8 @@ public theorem theorem_2_6_b
     have hGs : Gs.Normal := {
       conj_mem := by
         intro s hs g
-        simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, Gs] at hs
-        simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, map_mul, hs, mul_one, Gs]
+        simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq, Gs] at hs
+        simp only [Subgroup.mem_mk, Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_ofPred_eq, map_mul, hs, mul_one, Gs]
         rw [← LinearMap.det_comp, ← Module.End.mul_eq_comp, ← map_mul, mul_inv_cancel, map_one, map_one]
     }
     by_cases! hGs : Gs = ⊥
@@ -742,7 +742,7 @@ public theorem theorem_2_6_b
           use ringChar F, (ringChar_prime (by by_contra; rw [this] at hn; rw [hn] at hN1; contrapose! hN1; exact zero_pow_le_one n)).out
           unfold pCore
           rw [ne_eq, sSup_eq_bot.not]
-          simp only [Set.mem_setOf_eq, and_imp, not_forall]
+          simp only [Set.mem_ofPred_eq, and_imp, not_forall]
           have : Nat.card (⊤ : Subgroup N) = Nat.card N := Subgroup.card_top
           use ⊤, { conj_mem := fun n a g ↦ a }, IsPGroup.of_card (this ▸ hn)
           have := (Subgroup.nontrivial_iff_ne_bot N).mpr hne
@@ -753,7 +753,7 @@ public theorem theorem_2_6_b
             exact hpow n hn
           obtain ⟨q, hq_prime, hq_dvd, hq_ne_char⟩ :=
             exists_prime_dvd_ne_of_not_prime_power_bg hNcard_ne_zero hnotpow
-          haveI : Fact q.Prime := ⟨hq_prime⟩
+          have : Fact q.Prime := ⟨hq_prime⟩
           let Q : Sylow q N := Classical.choice Sylow.nonempty
           by_cases hnormQ : Subgroup.normalizer (Q : Set N) = ⊤
           · have hQ_normal : (Q : Subgroup N).Normal := Subgroup.normalizer_eq_top_iff.mp hnormQ
@@ -814,7 +814,7 @@ public theorem theorem_2_6_b
                   simpa using (top_eq_sylow_zero hchar0 C).symm
                 rw [htop] at hCcomm
                 exact setLike_mul_comm (s := (⊤ : Subgroup H)) trivial trivial
-              · haveI : Fact (Nat.Prime (ringChar F)) := ringChar_prime hchar0
+              · have : Fact (Nat.Prime (ringChar F)) := ringChar_prime hchar0
                 have hQH_disj_C : Disjoint QH (C : Subgroup H) :=
                   IsPGroup.disjoint_of_ne q (ringChar F) hq_ne_char QH (C : Subgroup H) hQH_p C.isPGroup'
                 intro x hx
@@ -897,7 +897,7 @@ public theorem theorem_2_6_b
               exact Odd.of_dvd_nat hoN M.card_subgroup_dvd_card
             obtain ⟨r, hr_prime, hr_core⟩ :=
               ihN (Nat.card M') (by simpa [hcardN] using hcardM'_lt) M' hM'_ne_bot hoM' rfl
-            haveI : Fact r.Prime := ⟨hr_prime⟩
+            have : Fact r.Prime := ⟨hr_prime⟩
             let e : M ≃* M' := M.equivMapOfInjective N.subtype N.subtype_injective
             have hpCore_map : (pCore r M).map e.toMonoidHom = pCore r M' := by
               simpa using (pCore_map_iso (G := M) (G' := M') (p := r) (f := e))
@@ -908,8 +908,8 @@ public theorem theorem_2_6_b
               rw [hpCore_map] at hmap_bot
               exact hr_core hmap_bot
             have hcoreM_normal : ((pCore r M).map M.subtype).Normal := by
-              letI : M.Normal := hM_normal
-              letI : (pCore r M).Characteristic := pCore_characteristic (G := M) (p := r)
+              let : M.Normal := hM_normal
+              let : (pCore r M).Characteristic := pCore_characteristic (G := M) (p := r)
               exact ConjAct.normal_of_characteristic_of_normal
             have hcoreM_p : IsPGroup r ((pCore r M).map M.subtype) := by
               exact IsPGroup.map (p := r) (H := pCore r M) (pCore_isPGroup (p := r) (G := M))
@@ -951,7 +951,7 @@ public theorem theorem_2_6_b
           rw [mul_assoc, hg₂.2.1 h hh, ← mul_assoc, hg₁.2.1 h hh, mul_assoc]
         · have : Commute g₁ g₂ := by rw [commute_iff_eq, hg₁.2.1 g₂ hg₂.1]
           rw [Commute.mul_pow this, hg₁.2.2, hg₂.2.2, one_mul]
-      one_mem' := by simp only [Set.mem_setOf_eq, one_mem, one_mul, mul_one, one_pow, and_self, implies_true]
+      one_mem' := by simp only [Set.mem_ofPred_eq, one_mem, one_mul, mul_one, one_pow, and_self, implies_true]
       inv_mem' := by
         intro g hg
         refine ⟨Subgroup.inv_mem qC hg.1, ?_, ?_⟩
@@ -986,7 +986,7 @@ public theorem theorem_2_6_b
         · rw [conj_pow, hk.2.2, mul_one, mul_inv_cancel]
     }
     by_cases! h : q = ringChar F
-    · haveI : Fact q.Prime := ⟨hq1⟩
+    · have : Fact q.Prime := ⟨hq1⟩
       have hqC_p : IsPGroup q qC := by
         dsimp [qC]
         exact IsPGroup.map (p := q) (H := pCore q Gs) (pCore_isPGroup (p := q) (G := Gs))
@@ -1009,14 +1009,14 @@ public theorem theorem_2_6_b
         exact hq1.ne_zero this
       have hchar0' : ringChar F' ≠ 0 := by
         simpa [Algebra.ringChar_eq F F'] using hchar0
-      haveI : CharP F q := by
+      have : CharP F q := by
         rw [CharP.charP_iff_prime_eq_zero hq1, h, ringChar.Nat.cast_ringChar]
-      haveI : CharP F' q :=
+      have : CharP F' q :=
         CharP.of_ringHom_of_ne_zero (algebraMap F F') q hq1.ne_zero
-      haveI : ExpChar F' q := ExpChar.prime hq1
-      letI : Fact (Module.finrank F' V' = 2) := ⟨hdim⟩
-      letI : FiniteDimensional F' V' := FiniteDimensional.of_fact_finrank_eq_two
-      letI : Nontrivial V' := nontrivial_of_finrank_eq_two hdim
+      have : ExpChar F' q := ExpChar.prime hq1
+      let : Fact (Module.finrank F' V' = 2) := ⟨hdim⟩
+      let : FiniteDimensional F' V' := FiniteDimensional.of_fact_finrank_eq_two
+      let : Nontrivial V' := nontrivial_of_finrank_eq_two hdim
       let sigma : Representation F' K V' := ρ'.comp K.subtype
       have hKp : IsPGroup (ringChar F') K := by
         simpa [h, Algebra.ringChar_eq F F'] using (IsElementaryAbelian.isPGroup q K)
@@ -1046,7 +1046,7 @@ public theorem theorem_2_6_b
               simp
         exact hxne1 (hi hxeq)
       have hU_pos : 0 < Module.finrank F' U := by
-        letI : Nontrivial U := (Submodule.nontrivial_iff_ne_bot).2 hU_ne_bot
+        let : Nontrivial U := (Submodule.nontrivial_iff_ne_bot).2 hU_ne_bot
         exact Module.finrank_pos (R := F') (M := U)
       have hU_lt : Module.finrank F' U < 2 := by
         simpa [hdim] using (Submodule.finrank_lt (K := F') (V := V') hU_ne_top)
@@ -1071,8 +1071,8 @@ public theorem theorem_2_6_b
           _ = ρ' g u := by simpa [sigma] using congrArg (fun z : V' => ρ' g z) hku
       let rhoU : Representation F' G U := Representation.subrepresentation ρ' U hU_stable
       let rhoQ : Representation F' G (V' ⧸ U) := Representation.quotient ρ' U hU_stable
-      letI : Module.Free F' U := Module.Free.of_divisionRing F' U
-      letI : Module.Free F' (V' ⧸ U) := Module.Free.of_divisionRing F' (V' ⧸ U)
+      let : Module.Free F' U := Module.Free.of_divisionRing F' U
+      let : Module.Free F' (V' ⧸ U) := Module.Free.of_divisionRing F' (V' ⧸ U)
       have hQ1 : Module.finrank F' (V' ⧸ U) = 1 := by
         have hsum := Submodule.finrank_quotient_add_finrank (R := F') (M := V') U
         omega
@@ -1184,13 +1184,13 @@ public theorem theorem_2_6_b
         have hcQ : rhoQ c = 1 := MonoidHom.mem_ker.mp (hcomm_le_ker_Q hc)
         intro z
         simpa using congrArg (fun f : Module.End F' (V' ⧸ U) => f z) hcQ
-      letI : CharP (Module.End F' V') q := by
+      let : CharP (Module.End F' V') q := by
         refine Module.charP_end (R := F') (M := V') (p := q) ?_
         obtain ⟨w, hw⟩ := exists_ne (0 : V')
         refine ⟨w, ?_⟩
         rw [Ideal.torsionOf_eq_bot_iff_of_noZeroSMulDivisors]
         exact hw
-      haveI : ExpChar (Module.End F' V') q := ExpChar.prime hq1
+      have : ExpChar (Module.End F' V') q := ExpChar.prime hq1
       have hcomm_qpow : ∀ c ∈ commutator G, c ^ q = 1 := by
         intro c hc
         obtain ⟨W, hcomplUW⟩ := exists_isCompl U
@@ -1340,7 +1340,7 @@ public theorem theorem_2_6_b
       constructor
       · exact IsMulCommutative.mk <| Std.Commutative.mk hCcomm
       · exact hcomm_le_C
-    · haveI : Fact q.Prime := ⟨hq1⟩
+    · have : Fact q.Prime := ⟨hq1⟩
       have hqC_p : IsPGroup q qC := by
         dsimp [qC]
         exact IsPGroup.map (p := q) (H := pCore q Gs) (pCore_isPGroup (p := q) (G := Gs))
@@ -1379,19 +1379,19 @@ public theorem theorem_2_6_b
           have hcop : Nat.Coprime (ringChar F') (q ^ m) :=
             hq1.coprime_pow_of_not_dvd (m := m) hnotdvd
           simpa [hm] using hcop
-      letI : ComplementedLattice (Subrepresentation σ) := by
+      let : ComplementedLattice (Subrepresentation σ) := by
         exact
           (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule
             (ρ := σ)).2 hσcr
-      letI : Fact (Module.finrank F' V' = 2) := ⟨hdim⟩
-      letI : FiniteDimensional F' V' := FiniteDimensional.of_fact_finrank_eq_two
-      letI : Nontrivial V' := nontrivial_of_finrank_eq_two hdim
+      let : Fact (Module.finrank F' V' = 2) := ⟨hdim⟩
+      let : FiniteDimensional F' V' := FiniteDimensional.of_fact_finrank_eq_two
+      let : Nontrivial V' := nontrivial_of_finrank_eq_two hdim
       obtain ⟨φ, hφirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional σ
       obtain ⟨ψ, hcompl⟩ := exists_isCompl φ
       have hcompl_sub : IsCompl φ.toSubmodule ψ.toSubmodule :=
         subrepresentation_isCompl_toSubmodule hcompl
-      letI : IsMulCommutative K := hK1.toIsMulCommutative
-      letI := hφirr
+      let : IsMulCommutative K := hK1.toIsMulCommutative
+      let := hφirr
       have hφ1 : Module.finrank F' φ.toSubmodule = 1 := by
         simpa using
           Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
@@ -1400,9 +1400,9 @@ public theorem theorem_2_6_b
         finrank_eq_one_of_isCompl_left_of_finrank_eq_two φ.toSubmodule ψ.toSubmodule hcompl_sub
           hφ1 hdim
       let xK : K := ⟨x, hxK⟩
-      letI : Module.Free F' φ.toSubmodule :=
+      let : Module.Free F' φ.toSubmodule :=
         Module.Free.of_divisionRing F' φ.toSubmodule
-      letI : Module.Free F' ψ.toSubmodule :=
+      let : Module.Free F' ψ.toSubmodule :=
         Module.Free.of_divisionRing F' ψ.toSubmodule
       obtain ⟨a, ha, _⟩ :=
         LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one hφ1 (φ.toRepresentation xK)
@@ -1732,7 +1732,7 @@ public theorem theorem_2_6_b
             _ = ρ' h (bg • w) := by rw [map_smul]
             _ = ρ' h (ρ' g w) := by rw [hbg w]
             _ = ρ' (h * g) w := by simp [map_mul, Module.End.mul_eq_comp]
-      letI : CommGroup G := {
+      let : CommGroup G := {
         mul_comm := fun g h ↦ hi (hcommρ g h)
       }
       let C : Sylow (ringChar F) G := Classical.choice inferInstance

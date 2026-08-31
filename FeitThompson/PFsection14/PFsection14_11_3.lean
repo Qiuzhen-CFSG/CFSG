@@ -1919,7 +1919,9 @@ public theorem section14_typeP_centralizer_le_M_of_case_9_7_b_source
     ⟨r, hrprime, hrdiv⟩
   let rP : Nat.Primes := ⟨r, hrprime⟩
   have hrF : rP ∈ subgroupPrimeSet (section8FittingSubgroup M) := by
-    simpa [rP, subgroupPrimeSet] using hrdiv
+    rw [subgroupPrimeSet]
+    change r ∣ Nat.card (section8FittingSubgroup M)
+    exact hrdiv
   have hM8 : M ∈ section8MaximalSubgroups G := by
     simpa [section8MaximalSubgroups, section9MaximalSubgroups] using h92.maximal
   have hnormF : Subgroup.normalizer (section8FittingSubgroup M : Set G) = M :=

@@ -599,14 +599,14 @@ private theorem section12ComplementIn_normal_isComplement'_sec10
 private theorem solvable_of_normal_and_quotient_sec10
     {L : Type u} [Group L]
     (N : Subgroup L) [N.Normal] :
-    IsSolvable N →
-      IsSolvable (L ⧸ N) →
-        IsSolvable L := by
+    Group.IsSolvable N →
+      Group.IsSolvable (L ⧸ N) →
+        Group.IsSolvable L := by
   intro hN hQ
-  letI : IsSolvable N := hN
-  letI : IsSolvable (L ⧸ N) := hQ
+  let _ : Group.IsSolvable N := hN
+  let _ : Group.IsSolvable (L ⧸ N) := hQ
   exact
-    solvable_of_ker_le_range
+    Group.isSolvable_of_ker_le_range
       N.subtype
       (QuotientGroup.mk' N)
       (by
@@ -620,7 +620,7 @@ public theorem typePDefinitionData_ambientDerived_solvable
     {G : Type u} [Group G] [Finite G]
     {M MF U W1 W2 : Subgroup G}
     (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    IsSolvable (ambientDerivedSubgroup M) := by
+    Group.IsSolvable (ambientDerivedSubgroup M) := by
   let D : Subgroup G := ambientDerivedSubgroup M
   rcases hP with
     ⟨hMF, _hW1cyc, _hW1ne, _hW1hall, _hcompMW1, _hUleD, hUnil, _hW1normU,
@@ -631,7 +631,7 @@ public theorem typePDefinitionData_ambientDerived_solvable
   have hDleM : D ≤ M := by
     simpa [D] using (section12_ambientDerivedSubgroup_le (G := G) (E := M))
   have hM_norm_MF : M ≤ Subgroup.normalizer (MF : Set G) := by
-    haveI : (MF.subgroupOf M).Normal := hMFnormM
+    have _ : (MF.subgroupOf M).Normal := hMFnormM
     exact Subgroup.le_normalizer_of_normal_subgroupOf hMFleM
   have hD_norm_MF : D ≤ Subgroup.normalizer (MF : Set G) :=
     hDleM.trans hM_norm_MF
@@ -647,22 +647,23 @@ public theorem typePDefinitionData_ambientDerived_solvable
     · exact hcomp.2.2.2.symm
   have hcompl : (U.subgroupOf D).IsComplement' (MF.subgroupOf D) :=
     section12ComplementIn_normal_isComplement'_sec10 hcomp_symm hMFnormalInD
-  have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
+  have hMFsub_solv : Group.IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
-      haveI : Group.IsNilpotent MF := hMFnil
+      have _ : Group.IsNilpotent MF := hMFnil
       exact Group.nilpotent_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcomp.1)).symm
-    haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
+    have _ : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
-  have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
+  have hquot_solv : Group.IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
-      haveI : Group.IsNilpotent U := hUnil
+      have _ : Group.IsNilpotent U := hUnil
       exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
-    haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
-    haveI : IsSolvable (U.subgroupOf D) := by infer_instance
-    exact solvable_of_solvable_injective (f := hcompl.QuotientMulEquiv.toMonoidHom)
+    have _ : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
+    have _ : Group.IsSolvable (U.subgroupOf D) := by infer_instance
+    exact Group.isSolvable_of_isSolvable_injective
+      (f := hcompl.QuotientMulEquiv.toMonoidHom)
       hcompl.QuotientMulEquiv.injective
-  haveI : (MF.subgroupOf D).Normal := hMFnormD
+  have _ : (MF.subgroupOf D).Normal := hMFnormD
   exact solvable_of_normal_and_quotient_sec10 (MF.subgroupOf D)
     hMFsub_solv hquot_solv
 
@@ -671,14 +672,14 @@ public theorem typePDefinitionData_derivedSubgroup_solvable
     {G : Type u} [Group G] [Finite G]
     {M MF U W1 W2 : Subgroup G}
     (hP : Section8.typePDefinitionData M MF U W1 W2) :
-    IsSolvable (derivedSubgroup M) := by
-  have hAmbSolv : IsSolvable (ambientDerivedSubgroup M) :=
+    Group.IsSolvable (derivedSubgroup M) := by
+  have hAmbSolv : Group.IsSolvable (ambientDerivedSubgroup M) :=
     typePDefinitionData_ambientDerived_solvable hP
   let e : derivedSubgroup M ≃* ambientDerivedSubgroup M :=
     Subgroup.equivMapOfInjective (f := M.subtype) (derivedSubgroup M)
       M.subtype_injective
-  letI : IsSolvable (ambientDerivedSubgroup M) := hAmbSolv
-  exact solvable_of_solvable_injective (f := e.toMonoidHom) e.injective
+  let _ : Group.IsSolvable (ambientDerivedSubgroup M) := hAmbSolv
+  exact Group.isSolvable_of_isSolvable_injective (f := e.toMonoidHom) e.injective
 
 /-- In Type `P`, the Hall complement `W₁` has order coprime to `M'`. -/
 public theorem typePDefinitionData_W1_card_coprime_ambientDerived
@@ -694,7 +695,7 @@ public theorem typePDefinitionData_W1_card_coprime_ambientDerived
   let D : Subgroup G := ambientDerivedSubgroup M
   have hDnorm : (D.subgroupOf M).Normal := by
     simpa [D] using (section12_normalIn_ambientDerivedSubgroup (G := G) (E := M)).2
-  letI : (D.subgroupOf M).Normal := hDnorm
+  let _ : (D.subgroupOf M).Normal := hDnorm
   have hDnormalInM : section10NormalIn D M :=
     ⟨by simpa [D] using hcompMW1.1, hDnorm⟩
   have hcompSymm : section12ComplementIn M W1 D := by
@@ -1467,8 +1468,8 @@ public theorem exists_pos_nat_degree_of_irreducible_character
     ∃ d : ℕ, 0 < d ∧ Section1.degree χ = (d : ℂ) := by
   rcases hχ with ⟨n, ρ, hρ, rfl⟩
   refine ⟨n, ?_, ?_⟩
-  · haveI : Representation.IsIrreducible ρ := hρ
-    haveI : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
+  · have _ : Representation.IsIrreducible ρ := hρ
+    have _ : Nontrivial (Fin n → ℂ) := Theory.Character.irreducible_nontrivial (ρ := ρ)
     have hdim_pos : 0 < Module.finrank ℂ (Fin n → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin n → ℂ)).2 inferInstance
     simpa using hdim_pos
@@ -2918,7 +2919,7 @@ public theorem isIrreducibleCharacterOnGroup_classFunctionLinearEquivOfMulEquiv
     Section1.IsIrreducibleCharacterOnGroup
       (classFunctionLinearEquivOfMulEquiv e χ) := by
   rcases hχ with ⟨n, ρ, hρirr, hchar⟩
-  haveI : Representation.IsIrreducible ρ := hρirr
+  have _ : Representation.IsIrreducible ρ := hρirr
   refine ⟨n, ρ.comp e.symm.toMonoidHom, irreducible_compMulEquiv ρ e.symm, ?_⟩
   ext b
   simp [classFunctionLinearEquivOfMulEquiv, hchar, Representation.character]
@@ -4576,7 +4577,7 @@ public theorem typePDefinitionData_secondDerived_lt_derivedSubgroup
     (section16SecondDerivedSubgroup M).subgroupOf M < derivedSubgroup M := by
   have hle : (section16SecondDerivedSubgroup M).subgroupOf M ≤ derivedSubgroup M :=
     secondDerivedSubgroup_subgroupOf_le_derived M
-  have hKsolv : IsSolvable (derivedSubgroup M) :=
+  have hKsolv : Group.IsSolvable (derivedSubgroup M) :=
     typePDefinitionData_derivedSubgroup_solvable hP
   have hKne : derivedSubgroup M ≠ ⊥ := by
     rcases hP with
@@ -4597,12 +4598,13 @@ public theorem typePDefinitionData_secondDerived_lt_derivedSubgroup
           hxSecond)
     have hW2bot : W2 = ⊥ := le_bot_iff.mp (by simpa [hDbot] using hW2leD)
     exact hW2ne hW2bot
-  haveI : IsSolvable (derivedSubgroup M) := hKsolv
-  haveI : Nontrivial (derivedSubgroup M) :=
+  have _ : Group.IsSolvable (derivedSubgroup M) := hKsolv
+  have _ : Nontrivial (derivedSubgroup M) :=
     (Subgroup.nontrivial_iff_ne_bot (H := derivedSubgroup M)).2 hKne
   have hDlt : derivedSubgroup (derivedSubgroup M) < (⊤ : Subgroup (derivedSubgroup M)) := by
-    simpa [derivedSubgroup, derivedSeries_one, _root_.commutator_def] using
-      IsSolvable.commutator_lt_top_of_nontrivial (G := derivedSubgroup M)
+    change commutator (derivedSubgroup M) < (⊤ : Subgroup (derivedSubgroup M))
+    exact Group.IsSolvable.commutator_lt_top_of_nontrivial
+      (G := derivedSubgroup M)
   refine lt_of_le_of_ne hle ?_
   intro heq
   have hsubtop :
@@ -4818,7 +4820,7 @@ public theorem typeVReduction_source_degree_eq_prime_of_ne_one
           simpa using Section1.degree_representation_character ρ
     exact_mod_cast hdnC
   have hbound_n : n ^ 2 ≤ Nat.card (derivedSubgroup M) := by
-    letI : Representation.IsIrreducible ρ := hρirr
+    let _ : Representation.IsIrreducible ρ := hρirr
     have hscalar : ∀ d : (⊥ : Subgroup (derivedSubgroup M)),
         ∃ a : ℂ, ρ d = a • (1 : Module.End ℂ (Fin n → ℂ)) := by
       intro d
@@ -5000,11 +5002,11 @@ public theorem typeVReduction_source_degree_one_count_eq_sq_of_complete
   classical
   have hNnormal : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Normal :=
     typeVReduction_kernelQuotientSubgroup_normal hred
-  letI : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Normal := hNnormal
+  let _ : ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Normal := hNnormal
   have hcomm : IsMulCommutative
       (derivedSubgroup M ⧸ (H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
     typeVReduction_kernelQuotient_isMulCommutative hred
-  letI : IsMulCommutative
+  let _ : IsMulCommutative
       (derivedSubgroup M ⧸ (H'.subgroupOf M).subgroupOf (derivedSubgroup M)) :=
     hcomm
   let LinIdx : Type v := {i : ι // Section1.degree (χ i) = 1}
@@ -5217,7 +5219,9 @@ public theorem typeVReduction_exists_source_degree_prime_family_count
     exact congrFun hij g
   have hsumχ : (∑ i : ι, Complex.normSq (χ i 1)) =
       (Nat.card (derivedSubgroup M) : ℝ) := by
-    simpa [χ, Section1.ofConjClassFunction_apply] using hsum
+    change (∑ i : ι, Complex.normSq (χrep i (ConjClasses.mk 1))) =
+      (Nat.card (derivedSubgroup M) : ℝ)
+    exact hsum
   have hcount :
       (Finset.univ.filter fun i => Section1.degree (χ i) = (p : ℂ)).card =
         p - 1 :=
@@ -5236,7 +5240,7 @@ public theorem fixedPointSubgroup_zpowers_conj_eq_elementCentralizerIn
     haveI : Subgroup.Normalizes (Subgroup.zpowers a) K := ⟨hAK⟩
     fixedPointSubgroup (Subgroup.zpowers a) K =
       (elementCentralizerIn K a).subgroupOf K := by
-  haveI : Subgroup.Normalizes (Subgroup.zpowers a) K := ⟨hAK⟩
+  have _ : Subgroup.Normalizes (Subgroup.zpowers a) K := ⟨hAK⟩
   ext x
   constructor
   · intro hx
@@ -5328,18 +5332,18 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpow
       (derivedSubgroup M)).Normal
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     dsimp [N]
     change (((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
       (derivedSubgroup M)).Characteristic
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   let A : Subgroup M := Subgroup.zpowers (a : M)
   have hNinv : IsInvariant A (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := A) (G := derivedSubgroup M) N
-  letI : IsInvariant A (derivedSubgroup M) N := hNinv
+  let _ : IsInvariant A (derivedSubgroup M) N := hNinv
   letI : MulDistribMulAction A (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := derivedSubgroup M) N hNinv
   have hfixQuot :
@@ -5443,18 +5447,18 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
       (derivedSubgroup M)).Normal
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     dsimp [N]
     change (((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
       (derivedSubgroup M)).Characteristic
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  let _ : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -5464,7 +5468,7 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixed_eq_one_of_W1_ne_o
   let A : Subgroup M := Subgroup.zpowers (a : M)
   have hNinvA : IsInvariant A (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := A) (G := derivedSubgroup M) N
-  letI : IsInvariant A (derivedSubgroup M) N := hNinvA
+  let _ : IsInvariant A (derivedSubgroup M) N := hNinvA
   letI : MulDistribMulAction A (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := A) (G := derivedSubgroup M) N hNinvA
   have hgenFix :
@@ -5532,18 +5536,18 @@ public theorem typePDefinitionData_inducedCF_secondDerivedQuotient_isIrreducible
     change (((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
       (derivedSubgroup M)).Normal
     infer_instance
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     dsimp [N]
     change (((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf
       (derivedSubgroup M)).Characteristic
     rw [secondDerivedSubgroup_subgroupOf_derived_eq M]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  let _ : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -5551,7 +5555,7 @@ public theorem typePDefinitionData_inducedCF_secondDerivedQuotient_isIrreducible
     change IsMulCommutative (derivedSubgroup M ⧸
       ((section16SecondDerivedSubgroup M).subgroupOf M).subgroupOf (derivedSubgroup M))
     infer_instance
-  haveI : IsMulCommutative (derivedSubgroup M ⧸ N) := hcomm
+  have _ : IsMulCommutative (derivedSubgroup M ⧸ N) := hcomm
   have hθirr :
       Section1.IsIrreducibleCharacterOnGroup
         (Section1.quotientCharacterInflation
@@ -5762,7 +5766,7 @@ public theorem quotientCharacterInflation_smul_eq_conjugateOnNormal
         Section1.conjugateOnNormal K
           (Section1.quotientCharacterInflation A K ψ) ((r⁻¹ : R) : L) := by
   classical
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  let _ : IsInvariant R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -5791,7 +5795,7 @@ public theorem inducedCF_quotientCharacterInflation_smul_eq
       Section1.inducedCF K (Section1.quotientCharacterInflation A K (r • ψ)) =
         Section1.inducedCF K (Section1.quotientCharacterInflation A K ψ) := by
   classical
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  let _ : IsInvariant R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -5830,7 +5834,7 @@ public theorem inducedCF_quotientCharacterInflation_eq_of_orbitRel
         Section1.inducedCF K (Section1.quotientCharacterInflation A K ψ.1) =
           Section1.inducedCF K (Section1.quotientCharacterInflation A K η.1) := by
   classical
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  let _ : IsInvariant R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -5869,8 +5873,8 @@ public theorem orbitRel_of_inducedCF_quotientCharacterInflation_eq
         Section1.inducedCF K (Section1.quotientCharacterInflation A K η.1) →
       MulAction.orbitRel R {ψ : (K ⧸ A.subgroupOf K) →* ℂˣ // ψ ≠ 1} ψ η := by
   classical
-  letI : IsMulCommutative (K ⧸ A.subgroupOf K) := hComm
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  let _ : IsMulCommutative (K ⧸ A.subgroupOf K) := hComm
+  let _ : IsInvariant R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -5955,7 +5959,7 @@ public theorem inducedKernelFamily_mem_iff_exists_quotientCharacter_of_quotient_
           χ = Section1.inducedCF K
             (Section1.quotientCharacterInflation A K ψ) := by
   classical
-  letI : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
+  let _ : (A.subgroupOf K).Normal := hAnorm.subgroupOf K
   constructor
   · intro hχ
     rcases (hSA.2 χ).mp hχ with ⟨θ, hθirr, hθker, hθne, hχeq⟩
@@ -6006,9 +6010,9 @@ public theorem inducedKernelFamily_card_eq_nonidentityOrbitQuotient
     SA.card =
       Nat.card (nonidentityOrbitQuotient R ((K ⧸ A.subgroupOf K) →* ℂˣ)) := by
   classical
-  letI : (A.subgroupOf K).Normal := (inferInstance : A.Normal).subgroupOf K
-  letI : IsMulCommutative (K ⧸ A.subgroupOf K) := hcomm
-  letI : IsInvariant R K (A.subgroupOf K) := hInv
+  let _ : (A.subgroupOf K).Normal := (inferInstance : A.Normal).subgroupOf K
+  let _ : IsMulCommutative (K ⧸ A.subgroupOf K) := hcomm
+  let _ : IsInvariant R K (A.subgroupOf K) := hInv
   letI : MulDistribMulAction R (K ⧸ A.subgroupOf K) :=
     quotientMulDistribMulAction (A := R) (G := K) (A.subgroupOf K) hInv
   letI : MulDistribMulAction R ((K ⧸ A.subgroupOf K) →* ℂˣ) :=
@@ -6226,16 +6230,16 @@ public theorem typeVReduction_quotientCharacterInflation_smul_eq_conjugateOnNorm
   have hNnormal : N.Normal := by
     dsimp [N]
     exact typeVReduction_kernelQuotientSubgroup_normal hred
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     change ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  let _ : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -6298,16 +6302,16 @@ public theorem typeVReduction_inducedCF_quotientCharacterInflation_smul_eq
   have hNnormal : N.Normal := by
     dsimp [N]
     exact typeVReduction_kernelQuotientSubgroup_normal hred
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     change ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  let _ : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -6395,16 +6399,16 @@ public theorem typeVReduction_inducedCF_quotientCharacterInflation_eq_of_orbitRe
   have hNnormal : N.Normal := by
     dsimp [N]
     exact typeVReduction_kernelQuotientSubgroup_normal hred
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNchar : N.Characteristic := by
     change ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Characteristic
     rw [typeVReduction_Hprime_subgroupOf_derived_eq hred]
     infer_instance
-  haveI : N.Characteristic := hNchar
+  have _ : N.Characteristic := hNchar
   have hNinvW1 : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := by
     exact isInvariant_of_characteristic (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N
-  letI : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
+  let _ : IsInvariant (W1.subgroupOf M) (derivedSubgroup M) N := hNinvW1
   letI : MulDistribMulAction (W1.subgroupOf M) (derivedSubgroup M ⧸ N) :=
     quotientMulDistribMulAction (A := W1.subgroupOf M)
       (G := derivedSubgroup M) N hNinvW1
@@ -6451,7 +6455,7 @@ public theorem typeVReduction_quotientCharacterInflation_conjugate_derived_eq
   have hNnormal : N.Normal := by
     change ((H'.subgroupOf M).subgroupOf (derivedSubgroup M)).Normal
     infer_instance
-  letI : N.Normal := hNnormal
+  let _ : N.Normal := hNnormal
   have hNderived : N = derivedSubgroup (derivedSubgroup M) := by
     dsimp [N]
     exact typeVReduction_Hprime_subgroupOf_derived_eq hred

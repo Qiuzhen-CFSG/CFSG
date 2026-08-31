@@ -342,23 +342,29 @@ public theorem stabilizer_baseOutsidePair
     · have hxbase : x ∈ MulAction.stabilizer X
           (QuotientGroup.mk 1 : conjugateCosetSpace M) :=
         MulAction.mem_stabilizer_iff.mpr (by
-          simpa [baseOutsidePair] using h 0)
+          exact h 0)
       simpa [baseCoset_stabilizer] using hxbase
     · have hxt : x ∈ MulAction.stabilizer X
           (QuotientGroup.mk t : conjugateCosetSpace M) :=
         MulAction.mem_stabilizer_iff.mpr (by
-          simpa [baseOutsidePair] using h 1)
+          exact h 1)
       simpa [conjugateCoset_stabilizer, ht.inv_eq_self] using hxt
   · rintro ⟨hxM, hxMt⟩ i
     fin_cases i
     · have hxbase : x ∈ MulAction.stabilizer X
           (QuotientGroup.mk 1 : conjugateCosetSpace M) := by
         simpa [baseCoset_stabilizer] using hxM
-      simpa [baseOutsidePair] using MulAction.mem_stabilizer_iff.mp hxbase
+      have hh := MulAction.mem_stabilizer_iff.mp hxbase
+      change (x • baseOutsidePair M t htM) 0 =
+        (baseOutsidePair M t htM) 0
+      exact hh
     · have hxt : x ∈ MulAction.stabilizer X
           (QuotientGroup.mk t : conjugateCosetSpace M) := by
         simpa [conjugateCoset_stabilizer, ht.inv_eq_self] using hxMt
-      simpa [baseOutsidePair] using MulAction.mem_stabilizer_iff.mp hxt
+      have hh := MulAction.mem_stabilizer_iff.mp hxt
+      change (x • baseOutsidePair M t htM) 1 =
+        (baseOutsidePair M t htM) 1
+      exact hh
 
 private theorem two_le_fixedPoints_card
     {G Omega : Type*} [Group G] [MulAction G Omega] [Finite Omega]

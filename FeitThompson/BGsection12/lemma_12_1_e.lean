@@ -127,7 +127,7 @@ private theorem section12_nilpotent_ambientDerivedSubgroup_of_le
     Subgroup.subgroupOfEquivOfLe
       (H := ambientDerivedSubgroup H) (K := ambientDerivedSubgroup K)
       (section12_ambientDerivedSubgroup_mono hHK)
-  haveI : Group.IsNilpotent (ambientDerivedSubgroup K) := hnilK
+  have : Group.IsNilpotent (ambientDerivedSubgroup K) := hnilK
   have hsubnil :
       Group.IsNilpotent ((ambientDerivedSubgroup H).subgroupOf (ambientDerivedSubgroup K)) :=
     inferInstance
@@ -208,7 +208,7 @@ private theorem section12_no_tau1_prime_dvd_derivedSubgroup
     ¬ p.val ∣ Nat.card (derivedSubgroup H) := by
   classical
   intro hpD
-  haveI : Fact p.val.Prime := ⟨p.2⟩
+  have : Fact p.val.Prime := ⟨p.2⟩
   rcases hE1H with ⟨hE1Hle, hHallE1H⟩
   let D : Subgroup H := derivedSubgroup H
   let P : Sylow p.val D := Classical.choice (Sylow.nonempty (p := p.val) (G := D))
@@ -227,12 +227,12 @@ private theorem section12_no_tau1_prime_dvd_derivedSubgroup
     section12_nilpotent_derivedSubgroup_of_ambient hnilH
   have hP_normal_D : (P : Subgroup D).Normal :=
     Group.IsNilpotent.sylow_normal hDnil p.val P
-  haveI : (P : Subgroup D).Characteristic :=
+  have : (P : Subgroup D).Characteristic :=
     Sylow.characteristic_of_normal P hP_normal_D
-  haveI : D.Normal := by
+  have : D.Normal := by
     dsimp [D]
     infer_instance
-  haveI : Pmap.Normal := by
+  have : Pmap.Normal := by
     change ((P : Subgroup D).map D.subtype).Normal
     infer_instance
   have hPmapπ : IsPiSubgroup (G := H) (section12Tau1Primes M) Pmap :=
@@ -469,7 +469,7 @@ public theorem section12_E2_sup_E3_hall_in_E
     section12_E2_hall_in_E (M := M) (E := E) (E₁₂ := E₁₂) (E₂ := E₂) hE12 hE2
   rcases hE2EHall with ⟨hE2E, hHallE2E⟩
   let K : Subgroup E := E₂.subgroupOf E ⊔ E₃.subgroupOf E
-  haveI : (E₃.subgroupOf E).Normal := hE3sub_norm
+  have : (E₃.subgroupOf E).Normal := hE3sub_norm
   have hKπ : IsPiSubgroup (G := E)
       (section12Tau2Primes M ∪ section12Tau3Primes M) K := by
     have hE2π : IsPiSubgroup (G := E)
@@ -569,11 +569,11 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   have hPN_eq : (PN : Subgroup Nrm) = Ploc := rfl
   have hPN_norm : (PN : Subgroup Nrm).Normal := by
     simpa [PE, Nrm, PN] using P.normal_in_normalizer
-  haveI : Ploc.Normal := by
+  have : Ploc.Normal := by
     rw [← hPN_eq]
     exact hPN_norm
   have hPloc_cyc : IsCyclic Ploc := by
-    letI : IsCyclic PE := hPcyc
+    let : IsCyclic PE := hPcyc
     let e : Ploc ≃* PE :=
       Subgroup.subgroupOfEquivOfLe (H := PE) (K := Nrm) (by
         simpa [PE, Nrm] using P.le_normalizer)
@@ -581,8 +581,8 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   have hPN_cyc : IsCyclic (PN : Subgroup Nrm) := by
     rw [hPN_eq]
     exact hPloc_cyc
-  letI : IsCyclic (PN : Subgroup Nrm) := hPN_cyc
-  haveI : (PN : Subgroup Nrm).Normal := hPN_norm
+  let : IsCyclic (PN : Subgroup Nrm) := hPN_cyc
+  have : (PN : Subgroup Nrm).Normal := hPN_norm
   have hcopPloc : Nat.Coprime (Nat.card Ploc) Ploc.index := by
     rw [← hPN_eq]
     exact PN.card_coprime_index
@@ -598,7 +598,7 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
       have hK_le_cent : K ≤ Subgroup.centralizer (Ploc : Set Nrm) :=
         (Subgroup.commutator_eq_bot_iff_le_centralizer).1 hcomm_bot
       have hPloc_comm : IsMulCommutative Ploc := by
-        letI : IsCyclic Ploc := hPloc_cyc
+        let : IsCyclic Ploc := hPloc_cyc
         infer_instance
       have hPloc_le_cent : Ploc ≤ Subgroup.centralizer (Ploc : Set Nrm) :=
         (Subgroup.le_centralizer_iff_isMulCommutative (K := Ploc)).2 hPloc_comm
@@ -618,8 +618,8 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
         have hcomm : aN * nN = nN * aN :=
           Subgroup.mem_centralizer_iff.mp hncent aN haPloc
         exact congrArg Subtype.val hcomm
-      letI : IsCyclic PE := by simpa [PE] using hPcyc
-      letI : CommGroup PE := IsCyclic.commGroup
+      let : IsCyclic PE := by simpa [PE] using hPcyc
+      let : CommGroup PE := IsCyclic.commGroup
       let tr := MonoidHom.transferSylow P hNrm_le_cent
       have hP_le_ker : PE ≤ tr.ker := by
         intro x hx
@@ -636,7 +636,7 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
   have hKnormPloc : K ≤ Subgroup.normalizer (Ploc : Set Nrm) := by
     intro k _hk
     simp [Ploc.normalizer_eq_top]
-  haveI : Subgroup.Normalizes K Ploc := ⟨hKnormPloc⟩
+  have : Subgroup.Normalizes K Ploc := ⟨hKnormPloc⟩
   have hcomm_self' : ⁅Ploc, K⁆ = Ploc := by
     simpa [Subgroup.commutator_comm] using hcomm_self
   have hcomm_map :
@@ -653,10 +653,10 @@ public theorem section12_sylow_inf_center_eq_bot_of_le_commutator
     have hy_eq_x : y = x := Ploc.subtype_injective hyx
     simpa [hy_eq_x] using hy
   have hPloc_comm : IsMulCommutative Ploc := by
-    letI : IsCyclic Ploc := hPloc_cyc
+    let : IsCyclic Ploc := hPloc_cyc
     infer_instance
-  have hPloc_solv : IsSolvable Ploc := by
-    letI : IsMulCommutative Ploc := hPloc_comm
+  have hPloc_solv : Group.IsSolvable Ploc := by
+    let : IsMulCommutative Ploc := hPloc_comm
     infer_instance
   have hcopKPloc : Nat.Coprime (Nat.card K) (Nat.card Ploc) := by
     simpa [hKcomp.index_eq_card] using hcopPloc.symm

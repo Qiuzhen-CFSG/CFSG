@@ -80,7 +80,7 @@ private theorem proposition_1_c_exists_center_involution_of_even_nilpotent
     (hQ_even : Even (Nat.card Q)) (hnil : Group.IsNilpotent Q) :
     ∃ z : Q, z ∈ Subgroup.center Q ∧ IsInvolution (z : G) := by
   classical
-  haveI : Group.IsNilpotent Q := by
+  have : Group.IsNilpotent Q := by
     simpa using hnil
   let twoPrime : Nat.Primes := ⟨2, Nat.prime_two⟩
   have htop : twoPrime ∈ subgroupPrimeSet (⊤ : Subgroup Q) := by
@@ -90,7 +90,7 @@ private theorem proposition_1_c_exists_center_involution_of_even_nilpotent
     rw [section8_subgroupPrimeSet_center_eq_top_of_nilpotent (H := Q)]
     exact htop
   have htwo_dvd_center : 2 ∣ Nat.card (Subgroup.center Q) := by
-    simpa [subgroupPrimeSet, twoPrime] using hcenterPrime
+    exact hcenterPrime
   obtain ⟨zC, hzC_order⟩ :=
     exists_prime_orderOf_dvd_card' (G := Subgroup.center Q) 2 htwo_dvd_center
   let z : Q := (zC : Q)
@@ -297,7 +297,7 @@ public theorem proposition_1_c_exists_S_Q1
                   s * q1 = q1 * s) ∧
                   S ⊔ Q1 = Q := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let P : Sylow 2 Q := default
   let SQ : Subgroup Q := P
   let Q1Q : Subgroup Q := pPrimeCore 2 Q
@@ -325,8 +325,7 @@ public theorem proposition_1_c_exists_S_Q1
     exact Nat.coprime_two_left.mp
       (pPrimeCore_coprime_card (G := Q) (p := 2))
   have hdisj_Q : Disjoint SQ Q1Q := by
-    apply disjoint_iff.mpr
-    apply Subgroup.inf_eq_bot_of_coprime
+    apply Subgroup.disjoint_of_coprime_natCard
     obtain ⟨n, hn⟩ := P.isPGroup'.exists_card_eq
     rw [hn]
     exact (pPrimeCore_coprime_card (G := Q) (p := 2)).pow_left n

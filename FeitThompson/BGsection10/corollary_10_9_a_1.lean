@@ -25,7 +25,7 @@ private theorem section10_sylow_eq_bot_of_not_mem_hall
     {K : Subgroup H} (hKHall : IsHallSubgroup π K) (hpπ : p ∉ π)
     (P : Sylow p.val K) :
     (P : Subgroup K) = ⊥ := by
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases P.isPGroup'.card_eq_or_dvd with hcard | hp_dvd
   · exact (Subgroup.card_eq_one (H := (P : Subgroup K))).mp hcard
   · exact False.elim <| hpπ
@@ -75,8 +75,8 @@ private theorem section10_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
     {p q : Nat.Primes} (hpq : p ≠ q) (P : Sylow p.val R)
     {Q : Subgroup R} (hQq : IsPGroup q.val Q) :
     (P : Subgroup R) ≤ Subgroup.centralizer (Q : Set R) := by
-  haveI : Fact p.val.Prime := ⟨p.property⟩
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   have hpq_val : p.val ≠ q.val := by
     intro hpq_val
     exact hpq (Subtype.ext hpq_val)
@@ -101,7 +101,7 @@ public theorem section10_pSubgroup_le_centralizer_of_nilpotent_overgroup
     (hPp : IsPGroup p.val P) (hXq : IsPGroup q.val X) :
     P ≤ Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let Psub : Subgroup L := P.subgroupOf L
   let Xsub : Subgroup L := X.subgroupOf L
   have hPsubp : IsPGroup p.val Psub := by
@@ -112,7 +112,7 @@ public theorem section10_pSubgroup_le_centralizer_of_nilpotent_overgroup
       (Subgroup.subgroupOfEquivOfLe (H := X) (K := L) hXL).symm
   obtain ⟨PL, hPsub_le_PL⟩ :=
     IsPGroup.exists_le_sylow (G := L) (p := p.val) hPsubp
-  letI : Group.IsNilpotent L := hLnil
+  let : Group.IsNilpotent L := hLnil
   have hPL_cent_Xsub : (PL : Subgroup L) ≤ Subgroup.centralizer (Xsub : Set L) :=
     section10_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
       (R := L) hpq PL hXsubq
@@ -146,7 +146,7 @@ public theorem section10_isPiSubgroup_compl_of_isPGroup_not_mem
     {q : Nat.Primes} (hqπ : q ∉ π) (hXq : IsPGroup q.val X) :
     IsPiSubgroup (G := H) πᶜ X := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   intro r hr_dvd
   rw [Set.mem_compl_iff]
   obtain ⟨n, hcard⟩ := hXq.exists_card_eq
@@ -162,7 +162,7 @@ public theorem section10_sylow_le_normal_hall_of_mem
     (P : Sylow p.val H) :
     (P : Subgroup H) ≤ S := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PS : Sylow p.val S := Classical.choice (Sylow.nonempty (p := p.val) (G := S))
   let Psub : Subgroup H := (PS : Subgroup S).map S.subtype
   have hPsub_p : IsPGroup p.val Psub := by
@@ -204,7 +204,7 @@ public theorem section10_exists_sylow_subgroupOf_with_same_ambient
     ∃ PS : Sylow p.val S,
       (PS : Subgroup S).map S.subtype = ((P : Subgroup D).map D.subtype : Subgroup H) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let SsubD : Subgroup D := S.subgroupOf D
   let Psub : Sylow p.val SsubD := P.subtype hPS
   let e : SsubD ≃* S := Subgroup.subgroupOfEquivOfLe hSD
@@ -238,7 +238,7 @@ public theorem section10_exists_sylow_centralized_of_local_nilpotent_hall_pair
       section10AmbientSylowSubgroup S P ≤
         Subgroup.centralizer (((X.map L.subtype).map S.subtype : Subgroup G) : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let PL : Sylow p.val L := Classical.choice (Sylow.nonempty (p := p.val) (G := L))
   let PsubS : Subgroup S := (PL : Subgroup L).map L.subtype
   have hPsubS_p : IsPGroup p.val PsubS := by
@@ -257,7 +257,7 @@ public theorem section10_exists_sylow_centralized_of_local_nilpotent_hall_pair
     · exact hp_not_L_index hp_L
   let P : Sylow p.val S := hPsubS_p.toSylow hp_not_PsubS_index
   have hPL_cent_X : (PL : Subgroup L) ≤ Subgroup.centralizer (X : Set L) := by
-    letI : Group.IsNilpotent L := hLnil
+    let : Group.IsNilpotent L := hLnil
     exact section10_nilpotent_sylow_le_centralizer_of_pSubgroup_ne
       (R := L) hpq PL hXq
   refine ⟨P, ?_⟩
@@ -276,14 +276,14 @@ public theorem section10_exists_sylow_centralized_of_local_nilpotent_hall_pair
 public theorem section10_exists_nilpotent_hall_containing
     {H : Type*} [Group H] [Finite H]
     {π : Set Nat.Primes} {K X : Subgroup H}
-    (hKsolv : IsSolvable K)
+    (hKsolv : Group.IsSolvable K)
     (hHas : section10HasNilpotentHallSubgroup π K)
     (hXK : X ≤ K) (hXπ : IsPiSubgroup π (X.subgroupOf K)) :
     ∃ L : Subgroup H, L ≤ K ∧ X ≤ L ∧
       IsHallSubgroup π (L.subgroupOf K) ∧ Group.IsNilpotent L := by
   classical
   let Xsub : Subgroup K := X.subgroupOf K
-  letI : MulDistribMulAction PUnit.{1} K := {
+  let : MulDistribMulAction PUnit.{1} K := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -300,7 +300,7 @@ public theorem section10_exists_nilpotent_hall_containing
   let Nsub : Subgroup K := N.subgroupOf K
   have hNsub_nil : Group.IsNilpotent Nsub := by
     let e : N ≃* Nsub := (Subgroup.subgroupOfEquivOfLe (H := N) (K := K) hNK).symm
-    letI : Group.IsNilpotent N := hNnil
+    let : Group.IsNilpotent N := hNnil
     exact Group.nilpotent_of_mulEquiv (G := N) (G' := Nsub) e
   obtain ⟨k, hk⟩ :=
     exists_conj_eq_of_isHallSubgroup_of_solvable
@@ -311,11 +311,11 @@ public theorem section10_exists_nilpotent_hall_containing
       let e : Nsub ≃* Nconj :=
         Subgroup.equivMapOfInjective Nsub (MulAut.conj k).toMonoidHom
           (MulAut.conj k).injective
-      letI : Group.IsNilpotent Nsub := hNsub_nil
+      let : Group.IsNilpotent Nsub := hNsub_nil
       exact Group.nilpotent_of_mulEquiv (G := Nsub) (G' := Nconj) e
     have hC_eq : C = Nconj := by simpa [Nconj] using hk
     let e : Nconj ≃* C := MulEquiv.subgroupCongr hC_eq.symm
-    letI : Group.IsNilpotent Nconj := hNconj_nil
+    let : Group.IsNilpotent Nconj := hNconj_nil
     exact Group.nilpotent_of_mulEquiv (G := Nconj) (G' := C) e
   let L : Subgroup H := C.map K.subtype
   have hLK : L ≤ K := by
@@ -331,7 +331,7 @@ public theorem section10_exists_nilpotent_hall_containing
     exact ⟨⟨x, hxK⟩, hXsubC hxXsub, rfl⟩
   have hLnil : Group.IsNilpotent L := by
     let e : C ≃* L := Subgroup.equivMapOfInjective C K.subtype K.subtype_injective
-    letI : Group.IsNilpotent C := hCnil
+    let : Group.IsNilpotent C := hCnil
     exact Group.nilpotent_of_mulEquiv (G := C) (G' := L) e
   exact ⟨L, hLK, hXL, by simpa [hLsub_eq] using hCHall, hLnil⟩
 
@@ -346,7 +346,7 @@ private theorem section10_lift_msigma_local_centralizer
       section10AmbientSylowSubgroup (section10Msigma M) Pσ ≤
         Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hlocal with ⟨P, hPcent⟩
   let S : Subgroup M := section10MsigmaSubgroup M
   let Sg : Subgroup G := section10Msigma M
@@ -389,7 +389,7 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
       section10AmbientSylowSubgroup (section10Msigma M) Pσ ≤
         Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let D : Subgroup M := derivedSubgroup M
   let S : Subgroup M := section10MsigmaSubgroup M
   let XM : Subgroup M := X.subgroupOf M
@@ -410,10 +410,10 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
   have hXsubDπ : IsPiSubgroup (G := D) (section10BetaPrimes M)ᶜ XsubD :=
     section10_isPiSubgroup_compl_of_isPGroup_not_mem
       (π := section10BetaPrimes M) hqβ hXsubDq
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-  haveI : IsSolvable M := hMsolv
-  have hDsolv : IsSolvable D := subgroup_solvable_of_solvable (H := D)
+  have : Group.IsSolvable M := hMsolv
+  have hDsolv : Group.IsSolvable D := by infer_instance
   obtain ⟨L, hLD, hXML, hLHallD, hLnil⟩ :=
     section10_exists_nilpotent_hall_containing
       (H := M) (π := (section10BetaPrimes M)ᶜ) (K := D) (X := XM)
@@ -421,7 +421,7 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
   let LsubD : Subgroup D := L.subgroupOf D
   have hLsubDnil : Group.IsNilpotent LsubD := by
     let e : L ≃* LsubD := (Subgroup.subgroupOfEquivOfLe hLD).symm
-    letI : Group.IsNilpotent L := hLnil
+    let : Group.IsNilpotent L := hLnil
     exact Group.nilpotent_of_mulEquiv (G := L) (G' := LsubD) e
   have hXsubD_le_LsubD : XsubD ≤ LsubD := by
     intro x hx
@@ -445,7 +445,7 @@ private theorem section10_corollary_10_9_a_1_of_le_derived
   have hSHallD : IsHallSubgroup (section10SigmaPrimes M) SsubD := by
     simpa [SsubD, S] using (section10_msigmaSubgroup_isHall hM).subgroupOf hSleD
   have hPDleSsubD : (PD : Subgroup D) ≤ SsubD := by
-    haveI : SsubD.Normal := hSsubDNormal
+    have : SsubD.Normal := hSsubDNormal
     exact section10_sylow_le_normal_hall_of_mem hSHallD hpσ PD
   obtain ⟨PS, hPSamb⟩ :=
     section10_exists_sylow_subgroupOf_with_same_ambient hSleD PD hPDleSsubD
@@ -483,7 +483,7 @@ private theorem section10_corollary_10_9_a_1_of_nilpotent_pair_hall
       section10AmbientSylowSubgroup (section10Msigma M) Pσ ≤
         Subgroup.centralizer (X : Set G) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let S : Subgroup M := section10MsigmaSubgroup M
   let XM : Subgroup M := X.subgroupOf M
   have hXMq : IsPGroup q.val XM := by
@@ -564,7 +564,7 @@ private theorem section10_pSubgroup_le_pPrimeCore_of_largest_lt
     (hXq : IsPGroup q.val X) (hpq_lt : p.val < q.val) :
     X ≤ pPrimeCore p.val H := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let π : H →* H ⧸ pPrimeCore p.val H := QuotientGroup.mk' (pPrimeCore p.val H)
   have hXmap_bot : X.map π = ⊥ := by
     by_contra hne
@@ -612,18 +612,18 @@ private theorem section10_inf_derived_nilpotent_of_pair_hall
     · have hrq' : r = q := by simpa using hrq
       intro hrβ
       exact hqβ (by simpa [hrq'] using hrβ)
-  have hDsolv : IsSolvable D := by
-    have hMsolv : IsSolvable M :=
+  have hDsolv : Group.IsSolvable D := by
+    have hMsolv : Group.IsSolvable M :=
       IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
-    letI : IsSolvable M := hMsolv
-    exact subgroup_solvable_of_solvable (H := D)
+    let : Group.IsSolvable M := hMsolv
+    exact by infer_instance
   obtain ⟨L, _hLD, hAL, _hLHall, hLnil⟩ :=
     section10_exists_nilpotent_hall_containing
       (H := M) (π := (section10BetaPrimes M)ᶜ) (K := D) (X := A)
       hDsolv (lemma_10_8_b (G := G) hM).1 hAD hAπD
   let AsubL : Subgroup L := A.subgroupOf L
   have hAsubLnil : Group.IsNilpotent AsubL := by
-    letI : Group.IsNilpotent L := hLnil
+    let : Group.IsNilpotent L := hLnil
     infer_instance
   let e : AsubL ≃* A := Subgroup.subgroupOfEquivOfLe hAL
   exact Group.nilpotent_of_mulEquiv (G := AsubL) (G' := A) e
@@ -634,7 +634,7 @@ private theorem section10_pSubgroup_le_inf_derived_of_sigma
     (hPp : IsPGroup p.val P) :
     P ≤ ((W ⊓ derivedSubgroup M : Subgroup M).subgroupOf W) := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   let D : Subgroup M := derivedSubgroup M
   let A : Subgroup M := W ⊓ D
   let qD : M →* M ⧸ D := QuotientGroup.mk' D
@@ -687,7 +687,7 @@ private theorem section10_inf_pPrimeCore_subgroupOf_isPGroup_of_pair_hall
     (_hpq : p ≠ q) (hWHall : IsHallSubgroup ({p, q} : Set Nat.Primes) W) :
     IsPGroup q.val ((W ⊓ pPrimeCore p.val M : Subgroup M).subgroupOf W) := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.property⟩
+  have : Fact q.val.Prime := ⟨q.property⟩
   let B : Subgroup M := W ⊓ pPrimeCore p.val M
   let BW : Subgroup W := B.subgroupOf W
   refine (IsPGroup.iff_card (p := q.val) (G := BW)).2 ?_
@@ -716,7 +716,7 @@ private theorem section10_inf_pPrimeCore_subgroupOf_isPGroup_of_pair_hall
       hp_dvd_B.trans (Subgroup.card_dvd_of_le (show B ≤ pPrimeCore p.val M from by
         intro x hx
         exact hx.2))
-    haveI : Fact p.val.Prime := ⟨p.property⟩
+    have : Fact p.val.Prime := ⟨p.property⟩
     exact ((p.property.coprime_iff_not_dvd).1
       (pPrimeCore_coprime_card (G := M) (p := p.val))) hp_dvd_core
   · have hrq' : r' = q := by simpa using hrq
@@ -742,7 +742,7 @@ private theorem section10_pair_hall_nilpotent_of_inf_derived_nilpotent
     rcases Set.mem_insert_iff.mp hr_pair with hrp | hrq
     · have hr_eq_p : r = p.val := congrArg Subtype.val hrp
       subst r
-      haveI : Fact p.val.Prime := ⟨p.property⟩
+      have : Fact p.val.Prime := ⟨p.property⟩
       let A : Subgroup M := W ⊓ derivedSubgroup M
       let AW : Subgroup W := A.subgroupOf W
       have hAWnormal : AW.Normal := by
@@ -754,7 +754,7 @@ private theorem section10_pair_hall_nilpotent_of_inf_derived_nilpotent
           intro x hx
           exact hx.1
         let e : A ≃* AW := (Subgroup.subgroupOfEquivOfLe (H := A) (K := W) hAW_le).symm
-        letI : Group.IsNilpotent A := hWinfDnil
+        let : Group.IsNilpotent A := hWinfDnil
         exact Group.nilpotent_of_mulEquiv (G := A) (G' := AW) e
       have hP_le_AW : (P : Subgroup W) ≤ AW :=
         section10_pSubgroup_le_inf_derived_of_sigma
@@ -783,7 +783,7 @@ private theorem section10_pair_hall_nilpotent_of_inf_derived_nilpotent
         have hrq' : r' = q := by simpa using hrq
         exact congrArg Subtype.val hrq'
       subst r
-      haveI : Fact q.val.Prime := ⟨q.property⟩
+      have : Fact q.val.Prime := ⟨q.property⟩
       let B : Subgroup M := W ⊓ pPrimeCore p.val M
       let BW : Subgroup W := B.subgroupOf W
       have hBWnormal : BW.Normal := by
@@ -833,7 +833,7 @@ private theorem section10_exists_nilpotent_pair_hall_containing_of_lt
       (H := M) (p := p) (q := q)
       (lemma_10_8_c (G := G) hM hpM hpβ).2.2 hXMq hpq_lt
   have hXMpair : IsPiSubgroup (G := M) ({p, q} : Set Nat.Primes) XM := by
-    haveI : Fact q.val.Prime := ⟨q.property⟩
+    have : Fact q.val.Prime := ⟨q.property⟩
     intro r hr_dvd
     obtain ⟨n, hcard⟩ := hXMq.exists_card_eq
     have hr_dvd_q : r.val ∣ q.val :=
@@ -841,7 +841,7 @@ private theorem section10_exists_nilpotent_pair_hall_containing_of_lt
     have hrq : r = q :=
       Subtype.ext ((Nat.prime_dvd_prime_iff_eq r.property q.property).mp hr_dvd_q)
     simp [hrq]
-  letI : MulDistribMulAction PUnit.{1} M := {
+  let : MulDistribMulAction PUnit.{1} M := {
     smul := fun _ x => x
     one_smul := by intro x; rfl
     mul_smul := by intro a b x; rfl
@@ -851,7 +851,7 @@ private theorem section10_exists_nilpotent_pair_hall_containing_of_lt
     refine ⟨?_⟩
     intro a x
     simp
-  have hMsolv : IsSolvable M :=
+  have hMsolv : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1)
   obtain ⟨W, hWHall, _hWinv, hXW⟩ :=
     exists_isHallSubgroup_isInvariant_of_isPiSubgroup

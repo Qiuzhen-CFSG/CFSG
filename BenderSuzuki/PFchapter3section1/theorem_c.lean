@@ -539,8 +539,10 @@ private theorem projectiveEquiv_natural
           (Matrix.SpecialLinearGroup.toLin'
             (Matrix.SpecialLinearGroup.map e.toRingHom A)
             (finTwoSemilinearEquiv_of_ringEquiv e v)) _
-      rw [Projectivization.map_mk]
-      rw [Projectivization.mk_eq_mk_iff']
+      change Projectivization.mk L
+          ((finTwoSemilinearEquiv_of_ringEquiv e).toLinearMap
+            (Matrix.SpecialLinearGroup.toLin' A v)) _ = _
+      apply (Projectivization.mk_eq_mk_iff' L _ _ _ _).2
       refine ⟨1, ?_⟩
       simp only [one_smul]
       ext i
@@ -2233,8 +2235,8 @@ private theorem theorem_c_of_Q1_ne_bot
         rw [← hqe]
         simpa only [mul_inv_rev, mul_assoc] using hconj
       letI : QK.Normal := hQK_normal
-      have hquotient_solvable : IsSolvable (d.H ⧸ QK) := by
-        letI : IsSolvable d.D := _root_.odd_order_theorem d.D hdDodd
+      have hquotient_solvable : Group.IsSolvable (d.H ⧸ QK) := by
+        letI : Group.IsSolvable d.D := _root_.odd_order_theorem d.D hdDodd
         let pi : d.H →* d.H ⧸ QK := QuotientGroup.mk' QK
         let piD : d.D →* d.H ⧸ QK := pi.comp d.D.subtype
         letI : d.Q.Normal := d.Q_normal
@@ -2252,7 +2254,7 @@ private theorem theorem_c_of_Q1_ne_bot
           have hqQK : q ∈ QK := Subgroup.mem_sup_left hq
           have hpiq : pi q = 1 := (QuotientGroup.eq_one_iff q).2 hqQK
           simp [hpiq]
-        exact solvable_of_surjective (f := piD) hpiD_surjective
+        exact Group.isSolvable_of_surjective (f := piD) hpiD_surjective
       have hquotient_nontrivial : Nontrivial (d.H ⧸ QK) := by
         rw [QuotientGroup.nontrivial_iff]
         intro hQKtop
@@ -2339,7 +2341,7 @@ private theorem theorem_c_of_Q1_ne_bot
               (orderOf_dvd_natCard vD)
           exact horderOdd.not_two_dvd_nat htwo
         exact hvne (by simp [hvDone])
-      letI : IsSolvable (d.H ⧸ QK) := hquotient_solvable
+      letI : Group.IsSolvable (d.H ⧸ QK) := hquotient_solvable
       letI : Nontrivial (d.H ⧸ QK) := hquotient_nontrivial
       obtain ⟨eta, hetaNe⟩ :=
         Section6.exists_nontrivial_linear_character_of_solvable (d.H ⧸ QK)
@@ -2888,21 +2890,21 @@ private theorem theorem_c_of_Q1_ne_bot
             have hpPi : p ∈ pi := by
               simpa [pi, subgroupPrimeSet] using hpQK
             exact hpCompl hpPi
-        have hHsolvable : IsSolvable d.H := by
+        have hHsolvable : Group.IsSolvable d.H := by
           have hsolvableSup :
               ∀ {L : Type u} [Group L] (N R : Subgroup L) [N.Normal],
-                IsSolvable N → IsSolvable R →
-                  IsSolvable ↥(N ⊔ R : Subgroup L) := by
+                Group.IsSolvable N → Group.IsSolvable R →
+                  Group.IsSolvable ↥(N ⊔ R : Subgroup L) := by
             intro L _ N R _ hNsolv hRsolv
             let T : Subgroup L := N ⊔ R
             have hNT : N ≤ T := le_sup_left
             have hRT : R ≤ T := le_sup_right
             let NT : Subgroup T := N.subgroupOf T
             haveI : NT.Normal := (inferInstance : N.Normal).subgroupOf T
-            have hNTsolv : IsSolvable NT := by
+            have hNTsolv : Group.IsSolvable NT := by
               let eNT : NT ≃* N := Subgroup.subgroupOfEquivOfLe hNT
-              letI : IsSolvable N := hNsolv
-              exact solvable_of_solvable_injective
+              letI : Group.IsSolvable N := hNsolv
+              exact Group.isSolvable_of_isSolvable_injective
                 (f := eNT.toMonoidHom) eNT.injective
             let f : R →* T ⧸ NT :=
               (QuotientGroup.mk' NT).comp (Subgroup.inclusion hRT)
@@ -2924,25 +2926,25 @@ private theorem theorem_c_of_Q1_ne_bot
                   QuotientGroup.mk' NT (⟨n, hNT hn⟩ : T) = 1 :=
                 (QuotientGroup.eq_one_iff _).2 hnNT
               rw [hmkN, one_mul]
-            have hquotSolv : IsSolvable (T ⧸ NT) := by
-              letI : IsSolvable R := hRsolv
-              exact solvable_of_surjective (f := f) hf
-            letI : IsSolvable NT := hNTsolv
-            letI : IsSolvable (T ⧸ NT) := hquotSolv
-            exact solvable_of_ker_le_range NT.subtype
+            have hquotSolv : Group.IsSolvable (T ⧸ NT) := by
+              letI : Group.IsSolvable R := hRsolv
+              exact Group.isSolvable_of_surjective (f := f) hf
+            letI : Group.IsSolvable NT := hNTsolv
+            letI : Group.IsSolvable (T ⧸ NT) := hquotSolv
+            exact Group.isSolvable_of_ker_le_range NT.subtype
               (QuotientGroup.mk' NT) (by
                 rw [QuotientGroup.ker_mk', Subgroup.range_subtype])
           letI : d.Q1.Normal := d.Q1_normal
-          have hQ1solv : IsSolvable d.Q1 :=
+          have hQ1solv : Group.IsSolvable d.Q1 :=
             _root_.odd_order_theorem d.Q1 d.Q1_odd
-          have hSsolv : IsSolvable d.S := by
+          have hSsolv : Group.IsSolvable d.S := by
             letI : Group.IsNilpotent d.S := d.S_nilpotent
             exact IsNilpotent.to_isSolvable
-          have hQsupSolv : IsSolvable ↥(d.Q1 ⊔ d.S) :=
+          have hQsupSolv : Group.IsSolvable ↥(d.Q1 ⊔ d.S) :=
             hsolvableSup d.Q1 d.S hQ1solv hSsolv
           have hQeq : d.Q1 ⊔ d.S = d.Q := by
             rw [sup_comm, d.Q_eq_S_sup_Q1]
-          have hQsolv : IsSolvable d.Q := by
+          have hQsolv : Group.IsSolvable d.Q := by
             rw [hQeq] at hQsupSolv
             exact hQsupSolv
           have hKleH : K ≤ d.H := by
@@ -2950,24 +2952,24 @@ private theorem theorem_c_of_Q1_ne_bot
             exact hch.1.section2.K_le_D.trans
               hch.1.section2.hA.A1.D_le_H
           let KH : Subgroup d.H := K.subgroupOf d.H
-          have hKHsolv : IsSolvable KH := by
+          have hKHsolv : Group.IsSolvable KH := by
             have hKcyclic : IsCyclic K :=
               (PFchapter1section2.proposition_2 H D Q K V W Q0 S Q1 t
                 hch.1.section2).1
             letI : IsCyclic K := hKcyclic
             letI : CommGroup K := IsCyclic.commGroup
-            letI : IsSolvable K := inferInstance
+            letI : Group.IsSolvable K := inferInstance
             let eKH : KH ≃* K := Subgroup.subgroupOfEquivOfLe hKleH
-            exact solvable_of_solvable_injective
+            exact Group.isSolvable_of_isSolvable_injective
               (f := eKH.toMonoidHom) eKH.injective
           letI : d.Q.Normal := d.Q_normal
-          have hQKsolv : IsSolvable QK := by
-            have hsupSolv : IsSolvable ↥(d.Q ⊔ KH) :=
+          have hQKsolv : Group.IsSolvable QK := by
+            have hsupSolv : Group.IsSolvable ↥(d.Q ⊔ KH) :=
               hsolvableSup d.Q KH hQsolv hKHsolv
             simpa [QK, KH] using hsupSolv
-          letI : IsSolvable QK := hQKsolv
-          letI : IsSolvable (d.H ⧸ QK) := hquotient_solvable
-          exact solvable_of_ker_le_range QK.subtype
+          letI : Group.IsSolvable QK := hQKsolv
+          letI : Group.IsSolvable (d.H ⧸ QK) := hquotient_solvable
+          exact Group.isSolvable_of_ker_le_range QK.subtype
             (QuotientGroup.mk' QK) (by
               rw [QuotientGroup.ker_mk', Subgroup.range_subtype])
         have hcomponentPair :
@@ -4324,9 +4326,9 @@ private theorem theorem_c_of_Q1_ne_bot
           exact hQ1bot.symm ▸ IsPGroup.of_bot (p := 2) (G := d.H)
         letI : Nontrivial d.Q1 :=
           (Subgroup.nontrivial_iff_ne_bot d.Q1).2 hQ1ne
-        have hQ1solv : IsSolvable d.Q1 :=
+        have hQ1solv : Group.IsSolvable d.Q1 :=
           _root_.odd_order_theorem d.Q1 d.Q1_odd
-        letI : IsSolvable d.Q1 := hQ1solv
+        letI : Group.IsSolvable d.Q1 := hQ1solv
         obtain ⟨eta0, heta0⟩ :=
           Section6.exists_nontrivial_linear_character_of_solvable d.Q1
         let phi0 : Section1.ClassFunction d.Q :=

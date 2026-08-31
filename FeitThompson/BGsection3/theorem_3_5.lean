@@ -17,7 +17,7 @@ abbrev Theorem35IndHyp {G : Type uG} [Group G] [Finite G] {F : Type uF} [Field F
     (ρ' : Representation F G' V'),
     Nat.card K' < Nat.card K →
     IsFrobeniusGroupWithKernelComplement K' R' →
-    IsSolvable K' →
+    Group.IsSolvable K' →
     IsCyclic R' →
     Nat.Prime (Nat.card R') →
     (ringChar F = 0 ∨
@@ -29,7 +29,7 @@ theorem theorem_3_5_quotient_step {G : Type uG} [Group G] [Finite G] {F : Type u
     [Field F] {V : Type uV} [AddCommGroup V] [Module F V]
     (K R : Subgroup G) (ρ : Representation F G V)
     (hind : Theorem35IndHyp.{uG, uF, uV} (F := F) K)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
@@ -39,16 +39,16 @@ theorem theorem_3_5_quotient_step {G : Type uG} [Group G] [Finite G] {F : Type u
   let N : Subgroup G := ρ.ker
   have hN_le_K : N ≤ K :=
     lemma_3_2_a (K := K) (R := R) (N := N) hfrob hsolvK hKnle
-  letI : N.Normal := inferInstance
+  let : N.Normal := inferInstance
   let q : G →* G ⧸ N := QuotientGroup.mk' N
-  letI : Representation.IsTrivial (ρ.comp N.subtype) :=
+  let : Representation.IsTrivial (ρ.comp N.subtype) :=
     isTrivialCompSubtypeOfLeKer (ρ := ρ) (N := N) (by
       intro x hx
       exact hx)
-  letI : IsSolvable ↥K := hsolvK
-  have hsolv_map : IsSolvable ↥(K.map q) :=
-    solvable_of_surjective (f := q.subgroupMap K) (MonoidHom.subgroupMap_surjective q K)
-  letI : IsCyclic ↥R := hR_cyclic
+  let : Group.IsSolvable ↥K := hsolvK
+  have hsolv_map : Group.IsSolvable ↥(K.map q) :=
+    Group.isSolvable_of_surjective (f := q.subgroupMap K) (MonoidHom.subgroupMap_surjective q K)
+  let : IsCyclic ↥R := hR_cyclic
   have hR_map_cyclic : IsCyclic ↥(R.map q) :=
     isCyclic_of_surjective (f := q.subgroupMap R) (MonoidHom.subgroupMap_surjective q R)
   have hcard_quot_dvd : Nat.card (G ⧸ N) ∣ Nat.card G := by
@@ -87,7 +87,7 @@ theorem theorem_3_5_exists_irreducible_counterexample
       let ρm := (Subrepresentation.ofSubmodule' m).toRepresentation
       ρm.fixedSubspace R ≠ ⊥ ∧
       ¬ ⁅K, K⁆ ≤ ρm.ker := by
-  letI : K.Normal := hfrob.normal
+  let : K.Normal := hfrob.normal
   have hbad_ker : ¬ ⁅K, K⁆ ≤ ρ.ker := by
     intro hker
     exact hbad ((commutator_le_centralizerIn_iff_le_ker (ρ := ρ) (R := K) (K := K)).2 hker)
@@ -137,10 +137,10 @@ theorem theorem_3_5_fixedSubspace_rank_one_of_nonzero
       change v.1.1 = w.1.1 at hEq'
       exact hEq'
     exact Subtype.ext <| Subtype.ext hEqV
-  letI : FiniteDimensional F ↥(ρ.fixedSubspace R) := FiniteDimensional.of_rank_eq_one hfixR
+  let : FiniteDimensional F ↥(ρ.fixedSubspace R) := FiniteDimensional.of_rank_eq_one hfixR
   have hfin_fix : Module.finrank F ↥(ρ.fixedSubspace R) = 1 :=
     (Module.rank_eq_one_iff_finrank_eq_one (R := F) (M := ↥(ρ.fixedSubspace R))).mp hfixR
-  letI : FiniteDimensional F S := FiniteDimensional.of_injective i hi_inj
+  let : FiniteDimensional F S := FiniteDimensional.of_injective i hi_inj
   have hfin_le : Module.finrank F S ≤ 1 := by
     calc
       Module.finrank F S ≤ Module.finrank F ↥(ρ.fixedSubspace R) :=
@@ -168,7 +168,7 @@ theorem theorem_3_5_faithful_reduction
         (ρ' : Representation F G' W),
         Nat.card K' < Nat.card K →
         IsFrobeniusGroupWithKernelComplement K' R' →
-        IsSolvable K' →
+        Group.IsSolvable K' →
         IsCyclic R' →
         Nat.Prime (Nat.card R') →
         (ringChar F = 0 ∨
@@ -176,7 +176,7 @@ theorem theorem_3_5_faithful_reduction
         Module.rank F ↥(ρ'.fixedSubspace R') = 1 →
         ⁅K', K'⁆ ≤ ρ'.centralizerIn K')
     [IsSemisimpleModule (MonoidAlgebra F G) ρ.asModule]
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
@@ -188,7 +188,7 @@ theorem theorem_3_5_faithful_reduction
       Module.rank F ↥(ρm.fixedSubspace R) = 1 ∧
       ρm.ker = ⊥ ∧
       ¬ ⁅K, K⁆ ≤ ρm.ker := by
-  letI : K.Normal := hfrob.normal
+  let : K.Normal := hfrob.normal
   obtain ⟨m, hm_simple, hm_fix, hm_bad⟩ :=
     theorem_3_5_exists_irreducible_counterexample K R ρ hfrob hchar hbad
   let ρm := (Subrepresentation.ofSubmodule' m).toRepresentation
@@ -213,7 +213,7 @@ theorem theorem_3_5_proper_invariant_subgroups_abelian
     [AddCommGroup V] [Module F V]
     (K R : Subgroup G) (ρ : Representation F G V)
     (hind : Theorem35IndHyp.{uG, uF, uV} (F := F) K)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
@@ -334,14 +334,14 @@ theorem theorem_3_5_proper_invariant_subgroups_abelian
       simpa using hybot
     let NK : Subgroup K := N.subgroupOf K
     let eNK : NK ≃* N := Subgroup.subgroupOfEquivOfLe (H := N) (K := K) hN_lt.1
-    letI : IsSolvable ↥K := hsolvK
-    have hsolvNK : IsSolvable ↥NK := subgroup_solvable_of_solvable (H := NK)
-    have hsolvN : IsSolvable ↥N := by
-      exact solvable_of_surjective (f := eNK.toMonoidHom) eNK.surjective
+    let : Group.IsSolvable ↥K := hsolvK
+    have hsolvNK : Group.IsSolvable ↥NK := by infer_instance
+    have hsolvN : Group.IsSolvable ↥N := by
+      exact Group.isSolvable_of_surjective (f := eNK.toMonoidHom) eNK.surjective
     let eNS : (N.subgroupOf S) ≃* N := Subgroup.subgroupOfEquivOfLe (H := N) (K := S) le_sup_left
-    have hsolvNsub : IsSolvable ↥(N.subgroupOf S) := by
-      letI : IsSolvable ↥N := hsolvN
-      exact solvable_of_surjective (f := eNS.symm.toMonoidHom) eNS.symm.surjective
+    have hsolvNsub : Group.IsSolvable ↥(N.subgroupOf S) := by
+      let : Group.IsSolvable ↥N := hsolvN
+      exact Group.isSolvable_of_surjective (f := eNS.symm.toMonoidHom) eNS.symm.surjective
     have hcard_sub_dvd : Nat.card S ∣ Nat.card G := Subgroup.card_subgroup_dvd_card S
     have hNsub_lt : Nat.card (N.subgroupOf S) < Nat.card K := by
       rw [natCard_subgroupOf_eq N S le_sup_left]
@@ -356,7 +356,7 @@ theorem theorem_3_5_proper_invariant_subgroups_abelian
       exact hfixR
     have hRsub_cyclic : IsCyclic ↥(R.subgroupOf S) := by
       let eRS : (R.subgroupOf S) ≃* R := Subgroup.subgroupOfEquivOfLe (H := R) (K := S) le_sup_right
-      letI : IsCyclic ↥R := hR_cyclic
+      let : IsCyclic ↥R := hR_cyclic
       exact isCyclic_of_surjective (f := eRS.symm.toMonoidHom) eRS.symm.surjective
     have hsub :
         ⁅N.subgroupOf S, N.subgroupOf S⁆ ≤
@@ -388,7 +388,7 @@ theorem theorem_3_5_commutator_abelian
     [AddCommGroup V] [Module F V]
     (K R : Subgroup G) (ρ : Representation F G V)
     (hind : Theorem35IndHyp.{uG, uF, uV} (F := F) K)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
@@ -398,13 +398,13 @@ theorem theorem_3_5_commutator_abelian
   by_cases hcomm_bot : ⁅K, K⁆ = ⊥
   · rw [hcomm_bot]
     infer_instance
-  · letI : IsSolvable ↥K := hsolvK
+  · let : Group.IsSolvable ↥K := hsolvK
     have hK_ne : K ≠ ⊥ := by
       intro hK_bot
       exact hcomm_bot (by simp [hK_bot])
-    letI : Nontrivial ↥K := (Subgroup.nontrivial_iff_ne_bot K).2 hK_ne
+    let : Nontrivial ↥K := (Subgroup.nontrivial_iff_ne_bot K).2 hK_ne
     have hcomm_lt_top : commutator (↥K) < (⊤ : Subgroup ↥K) :=
-      IsSolvable.commutator_lt_top_of_nontrivial (G := ↥K)
+      Group.IsSolvable.commutator_lt_top_of_nontrivial (G := ↥K)
     have hcomm_lt : ⁅K, K⁆ < K := by
       have hlt' :
           (commutator (↥K)).map K.subtype < (⊤ : Subgroup ↥K).map K.subtype :=
@@ -413,8 +413,8 @@ theorem theorem_3_5_commutator_abelian
       have htop_map : (⊤ : Subgroup ↥K).map K.subtype = K := by
         simpa [MonoidHom.range_eq_map] using (K.range_subtype : K.subtype.range = K)
       simpa [Subgroup.map_subtype_commutator, htop_map] using hlt'
-    letI : K.Normal := hfrob.normal
-    letI : (⁅K, K⁆).Normal := inferInstance
+    let : K.Normal := hfrob.normal
+    let : (⁅K, K⁆).Normal := inferInstance
     have hRinv_comm :
         ∀ r : R, ∀ x ∈ ⁅K, K⁆, (r : G) * x * (r : G)⁻¹ ∈ ⁅K, K⁆ := by
       intro r x hx
@@ -710,7 +710,7 @@ noncomputable def theorem_3_5_coindMapOfSubrep
   let σH : Representation F H V := σ.comp H.subtype
   have hσHcr : σH.IsCompletelyReducible := by
     exact Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime (ρ := σH) hchar
-  letI : ComplementedLattice (Subrepresentation σH) := by
+  let : ComplementedLattice (Subrepresentation σH) := by
     exact
       (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule
         (ρ := σH)).2 hσHcr
@@ -834,7 +834,7 @@ theorem theorem_3_5_coindEval_surjective_fixedSubspace
       ((coindEval (ρ := ρ) (1 : G)).toLinearMap.comp
         ((coindRep (ρ := ρ)).fixedSubspace R).subtype) := by
   classical
-  letI : Fintype R := Fintype.ofFinite R
+  let : Fintype R := Fintype.ofFinite R
   intro v
   refine ⟨⟨∑ r : R, coindBaseFunctionAt (ρ := ρ) (r : G) v, ?_⟩, ?_⟩
   · exact theorem_3_5_coind_sumBase_mem_fixedSubspace (ρ := ρ) v
@@ -892,10 +892,10 @@ theorem theorem_3_5_invariants_extendScalars_eq_baseChange
     Representation.invariants (Theory.Representation.extendScalars F' ρ) =
       (Representation.invariants ρ).baseChange F' := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Invertible (Fintype.card G : F) := by
+  let : Fintype G := Fintype.ofFinite G
+  let : Invertible (Fintype.card G : F) := by
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hF
-  letI : Invertible (Fintype.card G : F') := by
+  let : Invertible (Fintype.card G : F') := by
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hF'
   let S : Submodule F V := Representation.invariants ρ
   let S' : Submodule F' (F' ⊗[F] V) :=
@@ -1074,6 +1074,7 @@ theorem theorem_3_5_le_ker_of_extendScalars
     simpa [Theory.Representation.extendScalars_apply] using hfix
   exact (Module.FaithfullyFlat.tensorProduct_mk_injective (A := F) (B := F') V) hfix'
 
+set_option backward.isDefEq.respectTransparency false in
 noncomputable def theorem_3_5_coindEquivOfNotall
     {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
     {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
@@ -1086,11 +1087,11 @@ noncomputable def theorem_3_5_coindEquivOfNotall
     (hnall : ¬ ∀ x : G,
       Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
     ρ ≃ₗ coindRep M.toRepresentation := by
-  letI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
-  letI : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
+  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
   let f : ρ →ₗ coindRep M.toRepresentation := theorem_3_5_coindMapOfSubrep ρ hchar M
-  letI : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
+  let : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
   have hf_ne : f ≠ 0 := by
     obtain ⟨m0, hm0_ne⟩ := exists_ne (0 : M.toSubmodule)
     intro hf0
@@ -1104,7 +1105,7 @@ noncomputable def theorem_3_5_coindEquivOfNotall
   have hsimple_coind :
       IsSimpleOrder (Subrepresentation (coindRep (ρ := M.toRepresentation))) :=
     coindRep_irreducible_of_notall (ρ := M.toRepresentation) hcardQ hp hnall
-  letI : Representation.IsIrreducible (coindRep (ρ := M.toRepresentation)) := hsimple_coind
+  let : Representation.IsIrreducible (coindRep (ρ := M.toRepresentation)) := hsimple_coind
   have hfinj : Function.Injective f := by
     rcases (Representation.IsIrreducible.injective_or_eq_zero
       (ρ := ρ) (σ := coindRep (ρ := M.toRepresentation)) (f := f)) with hfinj | hf0
@@ -1154,8 +1155,8 @@ theorem theorem_3_5_distinct_constituents_case
     (hnall : ¬ ∀ x : G,
       Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
     ⁅K, K⁆ ≤ ρ.ker := by
-  letI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
-  letI : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
+  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
   have hcardQ : Nat.card (G ⧸ K) = Nat.card R := by
     calc
@@ -1167,7 +1168,7 @@ theorem theorem_3_5_distinct_constituents_case
     exact hchar_of_card_dvd (G := G) (F := F) hchar (Subgroup.card_subgroup_dvd_card K)
   let e : ρ ≃ₗ coindRep M.toRepresentation :=
     theorem_3_5_coindEquivOfNotall (ρ := ρ) hcardQ hR_prime hcharK M hnall
-  letI : FiniteDimensional F (Representation.coindV K.subtype M.toRepresentation) :=
+  let : FiniteDimensional F (Representation.coindV K.subtype M.toRepresentation) :=
     e.toLinearEquiv.finiteDimensional
   have hfixR_finrank : Module.finrank F ↥(ρ.fixedSubspace R) = 1 := by
     exact
@@ -1197,7 +1198,7 @@ theorem theorem_3_5_distinct_constituents_case
       _ ≤ Module.finrank F ↥((coindRep (ρ := M.toRepresentation)).fixedSubspace R) :=
         LinearMap.finrank_range_le FixEval
       _ = 1 := hfix_coind_finrank
-  letI : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
+  let : Nontrivial M.toSubmodule := Subrepresentation.irreducible_module_nontrivial M.toRepresentation
   have hM_finrank : Module.finrank F M.toSubmodule = 1 := by
     have hM_finrank_pos : 0 < Module.finrank F M.toSubmodule :=
       Module.finrank_pos_iff.mpr inferInstance
@@ -1230,14 +1231,14 @@ theorem theorem_3_5_irreducible_restriction_of_all_conjugates
     (hall : ∀ x : G,
       Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
     Representation.IsIrreducible (ρ.comp K.subtype) := by
-  letI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
-  letI : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
+  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
   have hcardQ : Nat.card (G ⧸ K) = Nat.card R := by
     calc
       Nat.card (G ⧸ K) = K.index := by simpa using K.index_eq_card.symm
       _ = Nat.card R := hfrob.isComplement'.symm.index_eq_card
-  letI : Fact (Nat.Prime (Nat.card R)) := ⟨hR_prime⟩
+  let : Fact (Nat.Prime (Nat.card R)) := ⟨hR_prime⟩
   have hcycQ : IsCyclic (G ⧸ K) := isCyclic_of_prime_card (α := G ⧸ K) hcardQ
   let hE : ∀ x : G, M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x :=
     fun x => Classical.choice (hall x)
@@ -1260,11 +1261,11 @@ theorem theorem_3_5_K_module_branch
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
     (hfixR : Module.rank F ↥(ρ.fixedSubspace R) = 1) :
     Representation.IsIrreducible (ρ.comp K.subtype) ∨ ⁅K, K⁆ ≤ ρ.ker := by
-  letI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
   obtain ⟨M, hMirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
     (ρ.comp K.subtype)
-  letI : Representation.IsIrreducible M.toRepresentation := hMirr
+  let : Representation.IsIrreducible M.toRepresentation := hMirr
   by_cases hnall : ¬ ∀ x : G,
       Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)
   · right
@@ -1279,7 +1280,7 @@ public theorem theorem_3_5_coprime_card_of_prime_complement
     (hR_prime : Nat.Prime (Nat.card R)) :
     Nat.Coprime (Nat.card K) (Nat.card R) := by
   classical
-  letI : K.Normal := hfrob.normal
+  let : K.Normal := hfrob.normal
   let p := Nat.card R
   have hp : Nat.Prime p := by
     simpa [p] using hR_prime
@@ -1297,9 +1298,9 @@ public theorem theorem_3_5_coprime_card_of_prime_complement
     (lemma_3_1 (K := K) (R := R) hK_ne hR_ne hfrob.normal hfrob.isComplement').1 hfrob
   let p' := p
   have hp' : Nat.Prime p' := hp
-  letI : Fact p'.Prime := ⟨hp'⟩
+  let : Fact p'.Prime := ⟨hp'⟩
   have hRK : R ≤ Subgroup.normalizer K := Subgroup.le_normalizer_of_normal (H := K)
-  haveI : Subgroup.Normalizes R K := ⟨hRK⟩
+  have : Subgroup.Normalizes R K := ⟨hRK⟩
   have hRp : IsPGroup p' ↥R := by
     refine (IsPGroup.iff_card (p := p') (G := ↥R)).2 ?_
     refine ⟨1, ?_⟩
@@ -1501,7 +1502,7 @@ theorem theorem_3_5_faithful_irreducible_endpoint
     (K R : Subgroup G) [K.Normal] (ρ : Representation F G V)
     (hind : Theorem35IndHyp.{uG, uF, uV} (F := F) K)
     [Representation.IsIrreducible ρ]
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
@@ -1510,9 +1511,9 @@ theorem theorem_3_5_faithful_irreducible_endpoint
     ⁅K, K⁆ ≤ ρ.ker := by
   classical
   let C : Subgroup G := ⁅K, K⁆
-  letI : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
-  letI : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
-  letI : IsSolvable ↥K := hsolvK
+  let : FiniteDimensional F V := finiteDimensional_of_irreducible_finite_group ρ inferInstance
+  let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial ρ
+  let : Group.IsSolvable ↥K := hsolvK
   have hR_ne : R ≠ ⊥ := by
     intro hR_bot
     exact hR_prime.ne_one ((Subgroup.eq_bot_iff_card (H := R)).1 hR_bot)
@@ -1527,9 +1528,9 @@ theorem theorem_3_5_faithful_irreducible_endpoint
       have hK_ne : K ≠ ⊥ := by
         intro hK_bot
         exact hCbot (by simp [C, hK_bot])
-      letI : Nontrivial ↥K := (Subgroup.nontrivial_iff_ne_bot K).2 hK_ne
+      let : Nontrivial ↥K := (Subgroup.nontrivial_iff_ne_bot K).2 hK_ne
       have hlt' : commutator ↥K < (⊤ : Subgroup ↥K) :=
-        IsSolvable.commutator_lt_top_of_nontrivial (G := ↥K)
+        Group.IsSolvable.commutator_lt_top_of_nontrivial (G := ↥K)
       have htop_map : (⊤ : Subgroup ↥K).map K.subtype = K := by
         simpa [MonoidHom.range_eq_map] using (K.range_subtype : K.subtype.range = K)
       have hmap_lt :
@@ -1562,16 +1563,16 @@ theorem theorem_3_5_faithful_irreducible_endpoint
       rw [natCard_subgroupOf_eq R S le_sup_right]
       exact hR_prime
     by_cases hSirr : Representation.IsIrreducible ρS
-    · letI : Representation.IsIrreducible ρS := hSirr
+    · let : Representation.IsIrreducible ρS := hSirr
       obtain ⟨L, hLirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional
         (ρS.comp Csub.subtype)
-      letI : Representation.IsIrreducible L.toRepresentation := hLirr
+      let : Representation.IsIrreducible L.toRepresentation := hLirr
       by_cases hall : ∀ x : S,
           Nonempty (L.toRepresentation ≃ₗ Theory.Representation.conjugateRep L.toRepresentation x)
       · have hCirr : Representation.IsIrreducible (ρS.comp Csub.subtype) :=
           theorem_3_5_irreducible_restriction_of_all_conjugates Csub Rsub ρS hsub_frob
             hRsub_prime L hall
-        letI : Representation.IsIrreducible (ρS.comp Csub.subtype) := hCirr
+        let : Representation.IsIrreducible (ρS.comp Csub.subtype) := hCirr
         have hfin : Module.finrank F V = 1 := by
           simpa using
             (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
@@ -1588,7 +1589,7 @@ theorem theorem_3_5_faithful_irreducible_endpoint
           simpa using
             (Representation.IsIrreducible.finrank_eq_one_of_isMulCommutative
               (ρ := L.toRepresentation))
-        letI : Fintype (S ⧸ Csub) := Fintype.ofFinite (S ⧸ Csub)
+        let : Fintype (S ⧸ Csub) := Fintype.ofFinite (S ⧸ Csub)
         have hcardQ' : Fintype.card (S ⧸ Csub) = Nat.card R := by
           simpa [Nat.card_eq_fintype_card] using hcardQ
         have hdim : Module.finrank F V = Nat.card R := by
@@ -1599,8 +1600,8 @@ theorem theorem_3_5_faithful_irreducible_endpoint
             _ = Fintype.card (S ⧸ Csub) * Module.finrank F L.toSubmodule := by
                   simpa using (finrank_coindRep_eq_card_mul (ρ := L.toRepresentation))
             _ = Nat.card R := by rw [hcardQ', hLfin, Nat.mul_one]
-        letI : Representation.IsIrreducible (ρ.comp K.subtype) := hKirr
-        letI : Theory.Representation.IsAbsolutelyIrreducible (ρ.comp K.subtype) :=
+        let : Representation.IsIrreducible (ρ.comp K.subtype) := hKirr
+        let : Theory.Representation.IsAbsolutelyIrreducible (ρ.comp K.subtype) :=
           (Theory.Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ.comp K.subtype)).2
             (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
               (ρ := ρ.comp K.subtype)).surjective
@@ -1616,12 +1617,12 @@ theorem theorem_3_5_faithful_irreducible_endpoint
         exact
           Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
             (ρ := ρS) hcharS
-      letI : ComplementedLattice (Subrepresentation ρS) := by
+      let : ComplementedLattice (Subrepresentation ρS) := by
         exact
           (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule
             (ρ := ρS)).2 hρScr
       obtain ⟨P, hPirr⟩ := Subrepresentation.irreducible_subrepresentation_of_finite_dimensional ρS
-      letI : Representation.IsIrreducible P.toRepresentation := hPirr
+      let : Representation.IsIrreducible P.toRepresentation := hPirr
       have hP_top_ne : P ≠ ⊤ := by
         intro hP_top
         subst hP_top
@@ -1644,7 +1645,7 @@ theorem theorem_3_5_faithful_irreducible_endpoint
           change P.toSubmodule ⊔ Q.toSubmodule = (⊤ : Submodule F V) at h
           exact h
       have hP_ne_bot : P.toSubmodule ≠ ⊥ := by
-        letI : Nontrivial P.toSubmodule := Subrepresentation.irreducible_module_nontrivial P.toRepresentation
+        let : Nontrivial P.toSubmodule := Subrepresentation.irreducible_module_nontrivial P.toRepresentation
         exact Submodule.nontrivial_iff_ne_bot.mp inferInstance
       have hQ_ne_bot : Q.toSubmodule ≠ ⊥ := by
         intro hQ_bot
@@ -1740,7 +1741,7 @@ theorem theorem_3_5_algClosed_by_card {F : Type uF} [Field F] [IsAlgClosed F] {V
     [AddCommGroup V] [Module F V] :
     ∀ (G : Type uG) [Group G] [Finite G] (K R : Subgroup G) (ρ : Representation F G V),
       IsFrobeniusGroupWithKernelComplement K R →
-      IsSolvable K →
+      Group.IsSolvable K →
       IsCyclic R →
       Nat.Prime (Nat.card R) →
       (ringChar F = 0 ∨
@@ -1752,7 +1753,7 @@ theorem theorem_3_5_algClosed_by_card {F : Type uF} [Field F] [IsAlgClosed F] {V
       (G : Type uG) [Group G] [Finite G] (K R : Subgroup G) (ρ : Representation F G W),
       Nat.card K = n →
       IsFrobeniusGroupWithKernelComplement K R →
-      IsSolvable K →
+      Group.IsSolvable K →
       IsCyclic R →
       Nat.Prime (Nat.card R) →
       (ringChar F = 0 ∨
@@ -1779,8 +1780,8 @@ theorem theorem_3_5_algClosed_by_card {F : Type uF} [Field F] [IsAlgClosed F] {V
         exact
           Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
             (ρ := ρ) hchar
-    letI := moduleρ
-    letI := semisimpleρ
+    let := moduleρ
+    let := semisimpleρ
     have hred :=
       theorem_3_5_faithful_reduction K R ρ hind hfrob hsolvK hR_cyclic hR_prime hchar
         hfixR hbad
@@ -1788,8 +1789,8 @@ theorem theorem_3_5_algClosed_by_card {F : Type uF} [Field F] [IsAlgClosed F] {V
     let ρm := (Subrepresentation.ofSubmodule' m).toRepresentation
     dsimp at hmprops
     rcases hmprops with ⟨hfixm, hker_bot, hbadm⟩
-    letI : K.Normal := hfrob.normal
-    haveI : Representation.IsIrreducible ρm :=
+    let : K.Normal := hfrob.normal
+    have : Representation.IsIrreducible ρm :=
       irreducible_of_ofSubmodule'_simple (ρ := ρ) hm_simple
     have hcomm_ker : ⁅K, K⁆ ≤ ρm.ker :=
       theorem_3_5_faithful_irreducible_endpoint K R ρm hind hfrob hsolvK hR_cyclic hR_prime
@@ -1801,13 +1802,13 @@ theorem theorem_3_5_algClosed_by_card {F : Type uF} [Field F] [IsAlgClosed F] {V
 public theorem theorem_3_5 {G : Type*} [Group G] [Finite G] {F : Type*} [Field F]
     {V : Type*}
     [AddCommGroup V] [Module F V] (K R : Subgroup G) (ρ : Representation F G V)
-    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : IsSolvable K)
+    (hfrob : IsFrobeniusGroupWithKernelComplement K R) (hsolvK : Group.IsSolvable K)
     (hR_cyclic : IsCyclic R) (hR_prime : Nat.Prime (Nat.card R))
     (hchar : ringChar F = 0 ∨
       (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G)))
     (hfixR : Module.rank F ↥(ρ.fixedSubspace R) = 1) :
     ⁅K, K⁆ ≤ ρ.centralizerIn K := by
-  letI : K.Normal := hfrob.normal
+  let : K.Normal := hfrob.normal
   let F' := AlgebraicClosure F
   have hringChar : ringChar F' = ringChar F := by
     simpa [F'] using (Algebra.ringChar_eq (K := F) (L := F')).symm

@@ -55,7 +55,7 @@ theorem pPrimeCore_le_commutator_of_quotient_isPGroup
     pPrimeCore p Q ≤ commutator Q := by
   classical
   let D : Subgroup Q := commutator Q
-  haveI : D.Normal := by
+  have : D.Normal := by
     dsimp [D]
     infer_instance
   let q : Q →* Q ⧸ D := QuotientGroup.mk' D
@@ -79,7 +79,7 @@ theorem nilpotent_top_le_pCore_sup_pPrimeCore
     (hQnil : Group.IsNilpotent Q) :
     (⊤ : Subgroup Q) ≤ pCore p Q ⊔ pPrimeCore p Q := by
   classical
-  haveI : Group.IsNilpotent Q := hQnil
+  have : Group.IsNilpotent Q := hQnil
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup Q)) := by
     exact Group.nilpotent_of_mulEquiv
       (G := Q) (G' := ↥(⊤ : Subgroup Q))
@@ -95,7 +95,7 @@ theorem nilpotent_top_le_pCore_sup_pPrimeCore
   · subst hqp
     exact le_sup_left
   · have hqprime : Nat.Prime q.1 := Nat.prime_of_mem_primeFactors q.1.2
-    letI : Fact (Nat.Prime q.1) := ⟨hqprime⟩
+    let : Fact (Nat.Prime q.1) := ⟨hqprime⟩
     obtain ⟨n, hn⟩ := (pCore_isPGroup (G := Q) (p := q.1)).exists_card_eq
     have hcop : Nat.Coprime p (Nat.card (pCore q.1 Q)) := by
       rw [hn]
@@ -119,7 +119,7 @@ public theorem isPGroup_of_nilpotent_quotient_commutator_isPGroup
   let C : Subgroup Q := pCore p Q
   let P' : Subgroup Q := pPrimeCore p Q
   let D : Subgroup Q := commutator Q
-  haveI : C.Normal := by
+  have : C.Normal := by
     dsimp [C]
     infer_instance
   have hP_le_D : P' ≤ D := by
@@ -156,12 +156,12 @@ public theorem isPGroup_of_nilpotent_quotient_commutator_isPGroup
     simpa [hD_map_comm] using hD_map_top
   have hquot_top_bot : (⊤ : Subgroup (Q ⧸ C)) = ⊥ := by
     by_contra hne
-    haveI : Group.IsNilpotent Q := hQnil
-    haveI : IsSolvable (Q ⧸ C) := by infer_instance
+    have : Group.IsNilpotent Q := hQnil
+    have : Group.IsSolvable (Q ⧸ C) := by infer_instance
     have hlt :
         ⁅(⊤ : Subgroup (Q ⧸ C)), (⊤ : Subgroup (Q ⧸ C))⁆ <
           (⊤ : Subgroup (Q ⧸ C)) :=
-      IsSolvable.commutator_lt_of_ne_bot (G := Q ⧸ C) hne
+      Group.IsSolvable.commutator_lt_of_ne_bot (G := Q ⧸ C) hne
     exact (ne_of_lt hlt) (by simpa [hcomm_top])
   have hC_top : C = (⊤ : Subgroup Q) := by
     apply top_unique
@@ -178,19 +178,19 @@ public theorem isPGroup_of_nilpotent_quotient_commutator_isPGroup
 theorem theorem_6_5_b_chief_quotient_isPGroup
     {L : Type u} [Group L] [Finite L]
     {K H1 : Subgroup L} [H1.Normal] [K.Normal]
-    (hKsolv : IsSolvable K)
+    (hKsolv : Group.IsSolvable K)
     (hchief : IsChiefFactor H1 K) :
     ∃ p : ℕ, p.Prime ∧ IsPGroup p (K ⧸ H1.subgroupOf K) := by
   classical
   let cf : ChiefFactor L := { V := H1, U := K, isChief := hchief }
   let π : L →* L ⧸ H1 := QuotientGroup.mk' H1
   let Uq : Subgroup (L ⧸ H1) := K.map π
-  haveI : Uq.Normal := by
+  have : Uq.Normal := by
     dsimp [Uq, π]
     infer_instance
-  haveI : IsMinimalNormal Uq := by
+  have : IsMinimalNormal Uq := by
     simpa [cf, π, Uq] using chiefFactor_quotient_isMinimalNormal (G := L) cf
-  haveI : IsSolvable Uq := by
+  have : Group.IsSolvable Uq := by
     let φ : K →* L ⧸ H1 := π.comp K.subtype
     have hφrange : φ.range = Uq := by
       ext x
@@ -199,14 +199,14 @@ theorem theorem_6_5_b_chief_quotient_isPGroup
         exact ⟨y, y.property, rfl⟩
       · rintro ⟨y, hyK, rfl⟩
         exact ⟨⟨y, hyK⟩, rfl⟩
-    haveI : IsSolvable K := hKsolv
-    haveI : IsSolvable φ.range :=
-      solvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
+    have : Group.IsSolvable K := hKsolv
+    have : Group.IsSolvable φ.range :=
+      Group.isSolvable_of_surjective (f := φ.rangeRestrict) φ.rangeRestrict_surjective
     exact hφrange ▸ inferInstance
   rcases minimalNormal_solvable_exists_isElementaryAbelian (G := L ⧸ H1) Uq with
     ⟨p, hp, hpElem⟩
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : IsElementaryAbelian p Uq := hpElem
+  have : Fact p.Prime := ⟨hp⟩
+  have : IsElementaryAbelian p Uq := hpElem
   have hUq_p : IsPGroup p Uq := IsElementaryAbelian.isPGroup p Uq
   refine ⟨p, hp, ?_⟩
   exact hUq_p.of_equiv (quotientSubgroupRangeEquiv K H1).symm
@@ -225,14 +225,14 @@ theorem theorem_6_5_b_quotient_commutator_isPGroup
   classical
   let Msub : Subgroup K := M.subgroupOf K
   let Hsub : Subgroup K := H1.subgroupOf K
-  haveI : Msub.Normal := hMnormK
-  haveI : Hsub.Normal := hH1normK
+  have : Msub.Normal := hMnormK
+  have : Hsub.Normal := hH1normK
   have hMsubHsub : Msub ≤ Hsub := by
     intro x hx
     exact hMH1 hx
   let Q : Type u := K ⧸ Msub
   let Hbar : Subgroup Q := Hsub.map (QuotientGroup.mk' Msub)
-  haveI : Hbar.Normal := by
+  have : Hbar.Normal := by
     dsimp [Hbar]
     infer_instance
   let e₁ : Q ⧸ commutator Q ≃* Q ⧸ Hbar :=
@@ -300,13 +300,13 @@ public theorem theorem_6_5_b
       (theorem_6_5_a_coherent_H1 h61 hH1norm hcommHyp hfrob hSH1)
   have hnoncomm : ¬ IsMulCommutative (K ⧸ M.subgroupOf K) :=
     theorem_6_5_b_quotient_noncomm hMH1c hH1K hMnormK hcommEq hMneH1
-  haveI : H1.Normal := hH1norm
-  haveI : K.Normal := hKnorm
+  have : H1.Normal := hH1norm
+  have : K.Normal := hKnorm
   have hH1normK : (H1.subgroupOf K).Normal := hH1norm.subgroupOf K
   rcases theorem_6_5_b_chief_quotient_isPGroup
       (L := L) (K := K) (H1 := H1) h61.2.2.1 hchief with
     ⟨p, hp, hKH1p⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hQabp : IsPGroup p
       ((K ⧸ M.subgroupOf K) ⧸ commutator (K ⧸ M.subgroupOf K)) :=
     theorem_6_5_b_quotient_commutator_isPGroup

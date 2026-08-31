@@ -17,6 +17,7 @@ namespace Wielandt
 
 universe u
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Prime-exponent base case of the homocyclic Frattini quotient-cover
 construction.
 
@@ -29,10 +30,10 @@ public theorem exists_homocyclic_frattini_quotient_cover_e_one
     {p : ℕ} [Fact p.Prime] [IsElementaryAbelian p V] :
     Nonempty (HomocyclicFrattiniQuotientCover (G := G) (V := V) (p := p) 1) := by
   classical
-  letI : Fintype V := Fintype.ofFinite V
-  letI : DecidableEq V := Classical.decEq V
-  haveI : Fact (IsPGroup p V) := ⟨IsElementaryAbelian.isPGroup p V⟩
-  letI : CommGroup V := IsMulCommutative.instCommGroup
+  let : Fintype V := Fintype.ofFinite V
+  let : DecidableEq V := Classical.decEq V
+  have : Fact (IsPGroup p V) := ⟨IsElementaryAbelian.isPGroup p V⟩
+  let : CommGroup V := IsMulCommutative.instCommGroup
   have hExp : Monoid.exponent V = p := IsElementaryAbelian.exponent_eq_prime (G := V) (p := p)
   let matrixIndex : Type u := ULift (Fin (Module.finrank (ZMod p) (Additive V)))
   let b : Module.Basis (Fin (Module.finrank (ZMod p) (Additive V))) (ZMod p) (Additive V) :=
@@ -79,9 +80,7 @@ public theorem exists_homocyclic_frattini_quotient_cover_e_one
     quotientEquiv_action := by
       intro g w
       dsimp [frattiniQuotientEquiv, coverAction]
-      rw [frattiniQuotientEquivOfIsElementaryAbelian_coe,
-        frattiniQuotientEquivOfIsElementaryAbelian_coe]
-      rfl
+      simp [frattiniQuotientEquivOfIsElementaryAbelian_coe]
     card_matrixIndex := by
       simp [matrixIndex] }⟩
 
@@ -106,7 +105,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverData
         g • frattiniQuotientEquiv
           (QuotientGroup.mk' (frattini (StandardHomocyclicCover matrixIndex (p ^ e))) w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -127,7 +126,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverActionData
           (coverAction g w)) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 /-- Source-hard standard cover data at the coordinate-linear interface.
@@ -156,7 +155,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverLinearData
               (Multiplicative.toAdd w)))) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -180,7 +179,7 @@ public structure StandardHomocyclicFrattiniQuotientCoverMatrixData
             (Matrix.toLin' (matrixLift g) (Multiplicative.toAdd w)))) =
         g • quotientToV (standardHomocyclicCoverReduction matrixIndex p e height_pos w)
   card_matrixIndex :
-    letI : CommGroup V := IsMulCommutative.instCommGroup
+    let : CommGroup V := IsMulCommutative.instCommGroup
     Fintype.card matrixIndex = Module.finrank (ZMod p) (Additive V)
 
 
@@ -197,9 +196,9 @@ public noncomputable def
     StandardHomocyclicFrattiniQuotientCoverLinearData
       (G := G) (V := V) (p := p) e := by
   classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
-  letI : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
-  letI : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
+  let : Fintype D.matrixIndex := D.instFintypeMatrixIndex
+  let : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
+  let : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
   let linearLift :
       G →*
         (Module.End (ZMod (p ^ e)) (D.matrixIndex → ZMod (p ^ e)))ˣ := by
@@ -424,9 +423,9 @@ public noncomputable def
     StandardHomocyclicFrattiniQuotientCoverActionData
       (G := G) (V := V) (p := p) e := by
   classical
-  letI : Fintype L.matrixIndex := L.instFintypeMatrixIndex
-  letI : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
-  letI : Nonempty L.matrixIndex := L.instNonemptyMatrixIndex
+  let : Fintype L.matrixIndex := L.instFintypeMatrixIndex
+  let : DecidableEq L.matrixIndex := L.instDecidableEqMatrixIndex
+  let : Nonempty L.matrixIndex := L.instNonemptyMatrixIndex
   let coverAction : G →* MulAut (StandardHomocyclicCover L.matrixIndex (p ^ e)) := {
     toFun := fun g =>
       AddEquiv.toMultiplicative
@@ -464,9 +463,9 @@ public noncomputable def
     StandardHomocyclicFrattiniQuotientCoverData
       (G := G) (V := V) (p := p) e := by
   classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
-  letI : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
-  letI : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
+  let : Fintype D.matrixIndex := D.instFintypeMatrixIndex
+  let : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
+  let : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
   exact {
     matrixIndex := D.matrixIndex
     instFintypeMatrixIndex := D.instFintypeMatrixIndex
@@ -498,9 +497,9 @@ public noncomputable def
       (G := G) (V := V) (p := p) e) :
     HomocyclicFrattiniQuotientCover (G := G) (V := V) (p := p) e := by
   classical
-  letI : Fintype D.matrixIndex := D.instFintypeMatrixIndex
-  letI : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
-  letI : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
+  let : Fintype D.matrixIndex := D.instFintypeMatrixIndex
+  let : DecidableEq D.matrixIndex := D.instDecidableEqMatrixIndex
+  let : Nonempty D.matrixIndex := D.instNonemptyMatrixIndex
   exact {
     cover := StandardHomocyclicCover D.matrixIndex (p ^ e)
     instGroupCover := inferInstance

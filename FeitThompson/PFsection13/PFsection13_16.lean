@@ -365,7 +365,7 @@ private theorem section13_theorem_13_16_K_subgroupOf_KW2_solvable_of_sourceConte
     (p q u v c d : ℕ)
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d) :
-    IsSolvable
+    Group.IsSolvable
       ((V ⊓ Subgroup.normalizer (W1 : Set G)).subgroupOf
         ((V ⊓ Subgroup.normalizer (W1 : Set G)) ⊔ W2)) := by
   let K : Subgroup G := V ⊓ Subgroup.normalizer (W1 : Set G)
@@ -392,7 +392,7 @@ private theorem section13_theorem_13_16_K_subgroupOf_KW2_solvable_of_sourceConte
     exact Group.nilpotent_of_mulEquiv (G := K) (G' := K.subgroupOf KW2)
       (_h := hKnil) e.symm
   haveI : Group.IsNilpotent (K.subgroupOf KW2) := hKsubKW2_nil
-  simpa [K, KW2] using (inferInstance : IsSolvable (K.subgroupOf KW2))
+  simpa [K, KW2] using (inferInstance : Group.IsSolvable (K.subgroupOf KW2))
 
 private theorem section13_theorem_13_16_Q1_solvable_of_sourceContext
     {G : Type u} [Group G] [Finite G]
@@ -405,7 +405,7 @@ private theorem section13_theorem_13_16_Q1_solvable_of_sourceContext
     (hsource : hypothesis_13_1_sourceData Smax Tmax W W1 W2 P Q U V C D
       Sfam Tfam τS τT p q u v c d)
     (hQprod : section12InternalDirectProduct W1 Q1 Q) :
-    IsSolvable Q1 := by
+    Group.IsSolvable Q1 := by
   rcases hsource with
     ⟨_hcase, _hptypeS, hptypeT, _hp_card, _hq_card, _hC, _hD, _hc_card,
       _hd_card, _hU_card, _hV_card, _hSfam, _hTfam, _hDadeS, _hDadeT,
@@ -471,7 +471,7 @@ private theorem section13_theorem_13_16_K_le_centralizer_W1_of_frobenius
       section13_theorem_13_16_K_W2_complementIn_of_sourceContext
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT
         p q u v c d hsourceOrig
-  have hKsolv : IsSolvable (K.subgroupOf E) := by
+  have hKsolv : Group.IsSolvable (K.subgroupOf E) := by
     simpa [K, E] using
       section13_theorem_13_16_K_subgroupOf_KW2_solvable_of_sourceContext
         Smax Tmax W W1 W2 P Q U V C D Sfam Tfam τS τT

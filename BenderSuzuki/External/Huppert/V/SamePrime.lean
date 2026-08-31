@@ -9,6 +9,7 @@ open PFchapter1section1 PFAppendixIII
 open scoped Pointwise
 
 universe u v
+set_option backward.isDefEq.respectTransparency false in
 /--
 The still-missing source double-count, stripped of the representation wrapper:
 Huppert's Frobenius partition evaluates the quotient-conjugation product
@@ -41,28 +42,28 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
                 ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N))
     (_hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ)) :
     ∀ n : N,
-      letI : CommGroup N := IsMulCommutative.instCommGroup
-      letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
+      let : CommGroup N := IsMulCommutative.instCommGroup
+      let : Fintype (Q ⧸ N) := Fintype.ofFinite _
       (∏ x : Q ⧸ N, quotientConjNormal N x n) =
         n ^ Nat.card (Q ⧸ N) := by
   classical
   intro n
-  letI : CommGroup N := IsMulCommutative.instCommGroup
-  letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
+  let : CommGroup N := IsMulCommutative.instCommGroup
+  let : Fintype (Q ⧸ N) := Fintype.ofFinite _
   have hcard : Nat.card (Subgroup.zpowers ψ) = p :=
     _hquot_action_distinct.2.2.1
   have hregular : ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N) :=
     _hquot_action_distinct.2.2.2.2.2
-  letI : MulDistribMulAction (Multiplicative (ZMod p)) (Q ⧸ N) :=
+  let : MulDistribMulAction (Multiplicative (ZMod p)) (Q ⧸ N) :=
     MulDistribMulAction.compHom (Q ⧸ N) (zmodZPowersMulAutHom ψ hcard)
   let SD : Type u :=
     (Q ⧸ N) ⋊[zmodZPowersMulAutHom ψ hcard] Multiplicative (ZMod p)
-  letI : Finite SD :=
+  let : Finite SD :=
     Finite.of_equiv ((Q ⧸ N) × Multiplicative (ZMod p))
       (SemidirectProduct.equivProd
         (φ := zmodZPowersMulAutHom ψ hcard)).symm
-  letI : Fintype SD := Fintype.ofFinite SD
-  letI : MulDistribMulAction SD N :=
+  let : Fintype SD := Fintype.ofFinite SD
+  let : MulDistribMulAction SD N :=
     MulDistribMulAction.compHom N
       (huppertMQSemidirectMulAutHom φ N _hNφ _hperiod ψ _hψ hcard)
   let K : Subgroup SD :=
@@ -73,8 +74,8 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
     MonoidHom.range
       (SemidirectProduct.inr :
         Multiplicative (ZMod p) →* SD)
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Fintype R := Fintype.ofFinite R
+  let : Fintype K := Fintype.ofFinite K
+  let : Fintype R := Fintype.ofFinite R
   let ρ : Representation (ZMod s) SD (Additive N) :=
     Theory.Representation.ofElementaryAbelianAction (A := SD) (G := N) (p := s)
   have hfrob : IsFrobeniusGroupWithKernelComplement K R := by
@@ -143,7 +144,7 @@ public theorem hkt_frobenius_partition_quotientConjNormal_prod_eq_pow
               rw [hRzero (ρ ((x : SD)⁻¹) v)]
               simp
   have hnorm_zero :
-      (letI : Fintype SD := Fintype.ofFinite SD
+      (let : Fintype SD := Fintype.ofFinite SD
        ρ.norm (Additive.ofMul n)) = 0 := by
     let v : Additive N := Additive.ofMul n
     let eSD : (Q ⧸ N) × Multiplicative (ZMod p) ≃ SD :=
@@ -289,18 +290,18 @@ public theorem huppertMQ_double_count_representation_norm_eval
                 ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N))
     (hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ)) :
     ∀ n : N,
-      letI : CommGroup N := IsMulCommutative.instCommGroup
-      letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
-      letI : MulDistribMulAction (Q ⧸ N) N :=
+      let : CommGroup N := IsMulCommutative.instCommGroup
+      let : Fintype (Q ⧸ N) := Fintype.ofFinite _
+      let : MulDistribMulAction (Q ⧸ N) N :=
         MulDistribMulAction.compHom N (quotientConjNormal N)
       (Theory.Representation.ofElementaryAbelianAction (A := Q ⧸ N) (G := N) (p := s)).norm
           (Additive.ofMul n) =
         (Nat.card (Q ⧸ N) : ZMod s) • Additive.ofMul n := by
   classical
   intro n
-  letI : CommGroup N := IsMulCommutative.instCommGroup
-  letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
-  letI : MulDistribMulAction (Q ⧸ N) N :=
+  let : CommGroup N := IsMulCommutative.instCommGroup
+  let : Fintype (Q ⧸ N) := Fintype.ofFinite _
+  let : MulDistribMulAction (Q ⧸ N) N :=
     MulDistribMulAction.compHom N (quotientConjNormal N)
   have hmq_eval : huppertMQ N n = n ^ Nat.card (Q ⧸ N) := by
     change
@@ -354,9 +355,9 @@ public theorem huppertMQ_double_count_eval
   classical
   intro n
   apply Additive.ofMul.injective
-  letI : CommGroup N := IsMulCommutative.instCommGroup
-  letI : Fintype (Q ⧸ N) := Fintype.ofFinite _
-  letI : MulDistribMulAction (Q ⧸ N) N :=
+  let : CommGroup N := IsMulCommutative.instCommGroup
+  let : Fintype (Q ⧸ N) := Fintype.ofFinite _
+  let : MulDistribMulAction (Q ⧸ N) N :=
     MulDistribMulAction.compHom N (quotientConjNormal N)
   calc
     Additive.ofMul (huppertMQ N n)
@@ -433,7 +434,7 @@ public theorem huppertMQ_double_count_forces_lower_centralizer_top
                 ActsRegularly (Subgroup.zpowers ψ) (Q ⧸ N))
     (hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ)) :
     Subgroup.centralizer (N : Set Q) = ⊤ := by
-  letI : IsMulCommutative N := hN_elem.toIsMulCommutative
+  let : IsMulCommutative N := hN_elem.toIsMulCommutative
   exact hkt_centralizer_eq_top_of_quotientConjNormal_trivial N
     (huppertMQ_double_count_forces_quotientConjNormal_trivial
       φ hprod hperiod N hNφ hN_elem hs_ne_r ψ hψ hrp
@@ -459,8 +460,8 @@ public theorem hkt_same_prime_product_identity_normalized_core
     (hmixed :
       (invariantSubgroupAut φ N hNφ * MulAut.conjNormal (H := N) b) x = x) :
     False := by
-  letI : Fact p.Prime := ⟨hprime⟩
-  letI : IsMulCommutative N := hN_elem.toIsMulCommutative
+  let : Fact p.Prime := ⟨hprime⟩
+  let : IsMulCommutative N := hN_elem.toIsMulCommutative
   let F : Q → Q := fun q => φ q
   let B : ℕ → Q := fun m => ((List.range m).map (fun k ↦ F^[k] b)).prod
   let P : ℕ → Q := fun m => ((List.range m).map (fun k ↦ F^[k] ((x : Q) * b))).prod
@@ -591,7 +592,7 @@ public theorem hkt_frobenius_partition_forces_quotient_prime_eq_period
       ∀ q : Q,
         ((List.range p).map (fun k ↦ (fun q : Q => φ q)^[k] q)).prod = 1)
     (_hnon_nil : ¬ Group.IsNilpotent Q)
-    (_hsolv : IsSolvable Q)
+    (_hsolv : Group.IsSolvable Q)
     (N : Subgroup Q) [N.Normal]
     (hNφ : ∀ q : Q, q ∈ N ↔ φ q ∈ N)
     (_hNinv : IsInvariant (Subgroup.zpowers φ) Q N)
@@ -646,7 +647,7 @@ public theorem hkt_frobenius_partition_forces_quotient_prime_eq_period
   have hquot_action_distinct := hquot_action_if_distinct hrp
   have hquot_zpowers_cyclic : IsCyclic (Subgroup.zpowers ψ) :=
     hquot_proposition_3_9_if_distinct hrp
-  letI : Fact p.Prime := ⟨hprime⟩
+  let : Fact p.Prime := ⟨hprime⟩
   have hcentralizer_top :
       Subgroup.centralizer (N : Set Q) = ⊤ :=
     huppertMQ_double_count_forces_lower_centralizer_top
@@ -693,8 +694,8 @@ public theorem hkt_same_prime_v812_product_identity_core
     (_hz1_order : orderOf ((z1 : MulAut N)) = p)
     (_hz2_order : orderOf ((z2 : MulAut N)) = p) :
     False := by
-  letI : Fact p.Prime := ⟨hprime⟩
-  letI : IsMulCommutative N := hN_elem.toIsMulCommutative
+  let : Fact p.Prime := ⟨hprime⟩
+  let : IsMulCommutative N := hN_elem.toIsMulCommutative
   let α : MulAut N := invariantSubgroupAut φ N hNφ
   let β : MulAut N := MulAut.conjNormal (H := N) a
   have hprodα :
@@ -768,7 +769,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
       ∀ q : Q,
         ((List.range p).map (fun k ↦ (fun q : Q => φ q)^[k] q)).prod = 1)
     (_hnon_nil : ¬ Group.IsNilpotent Q)
-    (_hsolv : IsSolvable Q)
+    (_hsolv : Group.IsSolvable Q)
     (N : Subgroup Q) [N.Normal]
     (hNφ : ∀ q : Q, q ∈ N ↔ φ q ∈ N)
     (_hNinv : IsInvariant (Subgroup.zpowers φ) Q N)
@@ -807,12 +808,12 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
     (inferInstance : IsElementaryAbelian r (Q ⧸ N)).toIsMulCommutative
   have hquot_fixed_top :
       fixedPointSubgroup (↥(Subgroup.zpowers ψ)) (Q ⧸ N) = ⊤ := by
-    haveI : IsMulCommutative (Q ⧸ N) := hquot_comm
+    have : IsMulCommutative (Q ⧸ N) := hquot_comm
     exact
       hkt_quotient_fixedPointSubgroup_eq_top_of_ne_bot
         φ N hNφ hNmax ψ hψ hquot_fixed_ne_bot
   have hquot_cyclic : IsCyclic (Q ⧸ N) := by
-    haveI : IsMulCommutative (Q ⧸ N) := hquot_comm
+    have : IsMulCommutative (Q ⧸ N) := hquot_comm
     exact
       hkt_quotient_isCyclic_of_fixedPointSubgroup_eq_top
         φ N hNφ hNmax ψ hψ hquot_fixed_top
@@ -824,7 +825,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
   let β : MulAut N := MulAut.conjNormal (H := N) a
   have hβ_fix :
       fixedPointSubgroup (↥(Subgroup.zpowers β)) N = ⊥ := by
-    haveI : IsMulCommutative N := hN_elem.toIsMulCommutative
+    have : IsMulCommutative N := hN_elem.toIsMulCommutative
     simpa [β] using
       hkt_conjNormal_fixedPointSubgroup_eq_bot_of_sup_zpowers_center
         N a ha_sup_top hcenter_bot
@@ -832,7 +833,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
     hkt_quotient_fixed_top_forces_lift_div_mem
       φ N hNφ ψ hψ hquot_fixed_top a
   have hαβ_comm : α * β = β * α := by
-    haveI : IsMulCommutative N := hN_elem.toIsMulCommutative
+    have : IsMulCommutative N := hN_elem.toIsMulCommutative
     simpa [α, β] using
       hkt_invariantSubgroupAut_commute_conjNormal_of_lift_fixed_mod
         φ N hNφ a ha_mod_N
@@ -852,8 +853,8 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
     simpa [α] using hα_pgroup_raw
   have hα_regular : ActsRegularly (Subgroup.zpowers α) N := by
     simpa [α] using hα_regular_raw
-  letI : Fact p.Prime := ⟨hprime⟩
-  haveI : Nontrivial N := N.nontrivial_iff_ne_bot.mpr hN_ne_bot
+  let : Fact p.Prime := ⟨hprime⟩
+  have : Nontrivial N := N.nontrivial_iff_ne_bot.mpr hN_ne_bot
   have hapN : a ^ p ∈ N := by
     have hquot_pow : (QuotientGroup.mk' N a) ^ p = 1 := by
       have hpow_card : (QuotientGroup.mk' N a) ^ Nat.card (Q ⧸ N) = 1 :=
@@ -915,7 +916,7 @@ public theorem hkt_same_prime_fixedPoint_quotient_contradiction
         _ = (x.1 : MulAut N) * (x.2 : MulAut N) *
             ((y.1 : MulAut N) * (y.2 : MulAut N)) := by
               simp [mul_assoc] }
-  letI : MulDistribMulAction A N := MulDistribMulAction.compHom N ρ
+  let : MulDistribMulAction A N := MulDistribMulAction.compHom N ρ
   have hs_ne_p : s ≠ p := by
     simpa [hrp] using hs_ne_r
   have hN_pgroup : IsPGroup s N := IsElementaryAbelian.isPGroup s N
@@ -1085,7 +1086,7 @@ public theorem hkt_false_of_solvable_maximal_branch_elementary_layers
       ∀ q : Q,
         ((List.range p).map (fun k ↦ (fun q : Q => φ q)^[k] q)).prod = 1)
     (hnon_nil : ¬ Group.IsNilpotent Q)
-    (hsolv : IsSolvable Q)
+    (hsolv : Group.IsSolvable Q)
     (N : Subgroup Q) [N.Normal]
     (hNφ : ∀ q : Q, q ∈ N ↔ φ q ∈ N)
     (hNinv : IsInvariant (Subgroup.zpowers φ) Q N)
@@ -1126,8 +1127,8 @@ public theorem hkt_false_of_solvable_maximal_branch_elementary_layers
   have hcentralizer_N : Subgroup.centralizer (N : Set Q) = N :=
     hkt_centralizer_lower_eq_self_of_maximal_elementary_branch
       φ N hNinv hN_ne_bot hN_ne_top hNmax hcenter_bot hN_elem
-  letI : Fact p.Prime := ⟨hprime⟩
-  letI : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hN_ne_bot
+  let : Fact p.Prime := ⟨hprime⟩
+  let : Nontrivial N := (Subgroup.nontrivial_iff_ne_bot N).2 hN_ne_bot
   have hlower_action_if_distinct :
       s ≠ p →
         fixedPointSubgroup
@@ -1190,7 +1191,7 @@ public theorem huppertV813_false_of_solvable_maximal_branch_after_quotient
       ∀ q : Q,
         ((List.range p).map (fun k ↦ (fun q : Q => φ q)^[k] q)).prod = 1)
     (hnon_nil : ¬ Group.IsNilpotent Q)
-    (hsolv : IsSolvable Q)
+    (hsolv : Group.IsSolvable Q)
     (N : Subgroup Q) [N.Normal]
     (hNφ : ∀ q : Q, q ∈ N ↔ φ q ∈ N)
     (hNinv : IsInvariant (Subgroup.zpowers φ) Q N)
@@ -1231,11 +1232,11 @@ public theorem huppertV813_false_of_solvable_maximal_branch_after_quotient
       hproper_invariant_quotient_nil hnon_nil
   have hs_ne_r : s ≠ r := by
     intro hsr
-    letI : Fact s.Prime := ⟨hs_prime⟩
+    let : Fact s.Prime := ⟨hs_prime⟩
     have hN_r : IsPGroup r N := by
       simpa [hsr] using hN_pgroup
     exact hkt_false_of_same_prime_lower_and_quotient_pgroups N hnon_nil hN_r
-  letI : Fact s.Prime := ⟨hs_prime⟩
+  let : Fact s.Prime := ⟨hs_prime⟩
   obtain ⟨hΦ_normal, hΦ_invariant, hΦ_le_N, hΦ_p, hN_frattini_quot_elem,
     hΦ_ne_bot_of_ne, hΦ_ne_top⟩ :=
       huppertV813_lower_frattini_ambient_facts
@@ -1266,7 +1267,7 @@ public theorem hkt_false_of_solvable_maximal_branch_core
       ∀ q : Q,
         ((List.range p).map (fun k ↦ (fun q : Q => φ q)^[k] q)).prod = 1)
     (hnon_nil : ¬ Group.IsNilpotent Q)
-    (hsolv : IsSolvable Q)
+    (hsolv : Group.IsSolvable Q)
     (N : Subgroup Q) [N.Normal]
     (hNinv : IsInvariant (Subgroup.zpowers φ) Q N)
     (hN_ne_bot : N ≠ ⊥) (hN_ne_top : N ≠ ⊤)
@@ -1285,9 +1286,9 @@ public theorem hkt_false_of_solvable_maximal_branch_core
   obtain ⟨r, hr_prime, hquot_elem⟩ :=
     hkt_maximal_invariant_quotient_exists_isElementaryAbelian
       φ N hNφ hN_ne_top hNmax hquot_nil
-  letI : Fact r.Prime := ⟨hr_prime⟩
-  letI : IsElementaryAbelian r (Q ⧸ N) := hquot_elem
-  haveI : Nontrivial (Q ⧸ N) :=
+  let : Fact r.Prime := ⟨hr_prime⟩
+  let : IsElementaryAbelian r (Q ⧸ N) := hquot_elem
+  have : Nontrivial (Q ⧸ N) :=
     (QuotientGroup.nontrivial_iff (N := N)).2 hN_ne_top
   obtain ⟨n, hquot_card, hn_ne_zero, hquot_prime_divisor_eq_r,
     hquot_card_eq_r_of_cyclic⟩ :=
@@ -1298,7 +1299,7 @@ public theorem hkt_false_of_solvable_maximal_branch_core
           (∀ s : ℕ, Nat.Prime s → s ∣ Nat.card (Q ⧸ N) → s = r) ∧
             (IsCyclic (Q ⧸ N) → Nat.card (Q ⧸ N) = r) :=
     ⟨n, hquot_card, hn_ne_zero, hquot_prime_divisor_eq_r, hquot_card_eq_r_of_cyclic⟩
-  letI : Fact p.Prime := ⟨hprime⟩
+  let : Fact p.Prime := ⟨hprime⟩
   let ψ : MulAut (Q ⧸ N) := invariantQuotientAut φ N hNφ
   have hquot_action_if_distinct :
       r ≠ p →

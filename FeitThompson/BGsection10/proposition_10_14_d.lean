@@ -66,7 +66,7 @@ public theorem section10_normalizer_ne_top_of_ne_bot_le_maximal
     Subgroup.normalizer (X : Set G) ≠ ⊤ := by
   intro hnorm_top
   have hXnormal : X.Normal := Subgroup.normalizer_eq_top_iff.mp hnorm_top
-  letI : IsSimpleGroup G := IsMinCE.simple
+  let : IsSimpleGroup G := IsMinCE.simple
   rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal X hXnormal with hXbot | hXtop
   · exact hXne hXbot
   · have htop_le_M : (⊤ : Subgroup G) ≤ M := by
@@ -169,7 +169,7 @@ public theorem section10_betaPrimes_of_idealPrime_of_sigma
     (hpσ : p ∈ section10SigmaPrimes M) :
     p ∈ section10BetaPrimes M := by
   classical
-  haveI : Fact p.val.Prime := ⟨p.property⟩
+  have : Fact p.val.Prime := ⟨p.property⟩
   rcases hpσ with ⟨hpM, P, hnormP⟩
   have hpα : p ∈ section10AlphaPrimes M := by
     by_contra hpα
@@ -197,7 +197,7 @@ public theorem section10_alpha_sylow_normalizer_le
     (P : Sylow q.val M) :
     Subgroup.normalizer ((((P : Subgroup M).map M.subtype : Subgroup G)) : Set G) ≤ M := by
   classical
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   let PG : Subgroup G := (P : Subgroup M).map M.subtype
   have hPG_le_M : PG ≤ M := by
     intro x hx
@@ -251,7 +251,7 @@ public theorem proposition_10_14_d
   classical
   intro M Y hM hYM hYne hYπ
   have hYproper : Y ≠ ⊤ := section10_proper_of_le_maximal hYM hM
-  haveI : IsSolvable Y :=
+  have : Group.IsSolvable Y :=
     IsMinCE.proper_subgroups_solvable Y (lt_top_iff_ne_top.mpr hYproper)
   have hYcard_ne_one : Nat.card Y ≠ 1 := by
     intro hcard
@@ -268,7 +268,7 @@ public theorem proposition_10_14_d
     exact hFne (by simpa [F] using hFbot)
   obtain ⟨q0, hq0prime, hq0dvdF⟩ := Nat.exists_prime_and_dvd hFcard_ne_one
   let q : Nat.Primes := ⟨q0, hq0prime⟩
-  haveI : Fact q.val.Prime := ⟨q.2⟩
+  have : Fact q.val.Prime := ⟨q.2⟩
   let CoreF : Subgroup F := pCore q.val F
   let CoreY : Subgroup Y := CoreF.map F.subtype
   let X : Subgroup G := CoreY.map Y.subtype
@@ -300,12 +300,12 @@ public theorem proposition_10_14_d
   have hqαM : q ∈ section10AlphaPrimes M := hqβM.1
   have hqβG : section10IdealPrime q G := hqβM.2
   have hCoreYchar : CoreY.Characteristic := by
-    haveI : F.Characteristic := fittingSubgroup_characteristic
-    haveI : CoreF.Characteristic :=
+    have : F.Characteristic := fittingSubgroup_characteristic
+    have : CoreF.Characteristic :=
       pCore_characteristic (G := F) (p := q.val)
     simpa [CoreY, CoreF, F] using
       characteristic_map_subtype_of_characteristic (G := Y) F CoreF
-  letI : CoreY.Characteristic := hCoreYchar
+  let : CoreY.Characteristic := hCoreYchar
   have hnormY_le_normX :
       Subgroup.normalizer (Y : Set G) ≤ Subgroup.normalizer (X : Set G) := by
     simpa [X, CoreY] using

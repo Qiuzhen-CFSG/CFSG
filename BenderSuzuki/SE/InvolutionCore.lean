@@ -93,6 +93,7 @@ public instance involutionCore_characteristic {X : Type*} [Group X] :
   rw [Subgroup.characteristic_iff_map_eq]
   exact involutionCore_map_mulEquiv
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A group equivalence induces an equivalence between the quotient by a
 normal subgroup and the quotient by its image. -/
 public noncomputable def quotientMulEquivOfMulEquiv

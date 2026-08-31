@@ -562,8 +562,8 @@ public theorem map_mulEquiv
     IsBorelSubgroup (B.map e.toMonoidHom) := by
   rcases hB with ⟨hsolvable, P, hBnormalizer⟩
   constructor
-  · letI : IsSolvable B := hsolvable
-    exact solvable_of_surjective
+  · let : Group.IsSolvable B := hsolvable
+    exact Group.isSolvable_of_surjective
       (f := e.toMonoidHom.subgroupMap B)
       (MonoidHom.subgroupMap_surjective e.toMonoidHom B)
   · let Pmap : Sylow 2 Q :=

@@ -16,12 +16,12 @@ Let `p` be a prime.
 (b) If `R` is a `p`-subgroup of `G`. Then `𝒪_{p'}(C_G(R)) ⊂ 𝒪_{p'}(G)`.
 -/
 
-public theorem proposition_1_15_a {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G) (p : ℕ) [Fact p.Prime] :
+public theorem proposition_1_15_a {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G) (p : ℕ) [Fact p.Prime] :
     ∀ T : Sylow p (↥(Op_p'p p G)),
       Subgroup.centralizer ((T.1.map (Op_p'p p G).subtype : Subgroup G) : Set G) ≤ Op_p'p p G := by
   exact centralizer_sylow_subgroup_le_op_p_prime_p_of_solvable (G := G) hsolv p
 
-public theorem proposition_1_15_b {G : Type*} [Group G] [Finite G] (hsolv : IsSolvable G) (p : ℕ) [Fact p.Prime] :
+public theorem proposition_1_15_b {G : Type*} [Group G] [Finite G] (hsolv : Group.IsSolvable G) (p : ℕ) [Fact p.Prime] :
     ∀ R : Subgroup G,
       IsPGroup p (↥R) →
         let C : Subgroup G := Subgroup.centralizer (R : Set G)

@@ -1,9 +1,7 @@
 name = "CFSG"
 defaultTargets = [
-    "BenderSuzuki",
-    "FeitThompson",
-    "Comparator",
-    "Theory",
+    "Challenge",
+    "Solution",
 ]
 lintDriver = "batteries/runLinter"
 
@@ -18,7 +16,18 @@ relaxedAutoImplicit = false
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.32.2"
+rev = "v4.33.0"
+
+[[require]]
+name = "Comparator"
+git = "https://github.com/leanprover/comparator.git"
+rev = "v4.33.0"
+
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Solution"
 
 [[lean_lib]]
 name = "FeitThompson"
@@ -27,7 +36,16 @@ name = "FeitThompson"
 name = "BenderSuzuki"
 
 [[lean_lib]]
-name = "Comparator"
+name = "GorensteinWalter"
+
+[[lean_lib]]
+name = "BenderGlauberman"
 
 [[lean_lib]]
 name = "Theory"
+
+[[lean_lib]]
+name = "Glauberman"
+
+[[lean_lib]]
+name = "BaerSuzuki"

@@ -388,7 +388,7 @@ private lemma generalizedQuaternion_source_subgroups
       ∀ t : P, orderOf t = 2 → t ∈ T := by
   let k : ℕ := 2 ^ (n - 3)
   have hk_pos : 0 < k := by positivity
-  letI : NeZero k := ⟨hk_pos.ne'⟩
+  let : NeZero k := ⟨hk_pos.ne'⟩
   have hm : 2 ^ (n - 2) = 2 * k := by
     have hsub : n - 2 = (n - 3) + 1 := by omega
     rw [hsub, pow_succ]
@@ -679,7 +679,7 @@ private lemma example3_exists_involution_of_generalizedQuaternionSylow
     (hQ : Nonempty (Q ≃* QuaternionGroup (2 ^ (n - 2)))) :
     ∃ t : G, IsInvolution t := by
   let m : ℕ := 2 ^ (n - 2)
-  letI : NeZero m := ⟨by simp [m]⟩
+  let : NeZero m := ⟨by simp [m]⟩
   let eqv : Q ≃* QuaternionGroup m := Classical.choice hQ
   let q0 : QuaternionGroup m :=
     QuaternionGroup.a (m : ZMod (2 * m))
@@ -750,11 +750,11 @@ private lemma example3_stage_e_structure_constant_identity
     {t : G} (ht : IsInvolution t) :
     1 + ∑ i, epsilon i * chi i t ^ 2 / chi i 1 = 0 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, _b, _hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let mu : ι → Section1.ClassFunction G :=
     fun j => Section1.ofConjClassFunction (xi j)
   let Ct : ConjClasses G := ConjClasses.mk t
@@ -815,7 +815,7 @@ private lemma example3_stage_e_structure_constant_identity
       ((ConjClasses.mem_carrier_iff_mk_eq).2 rfl)
     have hCtNonempty : Nonempty Ct.carrier :=
       ⟨⟨t, (ConjClasses.mem_carrier_iff_mk_eq).2 (by simp [Ct])⟩⟩
-    letI : Nonempty Ct.carrier := hCtNonempty
+    let : Nonempty Ct.carrier := hCtNonempty
     have hCtCard : (Nat.card Ct.carrier : ℂ) ≠ 0 := by
       exact_mod_cast (Nat.card_pos (α := Ct.carrier)).ne'
     have hGCard : (Nat.card G : ℂ) ≠ 0 := by
@@ -966,11 +966,11 @@ private lemma example3_low_norm_virtual_character_decomposition
       zeta = Section1.principalCharacter G +
         Section1.weightedFamilySum epsilon chi := by
   classical
-  letI : Fintype (Fin r) := Fintype.ofFinite (Fin r)
+  let : Fintype (Fin r) := Fintype.ofFinite (Fin r)
   rcases Theory.Character.irreducible_characters_form_basis (G := G) with
     ⟨ι, hι, xi, hxi, b, hb⟩
-  letI : Fintype ι := hι
-  letI : DecidableEq ι := Classical.decEq ι
+  let : Fintype ι := hι
+  let : DecidableEq ι := Classical.decEq ι
   let mu : ι → Section1.ClassFunction G :=
     fun i => Section1.ofConjClassFunction (xi i)
   have hmuIrreducible : ∀ i,
@@ -1182,7 +1182,7 @@ private lemma example3_simple_kernel_contradiction
     Section1.scalarProduct_irreducibleCharacter_principal_eq_zero_of_ne
       hchi hchi_nonprincipal
   have hmpos : 0 < m := by
-    letI : Representation.IsIrreducible rho := hirr
+    let : Representation.IsIrreducible rho := hirr
     have hpos : 0 < Module.finrank ℂ (Fin m → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
         (Theory.Character.irreducible_nontrivial (ρ := rho))
@@ -1205,7 +1205,7 @@ private lemma example3_simple_nonprincipal_degree_gt_one
     (hchar : chi = rho.character) :
     1 < m := by
   have hmpos : 0 < m := by
-    letI : Representation.IsIrreducible rho := hirr
+    let : Representation.IsIrreducible rho := hirr
     have hpos : 0 < Module.finrank ℂ (Fin m → ℂ) :=
       (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
         (Theory.Character.irreducible_nontrivial (ρ := rho))
@@ -1221,8 +1221,8 @@ private lemma example3_simple_nonprincipal_degree_gt_one
     rcases IsSimpleGroup.eq_bot_or_eq_top_of_normal lam.ker hlamnormal with hbot | htop
     · have hlaminjective : Function.Injective lam :=
         (MonoidHom.ker_eq_bot_iff lam).mp hbot
-      letI : CommGroup G := MonoidHom.commGroupOfInjective lam hlaminjective
-      letI : IsSimpleGroup G := hG
+      let : CommGroup G := MonoidHom.commGroupOfInjective lam hlaminjective
+      let : IsSimpleGroup G := hG
       have hp : (Nat.card G).Prime := IsSimpleGroup.prime_card
       have h8dvd : 8 ∣ Nat.card G := by
         rw [← hQeight]
@@ -1242,7 +1242,7 @@ private lemma example3_subgroup_pPrimeCore_eq_bot
     (hcore : pPrimeCore 2 G = ⊥)
     (M : Subgroup G) (hM : M.Normal) :
     pPrimeCore 2 M = ⊥ := by
-  letI : M.Normal := hM
+  let : M.Normal := hM
   have hmapbot : (pPrimeCore 2 M).map M.subtype = ⊥ := by
     apply le_bot_iff.mp
     simpa [hcore] using
@@ -1257,11 +1257,11 @@ private lemma example3_center_even_of_cyclic_sylow_corefree
     (hMeven : 2 ∣ Nat.card M)
     (S : Sylow 2 M) (hScyclic : IsCyclic S) :
     2 ∣ Nat.card (Subgroup.center M) := by
-  letI : Nontrivial M :=
+  let : Nontrivial M :=
     Finite.one_lt_card_iff_nontrivial.mp (by
       have htwo_le : 2 ≤ Nat.card M := Nat.le_of_dvd Nat.card_pos hMeven
       omega)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hminFac : (Nat.card M).minFac = 2 :=
     (Nat.minFac_eq_two_iff (Nat.card M)).2 hMeven
   have hcomp : HasNormalPComplement 2 M :=
@@ -1412,15 +1412,15 @@ private lemma example3_corefree_target_of_normal_center_even
       IsInvolution a → IsInvolution b → Commute a b → a = b) :
     2 ∣ Nat.card (Subgroup.center (G ⧸ pPrimeCore 2 G)) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : M.Normal := hM
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : M.Normal := hM
   let ZM : Subgroup G := (Subgroup.center M).map M.subtype
   have hZMnormal : ZM.Normal := by
     dsimp [ZM]
-    letI : (Subgroup.center M).Characteristic := Subgroup.centerCharacteristic
+    let : (Subgroup.center M).Characteristic := Subgroup.centerCharacteristic
     exact ConjAct.normal_of_characteristic_of_normal
-  letI : ZM.Normal := hZMnormal
-  letI : IsMulCommutative ZM := by
+  let : ZM.Normal := hZMnormal
+  let : IsMulCommutative ZM := by
     dsimp [ZM]
     exact Subgroup.map_isMulCommutative (Subgroup.center M) M.subtype
   have hcardZM : Nat.card ZM = Nat.card (Subgroup.center M) := by
@@ -1429,7 +1429,7 @@ private lemma example3_corefree_target_of_normal_center_even
   have hZMtwo : 2 ∣ Nat.card ZM := by
     rw [hcardZM]
     exact hcenterEven
-  letI : Fintype ZM := Fintype.ofFinite ZM
+  let : Fintype ZM := Fintype.ofFinite ZM
   have hZMtwo' : 2 ∣ Fintype.card ZM := by
     simpa [← Nat.card_eq_fintype_card] using hZMtwo
   obtain ⟨z, hzorder⟩ := exists_prime_orderOf_dvd_card 2 hZMtwo'
@@ -1877,7 +1877,7 @@ private lemma example3_positive_odd_scalar_ge_three
     exact Finset.sum_lt_sum (fun u _hu => hpointwise u)
       ⟨u0, Finset.mem_univ u0, hstrict⟩
   rw [← Finset.mul_sum, hsum, hsq] at hsumlt
-  letI : Nonempty N := ⟨u0⟩
+  let : Nonempty N := ⟨u0⟩
   have hcardpos : (0 : ℤ) < Nat.card N := by
     exact_mod_cast Nat.card_pos (α := N)
   have hepssq : epsilon * epsilon = 1 := by
@@ -1953,11 +1953,11 @@ private lemma example3_defect_four_mul_of_order_values
     ∃ c : ℕ, chi 1 - chi t = ((4 * c : ℕ) : ℂ) := by
   classical
   let V := Subgroup.zpowers x
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hVcard : Nat.card V = 4 := by
     change Nat.card (Subgroup.zpowers x) = 4
     rw [Nat.card_zpowers, hx]
-  letI : NeZero (Nat.card V) := ⟨by rw [hVcard]; norm_num⟩
+  let : NeZero (Nat.card V) := ⟨by rw [hVcard]; norm_num⟩
   let e : Multiplicative (ZMod 4) ≃* V := by
     rw [← hVcard]
     exact zmodCyclicMulEquiv (inferInstance : IsCyclic V)
@@ -2108,7 +2108,7 @@ private lemma example3_q8_sum_eq_eight_mul
     (htwoValue : ∀ y : G, orderOf y = 2 → chi y = chi t) :
     ∃ c : ℕ, chi 1 + chi t + 6 * epsilon = ((8 * c : ℕ) : ℂ) := by
   classical
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let rhoQ : Representation ℂ Q (Fin m → ℂ) := rho.comp (Q : Subgroup G).subtype
   let triv : Representation ℂ Q ℂ := Representation.trivial ℂ Q ℂ
   let c := Module.finrank ℂ (triv.IntertwiningMap rhoQ)
@@ -2652,7 +2652,7 @@ private lemma example3_inducedCF_restrict_eq_two_mul_of_fixed
     Section1.subgroupRestriction CH (Section1.inducedCF CH theta) =
       fun c => 2 * theta c := by
   classical
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   have hCHnormal : CH.Normal := inferInstance
   funext c
   change Section1.inducedCF CH theta c = 2 * theta c
@@ -2771,7 +2771,7 @@ private lemma example3_cyclic_card_four_order_four_eq_or_eq_inv
     (hcard : Nat.card Y = 4) {x y : Y}
     (hx : orderOf x = 4) (hy : orderOf y = 4) :
     y = x ∨ y = x⁻¹ := by
-  letI : NeZero (Nat.card Y) := ⟨Nat.card_pos.ne'⟩
+  let : NeZero (Nat.card Y) := ⟨Nat.card_pos.ne'⟩
   let e : Multiplicative (ZMod 4) ≃* Y := by
     rw [← hcard]
     exact zmodCyclicMulEquiv (inferInstance : IsCyclic Y)
@@ -2857,8 +2857,8 @@ private lemma example3_order_eq_one_two_or_four_of_card_eight_center_two
     have hcyclic : IsCyclic P :=
       isCyclic_iff_exists_orderOf_eq_natCard.mpr
         ⟨a, by rw [ha8, hPcard]⟩
-    letI : IsCyclic P := hcyclic
-    letI : CommGroup P := IsCyclic.commGroup
+    let : IsCyclic P := hcyclic
+    let : CommGroup P := IsCyclic.commGroup
     have hctop := CommGroup.center_eq_top (G := P)
     rw [hctop, Subgroup.card_top, hPcard] at hcenter
     norm_num at hcenter
@@ -3162,6 +3162,7 @@ private def example3_subgroup_card_perm {Q : Type*} [Group Q] [Finite Q]
     change Nat.card (V.map e.toMonoidHom) = 4 ↔ Nat.card V = 4
     rw [Subgroup.card_map_of_injective e.injective])
 
+set_option backward.isDefEq.respectTransparency false in
 private def example3_subgroup_card_perm_hom {Q : Type*} [Group Q] [Finite Q] :
     MulAut Q →* Equiv.Perm {V : Subgroup Q // Nat.card V = 4} where
   toFun := example3_subgroup_card_perm
@@ -3197,7 +3198,7 @@ private lemma example3_perm_three_orbit_of_moved
     (a : A) (ha : p a ≠ a) :
     ∀ b, b = a ∨ b = p a ∨ b = (p ^ 2) a := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
+  let : Fintype A := Fintype.ofFinite A
   have hp3 : p ^ 3 = 1 := by
     rw [← hp]
     exact pow_orderOf_eq_one p
@@ -3231,7 +3232,7 @@ private lemma example3_card_four_axis_fixed_of_card_eight
   have hindex : V.val.index = 2 := by
     rw [V.property, hQcard] at hmul
     omega
-  letI : V.val.Normal := Subgroup.normal_of_index_eq_two hindex
+  let : V.val.Normal := Subgroup.normal_of_index_eq_two hindex
   apply Subtype.ext
   change (MulAut.conj q • V.val : Subgroup Q) = V.val
   exact Subgroup.Normal.conj_smul_eq_self q V.val
@@ -3252,7 +3253,7 @@ private lemma example3_normalizer_axis_perm_order
   let rho := example3_subgroup_card_perm_hom.comp
     (Q : Subgroup G).normalizerMonoidHom
   let m := Q0.index
-  haveI : Q0.Normal := by
+  have : Q0.Normal := by
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer
       Q.le_normalizer).2 le_rfl
   have hmNot : ¬ 2 ∣ m := by
@@ -3694,11 +3695,11 @@ private lemma example3_simple_no_normal_two_complement_corefree
   have h8dvd : 8 ∣ Nat.card G := by
     rw [← hQcard]
     exact Subgroup.card_subgroup_dvd_card (Q : Subgroup G)
-  letI : Nontrivial G := Finite.one_lt_card_iff_nontrivial.mp (by
+  let : Nontrivial G := Finite.one_lt_card_iff_nontrivial.mp (by
     have h8le : 8 ≤ Nat.card G :=
       Nat.le_of_dvd Nat.card_pos h8dvd
     omega)
-  letI : IsSimpleGroup G := hG
+  let : IsSimpleGroup G := hG
   have hGp : IsPGroup 2 G :=
     BenderSuzuki.External.hkt_isPGroup_of_hasNormalPComplement_of_pPrimeCore_eq_bot
       hcore hcomp
@@ -3710,7 +3711,7 @@ private lemma example3_simple_no_normal_two_complement_corefree
   have hcenterTop : Subgroup.center G = ⊤ :=
     (IsSimpleGroup.eq_bot_or_eq_top_of_normal
       (Subgroup.center G) (by infer_instance)).resolve_left hcenterNeBot
-  letI : CommGroup G := Group.commGroupOfCenterEqTop hcenterTop
+  let : CommGroup G := Group.commGroupOfCenterEqTop hcenterTop
   have hprime : (Nat.card G).Prime := IsSimpleGroup.prime_card
   rcases (Nat.dvd_prime hprime).mp h8dvd with h8one | h8card
   · norm_num at h8one
@@ -3727,7 +3728,7 @@ private lemma example3_quotient_card_four_kernel_cosets
     (hy : orderOf (y : Y ⧸ N) = 4) :
     (∃ n : N, y = (n : Y) * x) ∨
       (∃ n : N, y = (n : Y) * x⁻¹) := by
-  letI : IsCyclic (Y ⧸ N) := hcyclic
+  let : IsCyclic (Y ⧸ N) := hcyclic
   rcases example3_cyclic_card_four_order_four_eq_or_eq_inv hcard hx hy with h | h
   · left
     have hmem : y / x ∈ N := QuotientGroup.eq_iff_div_mem.mp h
@@ -3748,7 +3749,7 @@ private lemma example3_irreducible_integer_valued_of_argumentPow_fixed
   intro g
   have hcard : Nat.card G ≠ 0 := (Nat.card_pos (α := G)).ne'
   have hn : Nat.card G * 1 ≠ 0 := by simpa using hcard
-  letI : NeZero (Nat.card G * 1) := ⟨hn⟩
+  let : NeZero (Nat.card G * 1) := ⟨hn⟩
   let eta : ℂ :=
     Complex.exp (2 * Real.pi * Complex.I / (Nat.card G * 1))
   have heta : IsPrimitiveRoot eta (Nat.card G * 1) := by
@@ -4123,9 +4124,9 @@ private lemma example3_stage_i_character_value
     (hscalarChi : Section1.scalarProduct G zeta chi = epsilon) :
     chi (x : G) = epsilon := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype H := Fintype.ofFinite H
-  letI : Fintype N := Fintype.ofFinite N
+  let : Fintype G := Fintype.ofFinite G
+  let : Fintype H := Fintype.ofFinite H
+  let : Fintype N := Fintype.ofFinite N
   rcases hchi with ⟨degree, rho, hirr, hchar⟩
   have hchi' : Section1.IsIrreducibleCharacterOnGroup chi :=
     ⟨degree, rho, hirr, hchar⟩
@@ -4519,7 +4520,7 @@ private lemma suzuki_example3_stage_c_to_l_core
         rfl
   obtain ⟨r, chi, epsilon, hchi_irreducible, hchi_injective, hchi_nonprincipal, hepsilon_sign,
       hzeta_decomposition, hr_large, hr_small⟩ := hstage_d
-  letI : Fintype (Fin r) := Fintype.ofFinite (Fin r)
+  let : Fintype (Fin r) := Fintype.ofFinite (Fin r)
   have hstage_e :
       ∃ (t : G) (d e f : Fin r → ℂ),
         orderOf t = 2 ∧
@@ -4689,7 +4690,7 @@ private lemma suzuki_example3_stage_c_to_l_core
         ∃ m : ℕ, 0 < m ∧ d i = (m : ℂ) := by
       intro i
       rcases hchi_irreducible i with ⟨m, rho, hirr, hchar⟩
-      letI : Representation.IsIrreducible rho := hirr
+      let : Representation.IsIrreducible rho := hirr
       let degreeNat := Module.finrank ℂ (Fin m → ℂ)
       have hpos : 0 < degreeNat := by
         exact (Module.finrank_pos_iff (R := ℂ) (M := Fin m → ℂ)).2
@@ -4775,7 +4776,7 @@ private lemma suzuki_example3_stage_c_to_l_core
     intro i
     rcases hchi_irreducible i with ⟨m, rho, hirr, hchar⟩
     refine ⟨m, rho, hirr, hchar, ?_⟩
-    letI : Representation.IsIrreducible rho := hirr
+    let : Representation.IsIrreducible rho := hirr
     apply (suzuki_ch6_theorem_1_8_ii rho t).1
     rw [← hchar]
     have hfi := hfall i
@@ -4825,7 +4826,7 @@ private lemma suzuki_example3_stage_c_to_l_core
         exact hdit.symm
       rcases hchi_irreducible i with ⟨m, rho, hirr, hchar⟩
       have htker : t ∈ rho.ker := by
-        letI : Representation.IsIrreducible rho := hirr
+        let : Representation.IsIrreducible rho := hirr
         apply (suzuki_ch6_theorem_1_8_ii rho t).1
         rw [← hchar]
         exact hvalue
@@ -5175,7 +5176,7 @@ private lemma suzuki_example3_stage_c_to_l_core
       2 ∣ Nat.card (Subgroup.center (G ⧸ pPrimeCore 2 G)) := by
     obtain ⟨t0, ht0⟩ :=
       example3_exists_involution_of_generalizedQuaternionSylow Q hQ
-    letI : Nontrivial G := ⟨⟨t0, 1, ht0.ne_one⟩⟩
+    let : Nontrivial G := ⟨⟨t0, 1, ht0.ne_one⟩⟩
     by_cases hsimple : IsSimpleGroup G
     · exact hstage_g hsimple (hstage_h hsimple)
     · exact example3_corefree_nonsimple_target
@@ -5193,7 +5194,7 @@ private lemma cyclic_square_character_inversion_split
       ∃ y : Y, (((chi0 ^ 2) y⁻¹ : ℂ) ≠ ((chi0 ^ 2) y : ℂ))) := by
   constructor
   · intro hm4 y
-    letI : Fintype Y := Fintype.ofFinite Y
+    let : Fintype Y := Fintype.ofFinite Y
     have hcard : Nat.card Y = m := by
       calc
         Nat.card Y = Nat.card (Multiplicative (ZMod m)) :=
@@ -5381,6 +5382,7 @@ private lemma example3_stage_c_norm_core
   exact ⟨heta_principal, hnorm_cases, hnorm_large, hnorm_small⟩
 
 set_option maxHeartbeats 500000 in
+set_option backward.isDefEq.respectTransparency false in
 private theorem suzuki_example3_corefree_setup
     {G : Type u} [Group G] [Finite G]
     (Q : Sylow 2 G) {n : ℕ} (hn : 3 ≤ n)
@@ -5465,7 +5467,7 @@ private theorem suzuki_example3_corefree_setup
     have hxQT : xQ ∈ TQ := hUniqueInvolutionQ xQ hxQorder
     exact ⟨xQ, hxQT, rfl⟩
   have hX_le_C : X ≤ C := by
-    letI : IsMulCommutative XQ := hXQcyclic.isMulCommutative
+    let : IsMulCommutative XQ := hXQcyclic.isMulCommutative
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
@@ -5690,14 +5692,14 @@ private theorem suzuki_example3_corefree_setup
     dsimp [CH, C, H]
     rw [← U.normalizerMonoidHom_ker]
     infer_instance
-  letI : CH.Normal := hCHnormal
+  let : CH.Normal := hCHnormal
   let phi : H →* MulAut U := by
     simpa [H] using U.normalizerMonoidHom
   have hphi_ker : phi.ker = CH := by
     simpa [phi, CH, C, H] using U.normalizerMonoidHom_ker
-  letI : IsCyclic X := hXcyclic
+  let : IsCyclic X := hXcyclic
   have hUcyclic : IsCyclic U := Subgroup.isCyclic_of_le hU_le_X
-  letI : IsCyclic U := hUcyclic
+  let : IsCyclic U := hUcyclic
   have hAutUcard : Nat.card (MulAut U) = 2 := by
     rw [IsCyclic.card_mulAut U, hUcard]
     decide
@@ -5720,7 +5722,7 @@ private theorem suzuki_example3_corefree_setup
     intro heq
     apply hphiq_ne_one
     exact (congrArg Subtype.val heq).symm
-  letI : Nontrivial (MonoidHom.range phi) :=
+  let : Nontrivial (MonoidHom.range phi) :=
     ⟨⟨oneRange, qRange, honeRange_ne_qRange⟩⟩
   have hrange_card_le : Nat.card (MonoidHom.range phi) ≤
       Nat.card (MulAut U) :=
@@ -5736,7 +5738,7 @@ private theorem suzuki_example3_corefree_setup
         Nat.card_congr hquotRange.toEquiv
       _ = 2 := hrange_card
   let eCH : CH ≃* C := Subgroup.subgroupOfEquivOfLe hC_le_H
-  letI : N.Characteristic := by
+  let : N.Characteristic := by
     dsimp [N]
     exact pPrimeCore_characteristic (p := 2) (G := C)
   let NCH : Subgroup CH := N.map eCH.symm
@@ -5753,12 +5755,12 @@ private theorem suzuki_example3_corefree_setup
     have hpsiz : psi z ∈ N :=
       hpsiN (Subgroup.mem_map_of_mem psi.toMonoidHom hz)
     exact Subgroup.mem_map.mpr ⟨psi z, hpsiz, by simp [psi]⟩
-  letI : NCH.Characteristic := hNCHcharacteristic
+  let : NCH.Characteristic := hNCHcharacteristic
   let NH : Subgroup H := NCH.map CH.subtype
   have hNHnormal : NH.Normal := by
     dsimp [NH]
     infer_instance
-  letI : NH.Normal := hNHnormal
+  let : NH.Normal := hNHnormal
   have hNH_iff (c : C) :
       (⟨(c : G), hC_le_H c.property⟩ : H) ∈ NH ↔ c ∈ N := by
     constructor
@@ -5874,8 +5876,8 @@ private theorem suzuki_example3_corefree_setup
     exact hQHNHdisjoint.symm
   have hfQHinjective : Function.Injective fQH :=
     (MonoidHom.ker_eq_bot_iff fQH).mp hfQHker
-  letI : Fintype QH := Fintype.ofFinite QH
-  letI : Fintype (H ⧸ NH) := Fintype.ofFinite (H ⧸ NH)
+  let : Fintype QH := Fintype.ofFinite QH
+  let : Fintype (H ⧸ NH) := Fintype.ofFinite (H ⧸ NH)
   have hfQHbijective : Function.Bijective fQH :=
     (Fintype.bijective_iff_injective_and_card fQH).2
       ⟨hfQHinjective, by
@@ -6158,7 +6160,7 @@ private theorem suzuki_example3_corefree_setup
   have hCquotCyclic : IsCyclic (C ⧸ N) :=
     isCyclic_of_surjective eSN eSN.surjective
   let m : ℕ := Nat.card (C ⧸ N)
-  letI : NeZero m := ⟨by
+  let : NeZero m := ⟨by
     dsimp [m]
     exact Nat.card_pos.ne'⟩
   let zchar : Multiplicative (ZMod m) →* ℂˣ :=
@@ -6235,7 +6237,7 @@ private theorem suzuki_example3_corefree_setup
   have hprincipal_self :
       Section1.scalarProduct CH (Section1.principalCharacter CH)
           (Section1.principalCharacter CH) = 1 := by
-    letI : Fintype CH := Fintype.ofFinite CH
+    let : Fintype CH := Fintype.ofFinite CH
     unfold Section1.scalarProduct Section1.principalCharacter
     simp only [mul_one, star_one, Finset.sum_const, Finset.card_univ,
       nsmul_eq_mul]
@@ -6573,7 +6575,7 @@ private theorem suzuki_example3_corefree_setup
           (∃ u : NH, h = x * (u : H)) ∨
           (∃ u : NH, h = x⁻¹ * (u : H)) := by
     intro hX4
-    letI : IsCyclic X := hXcyclic
+    let : IsCyclic X := hXcyclic
     obtain ⟨x, hxgen⟩ := IsCyclic.exists_generator (α := X)
     have hxzpowers : Subgroup.zpowers x = (⊤ : Subgroup X) := by
       apply le_antisymm le_top

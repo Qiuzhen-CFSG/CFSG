@@ -362,14 +362,14 @@ private theorem theorem_11_3_solvable_of_normal_and_quotient
     [Group L]
     (N : Subgroup L)
     [N.Normal] :
-    IsSolvable N →
-      IsSolvable (L ⧸ N) →
-        IsSolvable L := by
+    Group.IsSolvable N →
+      Group.IsSolvable (L ⧸ N) →
+        Group.IsSolvable L := by
   intro hN hQ
-  letI : IsSolvable N := hN
-  letI : IsSolvable (L ⧸ N) := hQ
+  let _ : Group.IsSolvable N := hN
+  let _ : Group.IsSolvable (L ⧸ N) := hQ
   exact
-    solvable_of_ker_le_range
+    Group.isSolvable_of_ker_le_range
       N.subtype
       (QuotientGroup.mk' N)
       (by
@@ -385,7 +385,7 @@ private theorem theorem_11_3_ambientDerived_solvable_of_typePDefinitionData
     [Finite G]
     (M MF U W1 W2 : Subgroup G) :
     Section8.typePDefinitionData M MF U W1 W2 →
-      IsSolvable (ambientDerivedSubgroup M) := by
+      Group.IsSolvable (ambientDerivedSubgroup M) := by
   intro hPDef
   let D : Subgroup G := ambientDerivedSubgroup M
   rcases hPDef with
@@ -412,19 +412,19 @@ private theorem theorem_11_3_ambientDerived_solvable_of_typePDefinitionData
     · exact hcomp.2.2.2.symm
   have hcompl : (U.subgroupOf D).IsComplement' (MF.subgroupOf D) :=
     theorem_11_3_complementIn_normal_isComplement' hcomp_symm hMFnormalInD
-  have hMFsub_solv : IsSolvable (MF.subgroupOf D) := by
+  have hMFsub_solv : Group.IsSolvable (MF.subgroupOf D) := by
     have hMFsub_nil : Group.IsNilpotent (MF.subgroupOf D) := by
       haveI : Group.IsNilpotent MF := hMFnil
       exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe (by simpa [D] using hcomp.1)).symm
     haveI : Group.IsNilpotent (MF.subgroupOf D) := hMFsub_nil
     infer_instance
-  have hquot_solv : IsSolvable (D ⧸ MF.subgroupOf D) := by
+  have hquot_solv : Group.IsSolvable (D ⧸ MF.subgroupOf D) := by
     have hUsub_nil : Group.IsNilpotent (U.subgroupOf D) := by
       haveI : Group.IsNilpotent U := hUnil
       exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hcomp.2.1).symm
     haveI : Group.IsNilpotent (U.subgroupOf D) := hUsub_nil
-    haveI : IsSolvable (U.subgroupOf D) := by infer_instance
-    exact solvable_of_solvable_injective (f := hcompl.QuotientMulEquiv.toMonoidHom)
+    have _ : Group.IsSolvable (U.subgroupOf D) := by infer_instance
+    exact Group.isSolvable_of_isSolvable_injective (f := hcompl.QuotientMulEquiv.toMonoidHom)
       hcompl.QuotientMulEquiv.injective
   haveI : (MF.subgroupOf D).Normal := hMFnormD
   exact theorem_11_3_solvable_of_normal_and_quotient (MF.subgroupOf D)
@@ -547,16 +547,16 @@ private theorem theorem_11_3_derivedSubgroup_solvable_of_hypothesis
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
     (p q : ℕ) :
       hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
-        IsSolvable (derivedSubgroup M) := by
+        Group.IsSolvable (derivedSubgroup M) := by
   intro h11
   have hPDef : Section8.typePDefinitionData M MF U W1 W2 :=
     theorem_11_typePDefinitionData_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11
-  have hAmbSolv : IsSolvable (ambientDerivedSubgroup M) :=
+  have hAmbSolv : Group.IsSolvable (ambientDerivedSubgroup M) :=
     theorem_11_3_ambientDerived_solvable_of_typePDefinitionData M MF U W1 W2 hPDef
   let e : derivedSubgroup M ≃* ambientDerivedSubgroup M :=
     Subgroup.equivMapOfInjective (f := M.subtype) (derivedSubgroup M) M.subtype_injective
-  letI : IsSolvable (ambientDerivedSubgroup M) := hAmbSolv
-  exact solvable_of_solvable_injective (f := e.toMonoidHom) e.injective
+  let _ : Group.IsSolvable (ambientDerivedSubgroup M) := hAmbSolv
+  exact Group.isSolvable_of_isSolvable_injective (f := e.toMonoidHom) e.injective
 
 /-- Hypothesis `(11.2)` supplies PF `(6.1)` for `K = M'` and the full family `S`. -/
 private theorem theorem_11_3_sixOneData_of_hypothesis
@@ -3076,7 +3076,7 @@ public theorem theorem_11_4
   have hH0CltK :
       (H0 ⊔ C).subgroupOf M < derivedSubgroup M :=
     hH0CltHC.trans_le hHCK
-  have hKsolv : IsSolvable (derivedSubgroup M) :=
+  have hKsolv : Group.IsSolvable (derivedSubgroup M) :=
     theorem_11_3_derivedSubgroup_solvable_of_hypothesis
       M MF H U C H0 W1 W2 S τ p q h11
   have hSH0Cne : SH0C.Nonempty := by
@@ -3271,16 +3271,16 @@ private theorem theorem_11_5_ambientDerived_lt_of_solvable_ne_bot
     [Group G]
     [Finite G]
     (E : Subgroup G) :
-    IsSolvable E →
+    Group.IsSolvable E →
       E ≠ ⊥ →
         ambientDerivedSubgroup E < E := by
   intro hsolv hne
   classical
-  haveI : IsSolvable E := hsolv
+  have _ : Group.IsSolvable E := hsolv
   haveI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot (H := E)).2 hne
   have hDlt : derivedSubgroup E < (⊤ : Subgroup E) := by
     simpa [derivedSubgroup, derivedSeries_one, _root_.commutator] using
-      IsSolvable.commutator_lt_top_of_nontrivial (G := E)
+      Group.IsSolvable.commutator_lt_top_of_nontrivial (G := E)
   refine lt_of_le_of_ne section12_ambientDerivedSubgroup_le ?_
   intro hEq
   have hDtop : derivedSubgroup E = (⊤ : Subgroup E) := by
@@ -3306,7 +3306,7 @@ private theorem theorem_11_5_secondDerived_lt_ambientDerived_of_hypothesis
   let D : Subgroup G := ambientDerivedSubgroup M
   have hPDef : Section8.typePDefinitionData M MF U W1 W2 :=
     theorem_11_5_typePDefinitionData_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11
-  have hDsolv : IsSolvable D := by
+  have hDsolv : Group.IsSolvable D := by
     dsimp [D]
     exact theorem_11_3_ambientDerived_solvable_of_typePDefinitionData M MF U W1 W2 hPDef
   have hDne : D ≠ ⊥ := by
@@ -3615,7 +3615,7 @@ private theorem theorem_11_5_secondDerived_subfamily_nonempty
       ((ambientDerivedSubgroup (ambientDerivedSubgroup M)).subgroupOf M) Sdd :=
     theorem_11_5_secondDerived_inducedKernelFamily_of_hypothesis
       M MF H U C H0 W1 W2 S Sdd τ p q h11 hsub
-  have hKsolv : IsSolvable (derivedSubgroup M) :=
+  have hKsolv : Group.IsSolvable (derivedSubgroup M) :=
     theorem_11_3_derivedSubgroup_solvable_of_hypothesis
       M MF H U C H0 W1 W2 S τ p q h11
   have hnorm :
@@ -4168,7 +4168,7 @@ private theorem theorem_11_5_HC_solvable_of_hypothesis
     (τ : Section1.ClassFunction M →ₗ[ℂ] Section1.ClassFunction G)
     (p q : ℕ) :
     hypothesis_11_2_data M MF H U C H0 W1 W2 S τ p q →
-      IsSolvable ↥(H ⊔ C) := by
+      Group.IsSolvable ↥(H ⊔ C) := by
   intro h11
   have hHCnilM : Group.IsNilpotent ((H ⊔ C).subgroupOf M) :=
     theorem_11_3_HC_nilpotent_subgroupOf_M_of_hypothesis
@@ -4387,7 +4387,7 @@ private theorem theorem_11_5_fixedPointFree_index_dvd
     quotientMulDistribMulAction (A := W1) (G := HC) (DD.subgroupOf HC) hInv
   letI : MulAction.QuotientAction W1 (DD.subgroupOf HC) :=
     quotientAction_of_isInvariant (A := W1) (DD.subgroupOf HC) hInv
-  have hHCsolv : IsSolvable HC := by
+  have hHCsolv : Group.IsSolvable HC := by
     dsimp [HC]
     exact theorem_11_5_HC_solvable_of_hypothesis
       M MF H U C H0 W1 W2 S τ p q h11
@@ -5071,7 +5071,7 @@ private theorem theorem_11_6_frobeniusActionData_H0_of_hypothesis
       Group.nilpotent_of_mulEquiv (G := H0.subgroupOf H) (G' := H0)
         (Subgroup.subgroupOfEquivOfLe hH0H)
     haveI : Group.IsNilpotent H0 := hH0nil
-    infer_instance
+    exact (inferInstance : Group.IsSolvable H0)
   · have hH0MF : H0 ≤ MF := by
       have hH0H : H0 ≤ H :=
         theorem_11_3_H0_le_H_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11
@@ -5247,9 +5247,9 @@ private theorem theorem_11_6_fixedPointSubgroup_quotient_commutator_isCompl_of_h
       ⟨_h10, hHMF, _htype, _hHleD, _hUleD, _hCeq, _hH0H, _hH0normM,
         _hp, _hquot, _hchief, _hcomm, _hpW2, _hqW1, _hPDef, _hOdd, h92⟩
   haveI : Group.IsNilpotent H := hHnil
-  haveI : IsSolvable H := by infer_instance
-  have hsolvQ : IsSolvable (H ⧸ commutator H) :=
-    solvable_quotient_of_solvable (commutator H)
+  have _ : Group.IsSolvable H := by infer_instance
+  have hsolvQ : Group.IsSolvable (H ⧸ commutator H) := by
+    infer_instance
   have hcopMFUW1 : Nat.Coprime (Nat.card MF) (Nat.card (U ⊔ W1 : Subgroup G)) :=
     Section9.nat_card_MF_coprime_U_sup_W1_of_hypothesis_9_2_sec9
       M MF U W1 W2 q h92
@@ -5403,10 +5403,10 @@ private theorem theorem_11_6_commutatorAction_H_eq_top_of_hypothesis
     exact section12_ambientDerivedSubgroup_le (E := M)
   have hPDef : Section8.typePDefinitionData M MF U W1 W2 :=
     theorem_11_typePDefinitionData_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11
-  have hDsolv : IsSolvable D := by
+  have hDsolv : Group.IsSolvable D := by
     dsimp [D]
     exact theorem_11_3_ambientDerived_solvable_of_typePDefinitionData M MF U W1 W2 hPDef
-  letI : IsSolvable D := hDsolv
+  let _ : Group.IsSolvable D := hDsolv
   have hHMF : H = MF := by
     rcases h11 with
       ⟨_h10, hHMF, _htype, _hHleD, _hUleD, _hCeq, _hH0H, _hH0normM,
@@ -15363,7 +15363,7 @@ private theorem theorem_11_9_quotient_card_gt_one_and_dvd_sub_one_of_hypothesis
       quotientMulDistribMulAction (A := W1) (G := U) (C.subgroupOf U) hInv
     letI : MulAction.QuotientAction W1 (C.subgroupOf U) :=
       quotientAction_of_isInvariant (A := W1) (C.subgroupOf U) hInv
-    have hUsolv : IsSolvable U := by
+    have hUsolv : Group.IsSolvable U := by
       have hPDef : Section8.typePDefinitionData M MF U W1 W2 :=
         theorem_11_typePDefinitionData_of_hypothesis M MF H U C H0 W1 W2 S τ p q h11
       rcases hPDef with
@@ -15562,7 +15562,7 @@ public theorem theorem_11_exists_conj_eq_of_typeP_complements
     apply top_unique
     intro x _hx
     exact hDleM (by simp [hDtop])
-  have hDsolv : IsSolvable D :=
+  have hDsolv : Group.IsSolvable D :=
     IsMinCE.proper_subgroups_solvable D (lt_top_iff_ne_top.2 hDneTop)
   rcases exists_conj_eq_of_isHallSubgroup_of_solvable
       (G := D) hDsolv

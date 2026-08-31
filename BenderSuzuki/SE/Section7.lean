@@ -822,8 +822,14 @@ theorem lemma73_transport_swap_between_sylows
   obtain ⟨x, hx⟩ := MulAction.exists_smul_eq E P₀ Q₀
   have hQconj : Q = P.conjBy (x : X) := by
     rw [hQ, hP, ← hx]
-    simp only [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def,
-      Subgroup.conjBy, Subgroup.map_map]
+    rw [Sylow.coe_subgroup_smul, Subgroup.pointwise_smul_def]
+    rw [Subgroup.conjBy]
+    change Subgroup.map E.subtype
+        (Subgroup.map (MulDistribMulAction.toMonoidHom E (MulAut.conj x))
+          (P₀ : Subgroup E)) =
+      Subgroup.map ((MulAut.conj (x : X)).toMonoidHom)
+        (Subgroup.map E.subtype (P₀ : Subgroup E))
+    rw [Subgroup.map_map, Subgroup.map_map]
     congr 1
   have hconjNorm :=
     section11_conjBy_le_normalizer_conjBy_of_le_normalizer

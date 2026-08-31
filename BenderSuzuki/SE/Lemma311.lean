@@ -102,7 +102,7 @@ private theorem lemma311_maximal_regular_core
       rw [← hcentTop]
       exact hcent
     exact hYproper (top_unique htopY)
-  have hNsolv : IsSolvable N := odd_order_theorem N hNodd
+  have hNsolv : Group.IsSolvable N := odd_order_theorem N hNodd
   obtain ⟨F, hFnorm, hFleN, hFne, hFmin⟩ :=
     exists_minimal_normal_le (G := G) N hNnormal hNne
   letI : F.Normal := hFnorm
@@ -115,12 +115,12 @@ private theorem lemma311_maximal_regular_core
   }
   let FN : Subgroup N := F.subgroupOf N
   let eFN : FN ≃* F := Subgroup.subgroupOfEquivOfLe hFleN
-  letI : IsSolvable N := hNsolv
-  have hFNsolv : IsSolvable FN := subgroup_solvable_of_solvable FN
-  letI : IsSolvable FN := hFNsolv
-  have hFsolv : IsSolvable F :=
-    solvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
-  letI : IsSolvable F := hFsolv
+  letI : Group.IsSolvable N := hNsolv
+  have hFNsolv : Group.IsSolvable FN := inferInstance
+  letI : Group.IsSolvable FN := hFNsolv
+  have hFsolv : Group.IsSolvable F :=
+    Group.isSolvable_of_surjective (f := eFN.toMonoidHom) eFN.surjective
+  letI : Group.IsSolvable F := hFsolv
   obtain ⟨r, hr, hFelem⟩ := minimalNormal_solvable_exists_isElementaryAbelian F
   letI : IsElementaryAbelian r F := hFelem
   have hFodd : Odd (Nat.card F) :=

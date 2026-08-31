@@ -66,9 +66,9 @@ private theorem section15_corollary15_6_Kstar_le_secondDerived
     · intro p hpH hpidx
       exact (Nat.not_coprime_of_dvd_of_dvd p.property.one_lt
         (by simpa [subgroupPrimeSet] using hpH) hpidx) hHcop
-  have hsolvM : IsSolvable M :=
+  have hsolvM : Group.IsSolvable M :=
     IsMinCE.proper_subgroups_solvable M (lt_top_iff_ne_top.2 hM.1.1)
-  letI : IsSolvable M := hsolvM
+  let : Group.IsSolvable M := hsolvM
   haveI : Hloc.Normal := by
     simpa [D, Hloc] using hDnormM.2
   have hHleDerived : Hloc ≤ derivedSubgroup M := by
