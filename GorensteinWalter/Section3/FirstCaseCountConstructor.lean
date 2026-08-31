@@ -43,7 +43,7 @@ private theorem sum_local_coset_pair_counts
         Nat.card {a : α // π a = ω.1} = 4} := by
   classical
   let Nonbase := {ω : Ω // ω ≠ ω0}
-  letI : Fintype Nonbase := Fintype.ofFinite _
+  let : Fintype Nonbase := Fintype.ofFinite _
   calc
     Nat.card (Σ ω : Nonbase,
         localPairFiber π ω.1) =

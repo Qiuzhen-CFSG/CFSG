@@ -24,8 +24,8 @@ public theorem commutator_le_pCore_of_le_pPrimeCore
     (hcommO : ⁅P, Subgroup.zpowers t⁆ ≤ pPrimeCore 2 X) :
     ⁅P, Subgroup.zpowers t⁆ ≤ pCore p X := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Q : Subgroup X := Subgroup.zpowers t
   let C : Subgroup X := ⁅P, Q⁆
   let O : Subgroup X := pPrimeCore 2 X
@@ -71,20 +71,20 @@ public theorem commutator_le_pCore_of_le_pPrimeCore
     Subgroup.disjoint_of_coprime_natCard hOQcop
   let OY : Subgroup Y := O.subgroupOf Y
   let QY : Subgroup Y := Q.subgroupOf Y
-  haveI : O.Normal := by dsimp [O]; infer_instance
+  have : O.Normal := by dsimp [O]; infer_instance
   have hcomp : OY.IsComplement' QY := by
     simpa [OY, QY, Y] using
       isComplement'_subgroupOf_sup_of_disjoint O Q hOQdisj
   have hOcard : Nat.card OY = Nat.card O :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe (show O ≤ Y from le_sup_left)).toEquiv
-  haveI : OY.Normal := by
+  have : OY.Normal := by
     simpa [OY, Y] using (Subgroup.Normal.subgroupOf (inferInstance : O.Normal) Y)
   have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
-  letI : Group.IsSolvable O := hOsolv
+  let : Group.IsSolvable O := hOsolv
   have hOYsolv : Group.IsSolvable OY :=
     isSolvable_of_mulEquiv
       (Subgroup.subgroupOfEquivOfLe (show O ≤ Y from le_sup_left)).symm
-  letI : Group.IsSolvable OY := hOYsolv
+  let : Group.IsSolvable OY := hOYsolv
   have hQcomm : IsMulCommutative Q := by infer_instance
   have hQYcomm : IsMulCommutative QY :=
     isMulCommutative_of_surjective
@@ -93,10 +93,10 @@ public theorem commutator_le_pCore_of_le_pPrimeCore
       hQcomm
   have hQYsolv : Group.IsSolvable QY :=
     Group.isSolvable_of_comm (fun a b => (IsMulCommutative.is_comm (M := QY)).comm a b)
-  letI : Group.IsSolvable QY := hQYsolv
+  let : Group.IsSolvable QY := hQYsolv
   have hquotSolv : Group.IsSolvable (Y ⧸ OY) :=
     isSolvable_of_mulEquiv hcomp.symm.QuotientMulEquiv.symm
-  letI : Group.IsSolvable (Y ⧸ OY) := hquotSolv
+  let : Group.IsSolvable (Y ⧸ OY) := hquotSolv
   have hYsolv : Group.IsSolvable Y :=
     isSolvable_of_normal_subgroup_and_quotient OY
   have hQYtwo : IsPGroup 2 QY := by

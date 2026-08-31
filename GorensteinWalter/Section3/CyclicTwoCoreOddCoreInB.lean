@@ -43,12 +43,12 @@ public theorem firstCase_cyclic_a7_S_layer_data
   let q : M →* M ⧸ O0 := QuotientGroup.mk' O0
   let Q := M ⧸ O0
   let Ebar : Subgroup Q := E0.map q
-  letI : O0.Normal := pPrimeCore_normal
+  let : O0.Normal := pPrimeCore_normal
   have hE_le_M : E ≤ M := (componentLayerOf_isNormalIn M).1
   have hE0_normal : E0.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := M) (N := E)
       (le_normalizer_of_isNormalIn (componentLayerOf_isNormalIn M))
-  haveI : E0.Normal := hE0_normal
+  have : E0.Normal := hE0_normal
   have hEbar_normal : Ebar.Normal := QuotientGroup.map_normal (G := M) O0 E0
   have hEbar_ne : Ebar ≠ ⊥ := by
     intro hbot
@@ -81,7 +81,7 @@ public theorem firstCase_cyclic_a7_S_layer_data
     intro hbot
     exact hEbar_ne ((Subgroup.map_eq_bot_iff_of_injective
       (H := Ebar) (f := eM.toMonoidHom) eM.injective).mp hbot)
-  letI : IsSimpleGroup (alternatingGroup (Fin 7)) :=
+  let : IsSimpleGroup (alternatingGroup (Fin 7)) :=
     alternatingGroup.isSimpleGroup (by norm_num : 5 ≤ Nat.card (Fin 7))
   have hEA_top : EA = ⊤ :=
     (IsSimpleGroup.eq_bot_or_eq_top_of_normal EA hEA_normal).resolve_left hEA_ne

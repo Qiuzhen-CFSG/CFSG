@@ -36,7 +36,7 @@ private theorem le_qCoreOf_of_isNormalIn_pGroup
     (A Q : Subgroup G) (p : ℕ) (hp : p.Prime)
     (hQA : Q ≤ A) (hQ : IsNormalIn Q A) (hQp : IsPGroup p Q) :
     Q ≤ qCoreOf A p := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQsub : Q.subgroupOf A ≤ pCore p (↥A) :=
     le_sSup ⟨by
       exact Subgroup.normal_subgroupOf_of_le_normalizer (H := A) (N := Q)
@@ -194,7 +194,7 @@ private theorem center_qCoreOf_fitting_ne_bot_of_mem_primesOfOrder
     simpa [P, F] using
       (fstar_qCoreOf_fitting_ne_bot_of_mem_primesOfOrder A p hp hpF)
   have hPnt : Nontrivial (↥P) := (Subgroup.nontrivial_iff_ne_bot P).2 hPne
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hCne : (Subgroup.center (↥P)) ≠ ⊥ := by
     intro hbot
     have hnt : Nontrivial (Subgroup.center (↥P)) :=
@@ -216,7 +216,7 @@ private theorem mem_primesOfOrder_of_qCoreOf_ne_bot
   let Q : Subgroup G := qCoreOf A p
   have hQleF : Q ≤ F := fstar_qCoreOf_le_fittingSubgroupOf A p hp
   have hQnt : Nontrivial (↥Q) := (Subgroup.nontrivial_iff_ne_bot Q).2 hQ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases exists_ne (1 : ↥Q) with ⟨xQ, hxne⟩
   let x : G := (xQ : ↥Q)
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup A p)) xQ with ⟨k, hk⟩
@@ -234,7 +234,7 @@ private theorem mem_primesOfOrder_of_qCoreOf_ne_bot
     exact hpdvd
   have hxG : x ∈ F := hQleF xQ.2
   have hordF : orderOf x ∣ Nat.card (↥F) := by
-    haveI : Fintype (↥F) := Fintype.ofFinite _
+    have : Fintype (↥F) := Fintype.ofFinite _
     let xF : ↥F := ⟨x, hxG⟩
     have hord : orderOf xF = orderOf x :=
       (orderOf_injective F.subtype F.subtype_injective xF).symm
@@ -255,8 +255,8 @@ private theorem qCoreOf_le_pResidualOf_of_ne
   have hxH : x ∈ H :=
     (fstar_qCoreOf_le_fittingSubgroupOf A p hp).trans le_sup_left hx
   let xQ : ↥(qCoreOf A p) := ⟨x, hx⟩
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Fact s.Prime := ⟨hs⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : Fact s.Prime := ⟨hs⟩
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup A p)) xQ with ⟨k, hk⟩
   have hpndvd : ¬ p ∣ s := by
     intro hdiv
@@ -402,7 +402,7 @@ private theorem perfect_subgroup_le_pResidualOf
     (hKH : K ≤ H) (hKperf : Group.IsPerfect K) :
     K ≤ pResidualOf H p := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   let R : Subgroup G := pResidualOf H p
   let Q : Type u := H ⧸ R.subgroupOf H
   let K' : Subgroup (↥H) := K.subgroupOf H
@@ -415,8 +415,8 @@ private theorem perfect_subgroup_le_pResidualOf
   have hQp : IsPGroup p Q := fstar_isPGroup_quotient_pResidualOf H p hp
   have hIbot : I = ⊥ := by
     by_contra hIne
-    haveI : Nontrivial (↥I) := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    haveI : Group.IsPerfect (↥I) := by
+    have : Nontrivial (↥I) := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    have : Group.IsPerfect (↥I) := by
       change Group.IsPerfect (↥((⊤ : Subgroup (↥K')).map f))
       exact Group.IsPerfect.map (G := ↥K') (H := (⊤ : Subgroup (↥K'))) (f := f)
     have hIp : IsPGroup p (↥I) := by
@@ -458,7 +458,7 @@ private theorem card_primesOfOrder_le_one_of_isPGroup
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) {p : ℕ} (hp : p.Prime) (hH : IsPGroup p H) :
     Nat.card (primesOfOrder H) ≤ 1 := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hunique : ∀ r : ℕ, r ∈ primesOfOrder H → r = p := by
     intro r hr
     have hrpf : r ∈ (Nat.card (↥H)).primeFactors := by simpa [primesOfOrder] using hr
@@ -498,10 +498,10 @@ private theorem isQuasisimple_mulEquiv
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H :=
@@ -591,7 +591,7 @@ private theorem map_fittingSubgroup_le_of_surjective
   have hmap_normal : ((fittingSubgroup G).map f).Normal :=
     Subgroup.Normal.map (H := fittingSubgroup G) inferInstance f hf
   have hmap_nil : Group.IsNilpotent ↥((fittingSubgroup G).map f) := by
-    haveI : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
+    have : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
     let ψ : fittingSubgroup G →* ↥((fittingSubgroup G).map f) :=
       { toFun := fun g => ⟨f g, Subgroup.mem_map.mpr ⟨g.1, g.2, rfl⟩⟩
         map_one' := by ext; simp
@@ -634,7 +634,7 @@ private theorem map_generalizedFittingSubgroupOf_top_subtype
       generalizedFittingSubgroupOf B := by
   rw [generalizedFittingSubgroupOf, generalizedFittingSubgroupOf, Subgroup.map_sup]
   rw [componentLayer_top_map_eq_componentLayerOf B]
-  haveI : Finite (↥(⊤ : Subgroup (↥B))) :=
+  have : Finite (↥(⊤ : Subgroup (↥B))) :=
     Finite.of_equiv (↥B) (Subgroup.topEquiv (G := ↥B)).toEquiv.symm
   change Subgroup.map B.subtype ((fittingSubgroup (↥(⊤ : Subgroup (↥B)))).map
       (⊤ : Subgroup (↥B)).subtype) ⊔ componentLayerOf B =
@@ -663,7 +663,7 @@ private theorem componentLayerOf_eq_bot_of_isPGroup_layer
   have hEq : IsPGroup p E :=
     IsPGroup.to_le hE
       (le_sSup (s := {E' : Subgroup G | IsComponentOf E' B}) (a := E) hEcomp)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hEnil : Group.IsNilpotent E := hEq.isNilpotent
   exact False.elim (not_isNilpotent_of_isQuasisimple E hEcomp.2.2 hEnil)
 
@@ -681,7 +681,7 @@ private theorem isPGroup_of_pResidualOf_eq_bot
     (H : Subgroup G) (p : ℕ) (hp : p.Prime)
     (hRes : pResidualOf H p = ⊥) :
     IsPGroup p H := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQ : IsPGroup p (H ⧸ (pResidualOf H p).subgroupOf H) :=
     fstar_isPGroup_quotient_pResidualOf H p hp
   have hResbot : (pResidualOf H p).subgroupOf H = ⊥ := by
@@ -700,7 +700,7 @@ private theorem mem_primesOfOrder_eq_of_isPGroup
     {G : Type u} [Group G] [Finite G]
     (H : Subgroup G) {p : ℕ} (hp : p.Prime) (hH : IsPGroup p H) :
     ∀ r : ℕ, r ∈ primesOfOrder H → r = p := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro r hr
   have hrpf : r ∈ (Nat.card (↥H)).primeFactors := by simpa [primesOfOrder] using hr
   have hrprime : r.Prime := Nat.prime_of_mem_primeFactors hrpf

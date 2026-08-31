@@ -62,8 +62,8 @@ public theorem secondCase_twoSubgroup_centralizes_U_of_centralizes_fitting_inter
     secondCase_normalizer_fitting_fixed_eq_M hmin c w F hFne hFnormalM
   have hPnormFU : P ≤ Subgroup.normalizer (c.FU : Set G) :=
     hPleC.trans (inf_le_left.trans (le_normalizer_of_isNormalIn hFUnormalH))
-  letI : P.Normalizes c.FU := ⟨hPnormFU⟩
-  letI : MulDistribMulAction P c.FU :=
+  let : P.Normalizes c.FU := ⟨hPnormFU⟩
+  let : MulDistribMulAction P c.FU :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P c.FU hPnormFU
   have hfixEq : fixedPointSubgroup P c.FU =
       (subgroupCentralizerIn c.FU P).subgroupOf c.FU :=

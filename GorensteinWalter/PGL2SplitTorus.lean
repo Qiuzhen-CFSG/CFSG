@@ -33,7 +33,7 @@ public theorem pgl2_split_torus_reflection_data
         ¬ U ≤ (Matrix.ProjectiveSpecialLinearGroup.toPGL
           (n := Fin 2) (R := K)).range) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let diagGL (k : Kˣ) : GL (Fin 2) K :=
     Matrix.GeneralLinearGroup.mkOfDetNeZero
       (Matrix.diagonal ![(k : K), 1]) (by

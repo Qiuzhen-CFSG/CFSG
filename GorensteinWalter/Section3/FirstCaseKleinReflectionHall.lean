@@ -67,7 +67,7 @@ public theorem firstCase_klein_reflection_hall_nontrivial
     ∃ I : Subgroup G,
       IsInvertedSubgroup I c.U s ∧ IsHallIn I c.FU ∧ I ≠ ⊥ := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨I, hI, hHall⟩ := hfirst.1 s hs
   have hsInv : IsInvolution s :=
     centralizerSetup_reflection_isInvolution c hs

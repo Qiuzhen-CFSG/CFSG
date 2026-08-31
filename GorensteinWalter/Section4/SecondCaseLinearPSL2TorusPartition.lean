@@ -46,7 +46,7 @@ public theorem psl2_torus_family_partition_of_huppert
       ∃! T : {T : Subgroup (PSL2 K) // ∃ g : PSL2 K,
         T = U.map (MulAut.conj g).toMonoidHom}, x ∈ T.1 := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   obtain ⟨P, hpart⟩ := hpart
   have hKodd : Odd (Nat.card K) := by
     rw [hKcard]

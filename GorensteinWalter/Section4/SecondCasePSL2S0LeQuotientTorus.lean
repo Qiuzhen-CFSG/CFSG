@@ -40,9 +40,9 @@ universe u
 private theorem cyclic_unique_involution {A : Type u} [Group A] [Finite A]
     (hcyc : IsCyclic A) : ∀ x y : A, x ≠ 1 → x ^ 2 = 1 → y ≠ 1 → y ^ 2 = 1 → x = y := by
   classical
-  letI : IsCyclic A := hcyc
+  let : IsCyclic A := hcyc
   intro x y hx1 hx2 hy1 hy2
-  letI : Fintype A := Fintype.ofFinite A
+  let : Fintype A := Fintype.ofFinite A
   by_contra hxy
   let S : Finset A := {1, x, y}
   have hSsub : S ⊆ ({z : A | z ^ 2 = 1} : Finset A) := by
@@ -188,7 +188,7 @@ private theorem psl2_reflected_join_of_reflected
       (∀ x : PSL2 K, x ∈ T → s * x * s⁻¹ = x⁻¹) ∧
       Subgroup.centralizer ({t} : Set (PSL2 K)) = T ⊔ Subgroup.zpowers s := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   obtain ⟨sU, hsUord⟩ := exists_prime_orderOf_dvd_card' (G := U) 2 hUeven
   let s0 : PSL2 K := sU
   have hs0U : s0 ∈ U := sU.2
@@ -346,7 +346,7 @@ public theorem psl2_reflected_join
   classical
   have hKfull : IsOddPrimePower (Nat.card K) := hK
   rcases hK with ⟨p, f, hp, hpOdd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hKcard : Nat.card K = p ^ f := hcard
   have hqodd : Odd (Nat.card K) := by
     rw [hcard]
@@ -519,7 +519,7 @@ public theorem secondCase_psl2_S0_le_quotient_torus
     let S0E : Subgroup d.E := c.S0.subgroupOf d.E
     have hS0Ecyc : IsCyclic S0E :=
       (Subgroup.subgroupOfEquivOfLe hS0leE).isCyclic.mpr c.S0_cyclic
-    letI : IsCyclic S0E := hS0Ecyc
+    let : IsCyclic S0E := hS0Ecyc
     change IsCyclic (S0E.map q)
     exact isCyclic_of_surjective
       (q.subgroupMap S0E) (q.subgroupMap_surjective S0E)

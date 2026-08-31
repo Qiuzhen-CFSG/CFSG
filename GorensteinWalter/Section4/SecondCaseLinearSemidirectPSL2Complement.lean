@@ -34,7 +34,7 @@ public theorem secondCase_linear_semidirect_psl2_normal_complement
       N ⊓ Subgroup.normalizer (X : Set H) = ⊥ ∧
       N ⊔ Subgroup.normalizer (X : Set H) = ⊤ ∧
       Nat.card N ∣ Nat.card F := by
-  letI : IsElementaryAbelian r N := hNelem
+  let : IsElementaryAbelian r N := hNelem
   have hNnorm : ∀ n : H, n ∈ N →
       n ∈ Subgroup.normalizer (X : Set H) → n = 1 := by
     intro n hn hnorm

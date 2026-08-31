@@ -55,7 +55,7 @@ public theorem
       (Nat.dvd_prime Nat.prime_three).mp hOdivThree
     rcases hOcard with hOone | hOthree
     · exact (Subgroup.eq_bot_iff_card O).2 hOone
-    · letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    · let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
       have hfactor : 3 ^ (Nat.card G).factorization 3 = 3 := by
         rw [hGcard]
         change 3 ^ padicValNat 3 12 = 3
@@ -65,7 +65,7 @@ public theorem
           norm_num
       let Osyl : Sylow 3 G := Sylow.ofCard O (by
         rw [hOthree, hfactor])
-      letI : Unique (Sylow 3 G) :=
+      let : Unique (Sylow 3 G) :=
         Sylow.unique_of_normal Osyl (show O.Normal from pPrimeCore_normal)
       have hone : Nat.card (Sylow 3 G) = 1 := Nat.card_unique
       have hfour : Nat.card (Sylow 3 G) = 4 :=
@@ -76,7 +76,7 @@ public theorem
     intro S
     refine ⟨1, by omega, ?_⟩
     rw [alternatingGroup.two_sylow_eq_kleinFour_of_card_eq_four (by simp) S]
-    letI : IsKleinFour (alternatingGroup.kleinFour (Fin 4)) :=
+    let : IsKleinFour (alternatingGroup.kleinFour (Fin 4)) :=
       alternatingGroup.kleinFour_isKleinFour (by simp)
     simpa using
       (IsKleinFour.nonempty_mulEquiv

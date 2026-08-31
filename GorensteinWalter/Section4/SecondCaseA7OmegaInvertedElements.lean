@@ -36,7 +36,7 @@ public theorem secondCase_a7_omega_invertedElements_le_fitting
       (I : Set G) = invertedElements c.U (od.s : G) ∧
       IsNormalIn I c.U ∧ I ≤ c.FU := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let s : G := od.s
   let QG : Subgroup G := od.Q.map c.FU.subtype
   have hsI : IsInvolution s := od.s_involution

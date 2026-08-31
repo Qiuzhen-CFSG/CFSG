@@ -54,7 +54,7 @@ public theorem sl2_card_formula (K : Type*) [Field K] [Finite K] :
     Nat.card (Matrix.SpecialLinearGroup (Fin 2) K) =
       Nat.card K * (Nat.card K ^ 2 - 1) := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let d : Matrix.GeneralLinearGroup (Fin 2) K →* Kˣ :=
     Matrix.GeneralLinearGroup.det
   have hdet_surj : Function.Surjective d :=
@@ -107,7 +107,7 @@ of one are exactly `1` and `-1`. -/
 public theorem rootsOfUnity_two_of_char_ne_two
     (K : Type*) [Field K] [Finite K] (hchar : (2 : K) ≠ 0) :
     Nat.card (rootsOfUnity 2 K) = 2 := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   let z : rootsOfUnity 2 K :=
     ⟨(-1 : Kˣ), by
       rw [mem_rootsOfUnity]
@@ -154,13 +154,13 @@ public theorem psl2_card_formula
     (K : Type*) [Field K] [Finite K]
     (hodd : IsOddPrimePower (Nat.card K)) :
     Nat.card (PSL2 K) = Nat.card K * (Nat.card K ^ 2 - 1) / 2 := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   rcases hodd with ⟨p, n, hp, hpOdd, _hn, hcard⟩
   have hcardF : Fintype.card K = p ^ n := by
     rw [← Nat.card_eq_fintype_card]
     exact hcard
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : CharP K p := charP_of_card_eq_prime_pow hcardF
+  let : Fact p.Prime := ⟨hp⟩
+  let : CharP K p := charP_of_card_eq_prime_pow hcardF
   have hchar : (2 : K) ≠ 0 := by
     intro h2
     have hpdiv : p ∣ 2 := (CharP.cast_eq_zero_iff K p 2).mp h2

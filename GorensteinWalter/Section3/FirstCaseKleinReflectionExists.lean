@@ -22,7 +22,7 @@ public theorem firstCase_klein_exists_reflection_not_mem_twoCore
     ∃ s : G, c.IsReflection s ∧ s ∉ twoCoreOf c.Hhat := by
   classical
   by_contra hnot
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hS8 : Nat.card (c.S : Subgroup G) = 8 :=
     firstCase_klein_S_card hmin c hfirst hklein
   have h26 := theorem_2_6 hmin c

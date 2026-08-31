@@ -166,7 +166,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_outerSupport_subset_K0
       exact hx
     exact hxI.1.1
   have hKinv_centK0 : Kinv ≤ Subgroup.centralizer (K0 : Set G) := by
-    letI : IsCyclic Kinv := hKinv_cyclic
+    let : IsCyclic Kinv := hKinv_cyclic
     intro x hx
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
@@ -181,7 +181,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_outerSupport_subset_K0
     rw [hYeq]
     exact centralizer_of_sup hKinv_centK0 hKinv_centF
   have hK0cyc : IsCyclic K0 := by
-    letI : IsCyclic Kinv := hKinv_cyclic
+    let : IsCyclic Kinv := hKinv_cyclic
     exact Subgroup.isCyclic_of_le hK0leK
   have hFcyc : IsCyclic F := by
     exact (secondCase_fitting_equation5_7_of_component_centralization
@@ -237,7 +237,7 @@ public theorem secondCase_equationSevenPrime_primeFactors_outerSupport_subset_K0
     rw [Subgroup.normal_subgroupOf_iff hFUleJ]
     intro f j hf hj
     exact hFU_normalJ.2 (j : G) hj (f : G) hf
-  letI : FUJ.Normal := hFUJnormal
+  let : FUJ.Normal := hFUJnormal
   have hFUJ_card : Nat.card (↥FUJ) = Nat.card (↥c.FU) :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hFUleJ).toEquiv
   have hDJ_card : Nat.card (↥DJ) = Nat.card (↥D) :=

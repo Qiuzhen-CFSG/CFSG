@@ -26,7 +26,7 @@ private lemma S_eq_closure_t1_t2
     {G : Type u} [Group G] [Finite G] (c : BenderGlauberman.Hyp11 G) :
     (c.S : Subgroup G) = Subgroup.closure ({c.t1, c.t2} : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   apply le_antisymm
   · intro s hs
     let K : Subgroup G := Subgroup.closure ({c.t1, c.t2} : Set G)
@@ -172,7 +172,7 @@ public theorem S_centralizes_B
     (bg.S : Subgroup G) ≤
       Subgroup.centralizer ((bg.B : Subgroup G) : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   intro s hs
   rw [Subgroup.mem_centralizer_iff]
   intro b hb
@@ -203,7 +203,7 @@ public theorem S_le_normalizer_P2
     (c.S : Subgroup G) ≤ Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P2 : Subgroup G := sylowCarrier (firstCase_P2_sylow c od hU Q)
   have hP2leB : P2 ≤ od.d.bg.B := by
     simpa [P2, firstCase_P2_carrier c od hU Q] using
@@ -247,8 +247,8 @@ private theorem firstCase_P_inf_P2_eq_bot
     qCoreOf od.d.bg.U od.p ⊓
       sylowCarrier (firstCase_P2_sylow c od hU Q) = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P2G : Subgroup G := sylowCarrier (firstCase_P2_sylow c od hU Q)
   have hPp : IsPGroup od.p P := qCoreOf_isPGroup od.d.bg.U od.p
@@ -306,8 +306,8 @@ public theorem firstCase_P0_ne_bot
     (hSM : (c.S : Subgroup G) ≤ M) :
     qCoreOf od.d.bg.U od.p ⊓ M ≠ ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P2G : Subgroup G := sylowCarrier (firstCase_P2_sylow c od hU Q)
   let P1G : Subgroup G := P ⊔ P2G
@@ -394,7 +394,7 @@ public theorem firstCase_P0_ne_bot
     have hP1leP2 : P1G ≤ P2G := (Subgroup.subgroupOf_eq_top.mp htop)
     exact hP1neP2 (le_antisymm hP1leP2 hP2leP1)
   have hP2sub_proper : P2sub < ⊤ := lt_top_iff_ne_top.mpr hP2sub_ne_top
-  haveI : Group.IsNilpotent (↥P1G) := hP1p.isNilpotent
+  have : Group.IsNilpotent (↥P1G) := hP1p.isNilpotent
   have hnc : NormalizerCondition (↥P1G) :=
     Group.normalizerCondition_of_isNilpotent (G := ↥P1G)
   have hltN : P2sub < Subgroup.normalizer (P2sub : Set (↥P1G)) :=
@@ -429,7 +429,7 @@ public theorem firstCase_normalizer_P2_proper
     Subgroup.normalizer
       (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≠ ⊤ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P2 : Subgroup G := sylowCarrier (firstCase_P2_sylow c od hU Q)
   let N : Subgroup G := Subgroup.normalizer (P2 : Set G)
   have hP2ne : P2 ≠ ⊥ := firstCase_P2_ne_one hmin c od hfirst hHhat hU Q
@@ -482,7 +482,7 @@ public theorem firstCase_exists_maximal_containing_normalizer_P2
           (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ M ∧
           (c.S : Subgroup G) ≤ M := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P2 : Subgroup G := sylowCarrier (firstCase_P2_sylow c od hU Q)
   let N : Subgroup G := Subgroup.normalizer (P2 : Set G)
   have hNproper : N ≠ ⊤ := by
@@ -514,7 +514,7 @@ public theorem firstCase_exists_maximal_P2_with_P0_ne_bot
           (c.S : Subgroup G) ≤ M ∧
             qCoreOf od.d.bg.U od.p ⊓ M ≠ ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨M, hMmax, hMN, hSM⟩ :=
     firstCase_exists_maximal_containing_normalizer_P2
       hmin c od hfirst hHhat hU Q
@@ -540,7 +540,7 @@ public theorem firstCase_V2_intersects_layer_or_twoCore
     fd.V2 ⊓ twoCoreOf M ≠ ⊥ ∨
       fd.V2 ⊓ componentLayerOf M ≠ ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   exact lemma_2_9 hmin c (firstCase_lemma29Hypothesis c hfirst hHhat)
     (V := fd.V2) (N := M)
     (hVN := fun x hx => hSM (fd.V2_le_S hx))
@@ -579,7 +579,7 @@ private theorem firstCase_twoCore_centralizes_FU
   have hord : orderOf c.t = 2 :=
     orderOf_eq_prime c.t_involution.2 c.t_involution.1
   have h2dvd : 2 ∣ Nat.card ↥(fittingSubgroupOf c.Hhat) := by
-    letI : Fintype ↥(fittingSubgroupOf c.Hhat) := Fintype.ofFinite _
+    let : Fintype ↥(fittingSubgroupOf c.Hhat) := Fintype.ofFinite _
     have h := orderOf_dvd_card (x := (⟨c.t, hxF⟩ : fittingSubgroupOf c.Hhat))
     simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk, hord] using h
   have h2π : 2 ∈ primesOfOrder (fittingSubgroupOf c.Hhat) :=
@@ -616,8 +616,8 @@ public theorem firstCase_V2_inf_twoCore_eq_bot
     (hControl : NormalizerControlledBy c.Hhat M) :
     fd.V2 ⊓ twoCoreOf M = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   by_contra hne
   have hnt : Nontrivial ↥(fd.V2 ⊓ twoCoreOf M) :=
@@ -713,8 +713,8 @@ private theorem firstCase_V2_le_of_inf_ne_bot
     (hne : fd.V2 ⊓ L ≠ ⊥) :
     fd.V2 ≤ L := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   have hnt : Nontrivial ↥(fd.V2 ⊓ L) :=
     (Subgroup.nontrivial_iff_ne_bot (fd.V2 ⊓ L)).2 hne
   obtain ⟨x, hxne⟩ := exists_ne (1 : ↥(fd.V2 ⊓ L))
@@ -788,7 +788,7 @@ public theorem firstCase_V2_le_componentLayer
     (hControl : NormalizerControlledBy c.Hhat M) :
     fd.V2 ≤ componentLayerOf M := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hdisj := firstCase_V2_intersects_layer_or_twoCore
     hmin c od hfirst hHhat hU Q fd M hMmax hMN hSM
   have hO2bot : fd.V2 ⊓ twoCoreOf M = ⊥ :=
@@ -819,15 +819,15 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_twoGroupQuotient
     (hQ : IsPGroup 2 (↥M ⧸ pPrimeCore 2 ↥M)) :
     fd.V2 ⊓ twoCoreOf M = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   have hpodd : Odd od.p :=
     (Fact.out : Nat.Prime od.p).odd_of_ne_two (firstCase_oriented_p_odd c od)
   have hP0ne : P ⊓ M ≠ ⊥ :=
     firstCase_P0_ne_bot hmin c od hfirst hHhat hU Q M hMmax hMN hSM
   let PM : Subgroup G := P ⊓ M
-  letI : Fintype ↥PM := Fintype.ofFinite _
+  let : Fintype ↥PM := Fintype.ofFinite _
   have hP0p : IsPGroup od.p PM :=
     (qCoreOf_isPGroup od.d.bg.U od.p).to_inf_left
   obtain ⟨n, hn⟩ := hP0p.exists_card_eq
@@ -998,15 +998,15 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_psl2_three
     (hpsl : Nonempty (L ≃* PSL2 K)) :
     fd.V2 ⊓ twoCoreOf M = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   have hpodd : Odd od.p :=
     (Fact.out : Nat.Prime od.p).odd_of_ne_two (firstCase_oriented_p_odd c od)
   have hP0ne : P ⊓ M ≠ ⊥ :=
     firstCase_P0_ne_bot hmin c od hfirst hHhat hU Q M hMmax hMN hSM
   let PM : Subgroup G := P ⊓ M
-  letI : Fintype ↥PM := Fintype.ofFinite _
+  let : Fintype ↥PM := Fintype.ofFinite _
   have hP0p : IsPGroup od.p PM :=
     (qCoreOf_isPGroup od.d.bg.U od.p).to_inf_left
   by_contra hne
@@ -1062,11 +1062,11 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_psl2_three
     apply Subtype.ext
     exact firstCase_t2_inverts_primeCore c od (x : G) hxP
   let O : Subgroup (↥M) := pPrimeCore 2 (↥M)
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := ↥M ⧸ O
-  letI : Group Q := QuotientGroup.Quotient.group O
+  let : Group Q := QuotientGroup.Quotient.group O
   let q : ↥M →* Q := QuotientGroup.mk' O
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let T2M : Subgroup (↥M) := (qCoreOf M 2).subgroupOf M
   have hT2Mp : IsPGroup 2 T2M :=
     (qCoreOf_isPGroup M 2).of_equiv
@@ -1171,15 +1171,15 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_pgl2_three
     (hpgl : Nonempty (L ≃* PGL2 K)) :
     fd.V2 ⊓ twoCoreOf M = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   have hpodd : Odd od.p :=
     (Fact.out : Nat.Prime od.p).odd_of_ne_two (firstCase_oriented_p_odd c od)
   have hP0ne : P ⊓ M ≠ ⊥ :=
     firstCase_P0_ne_bot hmin c od hfirst hHhat hU Q M hMmax hMN hSM
   let PM : Subgroup G := P ⊓ M
-  letI : Fintype ↥PM := Fintype.ofFinite _
+  let : Fintype ↥PM := Fintype.ofFinite _
   have hP0p : IsPGroup od.p PM :=
     (qCoreOf_isPGroup od.d.bg.U od.p).to_inf_left
   by_contra hne
@@ -1235,11 +1235,11 @@ public theorem firstCase_V2_inf_twoCore_eq_bot_of_quotient_pgl2_three
     apply Subtype.ext
     exact firstCase_t2_inverts_primeCore c od (x : G) hxP
   let O : Subgroup (↥M) := pPrimeCore 2 (↥M)
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := ↥M ⧸ O
-  letI : Group Q := QuotientGroup.Quotient.group O
+  let : Group Q := QuotientGroup.Quotient.group O
   let q : ↥M →* Q := QuotientGroup.mk' O
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let T2M : Subgroup (↥M) := (qCoreOf M 2).subgroupOf M
   have hT2Mp : IsPGroup 2 T2M :=
     (qCoreOf_isPGroup M 2).of_equiv
@@ -1340,7 +1340,7 @@ public theorem firstCase_V2_le_componentLayer_of_DGroup
     (hD : IsDGroup ↥M) :
     fd.V2 ≤ componentLayerOf M := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hdisj := firstCase_V2_intersects_layer_or_twoCore
     hmin c od hfirst hHhat hU Q fd M hMmax hMN hSM
   rcases hD with ⟨_hSylow, hQ⟩ | ⟨_hSylow, hA7⟩ |
@@ -1362,8 +1362,8 @@ public theorem firstCase_V2_le_componentLayer_of_DGroup
       · exact firstCase_V2_le_of_inf_ne_bot hmin c od fd hU Q M hMN
           (componentLayerOf M) (fstar_componentLayerOf_isNormalIn M) hE
   · -- linear quotient
-      letI : Field K := inferInstance
-      letI : Finite K := inferInstance
+      let : Field K := inferInstance
+      let : Finite K := inferInstance
       by_cases h3 : 3 < Nat.card K
       · have hO2bot :=
           firstCase_V2_inf_twoCore_eq_bot_of_quotient_linear_large

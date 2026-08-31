@@ -34,8 +34,8 @@ public theorem no_minimalCounterexample
 public theorem gorensteinWalter : gorensteinWalterStatement.{u} := by
   by_contra h
   obtain ⟨G, hG, hfin, hmin⟩ := exists_minimalCounterexample h
-  letI : Group G := hG
-  letI : Finite G := hfin
+  let : Group G := hG
+  let : Finite G := hfin
   exact no_minimalCounterexample hmin
 
 /-- Snake-case alias for the main theorem. -/

@@ -83,8 +83,8 @@ public theorem normal_two_subgroup_le_kleinFour_of_alternatingGroup_four
     (N : Subgroup (alternatingGroup (Fin 4)))
     (hNnormal : N.Normal) (hN2 : IsPGroup 2 N) :
     N ≤ alternatingGroup.kleinFour (Fin 4) := by
-  letI : N.Normal := hNnormal
-  letI : Fact (Nat.Prime 2) := ⟨by decide⟩
+  let : N.Normal := hNnormal
+  let : Fact (Nat.Prime 2) := ⟨by decide⟩
   obtain ⟨S : Sylow 2 (alternatingGroup (Fin 4))⟩ :=
     Sylow.nonempty (G := alternatingGroup (Fin 4))
   have hNleS : N ≤ (S : Subgroup (alternatingGroup (Fin 4))) :=

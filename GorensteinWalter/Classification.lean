@@ -296,8 +296,8 @@ private lemma generator_of_inf {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ m))) 
 private lemma mem_eq_one_of_card_one {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ m)))
     (hcard1 : Nat.card (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = 1)
     {z : DihedralGroup (2 ^ m)} (hz : z ∈ H ⊓ Subgroup.zpowers (DihedralGroup.r 1)) : z = 1 := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
-  letI : Fintype (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) := Fintype.ofFinite _
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : Fintype (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) := Fintype.ofFinite _
   have hc1 : Fintype.card (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = 1 := by
     rwa [Nat.card_eq_fintype_card] at hcard1
   rcases (Fintype.card_eq_one_iff).mp hc1 with ⟨z₀, hz₀⟩
@@ -311,7 +311,7 @@ private lemma mem_eq_one_of_card_one {m : ℕ} (H : Subgroup (DihedralGroup (2 ^
 private lemma isCyclic_or_dihedral_of_subgroup_dihedral_two_group {m : ℕ} (hm : 1 ≤ m)
     (H : Subgroup (DihedralGroup (2 ^ m))) :
     IsCyclic H ∨ ∃ k : ℕ, 1 ≤ k ∧ Nonempty (H ≃* DihedralGroup (2 ^ k)) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   let R : Subgroup (DihedralGroup (2 ^ m)) := Subgroup.zpowers (DihedralGroup.r 1)
   by_cases hHR : H ≤ R
   · left
@@ -517,7 +517,7 @@ public theorem properSubgroups_areDGroups
 private lemma dihedral_two_group_generated {m : ℕ} :
     Subgroup.zpowers (DihedralGroup.r 1 : DihedralGroup (2 ^ m)) ⊔
       Subgroup.zpowers (DihedralGroup.sr 1 : DihedralGroup (2 ^ m)) = ⊤ := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   apply le_antisymm
   · intro x hx
     trivial
@@ -648,7 +648,7 @@ public theorem hasCyclicOrDihedralSylowTwo_quotient {G : Type u} [Group G] [Fini
     rcases (Nat.dvd_prime_pow Nat.prime_two).mp hdvd with ⟨j, hjle, hjpow⟩
     by_cases hρ1 : orderOf ρ' = 1
     · left
-      haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       have hcyc1 : IsCyclic (DihedralGroup 1) :=
         isCyclic_of_prime_card (p := 2) (by rw [DihedralGroup.nat_card])
       have e1 : ↥S ≃* DihedralGroup 1 := by
@@ -678,7 +678,7 @@ private lemma card_comap_quotient {G : Type u} [Group G] [Finite G]
     have hx1 : mk x = 1 :=
       (MonoidHom.mem_ker (f := mk)).mp ((QuotientGroup.ker_mk' (N := N)).symm ▸ hx)
     simpa [mk, hx1] using H.one_mem
-  haveI : (N.subgroupOf P).Normal := by
+  have : (N.subgroupOf P).Normal := by
     -- N ⊴ G ⟹ N ≤ N_G(N) ⟹ N.subgroupOf P ⊴ P
     exact Subgroup.normal_subgroupOf_of_le_normalizer (H := P) (N := N)
       (Subgroup.le_normalizer_of_normal (H := N) (K := P))
@@ -857,8 +857,8 @@ public lemma exists_minimalNormal_of_normal_ne_bot {G : Type u} [Group G] [Finit
         rwa [← hH'card] at hle0
       have hle2 : Nat.card (↥M) ≤ Nat.card (↥H') := Subgroup.card_le_of_le hMH
       have hcard : Nat.card (↥M) = Nat.card (↥H') := le_antisymm hle2 hle1
-      haveI : Fintype ↑(M : Set G) := Fintype.ofFinite ↑(M : Set G)
-      haveI : Fintype ↑(H' : Set G) := Fintype.ofFinite ↑(H' : Set G)
+      have : Fintype ↑(M : Set G) := Fintype.ofFinite ↑(M : Set G)
+      have : Fintype ↑(H' : Set G) := Fintype.ofFinite ↑(H' : Set G)
       have hset : (M : Set G) = (H' : Set G) := by
         apply Set.eq_of_subset_of_card_le (s := (M : Set G)) (t := (H' : Set G)) hMH
         simpa [Nat.card_eq_fintype_card] using (le_of_eq hcard.symm)
@@ -943,7 +943,7 @@ public lemma nontrivial_of_dihedralSylowTwo {G : Type u} [Group G] [Finite G]
     simpa [Subgroup.card_top] using
       (Subgroup.card_dvd_of_le (H := (S : Subgroup G)) (K := ⊤) le_top)
   have h2le : 2 ≤ Nat.card G := Nat.le_of_dvd (by exact Nat.card_pos) (dvd_trans h2dvdS hdvd)
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   rw [Nat.card_eq_fintype_card] at h2le
   have h1 : 1 < Fintype.card G := by omega
   exact (Fintype.one_lt_card_iff_nontrivial (α := G)).mp h1
@@ -1055,7 +1055,7 @@ private lemma d8_is_dihedral4 : Nonempty (d8 ≃* DihedralGroup 4) := by
     exact Subtype.coe_injective (by
       simpa [Subgroup.coe_mul, Subgroup.coe_inv] using d8_rel)
   rcases (isCyclic_or_dihedral_of_generators ρ' σ' hgen hσ2 hrel) with hcyc | hdih
-  · haveI : IsCyclic d8 := hcyc
+  · have : IsCyclic d8 := hcyc
     have hcomm : ρ' * σ' = σ' * ρ' := IsMulCommutative.is_comm.comm ρ' σ'
     have hc : (↑(ρ' * σ') : Equiv.Perm (Fin 7)) = (↑(σ' * ρ') : Equiv.Perm (Fin 7)) :=
       congrArg (fun x : d8 => (x : Equiv.Perm (Fin 7))) hcomm
@@ -1227,9 +1227,9 @@ public lemma isDGroup_of_mulEquiv_aSeven
     (e : Nonempty (G ≃* alternatingGroup (Fin 7))) :
     IsDGroup G := by
   rcases e with ⟨e⟩
-  letI : IsSimpleGroup (alternatingGroup (Fin 7)) :=
+  let : IsSimpleGroup (alternatingGroup (Fin 7)) :=
     alternatingGroup.isSimpleGroup (by norm_num)
-  letI : IsSimpleGroup G := e.isSimpleGroup
+  let : IsSimpleGroup G := e.isSimpleGroup
   have hcoreA : pPrimeCore 2 (alternatingGroup (Fin 7)) = ⊥ := by
     apply pPrimeCore_eq_bot_of_simple_of_even
     rw [nat_card_alternatingGroup]
@@ -1328,8 +1328,8 @@ public lemma isDGroup_of_mulEquiv
   let N : Subgroup G := pPrimeCore 2 G
   let M : Subgroup H := pPrimeCore 2 H
   have hNM : N.map e.toMonoidHom = M := by simpa [N, M] using hmap
-  letI : N.Normal := pPrimeCore_normal
-  letI : M.Normal := pPrimeCore_normal
+  let : N.Normal := pPrimeCore_normal
+  let : M.Normal := pPrimeCore_normal
   let qE : (G ⧸ N) ≃* (H ⧸ M) := quotientOddCoreMulEquiv e N M hNM
   rcases hH with ⟨_hSylowH, htwo⟩ | ⟨_hSylowH, e7⟩ |
       ⟨_hSylowH, K, hKprime, L, hLnormal, hLindex, hLmodel⟩

@@ -28,7 +28,7 @@ public theorem inverted_elements_eq_of_mul_inv_mem_card_three_normalizer
     (hprodF : x * z⁻¹ ∈ F) :
     x = z := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let f : G := x * z⁻¹
   have hfF : f ∈ F := hprodF
   by_contra hxz

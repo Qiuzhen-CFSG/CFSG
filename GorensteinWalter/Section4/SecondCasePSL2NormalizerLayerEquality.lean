@@ -122,11 +122,11 @@ private theorem secondCase_H_solvable
   have hSleH : S ≤ c.H := centralizerSetup_S_le_H c
   have hS2 : IsPGroup 2 S := c.S.isPGroup'
   let US : Subgroup c.H := U.subgroupOf c.H
-  haveI : US.Normal :=
+  have : US.Normal :=
     (Subgroup.normal_subgroupOf_iff hUleH).2 (fun h k hh hk => hUnormalH.2 k hk h hh)
   have hUsolvH : Group.IsSolvable US := by
     let e : US ≃* U := Subgroup.subgroupOfEquivOfLe hUleH
-    letI : Group.IsSolvable U := hUsolv
+    let : Group.IsSolvable U := hUsolv
     exact isSolvable_of_mulEquiv e.symm
   let S' : Subgroup c.H := S.subgroupOf c.H
   have hS2' : IsPGroup 2 S' := hS2.comap_subtype
@@ -219,11 +219,11 @@ public theorem secondCase_psl2_normalizer_layer_eq_component
   have hZFne : ZF ≠ ⊥ := by
     have hFnil : Group.IsNilpotent (↥F) := by
       let e : F.subgroupOf c.FU ≃* F := Subgroup.subgroupOfEquivOfLe hFleFU
-      haveI : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
-      haveI : Group.IsNilpotent (F.subgroupOf c.FU) := inferInstance
+      have : Group.IsNilpotent (↥c.FU) := fittingSubgroupOf_isNilpotent c.U
+      have : Group.IsNilpotent (F.subgroupOf c.FU) := inferInstance
       exact Group.nilpotent_of_mulEquiv e
-    haveI : Group.IsNilpotent (↥F) := hFnil
-    haveI : Nontrivial F := (Subgroup.nontrivial_iff_ne_bot F).2 hFne
+    have : Group.IsNilpotent (↥F) := hFnil
+    have : Nontrivial F := (Subgroup.nontrivial_iff_ne_bot F).2 hFne
     have hcenter_ne : Subgroup.center F ≠ ⊥ :=
       Group.IsNilpotent.center_ne_bot (G := ↥F)
     intro hbot
@@ -257,20 +257,20 @@ public theorem secondCase_psl2_normalizer_layer_eq_component
     rw [c.H_eq_centralizer]
     exact hc'.1
   have hCsolv : Group.IsSolvable C := by
-    letI : Group.IsSolvable c.H := secondCase_H_solvable hmin c
-    letI : Group.IsSolvable (C.subgroupOf c.H) := inferInstance
+    let : Group.IsSolvable c.H := secondCase_H_solvable hmin c
+    let : Group.IsSolvable (C.subgroupOf c.H) := inferInstance
     exact isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hC)
   let EN : Subgroup M := E.subgroupOf M
   have hENnormal : EN.Normal := by
     rw [Subgroup.normal_subgroupOf_iff hEleM]
     intro e m he hm
     exact hEnormalM.2 m hm e he
-  letI : EN.Normal := hENnormal
+  let : EN.Normal := hENnormal
   let q : M →* M ⧸ EN := QuotientGroup.mk' EN
   let CM : Subgroup M := C.subgroupOf M
   have hCsolvM : Group.IsSolvable CM := by
     let e : CM ≃* C := Subgroup.subgroupOfEquivOfLe hCE
-    letI : Group.IsSolvable C := hCsolv
+    let : Group.IsSolvable C := hCsolv
     exact isSolvable_of_mulEquiv e.symm
   have hCMsurj : Function.Surjective (q.comp CM.subtype) := by
     intro a
@@ -307,17 +307,17 @@ public theorem secondCase_psl2_normalizer_layer_eq_component
   -- A perfect subgroup of `M` maps trivially to the solvable quotient.
   have hLperfect : Group.IsPerfect (L.subgroupOf M) := by
     let e : L.subgroupOf M ≃* L := Subgroup.subgroupOfEquivOfLe hLleM
-    letI : Group.IsPerfect L := componentLayerOf_isPerfect N
+    let : Group.IsPerfect L := componentLayerOf_isPerfect N
     exact Group.IsPerfect.ofSurjective (f := e.symm.toMonoidHom) e.symm.surjective
   have hLmap_bot : (L.subgroupOf M).map q = ⊥ := by
     by_contra hne
-    haveI : Nontrivial ((L.subgroupOf M).map q) :=
+    have : Nontrivial ((L.subgroupOf M).map q) :=
       (Subgroup.nontrivial_iff_ne_bot ((L.subgroupOf M).map q)).2 hne
-    letI : Group.IsSolvable ((L.subgroupOf M).map q) := by
-      letI : Group.IsSolvable (M ⧸ EN) := hMsolvQuot
+    let : Group.IsSolvable ((L.subgroupOf M).map q) := by
+      let : Group.IsSolvable (M ⧸ EN) := hMsolvQuot
       infer_instance
     have hperf : Group.IsPerfect ((L.subgroupOf M).map q) := by
-      letI : Group.IsPerfect (L.subgroupOf M) := hLperfect
+      let : Group.IsPerfect (L.subgroupOf M) := hLperfect
       exact Group.IsPerfect.map q
     exact Group.IsPerfect.not_isSolvable ((L.subgroupOf M).map q) inferInstance
   have hLleE : L ≤ E := by

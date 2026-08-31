@@ -30,7 +30,7 @@ public theorem pgl2_inner_involutions_conjugate
     (hyJ : y ∈ commutator (PGL2 K)) (hyI : IsInvolution y) :
     ∃ g : PGL2 K, g ∈ commutator (PGL2 K) ∧ g * x * g⁻¹ = y := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)

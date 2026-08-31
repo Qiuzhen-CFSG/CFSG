@@ -17,10 +17,10 @@ private theorem isQuasisimple_mulEquiv
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H := by
@@ -93,7 +93,7 @@ private theorem map_fittingSubgroup_le_of_surjective
   have hmap_normal : ((fittingSubgroup G).map f).Normal :=
     Subgroup.Normal.map (H := fittingSubgroup G) inferInstance f hf
   have hmap_nil : Group.IsNilpotent ↥((fittingSubgroup G).map f) := by
-    haveI : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
+    have : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
     let ψ : fittingSubgroup G →* ↥((fittingSubgroup G).map f) :=
       { toFun := fun g => ⟨f g, Subgroup.mem_map.mpr ⟨g.1, g.2, rfl⟩⟩
         map_one' := by ext; simp
@@ -234,7 +234,7 @@ private theorem generalizedFittingSubgroupOf_subgroup_top_eq
     have hA : A.subtype = e.toMonoidHom := by
       ext x
       rfl
-    haveI : Finite (↥A) :=
+    have : Finite (↥A) :=
       Finite.of_equiv (↥H) (Subgroup.topEquiv (G := ↥H)).toEquiv.symm
     calc
       (fittingSubgroupOf (⊤ : Subgroup (↥H))).map H.subtype
@@ -285,12 +285,12 @@ private theorem isPGroup_of_normal_nilpotent_of_extension
     (hQ : IsPGroup p (G ⧸ N)) :
     IsPGroup p R := by
   classical
-  letI : N.Normal := hNnorm
-  letI : R.Normal := hRnorm
+  let : N.Normal := hNnorm
+  let : R.Normal := hRnorm
   let K : Subgroup G := R ⊓ N
   have hKleR : K ≤ R := inf_le_left
   have hKleN : K ≤ N := inf_le_right
-  haveI : (K.subgroupOf R).Normal := by
+  have : (K.subgroupOf R).Normal := by
     refine (Subgroup.normal_subgroupOf_iff hKleR).mpr ?_
     intro x hx r hr
     rcases r with ⟨xR, xN⟩
@@ -301,8 +301,8 @@ private theorem isPGroup_of_normal_nilpotent_of_extension
     rcases hk with ⟨hkR, hkN⟩
     exact ⟨hRnorm.conj_mem k hkR n, N.mul_mem (N.mul_mem hn hkN) (N.inv_mem hn)⟩
   have hKnil : Group.IsNilpotent K := by
-    haveI : Group.IsNilpotent (↥R) := hRnil
-    haveI : Group.IsNilpotent (↥(K.subgroupOf R)) := inferInstance
+    have : Group.IsNilpotent (↥R) := hRnil
+    have : Group.IsNilpotent (↥(K.subgroupOf R)) := inferInstance
     exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hKleR)
   have hKleF : K ≤ fittingSubgroupOf N :=
     le_fittingSubgroupOf_of_isNormalIn_nilpotent hKleN hKnormN hKnil
@@ -329,7 +329,7 @@ private theorem isPGroup_of_normal_nilpotent_of_extension
     let e : R ⧸ K.subgroupOf R ≃* φ.range :=
       (QuotientGroup.quotientMulEquivOfEq hker').trans (QuotientGroup.quotientKerEquivRange φ)
     exact hrange.of_equiv e.symm
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   exact isPGroup_of_subgroup_and_quotient (G := ↥R) (N := K.subgroupOf R) hKp' hQR
 
 private theorem componentLayerOf_eq_bot_of_extension
@@ -339,7 +339,7 @@ private theorem componentLayerOf_eq_bot_of_extension
     (hQ : IsPGroup p (G ⧸ N)) :
     componentLayerOf (⊤ : Subgroup G) = ⊥ := by
   classical
-  letI : N.Normal := hNnorm
+  let : N.Normal := hNnorm
   apply le_bot_iff.mp
   rw [componentLayerOf]
   refine sSup_le ?_
@@ -347,7 +347,7 @@ private theorem componentLayerOf_eq_bot_of_extension
   let M : Subgroup G := L ⊓ N
   have hMleL : M ≤ L := inf_le_left
   have hMleN : M ≤ N := inf_le_right
-  haveI : (M.subgroupOf L).Normal := by
+  have : (M.subgroupOf L).Normal := by
     refine (Subgroup.normal_subgroupOf_iff hMleL).mpr ?_
     intro x hx l hl
     rcases l with ⟨xL, xN⟩
@@ -373,14 +373,14 @@ private theorem componentLayerOf_eq_bot_of_extension
     exact hrange.of_equiv e.symm
   have hLperf : Group.IsPerfect L := (Group.isPerfect_def).2 hL.2.2.2.1
   let Q : Type u := L ⧸ M.subgroupOf L
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQnil : Group.IsNilpotent Q := IsPGroup.isNilpotent hQL
-  letI : Group.IsNilpotent Q := hQnil
-  haveI : Group.IsSolvable Q := inferInstance
-  haveI : Group.IsPerfect Q := inferInstance
+  let : Group.IsNilpotent Q := hQnil
+  have : Group.IsSolvable Q := inferInstance
+  have : Group.IsPerfect Q := inferInstance
   have hQsub : Subsingleton Q := by
     by_contra hnot
-    haveI : Nontrivial Q := (not_subsingleton_iff_nontrivial).mp hnot
+    have : Nontrivial Q := (not_subsingleton_iff_nontrivial).mp hnot
     exact (Group.IsPerfect.not_isSolvable Q) inferInstance
   have hLleM : L ≤ M := by
     intro l hl
@@ -417,8 +417,8 @@ private theorem isPGroup_fittingSubgroup_of_extension
       IsPGroup p (qCoreOf (⊤ : Subgroup G) q) := by
     intro q hq
     have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hq
-    letI : Fact q.Prime := ⟨hqprime⟩
-    haveI : (qCoreOf (⊤ : Subgroup G) q).Normal := by
+    let : Fact q.Prime := ⟨hqprime⟩
+    have : (qCoreOf (⊤ : Subgroup G) q).Normal := by
       have h := qCoreOf_normal_in (⊤ : Subgroup G) q
       exact (Subgroup.normalizer_eq_top_iff).mp (top_le_iff.mp (le_normalizer_of_isNormalIn h))
     exact isPGroup_of_normal_nilpotent_of_extension p hp N hNnorm (qCoreOf (⊤ : Subgroup G) q)
@@ -426,7 +426,7 @@ private theorem isPGroup_fittingSubgroup_of_extension
       (IsPGroup.isNilpotent (qCoreOf_isPGroup (⊤ : Subgroup G) q)) hN hQ
   rw [fittingSubgroupOf_eq_iSup_qCoreOf (⊤ : Subgroup G)]
   let ι := (Nat.card (↥(⊤ : Subgroup G))).primeFactors.attach
-  haveI : ∀ q : ι, (qCoreOf (⊤ : Subgroup G) q.1.1).Normal := by
+  have : ∀ q : ι, (qCoreOf (⊤ : Subgroup G) q.1.1).Normal := by
     intro q
     have h := qCoreOf_normal_in (⊤ : Subgroup G) q.1.1
     exact (Subgroup.normalizer_eq_top_iff).mp (top_le_iff.mp (le_normalizer_of_isNormalIn h))
@@ -578,7 +578,7 @@ private theorem bender1970_1_9_step
     simpa [mul_assoc] using hc0C
   let Ht : Type u := ↥H
   let N' : Subgroup Ht := C.subgroupOf H
-  haveI : N'.Normal := by
+  have : N'.Normal := by
     refine (Subgroup.normal_subgroupOf_iff hCH).mpr ?_
     intro c n hc hn
     exact hCnormH.2 n hn c hc
@@ -707,7 +707,7 @@ public theorem bender1970_1_9_centralizer_pGroup
         · intro hx
           exact ⟨hx, Subgroup.le_normalizer (H := U) hx⟩
       have hVltW : V < W := by
-        letI : Fact p.Prime := ⟨hp⟩
+        let : Fact p.Prime := ⟨hp⟩
         have hUnil : Group.IsNilpotent (↥U) := IsPGroup.isNilpotent hUp
         have hnc : NormalizerCondition (↥U) :=
           Group.normalizerCondition_of_isNilpotent (G := ↥U)

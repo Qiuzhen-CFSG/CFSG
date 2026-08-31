@@ -167,10 +167,10 @@ private theorem pairFiber_card_eq
       else if Nat.card (Fiber c ω.1) = 4 then 6 else 0 := by
   classical
   by_cases hc0 : Nat.card (Fiber c ω.1) = 0
-  · letI : Fintype (Fiber c ω.1) := Fintype.ofFinite _
-    haveI : IsEmpty (Fiber c ω.1) :=
+  · let : Fintype (Fiber c ω.1) := Fintype.ofFinite _
+    have : IsEmpty (Fiber c ω.1) :=
       Fintype.card_eq_zero_iff.mp (by simpa [Nat.card_eq_fintype_card] using hc0)
-    haveI : IsEmpty (PairFiber c ω.1) := ⟨fun p => isEmptyElim p.1.1⟩
+    have : IsEmpty (PairFiber c ω.1) := ⟨fun p => isEmptyElim p.1.1⟩
     rw [hc0]
     simp
   · have hne : Nonempty (Fiber c ω.1) :=
@@ -307,7 +307,7 @@ private theorem sum_pairFiber_cards
     Nat.card (Σ ω : Nonbase c, PairFiber c ω.1) =
       2 * cosetInvolution_b c.Hhat 2 + 6 * cosetInvolution_b c.Hhat 4 := by
   classical
-  letI : Fintype (Nonbase c) := Fintype.ofFinite _
+  let : Fintype (Nonbase c) := Fintype.ofFinite _
   have hlocal : ∀ ω : Nonbase c, Nat.card (PairFiber c ω.1) =
       (if Nat.card (Fiber c ω.1) = 2 then 2 else 0) +
       (if Nat.card (Fiber c ω.1) = 4 then 6 else 0) := by

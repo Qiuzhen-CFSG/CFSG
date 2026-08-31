@@ -183,7 +183,7 @@ public theorem pGroup_le_kernel_of_complement
     {p : ℕ} [Fact p.Prime] (hAp : IsPGroup p A)
     (hcop : Nat.Coprime p (Nat.card C)) :
     A ≤ N := by
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   intro a ha
   let q : M →* M ⧸ N := QuotientGroup.mk' N
   rcases hAp.exists_card_eq with ⟨k, hk⟩
@@ -233,7 +233,7 @@ public theorem no_kleinFour_subgroup_of_isCyclic
     (M V : Subgroup G) (hVK : IsKleinFour V) (hVM : V ≤ M)
     (hMcyc : IsCyclic M) :
     False := by
-  letI : IsCyclic M := hMcyc
+  let : IsCyclic M := hMcyc
   have hnot : ¬ IsCyclic (↥V) :=
     @IsKleinFour.not_isCyclic (↥V) _ hVK
   exact hnot (Subgroup.isCyclic_of_le hVM)
@@ -265,7 +265,7 @@ public theorem v4_le_kernel_of_fixedPointFree
     (hfree : ∀ c : M, c ∈ C → c ≠ 1 →
       ∀ a : M, a ∈ A → a ≠ 1 → c * a * c⁻¹ ≠ a) :
     V ≤ N := by
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hcomp : N.IsComplement' C := by
     refine ⟨Subgroup.mul_injective_of_disjoint hdisj, ?_⟩
     intro g
@@ -331,7 +331,7 @@ public theorem frobenius_complement_has_no_v4_centralizer
     (hfree : ∀ c : M, c ∈ C → c ≠ 1 →
       ∀ a : M, a ∈ A → a ≠ 1 → c * a * c⁻¹ ≠ a) :
     False := by
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hcomp : N.IsComplement' C := by
     refine ⟨Subgroup.mul_injective_of_disjoint hdisj, ?_⟩
     intro g

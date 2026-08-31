@@ -106,7 +106,7 @@ public theorem psl2_low_dihedral_overgroup_eq_or_four_dvd_card
     exact ⟨m, by omega⟩
   · exfalso
     rcases hCyclic with ⟨_z, _hz, _hcard, hMcyclic⟩
-    letI : IsCyclic M := hMcyclic
+    let : IsCyclic M := hMcyclic
     exact hDnotcyclic (Subgroup.isCyclic_of_le hDM)
   · left
     rcases hDihedral with ⟨z, hzdiv, hMcard, _hMequiv⟩
@@ -174,7 +174,7 @@ public theorem psl2_low_dihedral_overgroup_eq_or_four_dvd_card
     rcases hSemidirect with
       ⟨a, _ccard, _hccard_dvd, _hccard_ambient, N, C,
         hNnormal, hNelem, hNcard, hCcyc, _hCcard, hdisj, hjoin⟩
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     have hcomp : N.IsComplement' C := by
       refine ⟨Subgroup.mul_injective_of_disjoint hdisj, ?_⟩
       intro g
@@ -184,7 +184,7 @@ public theorem psl2_low_dihedral_overgroup_eq_or_four_dvd_card
       rcases hg with ⟨n, hn, c, hc, hnc⟩
       exact ⟨⟨⟨n, hn⟩, ⟨c, hc⟩⟩, hnc⟩
     let eQ : M ⧸ N ≃* C := hcomp.symm.QuotientMulEquiv
-    letI : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
+    let : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
     let DM : Subgroup M := D.subgroupOf M
     have hDMcard : Nat.card DM = Nat.card D :=
       Nat.card_congr (Subgroup.subgroupOfEquivOfLe hDM)
@@ -227,7 +227,7 @@ public theorem psl2_low_dihedral_overgroup_eq_or_four_dvd_card
   · right
     rcases hPGL with ⟨a, ha, _hadiv, ⟨eM⟩⟩
     let K := GaloisField r a
-    letI : Finite (PGL2 K) :=
+    let : Finite (PGL2 K) :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
     have hKcard : Nat.card K = r ^ a := GaloisField.card r a ha

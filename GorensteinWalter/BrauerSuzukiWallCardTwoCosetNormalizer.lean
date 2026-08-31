@@ -73,7 +73,7 @@ public theorem
     rw [← hTNnorm]
     exact haNormN
   have haT : a ∈ T := haTN
-  letI : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
+  let : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
   by_contra hane
   have haSqH := IsKleinFour.mul_self (⟨a, haH⟩ : h.H)
   have haSq : a ^ 2 = 1 := by

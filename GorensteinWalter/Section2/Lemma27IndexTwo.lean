@@ -38,9 +38,9 @@ public theorem sylow_le_of_normal_odd_index_local_27
     {Q : Type u} [Group Q] [Finite Q]
     (L : Subgroup Q) (hLnormal : L.Normal) (hLindex : Odd L.index)
     (P : Sylow 2 Q) : (P : Subgroup Q) ≤ L := by
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : Q →* Q ⧸ L := QuotientGroup.mk' L
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hmapP : IsPGroup 2 ((P : Subgroup Q).map pi) :=
     P.isPGroup'.map pi
   rcases IsPGroup.iff_card.mp hmapP with ⟨n, hn⟩
@@ -159,7 +159,7 @@ public theorem exists_normal_index_two_of_card_eq_two_mul_odd
     (h2 : 2 ∣ Nat.card G) (hodd : Odd (Nat.card G / 2)) :
     ∃ N : Subgroup G, N.Normal ∧ N.index = 2 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have h2' : 2 ∣ Fintype.card G := by
     simpa [Nat.card_eq_fintype_card] using h2
   obtain ⟨g, hg2⟩ := exists_prime_orderOf_dvd_card' (G := G) 2 h2
@@ -219,7 +219,7 @@ public theorem exists_normal_index_two_containing_of_index_eq_two_mul_odd
     (h2 : 2 ∣ N.index) (hnot4 : ¬ 4 ∣ N.index) :
     ∃ M₂ : Subgroup A, M₂.Normal ∧ M₂.index = 2 ∧ N ≤ M₂ := by
   classical
-  letI : N.Normal := hN
+  let : N.Normal := hN
   rcases h2 with ⟨m, hm⟩
   have hmodd : Odd m := by
     by_contra hnotodd

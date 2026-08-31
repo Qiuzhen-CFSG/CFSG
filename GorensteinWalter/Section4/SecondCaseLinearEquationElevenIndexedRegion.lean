@@ -42,8 +42,8 @@ public theorem secondCase_linearEquation11_indexed_region_inequality
     (∃ g : G, Y = P.map (MulAut.conj g).toMonoidHom) ∧ Adm x Y}
   let ConjP : Type u := {Y : Subgroup G // ∃ g : G,
     Y = P.map (MulAut.conj g).toMonoidHom}
-  letI : Fintype Xs := Fintype.ofFinite Xs
-  letI : Fintype (Subgroup G) := Fintype.ofFinite (Subgroup G)
+  let : Fintype Xs := Fintype.ofFinite Xs
+  let : Fintype (Subgroup G) := Fintype.ofFinite (Subgroup G)
   have hLle : ∀ x : Xs, L ≤ Fintype.card (Ys x) := by
     intro x
     change L ≤ Fintype.card {Y : Subgroup G //
@@ -85,7 +85,7 @@ public theorem secondCase_linearEquation11_indexed_region_inequality
     simpa using (Nat.card_mul_le_of_injective_pair f hinj)
   have hConj : Nat.card ConjP = M.index := by
     classical
-    letI : MulAction G (Subgroup G) :=
+    let : MulAction G (Subgroup G) :=
       { smul := fun g H => H.map (MulAut.conj g).toMonoidHom
         one_smul := by
           intro H

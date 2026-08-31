@@ -44,8 +44,8 @@ private theorem F_order_p_eq_P :
     {x : G | x ∈ od.F ∧ x ^ od.p = 1} = (od.P : Set G) := by
   classical
   let S : Set G := {x : G | x ∈ od.F ∧ x ^ od.p = 1}
-  letI : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
-  letI : IsCyclic (↥od.F) := od.F_cyclic
+  let : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
+  let : IsCyclic (↥od.F) := od.F_cyclic
   have hp_pos : 0 < od.p := od.hp_prime.pos
   have hPsubS : (od.P : Set G) ⊆ S := by
     intro x hx
@@ -77,7 +77,7 @@ private theorem F_order_p_eq_P :
     exact le_of_eq (by
       change Nat.card {x : G // x ∈ S} = Nat.card (↥od.P)
       rw [hScard, od.P_card])
-  letI : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
+  let : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
   exact (Set.eq_of_subset_of_card_le hPsubS (by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hcard)).symm
@@ -86,9 +86,9 @@ private theorem K0_order_p_eq_P0 :
     {x : G | x ∈ od.K0 ∧ x ^ od.p = 1} = (od.P0 : Set G) := by
   classical
   let S : Set G := {x : G | x ∈ od.K0 ∧ x ^ od.p = 1}
-  letI : Fintype (↥od.K0) := Fintype.ofFinite (↥od.K0)
-  letI : IsCyclic (↥od.K) := od.K_cyclic
-  letI : IsCyclic (↥od.K0) := Subgroup.isCyclic_of_le (K0_le_K c w d od)
+  let : Fintype (↥od.K0) := Fintype.ofFinite (↥od.K0)
+  let : IsCyclic (↥od.K) := od.K_cyclic
+  let : IsCyclic (↥od.K0) := Subgroup.isCyclic_of_le (K0_le_K c w d od)
   have hp_pos : 0 < od.p := od.hp_prime.pos
   have hP0subS : (od.P0 : Set G) ⊆ S := by
     intro x hx
@@ -120,7 +120,7 @@ private theorem K0_order_p_eq_P0 :
     exact le_of_eq (by
       change Nat.card {x : G // x ∈ S} = Nat.card (↥od.P0)
       rw [hScard, od.P0_card])
-  letI : Fintype (↥od.P0) := Fintype.ofFinite (↥od.P0)
+  let : Fintype (↥od.P0) := Fintype.ofFinite (↥od.P0)
   exact (Set.eq_of_subset_of_card_le hP0subS (by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hcard)).symm
@@ -185,7 +185,7 @@ private theorem pow_one_of_sup_le_A :
 
 private theorem P_le_pCore :
     od.P ≤ (pCore od.p (↥c.U)).map c.U.subtype := by
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   have hPleU : od.P ≤ c.U := (od.P_le_F.trans (F_le_FU c w d od)).trans (fittingSubgroupOf_le c.U)
   let P' : Subgroup (↥c.U) := od.P.subgroupOf c.U
   have hPcard' : Nat.card P' = od.p :=
@@ -265,7 +265,7 @@ private theorem conj_le_A :
     ∀ q : G, q ∈ od.Q.map c.U.subtype → ∀ p : G, p ∈ od.P →
       q * p * q⁻¹ ∈ od.A := by
   intro q hq p hp
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   let OpU : Subgroup (↥c.U) := pCore od.p (↥c.U)
   rcases Subgroup.mem_map.mp hq with ⟨q0, hq0, hqeq⟩
   rcases Subgroup.mem_map.mp (od.Q_le_upperCentralSeries_two hq0) with ⟨z, hz, hzq⟩

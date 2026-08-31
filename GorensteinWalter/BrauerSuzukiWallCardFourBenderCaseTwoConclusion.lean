@@ -51,7 +51,7 @@ public theorem
     have hmul := XN.card_mul_index
     rw [hXNcard, hNcard'] at hmul
     omega
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hXNp : IsPGroup 3 XN := by
     apply IsPGroup.of_card (n := 1)
     simpa [hXNcard]
@@ -85,7 +85,7 @@ public theorem
         norm_num [hcard] at hmod
     rcases hcases with hone | hfour
     · exfalso
-      letI : Subsingleton (Sylow 3 N) :=
+      let : Subsingleton (Sylow 3 N) :=
         (Nat.card_eq_one_iff_unique.mp hone).1
       have hXNnormal : XN.Normal := by
         simpa [P] using Sylow.normal_of_subsingleton P
@@ -149,7 +149,7 @@ public theorem
     · rw [← huOrder]
       exact pow_orderOf_eq_one u
   have hXNcomm : IsMulCommutative XN := by
-    letI : IsCyclic XN := isCyclic_of_prime_card hXNcard
+    let : IsCyclic XN := isCyclic_of_prime_card hXNcard
     exact IsCyclic.isMulCommutative
   let CN : Subgroup N := Subgroup.centralizer (XN : Set N)
   have hXNleCN : XN ≤ CN := by
@@ -202,7 +202,7 @@ public theorem
   have hCN : CN = XN :=
     (Subgroup.eq_of_le_of_card_ge hXNleCN (by rw [hCNcard, hXNcard])).symm
   have hXcomm : IsMulCommutative X := by
-    letI : IsCyclic X := isCyclic_of_prime_card hXcard
+    let : IsCyclic X := isCyclic_of_prime_card hXcard
     exact IsCyclic.isMulCommutative
   let CX : Subgroup G := Subgroup.centralizer (X : Set G)
   have hXleCX : X ≤ CX := by

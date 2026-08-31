@@ -42,10 +42,10 @@ public theorem pgl2_low_two_part_torus_reflection_data_fixed_sylow
       g * t * g⁻¹ =
         (eP.symm (DihedralGroup.r
           (2 ^ (m - 1) : ZMod (2 ^ m))) : PGL2 K) := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨U, s, t, w, hUcyc, hUodd, hUcard, hsU, hsJ, hsne, hssq,
       htJ, htU, htsq, htinv, htrel, hwU, hwsq, hwinv, hcent⟩ :=
     pgl2_low_two_part_torus_reflection_data K hK hcard
@@ -116,7 +116,7 @@ public theorem pgl2_low_two_part_torus_reflection_data_fixed_sylow
     rw [pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     exact pgl2_psl2Range_index_eq_two K hK
   have hHPindex : HP.index = 2 := by
-    haveI : J.Normal := by
+    have : J.Normal := by
       dsimp [J]
       infer_instance
     have hdvd : HP.index ∣ 2 := by

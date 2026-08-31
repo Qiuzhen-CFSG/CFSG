@@ -73,7 +73,7 @@ public theorem
       rw [← hTNnorm]
       exact hcSub
     exact hcTN
-  letI : IsMulCommutative T :=
+  let : IsMulCommutative T :=
     (isCyclic_of_prime_card hTcard).isMulCommutative
   apply le_antisymm
   · intro c hcC

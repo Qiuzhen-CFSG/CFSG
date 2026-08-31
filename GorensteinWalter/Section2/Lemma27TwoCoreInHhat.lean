@@ -57,7 +57,7 @@ private theorem nontrivial_of_subgroup_ne_bot {G : Type u} [Group G] [Finite G]
   classical
   have hcard : 1 < Nat.card (↥H) :=
     (Subgroup.one_lt_card_iff_ne_bot (H := H)).2 hH
-  letI : Fintype (↥H) := Fintype.ofFinite _
+  let : Fintype (↥H) := Fintype.ofFinite _
   exact (Fintype.one_lt_card_iff_nontrivial (α := ↥H)).mp (by
     simpa [Nat.card_eq_fintype_card] using hcard)
 
@@ -67,10 +67,10 @@ private theorem fittingSubgroup_ne_bot_of_solvable
     {G : Type u} [Group G] [Finite G]
     (hGnt : Nontrivial G) (hsolv : Group.IsSolvable G) : (fittingSubgroup G) ≠ ⊥ := by
   classical
-  letI : Group.IsSolvable G := hsolv
+  let : Group.IsSolvable G := hsolv
   obtain ⟨M, hMnormal, hMne, hMmin⟩ := exists_minimal_normal hsolv hGnt
-  haveI : M.Normal := hMnormal
-  haveI : IsMinimalNormal M := ⟨fun K hKnorm hKle => by
+  have : M.Normal := hMnormal
+  have : IsMinimalNormal M := ⟨fun K hKnorm hKle => by
     by_cases hKbot : K = ⊥
     · exact Or.inl hKbot
     · exact Or.inr (hMmin K hKnorm hKle hKbot)⟩
@@ -123,7 +123,7 @@ public theorem twoCoreOf_centralizes_U_of_Lemma27Hypothesis
       orderOf_eq_prime c.t_involution.2 c.t_involution.1
     have h2dvd : 2 ∣ Nat.card (↥(fittingSubgroupOf c.Hhat)) := by
       have hdvd : orderOf c.t ∣ Nat.card (↥(fittingSubgroupOf c.Hhat)) := by
-        letI : Fintype (↥(fittingSubgroupOf c.Hhat)) := Fintype.ofFinite _
+        let : Fintype (↥(fittingSubgroupOf c.Hhat)) := Fintype.ofFinite _
         have h := orderOf_dvd_card (x := (⟨c.t, hxF⟩ : fittingSubgroupOf c.Hhat))
         simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h
       rwa [hord] at hdvd

@@ -23,7 +23,7 @@ public theorem secondCase_linear_sylow_into_semidirect_complement
     (hpne : p ≠ r) (X : Sylow p H) :
     ∃ g : H, (X : Subgroup H).map (MulAut.conj g).toMonoidHom ≤ C := by
   classical
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hcomp : N.IsComplement' C := by
     refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ hdisj ?_
     rw [← Subgroup.normal_mul N C, hjoin]

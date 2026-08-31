@@ -289,7 +289,7 @@ private lemma exists_dihedralSylow_subgroup_of_kleinFour
   obtain ⟨T', hV'T'⟩ := IsPGroup.exists_le_sylow (G := N) hV'p
   have hT'notcyc : ¬ IsCyclic T' := by
     intro hcyc
-    haveI : IsCyclic T' := hcyc
+    have : IsCyclic T' := hcyc
     have hV'cyc : IsCyclic V' := Subgroup.isCyclic_of_le hV'T'
     exact IsKleinFour.not_isCyclic (G := V') hV'cyc
   have hT'dih := (hSylow T').resolve_left hT'notcyc
@@ -377,8 +377,8 @@ public theorem twoCoreOf_eq_bot_of_kleinFour_hV2
 private lemma isQuasisimple_even_card {Q : Type u} [Group Q] [Finite Q]
     (hQ : IsQuasisimple Q) : 2 ∣ Nat.card Q := by
   classical
-  haveI : Nontrivial Q := hQ.1
-  haveI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+  have : Nontrivial Q := hQ.1
+  have : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
   by_contra hnot
   have hodd : Odd (Nat.card Q) := by
     rw [← Nat.not_even_iff_odd]
@@ -392,10 +392,10 @@ private lemma isQuasisimple_mulEquiv_local
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have hSimple : IsSimpleGroup (H ⧸ Subgroup.center H) := by
     have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H := by
@@ -704,7 +704,7 @@ private lemma map_fittingSubgroup_le_of_surjective_local
   have hmap_normal : ((fittingSubgroup G).map f).Normal :=
     Subgroup.Normal.map (H := fittingSubgroup G) inferInstance f hf
   have hmap_nil : Group.IsNilpotent ↥((fittingSubgroup G).map f) := by
-    haveI : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
+    have : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
     let ψ : fittingSubgroup G →* ↥((fittingSubgroup G).map f) :=
       { toFun := fun g => ⟨f g, Subgroup.mem_map.mpr ⟨g.1, g.2, rfl⟩⟩
         map_one' := by ext; simp
@@ -745,7 +745,7 @@ private lemma map_generalizedFittingSubgroupOf_top_subtype_local
       generalizedFittingSubgroupOf B := by
   rw [generalizedFittingSubgroupOf, generalizedFittingSubgroupOf, Subgroup.map_sup]
   rw [componentLayer_top_map_eq_componentLayerOf_local B]
-  haveI : Finite (↥(⊤ : Subgroup (↥B))) :=
+  have : Finite (↥(⊤ : Subgroup (↥B))) :=
     Finite.of_equiv (↥B) (Subgroup.topEquiv (G := ↥B)).toEquiv.symm
   change Subgroup.map B.subtype ((fittingSubgroup (↥(⊤ : Subgroup (↥B)))).map
       (⊤ : Subgroup (↥B)).subtype) ⊔ componentLayerOf B =
@@ -983,7 +983,7 @@ private lemma oddCore_inf_fitting_isNilpotent {G : Type u} [Group G] [Finite G]
   let F : Subgroup G := fittingSubgroupOf N
   let K : Subgroup G := oddCoreOf N ⊓ F
   have hKF : K ≤ F := inf_le_right
-  haveI : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent N
+  have : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent N
   have hsub : Group.IsNilpotent (↥(K.subgroupOf F)) := by infer_instance
   exact Group.nilpotent_of_mulEquiv (G := K.subgroupOf F) (G' := ↥K) (_h := hsub)
     (Subgroup.subgroupOfEquivOfLe hKF)
@@ -994,7 +994,7 @@ private theorem isSubnormal_of_nilpotent_ambient {G : Type u} [Group G] [Finite 
     {F : Subgroup G} (hF : Group.IsNilpotent F) (T : Subgroup G) (_hTF : T ≤ F) :
     (T.subgroupOf F).IsSubnormal := by
   classical
-  haveI : Group.IsNilpotent (↥F) := hF
+  have : Group.IsNilpotent (↥F) := hF
   let P : ℕ → Prop := fun n => ∀ H : Subgroup (↥F), H.index = n → H.IsSubnormal
   have hP : ∀ n, P n := by
     intro n
@@ -1339,8 +1339,8 @@ private theorem commutator_double_eq_self_of_coprime_solvable
     (hsolv : IsSolvable K) :
     ⁅⁅K, P⁆, P⁆ = ⁅K, P⁆ := by
   classical
-  letI : Subgroup.Normalizes P K := ⟨hPK⟩
-  letI : MulDistribMulAction (↥P) (↥K) :=
+  let : Subgroup.Normalizes P K := ⟨hPK⟩
+  let : MulDistribMulAction (↥P) (↥K) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P K hPK
   let C : Subgroup (↥K) := commutatorAction (A := ↥P) (G := ↥K)
   have hCmap : C.map K.subtype = ⁅K, P⁆ :=
@@ -1542,14 +1542,14 @@ private theorem exists_faithful_action_pair
     ∃ v : G, v ∈ V ∧ v ≠ 1 ∧ v ≠ s ∧
       ¬ (centralizerIn A v ≤ Subgroup.centralizer ({s} : Set G)) := by
   classical
-  letI : IsKleinFour (↥V) := hV
-  letI : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
-  letI : CommGroup (↥V) := IsMulCommutative.instCommGroup
+  let : IsKleinFour (↥V) := hV
+  let : IsMulCommutative (↥V) := IsKleinFour.isMulCommutative
+  let : CommGroup (↥V) := IsMulCommutative.instCommGroup
   have hV2 : IsPGroup 2 (↥V) := IsPGroup.of_card (n := 2) (by
     simpa [IsKleinFour.card_four])
-  letI : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
-  letI : V.Normalizes A := ⟨hVA⟩
-  letI : MulDistribMulAction (↥V) (↥A) :=
+  let : Fact (IsPGroup 2 (↥V)) := ⟨hV2⟩
+  let : V.Normalizes A := ⟨hVA⟩
+  let : MulDistribMulAction (↥V) (↥A) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer V A hVA
   by_contra hnone
   push Not at hnone

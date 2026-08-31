@@ -77,7 +77,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
           subst p
           exact hpodd.not_two_dvd_nat (by simp)) hpcop S'
     have hmapcyc : IsCyclic ((S : Subgroup H).map H.subtype) := by
-      letI : IsCyclic S' := hScyc
+      let : IsCyclic S' := hScyc
       exact Subgroup.isCyclic_of_le hSS'
     let eS : (S : Subgroup H) ≃* ((S : Subgroup H).map H.subtype) :=
       Subgroup.equivMapOfInjective (S : Subgroup H) H.subtype H.subtype_injective
@@ -101,7 +101,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
       hKcard H with hElem | hCyc | hDih | hA4 | hS4 | hA5 |
       hSemi | hPSL | hPGL
   · exfalso
-    letI : IsElementaryAbelian r H := hElem
+    let : IsElementaryAbelian r H := hElem
     obtain ⟨a, ha⟩ := (IsElementaryAbelian.isPGroup r H).exists_card_eq
     have hPdivP : p ∣ Nat.card (P : Subgroup H) := by
       rw [hPcard]
@@ -120,7 +120,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
       refine ⟨?_⟩
       intro x hx g
       have hcomm : g * x = x * g := by
-        letI : IsMulCommutative H := hHcyc.isMulCommutative
+        let : IsMulCommutative H := hHcyc.isMulCommutative
         exact (isMulCommutative_iff.mp inferInstance) _ _
       rw [show g * x * g⁻¹ = x by
         calc
@@ -157,7 +157,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
   · rcases hS4 with ⟨_, he⟩
     exact (sfour_normalizer_not_cyclic_of_prime_card hpodd P hPcard he).elim hNcyc
   · rcases hA5 with ⟨_, he⟩
-    letI : Group.IsPerfect (alternatingGroup (Fin 5)) :=
+    let : Group.IsPerfect (alternatingGroup (Fin 5)) :=
       ⟨commutator_alternatingGroup_eq_top (α := Fin 5) (by simp)⟩
     let hperf : Group.IsPerfect H :=
       Group.IsPerfect.ofSurjective (f := he.some.symm.toMonoidHom)
@@ -166,7 +166,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
       (P : Subgroup H) hPcard hSylowCyc hNcyc).elim
   · rcases hSemi with ⟨m, t, ht1, ht2, N₀, C₀,
       hNnormal, hNelem, hNcard, hCcyc, hCcard, hdisj, hjoin⟩
-    letI : IsElementaryAbelian r N₀ := hNelem
+    let : IsElementaryAbelian r N₀ := hNelem
     have hNcard_dvd : Nat.card N₀ ∣ Nat.card K := by
       have hNamb : IsPGroup r (N₀.map H.subtype) :=
         (IsElementaryAbelian.isPGroup r N₀).map H.subtype
@@ -198,7 +198,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
     rcases hbase with ⟨hbaseN, hbaseEq, hbaseInf, hbaseSup, hbaseCard⟩
     have hcomp' : N₀.IsComplement'
         (Subgroup.normalizer (P' : Set H)) := by
-      letI : N₀.Normal := hbaseN
+      let : N₀.Normal := hbaseN
       refine Subgroup.isComplement'_of_disjoint_and_mul_eq_univ ?_ ?_
       · exact (disjoint_iff.mpr hbaseInf)
       · rw [← Subgroup.normal_mul N₀
@@ -241,7 +241,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
         _ ≤ r ^ m := Nat.pow_le_pow_right
           (Fact.out : Nat.Prime r).pos hmone
     by_cases hLgt : 3 < Nat.card L
-    · letI : Group.IsPerfect (PSL2 L) :=
+    · let : Group.IsPerfect (PSL2 L) :=
         psl2_isPerfect_of_card_gt_three L hLgt
       have hperf : Group.IsPerfect H :=
         Group.IsPerfect.ofSurjective (f := he.some.symm.toMonoidHom)
@@ -249,7 +249,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
       exact (normalizer_not_cyclic_of_perfect_of_prime_card hperf
         (P : Subgroup H) hPcard hSylowCyc hNcyc).elim
     · have hL3 : Nat.card L = 3 := by omega
-      letI : Fintype L := Fintype.ofFinite L
+      let : Fintype L := Fintype.ofFinite L
       have hL3' : Fintype.card L = 3 := by
         simpa [Nat.card_eq_fintype_card] using hL3
       let eL : ZMod 3 ≃+* L :=
@@ -264,9 +264,9 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
         (alternatingGroup.kleinFour_isKleinFour (by simp)) eHA4.symm⟩
   · rcases hPGL with ⟨m, hm0, hmf, he⟩
     let L := GaloisField r m
-    letI : Field L := inferInstance
-    letI : Finite L := inferInstance
-    letI : Finite (PGL2 L) :=
+    let : Field L := inferInstance
+    let : Finite L := inferInstance
+    let : Finite (PGL2 L) :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
     have hLcard : Nat.card L = r ^ m := GaloisField.card r m hm0
@@ -291,7 +291,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
         _ ≤ r ^ m := Nat.pow_le_pow_right
           (Fact.out : Nat.Prime r).pos hmone
     by_cases hLgt : 3 < Nat.card L
-    · letI : Group.IsPerfect (PSL2 L) :=
+    · let : Group.IsPerfect (PSL2 L) :=
         psl2_isPerfect_of_card_gt_three L hLgt
       let ePGL : H ≃* PGL2 L := he.some
       let J : Subgroup H :=
@@ -355,7 +355,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
               subst p
               exact hpodd.not_two_dvd_nat (by simp)) hpcop S'
         have hmapcyc : IsCyclic ((S : Subgroup J).map f) := by
-          letI : IsCyclic S' := hScyc
+          let : IsCyclic S' := hScyc
           exact Subgroup.isCyclic_of_le hSS'
         let eS : (S : Subgroup J) ≃* ((S : Subgroup J).map f) :=
           Subgroup.equivMapOfInjective (S : Subgroup J) f
@@ -375,7 +375,7 @@ public theorem secondCase_linear_psl2_normalComplement_or_kleinFour
             _ = p := hPcard)
         hSylowCycJ hNcycJ).elim
     · have hL3 : Nat.card L = 3 := by omega
-      letI : Fintype L := Fintype.ofFinite L
+      let : Fintype L := Fintype.ofFinite L
       have hL3' : Fintype.card L = 3 := by
         simpa [Nat.card_eq_fintype_card] using hL3
       let eL : ZMod 3 ≃+* L :=

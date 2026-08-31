@@ -62,7 +62,7 @@ public theorem secondCase_invertedElements_le_component
   have hEsubNormal : Esub.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := w.M) (N := d.E)
       (le_normalizer_of_isNormalIn d.E_normal)
-  letI : Esub.Normal := hEsubNormal
+  let : Esub.Normal := hEsubNormal
   let p : w.M →* w.M ⧸ Esub := QuotientGroup.mk' Esub
   let yM : w.M := ⟨y, hyM⟩
   let sM : w.M := ⟨sG, hsM⟩

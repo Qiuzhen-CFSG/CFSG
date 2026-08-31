@@ -38,7 +38,7 @@ public theorem normalizer_P_eq (od : SecondCaseLinearOmegaView c w d)
       Nat.card FQ = Nat.card od.P :=
         Nat.card_congr (Subgroup.subgroupOfEquivOfLe hPleQ).toEquiv
       _ = od.p := od.P_card
-  letI : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
   have hFQneTop : FQ ≠ ⊤ := by
     intro htop
     have hQGcard : Nat.card QG = od.p := by
@@ -48,7 +48,7 @@ public theorem normalizer_P_eq (od : SecondCaseLinearOmegaView c w d)
         _ = od.p := hFQcard
     exact od.QG_not_cyclic (isCyclic_of_prime_card (p := od.p) hQGcard)
   have hQGp : IsPGroup od.p QG := od.QG_isPGroup
-  letI : Group.IsNilpotent QG := hQGp.isNilpotent
+  let : Group.IsNilpotent QG := hQGp.isNilpotent
   have hlt : FQ < Subgroup.normalizer (FQ : Set QG) :=
     Group.normalizerCondition_of_isNilpotent FQ (lt_top_iff_ne_top.mpr hFQneTop)
   let NQ : Subgroup QG := Subgroup.normalizer (FQ : Set QG)
@@ -265,10 +265,10 @@ public theorem center_card_eq_p_of_lt (od : SecondCaseLinearOmegaView c w d)
       rw [← od.A_card]
       exact Subgroup.card_dvd_of_le hZleA
     exact (Subgroup.card_map_of_injective QG.subtype_injective) ▸ hcard
-  letI : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
   have hZne : Nat.card (Subgroup.center QG) ≠ 1 := by
     intro h1
-    haveI : Nontrivial QG := od.QG_nontrivial
+    have : Nontrivial QG := od.QG_nontrivial
     have hnt : Nontrivial (Subgroup.center QG) :=
       IsPGroup.center_nontrivial (G := QG) od.QG_isPGroup
     have hgt : 1 < Nat.card (Subgroup.center QG) :=
@@ -466,7 +466,7 @@ public theorem relIndex_eq_p_of_lt (od : SecondCaseLinearOmegaView c w d)
       Nat.card AQ = Nat.card od.A :=
         Nat.card_congr (Subgroup.subgroupOfEquivOfLe hAleQ).toEquiv
       _ = od.p ^ 2 := od.A_card
-  letI : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
   have hQGp : IsPGroup od.p QG := od.QG_isPGroup
   have mem_smul_iff (x y : QG) (T : Subgroup QG) :
       y ∈ x • T ↔ x⁻¹ * y * x ∈ T := by
@@ -603,8 +603,8 @@ public theorem relIndex_eq_p_of_lt (od : SecondCaseLinearOmegaView c w d)
         (pick S).2 hpickS_ne
     exact Subtype.ext hsubEq
   have htargetCard : Nat.card target = od.p ^ 2 - 1 := by
-    letI : Fintype od.A := Fintype.ofFinite od.A
-    letI : Fintype target := Fintype.ofFinite target
+    let : Fintype od.A := Fintype.ofFinite od.A
+    let : Fintype target := Fintype.ofFinite target
     have hAF : Fintype.card od.A = od.p ^ 2 := by
       simpa [Nat.card_eq_fintype_card] using od.A_card
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
@@ -748,7 +748,7 @@ public theorem secondCase_linear_omega_trichotomy
         (od.A.subgroupOf QG).index = od.p) ∨
       (∀ x : G, x ∈ QG →
         (od.s : G) * x * (od.s : G)⁻¹ = x⁻¹) := by
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   let v := make_linear_omega_view c w d od
   convert (SecondCaseLinearOmegaView.trichotomy v) using 1 <;>
     simp only [v, make_linear_omega_view, SecondCaseLinearOmegaView.QG]

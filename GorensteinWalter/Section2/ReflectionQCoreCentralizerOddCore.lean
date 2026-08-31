@@ -34,7 +34,7 @@ public theorem reflection_qCore_centralizer_le_oddCore
     centralizerIn (qCoreOf c.U p) s ≤
       oddCoreOf (Subgroup.centralizer ({s} : Set G)) := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let C : Subgroup G := Subgroup.centralizer ({s} : Set G)
   let X : Subgroup G := centralizerIn (qCoreOf c.U p) s
   have hsInv : IsInvolution s :=
@@ -80,7 +80,7 @@ public theorem reflection_qCore_centralizer_le_oddCore
     apply hsInv.1
     exact congrArg Subtype.val h
   let O : Subgroup C := pPrimeCore 2 C
-  letI : O.Normal := pPrimeCore_normal
+  let : O.Normal := pPrimeCore_normal
   let q : C →* C ⧸ O := QuotientGroup.mk' O
   have hQ2 : IsPGroup 2 (C ⧸ O) := by
     simpa [O] using

@@ -36,7 +36,7 @@ public theorem dihedral_sylow_involutions_not_mem_normal_index_two_conjugate
       hPcard] at hcard
     omega
   have hHnoncyclic : ¬ IsCyclic H := by
-    letI : IsKleinFour H := by simpa [H] using hHklein
+    let : IsKleinFour H := by simpa [H] using hHklein
     exact IsKleinFour.not_isCyclic
   have conj_involution {x g : G} (hx : IsInvolution x) :
       IsInvolution (g * x * g⁻¹) := by

@@ -82,8 +82,8 @@ public theorem firstCase_klein_oddCore_parity
       _ = (x ^ n)⁻¹ := by simp
   let F : Type u := {z : G // z ∈ invertedElements O w}
   let e : R → F := fun z => ⟨z, hRin z z.2⟩
-  letI : Fintype R := Fintype.ofFinite R
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype R := Fintype.ofFinite R
+  let : Fintype F := Fintype.ofFinite F
   have he_inj : Function.Injective e := by
     intro a b hab
     apply Subtype.ext

@@ -56,7 +56,7 @@ public theorem linearOmega_equality_relIndex_core
     (B ⊔ K ⊔ c.FU).relIndex c.U ≤ p := by
   classical
   let U : Subgroup G := c.U
-  letI : MulAction U (Subgroup G) :=
+  let : MulAction U (Subgroup G) :=
     MulAction.compHom (Subgroup G) U.subtype
   have mem_smul_iff (x : U) (y : G) (T : Subgroup G) :
       y ∈ x • T ↔ (x : G)⁻¹ * y * (x : G) ∈ T := by
@@ -120,19 +120,19 @@ public theorem linearOmega_equality_relIndex_core
       exact hvalG
     rw [hxy']
   have htargetCard : Nat.card target = p ^ 2 - 1 := by
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype target := Fintype.ofFinite target
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype target := Fintype.ofFinite target
     have hAF : Fintype.card A = p ^ 2 := by
       simpa [Nat.card_eq_fintype_card] using hAcard
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
     simp [hAF]
   have hpairCard : Nat.card Pairs = Nat.card Orb * (p - 1) := by
-    letI : Fintype Orb := Fintype.ofFinite Orb
+    let : Fintype Orb := Fintype.ofFinite Orb
     rw [Nat.card_sigma]
     have hfiber : ∀ T : Orb, Nat.card {x : T.1 // x ≠ 1} = p - 1 := by
       intro T
-      letI : Fintype T.1 := Fintype.ofFinite T.1
-      letI : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
+      let : Fintype T.1 := Fintype.ofFinite T.1
+      let : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
       have hTF : Fintype.card T.1 = p := by
         simpa [Nat.card_eq_fintype_card] using hTcard T
       rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]

@@ -42,12 +42,12 @@ public theorem pgl2_invariant_oddP_subgroup_centralized
       Subgroup.normalizer (P : Set (PGL2 K))) :
     P ≤ Subgroup.centralizer ({t} : Set (PGL2 K)) := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   rcases hK with ⟨r, f, hr, hrodd, hf, hKcard⟩
-  letI : Fact r.Prime := ⟨hr⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact r.Prime := ⟨hr⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hK' : IsOddPrimePower (Nat.card K) :=
     ⟨r, f, hr, hrodd, hf, hKcard⟩
   have hqOdd : Odd (Nat.card K) := by
@@ -159,8 +159,8 @@ public theorem pgl2_invariant_oddP_subgroup_centralized
       exists_dihedral_subgroup_le_index_two_of_reflected_cyclic
         J U hJindex hUcyc (Nat.card U / 2) hUtwo
           (fun hUJ => hsJ (hUJ hsU)) w hwJ hwU hwsq hwinv
-    letI : IsCyclic U := hUcyc
-    letI : CommGroup U := IsCyclic.commGroup
+    let : IsCyclic U := hUcyc
+    let : CommGroup U := IsCyclic.commGroup
     have hDcent : D ≤ Subgroup.centralizer ({s} : Set (PGL2 K)) := by
       rw [hDeq]
       apply sup_le

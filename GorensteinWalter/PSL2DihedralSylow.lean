@@ -49,7 +49,7 @@ public theorem psl2_odd_hasDihedralSylowTwo_model
     (hodd : IsOddPrimePower (Nat.card K)) :
     HasDihedralSylowTwo (PSL2 K) := by
   rcases hodd with ⟨p, f, hp, hpOdd, hf, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hoddK : IsOddPrimePower (Nat.card K) :=
     ⟨p, f, hp, hpOdd, hf, hcard⟩
   have hPSLcard : Nat.card (PSL2 K) =

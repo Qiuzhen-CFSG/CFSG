@@ -101,8 +101,8 @@ public theorem secondCase_a7_fitting_isPGroup_three
   have hqprime : q.Prime := Nat.prime_of_mem_primeFactors hq
   by_cases hq3 : q = 3
   · exact hq3
-  letI : Fact q.Prime := ⟨hqprime⟩
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact q.Prime := ⟨hqprime⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let Q : Sylow q c.FU := Classical.choice Sylow.nonempty
   have hFp : IsPGroup 3 F := by
     apply IsPGroup.of_card (n := 1)
@@ -116,8 +116,8 @@ public theorem secondCase_a7_fitting_isPGroup_three
   have hRnormal : (R : Subgroup c.FU).Normal :=
     Group.IsNilpotent.sylow_normal
       (fittingSubgroupOf_isNilpotent c.U) 3 R
-  letI : (Q : Subgroup c.FU).Normal := hQnormal
-  letI : (R : Subgroup c.FU).Normal := hRnormal
+  let : (Q : Subgroup c.FU).Normal := hQnormal
+  let : (R : Subgroup c.FU).Normal := hRnormal
   have hQRdisj : Disjoint (Q : Subgroup c.FU) (R : Subgroup c.FU) :=
     IsPGroup.disjoint_of_ne q 3 hq3
       (Q : Subgroup c.FU) (R : Subgroup c.FU)

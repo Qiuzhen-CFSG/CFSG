@@ -123,7 +123,7 @@ public theorem fstar_normalizer_center_qCoreOf_fitting_eq_A
     simpa [P, F] using
       (fstar_qCoreOf_fitting_ne_bot_of_mem_primesOfOrder A p hp hpF)
   have hPnt : Nontrivial (↥P) := (Subgroup.nontrivial_iff_ne_bot P).2 hPne
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hCne : (Subgroup.center (↥P)) ≠ ⊥ := by
     intro hbot
     have hnt : Nontrivial (Subgroup.center (↥P)) :=
@@ -316,7 +316,7 @@ public theorem fstar_pResidualOf_generalizedFitting_centralizer_qCore
       have heZ : e.1 ∈ Z := hEcentral (Subgroup.mem_subgroupOf.mp he)
       have heK : (e : G) ∈ K := ⟨heH, heZ⟩
       simpa [π, QuotientGroup.ker_mk'] using (Subgroup.mem_subgroupOf).mpr heK
-    haveI : ((E.subgroupOf H).map π).Normal := by
+    have : ((E.subgroupOf H).map π).Normal := by
       rw [hEmap]
       infer_instance
     exact IsPGroup.to_sup_of_normal_right hFm hEm

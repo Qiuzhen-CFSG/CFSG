@@ -39,7 +39,7 @@ private lemma unique_involution_of_cyclic_two_group {A : Type*} [Group A] [Finit
     (hcard : Nat.card A = 2 ^ m) :
     ∀ x y : A, x ≠ 1 → x ^ 2 = 1 → y ≠ 1 → y ^ 2 = 1 → x = y := by
   classical
-  letI : IsCyclic A := hcyc
+  let : IsCyclic A := hcyc
   rcases IsCyclic.exists_monoid_generator (α := A) with ⟨g, hg⟩
   have hord : orderOf g = 2 ^ m := by
     rw [← hcard]
@@ -359,7 +359,7 @@ public lemma preamble_mem_of_odd_index
   let q : Q →* (Q ⧸ L) := QuotientGroup.mk' L
   have hq2 : (q t) ^ 2 = 1 := by simpa [q] using congrArg q ht2
   have horder : orderOf (q t) ∣ 2 := orderOf_dvd_of_pow_eq_one hq2
-  letI : Fintype (Q ⧸ L) := Fintype.ofFinite (Q ⧸ L)
+  let : Fintype (Q ⧸ L) := Fintype.ofFinite (Q ⧸ L)
   have horder_card : orderOf (q t) ∣ Fintype.card (Q ⧸ L) := orderOf_dvd_card
   have hcard_index : Fintype.card (Q ⧸ L) = L.index := by
     simpa [Nat.card_eq_fintype_card] using (Subgroup.index_eq_card L).symm
@@ -406,7 +406,7 @@ public theorem preambleCentralInvolution_quotient_two_of_dgroup
     apply e7.some.injective
     simpa using heone
   ·
-    letI : L.Normal := hLnormal
+    let : L.Normal := hLnormal
     have htL : tb ∈ L := preamble_mem_of_odd_index L hLnormal hLindex htq2
     let tbL : ↥L := ⟨tb, htL⟩
     have htLc : tbL ∈ Subgroup.center (↥L) := by

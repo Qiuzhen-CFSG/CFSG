@@ -160,8 +160,8 @@ public theorem secondCase_linear_quotientTorus_centralizer_orderP
       simpa using haT
     · have hbs : b = s := hn.symm.trans hns
       have hax : Commute a x := by
-        letI : IsCyclic T := torus.T_cyclic
-        letI : CommGroup T := IsCyclic.commGroup
+        let : IsCyclic T := torus.T_cyclic
+        let : CommGroup T := IsCyclic.commGroup
         exact congrArg Subtype.val
           (show (⟨a, haT⟩ : T) * ⟨x, hxT⟩ = ⟨x, hxT⟩ * ⟨a, haT⟩ by
             exact mul_comm _ _)
@@ -196,8 +196,8 @@ public theorem secondCase_linear_quotientTorus_centralizer_orderP
     rw [Subgroup.mem_centralizer_iff]
     intro x hxR'
     have hxT' : x ∈ T := hRleT hxR'
-    letI : IsCyclic T := torus.T_cyclic
-    letI : CommGroup T := IsCyclic.commGroup
+    let : IsCyclic T := torus.T_cyclic
+    let : CommGroup T := IsCyclic.commGroup
     exact congrArg Subtype.val
       (show (⟨x, hxT'⟩ : T) * ⟨y, hyT⟩ = ⟨y, hyT⟩ * ⟨x, hxT'⟩ by
         exact mul_comm _ _)

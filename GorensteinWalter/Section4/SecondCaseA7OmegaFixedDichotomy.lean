@@ -65,8 +65,8 @@ public theorem secondCase_a7_omega_fixed_dichotomy
       have hQsubp : IsPGroup 3 (QG.subgroupOf c.FU) :=
         od.FU_isPGroup.to_subgroup (QG.subgroupOf c.FU)
       exact hQsubp.of_equiv (Subgroup.subgroupOfEquivOfLe hQGleFU)
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-    letI : Group.IsNilpotent QG := hQGp.isNilpotent
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Group.IsNilpotent QG := hQGp.isNilpotent
     have hlt : FQ < Subgroup.normalizer (FQ : Set QG) :=
       Group.normalizerCondition_of_isNilpotent FQ
         (lt_top_iff_ne_top.mpr hFQneTop)

@@ -53,7 +53,7 @@ public theorem secondCase_a7_omega_center_card_eq_three_of_lt
     change Nat.card (od.Q.map c.FU.subtype) = 3 ^ 3
     rw [h27]
     norm_num
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨k, hkpos, hZcard⟩ :=
     IsPGroup.card_center_eq_prime_pow hQcard (by omega)
   have hZcardLe : Nat.card (Subgroup.center QG) ≤ 9 := by

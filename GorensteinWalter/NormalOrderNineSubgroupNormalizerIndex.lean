@@ -32,7 +32,7 @@ public theorem odd_relIndex_inf_normalizer_le_three_of_normal_card_nine
     (hUodd : Odd (Nat.card U)) :
     (U ⊓ Subgroup.normalizer (F : Set G)).relIndex U ≤ 3 := by
   classical
-  letI : MulAction U (Subgroup G) :=
+  let : MulAction U (Subgroup G) :=
     MulAction.compHom (Subgroup G) U.subtype
   have mem_smul_iff (x : U) (y : G) (T : Subgroup G) :
       y ∈ x • T ↔ (x : G)⁻¹ * y * (x : G) ∈ T := by
@@ -96,19 +96,19 @@ public theorem odd_relIndex_inf_normalizer_le_three_of_normal_card_nine
       exact hvalG
     rw [hxy']
   have htargetCard : Nat.card target = 8 := by
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype target := Fintype.ofFinite target
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype target := Fintype.ofFinite target
     have hAF : Fintype.card A = 9 := by
       simpa [Nat.card_eq_fintype_card] using hAcard
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
     simp [hAF]
   have hpairCard : Nat.card Pairs = Nat.card Orb * 2 := by
-    letI : Fintype Orb := Fintype.ofFinite Orb
+    let : Fintype Orb := Fintype.ofFinite Orb
     rw [Nat.card_sigma]
     have hfiber : ∀ T : Orb, Nat.card {x : T.1 // x ≠ 1} = 2 := by
       intro T
-      letI : Fintype T.1 := Fintype.ofFinite T.1
-      letI : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
+      let : Fintype T.1 := Fintype.ofFinite T.1
+      let : Fintype {x : T.1 // x ≠ 1} := Fintype.ofFinite _
       have hTF : Fintype.card T.1 = 3 := by
         simpa [Nat.card_eq_fintype_card] using hTcard T
       rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]

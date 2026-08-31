@@ -37,7 +37,7 @@ public theorem secondCase_linear_p0_ge_three
     (post : SecondCaseLinearPostNineData c w d K) :
     3 ≤ post.indices.p0 := by
   classical
-  letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+  let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
   let QG : Subgroup G := post.od.Q.map c.U.subtype
   have hQnormalU : IsNormalIn QG c.U := by
     change IsNormalIn (post.od.Q.map c.U.subtype) c.U
@@ -111,7 +111,7 @@ public theorem secondCase_linear_p0_ge_three
         intro htop
         exact (not_le_of_gt hstrict.2.1)
           (Subgroup.subgroupOf_eq_top.mp htop)
-      letI : Group.IsNilpotent QG := hQGp.isNilpotent
+      let : Group.IsNilpotent QG := hQGp.isNilpotent
       have hnorm : post.od.A.subgroupOf QG <
           Subgroup.normalizer ((post.od.A.subgroupOf QG : Subgroup QG) : Set QG) :=
         Group.normalizerCondition_of_isNilpotent _ hAQproper

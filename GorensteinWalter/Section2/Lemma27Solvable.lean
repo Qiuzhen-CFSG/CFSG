@@ -46,7 +46,7 @@ private theorem commutator_le_pPrimeCore_of_Lemma27Hypothesis
     ⁅(⊤ : Subgroup M'), Subgroup.zpowers tM⁆ ≤ pPrimeCore 2 M' := by
   classical
   intro M' tM
-  letI : Group M' := M.toGroup
+  let : Group M' := M.toGroup
   let π := primesOfOrder (fittingSubgroupOf c.Hhat)
   let A : Subgroup G := piCoreOf (fittingSubgroupOf M) πᶜ
   have hCommAmb : ⁅M, Subgroup.zpowers c.t⁆ ≤ A :=
@@ -114,7 +114,7 @@ private theorem quotient_two_of_central_involution_of_isDGroup
     exfalso
     apply htbne
     exact e7.some.injective (by simpa using heone)
-  · letI : L.Normal := hLnormal
+  · let : L.Normal := hLnormal
     have htL : tb ∈ L := preamble_mem_of_odd_index L hLnormal hLindex htb2
     let tbL : ↥L := ⟨tb, htL⟩
     have htLc : tbL ∈ Subgroup.center (↥L) := by
@@ -153,11 +153,11 @@ public theorem isSolvable_of_Lemma27Hypothesis
     IsSolvable M := by
   classical
   let M' : Type u := ↥M
-  letI : Group M' := M.toGroup
+  let : Group M' := M.toGroup
   let O : Subgroup M' := pPrimeCore 2 M'
-  letI : O.Normal := pPrimeCore_normal
+  let : O.Normal := pPrimeCore_normal
   let Q : Type u := M' ⧸ O
-  letI : Group Q := inferInstance
+  let : Group Q := inferInstance
   have htM : c.t ∈ M :=
     t_mem_M_of_centralizerStructure c M hM (theorem_2_6 hmin c)
   let tM : M' := ⟨c.t, htM⟩

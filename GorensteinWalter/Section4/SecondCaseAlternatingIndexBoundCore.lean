@@ -181,7 +181,7 @@ private theorem a7_reflected_cyclicTorus :
   let T : Subgroup A7 := Subgroup.zpowers a7a
   refine ⟨T, a7s, ?_⟩
   have hTcyc : IsCyclic T := by
-    letI : IsCyclic (↥T) := Subgroup.isCyclic_zpowers a7a
+    let : IsCyclic (↥T) := Subgroup.isCyclic_zpowers a7a
     exact inferInstance
   have hTne : T ≠ ⊥ := by
     intro hbot
@@ -365,7 +365,7 @@ public theorem index_le_seven_of_countData
   let Ω := G ⧸ M
   let π : G → Ω := fun x => QuotientGroup.mk (s := M) (x⁻¹ : G)
   let ω0 : Ω := π 1
-  letI : Fintype Ω := Fintype.ofFinite Ω
+  let : Fintype Ω := Fintype.ofFinite Ω
   have hbase : Nat.card {x : G // IsInvolution x ∧ π x = ω0} = 105 := by
     have h := base_fiber_card_eq (G := G) M
     -- unfold π/ω0 in h and replace by d.base_involutions_card
@@ -389,7 +389,7 @@ public theorem index_le_seven_of_countData
       rw [hcard']
       exact d.coset_involutions_bound y hy hyM
     · have hcard0 : Nat.card {x : G // IsInvolution x ∧ π x = ω} = 0 := by
-        haveI : IsEmpty {x : G // IsInvolution x ∧ π x = ω} :=
+        have : IsEmpty {x : G // IsInvolution x ∧ π x = ω} :=
           ⟨fun x => hnonempty ⟨x.1, x.2.1, x.2.2⟩⟩
         exact Nat.card_eq_zero.mpr (Or.inl inferInstance)
       rw [hcard0]

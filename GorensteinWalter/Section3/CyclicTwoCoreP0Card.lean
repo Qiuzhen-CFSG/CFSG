@@ -42,17 +42,17 @@ public theorem firstCase_cyclic_P0_card_three_of_a7
     (hP0ne : qCoreOf od.d.bg.U od.p ⊓ M ≠ ⊥) :
     Nat.card ((qCoreOf od.d.bg.U od.p ⊓ M : Subgroup G)) = 3 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
-  letI : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P0 : Subgroup G := P ⊓ M
   let P0M : Subgroup M := P0.subgroupOf M
   let O0 : Subgroup M := pPrimeCore 2 M
   let O : Subgroup G := O0.map M.subtype
-  letI : O0.Normal := pPrimeCore_normal
+  let : O0.Normal := pPrimeCore_normal
   let Q : Type u := M ⧸ O0
-  letI : Group Q := QuotientGroup.Quotient.group O0
+  let : Group Q := QuotientGroup.Quotient.group O0
   let q : M →* Q := QuotientGroup.mk' O0
   let P0Q : Subgroup Q := P0M.map q
   let V1M : Subgroup M := fd.V1.subgroupOf M

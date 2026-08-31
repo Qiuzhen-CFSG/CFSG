@@ -52,7 +52,7 @@ public theorem element_le_U_of_odd_order
           hUleH hSleH
       rw [hsub, hUS, Subgroup.subgroupOf_self]
       trivial
-  letI : U0.Normal := hU0norm
+  let : U0.Normal := hU0norm
   let q : H →* H ⧸ U0 := QuotientGroup.mk' U0
   let xH : H := ⟨x, hxH⟩
   have hxUS : xH ∈ U0 ⊔ S0 := by
@@ -401,7 +401,7 @@ public theorem kleinFour_eq_closure_of_mem
     (habne : a ≠ b) (hcomm : Commute a b) :
     V = Subgroup.closure ({a, b} : Set G) := by
   classical
-  letI : IsKleinFour V := hV
+  let : IsKleinFour V := hV
   have haa : a * a = 1 :=
     congrArg Subtype.val (IsKleinFour.mul_self ⟨a, ha⟩)
   have hbb : b * b = 1 :=
@@ -446,7 +446,7 @@ public theorem prime_ne_two_of_primeCore_ne_bot
     (U : Subgroup G) (p : ℕ) (hp : p.Prime)
     (hPne : qCoreOf U p ≠ ⊥) (hUodd : Nat.Coprime 2 (Nat.card U)) :
     p ≠ 2 := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro hp2
   have hPleU : qCoreOf U p ≤ U := qCoreOf_le U p
   have hPp : IsPGroup p (qCoreOf U p) := qCoreOf_isPGroup U p
@@ -470,7 +470,7 @@ public theorem firstCase_oriented_p_odd
     {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) (od : FirstCaseOrientedPrimeData c) :
     od.p ≠ 2 := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hUeq : c.U = od.d.bg.U := firstCase_U_eq_bg_U c od.d
   have hq : qCoreOf c.U od.p = qCoreOf od.d.bg.U od.p :=
     qCoreOf_eq_of_subgroup_eq hUeq od.p
@@ -535,10 +535,10 @@ private theorem firstCase_commute_t_ti
     (c : CentralizerSetup G) (d : FirstCaseBGData c)
     (fd : FirstCaseFourData c d) :
     Commute c.t d.bg.t2 ∧ Commute c.t d.bg.t1 := by
-  letI : IsKleinFour fd.V2 := fd.V2_klein
-  letI : IsKleinFour fd.V1 := fd.V1_klein
-  letI : IsMulCommutative fd.V2 := IsKleinFour.isMulCommutative
-  letI : IsMulCommutative fd.V1 := IsKleinFour.isMulCommutative
+  let : IsKleinFour fd.V2 := fd.V2_klein
+  let : IsKleinFour fd.V1 := fd.V1_klein
+  let : IsMulCommutative fd.V2 := IsKleinFour.isMulCommutative
+  let : IsMulCommutative fd.V1 := IsKleinFour.isMulCommutative
   constructor
   · have h := congrArg Subtype.val
       (mul_comm' (⟨d.bg.t2, fd.t2_mem_V2⟩ : fd.V2)
@@ -609,7 +609,7 @@ public theorem firstCase_normalizer_P2_not_le_H
     (Q : Sylow od.p ↥od.d.bg.B) :
     ¬ Subgroup.normalizer
         (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ≤ od.d.bg.H := by
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P2s := firstCase_P2_sylow c od hU Q
   let K2 : Subgroup G := od.d.bg.U ⊓
     Subgroup.centralizer (fd.V2 : Set G)
@@ -640,8 +640,8 @@ public theorem firstCase_P2_transitive
           (sylowCarrier (firstCase_P2_sylow c od hU Q) : Set G) ∧
           m * x * m⁻¹ = y := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P2s := firstCase_P2_sylow c od hU Q
   let K2 : Subgroup G := od.d.bg.U ⊓
     Subgroup.centralizer (fd.V2 : Set G)
@@ -682,7 +682,7 @@ public theorem firstCase_normalizer_P1_not_le_H
     (Q : Sylow od.p ↥od.d.bg.B) :
     ¬ Subgroup.normalizer
         (sylowCarrier (firstCase_P1_sylow c od hU Q) : Set G) ≤ od.d.bg.H := by
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P1s := firstCase_P1_sylow c od hU Q
   let K1 : Subgroup G := od.d.bg.U ⊓
     Subgroup.centralizer (fd.V1 : Set G)
@@ -707,8 +707,8 @@ public theorem firstCase_P1_carrier
     sylowCarrier (firstCase_P1_sylow c od hU Q) =
       qCoreOf od.d.bg.U od.p ⊔
         ((Q : Subgroup ↥od.d.bg.B).map od.d.bg.B.subtype) := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   simpa [firstCase_P1_sylow] using centralizerIn_sylow_of_pCore_carrier
     od.d.bg hU od.d.bg.t1_mem_S od.p
     (firstCase_t1_centralizes_primeCore_in_FU c od) Q
@@ -722,8 +722,8 @@ public theorem firstCase_P2_carrier
     (Q : Sylow od.p ↥od.d.bg.B) :
     sylowCarrier (firstCase_P2_sylow c od hU Q) =
       (Q : Subgroup ↥od.d.bg.B).map od.d.bg.B.subtype := by
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   simpa [firstCase_P2_sylow, centralizerIn_sylow_of_B_of_inverted] using
     centralizerIn_sylow_of_B_carrier od.d.bg hU od.d.bg.t2_mem_S od.p
       (centralizerIn_fittingSubgroupOf_card_coprime_of_inverted od.d.bg.U

@@ -31,13 +31,13 @@ public theorem secondCase_a7_ambient_quotient_model
   classical
   let M : Subgroup G := w.M
   let E : Subgroup G := d.E
-  letI : (pPrimeCore 2 M).Normal := inferInstance
+  let : (pPrimeCore 2 M).Normal := inferInstance
   have hOodd : Odd (Nat.card (pPrimeCore 2 M)) := by
     exact Nat.coprime_two_left.mp (pPrimeCore_coprime_card (p := 2) (G := M))
   have hEne : E ≠ ⊥ :=
     (Subgroup.nontrivial_iff_ne_bot E).mp d.E_component.2.2.1
   have hEperf : Group.IsPerfect (E.subgroupOf M) := by
-    letI : Group.IsPerfect E :=
+    let : Group.IsPerfect E :=
       (Group.isPerfect_def).2 d.E_component.2.2.2.1
     exact Group.IsPerfect.ofSurjective
       (f := (Subgroup.subgroupOfEquivOfLe d.E_component.1).symm.toMonoidHom)
@@ -119,11 +119,11 @@ public theorem secondCase_a7_ambient_quotient_model
   have hD : IsDGroup M := properSubgroups_areDGroups hmin M w.M_maximal.ne_top
   rcases hD with ⟨_hSylow, h2⟩ | ⟨_hSylow, hA7M⟩ |
       ⟨_hSylow, K, hKprime, L, hLnormal, hLindex, hLmodel⟩
-  · letI : Group.IsPerfect Ebar := hEbarData.2.1
-    letI : Nontrivial Ebar :=
+  · let : Group.IsPerfect Ebar := hEbarData.2.1
+    let : Nontrivial Ebar :=
       (Subgroup.nontrivial_iff_ne_bot Ebar).mpr hEbarData.1
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-    letI : Group.IsNilpotent (M ⧸ pPrimeCore 2 M) := IsPGroup.isNilpotent h2
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Group.IsNilpotent (M ⧸ pPrimeCore 2 M) := IsPGroup.isNilpotent h2
     have hEbarsolv : Group.IsSolvable Ebar := inferInstance
     exact False.elim (Group.IsPerfect.not_isSolvable Ebar hEbarsolv)
   · exact hA7M
@@ -168,14 +168,14 @@ public theorem secondCase_a7_ambient_quotient_model
         exact (Subgroup.map_eq_bot_iff_of_injective
           (H := EL) (f := eL.toMonoidHom) eL.injective).mp hbot
       have hELperf : Group.IsPerfect EL := by
-        letI : Group.IsPerfect Ebar := hEbarData.2.1
+        let : Group.IsPerfect Ebar := hEbarData.2.1
         let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbar_le_L
         exact Group.IsPerfect.ofSurjective
           (f := eEL.symm.toMonoidHom) eEL.symm.surjective
       have hJperf : Group.IsPerfect J :=
         perfect_map_subgroup EL eL.toMonoidHom hELperf
       have hJsn : J.IsSubnormal := hEbarData.2.2.subgroupOf.map eL.surjective
-      letI : Finite (PGL2 K) :=
+      let : Finite (PGL2 K) :=
         Finite.of_surjective Matrix.ProjGenLinGroup.mk
           Matrix.ProjGenLinGroup.mk_surjective
       have hPGLcore := pgl2_perfect_subnormal_eq_commutator

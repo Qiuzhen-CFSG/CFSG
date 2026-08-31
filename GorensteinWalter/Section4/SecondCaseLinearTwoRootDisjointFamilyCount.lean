@@ -32,8 +32,8 @@ public theorem secondCase_linear_twoRoot_disjoint_family_count
     (hScard : ∀ j, Nat.card (S j) = q) :
     Nat.card Fam ≤ (q - 1) / p := by
   classical
-  letI : Fintype Fam := Fintype.ofFinite Fam
-  letI : Fintype Roots := Fintype.ofFinite Roots
+  let : Fintype Fam := Fintype.ofFinite Fam
+  let : Fintype Roots := Fintype.ofFinite Roots
   let SharpW : Fam → Type u := fun i => {z : W i // (z : G) ≠ 1}
   let SharpS : Roots → Type u := fun j => {z : S j // (z : G) ≠ 1}
   let f : (Σ i : Fam, SharpW i) → (Σ j : Roots, SharpS j) := fun z =>
@@ -61,7 +61,7 @@ public theorem secondCase_linear_twoRoot_disjoint_family_count
           exact heq_of_eq (Subtype.ext hzW)
   have hSharpS : ∀ j, Nat.card (SharpS j) = q - 1 := by
     intro j
-    letI : Fintype (S j) := Fintype.ofFinite (S j)
+    let : Fintype (S j) := Fintype.ofFinite (S j)
     rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
     rw [← Nat.card_eq_fintype_card, hScard]
     simp

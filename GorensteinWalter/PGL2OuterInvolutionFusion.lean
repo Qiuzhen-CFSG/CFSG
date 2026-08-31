@@ -35,10 +35,10 @@ public theorem pgl2_outer_involutions_conjugate
     (hbJ : b ∉ commutator (PGL2 K)) :
     IsConj a b := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have haord : orderOf a = 2 :=
     orderOf_eq_prime (by simpa [pow_two] using ha.2) ha.1
   have hbord : orderOf b = 2 :=
@@ -80,7 +80,7 @@ public theorem pgl2_outer_involutions_conjugate
     rw [pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     exact pgl2_psl2Range_index_eq_two K hK
   have hHindex : H.index = 2 := by
-    haveI : J.Normal := by
+    have : J.Normal := by
       dsimp [J]
       infer_instance
     have hdvd : H.index ∣ 2 := by
@@ -97,7 +97,7 @@ public theorem pgl2_outer_involutions_conjugate
     · exact htwo
   have hHnoncyclic : ¬ IsCyclic H := by
     intro hHcyclic
-    letI : J.Normal := by
+    let : J.Normal := by
       dsimp [J]
       infer_instance
     let T : Sylow 2 J :=

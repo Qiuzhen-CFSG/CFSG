@@ -23,7 +23,7 @@ public theorem odd_card_subgroup_le_normal_index_two
     (hPodd : Odd (Nat.card P)) :
     P ≤ R := by
   classical
-  letI : R.Normal := hRnormal
+  let : R.Normal := hRnormal
   let q : G →* G ⧸ R := QuotientGroup.mk' R
   let Pbar : Subgroup (G ⧸ R) := P.map q
   have hPbar_dvd_P : Nat.card Pbar ∣ Nat.card P :=

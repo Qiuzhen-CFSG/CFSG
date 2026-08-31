@@ -94,8 +94,8 @@ public theorem firstCase_klein_FU_centralizes_hall
     rw [Subgroup.subgroupOf_map_subtype, inf_eq_left.2 hKHall.1]
   let A0 : Subgroup (↥F) := GorensteinWalter.piCore π (↥F)
   let B0 : Subgroup (↥F) := GorensteinWalter.piCore πᶜ (↥F)
-  haveI : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
-  haveI : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
+  have : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
+  have : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
   have hFtop : A0 ⊔ B0 = ⊤ := by
     simpa [A0, B0] using
       (piCore_sup_piCore_compl_eq_top_of_isNilpotent hFNil π)

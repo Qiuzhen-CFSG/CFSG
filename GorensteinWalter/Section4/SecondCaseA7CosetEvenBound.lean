@@ -42,7 +42,7 @@ public theorem secondCase_a7_coset_involutions_card_le_18_of_mem_H
   let J := {x : G // IsInvolution x ∧
     x ∈ (M : Set G) * ({y} : Set G)}
   let rho : D →* MulAut G := MulAut.conj.comp D.subtype
-  letI : MulAction D G := MulAction.compHom G rho
+  let : MulAction D G := MulAction.compHom G rho
   let O := MulAction.orbit D y
   have hy2 : y * y = 1 := by simpa [pow_two] using hy.2
   have hyND : y ∈ Subgroup.normalizer (D : Set G) := by
@@ -115,8 +115,8 @@ public theorem secondCase_a7_coset_involutions_card_le_18_of_mem_H
   have hstabGe : 6 ≤ Nat.card stab := by
     rw [← hFixcard]
     exact Nat.card_le_card_of_injective f hf
-  letI : Fintype D := Fintype.ofFinite D
-  letI : Fintype O := Fintype.ofFinite O
+  let : Fintype D := Fintype.ofFinite D
+  let : Fintype O := Fintype.ofFinite O
   have horbitStab : Nat.card O * Nat.card stab = Nat.card D := by
     have h := MulAction.card_orbit_mul_card_stabilizer_eq_card_group D y
     simpa only [Nat.card_eq_fintype_card] using h

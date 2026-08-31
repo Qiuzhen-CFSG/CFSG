@@ -54,9 +54,9 @@ private theorem index_subgroupOf_sup_dvd_card_of_le_normalizer
     ((B.subgroupOf (B ⊔ A)).index) ∣ Nat.card A := by
   classical
   have hAC : A.relIndex (B ⊔ A : Subgroup G) = A.relIndex B := by
-    letI : (A.subgroupOf B).Normal :=
+    let : (A.subgroupOf B).Normal :=
       Subgroup.normal_subgroupOf_of_le_normalizer (H := B) (N := A) hBnormA
-    letI : (A.subgroupOf (B ⊔ A : Subgroup G)).Normal :=
+    let : (A.subgroupOf (B ⊔ A : Subgroup G)).Normal :=
       Subgroup.normal_subgroupOf_sup_of_le_normalizer (H := B) (N := A) hBnormA
     let e := QuotientGroup.quotientInfEquivProdNormalizerQuotient B A hBnormA
     have hcard : Nat.card (B ⧸ A.subgroupOf B) =
@@ -144,7 +144,7 @@ private theorem s_normalizes_fittingSubgroupOf
     (bg : BenderGlauberman.Hyp11 G) {s : G} (hs : s ∈ (bg.S : Subgroup G)) :
     ∀ f : G, f ∈ fittingSubgroupOf bg.U → s * f * s⁻¹ ∈ fittingSubgroupOf bg.U := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   intro f hf
   rcases (Subgroup.mem_map).1 hf with ⟨fU, hfCore, rfl⟩
   let φ : ↥bg.U ≃* ↥bg.U := {
@@ -183,7 +183,7 @@ private theorem B_le_centralizerIn_U_of_mem_S
     {G : Type u} [Group G] [Finite G]
     (bg : BenderGlauberman.Hyp11 G) {s : G} (hs : s ∈ (bg.S : Subgroup G)) :
     bg.B ≤ centralizerIn bg.U s := by
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hBleU : bg.B ≤ bg.U := by
     intro b hbB
     have hbB12 : b ∈ bg.B1 ⊓ bg.B2 := by
@@ -274,9 +274,9 @@ private theorem B_normalizes_pPrimeCoreMap
   let F0 : Subgroup U0 := fittingSubgroup U0
   let Q0 : Subgroup F0 := pPrimeCore p F0
   let K0 : Subgroup U0 := Q0.map F0.subtype
-  haveI : F0.Characteristic := inferInstance
-  haveI : Q0.Characteristic := pPrimeCore_characteristic (p := p) (G := F0)
-  haveI : K0.Characteristic := inferInstance
+  have : F0.Characteristic := inferInstance
+  have : Q0.Characteristic := pPrimeCore_characteristic (p := p) (G := F0)
+  have : K0.Characteristic := inferInstance
   have hBleU : bg.B ≤ U0 := by
     intro b hbB
     have hbB12 : b ∈ bg.B1 ⊓ bg.B2 := by
@@ -355,7 +355,7 @@ public theorem centralizerIn_U_eq_centralizerIn_FU_sup_B
     {s : G} (hs : s ∈ (bg.S : Subgroup G)) :
     centralizerIn bg.U s = centralizerIn (fittingSubgroupOf bg.U) s ⊔ bg.B := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F : Subgroup G := fittingSubgroupOf bg.U
   have hFleU : F ≤ bg.U := fittingSubgroupOf_le bg.U
   have hBleU : bg.B ≤ bg.U := by
@@ -404,7 +404,7 @@ public theorem centralizerIn_U_eq_centralizerIn_FU_sup_B
       have hIsNorm : IsNormalIn F bg.U := fittingSubgroupOf_isNormalIn bg.U
       exact (Subgroup.normal_subgroupOf_iff hFleU).mpr
         (fun h k hh hk => hIsNorm.2 k hk h hh)
-    letI : (F.subgroupOf bg.U).Normal := hFnorm
+    let : (F.subgroupOf bg.U).Normal := hFnorm
     rcases (Subgroup.mem_sup_of_normal_left
       (s := F.subgroupOf bg.U) (t := bg.B.subgroupOf bg.U)).mp hxsupU with
       ⟨fU, hfU, bU, hbU, hxeq⟩
@@ -743,7 +743,7 @@ public theorem centralizerIn_sylow_of_pCore_carrier
     sylowCarrier (centralizerIn_sylow_of_pCore bg hU hs p hPleC Q) =
       qCoreOf bg.U p ⊔ ((Q : Subgroup ↥bg.B).map bg.B.subtype) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let C : Subgroup G := centralizerIn bg.U s
   let F : Subgroup G := fittingSubgroupOf bg.U
   let A : Subgroup G := centralizerIn F s
@@ -805,7 +805,7 @@ public theorem centralizerIn_sylow_of_pCore_carrier
     apply (Subgroup.subgroupOf_eq_top).2
     intro x hx
     simpa [hPsupD] using hx
-  letI : Pc.Normal := hPc_norm
+  let : Pc.Normal := hPc_norm
   have hcoe : (centralizerIn_sylow_of_pCore bg hU hs p hPleC Q : Subgroup C) =
       Pc ⊔ (QDc : Subgroup Dc).map Dc.subtype := by
     simp [centralizerIn_sylow_of_pCore, sylowOf_normal_pCore_sup_coe]

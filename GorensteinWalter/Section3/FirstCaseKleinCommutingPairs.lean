@@ -306,18 +306,18 @@ public theorem firstCase_klein_outside_commuting_involution_card_two_mul
       _ = 2 := firstCase_klein_Hhat_outside_commuting_fiber_card_two
         hmin c hfirst hklein hsH hsI hsV
   have hJsplit : Nat.card J = Nat.card A + Nat.card B := by
-    letI : Fintype J := Fintype.ofFinite J
-    letI : Fintype A := Fintype.ofFinite A
-    letI : Fintype B := Fintype.ofFinite B
+    let : Fintype J := Fintype.ofFinite J
+    let : Fintype A := Fintype.ofFinite A
+    let : Fintype B := Fintype.ofFinite B
     have h := Fintype.card_subtype_compl (α := J) (p := fun x : J => (x : G) ∈ V)
     have h' : Nat.card B = Nat.card J - Nat.card A := by
       simpa only [Nat.card_eq_fintype_card] using h
     omega
   have hJcard : Nat.card J = 3 := by rw [hJsplit, hA, hB]
   have hAllJ : Nat.card All = Nat.card J + Nat.card Out := by
-    letI : Fintype All := Fintype.ofFinite All
-    letI : Fintype J := Fintype.ofFinite J
-    letI : Fintype Out := Fintype.ofFinite Out
+    let : Fintype All := Fintype.ofFinite All
+    let : Fintype J := Fintype.ofFinite J
+    let : Fintype Out := Fintype.ofFinite Out
     let eJ : J ≃ {x : All // (x : G) ∈ c.Hhat} :=
       { toFun := fun x =>
           let y : J := x
@@ -392,10 +392,10 @@ public theorem firstCase_klein_external_commuting_pair_card
           left_inv := by intro x; rfl
           right_inv := by intro x; rfl }
       exact Nat.card_congr e
-    letI : Fintype T := Fintype.ofFinite T
-    letI : Fintype S := Fintype.ofFinite S
-    letI : Fintype {x : T // (x : G) ∈ V} := Fintype.ofFinite _
-    letI : Fintype {x : T // (x : G) ∉ V} := Fintype.ofFinite _
+    let : Fintype T := Fintype.ofFinite T
+    let : Fintype S := Fintype.ofFinite S
+    let : Fintype {x : T // (x : G) ∈ V} := Fintype.ofFinite _
+    let : Fintype {x : T // (x : G) ∉ V} := Fintype.ofFinite _
     have hcomp := Fintype.card_subtype_compl (α := T)
       (p := fun x : T => (x : G) ∈ V)
     have hcompNat : Nat.card {x : T // (x : G) ∉ V} =
@@ -417,7 +417,7 @@ public theorem firstCase_klein_external_commuting_pair_card
     intro s
     simpa [Q, S, V] using firstCase_klein_outside_commuting_involution_card_two_mul
       hmin c hfirst hklein hHcount s.2.2.1 s.2.1 s.2.2.2
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   calc
     Nat.card (Sigma Q) = ∑ s : S, Nat.card (Q s) := Nat.card_sigma
     _ = ∑ _s : S, 2 * k := by

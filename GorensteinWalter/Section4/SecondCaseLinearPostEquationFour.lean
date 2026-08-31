@@ -325,8 +325,8 @@ private theorem fitting_twoCore_inter_centralizes_fitting
     rw [Subgroup.normal_subgroupOf_iff hYleC]
     intro y z hy hz
     exact hYnormalC.2 z hz y hy
-  letI : PC.Normal := hPCnormal
-  letI : YC.Normal := hYCnormal
+  let : PC.Normal := hPCnormal
+  let : YC.Normal := hYCnormal
   have hPCcard : Nat.card PC = Nat.card P :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hPleC).toEquiv
   have hYCcard : Nat.card YC = Nat.card Y :=
@@ -355,8 +355,8 @@ private theorem fitting_twoCore_inter_centralizes_fitting
     secondCase_normalizer_fitting_fixed_eq_M hmin c w F hFne hFnormalM
   have hPnormFU : P ≤ Subgroup.normalizer (c.FU : Set G) :=
     hPleC.trans (inf_le_left.trans (le_normalizer_of_isNormalIn hFUnormalH))
-  letI : P.Normalizes c.FU := ⟨hPnormFU⟩
-  letI : MulDistribMulAction P c.FU :=
+  let : P.Normalizes c.FU := ⟨hPnormFU⟩
+  let : MulDistribMulAction P c.FU :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P c.FU hPnormFU
   have hfixEq : fixedPointSubgroup P c.FU =
       (subgroupCentralizerIn c.FU P).subgroupOf c.FU :=
@@ -642,7 +642,7 @@ public theorem secondCase_fitting_equation5_7_of_component_centralization
   have hTI : ∀ g : G, g ∉ w.M → F ⊓ conjugateSubgroup F g = ⊥ :=
     fitting_fixed_TI_of_normalizer_layer hmin c w d F hLayer
   have hK0cyc : IsCyclic K0 := by
-    letI : IsCyclic K := hKcyc
+    let : IsCyclic K := hKcyc
     exact Subgroup.isCyclic_of_le hK0le
   have hcycCard : IsCyclic F ∧ Nat.card F ≤ Nat.card K0 :=
     fitting_fixed_cyclic_and_card_le_of_normalizer_layer
@@ -652,7 +652,7 @@ public theorem secondCase_fitting_equation5_7_of_component_centralization
     have hK0card1 : Nat.card K0 = 1 := by rw [hK0bot]; simp
     have hFcard_le1 : Nat.card F ≤ 1 := by
       simpa [hK0card1] using hcycCard.2
-    haveI : Nonempty F := ⟨⟨1, F.one_mem⟩⟩
+    have : Nonempty F := ⟨⟨1, F.one_mem⟩⟩
     have hFcard_pos : 1 ≤ Nat.card F := Nat.card_pos
     have hFcard1 : Nat.card F = 1 := by omega
     exact hFne ((Subgroup.eq_bot_iff_card (H := F)).mpr hFcard1)

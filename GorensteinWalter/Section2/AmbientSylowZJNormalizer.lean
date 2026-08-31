@@ -76,7 +76,7 @@ public theorem exists_ambient_sylow_with_zj_normalizer_eq_of_fstar_pgroup
       (ZJ (G := ↑B) (PB : Subgroup (↑B)))
       (f := B.subtype) B.subtype_injective).mp hbot
     exact hZBneInt hpre
-  letI : (ZJ (G := ↑B) (PB : Subgroup (↑B))).Characteristic := hZchar
+  let : (ZJ (G := ↑B) (PB : Subgroup (↑B))).Characteristic := hZchar
   have hBleNZ : B ≤ Subgroup.normalizer (ZB : Set G) := by
     exact Subgroup.le_normalizer.trans
       (by simpa [ZB, section8SubgroupInAmbient] using

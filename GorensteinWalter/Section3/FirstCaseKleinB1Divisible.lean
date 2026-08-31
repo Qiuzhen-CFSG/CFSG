@@ -104,7 +104,7 @@ public theorem firstCase_klein_eight_dvd_b1
   have hSleHhat' : ∀ s : G, s ∈ S → s ∈ c.Hhat := by
     intro s hs
     exact hSleHhat hs
-  letI : MulAction S J1 :=
+  let : MulAction S J1 :=
     { smul := fun s x => ⟨s.1 * x.1 * s.1⁻¹, by
         have hxJ' : IsInvolution x.1 ∧ x.1 ∉ c.Hhat ∧
             firstCaseCosetInvolutions c x.1 = 1 := by
@@ -289,8 +289,8 @@ public theorem firstCase_klein_eight_dvd_b1
         _ = x.1 * x.1 := by rw [hxw]
         _ = 1 := by simpa [pow_two] using hxI.2
     exact htne (Subtype.ext (Subtype.ext ht1))
-  letI : Fintype S := Fintype.ofFinite _
-  letI : Fintype J1 := Fintype.ofFinite _
+  let : Fintype S := Fintype.ofFinite _
+  let : Fintype J1 := Fintype.ofFinite _
   have hdvd : Nat.card S ∣ Nat.card J1 :=
     natCard_dvd_of_free_action (G := S) (X := J1) hfree
   have hS8 : Nat.card S = 8 := firstCase_klein_S_card hmin c hfirst hklein

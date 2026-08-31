@@ -31,7 +31,7 @@ private lemma index_eq_index_of_normal_sup
     (E C : Subgroup G) (hE : E.Normal) (hEC : E ⊔ C = ⊤) :
     C.index = ((E ⊓ C).subgroupOf E).index := by
   classical
-  letI : E.Normal := hE
+  let : E.Normal := hE
   let b : G ⧸ C := QuotientGroup.mk (1 : G)
   have horbit : MulAction.orbit E b = Set.univ := by
     apply Set.eq_univ_iff_forall.mpr

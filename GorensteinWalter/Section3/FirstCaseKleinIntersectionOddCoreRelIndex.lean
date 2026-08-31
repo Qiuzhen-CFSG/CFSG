@@ -49,7 +49,7 @@ public theorem firstCase_klein_intersection_oddCore_relIndex_three
     · exact D.mul_mem (D.mul_mem hd (hNleD hn)) (D.inv_mem hd)
     · exact hBnorm.2 d (hDle hd) n
         ((show N ≤ twoCoreOf c.Hhat ⊔ c.U from inf_le_right) hn)
-  letI : (N.subgroupOf D).Normal := hNnormal
+  let : (N.subgroupOf D).Normal := hNnormal
   have hindex' : (N.subgroupOf D).index = 6 := by
     simpa [D, N] using hindex
   have hNodd : Nat.Coprime 2 (Nat.card N) := by

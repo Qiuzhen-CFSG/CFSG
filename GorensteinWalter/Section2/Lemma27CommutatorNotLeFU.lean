@@ -107,7 +107,7 @@ private theorem two_mem_primesOfOrder_fitting_Hhat
     orderOf_eq_prime c.t_involution.2 c.t_involution.1
   have h2dvd : 2 ∣ Nat.card (↥(fittingSubgroupOf c.Hhat)) := by
     have hdvd : orderOf c.t ∣ Nat.card (↥(fittingSubgroupOf c.Hhat)) := by
-      letI : Fintype (↥(fittingSubgroupOf c.Hhat)) := Fintype.ofFinite _
+      let : Fintype (↥(fittingSubgroupOf c.Hhat)) := Fintype.ofFinite _
       have h := orderOf_dvd_card (x := (⟨c.t, hxF⟩ : fittingSubgroupOf c.Hhat))
       simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h
     rwa [hord] at hdvd
@@ -276,7 +276,7 @@ public theorem exists_fixed_involution_of_Lemma27Hypothesis
       exists_fixed_involution_centralizer_of_kleinFour_inverted
         M A V c.t hVK4 hVleM htV hAne hAodd hAnorm hAinvt
     have ht'2 : t' * t' = 1 := by
-      letI : IsKleinFour (↥V) := hVK4
+      let : IsKleinFour (↥V) := hVK4
       let t'V : ↥V := ⟨t', ht'V⟩
       exact congrArg Subtype.val (IsKleinFour.mul_self t'V)
     exact ⟨t', ht'M, ht'C, ht'ne, ht'ne_t, ht'2, ht'fix⟩
@@ -310,7 +310,7 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
     piCore_compl_odd_card_of_Lemma27Hypothesis hmin c M hM
   have hxodd : Nat.Coprime 2 (orderOf x) := by
     have hdvd : orderOf x ∣ Nat.card (↥A) := by
-      letI : Fintype (↥A) := Fintype.ofFinite _
+      let : Fintype (↥A) := Fintype.ofFinite _
       have h := orderOf_dvd_card (x := (⟨x, hxA⟩ : A))
       simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h
     exact Nat.Coprime.of_dvd_right hdvd hAodd
@@ -595,14 +595,14 @@ public theorem lemma_2_7_commutator_S_U_not_le_FU
   have hpdvd_f : p ∣ orderOf f := by
     simpa [hord_f] using hpdvd
   have hpdvd_FU : p ∣ Nat.card (↥c.FU) := by
-    letI : Fintype (↥c.FU) := Fintype.ofFinite _
+    let : Fintype (↥c.FU) := Fintype.ofFinite _
     have h := orderOf_dvd_card (x := (⟨f, hfFU⟩ : c.FU))
     exact hpdvd_f.trans (by simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h)
   have hpFU : p ∈ (Nat.card (↥c.FU)).primeFactors := by
     exact Nat.mem_primeFactors.mpr ⟨hpprime, hpdvd_FU, Nat.card_pos.ne'⟩
   have hpπ : p ∈ π := hFU_pi p hpFU
   have hpdvd_A : p ∣ Nat.card (↥A) := by
-    letI : Fintype (↥A) := Fintype.ofFinite _
+    let : Fintype (↥A) := Fintype.ofFinite _
     have h := orderOf_dvd_card (x := (⟨⁅c.t, x⁆, htxA⟩ : A))
     exact hpdvd.trans (by simpa [Nat.card_eq_fintype_card, Subgroup.orderOf_mk] using h)
   have hpA : p ∈ (Nat.card (↥A)).primeFactors := by

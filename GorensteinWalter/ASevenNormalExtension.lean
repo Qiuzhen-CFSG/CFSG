@@ -113,7 +113,7 @@ public theorem aSeven_normal_extension_eq_top_of_dihedralSylow
     (eH : H ≃* alternatingGroup (Fin 7))
     (hCH : Subgroup.centralizer (H : Set G) = ⊥) :
     H = ⊤ := by
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   rcases quotient_centralizer_mulAut_embedding H with ⟨φ, hφ⟩
   let q : G ≃* G ⧸ Subgroup.centralizer (H : Set G) :=
     ((QuotientGroup.quotientMulEquivOfEq (G := G) hCH).trans

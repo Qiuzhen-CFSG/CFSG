@@ -34,9 +34,9 @@ public theorem center_eq_bot_of_quasisimple_psl2_quotient_coprime
     (e : Nonempty ((E ⧸ Subgroup.center E) ≃* PSL2MatrixGroup K)) :
     Subgroup.center E = ⊥ := by
   rcases hK with ⟨p, f, hp, _hpodd, hf, hKcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let Z : Subgroup E := Subgroup.center E
-  letI : Z.Normal := by
+  let : Z.Normal := by
     dsimp [Z]
     infer_instance
   apply oddCentralCover_eq_bot_of_cyclic_sylow_at_center_primes

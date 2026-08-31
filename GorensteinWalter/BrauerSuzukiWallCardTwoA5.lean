@@ -50,7 +50,7 @@ public theorem
     rw [← MonoidHom.ker_eq_bot_iff]
     rw [← N.normalCore_eq_ker]
     exact hcore
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite (G ⧸ N)
+  let : Fintype (G ⧸ N) := Fintype.ofFinite (G ⧸ N)
   have hCosetFcard : Fintype.card (G ⧸ N) = 5 := by
     simpa [Nat.card_eq_fintype_card] using hCosetCard
   let eCoset : (G ⧸ N) ≃ Fin 5 := Fintype.equivFinOfCardEq hCosetFcard

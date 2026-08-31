@@ -182,7 +182,7 @@ public theorem exists_outside_normalizer_conjugating_t_to
       omega
     subst V
     let S : Subgroup G := (c.S : Subgroup G)
-    letI : IsKleinFour S := by simpa [S] using hSK4
+    let : IsKleinFour S := by simpa [S] using hSK4
     have hcardS : Nat.card S = 4 := (inferInstance : IsKleinFour S).card_four
     have hcardG : 4 ≤ Nat.card G := by
       rw [← hcardS]

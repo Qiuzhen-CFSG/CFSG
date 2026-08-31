@@ -53,8 +53,8 @@ private theorem firstCase_cyclic_centralizer_t1_eq_B_sup_P0_of_a7_of_le_M
     centralizerIn od.d.bg.U od.d.bg.t1 =
       od.d.bg.B ⊔ (qCoreOf od.d.bg.U od.p ⊓ M) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData od.d.bg :=
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData od.d.bg :=
     firstCaseBGKData hmin c od.d
   have hBleM : od.d.bg.B ≤ M :=
     firstCase_cyclic_B_le_M_of_a7_source
@@ -122,7 +122,7 @@ public theorem firstCase_cyclic_primeCore_inf_B_eq_bot
     (hU : od.d.bg.U = fittingSubgroupOf od.d.bg.U ⊔ od.d.bg.B) :
     qCoreOf od.d.bg.U od.p ⊓ od.d.bg.B = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   apply le_bot_iff.mp
   intro x hx
@@ -170,7 +170,7 @@ public theorem firstCase_cyclic_primeCore_le_normalizer_P0
       Subgroup.normalizer
         ((qCoreOf od.d.bg.U od.p ⊓ M : Subgroup G) : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let P0 : Subgroup G := P ⊓ M
   have hPabel : IsMulCommutative (↥P) := firstCase_cyclic_primeCore_abelian c od
@@ -234,7 +234,7 @@ public theorem firstCase_cyclic_S_not_centralizes_nontrivial_qCore
     ¬ (od.d.bg.S : Subgroup G) ≤
       Subgroup.centralizer (qCoreOf od.d.bg.U q : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   intro hScent
   let Qq : Subgroup G := qCoreOf od.d.bg.U q
   have hBleM : od.d.bg.B ≤ M :=
@@ -303,7 +303,7 @@ public theorem firstCase_cyclic_primeCore_le_M_of_a7_of_CB_ne
       (qCoreOf od.d.bg.U od.p : Set G) ≠ ⊥) :
     qCoreOf od.d.bg.U od.p ≤ M := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let X : Subgroup G :=
     od.d.bg.B ⊓ Subgroup.centralizer (P : Set G)

@@ -352,7 +352,7 @@ public theorem firstCase_klein_fixed_V_involution_card_one
     let aV : V := ⟨a, ha⟩
     let bV : V := ⟨b, hb⟩
     let zV : V := ⟨z, hz⟩
-    letI : Fintype V := Fintype.ofFinite V
+    let : Fintype V := Fintype.ofFinite V
     have haV1 : aV ≠ 1 := by
       intro h
       exact ha1 (congrArg Subtype.val h)
@@ -579,8 +579,8 @@ public theorem firstCase_klein_Hhat_involution_count_with_K
     {x : JH // Commute (v : G) (x : G)}
   let R : JH → Type u := fun x =>
     {v : W // Commute (v : G) (x : G)}
-  letI : Fintype W := Fintype.ofFinite W
-  letI : Fintype JH := Fintype.ofFinite JH
+  let : Fintype W := Fintype.ofFinite W
+  let : Fintype JH := Fintype.ofFinite JH
   have hVklein : IsKleinFour V := by
     simpa [V] using firstCase_klein_V_klein c hklein
   have hVleHhat : V ≤ c.Hhat := by
@@ -662,8 +662,8 @@ public theorem firstCase_klein_Hhat_involution_count_with_K
         left_inv := by intro x; rfl
         right_inv := by intro w; rfl }
     rw [Nat.card_congr e, hWcard]
-  letI : Fintype JHin := Fintype.ofFinite JHin
-  letI : Fintype JHout := Fintype.ofFinite JHout
+  let : Fintype JHin := Fintype.ofFinite JHin
+  let : Fintype JHout := Fintype.ofFinite JHout
   have hJHsplit : Nat.card JH = 3 + Nat.card JHout := by
     have hcomp := Fintype.card_subtype_compl (α := JH) pJ
     have hle : Fintype.card JHin ≤ Fintype.card JH :=

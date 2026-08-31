@@ -125,7 +125,7 @@ private theorem factorization_two_2520 :
     Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 315)]
 
 private theorem a7S_card : Nat.card a7S = 8 := by
-  letI : Fintype a7S := Subtype.fintype (fun x : A7 => x ∈ (a7S : Set A7))
+  let : Fintype a7S := Subtype.fintype (fun x : A7 => x ∈ (a7S : Set A7))
   rw [Nat.card_eq_fintype_card]
   have h : Fintype.card a7S =
       Fintype.card {x : A7 // x ∈ a7SList.toFinset} := by
@@ -210,7 +210,7 @@ private lemma a7Gen_is_dihedral4 :
       (a7v : A7)⁻¹
     decide
   rcases (isCyclic_or_dihedral_of_generators ρ' σ' hgen hσ2 hrel) with hcyc | hdih
-  · haveI : IsCyclic a7GenSubgroup := hcyc
+  · have : IsCyclic a7GenSubgroup := hcyc
     have hcomm : ρ' * σ' = σ' * ρ' :=
       IsMulCommutative.is_comm.comm ρ' σ'
     have hc : ((ρ' * σ' : a7GenSubgroup) : A7) =
@@ -265,7 +265,7 @@ private theorem a7UList_card : a7UList.toFinset.card = 3 := by
   decide
 
 private theorem a7U_card : Nat.card a7U = 3 := by
-  letI : Fintype a7U := Subtype.fintype (fun x : A7 => x ∈ (a7U : Set A7))
+  let : Fintype a7U := Subtype.fintype (fun x : A7 => x ∈ (a7U : Set A7))
   rw [Nat.card_eq_fintype_card]
   have h : Fintype.card a7U =
       Fintype.card {x : A7 // x ∈ a7UList.toFinset} := by
@@ -314,7 +314,7 @@ private theorem a7VList_card : a7VList.toFinset.card = 4 := by
   decide
 
 private theorem a7V_card : Nat.card a7V = 4 := by
-  letI : Fintype a7V := Subtype.fintype (fun x : A7 => x ∈ (a7V : Set A7))
+  let : Fintype a7V := Subtype.fintype (fun x : A7 => x ∈ (a7V : Set A7))
   rw [Nat.card_eq_fintype_card]
   have h : Fintype.card a7V =
       Fintype.card {x : A7 // x ∈ a7VList.toFinset} := by

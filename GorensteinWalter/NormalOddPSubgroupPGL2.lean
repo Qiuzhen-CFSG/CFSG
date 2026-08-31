@@ -32,8 +32,8 @@ public theorem normal_pSubgroup_eq_bot_of_pgl2_odd
     (P : Subgroup (PGL2 K)) (hPnormal : P.Normal) (hPp : IsPGroup p P) :
     P = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Finite (PGL2 K) :=
+  let : Fact p.Prime := ⟨hp⟩
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hcard_ge_three : 3 ≤ Nat.card K := by
@@ -50,7 +50,7 @@ public theorem normal_pSubgroup_eq_bot_of_pgl2_odd
       _ = r ^ 1 := by simp
       _ ≤ r ^ n := Nat.pow_le_pow_right (by omega) hn
   by_cases hcard_three : Nat.card K = 3
-  · letI : Fintype K := Fintype.ofFinite K
+  · let : Fintype K := Fintype.ofFinite K
     have hFcard : Fintype.card K = 3 := by
       simpa [Nat.card_eq_fintype_card] using hcard_three
     let eK : ZMod 3 ≃+* K :=

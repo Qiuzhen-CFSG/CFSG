@@ -45,7 +45,7 @@ public theorem firstCase_klein_uniform_involution_inverted
         ∀ s : G, s ∈ c.Hhat → IsInvolution s →
           s ∉ twoCoreOf c.Hhat → IsInvertedSubgroup K c.U s := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨K, hKr, hKHall, hKne, hKref⟩ :=
     firstCase_klein_uniform_reflection_inverted hmin c hfirst hklein r hr hrV
   have h26 := theorem_2_6 hmin c
@@ -213,7 +213,7 @@ public theorem firstCase_klein_uniform_involution_inverted
           group }
     have hαHall : IsHallSubgroup (subgroupPrimeSet K)
         (KFU.map α.toMonoidHom) := hKFUHall.map_mulAut α
-    letI : KFU.Normal :=
+    let : KFU.Normal :=
       section15_hall_subgroup_normal_of_nilpotent hFUnil hKFUHall
     have hEqFU : KFU.map α.toMonoidHom = KFU :=
       hKFUHall.eq_of_normal hαHall

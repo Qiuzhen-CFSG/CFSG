@@ -812,7 +812,7 @@ public theorem firstCase_klein_restrictionSeven_exact
             (Subgroup.equivMapOfInjective c.Hhat (MulAut.conj g⁻¹).toMonoidHom
               (MulAut.conj g⁻¹).injective).toEquiv.symm
         rw [hconjcard, hHhatH, hHcard, hcardU]
-      letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+      let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
       have hAfac : (Nat.card A').factorization 3 = 2 := by
         rw [hAcard]
         rw [show (72 : ℕ) = 3 ^ 2 * 8 by norm_num]
@@ -946,16 +946,16 @@ public theorem firstCase_klein_restrictionSeven_exact
         exact Subgroup.mem_subgroupOf.mp hconj
       have hVg_normO : Vg ≤ Subgroup.normalizer (O : Set G) :=
         hVgleA'.trans (le_normalizer_of_isNormalIn hOnormalA')
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       have hVgP : IsPGroup 2 (↥Vg) := by
         apply IsPGroup.of_card (n := 2)
         rw [hVgcard]
         norm_num
-      letI : IsMulCommutative (↥Vg) := IsKleinFour.isMulCommutative
-      letI : CommGroup (↥Vg) := IsMulCommutative.instCommGroup
-      letI : Fact (IsPGroup 2 (↥Vg)) := ⟨hVgP⟩
-      letI : Vg.Normalizes O := ⟨hVg_normO⟩
-      letI : MulDistribMulAction (↥Vg) (↥O) :=
+      let : IsMulCommutative (↥Vg) := IsKleinFour.isMulCommutative
+      let : CommGroup (↥Vg) := IsMulCommutative.instCommGroup
+      let : Fact (IsPGroup 2 (↥Vg)) := ⟨hVgP⟩
+      let : Vg.Normalizes O := ⟨hVg_normO⟩
+      let : MulDistribMulAction (↥Vg) (↥O) :=
         Subgroup.conjMulDistribMulActionOfLeNormalizer Vg O hVg_normO
       have hOodd : Nat.Coprime 2 (Nat.card (↥O)) := by
         rw [hOcard]
@@ -1009,10 +1009,10 @@ public theorem firstCase_klein_restrictionSeven_exact
         have hformula := Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
           Vg O (a := v) (k := zO)
         exact hformula.symm.trans hcoe
-      letI : IsMulCommutative (↥O) := by
+      let : IsMulCommutative (↥O) := by
         apply IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3)
         simpa [hOcard]
-      letI : CommGroup (↥O) := IsMulCommutative.instCommGroup
+      let : CommGroup (↥O) := IsMulCommutative.instCommGroup
       have hconj_eq_of_memO : ∀ a b : G, a ∈ O → b ∈ O →
           a * b * a⁻¹ = b := by
         intro a b ha hb
@@ -1676,7 +1676,7 @@ public theorem firstCase_klein_restrictionSeven_N_eq_bot
           (Subgroup.equivMapOfInjective c.Hhat (MulAut.conj g⁻¹).toMonoidHom
             (MulAut.conj g⁻¹).injective).toEquiv.symm
       rw [hconjcard, hHhatH, hHcard, hcardU]
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have hAfac : (Nat.card A').factorization 3 = 2 := by
       rw [hAcard]
       rw [show (72 : ℕ) = 3 ^ 2 * 8 by norm_num]
@@ -1810,16 +1810,16 @@ public theorem firstCase_klein_restrictionSeven_N_eq_bot
       exact Subgroup.mem_subgroupOf.mp hconj
     have hVg_normO : Vg ≤ Subgroup.normalizer (O : Set G) :=
       hVgleA'.trans (le_normalizer_of_isNormalIn hOnormalA')
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hVgP : IsPGroup 2 (↥Vg) := by
       apply IsPGroup.of_card (n := 2)
       rw [hVgcard]
       norm_num
-    letI : IsMulCommutative (↥Vg) := IsKleinFour.isMulCommutative
-    letI : CommGroup (↥Vg) := IsMulCommutative.instCommGroup
-    letI : Fact (IsPGroup 2 (↥Vg)) := ⟨hVgP⟩
-    letI : Vg.Normalizes O := ⟨hVg_normO⟩
-    letI : MulDistribMulAction (↥Vg) (↥O) :=
+    let : IsMulCommutative (↥Vg) := IsKleinFour.isMulCommutative
+    let : CommGroup (↥Vg) := IsMulCommutative.instCommGroup
+    let : Fact (IsPGroup 2 (↥Vg)) := ⟨hVgP⟩
+    let : Vg.Normalizes O := ⟨hVg_normO⟩
+    let : MulDistribMulAction (↥Vg) (↥O) :=
       Subgroup.conjMulDistribMulActionOfLeNormalizer Vg O hVg_normO
     have hOodd : Nat.Coprime 2 (Nat.card (↥O)) := by
       rw [hOcard]
@@ -1873,10 +1873,10 @@ public theorem firstCase_klein_restrictionSeven_N_eq_bot
       have hformula := Subgroup.conjMulDistribMulActionOfLeNormalizer_smul_coe
         Vg O (a := v) (k := zO)
       exact hformula.symm.trans hcoe
-    letI : IsMulCommutative (↥O) := by
+    let : IsMulCommutative (↥O) := by
       apply IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3)
       simpa [hOcard]
-    letI : CommGroup (↥O) := IsMulCommutative.instCommGroup
+    let : CommGroup (↥O) := IsMulCommutative.instCommGroup
     have hconj_eq_of_memO : ∀ a b : G, a ∈ O → b ∈ O →
         a * b * a⁻¹ = b := by
       intro a b ha hb

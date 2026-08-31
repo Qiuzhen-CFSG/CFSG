@@ -30,7 +30,7 @@ public theorem secondCase_linear_p1_data
       p1 ≤ od.p + 1 ∧
       Nat.card (secondCase_linesIn G od.P od.P0) = p1 - 1 := by
   classical
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
   let p1 : ℕ := conjugateCount od.P od.A
   have hp01 : p0 ≤ p1 := by
     dsimp [p1]

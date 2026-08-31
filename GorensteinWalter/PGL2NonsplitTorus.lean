@@ -36,11 +36,11 @@ public theorem pgl2_nonsplit_torus_reflection_data
         ¬ U ≤ (Matrix.ProjectiveSpecialLinearGroup.toPGL
           (n := Fin 2) (R := F)).range) := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
-  haveI : CharP F p :=
+  let : Fintype F := Fintype.ofFinite F
+  have : CharP F p :=
     charP_of_card_eq_prime_pow (by simpa using hFcard)
   let E := FiniteField.Extension F p 2
-  letI : Fintype E := Fintype.ofFinite E
+  let : Fintype E := Fintype.ofFinite E
   have hidx :
       Fintype.card (Module.Free.ChooseBasisIndex F E) =
         Fintype.card (Fin 2) := by
@@ -168,7 +168,7 @@ public theorem pgl2_nonsplit_torus_reflection_data
         FiniteField.Extension.exists_frob_pow_eq
           (k := F) (p := p) (n := 2) g
       rw [← hpow, hsigma, one_pow]
-    letI : Subsingleton (E ≃ₐ[F] E) :=
+    let : Subsingleton (E ≃ₐ[F] E) :=
       ⟨fun a d ↦ (hall a).trans (hall d).symm⟩
     have hone : Nat.card (E ≃ₐ[F] E) = 1 := Nat.card_unique
     have htwo : Nat.card (E ≃ₐ[F] E) = 2 :=

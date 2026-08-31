@@ -29,7 +29,7 @@ public theorem qd_not_involved_of_hasDihedralSylowTwo
   intro hQd
   apply qdSL_not_involved_of_hasDihedralSylowTwo hG hpodd
   rcases hQd with ⟨K, N, hN, ⟨e⟩⟩
-  letI : N.Normal := hN
+  let : N.Normal := hN
   let L : Subgroup (Qd p) :=
     (SemidirectProduct.inr : qdSL p →* Qd p).range
   let eSL : qdSL p ≃* L :=

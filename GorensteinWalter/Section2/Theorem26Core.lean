@@ -82,7 +82,7 @@ private lemma unique_involution_of_cyclic_two_group_t26 {A : Type*} [Group A] [F
     (hcard : Nat.card A = 2 ^ m) :
     ∀ x y : A, x ≠ 1 → x ^ 2 = 1 → y ≠ 1 → y ^ 2 = 1 → x = y := by
   classical
-  letI : IsCyclic A := hcyc
+  let : IsCyclic A := hcyc
   rcases IsCyclic.exists_monoid_generator (α := A) with ⟨g, hg⟩
   have hord : orderOf g = 2 ^ m := by
     rw [← hcard]
@@ -283,7 +283,7 @@ private lemma involution_conjugate_into_sylow_two
     {M : Type u} [Group M] [Finite M]
     (P : Sylow 2 M) (x : M) (hx : IsInvolution x) :
     ∃ g : M, g * x * g⁻¹ ∈ (P : Subgroup M) := by
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hxord : orderOf x = 2 :=
     orderOf_eq_prime (by simpa [pow_two] using hx.2) hx.1
   have hxp : IsPGroup 2 (Subgroup.zpowers x) :=
@@ -404,10 +404,10 @@ private theorem quotient_centralizer_equiv_perm_three_of_kleinFour_fusion
     (hclasses : HasAtLeastTwoInvolutionClasses M) :
     Nonempty ((M ⧸ K) ≃* Equiv.Perm (Fin 3)) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : N.Normal := hNnormal
-  letI : K.Normal := hKnormal
-  letI : IsKleinFour N := hN
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : N.Normal := hNnormal
+  let : K.Normal := hKnormal
+  let : IsKleinFour N := hN
   let NP : Subgroup P := N.subgroupOf P
   let eNNP : N ≃* NP := (Subgroup.subgroupOfEquivOfLe hNleP).symm
   have hNP : IsKleinFour NP := {
@@ -429,10 +429,10 @@ private theorem quotient_centralizer_equiv_perm_three_of_kleinFour_fusion
   have hqdvd : Nat.card (M ⧸ K) ∣ 6 := by
     have hdvd := Subgroup.card_dvd_of_injective ψ hψ
     simpa [Nat.card_eq_fintype_card, Fintype.card_perm, Nat.factorial] using hdvd
-  haveI : Nontrivial N :=
+  have : Nontrivial N :=
     Finite.one_lt_card_iff_nontrivial.mp (by rw [hN.card_four]; norm_num)
   obtain ⟨t, ht1⟩ := exists_ne (1 : N)
-  letI : MulDistribMulAction M N :=
+  let : MulDistribMulAction M N :=
     MulDistribMulAction.compHom N (MulAut.conjNormal (H := N))
   let T : Set N := {x | x ≠ 1}
   have horbit : MulAction.orbit M t = T := by
@@ -521,7 +521,7 @@ private theorem quotient_centralizer_equiv_perm_three_of_kleinFour_fusion
       let q : M →* M ⧸ K := QuotientGroup.mk' K
       have involution_mem_K : ∀ z : M, IsInvolution z → z ∈ K := by
         intro z hz
-        letI : Fintype (M ⧸ K) := Fintype.ofFinite (M ⧸ K)
+        let : Fintype (M ⧸ K) := Fintype.ofFinite (M ⧸ K)
         have hqpow : (q z) ^ 2 = 1 := by
           rw [← map_pow, hz.2, map_one]
         have hord2 : orderOf (q z) ∣ 2 :=
@@ -717,7 +717,7 @@ private lemma odd_order_subgroup_le_U
     Subgroup.normal_subgroupOf_of_le_normalizer
       (le_normalizer_of_isNormalIn (U_isNormalIn_H c))
   let U' : Subgroup (↥c.H) := c.U.subgroupOf c.H
-  letI : U'.Normal := hU_normal
+  let : U'.Normal := hU_normal
   let S' : Subgroup (↥c.H) := (c.S : Subgroup G).subgroupOf c.H
   let q : ↥c.H →* ↥c.H ⧸ U' := QuotientGroup.mk' U'
   have hSH : (c.S : Subgroup G) ≤ c.H := S_le_H c
@@ -841,11 +841,11 @@ private lemma exists_involution_mem_twoCore_of_ne_bot
     (N : Subgroup G) (hN : twoCoreOf N ≠ ⊥) :
     ∃ z : G, IsInvolution z ∧ z ∈ twoCoreOf N := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hNp : IsPGroup 2 (twoCoreOf N) := by
     change IsPGroup 2 (qCoreOf N 2)
     exact qCoreOf_isPGroup N 2
-  letI : Nontrivial (twoCoreOf N) :=
+  let : Nontrivial (twoCoreOf N) :=
     (twoCoreOf N).nontrivial_iff_ne_bot.mpr hN
   rcases hNp.nontrivial_iff_card.mp (inferInstance : Nontrivial (twoCoreOf N)) with
     ⟨n, hn, hcard⟩
@@ -884,7 +884,7 @@ private lemma twoCoreOf_le_S {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) :
     twoCoreOf c.Hhat ≤ (c.S : Subgroup G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSleHhat : (c.S : Subgroup G) ≤ c.Hhat :=
     (S_le_H c).trans c.H_le_Hhat
   let S' : Sylow 2 (↥c.Hhat) := (c.S).subtype hSleHhat
@@ -917,7 +917,7 @@ private lemma oddCoreOf_le_centralizer_twoCoreOf {G : Type u} [Group G] [Finite 
     (H : Subgroup G) :
     oddCoreOf H ≤ Subgroup.centralizer (twoCoreOf H : Set G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hBp : IsPGroup 2 (pCore 2 (↥H)) := pCore_isPGroup (G := ↥H) (p := 2)
   obtain ⟨n, hcardB⟩ := hBp.exists_card_eq
   have hp_not_dvd_A : ¬ 2 ∣ Nat.card (pPrimeCore 2 (↥H)) := by
@@ -970,7 +970,7 @@ private lemma twoCoreOf_centralizes_U {G : Type u} [Group G] [Finite G]
     (c : CentralizerSetup G) :
     twoCoreOf c.Hhat ≤ Subgroup.centralizer (c.U : Set G) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hNleH : twoCoreOf c.Hhat ≤ c.H :=
     (twoCoreOf_le_S c).trans (S_le_H c)
   have hUleHhat : c.U ≤ c.Hhat :=
@@ -1367,13 +1367,13 @@ private lemma branch_one_centralizer_twoCore_eq_sup_cores
     Subgroup.centralizer (pCore 2 c.Hhat : Set c.Hhat) =
       pCore 2 c.Hhat ⊔ pPrimeCore 2 c.Hhat := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let M : Subgroup G := c.Hhat
   let N : Subgroup M := pCore 2 M
   let O : Subgroup M := pPrimeCore 2 M
   let C : Subgroup M := Subgroup.centralizer (N : Set M)
-  haveI : N.Normal := by dsimp [N]; infer_instance
-  haveI : C.Normal := by dsimp [C]; infer_instance
+  have : N.Normal := by dsimp [N]; infer_instance
+  have : C.Normal := by dsimp [C]; infer_instance
   have hSleM : (c.S : Subgroup G) ≤ M :=
     (centralizerSetup_S_le_H c).trans c.H_le_Hhat
   let P : Sylow 2 M := c.S.subtype hSleM
@@ -1396,7 +1396,7 @@ private lemma branch_one_centralizer_twoCore_eq_sup_cores
     intro n hn
     rw [Subgroup.mem_centralizer_iff]
     intro x hx
-    letI : IsKleinFour N := hK4
+    let : IsKleinFour N := hK4
     exact congrArg Subtype.val
       ((IsKleinFour.isMulCommutative (G := N)).is_comm.comm
         (⟨x, hx⟩ : N) (⟨n, hn⟩ : N))
@@ -1744,7 +1744,7 @@ private theorem branch_one_quotient_equiv_dihedral_three
       branch_one_centralizer_twoCore_eq_sup_cores c hK4
   have hfusion : ∀ x y : N, x ≠ 1 → y ≠ 1 →
       ∃ g : M, g * (x : M) * g⁻¹ = (y : M) := by
-    letI : IsKleinFour N := hK4
+    let : IsKleinFour N := hK4
     intro x y hx1 hy1
     have hxInvM : IsInvolution (x : M) := by
       constructor
@@ -2084,23 +2084,23 @@ private theorem component_impossible_of_quotient_isTwoGroup
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := N)
   have hOodd : Odd (Nat.card O) := Nat.coprime_two_left.mp hOcop
   have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Group.IsNilpotent (N ⧸ O) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Group.IsNilpotent (N ⧸ O) :=
     IsPGroup.isNilpotent (by simpa [O] using hQ)
   have hQsolv : Group.IsSolvable (N ⧸ O) := inferInstance
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
-  letI : Group.IsSolvable O := hOsolv
-  letI : Group.IsSolvable (N ⧸ O) := hQsolv
+  let : Group.IsSolvable O := hOsolv
+  let : Group.IsSolvable (N ⧸ O) := hQsolv
   have hNsolv : Group.IsSolvable N :=
     isSolvable_of_normal_subgroup_and_quotient O
-  letI : Group.IsSolvable N := hNsolv
-  letI : Group.IsSolvable (E.subgroupOf N) := inferInstance
+  let : Group.IsSolvable N := hNsolv
+  let : Group.IsSolvable (E.subgroupOf N) := inferInstance
   have hEsolv : Group.IsSolvable E :=
     isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hE.1)
-  letI : Nontrivial E := hE.2.2.1
-  letI : Group.IsPerfect E :=
+  let : Nontrivial E := hE.2.2.1
+  let : Group.IsPerfect E :=
     ⟨by simpa [derivedSubgroup] using hE.2.2.2.1⟩
   exact Group.IsPerfect.not_isSolvable E hEsolv
 
@@ -2402,7 +2402,7 @@ private theorem Theorem26ComponentBranchData.not_quotientIsASeven
       ((c.Hhat ⧸ pPrimeCore 2 c.Hhat) ≃* alternatingGroup (Fin 7)) := by
   rintro ⟨e⟩
   let O : Subgroup c.Hhat := pPrimeCore 2 c.Hhat
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   have hOcop : Nat.Coprime 2 (Nat.card O) := by
@@ -2465,8 +2465,8 @@ private theorem normal_index_two_of_normal_index_four_local
     ∃ N : Subgroup Q, N.Normal ∧ N.index = 2 := by
   classical
   rcases hN4 with ⟨N4, hN4, hindex4⟩
-  letI : N4.Normal := hN4
-  letI : Fintype (Q ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
+  let : N4.Normal := hN4
+  let : Fintype (Q ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
   have hcardQ : Nat.card (Q ⧸ N4) = 4 := by
     rw [← N4.index_eq_card, hindex4]
   have h2dvd : 2 ∣ Fintype.card (Q ⧸ N4) := by
@@ -2497,7 +2497,7 @@ private theorem involutions_conjugate_of_simple_dihedral
     (hDihedral : HasDihedralSylowTwo Q) :
     ∀ x y : Q, IsInvolution x → IsInvolution y →
       ∃ g : Q, g * x * g⁻¹ = y := by
-  letI : IsSimpleGroup Q := hSimple
+  let : IsSimpleGroup Q := hSimple
   have hno2 : ¬ ∃ N : Subgroup Q, N.Normal ∧ N.index = 2 := by
     rintro ⟨N, hNnormal, hNindex⟩
     rcases hSimple.eq_bot_or_eq_top_of_normal N hNnormal with hNbot | hNtop
@@ -2549,7 +2549,7 @@ private theorem psl2_odd_involutions_conjugate
         p = p ^ 1 := by simp
         _ ≤ p ^ n := Nat.pow_le_pow_right hp.pos hn)
   by_cases hcard3 : Nat.card K = 3
-  · letI : Fintype K := Fintype.ofFinite K
+  · let : Fintype K := Fintype.ofFinite K
     have hFcard : Fintype.card K = 3 := by
       simpa [Nat.card_eq_fintype_card] using hcard3
     let eK : ZMod 3 ≃+* K :=
@@ -2654,10 +2654,10 @@ private theorem Theorem26ComponentBranchData.not_linearModelPSL2
     (hLnormal : L.Normal) (hLindex : Odd L.index)
     (e : L ≃* PSL2 K) : False := by
   let O : Subgroup c.Hhat := pPrimeCore 2 c.Hhat
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   have hOcop : Nat.Coprime 2 (Nat.card O) := by
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := c.Hhat)
   have hOodd : Odd (Nat.card O) := Nat.coprime_two_left.mp hOcop
@@ -2693,7 +2693,7 @@ public theorem perfect_map_subgroup
     refine ⟨⟨x, hx⟩, ?_⟩
     apply Subtype.ext
     exact hxy
-  letI : Group.IsPerfect E := hEperf
+  let : Group.IsPerfect E := hEperf
   exact Group.IsPerfect.ofSurjective hef
 
 /-- The image of a nontrivial perfect subnormal subgroup across a solvable
@@ -2721,17 +2721,17 @@ public theorem perfect_subnormal_image_le_normal_odd_index
     have hEleO : E ≤ O := by
       have hker : E ≤ q.ker := (Subgroup.map_eq_bot_iff E).mp hbot
       simpa [q, QuotientGroup.ker_mk'] using hker
-    letI : Group.IsSolvable O := hOsolv
-    haveI : Group.IsSolvable (E.subgroupOf O) := inferInstance
+    let : Group.IsSolvable O := hOsolv
+    have : Group.IsSolvable (E.subgroupOf O) := inferInstance
     have hEsolv : Group.IsSolvable E :=
       isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEleO)
-    letI : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
-    letI : Group.IsPerfect E := hEperf
+    let : Nontrivial E := (Subgroup.nontrivial_iff_ne_bot E).2 hEne
+    let : Group.IsPerfect E := hEperf
     exact Group.IsPerfect.not_isSolvable E hEsolv
   have hEbarsn : Ebar.IsSubnormal := by
     dsimp [Ebar]
     exact hEsn.map (QuotientGroup.mk'_surjective O)
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : (H ⧸ O) →* (H ⧸ O) ⧸ L := QuotientGroup.mk' L
   let I : Subgroup ((H ⧸ O) ⧸ L) := Ebar.map pi
   have hIperf : Group.IsPerfect I := by
@@ -2743,10 +2743,10 @@ public theorem perfect_subnormal_image_le_normal_odd_index
     odd_order_theorem ((H ⧸ O) ⧸ L) hQodd
   have hIbot : I = ⊥ := by
     by_contra hIne
-    letI : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
+    let : Group.IsSolvable ((H ⧸ O) ⧸ L) := hQsolv
     have hIsolv : Group.IsSolvable I := inferInstance
-    letI : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
-    letI : Group.IsPerfect I := hIperf
+    let : Nontrivial I := (Subgroup.nontrivial_iff_ne_bot I).2 hIne
+    let : Group.IsPerfect I := hIperf
     exact Group.IsPerfect.not_isSolvable I hIsolv
   have hEbarL : Ebar ≤ L := by
     have hker : Ebar ≤ pi.ker := (Subgroup.map_eq_bot_iff Ebar).mp hIbot
@@ -2789,7 +2789,7 @@ public theorem perfect_subnormal_component_image_in_pgl2
     exact (Subgroup.map_eq_bot_iff_of_injective EL e.injective).not.mpr hELne
   have hELperf : Group.IsPerfect EL := by
     let eEL : EL ≃* Ebar := Subgroup.subgroupOfEquivOfLe hEbarL
-    letI : Group.IsPerfect Ebar := hEbarperf
+    let : Group.IsPerfect Ebar := hEbarperf
     exact Group.IsPerfect.ofSurjective
       (f := eEL.symm.toMonoidHom) eEL.symm.surjective
   have hJperf : Group.IsPerfect J := by
@@ -2830,7 +2830,7 @@ public theorem Theorem26ComponentBranchData.pgl2_component_image_eq_commutator
   have hEiperf : Group.IsPerfect Ei := by
     let eEi : Ei ≃* d.E :=
       Subgroup.subgroupOfEquivOfLe d.isComponent.1
-    letI : Group.IsPerfect d.E := hEperf
+    let : Group.IsPerfect d.E := hEperf
     exact Group.IsPerfect.ofSurjective
       (f := eEi.symm.toMonoidHom) eEi.symm.surjective
   have hEine : Ei ≠ ⊥ := by
@@ -2841,7 +2841,7 @@ public theorem Theorem26ComponentBranchData.pgl2_component_image_eq_commutator
     rw [hbot, Subgroup.map_bot] at hmap
     exact hmap.symm
   have hEisn : Ei.IsSubnormal := d.isComponent.2.1
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   have hOodd : Odd (Nat.card O) := by
@@ -2873,10 +2873,10 @@ public theorem isQuasisimple_mulEquiv_local
     {A B : Type u} [Group A] [Group B]
     (e : A ≃* B) (hA : IsQuasisimple A) : IsQuasisimple B := by
   have hNontriv : Nontrivial B := by
-    letI : Nontrivial A := hA.1
+    let : Nontrivial A := hA.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect B := by
-    letI : Group.IsPerfect A := (Group.isPerfect_def).2 hA.2.1
+    let : Group.IsPerfect A := (Group.isPerfect_def).2 hA.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.surjective
   have hSimple : IsSimpleGroup (B ⧸ Subgroup.center B) := by
     have he : (Subgroup.center A).map e.toMonoidHom = Subgroup.center B :=
@@ -2910,7 +2910,7 @@ public theorem quasisimple_component_kernel_eq_center_and_quotient_psl2
   let f : E →* Ebar :=
     (q.comp E.subtype).codRestrict Ebar (fun x => by
       exact Subgroup.mem_map.mpr ⟨x, x.2, rfl⟩)
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hf : Function.Surjective f := by
@@ -3005,7 +3005,7 @@ public theorem Theorem26ComponentBranchData.pgl2_component_kernel_eq_center
   have hEiQ : IsQuasisimple Ei :=
     isQuasisimple_mulEquiv_local eEi.symm d.isComponent.2.2
   have hEisn : Ei.IsSubnormal := d.isComponent.2.1
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   have hOodd : Odd (Nat.card O) := by
@@ -3026,8 +3026,8 @@ theorem pgl2_sylow_sup_commutator_eq_top
     (hcard : 3 < Nat.card K)
     (P : Sylow 2 (PGL2 K)) :
     commutator (PGL2 K) ⊔ (P : Subgroup (PGL2 K)) = ⊤ := by
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Finite (PGL2 K) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
@@ -3061,9 +3061,9 @@ public theorem sylow_le_of_normal_odd_index_local
     {Q : Type u} [Group Q] [Finite Q]
     (L : Subgroup Q) (hLnormal : L.Normal) (hLindex : Odd L.index)
     (P : Sylow 2 Q) : (P : Subgroup Q) ≤ L := by
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   let pi : Q →* Q ⧸ L := QuotientGroup.mk' L
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hmapP : IsPGroup 2 ((P : Subgroup Q).map pi) :=
     P.isPGroup'.map pi
   rcases IsPGroup.iff_card.mp hmapP with ⟨n, hn⟩
@@ -3105,7 +3105,7 @@ theorem sylow_sup_component_image_eq_pgl2_linear_subgroup
       P.mapSurjective (QuotientGroup.mk'_surjective O)
     (Pq : Subgroup (H ⧸ O)) ⊔ Ebar = L := by
   dsimp
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Pq : Sylow 2 (H ⧸ O) :=
     P.mapSurjective (QuotientGroup.mk'_surjective O)
   have hPqL : (Pq : Subgroup (H ⧸ O)) ≤ L :=
@@ -3184,7 +3184,7 @@ theorem Theorem26ComponentBranchData.pgl2_sylow_sup_component_image_eq_linear_su
   let Ebar : Subgroup (c.Hhat ⧸ O) := Ei.map q
   obtain ⟨hcard, _hEbarne, _hEbarperf, _hEbarsn, hEbarL, hJeq⟩ :=
     d.pgl2_component_image_eq_commutator K hK L hLnormal hLindex e
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   simpa [O, q, P, Pq, Ei, Ebar] using
@@ -3233,7 +3233,7 @@ public theorem pgl2_model_sylow_transport_distinguished_involution
           ⟨QuotientGroup.mk' O p, hPqL
             (Subgroup.mem_map.mpr ⟨p, p.2, rfl⟩)⟩ := by
   dsimp
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hSle : (c.S : Subgroup G) ≤ c.Hhat :=
     (S_le_H c).trans c.H_le_Hhat
   let P : Sylow 2 c.Hhat := c.S.subtype hSle
@@ -3380,7 +3380,7 @@ theorem Theorem26ComponentBranchData.pgl2_distinguished_involution_mem_component
     q ⟨c.t, ((S_le_H c).trans c.H_le_Hhat)
       (c.S0_le_S c.t_mem_S0)⟩ ∈ Ebar := by
   dsimp
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let O : Subgroup c.Hhat := pPrimeCore 2 c.Hhat
   let q : c.Hhat →* c.Hhat ⧸ O := QuotientGroup.mk' O
   let Ei : Subgroup c.Hhat := d.E.subgroupOf c.Hhat
@@ -3628,7 +3628,7 @@ public theorem Theorem26ComponentBranchData.pgl2_outer_involution_lift
                 (c.S0_le_S c.t_mem_S0)⟩,
               c.S0_le_S c.t_mem_S0, rfl⟩)⟩ = T.g * T.t * T.g⁻¹ := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let O : Subgroup c.Hhat := pPrimeCore 2 c.Hhat
   let q : c.Hhat →* c.Hhat ⧸ O := QuotientGroup.mk' O
   let Ei : Subgroup c.Hhat := d.E.subgroupOf c.Hhat
@@ -3885,7 +3885,7 @@ public theorem exists_invariant_sylow_two_of_involutive_normalizer_t26
     ∃ T : Sylow 2 B, ∀ x : B, x ∈ T → ⟨y * (x : G) * y⁻¹,
       ((Subgroup.mem_normalizer_iff.mp hyN) (x : G)).mp x.2⟩ ∈ T := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let f : B →* B :=
     { toFun := fun x => ⟨y * (x : G) * y⁻¹,
         ((Subgroup.mem_normalizer_iff.mp hyN) (x : G)).mp x.2⟩
@@ -3957,7 +3957,7 @@ public theorem exists_invariant_sylow_two_of_involutive_normalizer_t26
         y * (y * (x : G) * y) * y = (y * y) * (x : G) * (y * y) := by group
         _ = (x : G) := by rw [hy2]; simp
     rw [hφsq, Subgroup.map_id]
-  letI : Fintype (Sylow 2 B) := Fintype.ofFinite (Sylow 2 B)
+  let : Fintype (Sylow 2 B) := Fintype.ofFinite (Sylow 2 B)
   have hcardmod : Nat.card (Sylow 2 B) ≡ 1 [MOD 2] :=
     card_sylow_modEq_one (p := 2) (G := B)
   have hnot2 : ¬ 2 ∣ Fintype.card (Sylow 2 B) := by
@@ -4012,7 +4012,7 @@ public theorem component_branch_final_contradiction_t26
     (h8 : 8 ∣ Nat.card ↥(c.Hhat ⊓ conjugateSubgroup c.Hhat y)) :
     False := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let B : Subgroup G := c.Hhat ⊓ conjugateSubgroup c.Hhat y
   have hy2 : y * y = 1 := by simpa [pow_two] using hyI.2
   have hyN : y ∈ Subgroup.normalizer (B : Set G) := by

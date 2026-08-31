@@ -46,8 +46,8 @@ public theorem
     (hGcard : Nat.card G = 168) :
     Nonempty (BrauerSuzukiWallConclusion G) := by
   classical
-  letI : Fact (Nat.Prime 7) := ⟨by norm_num⟩
-  letI : Fact (Nat.Prime 3) := ⟨by norm_num⟩
+  let : Fact (Nat.Prime 7) := ⟨by norm_num⟩
+  let : Fact (Nat.Prime 3) := ⟨by norm_num⟩
   obtain ⟨Q0, hQ0card⟩ :=
     Sylow.exists_subgroup_card_pow_prime (G := G) 7 (n := 1) (by
       rw [hGcard]
@@ -94,7 +94,7 @@ public theorem
   have hSylowCard : Nat.card (Sylow 7 G) = 8 := by
     rcases hSylowCases with hone | height
     · exfalso
-      letI : Subsingleton (Sylow 7 G) :=
+      let : Subsingleton (Sylow 7 G) :=
         (Nat.card_eq_one_iff_unique.mp hone).1
       have hP0normal : (P0 : Subgroup G).Normal :=
         Sylow.normal_of_subsingleton P0
@@ -102,8 +102,8 @@ public theorem
           Subgroup.normalizer ((P0 : Subgroup G) : Set G) := by
         rw [Subgroup.normalizer_eq_top (P0 : Subgroup G)]
         exact le_top
-      letI : IsKleinFour V := hV
-      letI : MulDistribMulAction V (P0 : Subgroup G) :=
+      let : IsKleinFour V := hV
+      let : MulDistribMulAction V (P0 : Subgroup G) :=
         Subgroup.conjMulDistribMulActionOfLeNormalizer
           V (P0 : Subgroup G) hVleNorm
       have hfree : ∀ a : V, a ≠ 1 → ∀ z : (P0 : Subgroup G),
@@ -194,7 +194,7 @@ public theorem
       exact Subgroup.subgroupOf_eq_top.mp hsub
     · exact sup_le hQleN hDleN
   have hQcomm : IsMulCommutative Q := by
-    letI : IsCyclic Q := isCyclic_of_prime_card hQcard
+    let : IsCyclic Q := isCyclic_of_prime_card hQcard
     exact IsCyclic.isMulCommutative
   have hQcent : ∀ x : G, x ∈ Q → x ≠ 1 →
       Subgroup.centralizer ({x} : Set G) = Q := by
@@ -281,7 +281,7 @@ public theorem
       have hxbot : x ∈ (⊥ : Subgroup G) := hQD.le_bot ⟨hxQ, hxD⟩
       exact hxne (by simpa using hxbot)
   have hDcomm : IsMulCommutative D := by
-    letI : IsCyclic D := isCyclic_of_prime_card hDcard
+    let : IsCyclic D := isCyclic_of_prime_card hDcard
     exact IsCyclic.isMulCommutative
   obtain ⟨dD, hdOrder⟩ :=
     exists_prime_orderOf_dvd_card' (G := D) 3 (by rw [hDcard])

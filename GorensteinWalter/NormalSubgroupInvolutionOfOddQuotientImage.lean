@@ -22,8 +22,8 @@ public theorem involution_mem_normal_subgroup_of_quotient_mem_map_odd_kernel
     (htq : QuotientGroup.mk' O t ∈ E.map (QuotientGroup.mk' O)) :
     t ∈ E := by
   classical
-  letI : E.Normal := hEnormal
-  letI : O.Normal := hOnormal
+  let : E.Normal := hEnormal
+  let : O.Normal := hOnormal
   let qO : H →* H ⧸ O := QuotientGroup.mk' O
   let qE : H →* H ⧸ E := QuotientGroup.mk' E
   rcases Subgroup.mem_map.mp htq with ⟨e, heE, het⟩

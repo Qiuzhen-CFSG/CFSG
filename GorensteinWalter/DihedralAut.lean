@@ -39,13 +39,13 @@ private lemma rotation_ne_one (m : ℕ) (hm : 2 ≤ m) : 2 ^ m ≠ 1 := by
 
 private lemma rotation_card (m : ℕ) (_hm : 1 ≤ m) :
     Nat.card (↥(R m)) = 2 ^ m := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
   change Nat.card (Subgroup.zpowers (DihedralGroup.r 1 : D m)) = 2 ^ m
   rw [Nat.card_zpowers, DihedralGroup.orderOf_r_one]
 
 private lemma rotation_mem_image (m : ℕ) (hm : 2 ≤ m) (f : MulAut (D m)) :
     f (DihedralGroup.r 1) ∈ R m := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
   have horder : orderOf (f (DihedralGroup.r 1)) = 2 ^ m := by
     rw [MulEquiv.orderOf_eq f, DihedralGroup.orderOf_r_one]
   rcases dihedralGroup_cases (f (DihedralGroup.r 1)) with ⟨i, hi⟩ | ⟨i, hi⟩
@@ -75,8 +75,8 @@ private lemma reflection_not_rotation (m : ℕ) :
 private lemma reflection_image_exists (m : ℕ) (hm : 2 ≤ m)
     (f : MulAut (D m)) :
     ∃ b : R m, f (DihedralGroup.sr 0) = DihedralGroup.sr 0 * (b : D m) := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
-  letI : (R m).Characteristic := rotation_characteristic m hm
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : (R m).Characteristic := rotation_characteristic m hm
   have hsnot : f (DihedralGroup.sr 0) ∉ R m := by
     intro hs
     have hmap : Subgroup.map f.toMonoidHom (R m) = R m :=
@@ -114,7 +114,7 @@ private lemma restriction_apply_coe (m : ℕ) (hm : 2 ≤ m)
     (f : MulAut (D m)) (x : R m) :
     ((letI : (R m).Characteristic := rotation_characteristic m hm
       MulAut.characteristic (R m) f) x : D m) = f (x : D m) := by
-  letI : (R m).Characteristic := rotation_characteristic m hm
+  let : (R m).Characteristic := rotation_characteristic m hm
   rfl
 
 private lemma reflection_image_one (m : ℕ) (hm : 2 ≤ m) :
@@ -129,7 +129,7 @@ private lemma reflection_image_mul (m : ℕ) (hm : 2 ≤ m)
       reflection_image m hm f *
         ((letI : (R m).Characteristic := rotation_characteristic m hm
           MulAut.characteristic (R m) f) (reflection_image m hm g)) := by
-  letI : (R m).Characteristic := rotation_characteristic m hm
+  let : (R m).Characteristic := rotation_characteristic m hm
   apply Subtype.ext
   apply mul_left_cancel (a := (DihedralGroup.sr 0 : D m))
   calc
@@ -155,8 +155,8 @@ private lemma reflection_image_mul (m : ℕ) (hm : 2 ≤ m)
 private lemma semidirect_card (m : ℕ) (hm : 2 ≤ m) :
     Nat.card (R m ⋊[MonoidHom.id (MulAut (↥(R m)))] MulAut (↥(R m))) =
       2 ^ (m + (m - 1)) := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
-  letI : Fintype (↥(R m)) := Fintype.ofFinite _
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : Fintype (↥(R m)) := Fintype.ofFinite _
   have hR : Nat.card (↥(R m)) = 2 ^ m := rotation_card m (by omega)
   have hA : Nat.card (MulAut (↥(R m))) = 2 ^ (m - 1) := by
     rw [IsCyclic.card_mulAut (↥(R m)), hR]
@@ -188,8 +188,8 @@ private noncomputable def encode (m : ℕ) (hm : 2 ≤ m) :
 
 private lemma encode_injective (m : ℕ) (hm : 2 ≤ m) :
     Function.Injective (encode m hm) := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
-  letI : (R m).Characteristic := rotation_characteristic m hm
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : (R m).Characteristic := rotation_characteristic m hm
   intro f g hfg
   apply MulEquiv.ext
   intro x
@@ -220,8 +220,8 @@ private lemma encode_injective (m : ℕ) (hm : 2 ≤ m) :
 /-- For `m ≥ 2`, the automorphism group of `DihedralGroup (2^m)` is a 2-group. -/
 public theorem dihedral_mulAut_is_twoGroup {m : ℕ} (hm : 2 ≤ m) :
     IsPGroup 2 (MulAut (DihedralGroup (2 ^ m))) := by
-  letI : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
-  letI : Fintype (↥(R m)) := Fintype.ofFinite _
+  let : NeZero (2 ^ m) := ⟨rotation_ne_zero m⟩
+  let : Fintype (↥(R m)) := Fintype.ofFinite _
   have hSD : IsPGroup 2
       (R m ⋊[MonoidHom.id (MulAut (↥(R m)))] MulAut (↥(R m))) :=
     IsPGroup.of_card (semidirect_card m hm)

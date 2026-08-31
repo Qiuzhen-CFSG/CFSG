@@ -31,8 +31,8 @@ public theorem centralizer_eq_of_minimalNormal_kleinFour
     (hmin : IsMinimalCounterexample G)
     (H : Subgroup G) (hHnormal : H.Normal) (hH : IsKleinFour H) :
     Subgroup.centralizer (H : Set G) = H := by
-  letI : IsKleinFour H := hH
-  letI : IsMulCommutative H := IsKleinFour.isMulCommutative
+  let : IsKleinFour H := hH
+  let : IsMulCommutative H := IsKleinFour.isMulCommutative
   let C : Subgroup G := Subgroup.centralizer (H : Set G)
   have hNPC : Glauberman.NormalPComplement 2 (↥C) := by
     apply gw_prop9_centralizer_dihedral_normalTwoComplement hmin H hHnormal
@@ -90,8 +90,8 @@ public theorem quotient_card_eq_three_or_six_of_minimalNormal_kleinFour
     (hHmin : ∀ M : Subgroup G, M.Normal → M ≤ H → M = ⊥ ∨ M = H)
     (hH : IsKleinFour H) :
     Nat.card (G ⧸ H) = 3 ∨ Nat.card (G ⧸ H) = 6 := by
-  letI : H.Normal := hHnormal
-  letI : IsKleinFour H := hH
+  let : H.Normal := hHnormal
+  let : IsKleinFour H := hH
   have hC : Subgroup.centralizer (H : Set G) = H :=
     centralizer_eq_of_minimalNormal_kleinFour hmin H hHnormal hH
   rcases quotient_centralizer_mulAut_embedding H with ⟨φ, hφ⟩
@@ -133,7 +133,7 @@ public theorem quotient_card_eq_three_or_six_of_minimalNormal_kleinFour
       IsPGroup.of_card (n := 2) (by simp)
     have hGtwo : IsPGroup 2 G :=
       isPGroup_of_normal_subgroup_of_quotient H hHtwo hQtwo
-    letI : MulDistribMulAction G H :=
+    let : MulDistribMulAction G H :=
       MulDistribMulAction.compHom H (MulAut.conjNormal (H := H))
     let T : SubMulAction G H :=
       { carrier := {x | x ≠ (1 : H)}
@@ -213,8 +213,8 @@ public theorem exists_complement_of_minimalNormal_kleinFour
     (hHmin : ∀ M : Subgroup G, M.Normal → M ≤ H → M = ⊥ ∨ M = H)
     (hH : IsKleinFour H) :
     ∃ K : Subgroup G, H.IsComplement' K := by
-  letI : H.Normal := hHnormal
-  letI : IsKleinFour H := hH
+  let : H.Normal := hHnormal
+  let : IsKleinFour H := hH
   rcases quotient_card_eq_three_or_six_of_minimalNormal_kleinFour
       hmin H hHnormal hHmin hH with hq3 | hq6
   · have hHindex : H.index = 3 := by
@@ -242,7 +242,7 @@ public theorem exists_complement_of_minimalNormal_kleinFour
     let Abar : Subgroup (G ⧸ H) := eS3.symm.mapSubgroup (alternatingGroup (Fin 3))
     have hAbarNormal : Abar.Normal := by
       exact (eS3.symm.normal_map_iff).2 inferInstance
-    letI : Abar.Normal := hAbarNormal
+    let : Abar.Normal := hAbarNormal
     have hAbarCard : Nat.card Abar = 3 := by
       calc
         Nat.card Abar = Nat.card (alternatingGroup (Fin 3)) := by
@@ -257,7 +257,7 @@ public theorem exists_complement_of_minimalNormal_kleinFour
     let q : G →* G ⧸ H := QuotientGroup.mk' H
     let A : Subgroup G := Abar.comap q
     have hAnormal : A.Normal := hAbarNormal.comap q
-    letI : A.Normal := hAnormal
+    let : A.Normal := hAnormal
     have hHleA : H ≤ A := by
       intro h hh
       change q h ∈ Abar
@@ -282,7 +282,7 @@ public theorem exists_complement_of_minimalNormal_kleinFour
       apply (Subgroup.normal_subgroupOf_iff hHleA).2
       intro h k hh hk
       exact hHnormal.conj_mem h hh (k : G)
-    letI : HA.Normal := hHAnormal
+    let : HA.Normal := hHAnormal
     have hHAcard : Nat.card HA = 4 := by
       calc
         Nat.card HA = Nat.card H :=
@@ -340,7 +340,7 @@ public theorem exists_complement_of_minimalNormal_kleinFour
       rw [Subgroup.le_normalizer_iff]
       intro h hh d hd
       have hcomm : h * d = d * h := by
-        letI : IsMulCommutative H := IsKleinFour.isMulCommutative
+        let : IsMulCommutative H := IsKleinFour.isMulCommutative
         exact congrArg Subtype.val (mul_comm' (⟨h, hh⟩ : H) ⟨d, hd.1⟩)
       have heq : h * d * h⁻¹ = d := by
         rw [hcomm]

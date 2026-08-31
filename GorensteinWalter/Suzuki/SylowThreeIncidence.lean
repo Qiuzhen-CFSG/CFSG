@@ -61,7 +61,7 @@ private lemma sylow3_le_centralizer_U
   intro u hu
   have hP9' : Nat.card P = 3 ^ 2 := by
     simpa using firstCase_sylow3_card_nine c d P
-  haveI : IsMulCommutative P :=
+  have : IsMulCommutative P :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   exact (congrArg Subtype.val
     (((IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9').is_comm).comm
@@ -138,7 +138,7 @@ private lemma sylow3_count_eq_relIndex
     Nat.card (Sylow 3 (↥H)) =
       (Subgroup.normalizer (((P : Subgroup G) : Set G))).relIndex H := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let Q : Sylow 3 (↥H) := P.subtype hPleH
   have hQ : (Q : Subgroup (↥H)) = (P : Subgroup G).subgroupOf H := by
     exact Sylow.coe_subtype P hPleH
@@ -207,7 +207,7 @@ public theorem firstCase_normalizer_sylow3_inter_hhat_card
     (P : Sylow 3 G) (hPU : c.U ≤ (P : Subgroup G)) :
     Nat.card ↥((Subgroup.normalizer (P : Set G)) ⊓ c.Hhat) = 18 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let N : Subgroup G := Subgroup.normalizer (P : Set G)
   have hPleH : (P : Subgroup G) ≤ c.Hhat := sylow3_le_hhat hmin c hfirst d P hPU
   have hn3 := sylow3_count_eq_relIndex c.Hhat P hPleH

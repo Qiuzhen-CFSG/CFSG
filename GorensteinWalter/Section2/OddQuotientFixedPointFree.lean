@@ -39,14 +39,14 @@ public theorem fixedPointFree_quotient_of_odd_solvable_and_fixedPoints_le
     Subgroup.zpowers_le.mpr htnormK
   have hAnormD : A ≤ Subgroup.normalizer (D : Set X) :=
     Subgroup.zpowers_le.mpr htnormD
-  letI : Subgroup.Normalizes A K := ⟨hAnormK⟩
+  let : Subgroup.Normalizes A K := ⟨hAnormK⟩
   let DK : Subgroup K := D.subgroupOf K
-  haveI : DK.Normal := by
+  have : DK.Normal := by
     simpa [DK] using hDnormalK
   have hDKinv : IsInvariant A K DK := by
     simpa [DK] using
       (isInvariant_subgroupOf_of_le_normalizer hAnormK hAnormD hDK)
-  letI : MulDistribMulAction A (K ⧸ DK) :=
+  let : MulDistribMulAction A (K ⧸ DK) :=
     quotientMulDistribMulAction (A := A) (G := K) DK hDKinv
   have hAcard : Nat.card A = 2 := by
     rw [Nat.card_zpowers, orderOf_eq_prime ht.2 ht.1]

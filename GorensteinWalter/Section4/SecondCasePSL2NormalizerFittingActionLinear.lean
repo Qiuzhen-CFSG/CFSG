@@ -116,9 +116,9 @@ private theorem kleinFour_mem_cases
     (ha1 : a ≠ 1) (hb1 : b ≠ 1) (hab : a ≠ b)
     {w : G} (hwV : w ∈ V) :
     w = a * b ∨ w = a ∨ w = b ∨ w = 1 := by
-  letI : IsKleinFour V := hV
-  letI : Fintype (↥V) := Fintype.ofFinite (↥V)
-  letI : DecidableEq (↥V) := Classical.decEq _
+  let : IsKleinFour V := hV
+  let : Fintype (↥V) := Fintype.ofFinite (↥V)
+  let : DecidableEq (↥V) := Classical.decEq _
   let aV : V := ⟨a, haV⟩
   let bV : V := ⟨b, hbV⟩
   let wV : V := ⟨w, hwV⟩
@@ -238,7 +238,7 @@ private theorem secondCase_psl2_linear_quotient_centralization_of_model
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let L : Subgroup G := componentLayerOf N
   let O : Subgroup N := pPrimeCore 2 N
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : N →* N ⧸ O := QuotientGroup.mk' O
@@ -270,7 +270,7 @@ private theorem secondCase_psl2_linear_quotient_centralization_of_model
   have hLperf : Group.IsPerfect L := componentLayerOf_isPerfect N
   have hLperfLN : Group.IsPerfect LN := by
     let eLN : LN ≃* L := Subgroup.subgroupOfEquivOfLe hLleN
-    letI : Group.IsPerfect L := hLperf
+    let : Group.IsPerfect L := hLperf
     exact Group.IsPerfect.ofSurjective
       (f := eLN.symm.toMonoidHom) eLN.symm.surjective
   have hL_ne_bot : L ≠ ⊥ := by
@@ -285,7 +285,7 @@ private theorem secondCase_psl2_linear_quotient_centralization_of_model
     exact hL_ne_bot hmap.symm
   have hENperf : Group.IsPerfect EN := by
     let eEN : EN ≃* d.E := Subgroup.subgroupOfEquivOfLe hEleN
-    letI : Group.IsPerfect d.E := (Group.isPerfect_def).2 d.E_component.2.2.2.1
+    let : Group.IsPerfect d.E := (Group.isPerfect_def).2 d.E_component.2.2.2.1
     exact Group.IsPerfect.ofSurjective
       (f := eEN.symm.toMonoidHom) eEN.symm.surjective
   have hENne : EN ≠ ⊥ := by
@@ -754,7 +754,7 @@ public theorem secondCase_psl2_normalizer_fitting_action_of_linear_quotient
       Lq hLqnormal hLqindex (PSL2 K') eL
       (fun V hV => psl2_kleinFour_centralizer_eq_self K' hK' V hV) hInner
   · rcases eL with ⟨eL⟩
-    letI : Finite (PGL2 K') :=
+    let : Finite (PGL2 K') :=
       Finite.of_surjective Matrix.ProjGenLinGroup.mk
         Matrix.ProjGenLinGroup.mk_surjective
     exact secondCase_psl2_linear_quotient_centralization_of_model

@@ -32,8 +32,8 @@ public theorem pgl2_commutator_ne_bot_ne_top
     (hK : IsOddPrimePower (Nat.card K)) :
     commutator (PGL2 K) ≠ ⊥ ∧ commutator (PGL2 K) ≠ ⊤ := by
   classical
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (PGL2 K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hqOdd : Odd (Nat.card K) := by
@@ -112,7 +112,7 @@ public theorem pgl2_commutator_ne_bot_ne_top
   have hpglCard : 1 < Nat.card (PGL2 K) := by
     rw [pgl2_card_formula]
     omega
-  letI : Nontrivial (PGL2 K) :=
+  let : Nontrivial (PGL2 K) :=
     Finite.one_lt_card_iff_nontrivial.mp hpglCard
   have hcomm_ne_bot : commutator (PGL2 K) ≠ ⊥ := by
     intro hcomm
@@ -129,7 +129,7 @@ public theorem commutator_ne_bot_ne_top_of_mulEquiv_pgl2_odd
     (K : Type u) [Field K] [Finite K]
     (hK : IsOddPrimePower (Nat.card K)) (e : Q ≃* PGL2 K) :
     commutator Q ≠ ⊥ ∧ commutator Q ≠ ⊤ := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hPGL := pgl2_commutator_ne_bot_ne_top K hK

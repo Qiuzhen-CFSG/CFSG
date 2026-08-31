@@ -33,7 +33,7 @@ public theorem twoSubgroup_le_centralizer_involution_of_hasAbelianSylow
   have hjoinTwo : IsPGroup 2 (Subgroup.zpowers t ⊔ N : Subgroup X) :=
     IsPGroup.to_sup_of_normal_right' hTtwo hNtwo hTnormN
   obtain ⟨S, hjoinS⟩ := hjoinTwo.exists_le_sylow
-  letI : IsMulCommutative (S : Subgroup X) := hSylow S
+  let : IsMulCommutative (S : Subgroup X) := hSylow S
   intro n hn
   apply Subgroup.mem_centralizer_singleton_iff.mpr
   have hnS : n ∈ (S : Subgroup X) :=

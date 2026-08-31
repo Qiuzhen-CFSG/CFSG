@@ -45,16 +45,16 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
     P.map (normalPSL2ToPGammaL2 L K hK hcard e hsurj) ≤
       pGammaL2PSLRange K := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun a : K ≃+* K => (a : K → K)) (by
       intro a b hab
       ext x
       exact congrFun hab x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective (fun x : PGammaL2 K => (x.left, x.right)) (by
       intro x y hxy
       exact SemidirectProduct.ext
@@ -86,7 +86,7 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
     refine ⟨c0 * p0 * c0⁻¹, hPnormal.2 c0 hc0 p0 hp0, ?_⟩
     rw [map_mul, map_mul, map_inv, hc0eq, hp0eq]
     rfl
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hNcard : Nat.card N = Nat.card P0 :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hP0leA).toEquiv
   have hP0card : Nat.card P0 = Nat.card P :=
@@ -95,9 +95,9 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
   have hNnil : Group.IsNilpotent N := by
     let eP : P ≃* P0 := Subgroup.equivMapOfInjective P f hfinj
     have hP0nil : Group.IsNilpotent P0 := by
-      haveI : Group.IsNilpotent P := hPnil
+      have : Group.IsNilpotent P := hPnil
       exact Group.nilpotent_of_mulEquiv (G := P) (G' := P0) eP
-    haveI : Group.IsNilpotent P0 := hP0nil
+    have : Group.IsNilpotent P0 := hP0nil
     exact Group.nilpotent_of_mulEquiv (G := P0) (G' := N)
       (Subgroup.subgroupOfEquivOfLe hP0leA).symm
   let tL : L := ⟨t, htL⟩
@@ -271,8 +271,8 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
       _ = f (al : R) := by rfl
       _ = i (toPGL (alphaP u)) := hfal
   have hUnilp : Group.IsNilpotent U := by
-    letI : IsCyclic U := hUcyc
-    letI : CommGroup U := IsCyclic.commGroup
+    let : IsCyclic U := hUcyc
+    let : CommGroup U := IsCyclic.commGroup
     infer_instance
   have hNker : N ≤ pGammaL2LinearKernel K A := by
     by_contra hnle
@@ -286,7 +286,7 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
     obtain ⟨p, hp, hpodd, sigma, hsigord, Qp, hQpleF, hQpnormF, hQpp,
       a0, ha0Qp, ha0sigma, _ha0pow⟩ :=
       secondCase_fitting_fieldProjection_pElement A N hNodd hNnil hproj
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     let U0U : Subgroup U := pPrimeCore p U
     let U0 : Subgroup (PGammaL2 K) := U0U.map U.subtype
     have hU0leU : U0 ≤ U := Subgroup.map_subtype_le U0U
@@ -318,13 +318,13 @@ public theorem normalPSL2_involutionCentralizer_oddFitting_image_le_pslRange
         exact Subgroup.mem_map.mpr ⟨x, hx, rfl⟩
     have hU0quot : IsPGroup p (↥U ⧸ U0.subgroupOf U) := by
       rw [hU0sub]
-      haveI : Group.IsNilpotent U := hUnilp
+      have : Group.IsNilpotent U := hUnilp
       have hQnil : Group.IsNilpotent (U ⧸ pPrimeCore p U) :=
         Group.nilpotent_of_surjective (QuotientGroup.mk' (pPrimeCore p U))
           (QuotientGroup.mk'_surjective (pPrimeCore p U))
       have htopnil : Group.IsNilpotent
           (⊤ : Subgroup (U ⧸ pPrimeCore p U)) := by
-        letI : Group.IsNilpotent (U ⧸ pPrimeCore p U) := hQnil
+        let : Group.IsNilpotent (U ⧸ pPrimeCore p U) := hQnil
         infer_instance
       have htopP : IsPGroup p (⊤ : Subgroup (U ⧸ pPrimeCore p U)) :=
         isPGroup_of_nilpotent_normal (⊤ : Subgroup (U ⧸ pPrimeCore p U))

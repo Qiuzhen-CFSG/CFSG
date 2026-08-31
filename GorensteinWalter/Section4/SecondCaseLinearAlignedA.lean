@@ -43,7 +43,7 @@ public theorem secondCase_linear_aligned_A_conjugate_eq_A
     conjugateSubgroup post.od.A h = post.od.A := by
   have hPinterE : post.od.P ⊓ d.E = ⊥ :=
     secondCase_linear_P_inf_E_eq_bot hmin c w d K hK e post
-  letI : IsCyclic (↥post.od.K) := post.od.K_cyclic
+  let : IsCyclic (↥post.od.K) := post.od.K_cyclic
   have hK0leE : post.od.K0 ≤ d.E := by
     rw [post.od.K0_eq]
     exact inf_le_right.trans post.od.K_le_E
@@ -52,10 +52,10 @@ public theorem secondCase_linear_aligned_A_conjugate_eq_A
   have hF0 : post.od.F ⊓ post.od.K0 = ⊥ :=
     secondCase_linear_omega_F_cap_K0 c w d post.od
   have hFcomm : IsMulCommutative (↥post.od.F) := by
-    letI : IsCyclic (↥post.od.F) := post.od.F_cyclic
+    let : IsCyclic (↥post.od.F) := post.od.F_cyclic
     exact IsCyclic.isMulCommutative
   have hK0comm : IsMulCommutative (↥post.od.K0) := by
-    letI : IsCyclic (↥post.od.K0) := by
+    let : IsCyclic (↥post.od.K0) := by
       rw [post.od.K0_eq]
       exact Subgroup.isCyclic_of_le (H' := post.od.K) inf_le_right
     exact IsCyclic.isMulCommutative

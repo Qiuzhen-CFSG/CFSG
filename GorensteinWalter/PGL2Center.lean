@@ -122,8 +122,8 @@ private theorem center_eq_bot_of_two_pretransitive
 /-- The center of `PGL₂(K)` is trivial for every finite field `K`. -/
 public theorem pgl2_center_eq_bot (K : Type*) [Field K] [Finite K] :
     Subgroup.center (PGL2 K) = ⊥ := by
-  letI : MulAction (PGL2 K) (ℙ K (Fin 2 → K)) := inferInstance
-  letI : FaithfulSMul (PGL2 K) (ℙ K (Fin 2 → K)) :=
+  let : MulAction (PGL2 K) (ℙ K (Fin 2 → K)) := inferInstance
+  let : FaithfulSMul (PGL2 K) (ℙ K (Fin 2 → K)) :=
     faithfulSMul_iff.2 (pgl_action_trivial_eq_one K)
   have hcard : 3 ≤ Nat.card (ℙ K (Fin 2 → K)) := by
     have hfinrank : Module.finrank K (Fin 2 → K) = 2 := by simp

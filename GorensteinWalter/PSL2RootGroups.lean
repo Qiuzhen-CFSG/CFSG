@@ -149,7 +149,7 @@ public theorem psl2ProjectiveLineEquivSylow_infinity
   have hPSylNormal : (PSyl : Subgroup B).Normal := by
     change (((P : Subgroup (PSL2 K)).subgroupOf B)).Normal
     exact hPnormal
-  letI : Unique (Sylow p B) := Sylow.unique_of_normal PSyl hPSylNormal
+  let : Unique (Sylow p B) := Sylow.unique_of_normal PSyl hPSylNormal
   have hsub : PSyl = USyl := Subsingleton.elim _ _
   exact Sylow.subtype_injective hsub
 

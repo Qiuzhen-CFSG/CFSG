@@ -178,7 +178,7 @@ private lemma fixed_sylow_involutions_conjugate_in_A_four
       ∃ a : G, a ∈ A ∧ a * c.t * a⁻¹ = s := by
   classical
   let S : Subgroup G := (c.S : Subgroup G)
-  letI : IsKleinFour S := by
+  let : IsKleinFour S := by
     dsimp [S]
     exact m1_sylow_isKleinFour c.S hm e
   have hSle : S ≤ (c.S : Subgroup G) := by rfl

@@ -34,7 +34,7 @@ public theorem normalizer_inf_qCoreOf_eq_self_and_centralizer_inf_qCoreOf_eq_sel
     P ⊓ Subgroup.normalizer (qCoreOf H p : Set G) = P ∧
       P ⊓ Subgroup.centralizer (qCoreOf H p : Set G) = P := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let O : Subgroup G := qCoreOf H p
   let Q : Subgroup G := Subgroup.zpowers t
   let K : Subgroup G := O ⊔ P
@@ -49,7 +49,7 @@ public theorem normalizer_inf_qCoreOf_eq_self_and_centralizer_inf_qCoreOf_eq_sel
   have hKp : IsPGroup p K := by
     simpa [K] using IsPGroup.to_sup_of_normal_right' hOp hPp hOnormP
   have hKnil : Group.IsNilpotent K := hKp.isNilpotent
-  letI : Group.IsNilpotent K := hKnil
+  let : Group.IsNilpotent K := hKnil
   have hKsolv : Group.IsSolvable K := by infer_instance
   have hPoddCard : Odd (Nat.card P) := by
     obtain ⟨n, hn⟩ := hPp.exists_card_eq

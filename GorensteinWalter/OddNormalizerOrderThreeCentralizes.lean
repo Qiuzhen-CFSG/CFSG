@@ -25,7 +25,7 @@ public theorem odd_subgroup_le_centralizer_of_le_normalizer_card_three
     Subgroup.inclusion hBnorm
   let rho : B →* MulAut F := F.normalizerMonoidHom.comp i
   have hFcyc : IsCyclic F := isCyclic_of_prime_card hFcard
-  letI : IsCyclic F := hFcyc
+  let : IsCyclic F := hFcyc
   have hAutcard : Nat.card (MulAut F) = 2 := by
     rw [IsCyclic.card_mulAut, hFcard, Nat.totient_prime Nat.prime_three]
   have hrange_dvd_B : Nat.card rho.range ∣ Nat.card B :=

@@ -25,7 +25,7 @@ public theorem natCard_dvd_of_free_action
     Nat.card G ∣ Nat.card X := by
   classical
   let Ω : Type u := Quotient (MulAction.orbitRel G X)
-  letI : Fintype Ω := Fintype.ofFinite _
+  let : Fintype Ω := Fintype.ofFinite _
   have hstab (ω : Ω) : MulAction.stabilizer G ω.out = ⊥ := by
     ext g
     constructor

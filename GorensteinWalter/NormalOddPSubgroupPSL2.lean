@@ -31,7 +31,7 @@ public theorem normal_pSubgroup_eq_bot_of_psl2_odd
     (P : Subgroup (PSL2 K)) (hPnormal : P.Normal) (hPp : IsPGroup p P) :
     P = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hcard_ge_three : 3 ≤ Nat.card K := by
     rcases hK with ⟨r, n, hr, hrodd, hn, hcard⟩
     have hr_ne_two : r ≠ 2 := by
@@ -46,7 +46,7 @@ public theorem normal_pSubgroup_eq_bot_of_psl2_odd
       _ = r ^ 1 := by simp
       _ ≤ r ^ n := Nat.pow_le_pow_right (by omega) hn
   by_cases hcard_three : Nat.card K = 3
-  · letI : Fintype K := Fintype.ofFinite K
+  · let : Fintype K := Fintype.ofFinite K
     have hFcard : Fintype.card K = 3 := by
       simpa [Nat.card_eq_fintype_card] using hcard_three
     let eK : ZMod 3 ≃+* K :=
@@ -70,7 +70,7 @@ public theorem normal_pSubgroup_eq_bot_of_psl2_odd
       have hSp : IsPGroup p (S : Subgroup (PSL2 K)) :=
         hS'p.of_equiv (Subgroup.subgroupOfEquivOfLe hSleP)
       have hS2 : IsPGroup 2 (S : Subgroup (PSL2 K)) := S.isPGroup'
-      letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
       have hp_ne_two : 2 ≠ p := by
         intro h
         subst p

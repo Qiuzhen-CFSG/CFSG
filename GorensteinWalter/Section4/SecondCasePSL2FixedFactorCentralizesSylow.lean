@@ -65,8 +65,8 @@ private theorem mulAut_eq_one_of_isKleinFour_fixed_two
     {a b : A} (ha : a ≠ 1) (hb : b ≠ 1) (hab : a ≠ b)
     (hφa : φ a = a) (hφb : φ b = b) : φ = 1 := by
   classical
-  letI : IsKleinFour A := hA
-  letI : Fintype A := Fintype.ofFinite A
+  let : IsKleinFour A := hA
+  let : Fintype A := Fintype.ofFinite A
   apply MulEquiv.ext
   intro x
   have huniv : ({a * b, a, b, (1 : A)} : Finset A) = Finset.univ :=
@@ -121,8 +121,8 @@ private theorem sylow_two_unique_in_dihedral_join
     (hrP' : r ∈ (P' : Subgroup Q)) :
     P = P' := by
   classical
-  letI : IsCyclic T := hTcyc
-  letI : CommGroup T := IsCyclic.commGroup
+  let : IsCyclic T := hTcyc
+  let : CommGroup T := IsCyclic.commGroup
   let RT : Sylow 2 T := Classical.choice Sylow.nonempty
   let R : Subgroup Q := (RT : Subgroup T).map T.subtype
   let V : Subgroup Q := R ⊔ Subgroup.zpowers r

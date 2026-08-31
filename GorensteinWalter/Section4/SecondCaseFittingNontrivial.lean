@@ -29,7 +29,7 @@ public theorem secondCase_fitting_centralizer_ne_bot_of_inter_not_cyclic
   have hK0eq : K0 = Y := by
     rw [← hjoin, hFbot, sup_bot_eq]
   have hK0cyc : IsCyclic K0 := by
-    letI : IsCyclic K := hKcyc
+    let : IsCyclic K := hKcyc
     exact Subgroup.isCyclic_of_le hK0le
   apply hYnotcyc
   rw [← hK0eq]

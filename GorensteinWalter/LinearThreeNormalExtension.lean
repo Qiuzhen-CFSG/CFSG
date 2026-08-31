@@ -30,7 +30,7 @@ public theorem psl2_three_normal_extension_isDGroup
     (eH : H ≃* PSL2 (ZMod 3))
     (hCH : Subgroup.centralizer (H : Set G) = ⊥) :
     IsDGroup G := by
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   rcases quotient_centralizer_mulAut_embedding H with ⟨φ, hφ⟩
   let q : G ≃* G ⧸ Subgroup.centralizer (H : Set G) :=
     ((QuotientGroup.quotientMulEquivOfEq (G := G) hCH).trans

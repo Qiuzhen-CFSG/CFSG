@@ -366,9 +366,9 @@ private theorem firstCaseCosetLayer_four_orbit_card_private
         exact Nat.card_congr
           (quotient_subgroup_stabilizer_equiv_inter_conjugate c.Hhat w).toEquiv
       _ = 6 := hDcard
-  letI : Fintype ↥c.Hhat := Fintype.ofFinite _
-  letI : Fintype (MulAction.orbit c.Hhat (q.1)) := Fintype.ofFinite _
-  letI : Fintype (MulAction.stabilizer c.Hhat (q.1)) := Fintype.ofFinite _
+  let : Fintype ↥c.Hhat := Fintype.ofFinite _
+  let : Fintype (MulAction.orbit c.Hhat (q.1)) := Fintype.ofFinite _
+  let : Fintype (MulAction.stabilizer c.Hhat (q.1)) := Fintype.ofFinite _
   have horbit := MulAction.card_orbit_mul_card_stabilizer_eq_card_group
     c.Hhat (q.1)
   have horbit' : Nat.card (MulAction.orbit c.Hhat (q.1)) *

@@ -132,7 +132,7 @@ public theorem secondCase_linear_omegaData_of_alignedSylow
     intro hcard
     exact hFne ((Subgroup.eq_bot_iff_card (H := F)).mpr hcard)
   obtain ⟨p, hp, hpdvdF⟩ := Nat.exists_prime_and_dvd hFcardne
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFleU : F ≤ c.U := hFleFU.trans (fittingSubgroupOf_le c.U)
   have hpdvdU : p ∣ Nat.card c.U :=
     hpdvdF.trans (Subgroup.card_dvd_of_le hFleU)
@@ -230,8 +230,8 @@ public theorem secondCase_linear_omegaData_of_alignedSylow
   have hP0elem : IsElementaryAbelian p P0 :=
     IsElementaryAbelian.zpowers_of_pow_eq_one hf0pow
   have hAelem : IsElementaryAbelian p A := by
-    letI : IsElementaryAbelian p P := hPelem
-    letI : IsElementaryAbelian p P0 := hP0elem
+    let : IsElementaryAbelian p P := hPelem
+    let : IsElementaryAbelian p P0 := hP0elem
     exact IsElementaryAbelian.sup_of_le_centralizer hP0centP
   have hAleFU : A ≤ c.FU := by
     rw [show A = P ⊔ P0 by rfl]
@@ -284,15 +284,15 @@ public theorem secondCase_linear_omegaData_of_alignedSylow
     subst y
     exact hy
   have hAnc : ¬ IsCyclic A := by
-    letI : IsElementaryAbelian p A := hAelem
+    let : IsElementaryAbelian p A := hAelem
     exact IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq hAcard
   have hOpnc : ¬ IsCyclic Op := by
     intro hOpcyc
-    letI : IsCyclic Op := hOpcyc
+    let : IsCyclic Op := hOpcyc
     have hAUcyc : IsCyclic (A.subgroupOf c.U) :=
       Subgroup.isCyclic_of_le hAUleOp
     exact hAnc ((Subgroup.subgroupOfEquivOfLe hAleU).isCyclic.mp hAUcyc)
-  letI : Fact (IsPGroup p Op) := ⟨pCore_isPGroup (G := c.U) (p := p)⟩
+  let : Fact (IsPGroup p Op) := ⟨pCore_isPGroup (G := c.U) (p := p)⟩
   let Z2 : Subgroup Op := Subgroup.upperCentralSeries Op 2
   let Om : Subgroup Z2 := omega₁ (G := Z2) (p := p)
   let Q0 : Subgroup Op := z2OmegaCandidate (G := Op) p
@@ -318,10 +318,10 @@ public theorem secondCase_linear_omegaData_of_alignedSylow
     exact Subgroup.mem_map.mpr
       ⟨y, z2OmegaCandidate_le_upperCentralSeries_two (G := Op) (p := p) hy, rfl⟩
   have hQchar : Q.Characteristic := by
-    letI : Op.Characteristic := by
+    let : Op.Characteristic := by
       dsimp [Op]
       infer_instance
-    letI : Q0.Characteristic := by
+    let : Q0.Characteristic := by
       simpa [Q0] using z2OmegaCandidate_characteristic (G := Op) (p := p)
     exact characteristic_map_subtype_of_characteristic Op Q0
   let od : SecondCaseLinearOmegaData c w d :=

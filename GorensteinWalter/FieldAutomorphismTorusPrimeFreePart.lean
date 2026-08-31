@@ -29,7 +29,7 @@ private theorem prime_dvd_pow_self_sub_nat
 private theorem padicVal_pow_sub_one_le
     (p r : ℕ) (hp : p.Prime) (hpodd : Odd p) (hr : 2 ≤ r) :
     padicValNat p (r ^ p - 1) ≤ padicValNat p (r - 1) + 1 := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   by_cases hbase : p ∣ r - 1
   · have hpr : ¬ p ∣ r := by
       intro hpr
@@ -54,7 +54,7 @@ private theorem padicVal_pow_sub_one_le
 private theorem padicVal_pow_add_one_le
     (p r : ℕ) (hp : p.Prime) (hpodd : Odd p) (hr : 1 ≤ r) :
     padicValNat p (r ^ p + 1) ≤ padicValNat p (r + 1) + 1 := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   by_cases hbase : p ∣ r + 1
   · have hpr : ¬ p ∣ r := by
       intro hpr

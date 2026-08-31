@@ -104,7 +104,7 @@ public theorem secondCase_a7_equation6
     exact inf_le_right
   have hK0leM : K0 ≤ M := hK0leK.trans hKleM
   have hK0cyc : IsCyclic K0 := by
-    letI : IsCyclic K := hK_cyc
+    let : IsCyclic K := hK_cyc
     exact Subgroup.isCyclic_of_le hK0leK
   have hFleFU : F ≤ fittingSubgroupOf c.U := by
     rw [hF_def]

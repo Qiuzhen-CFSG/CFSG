@@ -86,8 +86,8 @@ private theorem qCoreOf_le_pResidualOf_of_ne_local
   have hxH : x ∈ H :=
     (fstar_qCoreOf_le_fittingSubgroupOf A p hp).trans le_sup_left hx
   let xQ : ↥(qCoreOf A p) := ⟨x, hx⟩
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Fact s.Prime := ⟨hs⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : Fact s.Prime := ⟨hs⟩
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup A p)) xQ with ⟨k, hk⟩
   have hpndvd : ¬ p ∣ s := by
     intro hdiv
@@ -165,7 +165,7 @@ private theorem pResidualOf_mono_local
     rcases (Nat.dvd_prime_pow hpdiv).mp (hNrel.trans (by rw [hn])) with ⟨m, _hm, hm⟩
     exact ⟨m, hm⟩
   have hResM : pResidualOf H p ≤ M := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     have hQ : IsPGroup p (H ⧸ (M.subgroupOf H)) := by
       rcases hMindex with ⟨m, hm⟩
       refine IsPGroup.of_card (n := m) ?_
@@ -190,8 +190,8 @@ private theorem qCoreOf_le_pResidualOf_fitting_of_ne_local
   intro x hx
   have hxF : x ∈ F := fstar_qCoreOf_le_fittingSubgroupOf A q hq hx
   let xQ : ↥(qCoreOf A q) := ⟨x, hx⟩
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact q.Prime := ⟨hq⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup A q)) xQ with ⟨k, hk⟩
   have hqndvd : ¬ q ∣ p := by
     intro hdiv
@@ -296,7 +296,7 @@ private theorem pResidualOf_fitting_eq_iSup_qCoreOf_of_ne_local
       ⨆ q : {q : ℕ // q.Prime ∧ q ≠ p}, qCoreOf A q.1 := by
   let F : Subgroup G := fittingSubgroupOf A
   let J : Subgroup G := ⨆ q : {q : ℕ // q.Prime ∧ q ≠ p}, qCoreOf A q.1
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFleA : F ≤ A := by
     intro x hx
     rcases (Subgroup.mem_map).1 hx with ⟨f, _hf, rfl⟩
@@ -442,7 +442,7 @@ private theorem pResidualOf_sup_le_local
     (hF : IsNormalIn F (F ⊔ E)) (hE : IsNormalIn E (F ⊔ E)) :
     pResidualOf (F ⊔ E) p ≤ pResidualOf F p ⊔ pResidualOf E p := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let X : Subgroup G := F ⊔ E
   let RF : Subgroup G := pResidualOf F p
   let RE : Subgroup G := pResidualOf E p
@@ -504,8 +504,8 @@ private theorem pResidualOf_sup_le_local
   have hEsubX : (E.subgroupOf X).Normal := by
     rw [Subgroup.normal_subgroupOf_iff_le_normalizer le_sup_right]
     exact le_normalizer_of_isNormalIn hE
-  haveI : (F.subgroupOf X).Normal := hFsubX
-  haveI : (E.subgroupOf X).Normal := hEsubX
+  have : (F.subgroupOf X).Normal := hFsubX
+  have : (E.subgroupOf X).Normal := hEsubX
   have hFbarN : Fbar.Normal := (inferInstance : (F.subgroupOf X).Normal).map π
     (QuotientGroup.mk'_surjective (N.subgroupOf X))
   have hEbarN : Ebar.Normal := (inferInstance : (E.subgroupOf X).Normal).map π
@@ -635,10 +635,10 @@ private theorem isQuasisimple_mulEquiv_local
     (e : G ≃* H) (hG : IsQuasisimple G) :
     IsQuasisimple H := by
   have hNontriv : Nontrivial H := by
-    letI : Nontrivial G := hG.1
+    let : Nontrivial G := hG.1
     exact e.toEquiv.injective.nontrivial
   have hPerf : Group.IsPerfect H := by
-    letI : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
+    let : Group.IsPerfect G := (Group.isPerfect_def).2 hG.2.1
     exact Group.IsPerfect.ofSurjective (f := e.toMonoidHom) e.toEquiv.surjective
   have he : (Subgroup.center G).map e.toMonoidHom = Subgroup.center H := by
     apply le_antisymm
@@ -803,7 +803,7 @@ private theorem nilpotent_top_le_pCore_sup_pPrimeCore_local
     (hQnil : Group.IsNilpotent Q) :
     (⊤ : Subgroup Q) ≤ pCore p Q ⊔ pPrimeCore p Q := by
   classical
-  haveI : Group.IsNilpotent Q := hQnil
+  have : Group.IsNilpotent Q := hQnil
   have hnilTop : Group.IsNilpotent (↥(⊤ : Subgroup Q)) := by
     exact Group.nilpotent_of_mulEquiv
       (G := Q) (G' := ↥(⊤ : Subgroup Q))
@@ -819,7 +819,7 @@ private theorem nilpotent_top_le_pCore_sup_pPrimeCore_local
     exact le_sup_left
   · have hqprime : Nat.Prime q.1 :=
       Nat.prime_of_mem_primeFactors q.1.2
-    letI : Fact (Nat.Prime q.1) := ⟨hqprime⟩
+    let : Fact (Nat.Prime q.1) := ⟨hqprime⟩
     obtain ⟨n, hn⟩ :=
       (pCore_isPGroup (G := Q) (p := q.1)).exists_card_eq
     have hcop : Nat.Coprime p (Nat.card (pCore q.1 Q)) := by
@@ -955,7 +955,7 @@ private theorem pResidualOf_fitting_le_pPrimeCore_local
     let e : fittingSubgroup (↥A) ≃* ↥F :=
       Subgroup.equivMapOfInjective (fittingSubgroup (↥A)) A.subtype A.subtype_injective
     exact Group.nilpotent_of_mulEquiv e
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hQ : IsPGroup p (↥F ⧸ N.subgroupOf F) := by
     have hdecomp : (⊤ : Subgroup (↥F)) ≤ (pCore p (↥F) ⊔ pPrimeCore p (↥F) : Subgroup (↥F)) :=
       nilpotent_top_le_pCore_sup_pPrimeCore_local (Q := ↥F) (p := p) hFnil
@@ -1033,7 +1033,7 @@ private theorem commutator_le_of_le_pPrimeCore_of_normalizes_local
     have hgN : g ∈ N := hg.2
     let gX : ↥X := ⟨g, hgX⟩
     let gN : ↥N := ⟨g, hgN⟩
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases (IsPGroup.iff_orderOf.mp hXp) gX with ⟨k, hk⟩
     have hord : orderOf g = p ^ k := by
       have h' : orderOf gX = p ^ k := hk
@@ -1046,7 +1046,7 @@ private theorem commutator_le_of_le_pPrimeCore_of_normalizes_local
       exact pPrimeCore_coprime_card (p := p) (G := ↥(fittingSubgroupOf A))
     have hgorder_dvd : orderOf g ∣ Nat.card (↥N) := by
       have hdvd : orderOf gN ∣ Nat.card (↥N) := by
-        letI : Fintype (↥N) := Fintype.ofFinite (↥N)
+        let : Fintype (↥N) := Fintype.ofFinite (↥N)
         simpa [Nat.card_eq_fintype_card] using (orderOf_dvd_card (G := ↥N) (x := gN))
       have hordN : orderOf gN = orderOf g := by
         simpa [gN] using (orderOf_injective N.subtype N.subtype_injective gN)
@@ -1182,7 +1182,7 @@ private theorem commutator_qCoreOf_B_inf_A_pResidualOf_S_local
     dsimp [X]
     exact inf_le_right
   have hSleA : S ≤ A := hSF.trans (fstar_generalizedFittingSubgroupOf_le A)
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hXnil : Group.IsNilpotent X := hXp.isNilpotent
   have hE : E ≤ S := fstar_componentLayer_le_selfCentralizingSubnormal A S hSF hSsub hCS
   have hENX : E ≤ Subgroup.normalizer (X : Set G) := by
@@ -1261,7 +1261,7 @@ private theorem commutator_eq_bot_of_normal_pgroup_pPrime_local
     (hKcop : Nat.Coprime p (Nat.card K)) :
     ⁅P, K⁆ = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hPle : P ≤ qCoreOf L p :=
     le_qCoreOf_of_normal_isPGroup L P p hPL (by
       rw [Subgroup.normal_subgroupOf_iff_le_normalizer hPL]
@@ -1324,8 +1324,8 @@ private theorem centralizes_of_normal_selfCentralizing_coprime_local
   have hKPP_bot : ⁅⁅K, P⁆, P⁆ = ⊥ := by
     apply le_bot_iff.mp
     exact (Subgroup.commutator_mono hKP_le_K1 le_rfl).trans (by simpa [hK1P_bot])
-  letI : P.Normalizes K := ⟨hPK⟩
-  letI : MulDistribMulAction (↥P) (↥K) :=
+  let : P.Normalizes K := ⟨hPK⟩
+  let : MulDistribMulAction (↥P) (↥K) :=
     Subgroup.conjMulDistribMulActionOfLeNormalizer P K hPK
   let C : Subgroup (↥K) := commutatorAction (A := ↥P) (G := ↥K)
   have hCmap : C.map K.subtype = ⁅K, P⁆ := by
@@ -1594,7 +1594,7 @@ private theorem centralizes_of_subnormal_selfCentralizing_coprime_local
         have hcopN : Nat.Coprime (Nat.card P) (Nat.card N) :=
           Nat.Coprime.of_dvd_right (Subgroup.card_dvd_of_le hN_le_K') hcop'
         have hsolvN : Group.IsSolvable (↥N) := by
-          letI : Group.IsSolvable (↥K') := hsolv'
+          let : Group.IsSolvable (↥K') := hsolv'
           have hsub_solv : Group.IsSolvable (↥(N.subgroupOf K')) := inferInstance
           have hmapN : (N.subgroupOf K').map K'.subtype = N :=
             Subgroup.map_subgroupOf_eq_of_le hN_le_K'
@@ -1695,8 +1695,8 @@ private theorem qCoreOf_le_pResidualOf_of_ne_local_S
   intro x hx
   have hxS : x ∈ S := qCoreOf_le S q hx
   let xQ : ↥(qCoreOf S q) := ⟨x, hx⟩
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact q.Prime := ⟨hq⟩
+  have : Fact p.Prime := ⟨hp⟩
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup S q)) xQ with ⟨k, hk⟩
   have hcop : Nat.Coprime p (q ^ k) := by
     exact (Nat.coprime_primes hp hq).2 hne.symm |>.pow_right k
@@ -1817,7 +1817,7 @@ private theorem qCoreOf_centralizer_le_qCoreOf_local
   let QS : Subgroup G := qCoreOf S q
   let QF : Subgroup G := qCoreOf F q
   let P : Subgroup G := (pPrimeCore q (↥F)).map F.subtype
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact q.Prime := ⟨hq⟩
   have hFnil : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent A
   have hFcE : F ≤ Subgroup.centralizer (E : Set G) := by
     have hcomm : ⁅F, E⁆ = ⊥ := Subgroup.commutator_comm E F ▸ layer_centralizes_fitting A
@@ -1834,7 +1834,7 @@ private theorem qCoreOf_centralizer_le_qCoreOf_local
         ((Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := P) (H₂ := QF)).2 hPcQ)
     exact (Subgroup.commutator_eq_bot_iff_le_centralizer (H₁ := QF) (H₂ := P)).1 hQcP
   have hFinterSnil : Group.IsNilpotent (↥(F ⊓ S)) := by
-    letI : Group.IsNilpotent (↥F) := hFnil
+    let : Group.IsNilpotent (↥F) := hFnil
     have hInst : Group.IsNilpotent (↥((F ⊓ S).subgroupOf F)) := by
       infer_instance
     exact Group.nilpotent_of_mulEquiv
@@ -1974,7 +1974,7 @@ private theorem qCoreOf_fitting_eq_bot_of_not_mem_primesOfOrder_local
   by_contra hx1
   have hxne : x ≠ 1 := hx1
   let xQ : ↥(qCoreOf F p) := ⟨x, hx⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   rcases (IsPGroup.iff_orderOf.mp (qCoreOf_isPGroup F p)) xQ with ⟨k, hk⟩
   have hordG : orderOf x = orderOf xQ := (Subgroup.orderOf_coe xQ)
   have hkpos : 0 < k := by
@@ -2020,13 +2020,13 @@ private theorem perfect_le_pResidualOf_local
     K ≤ pResidualOf H p := by
   classical
   let N : Subgroup G := pResidualOf H p
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hNnorm : (N.subgroupOf H).Normal :=
     fstar_pResidualOf_subgroupOf_normal H p
   let π : K →* H ⧸ N.subgroupOf H :=
     (QuotientGroup.mk' (N.subgroupOf H)).comp (Subgroup.inclusion hKH)
   have hπperf : Group.IsPerfect (π.range) := by
-    letI : Group.IsPerfect (↥K) := hKperf
+    let : Group.IsPerfect (↥K) := hKperf
     exact Group.IsPerfect.range (G := ↥K) (f := π)
   have hπp : IsPGroup p (π.range) := by
     have hQ : IsPGroup p (H ⧸ N.subgroupOf H) :=
@@ -2034,9 +2034,9 @@ private theorem perfect_le_pResidualOf_local
     exact hQ.to_subgroup π.range
   have hπrange_bot : π.range = ⊥ := by
     by_contra hne
-    haveI : Nontrivial (↥π.range) :=
+    have : Nontrivial (↥π.range) :=
       (Subgroup.nontrivial_iff_ne_bot (H := π.range)).mpr hne
-    haveI : Group.IsPerfect (↥π.range) := hπperf
+    have : Group.IsPerfect (↥π.range) := hπperf
     have hnil : Group.IsNilpotent (↥π.range) := hπp.isNilpotent
     exact (Group.IsPerfect.not_isNilpotent (G := ↥π.range)) hnil
   intro k hk
@@ -2135,7 +2135,7 @@ private theorem map_fittingSubgroup_le_of_surjective_local
   have hmap_normal : ((fittingSubgroup G).map f).Normal :=
     Subgroup.Normal.map (H := fittingSubgroup G) inferInstance f hf
   have hmap_nil : Group.IsNilpotent ↥((fittingSubgroup G).map f) := by
-    haveI : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
+    have : Group.IsNilpotent ↥(fittingSubgroup G) := by infer_instance
     let ψ : fittingSubgroup G →* ↥((fittingSubgroup G).map f) :=
       { toFun := fun g => ⟨f g, Subgroup.mem_map.mpr ⟨g.1, g.2, rfl⟩⟩
         map_one' := by ext; simp
@@ -2178,7 +2178,7 @@ private theorem map_generalizedFittingSubgroupOf_top_subtype_local
       generalizedFittingSubgroupOf B := by
   rw [generalizedFittingSubgroupOf, generalizedFittingSubgroupOf, Subgroup.map_sup]
   rw [componentLayer_top_map_eq_componentLayerOf_local B]
-  haveI : Finite (↥(⊤ : Subgroup (↥B))) :=
+  have : Finite (↥(⊤ : Subgroup (↥B))) :=
     Finite.of_equiv (↥B) (Subgroup.topEquiv (G := ↥B)).toEquiv.symm
   change Subgroup.map B.subtype ((fittingSubgroup (↥(⊤ : Subgroup (↥B)))).map
       (⊤ : Subgroup (↥B)).subtype) ⊔ componentLayerOf B =
@@ -2380,7 +2380,7 @@ private theorem fittingSubgroupOf_eq_inf_of_subnormal_local
       S.mul_mem (S.mul_mem hs hz.2) (S.inv_mem hs)
     exact Subgroup.mem_inf.mpr ⟨hz'F, hz'S⟩
   have hKnil : Group.IsNilpotent (↥(F ⊓ S)) := by
-    letI : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent A
+    let : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent A
     have hInst : Group.IsNilpotent (↥((F ⊓ S).subgroupOf F)) := by
       infer_instance
     exact Group.nilpotent_of_mulEquiv
@@ -2511,7 +2511,7 @@ private theorem pPrime_element_centralizes_qCoreOf_S_local
   let F : Subgroup G := fittingSubgroupOf A
   let E : Subgroup G := componentLayerOf A
   let P : Subgroup G := qCoreOf S p
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFnil : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent A
   have hFS_eq : fittingSubgroupOf S = F ⊓ S :=
     fittingSubgroupOf_eq_inf_of_subnormal_local A S hSF hSsub
@@ -2718,7 +2718,7 @@ private theorem pResidualOf_S_centralizes_qCoreOf_B_local
   let P : Subgroup G := qCoreOf S p
   let K : Subgroup G := pResidualOf S p
   let R : Subgroup G := qCoreOf B p
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hKres : pResidualOf K p = K := by
     simpa [K] using fstar_pResidualOf_idempotent S p hp
   have hKP : K ≤ Subgroup.normalizer (P : Set G) := by
@@ -2780,12 +2780,12 @@ private theorem pPrimeCore_fitting_centralizer_le_fitting_pPrimeCore_local
   let PA : Subgroup G := (pPrimeCore p (↥F)).map F.subtype
   let PS : Subgroup G := (pPrimeCore p (↥(F ⊓ S))).map (F ⊓ S).subtype
   let E : Subgroup G := componentLayerOf A
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFnil : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent A
   have hFS_eq : fittingSubgroupOf S = F ⊓ S :=
     fittingSubgroupOf_eq_inf_of_subnormal_local A S hSF hSsub
   have hFinterSnil : Group.IsNilpotent (↥(F ⊓ S)) := by
-    letI : Group.IsNilpotent (↥F) := hFnil
+    let : Group.IsNilpotent (↥F) := hFnil
     have hInst : Group.IsNilpotent (↥((F ⊓ S).subgroupOf F)) := by
       infer_instance
     exact Group.nilpotent_of_mulEquiv
@@ -2894,8 +2894,8 @@ private theorem commutator_qCoreOf_B_inf_A_qCoreOf_A_of_ne_local
   let X : Subgroup G := qCoreOf B p ⊓ A
   let P : Subgroup G := qCoreOf S q
   let BO : Subgroup G := qCoreOf A q
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Fact q.Prime := ⟨hq⟩
+  let : Fact p.Prime := ⟨hp⟩
+  let : Fact q.Prime := ⟨hq⟩
   have hXp : IsPGroup p X := IsPGroup.to_inf_left (qCoreOf_isPGroup B p)
   have hXA : X ≤ A := inf_le_right
   have hPA : P ≤ A :=
@@ -2950,7 +2950,7 @@ private theorem qCoreOf_B_inf_A_eq_bot_of_not_mem_primes_local
   let X : Subgroup G := qCoreOf B p ⊓ A
   let F : Subgroup G := fittingSubgroupOf A
   let E : Subgroup G := componentLayerOf A
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hXp : IsPGroup p X := IsPGroup.to_inf_left (qCoreOf_isPGroup B p)
   have hXA : X ≤ A := inf_le_right
   have hES : E ≤ S := fstar_componentLayer_le_selfCentralizingSubnormal A S hSF hSsub hCS
@@ -3085,7 +3085,7 @@ private theorem center_pPrimeCore_fitting_le_selfCentralizingSubnormal_local
   let F : Subgroup G := fittingSubgroupOf A
   let PFA : Subgroup G := pPrimeCoreOfFitting A p
   let Z : Subgroup G := (Subgroup.center (↥PFA)).map PFA.subtype
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hFnil : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent A
   have hPFA_le_F : PFA ≤ F := by
     dsimp [PFA, pPrimeCoreOfFitting, F]
@@ -3147,7 +3147,7 @@ private theorem qCoreOf_B_le_A_of_pResidual_ne_bot_local
   let PFA : Subgroup G := pPrimeCoreOfFitting A p
   let K : Subgroup G := pResidualOf S p
   let J : Subgroup G := ⨆ q : {q : ℕ // q.Prime ∧ q ≠ p}, qCoreOf A q.1
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hcentKR : Centralizes K (qCoreOf B p) :=
     pResidualOf_S_centralizes_qCoreOf_B_local hsimple A hA S hSF hSsub hCS hSB p hp hpF
   have hRcK : qCoreOf B p ≤ Subgroup.centralizer ((K : Subgroup G) : Set G) := by
@@ -3208,12 +3208,12 @@ private theorem qCoreOf_B_le_A_of_pResidual_ne_bot_local
     have hPFAnil : Group.IsNilpotent (↥PFA) := by
       have e : pPrimeCore p (↥F) ≃* ↥PFA :=
         Subgroup.equivMapOfInjective (pPrimeCore p (↥F)) F.subtype F.subtype_injective
-      letI : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent A
-      haveI : Group.IsNilpotent (pPrimeCore p (↥F)) := by
+      let : Group.IsNilpotent (↥F) := fittingSubgroupOf_isNilpotent A
+      have : Group.IsNilpotent (pPrimeCore p (↥F)) := by
         infer_instance
       exact Group.nilpotent_of_mulEquiv e
     have hZne : Z ≠ ⊥ := by
-      haveI : Nontrivial (↥PFA) :=
+      have : Nontrivial (↥PFA) :=
         (Subgroup.nontrivial_iff_ne_bot (H := PFA)).mpr hPFAbot
       have hCne : (Subgroup.center (↥PFA)) ≠ ⊥ :=
         Group.IsNilpotent.center_ne_bot (G := ↥PFA)
@@ -3263,7 +3263,7 @@ private theorem commutator_qCoreOf_B_pResidualOf_generalizedFitting_of_le_A_loca
   let F : Subgroup G := fittingSubgroupOf A
   let PFA : Subgroup G := pPrimeCoreOfFitting A p
   let PS : Subgroup G := (pPrimeCore p (↥(F ⊓ S))).map (F ⊓ S).subtype
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hRcK : qCoreOf B p ≤ Subgroup.centralizer ((pResidualOf S p : Subgroup G) : Set G) := by
     intro r hr
     rw [Subgroup.mem_centralizer_iff]
@@ -3291,8 +3291,8 @@ private theorem commutator_qCoreOf_B_pResidualOf_generalizedFitting_of_le_A_loca
   have hPFAnil : Group.IsNilpotent PFA := by
     have e : pPrimeCore p (↥F) ≃* ↥PFA :=
       Subgroup.equivMapOfInjective (pPrimeCore p (↥F)) F.subtype F.subtype_injective
-    letI : Group.IsNilpotent (↥F) := hFnil
-    haveI : Group.IsNilpotent (pPrimeCore p (↥F)) := by
+    let : Group.IsNilpotent (↥F) := hFnil
+    have : Group.IsNilpotent (pPrimeCore p (↥F)) := by
       infer_instance
     exact Group.nilpotent_of_mulEquiv e
   have hPS_sub : (PS.subgroupOf PFA).IsSubnormal :=
@@ -3321,7 +3321,7 @@ private theorem commutator_qCoreOf_B_pResidualOf_generalizedFitting_of_le_A_loca
     rw [hn]
     exact hcopP.pow_left n
   have hsolv : Group.IsSolvable PFA := by
-    letI : Group.IsNilpotent PFA := hPFAnil
+    let : Group.IsNilpotent PFA := hPFAnil
     infer_instance
   have hcentPFA : qCoreOf B p ≤ Subgroup.centralizer (PFA : Set G) :=
     centralizes_of_subnormal_selfCentralizing_coprime_local (qCoreOf B p) PFA PS

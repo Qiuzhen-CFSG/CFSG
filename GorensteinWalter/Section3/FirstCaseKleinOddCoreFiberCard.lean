@@ -49,7 +49,7 @@ public theorem firstCase_klein_oddCore_inverted_card_three
     refine ⟨?_, ?_⟩
     · exact D.mul_mem (D.mul_mem hd (hNleD hn)) (D.inv_mem hd)
     · exact hBnorm.2 d (hDle hd) n ((show N ≤ B from inf_le_right) hn)
-  letI : (N.subgroupOf D).Normal := hNnormal
+  let : (N.subgroupOf D).Normal := hNnormal
   have hindex' : (N.subgroupOf D).index = 6 := by simpa [D, N] using hindex
   have hNodd : Nat.Coprime 2 (Nat.card N) :=
     firstCase_klein_intersection_odd_of_index_six
@@ -84,7 +84,7 @@ public theorem firstCase_klein_oddCore_inverted_card_three
     have hconjB : o * n * o⁻¹ ∈ B :=
       hBnorm.2 o (hDle (hOleD ho)) n ((show N ≤ B from inf_le_right) hn)
     exact ⟨hconjD, hconjB⟩
-  letI : (N.subgroupOf O).Normal := hNO_normal
+  let : (N.subgroupOf O).Normal := hNO_normal
   let q : O →* (O ⧸ N.subgroupOf O) := QuotientGroup.mk' (N.subgroupOf O)
   have hqcard : Nat.card (O ⧸ N.subgroupOf O) = 3 := by
     rw [← (N.subgroupOf O).index_eq_card, hOindex]

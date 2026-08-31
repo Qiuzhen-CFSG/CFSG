@@ -53,7 +53,7 @@ public theorem lemma_2_4_glauberman_conjugator
     (hAp : IsPGroup p (generalizedFittingSubgroupOf A))
     (hMp : IsPGroup p (generalizedFittingSubgroupOf M)) :
     ∃ g : G, conjugateSubgroup A g = M ∧ g ∈ A := by
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hpodd : p ≠ 2 := by
     rcases hodd with ⟨k, hk⟩
     omega

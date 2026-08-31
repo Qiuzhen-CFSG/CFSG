@@ -69,7 +69,7 @@ private theorem psl2_two_pretransitive (K : Type*) [Field K] [Finite K] :
       change (q g) • x = g • x
       change g • x = g • x
       rfl }
-  letI : MulAction.IsPretransitive
+  let : MulAction.IsPretransitive
       (Matrix.SpecialLinearGroup (Fin 2) K)
       (Fin 2 ↪ ℙ K (Fin 2 → K)) := inferInstance
   exact @MulAction.IsPretransitive.of_embedding _ _ _ _ _ _ _ _ q f (Fin 2)
@@ -78,8 +78,8 @@ private theorem psl2_two_pretransitive (K : Type*) [Field K] [Finite K] :
 /-- The center of `PSL₂(K)` is trivial for every finite field `K`. -/
 public theorem psl2_center_eq_bot (K : Type*) [Field K] [Finite K] :
     Subgroup.center (PSL2 K) = ⊥ := by
-  letI : MulAction (PSL2 K) (ℙ K (Fin 2 → K)) := inferInstance
-  letI : FaithfulSMul (PSL2 K) (ℙ K (Fin 2 → K)) := inferInstance
+  let : MulAction (PSL2 K) (ℙ K (Fin 2 → K)) := inferInstance
+  let : FaithfulSMul (PSL2 K) (ℙ K (Fin 2 → K)) := inferInstance
   have hcard : 3 ≤ Nat.card (ℙ K (Fin 2 → K)) := by
     have hfinrank : Module.finrank K (Fin 2 → K) = 2 := by simp
     rw [Projectivization.card_of_finrank_two K (Fin 2 → K) hfinrank]

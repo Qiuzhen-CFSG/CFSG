@@ -25,13 +25,13 @@ public theorem secondCase_psl2_field_card_gt_three
     (hK : IsOddPrimePower (Nat.card K))
     (e : Nonempty ((d.E ⧸ Subgroup.center d.E) ≃* PSL2 K)) :
     3 < Nat.card K := by
-  letI : Group.IsPerfect d.E :=
+  let : Group.IsPerfect d.E :=
     (Group.isPerfect_def).2 d.E_component.2.2.2.1
-  letI : Group.IsPerfect (d.E ⧸ Subgroup.center d.E) := inferInstance
+  let : Group.IsPerfect (d.E ⧸ Subgroup.center d.E) := inferInstance
   have hPSLperf : Group.IsPerfect (PSL2 K) :=
     Group.IsPerfect.ofSurjective (f := e.some.toMonoidHom) e.some.surjective
   have htopPerf : Group.IsPerfect (↑(⊤ : Subgroup (PSL2 K))) := by
-    letI : Group.IsPerfect (PSL2 K) := hPSLperf
+    let : Group.IsPerfect (PSL2 K) := hPSLperf
     infer_instance
   exact (psl2_perfect_subnormal_eq_top K hK (⊤ : Subgroup (PSL2 K))
     top_ne_bot htopPerf Subgroup.IsSubnormal.top).1

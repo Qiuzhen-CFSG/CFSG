@@ -10,7 +10,7 @@ set_option maxHeartbeats 2000000 in
 public theorem a7_cube_eq_one_of_pow_nine :
     ∀ x : ASevenCertificateGroup, x ^ 9 = 1 → x ^ 3 = 1 := by
   intro x hx
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   apply Subtype.ext
   have hxPerm : (x : Equiv.Perm (Fin 7)) ^ 9 = 1 :=
     congrArg Subtype.val hx

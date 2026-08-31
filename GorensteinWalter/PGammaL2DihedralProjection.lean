@@ -33,10 +33,10 @@ public theorem pGammaL2PSLRange_normal
   let N : Subgroup (PGammaL2 K) := pGammaL2PGLRange K
   let C : Subgroup N := commutator N
   let L : Subgroup (PGammaL2 K) := C.map N.subtype
-  letI : C.Characteristic := by
+  let : C.Characteristic := by
     dsimp [C]
     infer_instance
-  letI : N.Normal := by
+  let : N.Normal := by
     exact pGammaL2PGLRange_normal K
   have hLnormal : L.Normal := by
     dsimp [L]
@@ -74,7 +74,7 @@ public theorem pGammaL2PSLRange_hasDihedralSylowTwo
     (K : Type u) [Field K] [Finite K]
     (hK : IsOddPrimePower (Nat.card K)) :
     HasDihedralSylowTwo (pGammaL2PSLRange K) := by
-  letI : Finite (pGammaL2PSLRange K) :=
+  let : Finite (pGammaL2PSLRange K) :=
     Finite.of_surjective (pGammaL2PSLRangeEquiv K)
       (pGammaL2PSLRangeEquiv K).surjective
   exact hasDihedralSylowTwo_of_mulEquiv
@@ -91,24 +91,24 @@ public theorem pGammaL2_psl_subgroupOf_index_not_dvd_four_of_dihedral
     (hPSL : pGammaL2PSLRange K ≤ A)
     (hAd : HasDihedralSylowTwo A) :
     ¬ 4 ∣ ((pGammaL2PSLRange K).subgroupOf A).index := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
         exact SemidirectProduct.ext
           (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
-  letI : Finite A := inferInstance
+  let : Finite A := inferInstance
   let H : Subgroup A := (pGammaL2PSLRange K).subgroupOf A
-  letI : Finite H := inferInstance
+  let : Finite H := inferInstance
   have hHnormal : H.Normal := by
     apply (Subgroup.normal_subgroupOf_iff hPSL).2
     intro h a hh ha
@@ -116,7 +116,7 @@ public theorem pGammaL2_psl_subgroupOf_index_not_dvd_four_of_dihedral
   let eH : H ≃* pGammaL2PSLRange K :=
     Subgroup.subgroupOfEquivOfLe hPSL
   have hHd : HasDihedralSylowTwo H := by
-    letI : Finite (pGammaL2PSLRange K) :=
+    let : Finite (pGammaL2PSLRange K) :=
       Finite.of_surjective (pGammaL2PSLRangeEquiv K)
         (pGammaL2PSLRangeEquiv K).surjective
     exact hasDihedralSylowTwo_of_mulEquiv eH
@@ -137,22 +137,22 @@ public theorem pGammaL2_even_field_projection_linearKernel_eq_psl
     (heven : 2 ∣ Nat.card (pGammaL2FieldProjection K A).range) :
     pGammaL2LinearKernel K A =
       (pGammaL2PSLRange K).subgroupOf A := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
         exact SemidirectProduct.ext
           (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
-  letI : Finite A := inferInstance
+  let : Finite A := inferInstance
   let H : Subgroup A := (pGammaL2PSLRange K).subgroupOf A
   let L : Subgroup A := pGammaL2LinearKernel K A
   let M : Subgroup (PGammaL2 K) := L.map A.subtype
@@ -233,7 +233,7 @@ public theorem pGammaL2_embedding_field_projection_odd_or_linearKernel_eq_psl
     MulEquiv.ofBijective f.rangeRestrict
       ⟨fun a b hab => hf (congrArg Subtype.val hab),
         f.rangeRestrict_surjective⟩
-  letI : Finite f.range := Finite.of_surjective eR eR.surjective
+  let : Finite f.range := Finite.of_surjective eR eR.surjective
   have hRange : HasDihedralSylowTwo f.range :=
     hasDihedralSylowTwo_of_mulEquiv eR.symm hSylow
   rcases Nat.even_or_odd

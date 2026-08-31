@@ -48,7 +48,7 @@ public theorem commutator_le_qCoreOf_via_invariant_closure
     have hxRk : xK ∈ Rk := Subgroup.le_normalClosure hxP0K
     exact Subgroup.mem_map.mpr ⟨xK, hxRk, rfl⟩
   have hRleP : R ≤ P := by
-    haveI : (P.subgroupOf K).Normal := by
+    have : (P.subgroupOf K).Normal := by
       exact Subgroup.normal_subgroupOf_of_le_normalizer hKnormP
     have hRkP : Rk ≤ P.subgroupOf K := by
       apply Subgroup.normalClosure_le_normal

@@ -25,7 +25,7 @@ public theorem normal_pSubgroup_eq_bot_of_mulEquiv_perm_four
     (P : Subgroup G) (hPnormal : P.Normal) (hPp : IsPGroup p P) :
     P = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let e : G ≃* Equiv.Perm (Fin 4) := he.some
   let Q : Subgroup (Equiv.Perm (Fin 4)) := P.map e.toMonoidHom
   have hQnormal : Q.Normal := hPnormal.map e.toMonoidHom e.surjective

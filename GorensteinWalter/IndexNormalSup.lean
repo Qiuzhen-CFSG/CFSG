@@ -19,7 +19,7 @@ public theorem index_eq_relIndex_inf_of_normal_sup
     (N K : Subgroup G) (hN : N.Normal) (hNK : N ⊔ K = ⊤) :
     K.index = (N ⊓ K).relIndex N := by
   classical
-  letI : N.Normal := hN
+  let : N.Normal := hN
   let b : G ⧸ K := QuotientGroup.mk (1 : G)
   have horbit : MulAction.orbit N b = Set.univ := by
     apply Set.eq_univ_iff_forall.mpr

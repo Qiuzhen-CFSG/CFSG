@@ -374,7 +374,7 @@ public theorem firstCase_distTwo_not_adjacent
       (commutingGraph c).Adj X Y.1} := ⟨⟨Y, hY⟩, hXY⟩
   have hcard := firstCase_distTwo_internal_neighbors_card_zero
     hmin c hfirst d A X hX
-  letI := Fintype.ofFinite
+  let := Fintype.ofFinite
     {Y : {Y : UConjugates c // commutingGraphDistTwo c A Y} //
       (commutingGraph c).Adj X Y.1}
   rw [Nat.card_eq_fintype_card, Fintype.card_eq_zero_iff] at hcard

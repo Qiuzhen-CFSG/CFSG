@@ -145,7 +145,7 @@ private lemma isKleinFour_of_card_four_no_order_four {G : Type*} [Group G] [Fini
       have hcard : Nat.card (Subgroup.zpowers g : Subgroup (↥K)) = 4 := by
         rw [hzg]
         simpa using hKcard
-      letI : Fintype (↥K) := Fintype.ofFinite _
+      let : Fintype (↥K) := Fintype.ofFinite _
       have hfc : Fintype.card ↥(Subgroup.zpowers g : Subgroup (↥K)) = orderOf g :=
         Fintype.card_zpowers (x := g)
       rw [← Nat.card_eq_fintype_card, hcard] at hfc
@@ -167,7 +167,7 @@ private lemma order_four_sq_eq_unique_involution {G : Type*} [Group G] [Finite G
     (K : Subgroup G) (hKcard : Nat.card ↥K = 4)
     {t : ↥K} (ht : t ≠ 1) (ht2 : t ^ 2 = 1)
     {x : ↥K} (hx4 : orderOf x = 4) : x ^ 2 = t := by
-  letI : Fintype (↥K) := Fintype.ofFinite _
+  let : Fintype (↥K) := Fintype.ofFinite _
   have hgen : Subgroup.zpowers x = ⊤ := by
     apply Subgroup.eq_of_le_of_card_ge (H := Subgroup.zpowers x) (K := ⊤) le_top
     rw [Nat.card_zpowers, hx4]
@@ -556,7 +556,7 @@ private lemma d8_v4_contains_r2 (K : Subgroup (DihedralGroup 4))
     have hKcyc : IsCyclic ↥K := by
       rw [hKrot, dihedralRotationSubgroup_def]
       exact Subgroup.isCyclic_zpowers (DihedralGroup.r (2 ^ k : ZMod (2 ^ 2)))
-    letI : IsKleinFour ↥K := hK
+    let : IsKleinFour ↥K := hK
     exact IsKleinFour.not_isCyclic hKcyc
   · exfalso
     rw [htop] at hKcard
@@ -646,7 +646,7 @@ private lemma sylow2_equiv_dihedral4
     (S2 : Sylow 2 G) :
     Nonempty ((S2 : Subgroup G) ≃* DihedralGroup 4) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hklein : IsKleinFour (pCore 2 c.Hhat) := firstCase_twoCore_isKleinFour hmin c hfirst
   have hS8 : Nat.card (c.S : Subgroup G) = 8 := firstCase_klein_S_card hmin c hfirst hklein
   have hm2 : c.m = 2 := by
@@ -678,7 +678,7 @@ public theorem firstCase_sylow3_normalizer_index
     (P : Sylow 3 G) :
     (Subgroup.normalizer (P : Set G)).index = 70 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   exact P.card_eq_index_normalizer.symm.trans (firstCase_sylow3_count hmin c hfirst d)
 
 /-- A simple group of order `2520` has no subgroup of index two. -/
@@ -842,7 +842,7 @@ public theorem firstCase_sylow2_card_eight
     (c : CentralizerSetup G) (d : FirstCaseCountData c) :
     ∀ S : Sylow 2 G, Nat.card S = 8 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   intro S
   rcases firstCase_index_card_of_countData c d with ⟨_, hGcard⟩
   have hS := S.card_eq_multiplicity
@@ -879,7 +879,7 @@ public theorem firstCase_normalizer_sylow3_sup_sylow2
       NP = (P : Subgroup G) ⊔ ((T2 : Subgroup (↥NP)).map NP.subtype) := by
   classical
   intro NP T2
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Tg : Subgroup G := (T2 : Subgroup (↥NP)).map NP.subtype
   have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
   have hNPcard : Nat.card ↥NP = 36 := firstCase_normalizer_sylow3_card hmin c hfirst d P
@@ -928,7 +928,7 @@ private lemma sylow3_count_eq_relIndex
     Nat.card (Sylow 3 (↥H)) =
       (Subgroup.normalizer (((P : Subgroup G) : Set G))).relIndex H := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let Q : Sylow 3 (↥H) := P.subtype hPleH
   have hQ : (Q : Subgroup (↥H)) = (P : Subgroup G).subgroupOf H := by
     exact Sylow.coe_subtype P hPleH
@@ -999,7 +999,7 @@ private theorem card_ne_seventy_two_of_normalizer_le
     Nat.card ↥H ≠ 72 := by
   classical
   intro hH72
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hn3 := sylow3_count_eq_relIndex H P hPleH
   have hm := H.index_mul_card
   rw [hH72, hGcard] at hm
@@ -1681,7 +1681,7 @@ private lemma sylow2_reflection_pow_four
     (S2 : Sylow 2 G) (r : G) (hrS2 : r ∈ (S2 : Subgroup G)) :
     r ^ 4 = 1 := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   rcases sylow2_equiv_dihedral4 hmin c hfirst d S2 with ⟨e⟩
   have hord : orderOf (e ⟨r, hrS2⟩) ∣ 4 := by
     rcases dihedralGroup_cases (e ⟨r, hrS2⟩) with ⟨i, hi⟩ | ⟨j, hj⟩
@@ -1764,7 +1764,7 @@ private lemma sylow3_inter_normalizer_inter_eq_inter
         let Q' : Sylow 3 (↥NQ) := Q.subtype hQleNQ
         obtain ⟨R, hzxleR⟩ := IsPGroup.exists_le_sylow (P := zxNQ) hzxNQp
         have hRnormal : (R : Subgroup (↥NQ)) = (Q' : Subgroup (↥NQ)) := by
-          letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+          let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
           obtain ⟨g, hg⟩ := MulAction.exists_smul_eq (↥NQ) Q' R
           have hQ'normal : (Q' : Subgroup (↥NQ)).Normal := by
             have hsub : (Q' : Subgroup (↥NQ)) = (Q : Subgroup G).subgroupOf NQ := by
@@ -1772,7 +1772,7 @@ private lemma sylow3_inter_normalizer_inter_eq_inter
             rw [hsub]
             exact (Subgroup.normal_subgroupOf_iff_le_normalizer hQleNQ).mpr (by
               simpa [NQ])
-          letI : (Q' : Subgroup (↥NQ)).Normal := hQ'normal
+          let : (Q' : Subgroup (↥NQ)).Normal := hQ'normal
           have hgfix : g • Q' = Q' := Sylow.smul_eq_of_normal
           calc
             (R : Subgroup (↥NQ)) = (g • Q' : Sylow 3 (↥NQ)) := by rw [← hg]
@@ -1830,7 +1830,7 @@ private lemma sylow3_le_centralizer_U
   intro u hu
   have hP9' : Nat.card P = 3 ^ 2 := by
     simpa using firstCase_sylow3_card_nine c d P
-  haveI : IsMulCommutative P :=
+  have : IsMulCommutative P :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   exact (congrArg Subtype.val
     (((IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9').is_comm).comm
@@ -1927,7 +1927,7 @@ private theorem firstCase_coset_involution_le_four
       exact ⟨hy, ⟨hyH, by
         rw [firstCase_coset_fiber_card_eq c hy]⟩⟩
     have hJne : Nat.card {x : G // x ∈ firstCaseJ c (firstCaseCosetInvolutions c y)} ≠ 0 := by
-      haveI : Nonempty {x : G // x ∈ firstCaseJ c (firstCaseCosetInvolutions c y)} :=
+      have : Nonempty {x : G // x ∈ firstCaseJ c (firstCaseCosetInvolutions c y)} :=
         ⟨⟨y, hyJ⟩⟩
       have hpos : 0 < Nat.card {x : G // x ∈
           firstCaseJ c (firstCaseCosetInvolutions c y)} := Nat.card_pos
@@ -1954,7 +1954,7 @@ public theorem firstCase_normalizer_sylow3_sylow2_inter_hhat_card_two
       Nat.card ↥(((T2 : Subgroup (↥NP)).map NP.subtype) ⊓ c.Hhat) = 2 := by
   classical
   intro NP T2
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Tg : Subgroup G := (T2 : Subgroup (↥NP)).map NP.subtype
   have hTgN : Tg ≤ NP := by
     intro x hx
@@ -2046,7 +2046,7 @@ public theorem firstCase_t2_inter_hhat_not_mem_twoCore
         t' ≠ 1 → t' ∉ twoCoreOf c.Hhat := by
   classical
   intro NP T2 t' ht' ht'ne
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let Tg : Subgroup G := (T2 : Subgroup (↥NP)).map NP.subtype
   have hklein : IsKleinFour (pCore 2 c.Hhat) := firstCase_twoCore_isKleinFour hmin c hfirst
   have hTg4 : Nat.card Tg = 4 := by
@@ -2070,7 +2070,7 @@ public theorem firstCase_t2_inter_hhat_not_mem_twoCore
   have hTg4sq : Nat.card Tg = 2 ^ 2 := by
     rw [hTg4]
     norm_num
-  haveI : IsMulCommutative Tg :=
+  have : IsMulCommutative Tg :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) hTg4sq
   intro htV
   have ht'central : ∀ x : G, x ∈ Tg → x * t' = t' * x := by
@@ -2230,7 +2230,7 @@ public theorem firstCase_t2_inter_hhat_inverts_P
   have hTg4sq : Nat.card Tg = 2 ^ 2 := by
     rw [hTg4]
     norm_num
-  haveI : IsMulCommutative Tg :=
+  have : IsMulCommutative Tg :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 2) hTg4sq
   have hcommTg : ∀ a b : G, a ∈ Tg → b ∈ Tg → a * b = b * a := by
     intro a b ha hb
@@ -2291,7 +2291,7 @@ public theorem firstCase_t2_inter_hhat_inverts_P
       hmin c hfirst d P hPU T2
   have haEx : ∃ a : G, a ∈ Tg ∧ a ∉ (c.Hhat : Set G) := by
     classical
-    letI : Fintype G := Fintype.ofFinite G
+    let : Fintype G := Fintype.ofFinite G
     let F : Finset G := {x : G | x ∈ Tg}.toFinset
     let E : Finset G := {x : G | x ∈ Tg ∧ x ∈ c.Hhat}.toFinset
     have hFcard : F.card = 4 := by
@@ -3064,8 +3064,8 @@ private lemma sylow2_join_inter_hhat_ne_four
       _ = 1 := eS2.map_one
   have ht'eqz : t' = z :=
     eq_of_mem_card_two (Tg ⊓ c.Hhat) hTgcard2 ht' ⟨hzTg, hzHhat⟩ ht'ne hz_ne
-  letI : Fintype (↥K) := Fintype.ofFinite _
-  haveI : IsKleinFour (↥K) := hKlein
+  let : Fintype (↥K) := Fintype.ofFinite _
+  have : IsKleinFour (↥K) := hKlein
   have hKcard' : Fintype.card (↥K) = 4 := by
     simpa [Nat.card_eq_fintype_card] using hK4
   have hKgt : 2 < Fintype.card (↥K) := by rw [hKcard']; norm_num
@@ -3159,7 +3159,7 @@ private lemma sylow2_join_inter_hhat_ne_four
         exact ⟨hx.1, ⟨hTgS2 hx.1, hx.2⟩⟩
     rw [hEq]
     exact hTgcard2
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F : Finset G := {x : G | x ∈ Tg}.toFinset
   let E : Finset G := {x : G | x ∈ Tg ∧ x ∈ K}.toFinset
   have hFcard : F.card = 4 := by
@@ -3300,7 +3300,7 @@ private lemma sylow2_join_inter_hhat_ne_four
         _ = 4 := hTg4
     have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
     have hP9' : Nat.card (P : Subgroup G) = 3 ^ 2 := by simpa using hP9
-    haveI : IsMulCommutative (P : Subgroup G) :=
+    have : IsMulCommutative (P : Subgroup G) :=
       IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
     let W : Subgroup G := conjugateSubgroup c.U r
     have hWP : W ≤ (P : Subgroup G) := by
@@ -3595,7 +3595,7 @@ private lemma join_inter_hhat_card_eq_18_or_72
     exact sup_le hPleH (hTgS2.trans hSleH)
   have hne36 : Nat.card ↥D ≠ 36 := by
     intro hD36
-    letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+    let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have hPleD : (P : Subgroup G) ≤ D := by
       intro x hx
       exact ⟨hPleH hx, hPleHhat hx⟩
@@ -3867,7 +3867,7 @@ private lemma sylow2_exists_t2_swap_U_W
   have hUne : c.U ≠ ⊥ := (lemma_2_2 hmin c).2
   have hNormU : Subgroup.normalizer (c.U : Set G) = c.Hhat :=
     theorem26_normalizer_U_eq_Hhat hmin c hO2 hUne
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F : Finset G := {x : G | x ∈ Tg}.toFinset
   let E : Finset G := {x : G | x ∈ Tg ∧ x ∈ c.Hhat}.toFinset
   have hFcard : F.card = 4 := by
@@ -4140,7 +4140,7 @@ private lemma sylow2_reflection_not_fix_W
   have hUne : c.U ≠ ⊥ := (lemma_2_2 hmin c).2
   have hNormU : Subgroup.normalizer (c.U : Set G) = c.Hhat :=
     theorem26_normalizer_U_eq_Hhat hmin c hO2 hUne
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F : Finset G := {x : G | x ∈ Tg}.toFinset
   let E : Finset G := {x : G | x ∈ Tg ∧ x ∈ c.Hhat}.toFinset
   have hFcard : F.card = 4 := by
@@ -4604,7 +4604,7 @@ private lemma sylow3_order_three
   classical
   have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
   have hP9' : Nat.card (P : Subgroup G) = 3 ^ 2 := by simpa using hP9
-  haveI : IsMulCommutative (P : Subgroup G) :=
+  have : IsMulCommutative (P : Subgroup G) :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   have hcommP : ∀ a b : G, a ∈ (P : Subgroup G) → b ∈ (P : Subgroup G) →
       a * b = b * a := by
@@ -4840,7 +4840,7 @@ private lemma join_h_ne_top_of_nondisjoint
       hrS2 hrTg hTgS2
   have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
   have hP9' : Nat.card (P : Subgroup G) = 3 ^ 2 := by simpa using hP9
-  haveI : IsMulCommutative (P : Subgroup G) :=
+  have : IsMulCommutative (P : Subgroup G) :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   have hcommP : ∀ a b : G, a ∈ (P : Subgroup G) → b ∈ (P : Subgroup G) →
       a * b = b * a := by
@@ -4857,7 +4857,7 @@ private lemma join_h_ne_top_of_nondisjoint
       _ = Nat.card (P : Subgroup G) := hcard
       _ = 9 := hP9
   have hQ9' : Nat.card (Q : Subgroup G) = 3 ^ 2 := by simpa using hQ9
-  haveI : IsMulCommutative (Q : Subgroup G) :=
+  have : IsMulCommutative (Q : Subgroup G) :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hQ9'
   have hcommQ : ∀ a b : G, a ∈ (Q : Subgroup G) → b ∈ (Q : Subgroup G) →
       a * b = b * a := by
@@ -5340,7 +5340,7 @@ private lemma sylow3_normalizer_order_three_mem
   classical
   let NP : Subgroup G := Subgroup.normalizer (P : Set G)
   let PP : Subgroup (↥NP) := (P : Subgroup G).subgroupOf NP
-  haveI : PP.Normal := by
+  have : PP.Normal := by
     change ((P : Subgroup G).subgroupOf NP).Normal
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer (P : Subgroup G).le_normalizer).mpr (by
       intro x hx
@@ -5432,7 +5432,7 @@ private lemma sylow3_normalizer_inter_card_dvd_four_of_disjoint
       exact hcop.dvd_of_dvd_mul_left (by
         simpa [show 36 = 9 * 4 by norm_num] using hDdvd36)
     exact hnot hdvd4'
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   rcases exists_prime_orderOf_dvd_card' 3 h3 with ⟨x, hx3⟩
   have hx3G : orderOf (x : G) = 3 := by
     rw [orderOf_submonoid (H := D.toSubmonoid) x]
@@ -5593,7 +5593,7 @@ private lemma join_h_ne_top_of_disjointness
     (hD : ∀ h : G, h ∈ H → h • P ≠ P → (P : Subgroup G) ⊓ (h • P : Sylow 3 G) = ⊥) :
     H ≠ ⊤ := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let NP : Subgroup G := Subgroup.normalizer (P : Set G)
   let Tg : Subgroup G := (T2 : Subgroup (↥NP)).map NP.subtype
   have hNleH : NP ≤ H := by
@@ -5761,7 +5761,7 @@ private lemma join_h_ne_top_of_disjointness
         _ = (n : G)⁻¹ • P := congrArg (fun x : Sylow 3 G => (n : G)⁻¹ • x) hEq
         _ = P := Sylow.smul_eq_iff_mem_normalizer.mpr (NP.inv_mem n.2))
   let Ω : Type u := {R : Sylow 3 G // R ∈ O'}
-  letI : MulAction (↥NP) Ω :=
+  let : MulAction (↥NP) Ω :=
     { smul := fun n R => ⟨n • R.1, hOrbRle R.1 R.2 ⟨n, rfl⟩⟩
       one_smul := by
         intro R
@@ -5804,7 +5804,7 @@ private lemma join_h_ne_top_of_disjointness
       Nat.card_congr (hfib_eq x)
     rw [hcard]
     exact (hOrbR x.1 x.2).2
-  letI : Fintype Ω := Fintype.ofFinite _
+  let : Fintype Ω := Fintype.ofFinite _
   have hsum : Nat.card Ω =
       ∑ q : Quotient (MulAction.orbitRel (↥NP) Ω),
         Nat.card {x : Ω // Quotient.mk (MulAction.orbitRel (↥NP) Ω) x = q} := by
@@ -5941,8 +5941,8 @@ public theorem firstCase_exists_indexSeven_subgroup
     (c : CentralizerSetup G) (hfirst : FirstCase c) (d : FirstCaseCountData c) :
     ∃ H : Subgroup G, H.index = 7 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hU3 : Nat.card c.U = 3 := firstCase_U_card_three hmin c hfirst d
   have hUp : IsPGroup 3 c.U := by
     refine IsPGroup.of_card (n := 1) ?_

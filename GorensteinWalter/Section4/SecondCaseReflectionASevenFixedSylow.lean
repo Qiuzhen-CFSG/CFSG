@@ -116,7 +116,7 @@ private lemma a7Base_is_dihedral4 :
       (a7v : A7)⁻¹
     decide
   rcases (isCyclic_or_dihedral_of_generators ρ' σ' hgen hσ2 hrel) with hcyc | hdih
-  · haveI : IsCyclic a7BaseSubgroup := hcyc
+  · have : IsCyclic a7BaseSubgroup := hcyc
     have hcomm : ρ' * σ' = σ' * ρ' :=
       IsMulCommutative.is_comm.comm ρ' σ'
     have hc : ((ρ' * σ' : a7BaseSubgroup) : A7) =

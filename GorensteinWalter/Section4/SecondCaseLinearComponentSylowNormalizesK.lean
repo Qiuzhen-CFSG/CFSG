@@ -229,8 +229,8 @@ public theorem secondCase_linear_componentSylow_le_normalizer_K
     exact hxI.2
   have hTcomm : ∀ a b : d.E ⧸ Subgroup.center d.E,
       a ∈ T → b ∈ T → a * b = b * a := by
-    letI : IsCyclic T := hTcyc
-    letI : CommGroup T := IsCyclic.commGroup
+    let : IsCyclic T := hTcyc
+    let : CommGroup T := IsCyclic.commGroup
     intro a b ha hb
     exact congrArg Subtype.val (mul_comm (⟨a, ha⟩ : T) (⟨b, hb⟩ : T))
   have hUEbar_norm :

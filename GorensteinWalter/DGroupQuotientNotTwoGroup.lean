@@ -29,7 +29,7 @@ public theorem not_isPGroup_two_of_psl2_odd
     (hK : IsOddPrimePower (Nat.card K)) :
     ¬ IsPGroup 2 (PSL2 K) := by
   rcases hK with ⟨p, n, hp, hpodd, hn, hcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   intro htwo
   have hUtwo : IsPGroup 2 (psl2UpperUnipotentSubgroup K) :=
     htwo.to_subgroup (psl2UpperUnipotentSubgroup K)
@@ -84,12 +84,12 @@ public theorem not_isPGroup_quotient_pPrimeCore_of_isDGroupQuotient
   · have hLtwo : IsPGroup 2 L := htwo.to_subgroup L
     rcases hLmodel with hPSLmodel | hPGLmodel
     · rcases hPSLmodel with ⟨K, instK, finK, hK⟩
-      letI : Field K := instK
-      letI : Finite K := finK
+      let : Field K := instK
+      let : Finite K := finK
       exact hPSL K hK.1 (hLtwo.of_equiv hK.2.some)
     · rcases hPGLmodel with ⟨K, instK, finK, hK⟩
-      letI : Field K := instK
-      letI : Finite K := finK
+      let : Field K := instK
+      let : Finite K := finK
       exact hPGL K hK.1 (hLtwo.of_equiv hK.2.some)
 
 /-- The `2`-core of a group isomorphic to odd `PSL₂(K)` is trivial for
@@ -133,7 +133,7 @@ public theorem pCore_two_eq_bot_of_mulEquiv_pgl2_odd
     (e : G ≃* PGL2 K) :
     pCore 2 G = ⊥ := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   let T : Subgroup G := pCore 2 G
@@ -187,8 +187,8 @@ public theorem pCore_two_eq_bot_of_mulEquiv_pgl2_odd
       let eJ : J ≃* PSL2 K := hJpsl.some
       have hP2 : IsPGroup 2 (PSL2 K) := hJ2.of_equiv eJ
       exact not_isPGroup_two_of_psl2_odd K hK hP2
-  letI : T'.Normal := hT'normal
-  letI : J.Normal := hJnormal
+  let : T'.Normal := hT'normal
+  let : J.Normal := hJnormal
   have hcomm_le : ⁅T', J⁆ ≤ T' ⊓ J := Subgroup.commutator_le_inf T' J
   have hcomm_bot : ⁅T', J⁆ = ⊥ :=
     le_bot_iff.mp (hcomm_le.trans (le_of_eq hT'Jbot))
@@ -211,7 +211,7 @@ public theorem subgroup_le_of_isPGroup_coindex_odd
     (L : Subgroup H) (hLnorm : L.Normal) (hLindex : Odd L.index)
     (K : Subgroup H) (hKp : IsPGroup 2 K) :
     K ≤ L := by
-  letI : L.Normal := hLnorm
+  let : L.Normal := hLnorm
   let π : H →* H ⧸ L := QuotientGroup.mk' L
   have hQodd : Odd (Nat.card (H ⧸ L)) := by
     rw [← L.index_eq_card]
@@ -247,7 +247,7 @@ public theorem pCore_two_eq_bot_of_linear_quotient_large
     pCore 2 A = ⊥ := by
   classical
   let O : Subgroup A := pPrimeCore 2 A
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := A ⧸ O
   let q : A →* Q := QuotientGroup.mk' O
   let T : Subgroup A := pCore 2 A
@@ -257,7 +257,7 @@ public theorem pCore_two_eq_bot_of_linear_quotient_large
     Subgroup.Normal.map hTnorm q (QuotientGroup.mk'_surjective O)
   have hTp : IsPGroup 2 T := pCore_isPGroup
   have hTQp : IsPGroup 2 TQ := IsPGroup.map hTp q
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   have hTQleL : TQ ≤ L :=
     subgroup_le_of_isPGroup_coindex_odd L hLnormal hLindex TQ hTQp
   let TL : Subgroup (↥L) := TQ.subgroupOf L
@@ -319,7 +319,7 @@ public theorem subgroup_map_le_of_inverted_against_normal_odd_index
     (t : G) (htL : f t ∈ L)
     (htinv : ∀ x ∈ P, t * x * t⁻¹ = x⁻¹) :
     P.map f ≤ L := by
-  letI : L.Normal := hLnorm
+  let : L.Normal := hLnorm
   let π : H →* H ⧸ L := QuotientGroup.mk' L
   have hQodd : Odd (Nat.card (H ⧸ L)) := by
     rw [← L.index_eq_card]

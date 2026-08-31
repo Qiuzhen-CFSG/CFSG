@@ -38,7 +38,7 @@ private theorem pPrimeCore_map_le_of_qCore_le_ne
     (hqX : ∀ q : ℕ, q.Prime → q ≠ p → qCoreOf U q ≤ X) :
     ((pPrimeCore p (fittingSubgroup U)).map (fittingSubgroup U).subtype).map U.subtype ≤ X := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F0 : Subgroup U := fittingSubgroup U
   let Q : Subgroup G := ((pPrimeCore p F0).map F0.subtype).map U.subtype
   have hQleF : Q ≤ fittingSubgroupOf U := by
@@ -47,13 +47,13 @@ private theorem pPrimeCore_map_le_of_qCore_le_ne
     rcases (Subgroup.mem_map).1 hy with ⟨z, hz, rfl⟩
     exact Subgroup.mem_map.mpr ⟨(F0.subtype z : U), z.2, rfl⟩
   have hFnil : Group.IsNilpotent (↥(fittingSubgroupOf U)) := fittingSubgroupOf_isNilpotent U
-  haveI : Group.IsNilpotent (↥(fittingSubgroupOf U)) := hFnil
+  have : Group.IsNilpotent (↥(fittingSubgroupOf U)) := hFnil
   have hQFnil : Group.IsNilpotent (↥(Q.subgroupOf (fittingSubgroupOf U))) := by infer_instance
-  haveI : Group.IsNilpotent (↥(Q.subgroupOf (fittingSubgroupOf U))) := hQFnil
+  have : Group.IsNilpotent (↥(Q.subgroupOf (fittingSubgroupOf U))) := hQFnil
   have hQnil : Group.IsNilpotent (↥Q) :=
     Group.nilpotent_of_mulEquiv (G := ↥(Q.subgroupOf (fittingSubgroupOf U))) (G' := ↥Q)
       (Subgroup.subgroupOfEquivOfLe hQleF)
-  haveI : Group.IsNilpotent (↥Q) := hQnil
+  have : Group.IsNilpotent (↥Q) := hQnil
   have hnilTopQ : Group.IsNilpotent (↥(⊤ : Subgroup Q)) :=
     Group.nilpotent_of_mulEquiv (G := Q) (G' := ↥(⊤ : Subgroup Q))
       (Subgroup.topEquiv.symm : Q ≃* ↥(⊤ : Subgroup Q))
@@ -108,7 +108,7 @@ private theorem pPrimeCore_map_le_of_qCore_le
     (hqX : ∀ q : ℕ, q.Prime → q ≠ p → qCoreOf U q ≤ X) :
     ((pPrimeCore p (fittingSubgroup U)).map (fittingSubgroup U).subtype).map U.subtype ≤ X := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let F0 : Subgroup U := fittingSubgroup U
   let φ : F0 →* G := U.subtype.comp F0.subtype
   have hnil : Group.IsNilpotent (↥(pPrimeCore p F0)) := by infer_instance
@@ -208,8 +208,8 @@ private theorem firstCase_cyclic_I1_card_coprime_three
     (hp3 : od.p = 3) :
     Nat.Coprime 3 (Nat.card (↥od.d.I1)) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hUeq : c.U = od.d.bg.U := firstCase_U_eq_bg_U c od.d
   have hFUeq : c.FU = fittingSubgroupOf od.d.bg.U := by
     change fittingSubgroupOf c.U = fittingSubgroupOf od.d.bg.U
@@ -282,8 +282,8 @@ public theorem firstCase_cyclic_I2_eq_FU_of_a7
     (hp3 : od.p = 3) :
     od.d.I2 = c.FU := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hUeq : c.U = od.d.bg.U := firstCase_U_eq_bg_U c od.d
   have hFUeq : c.FU = fittingSubgroupOf od.d.bg.U := by
     change fittingSubgroupOf c.U = fittingSubgroupOf od.d.bg.U
@@ -331,8 +331,8 @@ public theorem firstCase_cyclic_I1_eq_pPrimeCore_fittingSubgroupOf_of_a7
       ((pPrimeCore 3 (fittingSubgroup od.d.bg.U)).map
         (fittingSubgroup od.d.bg.U).subtype).map od.d.bg.U.subtype := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let U : Subgroup G := od.d.bg.U
   let F : Subgroup G := fittingSubgroupOf U
   let Q3 : Subgroup G :=
@@ -355,7 +355,7 @@ public theorem firstCase_cyclic_I1_eq_pPrimeCore_fittingSubgroupOf_of_a7
     intro x hx
     exact (le_normalizer_of_isNormalIn hI1data.2.1)
       (by simpa [hUeq] using (fittingSubgroupOf_le U hx))
-  haveI : (od.d.I1.subgroupOf F).Normal := hI1normF
+  have : (od.d.I1.subgroupOf F).Normal := hI1normF
   have hI1leQ' : od.d.I1 ≤ (pPrimeCore 3 (↥F)).map F.subtype :=
     subgroupOf_le_pPrimeCore_map (H := F) (K := od.d.I1) hI1leF hI1cop3
   have hI1leQ : od.d.I1 ≤ Q3 := by
@@ -397,8 +397,8 @@ public theorem firstCase_cyclic_centralizer_FU_t1_eq_threeCore_of_a7
     (hp3 : od.p = 3) :
     centralizerIn c.FU od.d.bg.t1 = qCoreOf od.d.bg.U 3 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let U : Subgroup G := od.d.bg.U
   let F : Subgroup G := fittingSubgroupOf U
   let P : Subgroup G := qCoreOf U 3
@@ -475,8 +475,8 @@ public theorem firstCase_cyclic_B_inter_FU_eq_bot_of_a7
     (hp3 : od.p = 3) :
     od.d.bg.B ⊓ c.FU = ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
+  let : Fintype G := Fintype.ofFinite G
+  let : BenderGlauberman.Hyp11KData od.d.bg := firstCaseBGKData hmin c od.d
   have hI2FU : od.d.I2 = c.FU :=
     firstCase_cyclic_I2_eq_FU_of_a7 hmin c od hfirst hcyclic hU Q M hMmax hMN hSM
       fd hV2 hA7 hp3
@@ -537,7 +537,7 @@ public theorem firstCase_cyclic_FU_abelian_of_a7
     (hp3 : od.p = 3) :
     IsMulCommutative (↥c.FU) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have hI2FU : od.d.I2 = c.FU :=
     firstCase_cyclic_I2_eq_FU_of_a7 hmin c od hfirst hcyclic hU Q M hMmax hMN hSM
       fd hV2 hA7 hp3

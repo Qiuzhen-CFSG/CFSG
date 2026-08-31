@@ -29,8 +29,8 @@ private theorem affine_action_of_injective_action
     (φ : K →* MulAut H) (hφ : Function.Injective φ) :
     ∃ ψ : (H ⋊[φ] K) →* Equiv.Perm H, Function.Injective ψ := by
   let affineSmul : (H ⋊[φ] K) → H → H := fun z x => z.left * (φ z.right) x
-  letI : SMul (H ⋊[φ] K) H := ⟨affineSmul⟩
-  letI : MulAction (H ⋊[φ] K) H :=
+  let : SMul (H ⋊[φ] K) H := ⟨affineSmul⟩
+  let : MulAction (H ⋊[φ] K) H :=
     { smul := affineSmul
       one_smul := by
         intro x
@@ -43,7 +43,7 @@ private theorem affine_action_of_injective_action
         dsimp [affineSmul]
         rw [map_mul, MulAut.mul_apply, (φ a.right).map_mul]
         rw [mul_assoc] }
-  letI : FaithfulSMul (H ⋊[φ] K) H :=
+  let : FaithfulSMul (H ⋊[φ] K) H :=
     ⟨by
       intro x y hxy
       apply SemidirectProduct.ext
@@ -92,7 +92,7 @@ public theorem faithful_four_point_action_of_split_normal_kleinFour
     (hH : IsKleinFour H) (hcomp : H.IsComplement' K)
     (hact : Function.Injective (normalSubgroupConj H K)) :
     ∃ ψ : G →* Equiv.Perm (Fin 4), Function.Injective ψ := by
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   let φ : (↥K) →* MulAut (↥H) := normalSubgroupConj H K
   rcases affine_action_of_injective_action φ hact with ⟨aff, haff⟩
   let eS : (↥H ⋊[φ] ↥K) ≃* G := SemidirectProduct.mulEquivSubgroup hcomp
@@ -119,7 +119,7 @@ public theorem faithful_four_point_action_of_centralizer_le_split_normal_kleinFo
     (hH : IsKleinFour H) (hcomp : H.IsComplement' K)
     (hcent : Subgroup.centralizer (H : Set G) ≤ H) :
     ∃ ψ : G →* Equiv.Perm (Fin 4), Function.Injective ψ := by
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hconjmap : ∀ a : ↥K,
       normalSubgroupConj H K a = MulAut.conjNormal (a : G) := by
     intro a

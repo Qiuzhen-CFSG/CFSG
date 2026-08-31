@@ -29,19 +29,19 @@ public theorem quasisimple_not_quotient_isTwoGroup
     simpa [O] using pPrimeCore_coprime_card (p := 2) (G := Q)
   have hOodd : Odd (Nat.card ↥O) := Nat.coprime_two_left.mp hOcop
   have hOsolv : Group.IsSolvable O := odd_order_theorem O hOodd
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  haveI : Group.IsNilpotent (Q ⧸ O) :=
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Group.IsNilpotent (Q ⧸ O) :=
     IsPGroup.isNilpotent (by simpa [O] using hQ2)
   have hQsolvQ : Group.IsSolvable (Q ⧸ O) := inferInstance
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
-  letI : Group.IsSolvable O := hOsolv
-  letI : Group.IsSolvable (Q ⧸ O) := hQsolvQ
+  let : Group.IsSolvable O := hOsolv
+  let : Group.IsSolvable (Q ⧸ O) := hQsolvQ
   have hQsolv : Group.IsSolvable Q :=
     isSolvable_of_normal_subgroup_and_quotient O
-  letI : Nontrivial Q := hQ.1
-  letI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+  let : Nontrivial Q := hQ.1
+  let : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
   exact Group.IsPerfect.not_isSolvable Q hQsolv
 
 /-- A quasisimple group is not solvable. -/
@@ -49,8 +49,8 @@ public theorem quasisimple_not_solvable
     {Q : Type u} [Group Q] [Finite Q]
     (hQ : IsQuasisimple Q) :
     ¬ Group.IsSolvable Q := by
-  letI : Nontrivial Q := hQ.1
-  letI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+  let : Nontrivial Q := hQ.1
+  let : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
   exact Group.IsPerfect.not_isSolvable Q
 
 /-- A quasisimple group has even order. -/
@@ -59,8 +59,8 @@ public theorem quasisimple_even_card
     (hQ : IsQuasisimple Q) :
     2 ∣ Nat.card Q := by
   classical
-  letI : Nontrivial Q := hQ.1
-  letI : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
+  let : Nontrivial Q := hQ.1
+  let : Group.IsPerfect Q := (Group.isPerfect_def).2 hQ.2.1
   by_contra hnot
   have hodd : Odd (Nat.card Q) := by
     rw [← Nat.not_even_iff_odd]
@@ -76,10 +76,10 @@ public theorem pPrimeCore_le_center_of_isQuasisimple
   classical
   let O : Subgroup Q := pPrimeCore 2 Q
   let Z : Subgroup Q := Subgroup.center Q
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
-  letI : Z.Normal := by
+  let : Z.Normal := by
     dsimp [Z]
     infer_instance
   let π : Q →* Q ⧸ Z := QuotientGroup.mk' Z

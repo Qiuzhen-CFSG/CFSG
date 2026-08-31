@@ -114,7 +114,7 @@ public theorem psl2_normal_oddP_eq_bot_or_eq_low_dihedral_overgroup
     exact ⟨m, by omega⟩
   · exfalso
     rcases hCyclic with ⟨_z, _hz, _hcard, hMcyclic⟩
-    letI : IsCyclic M := hMcyclic
+    let : IsCyclic M := hMcyclic
     exact hDnotcyclic (Subgroup.isCyclic_of_le hDM)
   · right
     rcases hDihedral with ⟨z, hzdiv, hMcard, _hMequiv⟩
@@ -183,7 +183,7 @@ public theorem psl2_normal_oddP_eq_bot_or_eq_low_dihedral_overgroup
     rcases hSemidirect with
       ⟨a, ccard, _hccard_dvd, _hccard_ambient, N, C,
         hNnormal, hNelem, hNcard, hCcyc, _hCcard, hdisj, hjoin⟩
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     have hcomp : N.IsComplement' C := by
       refine ⟨Subgroup.mul_injective_of_disjoint hdisj, ?_⟩
       intro g
@@ -193,7 +193,7 @@ public theorem psl2_normal_oddP_eq_bot_or_eq_low_dihedral_overgroup
       rcases hg with ⟨n, hn, c, hc, hnc⟩
       exact ⟨⟨⟨n, hn⟩, ⟨c, hc⟩⟩, hnc⟩
     let eQ : M ⧸ N ≃* C := hcomp.symm.QuotientMulEquiv
-    letI : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
+    let : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
     let DM : Subgroup M := D.subgroupOf M
     have hDMcard : Nat.card DM = Nat.card D :=
       Nat.card_congr (Subgroup.subgroupOfEquivOfLe hDM)

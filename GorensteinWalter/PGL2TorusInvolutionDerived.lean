@@ -25,7 +25,7 @@ private lemma pgl2_unique_involution_cyclic
     (hs : s ^ 2 = 1) (hsne : s ≠ 1) :
     ∀ x : U, x ^ 2 = 1 → x ≠ 1 → x = s := by
   classical
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   let A : Finset U := Finset.univ.filter (fun a => a ^ 2 = 1)
   have hle : A.card ≤ 2 := by
     simpa [A] using
@@ -97,10 +97,10 @@ public theorem pgl2_torus_involution_mem_commutator
     (hUJ : ¬ U ≤ commutator (PGL2 K)) :
     s ∈ commutator (PGL2 K) := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : IsCyclic U := hUcyc
+  let : IsCyclic U := hUcyc
   let J : Subgroup (PGL2 K) := commutator (PGL2 K)
   let UJ : Subgroup (PGL2 K) := U ⊓ J
   let UJU : Subgroup U := UJ.subgroupOf U
@@ -142,8 +142,8 @@ public theorem pgl2_torus_involution_mem_commutator
   have h2dvd : 2 ∣ Nat.card UJ := by
     rw [hUJcard]
     exact even_iff_two_dvd.mp hmeven
-  letI : Fintype UJ := Fintype.ofFinite UJ
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fintype UJ := Fintype.ofFinite UJ
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨x, hxord⟩ := exists_prime_orderOf_dvd_card (G := UJ) (p := 2)
     (by simpa [Nat.card_eq_fintype_card] using h2dvd)
   let xG : PGL2 K := (x : UJ)

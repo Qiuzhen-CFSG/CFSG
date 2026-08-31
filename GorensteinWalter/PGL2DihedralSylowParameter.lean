@@ -29,10 +29,10 @@ public theorem pgl2_dihedral_sylow_parameter_ge_two
     (P : Sylow 2 (PGL2 K)) {m : ℕ}
     (e : P ≃* DihedralGroup (2 ^ m)) :
     2 ≤ m := by
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hqOdd : Odd (Nat.card K) := by
     rcases hK with ⟨p, f, hp, hpOdd, hf, hKcard⟩
     rw [hKcard]

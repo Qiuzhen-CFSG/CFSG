@@ -155,8 +155,8 @@ public theorem aSeven_three_subgroup_centralizing_kleinFour_card_le_three
     (hcent : P ≤ Subgroup.centralizer (V : Set (alternatingGroup (Fin 7)))) :
     Nat.card P ≤ 3 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hV.card_four]
     norm_num

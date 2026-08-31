@@ -34,8 +34,8 @@ public theorem secondCase_linear_A_unique_elementary
     ∀ B : Subgroup G, B ≤ od.F ⊔ od.K0 →
       IsElementaryAbelian od.p B → Nat.card B = od.p ^ 2 → B = od.A := by
   classical
-  letI : Fact od.p.Prime := ⟨od.hp_prime⟩
-  letI : IsCyclic od.K := od.K_cyclic
+  let : Fact od.p.Prime := ⟨od.hp_prime⟩
+  let : IsCyclic od.K := od.K_cyclic
   have hK0leE : od.K0 ≤ d.E := by
     rw [od.K0_eq]
     exact inf_le_right.trans od.K_le_E
@@ -83,8 +83,8 @@ public theorem secondCase_linear_A_unique_elementary
   have hBcardpos : 1 < Nat.card B := by
     rw [hBcard]
     nlinarith [od.hp_prime.two_le]
-  letI : Nontrivial B := Finite.one_lt_card_iff_nontrivial.mp hBcardpos
-  letI : IsElementaryAbelian od.p B := hB_elem
+  let : Nontrivial B := Finite.one_lt_card_iff_nontrivial.mp hBcardpos
+  let : IsElementaryAbelian od.p B := hB_elem
   have hpow : ∀ x : B, (x : G) ^ od.p = 1 := by
     intro x
     have hexp : Monoid.exponent B = od.p := IsElementaryAbelian.exponent_eq_prime

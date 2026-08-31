@@ -43,7 +43,7 @@ public theorem card_map_eq_card_mul_card_ker
   have hkerK : kerK = (f.comp K.subtype).ker := by
     ext x
     simp [kerK, MonoidHom.mem_ker, Subgroup.mem_subgroupOf]
-  haveI : kerK.Normal := by
+  have : kerK.Normal := by
     rw [hkerK]
     infer_instance
   have hrange : (f.comp K.subtype).range = K.map f := by

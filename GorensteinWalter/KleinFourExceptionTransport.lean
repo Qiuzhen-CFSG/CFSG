@@ -17,7 +17,7 @@ public theorem isCyclic_subgroupOf
     {G : Type*} [Group G] {M A : Subgroup G}
     (hAM : A ≤ M) (hAcyc : IsCyclic A) :
     IsCyclic (A.subgroupOf M) := by
-  letI : IsCyclic A := hAcyc
+  let : IsCyclic A := hAcyc
   exact (Subgroup.subgroupOfEquivOfLe hAM).isCyclic.mpr
     (inferInstance : IsCyclic A)
 
@@ -85,7 +85,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_of_mulEquiv_alternatingGroup_
   let V' : Subgroup (alternatingGroup (Fin 4)) := V.map e.toMonoidHom
   let eA : A ≃* A' := Subgroup.equivMapOfInjective A e.toMonoidHom e.injective
   have hA'cyc : IsCyclic A' := by
-    letI : IsCyclic A := hAcyc
+    let : IsCyclic A := hAcyc
     exact eA.isCyclic.mp (inferInstance : IsCyclic A)
   have hA'ne : A' ≠ ⊥ := by
     intro hbot
@@ -117,7 +117,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_of_mulEquiv_alternatingGroup_
   let V' : Subgroup (alternatingGroup (Fin 5)) := V.map e.toMonoidHom
   let eA : A ≃* A' := Subgroup.equivMapOfInjective A e.toMonoidHom e.injective
   have hA'cyc : IsCyclic A' := by
-    letI : IsCyclic A := hAcyc
+    let : IsCyclic A := hAcyc
     exact eA.isCyclic.mp (inferInstance : IsCyclic A)
   have hA'ne : A' ≠ ⊥ := by
     intro hbot
@@ -149,7 +149,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_of_mulEquiv_perm_four
   let V' : Subgroup (Equiv.Perm (Fin 4)) := V.map e.toMonoidHom
   let eA : A ≃* A' := Subgroup.equivMapOfInjective A e.toMonoidHom e.injective
   have hA'cyc : IsCyclic A' := by
-    letI : IsCyclic A := hAcyc
+    let : IsCyclic A := hAcyc
     exact eA.isCyclic.mp (inferInstance : IsCyclic A)
   have hA'ne : A' ≠ ⊥ := by
     intro hbot

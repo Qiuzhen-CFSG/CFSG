@@ -91,7 +91,7 @@ public theorem bender1970_2_4_coreFree_selfCommutator_eq_bot
   have hRcop_p : Nat.Coprime p (Nat.card R) := by
     refine (Nat.Prime.coprime_iff_not_dvd hp).2 ?_
     intro hpdvd
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     rcases exists_prime_orderOf_dvd_card' (G := R) p hpdvd with ⟨a, ha_order⟩
     let P : Subgroup X := Subgroup.zpowers ((a : R) : X)
     have hPR : P ≤ R := Subgroup.zpowers_le.2 a.property
@@ -117,7 +117,7 @@ public theorem bender1970_2_4_coreFree_selfCommutator_eq_bot
     have hPleBot : P ≤ ⊥ := le_of_eq hPbot
     exact ha_ne (Subgroup.mem_bot.mp (hPleBot (Subgroup.mem_zpowers ((a : R) : X))))
   have hcop : Nat.Coprime (Nat.card R) (Nat.card U) := by
-    letI : Fact p.Prime := ⟨hp⟩
+    let : Fact p.Prime := ⟨hp⟩
     refine Nat.coprime_of_dvd ?_
     intro q hqprime hqR hqU
     rcases hUp.exists_card_eq with ⟨n, hn⟩
@@ -159,7 +159,7 @@ public theorem bender1970_2_4_coreFree_selfCommutator_eq_bot
     exact hxD
   have hnormD' : Subgroup.normalizer (D' : Set (↥F)) = D' :=
     le_antisymm hnormD'_le D'.le_normalizer
-  letI : Group.IsNilpotent (↥F) := hFnil
+  let : Group.IsNilpotent (↥F) := hFnil
   have hnc : NormalizerCondition (↥F) :=
     Group.normalizerCondition_of_isNilpotent (G := ↥F)
   have hD'top : D' = ⊤ :=
@@ -201,7 +201,7 @@ public theorem bender1970_2_4_solvable_oddP_selfCommutator_le_pCore
     (hUcomm : ⁅U, Subgroup.zpowers t⁆ = U) :
     U ≤ pCore p X := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let q : X →* X ⧸ (pCore p X) := QuotientGroup.mk' (pCore p X)
   let Ubar : Subgroup (X ⧸ (pCore p X)) := U.map q
   have hOp : IsPGroup p (pCore p X) :=
@@ -213,12 +213,12 @@ public theorem bender1970_2_4_solvable_oddP_selfCommutator_le_pCore
     rw [hn]
     exact hpodd.pow
   have hOcop2 : Nat.Coprime 2 (Nat.card (pCore p X)) := hOodd.coprime_two_left
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have htord : orderOf t = 2 := orderOf_eq_prime (by simpa [pow_two] using ht.2) ht.1
   have hT2 : IsPGroup 2 (Subgroup.zpowers t) := by
     refine IsPGroup.of_card (n := 1) ?_
     simp [Nat.card_zpowers, htord]
-  letI : Fact (IsPGroup 2 (Subgroup.zpowers t)) := ⟨hT2⟩
+  let : Fact (IsPGroup 2 (Subgroup.zpowers t)) := ⟨hT2⟩
   have hC1 : Subgroup.centralizer ((Subgroup.zpowers t : Subgroup X) : Set X) =
       Subgroup.centralizer ({t} : Set X) := by
     apply le_antisymm
@@ -302,7 +302,7 @@ public theorem bender1970_2_4_solvable_oddP_selfCommutator_le_pCore
       rw [Subgroup.map_commutator, MonoidHom.map_zpowers]
     rw [← hmapComm, hUcomm]
   have hsolvbar : Group.IsSolvable (X ⧸ (pCore p X)) := by
-    letI : Group.IsSolvable X := hsolv
+    let : Group.IsSolvable X := hsolv
     exact Group.isSolvable_of_surjective
       (f := QuotientGroup.mk' (pCore p X))
       (QuotientGroup.mk'_surjective (pCore p X))

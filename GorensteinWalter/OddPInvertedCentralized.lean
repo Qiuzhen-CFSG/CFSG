@@ -27,7 +27,7 @@ public theorem no_nontrivial_oddP_inverted_centralized
     (hXp : IsPGroup p X) (hpodd : Odd p) (hXne : X ≠ ⊥) :
     False := by
   classical
-  letI : Fintype X := Fintype.ofFinite X
+  let : Fintype X := Fintype.ofFinite X
   have hlt : 1 < Fintype.card X := by
     rw [← Nat.card_eq_fintype_card]
     exact (Subgroup.one_lt_card_iff_ne_bot X).mpr hXne
@@ -76,8 +76,8 @@ public theorem pgl2_no_inverted_oddP_centralized
     (hPinvByT : BenderGlauberman.IsInvertedBy t P)
     (hPne : P ≠ ⊥) :
     False := by
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Finite (PGL2 K) :=
+  let : Fact p.Prime := ⟨hp⟩
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   have hPcent : P ≤ Subgroup.centralizer ({t} : Set (PGL2 K)) :=

@@ -180,7 +180,7 @@ public theorem firstCase_edgeStarClass_faithful
     (d : FirstCaseCountData c) :
     FaithfulSMul G (CommutingGraphEdgeStarClass c) := by
   classical
-  letI := Fintype.ofFinite (CommutingGraphEdgeStarClass c)
+  let := Fintype.ofFinite (CommutingGraphEdgeStarClass c)
   rw [faithfulSMul_iff]
   intro g hg
   let φ : G →* Equiv.Perm (CommutingGraphEdgeStarClass c) :=
@@ -227,7 +227,7 @@ public theorem firstCase_exists_indexSeven_subgroup_oddGraph
   have hCpos : 0 < Nat.card C := by rw [hCcard]; norm_num
   have hCnonempty : Nonempty C := (Nat.card_pos_iff.mp hCpos).1
   let S : C := Classical.choice hCnonempty
-  letI : MulAction.IsPretransitive G C :=
+  let : MulAction.IsPretransitive G C :=
     ⟨fun X Y => firstCase_edgeStarClass_transitive hmin c hfirst d X Y⟩
   refine ⟨MulAction.stabilizer G S, ?_⟩
   rw [MulAction.index_stabilizer_of_transitive]

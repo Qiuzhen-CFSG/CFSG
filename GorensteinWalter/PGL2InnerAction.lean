@@ -156,7 +156,7 @@ public theorem toPGL_pgl2InnerAutPSL2_apply
   let toPGL : PSL2 K →* PGL2 K :=
     Matrix.ProjectiveSpecialLinearGroup.toPGL
   let H : Subgroup (PGL2 K) := toPGL.range
-  letI : H.Normal := by
+  let : H.Normal := by
     dsimp [H, toPGL]
     rw [← pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     infer_instance
@@ -179,7 +179,7 @@ public theorem pgl2InnerAutPSL2_toPGL
   let toPGL : PSL2 K →* PGL2 K :=
     Matrix.ProjectiveSpecialLinearGroup.toPGL
   let H : Subgroup (PGL2 K) := toPGL.range
-  letI : H.Normal := by
+  let : H.Normal := by
     dsimp [H, toPGL]
     rw [← pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     infer_instance
@@ -208,7 +208,7 @@ public theorem pgl2InnerAutPSL2_injective
   let toPGL : PSL2 K →* PGL2 K :=
     Matrix.ProjectiveSpecialLinearGroup.toPGL
   let H : Subgroup (PGL2 K) := toPGL.range
-  letI : H.Normal := by
+  let : H.Normal := by
     dsimp [H, toPGL]
     rw [← pgl2_commutator_eq_psl2_range_of_card_gt_three K hK hcard]
     infer_instance

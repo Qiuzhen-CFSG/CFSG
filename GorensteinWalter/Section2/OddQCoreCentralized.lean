@@ -38,7 +38,7 @@ public theorem mem_centralizer_qCoreOf_of_minimalCounterexample
     c.t ∈ Subgroup.centralizer (qCoreOf c.Hhat p : Set G) := by
   classical
   by_contra hcontra
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let Q : Subgroup G := qCoreOf c.Hhat p
   let Z : Subgroup G := Subgroup.zpowers c.t
   have htH : c.t ∈ c.H := by

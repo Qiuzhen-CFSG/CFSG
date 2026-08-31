@@ -25,8 +25,8 @@ public theorem normal_pSubgroup_eq_bot_of_mulEquiv_alternatingGroup
     (P : Subgroup G) (hPnormal : P.Normal) (hPp : IsPGroup p P) :
     P = ⊥ := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
-  letI : Nontrivial (Fin n) := Fin.nontrivial_iff_two_le.mpr (by omega)
+  let : Fact p.Prime := ⟨hp⟩
+  let : Nontrivial (Fin n) := Fin.nontrivial_iff_two_le.mpr (by omega)
   have hsimple_model : IsSimpleGroup (alternatingGroup (Fin n)) :=
     alternatingGroup.isSimpleGroup (by simpa using hn)
   have hsimple : IsSimpleGroup G :=

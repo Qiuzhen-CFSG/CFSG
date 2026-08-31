@@ -37,7 +37,7 @@ public theorem firstCase_cyclic_B_inter_M_eq_oddCore_of_a7_layer
   classical
   let O0 : Subgroup M := pPrimeCore 2 M
   let O : Subgroup G := O0.map M.subtype
-  letI : O0.Normal := pPrimeCore_normal
+  let : O0.Normal := pPrimeCore_normal
   let q : M →* M ⧸ O0 := QuotientGroup.mk' O0
   let SM : Sylow 2 M := c.S.subtype hSM
   let SQ : Sylow 2 (M ⧸ O0) :=

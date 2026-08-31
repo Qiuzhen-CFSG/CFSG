@@ -118,7 +118,7 @@ public theorem secondCase_a7_K_eq_center_U
       Subgroup.card_dvd_of_le hKleU
     rw [od.K_card, hUcard, hn0] at hdiv
     norm_num at hdiv
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨k, hkpos, hcenterCard⟩ :=
     IsPGroup.card_center_eq_prime_pow hUcard hnpos
   have hZcard : Nat.card Z = 3 ^ k := by

@@ -83,11 +83,11 @@ public theorem pgl2_low_reflected_tori_card_four
     (eP : P ≃* DihedralGroup (2 ^ m)) :
     Nonempty (PGL2LowReflectedToriData K P eP) := by
   classical
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
   rcases hK with ⟨r, f, hr, hrodd, hf, hKcard⟩
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   have hK' : IsOddPrimePower (Nat.card K) :=
     ⟨r, f, hr, hrodd, hf, hKcard⟩
   have hqOdd : Odd (Nat.card K) := by
@@ -219,8 +219,8 @@ public theorem pgl2_low_reflected_tori_card_four
     have hcardOne : Nat.card Rstar = 1 := by rw [hbot]; simp
     rw [hRstarcard] at hcardOne
     omega
-  letI : IsCyclic U := hUcyc
-  letI : CommGroup U := IsCyclic.commGroup
+  let : IsCyclic U := hUcyc
+  let : CommGroup U := IsCyclic.commGroup
   have hRcent : R ≤
       Subgroup.centralizer ({s} : Set (PGL2 K)) := by
     intro x hx
@@ -401,7 +401,7 @@ public theorem pgl2_low_reflected_tori_card_four
     rwa [ha] at hmem
   let HP : Subgroup P := J.subgroupOf (P : Subgroup (PGL2 K))
   have hHPindex : HP.index = 2 := by
-    haveI : J.Normal := by dsimp [J]; infer_instance
+    have : J.Normal := by dsimp [J]; infer_instance
     have hdvd : HP.index ∣ 2 := by
       change J.relIndex (P : Subgroup (PGL2 K)) ∣ 2
       simpa [hJindex] using

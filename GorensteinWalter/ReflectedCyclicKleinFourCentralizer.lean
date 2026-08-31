@@ -77,7 +77,7 @@ public theorem no_kleinFour_centralizes_odd_subgroup_of_reflected_cyclic_join
               (a : G) * (u * w) * (u * w)⁻¹ := by rw [hvcomm]
           _ = (a : G) := by group
       have hinv : (u * w) * (a : G) * (u * w)⁻¹ = (a : G)⁻¹ := by
-        letI : CommGroup U := IsCyclic.commGroup
+        let : CommGroup U := IsCyclic.commGroup
         have hucomm : u * (a : G)⁻¹ = (a : G)⁻¹ * u :=
           congrArg Subtype.val
             (mul_comm (⟨u, hu⟩ : U) (⟨(a : G), haU⟩ : U)⁻¹)

@@ -89,7 +89,7 @@ public theorem QG_le_pCore (od : SecondCaseLinearOmegaView c w d) :
 /-- `O_p(U) ≤ F(U)`, hence `Q` lies in the Fitting subgroup of `U`. -/
 public theorem pCore_amb_le_FU (od : SecondCaseLinearOmegaView c w d) :
     od.pCore_amb ≤ c.FU := by
-  letI : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
+  let : Fact (Nat.Prime od.p) := ⟨od.p_prime⟩
   have hle : (pCore od.p (↥c.U)).map c.U.subtype ≤
       (fittingSubgroup (↥c.U)).map c.U.subtype := by
     exact Subgroup.map_mono (K := pCore od.p (↥c.U))
@@ -148,8 +148,8 @@ public theorem F_order_p_eq_P (od : SecondCaseLinearOmegaView c w d) :
     {x : G | x ∈ od.F ∧ x ^ od.p = 1} = (od.P : Set G) := by
   classical
   let S : Set G := {x : G | x ∈ od.F ∧ x ^ od.p = 1}
-  letI : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
-  letI : IsCyclic (↥od.F) := od.F_cyclic
+  let : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
+  let : IsCyclic (↥od.F) := od.F_cyclic
   have hp_pos : 0 < od.p := od.p_prime.pos
   have hPsubS : (od.P : Set G) ⊆ S := by
     intro x hx
@@ -182,7 +182,7 @@ public theorem F_order_p_eq_P (od : SecondCaseLinearOmegaView c w d) :
     exact le_of_eq (by
       change od.p = Nat.card (↥od.P)
       rw [od.P_card])
-  letI : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
+  let : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
   exact (Set.eq_of_subset_of_card_le hPsubS (by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hcard)).symm

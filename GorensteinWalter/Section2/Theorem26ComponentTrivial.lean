@@ -649,7 +649,7 @@ private theorem four_dvd_card_ambient_join_t26
     4 ∣ Nat.card Mamb := by
   classical
   intro CEs R CEsts Rstar Mamb
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hy2 : y * y = 1 := by simpa [pow_two] using hyI.2
   have hg2 : g * g = 1 := by simpa [pow_two] using hgI.2
   obtain ⟨ld2, hs2, hld2s, hld2g, hld2t, hld2R, hld2Rstar⟩ :=
@@ -1058,7 +1058,7 @@ public theorem pgl2_model_impossible_t26
     (e : L ≃* PGL2 K) :
     False := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨ld⟩ := exists_theorem26_outer_lift_data d K hK L hLnormal hLindex e
   have hm2 : 2 ≤ c.m := pgl2_dihedral_sylow_parameter_ge_two K hK ld.Pmodel ld.eP
   have hend := d.pgl2_component_ambient_endpoint K hK L hLnormal hLindex e

@@ -53,8 +53,8 @@ universe u
 private lemma two_ne_zero_of_odd_card (K : Type u) [Field K] [Finite K]
     (hodd : Odd (Nat.card K)) : (2 : K) ≠ 0 := by
   intro h2
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fintype K := Fintype.ofFinite K
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hdvd_char : ringChar K ∣ 2 := (CharP.cast_eq_zero_iff K (ringChar K) 2).mp h2
   have hchar2 : ringChar K = 2 := by
     rcases hdvd_char with ⟨c, hc⟩

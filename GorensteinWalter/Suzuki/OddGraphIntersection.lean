@@ -308,8 +308,8 @@ private theorem rootTwo_incidence_empty
       invFun := fun p => ⟨⟨p.2.1, p.1⟩, p.2.2⟩
       left_inv := by intro p; rfl
       right_inv := by intro p; rfl }
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype B := Fintype.ofFinite B
   have hIcardA : Nat.card I =
       ∑ V : A, Nat.card {W : B // (commutingGraph c).Adj V.1 W.1} := by
     rw [Nat.card_congr eA, Nat.card_sigma]

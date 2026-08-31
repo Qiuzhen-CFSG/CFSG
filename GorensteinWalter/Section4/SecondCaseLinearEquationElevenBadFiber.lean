@@ -84,7 +84,7 @@ universe u
 instance (priority := 100) instFiniteSubgroupOfFinite {G : Type u} [Group G] [Finite G] :
     Finite (Subgroup G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   refine Finite.of_injective (fun S : Subgroup G => (S : Set G).toFinset) ?_
   intro S T h
   apply SetLike.ext
@@ -562,8 +562,8 @@ private lemma natCard_le_mul_of_fiber_le
     (hf : ∀ b : B, Nat.card {a : A // f a = b} ≤ q) :
     Nat.card A ≤ Nat.card B * q := by
   classical
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype B := Fintype.ofFinite B
   calc
     Nat.card A = Nat.card (Σ b : B, {a : A // f a = b}) := by
       exact (Nat.card_congr (Equiv.sigmaFiberEquiv f)).symm
@@ -725,7 +725,7 @@ public theorem secondCase_linearEquation11_badFiber_count
             (∃ g : G, Y = P.map (MulAut.conj g).toMonoidHom) ∧
             Y ≤ Subgroup.centralizer (W₀.1 : Set G) ∧ Y ≤ R x} => W.1) h
       exact le_trans (Nat.card_le_card_of_injective _ hinj) hSle
-    · haveI : IsEmpty Fib := ⟨fun Y => hFib ⟨Y⟩⟩
+    · have : IsEmpty Fib := ⟨fun Y => hFib ⟨Y⟩⟩
       have hz : Nat.card Fib = 0 := Nat.card_eq_zero.mpr (Or.inl inferInstance)
       simpa [Fib, hz]
   -- the union bound

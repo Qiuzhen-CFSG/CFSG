@@ -52,7 +52,7 @@ public theorem psl2_kleinFour_centralizer_eq_self
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     have hVcomm : Commute (⟨x, hx⟩ : V) ⟨y, hy⟩ := by
-      letI : IsKleinFour V := hV
+      let : IsKleinFour V := hV
       exact (IsKleinFour.isMulCommutative (G := V)).is_comm.comm
         ⟨x, hx⟩ ⟨y, hy⟩
     exact congrArg Subtype.val hVcomm.eq.symm

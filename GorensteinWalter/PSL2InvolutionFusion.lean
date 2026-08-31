@@ -42,7 +42,7 @@ public theorem psl2_involutions_conjugate_of_odd_prime_power
         p = p ^ 1 := by simp
         _ ≤ p ^ n := Nat.pow_le_pow_right (by omega) hn)
   by_cases hcard3 : Nat.card K = 3
-  · letI : Fintype K := Fintype.ofFinite K
+  · let : Fintype K := Fintype.ofFinite K
     have hFcard : Fintype.card K = 3 := by
       simpa [Nat.card_eq_fintype_card] using hcard3
     let eK : ZMod 3 ≃+* K :=
@@ -102,8 +102,8 @@ public theorem psl2_involutions_conjugate_of_odd_prime_power
         (∃ N : Subgroup (PSL2 K), N.Normal ∧ N.index = 4) →
           ∃ N : Subgroup (PSL2 K), N.Normal ∧ N.index = 2 := by
       rintro ⟨N4, hN4, hindex4⟩
-      letI : N4.Normal := hN4
-      letI : Fintype ((PSL2 K) ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
+      let : N4.Normal := hN4
+      let : Fintype ((PSL2 K) ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
       have hcardQ : Nat.card ((PSL2 K) ⧸ N4) = 4 := by
         rw [← N4.index_eq_card, hindex4]
       have h2dvd : 2 ∣ Fintype.card ((PSL2 K) ⧸ N4) := by

@@ -23,7 +23,7 @@ public theorem exists_mem_normalizer_not_mem_of_lt_fitting
   classical
   let F : Subgroup G := fittingSubgroupOf U
   have hDleF : D ≤ F := hD
-  haveI : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent U
+  have : Group.IsNilpotent F := fittingSubgroupOf_isNilpotent U
   have hnc : NormalizerCondition F := Group.normalizerCondition_of_isNilpotent (G := F)
   have hD'ne_top : D.subgroupOf F ≠ ⊤ := by
     intro htop

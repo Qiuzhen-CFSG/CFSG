@@ -70,8 +70,8 @@ public theorem secondCase_linear_S0_centralizes_U
       (Subgroup.mem_map.mpr ⟨aE, Subgroup.mem_subgroupOf.mpr ha, rfl⟩)⟩
     let kT : torus.T := ⟨q kE, hK0mapT
       (Subgroup.mem_map.mpr ⟨kE, Subgroup.mem_subgroupOf.mpr hk, rfl⟩)⟩
-    letI : IsCyclic torus.T := torus.T_cyclic
-    letI : CommGroup torus.T := IsCyclic.commGroup
+    let : IsCyclic torus.T := torus.T_cyclic
+    let : CommGroup torus.T := IsCyclic.commGroup
     have hqcomm : q aE * q kE = q kE * q aE := by
       simpa [aT, kT] using congrArg Subtype.val (mul_comm aT kT)
     have hqconj : q (aE * kE * aE⁻¹) = q kE := by

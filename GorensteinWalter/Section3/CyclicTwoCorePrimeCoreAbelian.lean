@@ -18,7 +18,7 @@ public theorem firstCase_cyclic_primeCore_abelian
     (od : FirstCaseOrientedPrimeData c) :
     IsMulCommutative (↥(qCoreOf od.d.bg.U od.p)) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   rw [isMulCommutative_iff]
   intro a b
   let P : Subgroup G := qCoreOf od.d.bg.U od.p

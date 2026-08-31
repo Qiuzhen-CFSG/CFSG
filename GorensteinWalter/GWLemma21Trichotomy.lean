@@ -443,7 +443,7 @@ private theorem hasNormalPComplement_of_normal_subgroup_and_pgroup_quotient
     HasNormalPComplement 2 G := by
   classical
   let K : Subgroup G := (pPrimeCore 2 (↥N)).map N.subtype
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K]
     infer_instance
   have hKcop : Nat.Coprime 2 (Nat.card K) := by
@@ -542,7 +542,7 @@ public theorem normal_index_four_dihedral_sylow_normalPComplement
     Glauberman.NormalPComplement 2 G := by
   classical
   rcases hN4 with ⟨N, hN, hindex⟩
-  letI : N.Normal := hN
+  let : N.Normal := hN
   let S : Sylow 2 G := Classical.choice Sylow.nonempty
   obtain ⟨m, hm, ⟨e⟩⟩ := hdihedral S
   have hD : huppertIV34GrunKernelSubgroup (Q := G) (S : Subgroup G) = evenRotations S e :=
@@ -571,8 +571,8 @@ private theorem normal_index_two_of_normal_index_four
     ∃ N : Subgroup G, N.Normal ∧ N.index = 2 := by
   classical
   rcases hN4 with ⟨N4, hN4, hindex4⟩
-  letI : N4.Normal := hN4
-  letI : Fintype (G ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
+  let : N4.Normal := hN4
+  let : Fintype (G ⧸ N4) := N4.fintypeQuotientOfFiniteIndex
   have hcardQ : Nat.card (G ⧸ N4) = 4 := by
     rw [← N4.index_eq_card, hindex4]
   have h2dvd : 2 ∣ Fintype.card (G ⧸ N4) := by
@@ -1654,7 +1654,7 @@ private lemma rotation_order_two_eq_dCentral {m : ℕ} (hm : 1 ≤ m)
     (i : ZMod (2 ^ m)) (h : orderOf (DihedralGroup.r i) = 2) :
     DihedralGroup.r i = dCentral m := by
   classical
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   have hsq : (DihedralGroup.r i : DihedralGroup (2 ^ m)) ^ 2 = 1 := by
     exact (congrArg (fun n : ℕ => (DihedralGroup.r i) ^ n) h.symm).trans
       (pow_orderOf_eq_one (DihedralGroup.r i))
@@ -1692,7 +1692,7 @@ private lemma rotation_sub_mem_even_of_order_eq
     (h : orderOf (DihedralGroup.r i) = orderOf (DihedralGroup.r j)) :
     DihedralGroup.r (j - i) ∈ dihedralRotationSubgroup m 1 := by
   classical
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   let n : ℕ := 2 ^ m
   have hnpos : 0 < n := by dsimp [n]; positivity
   have h2n : 2 ∣ n := by dsimp [n]; exact pow_dvd_pow 2 (by omega : 1 ≤ m)
@@ -2193,7 +2193,7 @@ private lemma kleinFour_action_fix_move
         _ = δ⁻¹ * (δ * y * δ⁻¹) * δ := by rw [← h]
         _ = y := by group
     exact hxy'
-  letI : IsKleinFour Z := hZ
+  let : IsKleinFour Z := hZ
   let xZ : Z := ⟨x, hxZ⟩
   let yZ : Z := ⟨y, hyZ⟩
   let bZ : Z := ⟨δ * y * δ⁻¹, hbZ⟩
@@ -2242,7 +2242,7 @@ private lemma normalizerContainsCPrime_of_two_transpositions
   have hρN : ρ ∈ Subgroup.normalizer (Z : Set G) :=
     (Subgroup.normalizer (Z : Set G)).mul_mem hγN hγ'N
   have hz2 : z * z = 1 := by
-    letI : IsKleinFour Z := hZ
+    let : IsKleinFour Z := hZ
     have h := IsKleinFour.mul_self (⟨z, hzZ⟩ : Z)
     exact congrArg Subtype.val h
   have hγza : γ * (z * a) * γ⁻¹ = a := by
@@ -2443,7 +2443,7 @@ private lemma exists_centralizer_sylow_alignment
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     rw [Set.mem_singleton_iff.mp hy]
-    letI : IsKleinFour Z := hZ
+    let : IsKleinFour Z := hZ
     have hxZ : (⟨x, hx⟩ : Z) * ⟨a, haZ⟩ = ⟨a, haZ⟩ * ⟨x, hx⟩ :=
       (IsKleinFour.isMulCommutative (G := Z)).is_comm.comm _ _
     exact (congrArg Subtype.val hxZ).symm
@@ -2659,7 +2659,7 @@ private lemma fusion_to_normalizer_moves_central
     dsimp [c]
     group
   have haz_comm : a * zAmbient S e = zAmbient S e * a := by
-    letI : IsKleinFour Z := hZ
+    let : IsKleinFour Z := hZ
     have h := (IsKleinFour.isMulCommutative (G := Z)).is_comm.comm
       ⟨a, haZ⟩ ⟨zAmbient S e, hzZ⟩
     exact congrArg Subtype.val h
@@ -3182,7 +3182,7 @@ private lemma centralizer_reflection_eq_dKlein {m : ℕ} (hm : 2 ≤ m)
     rw [Subgroup.mem_centralizer_iff]
     intro y hy
     rw [Set.mem_singleton_iff.mp hy]
-    letI : IsKleinFour V := hV
+    let : IsKleinFour V := hV
     let xV : V := ⟨x, hx⟩
     let sV : V := ⟨DihedralGroup.sr j, dKlein_sr_mem (by omega : 1 ≤ m) j⟩
     have hxV : xV * sV = sV * xV :=
@@ -4209,8 +4209,8 @@ private lemma kleinFour_aut_orbit_all
     (φ : MulAut K) (_hφ1 : φ ≠ 1) (hφ2 : φ ^ 2 ≠ 1) :
     ∀ a b : K, a ≠ 1 → b ≠ 1 → ∃ k : ℕ, (φ ^ k) a = b := by
   classical
-  haveI : Finite K := Nat.finite_of_card_ne_zero (by simp [IsKleinFour.card_four])
-  letI : Fintype K := Fintype.ofFinite K
+  have : Finite K := Nat.finite_of_card_ne_zero (by simp [IsKleinFour.card_four])
+  let : Fintype K := Fintype.ofFinite K
   intro a b ha hb
   have hfix_none : ∀ x : K, x ≠ 1 → φ x ≠ x := by
     intro x hx hfix
@@ -4287,7 +4287,7 @@ private lemma two_dvd_centralizer_relIndex_normalizer_of_sq_mem_not_mem
   classical
   let N : Subgroup G := Subgroup.normalizer (S : Set G)
   let C : Subgroup N := (Subgroup.centralizer (S : Set G)).subgroupOf N
-  haveI : C.Normal := Subgroup.normal_subgroupOf_centralizer_normalizer (S : Set G)
+  have : C.Normal := Subgroup.normal_subgroupOf_centralizer_normalizer (S : Set G)
   let q : N ⧸ C := QuotientGroup.mk ⟨n, hnN⟩
   have hq1 : q ≠ 1 := by
     intro hq
@@ -4409,7 +4409,7 @@ private theorem case1_no_index_two_fusion_and_normalizer
       dsimp [S]
       rw [hcard S0 hm e, hm1]
       norm_num
-    letI : IsKleinFour S := by
+    let : IsKleinFour S := by
       dsimp [S]
       exact m1_sylow_isKleinFour S0 hm1 e
     have hSC : S ≤ Subgroup.centralizer (S : Set G) := by
@@ -4418,7 +4418,7 @@ private theorem case1_no_index_two_fusion_and_normalizer
     have hNC : ¬ (Subgroup.normalizer (S : Set G) ≤ Subgroup.centralizer (S : Set G)) := by
       intro hNC'
       let K : Subgroup G := (MonoidHom.transferSylow S0 hNC').ker
-      haveI : K.Normal := inferInstance
+      have : K.Normal := inferInstance
       have hKindex : K.index = 4 := by
         have h := (Subgroup.IsComplement'.symm
           (MonoidHom.ker_transferSylow_isComplement' S0 hNC')).index_eq_card
@@ -4561,7 +4561,7 @@ private theorem case1_no_index_two_fusion_and_normalizer
         dsimp [T]
         rw [hcard S' hm' e', hm1']
         norm_num
-      letI : IsKleinFour T := by
+      let : IsKleinFour T := by
         dsimp [T]
         exact m1_sylow_isKleinFour S' hm1' e'
       have hZeq : Z = T := by
@@ -4601,7 +4601,7 @@ private lemma not_normalizerContainsCPrime_of_not_fused
   have hnz : n * zAmbient S e * n⁻¹ ≠ zAmbient S e := by
     intro hfix
     apply hsq
-    letI : IsKleinFour Z₁ := hZ₁
+    let : IsKleinFour Z₁ := hZ₁
     let nsub : Subgroup.normalizer (Z₁ : Set G) := ⟨n, hn⟩
     let φ : MulAut Z₁ := Z₁.normalizerMonoidHom nsub
     let zsub : Z₁ := ⟨zAmbient S e, hzZ₁⟩
@@ -4900,7 +4900,7 @@ private theorem case2_index_two_no_index_four_two_class
       exact no_normal_index_two_of_grun_relIndex_eq_one S0 hrel h2
   · exfalso
     rcases h2 with ⟨N, hNnormal, hNindex⟩
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     let S : Subgroup G := (S0 : Subgroup G)
     have hScard : Nat.card S = 4 := by
       have hm1 : m = 1 := by omega
@@ -4939,7 +4939,7 @@ private theorem case2_index_two_no_index_four_two_class
       pPrimeCore_index_two_of_sylow_two (G := ↥N)
         (n := S.index) hNcard hSindexOdd hNKp
     let K : Subgroup G := (pPrimeCore 2 (↥N)).map N.subtype
-    haveI : K.Normal := by
+    have : K.Normal := by
       dsimp [K]
       infer_instance
     have hKindex : K.index = 4 := by

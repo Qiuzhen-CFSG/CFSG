@@ -147,8 +147,8 @@ public lemma generator_of_inf {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ m))) :
 public lemma mem_eq_one_of_card_one {m : ℕ} (H : Subgroup (DihedralGroup (2 ^ m)))
     (hcard1 : Nat.card (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = 1)
     {z : DihedralGroup (2 ^ m)} (hz : z ∈ H ⊓ Subgroup.zpowers (DihedralGroup.r 1)) : z = 1 := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
-  letI : Fintype (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) := Fintype.ofFinite _
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : Fintype (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) := Fintype.ofFinite _
   have hc1 : Fintype.card (↥(H ⊓ Subgroup.zpowers (DihedralGroup.r 1))) = 1 := by
     rwa [Nat.card_eq_fintype_card] at hcard1
   rcases (Fintype.card_eq_one_iff).mp hc1 with ⟨z₀, hz₀⟩
@@ -203,8 +203,8 @@ public theorem mem_dihedralIndexTwoSubgroup_iff
     x ∈ dihedralIndexTwoSubgroup m j ↔
       (∃ k : ℤ, x = DihedralGroup.r ((2 : ZMod (2 ^ m)) * (k : ZMod (2 ^ m)))) ∨
       (∃ k : ℤ, x = DihedralGroup.sr (j + (2 : ZMod (2 ^ m)) * (k : ZMod (2 ^ m)))) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
-  letI : (Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m)))).Normal := zpowers_r_two_normal
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : (Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m)))).Normal := zpowers_r_two_normal
   constructor
   · intro hx
     rcases (Subgroup.mem_sup_of_normal_left (s := Subgroup.zpowers (DihedralGroup.r (2 : ZMod (2 ^ m))))
@@ -261,7 +261,7 @@ private lemma normal_dihedral_of_not_le_rotation {m : ℕ} (hm : 1 ≤ m)
     (hDnormal : D.Normal)
     (hDR : ¬ D ≤ Subgroup.zpowers (DihedralGroup.r 1)) :
     D = ⊤ ∨ ∃ j : ZMod (2 ^ m), D = dihedralIndexTwoSubgroup m j := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   let R : Subgroup (DihedralGroup (2 ^ m)) := Subgroup.zpowers (DihedralGroup.r 1)
   have hx : ∃ x : DihedralGroup (2 ^ m), x ∈ D ∧ x ∉ R := by
     by_contra h
@@ -447,7 +447,7 @@ public theorem le_zpowers_r_one_eq_dihedralRotationSubgroup {m : ℕ} (_hm : 1 �
     (D : Subgroup (DihedralGroup (2 ^ m)))
     (hDR : D ≤ Subgroup.zpowers (DihedralGroup.r 1)) :
     ∃ k : ℕ, k ≤ m ∧ D = dihedralRotationSubgroup m k := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   -- D ≤ ⟨r 1⟩ and ⟨r 1⟩ is cyclic, so D = ⟨(r 1)^n⟩ = ⟨r (n : ZMod (2^m))⟩
   rcases (Subgroup.le_zpowers_iff (DihedralGroup.r 1) D).mp hDR with ⟨n, hn⟩
   let n' : ℕ := (n : ZMod (2 ^ m)).val
@@ -549,7 +549,7 @@ central involution `2^(m-1)`. -/
 public lemma zmod_two_mul_eq_zero_iff
     {m : ℕ} (hm : 2 ≤ m) (i : ZMod (2 ^ m)) :
     (2 : ZMod (2 ^ m)) * i = 0 ↔ i = 0 ∨ i = (2 ^ (m - 1) : ZMod (2 ^ m)) := by
-  letI : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
+  let : NeZero (2 ^ m) := ⟨pow_ne_zero m (by norm_num : 2 ≠ 0)⟩
   constructor
   · intro h
     let v : ℕ := i.val
@@ -861,7 +861,7 @@ public theorem centralizer_kleinFour_le_dihedral
     (V : Subgroup (DihedralGroup (2 ^ m))) (hV : IsKleinFour V) :
     Subgroup.centralizer (V : Set (DihedralGroup (2 ^ m))) ≤ V := by
   classical
-  letI : IsKleinFour V := hV
+  let : IsKleinFour V := hV
   by_cases hm1 : m = 1
   · subst m
     have hVtop : V = ⊤ := by
@@ -887,10 +887,10 @@ public theorem centralizer_kleinFour_le_dihedral
       rw [hi]
       exact r_mem_zpowers_r_one i
     · exact ⟨i, hi ▸ htV⟩
-  letI : Finite V := Nat.finite_of_card_ne_zero (by
+  let : Finite V := Nat.finite_of_card_ne_zero (by
     rw [IsKleinFour.card_four]
     norm_num)
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   let tV : V := ⟨DihedralGroup.sr j, hjV⟩
   have hthree : 3 ≤ ENat.card V := by
     rw [ENat.card_eq_coe_fintype_card, IsKleinFour.card_four']

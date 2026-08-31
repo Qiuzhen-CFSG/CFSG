@@ -49,7 +49,7 @@ private lemma sylow3_comm_all
   classical
   have hP9 : Nat.card (P : Subgroup G) = 9 := firstCase_sylow3_card_nine c d P
   have hP9' : Nat.card (P : Subgroup G) = 3 ^ 2 := by simpa using hP9
-  haveI : IsMulCommutative (P : Subgroup G) :=
+  have : IsMulCommutative (P : Subgroup G) :=
     IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
   intro x y hx hy
   exact congrArg Subtype.val
@@ -186,8 +186,8 @@ private lemma order_three_subgroups_disjoint_of_ne
     {G : Type u} [Group G] [Finite G]
     (A B : Subgroup G) (hA : Nat.card A = 3) (hB : Nat.card B = 3)
     (hne : A ≠ B) : Disjoint A B := by
-  letI : Fintype ↥A := Fintype.ofFinite _
-  letI : Fintype ↥B := Fintype.ofFinite _
+  let : Fintype ↥A := Fintype.ofFinite _
+  let : Fintype ↥B := Fintype.ofFinite _
   rw [disjoint_iff_inf_le]
   intro x hx
   by_contra hxne
@@ -216,7 +216,7 @@ private lemma order_three_subgroup_eq_zpowers
     {G : Type u} [Group G] [Finite G]
     (A : Subgroup G) (hA : Nat.card A = 3) {x : G} (hx : x ∈ A)
     (hxne : x ≠ 1) : A = Subgroup.zpowers x := by
-  letI : Fintype ↥A := Fintype.ofFinite _
+  let : Fintype ↥A := Fintype.ofFinite _
   have hd0 := Subgroup.orderOf_dvd_natCard A hx
   have hA' : Fintype.card ↥A = 3 := by simpa [Nat.card_eq_fintype_card] using hA
   have hd : orderOf x ∣ 3 := by simpa [hA'] using hd0
@@ -465,7 +465,7 @@ public theorem neighbor_card_eq_four
     (c : CentralizerSetup G) (hfirst : FirstCase c) (d : FirstCaseCountData c) :
     Nat.card (lineNeighborSet c) = 4 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hU3 : Nat.card c.U = 3 := firstCase_U_card_three hmin c hfirst d
   have hUp : IsPGroup 3 c.U := by
     refine IsPGroup.of_card (n := 1) ?_

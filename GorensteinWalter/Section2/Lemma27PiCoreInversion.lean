@@ -35,7 +35,7 @@ private theorem lemma27II_exists_prime_order_subgroup_le_of_ne_bot
     intro hcard
     exact hPne ((Subgroup.eq_bot_iff_card (H := P)).2 hcard)
   obtain ⟨p, hpprime, hpdiv⟩ := Nat.exists_prime_and_dvd hcard_ne_one
-  letI : Fact p.Prime := ⟨hpprime⟩
+  let : Fact p.Prime := ⟨hpprime⟩
   obtain ⟨a, ha_order⟩ := exists_prime_orderOf_dvd_card' (G := P) p hpdiv
   let R : Subgroup G := Subgroup.zpowers ((a : P) : G)
   have hRleP : R ≤ P := Subgroup.zpowers_le.2 a.property

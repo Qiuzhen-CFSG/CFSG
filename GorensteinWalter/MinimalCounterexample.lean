@@ -71,7 +71,7 @@ public theorem minimalCounterexample_isSimple
     (hmin : IsMinimalCounterexample G) :
     IsSimpleGroup G := by
   have hO : pPrimeCore 2 G = ⊥ := pPrimeCore_two_eq_bot_of_minimalCounterexample hmin
-  haveI : Nontrivial G := nontrivial_of_dihedralSylowTwo hmin.1
+  have : Nontrivial G := nontrivial_of_dihedralSylowTwo hmin.1
   refine ⟨?_⟩
   intro H hHnormal
   by_cases hHbot : H = ⊥
@@ -134,7 +134,7 @@ public theorem minimalCounterexample_isSimple
             gw_prop9_dihedral_normal_subgroup_outer_automorphism hmin H' hH'normal hH'dihedral
           by_cases hH'4 : Nat.card (↥H') = 4
           · -- |H'| = 4: H' is a Klein four group
-            haveI : Fintype (↥H') := Fintype.ofFinite _
+            have : Fintype (↥H') := Fintype.ofFinite _
             have hK4 : IsKleinFour H' := by
               refine ⟨hH'4, ?_⟩
               have hsq : ∀ g : ↥H', g ^ 2 = 1 := by
@@ -297,14 +297,14 @@ private theorem center_eq_bot_of_minimalCounterexample
     (hmin : IsMinimalCounterexample G) :
     Subgroup.center G = ⊥ := by
   have hsimple : IsSimpleGroup G := minimalCounterexample_isSimple hmin
-  letI : IsSimpleGroup G := hsimple
-  letI : (Subgroup.center G).Characteristic := Subgroup.centerCharacteristic
+  let : IsSimpleGroup G := hsimple
+  let : (Subgroup.center G).Characteristic := Subgroup.centerCharacteristic
   have hnorm : (Subgroup.center G).Normal := inferInstance
   rcases Subgroup.Normal.eq_bot_or_eq_top hnorm with hbot | htop
   · exact hbot
   · have hcomm : IsMulCommutative G := Subgroup.center_eq_top_iff.mp htop
-    letI : CommGroup G := IsMulCommutative.instCommGroup
-    letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    let : CommGroup G := IsMulCommutative.instCommGroup
+    let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hcorebot : pPrimeCore 2 (G ⧸ pPrimeCore 2 G) = ⊥ :=
       pPrimeCore_quotient_pPrimeCore_eq_bot 2
     have hnil : Group.IsNilpotent (⊤ : Subgroup (G ⧸ pPrimeCore 2 G)) := by

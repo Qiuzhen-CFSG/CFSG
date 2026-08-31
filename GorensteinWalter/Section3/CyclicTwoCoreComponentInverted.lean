@@ -59,8 +59,8 @@ public theorem firstCase_cyclic_inverted_component_odd
           BenderGlauberman.IsInvertedBy od.d.bg.t2 X ∧
           X ≤ Subgroup.centralizer (fd.V1 : Set G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fact od.p.Prime := ⟨od.p_prime⟩
+  let : Fintype G := Fintype.ofFinite G
+  let : Fact od.p.Prime := ⟨od.p_prime⟩
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   let E : Subgroup G := componentLayerOf M
   have hP0ne : P ⊓ M ≠ ⊥ :=

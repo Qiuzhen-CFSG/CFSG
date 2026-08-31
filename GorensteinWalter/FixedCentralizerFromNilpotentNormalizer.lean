@@ -35,10 +35,10 @@ public theorem full_fixed_subgroups_of_nilpotent_normalizer_eq
     exact ⟨hx.1.1, hx.2⟩
   have hCleR : C ≤ R := inf_le_left
   have hCnil : Group.IsNilpotent C := by
-    letI : Group.IsNilpotent R := hRnil
+    let : Group.IsNilpotent R := hRnil
     have hsub : Group.IsNilpotent (C.subgroupOf R) :=
       Subgroup.isNilpotent (C.subgroupOf R)
-    letI : Group.IsNilpotent (C.subgroupOf R) := hsub
+    let : Group.IsNilpotent (C.subgroupOf R) := hsub
     exact Group.nilpotent_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hCleR)
   have hP_eq_C : P = C := by
     let PC : Subgroup C := P.subgroupOf C
@@ -69,7 +69,7 @@ public theorem full_fixed_subgroups_of_nilpotent_normalizer_eq
           exact ⟨⟨hCleR x.2, hxM⟩, x.2.2⟩
         exact Subgroup.mem_subgroupOf.mpr hxP
       · exact Subgroup.le_normalizer
-    letI : Group.IsNilpotent C := hCnil
+    let : Group.IsNilpotent C := hCnil
     have hnc : NormalizerCondition C :=
       Group.normalizerCondition_of_isNilpotent (G := C)
     have hPCtop : PC = ⊤ :=

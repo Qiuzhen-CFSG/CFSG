@@ -101,7 +101,7 @@ public theorem firstCase_klein_restrictionSeven_X_card_three
         (D.inv_mem hd)
     · exact hBnorm.2 d ((show D ≤ c.Hhat from inf_le_left) hd) n
         ((show N ≤ B from inf_le_right) hn)
-  letI : (N.subgroupOf D).Normal := hNnormal
+  let : (N.subgroupOf D).Normal := hNnormal
 
   let q : D →* (D ⧸ N.subgroupOf D) :=
     QuotientGroup.mk' (N.subgroupOf D)

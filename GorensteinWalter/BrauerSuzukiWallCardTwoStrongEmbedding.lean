@@ -61,7 +61,7 @@ public theorem
     exact (Subgroup.mem_normalizer_iff.mp hnN x).mp hxH
   have hPnormal : (P : Subgroup N).Normal := by
     simpa [P, IsPGroup.toSylow_coe] using hHNnormal
-  letI : Unique (Sylow 2 N) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow 2 N) := Sylow.unique_of_normal P hPnormal
   have hInvMemH : ∀ {x : G}, x ∈ N → IsInvolution x → x ∈ h.H := by
     intro x hxN hxI
     let xN : N := ⟨x, hxN⟩

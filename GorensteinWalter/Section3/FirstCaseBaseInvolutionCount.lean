@@ -123,7 +123,7 @@ public theorem firstCase_product_involution_component
     obtain ⟨n, hn⟩ := hSpow
     exact Subgroup.disjoint_of_coprime_natCard (by rw [hn]; exact hUcop.pow_left _)
   let U' : Subgroup (↥c.H) := c.U.subgroupOf c.H
-  letI : U'.Normal := by
+  let : U'.Normal := by
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hUnorm.1).2
       (le_normalizer_of_isNormalIn hUnorm)
   let q : ↥c.H →* (↥c.H ⧸ U') := QuotientGroup.mk' U'
@@ -215,9 +215,9 @@ private theorem firstCase_S_involutions_card
         · apply eS.injective
           simpa [map_pow] using hx.2)
   have hD : Nat.card {x : DihedralGroup 4 // IsInvolution x} = 5 := by
-    letI : DecidablePred (fun x : DihedralGroup 4 => IsInvolution x) := fun x =>
+    let : DecidablePred (fun x : DihedralGroup 4 => IsInvolution x) := fun x =>
       inferInstanceAs (Decidable (x ≠ 1 ∧ x ^ 2 = 1))
-    letI : Fintype {x : DihedralGroup 4 // IsInvolution x} :=
+    let : Fintype {x : DihedralGroup 4 // IsInvolution x} :=
       Fintype.subtype
         ((Finset.univ : Finset (DihedralGroup 4)).filter
           (fun x => IsInvolution x)) (by intro x; simp)
@@ -278,9 +278,9 @@ private theorem firstCase_V_nontrivial_involutions_card
         right_inv := by intro x; rfl }
     exact Nat.card_congr e
   have hA : Nat.card A = Nat.card V - 1 := by
-    letI : Fintype V := Fintype.ofFinite _
-    letI : Fintype A := Fintype.ofFinite _
-    letI : Fintype {x : V // x = 1} := Fintype.ofFinite _
+    let : Fintype V := Fintype.ofFinite _
+    let : Fintype A := Fintype.ofFinite _
+    let : Fintype {x : V // x = 1} := Fintype.ofFinite _
     have h1 : Fintype.card {x : V // x = 1} = 1 := by
       rw [Fintype.card_eq_one_iff]
       refine ⟨⟨1, rfl⟩, ?_⟩

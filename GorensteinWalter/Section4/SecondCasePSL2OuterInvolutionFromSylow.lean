@@ -78,7 +78,7 @@ public theorem secondCase_psl2_aligned_outer_involution
       w.M d.E_component.1 SM) hSMcyc
   have hAnotS0 : ¬ A ≤ c.S0 := by
     intro hAle
-    letI : IsCyclic c.S0 := c.S0_cyclic
+    let : IsCyclic c.S0 := c.S0_cyclic
     exact hAnc (Subgroup.isCyclic_of_le hAle)
   obtain ⟨s, hsA, hsS0⟩ := SetLike.not_le_iff_exists.mp hAnotS0
   have hAleS : A ≤ (c.S : Subgroup G) := hSMleS

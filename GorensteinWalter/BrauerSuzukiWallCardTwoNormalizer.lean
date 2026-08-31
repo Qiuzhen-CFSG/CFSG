@@ -146,15 +146,15 @@ public theorem
                 show h.s * h.s = 1 by
                     simpa [pow_two] using h.s_involution.2]
               simp
-    haveI : Nontrivial h.H :=
+    have : Nontrivial h.H :=
       Finite.one_lt_card_iff_nontrivial.mp (by rw [hHcard]; norm_num)
     exact {
       card_four := hHcard
       exponent_two :=
         (Monoid.exponent_eq_prime_iff Nat.prime_two).2 fun x hx ↦
           orderOf_eq_prime (hpow x) hx }
-  letI : IsKleinFour h.H := hH
-  letI : IsMulCommutative h.H := IsKleinFour.isMulCommutative
+  let : IsKleinFour h.H := hH
+  let : IsMulCommutative h.H := IsKleinFour.isMulCommutative
   have hHcard : Nat.card h.H = 4 := hH.card_four
   have hKleH : h.K ≤ h.H := by
     rw [h.H_eq_join]
@@ -262,8 +262,8 @@ public theorem
       rw [← hH.exponent_two]
       exact Monoid.exponent_eq_of_mulEquiv
         (Subgroup.subgroupOfEquivOfLe hHleN) }
-  letI : HN.Normal := hHnormalN
-  letI : IsKleinFour HN := hHNklein
+  let : HN.Normal := hHnormalN
+  let : IsKleinFour HN := hHNklein
   have hfusion : ∀ x y : HN, x ≠ 1 → y ≠ 1 →
       ∃ n : N, n * x * n⁻¹ = y := by
     intro x y hx hy
@@ -297,7 +297,7 @@ public theorem
         _ = gy⁻¹ * h.t * gy := by rw [hgy]
     rw [hyback, ← hgx]
     group
-  letI : MulDistribMulAction N HN :=
+  let : MulDistribMulAction N HN :=
     MulDistribMulAction.compHom HN (MulAut.conjNormal (H := HN))
   let tN : N := ⟨h.t, hHleN htH⟩
   let tHN : HN := ⟨tN, htH⟩

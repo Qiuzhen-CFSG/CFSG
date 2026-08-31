@@ -237,7 +237,7 @@ public theorem pGammaL2_linearKernel_odd_order_mem_pslRange
   have hzodd : Odd (orderOf z) := by
     simpa [hord] using hodd
   have hRindex : R.index = 2 := pgl2_psl2Range_index_eq_two K hK
-  haveI : R.Normal := Subgroup.normal_of_index_eq_two hRindex
+  have : R.Normal := Subgroup.normal_of_index_eq_two hRindex
   let q : PGL2 K →* PGL2 K ⧸ R := QuotientGroup.mk' R
   have hdvd2 : orderOf (q z) ∣ 2 := by
     have hcard : Nat.card (PGL2 K ⧸ R) = 2 := by

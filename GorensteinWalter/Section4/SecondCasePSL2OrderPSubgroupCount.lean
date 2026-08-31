@@ -28,7 +28,7 @@ private theorem conjugate_family_card
       T = U.map (MulAut.conj g).toMonoidHom} =
       (Subgroup.normalizer (U : Set G)).index := by
   classical
-  letI : MulAction G (Subgroup G) :=
+  let : MulAction G (Subgroup G) :=
     { smul := fun g H => H.map (MulAut.conj g).toMonoidHom
       one_smul := by
         intro H
@@ -80,7 +80,7 @@ private theorem order_p_elements_card_of_cyclic
     (U : Subgroup G) (hcyc : IsCyclic U) (hcard : Nat.card U = k)
     (hpk : p ∣ k) :
     Nat.card {x : U // orderOf (x : G) = p} = p - 1 := by
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   have hpk' : p ∣ Fintype.card U := by
     rw [← Nat.card_eq_fintype_card, hcard]
     exact hpk
@@ -176,7 +176,7 @@ public theorem psl2_order_p_subgroup_card_of_unique_torus_family
       let z : Piece := ⟨T', ⟨⟨x, hTx⟩, x.property⟩⟩
       refine ⟨z, ?_⟩
       simpa [hdecode, z]
-  letI : Fintype Tor := Fintype.ofFinite Tor
+  let : Fintype Tor := Fintype.ofFinite Tor
   have hAlpha_card : Nat.card Alpha = (q * k') * (p - 1) := by
     calc
       Nat.card Alpha = Nat.card Piece :=
@@ -227,11 +227,11 @@ public theorem psl2_order_p_subgroup_card_of_unique_torus_family
       let z : PPiece := ⟨⟨P, hPcard⟩, ⟨⟨x, hxP⟩, hxne⟩⟩
       exact ⟨z, rfl⟩
   have hPPiece_card : Nat.card PPiece = Nat.card Subps * (p - 1) := by
-    letI : Fintype Subps := Fintype.ofFinite Subps
+    let : Fintype Subps := Fintype.ofFinite Subps
     rw [Nat.card_sigma]
     have hfiber (P : Subps) :
         Nat.card {x : P.1 // (x : G) ≠ 1} = p - 1 := by
-      letI : Fintype P.1 := Fintype.ofFinite P.1
+      let : Fintype P.1 := Fintype.ofFinite P.1
       rw [Nat.card_eq_fintype_card, Fintype.card_subtype_compl]
       rw [← Nat.card_eq_fintype_card, P.2]
       simp

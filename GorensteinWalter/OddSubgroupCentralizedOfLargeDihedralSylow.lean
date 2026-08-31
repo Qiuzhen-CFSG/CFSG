@@ -82,7 +82,7 @@ public theorem odd_subgroup_le_centralizer_of_large_dihedral_sylow_in_dihedral_s
     have hMpos : 0 < Nat.card M := Nat.card_pos
     rw [hMcard, hz0] at hMpos
     simp at hMpos
-  letI : NeZero z := ⟨hz⟩
+  let : NeZero z := ⟨hz⟩
   let RD : Subgroup (DihedralGroup z) :=
     Subgroup.zpowers (DihedralGroup.r 1)
   let RM : Subgroup M := RD.comap eM.toMonoidHom
@@ -112,7 +112,7 @@ public theorem odd_subgroup_le_centralizer_of_large_dihedral_sylow_in_dihedral_s
   have hxRD : eM xM ∈ RD := hxRM
   let tR : RD := ⟨eM tM, htRD⟩
   let xR : RD := ⟨eM xM, hxRD⟩
-  letI : IsCyclic RD := by
+  let : IsCyclic RD := by
     dsimp [RD]
     infer_instance
   have hcommR : tR * xR = xR * tR := mul_comm' tR xR

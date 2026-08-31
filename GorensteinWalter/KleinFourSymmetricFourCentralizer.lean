@@ -23,7 +23,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_perm_four
       (A : Set (Equiv.Perm (Fin 4)))) :
     False := by
   classical
-  letI : IsCyclic A := hAcyc
+  let : IsCyclic A := hAcyc
   obtain ⟨a, ha_gen⟩ := IsCyclic.exists_zpow_surjective (G := A)
   let a₀ : Equiv.Perm (Fin 4) := (a : Equiv.Perm (Fin 4))
   have ha_ne : a₀ ≠ 1 := by
@@ -62,7 +62,7 @@ public theorem no_kleinFour_centralizes_odd_cyclic_perm_four
       rw [← hord3]))
   have ha3' : a₀ ^ 3 = 1 := by
     simpa [a₀] using congrArg Subtype.val ha3
-  letI : Fintype V := Fintype.ofFinite V
+  let : Fintype V := Fintype.ofFinite V
   have hlt : 1 < Fintype.card V := by
     rw [← Nat.card_eq_fintype_card, hVK.card_four]
     norm_num

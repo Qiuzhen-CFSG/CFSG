@@ -175,7 +175,7 @@ public theorem centralizer_odd_rotation_le_U_of_dihedral_join
   · rw [hxU]
     exact hu
   · exfalso
-    letI : CommGroup U := IsCyclic.commGroup
+    let : CommGroup U := IsCyclic.commGroup
     obtain ⟨a, ha1⟩ := Subgroup.ne_bot_iff_exists_ne_one.mp hAne
     have haA : (a : G) ∈ A := a.2
     have haU : (a : G) ∈ U := hArot haA
@@ -262,7 +262,7 @@ public theorem no_kleinFour_centralizes_odd_rotation_of_normalizer
       hAne hArot hAodd hUcyc hwU hwsq hwinv hN
   have hVU : V ≤ U := hVleC.trans hC_le_U
   have hVcyc : IsCyclic V := Subgroup.isCyclic_of_le hVU
-  haveI : IsKleinFour V := hVK
+  have : IsKleinFour V := hVK
   exact IsKleinFour.not_isCyclic hVcyc
 
 /-- The full statement needed from `PSL₂`: if a nontrivial odd-order cyclic

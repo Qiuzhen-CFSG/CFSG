@@ -24,7 +24,7 @@ private theorem central_automorphism_eq_one_local
     α = β := by
   apply MulEquiv.ext
   intro x
-  letI : Bracket E E := commutatorElement
+  let : Bracket E E := commutatorElement
   have hcomm : ∀ a b : E, α ⁅a, b⁆ = β ⁅a, b⁆ := by
     intro a b
     have hza := Subgroup.mem_center_iff.mp (hdelta a)
@@ -67,7 +67,7 @@ private theorem central_automorphism_eq_one_local
     simpa only [map_commutatorElement] using htarget
   have hx : x ∈ ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ := by
     have htop : Group.IsPerfect (↥(⊤ : Subgroup E)) := by
-      letI : Group.IsPerfect E := hperf
+      let : Group.IsPerfect E := hperf
       infer_instance
     have hcommtop : ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ = ⊤ :=
       (Subgroup.isPerfect_iff (H := (⊤ : Subgroup E))).mp htop
@@ -122,10 +122,10 @@ public theorem secondCase_psl2_action_data
     Nonempty (SecondCasePSL2ActionData w d K) := by
   have hcard : 3 < Nat.card K := secondCase_psl2_field_card_gt_three d K hK e
   rcases hK with ⟨p, n, hp, hpodd, hn, hKcard⟩
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let hK' : IsOddPrimePower (Nat.card K) := ⟨p, n, hp, hpodd, hn, hKcard⟩
   let M0 : Type u := ↥w.M
-  letI : Group M0 := inferInstance
+  let : Group M0 := inferInstance
   have hEleM : d.E ≤ w.M := d.E_component.1
   let E0 : Subgroup M0 := d.E.subgroupOf w.M
   have hE0normal : E0.Normal := by
@@ -197,7 +197,7 @@ public theorem secondCase_psl2_action_data
   have hMdihedral : HasDihedralSylowTwo M0 :=
     secondCase_psl2_hasDihedralSylowTwo hmin c w d K hK' e
   let O : Subgroup M0 := pPrimeCore 2 M0
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   have hOodd : Odd (Nat.card O) := by
     exact Nat.coprime_two_left.mp
       (pPrimeCore_coprime_card (p := 2) (G := M0))
@@ -224,7 +224,7 @@ public theorem secondCase_psl2_action_data
     rw [hbot, Subgroup.map_bot] at hmap
     exact hmap.symm
   have hE0perf : Group.IsPerfect E0 := by
-    letI : Group.IsPerfect d.E :=
+    let : Group.IsPerfect d.E :=
       (Group.isPerfect_def).2 d.E_component.2.2.2.1
     exact Group.IsPerfect.ofSurjective
       (f := eE0.symm.toMonoidHom) eE0.symm.surjective
@@ -415,22 +415,22 @@ public theorem secondCase_psl2_action_data
     exact (QuotientGroup.eq_one_iff (N := O) m).mp hqbot
   have hfkerodd : Odd (Nat.card fmap.ker) := by
     exact Odd.of_dvd_nat hOodd (Subgroup.card_dvd_of_le hfkerleO)
-  letI : Finite (PGL2 K) :=
+  let : Finite (PGL2 K) :=
     Finite.of_surjective Matrix.ProjGenLinGroup.mk
       Matrix.ProjGenLinGroup.mk_surjective
-  letI : Fintype K := Fintype.ofFinite K
-  letI : Finite (K ≃+* K) :=
+  let : Fintype K := Fintype.ofFinite K
+  let : Finite (K ≃+* K) :=
     Finite.of_injective (fun e : K ≃+* K => (e : K → K)) (by
       intro e f hef
       ext x
       exact congrFun hef x)
-  letI : Finite (PGammaL2 K) :=
+  let : Finite (PGammaL2 K) :=
     Finite.of_injective
       (fun x : PGammaL2 K => (x.left, x.right)) (by
         intro x y hxy
         exact SemidirectProduct.ext
           (congrArg Prod.fst hxy) (congrArg Prod.snd hxy))
-  letI : Finite fmap.range := inferInstance
+  let : Finite fmap.range := inferInstance
   have hRangeD : HasDihedralSylowTwo fmap.range :=
     image_hasDihedralSylowTwo_of_odd_kernel hMdihedral fmap hfkerodd
   have hfieldodd : Odd (Nat.card

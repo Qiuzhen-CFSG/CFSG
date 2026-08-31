@@ -29,10 +29,10 @@ public theorem normal_of_subgroupOf_map_eq_commutator
   have hELcomm : EL = commutator L := by
     apply Subgroup.map_injective (f := e.toMonoidHom) e.injective
     exact hmap.trans hcommMap.symm
-  letI : EL.Characteristic := by
+  let : EL.Characteristic := by
     rw [hELcomm]
     infer_instance
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   have hnormalMap : (EL.map L.subtype).Normal :=
     ConjAct.normal_of_characteristic_of_normal
   have hrecover : EL.map L.subtype = E := by

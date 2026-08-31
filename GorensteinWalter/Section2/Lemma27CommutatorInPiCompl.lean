@@ -69,9 +69,9 @@ public theorem commutator_le_piCoreOf_compl_of_centralizes_fitting_of_twoCore_bo
   have hFnil : Group.IsNilpotent (↥F) := by
     dsimp [F]
     exact fittingSubgroupOf_isNilpotent M
-  haveI : Group.IsNilpotent (↥F) := hFnil
-  haveI : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
-  haveI : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
+  have : Group.IsNilpotent (↥F) := hFnil
+  have : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
+  have : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
   have hFtop : A0 ⊔ B0 = (⊤ : Subgroup (↥F)) :=
     piCore_sup_piCore_compl_eq_top_of_isNilpotent hFnil π
   have ht_sq : t * t = 1 := by simpa [pow_two] using ht.2

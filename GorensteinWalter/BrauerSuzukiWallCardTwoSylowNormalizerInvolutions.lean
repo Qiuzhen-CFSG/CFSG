@@ -34,7 +34,7 @@ public theorem
         v ∈ Subgroup.normalizer
           (((P : Subgroup N).map N.subtype : Subgroup G) : Set G)} = 3 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let N : Subgroup G := Subgroup.normalizer (h.H : Set G)
   change ∀ P : Sylow 3 N,
     Nat.card {v : G // IsInvolution v ∧

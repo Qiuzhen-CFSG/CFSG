@@ -40,7 +40,7 @@ public theorem exists_kleinFour_lift_centralizing_of_odd_central_kernel
   let N : Subgroup L := Z.subgroupOf L
   have hNnormal : N.Normal := by
     exact (inferInstance : Z.Normal).subgroupOf L
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   let f : L →* Vbar :=
     (q.comp L.subtype).codRestrict Vbar (fun x => x.2)
   have hfsurj : Function.Surjective f := by

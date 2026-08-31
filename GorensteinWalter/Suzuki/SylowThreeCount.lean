@@ -187,18 +187,18 @@ public theorem firstCase_U_card_three
     Nat.card c.U = 3 := by
   classical
   have hklein : IsKleinFour (pCore 2 c.Hhat) := firstCase_twoCore_isKleinFour hmin c hfirst
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let H : Subgroup G := c.Hhat
   let N : Subgroup H := pCore 2 H
   let O : Subgroup H := pPrimeCore 2 H
   let K : Subgroup H := N ⊔ O
-  haveI : N.Normal := by
+  have : N.Normal := by
     dsimp [N, H]
     infer_instance
-  haveI : O.Normal := by
+  have : O.Normal := by
     dsimp [O, H]
     infer_instance
-  haveI : K.Normal := by
+  have : K.Normal := by
     dsimp [K, N, O, H]
     infer_instance
   have hNcard : Nat.card N = 4 := hklein.card_four
@@ -214,7 +214,7 @@ public theorem firstCase_U_card_three
       exact hOcop.pow_left n
     exact Subgroup.disjoint_of_coprime_natCard hcop
   have hOleN : O ≤ Subgroup.normalizer (N : Set H) := by
-    haveI : N.Normal := by infer_instance
+    have : N.Normal := by infer_instance
     simp [Subgroup.normalizer_eq_top]
   have hKcard : Nat.card (↥K) = Nat.card N * Nat.card O := by
     exact card_sup_eq_mul_of_disjoint_of_le_normalizer N O hOleN hNdisjO
@@ -252,7 +252,7 @@ public theorem firstCase_sylow3_card_nine
     (c : CentralizerSetup G) (d : FirstCaseCountData c) :
     ∀ P : Sylow 3 G, Nat.card P = 9 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   intro P
   rcases firstCase_index_card_of_countData c d with ⟨_, hGcard⟩
   have hP := P.card_eq_multiplicity
@@ -297,9 +297,9 @@ private lemma card_order3_subgroups_le_four {G : Type u} [Group G] [Finite G]
     (hG9 : Nat.card G = 9) :
     Nat.card {X : Subgroup G // Nat.card X = 3} ≤ 4 := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let S : Type u := {X : Subgroup G // Nat.card X = 3}
-  letI : Fintype S := Fintype.ofFinite S
+  let : Fintype S := Fintype.ofFinite S
   let part : S → Finset G := fun X =>
     {x : G | x ∈ (X.1 : Set G) ∧ x ≠ 1}.toFinset
   have hpartcard : ∀ X : S, (part X).card = 2 := by
@@ -371,7 +371,7 @@ private lemma le_subgroup_iff_normalizer {G : Type u} [Group G] [Finite G]
   constructor
   · intro hVleP
     have hP9' : Nat.card P = 3 ^ 2 := by simpa using hP9
-    haveI : IsMulCommutative P :=
+    have : IsMulCommutative P :=
       IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3) hP9'
     have hcomm : ∀ p : P, ∀ v : G, v ∈ V → (p : G) * v = v * (p : G) := by
       intro p v hv
@@ -651,7 +651,7 @@ private lemma sylow3_containing_card_le_eight
     (hP9 : ∀ P : Sylow 3 G, Nat.card P = 9) :
     Nat.card {P : Sylow 3 G // V ≤ (P : Subgroup G)} ≤ 8 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let N : Subgroup G := Subgroup.normalizer (V : Set G)
   have hVleN : V ≤ N := by
     rw [Subgroup.le_normalizer_iff]
@@ -699,7 +699,7 @@ private lemma fiberV_card_eq_of_conjugate
     Nat.card {P : Sylow 3 G // conjugateSubgroup c.U g ≤ (P : Subgroup G)} =
       Nat.card {P : Sylow 3 G // c.U ≤ (P : Subgroup G)} := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   let e : {P : Sylow 3 G // conjugateSubgroup c.U g ≤ (P : Subgroup G)} ≃
       {P : Sylow 3 G // c.U ≤ (P : Subgroup G)} :=
     { toFun := fun P => ⟨Sylow.ofCard (conjugateSubgroup (P.1 : Subgroup G) g⁻¹) (by
@@ -748,9 +748,9 @@ private lemma sylow3_count
     (c : CentralizerSetup G) (hfirst : FirstCase c) (d : FirstCaseCountData c) :
     Nat.card (Sylow 3 G) = 70 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : Fintype (Sylow 3 G) := Fintype.ofFinite _
-  letI : Fintype (UConjugates c) := Fintype.ofFinite _
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype (Sylow 3 G) := Fintype.ofFinite _
+  let : Fintype (UConjugates c) := Fintype.ofFinite _
   let n3 := Nat.card (Sylow 3 G)
   let fiberP : Sylow 3 G → Type u := fun P => {V : UConjugates c // V.1 ≤ (P : Subgroup G)}
   let fiberV : UConjugates c → Type u := fun V => {P : Sylow 3 G // V.1 ≤ (P : Subgroup G)}
@@ -863,9 +863,9 @@ public theorem firstCase_UConjugates_fiber_card
     (g : G) :
     Nat.card {P : Sylow 3 G // conjugateSubgroup c.U g ≤ (P : Subgroup G)} = 4 := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : Fintype (Sylow 3 G) := Fintype.ofFinite _
-  letI : Fintype (UConjugates c) := Fintype.ofFinite _
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fintype (Sylow 3 G) := Fintype.ofFinite _
+  let : Fintype (UConjugates c) := Fintype.ofFinite _
   let fiberV : UConjugates c → Type u := fun V => {P : Sylow 3 G // V.1 ≤ (P : Subgroup G)}
   let PairsV : Type u := {p : UConjugates c × (Sylow 3 G) // p.1.1 ≤ (p.2 : Subgroup G)}
   let PairsP : Type u := {p : (Sylow 3 G) × UConjugates c // p.2.1 ≤ (p.1 : Subgroup G)}

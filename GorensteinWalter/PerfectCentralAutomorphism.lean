@@ -27,7 +27,7 @@ public theorem perfect_central_automorphism_eq
     α = β := by
   apply MulEquiv.ext
   intro x
-  letI : Bracket E E := commutatorElement
+  let : Bracket E E := commutatorElement
   have hcomm : ∀ a b : E, α ⁅a, b⁆ = β ⁅a, b⁆ := by
     intro a b
     have hza := Subgroup.mem_center_iff.mp (hdelta a)
@@ -72,7 +72,7 @@ public theorem perfect_central_automorphism_eq
     simpa only [map_commutatorElement] using htarget
   have hx : x ∈ ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ := by
     have htop : Group.IsPerfect (↥(⊤ : Subgroup E)) := by
-      letI : Group.IsPerfect E := hperf
+      let : Group.IsPerfect E := hperf
       infer_instance
     have hcommtop : ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ = ⊤ :=
       (Subgroup.isPerfect_iff (H := (⊤ : Subgroup E))).mp htop

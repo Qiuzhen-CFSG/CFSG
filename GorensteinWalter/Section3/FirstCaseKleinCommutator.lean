@@ -70,9 +70,9 @@ private theorem commutator_centralizes_subgroup_of_centralizes_inverts
   classical
   let A0 : Subgroup (↥F) := GorensteinWalter.piCore π (↥F)
   let B0 : Subgroup (↥F) := GorensteinWalter.piCore πᶜ (↥F)
-  haveI : Group.IsNilpotent (↥F) := hFNil
-  haveI : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
-  haveI : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
+  have : Group.IsNilpotent (↥F) := hFNil
+  have : A0.Normal := by dsimp [A0]; exact piCore_normal_local π
+  have : B0.Normal := by dsimp [B0]; exact piCore_normal_local πᶜ
   have hM_normA : M ≤ Subgroup.normalizer (piCoreOf F π : Set G) :=
     le_normalizer_of_isNormalIn hA_norm
   have hM_normB : M ≤ Subgroup.normalizer (piCoreOf F πᶜ : Set G) :=
@@ -196,7 +196,7 @@ public theorem firstCase_klein_commutator_centralizes_fitting
             ⁅c.Hhat, Subgroup.zpowers s⁆ ≤
               Subgroup.centralizer (c.FU : Set G)) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨K, hKr, hKHall, hKne, hKunif⟩ :=
     firstCase_klein_uniform_involution_inverted hmin c hfirst hklein r hr hrV
   have h26 := theorem_2_6 hmin c

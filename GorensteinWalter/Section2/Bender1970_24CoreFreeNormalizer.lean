@@ -102,16 +102,16 @@ public theorem bender1970_2_4_coreFree_fittingNormalizer_commutator_le
     simpa [D] using
       (normal_nilpotent_fixedPoints_le_centralizer_of_pCore_eq_bot
         U F p hp hUp hFnormal hFnil hpcore hUinv)
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   let P : Subgroup R := pCore 2 R
   let K : Subgroup R := pPrimeCore 2 R
   let PX : Subgroup X := P.map R.subtype
   let KX : Subgroup X := K.map R.subtype
-  letI : Group.IsSolvable X := hsolv
-  haveI : P.Characteristic := by
+  let : Group.IsSolvable X := hsolv
+  have : P.Characteristic := by
     dsimp [P]
     infer_instance
-  haveI : K.Characteristic := by
+  have : K.Characteristic := by
     dsimp [K]
     infer_instance
   have htop : (⊤ : Subgroup R) ≤ P ⊔ K := by

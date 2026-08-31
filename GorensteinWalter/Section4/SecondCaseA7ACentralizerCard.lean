@@ -39,7 +39,7 @@ public theorem secondCase_a7_A_centralizer_card_le_108
   let A : Subgroup G := od.K ⊔ od.F
   let C : Subgroup G := M ⊓ Subgroup.centralizer (A : Set G)
   let O : Subgroup M := pPrimeCore 2 M
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : M →* M ⧸ O := QuotientGroup.mk' O

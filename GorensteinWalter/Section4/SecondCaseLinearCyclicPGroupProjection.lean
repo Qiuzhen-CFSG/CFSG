@@ -59,7 +59,7 @@ public theorem cyclic_pGroup_hom_injective_of_prime_subgroup_not_le_ker
     simpa using (Subgroup.card_dvd_of_le
       (H := X) (K := (⊤ : Subgroup S)) le_top)
   have hpTop : p ∣ Nat.card (⊤ : Subgroup S) := by simpa using hpS
-  letI : IsCyclic S := hScyc
+  let : IsCyclic S := hScyc
   have htopcyc : IsCyclic (⊤ : Subgroup S) := Subgroup.isCyclic_of_le le_top
   obtain ⟨H0, hH0, huniq⟩ :=
     secondCase_unique_order_p_subgroup_of_cyclic

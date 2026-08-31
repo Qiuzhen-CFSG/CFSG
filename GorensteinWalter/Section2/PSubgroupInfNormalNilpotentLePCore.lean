@@ -25,7 +25,7 @@ public theorem pSubgroup_inf_normal_nilpotent_le_pCore
     (hFnil : Group.IsNilpotent F) :
     U ⊓ F ≤ pCore p X := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   have hIFp : IsPGroup p (↑(U ⊓ F)) := hUp.to_inf_left
   have hIFpF : IsPGroup p (↑((U ⊓ F).subgroupOf F)) :=
     hIFp.of_equiv

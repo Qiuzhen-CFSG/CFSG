@@ -377,8 +377,8 @@ private lemma reflection_inverts_S0_local (c : BenderGlauberman.Hyp11 G) {r : G}
       _ = (w : G) * c.s := rfl
   have hxs : (c.s * x * c.s⁻¹) = x⁻¹ := BenderGlauberman.s_inverts_S0 c hx
   have hxw : (w : G) * x * (w : G)⁻¹ = x := by
-    letI : IsCyclic ↥(c.S0 : Subgroup G) := c.S0_cyclic
-    letI : CommGroup ↥(c.S0 : Subgroup G) := IsCyclic.commGroup
+    let : IsCyclic ↥(c.S0 : Subgroup G) := c.S0_cyclic
+    let : CommGroup ↥(c.S0 : Subgroup G) := IsCyclic.commGroup
     have hcomm : w * ⟨x, hx⟩ = ⟨x, hx⟩ * w := mul_comm w ⟨x, hx⟩
     have hval : (w : G) * x = x * (w : G) :=
       congrArg (fun z : ↥(c.S0 : Subgroup G) => (z : G)) hcomm
@@ -390,8 +390,8 @@ private lemma reflection_inverts_S0_local (c : BenderGlauberman.Hyp11 G) {r : G}
     _ = (w : G) * (c.s * x * c.s⁻¹) * (w : G)⁻¹ := by group
     _ = (w : G) * x⁻¹ * (w : G)⁻¹ := by rw [hxs]
     _ = x⁻¹ := by
-      letI : IsCyclic ↥(c.S0 : Subgroup G) := c.S0_cyclic
-      letI : CommGroup ↥(c.S0 : Subgroup G) := IsCyclic.commGroup
+      let : IsCyclic ↥(c.S0 : Subgroup G) := c.S0_cyclic
+      let : CommGroup ↥(c.S0 : Subgroup G) := IsCyclic.commGroup
       have hcomm : w * ⟨x⁻¹, (c.S0 : Subgroup G).inv_mem hx⟩ =
           ⟨x⁻¹, (c.S0 : Subgroup G).inv_mem hx⟩ * w := mul_comm w _
       have hval : (w : G) * x⁻¹ = x⁻¹ * (w : G) :=

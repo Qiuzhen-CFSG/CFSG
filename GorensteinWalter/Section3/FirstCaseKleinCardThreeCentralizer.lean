@@ -22,7 +22,7 @@ public theorem firstCase_klein_card_three_subgroup_centralizes_U
     (hUcard : Nat.card c.U = 3) :
     X ≤ Subgroup.centralizer (c.U : Set G) := by
   classical
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   have hUnorm : IsNormalIn c.U c.Hhat := by
     rw [(theorem_2_6 hmin c).1]
     refine ⟨Subgroup.map_subtype_le (pPrimeCore 2 c.Hhat), ?_⟩

@@ -55,7 +55,7 @@ public theorem
   have htIBS : BenderSuzuki.PFAppendixIII.IsInvolution h.t :=
     ⟨h.t_involution.1, h.t_involution.2⟩
   have hHleN : h.H ≤ N := Subgroup.le_normalizer
-  letI : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
+  let : IsKleinFour h.H := h.isKleinFour_H_of_card_K_eq_two hk
   have hTfree : ∀ {x : G}, x ∈ T →
       ¬ BenderSuzuki.PFAppendixIII.IsInvolution x := by
     intro x hxT hxI
@@ -161,7 +161,7 @@ public theorem
         _ = x⁻¹ * x := by rw [hinv]
         _ = 1 := by simp
     exact hTfree hxT ⟨hxone, hxSq⟩
-  letI : Fintype T := Fintype.ofFinite T
+  let : Fintype T := Fintype.ofFinite T
   let triple : Finset T := {1, xT, xT⁻¹}
   have hxTone : xT ≠ 1 := by
     intro hx

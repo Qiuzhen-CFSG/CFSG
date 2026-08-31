@@ -344,7 +344,7 @@ public theorem secondCase_linearContradictionData_core
           le_inf (hYlePE Y) (hYleCen' Y)
         rw [← hCbase] at hZle
         rw [post.od.A_eq]
-        letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+        let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
         have hP0leC : post.od.P0 ≤ C := by
           have hP0cent : post.od.P0 ≤
               Subgroup.centralizer (post.od.P0 : Set G) := by
@@ -352,9 +352,9 @@ public theorem secondCase_linearContradictionData_core
             intro z hz
             rw [Subgroup.mem_centralizer_iff]
             intro y hy
-            letI : IsCyclic (↥post.od.P0) :=
+            let : IsCyclic (↥post.od.P0) :=
               isCyclic_of_prime_card post.od.P0_card
-            letI : CommGroup (↥post.od.P0) := IsCyclic.commGroup
+            let : CommGroup (↥post.od.P0) := IsCyclic.commGroup
             exact congrArg Subtype.val
               (show (⟨y, hy⟩ : post.od.P0) * ⟨z, hz⟩ =
                   ⟨z, hz⟩ * ⟨y, hy⟩ by exact mul_comm _ _)
@@ -481,7 +481,7 @@ public theorem secondCase_linearContradictionData_core
 
   have hLineJoin : ∀ x : Xs, post.od.P ⊔ x.1.1 = post.od.A := by
     intro x
-    letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+    let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
     have hLcard : Nat.card x.1.1 = post.od.p := by
       rcases x.1.2.2.2 with ⟨g, hg⟩
       rw [hg, Subgroup.card_map_of_injective (MulAut.conj g).injective,
@@ -498,7 +498,7 @@ public theorem secondCase_linearContradictionData_core
     have hcomm : ∀ p : post.od.P, ∀ z : x.1.1,
         (p : G) * (z : G) = (z : G) * (p : G) := by
       intro p z
-      letI : IsElementaryAbelian post.od.p post.od.A := post.od.A_elem_abelian
+      let : IsElementaryAbelian post.od.p post.od.A := post.od.A_elem_abelian
       have hpA : (p : G) ∈ post.od.A := by
         rw [post.od.A_eq]
         exact (le_sup_left : post.od.P ≤ post.od.P ⊔ post.od.P0) p.2
@@ -550,14 +550,14 @@ public theorem secondCase_linearContradictionData_core
        X x ≤ D ∧ ¬ post.od.P ⊔ X x ≤ D) := by
     intro x Y hYconj hYle hYnotM
     dsimp
-    letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+    let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
     have hXleReg : X x ≤ Reg x := by
       rw [hXeq x]
       exact le_sup_left
     have hXcent : X x ≤ Subgroup.centralizer (Y : Set G) := by
       intro z hz
       have hXself : Xreg x ≤ Subgroup.centralizer (Xreg x : Set G) := by
-        letI : IsCyclic (↥(Xreg x)) := isCyclic_of_prime_card (hXcard x)
+        let : IsCyclic (↥(Xreg x)) := isCyclic_of_prime_card (hXcard x)
         exact (Subgroup.le_centralizer_iff_isMulCommutative).2
           (IsCyclic.isMulCommutative (α := ↥(Xreg x)))
       have hXE : Xreg x ≤ Subgroup.centralizer
@@ -623,7 +623,7 @@ public theorem secondCase_linearContradictionData_core
           Q ⊓ (D ⊓ Subgroup.normalizer (X x : Set G)) = ⊥ ∧
           Nat.card Q ∣ Nat.card K) := by
     intro x Y hYconj hYle hYnotM
-    letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+    let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
     have hpdvd : post.od.p ∣ Nat.card post.equation9.Kinv :=
       secondCase_linear_p_dvd_Kinv c' w' d' post
     have hpodd : Odd post.od.p :=
@@ -632,7 +632,7 @@ public theorem secondCase_linearContradictionData_core
       secondCase_equationNine_q_ge_seven_of_p_dvd_Kinv
         d' K post.equation9 post.od.hp_prime hpodd hpdvd
     rcases post.torus.primePower with ⟨r, f, hr, hrOdd, hf, hKcard⟩
-    letI : Fact r.Prime := ⟨hr⟩
+    let : Fact r.Prime := ⟨hr⟩
     let qbar : d'.E →* (d'.E ⧸ Subgroup.center d'.E) :=
       QuotientGroup.mk' (Subgroup.center d'.E)
     have hqker : qbar.ker = ⊥ := by
@@ -648,9 +648,9 @@ public theorem secondCase_linearContradictionData_core
       change (z : G) ∈ Subgroup.centralizer (post.od.P0 : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro p hp
-      letI : IsCyclic (↥post.od.P0) :=
+      let : IsCyclic (↥post.od.P0) :=
         isCyclic_of_prime_card post.od.P0_card
-      letI : CommGroup (↥post.od.P0) := IsCyclic.commGroup
+      let : CommGroup (↥post.od.P0) := IsCyclic.commGroup
       have hzP0 : (z : G) ∈ post.od.P0 := by
         exact hz
       exact congrArg Subtype.val
@@ -1027,7 +1027,7 @@ public theorem secondCase_linearContradictionData_core
         (SD.isPGroup').map φ |>.exists_le_sylow
       have hSEcyc : IsCyclic SE := hSylowCyc SE
       have hmapcyc : IsCyclic ((SD : Subgroup D).map φ) := by
-        letI : IsCyclic SE := hSEcyc
+        let : IsCyclic SE := hSEcyc
         exact Subgroup.isCyclic_of_le hSleSE
       let eSD : SD ≃* ((SD : Subgroup D).map φ) :=
         Subgroup.equivMapOfInjective (SD : Subgroup D) φ hφinj
@@ -1208,7 +1208,7 @@ public theorem secondCase_linearContradictionData_core
           Q ⊓ (D ⊓ Subgroup.normalizer (Y : Set G)) = ⊥ ∧
           Nat.card Q ∣ Nat.card K) := by
     intro x W Y hWle hWcard hWmin hYconj hYle hYcent
-    letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+    let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
     have hpdvd : post.od.p ∣ Nat.card post.equation9.Kinv :=
       secondCase_linear_p_dvd_Kinv c' w' d' post
     have hpodd : Odd post.od.p :=
@@ -1217,7 +1217,7 @@ public theorem secondCase_linearContradictionData_core
       secondCase_equationNine_q_ge_seven_of_p_dvd_Kinv
         d' K post.equation9 post.od.hp_prime hpodd hpdvd
     rcases post.torus.primePower with ⟨r, f, hr, hrOdd, hf, hKcard⟩
-    letI : Fact r.Prime := ⟨hr⟩
+    let : Fact r.Prime := ⟨hr⟩
     let qbar : d'.E →* (d'.E ⧸ Subgroup.center d'.E) :=
       QuotientGroup.mk' (Subgroup.center d'.E)
     have hqker : qbar.ker = ⊥ := by
@@ -1233,9 +1233,9 @@ public theorem secondCase_linearContradictionData_core
       change (z : G) ∈ Subgroup.centralizer (post.od.P0 : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro p hp
-      letI : IsCyclic (↥post.od.P0) :=
+      let : IsCyclic (↥post.od.P0) :=
         isCyclic_of_prime_card post.od.P0_card
-      letI : CommGroup (↥post.od.P0) := IsCyclic.commGroup
+      let : CommGroup (↥post.od.P0) := IsCyclic.commGroup
       have hzP0 : (z : G) ∈ post.od.P0 := by
         exact hz
       exact congrArg Subtype.val
@@ -1659,7 +1659,7 @@ public theorem secondCase_linearContradictionData_core
         exact hcoe
       have hS : IsCyclic (S : Subgroup (d'.E)) := hSylowCyc S
       have hS0 : IsCyclic (S0 : Subgroup (d'.E)) := hSylowCyc S0
-      letI : IsCyclic (S : Subgroup (d'.E)) := hS
+      let : IsCyclic (S : Subgroup (d'.E)) := hS
       have hpkS : post.od.p ∣ Nat.card (S : Subgroup (d'.E)) := by
         have hREdvd : Nat.card RE ∣ Nat.card (S : Subgroup (d'.E)) :=
           Subgroup.card_dvd_of_le hRS
@@ -1826,7 +1826,7 @@ public theorem secondCase_linearContradictionData_core
           (SE : Subgroup (E' : Type u)))).mpr
             (hSylowCyc SE0)
       have hmapcyc : IsCyclic ((SD : Subgroup D).map φ) := by
-        letI : IsCyclic SE := hSEcyc
+        let : IsCyclic SE := hSEcyc
         exact Subgroup.isCyclic_of_le hSleSE
       let eSD : SD ≃* ((SD : Subgroup D).map φ) :=
         Subgroup.equivMapOfInjective (SD : Subgroup D) φ hφinj
@@ -1979,8 +1979,8 @@ public theorem secondCase_linearContradictionData_core
             dsimp [zy]
           rw [hsub]
           rw [map_mul, map_mul]
-          letI : IsCyclic (↥(X x)) := isCyclic_of_prime_card hXcardX
-          letI : CommGroup (↥(X x)) := IsCyclic.commGroup
+          let : IsCyclic (↥(X x)) := isCyclic_of_prime_card hXcardX
+          let : CommGroup (↥(X x)) := IsCyclic.commGroup
           have hcomm : ψ (⟨z.1, hzD⟩ : D) * ψ y =
               ψ y * ψ (⟨z.1, hzD⟩ : D) :=
             mul_comm _ _
@@ -2313,7 +2313,7 @@ public theorem secondCase_linearContradictionData_core
           apply Subtype.ext
           exact congrArg (fun z : TY => ((z : E') : G)) hab
         exact congrArg Subtype.val (hφinj hφab)
-      letI : IsCyclic TY := hTYcyc
+      let : IsCyclic TY := hTYcyc
       exact isCyclic_of_injective fN hfNinj
     have hNormYDcyc : IsCyclic (Subgroup.normalizer (YD : Set D)) := by
       rw [show Subgroup.normalizer (YD : Set D) =
@@ -2520,11 +2520,11 @@ public theorem secondCase_linearContradictionData_core
       Nat.card (MinimalXInvariantFamily (post.od.P ⊔ d'.E)
         (Nat.card K) (X x)) ≤ (Nat.card K - 1) / post.od.p := by
     intro x
-    letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+    let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
     have hpodd : Odd post.od.p :=
       secondCase_linear_omega_p_odd c' w' d' post.od
     rcases post.torus.primePower with ⟨r, f, hr, hrOdd, hf, hKcard⟩
-    letI : Fact r.Prime := ⟨hr⟩
+    let : Fact r.Prime := ⟨hr⟩
     have hqodd : Odd (Nat.card K) := by
       rw [hKcard]
       exact hrOdd.pow
@@ -2543,9 +2543,9 @@ public theorem secondCase_linearContradictionData_core
       change (z : G) ∈ Subgroup.centralizer (post.od.P0 : Set G)
       rw [Subgroup.mem_centralizer_iff]
       intro p hp
-      letI : IsCyclic (↥post.od.P0) :=
+      let : IsCyclic (↥post.od.P0) :=
         isCyclic_of_prime_card post.od.P0_card
-      letI : CommGroup (↥post.od.P0) := IsCyclic.commGroup
+      let : CommGroup (↥post.od.P0) := IsCyclic.commGroup
       have hzP0 : (z : G) ∈ post.od.P0 := hz
       exact congrArg Subtype.val
         (show (⟨p, hp⟩ : post.od.P0) * ⟨(z : G), hzP0⟩ =
@@ -2737,7 +2737,7 @@ public theorem secondCase_linearContradictionData_core
       (post.od.P ⊔ d'.E) d'.E (X x) le_sup_right hpodd hqodd K
       hKcard rfl eE π hXlePE hπXinj hπE hXcardX hWleE hnotcent
 
-  letI : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
+  let : Fact post.od.p.Prime := ⟨post.od.hp_prime⟩
   have hK0leK : post.od.K0 ≤ post.od.K := by
     rw [post.od.K0_eq]
     exact inf_le_right
@@ -2784,9 +2784,9 @@ public theorem secondCase_linearContradictionData_core
     Y ≤ Reg x ∧ Y ≠ X x ∧ ¬ Y ≤ w'.M ∧ ¬ Bad x Y
   let Adm : Xs → Subgroup G → Prop := fun x Y =>
     (∃ g : G, Y = post.od.P.map (MulAut.conj g).toMonoidHom) ∧ CoreAdm x Y
-  letI : Fintype Lines := Fintype.ofFinite Lines
-  letI : Fintype Xs := Fintype.ofFinite Xs
-  letI : DecidableEq Xs := Classical.decEq Xs
+  let : Fintype Lines := Fintype.ofFinite Lines
+  let : Fintype Xs := Fintype.ofFinite Xs
+  let : DecidableEq Xs := Classical.decEq Xs
   have hRegP : ∀ x : Xs,
       conjugateSubgroup post.od.P (hreg x) = X x := by
     intro x

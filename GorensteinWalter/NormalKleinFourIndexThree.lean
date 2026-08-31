@@ -26,7 +26,7 @@ public theorem mulEquiv_alternatingGroup_four_of_normal_kleinFour_index_three
     (hcent : Subgroup.centralizer (H : Set G) = H)
     (hindex : H.index = 3) :
     Nonempty (G ≃* alternatingGroup (Fin 4)) := by
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   have hcop : Nat.Coprime (Nat.card H) H.index := by
     rw [hH.card_four, hindex]
     norm_num

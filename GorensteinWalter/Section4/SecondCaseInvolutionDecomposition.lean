@@ -90,7 +90,7 @@ private theorem mem_E_of_inverted
   have hEsubNormal : Esub.Normal :=
     Subgroup.normal_subgroupOf_of_le_normalizer (H := w.M) (N := d.E)
       (le_normalizer_of_isNormalIn d.E_normal)
-  letI : Esub.Normal := hEsubNormal
+  let : Esub.Normal := hEsubNormal
   let p : w.M →* w.M ⧸ Esub := QuotientGroup.mk' Esub
   let yM : w.M := ⟨y, hyM⟩
   let sM : w.M := ⟨sG, hsM⟩
@@ -231,7 +231,7 @@ public theorem secondCase_involution_decomposition
     refine ⟨(centralizerSetup_U_isNormalIn_H c).2 sG hsH x hx.1, ?_⟩
     exact w.M.mul_mem (w.M.mul_mem hsM hx.2) (w.M.inv_mem hsM)
   -- cyclic generator of the quotient image and a lift
-  letI : IsCyclic Xbar := hcycXbar
+  let : IsCyclic Xbar := hcycXbar
   obtain ⟨xbar, hxbar_gen⟩ := IsCyclic.exists_generator (α := Xbar)
   have hxbar_mem : (xbar : Q) ∈ Xbar := xbar.2
   rcases Subgroup.mem_map.mp hxbar_mem with ⟨xE, hxE, hxq⟩

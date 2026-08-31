@@ -34,7 +34,7 @@ public theorem secondCase_a7_u_inter_m_quotient_card_dvd_three
   classical
   let M : Subgroup G := w.M
   let O : Subgroup M := pPrimeCore 2 M
-  letI : O.Normal := by
+  let : O.Normal := by
     dsimp [O]
     infer_instance
   let q : M →* M ⧸ O := QuotientGroup.mk' O
@@ -55,8 +55,8 @@ public theorem secondCase_a7_u_inter_m_quotient_card_dvd_three
   have hTp : IsPGroup 2 T := by
     apply IsPGroup.of_card (G := T) (n := 1)
     simpa [hTcard]
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  letI : Fact (IsPGroup 2 (↥T)) := ⟨hTp⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (IsPGroup 2 (↥T)) := ⟨hTp⟩
   have hOcop : Nat.Coprime 2 (Nat.card O) :=
     pPrimeCore_coprime_card (p := 2) (G := M)
   have hcentmap :

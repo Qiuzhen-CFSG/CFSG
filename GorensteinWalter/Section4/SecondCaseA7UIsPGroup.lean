@@ -67,7 +67,7 @@ public theorem secondCase_a7_U_isPGroup_three
     rcases hidxCases with hidx | hidx
     · exact ⟨0, by simpa using hidx⟩
     · exact ⟨1, by simpa using hidx⟩
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
   obtain ⟨a, ha⟩ := IsPGroup.iff_card.mp hLp
   have hLsubcard : Nat.card (L.subgroupOf c.U) = Nat.card L :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hLleU).toEquiv

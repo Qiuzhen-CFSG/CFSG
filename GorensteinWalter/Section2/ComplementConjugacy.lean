@@ -65,7 +65,7 @@ public theorem complements_conjugate_of_coprime
       Nat.Coprime (Nat.card N) N.index →
       ∃ g : G, K = H.map (MulAut.conj g).toMonoidHom := by
   intro hN hH hK hcop
-  letI : N.Normal := hN
+  let : N.Normal := hN
   have hcopQ : Nat.Coprime (Nat.card N) (Nat.card (G ⧸ N)) := by
     simpa [Subgroup.index_eq_card] using hcop
   exact BenderSuzuki.External.huppert_I_18_3_complements_conjugate N H K hcopQ hH hK
@@ -79,7 +79,7 @@ public theorem exists_mem_normal_conjugator_of_coprime
       Nat.Coprime (Nat.card N) N.index →
       ∃ n : N, K = H.map (MulAut.conj (n : G)).toMonoidHom := by
   intro hN hH hK hcop
-  letI : N.Normal := hN
+  let : N.Normal := hN
   rcases (complements_conjugate_of_coprime N H K hN hH hK hcop) with ⟨g, hg⟩
   exact exists_mem_normal_conjugator hH hg
 
@@ -712,7 +712,7 @@ theorem invariant_right_coset_has_fixed_representative
   let Ucopy : Subgroup (G ⋊[φ] A) := U.map (SemidirectProduct.inl (φ := φ))
   let Acopy : Subgroup (G ⋊[φ] A) := (⊤ : Subgroup A).map (SemidirectProduct.inr (φ := φ))
   let AU : Subgroup (G ⋊[φ] A) := (embedSemidirectU U hU).range
-  letI : Finite (G ⋊[φ] A) := Finite.of_injective
+  let : Finite (G ⋊[φ] A) := Finite.of_injective
     (fun x : G ⋊[φ] A => (x.left, x.right)) (by
       intro x y h
       have h₁ : x.left = y.left := congrArg Prod.fst h
@@ -835,7 +835,7 @@ public theorem commutator_lt_of_pGroups
   have hBnormS : (B.subgroupOf S).Normal := by
     apply (Subgroup.normal_subgroupOf_iff_le_normalizer (H := B) (K := S) le_sup_left).2
     exact sup_le Subgroup.le_normalizer hPB
-  letI : (B.subgroupOf S).Normal := hBnormS
+  let : (B.subgroupOf S).Normal := hBnormS
   have hBPp : IsPGroup p S :=
     IsPGroup.to_sup_of_normal_left' hBp hPp hPB
   have hnil : Group.IsNilpotent ↑S :=

@@ -18,8 +18,8 @@ public theorem secondCase_linear_omega_F_order_p_eq_P
     {x : G | x ∈ od.F ∧ x ^ od.p = 1} = (od.P : Set G) := by
   classical
   let S : Set G := {x : G | x ∈ od.F ∧ x ^ od.p = 1}
-  letI : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
-  letI : IsCyclic (↥od.F) := od.F_cyclic
+  let : Fintype (↥od.F) := Fintype.ofFinite (↥od.F)
+  let : IsCyclic (↥od.F) := od.F_cyclic
   have hp_pos : 0 < od.p := od.hp_prime.pos
   have hPsubS : (od.P : Set G) ⊆ S := by
     intro x hx
@@ -51,7 +51,7 @@ public theorem secondCase_linear_omega_F_order_p_eq_P
     exact le_of_eq (by
       change Nat.card {x : G // x ∈ S} = Nat.card (↥od.P)
       rw [hScard, od.P_card])
-  letI : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
+  let : Fintype (↥od.P) := Fintype.ofFinite (↥od.P)
   exact (Set.eq_of_subset_of_card_le hPsubS (by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
     exact hcard)).symm

@@ -337,7 +337,7 @@ abbrev CenterEq (M : A5SL2) : Prop := M = 1 ∨ M = -1
 `E = [[1,1],[0,1]]` and `F = [[1,0],[1,1]]` is scalar with square `1`. -/
 theorem mem_center_SL2_zmod5_iff {M : A5SL2} :
     M ∈ Subgroup.center A5SL2 ↔ M = 1 ∨ M = -1 := by
-  haveI : Fact (Nat.Prime 5) := ⟨by decide⟩
+  have : Fact (Nat.Prime 5) := ⟨by decide⟩
   constructor
   · intro hM
     have hE : M.1 * a5E.1 = a5E.1 * M.1 := by
@@ -414,17 +414,17 @@ theorem repPerm_notCenter : ∀ x : alternatingGroup (Fin 5), x ≠ 1 →
 
 /-- The orders of the two generators and their product. -/
 theorem a5x_order : orderOf (a5x : alternatingGroup (Fin 5)) = 2 := by
-  haveI : Fact (Nat.Prime 2) := ⟨by decide⟩
+  have : Fact (Nat.Prime 2) := ⟨by decide⟩
   apply orderOf_eq_prime (p := 2)
   · decide
   · decide
 theorem a5y_order : orderOf (a5y : alternatingGroup (Fin 5)) = 3 := by
-  haveI : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
   apply orderOf_eq_prime (p := 3)
   · decide
   · decide
 theorem a5x_mul_a5y_order : orderOf (a5x.1 * a5y.1 : Equiv.Perm (Fin 5)) = 5 := by
-  haveI : Fact (Nat.Prime 5) := ⟨by decide⟩
+  have : Fact (Nat.Prime 5) := ⟨by decide⟩
   apply orderOf_eq_prime (p := 5)
   · decide
   · decide
@@ -507,8 +507,8 @@ theorem closure_a5x_a5y :
     ring
   -- |C| ≤ 60
   have hle60 : Nat.card ↥C ≤ 60 := by
-    haveI : Fintype ↥C := Fintype.ofFinite _
-    haveI : Fintype ↥(alternatingGroup (Fin 5)) := Fintype.ofFinite _
+    have : Fintype ↥C := Fintype.ofFinite _
+    have : Fintype ↥(alternatingGroup (Fin 5)) := Fintype.ofFinite _
     have hinj : Function.Injective (fun x : ↥C => (⟨x.1, hle x.2⟩ : alternatingGroup (Fin 5))) := by
       intro x y h
       exact Subtype.ext (congrArg (fun q : alternatingGroup (Fin 5) => q.1) h)
@@ -544,7 +544,7 @@ theorem closure_a5x_a5y :
         decide
       rw [hKcard, h30card, h60] at h
       omega
-    haveI : K.Normal := Subgroup.normal_of_index_eq_two hKindex
+    have : K.Normal := Subgroup.normal_of_index_eq_two hKindex
     rcases (alternatingGroup.isSimpleGroup (by norm_num : 5 ≤ Nat.card (Fin 5))).eq_bot_or_eq_top_of_normal K inferInstance with hKbot | hKtop
     · have : Nat.card ↥K = 1 := by rw [hKbot]; exact Subgroup.card_bot
       omega
@@ -795,7 +795,7 @@ public theorem sylowTwo_alternatingGroupFive_isKleinFour
       Sylow.card_eq_multiplicity S
     rw [h60, hfac] at hcardS
     simpa using hcardS
-  haveI : Fact (Nat.Prime 2) := ⟨by decide⟩
+  have : Fact (Nat.Prime 2) := ⟨by decide⟩
   constructor
   · exact hcard4
   · apply Nat.dvd_antisymm
@@ -832,7 +832,7 @@ public theorem sylowTwo_alternatingGroupFive_isKleinFour
       · exfalso
         exact hkne2 rfl
     · -- `2 ∣ Monoid.exponent ↥S`
-      letI : Fintype ↥(S : Subgroup (alternatingGroup (Fin 5))) := Fintype.ofFinite _
+      let : Fintype ↥(S : Subgroup (alternatingGroup (Fin 5))) := Fintype.ofFinite _
       have hcardF : Fintype.card ↥(S : Subgroup (alternatingGroup (Fin 5))) = 4 := by
         rw [← Nat.card_eq_fintype_card]
         exact hcard4
@@ -847,7 +847,7 @@ public theorem hasDihedralSylowTwo_alternatingGroupFive :
     HasDihedralSylowTwo (alternatingGroup (Fin 5)) := by
   intro S
   refine ⟨1, by norm_num, ?_⟩
-  haveI : IsKleinFour ↥(S : Subgroup (alternatingGroup (Fin 5))) :=
+  have : IsKleinFour ↥(S : Subgroup (alternatingGroup (Fin 5))) :=
     sylowTwo_alternatingGroupFive_isKleinFour S
   simpa using (IsKleinFour.nonempty_mulEquiv
     (G₁ := ↥(S : Subgroup (alternatingGroup (Fin 5)))) (G₂ := DihedralGroup 2))
@@ -864,7 +864,7 @@ public theorem hasCyclicOrDihedralSylowTwo_alternatingGroupFive :
 /-- The alternating group on five points is a D-group, realized through
 `A₅ ≅ PSL₂(ZMod 5)` with `q = 5` an odd prime power. -/
 public theorem alternatingGroupFive_isDGroup : IsDGroup (alternatingGroup (Fin 5)) := by
-  haveI : Fact (Nat.Prime 5) := ⟨by decide⟩
+  have : Fact (Nat.Prime 5) := ⟨by decide⟩
   refine IsDGroup.quotientHasLinearNormalSubgroup (G := alternatingGroup (Fin 5))
     (K := ZMod 5) hasCyclicOrDihedralSylowTwo_alternatingGroupFive ?_ ⊤ ?_ ?_ ?_
   · -- `IsOddPrimePower (Nat.card (ZMod 5))`
@@ -893,7 +893,7 @@ public theorem isDGroup_of_mulEquiv_aFive
     {G : Type u} [Group G] [Finite G]
     (e : Nonempty (G ≃* alternatingGroup (Fin 5))) :
     IsDGroup G := by
-  haveI : Fact (Nat.Prime 5) := ⟨by decide⟩
+  have : Fact (Nat.Prime 5) := ⟨by decide⟩
   rcases e with ⟨e⟩
   have hcoreA : pPrimeCore 2 (alternatingGroup (Fin 5)) = ⊥ :=
     pPrimeCore_two_alternatingGroupFive

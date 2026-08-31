@@ -141,7 +141,7 @@ private theorem disjoint_of_ne_of_card_eq_prime
   let I : Subgroup G := L ⊓ K
   have hIleL : I ≤ L := inf_le_left
   let IL : Subgroup L := I.subgroupOf L
-  letI : Fact (Nat.Prime (Nat.card L)) :=
+  let : Fact (Nat.Prime (Nat.card L)) :=
     ⟨hLcard ▸ (Fact.out : Nat.Prime p)⟩
   change I = ⊥
   rcases IL.eq_bot_or_eq_top_of_prime_card with hbot | htop
@@ -181,7 +181,7 @@ private theorem aSeven_fixed_invariant_oddP_subgroup_centralized
         a7t * x = x * a7t) →
       P ≤ Subgroup.centralizer ({a7t} : Set A7) := by
     intro q hq hPcard hcertificate
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     obtain ⟨xP, hxPorder⟩ :=
       exists_prime_orderOf_dvd_card' (G := P) q (by rw [hPcard])
     let x : A7 := xP
@@ -214,7 +214,7 @@ private theorem aSeven_fixed_invariant_oddP_subgroup_centralized
     rw [← hZeq]
     exact Subgroup.zpowers_le.mpr
       (Subgroup.mem_centralizer_singleton_iff.mpr htx.symm)
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   obtain ⟨n, hPcard⟩ := hPp.exists_card_eq
   have hpowDvd : p ^ n ∣ 2520 := by
     rw [← card_aSeven, ← hPcard]
@@ -243,7 +243,7 @@ private theorem aSeven_fixed_invariant_oddP_subgroup_centralized
         ⟨hx.1, hx.2.1,
           hx.2.2 a7v (by simp [a7CentralizerGenerators])⟩
     · have hPnine : Nat.card P = 9 := by simpa using hPcard
-      letI : IsMulCommutative P := by
+      let : IsMulCommutative P := by
         apply IsPGroup.isMulCommutative_of_card_eq_prime_sq (p := 3)
         simpa using hPnine
       have hPindex : P.index = 280 := by

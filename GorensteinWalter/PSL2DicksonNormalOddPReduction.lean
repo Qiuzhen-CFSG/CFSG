@@ -48,7 +48,7 @@ public theorem psl2_normal_oddP_dihedral_or_centralized_of_contains_sylow
     (∃ z : ℕ, Nat.card M = 2 * z ∧ Nonempty (M ≃* DihedralGroup z)) ∨
       P ≤ Subgroup.centralizer ({t} : Set (PSL2MatrixGroup F)) := by
   classical
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hf_ne_zero : f ≠ 0 := by
     intro hf_zero
     have hcard_one : Nat.card F = 1 := by
@@ -124,7 +124,7 @@ public theorem psl2_normal_oddP_dihedral_or_centralized_of_contains_sylow
     exact hS_not_rgroup hSr
   · exfalso
     rcases hCyclic with ⟨_z, _hz, _hcard, hMcyc⟩
-    letI : IsCyclic M := hMcyc
+    let : IsCyclic M := hMcyc
     exact hSnotcyc (Subgroup.isCyclic_of_le hSM)
   · exact Or.inl
       ⟨hDihedral.choose, hDihedral.choose_spec.2.1,
@@ -148,7 +148,7 @@ public theorem psl2_normal_oddP_dihedral_or_centralized_of_contains_sylow
     rcases hSemidirect with
       ⟨m, ccard, _hccard_dvd, _hccard_ambient, N, C,
         hNnormal, hNelem, _hNcard, hCcyc, _hCcard, hdisj, hjoin⟩
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     have hcomp : N.IsComplement' C := by
       refine ⟨Subgroup.mul_injective_of_disjoint hdisj, ?_⟩
       intro g
@@ -158,7 +158,7 @@ public theorem psl2_normal_oddP_dihedral_or_centralized_of_contains_sylow
       rcases hg with ⟨n, hn, c, hc, hnc⟩
       exact ⟨⟨⟨n, hn⟩, ⟨c, hc⟩⟩, hnc⟩
     let eQ : M ⧸ N ≃* C := hcomp.symm.QuotientMulEquiv
-    letI : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
+    let : IsCyclic (M ⧸ N) := eQ.isCyclic.mpr hCcyc
     have hNr : IsPGroup r N := IsElementaryAbelian.isPGroup r N
     have hr_ne_two : 2 ≠ r := by
       intro h

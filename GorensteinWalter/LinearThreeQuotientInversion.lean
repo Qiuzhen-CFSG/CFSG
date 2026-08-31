@@ -39,12 +39,12 @@ public theorem no_involution_inverts_of_quotient_linear_three
     (htinv : ∀ x ∈ P, t * x * t⁻¹ = x⁻¹) :
     False := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let O : Subgroup A := pPrimeCore 2 A
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := A ⧸ O
   let q : A →* Q := QuotientGroup.mk' O
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   have hPodd : Odd (Nat.card ↥P) := by
     rcases hPp.exists_card_eq with ⟨n, hn⟩
     rw [hn]
@@ -74,7 +74,7 @@ public theorem no_involution_inverts_of_quotient_linear_three
     have hx1 : (⟨x, hxL⟩ : ↥L) = 1 :=
       Subgroup.mem_bot.mp (by simpa [hbot] using hxL')
     exact congrArg Subtype.val hx1
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hK3
   let eK : ZMod 3 ≃+* K :=
@@ -133,12 +133,12 @@ public theorem no_involution_inverts_of_quotient_linear_three_pgl2
     (htinv : ∀ x ∈ P, t * x * t⁻¹ = x⁻¹) :
     False := by
   classical
-  letI : Fact p.Prime := ⟨hp⟩
+  let : Fact p.Prime := ⟨hp⟩
   let O : Subgroup A := pPrimeCore 2 A
-  letI : O.Normal := by dsimp [O]; infer_instance
+  let : O.Normal := by dsimp [O]; infer_instance
   let Q : Type u := A ⧸ O
   let q : A →* Q := QuotientGroup.mk' O
-  letI : L.Normal := hLnormal
+  let : L.Normal := hLnormal
   have hPodd : Odd (Nat.card ↥P) := by
     rcases hPp.exists_card_eq with ⟨n, hn⟩
     rw [hn]
@@ -185,7 +185,7 @@ public theorem no_involution_inverts_of_quotient_linear_three_pgl2
       have hx' := hT0Qnorm.conj_mem ((l : Q) * x * (l : Q)⁻¹) hx ((l : Q)⁻¹)
       have hEq : (l : Q)⁻¹ * ((l : Q) * x * (l : Q)⁻¹) * ((l : Q)⁻¹)⁻¹ = x := by group
       simpa [hEq] using hx'
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hFcard : Fintype.card K = 3 := by
     simpa [Nat.card_eq_fintype_card] using hK3
   let eK : ZMod 3 ≃+* K :=

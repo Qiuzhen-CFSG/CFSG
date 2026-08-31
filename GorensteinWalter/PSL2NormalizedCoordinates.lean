@@ -278,7 +278,7 @@ public theorem psl2NormalizedAffinePerm_mul
     psl2NormalizedAffinePerm K hKcard hK hcard alpha (x * y) =
       psl2NormalizedAffinePerm K hKcard hK hcard alpha x *
         psl2NormalizedAffinePerm K hKcard hK hcard alpha y := by
-  letI : Fintype K := Fintype.ofFinite K
+  let : Fintype K := Fintype.ofFinite K
   have hqOdd : Odd (Nat.card K) := by
     rcases hK with ⟨q, n, _hqPrime, hqOdd, _hn, hqcard⟩
     rw [hqcard]

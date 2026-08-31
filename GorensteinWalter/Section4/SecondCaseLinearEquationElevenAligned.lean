@@ -703,9 +703,9 @@ public theorem secondCase_linearEquation11_first_identity_chain
         rw [hcoe] at haA
         exact haA
       rcases haP0 with ⟨p', hp', p0, hp0, hEq⟩
-      letI : Fact (Nat.Prime p) := ⟨hp⟩
-      letI : IsCyclic P := isCyclic_of_prime_card hPcard
-      letI : CommGroup P := IsCyclic.commGroup
+      let : Fact (Nat.Prime p) := ⟨hp⟩
+      let : IsCyclic P := isCyclic_of_prime_card hPcard
+      let : CommGroup P := IsCyclic.commGroup
       have hcomm1 : q * p' = p' * q := by
         exact congrArg Subtype.val
           (show (⟨q, hq⟩ : P) * ⟨p', hp'⟩ = ⟨p', hp'⟩ * ⟨q, hq⟩ by

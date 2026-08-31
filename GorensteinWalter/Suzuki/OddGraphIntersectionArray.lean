@@ -99,7 +99,7 @@ public theorem firstCase_commutingGraph_connected
     rcases (c.Hhat_maximal.le_iff).mp hHle with htop | heq
     · exact htop
     · exact False.elim (hCne heq)
-  letI : Nonempty (UConjugates c) := ⟨UConjugates.base c⟩
+  let : Nonempty (UConjugates c) := ⟨UConjugates.base c⟩
   apply SimpleGraph.Connected.mk
   intro V W
   have root_reachable (X : UConjugates c) :
@@ -320,8 +320,8 @@ public theorem firstCase_rootLayerFour_rootNeighbor_card_one
       invFun := fun p => ⟨⟨p.2.1, p.1⟩, p.2.2⟩
       left_inv := by intro p; rfl
       right_inv := by intro p; rfl }
-  letI : Fintype A := Fintype.ofFinite A
-  letI : Fintype B := Fintype.ofFinite B
+  let : Fintype A := Fintype.ofFinite A
+  let : Fintype B := Fintype.ofFinite B
   have hIcardA : Nat.card I =
       ∑ V : A, Nat.card {W : B // (commutingGraph c).Adj V.1 W.1} := by
     rw [Nat.card_congr eA, Nat.card_sigma]
@@ -445,8 +445,8 @@ public theorem firstCase_rootLayerFour_two_incidence
       invFun := fun p => ⟨⟨p.2.1, p.1⟩, p.2.2⟩
       left_inv := by intro p; rfl
       right_inv := by intro p; rfl }
-  letI : Fintype F := Fintype.ofFinite F
-  letI : Fintype T := Fintype.ofFinite T
+  let : Fintype F := Fintype.ofFinite F
+  let : Fintype T := Fintype.ofFinite T
   have hFcard : Nat.card F = 12 := firstCaseRootLayerFour_card hmin c hfirst d
   have hTcard : Nat.card T = 18 := firstCaseRootLayerTwo_card hmin c hfirst d
   have hFcard' : Fintype.card F = 12 := by

@@ -65,7 +65,7 @@ public theorem bswInvolutions_ncard_mul_card_H
     (h : BrauerSuzukiWallHypotheses G) :
     (bswInvolutions G).ncard * Nat.card h.H = Nat.card G := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   rw [bswInvolutions_eq_orbit h]
   have horbit := MulAction.card_orbit_mul_card_stabilizer_eq_card_group
     (ConjAct G) h.t
@@ -283,7 +283,7 @@ private theorem BrauerSuzukiWallHypotheses.conjugates_eq_inv_of_mem_H_not_mem_K
   obtain ⟨k, hk, rfl⟩ := h.exists_eq_mul_s_of_mem_H_not_mem_K hyH hyK
   have hkx : Commute k x := by
     rw [commute_iff_eq]
-    letI : IsMulCommutative h.K := h.K_commutative
+    let : IsMulCommutative h.K := h.K_commutative
     exact congrArg Subtype.val
       ((IsMulCommutative.is_comm (M := h.K)).comm ⟨k, hk⟩ ⟨x, hxK⟩)
   calc
@@ -941,7 +941,7 @@ private theorem exists_conjugate_mem_of_prime_order_of_coprime_card_index
     {a : G} (haOrder : orderOf a = p) :
     ∃ y : G, y * a * y⁻¹ ∈ H := by
   classical
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   let PH : Sylow p H := default
   let Psub : Subgroup G := (PH : Subgroup H).map H.subtype
   have hPsubP : IsPGroup p Psub := by
@@ -1531,7 +1531,7 @@ private theorem selected_centralizer_structure
   · intro y hyCa
     have hxCa : x ∈ Subgroup.centralizer ({a} : Set G) := by
       exact Subgroup.mem_centralizer_singleton_iff.mpr hacommx.symm
-    letI : IsMulCommutative (Subgroup.centralizer ({a} : Set G)) := hCacomm
+    let : IsMulCommutative (Subgroup.centralizer ({a} : Set G)) := hCacomm
     have hyx : Commute y x := by
       change y * x = x * y
       exact congrArg Subtype.val
@@ -1540,7 +1540,7 @@ private theorem selected_centralizer_structure
             ⟨y, hyCa⟩ ⟨x, hxCa⟩)
     exact Subgroup.mem_centralizer_singleton_iff.mpr hyx
   · intro y hyF
-    letI : IsMulCommutative F := hFcomm
+    let : IsMulCommutative F := hFcomm
     have hya : Commute y a := by
       change y * a = a * y
       exact congrArg Subtype.val
@@ -2139,7 +2139,7 @@ private theorem selected_centralizer_isHall
   by_contra hcop
   rcases Nat.Prime.not_coprime_iff_dvd.mp hcop with
     ⟨p, hp, hpF, hpIndex⟩
-  letI : Fact (Nat.Prime p) := ⟨hp⟩
+  let : Fact (Nat.Prime p) := ⟨hp⟩
   let P : Sylow p F := default
   let PG : Subgroup G := (P : Subgroup F).map F.subtype
   have hPGp : IsPGroup p PG := P.isPGroup'.map F.subtype
@@ -2173,12 +2173,12 @@ private theorem selected_centralizer_isHall
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer hPGY.le).mpr
         hYNorm
-  letI : PY.Normal := hPYnormal
+  let : PY.Normal := hPYnormal
   have hPYne : PY ≠ ⊥ := by
     intro hPYbot
     exact hPGne
       ((Subgroup.subgroupOf_eq_bot.mp hPYbot).eq_bot_of_le hPGY.le)
-  letI : Fact (IsPGroup p Y) := ⟨hYp⟩
+  let : Fact (IsPGroup p Y) := ⟨hYp⟩
   obtain ⟨a, haPY, haCenter, hane, _hap⟩ :=
     exists_nontrivial_mem_center_of_normal_p_subgroup
       (G := Y) (p := p) PY hPYne
@@ -2263,7 +2263,7 @@ private theorem selected_centralizer_disjoint_conj_normalizer
       exact
         (Subgroup.normal_subgroupOf_iff_le_normalizer hFgLeMg).mpr
           (le_of_eq hMgEq)
-    letI : N.Normal := hNnormal
+    let : N.Normal := hNnormal
     let zMg : Mg := ⟨z, hzMg⟩
     let q : Mg →* (Mg ⧸ N) := QuotientGroup.mk' N
     have horderF : orderOf (q zMg) ∣ Nat.card F := by
@@ -3518,7 +3518,7 @@ private theorem selected_centralizer_external_commuting_pairs_card
   have hExternal (u : U) : Nat.card (External u) = Nat.card h.K :=
     selected_centralizer_external_involutions_card
       h hxC hxne hFodd u.property.1 u.property.2
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   calc
     Nat.card Pair = Nat.card (Σ u : U, External u) := Nat.card_congr ePair
     _ = ∑ u : U, Nat.card (External u) := Nat.card_sigma
@@ -3667,8 +3667,8 @@ private theorem selected_centralizer_zpowers_conjugate_into_inf_K
   have hFpNormal : Fp.Normal := by
     exact
       (Subgroup.normal_subgroupOf_iff_le_normalizer hFleP).mpr hPleM
-  letI : Fp.Normal := hFpNormal
-  letI : IsMulCommutative Fp := by
+  let : Fp.Normal := hFpNormal
+  let : IsMulCommutative Fp := by
     refine IsMulCommutative.mk ⟨?_⟩
     intro a b
     apply Subtype.ext
@@ -3969,7 +3969,7 @@ private theorem selected_centralizer_unoccupied_involutions_card_le_cosets
     ⟨(y : G), y.property.1, rfl⟩
   let z' : selected_centralizer_coset_involutions F omega.1 :=
     ⟨(z : G), z.property.1, hcoset.symm⟩
-  letI : Subsingleton (selected_centralizer_coset_involutions F omega.1) :=
+  let : Subsingleton (selected_centralizer_coset_involutions F omega.1) :=
     selected_centralizer_unoccupied_coset_involutions_subsingleton
       h hxC hxne hFcomm hFodd hFinv hFHall hFTI omega
   apply Subtype.ext
@@ -4337,7 +4337,7 @@ private theorem selected_centralizer_occupied_nonbase_cosets_card
     let baseFixed : Fixed u := ⟨base, hbaseFix u⟩
     have hcomp : Nat.card {omega : Fixed u // omega ≠ baseFixed} =
         Nat.card (Fixed u) - 1 := by
-      letI : Fintype (Fixed u) := Fintype.ofFinite (Fixed u)
+      let : Fintype (Fixed u) := Fintype.ofFinite (Fixed u)
       simpa [Nat.card_eq_fintype_card] using
         (Fintype.card_subtype_compl
           (fun omega : Fixed u => omega = baseFixed))
@@ -4368,7 +4368,7 @@ private theorem selected_centralizer_occupied_nonbase_cosets_card
       right_inv := by
         intro p
         rfl }
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   have hIncCard : Nat.card Inc = Nat.card U * (r - 1) := by
     calc
       Nat.card Inc = Nat.card (Σ u : U, NonbaseFixed u) :=
@@ -4455,7 +4455,7 @@ private theorem natCard_dvd_card_sub_one_of_fixedPointFree_action
     Nat.card A ∣ Nat.card N - 1 := by
   classical
   let X := {x : N // x ≠ 1}
-  letI : MulAction A X :=
+  let : MulAction A X :=
     { smul := fun a x => ⟨a • (x : N), by
         intro h
         apply x.2
@@ -4487,8 +4487,8 @@ private theorem natCard_dvd_card_sub_one_of_fixedPointFree_action
   have hcard :=
     Nat.card_congr (MulAction.selfEquivOrbitsQuotientProd hstab)
   have hXcard : Nat.card X = Nat.card N - 1 := by
-    letI : Fintype N := Fintype.ofFinite N
-    letI : Fintype X := Fintype.ofFinite X
+    let : Fintype N := Fintype.ofFinite N
+    let : Fintype X := Fintype.ofFinite X
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     change Fintype.card {x : N // x ≠ 1} = Fintype.card N - 1
     simp
@@ -4513,7 +4513,7 @@ private theorem selected_centralizer_inf_K_card_dvd_card_sub_one
   let M : Subgroup G := Subgroup.normalizer (F : Set G)
   let A : Subgroup G := h.K ⊓ M
   have hAnorm : A ≤ Subgroup.normalizer (F : Set G) := inf_le_right
-  letI : MulDistribMulAction A F :=
+  let : MulDistribMulAction A F :=
     MulDistribMulAction.compHom F (Subgroup.inclusion hAnorm)
   have hKleH : h.K ≤ h.H := by
     rw [h.H_eq_join]
@@ -5126,7 +5126,7 @@ private theorem bender_3_5_residual_centralizer_card_dvd
     by_contra hnot
     rcases Nat.Prime.not_coprime_iff_dvd.mp hnot with
       ⟨p, hpPrime, hpC, hpRest⟩
-    letI : Fact p.Prime := ⟨hpPrime⟩
+    let : Fact p.Prime := ⟨hpPrime⟩
     obtain ⟨aC, haCorder⟩ :=
       exists_prime_orderOf_dvd_card' (G := C) p hpC
     let a : G := aC
@@ -5301,7 +5301,7 @@ private theorem exists_involution_conjugator_of_isConj_inv_of_odd_centralizer
   let N : Subgroup M := C.subgroupOf M
   have hNnormal : N.Normal :=
     (Subgroup.normal_subgroupOf_iff_le_normalizer hCleM).mpr le_rfl
-  letI : N.Normal := hNnormal
+  let : N.Normal := hNnormal
   have hNodd : Odd (Nat.card N) := by
     have hcard : Nat.card N = Nat.card C :=
       Nat.card_congr (Subgroup.subgroupOfEquivOfLe hCleM)
@@ -5400,7 +5400,7 @@ private theorem bswResidual_orbit_card_mul_centralizer_card
         Nat.card (Subgroup.centralizer ({(y : G)} : Set G)) =
       Nat.card G := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   have horbit :=
     MulAction.card_orbit_mul_card_stabilizer_eq_card_group
       (ConjAct G) y
@@ -5467,9 +5467,9 @@ private theorem bender_3_5_residual_orbit_data
   let B : ℕ := 2 * k * (k - 1)
   let Y := bswResidualSubMulAction h F
   let Omega := Quotient (MulAction.orbitRel (ConjAct G) Y)
-  letI : Fintype G := Fintype.ofFinite G
-  letI : Fintype Y := Fintype.ofFinite Y
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype G := Fintype.ofFinite G
+  let : Fintype Y := Fintype.ofFinite Y
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hk' : 4 < k := by simpa [k] using hk
   have hBpos : 0 < B := by
     dsimp [B]
@@ -5961,7 +5961,7 @@ private theorem bender_3_5_residual_centralizer_isPGroup
     have hk' : 4 < k := by simpa [k] using hk
     omega
   obtain ⟨p, hpPrime, hpC⟩ := Nat.exists_prime_and_dvd hCneOne
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   obtain ⟨aC, haCorder⟩ :=
     exists_prime_orderOf_dvd_card' (G := C) p hpC
   have haCne : aC ≠ 1 := by
@@ -6048,7 +6048,7 @@ private theorem bender_3_6_residual_prime_data
   obtain ⟨p, hpPrime, hpC⟩ :=
     bender_3_5_residual_centralizer_isPGroup
       h hk F hFcard hFCent hFHall hMcard hFTI hHindex hy
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hCcard : Nat.card C = 2 * k - 1 := by
     simpa [C, k] using bender_3_5_residual_centralizer_card
       h hk F hFcard hFCent hFHall hMcard hFTI hHindex hy
@@ -6094,7 +6094,7 @@ private theorem mem_bswResidualSet_of_mem_residualPrimeSubgroup
     (X : Subgroup G) (hXp : IsPGroup p X)
     {x : G} (hxX : x ∈ X) (hxne : x ≠ 1) :
     x ∈ bswResidualSet h F := by
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   let xX : X := ⟨x, hxX⟩
   have hxXne : xX ≠ 1 := by
     intro hone
@@ -6183,7 +6183,7 @@ private theorem odd_subgroup_le_of_index_eq_two
     (D B : Subgroup H) (hindex : D.index = 2)
     (hBodd : Odd (Nat.card B)) : B ≤ D := by
   have hDnormal : D.Normal := Subgroup.normal_of_index_eq_two hindex
-  letI : D.Normal := hDnormal
+  let : D.Normal := hDnormal
   let q : H →* H ⧸ D := QuotientGroup.mk' D
   intro b hb
   apply (QuotientGroup.eq_one_iff (N := D) (x := b)).mp
@@ -6365,7 +6365,7 @@ private theorem bender_3_6_residual_centralizer_isPGroup_fixedPrime
     (hyP : IsPGroup p (Subgroup.centralizer ({y} : Set G)))
     {z : G} (hz : z ∈ bswResidualSet h F) :
     IsPGroup p (Subgroup.centralizer ({z} : Set G)) := by
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   obtain ⟨n, hn⟩ := hyP.exists_card_eq
   apply IsPGroup.of_card (n := n)
   calc
@@ -6415,7 +6415,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
     intro x hx
     rw [Subgroup.mem_iInf]
     intro q
-    haveI : Fact q.val.val.Prime := ⟨q.val.property⟩
+    have : Fact q.val.val.Prime := ⟨q.val.property⟩
     have hq_not_dvd_P : ¬ q.val.val ∣ Nat.card (P : Subgroup H) := by
       intro hq_dvd
       rcases P.isPGroup'.exists_card_eq with ⟨n, hcardP⟩
@@ -6435,7 +6435,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
         (Subgroup.normalizer ((R : Subgroup H) : Set H) : Set H)
       rw [Subgroup.mem_centralizer_iff]
       intro n hn
-      letI : IsMulCommutative
+      let : IsMulCommutative
           (Subgroup.normalizer ((R : Subgroup H) : Set H)) := hRcomm
       exact congrArg Subtype.val
         ((IsMulCommutative.is_comm
@@ -6468,7 +6468,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
         exact iInf_le _ iq
       have hq_core : q ∣ Nat.card (pPrimeCore q H) :=
         hq_dvd.trans (Subgroup.card_dvd_of_le hC_le_core)
-      haveI : Fact q.Prime := ⟨hqprime⟩
+      have : Fact q.Prime := ⟨hqprime⟩
       exact ((hqprime.coprime_iff_not_dvd).1
         (pPrimeCore_coprime_card (G := H) (p := q))) hq_core
   have hC_eq_P : C = (P : Subgroup H) :=
@@ -6481,7 +6481,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
   intro x hx
   rw [Subgroup.mem_iInf]
   intro q
-  haveI : Fact q.val.val.Prime := ⟨q.val.property⟩
+  have : Fact q.val.val.Prime := ⟨q.val.property⟩
   obtain ⟨R, hRcomm⟩ := hlocal q.val q.property.1 q.property.2
   have hRcenter : (R : Subgroup H) ≤
       centerIn (G := H)
@@ -6492,7 +6492,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
       (Subgroup.normalizer ((R : Subgroup H) : Set H) : Set H)
     rw [Subgroup.mem_centralizer_iff]
     intro n hn
-    letI : IsMulCommutative
+    let : IsMulCommutative
         (Subgroup.normalizer ((R : Subgroup H) : Set H)) := hRcomm
     exact congrArg Subtype.val
       ((IsMulCommutative.is_comm
@@ -6504,7 +6504,7 @@ private theorem sylow_normal_and_quotient_commutative_of_commutative_sylow_norma
     rw [isMulCommutative_iff]
     intro a b
     apply Subtype.ext
-    letI : IsMulCommutative
+    let : IsMulCommutative
         (Subgroup.normalizer ((R : Subgroup H) : Set H)) := hRcomm
     exact congrArg
       (fun z : Subgroup.normalizer ((R : Subgroup H) : Set H) => (z : H))
@@ -6534,7 +6534,7 @@ private theorem sup_normalizer_eq_top_of_commutator_le
   let C : Subgroup H := (P : Subgroup H) ⊔ (R : Subgroup H)
   have hCnormal : C.Normal :=
     Subgroup.Normal.of_commutator_le H (hcomm.trans le_sup_left)
-  letI : C.Normal := hCnormal
+  let : C.Normal := hCnormal
   let RC : Sylow r C := R.subtype le_sup_right
   have hfrattini :
       Subgroup.normalizer
@@ -6579,7 +6579,7 @@ private theorem bender_3_6_normalizer_card_odd
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   rw [← Nat.not_even_iff_odd]
   intro hNeven
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨uN, huOrder⟩ :=
     exists_prime_orderOf_dvd_card' (G := N) 2 hNeven.two_dvd
   let u : G := uN
@@ -6675,11 +6675,11 @@ private theorem bender_3_6_sylow_normalizer_commutative
   classical
   let N : Subgroup G := Subgroup.normalizer (X : Set G)
   let R0 : Subgroup N := (R : Subgroup N)
-  letI : Fact p.Prime := ⟨hpPrime⟩
-  letI : Fact r.Prime := ⟨hrPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact r.Prime := ⟨hrPrime⟩
   have hRne : R0 ≠ ⊥ := by
     simpa [R0, N] using R.ne_bot_of_dvd_card hrN
-  letI : Nontrivial R0 :=
+  let : Nontrivial R0 :=
     (Subgroup.nontrivial_iff_ne_bot R0).mpr hRne
   have hcenterNontrivial : Nontrivial (Subgroup.center R0) :=
     R.isPGroup'.center_nontrivial
@@ -6782,7 +6782,7 @@ private theorem bender_3_6_sylow_normalizer_commutative
         (D.conjBy g) (E.conjBy g) LG
           hDgEg hLGleEg hEgcard hLGodd
     have hDgcomm : IsMulCommutative (D.conjBy g) := by
-      letI : IsMulCommutative D := hDcomm
+      let : IsMulCommutative D := hDcomm
       change IsMulCommutative
         (D.map (MulAut.conj g).toMonoidHom)
       infer_instance
@@ -6851,7 +6851,7 @@ private theorem bender_3_6_sylow_normal_and_commutator_le
       commutator (Subgroup.normalizer (X : Set G)) ≤
         (P : Subgroup (Subgroup.normalizer (X : Set G))) := by
   classical
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hNodd : Odd
       (Nat.card (Subgroup.normalizer (X : Set G))) :=
     bender_3_6_normalizer_card_odd
@@ -6860,7 +6860,7 @@ private theorem bender_3_6_sylow_normal_and_commutator_le
   apply
     sylow_normal_and_quotient_commutative_of_commutative_sylow_normalizers P
   intro q hqN hqne
-  letI : Fact q.val.Prime := ⟨q.property⟩
+  let : Fact q.val.Prime := ⟨q.property⟩
   let R : Sylow q.val (Subgroup.normalizer (X : Set G)) :=
     Classical.choice Sylow.nonempty
   refine ⟨R, ?_⟩
@@ -6874,7 +6874,7 @@ private theorem isPGroup_le_normal_sylow
     {p : ℕ} [Fact p.Prime]
     (P : Sylow p H) (hPnormal : (P : Subgroup H).Normal)
     (X : Subgroup H) (hXp : IsPGroup p X) : X ≤ (P : Subgroup H) := by
-  letI : Unique (Sylow p H) := Sylow.unique_of_normal P hPnormal
+  let : Unique (Sylow p H) := Sylow.unique_of_normal P hPnormal
   obtain ⟨Q, hXQ⟩ := hXp.exists_le_sylow
   have hQP : Q = P := Subsingleton.elim Q P
   simpa [hQP] using hXQ
@@ -6907,7 +6907,7 @@ private theorem sylow_disjoint_of_normal_local_sylow
   let Pair := {pq : Sylow p G × Sylow p G // pq.1 ≠ pq.2}
   let score : Pair → ℕ := fun pq =>
     Nat.card ↥((pq.1.1 : Subgroup G) ⊓ (pq.1.2 : Subgroup G))
-  letI : Nonempty Pair := ⟨⟨(P, Q), hPQ⟩⟩
+  let : Nonempty Pair := ⟨⟨(P, Q), hPQ⟩⟩
   obtain ⟨pq, hpqMax⟩ := Finite.exists_max score
   let P₁ : Sylow p G := pq.1.1
   let P₂ : Sylow p G := pq.1.2
@@ -7054,7 +7054,7 @@ private theorem bender_3_7_sylow_isTISubsetRelative
     Suzuki.VI.IsTISubsetRelative
       (Subgroup.normalizer ((P : Subgroup G) : Set G))
       ((P : Subgroup G) : Set G) := by
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   apply sylow_isTISubsetRelative_of_pairwise_disjoint P
     (P.ne_bot_of_dvd_card hpG)
   apply sylow_disjoint_of_normal_local_sylow
@@ -7134,7 +7134,7 @@ private theorem bender_sylow_normalizer_index_count
   let N : Subgroup G := Subgroup.normalizer (((P : Subgroup G)) : Set G)
   let QN : Subgroup N := (P : Subgroup G).subgroupOf N
   let rho : N →* MulAut G := MulAut.conj.comp N.subtype
-  letI : MulAction N G := MulAction.compHom G rho
+  let : MulAction N G := MulAction.compHom G rho
   let Y : SubMulAction N G :=
     { carrier := ((P : Subgroup G) : Set G) \ {1}
       smul_mem' := by
@@ -7231,7 +7231,7 @@ private theorem bender_sylow_normalizer_index_count
       apply Subtype.ext
       rw [hsmul]
       have hcomm : Commute (n : G) (z : G) := by
-        letI : IsMulCommutative (P : Subgroup G) := hPcomm
+        let : IsMulCommutative (P : Subgroup G) := hPcomm
         exact congrArg Subtype.val
           ((IsMulCommutative.is_comm (M := (P : Subgroup G))).comm
             ⟨n, hn⟩ ⟨z, z.property.1⟩)
@@ -7241,8 +7241,8 @@ private theorem bender_sylow_normalizer_index_count
     Nat.card_congr
       (Subgroup.subgroupOfEquivOfLe
         (H := (P : Subgroup G)) (K := N) Subgroup.le_normalizer)
-  letI : Fintype N := Fintype.ofFinite N
-  letI : Fintype Y := Fintype.ofFinite Y
+  let : Fintype N := Fintype.ofFinite N
+  let : Fintype Y := Fintype.ofFinite Y
   have hOrbitCard (z : Y) :
       Nat.card (MulAction.orbit N z) = QN.index := by
     apply Nat.eq_of_mul_eq_mul_right (Nat.card_pos (α := QN))
@@ -7261,7 +7261,7 @@ private theorem bender_sylow_normalizer_index_count
       _ = (((P : Subgroup G) : Set G)).ncard - 1 := by
         rw [Set.ncard_sdiff_singleton_of_mem (P : Subgroup G).one_mem]
       _ = Nat.card (P : Subgroup G) - 1 := by congr 1
-  letI : Fintype Omega := Fintype.ofFinite Omega
+  let : Fintype Omega := Fintype.ofFinite Omega
   have hsumOrbit :
       Nat.card Y = ∑ omega : Omega,
         Nat.card (MulAction.orbit N (Quotient.out omega : Y)) := by
@@ -7323,7 +7323,7 @@ private theorem bender_3_8_residual_sylow_index_data
   let q : ℕ := 2 * k - 1
   let B : ℕ := 2 * k * (k - 1)
   let C : Subgroup G := Subgroup.centralizer ({y} : Set G)
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hk' : 4 < k := by simpa [k] using hk
   have hCcard : Nat.card C = q := by
     simpa [C, q, k] using
@@ -7404,7 +7404,7 @@ private theorem bender_3_8_residual_sylow_index_data
         Subgroup.centralizer ({x} : Set G) := by
       intro z hzP
       rw [Subgroup.mem_centralizer_singleton_iff]
-      letI : IsMulCommutative (P : Subgroup G) := hPcomm
+      let : IsMulCommutative (P : Subgroup G) := hPcomm
       exact congrArg Subtype.val
         ((IsMulCommutative.is_comm (M := (P : Subgroup G))).comm
           ⟨z, hzP⟩ ⟨x, hxP⟩)
@@ -7703,7 +7703,7 @@ private theorem normalizer_eq_of_relativeTI_join_inversion
       rw [Subgroup.mem_normalizer_iff]
       intro x
       have hcomm (hxD : x ∈ D) : d * x = x * d := by
-        letI : IsMulCommutative D := hDcomm
+        let : IsMulCommutative D := hDcomm
         exact congrArg Subtype.val
           ((IsMulCommutative.is_comm (M := D)).comm ⟨d, hdD⟩ ⟨x, hxD⟩)
       constructor
@@ -7819,7 +7819,7 @@ private theorem conclusion_nonempty_of_bender_3_8
   classical
   let k : ℕ := Nat.card h.K
   let q : ℕ := 2 * k - 1
-  letI : Fact p.Prime := ⟨hpPrime⟩
+  let : Fact p.Prime := ⟨hpPrime⟩
   have hk' : 4 < k := by simpa [k] using hk
   obtain ⟨P, hPcoe, hPcomm, hPcent, hPTI, hPindex⟩ :=
     bender_3_8_residual_sylow_index_data
@@ -7853,7 +7853,7 @@ private theorem conclusion_nonempty_of_bender_3_8
     simpa [PN, N, Q, k] using hPindex
   obtain ⟨r, hrPrime, hrIndex⟩ :=
     Nat.exists_prime_and_dvd (by omega : k - 1 ≠ 1)
-  letI : Fact r.Prime := ⟨hrPrime⟩
+  let : Fact r.Prime := ⟨hrPrime⟩
   have hrPNindex : r ∣ PN.index := by
     rw [hPNindex]
     exact hrIndex
@@ -8164,7 +8164,7 @@ public theorem brauerSuzukiWallConclusion_nonempty_of_order_cases
         Nat.card G = (2 * k - 1) * (k - 1) * (2 * k)) :
     Nonempty (BrauerSuzukiWallConclusion G) := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨x, F, hFdef, hxC, hxne, htx, hFcomm, hFodd, hFinv,
       hFCent, hbound⟩ :=
     exists_selected_centralizer_order_bound h hk horder

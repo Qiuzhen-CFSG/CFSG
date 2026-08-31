@@ -63,7 +63,7 @@ public theorem firstCase_klein_restrictionSeven_transfer
   have hyJ' : IsInvolution y ∧ y ∉ c.Hhat ∧
       firstCaseCosetInvolutions c y = n := by
     simpa [firstCaseJ] using hyJ
-  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨r, hr, hrV⟩ :=
     firstCase_klein_exists_reflection_not_mem_twoCore hmin c hfirst hklein
   obtain ⟨L, hLr, hLHall, hLne, hLall⟩ :=

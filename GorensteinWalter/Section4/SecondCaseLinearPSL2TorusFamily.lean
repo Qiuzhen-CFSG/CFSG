@@ -148,7 +148,7 @@ private theorem selected_half_torus_partition
         T = V.map (MulAut.conj g).toMonoidHom}, x ∈ T.1 := by
   classical
   rcases hK with ⟨r, f, hr, hrOdd, hf, hKcard⟩
-  letI : Fact r.Prime := ⟨hr⟩
+  let : Fact r.Prime := ⟨hr⟩
   let P : Sylow r (PSL2 K) := Classical.choice Sylow.nonempty
   obtain ⟨U, S, hUcyc, hUcard, hScyc, hScard, hpart⟩ :=
     huppert_II_8_5_a_psl2_cover hKcard P
@@ -206,7 +206,7 @@ private theorem selected_half_torus_partition
         convert Nat.dvd_sub hpPlus hpMinus using 1
         omega
       exact (Fact.out : Nat.Prime p).ne_one (Nat.dvd_one.mp hpOne)
-  letI : IsCyclic V := hVcyc
+  let : IsCyclic V := hVcyc
   obtain ⟨v, hvgen⟩ := IsCyclic.exists_generator (α := V)
   let vG : PSL2 K := v
   have hzV : Subgroup.zpowers vG = V := by

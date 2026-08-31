@@ -28,7 +28,7 @@ public theorem normal_subgroup_index_not_dvd_four_of_dihedral_sylow
     (hHd : HasDihedralSylowTwo H) :
     ¬ 4 ∣ H.index := by
   classical
-  letI : H.Normal := hHnormal
+  let : H.Normal := hHnormal
   let Q : Sylow 2 H := Classical.choice Sylow.nonempty
   let Qmap : Subgroup G := (Q : Subgroup H).map H.subtype
   have hQmap : IsPGroup 2 Qmap := by

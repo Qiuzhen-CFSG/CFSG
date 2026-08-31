@@ -160,7 +160,7 @@ private theorem monoidHom_eq_one_of_perfect_abelian_local
   intro x
   have hx : x ∈ ⁅(⊤ : Subgroup A), (⊤ : Subgroup A)⁆ := by
     have htop : Group.IsPerfect (↥(⊤ : Subgroup A)) := by
-      letI : Group.IsPerfect A := hA
+      let : Group.IsPerfect A := hA
       infer_instance
     have hcomm : ⁅(⊤ : Subgroup A), (⊤ : Subgroup A)⁆ = ⊤ :=
       (Subgroup.isPerfect_iff (H := (⊤ : Subgroup A))).mp htop
@@ -186,7 +186,7 @@ private theorem central_automorphism_eq_one_local
     α = β := by
   apply MulEquiv.ext
   intro x
-  letI : Bracket E E := commutatorElement
+  let : Bracket E E := commutatorElement
   have hcomm : ∀ a b : E, α ⁅a, b⁆ = β ⁅a, b⁆ := by
     intro a b
     have hza := Subgroup.mem_center_iff.mp (hdelta a)
@@ -232,7 +232,7 @@ private theorem central_automorphism_eq_one_local
     simpa only [map_commutatorElement] using htarget
   have hx : x ∈ ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ := by
     have htop : Group.IsPerfect (↥(⊤ : Subgroup E)) := by
-      letI : Group.IsPerfect E := hperf
+      let : Group.IsPerfect E := hperf
       infer_instance
     have hcommtop : ⁅(⊤ : Subgroup E), (⊤ : Subgroup E)⁆ = ⊤ :=
       (Subgroup.isPerfect_iff (H := (⊤ : Subgroup E))).mp htop
@@ -286,7 +286,7 @@ public theorem secondCase_a7_odd_subgroup_centralizes_component
         eQ.some.toMonoidHom = (Sbar : Subgroup (alternatingGroup (Fin 7)))) :
     F ≤ Subgroup.centralizer (E : Set G) := by
   classical
-  letI : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
+  let : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
   let A7 := alternatingGroup (Fin 7)
   let q : E →* E ⧸ Subgroup.center E := QuotientGroup.mk' (Subgroup.center E)
   intro f hfF
@@ -443,7 +443,7 @@ public theorem secondCase_a7_odd_subgroup_centralizes_component_of_reflection
       alternatingGroup (Fin 7))) :
     F ≤ Subgroup.centralizer (E : Set G) := by
   classical
-  letI : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
+  let : Group.IsPerfect E := (Group.isPerfect_def).2 hEcomp.2.2.2.1
   let A7 := alternatingGroup (Fin 7)
   let q : E →* E ⧸ Subgroup.center E :=
     QuotientGroup.mk' (Subgroup.center E)

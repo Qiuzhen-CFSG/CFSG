@@ -44,7 +44,7 @@ public theorem firstCase_cyclic_CB_ne_of_a7
     od.d.bg.B ⊓ Subgroup.centralizer
       (qCoreOf od.d.bg.U od.p : Set G) ≠ ⊥ := by
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   let P : Subgroup G := qCoreOf od.d.bg.U od.p
   obtain ⟨X, hXne, hXle, _hBnorm, hXcent⟩ :=
     firstCase_cyclic_exists_B_normalized_nontrivial_le_B_inter_M

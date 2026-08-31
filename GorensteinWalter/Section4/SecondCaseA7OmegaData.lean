@@ -107,7 +107,7 @@ public theorem secondCase_a7_omegaData
     exact hjoinCard
   have hFUncyc : ¬ IsCyclic c.FU := by
     intro hcyc
-    letI : IsCyclic c.FU := hcyc
+    let : IsCyclic c.FU := hcyc
     have hYle : c.FU ⊓ w.M ≤ c.FU := inf_le_left
     have hYsubcyc : IsCyclic ((c.FU ⊓ w.M).subgroupOf c.FU) :=
       Subgroup.isCyclic_of_le
@@ -115,8 +115,8 @@ public theorem secondCase_a7_omegaData
     have hYcyc : IsCyclic ↥(c.FU ⊓ w.M) :=
       (Subgroup.subgroupOfEquivOfLe hYle).isCyclic.mp hYsubcyc
     exact (secondCase_fitting_inter_M_not_cyclic hmin c w) hYcyc
-  letI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
-  letI : Fact (IsPGroup 3 c.FU) := ⟨hFUp⟩
+  let : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  let : Fact (IsPGroup 3 c.FU) := ⟨hFUp⟩
   let Z2 : Subgroup c.FU := Subgroup.upperCentralSeries c.FU 2
   let Om : Subgroup Z2 := omega₁ (G := Z2) (p := 3)
   let Q : Subgroup c.FU := z2OmegaCandidate (G := c.FU) 3

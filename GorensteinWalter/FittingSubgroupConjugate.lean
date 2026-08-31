@@ -31,7 +31,7 @@ public theorem fittingSubgroupOf_conjugateSubgroup
     have hnormal : ((fittingSubgroup X).map phi).Normal :=
       Subgroup.Normal.map (H := fittingSubgroup X) inferInstance phi hphi
     have hnil : Group.IsNilpotent ((fittingSubgroup X).map phi) := by
-      haveI : Group.IsNilpotent (fittingSubgroup X) := by infer_instance
+      have : Group.IsNilpotent (fittingSubgroup X) := by infer_instance
       let psi : fittingSubgroup X →* (fittingSubgroup X).map phi :=
         { toFun := fun x =>
             ⟨phi x, Subgroup.mem_map.mpr ⟨x.1, x.2, rfl⟩⟩

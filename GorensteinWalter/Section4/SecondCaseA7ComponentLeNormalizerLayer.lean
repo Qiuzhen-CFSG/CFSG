@@ -90,12 +90,12 @@ public theorem secondCase_a7_component_le_normalizer_layer
       ⟨hNproper, hcontrol, hnotle, htnot, hSylow,
         Or.inr (Or.inr htResidual)⟩
     have hNsolv : Group.IsSolvable N := (lemma_2_7 hmin c N h27).2.2
-    letI : Group.IsSolvable N := hNsolv
-    haveI : Group.IsSolvable (d.E.subgroupOf N) := inferInstance
+    let : Group.IsSolvable N := hNsolv
+    have : Group.IsSolvable (d.E.subgroupOf N) := inferInstance
     have hEsolv : Group.IsSolvable d.E :=
       isSolvable_of_mulEquiv (Subgroup.subgroupOfEquivOfLe hEleN)
-    letI : Nontrivial d.E := d.E_component.2.2.1
-    letI : Group.IsPerfect d.E := hEperfect
+    let : Nontrivial d.E := d.E_component.2.2.1
+    let : Group.IsPerfect d.E := hEperfect
     exact Group.IsPerfect.not_isSolvable d.E hEsolv
   exact quasisimple_le_of_normal_intersection_involution
     d.E (componentLayerOf N) N d.E_component.2.2 d.center_odd hEleN

@@ -57,7 +57,7 @@ public theorem mulEquiv_alternatingGroup_seven_of_index_seven
     rw [← MonoidHom.ker_eq_bot_iff]
     rw [← H.normalCore_eq_ker]
     exact hcore
-  letI : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
+  let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
   have hCosetFcard : Fintype.card (G ⧸ H) = 7 := by
     simpa [Nat.card_eq_fintype_card] using hCosetCard
   let eCoset : (G ⧸ H) ≃ Fin 7 := Fintype.equivFinOfCardEq hCosetFcard
