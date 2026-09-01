@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml (v0.4): repo-root metadata for formalization projects.
+# Requiredness/conformance:
+#   - Fields marked [required] should be present and filled.
+#   - Fields not marked [required] are examples/recommended metadata only; they may be omitted.
+#   - Projects may add extra YAML keys at any level. Readers should tolerate unknown keys.
+# This is a lightweight reporting schema, not a closed validation schema.
+
+version: "v0.4"
+
+# project - the formalization itself (not the source).
+project:
+  name: "CFSG"                     # [required]
+  authors: ["Tianjiao Nie", "Yusen Tang", "Ao Zhang", "Damiano Testa"]                  # [required] who did the formalization
+  responsible_maintainers: ["Tianjiao Nie"]  # people responsible for the formalization repository
+  license: "Apache"                  # [required]
+
+# This repository is the substantive development by default. If it is only a
+# packaging or comparison layer, uncomment and identify the actual formalization.
+# repository:
+#   substantive_formalization:
+#     id: ""                   # repository URL or another stable identifier
+#     revision: ""             # immutable commit/revision when available
+
+# sources - what was formalized. Sources may be articles, books, web posts,
+# folklore, conversations, or anything else; no arXiv record is assumed. For a
+# theorem first presented by this formalization, use type: "original-proof".
+sources:                       # [required] list of sources or an original proof
+  - title: "Character Theory for the Odd Order Theorem"                  # [required per source] title or short description
+    authors: ["T. Peterfalvi"]                # optional; may be unknown or inapplicable
+    id: ""                     # optional URL, DOI, ISBN, arXiv ID, citation, etc.
+    type: ""                   # article, book, web post, folklore, conversation, original-proof, ...
+    location: ""               # theorem/section/page/post/answer or other locator
+    relationship: ""           # formalizes | adapts | independently-proves | background | other
+    license: ""
+    author_endorsement: ""     # participated | endorsed | no-response | not-contacted | declined | n/a
+  - title: "Local Analysis for the Odd Order Theorem"                  # [required per source] title or short description
+    authors: ["Helmut Bender", "George Glauberman"]                # optional; may be unknown or inapplicable
+  - title: "The Classification of the Finite Simple Groups, Number 4: Part II, Chapters 1–4: Uniqueness Theorems"
+    authors: ["Daniel Gorenstein", "Richard Lyons", "Ronald Solomon"]
+    location: "Theorem SE"
+
+# related_formalizations - prior or parallel formalizations, if known.
+related_formalizations: []
+
+# classification - what area of mathematics the formalized result belongs to.
+# Optional, but it is the only part of this file that lets a reader find the
+# project by subject rather than by name. Use the identifiers from the official
+# arXiv taxonomy (https://arxiv.org/category_taxonomy) and MSC2020
+# (https://msc2020.org/); list as many or as few of each as apply.
+classification:
+  arxiv: ["math.GR"]                    # e.g. ["math.NT", "math.CO"]
+  msc2020: []                  # e.g. ["11N25", "05C35"]
+
+# project status
+status:
+  scope: ""                    # describe the scope of the project
+  # Count unresolved proof-development sorries only. Exclude the deliberate
+  # placeholder sorry in a Comparator challenge module.
+  sorry_count: 0
+  # Likewise, count only unresolved sorries in proof-development definitions,
+  # not deliberate definition holes in Comparator challenge modules.
+  sorry_in_definitions: 0
+  axioms: []                   # list all axioms used (including standard axioms such as `Quot.sound`)
+  main_results:                # list the main results of the project
+  - declaration: ""            # declaration proving this main result
+    file: ""                   # file containing the declaration
+    # Count unresolved sorries in the proved declaration, not the deliberate
+    # placeholder in its Comparator challenge module.
+    sorry_count: 0
+    axioms: []                 # axioms used for this result
+    comparator_config: ""      # path to the comparator (leanprover/comparator) JSON config that verifies this result
+    literature_dependencies:   # results this result relies on but does not prove, assumed from the literature
+    - statement: ""            # the result being relied on
+      source: ""               # the specific source it comes from (reference a `sources` entry)
+
+# how it was produced. Extra per-entry fields are allowed.
+automation:                    # [required]
+  methods:                     # [required] one entry per distinct phase/run/tool
+    - method: "autonomous"               # [required] manual | copilot | agent | autonomous | other
+      models: ["gpt-5.2", "gpt-5.4", "gpt-5.5", "gpt-5.6-sol", "deepseek-v4-flash", "deepseek-v4-pro"]               # e.g. ["claude-opus-4-7", "gpt-5"]
+      framework: "FormaTheoria"            # e.g. "Claude Code", "OpenClaw", "LeanCopilot"
+      tool_setup: ""           # tools, harnesses, plugins, orchestration, customizations
+      cost:
+        wall_time: "6 months"          # e.g. "3 weeks" or "240 GPU-hours"
+        spend_usd: ""          # spend for this method, e.g. "$10 API credits"
+        hardware: ""           # GPU count, "API-only", "my laptop", whatever's relevant
+      prompting_notes: ""      # freeform notes/examples about the prompts or task specs used
+  spend_usd: ""                # total spend across the project, e.g. "$10 API credits" or "subscription-based usage"
+  notes: ""                    # freeform details on the overall process and interaction setup
+
+# fidelity
+fidelity:
+  divergences: ""              # places the formalization deviates from sources: generalizations, weakened hypotheses, renamed lemmas, etc.
+
+# review status
+review:
+  status: "peer-reviewed"                   # [required] unchecked | agent-reviewed | self-assessed | peer-reviewed | author-verified | other/freeform
+  reviewers: []
+  notes: ""                    # more details on the review process
+
+# alignment - freeform YAML describing how source statements map to formal declarations.
+# The structured table below is only a suggested shape; replace or extend it as useful.
+alignment:
+  namespace: ""
+  statements:
+    - source: ""               # source theorem/lemma/definition/section
+      lean: ""                 # corresponding Lean declaration
+      module: ""               # corresponding Lean module/file
+      status: ""               # proved | literature-dependency | in-progress | not-formalized | other/freeform
+      note: ""
+
+# acknowledgements - optional credits for libraries, tools, discussions, etc.
+acknowledgements: ""
