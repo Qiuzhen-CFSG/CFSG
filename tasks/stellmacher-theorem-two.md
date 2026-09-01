@@ -3,7 +3,7 @@
 Status: done
 Target declarations: `Stellmacher.theorem_two` and its statement-level interfaces
 Lean modules: `Stellmacher.FinalTheorem`
-Sources: `refs/latex/stellmacher-n-group.tex`:L69-L140
+Sources: `refs/latex/stellmacher-n-group.tex`:L69-L140; `refs/files/stellmacher-n-group.pdf`:journal pp. 12, 38, 45, 65
 
 ## Task
 
@@ -13,7 +13,8 @@ Pin a source-faithful Lean statement of Stellmacher's Theorem 2, leaving its pro
 
 - `Theory.Quasithin` — 2-local and maximal 2-local subgroup predicates.
 - `Theory.Comparator.Defs` — strongly embedded subgroup predicate.
-- `FeitThompson.PCore.PCore` — the subgroup `Oₚ(U)` as `pCore p U`.
+- `FeitThompson.PCore.PCore` — the subgroups `Oₚ(U)`/`Oₚ′(U)` as
+  `pCore p U`/`pPrimeCore p U`.
 - Mathlib finite matrix, permutation, dihedral, and Sylow group interfaces — named models and the explicit alternatives.
 
 ## Bridges
@@ -26,10 +27,10 @@ Pin a source-faithful Lean statement of Stellmacher's Theorem 2, leaving its pro
 
 ## Resume (read this first — the recovery capsule)
 
-- Current route: R3-combine-model
+- Current route: R4-pdf-source-audit
 - Active route step: complete
 - Working node: `main`
-- Current blocker: none; the later Section 8–10 definitions of "of type X" are absent from the supplied transcription, so the landed statement uses the explicit amalgam description at lines 133–140 and records that source boundary.
+- Current blocker: none; the PDF confirms that the detailed Section 8–10 definitions of "of type X" are local conditions beyond the supplied transcription, so the landed statement uses the shared introductory amalgam interface and records that source boundary.
 - Next action: none; the requested interface cleanup is complete.
 - Routes to avoid: interpreting "of type X" as `H ≃ X`, which contradicts the source's local-amalgam definition.
 - Candidate next subnodes: `IsNTwoGroup`, `IsExceptionalModel`, `IsOfExceptionalType`, `IsSemidihedralGroup`.
@@ -44,12 +45,15 @@ Pin a source-faithful Lean statement of Stellmacher's Theorem 2, leaving its pro
 - initiated: (2026-09-01T11:07:06Z) Replace the redundant `ExceptionalType` tag and `ModelsExceptionalType` match with one inductive proposition carrying the four model witnesses.
 - closed: (2026-09-01T11:08:19Z) `IsExceptionalModel` now carries the four model witnesses directly; targeted builds of `Stellmacher.FinalTheorem` and the `Stellmacher` wrapper both succeed with only the requested `sorry` warning.
 - validated: (2026-09-01T11:38:38Z) `ExceptionalAmalgam` was retained as an abbreviation of the shared `LocalTypeAmalgam IsExceptionalModel`; Theorem 2's public statement rebuilds unchanged alongside Theorem 1.
+- initiated: (2026-09-01T13:22:05Z) Parallel PDF review compared the theorem scan with the LaTeX transcription and found that clause (e) uses the odd `2'`-core, not the 2-core.
+- closed: (2026-09-01T13:22:05Z) Replaced `pCore 2 U ≠ ⊥` by `pPrimeCore 2 U ≠ ⊥`, updated the theorem documentation, and rebuilt the owner module successfully.
+- validated: (2026-09-01T14:56:46Z) Independent subagent reviews confirmed clauses (a)--(e), the `C₂ × S₄` model, and the semidihedral presentation.  They also checked that the existing finite-group strong-embedding interface derives Sylow-2 containment, so no unrelated predicate change is needed.
 
 ## Proof Route
 
-- Route id: R3-combine-model
-- Sketch: Replace the data tag plus match-defined predicate by `IsExceptionalModel X`, an inductive proposition with one constructor for each source type. Store that proposition directly in `ExceptionalAmalgam.model`, eliminating its `kind` field. Preserve all four model witnesses and the public statement of `theorem_two`; no compatibility wrapper is needed because the removed declarations have no downstream consumers. Rebuild `Stellmacher.FinalTheorem` and the `Stellmacher` wrapper.
-- Main risk: a `Prop`-valued inductive may carry only proof-relevant constructor arguments; all four proposed witnesses are propositions, so no large-elimination interface is required.
+- Route id: R4-pdf-source-audit
+- Sketch: Compare every alternative in the Lean statement with the theorem scan, then repair any transcription-level notation drift. Preserve the shared local-amalgam interface for the phrase “of type X”, because the exact type-specific predicates in PDF Definitions 8.2, 8.6, and 10.1 are outside the supplied statement cluster. Use `pPrimeCore 2 U` for the scanned `O_{2'}(U)` clause and rebuild the owner and wrapper.
+- Main risk: confusing the 2-core `O₂` used in the amalgam hypotheses with the odd core `O_{2'}` used in alternative (e).
 
 Steps:
 - probe-interfaces: confirm exact Lean types and coercions for the statement-level declarations.
@@ -61,6 +65,9 @@ Steps:
 - validate: run direct source elaboration and inspect diagnostics/diff.
   Direct consumer: `Stellmacher.theorem_two`
   Helpers: none.
+- pdf-audit: compare the theorem and local-type definitions against the journal scan.
+  Direct consumer: `Stellmacher.theorem_two`
+  Helpers: `IsOfExceptionalType` documentation.
 
 ## Subnodes
 
@@ -74,7 +81,7 @@ Steps:
   Note: redundant tag-plus-match interface replaced by `IsExceptionalModel`.
   Dependencies: none.
 - `IsExceptionalModel` — done.
-  Note: the four named groups in clause (a), with their witnesses carried by constructors.
+  Note: the four named groups in clause (a), with concrete PSL/S₆ witnesses where available and explicit simple/order surrogates for `G₂(2)'` and `²F₄(2)'`.
   Dependencies: finite matrix/permutation group models.
 - `IsOfExceptionalType` — done.
   Note: the local-amalgam meaning of "of type X" from the source introduction.
@@ -91,13 +98,17 @@ Steps:
 - `R1-statement` — done. Uses: `main` and all listed statement interfaces. Result: direct-source elaboration succeeds. Node disposition: keep. Decision/Lesson: preserve the source's local-amalgam reading of "type". Evidence: source lines 133–140 and `Stellmacher/FinalTheorem.lean` fields `ExceptionalAmalgam.e1`, `e2`, `compatible`, and `intersection_surjective`.
 - `R2-inline` — done. Uses: `main`. Result: `TheoremTwoConclusion` removed and its body inlined without statement drift. Node disposition: prune `TheoremTwoConclusion`, keep `main`. Decision/Lesson: none. Evidence: direct elaboration at 2026-09-01T11:01:55Z.
 - `R3-combine-model` — done. Uses: `IsExceptionalModel`, `IsOfExceptionalType`. Result: the redundant tag and match definition were removed without changing the four alternatives. Node disposition: prune `ExceptionalType` and `ModelsExceptionalType`; keep `IsExceptionalModel`. Decision/Lesson: none. Evidence: `lake build Stellmacher.FinalTheorem` and `lake build Stellmacher` at 2026-09-01T11:08:19Z.
+- `R4-pdf-source-audit` — done. Uses: `theorem_two` clause (e). Result: corrected the transcription's dropped prime by using `pPrimeCore 2 U`; retained the shared local-amalgam interface because the exact type-specific predicates in PDF Sections 8–10 require infrastructure outside this statement cluster. Decision/Lesson: distinguish `O₂` from `O_{2'}` whenever the scan and transcription disagree. Evidence: PDF journal p. 12 and targeted build at 2026-09-01T13:22:05Z.
+- `R5-independent-review` — done. Uses: all theorem alternatives and imported interfaces. Result: two independent reviews found no further statement correction; the apparent missing Sylow-2 clause in `Theory.Comparator.IsStronglyEmbedded` is derivable in the finite setting. Decision/Lesson: keep the project-wide predicate unchanged and document the source-fidelity boundary for the later type-specific definitions. Evidence: review probes and `BenderSuzuki.SE.Basic.IsStronglyEmbedded.containsSylowTwo`.
 
 ## Validation
 
-- Last check: `lake build Stellmacher.FinalTheorem` and `lake build Stellmacher` succeeded at 2026-09-01T11:38:38Z. Expected warnings: the statement-only `sorry`s on `theorem_one` and `theorem_two`; pre-existing imported deprecation at `FeitThompson/Fitting/Faithful.lean:55`.
+- Last check: `lake build Stellmacher.FinalTheorem`, `lake build Stellmacher`, and the full `lake build` succeeded at 2026-09-01T15:03:38Z. Expected warnings: the statement-only `sorry`s on `theorem_one` and `theorem_two`; pre-existing imported deprecation at `FeitThompson/Fitting/Faithful.lean:55`.
 - Final validation: closed for statement-only scope. Axiom checking is intentionally not applicable until the requested proof placeholder is replaced.
 
 ## Source Notes
 
-- Audit status: theorem statement and available introductory definitions audited; closed for the supplied source excerpt.
+- Audit status: theorem statement audited against the PDF scan; exact type-specific definitions are present later in the PDF (Definitions 8.2, 8.6, and 10.1) but are represented here by the documented shared introductory interface.
 - [omitted-definition] `refs/latex/stellmacher-n-group.tex`:L133-L140 promises precise definitions in Sections 8–10, but the supplied transcription ends at line 577 near the start of Section 2; impact: `IsOfExceptionalType` cannot quote those refinements verbatim; disposition: source-faithful statement using the explicit compatible local-amalgam description at L133-L140; evidence/repair: do not replace the phrase by ambient group isomorphism.
+- [transcription] `refs/latex/stellmacher-n-group.tex`:L129 drops the prime in `O_{2'}(U)`; the PDF scan at journal p. 12 is authoritative for this symbol, and the Lean statement now uses `pPrimeCore 2 U`.
+- [model-interface] PDF Definitions 8.2, 8.6, and 10.1 impose type-specific local conditions; no corresponding concrete `G₂(2)'`/`²F₄(2)'` group models are imported, so `IsExceptionalModel` documents simple/order surrogates and `IsOfExceptionalType` is an explicit shared interface rather than an ambient isomorphism claim.

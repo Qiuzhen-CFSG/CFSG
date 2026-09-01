@@ -25,12 +25,15 @@ namespace Stellmacher
 @[expose] public def IsNTwoGroup (H : Type u) [Group H] [Finite H] : Prop :=
   ∀ U : Subgroup H, Theory.Quasithin.IsTwoLocal U → Group.IsSolvable U
 
-/-- Concrete identification of a group underlying one of the four local
-types in alternative (a) of Theorem 2.
+/-- Model witnesses used by the shared interface for the four local types in
+alternative (a) of Theorem 2.
 
-Here `Sp₄(2)` is represented by its standard isomorphic copy `S₆`.  The
-two remaining simple groups are characterized by their standard orders:
-`|G₂(2)'| = 6048` and `|²F₄(2)'| = 17971200`. -/
+`L₃(2)` is represented by the standard projective special linear group and
+`Sp₄(2)` by its isomorphic copy `S₆`.  No concrete group model for
+`G₂(2)'` or `²F₄(2)'` is available in the imported API, so those two
+constructors retain the standard simple-group order signatures as explicit
+surrogates.  The local-amalgam predicate below, rather than an ambient group
+isomorphism, is the formal interface for the source's phrase “of type”. -/
 public inductive IsExceptionalModel
     (X : Type u) [Group X] [Finite X] : Prop
   | linearThreeTwo
@@ -102,7 +105,12 @@ public abbrev ExceptionalAmalgam
   LocalTypeAmalgam IsExceptionalModel S0
 
 /-- The source's phrase that `H` is of type `L₃(2)`, `Sp₄(2)`,
-`G₂(2)'`, or `²F₄(2)'`. -/
+`G₂(2)'`, or `²F₄(2)'`.
+
+The paper gives the full type-specific local conditions later (Sections
+8--10).  The shared interface here records the common local-amalgam data
+from the introductory definition; it deliberately does not identify `H`
+with the named simple group. -/
 @[expose] public def IsOfExceptionalType
     {H : Type u} [Group H] [Finite H] (S0 : Sylow 2 H) : Prop :=
   Nonempty (ExceptionalAmalgam S0)
@@ -174,9 +182,12 @@ If `H` is an `(N₂)`-group of even order and `S0` is a Sylow 2-subgroup
 of `H`, then one of the following holds: `H` has one of the four exceptional
 local types; `S0` is dihedral or semidihedral; `S0` has order `2⁵` and `H`
 has a maximal 2-local subgroup isomorphic to `C₂ × S₄`; `H` has a
-strongly embedded subgroup; or some 2-local subgroup has nontrivial 2-core.
+strongly embedded subgroup; or some 2-local subgroup has nontrivial
+`2'`-core.
 
-Source: `refs/latex/stellmacher-n-group.tex`, lines 121--131. -/
+Source: `refs/latex/stellmacher-n-group.tex`, lines 121--131; the journal
+scan `refs/files/stellmacher-n-group.pdf`, p. 12, resolves the `2'`-core
+notation in clause (e). -/
 public theorem theorem_two
     {H : Type u} [Group H] [Finite H]
     (hN2 : IsNTwoGroup H) (hEven : Even (Nat.card H))
@@ -189,7 +200,7 @@ public theorem theorem_two
         Nonempty (U ≃* (Multiplicative (ZMod 2) × Equiv.Perm (Fin 4)))) ∨
     (∃ M : Subgroup H, Theory.Comparator.IsStronglyEmbedded M) ∨
     (∃ U : Subgroup H,
-      Theory.Quasithin.IsTwoLocal U ∧ pCore 2 U ≠ ⊥) := by
+      Theory.Quasithin.IsTwoLocal U ∧ pPrimeCore 2 U ≠ ⊥) := by
   sorry
 
 end Stellmacher

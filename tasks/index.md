@@ -24,10 +24,11 @@ Global orchestrator board. Each task or cohesive milestone has a card
 ## Global source-fidelity findings
 
 - [SF-stellmacher-1-odd-core] citation: `refs/latex/stellmacher-n-group.tex`:L249 transcribes `W = O_2(G)`, but the scan `refs/files/stellmacher-n-group.pdf`, journal p. 14, shows `W = O_{2'}(G)`; impact: all Section 1 declarations using `W`; disposition: repaired; evidence/repair: formalize `W` as `pPrimeCore 2 G`, while retaining the distinct standing hypothesis `O_2(G) = 1` from L243.
+- [SF-stellmacher-2-odd-core] citation: `refs/latex/stellmacher-n-group.tex`:L129 transcribes clause (e) as `O_2(U) ≠ 1`, but the scan `refs/files/stellmacher-n-group.pdf`, journal p. 12, shows `O_{2'}(U) ≠ 1`; impact: `Stellmacher.theorem_two` would state the wrong alternative (and use the 2-core instead of the odd core); disposition: repaired; evidence/repair: use `pPrimeCore 2 U ≠ ⊥` in clause (e).
 
 ## Validation
 
-- Authoritative build: `lake build Stellmacher` succeeded at 2026-09-01T11:51:14Z.
+- Authoritative build: `lake build Stellmacher` and the full `lake build` succeeded at 2026-09-01T15:03:38Z after the Theorem 2 clause (e) source correction and independent statement review.
 - Sorry inventory: exactly the requested statement-only proofs of `Stellmacher.theorem_one`, `Stellmacher.theorem_two`, `Stellmacher.SectionOne.lemma_one_one`, `lemma_one_two`, and `lemma_one_three` are `sorry`; no `admit`, `axiom`, or `opaque` occurs in the Stellmacher modules.
 
 ## Legacy
