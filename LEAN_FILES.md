@@ -1,5 +1,5 @@
 - [x] BaerSuzuki/FinalTheorem.lean
-- [ ] BenderGlauberman/ClassFunction.lean
+- [x] BenderGlauberman/ClassFunction.lean
 - [ ] BenderGlauberman/ClassFunctionHelpers.lean
 - [ ] BenderGlauberman/ClassFunctionProduct.lean
 - [ ] BenderGlauberman/ClassSumFormula.lean
