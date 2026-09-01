@@ -2,7 +2,6 @@ module
 
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public import Mathlib.GroupTheory.Sylow
-public import Mathlib.GroupTheory.Solvable
 public import Theory.Comparator.Defs
 
 open Theory.Comparator

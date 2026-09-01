@@ -3,17 +3,8 @@ module
 public import Theory.Comparator.Defs
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public import Mathlib.GroupTheory.Sylow
-public import Mathlib.GroupTheory.Solvable
 import BenderSuzuki.FinalTheorem
-import FeitThompson.FinalTheorem
 import GorensteinWalter.FinalTheorem
-import GorensteinWalter.GW1965
-import GorensteinWalter.NormalPComplementQuotientPGroup
-import GorensteinWalter.LinearRingEquiv
-import GorensteinWalter.LinearThreeEquiv
-import GorensteinWalter.PGL2CharacteristicSubgroup
-import Mathlib.GroupTheory.SpecificGroups.Alternating.KleinFour
-import Mathlib.Tactic
 
 noncomputable section
 
