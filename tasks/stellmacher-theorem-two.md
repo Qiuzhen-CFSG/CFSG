@@ -43,6 +43,7 @@ Pin a source-faithful Lean statement of Stellmacher's Theorem 2, leaving its pro
 - closed: (2026-09-01T11:01:55Z) Inlined alternatives (a)–(e) into the public type of `theorem_two` and removed the one-use `TheoremTwoConclusion` definition; direct elaboration again reports only the requested `sorry` warning.
 - initiated: (2026-09-01T11:07:06Z) Replace the redundant `ExceptionalType` tag and `ModelsExceptionalType` match with one inductive proposition carrying the four model witnesses.
 - closed: (2026-09-01T11:08:19Z) `IsExceptionalModel` now carries the four model witnesses directly; targeted builds of `Stellmacher.FinalTheorem` and the `Stellmacher` wrapper both succeed with only the requested `sorry` warning.
+- validated: (2026-09-01T11:38:38Z) `ExceptionalAmalgam` was retained as an abbreviation of the shared `LocalTypeAmalgam IsExceptionalModel`; Theorem 2's public statement rebuilds unchanged alongside Theorem 1.
 
 ## Proof Route
 
@@ -77,7 +78,7 @@ Steps:
   Dependencies: finite matrix/permutation group models.
 - `IsOfExceptionalType` — done.
   Note: the local-amalgam meaning of "of type X" from the source introduction.
-  Dependencies: `IsExceptionalModel`, maximal 2-locality, `pCore`.
+  Dependencies: `LocalTypeAmalgam`, `IsExceptionalModel`, maximal 2-locality, `pCore`.
 - `IsSemidihedralGroup` — done.
   Note: the standard presentation used in clause (b).
   Dependencies: elementary group APIs.
@@ -93,7 +94,7 @@ Steps:
 
 ## Validation
 
-- Last check: `lake build Stellmacher.FinalTheorem` and `lake build Stellmacher` succeeded at 2026-09-01T11:08:19Z; their only warning is the intentionally requested `sorry` on `theorem_two`.
+- Last check: `lake build Stellmacher.FinalTheorem` and `lake build Stellmacher` succeeded at 2026-09-01T11:38:38Z. Expected warnings: the statement-only `sorry`s on `theorem_one` and `theorem_two`; pre-existing imported deprecation at `FeitThompson/Fitting/Faithful.lean:55`.
 - Final validation: closed for statement-only scope. Axiom checking is intentionally not applicable until the requested proof placeholder is replaced.
 
 ## Source Notes

@@ -4,15 +4,17 @@ public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import Theory.Comparator.Defs
 public import Theory.Quasithin
+public import FeitThompson.Gorenstein.Chapter8_2
 public import FeitThompson.PCore.PCore
+public import FeitThompson.PGroup.Omega
 
 /-!
-# Stellmacher's Theorem 2
+# Stellmacher's main theorems
 
-This module pins the statement of Theorem 2 from
-`refs/latex/stellmacher-n-group.tex`, lines 121--131.  The auxiliary
-definitions make explicit the terminology used in the statement and its
-introductory explanation at lines 69--140.
+This module pins the statements of Theorems 1 and 2 from
+`refs/latex/stellmacher-n-group.tex`, lines 108--131.  The auxiliary
+definitions make explicit the terminology used in the statements and their
+introductory explanation at lines 69--145.
 -/
 
 universe u
@@ -39,6 +41,23 @@ public inductive IsExceptionalModel
   | twistedF4TwoDerived
       (_ : IsSimpleGroup X) (_ : Nat.card X = 17971200)
 
+/-- Concrete identification of a group underlying one of the eight local
+types in Theorem 1.
+
+The first constructor incorporates the four models in Theorem 2.  The
+remaining identifications use `Ω₆⁺(2) ≃ A₈` and
+`Ω₆⁺(3) ≃ PSL₄(3)`; `M₁₂` and `Ω₆⁻(3) ≃ PSU₄(3)` are
+characterized by their standard simple-group orders. -/
+public inductive IsMainTheoremModel
+    (X : Type u) [Group X] [Finite X] : Prop
+  | exceptional (_ : IsExceptionalModel X)
+  | mathieuTwelve (_ : IsSimpleGroup X) (_ : Nat.card X = 95040)
+  | omegaSixPlusTwo (_ : Nonempty (X ≃* alternatingGroup (Fin 8)))
+  | omegaSixMinusThree (_ : IsSimpleGroup X) (_ : Nat.card X = 3265920)
+  | omegaSixPlusThree
+      (_ : Nonempty
+        (X ≃* Matrix.ProjectiveSpecialLinearGroup (Fin 4) (ZMod 3)))
+
 /-- Data expressing the source's local meaning of "`H` is of type `X`".
 
 The group `X₀` is represented as a subgroup of `Aut(X)` containing every
@@ -47,12 +66,13 @@ inner automorphism, with injective inner-automorphism map.  The pairs
 agree on `P1 ⊓ P2` and map it onto `Q1 ⊓ Q2`.  The `Qᵢ` are distinct
 maximal 2-local subgroups of `X₀`, while `S0 ≤ P1 ⊓ P2` and
 `O₂(⟨P1, P2⟩) = 1`, as required in the source's introductory definition. -/
-public structure ExceptionalAmalgam
+public structure LocalTypeAmalgam
+    (Model : ∀ (X : Type u) [Group X] [Finite X], Prop)
     {H : Type u} [Group H] [Finite H] (S0 : Sylow 2 H) where
   X : Type u
   [groupX : Group X]
   [finiteX : Finite X]
-  model : IsExceptionalModel X
+  model : Model X
   X0 : Subgroup (MulAut X)
   inner_injective : Function.Injective (fun x : X ↦ MulAut.conj x)
   inner_le : ∀ x : X, MulAut.conj x ∈ X0
@@ -76,11 +96,37 @@ public structure ExceptionalAmalgam
       ((e1 ⟨x, hx1⟩ : Q1) : X0) = y ∧
       ((e2 ⟨x, hx2⟩ : Q2) : X0) = y
 
+/-- The local-amalgam data specialized to the four types in Theorem 2. -/
+public abbrev ExceptionalAmalgam
+    {H : Type u} [Group H] [Finite H] (S0 : Sylow 2 H) :=
+  LocalTypeAmalgam IsExceptionalModel S0
+
 /-- The source's phrase that `H` is of type `L₃(2)`, `Sp₄(2)`,
 `G₂(2)'`, or `²F₄(2)'`. -/
 @[expose] public def IsOfExceptionalType
     {H : Type u} [Group H] [Finite H] (S0 : Sylow 2 H) : Prop :=
   Nonempty (ExceptionalAmalgam S0)
+
+/-- The source's phrase that `H` is of one of the eight local types in
+Theorem 1. -/
+@[expose] public def IsOfMainTheoremType
+    {H : Type u} [Group H] [Finite H] (S0 : Sylow 2 H) : Prop :=
+  Nonempty (LocalTypeAmalgam IsMainTheoremModel S0)
+
+/-- The Baumann subgroup
+`B = C_{S₀}(Ω₁(Z(J(S₀))))`, viewed as a subgroup of the ambient group. -/
+@[expose] public def baumannSubgroup
+    {H : Type u} [Group H] (S0 : Sylow 2 H) : Subgroup H :=
+  let ZJ := thompsonCenter (G := H) (S0 : Subgroup H)
+  (S0 : Subgroup H) ⊓
+    Subgroup.centralizer
+      (((omega₁ (G := ZJ) (p := 2)).map ZJ.subtype : Subgroup H) : Set H)
+
+/-- A subgroup `U` is of characteristic 2 type when
+`C_U(O₂(U)) ≤ O₂(U)`. -/
+@[expose] public def IsCharacteristicTwoType
+    {H : Type u} [Group H] (U : Subgroup H) : Prop :=
+  Subgroup.centralizer (pCore 2 U : Set U) ≤ pCore 2 U
 
 /-- A group is dihedral when it is isomorphic to a polygonal dihedral
 group. -/
@@ -96,6 +142,31 @@ group. -/
       orderOf b = 2 ∧
       b * a * b⁻¹ = a ^ (2 ^ (n - 2) - 1) ∧
       Subgroup.closure ({a, b} : Set G) = ⊤
+
+/-- **Stellmacher, Theorem 1.**
+
+Let `S0` be a Sylow 2-subgroup of the finite group `H`, and let `B` be its
+Baumann subgroup.  If every 2-local subgroup containing `B` is solvable and
+of characteristic 2 type, and at least two distinct maximal 2-local
+subgroups contain `S0`, then `H` has one of the eight local types listed in
+the source.
+
+Source: `refs/latex/stellmacher-n-group.tex`, lines 108--118. -/
+public theorem theorem_one
+    {H : Type u} [Group H] [Finite H]
+    (S0 : Sylow 2 H)
+    (hlocal : ∀ U : Subgroup H,
+      Theory.Quasithin.IsTwoLocal U →
+      baumannSubgroup S0 ≤ U →
+      Group.IsSolvable U ∧ IsCharacteristicTwoType U)
+    (hmax : ∃ P1 P2 : Subgroup H,
+      P1 ≠ P2 ∧
+      Theory.Quasithin.IsMaximalTwoLocal P1 ∧
+      Theory.Quasithin.IsMaximalTwoLocal P2 ∧
+      (S0 : Subgroup H) ≤ P1 ∧
+      (S0 : Subgroup H) ≤ P2) :
+    IsOfMainTheoremType S0 := by
+  sorry
 
 /-- **Stellmacher, Theorem 2.**
 
