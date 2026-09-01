@@ -1,0 +1,1249 @@
+% !TEX encoding = UTF-8 Unicode
+% LaTeX transcription of:
+% Bernd Stellmacher, "An Application of the Amalgam Method: The 2-Local
+% Structure of N-Groups of Characteristic 2 Type",
+% Journal of Algebra 190 (1997), 11-67.  Article No. JA966864.
+% Transcribed from the scanned PDF (visual transcription; the embedded OCR
+% text layer was not used).
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\thepage\quad BERND STELLMACHER}
+\fancyhead[R]{\footnotesize 2-LOCAL STRUCTURE OF N-GROUPS}
+\renewcommand{\headrulewidth}{0pt}
+
+% Theorem-like environments.  The paper numbers all non-main statements
+% (in) a single counter per section and displays them as "(x.y)" without a
+% type word; the two main theorems are displayed as "THEOREM 1" and
+% "THEOREM 2".
+\theoremstyle{plain}
+\newtheorem{mainthm}{THEOREM}
+\newtheoremstyle{stmplain}{3pt}{3pt}{\itshape}{}{\normalfont}{}{.5em}{}
+\theoremstyle{stmplain}
+\newtheorem{stm}{}[section]
+\renewcommand{\thestm}{(\arabic{section}.\arabic{stm})}
+
+\newcommand{\N}{\mathrm{N}}
+
+% Section heading as printed in the paper: the bare number, centered.
+\newcommand{\sect}[1]{\stepcounter{section}\par\vspace{14pt}%
+  \begin{center}\textbf{#1.}\end{center}\vspace{2pt}}
+
+% Displayed line (as in the paper's plain displays).
+\newcommand{\disp}[1]{\begin{center}$\displaystyle #1$\end{center}}
+
+\title{\bfseries An Application of the Amalgam Method:\\[2pt]
+  The 2-Local Structure of $\N$-Groups of\\[2pt]
+  Characteristic 2 Type}
+\author{Bernd Stellmacher}
+\date{}
+
+\begin{document}
+
+\begin{center}
+{\footnotesize JOURNAL OF ALGEBRA \textbf{190}, 11--67 (1997)}\\[2pt]
+{\footnotesize ARTICLE NO. JA966864}\\[6pt]
+{\Large\bfseries An Application of the Amalgam Method:\\
+The 2-Local Structure of $\N$-Groups of\\
+Characteristic 2 Type}\\[8pt]
+{\large Bernd Stellmacher}\\[4pt]
+{\itshape Math.\ Seminar, Christian-Albrechts-Universit\"at zu Kiel,\\
+24098 Kiel, Germany}\\[6pt]
+{\itshape Communicated by Gernot Stroth}\\[4pt]
+{\itshape Received December 15, 1995}\\[10pt]
+{\scshape Dedicated to Professor B.\ Fischer on the occasion of his\\
+60th birthday}
+\end{center}
+
+\setcounter{section}{0}
+
+% [p. 11]
+\noindent In [9] Thompson classified the finite (simple) groups $H$ satisfying:
+
+\medskip
+\noindent $(\N)$ \quad \textit{Every $p$-local subgroup of $H$ is solvable, for every prime $p$.}
+
+\medskip
+\noindent Later it turned out that his proof could be used as a pattern for the
+classification of the finite simple groups in general. In the course of this
+later classification Thompson's result was generalized in [5], [6], and [7] to
+finite (simple) groups $H$ satisfying:
+
+\medskip
+\noindent $(\N_2)$ \quad \textit{Every 2-local subgroup of $H$ is solvable.}
+
+\medskip
+\noindent The proofs of both of the above results are subdivided as to whether
+the invariant $e(H)$ is small or large. Here $e(H)$ denotes the rank of a
+largest elementary abelian $p$-subgroup contained in a 2-local subgroup of
+$H$, where $p$ ranges over all odd primes. It is characteristic for those
+proofs that the general approach used fails if $e(H)$ is small.
+
+\noindent In the last 10 years a new method in group theory---the amalgam
+method---has been developed which seems to be well suited to deal with groups
+(of characteristic 2 type) where $e(H)$ is small. In contrast to other methods
+in group theory it is a completely local method. That is, it focuses on the
+structure of finite (local) subgroups of a group rather than the structure of
+the group itself. In fact, usually neither simplicity nor finiteness of the
+group is required.
+
+% [p. 12]
+This paper can be seen as an attempt to explore the reaches of the amalgam
+method in general classification problems (with arbitrary $e(H)$) and how
+global properties of the group in question (finiteness, simplicity, etc.) can
+be used to facilitate the amalgam method. We thought that $\N$-groups, i.e.,
+finite groups satisfying $(\N_2)$, would be an interesting class of groups for
+studying these aspects.
+
+\noindent The following two theorems will be proven in this paper.
+
+\begin{mainthm}\label{thm:1}
+Let $H$ be a finite group, $S_0 \in \mathrm{Syl}_2(H)$, and
+$B = C_{S_0}(\Omega_1(ZJ(S_0)))$. Suppose that
+\begin{enumerate}
+\item[(i)] every 2-local subgroup of $H$ containing $B$ is solvable and of
+  characteristic 2 type and
+\item[(ii)] there exist (at least) two maximal 2-local subgroups of $H$
+  containing $S_0$.
+\end{enumerate}
+Then $H$ is type $L_3(2)$, $Sp_4(2)$, $G_2(2)'$, ${}^2F_4(2)'$, $M_{12}$,
+$\Omega_6^+(2)$, $\Omega_6^-(3)$, or $\Omega_6^+(3)$.
+\end{mainthm}
+
+\begin{mainthm}\label{thm:2}
+Suppose that $H$ is an $\N_2$-group of even order and $S_0 \in \mathrm{Syl}_2(H)$.
+Then one of the following holds:
+\begin{enumerate}
+\item[(a)] $H$ is of type $L_3(2)$, $Sp_4(2)$, $G_2(2)'$, or ${}^2F_4(2)'$.
+\item[(b)] $S_0$ is a dihedral or semidihedral group.
+\item[(c)] $|S_0| = 2^5$ and there exists a maximal 2-local subgroup isomorphic to $C_2 \times S_4$ in $H$.
+\item[(d)] $H$ contains a strongly embedded subgroup.
+\item[(e)] There exists a 2-local subgroup $U$ of $H$ such that $O_2(U) \ne 1$.
+\end{enumerate}
+\end{mainthm}
+
+\noindent In Theorem~\ref{thm:1}, ``$H$ is of type $X$'' means that $H$ contains a
+pair of subgroups $P_1$ and $P_2$ such that $O_2(\langle P_1, P_2 \rangle) = 1$
+and $S_0 \le P_1 \cap P_2$, and the structure of $P_1$ and $P_2$ is like that
+of a pair of maximal 2-local subgroups of $X_0$, where $X \le X_0 \le
+\mathrm{Aut}(X)$. The precise definition for ``$H$ is of type $X$'' is given in
+Section 8 [for $X = L_3(2)$, $Sp_4(2)$, $G_2(2)'$, $\Omega_6^-(3)$, and
+$\Omega_6^+(3)$], Section 9 [for $X = \Omega_6^+(2)$], and Section 10 [for
+$X = M_{12}$ and ${}^2F_4(2)'$].
+
+\noindent Some remarks about the proof of Theorem~\ref{thm:1}. The amalgam method
+works with a pair of subgroups $P_1$ and $P_2$ having the following property:
+\begin{enumerate}
+\item[(1)] $S_0 \le P_1 \cap P_2$, $O_2(P_i) \ne 1$, $i = 1,2$, and $O_2(\langle P_1, P_2 \rangle) = 1$.
+\end{enumerate}
+
+% [p. 13]
+\noindent By a nice argument of Gomi [see (4.4)], such a pair of subgroups exists
+with the additional property:
+\begin{enumerate}
+\item[(2)] $S_0$ is contained in a unique maximal subgroup of $P_i$, $i = 1, 2$.
+\end{enumerate}
+
+\noindent Property (2) yields a particularly transparent structure for
+$P_1/O_2(P_1)$; see (3.3). A refinement of Gomi's argument gives a pair of
+subgroups which, apart from (1) and (2), satisfies (see (4.7)):
+\begin{enumerate}
+\item[(3)] Either $O^2(P_i)$ is subnormal in $C_{P_i}(\Omega_1(Z(S_0)))$ or
+  $\Omega_1(Z(S_0))$ is neither normal in $P_1$ nor in $P_2$.
+\end{enumerate}
+
+\noindent In the proof of (4.7) a pushing-up theorem for $SL_2(2)$ is used. This is
+a special case of Baumann's pushing-up theorem [1]. The subgroup $B$ used in
+hypothesis (i) of Theorem~\ref{thm:1}---the Baumann subgroup---was first used in
+that paper. However, we decided to quote [8] rather than [1] [see (2.4) and
+(2.5)] because the proof in [8] is short, elementary and, more important, stays
+within the framework of this paper since its proof also uses the amalgam
+method.
+
+\noindent It should be pointed out that, apart from [8] and textbook material the
+reader should be familiar with, the proof has been made self-contained.
+
+\noindent The importance of (3) for the proof can only be appreciated by reading
+the proofs of Sections 7--10, but some evidence can be given here.
+
+\noindent If $\Omega_1(Z(S_0))$ is neither normal in $P_1$ nor in $P_2$, then the
+normal subgroup $Z_i = \langle \Omega_1(Z(S_0))^{P_i} \rangle$ is a noncentral
+$GF(2)$ $P_i$-module with $C_{S_0}(Z_i) = O_2(P_i)$, $i = 1, 2$. Hence, the
+structure of $P_i/O_2(P_i)$ can be investigated by its action on $Z_i$. That
+this, together with the amalgam method, is a very effective procedure can be
+seen in (8.2), where this entire case is treated.
+
+\noindent If $\Omega_1(Z(S_0))$ is normal in $P_2$, then $P_2$ acts trivially on
+$Z_2$, and the action gives no further information about $P_2/O_2(P_2)$. This
+lack of information from the action is compensated by the subnormality of
+$O^2(P_2)$ in $C_{P_2}(\Omega_1(Z(S_0)))$. Indeed, it is mainly here where the
+global structure of $H$ facilitates the application of the amalgam method.
+
+\noindent There is another aspect of the proof which should be mentioned. There is
+no subdivision of the proof according to the size of $e(H)$. But, of course, a
+priori, there is no bound on $e(P_i)$, $i = 1, 2$. The easiest way to see how
+the proof treats larger values of $e(P_i)$ may be by referring to an example.
+
+\smallskip
+\noindent\emph{Let $H = (E_1 \times E_2)\langle t \rangle$, where $E_1 \cong L_3(2)$,
+$E_1^t = E_2$, and $t^2 = 1$. Then $H \cong L_3(2) \wr C_2$ and $e(H) = 2$ [larger
+values of $e(H)$ can be produced by substituting $\langle t \rangle$ by a larger
+2-group]. Let $S_0 \in \mathrm{Syl}_2(H)$, $t \in S_0$, and $T = S_0 \cap
+F^*(H)$, and let $L_1, L_2 \le E_1T$ such that $T = L_1 \cap L_2$ and
+$O^2(L_i) \cong A_4$, $i = 1, 2$. Then $P_1 = \langle L_1, t \rangle$ and
+$P_2 = \langle L_2, t \rangle$ are the only maximal 2-local subgroups of $H$
+containing $S_0$. They both are solvable and satisfy (1)--(3).}
+
+% [p. 14]
+\noindent We now forget about the global structure of $H$ and only use the
+structure of $P_1$ and $P_2$. More precisely, we only use the following
+properties:
+\begin{enumerate}
+\item[(*)] $[\Omega_1(Z(S_0)), O^2(L_i), O^2(L_i^t)] = 1$ for $i = 1, 2$.
+\item[(**)] $C_{Z(O_2(P_1))}(O^2(L_1^t)) \cap C_{Z(O_2(P_2))}(O^2(L_2^t)) \cap Z(T) \ne 1$.
+\end{enumerate}
+
+\noindent Then $\langle L_1^t, L_2^t \rangle \le C_H(x)$ for suitable
+$1 \ne x \in Z(T)$, and it is fairly easy to see that $C_H(x)$ is not solvable
+[if we assume the global information, we get that $E_2 \le C_H(x)$]. Hence,
+$H$ is not an $\N_2$-group.
+
+\noindent The crucial observation is that the Baumann subgroup $B$ (of $S_0$) is
+contained in $L_1$ and $L_2$; in fact $B = T$ in our example. In general,
+property (*) can be established if $B \le L_1 \cap L_2$ and $B$ is neither
+normal in $L_1$ nor $L_2$; see (3.10). This then allows one to use the above
+argument in fairly general situations. Usually the element $x$ can be found in
+\disp{[\Omega_1(Z(S_0)), O^2(L_1)] \cap [\Omega_1(Z(S_0)), O^2(L_2)] \cap Z(T),}
+but often the argument also works if $[\Omega_1(Z(S_0)), O^2(L_i)] = 1$ for
+some $i$.
+
+\noindent Most of the notation used in this paper is standard or will be defined
+in the section where it occurs for the first time. Modules will be written
+multiplicatively since they usually arise as normal subgroups or sections of
+groups.
+
+\smallskip
+\noindent Let $Y$ be a group and $V$ be a $GF(2)$ $Y$-module. Then $Y$ operates
+quadratically on $V$ if $[V, Y, Y] = 1$. An element $t$ of $Y$ induces a
+transvection on $V$ if $|V/C_V(t)| = 2$, and $Y$ induces transvections on $V$
+if $[V, Y] \ne 1$ and every element of $Y \setminus C_V(Y)$ induces a
+transvection on $V$.
+
+\sect{1}
+
+\noindent In this section $G$ is a finite solvable group of even order and $V$ is a
+finite $GF(2)$ $G$-module such that $C_G(V) = O_2(G) = 1$.
+
+\smallskip
+\noindent We will use the following
+
+\medskip
+\noindent\textit{Notation.} \quad $S \in \mathrm{Syl}_2(G)$, $W = O_2(G)$, and
+$m(Y) = |V|(|C_V(Y)||Y|)^{-1}$ for $Y \le S$.
+
+\smallskip
+\disp{\mathcal{A}(V, S) = \{A \le S \mid A \text{ is elementary abelian and } m(A) \le 1\}.}
+\disp{J(V, S) = \langle A \mid A \in \mathcal{A}(V, S) \rangle.}
+\disp{B = C_S(C_V(J(V, S))).}
+\disp{E = \langle J(V, S)^G \rangle.}
+
+% [p. 15]
+\noindent $\mathcal{A}(S)$ is the set of all subgroups $A$ of $S$ such that
+$m(A) \le m(S)$, $C_S([C_W(A), N_S(A)]) = A$, and $C_S(C_V(A)) = A$.
+
+\smallskip
+\noindent $\Omega(W)$ is the set of all subgroups $D$ in $W$ such that $|D| = 3$
+and $[V, D] = 4$.
+
+\smallskip
+\noindent The first lemma is well known and will be used in this paper without any
+further reference.
+
+\begin{stm}\label{st:1.1}
+The following hold:
+\begin{enumerate}
+\item[(a)] $W = [W, S]C_W(S)$.
+\item[(b)] $W = \langle C_W(a) \mid a \in S^{\#} \rangle$ if $S$ is noncyclic
+  and abelian.
+\item[(c)] $W = \langle C_W(S_0) \mid |S/S_0| = 2 \rangle$ if $S$ is elementary
+  abelian.
+\item[(d)] $S$ is elementary abelian if $[V, S, S] = 1$.
+\end{enumerate}
+\end{stm}
+
+\begin{stm}\label{st:1.2}
+Let $G = WS$. Suppose that $S$ is quadratic on $V$ and
+$V = \langle C_V(S)^G \rangle$. Then
+\disp{V = \langle C_V(S_0) \mid |S/S_0| = 2 \rangle.}
+\end{stm}
+
+\begin{proof}
+We have
+\disp{G = C_G(S)\langle [C_W(S_0), S] \mid |S/S_0| = 2 \rangle.}
+Let $H$ be a fixed subgroup of index 2 in $S$, $N = C_W(H)$ and
+$V_0 = \langle C_V(S_0) \mid |S/S_0| = 2 \rangle$. It suffices to show that
+$[N, S]$ normalizes $V_0$.
+
+\smallskip
+\noindent Let $S_0$ be any subgroup of index 2 in $S$. Then the quadratic action of
+$S$ on $V$ gives
+\disp{[S, C_V(S_0), N] \le C_V(H) \quad\text{and}\quad [C_V(S_0), N, S] \le C_V(H).}
+Hence the 3-subgroup lemma implies $[N, S, C_V(S_0)] \le C_V(H) \le V_0$.
+\end{proof}
+
+\begin{stm}\label{st:1.3}
+Let $x$ be an involution of $G$ and $F = [W, x]$. Suppose that $F$ is a
+$p$-group and $|V/C_V(x)| \le 4$. Then one of the following holds:
+\begin{enumerate}
+\item[(a)] $[V, F] = 4$ and $F \cong C_3$.
+\item[(b)] $[V, F] = 2^4$, $|V/C_V(x)| = 4$, and $F \cong C_3$, $C_5$, or
+  $C_3 \times C_3$.
+\item[(c)] $[V, F] = 2^6$, $|V/C_V(x)| = 4$, $[Z(F), x] = 1$, and $F$ is extra
+  special of order $3^3$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+We proceed by induction on $|F||V|$. Then $G = F\langle x \rangle$ and $V =
+[V, F]$; in particular $C_V(F) = 1$. Note that $|V/C_V(x)| = |[V, x]|$.
+
+\smallskip
+\noindent Assume first that there exists $1 \ne a \in Z(F)$ such that $a^x = a^{-1}$
+and $[V, a] = 2^4$. Then $[V, x] \le [V, a]$, and $F = [F, x]$ implies $V =
+[V, a]$. Hence, $F$ is a subgroup of $GL_4(2)$ ($\cong A_8$), and (a) or (b)
+follows.
+
+% [p. 16]
+\noindent Assume next that there exists $1 \ne a \in Z(F)$ such that $a^x = a^{-1}$
+and $[V, a] = 4$. Note that $C_F(V/[V, a]) = \langle a \rangle$ since $C_G(V) =
+1$. Set $\bar{V} = V/[V, a]$ and $\bar{G} = G/\langle a \rangle$. By induction
+either $F = \langle a \rangle$ or $\bar{F} \cong C_3$ and $F = Z(F)$ since
+$|\bar{V}/C_{\bar{V}}(\bar{x})| \le 2$. The first case gives (a). In the second
+case there exists $b \in Z(F)$ such that $b^x = b^{-1}$ and $[V, b] = 2^4$, and
+the above argument applies.
+
+\smallskip
+\noindent We may assume now that $[Z(F), x] = 1$. Let $z \in Z(F)$. If $[V, x, z] =
+1$, then $[V, F, x] \le C_V(z)$ and $[V, x, F] \le C_V(z)$. Hence also
+\disp{[F, x, V] = [F, V] = V \le C_V(z)}
+and $z = 1$. This shows that $[V, x] = 4$, $Z(F) \cong C_3$, and $V = [V,
+Z(F)]$. In particular, $V$ can be regarded as a $GF(4)$ $G$-module by the
+action of $Z(F)$.
+
+\smallskip
+\noindent Assume next that $F = \langle a, b \rangle$, where $a^x = a^{-1}$ and $b^x
+= b^{-1}$. Then $V = [V, a][V, b]$ and $|V| \le 2^6$ since $[V, a] = [V, b] =
+2^4$ and $[V, x] \le [V, a] \cap [V, b]$. Hence, $G$ is a subgroup of $SL_3(4)$
+and (c) follows.
+
+\smallskip
+\noindent Assume finally that there exist $a, b \in F$ so that $a^x = a^{-1}$, $b^x
+= b^{-1}$, $[a, b] \ne 1$, and $F \ne \langle a, b \rangle$. Set $F_0 =
+\langle a, b \rangle$ and $V_0 = [V, F_0]$. By induction $|V_0| = 2^6$ and
+$F_0$ is extra special of order $3^3$. Note that the structure of $SL_3(4)$
+gives $V_0 \ne V$ and $C_F(Z(F_0)) \ne F$. Let $F_1 = C_F(Z(F_0))$ and $F_2 =
+N_F(F_1)$. Again by induction $F_1 = C_{F_1}(x)F_0$ and $[Z(F_1), x] = 1$. It
+follows that $[F_2, x] \ne F_0$ and so $[F_2, x, Z(F_1)] \ne 1$. On the other
+hand, $[x, Z(F_1), F_2] = [Z(F_1), F_2, x] = 1$ which contradicts the
+3-subgroup lemma.
+\end{proof}
+
+\begin{stm}\label{st:1.4}
+Let $\Omega(W) = \{F_1, \ldots, F_r\}$ and $W_0 = \langle F_1, \ldots, F_r \rangle
+\le O_3(G)$. Then
+\begin{enumerate}
+\item[(a)] $W_0 = F_1 \times \cdots \times F_r$ and
+\item[(b)] $V = V_0 \times V_1 \times \cdots \times V_r$, where $V_0 = C_V(W_0)$
+  and $V_i = [V, F_i]$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Note that $[V, \langle F_1, F_2 \rangle] \le 2^4$. Hence, the structure of
+$GL_4(2)$ gives (a) and (b).
+\end{proof}
+
+\begin{stm}\label{st:1.5}
+Let $U$ be a subgroup of $S$. Then
+\begin{enumerate}
+\item[(a)] $|C_V(U)/C_V(S)| = m(S)m(U)^{-1}|S/U|$.
+\end{enumerate}
+Moreover, if $S$ is elementary abelian, then
+\begin{enumerate}
+\item[(b)] $S = \langle A \mid A \in \mathcal{A}(S), |A| = 2 \rangle$,
+\item[(c)] $W = \langle C_W(A) \mid A \in \mathcal{A}(S), |S/A| = 2 \rangle$,
+\item[(d)] $W = \langle C_W(A) \mid A \in \mathcal{A}(S), |A| = 2 \rangle$ if
+  $|S| \ge 4$,
+\item[(e)] $m(S) \ge 1$.
+\end{enumerate}
+\end{stm}
+
+% [p. 17]
+\begin{proof}
+Claim (a) is obvious. Let $S$ be elementary abelian and $A$ be any subgroup of
+index 2 in $S$. From (a) we get
+\disp{|C_V(A)/C_V(S)| = 2m(S)m(A)^{-1}.}
+Hence either $C_V(A) = C_V(S)$ or $m(A) \le m(S)$.
+
+\smallskip
+\noindent Let $Y = [C_W(A), S]$. Assume that $C_V(A) = C_V(S)$. Then $Y$ centralizes
+$C_V(S)$ and $V = C_V(Y) \times [V, Y]$. Since $[V, Y]$ is $S$-invariant and
+$C_V(S) \le C_V(Y)$, we get that $[V, Y] = 1$ and $C_W(A) = C_W(S)$. Note
+further that $C_S(Y) \ne A$ also implies $C_W(A) = C_W(S)$. Hence (c) follows.
+
+\smallskip
+\noindent From (c) we get that $S = \langle A \mid A \in \mathcal{A}(S), |S/A| = 2
+\rangle$. If $\mathcal{A}(A) \subseteq \mathcal{A}(S)$ for every $A \in
+\mathcal{A}(S)$ with $|S/A| = 2$, then (b) and (d) follow by induction on
+$|S|$. Hence, to prove (b) and (d), it suffices to prove the above inclusion
+$\mathcal{A}(A) \subseteq \mathcal{A}(S)$.
+
+\smallskip
+\noindent Let $A \in \mathcal{A}(S)$ with $|S/A| = 2$ and $A_0 \in
+\mathcal{A}(A)$. Set $Y_0 = [C_W(A_0), S]$ and $V_0 = C_V(A_0)$. Since $Y \le
+Y_0$ and $C_V(A) \le V_0$ we get that $C_S(Y_0) \le C_S(Y) = A$ and $C_S(V_0)
+\le C_S(C_V(A)) = A$; i.e., $C_S(Y_0) = C_A(Y_0)$ and $C_S(V_0) = C_A(V_0)$.
+Now $A_0 \in \mathcal{A}(A)$ implies that $A_0 \in \mathcal{A}(S)$.
+
+\smallskip
+\noindent To prove (e), let $A \in \mathcal{A}(S)$ and $|A| = 2$. Then (a) implies
+that $m(A) \ge 1$ and thus $m(S) \ge 1$.
+\end{proof}
+
+\begin{stm}\label{st:1.6}
+Let $V^* = [V, W]$. Suppose that $S$ is elementary abelian, $W = [W, S]$, and
+$m(S) \le m(Y)$ for every subgroup $Y \ne 1$ of $S$. Then one of the following
+holds:
+\begin{enumerate}
+\item[(a)] $|S| = 2$ and $m(S) > 1$,
+\item[(b)] $m(S) = 2$, $G \cong SL_2(2) \times SL_2(2)$, $|V^*| = 2^4$, and
+  $[V^*, S, S] \ne 1$,
+\item[(c)] $W = F_1 \times \cdots \times F_r$, where $F_i \in \Omega(W)$,
+  $[V, S, S] = 1$, and $|V^*/C_{V^*}(S)| = 2|S|$,
+\item[(d)] $WS = E_1 \times \cdots \times E_r$, where $E_i \cong SL_2(2)$ and
+  $E_i' \in \Omega(W)$, $[V, S, S] = 1$, and $|V^*/C_{V^*}(S)| = |S|$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+If $|S| = 2$, then (a) resp.\ (d) follows easily. Hence, we may assume that
+$|S| \ge 4$.
+
+\smallskip
+\noindent Let $\mathcal{A}_2(S) = \{A \in \mathcal{A}(S) \mid |A| = 2\}$ and $A \in
+\mathcal{A}_2(S)$, and let $V_A = C_V(A)$ and $W_A = [C_W(A), S]$. Note that
+$m(A) = m(S)$ and that $C_{W_A}(V_A) = 1$ by the $P \times Q$ lemma. From
+(1.5)(a) we get
+\disp{|V_A/C_{V_A}(S)| = |S/A| = |S/C_S(V_A)|.}
+Hence, by induction on $|S|$ we may assume that $W_AS/A = \bar{E}_1 \times
+\cdots \times \bar{E}_s$ and $V_A = U_0 \times U_1 \times \cdots \times U_s$,
+where $\bar{E}_i \cong SL_2(2)$, $U_0 = C_{V_A}(W_AS)$, $U_i = [V_A, \bar{E}_i]$,
+and $|U_i| = 4$. In particular, $W_A$ is a 3-group. Since $W$ is solvable and
+$[W, S] = W$, (1.5)(d) implies that $W$ is a 3-group.
+
+% [p. 18]
+\noindent Suppose that there exists $E_i$ such that $[V, E_i'] \nleq V_A$. Let
+$A_i = S \cap E_i$, $U = [V, E_i]$, and $S_0 = C_S(U)$. Then $[U, A_i, A_i] \ne
+1$ and $|A_i| = 4$. Moreover, $|V_A/C_{V_A}(A_i)| = 2$ and so for $a \in A_i^{\#}$
+either $C_V(a) \ge V_A$ or $|C_V(a)/C_{V_A}(a)| = 2$ since $m(\langle a \rangle)
+\ge m(S) = m(A)$. Since $U \nleq V_A$ we get
+\disp{|C_V(a)/C_{V_A}(a)| = |[V, a]/[V_A, a]| = 2 \qquad \text{for } a \in A_i \setminus A.}
+It follows that $|U| = 2^4$ and $[U, a] = 4$ for $a \in S \setminus S_0$. In
+particular, $[U, a, s] = [U, a, A]$ for $a \in A_i \setminus A$ and $s \in
+C_S(E_i) \setminus S_0$. This gives $[U, s] = [U, A]$ by the action of $E_i$,
+and $C_S(E_i) = A$. Hence $S = A_iS_0$.
+
+\smallskip
+\noindent Assume that $S_0 \ne 1$. Then by (1.5)(a),
+\disp{|C_V(S_0)/C_V(S)| = 4m(S)m(S_0)^{-1},}
+while $|U/C_V(S)| = 8$, a contradiction. Hence $S_0 = 1$ and $|S| = 4$.
+
+\smallskip
+\noindent Let $W_1 = C_W(U)$. Then $W_1 \le C_W(S)$ since $[V, S] \le U$. As shown
+above $[C_W(X), S] \cong C_3$ for $X \in \mathcal{A}_2(S)$. Hence $[C_W(X), S,
+W_1] = 1$ and $W_1 \le Z(W)$ by (1.5)(d). It follows that $[V, W_1, W_1] = 1$
+since $[V, W_1, S] = 1$ and $W = [W, S]$. This implies that $W_1 = 1$ and $W
+\cong C_3 \times C_3$. Now (b) is easy to verify.
+
+\smallskip
+\noindent Suppose now that for every $A \in \mathcal{A}_2(S)$, $[V, E_i'] \le V_A$
+for $i = 1, \ldots, s$. Together with (1.4) and (1.5)(d) this shows that $W =
+F_1 \times \cdots \times F_r$, $F_i \in \Omega(W)$, and $S \le N_G(F_i)$. Hence
+$[V^*, S, S] = 1$. We now choose $A \in \mathcal{A}_2(S)$ with the additional
+property the $s$ is maximal; i.e., $|[W, A]|$ is minimal.
+
+\smallskip
+\noindent As above, for $i = 1, \ldots, s$ there exists $A \le A_i \le S$ such that
+$|A_i| = 4$, $|V_A/C_{V_A}(A_i)| = 2$, and $[W_A, A_i] = F_i$. Let $i$ be fixed
+and $A = \langle a \rangle$. Among all subgroups of order 2 in $A$, we choose
+$B_i$ such that $B_i \ne A$ and $[W, B_i]$ is minimal with that property. Let
+$B_i = \langle x \rangle$. Since $a$ inverts $[W, A]$ the minimality of $[W,
+x]$ gives $C_{[W, A]}(x) = 1$. Hence, there exists $F_k \in \Omega(W)$ such that
+$[F_k, x] = 1$ and $[F_k, A] = F_k$. It follows that $[V, F_k] \le C_V(x) \nleq
+V_A$ and $m(B_i) \le m(A)$; in particular $B_i \in \mathcal{A}_2(S)$. Thus, the
+minimality of $[W, A]$ gives $[W, A] = [W, B_i] = 3$ or $9$. Let $B_0 = A$ and
+$V_0 = C_V(W)$, and note that $S = \langle B_0, \ldots, B_s \rangle$.
+
+\smallskip
+\noindent Assume that $[W, A] = 3$. Then $WS \cong SL_2(2) \times \cdots \times
+SL_2(2)$, $|S| = 2^s$, $|V^*/C_{V^*}(S)| = |S|$, and $|V^*/C_{V^*}(B_i)| = 2$.
+It follows that
+\disp{|V/C_V(S)| = |S||V_0/C_{V_0}(S)| = |S|m(S)}
+and
+\disp{|V/C_V(B_i)| = 2|V_0/C_{V_0}(B_i)| = 2m(B_i).}
+Hence $C_{V_0}(S) = C_{V_0}(B_i)$ and $[V, S, S] = 1$ since $m(B_i) = m(S)$,
+and (d) follows.
+
+% [p. 19]
+\noindent Assume now that $[W, A] = 9$. Then $|S| = 2^{r-1}$ since $W_AS/A \cong
+SL_2(2) \times \cdots \times SL_2(2)$ and $|V^*/C_{V^*}(B_i)| = 4$. Now as above
+$C_{V_0}(S) = C_{V_0}(B_i)$ and $[V, S, S] = 1$, and (c) follows.
+\end{proof}
+
+\begin{stm}\label{st:1.7}
+Suppose that $J(V, S) \ne 1$. Then the following hold:
+\begin{enumerate}
+\item[(a)] $W = E' \times C_W(E)$.
+\item[(b)] $B = J(V, S)$ and $J(V, S) \in \mathcal{A}(V, S)$.
+\item[(c)] $E = E_1 \times \cdots \times E_n$ and $V = V_0 \times V_1 \times
+  \cdots \times V_n$, where $V_0 = C_V(E)$, $E_i \cong SL_2(2)$, $V_i = [V,
+  E_i]$, and $|V_i| = 4$ for $i = 1, \ldots, n$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $A \in \mathcal{A}(V, S)$. Then $m(A) \le 1$, and (1.5)(e) gives $m(A) = 1$.
+Now (1.6)(d) and again (1.5)(e) imply that $[W, A], A = E_1 \times \cdots \times
+E_s$ and $V = C_V([W, A], A) \times V_1 \times \cdots \times V_s$, where $E_i
+\cong SL_2(2)$, $V_i = [V, E_i]$, and $|V_i| = 4$. Since $E_i = [W, E_i \cap
+A](E_i \cap A)$ each of the subgroups $E_i$ is normal in $W_A$.
+
+\smallskip
+\noindent Let $\Omega^*$ be the set of all subgroups $F$ of $G$ such that $F \cong
+SL_2(2)$, $[V, F] = 4$, and $F$ is normal in $WF$, and let $E_0 = \langle F \mid
+F \in \Omega^* \rangle$. Then $E_0 = E_1 \times \cdots \times E_r$, where
+$\Omega^* = \{E_1, \ldots, E_r\}$. Note that $E_0$ is normal in $G$.
+
+\smallskip
+\noindent Let $S_0 = S \cap E_0$. As we have seen above $J(V, S) \le S_0$. On the
+other hand, $|V/C_V(S_0)| \le |S_0|$ and thus $S_0 \in \mathcal{A}(V, S)$; in
+particular $S_0 = J(V, S)$ and $E_0 = E$.
+
+\smallskip
+\noindent It remains to prove $B = S_0$. Clearly, $B$ normalizes every $E_i \in
+\Omega^*$. Hence $B = S_0C_B(E)$. However, $C_B(E)$ centralizes $V$ and thus
+$B = S_0$.
+\end{proof}
+
+\sect{2}
+
+\noindent In this section $G$ is a finite solvable group of even order and
+$C_G(O_2(G)) \le O_2(G)$.
+
+\smallskip
+\noindent\textit{Notation.} \quad $S \in \mathrm{Syl}_2(G)$, $Z = \Omega_1(Z(S))$, $V =
+\langle Z^G \rangle$, and $\bar{G} = G/C_G(V)$. $\mathcal{A}(S)$ is the set of
+all elementary abelian subgroups of maximal order of $S$, $J(S) = \langle A
+\mid A \in \mathcal{A}(S) \rangle$, $\bar{Z} = \Omega_1(Z(J(S)))$, $B =
+C_S(\bar{Z})$, and $L = \langle B^G \rangle$.
+
+\begin{stm}\label{st:2.1}
+$O_2(\bar{G}) = 1$.
+\end{stm}
+
+\begin{proof}
+This follows directly from the definition of $V$.
+\end{proof}
+
+\begin{stm}\label{st:2.2}
+Let $\bar{E} = [O_2(\bar{G}), \bar{J}(\bar{S})]\bar{J}(\bar{S})$. Suppose that
+$\bar{J}(\bar{S}) \ne 1$. Then the following hold:
+\begin{enumerate}
+\item[(a)] $\bar{E}$ is a normal subgroup of $\bar{G}$.
+\item[(b)] $\bar{J}(\bar{S}) = \bar{B}$.
+\item[(c)] $\bar{E} = \bar{E}_1 \times \cdots \times \bar{E}_n$, where $\bar{E}_i
+  \cong SL_2(2)$.
+\item[(d)] $V = V_0 \times \cdots \times V_n$, where $V_0 = C_V(\bar{E})$, $V_i =
+  [V, E_i]$, and $|V_i| = 4$ for $i = 1, \ldots, n$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $A \in \mathcal{A}(S)$. Then the maximality of $|A|$ yields
+\disp{|VC_A(V)| = |V||C_A(V)||V \cap A|^{-1} \le |A|.}
+It follows that $|V/C_V(A)| \le |\bar{A}|$ and $\bar{A} \in \mathcal{A}(V,
+\bar{S})$ (for definition see Section 1); in particular $\bar{J}(\bar{S}) \le
+J(V, \bar{S})$. Now (1.6)(d) and (1.7) applied to $\bar{G}$ and $V$ give (c),
+(d), and, together with an easy Frattini argument, also (a).
+
+\smallskip
+\noindent Note that $\bar{B}$ normalizes $\bar{E}_i$ for $i = 1, \ldots, n$ and
+centralizes $V_0$ since $V_0 \le \bar{Z}$. It follows that
+$C_{\bar{B}}(\bar{E}') = C_{\bar{B}}(V) = 1$. Hence $\bar{J}(\bar{S}) \le
+\bar{B}$ implies that $\bar{J}(\bar{S}) = \bar{B}$.
+\end{proof}
+
+\begin{stm}\label{st:2.3}
+Suppose that $O_2(G) = C_S(V)$. Then $B \in \mathrm{Syl}_2(L)$.
+\end{stm}
+
+\begin{proof}
+Assume first that $[V, J(S)] = 1$. Then $V \le Z$ and thus $B \le C_S(V) =
+O_2(G)$. Hence, $B$ is normal in $G$.
+
+\smallskip
+\noindent Assume now that $[V, J(S)] \ne 1$. Let $E = \langle J(S)^G \rangle$. We
+apply (2.2). Then $\bar{J}(\bar{S}) = \bar{B}$ and $L = E\bar{B}$. Hence, it
+suffices to show that $O_2(E) \le B$. Let $Z_0 = \Omega_1(Z(J(O_2(E))))$ and $A
+\in \mathcal{A}(S)$. Note that by (1.5)(e), $C_A(V)V \in \mathcal{A}(S)$.
+Hence $\bar{Z} \le Z_0$ and $Z_0 \in C_{Z_0}(A)V$. It follows that $[Z_0, E]
+\le V$; in particular, $\bar{Z}V$ is normal in $E$. Now the structure of
+$\bar{E}$ and its operation on $\bar{V}$ shows that there exists $x \in E$ so
+that $E = \langle J(S), J(S)^x \rangle C_E(V)$ and $\bar{Z}V = Z^*V$, where
+$Z^* = \bar{Z} \cap \bar{Z}^x$ and $\bar{Z} = Z^*(\bar{Z} \cap V)$. Moreover,
+$C_E(V)$ centralizes $\bar{Z}V$ and so $C_E(V) = C_E(Z^*V)O_2(E)$. Since
+$O_2(E)$ normalizes $Z^*$, we conclude that $Z^*$ is normal in $E$. However,
+now $[Z^*, J(S)] = 1$ implies $[Z^*, E] = 1$, and $O_2(E) \le C_S(\bar{Z}) = B$.
+\end{proof}
+
+\begin{stm}\label{st:2.4}
+Suppose that the following hold:
+\begin{enumerate}
+\item[(i)] No nontrivial characteristic subgroup of $S$ is normal in $G$.
+\item[(ii)] $S$ is contained in a unique maximal subgroup of $G$.
+\end{enumerate}
+Then $[O_2(G), O^2(G)] \le V$.
+\end{stm}
+
+\begin{proof}
+By (i) neither $Z$ nor $J(S)$ is normal in $G$; i.e., $[V, J(S)] \ne 1$.
+Moreover, (ii) implies that $C_S(V) = O_2(G)$. We apply (2.2) and (2.3).
+
+\smallskip
+\noindent Let $B \le L_1 \le L$ so that $\bar{L}_1/O_2(\bar{L}_1) \cong SL_2(2)$ and
+$|L_1|$ is minimal with that property. Then $B \in \mathrm{Syl}_2(L_1)$ and
+$L_1/O_2(L_1) \cong D_{2 \cdot 3}$. Moreover, by (ii), $\langle L_1, S \rangle =
+G$ and thus no nontrivial characteristic subgroup of $B$ is normal in $L_1$.
+Hence, [8] implies that $[O_2(L_1), O^2(L_1)] \le V$. Let $T$ be a Hall
+$2'$-subgroup of $C_L(O_2(L)/V)$. Then $L_1 \le TS$ and $TS = G$. It follows
+that $[O_2(G), O^2(G)] \le V$.
+\end{proof}
+
+% [p. 21]
+\begin{stm}\label{st:2.5}
+Suppose that $G$ satisfies the hypothesis of (2.4) and $\bar{G} \cong SL_2(2)$.
+Let $T$ be a subgroup of $\mathrm{Aut}(S)$ of odd order. Then $\langle V^{\tau}
+\mid \tau \in T \rangle$ is a normal subgroup of $G$ in $O_2(G)$.
+\end{stm}
+
+\begin{proof}
+This is [8, 3.5].
+\end{proof}
+
+\sect{3}
+
+\noindent In this section $G$ is a finite group of even order, $S$ is a nontrivial
+2-subgroup of $G$, and $U$ is a subgroup of $G$ containing $S$.
+
+\smallskip
+\noindent\textit{Notation.} \quad $\mathcal{L}(U, S) = \{E \le U \mid S \in
+\mathrm{Syl}_2(E),\, O_2(E) \ne 1, \text{ and } S \ne O_2(E)\}$;
+$\mathcal{P}(U, S) = \{E \in \mathcal{L}(U, S) \mid S$ is contained in a unique
+maximal subgroup of $E\}$; $\mathcal{P}^*(U, S) = \{E \in \mathcal{P}(U, S)
+\mid O^2(E)$ is subnormal in $L$ for some maximal element $L \in
+\mathcal{L}(U, S)\}$. $\Phi_2(U)$ is the inverse image of $\Phi(U/O_2(U))$ in
+$U$. If $U = G$, we also write $\mathcal{L}(S)$, $\mathcal{P}(S)$, and
+$\mathcal{P}^*(S)$ instead of $\mathcal{L}(G, S)$, $\mathcal{P}(G, S)$, and
+$\mathcal{P}^*(G, S)$, respectively.
+
+\begin{stm}\label{st:3.1}
+Let $S \in \mathrm{Syl}_2(G)$ and $\mathcal{F}$ be the set of all subgroups $U$
+of $G$ such that $S \le U$ and
+\begin{enumerate}
+\item[(*)] $S \ne O_2(U)$ and $S$ is contained in a unique maximal subgroup of
+  $U$.
+\end{enumerate}
+Then either $\mathcal{F} = \emptyset$ and $S = O_2(G)$, or $O^2(G) = \langle P
+\mid P \in \mathcal{F} \rangle$.
+\end{stm}
+
+\begin{proof}
+Let $G$ be a minimal counterexample and $G_0 = \langle P \mid P \in
+\mathcal{F} \rangle$, and let $M$ be any maximal subgroup of $G$ containing
+$S$. Then either $M = N_G(S)$ or, by induction, $M = N_M(S)(M \cap G_0)$.
+Since $N_G(S)$ normalizes $G_0$ we conclude that $G_0N_G(S)$ is the unique
+maximal subgroup of $G$ containing $S$, but now $G \in \mathcal{F}$. Since $G =
+O^2(G)N_G(S) = O^2(G)M$ it follows that $G = O^2(G)$, and $G$ is not a
+counterexample.
+\end{proof}
+
+\begin{stm}\label{st:3.2}
+Let $L \in \mathcal{L}(S)$. Then $O^2(L) = \langle P \mid P \in
+\mathcal{P}(L, S) \rangle$.
+\end{stm}
+
+\begin{proof}
+This is a direct consequence of (3.1).
+\end{proof}
+
+\begin{stm}\label{st:3.3}
+Let $P \in \mathcal{P}(S)$ and $B$ be the maximal subgroup of $P$ containing
+$S$, and let $P_0$ be the largest normal subgroup of $P$ contained in $B$.
+Suppose that $P$ is solvable. Then
+\begin{enumerate}
+\item[(a)] $O^2(P/O_2(P))$ is a $p$-group for some odd prime $p$,
+\item[(b)] $O^2(P)/P_0$ is an irreducible $S$-module,
+\item[(c)] $P_0/O_2(P) = \Phi(O^2(P/O_2(P)))$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $\bar{P} = P/O_2(P)$. The existence of Hall subgroups in $\bar{P}$ shows
+that $\bar{P}$ is a $(2, p)$-group, where $p$ is some odd prime, and the
+Frattini argument shows that $P_0$ is a $p$-group.
+\end{proof}
+
+% [p. 22]
+\noindent Clearly, $\Phi(O^2(\bar{P})) \le \bar{P}_0$, and Maschke's theorem gives
+$\bar{P}_0 = \Phi(O^2(\bar{P}))$ and (b).
+
+\begin{stm}\label{st:3.4}
+Let $P \in \mathcal{P}(S)$ and $T$ be a normal subgroup of $S$. Suppose that $P$
+is solvable. Then either $T \le O_2(P)$ or $[O^2(P), T] = O^2(P)$.
+\end{stm}
+
+\begin{proof}
+Since $[O^2(P), T]$ is normal in $P$, the claim follows from (3.3).
+\end{proof}
+
+\begin{stm}\label{st:3.5}
+Let $P \in \mathcal{P}(S)$ and $N$ be a normal subgroup of $P$ in $O_2(P)$.
+Suppose that $P$ is solvable and $[N, O_2(P) \cap O^2(P)] = 1$. Then either
+$[Z(S), O^2(P)] \ne 1$ or $[N, O^2(P)] = 1$.
+\end{stm}
+
+\begin{proof}
+Note that $[N, O^2(P)] \le Z(O_2(O^2(P)))$ and that $[N, O^2(P), O^2(P)] = 1$
+implies $[N, O^2(P)] = 1$. Hence we may assume that $N \le O^2(P)$ and $N$ is
+abelian. By Maschke's theorem $N = C_N(O^2(P)) \times [N, O^2(P)]$. Since
+$[N, O^2(P)]$ is $S$-invariant, the claim follows.
+\end{proof}
+
+\begin{stm}\label{st:3.6}
+Let $P \in \mathcal{P}(S)$, $\bar{P} = P/O_2(P)$, and $Z$ and $T$ be two normal
+subgroups of $S$, and let $A$ be a subgroup of $S$ satisfying $\Phi(A) \le
+O_2(P)$ and $a \in A \setminus O_2(P)$. Suppose that $P$ is solvable, $Z \le
+O_2(P)$, and $T \nleq O_2(P)$. Then there exists $x \in P$ so that for $L =
+\langle A, A^x \rangle$ the following hold:
+\begin{enumerate}
+\item[(a)] $\bar{L} = \bar{E} \times \bar{A}_0$, where $\bar{E} \cong D_{2p^n}$
+  and $A = \langle a \rangle A_0$.
+\item[(b)] $O^2(L) \nleq \Phi_2(O^2(P))$.
+\item[(c)] Any two elements in $Z^L$ are interchanged by an involution of $L$.
+\item[(d)] $O^2(L) \le [O^2(L), T]$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $F = [O^2(P), a]$. If $F \le \Phi_2(O^2(P))$, then $a \in O_2(P)$ which is
+not the case. Hence $F \nleq \Phi_2(O^2(P))$. Let $F_0 \le F$ such that
+\begin{enumerate}
+\item[(*)] $F_0$ is $A$-invariant and $F_0 \nleq \Phi_2(O^2(P))$.
+\end{enumerate}
+Among all such $F_0$ satisfying (*) we choose $F_0$ such that first
+$|F_0[F_0, T]|$ and then $|F_0|$ is minimal. Since $F = \langle C_F(\bar{A}_0)
+\mid |\bar{A}/\bar{A}_0| = 2 \rangle$ there exists $A_0 \le A$ such that
+$|A/A_0| = 2$ and $F_0 \le C_F(A_0)$ by the minimal choice of $F_0$. Note that
+$\bar{F}_0 \nleq \Phi(\bar{F})$ and so $\bar{a} \notin \bar{A}_0$.
+
+\smallskip
+\noindent Choose $\bar{z} \in \bar{F}_0 \setminus \Phi(O^2(\bar{P}))$ such that
+$\bar{z}^{\bar{a}} = \bar{z}^{-1}$. The minimality of $\bar{F}_0$ gives
+$\bar{F}_0 = \langle \bar{z} \rangle$. Set $L = \langle A, A^x \rangle$. Then
+(a) and (b) hold. Since $O_2(L)$ normalizes every element in $Z^L$, the
+structure of $L/O_2(L)$ also gives (c).
+
+\smallskip
+\noindent By (3.4), $\bar{F}_0 \le [\bar{F}_0, \bar{T}]\Phi(O^2(\bar{P}))$. Hence
+$F_1 = [F_0, T, a] \nleq \Phi_2(O^2(P))$. Now the minimality of $F_0[F_0, T]$
+gives $F_0 \le [F_0, T]$, and (d) follows.
+\end{proof}
+
+\begin{stm}\label{st:3.7}
+Let $L \in \mathcal{L}(S)$ and $\bar{L} = L/O_2(L)$. Suppose that $L$ is
+solvable. Then
+\disp{[F(\bar{L}), \bar{S}] = \langle O^2(\bar{P}) \mid P \in \mathcal{P}^*(L, S) \rangle.}
+\end{stm}
+
+% [p. 23]
+\begin{proof}
+Let $F$ be the inverse image of $[F(\bar{L}), \bar{S}]$ in $L$. By (3.2), $FS =
+\langle P \mid P \in \mathcal{P}(FS, S) \rangle$. Moreover, $O^2(P)$ is
+subnormal in $L$ for every $P \in \mathcal{P}(FS, S)$; i.e., $P \in
+\mathcal{P}^*(L, S)$.
+
+\smallskip
+\noindent Now let $P \in \mathcal{P}^*(L, S)$. Then $O^2(P)$ is subnormal in $L$
+since $L$ is the unique maximal element of $\mathcal{L}(L, S)$. It follows that
+$O^2(\bar{P}) \le F(\bar{L})$ and so $P \in \mathcal{P}(FS, S)$ and
+$\mathcal{P}^*(L, S) = \mathcal{P}(FS, S)$.
+\end{proof}
+
+\begin{stm}\label{st:3.8}
+Let $P_1, P_2 \in \mathcal{P}(S)$ and $H = \langle P_1, P_2 \rangle$, and let $N$
+be a normal subgroup of $H$ which is maximal (with respect to inclusion) such
+that $O^2(P_i) \nleq N$ for $i = 1, 2$. Suppose that $P_1$ and $P_2$ are
+solvable. Then there exists a normal series $Q \le N \le H_0 \le H_1 \le H$
+such that
+\begin{enumerate}
+\item[(a)] $Q = S \cap N$ and $Q$ is the largest subgroup of $S$ which is normal
+  in $H$,
+\item[(b)] $H_0/N$ is a minimal normal subgroup of $H/N$ and $O^2(P_j) \le H_0$
+  for some $j \in \{1, 2\}$,
+\item[(c)] $H_1 = H_0$ or $H_1 = H_0O^2(P_k)$, where $O^2(P_k) \nleq H_0$,
+\item[(d)] $H = SH_1$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $Q^* = S \cap O_2(H)$. Clearly, $Q^*$ is the largest normal subgroup of $H$
+in $S$. Hence $Q^* \le N$ by the maximality of $N$; i.e., $Q^* \le S \cap N =
+Q$. On the other hand, by (3.4), $Q = O_2(P_i) \cap N$ since $O^2(P_i) \nleq
+N$. Hence $Q = Q^*$.
+
+\smallskip
+\noindent Let $H_0$ be the inverse image of a minimal normal subgroup of $H/N$. Then
+there exists $j \in \{1, 2\}$ such that $O^2(P_j) \le H_0$. Let $\{1, 2\} =
+\{j, k\}$. If $O^2(P_k) \le H_0$, then $H_0S = H$. If $O^2(P_k) \nleq H_0$,
+then $H_0O^2(P_k)S = H$.
+\end{proof}
+
+\begin{stm}\label{st:3.9}
+Let $P_1, P_2$ and $H$ be as in (3.8), and let $S \le T \in \mathrm{Syl}_2(H)$
+and $Q = S \cap O_2(H)$. Suppose that $H$ is solvable, $\Omega_1(Z(S)) \le Q$,
+and $J(S) = J(T)$. Then one of the following holds:
+\begin{enumerate}
+\item[(a)] $[\Omega_1(Z(S)), O^2(P_i), O^2(P_j)] = 1$ for $i \ne j$, or
+\item[(b)] $C_S(\Omega_1(Z(J(S)))) \le O_2(P_i)$ for some $i \in \{1, 2\}$, or
+\item[(c)] $[\Omega_1(Z(S)), O^2(P_1)] = [\Omega_1(Z(S)), O^2(P_2)]$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Let $Z = \Omega_1(Z(S))$, $V = \langle Z^H \rangle$, $\bar{H} = H/C_H(V)$, and
+$B = C_S(\Omega_1(Z(J(S))))$. We may assume that $B \nleq O_2(P_i)$ and
+$O^2(P_i) \nleq C_H(V)$ for $i = 1, 2$. We apply (3.8) with $C_H(V) \le N$.
+
+\smallskip
+\noindent Assume that $J(S) \le C_H(V)$. Then $J(S) \le Q$ and $V \le Z(J(S))$.
+Hence $B \le C_H(V)$ and so $B \le Q \le O_2(P_i)$, $i = 1, 2$, a contradiction.
+
+\smallskip
+\noindent Assume now that $J(S) \nleq C_H(V)$. Then there exists $i \in \{1, 2\}$
+such that $J(S) \nleq O_2(P_i)$; i.e., $O^2(P_i) \le \langle J(S)^{P_i} \rangle$
+by (3.4). Let $\bar{F} = O_2(F(\bar{H})) \cdot O^2(\bar{P}_i)J(\bar{S})$.
+
+% [p. 24]
+\noindent Since $J(S) = J(T)$ and $\bar{S} \cap O_2(\bar{H}) = 1$ we get
+$[J(\bar{S}), O_2(\bar{H})] = 1$ and thus $[\bar{F}, O_2(\bar{H})] = 1$. It
+follows that
+\disp{O_2(\bar{F}) \le C_{\bar{S}}(F(\bar{H})) = \bar{S} \cap O_2(\bar{H}) = 1.}
+Hence, (1.7) applied to $\bar{F}$ and $\bar{V}$ gives $O^2(\bar{P}_i) \le
+O_3(\bar{H})$; in particular, $\bar{H} = O_3(\bar{H})\bar{P}_j$, where $\{1, 2\}
+= \{i, j\}$, and $\bar{S} \in \mathrm{Syl}_2(\bar{H})$.
+
+\smallskip
+\noindent Assume that $J(S) \nleq O_2(P_j)$. Then by the same argument, $O^2(\bar{P}_i)
+\le O_3(\bar{H})$ and $\bar{H} = O_3(\bar{H})\bar{S}$. If $\bar{P}_1 \ne
+\bar{P}_2$, then again (1.7) gives (a). In the other case, (c) follows.
+
+\smallskip
+\noindent Assume that $J(S) \le O_2(P_j)$. Since $B \nleq O_2(P_j)$ we get that
+$[\Omega_1(Z(J(S))), O^2(P_i)] = 1$. However, now (1.7) applied to $\bar{H}$
+and $\bar{V}$ shows that $[V, O^2(P_1), O^2(P_2)] = 1$, and again (a) holds.
+\end{proof}
+
+\sect{4}
+
+\noindent In this section $G$ is a finite group of even order, $S \in
+\mathrm{Syl}_2(G)$, and the following hold:
+\begin{enumerate}
+\item[(a)] Every 2-local subgroup of $G$ containing $S$ is solvable and of
+  characteristic 2 type.
+\item[(b)] $S$ is contained in two different maximal 2-local subgroups of $G$.
+\end{enumerate}
+
+\smallskip
+\noindent\textit{Notation.} \quad $Z = \Omega_1(Z(S))$, $C = C_G(Z)$, $D =
+\bigcap_{P \in \mathcal{P}(S)} O_2(P)$, $M = N_G(D)$, $B = C_S(\Omega_1(Z(J(S))))$,
+
+\medskip
+\disp{\mathcal{P}_0(S) = \mathcal{P}^*(C, S) \cup (\mathcal{P}^*(S) \setminus \mathcal{P}(C, S)),}
+\disp{\mathcal{P}_1(S) = \mathcal{P}^*(M, S) \cup (\mathcal{P}^*(S) \setminus \mathcal{P}(M, S)),}
+\disp{\Lambda = \{(P_1, P_2) \mid P_i \in \mathcal{P}(S),\, O_2(\langle P_1, P_2 \rangle) = 1\}.}
+
+\smallskip
+\noindent\textit{Remark.} A subgroup similar to $D$ was used in [3].
+
+\begin{stm}\label{st:4.1}
+The following hold:
+\begin{enumerate}
+\item[(a)] $\mathcal{L}(S) \ne \emptyset \ne \mathcal{P}(S)$.
+\item[(b)] $O_2(M) \ne 1$.
+\item[(c)] $N_G(S) \le M$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+$N_G(S)$ is not the only 2-local subgroup of $G$ containing $S$. Hence (3.2)
+implies (a).
+
+\smallskip
+\noindent Claim (b) holds since $Z \le D \le O_2(M)$, and (c) holds since $N_G(S)$
+operates on the elements of $\mathcal{P}(S)$ by conjugation.
+\end{proof}
+
+% [p. 25]
+\begin{stm}\label{st:4.2}
+Let $L \in \mathcal{L}(S)$, $D_L = \bigcap_{P \in \mathcal{P}(L,S)} O_2(P)$,
+and $D_L^* = \bigcap_{P \in \mathcal{P}^*(L,S)} O_2(P)$. Then $D_L = D_L^* =
+O_2(L)$ and $D = \bigcap_{L \in \mathcal{M}\mathcal{L}(S)} O_2(L)$, where
+$\mathcal{M}\mathcal{L}(S)$ is the set of maximal elements of
+$\mathcal{L}(S)$.
+\end{stm}
+
+\begin{proof}
+Let $F_0$ be the inverse image of $F(L/O_2(L))$ in $L$ and $F = [F_0, S]$. By
+(3.7), $FS = \langle P \mid P \in \mathcal{P}^*(L, S) \rangle$. It follows that
+$[F_0, D_L^*] \le F$ and $[F, D_L^*] \le O_2(L)$. We conclude that
+\disp{O_2(L) \le D_L \le D_L^* \le O_2(L).}
+and the claim follows.
+\end{proof}
+
+\begin{stm}\label{st:4.3}
+$D = \bigcap_{P \in \mathcal{P}_i(S)} O_2(P)$ for $i = 0, 1$.
+\end{stm}
+
+\begin{proof}
+For $\emptyset \ne \mathcal{X} \subseteq \mathcal{L}(S)$ define $O_2(\mathcal{X})
+= \bigcap_{P \in \mathcal{X}} O_2(P)$. Let $M_0 = C$ and $M_1 = M$. By (4.2) it
+suffices to show that $O_2\mathcal{P}_i(S) \le O_2(L)$ for every maximal
+element $L \in \mathcal{L}(S)$.
+
+\smallskip
+\noindent We have $\mathcal{P}^*(L, S) \subseteq \mathcal{P}(M_i, S) \cup
+(\mathcal{P}^*(S) \setminus \mathcal{P}(M_i, S))$, and by (4.2),
+\disp{O_2(\mathcal{P}^*(M_i, S)) = O_2(\mathcal{P}(M_i, S)) = O_2(M_i).}
+Hence
+\disp{O_2(\mathcal{P}_i(S)) = O_2(\mathcal{P}(M_i, S)) \cap
+O_2(\mathcal{P}^*(S) \setminus \mathcal{P}(M_i, S))}
+\disp{\quad\quad\quad\quad \le O_2(\mathcal{P}^*(L, S)) = O_2(L).}
+\end{proof}
+
+\begin{stm}\label{st:4.4}
+Let $P \in \mathcal{P}(S) \setminus \mathcal{P}(M, S)$ and $k \in \{0, 1\}$. Then
+there exists $P^* \in \mathcal{P}_k(S)$ such that $(P, P^*) \in \Lambda$.
+\end{stm}
+
+\begin{proof}
+Let $\mathcal{P}_k(S) = \{P_1, \ldots, P_n\}$ and $H_i = \langle P, P_i \rangle$,
+$i = 1, \ldots, n$. We may assume that $O_2(H_i) \ne 1$ for $i = 1, \ldots,
+n$. Hence by (4.2) and (4.3),
+\disp{D \le \bigcap_{i=1}^n O_2(H_i) \le \bigcap_{i=1}^n O_2(P_i) = D}
+and $D = \bigcap_{i=1}^n O_2(H_i)$. However, now $P \le M$, a contradiction.
+\end{proof}
+
+\begin{stm}\label{st:4.5}
+Let $\mathcal{P}(S) = \mathcal{P}(M, S) \cup \mathcal{P}(C, S)$ and $P \in
+\mathcal{P}(S) \setminus \mathcal{P}(M, S)$. Then there exists $P^* \in
+\mathcal{P}^*(M, S)$ so that $(P, P^*) \in \Lambda$. If in addition
+$\mathcal{P}^*(C, S) \subseteq \mathcal{P}(M, S)$, then $O_2(M) \le O_2(C)$
+and $O_2(C) \in \mathrm{Syl}_2(O^2(P^*)O_2(C))$.
+\end{stm}
+
+\begin{proof}
+By (4.4) there exists $P^* \in \mathcal{P}_1(S)$ such that $(P, P^*) \in
+\Lambda$. Since $P \le C$, we have $P^* \nleq C$ and thus $P^* \in
+\mathcal{P}^*(M, S)$.
+
+\smallskip
+\noindent Suppose that $\mathcal{P}^*(C, S) \subseteq \mathcal{P}(M, S)$. Then
+(4.2) implies that $O_2(M) \le O_2(C)$. Since $O_2(O^2(P^*)) \le O_2(M)$, we
+conclude that $O_2(C) \in \mathrm{Syl}_2(O^2(P^*)O_2(C))$.
+\end{proof}
+
+% [p. 26]
+\begin{stm}\label{st:4.6}
+Suppose that $\mathcal{P}(S) = \mathcal{P}(C, S) \cup \mathcal{P}(M, S)$. Then
+$\mathcal{P}^*(C, S) \nsubseteq \mathcal{P}(M, S)$.
+\end{stm}
+
+\begin{proof}
+Assume that $\mathcal{P}^*(C, S) \subseteq \mathcal{P}(M, S)$. By (4.5) there
+exist $P \in \mathcal{P}(C, S)$ and $P^* \in \mathcal{P}^*(M, S)$ such that
+$(P, P^*) \in \Lambda$ and $O_2(C) \in \mathrm{Syl}_2(O^2(P^*)O_2(C))$.
+
+\smallskip
+\noindent Let $B_0 = C_{O_2(C)}(\Omega_1(Z(J(O_2(C)))))$, $L = \langle B_0^{P^*} \rangle$,
+$V = \langle Z^{P^*} \rangle$, and $\bar{L} = L/C_L(V)$. Note that $B_0$ is
+normal in $P$ and thus not normal in $P^*$. Hence by (3.4), $O^2(P^*) \le L$,
+and by (3.3), $O_2(L) \in \mathrm{Syl}_2(C_L(V))$ since $P^* \nleq C$. Thus
+(2.3) gives $B_0 \in \mathrm{Syl}_2(L)$. Moreover, since $(P, P^*) \in \Lambda$
+there is no nontrivial characteristic subgroup of $B_0$ which is normal in $L$.
+Hence $LS = P^*$ and (2.2) imply
+\begin{enumerate}
+\item[(i)] $\bar{L} = \bar{E}_1 \times \cdots \times \bar{E}_n$,
+\item[(ii)] $V = V_0 \times \cdots \times V_n$,
+\end{enumerate}
+where the notation is as in (2.2). Since $V_0 \cap Z$ is normalized by $P$ and
+$P^*$, we get $V_0 \cap Z = 1$ and thus $V_0 = 1$.
+
+\smallskip
+\noindent Let $T$ be a Sylow 3-subgroup of $P^*$. Then by (2.4), $[O_2(P^*), T] = V$
+and $O_2(P^*) = VC_{O_2(P^*)}(T)$. The Frattini argument shows that
+$C_{O_2(P^*)}(T)$ is normal in $S$, and $V_0 = 1$ gives $C_{O_2(P^*)}(T) = 1$
+and $O_2(P^*) = V_1 \times \cdots \times V_n$; in particular, $O_2(P^*) =
+O_2(M)$.
+
+\smallskip
+\noindent Let $R_i = [V_i, B_0]$ and $\Omega = \{R_i \mid i = 1, \ldots, n\}$. Note
+that $\Omega = \{R_i^s \mid s \in S\}$ since $P^* \in \mathcal{P}(S)$. Choose
+$\alpha \in \mathrm{Aut}(B_0)$. If $[V_i, \alpha, V_j] \ne 1$, then $R_j =
+[V_i, \alpha, V_j] = [V_i, \alpha, B_0] = R_i\alpha$. If $V_i\alpha \le V_j$,
+then there exists $E_j$ so that $[V_i, \alpha, E_j \cap B_0] = R_j = R_i\alpha$.
+We conclude that $\mathrm{Aut}(B_0)$ operates on $\Omega$. Since $C \le
+N_G(B_0)$ we get that $C = SC_0$, where $C_0 = N_C(R_1)$.
+
+\smallskip
+\noindent Let $U$ be a Hall $2'$-subgroup of $C_0$ and $u \in U$. By (2.5),
+$[V_1, V_1^u] = 1$, and $[V_i, V_1^u] \le R_1 \cap R_i = 1$ for $2 \le i$. It
+follows that $\langle V_1^U \rangle \le O_2(P^*)$. Hence also
+\disp{\langle \langle V_1^U \rangle^S \rangle = \langle V_1^{US} \rangle \le O_2(P^*).}
+However, $US = C$ and $\langle V_1^S \rangle = O_2(P^*)$. Now $O_2(P^*) = O_2(M)$
+implies that $C \le M$, and $M$ is the unique maximal 2-local subgroup
+containing $S$. a contradiction.
+\end{proof}
+
+\begin{stm}\label{st:4.7}
+There exists $(P, P^*) \in \Lambda$ such that $P \nleq C$ and $P^* \in
+\mathcal{P}_0(S)$.
+\end{stm}
+
+\begin{proof}
+Assume that $\mathcal{P}(S) \ne \mathcal{P}(C, S) \cup \mathcal{P}(M, S)$. Then
+(4.4) yields the assertion. Assume that $\mathcal{P}(S) = \mathcal{P}(C, S)
+\cup \mathcal{P}(M, S)$. Then (4.6) implies that $\mathcal{P}^*(C, S)
+\nsubseteq \mathcal{P}(M, S)$. Now (4.7) follows from (4.5) for $P^* \in
+\mathcal{P}^*(C, S) \setminus \mathcal{P}(M, S)$.
+\end{proof}
+
+% [p. 27]
+\sect{5}
+
+\noindent In this section we assume
+
+\medskip
+\noindent\textsc{Hypothesis 1.} \quad $H$ is a finite group of even order, $S_0 \in
+\mathrm{Syl}_2(H)$, and the following hold:
+\begin{enumerate}
+\item[(i)] Every 2-local subgroup of $H$ containing $S_0$ is solvable and of
+  characteristic 2 type.
+\item[(ii)] $O_2(H) = 1$ and $H$ does not contain a strongly embedded subgroup.
+\end{enumerate}
+
+\begin{stm}\label{st:5.1}
+There exists a nontrivial subgroup $S$ of $S_0$ and $P_1, P_2 \in \mathcal{P}(S)$
+such that $O_2(\langle P_1, P_2 \rangle) = 1$ and one of the following holds:
+\begin{enumerate}
+\item[(a)] $S = S_0$ and $\Omega_1(Z(S))$ is neither normal in $P_1$ nor in
+  $P_2$,
+\item[(b)] $S = S_0$ and $P_2 \in \mathcal{P}^*(C_H(\Omega_1(Z(S))), S)$,
+\item[(c)] $S \ne S_0$, $S_0$ is contained in a unique maximal 2-local subgroup
+  $M$ of $H$, and
+\begin{enumerate}
+\item[(c$_1$)] $\Omega_1(Z(S))$ and $J(S)$ are neither normal in $P_1$ nor in
+  $P_2$,
+\item[(c$_2$)] $P_i \nleq M$ and $S \in \mathrm{Syl}_2(N_H(O_2(P_i)))$ for $i =
+  1, 2$, and
+\item[(c$_3$)] if $J(S) \le T \le S_0$, $P_1^*, P_2^* \in \mathcal{P}(T)$, and
+  $O_2(\langle P_1^*, P_2^* \rangle) \ne 1$, then either $\langle P_1^*, P_2^*
+  \rangle \le M$ or $J(S) = J(S_1)$ for $T \le S_1 \in \mathrm{Syl}_2(\langle
+  P_1^*, P_2^* \rangle)$.
+\end{enumerate}
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Assume first that $S_0$ is contained in two different maximal 2-local subgroups
+of $H$. Then (a) or (b) follows from (4.7).
+
+\smallskip
+\noindent Assume now that there exists a unique maximal 2-local subgroup $M$ of $H$
+containing $S_0$. Since $M$ is not strongly embedded in $H$ there exists
+$1 \ne Q \le S_0$ such that $N_H(Q) \nleq M$. Among all 2-local subgroups which
+are not in $M$ we choose $N$ such that for $S \in \mathrm{Syl}_2(N \cap M)$
+consecutively
+\begin{enumerate}
+\item[(i)] $|J(S)|$ is maximal,
+\item[(ii)] $|S|$ is maximal.
+\end{enumerate}
+After conjugation in $M$ we may assume that $S \le S_0$. Since $S \ne S_0$ we
+have that
+\begin{enumerate}
+\item[(*)] $N_H(J(S)) \le M$ and $C_H(\Omega_1(Z(S))) \le M$;
+\end{enumerate}
+in particular $S \in \mathrm{Syl}_2(N)$. Hence by (3.2), $\mathcal{P}(N, S)
+\subsetneq \mathcal{P}(M, S)$.
+
+\smallskip
+\noindent Let $P \in \mathcal{P}(N, S) \setminus \mathcal{P}(M, S)$ and let $x \in
+N_{S_0}(S) \setminus S$ with $x^2 \in S$. Set $P_1 = P$, $P_2 = P_1^x$, and
+$H_0 = \langle P_1, P_2 \rangle$. Since $x \in N_H(O_2(H_0))$ and $H_0
+\nsubseteq M$ the maximality of $S$ implies that $O_2(H_0) = 1$; and similarly
+$S \in \mathrm{Syl}_2(N_H(O_2(P_i)))$. Together with (*), (c$_1$) and (c$_2$)
+follow.
+
+\smallskip
+\noindent Now let $P_1^*$ and $P_2^*$ be as in (c$_3$) and let $H^* = \langle P_1^*,
+P_2^* \rangle$ and $T \le S_1 \in \mathrm{Syl}_2(H^*)$. Assume that $J(S_1) \ne
+J(S)$. Then the maximality of $J(S)$ gives $H^* \le M$. Hence (c$_3$) holds.
+\end{proof}
+
+% [p. 28]
+\begin{stm}\label{st:5.2}
+Let $Z_0 = \Omega_1(Z(S_0))$, $B_0 = C_{S_0}(\Omega_1(Z(J(S_0))))$, $C =
+C_H(Z_0)$, and $P \in \mathcal{P}^*(C, S_0)$, and let $K$ be a subgroup of
+$P$. Suppose that the following hold:
+\begin{enumerate}
+\item[(i)] Every 2-local subgroup of $H$ containing $B_0$ is solvable and of
+  characteristic 2 type, and
+\item[(ii)] $K = [K, B_0]$.
+\end{enumerate}
+Then $K$ is subnormal in every 2-local subgroup of $H$ containing $B_0K$.
+\end{stm}
+
+\begin{proof}
+Let $D$ be a 2-subgroup of $H$ which is normalized by $KB_0$. Note that $B_0$ is
+normal in $DB_0$ and by (ii), $K = O^2(K)$. Hence $[D, B_0] \le D \cap B_0$ and
+\disp{[D, KB_0] = [D, \langle B_0^K \rangle] \le \langle (D \cap B_0)^K \rangle \le KB_0.}
+It follows that $D \in N_H(KB_0)$, and $K = O^2(KB_0)$ yields $D \le N_H(K)$. We
+have shown:
+\begin{enumerate}
+\item[(1)] Let $D$ be a 2-subgroup of $H$ and $KB_0 \le N_H(D)$. Then $D \le
+  N_H(K)$.
+\end{enumerate}
+From (1) we get that $K$ is normal in $KO_2(P)$ and from (3.3) that $KO_2(P)$
+is subnormal in $P$. Hence
+\begin{enumerate}
+\item[(2)] $K$ is subnormal in $O^2(P)$.
+\end{enumerate}
+
+\smallskip
+\noindent Assume now that $K$ is a counterexample such that $|K|$ is maximal. Set
+$N = N_H(K)$. By (1) there exists $T \in \mathrm{Syl}_2(N)$ such that
+$O_2(C)B_0 \le T$. Let $g \in H$ such that $T \le S_0^g$. Then $g \in
+N_H(B_0)$ and $Z_0^g \le Z(O_2(C))$. On the other hand, the subnormality of
+$O^2(P)$ in $C$ gives $O_2(O^2(P)) \le O_2(C)$ and by (3.5), $[\Omega_1(Z(O_2(C))),
+O^2(P)] = 1$. Hence $O^2(P) \le C^g$.
+
+\smallskip
+\noindent If $K \ne O^2(P)$, then the maximality of $K$ implies that $O^2(P)$ and
+thus by (2) also $K$ is subnormal in $C^g$. If $K = O^2(P)$, then $S_0 \in
+\mathrm{Syl}_2(N)$ and by (2), $K$ is subnormal in $C$. Hence, we have shown:
+\begin{enumerate}
+\item[(3)] There exists $h \in N_H(B_0)$ such that $S_0^h \cap N \in
+  \mathrm{Syl}_2(N)$ and $K$ is subnormal in $C^h$.
+\end{enumerate}
+
+\smallskip
+\noindent We set $T_0 = S_0^h$ and $\hat{Z}_0 = Z_0^h$, where $h$ and $S_0$ are as
+in (3). Since $K$ is a counterexample there exists a subgroup $M$ such that the
+following hold:
+\begin{enumerate}
+\item[(4)] $C_H(O_2(M)) \le O_2(M)$ and $KB_0 \le M$.
+\item[(5)] $K$ is not subnormal in $M$.
+\item[(6)] $K$ is subnormal in every proper subgroup of $M$ containing
+  $KB_0O_2(M)$.
+\end{enumerate}
+
+\smallskip
+\noindent By (1), $O_2(M) \le N$ and thus by (3), $O_2(M)B_0 \le T_0^g$ for some $g
+\in N$. Then $B_0^g = B_0$ and we may assume that $T_0 = T_0^g$. Now (4) implies
+that $\hat{Z}_0 \le Z(O_2(M))$.
+
+% [p. 29]
+\noindent Let $V = \langle \hat{Z}_0^M \rangle$ and $C_0 = C_M(V)$. If $K \le C_0$,
+then by (3), $K$ is subnormal in $C_0$ since $C_0 \le C^h$, and thus $K$ is
+subnormal in $M$ which contradicts (5).
+
+\smallskip
+\noindent Suppose that $O_2(K) \le C_0$. Then $[V, K] \le Z(O_2(K))$ by (1) and thus
+$[Z(O_2(K)), K] \ne 1$ since $K \nleq C_0$. This contradicts (3.5). We have
+shown:
+\begin{enumerate}
+\item[(7)] $O_2(K) \nleq C_0$.
+\end{enumerate}
+
+\smallskip
+\noindent Let $\bar{M} = M/C_0$ and $\bar{W} = O_2(\bar{M})$. Then as above in the
+proof of (1), $[\bar{W}, \bar{B}_0] \le \bar{W} \cap \bar{B}_0$ and $\bar{W} \le
+N_{\bar{M}}(\bar{K})$, i.e., $W \le N_M(KC_0)$. On the other hand, $K$ is
+subnormal in $KC_0$ and thus $O_2(K) \le O_2(KC_0)$. Hence
+\disp{O_2(K) \cap W \le O_2(W) \le O_2(M) \le C_0.}
+Since $K/O_2(K)$ is a $p$-subgroup we get that $[\bar{W}, \bar{K}] = O_2(\bar{K})
+\cap \bar{W} = 1$. In particular,
+\disp{[O_2(F(\bar{M})), O_2(\bar{K})] \ne 1}
+by (7). Now (6) implies that $\bar{M} = O_2(F(\bar{M}))K\bar{B}_0$ and $\bar{W} \le
+\bar{T}_0 \cap \bar{M}$. The definition of $\bar{V}$ implies that $\bar{W} =
+1$. Since by (7), $V \nleq Z(B_0)$ we get $J(\bar{T}_0) \nleq C_0$. Hence
+(2.2) gives $\bar{K} \le O_3(\bar{M})$ and $O_2(\bar{K}) = 1$, a contradiction
+to (7).
+\end{proof}
+
+\smallskip
+\noindent We now have set the stage for the amalgam method, which will deal with
+a triple $(P_1, P_2, S)$ as in (5.1). In case (5.1)(c), $P_1$ and $P_2$ need
+not be solvable or of characteristic 2 type. To get these properties we will
+make a further hypothesis which will be used in most of the following sections.
+
+\medskip
+\noindent\textsc{Hypothesis 2.} \quad Hypothesis 1 holds, $S$, $P_1$, and $P_2$ are as in
+(5.1), and $B = C_S(\Omega_1(Z(J(S))))$. In addition:
+\begin{enumerate}
+\item[(iii)] Every 2-local subgroup of $H$ containing $B$ is solvable and of
+  characteristic 2 type.
+\end{enumerate}
+
+\begin{stm}\label{st:5.3}
+Assume Hypothesis 2. Then $P_1$ and $P_2$ are solvable and of characteristic 2
+type.
+\end{stm}
+
+\begin{proof}
+Let $N = N_H(O_2(P_i))$. By (5.1), $S \in \mathrm{Syl}_2(N)$, and by Hypothesis
+2, $N$ is solvable and of characteristic 2 type.
+\end{proof}
+
+\begin{stm}\label{st:5.4}
+Assume Hypothesis 2. Let $B \le T \le S$, $F_1, F_2 \in \mathcal{P}(T)$, and
+$H_0 = \langle F_1, F_2 \rangle$, and let $M$ be a maximal 2-local subgroup of
+$H$ containing $S_0$. Suppose that $O_2(H_0) \ne 1$ and either $S = S_0$ or
+$H_0 \nleq M$. Then $\Omega_1(Z(S)) \le O_2(H_0)$.
+\end{stm}
+
+\begin{proof}
+Let $T_0 = T \cap O_2(H_0)$, $N = N_H(T_0)$, and $T \le S_1 \in
+\mathrm{Syl}_2(H_0)$. If $S = S_0$, then obviously $J(S) = J(S_1)$; and if $S
+\ne S_0$, then (5.1)(c) shows
+\end{proof}
+
+%% CONTINUE %%
+\end{document}

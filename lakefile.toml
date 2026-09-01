@@ -49,3 +49,6 @@ name = "Glauberman"
 
 [[lean_lib]]
 name = "BaerSuzuki"
+
+[[lean_lib]]
+name = "Stellmacher"

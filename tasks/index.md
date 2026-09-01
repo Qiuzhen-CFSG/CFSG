@@ -2,16 +2,14 @@
 
 Global orchestrator board. Each task or cohesive milestone has a card
 `tasks/<slug>.md`; a task may own several related declarations and modules.
-This file holds only cross-task state: the target table, the dependency DAG,
-global lessons, and authoritative validation.
 
 ## Targets
 
-- `ClassFunction performance cleanup` — done — task: `tasks/optimize-benderglauberman-classfunction.md` — modules: `BenderGlauberman/ClassFunction.lean`
+- `Stellmacher.theorem_two` statement cluster — done — task: `tasks/stellmacher-theorem-two.md` — modules: `Stellmacher.FinalTheorem`
 
 ## Dependency DAG
 
-- `ClassFunction performance cleanup` → `Theory.Character`, `Theory.Representation.RepEquiv`
+- `Stellmacher.theorem_two` → `Stellmacher.IsNTwoGroup`, `Stellmacher.IsOfExceptionalType`, `Stellmacher.IsSemidihedralGroup`
 
 ## Global lessons
 
@@ -23,8 +21,8 @@ global lessons, and authoritative validation.
 
 ## Validation
 
-- Authoritative build: `(2026-09-01T06:52:28Z) lake build` passed; `lake build BenderGlauberman` and targeted dependents also passed.
-- Sorry inventory: `(2026-09-01T06:52:28Z) clean for `BenderGlauberman/ClassFunction.lean`; all exported axiom checks passed with only `{propext, Classical.choice, Quot.sound}`.
+- Authoritative build: `lake build Stellmacher` succeeded at 2026-09-01T11:08:19Z.
+- Sorry inventory: exactly the requested proof of `Stellmacher.theorem_two` is `sorry` in `Stellmacher/FinalTheorem.lean`; no `admit`, `axiom`, or `opaque` occurs there.
 
 ## Legacy
 
