@@ -35,14 +35,14 @@ private theorem primeRank_le_card {R : Type*} [Group R] [Finite R] (q : ℕ) :
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le (le_trans (generatorRank_le_card_local (H := A)) (Subgroup.card_le_card_group A))
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
     have hSet :
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} =
           ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 private theorem exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
@@ -68,7 +68,7 @@ private theorem exists_pSubgroup_three_le_generatorRank_of_two_lt_groupRank
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

@@ -107,7 +107,7 @@ private theorem section10_exists_pSubgroup_two_le_generatorRank_of_two_le_primeR
     {n : ℕ | ∃ A : Subgroup R, IsPGroup p A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hrank' : 1 < sSup T := by
-    exact lt_of_lt_of_le (by decide : 1 < 2) (by simpa [primeRank, T] using hrank)
+    exact lt_of_lt_of_le (by decide : 1 < 2) (by simpa [primeRank_eq_sSup_generatorRank, T] using hrank)
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

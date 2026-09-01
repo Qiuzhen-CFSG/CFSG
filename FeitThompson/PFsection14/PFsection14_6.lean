@@ -753,7 +753,7 @@ public theorem section14_groupRank_le_two_of_injective_to_fin_two_cyclic
   · intro n hn
     rcases hn with ⟨q, _hq, hnq⟩
     have hprimeRank_le : primeRank q A ≤ 2 := by
-      rw [primeRank]
+      rw [primeRank_eq_sSup_generatorRank]
       refine csSup_le ?_ ?_
       · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := A), inferInstance, Nat.zero_le _⟩
       · intro m hm

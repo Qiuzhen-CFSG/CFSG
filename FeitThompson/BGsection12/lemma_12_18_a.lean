@@ -77,7 +77,7 @@ private theorem section12_exists_pSubgroup_three_le_generatorRank_of_three_le_pr
     {n : ℕ | ∃ A : Subgroup R, IsPGroup p A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hrank' : 2 < sSup T := by
-    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank, T] using hrank)
+    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank_eq_sSup_generatorRank, T] using hrank)
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -254,7 +254,7 @@ private theorem section12_malpha_sylow_groupRank_ge_three_of_mem_alpha
   have hAαgen : 3 ≤ generatorRank Aα := by
     simpa [hAα_gen_eq, hAG_gen_eq] using hAgen
   have hprimeRank_malpha : 3 ≤ primeRank r.val (section10Malpha M) := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card (section10Malpha M), ?_⟩
       intro n hn
@@ -1271,7 +1271,7 @@ private theorem section12_primeRank_le_card_current
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans <|
       (section8_generatorRank_le_natCard A).trans (Subgroup.card_le_card_group A)
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
@@ -1279,7 +1279,7 @@ private theorem section12_primeRank_le_card_current
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 omit [IsMinCE G] in

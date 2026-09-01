@@ -1569,7 +1569,7 @@ private theorem section11_primeRank_at_least_two_of_rank_two_subgroup
   have hBsub_comm : IsMulCommutative Bsub := by
     let : IsElementaryAbelian q.val Bsub := hBsub_elem
     exact hBsub_elem.toIsMulCommutative
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card M, ?_⟩
     intro n hn

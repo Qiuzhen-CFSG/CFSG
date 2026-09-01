@@ -95,7 +95,7 @@ private theorem section10_generatorRank_le_primeRank_of_isPGroup_local
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact le_of_eq (Group.rank_congr (Subgroup.topEquiv : (⊤ : Subgroup R) ≃* R)).symm
   have hmem : generatorRank R ∈ T := ⟨⊤, htop_p, htop_comm, hgen_le_top⟩
-  simpa [primeRank, T] using (le_csSup hTbdd hmem)
+  simpa [primeRank_eq_sSup_generatorRank, T] using (le_csSup hTbdd hmem)
 
 omit [Group G] [Finite G] [IsMinCE G] in
 public theorem section10_groupRank_le_primeRank_of_isPGroup_local
@@ -136,12 +136,12 @@ public theorem section10_groupRank_le_primeRank_of_isPGroup_local
           (section10_generatorRank_le_primeRank_of_isPGroup_local
               (R := A) (p := p) hAp hAcomm).trans
             (by simpa using section8_primeRank_le_of_subgroup (G := R) A p)
-        rw [primeRank]
+        rw [primeRank_eq_sSup_generatorRank]
         exact hsT_le.trans hgen_le_p
       · have hTempty :
           {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
               n ≤ generatorRank A} = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
-        rw [primeRank, hTempty]
+        rw [primeRank_eq_sSup_generatorRank, hTempty]
         simp
     rw [groupRank]
     exact hsSup_le.trans hqrank_le

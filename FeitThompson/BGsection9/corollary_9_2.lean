@@ -30,7 +30,7 @@ public theorem section9_c92_generatorRank_le_natCard
 public theorem section9_c92_primeRank_le_natCard
     {p : ℕ} (R : Type*) [Group R] [Finite R] :
     primeRank p R ≤ Nat.card R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -61,7 +61,7 @@ private theorem section9_c92_exists_pSubgroup_two_le_generatorRank_of_two_le_gro
   let T : Set ℕ :=
     {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

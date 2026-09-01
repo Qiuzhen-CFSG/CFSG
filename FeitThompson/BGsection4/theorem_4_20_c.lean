@@ -447,7 +447,7 @@ private theorem primeRank_le_of_pSubgroups_map_le
         {n : ℕ | ∃ B : Subgroup K, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B} :=
       ⟨B, hBq, hBcomm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q K := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove {n : ℕ | ∃ B : Subgroup K, IsPGroup q B ∧ IsMulCommutative B ∧
             n ≤ generatorRank B} from
           ⟨Nat.card K, by
@@ -456,13 +456,13 @@ private theorem primeRank_le_of_pSubgroups_map_le
             exact le_trans hnB (le_trans (generatorRank_le_card (G := B))
               (Subgroup.card_le_card_group B))⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup H, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 private theorem primeRank_comap_pPrimeCore_le_ker

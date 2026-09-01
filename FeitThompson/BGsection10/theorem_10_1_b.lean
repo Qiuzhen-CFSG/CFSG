@@ -1161,7 +1161,7 @@ public theorem section10_generatorRank_le_natCard_pre
 public theorem section10_primeRank_le_natCard_pre
     {q : ℕ} (H : Type*) [Group H] [Finite H] :
     primeRank q H ≤ Nat.card H := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -1201,21 +1201,21 @@ public theorem section10_primeRank_le_of_equiv_pre
           n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      rw [primeRank]
+      rw [primeRank_eq_sSup_generatorRank]
       refine le_csSup ?_ hmem
       refine ⟨Nat.card R, ?_⟩
       intro n hn
       rcases hn with ⟨B, _hBq, _hBcomm, hnB⟩
       exact hnB.trans <| (section10_generatorRank_le_natCard_pre B).trans
         (Subgroup.card_le_card_group B)
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 public theorem section10_groupRank_le_of_equiv_pre
@@ -1263,7 +1263,7 @@ public theorem section10_generatorRank_le_groupRank_of_subgroup_pre
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : generatorRank A ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -1285,7 +1285,7 @@ public theorem section10_primeRank_le_groupRank_sylow_pre
     primeRank p.val G ≤ groupRank (S : Subgroup G) := by
   classical
   have : Fact p.val.Prime := ⟨p.property⟩
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn

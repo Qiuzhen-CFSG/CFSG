@@ -13,7 +13,7 @@ public theorem groupRank_le_one_of_isCyclic
   have hprimeRank_le_one :
       ∀ q : ℕ, Nat.Prime q → primeRank q G ≤ 1 := by
     intro q hq
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
@@ -44,7 +44,7 @@ public theorem generatorRank_le_natCard
 public theorem primeRank_le_natCard
     {p : ℕ} (G : Type*) [Group G] [Finite G] :
     primeRank p G ≤ Nat.card G := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -55,7 +55,7 @@ private theorem primeRank_top_subgroup_eq
     (q : ℕ) (G : Type*) [Group G] [Finite G] :
     primeRank q (⊤ : Subgroup G) = primeRank q G := by
   classical
-  rw [primeRank, primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   apply le_antisymm
   · refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := (⊤ : Subgroup G)), inferInstance,
@@ -126,7 +126,7 @@ public theorem groupRank_at_least_three_of_elementaryAbelian_subgroup_card_p3'
   have hBgrank : 3 ≤ generatorRank B :=
     generatorRank_at_least_three_of_elementaryAbelian_card_p3 (p := p) (A := B) hBcard
   have hBprimeRank : 3 ≤ primeRank p G := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card G, ?_⟩
       intro n hn

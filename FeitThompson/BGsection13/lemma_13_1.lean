@@ -700,7 +700,7 @@ public theorem section13_generatorRank_le_primeRank_of_subgroup
     {R : Type*} [Group R] [Finite R] {q : ℕ} {A : Subgroup R}
     (hAp : IsPGroup q A) (hAcomm : IsMulCommutative A) :
     generatorRank A ≤ primeRank q R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card R, ?_⟩
     intro n hn

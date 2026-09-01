@@ -116,7 +116,7 @@ public theorem section9_c94_primeRank_at_least_three_of_generatorRank_subgroup
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card K, ?_⟩
     intro n hn

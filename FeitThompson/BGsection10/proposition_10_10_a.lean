@@ -108,7 +108,7 @@ public theorem section10_groupRank_at_least_two_of_generatorRank_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : 2 ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn

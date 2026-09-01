@@ -93,7 +93,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     generatorRank G ≤ groupRank G := by
   have hprimeRank_le_natCard : ∀ q : ℕ, primeRank q G ≤ Nat.card G := by
     intro q
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn
@@ -103,7 +103,7 @@ public theorem generatorRank_le_groupRank_of_commutative_pgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr Subgroup.topEquiv
   have hprimeRank : generatorRank G ≤ primeRank p G := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · exact ⟨Nat.card G, fun n hn => by
         rcases hn with ⟨A, _hAp, _hAcomm, hnA⟩

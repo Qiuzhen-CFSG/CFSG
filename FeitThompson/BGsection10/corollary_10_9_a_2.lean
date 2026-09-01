@@ -65,7 +65,7 @@ private theorem section10_msigma_sylow_groupRank_ge_three_of_mem_alpha
   have hAσgen : 3 ≤ generatorRank Aσ := by
     simpa [hAσ_gen_eq, hAG_gen_eq] using hAgen
   have hprimeRank_msigma : 3 ≤ primeRank p.val (section10Msigma M) := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card (section10Msigma M), ?_⟩
       intro n hn

@@ -31,6 +31,8 @@ public import Theory.GroupAction.Quotient
 public import Theory.PGL2.Defs
 public import Theory.PGroup
 public import Theory.PSL2.Defs
+public import Theory.PrimeRank
+public import Theory.Quasithin
 public import Theory.Representation
 public import Theory.Representation.AbsolutelyIrreducible
 public import Theory.Representation.Clifford

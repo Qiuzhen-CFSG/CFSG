@@ -257,7 +257,7 @@ public theorem section10_exists_pSubgroup_two_le_generatorRank_of_two_le_groupRa
     {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

@@ -594,7 +594,7 @@ public theorem section10_malpha_sylow_groupRank_ge_three_of_mem_alpha_early
   have hAαgen : 3 ≤ generatorRank Aα := by
     simpa [hAα_gen_eq, hAG_gen_eq] using hAgen
   have hprimeRank_malpha : 3 ≤ primeRank p.val (section10Malpha M) := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card (section10Malpha M), ?_⟩
       intro n hn

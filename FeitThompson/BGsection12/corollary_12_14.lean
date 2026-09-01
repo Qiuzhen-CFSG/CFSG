@@ -82,7 +82,7 @@ private theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_local
     {p : Nat.Primes} (hpσ : p ∈ section10SigmaPrimes M) :
     primeRank p.val M ≤ primeRank p.val (section10Msigma M) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, Nat.zero_le _⟩
   · intro n hn

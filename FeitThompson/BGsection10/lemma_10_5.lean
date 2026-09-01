@@ -65,7 +65,7 @@ private theorem section10_two_le_primeRank_of_elementaryAbelian_card_p_sq_pre
   have hAgen : 2 ≤ generatorRank A :=
     section10_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq_pre
       (p := p) (A := A) hAcard
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card R, ?_⟩
     intro n hn

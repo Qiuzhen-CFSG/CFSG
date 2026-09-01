@@ -162,13 +162,13 @@ private theorem primeRank_le_card {R : Type*} [Group R] [Finite R] (q : ℕ) :
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le (le_trans (generatorRank_le_card (G := A)) (Subgroup.card_le_card_group A))
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
     have hSet :
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} = ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 public theorem primeRank_le_groupRank {R : Type*} [Group R] [Finite R] {q : ℕ}
@@ -196,7 +196,7 @@ public theorem generatorRank_le_groupRank_of_isPGroup_abelian_subgroup
     exact le_trans hnB (le_trans (generatorRank_le_card (G := B)) (Subgroup.card_le_card_group B))
   have hmem : generatorRank A ∈ T := ⟨A, hAq, hAcomm, le_rfl⟩
   have hprimeRank : generatorRank A ≤ primeRank q R := by
-    simpa [primeRank, T] using (le_csSup hTbdd hmem)
+    simpa [primeRank_eq_sSup_generatorRank, T] using (le_csSup hTbdd hmem)
   exact hprimeRank.trans (primeRank_le_groupRank (R := R) (q := q) Fact.out)
 
 public theorem generatorRank_le_of_equiv {G H : Type*} [Group G] [Finite G] [Group H]
@@ -233,7 +233,7 @@ public theorem primeRank_le_of_subgroup {R : Type*} [Group R] [Finite R] (S : Su
         {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧
             n ≤ generatorRank B} from
           ⟨Nat.card R, by
@@ -242,13 +242,13 @@ public theorem primeRank_le_of_subgroup {R : Type*} [Group R] [Finite R] (S : Su
             exact le_trans hnB (le_trans (generatorRank_le_card (G := B))
               (Subgroup.card_le_card_group B))⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 
@@ -300,7 +300,7 @@ private theorem primeRank_le_of_equiv {R S : Type*} [Group R] [Finite R] [Group 
         {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧
             n ≤ generatorRank B} from
           ⟨Nat.card R, by
@@ -309,13 +309,13 @@ private theorem primeRank_le_of_equiv {R S : Type*} [Group R] [Finite R] [Group 
             exact le_trans hnB (le_trans (generatorRank_le_card (G := B))
               (Subgroup.card_le_card_group B))⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact le_trans hsSup_le hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 public theorem groupRank_le_of_equiv {R S : Type*} [Group R] [Finite R] [Group S] [Finite S]
@@ -360,7 +360,7 @@ private theorem generatorRank_le_primeRank_of_isPGroup
   have hgen_le_top : generatorRank R ≤ generatorRank (⊤ : Subgroup R) := by
     exact generatorRank_le_of_equiv (G := (⊤ : Subgroup R)) (H := R) Subgroup.topEquiv
   have hmem : generatorRank R ∈ T := ⟨⊤, htop_p, htop_comm, hgen_le_top⟩
-  simpa [primeRank, T] using (le_csSup hTbdd hmem)
+  simpa [primeRank_eq_sSup_generatorRank, T] using (le_csSup hTbdd hmem)
 
 
 private theorem groupRank_le_primeRank_of_isPGroup
@@ -400,12 +400,12 @@ private theorem groupRank_le_primeRank_of_isPGroup
         have hgen_le_p : generatorRank A ≤ primeRank p R :=
           generatorRank_le_primeRank_of_isPGroup (R := A) (p := p) hAp hAcomm |>.trans
             (primeRank_le_of_subgroup (R := R) (S := A) p)
-        rw [primeRank]
+        rw [primeRank_eq_sSup_generatorRank]
         exact le_trans hsT_le hgen_le_p
       · have hTempty :
           {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
               n ≤ generatorRank A} = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
-        rw [primeRank, hTempty]
+        rw [primeRank_eq_sSup_generatorRank, hTempty]
         simp
     rw [groupRank]
     exact le_trans hsSup_le hqrank_le
@@ -444,7 +444,7 @@ private theorem exists_abelian_subgroup_three_le_generatorRank_of_two_lt_groupRa
   let T : Set ℕ :=
     {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧ n ≤ generatorRank A}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -479,7 +479,7 @@ private theorem three_le_groupRank_of_mem_selfCentralizingAbelianSubgroupsAtLeas
     have hmem :
         3 ∈ S :=
       ⟨A, hRp.to_subgroup A, hAcomm, hA.2⟩
-    simpa [primeRank, S] using (le_csSup hSbdd hmem)
+    simpa [primeRank_eq_sSup_generatorRank, S] using (le_csSup hSbdd hmem)
   have hmem :
       primeRank p R ∈ {n : ℕ | ∃ q : ℕ, Nat.Prime q ∧ n ≤ primeRank q R} :=
     ⟨p, Fact.out, le_rfl⟩
@@ -1257,7 +1257,7 @@ public theorem groupRank_le_generatorRank_of_commutative_pgroup
   · exact ⟨0, p, Fact.out, Nat.zero_le _⟩
   · intro n hn
     rcases hn with ⟨q, hq, hnq⟩
-    rw [primeRank] at hnq
+    rw [primeRank_eq_sSup_generatorRank] at hnq
     refine hnq.trans ?_
     refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩

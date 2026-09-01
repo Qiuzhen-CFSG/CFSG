@@ -24,7 +24,7 @@ public theorem section9_c93_exists_pSubgroup_three_le_generatorRank_of_three_le_
   let T : Set ℕ :=
     {n : ℕ | ∃ A : Subgroup R, IsPGroup p A ∧ IsMulCommutative A ∧ n ≤ generatorRank A}
   have hrank' : 2 < sSup T := by
-    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank, T] using hrank)
+    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank_eq_sSup_generatorRank, T] using hrank)
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -56,7 +56,7 @@ public theorem section9_c93_groupRank_at_least_two_of_generatorRank_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : 2 ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -83,7 +83,7 @@ private theorem section9_c93_groupRank_at_least_two_of_noncyclic_pgroup
   have hEgen : 2 ≤ generatorRank E :=
     section9_c92_generatorRank_at_least_two_of_elementaryAbelian_card_p_sq (p := p) hEcard
   have hprank : 2 ≤ primeRank p R := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card R, ?_⟩
       intro n hn

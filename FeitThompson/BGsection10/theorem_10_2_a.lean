@@ -554,21 +554,21 @@ public theorem section10_primeRank_quotient_piCore_le_of_not_mem
           n ≤ generatorRank B} :=
       ⟨B, hBp, hBcomm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank p.val H := by
-      rw [primeRank]
+      rw [primeRank_eq_sSup_generatorRank]
       refine le_csSup ?_ hmem
       refine ⟨Nat.card H, ?_⟩
       intro n hn
       rcases hn with ⟨B, _hBp, _hBcomm, hnB⟩
       exact hnB.trans <|
         (section10_generatorRank_le_natCard_pre B).trans (Subgroup.card_le_card_group B)
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup (H ⧸ piCore π H), IsPGroup p.val A ∧
           IsMulCommutative A ∧ n ≤ generatorRank A} = ∅ := by
       simpa [T, Q, N₀] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 omit [IsMinCE G] in
@@ -579,7 +579,7 @@ public theorem section10_exists_pSubgroup_three_le_generatorRank_of_three_le_pri
     {n : ℕ | ∃ A : Subgroup R, IsPGroup p A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hrank' : 2 < sSup T := by
-    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank, T] using hrank)
+    exact lt_of_lt_of_le (by decide : 2 < 3) (by simpa [primeRank_eq_sSup_generatorRank, T] using hrank)
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

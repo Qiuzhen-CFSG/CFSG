@@ -77,7 +77,7 @@ public theorem lemma_5_2_b
     have hprimeRank_le_one :
         ∀ q : ℕ, Nat.Prime q → primeRank q R ≤ 1 := by
       intro q hq
-      rw [primeRank]
+      rw [primeRank_eq_sSup_generatorRank]
       refine csSup_le ?_ ?_
       · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, zero_le⟩
       intro n hn

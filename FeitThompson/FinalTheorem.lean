@@ -1048,7 +1048,7 @@ public theorem primeRank_le_one_of_cyclic_sylow_for_final
     {p : ℕ} {R : Type*} [Group R] [Finite R] [Fact p.Prime]
     (S : Sylow p R) (hS_cyc : IsCyclic (S : Subgroup R)) :
     primeRank p R ≤ 1 := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · letI : IsCyclic (S : Subgroup R) := hS_cyc
     refine ⟨0, ?_⟩

@@ -80,7 +80,7 @@ public theorem section12_groupRank_at_least_two_of_generatorRank_subgroup_pre
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : 2 ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -111,7 +111,7 @@ public theorem section12_generatorRank_le_groupRank_of_subgroup_pre
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : generatorRank A ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -422,7 +422,7 @@ public theorem section12_primeRank_le_groupRank_of_normal_hall_pre
     primeRank p.val R ≤ groupRank H := by
   classical
   have : Fact p.val.Prime := ⟨p.2⟩
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -439,7 +439,7 @@ public theorem section12_primeRank_le_primeRank_of_normal_hall_ambient_pre
     {p : Nat.Primes} (hpσ : p ∈ section10SigmaPrimes M) :
     primeRank p.val M ≤ primeRank p.val (section10Msigma M) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := M), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -496,7 +496,7 @@ public theorem section12_primeRank_le_groupRank_sylow_pre
     primeRank p.val G ≤ groupRank (S : Subgroup G) := by
   classical
   have : Fact p.val.Prime := ⟨p.property⟩
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p.val) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn

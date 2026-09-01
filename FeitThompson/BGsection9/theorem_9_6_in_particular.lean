@@ -46,7 +46,7 @@ private theorem section9_groupRank_at_least_two_of_elementaryAbelian_card_p_sq
       exact Group.rank_congr Subgroup.topEquiv
     simpa [htop_gen_eq] using hgen
   have hp_rank : 2 ≤ primeRank p A := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card A, ?_⟩
       intro n hn

@@ -119,7 +119,7 @@ variable {G : Type*} [Group G] [Finite G] [IsMinCE G]
 omit [IsMinCE G] in
 public theorem section12_primeRank_le_card {R : Type*} [Group R] [Finite R] (q : ℕ) :
     primeRank q R ≤ Nat.card R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := R), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -177,7 +177,7 @@ public theorem section12_primeRank_le_of_equiv {R S : Type*} [Group R] [Finite R
           n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove
             {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧
               n ≤ generatorRank B} from
@@ -188,14 +188,14 @@ public theorem section12_primeRank_le_of_equiv {R S : Type*} [Group R] [Finite R
               (section8_generatorRank_le_natCard B).trans
                 (Subgroup.card_le_card_group B)⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 omit [IsMinCE G] in
@@ -206,7 +206,7 @@ public theorem section12_exists_pSubgroup_two_le_generatorRank_of_two_le_primeRa
     {n : ℕ | ∃ A : Subgroup R, IsPGroup p A ∧ IsMulCommutative A ∧
       n ≤ generatorRank A}
   have hrank' : 1 < sSup T := by
-    exact lt_of_lt_of_le (by decide : 1 < 2) (by simpa [primeRank, T] using hrank)
+    exact lt_of_lt_of_le (by decide : 1 < 2) (by simpa [primeRank_eq_sSup_generatorRank, T] using hrank)
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -555,7 +555,7 @@ public theorem section12_generatorRank_le_primeRank_of_subgroup
     {R : Type*} [Group R] [Finite R] {q : ℕ} {A : Subgroup R}
     (hAp : IsPGroup q A) (hAcomm : IsMulCommutative A) :
     generatorRank A ≤ primeRank q R := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -1183,7 +1183,7 @@ private theorem section12_prime_dvd_card_of_primeRank_pos
   rcases hSup_mem with ⟨A, hAp, _hAcomm, hAgen⟩
   have hAgen_pos : 0 < generatorRank A := by
     have hSup_pos : 0 < sSup T := by
-      simpa [primeRank, T] using hpos
+      simpa [primeRank_eq_sSup_generatorRank, T] using hpos
     exact lt_of_lt_of_le hSup_pos hAgen
   have hAnontrivial : Nontrivial A := by
     rw [← not_subsingleton_iff_nontrivial]

@@ -1047,7 +1047,7 @@ public theorem section14_primeRank_le_of_equiv
           n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove
             {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧
               n ≤ generatorRank B} from
@@ -1058,14 +1058,14 @@ public theorem section14_primeRank_le_of_equiv
               (section8_generatorRank_le_natCard B).trans
                 (Subgroup.card_le_card_group B)⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 public theorem section14_hall_kappa_isZGroup
@@ -1627,7 +1627,11 @@ public theorem section14_prime_dvd_card_of_primeRank_pos
         {n : ℕ | ∃ A : Subgroup R, IsPGroup p.val A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} :=
     Nat.sSup_mem hTnonempty hTbdd
-  rcases (by simpa [primeRank] using hsSup_mem) with ⟨A, hAp, _hAcomm, hgen⟩
+  rcases (by simpa [primeRank_eq_sSup_generatorRank] using hsSup_mem) with ⟨A, hAp, _hAcomm, hgen⟩
+  have hpos_sSup :
+      1 ≤ sSup {n : ℕ | ∃ A : Subgroup R,
+        IsPGroup p.val A ∧ IsMulCommutative A ∧ n ≤ generatorRank A} := by
+    simpa [primeRank_eq_sSup_generatorRank] using hpos
   have hAne : A ≠ ⊥ := by
     intro hAbot
     have hAle0 : generatorRank A ≤ 0 := by
@@ -1647,7 +1651,7 @@ public theorem section14_prime_dvd_card_of_primeRank_pos
       exact_mod_cast
         (Group.rank_le (G := A) (S := (∅ : Finset A)) (by
           simpa using hclosure_empty))
-    have hAgen_pos : 1 ≤ generatorRank A := hpos.trans hgen
+    have hAgen_pos : 1 ≤ generatorRank A := hpos_sSup.trans hgen
     omega
   haveI : Nontrivial A := (Subgroup.nontrivial_iff_ne_bot (H := A)).2 hAne
   have hpA : p.val ∣ Nat.card A :=

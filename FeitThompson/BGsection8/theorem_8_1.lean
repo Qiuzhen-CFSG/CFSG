@@ -1568,7 +1568,7 @@ public theorem section8_primeRank_le_of_subgroup
     [Finite G] (S : Subgroup G) (q : ℕ) :
     primeRank q S ≤ primeRank q G := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := S), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -1597,7 +1597,7 @@ public theorem section8_groupRank_le_of_subgroup
   classical
   have hprimeRank_le_natCard : ∀ q : ℕ, primeRank q G ≤ Nat.card G := by
     intro q
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine csSup_le ?_ ?_
     · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := G), inferInstance, Nat.zero_le _⟩
     · intro n hn

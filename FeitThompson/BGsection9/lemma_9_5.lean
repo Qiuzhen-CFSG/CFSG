@@ -1484,7 +1484,7 @@ private theorem section9_c95_primeRank_le_card
   by_cases hS : S.Nonempty
   · have hsSup_mem : sSup S ∈ S := Nat.sSup_mem hS hSbdd
     rcases hsSup_mem with ⟨A, _hAq, _hAcomm, hsSup_le⟩
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans
       ((section9_c95_generatorRank_le_card A).trans (Subgroup.card_le_card_group A))
   · have hSempty : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
@@ -1492,7 +1492,7 @@ private theorem section9_c95_primeRank_le_card
         {n : ℕ | ∃ A : Subgroup R, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [S] using hSempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 omit [IsMinCE G] in
@@ -1542,7 +1542,7 @@ private theorem section9_c95_primeRank_le_of_equiv
         {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B} :=
       ⟨A', hA'q, hA'comm, hgen_le⟩
     have hprimeRank : generatorRank A ≤ primeRank q R := by
-      simpa [primeRank] using le_csSup
+      simpa [primeRank_eq_sSup_generatorRank] using le_csSup
         (show BddAbove {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧
             n ≤ generatorRank B} from
           ⟨Nat.card R, by
@@ -1551,14 +1551,14 @@ private theorem section9_c95_primeRank_le_of_equiv
             exact hnB.trans ((section9_c95_generatorRank_le_card B).trans
               (Subgroup.card_le_card_group B))⟩)
         hmem
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     exact hsSup_le.trans hprimeRank
   · have hTempty : T = ∅ := Set.not_nonempty_iff_eq_empty.mp hT
     have hSet :
         {n : ℕ | ∃ A : Subgroup S, IsPGroup q A ∧ IsMulCommutative A ∧
           n ≤ generatorRank A} = ∅ := by
       simpa [T] using hTempty
-    rw [primeRank, hSet]
+    rw [primeRank_eq_sSup_generatorRank, hSet]
     simp
 
 omit [IsMinCE G] in

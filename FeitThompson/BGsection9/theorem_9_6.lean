@@ -30,7 +30,7 @@ private theorem section9_generatorRank_le_natCard
 private theorem section9_primeRank_le_natCard
     {p : ℕ} (G : Type*) [Group G] [Finite G] :
     primeRank p G ≤ Nat.card G := by
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -52,7 +52,7 @@ private theorem section9_primeRank_at_least_three_of_generatorRank_subgroup
   have hgen_eq : generatorRank A' = generatorRank A := by
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine le_csSup ?_ ?_
   · refine ⟨Nat.card K, ?_⟩
     intro n hn
@@ -83,7 +83,7 @@ private theorem section9_exists_pSubgroup_three_le_generatorRank_of_three_le_gro
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 2 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn
@@ -121,7 +121,7 @@ private theorem section9_exists_pSubgroup_two_le_generatorRank_of_two_le_groupRa
   let T : Set ℕ :=
     {n : ℕ | ∃ B : Subgroup R, IsPGroup q B ∧ IsMulCommutative B ∧ n ≤ generatorRank B}
   have hqrank' : 1 < sSup T := by
-    simpa [primeRank, T] using hqrank
+    simpa [primeRank_eq_sSup_generatorRank, T] using hqrank
   have hTbdd : BddAbove T := by
     refine ⟨Nat.card R, ?_⟩
     intro n hn

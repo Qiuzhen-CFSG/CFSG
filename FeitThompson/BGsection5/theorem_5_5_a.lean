@@ -193,7 +193,7 @@ public theorem groupRank_at_least_three_of_generatorRank_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : 3 ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -223,7 +223,7 @@ private theorem generatorRank_le_groupRank_of_subgroup
     rw [generatorRank_eq_group_rank, generatorRank_eq_group_rank]
     exact Group.rank_congr (Subgroup.subgroupOfEquivOfLe (H := A) (K := K) hAK)
   have hqrankK : generatorRank A ≤ primeRank q K := by
-    rw [primeRank]
+    rw [primeRank_eq_sSup_generatorRank]
     refine le_csSup ?_ ?_
     · refine ⟨Nat.card K, ?_⟩
       intro n hn
@@ -244,7 +244,7 @@ private theorem primeRank_le_primeRank_of_subgroup
     (hHK : H ≤ K) :
     primeRank q H ≤ primeRank q K := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank, primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := H), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -324,7 +324,7 @@ private theorem primeRank_le_groupRank_sylow
     {G : Type*} [Group G] [Finite G] (S : Sylow p G) :
     primeRank p G ≤ groupRank (S : Subgroup G) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := p) (G := G), inferInstance, Nat.zero_le _⟩
   · intro n hn
@@ -369,7 +369,7 @@ public theorem primeRank_fitting_le_groupRank_pCore
     {G : Type*} [Group G] [Finite G] {q : ℕ} [Fact q.Prime] :
     primeRank q (fittingSubgroup G) ≤ groupRank (pCore q G) := by
   classical
-  rw [primeRank]
+  rw [primeRank_eq_sSup_generatorRank]
   refine csSup_le ?_ ?_
   · exact ⟨0, ⊥, IsPGroup.of_bot (p := q) (G := fittingSubgroup G), inferInstance,
       Nat.zero_le _⟩
