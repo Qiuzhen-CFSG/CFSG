@@ -1,6 +1,5 @@
 module
 
-import Mathlib.Tactic
 import BenderSuzuki.SE.PStabilityReduction
 public import FeitThompson.PCore.PCore
 

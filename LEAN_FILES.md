@@ -1,4 +1,4 @@
-- [ ] BaerSuzuki/FinalTheorem.lean
+- [x] BaerSuzuki/FinalTheorem.lean
 - [ ] BenderGlauberman/ClassFunction.lean
 - [ ] BenderGlauberman/ClassFunctionHelpers.lean
 - [ ] BenderGlauberman/ClassFunctionProduct.lean
