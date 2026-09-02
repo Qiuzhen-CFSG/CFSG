@@ -65,7 +65,7 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
           simpa using congrArg Subtype.val hypow) (by simp) (by
         intro y z hy hz hypow hzpow
         have hyz_comm : Commute y z := by
-          letI : IsMulCommutative ↥(Subgroup.closure s) :=
+          let : IsMulCommutative ↥(Subgroup.closure s) :=
             Subgroup.isMulCommutative_closure hcomm_s
           show y * z = z * y
           simpa using congrArg Subtype.val

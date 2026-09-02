@@ -24,10 +24,10 @@ public theorem isPGroup_of_prime_order_eq_p [Finite G]
     intro q hq hqd
     have hqd_card : q ∣ Nat.card (Subgroup.zpowers x) := by
       simpa [Nat.card_zpowers] using hqd
-    letI : Fintype (Subgroup.zpowers x) := Fintype.ofFinite (Subgroup.zpowers x)
+    let : Fintype (Subgroup.zpowers x) := Fintype.ofFinite (Subgroup.zpowers x)
     have hqd_card' : q ∣ Fintype.card (Subgroup.zpowers x) := by
       simpa [Nat.card_eq_fintype_card] using hqd_card
-    letI : Fact q.Prime := ⟨hq⟩
+    let : Fact q.Prime := ⟨hq⟩
     obtain ⟨y, hy⟩ :=
       _root_.exists_prime_orderOf_dvd_card (G := Subgroup.zpowers x) q hqd_card'
     have hy' : Nat.Prime (orderOf (y : H)) := by

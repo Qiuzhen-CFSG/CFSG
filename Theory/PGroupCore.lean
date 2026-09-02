@@ -188,7 +188,7 @@ lemma primeFactors_subset (N : Subgroup G) : (Nat.card (↥N)).primeFactors ⊆ 
   Nat.mem_primeFactors.mpr ⟨Nat.prime_of_mem_primeFactors hp, hpdvd, Nat.card_pos.ne'⟩
 
 public theorem isNilpotent_iSup_pCore : Group.IsNilpotent (↥(⨆ (p : (Nat.card G).primeFactors.attach), pCore p.1.1 G)) := by
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   let π := (Nat.card G).primeFactors.attach
   let H : π → Subgroup G := fun p => pCore p.1.1 G
   have hcomm : Pairwise fun (i j : π) => ∀ x y : G, x ∈ H i → y ∈ H j → Commute x y := by
@@ -199,8 +199,8 @@ public theorem isNilpotent_iSup_pCore : Group.IsNilpotent (↥(⨆ (p : (Nat.car
       exact Subtype.ext (Subtype.ext h)
     intro x y hx hy
     exact pCore_commute_of_ne i.1.1 j.1.1 hij' x hx y hy
-  haveI : Fintype π := inferInstance
-  haveI : ∀ i, Fintype (↥(H i)) := by
+  have : Fintype π := inferInstance
+  have : ∀ i, Fintype (↥(H i)) := by
     intro i
     haveI : DecidablePred (· ∈ H i) := Classical.decPred _
     exact Subtype.fintype (fun x : G => x ∈ H i)
@@ -210,8 +210,8 @@ public theorem isNilpotent_iSup_pCore : Group.IsNilpotent (↥(⨆ (p : (Nat.car
       intro h
       apply hij
       exact Subtype.ext (Subtype.ext h)
-    haveI : Finite ↥(H i) := inferInstance
-    haveI : Finite ↥(H j) := inferInstance
+    have : Finite ↥(H i) := inferInstance
+    have : Finite ↥(H j) := inferInstance
     have hcard := IsPGroup.coprime_card_of_ne i.1.1 j.1.1 hij' (H i) (H j) pCore_isPGroup pCore_isPGroup
     rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card]
     exact hcard
@@ -236,7 +236,7 @@ public theorem isNilpotent_iSup_pCore : Group.IsNilpotent (↥(⨆ (p : (Nat.car
     refine ⟨a, Subtype.ext ha⟩
   let e : (∀ i : π, H i) ≃* ↥(⨆ i, H i) :=
     MulEquiv.ofBijective ϕ' ⟨hinj', h_surj'⟩
-  haveI : Group.IsNilpotent (∀ i : π, H i) := by
+  have : Group.IsNilpotent (∀ i : π, H i) := by
     have : ∀ i, Group.IsNilpotent (H i) := by
       intro i
       exact pCore_isPGroup.isNilpotent
@@ -252,7 +252,7 @@ public theorem Sylow.iSup_sylow_eq_top :
   intro p
   by_cases hp : p.Prime
   · by_cases hd : p ∈ (Nat.card G).primeFactors
-    · letI := Fact.mk hp
+    · let := Fact.mk hp
       let P := (default : Sylow p G)
       have hl : P ≤ S := by
         refine le_iSup_of_le p (le_iSup_of_le hd ?_)
@@ -292,7 +292,7 @@ public theorem normal_nilpotent_le_sup_pCore {N : Subgroup G} (hN : N.Normal) (h
   rw [hsup_eq]
   refine iSup₂_le fun p hp => ?_
   have hpG : p ∈ (Nat.card G).primeFactors := primeFactors_subset N hp
-  haveI : Fact (Nat.Prime p) := ⟨Nat.prime_of_mem_primeFactors hp⟩
+  have : Fact (Nat.Prime p) := ⟨Nat.prime_of_mem_primeFactors hp⟩
   have hle1 : ((default : Sylow p (↥N)).map N.subtype) ≤ pCore p G :=
     Sylow.map_le_pCore hN hnil p (default : Sylow p (↥N))
   -- Show pCore p G ≤ ⨆ (p : (Nat.card G).primeFactors.attach), pCore p G.1

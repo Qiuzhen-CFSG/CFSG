@@ -81,7 +81,7 @@ public theorem exists_minimal_normal_isInvariant [Nontrivial G] :
     refine ⟨?_⟩
     intro a g
     simp
-  letI : IsInvariant A G (⊤ : Subgroup G) := htopInv
+  let : IsInvariant A G (⊤ : Subgroup G) := htopInv
   rcases exists_minimal_normal_isInvariant_le (A := A) (G := G) (K := (⊤ : Subgroup G))
     (hK := (by infer_instance : (⊤ : Subgroup G).Normal))
     (hKne := (by simp : (⊤ : Subgroup G) ≠ ⊥)) with
