@@ -1,16 +1,6 @@
 module
 
-public import Mathlib.Algebra.Group.Defs
-public import Mathlib.Algebra.Group.Subgroup.Defs
-public import Mathlib.Data.Bracket
-public import Mathlib.GroupTheory.Commutator.Basic
-
-public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
-public import Theory.GroupAction.Defs
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.Tactic.Basic
-
-import FeitThompson.Commutator.Core
+public import Theory.GroupAction.Invariant
 
 open scoped FixedPoints
 
@@ -18,65 +8,51 @@ section GroupActionDefs
 
 variable {G A : Type*} [Group G] [Group A]
 
+/-- Compatibility alias for the generic invariant-subgroup predicate. -/
+public abbrev IsInvariant
+    (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop :=
+  Theory.GroupAction.IsInvariant A G H
+
+/-- Compatibility alias for the induced action on an invariant subgroup. -/
+public abbrev instMulDistribMulAction_subtype
+    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+    {H : Subgroup G} [IsInvariant A G H] : MulDistribMulAction A H :=
+  Theory.GroupAction.instMulDistribMulAction_subtype
+
 /-- `C_G(A)`: the subgroup of elements of `G` fixed by the `A`-action. -/
-public abbrev fixedPointSubgroup (A : Type*) (G : Type*) [Group A] [Group G] [MulDistribMulAction A G] :
-    Subgroup G :=
+public abbrev fixedPointSubgroup (A : Type*) (G : Type*) [Group A] [Group G]
+    [MulDistribMulAction A G] : Subgroup G :=
   FixedPoints.subgroup A G
 
 /-- `C_A(S)`: the subgroup of `A` fixing every element of `S` pointwise. -/
 public abbrev fixingSubgroupOf (A : Type*) (G : Type*) [Group A] [MulAction A G]
-    (S : Set G) :
-    Subgroup A :=
+    (S : Set G) : Subgroup A :=
   fixingSubgroup (M := A) (α := G) S
 
-/-- A subgroup `H ≤ G` is `A`-invariant if it is fixed under the pointwise action. -/
-public class IsInvariant (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop where
-  invariant : ∀ a : A, ∀ g : G, g ∈ H ↔ a • g ∈ H
-
-/-- Restrict an `A`-action on `G` to an `A`-invariant subgroup `H`. -/
-public instance instMulDistribMulAction_subtype
-    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    {H : Subgroup G} [IsInvariant A G H] :
-    MulDistribMulAction A H where
-  smul a x := ⟨a • x.1, (IsInvariant.invariant (A := A) (G := G) (H := H) a x.1).1 x.2⟩
-  one_smul x := by
-    ext
-    change ((1 : A) • (x : G)) = x
-    simp
-  mul_smul a b x := by
-    ext
-    change ((a * b) • (x : G)) = a • (b • (x : G))
-    simpa using (mul_smul a b (x : G))
-  smul_mul a x y := by
-    ext
-    change a • ((x : G) * (y : G)) = a • (x : G) * a • (y : G)
-    simp
-  smul_one a := by
-    ext
-    change a • (1 : G) = (1 : G)
-    simp
-
-/-- The action of `A` on `G` is trivial. -/
+/-- Compatibility spelling for a trivial action. -/
 @[expose] public def ActsTrivially (A : Type*) (G : Type*) [SMul A G] : Prop :=
   ∀ a : A, ∀ g : G, a • g = g
 
-/-- `A` acts trivially on a subgroup `H ≤ G` (as a set), i.e. fixes all its elements. -/
-@[expose] public def ActsTriviallyOnSubgroup (A : Type*) (G : Type*) [Group G] [SMul A G]
-    (H : Subgroup G) : Prop :=
+/-- Compatibility spelling for an action trivial on a subgroup. -/
+@[expose] public def ActsTriviallyOnSubgroup
+    (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop :=
   ∀ a : A, ∀ g : G, g ∈ H → a • g = g
 
 end GroupActionDefs
 
-/-- `A` stabilizes a normal series if:
-- the series has explicit top and bottom endpoints,
-- each step moves downward (`Gi (next i) ≤ Gi i`),
-- every term is normal in `G`,
-- repeatedly applying `next` from the top eventually reaches the bottom,
-- every term is `A`-invariant,
-- and the action on each factor is trivial (`(a • g) * g⁻¹ ∈ Gi (next i)` for `g ∈ Gi i`).
--/
-@[expose]
-public def StabilizesNormalSeries {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+namespace IsInvariant
+
+/-- Compatibility projection for `Theory.GroupAction.IsInvariant.invariant`. -/
+public theorem invariant
+    {G A : Type*} [Group G] [SMul A G] {H : Subgroup G}
+    [IsInvariant A G H] (a : A) (g : G) : g ∈ H ↔ a • g ∈ H :=
+  Theory.GroupAction.IsInvariant.invariant a g
+
+end IsInvariant
+
+/-- Compatibility spelling for an action stabilizing a normal series. -/
+@[expose] public def StabilizesNormalSeries
+    {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     {ι : Type*} (Gi : ι → Subgroup G) (next : ι → ι) : Prop :=
   (∃ top bottom : ι,
       Gi top = ⊤ ∧

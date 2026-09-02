@@ -1242,8 +1242,866 @@ $H_0 \nleq M$. Then $\Omega_1(Z(S)) \le O_2(H_0)$.
 \begin{proof}
 Let $T_0 = T \cap O_2(H_0)$, $N = N_H(T_0)$, and $T \le S_1 \in
 \mathrm{Syl}_2(H_0)$. If $S = S_0$, then obviously $J(S) = J(S_1)$; and if $S
-\ne S_0$, then (5.1)(c) shows
+\ne S_0$, then (5.1)(c) shows that $J(S)=J(S_1)$ whenever $H_0$ is not
+contained in the distinguished maximal subgroup $M$. Hence, in either case,
+\[
+  [O_2(H_0),J(S)]\le J(S)\cap O_2(H_0)\le T_0,
+  \qquad T_0\ne1,
+\]
+because $\Omega_1(Z(S_1))\le J(S)$. Thus $N$ is a 2-local subgroup of $H$.
+By (3.8), $H_0\le N$, and therefore $N$ is of characteristic 2 type.
+Put $Z=\Omega_1(Z(S))$ and $W=\langle Z^N\rangle$. As above,
+$J(S)=J(S_2)$ for $T\le S_2\in\mathrm{Syl}_2(N)$. Since $Z\le J(S)$,
+we have $[O_2(N),W]\le T_0$ and $[T_0,W]=1$. Consequently
+$[O_2(W),O_2(N)]=1$, so $Z\le W\le O_2(N)$. It follows that
+$Z\le O_2(H_0)$, as required.
 \end{proof}
 
-%% CONTINUE %%
+% [p. 30]
+\sect{6}
+
+\noindent In this section we assume Hypothesis 2.
+
+\smallskip
+\noindent\textit{Notation.}\quad $Q_i=O_2(P_i)$, $L_i=\langle B^{P_i}\rangle$,
+$Z_i=\langle\Omega_1(Z(B))^{P_i}\rangle$, $V=\langle\Omega_1(Z(S))^{P_1}\rangle$,
+$\overline P_1=P_1/C_{P_1}(V)$, and $J(V,S)$ is as in Section 1.
+
+\begin{stm}\label{st:6.1}
+$B\le Q_2$.
+\end{stm}
+
+\begin{proof}
+Assume first that $J(S)\le Q_1$. Since
+$O_2(\langle P_1,P_2\rangle)=1$, this gives $J(S)\le Q_2$ and hence
+$B\le Q_2$. Assume now that $J(S)\nleq Q_1$. By (5.3) and (3.3),
+$C_S(V)=Q_1$, and by (2.3), $B\in\mathrm{Syl}_2(L_1)$. If
+$B\le Q_2$, then $J(S)$ is normal in $P_2$, so (5.1)(a) or (5.1)(b)
+holds and $S=S_0$. By (2.2) choose $E_1\in\mathcal P(L_1,B)$ with
+$\langle E_1,S\rangle=P_1$, $|[V,E_1]|=4$, and
+$E_1/C_{E_1}([V,E_1])\cong SL_2(2)$. Since
+$\langle E_1,P_2\rangle=\langle P_1,P_2\rangle$, no nontrivial
+characteristic subgroup of $B$ is normal in $E_1$; (2.4) therefore gives
+$|[O_2(E_1),O^2(E_1)]|=4$. Let
+$W_1=[O_2(E_1),O^2(E_1)]$ and
+$W=\langle W_1^u\mid u\in U\rangle$, where $U$ is a Hall $2'$-subgroup
+of $P_2$. By (2.5), $W$ is normal in $\langle E_1,U\rangle$.
+Applying (5.4) and (3.9) to $\langle E_1,E_1^u\rangle$ shows that
+$\langle L_1,U\rangle\le N_H(W)$. Set $W^*=\langle W^S\rangle$.
+Then $W^*$ is normal in $P_1$ and lies in $Q_1$. Since $P_2=SU=US$,
+$U\le N_H(W^*)$, whence
+$\langle P_1,P_2\rangle\le N_H(W^*)$, a contradiction.
+Thus $B\le Q_2$.
+\end{proof}
+
+\begin{stm}\label{st:6.2}
+Suppose that $[P_2,\Omega_1(Z(S))]\ne1$. Then $J(S)\le Q_i$ for
+$i=1,2$.
+\end{stm}
+
+\begin{proof}
+The hypothesis is symmetric in $P_1$ and $P_2$. Hence (6.1) gives
+$B\le Q_i$ for $i=1,2$. By (3.4),
+$[O^2(P_i),B]=O^2(P_i)$. If $J(S)\le Q_i$, then
+$\Omega_1(Z(Q_i))\le Z(B)$ and
+$[\Omega_1(Z(Q_i)),O^2(P_i)]=1$; (5.3) would then imply
+$[P_i,\Omega_1(Z(S))]=1$, a contradiction. Thus $J(S)\le Q_i$ for both
+$i$.
+\end{proof}
+
+\begin{stm}\label{st:6.3}
+Suppose that $[P_2,\Omega_1(Z(S))]\ne1$. Then
+\[
+  P_i/Q_i\cong D_{2\cdot 3^{n_i}}
+  \qquad (i=1,2)
+\]
+for suitable integers $n_i$.
+\end{stm}
+
+\begin{proof}
+By (6.2), $J(S)\le Q_i$ and hence $B\in\mathrm{Syl}_2(L_i)$ by
+(3.3) and (2.3). Applying (2.2), choose $E_i\in\mathcal P(L_i,B)$ so that
+$\langle E_i,S\rangle=P_i$, $|[Z_i,O_2(E_i)]|=4$, and
+$E_i/C_{E_i}([Z_i,O_2(E_i)])\cong SL_2(2)$. If $O^2(E_2)$ normalized
+$[Z_1,O^2(E_1^s)]$ for every $s\in S$, then $E_2$ would normalize
+$[Z_1,O^2(L_1)]$ and $\langle P_1,P_2\rangle\le N_H([Z_1,L_1])$,
+impossible. Choose $E_1,E_2$ so that
+$O^2(E_2)\le N_H([Z_1,O^2(E_1)])$. If
+$O_2(\langle E_1,E_2\rangle)\ne1$, (5.4) and (3.9) give the same
+normalizer contradiction. Thus $O_2(\langle E_1,E_2\rangle)=1$.
+The remaining possibility is that both $L_i/C_{L_i}(Z_i)$ are direct
+products of two copies of $SL_2(2)$; applying the preceding argument to
+$\langle E_1,E_2^s\rangle$ again yields a nontrivial 2-core, a contradiction.
+Therefore each $P_i/Q_i$ is dihedral of order $2\cdot3^{n_i}$.
+\end{proof}
+
+\begin{stm}\label{st:6.4}
+Suppose that $[P_2,\Omega_1(Z(S))]=1$ and $J(V,S)\ne1$. Then, for every
+$w\in C_V(J(V,S))\setminus\Omega_1(Z(S))$,
+\[
+  P_2\ne\langle C_{P_2}(w),S\rangle .
+\]
+\end{stm}
+
+\begin{proof}
+Put $Z_0=C_V(J(V,S))$ and $E=O_2(P_1)J(V,S)$. By (2.2),
+$B\le J(V,S)$, $E=E_1\times\cdots\times E_r$ with
+$E_i\cong SL_2(2)$, and
+$V=V_0\times V_1\times\cdots\times V_r$, where
+$V_0=C_V(E)$ and $V_i=[V,E_i]$ has order $4$. Since
+$[P_2,\Omega_1(Z(S))]=1$, (5.3) gives
+$\Omega_1(Z(P_1))=1$. If $r=1$, then $Z_0=\Omega_1(Z(S))$.
+Otherwise choose $w\in Z_0\setminus\Omega_1(Z(S))$ and put
+$T=C_S(w)$. There is $j$ with $[w,E_j]=1$; choose
+$F_1\in\mathcal P(ET,T)$ with $[w,F_1]=1$ and $E_j\le F_1$.
+If $P_2=\langle C_{P_2}(w),S\rangle$, choose
+$F_2\in\mathcal P(C_{P_2}(w),T)$ with
+$\langle F_2,S\rangle=P_2$, and set
+$L=\langle F_1,F_2\rangle$, $Q=T\cap O_2(L)$. Then $w\in O_2(L)$,
+and (3.8), (5.2), and (5.4) imply that $Q$ is normal in $L$ and
+$\Omega_1(Z(S))\le Z(Q)$. The $P\times Q$ lemma and (3.5) force
+$[\Omega_1(Z(S)),O^2(P_2)]=1$, contradicting the construction of $V$.
+Thus the displayed inequality holds.
+\end{proof}
+
+\sect{7}
+
+\noindent In this section $G$ is a finite group and $S$ is a nontrivial
+2-subgroup of $G$ such that
+
+\begin{enumerate}
+\item[(i)] there are $P_1,P_2\in\mathcal P(S)$ with
+  $G=\langle P_1,P_2\rangle$;
+\item[(ii)] $P_1$ and $P_2$ are solvable and of characteristic 2 type;
+\item[(iii)] $O_2(G)=1$.
+\end{enumerate}
+
+\noindent\textbf{Definition.} Let $\Gamma=\Gamma(G,P_1,P_2)$ be the graph whose
+vertices are the right cosets of $P_1$ and $P_2$ in $G$, with an edge
+$\{P_1g,P_2h\}$ whenever $P_1g\cap P_2h\ne\varnothing$. The group $G$
+acts on $\Gamma$ by right multiplication. For $d\in\Gamma$, write
+$G_d$ for its stabilizer, $d(l,d')$ for graph distance,
+$D(d)=\{l\mid d(l,d)=1\}$, $Q_d=O_2(G_d)$, and
+\[
+Z_d=\left\langle\Omega_1(Z(T))\mid T\in\mathrm{Syl}_2(G_d)\right\rangle,
+\qquad V_d=\langle Z_l\mid l\in D(d)\rangle.
+\]
+
+\begin{stm}\label{st:7.1}
+The graph $\Gamma$ is connected; $G$ is edge- but not vertex-transitive;
+there is an edge $\{a,b\}$ with $G_a=P_1$ and $G_b=P_2$; and $G_d$ acts
+transitively on $D(d)$ for every vertex $d$.
+\end{stm}
+
+\begin{proof}
+These are the standard coset-graph properties. Connectivity follows from
+$G=\langle P_1,P_2\rangle$, edge transitivity from right multiplication,
+and vertex non-transitivity from the two distinct vertex stabilizers. The
+last assertion follows by multiplying a path by an element of $G_d$.
+\end{proof}
+
+\begin{stm}\label{st:7.2}
+The kernel of the action of $G$ on $\Gamma$ is trivial.
+\end{stm}
+
+\begin{proof}
+The kernel is a normal subgroup of $G$ contained in $P_1$. Since $P_1$ is
+of characteristic 2 type, a nontrivial kernel has nontrivial 2-core,
+contradicting $O_2(G)=1$.
+\end{proof}
+
+\begin{stm}\label{st:7.3}
+Let $d\in\Gamma$, $l\in D(d)$, and
+$T\in\mathrm{Syl}_2(G_d\cap G_l)$. Then
+\begin{enumerate}
+\item[(a)] $T$ is Sylow in both $G_d$ and $G_l$, and $Q_d\le G_l$;
+\item[(b)] $Z_d\le\Omega_1(Z(Q_d))$;
+\item[(c)] either $C_T(Z_d)=Q_d$, or
+  $Z_d=\Omega_1(Z(G_d))=\Omega_1(Z(T))$;
+\item[(d)] if $Z_d=\Omega_1(Z(G_d))$, then $Z(G_l)=1$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Conjugate so that $G_d=P_1$, $G_l=P_2$, and $T=S$. Parts (a) and (b)
+follow from the characteristic-2-type hypotheses. Put $S_0=C_S(Z_d)$.
+Then $Q_d\le S_0$; if $S_0\nleq Q_d$, (3.4) gives
+$G_d=C_{G_d}(Z_d)S$, which is exactly (c). Finally,
+$\Omega_1(Z(G_l))\le\Omega_1(Z(S))=Z_d$ is central in
+$\langle G_d,G_l\rangle=G$, so $O_2(G)=1$ gives (d).
+\end{proof}
+
+\noindent Define
+\[
+ b=\min\{d(d,d')\mid Z_d\le Q_{d'}\}.
+\]
+By (7.2) and (7.3)(b), $b>0$. A pair $(a,a')$ is called \emph{critical}
+if $d(a,a')=b$ and $Z_a\le Q_{a'}$. Fix a critical pair and a path
+$\gamma=(a,a+1,\ldots,a+b)=(a'-b,\ldots,a')$ of length $b$, with
+$S\le G_a\cap G_{a+1}$ and $\{G_a,G_{a+1}\}=\{P_1,P_2\}$.
+
+\begin{stm}\label{st:7.4}
+For a critical path as above:
+\begin{enumerate}
+\item[(a)] $Z_a\le V_{a+1}\le G_{a'}$;
+\item[(b)] $Z_{a'}\le G_a$ and $V_{a'}\le G_{a+1}$;
+\item[(c)] $C_S(Z_a)=Q_a$;
+\item[(d)] if $[Z_a,Z_{a'}]\ne1$, then
+  $C_T(Z_{a'})=Q_{a'}$ for $T\in\mathrm{Syl}_2(G_{a'})$, and
+  $(a',a)$ is critical;
+\item[(e)] $Z_a$ is quadratic on $Z_{a'}$, and conversely.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Parts (a) and (b) follow from (7.3)(a) and the minimality of $b$. If
+$C_S(Z_a)\ne Q_a$, then (7.3)(c) gives $Z_a=\Omega_1(Z(S))\le Z_{a+1}$,
+contradicting minimality; this proves (c). Part (d) follows by symmetry.
+Both groups normalize one another and are abelian by (7.3)(b), so (e) is
+the three-subgroup-lemma calculation.
+\end{proof}
+
+\begin{stm}\label{st:7.5}
+Suppose $[Z_a,Z_{a'}]=1$. Then $b$ is odd,
+$Z_{a+1}=\Omega_1(Z(S))=\Omega_1(Z(G_{a+1}))$,
+$C_{Q_a}(E_a)=1$ (in particular $Z(G_a)=1$), and, if $b>1$,
+$V_{a+1}$ is elementary abelian and quadratic on $V_{a'}$, and conversely.
+\end{stm}
+
+\begin{proof}
+By (7.3)(c), $Z_{a'}=\Omega_1(Z(G_{a'}))$ and (7.4)(c) forces
+$a'\in(a+1)^G$, so $b$ is odd and the first assertion follows. Since
+$Z(S)\cap C_{Q_a}(E_a)\le Z(G_a)$, (7.3)(d) gives $C_{Q_a}(E_a)=1$.
+For $b>1$, (7.4)(a),(b) give mutual normalization and abelianness, which
+is the quadratic assertion.
+\end{proof}
+
+\noindent Under Hypothesis 2, (7.4)(c) and (5.1) give two cases: either
+$\Omega_1(Z(S))$ is normal in neither $P_1$ nor $P_2$ (Case I), or it is
+normal in $P_2$ (Case II); in Case II, $E_{a+1}$ is subnormal in
+$C_H(Z_{a+1})$.
+
+\begin{stm}\label{st:7.6}
+The following hold:
+\begin{enumerate}
+\item[(a)] $Q_a\cap Q_{a+1}$ is not normal in $G_{a+1}$;
+\item[(b)] $O_2(E_{a+1})\nleq Q_a$ and
+  $E_a\le\langle O_2(E_{a+1}),G_a\rangle$;
+\item[(c)] $Q_a\cap Q_{a+1}\le Q_m$ for every
+  $m\in D(a+1)$ with $\langle Q_m,G_a\cap G_{a+1}\rangle=G_{a+1}$;
+\item[(d)] $\langle C_G(Z_a),G_a\cap G_{a+1}\rangle\ne G_{a+1}$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+If $Q_a\cap Q_{a+1}$ were normal in $G_{a+1}$, use transitivity on
+$D(a+1)$ and (7.4) to obtain $Q_a\le Q_{a+1}$; then (3.5) forces
+$Z_a\le O_2(G)=1$. This proves (a). Part (b) follows because otherwise
+(a) fails; (3.4) then gives the containment in (b). Part (c) is the same
+normality argument after conjugation. Finally (d) follows from (a) and
+$Q_a\cap Q_{a+1}=C_{Q_{a+1}}(Z_a)$.
+\end{proof}
+
+\begin{stm}\label{st:7.7}
+Let $C=C_G(\Omega_1(Z(S)))$. If $E_{a+1}$ is subnormal in $C$,
+$O_2(C)\le S$, and $C$ is of characteristic 2 type, then
+\begin{enumerate}
+\item[(a)] $[C_G(Z_a),E_aO_2(E_{a+1})]\le Q_a$;
+\item[(b)] $C_G(V_{a+1})$ is a 2-group;
+\item[(c)] $E_{a+1}\nleq C$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+The subgroup $E_{a+1}$ is subnormal in $C$, so its odd residual acts
+faithfully on the chief factors of $O_2(C)$. Applying (3.5) to
+$\Omega_1(Z(O_2(C)))$ gives (a), and (b) follows from (a) and (7.3).
+If $E_{a+1}\le C$, then (a) and (b) force $Z_a\le O_2(G)$, a
+contradiction; hence (c).
+\end{proof}
+
+\begin{stm}\label{st:7.8}
+Let $d\in(a+1)^G$, $l\in D(d)$, and $A\le V_{d+1}$ satisfy
+$[A,G_d\cap G_l]\le V_{d+1}$ and
+$\langle G_d\cap G_l,G_{d+1}\rangle=G_{d+1}$. Then there is
+$x\in G_{d+1}$ such that, for $E=\langle A,A^x\rangle$ and a suitable
+$m\in D(d+1)$, the standard five conclusions hold:
+\begin{enumerate}
+\item[(i)] $x\in E$;
+\item[(ii)] $|A:A\cap G_m|=2$ and $A\nleq G_m$;
+\item[(iii)] $\langle E,G_d\cap G_{d+1}\rangle=G_{d+1}$;
+\item[(iv)] $[A\cap G_m,E]\le Q_{d+1}$;
+\item[(v)] $E=\langle a,V_{d+1}\rangle$ for every
+  $a\in A\setminus G_m$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Choose $a\in A$ with $|[V,a]|$ minimal and apply (3.6) to the
+normal 2-subgroups $G_d\cap G_l$ and $G_{d+1}$. The resulting subgroup
+$E=\langle A,A^x\rangle$ has dihedral image modulo its 2-core; the
+minimality choice gives (i)--(iv), and the action on the unique noncentral
+chief factor gives (v).
+\end{proof}
+
+\sect{8}
+
+\noindent In this section we assume Hypothesis 2 and use the notation of
+Section 7. Put
+\[
+ R=[Z_a,Z_{a'}],\qquad
+ \overline G_d=G_d/C_{G_d}(Z_d),
+\]
+and let $J(Z_a,S)$ have the meaning of Section 1.
+
+\begin{stm}\label{st:8.1}
+The following hold:
+\begin{enumerate}
+\item[(a)] $|Z_a:Z_a\cap Q_{a'}|=|Z_{a'}:Z_{a'}\cap Q_a|$;
+\item[(b)] $E_aJ(Z_a,S)=E_1\times\cdots\times E_r$ and
+  $Z_a=V_0\times\cdots\times V_r$, where
+  $V_0=C_{Z_a}(E_aJ(Z_a,S))$, $E_i\cong SL_2(2)$,
+  $V_i=[Z_a,E_i]$, and $|V_i|=4$ for $i\ge1$;
+\item[(c)] $R=(R\cap V_1)\times\cdots\times(R\cap V_r)$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+By (7.4)(c),(d), the configuration is symmetric in $a$ and $a'$. Assume
+$|Z_{a'}:Z_{a'}\cap Q_a|\ge |Z_a:Z_a\cap Q_{a'}|$. Then
+$Z_{a'}\le J(Z_a,S)$ and (1.5)(e) gives equality, proving (a).
+Part (b) is (1.7) applied to $Z_a$ and $S$, and (c) follows immediately.
+\end{proof}
+
+\begin{stm}\label{st:8.2}
+Suppose that $Z_{a+1}\le Z(G_{a+1})$. Then, for every $d\in\Gamma$,
+$G_d\cong S_4$ or $G_d\cong C_2\times S_4$.
+\end{stm}
+
+\begin{proof}
+By (7.3)(c), $Z_d\le Z(G_d)$ for every $d$. Hence
+$[P_i,\Omega_1(Z(S))]\ne1$, and (6.3) gives
+$G_d/Q_d\cong D_{2\cdot3^{n_d}}$. Choose
+$a-1\in D(a)$ with $\langle G_{a-1}\cap G_a,Z_{a'}\rangle=G_a$.
+The critical-pair relations (7.4) show first that $b>1$ and then that
+$V_{a+1}\le Q_{a+1}$. Applying (2.5) to a Hall $2'$-subgroup of
+$G_{a+1}$ forces $V_{a+1}$ to be normal in $G_a$, contradicting
+$O_2(\langle G_a,G_{a+1}\rangle)=1$, unless $b=1$. In the latter case
+the Frattini subgroup of each $Q_d$ is trivial and (8.1) gives
+$|Z(G_d)|\le2$; consequently $G_d/Q_d\cong SL_2(2)$ and the asserted
+two possibilities follow.
+\end{proof}
+
+\noindent The preceding result motivates the following terminology. A finite
+group $H$ is of type $L_3(2)$ (respectively $Sp_4(2)$) if it contains
+$G_a,G_{a+1}$ with $G_a\cap G_{a+1}=S\in\mathrm{Syl}_2(H)$,
+$O_2(\langle G_a,G_{a+1}\rangle)=1$, and
+$G_a\cong G_{a+1}\cong S_4$ (respectively $C_2\times S_4$).
+
+\begin{stm}\label{st:8.3}
+Suppose that $Z_{a+1}\le Z(G_{a+1})$. Then
+$O_2(E_a)\nleq Q_{a+1}$.
+\end{stm}
+
+\begin{proof}
+If $O_2(E_a)\le Q_{a+1}$, choose
+$F\in\mathcal P(E_aQ_{a+1},Q_{a+1})$ with
+$\langle F,G_a\cap G_{a+1}\rangle=G_a$. No nontrivial characteristic
+subgroup of $Q_{a+1}$ is normal in $F$, so (2.4) gives
+$[O_2(E_a),O_2(F)]\le Z_a$. This forces $O_2(E_a)=Z_a$ and then
+$Q_a=Z_a$. Applying (2.2) to $Z_a$ and $E_aJ(Q_{a+1})$ gives
+$J(S)=J(Q_{a+1})=B$, contradicting (6.1).
+\end{proof}
+
+\begin{stm}\label{st:8.4}
+Let $Z=C_{Z_a}(J(Z_a,S))$. If $Z_{a+1}\le Z(G_{a+1})$, then $Z$ is normal
+in $G_{a+1}$.
+\end{stm}
+
+\begin{proof}
+Let $S_1=\langle Z_a^{G_{a+1}}\rangle$ and
+$V_{a+1}=\langle Z^{G_{a+1}}\rangle$. Apply (8.1) and (7.8) successively
+along the critical path. The resulting subgroups satisfy
+$[D,V_1]\le Z_{a'}$ and $D\le Z_{a'+1}$ for every
+$D\le Z_{a'+2,a'+1}$; the three-subgroup lemma then gives
+$D\le Z_{a'+1}$. Iterating this containment shows
+$V_{a+1}\le Q_{a'}$ and hence $Z\trianglelefteq G_{a+1}$.
+\end{proof}
+
+\begin{stm}\label{st:8.5}
+Suppose that $Z_{a+1}\le Z(G_{a+1})$. Then
+$G_a/Q_a\cong SL_2(2)$ and $b=2$.
+\end{stm}
+
+\begin{proof}
+Set $Z=C_{Z_a}(J(Z_a,S))$. By (7.3)(d) and (8.1),
+$|Z_a|=|Z|^2$, and (8.3),(8.4) give
+$[Z,O_2(G_{a+1})]=1$. Thus $Z=Z_{a+1}$ and (8.1) gives
+$|Z_a|=4$, $G_a\cong SL_2(2)$. By (3.3),
+$G_a/Q_a\cong D_{2\cdot3^n}$; (7.7)(a) excludes the dihedral case
+unless $b=2$, yielding the claim.
+\end{proof}
+
+\begin{stm}\label{st:8.6}
+Suppose that $Z_{a+1}\le Z(G_{a+1})$. Choose
+$a-1\in D(a)\setminus\{a+1\}$ and put
+$D=Q_{a-1}\cap Q_{a+1}$, $L=\langle Q_{a-1},Q_a\rangle$,
+$Q=O_2(L)$, and $T\in\mathrm{Syl}_3(G_a)$. Then
+$[D,L]=Z_a$, $Q/D$ and $D$ are elementary abelian, and one of the
+following alternatives holds:
+\begin{enumerate}
+\item[(a)] $2^5\le |S|\le2^6$, $G_d/Q_d\cong SL_2(2)$ for every $d$,
+  $Q=Q_a$, $O_2(E_a)\cong C_4\times C_4$, and
+  $Q_{a+1}\cong C_4\rtimes Q_8$ or $Q_8\rtimes Q_8$;
+\item[(b)] $2^8\le |S|\le2^{10}$,
+  $G_a/Q_a\cong SL_2(2)$ and
+  $G_{a+1}/Q_{a+1}\cong SL_2(2)\times C_2$, with
+  $Q/O_2(E_a)$ of order at most $4$, $O_2(E_a)$ special of order $2^6$,
+  $V_{a+1}\cong Q_8\rtimes Q_8$, $\Phi(Q_{a+1})=Z_{a+1}$, and an
+  elementary abelian normal subgroup $W$ of order $2^4$ in $L$ whose
+  normalizer is nonsolvable;
+\item[(c)] $2^{14}\le |S|\le2^{15}$,
+  $G_a/Q_a\cong SL_2(2)$, and $E_{a+1}/O_2(E_{a+1})$ is elementary
+  abelian of order $3^4$, with
+  $|Q/D|=2^6$, $|D|=2^5$, $|Z_a|=4$, $D=C_Q(T)\times Z_a$,
+  $Q_{a+1}$ extra-special of order $2^9$, and $Q/(Q\cap Q_{a+1})$
+  elementary abelian of order $2^3$. Every $Q$-invariant subgroup of
+  order $3$ acts fixed-point-freely on $Q_{a+1}/Z_{a+1}$, every
+  involution in $QQ_{a+1}/Q_{a+1}$ centralizes a subgroup of order $2^5$,
+  and some $l\in D(a+1)\setminus\{a\}$ satisfies
+  $N_G(Z_lZ_a)/C_G(Z_lZ_a)\cong L_3(2)$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+By (8.1) and (8.5), $b=2$, $G_a/Q_a\cong SL_2(2)$ and $|Z_a|=4$.
+Writing $A=V_{a-1}\cap Q_a$, $\widetilde A=V_{a+1}\cap Q_a$ and
+$V=V_{a+1}/Z_{a+1}$, the relations in (7.6) give
+$[D,O_2(L)]=Z_a$ and $Q=A\widetilde A D$. The Frattini and
+three-subgroup arguments split according to
+$|A:A\cap D|=2$ or at least $4$. The first case gives (a); the second
+case yields successively (b) or (c), with the displayed orders and module
+structures. In case (b), the subgroup $W$ is obtained as
+$[V_1,E_a]$ and its normalizer is nonsolvable. In case (c), the
+fixed-point-free action of the order-$3$ subgroups and the final
+normalizer statement follow from (1.7) and (7.6).
+\end{proof}
+
+\noindent A finite group is said to be of type $G_2(2)'$, $V_6^-(3)$, or
+$V_8^+(3)$ if it contains a pair $G_a,G_{a+1}$ with Sylow intersection,
+trivial 2-core of their join, and satisfying respectively alternatives
+(a), (b), or (c) of (8.6). The groups $G_2(2)$,
+$\operatorname{Aut}(V_6^-(3))$, and
+$\operatorname{Aut}(V_8^+(3))$ provide examples.
+
+\sect{9}
+
+\noindent In this section we assume Hypothesis 2,
+$G=\langle P_1,P_2\rangle$, and the notation of Section 7. In addition,
+$[Z_a,Z_{a'}]=1$. Thus $Z_{a'}=\Omega_1(Z(T))\le Z(G_{a'})$ for
+$T\in\mathrm{Syl}_2(G_{a'})$ and $Z(G_a)=1$; in particular
+$E_{a'}$ is subnormal in $C_H(Z_{a'})$.
+
+\begin{stm}\label{st:9.1}
+Suppose $b=1$ and put
+$V_{a'}^*=\langle (Z_a\cap Q_{a'})^{G_{a'}}\rangle$. Then
+\begin{enumerate}
+\item[(a)] $G_a/Q_a\cong SL_2(2)\times C_2$ and
+  $G_{a'}/Q_{a'}\cong SL_2(2)$;
+\item[(b)] $|S|=2^7$, $Q_a=Z_a$, and
+  $V_{a'}^*\cong Q_8\rtimes Q_8$;
+\item[(c)] there is $U\le V_{a'}^*$ of order $2^3$ with
+  $N_H(U)/U\cong L_3(2)$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Here $a'=a+1$ and $Z_a\le Q_{a'}$. Apply (7.8) with
+$d=a+1$, $l=a$, and $A=Z_a$. The resulting subgroup
+$E=\langle Z_a,Z_a^x\rangle$ has the five properties in (7.8).
+Put $V=(Z_a\cap G_{a+2})(Z_{a+2}\cap G_a)$ and
+$V_0=Z_a\cap Z_{a+2}$. The relations (1)--(5) in the source proof show
+that $V/V_0$ is abelian of order greater than $4$, no noncyclic subgroup
+acts quadratically on $Z_a$, and $m(Y)\ge m(V)$ for every nontrivial
+$Y\le V$. Lemmas (1.6), (1.7), and (7.7) then give
+$|Z_a|=4$, $G_a/Q_a\cong SL_2(2)\times C_2$,
+$|S|=2^7$, and $V_{a'}^*\cong Q_8\rtimes Q_8$. The order-$3$ elements
+in $E_{a'}$ yield the subgroup $U$ and the $L_3(2)$ normalizer.
+\end{proof}
+
+\noindent A finite group is of type $V_6^+(2)$ if it contains two
+subgroups $G_a,G_{a'}$ with Sylow intersection, trivial 2-core of their
+join, and satisfying (9.1)(a)--(c). The group
+$V_6^+(2)\cong S_8\cong\operatorname{Aut}(L_4(2))$ is an example.
+
+\begin{stm}\label{st:9.2}
+Let $d\in(a')^G$ and $l,m\in D(d)$. If
+$|Z_l:Z_l\cap Z_m|=2$ and
+$\langle Q_m,G_l\cap G_d\rangle=G_d$, then
+$G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$.
+\end{stm}
+
+\begin{proof}
+Conjugate so that $d=a+1$ and $l=a$. Put
+$L=\langle Q_a,Q_m\rangle$ and $Q=Q_{a+1}\cap Q_m$.
+By (7.6)(c), $Q\le Q_a$; hence $Q$ induces transvections on $Z_a$.
+Applying (1.7) to $X=[Z_a,Q]$ gives $|Z_a|=4$ and
+$G_a/C_{G_a}(Z_a)\cong SL_2(2)$. Then (7.7)(a) gives
+$Q_a=C_{G_a}(Z_a)$.
+\end{proof}
+
+\begin{stm}\label{st:9.3}
+Suppose $b>1$. Then $G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$ for
+every $l\in a^G$.
+\end{stm}
+
+\begin{proof}
+It suffices to prove the assertion for $l=a$. If $|Z_a|>4$, apply
+(7.8) to $V_{a+1}$ along the path and use (7.5)(d). The resulting
+subgroups $W\le Z_m\cap G_a$ and $\widetilde W\le Z_{\widetilde m}\cap
+G_{a+1}$ satisfy the relations (1)--(4) of the source argument.
+If the corresponding commutator $R_1$ is nontrivial, (5.2) and
+subnormality contradict (7.7). If it is trivial, (6.4) and (1.7) again
+force $|Z_a|=4$. Finally (7.7)(a) gives
+$G_a/Q_a\cong SL_2(2)$.
+\end{proof}
+
+\noindent We shall use (9.3) repeatedly in the following form: for $b>1$,
+$Z_a=Z_{a-1}Z_{a+1}$ with $|Z_{a+1}|=2$, $S=Q_aQ_{a+1}$,
+$[Z_a,S]=Z_{a+1}$, and $V_{a+1}/Z_{a+1}$ is a faithful
+$G_{a+1}/Q_{a+1}$-module.
+
+\begin{stm}\label{st:9.4}
+Let $b>1$, $r\in G$ with $d(r,a+1)=2$. Suppose
+$t\in C_{G_{a+1}}(V_r)$, $x\in[E_{a+1},t]$, and $A\le V_r$ satisfy
+\begin{enumerate}
+\item[(i)] $[A,t]\le V_{a+1}$;
+\item[(ii)] $\langle G_{a+1}\cap G_n,t\rangle=G_{a+1}$ for
+  $n\in D(a+1)\cap D(r)$;
+\item[(iii)] $|[V_{a+1},t]Z_{a+1}/Z_{a+1}|=2$.
+\end{enumerate}
+Then $A\le V_{a+1}$.
+\end{stm}
+
+\begin{proof}
+Conjugate so that $n=a$ and $r^x=a-1$. Apply (7.6), (7.8), and
+(1.7) to the group generated by $Q_a\cap Q_{a-1}$ and $t$. The
+resulting module decomposition forces either $A\le V_{a+1}$ or a normal
+subgroup of both $G_a$ and $G_{a+1}$, contradicting (7.2). Hence
+$A\le V_{a+1}$.
+\end{proof}
+
+\begin{stm}\label{st:9.5}
+Let $b>1$ and choose $t\in V_{a'}\setminus Q_{a'}$ with
+$|[V_a,t]Z_a/Z_a|=2$ and $[V_a,t]\le V_{a'-2}$. Then either
+\begin{enumerate}
+\item[(a)] $|V_a|=2^3$ and $G_a/Q_a\cong SL_2(2)$, or
+\item[(b)] $|V_a|=2^5$, $G_a/Q_a\cong SL_2(2)\times C_2$, and
+  $|V_a\cap V_{a-2}|=2^3$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+On $\overline V_a=V_a/Z_a$, the element $t$ is a transvection. By
+(1.7) and (7.7)(b), $E_a/Q_a=E_1\times\cdots\times E_r$ with
+$E_i\cong C_3$ and $\overline V_a=V_0\times V_1\times\cdots\times V_r$,
+$|V_i|=4$. Choose $w\in O_2(E_{a-1})$ with
+$[w,[V_a,t]]Z_a=Z_{a-1}$. Then $\overline V_a=V_1V_1^w$.
+If $V_1=V_1^w$ one obtains (a), otherwise (b).
+\end{proof}
+
+\begin{stm}\label{st:9.6}
+Suppose $b>1$ and $G_{a+1}/Q_{a+1}\cong SL_2(2)$. Then
+$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$.
+\end{stm}
+
+\begin{proof}
+Put $R=[V_{a+1},V_{a'}]$ and
+$R_0=[V_{a-1},V_{a'-2}]$. Since $|Z_a|=4$, there are only three
+$G_{a+1}$-conjugates of $Z_a$; hence $|V_{a+1}|\le2^4$. The cases
+$R_0=1$, $b=3$, and $b>3$ are excluded respectively by (9.4),
+(7.7)(b), and the critical-pair symmetry. Thus the asserted index is $2$.
+\end{proof}
+
+\begin{stm}\label{st:9.7}
+Suppose $b>1$ and
+$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$. Then $b=3$,
+$|V_{a+1}|=8$, and $G_{a+1}/Q_{a+1}\cong SL_2(2)$.
+\end{stm}
+
+\begin{proof}
+For $t\in V_{a+1}\setminus Q_{a'}$, (9.5) gives
+$|V_{a'}|=8$ and $G_{a'}/Q_{a'}\cong SL_2(2)$. If $b>3$, the
+commutator $R=[V_{a'},Z_a]$ lies simultaneously in
+$V_{a+3}$ and $V_{a+5}$, forcing a contradiction to (7.4). Hence
+$b=3$.
+\end{proof}
+
+\begin{stm}\label{st:9.8}
+Suppose $Z_{a'}\le V_{a+1}$. Then $b\le3$.
+\end{stm}
+
+\begin{proof}
+If $b>3$, choose $l\in D(a+1)$. Then $W_l$ is abelian and lies in
+$G_{a'-2}$, so $[W_l,V_{a+1}]=1$. Applying (7.7)(a) and (7.8)
+produces $m\in D(a')$ with $[Z_a,Z_m]\ne1$. The alternatives
+$Z_m\le G_a$ and $Z_m\nleq G_a$ both contradict (9.7) or the
+normality conclusion in (7.6). Thus $b\le3$.
+\end{proof}
+
+\begin{stm}\label{st:9.9}
+Suppose $Z_{a+1}\le V_{a'}$. Then $b\le3$.
+\end{stm}
+
+\begin{proof}
+If $b>3$, (9.8) with $a+1$ and $a'$ interchanged gives
+$V_{a'}\le Q_{a+1}$ and $[Z_a,V_{a'}]=Z_{a+1}$. By (1.7) choose
+$V_1\le V_{a'}$ with
+$[V_1,Z_a]=Z_{a+1}$. A maximal subgroup of $V_{a-1}$ centralized by
+$V_1$ would have index at least $4$, contradicting (9.7). Hence
+$b\le3$.
+\end{proof}
+
+\begin{stm}\label{st:9.10}
+$b\le3$.
+\end{stm}
+
+\begin{proof}
+Assume $b>3$. By (9.8) and (9.9),
+$Z_{a'}\le V_{a+1}$ and $Z_{a+1}\le V_{a'}$. Apply (7.8) to obtain
+$m\in D(a')$ with $[Z_m,V_{a+1}]\ne1$. The resulting critical pair
+$(l,a'-1)$ and its symmetric translate yield
+$G_{a'-1}/Q_{a'-1}\cong SL_2(2)\times C_2$,
+$|V_{a'-1}|=2^5$, and an index-$2$ subgroup of $V_{a'-1}$,
+contradicting (9.7). Thus $b\le3$.
+\end{proof}
+
+\sect{9}
+
+\noindent In this section we assume Hypothesis 2, $G=\langle P_1,P_2\rangle$,
+and the notation of Section 7, together with $[Z_a,Z_{a'}]=1$. Thus
+$Z_{a'}=\Omega_1(Z(T))\le Z(G_{a'})$ and $Z(G_a)=1$.
+
+\begin{stm}\label{st:9.1}
+Suppose $b=1$ and put
+$V_{a'}^*=\langle(Z_a\cap Q_{a'})^{G_{a'}}\rangle$. Then
+\begin{enumerate}
+\item[(a)] $G_a/Q_a\cong SL_2(2)\times C_2$ and
+  $G_{a'}/Q_{a'}\cong SL_2(2)$;
+\item[(b)] $|S|=2^7$, $Q_a=Z_a$, and $V_{a'}^*\cong Q_8\rtimes Q_8$;
+\item[(c)] there is $U\le V_{a'}^*$ of order $2^3$ with
+  $N_H(U)/U\cong L_3(2)$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+Here $a'=a+1$ and $Z_a\le Q_{a'}$. Applying (7.8) to $A=Z_a$ and
+then (1.2), (1.6), and (1.7), one obtains $|Z_a|=4$,
+$|S|=2^7$, the two quotient structures in (a), and
+$V_{a'}^*\cong Q_8\rtimes Q_8$. The order-$3$ elements in
+$E_{a'}$ supply an elementary abelian subgroup $U$ of order $8$;
+its two vertex stabilizers give $N_H(U)/U\cong L_3(2)$.
+\end{proof}
+
+\noindent A finite group is of type $V_6^+(2)$ if it contains two such
+subgroups satisfying (9.1)(a)--(c). The group
+$V_6^+(2)\cong S_8\cong\operatorname{Aut}(L_4(2))$ is an example.
+
+\begin{stm}\label{st:9.2}
+Let $d\in(a')^G$ and $l,m\in D(d)$. If
+$|Z_l:Z_l\cap Z_m|=2$ and
+$\langle Q_m,G_l\cap G_d\rangle=G_d$, then
+$G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$.
+\end{stm}
+
+\begin{proof}
+Conjugate to $d=a+1$, $l=a$. Put
+$Q=Q_{a+1}\cap Q_m$. By (7.6)(c), $Q\le Q_a$ and
+$[Z_a,Q]\ne1$. Applying (1.7) gives $|Z_a|=4$ and
+$G_a/C_{G_a}(Z_a)\cong SL_2(2)$; (7.7)(a) then gives
+$Q_a=C_{G_a}(Z_a)$.
+\end{proof}
+
+\begin{stm}\label{st:9.3}
+Suppose $b>1$. Then $G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$ for
+every $l\in a^G$.
+\end{stm}
+
+\begin{proof}
+If $|Z_a|>4$, apply (7.8) twice along the critical path. The resulting
+subgroups either give a nontrivial normal subgroup of both adjacent
+vertex stabilizers or reduce to (9.2); both alternatives contradict
+(7.2) or force $|Z_a|=4$. Then (7.7)(a) gives
+$G_a/Q_a\cong SL_2(2)$, and transitivity gives the assertion for all
+$l\in a^G$.
+\end{proof}
+
+\noindent We use the following consequence of (9.3): if $b>1$, then
+$Z_a=Z_{a-1}Z_{a+1}$, $|Z_{a+1}|=2$, $S=Q_aQ_{a+1}$, and
+$V_{a+1}/Z_{a+1}$ is a faithful $G_{a+1}/Q_{a+1}$-module.
+
+\begin{stm}\label{st:9.4}
+Let $b>1$, $d(r,a+1)=2$, $t\in C_{G_{a+1}}(V_r)$,
+$x\in[E_{a+1},t]$, and $A\le V_r$ satisfy
+\begin{enumerate}
+\item[(i)] $[A,t]\le V_{a+1}$;
+\item[(ii)] $\langle G_{a+1}\cap G_n,t\rangle=G_{a+1}$ for
+  $n\in D(a+1)\cap D(r)$;
+\item[(iii)] $|[V_{a+1},t]Z_{a+1}/Z_{a+1}|=2$.
+\end{enumerate}
+Then $A\le V_{a+1}$.
+\end{stm}
+
+\begin{proof}
+Apply (7.8) to the pair of 2-subgroups
+$G_{a+1}\cap G_n$ and $G_{a+1}$, and then use (1.7) on the resulting
+dihedral section. Otherwise one obtains a subgroup normal in both
+adjacent vertex stabilizers, contrary to (7.2).
+\end{proof}
+
+\begin{stm}\label{st:9.5}
+Let $b>1$ and choose $t\in V_{a'}\setminus Q_{a'}$ with
+$|[V_a,t]Z_a/Z_a|=2$ and $[V_a,t]\le V_{a'-2}$. Then either
+\begin{enumerate}
+\item[(a)] $|V_a|=2^3$ and $G_a/Q_a\cong SL_2(2)$, or
+\item[(b)] $|V_a|=2^5$, $G_a/Q_a\cong SL_2(2)\times C_2$, and
+  $|V_a\cap V_{a-2}|=2^3$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+On $V_a/Z_a$, $t$ is a transvection. Lemmas (1.7) and (7.7)(b)
+decompose the module into four-dimensional summands. The relation
+$Z_{a-1}\le V_1V_1^w$ for a suitable $w\in O_2(E_{a-1})$ gives
+$V_1=V_1^w$ or $V_1\ne V_1^w$, which are exactly (a) and (b).
+\end{proof}
+
+\begin{stm}\label{st:9.6}
+Suppose $b>1$ and $G_{a+1}/Q_{a+1}\cong SL_2(2)$. Then
+$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$.
+\end{stm}
+
+\begin{proof}
+Set $R=[V_{a+1},V_{a'}]$ and
+$R_0=[V_{a-1},V_{a'-2}]$. The cases $R_0=1$, $b=3$, and $b>3$
+are excluded respectively by (9.4), (7.7), and the critical-pair
+symmetry. Hence the index is $2$.
+\end{proof}
+
+\begin{stm}\label{st:9.7}
+Suppose $b>1$ and
+$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$. Then $b=3$,
+$|V_{a+1}|=8$, and $G_{a+1}/Q_{a+1}\cong SL_2(2)$.
+\end{stm}
+
+\begin{proof}
+Apply (9.5) to an element of $V_{a+1}\setminus Q_{a'}$. If $b>3$,
+$[V_{a'},Z_a]$ lies in two incompatible path modules, contradicting
+(7.4); hence $b=3$, and (9.5) gives the order and quotient.
+\end{proof}
+
+\begin{stm}\label{st:9.8}
+Suppose that $Z_{a'}\le V_{a+1}$. Then $b\le3$.
+\end{stm}
+
+\begin{proof}
+If $b>3$, choose $l\in D(a+1)$. The subgroup $W_l$ is abelian and
+centralizes $V_{a+1}$. Applying (7.7) and (7.8) produces
+$m\in D(a')$ with $[Z_a,Z_m]\ne1$, contradicting (9.7) or (7.6).
+\end{proof}
+
+\begin{stm}\label{st:9.9}
+Suppose that $Z_{a+1}\le V_{a'}$. Then $b\le3$.
+\end{stm}
+
+\begin{proof}
+Interchange $a+1$ and $a'$ in (9.8). If $b>3$, (1.7) gives a subgroup
+$V_1\le V_{a'}$ with $[V_1,Z_a]=Z_{a+1}$; a maximal subgroup in
+$V_{a-1}$ would then have index at least $4$, contradicting (9.7).
+\end{proof}
+
+\begin{stm}\label{st:9.10}
+$b\le3$.
+\end{stm}
+
+\begin{proof}
+If $b>3$, (9.8) and (9.9) give
+$Z_{a'}\le V_{a+1}$ and $Z_{a+1}\le V_{a'}$. Applying (7.8) once
+more yields the configuration of (9.5)(b), which contradicts (9.7).
+\end{proof}
+
+\sect{10}
+
+\noindent In this section we finish the discussion begun in Section 9. We
+assume Hypothesis 2, $[Z_a,Z_{a'}]=1$, and $b=3$. Recall from (9.3) that
+$G_{a+2}/Q_{a+2}\cong SL_2(2)$, $|Z_{a+2}|=4$, and
+$Z_{a+2}=Z_{a+1}Z_{a'}=\Omega_1(Z(Q_{a+2}))$. Since $G_{a+2}$ is
+2-transitive on $D(a+2)$, the path $(a+1,a+2,a')$ is conjugate to
+$(a',a+2,a+1)$; hence $V_{a+1}\le Q_{a'}$ and $V_{a'}\le Q_{a+1}$.
+Write
+\[
+ \overline V_{a'}=V_{a'}/Z_{a'},\qquad
+ \overline G_{a'}=G_{a'}/Q_{a'}.
+\]
+
+\begin{stm}\label{st:10.1}
+Let
+$W=\langle(V_{a+1}\cap Q_{a'})^{G_{a+2}}\rangle$ and
+$W_0=(\bigcap_{r\in D(a+2)}Q_r)\cap W_{a+2}$. Then
+\[
+ W_{a+2}=V_{a+1}\cap V_{a'},\qquad
+ |W_0/W|=2,\qquad |W_{a+2}/W|=2^3 ,
+\]
+and one of the following holds:
+\begin{enumerate}
+\item[(a)] $2^6\le |S|\le2^7$,
+  $G_{a+1}/Q_{a+1}\cong G_{a+2}/Q_{a+2}\cong SL_2(2)$,
+  $Z_{a+2}=W$, $O_2(E_{a+2})\cong C_4\times C_4$,
+  $|V_{a+1}|=2^3$, $O_2(E_{a+1})$ is extra-special of order $2^5$,
+  and some involution in $Q_{a+2}\setminus Z_{a+2}$ has nonsolvable
+  centralizer;
+\item[(b)] $2^{11}\le |S|\le2^{12}$,
+  $G_{a+2}/Q_{a+2}\cong SL_2(2)$ and
+  $G_{a+1}/Q_{a+1}\cong F_{20}$, where $F_{20}$ is the Frobenius group
+  of order $20$, with
+  \[
+  |V_{a+1}/Z_{a+1}|=|O_2(E_{a+1})/V_{a+1}|=2^4,\quad
+  O_2(E_{a+1})'=V_{a+1},
+  \]
+  \[
+  |Z_{a+2}|=|W/(V_{a+1}\cap V_{a'})|
+  =|W_{a+2}/W_0|=|O_2(E_{a+2})W_{a+2}/W_{a+2}|=4,
+  \]
+  and $|V_{a+1}\cap V_{a'}/Z_{a+2}|=2$.
+\end{enumerate}
+\end{stm}
+
+\begin{proof}
+The transitivity of $Q_{a+1}$ on $D(a+2)\setminus\{a+1\}$ gives
+$W\le\bigcap_{r\in D(a+2)}Q_r$. Since
+$[V_{a+1}\cap Q_{a'},V_{a'}\cap Q_{a+1}]=1$, (1.7) gives
+$F(W)=1$. Also $O_2(E_{a+1})\nleq V_{a+1}$ by (7.6), so there is a
+noncentral chief factor in $O_2(E_{a+1})/V_{a+1}$. Applying (1.2) to
+the quadratic action on $\overline V_{a'}$ yields
+$t\in V_{a+1}\setminus Q_{a'}$ and $A\le V_{a'}$ with
+$|V_{a'}/A|=2$ and $[A,t]\le Z_{a+1}$.
+
+If some $a\in V_{a+1}\setminus Q_{a'}$ gives
+$|[V_{a'},a]|=2$, then (9.5) gives either the first alternative or
+$|V_{a+1}|=4$, which is impossible by (7.6). Thus
+$|[V_{a'},a]|\ge4$ for every such $a$. The module decomposition from
+(1.7) then gives
+$W_{a+2}=V_{a+1}\cap V_{a'}$, $|W_0/W|=2$, and
+$|W_{a+2}/W|=2^3$. The remaining cases are separated by whether
+$|V_{a'}|=2^3$ or $2^5$; (9.5)--(9.7) give the groups, orders, and
+module structures listed in (a) and (b). In case (a), the subgroup
+$W^*$ constructed from $C_{Q_{a+2}}(W_0)$ is elementary abelian normal,
+and its normalizer argument gives a nonsolvable centralizer. In case (b),
+the Frattini and centralizer calculations yield the displayed equalities.
+\end{proof}
+
+\noindent A finite group is of type $M_{12}$ (respectively $^2F_4(2)'$)
+if it contains $G_{a+2},G_{a+1}$ with Sylow intersection, trivial
+2-core of their join, and satisfying alternative (a) (respectively (b))
+of (10.1). The groups $M_{12}$ and $^2F_4(2)'$ are examples.
 \end{document}

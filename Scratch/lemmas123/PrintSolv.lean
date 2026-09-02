@@ -1,0 +1,10 @@
+import Stellmacher.SectionOne.Defs
+#print Group.IsSolvable
+#check Group.IsSolvable.to_subgroup
+#check Group.IsSolvable.subgroup
+#check IsSolvable.subgroup
+#check Group.IsSolvable.of_subgroup
+#check Subgroup.isSolvable
+#check Group.IsSolvable.of_injective
+#check Group.IsSolvable.of_surjective
+#check Group.IsSolvable.to_isSolvable

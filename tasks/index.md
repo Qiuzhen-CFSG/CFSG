@@ -5,6 +5,7 @@ Global orchestrator board. Each task or cohesive milestone has a card
 
 ## Targets
 
+- `Stellmacher.SectionOne.lemma_one_one` through `lemma_one_seven` proof phase — in progress — task: `tasks/stellmacher-section-one-proofs.md` — modules: `Stellmacher.SectionOne.LemmaOneOne` through `LemmaOneSeven`, `Stellmacher.SectionOne`, `Stellmacher.SectionsOneToFour`
 - `Stellmacher.SectionOne.lemma_one_one` through `lemma_one_three` statement cluster — done — task: `tasks/stellmacher-section-one-basic.md` — modules: `Stellmacher.SectionOne`, `Stellmacher.SectionOne.LemmaOneOne`, `Stellmacher.SectionOne.LemmaOneTwo`, `Stellmacher.SectionOne.LemmaOneThree`
 - `Stellmacher.theorem_one` statement cluster — done — task: `tasks/stellmacher-theorem-one.md` — modules: `Stellmacher.FinalTheorem`
 - `Stellmacher.theorem_two` proof phase — in progress — task: `tasks/stellmacher-theorem-two.md` — modules: `Stellmacher.FinalTheorem`, `Stellmacher/TheoremTwoProof.lean` (planned)
@@ -40,7 +41,7 @@ Global orchestrator board. Each task or cohesive milestone has a card
 ## Validation
 
 - Authoritative build: `lake build Stellmacher` and the full `lake build` succeeded at 2026-09-01T15:03:38Z after the Theorem 2 clause (e) source correction and independent statement review.
-- Sorry inventory: `Stellmacher.theorem_two` remains the active proof target (currently `sorry`), alongside the pre-existing statement-only placeholders for `theorem_one` and Section 1 lemmas; no `admit`, `axiom`, or `opaque` occurs in the Stellmacher modules.
+- Sorry inventory: Section One proof completion is active for `lemma_one_one` through `lemma_one_seven`; `Stellmacher.theorem_one` and `theorem_two` remain pre-existing statement-only placeholders. No `admit`, `axiom`, or `opaque` occurs in the Stellmacher modules.
 
 ## Legacy
 

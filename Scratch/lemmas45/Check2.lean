@@ -1,0 +1,14 @@
+import Stellmacher.SectionOne.LemmaOneFive
+#check natCard_subgroupOf_eq
+#check Nat.card_congr
+#check Subgroup.subgroupOfEquivOfLe
+#check Subgroup.card_mul_index
+#check Subgroup.index_mul_card
+#check Rat.cast_mul
+#check Rat.cast_inj
+#check Nat.cast_mul
+#check div_eq_mul_inv
+#check mul_inv_rev
+#check inv_mul_cancel₀
+#check inv_mul_cancel₀
+#check DivisionRing
