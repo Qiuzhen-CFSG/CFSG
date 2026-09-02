@@ -9,9 +9,11 @@ public import Theory.Representation.Maschke
 # Complete reducibility for finite-group representations
 -/
 
+@[expose] public section
+
 set_option backward.isDefEq.respectTransparency false in
 /-- A representation is completely reducible when its associated `F[G]`-module is semisimple. -/
-@[expose] public def Representation.IsCompletelyReducible
+def Representation.IsCompletelyReducible
     {F G V : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     (ρ : Representation F G V) : Prop :=
   IsSemisimpleModule (MonoidAlgebra F G) ρ.asModule
@@ -19,7 +21,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency false in
 /-- A finite-group representation is completely reducible when `ringChar F = 0` or
 `ringChar F` is prime and coprime to `|G|`. -/
-public theorem Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
+theorem Representation.isCompletelyReducible_of_ringChar_eq_zero_or_prime_coprime
     {G : Type*} [Group G] [Finite G] {F : Type*} [Field F] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (hchar : ringChar F = 0 ∨ (Nat.Prime (ringChar F) ∧ Nat.Coprime (ringChar F) (Nat.card G))) :

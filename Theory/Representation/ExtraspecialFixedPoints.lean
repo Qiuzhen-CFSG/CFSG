@@ -23,6 +23,8 @@ public import Theory.Representation.PrimitiveRootEigenspaces
 public import Theory.GroupAction.Lemmas
 public import Mathlib.GroupTheory.SemidirectProduct
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 open MonoidAlgebra
@@ -209,7 +211,7 @@ theorem exists_simple_submodule_nontrivial_of_not_le_ker_of_fixedSubspace_eq_bot
   obtain ⟨m, hm, hHmk⟩ := exists_simple_submodule_nontrivial_of_not_le_ker (ρ := ρ) H hH
   exact ⟨m, hm, invariants_ofSubmodule'_eq_bot_of_invariants_eq_bot ρ R m hfix, hHmk⟩
 
-public theorem commutator_le_center_of_isExtraspecial_local
+theorem commutator_le_center_of_isExtraspecial_local
     {q : ℕ} [Fact q.Prime] {K : Type*} [Group K] [Finite K] [IsExtraspecial q K] :
     commutator K ≤ Subgroup.center K := by
   let : IsMulCommutative (K ⧸ Subgroup.center K) :=
@@ -218,7 +220,7 @@ public theorem commutator_le_center_of_isExtraspecial_local
     (Subgroup.Normal.quotient_commutative_iff_commutator_le (N := Subgroup.center K)).mp
       inferInstance
 
-public theorem center_le_of_le_center_ne_bot_of_prime_center_local
+theorem center_le_of_le_center_ne_bot_of_prime_center_local
     {K : Type*} [Group K] [Finite K] {q : ℕ} [Fact q.Prime]
     (hcenter : Nat.card (Subgroup.center K) = q)
     {S : Subgroup K} (hS_le : S ≤ Subgroup.center K) (hS_ne_bot : S ≠ ⊥) :
@@ -2476,7 +2478,7 @@ theorem theorem_2_5_hE
     _ = Module.finrank F (intertwiningSubmodule (τ x) (ε ^ m • τ x)) + 1 := by
           rw [← hfinrank_intertwine m]
 
-public theorem theorem_2_5_a {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
+theorem theorem_2_5_a {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
     {P : Type*} [Group P] [IsExtraspecial p P] (hp : Nat.card P = p ^ (2 * n + 1))
     {h : ℕ} {H : Type*} [Group H] [IsCyclic H] (hH : Nat.card H = h) (hh : Nat.Coprime h p)
     {φ : H →* MulAut P}
@@ -2966,7 +2968,7 @@ theorem theorem_2_5_b_core
       exact hvInv
     exact hv_ne (by simpa using hv0)
 
-public theorem theorem_2_5_b {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
+theorem theorem_2_5_b {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
     {P : Type*} [Group P] [IsExtraspecial p P] (hp : Nat.card P = p ^ (2 * n + 1))
     {h : ℕ} {H : Type*} [Group H] [IsCyclic H] (hH : Nat.card H = h) (hh : Nat.Coprime h p)
     {φ : H →* MulAut P}

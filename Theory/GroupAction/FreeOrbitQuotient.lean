@@ -12,6 +12,8 @@ For a free group action, the subgroup-orbit quotient splits as the product of
 the full orbit quotient and the subgroup coset space.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 
@@ -19,7 +21,7 @@ namespace MulAction
 
 /-- For a free G-action on X, every full G-orbit splits into copies indexed by
 the left cosets of H when restricted to a subgroup H. -/
-public noncomputable def orbitRelQuotientSubgroupEquivProd
+noncomputable def orbitRelQuotientSubgroupEquivProd
     {G X : Type*} [Group G] [MulAction G X] [IsCancelSMul G X]
     (H : Subgroup G) :
     _root_.MulAction.orbitRel.Quotient H X ≃ _root_.MulAction.orbitRel.Quotient G X × (G ⧸ H) :=
@@ -38,7 +40,7 @@ public noncomputable def orbitRelQuotientSubgroupEquivProd
 
 /-- For a finite free G-action, the number of H-orbits is the index of H
 times the number of G-orbits. -/
-public theorem natCard_orbitRelQuotient_subgroup
+theorem natCard_orbitRelQuotient_subgroup
     {G X : Type*} [Group G] [Finite G] [MulAction G X] [IsCancelSMul G X]
     [Finite (_root_.MulAction.orbitRel.Quotient G X)] (H : Subgroup G) :
     Nat.card (_root_.MulAction.orbitRel.Quotient H X) =

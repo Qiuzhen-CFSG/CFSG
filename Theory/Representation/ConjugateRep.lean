@@ -4,6 +4,8 @@ public import Mathlib.RepresentationTheory.Basic
 public import Mathlib.RepresentationTheory.Induced
 public import Theory.Representation.RepEquiv
 
+@[expose] public section
+
 open _root_.Representation
 open scoped MonoidAlgebra
 
@@ -12,8 +14,7 @@ namespace Representation
 variable {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V] {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
 
 /-- The conjugate representation of `ρ` by the element `x`. -/
-@[expose]
-public def conjugateRep (x : G) : Representation F H V := {
+def conjugateRep (x : G) : Representation F H V := {
   toFun := fun h => ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩)
   map_one' := by
     simp only [OneMemClass.coe_one, mul_one, mul_inv_cancel]
@@ -23,12 +24,12 @@ public def conjugateRep (x : G) : Representation F H V := {
     simp only [Subgroup.coe_mul, MulMemClass.mk_mul_mk, conj_mul]
 }
 
-public theorem conjugateRep_apply (x : G) (h : H) : (conjugateRep ρ x) h = ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩) := rfl
+theorem conjugateRep_apply (x : G) (h : H) : (conjugateRep ρ x) h = ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩) := rfl
 
 
 /-- Transport a subrepresentation of a normal subgroup through the inverse of an
 ambient representation operator. -/
-@[expose] public def conjugateSubrepresentation
+def conjugateSubrepresentation
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -45,7 +46,7 @@ ambient representation operator. -/
     simp [h', map_mul, Module.End.mul_eq_comp, mul_assoc]
 
 @[simp]
-public theorem conjugateSubrepresentation_toSubmodule
+theorem conjugateSubrepresentation_toSubmodule
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -55,7 +56,7 @@ public theorem conjugateSubrepresentation_toSubmodule
 
 /-- The transported subrepresentation is equivalent to the corresponding
 conjugate representation. -/
-public noncomputable def conjugateSubrepresentationEquiv
+noncomputable def conjugateSubrepresentationEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -94,7 +95,7 @@ public noncomputable def conjugateSubrepresentationEquiv
 
 /-- A representation equivalence induces an equivalence between the
 corresponding conjugate representations. -/
-public noncomputable def conjugateRepEquiv
+noncomputable def conjugateRepEquiv
     {F G V W : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
     {H : Subgroup G} [H.Normal]
@@ -116,7 +117,7 @@ public noncomputable def conjugateRepEquiv
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 g⟩ v
 /-- Conjugation by an ambient representation operator is an order automorphism
 of the lattice of subrepresentations of a normal subgroup. -/
-public noncomputable def conjugateSubrepresentationOrderIso
+noncomputable def conjugateSubrepresentationOrderIso
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal] (g : G) :
@@ -157,7 +158,7 @@ public noncomputable def conjugateSubrepresentationOrderIso
 
 
 @[simp]
-public theorem conjugateSubrepresentationOrderIso_toSubmodule
+theorem conjugateSubrepresentationOrderIso_toSubmodule
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -169,7 +170,7 @@ public theorem conjugateSubrepresentationOrderIso_toSubmodule
   rw [inv_inv]
 
 @[simp]
-public theorem conjugateSubrepresentationOrderIso_apply
+theorem conjugateSubrepresentationOrderIso_apply
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -181,7 +182,7 @@ public theorem conjugateSubrepresentationOrderIso_apply
     conjugateSubrepresentation_toSubmodule, inv_inv]
 
 @[simp]
-public theorem conjugateSubrepresentationOrderIso_one
+theorem conjugateSubrepresentationOrderIso_one
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -192,7 +193,7 @@ public theorem conjugateSubrepresentationOrderIso_one
     Module.End.one_eq_id, Submodule.map_id]
 
 @[simp]
-public theorem conjugateSubrepresentationOrderIso_mul
+theorem conjugateSubrepresentationOrderIso_mul
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -208,7 +209,7 @@ public theorem conjugateSubrepresentationOrderIso_mul
 
 /-- Transport an equivalence of subrepresentations through the same ambient
 conjugation operator. -/
-public noncomputable def conjugateSubrepresentationOrderIsoRepEquiv
+noncomputable def conjugateSubrepresentationOrderIsoRepEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]

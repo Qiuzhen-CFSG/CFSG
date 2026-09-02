@@ -13,31 +13,29 @@ import Mathlib.GroupTheory.QuotientGroup.Basic
 This file ...
 -/
 
+@[expose] public section
+
 open scoped Pointwise
 
 variable (p : ℕ) (G : Type*) [Group G]
 
 /-- The set of normal `p`-subgroups of `G`. -/
-@[expose]
-public def normalPSubgroups : Set (Subgroup G) :=
+def normalPSubgroups : Set (Subgroup G) :=
   {K : Subgroup G | K.Normal ∧ IsPGroup p K}
 
 /-- The `p`-core of `G`: the supremum of all normal `p`-subgroups. -/
-@[expose]
-public def pCore : Subgroup G :=
+def pCore : Subgroup G :=
   sSup {K : Subgroup G | K.Normal ∧ IsPGroup p K}
 
 /-- The set of normal subgroups of `G` whose order is coprime to `p`. -/
-@[expose]
-public def normalPPrimeSubgroups : Set (Subgroup G) :=
+def normalPPrimeSubgroups : Set (Subgroup G) :=
   {K : Subgroup G | K.Normal ∧ Nat.Coprime p (Nat.card K)}
 
 /-- The `p'`-core of `G`: the supremum of all normal subgroups of order coprime to `p`. -/
-@[expose]
-public def pPrimeCore : Subgroup G :=
+def pPrimeCore : Subgroup G :=
   sSup {K : Subgroup G | K.Normal ∧ Nat.Coprime p (Nat.card K)}
 
-public instance prime_factors_attach_fact_inst (p : (Nat.card G).primeFactors.attach)
+instance prime_factors_attach_fact_inst (p : (Nat.card G).primeFactors.attach)
     : Fact (Nat.Prime p.1.1) :=
   ⟨Nat.prime_of_mem_primeFactors p.1.2⟩
 open scoped commutatorElement
@@ -65,7 +63,7 @@ variable {G} {p}
 
 /-- `p`-core of `G` is normal. -/
 @[instance]
-public theorem pCore_normal : (pCore p G).Normal := by
+theorem pCore_normal : (pCore p G).Normal := by
   refine ⟨?_⟩
   intro n hn g
   have hdir := directedOn_normal_pGroups p G
@@ -74,7 +72,7 @@ public theorem pCore_normal : (pCore p G).Normal := by
   exact Subgroup.mem_sSup_of_mem hK (hK.1.conj_mem n hnK g)
 
 /-- `p`-core of `G` is a `p`-group. -/
-public theorem pCore_isPGroup : IsPGroup p (pCore p G) := by
+theorem pCore_isPGroup : IsPGroup p (pCore p G) := by
   intro g
   have hg := g.2
   dsimp [pCore] at hg
@@ -89,7 +87,7 @@ public theorem pCore_isPGroup : IsPGroup p (pCore p G) := by
   simpa using hn
 
 /-- The `p`-core is preserved under group isomorphisms. -/
-public theorem pCore_map_iso {G G' : Type*} [Group G] [Group G'] (p : ℕ) (f : G ≃* G')
+theorem pCore_map_iso {G G' : Type*} [Group G] [Group G'] (p : ℕ) (f : G ≃* G')
     : (pCore p G).map f.toMonoidHom = pCore p G' := by
   let S : Set (Subgroup G) := {K | K.Normal ∧ IsPGroup p K}
   let S' : Set (Subgroup G') := {K' | K'.Normal ∧ IsPGroup p K'}
@@ -122,14 +120,14 @@ public theorem pCore_map_iso {G G' : Type*} [Group G] [Group G'] (p : ℕ) (f : 
     _ = pCore p G' := rfl
 
 /-- The `p`-core is characteristic. -/
-public instance pCore_characteristic : (pCore p G).Characteristic := by
+instance pCore_characteristic : (pCore p G).Characteristic := by
   rw [Subgroup.characteristic_iff_map_eq]
   intro φ
   simpa using (pCore_map_iso (G := G) (G' := G) (p := p) (f := φ))
 
 variable [Fact p.Prime]
 
-public theorem pCore_isNilpotent [Finite G] : Group.IsNilpotent (↥(pCore p G)) :=
+theorem pCore_isNilpotent [Finite G] : Group.IsNilpotent (↥(pCore p G)) :=
   pCore_isPGroup.isNilpotent
 
 lemma pCore_disjoint_of_ne (p q : ℕ) [Fact p.Prime] [Fact q.Prime] (hne : p ≠ q)
@@ -159,7 +157,7 @@ lemma Sylow.isPGroup_map {N : Subgroup G} (p : ℕ) (P : Sylow p (↥N))
 
 variable [Finite G]
 
-public theorem Group.IsNilpotent.sylow_normal (h : Group.IsNilpotent G)
+theorem Group.IsNilpotent.sylow_normal (h : Group.IsNilpotent G)
     (p : ℕ) [Fact p.Prime] (P : Sylow p G)
     : (P : Subgroup G).Normal :=
   have h_nc : NormalizerCondition G := @Group.normalizerCondition_of_isNilpotent G _ h
@@ -189,7 +187,7 @@ lemma primeFactors_subset (N : Subgroup G)
     have hpdvd : p ∣ Nat.card G := (Nat.dvd_of_mem_primeFactors hp).trans hdvd
     Nat.mem_primeFactors.mpr ⟨Nat.prime_of_mem_primeFactors hp, hpdvd, Nat.card_pos.ne'⟩
 
-public theorem isNilpotent_iSup_pCore
+theorem isNilpotent_iSup_pCore
     : Group.IsNilpotent (↥(⨆ (p : (Nat.card G).primeFactors.attach), pCore p.1.1 G)) := by
   have : Fintype G := Fintype.ofFinite G
   let π := (Nat.card G).primeFactors.attach
@@ -247,7 +245,7 @@ public theorem isNilpotent_iSup_pCore
   exact Group.nilpotent_of_mulEquiv e
 
 /-- A finite nilpotent group is the supremum of its Sylow subgroups. -/
-public theorem Sylow.iSup_sylow_eq_top
+theorem Sylow.iSup_sylow_eq_top
     : ⨆ p ∈ (Nat.card G).primeFactors, ((default : Sylow p G) : Subgroup G) = ⊤ := by
   set S := ⨆ p ∈ (Nat.card G).primeFactors, ((default : Sylow p G) : Subgroup G)
   rw[← Subgroup.card_eq_iff_eq_top]
@@ -286,7 +284,7 @@ lemma Sylow.iSup_sylow_map_eq_top {N : Subgroup G}
       = N := by
   rw[Sylow.iSup_sylow_eq_top (G := N), ← (MonoidHom.range_eq_map N.subtype), Subgroup.range_subtype]
 
-public theorem normal_nilpotent_le_sup_pCore {N : Subgroup G} (hN : N.Normal)
+theorem normal_nilpotent_le_sup_pCore {N : Subgroup G} (hN : N.Normal)
     (hnil : Group.IsNilpotent (↥N))
     : N ≤ ⨆ (p : (Nat.card G).primeFactors.attach), pCore p.1 G := by
   let π_N := (Nat.card (↥N)).primeFactors

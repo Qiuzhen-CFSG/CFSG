@@ -16,25 +16,27 @@ public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
 
 
+@[expose] public section
+
 open scoped IsMulCommutative commutatorElement
 
 section QuotientSubgroupRange
 
 /-- Cardinality of a quotient by a kernel equals the cardinality of the range. -/
-public lemma natCard_quotient_eq_card_range_of_ker_eq {A B : Type*} [Group A] [Finite A]
+lemma natCard_quotient_eq_card_range_of_ker_eq {A B : Type*} [Group A] [Finite A]
     [Group B] (φ : A →* B) (H : Subgroup A) [H.Normal] (hφker : φ.ker = H) :
     Nat.card (A ⧸ H) = Nat.card φ.range := by
   simpa [hφker] using Nat.card_congr (QuotientGroup.quotientKerEquivRange φ).toEquiv
 
 /-- Cardinality of a quotient by a kernel, rewritten along an explicit range subgroup. -/
-public lemma natCard_quotient_eq_card_of_ker_eq_of_range_eq {A B : Type*} [Group A]
+lemma natCard_quotient_eq_card_of_ker_eq_of_range_eq {A B : Type*} [Group A]
     [Finite A] [Group B] (φ : A →* B) (H : Subgroup A) [H.Normal] (S : Subgroup B)
     (hφker : φ.ker = H) (hφrange : φ.range = S) :
     Nat.card (A ⧸ H) = Nat.card S := by
   rw [natCard_quotient_eq_card_range_of_ker_eq φ H hφker, hφrange]
 
 /-- The range of the quotient map restricted to a subgroup has the quotient cardinality. -/
-public lemma natCard_map_mk'_eq {G : Type*} [Group G] [Finite G]
+lemma natCard_map_mk'_eq {G : Type*} [Group G] [Finite G]
     (K N : Subgroup G) [N.Normal] :
     Nat.card (K.map (QuotientGroup.mk' N)) = Nat.card (K ⧸ N.subgroupOf K) := by
   let φ : K →* G ⧸ N := (QuotientGroup.mk' N).comp K.subtype
@@ -53,8 +55,7 @@ public lemma natCard_map_mk'_eq {G : Type*} [Group G] [Finite G]
     (K.map (QuotientGroup.mk' N)) hφker hφrange
 
 /-- The quotient of a subgroup by the induced normal subgroup is the range of the quotient map. -/
-@[expose]
-public noncomputable def quotientSubgroupRangeEquiv {G : Type*} [Group G]
+noncomputable def quotientSubgroupRangeEquiv {G : Type*} [Group G]
     (K N : Subgroup G) [N.Normal] :
     (↥K ⧸ N.subgroupOf K) ≃* K.map (QuotientGroup.mk' N) := by
   let φ : K →* G ⧸ N := (QuotientGroup.mk' N).comp K.subtype
@@ -72,7 +73,7 @@ public noncomputable def quotientSubgroupRangeEquiv {G : Type*} [Group G]
     (QuotientGroup.quotientMulEquivOfEq hφker.symm).trans
       ((QuotientGroup.quotientKerEquivRange φ).trans (MulEquiv.subgroupCongr hφrange))
 
-public theorem quotientSubgroupRangeEquiv_apply_mk
+theorem quotientSubgroupRangeEquiv_apply_mk
     {G : Type*} [Group G] (K N : Subgroup G) [N.Normal] (x : K) :
     ((quotientSubgroupRangeEquiv K N) (QuotientGroup.mk' (N.subgroupOf K) x) :
         G ⧸ N) =
@@ -109,15 +110,15 @@ variable {A N : Type*} [Group A] [Finite A] [CommGroup N] [Finite N]
 variable [MulDistribMulAction A N]
 
 /-- A (multiplicative) 1-cocycle for an action. -/
-@[expose]
-public def IsCocycle₁ (c : A → N) : Prop :=
+
+def IsCocycle₁ (c : A → N) : Prop :=
   ∀ a b : A, c (a * b) = c a * (a • c b)
 
 /-- If `c : A → N` is a 1-cocycle and `|A|` is coprime to `|N|`, then `c` is a 1-coboundary.
 
 This is the elementary “`H¹(A, N) = 0` for coprime finite actions” statement, specialized to
 `Nat.card` and proved by an explicit averaging/product argument. -/
-public lemma exists_coboundary_of_cocycle_of_coprime_card
+lemma exists_coboundary_of_cocycle_of_coprime_card
     (c : A → N) (hc : IsCocycle₁ (A := A) (N := N) c)
     (hcop : Nat.Coprime (Nat.card A) (Nat.card N)) :
     ∃ n : N, ∀ a : A, c a = (a • n)⁻¹ * n := by
@@ -226,7 +227,7 @@ variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
 
 /-- If a subgroup `H` is `A`-invariant (in the sense of `IsInvariant`), then the action descends to
 `G ⧸ H`. -/
-public lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A G H) :
+lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A G H) :
     MulAction.QuotientAction A H where
   inv_mul_mem a {g g'} hg := by
     -- Use invariance of `H` and the fact `a` acts by an automorphism.
@@ -236,8 +237,8 @@ public lemma quotientAction_of_isInvariant (H : Subgroup G) (hH : IsInvariant A 
     simpa [smul_mul_assoc, smul_inv_smul] using this
 
 /-- A `MulDistribMulAction` on `G ⧸ H` induced by an `A`-action on `G` that preserves `H`. -/
-@[reducible, expose]
-public noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariant A G H)
+@[reducible]
+noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsInvariant A G H)
     [H.Normal] : MulDistribMulAction A (G ⧸ H) := by
   classical
   -- First, install the descended `MulAction`.
@@ -270,7 +271,7 @@ public noncomputable def quotientMulDistribMulAction (H : Subgroup G) (hH : IsIn
 
 /-- For the induced action on `G ⧸ H`, the image of fixed points in `G` lies in fixed points of
 the quotient. -/
-public theorem fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
+theorem fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
     (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H) :
     letI : MulDistribMulAction A (G ⧸ H) := quotientMulDistribMulAction (A := A) (G := G) H hH
     (FixedPoints.subgroup A G).map (QuotientGroup.mk' H) ≤ FixedPoints.subgroup A (G ⧸ H) := by
@@ -291,7 +292,7 @@ public theorem fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
 
 /-- If `H` is an abelian `A`-invariant normal subgroup with `(|A|,|H|)=1`, then fixed points in
 `G ⧸ H` are exactly the image of fixed points in `G`. -/
-public theorem fixedPoints_subgroup_quotient_eq_map_of_isMulCommutative
+theorem fixedPoints_subgroup_quotient_eq_map_of_isMulCommutative
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G]
     (H : Subgroup G) [H.Normal] (hH : IsInvariant A G H)
@@ -355,7 +356,7 @@ universe u v
 
 /-- Under solvability and coprime action assumptions, fixed points commute with quotienting by any
 `A`-invariant normal subgroup. -/
-public theorem fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+theorem fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
     {G : Type u} {A : Type v} [Group G] [Finite G] [Group A] [Finite A]
     [MulDistribMulAction A G]
     (hsolv : Group.IsSolvable G)
@@ -579,7 +580,7 @@ public theorem fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
 
 end QuotientActionInfrastructure
 
-public lemma card_quotient_subgroupOf_comap_eq
+lemma card_quotient_subgroupOf_comap_eq
     {G Q : Type*} [Group G] [Group Q]
     (f : G →* Q) (hf : Function.Surjective f) (H : Subgroup Q) :
     Nat.card ((H.comap f) ⧸ (f.ker.subgroupOf (H.comap f))) = Nat.card H := by
@@ -609,7 +610,7 @@ section IsInvariantQuotient
 
 open QuotientGroup
 
-public lemma isInvariant_map_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+lemma isInvariant_map_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     {N : Subgroup G} [N.Normal] [IsInvariant A G N]
     (H : Subgroup G) [IsInvariant A G H] :
     letI : MulDistribMulAction A (G ⧸ N) :=
@@ -632,7 +633,7 @@ public lemma isInvariant_map_quotient {G A : Type*} [Group G] [Group A] [MulDist
     have hsmul := congrArg (fun z : G ⧸ N => a⁻¹ • z) hq
     simpa [inv_smul_smul] using hsmul
 
-public lemma isInvariant_comap_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+lemma isInvariant_comap_quotient {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     {N : Subgroup G} [N.Normal] [IsInvariant A G N]
     (H : Subgroup (G ⧸ N))
     [hQ : MulDistribMulAction A (G ⧸ N)] [IsInvariant A (G ⧸ N) H]

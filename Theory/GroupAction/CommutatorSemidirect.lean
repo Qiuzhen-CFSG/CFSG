@@ -3,12 +3,14 @@ module
 public import Mathlib.GroupTheory.SemidirectProduct
 public import Theory.GroupAction.Defs
 
+@[expose] public section
+
 open scoped Pointwise commutatorElement
 
 
 variable {G A : Type*} [Group G] [Group A]
 
-private theorem semidirect_comm_inl_inv_inr_for_commutatorSubgroup
+theorem semidirect_comm_inl_inv_inr_for_commutatorSubgroup
     (φ : A →* MulAut G) (a : A) (g : G) :
     ⁅((SemidirectProduct.inl (φ := φ) g : G ⋊[φ] A)⁻¹),
       (SemidirectProduct.inr (φ := φ) a : G ⋊[φ] A)⁆ =
@@ -33,7 +35,7 @@ private theorem semidirect_comm_inl_inv_inr_for_commutatorSubgroup
 variable [MulDistribMulAction A G]
 
 /-- The subgroup action commutator is monotone in the subgroup being acted on. -/
-public theorem commutatorSubgroup_mono {H K : Subgroup G} (hHK : H ≤ K) :
+theorem commutatorSubgroup_mono {H K : Subgroup G} (hHK : H ≤ K) :
     commutatorSubgroup A G H ≤ commutatorSubgroup A G K := by
   rw [commutatorSubgroup, commutatorSubgroup]
   apply Subgroup.closure_mono
@@ -41,7 +43,7 @@ public theorem commutatorSubgroup_mono {H K : Subgroup G} (hHK : H ≤ K) :
   exact ⟨a, g, hHK hg, rfl⟩
 
 /-- Embed an action commutator into the associated semidirect product. -/
-public theorem commutatorSubgroup_map_semidirect_inl_eq_commutator
+theorem commutatorSubgroup_map_semidirect_inl_eq_commutator
     (B : Subgroup A) (H : Subgroup G) :
     let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
     let inl : G →* G ⋊[φ] A := SemidirectProduct.inl

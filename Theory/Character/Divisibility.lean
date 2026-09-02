@@ -10,6 +10,8 @@ public import Mathlib.NumberTheory.Niven
 public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
 
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 
@@ -23,46 +25,46 @@ attribute [local instance] Fintype.ofFinite
 variable {G V : Type*} [Group G] [Finite G]
 variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
-private abbrev IntegralGroupAlgebra (G : Type*) [Group G] := MonoidAlgebra ℤ G
+abbrev IntegralGroupAlgebra (G : Type*) [Group G] := MonoidAlgebra ℤ G
 
 
-private noncomputable def classSet (c : ConjClasses G) : Finset G :=
+noncomputable def classSet (c : ConjClasses G) : Finset G :=
   letI : DecidableEq (ConjClasses G) := Classical.decEq (ConjClasses G)
   Finset.univ.filter fun g : G => ConjClasses.mk g = c
 
-private noncomputable def conjClassFinset : Finset (ConjClasses G) :=
+noncomputable def conjClassFinset : Finset (ConjClasses G) :=
   letI : Fintype (ConjClasses G) := Fintype.ofFinite (ConjClasses G)
   Finset.univ
 
-private lemma mem_conjClassFinset (c : ConjClasses G) :
+lemma mem_conjClassFinset (c : ConjClasses G) :
     c ∈ conjClassFinset (G := G) := by
   classical
   simp [conjClassFinset]
 
-private lemma mem_classSet_iff {c : ConjClasses G} {g : G} :
+lemma mem_classSet_iff {c : ConjClasses G} {g : G} :
     g ∈ classSet (G := G) c ↔ ConjClasses.mk g = c := by
   classical
   simp [classSet]
 
-private noncomputable def classSumInt (c : ConjClasses G) : MonoidAlgebra ℤ G :=
+noncomputable def classSumInt (c : ConjClasses G) : MonoidAlgebra ℤ G :=
   ∑ g ∈ classSet (G := G) c, MonoidAlgebra.single g (1 : ℤ)
 
-private noncomputable def classSumComplex (c : ConjClasses G) : MonoidAlgebra ℂ G :=
+noncomputable def classSumComplex (c : ConjClasses G) : MonoidAlgebra ℂ G :=
   ∑ g ∈ classSet (G := G) c, MonoidAlgebra.single g (1 : ℂ)
 
-private instance integralGroupAlgebra_moduleFinite :
+instance integralGroupAlgebra_moduleFinite :
     Module.Finite ℤ (IntegralGroupAlgebra G) := by
   classical
   exact Module.Finite.of_basis (MonoidAlgebra.basis G ℤ)
 
-private lemma classSumInt_isIntegral (c : ConjClasses G) :
+lemma classSumInt_isIntegral (c : ConjClasses G) :
     IsIntegral ℤ (classSumInt (G := G) c) := by
   classical
   have hfin : Module.Finite ℤ (MonoidAlgebra ℤ G) :=
     Module.Finite.of_basis (MonoidAlgebra.basis G ℤ)
   exact @IsIntegral.of_finite ℤ (MonoidAlgebra ℤ G) _ _ _ hfin (classSumInt (G := G) c)
 
-private lemma classSumComplex_isIntegral (c : ConjClasses G) :
+lemma classSumComplex_isIntegral (c : ConjClasses G) :
     IsIntegral ℤ (classSumComplex (G := G) c) := by
   classical
   let φ : MonoidAlgebra ℤ G →+* MonoidAlgebra ℂ G :=
@@ -73,7 +75,7 @@ private lemma classSumComplex_isIntegral (c : ConjClasses G) :
   rw [← hmap]
   exact map_isIntegral_int φ (classSumInt_isIntegral (G := G) c)
 
-private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClasses G) (x : G) :
+lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClasses G) (x : G) :
     (classSumComplex (G := G) c).coeff x =
       if ConjClasses.mk x = c then 1 else 0 := by
   rw [classSumComplex]
@@ -98,7 +100,7 @@ private lemma classSumComplex_coeff [DecidableEq (ConjClasses G)] (c : ConjClass
     simp [hyx]
 
 
-private lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G) :
+lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G) :
     a * classSumComplex (G := G) c =
       classSumComplex (G := G) c * a := by
   classical
@@ -115,7 +117,7 @@ private lemma classSumComplex_comm (c : ConjClasses G) (a : MonoidAlgebra ℂ G)
         classSumComplex_coeff]
       rw [hconj, mul_comm]
 
-private noncomputable def centralElementIntertwiner
+noncomputable def centralElementIntertwiner
     (ρ : Representation ℂ G V) (z : MonoidAlgebra ℂ G)
     (hz : ∀ a : MonoidAlgebra ℂ G, a * z = z * a) :
     Representation.IntertwiningMap ρ ρ where
@@ -130,7 +132,7 @@ private noncomputable def centralElementIntertwiner
     exact congrArg ρ.asAlgebraHom (hz (MonoidAlgebra.single g (1 : ℂ))).symm
 
 omit [Finite G] [FiniteDimensional ℂ V] in
-public theorem irreducible_nontrivial
+theorem irreducible_nontrivial
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ] :
     Nontrivial V := by
   classical
@@ -145,7 +147,7 @@ public theorem irreducible_nontrivial
     simp [hsub.elim v 0]
   exact IsSimpleOrder.bot_ne_top (α := Subrepresentation ρ) hbot_top
 
-private lemma centralElementIntertwiner_eq_scalar
+lemma centralElementIntertwiner_eq_scalar
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (z : MonoidAlgebra ℂ G) (hz : ∀ a : MonoidAlgebra ℂ G, a * z = z * a) :
     ∃ a : ℂ, ρ.asAlgebraHom z = a • (1 : Module.End ℂ V) := by
@@ -173,14 +175,14 @@ private lemma centralElementIntertwiner_eq_scalar
     (congrArg (fun f : Representation.IntertwiningMap ρ ρ => f v) ha).symm
 
 omit [FiniteDimensional ℂ V] in
-private lemma classSumComplex_trace
+lemma classSumComplex_trace
     (ρ : Representation ℂ G V) (c : ConjClasses G) :
     LinearMap.trace ℂ V (ρ.asAlgebraHom (classSumComplex (G := G) c)) =
       ∑ g ∈ classSet (G := G) c, ρ.character g := by
   classical
   simp [classSumComplex, Representation.character, map_sum]
 
-private lemma classSet_card_eq_carrier_card (c : ConjClasses G) :
+lemma classSet_card_eq_carrier_card (c : ConjClasses G) :
     (classSet (G := G) c).card = Nat.card c.carrier := by
   classical
   have hcard :
@@ -194,7 +196,7 @@ private lemma classSet_card_eq_carrier_card (c : ConjClasses G) :
       exact (ConjClasses.mem_carrier_iff_mk_eq (a := g) (b := c)).symm))
 
 omit [FiniteDimensional ℂ V] in
-private lemma classSumComplex_trace_eq_card_mul
+lemma classSumComplex_trace_eq_card_mul
     (ρ : Representation ℂ G V) {c : ConjClasses G} {x : G}
     (hx : ConjClasses.mk x = c) :
     LinearMap.trace ℂ V (ρ.asAlgebraHom (classSumComplex (G := G) c)) =
@@ -220,7 +222,7 @@ private lemma classSumComplex_trace_eq_card_mul
             simp [nsmul_eq_mul]
 
 omit [FiniteDimensional ℂ V] in
-private lemma isIntegral_scalar_of_isIntegral_smul_one
+lemma isIntegral_scalar_of_isIntegral_smul_one
     [Nontrivial V] (a : ℂ) (h : IsIntegral ℤ (a • (1 : Module.End ℂ V))) :
     IsIntegral ℤ a := by
   have h' : IsIntegral ℤ (algebraMap ℂ (Module.End ℂ V) a) := by
@@ -230,7 +232,7 @@ private lemma isIntegral_scalar_of_isIntegral_smul_one
   exact (isIntegral_algHom_iff f
     (FaithfulSMul.algebraMap_injective ℂ (Module.End ℂ V))).mp h'
 
-private lemma classSum_scalar_isIntegral
+lemma classSum_scalar_isIntegral
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (c : ConjClasses G) :
     ∃ a : ℂ,
@@ -247,7 +249,7 @@ private lemma classSum_scalar_isIntegral
   have : Nontrivial V := irreducible_nontrivial (ρ := ρ)
   exact isIntegral_scalar_of_isIntegral_smul_one (V := V) a (by simpa [ha] using hend)
 
-private lemma classSum_scalar_mul_finrank
+lemma classSum_scalar_mul_finrank
     (ρ : Representation ℂ G V) (c : ConjClasses G) {x : G}
     (hx : ConjClasses.mk x = c) {a : ℂ}
     (ha : ρ.asAlgebraHom (classSumComplex (G := G) c) = a • (1 : Module.End ℂ V)) :
@@ -265,7 +267,7 @@ private lemma classSum_scalar_mul_finrank
     simp
   exact htrace₂.symm.trans htrace₁
 
-public lemma trace_of_finite_order_isIntegral
+lemma trace_of_finite_order_isIntegral
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f : Module.End ℂ V} {n : ℕ} (hn : n ≠ 0) (hpow : f ^ n = 1) :
     IsIntegral ℤ (LinearMap.trace ℂ V f) := by
@@ -285,7 +287,7 @@ public lemma trace_of_finite_order_isIntegral
     isIntegral_algebraMap
   simpa using hμint.mul hrank_int
 
-public lemma representation_character_isIntegral
+lemma representation_character_isIntegral
     (ρ : Representation ℂ G V) (g : G) :
     IsIntegral ℤ (ρ.character g) := by
   classical
@@ -296,16 +298,16 @@ public lemma representation_character_isIntegral
     rw [← MonoidHom.map_pow, pow_orderOf_eq_one, MonoidHom.map_one]
   exact trace_of_finite_order_isIntegral (f := ρ g) hn hpow
 
-private noncomputable def classRep (c : ConjClasses G) : G :=
+noncomputable def classRep (c : ConjClasses G) : G :=
   Classical.choose (ConjClasses.exists_rep c)
 
 omit [Finite G] in
-private lemma classRep_spec (c : ConjClasses G) :
+lemma classRep_spec (c : ConjClasses G) :
     ConjClasses.mk (classRep (G := G) c) = c :=
   Classical.choose_spec (ConjClasses.exists_rep c)
 
 omit [Finite G] [FiniteDimensional ℂ V] in
-private lemma character_eq_of_mk_eq
+lemma character_eq_of_mk_eq
     (ρ : Representation ℂ G V) {g x : G}
     (h : ConjClasses.mk g = ConjClasses.mk x) :
     ρ.character g = ρ.character x := by
@@ -314,7 +316,7 @@ private lemma character_eq_of_mk_eq
   simp
 
 omit [FiniteDimensional ℂ V] in
-private lemma sum_character_norm_by_conjClasses
+lemma sum_character_norm_by_conjClasses
     (ρ : Representation ℂ G V) :
     (∑ g : G, ρ.character g * star (ρ.character g)) =
       ∑ c ∈ conjClassFinset (G := G),
@@ -359,25 +361,25 @@ private lemma sum_character_norm_by_conjClasses
               rw [Finset.sum_const, classSet_card_eq_carrier_card (G := G) c]
               simp [nsmul_eq_mul, mul_assoc]
 
-public noncomputable def classSumScalar
+noncomputable def classSumScalar
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (c : ConjClasses G) : ℂ :=
   Classical.choose (classSum_scalar_isIntegral (ρ := ρ) c)
 
-public theorem classSumScalar_isIntegral
+theorem classSumScalar_isIntegral
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (c : ConjClasses G) :
     IsIntegral ℤ (classSumScalar (ρ := ρ) c) :=
   (Classical.choose_spec (classSum_scalar_isIntegral (ρ := ρ) c)).1
 
-private lemma classSumScalar_spec
+lemma classSumScalar_spec
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (c : ConjClasses G) :
     ρ.asAlgebraHom (classSumComplex (G := G) c) =
       classSumScalar (ρ := ρ) c • (1 : Module.End ℂ V) :=
   (Classical.choose_spec (classSum_scalar_isIntegral (ρ := ρ) c)).2
 
-public theorem classSumScalar_eq_card_mul_character_div
+theorem classSumScalar_eq_card_mul_character_div
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (c : ConjClasses G) {x : G} (hx : x ∈ c.carrier) :
     classSumScalar (ρ := ρ) c =
@@ -400,7 +402,7 @@ public theorem classSumScalar_eq_card_mul_character_div
   field_simp [hdim_ne]
   simpa [mul_comm] using hscalar
 
-private theorem classSumComplex_mul_eq_sum_of_coefficients
+theorem classSumComplex_mul_eq_sum_of_coefficients
     (a : ConjClasses G → ConjClasses G → ConjClasses G → ℕ)
     (hdata : ∀ i j s : ConjClasses G, ∀ x : G, x ∈ s.carrier →
       a i j s =
@@ -523,7 +525,7 @@ private theorem classSumComplex_mul_eq_sum_of_coefficients
     simp [classSumComplex_coeff]
   exact hleft.trans (hindicator.trans (hdouble.trans (hcoeff.trans hright.symm)))
 
-public theorem classSumScalar_mul_eq_sum_of_coefficients
+theorem classSumScalar_mul_eq_sum_of_coefficients
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ]
     (a : ConjClasses G → ConjClasses G → ConjClasses G → ℕ)
     (hdata : ∀ i j s : ConjClasses G, ∀ x : G, x ∈ s.carrier →
@@ -573,7 +575,7 @@ public theorem classSumScalar_mul_eq_sum_of_coefficients
   exact (smul_left_injective ℂ hv) (by simpa [C] using hvend)
 
 /-- For an irreducible complex representation of a finite group, the dimension divides the group order. -/
-public theorem irreducible_dimension_dvd_group_order
+theorem irreducible_dimension_dvd_group_order
     (ρ : Representation ℂ G V) [Representation.IsIrreducible ρ] :
     Module.finrank ℂ V ∣ Nat.card G := by
   classical

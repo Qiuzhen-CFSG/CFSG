@@ -13,6 +13,8 @@ public import Mathlib.RingTheory.PicardGroup
 public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.RingTheory.SimpleRing.Principal
 
+@[expose] public section
+
 open scoped BigOperators
 open Finsupp TensorProduct Module
 
@@ -30,7 +32,7 @@ variable [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
 
 noncomputable section
 
-public instance finiteDimensional_coindV
+instance finiteDimensional_coindV
     {H K U : Type*} [Group H] [Group K] [Finite K]
     [AddCommGroup U] [Module ℂ U] [FiniteDimensional ℂ U]
     (φ : H →* K) (ρ : Representation ℂ H U) :
@@ -38,7 +40,7 @@ public instance finiteDimensional_coindV
   let _ : FiniteDimensional ℂ (K → U) := inferInstance
   infer_instance
 
-public instance finiteDimensional_ind
+instance finiteDimensional_ind
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     FiniteDimensional ℂ (Representation.IndV S.subtype ρ) := by
   let _ : FiniteDimensional ℂ (G →₀ ℂ) := inferInstance
@@ -259,7 +261,7 @@ lemma indToCoind_coindToInd
     simp [indToCoind, LinearMap.comp_apply]
     simpa [LinearMap.codRestrict] using indToCoindAux_of_not_rel S ρ g x a hx
 
-public noncomputable def indCoindEquiv
+noncomputable def indCoindEquiv
     (S : Subgroup G) (ρ : Representation ℂ S A) :
     (Representation.ind S.subtype ρ).Equiv (Representation.coind S.subtype ρ) := by
   classical
@@ -605,7 +607,7 @@ theorem quotient_fiber_character_term
     simp [hfix, hx]
 
 /-- Character formula for induced representations. -/
-public theorem induced_character_formula
+theorem induced_character_formula
     (S : Subgroup G) [DecidablePred (· ∈ S)] (ρ : Representation ℂ S A) (g : G) :
     (Representation.ind S.subtype ρ).character g =
       (Nat.card S : ℂ)⁻¹ * ∑ x : G,
@@ -658,7 +660,7 @@ public theorem induced_character_formula
       rw [hsumF]
       field_simp [hcardS_ne]
 
-public lemma eigenvalue_pow_eq_one_of_pow_eq_one
+lemma eigenvalue_pow_eq_one_of_pow_eq_one
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f : Module.End ℂ V} {μ : ℂ} {n : ℕ}
     (hpow : f ^ n = 1) (hμ : f.HasEigenvalue μ) :
@@ -717,7 +719,7 @@ lemma complex_star_eigenvalue_eq_pow_pred_of_pow_eq_one
   simpa [pow_succ', mul_comm, mul_left_comm, mul_assoc] using
     eigenvalue_pow_eq_one_of_pow_eq_one hpow hμ
 
-public lemma eigenspace_iSup_eq_top_over_eigenvalues
+lemma eigenspace_iSup_eq_top_over_eigenvalues
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f : Module.End ℂ V} (hf : f.IsSemisimple) :
     ⨆ μ : f.Eigenvalues, f.eigenspace (μ : ℂ) = ⊤ := by
@@ -734,7 +736,7 @@ public lemma eigenspace_iSup_eq_top_over_eigenvalues
           simp [hbot]
     _ = ⊤ := hf.iSup_eigenspace_eq_top
 
-public lemma end_isSemisimple_of_pow_eq_one
+lemma end_isSemisimple_of_pow_eq_one
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (f : Module.End ℂ V) {n : ℕ} (hn : n ≠ 0) (hpow : f ^ n = 1) :
     f.IsSemisimple := by
@@ -745,7 +747,7 @@ public lemma end_isSemisimple_of_pow_eq_one
         exact_mod_cast hn)).squarefree
   · simp [map_sub, map_pow, Polynomial.aeval_X, hpow]
 
-public lemma trace_restrict_pow_eigenspace_eq
+lemma trace_restrict_pow_eigenspace_eq
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f : Module.End ℂ V} (μ : f.Eigenvalues) (k : ℕ) :
     LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
@@ -774,7 +776,7 @@ public lemma trace_restrict_pow_eigenspace_eq
   rw [hrestrict]
   simp [LinearMap.trace_id, smul_eq_mul]
 
-public lemma trace_pow_eq_sum_eigenvalues
+lemma trace_pow_eq_sum_eigenvalues
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f : Module.End ℂ V} {n k : ℕ}
     (hn : n ≠ 0) (hpow : f ^ n = 1) :
@@ -832,7 +834,7 @@ lemma trace_pow_pred_eq_star_trace_of_pow_eq_one
       symm
       simp
 
-public lemma representation_character_inv_eq_star_character
+lemma representation_character_inv_eq_star_character
     {G V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) (g : G) :

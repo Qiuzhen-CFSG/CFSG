@@ -9,6 +9,8 @@ public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.RepresentationTheory.FinGroupCharZero
 public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
+@[expose] public section
+
 noncomputable section
 
 open scoped BigOperators
@@ -24,7 +26,7 @@ variable {G V : Type*} [Group G] [Finite G]
 variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
 /-- Unbundled simplicity criterion: an irreducible complex representation has one-dimensional endomorphism algebra, and conversely when `|G|` is invertible. -/
-public theorem irreducible_iff_end_dimension_one
+theorem irreducible_iff_end_dimension_one
     (ρ : Representation ℂ G V) :
     Representation.IsIrreducible ρ ↔
       Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 := by
@@ -137,7 +139,7 @@ public theorem irreducible_iff_end_dimension_one
           · exact he_ne_one (by simpa using hc.symm)
 
 /-- Unbundled character-norm criterion for irreducibility. -/
-public theorem irreducible_iff_character_norm_one
+theorem irreducible_iff_character_norm_one
     (ρ : Representation ℂ G V) :
     Representation.IsIrreducible ρ ↔
       classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) = 1 := by
@@ -177,7 +179,7 @@ public theorem irreducible_iff_character_norm_one
 
 /-- The class function of an irreducible finite-dimensional complex representation is
 an irreducible character, independently of the chosen coefficient-space model. -/
-public theorem isIrreducibleCharacter_characterClassFunction
+theorem isIrreducibleCharacter_characterClassFunction
     {G V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) (hρ : Representation.IsIrreducible ρ) :
@@ -207,7 +209,7 @@ public theorem isIrreducibleCharacter_characterClassFunction
 
 /-- Irreducible representations over an algebraically closed nonmodular field with
 the same character are equivalent. -/
-public theorem equiv_of_irreducible_char_eq
+theorem equiv_of_irreducible_char_eq
     {G : Type*} [Group G] [Finite G]
     {F : Type*} [Field F] [IsAlgClosed F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -239,7 +241,7 @@ public theorem equiv_of_irreducible_char_eq
     exact False.elim (zero_ne_one (horth'.symm.trans hself'))
 set_option backward.isDefEq.respectTransparency false in
 /-- The one-dimensional trivial complex representation is irreducible. -/
-public theorem trivial_complex_irreducible
+theorem trivial_complex_irreducible
     {G : Type*} [Group G] [Finite G] :
     Representation.IsIrreducible (Representation.trivial ℂ G ℂ) := by
   rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
@@ -247,7 +249,7 @@ public theorem trivial_complex_irreducible
     (K := ℂ) (A := MonoidAlgebra ℂ G)
     (V := (Representation.trivial ℂ G ℂ).asModule) (CommSemiring.finrank_self ℂ)
 /-- Custom bundled form of the equal-character irreducible equivalence theorem. -/
-public theorem repEquiv_of_irreducible_char_eq
+theorem repEquiv_of_irreducible_char_eq
     {G : Type*} [Group G] [Finite G]
     {F : Type*} [Field F] [IsAlgClosed F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]

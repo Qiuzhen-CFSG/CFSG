@@ -18,6 +18,8 @@ quotient, and Burnside's lemma recovers exact fixed-point counts for
 prime-order permutations in every field characteristic.
 -/
 
+@[expose] public section
+
 open scoped BigOperators
 
 noncomputable section
@@ -27,7 +29,7 @@ namespace Representation
 open _root_.Representation
 
 attribute [local instance] Fintype.ofFinite
-private def RespectfulFunctions
+def RespectfulFunctions
     (F ι : Type*) [Field F] (r : Setoid ι) : Submodule F (ι → F) where
   carrier := {f | ∀ ⦃i j⦄, r i j → f i = f j}
   zero_mem' := by simp
@@ -38,7 +40,7 @@ private def RespectfulFunctions
     intro a f hf i j hij
     simp [hf hij]
 
-private noncomputable def quotientFunctionsLinearEquivRespectful
+noncomputable def quotientFunctionsLinearEquivRespectful
     (F ι : Type*) [Field F] (r : Setoid ι) :
     (Quotient r → F) ≃ₗ[F] RespectfulFunctions F ι r where
   toFun f := ⟨fun i => f (Quotient.mk'' i), by
@@ -61,7 +63,7 @@ private noncomputable def quotientFunctionsLinearEquivRespectful
     ext i
     rfl
 
-private theorem quotientFunctionsLinearEquivRespectful_finrank
+theorem quotientFunctionsLinearEquivRespectful_finrank
     (F ι : Type*) [Field F] [Finite ι] (r : Setoid ι) :
     Module.finrank F (RespectfulFunctions F ι r) =
       Nat.card (Quotient r) := by
@@ -69,7 +71,7 @@ private theorem quotientFunctionsLinearEquivRespectful_finrank
   rw [Module.finrank_pi_fintype]
   simp [Nat.card_eq_fintype_card]
 
-private theorem equivariantBasis_equivFun_apply
+theorem equivariantBasis_equivFun_apply
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V →ₗ[F] V) (σ : Equiv.Perm ι)
     (hT : ∀ i, T (b i) = b (σ i)) (v : V) (i : ι) :
@@ -84,7 +86,7 @@ private theorem equivariantBasis_equivFun_apply
     simp [hσxi]
   · simp
 
-private theorem perm_invariant_zpowers
+theorem perm_invariant_zpowers
     {F ι : Type*} [Field F] (σ : Equiv.Perm ι) (f : ι → F)
     (hf : ∀ i, f (σ i) = f i) :
     ∀ g : Subgroup.zpowers σ, ∀ i, f (g.1 i) = f i := by
@@ -104,7 +106,7 @@ private theorem perm_invariant_zpowers
   intro g i
   exact hle g.2 i
 
-private theorem equivariantBasis_fixed_iff_respectful
+theorem equivariantBasis_fixed_iff_respectful
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
     (hT : ∀ i, T (b i) = b (σ i)) (v : V) :
@@ -138,7 +140,7 @@ private theorem equivariantBasis_fixed_iff_respectful
       _ = b.equivFun v (σ i) := (hv hrel).symm
       _ = b.equivFun v j := by simp [i]
 
-private noncomputable def equivariantBasisFixedLinearEquivRespectful
+noncomputable def equivariantBasisFixedLinearEquivRespectful
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
     (hT : ∀ i, T (b i) = b (σ i)) :
@@ -167,7 +169,7 @@ private noncomputable def equivariantBasisFixedLinearEquivRespectful
 
 /-- The fixed submodule of a linear equivalence that permutes a finite basis has
 dimension equal to the number of orbits of the basis permutation. -/
-public theorem equivariantBasis_fixedSubmodule_finrank_eq_orbitQuotient_card
+theorem equivariantBasis_fixedSubmodule_finrank_eq_orbitQuotient_card
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
     (hT : ∀ i, T (b i) = b (σ i)) :
@@ -177,7 +179,7 @@ public theorem equivariantBasis_fixedSubmodule_finrank_eq_orbitQuotient_card
     (equivariantBasisFixedLinearEquivRespectful b T σ hT)]
   exact quotientFunctionsLinearEquivRespectful_finrank F ι _
 
-private theorem fixedBy_eq_fixedPoints_of_zpowers_eq_top
+theorem fixedBy_eq_fixedPoints_of_zpowers_eq_top
     {G X : Type*} [Group G] [MulAction G X] (g : G)
     (hg : Subgroup.zpowers g = ⊤) :
     MulAction.fixedBy X g = MulAction.fixedPoints G X := by
@@ -192,7 +194,7 @@ private theorem fixedBy_eq_fixedPoints_of_zpowers_eq_top
   · intro hx
     exact hx g
 
-private theorem primeCard_fixedPoints_orbit_formula
+theorem primeCard_fixedPoints_orbit_formula
     {p : ℕ} [Fact p.Prime] {G X : Type*}
     [Group G] [Fintype G] [MulAction G X] [Fintype X]
     [∀ g : G, Fintype (MulAction.fixedBy X g)]
@@ -250,7 +252,7 @@ private theorem primeCard_fixedPoints_orbit_formula
     _ = Fintype.card (MulAction.orbitRel.Quotient G X) *
         Fintype.card G := hburnside
     _ = Fintype.card (MulAction.orbitRel.Quotient G X) * p := by rw [hG]
-private noncomputable def permFixedPointsEquivZpowersFixedPoints
+noncomputable def permFixedPointsEquivZpowersFixedPoints
     {X : Type*} (σ : Equiv.Perm X) :
     Function.fixedPoints σ ≃
       MulAction.fixedPoints (Subgroup.zpowers σ) X where
@@ -264,7 +266,7 @@ private noncomputable def permFixedPointsEquivZpowersFixedPoints
   left_inv _ := rfl
   right_inv _ := rfl
 
-private theorem primeOrder_perm_fixedPoints_orbit_formula
+theorem primeOrder_perm_fixedPoints_orbit_formula
     {X : Type*} [Finite X] (σ : Equiv.Perm X)
     (hprime : (orderOf σ).Prime) :
     Nat.card X +
@@ -283,14 +285,14 @@ private theorem primeOrder_perm_fixedPoints_orbit_formula
   simpa only [Nat.card_eq_fintype_card] using h
 
 
-private def trivialPermFixedPointsEquiv
+def trivialPermFixedPointsEquiv
     (X : Type*) :
     Function.fixedPoints (1 : Equiv.Perm X) ≃ X where
   toFun x := x.1
   invFun x := ⟨x, rfl⟩
   left_inv _ := rfl
   right_inv _ := rfl
-private noncomputable def trivialPermOrbitQuotientEquiv
+noncomputable def trivialPermOrbitQuotientEquiv
     (X : Type*) :
     X ≃ MulAction.orbitRel.Quotient
       (Subgroup.zpowers (1 : Equiv.Perm X)) X where
@@ -313,7 +315,7 @@ private noncomputable def trivialPermOrbitQuotientEquiv
   right_inv q := by
     induction q using Quotient.inductionOn
     rfl
-private theorem primePow_perm_fixedPoints_orbit_formula
+theorem primePow_perm_fixedPoints_orbit_formula
     {p : ℕ} (hp : p.Prime) {X : Type*} [Finite X]
     (σ : Equiv.Perm X) (hpow : σ ^ p = 1) :
     Nat.card X + (p - 1) * Nat.card (Function.fixedPoints σ) =
@@ -344,7 +346,7 @@ private theorem primePow_perm_fixedPoints_orbit_formula
 
 /-- Permutations whose orders divide the same prime have equally many fixed
 points when their finite index types and orbit quotients have equal cardinality. -/
-public theorem primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
+theorem primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
     {p : ℕ} (hp : p.Prime) {X Y : Type*} [Finite X] [Finite Y]
     (σ : Equiv.Perm X) (τ : Equiv.Perm Y)
     (hσpow : σ ^ p = 1) (hτpow : τ ^ p = 1)
@@ -363,7 +365,7 @@ public theorem primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
     Nat.add_left_cancel (hσ.trans hτ.symm)
   exact Nat.mul_left_cancel (Nat.sub_pos_of_lt hp.one_lt) hmul
 
-private theorem equivariantBasis_pow_apply
+theorem equivariantBasis_pow_apply
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V)
     (σ : Equiv.Perm ι) (hT : ∀ i, T (b i) = b (σ i)) :
@@ -378,7 +380,7 @@ private theorem equivariantBasis_pow_apply
 
 /-- A permutation induced by a linear equivalence on a basis satisfies every
 power identity satisfied by the linear equivalence. -/
-public theorem equivariantBasis_perm_pow_eq_one_of_linearEquiv_pow_eq_one
+theorem equivariantBasis_perm_pow_eq_one_of_linearEquiv_pow_eq_one
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V)
     (σ : Equiv.Perm ι) (hT : ∀ i, T (b i) = b (σ i))
@@ -391,7 +393,7 @@ public theorem equivariantBasis_perm_pow_eq_one_of_linearEquiv_pow_eq_one
 
 /-- Two finite bases permuted by the same prime-period linear equivalence have
 equally many fixed basis vectors. -/
-public theorem primePow_equivariantBases_fixedPoints_ncard_eq
+theorem primePow_equivariantBases_fixedPoints_ncard_eq
     {p : ℕ} (hp : p.Prime)
     {F V ι κ : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] [Finite κ]
@@ -414,7 +416,7 @@ public theorem primePow_equivariantBases_fixedPoints_ncard_eq
       ← equivariantBasis_fixedSubmodule_finrank_eq_orbitQuotient_card
         c T τ hTτ]
 
-private noncomputable def permutedBasisInvariantsLinearEquivRespectful
+noncomputable def permutedBasisInvariantsLinearEquivRespectful
     {F G V iota : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     [Finite iota] [MulAction G iota]
     (rho : Representation F G V) (b : Module.Basis iota F V)
@@ -466,7 +468,7 @@ private noncomputable def permutedBasisInvariantsLinearEquivRespectful
 
 /-- The invariant subspace of a representation that permutes a finite basis has
 dimension equal to the number of orbits of the basis action. -/
-public theorem permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
+theorem permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
     {F G V iota : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     [Finite iota] [MulAction G iota]
     (rho : Representation F G V) (b : Module.Basis iota F V)

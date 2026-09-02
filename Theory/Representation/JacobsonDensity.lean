@@ -5,14 +5,15 @@ public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Theory.Representation.ExtendScalars
 public import Theory.Representation.RepEnd
 
+@[expose] public section
+
 open scoped MonoidAlgebra
 open scoped TensorProduct
 
 namespace Representation
 
 /-- The algebra homomorphism sending an element of `A` to its action on `V`. -/
-@[expose]
-public def jacobson_density_mapping
+def jacobson_density_mapping
     (F : Type*) [Field F]
     (A : Type*) [Ring A] [Algebra F A]
     (V : Type*) [AddCommGroup V] [Module F V]
@@ -40,7 +41,7 @@ public def jacobson_density_mapping
       simp only [algebraMap_smul, LinearMap.coe_mk, AddHom.coe_mk, Module.algebraMap_end_apply]
   }
 
-public theorem simple_of_jacobson_density_surjective
+theorem simple_of_jacobson_density_surjective
     {F : Type*} [Field F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [inst : Nontrivial V] [Module F V]
@@ -82,7 +83,7 @@ public theorem simple_of_jacobson_density_surjective
       exact Submodule.smul_of_tower_mem s a hmem
     tauto
 
-public theorem surjective_of_jacobson_density_surjective
+theorem surjective_of_jacobson_density_surjective
     {F : Type*} [Field F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V]
@@ -119,7 +120,7 @@ public theorem surjective_of_jacobson_density_surjective
   rw [Module.algebraMap_end_apply, mul_smul, ← this]
   simp only [LinearMap.map_smul_of_tower, ne_eq, hx, not_false_eq_true, inv_smul_smul₀]
 
-public theorem jacobson_density_surjective
+theorem jacobson_density_surjective
     {F : Type*} [Field F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -411,7 +412,7 @@ public theorem jacobson_density_surjective
   rw [this]
   simp only [Finsupp.univ_sum_single_apply]
 
-public theorem _root_.AlgebraicClosure.jacobson_density_condition
+theorem _root_.AlgebraicClosure.jacobson_density_condition
     {F : Type*} [Field F] [IsAlgClosed F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -446,7 +447,7 @@ public theorem _root_.AlgebraicClosure.jacobson_density_condition
   (algebraMap F (Module.End A V)) a = (algebraMap F L') a := by rfl
   _ = _ := by rw [ha]
 
-public theorem jacobson_density_surjective_isAlgClosed
+theorem jacobson_density_surjective_isAlgClosed
     {F : Type*} [Field F] [IsAlgClosed F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -455,7 +456,7 @@ public theorem jacobson_density_surjective_isAlgClosed
   jacobson_density_surjective AlgebraicClosure.jacobson_density_condition
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem adjoin_univ_iff_surjective
+theorem adjoin_univ_iff_surjective
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]
@@ -560,7 +561,7 @@ public theorem adjoin_univ_iff_surjective
       exact Set.mem_range_self g
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem irreducible_of_jacobson_density_surjective
+theorem irreducible_of_jacobson_density_surjective
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [inst : Nontrivial V] [Module F V]
@@ -573,7 +574,7 @@ public theorem irreducible_of_jacobson_density_surjective
   apply simple_of_jacobson_density_surjective (F := F)
   exact (adjoin_univ_iff_surjective ρ).mp hs
 
-public theorem algebraMap_surj_iff_surj
+theorem algebraMap_surj_iff_surj
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]
@@ -595,7 +596,7 @@ public theorem algebraMap_surj_iff_surj
     exact this
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem jacobson_density_surjective_rep
+theorem jacobson_density_surjective_rep
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V] [inst' :FiniteDimensional F V]
@@ -609,7 +610,7 @@ public theorem jacobson_density_surjective_rep
   exact jacobson_density_surjective hs
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem jacobson_density_surjective_isAlgClosed_rep
+theorem jacobson_density_surjective_isAlgClosed_rep
     {F : Type*} [Field F] [IsAlgClosed F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V] [inst' :FiniteDimensional F V]
@@ -621,7 +622,7 @@ public theorem jacobson_density_surjective_isAlgClosed_rep
   exact jacobson_density_surjective_isAlgClosed
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem surjective_of_jacobson_density_surjective_rep
+theorem surjective_of_jacobson_density_surjective_rep
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]

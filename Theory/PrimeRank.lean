@@ -12,12 +12,13 @@ elementary abelian `p`-subgroup. The former description is used here because
 it is the established interface in the Feit--Thompson development.
 -/
 
+@[expose] public section
+
 open scoped IsMulCommutative
 
 /-- The `q`-rank of a finite group: the maximal generator rank of an abelian
 `q`-subgroup. -/
-@[expose]
-public noncomputable def primeRank (q : ℕ) (G : Type*) [Group G] : ℕ :=
+noncomputable def primeRank (q : ℕ) (G : Type*) [Group G] : ℕ :=
   sSup
     {n : ℕ |
       ∃ A : Subgroup G,
@@ -27,6 +28,5 @@ public noncomputable def primeRank (q : ℕ) (G : Type*) [Group G] : ℕ :=
     }
 
 /-- The rank of a finite group: the maximal `q`-rank over primes `q`. -/
-@[expose]
-public noncomputable def groupRank (G : Type*) [Group G] : ℕ :=
+noncomputable def groupRank (G : Type*) [Group G] : ℕ :=
   sSup {n : ℕ | ∃ q : ℕ, q.Prime ∧ n ≤ primeRank q G}

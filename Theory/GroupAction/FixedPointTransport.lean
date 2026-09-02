@@ -2,6 +2,8 @@ module
 
 public import Theory.GroupAction.Defs
 
+@[expose] public section
+
 open scoped Pointwise
 
 section FixedPointTransportSet
@@ -10,7 +12,7 @@ variable {G A : Type*} [Group G] [Group A] [MulAction A G]
 
 omit [Group G] in
 /-- Triviality of the action on a set is equivalent to containment in the fixed-point set. -/
-public theorem isTrivialActionOnSet_iff_subset_fixedPoints (S : Set G) :
+theorem isTrivialActionOnSet_iff_subset_fixedPoints (S : Set G) :
     IsTrivialActionOnSet (A := A) (G := G) S ↔ S ⊆ MulAction.fixedPoints A G := by
   constructor
   · intro htriv x hx
@@ -32,7 +34,7 @@ section FixedPointTransport
 variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
 
 /-- Triviality on a subgroup is equivalent to subgroup containment in fixed points. -/
-public theorem isTrivialActionOnSubgroup_iff_le_fixedPoints_subgroup (H : Subgroup G) :
+theorem isTrivialActionOnSubgroup_iff_le_fixedPoints_subgroup (H : Subgroup G) :
     IsTrivialActionOnSubgroup (A := A) (G := G) H ↔ H ≤ FixedPoints.subgroup A G := by
   constructor
   · intro htriv x hx
@@ -48,14 +50,14 @@ public theorem isTrivialActionOnSubgroup_iff_le_fixedPoints_subgroup (H : Subgro
     exact hxfix' a
 
 /-- A subgroup contained in fixed points is fixed pointwise. -/
-public theorem isTrivialActionOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup G}
+theorem isTrivialActionOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup G}
     (hle : H ≤ FixedPoints.subgroup A G) :
     IsTrivialActionOnSubgroup (A := A) (G := G) H :=
   (isTrivialActionOnSubgroup_iff_le_fixedPoints_subgroup (A := A) (G := G) H).2 hle
 
 /-! Functional spellings used by the group-action interfaces. -/
 
-public theorem actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup G}
+theorem actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup G}
     (hle : H ≤ FixedPoints.subgroup A G) :
     ActsTriviallyOnSubgroup (A := A) (G := G) H := by
   intro a x hx

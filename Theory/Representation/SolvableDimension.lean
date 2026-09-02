@@ -17,6 +17,8 @@ public import Theory.Representation.ConjugateRep
 public import Theory.Representation.CyclicQuotientExtension
 public import Theory.Representation.CompleteReducibility
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 open MonoidAlgebra
@@ -63,7 +65,7 @@ lemma quotient_simple_of_coatom
   · intro H _
     simpa using (show H = ⊥ ∨ H = ⊤ from eq_bot_or_eq_top H)
 
-public lemma exist_index_p_of_solvable
+lemma exist_index_p_of_solvable
     (G : Type*) [Group G] [Finite G] [Group.IsSolvable G] [Nontrivial G] :
     ∃ H : Subgroup G, H.Normal ∧ H.index.Prime := by
   let N : Subgroup G := commutator G
@@ -102,7 +104,7 @@ noncomputable def conj_equiv_one : ρ ≃ₗ conjugateRep ρ (1 : G) := by
   ext v
   simp [conjugateRep_apply]
 
-public noncomputable def conj_equiv_of_mem (h : H) : ρ ≃ₗ conjugateRep ρ h := by
+noncomputable def conj_equiv_of_mem (h : H) : ρ ≃ₗ conjugateRep ρ h := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (ρ h) (Representation.apply_bijective ρ h)) ?_
   intro k
   ext v
@@ -142,7 +144,7 @@ noncomputable def conj_equiv_pow {a : G}
           (conj_equiv_pow e n).trans
             (conj_equiv_mul_left (ρ := ρ) (a := a) (g := a ^ n) e)
 
-public noncomputable def all_conjugates_of_prime_quotient
+noncomputable def all_conjugates_of_prime_quotient
     [Finite G] {p : ℕ} (hcard : Nat.card (G ⧸ H) = p) (hp : p.Prime)
     {a : G} (ha : (a : G ⧸ H) ≠ 1) (e : ρ ≃ₗ conjugateRep ρ a) :
     ∀ x : G, ρ ≃ₗ conjugateRep ρ x := by
@@ -172,7 +174,7 @@ noncomputable def conj_assoc_equiv (a b : G) :
   ext v
   simp [conjugateRep_apply, mul_assoc]
 
-public noncomputable def conj_diff_equiv {g x : G}
+noncomputable def conj_diff_equiv {g x : G}
     (e : conjugateRep ρ g ≃ₗ conjugateRep ρ x) :
     ρ ≃ₗ conjugateRep ρ (x * g⁻¹) := by
   let τ : Representation F H V := conjugateRep ρ g
@@ -206,7 +208,7 @@ noncomputable def conjugateAut (g : G) : H ≃* H where
     apply Subtype.ext
     simp [mul_assoc]
 
-public theorem conjugateRep_irreducible (g : G) [IsIrreducible ρ] :
+theorem conjugateRep_irreducible (g : G) [IsIrreducible ρ] :
     IsIrreducible (conjugateRep ρ g) := by
   exact
     RepEquiv.irreducible_of_group_iso
@@ -216,7 +218,7 @@ public theorem conjugateRep_irreducible (g : G) [IsIrreducible ρ] :
         simp [conjugateAut, conjugateRep_apply, mul_assoc])
       inferInstance
 
-@[expose] public def subrepInclusion {ρ' : Representation F H V} (S : Subrepresentation ρ') :
+def subrepInclusion {ρ' : Representation F H V} (S : Subrepresentation ρ') :
     S.toRepresentation →ₗ ρ' := by
   refine RepMap.mk S.toSubmodule.subtype ?_
   intro h
@@ -224,7 +226,7 @@ public theorem conjugateRep_irreducible (g : G) [IsIrreducible ρ] :
   rfl
 
 omit [H.Normal] in
-public theorem repMap_range_ne_bot_of_ne_zero
+theorem repMap_range_ne_bot_of_ne_zero
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
@@ -242,7 +244,7 @@ public theorem repMap_range_ne_bot_of_ne_zero
 
 
 set_option backward.isDefEq.respectTransparency false in
-public noncomputable def repEquivOfNeZeroOfSimple
+noncomputable def repEquivOfNeZeroOfSimple
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
@@ -340,7 +342,7 @@ noncomputable def subrepresentationOrderIsoOfEquiv
       exact ⟨w, h hw, rfl⟩
 
 omit [H.Normal] in
-public theorem subrep_le_of_nonzero_mem
+theorem subrep_le_of_nonzero_mem
     {V' : Type*} [AddCommGroup V'] [Module F V']
     {ρ' : Representation F H V'}
     (S T : Subrepresentation ρ') [IsIrreducible S.toRepresentation]
@@ -371,10 +373,10 @@ public theorem subrep_le_of_nonzero_mem
     trivial
   exact hwU
 
-public abbrev coindRep : Representation F G (Representation.coindV H.subtype ρ) :=
+abbrev coindRep : Representation F G (Representation.coindV H.subtype ρ) :=
   Representation.coind H.subtype ρ
 
-public def coindCosetSubrep (q : G ⧸ H) :
+def coindCosetSubrep (q : G ⧸ H) :
     Subrepresentation ((coindRep (ρ := ρ)).comp H.subtype) where
   toSubmodule := {
     carrier := {f | ∀ g : G, ((g : G ⧸ H) ≠ q) → f.1 g = 0}
@@ -397,7 +399,7 @@ public def coindCosetSubrep (q : G ⧸ H) :
     rw [hh, mul_one] at hq
     exact hq
 
-@[expose] public def coindEval (g : G) :
+def coindEval (g : G) :
     (coindRep (ρ := ρ)).comp H.subtype →ₗ conjugateRep ρ g := by
   refine RepMap.mk ?_ ?_
   · refine
@@ -415,7 +417,7 @@ public def coindCosetSubrep (q : G ⧸ H) :
           Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩
         (g : G)
 
-@[expose] public noncomputable def coindBaseFunctionAt (g : G) (v : V) :
+noncomputable def coindBaseFunctionAt (g : G) (v : V) :
     Representation.coindV H.subtype ρ := by
   classical
   refine ⟨fun x => if hx : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx⟩ v else 0, ?_⟩
@@ -439,7 +441,7 @@ public def coindCosetSubrep (q : G ⧸ H) :
       exact H.mul_mem (H.inv_mem h.prop) hhx
     simp [hx, hhx]
 
-@[simp] public theorem coindEval_base (g : G) (v : V) :
+@[simp] theorem coindEval_base (g : G) (v : V) :
     coindEval (ρ := ρ) g (coindBaseFunctionAt (ρ := ρ) g v) = v := by
   change (if hg : g * g⁻¹ ∈ H then ρ ⟨g * g⁻¹, hg⟩ v else 0) = v
   rw [dif_pos]
@@ -454,7 +456,7 @@ public def coindCosetSubrep (q : G ⧸ H) :
       _ = v := by simp [h1]
   · simp
 
-public theorem coindBaseFunctionAt_mem_coset (g : G) (v : V) :
+theorem coindBaseFunctionAt_mem_coset (g : G) (v : V) :
     coindBaseFunctionAt (ρ := ρ) g v ∈ (coindCosetSubrep (ρ := ρ) (g : G ⧸ H)).toSubmodule := by
   intro x hx
   change (if hx' : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx'⟩ v else 0) = 0
@@ -463,7 +465,7 @@ public theorem coindBaseFunctionAt_mem_coset (g : G) (v : V) :
   apply hx
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
-@[simp] public theorem coindEval_of_ne_coset
+@[simp] theorem coindEval_of_ne_coset
     {g x : G} (hx : (x : G ⧸ H) ≠ (g : G ⧸ H)) (v : V) :
     coindEval (ρ := ρ) x (coindBaseFunctionAt (ρ := ρ) g v) = 0 := by
   change (if hx' : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx'⟩ v else 0) = 0
@@ -473,7 +475,7 @@ public theorem coindBaseFunctionAt_mem_coset (g : G) (v : V) :
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
 set_option backward.isDefEq.respectTransparency false in
-public noncomputable def coindCosetEquiv (g : G) :
+noncomputable def coindCosetEquiv (g : G) :
     (coindCosetSubrep (ρ := ρ) (g : G ⧸ H)).toRepresentation ≃ₗ conjugateRep ρ g := by
   let S := coindCosetSubrep (ρ := ρ) (g : G ⧸ H)
   let evLin :
@@ -525,7 +527,7 @@ public noncomputable def coindCosetEquiv (g : G) :
         (ρ := S.toRepresentation) (σ := conjugateRep ρ g) ev h f)
 
 set_option backward.isDefEq.respectTransparency false in
-@[expose] public noncomputable def coindProj (q : G ⧸ H) :
+noncomputable def coindProj (q : G ⧸ H) :
     ((coindRep (ρ := ρ)).comp H.subtype) →ₗ ((coindRep (ρ := ρ)).comp H.subtype) := by
   classical
   let proj : (G → V) →ₗ[F] (G → V) :=
@@ -577,19 +579,19 @@ set_option backward.isDefEq.respectTransparency false in
       simp [LinearMap.restrict_apply, proj, hx]
 
 set_option backward.isDefEq.respectTransparency false in
-@[simp] public theorem coindProj_apply
+@[simp] theorem coindProj_apply
     (q : G ⧸ H) (f : Representation.coindV H.subtype ρ) (x : G) :
     (coindProj (ρ := ρ) q f).1 x = if (x : G ⧸ H) = q then f.1 x else 0 := by
   simp [coindProj, LinearMap.restrict_apply]
 
-public theorem coindProj_mem_coset
+theorem coindProj_mem_coset
     (q : G ⧸ H) (f : Representation.coindV H.subtype ρ) :
     coindProj (ρ := ρ) q f ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule := by
   intro x hx
   simp [coindProj_apply, hx]
 
 set_option backward.isDefEq.respectTransparency false in
-@[expose] public noncomputable def coindProjToCoset (q : G ⧸ H) :
+noncomputable def coindProjToCoset (q : G ⧸ H) :
     ((coindRep (ρ := ρ)).comp H.subtype) →ₗ (coindCosetSubrep (ρ := ρ) q).toRepresentation := by
   refine RepMap.mk ?_ ?_
   · refine
@@ -613,7 +615,7 @@ set_option backward.isDefEq.respectTransparency false in
         (coindProj (ρ := ρ) q) h f
     simp
 
-@[simp] public theorem coindProj_eq_self_of_mem {q : G ⧸ H}
+@[simp] theorem coindProj_eq_self_of_mem {q : G ⧸ H}
     (f : Representation.coindV H.subtype ρ)
     (hf : f ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule) :
     coindProj (ρ := ρ) q f = f := by
@@ -644,13 +646,13 @@ theorem mem_iSup_coindCosetSubrep [Fintype (G ⧸ H)] (f : Representation.coindV
   intro q _
   exact Submodule.mem_iSup_of_mem q (coindProj_mem_coset (ρ := ρ) q f)
 
-public theorem iSup_coindCosetSubrep_eq_top [Fintype (G ⧸ H)] :
+theorem iSup_coindCosetSubrep_eq_top [Fintype (G ⧸ H)] :
     (⨆ q : G ⧸ H, (coindCosetSubrep (ρ := ρ) q).toSubmodule) = ⊤ := by
   refine Submodule.eq_top_iff'.mpr ?_
   intro f
   exact mem_iSup_coindCosetSubrep (ρ := ρ) f
 
-public theorem coind_apply_mem_coset_shift
+theorem coind_apply_mem_coset_shift
     (x : G) {q : G ⧸ H} (f : Representation.coindV H.subtype ρ)
     (hf : f ∈ (coindCosetSubrep (ρ := ρ) q).toSubmodule) :
     coindRep (ρ := ρ) x f ∈ (coindCosetSubrep (ρ := ρ) (q / (x : G ⧸ H))).toSubmodule := by
@@ -664,7 +666,7 @@ public theorem coind_apply_mem_coset_shift
 
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem coindCosetSubrep_irreducible [Finite G] [IsIrreducible ρ] (q : G ⧸ H) :
+theorem coindCosetSubrep_irreducible [Finite G] [IsIrreducible ρ] (q : G ⧸ H) :
     IsSimpleOrder (Subrepresentation ((coindCosetSubrep (ρ := ρ) q).toRepresentation)) := by
   let g : G := Classical.choose (QuotientGroup.mk_surjective q)
   have hg : (g : G ⧸ H) = q := Classical.choose_spec (QuotientGroup.mk_surjective q)
@@ -689,7 +691,7 @@ public theorem coindCosetSubrep_irreducible [Finite G] [IsIrreducible ρ] (q : G
   exact hIrr
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem coindRep_irreducible_of_notall
+theorem coindRep_irreducible_of_notall
     [Finite G] [FiniteDimensional F V] [IsIrreducible ρ]
     {p : ℕ} (hcard : Nat.card (G ⧸ H) = p) (hp : p.Prime)
     (hnall : ¬ ∀ x : G, Nonempty (ρ ≃ₗ conjugateRep ρ x)) :
@@ -884,7 +886,7 @@ public theorem coindRep_irreducible_of_notall
 /-- If no element outside a normal subgroup carries an irreducible representation to an
 equivalent conjugate, then its coinduction is irreducible. This is the general
 finite-index criterion underlying the prime-index specialization above. -/
-public theorem coindRep_irreducible_of_noNontrivialConj
+theorem coindRep_irreducible_of_noNontrivialConj
     {F : Type*} [Field F]
     {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V]
@@ -1082,7 +1084,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
 
 
 set_option backward.isDefEq.respectTransparency false in
-private noncomputable def coindMapFromRepMapAux
+noncomputable def coindMapFromRepMapAux
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] {W : Type*}
     [AddCommGroup W] [Module F W] (σ : Representation F G W)
@@ -1114,14 +1116,14 @@ private noncomputable def coindMapFromRepMapAux
   ext x
   simp [lift, coindRep, Representation.coind_apply, σ.map_mul]
 
-private theorem coindEval_coindMapFromRepMapAux
+theorem coindEval_coindMapFromRepMapAux
     {F : Type*} [Field F] {G : Type*} [Group G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] {W : Type*}
     [AddCommGroup W] [Module F W] (σ : Representation F G W)
     (ρ : Representation F H V) (π : σ.comp H.subtype →ₗ ρ) (g : G) (w : W) :
     coindEval (ρ := ρ) g (coindMapFromRepMapAux σ ρ π w) = π (σ g w) := rfl
 
-private noncomputable def coindMapFromRepMapAuxOfSubrepAux
+noncomputable def coindMapFromRepMapAuxOfSubrepAux
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] (σ : Representation F G V)
     (hchar : ringChar F = 0 ∨
@@ -1185,7 +1187,7 @@ private noncomputable def coindMapFromRepMapAuxOfSubrepAux
     coindMapFromRepMapAux σ M.toRepresentation
       (Representation.RepMap.mk proj hproj_intertwining)
 
-private theorem coindMapFromRepMapAuxOfSubrepAuxAux_eval_one
+theorem coindMapFromRepMapAuxOfSubrepAuxAux_eval_one
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
     {V : Type*} [AddCommGroup V] [Module F V] (σ : Representation F G V)
     (hchar : ringChar F = 0 ∨
@@ -1199,7 +1201,7 @@ private theorem coindMapFromRepMapAuxOfSubrepAuxAux_eval_one
     Representation.RepMap.coe_mk, Submodule.projectionOnto_apply_left]
 
 set_option backward.isDefEq.respectTransparency false in
-private theorem semisimple_le_ker_of_forall_simple_submodule_le_ker {G : Type*} [Group G] {F : Type*}
+theorem semisimple_le_ker_of_forall_simple_submodule_le_ker {G : Type*} [Group G] {F : Type*}
     [Field F] {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     [IsSemisimpleModule (MonoidAlgebra F G) ρ.asModule] (H : Subgroup G)
     (hsimple :
@@ -1260,7 +1262,7 @@ private theorem semisimple_le_ker_of_forall_simple_submodule_le_ker {G : Type*} 
 set_option backward.isDefEq.respectTransparency false in
 /-- A semisimple representation on which a subgroup acts nontrivially has a simple
 constituent on which that subgroup still acts nontrivially. -/
-public theorem exists_simple_submodule_not_le_ker_of_semisimple
+theorem exists_simple_submodule_not_le_ker_of_semisimple
     {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     [IsSemisimpleModule (MonoidAlgebra F G) ρ.asModule]
@@ -1273,7 +1275,7 @@ public theorem exists_simple_submodule_not_le_ker_of_semisimple
   exact hH (semisimple_le_ker_of_forall_simple_submodule_le_ker ρ H hcontra)
 set_option backward.isDefEq.respectTransparency false in
 /-- A simple group-algebra submodule defines an irreducible subrepresentation. -/
-public theorem irreducible_subrepresentation_of_simple_asModuleSubmodule {G : Type*} [Group G] {F : Type*} [Field F]
+theorem irreducible_subrepresentation_of_simple_asModuleSubmodule {G : Type*} [Group G] {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     {m : Submodule (MonoidAlgebra F G) ρ.asModule}
     (hm : IsSimpleModule (MonoidAlgebra F G) m) :
@@ -1286,7 +1288,7 @@ public theorem irreducible_subrepresentation_of_simple_asModuleSubmodule {G : Ty
 set_option backward.isDefEq.respectTransparency false in
 /-- An irreducible representation is equivalent to the coinduction of a simple constituent
 of its semisimple restriction when that constituent has no equivalent nontrivial conjugate. -/
-public noncomputable def coindEquivOfSubrep_noNontrivialConj
+noncomputable def coindEquivOfSubrep_noNontrivialConj
     {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
     {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
     [FiniteDimensional F V] (ρ : Representation F G V) [Representation.IsIrreducible ρ]
@@ -1389,7 +1391,7 @@ theorem coindBase_eq_coindProj_of_section [Fintype (G ⧸ H)]
     exact congrArg Subtype.val hEq
   simpa [g, hg] using hEq0
 
-public noncomputable def coindPiEquiv [Fintype (G ⧸ H)] :
+noncomputable def coindPiEquiv [Fintype (G ⧸ H)] :
     Representation.coindV H.subtype ρ ≃ₗ[F] (G ⧸ H → V) where
   toFun f q := coindEval (ρ := ρ) (quotientSection (G := G) (H := H) q) f
   invFun ψ := ∑ q : G ⧸ H,
@@ -1451,7 +1453,7 @@ public noncomputable def coindPiEquiv [Fintype (G ⧸ H)] :
     ext q
     simp
 
-public theorem finrank_coindRep_eq_card_mul [Fintype (G ⧸ H)] [FiniteDimensional F V] :
+theorem finrank_coindRep_eq_card_mul [Fintype (G ⧸ H)] [FiniteDimensional F V] :
     Module.finrank F (Representation.coindV H.subtype ρ) =
       Fintype.card (G ⧸ H) * Module.finrank F V := by
   rw [LinearEquiv.finrank_eq (coindPiEquiv (ρ := ρ))]
@@ -1995,7 +1997,7 @@ lemma lemma_2_3_algClosed
         simpa [hcard] using hfinG
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem lemma_2_3
+theorem lemma_2_3
     {F : Type*} [Field F]
     {G : Type*} [Group G] [Finite G] [Group.IsSolvable G]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]

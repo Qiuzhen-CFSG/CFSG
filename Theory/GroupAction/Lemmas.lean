@@ -9,10 +9,12 @@ public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
 
 
+@[expose] public section
+
 open scoped commutatorElement
 
 
-public theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ : A →* MulAut G)
+theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ : A →* MulAut G)
     (a : A) (g : G) :
     ⁅(((SemidirectProduct.inl (φ := φ) g : G ⋊[φ] A))⁻¹), (SemidirectProduct.inr (φ := φ) a)⁆ =
       SemidirectProduct.inl (φ := φ) (g⁻¹ * ((φ a) g)) := by
@@ -52,14 +54,14 @@ local notation "inr" => (SemidirectProduct.inr (φ := φ₀) : A →* SD)
 
 end Semidirect
 
-public theorem commutatorAction_eq_closure {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
+theorem commutatorAction_eq_closure {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     commutatorAction (A := A) (G := G) =
       Subgroup.closure {x : G | ∃ a : A, ∃ g : G, x = g⁻¹ * (a • g)} := by
   ext x
   simp [commutatorAction, commutatorSubgroup]
 
 
-public theorem commutatorAction₂_le_commutatorAction
+theorem commutatorAction₂_le_commutatorAction
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     commutatorAction₂ (A := A) (G := G) ≤ commutatorAction (A := A) (G := G) := by
   change commutatorSubgroup (A := A) (G := G) (H := commutatorAction (A := A) (G := G)) ≤
@@ -71,7 +73,7 @@ public theorem commutatorAction₂_le_commutatorAction
   exact Subgroup.subset_closure ⟨a, g, rfl⟩
 
 
-public theorem fixedPoints_subgroup_map_subtype_eq_inf
+theorem fixedPoints_subgroup_map_subtype_eq_inf
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
     (H : Subgroup G) [IsInvariant A G H] :
     (FixedPoints.subgroup A H).map H.subtype = H ⊓ FixedPoints.subgroup A G := by
@@ -97,7 +99,7 @@ public theorem fixedPoints_subgroup_map_subtype_eq_inf
 
 
 set_option backward.isDefEq.respectTransparency false in
-public theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Group A]
+theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] :
     (commutatorAction (A := A) (G := G)).Normal ∧
       IsInvariant A G (commutatorAction (A := A) (G := G)) := by
@@ -211,18 +213,18 @@ public theorem commutatorAction_normal_and_invariant {G A : Type*} [Group G] [Gr
       simpa [smul_smul] using this
 
 
-public theorem commutatorAction_normal
+theorem commutatorAction_normal
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     (commutatorAction (A := A) (G := G)).Normal :=
   (commutatorAction_normal_and_invariant (G := G) (A := A)).1
 
-public theorem commutatorAction_isInvariant
+theorem commutatorAction_isInvariant
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     IsInvariant A G (commutatorAction (A := A) (G := G)) :=
   (commutatorAction_normal_and_invariant (G := G) (A := A)).2
 
 
-public theorem commutatorAction_map_subtype_eq_commutatorAction₂
+theorem commutatorAction_map_subtype_eq_commutatorAction₂
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :
     let H : Subgroup G := commutatorAction (A := A) (G := G)
     letI : IsInvariant A G H := (commutatorAction_normal_and_invariant (G := G) (A := A)).2
@@ -259,7 +261,7 @@ section subgroupOf
 
 variable {G : Type*} [Group G]
 
-public lemma subgroupOf_map_subtype_eq {K : Subgroup G} (H : Subgroup K) :
+lemma subgroupOf_map_subtype_eq {K : Subgroup G} (H : Subgroup K) :
     (H.map K.subtype).subgroupOf K = H := by
   ext x; simp [Subgroup.mem_subgroupOf]
 
@@ -269,7 +271,7 @@ section card
 
 variable {G : Type*} [Group G]
 
-public lemma natCard_subgroupOf_eq (H K : Subgroup G) (hHK : H ≤ K) :
+lemma natCard_subgroupOf_eq (H K : Subgroup G) (hHK : H ≤ K) :
     Nat.card (H.subgroupOf K) = Nat.card H :=
   Nat.card_congr (Subgroup.subgroupOfEquivOfLe (G := G) (H := H) (K := K) hHK).toEquiv
 
@@ -282,7 +284,7 @@ variable {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
 omit [Finite G] in
 /-- If a `p`-group `A` acts on a finite group `G` and `p` does not divide `|Aut G|`,
 then the action is trivial. -/
-public theorem isTrivialAction_of_isPGroup_of_not_dvd_card_mulAut
+theorem isTrivialAction_of_isPGroup_of_not_dvd_card_mulAut
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hAut : ¬ p ∣ Nat.card (MulAut G)) :
     IsTrivialAction (A := A) (G := G) := by
   let : Fact p.Prime := ⟨hp⟩
@@ -306,7 +308,7 @@ public theorem isTrivialAction_of_isPGroup_of_not_dvd_card_mulAut
   simpa [φ, MulDistribMulAction.toMulAut_apply] using congrArg (fun f : MulAut G => f g) ha_one
 
 /-- If a `p`-group `A` acts on a cyclic group `G` of order `p`, then the action is trivial. -/
-public theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
+theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
     IsTrivialAction (A := A) (G := G) := by
@@ -327,7 +329,7 @@ public theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
       exact hdiv_sub
     exact hp.not_dvd_one hdiv_one)
 
-public theorem actsTrivially_of_isPGroup_on_cyclic_prime_order
+theorem actsTrivially_of_isPGroup_on_cyclic_prime_order
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
     ActsTrivially (A := A) (G := G) := by

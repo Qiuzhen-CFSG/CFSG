@@ -14,19 +14,21 @@ This file contains the finite-dimensional module decomposition and cancellation
 facts needed for scalar-extension descent of representations.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace Module
 
 /-- A nonzero module is indecomposable if every complementary pair of submodules
 has a zero member. -/
-public def IsIndecomposable
+def IsIndecomposable
     (R M : Type*) [Ring R] [AddCommGroup M] [Module R M] : Prop :=
   Nontrivial M ∧
     ∀ p q : Submodule R M, IsCompl p q → p = ⊥ ∨ q = ⊥
 
 /-- The endomorphism ring of a finite-dimensional indecomposable module is local. -/
-public theorem end_isLocalRing_of_isIndecomposable
+theorem end_isLocalRing_of_isIndecomposable
     {F R M : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup M] [Module F M] [Module R M] [IsScalarTower F R M]
     [FiniteDimensional F M]
@@ -558,7 +560,7 @@ def piProdLinearEquiv
     left_inv := by intro x; rfl
     right_inv := by intro x; rfl }
 
-public lemma linearEquiv_of_fin_copies_linearEquiv
+lemma linearEquiv_of_fin_copies_linearEquiv
     {F R M N : Type*} [Field F] [Ring R] [Algebra F R]
     [AddCommGroup M] [Module F M] [Module R M] [IsScalarTower F R M]
     [FiniteDimensional F M]

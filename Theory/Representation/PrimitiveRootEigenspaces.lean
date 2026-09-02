@@ -18,6 +18,8 @@ public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 open MonoidAlgebra
@@ -60,8 +62,7 @@ Then
 -/
 
 /-- The submodule of endomorphisms intertwining `A` on the left with `B` on the right. -/
-@[expose]
-public def intertwiningSubmodule
+def intertwiningSubmodule
     {R : Type*} [CommSemiring R]
     {M : Type*} [AddCommMonoid M] [Module R M]
     (A B : _root_.Module.End R M) :
@@ -123,7 +124,7 @@ lemma prod_X_sub_powers_eq_X_pow_sub_one {F : Type _} [Field F] {ε : F} {h : �
     _ = ∏ ζ ∈ nthRootsFinset h (1 : F), (X - C ζ) := by rw [nthRootsFinset_eq_image hε hpos]; simp
     _ = X ^ h - (1 : Polynomial F) := by rw [Polynomial.X_pow_sub_one_eq_prod hpos hε]
 
-public theorem proposition_2_4_a
+theorem proposition_2_4_a
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -240,7 +241,7 @@ public theorem proposition_2_4_a
 
 
 -- Now we copy the lemmas from eigenspace_decomposition_v12 and projections_from_isInternal
-public lemma LinearEquiv.toLinearMap_pow
+lemma LinearEquiv.toLinearMap_pow
     {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     (e : M ≃ₗ[R] M) (n : ℕ) : (e ^ n).toLinearMap = e.toLinearMap ^ n := by
   induction n with
@@ -430,7 +431,7 @@ lemma eigenspace_eq_of_zpow_modEq (a b : ℤ) (hab : a ≡ b [ZMOD h]) :
 end BlockEquality
 
 -- Projections from an internal direct sum decomposition
-public theorem proposition_2_4_c
+theorem proposition_2_4_c
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -439,7 +440,7 @@ public theorem proposition_2_4_c
     blockElementaryMap (fun s : Fin h => eigenspace g.toLinearMap (ε ^ (s : ℤ))) it.1 it.2) :=
   isInternal_blockElementaryMap _ (eigenspace_decomposition hh g hg ε hε)
 
-public theorem proposition_2_4_d
+theorem proposition_2_4_d
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -484,7 +485,7 @@ public theorem proposition_2_4_d
   rw [hii, htt] at hmain
   simpa [ii, tt] using hmain
 
-public lemma eigenspace_eq_intCast
+lemma eigenspace_eq_intCast
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hh : h ≥ 2)
@@ -538,7 +539,7 @@ lemma fin_intCast_coe_int
     exact congrArg (fun n : ℕ => (n : ℤ)) (Fin.val_intCast (n := h) z)
   simpa [Int.toNat_of_nonneg hnonneg] using hcast
 
-public theorem proposition_2_4_e
+theorem proposition_2_4_e
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -619,7 +620,7 @@ public theorem proposition_2_4_e
   · intro x y hx hy
     simp [Module.End.mul_apply, map_add, hx, hy]
 
-public theorem proposition_2_4_f
+theorem proposition_2_4_f
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -723,7 +724,7 @@ public theorem proposition_2_4_f
     exact ⟨hC_indep, hC_top⟩
   simpa [A, C, B, N, τ, Int.emod_emod] using h_internal
 
-public theorem proposition_2_4_g
+theorem proposition_2_4_g
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -780,7 +781,7 @@ public theorem proposition_2_4_g
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       rw [zpow_natCast]
 
-public theorem proposition_2_4_h
+theorem proposition_2_4_h
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
@@ -876,7 +877,7 @@ public theorem proposition_2_4_h
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       rw [← hshifti i]
 
-public theorem proposition_2_4_j
+theorem proposition_2_4_j
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {q : ℕ} (hdim : Module.finrank F V = q)
@@ -1641,7 +1642,7 @@ public theorem proposition_2_4_j
         rw [hsum2_decomp] at hsum2
         omega
 
-public theorem proposition_2_4_k
+theorem proposition_2_4_k
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {q : ℕ} (hdim : Module.finrank F V = q) (hq : q ≥ 2)

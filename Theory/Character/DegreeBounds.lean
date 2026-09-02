@@ -18,6 +18,8 @@ the full endomorphism algebra is spanned by representatives for the cosets of
 `D`, hence `dim V ^ 2 ≤ [G : D]`.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped BigOperators commutatorElement
@@ -35,45 +37,45 @@ variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
 This avoids quotient notation in later statements while remaining equivalent
 to the book condition when `B` is normal and `B ≤ D`. -/
-@[expose] public def IsCentralModulo (B D : Subgroup G) : Prop :=
+def IsCentralModulo (B D : Subgroup G) : Prop :=
   ∀ ⦃d : G⦄, d ∈ D → ∀ c : G, ⁅d, c⁆ ∈ B
 
-private abbrev DegreeRightCosets (D : Subgroup G) :=
+abbrev DegreeRightCosets (D : Subgroup G) :=
   Quotient (QuotientGroup.rightRel D)
 
-private def degreeRightCosetOut (D : Subgroup G) (g : G) : G :=
+def degreeRightCosetOut (D : Subgroup G) (g : G) : G :=
   Quotient.out (Quotient.mk (QuotientGroup.rightRel D) g)
 
 omit [Finite G] in
-private theorem degreeRightCosetOut_spec (D : Subgroup G) (g : G) :
+theorem degreeRightCosetOut_spec (D : Subgroup G) (g : G) :
     g * (degreeRightCosetOut D g)⁻¹ ∈ D := by
   simpa [degreeRightCosetOut, QuotientGroup.rightRel_apply] using
     (Quotient.mk_out (s := QuotientGroup.rightRel D) g)
 
 omit [Finite G] in
-private theorem degreeRightCosetOut_eq_of_mk_eq (D : Subgroup G) {g h : G}
+theorem degreeRightCosetOut_eq_of_mk_eq (D : Subgroup G) {g h : G}
     (eq : Quotient.mk (QuotientGroup.rightRel D) g =
       Quotient.mk (QuotientGroup.rightRel D) h) :
     degreeRightCosetOut D g = degreeRightCosetOut D h :=
   congrArg Quotient.out eq
 
-private def degreeRightCosetCorrection (D : Subgroup G) (g : G) : D :=
+def degreeRightCosetCorrection (D : Subgroup G) (g : G) : D :=
   ⟨g * (degreeRightCosetOut D g)⁻¹, degreeRightCosetOut_spec D g⟩
 
 omit [Finite G] in
-private theorem degreeRightCosetCorrection_mul_out (D : Subgroup G) (g : G) :
+theorem degreeRightCosetCorrection_mul_out (D : Subgroup G) (g : G) :
     ((degreeRightCosetCorrection D g : D) : G) * degreeRightCosetOut D g = g := by
   simp [degreeRightCosetCorrection, degreeRightCosetOut, mul_assoc]
 
 omit [Finite G] in
-private lemma degreeRightCosets_nat_card_eq_index (D : Subgroup G) :
+lemma degreeRightCosets_nat_card_eq_index (D : Subgroup G) :
     Nat.card (DegreeRightCosets D) = D.index := by
   classical
   rw [Subgroup.index_eq_card]
   exact Nat.card_congr (QuotientGroup.quotientRightRelEquivQuotientLeftRel D)
 
 omit [Finite G] in
-private theorem span_range_eq_top_of_irreducible_isAlgClosed
+theorem span_range_eq_top_of_irreducible_isAlgClosed
     (ρ : Representation ℂ G V) [IsIrreducible ρ] :
     Submodule.span ℂ (Set.range (ρ : G → Module.End ℂ V)) = ⊤ := by
   have htop :
@@ -93,7 +95,7 @@ private theorem span_range_eq_top_of_irreducible_isAlgClosed
     _ = ⊤ := by simp [htop]
 
 omit [Finite G] [FiniteDimensional ℂ V] in
-private lemma mem_span_coset_representatives_of_scalar_on_subgroup
+lemma mem_span_coset_representatives_of_scalar_on_subgroup
     (ρ : Representation ℂ G V) (D : Subgroup G)
     (hDscalar : ∀ d : D, ∃ a : ℂ, ρ d = a • (1 : Module.End ℂ V))
     (g : G) :
@@ -134,7 +136,7 @@ private lemma mem_span_coset_representatives_of_scalar_on_subgroup
 
 /-- If an irreducible complex representation is scalar on `D`, then
 `dim V ^ 2 ≤ [G : D]`. -/
-public theorem irreducible_finrank_sq_le_index_of_scalar_on_subgroup
+theorem irreducible_finrank_sq_le_index_of_scalar_on_subgroup
     (ρ : Representation ℂ G V) [IsIrreducible ρ] (D : Subgroup G)
     (hDscalar : ∀ d : D, ∃ a : ℂ, ρ d = a • (1 : Module.End ℂ V)) :
     Module.finrank ℂ V ^ 2 ≤ D.index := by
@@ -180,7 +182,7 @@ public theorem irreducible_finrank_sq_le_index_of_scalar_on_subgroup
     _ = D.index := degreeRightCosets_nat_card_eq_index D
 
 omit [Finite G] [FiniteDimensional ℂ V] in
-private lemma commute_of_commutator_mem_kernel
+lemma commute_of_commutator_mem_kernel
     (ρ : Representation ℂ G V) (B : Subgroup G)
     (hBker : ∀ b : B, ρ b = (1 : Module.End ℂ V))
     {d c : G} (hcomm : ⁅d, c⁆ ∈ B) :
@@ -198,7 +200,7 @@ private lemma commute_of_commutator_mem_kernel
     _ = ρ c * ρ d := by rw [hmul, one_mul]
 
 omit [Finite G] in
-private lemma scalar_on_subgroup_of_centralModulo_kernel
+lemma scalar_on_subgroup_of_centralModulo_kernel
     (ρ : Representation ℂ G V) [IsIrreducible ρ] (B D : Subgroup G)
     (hBker : ∀ b : B, ρ b = (1 : Module.End ℂ V))
     (hcentral : IsCentralModulo B D) (d : D) :
@@ -238,7 +240,7 @@ private lemma scalar_on_subgroup_of_centralModulo_kernel
 /-- Isaacs, Corollary 2.30 in the direct commutator form used by Peterfalvi
 (1.8): if `D/B` is central and `B` is in the kernel of an irreducible
 character, then the degree squared is at most `[G : D]`. -/
-public theorem irreducible_finrank_sq_le_index_of_centralModulo_kernel
+theorem irreducible_finrank_sq_le_index_of_centralModulo_kernel
     (ρ : Representation ℂ G V) [IsIrreducible ρ] (B D : Subgroup G)
     (hBker : ∀ b : B, ρ b = (1 : Module.End ℂ V))
     (hcentral : IsCentralModulo B D) :

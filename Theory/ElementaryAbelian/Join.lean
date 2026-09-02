@@ -17,9 +17,11 @@ Public items:
 -/
 
 
+@[expose] public section
+
 open scoped IsMulCommutative
 
-public theorem IsElementaryAbelian.sup_of_le_centralizer
+theorem IsElementaryAbelian.sup_of_le_centralizer
     {p : ℕ} {G : Type*} [Group G] {E C : Subgroup G}
     [IsElementaryAbelian p E] [IsElementaryAbelian p C]
     (hCE : C ≤ Subgroup.centralizer (E : Set G)) :

@@ -3,6 +3,8 @@ module
 public import Theory.Character.Orthogonality
 public import Mathlib.LinearAlgebra.Matrix.Permutation
 
+@[expose] public section
+
 open scoped BigOperators
 
 noncomputable section
@@ -16,7 +18,7 @@ attribute [local instance] Fintype.ofFinite
 
 variable {L : Type*} [Group L] [Finite L]
 
-@[expose] public def normalSubgroupConjMulEquiv
+def normalSubgroupConjMulEquiv
     (N : Subgroup L) [N.Normal] (g : L) : N ≃* N where
   toFun x :=
     ⟨g * (x : L) * g⁻¹,
@@ -35,7 +37,7 @@ variable {L : Type*} [Group L] [Finite L]
     apply Subtype.ext
     simp [mul_assoc]
 
-@[expose] public def conjClassesConjPerm
+def conjClassesConjPerm
     (N : Subgroup L) [N.Normal] (g : L) :
     Equiv.Perm (ConjClasses N) where
   toFun := ConjClasses.map (normalSubgroupConjMulEquiv N g).toMonoidHom
@@ -54,13 +56,13 @@ variable {L : Type*} [Group L] [Finite L]
     simp [normalSubgroupConjMulEquiv, mul_assoc]
 
 omit [Finite L] in
-public theorem conjClassesConjPerm_mk
+theorem conjClassesConjPerm_mk
     (N : Subgroup L) [N.Normal] (g : L) (x : N) :
     conjClassesConjPerm N g (ConjClasses.mk x) =
       ConjClasses.mk ((normalSubgroupConjMulEquiv N g) x) := rfl
 
 omit [Finite L] in
-public theorem conjClassesConjPerm_symm_mk
+theorem conjClassesConjPerm_symm_mk
     (N : Subgroup L) [N.Normal] (g : L) (x : N) :
     (conjClassesConjPerm N g).symm (ConjClasses.mk x) =
       ConjClasses.mk ((normalSubgroupConjMulEquiv N g).symm x) := by
@@ -69,7 +71,7 @@ public theorem conjClassesConjPerm_symm_mk
   congr 1
   apply Subtype.ext
   simp [normalSubgroupConjMulEquiv, mul_assoc]
-@[expose] public def classFunctionConjLinearEquiv
+def classFunctionConjLinearEquiv
     (N : Subgroup L) [N.Normal] (g : L) :
     ConjClassFunction N ≃ₗ[ℂ] ConjClassFunction N where
   toFun φ := fun c => φ ((conjClassesConjPerm N g).symm c)
@@ -79,7 +81,7 @@ public theorem conjClassesConjPerm_symm_mk
   map_add' φ ψ := by ext c; simp
   map_smul' a φ := by ext c; simp
 
-public theorem classFunctionConjLinearEquiv_basisFun
+theorem classFunctionConjLinearEquiv_basisFun
     (N : Subgroup L) [N.Normal] (g : L)
     (c : ConjClasses N) :
     classFunctionConjLinearEquiv N g
@@ -112,7 +114,7 @@ public theorem classFunctionConjLinearEquiv_basisFun
       simp
     simp [classFunctionConjLinearEquiv, hsymm, hdc]
 omit [Finite L] in
-public theorem classFunctionConjLinearEquiv_characterClassFunction
+theorem classFunctionConjLinearEquiv_characterClassFunction
     (N : Subgroup L) [N.Normal] (g : L)
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (rho : Representation ℂ N V) :
@@ -132,7 +134,7 @@ public theorem classFunctionConjLinearEquiv_characterClassFunction
   rw [conjClassesConjPerm_symm_mk]
   rfl
 
-public theorem classFunctionInner_classFunctionConjLinearEquiv
+theorem classFunctionInner_classFunctionConjLinearEquiv
     (N : Subgroup L) [N.Normal] (g : L)
     (phi psi : ConjClassFunction N) :
     classFunctionInner (classFunctionConjLinearEquiv N g phi)
@@ -157,7 +159,7 @@ public theorem classFunctionInner_classFunctionConjLinearEquiv
   simp_rw [happ, happ']
   simpa using (normalSubgroupConjMulEquiv N g).symm.sum_comp
     (fun x : N => phi (ConjClasses.mk x) * star (psi (ConjClasses.mk x)))
-public theorem classFunctionConjLinearEquiv_isIrreducibleCharacter
+theorem classFunctionConjLinearEquiv_isIrreducibleCharacter
     (N : Subgroup L) [N.Normal] (g : L)
     {chi : ConjClassFunction N}
     (hchi : IsIrreducibleConjCharacter chi) :
@@ -169,7 +171,7 @@ public theorem classFunctionConjLinearEquiv_isIrreducibleCharacter
   · rw [classFunctionInner_classFunctionConjLinearEquiv]
     exact hchi.2
 
-public theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
+theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
     {ι M : Type*} [Fintype ι] [DecidableEq ι]
     [AddCommGroup M] [Module ℂ M]
     (b : Module.Basis ι ℂ M)
@@ -224,7 +226,7 @@ public theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
         simp [hi]
 
 omit [Finite L] in
-public theorem classFunctionConjLinearEquiv_symm_apply
+theorem classFunctionConjLinearEquiv_symm_apply
     (N : Subgroup L) [N.Normal] (g : L)
     (chi : ConjClassFunction N) :
     (classFunctionConjLinearEquiv N g).symm chi =
@@ -241,7 +243,7 @@ public theorem classFunctionConjLinearEquiv_symm_apply
     simp [normalSubgroupConjMulEquiv, mul_assoc]
   exact congrArg chi (congrArg ConjClasses.mk h)
 
-@[expose] public def irreducibleConjClassFunctionPerm
+def irreducibleConjClassFunctionPerm
     (N : Subgroup L) [N.Normal] (g : L) :
     Equiv.Perm {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} where
   toFun chi :=
@@ -263,7 +265,7 @@ public theorem classFunctionConjLinearEquiv_symm_apply
     rw [← classFunctionConjLinearEquiv_symm_apply N g]
     simp
 
-public theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
+theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
     (N : Subgroup L) [N.Normal] (g : L) :
     LinearMap.trace ℂ (ConjClassFunction N)
         (classFunctionConjLinearEquiv N g).toLinearMap =
@@ -313,7 +315,7 @@ public theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
         rw [hbIrr, hbIrr]
         rfl)
 
-public theorem trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses
+theorem trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses
     (N : Subgroup L) [N.Normal] (g : L) :
     LinearMap.trace ℂ (ConjClassFunction N)
         (classFunctionConjLinearEquiv N g).toLinearMap =
@@ -325,7 +327,7 @@ public theorem trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses
       (classFunctionConjLinearEquiv N g)
       (classFunctionConjLinearEquiv_basisFun N g)
 
-public theorem fixed_irreducible_ncard_eq_fixed_conjClasses
+theorem fixed_irreducible_ncard_eq_fixed_conjClasses
     (N : Subgroup L) [N.Normal] (g : L) :
     (Function.fixedPoints
         (irreducibleConjClassFunctionPerm N g)).ncard =
@@ -335,7 +337,7 @@ public theorem fixed_irreducible_ncard_eq_fixed_conjClasses
   have hClass :=
     trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses N g
   exact_mod_cast hIrr.symm.trans hClass
-public theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
+theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
     (N : Subgroup L) [N.Normal] (g : L)
     {chi psi : ConjClassFunction N}
     (hchiIrr : IsIrreducibleConjCharacter chi)

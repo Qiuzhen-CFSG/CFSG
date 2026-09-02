@@ -11,6 +11,8 @@ This file gives the canonical basis of Representation.free and records that
 the basis indices are permuted freely by the represented group.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace Representation
@@ -19,7 +21,7 @@ open _root_.Representation
 
 /-- The group acts on the second coordinate of the canonical basis index for a
 free representation. -/
-@[reducible] public def freeBasisIndexMulAction (G alpha : Type*)
+@[reducible] def freeBasisIndexMulAction (G alpha : Type*)
     [Group G] : MulAction G (alpha × G) where
   smul g x := (x.1, g * x.2)
   one_smul x := by
@@ -33,7 +35,7 @@ free representation. -/
 
 /-- The canonical K-basis of a free representation, indexed by a free
 G-set. -/
-public noncomputable def freeBasis
+noncomputable def freeBasis
     (K G alpha : Type*) [Field K] [Group G] :
     Module.Basis (alpha × G) K (alpha →₀ MonoidAlgebra K G) :=
   (Finsupp.basisSingleOne : Module.Basis (alpha × G) K ((alpha × G) →₀ K)).map
@@ -41,7 +43,7 @@ public noncomputable def freeBasis
       (Finsupp.mapRange.linearEquiv (MonoidAlgebra.coeffLinearEquiv K).symm))
 
 @[simp]
-public theorem freeBasis_apply
+theorem freeBasis_apply
     (K G alpha : Type*) [Field K] [Group G] (x : alpha × G) :
     freeBasis K G alpha x =
       Finsupp.single x.1 (MonoidAlgebra.single x.2 (1 : K)) := by
@@ -50,7 +52,7 @@ public theorem freeBasis_apply
 
 /-- The free representation permutes its canonical basis through left
 multiplication on the group coordinate. -/
-public theorem free_apply_freeBasis
+theorem free_apply_freeBasis
     (K G alpha : Type*) [Field K] [Group G] (g : G) (x : alpha × G) :
     letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
     free K G alpha g (freeBasis K G alpha x) =
@@ -63,7 +65,7 @@ public theorem free_apply_freeBasis
 
 /-- Explicit pair form of the free-basis action theorem. -/
 @[simp]
-public theorem free_apply_freeBasis_pair
+theorem free_apply_freeBasis_pair
   (K G alpha : Type*) [Field K] [Group G] (g h : G) (a : alpha) :
     free K G alpha g (freeBasis K G alpha (a, h)) =
       freeBasis K G alpha (a, g * h) := by
@@ -72,7 +74,7 @@ public theorem free_apply_freeBasis_pair
 
 /-- A representation equivalent to a finite-rank free representation has a
 basis permuted freely by the represented group. -/
-public theorem exists_freeOrbitBasis_of_repEquiv_free
+theorem exists_freeOrbitBasis_of_repEquiv_free
     {K G V : Type*} {alpha : Type} [Field K] [Group G] [Finite G] [Finite alpha]
     [AddCommGroup V] [Module K V]
     (rho : Representation K G V) (e : rho ≃ₗ Representation.free K G alpha) :

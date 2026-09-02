@@ -20,11 +20,13 @@ Public items:
 -/
 
 
+@[expose] public section
+
 open scoped IsMulCommutative
 
 universe u
 
-public instance IsElementaryAbelian.isVectorSpace (p : ℕ) [Fact p.Prime]
+instance IsElementaryAbelian.isVectorSpace (p : ℕ) [Fact p.Prime]
     {G : Type u} [Group G] [inst : IsElementaryAbelian p G] :
     Module (ZMod p) (Additive G) :=
   have hpow : ∀ g : G, g ^ p = 1 :=
@@ -35,7 +37,7 @@ public instance IsElementaryAbelian.isVectorSpace (p : ℕ) [Fact p.Prime]
 
 /-- For every subgroup `B` of an elementary abelian group `A`, there exists a subgroup `C` disjoint
 from `B` and such that `B` and `C` generate the whole group `A`. -/
-public theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
+theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
     (A : Type u) [Group A]
     [h : IsElementaryAbelian p A] (B : Subgroup A) :
     ∃ C : Subgroup A, IsCompl B C := by

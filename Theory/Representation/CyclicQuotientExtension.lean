@@ -16,6 +16,8 @@ public import Mathlib.RingTheory.ZMod.Torsion
 public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 open MonoidAlgebra
@@ -49,11 +51,11 @@ Then
   (c) is moved to endFieldRep_isAbsolutelyIrreducible
 -/
 
-public alias proposition_2_1_a := isAbsolutelyIrreducible_iff_surjective
+alias proposition_2_1_a := isAbsolutelyIrreducible_iff_surjective
 
-public alias proposition_2_1_b := jacobson_density_surjective_rep
+alias proposition_2_1_b := jacobson_density_surjective_rep
 
-public alias proposition_2_1_c := endFieldRep_isAbsolutelyIrreducible
+alias proposition_2_1_c := endFieldRep_isAbsolutelyIrreducible
 
 /-
 **Kind**: Theorem
@@ -108,7 +110,7 @@ noncomputable def proposition_2_2_restrictionConjEquiv (x : G) :
   simp [conjugateRep_apply, mul_assoc]
 
 /-- The restriction of a `G`-representation to a normal subgroup is equivalent to each conjugate. -/
-public noncomputable def cyclicQuotientRestrictionConjEquiv (x : G) :
+noncomputable def cyclicQuotientRestrictionConjEquiv (x : G) :
     conjugateRep (iota.comp H.subtype) x ≃ₗ iota.comp H.subtype := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (iota x⁻¹) (Representation.apply_bijective iota x⁻¹)) ?_
   intro h
@@ -146,7 +148,7 @@ def proposition_2_2_subrepInclusion (phi : Subrepresentation (proposition_2_2_si
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The explicit equivalence constructed in Proposition 2.2(a). -/
-public noncomputable def proposition_2_2_a_apply
+noncomputable def proposition_2_2_a_apply
     (phi : Subrepresentation (iota.comp H.subtype)) (f : rho ≃ₗ phi.toRepresentation) :
     iota.comp H.subtype ≃ₗ rho := by
   classical
@@ -309,7 +311,7 @@ public noncomputable def proposition_2_2_a_apply
 end Proposition2_2
 
 /-- Proposition 2.2(a): an irreducible constituent of the restriction is equivalent to `ρ`. -/
-public noncomputable def proposition_2_2_a
+noncomputable def proposition_2_2_a
     {F : Type*} [Field F] [IsAlgClosed F]
     {G : Type*} [Group G]
     (H : Subgroup G) [hN : H.Normal] (hcyc : IsCyclic (G ⧸ H))
@@ -875,7 +877,7 @@ theorem p22b_funCosetSubrep_irreducible
 
 end Proposition22bFunctionSpace
 
-public theorem proposition_2_2_b
+theorem proposition_2_2_b
     {F : Type*} [Field F] [IsAlgClosed F]
     {G : Type*} [Group G]
     (H : Subgroup G) [hN : H.Normal] (hcyc : IsCyclic (G ⧸ H)) [Finite (G ⧸ H)]

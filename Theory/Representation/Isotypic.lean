@@ -16,6 +16,8 @@ irreducible submodules, and the independence of the multiplicity of the
 isomorphism class from the chosen decomposition.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped DirectSum
@@ -25,14 +27,14 @@ open _root_.Representation
 
 
 /-- Isaacs, Definition 1.12: the `M`-homogeneous part of `V`. -/
-@[expose] public def homogeneousComponent
+def homogeneousComponent
     (A V M : Type*) [Semiring A]
     [AddCommMonoid V] [Module A V]
     [AddCommMonoid M] [Module A M] : Submodule A V :=
   sSup {W : Submodule A V | Nonempty (W ≃ₗ[A] M)}
 
 
-private theorem simple_submodule_le_selected
+theorem simple_submodule_le_selected
     {A V M : Type*} [Ring A]
     [AddCommGroup V] [Module A V]
     [AddCommGroup M] [Module A M]
@@ -80,7 +82,7 @@ private theorem simple_submodule_le_selected
       simpa [hcoord_apply] using congrArg (fun f : S →ₗ[A] W i => f ⟨x, hx⟩) hcoord_zero
     simp [hzero]
 
-private theorem homogeneousComponent_eq_selected_sum
+theorem homogeneousComponent_eq_selected_sum
     {A V M : Type*} [Ring A]
     [AddCommGroup V] [Module A V]
     [AddCommGroup M] [Module A M]
@@ -103,7 +105,7 @@ private theorem homogeneousComponent_eq_selected_sum
     rw [homogeneousComponent]
     exact le_sSup i.2
 
-private theorem selected_length_eq_card
+theorem selected_length_eq_card
     {A V M : Type*} [Ring A]
     [AddCommGroup V] [Module A V]
     [AddCommGroup M] [Module A M]
@@ -153,7 +155,7 @@ private theorem selected_length_eq_card
       simp [J, Nat.card_eq_fintype_card]
 
 /-- Isaacs, Character Theory of Finite Groups, Lemma 1.13. -/
-public theorem isaacs_lemma_1_13
+theorem isaacs_lemma_1_13
     {A V M : Type*} [Ring A]
     [AddCommGroup V] [Module A V]
     [AddCommGroup M] [Module A M]

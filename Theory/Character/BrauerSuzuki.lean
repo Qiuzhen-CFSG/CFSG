@@ -13,6 +13,8 @@ product of two induced class functions as a double sum over the base group and
 the subgroup.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped BigOperators
@@ -32,12 +34,12 @@ attribute [local instance] Fintype.ofFinite
 attribute [local instance] Classical.propDecidable
 
 /-- `star (if p then a else b) = if p then star a else star b`. -/
-private lemma star_ite {p : Prop} [Decidable p] (a b : ℂ) :
+lemma star_ite {p : Prop} [Decidable p] (a b : ℂ) :
     star (if p then a else b) = (if p then star a else star b) := by
   by_cases h : p <;> simp [h]
 
 /-- Reindexing: `∑_{x,y} f (x⁻¹·y) = |L| · ∑_z f z`. -/
-public lemma conj_reindex {L : Type u} [Group L] [Fintype L] (f : L → ℂ) :
+lemma conj_reindex {L : Type u} [Group L] [Fintype L] (f : L → ℂ) :
     (∑ x : L, ∑ y : L, f (x⁻¹ * y)) = (Nat.card L : ℂ) * ∑ z : L, f z := by
   classical
   calc
@@ -62,7 +64,7 @@ public lemma conj_reindex {L : Type u} [Group L] [Fintype L] (f : L → ℂ) :
       simp [Finset.sum_const, Nat.card_eq_fintype_card]
 
 /-- A function vanishing off `H` sums over `G` the same as over `H`. -/
-public lemma sum_eq_sum_subgroup_of_vanishes {G : Type u} [Group G] [Fintype G]
+lemma sum_eq_sum_subgroup_of_vanishes {G : Type u} [Group G] [Fintype G]
     (H : Subgroup G) (f : G → ℂ) (hf : ∀ x : G, x ∉ H → f x = 0) :
     (∑ x : G, f x) = ∑ x : ↥H, f (x : G) := by
   classical
@@ -88,14 +90,14 @@ public lemma sum_eq_sum_subgroup_of_vanishes {G : Type u} [Group G] [Fintype G]
 
 /-- The summand of the pairing of two induced class functions:
 `δ₁ h · conj(δ₂(z⁻¹·h·z))` when `z⁻¹·h·z ∈ H`, else `0`. -/
-@[expose] public noncomputable def pairingSummand {G : Type u} [Group G] (H : Subgroup G)
+noncomputable def pairingSummand {G : Type u} [Group G] (H : Subgroup G)
     (δ₁ δ₂ : ClassFunction (↥H)) (z : G) (h : ↥H) : ℂ := by
   classical
   exact if hz : z⁻¹ * (h : G) * z ∈ H then δ₁ h * star (δ₂ ⟨z⁻¹ * (h : G) * z, hz⟩) else 0
 
 /-- The Brauer--Suzuki expansion: the scalar product of two induced class
 functions is a double sum over the base group and the subgroup. -/
-public lemma pairing_induced_expand {L : Type u} [Group L] [Fintype L] (K : Subgroup L)
+lemma pairing_induced_expand {L : Type u} [Group L] [Fintype L] (K : Subgroup L)
     (δ₁ δ₂ : ClassFunction (↥K)) :
     scalarProduct L (inducedClassFunction K δ₁) (inducedClassFunction K δ₂) =
       ((Nat.card (↥K) : ℂ)⁻¹ * (Nat.card (↥K) : ℂ)⁻¹) *

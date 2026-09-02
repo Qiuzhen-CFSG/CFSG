@@ -29,7 +29,7 @@ open _root_.Representation
 
 section TracePi
 
-public theorem trace_pi_map_perm {R : Type*} [Field R]
+theorem trace_pi_map_perm {R : Type*} [Field R]
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {κ : Type*} [Fintype κ] [DecidableEq κ]
     {M : Type*} [AddCommGroup M] [Module R M]

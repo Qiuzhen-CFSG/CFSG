@@ -8,9 +8,11 @@ public import Theory.GroupAction.Defs
 # Burnside normal p-complement consequence
 -/
 
+@[expose] public section
+
 /-- If a Sylow `p`-subgroup is contained in the center of its normalizer, then there is a normal
 subgroup of `p'`-order with `p`-group quotient. -/
-public theorem exists_normal_coprime_subgroup_and_pgroup_quotient_of_sylow_le_center_normalizer
+theorem exists_normal_coprime_subgroup_and_pgroup_quotient_of_sylow_le_center_normalizer
     {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact p.Prime] (S : Sylow p G)
     (hS : (S : Subgroup G) ≤ centerIn (G := G) (Subgroup.normalizer (S : Subgroup G))) :
     ∃ (N : Subgroup G) (_ : N.Normal), Nat.Coprime p (Nat.card N) ∧ IsPGroup p (G ⧸ N) := by

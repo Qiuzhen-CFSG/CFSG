@@ -15,6 +15,8 @@ inertia subgroup of an irreducible representation of a normal subgroup equals
 the subgroup, and the induced representation is irreducible.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 
@@ -182,7 +184,7 @@ def isaacs_6_34_coindRepEquivOfRepEquiv
   exact f.isIntertwining'
 
 /-- Isaacs, Character Theory of Finite Groups, Theorem 6.34. -/
-public theorem isaacs_theorem_6_34
+theorem isaacs_theorem_6_34
     {G : Type*} [Group G] [Finite G]
     (N : Subgroup G) [N.Normal]
     (hcentralizer : forall n : N, n ≠ 1 ->

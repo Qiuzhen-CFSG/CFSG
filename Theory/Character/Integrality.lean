@@ -15,6 +15,8 @@ finite order is an algebraic integer, hence the trace is, hence `ρ.character g`
 is for every representation `ρ`.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped BigOperators
@@ -23,7 +25,7 @@ open scoped BigOperators
 universe u v
 
 /-- An eigenvalue of an endomorphism of finite order is an algebraic integer. -/
-public theorem eigen_value_isIntegral_of_pow_eq_one {V : Type v} [AddCommGroup V]
+theorem eigen_value_isIntegral_of_pow_eq_one {V : Type v} [AddCommGroup V]
     [Module ℂ V] {f : V →ₗ[ℂ] V} {n : ℕ} (hn : 0 < n) (hf : f ^ n = 1)
     {z : ℂ} (hz : Module.End.HasEigenvalue f z) : IsIntegral ℤ z := by
   classical
@@ -65,7 +67,7 @@ public theorem eigen_value_isIntegral_of_pow_eq_one {V : Type v} [AddCommGroup V
 
 /-- The trace of an endomorphism, all of whose eigenvalues are algebraic
 integers, is an algebraic integer. -/
-public theorem trace_isIntegral_of_forall_eigenvalue {V : Type v} [AddCommGroup V]
+theorem trace_isIntegral_of_forall_eigenvalue {V : Type v} [AddCommGroup V]
     [Module ℂ V] [FiniteDimensional ℂ V] (f : V →ₗ[ℂ] V)
     (h : ∀ z : ℂ, Module.End.HasEigenvalue f z → IsIntegral ℤ z) :
     IsIntegral ℤ ((LinearMap.trace ℂ V) f) := by
@@ -92,7 +94,7 @@ public theorem trace_isIntegral_of_forall_eigenvalue {V : Type v} [AddCommGroup 
 
 /-- If `f` commutes with an idempotent `g`, then every eigenvalue of `f * g`
 is either zero or an eigenvalue of `f`. -/
-public theorem hasEigenvalue_of_mul_hasEigenvalue {V : Type v} [AddCommGroup V]
+theorem hasEigenvalue_of_mul_hasEigenvalue {V : Type v} [AddCommGroup V]
     [Module ℂ V] {f g : V →ₗ[ℂ] V} (hcomm : f * g = g * f) (hidem : g * g = g)
     {z : ℂ} (hz : Module.End.HasEigenvalue (f * g) z) :
     z = 0 ∨ Module.End.HasEigenvalue f z := by
@@ -143,7 +145,7 @@ public theorem hasEigenvalue_of_mul_hasEigenvalue {V : Type v} [AddCommGroup V]
     exact hg hgx0
 
 /-- Character values are algebraic integers. -/
-public theorem character_value_isIntegral {G : Type u} [Group G] [Fintype G]
+theorem character_value_isIntegral {G : Type u} [Group G] [Fintype G]
     {V : Type v} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) (g : G) :
     IsIntegral ℤ (ρ.character g) := by

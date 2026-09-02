@@ -22,6 +22,8 @@ public import Theory.Representation.CompleteReducibility
 public import Mathlib.GroupTheory.Nilpotent
 public import Theory.Representation.ConjugateRep
 
+@[expose] public section
+
 open _root_.Representation
 open Representation
 open MonoidAlgebra
@@ -119,7 +121,7 @@ Then $Z(G)$ is cyclic.
 
 open scoped IsMulCommutative in
 set_option backward.isDefEq.respectTransparency false in
-public theorem center_cyclic_of_representation_faithful_irreducible
+theorem center_cyclic_of_representation_faithful_irreducible
     {F : Type*} [Field F]
     {G : Type*} [Group G] [Finite G]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -640,7 +642,7 @@ lemma exists_prime_dvd_ne_of_not_prime_power_bg {m p : ℕ} (hm0 : m ≠ 0)
   exact Nat.eq_prime_pow_of_unique_prime_dvd hm0 h'
 
 set_option maxHeartbeats 1000000 in
-public theorem theorem_2_6_b
+theorem theorem_2_6_b
     {F : Type*} [Field F]
     {G : Type*} [Group G] (ho : Odd (Nat.card G))
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -1748,7 +1750,7 @@ public theorem theorem_2_6_b
 
 
 
-public theorem theorem_2_6_a
+theorem theorem_2_6_a
     {F : Type*} [Field F]
     {G : Type*} [Group G] (ho : Odd (Nat.card G))
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]

@@ -17,8 +17,10 @@ Public items:
 It also re-exports `Basic`.
 -/
 
+@[expose] public section
+
 /-- Maximal subgroups of finite p-groups are normal. -/
-public lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ}
+lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ}
     [Fact p.Prime] [Fact (IsPGroup p R)] {K : Subgroup R} (hK : IsCoatom K)
     : K.Normal := by
   let : Group.IsNilpotent R := IsPGroup.isNilpotent (p := p) (G := R) (h := Fact.out)
@@ -26,7 +28,7 @@ public lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ
     (Group.normalizerCondition_of_isNilpotent (G := R)) hK
 
 /-- The quotient of a group by a maximal normal subgroup has only the two trivial subgroups. -/
-public lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
+lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
     {K : Subgroup R} [K.Normal] (hK : IsCoatom K)
     : ∀ H : Subgroup (R ⧸ K), H = ⊥ ∨ H = ⊤ := by
   intro H
@@ -53,7 +55,7 @@ public lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
       _ = ⊥ := by simp
 
 /-- The quotient of a finite p-group by a maximal subgroup has order `p`. -/
-public lemma card_quotient_coatom_eq_prime {R : Type*} [Group R] [Finite R]
+lemma card_quotient_coatom_eq_prime {R : Type*} [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
     {K : Subgroup R} (hK : IsCoatom K)
     : Nat.card (R ⧸ K) = p := by

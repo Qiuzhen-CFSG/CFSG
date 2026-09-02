@@ -14,6 +14,8 @@ sum, every summand is a conjugate subrepresentation, and conjugate
 constituents occur with equal multiplicities.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open scoped DirectSum MonoidAlgebra
@@ -22,7 +24,7 @@ namespace Representation
 open _root_.Representation
 
 
-private theorem exists_supIndep_subset_sup_eq
+theorem exists_supIndep_subset_sup_eq
     {ι α : Type*} [DecidableEq ι] [Lattice α] [OrderBot α] [IsModularLattice α]
     (s : Finset ι) (f : ι → α)
     (hf : ∀ i ∈ s, IsAtom (f i)) :
@@ -41,7 +43,7 @@ private theorem exists_supIndep_subset_sup_eq
         · exact htind.insert ((hf a (Finset.mem_insert_self a s)).not_le_iff_disjoint.mp hle)
         · rw [Finset.sup_insert, Finset.sup_insert, htsup]
 
-private theorem iSup_conjugateSubrepresentations_eq_top
+theorem iSup_conjugateSubrepresentations_eq_top
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -94,7 +96,7 @@ private theorem iSup_conjugateSubrepresentations_eq_top
   change T.toSubmodule = (⊤ : Subrepresentation rho).toSubmodule
   exact congrArg Subrepresentation.toSubmodule hTtop
 
-private noncomputable def isaacs_6_5_ofSubmodule'_repEquiv
+noncomputable def isaacs_6_5_ofSubmodule'_repEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V)
@@ -131,7 +133,7 @@ private noncomputable def isaacs_6_5_ofSubmodule'_repEquiv
       rfl
     _ = rho g (rho.asModuleEquiv ↑(e v)) := by rfl
 set_option backward.isDefEq.respectTransparency false in
-private theorem isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
+theorem isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     {rho : Representation F G V}
@@ -190,7 +192,7 @@ private theorem isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
       ((Subrepresentation.ofSubmodule' U.asSubmodule).toRepresentation ≃ₗ
         (Subrepresentation.ofSubmodule' W.asSubmodule).toRepresentation)
     exact ⟨isaacs_6_5_ofSubmodule'_repEquiv rho e⟩
-private theorem isaacs_6_5_nonempty_repEquiv_conjugateOrderIso_iff
+theorem isaacs_6_5_nonempty_repEquiv_conjugateOrderIso_iff
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
@@ -221,7 +223,7 @@ private theorem isaacs_6_5_nonempty_repEquiv_conjugateOrderIso_iff
     exact ⟨e'⟩
 
 /-- Isaacs, Character Theory of Finite Groups, Theorem 6.5. -/
-public theorem isaacs_theorem_6_5
+theorem isaacs_theorem_6_5
     {F G V : Type*} [Field F] [Group G] [Finite G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
