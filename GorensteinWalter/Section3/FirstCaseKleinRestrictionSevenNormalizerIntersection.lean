@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSevenConjugateU
 public import GorensteinWalter.Section3.FirstCaseKleinNormalizer
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

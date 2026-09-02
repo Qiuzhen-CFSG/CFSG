@@ -6,6 +6,8 @@ public import Glauberman.CentralizerInfPCorePreimageIsPGroup
 public import Glauberman.QuotientConjugationSquareZero
 
 import Glauberman.Lemma6_1
+open Theory.ElementaryAbelian
+
 
 /-!
 # Glauberman Lemma 6.3, Steps 1–5

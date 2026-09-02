@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection12.lemma_12_8_f
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 

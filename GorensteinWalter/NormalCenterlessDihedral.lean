@@ -4,6 +4,7 @@ public import GorensteinWalter.Classification
 public import GorensteinWalter.DihedralCore
 import FeitThompson.PCore.PPrimeCore
 
+
 /-!
 # Centralizers of normal centerless subgroups with dihedral Sylow 2-subgroups
 

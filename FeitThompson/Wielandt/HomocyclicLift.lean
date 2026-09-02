@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.PGroup.HomocyclicFrattini
 public import FeitThompson.Wielandt.MatrixTrace
+open Theory.ElementaryAbelian
+
 
 /-!
 # Homocyclic lift packages for Wielandt fixed-point arguments

@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section3.CyclicTwoCoreLayerASeven
 
+
 /-!
 # Cyclic first-case layer structure: A₇ quotient with oriented prime `3`
 

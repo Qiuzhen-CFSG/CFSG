@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.Section2.Coherence
 
+
 /-!
 # Bender--Glauberman: Lemma 2.4
 

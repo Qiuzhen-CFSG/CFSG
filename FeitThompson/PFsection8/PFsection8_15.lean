@@ -3,6 +3,8 @@ module
 public import FeitThompson.PFsection5.PFsection5_3
 import FeitThompson.PFsection8.PFsection8_13
 public import FeitThompson.PFsection8.Basic
+open Theory.GroupAction
+
 
 noncomputable section
 

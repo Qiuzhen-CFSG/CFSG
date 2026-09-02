@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinUniformInvolution
 public import GorensteinWalter.Section2.Lemma27FittingDecomposition
 import Mathlib.Tactic
 
+
 /-!
 # The commutator-centralization consequence in the Klein-four branch
 -/

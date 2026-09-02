@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreBInterM
 import Mathlib.Tactic
 
+
 /-!
 # `B ≤ M` in the cyclic first-case A₇ layer model — normalizer-equality leg
 

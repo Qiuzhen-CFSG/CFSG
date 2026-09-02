@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
 import GorensteinWalter.Section2.PSubgroupInfNormalNilpotentLePCore
 import Mathlib.Tactic
+
 open scoped Pointwise commutatorElement
 noncomputable section
 namespace GorensteinWalter

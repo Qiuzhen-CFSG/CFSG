@@ -2,10 +2,12 @@ module
 
 public import Mathlib.RepresentationTheory.Invariants
 
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
+public import Theory.ElementaryAbelian.Basic
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.GroupAction.Defs
 
 open scoped IsMulCommutative
+open Theory.ElementaryAbelian
 
 /-!
 Representations attached to actions on elementary abelian groups.
@@ -60,7 +62,7 @@ abelian group. -/
 public theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbelian p G]
     [MulDistribMulAction A G] :
     (ofElementaryAbelianAction (A := A) (G := G) (p := p)).ker =
-      fixingSubgroupOf A G (Set.univ : Set G) := by
+      fixingSubgroup (M := A) (α := G) (Set.univ : Set G) := by
   ext a
   rw [MonoidHom.mem_ker]
   constructor

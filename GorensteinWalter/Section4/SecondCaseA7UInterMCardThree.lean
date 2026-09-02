@@ -6,6 +6,7 @@ public import GorensteinWalter.ASevenInvariantOddPSubgroupCentralized
 public import FeitThompson.BGsection1.CentralizerLemmas
 import Mathlib.Tactic
 
+
 /-!
 # The odd image in the A₇ branch has nontrivial 3-part
 

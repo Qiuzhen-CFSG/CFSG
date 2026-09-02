@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardExactUnconditional
 import Mathlib.Tactic
 
+
 /-!
 # An order-three witness in the alternating second-case intersection
 

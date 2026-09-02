@@ -8,6 +8,8 @@ import FeitThompson.PFsection8.PFsection8_8
 import FeitThompson.PFsection12.PFsection12_7
 public import FeitThompson.PFsection14.PFsection14_1
 public import FeitThompson.PFsection14.PFsection14_Conclusion
+open Theory.GroupAction
+
 
 /-!
 # Final odd-order theorem wiring

@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.SE.Section7
+open Theory.GroupAction
+
 
 /-!
 # Lemma 7.3: invariant Sylow subgroups and swapping involutions

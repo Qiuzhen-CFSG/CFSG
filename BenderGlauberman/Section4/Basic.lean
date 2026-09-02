@@ -7,6 +7,7 @@ import all BenderGlauberman.Lemma19
 public import FeitThompson.SubgroupConjAction
 import all BenderGlauberman.Defs
 
+
 /-!
 # Bender--Glauberman: Section 4 — shared infrastructure
 

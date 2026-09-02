@@ -4,7 +4,10 @@ public import Theory.Representation.Maschke
 public import Theory.Representation.ElementaryAbelianAction
 public import Mathlib.RepresentationTheory.Submodule
 import Mathlib.Algebra.Field.ZMod
-import FeitThompson.GroupAction.Invariant
+import Theory.GroupAction.Invariant
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped IsMulCommutative
 

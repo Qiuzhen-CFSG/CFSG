@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixIndex
 import Mathlib.Tactic
 
+
 /-!
 # The `D₆` intersection transfer
 

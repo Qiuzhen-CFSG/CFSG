@@ -1,6 +1,9 @@
 module
 
 public import Stellmacher.SectionsOneToFourDefs
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped BigOperators Pointwise
 

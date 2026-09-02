@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.FieldTheory.Finite.Extension
 public import Mathlib.FieldTheory.Finite.Trace
@@ -29,6 +29,8 @@ import Mathlib.Algebra.Polynomial.SpecificDegree
 import Mathlib.Algebra.BigOperators.Ring.Nat
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.GroupTheory.Transfer
+open Theory.ElementaryAbelian
+
 
 /-!
 # Huppert II.8.27

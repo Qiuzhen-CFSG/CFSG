@@ -8,6 +8,7 @@ public import GorensteinWalter.QuotientCenterAutomorphism
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import Mathlib.Tactic
 
+
 /-!
 # The fixed factor centralizes the component Sylow
 

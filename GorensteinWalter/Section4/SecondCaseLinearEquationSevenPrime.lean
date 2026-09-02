@@ -11,6 +11,7 @@ import GorensteinWalter.CentralizerSetupFittingNormal
 import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (7): the prime-support half for the `PSL₂` branch
 

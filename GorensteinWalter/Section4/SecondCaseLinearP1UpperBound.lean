@@ -2,6 +2,8 @@ module
 
 public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 /-!
 # The second equation-(8) conjugate-count bound

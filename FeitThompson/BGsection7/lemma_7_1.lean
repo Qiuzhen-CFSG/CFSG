@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection7.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+
 /-! # Lemma 7.1 from BG Section 7 -/
 
 open scoped Pointwise

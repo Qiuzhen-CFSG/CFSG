@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreBLeMSource
 import Mathlib.Tactic
 
+
 /-!
 # Section 3: normalizing the odd-core intersection
 

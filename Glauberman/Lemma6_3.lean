@@ -27,6 +27,7 @@ public import Mathlib.Tactic
 
 import Glauberman.InvolvedQuotient
 
+
 noncomputable section
 
 open Matrix

@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.SE.Section7Coprime
+open Theory.GroupAction
+
 
 /-!
 # Section 7: the theta-chain endpoint

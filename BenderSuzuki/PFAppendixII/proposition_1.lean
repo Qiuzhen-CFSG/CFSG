@@ -11,6 +11,9 @@ import BenderSuzuki.PFchapter1section1.proposition_4_b
 import FeitThompson.FinalTheorem
 public import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.Algebra.GroupWithZero.TransferInstance
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi Appendix II, Proposition 1

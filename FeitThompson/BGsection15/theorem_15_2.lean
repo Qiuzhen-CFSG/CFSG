@@ -5,6 +5,9 @@ import FeitThompson.PCore.CentralizerControl
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 
@@ -7108,7 +7111,9 @@ private theorem section15_msigma_derived_le_quotient_centralizer_of_theorem15_2_
       let yQ : Qbar := ⟨y, hyQbar⟩
       have hxSker : MulDistribMulAction.toMulAut S Qbar xS = 1 := by
         have hfix' := hxS_fix
-        rw [fixingSubgroupOf_univ_eq_ker_toMulAut] at hfix'
+        change xS ∈ fixingSubgroup (M := (↥S)) (α := (↥Qbar))
+          (Set.univ : Set Qbar) at hfix'
+        rw [fixingSubgroup_univ_eq_ker_toMulAut] at hfix'
         exact MonoidHom.mem_ker.mp hfix'
       have hyfix : (xS : S) • yQ = yQ := by
         have hact := congrArg (fun f : MulAut Qbar => f yQ) hxSker

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseInvolutionKQuotientCard
 public import GorensteinWalter.Section4.SecondCaseA7UInterMCardExactUnconditional
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the A₇ bound on the inverted subgroup
 -/

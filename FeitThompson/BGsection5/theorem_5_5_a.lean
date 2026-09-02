@@ -3,6 +3,9 @@ module
 public import FeitThompson.BGsection5.corollary_5_4
 public import FeitThompson.BGsection4.theorem_4_17
 public import FeitThompson.BGsection4.lemma_4_5_b
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-! # Theorem 5.5(a) from BG Section 5 -/
 
@@ -465,7 +468,7 @@ public theorem pCore_commute_of_ne_local
   have hcomm : ⁅x, y⁆ = (1 : G) := by simpa using hmem_inf
   rwa [commutatorElement_eq_one_iff_mul_comm] at hcomm
 
-private theorem actsTrivially_of_isPGroup_on_cyclic_prime_order_local
+private theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order_local
     {A G : Type*} [Group A] [Finite A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
@@ -760,7 +763,7 @@ private theorem normal_prime_order_subgroup_le_center_of_isPGroup
   let : Finite (ConjAct R) := Finite.of_equiv R ConjAct.toConjAct.toEquiv
   have hConjP : IsPGroup p (ConjAct R) := hpR.of_equiv ConjAct.toConjAct
   have htriv : ActsTrivially (A := ConjAct R) (G := S) :=
-    actsTrivially_of_isPGroup_on_cyclic_prime_order_local
+    isTrivialAction_of_isPGroup_on_cyclic_prime_order_local
       (A := ConjAct R) (G := S) (Fact.out : Nat.Prime p) hConjP inferInstance hScard
   intro s hs
   rw [Subgroup.mem_center_iff]

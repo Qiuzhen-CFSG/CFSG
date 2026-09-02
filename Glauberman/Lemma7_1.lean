@@ -9,6 +9,7 @@ public import Mathlib.GroupTheory.Complement
 public import Mathlib.GroupTheory.Index
 public import Mathlib.Tactic
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Lemma 7.1
 

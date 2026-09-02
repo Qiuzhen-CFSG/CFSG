@@ -13,15 +13,20 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.ElementaryAbelian.Extraspecial
+public import Theory.GroupAction.NormalComplement
+public import Theory.GroupAction.PrimeOrder
+public import Theory.PGroupCore
+public import Theory.Representation.ExtendScalars
+public import Theory.Representation.CompleteReducibility
+public import Mathlib.GroupTheory.Nilpotent
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
 
 open _root_.Representation
 open Theory.Representation
+open Theory.GroupAction
+open Theory.PGroup
+open Theory.ElementaryAbelian
 open MonoidAlgebra
 open Module
 open Module.End
@@ -32,6 +37,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped commutatorElement
+namespace Theory.Representation
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.6
@@ -124,7 +130,7 @@ public theorem center_cyclic_of_representation_faithful_irreducible
     (hi : Function.Injective ρ) :
     IsCyclic (Subgroup.center G) := by
   let _ := (inferInstance : FiniteDimensional F V)
-  let f : (Subgroup.center G) →* End F[G] ρ.asModule := {
+  let f : (Subgroup.center G) →* _root_.Module.End F[G] ρ.asModule := {
     toFun := fun c' ↦ {
       toFun := fun v' ↦ (single c'.val (1 : F)) • v'
       map_add' := by simp only [smul_add, single_smul, one_smul, implies_true]
@@ -139,7 +145,7 @@ public theorem center_cyclic_of_representation_faithful_irreducible
     }
     map_one' := by
       ext v'
-      have : (single (1 : G) (1 : F)) • v' = (1 : End F[G] ρ.asModule) v' := by
+      have : (single (1 : G) (1 : F)) • v' = (1 : _root_.Module.End F[G] ρ.asModule) v' := by
         simp only [single_smul, map_one, Module.End.one_apply, one_smul]
         rfl
       exact this
@@ -182,7 +188,8 @@ public theorem center_cyclic_of_representation_faithful_irreducible
       refine isCancelMulZero_iff_noZeroDivisors.mpr ?_
       rw [_root_.noZeroDivisors_iff]
       intro a b hab
-      have : DecidableEq (End F[G] ρ.asModule) := by exact Classical.typeDecidableEq (End F[G] ρ.asModule)
+      have : DecidableEq (_root_.Module.End F[G] ρ.asModule) := by
+        exact Classical.typeDecidableEq (_root_.Module.End F[G] ρ.asModule)
       have : IsSimpleModule F[G] ρ.asModule := (irreducible_iff_isSimpleModule_asModule ρ).mp inst
       exact zero_eq_mul.mp hab.symm
     toNontrivial := Subring.instNontrivialSubtypeMem k
@@ -1761,3 +1768,5 @@ public theorem theorem_2_6_a
   · have : Fact (ringChar F).Prime := ringChar_prime h
     rw [card_not_dvd_sylow_eq_bot hc, commutator_def, Subgroup.commutator_le] at hC'
     exact commutatorElement_eq_one_iff_mul_comm.mp (hi (congrArg ρ (hC' a trivial b trivial)))
+
+end Theory.Representation

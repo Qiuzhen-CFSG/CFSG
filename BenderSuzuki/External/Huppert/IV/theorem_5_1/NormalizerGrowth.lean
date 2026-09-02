@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.External.Huppert.IV.Basic
+open Theory.GroupAction
+
 
 /-!
 # Huppert IV.5.1 normalizer-growth core

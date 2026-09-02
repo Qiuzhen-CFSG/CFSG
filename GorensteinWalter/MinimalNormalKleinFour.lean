@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.GW1965
 public import Mathlib.GroupTheory.SchurZassenhaus
 
+
 /-!
 # Minimal normal Klein four subgroups
 

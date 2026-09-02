@@ -14,6 +14,7 @@ public import GorensteinWalter.Section2.Lemma27PiCoreInversion
 import GorensteinWalter.MinimalCounterexample
 import GorensteinWalter.Section2.Theorem26
 
+
 /-!
 # Lemma 2.7, first conjunct
 

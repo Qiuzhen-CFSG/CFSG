@@ -5,6 +5,8 @@ public import BenderSuzuki.SE.Theorem2
 import BenderSuzuki.SE.Borel
 import BenderSuzuki.SE.Proposition84Action
 import BenderSuzuki.SE.Proposition84Sylow
+import Theory.GroupAction.Lemmas
+
 
 /-!
 # The local normalizer step in Proposition 8.2
@@ -592,7 +594,7 @@ public theorem corollary713_nonsolvable_exists_normal_twoSubgroup_regular
     exact ⟨involutionCoreIn_le F hx.2, hx.1⟩
   have hF0normalF : (F0.subgroupOf F).Normal := by
     dsimp [F0]
-    rw [involutionCoreIn, subgroupOf_map_subtype_eq]
+    rw [involutionCoreIn, Theory.GroupAction.subgroupOf_map_subtype_eq]
     exact involutionCore_normal
   have hH0normalB0 : (H0.subgroupOf B0).Normal := by
     rw [Subgroup.normal_subgroupOf_iff hH0B0]

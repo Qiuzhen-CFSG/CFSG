@@ -1,9 +1,11 @@
 module
 
 public import FeitThompson.PFsection1.PFsection1_5
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Quotient
 public import Mathlib.GroupTheory.Coset.Card
 public import Mathlib.GroupTheory.QuotientGroup.Basic
+
+open Theory.GroupAction
 /-!
 # Peterfalvi, Section 1, Proposition (1.6)
 

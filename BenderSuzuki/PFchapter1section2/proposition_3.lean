@@ -4,6 +4,8 @@ public import BenderSuzuki.PFAppendixI.proposition_2
 public import Mathlib.GroupTheory.SemidirectProduct
 import BenderSuzuki.PFchapter1section2.AppendixIInput
 public import BenderSuzuki.PFchapter1section2.proposition_2
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace PFchapter1section2

@@ -12,6 +12,8 @@ open Theory.GroupAction
 
 open scoped commutatorElement
 
+namespace Theory.GroupAction
+
 public theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ : A →* MulAut G)
     (a : A) (g : G) :
     ⁅(((SemidirectProduct.inl (φ := φ) g : G ⋊[φ] A))⁻¹), (SemidirectProduct.inr (φ := φ) a)⁆ =
@@ -327,4 +329,14 @@ public theorem isTrivialAction_of_isPGroup_on_cyclic_prime_order
       exact hdiv_sub
     exact hp.not_dvd_one hdiv_one)
 
+public theorem actsTrivially_of_isPGroup_on_cyclic_prime_order
+    {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
+    (hG_card : Nat.card G = p) :
+    ActsTrivially (A := A) (G := G) := by
+  intro a g
+  exact (isTrivialAction_of_isPGroup_on_cyclic_prime_order
+    (G := G) (A := A) hp hA hG_cyclic hG_card).acts_trivially a g
+
 end PGroupAction
+
+end Theory.GroupAction

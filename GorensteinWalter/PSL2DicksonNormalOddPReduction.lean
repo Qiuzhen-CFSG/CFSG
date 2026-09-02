@@ -11,6 +11,8 @@ import GorensteinWalter.NormalOddPSubgroupSymmetricFour
 import GorensteinWalter.PSL2DihedralSylow
 import Mathlib.GroupTheory.Complement
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 /-!
 # Dickson reduction for invariant odd-prime subgroups of `PSL₂`

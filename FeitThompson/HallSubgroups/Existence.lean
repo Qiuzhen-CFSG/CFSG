@@ -27,11 +27,12 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Invariant
+public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.HallSubgroups.Complements
 
+open Theory.GroupAction
 
 /-
 **Kind**: Theorem

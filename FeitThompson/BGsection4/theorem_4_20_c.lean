@@ -5,6 +5,8 @@ public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.gorenstein_5_4_15
 public import FeitThompson.BGsection4.theorem_4_18_b
 public import FeitThompson.BGsection4.theorem_4_20_a
+open Theory.GroupAction
+
 
 /-! # Theorem 4.20(c) from BG Section 4 -/
 

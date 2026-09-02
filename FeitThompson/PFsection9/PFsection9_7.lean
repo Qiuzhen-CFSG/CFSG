@@ -9,6 +9,10 @@ import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 noncomputable section
 
@@ -1551,8 +1555,8 @@ public theorem theorem_9_7_fixedPointSubgroup_W1_barU_eq_bot_of_isInvariant_sec9
   have hfix_quot_eq :
       fixedPointSubgroup W1 (U ⧸ C.subgroupOf U) =
         (fixedPointSubgroup W1 U).map (QuotientGroup.mk' (C.subgroupOf U)) :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := U) (A := W1) hUsolv hcop (π := (∅ : Set Nat.Primes))
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := U) (A := W1) hUsolv hcop
       (C.subgroupOf U) hCinv
   rw [hfix_quot_eq, hfix_map_bot]
 

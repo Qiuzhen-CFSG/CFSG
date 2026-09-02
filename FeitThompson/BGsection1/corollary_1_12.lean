@@ -2,6 +2,9 @@ module
 
 public import FeitThompson.BGsection1.theorem_1_13
 
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 open scoped Pointwise
 
 public section

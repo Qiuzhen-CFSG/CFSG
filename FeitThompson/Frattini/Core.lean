@@ -4,7 +4,9 @@ public import Mathlib.GroupTheory.Frattini
 public import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
+
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 

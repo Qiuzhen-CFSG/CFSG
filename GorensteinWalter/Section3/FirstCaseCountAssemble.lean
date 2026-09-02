@@ -11,6 +11,7 @@ public import GorensteinWalter.Section3.FirstCaseTwoCoreKleinFour
 public import GorensteinWalter.Section3.FirstCaseCyclicTwoCore
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

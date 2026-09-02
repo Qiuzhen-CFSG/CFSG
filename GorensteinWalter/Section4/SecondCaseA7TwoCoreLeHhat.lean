@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseA7TwoCoreCentralizesU
 public import GorensteinWalter.TwoSubgroupCentralizingULeTwoCore
 public import GorensteinWalter.Section2.Theorem26
 
+
 /-!
 # The forward equation-(7) two-core containment
 -/

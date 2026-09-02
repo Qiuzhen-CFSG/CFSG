@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCommutator
 public import GorensteinWalter.Section3.CyclicTwoCoreKleinFour
 import Mathlib.Tactic
 
+
 /-!
 # The odd-core decomposition in the Klein-four branch
 -/

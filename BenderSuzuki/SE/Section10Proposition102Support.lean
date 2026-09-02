@@ -3,6 +3,8 @@ module
 public import BenderSuzuki.SE.Lemma83
 public import BenderSuzuki.SE.Theorem2
 import BenderSuzuki.PFchapter1section1.lemma_a
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Proposition 10.2: ambient Sylow support

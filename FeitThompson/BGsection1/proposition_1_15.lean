@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.BGsection1.corollary_1_12
 
+
 open scoped Pointwise
 
 public section

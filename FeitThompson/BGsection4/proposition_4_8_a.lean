@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection4.gorenstein_5_4_15
+open Theory.ElementaryAbelian
+
 /-! # Proposition 4.8(a) from BG Section 4 -/
 
 section Main

@@ -3,6 +3,7 @@ module
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
 
+
 /-!
 # Nilpotent groups and `p`-cores
 -/

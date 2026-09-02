@@ -7,6 +7,7 @@ public import GorensteinWalter.Section3.CyclicTwoCorePrimeCoreAbelian
 import all BenderGlauberman.Defs
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 /-!

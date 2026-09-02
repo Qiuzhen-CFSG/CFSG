@@ -32,20 +32,20 @@ import Mathlib.Tactic.TypeStar
 public import FeitThompson.ChiefFactors.Core
 public import FeitThompson.ChiefFactors.BaerCore
 public import FeitThompson.ChiefFactors.Proposition12
-import FeitThompson.Burnside.NormalComplement
+import Theory.GroupAction.NormalComplement
 import FeitThompson.Commutator.ActionTriviality
 import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.Commutator.CyclicSylow
 import FeitThompson.Commutator.Core
-import FeitThompson.ElementaryAbelian
+import Theory.ElementaryAbelian.VectorSpace
 import FeitThompson.Fitting.Centralizer
 import FeitThompson.Fitting.Core
 import FeitThompson.Fitting.Faithful
 public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Defs
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Defs
+public import Theory.GroupAction.Invariant
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.HallSubgroups.Complements
 public import FeitThompson.HallSubgroups.Existence
@@ -54,6 +54,7 @@ public import FeitThompson.PGroup.Omega
 import FeitThompson.PGroup.NormalSubgroups
 public import Theory.Representation.CompleteReducibility
 public import Theory.Representation.Maschke
+
 
 open scoped Pointwise
 

@@ -6,6 +6,8 @@ public import FeitThompson.BGsection8.theorem_8_1
 public import FeitThompson.Gorenstein.Chapter8_2
 public import FeitThompson.BGsection11.corollary_11_2_a
 public import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Corollary 6.4

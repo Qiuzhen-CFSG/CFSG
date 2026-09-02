@@ -8,6 +8,8 @@ public import GorensteinWalter.Classification
 import GorensteinWalter.PGammaL2PureSemilinear
 public import BenderSuzuki.SE.PStability
 public import Mathlib.Tactic
+open Theory.GroupAction
+
 open scoped Pointwise
 namespace GorensteinWalter
 noncomputable section

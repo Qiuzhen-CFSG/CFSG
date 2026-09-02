@@ -14,6 +14,7 @@ public import GorensteinWalter.PSL2Cardinality
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # The `A₇`-quotient model case of the Fact 1.10(ii) normalizer centralization
 

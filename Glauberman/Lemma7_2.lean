@@ -7,6 +7,7 @@ public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.GroupTheory.Index
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Lemma 7.2
 

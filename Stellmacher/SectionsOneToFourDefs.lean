@@ -6,6 +6,9 @@ public import FeitThompson.PCore.PCore
 public import Mathlib.GroupTheory.Frattini
 public import Mathlib.GroupTheory.IsSubnormal
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 Shared statement-level notation for Sections 1--4 of Stellmacher.

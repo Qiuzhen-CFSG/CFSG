@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinIntersectionOdd
 public import GorensteinWalter.OddSubgroupLeOddFactor
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

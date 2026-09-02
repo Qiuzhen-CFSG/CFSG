@@ -13,14 +13,13 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 
-open Representation
+namespace Theory.Representation
+
+open _root_.Representation
 open Theory.Representation
 open MonoidAlgebra
 open Module
@@ -63,9 +62,9 @@ Then
 public def intertwiningSubmodule
     {R : Type*} [CommSemiring R]
     {M : Type*} [AddCommMonoid M] [Module R M]
-    (A B : End R M) :
-  Submodule R (End R M) := {
-    carrier := {X : End R M | A * X = X * B}
+    (A B : _root_.Module.End R M) :
+  Submodule R (_root_.Module.End R M) := {
+    carrier := {X : _root_.Module.End R M | A * X = X * B}
     add_mem' := by
       intro X Y hX hY
       simp_all only [Set.mem_setOf_eq]
@@ -314,15 +313,15 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
   haveI : Nonempty I := Fin.pos_iff_nonempty.mp hpos
   have sum_p : ∑ i ∈ (Finset.univ : Finset I), p i = 1 := by
     simpa using Lagrange.sum_basis vals_injective Finset.univ_nonempty
-  have g_pow_eq_one_linearMap : (g.toLinearMap : Module.End F V) ^ h = 1 := by
+  have g_pow_eq_one_linearMap : (g.toLinearMap : _root_.Module.End F V) ^ h = 1 := by
     calc
-      (g.toLinearMap : Module.End F V) ^ h = (g ^ h).toLinearMap := by
+      (g.toLinearMap : _root_.Module.End F V) ^ h = (g ^ h).toLinearMap := by
         rw [LinearEquiv.toLinearMap_pow]
       _ = (1 : V ≃ₗ[F] V).toLinearMap := by rw [hg]
-      _ = (1 : Module.End F V) := by rfl
-  have aeval_X_pow_sub_one_eq_zero : aeval (g.toLinearMap : Module.End F V) ((X : Polynomial F) ^ h - 1) = 0 := by
+      _ = (1 : _root_.Module.End F V) := by rfl
+  have aeval_X_pow_sub_one_eq_zero : aeval (g.toLinearMap : _root_.Module.End F V) ((X : Polynomial F) ^ h - 1) = 0 := by
     calc
-      aeval (g.toLinearMap : Module.End F V) ((X : Polynomial F) ^ h - 1) = (g.toLinearMap : Module.End F V) ^ h - 1 := by
+      aeval (g.toLinearMap : _root_.Module.End F V) ((X : Polynomial F) ^ h - 1) = (g.toLinearMap : _root_.Module.End F V) ^ h - 1 := by
         simp [Polynomial.aeval_sub, Polynomial.aeval_X_pow, Polynomial.aeval_one]
       _ = 0 := sub_eq_zero.mpr g_pow_eq_one_linearMap
   have h_eq (i : I) : (X - C (vals ε i)) * p i = C (Lagrange.nodalWeight (Finset.univ : Finset I) (vals ε) i) * (X ^ h - 1) := by
@@ -343,7 +342,7 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
       _ = C w * ((X - C (vals ε i)) * (nodal / (X - C (vals ε i)))) := by ring
       _ = C w * nodal := by rw [h_div_eq]
       _ = C w * (X ^ h - 1) := by rw [nodal_eq_X_pow_sub_one]
-  have hzero (i : I) : aeval (g.toLinearMap : Module.End F V) ((X - C (vals ε i)) * p i) = 0 := by
+  have hzero (i : I) : aeval (g.toLinearMap : _root_.Module.End F V) ((X - C (vals ε i)) * p i) = 0 := by
     rw [h_eq i]
     simp [Polynomial.aeval_mul, Polynomial.aeval_C, aeval_X_pow_sub_one_eq_zero]
   have basis_mul_X_sub_C_dvd_X_pow_sub_one (i : I) :
@@ -354,20 +353,20 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
       Polynomial.isUnit_C.mpr (IsUnit.mk0 _ hweight_ne_zero)
     rw [h_eq i]
     exact (IsUnit.dvd_mul_left hunit).mp (dvd_refl _)
-  let π (i : I) : Module.End F V := aeval g.toLinearMap (p i)
+  let π (i : I) : _root_.Module.End F V := aeval g.toLinearMap (p i)
   have π_mapsTo (i : I) : ∀ v, π i v ∈ E i := by
     intro w
     dsimp [E]
     rw [mem_eigenspace_iff]
     have hzero := hzero i
-    have Hcomp : (g.toLinearMap - (vals ε i) • (1 : Module.End F V)) ∘ₗ π i = aeval g.toLinearMap ((X - C (vals ε i)) * p i) := by
+    have Hcomp : (g.toLinearMap - (vals ε i) • (1 : _root_.Module.End F V)) ∘ₗ π i = aeval g.toLinearMap ((X - C (vals ε i)) * p i) := by
       calc
-        (g.toLinearMap - vals ε i • (1 : Module.End F V)) ∘ₗ π i
-            = (g.toLinearMap - vals ε i • (1 : Module.End F V)) * π i := by rw [Module.End.mul_eq_comp]
+        (g.toLinearMap - vals ε i • (1 : _root_.Module.End F V)) ∘ₗ π i
+            = (g.toLinearMap - vals ε i • (1 : _root_.Module.End F V)) * π i := by rw [Module.End.mul_eq_comp]
         _ = aeval g.toLinearMap ((X - C (vals ε i)) * p i) := by
           simp [π, p, Polynomial.aeval_mul, Polynomial.aeval_sub, Polynomial.aeval_X, Polynomial.aeval_C,
             Algebra.algebraMap_eq_smul_one]
-    have H : (g.toLinearMap - (vals ε i) • (1 : Module.End F V)) ∘ₗ π i = 0 := by
+    have H : (g.toLinearMap - (vals ε i) • (1 : _root_.Module.End F V)) ∘ₗ π i = 0 := by
       rw [Hcomp, hzero]
     have H' := LinearMap.congr_fun H w
     have Hsub : g.toLinearMap (π i w) - vals ε i • (π i w) = 0 := by
@@ -391,7 +390,7 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
     simp_rw [Submodule.mem_iSup, Submodule.mem_top, iff_true]
     have hsum : v = ∑ i ∈ Finset.univ, π i v := by
       calc
-        v = (1 : Module.End F V) v := by simp
+        v = (1 : _root_.Module.End F V) v := by simp
         _ = (∑ i ∈ Finset.univ, π i) v := by rw [sum_π_id]
         _ = ∑ i ∈ Finset.univ, π i v := by simp [LinearMap.sum_apply]
     rw [hsum]
@@ -633,8 +632,8 @@ public theorem proposition_2_4_f
   let A : Fin h → Submodule F V := fun s ↦ End.eigenspace g.toLinearMap (ε ^ (s : ℤ))
   let hA : DirectSum.IsInternal A := eigenspace_decomposition hh g hg ε hε
   let τ : Fin h → Fin h := fun i ↦ @Fin.intCast h ‹_› ((i : ℤ) + m)
-  let B : Fin h → Submodule F (Module.End F V) := fun i ↦ blockElementaryMap A i (τ i)
-  let N : Submodule F (Module.End F V) := intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)
+  let B : Fin h → Submodule F (_root_.Module.End F V) := fun i ↦ blockElementaryMap A i (τ i)
+  let N : Submodule F (_root_.Module.End F V) := intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)
   have hB_le : ∀ i : Fin h, B i ≤ N := by
     intro i
     have hsub : ((i : ℤ) + m) - (i : ℤ) = m := by
@@ -650,14 +649,14 @@ public theorem proposition_2_4_f
       intro i j hij
       exact congrArg Prod.fst hij
     simpa [B, f, Function.comp_def] using h_indep_all.comp hf
-  have hX_map (X : Module.End F V) (hX : X ∈ N) (i : Fin h) {v : V} (hv : v ∈ A i) :
+  have hX_map (X : _root_.Module.End F V) (hX : X ∈ N) (i : Fin h) {v : V} (hv : v ∈ A i) :
       X v ∈ A (τ i) := by
     have hXeq : g.toLinearMap * X = X * (ε ^ m • g.toLinearMap) := hX
     have hgv : g.toLinearMap v = ε ^ (i : ℤ) • v := by
       exact (Module.End.mem_eigenspace_iff).mp hv
     have hε0 : ε ≠ 0 := hε.ne_zero (by omega)
     have hcalc : g.toLinearMap (X v) = ε ^ ((i : ℤ) + m) • X v := by
-      have htmp := congrArg (fun f : Module.End F V => f v) hXeq
+      have htmp := congrArg (fun f : _root_.Module.End F V => f v) hXeq
       change (g.toLinearMap * X) v = (X * (ε ^ m • g.toLinearMap)) v at htmp
       rw [Module.End.mul_apply, Module.End.mul_apply, LinearMap.smul_apply, hgv] at htmp
       calc
@@ -674,7 +673,7 @@ public theorem proposition_2_4_f
       simpa [A, τ] using eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) ((i : ℤ) + m)
     rw [hτ]
     exact hmem
-  have hzero_t (X : Module.End F V) (hX : X ∈ N) (i t : Fin h) (ht : t ≠ τ i) :
+  have hzero_t (X : _root_.Module.End F V) (hX : X ∈ N) (i t : Fin h) (ht : t ≠ τ i) :
       blockComponent A hA X i t = 0 := by
     ext v
     rw [blockComponent_apply, LinearMap.zero_apply]
@@ -710,7 +709,7 @@ public theorem proposition_2_4_f
     have hC_top' :
         ⨆ i : Fin h, Submodule.comap ((⨆ i ∈ (Set.univ : Set (Fin h)), B i)).subtype (B i) = ⊤ := by
       simpa using
-        (Submodule.biSup_comap_subtype_eq_top (R := F) (M := Module.End F V)
+        (Submodule.biSup_comap_subtype_eq_top (R := F) (M := _root_.Module.End F V)
           (s := (Set.univ : Set (Fin h))) (p := B))
     have h_eq' : (⨆ i ∈ (Set.univ : Set (Fin h)), B i) = N := by
       simp [h_eq]
@@ -736,8 +735,8 @@ public theorem proposition_2_4_g
   classical
   let A : Fin h → Submodule F V := fun s ↦ End.eigenspace g.toLinearMap (ε ^ (s : ℤ))
   let τ : Fin h → Fin h := fun i ↦ @Fin.intCast h ‹_› ((i : ℤ) + m)
-  let B : Fin h → Submodule F (Module.End F V) := fun i ↦ blockElementaryMap A i (τ i)
-  let N : Submodule F (Module.End F V) := intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)
+  let B : Fin h → Submodule F (_root_.Module.End F V) := fun i ↦ blockElementaryMap A i (τ i)
+  let N : Submodule F (_root_.Module.End F V) := intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)
   let C : Fin h → Submodule F N := fun i ↦ Submodule.comap N.subtype (B i)
   have hB_le : ∀ i : Fin h, B i ≤ N := by
     intro i
@@ -1735,3 +1734,5 @@ public theorem proposition_2_4_k
       rw [h00eq]
       nlinarith
     exact Or.inr (by exact_mod_cast hpos0')
+
+end Theory.Representation

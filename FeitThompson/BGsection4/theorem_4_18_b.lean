@@ -3,6 +3,7 @@ public import FeitThompson.BGsection3.Defs
 
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.theorem_4_18_a
+
 /-! # Theorem 4.18(b) from BG Section 4 -/
 
 universe u

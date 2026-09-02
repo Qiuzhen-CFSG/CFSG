@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection12.corollary_12_6_d
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

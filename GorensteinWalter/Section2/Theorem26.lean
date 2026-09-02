@@ -2,6 +2,8 @@ module
 
 public import GorensteinWalter.Section2.Theorem26Core
 public import GorensteinWalter.Section2.Theorem26ComponentTrivial
+open Theory.Representation
+
 
 /-!
 # Theorem 2.6 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")

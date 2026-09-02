@@ -12,6 +12,8 @@ public import FeitThompson.ChiefFactors.Proposition12
 public import FeitThompson.PGroup.Omega
 public import FeitThompson.Fitting.Core
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 /-!
 # Section 4: shared data and infrastructure for the linear equation-(8)

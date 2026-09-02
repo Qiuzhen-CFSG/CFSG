@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreBInterM
 import Mathlib.Tactic
 
+
 /-!
 # The maximal-overgroup factorization `M = (B ∩ M) E(M)`
 

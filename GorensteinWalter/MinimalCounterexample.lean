@@ -15,6 +15,7 @@ public import GorensteinWalter.LinearThree
 public import GorensteinWalter.MinimalNormalKleinFour
 public import GorensteinWalter.PGroupExtension
 
+
 universe u
 
 namespace GorensteinWalter

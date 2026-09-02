@@ -21,6 +21,7 @@ import Mathlib.GroupTheory.FixedPointFree
 import FeitThompson.FinalTheorem
 import GorensteinWalter.Section2.ExistsReflection
 
+
 namespace GorensteinWalter
 
 universe u

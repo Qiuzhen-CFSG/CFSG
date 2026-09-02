@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreBInterM
 public import GorensteinWalter.NormalizerEqOfNontrivialNormalInCoatom
 import Mathlib.Tactic
 
+
 /-!
 # Section 3: A₇-layer normalizer control — reduction to the layer equality
 

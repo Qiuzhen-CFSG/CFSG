@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.FirstCaseDihedralThreeCore
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionFive
 public import GorensteinWalter.InvolutionNormalizerInfConjugate
 import Mathlib.Tactic
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter

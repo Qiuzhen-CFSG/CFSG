@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.PFsection9.PFsection9_8.Reducible
+open Theory.ElementaryAbelian
+
 
 noncomputable section
 

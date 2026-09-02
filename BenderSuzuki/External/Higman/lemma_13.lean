@@ -7,8 +7,11 @@ public import BenderSuzuki.External.Higman.InvariantComplement
 import Mathlib.Order.RelSeries
 import FeitThompson.Frattini.Core
 import FeitThompson.Commutator.Core
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Invariant
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Higman Lemma 13

@@ -2,7 +2,7 @@ module
 
 public import Theory.GroupAction.Defs
 
-
+namespace Theory.GroupAction
 open scoped Pointwise
 
 section FixedPointTransportSet
@@ -54,5 +54,15 @@ public theorem isTrivialActionOnSubgroup_of_le_fixedPoints_subgroup {H : Subgrou
     IsTrivialActionOnSubgroup (A := A) (G := G) H :=
   (isTrivialActionOnSubgroup_iff_le_fixedPoints_subgroup (A := A) (G := G) H).2 hle
 
+/-! Functional spellings used by the group-action interfaces. -/
+
+public theorem actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup G}
+    (hle : H ≤ FixedPoints.subgroup A G) :
+    ActsTriviallyOnSubgroup (A := A) (G := G) H := by
+  intro a x hx
+  exact (FixedPoints.mem_subgroup (M := A) (a := x)).1 (hle hx) a
+
 
 end FixedPointTransport
+
+end Theory.GroupAction

@@ -3,6 +3,8 @@ module
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
 public import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
 
+namespace Theory.Representation
+
 /-- The submodule of endomorphisms that map the `i`-block into the `t`-block
 and vanish on every other block. -/
 @[expose]
@@ -442,3 +444,5 @@ public theorem blockElementaryMap_finrank
     (i : ι) (t : ι) :
     finrank R (blockElementaryMap A i t) = finrank R (A i) * finrank R (A t) := by
   rw [LinearEquiv.finrank_eq (blockElementaryMap_iso _ hA _ _), Module.finrank_linearMap]
+
+end Theory.Representation

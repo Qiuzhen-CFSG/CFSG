@@ -9,6 +9,7 @@ public import GorensteinWalter.Suzuki.HhatQuotientS4
 public import GorensteinWalter.NormalTwoSubgroupSymmetricFour
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -1,6 +1,9 @@
 module
 
 public import BenderSuzuki.PFAppendixI.proposition_2
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 noncomputable section
 

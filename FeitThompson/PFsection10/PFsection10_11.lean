@@ -21,6 +21,11 @@ import FeitThompson.PFsection9.PFsection9_3
 import FeitThompson.PFsection9.PFsection9_4
 import FeitThompson.PFsection9.PFsection9_6
 public import FeitThompson.PFsection9.PFsection9_11
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 10: Theorem (10.11)
@@ -26070,7 +26075,7 @@ private theorem typeVReduction_kernelQuotient_fixedPointSubgroup_zpowers_eq_bot_
         (fixedPointSubgroup A (derivedSubgroup M)).map
           (QuotientGroup.mk' N) := by
     simpa using
-      (fixedPointSubgroup_quotient_eq_map_of_isMulCommutative
+      (fixedPoints_subgroup_quotient_eq_map_of_isMulCommutative
         (G := derivedSubgroup M) (A := A) (H := N) (hH := hNinv) hcop)
   have hNorm : A ≤ Subgroup.normalizer (derivedSubgroup M) := by
     dsimp [A]

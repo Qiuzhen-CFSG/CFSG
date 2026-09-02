@@ -2,6 +2,9 @@ module
 
 public import FeitThompson.BGsection11.corollary_11_6_c
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped commutatorElement
 

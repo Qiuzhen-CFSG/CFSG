@@ -10,6 +10,7 @@ public import GorensteinWalter.Classification
 public import GorensteinWalter.Suzuki.SylowThreeCount
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

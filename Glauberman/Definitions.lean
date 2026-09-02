@@ -5,6 +5,7 @@ public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.Algebra.Group.Equiv.TypeTags
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Definitions 2.1–2.3
 

@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Lemma27IndexTwo
 public import GorensteinWalter.Section2.Lemma27DGroupIndexParity
 import Mathlib.Tactic
 
+
 /-!
 # The `t ∈ O²(M)` trichotomy branch for Lemma 2.7
 

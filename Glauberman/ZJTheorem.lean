@@ -6,6 +6,7 @@ public import Glauberman.TheoremB
 public import Glauberman.TheoremC
 import Glauberman.Lemma6_3
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Theorems A–D and Lemma 6.3
 

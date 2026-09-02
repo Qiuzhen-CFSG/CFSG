@@ -2,9 +2,12 @@ module
 
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.BGsection12.lemma_12_1_a
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.GroupAction.Defs
 public import FeitThompson.Wielandt.MatrixTrace
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Fixed-point product infrastructure for Wielandt

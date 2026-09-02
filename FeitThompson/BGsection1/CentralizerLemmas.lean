@@ -3,6 +3,7 @@ module
 public import FeitThompson.BGsection1.Defs
 import FeitThompson.Fitting.Centralizer
 
+
 open scoped Pointwise commutatorElement
 
 public lemma centralizer_le_normalizer {G : Type*} [Group G] (R : Subgroup G) :

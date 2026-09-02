@@ -9,6 +9,8 @@ import Theory.Character.DegreeBounds
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_5_c
+open Theory.GroupAction
+
 
 noncomputable section
 

@@ -3,6 +3,9 @@ module
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.Wielandt
 public import FeitThompson.PFsection9.Basic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 noncomputable section
 

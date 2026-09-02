@@ -4,6 +4,9 @@ public import FeitThompson.BGsection13.corollary_13_11
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

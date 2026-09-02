@@ -4,6 +4,8 @@ public import FeitThompson.BGsection13.lemma_13_7
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+
 
 open scoped Pointwise
 
@@ -1791,7 +1793,7 @@ private theorem section13_fixedPointSubgroup_quotient_eq_map_of_solvable_kernel_
     refine ⟨x, ?_, ?_⟩
     · simpa [fixedPointSubgroup] using hxfix
     · simp [x]
-  · exact fixedPointSubgroup_map_mk'_le_fixedPointSubgroup_quotient
+  · exact fixedPoints_subgroup_map_mk'_le_fixedPoints_subgroup_quotient
       (A := A) (G := L) K hKinv
 
 private theorem section13_lemma_13_8_fixed_point_prime_order_lift_to_normalizer_Q_divisor

@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseHhatInvolutionCount
 public import GorensteinWalter.Section3.FirstCaseKleinVUInvolution
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -13,6 +13,7 @@ public import GorensteinWalter.CosetInvolutionCount
 public import GorensteinWalter.Section3.FirstCaseCountData
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

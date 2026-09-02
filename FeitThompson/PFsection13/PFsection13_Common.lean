@@ -18,6 +18,8 @@ import FeitThompson.PFsection3.PFsection3_9
 import FeitThompson.PFsection5.PFsection5_9
 import FeitThompson.PFsection6.PFsection6_8
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+open Theory.GroupAction
+
 
 /-!
 # Peterfalvi, Section 13: PFsection13_Common

@@ -6,6 +6,7 @@ public import GorensteinWalter.CentralOddKernelKleinFourLift
 public import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
 
+
 /-!
 # A Klein four centralizing the component part of U
 -/

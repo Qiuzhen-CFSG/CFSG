@@ -1,6 +1,9 @@
 module
 
 public import FeitThompson.BGsection14.corollary_14_9
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 

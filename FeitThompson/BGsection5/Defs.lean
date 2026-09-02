@@ -3,7 +3,7 @@ public import FeitThompson.BGsection3.Defs
 
 public import Theory.Representation.CyclicQuotientExtension
 public import Theory.Representation.SolvableDimension
-public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import Theory.Representation.PrimitiveRootEigenspaces
 public import Theory.Representation.ExtraspecialFixedPoints
 public import Theory.Representation.TwoDimensionalOddOrder
 public import Mathlib.Algebra.CharP.LinearMaps
@@ -20,16 +20,18 @@ public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
 public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Theory.GroupAction.NormalComplement
+public import Theory.ElementaryAbelian.Extraspecial
+public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.Defs
 import FeitThompson.PCore.PCore
 import FeitThompson.PGroup.NormalSubgroups
 import Mathlib.GroupTheory.Schreier
+open Theory.ElementaryAbelian
+
 
 /-! # Definitions for BG Section 5 -/
 

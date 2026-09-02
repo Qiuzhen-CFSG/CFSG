@@ -6,6 +6,9 @@ public import FeitThompson.BGsection7.theorem_7_4
 public import FeitThompson.BGsection7.proposition_7_5
 public import FeitThompson.BGsection7.theorem_7_6
 import Mathlib.Order.Atoms
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped commutatorElement
 
@@ -294,7 +297,9 @@ public theorem section8CentralizerInFitting_primeSet_eq_fitting_of_centerInFitti
   · intro q hqF
     exact
       section8CenterInFitting_primeSet_subset_centralizerInFitting M A₀
-        (by simpa [hZπ] using hqF)
+        (by
+          rw [hZπ]
+          exact hqF)
 
 /-- Pulling a subgroup back to an overgroup preserves its prime support. -/
 public theorem section8_subgroupPrimeSet_subgroupOf_eq
@@ -1260,7 +1265,10 @@ public theorem section8_centerIn_ne_bot_of_isPGroup
       rw [Subgroup.mem_centralizer_iff]
       intro y hy
       exact congrArg Subtype.val (Subgroup.mem_center_iff.mp hz ⟨y, hy⟩)
-    simpa [hcenterIn_bot] using hxCenterIn
+    have hxbot : x ∈ (⊥ : Subgroup G) := by
+      rw [← hcenterIn_bot]
+      exact hxCenterIn
+    simpa using hxbot
   have hcenter_bot : Subgroup.center H = ⊥ := by
     apply Subgroup.map_injective H.subtype_injective
     simpa using hcenter_map_bot
@@ -2235,7 +2243,7 @@ public theorem section8_part_b_sylow_endpoint
     section8_normalizer_centerIn_thompsonSubgroup_eq_of_fitting_isPGroup
       hM hpF hFp P
   refine section8SubgroupInAmbient_sylow_of_normalizer_le P ?_
-  simpa [hZJnorm] using hNtransfer
+  simpa only [hZJnorm] using hNtransfer
 
 /-- The first conclusion of branch (b): the transported Sylow subgroup of `M` is Sylow in `G`. -/
 public theorem section8_part_b_sylow_core
@@ -3077,10 +3085,15 @@ public theorem section8_piCoreIn_singleton_centerInFitting_le_singleton_compl_co
         ⟨hRrX_norm_C, hcopRrC⟩)
   intro x hxRr
   let xX : X := ⟨x, hRr_le_X hxRr⟩
-  have hxC : xX ∈ C := hRrX_le_C (by simpa [xX, Subgroup.mem_subgroupOf] using hxRr)
+  have hxRr_sub : xX ∈ Rr.subgroupOf X := by
+    change x ∈ Rr
+    exact hxRr
+  have hxC : xX ∈ C := hRrX_le_C hxRr_sub
   let xC : C := ⟨xX, hxC⟩
   have hxCoreC : xC ∈ pPrimeCore q.val C := by
-    exact hRrC_le_core (by simpa [xC, xX, Subgroup.mem_subgroupOf] using hxRr)
+    apply hRrC_le_core
+    change xX ∈ Rr.subgroupOf X
+    exact hxRr_sub
   have hxCoreX : (xC : X) ∈ pPrimeCore q.val X :=
     hcoreC_le_coreX (Subgroup.mem_map_of_mem C.subtype hxCoreC)
   have hxCoreG : x ∈ (pPrimeCore q.val X).map X.subtype :=
@@ -4125,7 +4138,8 @@ public theorem section8FittingSubgroup_primeSet_eq_centralizerInFitting_of_maxim
       have hZπ : subgroupPrimeSet (section8CenterInFitting M) =
           subgroupPrimeSet (section8FittingSubgroup M) :=
         section8CenterInFitting_primeSet_eq_fitting M
-      simpa [hZπ] using hqF
+      rw [hZπ]
+      exact hqF
     have : IsMulCommutative (section8CenterInFitting M) :=
       section8CenterInFitting_isMulCommutative M
     have hRq_ne_bot : Rq ≠ ⊥ := by
@@ -4400,7 +4414,9 @@ public theorem section8_piCoreIn_singleton_fitting_maximalOver_le_original
     hDq_le_cent_Rr.trans (centralizer_le_normalizer Rr)
   have hnorm_Rr : Subgroup.normalizer (Rr : Set G) = M := by
     simpa [Rr] using section8_normalizer_piCoreIn_singleton_centerInFitting_eq hM hrF
-  simpa [Dq, Rr, hnorm_Rr] using hDq_le_norm_Rr
+  change Dq ≤ M
+  rw [← hnorm_Rr]
+  exact hDq_le_norm_Rr
 
 /-- The Fitting subgroup of any maximal overgroup `N` of `A = C_{F(M)}(A₀)` is
 contained in the original maximal subgroup `M`. This is the formal version of
@@ -6368,7 +6384,7 @@ public theorem section8_sylowOf_maximalOver_sylowSubgroupInAmbient_is_sylow_glob
     section8_normalizer_centerIn_thompsonSubgroup_eq_of_maximalOver_sylowSubgroupInAmbient
       hM hpF hFp P hA hN R
   refine section8SubgroupInAmbient_sylow_of_normalizer_le R ?_
-  simpa [hZJnorm] using
+  simpa only [hZJnorm] using
     section8_normalizer_centerIn_thompsonSubgroup_le_of_normalizer_sylow R
 
 
@@ -6717,7 +6733,7 @@ public theorem section8_inf_sylow_normalizer_le_of_card_eq_sylowSubgroupInAmbien
     section8_normalizer_centerIn_thompsonSubgroup_eq_of_fitting_isPGroup hM hpF hFp R_M
   have hnormR :
       Subgroup.normalizer (section8SubgroupInAmbient (R_M : Subgroup M) : Set G) ≤ M := by
-    simpa [hnormZ] using
+    simpa only [hnormZ] using
       section8_normalizer_centerIn_thompsonSubgroup_le_of_normalizer_sylow R_M
   rw [← hR_M]
   exact hnormR

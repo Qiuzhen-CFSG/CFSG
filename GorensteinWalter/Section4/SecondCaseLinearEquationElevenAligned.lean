@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseComponentData
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 /-!

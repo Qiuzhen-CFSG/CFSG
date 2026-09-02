@@ -2,14 +2,17 @@ module
 
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.BGsection12.lemma_12_1_a
-public import FeitThompson.ElementaryAbelian
-public import FeitThompson.GroupAction.Defs
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.GroupAction.Defs
 public import FeitThompson.LinearAlgebra.MatrixBlocks
 public import FeitThompson.PGroup.HomocyclicFrattini
 public import FeitThompson.Wielandt.FixedPointProduct
 public import FeitThompson.Wielandt.MatrixTrace
 public import FeitThompson.Wielandt.StandardCover
 public import FeitThompson.Wielandt.SubgroupRectangular
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Wielandt fixed point theorem

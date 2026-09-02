@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinB4Divisible
 public import GorensteinWalter.CentralizerSup
 import Mathlib.Tactic
 
+
 /-!
 # Odd-graph neighbours of `U`
 

@@ -5,6 +5,7 @@ public import FeitThompson.TBS.TBS
 public import FeitThompson.BGsection6.Defs
 import BenderSuzuki.SE.Basic
 
+
 /-!
 # Section 7: the Thompson--Bender signalizer step
 

@@ -1,6 +1,8 @@
 module
 
 public import Glauberman.MinimalNormalPSubgroupFaithfulIrreducibleAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Minimal normal p-subgroups and their faithful conjugation quotient

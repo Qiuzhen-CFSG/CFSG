@@ -9,6 +9,7 @@ public import GorensteinWalter.Section4.PSL2ReflectedTorusCard
 import GorensteinWalter.Section2.FStarCommute
 import Mathlib.Tactic
 
+
 /-!
 # Odd Fitting subgroups in involution centralizers of normal `PSL₂` extensions
 

@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Basic
 public import GorensteinWalter.InvolutionNormalizerInfConjugate
 import Mathlib.Tactic
 
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter

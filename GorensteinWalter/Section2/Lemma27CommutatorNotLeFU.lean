@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.PiCoreCharacteristic
 import GorensteinWalter.Section2.Bender1970_18
 import Mathlib.Tactic
 
+
 /-!
 # Fixed-point ingredient for the final `[S,U] ≰ F(U)` conjunct
 

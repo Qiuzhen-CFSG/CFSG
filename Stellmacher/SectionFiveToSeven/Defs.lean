@@ -7,6 +7,8 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.Gorenstein.Chapter8_2
 public import Mathlib.GroupTheory.IsSubnormal
 public import Mathlib.GroupTheory.Sylow
+open Theory.ElementaryAbelian
+
 open scoped Pointwise
 
 universe u v

@@ -1,6 +1,9 @@
 module
 
 public import FeitThompson.BGsection12.theorem_12_7_c
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 
@@ -57,10 +60,8 @@ public theorem section12_sigma_compl_fitting_core_isPGroup_of_tau2_singleton_pre
     let Rq : Subgroup G :=
       piCoreIn ({q} : Set Nat.Primes) (section8CenterInFitting M)
     have hqZFit : q ∈ subgroupPrimeSet (section8CenterInFitting M) := by
-      simpa [F] using
-        (by
-          rw [section8CenterInFitting_primeSet_eq_fitting M]
-          exact hqF)
+      rw [section8CenterInFitting_primeSet_eq_fitting M]
+      simpa [F] using hqF
     have hZFit_comm : IsMulCommutative (section8CenterInFitting M) := by
       simpa using section8CenterInFitting_isMulCommutative M
     letI : IsMulCommutative (section8CenterInFitting M) := hZFit_comm

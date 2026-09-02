@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.CyclicTwoCoreASevenStructure
 import Mathlib.Tactic
 
+
 /-!
 # The odd core of the maximal overgroup lies in `B = C_U(S)`
 

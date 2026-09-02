@@ -1,6 +1,9 @@
 module
 
 public import FeitThompson.BGsection5.theorem_5_3_d
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-! # Corollary 5.4 from BG Section 5 -/
 

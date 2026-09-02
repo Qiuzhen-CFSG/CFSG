@@ -3,6 +3,10 @@ module
 public import FeitThompson.BGsection1.Defs
 import Mathlib.Data.Nat.Choose.Dvd
 
+public import Theory.GroupAction.Defs
+
+open Theory.GroupAction
+
 open scoped Pointwise commutatorElement
 
 section CriticalSubgroupLemmas

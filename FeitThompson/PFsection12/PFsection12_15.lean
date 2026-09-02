@@ -5,7 +5,7 @@ import FeitThompson.PFsection12.PFsection12_4
 import FeitThompson.PFsection12.PFsection12_5
 import FeitThompson.PFsection12.PFsection12_10
 import FeitThompson.PFsection12.PFsection12_14
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3

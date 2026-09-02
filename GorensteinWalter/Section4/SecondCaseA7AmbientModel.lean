@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreASevenNormalizerLayerEquali
 public import GorensteinWalter.Section2.ComponentLayerCentralizesSolvableNormalized
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

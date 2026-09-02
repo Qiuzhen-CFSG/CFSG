@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreSourceNormalizerWitness
 public import GorensteinWalter.Section3.CyclicTwoCoreCentralizerT1
 import Mathlib.Tactic
 
+
 /-!
 # Section 3: the centralizer core `C_B(P) ≠ 1`
 

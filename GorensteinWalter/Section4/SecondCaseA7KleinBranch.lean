@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseA7KleinFourLeTwoCore
 public import GorensteinWalter.Section2.Theorem26
 
+
 /-!
 # Selecting the Klein-four branch of Theorem 2.6
 -/

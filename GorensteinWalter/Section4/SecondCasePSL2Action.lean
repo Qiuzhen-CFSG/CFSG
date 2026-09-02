@@ -11,6 +11,7 @@ public import GorensteinWalter.PGammaL2PureSemilinear
 public import GorensteinWalter.QuotientCenterAutomorphism
 public import Mathlib.Tactic
 
+
 open Matrix
 noncomputable section
 namespace GorensteinWalter

@@ -18,6 +18,8 @@ import BenderSuzuki.PFAppendixII.proposition_1
 import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.GroupTheory.SpecificGroups.Alternating.Simple
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Lemma 11.4: recognized-model boundary

@@ -23,6 +23,8 @@ public import BenderSuzuki.PFchapter1section3.proposition_2
 public import BenderSuzuki.PFchapter3section1.Basic
 public import FeitThompson.FinalTheorem
 public import FeitThompson.PFsection6.Basic
+open Theory.GroupAction
+
 
 namespace BenderSuzuki
 namespace PFchapter3section1

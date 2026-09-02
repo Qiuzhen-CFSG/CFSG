@@ -6,11 +6,13 @@ import BenderSuzuki.External.Higman.lemma_6
 public import BenderSuzuki.External.Higman.lemma_9
 public import BenderSuzuki.External.Higman.lemma_10
 import BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
-import FeitThompson.GroupAction.Invariant
+import Theory.GroupAction.Invariant
 import FeitThompson.Frattini.Core
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+open Theory.GroupAction
+
 
 /-!
 # Higman Lemma 11

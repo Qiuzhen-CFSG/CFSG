@@ -8,6 +8,7 @@ public import GorensteinWalter.MinimalCounterexample
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (9): the `PSL₂(q)` numeric data
 

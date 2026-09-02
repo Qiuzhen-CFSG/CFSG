@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.SE.Section11Lemma113Arithmetic
 public import BenderSuzuki.SE.Section11Lemma113Burnside
 public import BenderSuzuki.SE.Section11Lemma113Disjoint
+import Theory.GroupAction.Lemmas
 
 /-!
 # Section 11, Lemma 11.3
@@ -75,7 +76,7 @@ public theorem lemma_11_3
       exact ⟨⟨x, hSM hx⟩, rfl⟩)).symm
   have hCnormal :
       ((involutionCoreIn M).subgroupOf M).Normal := by
-    rw [involutionCoreIn, subgroupOf_map_subtype_eq]
+    rw [involutionCoreIn, Theory.GroupAction.subgroupOf_map_subtype_eq]
     exact involutionCore_normal
   have hHnormC : H ≤ Subgroup.normalizer
       ((involutionCoreIn M : Subgroup X) : Set X) := by

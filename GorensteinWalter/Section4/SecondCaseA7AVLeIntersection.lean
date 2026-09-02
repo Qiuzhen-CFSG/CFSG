@@ -6,6 +6,7 @@ import GorensteinWalter.TwoCoreCentralizerEqualsHhat
 import GorensteinWalter.TwoCoreNormal
 import GorensteinWalter.NormalSubgroupInfConjugate
 
+
 /-! # The normal `A V` subgroup in the even coset intersection -/
 
 noncomputable section

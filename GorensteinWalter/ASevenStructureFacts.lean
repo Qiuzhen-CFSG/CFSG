@@ -10,6 +10,8 @@ public import GorensteinWalter.ASevenInvariantOddPSubgroupCertificateDefs
 public import GorensteinWalter.Defs
 public import FeitThompson.ChiefFactors.Core
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

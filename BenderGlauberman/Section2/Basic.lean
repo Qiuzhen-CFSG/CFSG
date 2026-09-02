@@ -11,12 +11,14 @@ public import GorensteinWalter.Defs
 public import GorensteinWalter.Section1
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import FeitThompson.GroupAction.CoprimeHall
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Invariant
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Defs
+import Theory.GroupAction.Invariant
+import Theory.GroupAction.Quotient
 import FeitThompson.SubgroupConj
 import FeitThompson.SubgroupConjAction
 import Mathlib.GroupTheory.PGroup
+open Theory.GroupAction
+
 
 /-!
 # Bender--Glauberman: Section 2 setup and the general situation

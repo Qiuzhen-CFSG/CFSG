@@ -9,6 +9,7 @@ public import FeitThompson.PCore.CentralizerControl
 import all FeitThompson.PCore.CentralizerControl
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first case: inversion corollaries on `F(U)`
 

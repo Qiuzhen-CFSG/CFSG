@@ -5,6 +5,8 @@ import Glauberman.Theorem5_2
 import Glauberman.TheoremA
 import Glauberman.Lemma6_3
 import Glauberman.InvolvedQuotient
+open Theory.GroupAction
+
 
 /-!
 # Glauberman's Theorem B
@@ -73,7 +75,8 @@ public theorem theoremB {p : ℕ} [Fact p.Prime] (hpodd : p ≠ 2)
                   exact congrArg Subtype.val hcomm
                 have hzBot : ((z : ↥(S₂ : Subgroup G)) : G) ∈
                     (⊥ : Subgroup G) := by
-                  simpa [hcenterIn_bot] using hzCenterIn
+                  rw [← hcenterIn_bot]
+                  exact hzCenterIn
                 have hz_one : ((z : ↥(S₂ : Subgroup G)) : G) = 1 := by
                   simpa using hzBot
                 exact Subtype.ext hz_one

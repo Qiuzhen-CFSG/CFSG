@@ -6,6 +6,7 @@ public import GorensteinWalter.DGroupQuotientNotTwoGroup
 import GorensteinWalter.KleinFourQuotientOddKernel
 import Mathlib.Tactic
 
+
 /-!
 # Forcing the cyclic first-case layer quotient to be A₇
 

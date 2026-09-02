@@ -2,6 +2,7 @@ module
 
 public import Stellmacher.SectionTwo.LemmaTwoOne
 
+
 open scoped BigOperators Pointwise
 
 namespace Stellmacher.SectionTwo

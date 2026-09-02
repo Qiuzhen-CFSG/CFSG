@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection1.Basic
 
+open Theory.GroupAction
+
 open scoped Pointwise
 
 public section
@@ -42,8 +44,8 @@ theorem proposition_1_5_d {G A : Type*} [Group G] [Finite G] [Group A] [Finite A
   let _ := π
   intro H _ hHinv
   simpa using
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := G) (A := A) hsolv hcoprime (π := π) H hHinv
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := G) (A := A) hsolv hcoprime H hHinv
 
 -- Proposition 1.5(e)
 theorem proposition_1_5_e {G A : Type*} [Group G] [Finite G] [Group A] [Finite A]

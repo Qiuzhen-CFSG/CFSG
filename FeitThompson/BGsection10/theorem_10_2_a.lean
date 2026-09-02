@@ -6,6 +6,8 @@ public import FeitThompson.BGsection10.theorem_10_1_d
 public import FeitThompson.BGsection10.theorem_10_1_e
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.GroupAction
+
 
 open scoped Pointwise commutatorElement
 

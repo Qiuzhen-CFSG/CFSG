@@ -1,9 +1,11 @@
 module
 
 public import FeitThompson.BGsection3.Defs
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Quotient
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.GroupTheory.QuotientGroup.Basic
+
+open Theory.GroupAction
 
 open Subgroup
 

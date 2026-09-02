@@ -1,7 +1,7 @@
 module
 
 public import FeitThompson.PFsection12.Basic
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3

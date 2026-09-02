@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # The aligned-Sylow decomposition in the PSL₂ branch
 

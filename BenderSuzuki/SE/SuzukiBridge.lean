@@ -4,6 +4,8 @@ public import BenderSuzuki.SE.ConjugateAction
 public import BenderSuzuki.SE.Theorem6
 import BenderSuzuki.PFchapter1section2.proposition_1_b
 import FeitThompson.BGsection5.theorem_5_3
+open Theory.GroupAction
+
 
 /-!
 # From a strong-embedding complement to Suzuki's hypotheses

@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.theorem_3_4
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
+open Theory.GroupAction
+
 
 /-!
 # Huppert IV.3.7
@@ -532,5 +534,4 @@ public theorem huppert_IV_3_7_second_grun
 
 end External
 end BenderSuzuki
-
 

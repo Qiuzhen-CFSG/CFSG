@@ -7,6 +7,8 @@ import FeitThompson.BGsection3.lemma_3_2_b
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.PFsection5.PFsection5_7
 import FeitThompson.PFsection6.PFsection6_3
+open Theory.GroupAction
+
 
 noncomputable section
 

@@ -1,6 +1,8 @@
 module
 
 public import GorensteinWalter.BrauerSuzukiWallCardH
+open Theory.GroupAction
+
 
 /-!
 # The index of `K` in the Brauer--Suzuki--Wall centralizer

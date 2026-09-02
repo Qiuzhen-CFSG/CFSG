@@ -1,6 +1,10 @@
 module
 
 public import FeitThompson.ChiefFactors.Core
+public import Theory.GroupAction.Invariant
+
+open Theory.ElementaryAbelian
+open Theory.GroupAction
 
 open scoped commutatorElement
 
@@ -448,7 +452,7 @@ public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : Group.I
   let _ : Group.IsSolvable (↥Uq) := by infer_instance
   -- Apply Lemma 1.1 in the quotient to get centrality in the quotient Fitting subgroup.
   have hUq_centerIn :
-      Uq ≤ centerIn (G := (G ⧸ cf.V)) (fittingSubgroup (G ⧸ cf.V)) := by
+      Uq ≤ Theory.GroupAction.centerIn (G := (G ⧸ cf.V)) (fittingSubgroup (G ⧸ cf.V)) := by
     let _ : Uq.Normal := hUq_min.1
     let _ : IsMinimalNormal Uq := {
         minimal := fun (K) [hKn : K.Normal] hle => by
@@ -459,8 +463,8 @@ public theorem normal_nilpotent_le_centralizerOfChiefFactor_top (hsolv : Group.I
   let Fq : Subgroup (G ⧸ cf.V) := fittingSubgroup (G ⧸ cf.V)
   have hUq_le_centF : Uq ≤ Subgroup.centralizer (Fq : Set (G ⧸ cf.V)) := by
     intro x hx
-    have hx' : x ∈ centerIn (G := (G ⧸ cf.V)) Fq := hUq_centerIn hx
-    dsimp [centerIn] at hx'
+    have hx' : x ∈ Theory.GroupAction.centerIn (G := (G ⧸ cf.V)) Fq := hUq_centerIn hx
+    dsimp [Theory.GroupAction.centerIn] at hx'
     exact hx'.2
   -- Hence `Fq` centralizes `Uq`.
   have hFq_le_centralizer : Fq ≤ Subgroup.centralizer (Uq : Set (G ⧸ cf.V)) :=

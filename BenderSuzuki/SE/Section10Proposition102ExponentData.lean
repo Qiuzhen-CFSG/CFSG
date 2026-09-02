@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.SE.Section10Proposition102Fitting
+import Theory.GroupAction.Lemmas
+
 
 /-!
 # Section 10, Proposition 10.2(c): source-specific exponent data
@@ -266,7 +268,7 @@ public theorem proposition102_exponent_data_of_prime_dvd
   have hHnormE : E ≤ Subgroup.normalizer (H : Set X) := by
     have hHnormalE : (H.subgroupOf E).Normal := by
       change (((derivedSubgroup E).map E.subtype).subgroupOf E).Normal
-      rw [subgroupOf_map_subtype_eq]
+      rw [Theory.GroupAction.subgroupOf_map_subtype_eq]
       infer_instance
     exact (Subgroup.normal_subgroupOf_iff_le_normalizer hHleE).mp hHnormalE
   have hPnormH : P ≤ Subgroup.normalizer (H : Set X) := hPE.trans hHnormE

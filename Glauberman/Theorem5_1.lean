@@ -4,6 +4,8 @@ public import Glauberman.Definitions
 public import Mathlib.Algebra.Group.Subgroup.Map
 public import Mathlib.Algebra.Group.Subgroup.Lattice
 import FeitThompson.BGsection6.Defs
+open Theory.GroupAction
+
 
 open scoped Pointwise
 
@@ -200,7 +202,8 @@ theorem centerIn_ne_bot_of_isPGroup_ne_bot {p : ℕ} [Fact p.Prime]
     have hzCenterIn : ((z : ↥S) : G) ∈ centerIn (G := G) S := by
       simpa [centerIn_eq_map_center_local] using hzMap
     have hzBot : ((z : ↥S) : G) ∈ (⊥ : Subgroup G) := by
-      simpa [hcenterIn_bot] using hzCenterIn
+      rw [← hcenterIn_bot]
+      exact hzCenterIn
     have hz_one : ((z : ↥S) : G) = 1 := by simpa using hzBot
     exact Subtype.ext hz_one
   · intro hz

@@ -3,8 +3,10 @@ module
 public import BenderSuzuki.PFAppendixII.proposition_1
 public import BenderSuzuki.RightNearField.Linear
 import BenderSuzuki.PFAppendixI.proposition_2
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 public import Theory.Representation.Maschke
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi Appendix II, Proposition 2

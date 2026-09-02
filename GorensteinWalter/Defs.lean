@@ -4,6 +4,7 @@ public import GorensteinWalter.Classification
 public import Mathlib.GroupTheory.IsSubnormal
 public import FeitThompson.Fitting.Core
 
+
 /-!
 # Common subgroup and involution-centralizer definitions
 -/

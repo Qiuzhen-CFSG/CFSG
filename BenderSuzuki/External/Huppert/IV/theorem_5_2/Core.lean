@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.External.Huppert.IV.Basic
+open Theory.GroupAction
+
 
 /-!
 # Huppert IV.5.2 transport core
@@ -132,7 +134,7 @@ public theorem hkt_huppert_iv52_center_element_commutes_with_other_sylow_of_doub
     hkt_huppert_iv52_centers_eq_of_center_normalized
       (Q := Q) (q := q) S T hcenter_le_T hT_le_normalizer_center
   have hzT : z ∈ centerIn (G := Q) (T : Subgroup Q) := by
-    simpa [hcenters] using hz
+    exact hcenters ▸ hz
   exact ((Subgroup.mem_centralizer_iff.mp hzT.2) t ht).symm
 
 public theorem hkt_huppert_iv52_other_center_element_mem_sylow_of_double_normalization
@@ -153,7 +155,7 @@ public theorem hkt_huppert_iv52_other_center_element_mem_sylow_of_double_normali
     hkt_huppert_iv52_centers_eq_of_center_normalized
       (Q := Q) (q := q) S T hcenter_le_T hT_le_normalizer_center
   have hzS : z ∈ centerIn (G := Q) (S : Subgroup Q) := by
-    simpa [hcenters] using hz
+    exact hcenters.symm ▸ hz
   exact hzS.1
 
 public theorem hkt_huppert_iv52_other_center_element_commutes_with_sylow_of_double_normalization
@@ -174,7 +176,7 @@ public theorem hkt_huppert_iv52_other_center_element_commutes_with_sylow_of_doub
     hkt_huppert_iv52_centers_eq_of_center_normalized
       (Q := Q) (q := q) S T hcenter_le_T hT_le_normalizer_center
   have hzS : z ∈ centerIn (G := Q) (S : Subgroup Q) := by
-    simpa [hcenters] using hz
+    exact hcenters.symm ▸ hz
   exact ((Subgroup.mem_centralizer_iff.mp hzS.2) s hs).symm
 
 public theorem hkt_huppert_iv52_center_le_other_center_of_double_normalization

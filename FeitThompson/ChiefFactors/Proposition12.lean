@@ -2,10 +2,11 @@ module
 
 public import FeitThompson.ChiefFactors.Core
 public import FeitThompson.ChiefFactors.BaerCore
-import FeitThompson.GroupAction.Quotient
-
+import Theory.GroupAction.Quotient
 import Mathlib.Order.Atoms.Finite
 import Mathlib.Order.RelSeries
+
+open Theory.GroupAction
 
 section Proposition12
 

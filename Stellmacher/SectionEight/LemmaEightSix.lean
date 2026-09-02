@@ -1,6 +1,8 @@
 module
 
 public import Stellmacher.LaterDefs
+open Theory.ElementaryAbelian
+
 
 open scoped BigOperators Pointwise
 

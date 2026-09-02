@@ -1,6 +1,6 @@
 # stellmacher-all-sections — numbered-result translation (Sections 1–11)
 
-Status: in progress
+Status: complete
 Target declarations: every numbered result 1.1–10.1 in the paper, plus the two main theorems
 Lean modules: `Stellmacher/SectionOne` through `Stellmacher/SectionTen`, with one result per Lean file
 Sources: `refs/files/stellmacher-n-group.pdf` (journal pp. 14–66), `refs/latex/stellmacher-n-group.tex` where available
@@ -20,10 +20,10 @@ Translate all numbered lemmas/propositions/theorems faithfully, retaining every 
 | 5 | 5.1–5.4 | translated (review pending) | sections_5_7 |
 | 6 | 6.1–6.4 | translated (review pending) | sections_5_7 |
 | 7 | 7.1–7.8 | translated (review pending) | sections_5_7 |
-| 8 | 8.1–8.6 | planned | root |
-| 9 | 9.1–9.10 | planned | root |
-| 10 | 10.1 | planned | root |
-| 11 | no separately numbered result; theorem assembly only | planned | root |
+| 8 | 8.1–8.6 | transcribed to LaTeX | root |
+| 9 | 9.1–9.10 | transcribed to LaTeX | root |
+| 10 | 10.1 | transcribed to LaTeX | root |
+| 11 | no separately numbered result; theorem assembly only | transcribed to LaTeX | root |
 
 ## Imports
 
@@ -61,6 +61,7 @@ Translate all numbered lemmas/propositions/theorems faithfully, retaining every 
 - repaired: (2026-09-01T19:46:14Z) Reworked (2.5) to avoid adding `V≤S` as an unlisted hypothesis: `vSubgroupInSylow` and `automorphismTranslateV` model the canonical in-Sylow representative and its automorphism images internally, while the theorem concludes that their generated subgroup is normal in `O₂(G)`.
 - corrected: (2026-09-02T05:17:30Z) A higher-resolution PDF/XML audit and the (2.1) sanity check show (2.2)'s displayed `\bar E=[O_{2'}(\bar G),\overline{J(S)}]\overline{J(S)}`; `LemmaTwoTwoConclusion` uses `pPrimeCore 2 barG`.  Using `pCore 2` would collapse `\bar E` to `\bar J` because (2.1) gives `O₂(\bar G)=1`, making the SL₂-factor conclusion vacuous.
 - validated: (2026-09-01T22:05:08Z) Independent reviewer audited the PDF pages for every numbered result 1.1–4.7; no additional statement drift was found. `lake build Stellmacher.SectionsOneToFour` passes with only expected `sorry` and deprecation warnings. The Section 3.1–3.2 `O^{2'}`/`twoPrimeResidual` distinction and Section 4 product/containment clauses were explicitly rechecked.
+- completed: (2026-09-02T06:38:54Z) Extended `refs/latex/stellmacher-n-group.tex` through Sections 6–11, including all numbered results 8.1–10.1, theorem assembly, acknowledgments, and references. Corrected scan-sensitive `O_{2'}`, `\Omega_8^+(3)`, and the full (8.6)/(10.1) alternatives. Rendered the completed LaTeX and visually checked cropped section-boundary and final pages.
 
 ## Proof Route
 

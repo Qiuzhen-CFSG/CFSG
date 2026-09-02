@@ -16,40 +16,15 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
+public import Theory.GroupAction.Defs
 public import FeitThompson.Fitting.Core
 import FeitThompson.PGroup.Omega
 
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 open scoped IsMulCommutative commutatorElement
-
-/-- The center of a subgroup, viewed as a subgroup of the ambient group. -/
-@[expose]
-public def centerIn {G : Type*} [Group G] (H : Subgroup G) : Subgroup G :=
-  H ⊓ Subgroup.centralizer (H : Set G)
-
-/-- `centerIn H` is the image of the center of `H` in the ambient group. -/
-@[simp] theorem centerIn_eq_map_center {G : Type*} [Group G] (H : Subgroup G) :
-    centerIn H = (Subgroup.center H).map H.subtype := by
-  simp [centerIn]
-  ext x
-  constructor
-  · intro hx
-    rcases hx with ⟨hxH, hx_centralizer⟩
-    have hx_center : (⟨x, hxH⟩ : H) ∈ Subgroup.center H := by
-      exact Subgroup.mem_center_iff.mpr (fun h =>
-          Subtype.ext (Subgroup.mem_centralizer_iff.mp hx_centralizer (h : G) h.property))
-    exact ⟨⟨x, hxH⟩, hx_center, rfl⟩
-  · intro hx_map
-    rcases hx_map with ⟨h, hh, rfl⟩
-    have hH : (h : G) ∈ H := h.property
-    have h_centralizer : (h : G) ∈ Subgroup.centralizer (H : Set G) := by
-      intro g hg
-      have h_center := Subgroup.mem_center_iff.mp hh ⟨g, hg⟩
-      calc
-        g * (h : G) = (⟨g, hg⟩ * h : H).val := by simp
-        _ = (h * ⟨g, hg⟩ : H).val := by rw [h_center]
-        _ = (h : G) * g := by simp
-    exact ⟨hH, h_centralizer⟩
 
 /-- A solvable nontrivial subgroup has proper commutator subgroup. -/
 theorem commutator_lt_self_of_isSolvable {G : Type*} [Group G] (M : Subgroup G)

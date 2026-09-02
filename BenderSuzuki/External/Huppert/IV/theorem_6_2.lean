@@ -8,6 +8,10 @@ public import FeitThompson.BGsection3.theorem_3_6
 public import FeitThompson.BGsection9.corollary_9_2
 import Theory.Representation.ElementaryAbelianAction
 import Mathlib.Algebra.Field.ULift
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 /-!
 # Huppert IV.6.2
@@ -3434,7 +3438,7 @@ private theorem hkt_commutator_eq_bot_of_coprime_double_commutator_eq_bot
     have hx_double := hcommAction2_map_le hx_commAction2
     rwa [hdouble] at hx_double
   exact le_antisymm hle (show (⊥ : Subgroup Q) ≤ ⁅W, R⁆ from bot_le)
-private theorem hkt_actsTrivially_of_isPGroup_on_cyclic_prime_order
+private theorem hkt_isTrivialAction_of_isPGroup_on_cyclic_prime_order
     {A G : Type*} [Group A] [Group G] [Finite G] [MulDistribMulAction A G]
     {p : ℕ} (hp : Nat.Prime p) (hA : IsPGroup p A) (hG_cyclic : IsCyclic G)
     (hG_card : Nat.card G = p) :
@@ -3566,7 +3570,7 @@ private theorem hkt_iv62_q_preterminal_layer_card_eq_two_dimensional
       have hB_cyclic : IsCyclic B := isCyclic_of_prime_card hBcard_q
       have : Subgroup.Normalizes A B := ⟨A_normalizes_B⟩
       have htriv : ActsTrivially (A := A) (G := B) :=
-        hkt_actsTrivially_of_isPGroup_on_cyclic_prime_order
+        hkt_isTrivialAction_of_isPGroup_on_cyclic_prime_order
           (A := A) (G := B) (p := q) (Fact.out : Nat.Prime q)
           hA_p hB_cyclic hBcard_q
       have hcomm : ⁅A, B⁆ = ⊥ :=

@@ -5,6 +5,9 @@ import Mathlib.RepresentationTheory.Submodule
 import FeitThompson.Frattini.Core
 import FeitThompson.GroupAction.CoprimeHall
 
+open Theory.ElementaryAbelian
+open Theory.GroupAction
+
 open scoped Pointwise
 
 
@@ -232,8 +235,8 @@ theorem proposition_1_16_b_qgroup
             let _ : MulDistribMulAction ↥Y.1 (G ⧸ frattini G) :=
               quotientMulDistribMulAction (A := ↥Y.1) (G := G) (frattini G) hsubinv
             simpa [Kbar] using
-              (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-                (G := G) (A := ↥Y.1) hsolv hsubcop (π := (∅ : Set Nat.Primes))
+              (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+                (G := G) (A := ↥Y.1) hsolv hsubcop
                 (frattini G) hsubinv).symm
   have _ : IsElementaryAbelian q (G ⧸ frattini G) :=
     isElementaryAbelian_quotient_frattini (R := G) (p := q)

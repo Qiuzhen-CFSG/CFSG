@@ -4,6 +4,9 @@ public import BenderSuzuki.External.Huppert.XI.TopResidual
 
 public import BenderSuzuki.PFAppendixII.Semilinear
 public import Theory.Representation.Clifford
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 /-!
 # Huppert--Blackburn XI.2.5
 

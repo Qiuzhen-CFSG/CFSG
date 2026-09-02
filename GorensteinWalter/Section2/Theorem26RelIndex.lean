@@ -14,6 +14,7 @@ import Mathlib.GroupTheory.Index
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 open scoped commutatorElement
 open scoped IsMulCommutative

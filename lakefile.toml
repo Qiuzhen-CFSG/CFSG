@@ -23,6 +23,16 @@ name = "Comparator"
 git = "https://github.com/leanprover/comparator.git"
 rev = "v4.33.0"
 
+[[require]]
+name = "leanfmt"
+git = "https://github.com/duckki/leanfmt.git"
+rev = "v0.3.9"
+
+[[require]]
+name = "skimmer"
+git = "https://github.com/thorimur/skimmer.git"
+rev = "v0.0.1+try-this"
+
 [[lean_lib]]
 name = "Challenge"
 

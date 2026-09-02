@@ -4,6 +4,7 @@ public import GorensteinWalter.Section2.Bender1970API
 public import GorensteinWalter.Section2.ControlCore
 import Mathlib.GroupTheory.IsPerfect
 
+
 /-!
 # Bender (1970) Statement 1.7 — shared `F*(A)`-subnormal helpers
 

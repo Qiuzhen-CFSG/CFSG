@@ -15,6 +15,8 @@ import GorensteinWalter.Section2.KleinFourCentralizerWitness
 import GorensteinWalter.Section3.CyclicTwoCorePInfPg
 import GorensteinWalter.PrimeOrderSubgroupIntersection
 import Mathlib.Tactic
+open Theory.GroupAction
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter

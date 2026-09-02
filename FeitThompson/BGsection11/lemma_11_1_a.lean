@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection11.Defs
 import Mathlib.GroupTheory.Schreier
+open Theory.ElementaryAbelian
+
 
 /-!
 # Statements from BG Section 11

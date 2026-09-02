@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinDataComplete
 public import GorensteinWalter.Section3.FirstCaseKleinInvolutionTransfer
 import Mathlib.Tactic
 
+
 /-!
 # The nontrivial `V`-component in restriction (5)
 

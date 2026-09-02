@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section4.SecondCaseInvolutionDecomposition
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: inverted elements lie in the selected component
 

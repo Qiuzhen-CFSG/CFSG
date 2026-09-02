@@ -15,6 +15,9 @@ import FeitThompson.PFsection2.PFsection2_7_11
 import FeitThompson.PFsection10.PFsection10_11
 import FeitThompson.PFsection11.PFsection11_9
 import FeitThompson.PFsection12.PFsection12_7
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 13: PFsection13_2

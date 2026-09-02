@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.ClassFunctionProduct
 
+
 /-!
 # Bender--Glauberman: Section 3 — shared infrastructure
 

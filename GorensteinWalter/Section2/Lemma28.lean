@@ -14,6 +14,8 @@ public import GorensteinWalter.MinimalCounterexample
 public import GorensteinWalter.Section1
 import BenderSuzuki.External.Hall.Basic
 import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Lemma 2.8 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")

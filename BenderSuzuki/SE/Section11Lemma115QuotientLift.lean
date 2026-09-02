@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section11Lemma115Kernel
 public import BenderSuzuki.SE.Section11Lemma115QuotientMembership
+open Theory.ElementaryAbelian
+
 
 /-!
 # Section 11, Lemma 11.5: the quotient Sylow lift

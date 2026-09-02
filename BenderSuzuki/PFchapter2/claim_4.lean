@@ -5,6 +5,8 @@ public import BenderSuzuki.PFchapter2.claim_3
 public import BenderSuzuki.PFchapter1section2.proposition_1_b
 public import BenderSuzuki.PFchapter1section2.proposition_2
 public import FeitThompson.Wielandt
+open Theory.GroupAction
+
 
 namespace BenderSuzuki
 namespace PFchapter2

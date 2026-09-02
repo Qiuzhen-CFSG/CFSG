@@ -9,6 +9,7 @@ public import GorensteinWalter.Section3.FirstCaseCosetFiberCard
 public import GorensteinWalter.Section2.Basic
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

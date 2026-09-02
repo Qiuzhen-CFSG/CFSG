@@ -1,6 +1,8 @@
 module
 
 public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.GroupTheory.GroupAction.Quotient
 
 
 /-!
@@ -12,6 +14,8 @@ the full orbit quotient and the subgroup coset space.
 
 noncomputable section
 
+namespace Theory.GroupAction
+
 namespace MulAction
 
 /-- For a free G-action on X, every full G-orbit splits into copies indexed by
@@ -19,34 +23,36 @@ the left cosets of H when restricted to a subgroup H. -/
 public noncomputable def orbitRelQuotientSubgroupEquivProd
     {G X : Type*} [Group G] [MulAction G X] [IsCancelSMul G X]
     (H : Subgroup G) :
-    orbitRel.Quotient H X ≃ orbitRel.Quotient G X × (G ⧸ H) :=
-  (equivSubgroupOrbits X H).trans
-    ((Equiv.sigmaCongrRight fun (omega : orbitRel.Quotient G X) =>
-      letI : IsCancelSMul G (orbitRel.Quotient.orbit omega) := {
+    _root_.MulAction.orbitRel.Quotient H X ≃ _root_.MulAction.orbitRel.Quotient G X × (G ⧸ H) :=
+  (_root_.MulAction.equivSubgroupOrbits X H).trans
+    ((Equiv.sigmaCongrRight fun (omega : _root_.MulAction.orbitRel.Quotient G X) =>
+      letI : IsCancelSMul G (_root_.MulAction.orbitRel.Quotient.orbit omega) := {
         left_cancel' g x y h :=
-          Subtype.ext (IsCancelSMul.left_cancel g x.1 y.1 (congrArg Subtype.val h))
+        Subtype.ext (IsCancelSMul.left_cancel g x.1 y.1 (congrArg Subtype.val h))
         right_cancel' g h x eq :=
           IsCancelSMul.right_cancel g h x.1 (congrArg Subtype.val eq) }
-      equivSubgroupOrbitsQuotientGroup
+      _root_.MulAction.equivSubgroupOrbitsQuotientGroup
         (x := (⟨omega.out,
-          orbitRel.Quotient.mem_orbit.mpr (Quotient.out_eq' omega)⟩ :
-            orbitRel.Quotient.orbit omega)) H).trans
+          _root_.MulAction.orbitRel.Quotient.mem_orbit.mpr (Quotient.out_eq' omega)⟩ :
+            _root_.MulAction.orbitRel.Quotient.orbit omega)) H).trans
       (Equiv.sigmaEquivProd _ _))
 
 /-- For a finite free G-action, the number of H-orbits is the index of H
 times the number of G-orbits. -/
 public theorem natCard_orbitRelQuotient_subgroup
     {G X : Type*} [Group G] [Finite G] [MulAction G X] [IsCancelSMul G X]
-    [Finite (orbitRel.Quotient G X)] (H : Subgroup G) :
-    Nat.card (orbitRel.Quotient H X) =
-      H.index * Nat.card (orbitRel.Quotient G X) := by
+    [Finite (_root_.MulAction.orbitRel.Quotient G X)] (H : Subgroup G) :
+    Nat.card (_root_.MulAction.orbitRel.Quotient H X) =
+      H.index * Nat.card (_root_.MulAction.orbitRel.Quotient G X) := by
   calc
-    Nat.card (orbitRel.Quotient H X) =
-        Nat.card (orbitRel.Quotient G X × (G ⧸ H)) :=
+    Nat.card (_root_.MulAction.orbitRel.Quotient H X) =
+        Nat.card (_root_.MulAction.orbitRel.Quotient G X × (G ⧸ H)) :=
       Nat.card_congr (orbitRelQuotientSubgroupEquivProd H)
-    _ = Nat.card (orbitRel.Quotient G X) * Nat.card (G ⧸ H) :=
+    _ = Nat.card (_root_.MulAction.orbitRel.Quotient G X) * Nat.card (G ⧸ H) :=
       Nat.card_prod _ _
-    _ = H.index * Nat.card (orbitRel.Quotient G X) := by
+    _ = H.index * Nat.card (_root_.MulAction.orbitRel.Quotient G X) := by
       rw [H.index_eq_card, Nat.mul_comm]
 
 end MulAction
+
+end Theory.GroupAction

@@ -11,6 +11,7 @@ public import FeitThompson.PCore.PPrimeCore
 public import Mathlib.GroupTheory.Solvable
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 
+
 /-!
 # Thompson's minimal-counterexample data for Theorem D
 

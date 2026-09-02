@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Bender1970_18
 public import GorensteinWalter.Section2.Bender1970_16
 import Mathlib.GroupTheory.IsPerfect
 
+
 /-!
 # Bender (1970), Statement 1.7(iii)
 

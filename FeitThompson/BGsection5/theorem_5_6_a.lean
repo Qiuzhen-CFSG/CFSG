@@ -18,13 +18,15 @@ import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.RingTheory.SimpleModule.Isotypic
 import Mathlib.RingTheory.ZMod.Torsion
 import FeitThompson.BGsection1.CriticalSubgroupLemmas
-import FeitThompson.Burnside.NormalComplement
-import FeitThompson.Extraspecial
-import FeitThompson.LinearAlgebra.BlockElementaryMap
+import Theory.GroupAction.NormalComplement
+import Theory.ElementaryAbelian.Extraspecial
+import Theory.Representation.BlockElementaryMap
 import Theory.Representation.ConjugateRep
-import FeitThompson.BGsection2.EndFieldRep
+import Theory.Representation.EndFieldRep
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+
 
 /-! # Theorem 5.6(a) from BG Section 5 -/
 

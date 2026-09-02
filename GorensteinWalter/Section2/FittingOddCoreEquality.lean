@@ -9,6 +9,7 @@ public import GorensteinWalter.Section2.Lemma27IndexTwo
 import FeitThompson.PCore.CentralizerControl
 import Mathlib.Tactic
 
+
 /-!
 # `F(O(H)) = O_{2'}(F(H))`
 

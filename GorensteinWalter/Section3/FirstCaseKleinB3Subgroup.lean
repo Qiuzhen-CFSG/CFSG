@@ -7,6 +7,7 @@ public import GorensteinWalter.Section3.FirstCaseCountData
 public import GorensteinWalter.InvertedSetCardSmall
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

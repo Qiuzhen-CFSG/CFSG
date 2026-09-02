@@ -10,6 +10,9 @@ import BenderSuzuki.SE.II1Hering31Finite
 import BenderSuzuki.SE.II1Hering31Abelian
 import FeitThompson.BGsection9.corollary_9_2
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Hering's theorem `[II1; 3.1]`

@@ -2,6 +2,8 @@ module
 
 public import Theory.GroupAction.Defs
 
+namespace Theory.GroupAction
+
 /-- A quadratic action fixes its first action-commutator subgroup pointwise. -/
 public theorem commutatorAction_le_fixedPoints_of_commutatorAction₂_eq_bot
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
@@ -15,4 +17,6 @@ public theorem commutatorAction_le_fixedPoints_of_commutatorAction₂_eq_bot
   have hone : d⁻¹ * (a • d) = 1 := by
     rw [hquadratic] at hdelta
     simpa using hdelta
+
+end Theory.GroupAction
   exact (eq_of_inv_mul_eq_one hone).symm

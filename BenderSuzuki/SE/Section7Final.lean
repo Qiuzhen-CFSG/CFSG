@@ -8,6 +8,8 @@ import BenderSuzuki.PFAppendixII.proposition_1
 import BenderSuzuki.SE.InvolutionCore
 import BenderSuzuki.SE.StrongEmbeddingOddCore
 import FeitThompson.PCore.CentralizerControl
+open Theory.GroupAction
+
 
 /-!
 # Section 7: the second-stage setup

@@ -29,6 +29,7 @@ import Mathlib.Algebra.DirectSum.LinearMap
 import Mathlib.LinearAlgebra.Trace
 import FeitThompson.PFsection1.PFsection1_1
 
+
 /-!
 # Bender--Glauberman: Theorem C
 

@@ -3,6 +3,8 @@ module
 public import BenderSuzuki.SE.Corollary85Field
 import BenderSuzuki.PFchapter1section1.lemma_b
 import BenderSuzuki.SE.Proposition84Residual
+open Theory.GroupAction
+
 
 /-!
 # Corollary 8.5

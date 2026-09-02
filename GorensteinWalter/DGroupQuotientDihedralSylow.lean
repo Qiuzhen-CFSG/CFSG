@@ -2,6 +2,8 @@ module
 
 public import GorensteinWalter.DGroupQuotientNotTwoGroup
 import BenderSuzuki.External.Huppert.IV.ComplementTransfer
+open Theory.GroupAction
+
 
 /-!
 # Dihedral Sylow subgroups from the D-group quotient clause

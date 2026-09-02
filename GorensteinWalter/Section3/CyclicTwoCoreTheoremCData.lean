@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseCyclicTwoCoreInfra
 import Mathlib.Tactic
 
+
 /-!
 # Strict conditional reduction for the five Theorem-C A₇-model inputs
 

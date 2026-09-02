@@ -7,6 +7,7 @@ public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 public meta import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

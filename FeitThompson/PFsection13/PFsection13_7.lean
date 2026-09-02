@@ -3,6 +3,8 @@ module
 import FeitThompson.PFsection5.PFsection5_9
 public import FeitThompson.PFsection13.PFsection13_6
 import FeitThompson.PFsection8.PFsection8_5_a
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 13: PFsection13_7

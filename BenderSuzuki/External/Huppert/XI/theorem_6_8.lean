@@ -18,6 +18,9 @@ import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.RingTheory.IntegralDomain
 import Mathlib.RingTheory.SimpleModule.Basic
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped commutatorElement IsMulCommutative
 

@@ -3,6 +3,8 @@ module
 public import Theory.Representation.ElementaryAbelianAction
 public import Theory.Representation.RepMap
 public import Mathlib.FieldTheory.Finite.GaloisField
+open Theory.ElementaryAbelian
+
 
 open scoped IsMulCommutative
 
@@ -114,6 +116,5 @@ public noncomputable def AppendixIFpT
 
 end PFAppendixI
 end BenderSuzuki
-
 
 

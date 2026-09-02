@@ -2,6 +2,7 @@ module
 
 public import Stellmacher.SectionThree.LemmaThreeSix
 
+
 open scoped BigOperators Pointwise
 
 namespace Stellmacher.SectionThree

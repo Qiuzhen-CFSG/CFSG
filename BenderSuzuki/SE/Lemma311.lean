@@ -7,6 +7,9 @@ import FeitThompson.FinalTheorem
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Lemma 3.11
@@ -1408,9 +1411,9 @@ private theorem lemma311_quotient_centralizer_le_map
         quotientMulDistribMulAction (A := A) (G := O) L hLinv
       fixedPointSubgroup A (O ⧸ L) =
         (fixedPointSubgroup A O).map (QuotientGroup.mk' L) := by
-    exact fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
+    exact fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
       (G := O) (A := A) (odd_order_theorem O hOodd) hcop
-      (∅ : Set Nat.Primes) L hLinv
+      L hLinv
   intro x hx
   obtain ⟨g, rfl⟩ := QuotientGroup.mk'_surjective N x
   have hgSup : g ∈ O ⊔ Subgroup.centralizer ({z} : Set G) := by

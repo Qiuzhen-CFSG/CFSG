@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinDataComplete
 public import GorensteinWalter.Section2.Basic
 import Mathlib.Tactic
 
+
 /-!
 # The order-six intersection in restriction (6)
 

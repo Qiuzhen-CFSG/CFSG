@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.ComponentLayerCentralizesSolvableNormali
 public import GorensteinWalter.Section2.Lemma27IndexTwo
 import Mathlib.Tactic
 
+
 /-!
 # The selected component centralizes the maximal subgroup's odd core
 -/

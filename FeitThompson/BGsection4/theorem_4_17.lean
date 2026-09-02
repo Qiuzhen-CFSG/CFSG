@@ -3,6 +3,11 @@ public import FeitThompson.BGsection3.Defs
 import Theory.Representation.ElementaryAbelianAction
 public import FeitThompson.GeneratorRank
 public import FeitThompson.BGsection4.gorenstein_5_4_15
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-! # Theorem 4.17 from BG Section 4 -/
 

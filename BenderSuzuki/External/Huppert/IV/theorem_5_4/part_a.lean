@@ -2,6 +2,8 @@ module
 public import BenderSuzuki.External.Huppert.IV.GrunCore
 public import BenderSuzuki.External.Huppert.IV.theorem_5_2.Core
 public import BenderSuzuki.External.Huppert.IV.theorem_5_1.part_a
+open Theory.GroupAction
+
 
 /-!
 # Huppert IV.5.4(a)
@@ -801,7 +803,11 @@ private theorem hkt_iv54_center_quotient_hasNormalPComplement_of_quotient_comple
         _ = (⊤ : Subgroup Q).map π := by rw [hpre_top]
         _ = ⊤ := Subgroup.map_top_of_surjective π (QuotientGroup.mk'_surjective Z)
     exact ((Fact.out : Nat.Prime q).coprime_iff_not_dvd.mp hKbar_coprime)
-      (by simpa [hKbar_top] using hq_dvd_quot)
+      (by
+        have hq_dvd_Kbar : q ∣ Nat.card Kbar := by
+          rw [hKbar_top]
+          simpa only [Subgroup.card_top] using hq_dvd_quot
+        exact hq_dvd_Kbar)
   have hpre_comp : HasNormalPComplement q pre :=
     hproper pre hpre_ne_bot hpre_ne_top hq_dvd_pre
   letI : pre.Normal := hpre_normal
@@ -883,7 +889,8 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
           by_cases hcenter_eq_sylow :
               centerIn (G := Q) (S : Subgroup Q) = (S : Subgroup Q)
           · have hSnormal' : (S : Subgroup Q).Normal := by
-              simpa [hcenter_eq_sylow] using hZnormal
+              rw [← hcenter_eq_sylow]
+              exact hZnormal
             exact False.elim (hSnormal hSnormal')
           · letI : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal := hZnormal
             by_cases hquot_comp :
@@ -988,7 +995,8 @@ private theorem hkt_iv54_proper_sylow_normalizer_quotient_control_false_source
                                   Subgroup (Q ⧸ Z)).Normal :=
                               Subgroup.normalizer_eq_top_iff.mp
                                 (by simpa [ZNbar] using hZNbar_top)
-                            simpa [hcenterbar_eq_sylow] using hcenterbar_normal
+                            rw [← hcenterbar_eq_sylow]
+                            exact hcenterbar_normal
                           exact hSbar_not_normal (by simpa [Qbar] using hSbar'_normal)
                         · -- Remaining source: after quotienting by `Z(S)`,
                           -- the induced Sylow is still in the top
@@ -1338,7 +1346,11 @@ private theorem hkt_iv54_center_quotient_raw_preimage_of_complement
       _ = (⊤ : Subgroup Q).map π := by rw [hpre_top]
       _ = ⊤ := Subgroup.map_top_of_surjective π (QuotientGroup.mk'_surjective Z)
   exact ((Fact.out : Nat.Prime q).coprime_iff_not_dvd.mp hKbar_coprime)
-    (by simpa [hKbar_top] using hq_dvd_quot)
+    (by
+      have hq_dvd_Kbar : q ∣ Nat.card Kbar := by
+        rw [hKbar_top]
+        simpa only [Subgroup.card_top] using hq_dvd_quot
+      exact hq_dvd_Kbar)
 
 private theorem hkt_iv54_center_quotient_complement_lift_from_extension
     {Q : Type u} [Group Q] [Finite Q] {q : ℕ} [Fact q.Prime]
@@ -1449,7 +1461,8 @@ private theorem hkt_iv54_center_eq_sylow_top_contradiction
   have hZnormal : (centerIn (G := Q) (S : Subgroup Q) : Subgroup Q).Normal :=
     hkt_iv54_centerIn_normal_of_normalizer_top (Q := Q) (q := q) S hZNtop
   have hSnormal : (S : Subgroup Q).Normal := by
-    simpa [hcenter_eq_sylow] using hZnormal
+    rw [← hcenter_eq_sylow]
+    exact hZnormal
   exact hS_not_normal hSnormal
 
 private theorem hkt_iv54_center_quotient_branch_hasNormalPComplement

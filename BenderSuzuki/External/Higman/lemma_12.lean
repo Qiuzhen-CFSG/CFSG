@@ -8,11 +8,13 @@ public import BenderSuzuki.External.Higman.lemma_11
 import BenderSuzuki.External.Higman.lemma_6
 public import BenderSuzuki.PFAppendixIII.FrobeniusBilinear
 import BenderSuzuki.PFAppendixIII.CentralExtensionCoordinates
-import FeitThompson.GroupAction.Invariant
+import Theory.GroupAction.Invariant
 import FeitThompson.Frattini.Core
 import Theory.Representation.Maschke
 import Mathlib.LinearAlgebra.FixedSubmodule
 import Mathlib.RepresentationTheory.Submodule
+open Theory.GroupAction
+
 
 /-!
 # Higman Lemma 12

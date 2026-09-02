@@ -4,6 +4,8 @@ public import BenderSuzuki.SE.RankOne
 public import BenderSuzuki.SE.ConjugateAction
 public import BenderSuzuki.SE.Compat
 import BenderSuzuki.PFchapter1section1.proposition_4_c
+open Theory.GroupAction
+
 
 /-!
 # Bridges for the final Bender--Suzuki reduction

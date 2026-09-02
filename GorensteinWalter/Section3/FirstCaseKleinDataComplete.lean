@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinCommutator
 public import GorensteinWalter.Section3.FirstCaseKleinData
 
+
 /-!
 # Complete structural data for the Klein-four branch
 -/

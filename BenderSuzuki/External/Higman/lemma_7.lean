@@ -2,10 +2,12 @@ module
 
 public import BenderSuzuki.External.Higman.lemma_4
 import BenderSuzuki.External.Higman.lemma_1
-import FeitThompson.GroupAction.Defs
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Defs
+import Theory.GroupAction.Quotient
 import FeitThompson.Frattini.Core
 import Mathlib.LinearAlgebra.FixedSubmodule
+open Theory.GroupAction
+
 
 /-!
 # Higman Lemma 7

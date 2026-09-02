@@ -4,7 +4,9 @@ public import FeitThompson.BGsection3.Defs
 import Mathlib.GroupTheory.Rank
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.GroupTheory.Frattini
-import FeitThompson.ElementaryAbelian
+import Theory.ElementaryAbelian.VectorSpace
+
+open Theory.ElementaryAbelian
 
 open scoped IsMulCommutative Subgroup
 

@@ -4,6 +4,8 @@ public import FeitThompson.BGsection9.corollary_9_2
 public import FeitThompson.BGsection4.lemma_4_5_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

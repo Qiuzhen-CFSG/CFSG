@@ -2,6 +2,9 @@ module
 
 public import Stellmacher.SectionOne.Defs
 import Theory.PGroup
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped BigOperators Pointwise
 
@@ -316,7 +319,7 @@ private theorem lemma_one_one_part_d
   let φ : G →* MulAut V := MulDistribMulAction.toMulAut G V
   have hφinj : Function.Injective φ := by
     rw [← MonoidHom.ker_eq_bot_iff]
-    rw [← fixingSubgroupOf_univ_eq_ker_toMulAut]
+    rw [← fixingSubgroup_univ_eq_ker_toMulAut]
     exact h.action_faithful
   let ψ : S →* MulAut V := φ.comp (S : Subgroup G).subtype
   have hψinj : Function.Injective ψ := by

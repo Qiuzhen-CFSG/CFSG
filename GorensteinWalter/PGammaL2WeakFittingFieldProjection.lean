@@ -12,6 +12,7 @@ import Mathlib.GroupTheory.Commutator.Basic
 import Mathlib.GroupTheory.PGroup
 import Mathlib.Tactic
 
+
 /-!
 # The weak semilinear endpoint: trivial field projection from the inner involution centralizer
 

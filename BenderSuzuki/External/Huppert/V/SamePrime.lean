@@ -1,6 +1,9 @@
 module
 
 public import BenderSuzuki.External.Huppert.V.FrattiniQuotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace External

@@ -5,6 +5,8 @@ import Mathlib.GroupTheory.IndexNormal
 public import FeitThompson.Utils
 public import FeitThompson.BGsection4.Infrastructure
 public import FeitThompson.BGsection4.lemma_4_5_a
+open Theory.ElementaryAbelian
+
 
 open scoped IsMulCommutative commutatorElement
 

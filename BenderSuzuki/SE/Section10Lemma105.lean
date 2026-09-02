@@ -4,6 +4,8 @@ public import BenderSuzuki.SE.Section10Lemma104
 public import BenderSuzuki.SE.PermutationQuotient
 import FeitThompson.BGsection3.Remaining
 import FeitThompson.PFsection14.PFsection14_6
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Lemma 10.5
@@ -1197,8 +1199,8 @@ public theorem lemma105_faithful_quotient_of_fixed_zpowers
       Nat.Coprime.of_dvd_left hAcardDvd hcop
     have hfixedEq : fixedPointSubgroup A (G ⧸ H) =
         (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
-      exact fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := G) (A := A) hGsolv hcopA (∅ : Set Nat.Primes) H hAinv
+      exact fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := G) (A := A) hGsolv hcopA H hAinv
     have hHmap : H.map (QuotientGroup.mk' H) = ⊥ := by
       apply (Subgroup.eq_bot_iff_forall _).2
       intro x hx

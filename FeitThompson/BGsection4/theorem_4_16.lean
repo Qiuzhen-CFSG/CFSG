@@ -12,6 +12,11 @@ public import FeitThompson.BGsection4.theorem_4_12_c
 public import FeitThompson.BGsection4.lemma_4_13
 public import FeitThompson.BGsection4.lemma_4_15
 public import FeitThompson.BGsection4.gorenstein_5_4_15
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-! # Theorem 4.16 from BG Section 4 -/
 

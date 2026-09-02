@@ -3,11 +3,14 @@ module
 public import BenderSuzuki.PFchapter2.Basic
 import BenderSuzuki.External.Hall.theorem_14_4_2
 import BenderSuzuki.PFchapter1section3.lemma_3
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
 import FeitThompson.TBS.TBS
 import FeitThompson.PFsection2.Basic
 import BenderSuzuki.External.Huppert.V.Semidirect
 import BenderSuzuki.PFchapter1section1.proposition_5
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace PFchapter2

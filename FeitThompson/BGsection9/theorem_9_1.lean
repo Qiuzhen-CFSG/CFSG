@@ -4,6 +4,9 @@ public import FeitThompson.BGsection9.Defs
 public import FeitThompson.BGsection4.theorem_4_20_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 
@@ -713,7 +716,8 @@ private theorem section9_centerIn_ne_bot_of_isPGroup_ne_bot
     have hzCenterIn : ((z : S) : G) ∈ centerIn (G := G) S := by
       simpa [centerIn_eq_map_center_local] using hzMap
     have hzBot : ((z : S) : G) ∈ (⊥ : Subgroup G) := by
-      simpa [hcenterIn_bot] using hzCenterIn
+      rw [← hcenterIn_bot]
+      exact hzCenterIn
     have hz_one : ((z : S) : G) = 1 := by simpa using hzBot
     exact Subtype.ext hz_one
   · intro hz

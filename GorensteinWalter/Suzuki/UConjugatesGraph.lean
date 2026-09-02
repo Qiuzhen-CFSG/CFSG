@@ -7,6 +7,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Maps
 public import Mathlib.GroupTheory.Subgroup.Simple
 import Mathlib.Tactic
 
+
 /-!
 # The clean 35-point commuting graph
 

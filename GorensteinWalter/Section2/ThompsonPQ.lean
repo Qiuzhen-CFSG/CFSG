@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.Section2.ComplementConjugacy
 import FeitThompson.Commutator.ActionTriviality
 import FeitThompson.GroupAction.Cardinalities
+open Theory.GroupAction
+
 
 /-!
 # Thompson's P × Q lemma

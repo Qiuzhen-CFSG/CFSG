@@ -6,6 +6,8 @@ public import GorensteinWalter.Section2.FStarSubnormal
 public import GorensteinWalter.Section2.FStarCommute
 public import GorensteinWalter.Section2.Bender1970_18
 import FeitThompson.PCore.Nilpotent
+open Theory.GroupAction
+
 
 set_option maxHeartbeats 400000
 

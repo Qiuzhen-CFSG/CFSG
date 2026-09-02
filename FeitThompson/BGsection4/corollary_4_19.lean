@@ -7,6 +7,9 @@ public import FeitThompson.BGsection4.theorem_4_18_a
 public import FeitThompson.BGsection4.theorem_4_18_b
 public import FeitThompson.BGsection4.theorem_4_18_c
 public import FeitThompson.BGsection4.theorem_4_18_e
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 /-! # Corollary 4.19 from BG Section 4 -/
 
 universe u

@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection4.theorem_4_12_b
 public import FeitThompson.BGsection4.lemma_4_5_a
 public import FeitThompson.BGsection4.lemma_4_10
+open Theory.GroupAction
+
 
 open scoped FixedPoints
 

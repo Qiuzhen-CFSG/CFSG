@@ -13,12 +13,8 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 
 open _root_.Representation
 open Theory.Representation
@@ -31,6 +27,7 @@ open scoped BigOperators
 open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
+namespace Theory.Representation
 section Main
 
 /- # General Results on Representations -/
@@ -998,3 +995,7 @@ public theorem proposition_2_2_b
             change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) = _
             exact hcomm
     _ = ρ h v := by simp [eV]
+
+end Main
+
+end Theory.Representation

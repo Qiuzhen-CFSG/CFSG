@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection1.proposition_1_6
 
+open Theory.ElementaryAbelian
+
 open scoped Pointwise
 
 public section

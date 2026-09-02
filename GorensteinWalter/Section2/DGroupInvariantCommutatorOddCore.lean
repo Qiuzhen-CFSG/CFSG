@@ -11,6 +11,7 @@ import FeitThompson.BGsection1.CentralizerLemmas
 import BenderSuzuki.SE.IG1114
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 namespace GorensteinWalter

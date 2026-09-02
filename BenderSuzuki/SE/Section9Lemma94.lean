@@ -8,6 +8,8 @@ import BenderSuzuki.SE.Proposition84Action
 import BenderSuzuki.External.Huppert.IV.Basic
 import BenderSuzuki.External.Huppert.X.ConjugationFamily
 import FeitThompson.BGsection1.CentralizerLemmas
+open Theory.GroupAction
+
 
 /-!
 # Section 9, Lemma 9.4

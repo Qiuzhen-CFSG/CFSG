@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinData
 public import GorensteinWalter.Section2.Basic
 import Mathlib.Tactic
 
+
 /-!
 # Order bookkeeping for the Klein-four first case
 

@@ -27,6 +27,7 @@ public import BenderGlauberman.TheoremC
 import all BenderGlauberman.Defs
 import FeitThompson.FinalTheorem
 
+
 noncomputable section
 
 namespace GorensteinWalter

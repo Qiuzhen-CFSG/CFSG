@@ -24,6 +24,9 @@ import FeitThompson.PFsection9.PFsection9_7
 import FeitThompson.PFsection9.PFsection9_8
 import FeitThompson.PFsection9.PFsection9_11
 import FeitThompson.PFsection4.PFsection4_5_to_10
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 11: Theorem (11.9)
@@ -2329,8 +2332,8 @@ private theorem theorem_11_pf96_W2_image_card_eq_source_of_hypothesis
   have hfixedQuot :
       fixedPointSubgroup W1 (MF ⧸ H0.subgroupOf MF) =
         (fixedPointSubgroup W1 MF).map (QuotientGroup.mk' (H0.subgroupOf MF)) :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := MF) (A := W1) hsolvMF hcopW1MF (π := (∅ : Set Nat.Primes))
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := MF) (A := W1) hsolvMF hcopW1MF
       (H0.subgroupOf MF) hH0inv
   have hfixedMF :
       fixedPointSubgroup W1 MF = (subgroupCentralizerIn MF W1).subgroupOf MF :=
@@ -4406,8 +4409,8 @@ private theorem theorem_11_5_fixedPointFree_index_dvd
   have hfix_quot_eq :
       fixedPointSubgroup W1 (HC ⧸ DD.subgroupOf HC) =
         (fixedPointSubgroup W1 HC).map (QuotientGroup.mk' (DD.subgroupOf HC)) :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := HC) (A := W1) hHCsolv hcop (π := (∅ : Set Nat.Primes))
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := HC) (A := W1) hHCsolv hcop
       (DD.subgroupOf HC) hInv
   have hfix_quot_bot : fixedPointSubgroup W1 (HC ⧸ DD.subgroupOf HC) = ⊥ := by
     rw [hfix_quot_eq, hfix_map_bot]
@@ -15385,8 +15388,8 @@ private theorem theorem_11_9_quotient_card_gt_one_and_dvd_sub_one_of_hypothesis
     have hfix_quot_eq :
         fixedPointSubgroup W1 (U ⧸ C.subgroupOf U) =
           (fixedPointSubgroup W1 U).map (QuotientGroup.mk' (C.subgroupOf U)) :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := U) (A := W1) hUsolv hcop (π := (∅ : Set Nat.Primes))
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := U) (A := W1) hUsolv hcop
         (C.subgroupOf U) hInv
     have hfix_quot_bot : fixedPointSubgroup W1 (U ⧸ C.subgroupOf U) = ⊥ := by
       rw [hfix_quot_eq, hfix_map_bot]

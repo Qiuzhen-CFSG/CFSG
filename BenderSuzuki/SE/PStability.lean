@@ -4,9 +4,14 @@ public import BenderSuzuki.SE.StrongEmbeddingConjugacy
 public import FeitThompson.BGsection6.Defs
 public import Mathlib.GroupTheory.SpecificGroups.Quaternion
 import FeitThompson.BGsection9.corollary_9_2
-import FeitThompson.Burnside.NormalComplement
+import Theory.GroupAction.NormalComplement
 import FeitThompson.Frattini.Core
 import Theory.Representation.TwoDimensionalOddOrder
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Abelian Sylow subgroups and the `SL(2,3)` obstruction

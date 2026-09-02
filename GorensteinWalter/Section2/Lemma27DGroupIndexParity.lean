@@ -11,6 +11,7 @@ import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
 import Mathlib.Tactic
 
+
 /-!
 # D-group index parity for Lemma 2.7
 

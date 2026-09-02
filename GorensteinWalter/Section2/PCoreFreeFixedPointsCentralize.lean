@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section2.PSubgroupInfNormalNilpotentLePCore
 
+
 /-!
 # Fixed points in a normal nilpotent subgroup centralize a core-free
 `p`-subgroup

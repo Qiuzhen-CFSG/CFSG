@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section10Proposition102ExponentData
 import BenderSuzuki.SE.InvolutionCore
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Lemma 11.3: reusable core reductions

@@ -10,6 +10,8 @@ public import FeitThompson.PFsection1.PFsection1_6
 import FeitThompson.PFsection2.PFsection2_6
 import FeitThompson.PFsection3.PFsection3_5
 public import FeitThompson.PFsection5.Basic
+open Theory.GroupAction
+
 
 /-!
 # Peterfalvi Appendix IV, Lemma 2
@@ -28,6 +30,7 @@ namespace BenderSuzuki
 namespace PFAppendixIV
 
 open Section1 Section5 PFchapter1section1
+open Theory.Representation
 
 universe u v
 
@@ -1427,5 +1430,3 @@ public theorem lemma_2
 
 end PFAppendixIV
 end BenderSuzuki
-
-

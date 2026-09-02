@@ -8,6 +8,8 @@ import BenderSuzuki.PFchapter1section3.lemma_4
 import BenderSuzuki.MatrixGroups.PSL28Facts
 import BenderSuzuki.External.Huppert.III.lemma_1_3
 public import BenderSuzuki.RightNearField.Linear
+open Theory.GroupAction
+
 
 namespace BenderSuzuki
 namespace PFchapter2

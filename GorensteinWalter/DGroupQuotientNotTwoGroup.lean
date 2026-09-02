@@ -6,6 +6,7 @@ import GorensteinWalter.PSL2ProjectiveLine
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
 import Mathlib.Tactic
 
+
 /-!
 # The non-two-group content of a D-group quotient
 

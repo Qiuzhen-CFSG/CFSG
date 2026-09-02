@@ -4,6 +4,8 @@ public import FeitThompson.BGsection10.proposition_10_11_c
 public import FeitThompson.BGsection3.Remaining
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

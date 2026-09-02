@@ -3,6 +3,7 @@ module
 public import Glauberman.CentralizerInfQuotientCentralizerIsPGroup
 public import Glauberman.Definitions
 
+
 /-!
 # The p-core preimage centralizing a normal p-subgroup
 

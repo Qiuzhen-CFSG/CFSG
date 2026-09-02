@@ -10,6 +10,7 @@ public import Mathlib.GroupTheory.Index
 public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 public import Mathlib.Tactic
 
+
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — Theorem 7.1
 

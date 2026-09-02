@@ -4,6 +4,7 @@ public import GorensteinWalter.CPrime
 import FeitThompson.BGsection6.Defs
 import Mathlib.GroupTheory.GroupAction.SubMulAction
 
+
 /-!
 # Klein-four normalizers when the odd-core quotient is a two-group
 

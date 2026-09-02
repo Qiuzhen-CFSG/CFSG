@@ -8,6 +8,8 @@ open Theory.GroupAction
 
 open scoped Pointwise
 
+namespace Theory.GroupAction
+
 section MinimalSubgroup
 
 variable {G : Type*} [Group G] [Finite G]
@@ -87,3 +89,5 @@ public theorem exists_minimal_normal_isInvariant [Nontrivial G] :
   exact ⟨M, hMnorm, hMinv, hMne, hMmin⟩
 
 end MinimalNormalInvariant
+
+end Theory.GroupAction

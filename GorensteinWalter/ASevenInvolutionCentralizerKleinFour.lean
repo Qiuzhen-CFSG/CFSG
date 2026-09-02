@@ -4,6 +4,8 @@ public import GorensteinWalter.ASevenStructureFacts
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 public import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # Klein four subgroups centralizing the three-part of an A7 involution centralizer

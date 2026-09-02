@@ -14,6 +14,8 @@ import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_5_c
 import FeitThompson.PFsection6.PFsection6_6
+open Theory.GroupAction
+
 
 noncomputable section
 
@@ -263,7 +265,8 @@ theorem theorem_6_8_caseA_Z_inf_W2_eq_bot
   apply le_antisymm
   · intro x hx
     have hxcenterW2 : x ∈ centerIn H ⊓ W2 := ⟨hx.1.1, hx.2⟩
-    simpa [hcenterW2] using hxcenterW2
+    rw [← hcenterW2]
+    exact hxcenterW2
   · exact bot_le
 
 theorem theorem_6_8_natCard_map_mk'_eq_of_inf_eq_bot
@@ -7099,7 +7102,8 @@ theorem theorem_6_8_caseA_W1_centralizerIn_Z_eq_bot_of_caseC2
     simpa [hcent_eq] using hxcentH
   have hxInf : x ∈ centerIn H ⊓ W2 := ⟨hxCenter, hxW2⟩
   have hxbot : x ∈ (⊥ : Subgroup L) := by
-    simpa [hcenterW2] using hxInf
+    rw [← hcenterW2]
+    exact hxInf
   simpa using hxbot
 
 theorem theorem_6_8_caseA_W1_centralizerIn_Z_eq_bot_of_branch
@@ -17056,7 +17060,8 @@ theorem theorem_6_8_caseA_c2_card_dvd_Z_sub_one
       simpa [hcent_eq] using hxcentH
     have hxInf : x ∈ centerIn H ⊓ W2 := ⟨hxCenter, hxW2⟩
     have hxbot : x ∈ (⊥ : Subgroup L) := by
-      simpa [hcenterW2] using hxInf
+      rw [← hcenterW2]
+      exact hxInf
     simpa using hxbot
   exact frobeniusComplement_card_dvd_normal_subgroup_card_sub_one
     (K := Z) (R := W1) (N := Z) le_rfl hcentZ

@@ -6,6 +6,9 @@ public import FeitThompson.BGsection4.theorem_4_20_c
 public import FeitThompson.BGsection4.corollary_4_19
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 
@@ -1845,7 +1848,7 @@ private theorem section9_c95_pgroup_centralizes_of_centralizes_chiefFactors
   have hker_eq :
       fixingSubgroupOf (↥R_I) K_I (Set.univ : Set K_I) =
         (MulDistribMulAction.toMulAut (G := ↥R_I) (M := K_I)).ker :=
-    fixingSubgroupOf_univ_eq_ker_toMulAut (A := ↥R_I) (G := K_I)
+    fixingSubgroup_univ_eq_ker_toMulAut (A := ↥R_I) (G := K_I)
   have hker_normal : (fixingSubgroupOf (↥R_I) K_I (Set.univ : Set K_I)).Normal := by
     rw [hker_eq]
     exact MonoidHom.normal_ker (MulDistribMulAction.toMulAut (G := ↥R_I) (M := K_I))

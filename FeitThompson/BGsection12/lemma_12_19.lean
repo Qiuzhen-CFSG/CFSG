@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection12.lemma_12_18_b
+open Theory.GroupAction
+
 
 open scoped Pointwise
 
@@ -47,7 +49,7 @@ private theorem section12_isInvariant_of_le_fixedPointSubgroup_current
     {H : Subgroup R} (hH : H ≤ fixedPointSubgroup A R) :
     IsInvariant A R H := by
   have htriv : ActsTriviallyOnSubgroup (A := A) (G := R) H :=
-    actsTriviallyOnSubgroup_of_le_fixedPointSubgroup (A := A) (G := R) hH
+    actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup (A := A) (G := R) hH
   refine ⟨?_⟩
   intro a x
   constructor

@@ -5,6 +5,7 @@ public import GorensteinWalter.Suzuki.SwappedLinesInvertedLine
 public import GorensteinWalter.Section3.FirstCaseKleinCardThreeTransferNormalizer
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 
 noncomputable section

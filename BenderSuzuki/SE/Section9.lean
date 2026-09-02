@@ -3,6 +3,8 @@ module
 public import BenderSuzuki.SE.Proposition84
 public import Mathlib.Algebra.Group.Subgroup.Ker
 import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Section 9: minimal normal supplements

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixIndex
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionFive
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

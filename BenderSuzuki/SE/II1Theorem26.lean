@@ -11,6 +11,8 @@ import BenderSuzuki.External.Isaacs.VII.theorem_7_15
 import BenderSuzuki.External.Huppert.XI.theorem_6_1
 import BenderSuzuki.External.Suzuki.VI.proposition_2_9
 import Theory.Character.BrauerPermutation
+open Theory.GroupAction
+
 
 /-!
 # GLS Part II, Chapter 1, Theorem 2.6

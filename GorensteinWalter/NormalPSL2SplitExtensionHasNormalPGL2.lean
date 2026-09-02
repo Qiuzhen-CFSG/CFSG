@@ -9,6 +9,7 @@ public import GorensteinWalter.DGroupQuotient
 public import GorensteinWalter.PGroupExtension
 public import GorensteinWalter.CPrime
 
+
 /-!
 # The split-four normal-extension lift
 

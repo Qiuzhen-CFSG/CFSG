@@ -11,6 +11,7 @@ public import GorensteinWalter.DihedralCore
 public import GorensteinWalter.DihedralUniqueCentralInvolution
 public import GorensteinWalter.DihedralNormalSubgroup
 
+
 /-!
 # Index-two and O²(M)-branch infrastructure for Lemma 2.7
 

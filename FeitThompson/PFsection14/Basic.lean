@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGappendixC.theorem_C
 public import FeitThompson.PFsection13.PFsection13_19
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 14: basic notation

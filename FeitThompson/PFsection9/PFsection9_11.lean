@@ -15,6 +15,9 @@ import FeitThompson.PFsection6.PFsection6_6
 import FeitThompson.PFsection6.PFsection6_8
 public import FeitThompson.PFsection8.PFsection8_5_b
 public import FeitThompson.PFsection8.PFsection8_15
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

@@ -3,7 +3,7 @@ module
 public import BenderSuzuki.SE.ConjugateAction
 public import BenderSuzuki.SE.Compat
 public import BenderSuzuki.External.Hall.Basic
-public import FeitThompson.GroupAction.Lemmas
+public import Theory.GroupAction.Lemmas
 public import FeitThompson.SubgroupConj
 import BenderSuzuki.SE.InvolutionCore
 import BenderSuzuki.SE.StrongEmbeddingIntersections
@@ -14,6 +14,8 @@ import BenderSuzuki.PFchapter1section1.proposition_4_c
 import FeitThompson.BGsection1.proposition_1_5
 import FeitThompson.BGsection7.Defs
 import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Theorem 4(b): source-facing contract

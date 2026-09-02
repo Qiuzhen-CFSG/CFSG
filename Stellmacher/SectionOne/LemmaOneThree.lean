@@ -1,6 +1,9 @@
 module
 
 public import Stellmacher.SectionOne.Defs
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace Stellmacher.SectionOne
 

@@ -337,7 +337,8 @@ public theorem isInvariant_sup_of_le_normalizer (X Y : Subgroup G)
 - and the action on each factor is trivial (`(a • g) * g⁻¹ ∈ Gi (next i)` for `g ∈ Gi i`).
 -/
 @[expose]
-public def IsStabilizingNormalSeries {ι : Type*} (Gi : ι → Subgroup G) (next : ι → ι) : Prop :=
+public def IsStabilizingNormalSeries {G A : Type*} [Group G] [Group A]
+    [MulDistribMulAction A G] {ι : Type*} (Gi : ι → Subgroup G) (next : ι → ι) : Prop :=
   (∃ top bottom : ι,
       Gi top = ⊤ ∧
       Gi bottom = ⊥ ∧
@@ -346,5 +347,10 @@ public def IsStabilizingNormalSeries {ι : Type*} (Gi : ι → Subgroup G) (next
     (∀ i, (Gi i).Normal) ∧
     (∀ i, IsInvariant A G (Gi i)) ∧
       ∀ i (a : A) (g : G), g ∈ Gi i → (a • g) * g⁻¹ ∈ Gi (next i)
+
+@[expose]
+public def StabilizesNormalSeries {G A : Type*} [Group G] [Group A]
+    [MulDistribMulAction A G] {ι : Type*} (Gi : ι → Subgroup G) (next : ι → ι) : Prop :=
+  IsStabilizingNormalSeries (G := G) (A := A) Gi next
 
 end Theory.GroupAction

@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.PFsection9.PFsection9_8.InitialData
+open Theory.GroupAction
+
 
 noncomputable section
 

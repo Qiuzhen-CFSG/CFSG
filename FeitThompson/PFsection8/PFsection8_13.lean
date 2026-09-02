@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.PFsection8.PFsection8_5_c
 public import FeitThompson.PFsection8.PFsection8_11
+open Theory.GroupAction
+
 
 noncomputable section
 

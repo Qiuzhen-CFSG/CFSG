@@ -15,6 +15,9 @@ import BenderSuzuki.PFAppendixIII.lemma_2
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.Wielandt.FixedPointProduct
 public import BenderSuzuki.PFchapter3section1.Basic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace PFchapter3section1
@@ -883,8 +886,8 @@ private theorem cubic_linear_contradiction
     letI : Group.IsNilpotent S := hSpgroup.isNilpotent
     have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := S) (A := A) hSsolvable hcoprime
         Z (inferInstance : IsInvariant A S Z)
     have hxMap : x ∈ (fixedPointSubgroup A S).map
         (QuotientGroup.mk' Z) := by
@@ -1055,8 +1058,8 @@ private theorem cubic_linear_contradiction
   letI : Group.IsNilpotent S := hSpgroup.isNilpotent
   have hSsolvable : Group.IsSolvable S := by infer_instance
   have hfixedEq :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := S) (A := P) hSsolvable hPScoprime (∅ : Set Nat.Primes)
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := S) (A := P) hSsolvable hPScoprime
       Z (inferInstance : IsInvariant P S Z)
   have hfixedMapBot : (fixedPointSubgroup P S).map
       (QuotientGroup.mk' Z) = ⊥ := by
@@ -1068,6 +1071,7 @@ private theorem cubic_linear_contradiction
       (QuotientGroup.eq_one_iff x).mpr hxZ
     simp [hxOne]
   have hPfixedE : fixedPointSubgroup P E = ⊥ := by
+    change FixedPoints.subgroup P E = ⊥
     rw [hfixedEq]
     exact hfixedMapBot
   letI : MulDistribMulAction KSD E :=
@@ -2327,8 +2331,8 @@ private theorem cubic_order_five_contradiction
     letI : Group.IsNilpotent S := hSpgroup.isNilpotent
     have hSsolvable : Group.IsSolvable S := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := S) (A := A) hSsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := S) (A := A) hSsolvable hcoprime
         Z (inferInstance : IsInvariant A S Z)
     have hxMap : x ∈ (fixedPointSubgroup A S).map
         (QuotientGroup.mk' Z) := by
@@ -4405,10 +4409,11 @@ public theorem proposition
         rw [hPcard, hmS]
         exact hpOdd.coprime_two_right.pow_right m
       have hfixedQuotientMap :=
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := S) (A := P) hSsolvable hcoprime (∅ : Set Nat.Primes)
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := S) (A := P) hSsolvable hcoprime
           (Subgroup.center S)
           (inferInstance : IsInvariant P S (Subgroup.center S))
+      change FixedPoints.subgroup P (S ⧸ Subgroup.center S) = ⊤ at hfixedQuotientTop
       rw [hfixedQuotientTop] at hfixedQuotientMap
       have hfixedTop : fixedPointSubgroup P S = ⊤ := by
         rw [eq_top_iff]
@@ -4623,7 +4628,7 @@ public theorem proposition
       have hFixCenterCard :
           Nat.card (fixedPointSubgroup P (Subgroup.center S)) = ell := by
         have hMapCenter :=
-          fixedPointSubgroup_map_subtype_eq_inf
+          fixedPoints_subgroup_map_subtype_eq_inf
             (A := P) (G := S) (Subgroup.center S)
         calc
           Nat.card (fixedPointSubgroup P (Subgroup.center S)) =
@@ -4642,8 +4647,8 @@ public theorem proposition
               (Subgroup.subgroupOfEquivOfLe hCQ0leS).toEquiv
           _ = ell := hellCard.symm
       have hFixedQuotientEq :=
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := S) (A := P) hSsolvable hcoprime (∅ : Set Nat.Primes)
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := S) (A := P) hSsolvable hcoprime
           (Subgroup.center S)
           (inferInstance : IsInvariant P S (Subgroup.center S))
       have hLiftFixed :

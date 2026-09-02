@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinVUInvolution
 public import GorensteinWalter.DihedralThreeNoOrderSix
 import Mathlib.Tactic
 
+
 /-!
 # No involution of `Ĥ` centralizes the inverted order-three subgroup
 -/

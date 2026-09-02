@@ -12,6 +12,7 @@ import all BenderGlauberman.ClassSumFormula
 public import BenderGlauberman.ClassFunction
 import all BenderGlauberman.Defs
 
+
 /-!
 # Bender--Glauberman: Lemma 2.2
 

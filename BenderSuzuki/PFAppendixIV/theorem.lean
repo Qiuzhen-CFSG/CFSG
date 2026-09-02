@@ -12,6 +12,9 @@ import FeitThompson.PFsection6.PFsection6_5_b
 import FeitThompson.PFsection6.PFsection6_6
 import FeitThompson.HallSubgroups.Core
 import Theory.Character.DegreeBounds
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 attribute [local instance] commutatorElement
 open scoped IsMulCommutative
@@ -1344,11 +1347,12 @@ private theorem actsRegularly_quotient_of_solvable_coprime_appendixIV
     simpa [hsmul] using h
   have hfixedA' : fixedPointSubgroup A' M = ⊥ := by
     simpa using hregular a ha
+  change FixedPoints.subgroup (↥A') M = ⊥ at hfixedA'
   let : MulDistribMulAction A' (M ⧸ N) :=
     quotientMulDistribMulAction (A := A') (G := M) N hNinvA'
   have hfixed :=
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-      (G := M) (A := A') hsolv ?_ (∅ : Set Nat.Primes) N hNinvA'
+    fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+      (G := M) (A := A') hsolv ?_ N hNinvA'
   · rw [hfixedA'] at hfixed
     simpa [A'] using hfixed
   · exact Nat.Coprime.of_dvd_left (Subgroup.card_subgroup_dvd_card A') hcop

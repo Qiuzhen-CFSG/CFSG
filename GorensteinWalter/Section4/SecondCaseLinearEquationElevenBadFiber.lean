@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.Defs
 import Mathlib.GroupTheory.Sylow
 import Mathlib.Tactic
 
+
 /-!
 # Section 4, equation (11): the bad-fibre bound (`P × E` / `X × E^g`)
 

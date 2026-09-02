@@ -7,6 +7,8 @@ import FeitThompson.Fitting.Core
 import FeitThompson.ChiefFactors.Proposition12
 import FeitThompson.BGsection1.proposition_1_10
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Proposition 10.2(d--e): Fitting infrastructure

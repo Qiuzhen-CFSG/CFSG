@@ -12,6 +12,7 @@ import GorensteinWalter.Section2.Lemma27Infra
 import GorensteinWalter.Section2.PreambleInvolutions
 import GorensteinWalter.Section2.Reflection
 
+
 open scoped Pointwise
 
 namespace GorensteinWalter

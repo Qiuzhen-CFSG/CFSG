@@ -7,6 +7,10 @@ import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.GroupAction.Cardinalities
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.PCore.PCore
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # The cross-characteristic core of `[IG; 11.14(i)]`
@@ -71,10 +75,11 @@ public theorem ig1114_i_actsTrivially_of_fixedPointSubgroup_eq_bot
     have hsolvT : Group.IsSolvable T := by infer_instance
     let hPhiInvB : IsInvariant (↥B) T Phi :=
       isInvariant_of_characteristic (A := ↥B) (G := T) Phi
-    have hfixBq : fixedPointSubgroup (↥B) (T ⧸ Phi) = ⊥ := by
+    have hfixBq : FixedPoints.subgroup (↥B) (T ⧸ Phi) = ⊥ := by
       have heq :=
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
           (G := T) (A := ↥B) hsolvT hBcopT Phi hPhiInvB
+      change FixedPoints.subgroup (↥B) T = ⊥ at hfixB
       rw [heq, hfixB]
       simp
     obtain ⟨n, hTcard⟩ := hT.exists_card_eq

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreP0Card
 public import GorensteinWalter.ASevenInvolutionCentralizerOddPart
 import Mathlib.Tactic
 
+
 /-!
 # The cyclic first-case decomposition `U ∩ M = P₀ × (B ∩ M)`
 

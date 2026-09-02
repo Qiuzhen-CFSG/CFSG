@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.ComplementConjugacy
 public import GorensteinWalter.CPrime
 import Mathlib.Tactic
 
+
 /-!
 # Split-four quotient transport: `C'(Z)` equality across `G/O₂'(G)`
 

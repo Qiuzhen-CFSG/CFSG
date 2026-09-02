@@ -10,6 +10,8 @@ public import GorensteinWalter.Section1
 public import GorensteinWalter.MinimalCounterexample
 public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 public import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Lemma 2.9 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")

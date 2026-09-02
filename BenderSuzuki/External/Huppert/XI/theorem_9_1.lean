@@ -8,6 +8,10 @@ import FeitThompson.PFsection1.PFsection1_7_Mackey
 import FeitThompson.PFsection6.PFsection6_8
 import Theory.Character.BrauerPermutation
 import Mathlib.NumberTheory.Multiplicity
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Ito XI.9.1
@@ -8575,7 +8579,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
         isInvariant_of_characteristic (A := S) (G := F) C
       let : MulDistribMulAction S (F ⧸ C) :=
         quotientMulDistribMulAction (A := S) (G := F) C hCinvS
-      have hquot := fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
+      have hquot := fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
         (G := F) (A := S) (inferInstance : Group.IsSolvable F) hcopSF C hCinvS
       have hfixF : fixedPointSubgroup (↥S) F = ⊥ := by
         rw [Subgroup.eq_bot_iff_forall]
@@ -8583,6 +8587,7 @@ private theorem huppert_XI_9_1_noncommutativeKernel_zGroupComplement_aux
         have hzd : d • (z : F) = z := by
           simpa [S] using hz (⟨d, Subgroup.mem_zpowers d⟩ : S)
         exact hDFree d hd z hzd
+      change FixedPoints.subgroup (↥S) F = ⊥ at hfixF
       rw [hfixF] at hquot
       have hfixQuot : fixedPointSubgroup (↥S) (F ⧸ C) = ⊥ := by
         simpa [C] using hquot

@@ -3,6 +3,7 @@ module
 public import BenderGlauberman.Section2.Basic
 public import BenderGlauberman.Section2.Lemma22
 
+
 /-!
 # Bender--Glauberman: Section 2 — the Coherence Theorem 2.3 cluster
 

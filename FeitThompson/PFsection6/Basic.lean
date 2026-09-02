@@ -6,6 +6,9 @@ public import FeitThompson.PFsection4.PFsection4_9
 public import FeitThompson.ChiefFactors.Core
 import Theory.Representation.SolvableDimension
 
+open Theory.Representation
+open Theory.GroupAction
+
 /-!
 # Peterfalvi, Section 6: basic notation
 

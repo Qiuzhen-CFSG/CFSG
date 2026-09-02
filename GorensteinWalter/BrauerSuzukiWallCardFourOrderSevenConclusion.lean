@@ -4,6 +4,8 @@ public import GorensteinWalter.BrauerSuzukiWallStructure
 
 import all GorensteinWalter.BrauerSuzukiWallStructure
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # The order-seven structural conclusion in the order-four branch

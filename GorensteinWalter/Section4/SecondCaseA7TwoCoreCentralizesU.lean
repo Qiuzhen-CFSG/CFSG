@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section1
 import Mathlib.Tactic
 
+
 /-!
 # The equation-(7) two-core centralizes U
 

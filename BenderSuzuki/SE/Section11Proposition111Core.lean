@@ -1,6 +1,8 @@
 module
 
 public import BenderSuzuki.SE.Section10Proposition102Fitting
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Proposition 11.1: nilpotent product core

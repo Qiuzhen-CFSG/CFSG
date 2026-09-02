@@ -4,6 +4,9 @@ public import FeitThompson.BGsection10.lemma_10_4_c
 public import FeitThompson.BGsection4.lemma_4_5_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

@@ -6,6 +6,7 @@ public import GorensteinWalter.Section2.Lemma27QuotientIndex
 public import GorensteinWalter.ASevenInvariantOddPSubgroupCertificateDefs
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

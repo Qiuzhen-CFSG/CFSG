@@ -14,6 +14,10 @@ import FeitThompson.PFsection1.PFsection1_7_Mackey
 import FeitThompson.PFsection6.PFsection6_8
 import FeitThompson.PCore.Nilpotent
 import Theory.Character.BrauerPermutation
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Feit XI.6.1
@@ -487,16 +491,16 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
     Nat.Coprime.of_dvd_left hScardDvd hcop
   let hCinvS : IsInvariant S Q C :=
     isInvariant_of_characteristic (A := S) (G := Q) C
-  have hquot := fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
+  have hquot := fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
     (G := Q) (A := S) hsolv hcopS C hCinvS
-  have hfixQ : fixedPointSubgroup (↥S) Q = ⊥ := by
+  have hfixQ : FixedPoints.subgroup (↥S) Q = ⊥ := by
     rw [Subgroup.eq_bot_iff_forall]
     intro q hq
     have hqa : a • (q : Q) = q := by
       simpa [S] using hq (⟨a, Subgroup.mem_zpowers a⟩ : S)
     exact hfree a ha q hqa
   rw [hfixQ] at hquot
-  have hquotBot : fixedPointSubgroup (↥S) (Q ⧸ C) = ⊥ := by
+  have hquotBot : FixedPoints.subgroup (↥S) (Q ⧸ C) = ⊥ := by
     simpa [C] using hquot
   have hxS : x ∈ fixedPointSubgroup (↥S) (Q ⧸ C) := by
     change ∀ s : S, s • x = x
@@ -505,6 +509,7 @@ private theorem huppert_XI_6_1_abelianization_fixedPointFree
     · rcases Subgroup.mem_zpowers_iff.mp s.property with ⟨n, hn⟩
       exact Subgroup.mem_zpowers_iff.mpr ⟨n, Subtype.ext hn⟩
     · simpa [S] using hx
+  change x ∈ FixedPoints.subgroup (↥S) (Q ⧸ C) at hxS
   rw [hquotBot] at hxS
   simpa using hxS
 /-- The abelianization of a nontrivial finite solvable group is nontrivial. -/

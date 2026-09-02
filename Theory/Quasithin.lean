@@ -21,8 +21,7 @@ namespace Theory.Quasithin
 /-- A subgroup is *2-local* when it is the normalizer of a nontrivial
 2-subgroup. -/
 public def IsTwoLocal {G : Type*} [Group G] (M : Subgroup G) : Prop :=
-  ∃ Q : Subgroup G, Q ≠ ⊥ ∧ IsPGroup 2 Q ∧
-    M = Subgroup.normalizer (Q : Set G)
+  ∃ Q : Subgroup G, Q ≠ ⊥ ∧ IsPGroup 2 Q ∧ M = Subgroup.normalizer (Q : Set G)
 
 /-- A 2-local subgroup maximal among the 2-local subgroups under inclusion. -/
 public def IsMaximalTwoLocal {G : Type*} [Group G] (M : Subgroup G) : Prop :=
@@ -35,8 +34,8 @@ public def calM (G : Type*) [Group G] : Set (Subgroup G) :=
 /-- The quasithin invariant `e(G)`: the maximum odd-prime rank among the
 maximal 2-local subgroups of `G`. -/
 public noncomputable def e (G : Type*) [Group G] [Finite G] : ℕ :=
-  sSup {n : ℕ | ∃ M : Subgroup G, M ∈ calM G ∧
-    ∃ p : ℕ, p.Prime ∧ Odd p ∧ n ≤ primeRank p M}
+  sSup
+    {n : ℕ | ∃ M : Subgroup G, M ∈ calM G ∧ ∃ p : ℕ, p.Prime ∧ Odd p ∧ n ≤ primeRank p M}
 
 /-- A finite group is *quasithin* when its invariant `e(G)` is at most two. -/
 public def IsQuasithin (G : Type*) [Group G] [Finite G] : Prop := e G ≤ 2

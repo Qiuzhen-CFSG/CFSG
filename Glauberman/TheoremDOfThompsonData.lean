@@ -8,6 +8,7 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
 
+
 /-!
 # Glauberman Theorem D (the normal `p`-complement criterion)
 

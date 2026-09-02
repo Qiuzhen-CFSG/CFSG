@@ -7,6 +7,7 @@ public import GorensteinWalter.Section2.FStarSubnormal
 public import GorensteinWalter.Defs
 import Mathlib.GroupTheory.IsPerfect
 
+
 /-!
 # Bender (1970) Statement 1.6
 

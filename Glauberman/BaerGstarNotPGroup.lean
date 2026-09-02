@@ -2,6 +2,7 @@ module
 
 public import Glauberman.Lemma6_1
 
+
 /-!
 # The Baer witness subgroup in Glauberman Lemma 6.3
 -/

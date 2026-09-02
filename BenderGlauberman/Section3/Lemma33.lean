@@ -14,6 +14,7 @@ import FeitThompson.SubgroupConjAction
 public import Theory.Character.Divisibility
 public import GorensteinWalter.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Lemma 3.3
 

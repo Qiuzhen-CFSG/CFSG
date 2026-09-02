@@ -4,6 +4,8 @@ public import FeitThompson.BGsection13.lemma_13_1
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Data.Finset.NatDivisors
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

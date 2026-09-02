@@ -3,11 +3,14 @@ module
 public import FeitThompson.BGsection3.Defs
 public import BenderSuzuki.External.Isaacs.VII.problem_7_1
 public import BenderSuzuki.External.Isaacs.XV.lemma_15_15
-public import FeitThompson.GroupAction.FreeOrbitQuotient
+public import Theory.GroupAction.FreeOrbitQuotient
 public import Theory.Representation.FreeBasis
 public import Theory.Representation.ScalarDescent
 public import Theory.Representation.PermutationBasisOrbits
 public import Mathlib.FieldTheory.AlgebraicClosure
+
+open Theory.GroupAction
+open Theory.Representation
 
 open scoped TensorProduct
 
@@ -53,7 +56,7 @@ private theorem isaacs_15_16_fixedSpace_of_freePermutationBasis
       Theory.Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
         (rho.comp H0.subtype) b hb0
     _ = H0.index * Nat.card (MulAction.orbitRel.Quotient G iota) :=
-      MulAction.natCard_orbitRelQuotient_subgroup H0
+      Theory.GroupAction.MulAction.natCard_orbitRelQuotient_subgroup H0
     _ = H0.index * Module.finrank K rho.invariants := by
       rw [Theory.Representation.permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
         rho b hb]

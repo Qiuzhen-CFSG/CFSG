@@ -1,6 +1,9 @@
 module
 
 public import FeitThompson.BGsection12.proposition_12_15_e
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

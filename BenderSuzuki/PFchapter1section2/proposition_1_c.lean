@@ -6,6 +6,7 @@ import BenderSuzuki.PFchapter1section1.proposition_5
 import FeitThompson.BGsection8.theorem_8_1
 import FeitThompson.PCore.Nilpotent
 
+
 namespace BenderSuzuki
 namespace PFchapter1section2
 

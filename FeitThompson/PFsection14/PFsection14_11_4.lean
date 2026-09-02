@@ -6,6 +6,8 @@ import FeitThompson.PFsection3.PFsection3_4
 import FeitThompson.PFsection7.PFsection7_5
 import FeitThompson.PFsection7.PFsection7_8_b
 import FeitThompson.PFsection8.PFsection8_5_a
+open Theory.GroupAction
+
 
 /-!
 # Peterfalvi, Section 14: theorem (14.11.4)

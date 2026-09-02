@@ -1,10 +1,14 @@
 module
 
 public import FeitThompson.BGsection15.theorem_15_7
+import Theory.GroupAction.Lemmas
 import FeitThompson.PCore.CentralizerControl
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+open Theory.ElementaryAbelian
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

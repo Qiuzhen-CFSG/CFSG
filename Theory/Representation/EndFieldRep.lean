@@ -3,10 +3,13 @@ module
 public import Mathlib.RingTheory.LittleWedderburn
 public import Theory.Representation.AbsolutelyIrreducible
 
-open Representation
+namespace Theory.Representation
+
+open _root_.Representation
 open Theory.Representation
 open MonoidAlgebra
 open Module
+open Module.End
 
 open scoped MonoidAlgebra
 
@@ -37,7 +40,7 @@ variable (ρ : Representation F G V)
 
 /-- We build the `K[G]`-module instance on `ρ.asModule`.-/
 public noncomputable instance endFieldModule :
-  Module (End F[G] ρ.asModule) ρ.asModule := {
+  Module (_root_.Module.End F[G] ρ.asModule) ρ.asModule := {
     smul := fun k m ↦ k m
     mul_smul := fun _ _ _ ↦ rfl
     one_smul := fun _ ↦ rfl
@@ -47,7 +50,7 @@ public noncomputable instance endFieldModule :
     zero_smul := fun _ ↦ rfl
   }
 
-@[simp] public theorem endFieldModule_smul_apply (k : End F[G] ρ.asModule) (m : ρ.asModule) :
+@[simp] public theorem endFieldModule_smul_apply (k : _root_.Module.End F[G] ρ.asModule) (m : ρ.asModule) :
   (k • m) = k m := rfl
 
 end EndFieldModule
@@ -62,7 +65,7 @@ variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 
 /-- We build the finite field instance over the endomorphism field `K = End_{F[G]}(ρ.asModule)`.-/
 public instance endField_finite :
-    Finite (End F[G] ρ.asModule) :=
+    Finite (_root_.Module.End F[G] ρ.asModule) :=
   letI : Module F ρ.asModule := Representation.instModuleAsModule ρ
   letI : Finite V := Module.finite_iff_finite.mp iFD
   let : Finite ρ.asModule :=
@@ -72,7 +75,7 @@ public instance endField_finite :
 
 set_option backward.isDefEq.respectTransparency false in
 public noncomputable instance endField_field :
-    Field (End F[G] ρ.asModule) := by
+    Field (_root_.Module.End F[G] ρ.asModule) := by
   classical
   let : IsSimpleModule F[G] ρ.asModule := (irreducible_iff_isSimpleModule_asModule ρ).mp iIr
   exact littleWedderburn _
@@ -89,7 +92,7 @@ variable (ρ : Representation F G V)
 set_option backward.isDefEq.respectTransparency false in
 /-- The endomorphism field representation inherited from the original representation `ρ`.-/
 @[expose] public def endFieldRep :
-  Representation (End F[G] ρ.asModule) G ρ.asModule := {
+  Representation (_root_.Module.End F[G] ρ.asModule) G ρ.asModule := {
     toFun := fun g ↦ {
       toFun m := ρ.asModuleEquiv.symm (ρ g (ρ.asModuleEquiv m))
       map_add' x y := by simp
@@ -132,7 +135,7 @@ public instance endFieldRep_mulActionHomClass :
       rw [add_smul, map_add, a, b, add_smul]
     · intro g r
       trans f (r • (ρ.asModuleEquiv.symm ((ρ g) (ρ.asModuleEquiv m)))); simp
-      have (m : ρ.asModule) : r • m = (r • (1 : End F[G] ρ.asModule)) • m := rfl
+      have (m : ρ.asModule) : r • m = (r • (1 : _root_.Module.End F[G] ρ.asModule)) • m := rfl
       rw [this, RepMap.map_smul, ← endFieldRep_apply, f.isIntertwining]
       simp
 
@@ -170,3 +173,5 @@ public theorem endFieldRep_isAbsolutelyIrreducible :
   }, rfl⟩
 
 end EndFieldRepIrr
+
+end Theory.Representation

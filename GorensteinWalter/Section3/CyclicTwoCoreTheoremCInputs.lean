@@ -17,6 +17,7 @@ public import GorensteinWalter.Section1
 import all BenderGlauberman.Defs
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first case: the five Theorem-C A₇-model inputs
 

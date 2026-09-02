@@ -2,6 +2,9 @@ module
 
 public import FeitThompson.PFsection14.PFsection14_5
 public import FeitThompson.PFsection14.PFsection14_2_Quotient
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 14: theorem (14.6)

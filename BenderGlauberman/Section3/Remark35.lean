@@ -5,6 +5,7 @@ public import BenderGlauberman.Section3.Basic
 public import GorensteinWalter.Defs
 import all BenderGlauberman.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Remark 3.5
 

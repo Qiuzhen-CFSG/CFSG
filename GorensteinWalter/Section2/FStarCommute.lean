@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Bender1970API
 public import GorensteinWalter.Section2.ControlCore
 public import GorensteinWalter.Section2.FStarSubnormal
 
+
 /-!
 # Bender (1970) Statement 1.7 — centralizer and F\*-commutation helpers
 

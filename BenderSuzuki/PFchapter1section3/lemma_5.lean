@@ -14,6 +14,11 @@ import FeitThompson.GroupAction.CoprimeHall
 import Theory.Representation.ElementaryAbelianAction
 import Theory.Representation.TwoDimensionalOddOrder
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace PFchapter1section3
@@ -1576,8 +1581,8 @@ private theorem lemma_5_W_cyclic_and_divides_obligation
     letI : Group.IsNilpotent Q := hQp.isNilpotent
     have hQsolvable : Group.IsSolvable Q := by infer_instance
     have hfixedEq :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := Q) (A := A) hQsolvable hcoprime (∅ : Set Nat.Primes)
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := Q) (A := A) hQsolvable hcoprime
         (Subgroup.center Q) (inferInstance : IsInvariant A Q (Subgroup.center Q))
     have hxMap : x ∈ (fixedPointSubgroup A Q).map
         (QuotientGroup.mk' (Subgroup.center Q)) := by

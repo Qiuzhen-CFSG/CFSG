@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixIndex
 import Mathlib.Tactic
 
+
 /-!
 # Odd-core index two at an index-six intersection
 

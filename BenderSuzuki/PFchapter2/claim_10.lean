@@ -19,6 +19,8 @@ import BenderSuzuki.PFchapter1section2.AppendixIInput
 import Mathlib.NumberTheory.Multiplicity
 import Mathlib.Data.Nat.MaxPowDiv
 import Mathlib.Algebra.Field.MinimalAxioms
+open Theory.GroupAction
+
 
 namespace BenderSuzuki
 namespace PFchapter2

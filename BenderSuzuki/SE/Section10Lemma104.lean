@@ -4,6 +4,8 @@ public import BenderSuzuki.SE.Section10Lemma103
 public import BenderSuzuki.SE.Proposition84Sylow
 public import FeitThompson.BGsection8.theorem_8_1
 import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Lemma 10.4

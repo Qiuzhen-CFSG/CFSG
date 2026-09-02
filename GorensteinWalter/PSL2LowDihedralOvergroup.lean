@@ -9,6 +9,8 @@ import GorensteinWalter.NormalOddPSubgroupPSL2
 import GorensteinWalter.NormalOddPSubgroupSymmetricFour
 import Mathlib.GroupTheory.Complement
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 /-!
 # Dickson overgroups of a low-order dihedral subgroup

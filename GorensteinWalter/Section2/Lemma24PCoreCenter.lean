@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.Section2.CentralizerPCoreOfFstarPGroup
 public import GorensteinWalter.NormalizerEqOfNontrivialNormalInCoatom
 public import FeitThompson.BGsection8.theorem_8_1
+open Theory.GroupAction
+
 
 /-!
 # The p-core center used in Gorenstein--Walter Lemma 2.4

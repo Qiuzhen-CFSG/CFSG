@@ -4,6 +4,7 @@ public import GorensteinWalter.Section2.Bender1970API
 public import GorensteinWalter.Section2.Bender1970_18
 import Mathlib.Tactic
 
+
 /-!
 # The `π`/`πᶜ` decomposition of the Fitting subgroup
 

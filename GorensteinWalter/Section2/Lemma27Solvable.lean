@@ -13,6 +13,7 @@ public import GorensteinWalter.Classification
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # Lemma 2.7, solvability of `M`
 

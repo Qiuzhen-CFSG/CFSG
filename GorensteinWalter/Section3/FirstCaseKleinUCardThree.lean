@@ -10,6 +10,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCosetRepresentative
 public import GorensteinWalter.Section3.FirstCaseJNCoset
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Theorem26
 public import GorensteinWalter.Section3.FirstCaseCyclicTwoCore
 import Mathlib.Tactic
 
+
 /-!
 # Klein-four-branch data for the first-case count
 

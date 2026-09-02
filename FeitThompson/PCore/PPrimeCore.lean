@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.PCore.Defs
 
+
 open scoped Pointwise
 
 variable (p : ℕ) (G : Type*) [Group G]

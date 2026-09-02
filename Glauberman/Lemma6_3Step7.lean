@@ -6,6 +6,7 @@ public import Mathlib.GroupTheory.Complement
 
 import Glauberman.Theorem4_1
 
+
 /-!
 # Glauberman Lemma 6.3, step 7: identifying the centralizer
 

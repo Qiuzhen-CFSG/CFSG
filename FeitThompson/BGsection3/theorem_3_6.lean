@@ -4,6 +4,10 @@ public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.BGsection3.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection3.theorem_3_5
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 open scoped commutatorElement
 
@@ -974,7 +978,7 @@ public theorem theorem_3_6_invariant_complement_in_fitting_preimage
     simpa [K] using isInvariant_map_subtype (A := ↥R) (G := ↥H) U K0
   let : IsInvariant (↥R) (↥H) K := hK_inv
   have hNK_inv : IsInvariant (↥R) (↥H) (Subgroup.normalizer K) := by
-    simpa using isInvariant_normalizer_of_isInvariant (A := ↥R) (G := ↥H) K
+    simpa using isInvariant_normalizer (A := ↥R) (G := ↥H) K
   exact ⟨K, hK_le_U, hVK_sup, hVK_disj, hK_inv, hNK_inv⟩
 
 private theorem map_subgroupOf_map_conjNormal_eq
@@ -2412,7 +2416,7 @@ public theorem theorem_3_6_r0_centralizing_complement_forces_cyclic
     exact hK_fix_H (by simpa [Subgroup.mem_subgroupOf] using hx)
   have hK_triv_NK :
       ActsTriviallyOnSubgroup (A := ↥R₀) (G := ↥NK) (K.subgroupOf NK) :=
-    actsTriviallyOnSubgroup_of_le_fixedPointSubgroup (A := ↥R₀) (G := ↥NK) hK_fix_NK
+    actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup (A := ↥R₀) (G := ↥NK) hK_fix_NK
   have hKsub_inv₀ : IsInvariant (↥R₀) (↥NK) (K.subgroupOf NK) := by
     refine ⟨?_⟩
     intro a x
@@ -9839,7 +9843,7 @@ private theorem theorem_3_6_final_contradiction
     let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
-      simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
+      simp [ψ, CY, actionCentralizerIn, fixingSubgroup_univ_eq_ker_toMulAut]
     have hιR_smul_K (a : R) (g : K) : (ιR a : Sg) • g = (a : R) • g := by
       apply Subtype.ext
       apply H.subtype_injective
@@ -10093,7 +10097,7 @@ private theorem theorem_3_6_final_contradiction
     let : CommGroup (MulAut ↥(F Y)) :=
       MonoidHom.commGroupOfInjective eAut.toMonoidHom eAut.injective
     have hψker : ψ.ker = CY := by
-      simp [ψ, CY, actionCentralizerIn, fixingSubgroupOf_univ_eq_ker_toMulAut]
+      simp [ψ, CY, actionCentralizerIn, fixingSubgroup_univ_eq_ker_toMulAut]
     have hP_transport (a : Psub) (g : K) (x : V) :
         ((a • g : K) • (a • x : V) : V) = (a : Psub) • ((g : K) • x : V) := by
       apply Subtype.ext

@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGappendixC.Basic
 
+open Theory.GroupAction
+
 open scoped Pointwise commutatorElement
 
 noncomputable section

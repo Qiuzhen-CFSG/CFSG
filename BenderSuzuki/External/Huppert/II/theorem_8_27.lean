@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.FieldTheory.Finite.Extension
 public import Mathlib.FieldTheory.Finite.Trace

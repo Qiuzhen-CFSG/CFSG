@@ -7,6 +7,7 @@ public import GorensteinWalter.Section2.Bender1970_18
 import FeitThompson.FinalTheorem
 import Mathlib.GroupTheory.SpecificGroups.Alternating.Simple
 
+
 /-!
 # Absorption of a component centralizing the Fitting subgroup
 

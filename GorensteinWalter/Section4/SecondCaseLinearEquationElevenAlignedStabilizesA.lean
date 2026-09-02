@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.Section4.SecondCaseComponentData
 public import GorensteinWalter.Section3.CyclicTwoCoreFittingTI
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

@@ -2,7 +2,9 @@ module
 
 public import BenderSuzuki.External.Higman.lemma_2
 import FeitThompson.Frattini.Core
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+
 
 /-!
 # Higman Lemma 3
@@ -1341,7 +1343,6 @@ public theorem lemma3_covering_phi_case_exponent_le_four
 end Higman
 end External
 end BenderSuzuki
-
 
 
 

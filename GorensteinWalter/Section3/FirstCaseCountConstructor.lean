@@ -16,6 +16,7 @@ public import GorensteinWalter.InvolutionCountInSubgroup
 import GorensteinWalter.Section3.FirstCaseKleinDataComplete
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

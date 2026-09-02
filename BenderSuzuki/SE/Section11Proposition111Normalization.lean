@@ -3,6 +3,8 @@ module
 public import BenderSuzuki.SE.Section11Proposition111Transport
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.SE.Section10Lemma101
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Proposition 11.1: Fitting-subgroup normalization

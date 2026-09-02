@@ -2,6 +2,11 @@ module
 
 public import FeitThompson.BGsection3.Infrastructure
 public import FeitThompson.BGsection3.lemma_3_3
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped commutatorElement IsMulCommutative
 
@@ -613,7 +618,7 @@ theorem faithfulSMul_of_prime_order_of_not_actsTrivially {A G : Type*} [Group A]
     have haC : a ∈ C := by
       simp [C, hC_top]
     have haKer : a ∈ (MulDistribMulAction.toMulAut A G).ker := by
-      simpa [C, fixingSubgroupOf_univ_eq_ker_toMulAut] using haC
+      simpa [C, fixingSubgroup_univ_eq_ker_toMulAut] using haC
     simpa [MonoidHom.mem_ker] using congrArg (fun f : MulAut G => f g) haKer
   have hcardC_dvd : Nat.card C ∣ Nat.card A := Subgroup.card_subgroup_dvd_card C
   have hcardC_eq_one : Nat.card C = 1 := by
@@ -624,8 +629,8 @@ theorem faithfulSMul_of_prime_order_of_not_actsTrivially {A G : Type*} [Group A]
   refine (faithfulSMul_iff (G := A) (α := G)).2 ?_
   intro a ha
   have haC : a ∈ C := by
-    rw [show C = fixingSubgroupOf A G Set.univ by rfl]
-    rw [fixingSubgroupOf_univ_eq_ker_toMulAut, MonoidHom.mem_ker]
+    change a ∈ fixingSubgroup (M := A) (α := G) (Set.univ : Set G)
+    rw [fixingSubgroup_univ_eq_ker_toMulAut, MonoidHom.mem_ker]
     ext g
     exact ha g
   have ha_bot : a ∈ (⊥ : Subgroup A) := by simpa [C, hC_bot] using haC

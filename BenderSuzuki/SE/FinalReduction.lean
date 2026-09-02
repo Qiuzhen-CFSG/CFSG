@@ -3,6 +3,7 @@ module
 public import BenderSuzuki.SE.Interfaces
 import BenderSuzuki.SE.InvolutionCore
 
+
 /-!
 # The outer reduction for Theorem SE
 

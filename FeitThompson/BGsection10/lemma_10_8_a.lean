@@ -6,6 +6,7 @@ public import FeitThompson.BGsection4.theorem_4_18_a
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 open scoped Pointwise
 
 /-!

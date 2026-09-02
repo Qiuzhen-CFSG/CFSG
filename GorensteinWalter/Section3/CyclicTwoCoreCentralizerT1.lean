@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.CyclicTwoCorePrimeCoreAbelian
 public import GorensteinWalter.Section2.Bender1970_18
 import Mathlib.Tactic
 
+
 /-!
 # Cyclic first-case centralizer equation `C_U(t₁) = B × P₀` — work in progress
 

@@ -7,6 +7,9 @@ import FeitThompson.PFsection2.PFsection2_7_11
 import FeitThompson.PFsection4.PFsection4_5_to_10
 import FeitThompson.PFsection5.PFsection5_9
 import FeitThompson.PFsection7.PFsection7_8_a
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 14: theorem (14.9), Delta correction

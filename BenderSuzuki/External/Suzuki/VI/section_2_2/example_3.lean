@@ -21,6 +21,7 @@ import FeitThompson.PFsection3.PFsection3_5
 import FeitThompson.PFsection5.PFsection5_9
 import Mathlib.Tactic
 
+
 /-!
 # Suzuki Chapter 6, Section 2.2, Example 3
 

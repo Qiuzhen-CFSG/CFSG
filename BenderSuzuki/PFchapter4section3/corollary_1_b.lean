@@ -14,6 +14,8 @@ import BenderSuzuki.PFchapter1section3.lemma_1
 import BenderSuzuki.PFchapter1section3.lemma_2
 import BenderSuzuki.External.Huppert.II.theorem_10_12
 import BenderSuzuki.External.Huppert.II.theorem_10_13
+open Theory.GroupAction
+
 
 namespace BenderSuzuki
 namespace PFchapter4section3

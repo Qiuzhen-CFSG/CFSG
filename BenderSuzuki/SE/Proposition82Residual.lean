@@ -1,6 +1,7 @@
 module
 
 public import BenderSuzuki.External.Huppert.IV.Residual
+import Theory.Representation.SolvableDimension
 
 /-!
 # Residual and Sylow data for Proposition 8.2
@@ -16,6 +17,7 @@ noncomputable section
 namespace BenderSuzuki
 
 open External
+open Theory.Representation
 open scoped Pointwise
 
 universe u

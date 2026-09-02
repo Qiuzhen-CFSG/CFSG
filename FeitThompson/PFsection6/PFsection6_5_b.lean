@@ -2,8 +2,11 @@ module
 
 public import FeitThompson.PFsection6.PFsection6_4
 import FeitThompson.ChiefFactors.BaerCore
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
 import FeitThompson.PFsection6.PFsection6_5_a
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 noncomputable section
 

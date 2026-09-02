@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection1.Defs
 
+open Theory.GroupAction
+
 open scoped commutatorElement
 
 public instance center_isInvariant {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G] :

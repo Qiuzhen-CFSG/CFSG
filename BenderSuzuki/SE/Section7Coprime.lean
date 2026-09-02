@@ -5,6 +5,9 @@ public import BenderSuzuki.SE.Compat
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
 import FeitThompson.Wielandt.FixedPointProduct
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Section 7: coprime-action generation for Lemma 7.5
@@ -453,7 +456,7 @@ private theorem lemma75_generated_map_subtype_le
       IsInvariant.invariant (A := H) (G := V) (H := N) (j : H) v⟩
   rw [Subgroup.map_sup]
   apply sup_le
-  · rw [fixedPointSubgroup_map_subtype_eq_inf]
+  · rw [fixedPoints_subgroup_map_subtype_eq_inf]
     exact inf_le_right.trans le_sup_left
   · intro x hx
     rcases Subgroup.mem_map.mp hx with ⟨y, hy, rfl⟩
@@ -518,15 +521,15 @@ private theorem lemma75_generated_map_quotient_eq
       fixedPointSubgroup J (V ⧸ N) =
         (fixedPointSubgroup J V).map q := by
     simpa [q] using
-      (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := V) (A := J) hsolv hcopJ (∅ : Set Nat.Primes) N hJinv)
+      (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := V) (A := J) hsolv hcopJ N hJinv)
   have hZfix :
       fixedPointSubgroup (Subgroup.zpowers z) (V ⧸ N) =
         (fixedPointSubgroup (Subgroup.zpowers z) V).map q := by
     simpa [q] using
-      (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
+      (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
         (G := V) (A := Subgroup.zpowers z) hsolv hcopZ
-          (∅ : Set Nat.Primes) N hZinv)
+          N hZinv)
   have hLmap : (lemma75JOrbit (H := H) (V := V) J z).map q =
       lemma75JOrbit (H := H) (V := V ⧸ N) J z := by
     apply le_antisymm

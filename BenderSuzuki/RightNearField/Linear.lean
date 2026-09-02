@@ -4,8 +4,10 @@ public import BenderSuzuki.RightNearField
 public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.Algebra.Module.ZMod
 
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import Mathlib.RepresentationTheory.Maschke
+open Theory.ElementaryAbelian
+
 /-!
 # Linear algebra of finite right near-fields
 

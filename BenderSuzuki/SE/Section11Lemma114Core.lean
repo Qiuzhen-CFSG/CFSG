@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.PFchapter2.Basic
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Lemma 11.4: source-independent local algebra

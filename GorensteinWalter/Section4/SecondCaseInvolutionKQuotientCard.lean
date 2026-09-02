@@ -4,6 +4,7 @@ public import GorensteinWalter.Section4.SecondCaseInvolutionOddCoreDisjoint
 public import GorensteinWalter.Section2.Lemma27QuotientIndex
 import Mathlib.Tactic
 
+
 /-!
 # Section 4: the odd-core quotient preserves the size of `K`
 -/

@@ -2,6 +2,7 @@ module
 
 public import GorensteinWalter.Section2.Bender1970_16
 
+
 /-!
 # A generalized-Fitting criterion for a self-centralizing p-core
 

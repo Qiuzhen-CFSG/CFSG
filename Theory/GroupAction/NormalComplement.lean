@@ -1,8 +1,9 @@
 module
 
 public import Mathlib.GroupTheory.Transfer
+public import Theory.GroupAction.Defs
 
-public import FeitThompson.ChiefFactors.Core
+namespace Theory.GroupAction
 
 /-!
 # Burnside normal p-complement consequence
@@ -31,3 +32,5 @@ public theorem exists_normal_coprime_subgroup_and_pgroup_quotient_of_sylow_le_ce
     let e : G ⧸ N ≃* (S : Subgroup G) := hcomp'.QuotientMulEquiv
     exact IsPGroup.of_injective (hG := by simpa using S.isPGroup')
       (ϕ := e.toMonoidHom) e.injective
+
+end Theory.GroupAction

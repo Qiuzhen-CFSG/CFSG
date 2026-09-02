@@ -15,6 +15,7 @@ public import GorensteinWalter.Section2.Lemma27QuotientIndex
 import GorensteinWalter.Section4.SecondCaseInvertedElementsInComponent
 import Mathlib.Tactic
 
+
 /-!
 # The A7 equation-(6) decomposition
 

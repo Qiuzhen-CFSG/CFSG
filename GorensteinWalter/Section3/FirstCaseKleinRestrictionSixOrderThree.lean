@@ -7,6 +7,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSixFull
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

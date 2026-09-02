@@ -3,9 +3,11 @@ module
 public import FeitThompson.BGsection1.Defs
 import FeitThompson.Commutator.ActionTriviality
 import FeitThompson.Frattini.CoprimeAction
-import FeitThompson.GroupAction.MinimalNormal
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.MinimalNormal
+import Theory.GroupAction.Quotient
 import FeitThompson.HallSubgroups.Conjugacy
+
+open Theory.GroupAction
 
 open scoped Pointwise
 
@@ -38,21 +40,6 @@ public theorem exists_mem_fixedPointSubgroup_eq_map_conj_of_isHallSubgroup_of_is
   simpa using
     exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
       (G := G) (A := A) hsolv hcoprime π hHall₁ hHall₂ hInv₁ hInv₂
-
-public theorem fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-    {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
-    (hsolv : Group.IsSolvable G) (hcoprime : Nat.Coprime (Nat.card A) (Nat.card G))
-    (π : Set Nat.Primes) :
-    ∀ (H : Subgroup G) [H.Normal] (hHinv : IsInvariant A G H),
-      letI : MulDistribMulAction A (G ⧸ H) :=
-        quotientMulDistribMulAction (A := A) (G := G) H hHinv
-      fixedPointSubgroup A (G ⧸ H) = (fixedPointSubgroup A G).map (QuotientGroup.mk' H) := by
-  let _ := π
-  intro H _hHnorm hHinv
-  simpa using
-    fixedPointSubgroup_quotient_eq_map_of_solvable_coprime
-      (G := G) (A := A) hsolv hcoprime H hHinv
-
 
 public theorem commutatorAction_le_piCore_of_hall_complement_le_fixedPointSubgroup
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]
@@ -128,8 +115,8 @@ public theorem fixedPointSubgroup_sup_commutatorAction_eq_top_of_solvable_coprim
     fixedPointSubgroup_sup_commutatorAction_eq_top_of_fixedPointQuotientImage
       (G := G) (A := A)
       (hfixed_quotient_image := fun (H : Subgroup G) (_ : H.Normal) (hHinv : IsInvariant A G H) =>
-        fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-          (G := G) (A := A) hsolv hcoprime (π := (∅ : Set Nat.Primes)) H hHinv)
+        fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+          (G := G) (A := A) hsolv hcoprime H hHinv)
 
 public theorem commutatorAction₂_eq_commutatorAction_of_solvable_coprime
     {G A : Type*} [Group G] [Finite G] [Group A] [Finite A] [MulDistribMulAction A G]

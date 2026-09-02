@@ -3,6 +3,8 @@ module
 public import BenderSuzuki.SE.Section10Proposition102Final
 public import BenderSuzuki.SE.StrongEmbeddingFusion
 public import BenderSuzuki.PFchapter1section1.lemma_a
+open Theory.GroupAction
+
 
 /-!
 # Section 11, Lemma 11.5: source-independent core facts

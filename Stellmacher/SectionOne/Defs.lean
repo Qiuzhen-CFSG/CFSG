@@ -1,7 +1,10 @@
 module
 
 public import Stellmacher.FinalTheorem
-public import FeitThompson.Extraspecial
+public import Theory.ElementaryAbelian.Extraspecial
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Stellmacher, Section 1: common definitions

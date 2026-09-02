@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.CyclicTwoCoreASevenNormalizerControl
 public import GorensteinWalter.Section3.FirstCaseCyclicTwoCoreInfra
 import Mathlib.Tactic
 
+
 /-!
 # Section 3: conditional centralizer-to-coatom reduction
 

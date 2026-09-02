@@ -13,9 +13,13 @@ import Mathlib.GroupTheory.IsSubnormal
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 import Mathlib.Order.Preorder.Finite
 public import FeitThompson.BGsection7.Defs
+
 public import FeitThompson.BGsection7.lemma_7_1
 public import FeitThompson.BGsection7.theorem_7_2
 public import FeitThompson.BGsection7.theorem_7_3
+open Theory.GroupAction
+open Theory.Representation
+
 
 open scoped Pointwise commutatorElement
 

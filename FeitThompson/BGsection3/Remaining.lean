@@ -8,10 +8,14 @@ public import FeitThompson.BGsection3.theorem_3_6
 import Mathlib.Data.Nat.Choose.Dvd
 import Mathlib.GroupTheory.GroupAction.OfQuotient
 import Mathlib.GroupTheory.IndexNormal
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PGroup.NormalSubgroups
 import FeitThompson.Fitting.Centralizer
 public import Theory.Representation.ElementaryAbelianAction
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 open scoped Pointwise TensorProduct commutatorElement IsMulCommutative
 
@@ -950,7 +954,7 @@ public theorem theorem_3_7_chief_factor_bridge {G : Type u37} [Group G] [Finite 
         Theory.Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
       have hρker_eq : ρ.ker = φ.ker := by
         rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
-        rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
+        rw [fixingSubgroup_univ_eq_ker_toMulAut]
         rfl
       have hLq_ker : Lq ≤ ρ.ker := by
         simpa [Lq, π, Uq, ρ] using
@@ -1878,7 +1882,7 @@ public theorem theorem_3_8 {G : Type u38} [Group G] [Finite G] (K R : Subgroup G
                 Theory.Representation.ofElementaryAbelianAction (A := G' ⧸ cf.V) (G := Uq) (p := q)
               have hρker_eq : ρ.ker = φ.ker := by
                 rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
-                rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
+                rw [fixingSubgroup_univ_eq_ker_toMulAut]
                 rfl
               have hFcent :
                   F' ≤ centralizerOfChiefFactor (G := G') K' cf :=
@@ -4951,7 +4955,7 @@ private theorem theorem_3_10_case2_faithful_action
         _ = (⊤ : Subgroup G) ⊓ fixingSubgroupOf G M Set.univ := rfl
         _ = fixingSubgroupOf G M Set.univ := by simp
         _ = (MulDistribMulAction.toMulAut G M).ker :=
-          fixingSubgroupOf_univ_eq_ker_toMulAut
+          fixingSubgroup_univ_eq_ker_toMulAut
     rw [hC_eq_ker]
     infer_instance
   have hK_not_le_C : ¬ K ≤ C := by
@@ -5041,7 +5045,7 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_invariant_subgroup
   apply
     (Subgroup.map_eq_bot_iff_of_injective
       (H := fixedPointSubgroup (↥A) N) (f := N.subtype) N.subtype_injective).1
-  rw [fixedPointSubgroup_map_subtype_eq_inf]
+  rw [fixedPoints_subgroup_map_subtype_eq_inf]
   simp [hfixA]
 
 omit [Finite G] [Finite M] [Nontrivial M] in
@@ -5062,7 +5066,14 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_invariant_subgroup
         change g ∈ N ↔ (a : G) • g ∈ N
         exact IsInvariant.invariant (A := G) (G := M) (H := N) (a : G) g }
   apply (Subgroup.map_injective (f := N.subtype) N.subtype_injective)
-  rw [fixedPointSubgroup_map_subtype_eq_inf, fixedPointSubgroup_map_subtype_eq_inf, hfixR x hx]
+  have hfixR' :
+      FixedPoints.subgroup (↥(Subgroup.zpowers (x : G))) M =
+        FixedPoints.subgroup (↥R) M := by
+    simpa [fixedPointSubgroup] using hfixR x hx
+  rw [fixedPoints_subgroup_map_subtype_eq_inf
+      (A := ↥(Subgroup.zpowers (x : G))) (G := M) N,
+    fixedPoints_subgroup_map_subtype_eq_inf (A := ↥R) (G := M) N,
+    hfixR']
 
 omit [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
@@ -5079,8 +5090,9 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_bot_of_quotient
     { invariant := fun a g => by
         change g ∈ N ↔ (a : G) • g ∈ N
         exact hNinv.invariant (a : G) g }
-  rw [fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-    (G := M) (A := ↥A) hsolvM hcopA (π := ∅) (H := N) inferInstance]
+  change FixedPoints.subgroup (↥A) (M ⧸ N) = ⊥
+  rw [fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+    (G := M) (A := ↥A) hsolvM hcopA (H := N) inferInstance]
   simp [hfixA]
 
 omit [Nontrivial M] in
@@ -5115,13 +5127,17 @@ private theorem theorem_3_10_fixedPointSubgroup_eq_of_quotient
   calc
     fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) (M ⧸ N)
         = (fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M).map (QuotientGroup.mk' N) := by
-            rw [fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-              (G := M) (A := ↥(Subgroup.zpowers (x : G))) hsolvM hz_cop (π := ∅) (H := N)
+            change FixedPoints.subgroup (↥(Subgroup.zpowers (x : G))) (M ⧸ N) =
+              (fixedPointSubgroup (↥(Subgroup.zpowers (x : G))) M).map (QuotientGroup.mk' N)
+            rw [fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+              (G := M) (A := ↥(Subgroup.zpowers (x : G))) hsolvM hz_cop (H := N)
               inferInstance]
     _ = (fixedPointSubgroup (↥R) M).map (QuotientGroup.mk' N) := by rw [hfixR x hx]
     _ = fixedPointSubgroup (↥R) (M ⧸ N) := by
-          rw [fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-            (G := M) (A := ↥R) hsolvM hcopR (π := ∅) (H := N) inferInstance]
+          change (fixedPointSubgroup (↥R) M).map (QuotientGroup.mk' N) =
+            FixedPoints.subgroup (↥R) (M ⧸ N)
+          rw [fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+            (G := M) (A := ↥R) hsolvM hcopR (H := N) inferInstance]
 
 omit [Nontrivial M] in
 private theorem theorem_3_10_fixedPointSubgroup_card_factor
@@ -5161,8 +5177,8 @@ private theorem theorem_3_10_fixedPointSubgroup_card_factor
     change Nat.card (fixedPointSubgroup (↥R) (M ⧸ N)) =
       Nat.card ((fixedPointSubgroup (↥R) M).map (QuotientGroup.mk' N))
     exact congrArg (fun H : Subgroup (M ⧸ N) => Nat.card H)
-      (fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-        (G := M) (A := ↥R) hsolvM hcopR (π := ∅) (H := N) inferInstance)
+      (fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+        (G := M) (A := ↥R) hsolvM hcopR (H := N) inferInstance)
   have hcard_mul : Nat.card C = Nat.card (C.map q) * Nat.card (N.subgroupOf C) := by
     calc
       Nat.card C = Nat.card (C ⧸ N.subgroupOf C) * Nat.card (N.subgroupOf C) := by
@@ -7838,8 +7854,9 @@ public theorem theorem_3_10
           let q : M' →* M' ⧸ N := QuotientGroup.mk' N
           have hfixQ_eq : fixedPointSubgroup (↥R') (M' ⧸ N) = C.map q := by
             dsimp [C, q]
-            rw [fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
-              (G := M') (A := ↥R') hsolvM' hcopR' (π := ∅) (H := N) inferInstance]
+            change FixedPoints.subgroup (↥R') (M' ⧸ N) = C.map q
+            rw [fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
+              (G := M') (A := ↥R') hsolvM' hcopR' (H := N) inferInstance]
           rw [hfixQ_eq]
           exact
             isCyclic_of_surjective (f := q.subgroupMap C)
@@ -7932,7 +7949,7 @@ public theorem theorem_3_10
         have hker_eq :
             fixingSubgroupOf (↥A) M' (Set.univ : Set M') =
               (MulDistribMulAction.toMulAut (G := ↥A) (M := M')).ker :=
-          fixingSubgroupOf_univ_eq_ker_toMulAut (A := ↥A) (G := M')
+          fixingSubgroup_univ_eq_ker_toMulAut (A := ↥A) (G := M')
         have hker_normal : (fixingSubgroupOf (↥A) M' (Set.univ : Set M')).Normal := by
           rw [hker_eq]
           exact MonoidHom.normal_ker (MulDistribMulAction.toMulAut (G := ↥A) (M := M'))

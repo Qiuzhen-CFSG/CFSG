@@ -12,6 +12,8 @@ import FeitThompson.PFsection7.PFsection7_8_b
 import FeitThompson.PFsection9.Basic
 import FeitThompson.PFsection9.PFsection9_10
 import FeitThompson.PFsection13.Basic
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 14: (14.2) source-data adapters

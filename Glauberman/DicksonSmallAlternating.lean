@@ -2,7 +2,7 @@ module
 
 public import Mathlib.GroupTheory.SpecificGroups.Alternating
 public import Mathlib.GroupTheory.Sylow
-import FeitThompson.ElementaryAbelian
+import Theory.ElementaryAbelian.VectorSpace
 import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
 /-!

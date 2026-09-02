@@ -1,9 +1,11 @@
 module
 
 public import BenderSuzuki.PFAppendixI.Basic
-public import FeitThompson.BGsection2.EndFieldRep
+public import Theory.Representation.EndFieldRep
 public import Mathlib.RingTheory.SimpleModule.Rank
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
+open Theory.ElementaryAbelian
+
 /-!
 # Peterfalvi Appendix I, Proposition 2
 -/
@@ -858,5 +860,4 @@ public theorem peterfalvi_appendixI_proposition_2_b
         Q0 q0_add u_add s hs S hclosure hconjT)
 end PFAppendixI
 end BenderSuzuki
-
 

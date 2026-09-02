@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.Theorem26
 public import GorensteinWalter.CyclicOrderThreeAutomorphism
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

@@ -21,6 +21,7 @@ import FeitThompson.PCore.PPrimeCore
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # The linear model case of the Fact 1.10(ii) normalizer centralization
 

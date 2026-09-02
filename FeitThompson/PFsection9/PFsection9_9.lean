@@ -2,6 +2,9 @@ module
 
 import FeitThompson.PFsection3.PFsection3_5
 public import FeitThompson.PFsection9.PFsection9_8
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 noncomputable section
 

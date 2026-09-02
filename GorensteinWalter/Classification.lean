@@ -7,9 +7,11 @@ public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Projective
 public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
-import FeitThompson.Burnside.NormalComplement
+import Theory.GroupAction.NormalComplement
 import FeitThompson.BGsection1.PLengthLemmas
 import FeitThompson.BGsection1.theorem_1_18
+open Theory.GroupAction
+
 
 /-!
 # The Gorenstein--Walter classification layer

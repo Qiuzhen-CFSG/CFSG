@@ -4,6 +4,7 @@ public import FeitThompson.BGsection10.lemma_10_8_b
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
+
 open scoped Pointwise
 
 /-!
@@ -28,4 +29,3 @@ public theorem lemma_10_8_c
       HasNormalPComplement p.val (section10MsigmaSubgroup M) ∧
       IsLargestPrimeDivisor p.val (Nat.card (M ⧸ pPrimeCore p.val M)) := by
   exact section10_normalPComplements_of_not_mem_beta hM hpM hpβ
-

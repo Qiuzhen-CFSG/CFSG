@@ -7,6 +7,9 @@ public import FeitThompson.BGsection1.theorem_1_8
 public import FeitThompson.BGsection1.theorem_1_11
 public import FeitThompson.PGroup.OmegaFrattini
 public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace External

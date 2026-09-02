@@ -1,9 +1,11 @@
 module
 
 import Mathlib.Data.Nat.Factorization.Basic
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
 public import BenderSuzuki.PFchapter2.Basic
 public import Mathlib.GroupTheory.Transfer
+open Theory.GroupAction
+
 
 /-!
 # Hall §14.4 basic definitions
@@ -543,4 +545,3 @@ public theorem weaklyClosedIn_normalizer_le_normalizer
   simpa using (Subgroup.normalizer (Q : Set G)).inv_mem hninvQ
 end External
 end BenderSuzuki
-

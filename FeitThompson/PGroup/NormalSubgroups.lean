@@ -3,7 +3,7 @@ module
 public import Mathlib.Logic.Basic
 public import Mathlib.GroupTheory.PGroup
 public import FeitThompson.HallSubgroups.Core
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
 
 open scoped Pointwise
 

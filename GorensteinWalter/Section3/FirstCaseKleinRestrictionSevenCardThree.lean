@@ -11,6 +11,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinConjugateVUIndex
 public import GorensteinWalter.KleinFourCentralizerTransport
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

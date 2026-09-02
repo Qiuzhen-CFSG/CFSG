@@ -10,9 +10,11 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.GroupTheory.QuotientGroup.Basic
 
 public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Conjugacy
+
+open Theory.GroupAction
 
 open scoped IsMulCommutative
 

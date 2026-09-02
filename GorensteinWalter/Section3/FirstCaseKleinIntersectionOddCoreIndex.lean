@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section3.FirstCaseKleinIntersectionOdd
 public import GorensteinWalter.Section3.FirstCaseOddCoreIndexTwo
 import Mathlib.Tactic
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter
@@ -71,4 +72,3 @@ public theorem firstCase_klein_intersection_oddCore_index_two_of_index_six
   simpa [D, O] using hout
 
 end GorensteinWalter
-

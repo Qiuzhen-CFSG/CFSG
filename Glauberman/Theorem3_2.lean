@@ -8,6 +8,8 @@ public import Mathlib.GroupTheory.PGroup
 public import Mathlib.GroupTheory.Index
 public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.GroupTheory.GroupAction.ConjAct
+open Theory.GroupAction
+
 
 /-!
 # Glauberman, "A Characteristic Subgroup of a p-Stable Group" — §3, Theorem 3.2 and companions

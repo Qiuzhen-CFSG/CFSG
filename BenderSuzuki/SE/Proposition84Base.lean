@@ -9,6 +9,8 @@ import BenderSuzuki.SE.Proposition84Coprime
 import BenderSuzuki.SE.Proposition84Sylow
 import BenderSuzuki.SE.Proposition84TorusModels
 import BenderSuzuki.PFchapter1section3.lemma_1
+import Theory.GroupAction.Lemmas
+
 
 /-!
 # Proposition 8.4: the base case `Y₁ = Y`
@@ -380,7 +382,7 @@ public theorem IsStronglyEmbedded.involutionCoreIn_normalizer_eq_centralizerTwoP
     exact hx.2
   have hF1sub : F1.subgroupOf N = involutionCore N := by
     simpa [F1, involutionCoreIn] using
-      subgroupOf_map_subtype_eq (involutionCore N)
+      Theory.GroupAction.subgroupOf_map_subtype_eq (involutionCore N)
   have hNfactor_subtype :
       (Set.univ : Set N) =
         (involutionCore N : Set N) * ((R.subgroupOf N) : Set N) := by

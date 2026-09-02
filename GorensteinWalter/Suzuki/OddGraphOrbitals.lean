@@ -7,6 +7,7 @@ public import GorensteinWalter.InvertedSetCardSmall
 public import GorensteinWalter.TwoCoreNormal
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

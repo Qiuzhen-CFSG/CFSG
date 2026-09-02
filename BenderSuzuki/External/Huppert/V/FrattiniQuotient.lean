@@ -2,6 +2,9 @@ module
 
 public import BenderSuzuki.External.Huppert.IV.ComplementTransfer
 public import BenderSuzuki.External.Huppert.V.Semidirect
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace External

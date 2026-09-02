@@ -1,6 +1,8 @@
 module
 
 public import FeitThompson.BGsection11.theorem_11_5
+open Theory.ElementaryAbelian
+
 
 /-!
 # Corollary 11.6(a)

@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSevenCardThree
 public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSevenTransfer
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

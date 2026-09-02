@@ -5,6 +5,7 @@ public import BenderGlauberman.Section2.Lemma25
 public import BenderGlauberman.Section3.Lemma34
 public import BenderGlauberman.Section4.Theorem43
 
+
 /-!
 # Shared infrastructure for the main Bender--Glauberman theorems
 

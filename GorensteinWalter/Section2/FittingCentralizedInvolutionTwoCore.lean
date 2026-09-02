@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Section2.Lemma27Infra
 public import GorensteinWalter.Section2.Bender1970_16
 
+
 /-!
 # A centralized involution forces a nontrivial two-core
 

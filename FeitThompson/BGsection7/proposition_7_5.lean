@@ -7,6 +7,9 @@ public import FeitThompson.BGsection6.theorem_6_1
 public import FeitThompson.BGsection6.theorem_6_7
 public import FeitThompson.BGsection5.theorem_5_3
 public import FeitThompson.BGsection4.proposition_4_6
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise IsMulCommutative commutatorElement
 

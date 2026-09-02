@@ -3,6 +3,8 @@ module
 public import FeitThompson.PFsection13.PFsection13_11
 import FeitThompson.PFsection8.PFsection8_5_a
 import FeitThompson.PFsection9.PFsection9_7
+open Theory.GroupAction
+
 
 /-!
 # Peterfalvi, Section 13: PFsection13_12

@@ -5,6 +5,10 @@ import FeitThompson.PCore.CentralizerControl
 import FeitThompson.HallSubgroups.Conjugacy
 import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+open Theory.Representation
+
 
 open scoped Pointwise commutatorElement
 
@@ -4047,7 +4051,9 @@ private theorem section15_theorem15_7_P1_pCore_rank_le_two_of_center_eq_kstar
             ⟨hx_msigma, hx_cent_k⟩
           simpa [hcent_eq] using hxcent
         have hP_le_center : P ≤ centerIn P := by
-          simpa [P, Kstar, hCenter_eq] using hP_le_Kstar
+          change section15PCoreIn p MF ≤ centerIn (section15PCoreIn p MF)
+          rw [hCenter_eq]
+          simpa [P, Kstar] using hP_le_Kstar
         have hPcomm : IsMulCommutative P := by
           refine ⟨⟨fun x y => ?_⟩⟩
           have hxcenter : ((x : P) : G) ∈ centerIn P := hP_le_center x.property
@@ -4530,7 +4536,10 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
         have hmul := congrArg (fun t : G => t * (x : G)) hyconj
         simpa [mul_assoc] using hmul.symm
       have hycenterIn : (y : G) ∈ centerIn P := by
-        simpa [P, hCenter_eq, hcent_x] using hycent
+        change (y : G) ∈ centerIn (section15PCoreIn p MF)
+        rw [hCenter_eq]
+        rw [← hcent_x]
+        exact hycent
       have hycenterMap : (y : G) ∈ (Subgroup.center P).map P.subtype := by
         simpa [centerIn_eq_map_center_local] using hycenterIn
       rcases hycenterMap with ⟨z, hz, hz_eq⟩
@@ -4542,7 +4551,11 @@ private theorem section15_theorem15_7_P1_kappa_card_dvd_p_add_one_of_kstar_route
         rw [centerIn_eq_map_center_local]
         exact ⟨y, hy, rfl⟩
       have hycent : (y : G) ∈ elementCentralizerIn (section10Msigma M) (x : G) := by
-        simpa [P, hCenter_eq, hcent_x] using hycenterIn
+        have hyKstar : (y : G) ∈ section14KStar M K := by
+          change (y : G) ∈ centerIn (section15PCoreIn p MF) at hycenterIn
+          rw [hCenter_eq] at hycenterIn
+          exact hycenterIn
+        exact hcent_x.symm ▸ hyKstar
       have hmul : (y : G) * (x : G) = (x : G) * (y : G) :=
         Subgroup.mem_centralizer_singleton_iff.mp hycent.2
       have hyconj : (x : G) * (y : G) * (x : G)⁻¹ = y := by

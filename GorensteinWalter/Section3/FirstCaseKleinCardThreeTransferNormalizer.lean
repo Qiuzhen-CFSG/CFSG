@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinRestrictionSevenTransfer
 public import GorensteinWalter.Section3.FirstCaseKleinNormalizer
 import Mathlib.Tactic
 
+
 noncomputable section
 
 open scoped Pointwise

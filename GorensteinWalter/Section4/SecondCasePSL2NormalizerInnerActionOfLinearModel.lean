@@ -10,6 +10,7 @@ public import GorensteinWalter.OddKernelCentralizerSurjective
 public import GorensteinWalter.NormalCenterlessDihedral
 import Mathlib.Tactic
 
+
 /-!
 # The normalizer inner action in the linear D-group model
 -/

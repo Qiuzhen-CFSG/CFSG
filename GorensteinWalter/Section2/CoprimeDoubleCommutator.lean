@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.Frattini.CoprimeAction
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+
 
 /-!
 # Coprime double-commutator collapse

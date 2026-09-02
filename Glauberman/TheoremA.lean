@@ -3,6 +3,8 @@ module
 public import Glauberman.Theorem4_3
 public import Glauberman.pStability
 public import Glauberman.Definitions
+open Theory.GroupAction
+
 
 /-!
 # Glauberman Theorem A (the ZJ-theorem)

@@ -5,6 +5,7 @@ public import GorensteinWalter.OddPInvertedCentralized
 import FeitThompson.FinalTheorem
 import Mathlib.Tactic
 
+
 /-!
 # A quasisimple group cannot have a two-group odd-core quotient
 

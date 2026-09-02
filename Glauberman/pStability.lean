@@ -5,6 +5,7 @@ import Mathlib.GroupTheory.PGroup
 import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.Commutator.Basic
 
+
 /-!
 # Shared plumbing for the `pStable`/`pStableLocal` conditions
 

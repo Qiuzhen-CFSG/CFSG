@@ -2,6 +2,8 @@ module
 
 public import Mathlib.GroupTheory.Transfer
 public import BenderSuzuki.External.Huppert.IV.Residual
+open Theory.GroupAction
+
 
 /-!
 # Huppert IV.3.3

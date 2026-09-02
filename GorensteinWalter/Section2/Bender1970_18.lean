@@ -6,6 +6,8 @@ public import GorensteinWalter.Section2.ThompsonPQ
 import FeitThompson.ChiefFactors.Core
 import Mathlib.SetTheory.Cardinal.NatCard
 public import Mathlib.GroupTheory.IsPerfect
+open Theory.GroupAction
+
 
 /-!
 # Bender (1970) Statements 1.8 and the shared F*-centralizer helpers

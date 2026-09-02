@@ -7,6 +7,7 @@ public import FeitThompson.BGsection1.PLengthLemmas
 import Mathlib.GroupTheory.Perm.Cycle.Type
 import Mathlib.Tactic.IntervalCases
 
+
 /-!
 # Proof of Bender--Glauberman Theorem B
 

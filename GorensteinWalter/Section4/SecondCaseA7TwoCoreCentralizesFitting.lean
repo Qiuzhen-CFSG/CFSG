@@ -5,6 +5,8 @@ public import FeitThompson.GroupAction.CentralizerCondition
 public import FeitThompson.SubgroupConj
 public import FeitThompson.ChiefFactors.Proposition12
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # The equation-(7) two-core centralizes the Fitting subgroup

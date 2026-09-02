@@ -27,11 +27,13 @@ import Mathlib.Order.SetNotation
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.TypeStar
 
-public import FeitThompson.GroupAction.Invariant
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Invariant
+public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.HallSubgroups.Complements
 public import FeitThompson.HallSubgroups.Existence
+
+open Theory.GroupAction
 
 
 /-
@@ -64,7 +66,7 @@ public theorem inf_normalizer_le_of_isHallSubgroup_of_isInvariant
   let K : Subgroup N := H₂.subgroupOf N
   let _ : IsInvariant A G H₁ := hInv₁
   have hN_inv : IsInvariant A G N := by
-    simpa [N] using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
+    simpa [N] using isInvariant_normalizer (A := A) (G := G) H₁
   let _ : IsInvariant A G N := hN_inv
   let _ : Group.IsSolvable G := hsolv
   have hsolvN : Group.IsSolvable N := by infer_instance
@@ -850,7 +852,7 @@ public theorem exists_fixedPoint_conj_of_isHallSubgroup_of_isInvariant
               (Subgroup.card_subgroup_dvd_card (s := Subgroup.normalizer H₁) (α := G)) hcoprime
           let _ : IsInvariant A G H₁ := hInv₁
           have hInvN : IsInvariant A G (Subgroup.normalizer H₁) := by
-            simpa using isInvariant_normalizer_of_isInvariant (A := A) (G := G) H₁
+            simpa using isInvariant_normalizer (A := A) (G := G) H₁
           let _ : IsInvariant A G (Subgroup.normalizer (H₁ : Set G)) := hInvN
           have hcocycle' :
               ∀ a b : A, φ (a * b) = φ a * (a • φ b) := by

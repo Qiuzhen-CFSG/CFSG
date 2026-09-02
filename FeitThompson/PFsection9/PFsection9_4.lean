@@ -4,6 +4,9 @@ import FeitThompson.PFsection9.PFsection9_3
 import FeitThompson.PCore.PCore
 import FeitThompson.PCore.PPrimeCore
 public import FeitThompson.PFsection9.Basic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 noncomputable section
 

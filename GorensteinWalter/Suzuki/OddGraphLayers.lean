@@ -9,6 +9,7 @@ public import GorensteinWalter.Section3.FirstCaseCountConstructor
 public import GorensteinWalter.Suzuki.OddGraphNeighbors
 import Mathlib.Tactic
 
+
 /-!
 # Odd-graph coset layers
 

@@ -8,14 +8,14 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.Gorenstein.Chapter8_2
 public import FeitThompson.ChiefFactors.Core
 public import FeitThompson.Commutator.Core
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.Fitting.Core
 public import FeitThompson.Frattini.CoprimeAction
 public import FeitThompson.Frattini.Core
-public import FeitThompson.GroupAction.Defs
+public import Theory.GroupAction.Defs
 public import FeitThompson.GroupAction.CoprimeHall
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Quotient
 public import FeitThompson.HallSubgroups.Conjugacy
 public import FeitThompson.HallSubgroups.Core
 import FeitThompson.SubgroupConj
@@ -31,6 +31,11 @@ public import Mathlib.GroupTheory.Commutator.Basic
 public import Mathlib.LinearAlgebra.GeneralLinearGroup.AlgEquiv
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Mathlib.LinearAlgebra.Eigenspace.Semisimple
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped MatrixGroups Pointwise TensorProduct commutatorElement IsMulCommutative
 

@@ -14,6 +14,7 @@ public import BenderGlauberman.ClassFunction
 import FeitThompson.SubgroupConjAction
 public import GorensteinWalter.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Lemma 3.4
 

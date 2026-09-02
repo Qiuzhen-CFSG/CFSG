@@ -8,6 +8,9 @@ public import Mathlib.GroupTheory.SpecificGroups.ZGroup
 public import FeitThompson.FinalTheorem
 public import FeitThompson.Fitting.Centralizer
 public import Mathlib.Algebra.Group.Subgroup.Order
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 attribute [local instance] IsMulCommutative.instCommGroup
 
@@ -1131,8 +1134,9 @@ private theorem peterfalvi_appendixI_proposition_1_pGroup_fixedPointFree_crossPr
             exact top_ne_bot (hFspan.symm.trans hbot)
           have hfaithR :
               actionCentralizerIn (A := R) (G := E) (⊤ : Subgroup R) = ⊥ := by
-            rw [actionCentralizerIn, top_inf_eq,
-              fixingSubgroupOf_univ_eq_ker_toMulAut, MonoidHom.ker_eq_bot_iff]
+            rw [actionCentralizerIn, top_inf_eq]
+            change fixingSubgroup (M := ↥R) (α := E) Set.univ = ⊥
+            rw [fixingSubgroup_univ_eq_ker_toMulAut, MonoidHom.ker_eq_bot_iff]
             intro a b hab
             apply FaithfulSMul.eq_of_smul_eq_smul (α := E)
             intro e
@@ -1568,10 +1572,6 @@ public theorem peterfalvi_appendixI_proposition_1
 
 end PFAppendixI
 end BenderSuzuki
-
-
-
-
 
 
 

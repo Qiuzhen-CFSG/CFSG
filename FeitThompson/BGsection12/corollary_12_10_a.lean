@@ -3,6 +3,9 @@ module
 public import Mathlib.Algebra.GCDMonoid.FinsetLemmas
 public import FeitThompson.BGsection12.corollary_12_9_b
 public import FeitThompson.BGsection3.Remaining
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

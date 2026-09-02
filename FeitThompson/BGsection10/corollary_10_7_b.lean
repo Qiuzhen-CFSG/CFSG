@@ -4,6 +4,11 @@ public import FeitThompson.BGsection10.corollary_10_7_a
 public import FeitThompson.BGsection4.theorem_4_16
 import Mathlib.GroupTheory.Schreier
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
+open Theory.Representation
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise commutatorElement
 

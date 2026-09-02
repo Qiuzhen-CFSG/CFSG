@@ -7,6 +7,9 @@ public import BenderSuzuki.External.Higman.lemma_12
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.GroupAction.CentralizerCondition
 import Mathlib.GroupTheory.Complement
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Higman's classification theorem: Type-B scalar action coordinates

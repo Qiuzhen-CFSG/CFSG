@@ -7,6 +7,8 @@ import GorensteinWalter.OrderThreeNormalizer
 
 import all GorensteinWalter.BrauerSuzukiWallStructure
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # The structural conclusion in Bender's second order-four case
@@ -312,4 +314,3 @@ public theorem
     hk V X hV hXcard hDcent u hu hNormX huinv hGcard
 
 end GorensteinWalter
-

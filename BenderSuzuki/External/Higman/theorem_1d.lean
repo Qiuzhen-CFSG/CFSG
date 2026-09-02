@@ -3,7 +3,9 @@ module
 public import BenderSuzuki.External.Higman.theorem_1b
 import BenderSuzuki.External.Higman.lemma_12
 import BenderSuzuki.External.Higman.InvariantComplement
-import FeitThompson.GroupAction.Quotient
+import Theory.GroupAction.Quotient
+open Theory.GroupAction
+
 
 /-!
 # Higman's classification theorem for Suzuki 2-groups: extracted branch

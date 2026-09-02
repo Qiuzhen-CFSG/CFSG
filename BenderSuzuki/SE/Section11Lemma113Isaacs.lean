@@ -4,6 +4,7 @@ public import BenderSuzuki.SE.Section11Lemma113Callbacks
 import Theory.Character.Divisibility
 import FeitThompson.PFsection1.PFsection1_6
 import Theory.Character.Orthogonality
+import Theory.GroupAction.Lemmas
 
 /-!
 # Section 11, Lemma 11.3: internal Isaacs 3.8--3.9 endpoint
@@ -449,7 +450,7 @@ public theorem is1_38_39
       simp
     simpa only [H, hmapTop] using hmaplt
   have hHnormal : (H.subgroupOf W).Normal := by
-    simpa [H, K, subgroupOf_map_subtype_eq] using
+    simpa [H, K, Theory.GroupAction.subgroupOf_map_subtype_eq] using
       MonoidHom.normal_ker rho
   refine ⟨⟨H, hHlt, hHnormal, ?_⟩⟩
   intro z hz w hw

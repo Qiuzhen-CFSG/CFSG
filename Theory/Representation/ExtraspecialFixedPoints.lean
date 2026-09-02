@@ -13,19 +13,20 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
+public import Mathlib.GroupTheory.Nilpotent
+public import Theory.ElementaryAbelian.Extraspecial
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
 public import Theory.Representation.CyclicQuotientExtension
 import Theory.Representation.Unbundled
 public import Theory.Representation.SolvableDimension
-public import FeitThompson.LinearAlgebra.PrimitiveRootEigenspaces
+public import Theory.Representation.PrimitiveRootEigenspaces
+public import Theory.GroupAction.Lemmas
+public import Mathlib.GroupTheory.SemidirectProduct
 
 open _root_.Representation
 open Theory.Representation
+open Theory.ElementaryAbelian
+open Theory.GroupAction
 open MonoidAlgebra
 open Module
 open Module.End
@@ -36,6 +37,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped commutatorElement
+namespace Theory.Representation
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.5
@@ -2917,7 +2919,7 @@ theorem theorem_2_5_b_core
             ↥(intertwiningSubmodule g.toLinearMap (ε ^ k • g.toLinearMap)) := by
       simpa only [hIntertwine k] using
         congrArg
-          (fun N : Submodule F' (End F' ↥M.toSubmodule) => Module.finrank F' ↥N)
+          (fun N : Submodule F' (_root_.Module.End F' ↥M.toSubmodule) => Module.finrank F' ↥N)
           (hIntertwine k)
     calc
       Module.finrank F' ↥(intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap))
@@ -2996,3 +2998,5 @@ public theorem theorem_2_5_b {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
     theorem_2_5_b_core
       (hp := hp) (hH := hH) (hh := hh) (φ := φ) hcentralizer
       (hc := hc) (hhne := hhne) (ρ := ρ) hfaithful hcharP
+
+end Theory.Representation

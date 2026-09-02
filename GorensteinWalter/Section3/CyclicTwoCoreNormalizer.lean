@@ -9,6 +9,7 @@ public import GorensteinWalter.Section3.CyclicTwoCorePrime
 public import GorensteinWalter.Section3.CyclicTwoCoreSylow
 public import GorensteinWalter.Section3.KleinFourTransitive
 
+
 noncomputable section
 
 open scoped Pointwise

@@ -2,6 +2,7 @@ module
 
 public import Stellmacher.SectionsOneToFourDefs
 
+
 open scoped BigOperators Pointwise
 
 namespace Stellmacher.SectionThree

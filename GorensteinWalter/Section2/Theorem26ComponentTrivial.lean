@@ -8,6 +8,7 @@ public import GorensteinWalter.Section2.Theorem26ComponentTransport
 public import GorensteinWalter.Section2.DihedralCentralizerInvolutionConjugator
 import Mathlib.Tactic
 
+
 open scoped Pointwise
 open scoped commutatorElement
 open scoped IsMulCommutative

@@ -7,24 +7,28 @@ public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.Commutator.FocalSubgroup
 public import FeitThompson.GroupAction.CentralizerCondition
 public import FeitThompson.GroupAction.CoprimeHall
-public import FeitThompson.GroupAction.FixedPointTransport
+public import Theory.GroupAction.FixedPointTransport
 public import FeitThompson.GroupAction.NoncyclicAbelianPGroup
 public import FeitThompson.GroupAction.SeriesPiGroup
 public import FeitThompson.PCore.CentralizerControl
-public import FeitThompson.Burnside.NormalComplement
+public import Theory.GroupAction.NormalComplement
 public import FeitThompson.Commutator.ActionTriviality
 public import FeitThompson.Frattini.CoprimeAction
 public import FeitThompson.Commutator.CyclicSylow
 public import FeitThompson.Commutator.Core
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 public import FeitThompson.Fitting.Centralizer
 public import FeitThompson.Fitting.Core
 public import FeitThompson.Fitting.Faithful
 public import FeitThompson.PGroup.NormalSubgroups
 public import FeitThompson.PGroup.OmegaFrattini
 public import Mathlib.GroupTheory.SpecificGroups.ZGroup
+
 public import FeitThompson.HallSubgroups.Core
 public import FeitThompson.ChiefFactors.BaerCore
+
+open Theory.GroupAction
+open Theory.ElementaryAbelian
 
 open scoped Pointwise
 
@@ -98,21 +102,9 @@ lemma IsPiGroup.quotient {π : Set Nat.Primes} {G : Type*} [Group G] [Finite G]
   IsPiGroup.of_surjective (π := π) (G := G) (H := G ⧸ H) hG
     (QuotientGroup.mk' H) (QuotientGroup.mk'_surjective (N := H))
 
-lemma fixingSubgroupOf_univ_eq_ker_toMulAut {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] :
-    fixingSubgroupOf A G (Set.univ : Set G) = (MulDistribMulAction.toMulAut A G).ker := by
-  ext a
-  rw [MonoidHom.mem_ker, fixingSubgroupOf, mem_fixingSubgroup_iff]
-  constructor
-  · intro ha
-    ext g
-    exact ha g (by simp)
-  · intro ha g _
-    exact DFunLike.congr_fun ha g
-
 theorem centerIn_eq_map_center_local {G : Type*} [Group G] (H : Subgroup G) :
-    centerIn H = (Subgroup.center H).map H.subtype := by
-  simp [centerIn]
+    Theory.GroupAction.centerIn H = (Subgroup.center H).map H.subtype := by
+  simp [Theory.GroupAction.centerIn]
   ext x
   constructor
   · rintro ⟨hxH, hx_centralizer⟩

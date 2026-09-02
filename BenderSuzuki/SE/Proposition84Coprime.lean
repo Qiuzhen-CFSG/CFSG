@@ -4,6 +4,8 @@ public import BenderSuzuki.SE.Proposition84Residual
 import FeitThompson.FinalTheorem
 import FeitThompson.GroupAction.CoprimeHall
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+
 
 /-!
 # Coprime-action infrastructure for Proposition 8.4

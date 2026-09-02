@@ -2,6 +2,9 @@ module
 
 public import FeitThompson.PFsection13.PFsection13_15
 import FeitThompson.PFsection9.PFsection9_1
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 13: PFsection13_16

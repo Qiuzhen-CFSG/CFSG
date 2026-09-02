@@ -8,6 +8,7 @@ public import BenderGlauberman.Defs
 import BenderGlauberman.FinalTheorem
 import all BenderGlauberman.Lemma19
 
+
 noncomputable section
 
 open scoped commutatorElement

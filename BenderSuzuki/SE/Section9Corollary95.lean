@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section9Lemma92
 public import BenderSuzuki.SE.Section9Lemma94
+open Theory.GroupAction
+
 
 /-!
 # Section 9, Corollary 9.5

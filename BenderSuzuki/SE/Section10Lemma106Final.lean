@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section10Lemma106Hall
 import FeitThompson.FinalTheorem
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Lemma 10.6: complement assembly

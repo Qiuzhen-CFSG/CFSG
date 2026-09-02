@@ -9,6 +9,7 @@ public import BenderGlauberman.Section2.Basic
 import all BenderGlauberman.Section2.Basic
 public import BenderGlauberman.Section2.Coherence
 
+
 /-!
 # Bender--Glauberman: Lemma 2.5 — proof core
 

@@ -5,6 +5,9 @@ public import FeitThompson.BGsection4.lemma_4_1
 public import FeitThompson.BGsection4.Defs
 public import FeitThompson.BGsection3.theorem_3_4
 public import FeitThompson.BGsection4.proposition_4_3_b
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-! # Infrastructure for BG Section 4, Lemma 4.5 -/
 

@@ -3,6 +3,8 @@ module
 
 public import BenderSuzuki.PFAppendixII.proposition_1
 public import BenderSuzuki.SE.Compat
+open Theory.ElementaryAbelian
+
 
 /-!
 # Regular normal subgroups in doubly transitive actions

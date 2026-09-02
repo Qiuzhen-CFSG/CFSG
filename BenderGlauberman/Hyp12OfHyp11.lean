@@ -4,6 +4,7 @@ public import BenderGlauberman.Defs
 public import BenderGlauberman.DihedralStructure
 public import BenderGlauberman.Section3.Basic
 
+
 /-!
 # Constructor for Hypothesis 1.2 from Hypothesis 1.1
 

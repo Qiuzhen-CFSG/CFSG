@@ -2,6 +2,9 @@ module
 
 public import FeitThompson.BGsection11.corollary_11_4
 import Mathlib.GroupTheory.Schreier
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Theorem 11.5

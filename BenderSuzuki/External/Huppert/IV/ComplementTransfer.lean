@@ -5,11 +5,13 @@ public import FeitThompson.BGsection1.Basic
 public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.BGsection6.Defs
 public import FeitThompson.BGsection8.theorem_8_1
-public import FeitThompson.GroupAction.Lemmas
-public import FeitThompson.GroupAction.Quotient
+public import Theory.GroupAction.Lemmas
+public import Theory.GroupAction.Quotient
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.NoncommCoprod
+open Theory.GroupAction
+
 
 /-!
 # Common complement-transfer tools for Huppert IV
@@ -761,7 +763,7 @@ public theorem hkt_centralizer_center_sylow_hasNormalPComplement_quotient_pPrime
       Subgroup.centralizer
           (centerIn (G := Q ⧸ M) (Sbar : Subgroup (Q ⧸ M)) : Set (Q ⧸ M)) =
         (Subgroup.centralizer (centerIn (G := Q) (S : Subgroup Q) : Set Q)).map π := by
-    simpa [π, M, hcenter_map] using
+    simpa only [π, M, hcenter_map] using
       (centralizer_map_quotient_eq_map_centralizer
         (G := Q) (p := p) (T := centerIn (G := Q) (S : Subgroup Q)) (M := M)
         (inferInstance : M.Normal)

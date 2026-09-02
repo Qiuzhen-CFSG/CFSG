@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.Section2.Bender1970API
 public import GorensteinWalter.Classification
 import Mathlib.GroupTheory.IsPerfect
+open Theory.GroupAction
+
 
 /-!
 # The control-core bridge for Lemma 2.3

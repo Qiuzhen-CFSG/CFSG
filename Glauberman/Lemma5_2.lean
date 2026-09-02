@@ -6,10 +6,12 @@ public import FeitThompson.PCore.PCore
 public import FeitThompson.PCore.PPrimeCore
 public import FeitThompson.BGsection1.PLengthLemmas
 public import FeitThompson.BGsection1.theorem_1_18
-public import FeitThompson.Burnside.NormalComplement
+public import Theory.GroupAction.NormalComplement
 public import FeitThompson.BGsection10.theorem_10_1_b
 import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.Index
+open Theory.GroupAction
+
 
 open scoped Pointwise
 

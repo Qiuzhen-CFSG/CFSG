@@ -5,6 +5,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinConjugation
 public import GorensteinWalter.Section2.FStarCommute
 import Mathlib.Tactic
 
+
 /-!
 # Uniformity for all involutions outside the Klein four two-core
 -/

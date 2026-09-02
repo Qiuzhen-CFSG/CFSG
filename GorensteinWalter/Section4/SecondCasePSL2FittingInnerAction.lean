@@ -14,6 +14,7 @@ import GorensteinWalter.Section2.FStarCommute
 import GorensteinWalter.FiniteFieldFixedSubfieldSquare
 import Mathlib.Tactic
 
+
 noncomputable section
 namespace GorensteinWalter
 open Matrix

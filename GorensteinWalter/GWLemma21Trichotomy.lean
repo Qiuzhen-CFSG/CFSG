@@ -4,6 +4,8 @@ public import GorensteinWalter.GWLemma21
 public import GorensteinWalter.CPrime
 public import Glauberman.Definitions
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # Gorenstein--Walter Part I, Lemma 2.1: the three-case trichotomy

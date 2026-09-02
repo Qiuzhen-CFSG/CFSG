@@ -23,7 +23,7 @@ import GorensteinWalter.LinearThreeNormalExtension
 import GorensteinWalter.ASevenNormalExtension
 public import GorensteinWalter.PGroupExtension
 public import Glauberman.ZJTheorem
-import FeitThompson.Burnside.NormalComplement
+import Theory.GroupAction.NormalComplement
 import FeitThompson.PCore.PPrimeCore
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.GroupAction.ConjAct
@@ -33,6 +33,8 @@ import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import Mathlib.GroupTheory.Subgroup.Center
+open Theory.GroupAction
+
 
 /-!
 # Gorenstein--Walter (1965): statements needed for Proposition 9 and Lemmas 2.1/2.2

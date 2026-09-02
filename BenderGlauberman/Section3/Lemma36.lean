@@ -15,6 +15,7 @@ import Mathlib.Algebra.DirectSum.LinearMap
 import Mathlib.LinearAlgebra.Trace
 public import GorensteinWalter.Defs
 
+
 /-!
 # Bender--Glauberman: Section 3 — Lemma 3.6
 

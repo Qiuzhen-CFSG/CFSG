@@ -8,6 +8,7 @@ import BenderSuzuki.PFchapter1section2.proposition_1_b
 import BenderSuzuki.PFchapter1section2.corollary
 import BenderSuzuki.PFchapter2.claim_6
 
+
 namespace BenderSuzuki
 namespace PFchapter2
 

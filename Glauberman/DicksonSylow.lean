@@ -1,7 +1,7 @@
 module
 
 public import BenderSuzuki.MatrixGroups.PSL2
-public import FeitThompson.ElementaryAbelian
+public import Theory.ElementaryAbelian.VectorSpace
 import Glauberman.DicksonUnipotent
 import Mathlib.Algebra.CharP.CharAndCard
 import Mathlib.Algebra.BigOperators.Ring.Nat

@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.BrauerSuzukiWallCardH
 import GorensteinWalter.PGroupExtension
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # The Klein-four normalizer in the order-four Brauer--Suzuki--Wall branch

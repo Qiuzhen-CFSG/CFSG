@@ -4,6 +4,8 @@ public import GorensteinWalter.BrauerSuzukiWallCardH
 import GorensteinWalter.BrauerSuzukiWallHall
 import GorensteinWalter.DihedralGenerators
 import Mathlib.Tactic
+open Theory.GroupAction
+
 
 /-!
 # The Sylow structure in the order-four Brauer--Suzuki--Wall branch

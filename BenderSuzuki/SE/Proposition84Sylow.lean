@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Interfaces
 import FeitThompson.BGsection5.theorem_5_3
+open Theory.GroupAction
+
 
 /-!
 # A normal Sylow intersection lemma for Proposition 8.4

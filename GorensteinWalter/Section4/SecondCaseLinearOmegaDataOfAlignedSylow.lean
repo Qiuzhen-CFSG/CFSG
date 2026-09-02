@@ -1,5 +1,7 @@
 module
 
+import Theory.ElementaryAbelian.Join
+
 public import GorensteinWalter.Section4.SecondCaseLinearEquationEightDefs
 public import GorensteinWalter.Section4.SecondCaseLinearComponentCommutator
 public import GorensteinWalter.Section4.SecondCasePSL2AlignedSylowDecomposition
@@ -15,8 +17,10 @@ import GorensteinWalter.Section2.PSubgroupInfNormalNilpotentLePCore
 import GorensteinWalter.FixedCentralizerFromNilpotentNormalizer
 import FeitThompson.BGsection1.CriticalSubgroupLemmas
 import FeitThompson.BGsection4.lemma_4_5_c
-import FeitThompson.ElementaryAbelian
+import Theory.ElementaryAbelian.VectorSpace
 import Mathlib.Tactic
+open Theory.ElementaryAbelian
+
 
 /-!
 # The aligned linear omega-data producer

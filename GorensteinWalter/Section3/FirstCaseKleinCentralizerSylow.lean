@@ -6,6 +6,7 @@ import GorensteinWalter.CentralInvolutionMemLargeDihedralSubgroup
 import GorensteinWalter.DihedralCore
 import GorensteinWalter.Classification
 import Mathlib.Tactic
+
 open scoped Pointwise
 namespace GorensteinWalter
 noncomputable section

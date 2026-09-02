@@ -8,6 +8,7 @@ import GorensteinWalter.InvolutionNormalizerInfConjugate
 import GorensteinWalter.TwoCoreCentralizerEqualsHhat
 import GorensteinWalter.TwoCoreNormal
 
+
 /-! # The Klein four is Sylow in the even coset intersection -/
 
 noncomputable section

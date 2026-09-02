@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.PCore.Defs
 
+
 open scoped commutatorElement
 
 variable (p : ℕ) (G : Type*) [Group G]

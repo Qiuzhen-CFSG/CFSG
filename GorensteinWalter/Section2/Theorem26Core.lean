@@ -32,6 +32,10 @@ import GorensteinWalter.LinearThreeEquiv
 import GorensteinWalter.LinearRingEquiv
 import FeitThompson.FinalTheorem
 import Mathlib.LinearAlgebra.Projectivization.PSL.PSL2
+open Theory.Representation
+
+open Theory.GroupAction
+
 
 /-!
 # Theorem 2.6 (Bender, "Finite Groups with Dihedral Sylow 2-Subgroups")

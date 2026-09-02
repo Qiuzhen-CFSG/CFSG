@@ -5,6 +5,7 @@ public import Mathlib.Data.Finite.Defs
 
 public import GorensteinWalter.Section3.CyclicTwoCoreNormalizer
 
+
 noncomputable section
 
 open scoped Pointwise

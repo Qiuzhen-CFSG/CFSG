@@ -4,6 +4,8 @@ import FeitThompson.BGsection3.theorem_3_4
 import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection8.PFsection8_5_b
 public import FeitThompson.PFsection9.PFsection9_1
+open Theory.GroupAction
+
 
 noncomputable section
 

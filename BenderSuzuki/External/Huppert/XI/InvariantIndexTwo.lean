@@ -5,6 +5,8 @@ public import BenderSuzuki.External.Huppert.IV.Residual
 import BenderSuzuki.External.Huppert.V.Semidirect
 import Mathlib.GroupTheory.IndexNormal
 import Mathlib.LinearAlgebra.Dual.Lemmas
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki.External
 

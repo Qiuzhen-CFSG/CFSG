@@ -115,7 +115,7 @@ $B = C_{S_0}(\Omega_1(ZJ(S_0)))$. Suppose that
   containing $S_0$.
 \end{enumerate}
 Then $H$ is type $L_3(2)$, $Sp_4(2)$, $G_2(2)'$, ${}^2F_4(2)'$, $M_{12}$,
-$\Omega_6^+(2)$, $\Omega_6^-(3)$, or $\Omega_6^+(3)$.
+$\Omega_6^+(2)$, $\Omega_6^-(3)$, or $\Omega_8^+(3)$.
 \end{mainthm}
 
 \begin{mainthm}\label{thm:2}
@@ -126,7 +126,7 @@ Then one of the following holds:
 \item[(b)] $S_0$ is a dihedral or semidihedral group.
 \item[(c)] $|S_0| = 2^5$ and there exists a maximal 2-local subgroup isomorphic to $C_2 \times S_4$ in $H$.
 \item[(d)] $H$ contains a strongly embedded subgroup.
-\item[(e)] There exists a 2-local subgroup $U$ of $H$ such that $O_2(U) \ne 1$.
+\item[(e)] There exists a 2-local subgroup $U$ of $H$ such that $O_{2'}(U) \ne 1$.
 \end{enumerate}
 \end{mainthm}
 
@@ -136,7 +136,7 @@ and $S_0 \le P_1 \cap P_2$, and the structure of $P_1$ and $P_2$ is like that
 of a pair of maximal 2-local subgroups of $X_0$, where $X \le X_0 \le
 \mathrm{Aut}(X)$. The precise definition for ``$H$ is of type $X$'' is given in
 Section 8 [for $X = L_3(2)$, $Sp_4(2)$, $G_2(2)'$, $\Omega_6^-(3)$, and
-$\Omega_6^+(3)$], Section 9 [for $X = \Omega_6^+(2)$], and Section 10 [for
+$\Omega_8^+(3)$], Section 9 [for $X = \Omega_6^+(2)$], and Section 10 [for
 $X = M_{12}$ and ${}^2F_4(2)'$].
 
 \noindent Some remarks about the proof of Theorem~\ref{thm:1}. The amalgam method
@@ -246,7 +246,7 @@ finite $GF(2)$ $G$-module such that $C_G(V) = O_2(G) = 1$.
 \noindent We will use the following
 
 \medskip
-\noindent\textit{Notation.} \quad $S \in \mathrm{Syl}_2(G)$, $W = O_2(G)$, and
+\noindent\textit{Notation.} \quad $S \in \mathrm{Syl}_2(G)$, $W = O_{2'}(G)$, and
 $m(Y) = |V|(|C_V(Y)||Y|)^{-1}$ for $Y \le S$.
 
 \smallskip
@@ -1384,7 +1384,7 @@ $G_d$ for its stabilizer, $d(l,d')$ for graph distance,
 $D(d)=\{l\mid d(l,d)=1\}$, $Q_d=O_2(G_d)$, and
 \[
 Z_d=\left\langle\Omega_1(Z(T))\mid T\in\mathrm{Syl}_2(G_d)\right\rangle,
-\qquad V_d=\langle Z_l\mid l\in D(d)\rangle.
+\qquad V_d=\langle Z_l\mid l\in D(d)\rangle,\qquad E_d=O^2(G_d).
 \]
 
 \begin{stm}\label{st:7.1}
@@ -1650,16 +1650,25 @@ $Q=O_2(L)$, and $T\in\mathrm{Syl}_3(G_a)$. Then
 $[D,L]=Z_a$, $Q/D$ and $D$ are elementary abelian, and one of the
 following alternatives holds:
 \begin{enumerate}
-\item[(a)] $2^5\le |S|\le2^6$, $G_d/Q_d\cong SL_2(2)$ for every $d$,
-  $Q=Q_a$, $O_2(E_a)\cong C_4\times C_4$, and
-  $Q_{a+1}\cong C_4\rtimes Q_8$ or $Q_8\rtimes Q_8$;
+\item[(a)] $2^5\le |S|\le2^6$, $G_d/Q_d\cong SL_2(2)$ for every $d$, and
+  \begin{enumerate}
+  \item[(a$_1$)] $Q=Q_a$, $O_2(E_a)\cong C_4\times C_4$, and
+    $Q=O_2(E_a)\langle t\rangle$, where $t=1$ or $t$ inverts
+    $O_2(E_a)$;
+  \item[(a$_2$)] $Q_{a+1}\cong C_4\circ Q_8$ or $Q_8\circ Q_8$, and
+    $Q_{a+1}\cap E_{a+1}\cong Q_8$.
+  \end{enumerate}
 \item[(b)] $2^8\le |S|\le2^{10}$,
   $G_a/Q_a\cong SL_2(2)$ and
-  $G_{a+1}/Q_{a+1}\cong SL_2(2)\times C_2$, with
-  $Q/O_2(E_a)$ of order at most $4$, $O_2(E_a)$ special of order $2^6$,
-  $V_{a+1}\cong Q_8\rtimes Q_8$, $\Phi(Q_{a+1})=Z_{a+1}$, and an
-  elementary abelian normal subgroup $W$ of order $2^4$ in $L$ whose
-  normalizer is nonsolvable;
+  $G_{a+1}/Q_{a+1}\cong SL_2(2)\rtimes C_2$, with
+  \begin{enumerate}
+  \item[(b$_1$)] $|Q/O_2(E_a)|\le4$, $O_2(E_a)$ special of order $2^6$,
+    and $C_{O_2(E_a)}(T)=1$;
+  \item[(b$_2$)] $V_{a+1}\cong Q_8\circ Q_8$ and
+    $\Phi(Q_{a+1})=Z_{a+1}$;
+  \item[(b$_3$)] there is an elementary abelian normal subgroup $W$ of
+    order $2^4$ in $L$ such that $N_G(W)$ is nonsolvable.
+  \end{enumerate}
 \item[(c)] $2^{14}\le |S|\le2^{15}$,
   $G_a/Q_a\cong SL_2(2)$, and $E_{a+1}/O_2(E_{a+1})$ is elementary
   abelian of order $3^4$, with
@@ -1687,12 +1696,12 @@ fixed-point-free action of the order-$3$ subgroups and the final
 normalizer statement follow from (1.7) and (7.6).
 \end{proof}
 
-\noindent A finite group is said to be of type $G_2(2)'$, $V_6^-(3)$, or
-$V_8^+(3)$ if it contains a pair $G_a,G_{a+1}$ with Sylow intersection,
+\noindent A finite group is said to be of type $G_2(2)'$, $\Omega_6^-(3)$, or
+$\Omega_8^+(3)$ if it contains a pair $G_a,G_{a+1}$ with Sylow intersection,
 trivial 2-core of their join, and satisfying respectively alternatives
 (a), (b), or (c) of (8.6). The groups $G_2(2)$,
-$\operatorname{Aut}(V_6^-(3))$, and
-$\operatorname{Aut}(V_8^+(3))$ provide examples.
+$\operatorname{Aut}(\Omega_6^-(3))$, and
+$\operatorname{Aut}(\Omega_8^+(3))$ provide examples.
 
 \sect{9}
 
@@ -1729,10 +1738,10 @@ $|S|=2^7$, and $V_{a'}^*\cong Q_8\rtimes Q_8$. The order-$3$ elements
 in $E_{a'}$ yield the subgroup $U$ and the $L_3(2)$ normalizer.
 \end{proof}
 
-\noindent A finite group is of type $V_6^+(2)$ if it contains two
+\noindent A finite group is of type $\Omega_6^+(2)$ if it contains two
 subgroups $G_a,G_{a'}$ with Sylow intersection, trivial 2-core of their
 join, and satisfying (9.1)(a)--(c). The group
-$V_6^+(2)\cong S_8\cong\operatorname{Aut}(L_4(2))$ is an example.
+$\Omega_6^+(2)\cong S_8\cong\operatorname{Aut}(L_4(2))$ is an example.
 
 \begin{stm}\label{st:9.2}
 Let $d\in(a')^G$ and $l,m\in D(d)$. If
@@ -1876,160 +1885,6 @@ $|V_{a'-1}|=2^5$, and an index-$2$ subgroup of $V_{a'-1}$,
 contradicting (9.7). Thus $b\le3$.
 \end{proof}
 
-\sect{9}
-
-\noindent In this section we assume Hypothesis 2, $G=\langle P_1,P_2\rangle$,
-and the notation of Section 7, together with $[Z_a,Z_{a'}]=1$. Thus
-$Z_{a'}=\Omega_1(Z(T))\le Z(G_{a'})$ and $Z(G_a)=1$.
-
-\begin{stm}\label{st:9.1}
-Suppose $b=1$ and put
-$V_{a'}^*=\langle(Z_a\cap Q_{a'})^{G_{a'}}\rangle$. Then
-\begin{enumerate}
-\item[(a)] $G_a/Q_a\cong SL_2(2)\times C_2$ and
-  $G_{a'}/Q_{a'}\cong SL_2(2)$;
-\item[(b)] $|S|=2^7$, $Q_a=Z_a$, and $V_{a'}^*\cong Q_8\rtimes Q_8$;
-\item[(c)] there is $U\le V_{a'}^*$ of order $2^3$ with
-  $N_H(U)/U\cong L_3(2)$.
-\end{enumerate}
-\end{stm}
-
-\begin{proof}
-Here $a'=a+1$ and $Z_a\le Q_{a'}$. Applying (7.8) to $A=Z_a$ and
-then (1.2), (1.6), and (1.7), one obtains $|Z_a|=4$,
-$|S|=2^7$, the two quotient structures in (a), and
-$V_{a'}^*\cong Q_8\rtimes Q_8$. The order-$3$ elements in
-$E_{a'}$ supply an elementary abelian subgroup $U$ of order $8$;
-its two vertex stabilizers give $N_H(U)/U\cong L_3(2)$.
-\end{proof}
-
-\noindent A finite group is of type $V_6^+(2)$ if it contains two such
-subgroups satisfying (9.1)(a)--(c). The group
-$V_6^+(2)\cong S_8\cong\operatorname{Aut}(L_4(2))$ is an example.
-
-\begin{stm}\label{st:9.2}
-Let $d\in(a')^G$ and $l,m\in D(d)$. If
-$|Z_l:Z_l\cap Z_m|=2$ and
-$\langle Q_m,G_l\cap G_d\rangle=G_d$, then
-$G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$.
-\end{stm}
-
-\begin{proof}
-Conjugate to $d=a+1$, $l=a$. Put
-$Q=Q_{a+1}\cap Q_m$. By (7.6)(c), $Q\le Q_a$ and
-$[Z_a,Q]\ne1$. Applying (1.7) gives $|Z_a|=4$ and
-$G_a/C_{G_a}(Z_a)\cong SL_2(2)$; (7.7)(a) then gives
-$Q_a=C_{G_a}(Z_a)$.
-\end{proof}
-
-\begin{stm}\label{st:9.3}
-Suppose $b>1$. Then $G_l/Q_l\cong SL_2(2)$ and $|Z_l|=4$ for
-every $l\in a^G$.
-\end{stm}
-
-\begin{proof}
-If $|Z_a|>4$, apply (7.8) twice along the critical path. The resulting
-subgroups either give a nontrivial normal subgroup of both adjacent
-vertex stabilizers or reduce to (9.2); both alternatives contradict
-(7.2) or force $|Z_a|=4$. Then (7.7)(a) gives
-$G_a/Q_a\cong SL_2(2)$, and transitivity gives the assertion for all
-$l\in a^G$.
-\end{proof}
-
-\noindent We use the following consequence of (9.3): if $b>1$, then
-$Z_a=Z_{a-1}Z_{a+1}$, $|Z_{a+1}|=2$, $S=Q_aQ_{a+1}$, and
-$V_{a+1}/Z_{a+1}$ is a faithful $G_{a+1}/Q_{a+1}$-module.
-
-\begin{stm}\label{st:9.4}
-Let $b>1$, $d(r,a+1)=2$, $t\in C_{G_{a+1}}(V_r)$,
-$x\in[E_{a+1},t]$, and $A\le V_r$ satisfy
-\begin{enumerate}
-\item[(i)] $[A,t]\le V_{a+1}$;
-\item[(ii)] $\langle G_{a+1}\cap G_n,t\rangle=G_{a+1}$ for
-  $n\in D(a+1)\cap D(r)$;
-\item[(iii)] $|[V_{a+1},t]Z_{a+1}/Z_{a+1}|=2$.
-\end{enumerate}
-Then $A\le V_{a+1}$.
-\end{stm}
-
-\begin{proof}
-Apply (7.8) to the pair of 2-subgroups
-$G_{a+1}\cap G_n$ and $G_{a+1}$, and then use (1.7) on the resulting
-dihedral section. Otherwise one obtains a subgroup normal in both
-adjacent vertex stabilizers, contrary to (7.2).
-\end{proof}
-
-\begin{stm}\label{st:9.5}
-Let $b>1$ and choose $t\in V_{a'}\setminus Q_{a'}$ with
-$|[V_a,t]Z_a/Z_a|=2$ and $[V_a,t]\le V_{a'-2}$. Then either
-\begin{enumerate}
-\item[(a)] $|V_a|=2^3$ and $G_a/Q_a\cong SL_2(2)$, or
-\item[(b)] $|V_a|=2^5$, $G_a/Q_a\cong SL_2(2)\times C_2$, and
-  $|V_a\cap V_{a-2}|=2^3$.
-\end{enumerate}
-\end{stm}
-
-\begin{proof}
-On $V_a/Z_a$, $t$ is a transvection. Lemmas (1.7) and (7.7)(b)
-decompose the module into four-dimensional summands. The relation
-$Z_{a-1}\le V_1V_1^w$ for a suitable $w\in O_2(E_{a-1})$ gives
-$V_1=V_1^w$ or $V_1\ne V_1^w$, which are exactly (a) and (b).
-\end{proof}
-
-\begin{stm}\label{st:9.6}
-Suppose $b>1$ and $G_{a+1}/Q_{a+1}\cong SL_2(2)$. Then
-$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$.
-\end{stm}
-
-\begin{proof}
-Set $R=[V_{a+1},V_{a'}]$ and
-$R_0=[V_{a-1},V_{a'-2}]$. The cases $R_0=1$, $b=3$, and $b>3$
-are excluded respectively by (9.4), (7.7), and the critical-pair
-symmetry. Hence the index is $2$.
-\end{proof}
-
-\begin{stm}\label{st:9.7}
-Suppose $b>1$ and
-$|V_{a+1}:V_{a+1}\cap V_{a+3}|=2$. Then $b=3$,
-$|V_{a+1}|=8$, and $G_{a+1}/Q_{a+1}\cong SL_2(2)$.
-\end{stm}
-
-\begin{proof}
-Apply (9.5) to an element of $V_{a+1}\setminus Q_{a'}$. If $b>3$,
-$[V_{a'},Z_a]$ lies in two incompatible path modules, contradicting
-(7.4); hence $b=3$, and (9.5) gives the order and quotient.
-\end{proof}
-
-\begin{stm}\label{st:9.8}
-Suppose that $Z_{a'}\le V_{a+1}$. Then $b\le3$.
-\end{stm}
-
-\begin{proof}
-If $b>3$, choose $l\in D(a+1)$. The subgroup $W_l$ is abelian and
-centralizes $V_{a+1}$. Applying (7.7) and (7.8) produces
-$m\in D(a')$ with $[Z_a,Z_m]\ne1$, contradicting (9.7) or (7.6).
-\end{proof}
-
-\begin{stm}\label{st:9.9}
-Suppose that $Z_{a+1}\le V_{a'}$. Then $b\le3$.
-\end{stm}
-
-\begin{proof}
-Interchange $a+1$ and $a'$ in (9.8). If $b>3$, (1.7) gives a subgroup
-$V_1\le V_{a'}$ with $[V_1,Z_a]=Z_{a+1}$; a maximal subgroup in
-$V_{a-1}$ would then have index at least $4$, contradicting (9.7).
-\end{proof}
-
-\begin{stm}\label{st:9.10}
-$b\le3$.
-\end{stm}
-
-\begin{proof}
-If $b>3$, (9.8) and (9.9) give
-$Z_{a'}\le V_{a+1}$ and $Z_{a+1}\le V_{a'}$. Applying (7.8) once
-more yields the configuration of (9.5)(b), which contradicts (9.7).
-\end{proof}
-
 \sect{10}
 
 \noindent In this section we finish the discussion begun in Section 9. We
@@ -2104,4 +1959,85 @@ the Frattini and centralizer calculations yield the displayed equalities.
 if it contains $G_{a+2},G_{a+1}$ with Sylow intersection, trivial
 2-core of their join, and satisfying alternative (a) (respectively (b))
 of (10.1). The groups $M_{12}$ and $^2F_4(2)'$ are examples.
+\sect{11}
+
+\noindent In this section we prove Theorems 1 and 2. Let $H$ be a finite
+group and suppose either
+\begin{enumerate}
+\item[(i)] $H$ satisfies the hypothesis of Theorem 1, or
+\item[(ii)] $H$ satisfies the hypothesis of Theorem 2 but not alternatives
+  (d) or (e) of its conclusion.
+\end{enumerate}
+In both cases $H$ satisfies Hypothesis 2 of Section 5. If (i) holds, then
+(8.2), (8.6), (9.1), (9.10), and (10.1) prove Theorem 1. We may therefore
+assume (ii).
+
+\noindent If $H$ also satisfies the hypothesis of Theorem 1, alternative
+(a) of Theorem 2 follows immediately. We may hence assume that $S_0$ lies
+in a unique maximal 2-local subgroup of $H$, so that the subgroups
+$S,P_1,P_2$ of Hypothesis 2 are as in (5.1)(c). By (8.2), either
+\[
+ \text{(I)}\quad P_1\cong P_2\cong S_4,\quad S\cong D_8,
+\]
+or
+\[
+ \text{(II)}\quad P_1\cong P_2\cong C_2\times S_4,\quad
+ S\cong C_2\times D_8.
+\]
+Let $Q=O_2(P_1)$ and $N=N_H(Q)$. By (5.1)(c$_2$),
+$S\in\mathrm{Syl}_2(N)$; solvability of $N$ and
+$C_N(Q)\le Q$ give $N=P_1$.
+
+\noindent In case (I), choose $x\in Q\setminus Z(S_0)$. Then
+$Q=C_{S_0}(x)$ and
+\[
+  4^{-1}|S_0|=|S_0/C_{S_0}(x)|
+  =|\{[s,x]\mid s\in S_0\}|.
+\]
+Thus $S_0'=\Phi(S_0)$ and $|S_0/\Phi(S_0)|=4$; the standard
+2-group calculation (see [4, 5.4.5]) gives alternative (b) of Theorem 2.
+
+\noindent In case (II), $S$ contains exactly two elementary abelian
+subgroups of order $8$ and $|N_{S_0}(S)/S|=2$. Since
+$C_H(Z(P_1))$ is of characteristic 2 type, it equals $P_1$. Hence
+$J(S)=J(N_{S_0}(S))$ and $S_0=N_{S_0}(S)$, which is alternative (c) of
+Theorem 2.
+
+\bigskip
+\begin{center}
+\textsc{Acknowledgments}
+\end{center}
+
+\noindent I would like to thank Professor A. Delgado and Professor J. G.
+Thompson for reading large parts of the manuscript. They made many helpful
+suggestions and pointed out several mistakes.
+
+\bigskip
+\begin{center}
+\textsc{References}
+\end{center}
+
+\begin{enumerate}
+\item B. Baumann, \"Uber endliche Gruppen mit einer zu $L_2(2^n)$ isomorphen
+  Faktorgruppe, \emph{Proc. Amer. Math. Soc.} \textbf{74} (1979), 215--222.
+\item D. Goldschmidt, Automorphisms of trivalent graphs, \emph{Ann. of Math.}
+  \textbf{111} (1980), 377--404.
+\item K. Gomi, On the 2-local structure of groups of characteristic 2 type,
+  \emph{J. Algebra} \textbf{108} (1987), 492--502.
+\item D. Gorenstein, \emph{Finite Groups}, Harper \& Row, New York, 1968.
+\item D. Gorenstein and R. Lyons, Nonsolvable finite groups with solvable
+  2-local subgroups, \emph{J. Algebra} \textbf{38} (1976), 453--522.
+\item Z. Janko, Nonsolvable finite groups all of whose 2-local subgroups are
+  solvable, I, \emph{J. Algebra} \textbf{21} (1972), 458--517.
+\item F. Smith, Finite simple groups all of whose 2-local subgroups are
+  solvable, \emph{J. Algebra} \textbf{34} (1975), 481--520.
+\item B. Stellmacher, Pushing up, \emph{Arch. Math.} \textbf{46} (1986), 8--17.
+\item J. G. Thompson, Nonsolvable finite groups all of whose local subgroups
+  are solvable, I, \emph{Bull. Amer. Math. Soc.} \textbf{74} (1968), 383--437;
+  II, \emph{Pacific J. Math.} \textbf{33} (1970), 451--536; III, \emph{Pacific
+  J. Math.} \textbf{39} (1971), 483--534; IV, \emph{Pacific J. Math.}
+  \textbf{48} (1973), 511--592; V, \emph{Pacific J. Math.} \textbf{50}
+  (1974), 215--297; VI, \emph{Pacific J. Math.} \textbf{51} (1974), 573--630.
+\end{enumerate}
+
 \end{document}

@@ -3,6 +3,9 @@ module
 public import FeitThompson.BGsection4.proposition_4_8_b
 import FeitThompson.Utils
 public import FeitThompson.BGsection4.lemma_4_5_b
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 open scoped FixedPoints
 

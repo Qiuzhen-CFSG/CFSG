@@ -8,6 +8,7 @@ public import FeitThompson.Gorenstein.Chapter8_2
 public import FeitThompson.PCore.PCore
 public import FeitThompson.PGroup.Omega
 
+
 /-!
 # Stellmacher's main theorems
 

@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection1.proposition_1_15
 
+open Theory.GroupAction
+
 open scoped Pointwise
 
 public section

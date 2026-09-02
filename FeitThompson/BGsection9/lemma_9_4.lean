@@ -3,6 +3,8 @@ module
 public import FeitThompson.BGsection9.corollary_9_3
 import Mathlib.GroupTheory.Schreier
 import Mathlib.GroupTheory.Subgroup.Centralizer
+open Theory.ElementaryAbelian
+
 
 open scoped Pointwise
 

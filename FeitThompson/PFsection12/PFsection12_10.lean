@@ -5,7 +5,7 @@ import FeitThompson.PFsection10.PFsection10_11
 import FeitThompson.PFsection11.PFsection11_9
 import FeitThompson.PFsection12.PFsection12_6
 import FeitThompson.PFsection12.PFsection12_9
-import FeitThompson.GroupAction.MinimalNormal
+import Theory.GroupAction.MinimalNormal
 import FeitThompson.PFsection5.RealVirtualParity
 import FeitThompson.PFsection6.PFsection6_5_a
 import FeitThompson.PFsection7.PFsection7_3
@@ -20,6 +20,8 @@ import FeitThompson.PFsection8.SourceTypePBridge
 import FeitThompson.PFsection9.PFsection9_1
 import Mathlib.GroupTheory.Schreier
 import Mathlib.RingTheory.ZMod.UnitsCyclic
+open Theory.GroupAction
+
 
 /-!
 # Peterfalvi, Section 12: Theorem (12.10)

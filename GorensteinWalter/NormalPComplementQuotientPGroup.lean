@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Classification
 public import Glauberman.Definitions
 
+
 /-!
 # Quotient by the prime-to-p core under a normal p-complement
 

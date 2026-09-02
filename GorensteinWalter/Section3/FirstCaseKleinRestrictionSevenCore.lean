@@ -11,6 +11,7 @@ public import GorensteinWalter.InvertedPCommutator
 public import GorensteinWalter.OrderThreeNormalizer
 import Mathlib.Tactic
 
+
 noncomputable section
 open scoped Pointwise
 namespace GorensteinWalter
@@ -553,4 +554,3 @@ public theorem firstCase_klein_restrictionSeven_core
       hXcard hXle hsH hsI hsV hsNorm hsInv⟩
 
 end GorensteinWalter
-

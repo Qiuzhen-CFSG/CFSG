@@ -6,6 +6,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinB3Subgroup
 public import GorensteinWalter.Section3.FirstCaseKleinCosetInvolution
 import Mathlib.Tactic
 
+
 noncomputable section
 
 namespace GorensteinWalter

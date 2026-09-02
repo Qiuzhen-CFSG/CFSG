@@ -9,6 +9,7 @@ public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.Algebra.Field.ZMod
 
+
 /-!
 # The alternating group `A₅` is a D-group
 

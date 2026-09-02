@@ -5,6 +5,9 @@ import all FeitThompson.BGsection6.Defs
 import FeitThompson.BGsection6.theorem_6_1
 import Theory.Representation.ElementaryAbelianAction
 import FeitThompson.SubgroupConj
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # The p-stability reduction for groups with abelian Sylow 2-subgroups
@@ -2268,7 +2271,7 @@ private theorem pStable_le_centralizerOfChiefFactor_of_abelianSylowTwo
   have hρ_faithful : Function.Injective ρ := by
     have hρker_bot : ρ.ker = ⊥ := by
       rw [Theory.Representation.ker_ofElementaryAbelianAction_eq_fixingSubgroup]
-      rw [fixingSubgroupOf_univ_eq_ker_toMulAut]
+      rw [fixingSubgroup_univ_eq_ker_toMulAut]
       exact (MonoidHom.ker_eq_bot_iff (φ.range.subtype)).2 φ.range.subtype_injective
     exact (MonoidHom.ker_eq_bot_iff ρ).1 hρker_bot
   have hpodd : Odd p := (Fact.out : Nat.Prime p).odd_of_ne_two hp2

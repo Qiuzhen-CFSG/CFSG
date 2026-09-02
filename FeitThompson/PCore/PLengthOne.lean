@@ -2,6 +2,7 @@ module
 
 public import FeitThompson.PCore.Defs
 public import FeitThompson.SubgroupConj
+
 open Subgroup
 
 section PLengthOne

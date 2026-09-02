@@ -7,6 +7,9 @@ import FeitThompson.PFsection5.PFsection5_7
 import FeitThompson.PFsection5.PFsection5_8
 import Theory.Character.DegreeBounds
 public import FeitThompson.PFsection9.Basic
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 /-!
 # Peterfalvi, Section 10: basic notation
@@ -5349,11 +5352,11 @@ public theorem typePDefinitionData_secondDerivedQuotient_fixedPointSubgroup_zpow
   have hfixQuot :
       fixedPointSubgroup A (derivedSubgroup M ⧸ N) =
         (fixedPointSubgroup A (derivedSubgroup M)).map (QuotientGroup.mk' N) := by
-    exact fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
+    exact fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
       (G := derivedSubgroup M) (A := A)
       (typePDefinitionData_derivedSubgroup_solvable hP)
       (typePDefinitionData_coprime_zpowers_W1_derived hP a)
-      (π := (∅ : Set Nat.Primes)) N hNinv
+      N hNinv
   have hNorm : A ≤ Subgroup.normalizer (derivedSubgroup M) := by
     dsimp [A]
     exact (Subgroup.zpowers_le).2

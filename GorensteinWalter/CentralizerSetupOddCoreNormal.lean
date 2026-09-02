@@ -3,6 +3,7 @@ module
 public import GorensteinWalter.Defs
 import FeitThompson.PCore.PPrimeCore
 
+
 /-! # Normality of the odd core in a centralizer setup -/
 
 namespace GorensteinWalter

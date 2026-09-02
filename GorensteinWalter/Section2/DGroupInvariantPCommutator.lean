@@ -5,6 +5,7 @@ public import GorensteinWalter.Section2.CommutatorOddCoreTail
 import FeitThompson.SubgroupConj
 import Mathlib.Tactic
 
+
 namespace GorensteinWalter
 
 universe u

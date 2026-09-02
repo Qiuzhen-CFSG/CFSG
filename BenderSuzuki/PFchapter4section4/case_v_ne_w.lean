@@ -12,6 +12,9 @@ import BenderSuzuki.PFchapter1section2.AppendixIInput
 import BenderSuzuki.PFchapter1section3.lemma_5
 import BenderSuzuki.PFchapter3section3.proposition
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.GroupAction
+open Theory.ElementaryAbelian
+
 
 namespace BenderSuzuki
 namespace PFchapter4section4
@@ -1098,9 +1101,9 @@ public theorem case_v_ne_w
       rw [hP_card, hn]
       exact hp_odd.coprime_two_right.pow_right n
     have hfixed_quotient :=
-      fixedPointSubgroup_quotient_eq_map_of_solvable_coprime_action
+      fixedPoints_subgroup_quotient_eq_map_of_solvable_coprime
         (G := Q) (A := P) hQ_solvable hP_Q_coprime
-          (∅ : Set Nat.Primes) Q0Q hQ0Q_invariant_P
+          Q0Q hQ0Q_invariant_P
     have hxbar_map : xbar ∈
         (fixedPointSubgroup P Q).map (QuotientGroup.mk' Q0Q) := by
       rw [← hfixed_quotient]

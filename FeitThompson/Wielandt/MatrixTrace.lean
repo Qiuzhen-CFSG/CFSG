@@ -2,6 +2,8 @@ module
 
 public import FeitThompson.BGsection3.Remaining
 public import FeitThompson.LinearAlgebra.MatrixBlocks
+open Theory.ElementaryAbelian
+
 
 /-!
 # Matrix trace infrastructure for Wielandt fixed-point arguments
@@ -373,5 +375,4 @@ public theorem CommonMatrixLiftBlockData.exists_matrix_trace_model
               Nat.card (A i) : ZMod (p ^ e)) := by
   classical
   exact MatrixTraceModel.exists_matrix_trace_model (D.toMatrixTraceModel A)
-
 

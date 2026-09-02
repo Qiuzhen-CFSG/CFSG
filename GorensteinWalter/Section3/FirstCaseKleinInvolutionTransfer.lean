@@ -4,6 +4,7 @@ public import GorensteinWalter.Section3.FirstCaseKleinCentralizerSylow
 import GorensteinWalter.Section3.FirstCaseKleinSylowTransfer
 import GorensteinWalter.Section3.FirstCaseKleinInvolutionExtraction
 import Mathlib.Tactic
+
 open scoped Pointwise
 namespace GorensteinWalter
 noncomputable section

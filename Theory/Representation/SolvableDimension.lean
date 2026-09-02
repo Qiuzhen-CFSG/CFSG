@@ -13,13 +13,9 @@ public import Mathlib.RepresentationTheory.Submodule
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 public import Mathlib.RingTheory.SimpleModule.Isotypic
 public import Mathlib.RingTheory.ZMod.Torsion
-public import FeitThompson.BGsection1.CriticalSubgroupLemmas
-public import FeitThompson.Burnside.NormalComplement
-public import FeitThompson.Extraspecial
-public import FeitThompson.LinearAlgebra.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
-public import FeitThompson.BGsection2.EndFieldRep
 public import Theory.Representation.CyclicQuotientExtension
+public import Theory.Representation.CompleteReducibility
 
 open _root_.Representation
 open Theory.Representation
@@ -33,6 +29,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped IsMulCommutative
+namespace Theory.Representation
 /-
 **Kind**: Theorem
 **Note**: Lemma 2.3
@@ -2010,3 +2007,7 @@ public theorem lemma_2_3
   have h := lemma_2_3_algClosed ρ'
   rw [Module.finrank_baseChange] at h
   exact h
+
+end
+
+end Theory.Representation

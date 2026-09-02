@@ -2,6 +2,8 @@ module
 
 public import BenderSuzuki.SE.Section10Lemma105
 import FeitThompson.GroupAction.CoprimeHall
+open Theory.GroupAction
+
 
 /-!
 # Section 10, Lemma 10.6
@@ -215,7 +217,7 @@ public theorem lemma106_hall_complement_action
     have hCfixSmap :
         (fixedPointSubgroup A S).map S.subtype =
           S ⊓ fixedPointSubgroup A G := by
-      simpa using fixedPointSubgroup_map_subtype_eq_inf S
+      simpa using fixedPoints_subgroup_map_subtype_eq_inf S
     have hInf : S ⊓ fixedPointSubgroup A G = ⊥ := by
       rw [hCfix, ← hcompSC.disjoint.eq_bot]
     apply (Subgroup.map_subtype_inj (H := S)).mp

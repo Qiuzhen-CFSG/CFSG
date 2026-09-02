@@ -3,6 +3,8 @@ module
 public import GorensteinWalter.Section2.AmbientSylowZJNormalizer
 public import GorensteinWalter.Section2.Lemma24PCoreCenter
 public import Glauberman.TheoremB
+open Theory.GroupAction
+
 
 /-!
 # The Glauberman conjugator for Gorenstein--Walter Lemma 2.4
