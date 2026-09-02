@@ -3,7 +3,6 @@ module
 public import Mathlib.RepresentationTheory.Intertwining
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.Algebra.Module.NatInt
-
 public import Theory.Representation.SubrepresentationLattice
 
 @[expose] public section
@@ -18,7 +17,8 @@ open _root_.Representation
 /-- Bundled intertwining maps between two representations. -/
 abbrev RepMap {F G V W : Type*} [Semiring F] [Monoid G] [AddCommMonoid V]
     [AddCommMonoid W] [Module F V] [Module F W]
-    (ρ : Representation F G V) (σ : Representation F G W) : Type _ :=
+    (ρ : Representation F G V) (σ : Representation F G W)
+    : Type _ :=
   IntertwiningMap ρ σ
 /-- Notation for bundled intertwining maps between representations. -/
 notation:25 ρ " →ₗ " σ:0 => RepMap ρ σ
@@ -33,26 +33,23 @@ instance : Zero (RepMap ρ σ) := IntertwiningMap.instZero _ _
 instance : Add (RepMap ρ σ) := IntertwiningMap.instAdd _ _
 instance : SMul F (RepMap ρ σ) := IntertwiningMap.instSMul _ _
 instance : SMul ℕ (RepMap ρ σ) := IntertwiningMap.instSMulNat _ _
+
 instance instAddCommMonoid : AddCommMonoid (RepMap ρ σ) :=
   IntertwiningMap.instAddCommMonoid _ _
-instance : Module F (RepMap ρ σ) := IntertwiningMap.instModule _ _
 
+instance : Module F (RepMap ρ σ) := IntertwiningMap.instModule _ _
 
 @[simp]
 lemma coe_zero : ((0 : RepMap ρ σ) : V → W) = 0 := rfl
 
 @[simp]
-lemma coe_add (f g : RepMap ρ σ) :
-    ((f + g : RepMap ρ σ) : V → W) = f + g := rfl
+lemma coe_add (f g : RepMap ρ σ) : ((f + g : RepMap ρ σ) : V → W) = f + g := rfl
 
 @[simp]
-lemma coe_smul (a : F) (f : RepMap ρ σ) :
-    ((a • f : RepMap ρ σ) : V → W) = a • f := rfl
+lemma coe_smul (a : F) (f : RepMap ρ σ) : ((a • f : RepMap ρ σ) : V → W) = a • f := rfl
 
 @[simp]
-lemma coe_nsmul (n : ℕ) (f : RepMap ρ σ) :
-    ((n • f : RepMap ρ σ) : V → W) = n • f := rfl
-
+lemma coe_nsmul (n : ℕ) (f : RepMap ρ σ) : ((n • f : RepMap ρ σ) : V → W) = n • f := rfl
 
 /-- Identification of intertwining maps with linear maps on the corresponding `F[G]`-modules. -/
 def equivLinearMapAsModule : RepMap ρ σ ≃ₗ[F] ρ.asModule →ₗ[F[G]] σ.asModule :=
@@ -81,26 +78,23 @@ protected def copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ρ →ₗ
   isIntertwining' := h.symm ▸ f.isIntertwining'
 
 @[simp]
-theorem coe_copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' :=
-  by rfl
-
+theorem coe_copy (f : ρ →ₗ σ) (f' : V → W) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' := by rfl
 
 /-- Build an intertwining map from a linear map commuting with the actions. -/
-def mk (toLinearMap : V →ₗ[F] W) (isIntertwining : ∀ (g : G), toLinearMap ∘ₗ ρ g = σ g ∘ₗ toLinearMap) : RepMap ρ σ :=
+def mk (toLinearMap : V →ₗ[F] W)
+    (isIntertwining : ∀ (g : G), toLinearMap ∘ₗ ρ g = σ g ∘ₗ toLinearMap)
+    : RepMap ρ σ :=
   IntertwiningMap.mk toLinearMap isIntertwining
 
 @[simp]
-theorem coe_mk (f : V →ₗ[F] W) (h) :
-    ((.mk f h : ρ →ₗ σ) : V → W) = f :=
-  by rfl
+theorem coe_mk (f : V →ₗ[F] W) (h) : ((.mk f h : ρ →ₗ σ) : V → W) = f := by rfl
 
 @[simp]
-theorem coe_linearMap_mk (f : V →ₗ[F] W) (h) :
-    (.mk f h : ρ →ₗ σ).toLinearMap = f :=
-  by rfl
+theorem coe_linearMap_mk (f : V →ₗ[F] W) (h) : (.mk f h : ρ →ₗ σ).toLinearMap = f := by
+  rfl
 
-theorem toLinearMap_injective (f g : ρ →ₗ σ)
-    (h : f.toLinearMap = g.toLinearMap) : f = g := by
+theorem toLinearMap_injective (f g : ρ →ₗ σ) (h : f.toLinearMap = g.toLinearMap)
+    : f = g := by
   apply DFunLike.ext
   exact fun m ↦  DFunLike.congr_fun h m
 
@@ -147,8 +141,7 @@ protected theorem map_smul (c : F) (x : V) : f (c • x) = c • f x :=
   map_smul f.toLinearMap c x
 
 @[simp]
-protected theorem map_eq_zero_iff (h : Function.Injective f) {x : V} :
-    f x = 0 ↔ x = 0 :=
+protected theorem map_eq_zero_iff (h : Function.Injective f) {x : V} : f x = 0 ↔ x = 0 :=
   _root_.map_eq_zero_iff f.toLinearMap h
 
 variable {F G V₁ V₂ V₃: Type*} [CommRing F] [Monoid G] [AddCommMonoid V₁]
@@ -157,13 +150,15 @@ variable {F G V₁ V₂ V₃: Type*} [CommRing F] [Monoid G] [AddCommMonoid V₁
   (f : ρ₂ →ₗ ρ₃) (f' : ρ₂ →ₗ ρ₃) (g : ρ₁ →ₗ ρ₂) (g' : ρ₁ →ₗ ρ₂)
 
 /-- Composition of intertwining maps. -/
-def comp : ρ₁ →ₗ ρ₃ := {
-  toLinearMap := f.toLinearMap.comp g.toLinearMap
-  isIntertwining' := fun h => by
-    ext
-    simp only [LinearMap.coe_comp, Function.comp_apply, IntertwiningMap.toLinearMap_apply]
-    rw [g.isIntertwining, f.isIntertwining]
-}
+def comp : ρ₁ →ₗ ρ₃ :=
+  {
+    toLinearMap := f.toLinearMap.comp g.toLinearMap
+    isIntertwining' :=
+      fun h => by
+        ext
+        simp only [LinearMap.coe_comp, Function.comp_apply, IntertwiningMap.toLinearMap_apply]
+        rw [g.isIntertwining, f.isIntertwining]
+  }
 
 @[simp, norm_cast]
 theorem coe_comp : (f.comp g : V₁ → V₃) = f ∘ g :=
@@ -182,22 +177,22 @@ theorem comp_apply (v : V₁) : f.comp g v = f (g v) :=
 
 theorem comp_assoc
     {V₀ : Type*} [AddCommMonoid V₀] [Module F V₀]
-    {ρ₀ : Representation F G V₀} (h : ρ₀ →ₗ ρ₁) :
-    (f.comp g).comp h = f.comp (g.comp h) :=
+    {ρ₀ : Representation F G V₀} (h : ρ₀ →ₗ ρ₁)
+    : (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 
-lemma _root_.Function.Surjective.injective_RepMapComp_right (hg : Surjective g) :
-    Injective fun f : ρ₂ →ₗ ρ₃ ↦ f.comp g :=
+lemma _root_.Function.Surjective.injective_RepMapComp_right (hg : Surjective g)
+    : Injective fun f : ρ₂ →ₗ ρ₃ ↦ f.comp g :=
   fun _ _ h ↦ ext <| hg.forall.2 (RepMap.ext_iff.1 h)
 
 @[simp]
 theorem cancel_right (hg : Surjective g) : f.comp g = f'.comp g ↔ f = f' :=
   hg.injective_RepMapComp_right.eq_iff
 
-lemma _root_.Function.Injective.injective_RepMapComp_left (hf : Injective f) :
-    Injective fun g : ρ₁ →ₗ ρ₂ ↦ f.comp g :=
-  fun g₁ g₂ (h : f.comp g₁ = f.comp g₂) ↦ ext fun x ↦ hf <| by rw [← comp_apply, h, comp_apply]
-
+lemma _root_.Function.Injective.injective_RepMapComp_left (hf : Injective f)
+    : Injective fun g : ρ₁ →ₗ ρ₂ ↦ f.comp g :=
+  fun g₁ g₂ (h : f.comp g₁ = f.comp g₂) ↦
+    ext fun x ↦ hf <| by rw [← comp_apply, h, comp_apply]
 
 @[simp]
 theorem cancel_left (hf : Injective f) : f.comp g = f.comp g' ↔ g = g' :=
@@ -208,8 +203,8 @@ variable {F G V W : Type*} [CommRing F] [Monoid G] [AddCommMonoid V] [AddCommMon
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Construct an inverse intertwining map from two-sided inverse data. -/
-def inverse (f : ρ →ₗ σ) (g : W → V) (h₁ : LeftInverse g f) (h₂ : RightInverse g f) :
-    σ →ₗ ρ := by
+def inverse (f : ρ →ₗ σ) (g : W → V) (h₁ : LeftInverse g f) (h₂ : RightInverse g f)
+    : σ →ₗ ρ := by
   dsimp [LeftInverse, Function.RightInverse] at h₁ h₂
   exact {
       toFun := g
@@ -230,7 +225,6 @@ section
 variable (f : ρ →ₗ σ) (g : σ →ₗ ρ) (h : g.comp f = .id)
 
 include h
-
 
 end
 
@@ -270,9 +264,14 @@ theorem default_def : (default : ρ →ₗ σ) = 0 :=
   rfl
 
 instance uniqueOfLeft [Subsingleton V] : Unique (ρ →ₗ σ) :=
-  { (inferInstance : (Inhabited (ρ →ₗ σ))) with
-    uniq := fun f => ext fun x => by
-      rw [Subsingleton.elim x 0, RepMap.map_zero, RepMap.map_zero] }
+  {
+    (inferInstance : (Inhabited (ρ →ₗ σ))) with
+      uniq :=
+        fun f =>
+          ext
+            fun x => by
+              rw [Subsingleton.elim x 0, RepMap.map_zero, RepMap.map_zero]
+  }
 
 instance uniqueOfRight [Subsingleton W] : Unique (ρ →ₗ σ) :=
   coe_injective.unique
@@ -283,35 +282,34 @@ theorem ne_zero_of_injective [Nontrivial V] (hf : Injective f) : f ≠ 0 :=
   have ⟨x, ne⟩ := exists_ne (0 : V)
   fun h ↦ hf.ne ne <| by simp [h]
 
-
 @[simp]
 theorem add_apply (f g : ρ →ₗ σ) (x : V) : (f + g) x = f x + g x :=
   rfl
 
-theorem add_comp (f : ρ₁ →ₗ ρ₂) (g h : ρ₂ →ₗ ρ₃) :
-    (h + g).comp f = h.comp f + g.comp f :=
+theorem add_comp (f : ρ₁ →ₗ ρ₂) (g h : ρ₂ →ₗ ρ₃) : (h + g).comp f = h.comp f + g.comp f :=
   rfl
 
-theorem comp_add (f g : ρ₁ →ₗ ρ₂) (h : ρ₂ →ₗ ρ₃) :
-    h.comp (f + g) = h.comp f + h.comp g :=
+theorem comp_add (f g : ρ₁ →ₗ ρ₂) (h : ρ₂ →ₗ ρ₃) : h.comp (f + g) = h.comp f + h.comp g :=
   ext fun _ ↦ h.map_add _ _
 
 variable {V₁ V₂ V₃ : Type*} [AddCommGroup V₁] [AddCommGroup V₂] [AddCommGroup V₃]
   [Module F V₁] [Module F V₂] [Module F V₃]
   (ρ₁ : Representation F G V₁) (ρ₂ : Representation F G V₂) (ρ₃ : Representation F G V₃)
 
-
 set_option backward.isDefEq.respectTransparency false in
 instance : Neg (ρ →ₗ σ) :=
   ⟨fun f ↦
-    { toFun := -f
+    {
+      toFun := -f
       map_add' := by simp [add_comm]
       map_smul' := by simp
-      isIntertwining' := fun h ↦ by
-        ext v
-        simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
-          Pi.neg_apply, map_neg, neg_inj]
-        rw [f.isIntertwining] }⟩
+      isIntertwining' :=
+        fun h ↦ by
+          ext v
+          simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
+            Pi.neg_apply, map_neg, neg_inj]
+          rw [f.isIntertwining]
+    }⟩
 
 @[simp]
 theorem neg_apply (f : ρ →ₗ σ) (x : V) : (-f) x = -f x :=
@@ -328,22 +326,26 @@ theorem comp_neg (f : ρ₁ →ₗ ρ₂) (g : ρ₂ →ₗ ρ₃) : g.comp (-f)
 set_option backward.isDefEq.respectTransparency false in
 instance : Sub (ρ →ₗ σ) :=
   ⟨fun f g ↦
-    { toFun := f - g
-      map_add' := fun x y ↦ by
-        simp only [Pi.sub_apply, RepMap.map_add]
-        grind
+    {
+      toFun := f - g
+      map_add' :=
+        fun x y ↦ by
+          simp only [Pi.sub_apply, RepMap.map_add]
+          grind
       map_smul' := fun r x ↦ by simp [Pi.sub_apply, smul_sub]
-      isIntertwining' := fun h ↦ by
-        ext v
-        simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply, Pi.sub_apply, f.isIntertwining, g.isIntertwining, map_sub] }⟩
+      isIntertwining' :=
+        fun h ↦ by
+          ext v
+          simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply, Pi.sub_apply, f.isIntertwining, g.isIntertwining, map_sub]
+    }⟩
 
 @[simp]
 theorem sub_apply (f g : ρ →ₗ σ) (x : V) : (f - g) x = f x - g x :=
   rfl
 
-
 instance zsmul : SMul ℤ (ρ₁ →ₗ ρ₂) where
-  smul := fun n f ↦ RepMap.mk (n • f.toLinearMap) (fun h ↦ by ext v; simp [f.isIntertwining])
+  smul :=
+    fun n f ↦ RepMap.mk (n • f.toLinearMap) (fun h ↦ by ext v; simp [f.isIntertwining])
 
 instance addCommGroup : AddCommGroup (ρ →ₗ σ) :=
   DFunLike.coe_injective.addCommGroup _ rfl (fun _ _ ↦ rfl) (fun _ ↦ rfl) (fun _ _ ↦ rfl)
@@ -361,31 +363,34 @@ theorem identityMapOfZeroModuleIsZero [Subsingleton V] : id (ρ := ρ) = 0 :=
   Subsingleton.eq_zero id
 
 /-- The range of an intertwining map as a subrepresentation. -/
-def range : Subrepresentation σ := {
-  toSubmodule := LinearMap.range f.toLinearMap
-  apply_mem_toSubmodule g v h := by
-    simp only [LinearMap.mem_range, IntertwiningMap.toLinearMap_apply] at h ⊢
-    obtain ⟨y, hy⟩ := h
-    use (ρ g) y
-    rw [f.isIntertwining, hy]
-}
+def range : Subrepresentation σ :=
+  {
+    toSubmodule := LinearMap.range f.toLinearMap
+    apply_mem_toSubmodule g v h := by
+      simp only [LinearMap.mem_range, IntertwiningMap.toLinearMap_apply] at h ⊢
+      obtain ⟨y, hy⟩ := h
+      use (ρ g) y
+      rw [f.isIntertwining, hy]
+  }
 
 variable {F G V W : Type*} [Field F] [Monoid G] [AddCommGroup V] [AddCommGroup W]
   [Module F V] [Module F W] {ρ : Representation F G V} {σ : Representation F G W}
 
-theorem _root_.Representation.eq_bot_iff {p : Subrepresentation ρ} :
-    p = ⊥ ↔ ∀ x ∈ p, x = 0 := by
+theorem _root_.Representation.eq_bot_iff {p : Subrepresentation ρ}
+    : p = ⊥ ↔ ∀ x ∈ p, x = 0 := by
   have : p.toSubmodule = ⊥ ↔ p = ⊥ := (StrictMono.apply_eq_bot_iff fun ⦃a b⦄ a_1 ↦ a_1)
   rw [← this, Submodule.eq_bot_iff]
   rfl
 
-theorem _root_.Representation.eq_top_iff' {p : Subrepresentation ρ} :
-    p = ⊤ ↔ ∀ x, x ∈ p := by
+theorem _root_.Representation.eq_top_iff' {p : Subrepresentation ρ}
+    : p = ⊤ ↔ ∀ x, x ∈ p := by
   have : p.toSubmodule = ⊤ ↔ p = ⊤ := (StrictMono.apply_eq_top_iff fun ⦃a b⦄ a_1 ↦ a_1)
   rw [← this, Submodule.eq_top_iff']
   rfl
 
-theorem irreducible_of_inj {f : ρ →ₗ σ} [Nontrivial V] [inst : IsIrreducible σ] (h : Function.Injective f) : IsIrreducible ρ := by
+theorem irreducible_of_inj {f : ρ →ₗ σ} [Nontrivial V] [inst : IsIrreducible σ]
+    (h : Function.Injective f)
+    : IsIrreducible ρ := by
   unfold IsIrreducible at inst ⊢
   rw [isSimpleOrder_iff_isAtom_top] at inst ⊢
   unfold IsAtom at inst ⊢

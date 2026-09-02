@@ -17,21 +17,20 @@ noncomputable section
 
 open scoped BigOperators
 
-
 universe u
 
 /-- The class function on `G` induced from a class function of the subgroup `H`. -/
 def inducedClassFunction {G : Type u} [Group G] [Fintype G] (H : Subgroup G)
-    (φ : ClassFunction (↥H)) : ClassFunction G := by
+    (φ : ClassFunction (↥H))
+    : ClassFunction G := by
   classical
   exact fun g => (Nat.card (↥H) : ℂ)⁻¹ * ∑ x : G,
     if hx : x⁻¹ * g * x ∈ H then φ ⟨x⁻¹ * g * x, hx⟩ else 0
 
 /-- The induced function vanishes on elements with no conjugate in `H`. -/
 lemma inducedClassFunction_supportedOn {G : Type u} [Group G] [Fintype G] (H : Subgroup G)
-    (φ : ClassFunction (↥H)) (g : G) (hg : ∀ x : G, x⁻¹ * g * x ∉ H) :
-    inducedClassFunction H φ g = 0 := by
+    (φ : ClassFunction (↥H)) (g : G) (hg : ∀ x : G, x⁻¹ * g * x ∉ H)
+    : inducedClassFunction H φ g = 0 := by
   classical
   unfold inducedClassFunction
   simp [hg]
-

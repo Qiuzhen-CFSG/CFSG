@@ -29,8 +29,7 @@ namespace Representation
 open _root_.Representation
 
 attribute [local instance] Fintype.ofFinite
-def RespectfulFunctions
-    (F ι : Type*) [Field F] (r : Setoid ι) : Submodule F (ι → F) where
+def RespectfulFunctions (F ι : Type*) [Field F] (r : Setoid ι) : Submodule F (ι → F) where
   carrier := {f | ∀ ⦃i j⦄, r i j → f i = f j}
   zero_mem' := by simp
   add_mem' := by
@@ -41,11 +40,15 @@ def RespectfulFunctions
     simp [hf hij]
 
 noncomputable def quotientFunctionsLinearEquivRespectful
-    (F ι : Type*) [Field F] (r : Setoid ι) :
-    (Quotient r → F) ≃ₗ[F] RespectfulFunctions F ι r where
-  toFun f := ⟨fun i => f (Quotient.mk'' i), by
-    intro i j hij
-    exact congrArg f (Quotient.sound hij)⟩
+    (F ι : Type*) [Field F] (r : Setoid ι)
+    : (Quotient r → F) ≃ₗ[F] RespectfulFunctions F ι r where
+  toFun f :=
+    ⟨
+      fun i => f (Quotient.mk'' i),
+      by
+        intro i j hij
+        exact congrArg f (Quotient.sound hij)
+    ⟩
   invFun f := Quotient.lift f.1 (by
     intro i j hij
     exact f.2 hij)
@@ -64,9 +67,8 @@ noncomputable def quotientFunctionsLinearEquivRespectful
     rfl
 
 theorem quotientFunctionsLinearEquivRespectful_finrank
-    (F ι : Type*) [Field F] [Finite ι] (r : Setoid ι) :
-    Module.finrank F (RespectfulFunctions F ι r) =
-      Nat.card (Quotient r) := by
+    (F ι : Type*) [Field F] [Finite ι] (r : Setoid ι)
+    : Module.finrank F (RespectfulFunctions F ι r) = Nat.card (Quotient r) := by
   rw [← LinearEquiv.finrank_eq (quotientFunctionsLinearEquivRespectful F ι r)]
   rw [Module.finrank_pi_fintype]
   simp [Nat.card_eq_fintype_card]
@@ -74,8 +76,8 @@ theorem quotientFunctionsLinearEquivRespectful_finrank
 theorem equivariantBasis_equivFun_apply
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V →ₗ[F] V) (σ : Equiv.Perm ι)
-    (hT : ∀ i, T (b i) = b (σ i)) (v : V) (i : ι) :
-    b.equivFun (T v) (σ i) = b.equivFun v i := by
+    (hT : ∀ i, T (b i) = b (σ i)) (v : V) (i : ι)
+    : b.equivFun (T v) (σ i) = b.equivFun v i := by
   classical
   rw [← b.sum_equivFun v, map_sum]
   simp [hT]
@@ -88,8 +90,8 @@ theorem equivariantBasis_equivFun_apply
 
 theorem perm_invariant_zpowers
     {F ι : Type*} [Field F] (σ : Equiv.Perm ι) (f : ι → F)
-    (hf : ∀ i, f (σ i) = f i) :
-    ∀ g : Subgroup.zpowers σ, ∀ i, f (g.1 i) = f i := by
+    (hf : ∀ i, f (σ i) = f i)
+    : ∀ g : Subgroup.zpowers σ, ∀ i, f (g.1 i) = f i := by
   let S : Subgroup (Equiv.Perm ι) := {
     carrier := {g | ∀ i, f (g i) = f i}
     one_mem' := by simp
@@ -109,10 +111,10 @@ theorem perm_invariant_zpowers
 theorem equivariantBasis_fixed_iff_respectful
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
-    (hT : ∀ i, T (b i) = b (σ i)) (v : V) :
-    T v = v ↔
-      b.equivFun v ∈ RespectfulFunctions F ι
-        (MulAction.orbitRel (Subgroup.zpowers σ) ι) := by
+    (hT : ∀ i, T (b i) = b (σ i)) (v : V)
+    : T v = v
+      ↔ b.equivFun v
+        ∈ RespectfulFunctions F ι (MulAction.orbitRel (Subgroup.zpowers σ) ι) := by
   constructor
   · intro hv i j hij
     have hstep : ∀ x, b.equivFun v (σ x) = b.equivFun v x := by
@@ -133,8 +135,7 @@ theorem equivariantBasis_fixed_iff_respectful
       rw [MulAction.orbitRel_apply]
       exact ⟨⟨σ, Subgroup.mem_zpowers σ⟩, rfl⟩
     calc
-      b.equivFun (T v) j =
-          b.equivFun (T v) (σ i) := by simp [i]
+      b.equivFun (T v) j = b.equivFun (T v) (σ i) := by simp [i]
       _ = b.equivFun v i :=
         equivariantBasis_equivFun_apply b T.toLinearMap σ hT v i
       _ = b.equivFun v (σ i) := (hv hrel).symm
@@ -143,17 +144,18 @@ theorem equivariantBasis_fixed_iff_respectful
 noncomputable def equivariantBasisFixedLinearEquivRespectful
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
-    (hT : ∀ i, T (b i) = b (σ i)) :
-    T.fixedSubmodule ≃ₗ[F]
-      RespectfulFunctions F ι
-        (MulAction.orbitRel (Subgroup.zpowers σ) ι) where
-  toFun v := ⟨b.equivFun v.1,
-    (equivariantBasis_fixed_iff_respectful b T σ hT v.1).1 v.2⟩
-  invFun f := ⟨b.equivFun.symm f.1,
-    (equivariantBasis_fixed_iff_respectful b T σ hT
-      (b.equivFun.symm f.1)).2 (by
-        rw [b.equivFun.apply_symm_apply]
-        exact f.2)⟩
+    (hT : ∀ i, T (b i) = b (σ i))
+    : T.fixedSubmodule
+      ≃ₗ[F] RespectfulFunctions F ι (MulAction.orbitRel (Subgroup.zpowers σ) ι) where
+  toFun v := ⟨b.equivFun v.1, (equivariantBasis_fixed_iff_respectful b T σ hT v.1).1 v.2⟩
+  invFun f :=
+    ⟨
+      b.equivFun.symm f.1,
+      (equivariantBasis_fixed_iff_respectful b T σ hT (b.equivFun.symm f.1)).2
+        (by
+          rw [b.equivFun.apply_symm_apply]
+          exact f.2)
+    ⟩
   left_inv v := by
     ext
     simp
@@ -172,17 +174,17 @@ dimension equal to the number of orbits of the basis permutation. -/
 theorem equivariantBasis_fixedSubmodule_finrank_eq_orbitQuotient_card
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι)
-    (hT : ∀ i, T (b i) = b (σ i)) :
-    Module.finrank F T.fixedSubmodule =
-      Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) ι) := by
+    (hT : ∀ i, T (b i) = b (σ i))
+    : Module.finrank F T.fixedSubmodule
+      = Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) ι) := by
   rw [LinearEquiv.finrank_eq
     (equivariantBasisFixedLinearEquivRespectful b T σ hT)]
   exact quotientFunctionsLinearEquivRespectful_finrank F ι _
 
 theorem fixedBy_eq_fixedPoints_of_zpowers_eq_top
     {G X : Type*} [Group G] [MulAction G X] (g : G)
-    (hg : Subgroup.zpowers g = ⊤) :
-    MulAction.fixedBy X g = MulAction.fixedPoints G X := by
+    (hg : Subgroup.zpowers g = ⊤)
+    : MulAction.fixedBy X g = MulAction.fixedPoints G X := by
   ext x
   constructor
   · intro hx h
@@ -200,10 +202,9 @@ theorem primeCard_fixedPoints_orbit_formula
     [∀ g : G, Fintype (MulAction.fixedBy X g)]
     [Fintype (MulAction.fixedPoints G X)]
     [Fintype (MulAction.orbitRel.Quotient G X)]
-    (hG : Fintype.card G = p) :
-    Fintype.card X +
-        (p - 1) * Fintype.card (MulAction.fixedPoints G X) =
-      Fintype.card (MulAction.orbitRel.Quotient G X) * p := by
+    (hG : Fintype.card G = p)
+    : Fintype.card X + (p - 1) * Fintype.card (MulAction.fixedPoints G X)
+      = Fintype.card (MulAction.orbitRel.Quotient G X) * p := by
   classical
   have hfixed (g : G) (hg : g ≠ 1) :
       Fintype.card (MulAction.fixedBy X g) =
@@ -219,17 +220,16 @@ theorem primeCard_fixedPoints_orbit_formula
         (Fintype.card G - 1) *
           Fintype.card (MulAction.fixedPoints G X) := by
     calc
-      (∑ g ∈ Finset.univ.erase (1 : G),
-          Fintype.card (MulAction.fixedBy X g)) =
-          ∑ _g ∈ Finset.univ.erase (1 : G),
-            Fintype.card (MulAction.fixedPoints G X) := by
+      (∑ g ∈ Finset.univ.erase (1 : G), Fintype.card (MulAction.fixedBy X g))
+          = ∑ _g ∈ Finset.univ.erase (1 : G),
+              Fintype.card (MulAction.fixedPoints G X) := by
         apply Finset.sum_congr rfl
         intro g hg
         rw [hfixed g (by simpa using hg)]
-      _ = (Finset.univ.erase (1 : G)).card *
-          Fintype.card (MulAction.fixedPoints G X) := by simp
-      _ = (Fintype.card G - 1) *
-          Fintype.card (MulAction.fixedPoints G X) := by
+      _ = (Finset.univ.erase (1 : G)).card
+          * Fintype.card (MulAction.fixedPoints G X) := by
+        simp
+      _ = (Fintype.card G - 1) * Fintype.card (MulAction.fixedPoints G X) := by
         rw [Finset.card_erase_of_mem (Finset.mem_univ (1 : G)),
           Finset.card_univ]
   have hburnside :
@@ -242,37 +242,35 @@ theorem primeCard_fixedPoints_orbit_formula
       Finset.sum_erase_add _ _ (Finset.mem_univ (1 : G))]
     exact MulAction.sum_card_fixedBy_eq_card_orbits_mul_card_group G X
   calc
-    Fintype.card X +
-        (p - 1) * Fintype.card (MulAction.fixedPoints G X) =
-      Fintype.card (MulAction.fixedBy X (1 : G)) +
-        ∑ g ∈ Finset.univ.erase (1 : G),
-          Fintype.card (MulAction.fixedBy X g) := by
-            rw [hsum, hG]
-            simp [MulAction.fixedBy]
-    _ = Fintype.card (MulAction.orbitRel.Quotient G X) *
-        Fintype.card G := hburnside
+    Fintype.card X + (p - 1) * Fintype.card (MulAction.fixedPoints G X)
+        = Fintype.card (MulAction.fixedBy X (1 : G))
+          + ∑ g ∈ Finset.univ.erase (1 : G), Fintype.card (MulAction.fixedBy X g) := by
+      rw [hsum, hG]
+      simp [MulAction.fixedBy]
+    _ = Fintype.card (MulAction.orbitRel.Quotient G X) * Fintype.card G := hburnside
     _ = Fintype.card (MulAction.orbitRel.Quotient G X) * p := by rw [hG]
-noncomputable def permFixedPointsEquivZpowersFixedPoints
-    {X : Type*} (σ : Equiv.Perm X) :
-    Function.fixedPoints σ ≃
-      MulAction.fixedPoints (Subgroup.zpowers σ) X where
-  toFun x := ⟨x.1, by
-    intro g
-    rcases g.2 with ⟨z, hz⟩
-    change (g.1 : Equiv.Perm X) x.1 = x.1
-    rw [← hz]
-    exact Function.IsFixedPt.perm_zpow x.2 z⟩
+
+noncomputable def permFixedPointsEquivZpowersFixedPoints {X : Type*} (σ : Equiv.Perm X)
+    : Function.fixedPoints σ ≃ MulAction.fixedPoints (Subgroup.zpowers σ) X where
+  toFun x :=
+    ⟨
+      x.1,
+      by
+        intro g
+        rcases g.2 with ⟨z, hz⟩
+        change (g.1 : Equiv.Perm X) x.1 = x.1
+        rw [← hz]
+        exact Function.IsFixedPt.perm_zpow x.2 z
+    ⟩
   invFun x := ⟨x.1, x.2 ⟨σ, Subgroup.mem_zpowers σ⟩⟩
   left_inv _ := rfl
   right_inv _ := rfl
 
 theorem primeOrder_perm_fixedPoints_orbit_formula
     {X : Type*} [Finite X] (σ : Equiv.Perm X)
-    (hprime : (orderOf σ).Prime) :
-    Nat.card X +
-        (orderOf σ - 1) * Nat.card (Function.fixedPoints σ) =
-      Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) *
-        orderOf σ := by
+    (hprime : (orderOf σ).Prime)
+    : Nat.card X + (orderOf σ - 1) * Nat.card (Function.fixedPoints σ)
+      = Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) * orderOf σ := by
   let : Fact (orderOf σ).Prime := ⟨hprime⟩
   have h := primeCard_fixedPoints_orbit_formula
     (G := Subgroup.zpowers σ) (X := X) (p := orderOf σ)
@@ -284,42 +282,42 @@ theorem primeOrder_perm_fixedPoints_orbit_formula
   rw [hfixed] at h
   simpa only [Nat.card_eq_fintype_card] using h
 
-
-def trivialPermFixedPointsEquiv
-    (X : Type*) :
-    Function.fixedPoints (1 : Equiv.Perm X) ≃ X where
+def trivialPermFixedPointsEquiv (X : Type*)
+    : Function.fixedPoints (1 : Equiv.Perm X) ≃ X where
   toFun x := x.1
   invFun x := ⟨x, rfl⟩
   left_inv _ := rfl
   right_inv _ := rfl
-noncomputable def trivialPermOrbitQuotientEquiv
-    (X : Type*) :
-    X ≃ MulAction.orbitRel.Quotient
-      (Subgroup.zpowers (1 : Equiv.Perm X)) X where
+
+noncomputable def trivialPermOrbitQuotientEquiv (X : Type*)
+    : X ≃ MulAction.orbitRel.Quotient (Subgroup.zpowers (1 : Equiv.Perm X)) X where
   toFun x := Quotient.mk'' x
-  invFun := Quotient.lift id (by
-    intro x y hxy
-    change
-      MulAction.orbitRel
-        (Subgroup.zpowers (1 : Equiv.Perm X)) X x y at hxy
-    rw [MulAction.orbitRel_apply] at hxy
-    rcases hxy with ⟨g, rfl⟩
-    have hgmem :
-        (g.1 : Equiv.Perm X) ∈ (⊥ : Subgroup (Equiv.Perm X)) := by
-      simpa only [Subgroup.zpowers_one_eq_bot] using g.2
-    have hg : (g.1 : Equiv.Perm X) = 1 := Subgroup.mem_bot.mp hgmem
-    change g.1 y = y
-    rw [hg]
-    rfl)
+  invFun :=
+    Quotient.lift id
+      (by
+        intro x y hxy
+        change
+          MulAction.orbitRel
+            (Subgroup.zpowers (1 : Equiv.Perm X)) X x y at hxy
+        rw [MulAction.orbitRel_apply] at hxy
+        rcases hxy with ⟨g, rfl⟩
+        have hgmem :
+            (g.1 : Equiv.Perm X) ∈ (⊥ : Subgroup (Equiv.Perm X)) := by
+          simpa only [Subgroup.zpowers_one_eq_bot] using g.2
+        have hg : (g.1 : Equiv.Perm X) = 1 := Subgroup.mem_bot.mp hgmem
+        change g.1 y = y
+        rw [hg]
+        rfl)
   left_inv x := rfl
   right_inv q := by
     induction q using Quotient.inductionOn
     rfl
+
 theorem primePow_perm_fixedPoints_orbit_formula
     {p : ℕ} (hp : p.Prime) {X : Type*} [Finite X]
-    (σ : Equiv.Perm X) (hpow : σ ^ p = 1) :
-    Nat.card X + (p - 1) * Nat.card (Function.fixedPoints σ) =
-      Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) * p := by
+    (σ : Equiv.Perm X) (hpow : σ ^ p = 1)
+    : Nat.card X + (p - 1) * Nat.card (Function.fixedPoints σ)
+      = Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) * p := by
   have hdvd : orderOf σ ∣ p := orderOf_dvd_iff_pow_eq_one.mpr hpow
   rcases (Nat.dvd_prime hp).mp hdvd with horder_one | horder_prime
   · have hσ : σ = 1 := orderOf_eq_one_iff.mp horder_one
@@ -335,9 +333,8 @@ theorem primePow_perm_fixedPoints_orbit_formula
       Nat.card_congr (trivialPermOrbitQuotientEquiv X).symm
     rw [hfixed, hquot]
     calc
-      Nat.card X + (p - 1) * Nat.card X =
-          (1 + (p - 1)) * Nat.card X := by
-            rw [Nat.add_mul, one_mul]
+      Nat.card X + (p - 1) * Nat.card X = (1 + (p - 1)) * Nat.card X := by
+        rw [Nat.add_mul, one_mul]
       _ = p * Nat.card X := by rw [Nat.add_sub_of_le hp.one_le]
       _ = Nat.card X * p := Nat.mul_comm _ _
   · have h := primeOrder_perm_fixedPoints_orbit_formula σ
@@ -351,11 +348,10 @@ theorem primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
     (σ : Equiv.Perm X) (τ : Equiv.Perm Y)
     (hσpow : σ ^ p = 1) (hτpow : τ ^ p = 1)
     (hcard : Nat.card X = Nat.card Y)
-    (horbit :
-      Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X) =
-        Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers τ) Y)) :
-    Nat.card (Function.fixedPoints σ) =
-      Nat.card (Function.fixedPoints τ) := by
+    (horbit
+      : Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers σ) X)
+        = Nat.card (MulAction.orbitRel.Quotient (Subgroup.zpowers τ) Y))
+    : Nat.card (Function.fixedPoints σ) = Nat.card (Function.fixedPoints τ) := by
   have hσ := primePow_perm_fixedPoints_orbit_formula hp σ hσpow
   have hτ := primePow_perm_fixedPoints_orbit_formula hp τ hτpow
   rw [← hcard, ← horbit] at hτ
@@ -368,8 +364,8 @@ theorem primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq
 theorem equivariantBasis_pow_apply
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V)
-    (σ : Equiv.Perm ι) (hT : ∀ i, T (b i) = b (σ i)) :
-    ∀ (n : ℕ) (i : ι), (T ^ n) (b i) = b ((σ ^ n) i) := by
+    (σ : Equiv.Perm ι) (hT : ∀ i, T (b i) = b (σ i))
+    : ∀ (n : ℕ) (i : ι), (T ^ n) (b i) = b ((σ ^ n) i) := by
   intro n
   induction n with
   | zero => simp
@@ -384,8 +380,8 @@ theorem equivariantBasis_perm_pow_eq_one_of_linearEquiv_pow_eq_one
     {F V ι : Type*} [Field F] [AddCommGroup V] [Module F V]
     [Finite ι] (b : Module.Basis ι F V) (T : V ≃ₗ[F] V)
     (σ : Equiv.Perm ι) (hT : ∀ i, T (b i) = b (σ i))
-    {n : ℕ} (hpow : T ^ n = 1) :
-    σ ^ n = 1 := by
+    {n : ℕ} (hpow : T ^ n = 1)
+    : σ ^ n = 1 := by
   ext i
   apply b.injective
   rw [← equivariantBasis_pow_apply b T σ hT n i, hpow]
@@ -401,9 +397,8 @@ theorem primePow_equivariantBases_fixedPoints_ncard_eq
     (T : V ≃ₗ[F] V) (σ : Equiv.Perm ι) (τ : Equiv.Perm κ)
     (hTσ : ∀ i, T (b i) = b (σ i))
     (hTτ : ∀ j, T (c j) = c (τ j))
-    (hpow : T ^ p = 1) :
-    Nat.card (Function.fixedPoints σ) =
-      Nat.card (Function.fixedPoints τ) := by
+    (hpow : T ^ p = 1)
+    : Nat.card (Function.fixedPoints σ) = Nat.card (Function.fixedPoints τ) := by
   apply primePow_perm_fixedPoints_ncard_eq_of_orbitQuotient_card_eq hp σ τ
   · exact equivariantBasis_perm_pow_eq_one_of_linearEquiv_pow_eq_one
       b T σ hTσ hpow
@@ -420,39 +415,47 @@ noncomputable def permutedBasisInvariantsLinearEquivRespectful
     {F G V iota : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     [Finite iota] [MulAction G iota]
     (rho : Representation F G V) (b : Module.Basis iota F V)
-    (hb : forall g : G, forall i : iota, rho g (b i) = b (g • i)) :
-    rho.invariants ≃ₗ[F]
-      RespectfulFunctions F iota (MulAction.orbitRel G iota) where
-  toFun v := ⟨b.equivFun v.1, by
-    intro i j hij
-    rw [MulAction.orbitRel_apply] at hij
-    rcases hij with ⟨g, rfl⟩
-    simpa [MulAction.toPerm_apply, v.2 g] using
-      (equivariantBasis_equivFun_apply b
-        (rho g) (MulAction.toPerm g) (hb g) v.1 j)⟩
-  invFun f := ⟨b.equivFun.symm f.1, by
-    intro g
-    apply b.equivFun.injective
-    funext j
-    let i : iota := g⁻¹ • j
-    have hi : g • i = j := by simp [i]
-    have hrel : MulAction.orbitRel G iota (g • i) i := by
-      rw [MulAction.orbitRel_apply]
-      exact ⟨g, rfl⟩
-    calc
-      b.equivFun (rho g (b.equivFun.symm f.1)) j =
-          b.equivFun (rho g (b.equivFun.symm f.1)) (g • i) := by rw [hi]
-      _ = b.equivFun (b.equivFun.symm f.1) i := by
-        simpa [MulAction.toPerm_apply] using
-          (equivariantBasis_equivFun_apply b
-            (rho g) (MulAction.toPerm g)
-            (hb g) (b.equivFun.symm f.1) i)
-      _ = f.1 i :=
-        congrFun (b.equivFun.apply_symm_apply f.1) i
-      _ = f.1 (g • i) := (f.2 hrel).symm
-      _ = f.1 j := by rw [hi]
-      _ = b.equivFun (b.equivFun.symm f.1) j :=
-        (congrFun (b.equivFun.apply_symm_apply f.1) j).symm⟩
+    (hb : forall g : G, forall i : iota, rho g (b i) = b (g • i))
+    : rho.invariants ≃ₗ[F] RespectfulFunctions F iota (MulAction.orbitRel G iota) where
+  toFun v :=
+    ⟨
+      b.equivFun v.1,
+      by
+        intro i j hij
+        rw [MulAction.orbitRel_apply] at hij
+        rcases hij with ⟨g, rfl⟩
+        simpa [MulAction.toPerm_apply, v.2 g]
+          using (equivariantBasis_equivFun_apply b
+                  (rho g) (MulAction.toPerm g) (hb g) v.1 j)
+    ⟩
+  invFun f :=
+    ⟨
+      b.equivFun.symm f.1,
+      by
+        intro g
+        apply b.equivFun.injective
+        funext j
+        let i : iota := g⁻¹ • j
+        have hi : g • i = j := by simp [i]
+        have hrel : MulAction.orbitRel G iota (g • i) i := by
+          rw [MulAction.orbitRel_apply]
+          exact ⟨g, rfl⟩
+        calc
+          b.equivFun (rho g (b.equivFun.symm f.1)) j
+              = b.equivFun (rho g (b.equivFun.symm f.1)) (g • i) := by
+            rw [hi]
+          _ = b.equivFun (b.equivFun.symm f.1) i := by
+            simpa [MulAction.toPerm_apply]
+              using (equivariantBasis_equivFun_apply b
+                      (rho g) (MulAction.toPerm g)
+                      (hb g) (b.equivFun.symm f.1) i)
+          _ = f.1 i :=
+            congrFun (b.equivFun.apply_symm_apply f.1) i
+          _ = f.1 (g • i) := (f.2 hrel).symm
+          _ = f.1 j := by rw [hi]
+          _ = b.equivFun (b.equivFun.symm f.1) j :=
+            (congrFun (b.equivFun.apply_symm_apply f.1) j).symm
+    ⟩
   left_inv v := by
     ext
     simp
@@ -472,12 +475,10 @@ theorem permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
     {F G V iota : Type*} [Field F] [Group G] [AddCommGroup V] [Module F V]
     [Finite iota] [MulAction G iota]
     (rho : Representation F G V) (b : Module.Basis iota F V)
-    (hb : forall g : G, forall i : iota, rho g (b i) = b (g • i)) :
-    Module.finrank F rho.invariants =
-      Nat.card (MulAction.orbitRel.Quotient G iota) := by
+    (hb : forall g : G, forall i : iota, rho g (b i) = b (g • i))
+    : Module.finrank F rho.invariants
+      = Nat.card (MulAction.orbitRel.Quotient G iota) := by
   rw [LinearEquiv.finrank_eq
     (permutedBasisInvariantsLinearEquivRespectful rho b hb)]
   exact quotientFunctionsLinearEquivRespectful_finrank F iota _
 end Representation
-
-

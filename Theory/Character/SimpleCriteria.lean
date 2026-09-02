@@ -15,10 +15,8 @@ noncomputable section
 
 open scoped BigOperators
 
-
 open _root_.Representation
 open Representation
-
 
 attribute [local instance] Fintype.ofFinite
 
@@ -26,10 +24,9 @@ variable {G V : Type*} [Group G] [Finite G]
 variable [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
 
 /-- Unbundled simplicity criterion: an irreducible complex representation has one-dimensional endomorphism algebra, and conversely when `|G|` is invertible. -/
-theorem irreducible_iff_end_dimension_one
-    (ρ : Representation ℂ G V) :
-    Representation.IsIrreducible ρ ↔
-      Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 := by
+theorem irreducible_iff_end_dimension_one (ρ : Representation ℂ G V)
+    : Representation.IsIrreducible ρ
+      ↔ Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) = 1 := by
   classical
   have : NeZero (Nat.card G : ℂ) := ⟨by
     exact_mod_cast (Nat.card_pos (α := G)).ne'⟩
@@ -53,9 +50,10 @@ theorem irreducible_iff_end_dimension_one
     let : Nontrivial ρ.asModule := hV_nontrivial
     rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
     change IsSimpleOrder (Submodule (MonoidAlgebra ℂ G) ρ.asModule)
-    refine
-      { toNontrivial := ?_
-        eq_bot_or_eq_top := ?_ }
+    refine {
+      toNontrivial := ?_
+      eq_bot_or_eq_top := ?_
+    }
     · exact ⟨⟨⊥, ⊤, bot_ne_top⟩⟩
     · intro N
       by_cases hNbot : N = ⊥
@@ -81,8 +79,8 @@ theorem irreducible_iff_end_dimension_one
           have he_ne_zero : e ≠ 0 := by
             intro he0
             apply heEnd_ne_zero
-            simpa [e] using
-              congrArg (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)) he0
+            simpa [e]
+              using congrArg (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)) he0
           have hP_nonbot : P ≠ ⊥ := by
             intro hPbot
             apply hNtop
@@ -92,24 +90,24 @@ theorem irreducible_iff_end_dimension_one
           have heEnd_ne_one : eEnd ≠ 1 := by
             obtain ⟨y, hyP, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP_nonbot
             have hyproj : eEnd y = 0 := by
-              simpa [eEnd] using
-                (Submodule.projection_apply_eq_zero_iff hPcompl (x := y)).2 hyP
+              simpa [eEnd]
+                using (Submodule.projection_apply_eq_zero_iff hPcompl (x := y)).2 hyP
             intro he1
             exact hy0 (by simpa [he1] using hyproj)
           have he_ne_one : e ≠ 1 := by
             intro he1
             apply heEnd_ne_one
-            simpa [e] using
-              congrArg (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)) he1
+            simpa [e]
+              using congrArg (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)) he1
           have he_idem : e * e = e := by
             apply (Representation.IntertwiningMap.equivAlgEnd (ρ := ρ)).injective
             simpa [e] using (Submodule.isIdempotentElem_projection hPcompl).eq
           obtain ⟨c, hc⟩ :
               ∃ c : ℂ, c • (1 : Representation.IntertwiningMap ρ ρ) = e := by
-            exact
-              (finrank_eq_one_iff_of_nonzero'
-                (K := ℂ) (V := Representation.IntertwiningMap ρ ρ)
-                (1 : Representation.IntertwiningMap ρ ρ) one_ne_zero).mp hend e
+            exact (finrank_eq_one_iff_of_nonzero'
+                    (K := ℂ) (V := Representation.IntertwiningMap ρ ρ)
+                    (1 : Representation.IntertwiningMap ρ ρ) one_ne_zero).mp
+              hend e
           obtain ⟨v0, hv0⟩ := exists_ne (0 : V)
           have hcv : e v0 = c • v0 := by
             simpa using (congrArg (fun f : Representation.IntertwiningMap ρ ρ => f v0) hc).symm
@@ -120,8 +118,8 @@ theorem irreducible_iff_end_dimension_one
               _ = e (c • v0) := by rw [map_smul]
               _ = e (e v0) := by rw [hcv.symm]
               _ = e v0 := by
-                    simpa using congrArg
-                      (fun f : Representation.IntertwiningMap ρ ρ => f v0) he_idem
+                simpa using congrArg
+                  (fun f : Representation.IntertwiningMap ρ ρ => f v0) he_idem
               _ = c • v0 := hcv
           have hscalar : (c * c - c) • v0 = 0 := by
             rw [sub_smul, hsqv, sub_self]
@@ -139,10 +137,9 @@ theorem irreducible_iff_end_dimension_one
           · exact he_ne_one (by simpa using hc.symm)
 
 /-- Unbundled character-norm criterion for irreducibility. -/
-theorem irreducible_iff_character_norm_one
-    (ρ : Representation ℂ G V) :
-    Representation.IsIrreducible ρ ↔
-      classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) = 1 := by
+theorem irreducible_iff_character_norm_one (ρ : Representation ℂ G V)
+    : Representation.IsIrreducible ρ
+      ↔ classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) = 1 := by
   classical
   have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := G)).ne'
@@ -150,9 +147,8 @@ theorem irreducible_iff_character_norm_one
   have hinner :
       classFunctionInner (characterClassFunction ρ) (characterClassFunction ρ) =
         (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g) := by
-    change
-      (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g) =
-      (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g)
+    change (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g)
+            = (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g)
     rfl
   have hsumSelf :
       (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g) =
@@ -160,14 +156,14 @@ theorem irreducible_iff_character_norm_one
     calc
       (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * star (ρ.character g)
           = (Nat.card G : ℂ)⁻¹ * ∑ g : G, ρ.character g * ρ.character g⁻¹ := by
-              congr 1
-              refine Finset.sum_congr rfl ?_
-              intro g _hg
-              rw [(representation_character_inv_eq_star_character ρ g).symm]
+        congr 1
+        refine Finset.sum_congr rfl ?_
+        intro g _hg
+        rw [(representation_character_inv_eq_star_character ρ g).symm]
       _ = (Module.finrank ℂ (Representation.IntertwiningMap ρ ρ) : ℂ) := by
-            simpa using
-              (Representation.card_inv_mul_sum_char_mul_char_eq_finrank
-                (ρ := ρ) (σ := ρ))
+        simpa using
+          (Representation.card_inv_mul_sum_char_mul_char_eq_finrank
+            (ρ := ρ) (σ := ρ))
   rw [hinner, hsumSelf]
   constructor
   · intro h
@@ -176,14 +172,13 @@ theorem irreducible_iff_character_norm_one
     apply (irreducible_iff_end_dimension_one (ρ := ρ)).2
     exact_mod_cast h
 
-
 /-- The class function of an irreducible finite-dimensional complex representation is
 an irreducible character, independently of the chosen coefficient-space model. -/
 theorem isIrreducibleCharacter_characterClassFunction
     {G V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V) (hρ : Representation.IsIrreducible ρ) :
-    IsIrreducibleConjCharacter (characterClassFunction ρ) := by
+    (ρ : Representation ℂ G V) (hρ : Representation.IsIrreducible ρ)
+    : IsIrreducibleConjCharacter (characterClassFunction ρ) := by
   constructor
   · let b : Module.Basis (Fin (Module.finrank ℂ V)) ℂ V := Module.finBasis ℂ V
     let e : V ≃ₗ[ℂ] (Fin (Module.finrank ℂ V) → ℂ) := b.equivFun
@@ -217,8 +212,8 @@ theorem equiv_of_irreducible_char_eq
     {ρ : Representation F G V} {σ : Representation F G W}
     [IsIrreducible ρ] [IsIrreducible σ]
     (hc : ¬ ringChar F ∣ Nat.card G)
-    (hchar : ρ.character = σ.character) :
-    Nonempty (Equiv σ ρ) := by
+    (hchar : ρ.character = σ.character)
+    : Nonempty (Equiv σ ρ) := by
   let : Fintype G := Fintype.ofFinite G
   have hcard_ne_zero : (Nat.card G : F) ≠ 0 := by
     intro hzero
@@ -241,9 +236,8 @@ theorem equiv_of_irreducible_char_eq
     exact False.elim (zero_ne_one (horth'.symm.trans hself'))
 set_option backward.isDefEq.respectTransparency false in
 /-- The one-dimensional trivial complex representation is irreducible. -/
-theorem trivial_complex_irreducible
-    {G : Type*} [Group G] [Finite G] :
-    Representation.IsIrreducible (Representation.trivial ℂ G ℂ) := by
+theorem trivial_complex_irreducible {G : Type*} [Group G] [Finite G]
+    : Representation.IsIrreducible (Representation.trivial ℂ G ℂ) := by
   rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
   exact is_simple_module_of_finrank_eq_one
     (K := ℂ) (A := MonoidAlgebra ℂ G)
@@ -257,7 +251,7 @@ theorem repEquiv_of_irreducible_char_eq
     {ρ : Representation F G V} {σ : Representation F G W}
     [IsIrreducible ρ] [IsIrreducible σ]
     (hc : ¬ ringChar F ∣ Nat.card G)
-    (hchar : ρ.character = σ.character) :
-    Nonempty (σ ≃ₗ ρ) := by
+    (hchar : ρ.character = σ.character)
+    : Nonempty (σ ≃ₗ ρ) := by
   rcases equiv_of_irreducible_char_eq (ρ := ρ) (σ := σ) hc hchar with ⟨e⟩
   exact ⟨RepEquiv.ofRepresentationEquiv e⟩

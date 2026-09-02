@@ -21,8 +21,8 @@ open _root_.Representation
 
 /-- The group acts on the second coordinate of the canonical basis index for a
 free representation. -/
-@[reducible] def freeBasisIndexMulAction (G alpha : Type*)
-    [Group G] : MulAction G (alpha × G) where
+@[reducible]
+def freeBasisIndexMulAction (G alpha : Type*) [Group G] : MulAction G (alpha × G) where
   smul g x := (x.1, g * x.2)
   one_smul x := by
     rcases x with ⟨i, h⟩
@@ -35,28 +35,24 @@ free representation. -/
 
 /-- The canonical K-basis of a free representation, indexed by a free
 G-set. -/
-noncomputable def freeBasis
-    (K G alpha : Type*) [Field K] [Group G] :
-    Module.Basis (alpha × G) K (alpha →₀ MonoidAlgebra K G) :=
+noncomputable def freeBasis (K G alpha : Type*) [Field K] [Group G]
+    : Module.Basis (alpha × G) K (alpha →₀ MonoidAlgebra K G) :=
   (Finsupp.basisSingleOne : Module.Basis (alpha × G) K ((alpha × G) →₀ K)).map
     ((Finsupp.curryLinearEquiv K).trans
       (Finsupp.mapRange.linearEquiv (MonoidAlgebra.coeffLinearEquiv K).symm))
 
 @[simp]
-theorem freeBasis_apply
-    (K G alpha : Type*) [Field K] [Group G] (x : alpha × G) :
-    freeBasis K G alpha x =
-      Finsupp.single x.1 (MonoidAlgebra.single x.2 (1 : K)) := by
+theorem freeBasis_apply (K G alpha : Type*) [Field K] [Group G] (x : alpha × G)
+    : freeBasis K G alpha x = Finsupp.single x.1 (MonoidAlgebra.single x.2 (1 : K)) := by
   ext i g
   simp [freeBasis, Finsupp.curryLinearEquiv]
 
 /-- The free representation permutes its canonical basis through left
 multiplication on the group coordinate. -/
 theorem free_apply_freeBasis
-    (K G alpha : Type*) [Field K] [Group G] (g : G) (x : alpha × G) :
-    letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
-    free K G alpha g (freeBasis K G alpha x) =
-      freeBasis K G alpha (g • x) := by
+    (K G alpha : Type*) [Field K] [Group G] (g : G) (x : alpha × G)
+    : letI : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
+      free K G alpha g (freeBasis K G alpha x) = freeBasis K G alpha (g • x) := by
   let : MulAction G (alpha × G) := freeBasisIndexMulAction G alpha
   rcases x with ⟨i, h⟩
   change Representation.free K G alpha g (freeBasis K G alpha (i, h)) =
@@ -66,25 +62,22 @@ theorem free_apply_freeBasis
 /-- Explicit pair form of the free-basis action theorem. -/
 @[simp]
 theorem free_apply_freeBasis_pair
-  (K G alpha : Type*) [Field K] [Group G] (g h : G) (a : alpha) :
-    free K G alpha g (freeBasis K G alpha (a, h)) =
-      freeBasis K G alpha (a, g * h) := by
+    (K G alpha : Type*) [Field K] [Group G] (g h : G) (a : alpha)
+    : free K G alpha g (freeBasis K G alpha (a, h)) = freeBasis K G alpha (a, g * h) := by
   convert free_apply_freeBasis K G alpha g (a, h) using 1; rfl
-
 
 /-- A representation equivalent to a finite-rank free representation has a
 basis permuted freely by the represented group. -/
 theorem exists_freeOrbitBasis_of_repEquiv_free
     {K G V : Type*} {alpha : Type} [Field K] [Group G] [Finite G] [Finite alpha]
     [AddCommGroup V] [Module K V]
-    (rho : Representation K G V) (e : rho ≃ₗ Representation.free K G alpha) :
-    exists (iota : Type) (instFintype : Fintype iota)
-      (instAction : MulAction G iota),
-      letI : Fintype iota := instFintype
-      letI : MulAction G iota := instAction
-      exists b : Module.Basis iota K V,
-        (forall g : G, forall i : iota, rho g (b i) = b (g • i)) ∧
-          (forall i : iota, Nat.card (MulAction.orbit G i) = Nat.card G) := by
+    (rho : Representation K G V) (e : rho ≃ₗ Representation.free K G alpha)
+    : exists (iota : Type) (instFintype : Fintype iota) (instAction : MulAction G iota),
+        letI : Fintype iota := instFintype
+        letI : MulAction G iota := instAction
+        exists b : Module.Basis iota K V,
+          (forall g : G, forall i : iota, rho g (b i) = b (g • i))
+          ∧ (forall i : iota, Nat.card (MulAction.orbit G i) = Nat.card G) := by
   classical
   let : Fintype G := Fintype.ofFinite G
   let : Fintype alpha := Fintype.ofFinite alpha
@@ -115,8 +108,7 @@ theorem exists_freeOrbitBasis_of_repEquiv_free
     exact (e.symm.isIntertwining g (freeBasis K G alpha (q.symm i))).symm
   · intro i
     let : Finite (MulAction.orbit G i) := by
-      simpa [Set.finite_coe_iff] using
-        (Finite.finite_mulAction_orbit (M := G) i)
+      simpa [Set.finite_coe_iff] using (Finite.finite_mulAction_orbit (M := G) i)
     let : Fintype (MulAction.orbit G i) := Fintype.ofFinite _
     let : Fintype (MulAction.stabilizer G i) := Fintype.ofFinite _
     have hstabilizer : MulAction.stabilizer G i = ⊥ := by
@@ -141,5 +133,3 @@ theorem exists_freeOrbitBasis_of_repEquiv_free
       MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
     simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
 end Representation
-
-

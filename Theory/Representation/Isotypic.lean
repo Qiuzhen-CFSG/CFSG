@@ -25,14 +25,13 @@ namespace Representation
 
 open _root_.Representation
 
-
 /-- Isaacs, Definition 1.12: the `M`-homogeneous part of `V`. -/
 def homogeneousComponent
     (A V M : Type*) [Semiring A]
     [AddCommMonoid V] [Module A V]
-    [AddCommMonoid M] [Module A M] : Submodule A V :=
+    [AddCommMonoid M] [Module A M]
+    : Submodule A V :=
   sSup {W : Submodule A V | Nonempty (W ≃ₗ[A] M)}
-
 
 theorem simple_submodule_le_selected
     {A V M : Type*} [Ring A]
@@ -43,8 +42,8 @@ theorem simple_submodule_le_selected
     (hW_internal : DirectSum.IsInternal W)
     (hW_irreducible : forall i : ι, IsSimpleModule A (W i))
     (S : Submodule A V) [IsSimpleModule A S]
-    (hSM : Nonempty (S ≃ₗ[A] M)) :
-    S <= iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) := by
+    (hSM : Nonempty (S ≃ₗ[A] M))
+    : S <= iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) := by
   classical
   let selected : Submodule A V :=
     iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1)
@@ -90,9 +89,9 @@ theorem homogeneousComponent_eq_selected_sum
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (W : ι -> Submodule A V)
     (hW_internal : DirectSum.IsInternal W)
-    (hW_irreducible : forall i : ι, IsSimpleModule A (W i)) :
-    homogeneousComponent A V M =
-      iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) := by
+    (hW_irreducible : forall i : ι, IsSimpleModule A (W i))
+    : homogeneousComponent A V M
+      = iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) := by
   have : IsSimpleModule A M := hM
   apply le_antisymm
   · rw [homogeneousComponent]
@@ -112,11 +111,11 @@ theorem selected_length_eq_card
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (W : ι -> Submodule A V)
     (hW_internal : DirectSum.IsInternal W)
-    (hW_irreducible : forall i : ι, IsSimpleModule A (W i)) :
-    Module.length A
-        ((iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1) :
-          Submodule A V)) =
-      (Nat.card (Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M))) : ENat) := by
+    (hW_irreducible : forall i : ι, IsSimpleModule A (W i))
+    : Module.length A
+        ((iSup (fun i : Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M)) => W i.1)
+          : Submodule A V))
+      = (Nat.card (Subtype (fun i : ι => Nonempty ((W i) ≃ₗ[A] M))) : ENat) := by
   classical
   let p : ι -> Prop := fun i => Nonempty ((W i) ≃ₗ[A] M)
   let J := {i : ι // p i}
@@ -163,16 +162,16 @@ theorem isaacs_lemma_1_13
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (W : ι -> Submodule A V)
     (hW_internal : DirectSum.IsInternal W)
-    (hW_irreducible : forall i : ι, IsSimpleModule A (W i)) :
-    (forall f : Module.End A V,
-        Submodule.map f (homogeneousComponent A V M) <= homogeneousComponent A V M) ∧
-      homogeneousComponent A V M =
-        iSup (fun i : {i : ι // Nonempty ((W i) ≃ₗ[A] M)} => W i.1) ∧
-      (forall {κ : Type*} [Fintype κ] [DecidableEq κ] (U : κ -> Submodule A V),
-        DirectSum.IsInternal U ->
-          (forall k : κ, IsSimpleModule A (U k)) ->
-            Nat.card {i : ι // Nonempty ((W i) ≃ₗ[A] M)} =
-              Nat.card {k : κ // Nonempty ((U k) ≃ₗ[A] M)}) := by
+    (hW_irreducible : forall i : ι, IsSimpleModule A (W i))
+    : (forall f : Module.End A V,
+        Submodule.map f (homogeneousComponent A V M) <= homogeneousComponent A V M)
+      ∧ homogeneousComponent A V M
+        = iSup (fun i : {i : ι // Nonempty ((W i) ≃ₗ[A] M)} => W i.1)
+      ∧ (forall {κ : Type*} [Fintype κ] [DecidableEq κ] (U : κ -> Submodule A V),
+          DirectSum.IsInternal U
+          -> (forall k : κ, IsSimpleModule A (U k))
+          -> Nat.card {i : ι // Nonempty ((W i) ≃ₗ[A] M)}
+              = Nat.card {k : κ // Nonempty ((U k) ≃ₗ[A] M)}) := by
   classical
   refine ⟨?_, ?_, ?_⟩
   · intro f

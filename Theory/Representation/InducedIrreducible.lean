@@ -19,24 +19,21 @@ the subgroup, and the induced representation is irreducible.
 
 noncomputable section
 
-
 namespace Representation
 
 open _root_.Representation
 
-
 theorem isaacs_6_34_inertia
     {G : Type*} [Group G] [Finite G]
     (N : Subgroup G) [N.Normal]
-    (hcentralizer : forall n : N, n ≠ 1 ->
-      Subgroup.centralizer ({(n : G)} : Set G) ≤ N)
+    (hcentralizer : forall n : N, n ≠ 1 -> Subgroup.centralizer ({(n : G)} : Set G) ≤ N)
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (phi : Representation ℂ N V)
     (hphi : Representation.IsIrreducible phi)
-    (hnonprincipal : ¬ Nonempty (phi ≃ₗ Representation.trivial ℂ N ℂ)) :
-    forall g : G,
-      Nonempty (phi ≃ₗ Representation.conjugateRep (G := G) (H := N) phi g) ↔
-        g ∈ N := by
+    (hnonprincipal : ¬ Nonempty (phi ≃ₗ Representation.trivial ℂ N ℂ))
+    : forall g : G,
+        Nonempty (phi ≃ₗ Representation.conjugateRep (G := G) (H := N) phi g)
+        ↔ g ∈ N := by
   let : Representation.IsIrreducible phi := hphi
   intro g
   constructor
@@ -106,19 +103,18 @@ theorem isaacs_6_34_inertia
     have ha :
         g⁻¹ * (x : G) * g = (n : G)⁻¹ * (x : G) * (n : G) := by
       calc
-        g⁻¹ * (x : G) * g =
-            ((n : G)⁻¹ * (n : G)) * (g⁻¹ * (x : G) * g) *
-              ((n : G)⁻¹ * (n : G)) := by simp
-        _ = (n : G)⁻¹ *
-              ((n : G) * (g⁻¹ * (x : G) * g) * (n : G)⁻¹) *
-                (n : G) := by simp [mul_assoc]
+        g⁻¹ * (x : G) * g
+            = ((n : G)⁻¹ * (n : G)) * (g⁻¹ * (x : G) * g) * ((n : G)⁻¹ * (n : G)) := by
+          simp
+        _ = (n : G)⁻¹ * ((n : G) * (g⁻¹ * (x : G) * g) * (n : G)⁻¹) * (n : G) := by
+          simp [mul_assoc]
         _ = (n : G)⁻¹ * (x : G) * (n : G) := by rw [hnG]
     have hcconj :
         (g * (n : G)⁻¹) * (x : G) * (g * (n : G)⁻¹)⁻¹ = (x : G) := by
       calc
-        (g * (n : G)⁻¹) * (x : G) * (g * (n : G)⁻¹)⁻¹ =
-            g * ((n : G)⁻¹ * (x : G) * (n : G)) * g⁻¹ := by
-              simp [mul_assoc]
+        (g * (n : G)⁻¹) * (x : G) * (g * (n : G)⁻¹)⁻¹
+            = g * ((n : G)⁻¹ * (x : G) * (n : G)) * g⁻¹ := by
+          simp [mul_assoc]
         _ = g * (g⁻¹ * (x : G) * g) * g⁻¹ := by rw [← ha]
         _ = (x : G) := by simp [mul_assoc]
     have hcmem : g * (n : G)⁻¹ ∈ N := by
@@ -135,23 +131,26 @@ theorem isaacs_6_34_inertia
 def isaacs_6_34_standardRep
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    (rho : Representation F G V) :
-    Representation F G (ULift (Fin (Module.finrank F V) → F)) :=
+    (rho : Representation F G V)
+    : Representation F G (ULift (Fin (Module.finrank F V) → F)) :=
   let e : V ≃ₗ[F] ULift (Fin (Module.finrank F V) → F) :=
     (Module.finBasis F V).equivFun.trans ULift.moduleEquiv.symm
-  { toFun := fun g => e.conj (rho g)
+  {
+    toFun := fun g => e.conj (rho g)
     map_one' := by
       ext x
       simp [LinearEquiv.conj_apply]
     map_mul' := by
       intro g h
       ext x
-      simp [LinearEquiv.conj_apply, map_mul] }
+      simp [LinearEquiv.conj_apply, map_mul]
+  }
 
 def isaacs_6_34_standardRepEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    (rho : Representation F G V) : rho ≃ₗ isaacs_6_34_standardRep rho := by
+    (rho : Representation F G V)
+    : rho ≃ₗ isaacs_6_34_standardRep rho := by
   let e : V ≃ₗ[F] ULift (Fin (Module.finrank F V) → F) :=
     (Module.finBasis F V).equivFun.trans ULift.moduleEquiv.symm
   refine Representation.RepEquiv.mk e ?_
@@ -163,8 +162,8 @@ def isaacs_6_34_coindRepEquivOfRepEquiv
     {F G H V W : Type*} [Field F] [Group G] [Group H]
     [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
     (i : H →* G) {rho : Representation F H V} {sigma : Representation F H W}
-    (e : rho ≃ₗ sigma) :
-    Representation.coind i rho ≃ₗ Representation.coind i sigma := by
+    (e : rho ≃ₗ sigma)
+    : Representation.coind i rho ≃ₗ Representation.coind i sigma := by
   let f := Representation.coindMap i e.toRepMap
   have hf : Function.Bijective f := by
     constructor
@@ -187,28 +186,29 @@ def isaacs_6_34_coindRepEquivOfRepEquiv
 theorem isaacs_theorem_6_34
     {G : Type*} [Group G] [Finite G]
     (N : Subgroup G) [N.Normal]
-    (hcentralizer : forall n : N, n ≠ 1 ->
-      Subgroup.centralizer ({(n : G)} : Set G) ≤ N) :
-    (forall {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-      (phi : Representation ℂ N V),
-      Representation.IsIrreducible phi ->
-        ¬ Nonempty (phi ≃ₗ Representation.trivial ℂ N ℂ) ->
-          (forall g : G,
-            Nonempty (phi ≃ₗ
-              Representation.conjugateRep (G := G) (H := N) phi g) ↔ g ∈ N) ∧
-            Representation.IsIrreducible (Representation.ind N.subtype phi)) ∧
-      (forall {W : Type*} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
-        (chi : Representation ℂ G W),
-        Representation.IsIrreducible chi ->
-          ¬ N ≤ chi.ker ->
-            exists (V : Type*) (instAddV : AddCommGroup V) (instModuleV : Module ℂ V)
-              (instFiniteV : FiniteDimensional ℂ V),
+    (hcentralizer : forall n : N, n ≠ 1 -> Subgroup.centralizer ({(n : G)} : Set G) ≤ N)
+    : (forall {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
+              (phi : Representation ℂ N V),
+        Representation.IsIrreducible phi
+        -> ¬ Nonempty (phi ≃ₗ Representation.trivial ℂ N ℂ)
+        -> (forall g : G,
+              Nonempty (phi ≃ₗ Representation.conjugateRep (G := G) (H := N) phi g)
+              ↔ g ∈ N)
+            ∧ Representation.IsIrreducible (Representation.ind N.subtype phi))
+      ∧ (forall {W : Type*} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
+                (chi : Representation ℂ G W),
+          Representation.IsIrreducible chi
+          -> ¬ N ≤ chi.ker
+          -> exists (V : Type*) (instAddV : AddCommGroup V) (instModuleV
+                                                              : Module ℂ V) (instFiniteV
+                                                                              : FiniteDimensional
+                                                                                  ℂ V),
               letI : AddCommGroup V := instAddV
               letI : Module ℂ V := instModuleV
               letI : FiniteDimensional ℂ V := instFiniteV
               exists phi : Representation ℂ N V,
-                Representation.IsIrreducible phi ∧
-                  Nonempty (chi ≃ₗ Representation.ind N.subtype phi)) := by
+                Representation.IsIrreducible phi
+                ∧ Nonempty (chi ≃ₗ Representation.ind N.subtype phi)) := by
   constructor
   · intro V _ _ _ phi hphi hnonprincipal
     let : Representation.IsIrreducible phi := hphi

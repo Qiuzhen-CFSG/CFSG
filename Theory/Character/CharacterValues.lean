@@ -21,7 +21,6 @@ noncomputable section
 
 open scoped BigOperators
 
-
 open _root_.Representation
 open Representation
 
@@ -34,8 +33,8 @@ and `η` is a primitive `M`-th root of unity, then the trace belongs to `ℤ[η]
 lemma finite_order_end_trace_mem_cyclotomicOrder
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {η : ℂ} {N M : ℕ} (hη : IsPrimitiveRoot η M) (hM : M ≠ 0)
-    (hNM : N ∣ M) {f : Module.End ℂ V} (hN : N ≠ 0) (hf : f ^ N = 1) :
-    LinearMap.trace ℂ V f ∈ cyclotomicOrder η := by
+    (hNM : N ∣ M) {f : Module.End ℂ V} (hN : N ≠ 0) (hf : f ^ N = 1)
+    : LinearMap.trace ℂ V f ∈ cyclotomicOrder η := by
   classical
   let A := cyclotomicOrder η
   change LinearMap.trace ℂ V (f ^ 1) ∈ A
@@ -61,27 +60,25 @@ lemma representation_character_mem_cyclotomicOrder
     {G V : Type*} [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {η : ℂ} (hη : IsPrimitiveRoot η (Nat.card G))
-    (ρ : Representation ℂ G V) (g : G) :
-    ρ.character g ∈ cyclotomicOrder η := by
+    (ρ : Representation ℂ G V) (g : G)
+    : ρ.character g ∈ cyclotomicOrder η := by
   classical
   have hcard_ne : Nat.card G ≠ 0 := (Nat.card_pos (α := G)).ne'
   let N := orderOf g
   have hN : N ≠ 0 := Nat.ne_of_gt (orderOf_pos g)
-  have hNcard : N ∣ Nat.card G := by
-    simpa [N] using orderOf_dvd_natCard g
+  have hNcard : N ∣ Nat.card G := by simpa [N] using orderOf_dvd_natCard g
   have hpow : (ρ g) ^ N = 1 := by
     subst N
     rw [← MonoidHom.map_pow, pow_orderOf_eq_one, MonoidHom.map_one]
-  simpa [Representation.character] using
-    finite_order_end_trace_mem_cyclotomicOrder (η := η) (N := N) (M := Nat.card G)
+  simpa [Representation.character]
+    using finite_order_end_trace_mem_cyclotomicOrder (η := η) (N := N) (M := Nat.card G)
       hη hcard_ne hNcard (f := ρ g) hN hpow
-
 
 /-- A map commuting with `f` preserves each eigenspace of `f`. -/
 lemma eigenspace_mapsTo_of_commute
     {V : Type*} [AddCommGroup V] [Module ℂ V]
-    {f T : Module.End ℂ V} (hcomm : f * T = T * f) (μ : f.Eigenvalues) :
-    Set.MapsTo T (f.eigenspace (μ : ℂ)) (f.eigenspace (μ : ℂ)) := by
+    {f T : Module.End ℂ V} (hcomm : f * T = T * f) (μ : f.Eigenvalues)
+    : Set.MapsTo T (f.eigenspace (μ : ℂ)) (f.eigenspace (μ : ℂ)) := by
   intro v hv
   apply (Module.End.mem_eigenspace_iff).2
   have hv' : f v = (μ : ℂ) • v := (Module.End.mem_eigenspace_iff).1 hv
@@ -95,8 +92,8 @@ lemma eigenspace_mapsTo_of_commute
 /-- If `T` commutes with `f`, then `f * T` also preserves each eigenspace of `f`. -/
 lemma mul_mapsTo_eigenspace_of_commute
     {V : Type*} [AddCommGroup V] [Module ℂ V]
-    {f T : Module.End ℂ V} (hcomm : f * T = T * f) (μ : f.Eigenvalues) :
-    Set.MapsTo (f * T) (f.eigenspace (μ : ℂ)) (f.eigenspace (μ : ℂ)) := by
+    {f T : Module.End ℂ V} (hcomm : f * T = T * f) (μ : f.Eigenvalues)
+    : Set.MapsTo (f * T) (f.eigenspace (μ : ℂ)) (f.eigenspace (μ : ℂ)) := by
   intro v hv
   let hmapT := eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ
   have hTv : T v ∈ f.eigenspace (μ : ℂ) := hmapT hv
@@ -112,11 +109,11 @@ lemma restrict_pow_eq_one
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     {f T : Module.End ℂ V} {μ : f.Eigenvalues}
     (hmapT : Set.MapsTo T (f.eigenspace (μ : ℂ)) (f.eigenspace (μ : ℂ)))
-    {N : ℕ} (hTpow : T ^ N = 1) :
-    (T.restrict hmapT) ^ N = (1 : Module.End ℂ (f.eigenspace (μ : ℂ))) := by
+    {N : ℕ} (hTpow : T ^ N = 1)
+    : (T.restrict hmapT) ^ N = (1 : Module.End ℂ (f.eigenspace (μ : ℂ))) := by
   calc
-    (T.restrict hmapT) ^ N =
-        (T ^ N).restrict (Module.End.pow_apply_mem_of_forall_mem N hmapT) := by
+    (T.restrict hmapT) ^ N
+        = (T ^ N).restrict (Module.End.pow_apply_mem_of_forall_mem N hmapT) := by
       exact Module.End.pow_restrict N hmapT
     _ = 1 := by
       ext v
@@ -126,11 +123,11 @@ lemma restrict_pow_eq_one
 lemma trace_eq_sum_trace_restrict_eigenspaces_of_commute
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f T : Module.End ℂ V} {p : ℕ} (hp : p ≠ 0) (hf : f ^ p = 1)
-    (hcomm : f * T = T * f) :
-    LinearMap.trace ℂ V T =
-      ∑ μ : f.Eigenvalues,
-        LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
-          (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
+    (hcomm : f * T = T * f)
+    : LinearMap.trace ℂ V T
+      = ∑ μ : f.Eigenvalues,
+          LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
+            (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
   classical
   let Nsub : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hp hf
@@ -153,11 +150,12 @@ commutes with the finite-order map `f`.
 lemma trace_mul_eq_sum_eigen_mul_trace_restrict
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     {f T : Module.End ℂ V} {p : ℕ} (hp : p ≠ 0) (hf : f ^ p = 1)
-    (hcomm : f * T = T * f) :
-    LinearMap.trace ℂ V (f * T) =
-      ∑ μ : f.Eigenvalues, (μ : ℂ) *
-        LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
-          (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
+    (hcomm : f * T = T * f)
+    : LinearMap.trace ℂ V (f * T)
+      = ∑ μ : f.Eigenvalues,
+          (μ : ℂ)
+          * LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
+              (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
   classical
   let Nsub : f.Eigenvalues → Submodule ℂ V := fun μ => f.eigenspace (μ : ℂ)
   have hsemi : f.IsSemisimple := end_isSemisimple_of_pow_eq_one f hp hf
@@ -178,10 +176,11 @@ lemma trace_mul_eq_sum_eigen_mul_trace_restrict
     LinearMap.trace ℂ V (f * T)
         = ∑ μ : f.Eigenvalues,
             LinearMap.trace ℂ (Nsub μ) ((f * T).restrict (hmapfT μ)) := by
-          simpa [Nsub] using LinearMap.trace_eq_sum_trace_restrict hds hmapfT
-    _ = ∑ μ : f.Eigenvalues, (μ : ℂ) *
-        LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
-          (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
+      simpa [Nsub] using LinearMap.trace_eq_sum_trace_restrict hds hmapfT
+    _ = ∑ μ : f.Eigenvalues,
+          (μ : ℂ)
+          * LinearMap.trace ℂ (f.eigenspace (μ : ℂ))
+              (T.restrict (eigenspace_mapsTo_of_commute (f := f) (T := T) hcomm μ)) := by
       refine Finset.sum_congr rfl ?_
       intro μ _
       have hrestrict :
@@ -206,8 +205,8 @@ lemma finite_order_commuting_trace_mul_mem_cyclotomicOrder
     (hη : IsPrimitiveRoot η M) (hM : M ≠ 0) (hNM : N ∣ M)
     (hξη : ξ ∈ cyclotomicOrder η)
     {f T : Module.End ℂ V} (hN : N ≠ 0)
-    (hf : f ^ p = 1) (hTpow : T ^ N = 1) (hcomm : f * T = T * f) :
-    LinearMap.trace ℂ V (f * T) ∈ cyclotomicOrder η := by
+    (hf : f ^ p = 1) (hTpow : T ^ N = 1) (hcomm : f * T = T * f)
+    : LinearMap.trace ℂ V (f * T) ∈ cyclotomicOrder η := by
   classical
   let A := cyclotomicOrder η
   rw [trace_mul_eq_sum_eigen_mul_trace_restrict (f := f) (T := T) hp hf hcomm]
@@ -239,8 +238,8 @@ theorem finite_order_commuting_trace_mul_congruent
     (hη : IsPrimitiveRoot η M) (hM : M ≠ 0) (hNM : N ∣ M)
     (hξη : ξ ∈ cyclotomicOrder η)
     {f T : Module.End ℂ V} (hN : N ≠ 0)
-    (hf : f ^ p = 1) (hTpow : T ^ N = 1) (hcomm : f * T = T * f) :
-    ∃ hmul : LinearMap.trace ℂ V (f * T) ∈ cyclotomicOrder η,
+    (hf : f ^ p = 1) (hTpow : T ^ N = 1) (hcomm : f * T = T * f)
+    : ∃ hmul : LinearMap.trace ℂ V (f * T) ∈ cyclotomicOrder η,
       ∃ hTmem : LinearMap.trace ℂ V T ∈ cyclotomicOrder η,
         CongruentModOneSub η ξ
           (LinearMap.trace ℂ V (f * T)) (LinearMap.trace ℂ V T)
@@ -289,16 +288,16 @@ theorem finite_order_commuting_trace_mul_congruent
     change LinearMap.trace ℂ V (f * T) - LinearMap.trace ℂ V T =
       ((∑ μ : f.Eigenvalues, (zterm μ - wterm μ) : A) : ℂ)
     calc
-      LinearMap.trace ℂ V (f * T) - LinearMap.trace ℂ V T =
-          (∑ μ : f.Eigenvalues, (μ : ℂ) * t μ) - ∑ μ : f.Eigenvalues, t μ := by
-            rw [trace_mul_eq_sum_eigen_mul_trace_restrict
-              (f := f) (T := T) hp hf hcomm,
-              trace_eq_sum_trace_restrict_eigenspaces_of_commute
-              (f := f) (T := T) hp hf hcomm]
+      LinearMap.trace ℂ V (f * T) - LinearMap.trace ℂ V T
+          = (∑ μ : f.Eigenvalues, (μ : ℂ) * t μ) - ∑ μ : f.Eigenvalues, t μ := by
+        rw [trace_mul_eq_sum_eigen_mul_trace_restrict
+          (f := f) (T := T) hp hf hcomm,
+          trace_eq_sum_trace_restrict_eigenspaces_of_commute
+          (f := f) (T := T) hp hf hcomm]
       _ = ∑ μ : f.Eigenvalues, ((μ : ℂ) * t μ - t μ) := by
-            rw [Finset.sum_sub_distrib]
+        rw [Finset.sum_sub_distrib]
       _ = ((∑ μ : f.Eigenvalues, (zterm μ - wterm μ) : A) : ℂ) := by
-            simp [zterm, wterm]
+        simp [zterm, wterm]
   rw [hdiff]
   refine Ideal.sum_mem _ fun μ _ => ?_
   have hμp : (μ : ℂ) ^ p = 1 := eigenvalue_pow_eq_one_of_pow_eq_one hf μ.property
@@ -322,7 +321,8 @@ characters, with all representation spaces encoded as standard spaces
 -/
 noncomputable def virtualCharacterOfRepresentations
     {G : Type*} [Group G] (r : ℕ) (m : Fin r → ℤ) (n : Fin r → ℕ)
-    (ρ : (i : Fin r) → Representation ℂ G (Fin (n i) → ℂ)) : G → ℂ :=
+    (ρ : (i : Fin r) → Representation ℂ G (Fin (n i) → ℂ))
+    : G → ℂ :=
   fun g => ∑ i : Fin r, (m i : ℂ) * (ρ i).character g
 
 /--
@@ -332,9 +332,11 @@ the usual integer span of irreducible characters, but this form avoids any
 category-theoretic representation API.
 -/
 def IsVirtualCharacter {G : Type*} [Group G] (χ : G → ℂ) : Prop :=
-  ∃ r : ℕ, ∃ m : Fin r → ℤ, ∃ n : Fin r → ℕ,
-    ∃ ρ : (i : Fin r) → Representation ℂ G (Fin (n i) → ℂ),
-      χ = virtualCharacterOfRepresentations r m n ρ
+  ∃ r : ℕ,
+  ∃ m : Fin r → ℤ,
+  ∃ n : Fin r → ℕ,
+  ∃ ρ : (i : Fin r) → Representation ℂ G (Fin (n i) → ℂ),
+    χ = virtualCharacterOfRepresentations r m n ρ
 
 /--
 Values of a virtual character of a finite group lie in the cyclotomic order
@@ -343,8 +345,8 @@ generated by a primitive `|G|`-th root.
 lemma virtualCharacter_mem_cyclotomicOrder
     {G : Type*} [Group G] [Finite G]
     {χ : G → ℂ} (hχ : IsVirtualCharacter χ)
-    {η : ℂ} (hη : IsPrimitiveRoot η (Nat.card G)) (g : G) :
-    χ g ∈ cyclotomicOrder η := by
+    {η : ℂ} (hη : IsPrimitiveRoot η (Nat.card G)) (g : G)
+    : χ g ∈ cyclotomicOrder η := by
   classical
   rcases hχ with ⟨r, m, n, ρ, hχeq⟩
   rw [hχeq]
@@ -364,15 +366,14 @@ theorem representation_character_congruent_at_mul
     {p : ℕ} {η ξ : ℂ} (hξ : IsPrimitiveRoot ξ p) (hp : p ≠ 0)
     (hη : IsPrimitiveRoot η (Nat.card G)) (hξη : ξ ∈ cyclotomicOrder η)
     (ρ : Representation ℂ G V) {x y : G}
-    (hx_order : orderOf x = p) (hcomm : x * y = y * x) :
-    ∃ hxy : ρ.character (x * y) ∈ cyclotomicOrder η,
+    (hx_order : orderOf x = p) (hcomm : x * y = y * x)
+    : ∃ hxy : ρ.character (x * y) ∈ cyclotomicOrder η,
       ∃ hy : ρ.character y ∈ cyclotomicOrder η,
         CongruentModOneSub η ξ (ρ.character (x * y)) (ρ.character y) hξη hxy hy := by
   classical
   let N := orderOf y
   have hN : N ≠ 0 := Nat.ne_of_gt (orderOf_pos y)
-  have hNcard : N ∣ Nat.card G := by
-    simpa [N] using orderOf_dvd_natCard y
+  have hNcard : N ∣ Nat.card G := by simpa [N] using orderOf_dvd_natCard y
   have hxpow : x ^ p = 1 := by
     rw [← hx_order]
     exact pow_orderOf_eq_one x
@@ -405,8 +406,8 @@ theorem virtualCharacter_congruent_at_mul
     {p : ℕ} {η ξ : ℂ} (hξ : IsPrimitiveRoot ξ p) (hp : p ≠ 0)
     (hη : IsPrimitiveRoot η (Nat.card G)) (hξη : ξ ∈ cyclotomicOrder η)
     {χ : G → ℂ} (hχ : IsVirtualCharacter χ) {x y : G}
-    (hx_order : orderOf x = p) (hcomm : x * y = y * x) :
-    ∃ hxy : χ (x * y) ∈ cyclotomicOrder η,
+    (hx_order : orderOf x = p) (hcomm : x * y = y * x)
+    : ∃ hxy : χ (x * y) ∈ cyclotomicOrder η,
       ∃ hy : χ y ∈ cyclotomicOrder η,
         CongruentModOneSub η ξ (χ (x * y)) (χ y) hξη hxy hy := by
   classical
@@ -454,4 +455,3 @@ theorem virtualCharacter_congruent_at_mul
   have hmul := congruentModIn_mul_left hci
     (⟨(m i : ℂ), intCast_mem_cyclotomicOrder η (m i)⟩ : A)
   simpa [zterm, wterm] using hmul
-

@@ -11,7 +11,6 @@ open MonoidAlgebra
 
 noncomputable section
 
-
 open _root_.Representation
 open Representation
 
@@ -24,8 +23,8 @@ abbrev CrossCharClassFunction (F G : Type*) [Field F] [Group G] :=
 /-- Turn a conjugation-invariant function into an arbitrary-field class function. -/
 noncomputable def crossCharClassFunctionOfInvariant
     {F G : Type*} [Field F] [Group G] (f : G → F)
-    (hf : ∀ g h : G, f (h * g * h⁻¹) = f g) :
-    CrossCharClassFunction F G := by
+    (hf : ∀ g h : G, f (h * g * h⁻¹) = f g)
+    : CrossCharClassFunction F G := by
   refine Quotient.lift f ?_
   intro a b hab
   rcases hab with ⟨c, hc⟩
@@ -41,15 +40,18 @@ noncomputable def crossCharClassFunctionOfInvariant
 noncomputable def crossCharCharacterClassFunction
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    (ρ : Representation F G V) : CrossCharClassFunction F G :=
-  crossCharClassFunctionOfInvariant ρ.character (by
-    intro g h
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g h)
+    (ρ : Representation F G V)
+    : CrossCharClassFunction F G :=
+  crossCharClassFunctionOfInvariant ρ.character
+    (by
+      intro g h
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g h)
 
 /-- The bilinear character pairing, using inversion in the second variable. -/
 noncomputable def crossCharClassFunctionPairing
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (φ ψ : CrossCharClassFunction F G) : F := by
+    (φ ψ : CrossCharClassFunction F G)
+    : F := by
   classical
   letI := Fintype.ofFinite G
   exact (Nat.card G : F)⁻¹ *
@@ -59,12 +61,11 @@ lemma crossCharClassFunctionPairing_character
     {F G V W : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     [AddCommGroup W] [Module F W] [FiniteDimensional F W]
-    (ρ : Representation F G V) (σ : Representation F G W) :
-    crossCharClassFunctionPairing
+    (ρ : Representation F G V) (σ : Representation F G W)
+    : crossCharClassFunctionPairing
         (crossCharCharacterClassFunction ρ)
-        (crossCharCharacterClassFunction σ) =
-      (Nat.card G : F)⁻¹ *
-        ∑ g : G, ρ.character g * σ.character g⁻¹ := by
+        (crossCharCharacterClassFunction σ)
+      = (Nat.card G : F)⁻¹ * ∑ g : G, ρ.character g * σ.character g⁻¹ := by
   rfl
 
 abbrev CrossCharGroupAlgebra (F G : Type*) [Field F] [Group G] :=
@@ -72,10 +73,11 @@ abbrev CrossCharGroupAlgebra (F G : Type*) [Field F] [Group G] :=
 
 theorem crossCharWedderburnDataExists
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) :
-    ∃ (n : ℕ) (d : Fin n → ℕ), (∀ i, NeZero (d i)) ∧
-      Nonempty (CrossCharGroupAlgebra F G ≃ₐ[F]
-        ∀ i, Matrix (Fin (d i)) (Fin (d i)) F) := by
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : ∃ (n : ℕ) (d : Fin n → ℕ),
+        (∀ i, NeZero (d i))
+        ∧ Nonempty
+            (CrossCharGroupAlgebra F G ≃ₐ[F] ∀ i, Matrix (Fin (d i)) (Fin (d i)) F) := by
   classical
   have hcard : (Nat.card G : F) ≠ 0 := by
     intro hz
@@ -89,25 +91,26 @@ theorem crossCharWedderburnDataExists
 
 noncomputable def crossCharWedderburnCard
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) : ℕ :=
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : ℕ :=
   Classical.choose (crossCharWedderburnDataExists F G hchar)
 
 noncomputable def crossCharWedderburnDims
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) :
-    Fin (crossCharWedderburnCard F G hchar) → ℕ :=
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : Fin (crossCharWedderburnCard F G hchar) → ℕ :=
   Classical.choose (Classical.choose_spec (crossCharWedderburnDataExists F G hchar))
 
 theorem crossCharWedderburnDims_spec
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) :
-    (∀ i, NeZero (crossCharWedderburnDims F G hchar i)) ∧
-      Nonempty (CrossCharGroupAlgebra F G ≃ₐ[F]
-        ∀ i : Fin (crossCharWedderburnCard F G hchar),
-          Matrix (Fin (crossCharWedderburnDims F G hchar i))
-            (Fin (crossCharWedderburnDims F G hchar i)) F) :=
-  Classical.choose_spec
-    (Classical.choose_spec (crossCharWedderburnDataExists F G hchar))
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : (∀ i, NeZero (crossCharWedderburnDims F G hchar i))
+      ∧ Nonempty
+          (CrossCharGroupAlgebra F G
+            ≃ₐ[F] ∀ i : Fin (crossCharWedderburnCard F G hchar),
+              Matrix (Fin (crossCharWedderburnDims F G hchar i))
+                (Fin (crossCharWedderburnDims F G hchar i)) F) :=
+  Classical.choose_spec (Classical.choose_spec (crossCharWedderburnDataExists F G hchar))
 
 noncomputable abbrev CrossCharWedderburnIndex
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
@@ -117,43 +120,42 @@ noncomputable abbrev CrossCharWedderburnIndex
 noncomputable def crossCharWedderburnDim
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) : ℕ :=
+    (i : CrossCharWedderburnIndex F G hchar)
+    : ℕ :=
   crossCharWedderburnDims F G hchar i
 
 instance crossCharWedderburnDim_neZero
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    NeZero (crossCharWedderburnDim i) :=
+    (i : CrossCharWedderburnIndex F G hchar)
+    : NeZero (crossCharWedderburnDim i) :=
   (crossCharWedderburnDims_spec F G hchar).1 i
 
 noncomputable def crossCharWedderburnEquiv
     (F G : Type*) [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) :
-    CrossCharGroupAlgebra F G ≃ₐ[F]
-      ∀ i : CrossCharWedderburnIndex F G hchar,
-        Matrix (Fin (crossCharWedderburnDim i))
-          (Fin (crossCharWedderburnDim i)) F :=
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : CrossCharGroupAlgebra F G
+      ≃ₐ[F] ∀ i : CrossCharWedderburnIndex F G hchar,
+        Matrix (Fin (crossCharWedderburnDim i)) (Fin (crossCharWedderburnDim i)) F :=
   Classical.choice (crossCharWedderburnDims_spec F G hchar).2
 
 noncomputable def crossCharBlockAlgHom
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    CrossCharGroupAlgebra F G →ₐ[F]
-      Matrix (Fin (crossCharWedderburnDim i))
-        (Fin (crossCharWedderburnDim i)) F :=
-  (Pi.evalAlgHom F (fun j : CrossCharWedderburnIndex F G hchar =>
-      Matrix (Fin (crossCharWedderburnDim j))
-        (Fin (crossCharWedderburnDim j)) F) i).comp
+    (i : CrossCharWedderburnIndex F G hchar)
+    : CrossCharGroupAlgebra F G
+      →ₐ[F] Matrix (Fin (crossCharWedderburnDim i)) (Fin (crossCharWedderburnDim i)) F :=
+  (Pi.evalAlgHom F
+    (fun j : CrossCharWedderburnIndex F G hchar =>
+      Matrix (Fin (crossCharWedderburnDim j)) (Fin (crossCharWedderburnDim j)) F)
+    i).comp
     (crossCharWedderburnEquiv F G hchar).toAlgHom
 
 instance crossCharMatrixBlockModule
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    Module (CrossCharGroupAlgebra F G)
-      (Fin (crossCharWedderburnDim i) → F) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : Module (CrossCharGroupAlgebra F G) (Fin (crossCharWedderburnDim i) → F) := by
   classical
   letI : Module
       (Matrix (Fin (crossCharWedderburnDim i))
@@ -165,9 +167,9 @@ instance crossCharMatrixBlockModule
 instance crossCharMatrixBlockIsScalarTower
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    IsScalarTower F (CrossCharGroupAlgebra F G)
-      (Fin (crossCharWedderburnDim i) → F) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : IsScalarTower F (CrossCharGroupAlgebra F G)
+        (Fin (crossCharWedderburnDim i) → F) := by
   classical
   let : Module
       (Matrix (Fin (crossCharWedderburnDim i))
@@ -183,8 +185,8 @@ instance crossCharMatrixBlockIsScalarTower
 noncomputable def crossCharMatrixBlockRepresentation
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    Representation F G (Fin (crossCharWedderburnDim i) → F) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : Representation F G (Fin (crossCharWedderburnDim i) → F) := by
   classical
   letI := crossCharMatrixBlockModule i
   letI := crossCharMatrixBlockIsScalarTower i
@@ -194,8 +196,8 @@ noncomputable def crossCharMatrixBlockRepresentation
 lemma crossCharMatrixBlockRepresentation_irreducible
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    Representation.IsIrreducible (crossCharMatrixBlockRepresentation i) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : Representation.IsIrreducible (crossCharMatrixBlockRepresentation i) := by
   classical
   let := crossCharMatrixBlockModule i
   let := crossCharMatrixBlockIsScalarTower i
@@ -219,9 +221,10 @@ lemma crossCharMatrixBlockRepresentation_irreducible
     intro m
     refine ⟨(crossCharWedderburnEquiv F G hchar).symm (Pi.single i m), ?_⟩
     simp [φ, crossCharBlockAlgHom]
-  refine
-    { toNontrivial := ?_
-      eq_bot_or_eq_top := ?_ }
+  refine {
+    toNontrivial := ?_
+    eq_bot_or_eq_top := ?_
+  }
   · have : Nontrivial (Fin (crossCharWedderburnDim i) → F) := Pi.nontrivial
     refine ⟨⟨(⊥ : Subrepresentation
       (Representation.ofModule' (k := F) (G := G)
@@ -314,17 +317,17 @@ lemma crossCharMatrixBlockRepresentation_irreducible
 noncomputable def crossCharBlockCharacter
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i : CrossCharWedderburnIndex F G hchar) :
-    CrossCharClassFunction F G :=
+    (i : CrossCharWedderburnIndex F G hchar)
+    : CrossCharClassFunction F G :=
   crossCharCharacterClassFunction (crossCharMatrixBlockRepresentation i)
 
 lemma crossCharBlockCharacters_orthonormal
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
-    (i j : CrossCharWedderburnIndex F G hchar) :
-    crossCharClassFunctionPairing
-        (crossCharBlockCharacter i) (crossCharBlockCharacter j) =
-      if i = j then 1 else 0 := by
+    (i j : CrossCharWedderburnIndex F G hchar)
+    : crossCharClassFunctionPairing
+        (crossCharBlockCharacter i) (crossCharBlockCharacter j)
+      = if i = j then 1 else 0 := by
   classical
   have hcard_ne : (Nat.card G : F) ≠ 0 := by
     intro hz
@@ -408,18 +411,17 @@ lemma crossCharBlockCharacters_orthonormal
       exact hv (h.some.toLinearEquiv.injective (by simpa using hφv))
     simp [hij, hno]
 
-
 lemma crossCharClassFunctionPairing_zero_left
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (φ : CrossCharClassFunction F G) :
-    crossCharClassFunctionPairing (0 : CrossCharClassFunction F G) φ = 0 := by
+    (φ : CrossCharClassFunction F G)
+    : crossCharClassFunctionPairing (0 : CrossCharClassFunction F G) φ = 0 := by
   classical
   simp [crossCharClassFunctionPairing]
 
 noncomputable def crossCharClassFunctionPairingLeftLinear
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (ψ : CrossCharClassFunction F G) :
-    CrossCharClassFunction F G →ₗ[F] F where
+    (ψ : CrossCharClassFunction F G)
+    : CrossCharClassFunction F G →ₗ[F] F where
   toFun φ := crossCharClassFunctionPairing φ ψ
   map_add' φ₁ φ₂ := by
     classical
@@ -433,9 +435,9 @@ noncomputable def crossCharClassFunctionPairingLeftLinear
 lemma crossCharClassFunctionPairing_sum_left
     {F G ι : Type*} [Field F] [Group G] [Finite G] [Fintype ι]
     (a : ι → F) (φ : ι → CrossCharClassFunction F G)
-    (ψ : CrossCharClassFunction F G) :
-    crossCharClassFunctionPairing (∑ i, a i • φ i) ψ =
-      ∑ i, a i • crossCharClassFunctionPairing (φ i) ψ := by
+    (ψ : CrossCharClassFunction F G)
+    : crossCharClassFunctionPairing (∑ i, a i • φ i) ψ
+      = ∑ i, a i • crossCharClassFunctionPairing (φ i) ψ := by
   classical
   change crossCharClassFunctionPairingLeftLinear ψ (∑ i, a i • φ i) =
     ∑ i, a i • crossCharClassFunctionPairingLeftLinear ψ (φ i)
@@ -444,10 +446,10 @@ lemma crossCharClassFunctionPairing_sum_left
 
 lemma crossCharBlockCharacters_linearIndependent
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    LinearIndependent F
-      (crossCharBlockCharacter :
-        CrossCharWedderburnIndex F G hchar → CrossCharClassFunction F G) := by
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : LinearIndependent F
+        (crossCharBlockCharacter
+          : CrossCharWedderburnIndex F G hchar → CrossCharClassFunction F G) := by
   classical
   rw [Fintype.linearIndependent_iff]
   intro a ha i
@@ -467,39 +469,40 @@ lemma crossCharBlockCharacters_linearIndependent
 
 lemma crossCharBlockCharacters_card_le_classFunction_finrank
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    Fintype.card (CrossCharWedderburnIndex F G hchar) ≤
-      Module.finrank F (CrossCharClassFunction F G) := by
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : Fintype.card (CrossCharWedderburnIndex F G hchar)
+      ≤ Module.finrank F (CrossCharClassFunction F G) := by
   classical
   have hli := crossCharBlockCharacters_linearIndependent
     (F := F) (G := G) (hchar := hchar)
   have hspan := (finrank_span_eq_card hli).symm
   calc
-    Fintype.card (CrossCharWedderburnIndex F G hchar) =
-        Module.finrank F
-          (Submodule.span F (Set.range
-            (crossCharBlockCharacter :
-              CrossCharWedderburnIndex F G hchar →
-                CrossCharClassFunction F G))) := hspan
+    Fintype.card (CrossCharWedderburnIndex F G hchar)
+        = Module.finrank F
+            (Submodule.span F
+              (Set.range
+                (crossCharBlockCharacter
+                  : CrossCharWedderburnIndex F G hchar → CrossCharClassFunction F G))) :=
+      hspan
     _ ≤ Module.finrank F (CrossCharClassFunction F G) :=
       Submodule.finrank_le _
 
 noncomputable def crossCharClassFunctionCentralElement
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (φ : CrossCharClassFunction F G) : CrossCharGroupAlgebra F G :=
+    (φ : CrossCharClassFunction F G)
+    : CrossCharGroupAlgebra F G :=
   ∑ g : G, MonoidAlgebra.single g (φ (ConjClasses.mk g⁻¹))
 
 lemma crossCharClassFunctionCentralElement_coeff
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (φ : CrossCharClassFunction F G) (g : G) :
-    (crossCharClassFunctionCentralElement φ).coeff g =
-      φ (ConjClasses.mk g⁻¹) := by
+    (φ : CrossCharClassFunction F G) (g : G)
+    : (crossCharClassFunctionCentralElement φ).coeff g = φ (ConjClasses.mk g⁻¹) := by
   classical
   simp [crossCharClassFunctionCentralElement, Finsupp.single_apply]
 
 noncomputable def crossCharClassFunctionCentralElementLinear
-    {F G : Type*} [Field F] [Group G] [Finite G] :
-    CrossCharClassFunction F G →ₗ[F] CrossCharGroupAlgebra F G where
+    {F G : Type*} [Field F] [Group G] [Finite G]
+    : CrossCharClassFunction F G →ₗ[F] CrossCharGroupAlgebra F G where
   toFun φ := crossCharClassFunctionCentralElement φ
   map_add' φ ψ := by
     classical
@@ -512,9 +515,9 @@ noncomputable def crossCharClassFunctionCentralElementLinear
 
 lemma crossCharClassFunctionCentralElement_comm
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (φ : CrossCharClassFunction F G) (a : CrossCharGroupAlgebra F G) :
-    a * crossCharClassFunctionCentralElement φ =
-      crossCharClassFunctionCentralElement φ * a := by
+    (φ : CrossCharClassFunction F G) (a : CrossCharGroupAlgebra F G)
+    : a * crossCharClassFunctionCentralElement φ
+      = crossCharClassFunctionCentralElement φ * a := by
   classical
   induction a using MonoidAlgebra.induction_linear with
   | zero => simp
@@ -538,10 +541,11 @@ lemma crossCharBlockAlgHom_centralElement_mem_center
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
     (φ : CrossCharClassFunction F G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    crossCharBlockAlgHom i (crossCharClassFunctionCentralElement φ) ∈
-      Set.center (Matrix (Fin (crossCharWedderburnDim i))
-        (Fin (crossCharWedderburnDim i)) F) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : crossCharBlockAlgHom i (crossCharClassFunctionCentralElement φ)
+      ∈ Set.center
+          (Matrix (Fin (crossCharWedderburnDim i))
+            (Fin (crossCharWedderburnDim i)) F) := by
   classical
   rw [Semigroup.mem_center_iff]
   intro M
@@ -556,10 +560,10 @@ lemma crossCharBlockAlgHom_centralElement_eq_scalar
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G}
     (φ : CrossCharClassFunction F G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    ∃ c : F,
-      crossCharBlockAlgHom i (crossCharClassFunctionCentralElement φ) =
-        Matrix.scalar (Fin (crossCharWedderburnDim i)) c := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : ∃ c : F,
+        crossCharBlockAlgHom i (crossCharClassFunctionCentralElement φ)
+        = Matrix.scalar (Fin (crossCharWedderburnDim i)) c := by
   classical
   have hcenter :=
     crossCharBlockAlgHom_centralElement_mem_center φ i
@@ -569,9 +573,8 @@ lemma crossCharBlockAlgHom_centralElement_eq_scalar
 
 noncomputable def crossCharClassFunctionBlockScalarLinear
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    CrossCharClassFunction F G →ₗ[F]
-      (CrossCharWedderburnIndex F G hchar → F) where
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : CrossCharClassFunction F G →ₗ[F] (CrossCharWedderburnIndex F G hchar → F) where
   toFun φ i :=
     crossCharBlockAlgHom i (crossCharClassFunctionCentralElement φ) 0 0
   map_add' φ ψ := by
@@ -599,10 +602,9 @@ noncomputable def crossCharClassFunctionBlockScalarLinear
 
 lemma crossCharClassFunctionBlockScalarLinear_injective
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    Function.Injective
-      (crossCharClassFunctionBlockScalarLinear
-        (F := F) (G := G) (hchar := hchar)) := by
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : Function.Injective
+        (crossCharClassFunctionBlockScalarLinear (F := F) (G := G) (hchar := hchar)) := by
   classical
   rw [injective_iff_map_eq_zero]
   intro φ hφ
@@ -630,9 +632,9 @@ lemma crossCharClassFunctionBlockScalarLinear_injective
 
 lemma crossCharClassFunction_finrank_le_blockCharacters_card
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    Module.finrank F (CrossCharClassFunction F G) ≤
-      Fintype.card (CrossCharWedderburnIndex F G hchar) := by
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : Module.finrank F (CrossCharClassFunction F G)
+      ≤ Fintype.card (CrossCharWedderburnIndex F G hchar) := by
   classical
   have hinj := crossCharClassFunctionBlockScalarLinear_injective
     (F := F) (G := G) (hchar := hchar)
@@ -643,12 +645,12 @@ lemma crossCharClassFunction_finrank_le_blockCharacters_card
 
 lemma crossCharBlockCharacters_span
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} :
-    Submodule.span F
+    {hchar : ¬ ringChar F ∣ Nat.card G}
+    : Submodule.span F
         (Set.range
-          (crossCharBlockCharacter :
-            CrossCharWedderburnIndex F G hchar →
-              CrossCharClassFunction F G)) = ⊤ := by
+          (crossCharBlockCharacter
+            : CrossCharWedderburnIndex F G hchar → CrossCharClassFunction F G))
+      = ⊤ := by
   classical
   refine Submodule.eq_top_of_finrank_eq ?_
   have hli := crossCharBlockCharacters_linearIndependent
@@ -656,12 +658,12 @@ lemma crossCharBlockCharacters_span
   have hspan := (finrank_span_eq_card hli).symm
   calc
     Module.finrank F
-        (Submodule.span F
-          (Set.range
-            (crossCharBlockCharacter :
-              CrossCharWedderburnIndex F G hchar →
-                CrossCharClassFunction F G))) =
-      Fintype.card (CrossCharWedderburnIndex F G hchar) := hspan.symm
+          (Submodule.span F
+            (Set.range
+              (crossCharBlockCharacter
+                : CrossCharWedderburnIndex F G hchar → CrossCharClassFunction F G)))
+        = Fintype.card (CrossCharWedderburnIndex F G hchar) :=
+      hspan.symm
     _ = Module.finrank F (CrossCharClassFunction F G) :=
       le_antisymm
         (crossCharBlockCharacters_card_le_classFunction_finrank
@@ -671,29 +673,27 @@ lemma crossCharBlockCharacters_span
 
 noncomputable def crossCharChosenBlockBasis
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    (hchar : ¬ ringChar F ∣ Nat.card G) :
-    Module.Basis (CrossCharWedderburnIndex F G hchar) F
-      (CrossCharClassFunction F G) :=
+    (hchar : ¬ ringChar F ∣ Nat.card G)
+    : Module.Basis (CrossCharWedderburnIndex F G hchar) F (CrossCharClassFunction F G) :=
   Module.Basis.mk
-    (crossCharBlockCharacters_linearIndependent
-      (F := F) (G := G) (hchar := hchar))
+    (crossCharBlockCharacters_linearIndependent (F := F) (G := G) (hchar := hchar))
     (by rw [crossCharBlockCharacters_span
       (F := F) (G := G) (hchar := hchar)])
 
 theorem crossChar_irreducibleCharacters_basis
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     (hchar : ¬ ringChar F ∣ Nat.card G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    crossCharChosenBlockBasis hchar i = crossCharBlockCharacter i := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : crossCharChosenBlockBasis hchar i = crossCharBlockCharacter i := by
   simp [crossCharChosenBlockBasis]
 
 theorem crossChar_irreducibleCharacters_complete
     {F G V : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     (hchar : ¬ ringChar F ∣ Nat.card G)
-    (ρ : Representation F G V) (hρ : Representation.IsIrreducible ρ) :
-    ∃ i : CrossCharWedderburnIndex F G hchar,
-      Nonempty (ρ ≃ₗ crossCharMatrixBlockRepresentation (hchar := hchar) i) := by
+    (ρ : Representation F G V) (hρ : Representation.IsIrreducible ρ)
+    : ∃ i : CrossCharWedderburnIndex F G hchar,
+        Nonempty (ρ ≃ₗ crossCharMatrixBlockRepresentation (hchar := hchar) i) := by
   classical
   let b := crossCharChosenBlockBasis hchar
   let : Representation.IsIrreducible ρ := hρ
@@ -709,13 +709,11 @@ theorem crossChar_irreducibleCharacters_complete
       (∑ i : CrossCharWedderburnIndex F G hchar,
           b.repr χ i • crossCharBlockCharacter i) = χ := by
     calc
-      (∑ i : CrossCharWedderburnIndex F G hchar,
-          b.repr χ i • crossCharBlockCharacter i) =
-          ∑ i : CrossCharWedderburnIndex F G hchar,
-            b.repr χ i • b i := by
-              refine Finset.sum_congr rfl ?_
-              intro i _hi
-              simp [b, crossChar_irreducibleCharacters_basis]
+      (∑ i : CrossCharWedderburnIndex F G hchar, b.repr χ i • crossCharBlockCharacter i)
+          = ∑ i : CrossCharWedderburnIndex F G hchar, b.repr χ i • b i := by
+        refine Finset.sum_congr rfl ?_
+        intro i _hi
+        simp [b, crossChar_irreducibleCharacters_basis]
       _ = χ := Module.Basis.sum_repr b χ
   have hself : crossCharClassFunctionPairing χ χ = 1 := by
     have horth := Representation.char_orthonormal (ρ := ρ) (σ := ρ)
@@ -738,20 +736,19 @@ theorem crossChar_irreducibleCharacters_complete
       crossCharClassFunctionPairing_character, hnoEquiv] using horth
   have hzero : crossCharClassFunctionPairing χ χ = 0 := by
     calc
-      crossCharClassFunctionPairing χ χ =
-          crossCharClassFunctionPairing
-            (∑ i : CrossCharWedderburnIndex F G hchar,
-              b.repr χ i • crossCharBlockCharacter i) χ :=
+      crossCharClassFunctionPairing χ χ
+          = crossCharClassFunctionPairing
+              (∑ i : CrossCharWedderburnIndex F G hchar,
+                b.repr χ i • crossCharBlockCharacter i) χ :=
         congrArg (fun f => crossCharClassFunctionPairing f χ) hsum.symm
       _ = ∑ i : CrossCharWedderburnIndex F G hchar,
-            b.repr χ i •
-              crossCharClassFunctionPairing (crossCharBlockCharacter i) χ :=
+            b.repr χ i • crossCharClassFunctionPairing (crossCharBlockCharacter i) χ :=
         crossCharClassFunctionPairing_sum_left _ _ _
       _ = 0 := by simp [hall]
   exact one_ne_zero (hself.symm.trans hzero)
-def crossCharConjClassesPerm
-    {G : Type*} [Group G] (α : G ≃* G) :
-    Equiv.Perm (ConjClasses G) where
+
+def crossCharConjClassesPerm {G : Type*} [Group G] (α : G ≃* G)
+    : Equiv.Perm (ConjClasses G) where
   toFun := ConjClasses.map α.toMonoidHom
   invFun := ConjClasses.map α.symm.toMonoidHom
   left_inv c := by
@@ -763,15 +760,13 @@ def crossCharConjClassesPerm
     change ConjClasses.mk (α (α.symm x)) = ConjClasses.mk x
     simp
 
-theorem crossCharConjClassesPerm_mk
-    {G : Type*} [Group G] (α : G ≃* G) (x : G) :
-    crossCharConjClassesPerm α (ConjClasses.mk x) =
-      ConjClasses.mk (α x) := rfl
-
+theorem crossCharConjClassesPerm_mk {G : Type*} [Group G] (α : G ≃* G) (x : G)
+    : crossCharConjClassesPerm α (ConjClasses.mk x) = ConjClasses.mk (α x) :=
+  rfl
 
 noncomputable def crossCharClassFunctionMapLinearEquiv
-    {F G : Type*} [Field F] [Group G] (α : G ≃* G) :
-    CrossCharClassFunction F G ≃ₗ[F] CrossCharClassFunction F G where
+    {F G : Type*} [Field F] [Group G] (α : G ≃* G)
+    : CrossCharClassFunction F G ≃ₗ[F] CrossCharClassFunction F G where
   toFun φ := fun c => φ ((crossCharConjClassesPerm α).symm c)
   invFun φ := fun c => φ (crossCharConjClassesPerm α c)
   left_inv φ := by ext c; simp
@@ -781,11 +776,9 @@ noncomputable def crossCharClassFunctionMapLinearEquiv
 
 theorem crossCharClassFunctionMapLinearEquiv_basisFun
     {F G : Type*} [Field F] [Group G] [Finite G]
-    (α : G ≃* G) (c : ConjClasses G) :
-    crossCharClassFunctionMapLinearEquiv (F := F) α
-        ((Pi.basisFun F (ConjClasses G)) c) =
-      (Pi.basisFun F (ConjClasses G))
-        (crossCharConjClassesPerm α c) := by
+    (α : G ≃* G) (c : ConjClasses G)
+    : crossCharClassFunctionMapLinearEquiv (F := F) α ((Pi.basisFun F (ConjClasses G)) c)
+      = (Pi.basisFun F (ConjClasses G)) (crossCharConjClassesPerm α c) := by
   classical
   ext d
   by_cases h : d = crossCharConjClassesPerm α c
@@ -797,14 +790,13 @@ theorem crossCharClassFunctionMapLinearEquiv_basisFun
       rw [← hs]
       simp
     simp [crossCharClassFunctionMapLinearEquiv, Pi.basisFun_apply, h, hs]
+
 theorem crossCharClassFunctionMapLinearEquiv_character
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    (α : G ≃* G) (ρ : Representation F G V) :
-    crossCharClassFunctionMapLinearEquiv α
-        (crossCharCharacterClassFunction ρ) =
-      crossCharCharacterClassFunction
-        (ρ.comp α.symm.toMonoidHom) := by
+    (α : G ≃* G) (ρ : Representation F G V)
+    : crossCharClassFunctionMapLinearEquiv α (crossCharCharacterClassFunction ρ)
+      = crossCharCharacterClassFunction (ρ.comp α.symm.toMonoidHom) := by
   ext c
   rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
   change ρ.character (α.symm x) =
@@ -814,36 +806,39 @@ theorem crossCharClassFunctionMapLinearEquiv_character
 noncomputable def crossCharBlockMap
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    CrossCharWedderburnIndex F G hchar :=
-  Classical.choose (crossChar_irreducibleCharacters_complete hchar
-    ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-    ((Representation.RepEquiv.irreducible_iff_group_iso
-      (ρ := crossCharMatrixBlockRepresentation i)
-      (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-      α (by intro g v; simp)).1
-      (crossCharMatrixBlockRepresentation_irreducible i)))
+    (i : CrossCharWedderburnIndex F G hchar)
+    : CrossCharWedderburnIndex F G hchar :=
+  Classical.choose
+    (crossChar_irreducibleCharacters_complete hchar
+      ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
+      ((Representation.RepEquiv.irreducible_iff_group_iso
+          (ρ := crossCharMatrixBlockRepresentation i)
+          (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
+          α (by intro g v; simp)).1
+        (crossCharMatrixBlockRepresentation_irreducible i)))
 
 theorem crossCharBlockMap_spec
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    Nonempty (((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom) ≃ₗ
-      crossCharMatrixBlockRepresentation (crossCharBlockMap α i)) :=
-  Classical.choose_spec (crossChar_irreducibleCharacters_complete hchar
-    ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-    ((Representation.RepEquiv.irreducible_iff_group_iso
-      (ρ := crossCharMatrixBlockRepresentation i)
-      (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-      α (by intro g v; simp)).1
-      (crossCharMatrixBlockRepresentation_irreducible i)))
+    (i : CrossCharWedderburnIndex F G hchar)
+    : Nonempty
+        (((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
+          ≃ₗ crossCharMatrixBlockRepresentation (crossCharBlockMap α i)) :=
+  Classical.choose_spec
+    (crossChar_irreducibleCharacters_complete hchar
+      ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
+      ((Representation.RepEquiv.irreducible_iff_group_iso
+          (ρ := crossCharMatrixBlockRepresentation i)
+          (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
+          α (by intro g v; simp)).1
+        (crossCharMatrixBlockRepresentation_irreducible i)))
 
 theorem crossCharClassFunctionMapLinearEquiv_blockCharacter
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    crossCharClassFunctionMapLinearEquiv α (crossCharBlockCharacter i) =
-      crossCharBlockCharacter (crossCharBlockMap α i) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : crossCharClassFunctionMapLinearEquiv α (crossCharBlockCharacter i)
+      = crossCharBlockCharacter (crossCharBlockMap α i) := by
   rw [crossCharBlockCharacter, crossCharClassFunctionMapLinearEquiv_character]
   ext c
   rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
@@ -852,8 +847,8 @@ theorem crossCharClassFunctionMapLinearEquiv_blockCharacter
 
 theorem crossCharBlockMap_injective
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G) :
-    Function.Injective (crossCharBlockMap (hchar := hchar) α) := by
+    {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
+    : Function.Injective (crossCharBlockMap (hchar := hchar) α) := by
   intro i j hij
   have hmap :
       crossCharClassFunctionMapLinearEquiv (F := F) α
@@ -871,45 +866,43 @@ theorem crossCharBlockMap_injective
 
 noncomputable def crossCharBlockPerm
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
-    {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G) :
-    Equiv.Perm (CrossCharWedderburnIndex F G hchar) :=
+    {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
+    : Equiv.Perm (CrossCharWedderburnIndex F G hchar) :=
   Equiv.ofBijective (crossCharBlockMap α)
-    ⟨crossCharBlockMap_injective α,
-      Finite.injective_iff_surjective.mp (crossCharBlockMap_injective α)⟩
+    ⟨
+      crossCharBlockMap_injective α,
+      Finite.injective_iff_surjective.mp (crossCharBlockMap_injective α)
+    ⟩
 
 theorem crossCharBlockPerm_apply
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    crossCharBlockPerm α i = crossCharBlockMap α i := rfl
+    (i : CrossCharWedderburnIndex F G hchar)
+    : crossCharBlockPerm α i = crossCharBlockMap α i :=
+  rfl
 
 theorem crossCharClassFunctionMapLinearEquiv_blockBasis
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
-    (i : CrossCharWedderburnIndex F G hchar) :
-    crossCharClassFunctionMapLinearEquiv α
-        (crossCharChosenBlockBasis hchar i) =
-      crossCharChosenBlockBasis hchar (crossCharBlockPerm α i) := by
+    (i : CrossCharWedderburnIndex F G hchar)
+    : crossCharClassFunctionMapLinearEquiv α (crossCharChosenBlockBasis hchar i)
+      = crossCharChosenBlockBasis hchar (crossCharBlockPerm α i) := by
   rw [crossChar_irreducibleCharacters_basis hchar,
     crossChar_irreducibleCharacters_basis hchar,
     crossCharBlockPerm_apply,
     crossCharClassFunctionMapLinearEquiv_blockCharacter]
 
-
 set_option backward.isDefEq.respectTransparency false in
-theorem crossChar_trivial_irreducible
-    {F G : Type*} [Field F] [Group G] [Finite G] :
-    Representation.IsIrreducible (Representation.trivial F G F) := by
+theorem crossChar_trivial_irreducible {F G : Type*} [Field F] [Group G] [Finite G]
+    : Representation.IsIrreducible (Representation.trivial F G F) := by
   rw [Representation.irreducible_iff_isSimpleModule_asModule, isSimpleModule_iff]
   exact is_simple_module_of_finrank_eq_one
     (K := F) (A := MonoidAlgebra F G)
     (V := (Representation.trivial F G F).asModule)
     (CommSemiring.finrank_self F)
 
-noncomputable def crossCharClassFunctionMapMonoidHom
-    {F G : Type*} [Field F] [Group G] :
-    (G ≃* G) →*
-      (CrossCharClassFunction F G ≃ₗ[F] CrossCharClassFunction F G) where
+noncomputable def crossCharClassFunctionMapMonoidHom {F G : Type*} [Field F] [Group G]
+    : (G ≃* G) →* (CrossCharClassFunction F G ≃ₗ[F] CrossCharClassFunction F G) where
   toFun := crossCharClassFunctionMapLinearEquiv
   map_one' := by
     ext φ c
@@ -924,11 +917,10 @@ theorem crossCharBlockPerm_fixed_of_character_fixed
     {F G : Type*} [Field F] [IsAlgClosed F] [Group G] [Finite G]
     {hchar : ¬ ringChar F ∣ Nat.card G} (α : G ≃* G)
     (i : CrossCharWedderburnIndex F G hchar)
-    (hfixed :
-      crossCharClassFunctionMapLinearEquiv α
-          (crossCharBlockCharacter i) =
-        crossCharBlockCharacter i) :
-    crossCharBlockPerm α i = i := by
+    (hfixed
+      : crossCharClassFunctionMapLinearEquiv α (crossCharBlockCharacter i)
+        = crossCharBlockCharacter i)
+    : crossCharBlockPerm α i = i := by
   apply (crossCharChosenBlockBasis hchar).injective
   rw [← crossCharClassFunctionMapLinearEquiv_blockBasis α i]
   simpa [crossChar_irreducibleCharacters_basis] using hfixed
@@ -942,11 +934,9 @@ theorem crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
     (hchar : ¬ ringChar F ∣ Nat.card G)
     (α : G ≃* G) (hαpow : α ^ p = 1)
     (ρ : Representation F G V) (hρ : Representation.IsIrreducible ρ)
-    (hnonprincipal :
-      ¬ Nonempty (ρ ≃ₗ Representation.trivial F G F))
-    (hstable :
-      Nonempty (ρ ≃ₗ ρ.comp α.symm.toMonoidHom)) :
-    ∃ x : G, x ≠ 1 ∧ IsConj (α x) x := by
+    (hnonprincipal : ¬ Nonempty (ρ ≃ₗ Representation.trivial F G F))
+    (hstable : Nonempty (ρ ≃ₗ ρ.comp α.symm.toMonoidHom))
+    : ∃ x : G, x ≠ 1 ∧ IsConj (α x) x := by
   classical
   obtain ⟨iρ, eρ⟩ :=
     crossChar_irreducibleCharacters_complete hchar ρ hρ
@@ -990,12 +980,11 @@ theorem crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
           (crossCharBlockCharacter iρ) =
         crossCharBlockCharacter iρ := by
     calc
-      crossCharClassFunctionMapLinearEquiv α
-          (crossCharBlockCharacter iρ) =
-          crossCharClassFunctionMapLinearEquiv α
-            (crossCharCharacterClassFunction ρ) := by rw [hblockCharρ]
-      _ = crossCharCharacterClassFunction
-          (ρ.comp α.symm.toMonoidHom) :=
+      crossCharClassFunctionMapLinearEquiv α (crossCharBlockCharacter iρ)
+          = crossCharClassFunctionMapLinearEquiv α
+              (crossCharCharacterClassFunction ρ) := by
+        rw [hblockCharρ]
+      _ = crossCharCharacterClassFunction (ρ.comp α.symm.toMonoidHom) :=
         crossCharClassFunctionMapLinearEquiv_character α ρ
       _ = crossCharCharacterClassFunction ρ := hstableChar
       _ = crossCharBlockCharacter iρ := hblockCharρ.symm
@@ -1004,17 +993,14 @@ theorem crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
           (crossCharBlockCharacter i0) =
         crossCharBlockCharacter i0 := by
     calc
-      crossCharClassFunctionMapLinearEquiv α
-          (crossCharBlockCharacter i0) =
-          crossCharClassFunctionMapLinearEquiv α
-            (crossCharCharacterClassFunction
-              (Representation.trivial F G F)) := by rw [hblockChar0]
+      crossCharClassFunctionMapLinearEquiv α (crossCharBlockCharacter i0)
+          = crossCharClassFunctionMapLinearEquiv α
+              (crossCharCharacterClassFunction (Representation.trivial F G F)) := by
+        rw [hblockChar0]
       _ = crossCharCharacterClassFunction
-          ((Representation.trivial F G F).comp α.symm.toMonoidHom) :=
-        crossCharClassFunctionMapLinearEquiv_character α
-          (Representation.trivial F G F)
-      _ = crossCharCharacterClassFunction
-          (Representation.trivial F G F) := htrivialChar
+            ((Representation.trivial F G F).comp α.symm.toMonoidHom) :=
+        crossCharClassFunctionMapLinearEquiv_character α (Representation.trivial F G F)
+      _ = crossCharCharacterClassFunction (Representation.trivial F G F) := htrivialChar
       _ = crossCharBlockCharacter i0 := hblockChar0.symm
   have hiρ :
       crossCharBlockPerm α iρ = iρ :=
@@ -1068,4 +1054,3 @@ theorem crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
   refine ⟨x, hxne, ?_⟩
   rw [Function.mem_fixedPoints_iff, crossCharConjClassesPerm_mk] at hc
   exact ConjClasses.mk_eq_mk_iff_isConj.mp hc
-

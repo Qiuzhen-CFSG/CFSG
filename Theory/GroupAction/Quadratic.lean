@@ -2,14 +2,13 @@ module
 
 public import Theory.GroupAction.Defs
 
-
 @[expose] public section
 
 /-- A quadratic action fixes its first action-commutator subgroup pointwise. -/
 theorem commutatorAction_le_fixedPoints_of_commutatorAction₂_eq_bot
     {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
-    (hquadratic : commutatorAction₂ A G = ⊥) :
-    commutatorAction A G ≤ FixedPoints.subgroup A G := by
+    (hquadratic : commutatorAction₂ A G = ⊥)
+    : commutatorAction A G ≤ FixedPoints.subgroup A G := by
   intro d hd
   rw [FixedPoints.mem_subgroup]
   intro a

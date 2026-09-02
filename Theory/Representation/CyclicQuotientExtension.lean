@@ -83,8 +83,8 @@ variable (iota : Representation F G W) [IsIrreducible iota]
 
 abbrev proposition_2_2_sigma : Representation F H W := iota.comp H.subtype
 
-def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H iota) :
-    conjugateRep rho x →ₗ conjugateRep (proposition_2_2_sigma H iota) x := by
+def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H iota)
+    : conjugateRep rho x →ₗ conjugateRep (proposition_2_2_sigma H iota) x := by
   refine RepMap.mk u.toLinearMap ?_
   intro h
   ext v
@@ -96,22 +96,25 @@ def proposition_2_2_conjugateMap (x : G) (u : rho →ₗ proposition_2_2_sigma H
       (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hN h h.prop x⟩ : H) v
   convert hu using 1 <;> rfl
 
-omit [IsAlgClosed
-  F] [FiniteDimensional F V] [FiniteDimensional F W] [rho.IsIrreducible] [iota.IsIrreducible] in
+omit
+  [IsAlgClosed F] [FiniteDimensional F V] [FiniteDimensional F W] [rho.IsIrreducible]
+    [iota.IsIrreducible] in
 @[simp]
-theorem proposition_2_2_conjugateMap_apply (x : G) (u : rho →ₗ proposition_2_2_sigma H iota) (v : V) :
-    proposition_2_2_conjugateMap H rho iota x u v = u v := rfl
+theorem proposition_2_2_conjugateMap_apply (x : G)
+    (u : rho →ₗ proposition_2_2_sigma H iota) (v : V)
+    : proposition_2_2_conjugateMap H rho iota x u v = u v :=
+  rfl
 
-noncomputable def proposition_2_2_restrictionConjEquiv (x : G) :
-    conjugateRep (proposition_2_2_sigma H iota) x ≃ₗ proposition_2_2_sigma H iota := by
+noncomputable def proposition_2_2_restrictionConjEquiv (x : G)
+    : conjugateRep (proposition_2_2_sigma H iota) x ≃ₗ proposition_2_2_sigma H iota := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (iota x⁻¹) (Representation.apply_bijective iota x⁻¹)) ?_
   intro h
   ext v
   simp [conjugateRep_apply, mul_assoc]
 
 /-- The restriction of a `G`-representation to a normal subgroup is equivalent to each conjugate. -/
-noncomputable def cyclicQuotientRestrictionConjEquiv (x : G) :
-    conjugateRep (iota.comp H.subtype) x ≃ₗ iota.comp H.subtype := by
+noncomputable def cyclicQuotientRestrictionConjEquiv (x : G)
+    : conjugateRep (iota.comp H.subtype) x ≃ₗ iota.comp H.subtype := by
   refine RepEquiv.mk (LinearEquiv.ofBijective (iota x⁻¹) (Representation.apply_bijective iota x⁻¹)) ?_
   intro h
   ext v
@@ -119,19 +122,20 @@ noncomputable def cyclicQuotientRestrictionConjEquiv (x : G) :
 
 omit [IsAlgClosed F] [FiniteDimensional F W] [iota.IsIrreducible] in
 @[simp]
-theorem proposition_2_2_restrictionConjEquiv_apply (x : G) (w : W) :
-    proposition_2_2_restrictionConjEquiv H iota x w = iota x⁻¹ w := rfl
+theorem proposition_2_2_restrictionConjEquiv_apply (x : G) (w : W)
+    : proposition_2_2_restrictionConjEquiv H iota x w = iota x⁻¹ w :=
+  rfl
 
-noncomputable def proposition_2_2_twistMap (x : G) :
-    Module.End F (Representation.RepMap rho (proposition_2_2_sigma H iota)) := by
-  refine
-    { toFun := ?_
-      map_add' := ?_
-      map_smul' := ?_ }
+noncomputable def proposition_2_2_twistMap (x : G)
+    : Module.End F (Representation.RepMap rho (proposition_2_2_sigma H iota)) := by
+  refine {
+    toFun := ?_
+    map_add' := ?_
+    map_smul' := ?_
+  }
   · intro u
-    exact
-      (proposition_2_2_restrictionConjEquiv H iota x).toRepMap.comp
-        ((proposition_2_2_conjugateMap H rho iota x u).comp (E x).toRepMap)
+    exact (proposition_2_2_restrictionConjEquiv H iota x).toRepMap.comp
+      ((proposition_2_2_conjugateMap H rho iota x u).comp (E x).toRepMap)
   · intro u v
     ext w
     simp [RepMap.comp_apply]
@@ -139,8 +143,9 @@ noncomputable def proposition_2_2_twistMap (x : G) :
     ext w
     simp [RepMap.comp_apply]
 
-def proposition_2_2_subrepInclusion (phi : Subrepresentation (proposition_2_2_sigma H iota)) :
-    phi.toRepresentation →ₗ proposition_2_2_sigma H iota := by
+def proposition_2_2_subrepInclusion
+    (phi : Subrepresentation (proposition_2_2_sigma H iota))
+    : phi.toRepresentation →ₗ proposition_2_2_sigma H iota := by
   refine RepMap.mk phi.toSubmodule.subtype ?_
   intro h
   ext v
@@ -149,8 +154,8 @@ def proposition_2_2_subrepInclusion (phi : Subrepresentation (proposition_2_2_si
 set_option backward.isDefEq.respectTransparency false in
 /-- The explicit equivalence constructed in Proposition 2.2(a). -/
 noncomputable def proposition_2_2_a_apply
-    (phi : Subrepresentation (iota.comp H.subtype)) (f : rho ≃ₗ phi.toRepresentation) :
-    iota.comp H.subtype ≃ₗ rho := by
+    (phi : Subrepresentation (iota.comp H.subtype)) (f : rho ≃ₗ phi.toRepresentation)
+    : iota.comp H.subtype ≃ₗ rho := by
   classical
   let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial rho
   let u0 : Representation.RepMap rho (proposition_2_2_sigma H iota) :=
@@ -258,8 +263,7 @@ noncomputable def proposition_2_2_a_apply
   have hGstable : ∀ g : G, ∀ w ∈ S, iota g w ∈ S := by
     intro g w hw
     rcases Subgroup.mem_zpowers_iff.mp (hq (g : G ⧸ H)) with ⟨n, hn⟩
-    have hgxn : (g : G ⧸ H) = (x ^ n : G) := by
-      simpa [hxq] using hn.symm
+    have hgxn : (g : G ⧸ H) = (x ^ n : G) := by simpa [hxq] using hn.symm
     have hdiv : g / x ^ n ∈ H := (QuotientGroup.eq_iff_div_mem).mp hgxn
     let h' : H := ⟨g / x ^ n, hdiv⟩
     have hxnw : iota (x ^ n) w ∈ S := hxpow_mem n w hw
@@ -320,10 +324,9 @@ noncomputable def proposition_2_2_a
     (ρ : Representation F H V) (E : ∀ x : G, ρ ≃ₗ conjugateRep ρ x) [IsIrreducible ρ]
     (ι : Representation F G W) [IsIrreducible ι]
     (φ : Subrepresentation (ι.comp H.subtype))
-    (f : ρ ≃ₗ φ.toRepresentation) :
-    ι.comp H.subtype ≃ₗ ρ :=
+    (f : ρ ≃ₗ φ.toRepresentation)
+    : ι.comp H.subtype ≃ₗ ρ :=
   proposition_2_2_a_apply H hcyc ρ E ι φ f
-
 
 section Proposition22bFunctionSpace
 
@@ -332,8 +335,8 @@ variable {G : Type*} [Group G]
 variable {H : Subgroup G} [H.Normal]
 variable {V : Type*} [AddCommGroup V] [Module F V]
 
-def p22b_subrepInclusion {ρ : Representation F H V} (S : Subrepresentation ρ) :
-    S.toRepresentation →ₗ ρ := by
+def p22b_subrepInclusion {ρ : Representation F H V} (S : Subrepresentation ρ)
+    : S.toRepresentation →ₗ ρ := by
   refine RepMap.mk S.toSubmodule.subtype ?_
   intro h
   ext v
@@ -344,8 +347,8 @@ theorem p22b_repMapRangeNeBotOfNeZero
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
-    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    f.range ≠ ⊥ := by
+    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0)
+    : f.range ≠ ⊥ := by
   intro hbot
   apply hf
   apply Representation.RepMap.toLinearMap_injective
@@ -361,8 +364,8 @@ theorem p22b_repMapRangeEqTopOfNeZero
     {V₁ : Type*} [AddCommGroup V₁] [Module F V₁]
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
-    [Representation.IsIrreducible ρ₂] (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    f.range = ⊤ := by
+    [Representation.IsIrreducible ρ₂] (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0)
+    : f.range = ⊤ := by
   rcases (inferInstance : Representation.IsIrreducible ρ₂).eq_bot_or_eq_top f.range with
     hbot | htop
   · exact False.elim (p22b_repMapRangeNeBotOfNeZero f hf hbot)
@@ -374,8 +377,8 @@ noncomputable def p22b_repEquivOfNeZero
     {V₂ : Type*} [AddCommGroup V₂] [Module F V₂]
     {ρ₁ : Representation F H V₁} {ρ₂ : Representation F H V₂}
     [Representation.IsIrreducible ρ₁] [Representation.IsIrreducible ρ₂]
-    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0) :
-    ρ₁ ≃ₗ ρ₂ := by
+    (f : ρ₁ →ₗ ρ₂) (hf : f ≠ 0)
+    : ρ₁ ≃ₗ ρ₂ := by
   have hfinj : Function.Injective f := by
     rcases (Representation.IsIrreducible.injective_or_eq_zero
       (ρ := ρ₁) (σ := ρ₂) (f := f)) with hfinj | hf0
@@ -404,17 +407,25 @@ def p22b_funSubmodule (ρ : Representation F H V) : Submodule F (G → V) where
     intro a f hf h x
     simp [hf h x]
 
-abbrev p22b_funSpace (ρ : Representation F H V) := ↥(p22b_funSubmodule (G := G) (H := H) ρ)
+abbrev p22b_funSpace (ρ : Representation F H V) :=
+  ↥(p22b_funSubmodule (G := G) (H := H) ρ)
 
-instance (ρ : Representation F H V) : CoeFun (p22b_funSpace (G := G) (H := H) ρ) (fun _ => G → V) :=
+instance (ρ : Representation F H V)
+    : CoeFun (p22b_funSpace (G := G) (H := H) ρ) (fun _ => G → V) :=
   ⟨fun f => f.1⟩
 
-def p22b_funRep (ρ : Representation F H V) :
-    Representation F G (p22b_funSpace (G := G) (H := H) ρ) where
+def p22b_funRep (ρ : Representation F H V)
+    : Representation F G (p22b_funSpace (G := G) (H := H) ρ) where
   toFun g :=
-    { toFun := fun f => ⟨fun x => f (x * g), by
-          intro h x
-          simpa [mul_assoc] using f.2 h (x * g)⟩
+    {
+      toFun :=
+        fun f =>
+          ⟨
+            fun x => f (x * g),
+            by
+              intro h x
+              simpa [mul_assoc] using f.2 h (x * g)
+          ⟩
       map_add' := by
         intro f₁ f₂
         ext x
@@ -422,7 +433,8 @@ def p22b_funRep (ρ : Representation F H V) :
       map_smul' := by
         intro a f
         ext x
-        rfl }
+        rfl
+    }
   map_one' := by
     ext f x
     simp
@@ -431,22 +443,25 @@ def p22b_funRep (ρ : Representation F H V) :
     simp [mul_assoc]
 
 omit [H.Normal] in
-@[simp] theorem p22b_funRep_apply (ρ : Representation F H V) (g : G)
-    (f : p22b_funSpace (G := G) (H := H) ρ) (x : G) :
-    p22b_funRep (G := G) (H := H) ρ g f x = f (x * g) := rfl
+@[simp]
+theorem p22b_funRep_apply (ρ : Representation F H V) (g : G)
+    (f : p22b_funSpace (G := G) (H := H) ρ) (x : G)
+    : p22b_funRep (G := G) (H := H) ρ g f x = f (x * g) :=
+  rfl
 
-def p22b_funCosetSubrep (ρ : Representation F H V) (q : G ⧸ H) :
-    Subrepresentation ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) where
-  toSubmodule := {
-    carrier := {f | ∀ g : G, ((g : G ⧸ H) ≠ q) → f g = 0}
-    zero_mem' := by simp
-    add_mem' := by
-      intro f g hf hg x hx
-      simp [hf x hx, hg x hx]
-    smul_mem' := by
-      intro a f hf x hx
-      simp [hf x hx]
-  }
+def p22b_funCosetSubrep (ρ : Representation F H V) (q : G ⧸ H)
+    : Subrepresentation ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) where
+  toSubmodule :=
+    {
+      carrier := {f | ∀ g : G, ((g : G ⧸ H) ≠ q) → f g = 0}
+      zero_mem' := by simp
+      add_mem' := by
+        intro f g hf hg x hx
+        simp [hf x hx, hg x hx]
+      smul_mem' := by
+        intro a f hf x hx
+        simp [hf x hx]
+    }
   apply_mem_toSubmodule := by
     intro h f hf g hg
     change f (g * h) = 0
@@ -458,32 +473,34 @@ def p22b_funCosetSubrep (ρ : Representation F H V) (q : G ⧸ H) :
     rw [hh, mul_one] at hq
     exact hq
 
-def p22b_funEval (ρ : Representation F H V) (g : G) :
-    ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ conjugateRep ρ g := by
+def p22b_funEval (ρ : Representation F H V) (g : G)
+    : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ conjugateRep ρ g := by
   refine RepMap.mk ?_ ?_
-  · refine
-      { toFun := fun f => f g
-        map_add' := by intro f₁ f₂; rfl
-        map_smul' := by intro a f; rfl }
+  · refine {
+      toFun := fun f => f g
+      map_add' := by intro f₁ f₂; rfl
+      map_smul' := by intro a f; rfl
+    }
   · intro h
     ext f
     change f (g * h.val) =
       ρ ⟨(g : G) * h.val * (g : G)⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩ (f g)
-    simpa [Representation.conjugateRep_apply, mul_assoc] using
-      f.2
-        ⟨(g : G) * h.val * (g : G)⁻¹,
-          Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩
+    simpa [Representation.conjugateRep_apply, mul_assoc]
+      using f.2
+        ⟨
+          (g : G) * h.val * (g : G)⁻¹,
+          Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)
+        ⟩
         (g : G)
 
-noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v : V) :
-    p22b_funSpace (G := G) (H := H) ρ := by
+noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v : V)
+    : p22b_funSpace (G := G) (H := H) ρ := by
   classical
   refine ⟨fun x => if hx : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx⟩ v else 0, ?_⟩
   intro h x
   by_cases hx : x * g⁻¹ ∈ H
-  · have hhx : ((h : G) * x) * g⁻¹ ∈ H := by
-      simpa [mul_assoc] using H.mul_mem h.prop hx
+  · have hhx : ((h : G) * x) * g⁻¹ ∈ H := by simpa [mul_assoc] using H.mul_mem h.prop hx
     change (if hhx' : ((h : G) * x) * g⁻¹ ∈ H then ρ ⟨((h : G) * x) * g⁻¹, hhx'⟩ v else 0) =
       ρ h ((if hx' : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx'⟩ v else 0))
     rw [dif_pos hhx, dif_pos hx]
@@ -500,9 +517,10 @@ noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v 
       exact H.mul_mem (H.inv_mem h.prop) hhx
     simp [hx, hhx]
 
-@[simp] theorem p22b_funEval_base (ρ : Representation F H V) (g : G) (v : V) :
-    p22b_funEval (G := G) (H := H) ρ g
-      (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v) = v := by
+@[simp]
+theorem p22b_funEval_base (ρ : Representation F H V) (g : G) (v : V)
+    : p22b_funEval (G := G) (H := H) ρ g (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v)
+      = v := by
   classical
   change (if hg : g * g⁻¹ ∈ H then ρ ⟨g * g⁻¹, hg⟩ v else 0) = v
   rw [dif_pos]
@@ -517,9 +535,9 @@ noncomputable def p22b_funBaseFunctionAt (ρ : Representation F H V) (g : G) (v 
       _ = v := by simp [h1]
   · simp
 
-theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v : V) :
-    p22b_funBaseFunctionAt (G := G) (H := H) ρ g v ∈
-      (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toSubmodule := by
+theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v : V)
+    : p22b_funBaseFunctionAt (G := G) (H := H) ρ g v
+      ∈ (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toSubmodule := by
   classical
   intro x hx
   change (if hx' : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx'⟩ v else 0) = 0
@@ -528,10 +546,11 @@ theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v 
   apply hx
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
-@[simp] theorem p22b_funEval_of_ne_coset
-    (ρ : Representation F H V) {g x : G} (hx : (x : G ⧸ H) ≠ (g : G ⧸ H)) (v : V) :
-    p22b_funEval (G := G) (H := H) ρ x
-      (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v) = 0 := by
+@[simp]
+theorem p22b_funEval_of_ne_coset
+    (ρ : Representation F H V) {g x : G} (hx : (x : G ⧸ H) ≠ (g : G ⧸ H)) (v : V)
+    : p22b_funEval (G := G) (H := H) ρ x (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v)
+      = 0 := by
   classical
   change (if hx' : x * g⁻¹ ∈ H then ρ ⟨x * g⁻¹, hx'⟩ v else 0) = 0
   rw [dif_neg]
@@ -540,8 +559,9 @@ theorem p22b_funBaseFunctionAt_mem_coset (ρ : Representation F H V) (g : G) (v 
   exact (QuotientGroup.eq_iff_div_mem).2 (by simpa [div_eq_mul_inv] using hmem)
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
-    (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toRepresentation ≃ₗ conjugateRep ρ g := by
+noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G)
+    : (p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)).toRepresentation
+      ≃ₗ conjugateRep ρ g := by
   let S := p22b_funCosetSubrep (G := G) (H := H) ρ (g : G ⧸ H)
   let evLin :
       S.toSubmodule →ₗ[F] V :=
@@ -553,10 +573,9 @@ noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
     change f.1.1 (g * h.val) =
       ρ ⟨g * h.val * g⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩ (f.1.1 g)
-    simpa [mul_assoc] using
-      f.1.2
-        ⟨g * h.val * g⁻¹,
-          Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩
+    simpa [mul_assoc]
+      using f.1.2
+        ⟨g * h.val * g⁻¹, Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⟩
         g
   refine RepEquiv.mk (LinearEquiv.ofBijective ev.toLinearMap ⟨?_, ?_⟩) ?_
   · intro f₁ f₂ hfg
@@ -566,22 +585,25 @@ noncomputable def p22b_funCosetEquiv (ρ : Representation F H V) (g : G) :
         simpa [div_eq_mul_inv] using (QuotientGroup.eq_iff_div_mem).mp hx
       have hf₁ :
           f₁.1.1 x = ρ ⟨x * g⁻¹, hmem⟩ (f₁.1.1 g) := by
-        simpa [p22b_funEval, hmem, div_eq_mul_inv, mul_assoc] using
-          f₁.1.2 ⟨x * g⁻¹, hmem⟩ (g : G)
+        simpa [p22b_funEval, hmem, div_eq_mul_inv, mul_assoc]
+          using f₁.1.2 ⟨x * g⁻¹, hmem⟩ (g : G)
       have hf₂ :
           f₂.1.1 x = ρ ⟨x * g⁻¹, hmem⟩ (f₂.1.1 g) := by
-        simpa [p22b_funEval, hmem, div_eq_mul_inv, mul_assoc] using
-          f₂.1.2 ⟨x * g⁻¹, hmem⟩ (g : G)
-      have hg : f₁.1.1 g = f₂.1.1 g := by
-        simpa [ev, evLin, p22b_funEval] using hfg
+        simpa [p22b_funEval, hmem, div_eq_mul_inv, mul_assoc]
+          using f₂.1.2 ⟨x * g⁻¹, hmem⟩ (g : G)
+      have hg : f₁.1.1 g = f₂.1.1 g := by simpa [ev, evLin, p22b_funEval] using hfg
       rw [hf₁, hf₂, hg]
     · have hf₁x : f₁.1.1 x = 0 := f₁.2 x hx
       have hf₂x : f₂.1.1 x = 0 := f₂.2 x hx
       rw [hf₁x, hf₂x]
   · intro v
-    refine
-      ⟨⟨p22b_funBaseFunctionAt (G := G) (H := H) ρ g v,
-        p22b_funBaseFunctionAt_mem_coset (G := G) (H := H) ρ g v⟩, ?_⟩
+    refine ⟨
+      ⟨
+        p22b_funBaseFunctionAt (G := G) (H := H) ρ g v,
+        p22b_funBaseFunctionAt_mem_coset (G := G) (H := H) ρ g v
+      ⟩,
+      ?_
+    ⟩
     change p22b_funEval (G := G) (H := H) ρ g
         (p22b_funBaseFunctionAt (G := G) (H := H) ρ g v) = v
     simp
@@ -595,17 +617,18 @@ noncomputable def p22b_funQuotientSection [Fintype (G ⧸ H)] (q : G ⧸ H) : G 
   Classical.choose (QuotientGroup.mk_surjective q)
 
 omit [H.Normal] in
-theorem p22b_funQuotientSection_spec [Fintype (G ⧸ H)] (q : G ⧸ H) :
-    ((p22b_funQuotientSection (G := G) (H := H) q : G) : G ⧸ H) = q :=
+theorem p22b_funQuotientSection_spec [Fintype (G ⧸ H)] (q : G ⧸ H)
+    : ((p22b_funQuotientSection (G := G) (H := H) q : G) : G ⧸ H) = q :=
   Classical.choose_spec (QuotientGroup.mk_surjective q)
 
 theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
-    (f : p22b_funSpace (G := G) (H := H) ρ) :
-    (∑ q : G ⧸ H,
-      p22b_funBaseFunctionAt (G := G) (H := H) ρ
-        (p22b_funQuotientSection (G := G) (H := H) q)
-        (p22b_funEval (G := G) (H := H) ρ
-          (p22b_funQuotientSection (G := G) (H := H) q) f)) = f := by
+    (f : p22b_funSpace (G := G) (H := H) ρ)
+    : (∑ q : G ⧸ H,
+        p22b_funBaseFunctionAt (G := G) (H := H) ρ
+          (p22b_funQuotientSection (G := G) (H := H) q)
+          (p22b_funEval (G := G) (H := H) ρ
+            (p22b_funQuotientSection (G := G) (H := H) q) f))
+      = f := by
   classical
   ext x
   let qx : G ⧸ H := x
@@ -629,27 +652,27 @@ theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
         p22b_funBaseFunctionAt (G := G) (H := H) ρ
           (p22b_funQuotientSection (G := G) (H := H) q)
           (p22b_funEval (G := G) (H := H) ρ
-            (p22b_funQuotientSection (G := G) (H := H) q) f)) x
-      =
+            (p22b_funQuotientSection (G := G) (H := H) q) f))
+          x
+        = ∑ q : G ⧸ H,
+            p22b_funEval (G := G) (H := H) ρ x
+              (p22b_funBaseFunctionAt (G := G) (H := H) ρ
+                (p22b_funQuotientSection (G := G) (H := H) q)
+                (p22b_funEval (G := G) (H := H) ρ
+                  (p22b_funQuotientSection (G := G) (H := H) q) f)) := by
+      change (p22b_funEval (G := G) (H := H) ρ x).toLinearMap
+          (∑ q : G ⧸ H,
+            p22b_funBaseFunctionAt (G := G) (H := H) ρ
+              (p22b_funQuotientSection (G := G) (H := H) q)
+              (p22b_funEval (G := G) (H := H) ρ
+                (p22b_funQuotientSection (G := G) (H := H) q) f)) =
         ∑ q : G ⧸ H,
-          p22b_funEval (G := G) (H := H) ρ x
+          (p22b_funEval (G := G) (H := H) ρ x).toLinearMap
             (p22b_funBaseFunctionAt (G := G) (H := H) ρ
               (p22b_funQuotientSection (G := G) (H := H) q)
               (p22b_funEval (G := G) (H := H) ρ
-                (p22b_funQuotientSection (G := G) (H := H) q) f)) := by
-          change (p22b_funEval (G := G) (H := H) ρ x).toLinearMap
-              (∑ q : G ⧸ H,
-                p22b_funBaseFunctionAt (G := G) (H := H) ρ
-                  (p22b_funQuotientSection (G := G) (H := H) q)
-                  (p22b_funEval (G := G) (H := H) ρ
-                    (p22b_funQuotientSection (G := G) (H := H) q) f)) =
-            ∑ q : G ⧸ H,
-              (p22b_funEval (G := G) (H := H) ρ x).toLinearMap
-                (p22b_funBaseFunctionAt (G := G) (H := H) ρ
-                  (p22b_funQuotientSection (G := G) (H := H) q)
-                  (p22b_funEval (G := G) (H := H) ρ
-                    (p22b_funQuotientSection (G := G) (H := H) q) f))
-          simp
+                (p22b_funQuotientSection (G := G) (H := H) q) f))
+      simp
     _ = f x := by
       rw [Finset.sum_eq_single qx]
       · exact hmain
@@ -670,13 +693,14 @@ theorem p22b_funSumSections [Fintype (G ⧸ H)] (ρ : Representation F H V)
       · intro hq
         exact False.elim (hq (Finset.mem_univ qx))
 
-noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V) :
-    p22b_funSpace (G := G) (H := H) ρ ≃ₗ[F] (G ⧸ H → V) where
-  toFun f q := p22b_funEval (G := G) (H := H) ρ
-    (p22b_funQuotientSection (G := G) (H := H) q) f
-  invFun ψ := ∑ q : G ⧸ H,
-    p22b_funBaseFunctionAt (G := G) (H := H) ρ
-      (p22b_funQuotientSection (G := G) (H := H) q) (ψ q)
+noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V)
+    : p22b_funSpace (G := G) (H := H) ρ ≃ₗ[F] (G ⧸ H → V) where
+  toFun f q :=
+    p22b_funEval (G := G) (H := H) ρ (p22b_funQuotientSection (G := G) (H := H) q) f
+  invFun ψ :=
+    ∑ q : G ⧸ H,
+      p22b_funBaseFunctionAt (G := G) (H := H) ρ
+        (p22b_funQuotientSection (G := G) (H := H) q) (ψ q)
   left_inv := p22b_funSumSections (G := G) (H := H) ρ
   right_inv := by
     intro ψ
@@ -685,22 +709,22 @@ noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V
     have hg : (g : G ⧸ H) = q := p22b_funQuotientSection_spec (G := G) (H := H) q
     calc
       p22b_funEval (G := G) (H := H) ρ g
-          (∑ q' : G ⧸ H,
-            p22b_funBaseFunctionAt (G := G) (H := H) ρ
-              (p22b_funQuotientSection (G := G) (H := H) q') (ψ q'))
+            (∑ q' : G ⧸ H,
+              p22b_funBaseFunctionAt (G := G) (H := H) ρ
+                (p22b_funQuotientSection (G := G) (H := H) q') (ψ q'))
           = ∑ q' : G ⧸ H,
               p22b_funEval (G := G) (H := H) ρ g
                 (p22b_funBaseFunctionAt (G := G) (H := H) ρ
                   (p22b_funQuotientSection (G := G) (H := H) q') (ψ q')) := by
-            change (p22b_funEval (G := G) (H := H) ρ g).toLinearMap
-                (∑ q' : G ⧸ H,
-                  p22b_funBaseFunctionAt (G := G) (H := H) ρ
-                    (p22b_funQuotientSection (G := G) (H := H) q') (ψ q')) =
-              ∑ q' : G ⧸ H,
-                (p22b_funEval (G := G) (H := H) ρ g).toLinearMap
-                  (p22b_funBaseFunctionAt (G := G) (H := H) ρ
-                    (p22b_funQuotientSection (G := G) (H := H) q') (ψ q'))
-            simp
+        change (p22b_funEval (G := G) (H := H) ρ g).toLinearMap
+            (∑ q' : G ⧸ H,
+              p22b_funBaseFunctionAt (G := G) (H := H) ρ
+                (p22b_funQuotientSection (G := G) (H := H) q') (ψ q')) =
+          ∑ q' : G ⧸ H,
+            (p22b_funEval (G := G) (H := H) ρ g).toLinearMap
+              (p22b_funBaseFunctionAt (G := G) (H := H) ρ
+                (p22b_funQuotientSection (G := G) (H := H) q') (ψ q'))
+        simp
       _ = ψ q := by
         classical
         rw [Finset.sum_eq_single q]
@@ -712,11 +736,11 @@ noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V
           have hqg' :
               (g : G ⧸ H) ≠ ((p22b_funQuotientSection (G := G) (H := H) q' : G) : G ⧸ H) := by
             simpa [ne_comm] using hqg
-          simpa [g] using
-            (p22b_funEval_of_ne_coset (G := G) (H := H) ρ
-              (x := g)
-              (g := p22b_funQuotientSection (G := G) (H := H) q')
-              hqg' (ψ q'))
+          simpa [g]
+            using (p22b_funEval_of_ne_coset (G := G) (H := H) ρ
+                    (x := g)
+                    (g := p22b_funQuotientSection (G := G) (H := H) q')
+                    hqg' (ψ q'))
         · intro hq'
           exact False.elim (hq' (Finset.mem_univ q))
   map_add' f₁ f₂ := by
@@ -727,9 +751,9 @@ noncomputable def p22b_funPiEquiv [Fintype (G ⧸ H)] (ρ : Representation F H V
     simp
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H) :
-    ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ
-      ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) := by
+noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H)
+    : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype)
+      →ₗ ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) := by
   classical
   let proj : (G → V) →ₗ[F] (G → V) :=
     { toFun := fun f g => if (g : G ⧸ H) = q then f g else 0
@@ -780,37 +804,43 @@ noncomputable def p22b_funProj (ρ : Representation F H V) (q : G ⧸ H) :
       simp [p22b_funRep_apply, LinearMap.restrict_apply, proj, hx]
 
 set_option backward.isDefEq.respectTransparency false in
-@[simp] theorem p22b_funProj_apply (ρ : Representation F H V) [DecidableEq (G ⧸ H)] (q : G ⧸ H)
-    (f : p22b_funSpace (G := G) (H := H) ρ) (x : G) :
-    (p22b_funProj (G := G) (H := H) ρ q f) x = if (x : G ⧸ H) = q then f x else 0 := by
+@[simp]
+theorem p22b_funProj_apply (ρ : Representation F H V) [DecidableEq (G ⧸ H)] (q : G ⧸ H)
+    (f : p22b_funSpace (G := G) (H := H) ρ) (x : G)
+    : (p22b_funProj (G := G) (H := H) ρ q f) x = if (x : G ⧸ H) = q then f x else 0 := by
   classical
   simp [p22b_funProj, LinearMap.restrict_apply]
 
 theorem p22b_funProj_mem_coset (ρ : Representation F H V) (q : G ⧸ H)
-    (f : p22b_funSpace (G := G) (H := H) ρ) :
-    p22b_funProj (G := G) (H := H) ρ q f ∈
-      (p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule := by
+    (f : p22b_funSpace (G := G) (H := H) ρ)
+    : p22b_funProj (G := G) (H := H) ρ q f
+      ∈ (p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule := by
   classical
   intro x hx
   rw [p22b_funProj_apply]
   simp [hx]
 
-noncomputable def p22b_funProjToCoset (ρ : Representation F H V) (q : G ⧸ H) :
-    ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype) →ₗ
-      (p22b_funCosetSubrep (G := G) (H := H) ρ q).toRepresentation := by
+noncomputable def p22b_funProjToCoset (ρ : Representation F H V) (q : G ⧸ H)
+    : ((p22b_funRep (G := G) (H := H) ρ).comp H.subtype)
+      →ₗ (p22b_funCosetSubrep (G := G) (H := H) ρ q).toRepresentation := by
   classical
   refine RepMap.mk ?_ ?_
-  · refine
-      { toFun := fun f => ⟨p22b_funProj (G := G) (H := H) ρ q f,
-          p22b_funProj_mem_coset (G := G) (H := H) ρ q f⟩
-        map_add' := by
-          intro f g
-          ext x
-          simp [p22b_funProj_apply]
-        map_smul' := by
-          intro a f
-          ext x
-          simp [p22b_funProj_apply] }
+  · refine {
+      toFun :=
+        fun f =>
+          ⟨
+            p22b_funProj (G := G) (H := H) ρ q f,
+            p22b_funProj_mem_coset (G := G) (H := H) ρ q f
+          ⟩
+      map_add' := by
+        intro f g
+        ext x
+        simp [p22b_funProj_apply]
+      map_smul' := by
+        intro a f
+        ext x
+        simp [p22b_funProj_apply]
+    }
   · intro h
     ext f x
     change (p22b_funProj (G := G) (H := H) ρ q
@@ -825,8 +855,8 @@ noncomputable def p22b_funProjToCoset (ρ : Representation F H V) (q : G ⧸ H) 
     simp
 
 theorem p22b_conjugateRep_irreducible
-    (ρ : Representation F H V) (g : G) [Representation.IsIrreducible ρ] :
-    Representation.IsIrreducible (conjugateRep ρ g) := by
+    (ρ : Representation F H V) (g : G) [Representation.IsIrreducible ρ]
+    : Representation.IsIrreducible (conjugateRep ρ g) := by
   let e : H ≃* H := {
     toFun := fun h => ⟨g⁻¹ * (h : G) * g, by
       simpa using Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop g⁻¹⟩
@@ -844,20 +874,19 @@ theorem p22b_conjugateRep_irreducible
       intro a b
       apply Subtype.ext
       simp [mul_assoc] }
-  exact
-    RepEquiv.irreducible_of_group_iso
-      (ρ := ρ) (σ := conjugateRep ρ g) e
-      (by
-        intro h v
-        simp [e, Representation.conjugateRep_apply, mul_assoc])
-      inferInstance
+  exact RepEquiv.irreducible_of_group_iso
+    (ρ := ρ) (σ := conjugateRep ρ g) e
+    (by
+      intro h v
+      simp [e, Representation.conjugateRep_apply, mul_assoc])
+    inferInstance
 
 theorem p22b_funCosetSubrep_irreducible
-    (ρ : Representation F H V) [Representation.IsIrreducible ρ] (q : G ⧸ H) :
-    @Representation.IsIrreducible H F
-      ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule)
-      inferInstance inferInstance inferInstance inferInstance
-      ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toRepresentation) := by
+    (ρ : Representation F H V) [Representation.IsIrreducible ρ] (q : G ⧸ H)
+    : @Representation.IsIrreducible H F
+        ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toSubmodule)
+        inferInstance inferInstance inferInstance inferInstance
+        ((p22b_funCosetSubrep (G := G) (H := H) ρ q).toRepresentation) := by
   let g : G := Classical.choose (QuotientGroup.mk_surjective q)
   have hg : (g : G ⧸ H) = q := Classical.choose_spec (QuotientGroup.mk_surjective q)
   let e :
@@ -884,8 +913,8 @@ theorem proposition_2_2_b
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {W : Type*} [AddCommGroup W] [Module F W] [FiniteDimensional F W]
     (ρ : Representation F H V) [IsIrreducible ρ]
-    (E : ∀ x : G, ρ ≃ₗ conjugateRep ρ x) :
-    ∃ (σ : Representation F G V), σ.comp H.subtype = ρ := by
+    (E : ∀ x : G, ρ ≃ₗ conjugateRep ρ x)
+    : ∃ (σ : Representation F G V), σ.comp H.subtype = ρ := by
   let _ := (inferInstance : FiniteDimensional F W)
   classical
   let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
@@ -974,16 +1003,20 @@ theorem proposition_2_2_b
       fN
   let eV : L.toSubmodule ≃ₗ[F] V := eL.toLinearEquiv
   refine ⟨
-    { toFun := fun g =>
-        eV.toLinearMap.comp ((L.toRepresentation g).comp eV.symm.toLinearMap)
+    {
+      toFun :=
+        fun g =>
+          eV.toLinearMap.comp ((L.toRepresentation g).comp eV.symm.toLinearMap)
       map_one' := by
         ext v
         simp [eV]
       map_mul' := by
         intro g₁ g₂
         ext v
-        simp},
-    ?_⟩
+        simp
+    },
+    ?_
+  ⟩
   ext h v
   change eV ((L.toRepresentation h) (eV.symm v)) = ρ h v
   have hcomm :=
@@ -992,10 +1025,9 @@ theorem proposition_2_2_b
   change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) =
     ρ h (eL.toLinearEquiv (eV.symm v)) at hcomm
   calc
-    eV ((L.toRepresentation h) (eV.symm v))
-        = ρ h (eL.toLinearEquiv (eV.symm v)) := by
-            change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) = _
-            exact hcomm
+    eV ((L.toRepresentation h) (eV.symm v)) = ρ h (eL.toLinearEquiv (eV.symm v)) := by
+      change eL.toLinearEquiv ((L.toRepresentation h) (eV.symm v)) = _
+      exact hcomm
     _ = ρ h v := by simp [eV]
 
 end Main

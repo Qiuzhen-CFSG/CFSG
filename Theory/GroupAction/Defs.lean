@@ -3,18 +3,13 @@ module
 public import Mathlib.GroupTheory.GroupAction.FixingSubgroup
 public import Mathlib.GroupTheory.Commutator.Basic
 
-
-
-
 @[expose] public section
 
 open scoped FixedPoints
 
-
 section GroupActionDefs
 
 variable {G A : Type*} [Group G] [Group A]
-
 
 /-- The action of `A` on `G` is trivial. -/
 class IsTrivialAction (A : Type*) (G : Type*) [SMul A G] : Prop where
@@ -22,12 +17,12 @@ class IsTrivialAction (A : Type*) (G : Type*) [SMul A G] : Prop where
 
 /-- `A` acts trivially on a subgroup `H ≤ G` (as a set), i.e. fixes all its elements. -/
 class IsTrivialActionOnSubgroup (A : Type*) (G : Type*) [Group G] [SMul A G]
-    (H : Subgroup G) : Prop where
+    (H : Subgroup G)
+    : Prop where
   acts_trivially : ∀ a : A, ∀ g : G, g ∈ H → a • g = g
 
 /-- `A` acts trivially on a set `S ⊆ G`, i.e. fixes all its elements. -/
-class IsTrivialActionOnSet (A : Type*) (G : Type*) [SMul A G]
-    (S : Set G) : Prop where
+class IsTrivialActionOnSet (A : Type*) (G : Type*) [SMul A G] (S : Set G) : Prop where
   acts_trivially : ∀ a : A, ∀ g : G, g ∈ S → a • g = g
 
 /-! Compatibility spellings retained as canonical names in the reusable namespace. -/
@@ -35,24 +30,25 @@ class IsTrivialActionOnSet (A : Type*) (G : Type*) [SMul A G]
 def ActsTrivially (A : Type*) (G : Type*) [SMul A G] : Prop :=
   ∀ a : A, ∀ g : G, a • g = g
 
-def ActsTriviallyOnSubgroup
-    (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop :=
+def ActsTriviallyOnSubgroup (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G)
+    : Prop :=
   ∀ a : A, ∀ g : G, g ∈ H → a • g = g
 
 /-- `C_G(A)`: the subgroup of elements of `G` fixed by the `A`-action. -/
 abbrev fixedPointSubgroup (A : Type*) (G : Type*) [Group A] [Group G]
-    [MulDistribMulAction A G] : Subgroup G :=
+    [MulDistribMulAction A G]
+    : Subgroup G :=
   FixedPoints.subgroup A G
 
 /-- `C_A(S)`: the subgroup of `A` fixing every element of `S` pointwise. -/
-abbrev fixingSubgroupOf (A : Type*) (G : Type*) [Group A] [MulAction A G]
-    (S : Set G) : Subgroup A :=
+abbrev fixingSubgroupOf (A : Type*) (G : Type*) [Group A] [MulAction A G] (S : Set G)
+    : Subgroup A :=
   fixingSubgroup (M := A) (α := G) S
 
 theorem fixingSubgroup_univ_eq_ker_toMulAut {G A : Type*} [Group G] [Group A]
-    [MulDistribMulAction A G] :
-    fixingSubgroup (M := A) (α := G) (Set.univ : Set G) =
-      (MulDistribMulAction.toMulAut A G).ker := by
+    [MulDistribMulAction A G]
+    : fixingSubgroup (M := A) (α := G) (Set.univ : Set G)
+      = (MulDistribMulAction.toMulAut A G).ker := by
   ext a
   rw [MonoidHom.mem_ker, mem_fixingSubgroup_iff]
   constructor
@@ -66,28 +62,30 @@ theorem fixingSubgroup_univ_eq_ker_toMulAut {G A : Type*} [Group G] [Group A]
 `h⁻¹ * (a • h)` with `h ∈ H`. -/
 def commutatorSubgroup (A : Type*) (G : Type*) [Group A] [Group G]
     [MulDistribMulAction A G]
-    (H : Subgroup G := ⊤) : Subgroup G :=
+    (H : Subgroup G := ⊤)
+    : Subgroup G :=
   Subgroup.closure {x : G | ∃ a : A, ∃ h : G, h ∈ H ∧ x = h⁻¹ * (a • h)}
 
 /-- The commutator subgroup `⁅G, A⁆` of the whole group `G` with the `A`-action. -/
 abbrev commutatorAction (A : Type*) (G : Type*) [Group A] [Group G]
-    [MulDistribMulAction A G] :
-    Subgroup G :=
+    [MulDistribMulAction A G]
+    : Subgroup G :=
   commutatorSubgroup (A := A) (G := G) (H := ⊤)
 
 /-- The iterated commutator subgroup `⁅⁅G, A⁆, A⁆` for the `A`-action on `G`. -/
 abbrev commutatorAction₂ (A : Type*) (G : Type*) [Group A] [Group G]
-    [MulDistribMulAction A G] :
-    Subgroup G :=
+    [MulDistribMulAction A G]
+    : Subgroup G :=
   commutatorSubgroup (A := A) (G := G) (H := commutatorAction (A := A) (G := G))
 
 /-! The center of a subgroup, viewed inside its ambient group. -/
+
 def centerIn {G : Type*} [Group G] (H : Subgroup G) : Subgroup G :=
   H ⊓ Subgroup.centralizer (H : Set G)
 
 @[simp]
-theorem centerIn_eq_map_center {G : Type*} [Group G] (H : Subgroup G) :
-    centerIn H = (Subgroup.center H).map H.subtype := by
+theorem centerIn_eq_map_center {G : Type*} [Group G] (H : Subgroup G)
+    : centerIn H = (Subgroup.center H).map H.subtype := by
   simp [centerIn]
   ext x
   constructor
@@ -109,4 +107,3 @@ theorem centerIn_eq_map_center {G : Type*} [Group G] (H : Subgroup G) :
     exact ⟨h.property, h_centralizer⟩
 
 end GroupActionDefs
-

@@ -17,7 +17,6 @@ public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
-
 @[expose] public section
 
 open _root_.Representation
@@ -65,8 +64,9 @@ Then
 def intertwiningSubmodule
     {R : Type*} [CommSemiring R]
     {M : Type*} [AddCommMonoid M] [Module R M]
-    (A B : _root_.Module.End R M) :
-  Submodule R (_root_.Module.End R M) := {
+    (A B : _root_.Module.End R M)
+    : Submodule R (_root_.Module.End R M) :=
+  {
     carrier := {X : _root_.Module.End R M | A * X = X * B}
     add_mem' := by
       intro X Y hX hY
@@ -80,15 +80,16 @@ def intertwiningSubmodule
   }
 
 -- Lemma: injectivity of powers of a primitive root of unity
-lemma injective_powers {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : IsPrimitiveRoot ε h) :
-    Function.Injective (fun (i : Fin h) => ε ^ (i : ℤ)) := by
+lemma injective_powers {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : IsPrimitiveRoot ε h)
+    : Function.Injective (fun (i : Fin h) => ε ^ (i : ℤ)) := by
   intro i j hpow
   apply Fin.ext
   exact hε.pow_inj i.2 j.2 (by simpa using hpow)
 
 -- Factorization lemmas (copied from nthRootsFinset_eq_powers2.lean)
-lemma mem_nthRootsFinset_iff {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : IsPrimitiveRoot ε h) (hpos : 0 < h) (ζ : F) :
-    ζ ∈ nthRootsFinset h (1 : F) ↔ ∃ i : Fin h, ζ = ε ^ (i : ℕ) := by
+lemma mem_nthRootsFinset_iff {F : Type _} [Field F] {ε : F} {h : ℕ}
+    (hε : IsPrimitiveRoot ε h) (hpos : 0 < h) (ζ : F)
+    : ζ ∈ nthRootsFinset h (1 : F) ↔ ∃ i : Fin h, ζ = ε ^ (i : ℕ) := by
   classical
   have : NeZero h := ⟨hpos.ne'⟩
   constructor
@@ -105,32 +106,38 @@ lemma mem_nthRootsFinset_iff {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : Is
       _ = 1 := by simp
 
 open scoped Classical in
-lemma nthRootsFinset_eq_image {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : IsPrimitiveRoot ε h) (hpos : 0 < h) :
-    nthRootsFinset h (1 : F) = (Finset.univ : Finset (Fin h)).image (fun i : Fin h => ε ^ (i : ℕ)) := by
+lemma nthRootsFinset_eq_image {F : Type _} [Field F] {ε : F} {h : ℕ}
+    (hε : IsPrimitiveRoot ε h) (hpos : 0 < h)
+    : nthRootsFinset h (1 : F)
+      = (Finset.univ : Finset (Fin h)).image (fun i : Fin h => ε ^ (i : ℕ)) := by
   classical
   have : NeZero h := ⟨hpos.ne'⟩
   ext ζ
   simp only [Finset.mem_image, Finset.mem_univ, true_and, mem_nthRootsFinset_iff hε hpos ζ, eq_comm]
 
-lemma prod_X_sub_powers_eq_X_pow_sub_one {F : Type _} [Field F] {ε : F} {h : ℕ} (hε : IsPrimitiveRoot ε h) (hpos : 0 < h) :
-    ∏ i : Fin h, (X - C (ε ^ (i : ℤ))) = X ^ h - (1 : Polynomial F) := by
+lemma prod_X_sub_powers_eq_X_pow_sub_one {F : Type _} [Field F] {ε : F} {h : ℕ}
+    (hε : IsPrimitiveRoot ε h) (hpos : 0 < h)
+    : ∏ i : Fin h, (X - C (ε ^ (i : ℤ))) = X ^ h - (1 : Polynomial F) := by
   classical
   calc
-    ∏ i : Fin h, (X - C (ε ^ (i : ℤ))) = ∏ ζ ∈ ((Finset.univ : Finset (Fin h)).image (fun i : Fin h => ε ^ (i : ℤ))), (X - C ζ) := by
+    ∏ i : Fin h, (X - C (ε ^ (i : ℤ)))
+        = ∏ ζ ∈ ((Finset.univ : Finset (Fin h)).image (fun i : Fin h => ε ^ (i : ℤ))),
+            (X - C ζ) := by
       have hinj : Set.InjOn (fun i : Fin h => ε ^ (i : ℤ)) (Finset.univ : Finset (Fin h)) := by
         intro i hi j hj hpow
         exact Fin.ext (hε.pow_inj i.2 j.2 (by simpa using hpow))
       rw [Finset.prod_image hinj]
-    _ = ∏ ζ ∈ nthRootsFinset h (1 : F), (X - C ζ) := by rw [nthRootsFinset_eq_image hε hpos]; simp
+    _ = ∏ ζ ∈ nthRootsFinset h (1 : F), (X - C ζ) := by
+      rw [nthRootsFinset_eq_image hε hpos]; simp
     _ = X ^ h - (1 : Polynomial F) := by rw [Polynomial.X_pow_sub_one_eq_prod hpos hε]
 
 theorem proposition_2_4_a
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) :
-    DirectSum.IsInternal <| fun (i : Fin h) => Module.End.eigenspace
-    g.toLinearMap (ε ^ (i : ℤ)) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h)
+    : DirectSum.IsInternal
+      <| fun (i : Fin h) => Module.End.eigenspace g.toLinearMap (ε ^ (i : ℤ)) := by
   -- Let f be the linear map associated to g
   let f : V →ₗ[F] V := g.toLinearMap
   have hpos : 0 < h := by omega
@@ -140,7 +147,8 @@ theorem proposition_2_4_a
     calc
       (f ^ h) v = ((g.toLinearMap) ^ h) v := rfl
       _ = ((LinearEquiv.automorphismGroup.toLinearMapMonoidHom g) ^ h) v := by simp
-      _ = (LinearEquiv.automorphismGroup.toLinearMapMonoidHom (g ^ h)) v := by rw [MonoidHom.map_pow]
+      _ = (LinearEquiv.automorphismGroup.toLinearMapMonoidHom (g ^ h)) v := by
+        rw [MonoidHom.map_pow]
       _ = ((g ^ h).toLinearMap) v := by simp
       _ = ((1 : V ≃ₗ[F] V).toLinearMap) v := by rw [hg]
       _ = v := by simp
@@ -229,7 +237,8 @@ theorem proposition_2_4_a
   -- The supremum of eigenspaces equals ⊤
   have h_sup : ⨆ i : Fin h, eigenspace f (ε ^ (i : ℤ)) = ⊤ := by
     calc
-      ⨆ i : Fin h, eigenspace f (ε ^ (i : ℤ)) = ⨆ i : Fin h, LinearMap.ker (aeval f (X - C (ε ^ (i : ℤ)))) := by
+      ⨆ i : Fin h, eigenspace f (ε ^ (i : ℤ))
+          = ⨆ i : Fin h, LinearMap.ker (aeval f (X - C (ε ^ (i : ℤ)))) := by
         simp_rw [eigenspace_eq_ker]
       _ = LinearMap.ker (aeval f (∏ i : Fin h, (X - C (ε ^ (i : ℤ))))) := h_sup_ker
       _ = LinearMap.ker (aeval f (X ^ h - (1 : Polynomial F))) := by rw [h_factor]
@@ -239,11 +248,11 @@ theorem proposition_2_4_a
   rw [DirectSum.isInternal_submodule_iff_iSupIndep_and_iSup_eq_top]
   exact ⟨h_indep, h_sup⟩
 
-
 -- Now we copy the lemmas from eigenspace_decomposition_v12 and projections_from_isInternal
 lemma LinearEquiv.toLinearMap_pow
     {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    (e : M ≃ₗ[R] M) (n : ℕ) : (e ^ n).toLinearMap = e.toLinearMap ^ n := by
+    (e : M ≃ₗ[R] M) (n : ℕ)
+    : (e ^ n).toLinearMap = e.toLinearMap ^ n := by
   induction n with
   | zero =>
       simp [LinearEquiv.coe_toLinearMap_one, pow_zero, Module.End.one_eq_id]
@@ -257,9 +266,10 @@ lemma LinearEquiv.toLinearMap_pow
 -- Now we copy the lemmas from eigenspace_decomposition_v12 and projections_from_isInternal
 
 -- Eigenspace decomposition theorem
-theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGroup V] [Module F V]
-    [FiniteDimensional F V] {h : ℕ} (hh : h ≥ 2) (g : V ≃ₗ[F] V) (hg : g ^ h = 1) (ε : F) (hε : IsPrimitiveRoot ε h) :
-    DirectSum.IsInternal (fun i : Fin h => eigenspace g.toLinearMap (ε ^ (i : ℤ))) := by
+theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGroup V]
+    [Module F V] [FiniteDimensional F V] {h : ℕ} (hh : h ≥ 2) (g : V ≃ₗ[F] V)
+    (hg : g ^ h = 1) (ε : F) (hε : IsPrimitiveRoot ε h)
+    : DirectSum.IsInternal (fun i : Fin h => eigenspace g.toLinearMap (ε ^ (i : ℤ))) := by
   -- local notation for the index set
   let I := Fin h
   -- define eigenspaces
@@ -324,7 +334,8 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
       _ = (1 : _root_.Module.End F V) := by rfl
   have aeval_X_pow_sub_one_eq_zero : aeval (g.toLinearMap : _root_.Module.End F V) ((X : Polynomial F) ^ h - 1) = 0 := by
     calc
-      aeval (g.toLinearMap : _root_.Module.End F V) ((X : Polynomial F) ^ h - 1) = (g.toLinearMap : _root_.Module.End F V) ^ h - 1 := by
+      aeval (g.toLinearMap : _root_.Module.End F V) ((X : Polynomial F) ^ h - 1)
+          = (g.toLinearMap : _root_.Module.End F V) ^ h - 1 := by
         simp [Polynomial.aeval_sub, Polynomial.aeval_X_pow, Polynomial.aeval_one]
       _ = 0 := sub_eq_zero.mpr g_pow_eq_one_linearMap
   have h_eq (i : I) : (X - C (vals ε i)) * p i = C (Lagrange.nodalWeight (Finset.univ : Finset I) (vals ε) i) * (X ^ h - 1) := by
@@ -340,7 +351,9 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
     have h_basis_eq : Lagrange.basis (Finset.univ : Finset I) (vals ε) i = C w * (nodal / (X - C (vals ε i))) :=
       Lagrange.basis_eq_prod_sub_inv_mul_nodal_div (Finset.mem_univ i)
     calc
-      (X - C (vals ε i)) * p i = (X - C (vals ε i)) * Lagrange.basis (Finset.univ : Finset I) (vals ε) i := rfl
+      (X - C (vals ε i)) * p i
+          = (X - C (vals ε i)) * Lagrange.basis (Finset.univ : Finset I) (vals ε) i :=
+        rfl
       _ = (X - C (vals ε i)) * (C w * (nodal / (X - C (vals ε i)))) := by rw [h_basis_eq]
       _ = C w * ((X - C (vals ε i)) * (nodal / (X - C (vals ε i)))) := by ring
       _ = C w * nodal := by rw [h_div_eq]
@@ -365,7 +378,8 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
     have Hcomp : (g.toLinearMap - (vals ε i) • (1 : _root_.Module.End F V)) ∘ₗ π i = aeval g.toLinearMap ((X - C (vals ε i)) * p i) := by
       calc
         (g.toLinearMap - vals ε i • (1 : _root_.Module.End F V)) ∘ₗ π i
-            = (g.toLinearMap - vals ε i • (1 : _root_.Module.End F V)) * π i := by rw [Module.End.mul_eq_comp]
+            = (g.toLinearMap - vals ε i • (1 : _root_.Module.End F V)) * π i := by
+          rw [Module.End.mul_eq_comp]
         _ = aeval g.toLinearMap ((X - C (vals ε i)) * p i) := by
           simp [π, p, Polynomial.aeval_mul, Polynomial.aeval_sub, Polynomial.aeval_X, Polynomial.aeval_C,
             Algebra.algebraMap_eq_smul_one]
@@ -403,9 +417,9 @@ theorem eigenspace_decomposition {F : Type _} [Field F] {V : Type _} [AddCommGro
     exact hN i hmem
 
 section BlockEquality
-variable {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-  {g : V ≃ₗ[F] V} {h : ℕ} (hge2 : h ≥ 2) (ε : F) (hε : IsPrimitiveRoot ε h)
-
+variable {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V]
+  [FiniteDimensional F V] {g : V ≃ₗ[F] V} {h : ℕ} (hge2 : h ≥ 2) (ε : F)
+  (hε : IsPrimitiveRoot ε h)
 
 open IsPrimitiveRoot
 include hge2 hε
@@ -423,8 +437,9 @@ lemma zpow_eq_zpow_iff_modEq' (a b : ℤ) : ε ^ a = ε ^ b ↔ a ≡ b [ZMOD h]
   simpa [h_unit.unit_spec, horder] using H'
 
 omit [FiniteDimensional F V] in
-lemma eigenspace_eq_of_zpow_modEq (a b : ℤ) (hab : a ≡ b [ZMOD h]) :
-    Module.End.eigenspace g.toLinearMap (ε ^ a) = Module.End.eigenspace g.toLinearMap (ε ^ b) := by
+lemma eigenspace_eq_of_zpow_modEq (a b : ℤ) (hab : a ≡ b [ZMOD h])
+    : Module.End.eigenspace g.toLinearMap (ε ^ a)
+      = Module.End.eigenspace g.toLinearMap (ε ^ b) := by
   have hpow : ε ^ a = ε ^ b := (zpow_eq_zpow_iff_modEq' hge2 ε hε a b).mpr hab
   rw [hpow]
 
@@ -435,19 +450,23 @@ theorem proposition_2_4_c
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) :
-    DirectSum.IsInternal (fun it : Fin h × Fin h =>
-    blockElementaryMap (fun s : Fin h => eigenspace g.toLinearMap (ε ^ (s : ℤ))) it.1 it.2) :=
+    {ε : F} (hε : IsPrimitiveRoot ε h)
+    : DirectSum.IsInternal
+        (fun it : Fin h × Fin h =>
+          blockElementaryMap (fun s : Fin h => eigenspace g.toLinearMap (ε ^ (s : ℤ)))
+            it.1 it.2) :=
   isInternal_blockElementaryMap _ (eigenspace_decomposition hh g hg ε hε)
 
 theorem proposition_2_4_d
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (i : ℤ) (t : ℤ) :
-    Module.finrank F (blockElementaryMap (fun (s : Fin h) ↦ End.eigenspace g.toLinearMap (ε ^ (s : ℤ))) (@Fin.intCast h ⟨by omega⟩ i) (@Fin.intCast h ⟨by omega⟩ t)) =
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ))) *
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (t : ℤ))) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (i : ℤ) (t : ℤ)
+    : Module.finrank F
+        (blockElementaryMap (fun (s : Fin h) ↦ End.eigenspace g.toLinearMap (ε ^ (s : ℤ)))
+          (@Fin.intCast h ⟨by omega⟩ i) (@Fin.intCast h ⟨by omega⟩ t))
+      = (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ)))
+        * (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (t : ℤ))) := by
   let : NeZero h := by
     have hpos : 0 < h := by omega
     exact NeZero.of_pos hpos
@@ -489,9 +508,9 @@ lemma eigenspace_eq_intCast
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (z : ℤ) :
-    End.eigenspace g.toLinearMap (ε ^ ((@Fin.intCast h ⟨by omega⟩ z : Fin h) : ℤ)) =
-      End.eigenspace g.toLinearMap (ε ^ z) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (z : ℤ)
+    : End.eigenspace g.toLinearMap (ε ^ ((@Fin.intCast h ⟨by omega⟩ z : Fin h) : ℤ))
+      = End.eigenspace g.toLinearMap (ε ^ z) := by
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
   have hnonneg : 0 ≤ z % h := by
@@ -504,9 +523,9 @@ lemma eigenspace_eq_intCast
   apply eigenspace_eq_of_zpow_modEq (hge2 := hh) (g := g) (h := h) (ε := ε) (hε := hε)
   simpa [hval] using (Int.mod_modEq z (h : ℤ))
 
-@[simp] lemma fin_intCast_coe
-    {h : ℕ} [NeZero h] (i : Fin h) :
-    (@Fin.intCast h (by infer_instance) (i : ℤ)) = i := by
+@[simp]
+lemma fin_intCast_coe {h : ℕ} [NeZero h] (i : Fin h)
+    : (@Fin.intCast h (by infer_instance) (i : ℤ)) = i := by
   apply Fin.ext
   have hnonneg : (0 : ℤ) ≤ (i : ℤ) := by
     exact_mod_cast Nat.zero_le i.1
@@ -517,9 +536,10 @@ lemma eigenspace_eq_intCast
     simp
   exact (Fin.val_intCast (n := h) (i : ℤ)).trans hmod
 
-@[simp] lemma fin_intCast_emod
-    {h : ℕ} [NeZero h] (z : ℤ) :
-    (@Fin.intCast h (by infer_instance) (z % h)) = @Fin.intCast h (by infer_instance) z := by
+@[simp]
+lemma fin_intCast_emod {h : ℕ} [NeZero h] (z : ℤ)
+    : (@Fin.intCast h (by infer_instance) (z % h))
+      = @Fin.intCast h (by infer_instance) z := by
   have hnonneg : 0 ≤ z % h := by
     exact Int.emod_nonneg _ (Int.natCast_ne_zero.mpr (NeZero.ne h))
   have hval : ((@Fin.intCast h (by infer_instance) z : Fin h) : ℤ) = z % h := by
@@ -527,11 +547,11 @@ lemma eigenspace_eq_intCast
         (((@Fin.intCast h (by infer_instance) z : Fin h).val : ℤ) : ℤ) = ((z % h).toNat : ℤ) :=
       congrArg (fun n : ℕ => (n : ℤ)) (Fin.val_intCast (n := h) z)
     simpa [Int.toNat_of_nonneg hnonneg] using hcast
-  simpa [hval] using fin_intCast_coe (h := h) (i := (@Fin.intCast h (by infer_instance) z : Fin h))
+  simpa [hval]
+    using fin_intCast_coe (h := h) (i := (@Fin.intCast h (by infer_instance) z : Fin h))
 
-lemma fin_intCast_coe_int
-    {h : ℕ} [NeZero h] (z : ℤ) :
-    ((@Fin.intCast h (by infer_instance) z : Fin h) : ℤ) = z % h := by
+lemma fin_intCast_coe_int {h : ℕ} [NeZero h] (z : ℤ)
+    : ((@Fin.intCast h (by infer_instance) z : Fin h) : ℤ) = z % h := by
   have hnonneg : 0 ≤ z % h := by
     exact Int.emod_nonneg _ (Int.natCast_ne_zero.mpr (NeZero.ne h))
   have hcast :
@@ -543,10 +563,12 @@ theorem proposition_2_4_e
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (i : ℤ) (t : ℤ) :
-    (blockElementaryMap (fun (s : Fin h) ↦
-    End.eigenspace g.toLinearMap (ε ^ (s : ℤ))) (@Fin.intCast h ⟨by omega⟩ i) (@Fin.intCast h ⟨by omega⟩ t)) ≤
-    intertwiningSubmodule g.toLinearMap (ε ^ (t - i) • g.toLinearMap) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (i : ℤ) (t : ℤ)
+    : (blockElementaryMap
+        (fun (s : Fin h) ↦
+          End.eigenspace g.toLinearMap (ε ^ (s : ℤ)))
+        (@Fin.intCast h ⟨by omega⟩ i) (@Fin.intCast h ⟨by omega⟩ t))
+      ≤ intertwiningSubmodule g.toLinearMap (ε ^ (t - i) • g.toLinearMap) := by
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
   let A : Fin h → Submodule F V := fun s ↦ End.eigenspace g.toLinearMap (ε ^ (s : ℤ))
@@ -624,11 +646,16 @@ theorem proposition_2_4_f
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ) :
-    DirectSum.IsInternal <| fun (i : Fin h) ↦
-    Submodule.comap (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)).subtype
-    (blockElementaryMap (fun (s : Fin h) ↦
-    End.eigenspace g.toLinearMap (ε ^ (s : ℤ))) (@Fin.intCast h ⟨by omega⟩ i) (@Fin.intCast h ⟨by omega⟩ ((i + m) % h))) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ)
+    : DirectSum.IsInternal
+      <| fun (i : Fin h) ↦
+          Submodule.comap
+            (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)).subtype
+            (blockElementaryMap
+              (fun (s : Fin h) ↦
+                End.eigenspace g.toLinearMap (ε ^ (s : ℤ)))
+              (@Fin.intCast h ⟨by omega⟩ i)
+              (@Fin.intCast h ⟨by omega⟩ ((i + m) % h))) := by
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
   classical
@@ -641,8 +668,9 @@ theorem proposition_2_4_f
     intro i
     have hsub : ((i : ℤ) + m) - (i : ℤ) = m := by
       omega
-    simpa [A, B, N, τ, hsub] using
-      proposition_2_4_e (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ)) (t := (i : ℤ) + m)
+    simpa [A, B, N, τ, hsub]
+      using proposition_2_4_e (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ))
+        (t := (i : ℤ) + m)
   have h_indep_all :
       iSupIndep (fun it : Fin h × Fin h ↦ blockElementaryMap A it.1 it.2) :=
     (proposition_2_4_c (hg := hg) (hh := hh) (hε := hε)).submodule_iSupIndep
@@ -673,7 +701,8 @@ theorem proposition_2_4_f
       exact (Module.End.mem_eigenspace_iff).2 hcalc
     have hτ :
         A (τ i) = End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m)) := by
-      simpa [A, τ] using eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) ((i : ℤ) + m)
+      simpa [A, τ]
+        using eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) ((i : ℤ) + m)
     rw [hτ]
     exact hmem
   have hzero_t (X : _root_.Module.End F V) (hX : X ∈ N) (i t : Fin h) (ht : t ≠ τ i) :
@@ -728,11 +757,11 @@ theorem proposition_2_4_g
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ) :
-    Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)) =
-    ∑ i : Fin h,
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val)) *
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m))) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ)
+    : Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap))
+      = ∑ i : Fin h,
+          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val))
+          * (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m))) := by
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
   classical
@@ -745,12 +774,13 @@ theorem proposition_2_4_g
     intro i
     have hsub : ((i : ℤ) + m) - (i : ℤ) = m := by
       omega
-    simpa [A, B, N, τ, hsub] using
-      proposition_2_4_e (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ)) (t := (i : ℤ) + m)
+    simpa [A, B, N, τ, hsub]
+      using proposition_2_4_e (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ))
+        (t := (i : ℤ) + m)
   have hC_internal :
       DirectSum.IsInternal C := by
-    simpa [A, B, C, N, τ, Int.emod_emod] using
-      proposition_2_4_f (hg := hg) (hh := hh) (hε := hε) m
+    simpa [A, B, C, N, τ, Int.emod_emod]
+      using proposition_2_4_f (hg := hg) (hh := hh) (hε := hε) m
   let : ∀ i : Fin h, Module.Free F (C i) := fun i => Module.Free.of_divisionRing (K := F) (V := C i)
   let : ∀ i : Fin h, Module.Finite F (C i) := fun i =>
     Module.Finite.of_basis (Module.finBasis F (C i))
@@ -763,21 +793,24 @@ theorem proposition_2_4_g
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       rw [LinearEquiv.finrank_eq (Submodule.comapSubtypeEquivOfLe (hB_le i))]
     _ = ∑ i : Fin h,
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ))) *
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m))) := by
+          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ)))
+          * (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m))) := by
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       have hii : (@Fin.intCast h (by infer_instance) (i : ℤ)) = i := by simp
-      have hdi :
-          Module.finrank F (blockElementaryMap A (@Fin.intCast h (by infer_instance) (i : ℤ)) (τ i)) =
-            (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ))) *
-            (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m))) := by
-        simpa [A, τ] using
-          (proposition_2_4_d (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ)) (t := (i : ℤ) + m))
+      have hdi
+          : Module.finrank F
+              (blockElementaryMap A (@Fin.intCast h (by infer_instance) (i : ℤ)) (τ i))
+            = (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℤ)))
+              * (Module.finrank F
+                  <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m))) := by
+        simpa [A, τ]
+          using (proposition_2_4_d (hg := hg) (hh := hh) (hε := hε) (i := (i : ℤ))
+                  (t := (i : ℤ) + m))
       rw [hii] at hdi
       simpa [B] using hdi
     _ = ∑ i : Fin h,
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val)) *
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m))) := by
+          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val))
+          * (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m))) := by
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       rw [zpow_natCast]
 
@@ -785,12 +818,16 @@ theorem proposition_2_4_h
     {F : Type*} [Field F]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
-    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ) :
-    (2 : ℤ) * Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap)) -
-    (2 : ℤ) * Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)) =
-    ∑ i : Fin h,
-    (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val) : ℤ) -
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m)) : ℤ)) ^ 2) := by
+    {ε : F} (hε : IsPrimitiveRoot ε h) (m : ℤ)
+    : (2 : ℤ)
+          * Module.finrank F
+              (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap))
+        - (2 : ℤ)
+          * Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap))
+      = ∑ i : Fin h,
+          (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val) : ℤ)
+              - (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m)) : ℤ))
+            ^ 2) := by
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
   let d : Fin h → ℤ := fun i ↦ Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val)
@@ -802,8 +839,9 @@ theorem proposition_2_4_h
         End.eigenspace g.toLinearMap (ε ^ i.val) := by
       rw [add_zero, zpow_natCast]
     exact congrArg (fun W : Submodule F V => (Module.finrank F W : ℤ)) hspace
-  have hshifti (i : Fin h) :
-      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m)) : ℤ) = e i := by
+  have hshifti (i : Fin h)
+      : (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m)) : ℤ)
+        = e i := by
     dsimp [e, d, s]
     have hmnonneg : 0 ≤ m % h := by
       exact Int.emod_nonneg _ (Int.natCast_ne_zero.mpr (NeZero.ne h))
@@ -829,8 +867,9 @@ theorem proposition_2_4_h
     have hspace :
         End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m)) =
           End.eigenspace g.toLinearMap (ε ^ ((@Fin.intCast h ‹_› m + i : Fin h) : ℤ)) := by
-      simpa [hidx] using
-        (eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) ((i : ℤ) + m)).symm
+      simpa [hidx]
+        using (eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε)
+                ((i : ℤ) + m)).symm
     have hspace' : End.eigenspace g.toLinearMap (ε ^ ((i : ℤ) + m)) =
         End.eigenspace g.toLinearMap (ε ^ ((@Fin.intCast h ‹_› m + i : Fin h).val)) := by
       simpa [zpow_natCast] using hspace
@@ -851,9 +890,10 @@ theorem proposition_2_4_h
     rw [hshifti i]
   have hshift :
       ∑ i : Fin h, e i * e i = ∑ i : Fin h, d i * d i := by
-    simpa [e, add_assoc, add_comm, pow_two] using
-      (Fintype.sum_bijective (fun i : Fin h ↦ s + i) (AddGroup.addLeft_bijective s)
-        (fun i : Fin h ↦ d (s + i) * d (s + i)) (fun i : Fin h ↦ d i * d i) (fun i ↦ rfl))
+    simpa [e, add_assoc, add_comm, pow_two]
+      using (Fintype.sum_bijective (fun i : Fin h ↦ s + i) (AddGroup.addLeft_bijective s)
+              (fun i : Fin h ↦ d (s + i) * d (s + i)) (fun i : Fin h ↦ d i * d i)
+              (fun i ↦ rfl))
   have hsq :
       ∑ i : Fin h, (d i - e i) ^ 2 =
         (∑ i : Fin h, d i * d i) + (∑ i : Fin h, e i * e i) - 2 * ∑ i : Fin h, d i * e i := by
@@ -862,18 +902,25 @@ theorem proposition_2_4_h
     simp_rw [mul_assoc]
     rw [← Finset.mul_sum]
   calc
-    (2 : ℤ) * Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap)) -
-        (2 : ℤ) * Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)) =
-      2 * (∑ i : Fin h, d i * d i) - 2 * (∑ i : Fin h, d i * e i) := by
-        rw [h0, hm]
-    _ = (∑ i : Fin h, d i * d i) + (∑ i : Fin h, e i * e i) - 2 * ∑ i : Fin h, d i * e i := by
+    (2 : ℤ)
+            * Module.finrank F
+                (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap))
+          - (2 : ℤ)
+            * Module.finrank F
+                (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap))
+        = 2 * (∑ i : Fin h, d i * d i) - 2 * (∑ i : Fin h, d i * e i) := by
+      rw [h0, hm]
+    _ = (∑ i : Fin h, d i * d i)
+        + (∑ i : Fin h, e i * e i)
+        - 2 * ∑ i : Fin h, d i * e i := by
       rw [hshift]
       ring_nf
     _ = ∑ i : Fin h, (d i - e i) ^ 2 := by
       exact hsq.symm
     _ = ∑ i : Fin h,
-        (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val) : ℤ) -
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m)) : ℤ)) ^ 2) := by
+          (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i.val) : ℤ)
+              - (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i + m)) : ℤ))
+            ^ 2) := by
       refine Finset.sum_congr rfl fun i hi ↦ ?_
       rw [← hshifti i]
 
@@ -883,13 +930,23 @@ theorem proposition_2_4_j
     {q : ℕ} (hdim : Module.finrank F V = q)
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
     {ε : F} (hε : IsPrimitiveRoot ε h)
-    (hE : ∀ m : ℤ, ¬ (m % h = 0) →
-      Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap)) =
-      Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)) + 1) :
-    ∃ i : ℤ, ∃ n : ℤ, ∃ δ : ℤ, (δ = 1 ∨ δ = -1) ∧ q = h * n + δ ∧
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i)) = n + δ ∧
-    ∀ j : ℤ, ¬ ((j - i) % h) = 0 →
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ j)) = n := by
+    (hE
+      : ∀ m : ℤ,
+          ¬ (m % h = 0)
+          → Module.finrank F
+              (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap))
+            = Module.finrank F
+                (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap))
+              + 1)
+    : ∃ i : ℤ,
+      ∃ n : ℤ,
+      ∃ δ : ℤ,
+        (δ = 1 ∨ δ = -1)
+        ∧ q = h * n + δ
+        ∧ (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i)) = n + δ
+        ∧ ∀ j : ℤ,
+            ¬ ((j - i) % h) = 0
+            → (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ j)) = n := by
   classical
   let : NeZero h := by
     exact NeZero.of_pos (by omega)
@@ -898,21 +955,25 @@ theorem proposition_2_4_j
   let s2 : Fin h -> Fin h := fun i => @Fin.intCast h (by infer_instance) ((i : Int) + 2)
   let a1 : Fin h -> Int := fun i => (d i - d (s1 i)) ^ 2
   let a2 : Fin h -> Int := fun i => (d i - d (s2 i)) ^ 2
-  have hshift (m : Int) (i : Fin h) :
-      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + m)) : Int) =
-        d (@Fin.intCast h (by infer_instance) ((i : Int) + m)) := by
+  have hshift (m : Int) (i : Fin h)
+      : (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + m)) : Int)
+        = d (@Fin.intCast h (by infer_instance) ((i : Int) + m)) := by
     have hspace :
         End.eigenspace g.toLinearMap (ε ^ ((@Fin.intCast h (by infer_instance) ((i : Int) + m) : Fin h) : Int)) =
           End.eigenspace g.toLinearMap (ε ^ ((i : Int) + m)) := by
       simpa using
         eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) ((i : Int) + m)
     calc
-      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + m)) : Int) =
-          (Module.finrank F <| End.eigenspace g.toLinearMap
-            (ε ^ ((@Fin.intCast h (by infer_instance) ((i : Int) + m) : Fin h) : Int)) : Int) := by
-              exact congrArg (fun W : Submodule F V => (Module.finrank F W : Int)) hspace.symm
+      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + m)) : Int)
+          = (Module.finrank F
+                <| End.eigenspace g.toLinearMap
+                    (ε
+                      ^ ((@Fin.intCast h (by infer_instance) ((i : Int) + m) : Fin h)
+                          : Int))
+              : Int) := by
+        exact congrArg (fun W : Submodule F V => (Module.finrank F W : Int)) hspace.symm
       _ = d (@Fin.intCast h (by infer_instance) ((i : Int) + m)) := by
-            simp [d]
+        simp [d]
   let c0 : Int :=
     Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ (0 : Int) • g.toLinearMap))
   let c1 : Int :=
@@ -928,20 +989,25 @@ theorem proposition_2_4_j
   have hsum1_raw := proposition_2_4_h (hg := hg) (hh := hh) (hε := hε) (m := 1)
   have hsum1_left : (2 : Int) * c0 - (2 : Int) * c1 = 2 := by
     omega
-  have hcast_rank (z : Int) :
-      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int) =
-        d (@Fin.intCast h (by infer_instance) z) := by
-    simpa [d] using
-      congrArg (fun W : Submodule F V => (Module.finrank F W : Int))
+  have hcast_rank (z : Int)
+      : (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int)
+        = d (@Fin.intCast h (by infer_instance) z) := by
+    simpa [d]
+      using congrArg (fun W : Submodule F V => (Module.finrank F W : Int))
         (eigenspace_eq_intCast (hh := hh) (g := g) (h := h) (hε := hε) z).symm
-  have hsum1' :
-      (∑ i : Fin h,
-        (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1)) : Int)) ^ 2)) = 2 := by
+  have hsum1'
+      : (∑ i : Fin h,
+          (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+              - (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1))
+                  : Int))
+            ^ 2))
+        = 2 := by
     calc
       (∑ i : Fin h,
-        (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1)) : Int)) ^ 2))
+          (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+              - (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1))
+                  : Int))
+            ^ 2))
           = (2 : Int) * c0 - (2 : Int) * c1 := by
         simpa [c0, c1] using hsum1_raw.symm
       _ = 2 := hsum1_left
@@ -968,14 +1034,20 @@ theorem proposition_2_4_j
           (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1)) : Int)) ^ 2)
       rw [zpow_natCast]
     calc
-      ∑ i : Fin h, a1 i =
-          ∑ i : Fin h,
-            ((d i -
-              (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1)) : Int)) ^ 2) := hsum1a
-      _ =
-          ∑ i : Fin h,
-            (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-              (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1)) : Int)) ^ 2) := hsum1b
+      ∑ i : Fin h, a1 i
+          = ∑ i : Fin h,
+              ((d i
+                  - (Module.finrank F
+                        <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1))
+                      : Int))
+                ^ 2) :=
+        hsum1a
+      _ = ∑ i : Fin h,
+            (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+                - (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 1))
+                    : Int))
+              ^ 2) :=
+        hsum1b
       _ = 2 := hsum1'
   let A : Fin h -> Submodule F V := fun i => End.eigenspace g.toLinearMap (ε ^ (i : Int))
   have hqsum_nat_A :
@@ -998,11 +1070,12 @@ theorem proposition_2_4_j
   have hqsum : (q : ℤ) = ∑ i : Fin h, d i := by
     rw [← hdim]
     calc
-      (Module.finrank F V : ℤ) =
-          ((∑ i : Fin h, Module.finrank F (End.eigenspace g.toLinearMap (ε ^ (i : ℤ)))) : ℤ) := by
-            exact_mod_cast hqsum_nat
+      (Module.finrank F V : ℤ)
+          = ((∑ i : Fin h, Module.finrank F (End.eigenspace g.toLinearMap (ε ^ (i : ℤ))))
+              : ℤ) := by
+        exact_mod_cast hqsum_nat
       _ = ∑ i : Fin h, d i := by
-            simp [d]
+        simp [d]
   let S2 : Finset (Fin h) := Finset.univ.filter fun i => d i ≠ d 0
   have hS2ne : S2.Nonempty := by
     by_contra hEmpty
@@ -1059,10 +1132,8 @@ theorem proposition_2_4_j
           exact (not_le_of_gt hkt) (Finset.le_max' S2 t htmem)
     · by_contra hneq
       exact htmem (by simp [S2, hneq])
-  have hd_j_ne : d j ≠ d 0 := by
-    simpa [S2] using hj_mem
-  have hd_k_ne : d k ≠ d 0 := by
-    simpa [S2] using hk_mem
+  have hd_j_ne : d j ≠ d 0 := by simpa [S2] using hj_mem
+  have hd_k_ne : d k ≠ d 0 := by simpa [S2] using hk_mem
   have hd_jm1 : d jm1 = d 0 := by
     exact houtside_eq0 jm1 (Or.inl hjm1_lt_j)
   have hs1k_eq0_or_gt : s1 k = 0 ∨ k < s1 k := by
@@ -1070,8 +1141,7 @@ theorem proposition_2_4_j
     · right
       have hs1k :
           s1 k = (⟨k.val + 1, hk1⟩ : Fin h) := by
-        simpa [s1] using
-          (fin_intCast_coe (h := h) (i := (⟨k.val + 1, hk1⟩ : Fin h)))
+        simpa [s1] using (fin_intCast_coe (h := h) (i := (⟨k.val + 1, hk1⟩ : Fin h)))
       rw [hs1k, Fin.lt_def]
       simp
     · left
@@ -1179,7 +1249,7 @@ theorem proposition_2_4_j
         calc
           d (⟨j.val + (m + 1), by omega⟩ : Fin h)
               = d (s1 (⟨j.val + m, by omega⟩ : Fin h)) := by
-                rw [hs1eq]
+            rw [hs1eq]
           _ = d (⟨j.val + m, by omega⟩ : Fin h) := hstep.symm
           _ = d j := ih (Nat.le_of_lt hm_lt)
   have hinside_const (t : Fin h) (hjt : j ≤ t) (htk : t ≤ k) : d t = d j := by
@@ -1216,7 +1286,8 @@ theorem proposition_2_4_j
         _ = t := by simp [ht]
     have htmod : ((t : Int) % h) = (t : Int) := by
       calc
-        ((t : Int) % h) = ((@Fin.intCast h (by infer_instance) (t : Int) : Fin h) : Int) := by
+        ((t : Int) % h)
+            = ((@Fin.intCast h (by infer_instance) (t : Int) : Fin h) : Int) := by
           symm
           exact fin_intCast_coe_int (h := h) (z := (t : Int))
         _ = t := by simp
@@ -1241,14 +1312,14 @@ theorem proposition_2_4_j
       calc
         (q : Int) = ∑ t : Fin h, d t := hqsum
         _ = d j + ∑ t ∈ Finset.univ.erase j, d t := by
-              symm
-              exact Finset.add_sum_erase Finset.univ (fun t : Fin h => d t) (Finset.mem_univ j)
+          symm
+          exact Finset.add_sum_erase Finset.univ (fun t : Fin h => d t) (Finset.mem_univ j)
         _ = d j + ∑ t ∈ Finset.univ.erase j, d 0 := by rw [hsum_rest]
         _ = d j + ((h - 1 : Nat) : Int) * d 0 := by simp
         _ = d j + (h - 1) * d 0 := by
-              have h1 : 1 ≤ h := by omega
-              rw [Nat.cast_sub h1]
-              norm_num
+          have h1 : 1 ≤ h := by omega
+          rw [Nat.cast_sub h1]
+          norm_num
         _ = h * d 0 + (d j - d 0) := by ring
     refine ⟨(j : Int), d 0, d j - d 0, hdelta, ?_, ?_, ?_⟩
     · simpa using hqeq
@@ -1261,8 +1332,9 @@ theorem proposition_2_4_j
         intro hEq
         exact hz (hcast_eq_mod_zero (t := j) hEq)
       calc
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int) =
-            d (@Fin.intCast h (by infer_instance) z) := hcast_rank z
+        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int)
+            = d (@Fin.intCast h (by infer_instance) z) :=
+          hcast_rank z
         _ = d 0 := houtside_j ht_ne
   · by_cases hcomp : j = 1 ∧ k.val = h - 1
     · have hj1 : j = 1 := hcomp.1
@@ -1300,14 +1372,14 @@ theorem proposition_2_4_j
         calc
           (q : Int) = ∑ t : Fin h, d t := hqsum
           _ = d 0 + ∑ t ∈ Finset.univ.erase (0 : Fin h), d t := by
-                symm
-                exact Finset.add_sum_erase Finset.univ (fun t : Fin h => d t) (Finset.mem_univ 0)
+            symm
+            exact Finset.add_sum_erase Finset.univ (fun t : Fin h => d t) (Finset.mem_univ 0)
           _ = d 0 + ∑ t ∈ Finset.univ.erase (0 : Fin h), d j := by rw [hsum_rest]
           _ = d 0 + ((h - 1 : Nat) : Int) * d j := by simp
           _ = d 0 + (h - 1) * d j := by
-                have h1 : 1 ≤ h := by omega
-                rw [Nat.cast_sub h1]
-                norm_num
+            have h1 : 1 ≤ h := by omega
+            rw [Nat.cast_sub h1]
+            norm_num
           _ = h * d j + (d 0 - d j) := by ring
       refine ⟨0, d j, d 0 - d j, hdelta0, ?_, ?_, ?_⟩
       · simpa using hqeq
@@ -1329,8 +1401,9 @@ theorem proposition_2_4_j
               _ = 0 := by simp [hEq]
           exact hz (by simpa using hz0)
         calc
-          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int) =
-              d (@Fin.intCast h (by infer_instance) z) := hcast_rank z
+          (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ z) : Int)
+              = d (@Fin.intCast h (by infer_instance) z) :=
+            hcast_rank z
           _ = d j := hinside_nonzero ht0
     · exfalso
       have hj_lt_k : j < k := lt_of_le_of_ne hj_le_k hjk
@@ -1354,16 +1427,23 @@ theorem proposition_2_4_j
       have hsum2_raw := proposition_2_4_h (hg := hg) (hh := hh) (hε := hε) (m := 2)
       have hsum2_left : (2 : Int) * c0 - (2 : Int) * c2 = 2 := by
         omega
-      have hsum2' :
-          (∑ i : Fin h,
-            (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-              (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2)) : Int)) ^ 2)) = 2 := by
+      have hsum2'
+          : (∑ i : Fin h,
+              (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+                  - (Module.finrank F
+                        <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2))
+                      : Int))
+                ^ 2))
+            = 2 := by
         calc
           (∑ i : Fin h,
-            (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-              (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2)) : Int)) ^ 2))
+              (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+                  - (Module.finrank F
+                        <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2))
+                      : Int))
+                ^ 2))
               = (2 : Int) * c0 - (2 : Int) * c2 := by
-                  simpa [c0, c2] using hsum2_raw.symm
+            simpa [c0, c2] using hsum2_raw.symm
           _ = 2 := hsum2_left
       have hsum2 : (∑ i : Fin h, a2 i) = 2 := by
         have hsum2a :
@@ -1388,14 +1468,21 @@ theorem proposition_2_4_j
               (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2)) : Int)) ^ 2)
           rw [zpow_natCast]
         calc
-          ∑ i : Fin h, a2 i =
-              ∑ i : Fin h,
-                ((d i -
-                  (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2)) : Int)) ^ 2) := hsum2a
-          _ =
-              ∑ i : Fin h,
-                (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int) -
-                  (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2)) : Int)) ^ 2) := hsum2b
+          ∑ i : Fin h, a2 i
+              = ∑ i : Fin h,
+                  ((d i
+                      - (Module.finrank F
+                            <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2))
+                          : Int))
+                    ^ 2) :=
+            hsum2a
+          _ = ∑ i : Fin h,
+                (((Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (i : ℕ)) : Int)
+                    - (Module.finrank F
+                          <| End.eigenspace g.toLinearMap (ε ^ ((i : Int) + 2))
+                        : Int))
+                  ^ 2) :=
+            hsum2b
           _ = 2 := hsum2'
       let km1 : Fin h := ⟨k.val - 1, by omega⟩
       have hkm1_lt_k : km1 < k := by
@@ -1484,7 +1571,8 @@ theorem proposition_2_4_j
           by_cases hk2 : k.val + 2 < h
           · right
             have hs2k : s2 k = (⟨k.val + 2, hk2⟩ : Fin h) := by
-              simpa [s2] using (fin_intCast_coe (h := h) (i := (⟨k.val + 2, hk2⟩ : Fin h)))
+              simpa [s2]
+                using (fin_intCast_coe (h := h) (i := (⟨k.val + 2, hk2⟩ : Fin h)))
             rw [hs2k, Fin.lt_def]
             simp
           · left
@@ -1648,15 +1736,25 @@ theorem proposition_2_4_k
     {q : ℕ} (hdim : Module.finrank F V = q) (hq : q ≥ 2)
     {g : V ≃ₗ[F] V} {h : ℕ} (hg : g ^ h = 1) (hh : h ≥ 2)
     {ε : F} (hε : IsPrimitiveRoot ε h)
-    (hE : ∀ m : ℤ, ¬ (m % h = 0) →
-      Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap)) =
-      Module.finrank F (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap)) + 1) :
-    ∃ i : ℤ, ∃ n : ℤ, ∃ δ : ℤ, (δ = 1 ∨ δ = -1) ∧ q = h * n + δ ∧
-    (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i)) = n + δ ∧
-    (∀ j : ℤ, ¬ ((j - i) % h) = 0 →
-      (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ j)) = n) ∧
-    ((n = 1 ∧ i = 0 ∧ δ = -1 ∧ h = q + 1) ∨
-      0 < (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)))) := by
+    (hE
+      : ∀ m : ℤ,
+          ¬ (m % h = 0)
+          → Module.finrank F
+              (intertwiningSubmodule g.toLinearMap (ε ^ (0 : ℤ) • g.toLinearMap))
+            = Module.finrank F
+                (intertwiningSubmodule g.toLinearMap (ε ^ m • g.toLinearMap))
+              + 1)
+    : ∃ i : ℤ,
+      ∃ n : ℤ,
+      ∃ δ : ℤ,
+        (δ = 1 ∨ δ = -1)
+        ∧ q = h * n + δ
+        ∧ (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i)) = n + δ
+        ∧ (∀ j : ℤ,
+            ¬ ((j - i) % h) = 0
+            → (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ j)) = n)
+        ∧ ((n = 1 ∧ i = 0 ∧ δ = -1 ∧ h = q + 1)
+            ∨ 0 < (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)))) := by
   have hq2 : (2 : ℤ) ≤ q := by
     exact_mod_cast hq
   have hh2 : (2 : ℤ) ≤ h := by
@@ -1669,18 +1767,19 @@ theorem proposition_2_4_k
       apply eigenspace_eq_of_zpow_modEq (hge2 := hh) (g := g) (h := h) (ε := ε) (hε := hε)
       have hdivneg : (h : ℤ) ∣ -i := by
         exact Int.dvd_iff_emod_eq_zero.mpr (by simpa using hi0)
-      have hdiv : (h : ℤ) ∣ i := by
-        simpa [Int.dvd_neg] using hdivneg
+      have hdiv : (h : ℤ) ∣ i := by simpa [Int.dvd_neg] using hdivneg
       exact Int.modEq_zero_iff_dvd.mpr hdiv
-    have h0eq : (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)) : ℤ) = n + δ := by
+    have h0eq
+        : (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)) : ℤ)
+          = n + δ := by
       have hfin :
           (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i) : ℤ) =
             (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)) : ℤ) :=
         congrArg (fun W : Submodule F V => (Module.finrank F W : ℤ)) hspace
       calc
-        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)) : ℤ) =
-            (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i) : ℤ) := by
-              simpa using hfin.symm
+        (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ (0 : ℤ)) : ℤ)
+            = (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ i) : ℤ) := by
+          simpa using hfin.symm
         _ = n + δ := hni
     have hrest0 : ∀ j : ℤ, ¬ ((j - (0 : ℤ)) % h) = 0 →
         (Module.finrank F <| End.eigenspace g.toLinearMap (ε ^ j)) = n := by

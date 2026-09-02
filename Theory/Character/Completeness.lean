@@ -17,10 +17,8 @@ noncomputable section
 open scoped BigOperators AlgebraMonoidAlgebra Matrix.Module
 open MonoidAlgebra
 
-
 open _root_.Representation
 open Representation
-
 
 attribute [local instance] Fintype.ofFinite
 
@@ -28,10 +26,11 @@ variable {G : Type*} [Group G] [Finite G]
 
 abbrev GroupAlgebra := MonoidAlgebra ℂ G
 
-theorem wedderburnDataExists (G : Type*) [Group G] [Finite G] :
-    ∃ (n : ℕ) (d : Fin n → ℕ), (∀ i, NeZero (d i)) ∧
-        Nonempty (GroupAlgebra (G := G) ≃ₐ[ℂ]
-          Π i, Matrix (Fin (d i)) (Fin (d i)) ℂ) := by
+theorem wedderburnDataExists (G : Type*) [Group G] [Finite G]
+    : ∃ (n : ℕ) (d : Fin n → ℕ),
+        (∀ i, NeZero (d i))
+        ∧ Nonempty
+            (GroupAlgebra (G := G) ≃ₐ[ℂ] Π i, Matrix (Fin (d i)) (Fin (d i)) ℂ) := by
   classical
   have : NeZero (Nat.card G : ℂ) := ⟨by
     exact_mod_cast (Nat.card_pos (α := G)).ne'⟩
@@ -45,14 +44,15 @@ theorem wedderburnDataExists (G : Type*) [Group G] [Finite G] :
 noncomputable def wedderburnCard (G : Type*) [Group G] [Finite G] : ℕ :=
   Classical.choose (wedderburnDataExists G)
 
-noncomputable def wedderburnDims (G : Type*) [Group G] [Finite G] :
-    Fin (wedderburnCard G) → ℕ :=
+noncomputable def wedderburnDims (G : Type*) [Group G] [Finite G]
+    : Fin (wedderburnCard G) → ℕ :=
   Classical.choose (Classical.choose_spec (wedderburnDataExists G))
 
-theorem wedderburnDims_spec (G : Type*) [Group G] [Finite G] :
-    (∀ i, NeZero (wedderburnDims G i)) ∧
-        Nonempty (GroupAlgebra (G := G) ≃ₐ[ℂ]
-          Π i, Matrix (Fin (wedderburnDims G i)) (Fin (wedderburnDims G i)) ℂ) :=
+theorem wedderburnDims_spec (G : Type*) [Group G] [Finite G]
+    : (∀ i, NeZero (wedderburnDims G i))
+      ∧ Nonempty
+          (GroupAlgebra (G := G)
+            ≃ₐ[ℂ] Π i, Matrix (Fin (wedderburnDims G i)) (Fin (wedderburnDims G i)) ℂ) :=
   Classical.choose_spec (Classical.choose_spec (wedderburnDataExists G))
 
 noncomputable abbrev wedderburnIndex (G : Type*) [Group G] [Finite G] : Type :=
@@ -61,28 +61,27 @@ noncomputable abbrev wedderburnIndex (G : Type*) [Group G] [Finite G] : Type :=
 noncomputable def wedderburnDim (i : wedderburnIndex G) : ℕ :=
   wedderburnDims G i
 
-instance wedderburnDim_neZero (i : wedderburnIndex G) :
-    NeZero (wedderburnDim (G := G) i) :=
+instance wedderburnDim_neZero (i : wedderburnIndex G)
+    : NeZero (wedderburnDim (G := G) i) :=
   (wedderburnDims_spec G).1 i
 
-noncomputable def wedderburnEquiv (G : Type*) [Group G] [Finite G] :
-    GroupAlgebra (G := G) ≃ₐ[ℂ]
-      Π i : wedderburnIndex G,
-        Matrix (Fin (wedderburnDim (G := G) i))
-          (Fin (wedderburnDim (G := G) i)) ℂ :=
+noncomputable def wedderburnEquiv (G : Type*) [Group G] [Finite G]
+    : GroupAlgebra (G := G)
+      ≃ₐ[ℂ] Π i : wedderburnIndex G,
+            Matrix (Fin (wedderburnDim (G := G) i)) (Fin (wedderburnDim (G := G) i)) ℂ :=
   Classical.choice (wedderburnDims_spec G).2
 
-noncomputable def blockAlgHom (i : wedderburnIndex G) :
-    GroupAlgebra (G := G) →ₐ[ℂ]
-      Matrix (Fin (wedderburnDim (G := G) i))
-        (Fin (wedderburnDim (G := G) i)) ℂ :=
-  (Pi.evalAlgHom ℂ (fun j : wedderburnIndex G =>
-      Matrix (Fin (wedderburnDim (G := G) j))
-        (Fin (wedderburnDim (G := G) j)) ℂ) i).comp
+noncomputable def blockAlgHom (i : wedderburnIndex G)
+    : GroupAlgebra (G := G)
+      →ₐ[ℂ] Matrix (Fin (wedderburnDim (G := G) i)) (Fin (wedderburnDim (G := G) i)) ℂ :=
+  (Pi.evalAlgHom ℂ
+    (fun j : wedderburnIndex G =>
+      Matrix (Fin (wedderburnDim (G := G) j)) (Fin (wedderburnDim (G := G) j)) ℂ)
+    i).comp
     (wedderburnEquiv G).toAlgHom
 
-instance matrixBlockModule (i : wedderburnIndex G) :
-    Module (GroupAlgebra (G := G)) (Fin (wedderburnDim (G := G) i) → ℂ) := by
+instance matrixBlockModule (i : wedderburnIndex G)
+    : Module (GroupAlgebra (G := G)) (Fin (wedderburnDim (G := G) i) → ℂ) := by
   classical
   letI : Module
       (Matrix (Fin (wedderburnDim (G := G) i))
@@ -91,9 +90,8 @@ instance matrixBlockModule (i : wedderburnIndex G) :
     Matrix.Module.matrixModule
   exact Module.compHom _ (blockAlgHom (G := G) i).toRingHom
 
-instance matrixBlockIsScalarTower (i : wedderburnIndex G) :
-    IsScalarTower ℂ (GroupAlgebra (G := G))
-      (Fin (wedderburnDim (G := G) i) → ℂ) := by
+instance matrixBlockIsScalarTower (i : wedderburnIndex G)
+    : IsScalarTower ℂ (GroupAlgebra (G := G)) (Fin (wedderburnDim (G := G) i) → ℂ) := by
   classical
   let : Module
       (Matrix (Fin (wedderburnDim (G := G) i))
@@ -106,16 +104,16 @@ instance matrixBlockIsScalarTower (i : wedderburnIndex G) :
   rw [map_smul]
   exact smul_assoc r (blockAlgHom (G := G) i a) v
 
-noncomputable def matrixBlockRepresentation (i : wedderburnIndex G) :
-    Representation ℂ G (Fin (wedderburnDim (G := G) i) → ℂ) := by
+noncomputable def matrixBlockRepresentation (i : wedderburnIndex G)
+    : Representation ℂ G (Fin (wedderburnDim (G := G) i) → ℂ) := by
   classical
   letI := matrixBlockModule (G := G) i
   letI := matrixBlockIsScalarTower (G := G) i
   exact Representation.ofModule' (k := ℂ) (G := G)
     (Fin (wedderburnDim (G := G) i) → ℂ)
 
-lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
-    Representation.IsIrreducible (matrixBlockRepresentation (G := G) i) := by
+lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G)
+    : Representation.IsIrreducible (matrixBlockRepresentation (G := G) i) := by
   classical
   let := matrixBlockModule (G := G) i
   let := matrixBlockIsScalarTower (G := G) i
@@ -139,9 +137,10 @@ lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
     intro m
     refine ⟨(wedderburnEquiv G).symm (Pi.single i m), ?_⟩
     simp [φ, blockAlgHom]
-  refine
-    { toNontrivial := ?_
-      eq_bot_or_eq_top := ?_ }
+  refine {
+    toNontrivial := ?_
+    eq_bot_or_eq_top := ?_
+  }
   · have : Nontrivial (Fin (wedderburnDim (G := G) i) → ℂ) := Pi.nontrivial
     refine ⟨⟨(⊥ : Subrepresentation
       (Representation.ofModule' (k := ℂ) (G := G)
@@ -234,8 +233,8 @@ lemma matrixBlockRepresentation_irreducible (i : wedderburnIndex G) :
 noncomputable def blockCharacter (i : wedderburnIndex G) : ConjClassFunction G :=
   characterClassFunction (matrixBlockRepresentation (G := G) i)
 
-lemma blockCharacter_irreducible (i : wedderburnIndex G) :
-    IsIrreducibleConjCharacter (blockCharacter (G := G) i) := by
+lemma blockCharacter_irreducible (i : wedderburnIndex G)
+    : IsIrreducibleConjCharacter (blockCharacter (G := G) i) := by
   classical
   refine ⟨?_, ?_⟩
   · refine ⟨wedderburnDim (G := G) i, matrixBlockRepresentation (G := G) i, rfl⟩
@@ -243,9 +242,9 @@ lemma blockCharacter_irreducible (i : wedderburnIndex G) :
       (ρ := matrixBlockRepresentation (G := G) i)).1
         (matrixBlockRepresentation_irreducible (G := G) i)
 
-lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
-    classFunctionInner (blockCharacter (G := G) i) (blockCharacter (G := G) j) =
-      if i = j then 1 else 0 := by
+lemma blockCharacters_orthonormal (i j : wedderburnIndex G)
+    : classFunctionInner (blockCharacter (G := G) i) (blockCharacter (G := G) j)
+      = if i = j then 1 else 0 := by
   classical
   have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := G)).ne'
@@ -260,13 +259,17 @@ lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
             (matrixBlockRepresentation (G := G) j)
             (matrixBlockRepresentation (G := G) i)) then 1 else 0 := by
     dsimp [blockCharacter]
-    change
-      (Nat.card G : ℂ)⁻¹ *
-          ∑ g : G, (matrixBlockRepresentation (G := G) i).character g *
-            star ((matrixBlockRepresentation (G := G) j).character g) =
-        if Nonempty (Representation.Equiv
-            (matrixBlockRepresentation (G := G) j)
-            (matrixBlockRepresentation (G := G) i)) then 1 else 0
+    change (Nat.card G : ℂ)⁻¹
+              * ∑ g : G,
+                  (matrixBlockRepresentation (G := G) i).character g
+                  * star ((matrixBlockRepresentation (G := G) j).character g)
+            = if Nonempty
+                  (Representation.Equiv
+                    (matrixBlockRepresentation (G := G) j)
+                    (matrixBlockRepresentation (G := G) i)) then
+                1
+              else
+                0
     rw [← Representation.char_orthonormal
       (ρ := matrixBlockRepresentation (G := G) i)
       (σ := matrixBlockRepresentation (G := G) j)]
@@ -343,13 +346,13 @@ lemma blockCharacters_orthonormal (i j : wedderburnIndex G) :
       exact hv (h.some.toLinearEquiv.injective (by simpa using hφv))
     simp [hij, hno]
 
-lemma classFunctionInner_zero_left (φ : ConjClassFunction G) :
-    classFunctionInner (0 : ConjClassFunction G) φ = 0 := by
+lemma classFunctionInner_zero_left (φ : ConjClassFunction G)
+    : classFunctionInner (0 : ConjClassFunction G) φ = 0 := by
   classical
   simp [classFunctionInner]
 
-noncomputable def classFunctionInnerLeftLinear (ψ : ConjClassFunction G) :
-    ConjClassFunction G →ₗ[ℂ] ℂ where
+noncomputable def classFunctionInnerLeftLinear (ψ : ConjClassFunction G)
+    : ConjClassFunction G →ₗ[ℂ] ℂ where
   toFun φ := classFunctionInner φ ψ
   map_add' φ₁ φ₂ := by
     classical
@@ -359,17 +362,16 @@ noncomputable def classFunctionInnerLeftLinear (ψ : ConjClassFunction G) :
     simp [classFunctionInner, Finset.mul_sum, mul_assoc, mul_left_comm]
 
 lemma classFunctionInner_sum_left {ι : Type*} [Fintype ι]
-    (a : ι → ℂ) (φ : ι → ConjClassFunction G) (ψ : ConjClassFunction G) :
-    classFunctionInner (∑ i, a i • φ i) ψ =
-      ∑ i, a i • classFunctionInner (φ i) ψ := by
+    (a : ι → ℂ) (φ : ι → ConjClassFunction G) (ψ : ConjClassFunction G)
+    : classFunctionInner (∑ i, a i • φ i) ψ = ∑ i, a i • classFunctionInner (φ i) ψ := by
   classical
   change classFunctionInnerLeftLinear (G := G) ψ (∑ i, a i • φ i) =
     ∑ i, a i • classFunctionInnerLeftLinear (G := G) ψ (φ i)
   rw [map_sum]
   simp
 
-lemma blockCharacters_linearIndependent :
-    LinearIndependent ℂ (blockCharacter (G := G)) := by
+lemma blockCharacters_linearIndependent
+    : LinearIndependent ℂ (blockCharacter (G := G)) := by
   classical
   rw [Fintype.linearIndependent_iff]
   intro a ha i
@@ -385,27 +387,28 @@ lemma blockCharacters_linearIndependent :
     simp [blockCharacters_orthonormal]
   exact hcoeff ▸ hinner
 
-lemma blockCharacters_card_le_classFunction_finrank :
-    Fintype.card (wedderburnIndex G) ≤ Module.finrank ℂ (ConjClassFunction G) := by
+lemma blockCharacters_card_le_classFunction_finrank
+    : Fintype.card (wedderburnIndex G) ≤ Module.finrank ℂ (ConjClassFunction G) := by
   classical
   have hli := blockCharacters_linearIndependent (G := G)
   have hspan := (finrank_span_eq_card hli).symm
   calc
     Fintype.card (wedderburnIndex G)
-        = Module.finrank ℂ (Submodule.span ℂ (Set.range (blockCharacter (G := G)))) := hspan
+        = Module.finrank ℂ (Submodule.span ℂ (Set.range (blockCharacter (G := G)))) :=
+      hspan
     _ ≤ Module.finrank ℂ (ConjClassFunction G) := Submodule.finrank_le _
 
-noncomputable def classFunctionCentralElement (φ : ConjClassFunction G) :
-    GroupAlgebra (G := G) :=
+noncomputable def classFunctionCentralElement (φ : ConjClassFunction G)
+    : GroupAlgebra (G := G) :=
   ∑ g : G, MonoidAlgebra.single g (φ (ConjClasses.mk g⁻¹))
 
-lemma classFunctionCentralElement_coeff (φ : ConjClassFunction G) (g : G) :
-    (classFunctionCentralElement (G := G) φ).coeff g = φ (ConjClasses.mk g⁻¹) := by
+lemma classFunctionCentralElement_coeff (φ : ConjClassFunction G) (g : G)
+    : (classFunctionCentralElement (G := G) φ).coeff g = φ (ConjClasses.mk g⁻¹) := by
   classical
   simp [classFunctionCentralElement, Finsupp.single_apply]
 
-noncomputable def classFunctionCentralElementLinear :
-    ConjClassFunction G →ₗ[ℂ] GroupAlgebra (G := G) where
+noncomputable def classFunctionCentralElementLinear
+    : ConjClassFunction G →ₗ[ℂ] GroupAlgebra (G := G) where
   toFun φ := classFunctionCentralElement (G := G) φ
   map_add' φ ψ := by
     classical
@@ -416,10 +419,10 @@ noncomputable def classFunctionCentralElementLinear :
     ext g
     simp [classFunctionCentralElement_coeff, smul_eq_mul]
 
-
-lemma classFunctionCentralElement_comm (φ : ConjClassFunction G) (a : GroupAlgebra (G := G)) :
-    a * classFunctionCentralElement (G := G) φ =
-      classFunctionCentralElement (G := G) φ * a := by
+lemma classFunctionCentralElement_comm (φ : ConjClassFunction G)
+    (a : GroupAlgebra (G := G))
+    : a * classFunctionCentralElement (G := G) φ
+      = classFunctionCentralElement (G := G) φ * a := by
   classical
   induction a using MonoidAlgebra.induction_linear with
   | zero => simp
@@ -440,10 +443,11 @@ lemma classFunctionCentralElement_comm (φ : ConjClassFunction G) (a : GroupAlge
       rw [hφ, mul_comm]
 
 lemma blockAlgHom_classFunctionCentralElement_mem_center
-    (φ : ConjClassFunction G) (i : wedderburnIndex G) :
-    blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) ∈
-      Set.center (Matrix (Fin (wedderburnDim (G := G) i))
-        (Fin (wedderburnDim (G := G) i)) ℂ) := by
+    (φ : ConjClassFunction G) (i : wedderburnIndex G)
+    : blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ)
+      ∈ Set.center
+          (Matrix (Fin (wedderburnDim (G := G) i))
+            (Fin (wedderburnDim (G := G) i)) ℂ) := by
   classical
   rw [Semigroup.mem_center_iff]
   intro M
@@ -457,41 +461,41 @@ lemma blockAlgHom_classFunctionCentralElement_mem_center
   obtain ⟨a, ha⟩ := hsurj M
   calc
     M * blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ)
-        = blockAlgHom (G := G) i a *
-            blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) := by
-            rw [ha]
+        = blockAlgHom (G := G) i a
+          * blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) := by
+      rw [ha]
     _ = blockAlgHom (G := G) i (a * classFunctionCentralElement (G := G) φ) := by
-            rw [map_mul]
+      rw [map_mul]
     _ = blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ * a) := by
-            rw [classFunctionCentralElement_comm]
-    _ = blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) *
-            blockAlgHom (G := G) i a := by
-            rw [map_mul]
+      rw [classFunctionCentralElement_comm]
+    _ = blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ)
+        * blockAlgHom (G := G) i a := by
+      rw [map_mul]
     _ = blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) * M := by
-            rw [ha]
+      rw [ha]
 
 lemma blockAlgHom_classFunctionCentralElement_eq_scalar
-    (φ : ConjClassFunction G) (i : wedderburnIndex G) :
-    ∃ c : ℂ,
-      blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ) =
-        Matrix.scalar (Fin (wedderburnDim (G := G) i)) c := by
+    (φ : ConjClassFunction G) (i : wedderburnIndex G)
+    : ∃ c : ℂ,
+        blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ)
+        = Matrix.scalar (Fin (wedderburnDim (G := G) i)) c := by
   classical
   have hcenter := blockAlgHom_classFunctionCentralElement_mem_center (G := G) φ i
   rw [Matrix.center_eq_range] at hcenter
   rcases hcenter with ⟨c, hc⟩
   exact ⟨c, hc.symm⟩
 
-
-lemma matrix_trace_scalar (i : wedderburnIndex G) (c : ℂ) :
-    Matrix.trace (Matrix.scalar (Fin (wedderburnDim (G := G) i)) c) =
-      (wedderburnDim (G := G) i : ℂ) * c := by
+lemma matrix_trace_scalar (i : wedderburnIndex G) (c : ℂ)
+    : Matrix.trace (Matrix.scalar (Fin (wedderburnDim (G := G) i)) c)
+      = (wedderburnDim (G := G) i : ℂ) * c := by
   rw [Matrix.trace]
   simp [Matrix.diag, Matrix.scalar, Finset.sum_const, nsmul_eq_mul]
 
-noncomputable def classFunctionBlockTraceLinear :
-    ConjClassFunction G →ₗ[ℂ] (wedderburnIndex G → ℂ) where
-  toFun φ := fun i =>
-    Matrix.trace (blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ))
+noncomputable def classFunctionBlockTraceLinear
+    : ConjClassFunction G →ₗ[ℂ] (wedderburnIndex G → ℂ) where
+  toFun φ :=
+    fun i =>
+      Matrix.trace (blockAlgHom (G := G) i (classFunctionCentralElement (G := G) φ))
   map_add' φ ψ := by
     classical
     funext i
@@ -512,8 +516,8 @@ noncomputable def classFunctionBlockTraceLinear :
     rw [map_smul, map_smul, Matrix.trace_smul]
     rfl
 
-lemma classFunctionBlockTraceLinear_injective :
-    Function.Injective (classFunctionBlockTraceLinear (G := G)) := by
+lemma classFunctionBlockTraceLinear_injective
+    : Function.Injective (classFunctionBlockTraceLinear (G := G)) := by
   classical
   rw [injective_iff_map_eq_zero]
   intro φ hφ
@@ -542,33 +546,32 @@ lemma classFunctionBlockTraceLinear_injective :
   have hcoeff := congrArg (fun a : GroupAlgebra (G := G) => a.coeff g⁻¹) hcentral_zero
   simpa [classFunctionCentralElement_coeff] using hcoeff
 
-lemma classFunction_finrank_le_blockCharacters_card :
-    Module.finrank ℂ (ConjClassFunction G) ≤ Fintype.card (wedderburnIndex G) := by
+lemma classFunction_finrank_le_blockCharacters_card
+    : Module.finrank ℂ (ConjClassFunction G) ≤ Fintype.card (wedderburnIndex G) := by
   classical
   have hinj := classFunctionBlockTraceLinear_injective (G := G)
   have hle := LinearMap.finrank_le_finrank_of_injective
     (f := classFunctionBlockTraceLinear (G := G)) hinj
   simpa [Module.finrank_fintype_fun_eq_card] using hle
 
-lemma blockCharacters_span :
-    Submodule.span ℂ (Set.range (blockCharacter (G := G))) = ⊤ := by
+lemma blockCharacters_span
+    : Submodule.span ℂ (Set.range (blockCharacter (G := G))) = ⊤ := by
   classical
   refine Submodule.eq_top_of_finrank_eq ?_
   have hli := blockCharacters_linearIndependent (G := G)
   have hspan := (finrank_span_eq_card hli).symm
   calc
     Module.finrank ℂ (Submodule.span ℂ (Set.range (blockCharacter (G := G))))
-        = Fintype.card (wedderburnIndex G) := hspan.symm
+        = Fintype.card (wedderburnIndex G) :=
+      hspan.symm
     _ = Module.finrank ℂ (ConjClassFunction G) :=
-        le_antisymm (blockCharacters_card_le_classFunction_finrank (G := G))
-          (classFunction_finrank_le_blockCharacters_card (G := G))
+      le_antisymm (blockCharacters_card_le_classFunction_finrank (G := G))
+        (classFunction_finrank_le_blockCharacters_card (G := G))
 
 /-- The irreducible characters span the space of class functions on `G`. -/
 theorem classFunction_span_irreducible_characters
-    :
-    ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
-      IsCompleteIrreducibleCharacterFamily χ ∧
-        Submodule.span ℂ (Set.range χ) = ⊤ := by
+    : ∃ (ι : Type) (_ : Fintype ι) (χ : ι → ConjClassFunction G),
+        IsCompleteIrreducibleCharacterFamily χ ∧ Submodule.span ℂ (Set.range χ) = ⊤ := by
   classical
   refine ⟨wedderburnIndex G, inferInstance, blockCharacter (G := G), ?_,
     blockCharacters_span (G := G)⟩
@@ -590,12 +593,15 @@ theorem classFunction_span_irreducible_characters
                 (matrixBlockRepresentation (G := G) i)) then 1 else 0 := by
         rw [hρ]
         dsimp [blockCharacter]
-        change
-          (Nat.card G : ℂ)⁻¹ *
-              ∑ g : G, (matrixBlockRepresentation (G := G) i).character g *
-                star (ρ.character g) =
-            if Nonempty (Representation.Equiv ρ
-                (matrixBlockRepresentation (G := G) i)) then 1 else 0
+        change (Nat.card G : ℂ)⁻¹
+                  * ∑ g : G,
+                      (matrixBlockRepresentation (G := G) i).character g
+                      * star (ρ.character g)
+                = if Nonempty
+                      (Representation.Equiv ρ (matrixBlockRepresentation (G := G) i)) then
+                    1
+                  else
+                    0
         have hcard_ne : (Nat.card G : ℂ) ≠ 0 := by
           exact_mod_cast (Nat.card_pos (α := G)).ne'
         let : Invertible (Nat.card G : ℂ) := invertibleOfNonzero hcard_ne
@@ -649,4 +655,3 @@ theorem classFunction_span_irreducible_characters
       exact (blockCharacter_irreducible (G := G) j).2
     rw [blockCharacters_orthonormal (G := G), if_neg hne] at hnorm
     exact zero_ne_one hnorm
-

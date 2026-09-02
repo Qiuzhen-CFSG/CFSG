@@ -17,28 +17,34 @@ def jacobson_density_mapping
     (F : Type*) [Field F]
     (A : Type*) [Ring A] [Algebra F A]
     (V : Type*) [AddCommGroup V] [Module F V]
-    [Module A V] [IsScalarTower F A V] :
-  A →ₐ[F] Module.End F V := {
-    toFun := fun a ↦ {
-      toFun := fun v ↦ a • v
-      map_add' := fun x y ↦ smul_add a x y
-      map_smul' := fun m x ↦ smul_comm a m x
-    }
+    [Module A V] [IsScalarTower F A V]
+    : A →ₐ[F] Module.End F V :=
+  {
+    toFun :=
+      fun a ↦
+        {
+          toFun := fun v ↦ a • v
+          map_add' := fun x y ↦ smul_add a x y
+          map_smul' := fun m x ↦ smul_comm a m x
+        }
     map_one' := by
       ext v
       simp only [one_smul, LinearMap.coe_mk, AddHom.coe_mk, Module.End.one_apply]
-    map_mul' := fun x y => by
-      ext v
-      simp only [LinearMap.coe_mk, AddHom.coe_mk, Module.End.mul_apply, mul_smul]
+    map_mul' :=
+      fun x y => by
+        ext v
+        simp only [LinearMap.coe_mk, AddHom.coe_mk, Module.End.mul_apply, mul_smul]
     map_zero' := by
       ext v
       simp only [zero_smul, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.zero_apply]
-    map_add' := fun x y => by
-      ext v
-      simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.add_apply, add_smul]
-    commutes' := fun f => by
-      ext v
-      simp only [algebraMap_smul, LinearMap.coe_mk, AddHom.coe_mk, Module.algebraMap_end_apply]
+    map_add' :=
+      fun x y => by
+        ext v
+        simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.add_apply, add_smul]
+    commutes' :=
+      fun f => by
+        ext v
+        simp only [algebraMap_smul, LinearMap.coe_mk, AddHom.coe_mk, Module.algebraMap_end_apply]
   }
 
 theorem simple_of_jacobson_density_surjective
@@ -46,8 +52,8 @@ theorem simple_of_jacobson_density_surjective
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [inst : Nontrivial V] [Module F V]
     [FiniteDimensional F V] [Module A V] [IsScalarTower F A V]
-    (hs : Function.Surjective (jacobson_density_mapping F A V)) :
-    IsSimpleModule A V := by
+    (hs : Function.Surjective (jacobson_density_mapping F A V))
+    : IsSimpleModule A V := by
   rw [isSimpleModule_iff, isSimpleOrder_iff]
   constructor
   · obtain ⟨x, y, hxy⟩ := inst.exists_pair_ne
@@ -88,8 +94,8 @@ theorem surjective_of_jacobson_density_surjective
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V]
     [Module A V] [IsScalarTower F A V]
-    (hs : Function.Surjective (jacobson_density_mapping F A V)) :
-    Function.Surjective (algebraMap F (Module.End A V)) := by
+    (hs : Function.Surjective (jacobson_density_mapping F A V))
+    : Function.Surjective (algebraMap F (Module.End A V)) := by
   intro T
   by_cases! h : ¬ Nontrivial V
   · use 0
@@ -125,8 +131,8 @@ theorem jacobson_density_surjective
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
     [Module A V] [IsScalarTower F A V] [inst : IsSimpleModule A V]
-    (hs : Function.Surjective (algebraMap F (Module.End A V))) :
-    Function.Surjective (jacobson_density_mapping F A V) := by
+    (hs : Function.Surjective (algebraMap F (Module.End A V)))
+    : Function.Surjective (jacobson_density_mapping F A V) := by
   let p : ℕ → Prop := fun n ↦ (W : Submodule F V) → (hdim : Module.finrank F W = n) →
     ∀ u ∉ W, ∃ x : A, (∀ w ∈ W, x • w = 0) ∧ (x • u ≠ 0)
   have (k : ℕ) : p k := by
@@ -416,8 +422,8 @@ theorem _root_.AlgebraicClosure.jacobson_density_condition
     {F : Type*} [Field F] [IsAlgClosed F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    [Module A V] [IsScalarTower F A V] [IsSimpleModule A V] :
-    Function.Surjective (algebraMap F (Module.End A V)) := by
+    [Module A V] [IsScalarTower F A V] [IsSimpleModule A V]
+    : Function.Surjective (algebraMap F (Module.End A V)) := by
   let : DecidableEq (Module.End A V) := Classical.typeDecidableEq (Module.End A V)
   let : DivisionRing (Module.End A V) := Module.End.instDivisionRing
   let : FiniteDimensional F (Module.End F V) := Module.IsNoetherian.finite F (Module.End F V)
@@ -444,15 +450,15 @@ theorem _root_.AlgebraicClosure.jacobson_density_condition
   obtain ⟨a, ha⟩ := (@IsAlgClosed.algebraMap_bijective_of_isIntegral F L' _ _ _ _ _ _).2 ⟨d', Algebra.self_mem_adjoin_singleton F d'⟩
   use a
   calc
-  (algebraMap F (Module.End A V)) a = (algebraMap F L') a := by rfl
-  _ = _ := by rw [ha]
+    (algebraMap F (Module.End A V)) a = (algebraMap F L') a := by rfl
+    _ = _ := by rw [ha]
 
 theorem jacobson_density_surjective_isAlgClosed
     {F : Type*} [Field F] [IsAlgClosed F]
     {A : Type*} [Ring A] [Algebra F A]
     {V : Type*} [AddCommGroup V] [Module F V] [FiniteDimensional F V]
-    [Module A V] [IsScalarTower F A V] [IsSimpleModule A V] :
-    Function.Surjective (jacobson_density_mapping F A V) :=
+    [Module A V] [IsScalarTower F A V] [IsSimpleModule A V]
+    : Function.Surjective (jacobson_density_mapping F A V) :=
   jacobson_density_surjective AlgebraicClosure.jacobson_density_condition
 
 set_option backward.isDefEq.respectTransparency false in
@@ -460,9 +466,9 @@ theorem adjoin_univ_iff_surjective
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]
-    (ρ : Representation F G V) :
-    Algebra.adjoin F (Set.range ρ) = ⊤ ↔
-    Function.Surjective ⇑(jacobson_density_mapping F F[G] ρ.asModule) := by
+    (ρ : Representation F G V)
+    : Algebra.adjoin F (Set.range ρ) = ⊤
+      ↔ Function.Surjective ⇑(jacobson_density_mapping F F[G] ρ.asModule) := by
   have : Algebra.adjoin F (Set.range ρ) = ⊤ ↔ Algebra.adjoin F (Set.range ρ) =
       (Set.univ : Set (Module.End F V)) :=
     Iff.symm (StrictMono.apply_eq_top_iff fun ⦃a b⦄ a_1 ↦ a_1)
@@ -566,8 +572,8 @@ theorem irreducible_of_jacobson_density_surjective
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [inst : Nontrivial V] [Module F V]
     [inst' : FiniteDimensional F V](ρ : Representation F G V)
-    (hs : Algebra.adjoin F (Set.range ρ) = ⊤) :
-    IsIrreducible ρ := by
+    (hs : Algebra.adjoin F (Set.range ρ) = ⊤)
+    : IsIrreducible ρ := by
   let : Nontrivial ρ.asModule := inst
   let : FiniteDimensional F ρ.asModule := inst'
   rw [irreducible_iff_isSimpleModule_asModule]
@@ -578,9 +584,9 @@ theorem algebraMap_surj_iff_surj
     {F : Type*} [Field F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]
-    (ρ : Representation F G V) :
-    Function.Surjective (algebraMap F (Module.End F[G] ρ.asModule)) ↔
-    Function.Surjective (algebraMap F (End ρ)) := by
+    (ρ : Representation F G V)
+    : Function.Surjective (algebraMap F (Module.End F[G] ρ.asModule))
+      ↔ Function.Surjective (algebraMap F (End ρ)) := by
   refine ⟨fun h f ↦ ?_, fun h f ↦ ?_⟩
   · obtain ⟨r, hr⟩ := h (RepMap.equivLinearMapAsModule ρ ρ f)
     use r
@@ -601,8 +607,8 @@ theorem jacobson_density_surjective_rep
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V] [inst' :FiniteDimensional F V]
     (ρ : Representation F G V) [inst : IsIrreducible ρ]
-    (hs : Function.Surjective (algebraMap F (End ρ))) :
-    Algebra.adjoin F (Set.range ρ) = ⊤ := by
+    (hs : Function.Surjective (algebraMap F (End ρ)))
+    : Algebra.adjoin F (Set.range ρ) = ⊤ := by
   let := (irreducible_iff_isSimpleModule_asModule ρ).mp inst
   let : FiniteDimensional F ρ.asModule := inst'
   rw [adjoin_univ_iff_surjective]
@@ -614,8 +620,8 @@ theorem jacobson_density_surjective_isAlgClosed_rep
     {F : Type*} [Field F] [IsAlgClosed F]
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V] [inst' :FiniteDimensional F V]
-    (ρ : Representation F G V) [inst : IsIrreducible ρ] :
-    Algebra.adjoin F (Set.range ρ) = ⊤ := by
+    (ρ : Representation F G V) [inst : IsIrreducible ρ]
+    : Algebra.adjoin F (Set.range ρ) = ⊤ := by
   let := (irreducible_iff_isSimpleModule_asModule ρ).mp inst
   let : FiniteDimensional F ρ.asModule := inst'
   rw [adjoin_univ_iff_surjective]
@@ -627,8 +633,8 @@ theorem surjective_of_jacobson_density_surjective_rep
     {G : Type*} [Monoid G]
     {V : Type*} [AddCommGroup V] [Module F V]
     (ρ : Representation F G V)
-    (hs : Algebra.adjoin F (Set.range ρ) = ⊤) :
-    Function.Surjective (algebraMap F (End ρ)) := by
+    (hs : Algebra.adjoin F (Set.range ρ) = ⊤)
+    : Function.Surjective (algebraMap F (End ρ)) := by
   rw [adjoin_univ_iff_surjective] at hs
   rw [← algebraMap_surj_iff_surj]
   exact surjective_of_jacobson_density_surjective hs

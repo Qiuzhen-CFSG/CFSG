@@ -11,21 +11,26 @@ open scoped MonoidAlgebra
 
 namespace Representation
 
-variable {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V] {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
+variable {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V]
+  {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
 
 /-- The conjugate representation of `ρ` by the element `x`. -/
-def conjugateRep (x : G) : Representation F H V := {
-  toFun := fun h => ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩)
-  map_one' := by
-    simp only [OneMemClass.coe_one, mul_one, mul_inv_cancel]
-    rw [(Subgroup.mk_eq_one _).mpr rfl, map_one]
-  map_mul' := fun g₁ g₂ => by
-    rw[← map_mul]
-    simp only [Subgroup.coe_mul, MulMemClass.mk_mul_mk, conj_mul]
-}
+def conjugateRep (x : G) : Representation F H V :=
+  {
+    toFun := fun h => ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩)
+    map_one' := by
+      simp only [OneMemClass.coe_one, mul_one, mul_inv_cancel]
+      rw [(Subgroup.mk_eq_one _).mpr rfl, map_one]
+    map_mul' :=
+      fun g₁ g₂ => by
+        rw[← map_mul]
+        simp only [Subgroup.coe_mul, MulMemClass.mk_mul_mk, conj_mul]
+  }
 
-theorem conjugateRep_apply (x : G) (h : H) : (conjugateRep ρ x) h = ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩) := rfl
-
+theorem conjugateRep_apply (x : G) (h : H)
+    : (conjugateRep ρ x) h
+      = ρ (⟨x * h.val * x⁻¹, Subgroup.Normal.conj_mem hH h h.prop x⟩) :=
+  rfl
 
 /-- Transport a subrepresentation of a normal subgroup through the inverse of an
 ambient representation operator. -/
@@ -33,8 +38,8 @@ def conjugateSubrepresentation
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (W : Subrepresentation (rho.comp H.subtype)) (g : G) :
-    Subrepresentation (rho.comp H.subtype) where
+    (W : Subrepresentation (rho.comp H.subtype)) (g : G)
+    : Subrepresentation (rho.comp H.subtype) where
   toSubmodule := Submodule.map (rho g⁻¹) W.toSubmodule
   apply_mem_toSubmodule h v hv := by
     rcases hv with ⟨w, hw, rfl⟩
@@ -50,9 +55,10 @@ theorem conjugateSubrepresentation_toSubmodule
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (W : Subrepresentation (rho.comp H.subtype)) (g : G) :
-    (conjugateSubrepresentation rho H W g).toSubmodule =
-      Submodule.map (rho g⁻¹) W.toSubmodule := rfl
+    (W : Subrepresentation (rho.comp H.subtype)) (g : G)
+    : (conjugateSubrepresentation rho H W g).toSubmodule
+      = Submodule.map (rho g⁻¹) W.toSubmodule :=
+  rfl
 
 /-- The transported subrepresentation is equivalent to the corresponding
 conjugate representation. -/
@@ -60,9 +66,9 @@ noncomputable def conjugateSubrepresentationEquiv
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (W : Subrepresentation (rho.comp H.subtype)) (g : G) :
-    (conjugateSubrepresentation rho H W g).toRepresentation ≃ₗ
-      Representation.conjugateRep (G := G) (H := H) W.toRepresentation g := by
+    (W : Subrepresentation (rho.comp H.subtype)) (g : G)
+    : (conjugateSubrepresentation rho H W g).toRepresentation
+      ≃ₗ Representation.conjugateRep (G := G) (H := H) W.toRepresentation g := by
   let Wg := conjugateSubrepresentation rho H W g
   let L : Wg.toSubmodule →ₗ[F] W.toSubmodule := {
     toFun := fun x => by
@@ -100,9 +106,9 @@ noncomputable def conjugateRepEquiv
     [AddCommGroup V] [Module F V] [AddCommGroup W] [Module F W]
     {H : Subgroup G} [H.Normal]
     {rho : Representation F H V} {sigma : Representation F H W}
-    (e : rho ≃ₗ sigma) (g : G) :
-    Representation.conjugateRep (G := G) (H := H) rho g ≃ₗ
-      Representation.conjugateRep (G := G) (H := H) sigma g := by
+    (e : rho ≃ₗ sigma) (g : G)
+    : Representation.conjugateRep (G := G) (H := H) rho g
+      ≃ₗ Representation.conjugateRep (G := G) (H := H) sigma g := by
   refine Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro h
   ext v
@@ -111,18 +117,18 @@ noncomputable def conjugateRepEquiv
     Representation.RepEquiv.coe_toLinearMap e
   simp only [LinearEquiv.coe_toLinearMap]
   rw [he]
-  simpa [Representation.conjugateRep_apply] using
-    Representation.RepEquiv.isIntertwining e
-      ⟨g * (h : G) * g⁻¹,
-        Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 g⟩ v
+  simpa [Representation.conjugateRep_apply]
+    using Representation.RepEquiv.isIntertwining e
+      ⟨g * (h : G) * g⁻¹, Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 g⟩ v
+
 /-- Conjugation by an ambient representation operator is an order automorphism
 of the lattice of subrepresentations of a normal subgroup. -/
 noncomputable def conjugateSubrepresentationOrderIso
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
-    (rho : Representation F G V) (H : Subgroup G) [H.Normal] (g : G) :
-    Subrepresentation (rho.comp H.subtype) ≃o
-      Subrepresentation (rho.comp H.subtype) where
+    (rho : Representation F G V) (H : Subgroup G) [H.Normal] (g : G)
+    : Subrepresentation (rho.comp H.subtype)
+      ≃o Subrepresentation (rho.comp H.subtype) where
   toFun W := conjugateSubrepresentation rho H W g⁻¹
   invFun W := conjugateSubrepresentation rho H W g
   left_inv W := by
@@ -139,32 +145,29 @@ noncomputable def conjugateSubrepresentationOrderIso
     simp [← Module.End.mul_eq_comp, ← map_mul, Module.End.one_eq_id]
   map_rel_iff' := by
     intro W U
-    change
-      (conjugateSubrepresentation rho H W g⁻¹ ≤
-          conjugateSubrepresentation rho H U g⁻¹) ↔ W ≤ U
-    change
-      (conjugateSubrepresentation rho H W g⁻¹).toSubmodule ≤
-          (conjugateSubrepresentation rho H U g⁻¹).toSubmodule ↔
-        W.toSubmodule ≤ U.toSubmodule
+    change (conjugateSubrepresentation rho H W g⁻¹
+              ≤ conjugateSubrepresentation rho H U g⁻¹)
+            ↔ W ≤ U
+    change (conjugateSubrepresentation rho H W g⁻¹).toSubmodule
+              ≤ (conjugateSubrepresentation rho H U g⁻¹).toSubmodule
+            ↔ W.toSubmodule ≤ U.toSubmodule
     rw [conjugateSubrepresentation_toSubmodule,
       conjugateSubrepresentation_toSubmodule]
     have hinj : Function.Injective (rho g) := by
       intro x y hxy
       have hxy' := congrArg (rho g⁻¹) hxy
       simpa [← Module.End.mul_apply, ← map_mul] using hxy'
-    simpa only [inv_inv] using
-      (Submodule.map_le_map_iff_of_injective
-        hinj W.toSubmodule U.toSubmodule)
-
+    simpa only [inv_inv]
+      using (Submodule.map_le_map_iff_of_injective hinj W.toSubmodule U.toSubmodule)
 
 @[simp]
 theorem conjugateSubrepresentationOrderIso_toSubmodule
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (g : G) (W : Subrepresentation (rho.comp H.subtype)) :
-    (conjugateSubrepresentationOrderIso rho H g W).toSubmodule =
-      Submodule.map (rho g) W.toSubmodule := by
+    (g : G) (W : Subrepresentation (rho.comp H.subtype))
+    : (conjugateSubrepresentationOrderIso rho H g W).toSubmodule
+      = Submodule.map (rho g) W.toSubmodule := by
   change Submodule.map (rho (g⁻¹)⁻¹) W.toSubmodule =
     Submodule.map (rho g) W.toSubmodule
   rw [inv_inv]
@@ -174,9 +177,9 @@ theorem conjugateSubrepresentationOrderIso_apply
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (g : G) (W : Subrepresentation (rho.comp H.subtype)) :
-    conjugateSubrepresentationOrderIso rho H g W =
-      conjugateSubrepresentation rho H W g⁻¹ := by
+    (g : G) (W : Subrepresentation (rho.comp H.subtype))
+    : conjugateSubrepresentationOrderIso rho H g W
+      = conjugateSubrepresentation rho H W g⁻¹ := by
   apply Subrepresentation.toSubmodule_injective
   rw [conjugateSubrepresentationOrderIso_toSubmodule,
     conjugateSubrepresentation_toSubmodule, inv_inv]
@@ -186,8 +189,8 @@ theorem conjugateSubrepresentationOrderIso_one
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (W : Subrepresentation (rho.comp H.subtype)) :
-    conjugateSubrepresentationOrderIso rho H 1 W = W := by
+    (W : Subrepresentation (rho.comp H.subtype))
+    : conjugateSubrepresentationOrderIso rho H 1 W = W := by
   apply Subrepresentation.toSubmodule_injective
   rw [conjugateSubrepresentationOrderIso_toSubmodule, map_one,
     Module.End.one_eq_id, Submodule.map_id]
@@ -197,10 +200,10 @@ theorem conjugateSubrepresentationOrderIso_mul
     {F G V : Type*} [Field F] [Group G]
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
-    (g k : G) (W : Subrepresentation (rho.comp H.subtype)) :
-    conjugateSubrepresentationOrderIso rho H (g * k) W =
-      conjugateSubrepresentationOrderIso rho H g
-        (conjugateSubrepresentationOrderIso rho H k W) := by
+    (g k : G) (W : Subrepresentation (rho.comp H.subtype))
+    : conjugateSubrepresentationOrderIso rho H (g * k) W
+      = conjugateSubrepresentationOrderIso rho H g
+          (conjugateSubrepresentationOrderIso rho H k W) := by
   apply Subrepresentation.toSubmodule_injective
   rw [conjugateSubrepresentationOrderIso_toSubmodule,
     conjugateSubrepresentationOrderIso_toSubmodule,
@@ -214,12 +217,11 @@ noncomputable def conjugateSubrepresentationOrderIsoRepEquiv
     [AddCommGroup V] [Module F V]
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
     {U W : Subrepresentation (rho.comp H.subtype)}
-    (e : U.toRepresentation ≃ₗ W.toRepresentation) (g : G) :
-    (conjugateSubrepresentationOrderIso rho H g U).toRepresentation ≃ₗ
-      (conjugateSubrepresentationOrderIso rho H g W).toRepresentation :=
+    (e : U.toRepresentation ≃ₗ W.toRepresentation) (g : G)
+    : (conjugateSubrepresentationOrderIso rho H g U).toRepresentation
+      ≃ₗ (conjugateSubrepresentationOrderIso rho H g W).toRepresentation :=
   (conjugateSubrepresentationEquiv rho H U g⁻¹).trans
-    ((conjugateRepEquiv e g⁻¹).trans
-      (conjugateSubrepresentationEquiv rho H W g⁻¹).symm)
+    ((conjugateRepEquiv e g⁻¹).trans (conjugateSubrepresentationEquiv rho H W g⁻¹).symm)
 -- TODO : M^x ≅ M ⨂ x
 
 end Representation

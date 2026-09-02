@@ -22,7 +22,6 @@ Public items:
 - `frattiniQuotientEquivOfIsElementaryAbelian` and its `_mk'`/`_coe` lemmas
 -/
 
-
 @[expose] public section
 
 open scoped IsMulCommutative
@@ -31,15 +30,16 @@ open scoped IsMulCommutative
 then `H = ⊤`. -/
 theorem frattini_nongenerating_of_isPGroup {R : Type*} [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)] : ∀ H : Subgroup R, H ⊔ frattini R = ⊤ → H = ⊤ := by
+    [Fact (IsPGroup p R)]
+    : ∀ H : Subgroup R, H ⊔ frattini R = ⊤ → H = ⊤ := by
   intro H hsup
   simpa using (frattini_nongenerating (G := R) hsup)
 
 /-- For a finite `p`-group, the commutator subgroup is contained in the Frattini subgroup:
 `[R,R] ≤ Φ(R)`. -/
 lemma commutator_le_frattini_of_isPGroup {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
-    _root_.commutator R ≤ frattini R := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
+    : _root_.commutator R ≤ frattini R := by
   intro x hx
   unfold frattini Order.radical
   simp only [Subgroup.mem_iInf]
@@ -52,19 +52,21 @@ lemma commutator_le_frattini_of_isPGroup {R : Type*} [Group R] [Finite R]
 
 /-- In a finite `p`-group, every `p`-th power lies in the Frattini subgroup. -/
 lemma pth_power_mem_frattini_of_isPGroup {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] (x : R) : x ^ p ∈ frattini R := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] (x : R)
+    : x ^ p ∈ frattini R := by
   unfold frattini Order.radical
   simp only [Subgroup.mem_iInf]
   intro M hM
   let : M.Normal := coatom_normal_of_isPGroup (p := p) (K := M) hM
-  exact (QuotientGroup.eq_one_iff (N := M) (x := x ^ p)).1 (by
-    simpa [MonoidHom.map_pow, card_quotient_coatom_eq_prime (p := p) (K := M) hM] using
-      (pow_card_eq_one' (x := (QuotientGroup.mk' M x : R ⧸ M))))
+  exact (QuotientGroup.eq_one_iff (N := M) (x := x ^ p)).1
+    (by
+      simpa [MonoidHom.map_pow, card_quotient_coatom_eq_prime (p := p) (K := M) hM]
+        using (pow_card_eq_one' (x := (QuotientGroup.mk' M x : R ⧸ M))))
 
 /-- The Frattini quotient of a finite `p`-group is elementary abelian. -/
 theorem isElementaryAbelian_quotient_frattini {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
-    IsElementaryAbelian p (R ⧸ frattini R) := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
+    : IsElementaryAbelian p (R ⧸ frattini R) := by
   refine {
     toIsMulCommutative := ?_,
     exponent_dvd_p := ?_
@@ -81,8 +83,8 @@ theorem isElementaryAbelian_quotient_frattini {R : Type*} [Group R] [Finite R]
 
 /-- An elementary abelian finite `p`-group has trivial Frattini subgroup. -/
 theorem frattini_eq_bot_of_isElementaryAbelian {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R] :
-    frattini R = ⊥ := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R]
+    : frattini R = ⊥ := by
   apply eq_bot_iff.mpr
   intro x hx
   by_cases hx1 : x = 1
@@ -113,8 +115,8 @@ theorem frattini_eq_bot_of_isElementaryAbelian {R : Type*} [Group R] [Finite R]
           simp [(by simpa [sup_comm] using hcompl.sup_eq_top : B ⊔ C = ⊤)]) with
           ⟨b, hbB, c, hcC, hbc_eq⟩
         have hbD : b ∈ D := by
-          simpa [mul_assoc, ← hbc_eq] using
-            (D.mul_mem hdD (D.inv_mem ((le_of_lt hCD) hcC)))
+          simpa [mul_assoc, ← hbc_eq]
+            using (D.mul_mem hdD (D.inv_mem ((le_of_lt hCD) hcC)))
         have hb_ne_one : b ≠ 1 := by
           intro hb1
           exact hdnotC (by simpa [← hbc_eq, hb1] using hcC)
@@ -131,16 +133,17 @@ theorem frattini_eq_bot_of_isElementaryAbelian {R : Type*} [Group R] [Finite R]
         have hB_le_D : B ≤ D :=
           fun y hy => ((Subgroup.subgroupOf_eq_top).1
             ((Subgroup.eq_bot_or_eq_top_of_prime_card (G := B) E).resolve_left hE_ne_bot) hy).2
-        exact top_le_iff.mp (by
-          rw [← hcompl.sup_eq_top]
-          exact sup_le hB_le_D (le_of_lt hCD))
+        exact top_le_iff.mp
+          (by
+            rw [← hcompl.sup_eq_top]
+            exact sup_le hB_le_D (le_of_lt hCD))
     exact False.elim (hx_not_C ((frattini_le_coatom hC_coatom) hx))
 
 /-- The Frattini quotient of an elementary abelian finite `p`-group is isomorphic to the group. -/
 noncomputable def frattiniQuotientEquivOfIsElementaryAbelian
     {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R] :
-    R ⧸ frattini R ≃* R :=
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R]
+    : R ⧸ frattini R ≃* R :=
   (QuotientGroup.quotientMulEquivOfEq
     (frattini_eq_bot_of_isElementaryAbelian (R := R) (p := p))).trans
     (QuotientGroup.quotientBot (G := R))
@@ -148,23 +151,24 @@ noncomputable def frattiniQuotientEquivOfIsElementaryAbelian
 theorem frattiniQuotientEquivOfIsElementaryAbelian_mk'
     {R : Type*} [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R]
-    (r : R) :
-    frattiniQuotientEquivOfIsElementaryAbelian (R := R) (p := p)
-      (QuotientGroup.mk' (frattini R) r) = r := by
+    (r : R)
+    : frattiniQuotientEquivOfIsElementaryAbelian (R := R) (p := p)
+        (QuotientGroup.mk' (frattini R) r)
+      = r := by
   rfl
 
 theorem frattiniQuotientEquivOfIsElementaryAbelian_coe
     {R : Type*} [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] [IsElementaryAbelian p R]
-    (r : R) :
-    frattiniQuotientEquivOfIsElementaryAbelian (R := R) (p := p)
-      (r : R ⧸ frattini R) = r :=
+    (r : R)
+    : frattiniQuotientEquivOfIsElementaryAbelian (R := R) (p := p) (r : R ⧸ frattini R)
+      = r :=
   frattiniQuotientEquivOfIsElementaryAbelian_mk' (R := R) (p := p) r
 
 /-- For a finite `p`-group, `Φ(R) = ⊥` iff `R` is elementary abelian. -/
 theorem frattini_eq_bot_iff_isElementaryAbelian {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
-    frattini R = ⊥ ↔ IsElementaryAbelian p R := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
+    : frattini R = ⊥ ↔ IsElementaryAbelian p R := by
   constructor
   · intro hphi
     refine {
@@ -191,10 +195,11 @@ theorem frattini_eq_bot_iff_isElementaryAbelian {R : Type*} [Group R] [Finite R]
 
 /-- For a finite `p`-group, `Φ(R)` is generated by commutators and `p`-th powers. -/
 theorem frattini_eq_closure_commutator_union_powers {R : Type*} [Group R] [Finite R]
-    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)] :
-    frattini R =
-      Subgroup.closure (((_root_.commutator R : Subgroup R) : Set R) ∪
-        Set.range (fun x : R => x ^ p)) := by
+    {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
+    : frattini R
+      = Subgroup.closure
+          (((_root_.commutator R : Subgroup R) : Set R)
+            ∪ Set.range (fun x : R => x ^ p)) := by
   let K : Subgroup R :=
     Subgroup.closure (((_root_.commutator R : Subgroup R) : Set R) ∪
       Set.range (fun x : R => x ^ p))
@@ -232,13 +237,12 @@ theorem frattini_eq_closure_commutator_union_powers {R : Type*} [Group R] [Finit
           (Subgroup.subset_closure (Or.inr ⟨x, rfl⟩)))
   exact le_antisymm
     (by
-      simpa [hphi_quot, K] using
-        (frattini_le_comap_frattini_of_surjective (G := R) (H := R ⧸ K)
-          (φ := QuotientGroup.mk' K) (QuotientGroup.mk'_surjective K)))
+      simpa [hphi_quot, K]
+        using (frattini_le_comap_frattini_of_surjective (G := R) (H := R ⧸ K)
+                (φ := QuotientGroup.mk' K) (QuotientGroup.mk'_surjective K)))
     (by
       refine (Subgroup.closure_le (K := frattini R)).2 ?_
       intro x hx
       rcases hx with hxcomm | ⟨y, rfl⟩
       · exact commutator_le_frattini_of_isPGroup (R := R) (p := p) hxcomm
       · exact pth_power_mem_frattini_of_isPGroup (R := R) (p := p) y)
-

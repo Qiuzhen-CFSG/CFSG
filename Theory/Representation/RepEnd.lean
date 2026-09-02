@@ -62,8 +62,8 @@ theorem natCast_apply (n : ℕ) (m : V) : (↑n : End ρ) m = n • m := by
   rfl
 
 @[simp]
-theorem ofNat_apply (n : ℕ) [n.AtLeastTwo] (m : V) :
-    (ofNat(n) : End ρ) m = ofNat(n) • m := by
+theorem ofNat_apply (n : ℕ) [n.AtLeastTwo] (m : V)
+    : (ofNat(n) : End ρ) m = ofNat(n) • m := by
   trans (↑n : End ρ) m
   rfl
   rw [natCast_apply]
@@ -83,10 +83,11 @@ instance instRing : Ring (End ρ) where
 theorem intCast_apply (z : ℤ) (m : V) : (z : End ρ) m = z • m :=
   rfl
 
-theorem coe_pow (f : End  ρ) (n : ℕ) : ⇑(f ^ n) = f^[n] := hom_coe_pow _ rfl (fun _ _ ↦ rfl) _ _
+theorem coe_pow (f : End ρ) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
+  hom_coe_pow _ rfl (fun _ _ ↦ rfl) _ _
 
-theorem pow_apply (f : End ρ) (n : ℕ) (m : V) : (f ^ n) m = f^[n] m := congr_fun (coe_pow f n) m
-
+theorem pow_apply (f : End ρ) (n : ℕ) (m : V) : (f ^ n) m = f^[n] m :=
+  congr_fun (coe_pow f n) m
 
 @[simp]
 theorem id_pow (n : ℕ) : (id : End ρ) ^ n = .id :=
@@ -98,16 +99,15 @@ theorem iterate_succ (n : ℕ) : f' ^ (n + 1) = .comp (f' ^ n) f' := by
   rw [pow_succ]
   rfl
 
-
 /-- Scalar multiplication by `α` as an endomorphism of `ρ`. -/
 def smulLeft (α : F) : End ρ where
   toFun x := α • x
   map_add' := smul_add _
   map_smul' β _ := by rw [smul_comm]; rfl
-  isIntertwining' g := by ext; simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply, map_smul]
+  isIntertwining' g := by
+    ext; simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply, map_smul]
 
-@[simp]
-lemma smulLeft_eq (α : F) : smulLeft α = α • .id (ρ := ρ) := rfl
+@[simp] lemma smulLeft_eq (α : F) : smulLeft α = α • .id (ρ := ρ) := rfl
 
 instance applyModule : Module (End ρ) V where
   smul := (· <| ·)
@@ -127,35 +127,37 @@ instance apply_faithfulSMul : FaithfulSMul (End ρ) V :=
 
 variable {S : Type*} [Monoid S]
 
-instance apply_smulCommClass [SMul S F] [SMul S V] [IsScalarTower S F V] :
-    SMulCommClass S (End ρ) V where
+instance apply_smulCommClass [SMul S F] [SMul S V] [IsScalarTower S F V]
+    : SMulCommClass S (End ρ) V where
   smul_comm r e m := (e.map_smul_of_tower r m).symm
 
-instance apply_smulCommClass' [SMul S F] [SMul S V] [IsScalarTower S F V] :
-    SMulCommClass (End ρ) S V :=
+instance apply_smulCommClass' [SMul S F] [SMul S V] [IsScalarTower S F V]
+    : SMulCommClass (End ρ) S V :=
   SMulCommClass.symm _ _ _
 
-instance : Algebra F (End ρ) := {
-  algebraMap := {
-    toFun := fun f ↦ smulLeft f
-    map_one' := by simp only [smulLeft_eq, one_smul]; rfl
-    map_mul' f₁ f₂ := by
+instance : Algebra F (End ρ) :=
+  {
+    algebraMap :=
+      {
+        toFun := fun f ↦ smulLeft f
+        map_one' := by simp only [smulLeft_eq, one_smul]; rfl
+        map_mul' f₁ f₂ := by
+          ext x
+          simp [smulLeft_eq, RepMap.smul_apply, mul_smul]
+          rw [smul_smul, smul_smul, mul_comm]
+        map_zero' := by simp only [smulLeft_eq, zero_smul]
+        map_add' f₁ f₂ := by
+          ext x
+          simp [smulLeft_eq, RepMap.smul_apply, RepMap.add_apply, add_smul]
+      }
+    commutes' f g := by
       ext x
-      simp [smulLeft_eq, RepMap.smul_apply, mul_smul]
-      rw [smul_smul, smul_smul, mul_comm]
-    map_zero' := by simp only [smulLeft_eq, zero_smul]
-    map_add' f₁ f₂ := by
+      simp [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
+        RepMap.smul_apply]
+    smul_def' f g := by
       ext x
-      simp [smulLeft_eq, RepMap.smul_apply, RepMap.add_apply, add_smul]
+      simp [RepMap.smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
   }
-  commutes' f g := by
-    ext x
-    simp [smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-      RepMap.smul_apply]
-  smul_def' f g := by
-    ext x
-    simp [RepMap.smul_apply, smulLeft_eq, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-}
 
-theorem algebraMap_apply (f : F) : (algebraMap F (End ρ)) f = f • id (ρ := ρ) :=
-  by rw [show (algebraMap F (End ρ)) f = smulLeft f from rfl, smulLeft_eq]
+theorem algebraMap_apply (f : F) : (algebraMap F (End ρ)) f = f • id (ρ := ρ) := by
+  rw [show (algebraMap F (End ρ)) f = smulLeft f from rfl, smulLeft_eq]

@@ -24,7 +24,6 @@ open scoped BigOperators
 
 attribute [local instance] Fintype.ofFinite
 
-
 variable {G : Type*} [Group G]
 
 /-- Complex-valued class functions on `G`, implemented as functions on conjugacy classes. -/
@@ -32,7 +31,8 @@ abbrev ConjClassFunction (G : Type*) [Group G] := ConjClasses G → ℂ
 
 /-- Turn a complex-valued function on `G` that is constant on conjugacy classes into a class function. -/
 noncomputable def conjClassFunctionOfInvariant (f : G → ℂ)
-    (hf : ∀ g h : G, f (h * g * h⁻¹) = f g) : ConjClassFunction G := by
+    (hf : ∀ g h : G, f (h * g * h⁻¹) = f g)
+    : ConjClassFunction G := by
   refine Quotient.lift f ?_
   intro a b hab
   rcases hab with ⟨c, hc⟩
@@ -46,14 +46,15 @@ noncomputable def conjClassFunctionOfInvariant (f : G → ℂ)
 
 /-- The class function attached to a representation character. -/
 noncomputable def characterClassFunction {V : Type*} [AddCommGroup V]
-    [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V) : ConjClassFunction G :=
-  conjClassFunctionOfInvariant ρ.character (by
-    intro g h
-    simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g h)
+    [Module ℂ V] [FiniteDimensional ℂ V] (ρ : Representation ℂ G V)
+    : ConjClassFunction G :=
+  conjClassFunctionOfInvariant ρ.character
+    (by
+      intro g h
+      simpa [mul_assoc] using Representation.char_conj (ρ := ρ) g h)
 
 /-- Inner product of complex class functions, normalized by `|G|`. -/
-noncomputable def classFunctionInner [Finite G]
-    (φ ψ : ConjClassFunction G) : ℂ := by
+noncomputable def classFunctionInner [Finite G] (φ ψ : ConjClassFunction G) : ℂ := by
   classical
   letI := Fintype.ofFinite G
   exact (Nat.card G : ℂ)⁻¹ * ∑ g : G, φ (ConjClasses.mk g) * star (ψ (ConjClasses.mk g))
@@ -70,86 +71,90 @@ def IsIrreducibleConjCharacter [Finite G] (χ : ConjClassFunction G) : Prop :=
 /-- A finite family of class functions containing each irreducible complex character
 exactly once. -/
 def IsCompleteIrreducibleCharacterFamily [Finite G]
-    {ι : Type*} [Fintype ι] (χ : ι → ConjClassFunction G) : Prop :=
-  (∀ i, IsIrreducibleConjCharacter (χ i)) ∧
-    (∀ χ₀ : ConjClassFunction G, IsIrreducibleConjCharacter χ₀ → ∃ i, χ i = χ₀) ∧
-    Function.Injective χ
+    {ι : Type*} [Fintype ι] (χ : ι → ConjClassFunction G)
+    : Prop :=
+  (∀ i, IsIrreducibleConjCharacter (χ i))
+  ∧ (∀ χ₀ : ConjClassFunction G, IsIrreducibleConjCharacter χ₀ → ∃ i, χ i = χ₀)
+  ∧ Function.Injective χ
 
 /-! ## Bridges between `ClassFunction G` (`G → ℂ`) and `ConjClassFunction G` (`ConjClasses G → ℂ`) -/
 
 /-- Turn a class function on `G` into a function on conjugacy classes. -/
 noncomputable def toConjClassFunction {G : Type*} [Group G]
-    (phi : ClassFunction G) (hphi : IsClassFunction phi) : ConjClassFunction G :=
-  conjClassFunctionOfInvariant phi (by
-    intro g x
-    exact hphi g x)
+    (phi : ClassFunction G) (hphi : IsClassFunction phi)
+    : ConjClassFunction G :=
+  conjClassFunctionOfInvariant phi
+    (by
+      intro g x
+      exact hphi g x)
 
 theorem toConjClassFunction_apply {G : Type*} [Group G] (phi : ClassFunction G)
-    (hphi : IsClassFunction phi) (g : G) :
-    toConjClassFunction phi hphi (ConjClasses.mk g) = phi g := rfl
+    (hphi : IsClassFunction phi) (g : G)
+    : toConjClassFunction phi hphi (ConjClasses.mk g) = phi g :=
+  rfl
 
 theorem toConjClassFunction_eq_of_apply {G : Type*} [Group G] (phi : ClassFunction G)
     (hphi : IsClassFunction phi) (Phi : ConjClassFunction G)
-    (hPhi : ∀ g : G, Phi (ConjClasses.mk g) = phi g) :
-    toConjClassFunction phi hphi = Phi := by
+    (hPhi : ∀ g : G, Phi (ConjClasses.mk g) = phi g)
+    : toConjClassFunction phi hphi = Phi := by
   ext c
   rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
   exact (toConjClassFunction_apply phi hphi g).trans (hPhi g).symm
 
 theorem classFunctionInner_toConjClassFunction {G : Type*} [Group G] [Finite G]
-    (phi psi : ClassFunction G) (hphi : IsClassFunction phi) (hpsi : IsClassFunction psi) :
-    classFunctionInner (toConjClassFunction phi hphi) (toConjClassFunction psi hpsi) =
-      scalarProduct G phi psi := by
+    (phi psi : ClassFunction G) (hphi : IsClassFunction phi) (hpsi : IsClassFunction psi)
+    : classFunctionInner (toConjClassFunction phi hphi) (toConjClassFunction psi hpsi)
+      = scalarProduct G phi psi := by
   classical
   rfl
 
-noncomputable def ofConjClassFunction {G : Type*} [Group G]
-    (chi : ConjClassFunction G) : ClassFunction G :=
+noncomputable def ofConjClassFunction {G : Type*} [Group G] (chi : ConjClassFunction G)
+    : ClassFunction G :=
   fun g => chi (ConjClasses.mk g)
 
 theorem ofConjClassFunction_apply {G : Type*} [Group G]
-    (chi : ConjClassFunction G) (g : G) :
-    ofConjClassFunction chi g = chi (ConjClasses.mk g) := rfl
+    (chi : ConjClassFunction G) (g : G)
+    : ofConjClassFunction chi g = chi (ConjClasses.mk g) :=
+  rfl
 
 theorem ofConjClassFunction_characterClassFunction {G V : Type*} [Group G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (rho : Representation ℂ G V) :
-    ofConjClassFunction (characterClassFunction rho) = rho.character := by
+    (rho : Representation ℂ G V)
+    : ofConjClassFunction (characterClassFunction rho) = rho.character := by
   rfl
 
 theorem ofConjClassFunction_isClassFunction {G : Type*} [Group G]
-    (chi : ConjClassFunction G) :
-    IsClassFunction (ofConjClassFunction chi) := by
+    (chi : ConjClassFunction G)
+    : IsClassFunction (ofConjClassFunction chi) := by
   intro x g
   unfold ofConjClassFunction
   congr 1
-  exact (ConjClasses.mk_eq_mk_iff_isConj).2
-    ((isConj_iff).2 ⟨g⁻¹, by simp [mul_assoc]⟩)
+  exact (ConjClasses.mk_eq_mk_iff_isConj).2 ((isConj_iff).2 ⟨g⁻¹, by simp [mul_assoc]⟩)
 
 theorem toConjClassFunction_ofConjClassFunction {G : Type*} [Group G]
-    (chi : ConjClassFunction G) :
-    toConjClassFunction (ofConjClassFunction chi)
-        (ofConjClassFunction_isClassFunction chi) = chi := by
+    (chi : ConjClassFunction G)
+    : toConjClassFunction (ofConjClassFunction chi)
+        (ofConjClassFunction_isClassFunction chi)
+      = chi := by
   ext c
   rcases ConjClasses.exists_rep c with ⟨g, rfl⟩
   rfl
 
 theorem scalarProduct_ofConjClassFunction {G : Type*} [Group G] [Finite G]
-    (phi psi : ConjClassFunction G) :
-    scalarProduct G (ofConjClassFunction phi) (ofConjClassFunction psi) =
-      classFunctionInner phi psi := by
+    (phi psi : ConjClassFunction G)
+    : scalarProduct G (ofConjClassFunction phi) (ofConjClassFunction psi)
+      = classFunctionInner phi psi := by
   symm
-  simpa only [toConjClassFunction_ofConjClassFunction] using
-    (classFunctionInner_toConjClassFunction
-      (ofConjClassFunction phi) (ofConjClassFunction psi)
-      (ofConjClassFunction_isClassFunction phi)
-      (ofConjClassFunction_isClassFunction psi))
+  simpa only [toConjClassFunction_ofConjClassFunction]
+    using (classFunctionInner_toConjClassFunction
+            (ofConjClassFunction phi) (ofConjClassFunction psi)
+            (ofConjClassFunction_isClassFunction phi)
+            (ofConjClassFunction_isClassFunction psi))
 
 theorem classFunctionInner_toConjClassFunction_right {G : Type*} [Group G] [Finite G]
-    (phi : ClassFunction G) (hphi : IsClassFunction phi) (chi : ConjClassFunction G) :
-    classFunctionInner (toConjClassFunction phi hphi) chi =
-      scalarProduct G phi (ofConjClassFunction chi) := by
+    (phi : ClassFunction G) (hphi : IsClassFunction phi) (chi : ConjClassFunction G)
+    : classFunctionInner (toConjClassFunction phi hphi) chi
+      = scalarProduct G phi (ofConjClassFunction chi) := by
   rw [← toConjClassFunction_ofConjClassFunction chi]
   exact classFunctionInner_toConjClassFunction phi (ofConjClassFunction chi)
     hphi (ofConjClassFunction_isClassFunction chi)
-

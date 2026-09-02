@@ -3,7 +3,6 @@ module
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.RepresentationTheory.Invariants
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-
 public import Theory.Representation.SubrepresentationLattice
 public import Theory.Representation.RepEquiv
 
@@ -19,32 +18,37 @@ open _root_.Representation
 
 section extendScalarsRep
 
-variable {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [AddCommGroup W] [Module F V] [Module F W] (F' : Type*) [Field F'] [Algebra F F'] (ρ : Representation F G V) (σ : Representation F G W)
+variable {F G V W : Type*} [Monoid G] [Field F] [AddCommGroup V] [AddCommGroup W]
+  [Module F V] [Module F W] (F' : Type*) [Field F'] [Algebra F F']
+  (ρ : Representation F G V) (σ : Representation F G W)
 
 /-- The representation obtained from `ρ` by extending scalars from `F` to `F'`. -/
-def extendScalars : Representation F' G (F' ⊗[F] V) := {
-  toFun := fun g => (ρ g).baseChange F'
-  map_one' := by rw [map_one, baseChange_one],
-  map_mul' := fun g g' => by rw [map_mul, baseChange_mul]
+def extendScalars : Representation F' G (F' ⊗[F] V) :=
+  {
+    toFun := fun g => (ρ g).baseChange F'
+    map_one' := by rw [map_one, baseChange_one],
+    map_mul' := fun g g' => by rw [map_mul, baseChange_mul]
   }
 
 @[simp]
 theorem extendScalars_apply (g : G) : extendScalars F' ρ g = (ρ g).baseChange F' := by rfl
 
-
 set_option backward.isDefEq.respectTransparency false in
-theorem extendScalars_nontrivial_iff :
-    Nontrivial ρ.asModule ↔ Nontrivial (extendScalars F' ρ).asModule := by
+theorem extendScalars_nontrivial_iff
+    : Nontrivial ρ.asModule ↔ Nontrivial (extendScalars F' ρ).asModule := by
   rw [← rank_pos_iff_nontrivial (R := F), ← rank_pos_iff_nontrivial (R := F')]
   have : Module.rank F' (extendScalars F' ρ).asModule = Module.rank F' (F' ⊗[F] V) := rfl
   rw [this, Module.rank_baseChange, Cardinal.zero_lt_lift_iff]
   rfl
 
-instance extendScalars_nontrivial [inst : Nontrivial V] : Nontrivial (extendScalars F' ρ).asModule := (extendScalars_nontrivial_iff _ _).mp inst
+instance extendScalars_nontrivial [inst : Nontrivial V]
+    : Nontrivial (extendScalars F' ρ).asModule :=
+  (extendScalars_nontrivial_iff _ _).mp inst
 
 set_option backward.isDefEq.respectTransparency false in
-theorem extendScalars_finite_dimensional_iff :
-    FiniteDimensional F ρ.asModule ↔ FiniteDimensional F' (extendScalars F' ρ).asModule := by
+theorem extendScalars_finite_dimensional_iff
+    : FiniteDimensional F ρ.asModule
+      ↔ FiniteDimensional F' (extendScalars F' ρ).asModule := by
   unfold FiniteDimensional
   let : Module.Free F' ((extendScalars F' ρ).asModule) := Module.Free.of_divisionRing F' (F' ⊗[F] V)
   rw [← Module.rank_lt_aleph0_iff, ← Module.rank_lt_aleph0_iff (R := F')]
@@ -53,10 +57,12 @@ theorem extendScalars_finite_dimensional_iff :
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
-instance extendScalars_finite_dimensional [inst : FiniteDimensional F V] : FiniteDimensional F' (extendScalars F' ρ).asModule := (extendScalars_finite_dimensional_iff _ _).mp inst
+instance extendScalars_finite_dimensional [inst : FiniteDimensional F V]
+    : FiniteDimensional F' (extendScalars F' ρ).asModule :=
+  (extendScalars_finite_dimensional_iff _ _).mp inst
 
-theorem extendScalars_faithful_iff :
-    Function.Injective ρ ↔ Function.Injective (extendScalars F' ρ) := by
+theorem extendScalars_faithful_iff
+    : Function.Injective ρ ↔ Function.Injective (extendScalars F' ρ) := by
   refine ⟨fun hi g₁ g₂ he => ?_, fun hi g₁ g₂ he => ?_⟩
   · rw [← Function.Injective.eq_iff hi]
     ext v
@@ -67,15 +73,14 @@ theorem extendScalars_faithful_iff :
       TensorProduct.AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
       coe_restrictScalars, baseChange_tmul, he]
 
-theorem adjoin_eq_span :
-    (Algebra.adjoin F (Set.range ρ)).toSubmodule = Submodule.span F (Set.range ρ) := by
+theorem adjoin_eq_span
+    : (Algebra.adjoin F (Set.range ρ)).toSubmodule = Submodule.span F (Set.range ρ) := by
   rw [Algebra.adjoin_eq_span, MonoidHom.mclosure_range, MonoidHom.coe_mrange]
 
 set_option backward.isDefEq.respectTransparency false in
 open Module.Basis in
-lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
-    Submodule.span F S = ⊤ ↔
-    Submodule.span F' {s.baseChange F' | s ∈ S} = ⊤ := by
+lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V))
+    : Submodule.span F S = ⊤ ↔ Submodule.span F' {s.baseChange F' | s ∈ S} = ⊤ := by
   let b := ofVectorSpace F V
   set ι := ofVectorSpaceIndex F V
   have : DecidableEq ι := Classical.typeDecidableEq ι
@@ -199,9 +204,9 @@ lemma baseChange_surj_iff [FiniteDimensional F V] (S : Set (Module.End F V)) :
       rw [this, TensorProduct.tmul_sum]
       rfl
 
-theorem extendScalars_surj_iff [FiniteDimensional F V] :
-    Algebra.adjoin F (Set.range ρ) = ⊤ ↔
-    Algebra.adjoin F' (Set.range (extendScalars F' ρ)) = ⊤ := by
+theorem extendScalars_surj_iff [FiniteDimensional F V]
+    : Algebra.adjoin F (Set.range ρ) = ⊤
+      ↔ Algebra.adjoin F' (Set.range (extendScalars F' ρ)) = ⊤ := by
   have :(Set.range (extendScalars F' ρ)) = {s.baseChange F' | s ∈ (Set.range ρ)}:= by
     unfold extendScalars
     simp only [MonoidHom.coe_mk, OneHom.coe_mk, Set.mem_range, exists_exists_eq_and]
@@ -210,8 +215,9 @@ theorem extendScalars_surj_iff [FiniteDimensional F V] :
   exact baseChange_surj_iff F' (Set.range ρ)
 
 /-- Base change of subrepresentations along scalar extension. -/
-def subrepresentation_extendScalars :
-    Subrepresentation ρ → Subrepresentation (extendScalars F' ρ) := fun φ ↦ by
+def subrepresentation_extendScalars
+    : Subrepresentation ρ → Subrepresentation (extendScalars F' ρ) :=
+  fun φ ↦ by
     refine .mk (φ.toSubmodule.baseChange F') ?_
     intro g v' ⟨v, hv⟩
     have : (baseChange F' (ρ g)) v' = (baseChange F' ((ρ g).comp φ.toSubmodule.subtype)) v := by rw [← hv, baseChange_comp]; rfl
@@ -235,25 +241,28 @@ def subrepresentation_extendScalars :
       exact add_mem hx hy
     exact TensorProduct.induction_on v zero tmul add
 
-theorem subrepresentation_extendScalars_apply (φ : Subrepresentation ρ) :
-  ((subrepresentation_extendScalars F' ρ) φ).toSubmodule = φ.toSubmodule.baseChange F' := by rfl
+theorem subrepresentation_extendScalars_apply (φ : Subrepresentation ρ)
+    : ((subrepresentation_extendScalars F' ρ) φ).toSubmodule
+      = φ.toSubmodule.baseChange F' := by rfl
 
-theorem subrepresentation_extendScalars_bot :
-    subrepresentation_extendScalars F' ρ ⊥ = ⊥ := by
+theorem subrepresentation_extendScalars_bot
+    : subrepresentation_extendScalars F' ρ ⊥ = ⊥ := by
   apply Subrepresentation.toSubmodule_injective
   have h1 : (⊥ : Subrepresentation ρ).toSubmodule = ⊥ := by rfl
   have h2 : (⊥ : Subrepresentation (extendScalars F' ρ)).toSubmodule = ⊥ := by rfl
   rw [subrepresentation_extendScalars_apply, h1, h2, Submodule.baseChange_bot]
 
-theorem subrepresentation_extendScalars_top :
-    subrepresentation_extendScalars F' ρ ⊤ = ⊤ := by
+theorem subrepresentation_extendScalars_top
+    : subrepresentation_extendScalars F' ρ ⊤ = ⊤ := by
   apply Subrepresentation.toSubmodule_injective
   have h1 : (⊤ : Subrepresentation ρ).toSubmodule = ⊤ := by rfl
   have h2 : (⊤ : Subrepresentation (extendScalars F' ρ)).toSubmodule = ⊤ := by rfl
   rw [subrepresentation_extendScalars_apply, h1, h2, Submodule.baseChange_top]
 
 set_option backward.isDefEq.respectTransparency false in
-lemma mem_of_tmul_mem_baseChange {m : V} {W : Submodule F V} (hm : 1 ⊗ₜ m ∈ W.baseChange F') : m ∈ W := by
+lemma mem_of_tmul_mem_baseChange {m : V} {W : Submodule F V}
+    (hm : 1 ⊗ₜ m ∈ W.baseChange F')
+    : m ∈ W := by
   let f := Submodule.mkQ W
   have := LinearMap.exact_subtype_mkQ W
   rw [← Module.FaithfullyFlat.lTensor_exact_iff_exact (R := F) (M := F')] at this
@@ -265,25 +274,26 @@ lemma mem_of_tmul_mem_baseChange {m : V} {W : Submodule F V} (hm : 1 ⊗ₜ m �
     Submodule.Quotient.mk_eq_zero] at this
   exact this
 
-theorem subrepresentation_extendScalars_inj :
-    Function.Injective (subrepresentation_extendScalars F' ρ) := fun φ₁ φ₂ he ↦ by
-  suffices φ₁.toSubmodule = φ₂.toSubmodule by
-    exact Subrepresentation.toSubmodule_injective this
-  have he : (subrepresentation_extendScalars F' ρ φ₁).toSubmodule =
-    (subrepresentation_extendScalars F' ρ φ₂).toSubmodule := by rw [he]
-  rw [subrepresentation_extendScalars_apply, subrepresentation_extendScalars_apply] at he
-  refine le_antisymm (fun v h ↦ ?_) (fun v h ↦ ?_)
-  · have : (1 ⊗ₜ v) ∈ Submodule.baseChange F' φ₁.toSubmodule :=
-      Submodule.tmul_mem_baseChange_of_mem 1 h
-    rw [he] at this
-    exact mem_of_tmul_mem_baseChange F' this
-  · have : (1 ⊗ₜ v) ∈ Submodule.baseChange F' φ₂.toSubmodule :=
-      Submodule.tmul_mem_baseChange_of_mem 1 h
-    rw [← he] at this
-    exact mem_of_tmul_mem_baseChange F' this
+theorem subrepresentation_extendScalars_inj
+    : Function.Injective (subrepresentation_extendScalars F' ρ) :=
+  fun φ₁ φ₂ he ↦ by
+    suffices φ₁.toSubmodule = φ₂.toSubmodule by
+      exact Subrepresentation.toSubmodule_injective this
+    have he : (subrepresentation_extendScalars F' ρ φ₁).toSubmodule =
+      (subrepresentation_extendScalars F' ρ φ₂).toSubmodule := by rw [he]
+    rw [subrepresentation_extendScalars_apply, subrepresentation_extendScalars_apply] at he
+    refine le_antisymm (fun v h ↦ ?_) (fun v h ↦ ?_)
+    · have : (1 ⊗ₜ v) ∈ Submodule.baseChange F' φ₁.toSubmodule :=
+        Submodule.tmul_mem_baseChange_of_mem 1 h
+      rw [he] at this
+      exact mem_of_tmul_mem_baseChange F' this
+    · have : (1 ⊗ₜ v) ∈ Submodule.baseChange F' φ₂.toSubmodule :=
+        Submodule.tmul_mem_baseChange_of_mem 1 h
+      rw [← he] at this
+      exact mem_of_tmul_mem_baseChange F' this
 
-theorem _root_.Subrepresentation.nontrivial_iff :
-    Nontrivial (Subrepresentation ρ) ↔ Nontrivial ρ.asModule := by
+theorem _root_.Subrepresentation.nontrivial_iff
+    : Nontrivial (Subrepresentation ρ) ↔ Nontrivial ρ.asModule := by
   rw [← Submodule.nontrivial_iff (R := F) (M := ρ.asModule)]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · obtain ⟨x, y, h⟩ := h
@@ -296,14 +306,15 @@ theorem _root_.Subrepresentation.nontrivial_iff :
     have : (⊤ : Subrepresentation ρ).toSubmodule = (⊥ : Subrepresentation ρ).toSubmodule := by rw [this]
     exact this
 
-theorem extendScalars_subrepresentation_nontrivial_iff :
-    Nontrivial (Subrepresentation ρ) ↔ Nontrivial (Subrepresentation (extendScalars F' ρ)) := by
+theorem extendScalars_subrepresentation_nontrivial_iff
+    : Nontrivial (Subrepresentation ρ)
+      ↔ Nontrivial (Subrepresentation (extendScalars F' ρ)) := by
   rw [Subrepresentation.nontrivial_iff, Subrepresentation.nontrivial_iff]
   exact extendScalars_nontrivial_iff F' ρ
 
 set_option backward.isDefEq.respectTransparency false in
-theorem irreducible_of_extendScalars [inst : IsIrreducible (extendScalars F' ρ)] :
-    IsIrreducible ρ := by
+theorem irreducible_of_extendScalars [inst : IsIrreducible (extendScalars F' ρ)]
+    : IsIrreducible ρ := by
   have : Nontrivial (Subrepresentation ρ) := by
     rw [extendScalars_subrepresentation_nontrivial_iff (F' := F'), Subrepresentation.nontrivial_iff]
     exact Subrepresentation.irreducible_module_nontrivial (extendScalars F' ρ)
@@ -325,30 +336,31 @@ variable {ρ} {σ}
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Extend an intertwining map along scalar extension. -/
-def extendScalars_map (e : ρ →ₗ σ) :
-    extendScalars F' ρ →ₗ extendScalars F' σ :=
-  RepMap.mk (baseChange F' e.toLinearMap) (by
-    intro g
-    ext x
-    simp only [extendScalars_apply, TensorProduct.AlgebraTensorModule.curry_apply,
-      restrictScalars_comp, TensorProduct.curry_apply, coe_comp, coe_restrictScalars,
-      Function.comp_apply, baseChange_tmul, IntertwiningMap.coe_toLinearMap]
-    rw [e.isIntertwining])
+def extendScalars_map (e : ρ →ₗ σ) : extendScalars F' ρ →ₗ extendScalars F' σ :=
+  RepMap.mk (baseChange F' e.toLinearMap)
+    (by
+      intro g
+      ext x
+      simp only [extendScalars_apply, TensorProduct.AlgebraTensorModule.curry_apply,
+        restrictScalars_comp, TensorProduct.curry_apply, coe_comp, coe_restrictScalars,
+        Function.comp_apply, baseChange_tmul, IntertwiningMap.coe_toLinearMap]
+      rw [e.isIntertwining])
 
-theorem extendScalars_map_toLinearMap {e : ρ →ₗ σ} :
-  (extendScalars_map F' e).toLinearMap = baseChange F' e.toLinearMap := by rfl
-
+theorem extendScalars_map_toLinearMap {e : ρ →ₗ σ}
+    : (extendScalars_map F' e).toLinearMap = baseChange F' e.toLinearMap := by rfl
 
 /-- Iterated scalar extension is canonically equivalent to direct scalar extension. -/
-def extendScalars_comp {F'' : Type*} [Field F''] [Algebra F' F''] [Algebra F F''] [IsScalarTower F F' F''] :
-    extendScalars F'' (extendScalars F' ρ) ≃ₗ extendScalars F'' ρ :=
-  RepEquiv.mk (TensorProduct.AlgebraTensorModule.cancelBaseChange F F' F'' F'' V) (by
-  intro g
-  ext x
-  simp only [extendScalars_apply, TensorProduct.AlgebraTensorModule.curry_apply,
-    restrictScalars_comp, TensorProduct.curry_apply, coe_restrictScalars, coe_comp,
-    LinearEquiv.coe_coe, Function.comp_apply, baseChange_tmul,
-    TensorProduct.AlgebraTensorModule.cancelBaseChange_tmul, one_smul])
+def extendScalars_comp {F'' : Type*} [Field F''] [Algebra F' F''] [Algebra F F'']
+    [IsScalarTower F F' F'']
+    : extendScalars F'' (extendScalars F' ρ) ≃ₗ extendScalars F'' ρ :=
+  RepEquiv.mk (TensorProduct.AlgebraTensorModule.cancelBaseChange F F' F'' F'' V)
+    (by
+      intro g
+      ext x
+      simp only [extendScalars_apply, TensorProduct.AlgebraTensorModule.curry_apply,
+        restrictScalars_comp, TensorProduct.curry_apply, coe_restrictScalars, coe_comp,
+        LinearEquiv.coe_coe, Function.comp_apply, baseChange_tmul,
+        TensorProduct.AlgebraTensorModule.cancelBaseChange_tmul, one_smul])
 
 end extendScalarsRep
 
@@ -358,9 +370,9 @@ theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     {G : Type*} [Group G] [Finite G] {F : Type*} [Field F]
     {F' : Type*} [Field F'] [Algebra F F'] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
-    (hF : (Nat.card G : F) ≠ 0) (hF' : (Nat.card G : F') ≠ 0) :
-    Representation.invariants (Representation.extendScalars F' ρ) =
-      (Representation.invariants ρ).baseChange F' := by
+    (hF : (Nat.card G : F) ≠ 0) (hF' : (Nat.card G : F') ≠ 0)
+    : Representation.invariants (Representation.extendScalars F' ρ)
+      = (Representation.invariants ρ).baseChange F' := by
   classical
   let _ : Fintype G := Fintype.ofFinite G
   let _ : Invertible (Fintype.card G : F) := by
@@ -428,6 +440,5 @@ theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     S' = LinearMap.range avg' := hrange_avg'.symm
     _ = LinearMap.range (LinearMap.baseChange F' avg) := by rw [havg_eq]
     _ = S.baseChange F' := hrange_avg_bc
-
 
 end Representation

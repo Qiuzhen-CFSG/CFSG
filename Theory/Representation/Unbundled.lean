@@ -35,9 +35,9 @@ theorem trace_pi_map_perm {R : Type*} [Field R]
     {M : Type*} [AddCommGroup M] [Module R M]
     (b : Basis κ R M) (e : ι → ι) (L : ι → M →ₗ[R] M)
     (T : (ι → M) →ₗ[R] (ι → M))
-    (hT : ∀ x i, T x i = L i (x (e i))) :
-    LinearMap.trace R (ι → M) T =
-      ∑ i : ι, if e i = i then LinearMap.trace R M (L i) else 0 := by
+    (hT : ∀ x i, T x i = L i (x (e i)))
+    : LinearMap.trace R (ι → M) T
+      = ∑ i : ι, if e i = i then LinearMap.trace R M (L i) else 0 := by
   classical
   let B : Basis (Σ _ : ι, κ) R (ι → M) := Pi.basis (fun _ : ι => b)
   rw [LinearMap.trace_eq_matrix_trace R B T]
@@ -64,7 +64,6 @@ theorem trace_pi_map_perm {R : Type*} [Field R]
     rw [LinearMap.toMatrix_apply]
     have hne : i ≠ e i := fun hi => h hi.symm
     simp [B, hT, hne]
-
 
 end TracePi
 

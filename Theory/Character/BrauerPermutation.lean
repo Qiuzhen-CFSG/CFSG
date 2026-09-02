@@ -9,24 +9,23 @@ open scoped BigOperators
 
 noncomputable section
 
-
 open _root_.Representation
 open Representation
-
 
 attribute [local instance] Fintype.ofFinite
 
 variable {L : Type*} [Group L] [Finite L]
 
-def normalSubgroupConjMulEquiv
-    (N : Subgroup L) [N.Normal] (g : L) : N ≃* N where
+def normalSubgroupConjMulEquiv (N : Subgroup L) [N.Normal] (g : L) : N ≃* N where
   toFun x :=
-    ⟨g * (x : L) * g⁻¹,
-      Subgroup.Normal.conj_mem (inferInstance : N.Normal) (x : L) x.2 g⟩
+    ⟨g * (x : L) * g⁻¹, Subgroup.Normal.conj_mem (inferInstance : N.Normal) (x : L) x.2 g⟩
   invFun x :=
-    ⟨g⁻¹ * (x : L) * g, by
-      simpa using
-        ((inferInstance : N.Normal).conj_mem (x : L) x.2 g⁻¹)⟩
+    ⟨
+      g⁻¹ * (x : L) * g,
+      by
+        simpa using
+          ((inferInstance : N.Normal).conj_mem (x : L) x.2 g⁻¹)
+    ⟩
   left_inv x := by
     apply Subtype.ext
     simp [mul_assoc]
@@ -37,9 +36,8 @@ def normalSubgroupConjMulEquiv
     apply Subtype.ext
     simp [mul_assoc]
 
-def conjClassesConjPerm
-    (N : Subgroup L) [N.Normal] (g : L) :
-    Equiv.Perm (ConjClasses N) where
+def conjClassesConjPerm (N : Subgroup L) [N.Normal] (g : L)
+    : Equiv.Perm (ConjClasses N) where
   toFun := ConjClasses.map (normalSubgroupConjMulEquiv N g).toMonoidHom
   invFun := ConjClasses.map (normalSubgroupConjMulEquiv N g⁻¹).toMonoidHom
   left_inv c := by
@@ -56,24 +54,22 @@ def conjClassesConjPerm
     simp [normalSubgroupConjMulEquiv, mul_assoc]
 
 omit [Finite L] in
-theorem conjClassesConjPerm_mk
-    (N : Subgroup L) [N.Normal] (g : L) (x : N) :
-    conjClassesConjPerm N g (ConjClasses.mk x) =
-      ConjClasses.mk ((normalSubgroupConjMulEquiv N g) x) := rfl
+theorem conjClassesConjPerm_mk (N : Subgroup L) [N.Normal] (g : L) (x : N)
+    : conjClassesConjPerm N g (ConjClasses.mk x)
+      = ConjClasses.mk ((normalSubgroupConjMulEquiv N g) x) :=
+  rfl
 
 omit [Finite L] in
-theorem conjClassesConjPerm_symm_mk
-    (N : Subgroup L) [N.Normal] (g : L) (x : N) :
-    (conjClassesConjPerm N g).symm (ConjClasses.mk x) =
-      ConjClasses.mk ((normalSubgroupConjMulEquiv N g).symm x) := by
+theorem conjClassesConjPerm_symm_mk (N : Subgroup L) [N.Normal] (g : L) (x : N)
+    : (conjClassesConjPerm N g).symm (ConjClasses.mk x)
+      = ConjClasses.mk ((normalSubgroupConjMulEquiv N g).symm x) := by
   change ConjClasses.mk ((normalSubgroupConjMulEquiv N g⁻¹) x) =
     ConjClasses.mk ((normalSubgroupConjMulEquiv N g).symm x)
   congr 1
   apply Subtype.ext
   simp [normalSubgroupConjMulEquiv, mul_assoc]
-def classFunctionConjLinearEquiv
-    (N : Subgroup L) [N.Normal] (g : L) :
-    ConjClassFunction N ≃ₗ[ℂ] ConjClassFunction N where
+def classFunctionConjLinearEquiv (N : Subgroup L) [N.Normal] (g : L)
+    : ConjClassFunction N ≃ₗ[ℂ] ConjClassFunction N where
   toFun φ := fun c => φ ((conjClassesConjPerm N g).symm c)
   invFun φ := fun c => φ ((conjClassesConjPerm N g) c)
   left_inv φ := by ext c; simp
@@ -83,11 +79,9 @@ def classFunctionConjLinearEquiv
 
 theorem classFunctionConjLinearEquiv_basisFun
     (N : Subgroup L) [N.Normal] (g : L)
-    (c : ConjClasses N) :
-    classFunctionConjLinearEquiv N g
-        ((Pi.basisFun ℂ (ConjClasses N)) c) =
-      (Pi.basisFun ℂ (ConjClasses N))
-        ((conjClassesConjPerm N g) c) := by
+    (c : ConjClasses N)
+    : classFunctionConjLinearEquiv N g ((Pi.basisFun ℂ (ConjClasses N)) c)
+      = (Pi.basisFun ℂ (ConjClasses N)) ((conjClassesConjPerm N g) c) := by
   classical
   ext d
   by_cases hsymm : (conjClassesConjPerm N g).symm d = c
@@ -99,13 +93,10 @@ theorem classFunctionConjLinearEquiv_basisFun
         (conjClassesConjPerm N g).symm
           ((conjClassesConjPerm N g) c) = c := by
       simp
-    change
-      ((Pi.basisFun ℂ (ConjClasses N)) c)
-          ((conjClassesConjPerm N g).symm
-            ((conjClassesConjPerm N g) c)) =
-        ((Pi.basisFun ℂ (ConjClasses N))
-          ((conjClassesConjPerm N g) c))
-            ((conjClassesConjPerm N g) c)
+    change ((Pi.basisFun ℂ (ConjClasses N)) c)
+              ((conjClassesConjPerm N g).symm ((conjClassesConjPerm N g) c))
+            = ((Pi.basisFun ℂ (ConjClasses N)) ((conjClassesConjPerm N g) c))
+                ((conjClassesConjPerm N g) c)
     simp [hinv]
   · have hdc : d ≠ (conjClassesConjPerm N g) c := by
       intro hdc
@@ -117,11 +108,11 @@ omit [Finite L] in
 theorem classFunctionConjLinearEquiv_characterClassFunction
     (N : Subgroup L) [N.Normal] (g : L)
     {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (rho : Representation ℂ N V) :
-    classFunctionConjLinearEquiv N g (characterClassFunction rho) =
-      characterClassFunction
-        (show Representation ℂ N V from
-          rho.comp (normalSubgroupConjMulEquiv N g).symm.toMonoidHom) := by
+    (rho : Representation ℂ N V)
+    : classFunctionConjLinearEquiv N g (characterClassFunction rho)
+      = characterClassFunction
+          (show Representation ℂ N V from rho.comp
+            (normalSubgroupConjMulEquiv N g).symm.toMonoidHom) := by
   let sigma : Representation ℂ N V :=
     rho.comp (normalSubgroupConjMulEquiv N g).symm.toMonoidHom
   change classFunctionConjLinearEquiv N g (characterClassFunction rho) =
@@ -136,10 +127,10 @@ theorem classFunctionConjLinearEquiv_characterClassFunction
 
 theorem classFunctionInner_classFunctionConjLinearEquiv
     (N : Subgroup L) [N.Normal] (g : L)
-    (phi psi : ConjClassFunction N) :
-    classFunctionInner (classFunctionConjLinearEquiv N g phi)
-        (classFunctionConjLinearEquiv N g psi) =
-      classFunctionInner phi psi := by
+    (phi psi : ConjClassFunction N)
+    : classFunctionInner (classFunctionConjLinearEquiv N g phi)
+        (classFunctionConjLinearEquiv N g psi)
+      = classFunctionInner phi psi := by
   classical
   let : Fintype N := Fintype.ofFinite N
   unfold classFunctionInner
@@ -159,11 +150,12 @@ theorem classFunctionInner_classFunctionConjLinearEquiv
   simp_rw [happ, happ']
   simpa using (normalSubgroupConjMulEquiv N g).symm.sum_comp
     (fun x : N => phi (ConjClasses.mk x) * star (psi (ConjClasses.mk x)))
+
 theorem classFunctionConjLinearEquiv_isIrreducibleCharacter
     (N : Subgroup L) [N.Normal] (g : L)
     {chi : ConjClassFunction N}
-    (hchi : IsIrreducibleConjCharacter chi) :
-    IsIrreducibleConjCharacter (classFunctionConjLinearEquiv N g chi) := by
+    (hchi : IsIrreducibleConjCharacter chi)
+    : IsIrreducibleConjCharacter (classFunctionConjLinearEquiv N g chi) := by
   rcases hchi.1 with ⟨n, rho, hrho⟩
   constructor
   · refine ⟨n, rho.comp (normalSubgroupConjMulEquiv N g).symm.toMonoidHom, ?_⟩
@@ -177,9 +169,8 @@ theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
     (b : Module.Basis ι ℂ M)
     (sigma : Equiv.Perm ι)
     (T : M ≃ₗ[ℂ] M)
-    (hT : ∀ i, T (b i) = b (sigma i)) :
-    LinearMap.trace ℂ M T.toLinearMap =
-      ((Function.fixedPoints sigma).ncard : ℂ) := by
+    (hT : ∀ i, T (b i) = b (sigma i))
+    : LinearMap.trace ℂ M T.toLinearMap = ((Function.fixedPoints sigma).ncard : ℂ) := by
   classical
   have hmatrix :
       LinearMap.toMatrix b b T.toLinearMap = (sigma⁻¹).permMatrix ℂ := by
@@ -204,12 +195,12 @@ theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
       rw [hentry]
       simp [h, hsymm']
   calc
-    LinearMap.trace ℂ M T.toLinearMap =
-        Matrix.trace (LinearMap.toMatrix b b T.toLinearMap) := by
-          rw [LinearMap.trace_eq_matrix_trace ℂ b T.toLinearMap]
+    LinearMap.trace ℂ M T.toLinearMap
+        = Matrix.trace (LinearMap.toMatrix b b T.toLinearMap) := by
+      rw [LinearMap.trace_eq_matrix_trace ℂ b T.toLinearMap]
     _ = Matrix.trace ((sigma⁻¹).permMatrix ℂ) := by rw [hmatrix]
     _ = ((Function.fixedPoints (sigma⁻¹ : Equiv.Perm ι)).ncard : ℂ) := by
-          exact Matrix.trace_permutation (R := ℂ) (σ := sigma⁻¹)
+      exact Matrix.trace_permutation (R := ℂ) (σ := sigma⁻¹)
     _ = ((Function.fixedPoints sigma).ncard : ℂ) := by
       congr 1
       congr 1
@@ -228,9 +219,9 @@ theorem trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
 omit [Finite L] in
 theorem classFunctionConjLinearEquiv_symm_apply
     (N : Subgroup L) [N.Normal] (g : L)
-    (chi : ConjClassFunction N) :
-    (classFunctionConjLinearEquiv N g).symm chi =
-      classFunctionConjLinearEquiv N g⁻¹ chi := by
+    (chi : ConjClassFunction N)
+    : (classFunctionConjLinearEquiv N g).symm chi
+      = classFunctionConjLinearEquiv N g⁻¹ chi := by
   ext c
   rcases ConjClasses.exists_rep c with ⟨x, rfl⟩
   change chi (conjClassesConjPerm N g (ConjClasses.mk x)) =
@@ -243,15 +234,18 @@ theorem classFunctionConjLinearEquiv_symm_apply
     simp [normalSubgroupConjMulEquiv, mul_assoc]
   exact congrArg chi (congrArg ConjClasses.mk h)
 
-def irreducibleConjClassFunctionPerm
-    (N : Subgroup L) [N.Normal] (g : L) :
-    Equiv.Perm {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} where
+def irreducibleConjClassFunctionPerm (N : Subgroup L) [N.Normal] (g : L)
+    : Equiv.Perm {chi : ConjClassFunction N // IsIrreducibleConjCharacter chi} where
   toFun chi :=
-    ⟨classFunctionConjLinearEquiv N g chi.1,
-      classFunctionConjLinearEquiv_isIrreducibleCharacter N g chi.2⟩
+    ⟨
+      classFunctionConjLinearEquiv N g chi.1,
+      classFunctionConjLinearEquiv_isIrreducibleCharacter N g chi.2
+    ⟩
   invFun chi :=
-    ⟨classFunctionConjLinearEquiv N g⁻¹ chi.1,
-      classFunctionConjLinearEquiv_isIrreducibleCharacter N g⁻¹ chi.2⟩
+    ⟨
+      classFunctionConjLinearEquiv N g⁻¹ chi.1,
+      classFunctionConjLinearEquiv_isIrreducibleCharacter N g⁻¹ chi.2
+    ⟩
   left_inv chi := by
     apply Subtype.ext
     change classFunctionConjLinearEquiv N g⁻¹
@@ -266,11 +260,10 @@ def irreducibleConjClassFunctionPerm
     simp
 
 theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
-    (N : Subgroup L) [N.Normal] (g : L) :
-    LinearMap.trace ℂ (ConjClassFunction N)
-        (classFunctionConjLinearEquiv N g).toLinearMap =
-      ((Function.fixedPoints
-          (irreducibleConjClassFunctionPerm N g)).ncard : ℂ) := by
+    (N : Subgroup L) [N.Normal] (g : L)
+    : LinearMap.trace ℂ (ConjClassFunction N)
+        (classFunctionConjLinearEquiv N g).toLinearMap
+      = ((Function.fixedPoints (irreducibleConjClassFunctionPerm N g)).ncard : ℂ) := by
   classical
   rcases irreducible_characters_form_basis (G := N) with
     ⟨ι, hι, chi, hchi, b, hb⟩
@@ -306,20 +299,19 @@ theorem trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles
     have h := congrArg Subtype.val (_root_.Equiv.apply_symm_apply e psi)
     dsimp [e, f] at h
     exact h
-  exact
-    trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
-      bIrr (irreducibleConjClassFunctionPerm N g)
-      (classFunctionConjLinearEquiv N g)
-      (by
-        intro psi
-        rw [hbIrr, hbIrr]
-        rfl)
+  exact trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
+    bIrr (irreducibleConjClassFunctionPerm N g)
+    (classFunctionConjLinearEquiv N g)
+    (by
+      intro psi
+      rw [hbIrr, hbIrr]
+      rfl)
 
 theorem trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses
-    (N : Subgroup L) [N.Normal] (g : L) :
-    LinearMap.trace ℂ (ConjClassFunction N)
-        (classFunctionConjLinearEquiv N g).toLinearMap =
-      ((Function.fixedPoints (conjClassesConjPerm N g)).ncard : ℂ) := by
+    (N : Subgroup L) [N.Normal] (g : L)
+    : LinearMap.trace ℂ (ConjClassFunction N)
+        (classFunctionConjLinearEquiv N g).toLinearMap
+      = ((Function.fixedPoints (conjClassesConjPerm N g)).ncard : ℂ) := by
   classical
   exact
     trace_linearEquiv_eq_ncard_fixedPoints_of_permutes_basis
@@ -327,16 +319,15 @@ theorem trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses
       (classFunctionConjLinearEquiv N g)
       (classFunctionConjLinearEquiv_basisFun N g)
 
-theorem fixed_irreducible_ncard_eq_fixed_conjClasses
-    (N : Subgroup L) [N.Normal] (g : L) :
-    (Function.fixedPoints
-        (irreducibleConjClassFunctionPerm N g)).ncard =
-      (Function.fixedPoints (conjClassesConjPerm N g)).ncard := by
+theorem fixed_irreducible_ncard_eq_fixed_conjClasses (N : Subgroup L) [N.Normal] (g : L)
+    : (Function.fixedPoints (irreducibleConjClassFunctionPerm N g)).ncard
+      = (Function.fixedPoints (conjClassesConjPerm N g)).ncard := by
   have hIrr :=
     trace_classFunctionConjLinearEquiv_eq_fixed_irreducibles N g
   have hClass :=
     trace_classFunctionConjLinearEquiv_eq_fixed_conjClasses N g
   exact_mod_cast hIrr.symm.trans hClass
+
 theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
     (N : Subgroup L) [N.Normal] (g : L)
     {chi psi : ConjClassFunction N}
@@ -344,9 +335,8 @@ theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
     (hpsiIrr : IsIrreducibleConjCharacter psi)
     (hchiFix : classFunctionConjLinearEquiv N g chi = chi)
     (hpsiFix : classFunctionConjLinearEquiv N g psi = psi)
-    (hne : chi ≠ psi) :
-    ∃ x : N, x ≠ 1 ∧
-      IsConj ((normalSubgroupConjMulEquiv N g) x) x := by
+    (hne : chi ≠ psi)
+    : ∃ x : N, x ≠ 1 ∧ IsConj ((normalSubgroupConjMulEquiv N g) x) x := by
   classical
   rcases irreducible_characters_form_basis (G := N) with
     ⟨ι, hι, theta, htheta, _basis, _hbasis⟩

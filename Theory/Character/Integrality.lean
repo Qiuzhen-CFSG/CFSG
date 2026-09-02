@@ -21,13 +21,13 @@ noncomputable section
 
 open scoped BigOperators
 
-
 universe u v
 
 /-- An eigenvalue of an endomorphism of finite order is an algebraic integer. -/
 theorem eigen_value_isIntegral_of_pow_eq_one {V : Type v} [AddCommGroup V]
     [Module ℂ V] {f : V →ₗ[ℂ] V} {n : ℕ} (hn : 0 < n) (hf : f ^ n = 1)
-    {z : ℂ} (hz : Module.End.HasEigenvalue f z) : IsIntegral ℤ z := by
+    {z : ℂ} (hz : Module.End.HasEigenvalue f z)
+    : IsIntegral ℤ z := by
   classical
   rcases Submodule.exists_mem_ne_zero_of_ne_bot hz with ⟨x, hxmem, hx0⟩
   have hx : f x = z • x := by
@@ -69,8 +69,8 @@ theorem eigen_value_isIntegral_of_pow_eq_one {V : Type v} [AddCommGroup V]
 integers, is an algebraic integer. -/
 theorem trace_isIntegral_of_forall_eigenvalue {V : Type v} [AddCommGroup V]
     [Module ℂ V] [FiniteDimensional ℂ V] (f : V →ₗ[ℂ] V)
-    (h : ∀ z : ℂ, Module.End.HasEigenvalue f z → IsIntegral ℤ z) :
-    IsIntegral ℤ ((LinearMap.trace ℂ V) f) := by
+    (h : ∀ z : ℂ, Module.End.HasEigenvalue f z → IsIntegral ℤ z)
+    : IsIntegral ℤ ((LinearMap.trace ℂ V) f) := by
   classical
   have hsplits : f.charpoly.Splits := IsAlgClosed.splits f.charpoly
   have htr : (LinearMap.trace ℂ V) f = f.charpoly.roots.sum :=
@@ -96,8 +96,8 @@ theorem trace_isIntegral_of_forall_eigenvalue {V : Type v} [AddCommGroup V]
 is either zero or an eigenvalue of `f`. -/
 theorem hasEigenvalue_of_mul_hasEigenvalue {V : Type v} [AddCommGroup V]
     [Module ℂ V] {f g : V →ₗ[ℂ] V} (hcomm : f * g = g * f) (hidem : g * g = g)
-    {z : ℂ} (hz : Module.End.HasEigenvalue (f * g) z) :
-    z = 0 ∨ Module.End.HasEigenvalue f z := by
+    {z : ℂ} (hz : Module.End.HasEigenvalue (f * g) z)
+    : z = 0 ∨ Module.End.HasEigenvalue f z := by
   classical
   rcases Submodule.exists_mem_ne_zero_of_ne_bot hz with ⟨x, hxmem, hx0⟩
   have hx : (f * g) x = z • x := by
@@ -147,12 +147,11 @@ theorem hasEigenvalue_of_mul_hasEigenvalue {V : Type v} [AddCommGroup V]
 /-- Character values are algebraic integers. -/
 theorem character_value_isIntegral {G : Type u} [Group G] [Fintype G]
     {V : Type v} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
-    (ρ : Representation ℂ G V) (g : G) :
-    IsIntegral ℤ (ρ.character g) := by
+    (ρ : Representation ℂ G V) (g : G)
+    : IsIntegral ℤ (ρ.character g) := by
   change IsIntegral ℤ ((LinearMap.trace ℂ V) (ρ g))
   refine trace_isIntegral_of_forall_eigenvalue (ρ g) ?_
   intro z hz
   have hf : (ρ g) ^ orderOf g = 1 := by
     rw [← map_pow, pow_orderOf_eq_one, map_one]
   exact eigen_value_isIntegral_of_pow_eq_one (orderOf_pos g) hf hz
-
