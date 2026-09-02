@@ -10,8 +10,8 @@ variable {G : Type*} [Group G]
 land in a common normal subgroup instead of being trivial. -/
 public theorem commutator_commutator_le_of_rotate
     {H₁ H₂ H₃ K : Subgroup G} [K.Normal]
-    (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K) :
-    ⁅⁅H₁, H₂⁆, H₃⁆ ≤ K := by
+    (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K)
+    : ⁅⁅H₁, H₂⁆, H₃⁆ ≤ K := by
   let q : G →* G ⧸ K := QuotientGroup.mk' K
   have h₁q : ⁅⁅H₂.map q, H₃.map q⁆, H₁.map q⁆ = ⊥ := by
     rw [← Subgroup.map_commutator, ← Subgroup.map_commutator]
@@ -33,8 +33,8 @@ public theorem commutator_commutator_le_of_rotate_of_le_normalizer
     {H₁ H₂ H₃ K : Subgroup G}
     (hnorm₁ : H₁ ≤ normalizer K) (hnorm₂ : H₂ ≤ normalizer K)
     (hnorm₃ : H₃ ≤ normalizer K)
-    (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K) :
-    ⁅⁅H₁, H₂⁆, H₃⁆ ≤ K := by
+    (h₁ : ⁅⁅H₂, H₃⁆, H₁⁆ ≤ K) (h₂ : ⁅⁅H₃, H₁⁆, H₂⁆ ≤ K)
+    : ⁅⁅H₁, H₂⁆, H₃⁆ ≤ K := by
   let L : Subgroup G := H₁ ⊔ H₂ ⊔ H₃ ⊔ K
   have hH₁L : H₁ ≤ L :=
     le_sup_of_le_left (le_sup_of_le_left le_sup_left)
@@ -47,7 +47,7 @@ public theorem commutator_commutator_le_of_rotate_of_le_normalizer
   let H₂' : Subgroup L := H₂.subgroupOf L
   let H₃' : Subgroup L := H₃.subgroupOf L
   let K' : Subgroup L := K.subgroupOf L
-  letI : K'.Normal := by
+  let : K'.Normal := by
     dsimp [K']
     exact Subgroup.normal_subgroupOf_of_le_normalizer hLnorm
   have hmapH₁ : H₁'.map L.subtype = H₁ := by

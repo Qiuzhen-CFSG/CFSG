@@ -6,7 +6,7 @@ public import Theory.GroupAction.Defs
 open scoped Pointwise commutatorElement
 
 
-variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
+variable {G A : Type*} [Group G] [Group A]
 
 private theorem semidirect_comm_inl_inv_inr_for_commutatorSubgroup
     (φ : A →* MulAut G) (a : A) (g : G) :
@@ -30,6 +30,8 @@ private theorem semidirect_comm_inl_inv_inr_for_commutatorSubgroup
     _ = (inl g : G ⋊[φ] A)⁻¹ * inl ((φ a) g) := by rw [hconj]
     _ = inl (g⁻¹ * (φ a) g) := by simp [inl]
 
+variable [MulDistribMulAction A G]
+
 /-- The subgroup action commutator is monotone in the subgroup being acted on. -/
 public theorem commutatorSubgroup_mono {H K : Subgroup G} (hHK : H ≤ K) :
     commutatorSubgroup A G H ≤ commutatorSubgroup A G K := by
@@ -47,7 +49,7 @@ public theorem commutatorSubgroup_map_semidirect_inl_eq_commutator
     (commutatorSubgroup B G H).map inl = ⁅H.map inl, B.map inr⁆ := by
   let φ : A →* MulAut G := MulDistribMulAction.toMulAut A G
   let SD := G ⋊[φ] A
-  letI : Group SD := by infer_instance
+  let : Group SD := by infer_instance
   let inl : G →* SD := SemidirectProduct.inl
   let inr : A →* SD := SemidirectProduct.inr
   let X : Set G :=
@@ -77,4 +79,3 @@ public theorem commutatorSubgroup_map_semidirect_inl_eq_commutator
     have hcomm' : ⁅inl g, inr b⁆ = inl (g * (b • g)⁻¹) := by
       simpa [inv_inv, b', Subgroup.smul_def] using hcomm b' g⁻¹
     simpa [hcomm'] using hmem
-

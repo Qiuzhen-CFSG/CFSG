@@ -5,24 +5,10 @@ public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Theory.Representation.ExtendScalars
 public import Theory.Representation.RepEnd
 
-namespace Representation
-
-open _root_.Representation
 open scoped MonoidAlgebra
 open scoped TensorProduct
 
-/-
-**Kind**: Theorem
-**Name**: Jacobson Density Theorem
-**Note**: G, Theorem 3.6.2
-**Stmt**:
-Let $F$ be a field.
-Let $A$ be an algebra over $F$.
-Let $V$ be a finite dimensional vector space over $F$.
-Let $A$ represent faithfully and irreducibly on $V$.
-If $\End_{A}(V) = F$.
-Then A is isomorphic to the algebra $\End_{F}(V)$ of all linear transformations on V.
--/
+namespace Representation
 
 /-- The algebra homomorphism sending an element of `A` to its action on `V`. -/
 @[expose]
@@ -425,7 +411,6 @@ public theorem jacobson_density_surjective
   rw [this]
   simp only [Finsupp.univ_sum_single_apply]
 
-
 public theorem _root_.AlgebraicClosure.jacobson_density_condition
     {F : Type*} [Field F] [IsAlgClosed F]
     {A : Type*} [Ring A] [Algebra F A]
@@ -468,7 +453,6 @@ public theorem jacobson_density_surjective_isAlgClosed
     [Module A V] [IsScalarTower F A V] [IsSimpleModule A V] :
     Function.Surjective (jacobson_density_mapping F A V) :=
   jacobson_density_surjective AlgebraicClosure.jacobson_density_condition
-
 
 set_option backward.isDefEq.respectTransparency false in
 public theorem adjoin_univ_iff_surjective
@@ -647,3 +631,5 @@ public theorem surjective_of_jacobson_density_surjective_rep
   rw [adjoin_univ_iff_surjective] at hs
   rw [← algebraMap_surj_iff_surj]
   exact surjective_of_jacobson_density_surjective hs
+
+end Representation

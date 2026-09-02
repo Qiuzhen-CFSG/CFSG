@@ -17,18 +17,18 @@ Public items:
 It also re-exports `Basic`.
 -/
 
-
 /-- Maximal subgroups of finite p-groups are normal. -/
-public lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
-    [Fact (IsPGroup p R)] {K : Subgroup R} (hK : IsCoatom K) : K.Normal := by
+public lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ}
+    [Fact p.Prime] [Fact (IsPGroup p R)] {K : Subgroup R} (hK : IsCoatom K)
+    : K.Normal := by
   let : Group.IsNilpotent R := IsPGroup.isNilpotent (p := p) (G := R) (h := Fact.out)
   exact Subgroup.NormalizerCondition.normal_of_coatom K
     (Group.normalizerCondition_of_isNilpotent (G := R)) hK
 
 /-- The quotient of a group by a maximal normal subgroup has only the two trivial subgroups. -/
 public lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
-    {K : Subgroup R} [K.Normal] (hK : IsCoatom K) :
-    ∀ H : Subgroup (R ⧸ K), H = ⊥ ∨ H = ⊤ := by
+    {K : Subgroup R} [K.Normal] (hK : IsCoatom K)
+    : ∀ H : Subgroup (R ⧸ K), H = ⊥ ∨ H = ⊤ := by
   intro H
   have hK_le_comap : K ≤ H.comap (QuotientGroup.mk' K) := by
     intro x hx
@@ -41,8 +41,9 @@ public lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
         (Subgroup.map_comap_eq_self_of_surjective (f := QuotientGroup.mk' K)
           (h := QuotientGroup.mk'_surjective K) H).symm
       _ = (⊤ : Subgroup R).map (QuotientGroup.mk' K) := by simp [htop]
-      _ = ⊤ := Subgroup.map_top_of_surjective (f := QuotientGroup.mk' K)
-        (QuotientGroup.mk'_surjective K)
+      _ = ⊤ :=
+        Subgroup.map_top_of_surjective (f := QuotientGroup.mk' K)
+          (QuotientGroup.mk'_surjective K)
   · left
     calc
       H = (H.comap (QuotientGroup.mk' K)).map (QuotientGroup.mk' K) :=
@@ -54,7 +55,8 @@ public lemma quotient_subgroup_eq_bot_or_top_of_coatom {R : Type*} [Group R]
 /-- The quotient of a finite p-group by a maximal subgroup has order `p`. -/
 public lemma card_quotient_coatom_eq_prime {R : Type*} [Group R] [Finite R]
     {p : ℕ} [Fact p.Prime] [Fact (IsPGroup p R)]
-    {K : Subgroup R} (hK : IsCoatom K) : Nat.card (R ⧸ K) = p := by
+    {K : Subgroup R} (hK : IsCoatom K)
+    : Nat.card (R ⧸ K) = p := by
   let : K.Normal := coatom_normal_of_isPGroup (p := p) (K := K) hK
   have hq_pgroup : IsPGroup p (R ⧸ K) := (Fact.out : IsPGroup p R).to_quotient K
   rcases hq_pgroup.exists_card_eq with ⟨n, hn⟩
@@ -94,4 +96,3 @@ public lemma card_quotient_coatom_eq_prime {R : Type*} [Group R] [Finite R]
       hH_ne_bot hH_ne_top
   have hn_eq_one : n = 1 := by omega
   simp [hn, hn_eq_one]
-

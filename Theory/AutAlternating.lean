@@ -44,15 +44,15 @@ open Equiv
 open Equiv.Perm
 
 /-- `IsThreeCycle` is decidable: it is the multiset equality `cycleType = {3}`. -/
-local instance decidableIsThreeCycle (α : Type*) [Fintype α] [DecidableEq α] :
-    DecidablePred (fun σ : Perm α => σ.IsThreeCycle) :=
+local instance decidableIsThreeCycle (α : Type*) [Fintype α] [DecidableEq α]
+    : DecidablePred (fun σ : Perm α => σ.IsThreeCycle) :=
   fun σ => (inferInstance : Decidable (σ.cycleType = {3}))
 
 /-! ### Conjugation of transpositions and 3-cycles -/
 
 /-- Conjugating a transposition by a permutation moves its two points. -/
-public theorem conj_swap {α : Type*} [DecidableEq α] (σ : Equiv.Perm α) (a b : α) :
-    σ * Equiv.swap a b * σ⁻¹ = Equiv.swap (σ a) (σ b) := by
+public theorem conj_swap {α : Type*} [DecidableEq α] (σ : Equiv.Perm α) (a b : α)
+    : σ * Equiv.swap a b * σ⁻¹ = Equiv.swap (σ a) (σ b) := by
   ext x
   by_cases hxa : x = σ a
   · subst hxa
@@ -78,8 +78,8 @@ public theorem conj_swap {α : Type*} [DecidableEq α] (σ : Equiv.Perm α) (a b
 /-- The support of the 3-cycle `(i j k)`, realized as `swap i j * swap i k`, is
 `{i, j, k}`. -/
 public theorem support_swap_mul_swap_same {α : Type*} [Fintype α] [DecidableEq α]
-    {i j k : α} (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
-    support (Equiv.swap i j * Equiv.swap i k) = {i, j, k} := by
+    {i j k : α} (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
+    : support (Equiv.swap i j * Equiv.swap i k) = {i, j, k} := by
   apply le_antisymm ((support_mul_le _ _).trans ?_) ?_
   · rw [support_swap hij, support_swap hik]
     simp
@@ -111,8 +111,8 @@ public theorem support_swap_mul_swap_same {α : Type*} [Fintype α] [DecidableEq
 /-- In a type with at least four elements, three points distinct from a given point
 and from each other exist. -/
 private theorem exists_three_ne_of_card {α : Type*} [Fintype α] [DecidableEq α]
-    (h : 4 ≤ Fintype.card α) (i : α) :
-    ∃ j k l : α, i ≠ j ∧ i ≠ k ∧ i ≠ l ∧ j ≠ k ∧ j ≠ l ∧ k ≠ l := by
+    (h : 4 ≤ Fintype.card α) (i : α)
+    : ∃ j k l : α, i ≠ j ∧ i ≠ k ∧ i ≠ l ∧ j ≠ k ∧ j ≠ l ∧ k ≠ l := by
   classical
   have hcard : 3 ≤ (Finset.univ.erase i).card := by
     have h' := Finset.card_erase_add_one (s := Finset.univ) (a := i) (Finset.mem_univ i)
@@ -137,10 +137,13 @@ private theorem exists_three_ne_of_card {α : Type*} [Fintype α] [DecidableEq �
 
 /-- An element of the symmetric group centralizing the alternating group preserves
 the support of every 3-cycle, hence of every three-element set. -/
-private theorem map_three_subset_eq_of_mem_centralizer {α : Type*} [Fintype α] [DecidableEq α]
-    (x : Perm α) (hx : x ∈ Subgroup.centralizer ((alternatingGroup α : Subgroup (Perm α)) : Set (Perm α)))
-    {a b c : α} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
-    ({a, b, c} : Finset α).map x.toEmbedding = {a, b, c} := by
+private theorem map_three_subset_eq_of_mem_centralizer {α : Type*} [Fintype α]
+    [DecidableEq α] (x : Perm α)
+    (hx
+      : x
+        ∈ Subgroup.centralizer ((alternatingGroup α : Subgroup (Perm α)) : Set (Perm α)))
+    {a b c : α} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    : ({a, b, c} : Finset α).map x.toEmbedding = {a, b, c} := by
   -- the 3-cycle `swap a b * swap a c` lies in `Aₙ`, so `x` commutes with it; its
   -- support is preserved
   have hc : IsThreeCycle (Equiv.swap a b * Equiv.swap a c) :=
@@ -152,8 +155,9 @@ private theorem map_three_subset_eq_of_mem_centralizer {α : Type*} [Fintype α]
   have hxcx : x * (Equiv.swap a b * Equiv.swap a c) * x⁻¹ =
       Equiv.swap a b * Equiv.swap a c := by
     calc
-      x * (Equiv.swap a b * Equiv.swap a c) * x⁻¹ =
-          (Equiv.swap a b * Equiv.swap a c) * x * x⁻¹ := by rw [← hcomm]
+      x * (Equiv.swap a b * Equiv.swap a c) * x⁻¹
+          = (Equiv.swap a b * Equiv.swap a c) * x * x⁻¹ := by
+        rw [← hcomm]
       _ = Equiv.swap a b * Equiv.swap a c := by simp [mul_assoc]
   have hsup : (x * (Equiv.swap a b * Equiv.swap a c) * x⁻¹).support =
       (Equiv.swap a b * Equiv.swap a c).support := by rw [hxcx]
@@ -164,9 +168,10 @@ private theorem map_three_subset_eq_of_mem_centralizer {α : Type*} [Fintype α]
 /-- The centralizer of the alternating group in the symmetric group is trivial for
 `n ≥ 4`.  An element commuting with `Aₙ` commutes with every 3-cycle, hence
 preserves every three-element support, hence fixes each point. -/
-public theorem centralizer_alternatingGroup_eq_bot (n : ℕ) (hn : 4 ≤ n) :
-    Subgroup.centralizer ((alternatingGroup (Fin n) : Subgroup (Perm (Fin n))) : Set (Perm (Fin n))) =
-      ⊥ := by
+public theorem centralizer_alternatingGroup_eq_bot (n : ℕ) (hn : 4 ≤ n)
+    : Subgroup.centralizer
+        ((alternatingGroup (Fin n) : Subgroup (Perm (Fin n))) : Set (Perm (Fin n)))
+      = ⊥ := by
   apply le_antisymm
   · intro x hx
     apply (Subgroup.mem_bot).2
@@ -203,16 +208,17 @@ public theorem centralizer_alternatingGroup_eq_bot (n : ℕ) (hn : 4 ≤ n) :
 
 /-- An element of order `3` has cycle type `3^r` for some `r ≥ 1`: its cycles are
 exactly `r` disjoint 3-cycles. -/
-private theorem cycleType_of_order_three {α : Type*} [Fintype α] [DecidableEq α] (g : Perm α)
-    (hg : orderOf g = 3) : ∃ r : ℕ, 1 ≤ r ∧ g.cycleType = Multiset.replicate r 3 := by
+private theorem cycleType_of_order_three {α : Type*} [Fintype α] [DecidableEq α]
+    (g : Perm α) (hg : orderOf g = 3)
+    : ∃ r : ℕ, 1 ≤ r ∧ g.cycleType = Multiset.replicate r 3 := by
   have hp : (orderOf g).Prime := by rw [hg]; exact Nat.prime_three
   obtain ⟨k, hk⟩ := cycleType_prime_order (σ := g) hp
   refine ⟨k + 1, by omega, ?_⟩
   simpa [hg] using hk
 
 /-- `∏ i ∈ range n, (i+1) = n!`. -/
-private theorem prod_range_succ_eq_factorial (n : ℕ) :
-    (∏ i ∈ Finset.range n, (i + 1)) = n.factorial := by
+private theorem prod_range_succ_eq_factorial (n : ℕ)
+    : (∏ i ∈ Finset.range n, (i + 1)) = n.factorial := by
   induction n with
   | zero => simp
   | succ n ih =>
@@ -221,16 +227,17 @@ private theorem prod_range_succ_eq_factorial (n : ℕ) :
       ring
 
 /-- `(k+3)! = (k+3)(k+2)(k+1)k!`. -/
-private theorem factorial_add_three (k : ℕ) :
-    (k + 3).factorial = (k + 3) * (k + 2) * (k + 1) * k.factorial := by
+private theorem factorial_add_three (k : ℕ)
+    : (k + 3).factorial = (k + 3) * (k + 2) * (k + 1) * k.factorial := by
   rw [show k + 3 = (k + 2) + 1 by omega, Nat.factorial_succ]
   rw [show k + 2 = (k + 1) + 1 by omega, Nat.factorial_succ]
   rw [show k + 1 = k + 1 by rfl, Nat.factorial_succ]
   ring
 
 /-- `3 · #(3-cycles) = n(n-1)(n-2)` on `n` points. -/
-private theorem card_threeCycle (n : ℕ) (hn : 3 ≤ n) :
-    3 * (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card = n * (n - 1) * (n - 2) := by
+private theorem card_threeCycle (n : ℕ) (hn : 3 ≤ n)
+    : 3 * (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card
+      = n * (n - 1) * (n - 2) := by
   classical
   have h₁ : (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle) =
       (Finset.univ.filter fun g : Perm (Fin n) => g.cycleType = {3}) := by
@@ -239,15 +246,16 @@ private theorem card_threeCycle (n : ℕ) (hn : 3 ≤ n) :
   rw [h₁]
   have h₂ : (Finset.univ.filter fun g : Perm (Fin n) => g.cycleType = {3}).card =
       (3 - 1).factorial * n.choose 3 := by
-    simpa [Fintype.card_fin] using
-      (Equiv.Perm.card_of_cycleType_singleton (α := Fin n) (n := 3) (by norm_num)
-        (by simpa [Fintype.card_fin] using hn))
+    simpa [Fintype.card_fin]
+      using (Equiv.Perm.card_of_cycleType_singleton (α := Fin n) (n := 3) (by norm_num)
+              (by simpa [Fintype.card_fin] using hn))
   rw [h₂]
   -- 6·C(n,3) = n(n-1)(n-2)
   have h6 : 6 * n.choose 3 = n * (n - 1) * (n - 2) := by
     apply Nat.mul_right_cancel (Nat.factorial_pos (n - 3))
     calc
-      6 * n.choose 3 * (n - 3).factorial = n.choose 3 * (3 : ℕ).factorial * (n - 3).factorial := by
+      6 * n.choose 3 * (n - 3).factorial
+          = n.choose 3 * (3 : ℕ).factorial * (n - 3).factorial := by
         norm_num [Nat.factorial]
         exact Or.inl (by ring)
       _ = n.factorial := Nat.choose_mul_factorial_mul_factorial (k := 3) (n := n) hn
@@ -263,9 +271,10 @@ private theorem card_threeCycle (n : ℕ) (hn : 3 ≤ n) :
 /-- The size of the `Sₙ`-conjugacy class of an element of cycle type `3^r` times
 `(n-3r)! · 3^r · r!` is `n!`. -/
 private theorem card_isConj_replicate (n r : ℕ) {y : Perm (Fin n)}
-    (hy : y.cycleType = Multiset.replicate r 3) :
-    Fintype.card {h : Perm (Fin n) // IsConj y h} * ((n - 3 * r).factorial * 3 ^ r * r.factorial) =
-      n.factorial := by
+    (hy : y.cycleType = Multiset.replicate r 3)
+    : Fintype.card {h : Perm (Fin n) // IsConj y h}
+        * ((n - 3 * r).factorial * 3 ^ r * r.factorial)
+      = n.factorial := by
   classical
   have hsum : y.cycleType.sum = 3 * r := by
     rw [hy, Multiset.sum_replicate]
@@ -283,13 +292,14 @@ private theorem card_isConj_replicate (n r : ℕ) {y : Perm (Fin n)}
       simp [Multiset.count_replicate]
   have hc := Equiv.Perm.card_isConj_mul_eq (α := Fin n) y
   simpa [hsum, hprod, hfac, Nat.card_eq_fintype_card, Fintype.card_fin,
-    Fintype.card_subtype, mul_assoc, mul_comm, mul_left_comm] using hc
+    Fintype.card_subtype, mul_assoc, mul_comm, mul_left_comm]
+    using hc
 
 /-- The `Aₙ`-conjugacy class of `y` is at least half as large as its `Sₙ`-conjugacy
 class: the latter splits into at most two classes on restriction to `Aₙ`. -/
-private theorem card_class_A_ge_half {n : ℕ} (hn : 5 ≤ n) (y : alternatingGroup (Fin n)) :
-    Fintype.card {h : Perm (Fin n) // IsConj (y : Perm (Fin n)) h} ≤
-      2 * Fintype.card {z : alternatingGroup (Fin n) // IsConj y z} := by
+private theorem card_class_A_ge_half {n : ℕ} (hn : 5 ≤ n) (y : alternatingGroup (Fin n))
+    : Fintype.card {h : Perm (Fin n) // IsConj (y : Perm (Fin n)) h}
+      ≤ 2 * Fintype.card {z : alternatingGroup (Fin n) // IsConj y z} := by
   classical
   have : NeZero n := ⟨by omega⟩
   let τ : Perm (Fin n) := Equiv.swap 0 1
@@ -312,11 +322,13 @@ private theorem card_class_A_ge_half {n : ℕ} (hn : 5 ≤ n) (y : alternatingGr
       have hh := Classical.choose_spec (Finset.mem_filter.mp h.2).2
       have hw := Classical.choose_spec (Finset.mem_filter.mp w.2).2
       calc
-        (h.1 : Perm (Fin n)) = (ah : Perm (Fin n)) * (y : Perm (Fin n)) * (ah : Perm (Fin n))⁻¹ := by
+        (h.1 : Perm (Fin n))
+            = (ah : Perm (Fin n)) * (y : Perm (Fin n)) * (ah : Perm (Fin n))⁻¹ := by
           simpa [ah] using hh
         _ = (aw : Perm (Fin n)) * (y : Perm (Fin n)) * (aw : Perm (Fin n))⁻¹ := by
-          simpa [f, ah, aw] using
-            congrArg (fun t : alternatingGroup (Fin n) => (t : Perm (Fin n))) (congrArg Subtype.val hfw)
+          simpa [f, ah, aw]
+            using congrArg (fun t : alternatingGroup (Fin n) => (t : Perm (Fin n)))
+              (congrArg Subtype.val hfw)
         _ = (w.1 : Perm (Fin n)) := by
           simpa [aw] using hw.symm
     -- |class_A| ≤ |X|: the coercion is injective
@@ -381,10 +393,12 @@ private theorem card_class_A_ge_half {n : ℕ} (hn : 5 ≤ n) (y : alternatingGr
           _ = g * (y : Perm (Fin n)) * g⁻¹ := by simp
           _ = h := hg
   calc
-    Fintype.card {h : Perm (Fin n) // IsConj (y : Perm (Fin n)) h} =
-        ({h : Perm (Fin n) | IsConj (y : Perm (Fin n)) h} : Finset (Perm (Fin n))).card := by
+    Fintype.card {h : Perm (Fin n) // IsConj (y : Perm (Fin n)) h}
+        = ({h : Perm (Fin n) | IsConj (y : Perm (Fin n)) h}
+            : Finset (Perm (Fin n))).card := by
       rw [← Fintype.card_subtype (p := fun h : Perm (Fin n) => IsConj (y : Perm (Fin n)) h)]
-    _ ≤ (X ∪ X.image (fun h : Perm (Fin n) => τ * h * τ⁻¹)).card := Finset.card_le_card hcover
+    _ ≤ (X ∪ X.image (fun h : Perm (Fin n) => τ * h * τ⁻¹)).card :=
+      Finset.card_le_card hcover
     _ ≤ X.card + (X.image (fun h : Perm (Fin n) => τ * h * τ⁻¹)).card :=
       Finset.card_union_le X (X.image (fun h : Perm (Fin n) => τ * h * τ⁻¹))
     _ ≤ X.card + X.card := by
@@ -394,29 +408,41 @@ private theorem card_class_A_ge_half {n : ℕ} (hn : 5 ≤ n) (y : alternatingGr
 
 /-- Automorphisms of a group preserve the size of conjugacy classes. -/
 private theorem card_class_mulAut_eq {G : Type*} [Group G] [Fintype G] [DecidableEq G]
-    (φ : MulAut G) (x : G) :
-    Fintype.card {z : G // IsConj x z} = Fintype.card {z : G // IsConj (φ x) z} := by
+    (φ : MulAut G) (x : G)
+    : Fintype.card {z : G // IsConj x z} = Fintype.card {z : G // IsConj (φ x) z} := by
   classical
   exact Fintype.card_congr
-    { toFun := fun z => ⟨φ z.1, by
-        rcases z with ⟨z, hz⟩
-        rw [isConj_iff] at hz ⊢
-        rcases hz with ⟨g, hg⟩
-        refine ⟨φ g, ?_⟩
-        simpa [map_mul, map_inv] using congrArg φ hg⟩
-      invFun := fun z => ⟨φ.symm z.1, by
-        rcases z with ⟨z, hz⟩
-        rw [isConj_iff] at hz ⊢
-        rcases hz with ⟨g, hg⟩
-        refine ⟨φ.symm g, ?_⟩
-        simpa [map_mul, map_inv] using congrArg φ.symm hg⟩
+    {
+      toFun :=
+        fun z =>
+          ⟨
+            φ z.1,
+            by
+              rcases z with ⟨z, hz⟩
+              rw [isConj_iff] at hz ⊢
+              rcases hz with ⟨g, hg⟩
+              refine ⟨φ g, ?_⟩
+              simpa [map_mul, map_inv] using congrArg φ hg
+          ⟩
+      invFun :=
+        fun z =>
+          ⟨
+            φ.symm z.1,
+            by
+              rcases z with ⟨z, hz⟩
+              rw [isConj_iff] at hz ⊢
+              rcases hz with ⟨g, hg⟩
+              refine ⟨φ.symm g, ?_⟩
+              simpa [map_mul, map_inv] using congrArg φ.symm hg
+          ⟩
       left_inv := fun z => by ext; simp
-      right_inv := fun z => by ext; simp }
+      right_inv := fun z => by ext; simp
+    }
 
 /-- The factorial inequality behind the `n ≠ 6` exclusion:
 `2 · 3^(r-1) · r! · (n-3r)! < (n-3)!` for `r ≥ 2` and `n ≥ 7`. -/
-private theorem factorial_inequality {n r : ℕ} (hn : 7 ≤ n) (hr : 2 ≤ r) (h3r : 3 * r ≤ n) :
-    2 * 3 ^ (r - 1) * r.factorial * (n - 3 * r).factorial < (n - 3).factorial := by
+private theorem factorial_inequality {n r : ℕ} (hn : 7 ≤ n) (hr : 2 ≤ r) (h3r : 3 * r ≤ n)
+    : 2 * 3 ^ (r - 1) * r.factorial * (n - 3 * r).factorial < (n - 3).factorial := by
   have hsplit : (n - 3).factorial =
       (∏ i ∈ Finset.range (3 * r - 3), (n - 3 * r + i + 1)) * (n - 3 * r).factorial := by
     rw [← prod_range_succ_eq_factorial (n - 3), ← prod_range_succ_eq_factorial (n - 3 * r)]
@@ -482,24 +508,26 @@ private theorem factorial_inequality {n r : ℕ} (hn : 7 ≤ n) (hr : 2 ≤ r) (
                 (by omega : 0 < 3 * r - 2)
             have hmul : (3 * r) * (3 * r - 1) * (3 * r - 2) * (3 * r - 3).factorial >
                 (3 * r) * (3 * r - 1) * (3 * r - 2) * (2 * 3 ^ (r - 1) * r.factorial) := by
-              simpa [mul_assoc, mul_left_comm, mul_comm] using
-                Nat.mul_lt_mul_of_pos_right ih' hpos'
+              simpa [mul_assoc, mul_left_comm, mul_comm]
+                using Nat.mul_lt_mul_of_pos_right ih' hpos'
             have hge : (3 * r) * (3 * r - 1) * (3 * r - 2) * (2 * 3 ^ (r - 1) * r.factorial) ≥
                 3 * (r + 1) * (2 * 3 ^ (r - 1) * r.factorial) := by
               exact Nat.mul_le_mul hstep le_rfl
-            exact lt_of_le_of_lt hge (by simpa [mul_assoc, mul_left_comm, mul_comm] using hmul)
+            exact lt_of_le_of_lt hge
+              (by simpa [mul_assoc, mul_left_comm, mul_comm] using hmul)
     calc
       2 * 3 ^ (r - 1) * r.factorial * (n - 3 * r).factorial
-          < (3 * r - 3).factorial * (n - 3 * r).factorial := Nat.mul_lt_mul_of_pos_right hfac hpos
+          < (3 * r - 3).factorial * (n - 3 * r).factorial :=
+        Nat.mul_lt_mul_of_pos_right hfac hpos
       _ ≤ (∏ i ∈ Finset.range (3 * r - 3), (n - 3 * r + i + 1)) * (n - 3 * r).factorial :=
-          Nat.mul_le_mul_right (n - 3 * r).factorial htail
+        Nat.mul_le_mul_right (n - 3 * r).factorial htail
       _ = (n - 3).factorial := hsplit.symm
 
 /-- The `Aₙ`-conjugacy class of a 3-cycle is no larger than the set of 3-cycles. -/
-private theorem card_class_threeCycle_le {n : ℕ} (_hn : 3 ≤ n) (x : alternatingGroup (Fin n))
-    (hx : (x : Perm (Fin n)).IsThreeCycle) :
-    Fintype.card {z : alternatingGroup (Fin n) // IsConj x z} ≤
-      (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card := by
+private theorem card_class_threeCycle_le {n : ℕ} (_hn : 3 ≤ n)
+    (x : alternatingGroup (Fin n)) (hx : (x : Perm (Fin n)).IsThreeCycle)
+    : Fintype.card {z : alternatingGroup (Fin n) // IsConj x z}
+      ≤ (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card := by
   classical
   -- every conjugate of x is again a 3-cycle
   have hz : ∀ z : alternatingGroup (Fin n), IsConj x z → (z : Perm (Fin n)).IsThreeCycle := by
@@ -527,10 +555,10 @@ private theorem card_class_threeCycle_le {n : ℕ} (_hn : 3 ≤ n) (x : alternat
 
 /-- For `n ≥ 7`, the `Sₙ`-conjugacy class of an element of cycle type `3^r`, `r ≥ 2`,
 has more than twice as many elements as there are 3-cycles. -/
-private theorem card_class_replicate_gt (n r : ℕ) (hn : 7 ≤ n) (hr : 2 ≤ r) (h3r : 3 * r ≤ n)
-    {y : Perm (Fin n)} (hy : y.cycleType = Multiset.replicate r 3) :
-    2 * (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card <
-      Fintype.card {h : Perm (Fin n) // IsConj y h} := by
+private theorem card_class_replicate_gt (n r : ℕ) (hn : 7 ≤ n) (hr : 2 ≤ r)
+    (h3r : 3 * r ≤ n) {y : Perm (Fin n)} (hy : y.cycleType = Multiset.replicate r 3)
+    : 2 * (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card
+      < Fintype.card {h : Perm (Fin n) // IsConj y h} := by
   classical
   let T : ℕ := (Finset.univ.filter fun g : Perm (Fin n) => g.IsThreeCycle).card
   let B : ℕ := (n - 3 * r).factorial * 3 ^ r * r.factorial
@@ -538,8 +566,7 @@ private theorem card_class_replicate_gt (n r : ℕ) (hn : 7 ≤ n) (hr : 2 ≤ r
   -- 3T = n(n-1)(n-2) and S·B = n!
   have hT : 3 * T = n * (n - 1) * (n - 2) := by
     simpa [T] using card_threeCycle n (by omega)
-  have hS : S * B = n.factorial := by
-    simpa [S, B] using card_isConj_replicate n r hy
+  have hS : S * B = n.factorial := by simpa [S, B] using card_isConj_replicate n r hy
   -- the factorial inequality, multiplied by 3·n(n-1)(n-2): 2·P·B < 3·n!
   have hfi := factorial_inequality (n := n) (r := r) (by omega) hr h3r
   have hpow : 3 ^ r = 3 * 3 ^ (r - 1) := by
@@ -584,8 +611,8 @@ automorphism preserves element orders and conjugacy-class sizes; the 3-cycles ar
 the elements of order 3 whose `Sₙ`-class is the smallest possible. -/
 private theorem threeCycle_of_mulAut (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6)
     (φ : MulAut (alternatingGroup (Fin n))) {c : alternatingGroup (Fin n)}
-    (hc : (c : Perm (Fin n)).IsThreeCycle) :
-    ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle := by
+    (hc : (c : Perm (Fin n)).IsThreeCycle)
+    : ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle := by
   classical
   -- φ(c) has order 3
   have horder : orderOf ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)) = 3 := by
@@ -609,7 +636,8 @@ private theorem threeCycle_of_mulAut (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6)
       simp [mul_comm]
     have h3r : 3 * r ≤ n := by
       calc
-        3 * r = ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).support.card := hsup.symm
+        3 * r = ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).support.card :=
+          hsup.symm
         _ ≤ (Finset.univ : Finset (Fin n)).card := Finset.card_le_univ _
         _ = n := by simp
     have hn7 : 7 ≤ n := by
@@ -635,9 +663,9 @@ private theorem threeCycle_of_mulAut (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6)
 /-- The product of two 3-cycles `(a b c)(a b d)` sharing the pair `{a, b}` in the
 same direction is the double transposition `(a c)(b d)`. -/
 private theorem P_same {α : Type*} [DecidableEq α] {a b c d : α}
-    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (had : a ≠ d) (hbd : b ≠ d) (hcd : c ≠ d) :
-    (Equiv.swap a b * Equiv.swap b c) * (Equiv.swap a b * Equiv.swap b d) =
-      Equiv.swap a c * Equiv.swap b d := by
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (had : a ≠ d) (hbd : b ≠ d) (hcd : c ≠ d)
+    : (Equiv.swap a b * Equiv.swap b c) * (Equiv.swap a b * Equiv.swap b d)
+      = Equiv.swap a c * Equiv.swap b d := by
   ext x
   by_cases hx : x ∈ ({a, b, c, d} : Finset α)
   · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -651,8 +679,8 @@ private theorem P_same {α : Type*} [DecidableEq α] {a b c d : α}
 
 /-- Rotating a 3-cycle: `(a b c) = (b c a)` as swap products. -/
 private theorem threeCycle_rotate {α : Type*} [DecidableEq α] {a b c : α}
-    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
-    Equiv.swap a b * Equiv.swap b c = Equiv.swap b c * Equiv.swap c a := by
+    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c)
+    : Equiv.swap a b * Equiv.swap b c = Equiv.swap b c * Equiv.swap c a := by
   ext x
   by_cases hx : x ∈ ({a, b, c} : Finset α)
   · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -666,14 +694,15 @@ private theorem threeCycle_rotate {α : Type*} [DecidableEq α] {a b c : α}
 /-- For a 3-cycle `g`, the two points of the support other than `a` are `g a` and
 `g (g a)`. -/
 private theorem threeCycle_support_eq {α : Type*} [Fintype α] [DecidableEq α]
-    {g : Equiv.Perm α} (hg : g.IsThreeCycle) {a : α} (ha : a ∈ g.support) :
-    g.support = ({a, g a, g (g a)} : Finset α) :=
+    {g : Equiv.Perm α} (hg : g.IsThreeCycle) {a : α} (ha : a ∈ g.support)
+    : g.support = ({a, g a, g (g a)} : Finset α) :=
   hg.support_eq_iff_mem_support.mpr ha
 
 /-- Direction: for `a ∈ supp g`, `b ∈ supp g`, `a ≠ b`: `g a = b` or `g b = a`. -/
 private theorem threeCycle_direction {α : Type*} [Fintype α] [DecidableEq α]
     {g : Equiv.Perm α} (hg : g.IsThreeCycle) {a b : α}
-    (ha : a ∈ g.support) (hb : b ∈ g.support) (hab : a ≠ b) : g a = b ∨ g b = a := by
+    (ha : a ∈ g.support) (hb : b ∈ g.support) (hab : a ≠ b)
+    : g a = b ∨ g b = a := by
   have hsupp := hg.support_eq_iff_mem_support.mpr ha
   have h3 : g ^ 3 = 1 := by simpa [hg.orderOf] using pow_orderOf_eq_one g
   have h3a : (g ^ 3) a = a := by rw [h3]; simp
@@ -690,7 +719,8 @@ private theorem threeCycle_direction {α : Type*} [Fintype α] [DecidableEq α]
 equal. -/
 private theorem threeCycle_eq_of_agree {α : Type*} [Fintype α] [DecidableEq α]
     {g g' : Equiv.Perm α} (hg : g.IsThreeCycle) (hg' : g'.IsThreeCycle)
-    (hss : g.support = g'.support) {a : α} (ha : a ∈ g.support) (hga : g' a = g a) : g = g' := by
+    (hss : g.support = g'.support) {a : α} (ha : a ∈ g.support) (hga : g' a = g a)
+    : g = g' := by
   have ha' : a ∈ g'.support := by rwa [← hss]
   have hsupp := hg.support_eq_iff_mem_support.mpr ha
   have hnd' := hg'.nodup_iff_mem_support.mpr ha'
@@ -721,7 +751,8 @@ private theorem threeCycle_eq_of_agree {α : Type*} [Fintype α] [DecidableEq α
 
 /-- A 3-cycle satisfies `g⁻¹ = g * g`. -/
 private theorem threeCycle_inv_eq_sq {α : Type*} [Fintype α] [DecidableEq α]
-    {g : Equiv.Perm α} (hg : g.IsThreeCycle) : g⁻¹ = g * g := by
+    {g : Equiv.Perm α} (hg : g.IsThreeCycle)
+    : g⁻¹ = g * g := by
   apply inv_eq_of_mul_eq_one_left (a := g * g) (b := g)
   have h3 : g ^ 3 = 1 := by simpa [hg.orderOf] using pow_orderOf_eq_one g
   simpa [pow_succ, pow_two] using h3
@@ -729,7 +760,8 @@ private theorem threeCycle_inv_eq_sq {α : Type*} [Fintype α] [DecidableEq α]
 /-- Two 3-cycles with the same support are equal or inverse. -/
 private theorem threeCycle_eq_or_inv_of_support_eq {α : Type*} [Fintype α] [DecidableEq α]
     {g g' : Equiv.Perm α} (hg : g.IsThreeCycle) (hg' : g'.IsThreeCycle)
-    (hss : g.support = g'.support) : g = g' ∨ g = g'⁻¹ := by
+    (hss : g.support = g'.support)
+    : g = g' ∨ g = g'⁻¹ := by
   have hne : (g.support : Finset α).Nonempty := by
     rw [← Finset.card_pos, hg.card_support]
     norm_num
@@ -764,10 +796,16 @@ private theorem threeCycle_eq_or_inv_of_support_eq {α : Type*} [Fintype α] [De
 same direction: `x = (a b c)` and `y = (a b d)`. -/
 private theorem threeCycle_mul_order2 {α : Type*} [Fintype α] [DecidableEq α]
     {x y : Equiv.Perm α} (hx : x.IsThreeCycle) (hy : y.IsThreeCycle)
-    (hxy : orderOf (x * y) = 2) :
-    ∃ a b c d, a ≠ b ∧ a ≠ c ∧ b ≠ c ∧ a ≠ d ∧ b ≠ d ∧ c ≠ d ∧
-      x = Equiv.swap a b * Equiv.swap b c ∧
-      y = Equiv.swap a b * Equiv.swap b d := by
+    (hxy : orderOf (x * y) = 2)
+    : ∃ a b c d,
+        a ≠ b
+        ∧ a ≠ c
+        ∧ b ≠ c
+        ∧ a ≠ d
+        ∧ b ≠ d
+        ∧ c ≠ d
+        ∧ x = Equiv.swap a b * Equiv.swap b c
+        ∧ y = Equiv.swap a b * Equiv.swap b d := by
   have hsq : (x * y) * (x * y) = 1 := by simpa [hxy, pow_two] using pow_orderOf_eq_one (x * y)
   have hne_supp : x.support ≠ y.support := by
     intro hss
@@ -948,8 +986,8 @@ representations `(p, q, r)`, `(q, r, p)`, `(r, p, q)`. -/
 private theorem threeCycle_repr {α : Type*} [Fintype α] [DecidableEq α] {p q r a b c : α}
     (hpq : p ≠ q) (hqr : q ≠ r) (hrp : r ≠ p)
     (hab : a ≠ b) (hbc : b ≠ c) (hca : c ≠ a)
-    (h : Equiv.swap p q * Equiv.swap q r = Equiv.swap a b * Equiv.swap b c) :
-    a = p ∧ b = q ∧ c = r ∨ a = q ∧ b = r ∧ c = p ∨ a = r ∧ b = p ∧ c = q := by
+    (h : Equiv.swap p q * Equiv.swap q r = Equiv.swap a b * Equiv.swap b c)
+    : a = p ∧ b = q ∧ c = r ∨ a = q ∧ b = r ∧ c = p ∨ a = r ∧ b = p ∧ c = q := by
   classical
   have hmem : a ∈ (Equiv.swap p q * Equiv.swap q r).support := by
     rw [h]
@@ -980,7 +1018,8 @@ private theorem threeCycle_repr {α : Type*} [Fintype α] [DecidableEq α] {p q 
     have hc : c = r := by
       have h₁ := congrArg (fun t : Equiv.Perm α => t (t p)) h
       have h₂ : r = c := by
-        simpa [hpa, mul_apply, hqr_p, hbc_p, hpq_r, hpb_c, swap_apply_left, swap_apply_right]
+        simpa [hpa, mul_apply, hqr_p, hbc_p, hpq_r, hpb_c, swap_apply_left,
+          swap_apply_right]
           using h₁
       exact h₂.symm
     exact Or.inl ⟨hpa, hb, hc⟩
@@ -1000,7 +1039,8 @@ private theorem threeCycle_repr {α : Type*} [Fintype α] [DecidableEq α] {p q 
     have hc : c = p := by
       have h₁ := congrArg (fun t : Equiv.Perm α => t (t q)) h
       have h₂ : p = c := by
-        simpa [hqa, mul_apply, hqr_q, hpq_r, hbc_q, hqb_c, swap_apply_left, swap_apply_right]
+        simpa [hqa, mul_apply, hqr_q, hpq_r, hbc_q, hqb_c, swap_apply_left,
+          swap_apply_right]
           using h₁
       exact h₂.symm
     exact Or.inr (Or.inl ⟨hqa, hb, hc⟩)
@@ -1020,18 +1060,20 @@ private theorem threeCycle_repr {α : Type*} [Fintype α] [DecidableEq α] {p q 
     have hc : c = q := by
       have h₁ := congrArg (fun t : Equiv.Perm α => t (t r)) h
       have h₂ : q = c := by
-        simpa [hra, mul_apply, hqr_p', hbc_r, hrb_c, swap_apply_left, swap_apply_right] using h₁
+        simpa [hra, mul_apply, hqr_p', hbc_r, hrb_c, swap_apply_left, swap_apply_right]
+          using h₁
       exact h₂.symm
     exact Or.inr (Or.inr ⟨hra, hb, hc⟩)
 
 /-- An oriented pair of `(a b d)` never coincides with an oriented pair of `(p q t)`
 when `(p, q) = (b, c)` or `(c, a)` and `t` avoids `{a, b}`. -/
-private theorem no_common_oriented_pair {α : Type*} [DecidableEq α] {a b c d p q t u v : α}
-    (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (had : a ≠ d) (hbd : b ≠ d) (hcd : c ≠ d)
-    (hta : t ≠ a) (htb : t ≠ b)
+private theorem no_common_oriented_pair {α : Type*} [DecidableEq α]
+    {a b c d p q t u v : α} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) (had : a ≠ d)
+    (hbd : b ≠ d) (hcd : c ≠ d) (hta : t ≠ a) (htb : t ≠ b)
     (hpq : (p, q) = (b, c) ∨ (p, q) = (c, a))
     (hu : (u, v) = (a, b) ∨ (u, v) = (b, d) ∨ (u, v) = (d, a))
-    (hv : (u, v) = (p, q) ∨ (u, v) = (q, t) ∨ (u, v) = (t, p)) : False := by
+    (hv : (u, v) = (p, q) ∨ (u, v) = (q, t) ∨ (u, v) = (t, p))
+    : False := by
   have hpair : ((u, v) : α × α) ∈ ({(a, b), (b, d), (d, a)} : Finset (α × α)) := by
     rcases hu with hu | hu | hu <;> rcases (by simpa [Prod.ext_iff] using hu) with ⟨rfl, rfl⟩ <;> simp
   rcases hpq with hpq | hpq
@@ -1087,8 +1129,8 @@ private theorem threeCycle_star_anchor {α : Type*} [Fintype α] [DecidableEq α
     (hx : x.IsThreeCycle) (hy : y.IsThreeCycle) (hz : z.IsThreeCycle)
     (hxform : x = Equiv.swap a b * Equiv.swap b c)
     (hyform : y = Equiv.swap a b * Equiv.swap b d)
-    (hxz : orderOf (x * z) = 2) (hyz : orderOf (y * z) = 2) :
-    ∃ e : α, a ≠ e ∧ b ≠ e ∧ c ≠ e ∧ d ≠ e ∧ z = Equiv.swap a b * Equiv.swap b e := by
+    (hxz : orderOf (x * z) = 2) (hyz : orderOf (y * z) = 2)
+    : ∃ e : α, a ≠ e ∧ b ≠ e ∧ c ≠ e ∧ d ≠ e ∧ z = Equiv.swap a b * Equiv.swap b e := by
   classical
   obtain ⟨a', b', c', d', ha'b', ha'c', hb'c', ha'd', hb'd', hc'd', hxform', hzform'⟩ :=
     threeCycle_mul_order2 hx hz hxz
@@ -1164,10 +1206,13 @@ an injective third-point function `f`. -/
 private theorem threeCycle_family (n : ℕ) [NeZero n] (hn : 5 ≤ n)
     {h : points_off n hn → Perm (Fin n)}
     (h3c : ∀ i, (h i).IsThreeCycle)
-    (hord : ∀ i j, i ≠ j → orderOf (h i * h j) = 2) (hinj : Function.Injective h) :
-    ∃ a b : Fin n, a ≠ b ∧ ∃ f : points_off n hn → Fin n,
-      (∀ i, a ≠ f i ∧ b ≠ f i) ∧ Function.Injective f ∧
-      ∀ i, h i = Equiv.swap a b * Equiv.swap b (f i) := by
+    (hord : ∀ i j, i ≠ j → orderOf (h i * h j) = 2) (hinj : Function.Injective h)
+    : ∃ a b : Fin n,
+        a ≠ b
+        ∧ ∃ f : points_off n hn → Fin n,
+            (∀ i, a ≠ f i ∧ b ≠ f i)
+            ∧ Function.Injective f
+            ∧ ∀ i, h i = Equiv.swap a b * Equiv.swap b (f i) := by
   classical
   have h20 : (⟨2, by omega⟩ : Fin n) ≠ (0 : Fin n) := by
     intro h; have hv := congrArg Fin.val h; simp at hv
@@ -1230,7 +1275,8 @@ private theorem threeCycle_family (n : ℕ) [NeZero n] (hn : 5 ≤ n)
   · intro i j hij
     have hh : h i = h j := by
       calc
-        h i = Equiv.swap a b * Equiv.swap b (f i) := (Classical.choose_spec (hthird i)).2.2.1
+        h i = Equiv.swap a b * Equiv.swap b (f i) :=
+          (Classical.choose_spec (hthird i)).2.2.1
         _ = Equiv.swap a b * Equiv.swap b (f j) := by rw [hij]
         _ = h j := (Classical.choose_spec (hthird j)).2.2.1.symm
     exact hinj hh
@@ -1252,29 +1298,31 @@ private theorem fin_one_ne_zero {n : ℕ} [NeZero n] (hn : 2 ≤ n) : (1 : Fin n
   omega
 
 private theorem genPerm_isThreeCycle {n : ℕ} [NeZero n] (hn : 2 ≤ n) {i : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) : (genPerm n i).IsThreeCycle := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1)
+    : (genPerm n i).IsThreeCycle := by
   have h10 : (1 : Fin n) ≠ 0 := fin_one_ne_zero hn
   have h01 : (0 : Fin n) ≠ 1 := h10.symm
   have h1i : (1 : Fin n) ≠ i := hi1.symm
   have h0i : (0 : Fin n) ≠ i := hi0.symm
-  simpa [genPerm, swap_comm] using
-    (Equiv.Perm.isThreeCycle_swap_mul_swap_same (a := (1 : Fin n)) (b := (0 : Fin n))
-      (c := i) h10 h1i h0i)
+  simpa [genPerm, swap_comm]
+    using (Equiv.Perm.isThreeCycle_swap_mul_swap_same (a := (1 : Fin n))
+            (b := (0 : Fin n)) (c := i) h10 h1i h0i)
 
 private theorem genPerm_mem_alternatingGroup {n : ℕ} [NeZero n] (hn : 2 ≤ n) {i : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) : genPerm n i ∈ alternatingGroup (Fin n) := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1)
+    : genPerm n i ∈ alternatingGroup (Fin n) := by
   rw [Equiv.Perm.mem_alternatingGroup]
   exact (genPerm_isThreeCycle hn hi0 hi1).sign
 
 /-- The generator `(0 1 i)` as an element of `Aₙ`. -/
-private def gen (n : ℕ) [NeZero n] (hn : 2 ≤ n) (i : Fin n) (hi0 : i ≠ 0) (hi1 : i ≠ 1) :
-    alternatingGroup (Fin n) :=
+private def gen (n : ℕ) [NeZero n] (hn : 2 ≤ n) (i : Fin n) (hi0 : i ≠ 0) (hi1 : i ≠ 1)
+    : alternatingGroup (Fin n) :=
   ⟨genPerm n i, genPerm_mem_alternatingGroup hn hi0 hi1⟩
 
 /-- The support of the generator `(0 1 i)` is `{0, 1, i}`. -/
 private theorem genPerm_support {n : ℕ} [NeZero n] (hn : 2 ≤ n) {i : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) :
-    (genPerm n i).support = ({0, 1, i} : Finset (Fin n)) := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1)
+    : (genPerm n i).support = ({0, 1, i} : Finset (Fin n)) := by
   -- (0 1 i) = swap 0 1 * swap 1 i = swap 0 i * swap 0 1, whose support is {0, 1, i}
   have h01 : (0 : Fin n) ≠ 1 := fin_one_ne_zero hn |>.symm
   have h0i : (0 : Fin n) ≠ i := hi0.symm
@@ -1300,16 +1348,17 @@ private theorem genPerm_support {n : ℕ} [NeZero n] (hn : 2 ≤ n) {i : Fin n}
 /-- The product of two generators `(0 1 i)(0 1 j)` is the double transposition
 `(0 i)(1 j)`; in particular it has order 2. -/
 private theorem gen_mul_order2 {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j) :
-    orderOf (genPerm n i * genPerm n j) = 2 := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j)
+    : orderOf (genPerm n i * genPerm n j) = 2 := by
   have h01 : (0 : Fin n) ≠ 1 := fin_one_ne_zero (by omega) |>.symm
   have h0i : (0 : Fin n) ≠ i := hi0.symm
   have h1i : (1 : Fin n) ≠ i := hi1.symm
   have h0j : (0 : Fin n) ≠ j := hj0.symm
   have h1j : (1 : Fin n) ≠ j := hj1.symm
   have hprod : genPerm n i * genPerm n j = Equiv.swap (0 : Fin n) i * Equiv.swap 1 j := by
-    simpa [genPerm] using
-      (P_same (a := (0 : Fin n)) (b := (1 : Fin n)) (c := i) (d := j) h01 h0i h1i h0j h1j hij)
+    simpa [genPerm]
+      using (P_same (a := (0 : Fin n)) (b := (1 : Fin n)) (c := i) (d := j) h01 h0i h1i
+              h0j h1j hij)
   have hsq : (genPerm n i * genPerm n j) * (genPerm n i * genPerm n j) = 1 := by
     rw [hprod]
     ext x
@@ -1334,8 +1383,8 @@ private theorem gen_mul_order2 {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
 
 /-- The two generators `(0 1 i)` and `(0 1 j)` are distinct for `i ≠ j`. -/
 private theorem genPerm_ne {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j) :
-    genPerm n i ≠ genPerm n j := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j)
+    : genPerm n i ≠ genPerm n j := by
   intro h
   apply hij
   -- the two 3-cycles have different supports: {0, 1, i} vs {0, 1, j}
@@ -1355,8 +1404,8 @@ private theorem genPerm_ne {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
 
 /-- A generator is not the inverse of another: `(0 1 i) ≠ (0 1 j)⁻¹` for `i ≠ j`. -/
 private theorem genPerm_ne_inv {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j) :
-    genPerm n i ≠ (genPerm n j)⁻¹ := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j)
+    : genPerm n i ≠ (genPerm n j)⁻¹ := by
   intro h
   have h1 : genPerm n i * genPerm n j = 1 := by
     rw [h]
@@ -1372,8 +1421,8 @@ private theorem genPerm_ne_inv {n : ℕ} [NeZero n] (hn : 3 ≤ n) {i j : Fin n}
 
 /-- Disjoint transpositions commute. -/
 private theorem swap_commute_disjoint {α : Type*} [DecidableEq α] {a b c d : α}
-    (hac : a ≠ c) (had : a ≠ d) (hbc : b ≠ c) (hbd : b ≠ d) :
-    Equiv.swap a b * Equiv.swap c d = Equiv.swap c d * Equiv.swap a b := by
+    (hac : a ≠ c) (had : a ≠ d) (hbc : b ≠ c) (hbd : b ≠ d)
+    : Equiv.swap a b * Equiv.swap c d = Equiv.swap c d * Equiv.swap a b := by
   ext x
   by_cases hx : x ∈ ({a, b, c, d} : Finset α)
   · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -1387,12 +1436,13 @@ private theorem swap_commute_disjoint {α : Type*} [DecidableEq α] {a b c d : �
 
 /-- `(0 i 1) = (0 1 i)²`. -/
 private theorem W2 {n : ℕ} [NeZero n] {i : Fin n} (hn : 2 ≤ n)
-    (h0i : (0 : Fin n) ≠ i) (h1i : (1 : Fin n) ≠ i) :
-    Equiv.swap (0 : Fin n) i * Equiv.swap i 1 = genPerm n i * genPerm n i := by
+    (h0i : (0 : Fin n) ≠ i) (h1i : (1 : Fin n) ≠ i)
+    : Equiv.swap (0 : Fin n) i * Equiv.swap i 1 = genPerm n i * genPerm n i := by
   have hg : (genPerm n i).IsThreeCycle := genPerm_isThreeCycle hn h0i.symm h1i.symm
   have h10 : (1 : Fin n) ≠ 0 := fin_one_ne_zero hn
   calc
-    Equiv.swap (0 : Fin n) i * Equiv.swap i 1 = Equiv.swap 1 i * Equiv.swap (0 : Fin n) 1 := by
+    Equiv.swap (0 : Fin n) i * Equiv.swap i 1
+        = Equiv.swap 1 i * Equiv.swap (0 : Fin n) 1 := by
       ext x
       by_cases hx : x ∈ ({0, 1, i} : Finset (Fin n))
       · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -1411,21 +1461,27 @@ private theorem W2 {n : ℕ} [NeZero n] {i : Fin n} (hn : 2 ≤ n)
 /-- The product of two generators is the double transposition `(0 x)(1 y)`. -/
 private theorem gen_mul_double {n : ℕ} [NeZero n] {x y : Fin n}
     (h01 : (0 : Fin n) ≠ 1) (hx0 : x ≠ 0) (hx1 : x ≠ 1) (hy0 : y ≠ 0) (hy1 : y ≠ 1)
-    (hxy : x ≠ y) : genPerm n x * genPerm n y = Equiv.swap (0 : Fin n) x * Equiv.swap 1 y := by
-  simpa [genPerm] using (P_same (a := (0 : Fin n)) (b := (1 : Fin n)) (c := x) (d := y)
-    h01 hx0.symm hx1.symm hy0.symm hy1.symm hxy)
+    (hxy : x ≠ y)
+    : genPerm n x * genPerm n y = Equiv.swap (0 : Fin n) x * Equiv.swap 1 y := by
+  simpa [genPerm]
+    using (P_same (a := (0 : Fin n)) (b := (1 : Fin n)) (c := x) (d := y)
+            h01 hx0.symm hx1.symm hy0.symm hy1.symm hxy)
 
 /-- `(0 j)(1 b)(0 i)(1 b) = (0 j)(0 i)`. -/
 private theorem W3b {n : ℕ} [NeZero n] {i j b : Fin n}
     (h01 : (0 : Fin n) ≠ 1) (h1i : (1 : Fin n) ≠ i)
-    (hb0 : b ≠ (0 : Fin n)) (hbi : b ≠ i) :
-    (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b) * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) =
-      Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i := by
+    (hb0 : b ≠ (0 : Fin n)) (hbi : b ≠ i)
+    : (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b)
+        * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b)
+      = Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i := by
   calc
-    (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b) * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) =
-        Equiv.swap (0 : Fin n) j * ((Equiv.swap 1 b * Equiv.swap (0 : Fin n) i) * Equiv.swap 1 b) := by
+    (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b)
+          * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b)
+        = Equiv.swap (0 : Fin n) j
+          * ((Equiv.swap 1 b * Equiv.swap (0 : Fin n) i) * Equiv.swap 1 b) := by
       group
-    _ = Equiv.swap (0 : Fin n) j * ((Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) * Equiv.swap 1 b) := by
+    _ = Equiv.swap (0 : Fin n) j
+        * ((Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) * Equiv.swap 1 b) := by
       congr 1
       exact congrArg (fun t : Equiv.Perm (Fin n) => t * Equiv.swap 1 b)
         (swap_commute_disjoint (a := (1 : Fin n)) (b := b) (c := (0 : Fin n)) (d := i)
@@ -1435,9 +1491,9 @@ private theorem W3b {n : ℕ} [NeZero n] {i j b : Fin n}
 
 /-- `(0 j)(0 i) = (0 i j)` as swap products. -/
 private theorem W3c {n : ℕ} [NeZero n] {i j : Fin n} (h0i : (0 : Fin n) ≠ i)
-    (h0j : (0 : Fin n) ≠ j) (hij : i ≠ j) :
-    Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i =
-      Equiv.swap (0 : Fin n) i * Equiv.swap i j := by
+    (h0j : (0 : Fin n) ≠ j) (hij : i ≠ j)
+    : Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i
+      = Equiv.swap (0 : Fin n) i * Equiv.swap i j := by
   ext x
   by_cases hx : x ∈ ({0, i, j} : Finset (Fin n))
   · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -1452,14 +1508,16 @@ private theorem W3c {n : ℕ} [NeZero n] {i j : Fin n} (h0i : (0 : Fin n) ≠ i)
 private theorem W3 {n : ℕ} [NeZero n] {i j b : Fin n}
     (h01 : (0 : Fin n) ≠ 1) (h0i : (0 : Fin n) ≠ i) (h1i : (1 : Fin n) ≠ i)
     (h0j : (0 : Fin n) ≠ j) (h1j : (1 : Fin n) ≠ j) (hij : i ≠ j)
-    (hb0 : b ≠ (0 : Fin n)) (hb1 : b ≠ (1 : Fin n)) (hbi : b ≠ i) (hbj : b ≠ j) :
-    Equiv.swap (0 : Fin n) i * Equiv.swap i j =
-      genPerm n j * genPerm n b * genPerm n i * genPerm n b := by
+    (hb0 : b ≠ (0 : Fin n)) (hb1 : b ≠ (1 : Fin n)) (hbi : b ≠ i) (hbj : b ≠ j)
+    : Equiv.swap (0 : Fin n) i * Equiv.swap i j
+      = genPerm n j * genPerm n b * genPerm n i * genPerm n b := by
   calc
-    Equiv.swap (0 : Fin n) i * Equiv.swap i j =
-        Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i := (W3c h0i h0j hij).symm
-    _ = (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b) * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) :=
-        (W3b h01 h1i hb0 hbi).symm
+    Equiv.swap (0 : Fin n) i * Equiv.swap i j
+        = Equiv.swap (0 : Fin n) j * Equiv.swap (0 : Fin n) i :=
+      (W3c h0i h0j hij).symm
+    _ = (Equiv.swap (0 : Fin n) j * Equiv.swap 1 b)
+        * (Equiv.swap (0 : Fin n) i * Equiv.swap 1 b) :=
+      (W3b h01 h1i hb0 hbi).symm
     _ = genPerm n j * genPerm n b * genPerm n i * genPerm n b := by
       rw [← gen_mul_double h01 h0j.symm h1j.symm hb0 hb1 hbj.symm]
       rw [← gen_mul_double h01 h0i.symm h1i.symm hb0 hb1 hbi.symm]
@@ -1469,9 +1527,10 @@ private theorem W3 {n : ℕ} [NeZero n] {i j b : Fin n}
 private theorem W5 {n : ℕ} [NeZero n] {i j k : Fin n}
     (h0i : (0 : Fin n) ≠ i) (h0j : (0 : Fin n) ≠ j) (h0k : (0 : Fin n) ≠ k)
     (h1i : (1 : Fin n) ≠ i) (h1j : (1 : Fin n) ≠ j) (h1k : (1 : Fin n) ≠ k)
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
-    Equiv.swap i j * Equiv.swap j k =
-      (Equiv.swap (0 : Fin n) i * Equiv.swap i j) * (Equiv.swap (0 : Fin n) j * Equiv.swap j k) := by
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
+    : Equiv.swap i j * Equiv.swap j k
+      = (Equiv.swap (0 : Fin n) i * Equiv.swap i j)
+        * (Equiv.swap (0 : Fin n) j * Equiv.swap j k) := by
   ext x
   by_cases hx : x ∈ ({0, i, j, k} : Finset (Fin n))
   · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -1486,13 +1545,14 @@ private theorem W5 {n : ℕ} [NeZero n] {i j k : Fin n}
 /-- `(1 i j) = (0 1 j)² (0 1 i)` for `i, j ≥ 2` distinct. -/
 private theorem W6 {n : ℕ} [NeZero n] {i j : Fin n} (h01 : (0 : Fin n) ≠ 1)
     (h1i : (1 : Fin n) ≠ i) (h1j : (1 : Fin n) ≠ j) (h0i : (0 : Fin n) ≠ i)
-    (h0j : (0 : Fin n) ≠ j) (hij : i ≠ j) :
-    Equiv.swap (1 : Fin n) i * Equiv.swap i j =
-      (genPerm n j * genPerm n j) * genPerm n i := by
+    (h0j : (0 : Fin n) ≠ j) (hij : i ≠ j)
+    : Equiv.swap (1 : Fin n) i * Equiv.swap i j
+      = (genPerm n j * genPerm n j) * genPerm n i := by
   calc
-    Equiv.swap (1 : Fin n) i * Equiv.swap i j =
-        (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 j) * (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 j) *
-          (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 i) := by
+    Equiv.swap (1 : Fin n) i * Equiv.swap i j
+        = (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 j)
+          * (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 j)
+          * (Equiv.swap (0 : Fin n) 1 * Equiv.swap 1 i) := by
       ext x
       by_cases hx : x ∈ ({0, 1, i, j} : Finset (Fin n))
       · simp only [Finset.mem_insert, Finset.mem_singleton] at hx
@@ -1510,7 +1570,8 @@ private theorem W6 {n : ℕ} [NeZero n] {i j : Fin n} (h01 : (0 : Fin n) ≠ 1)
 
 /-- A finite set of size smaller than the ambient type misses a point. -/
 private theorem exists_ne_of_card_lt {α : Type*} [Fintype α] [DecidableEq α]
-    (s : Finset α) (hs : s.card < Fintype.card α) : ∃ x : α, x ∉ s := by
+    (s : Finset α) (hs : s.card < Fintype.card α)
+    : ∃ x : α, x ∉ s := by
   by_contra h
   push Not at h
   have hsu : s = Finset.univ := Finset.eq_univ_iff_forall.mpr h
@@ -1522,15 +1583,14 @@ private theorem exists_ne_of_card_lt {α : Type*} [Fintype α] [DecidableEq α]
 /-- For `n ≥ 5` and points `i, j ∉ {0, 1}` distinct, there is a point outside
 `{0, 1, i, j}`. -/
 private theorem exists_ne_card_four {n : ℕ} [NeZero n] (hn : 5 ≤ n) (i j : Fin n)
-    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j) :
-    ∃ b : Fin n, b ≠ 0 ∧ b ≠ 1 ∧ b ≠ i ∧ b ≠ j := by
+    (hi0 : i ≠ 0) (hi1 : i ≠ 1) (hj0 : j ≠ 0) (hj1 : j ≠ 1) (hij : i ≠ j)
+    : ∃ b : Fin n, b ≠ 0 ∧ b ≠ 1 ∧ b ≠ i ∧ b ≠ j := by
   have h01 : (0 : Fin n) ≠ 1 := fin_one_ne_zero (by omega) |>.symm
   have h1i : (1 : Fin n) ≠ i := hi1.symm
   have h1j : (1 : Fin n) ≠ j := hj1.symm
   have hcard : ({0, 1, i, j} : Finset (Fin n)).card = 4 := by
     calc
-      ({0, 1, i, j} : Finset (Fin n)).card =
-          ({1, i, j} : Finset (Fin n)).card + 1 :=
+      ({0, 1, i, j} : Finset (Fin n)).card = ({1, i, j} : Finset (Fin n)).card + 1 :=
         Finset.card_insert_of_notMem (by simp [h01, hi0.symm, hj0.symm])
       _ = ({i, j} : Finset (Fin n)).card + 1 + 1 := by
         rw [Finset.card_insert_of_notMem (by simp [h1i, h1j])]
@@ -1550,8 +1610,10 @@ private theorem exists_ne_card_four {n : ℕ} [NeZero n] (hn : 5 ≤ n) (i j : F
 
 /-- Every 3-cycle belongs to the closure of the generators `(0 1 i)`. -/
 private theorem isThreeCycle_mem_closure_gen {n : ℕ} [NeZero n] (hn : 5 ≤ n)
-    {g : Perm (Fin n)} (hg : g.IsThreeCycle) :
-    g ∈ Subgroup.closure (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1) := by
+    {g : Perm (Fin n)} (hg : g.IsThreeCycle)
+    : g
+      ∈ Subgroup.closure
+          (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1) := by
   classical
   let S : Set (Perm (Fin n)) := Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1
   have hgen_mem : ∀ i : Fin n, i ≠ 0 → i ≠ 1 → genPerm n i ∈ Subgroup.closure S := by
@@ -1757,9 +1819,9 @@ private theorem isThreeCycle_mem_closure_gen {n : ℕ} [NeZero n] (hn : 5 ≤ n)
         (hgen_mem (g a) hga_0 hga_1)) (hgen_mem b' hb'0 hb'1))
 
 /-- The generators `(0 1 i)` generate `Aₙ`. -/
-private theorem gen_closure_eq_alternatingGroup {n : ℕ} [NeZero n] (hn : 5 ≤ n) :
-    Subgroup.closure (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1) =
-      alternatingGroup (Fin n) := by
+private theorem gen_closure_eq_alternatingGroup {n : ℕ} [NeZero n] (hn : 5 ≤ n)
+    : Subgroup.closure (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1)
+      = alternatingGroup (Fin n) := by
   apply le_antisymm
   · exact (Subgroup.closure_le (alternatingGroup (Fin n))).mpr (by
       intro g hg
@@ -1779,8 +1841,9 @@ private theorem gen_closure_eq_alternatingGroup {n : ℕ} [NeZero n] (hn : 5 ≤
 subgroup `Aₙ` as well. -/
 private theorem closure_alternatingGroup_eq_top_of_generates {n : ℕ} [NeZero n]
     {S : Set (Perm (Fin n))} (hS : S ⊆ alternatingGroup (Fin n))
-    (hgen : Subgroup.closure S = alternatingGroup (Fin n)) :
-    (Subgroup.closure (Subtype.val ⁻¹' S) : Subgroup (alternatingGroup (Fin n))) = ⊤ := by
+    (hgen : Subgroup.closure S = alternatingGroup (Fin n))
+    : (Subgroup.closure (Subtype.val ⁻¹' S) : Subgroup (alternatingGroup (Fin n)))
+      = ⊤ := by
   let f : alternatingGroup (Fin n) →* Perm (Fin n) :=
     Subgroup.subtype (alternatingGroup (Fin n))
   let K : Subgroup (alternatingGroup (Fin n)) := Subgroup.closure (Subtype.val ⁻¹' S)
@@ -1805,10 +1868,13 @@ private theorem closure_alternatingGroup_eq_top_of_generates {n : ℕ} [NeZero n
     rwa [← hkx]
 
 /-- The generators `(0 1 i)` generate the whole of `Aₙ` as a subgroup. -/
-private theorem gen_closure_alternatingGroup_eq_top {n : ℕ} [NeZero n] (hn : 5 ≤ n) :
-    (Subgroup.closure (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} =>
-      (gen n (by omega) i.1 i.2.1 i.2.2 : alternatingGroup (Fin n))) :
-      Subgroup (alternatingGroup (Fin n))) = ⊤ := by
+private theorem gen_closure_alternatingGroup_eq_top {n : ℕ} [NeZero n] (hn : 5 ≤ n)
+    : (Subgroup.closure
+          (Set.range
+            fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} =>
+              (gen n (by omega) i.1 i.2.1 i.2.2 : alternatingGroup (Fin n)))
+        : Subgroup (alternatingGroup (Fin n)))
+      = ⊤ := by
   have hS : (Set.range fun i : {i : Fin n // i ≠ 0 ∧ i ≠ 1} => genPerm n i.1) ⊆
       alternatingGroup (Fin n) := by
     intro g hg
@@ -1830,15 +1896,15 @@ private theorem gen_closure_alternatingGroup_eq_top {n : ℕ} [NeZero n] (hn : 5
       change (gen n (by omega) i.1 i.2.1 i.2.2 : Perm (Fin n)) = (a : Perm (Fin n))
       exact congrArg (fun x : alternatingGroup (Fin n) => (x : Perm (Fin n))) hi
   rw [← hpre]
-  exact closure_alternatingGroup_eq_top_of_generates hS (gen_closure_eq_alternatingGroup hn)
+  exact closure_alternatingGroup_eq_top_of_generates hS
+    (gen_closure_eq_alternatingGroup hn)
 
 /- The main theorem -/
 
 /-- The kernel of the conjugation action on a normal subgroup is its
 centralizer in the ambient group. -/
-private theorem conjNormal_ker_local {G : Type u} [Group G]
-    {K : Subgroup G} [K.Normal] :
-    (MulAut.conjNormal (H := K)).ker = Subgroup.centralizer (K : Set G) := by
+private theorem conjNormal_ker_local {G : Type u} [Group G] {K : Subgroup G} [K.Normal]
+    : (MulAut.conjNormal (H := K)).ker = Subgroup.centralizer (K : Set G) := by
   ext x
   rw [MonoidHom.mem_ker]
   constructor
@@ -1865,9 +1931,10 @@ private theorem conjNormal_ker_local {G : Type u} [Group G]
       _ = (k : G) := by simp [mul_assoc]
 
 /-- The conjugation map `Sₙ → Aut(Aₙ)` is injective for `n ≥ 4`. -/
-public theorem conjNormal_injective_alternatingGroup (n : ℕ) (hn : 4 ≤ n) :
-    Function.Injective (MulAut.conjNormal (H := alternatingGroup (Fin n)) :
-      Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
+public theorem conjNormal_injective_alternatingGroup (n : ℕ) (hn : 4 ≤ n)
+    : Function.Injective
+        (MulAut.conjNormal (H := alternatingGroup (Fin n))
+          : Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
   apply (MonoidHom.ker_eq_bot_iff _).mp
   rw [conjNormal_ker_local]
   exact centralizer_alternatingGroup_eq_bot n (by omega)
@@ -1878,10 +1945,11 @@ permutation of the point set (`n ≥ 5`).  This is the surjectivity half of Theo
 `n = 6` the hypothesis is supplied by composing with the exceptional automorphism. -/
 private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
     (φ : MulAut (alternatingGroup (Fin n)))
-    (hφ : ∀ c : alternatingGroup (Fin n), (c : Perm (Fin n)).IsThreeCycle →
-      ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle) :
-    ∃ σ : Perm (Fin n),
-      φ = MulAut.conjNormal (H := alternatingGroup (Fin n)) σ := by
+    (hφ
+      : ∀ c : alternatingGroup (Fin n),
+          (c : Perm (Fin n)).IsThreeCycle
+          → ((φ c : alternatingGroup (Fin n)) : Perm (Fin n)).IsThreeCycle)
+    : ∃ σ : Perm (Fin n), φ = MulAut.conjNormal (H := alternatingGroup (Fin n)) σ := by
   classical
   have : NeZero n := ⟨by omega⟩
   -- the images of the generators `(0 1 i)` under φ form a 3-cycle family
@@ -1889,8 +1957,9 @@ private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
     fun i => (φ (gen n (by omega) i.1 i.2.1 i.2.2) : Perm (Fin n))
   have h3c : ∀ i, (h i).IsThreeCycle := by
     intro i
-    simpa [h, gen] using
-      hφ (gen n (by omega) i.1 i.2.1 i.2.2) (genPerm_isThreeCycle (by omega) i.2.1 i.2.2)
+    simpa [h, gen]
+      using hφ (gen n (by omega) i.1 i.2.1 i.2.2)
+        (genPerm_isThreeCycle (by omega) i.2.1 i.2.2)
   have hord : ∀ i j, i ≠ j → orderOf (h i * h j) = 2 := by
     intro i j hij
     have hne : i.1 ≠ j.1 := by
@@ -1899,15 +1968,19 @@ private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
       apply Subtype.ext
       exact h
     calc
-      orderOf (h i * h j) =
-          orderOf ((φ (gen n (by omega) i.1 i.2.1 i.2.2 * gen n (by omega) j.1 j.2.1 j.2.2) :
-            alternatingGroup (Fin n)) : Perm (Fin n)) := by
+      orderOf (h i * h j)
+          = orderOf
+              ((φ (gen n (by omega) i.1 i.2.1 i.2.2 * gen n (by omega) j.1 j.2.1 j.2.2)
+                  : alternatingGroup (Fin n))
+                : Perm (Fin n)) := by
         simp [h, map_mul, Subgroup.coe_mul]
-      _ = orderOf (gen n (by omega) i.1 i.2.1 i.2.2 * gen n (by omega) j.1 j.2.1 j.2.2) := by
+      _ = orderOf
+            (gen n (by omega) i.1 i.2.1 i.2.2 * gen n (by omega) j.1 j.2.1 j.2.2) := by
         rw [Subgroup.orderOf_coe, MulEquiv.orderOf_eq]
       _ = 2 := by
         rw [← Subgroup.orderOf_coe]
-        simpa [gen, Subgroup.coe_mul] using gen_mul_order2 (by omega) i.2.1 i.2.2 j.2.1 j.2.2 hne
+        simpa [gen, Subgroup.coe_mul]
+          using gen_mul_order2 (by omega) i.2.1 i.2.2 j.2.1 j.2.2 hne
   have hinj : Function.Injective h := by
     intro i j hij
     have hgi : (φ (gen n (by omega) i.1 i.2.1 i.2.2) : Perm (Fin n)) =
@@ -1918,7 +1991,8 @@ private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
       apply Subtype.ext
       exact hgi
     have hperm : genPerm n i.1 = genPerm n j.1 := by
-      simpa [gen] using congrArg (fun t : alternatingGroup (Fin n) => (t : Perm (Fin n))) hg
+      simpa [gen]
+        using congrArg (fun t : alternatingGroup (Fin n) => (t : Perm (Fin n))) hg
     have hne : i.1 = j.1 := by
       by_contra h
       exact genPerm_ne (by omega) i.2.1 i.2.2 j.2.1 j.2.2 h hperm
@@ -1984,20 +2058,24 @@ private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
     calc
       (φ (gen n (by omega) i.1 i.2.1 i.2.2) : Perm (Fin n)) = h i := rfl
       _ = Equiv.swap a b * Equiv.swap b (f i) := hfam i
-      _ = Equiv.swap (σe (0 : Fin n)) (σe (1 : Fin n)) *
-          Equiv.swap (σe (1 : Fin n)) (σe i.1) := by
+      _ = Equiv.swap (σe (0 : Fin n)) (σe (1 : Fin n))
+          * Equiv.swap (σe (1 : Fin n)) (σe i.1) := by
         rw [hσ0, hσ1, hσi]
-      _ = σe * Equiv.swap (0 : Fin n) (1 : Fin n) * σe⁻¹ *
-          (σe * Equiv.swap (1 : Fin n) i.1 * σe⁻¹) := by
+      _ = σe
+          * Equiv.swap (0 : Fin n) (1 : Fin n)
+          * σe⁻¹
+          * (σe * Equiv.swap (1 : Fin n) i.1 * σe⁻¹) := by
         rw [← conj_swap σe (0 : Fin n) (1 : Fin n)]
         rw [← conj_swap σe (1 : Fin n) i.1]
-      _ = σe * (Equiv.swap (0 : Fin n) (1 : Fin n) *
-          Equiv.swap (1 : Fin n) i.1) * σe⁻¹ := by
+      _ = σe
+          * (Equiv.swap (0 : Fin n) (1 : Fin n) * Equiv.swap (1 : Fin n) i.1)
+          * σe⁻¹ := by
         group
       _ = σe * genPerm n i.1 * σe⁻¹ := by
         simp [genPerm]
       _ = (MulAut.conjNormal (H := alternatingGroup (Fin n)) σe
-          (gen n (by omega) i.1 i.2.1 i.2.2) : Perm (Fin n)) := by
+              (gen n (by omega) i.1 i.2.1 i.2.2)
+            : Perm (Fin n)) := by
         rw [MulAut.conjNormal_apply]
         simp [gen]
   -- the equalizer of φ and conjNormal σe contains the generators, hence all of Aₙ
@@ -2043,9 +2121,10 @@ private theorem aut_of_preserves_threeCycle (n : ℕ) (hn : 5 ≤ n)
 /-- GLS vol. 3, Theorem 5.2.1: for `n ≥ 5`, `n ≠ 6`, the conjugation map
 `Sₙ → Aut(Aₙ)` is bijective.  (Surjectivity: Milestones 3–4 of
 `task-aut-alternating.md`.) -/
-public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6) :
-    Function.Bijective (MulAut.conjNormal (H := alternatingGroup (Fin n)) :
-      Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
+public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6 : n ≠ 6)
+    : Function.Bijective
+        (MulAut.conjNormal (H := alternatingGroup (Fin n))
+          : Perm (Fin n) →* MulAut (alternatingGroup (Fin n))) := by
   refine ⟨conjNormal_injective_alternatingGroup n (by omega), ?_⟩
   -- surjectivity (Milestones 3–4): the automorphism maps the class of 3-cycles to
   -- itself (Milestone 3), hence is conjugation by a permutation (Milestone 4)
@@ -2057,7 +2136,6 @@ public theorem aut_alternatingGroup_bijective_conj (n : ℕ) (hn : 5 ≤ n) (hn6
   rcases aut_of_preserves_threeCycle n hn φ hφ with ⟨σ, hσ⟩
   refine ⟨σ, ?_⟩
   exact hσ.symm
-
 
 end AutAlternating
 

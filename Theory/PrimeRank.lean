@@ -16,13 +16,17 @@ open scoped IsMulCommutative
 
 /-- The `q`-rank of a finite group: the maximal generator rank of an abelian
 `q`-subgroup. -/
-@[expose] public noncomputable def primeRank
-    (q : ℕ) (G : Type*) [Group G] : ℕ :=
-  sSup {n : ℕ | ∃ A : Subgroup G,
-    IsPGroup q A ∧ IsMulCommutative A ∧
-      ∃ hA : Group.FG A, n ≤ @Group.rank A inferInstance hA}
+@[expose]
+public noncomputable def primeRank (q : ℕ) (G : Type*) [Group G] : ℕ :=
+  sSup
+    {n : ℕ |
+      ∃ A : Subgroup G,
+        IsPGroup q A
+        ∧ IsMulCommutative A
+        ∧ ∃ hA : Group.FG A, n ≤ @Group.rank A inferInstance hA
+    }
 
 /-- The rank of a finite group: the maximal `q`-rank over primes `q`. -/
-@[expose] public noncomputable def groupRank
-    (G : Type*) [Group G] : ℕ :=
+@[expose]
+public noncomputable def groupRank (G : Type*) [Group G] : ℕ :=
   sSup {n : ℕ | ∃ q : ℕ, q.Prime ∧ n ≤ primeRank q G}

@@ -17,7 +17,6 @@ public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
-namespace Representation
 
 open _root_.Representation
 open Representation
@@ -27,9 +26,12 @@ open Module.End
 open Polynomial
 open scoped DirectSum
 open scoped BigOperators
-open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
+open scoped TensorProduct
+
+namespace Representation
+
 /-
 **Kind**: Theorem
 **Note**: Proposition 2.4
@@ -67,12 +69,12 @@ public def intertwiningSubmodule
     carrier := {X : _root_.Module.End R M | A * X = X * B}
     add_mem' := by
       intro X Y hX hY
-      simp_all only [Set.mem_setOf_eq]
+      simp_all only [Set.mem_ofPred_eq]
       rw [mul_add, hX, hY, add_mul]
-    zero_mem' := by simp only [Set.mem_setOf_eq, mul_zero, zero_mul]
+    zero_mem' := by simp only [Set.mem_ofPred_eq, mul_zero, zero_mul]
     smul_mem' := by
       intro r X hX
-      simp_all only [Set.mem_setOf_eq]
+      simp_all only [Set.mem_ofPred_eq]
       rw [mul_smul_comm, hX, smul_mul_assoc]
   }
 
