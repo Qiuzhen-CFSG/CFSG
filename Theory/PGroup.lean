@@ -14,10 +14,9 @@ Public items:
 - `quotient_subgroup_eq_bot_or_top_of_coatom`
 - `card_quotient_coatom_eq_prime`
 
-It also re-exports `Theory.ElementaryAbelian.Basic`.
+It also re-exports `Basic`.
 -/
 
-namespace Theory.PGroup
 
 /-- Maximal subgroups of finite p-groups are normal. -/
 public lemma coatom_normal_of_isPGroup {R : Type*} [Group R] [Finite R] {p : ℕ} [Fact p.Prime]
@@ -96,4 +95,3 @@ public lemma card_quotient_coatom_eq_prime {R : Type*} [Group R] [Finite R]
   have hn_eq_one : n = 1 := by omega
   simp [hn, hn_eq_one]
 
-end Theory.PGroup

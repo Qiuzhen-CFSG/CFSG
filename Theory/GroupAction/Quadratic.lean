@@ -2,7 +2,6 @@ module
 
 public import Theory.GroupAction.Defs
 
-namespace Theory.GroupAction
 
 /-- A quadratic action fixes its first action-commutator subgroup pointwise. -/
 public theorem commutatorAction_le_fixedPoints_of_commutatorAction₂_eq_bot
@@ -18,5 +17,4 @@ public theorem commutatorAction_le_fixedPoints_of_commutatorAction₂_eq_bot
     rw [hquadratic] at hdelta
     simpa using hdelta
 
-end Theory.GroupAction
   exact (eq_of_inv_mul_eq_one hone).symm

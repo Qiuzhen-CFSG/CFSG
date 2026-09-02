@@ -15,12 +15,10 @@ noncomputable section
 open scoped BigOperators AlgebraMonoidAlgebra Matrix.Module
 open MonoidAlgebra
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
@@ -650,4 +648,3 @@ public theorem classFunction_span_irreducible_characters
     rw [blockCharacters_orthonormal (G := G), if_neg hne] at hnorm
     exact zero_ne_one hnorm
 
-end Theory.Character

@@ -17,7 +17,7 @@ public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -27,7 +27,7 @@ open scoped BigOperators
 open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
-namespace Theory.Representation
+namespace Representation
 section Main
 
 /- # General Results on Representations -/
@@ -121,7 +121,7 @@ theorem proposition_2_2_restrictionConjEquiv_apply (x : G) (w : W) :
     proposition_2_2_restrictionConjEquiv H iota x w = iota x⁻¹ w := rfl
 
 noncomputable def proposition_2_2_twistMap (x : G) :
-    Module.End F (Theory.Representation.RepMap rho (proposition_2_2_sigma H iota)) := by
+    Module.End F (Representation.RepMap rho (proposition_2_2_sigma H iota)) := by
   refine
     { toFun := ?_
       map_add' := ?_
@@ -151,7 +151,7 @@ public noncomputable def proposition_2_2_a_apply
     iota.comp H.subtype ≃ₗ rho := by
   classical
   let : Nontrivial V := Subrepresentation.irreducible_module_nontrivial rho
-  let u0 : Theory.Representation.RepMap rho (proposition_2_2_sigma H iota) :=
+  let u0 : Representation.RepMap rho (proposition_2_2_sigma H iota) :=
     (proposition_2_2_subrepInclusion H iota phi).comp f.toRepMap
   have hu0_ne : u0 ≠ 0 := by
     apply RepMap.ne_zero_of_injective
@@ -281,7 +281,7 @@ public noncomputable def proposition_2_2_a_apply
           congrArg Subrepresentation.toSubmodule hpsi
         _ = (⊥ : Submodule F W) := rfl
     apply hu_ne
-    apply Theory.Representation.RepMap.toLinearMap_injective
+    apply Representation.RepMap.toLinearMap_injective
     exact LinearMap.range_eq_bot.mp hSbot
   have hpsi_top : psi = ⊤ := by
     rcases (inferInstance : IsIrreducible iota).eq_bot_or_eq_top psi with hbot | htop
@@ -346,7 +346,7 @@ theorem p22b_repMapRangeNeBotOfNeZero
     f.range ≠ ⊥ := by
   intro hbot
   apply hf
-  apply Theory.Representation.RepMap.toLinearMap_injective
+  apply Representation.RepMap.toLinearMap_injective
   apply LinearMap.range_eq_bot.mp
   calc
     f.toLinearMap.range = f.range.toSubmodule := rfl
@@ -468,7 +468,7 @@ def p22b_funEval (ρ : Representation F H V) (g : G) :
     change f (g * h.val) =
       ρ ⟨(g : G) * h.val * (g : G)⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩ (f g)
-    simpa [Theory.Representation.conjugateRep_apply, mul_assoc] using
+    simpa [Representation.conjugateRep_apply, mul_assoc] using
       f.2
         ⟨(g : G) * h.val * (g : G)⁻¹,
           Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩
@@ -847,7 +847,7 @@ theorem p22b_conjugateRep_irreducible
       (ρ := ρ) (σ := conjugateRep ρ g) e
       (by
         intro h v
-        simp [e, Theory.Representation.conjugateRep_apply, mul_assoc])
+        simp [e, Representation.conjugateRep_apply, mul_assoc])
       inferInstance
 
 theorem p22b_funCosetSubrep_irreducible
@@ -998,4 +998,4 @@ public theorem proposition_2_2_b
 
 end Main
 
-end Theory.Representation
+end Representation

@@ -22,7 +22,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -476,6 +476,6 @@ public theorem permutedBasis_fixedSubspace_finrank_eq_orbitQuotient_card
   rw [LinearEquiv.finrank_eq
     (permutedBasisInvariantsLinearEquivRespectful rho b hb)]
   exact quotientFunctionsLinearEquivRespectful_finrank F iota _
-end Theory.Representation
+end Representation
 
 

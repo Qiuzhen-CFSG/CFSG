@@ -9,7 +9,7 @@ public import Theory.Representation.SubrepresentationLattice
 open scoped TensorProduct
 open scoped MonoidAlgebra
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -83,4 +83,4 @@ variable {ρ} {σ}
 
 end AbsolutelyIrreducibleRep
 
-end Theory.Representation
+end Representation

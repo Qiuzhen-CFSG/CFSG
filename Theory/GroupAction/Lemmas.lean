@@ -8,11 +8,9 @@ import Mathlib.Tactic.Basic
 public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
 
-open Theory.GroupAction
 
 open scoped commutatorElement
 
-namespace Theory.GroupAction
 
 public theorem semidirect_comm_inl_inv_inr {G A : Type*} [Group G] [Group A] (φ : A →* MulAut G)
     (a : A) (g : G) :
@@ -339,4 +337,3 @@ public theorem actsTrivially_of_isPGroup_on_cyclic_prime_order
 
 end PGroupAction
 
-end Theory.GroupAction

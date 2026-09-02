@@ -22,7 +22,6 @@ open scoped BigOperators
 
 attribute [local instance] Fintype.ofFinite
 
-namespace Theory.Character
 
 variable {G : Type*} [Group G]
 
@@ -152,4 +151,3 @@ public theorem classFunctionInner_toConjClassFunction_right {G : Type*} [Group G
   exact classFunctionInner_toConjClassFunction phi (ofConjClassFunction chi)
     hphi (ofConjClassFunction_isClassFunction chi)
 
-end Theory.Character

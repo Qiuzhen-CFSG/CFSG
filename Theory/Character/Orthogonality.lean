@@ -25,10 +25,9 @@ open scoped BigOperators
 
 attribute [local instance] Fintype.ofFinite
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
 universe u
 
@@ -63,13 +62,10 @@ public theorem irreducibleCharacter_self {φ : ClassFunction G} (hφ : IsIrreduc
   rw [Representation.char_orthonormal (ρ := ρ) (σ := ρ)]
   rw [if_pos ⟨Representation.Equiv.refl ρ⟩]
 
-end Theory.Character
 
 /-! ## Completeness and orthogonality for ConjClasses-based characters -/
 
-namespace Theory.Character
 
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
@@ -113,7 +109,7 @@ private lemma classFunctionInner_characterClassFunction
   congr 1
   refine Finset.sum_congr rfl ?_
   intro g _hg
-  rw [(Theory.Representation.representation_character_inv_eq_star_character σ g).symm]
+  rw [(Representation.representation_character_inv_eq_star_character σ g).symm]
 
 private lemma completeFamily_orthonormal {ι : Type*} [Fintype ι] [DecidableEq ι]
     {χ : ι → ConjClassFunction G} (hχ : IsCompleteIrreducibleCharacterFamily χ)
@@ -496,4 +492,3 @@ public theorem exists_completeIrreducibleCharacterFamily_sum_degree_normSq
     · exact hcomplex
   exact Complex.ofReal_injective hrealCast
 
-end Theory.Character

@@ -2,7 +2,6 @@ module
 
 public import Theory.ElementaryAbelian.Basic
 
-namespace Theory.ElementaryAbelian
 
 /-- An extraspecial `p`-group has center of order `p`, elementary abelian central quotient, and
 nontrivial central quotient. -/
@@ -38,4 +37,3 @@ public theorem IsExtraspecial.isPGroup (p : ℕ) [Fact p.Prime] (G : Type*) [Gro
   exact IsPGroup.of_normal_qotient (Subgroup.center G) (IsExtraspecial.center_isPGroup p G)
     (IsExtraspecial.quotient_isPGroup p G)
 
-end Theory.ElementaryAbelian

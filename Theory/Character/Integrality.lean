@@ -19,7 +19,6 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 universe u v
 
@@ -155,4 +154,3 @@ public theorem character_value_isIntegral {G : Type u} [Group G] [Fintype G]
     rw [← map_pow, pow_orderOf_eq_one, map_one]
   exact eigen_value_isIntegral_of_pow_eq_one (orderOf_pos g) hf hz
 
-end Theory.Character

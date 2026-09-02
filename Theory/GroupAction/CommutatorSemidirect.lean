@@ -5,7 +5,6 @@ public import Theory.GroupAction.Defs
 
 open scoped Pointwise commutatorElement
 
-namespace Theory.GroupAction
 
 variable {G A : Type*} [Group G] [Group A] [MulDistribMulAction A G]
 
@@ -79,4 +78,3 @@ public theorem commutatorSubgroup_map_semidirect_inl_eq_commutator
       simpa [inv_inv, b', Subgroup.smul_def] using hcomm b' g⁻¹
     simpa [hcomm'] using hmem
 
-end Theory.GroupAction

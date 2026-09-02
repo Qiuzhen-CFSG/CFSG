@@ -26,7 +26,6 @@ Public items:
   factors are acted on trivially.
 -/
 
-namespace Theory.GroupAction
 
 /-- A subgroup `H ≤ G` is `A`-invariant if it is fixed under the pointwise action. -/
 public class IsInvariant (A : Type*) (G : Type*) [Group G] [SMul A G] (H : Subgroup G) : Prop where
@@ -353,4 +352,3 @@ public def StabilizesNormalSeries {G A : Type*} [Group G] [Group A]
     [MulDistribMulAction A G] {ι : Type*} (Gi : ι → Subgroup G) (next : ι → ι) : Prop :=
   IsStabilizingNormalSeries (G := G) (A := A) Gi next
 
-end Theory.GroupAction

@@ -131,7 +131,7 @@ public noncomputable def kerBaseChangeEquiv
   exact e0.trans (LinearEquiv.ofEq _ _ (baseChange_ker_eq T))
 end LinearMap
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -742,14 +742,14 @@ public theorem repEquiv_of_extendScalars
     Module.finBasis F V
   let bW : Module.Basis (Fin (Module.finrank F V)) F W :=
     (Module.finBasis F W).reindex (finCongr hdim.symm)
-  let : Module F (rho →ₗ sigma) := Theory.Representation.RepMap.instModule rho sigma
+  let : Module F (rho →ₗ sigma) := Representation.RepMap.instModule rho sigma
   let : Module.Finite F (rho →ₗ sigma) :=
     Module.Finite.of_injective
       (IntertwiningMap.toLinearMapl (ρ := rho) (σ := sigma))
       (IntertwiningMap.toLinearMap_injective rho sigma)
   let : Module.Free F (rho →ₗ sigma) :=
     @Module.Free.of_divisionRing F (rho →ₗ sigma) _ _
-      (Theory.Representation.RepMap.instModule rho sigma)
+      (Representation.RepMap.instModule rho sigma)
   let b : Module.Basis (Fin (Module.finrank F (rho →ₗ sigma))) F
       (rho →ₗ sigma) := Module.finBasis F (rho →ₗ sigma)
   let q := intertwiningMapBaseChangeEquiv (E := S) rho sigma
@@ -804,4 +804,4 @@ public theorem repEquiv_of_extendScalars
   exact repEquiv_of_intertwinerDeterminantPolynomial_ne_zero
     rho sigma bV bW b hp
 end DeterminantSpecialization
-end Theory.Representation
+end Representation

@@ -9,12 +9,10 @@ public import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 public import Mathlib.NumberTheory.Niven
 public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
-open Theory.Character
 
 noncomputable section
 
@@ -674,4 +672,3 @@ public theorem irreducible_dimension_dvd_group_order
 
 end
 
-end Theory.Character

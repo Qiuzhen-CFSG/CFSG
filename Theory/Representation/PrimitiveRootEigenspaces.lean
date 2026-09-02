@@ -17,10 +17,10 @@ public import Theory.Representation.BlockElementaryMap
 public import Theory.Representation.ConjugateRep
 public import Theory.Representation.EndFieldRep
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -1735,4 +1735,4 @@ public theorem proposition_2_4_k
       nlinarith
     exact Or.inr (by exact_mod_cast hpos0')
 
-end Theory.Representation
+end Representation

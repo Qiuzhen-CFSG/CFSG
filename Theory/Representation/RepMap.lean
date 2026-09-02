@@ -9,7 +9,7 @@ public import Theory.Representation.SubrepresentationLattice
 open Function
 open scoped MonoidAlgebra
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 

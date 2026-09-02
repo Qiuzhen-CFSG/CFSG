@@ -27,7 +27,6 @@ noncomputable section
 open scoped BigOperators
 open Polynomial
 
-namespace Theory.Character
 
 
 /-! ## The order `ℤ[η]` and congruence in it -/
@@ -471,4 +470,3 @@ public theorem prime_dvd_int_of_congruent_zero_mod_one_sub
     exact quotient_integral_of_dvd_in_cyclotomicOrder hη hdiv_complex
   exact prime_dvd_int_of_integral_power_quotient hp n hquot_int
 
-end Theory.Character

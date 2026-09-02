@@ -6,15 +6,11 @@ public import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 # Projective special linear group in dimension two
 
 The concrete `PSL(2, K)` matrix-group model, copied from
-`GorensteinWalter.Classification.PSL2` and exposed as `Theory.PSL2`.
+`GorensteinWalter.Classification.PSL2` and exposed as `PSL2`.
 -/
-
-namespace Theory
 
 universe u
 
 /-- `PSL(2, K)`. -/
 public abbrev PSL2 (K : Type u) [CommRing K] :=
   Matrix.ProjectiveSpecialLinearGroup (Fin 2) K
-
-end Theory

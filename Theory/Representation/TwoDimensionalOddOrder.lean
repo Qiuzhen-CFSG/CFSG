@@ -23,10 +23,7 @@ public import Mathlib.GroupTheory.Nilpotent
 public import Theory.Representation.ConjugateRep
 
 open _root_.Representation
-open Theory.Representation
-open Theory.GroupAction
-open Theory.PGroup
-open Theory.ElementaryAbelian
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -37,7 +34,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped commutatorElement
-namespace Theory.Representation
+namespace Representation
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.6
@@ -55,7 +52,7 @@ lemma top_eq_sylow_zero
     {G : Type*} [Group G]
     {p : ℕ} (hp : p = 0) (C : Sylow p G) :
     ⊤ = C.toSubgroup :=
-  C.is_maximal' (fun g ↦ ⟨1, by rw [pow_one, hp, pow_zero]⟩) fun _ _ ↦ trivial
+  C.is_maximal' (fun g ↦ ⟨1, by rw [pow_one, hp, pow_zero]⟩) fun _ _ ↦ by simp
 
 lemma card_not_dvd_sylow_eq_bot
     {G : Type*} [Group G] [Finite G]
@@ -368,7 +365,7 @@ lemma pGroup_fix_nonzero_vector
       exact w.prop m hm
   obtain ⟨n, hn⟩ := IsPGroup.exists_card_eq hp
   exact Exists.casesOn (this n ⊤ (hn.symm ▸ Subgroup.card_top)) fun w h ↦
-      And.casesOn h fun l r ↦ Exists.intro w ⟨l, fun g ↦ r g trivial⟩
+      And.casesOn h fun l r ↦ Exists.intro w ⟨l, fun g ↦ r g (by simp)⟩
 
 lemma nontrivial_of_finrank_eq_two
     {F V : Type*} [Field F] [AddCommGroup V] [Module F V] [FiniteDimensional F V]
@@ -707,7 +704,7 @@ public theorem theorem_2_6_b
     by_cases! hGs : Gs = ⊥
     -- G* = ⊥
     · have h : Subgroup.center G = ⊤ := by
-        apply le_antisymm; exact Subgroup.toSubmonoid_le.mp fun _ _ ↦ trivial
+        apply le_antisymm; exact Subgroup.toSubmonoid_le.mp fun _ _ ↦ by simp
         intro h _
         rw [Subgroup.mem_center_iff]
         intro g
@@ -820,7 +817,7 @@ public theorem theorem_2_6_b
                 have htop : (C : Subgroup H) = ⊤ := by
                   simpa using (top_eq_sylow_zero hchar0 C).symm
                 rw [htop] at hCcomm
-                exact setLike_mul_comm (s := (⊤ : Subgroup H)) trivial trivial
+                exact setLike_mul_comm (s := (⊤ : Subgroup H)) (by simp) (by simp)
               · have : Fact (Nat.Prime (ringChar F)) := ringChar_prime hchar0
                 have hQH_disj_C : Disjoint QH (C : Subgroup H) :=
                   IsPGroup.disjoint_of_ne q (ringChar F) hq_ne_char QH (C : Subgroup H) hQH_p C.isPGroup'
@@ -1764,9 +1761,10 @@ public theorem theorem_2_6_a
   refine IsMulCommutative.mk <| Std.Commutative.mk <| fun a b ↦ ?_
   by_cases h : ringChar F = 0
   · rw [← top_eq_sylow_zero h] at hC
-    exact setLike_mul_comm (s := (⊤ : Subgroup G)) trivial trivial
+    exact setLike_mul_comm (s := (⊤ : Subgroup G)) (by simp) (by simp)
   · have : Fact (ringChar F).Prime := ringChar_prime h
     rw [card_not_dvd_sylow_eq_bot hc, commutator_def, Subgroup.commutator_le] at hC'
-    exact commutatorElement_eq_one_iff_mul_comm.mp (hi (congrArg ρ (hC' a trivial b trivial)))
+    exact commutatorElement_eq_one_iff_mul_comm.mp
+      (hi (congrArg ρ (hC' a (by simp) b (by simp))))
 
-end Theory.Representation
+end Representation

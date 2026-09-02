@@ -17,7 +17,7 @@ constituents occur with equal multiplicities.
 noncomputable section
 
 open scoped DirectSum MonoidAlgebra
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -48,18 +48,18 @@ private theorem iSup_conjugateSubrepresentations_eq_top
     (hrho : Representation.IsIrreducible rho)
     (W : Subrepresentation (rho.comp H.subtype))
     (hW : Representation.IsIrreducible W.toRepresentation) :
-    (⨆ g : G, Theory.Representation.conjugateSubrepresentation rho H W g) = ⊤ := by
+    (⨆ g : G, Representation.conjugateSubrepresentation rho H W g) = ⊤ := by
   let rhoH : Representation F H V := rho.comp H.subtype
   let U : G → Subrepresentation rhoH :=
-    fun g => Theory.Representation.conjugateSubrepresentation rho H W g
+    fun g => Representation.conjugateSubrepresentation rho H W g
   have hstable (x : G) :
-      Theory.Representation.conjugateSubrepresentationOrderIso rho H x (⨆ g, U g) ≤
+      Representation.conjugateSubrepresentationOrderIso rho H x (⨆ g, U g) ≤
         ⨆ g, U g := by
     rw [OrderIso.map_iSup]
     refine iSup_le fun g => ?_
     rw [show U g =
-      Theory.Representation.conjugateSubrepresentationOrderIso rho H g⁻¹ W by simp [U]]
-    rw [← Theory.Representation.conjugateSubrepresentationOrderIso_mul]
+      Representation.conjugateSubrepresentationOrderIso rho H g⁻¹ W by simp [U]]
+    rw [← Representation.conjugateSubrepresentationOrderIso_mul]
     refine le_iSup_of_le ((x * g⁻¹)⁻¹) ?_
     simp [U]
   let T : Subrepresentation rho := {
@@ -67,7 +67,7 @@ private theorem iSup_conjugateSubrepresentations_eq_top
     apply_mem_toSubmodule x v hv := by
       have hvmap : rho x v ∈ Submodule.map (rho x) (⨆ g, U g).toSubmodule :=
         ⟨v, hv, rfl⟩
-      rw [← Theory.Representation.conjugateSubrepresentationOrderIso_toSubmodule] at hvmap
+      rw [← Representation.conjugateSubrepresentationOrderIso_toSubmodule] at hvmap
       exact hstable x hvmap
   }
   have hWatom : IsAtom W :=
@@ -102,7 +102,7 @@ private noncomputable def isaacs_6_5_ofSubmodule'_repEquiv
     (e : U ≃ₗ[MonoidAlgebra F G] W) :
     (Subrepresentation.ofSubmodule' U).toRepresentation ≃ₗ
       (Subrepresentation.ofSubmodule' W).toRepresentation := by
-  refine Theory.Representation.RepEquiv.mk (e.restrictScalars F) ?_
+  refine Representation.RepEquiv.mk (e.restrictScalars F) ?_
   intro g
   apply LinearMap.ext
   intro v
@@ -143,7 +143,7 @@ private theorem isaacs_6_5_nonempty_repEquiv_iff_asSubmodule_linearEquiv
     let eMod : U.toRepresentation.asModule ≃ₗ[MonoidAlgebra F G]
         W.toRepresentation.asModule :=
       LinearEquiv.ofBijective
-        (Theory.Representation.RepMap.equivLinearMapAsModule
+        (Representation.RepMap.equivLinearMapAsModule
           U.toRepresentation W.toRepresentation e.toRepMap)
         e.bijective
     let f : U.asSubmodule →ₗ[MonoidAlgebra F G] W.asSubmodule := {
@@ -197,24 +197,24 @@ private theorem isaacs_6_5_nonempty_repEquiv_conjugateOrderIso_iff
     (x : G) (U W : Subrepresentation (rho.comp H.subtype)) :
     Nonempty (U.toRepresentation ≃ₗ W.toRepresentation) ↔
       Nonempty
-        ((Theory.Representation.conjugateSubrepresentationOrderIso rho H x U).toRepresentation ≃ₗ
-          (Theory.Representation.conjugateSubrepresentationOrderIso rho H x W).toRepresentation) := by
+        ((Representation.conjugateSubrepresentationOrderIso rho H x U).toRepresentation ≃ₗ
+          (Representation.conjugateSubrepresentationOrderIso rho H x W).toRepresentation) := by
   constructor
   · rintro ⟨e⟩
-    exact ⟨Theory.Representation.conjugateSubrepresentationOrderIsoRepEquiv rho H e x⟩
+    exact ⟨Representation.conjugateSubrepresentationOrderIsoRepEquiv rho H e x⟩
   · rintro ⟨e⟩
     let e' :=
-      Theory.Representation.conjugateSubrepresentationOrderIsoRepEquiv rho H e x⁻¹
+      Representation.conjugateSubrepresentationOrderIsoRepEquiv rho H e x⁻¹
     have hU :
-        Theory.Representation.conjugateSubrepresentationOrderIso rho H x⁻¹
-            (Theory.Representation.conjugateSubrepresentationOrderIso rho H x U) = U := by
-      rw [← Theory.Representation.conjugateSubrepresentationOrderIso_mul]
+        Representation.conjugateSubrepresentationOrderIso rho H x⁻¹
+            (Representation.conjugateSubrepresentationOrderIso rho H x U) = U := by
+      rw [← Representation.conjugateSubrepresentationOrderIso_mul]
       apply Subrepresentation.toSubmodule_injective
       simp [Module.End.one_eq_id]
     have hW :
-        Theory.Representation.conjugateSubrepresentationOrderIso rho H x⁻¹
-            (Theory.Representation.conjugateSubrepresentationOrderIso rho H x W) = W := by
-      rw [← Theory.Representation.conjugateSubrepresentationOrderIso_mul]
+        Representation.conjugateSubrepresentationOrderIso rho H x⁻¹
+            (Representation.conjugateSubrepresentationOrderIso rho H x W) = W := by
+      rw [← Representation.conjugateSubrepresentationOrderIso_mul]
       apply Subrepresentation.toSubmodule_injective
       simp [Module.End.one_eq_id]
     rw [hU, hW] at e'
@@ -230,21 +230,21 @@ public theorem isaacs_theorem_6_5
     (hW : Representation.IsIrreducible W.toRepresentation) :
     ∃ n : ℕ, ∃ g : Fin n → G,
       DirectSum.IsInternal (fun i : Fin n =>
-        (Theory.Representation.conjugateSubrepresentation rho H W (g i)).asSubmodule) ∧
+        (Representation.conjugateSubrepresentation rho H W (g i)).asSubmodule) ∧
       (∀ i : Fin n, Representation.IsIrreducible
-        (Theory.Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation) ∧
+        (Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation) ∧
       (∀ i : Fin n, Nonempty
-        ((Theory.Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ
-          Theory.Representation.conjugateRep (G := G) (H := H) W.toRepresentation (g i))) ∧
+        ((Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ
+          Representation.conjugateRep (G := G) (H := H) W.toRepresentation (g i))) ∧
       ∀ {M : Type*} [AddCommGroup M] [Module F M]
         (sigma : Representation F H M),
         (∃ x : G, Nonempty (sigma ≃ₗ
-          Theory.Representation.conjugateRep (G := G) (H := H) W.toRepresentation x)) →
+          Representation.conjugateRep (G := G) (H := H) W.toRepresentation x)) →
         Nat.card {i : Fin n // Nonempty
-          ((Theory.Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ
+          ((Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ
             W.toRepresentation)} =
         Nat.card {i : Fin n // Nonempty
-          ((Theory.Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ sigma)} := by
+          ((Representation.conjugateSubrepresentation rho H W (g i)).toRepresentation ≃ₗ sigma)} := by
   classical
   let : Fintype G := Fintype.ofFinite G
   let rhoH : Representation F H V := rho.comp H.subtype
@@ -252,13 +252,13 @@ public theorem isaacs_theorem_6_5
     Representation.instModuleMonoidAlgebraAsModule rhoH
   let : Ring (MonoidAlgebra F H) := MonoidAlgebra.ring
   let U : G → Subrepresentation rhoH :=
-    fun x => Theory.Representation.conjugateSubrepresentation rho H W x
+    fun x => Representation.conjugateSubrepresentation rho H W x
   have hWatom : IsAtom W :=
     (Subrepresentation.irreducible_iff_isAtom W).mp hW
   have hUatom (x : G) : IsAtom (U x) := by
     rw [show U x =
-      Theory.Representation.conjugateSubrepresentationOrderIso rho H x⁻¹ W by simp [U]]
-    exact ((Theory.Representation.conjugateSubrepresentationOrderIso rho H x⁻¹).isAtom_iff W).mpr
+      Representation.conjugateSubrepresentationOrderIso rho H x⁻¹ W by simp [U]]
+    exact ((Representation.conjugateSubrepresentationOrderIso rho H x⁻¹).isAtom_iff W).mpr
       hWatom
   let eSub : Subrepresentation rhoH ≃o Submodule (MonoidAlgebra F H) V :=
     Subrepresentation.subrepresentationSubmoduleOrderIso
@@ -308,14 +308,14 @@ public theorem isaacs_theorem_6_5
   · intro i
     exact (Subrepresentation.irreducible_iff_isAtom (U (g i))).mpr (hUatom (g i))
   · intro i
-    exact ⟨Theory.Representation.conjugateSubrepresentationEquiv rho H W (g i)⟩
+    exact ⟨Representation.conjugateSubrepresentationEquiv rho H W (g i)⟩
   · intro M _ _ sigma hsigma
     obtain ⟨x, ⟨eSigmaConj⟩⟩ := hsigma
     let eSigmaUx : sigma ≃ₗ (U x).toRepresentation :=
       eSigmaConj.trans
-        (Theory.Representation.conjugateSubrepresentationEquiv rho H W x).symm
+        (Representation.conjugateSubrepresentationEquiv rho H W x).symm
     let C :=
-      Theory.Representation.conjugateSubrepresentationOrderIso rho H x
+      Representation.conjugateSubrepresentationOrderIso rho H x
     let Cmod : Submodule (MonoidAlgebra F H) V ≃o
         Submodule (MonoidAlgebra F H) V :=
       eSub.symm |>.trans (C.trans eSub)
@@ -345,8 +345,8 @@ public theorem isaacs_theorem_6_5
     have hCUx : C (U x) = W := by
       dsimp [C]
       rw [show U x =
-        Theory.Representation.conjugateSubrepresentationOrderIso rho H x⁻¹ W by simp [U]]
-      rw [← Theory.Representation.conjugateSubrepresentationOrderIso_mul]
+        Representation.conjugateSubrepresentationOrderIso rho H x⁻¹ W by simp [U]]
+      rw [← Representation.conjugateSubrepresentationOrderIso_mul]
       apply Subrepresentation.toSubmodule_injective
       simp [Module.End.one_eq_id]
     let eCUxW : (C (U x)).toRepresentation ≃ₗ W.toRepresentation := by
@@ -409,4 +409,4 @@ public theorem isaacs_theorem_6_5
           ((U (g i)).toRepresentation ≃ₗ sigma)} :=
         Nat.card_congr (Equiv.subtypeEquivRight hRight)
 
-end Theory.Representation
+end Representation

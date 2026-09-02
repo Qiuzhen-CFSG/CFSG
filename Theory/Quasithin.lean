@@ -16,7 +16,6 @@ A Sylow 2-subgroup `T : Sylow 2 G` is commonly fixed while using these
 definitions, but none of the invariants depends on the choice of `T`.
 -/
 
-namespace Theory.Quasithin
 
 /-- A subgroup is *2-local* when it is the normalizer of a nontrivial
 2-subgroup. -/
@@ -40,4 +39,3 @@ public noncomputable def e (G : Type*) [Group G] [Finite G] : ℕ :=
 /-- A finite group is *quasithin* when its invariant `e(G)` is at most two. -/
 public def IsQuasithin (G : Type*) [Group G] [Finite G] : Prop := e G ≤ 2
 
-end Theory.Quasithin

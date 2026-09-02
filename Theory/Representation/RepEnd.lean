@@ -2,7 +2,7 @@ module
 
 public import Theory.Representation.RepEquiv
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 

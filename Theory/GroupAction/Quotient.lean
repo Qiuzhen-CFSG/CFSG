@@ -15,7 +15,6 @@ import Mathlib.Tactic.Basic
 public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
 
-open Theory.GroupAction
 
 open scoped IsMulCommutative commutatorElement
 

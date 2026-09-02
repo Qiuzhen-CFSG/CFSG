@@ -14,7 +14,6 @@ This file ...
 
 open scoped Pointwise
 
-namespace Theory.PGroup
 
 variable (p : ℕ) (G : Type*) [Group G]
 
@@ -304,4 +303,3 @@ public theorem normal_nilpotent_le_sup_pCore {N : Subgroup G} (hN : N.Normal) (h
 
 end pCore_properties
 
-end Theory.PGroup

@@ -16,7 +16,6 @@ Public items:
 - `IsElementaryAbelian.sup_of_le_centralizer`
 -/
 
-namespace Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 
@@ -76,4 +75,3 @@ public theorem IsElementaryAbelian.sup_of_le_centralizer
         intro y _hy hypow
         simpa [inv_pow] using congrArg Inv.inv hypow) hxcl
 
-end Theory.ElementaryAbelian

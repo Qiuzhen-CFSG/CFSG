@@ -2,7 +2,6 @@ module
 
 public import Theory.GroupAction.Defs
 
-namespace Theory.GroupAction
 open scoped Pointwise
 
 section FixedPointTransportSet
@@ -65,4 +64,3 @@ public theorem actsTriviallyOnSubgroup_of_le_fixedPoints_subgroup {H : Subgroup 
 
 end FixedPointTransport
 
-end Theory.GroupAction

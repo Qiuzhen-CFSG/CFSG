@@ -4,7 +4,7 @@ public import Theory.Representation.RepMap
 
 open Function
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -362,7 +362,7 @@ public noncomputable def ofRepresentationEquiv
     [AddCommMonoid V] [AddCommMonoid W] [Module F V] [Module F W]
     {ρ : Representation F G V} {σ : Representation F G W}
     (e : Representation.Equiv ρ σ) : ρ ≃ₗ σ :=
-  Theory.Representation.RepEquiv.mk e.toLinearEquiv e.isIntertwining'
+  Representation.RepEquiv.mk e.toLinearEquiv e.isIntertwining'
 
 /-- Convert the project bundled representation equivalence to Mathlib's
 representation equivalence. -/

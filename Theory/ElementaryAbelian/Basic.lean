@@ -19,11 +19,10 @@ Public items:
   `.zpowers_of_pow_eq_one`;
 - `IsElementaryAbelian.not_isCyclic_of_card_eq_prime_sq`.
 
-The vector-space complement API lives in `Theory.ElementaryAbelian.VectorSpace`, and the join
-lemma lives in `Theory.ElementaryAbelian.Join`.
+The vector-space complement API lives in `VectorSpace`, and the join
+lemma lives in `Join`.
 -/
 
-namespace Theory.ElementaryAbelian
 
 universe u
 
@@ -137,4 +136,3 @@ public theorem IsElementaryAbelian.zpowers_of_pow_eq_one
     exact (orderOf_dvd_of_mem_zpowers y.2).trans (orderOf_dvd_of_pow_eq_one hxpow)
   simpa using (orderOf_dvd_iff_pow_eq_one.mp hy_dvd)
 
-end Theory.ElementaryAbelian

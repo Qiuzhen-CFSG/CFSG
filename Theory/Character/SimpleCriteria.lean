@@ -13,12 +13,10 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
@@ -261,4 +259,3 @@ public theorem repEquiv_of_irreducible_char_eq
     Nonempty (σ ≃ₗ ρ) := by
   rcases equiv_of_irreducible_char_eq (ρ := ρ) (σ := σ) hc hchar with ⟨e⟩
   exact ⟨RepEquiv.ofRepresentationEquiv e⟩
-end Theory.Character

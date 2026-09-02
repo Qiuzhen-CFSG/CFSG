@@ -13,7 +13,7 @@ the basis indices are permuted freely by the represented group.
 
 noncomputable section
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -138,6 +138,6 @@ public theorem exists_freeOrbitBasis_of_repEquiv_free
     have horbit :=
       MulAction.card_orbit_mul_card_stabilizer_eq_card_group G i
     simpa [Nat.card_eq_fintype_card, hstabilizer] using horbit
-end Theory.Representation
+end Representation
 
 

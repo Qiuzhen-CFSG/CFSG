@@ -19,10 +19,9 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
 attribute [local instance] Fintype.ofFinite
 
@@ -454,4 +453,3 @@ public theorem virtualCharacter_congruent_at_mul
     (⟨(m i : ℂ), intCast_mem_cyclotomicOrder η (m i)⟩ : A)
   simpa [zterm, wterm] using hmul
 
-end Theory.Character

@@ -19,7 +19,6 @@ Public items:
 - `IsElementaryAbelian.exists_isCompl`
 -/
 
-namespace Theory.ElementaryAbelian
 
 open scoped IsMulCommutative
 
@@ -57,4 +56,3 @@ public theorem IsElementaryAbelian.exists_isCompl (p : ℕ) [hp : Fact p.Prime]
     IsCompl.of_orderEmbedding (RelIso.toRelEmbedding Subgroup.toAddSubgroup) hcompl_add
   exact ⟨C, hcompl⟩
 
-end Theory.ElementaryAbelian

@@ -7,7 +7,7 @@ public import Theory.Representation.RepEquiv
 open _root_.Representation
 open scoped MonoidAlgebra
 
-namespace Theory.Representation
+namespace Representation
 
 variable {F G V : Type*} [Group G] [Field F] [AddCommGroup V] [Module F V] {H : Subgroup G} [hH : H.Normal] (ρ : Representation F H V)
 
@@ -61,7 +61,7 @@ public noncomputable def conjugateSubrepresentationEquiv
     (rho : Representation F G V) (H : Subgroup G) [H.Normal]
     (W : Subrepresentation (rho.comp H.subtype)) (g : G) :
     (conjugateSubrepresentation rho H W g).toRepresentation ≃ₗ
-      Theory.Representation.conjugateRep (G := G) (H := H) W.toRepresentation g := by
+      Representation.conjugateRep (G := G) (H := H) W.toRepresentation g := by
   let Wg := conjugateSubrepresentation rho H W g
   let L : Wg.toSubmodule →ₗ[F] W.toSubmodule := {
     toFun := fun x => by
@@ -77,7 +77,7 @@ public noncomputable def conjugateSubrepresentationEquiv
       intro c x
       ext
       simp }
-  refine Theory.Representation.RepEquiv.mk (LinearEquiv.ofBijective L ?_) ?_
+  refine Representation.RepEquiv.mk (LinearEquiv.ofBijective L ?_) ?_
   · constructor
     · intro x y hxy
       apply Subtype.ext
@@ -100,18 +100,18 @@ public noncomputable def conjugateRepEquiv
     {H : Subgroup G} [H.Normal]
     {rho : Representation F H V} {sigma : Representation F H W}
     (e : rho ≃ₗ sigma) (g : G) :
-    Theory.Representation.conjugateRep (G := G) (H := H) rho g ≃ₗ
-      Theory.Representation.conjugateRep (G := G) (H := H) sigma g := by
-  refine Theory.Representation.RepEquiv.mk e.toLinearEquiv ?_
+    Representation.conjugateRep (G := G) (H := H) rho g ≃ₗ
+      Representation.conjugateRep (G := G) (H := H) sigma g := by
+  refine Representation.RepEquiv.mk e.toLinearEquiv ?_
   intro h
   ext v
-  simp only [LinearMap.comp_apply, Theory.Representation.conjugateRep_apply]
+  simp only [LinearMap.comp_apply, Representation.conjugateRep_apply]
   have he : (e.toLinearEquiv : V → W) = (e : V → W) :=
-    Theory.Representation.RepEquiv.coe_toLinearMap e
+    Representation.RepEquiv.coe_toLinearMap e
   simp only [LinearEquiv.coe_toLinearMap]
   rw [he]
-  simpa [Theory.Representation.conjugateRep_apply] using
-    Theory.Representation.RepEquiv.isIntertwining e
+  simpa [Representation.conjugateRep_apply] using
+    Representation.RepEquiv.isIntertwining e
       ⟨g * (h : G) * g⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.2 g⟩ v
 /-- Conjugation by an ambient representation operator is an order automorphism
@@ -221,4 +221,4 @@ public noncomputable def conjugateSubrepresentationOrderIsoRepEquiv
       (conjugateSubrepresentationEquiv rho H W g⁻¹).symm)
 -- TODO : M^x ≅ M ⨂ x
 
-end Theory.Representation
+end Representation

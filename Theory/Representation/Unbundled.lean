@@ -23,7 +23,7 @@ open Module
 
 open scoped BigOperators
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -68,4 +68,4 @@ public theorem trace_pi_map_perm {R : Type*} [Field R]
 
 end TracePi
 
-end Theory.Representation
+end Representation

@@ -22,11 +22,8 @@ Public items:
 - `frattiniQuotientEquivOfIsElementaryAbelian` and its `_mk'`/`_coe` lemmas
 -/
 
-namespace Theory.Frattini
 
 open scoped IsMulCommutative
-open Theory.ElementaryAbelian
-open Theory.PGroup
 
 /-- The p-group specialization of `frattini_nongenerating`: if `H ⊔ Φ(R) = ⊤`,
 then `H = ⊤`. -/
@@ -243,4 +240,3 @@ public theorem frattini_eq_closure_commutator_union_powers {R : Type*} [Group R]
       · exact commutator_le_frattini_of_isPGroup (R := R) (p := p) hxcomm
       · exact pth_power_mem_frattini_of_isPGroup (R := R) (p := p) y)
 
-end Theory.Frattini

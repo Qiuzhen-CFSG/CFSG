@@ -14,7 +14,6 @@ the full orbit quotient and the subgroup coset space.
 
 noncomputable section
 
-namespace Theory.GroupAction
 
 namespace MulAction
 
@@ -55,4 +54,3 @@ public theorem natCard_orbitRelQuotient_subgroup
 
 end MulAction
 
-end Theory.GroupAction

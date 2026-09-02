@@ -9,10 +9,9 @@ open MonoidAlgebra
 
 noncomputable section
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
 attribute [local instance] Fintype.ofFinite
 
@@ -817,7 +816,7 @@ private noncomputable def crossCharBlockMap
     CrossCharWedderburnIndex F G hchar :=
   Classical.choose (crossChar_irreducibleCharacters_complete hchar
     ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-    ((Theory.Representation.RepEquiv.irreducible_iff_group_iso
+    ((Representation.RepEquiv.irreducible_iff_group_iso
       (ρ := crossCharMatrixBlockRepresentation i)
       (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
       α (by intro g v; simp)).1
@@ -831,7 +830,7 @@ private theorem crossCharBlockMap_spec
       crossCharMatrixBlockRepresentation (crossCharBlockMap α i)) :=
   Classical.choose_spec (crossChar_irreducibleCharacters_complete hchar
     ((crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
-    ((Theory.Representation.RepEquiv.irreducible_iff_group_iso
+    ((Representation.RepEquiv.irreducible_iff_group_iso
       (ρ := crossCharMatrixBlockRepresentation i)
       (σ := (crossCharMatrixBlockRepresentation i).comp α.symm.toMonoidHom)
       α (by intro g v; simp)).1
@@ -1068,4 +1067,3 @@ public theorem crossChar_exists_nontrivial_fixed_conjClass_of_stable_irreducible
   rw [Function.mem_fixedPoints_iff, crossCharConjClassesPerm_mk] at hc
   exact ConjClasses.mk_eq_mk_iff_isConj.mp hc
 
-end Theory.Character

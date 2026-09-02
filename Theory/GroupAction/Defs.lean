@@ -8,7 +8,6 @@ public import Mathlib.GroupTheory.Commutator.Basic
 
 open scoped FixedPoints
 
-namespace Theory.GroupAction
 
 section GroupActionDefs
 
@@ -113,4 +112,3 @@ public theorem centerIn_eq_map_center {G : Type*} [Group G] (H : Subgroup G) :
 
 end GroupActionDefs
 
-end Theory.GroupAction

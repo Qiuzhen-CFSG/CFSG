@@ -7,12 +7,10 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
-open Theory.Character
 
 attribute [local instance] Fintype.ofFinite
 
@@ -403,4 +401,3 @@ public theorem exists_nontrivial_fixed_conjClass_of_two_fixed_irreducible
   refine ⟨x, hxne, ?_⟩
   rw [Function.mem_fixedPoints_iff, conjClassesConjPerm_mk] at hc
   exact ConjClasses.mk_eq_mk_iff_isConj.mp hc
-end Theory.Character

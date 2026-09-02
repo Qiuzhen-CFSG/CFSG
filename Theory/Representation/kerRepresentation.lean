@@ -27,7 +27,7 @@ section kerRepresentation
 
 open QuotientGroup Representation
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -38,7 +38,7 @@ variable {F G V : Type*} [CommSemiring F] [Group G] [AddCommMonoid V] [Module F 
 public def kerRepresentation : Representation F (G ⧸ ker ρ) V :=
   kerLift' ρ
 
-public theorem kerRepresentation_apply (g : G) : Theory.Representation.kerRepresentation ρ (mk' _ g) = ρ g := by rfl
+public theorem kerRepresentation_apply (g : G) : Representation.kerRepresentation ρ (mk' _ g) = ρ g := by rfl
 
 public theorem kerRepresentation_faithful : Injective (kerRepresentation ρ) :=
   kerLift'_injective ρ
@@ -67,6 +67,6 @@ public theorem kerRepresentation_irreducible_iff : IsIrreducible (kerRepresentat
 
 public instance kerRepresentation_irreducible [IsIrreducible ρ] : IsIrreducible (kerRepresentation ρ) := (kerRepresentation_irreducible_iff ρ).mpr inferInstance
 
-end Theory.Representation
+end Representation
 
 end kerRepresentation

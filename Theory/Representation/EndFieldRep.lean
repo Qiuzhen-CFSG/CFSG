@@ -3,10 +3,10 @@ module
 public import Mathlib.RingTheory.LittleWedderburn
 public import Theory.Representation.AbsolutelyIrreducible
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -121,12 +121,12 @@ variable (ρ : Representation F G V) [iIr : IsIrreducible ρ]
 
 set_option backward.isDefEq.respectTransparency false in
 public instance endFieldRep_AddHomClass :
-    AddHomClass (Theory.Representation.End (endFieldRep ρ)) ρ.asModule ρ.asModule where
+    AddHomClass (Representation.End (endFieldRep ρ)) ρ.asModule ρ.asModule where
   map_add f x y := RepMap.map_add f x y
 
 set_option backward.isDefEq.respectTransparency false in
 public instance endFieldRep_mulActionHomClass :
-    MulActionHomClass (Theory.Representation.End (endFieldRep ρ)) F[G] ρ.asModule ρ.asModule where
+    MulActionHomClass (Representation.End (endFieldRep ρ)) F[G] ρ.asModule ρ.asModule where
   map_smulₛₗ f x m := by
     apply MonoidAlgebra.induction_linear
       (motive := fun x ↦ f (x • m) = x • f m) x
@@ -174,4 +174,4 @@ public theorem endFieldRep_isAbsolutelyIrreducible :
 
 end EndFieldRepIrr
 
-end Theory.Representation
+end Representation

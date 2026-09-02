@@ -16,7 +16,6 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 universe u
 
@@ -57,7 +56,7 @@ public abbrev ClassFunction (G : Type u) := G → ℂ
   IsIrreducibleCharacter φ ∧ φ 1 = 1
 
 /-- Two class functions are disjoint if no irreducible character occurs in both. -/
-@[expose] public def Disjoint {G : Type u} [Group G] [Fintype G] (φ ψ : ClassFunction G) : Prop :=
+@[expose] public def ClassFunction.Disjoint {G : Type u} [Group G] [Fintype G] (φ ψ : ClassFunction G) : Prop :=
   ∀ χ : ClassFunction G, IsIrreducibleCharacter χ →
     scalarProduct G χ φ ≠ 0 → scalarProduct G χ ψ = 0
 
@@ -199,4 +198,3 @@ public lemma characterProduct_smul_left (z : ℂ) (φ ψ : ClassFunction G) :
 
 end ScalarProduct
 
-end Theory.Character

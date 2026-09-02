@@ -7,7 +7,6 @@ public import Theory.ElementaryAbelian.VectorSpace
 public import Theory.GroupAction.Defs
 
 open scoped IsMulCommutative
-open Theory.ElementaryAbelian
 
 /-!
 Representations attached to actions on elementary abelian groups.
@@ -16,7 +15,7 @@ An elementary abelian `p`-group is canonically a `ZMod p`-module after passing t
 `Additive`. Any action by group automorphisms is therefore linear over `ZMod p`.
 -/
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -83,4 +82,4 @@ public theorem ker_ofElementaryAbelianAction_eq_fixingSubgroup [IsElementaryAbel
     simp [hfix]
 
 
-end Theory.Representation
+end Representation

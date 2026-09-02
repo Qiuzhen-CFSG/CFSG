@@ -22,10 +22,9 @@ noncomputable section
 
 open scoped BigOperators commutatorElement
 
-namespace Theory.Character
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 
 attribute [local instance] Fintype.ofFinite
 
@@ -248,4 +247,3 @@ public theorem irreducible_finrank_sq_le_index_of_centralModulo_kernel
     (ρ := ρ) D (scalar_on_subgroup_of_centralModulo_kernel
       (ρ := ρ) B D hBker hcentral)
 
-end Theory.Character

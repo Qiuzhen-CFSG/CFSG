@@ -24,9 +24,7 @@ public import Theory.GroupAction.Lemmas
 public import Mathlib.GroupTheory.SemidirectProduct
 
 open _root_.Representation
-open Theory.Representation
-open Theory.ElementaryAbelian
-open Theory.GroupAction
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -37,7 +35,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped commutatorElement
-namespace Theory.Representation
+namespace Representation
 /-
 **Kind**: Theorem
 **Note**: Theorem 2.5
@@ -570,9 +568,9 @@ theorem fixedVectors_eq_zero_extendScalars
   have hf'_apply (w : F' ⊗[F] V) (g : G) :
       f' w g = (extendScalars F' ρ) g w - w := by
     refine TensorProduct.induction_on w ?_ ?_ ?_
-    · simp [f', f, fixedDiffMap, Theory.Representation.extendScalars_apply]
+    · simp [f', f, fixedDiffMap, Representation.extendScalars_apply]
     · intro a v
-      simp [f', f, fixedDiffMap, Theory.Representation.extendScalars_apply, TensorProduct.tmul_sub]
+      simp [f', f, fixedDiffMap, Representation.extendScalars_apply, TensorProduct.tmul_sub]
     · intro x y hx hy
       simp [hx, hy, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
   ext w
@@ -607,8 +605,8 @@ theorem finrank_eq_primePow_of_faithful_irreducible_isExtraspecial
     (hc : ¬ ringChar F ∣ Nat.card K) :
     Module.finrank F V = q ^ n := by
   classical
-  let : Theory.Representation.IsAbsolutelyIrreducible ρ :=
-    (Theory.Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
+  let : Representation.IsAbsolutelyIrreducible ρ :=
+    (Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).surjective
   let : Fact (IsPGroup q K) := ⟨IsExtraspecial.isPGroup q K⟩
@@ -1379,8 +1377,8 @@ theorem theorem_2_5_hE
   let : Fact (IsPGroup p P) := ⟨IsExtraspecial.isPGroup p P⟩
   let : Group.IsNilpotent P := (Fact.out : IsPGroup p P).isNilpotent
   let : Group.IsSolvable P := IsNilpotent.to_isSolvable
-  let : Theory.Representation.IsAbsolutelyIrreducible ρ :=
-    (Theory.Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
+  let : Representation.IsAbsolutelyIrreducible ρ :=
+    (Representation.isAbsolutelyIrreducible_iff_surjective (ρ := ρ)).2
       (Representation.IsIrreducible.algebraMap_intertwiningMap_bijective_of_isAlgClosed
         (ρ := ρ)).surjective
   have hdim_dvd_card : Module.finrank F V ∣ Nat.card P := lemma_2_3 ρ
@@ -2645,9 +2643,9 @@ theorem theorem_2_5_b_core
       exact Or.inr ⟨hprime_char, hprime_char.coprime_iff_not_dvd.mpr hnotdvdG⟩
   let F' := AlgebraicClosure F
   let V' := F' ⊗[F] V
-  let ρ' := Theory.Representation.extendScalars F' ρ
+  let ρ' := Representation.extendScalars F' ρ
   have hρ'faithful : Function.Injective ρ' := by
-    exact (Theory.Representation.extendScalars_faithful_iff F' ρ).mp hfaithful
+    exact (Representation.extendScalars_faithful_iff F' ρ).mp hfaithful
   have hfixRset :
       {v : V | ∀ r : R, (ρ.comp R.subtype) r v = v} = ({0} : Set V) := by
     ext v
@@ -2664,14 +2662,14 @@ theorem theorem_2_5_b_core
     let ρR : Representation F R V := ρ.comp R.subtype
     have hfixRset' : {w : V' | ∀ r : R, (ρ'.comp R.subtype) r w = w} = ({0} : Set V') := by
       have hfixRset'' :
-          {w : V' | ∀ r : R, (Theory.Representation.extendScalars F' ρR) r w = w} = ({0} : Set V') := by
+          {w : V' | ∀ r : R, (Representation.extendScalars F' ρR) r w = w} = ({0} : Set V') := by
         exact
           fixedVectors_eq_zero_extendScalars (ρ := ρR) (F' := F')
             (by simpa only [ρR] using hfixRset)
       ext w
       constructor
       · intro hw
-        have hw' : ∀ r : R, (Theory.Representation.extendScalars F' ρR) r w = w := by
+        have hw' : ∀ r : R, (Representation.extendScalars F' ρR) r w = w := by
           intro r
           simpa [ρR, ρ'] using hw r
         have hw0 : w ∈ ({0} : Set V') := by
@@ -2999,4 +2997,4 @@ public theorem theorem_2_5_b {p : ℕ} [hp : Fact p.Prime] {n : ℕ}
       (hp := hp) (hH := hH) (hh := hh) (φ := φ) hcentralizer
       (hc := hc) (hhne := hhne) (ρ := ρ) hfaithful hcharP
 
-end Theory.Representation
+end Representation

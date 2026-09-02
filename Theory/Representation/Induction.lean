@@ -16,7 +16,7 @@ public import Mathlib.RingTheory.SimpleRing.Principal
 open scoped BigOperators
 open Finsupp TensorProduct Module
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -864,4 +864,4 @@ public lemma representation_character_inv_eq_star_character
 
 end
 
-end Theory.Representation
+end Representation

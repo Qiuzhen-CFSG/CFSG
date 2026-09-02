@@ -19,7 +19,7 @@ isomorphism class from the chosen decomposition.
 noncomputable section
 
 open scoped DirectSum
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -193,4 +193,4 @@ public theorem isaacs_lemma_1_13
     change (Nat.card JW : ENat) = (Nat.card JU : ENat)
     exact hWcard.trans hUcard.symm
 
-end Theory.Representation
+end Representation

@@ -17,7 +17,6 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 universe u
 
@@ -271,4 +270,3 @@ public lemma pairing_induced_expand {L : Type u} [Group L] [Fintype L] (K : Subg
           ∑ z : L, ∑ h : ↥K, pairingSummand K δ₁ δ₂ z h := by
             rfl
 
-end Theory.Character

@@ -18,7 +18,7 @@ public import Theory.Representation.CyclicQuotientExtension
 public import Theory.Representation.CompleteReducibility
 
 open _root_.Representation
-open Theory.Representation
+open Representation
 open MonoidAlgebra
 open Module
 open Module.End
@@ -29,7 +29,7 @@ open scoped TensorProduct
 open scoped MonoidAlgebra
 open scoped Function
 open scoped IsMulCommutative
-namespace Theory.Representation
+namespace Representation
 /-
 **Kind**: Theorem
 **Note**: Lemma 2.3
@@ -232,7 +232,7 @@ public theorem repMap_range_ne_bot_of_ne_zero
     f.range ≠ ⊥ := by
   intro hbot
   apply hf
-  apply Theory.Representation.RepMap.toLinearMap_injective
+  apply Representation.RepMap.toLinearMap_injective
   apply LinearMap.range_eq_bot.mp
   calc
     f.toLinearMap.range = f.range.toSubmodule := rfl
@@ -409,7 +409,7 @@ public def coindCosetSubrep (q : G ⧸ H) :
     change f.1 (g * h.val) =
       ρ ⟨(g : G) * h.val * (g : G)⁻¹,
         Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩ (f.1 g)
-    simpa [Theory.Representation.conjugateRep_apply, mul_assoc] using
+    simpa [Representation.conjugateRep_apply, mul_assoc] using
       f.2
         ⟨(g : G) * h.val * (g : G)⁻¹,
           Subgroup.Normal.conj_mem (inferInstance : H.Normal) h h.prop (g : G)⟩
@@ -891,7 +891,7 @@ public theorem coindRep_irreducible_of_noNontrivialConj
     (ρ : Representation F H V) [FiniteDimensional F V] [Representation.IsIrreducible ρ]
     (hnconj :
       ∀ x : G, (x : G ⧸ H) ≠ 1 →
-        ¬ Nonempty (ρ ≃ₗ Theory.Representation.conjugateRep ρ x)) :
+        ¬ Nonempty (ρ ≃ₗ Representation.conjugateRep ρ x)) :
     IsSimpleOrder (Subrepresentation (coindRep (ρ := ρ))) := by
   classical
   let : Fintype (G ⧸ H) := Fintype.ofFinite (G ⧸ H)
@@ -1003,15 +1003,15 @@ public theorem coindRep_irreducible_of_noNontrivialConj
                 hfq'_ne)
       let eCg :
           (coindCosetSubrep (ρ := ρ) q).toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep ρ g := by
+            Representation.conjugateRep ρ g := by
         simpa [q] using (coindCosetEquiv (ρ := ρ) g)
       let eCx :
           (coindCosetSubrep (ρ := ρ) q').toRepresentation ≃ₗ
-            Theory.Representation.conjugateRep ρ x := by
+            Representation.conjugateRep ρ x := by
         rw [← hx]
         exact coindCosetEquiv (ρ := ρ) x
-      let eNg : N.toRepresentation ≃ₗ Theory.Representation.conjugateRep ρ g := eNq.trans eCg
-      let eNx : N.toRepresentation ≃ₗ Theory.Representation.conjugateRep ρ x := eNq'.trans eCx
+      let eNg : N.toRepresentation ≃ₗ Representation.conjugateRep ρ g := eNq.trans eCg
+      let eNx : N.toRepresentation ≃ₗ Representation.conjugateRep ρ x := eNq'.trans eCx
       have hneqone : ((x * g⁻¹ : G) : G ⧸ H) ≠ 1 := by
         intro h1
         apply hq'
@@ -1106,7 +1106,7 @@ private noncomputable def coindMapFromRepMapAux
         apply Subtype.ext
         ext g
         simp }
-  refine Theory.Representation.RepMap.mk lift ?_
+  refine Representation.RepMap.mk lift ?_
   intro g
   apply LinearMap.ext
   intro w
@@ -1183,7 +1183,7 @@ private noncomputable def coindMapFromRepMapAuxOfSubrepAux
       _ = (((M.toRepresentation h).comp proj v : M.toSubmodule) : V) := by rfl
   exact
     coindMapFromRepMapAux σ M.toRepresentation
-      (Theory.Representation.RepMap.mk proj hproj_intertwining)
+      (Representation.RepMap.mk proj hproj_intertwining)
 
 private theorem coindMapFromRepMapAuxOfSubrepAuxAux_eval_one
     {F : Type*} [Field F] {G : Type*} [Group G] [Finite G] {H : Subgroup G} [H.Normal]
@@ -1196,7 +1196,7 @@ private theorem coindMapFromRepMapAuxOfSubrepAuxAux_eval_one
   classical
   unfold coindMapFromRepMapAuxOfSubrepAux
   simp only [coindEval_coindMapFromRepMapAux, map_one, Module.End.one_apply,
-    Theory.Representation.RepMap.coe_mk, Submodule.projectionOnto_apply_left]
+    Representation.RepMap.coe_mk, Submodule.projectionOnto_apply_left]
 
 set_option backward.isDefEq.respectTransparency false in
 private theorem semisimple_le_ker_of_forall_simple_submodule_le_ker {G : Type*} [Group G] {F : Type*}
@@ -1295,7 +1295,7 @@ public noncomputable def coindEquivOfSubrep_noNontrivialConj
     (M : Subrepresentation (ρ.comp H.subtype))
     [Representation.IsIrreducible M.toRepresentation]
     (hnconj : ∀ x : G, (x : G ⧸ H) ≠ 1 →
-      ¬ Nonempty (M.toRepresentation ≃ₗ Theory.Representation.conjugateRep M.toRepresentation x)) :
+      ¬ Nonempty (M.toRepresentation ≃ₗ Representation.conjugateRep M.toRepresentation x)) :
     ρ ≃ₗ coindRep M.toRepresentation := by
   let : FiniteDimensional F M.toSubmodule := FiniteDimensional.of_injective M.toSubmodule.subtype
     Subtype.val_injective
@@ -1323,7 +1323,7 @@ public noncomputable def coindEquivOfSubrep_noNontrivialConj
   have hrange_ne : f.range ≠ ⊥ := by
     intro hbot
     apply hf_ne
-    apply Theory.Representation.RepMap.toLinearMap_injective
+    apply Representation.RepMap.toLinearMap_injective
     apply LinearMap.range_eq_bot.mp
     calc
       f.toLinearMap.range = f.range.toSubmodule := rfl
@@ -1344,7 +1344,7 @@ public noncomputable def coindEquivOfSubrep_noNontrivialConj
         _ = (⊤ : Submodule F (Representation.coindV H.subtype M.toRepresentation)) := rfl)
   let eLin : V ≃ₗ[F] Representation.coindV H.subtype M.toRepresentation :=
     LinearEquiv.ofBijective f.toLinearMap ⟨hfinj, hfsurj⟩
-  refine Theory.Representation.RepEquiv.mk eLin ?_
+  refine Representation.RepEquiv.mk eLin ?_
   intro g
   ext v x
   simpa [LinearMap.comp_apply, eLin] using congrArg
@@ -1578,7 +1578,7 @@ lemma lemma_2_3_algClosed
                 rw [← ρ.map_mul, ← ρ.map_mul]
                 congr 1
                 simp [k, mul_assoc]
-              simpa [Theory.Representation.conjugateRep_apply, ρH, σ, k] using hk
+              simpa [Representation.conjugateRep_apply, ρH, σ, k] using hk
         let A : G ⧸ H → Subrepresentation ρH := fun q =>
           (shiftMap (quotientSection (G := G) (H := H) q)).range
         let eA : ∀ q : G ⧸ H,
@@ -2010,4 +2010,4 @@ public theorem lemma_2_3
 
 end
 
-end Theory.Representation
+end Representation

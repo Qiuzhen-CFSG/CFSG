@@ -15,7 +15,6 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace Theory.Character
 
 universe u
 
@@ -34,4 +33,3 @@ public lemma inducedClassFunction_supportedOn {G : Type u} [Group G] [Fintype G]
   unfold inducedClassFunction
   simp [hg]
 
-end Theory.Character

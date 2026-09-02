@@ -11,7 +11,7 @@ open LinearMap
 open scoped TensorProduct
 open scoped MonoidAlgebra
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 
@@ -360,7 +360,7 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     {F' : Type*} [Field F'] [Algebra F F'] {V : Type*}
     [AddCommGroup V] [Module F V] (ρ : Representation F G V)
     (hF : (Nat.card G : F) ≠ 0) (hF' : (Nat.card G : F') ≠ 0) :
-    Representation.invariants (Theory.Representation.extendScalars F' ρ) =
+    Representation.invariants (Representation.extendScalars F' ρ) =
       (Representation.invariants ρ).baseChange F' := by
   classical
   let _ : Fintype G := Fintype.ofFinite G
@@ -370,19 +370,19 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     simpa [Nat.card_eq_fintype_card] using invertibleOfNonzero hF'
   let S : Submodule F V := Representation.invariants ρ
   let S' : Submodule F' (F' ⊗[F] V) :=
-    Representation.invariants (Theory.Representation.extendScalars F' ρ)
+    Representation.invariants (Representation.extendScalars F' ρ)
   let avg : V →ₗ[F] V := Representation.averageMap ρ
   let avgS : V →ₗ[F] ↥S :=
     avg.codRestrict S (Representation.averageMap_invariant (ρ := ρ))
   let avg' : F' ⊗[F] V →ₗ[F'] F' ⊗[F] V :=
-    Representation.averageMap (Theory.Representation.extendScalars F' ρ)
+    Representation.averageMap (Representation.extendScalars F' ρ)
   let avgS' : F' ⊗[F] V →ₗ[F'] ↥S' :=
     avg'.codRestrict S'
-      (Representation.averageMap_invariant (ρ := Theory.Representation.extendScalars F' ρ))
+      (Representation.averageMap_invariant (ρ := Representation.extendScalars F' ρ))
   have havg_eq : avg' = LinearMap.baseChange F' avg := by
     ext a
     simp [avg', avg, Representation.averageMap, GroupAlgebra.average,
-      Theory.Representation.extendScalars_apply, map_sum, TensorProduct.AlgebraTensorModule.curry_apply]
+      Representation.extendScalars_apply, map_sum, TensorProduct.AlgebraTensorModule.curry_apply]
     rw [Finset.smul_sum]
     simp_rw [TensorProduct.smul_tmul']
     rw [TensorProduct.tmul_sum]
@@ -400,7 +400,7 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
   have havgS'_proj_apply (v : S') : avgS' (S'.subtype v) = v := by
     apply Subtype.ext
     change avg' (S'.subtype v) = S'.subtype v
-    exact Representation.averageMap_id (ρ := Theory.Representation.extendScalars F' ρ) v v.2
+    exact Representation.averageMap_id (ρ := Representation.extendScalars F' ρ) v v.2
   have hrange_avg : LinearMap.range avg = S := by
     rw [← havgS_subtype, LinearMap.range_comp]
     rw [LinearMap.range_eq_of_proj havgS_proj_apply, Submodule.map_top, Submodule.range_subtype]
@@ -431,4 +431,4 @@ public theorem invariants_extendScalars_eq_baseChange_of_card_ne_zero
     _ = S.baseChange F' := hrange_avg_bc
 
 
-end Theory.Representation
+end Representation

@@ -4,11 +4,9 @@ public import Mathlib.Algebra.Group.Subgroup.Finite
 public import Theory.GroupAction.Defs
 public import Theory.GroupAction.Invariant
 
-open Theory.GroupAction
 
 open scoped Pointwise
 
-namespace Theory.GroupAction
 
 section MinimalSubgroup
 
@@ -90,4 +88,3 @@ public theorem exists_minimal_normal_isInvariant [Nontrivial G] :
 
 end MinimalNormalInvariant
 
-end Theory.GroupAction

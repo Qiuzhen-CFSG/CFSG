@@ -9,7 +9,6 @@ universe u
 
 open Matrix
 
-namespace Theory.Comparator
 
 /-- An involution: a nonidentity element of order dividing two. -/
 @[expose] public def IsInvolution {G : Type*} [Group G] (x : G) : Prop := x ≠ 1 ∧ x ^ 2 = 1
@@ -64,4 +63,3 @@ public inductive IsSimpleBenderGroup (G : Type u) [Group G] : Prop
   | isSuzuki (n : ℕ) (_ : 1 ≤ n) (e : G ≃* SzModel n)
   | isPSU3 (n : ℕ) (_ : 2 ≤ n) (e : G ≃* PSU3Model n)
 
-end Theory.Comparator

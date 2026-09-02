@@ -5,7 +5,6 @@ public import Mathlib.GroupTheory.Sylow
 public import Mathlib.GroupTheory.OrderOfElement
 public import Mathlib.Data.Nat.Prime.Basic
 
-namespace Theory.GroupAction
 
 variable {G : Type*} [Group G]
 
@@ -37,4 +36,3 @@ public theorem isPGroup_of_prime_order_eq_p [Finite G]
       simpa [Subgroup.orderOf_coe] using hy
     exact hyq'.symm.trans hqy)
 
-end Theory.GroupAction

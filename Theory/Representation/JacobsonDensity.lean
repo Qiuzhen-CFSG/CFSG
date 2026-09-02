@@ -5,7 +5,7 @@ public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Theory.Representation.ExtendScalars
 public import Theory.Representation.RepEnd
 
-namespace Theory.Representation
+namespace Representation
 
 open _root_.Representation
 open scoped MonoidAlgebra
