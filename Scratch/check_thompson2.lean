@@ -1,0 +1,4 @@
+module
+import Stellmacher.SectionsOneToFourDefs
+#print thompsonSubgroup
+#print thompsonAbelianSubgroups

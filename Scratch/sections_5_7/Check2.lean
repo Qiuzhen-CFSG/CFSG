@@ -1,0 +1,19 @@
+module
+import FeitThompson.BGsection1.PLengthLemmas
+import Mathlib.GroupTheory.IsSubnormal
+#check Subgroup.subgroupOf
+#check Subgroup.IsSubnormal
+#check IsCoatom
+#check Maximal
+#check Subgroup.normal_subgroupOf_iff
+#check Subgroup.map
+#check Subgroup.comap
+#check Sylow
+#check Sylow.isPGroup'
+#check Sylow.coe_subgroup
+#check Sylow.coe_subgroup_smul
+#check Subgroup.center
+#check Subgroup.centralizer
+#check Subgroup.commutator
+#check Subgroup.closure
+#check frattini

@@ -1,0 +1,10 @@
+module
+
+public import Stellmacher.SectionFiveToSeven.Result7_1
+public import Stellmacher.SectionFiveToSeven.Result7_2
+public import Stellmacher.SectionFiveToSeven.Result7_3
+public import Stellmacher.SectionFiveToSeven.Result7_4
+public import Stellmacher.SectionFiveToSeven.Result7_5
+public import Stellmacher.SectionFiveToSeven.Result7_6
+public import Stellmacher.SectionFiveToSeven.Result7_7
+public import Stellmacher.SectionFiveToSeven.Result7_8
